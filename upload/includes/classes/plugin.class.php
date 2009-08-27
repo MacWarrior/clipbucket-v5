@@ -2,6 +2,7 @@
 /**
  Plugin class
  Author:Arslan Hassan
+ version : 1.1 - 2009 august 26
  
  Wiget Areas, for multiple places, use "[place]placement[/place]" without quotes 
  -- For including some files in templates, following placements can be set
@@ -62,18 +63,51 @@ class CBPlugin extends ClipBucket
 			if($item=='..' || $item=='.' || substr($item,0,1)=='_'|| substr($item,0,1)=='.')
 			{
 				//Skip $item_list[] = $item;
+				//$sub_dir_list = scandir(PLUG_DIR.'/'.$item);
 			}else{
 				//Now CHecking if its file, not a directory
 				if(!is_dir(PLUG_DIR.'/'.$item))
-				$item_list[] = $item;
+				{
+					$item_list[] = $item;
+				}else{
+					$sub_dir = $item;
+					$sub_dir_list = scandir(PLUG_DIR.'/'.$item);
+					foreach($sub_dir_list as $item)
+					{
+						if($item=='..' || $item=='.' || substr($item,0,1)=='_'|| substr($item,0,1)=='.')
+						{
+							//Skip $item_list[] = $item;
+							//$sub_dir_list = scandir(PLUG_DIR.'/'.$item);
+						}else{
+							//Now CHecking if its file, not a directory
+							if(!is_dir(PLUG_DIR.'/'.$sub_dir.'/'.$item))
+							{
+								$subitem_list[$sub_dir][] = $item;
+							}
+						}
+					}
+				}
 			}
 		}
+		
 		//Our Plugin List has plugin main files only, now star reading files
 		foreach($item_list as $plugin_file)
 		{
 			$plugin_details = $this->getPluginDetails($plugin_file);
 			if(!empty($plugin_details['name']))
 			$plugins_array[]= $plugin_details;
+		}
+		
+		//Now Reading Sub Dir Files
+		foreach($subitem_list as $sub_dir => $sub_dir_list )
+		{
+			foreach($subitem_list[$sub_dir] as $plugin_file)
+			{
+				$plugin_details = $this->getPluginDetails($plugin_file,$sub_dir);
+				$plugin_details['folder'] = $sub_dir;
+				if(!empty($plugin_details['name']))
+				$plugins_array[] = $plugin_details;
+			}
 		}
 		
 		return $plugins_array;
@@ -129,13 +163,16 @@ class CBPlugin extends ClipBucket
 	* Function used to check weather plugin is instlled or not
 	* @param : $plugin_code STRING
 	*/
-	function is_installed($file,$v=NULL)
+	function is_installed($file,$v=NULL,$folder=NULL)
 	{
 		global $db;
 		
 		if($v)
 		$version_check = "AND plugin_version='$v'";
-		$query = "SELECT plugin_file FROM plugins WHERE $version_check plugin_file='".$file."'";
+		if($folder)
+		$folder_check = " AND plugin_folder ='$folder'";
+		
+		$query = "SELECT plugin_file FROM plugins WHERE plugin_file='".$file."' $version_check $folder_check";
 		$details = $db->Execute($query);
 		if($details->recordcount()>0)
 		return true;
@@ -148,9 +185,12 @@ class CBPlugin extends ClipBucket
 	* get plugin details
 	* @param : $file STRING
 	*/
-	function get_plugin_details($plug_file)
+	function get_plugin_details($plug_file,$sub_dir=NULL)
 	{
-		$file = PLUG_DIR.'/'.$plug_file;
+		if($sub_dir!='')
+			$sub_dir = $sub_dir.'/';
+			
+		$file = PLUG_DIR.'/'.$sub_dir.$plug_file;
 		if(file_exists($file) && is_file($file))
 		{
 			// We don't need to write to the file, so just open for reading.
@@ -192,9 +232,9 @@ class CBPlugin extends ClipBucket
 			return false;
 		}
 	}
-	function getPluginDetails($file)
+	function getPluginDetails($file,$sub_dir=NULL)
 	{
-		return $this->get_plugin_details($file);
+		return $this->get_plugin_details($file,$sub_dir);
 	}
 	
 	
@@ -203,9 +243,12 @@ class CBPlugin extends ClipBucket
 	 * Function used to get plugin details from database
 	 * @param : plugin_id_code STRING
 	 */
-	 function getPlugin($file)
+	 function getPlugin($file,$folder=NULL)
 	 {
-		 $query = mysql_query("SELECT * FROM plugins WHERE plugin_file ='".$file."'");
+		 if($folder)
+		 	$folder_query = " AND plugin_folder = '$folder'";
+			
+		 $query = mysql_query("SELECT * FROM plugins WHERE plugin_file ='".$file."' $folder_query");
 		 return mysql_fetch_assoc($query);
 	 }
 	 
@@ -214,24 +257,26 @@ class CBPlugin extends ClipBucket
 	 * ClipBucket Internal Plugin Installer
 	 * @param:plugin
 	 */
-	 function installPlugin($pluginFile)
+	 function installPlugin($pluginFile,$folder=NULL)
 	 {
 		 global $db,$LANG,$Cbucket;
-		 $plug_details = $this->get_plugin_details($pluginFile);	
+		 $plug_details = $this->get_plugin_details($pluginFile,$folder);	
 		 if(!$plug_details)
 		 	$msg = e($LANG['plugin_no_file_err']);
 		 if(empty($plug_details['name']))
 		 	$msg = e($LANG['plugin_file_detail_err']);
-		 if($this->is_installed($pluginFile))
+		 if($this->is_installed($pluginFile,$folder))
 		 	$msg = e($LANG['plugin_installed_err']);
 		
 		 if(empty($msg))
 		 {	  
-		 
-			$plug_details = $this->getPluginDetails(PLUG_DIR.'/'.$pluginFile);
+		 	$file_folder = $folder;
+		 	if($folder!='')
+				$folder  = $folder.'/';
+			$plug_details = $this->getPluginDetails(PLUG_DIR.'/'.$folder.$pluginFile);
 			
-			if(file_exists(PLUG_DIR.'/install_'.$pluginFile))
-			require_once(PLUG_DIR.'/install_'.$pluginFile);
+			if(file_exists(PLUG_DIR.'/'.$folder.'install_'.$pluginFile))
+			require_once(PLUG_DIR.'/'.$folder.'install_'.$pluginFile);
 			
 			 dbInsert
 			 (
@@ -242,6 +287,7 @@ class CBPlugin extends ClipBucket
 				   'plugin_license_key',
 				   'plugin_license_code',
 				   'plugin_active',
+				   'plugin_folder'
 				   ),
 			 array(
 				   $pluginFile,
@@ -249,6 +295,7 @@ class CBPlugin extends ClipBucket
 				   $plugin_details_array['plugin_license_key'],
 				   $plugin_details_array['plugin_license_code'],
 				   'yes',
+				   $file_folder,
 				   )
 			 );
 			 
@@ -262,11 +309,15 @@ class CBPlugin extends ClipBucket
 	 /**
 	  * Function used to activate plugin
 	  */
-	 function pluginActive($plugin_file,$active='yes'){
+	 function pluginActive($plugin_file,$active='yes',$folder=NULL){
 		global $LANG;
+		
+		if($folder)
+		 	$folder_query = " AND plugin_folder = '$folder'";
+			
 		if($this->is_installed($plugin_file))
 		{
-		mysql_query("UPDATE plugins SET plugin_active='".$active."' WHERE plugin_file='".$plugin_file."'");
+		mysql_query("UPDATE plugins SET plugin_active='".$active."' WHERE plugin_file='".$plugin_file."' $folder_query");
 		$active_msg = $active=='yes' ? 'activated' : 'deactiveted';
 			$msg = e("Plugin has been $active_msg",m);
 		}else{
@@ -278,29 +329,25 @@ class CBPlugin extends ClipBucket
 	 /**
 	  * Function used to activate plugin
 	  */
-	 function uninstallPlugin($file){
+	 function uninstallPlugin($file,$folder=NULL){
 		global $LANG;
 		if($this->is_installed($file))
 		{
-			mysql_query("DELETE FROM plugins WHERE plugin_file='".$file."' ");
-			if(file_exists(PLUG_DIR.'/uninstall_'.$file))
-			require_once(PLUG_DIR.'/uninstall_'.$file);
+			if($folder)
+		 		$folder_query = " AND plugin_folder = '$folder'";
+				
+			if($folder!='')
+				$folder  = $folder.'/';
+
+			mysql_query("DELETE FROM plugins WHERE plugin_file='".$file."' $folder_query");
+			if(file_exists(PLUG_DIR.'/'.$folder.'uninstall_'.$file))
+			require_once(PLUG_DIR.'/'.$folder.'uninstall_'.$file);
 			$msg = e("Plugin has been Uninstalled",m);
 		}else{
 			$msg = e($LANG['plugin_no_install_err']);
 		}
 		return $msg;
 	 }
-	 
-	 /**
-	  * Function used to add ClipBucket Plugin Menu
-	  */
-	 function add_admin_menu($headers,$links)
-	 {
-		 //This Function used to createa admin menu
-		 
-	 }
-	 
 	 
 }
 

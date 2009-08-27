@@ -5,7 +5,7 @@
 @charset "utf-8";
 /* CSS Document */
 
-BODY
+html,BODY
 {
 	margin:0px;
 	padding:0px;

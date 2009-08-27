@@ -15,9 +15,12 @@
 */
 class signup {
 	
+	var $signup_plugins = array(); //Signup Plugins
+	var $custom_signup_fields = array();
+	
 	function load_signup_fields($default=NULL)
 	{
-		global $LANG,$user_signup_fields,$Cbucket;;
+		global $LANG,$Cbucket;
 		/**
 		 * this function will create initial array for user fields
 		 * this will tell 
@@ -37,19 +40,17 @@ class signup {
 		 *       anchor_after [anchor after field]
 		 *      )
 		 */
-		 if(empty($default))
-		 {
-			 $username = $_POST['username'];
-			 $email = $_POST['email'];
-			 $dcountry = $_POST['country'];
-			 $dob = $_POST['dob'];
-		 }else{
-			 $username = $default['username'];
-			 $email = $default['email'];
-			 $dcountry = $default['country'];
-			 $dob = $default['dob'];
-		 }
-		 $dob =  $dob ? date("d M, Y",strtotime($dob)) : '14 Oct, 1989';
+		 
+		
+		if(empty($default))
+			$default = $_POST;
+			
+		$username = $default['username'];
+		$email = $default['email'];
+		$dcountry = $default['country'];
+		$dob = $default['dob'];
+
+		 $dob =  $dob ? date("d-m-Y",strtotime($dob)) : '14-14-1989';
 		 
 		 $user_signup_fields = array
 		 (
@@ -60,6 +61,14 @@ class signup {
 							  'id'=> "username",
 							  'value'=> $username,
 							  'hint_2'=> $LANG['user_allowed_format'],
+							  'db_field'=>'username',
+							  'required'=>'yes',
+							  'syntax_type'=> 'username',
+							  'validate_function'=> 'username_check',
+							  'function_error_msg' => $LANG['user_contains_disallow_err'],
+							  'db_value_check_func'=> 'user_exists',
+							  'db_value_exists'=>false,
+							  'db_value_err'=>$LANG['usr_uname_err2']
 							  ),
 		  'email' => array(
 							  'title'=> $LANG['email'],
@@ -67,18 +76,34 @@ class signup {
 							  'name'=> "email",
 							  'id'=> "email",
 							  'value'=> $email,
+							  'db_field'=>'email',
+							  'required'=>'yes',
+							  'syntax_type'=> 'email',
+							  'db_value_check_func'=> 'email_exists',
+							  'db_value_exists'=>false,
+							  'db_value_err'=>$LANG['usr_email_err3']
 							  ),
 		  'password' => array(
 							  'title'=> $LANG['password'],
 							  'type'=> "password",
 							  'name'=> "password",
 							  'id'=> "password",
+							  'db_field'=>'password',
+							  'required'=>'yes',
+							  'invalid_err'=>$LANG['usr_pass_err2'],
+							  'relative_to' => 'cpassword',
+							  'relative_type' => 'exact',
+							  'relative_err' => $LANG['usr_pass_err3'],
+							  'validate_function' => 'pass_code',
+							  'use_func_val'=>true
 							  ),
 		  'cpassword' => array(
 							  'title'=> $LANG['user_confirm_pass'],
 							  'type'=> "password",
 							  'name'=> "cpassword",
 							  'id'=> "cpassword",
+							  'required'=>'no',
+							  'invalid_err'=>$LANG['usr_cpass_err'],
 							  ),
 		  'country'	=> array(
 							 'title'=> $LANG['country'],
@@ -86,7 +111,9 @@ class signup {
 							 'value' => $Cbucket->get_countries(iso2),
 							 'id'	=> 'country',
 							 'name'	=> 'country',
-							 'checked'=> $dcountry
+							 'checked'=> $dcountry,
+							 'db_field'=>'country',
+							 'required'=>'yes',
 							 ),
 		  'gender' => array(
 							'title' => $LANG['gender'],
@@ -96,6 +123,8 @@ class signup {
 							'value' => array('Male'=>$LANG['male'],'Female'=>$LANG['female']),
 							'sep'=> '&nbsp;',
 							'checked'=>'female',
+							'db_field'=>'sex',
+							'required'=>'yes',
 							),
 		  'dob'	=> array(
 						 'title' => $LANG['user_date_of_birth'],
@@ -105,6 +134,8 @@ class signup {
 						 'class'=>'date_field',
 						 'anchor_after' => 'date_picker',
 						 'value'=> $dob,
+						 'db_field'=>'dob',
+						 'required'=>'yes',
 						 )
 		  );
 		 
@@ -112,16 +143,228 @@ class signup {
 	}
 	
 	
-	//Creating DOB field
+	/**
+	 * Function used to validate Signup Form
+	 */
+	function validate_form_fields($array=NULL)
+	{
+		$fields = $this->load_signup_fields($array);
+
+		if($array==NULL)
+			$array = $_POST;
+		
+		if(is_array($_FILES))
+			$array = array_merge($array,$_FILES);
+
+		//Mergin Array
+		$signup_fields = array_merge($fields,$this->custom_signup_fields);
+				
+		//Now Validating Each Field 1 by 1
+		foreach($signup_fields as $field)
+		{
+			$field['name'] = formObj::rmBrackets($field['name']);
+			
+			//pr($field);
+			$title = $field['title'];
+			$val = $array[$field['name']];
+			$req = $field['required'];
+			$invalid_err =  $field['invalid_err'];
+			$function_error_msg = $field['function_error_msg'];
+			$length = strlen($val);
+			$min_len = $field['min_length'];
+			$min_len = $min_len ? $min_len : 0;
+			$max_len = $field['max_length'] ;
+			$rel_val = $array[$field['relative_to']];
+			
+			if(empty($invalid_err))
+				$invalid_err =  sprintf("Invalid '%s'",$title);
+			if(is_array($array[$field['name']]))
+				$invalid_err = '';
+				
+			//Checking if its required or not
+			if($req == 'yes')
+			{
+				if(empty($val) && !is_array($array[$field['name']]))
+				{
+					e($invalid_err);
+					$block = true;
+				}else{
+					$block = false;
+				}
+			}
+			$funct_err = is_valid_value($field['validate_function'],$val);
+			if($block!=true)
+			{
+				//Checking Syntax
+				if(!$funct_err)
+				{
+					if(!empty($function_error_msg))
+						e($function_error_msg);
+					elseif(!empty($invalid_err))
+						e($invalid_err);
+				}elseif(!is_valid_syntax($field['syntax_type'],$val))
+				{
+					if(!empty($invalid_err))
+						e($invalid_err);
+				}
+				elseif(isset($max_len))
+				{
+					if($length > $max_len || $length < $min_len)
+					e(sprintf(" please enter '%s' value between '%s' and '%s'",
+							  $title,$field['min_length'],$field['max_length']));
+				}elseif(function_exists($field['db_value_check_func']))
+				{
+					$db_val_result = $field['db_value_check_func']($val);
+					if($db_val_result != $field['db_value_exists'])
+						if(!empty($field['db_value_err']))
+							e($field['db_value_err']);
+						elseif(!empty($invalid_err))
+							e($invalid_err);
+				}elseif($field['relative_type']!='')
+				{
+					switch($field['relative_type'])
+					{
+						case 'exact':
+						{
+							if($rel_val != $val)
+							{
+								if(!empty($field['relative_err']))
+									e($field['relative_err']);
+								elseif(!empty($invalid_err))
+									e($invalid_err);
+							}
+						}
+						break;
+					}
+				}
+			}	
+		}
+		
+	}
 	
 	
+	/**
+	 * Function used to validate signup form
+	 */
+	function signup_user($array=NULL)
+	{
+		global $LANG,$db;
+		if($array==NULL)
+			$array = $_POST;
+		
+		if(is_array($_FILES))
+			$array = array_merge($array,$_FILES);
+		$this->validate_form_fields($array);
+		
+		//checking terms and policy agreement
+		if($_POST['agree']!='yes')
+			e($LANG['usr_ament_err']);
+		if(!error())
+		{
+			$signup_fields = $this->load_signup_fields($array);
+			
+			//Adding Custom Signup Fields
+			if(count($this->custom_signup_fields)>0)
+				$signup_fields = array_merge($signup_fields,$this->custom_signup_fields);
+			
+			foreach($signup_fields as $field)
+			{
+				$name = formObj::rmBrackets($field['name']);
+				$val = $array[$name];
+				
+				if($field['use_func_val'])
+					$val = $field['validate_function']($val);
+				
+				
+				if(!empty($field['db_field']))
+				$query_field[] = $field['db_field'];
+				
+				if(is_array($val))
+				{
+					$new_val = '';
+					foreach($val as $v)
+					{
+						$new_val .= "#".$v."# ";
+					}
+					$val = $new_val;
+				}
+				if(!$field['clean_func'] || (!function_exists($field['clean_func']) && !is_array($field['clean_func'])))
+					$val = mysql_clean($val);
+				else
+					$val = apply_func($field['clean_func'],$val);
+				
+				if(!empty($field['db_field']))
+				$query_val[] = $val;
+				
+			}
+			
+			// Setting Verification type
+			if(EMAIL_VERIFICATION == '1'){
+				$usr_status = 'ToActivate';
+			}else{
+				$usr_status = 'Ok';
+			}
+			$query_field[] = "	usr_status";
+			$query_val[] = $usr_status;
+			
+			//Creating AV Code
+			$avcode		= RandomString(10);
+			$query_field[] = "avcode";
+			$query_val[] = $avcode;
+			
+			//Signup IP
+			$signup_ip	= $_SERVER['REMOTE_ADDR'];
+			$query_field[] = "signup_ip";
+			$query_val[] = $signup_ip;
+			
+			//Date Joined
+			$now = NOW();
+			$query_field[] = "doj";
+			$query_val[] = $now;
+			
+			$query = "INSERT INTO users (";
+			$total_fields = count($query_field);
+			
+			//Adding Fields to query
+			$i = 0;
+			foreach($query_field as $qfield)
+			{
+				$i++;
+				$query .= $qfield;
+				if($i<$total_fields)
+				$query .= ',';
+			}
+			
+			$query .= ") VALUES (";
+			
+			$i = 0;
+			//Adding Fields Values to query
+			foreach($query_val as $qval)
+			{
+				$i++;
+				$query .= "'$qval'";
+				if($i<$total_fields)
+				$query .= ',';
+			}
+			
+			//Finalzing Query
+			$query .= ")";
+			
+			$db->Execute($query);
+			$insert_id = $db->insert_id();
+			
+			return $insert_id;
+		}
+	}
+	
+		
 	//Duplicate User Check
 	function duplicate_user($name){
-		$myquery =  new myquery();
+		global $myquery;
 		if($myquery->check_user($name)){
-		return true;
+			return true;
 		}else{
-		return false;
+			return false;
 		}
 	}
 	
@@ -305,7 +548,7 @@ class signup {
 			return false;
 			}
 	}
-			
+
 	//Validate Form Fields And Add Member
 	
 	function SignUpUser(){

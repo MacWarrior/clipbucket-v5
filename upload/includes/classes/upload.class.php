@@ -65,10 +65,12 @@
 			$val = $array[$field['name']];
 			$req = $field['required'];
 			$invalid_err =  $field['invalid_err'];
+			$function_error_msg = $field['function_error_msg'];
 			$length = strlen($val);
 			$min_len = $field['min_length'];
 			$min_len = $min_len ? $min_len : 0;
 			$max_len = $field['max_length'] ;
+			$rel_val = $array[$field['relative_to']];
 			
 			if(empty($invalid_err))
 				$invalid_err =  sprintf("Invalid '%s'",$title);
@@ -82,6 +84,8 @@
 				{
 					e($invalid_err);
 					$block = true;
+				}else{
+					$block = false;
 				}
 			}
 
@@ -92,7 +96,9 @@
 				//Checking Syntax
 				if(!$funct_err)
 				{
-					if(!empty($invalid_err))
+					if(!empty($function_error_msg))
+						e($function_error_msg);
+					elseif(!empty($invalid_err))
 						e($invalid_err);
 				}elseif(!is_valid_syntax($field['syntax_type'],$val))
 				{
@@ -104,6 +110,30 @@
 					if($length > $max_len || $length < $min_len)
 					e(sprintf(" please enter '%s' value between '%s' and '%s'",
 							  $title,$field['min_length'],$field['max_length']));
+				}elseif(function_exists($field['db_value_check_func']))
+				{
+					$db_val_result = $field['db_value_check_func']($val);
+					if($db_val_result != $field['db_value_exists'])
+						if(!empty($field['db_value_err']))
+							e($field['db_value_err']);
+						elseif(!empty($invalid_err))
+							e($invalid_err);
+				}elseif($field['relative_type']!='')
+				{
+					switch($field['relative_type'])
+					{
+						case 'exact':
+						{
+							if($rel_val != $val)
+							{
+								if(!empty($field['relative_err']))
+									e($field['relative_err']);
+								elseif(!empty($invalid_err))
+									e($invalid_err);
+							}
+						}
+						break;
+					}
 				}
 			}	
 		}

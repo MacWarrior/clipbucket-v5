@@ -1,7 +1,7 @@
 <?php
 /*
 	Plugin Name: JW Player Plugin
-	Description: Adds Jw Player for Clipbucket
+	Description: jw Player for Clipbucket
 	Author: Arslan Hassan
 	ClipBucket Version: 2
 	Plugin Version: 1.0 - JW 4.5.230

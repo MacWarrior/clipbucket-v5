@@ -1,4 +1,5 @@
 {assign var='required_fields' value=$signup->load_signup_fields()}
+{assign var='custom_field' value=$signup->custom_signup_fields}
 
 <table width="940" border="0" align="center" cellpadding="0" cellspacing="0">
   <tr>
@@ -62,22 +63,19 @@
             {foreach from=$required_fields item=field}
             <tr>
               <td width="33%" align="right" valign="top" class="header3">{$field.title}* :</td>
-              <td width="67%">{$field.hint_1}{ANCHOR place=$field.anchor_before}{$formObj->createField($field)}{ANCHOR place=$field.anchor_before}<br />
+              <td width="67%">{$field.hint_1}{ANCHOR place=$field.anchor_before}{$formObj->createField($field)}{ANCHOR place=$field.anchor_after}<br />
                 {$field.hint_2}</td>
             </tr>
             {/foreach}
-			{if $captcha_type != 0 }
+            
+            {foreach from=$custom_field item=field}
             <tr>
-              <td align="right" valign="top" class="header3">{$LANG.verification}: </td>
-              <td class="tips"><input name="verification" type="text" id="verification" size="30" />
-                <br />
-                {$LANG.user_enter_text_as_img}<br /></td>
+              <td width="33%" align="right" valign="top" class="header3">{$field.title}* :</td>
+              <td width="67%">{$field.hint_1}{ANCHOR place=$field.anchor_before}{$formObj->createField($field)}{ANCHOR place=$field.anchor_after}<br />
+                {$field.hint_2}</td>
             </tr>
-            <tr>
-              <td align="right" valign="top" class="header3">&nbsp;</td>
-              <td class="tips"><img src="{$captcha}" border=1 name="captcha" id="captcha"><br />
-               <a href="javascript:void(0)" onclick="javascript:reloadImage('{$captcha}');"> {$LANG.user_refresh_img}</a></td>{/if}
-            </tr>
+            {/foreach}
+           
             <tr>
               <td colspan="2" align="center" valign="top" class="header3"><input name="agree" type="checkbox" id="agree" value="yes" checked="checked" />
                 - {$LANG.user_i_agree_to_the} <a href="{$termsofuse_link}" target="_blank" style="text-decoration:underline">{$LANG.tos_title}</a> and <a href="{$privacy_link}" target="_blank" style="text-decoration:underline">{$LANG.privacy_policy}</a>

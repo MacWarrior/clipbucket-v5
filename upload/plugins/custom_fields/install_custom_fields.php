@@ -40,7 +40,7 @@ function install_custom_fields()
 )
 VALUES (
 NULL , 'en', 'cust_field_err', 'Invalid \'%s\' field value'
-)";
+)");
 	
 }
 install_custom_fields();

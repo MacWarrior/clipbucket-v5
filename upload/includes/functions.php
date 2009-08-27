@@ -1569,6 +1569,25 @@ function SetTime($sec, $padHours = true) {
 	
 	
 	/**
+	 * Function used to add custom signup form fields
+	 * In this you will provide an array that has a complete
+	 * details of the field such as 'name',validate_func etc
+	 * please check docs.clip-bucket.com for "how to add custom signup field"
+	 */
+	function register_signup_field($array)
+	{
+		global $signup;
+		$name = key($array);
+		if(is_array($array) && !empty($array[$name]['name']))
+		{
+			foreach($array as $key => $arr)
+				$signup->custom_signup_fields[$key] = $arr;
+		}
+	}
+	
+	
+	
+	/**
 	 * Function used to get PHP Path
 	 */
 	 function php_path()
@@ -1906,5 +1925,73 @@ function SetTime($sec, $padHours = true) {
 			return true;
 	}
 
-	 
+	
+	/**
+	 * Function used to validate username
+	 * @input USERNAME
+	 */
+	function username_check($username)
+	{
+		global $Cbucket;
+		$banned_words = $Cbucket->configs['disallowed_usernames'];
+		$banned_words = explode(',',$banned_words);
+		foreach($banned_words as $word)
+		{
+			preg_match("/$word/Ui",$username,$match);
+			if(!empty($match[0]))
+				return false;
+		}
+		
+		return true;
+	}
+	
+	
+	
+	
+	
+	/**
+	 * Function used to check weather username already exists or not
+	 * @input USERNAME
+	 */
+	function user_exists($user)
+	{
+		global $signup;
+		return $signup->duplicate_user($user);
+	}
+	
+	/**
+	 * Function used to check weather email already exists or not
+	 * @input email
+	 */
+	function email_exists($user)
+	{
+		global $signup;
+		return $signup->duplicate_email($user);
+	}
+	
+	
+	
+	/**
+	 * Function used to check weather erro exists or not
+	 */
+	function error()
+	{
+		if(count(error_list())>0)
+		{
+			return error_list();
+		}else{
+			return false;
+		}
+	}
+	
+	
+	/**
+	 * Function used to load plugin
+	 * please check docs.clip-bucket.com
+	 */
+	function load_plugin()
+	{
+		global $cbplugin;
+		
+	}
 ?>

@@ -43,11 +43,11 @@ if($lang_obj->lang_exists(mysql_clean($_GET['edit_language'])))
 		if(!empty($varname))
 			$varname_query = "varname LIKE '%$varname%'";
 		if(!empty($text))
-			$text_query = "varname text '%$text%'";
+			$text_query = "text LIKE '%$text%'";
 		
 		if(!empty($text_query) || !empty($varname_query))
 		{
-			if(!empty($text_query))
+			if(!empty($text_query) && !empty($varname_query) )
 				$or = ' OR ';
 			$extra_param = " AND ( $varname_query $or  $text_query )";
 		}

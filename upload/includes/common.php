@@ -18,7 +18,7 @@
  *******************************************************************
  */
 
-ob_start('ob_gzhandler');
+ob_start();
 
 //Setting Cookie Timeout
 define('COOKIE_TIMEOUT',315360000); // 10 years
@@ -34,7 +34,6 @@ if (!is_dir($sessdir)) { mkdir($sessdir, 0777); }
 ini_set('session.save_path', $sessdir);*/
 
 session_start();
-
 // Check Installation Directory
 if(file_exists(dirname(__FILE__).'/../install/isinstall.php')){
 	header('location:../install');
@@ -404,4 +403,6 @@ $Smarty->register_function('FlashPlayer','flashPlayer');
 
 
 $Smarty->register_modifier('get_thumb_num','get_thumb_num');
+
+
 ?>

@@ -16,28 +16,32 @@ $pages->page_redir();
 //unnstalling Plugin
 if(isset($_GET['uninstall']))
 {
-	$msg = $cbplugin->uninstallPlugin(mysql_clean($_GET['uninstall']));
+	$folder = $_GET['f'];
+	$msg = $cbplugin->uninstallPlugin(mysql_clean($_GET['uninstall']),$folder);
 }
 
 
 //Activation or deactivating plugin
 if(isset($_GET['activate']))
 {
+	$folder = $_GET['f'];
 	$id = mysql_clean($_GET['activate']);
-	$msg = $cbplugin->pluginActive($id,'yes');
+	$msg = $cbplugin->pluginActive($id,'yes',$folder);
 }
 
 if(isset($_GET['deactivate']))
 {
+	$folder = $_GET['f'];
 	$id = mysql_clean($_GET['deactivate']);
-	$msg = $cbplugin->pluginActive($id,'no');
+	$msg = $cbplugin->pluginActive($id,'no',$folder);
 }
 
 
 //Installing Plugin
 if(isset($_GET['install_plugin']))
 {
-	$msg = $cbplugin->installPlugin(mysql_clean($_GET['install_plugin']));
+	$folder = $_GET['f'];
+	$msg = $cbplugin->installPlugin(mysql_clean($_GET['install_plugin']),$folder);
 }
 
 //Get New Plugin List

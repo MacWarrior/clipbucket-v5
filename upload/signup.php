@@ -17,17 +17,8 @@ if($userquery->login_check('',true)){
 if(!$signup->Registration()){
 $msg = $LANG['usr_reg_err'];
 }else{
-	if($row['captcha_type']==2){
-		Assign('captcha',BASEURL.'/includes/classes/captcha/img.php');
-	}elseif($row['captcha_type']==1){
-		Assign('captcha',BASEURL.'/includes/classes/captcha_simple.img.php');
-	}
-	
 	if(isset($_POST['signup'])){
-		$msg = $signup->SignUpUser();
-			if($msg=='success'){
-			redirect_to(BASEURL.signup_success);
-			}
+		$signup->signup_user($_POST);
 	}
 }
 subtitle('signup');

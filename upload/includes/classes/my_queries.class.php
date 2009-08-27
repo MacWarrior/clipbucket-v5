@@ -93,12 +93,12 @@ class myquery {
 	}
 	
 	function check_user($username){
-	$query = mysql_query("SELECT * FROM users WHERE username ='".$username."'");
-	if(mysql_num_rows($query) > 0){
-	return true;
-	}else{
-	return false;
-	}
+		$query = mysql_query("SELECT * FROM users WHERE username ='".$username."'");
+		if(mysql_num_rows($query) > 0){
+			return true;
+		}else{
+			return false;
+		}
 	}
 	
 	function check_email($email){

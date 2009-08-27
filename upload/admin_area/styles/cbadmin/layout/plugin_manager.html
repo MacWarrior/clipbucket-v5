@@ -17,8 +17,8 @@
 <a href="{$plug.website}">{$plug.website}</a></em><br>
 Version : {$plug.version}
 </td>
-    <td height="100" valign="top" class="td_body">{if $plug.plugin_active == 'yes'}<a href="?deactivate={$plug.plugin_file}">Deactivate</a>{else}<a href="?activate={$plug.plugin_file}">Activate</a>{/if}<br>
-      <a href="javascript:Confirm_Uninstall('?uninstall={$plug.plugin_file}')">Uninstall</a></td>
+    <td height="100" valign="top" class="td_body">{if $plug.plugin_active == 'yes'}<a href="?deactivate={$plug.plugin_file}{if $plug.folder!=''}&f={$plug.folder}{/if}">Deactivate</a>{else}<a href="?activate={$plug.plugin_file}{if $plug.folder!=''}&f={$plug.folder}{/if}">Activate</a>{/if}<br>
+      <a href="javascript:Confirm_Uninstall('?uninstall={$plug.plugin_file}{if $plug.folder!=''}&f={$plug.folder}{/if}')">Uninstall</a></td>
   </tr>
   {if $bgcolor == ""}
  	 {assign var = bgcolor value = "#EEEEEE"}
@@ -52,7 +52,7 @@ Version : {$plug.version}
 <a href="{$plug.website}">{$plug.website}</a></em><br>
 Version : {$plug.version}
 </td>
-    <td height="100" valign="top" class="td_body"><a href="?install_plugin={$plug.file}">Install Plugin</a></td>
+    <td height="100" valign="top" class="td_body"><a href="?install_plugin={$plug.file}{if $plug.folder!=''}&f={$plug.folder}{/if}">Install Plugin</a></td>
   </tr>
   {if $bgcolor == ""}
  	 {assign var = bgcolor value = "#EEEEEE"}
