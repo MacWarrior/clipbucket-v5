@@ -5338,10 +5338,9 @@
 	* @since : ClipBucket 2.8.1
 	*/
 
-	function get_user_subscibers($userid, $limit = false)
-	{
+	function get_user_subscibers($userid, $limit = false) {
 		global $db;
-		$result = $db->select(tbl("subscriptions"), "userid", "subscribed_to = '$userid'", "$limit");	
+		$result = $db->select(tbl("subscriptions"), "userid", "subscribed_to = '$userid'", "$limit");
 		$ids = array();
 		foreach ($result as $key => $value) {
 			$ids[] = $value['userid'];
@@ -5349,7 +5348,7 @@
 		return $ids;
 	}
 
-	/*
+	/**
 	* Consider it an aleternative of regular template_files()
 	* It is being introduced because plugin files load before
 	* anything else and if we load an HTML file via plugin, 
@@ -5360,19 +5359,37 @@
 	* @author : Saqib Razzaq
 	*/
 
-	function display_module_file($display_file)
-	{
-		if (file_exists( $display_file ))
-		{
+	function display_module_file($display_file) {
+		if (file_exists( $display_file )) {
 			global $ClipBucket;
 			$ClipBucket->template_files[] = array('file' => $display_file);
-		}
-		else
-		{
-			if (has_access("admin_access"))
-			{
+		} else {
+			if (has_access("admin_access"))	{
 				e("Display template couldn't be loaded (admin only message)", "e");
 			}
+		}
+	}
+
+	/**
+	* Check where a function is being called from
+	* @param : { boolean } { $file } { false by default, returns file path if true }
+	* @param : { boolean } { $pex } { false by default, exists after pr() if true }
+	* @since : 2nd March, 2016 ClipBucket 2.8.1
+	* @author : Saqib Razzaq
+	*/
+
+	function trace_func($file = false, $pex = false) {
+		if (!$file) {
+			$trace = debug_backtrace();
+		} else {
+			$trace = debug_backtrace();
+			$trace = $trace[1]['file'];
+		}
+
+		if (!$pex) {
+			pr($trace,true);
+		} else {
+			pex($trace,true);
 		}
 	}
 
