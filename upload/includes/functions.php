@@ -5116,22 +5116,13 @@
             echo $e->getFile();
         }
 
-        function view_image( $args = array() ) {
-
-			if ( empty( $args[ 'src' ] ) ) {
-				return false;
-			}
-
-			$tim = BASEURL.'/image.php';
-			$string = http_build_query( $args, null, '&' );
-
-			return $tim.'?'.$string;
-		}
-		
 		/**
-		 * Returns This page name or boolean for the given string
-		 * @param STRING $name
-		 */
+		* Returns current page name or boolean for the given string
+		*
+		* @param { string } { $name } { name of page to check against }
+		* @return : { string / boolean } { page name if found, else false }
+		*/
+
 		function this_page($name="")
 		{
 		    if(defined('THIS_PAGE'))
@@ -5152,7 +5143,7 @@
 		}
 
 		/**
-		* Returns This page name or boolean for the given string
+		* Returns current page's parent name or boolean for the given string
 		*
 		* @param { string } { $name } { name of page to check against }
 		* @return : { string / boolean } { page name if found, else false }
@@ -5394,6 +5385,26 @@
 			pex($trace,true);
 		}
 	}
+
+    /**
+	* Display an image or build image tag
+	*
+	* @param : { string } { $src } { link to image file }
+	* @param : { boolean } { $return } { false by default, returns img tag if true }
+	* @since : 2nd March, 2016 ClipBucket 2.8.1
+	* @author : Saqib Razzaq
+    */
+
+    function view_image($src, $return = false) {
+		if (!empty($src)) {
+			if (!$return) {
+				echo '<img src='.$src.' >';
+			} else {
+				return '<img src='.$src.' >';
+			}
+		}
+	}
+	
 
 
         include( 'functions_db.php' );
