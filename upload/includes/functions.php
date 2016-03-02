@@ -5029,139 +5029,139 @@
 	}
         
         
-        /**
-         * function used to verify user age
-         */
-        function verify_age($dob)
-        {
-            $allowed_age = config('min_age_reg');
-            if($allowed_age < 1) return true;
-            
-            $age_time = strtotime($dob);
-            $diff = time() - $age_time;
-            
-            $diff = $diff / 60 / 60 / 24 / 364;
-            
-            if($diff >= $allowed_age ) return true;
-            
+    /**
+     * function used to verify user age
+     */
+    function verify_age($dob)
+    {
+        $allowed_age = config('min_age_reg');
+        if($allowed_age < 1) return true;
+        
+        $age_time = strtotime($dob);
+        $diff = time() - $age_time;
+        
+        $diff = $diff / 60 / 60 / 24 / 364;
+        
+        if($diff >= $allowed_age ) return true;
+        
+        return false;
+    }
+
+
+    /**
+     * Checks development mode
+     *
+     * @return Boolean
+     */
+    function in_dev()
+    {
+        if(defined('DEVELOPMENT_MODE'))
+            return DEVELOPMENT_MODE;
+        else
             return false;
-        }
+    }
 
+    function dump($data){
+    	echo "<pre>";
+    	var_dump($data);
+    	echo "</pre>";
+    }
 
-        /**
-         * Checks development mode
-         *
-         * @return Boolean
-         */
-        function in_dev()
-        {
-            if(defined('DEVELOPMENT_MODE'))
-                return DEVELOPMENT_MODE;
-            else
-                return false;
-        }
-
-        function dump($data){
-        	echo "<pre>";
-        	var_dump($data);
-        	echo "</pre>";
-        }
-
-        /**
-		* Function is used to write logs 
-		*/
-		function logData($data,$file=NULL,$path=false,$force=false)
+    /**
+	* Function is used to write logs 
+	*/
+	function logData($data,$file=NULL,$path=false,$force=false)
+	{
+		if($force!=false&&!empty($path))
 		{
-			if($force!=false&&!empty($path))
+			$file =$path;
+			if(is_array($data)) $data = json_encode($data);
+			if(file_exists($file))
+				$text = file_get_contents($file);
+			$text .= " \n {$data}";
+			file_put_contents($file, $text);
+		}
+		else
+		{
+			if(!empty($file))
 			{
-				$file =$path;
-				if(is_array($data)) $data = json_encode($data);
-				if(file_exists($file))
-					$text = file_get_contents($file);
-				$text .= " \n {$data}";
-				file_put_contents($file, $text);
+				$logFilePath = BASEDIR. "/files/".$file.".txt";
 			}
 			else
 			{
-				if(!empty($file))
-				{
-					$logFilePath = BASEDIR. "/files/".$file.".txt";
-				}
-				else
-				{
-					$logFilePath = BASEDIR. "/files/ffmpegLog.txt";
-				}
-				if(is_array($data)) $data = json_encode($data);
-				if(file_exists($logFilePath))
-					$text = file_get_contents($logFilePath);
-				$text .= " \n \n  {$data}";
-				if(DEVELOPMENT_MODE||$force)
-					file_put_contents($logFilePath, $text);
+				$logFilePath = BASEDIR. "/files/ffmpegLog.txt";
 			}
+			if(is_array($data)) $data = json_encode($data);
+			if(file_exists($logFilePath))
+				$text = file_get_contents($logFilePath);
+			$text .= " \n \n  {$data}";
+			if(DEVELOPMENT_MODE||$force)
+				file_put_contents($logFilePath, $text);
 		}
+	}
 
-        /**
-         * displays a runtime error
-         *
-         * @param Object $e
-         */
-        function show_cb_error($e)
-        {
-            echo $e->getMessage();
-            echo '<br>';
-            echo 'On Line Number ';
-            echo $e->getLine();
-            echo '<br>';
-            echo 'In file ';
-            echo $e->getFile();
-        }
+    /**
+    * Displays a code error in developer friendly way [ used with PHP exceptions ]
+    *
+    * @param { Object } { $e } { complete current object }
+    */
 
-		/**
-		* Returns current page name or boolean for the given string
-		*
-		* @param { string } { $name } { name of page to check against }
-		* @return : { string / boolean } { page name if found, else false }
-		*/
+    function show_cb_error($e) {
+        echo $e->getMessage();
+        echo '<br>';
+        echo 'On Line Number ';
+        echo $e->getLine();
+        echo '<br>';
+        echo 'In file ';
+        echo $e->getFile();
+    }
 
-		function this_page($name="")
-		{
-		    if(defined('THIS_PAGE'))
-		    {
-		        $page = THIS_PAGE;
-		        if($name)
-		        {
-		            if($page==$name)
-		                return true;
-		            else
-		                return false;
-		        }
+	/**
+	* Returns current page name or boolean for the given string
+	*
+	* @param { string } { $name } { name of page to check against }
+	* @return : { string / boolean } { page name if found, else false }
+	*/
 
-		        return $page;
-		    }
+	function this_page($name="")
+	{
+	    if(defined('THIS_PAGE'))
+	    {
+	        $page = THIS_PAGE;
+	        if($name)
+	        {
+	            if($page==$name)
+	                return true;
+	            else
+	                return false;
+	        }
 
-		    return false;
-		}
+	        return $page;
+	    }
 
-		/**
-		* Returns current page's parent name or boolean for the given string
-		*
-		* @param { string } { $name } { name of page to check against }
-		* @return : { string / boolean } { page name if found, else false }
-		*/
+	    return false;
+	}
 
-		function parent_page($name="") {
-		    if(defined('PARENT_PAGE')) {
-		        $page = PARENT_PAGE;
-		        if($name) {
-		            if($page==$name)
-		                return true;
-		            else
-		                return false;
-		        }
-		        return $page;
-		    }
-		    return false;
-		}
+	/**
+	* Returns current page's parent name or boolean for the given string
+	*
+	* @param { string } { $name } { name of page to check against }
+	* @return : { string / boolean } { page name if found, else false }
+	*/
+
+	function parent_page($name="") {
+	    if(defined('PARENT_PAGE')) {
+	        $page = PARENT_PAGE;
+	        if($name) {
+	            if($page==$name)
+	                return true;
+	            else
+	                return false;
+	        }
+	        return $page;
+	    }
+	    return false;
+	}
 
 
 		
@@ -5405,17 +5405,15 @@
 		}
 	}
 	
+    include( 'functions_db.php' );
+    include( 'functions_filter.php' );
+    include( 'functions_player.php' );
+    include( 'functions_template.php' );
+    include( 'functions_helper.php' );
 
-
-        include( 'functions_db.php' );
-        include( 'functions_filter.php' );
-        include( 'functions_player.php' );
-        include( 'functions_template.php' );
-        include( 'functions_helper.php' );
-
-        include( 'functions_video.php' );
-        include( 'functions_user.php' );
-        include( 'functions_photo.php' );
-        include('functions_actions.php');
-        include('functions_playlist.php');
+    include( 'functions_video.php' );
+    include( 'functions_user.php' );
+    include( 'functions_photo.php' );
+    include('functions_actions.php');
+    include('functions_playlist.php');
 ?>
