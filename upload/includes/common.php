@@ -88,7 +88,7 @@ if(!@$in_bg_cron)
 	require_once('classes/user.class.php');
 	require_once('classes/lang.class.php');
 	require_once('classes/pages.class.php');
-
+	require_once('classes/helper.class.php');
     $cb_columns = new cb_columns();
 
 	$myquery 	= new myquery();
@@ -739,6 +739,6 @@ include('admin.functions.php');
 	define("SEND_COMMENT_NOTIFICATION",config("send_comment_notification"));
 	define("SEND_VID_APPROVE_EMAIL",config("approve_video_notification"));
 	
-
+$hlp = new clip_helper();
 
 ?>
