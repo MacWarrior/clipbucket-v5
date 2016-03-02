@@ -5067,36 +5067,38 @@
     	echo "</pre>";
     }
 
+    
     /**
-	* Function is used to write logs 
-	*/
-	function logData($data,$file=NULL,$path=false,$force=false)
-	{
-		if($force!=false&&!empty($path))
-		{
+	* Creates log files for video conversion
+	* 
+	* @param : { string } { $data } { data to be written in file }
+	* @param : { string } { $file } { name of file to write data for }
+	* @param : { string } { $path } { false by default, path to file }
+	* @param : { boolean } { $force } { false by default, forces file creation }
+    */
+
+	function logData($data,$file=NULL,$path=false,$force=false) {
+		if($force!=false&&!empty($path)) {
 			$file =$path;
 			if(is_array($data)) $data = json_encode($data);
 			if(file_exists($file))
 				$text = file_get_contents($file);
 			$text .= " \n {$data}";
 			file_put_contents($file, $text);
-		}
-		else
-		{
-			if(!empty($file))
-			{
+		} else {
+			if(!empty($file)) {
 				$logFilePath = BASEDIR. "/files/".$file.".txt";
-			}
-			else
-			{
+			} else {
 				$logFilePath = BASEDIR. "/files/ffmpegLog.txt";
 			}
 			if(is_array($data)) $data = json_encode($data);
-			if(file_exists($logFilePath))
+			if(file_exists($logFilePath)) {
 				$text = file_get_contents($logFilePath);
+			}
 			$text .= " \n \n  {$data}";
-			if(DEVELOPMENT_MODE||$force)
+			if(DEVELOPMENT_MODE||$force) {
 				file_put_contents($logFilePath, $text);
+			}
 		}
 	}
 
