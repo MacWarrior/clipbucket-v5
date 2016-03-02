@@ -5150,26 +5150,25 @@
 
 		    return false;
 		}
+
 		/**
-		 * Returns This page name or boolean for the given string
-		 * @param STRING $name
-		 */
-		function parent_page($name="")
-		{
-		    if(defined('PARENT_PAGE'))
-		    {
+		* Returns This page name or boolean for the given string
+		*
+		* @param { string } { $name } { name of page to check against }
+		* @return : { string / boolean } { page name if found, else false }
+		*/
+
+		function parent_page($name="") {
+		    if(defined('PARENT_PAGE')) {
 		        $page = PARENT_PAGE;
-		        if($name)
-		        {
+		        if($name) {
 		            if($page==$name)
 		                return true;
 		            else
 		                return false;
 		        }
-
 		        return $page;
 		    }
-
 		    return false;
 		}
 
