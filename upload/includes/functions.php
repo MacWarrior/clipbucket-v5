@@ -5176,10 +5176,14 @@
 
 		
 	/**
-	 * Sortings
-	 */
-	function sorting_links()
-	{
+	* Function used for building sort links that are used
+	* on main pages such as videos.php, photos.php etc
+	*
+	* @param : { none }
+	* @return : { array } { $array } { an array with all possible sort sorts }
+	*/
+
+	function sorting_links() {
 		if(!isset($_GET['sort']))
 			$_GET['sort'] = 'most_recent';
 		if(!isset($_GET['time']))
@@ -5196,8 +5200,15 @@
 		return $array;
 	}
 
-	function time_links()
-	{
+	/**
+	* Function used for building time links that are used
+	* on main pages such as videos.php, photos.php etc
+	*
+	* @param : { none }
+	* @return : { array } { $array } { an array with all possible time sorts }
+	*/
+
+	function time_links() {
 		$array = array
 		('all_time' 	=> lang('alltime'),
 		 'today'		=> lang('today'),
