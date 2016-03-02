@@ -5307,24 +5307,18 @@
 	* If any of these configs are less than required value, warning is shown
     */
 
-	function check_server_confs() 
-	{
+	function check_server_confs() {
 		define('POST_MAX_SIZE', ini_get('post_max_size'));
 	    define('MEMORY_LIMIT', ini_get('memory_limit'));
 	    define('UPLOAD_MAX_FILESIZE', ini_get('upload_max_filesize'));
 	    define('MAX_EXECUTION_TIME', ini_get('max_execution_time'));
 
-		if ( POST_MAX_SIZE > 50 && MEMORY_LIMIT > 128 && UPLOAD_MAX_FILESIZE > 50 && MAX_EXECUTION_TIME > 7200 ) 
-		{
+		if ( POST_MAX_SIZE >= 50 && MEMORY_LIMIT >= 128 && UPLOAD_MAX_FILESIZE >= 50 && MAX_EXECUTION_TIME >= 7200 ) {
 			define("SERVER_CONFS", true);
-		} 
-		elseif ( POST_MAX_SIZE < 50 || MEMORY_LIMIT < 128 || UPLOAD_MAX_FILESIZE < 50 && MAX_EXECUTION_TIME < 7200 )
-		{
+		} elseif ( POST_MAX_SIZE < 50 || MEMORY_LIMIT < 128 || UPLOAD_MAX_FILESIZE < 50 && MAX_EXECUTION_TIME < 7200 ) {
 			e('You must update <strong>"Server Configurations"</strong>. Click here <a href='.BASEURL.'/admin_area/cb_server_conf_info.php>for details</a>',w);
 			define("SERVER_CONFS", false);
-		}
-		else 
-		{
+		} else {
 			define("SERVER_CONFS", false);
 		}
 	}
