@@ -5213,12 +5213,16 @@
 	}
 
 	/**
-	 * Get Video Collection Items
-	 *
-	 * @return Array
-	 */
-	function get_videos_of_collection($id,$order,$limit,$count_only=false)
-	{
+	* Fetch videos from video collections
+	*
+	* @param : { integer } { $id } { id of collection from which to fetch videos }
+	* @param : { string } { $order } { sorting of videos } 
+	* @param : { integer } { $limit } { number of videos to fetch }
+	* @param : { boolean } { $count_only } { false by default, if true, returns videos count only }
+	* @return { array } { $items } { an array with videos data }
+	*/
+
+	function get_videos_of_collection($id,$order,$limit,$count_only=false) {
 		global $cbvideo;
 		$items = array();
 		$items  = $cbvideo->collection->get_collection_items_with_details($id,$order,$limit,$count_only);
@@ -5226,12 +5230,11 @@
 	}
 
 	/**
-	 * Get language locale
-	 *
-	 * @return String
-	 */
-	function get_locale()
-	{
+	* Calls $lang_obj variable and returns a string
+	* @return String
+	*/
+
+	function get_locale() {
 		global $lang_obj;
 		return $lang_obj->lang_iso;
 	}
@@ -5274,29 +5277,24 @@
 	*
 	* @return {bool/string/int} {true/$return_arr}
 	*/
-	function find_string($needle_start,$needle_end,$results)
-	{
-		if(empty($results)||empty($needle_start)||empty($needle_end))
-		{
+
+	function find_string($needle_start,$needle_end,$results) {
+		if(empty($results)||empty($needle_start)||empty($needle_end)) {
 			return false;
 		}
 		$start = strpos($results, $needle_start);	
 		$end = strpos($results, $needle_end);
-		if(!empty($start)&&!empty($end))
-		{
+		if(!empty($start)&&!empty($end)) {
 			$results = substr($results, $start,$end);
 			//echo $results;
 			$end = strpos($results, $needle_end);
-			if(empty($end))
-			{
+			if(empty($end)) {
 				return false;
 			}
 			$results = substr($results, 0,$end);
 			$return_arr = explode(':', $results);
 			return $return_arr;
-		}
-		else
-		{
+		} else {
 			return false;
 		}
 	}
