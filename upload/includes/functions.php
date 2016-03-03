@@ -4197,11 +4197,13 @@
     }    
 	
 	/**
-	 * Function used to generate
-	 * embed code of embedded video
-	 */
-	function embeded_code($vdetails)
-	{
+	* Generate embed code of provided video
+	*
+	* @param : { array } { $vdetails } { all details of video }
+	* @return : { string } { $code } { embed code for video }
+	*/
+
+	function embeded_code($vdetails) {
 		$code = '';
 		$code .= '<object width="'.EMBED_VDO_WIDTH.'" height="'.EMBED_VDO_HEIGHT.'">';
 		$code .= '<param name="allowFullScreen" value="true">';
