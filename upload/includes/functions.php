@@ -3808,15 +3808,15 @@
 	}
 	
 	/**
-	 * Function used to parse version from info
-	 */
-	function parse_version($path,$result)
-	{
-		switch($path)
-		{
+	* Function used to parse versions from info
+	* @param : { string } { $path } { tool to check }
+	* @param : { string } { $result } { data to parse version from }
+	*/
+
+	function parse_version($path,$result) {
+		switch($path) {
 			case 'ffmpeg':
 			{
-
 				//Gett FFMPEG SVN version
 				dump($result);
 				preg_match("/svn-r([0-9]+)/i",strtolower($result),$matches);
@@ -3829,10 +3829,8 @@
 				if(is_numeric(floatval($matches[1])) && $matches[1]) {
 					return  $matches[1];
 				}
-				
 				//Get FFMPEG GIT version
 				preg_match("/ffmpeg version n\-([0-9]+)/i",strtolower($result),$matches);
-				
 				if(is_numeric(floatval($matches[1])) && $matches[1]) {
 					return 'Git '.$matches[1];
 				}
@@ -3866,41 +3864,34 @@
 		}
 	}
 	
-	
 	/**
-	 * function used to call clipbucket footers
-	 */
-	function footer()
-	{
+	* Calls ClipBucket footer into the battlefield
+	* @return : { null } 
+	*/
+
+	function footer() {
 		$funcs = get_functions('clipbucket_footer');
-		if(is_array($funcs) && count($funcs)>0)
-		{
-			foreach($funcs as $func)
-			{
-				if(function_exists($func))
-				{
+		if(is_array($funcs) && count($funcs)>0) {
+			foreach($funcs as $func) {
+				if(function_exists($func)) {
 					$func();
 				}
 			}
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
-	
+
 	/**
-	 * Function used to generate RSS FEED links
-	 */
-	function rss_feeds($params)
-	{
+	* Function used to generate RSS FEED links
+	* @param : { array } { $params } { array with paramets }
+	*/
+
+	function rss_feeds($params) {
+
 		/**
-		 * setting up the feeds arrays..
-		 * if you want to call em in your functions..simply call the global variable $rss_feeds
-		 */
+		* setting up the feeds arrays..
+		* if you want to call em in your functions..simply call the global variable $rss_feeds
+		*/
+
 		$rss_link = cblink(array("name"=>"rss"));
 		$rss_feeds = array();
 		$rss_feeds[] = array("title"=>"Recently added videos","link"=>$rss_link."recent");
@@ -3909,18 +3900,14 @@
 		$rss_feeds[] = array("title"=>"Videos Being Watched","link"=>$rss_link."watching");
 		
 		$funcs = get_functions('rss_feeds');
-		if(is_array($funcs))
-		{
-			foreach($funcs as $func)
-			{
+		if(is_array($funcs)) {
+			foreach($funcs as $func) {
 				return $func($params);
 			}
 		}
 
-		if($params['link_tag'])
-		{
-			foreach($rss_feeds as $rss_feed)
-			{
+		if($params['link_tag']) {
+			foreach($rss_feeds as $rss_feed) {
 				echo "<link rel=\"alternate\" type=\"application/rss+xml\"
 				title=\"".$rss_feed['title']."\" href=\"".$rss_feed['link']."\" />\n";
 			}
@@ -3928,26 +3915,24 @@
 	}
 	
 	/**
-	 * Function used to insert Log
-	 */
-	function insert_log($type,$details)
-	{
+	* Function used to insert Log
+	* @uses { class : $cblog } { function : insert }
+	*/
+
+	function insert_log($type,$details) {
 		global $cblog;
 		$cblog->insert($type,$details);
 	}
 	
 	/**
-	 * Function used to get db size
-	 */
+	* Function used to get database size
+	* @return : { array } { $dbsize } { array with data size }
+	*/
 
-	function get_db_size()
-	{
+	function get_db_size() {
 		global $db;
 		$results = $db->_select("SHOW TABLE STATUS");
-
-
-		foreach($results as $row)
-		{
+		foreach($results as $row) {
 			$dbsize += $row[ "Data_length" ] + $row[ "Index_length" ];
 		}
 		return $dbsize;
@@ -3955,28 +3940,30 @@
 
 	
 	/**
-	 * Function used to check weather user has marked comment as spam or not
-	 */
-	function marked_spammed($comment)
-	{
+	* Function used to check weather user has marked comment as spam or not
+	* @param : { array } { $comment } { array with all details of comment }
+	* @return : { boolean } { true if marked as spam, else fasle }
+	*/
+
+	function marked_spammed($comment) {
 		$spam_voters = explode("|",$comment['spam_voters']);
 		$spam_votes = $comment['spam_votes'];
 		$admin_vote = in_array('1',$spam_voters);
-		if(userid() && in_array(userid(),$spam_voters)){
+		if(userid() && in_array(userid(),$spam_voters)) {
 			return true;
-		}elseif($admin_vote){
+		} elseif($admin_vote) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
 	
 	
 	/**
-	 * function used to get all time zones
-	 */
-	function get_time_zones()
-	{
+	* function used to get all time zones
+	*/
+
+	function get_time_zones() {
 		$timezoneTable = array(
 			"-12" => "(GMT -12:00) Eniwetok, Kwajalein",
 			"-11" => "(GMT -11:00) Midway Island, Samoa",
@@ -4012,15 +3999,15 @@
 		return $timezoneTable;
 	}
 	
-	
 	/**
-	 * Function used to get object type from its code
-	 * ie v=>video
-	 */
-	function get_obj_type($type)
-	{
-		switch($type)
-		{
+	* Function used to get object type from its code
+	* 
+	* @param : { string } { $type } { shortcode of type ie v=>video }
+	* @return : { string } { complete type name }
+	*/
+
+	function get_obj_type($type) {
+		switch($type) {
 			case "v":
 			{
 				return "video";
@@ -4029,19 +4016,7 @@
 		}
 	}
 	
-	
-	
-	function check_cbvideo()
-	{
-		
-		/**
-		  * come, keep it for two more versions only
-		  * it will be gone in next few updates by default :p
-		  *
-		  * but dont ever forget its name
-		  * its a damn ClipBucket
-		  */
-		  
+	function check_cbvideo() {
 		if((!defined("isCBSecured") 
 		|| count(get_functions('clipbucket_footer'))== 0 )
 		&& !BACK_END) 
@@ -5105,22 +5080,18 @@
 	* @return : { string / boolean } { page name if found, else false }
 	*/
 
-	function this_page($name="")
-	{
-	    if(defined('THIS_PAGE'))
-	    {
+	function this_page($name="") {
+	    if(defined('THIS_PAGE')) {
 	        $page = THIS_PAGE;
-	        if($name)
-	        {
-	            if($page==$name)
-	                return true;
-	            else
+	        if($name) {
+	            if($page==$name) {
+	                return true; 
+	            } else {
 	                return false;
+	            }
 	        }
-
 	        return $page;
 	    }
-
 	    return false;
 	}
 
