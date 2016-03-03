@@ -96,32 +96,7 @@ if(isset($_POST['youtube']))
 	* Converting YouTube Time in seconds
 	*/
 
-	function getStringBetween($str,$from,$to)
-	{
-    $sub = substr($str, strpos($str,$from)+strlen($from),strlen($str));
-    return substr($sub,0,strpos($sub,$to));
-	}
-
-	$str = $time;
-	$str = str_replace("P", "", $str);
-	$from = "T";
-	$to = "H";
-
-	$hours = getStringBetween($str,$from,$to);
-
-	$from = "H";
-	$to = "M";
-
-	$mins = getStringBetween($str,$from,$to);
-
-	$from = "M";
-	$to = "S";
-
-	$secs = getStringBetween($str,$from,$to);
-
-	$hours = $hours * 3600;
-	$mins = $mins * 60;
-	$total = $hours + $mins + $secs;
+	$total = yt_time_convert($time);
 
 	/*	$match_arr = 
 	array
