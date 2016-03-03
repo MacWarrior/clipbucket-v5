@@ -4069,14 +4069,15 @@
 		}
 	}
 
-    function check_install($type)
-    {
+	/**
+	* Check installation of ClipBucket
+	* @param : { string } { $type } { type of check e.g before, after }
+	*/
 
+    function check_install($type) {
     	if(DEVELOPMENT_MODE) return true;
-
 		global $while_installing,$Cbucket;
-		switch($type)
-		{
+		switch($type) {
 			case "before":
 			{
 				if(file_exists('files/temp/install.me') && !file_exists('includes/clipbucket.php'))
@@ -4097,13 +4098,18 @@
 		}       
     }
 
-    function get_server_url()
-    {
+    /**
+	* Function to get server URL
+	* @param : { none }
+	* @return { string } { url of server }
+    */
+
+    function get_server_url() {
         $DirName = dirname($_SERVER['PHP_SELF']);
-        if(preg_match('/admin_area/i', $DirName))
-        {
+        if(preg_match('/admin_area/i', $DirName)) {
             $DirName = str_replace('/admin_area','',$DirName);
         }
+
 		if(preg_match('/cb_install/i', $DirName))
         {
             $DirName = str_replace('/cb_install','',$DirName);
@@ -4111,14 +4117,15 @@
         return get_server_protocol().$_SERVER['HTTP_HOST'].$DirName;
     }
 
-    function get_server_protocol()
-    {
-        if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')
-        {
+    /**
+	* Get current protocol of server that CB is running on
+	* @return { string } { $protocol } { http or https }
+    */
+
+    function get_server_protocol() {
+        if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
             return 'https://';
-        }
-        else
-        {
+        } else {
             $protocol = preg_replace('/^([a-z]+)\/.*$/', '\\1', strtolower($_SERVER['SERVER_PROTOCOL']));
             $protocol .= '://';
             return $protocol;
@@ -4127,26 +4134,23 @@
 	
 	
 	/**
-	 * Returns <kbd>true</kbd> if the string or array of string is encoded in UTF8.
-	 *
-	 * Example of use. If you want to know if a file is saved in UTF8 format :
-	 * <code> $array = file('one file.txt');
-	 * $isUTF8 = isUTF8($array);
-	 * if (!$isUTF8) --> we need to apply utf8_encode() to be in UTF8
-	 * else --> we are in UTF8 :)
-	 * </code>
-	 * @param mixed A string, or an array from a file() function.
-	 * @return boolean
-	 */
-	function isUTF8($string)
-	{
-		if (is_array($string))
-		{
+	* Returns <kbd>true</kbd> if the string or array of string is encoded in UTF8.
+	*
+	* Example of use. If you want to know if a file is saved in UTF8 format :
+	* <code> $array = file('one file.txt');
+	* $isUTF8 = isUTF8($array);
+	* if (!$isUTF8) --> we need to apply utf8_encode() to be in UTF8
+	* else --> we are in UTF8 :)
+	* </code>
+	* @param mixed A string, or an array from a file() function.
+	* @return boolean
+	*/
+
+	function isUTF8($string) {
+		if (is_array($string)) {
 			$enc = implode('', $string);
 			return @!((ord($enc[0]) != 239) && (ord($enc[1]) != 187) && (ord($enc[2]) != 191));
-		}
-		else
-		{
+		} else {
 			return (utf8_encode(utf8_decode($string)) == $string);
 		}   
 	}
