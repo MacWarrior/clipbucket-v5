@@ -4451,6 +4451,7 @@
 		
 		return join('',$return_string);
 	}
+
 	function callback_month($month)
 	{
 		return date('M',mktime(0,0,0,$month,1));
@@ -5380,6 +5381,22 @@
 				return '<img src='.$src.' >';
 			}
 		}
+	}
+
+	/**
+	* Get part of a string between two characters
+	* 
+	* @param : { string } { $str } { string to read }
+	* @param : { string } { $from } { character to start cutting }
+	* @param : { string } { $to } { character to stop cutting }
+	* @return : { string } { requested part of stirng }
+	* @since : 3rd March, 2016 ClipBucket 2.8.1
+	* @author : Saqib Razzaq
+	*/
+
+	function getStringBetween($str,$from,$to) {
+	    $sub = substr($str, strpos($str,$from)+strlen($from),strlen($str));
+	    return substr($sub,0,strpos($sub,$to));
 	}
 	
     include( 'functions_db.php' );
