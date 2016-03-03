@@ -5398,6 +5398,42 @@
 	    $sub = substr($str, strpos($str,$from)+strlen($from),strlen($str));
 	    return substr($sub,0,strpos($sub,$to));
 	}
+
+	/**
+	* Convert default youtube api timestamp in usable CB time
+	*
+	* @param : { string } { $time } { youtube time stamp }
+	* @return : { integer } { $total } { video duration in seconds }
+	* @since : 3rd March, 2016 ClipBucket 2.8.1
+	* @author : Saqib Razzaq
+	*/
+
+	function yt_time_convert($time) {
+		if (!empty($time)) {
+			$str = $time;
+			$str = str_replace("P", "", $str);
+			$from = "T";
+			$to = "H";
+			$hours = getStringBetween($str,$from,$to);
+			$from = "H";
+			$to = "M";
+			$mins = getStringBetween($str,$from,$to);
+			$from = "M";
+			$to = "S";
+			$secs = getStringBetween($str,$from,$to);
+
+			$hours = $hours * 3600;
+			$mins = $mins * 60;
+			$total = $hours + $mins + $secs;
+			if (is_numeric($total)) {
+				return $total;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
 	
     include( 'functions_db.php' );
     include( 'functions_filter.php' );
