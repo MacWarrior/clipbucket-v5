@@ -4151,26 +4151,24 @@
 		}   
 	}
 
-    /*
-        extract the file extension from any given path or url.
-        source: http://www.php.net/manual/en/function.basename.php#89127
+    /**
+    * Extract file extension from any given path or url
+    * 
+    * @param : { string } { $filepath } { path to be filtered for extension }
+    * @return : { string } { $matches } { extension of file filtered from string }
     */
-    function fetch_file_extension($filepath)
-    {
+
+    function fetch_file_extension($filepath) {
         preg_match('/[^?]*/', $filepath, $matches);
         $string = $matches[0];
-
         $pattern = preg_split('/\./', $string, -1, PREG_SPLIT_OFFSET_CAPTURE);
-
         # check if there is any extension
-        if(count($pattern) == 1)
-        {
+        if(count($pattern) == 1) {
             // no file extension found
             return;
         }
 
-        if(count($pattern) > 1)
-        {
+        if(count($pattern) > 1) {
             $filenamepart = $pattern[count($pattern)-1][0];
             preg_match('/[^?]*/', $filenamepart, $matches);
             return $matches[0];
@@ -4181,8 +4179,7 @@
     * Extract the file filename from any given path or url
     * 
     * @param : { string } { $filepath } { path to be filtered for filename }
-    * @return : { string } { name of file filtered from string }
-    * @source : http://www.php.net/manual/en/function.basename.php#89127
+    * @return : { string } { $filename } { name of file filtered from string }
     */
 
     function fetch_filename($filepath) {
