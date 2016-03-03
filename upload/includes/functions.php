@@ -4912,14 +4912,13 @@
 		$cbvid->collection->deleteItemFromCollections($vdetails['videoid']);
 	}
 	
-	
 	/**
-	 * function used to check
-	 * remote link is valid or not
-	 */
+	* Check if a remote file exists or not via curl without downloading it
+	* @param : { string } { $url } { URL of file to check }
+	* @return : { boolean } { true if file exists, else fasle }
+	*/
 	
-	function checkRemoteFile($url)
-	{
+	function checkRemoteFile($url) {
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL,$url);
 		// don't download content
@@ -4928,12 +4927,9 @@
 		curl_setopt($ch, CURLOPT_HEADER, 1);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		$result = curl_exec($ch);
-		if($result!==FALSE)
-		{
+		if($result!==FALSE) {
 			return true;
-		}
-		else
-		{
+		} else {
 			return false;
 		}
 	}
