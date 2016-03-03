@@ -4315,20 +4315,23 @@
 	}
 	
 	/**
-	 * This will update stats like Favorite count, Playlist count
-	 */
-	function updateObjectStats($type='favorite',$object='video',$id,$op='+')
-	{
+	* This will update stats like Favorite count, Playlist count
+	* 
+	* @param : { string } { $type } { favorite by default, type of stats to update }
+	* @param : { string } { $object } { video by default, object to update stats for e.g video, photo }
+	* @param : { integer } { $id } { id of item to update stats for }
+	* @param : { string } { $op } { + by default, increment of decrement }
+	* @action : databse updation
+	*/
+
+	function updateObjectStats($type='favorite',$object='video',$id,$op='+') {
 		global $db;
-		
-		switch($type)
-		{
+		switch($type) {
 			case "favorite":  case "favourite":
 			case "favorites": case "favourties":
 			case "fav":
 			{
-				switch($object)
-				{
+				switch($object) {
 					case "video": 
 					case "videos": case "v":
 					{
@@ -4342,13 +4345,6 @@
 						$db->update(tbl('photos'),array('total_favorites'),array("|f|total_favorites".$op."1")," photo_id = '".$id."'");
 					}
 					break;
-					
-					/*case "collection":
-					case "collections": case "cl":
-					{
-						$db->update(tbl('photos'),array('total_favorites'),array("|f|total_favorites".$op."1")," photo_id = '".$id."'");
-					}
-					break;*/
 				}
 			}
 			break;
@@ -4356,8 +4352,7 @@
 			case "playlist": case "playList":
 			case "plist":
 			{
-				switch($object)
-				{
+				switch($object) {
 					case "video":
 					case "videos": case "v":
 					{
@@ -4370,12 +4365,12 @@
 	
 	
 	/**
-	 * FUnction used to check weather conversion lock exists or not
+	 * Function used to check weather conversion lock exists or not
 	 * if converson log exists it means no further conersion commands will be executed
 	 *
 	 * @return { boolean } { true if conversion lock exists, else false }
 	 */
-	
+
 	function conv_lock_exists() {
 		if(file_exists(TEMP_DIR.'/conv_lock.loc')) {
 			return true;
