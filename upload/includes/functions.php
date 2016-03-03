@@ -4989,39 +4989,29 @@
 	}
 	
 	/**
-	 * function used to register a module file, that will be later called
-	 * by load_modules() function
-	 */
-	function register_module($mod_name,$file)
-	{
+	* Function for registering module file 
+	* @param : { string } { $mod_name } { name of module }
+	* @param : { string } { $file } { file to be loaded for module }
+	* @action : Adds module details into an existing array
+	*/
+
+	function register_module($mod_name,$file) {
 		global $Cbucket;
 		$Cbucket->modules_list[$mod_name][] = $file;
-
-		
-		
 	}
 	
 	/**
-	 * function used to load module files
-	 */
-	function load_modules()
-	{
+	* Loads all module files (mostly used with plugins)
+	* @param : { none } { all things handled inside function }
+	*/
 
-
+	function load_modules()	{
 		global $Cbucket,$lang_obj,$signup,$Upload,$cbgroup,
 		$adsObj,$formObj,$cbplugin,$eh,$sess,$cblog,$imgObj,
 		$cbvideo,$cbplayer,$cbemail,$cbpm,$cbpage,$cbindex,
 		$cbcollection,$cbphoto,$cbfeeds,$userquery,$db,$pages,$cbvid;
-
-
-		
-		
-		foreach($Cbucket->modules_list as $cbmod)
-		{
-
-			foreach($cbmod as $modfile)
-			{
-				
+		foreach($Cbucket->modules_list as $cbmod) {
+			foreach($cbmod as $modfile) {
 				if(file_exists($modfile))
 					include($modfile);
 			}
@@ -5030,20 +5020,18 @@
         
         
     /**
-     * function used to verify user age
-     */
-    function verify_age($dob)
-    {
+    * function used to verify user age
+    * @param : { string } { $dob } { date of birth of user }\
+    * @return : { boolean } { true / flase depending on situation }
+    */
+
+    function verify_age($dob) {
         $allowed_age = config('min_age_reg');
         if($allowed_age < 1) return true;
-        
         $age_time = strtotime($dob);
         $diff = time() - $age_time;
-        
         $diff = $diff / 60 / 60 / 24 / 364;
-        
         if($diff >= $allowed_age ) return true;
-        
         return false;
     }
 
@@ -5053,15 +5041,21 @@
      *
      * @return Boolean
      */
-    function in_dev()
-    {
-        if(defined('DEVELOPMENT_MODE'))
+
+    function in_dev() {
+        if(defined('DEVELOPMENT_MODE')) {
             return DEVELOPMENT_MODE;
-        else
+        } else {
             return false;
+        }
     }
 
-    function dump($data){
+    /**
+	* Dumps data in pretty format [ latest CB prefers pr() instead ]
+	* @param : { array } { $data } { data to be dumped }
+    */
+
+    function dump($data) {
     	echo "<pre>";
     	var_dump($data);
     	echo "</pre>";
