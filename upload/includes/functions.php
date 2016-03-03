@@ -4373,45 +4373,45 @@
 	 * FUnction used to check weather conversion lock exists or not
 	 * if converson log exists it means no further conersion commands will be executed
 	 *
-	 * @return BOOLEAN
+	 * @return { boolean } { true if conversion lock exists, else false }
 	 */
-	function conv_lock_exists()
-	{
-		if(file_exists(TEMP_DIR.'/conv_lock.loc'))
+	
+	function conv_lock_exists() {
+		if(file_exists(TEMP_DIR.'/conv_lock.loc')) {
 			return true;
-		else
+		} else {
 			return false;
+		}
 	}
 	
 	/**
-	 * Function used to return a well-formed queryString
-	 * for passing variables to url
-	 * @input variable_name
-	 */
-	function queryString($var=false,$remove=false)
-	{
+	* Function used to return a well-formed queryString
+	* for passing variables to url
+	* @input variable_name
+	*/
+
+	function queryString($var=false,$remove=false) {
 		$queryString = $_SERVER['QUERY_STRING'];
-		
-		if($var)
-		$queryString = preg_replace("/&?$var=([\w+\s\b\.?\S]+|)/","",$queryString);
-		
-		if($remove)
-		{
-			if(!is_array($remove))
-			$queryString = preg_replace("/&?$remove=([\w+\s\b\.?\S]+|)/","",$queryString);
-			else
-			foreach($remove as $rm)
-				$queryString = preg_replace("/&?$rm=([\w+\s\b\.?\S]+|)/","",$queryString);
-			
+		if($var) {
+			$queryString = preg_replace("/&?$var=([\w+\s\b\.?\S]+|)/","",$queryString);
 		}
 		
-		if($queryString)
+		if($remove) {
+			if(!is_array($remove)) {
+				$queryString = preg_replace("/&?$remove=([\w+\s\b\.?\S]+|)/","",$queryString);
+			} else {
+				foreach($remove as $rm) {
+					$queryString = preg_replace("/&?$rm=([\w+\s\b\.?\S]+|)/","",$queryString);
+				}
+			}
+		}
+		
+		if($queryString) {
 			$preUrl = "?$queryString&";
-		else
+		} else {
 			$preUrl = "?";
-		
+		}
 		$preUrl = preg_replace(array("/(\&{2,10})/","/\?\&/"),array("&","?"),$preUrl);
-		
 		return $preUrl.$var;
 	}
 	
@@ -4422,33 +4422,26 @@
 	 * These function are written by Martin Angelov.
 	 * Read post here: http://tutorialzine.com/2009/08/creating-a-facebook-like-registration-form-with-jquery/
 	 */
-	function generate_options($params)
-	{
+
+	function generate_options($params) {
 		$reverse=false;
-		
-		if($params['from']>$params['to'])
-		{
+		if($params['from']>$params['to']) {
 			$tmp=$params['from'];
 			$params['from']=$params['to'];
 			$params['to']=$tmp;
-			
 			$reverse=true;
 		}
 		
-		
 		$return_string=array();
-		for($i=$params['from'];$i<=$params['to'];$i++)
-		{
+		for($i=$params['from'];$i<=$params['to'];$i++) {
 			//$return_string[$i] = ($callback?$callback($i):$i);
 			$return_string[] = '<option value="'.$i.'">'.($params['callback']?$params['callback']($i):$i).'</option>';
 		}
 		
-		if($reverse)
-		{
+		if($reverse) {
 			$return_string=array_reverse($return_string);
 		}
-		
-		
+
 		return join('',$return_string);
 	}
 
