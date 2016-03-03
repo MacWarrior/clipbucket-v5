@@ -4593,17 +4593,16 @@
     }
 	
 	/**
-	 * function used to update last commented option 
-	 * so comment cache can be refreshed
-	 */
-	function update_last_commented($type,$id)
-	{
+	* Updates last commented data - helps cache refresh
+	* @param : { string } { $type } { type of comment e.g video, channel }
+	* @param : { integer } { $id } { id of element to update }
+	* @action : databse updation
+	*/
+
+	function update_last_commented($type,$id) {
 		global $db;
-		
-		if($type && $id)
-		{
-			switch($type)
-			{
+		if($type && $id) {
+			switch($type) {
 				case "v":
 				case "video":
 				case "vdo":
@@ -4641,8 +4640,7 @@
 				case "topic":
 				case "topics":
 				$db->update(tbl("group_topics"),array('last_post_time'),array(now()),"topic_id='$id'");
-				break;
-				
+				break;	
 			}
 		}
 	}
@@ -4653,50 +4651,48 @@
 	 * 0 - Public
 	 * 1 - Protected
 	 * 2 - Private
+	 * @note : groups have been deprecated and will be removed soon
 	 */
-	 function getGroupPrivacy($privacyID)
-	 {
+
+	 function getGroupPrivacy($privacyID) {
+		switch($privacyID) {
+			case "0": default:
 			{
-				switch($privacyID)
-				{
-					case "0": default:
-					{
-						return lang("group_is_public");
-					}
-					break;
-					
-					case "1":
-					{
-						return lang("group_is_protected");
-					}
-					break;
-					
-					case "2":
-					{
-						return lang("group_is_private");
-					}
-					break;
-				}
+				return lang("group_is_public");
 			}
+			break;
+			
+			case "1":
+			{
+				return lang("group_is_protected");
+			}
+			break;
+			
+			case "2":
+			{
+				return lang("group_is_private");
+			}
+			break;
+		}
 	 }	
 	
 	/**
-	 * Function used to create user feed
-	 * this function simple takes ID as input
-	 * and do the rest seemlessli ;)
-	 */
-	function addFeed($array)
-	{
+	* Inserts new feed against given user
+	*
+	* @param : { array } { $array } { array with all details of feed e.g userid, action etc }
+	* @action : inserts feed into database 
+	*/
+
+	function addFeed($array) {
 		global $cbfeeds,$cbphoto,$userquery;
-		
 		$action = $array['action'];
-		if($array['uid'])
+		if($array['uid']) {
 			$userid = $array['uid'];
-		else
+		} else {
 			$userid = userid();
+		}
 			
-		switch($action)
-		{
+		switch($action) {
 			case "upload_photo":
 			{
 
@@ -4765,7 +4761,6 @@
 				
 				$cbfeeds->addFeed($feed);
 			}
-			
 		}
 	}
 	
@@ -4782,7 +4777,6 @@
 		return basename(dirname($pluginFile));
 	}
 
-	
 	/**
 	* Fetch browser details for current user
 	* 
