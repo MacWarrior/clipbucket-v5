@@ -4560,18 +4560,21 @@
 		
 	}
 
+	/**
+	* Get depth of an array ( nested elements )
+	*
+	* @param : { array } { $array } { array to find depth for }
+	* @return : { integer } { $ini_depth } { depth of array }
+	*/
 
 	function array_depth($array) {
 		$ini_depth = 0;
-		
-		foreach($array as $arr)
-		{
-			if(is_array($arr))
-			{
+		foreach($array as $arr) {
+			if(is_array($arr)) {
 				$depth = array_depth($arr) + 1;	
-				
-				if($depth > $ini_depth)
+				if($depth > $ini_depth) {
 					$ini_depth = $depth;
+				}
 			}
 		}
 		
