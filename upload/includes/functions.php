@@ -3726,10 +3726,14 @@
 			
 	}
 	
-	
+	/**
+	* Check if PHP_CLI is installed by exracting its version
+	*
+	* @param : { string } { $path } { path to PHP_CLI }
+	* @return : { string } { version if found, else false }
+	*/
 
-	function check_php_cli($path)
-	{	
+	function check_php_cli($path) {	
 		$path = get_binaries($path);
 		$matches = array();
 		$result = shell_output($path." --version");
@@ -3746,26 +3750,42 @@
 			
 	}
 
-	function check_media_info($path)
-	{	
+	/**
+	* Check if MediaInfo is installed by exracting its version
+	*
+	* @param : { string } { $path } { path to MediaInfo }
+	* @return : { string } { version if found, else false }
+	*/
+
+	function check_media_info($path) {	
 		$path = get_binaries($path);
-		//$matches = array();
 		$result = shell_output($path." --version");
 		$media_info_version  = explode('v', $result);
 		return $media_info_version[1];
 	}
 
-	function check_imagick($path)
-	{	
+	/**
+	* Check if ImageMagick is installed by exracting its version
+	*
+	* @param : { string } { $path } { path to ImageMagick }
+	* @return : { string } { version if found, else false }
+	*/
+
+	function check_imagick($path) {	
 		$path = get_binaries($path);
 		$result = shell_output($path." --version");
 		$result = explode(" ", $result);
-		//pr($result,true);
 		return $result[2];
 	}
 
-	function check_ffprobe_path($path)
-	{	
+	/**
+	* Check if FFPROBE is installed by exracting its version
+	*
+	* @param : { string } { $path } { path to FFPROBE }
+	* @return : { string } { version if found, else false }
+	*/
+
+	function check_ffprobe_path($path) {	
 		$path = get_binaries($path);
 		$result = shell_output($path." -version");
 		$result = explode(" ", $result);
@@ -3773,38 +3793,35 @@
 		return $result;
 	}
 	
+	/**
+	* Check if MP4Box is installed by exracting its version
+	*
+	* @param : { string } { $path } { path to MP4Box }
+	* @return : { string / false } { version if found, else false }
+	*/
 
-	function check_mp4box($path)
-	{	
+	function check_mp4box($path) {	
 		$path = get_binaries($path);
 		$matches = array();
 		$result = shell_output($path." -version");
-		if($result) 
-		{
+		if($result) {
 			preg_match("/(?:version\\s)(\\d\\.\\d\\.(?:\\d|[\\w]+))/i", strtolower($result), $matches);
-			if(count($matches) > 0)
-			{
+			if(count($matches) > 0) {
 				$version = array_pop($matches);
 				return $version;
 			}
 			return false;
-		}
-		elseif (preg_match("/GPAC version/i", $result))
-			{
+		} elseif (preg_match("/GPAC version/i", $result)) {
 				preg_match('@^(?:GPAC version)?([^-]+)@i',$result, $matches);
 				$host = $matches[1];
-
 				// get last two segments of host name
 				preg_match('/[^.]+\.[^.]+$/', $host, $matches);
 				//echo "{$matches[0]}\n";
 				$version = "{$matches[0]}";
 				return $version;
-			}
-		else
-		{
+			} else {
 			return false;
-		}
-			
+		}	
 	}
 	
 	/**
