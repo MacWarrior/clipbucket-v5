@@ -4904,10 +4904,12 @@
 	}
 	
 	/**
-	  * function used to delete vidoe from collections
-	  */
-	function delete_video_from_collection($vdetails)
-	{
+	* Deletes a video from a video collection
+	* @param : { array } { $vdetails } { video details of video to be deleted }
+	* @action : { calls function from video class }
+	*/
+
+	function delete_video_from_collection($vdetails) {
 		global  $cbvid;
 		$cbvid->collection->deleteItemFromCollections($vdetails['videoid']);
 	}
