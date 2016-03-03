@@ -4770,10 +4770,13 @@
 	}
 	
 	/**
-	 * function used to get plugin directory name
-	 */
-	function this_plugin($pluginFile=NULL)
-	{
+	* Fetch directory of a plugin to make it dynamic
+	*
+	* @param : { string } { $pluginFile } { false by default, main file of plugin }
+	* @return :	{ string } { basename($pluginFile) } { directory path of plugin }
+	*/
+
+	function this_plugin($pluginFile=NULL) {
 		if(!$pluginFile)
 			global $pluginFile;
 		return basename(dirname($pluginFile));
