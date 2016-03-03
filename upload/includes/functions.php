@@ -4051,12 +4051,14 @@
 	}
 	
 	/**
-	 * Gives coversion process output
-	 */
-	function conv_status($in)
-	{
-		switch($in)
-		{
+	* Determines conversio status using provided string
+	*
+	* @param : {  string } { $in } { string with conversion value }
+	* @return : { string } { determined conversion status }
+	*/
+
+	function conv_status($in) {
+		switch($in) {
 			case "p":
 			return "Processing";
 			break;
