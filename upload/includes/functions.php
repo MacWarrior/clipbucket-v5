@@ -4458,22 +4458,21 @@
 	
 	
 	/**
-	 * Function use to download file to server
-	 * 
-	 * @param URL
-	 * @param destination
-	 */
-	function snatch_it($snatching_file,$destination,$dest_name,$rawdecode=true)
-	{
+	* Download a remote file and store in given directory
+	* 
+	* @param : { string } { $snatching_file } { file to be downloaded }
+	* @param : { string } { $destination } { where to save the downloaded file }
+	* @param : { string } { $dest_name } { new name for file }
+	*/
+
+	function snatch_it($snatching_file,$destination,$dest_name,$rawdecode=true) {
 		global $curl;
 		if($rawdecode==true)
 		$snatching_file= rawurldecode($snatching_file);
-		if(PHP_OS == "Linux")
-		{
+		if(PHP_OS == "Linux") {
 			$destination.'/'.$dest_name;
 			$fp = fopen ($destination.'/'.$dest_name, 'w+');
-		}
-		elseif (PHP_OS == "WINNT") {
+		} elseif (PHP_OS == "WINNT") {
 			$destination.'\\'.$dest_name;
 			$fp = fopen ($destination.'\\'.$dest_name, 'w+');
 		}
@@ -4485,28 +4484,30 @@
 		curl_exec($ch);
 		curl_close($ch);
 		fclose($fp);
-	}
-	
+	}	
 	
 	/**
-	 * Function check curl
-	 */
+	* Checks if CURL is installed on server
+	*
+	* @param : { none }
+	* @return : { boolean } { true if curl found, else false }
+	*/
+
 	function isCurlInstalled()
 	{
-		if  (in_array  ('curl', get_loaded_extensions())) {
+		if  (in_array('curl',get_loaded_extensions())) {
 			return true;
-		}
-		else{
+		} else {
 			return false;
 		}
 	}
 	
 	/**
-	 * Function for loading 
-	 * uploader file url & other configurations
-	 */
-	function uploaderDetails()
-	{
+	* Load configruation related files for uploader (video, photo)
+	* @return : { null }
+	*/
+
+	function uploaderDetails() {
 		global $uploaderType;
 
 		$uploaderDetails = array
@@ -4521,7 +4522,6 @@
 			'uploadScriptPath' => BASEURL.'/actions/photo_uploader.php',
 		);
 
-
 		assign('uploaderDetails',$uploaderDetails);	
 		assign('photoUploaderDetails',$photoUploaderDetails);		
 		//Calling Custom Functions
@@ -4530,28 +4530,26 @@
 	
 	
 	/**
-	 * Function isSectionEnabled
-	 * This function used to check weather INPUT section is enabled or not
-	 */
-	function isSectionEnabled($input,$restrict=false)
-	{
+	* Checks if given section is enabled or not e.g videos, photos
+	*
+	* @param : { string } { $input } { section to check }
+	* @param : { boolean } { $restrict } { false by default, returns true on cb_install }
+	* @return : { boolean } { true of false depending on situation }
+	*/
+
+	function isSectionEnabled($input,$restrict=false) {
 		global $Cbucket;
-		
 		$section = $Cbucket->configs[$input.'Section'];
-		
-		if(!$restrict)
-		{
-			if($section =='yes')
+		if(!$restrict) {
+			if($section =='yes') {
 				return true;
-			else
+			} else {
 				return false;
-		}else
-		{
-			if($section =='yes' || THIS_PAGE=='cb_install')
-			{
+			}
+		} else {
+			if($section =='yes' || THIS_PAGE=='cb_install') {
 				return true;
-			}else
-			{
+			} else {
 				template_files('blocked.html');
 				display_it();
 				exit();
