@@ -3546,68 +3546,65 @@
 
 	
 	/**
-	 * Function used to check weather to include
-	 * given file or not
-	 * it will take array of pages
-	 * if array has ACTIVE PAGE or has GLOBAL value
-	 * it will return true
-	 * otherwise FALSE
-	 */
-	function is_includeable($array)
-	{
-		if(!is_array($array))
+	* Function used to check weather to include given file or not
+	* it will take array of pages if array has ACTIVE PAGE or has GLOBAL value
+	* it will return true otherwise FALSE
+	* 
+	* @param : { array } { $array } { array with files to include }
+	* @return : { boolean } { true or false depending on situation }
+	*/
+
+	function is_includeable($array) {
+		if(!is_array($array)) {
 			$array = array($array);
-		if(in_array(THIS_PAGE,$array) || in_array('global',$array))
-		{
+		}
+		if(in_array(THIS_PAGE,$array) || in_array('global',$array)) {
 			return true;
-		}else
+		} else {
 			return false;
+		}
 	}
 	
 	/**
-	 * This function works the same way as include_header
-	 * but the only difference is , it is used to include
-	 * JS files only
-	 */
+	* This function works the same way as include_header
+	* but the only difference is , it is used to include
+	* JS files only
+	* @param : { arary } { $params } { array with parameters e.g  file, type}
+	*/
+
 	$the_js_files = array();
-	function include_js($params)
-	{
+	function include_js($params) {
 		global $the_js_files;
-		
 		$file = $params['file'];
 		$type = $params['type'];
-		
-		if(!in_array($file,$the_js_files))
-		{
+		if(!in_array($file,$the_js_files)) {
 			$the_js_files[] = $file;
-			if($type=='global')
+			if($type == 'global') {
 				return '<script src="'.JS_URL.'/'.$file.'" type="text/javascript"></script>';
-			elseif(is_array($type))
-			{
-				foreach($type as $t)
-				{
-					if($t==THIS_PAGE)
+			} elseif(is_array($type)) {
+				foreach($type as $t) {
+					if($t == THIS_PAGE)
 						return '<script src="'.JS_URL.'/'.$file.'" type="text/javascript"></script>';
 				}
-			}elseif($type==THIS_PAGE)
+			} elseif($type == THIS_PAGE) {
 				return '<script src="'.JS_URL.'/'.$file.'" type="text/javascript"></script>';
+			}
 		}
-		
 		return false;
 	}
 		
 	
+	
 	/**
-	 * Function used to check weather FFMPEG has Required Modules installed or not
-	 */
-	function get_ffmpeg_codecs($data=false)
-	{
-		if (PHP_OS == "Linux")
-		{
+	* Checks if FFMPEG has all required modules installed on server
+	* @param : { string } { $data } { false by default, version of ffmpeg }
+	* @return : { array } { $codecs } { an array with all required modules }
+	*/
+
+	function get_ffmpeg_codecs($data=false) {
+		if (PHP_OS == "Linux") {
 			$a = 'libfaac';
-		}
-		elseif (PHP_OS == "WINNT")
-		{
+		} elseif (PHP_OS == "WINNT") {
 			$a = 'libvo_aacenc';
 		}
 		$req_codecs = array
@@ -3620,107 +3617,105 @@
 		 'libvorbis' => 'Ogg Vorbis is a new audio compression format',
 		 );
 		 
-		if($data)
+		if($data) {
 			$version = $data;
-		else
+		} else {
 			$version = shell_output(  get_binaries('ffmpeg').' -i xxx -acodec copy -vcodec copy -f null /dev/null 2>&1' );
+		}
 		preg_match_all("/enable\-(.*) /Ui",$version,$matches);
 		$installed = $matches[1];
 		
 		$the_codecs = array();
 		
-		foreach($installed as $inst)
-		{
+		foreach($installed as $inst) {
 			if(empty($req_codecs[$inst]))
 				$the_codecs[$inst]['installed'] = 'yes';
 		}
 		
-		foreach($req_codecs as $key=>$codec)
-		{
+		foreach($req_codecs as $key=>$codec) {
 			$the_req_codecs[$key] = array();
 			$the_req_codecs[$key]['required'] = 'yes';
 			$the_req_codecs[$key]['desc'] = $req_codecs[$key];
-			if(in_array($key,$installed))
+			if(in_array($key,$installed)) {
 				$the_req_codecs[$key]['installed'] = 'yes';
-			else
+			} else {
 				$the_req_codecs[$key]['installed'] = 'no';
+			}
 		}
-		
 		$the_codecs =  array_merge($the_req_codecs,$the_codecs);
 		return $the_codecs;
 	}
 	
-	
 	/**
-	 * Function used to cheack weather MODULE is INSTALLED or NOT
-	 */
-	function check_module_path($params)
-	{
+	* Check if a module is installed on server or not using path
+	* @param : { array } { $params } { array with paramters including path }
+	* @return : { string / boolean } { path if found, else fasle }
+	*/
+	
+	function check_module_path($params) {
 		$rPath = $path = $params['path'];
 		if($path['get_path'])
 			$path = get_binaries($path);
 		$array = array();
 		$result = shell_output($path." -version");
-		if($result) {
-			if(strstr($result,'error') || strstr(($result),'No such file or directory')){
+		if ($result) {
+			if(strstr($result,'error') || strstr(($result),'No such file or directory')) {
 				$error['error'] = $result;
-				if($params['assign'])
+				if($params['assign']) {
 					assign($params['assign'],$error);
-				
+				}
 				return false;
-			}
-					
+			}		
 			if($params['assign']) {
 				$array['status'] = 'ok';
 				$array['version'] = parse_version($params['path'],$result);
 				assign($params['assign'],$array);
 				return $array;
-			}else {
+			} else {
 				return $result;
 			}
-		}else {
-			if($params['assign'])
+		} else {
+			if($params['assign']) {
 				assign($params['assign']['error'],"error");
-			else
+			} else {
 				return false;
+			}
 		}
 			
 	}
-	function check_ffmpeg($path)
-	{	
+
+	/**
+	* Check if FFMPEG is installed by exracting its version
+	*
+	* @param : { string } { $path } { path to FFMPEG }
+	* @return : { string } { version if found, else false }
+	*/
+
+	function check_ffmpeg($path) {	
 		$path = get_binaries($path);
 		$matches = array();
 		$result = shell_output($path." -version");
-		//echo $result;
 		if($result) {
-			if (preg_match("/git/i", $result))
-			{
+			if (preg_match("/git/i", $result)) {
 				preg_match('@^(?:ffmpeg version)?([^C]+)@i',$result, $matches);
 				$host = $matches[1];
 				return $host;
-			}
-			elseif (preg_match("/ffmpeg version/i", $result))
-			{
+			} elseif (preg_match("/ffmpeg version/i", $result)) {
 				preg_match('@^(?:ffmpeg version)?([^,]+)@i',$result, $matches);
 				$host = $matches[1];
-
 				// get last two segments of host name
 				preg_match('/[^.]+\.[^.]+$/', $host, $matches);
-				//echo "{$matches[0]}\n";
 				$version = "{$matches[0]}";
 				return $version;
-			}
-			else
+			} else {
 				preg_match("/(?:ffmpeg\\s)(?:version\\s)?(\\d\\.\\d\\.(?:\\d|[\\w]+))/i", strtolower($result), $matches);
-				if(count($matches) > 0)
-				{
+				if(count($matches) > 0) {
 					$version = array_pop($matches);
 					return $version;
 				}
+			}
 			return false;
-		}
-		else
-		{
+		} else {
 			return false;
 		}
 			
@@ -3739,15 +3734,14 @@
 		$result = shell_output($path." --version");
 		if($result) {
 			preg_match("/(?:php\\s)(?:version\\s)?(\\d\\.\\d\\.(?:\\d|[\\w]+))/i", strtolower($result), $matches);
-			if(count($matches) > 0){
+			if(count($matches) > 0) {
 				$version = array_pop($matches);
 				return $version;
 			}
 			return false;
-		}else{
+		} else {
 			return false;
-		}
-			
+		}	
 	}
 
 	/**
