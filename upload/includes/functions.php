@@ -4968,21 +4968,24 @@
 	}
 	
 	/**
-	 * function used to insert or update counter
-	 */
-	function update_counter($section,$query,$counter)
-	{
+	* Updates total count for videos, photos and channels
+	* 
+	* @param : { string } { $section } { section to update counter for } 
+	* @param : { string } { $query } { query to run for updating }
+	* @param : { integer } { $counter } { count to update }
+	* @return : { null }
+	*/
+
+	function update_counter($section,$query,$counter) {
 		global $db;
 		unset($query['order']);
 		$je_query = json_encode($query);
 		$query_md5 = md5($je_query);
 		$count = $db->count(tbl('counters'),"*","section='$section' AND query_md5='$query_md5'");
-		if($count)
-		{
+		if($count) {
 			$db->update(tbl('counters'),array('counts','date_added'),array($counter,strtotime(now())),
 			"section='$section' AND query_md5='$query_md5'");
-		}else
-		{
+		} else {
 			$db->insert(tbl('counters'),array('section','query','query_md5','counts','date_added'),
 			array($section,'|no_mc|'.$je_query,$query_md5,$counter,strtotime(now())));
 		}
@@ -4990,6 +4993,7 @@
 	
 	/**
 	* Function for registering module file 
+	*
 	* @param : { string } { $mod_name } { name of module }
 	* @param : { string } { $file } { file to be loaded for module }
 	* @action : Adds module details into an existing array
