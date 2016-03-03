@@ -4940,31 +4940,32 @@
 	
 	
 	/**
-	 * function used to get counts from
-	 * cb_counter table
-	 */
-	function get_counter($section,$query)
-	{
-		if(!config('use_cached_pagin'))
-			return false;
-			
+	* Fetch total count for videos, photos and channels
+	* 
+	* @param : { string } { $section } { section to select count for } 
+	* @param : { string } { $query } { query to fetch data against }
+	* @return : { integer } { $select[0]['counts'] } { count for requested field }
+	*/
+
+	function get_counter($section,$query) {
 		global $db;
-		
+
+		if(!config('use_cached_pagin')) {
+			return false;	
+		}
 		$timeRefresh = config('cached_pagin_time');
 		$timeRefresh = $timeRefresh*60;
-		
 		$validTime = time()-$timeRefresh;
-		
 		unset($query['order']);
 		$je_query = json_encode($query);
 		$query_md5 = md5($je_query);
 		$select = $db->select(tbl('counters'),"*","section='$section' AND query_md5='$query_md5' 
 		AND '$validTime' < date_added");
-		if($db->num_rows>0)
-		{
+		if($db->num_rows>0) {
 			return $select[0]['counts'];
-		}else
-		return false;
+		} else {
+			return false;	
+		}
 	}
 	
 	/**
