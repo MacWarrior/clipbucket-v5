@@ -4177,12 +4177,15 @@
         }
     }
 
-    /*
-        extract the file filename from any given path or url.
-        source: http://www.php.net/manual/en/function.basename.php#89127
+    /**
+    * Extract the file filename from any given path or url
+    * 
+    * @param : { string } { $filepath } { path to be filtered for filename }
+    * @return : { string } { name of file filtered from string }
+    * @source : http://www.php.net/manual/en/function.basename.php#89127
     */
-    function fetch_filename($filepath)
-    {
+
+    function fetch_filename($filepath) {
         preg_match('/[^?]*/', $filepath, $matches);
         $string = $matches[0];
         #split the string by the literal dot in the filename
@@ -4191,7 +4194,6 @@
         $lastdot = $pattern[count($pattern)-1][1];
         #now extract the filename using the basename function
         $filename = basename(substr($string, 0, $lastdot-1));
-
         #return the filename part
         return $filename;
     }    
