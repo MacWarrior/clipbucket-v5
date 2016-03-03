@@ -4217,83 +4217,90 @@
 	
 	
 	/**
-	 * function used to convert input to proper date created formate
-	 */
-	function datecreated($in)
-	{
-		
+	* function used to convert input to proper date created formate
+	* 
+	* @param : { string } { date in string }
+	* @return : { string } { proper date format }
+	*/
+
+	function datecreated($in) {
 		$date_els = explode('-',$in);
-		
 		//checking date format
 		$df = config("date_format");
 		$df_els  = explode('-',$df);
-		
-		foreach($df_els as $key => $el)
+		foreach($df_els as $key => $el) {
 			${strtolower($el).'id'} = $key;
-		
+		}
 		$month = $date_els[$mid];
 		$day = $date_els[$did];
 		$year = $date_els[$yid];
-
-		if($in)
+		if($in) {
 			return date("Y-m-d",strtotime($year.'-'.$month.'-'.$day));
-		else
+		} else {
 			return '0000-00-00';
+		}
 	}
 	
-	
 	/**
-	 * After struggling alot with baseurl problem
-	 * i finally able to found its nice and working solkution..
-	 * its not my original but its a genuine working copy
-	 * its still in beta mode 
-	 */
-	function baseurl()
-	{
-		$protocol = is_ssl() ? 'https://' : 'http://';
-		if(!$sub_dir)
-		return $base = $protocol.$_SERVER['HTTP_HOST'].untrailingslashit(stripslashes(dirname(($_SERVER['SCRIPT_NAME']))));
-		else
-		return $base = $protocol.$_SERVER['HTTP_HOST'].untrailingslashit(stripslashes(dirname(dirname($_SERVER['SCRIPT_NAME']))));
+	* Get baseurl of working ClipBucket
+	* 
+	* @param : { none } 
+	* @return : { string } { url of website }
+	*/
 
-	}function base_url(){ return baseurl();}
+	function baseurl() {
+		$protocol = is_ssl() ? 'https://' : 'http://';
+		if(!$sub_dir) {
+			return $base = $protocol.$_SERVER['HTTP_HOST'].untrailingslashit(stripslashes(dirname(($_SERVER['SCRIPT_NAME']))));
+		} else {
+			return $base = $protocol.$_SERVER['HTTP_HOST'].untrailingslashit(stripslashes(dirname(dirname($_SERVER['SCRIPT_NAME']))));
+		}
+	}
+
+	/**
+	* Get baseurl of website
+	* @uses : baseurl()
+	*/
+
+	function base_url(){ return baseurl();}
 	
 	/**
-	 * SRC (WORD PRESS)
-	 * Appends a trailing slash.
-	 *
-	 * Will remove trailing slash if it exists already before adding a trailing
-	 * slash. This prevents double slashing a string or path.
-	 *
-	 * The primary use of this is for paths and thus should be used for paths. It is
-	 * not restricted to paths and offers no specific path support.
-	 *
-	 * @since 1.2.0
-	 * @uses untrailingslashit() Unslashes string if it was slashed already.
-	 *
-	 * @param string $string What to add the trailing slash to.
-	 * @return string String with trailing slash added.
-	 */
+	* SRC (WordPress)
+	* Appends a trailing slash.
+	*
+	* Will remove trailing slash if it exists already before adding a trailing
+	* slash. This prevents double slashing a string or path.
+	*
+	* The primary use of this is for paths and thus should be used for paths. It is
+	* not restricted to paths and offers no specific path support.
+	*
+	* @since 1.2.0
+	* @uses untrailingslashit() Unslashes string if it was slashed already.
+	*
+	* @param { string } { $string } { What to add the trailing slash to }
+	* @return { string } { $string } { String with trailing slash added}
+	*/
+
 	function trailingslashit($string) {
 		return untrailingslashit($string) . '/';
 	}
 
 	/**
-	 * SRC (WORD PRESS)
-	 * Removes trailing slash if it exists.
-	 *
-	 * The primary use of this is for paths and thus should be used for paths. It is
-	 * not restricted to paths and offers no specific path support.
-	 *
-	 * @since 2.2.0
-	 *
-	 * @param string $string What to remove the trailing slash from.
-	 * @return string String without the trailing slash.
-	 */
+	* SRC (WordPress)
+	* Removes trailing slash if it exists.
+	*
+	* The primary use of this is for paths and thus should be used for paths. It is
+	* not restricted to paths and offers no specific path support.
+	*
+	* @since 2.2.0
+	*
+	* @param { string } { $string } { What to remove the trailing slash from }
+	* @return { string } { $string } { String without the trailing slash }
+	*/
+
 	function untrailingslashit($string) {
 		return rtrim($string, '/');
 	}
-	
 	
 	/**
 	* Check if website is using SSL or not
@@ -4365,7 +4372,6 @@
 			}
 		}
 	}
-	
 	
 	/**
 	 * Function used to check weather conversion lock exists or not
