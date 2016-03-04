@@ -3130,23 +3130,23 @@
 	
 	
 	/**
-	 * Function used to load clipbucket title
-	 */
-	function cbtitle($params=false)
-	{
+	* Adds title for ClipBucket powered website
+	* @param : { string } { $title } { title to be given to page }
+	*/
+
+	function cbtitle($params=false) {
 		global $cbsubtitle;
-		
 		$sub_sep = getArrayValue($params, 'sub_sep');
-		if(!$sub_sep)
+		if(!$sub_sep) {
 			$sub_sep = '-';
-			
+		}
 		//Getting Subtitle
-		if(!$cbsubtitle)
+		if(!$cbsubtitle) {
 			echo TITLE." - ".SLOGAN;
-		else
+		} else {
 			echo $cbsubtitle." $sub_sep ";
-			echo TITLE;
-		//echo " ".SUBTITLE;
+			echo TITLE;	
+		}
 	}
 	
 	/**
