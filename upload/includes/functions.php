@@ -2791,25 +2791,23 @@
 		}
 		
 	}
-	
 
-	
-	
 	/**
-	 * In each plugin
-	 * we will define a CONST
-	 * such as plguin_installed
-	 * that will be used weather plugin is installed or not
-	 * ie define("editorspick_install","installed");
-	 * is_installed('editorspic');
-	 */
-	function is_installed($plugin)
-	{
+	* In each plugin we will define a CONST such as plguin_installed
+	* that will be used weather plugin is installed or not
+	* ie define("editorspick_install","installed");
+	* is_installed('editorspic');
+	* 
+	* @param : { string } { $plugin } { name of the plguin to check }
+	* @return : { boolean } { true if plugin installed, else false }
+	*/
 
-		if(defined($plugin."_install"))
+	function is_installed($plugin) {
+		if(defined($plugin."_install")) {
 			return true;
-		else
+		} else {
 			return false;
+		}
 	}
 	
 	
