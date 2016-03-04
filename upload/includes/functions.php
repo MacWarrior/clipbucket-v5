@@ -2475,28 +2475,27 @@
 		global $userquery;
 		return $userquery->usr_levels[$id];
 	}
-	
-	
-	
+
 	/**
-	 * This function used to check
-	 * weather user is online or not
-	 * @param : last_active time
-	 * @param : time margin
-	 */
-	function is_online($time,$margin='5')
-	{
+	* This function used to check weather user is online or not
+	*
+	* @param : { string } { $time } { last active time }
+	* @param : { integer } { $margin } { time margin }
+	* @return : { string  }{ status of user e.g online or ofline }
+	*/
+
+	function is_online($time,$margin='5') {
 		$margin = $margin*60;
 		$active = strtotime($time);
 		$curr = time();
 		$diff = $curr - $active;
-		if($diff > $margin)
+		if($diff > $margin) {
 			return 'offline';
-		else
+		} else {
 			return 'online';
+		}
 	}
-	
-	
+
 	/**
 	* ClipBucket Form Validator
 	* this function controls the whole logic of how to operate input
