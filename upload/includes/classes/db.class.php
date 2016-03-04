@@ -245,7 +245,6 @@ class Clipbucket_db
         return true;
     }
 
-
     /**
     * Delete an element from database
     *
@@ -256,14 +255,13 @@ class Clipbucket_db
     * @return : { null }
     */
 
-    function delete($tbl,$flds,$vls,$ep=NULL)
-    {
+    function delete($tbl,$flds,$vls,$ep=NULL) {
         global $db ;
         $total_fields = count($flds);
         $fields_query = "";
         $count = 0;
         for($i=0;$i<$total_fields;$i++) {
-            $count += $count;
+            $count++;
             $val = mysql_clean($vls[$i]);
             $needle = substr($val,0,3);
             if($needle != '|f|') {
@@ -272,15 +270,14 @@ class Clipbucket_db
                 $val = substr($val,3,strlen($val));
                 $fields_query .= $flds[$i]."=".$val."";
             }
-            if($total_fields!=$count)
+            if($total_fields!=$count) {
                 $fields_query .= ' AND ';
+            }
         }
         //Complete Query
         $query = "DELETE FROM $tbl WHERE $fields_query $ep";
-        //if(!mysql_query($query)) die(mysql_error());
         if(isset($this->total_queries)) $this->total_queries++;
         $this->total_queries_sql[] = $query;
-
         try {
             $this->mysqli->query($query);
         } catch(DB_Exception $e) {
@@ -298,14 +295,13 @@ class Clipbucket_db
     * @return : { integer } { $insert_id } { id of inserted element }
     */
 
-    function insert($tbl,$flds,$vls,$ep=NULL)
-    {
+    function insert($tbl,$flds,$vls,$ep=NULL) {
         $total_fields = count($flds);
         $count = 0;
         $fields_query = "";
         $values_query = "";
         foreach($flds as $field) {
-            $count += $count;
+            $count++;
             $fields_query .= $field;
             if($total_fields!=$count)
                 $fields_query .= ',';
@@ -313,7 +309,7 @@ class Clipbucket_db
         $total_values = count($vls);
         $count = 0;
         foreach($vls as $value) {
-            $count += $count;
+            $count++;
             preg_match('/\|no_mc\|/',$value,$matches);
             if($matches) {
                 $val = preg_replace('/\|no_mc\|/','',$value);
@@ -321,7 +317,6 @@ class Clipbucket_db
                 $val = $this->clean_var($value);
             }
             $needle = substr($val,0,3);
-
             if($needle != '|f|') {
                 $values_query .= "'".$val."'";
             } else {
@@ -329,11 +324,11 @@ class Clipbucket_db
                 $values_query .= "'".$val."'";
             }
 
-            if($total_values!=$count)
+            $val ;
+            if($total_values!=$count) {
                 $values_query .= ',';
+            }
         }
-
-        //Complete Query
         $query = "INSERT INTO $tbl ($fields_query) VALUES ($values_query) $ep";
         $this->total_queries_sql[] = $query;
         if(isset($this->total_queries)) $this->total_queries++;
@@ -346,7 +341,6 @@ class Clipbucket_db
         }
 
     }
-
     /**
     * Function used to insert values in database { table, associative array style }
     * @param : { string } { $tbl } { table to insert values in }
