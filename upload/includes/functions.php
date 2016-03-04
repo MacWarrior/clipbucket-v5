@@ -2467,9 +2467,10 @@
 	}
 	
 	/**
-	 * Function used to return level name 
-	 * @param levelid
-	 */
+	* Fetch user leve against a given userid
+	* @uses : { class : $userquery } { function : usr_levels() }
+	*/
+
 	function get_user_level($id)
 	{
 		global $userquery;
