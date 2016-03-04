@@ -1565,23 +1565,24 @@
 	}
 	
 	/**
-	 * Function used to add tempalte in display template list
-	 * @param File : file of the template
-	 * @param Folder : weather to add template folder or not
-	 * if set to true, file will be loaded from inside the template
-	 * such that file path will becom $templatefolder/$file
-	 * @param follow_show_page : this param tells weather to follow ClipBucket->show_page
-	 * variable or not, if show_page is set to false and follow is true, this template will not load
-	 * otherwise there it WILL
-	 */
-	function template_files($file,$folder=false,$follow_show_page=true)
-	{
+	* Function used to add tempalte in display template list
+	* @param : { string } { $file } { file of the template }
+	* @param : { string } { $folder } { weather to add template folder or not }
+	* if set to true, file will be loaded from inside the template
+	* such that file path will becom $templatefolder/$file
+	* @param : { boolean } { follow_show_page } { this param tells weather to follow ClipBucket->show_page }
+	* variable or not, if show_page is set to false and follow is true, this template will not load
+	* otherwise there it WILL
+	*/
+
+	function template_files($file,$folder=false,$follow_show_page=true) {
 		global $ClipBucket;
-		if(!$folder)
+		if(!$folder) {
 			$ClipBucket->template_files[] = array('file' => $file,'follow_show_page'=>$follow_show_page);
-		else
+		} else {
 			$ClipBucket->template_files[] = array('file'=>$file,
 			'folder'=>$folder,'follow_show_page'=>$follow_show_page);
+		}
 	}
 	
 	/**
