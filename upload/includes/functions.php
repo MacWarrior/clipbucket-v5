@@ -741,50 +741,48 @@
 	}
 	function form_val($string){return cleanForm($string); }
 	
-	//Escaping Magic Quotes
-	
 	/**
 	* FUNCTION USED TO MAKE TAGS MORE PERFECT
-	* @Author : Arslan Hassan <arslan@clip-bucket.com,arslan@labguru.com>
-	* @param tags text unformatted
-	* returns tags formatted
+	* @author : Arslan Hassan <arslan@clip-bucket.com,arslan@labguru.com>
+	* @param : { string } { $tags } { text unformatted }
+	* @return : { string } { $tagString } { text formatted }
 	*/
-	function genTags($tags,$sep=',')
-	{
+	
+	function genTags($tags,$sep=',') {
 		//Remove fazool spaces
 		$tags = preg_replace(array('/ ,/','/, /'),',',$tags);
 		$tags = preg_replace( "`[,]+`" , ",", $tags);
 		$tag_array = explode($sep,$tags);
-		foreach($tag_array as $tag)
-		{
-			if(isValidtag($tag))
-			{
+		foreach($tag_array as $tag) {
+			if(isValidtag($tag)) {
 				$newTags[] = $tag;
 			}
 			
 		}
 		//Creating new tag string
-		if(is_array($newTags))
+		if(is_array($newTags)) {
 			$tagString = implode(',',$newTags);
-		else
+		} else {
 			$tagString = 'no-tag';
+		}
 		return $tagString;
 	}
 	
 	/**
 	* FUNCTION USED TO VALIDATE TAG
-	* @Author : Arslan Hassan <arslan@clip-bucket.com,arslan@labguru.com>
-	* @param tag
-	* return true or false
+	* @author : Arslan Hassan <arslan@clip-bucket.com,arslan@labguru.com>
+	* @param { string } { $tag } { tag to be validated }
+	* @return : { boolean } { true or false }
 	*/
-	function isValidtag($tag)
-	{
+
+	function isValidtag($tag) {
 		$disallow_array = array
 		('of','is','no','on','off','a','the','why','how','what','in');
-		if(!in_array($tag,$disallow_array) && strlen($tag)>2)
+		if(!in_array($tag,$disallow_array) && strlen($tag)>2) {
 			return true;
-		else
+		} else {
 			return false;
+		}
 	}
 	
 	
