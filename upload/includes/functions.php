@@ -710,35 +710,46 @@
 	
 	/**
 	* FUNCTION USED TO GET THUMBNAIL, MADE FOR SMARTY
-	* @ param : array("FLV");
+	* @param : { array } { $params } { array of parameters }
 	*/
-	function getSmartyThumb($params)
-	{
+
+	function getSmartyThumb($params) {
 		return get_thumb($params['vdetails'],$params['num'],$params['multi'],$params['count_only'],true,true,$params['size']);
 	}
 
-	
 	/**
 	* FUNCTION USED TO GET VIDEO RATING IN SMARTY
+	* @param : { array } { $param } { array of parameters }
 	* @param : array(pullRating($videos[$id]['videoid'],false,false,false,'novote');
 	*/
-	function pullSmartyRating($param)
-	{
+
+	function pullSmartyRating($param) {
 		return pullRating($param['id'],$param['show5'],$param['showPerc'],$aram['showVotes'],$param['static']);	
 	}
 	
 	/**
 	* FUNCTION USED TO CLEAN VALUES THAT CAN BE USED IN FORMS
+	* @param : { string } { $string } { string to be cleaned }  
+	* @return : { string } { $string } { cleaned string }  
 	*/
-	function cleanForm($string)
-	{
-		if(is_string($string))
+
+	function cleanForm($string) {
+		if(is_string($string)) {
 			$string = htmlspecialchars($string);
-		if(get_magic_quotes_gpc())
-			if(!is_array($string))
-			$string = stripslashes($string);			
+		}
+		if(get_magic_quotes_gpc()) {
+			if(!is_array($string)) {
+				$string = stripslashes($string);			
+			}
+		}
 		return $string;
 	}
+
+	/**
+	* Cleans form values
+	* @uses : { function : cleanForm }
+	*/
+
 	function form_val($string){return cleanForm($string); }
 	
 	/**
@@ -747,7 +758,7 @@
 	* @param : { string } { $tags } { text unformatted }
 	* @return : { string } { $tagString } { text formatted }
 	*/
-	
+
 	function genTags($tags,$sep=',') {
 		//Remove fazool spaces
 		$tags = preg_replace(array('/ ,/','/, /'),',',$tags);
