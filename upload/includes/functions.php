@@ -1836,108 +1836,120 @@
 		return $phrase;
 		
 	}
-	function smarty_lang($param)
-	{
-		if(getArrayValue($param, 'assign')=='')
+
+	/**
+	* Fetch lang value from smarty using lang code
+	* @param : { array } { $param } { array of parameters }
+	* @uses : { function lang() }
+	*/
+
+	function smarty_lang($param) {
+		if(getArrayValue($param, 'assign')=='') {
 			return lang($param['code'],getArrayValue($param, 'sprintf'));
-		else
+		} else {
 			assign($param['assign'],lang($param['code'],$param['sprintf']));
+		}
 	}
 
+	/**
+	* Get an array element by key
+	* @param : { array } { $array } { array to check for element }
+	* @param : { string / integeger } { $key } { element name or key }
+	* @return : { value / false } { element value if found, else false }
+	*/
 
 	function getArrayValue($array = array(), $key = false){
 		if(!empty($array) && $key){
 			if(isset($array[$key])){
 				return $array[$key];
-			}else{
+			} else {
 				return false;
 			}
 		}
 		return false;
 	}
 
+	/**
+	* Fetch value of a constant 
+	* @param : { string } { $constantName } { false by default, name of constant }
+	* @return : { val / false } { constant value if found, else fasle }
+	* @ref: { http://php.net/manual/en/function.constant.php }
+	*/
+
 	function getConstant($constantName = false){
-		if($constantName && defined($constantName))
+		if($constantName && defined($constantName))  {
 			return constant($constantName);
-		return false;
+		} else {
+			return false;
+		}
 	}
 
 	/**
-	 * Function used to assign link
-	 */
-	function cblink($params)
-	{
+	* Function used to assign link
+	* @param : { array } { $params } { an array of parameters }
+	* @return : { stirng } { buils link }
+	*/
+
+	function cblink($params) {
 		global $ClipBucket;
 		$name = getArrayValue($params, 'name');
 		$ref = getArrayValue($params, 'ref');
-		
-		if($name=='category')
-		{
+		if($name=='category') {
 			return category_link($params['data'],$params['type']);
 		}
-		if($name=='sort')
-		{
+		if($name=='sort') {
 			return sort_link($params['sort'],'sort',$params['type']);
 		}
-		if($name=='time')
-		{
+		if($name=='time') {
 			return sort_link($params['sort'],'time',$params['type']);
 		}
-		if($name=='tag')
-		{
+		if($name=='tag') {
 			return BASEURL.'/search_result.php?query='.urlencode($params['tag']).'&type='.$params['type'];
 		}
-		if($name=='category_search')
-		{
+		if($name=='category_search') {
 			return BASEURL.'/search_result.php?category[]='.$params['category'].'&type='.$params['type'];
 		}
 		
-		
-		if(SEO!='yes')
-		{
+		if (SEO!='yes') {
 			preg_match('/http:\/\//',$ClipBucket->links[$name][0],$matches);
-			if($matches)
+			if($matches) {
 				$link = $ClipBucket->links[$name][0];
-			else
+			} else {
 				$link = BASEURL.'/'.$ClipBucket->links[$name][0];
-		}else
-		{
+			}
+		} else {
 			preg_match('/http:\/\//',$ClipBucket->links[$name][1],$matches);
-			if($matches)
+			if($matches) {
 				$link = $ClipBucket->links[$name][1];
-			else
+			} else {
 				$link = BASEURL.'/'.$ClipBucket->links[$name][1];
+			}
 		}
 		
 		$param_link = "";
-		if(!empty($params['extra_params']))
-		{
+		if(!empty($params['extra_params'])) {
 			preg_match('/\?/',$link,$matches);
-			if(!empty($matches[0]))
-			{
+			if(!empty($matches[0])) {
 				$param_link = '&'.$params['extra_params'];
-			}else{
+			} else {
 				$param_link = '?'.$params['extra_params'];
 			}
 		}
 		
-		if(isset($params['assign']))
+		if(isset($params['assign'])) {
 			assign($params['assign'],$link.$param_link);
-		else
+		} else {
 			return $link.$param_link;
+		}
 	}
 
 	
 	/**
-	 * Function used to show rating
-	 * @inputs
-	 * class : class used to show rating usually rating_stars
-	 * rating : rating of video or something
-	 * ratings : number of rating
-	 * total : total rating or out of
-	 */
-	function show_rating($params)
-	{
+	* Function used to show rating
+	* @param : { array } { $params } { array of parameters }
+	*/
+
+	function show_rating($params) {
 		$class 	= $params['class'] ? $params['class'] : 'rating_stars';
 		$rating 	= $params['rating'];
 		$ratings 	= $params['ratings'];
@@ -1945,8 +1957,8 @@
 		$style		= $params['style'];
 		if(empty($style))
 			$style = config('rating_style');
+		
 		//Checking Percent
-
 		{
 			if($total<=10)
 				$total = 10;
@@ -1954,24 +1966,23 @@
 			$disperc = 100 - $perc;		
 			if($ratings <= 0 && $disperc == 100)
 				$disperc = 0;
-		}
-				
+		}	
 		$perc = $perc.'%';
 		$disperc = $disperc."%";		
-		switch($style)
-		{
+		switch($style) {
 			case "percentage": case "percent":
 			case "perc": default:
 			{
 				$likeClass = "UserLiked";
-				if(str_replace('%','',$perc) < '50')
-					$likeClass = 'UserDisliked';
-					
+				if(str_replace('%','',$perc) < '50') {
+					$likeClass = 'UserDisliked';	
+				}
 				$ratingTemplate = '<div class="'.$class.'">
 									<div class="ratingContainer">
 										<span class="ratingText">'.$perc.'</span>';
-				if($ratings > 0)
+				if($ratings > 0) {
 					$ratingTemplate .= ' <span class="'.$likeClass.'">&nbsp;</span>';										
+				}
 				$ratingTemplate .='</div>
 								</div>';	
 			}
@@ -1993,7 +2004,6 @@
 			{
 				$likes = round($ratings*$perc/100);
 				$dislikes = $ratings - $likes;
-				
 				$ratingTemplate = '<div class="'.$class.'">
 					<div class="ratingContainer">
 						<div class="ratingText">
@@ -2008,11 +2018,9 @@
 			case "custom": case "own_style":
 			{
 				$file = LAYOUT."/".$params['file'];
-				if(!empty($params['file']) && file_exists($file))
-				{
+				if(!empty($params['file']) && file_exists($file)) {
 					// File exists, lets start assign things
 					assign("perc",$perc); assign("disperc",$disperc);
-					
 					// Likes and Dislikes
 					$likes = floor($ratings*$perc/100);
 					$dislikes = $ratings - $likes;
@@ -2025,134 +2033,116 @@
 			}
 			break;
 		}
-		/*$rating = '<div class="'.$class.'">
-					<div class="stars_blank">
-						<div class="stars_filled" style="width:'.$perc.'">&nbsp;</div>
-						<div class="clear"></div>
-					</div>
-				  </div>';*/
 		return $ratingTemplate;
 	}
 
 	/**
-	 * Function used to display an ad
-	 */
-	function ad($in)
-	{
+	* Function used to display an ad
+	*/
+
+	function ad($in) {
 		return stripslashes(htmlspecialchars_decode($in));
 	}
 	
 	
 	/**
-	 * Function used to get
-	 * available function list
-	 * for special place , read docs.clip-bucket.com
-	 */
-	function get_functions($name)
-	{
+	* Function used to get available function list
+	* for special place , read docs.clip-bucket.com
+	*/
+
+	function get_functions($name) {
 		global $Cbucket;
 		if(isset($Cbucket->$name)){
 			$funcs = $Cbucket->$name;
-			if(is_array($funcs) && count($funcs)>0)
+			if(is_array($funcs) && count($funcs)>0) {
 				return $funcs;
-			else
+			} else {
 				return false;
+			}
 		}
 	}
 	
-	
 	/**
-	 * Function used to add js in ClipBuckets JSArray
-	 * see docs.clip-bucket.com
-	 */
-	function add_js($files)
-	{
+	* Function used to add js in ClipBuckets JSArray
+	* @uses { class : $Cbucket } { function : addJS }
+	*/
+
+	function add_js($files) {
 		global $Cbucket;
 		return $Cbucket->addJS($files);
 	}
 	
 	/**
-	 * Function add_header()
-	 * this will be used to add new files in header array
-	 * this is basically for plugins
-	 * for specific page array('page'=>'file') 
-	 * ie array('uploadactive'=>'datepicker.js')
-	 */
-	function add_header($files)
-	{
+	* Function add_header()
+	* this will be used to add new files in header array
+	* this is basically for plugins
+	* for specific page array('page'=>'file') 
+	* ie array('uploadactive'=>'datepicker.js')
+	*
+	* @uses : { class : $Cbucket } { function : add_header }
+	*/
+
+	function add_header($files) {
 		global $Cbucket;
 		return $Cbucket->add_header($files);
 	}
-	function add_admin_header($files)
-	{
+
+	/**
+	* Adds admin header
+	* @uses : { class : $Cbucket } { function : add_admin_header }
+	*/
+
+	function add_admin_header($files) {
 		global $Cbucket;
 		return $Cbucket->add_admin_header($files);
 	}
 
 	/**
-	 * Funcion used to call functions
-	 * when user view channel
-	 * ie in view_channel.php
-	 */
-	function call_view_channel_functions($u)
-	{
+	* Functions used to call functions when users views a channel
+	* @param : { array } { $u } { array with details of user }
+	*/
+
+	function call_view_channel_functions($u) {
 		$funcs = get_functions('view_channel_functions');
-		if(is_array($funcs) && count($funcs)>0)
-		{
-			foreach($funcs as $func)
-			{
-				if(function_exists($func))
-				{
+		if(is_array($funcs) && count($funcs)>0) {
+			foreach($funcs as $func) {
+				if(function_exists($func)) {
 					$func($u);
 				}
 			}
 		}
-		
 		increment_views($u['userid'],"channel");
 	}
 	
-	
-	
-	
 	/**
-	 * Funcion used to call functions
-	 * when user view topic
-	 * ie in view_topic.php
-	 */
-	function call_view_topic_functions($tdetails)
-	{
+	* Functions used to call functions when users views a group topic
+	* @param : { array } { $tdetails } { array with details of group topic }
+	* @deprecated : { function has been deprecated and will be removed in next version }
+	*/
+
+	function call_view_topic_functions($tdetails) {
 		$funcs = get_functions('view_topic_functions');
-		if(is_array($funcs) && count($funcs)>0)
-		{
-			foreach($funcs as $func)
-			{
-				if(function_exists($func))
-				{
+		if(is_array($funcs) && count($funcs)>0) {
+			foreach($funcs as $func) {
+				if(function_exists($func)) {
 					$func($tdetails);
 				}
 			}
 		}
-		
 		increment_views($tdetails['topic_id'],"topic");
 	}
 
-
-	
-
 	/**
-	 * Funcion used to call functions
-	 * when user view group
-	 * ie in view_group.php
-	 */
-	function call_view_group_functions($gdetails)
-	{
+	* Functions used to call functions when users views a group
+	* @param : { array } { $gdetails } { array with details of group }
+	* @deprecated : { function has been deprecated and will be removed in next version }
+	*/
+
+	function call_view_group_functions($gdetails) {
 		$funcs = get_functions('view_group_functions');
-		if(is_array($funcs) && count($funcs)>0)
-		{
-			foreach($funcs as $func)
-			{
-				if(function_exists($func))
-				{
+		if(is_array($funcs) && count($funcs)>0) {
+			foreach($funcs as $func) {
+				if(function_exists($func)) {
 					$func($gdetails);
 				}
 			}
@@ -2161,42 +2151,40 @@
 	}
 	
 	/**
-	 * Funcion used to call functions
-	 * when user view collection
-	 * ie in view_collection.php
-	 */
-	function call_view_collection_functions($cdetails)
-	{
+	* Functions used to call functions when users views a collection
+	* @param : { array } { $cdetails } { array with details of collection }
+	*/
+
+	function call_view_collection_functions($cdetails) {
 		$funcs = get_functions('view_collection_functions');
-		if(is_array($funcs) && count($funcs)>0)
-		{
-			foreach($funcs as $func)
-			{
-				if(function_exists($func))
-				{
+		if(is_array($funcs) && count($funcs)>0) {
+			foreach($funcs as $func) {
+				if(function_exists($func)) {
 					$func($cdetails);
 				}
 			}
 		};
-
 		increment_views($cdetails['collection_id'],"collection");
 	}
 
 	
 	/**
-	 * Function used to incream number of view
-	 * in object
-	 */
-	function increment_views($id,$type=NULL)
-	{
+	* Function used to increment views of an object
+	* 
+	* @param : { integer } { $id } { id of element to update views for }
+	* @param : { string } { $type } { type of object e.g video, user }
+	* @return : { null }
+	* @action : database updating
+	*/
+
+	function increment_views($id,$type=NULL) {
 		global $db;
-		switch($type)
-		{
+		switch($type) {
 			case 'v':
 			case 'video':
 			default:
 			{
-				if(!isset($_COOKIE['video_'.$id])){
+				if(!isset($_COOKIE['video_'.$id])) {
 					$currentTime = time();
 					file_put_contents("/home/sajjad/Desktop/log.txt", json_encode($videoViewsRecord));
 					$views = (int)$videoViewsRecord["video_views"] + 1;
@@ -2204,17 +2192,14 @@
 					$query = "UPDATE " . tbl("video_views") . " SET video_views = video_views + 1 WHERE video_id = {$id}";
 					$result = $db->Execute($query);
 					setcookie('video_'.$id,'watched',time()+3600);
-					
 				}
 			}
 			break;
 			case 'u':
 			case 'user':
 			case 'channel':
-
 			{
-				
-				if(!isset($_COOKIE['user_'.$id])){
+				if(!isset($_COOKIE['user_'.$id])) {
 					$db->update(tbl("users"),array("profile_hits"),array("|f|profile_hits+1")," userid='$id'");
 					setcookie('user_'.$id,'watched',time()+3600);
 				}
@@ -2222,9 +2207,8 @@
 			break;
 			case 't':
 			case 'topic':
-
 			{
-				if(!isset($_COOKIE['topic_'.$id])){
+				if(!isset($_COOKIE['topic_'.$id])) {
 					$db->update(tbl("group_topics"),array("total_views"),array("|f|total_views+1")," topic_id='$id'");
 					setcookie('topic_'.$id,'watched',time()+3600);
 				}
@@ -2235,7 +2219,7 @@
 			case 'group':
 
 			{
-				if(!isset($_COOKIE['group_'.$id])){
+				if(!isset($_COOKIE['group_'.$id])) {
 					$db->update(tbl("groups"),array("total_views"),array("|f|total_views+1")," group_id='$id'");
 					setcookie('group_'.$id,'watched',time()+3600);
 				}
@@ -2245,7 +2229,7 @@
 			case "collect":
 			case "collection":
 			{
-				if(!isset($_COOKIE['collection_'.$id])){
+				if(!isset($_COOKIE['collection_'.$id])) {
 					$db->update(tbl("collections"),array("views"),array("|f|views+1")," collection_id = '$id'");
 					setcookie('collection_'.$id,'viewed',time()+3600);
 				}
@@ -2256,8 +2240,7 @@
 			case "photo":
 			case "p":
 			{
-				if(!isset($_COOKIE['photo_'.$id]))
-				{
+				if(!isset($_COOKIE['photo_'.$id])) {
 					$db->update(tbl('photos'),array("views","last_viewed"),array("|f|views+1",NOW())," photo_id = '$id'");
 					setcookie('photo_'.$id,'viewed',time()+3600);
 				}
@@ -2266,22 +2249,25 @@
 		
 	}
 
-	function increment_views_new($id,$type=NULL)
-	{
+	/**
+	* Function used to increment views of an object
+	* 
+	* @param : { integer } { $id } { id of element to update views for }
+	* @param : { string } { $type } { type of object e.g video, user }
+	* @return : { null }
+	* @action : database updating
+	*/
 
+	function increment_views_new($id,$type=NULL) {
 		global $db;
-		switch($type)
-		{
+		switch($type) {
 			case 'v':
 			case 'video':
 			default:
 			{	
-				if(!isset($_COOKIE['video_'.$id])){
-					
+				if(!isset($_COOKIE['video_'.$id])) {
 					$currentTime = time();
-					//$db->update(tbl("video_views"),array("video_views","video_id", "last_updated"),array("|f|views+1",$currentTime)," videoid='$id' OR videokey='$id'");
 					$db->update(tbl("video"),array("views", "last_viewed"),array("|f|views+1",$currentTime)," videoid='$id' OR videokey='$id'");
-					//exit('check_1'.$type.'id_'.$id);
 					setcookie('video_'.$id,'watched',time()+3600);
 				}
 			}
@@ -2289,10 +2275,8 @@
 			case 'u':
 			case 'user':
 			case 'channel':
-
 			{
-				
-				if(!isset($_COOKIE['user_'.$id])){
+				if(!isset($_COOKIE['user_'.$id])) {
 					$db->update(tbl("users"),array("profile_hits"),array("|f|profile_hits+1")," userid='$id'");
 					setcookie('user_'.$id,'watched',time()+3600);
 				}
@@ -2300,9 +2284,8 @@
 			break;
 			case 't':
 			case 'topic':
-
 			{
-				if(!isset($_COOKIE['topic_'.$id])){
+				if(!isset($_COOKIE['topic_'.$id])) {
 					$db->update(tbl("group_topics"),array("total_views"),array("|f|total_views+1")," topic_id='$id'");
 					setcookie('topic_'.$id,'watched',time()+3600);
 				}
@@ -2311,9 +2294,8 @@
 			break;
 			case 'g':
 			case 'group':
-
 			{
-				if(!isset($_COOKIE['group_'.$id])){
+				if(!isset($_COOKIE['group_'.$id])) {
 					$db->update(tbl("groups"),array("total_views"),array("|f|total_views+1")," group_id='$id'");
 					setcookie('group_'.$id,'watched',time()+3600);
 				}
@@ -2323,7 +2305,7 @@
 			case "collect":
 			case "collection":
 			{
-				if(!isset($_COOKIE['collection_'.$id])){
+				if(!isset($_COOKIE['collection_'.$id])) {
 					$db->update(tbl("collections"),array("views"),array("|f|views+1")," collection_id = '$id'");
 					setcookie('collection_'.$id,'viewed',time()+3600);
 				}
@@ -2334,8 +2316,7 @@
 			case "photo":
 			case "p":
 			{
-				if(!isset($_COOKIE['photo_'.$id]))
-				{
+				if(!isset($_COOKIE['photo_'.$id])) {
 					$db->update(tbl('photos'),array("views","last_viewed"),array("|f|views+1",NOW())," photo_id = '$id'");
 					setcookie('photo_'.$id,'viewed',time()+3600);
 				}
@@ -2644,8 +2625,7 @@
 	* @uses : { function : lang() }
 	*/
 
-	function nicetime($date,$istime=false)
-	{
+	function nicetime($date,$istime=false) {
 		if(empty($date)) {
 			return lang('no_date_provided');
 		}
