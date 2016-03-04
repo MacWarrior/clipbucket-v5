@@ -1265,12 +1265,13 @@
 	}
 	
 	/**
-	 * Function used to get user avatar
-	 * @param ARRAY $userdetail
-	 * @param SIZE $int
-	 */
-	function avatar($param)
-	{
+	* Function used to get user avatar
+	* @param { array } { $param } { array with paramters }
+	* @params_in_$param : details, size, uid
+	* @uses : { class : $userquery } { function : avatar }
+	*/
+
+	function avatar($param) {
 		global $userquery;
 		$udetails = $param['details'];
 		$size = $param['size'];
@@ -1280,26 +1281,27 @@
 	
 	
 	/**
-	 * This funcion used to call function dynamically in smarty
-	 */
-	function load_form($param)
-	{
+	* This funcion used to call function dynamically in smarty
+	* @param : { array } { $param } { array with parameters e.g $param['name'] }
+	*/
+
+	function load_form($param) {
 		$func = $param['name'];
-		if(function_exists($func))
+		if(function_exists($func)) {
 			return $func($param);
+		}
 	}
 	
-	
-	
 	/**
-	 * Function used to get PHP Path
-	 */
-	 function php_path()
-	 {
-		 if(PHP_PATH !='')
-			 return PHP_PATH;
-		 else
+	* Function used to get PHP Path
+	*/
+
+	function php_path() {
+		if(PHP_PATH !='') {
+			return PHP_PATH;
+		} else {
 		 	return "/usr/bin/php";
+		}
 	 }
 	 
 	/**
