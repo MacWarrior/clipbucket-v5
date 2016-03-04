@@ -1564,7 +1564,6 @@
 		return $eh->message_list;
 	}
 	
-	
 	/**
 	 * Function used to add tempalte in display template list
 	 * @param File : file of the template
@@ -1586,16 +1585,19 @@
 	}
 	
 	/**
-	 * Function used to include file
-	 */
-	function include_template_file($params)
-	{
+	* Function used to include file
+	* @param : { array } { $params } { paramets inside array e.g $param['file'] }
+	* @return : { null }
+	* @action : { displays template }
+	*/
+
+	function include_template_file($params) {
 		$file = $params['file'];
-		
-		if(file_exists(LAYOUT.'/'.$file))
+		if(file_exists(LAYOUT.'/'.$file)) {
 			Template($file);
-		elseif(file_exists($file))
+		} elseif(file_exists($file)) {
 			Template($file,false);
+		}
 	}
 
 	/**
@@ -2153,7 +2155,6 @@
 		increment_views($cdetails['collection_id'],"collection");
 	}
 
-	
 	/**
 	* Function used to increment views of an object
 	* 
