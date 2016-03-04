@@ -2410,30 +2410,25 @@
 	}
 	
 	/**
-	 * Function used to show collection form
-	 */
-	function show_collection_form($params)
-	{
+	* Function used to show collection form
+	* @param : { array } { $params } { array with paramters }
+	*/
+
+	function show_collection_form($params) {
 		global $db,$cbcollection;
-		if(!userid())
+		if(!userid()) {
 			$loggedIn = "not";
-		else	
-		{		
-			$collectArray = array("order"=>" collection_name ASC","type"=>"videos","user"=>userid());		
-			$collections = $cbcollection->get_collections($collectArray);
-                        
-                        $contributions = $cbcollection->get_contributor_collections(userid());
-                        
-                        if($contributions)
-                        {
-                            if(!$collections)
-                                $collections = $contributions;
-                            else
-                            {
-                                $collections = array_merge($collections,$contributions);
-                            }
-                        }
-			
+		} else {		
+			$collectArray = array("order"=>" collection_name ASC","type"=>"videos","user"=>userid());
+			$collections = $cbcollection->get_collections($collectArray);           
+            $contributions = $cbcollection->get_contributor_collections(userid());
+            if($contributions) {
+                if(!$collections) {
+                    $collections = $contributions;
+                } else {
+                    $collections = array_merge($collections,$contributions);
+                }
+            }
 			assign("collections",$collections);
 			assign("contributions",$contributions);
 		}
