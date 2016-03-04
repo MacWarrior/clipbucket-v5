@@ -1533,17 +1533,14 @@
 	}
 	
 	/**
-	 * Function used to get number of videos uploaded by user
-	 * @param INT userid
-	 * @param Conditions
-	 */
-	function get_user_vids($uid,$cond=NULL,$count_only=false)
-	{
+	* Function used to get number of videos uploaded by user
+	* @uses : { class : $userquery } { function : get_user_vids }
+	*/
+
+	function get_user_vids($uid,$cond=NULL,$count_only=false) {
 		global $userquery;
 		return $userquery->get_user_vids($uid,$cond,$count_only);
 	}
-	
-	
 	
 	/**
 	* Function used to get error_list
