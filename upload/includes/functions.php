@@ -3195,21 +3195,21 @@
 	}
 	
 	/**
-	 * Function used to delete photos if
-	 * whole collection is being deleted
-	 */
-	function delete_collection_photos($details)
-	{
+	* Deletes all photos found inside of given collection 
+	* function is used when whole collection is being deleted
+	*
+	* @param : { array } { $details } { an array with collection's details }
+	* @return : { null }
+	* @action: makes photos orphan
+	*/
+
+	function delete_collection_photos($details) {
 		global $cbcollection,$cbphoto;
 		$type = $details['type'];
-
-		if($type == 'photos')
-		{
+		if($type == 'photos') {
 			$ps = $cbphoto->get_photos(array("collection"=>$details['collection_id']));
-			if(!empty($ps))
-			{	
-				foreach($ps as $p)
-				{
+			if(!empty($ps)) {	
+				foreach($ps as $p) {
 					$cbphoto->make_photo_orphan($details,$p['photo_id']);	
 				}
 				unset($ps); // Empty $ps. Avoiding the duplication prob
@@ -3218,49 +3218,50 @@
 	}
 	
 	/**
-	 * FUnction used to get head menu
-	 */
-	function head_menu($params=NULL)
-	{
+	* Get ClipBucket's header menu
+	* @uses : { class : $Cbucket } { function : head_menu }
+	*/
+
+	function head_menu($params=NULL) {
 		global $Cbucket;
 		return $Cbucket->head_menu($params);
 	}
+
+	/**
+	* Get ClipBucket's menu
+	* @uses : { class : $Cbucket } { function : cbMenu }
+	*/
 	
-	function cbMenu($params=NULL)
-	{
+	function cbMenu($params=NULL) {
 		global $Cbucket;
 		return $Cbucket->cbMenu($params);
 	}
 	
 	/**
-	 * FUnction used to get foot menu
-	 */
-	function foot_menu($params=NULL)
-	{
+	* Get ClipBucket's footer menu
+	* @uses : { class : $Cbucket } { function : foot_menu }
+	*/
+
+	function foot_menu($params=NULL) {
 		global $Cbucket;
 		return $Cbucket->foot_menu($params);
 	}
 	
-	
-	
-	
 	/**
-	 * FUNCTION Used to convert XML to Array
-	 * @Author : http://www.php.net/manual/en/function.xml-parse.php#87920
-	 */
-	function xml2array($url, $get_attributes = 1, $priority = 'tag',$is_url=true)
-	{
+	* Converts given array XML into a PHP array
+	* 
+	* @param : { array } { $array } { array to be converted into XML }
+	* @return : { string } { $xml } { array converted into XML }
+	*/
+
+	function xml2array($url, $get_attributes = 1, $priority = 'tag',$is_url=true) {
 		$contents = "";
-		if (!function_exists('xml_parser_create'))
-		{
+		if (!function_exists('xml_parser_create')) {
 			return false;
 		}
 		$parser = xml_parser_create('');
-		
-		if($is_url)
-		{
-			if (!($fp = @ fopen($url, 'rb')))
-			{
+		if($is_url) {
+			if (!($fp = @ fopen($url, 'rb'))) {
 				$ch = curl_init();
 				curl_setopt($ch,CURLOPT_URL,$url);
 				curl_setopt($ch, CURLOPT_USERAGENT, 
@@ -3273,12 +3274,11 @@
 				if(!$contents)
 					return false;
 			}
-			while (!feof($fp))
-			{
+			while (!feof($fp)) {
 				$contents .= fread($fp, 8192);
 			}
 			fclose($fp);
-		}else{
+		} else {
 			$contents = $url;
 		}
 
@@ -3287,65 +3287,57 @@
 		xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
 		xml_parse_into_struct($parser, trim($contents), $xml_values);
 		xml_parser_free($parser);
-		if (!$xml_values)
+		if (!$xml_values) {
 			return; //Hmm...
+		}
 		$xml_array = array ();
 		$parents = array ();
 		$opened_tags = array ();
 		$arr = array ();
 		$current = & $xml_array;
 		$repeated_tag_index = array ();
-		foreach ($xml_values as $data)
-		{
+		foreach ($xml_values as $data) {
 			
 			unset ($attributes, $value);
 			extract($data);
 			$result = array ();
 			$attributes_data = array ();
-			if (isset ($value))
-			{
-				if ($priority == 'tag')
+			if (isset ($value)) {
+				if ($priority == 'tag') {
 					$result = $value;
-				else
+				} else {
 					$result['value'] = $value;
-			}
-			if (isset ($attributes) and $get_attributes)
-			{
-				foreach ($attributes as $attr => $val)
-				{
-					if ($priority == 'tag')
-						$attributes_data[$attr] = $val;
-					else
-						$result['attr'][$attr] = $val; //Set all the attributes in a array called 'attr'
 				}
 			}
-			if ($type == "open")
-			{
+			if (isset ($attributes) and $get_attributes) {
+				foreach ($attributes as $attr => $val) {
+					if ($priority == 'tag') {
+						$attributes_data[$attr] = $val;
+					} else{
+						$result['attr'][$attr] = $val; //Set all the attributes in a array called 'attr'
+					}
+				}
+			}
+			if ($type == "open") {
 				$parent[$level -1] = & $current;
-				if (!is_array($current) or (!in_array($tag, array_keys($current))))
-				{
+				if (!is_array($current) or (!in_array($tag, array_keys($current)))) {
 					$current[$tag] = $result;
-					if ($attributes_data)
+					if ($attributes_data) {
 						$current[$tag . '_attr'] = $attributes_data;
+					}
 					$repeated_tag_index[$tag . '_' . $level] = 1;
 					$current = & $current[$tag];
-				}
-				else
-				{
-					if (isset ($current[$tag][0]))
-					{
+				} else {
+					if (isset ($current[$tag][0])) {
 						$current[$tag][$repeated_tag_index[$tag . '_' . $level]] = $result;
 						$repeated_tag_index[$tag . '_' . $level]++;
-					}
-					else
-					{
+					} else {
 						$current[$tag] = array (
 							$current[$tag],
 							$result
 						);
 						$repeated_tag_index[$tag . '_' . $level] = 2;
-						if (isset ($current[$tag . '_attr']))
-						{
+						if (isset ($current[$tag . '_attr'])) {
 							$current[$tag]['0_attr'] = $current[$tag . '_attr'];
 							unset ($current[$tag . '_attr']);
 						}
@@ -3353,126 +3345,110 @@
 					$last_item_index = $repeated_tag_index[$tag . '_' . $level] - 1;
 					$current = & $current[$tag][$last_item_index];
 				}
-			}
-			elseif ($type == "complete")
-			{
-				if (!isset ($current[$tag]))
-				{
+			} elseif ($type == "complete") {
+				if (!isset ($current[$tag])) {
 					$current[$tag] = $result;
 					$repeated_tag_index[$tag . '_' . $level] = 1;
 					if ($priority == 'tag' and $attributes_data)
 						$current[$tag . '_attr'] = $attributes_data;
-				}
-				else
-				{
-					if (isset ($current[$tag][0]) and is_array($current[$tag]))
-					{
+				} else {
+					if (isset ($current[$tag][0]) and is_array($current[$tag])) {
 						$current[$tag][$repeated_tag_index[$tag . '_' . $level]] = $result;
-						if ($priority == 'tag' and $get_attributes and $attributes_data)
-						{
+						if ($priority == 'tag' and $get_attributes and $attributes_data) {
 							$current[$tag][$repeated_tag_index[$tag . '_' . $level] . '_attr'] = $attributes_data;
 						}
 						$repeated_tag_index[$tag . '_' . $level]++;
-					}
-					else
-					{
+					} else {
 						$current[$tag] = array (
 							$current[$tag],
 							$result
 						);
 						$repeated_tag_index[$tag . '_' . $level] = 1;
-						if ($priority == 'tag' and $get_attributes)
-						{
-							if (isset ($current[$tag . '_attr']))
-							{
+						if ($priority == 'tag' and $get_attributes) {
+							if (isset ($current[$tag . '_attr'])) {
 								$current[$tag]['0_attr'] = $current[$tag . '_attr'];
 								unset ($current[$tag . '_attr']);
 							}
-							if ($attributes_data)
-							{
+							if ($attributes_data) {
 								$current[$tag][$repeated_tag_index[$tag . '_' . $level] . '_attr'] = $attributes_data;
 							}
 						}
 						$repeated_tag_index[$tag . '_' . $level]++; //0 and 1 index is already taken
 					}
 				}
-			}
-			elseif ($type == 'close')
-			{
+			} elseif ($type == 'close') {
 				$current = & $parent[$level -1];
 			}
 		}
-		
 		return ($xml_array);
 	}
 	
-	
-	function array2xml($array, $level=1)
-	{
+	/**
+	* Converts given array into valid XML
+	* 
+	* @param : { array } { $array } { array to be converted into XML }
+	* @return : { string } { $xml } { array converted into XML }
+	*/
+
+	function array2xml($array, $level=1) {
 		$xml = '';
-		// if ($level==1) {
-		//     $xml .= "<array>\n";
-		// }
 		foreach ($array as $key=>$value) {
-		$key = strtolower($key);
-		if (is_object($value)) {$value=get_object_vars($value);}// convert object to array
-		
-		if (is_array($value)) {
-			$multi_tags = false;
-			foreach($value as $key2=>$value2) {
-			 if (is_object($value2)) {$value2=get_object_vars($value2);} // convert object to array
-				if (is_array($value2)) {
-					$xml .= str_repeat("\t",$level)."<$key>\n";
-					$xml .= array2xml($value2, $level+1);
-					$xml .= str_repeat("\t",$level)."</$key>\n";
-					$multi_tags = true;
-				} else {
-					if (trim($value2)!='') {
-						if (htmlspecialchars($value2)!=$value2) {
-							$xml .= str_repeat("\t",$level).
-									"<$key2><![CDATA[$value2]]>". // changed $key to $key2... didn't work otherwise.
-									"</$key2>\n";
-						} else {
-							$xml .= str_repeat("\t",$level).
-									"<$key2>$value2</$key2>\n"; // changed $key to $key2
+			$key = strtolower($key);
+			if (is_object($value)) {$value=get_object_vars($value);}// convert object to array
+			
+			if (is_array($value)) {
+				$multi_tags = false;
+				foreach($value as $key2=>$value2) {
+				 if (is_object($value2)) {$value2=get_object_vars($value2);} // convert object to array
+					if (is_array($value2)) {
+						$xml .= str_repeat("\t",$level)."<$key>\n";
+						$xml .= array2xml($value2, $level+1);
+						$xml .= str_repeat("\t",$level)."</$key>\n";
+						$multi_tags = true;
+					} else {
+						if (trim($value2)!='') {
+							if (htmlspecialchars($value2)!=$value2) {
+								$xml .= str_repeat("\t",$level).
+										"<$key2><![CDATA[$value2]]>". // changed $key to $key2... didn't work otherwise.
+										"</$key2>\n";
+							} else {
+								$xml .= str_repeat("\t",$level).
+										"<$key2>$value2</$key2>\n"; // changed $key to $key2
+							}
 						}
+						$multi_tags = true;
 					}
-					$multi_tags = true;
 				}
-			}
-			if (!$multi_tags and count($value)>0) {
-				$xml .= str_repeat("\t",$level)."<$key>\n";
-				$xml .= array2xml($value, $level+1);
-				$xml .= str_repeat("\t",$level)."</$key>\n";
-			}
-		
-		 } else {
-			if (trim($value)!='') {
-			 echo "value=$value<br>";
-				if (htmlspecialchars($value)!=$value) {
-					$xml .= str_repeat("\t",$level)."<$key>".
-							"<![CDATA[$value]]></$key>\n";
-				} else {
-					$xml .= str_repeat("\t",$level).
-							"<$key>$value</$key>\n";
+				if (!$multi_tags and count($value)>0) {
+					$xml .= str_repeat("\t",$level)."<$key>\n";
+					$xml .= array2xml($value, $level+1);
+					$xml .= str_repeat("\t",$level)."</$key>\n";
+				}
+			
+			 } else {
+				if (trim($value)!='') {
+				 echo "value=$value<br>";
+					if (htmlspecialchars($value)!=$value) {
+						$xml .= str_repeat("\t",$level)."<$key>".
+								"<![CDATA[$value]]></$key>\n";
+					} else {
+						$xml .= str_repeat("\t",$level).
+								"<$key>$value</$key>\n";
+					}
 				}
 			}
 		}
-		}
-		//if ($level==1) {
-		//    $xml .= "</array>\n";
-		// }
-		
 		return $xml;
 	}
 
 
 	
 	/**
-	 * FUnction used to display widget
-	 */
-	function widget($params)
-	{
+	* FUnction used to display widget
+ 	* @deprecated : { function is not used anymore and will be removed }	 
+	*/
+
+	function widget($params) {
 		$name = $params['name'];
 		$content = $params['content'];
 		
@@ -3489,62 +3465,57 @@
 	
 	
 	/**
-	 * Function used to get latest ClipBucket version info
-	 */
-	function get_latest_cb_info()
-	{
-		if($_SERVER['HTTP_HOST']!='localhost')
+ 	* Function used to get latest ClipBucket version info
+ 	* @deprecated : { function is not used anymore and will be removed }
+	*/
+
+	function get_latest_cb_info() {
+		if($_SERVER['HTTP_HOST']!='localhost') {
 			$url = 'http://clip-bucket.com/versions.xml';
-		else
+		} else {
 			$url = 'http://localhost/clipbucket/2.x/2/upload/tester/versions.xml';
+		}
 		$version = xml2array($url);
-		if(!$version)
-		{
+		if (!$version) {
 			return false;
-		}else
-		{
+		} else {
 			return $version['phpbucket']['clipbucket'][0];
 		}
 	}
 
 	
 	/**
-	 * This function used to include headers in <head> tag
-	 * it will check weather to include the file or not
-	 * it will take file and its type as an array
-	 * then compare its type with THIS_PAGE constant
-	 * if header has TYPE of THIS_PAGE then it will be inlucded
-	 */
-	function include_header($params)
-	{
+	* This function used to include headers in <head> tag
+	* it will check weather to include the file or not
+	* it will take file and its type as an array
+	* then compare its type with THIS_PAGE constant
+	* if header has TYPE of THIS_PAGE then it will be inlucded
+	*
+	* @param : { array } { $params } { paramters array e.g file, type }
+	* @return : { false } 
+	*/
+
+	function include_header($params) {
 		$file = getArrayValue($params, 'file');
 		$type = getArrayValue($params, 'type');
-		
-		if($file=='global_header')
-		{
+		if($file == 'global_header') {
 			Template(BASEDIR.'/styles/global/head.html',false);
 			return false;
 		}
-		
-		if($file == 'admin_bar')
-		{
+		if($file == 'admin_bar') {
 			if(has_access('admin_access',TRUE))
 				Template(BASEDIR.'/styles/global/admin_bar.html',false);
 				return false;
 		}
-		
-		if(!$type)
+		if(!$type) {
 			$type = "global";
-		
-		if(is_includeable($type))
+		}
+		if(is_includeable($type)) {
 			Template($file,false);
-		
+		}		
 		return false;
 	}
-	
-	
 
-	
 	/**
 	* Function used to check weather to include given file or not
 	* it will take array of pages if array has ACTIVE PAGE or has GLOBAL value
@@ -3569,7 +3540,9 @@
 	* This function works the same way as include_header
 	* but the only difference is , it is used to include
 	* JS files only
+	*
 	* @param : { arary } { $params } { array with parameters e.g  file, type}
+	* @return : { string } { javascript tag with file in src }
 	*/
 
 	$the_js_files = array();
@@ -3593,8 +3566,6 @@
 		return false;
 	}
 		
-	
-	
 	/**
 	* Checks if FFMPEG has all required modules installed on server
 	* @param : { string } { $data } { false by default, version of ffmpeg }
@@ -3680,8 +3651,7 @@
 			} else {
 				return false;
 			}
-		}
-			
+		}	
 	}
 
 	/**
