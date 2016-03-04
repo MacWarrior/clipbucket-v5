@@ -2612,40 +2612,40 @@
 		}
 	}
 
-
 	/**
-	 * Function used to check weather tempalte file exists or not
-	 * input path to file
-	 */
-	function template_file_exists($file,$dir)
-	{
-		if(!file_exists($dir.'/'.$file) && !empty($file) && !file_exists($file))
-		{
+	* Function used to check weather tempalte file exists or not
+	* 
+	* @param : { string } { $file } { file name to be checked }
+	* @param : { string } { $dir } { directory to check file in }
+	* @return : { boolean } { true if file exists, else false }
+	*/
+
+	function template_file_exists($file,$dir) {
+		if(!file_exists($dir.'/'.$file) && !empty($file) && !file_exists($file)) {
 			echo sprintf(lang("temp_file_load_err"),$file,$dir);
 			return false;
-		}else
+		} else {
 			return true;
+		}
 	}
 	
 	/** 
-	 * Function used to count age from date
-	 */
-	function get_age($input)
-	{ 
+	* Function used to count age from date
+	* @param : { string } { $input } { date to count age }
+	* @return : { integer } { $iYears } { years old }
+	*/
+
+	function get_age($input) { 
 		$time = strtotime($input);
 		$iMonth = date("m",$time);
 		$iDay = date("d",$time);
 		$iYear = date("Y",$time);
-		
 		$iTimeStamp = (mktime() - 86400) - mktime(0, 0, 0, $iMonth, $iDay, $iYear); 
 		$iDays = $iTimeStamp / 86400;  
 		$iYears = floor($iDays / 365 );  
 		return $iYears; 
 	}
-	
-	
-	
-	
+
 	/**
 	* Function used to check time span a time difference function that outputs the 
 	* time passed in facebook's style: 1 day ago, or 4 months ago. I took andrew dot
@@ -2656,6 +2656,7 @@
 	*
 	* @param : { string } { $date } { date to be converted in nicetime }
 	* @param : { boolean } { false by default, considers date to be in time format if true }
+	* @uses : { function : lang() }
 	*/
 
 	function nicetime($date,$istime=false)
@@ -2678,13 +2679,13 @@
 		// is it future date or past date
 		if($now > $unix_date) {   
 			//time_ago
-			$difference     = $now - $unix_date;
-			$tense         = "time_ago";
+			$difference = $now - $unix_date;
+			$tense = "time_ago";
 		   
 		} else {
 			//from_now
-			$difference     = $unix_date - $now;
-			$tense         = "from_now";
+			$difference = $unix_date - $now;
+			$tense = "from_now";
 		}
 		for($j = 0; $difference >= $lengths[$j] && $j < count($lengths)-1; $j++) {
 			$difference /= $lengths[$j];
