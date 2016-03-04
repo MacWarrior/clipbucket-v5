@@ -1397,14 +1397,14 @@
 	}
 	
 	/**
-	 * Function used to execute command in background
-	 */
+	* Function used to execute command in background
+	* @param : { string } { $cmd } { command to be executed }
+	*/
+
 	function bgexec($cmd) {
 		if (substr(php_uname(), 0, 7) == "Windows"){
-			//exec($cmd." >> /dev/null &");
 			exec($cmd);
-			//pclose(popen("start \"bla\" \"" . $exe . "\" " . escapeshellarg($args), "r")); 
-		}else{
+		} else {
 			exec($cmd . " > /dev/null &");  
 		}
 	}
