@@ -933,65 +933,50 @@
 		//Woops..its gone
 	}
 	
+	/**
+	* Get list of categories from smarty
+	* @uses { function : getCategoryList }
+	*/
 	
-	function getSmartyCategoryList($params)
-	{
+	function getSmartyCategoryList($params) {
 		return getCategoryList($params);
 	}
-	
-	
-	//Function used to register function as multiple modifiers
-	
-	
-	
+
 	/**
 	* Function used to insert data in database
-	* @param : table name
-	* @param : fields array
-	* @param : values array
-	* @param : extra params
+	* @uses : { class : $db } { function : dbInsert }
 	*/
-	function dbInsert($tbl,$flds,$vls,$ep=NULL)
-	{
+
+	function dbInsert($tbl,$flds,$vls,$ep=NULL) {
 		global $db ;
 		$db->insert($tbl,$flds,$vls,$ep);
 	}
 	
 	/**
 	* Function used to Update data in database
-	* @param : table name
-	* @param : fields array
-	* @param : values array
-	* @param : Condition params
-	* @params : Extra params
+	* @uses : { class : $db } { function : dbUpdate }
 	*/
-	function dbUpdate($tbl,$flds,$vls,$cond,$ep=NULL)
-	{
+
+	function dbUpdate($tbl,$flds,$vls,$cond,$ep=NULL) {
 		global $db ;
 		return $db->update($tbl,$flds,$vls,$cond,$ep);		
 	}
-	
-	
-	
+
 	/**
 	* Function used to Delete data in database
-	* @param : table name
-	* @param : fields array
-	* @param : values array
-	* @params : Extra params
+	* @uses : { class : $db } { function : dbDelete }
 	*/
-	function dbDelete($tbl,$flds,$vls,$ep=NULL)
-	{
+
+	function dbDelete($tbl,$flds,$vls,$ep=NULL) {
 		global $db ;
 		return $db->delete($tbl,$flds,$vls,$ep);		
 	}
 	
-	
 	/**
-	 **
-	 */
-	function cbRocks()
-	{
+	*
+	*/
+
+	function cbRocks() {
 		define("isCBSecured",TRUE); 
 		//echo cbSecured(CB_SIGN);
 	}
@@ -999,8 +984,7 @@
 	/**
 	 * Insert Id
 	 */
-	 function get_id($code)
-	 {
+	 function get_id($code) {
 		 global $Cbucket;
 		 $id = $Cbucket->ids[$code];
 		 if(empty($id)) $id = $code;
@@ -1010,18 +994,19 @@
 	/**
 	 * Set Id
 	 */
-	 function set_id($code,$id)
-	 {
-		 global $Cbucket;
-		 return $Cbucket->ids[$code]=$id;
-	 }
+
+	function set_id($code,$id) {
+		global $Cbucket;
+		return $Cbucket->ids[$code]=$id;
+	}
 	 
 	
 	/**
-	 * Function used to select data from database
-	 */
-	function dbselect($tbl,$fields='*',$cond=false,$limit=false,$order=false,$p=false)
-	{
+	* Function used to select data from database
+	* @uses : { class : $db } { function dbselect }
+	*/
+
+	function dbselect($tbl,$fields='*',$cond=false,$limit=false,$order=false,$p=false) {
 		global $db;
 		return $db->dbselect($tbl,$fields,$cond,$limit,$order,$p);
 	}
@@ -1029,40 +1014,40 @@
 	
 	
 	/**
-	 * An easy function for erorrs and messages (e is basically short form of exception)
-	 * I dont want to use the whole Trigger and Exception code, so e pretty works for me :D
-	 * @param TEXT $msg
-	 * @param TYPE $type (e for Error, m for Message
-	 * @param INT $id Any Predefined Message ID
-	 */
+	* An easy function for erorrs and messages (e is basically short form of exception)
+	* I dont want to use the whole Trigger and Exception code, so e pretty works for me :D
+	* @param { string } { $msg } { message to display }
+	* @param { string } { $type } { e for error and m for message }
+	* @param { integer } { $id } { Any Predefined Message ID }
+	*/
 	
-	function e($msg=NULL,$type='e',$id=NULL)
-	{
+	function e($msg=NULL,$type='e',$id=NULL) {
 		global $eh;
-		if(!empty($msg))
+		if(!empty($msg)) {
 			return $eh->e($msg,$type,$id);
+		}
 	}
 	
-	
 	/**
-	 * Function used to get subscription template
-	 */
-	function get_subscription_template()
-	{
+	* Function used to get subscription template
+	* @uses : { function : lang }
+	*/
+
+	function get_subscription_template() {
 		global $LANG;
 		return lang('user_subscribe_message');
 	}
 	
-	
 	/**
-	 * Short form of print_r as pr
-	 */
-	function pr($text,$wrap_pre=false)
-	{
-		if(!$wrap_pre)
-		print_r($text);
-		else
-		{
+	* Print an array in pretty way 
+	* @param : { string / array } { $text } { Element to be printed }
+	* @param : { boolean } { $pretty } { false by default, prnints in pretty way if true }
+	*/
+
+	function pr($text,$pretty=false) {
+		if(!$pretty) {
+			print_r($text);
+		} else {
 			echo "<pre>";
 			print_r($text);
 			echo "</pre>";
@@ -1070,14 +1055,15 @@
 	}
 
 	/**
-	* PR extended into auto exiting
+	* Print an array in pretty way and exit right after
+	* @param : { string / array } { $text } { Element to be printed }
+	* @param : { boolean } { $pretty } { false by default, prnints in pretty way if true }
 	*/
-	function pex($text,$wrap_pre=false)
-	{
-		if(!$wrap_pre)
-		print_r($text);
-		else
-		{
+
+	function pex($text,$pretty=false) {
+		if(!$pretty) {
+			print_r($text);
+		} else {
 			echo "<pre>";
 			print_r($text);
 			echo "</pre>";
@@ -1085,13 +1071,12 @@
 		}
 	}
 	
-	
 	/**
-	 * This function is used to call function in smarty template
-	 * This wont let you pass parameters to the function, but it will only call it
-	 */
-	function FUNC($params)
-	{
+	* This function is used to call function in smarty template
+	* This wont let you pass parameters to the function, but it will only call it
+	*/
+
+	function FUNC($params) {
 		global $Cbucket;
 		//Function used to call functions by
 		//{func namefunction_name}
@@ -1102,119 +1087,150 @@
 	}
 	
 	/**
-	 * Function used to get userid anywhere 
-	 * if there is no user_id it will return false
-	 */
-	function user_id()
-	{
+	* Function used to get userid anywhere 
+	* if there is no user_id it will return false
+	* @uses : { class : $userquery } { var : userid }
+	*/
+
+	function user_id() {
 		global $userquery;
 		if($userquery->userid !='' && $userquery->is_login) return $userquery->userid; else false;
 	}
-	//replica
+	
+	/**
+	* Get current user's userid
+	* @uses : { function : user_id }
+	*/
+
 	function userid(){return user_id();}
 	
 	/**
-	 * Function used to get username anywhere 
-	 * if there is no usern_name it will return false
-	 */
-	function user_name()
-	{
+	* Function used to get username anywhere 
+	* if there is no usern_name it will return false
+	* @uses : { class : $userquery } { var : $username }
+	*/
+
+	function user_name() {
 		global $userquery;
-		if($userquery->user_name)
+		if($userquery->user_name) {
 			return $userquery->user_name;
-		else
+		} else {
 			return $userquery->get_logged_username();
+		}
 	}
+
+	/**
+	* Get loggedin user's username
+	* @uses : { function : user_name }
+	*/
+
 	function username(){return user_name();}
 	
 	/**
-	 * Function used to check weather user access or not
-	 */
-	function has_access($access,$check_only=TRUE,$verify_logged_user=true)
-	{
+	* Function used to check weather user access or not
+	* @uses : { class : $userquery } { function : login_check }
+	*/
+
+	function has_access($access,$check_only=TRUE,$verify_logged_user=true) {
 		global $userquery;
-		//dump($userquery->login_check($access,$check_only,$verify_logged_user));
 		return $userquery->login_check($access,$check_only,$verify_logged_user);
 	}
 	
 	/**
-	 * Function used to return mysql time
-	 * @author : Fwhite
-	 */
-	function NOW()
-	{
+	* Function used to return mysql time
+	* @return : { current time }
+	* @author : Fwhite
+	*/
+
+	function NOWNOW() {
 		return date('Y-m-d H:i:s', time());
 	}
 	
 	
 	/**
-	 * Function used to get Regular Expression from database
-	 * @param : code
-	 */
-	function get_re($code)
-	{
+	* Function used to get Regular Expression from database
+	* @param : { string } { $code } { code to be filtered }
+	*/
+
+	function get_re($code) {
 		global $db;
 		$results = $db->select(tbl("validation_re"),"*"," re_code='$code'");
-		if($db->num_rows>0)
-		{
+		if($db->num_rows>0) {
 			return $results[0]['re_syntax'];
-		}else{
+		} else {
 			return false;
 		}
 	}
-	function get_regular_expression($code)
-	{
+
+	/**
+	* Get regular expression from code
+	* @uses : { function : get_re }
+	*/
+
+	function get_regular_expression($code) {
 		return get_re($code); 
 	}
 	
 	/**
-	 * Function used to check weather input is valid or not
-	 * based on preg_match
-	 */
-	function check_re($syntax,$text)
-	{
+	* Function used to check weather input is valid or not
+	* based on preg_match
+	*/
+
+	function check_re($syntax,$text) {
 		preg_match('/'.$syntax.'/i',$text,$matches);
-		if(!empty($matches[0]))
-		{
+		if(!empty($matches[0])) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
-	function check_regular_expression($code,$text)
-	{
+
+	/**
+	* Check regular expression
+	* @uses: { function : check_re }
+	*/
+
+	function check_regular_expression($code,$text) {
 		return check_re($code,$text); 
 	}
 	
 	/**
-	 * Function used to check field directly
-	 */
-	function validate_field($code,$text)
-	{
+	* Function used to check field directly
+	* @uses : { function : check_regular_expression }
+	*/
+
+	function validate_field($code,$text) {
 		$syntax =  get_re($code);
-		if(empty($syntax))
+		if(empty($syntax)) {
 			return true;
+		}
 		return check_regular_expression($syntax,$text);
 	}
-	
-	function is_valid_syntax($code,$text)
-	{
-		if(DEV_INGNORE_SYNTAX)
+
+	/**
+	* Check if syntax is valid
+	* @uses : { function : validate_field }
+	*/
+
+	function is_valid_syntax($code,$text) {
+		if(DEV_INGNORE_SYNTAX) {
 			return true;
+		}
 		return validate_field($code,$text);
 	}
 	
 	/**
-	 * Function used to apply function on a value
-	 */
-	function is_valid_value($func,$val)
-	{
-		if(!function_exists($func))
+	* Function used to apply function on a value
+	*/
+
+	function is_valid_value($func,$val) {
+		if(!function_exists($func)) {
 			return true;
-		elseif(!$func($val))
+		} elseif(!$func($val)) {
 			return false;
-		else
+		} else {
 			return true;
+		}
 	}
 	
 	/**
