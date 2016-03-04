@@ -3084,50 +3084,47 @@
 	
 	
 	/**
-	 * Function used to ingore errors
-	 * that are created when there is wrong action done
-	 * on clipbucket ie inavalid username etc
-	 */
-	function ignore_errors()
-	{
+	* Function used to ingore errors
+	* that are created when there is wrong action done
+	* on clipbucket ie inavalid username etc
+	* 
+	* @deprecated : { function is not used anymore and will be removed in next version }
+	*/
+
+	function ignore_errors() {
 		global $ignore_cb_errors;
 		$ignore_cb_errors = TRUE;
 	}
 	
 	/**
-	 * Function used to set $ignore_cb_errors 
-	 * back to TRUE so our error catching system
-	 * can generate errors
-	 */
-	function catch_error()
-	{
+	* Function used to set $ignore_cb_errors 
+	* back to TRUE so our error catching system
+	* can generate errors
+	* @deprecated : { function is not used anymore and will be removed in next version }
+	*/
+
+	function catch_error() {
 		global $ignore_cb_errors;
 		$ignore_cb_errors = FALSE;
 	}
 	
 	
 	/**
-	 * Function used to call sub_menu_easily
-	 */
-	function sub_menu()
-	{
-		/**
-		 * Submenu function used to used to display submenu links
-		 * after navbar
-		 */
+	* Function used to call sub_menu_easily
+	*/
+
+	function sub_menu() {
+		# Submenu function used to used to display submenu links
+		# after navbar
 		$funcs = get_functions('sub_menu');
-		if(is_array($funcs) && count($funcs)>0)
-		{
-			foreach($funcs as $func)
-			{
-				if(function_exists($func))
-				{
+		if(is_array($funcs) && count($funcs)>0) {
+			foreach($funcs as $func) {
+				if(function_exists($func)) {
 					return $func($u);
 				}
 			}
 		}
 	}
-	
 	
 	/**
 	* Adds title for ClipBucket powered website
