@@ -1556,10 +1556,11 @@
 	
 	
 	/**
-	 * Function used to get msg_list
-	 */
-	function msg_list()
-	{
+	* Function used to get msg_list
+	* @uses : { class : $eh } { function : $message_list }
+	*/
+
+	function msg_list() {
 		global $eh;
 		return $eh->message_list;
 	}
