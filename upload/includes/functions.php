@@ -16,36 +16,43 @@
 	include_once 'upload_forms.php';
  
  	/**
-    * Function used to throw
-    ** @param  $message pointer
-    ** @return message
+    * Function used to throw error
+	* @param { string } { $message } { message to show }
+	* @return { string } { $message } { error message }
     */
-    function throw_error($message,$pointer="")
-    {
+    function throw_error($message,$pointer="") {
         global $Cbucket;
         if($pointer)
         $Cbucket->error_pointer[$pointer] = $message;
           throw new Exception($message);
     }
  
-	//This Funtion is use to get CURRENT PAGE DIRECT URL
-	function curPageURL()
-	{
+	/**
+	* This Funtion is use to get CURRENT PAGE DIRECT URL
+	* @return : { string } { $pageURL } { url of current page }
+	*/
+
+	function curPageURL() {
  		$pageURL = 'http';
 		if (@$_SERVER["HTTPS"] == "on") {
-		$pageURL .= "s";
+			$pageURL .= "s";
 		}
 		$pageURL .= "://";
  		$pageURL .= $_SERVER['SERVER_NAME'];
 		$pageURL .= $_SERVER['PHP_SELF'];
 		$query_string = $_SERVER['QUERY_STRING'];
-		if(!empty($query_string)){
-		$pageURL .= '?'.$query_string;
+		if(!empty($query_string)) {
+			$pageURL .= '?'.$query_string;
 		}
  		return $pageURL;
 	}
 	
-	//QuotesReplace
+	/**
+	* Cleans a string by putting it through multiple layers
+	* @param : { string } { string to be cleaned }
+	* @return : { string } { $string } { cleaned string }
+	*/
+
 	function Replacer($string) {
 		//Wp-Magic Quotes
 		$string = preg_replace("/'s/", '&#8217;s', $string);
@@ -59,7 +66,6 @@
 		$string = preg_replace("/'([\s.]|\Z)/", '&#8217;$1', $string);
 		$string = preg_replace("/ \(tm\)/i", ' &#8482;', $string);
 		$string = str_replace("''", '&#8221;', $string);
-
 		$array = array('/& /');
 		$replace = array('&amp; ') ;
 		return $string = preg_replace($array,$replace,$string);
