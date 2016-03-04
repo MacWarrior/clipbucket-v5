@@ -141,77 +141,36 @@
 	
 	}
 
-
- //This Function Is Used To Display Tags Cloud
-	 function TagClouds($cloudquery)
-	{
-			$tags = array();
-			$cloud = array();
-			$query = mysql_query($cloudquery);
-			while ($t = mysql_fetch_array($query))
-			{
-					$db = explode(' ', $t[0]);
-					while (list($key, $value) = each($db))
-					{
-							@$keyword[$value] += 1;
-					}
-			}
-			if (is_array(@$keyword))
-			{
-					$minFont = 11;
-					$maxFont = 22;
-					$min = min(array_values($keyword));
-					$max = max(array_values($keyword));
-					$fix = ($max - $min == 0) ? 1 : $max - $min;
-					// Display the tags
-					foreach ($keyword as $tag => $count)
-					{
-							$size = $minFont + ($count - $min) * ($maxFont - $minFont) / $fix;
-							$cloud[] = '<a class=cloudtags style="font-size: ' . floor($size) . 'px;" href="' . BASEURL.search_result.'?query=' . $tag . '" title="Tags: ' . ucfirst($tag) . ' was used ' . $count . ' times"><span>' . mysql_clean($tag) . '</span></a>';
-					}
-					$shown = join("\n", $cloud) . "\n";
-					return $shown;
-			}
-		}
-		
-
-			
 	/**
-	 * Function used to send emails
-	 * @Author : Arslan Hassan
-	 * this is a very basic email function 
-	 * you can extend or replace this function easily
-	 * read our docs.clip-bucket.com
-	 */
-	function cbmail($array)
-	{
+	* Function used to send emails. this is a very basic email function 
+	* you can extend or replace this function easily
+	* @param : { array } { $array } { array with all details of email }
+	* @param_list : { content, subject, to, from, to_name, from_name }
+	* @author : Arslan Hassan
+	*/
+
+	function cbmail($array) {
 		$func_array = get_functions('email_functions');
-		if(is_array($func_array))
-		{
-			foreach($func_array as $func)
-			{
-				if(function_exists($func))
-				{
+		if(is_array($func_array)) {
+			foreach($func_array as $func) {
+				if(function_exists($func)) {
 					return $func($array);
 				}
 			}
 		}
-		
 		$content = escape_gpc($array['content']);
 		$subject = escape_gpc($array['subject']);
 		$to		 = $array['to'];
 		$from	 = $array['from'];
 		$to_name = $array['to_name'];
 		$from_name = $array['from_name'];
-		
-		if($array['nl2br'])
+		if($array['nl2br']) {
 			$content = nl2br($content);
+		}
 		
 		# CHecking Content
-		if(preg_match('/<html>/',$content,$matches))
-		{
-			if(empty($matches[1]))
-			{
+		if(preg_match('/<html>/',$content,$matches)) {
+			if(empty($matches[1])) {
 				$content = wrap_email_content($content);
 			}
 		}
@@ -220,14 +179,10 @@
 		//ClipBucket uses PHPMailer for sending emails
 		include_once("classes/phpmailer/class.phpmailer.php");
 		include_once("classes/phpmailer/class.smtp.php");
-		
 		$mail  = new PHPMailer(); // defaults to using php "mail()"
-		
 		$mail_type = config('mail_type');
-		
 		//---Setting SMTP ---		
-		if($mail_type=='smtp')
-		{
+		if($mail_type=='smtp') {
 			$mail->IsSMTP(); // telling the class to use SMTP
 			$mail->Host       = config('smtp_host'); // SMTP server
 			if(config('smtp_auth')=='yes')
@@ -237,99 +192,112 @@
 			$mail->Password   = config('smtp_pass');        // SMTP account password
 		}
 		//--- Ending Smtp Settings
-		
 		$mail->SetFrom($from, $from_name);
-		
-		if(is_array($to))
-		{
-			foreach($to as $name)
-			{		
+		if(is_array($to)) {
+			foreach($to as $name) {		
 				$mail->AddAddress(strtolower($name), $to_name);
 			}
 		} else {
 			$mail->AddAddress(strtolower($to), $to_name);
 		}
-		
 		$mail->Subject = $subject;
-		$mail->MsgHTML($message);
-				
-		if(!$mail->Send())
-		{
-			//apply check here nafisa	
-			if(has_access('admin_access',TRUE) )
+		$mail->MsgHTML($message);		
+		if(!$mail->Send()) {
+			if(has_access('admin_access',TRUE) ) {
 		  		e("Mailer Error: " . $mail->ErrorInfo);
-		  return false;
-		}else
+			}
+		  	return false;
+		} else {
 			return true;
+		}
 	}
-	function send_email($from,$to,$subj,$message)
-	{
+
+	/**
+	* Send email from PHP
+	* @uses : { function : cbmail }
+	*/
+
+	function send_email($from,$to,$subj,$message) {
 		return cbmail(array('from'=>$from,'to'=>$to,'subject'=>$subj,'content'=>$message));
 	}
 	
 	/**
-	 * Function used to wrap email content in 
-	 * HTML AND BODY TAGS
-	 */
-	function wrap_email_content($content)
-	{
+	* Function used to wrap email content in adds HTML AND BODY TAGS
+	* @param : { string } { $content } { contents of email to be wrapped }
+	*/
+
+	function wrap_email_content($content) {
 		return '<html><body>'.$content.'</body></html>';
 	}
 	
 	/**
-	 * Function used to get file name
-	 */
-	function GetName($file)
-	{
-		if(!is_string($file))
+	* Function used to get file name
+	* @param : { string } { $file } { file path to get name for }
+	*/
+
+	function GetName($file) {
+		if(!is_string($file)) {
 			return false;
-		
+		}
 		//for srever thumb files 
 		$parts = parse_url($file);
         parse_str($parts['query'], $query);
         $get_file_name = $query['src'];
         $path = explode('.',$get_file_name);
         $server_thumb_name = $path[0];
-        if (!empty($server_thumb_name))
+        if (!empty($server_thumb_name)) {
         	return $server_thumb_name;
-        /*srever thumb files END */
-
+        }
+        /*srever thumb files END */ 
 		$path = explode('/',$file);
-		if(is_array($path))
+		if(is_array($path)) {
 			$file = $path[count($path)-1];
+		}
 		$new_name 	 = substr($file, 0, strrpos($file, '.'));
 		return $new_name;
 	}
 
-        function get_elapsed_time($ts,$datetime=1)
-        {
-          if($datetime == 1)
-          {
-          $ts = date('U',strtotime($ts));
-          }
-          $mins = floor((time() - $ts) / 60);
-          $hours = floor($mins / 60);
-          $mins -= $hours * 60;
-          $days = floor($hours / 24);
-          $hours -= $days * 24;
-          $weeks = floor($days / 7);
-          $days -= $weeks * 7;
-          $t = "";
-          if ($weeks > 0)
-            return "$weeks week" . ($weeks > 1 ? "s" : "");
-          if ($days > 0)
-            return "$days day" . ($days > 1 ? "s" : "");
-          if ($hours > 0)
-            return "$hours hour" . ($hours > 1 ? "s" : "");
-          if ($mins > 0)
-            return "$mins min" . ($mins > 1 ? "s" : "");
-          return "< 1 min";
-        }
+	/**
+	* Get time elapsed
+	* @deprecated : { function has been deprecated and will be removed in next version }
+	*/
 
-	//Function Used TO Get Extensio Of File
-		function GetExt($file){
-			return strtolower(substr($file, strrpos($file,'.') + 1));
-			}
+    function get_elapsed_time($ts,$datetime=1) {
+      if($datetime == 1) {
+      	$ts = date('U',strtotime($ts));
+      }
+      $mins = floor((time() - $ts) / 60);
+      $hours = floor($mins / 60);
+      $mins -= $hours * 60;
+      $days = floor($hours / 24);
+      $hours -= $days * 24;
+      $weeks = floor($days / 7);
+      $days -= $weeks * 7;
+      $t = "";
+      if ($weeks > 0) {
+        return "$weeks week" . ($weeks > 1 ? "s" : "");
+      }
+      if ($days > 0) {
+        return "$days day" . ($days > 1 ? "s" : "");
+      }
+      if ($hours > 0) {
+        return "$hours hour" . ($hours > 1 ? "s" : "");
+      }
+      if ($mins > 0) {
+        return "$mins min" . ($mins > 1 ? "s" : "");
+      }
+      return "< 1 min";
+    }
+
+    /**
+	* Function Used TO Get Extensio Of File
+	* @param : { string } { $file } { file to get extension of }
+	* @return : { string } { extension of file }
+    */
+	
+	function GetExt($file) {
+		return strtolower(substr($file, strrpos($file,'.') + 1));
+	}
 
 	/**
 	* Convert given seconds in Hours Minutes Seconds format
