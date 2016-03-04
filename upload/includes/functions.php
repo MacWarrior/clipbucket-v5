@@ -1302,22 +1302,21 @@
 		 	return "/usr/bin/php";
 	 }
 	 
-	 /**
-	  * Functon used to get binary paths
-	  */
-	 function get_binaries($path)
-	 {
-		 if(is_array($path))
-		 {
+	/**
+	* Functon used to get binary paths
+	* @param : { string } { $path } { element to get path for }
+	*/
+
+	function get_binaries($path)
+	{
+		if(is_array($path)) {
 			 $type = $path['type'];
 			 $path = $path['path'];
 		 }
-		
-		if($type=='' || $type=='user')
-		{
+
+		if($type=='' || $type=='user') {
 			$path = strtolower($path);
-			switch($path)
-			{
+			switch($path) {
 				case "php":
 				return php_path();
 				break;
@@ -1346,51 +1345,54 @@
 				return config("ffmpegpath");
 				break;
 			}
-		}else{
+		} else {
 			$path = strtolower($path);
-			switch($path)
-			{
+			switch($path) {
 				case "php":
 				$return_path = shell_output("which php");
-				if($return_path)
+				if($return_path) {
 					return $return_path;
-				else
+				} else {
 					return "Unable to find PHP path";
+				}
 				break;
 				
 				case "mp4box":
 				$return_path =  shell_output("which MP4Box");
-				if($return_path)
+				if($return_path) {
 					return $return_path;
-				else
+				} else {
 					return "Unable to find mp4box path";
+				}
 				break;
 				
 				case "flvtool2":
 				$return_path =  shell_output("which flvtool2");
-				if($return_path)
+				if($return_path) {
 					return $return_path;
-				else
+				} else {
 					return "Unable to find flvtool2 path";
+				}
 				break;
 				
 				case "ffmpeg":
 				$return_path =  shell_output("which ffmpeg");
-				if($return_path)
+				if($return_path) {
 					return $return_path;
-				else
+				} else {
 					return "Unable to find ffmpeg path";
+				}
 				break;
 			}
 		}
-	 }
-	 
+	}
 	 
 	/**
-	 * Function in case htmlspecialchars_decode does not exist
-	 */
-	function unhtmlentities ($string)
-	{
+	* Function in case htmlspecialchars_decode does not exist
+	* @param : { string } { $string } { string to decode }
+	*/
+
+	function unhtmlentities ($string) {
 		$trans_tbl =get_html_translation_table (HTML_ENTITIES );
 		$trans_tbl =array_flip ($trans_tbl );
 		return strtr ($string ,$trans_tbl );
