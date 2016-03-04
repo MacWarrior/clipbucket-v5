@@ -2344,40 +2344,28 @@
 		
 	}
 	
-	
 	/**
-	 * Function used to get post var
-	 */
-	function post($var)
-	{
+	* Function used to get post var
+	* @param : { string } { $var } { variable to get value for }
+	*/
+
+	function post($var) {
 		return $_POST[$var];
 	}
 	
 	
 	/**
-	 * Function used to show sharing form
-	 */
-	function show_share_form($array)
-	{
-		
-		assign('params',$array);
-        if(SMARTY_VERSION>2)
-            Template('blocks/common/share.html');
-        else
-            Template('blocks/share_form.html');
+	* Function used to show flag form
+	* @param : { array } { $array } { array of parameters }
+	*/
 
-	}
-	
-	/**
-	 * Function used to show flag form
-	 */
-	function show_flag_form($array)
-	{
+	function show_share_form($array) {
 		assign('params',$array);
-        if(SMARTY_VERSION>2)
-            Template('blocks/common/report.html');
-        else
-            Template('blocks/flag_form.html');
+        if(SMARTY_VERSION>2) {
+            Template('blocks/common/share.html');
+        } else {
+            Template('blocks/share_form.html');
+        }
 	}
 	
 	/**
@@ -2385,27 +2373,32 @@
 	* @param : { array } { $array } { array of parameters }
 	*/
 
-	function show_playlist_form($array)
-	{
+	function show_flag_form($array) {
+		assign('params',$array);
+        if(SMARTY_VERSION>2) {
+            Template('blocks/common/report.html');
+        } else {
+            Template('blocks/flag_form.html');
+        }
+	}
+	
+	/**
+	* Function used to show playlist form
+	* @param : { array } { $array } { array of parameters }
+	*/
+
+	function show_playlist_form($array) {
 		global $cbvid;
 		assign('params',$array);
-		
 		// decides to show all or user only playlists
 		// depending on the parameters passed to it
-
-		if (!empty($array['user']))
-		{
+		if (!empty($array['user'])) {
 			$playlists = $cbvid->action->get_playlists($array);
-		}
-		else
-		{
+		} else {
 			$playlists = $cbvid->action->get_playlists();
 		}
-
 		assign('playlists',$playlists);
-
-      
-            Template('blocks/common/playlist.html');
+        Template('blocks/common/playlist.html');
        
 	}
 	
