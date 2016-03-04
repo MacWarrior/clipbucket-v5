@@ -331,110 +331,110 @@
 			return strtolower(substr($file, strrpos($file,'.') + 1));
 			}
 
-	function old_set_time($temps)
-	{
-			round($temps);
-			$heures = floor($temps / 3600);
-			$minutes = round(floor(($temps - ($heures * 3600)) / 60));
-			if ($minutes < 10)
-					$minutes = "0" . round($minutes);
-			$secondes = round($temps - ($heures * 3600) - ($minutes * 60));
-			if ($secondes < 10)
-					$secondes = "0" .  round($secondes);
-			return $minutes . ':' . $secondes;
-	}
+	/**
+	* Convert given seconds in Hours Minutes Seconds format
+	* @param : { integer } { $sec } { seconds to conver }
+	* @return : { string } { $hms } { formatted time string }
+	*/
+
 	function SetTime($sec, $padHours = true) {
-	
-		if($sec < 3600)
+		if($sec < 3600) {
 			return old_set_time($sec);
-			
+		}
 		$hms = "";
-	
 		// there are 3600 seconds in an hour, so if we
 		// divide total seconds by 3600 and throw away
 		// the remainder, we've got the number of hours
 		$hours = intval(intval($sec) / 3600);
-	
 		// add to $hms, with a leading 0 if asked for
 		$hms .= ($padHours)
 			  ? str_pad($hours, 2, "0", STR_PAD_LEFT). ':'
 			  : $hours. ':';
-	
 		// dividing the total seconds by 60 will give us
 		// the number of minutes, but we're interested in
 		// minutes past the hour: to get that, we need to
 		// divide by 60 again and keep the remainder
 		$minutes = intval(($sec / 60) % 60);
-	
 		// then add to $hms (with a leading 0 if needed)
 		$hms .= str_pad($minutes, 2, "0", STR_PAD_LEFT). ':';
-	
 		// seconds are simple - just divide the total
 		// seconds by 60 and keep the remainder
 		$seconds = intval($sec % 60);
-	
 		// add to $hms, again with a leading 0 if needed
 		$hms .= str_pad($seconds, 2, "0", STR_PAD_LEFT);
-	
 		return $hms;
 	}
 	
-	//Simple Validation
+	/**
+	* Check if provided is a valid string
+	* @param : { string } { $text } { string to be checked }
+	* @return : { boolean } { true if string, else fasle }
+	*/
+
 	function isValidText($text){
       $pattern = "^^[_a-z0-9-]+$";
       if (eregi($pattern, $text)){
          return true;
-      	}else {
+      	} else {
          return false;
       }   
    }
 
-   //Function Used To Validate Email
+    /**
+	* Checks if provided email is valid or not
+	* @param : { string } { $email } { email address to check }
+	* @return : { boolean } { if valid return true, else false }
+    */
 	
 	function isValidEmail($email){
       $pattern = "/[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/i";
 	  preg_match($pattern, $email,$matches);
-      if ($matches[0]!=''){
-         return true;
-      }
-      else {
-		/* if(!DEVELOPMENT_MODE)
-         	return false;
-		 else*/
-		 	return true;
+      if ($matches[0]!='') {
+        	return true;
+      } else {
+			return true;
       }   
    }
 
-   //Function Used To Validate Email
-    function is_valid_email($email)
-	{
+    /**
+	* Checks if provided email is valid or not
+	* @param : { string } { $email } { email address to check }
+	* @return : { boolean } { if valid return true, else false }
+    */
+
+    function is_valid_email($email) {
 	    $pattern = "/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/";
-	    /*pr(preg_match($pattern, $email),true);*/
-	    if(preg_match($pattern, $email))
+	    if(preg_match($pattern, $email)) {
 	        return true;
-	    else
+	    } else {
 	     return false;
+	    }
 	}
 
-   
-   	// THIS FUNCTION SETS HTMLSPECIALCHARS_DECODE IF FUNCTION DOESN'T EXIST
-	// INPUT: $text REPRESENTING THE TEXT TO DECODE
-	//	  $ent_quotes (OPTIONAL) REPRESENTING WHETHER TO REPLACE DOUBLE QUOTES, ETC
-	// OUTPUT: A STRING WITH HTML CHARACTERS DECODED
+	/**
+	* Decode html special characters
+	* @param : { string } { $text } { text to decode }
+	* @return : { string } { $text } { decoded string }
+	*/
+
 	if(!function_exists('htmlspecialchars_decode')) {
 		function htmlspecialchars_decode($text, $ent_quotes = "") {
-		$text = str_replace("&quot;", "\"", $text);
-		$text = str_replace("&#039;", "'", $text);
-		$text = str_replace("&lt;", "<", $text);
-		$text = str_replace("&gt;", ">", $text);
-		$text = str_replace("&amp;", "&", $text);
-		return $text;
+			$text = str_replace("&quot;", "\"", $text);
+			$text = str_replace("&#039;", "'", $text);
+			$text = str_replace("&lt;", "<", $text);
+			$text = str_replace("&gt;", ">", $text);
+			$text = str_replace("&amp;", "&", $text);
+			return $text;
 		}
-	} // END htmlspecialchars() FUNCTION
-	
-	//THIS FUNCTION IS USED TO LIST FILE TYPES IN FLASH UPLOAD
-	//INPUT FILE TYPES
-	//OUTPUT FILE TYPE IN PROPER FORMAT
+	} 
+
+	/**
+	*THIS FUNCTION IS USED TO LIST FILE TYPES IN FLASH UPLOAD
+	* INPUT FILE TYPES
+	* OUTPUT FILE TYPE IN PROPER FORMAT
+	* @deprecated : { function has been deprecated and will be removed in next version }
+	*/
+
 	function ListFileTypes($types){
 		$types_array = preg_replace('/,/',' ',$types);
 		$types_array = explode(' ',$types_array);
@@ -445,38 +445,34 @@
 		if($i!=count($types_array))$list .= ';';
 		}
 		}
-	return $list;
+		return $list;
 	}
 
 	/**
-	 * Get Directory Size - get_video_file($vdata,$no_video,false);
-	 */
-	function get_directory_size($path)
-	{
+	* Get Directory Size - get_video_file($vdata,$no_video,false);
+	* @param : { string } { $path } { path to directory to determine size of }
+	* @return : { integer } { $total } { size of directory }
+	*/
+
+	function get_directory_size($path) {
 		$totalsize = 0;
 		$totalcount = 0;
 		$dircount = 0;
-		if ($handle = opendir ($path))
-		{
-		while (false !== ($file = readdir($handle)))
-		{
-		  $nextpath = $path . '/' . $file;
-		  if ($file != '.' && $file != '..' && !is_link ($nextpath))
-		  {
-			if (is_dir ($nextpath))
-			{
-			  $dircount++;
-			  $result = get_directory_size($nextpath);
-			  $totalsize += $result['size'];
-			  $totalcount += $result['count'];
-			  $dircount += $result['dircount'];
-			}
-			elseif (is_file ($nextpath))
-			{
-			  $totalsize += filesize ($nextpath);
-			  $totalcount++;
-			}
-		  }
+		if ($handle = opendir ($path)) {
+		while (false !== ($file = readdir($handle))) {
+		  	$nextpath = $path . '/' . $file;
+		  	if ($file != '.' && $file != '..' && !is_link ($nextpath))  {
+				if (is_dir ($nextpath)) {
+				  $dircount++;
+				  $result = get_directory_size($nextpath);
+				  $totalsize += $result['size'];
+				  $totalcount += $result['count'];
+				  $dircount += $result['dircount'];
+				} elseif (is_file ($nextpath)) {
+				  $totalsize += filesize ($nextpath);
+				  $totalcount++;
+				}
+		  	}
 		}
 		}
 		closedir ($handle);
@@ -485,9 +481,13 @@
 		$total['dircount'] = $dircount;
 		return $total;
 	}
-	//FUNCTION USED TO FORMAT FILE SIZE
-	//INPUT BYTES
-	//OUTPT MB , Kib
+	
+	/**
+	* Format filze size in readable format
+	* @param : { integer } { $data } { size in bytes }
+	* @return : { string } { $data } { file size in readable format }
+	*/
+
 	function formatfilesize( $data ) {
         // bytes
         if( $data < 1024 ) {
@@ -649,10 +649,10 @@
 	
 	/**
 	* FUNCTION USED TO GET ADVERTISMENT
-	* @param : array(Ad Code, LIMIT);
+	* @param : { array } { $params } { array of parameters }
 	*/
-	function getAd($params)
-	{
+
+	function getAd($params) {
 		global $adsObj;
 		$data = '';
 		if($params['style'] || $params['class'] || $params['align'])
