@@ -1,29 +1,26 @@
 <?php
-/**
-###################################################################
-# Copyright (c) 2008 - 2010 ClipBucket / PHPBucket
-# URL:              [url]http://clip-bucket.com[/url]
-# Function:         Various
-# Author:           Arslan Hassan
-# Language:         PHP
-# License:          Attribution Assurance License
-# [url]http://www.opensource.org/licenses/attribution.php[/url]
-# Version:          $Id: functions.php 1068 2013-05-22 08:26:28Z ahzulfi $
-# Last Modified:    $Date: 2013-05-22 13:26:28 +0500 (Wed, 22 May 2013) $
-# Notice:           Please maintain this section
-####################################################################
-**/
 
- define("SHOW_COUNTRY_FLAG",TRUE);
- require 'define_php_links.php';
- include_once 'upload_forms.php';
+/**
+* File: Functions
+* Description: Various kind of functions to do ClipBucket jobs
+* @license: Attribution Assurance License
+* @since: ClipBucket 1.0
+* @author[s]: Arslan Hassan, Fawaz Tahir, Fahad Abbass, Awais Tariq, Saqib Razzaq
+* @copyright: (c) 2008 - 2010 ClipBucket / PHPBucket
+* @notice: Please maintain this section
+* @modified: March 4th, 2016 ClipBucket 2.8.1
+*/
+
+	define("SHOW_COUNTRY_FLAG",TRUE);
+	require 'define_php_links.php';
+	include_once 'upload_forms.php';
  
  	/**
     * Function used to throw
     ** @param  $message pointer
     ** @return message
     */
-   function throw_error($message,$pointer="")
+    function throw_error($message,$pointer="")
     {
         global $Cbucket;
         if($pointer)
@@ -3039,8 +3036,10 @@
 	}
 	
 	/**
-	 * Function used to load captcha
-	 */
+	* Function used to load captcha
+	* @param : { array } { $params } { an array of parametrs }
+	*/
+
 	define("GLOBAL_CB_CAPTCHA","cb_captcha");
 	function load_captcha($params)
 	{
@@ -3068,18 +3067,18 @@
 	}
 	
 	/**
-	 * Function used to verify captcha
-	 */
-	function verify_captcha()
-	{
+	* Function used to verify captcha
+	*/
+
+	function verify_captcha() {
 		$var = post('cb_captcha_enabled');
-		if($var=='yes')
-		{
+		if($var == 'yes') {
 			$captcha = get_captcha();
 			$val = $captcha['validate_function'](post(GLOBAL_CB_CAPTCHA));
 			return $val;
-		}else
+		} else {
 			return true;
+		}
 	}
 	
 	
@@ -3100,6 +3099,7 @@
 	* Function used to set $ignore_cb_errors 
 	* back to TRUE so our error catching system
 	* can generate errors
+	*
 	* @deprecated : { function is not used anymore and will be removed in next version }
 	*/
 
