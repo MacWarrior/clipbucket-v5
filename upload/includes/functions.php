@@ -1661,65 +1661,63 @@
 		return true;
 	}
 	
-	
-	
-	
-	
 	/**
-	 * Function used to check weather username already exists or not
-	 * @input USERNAME
-	 */
-	function user_exists($user)
-	{
+	* Function used to check weather username already exists or not
+	* @uses : { class : $userquery } { function : username_exists }
+	*/
+
+	function user_exists($user) {
 		global $userquery;
 		return $userquery->username_exists($user);
 	}
 	
 	/**
-	 * Function used to check weather email already exists or not
-	 * @input email
-	 */
-	function email_exists($user)
-	{
+	* Function used to check weather email already exists or not
+	* @param : { string } { $user } { email address to check }
+	* @uses : { class : $userquery } { function : duplicate_email }
+	*/
+
+	function email_exists($user) {
 		global $userquery;
 		return $userquery->duplicate_email($user);
 	}
 	
 	/**
-	 * function used to check weather group URL exists or not
-	 */
-	function group_url_exists($url)
-	{
+	* function used to check weather group URL exists or not
+	* @uses : { class : cbgroup } { function : group_url_exists }
+	* @deprecated : { function has been deprecated and will be removed in next version }
+	*/
+
+	function group_url_exists($url) {
 		global $cbgroup;
 		return $cbgroup->group_url_exists($url);
 	}
 	
 	
 	/**
-	 * Function used to check weather erro exists or not
-	 */
-	function error($param='array')
-	{
-		if(count(error_list())>0)
-		{
-			if($param!='array')
-			{
-				if($param=='single')
+	* Function used to check weather error exists or not
+	*/
+
+	function error($param='array') {
+		if (count(error_list())>0) {
+			if($param!='array') {
+				if($param=='single') {
 					$param = 0;
+				}
 				$msg = error_list();
 				return $msg[$param];
 			}
 			return error_list();
-		}else{
+		} else {
 			return false;
 		}
 	}
 	
 	/**
-	 * Function used to check weather msg exists or not
-	 */
-	function msg($param='array')
-	{
+	* Function used to check weather msg exists or not
+	*/
+
+	function msg($param='array') {
 		if(count(msg_list())>0)
 		{
 			if($param!='array')
@@ -1735,104 +1733,103 @@
 		}
 	}
 	
-	
-	
 	/**
-	 * Function used to load plugin
-	 * please check docs.clip-bucket.com
-	 */
-	function load_plugin()
-	{
+	* Function used to load plugin
+	*/
+
+	function load_plugin() {
 		global $cbplugin;
 		
 	}
 	
-	
-	
 	/**
-	 * Function used to create limit functoin from current page & results
-	 */
-	function create_query_limit($page,$result)
-	{
-		$limit  = $result;	
-		if(empty($page) || $page == 0 || !is_numeric($page)){
-		$page   = 1;
+	* Function used to create limit functoin from current page & results
+	*/
 
+	function create_query_limit($page,$result) {
+		$limit  = $result;	
+		if(empty($page) || $page == 0 || !is_numeric($page)) {
+			$page = 1;
 		}
-		$from 	= $page-1;
-		$from 	= $from*$limit;
-		
+		$from = $page - 1;
+		$from = $from*$limit;
 		return $from.','.$result;
 	}
 	
 	
 	/**
-	 * Function used to get value from $_GET
-	 */
-	function get_form_val($val,$filter=false)
-	{
-		if($filter)
-			return form_val($_GET[$val]);
-		else
-			return $_GET[$val];
-	}function get($val){ return get_form_val($val); }
-	
-	/**
-	 * Function used to get value form $_POST
-	 */
-	function post_form_val($val,$filter=false)
-	{
-		if($filter)
-			return form_val($_POST[$val]);
-		else
-			$_POST[$val];
-	}
-	
-	
-	/**
-	 * Function used to get value from $_REQUEST
-	 */
-	function request_form_val($val,$filter=false)
-	{
-		if($filter)
-			return form_val($_REQUEST[$val]);
-		else
-			$_REQUEST[$val];
-	}
-	
-	
-	/**
-	 * Function used to return LANG variable
-	 */
-	function lang($var,$sprintf=false)
-	{
-		global $LANG,$Cbucket;
+	* Function used to get value from $_GET
+	* @param : { string } { $val } { value to fetch from $_GET }
+	* @param : { boolean } { $filter } { false by default, filters value if true }
+	*/
 
-		$array_str = array
-		( '{title}');
-		$array_replace = array
-		( $Cbucket->configs['site_title'] );
-		
-		if(isset($LANG[$var]))
-		{
+	function get_form_val($val,$filter=false) {
+		if($filter) {
+			return form_val($_GET[$val]);
+		} else {
+			return $_GET[$val];
+		}
+	}
+
+	/**
+	* Function used to get value from $_GET
+	* @uses : { function : get_form_val }
+	*/
+
+	function get($val){ return get_form_val($val); }
+	
+	/**
+	* Function used to get value from $_POST
+	* @param : { string } { $val } { value to fetch from $_POST }
+	* @param : { boolean } { $filter } { false by default, filters value if true }
+	*/
+
+	function post_form_val($val,$filter=false) {
+		if($filter) {
+			return form_val($_POST[$val]);
+		} else {
+			return $_POST[$val];
+		}
+	}
+	
+	
+	/**
+	* Function used to get value from $_REQUEST
+	* @param : { string } { $val } { value to fetch from $_REQUEST }
+	* @param : { boolean } { $filter } { false by default, filters value if true }
+	*/
+
+	function request_form_val($val,$filter=false) {
+		if($filter) {
+			return form_val($_REQUEST[$val]);
+		} else {
+			return $_REQUEST[$val];
+		}
+	}
+	
+	
+	/**
+	* Function used to return LANG variable
+	*/
+
+	function lang($var,$sprintf=false) {
+		global $LANG,$Cbucket;
+		$array_str = array( '{title}');
+		$array_replace = array( $Cbucket->configs['site_title'] );
+		if(isset($LANG[$var])) {
 			$phrase =  str_replace($array_str,$array_replace,$LANG[$var]);
-		}else
-		{
+		} else {
 			$phrase = str_replace($array_str,$array_replace,$var);
 		}
 		
-		if($sprintf)
-		{
+		if($sprintf) {
 			$sprints = explode(',',$sprintf);
-			if(is_array($sprints))
-			{
-				foreach($sprints as $sprint)
-				{
+			if(is_array($sprints)) {
+				foreach($sprints as $sprint) {
 					$phrase = sprintf($phrase,$sprint);
 				}
 			}
 		}
-		
 		return $phrase;
 		
 	}
