@@ -505,34 +505,16 @@
 		}
     
     }
-	 
-	//TEST EXCEC FUNCTION 
-	function test_exec( $cmd )
-	{
-		echo '<div border="1px">';
-		echo '<h1>' . htmlentities( $cmd ) . '</h1>';
 
-		if (stristr(PHP_OS, 'WIN')) { 
-			$cmd = $cmd;
-		}else{
-			$cmd = "PATH=\$PATH:/bin:/usr/bin:/usr/local/bin bash -c \"$cmd\"";
-		}
-		$data = shell_exec( $cmd );
-		
-		return $data;
-		// if( $data === false )
-		// 	echo "<p>FAILED: $cmd</p></div>";
-		// echo '<p><pre>' . htmlentities( $data ) . '</pre></p></div>';
-	}
-	
 	/**
-	 * Function used to get shell output
-	 */
-	function shell_output($cmd)
-	{
+	* Function used to get shell output
+	* @param : { string } { $cmd } { command to run }
+	*/
+
+	function shell_output($cmd) {
 		if (stristr(PHP_OS, 'WIN')) { 
 			$cmd = $cmd;
-		}else{
+		} else {
 			$cmd = "PATH=\$PATH:/bin:/usr/bin:/usr/local/bin bash -c \"$cmd\"  2>&1";
 		}
 		$data = shell_exec( $cmd );
