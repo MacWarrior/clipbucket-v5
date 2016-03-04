@@ -1610,14 +1610,15 @@
 		
 	}
 	
+	/**
+	* Displays pagination for given type of object
+	* @uses : { class : $pages } { function : $pagination }
+	*/
 	
-	
-	function showpagination($total,$page,$link,$extra_params=NULL,$tag='<a #params#>#page#</a>')
-	{
+	function showpagination($total,$page,$link,$extra_params=NULL,$tag='<a #params#>#page#</a>') {
 		global $pages;
 		return $pages->pagination($total,$page,$link,$extra_params,$tag);
 	}
-	
 	
 	/**
 	* Function used to check username is disallowed or not
@@ -1636,7 +1637,6 @@
 		}
 	}
 
-	
 	/**
 	* Function used to validate username
 	* @param : { string } { $username } { username to be checked }
@@ -1696,7 +1696,6 @@
 		global $cbgroup;
 		return $cbgroup->group_url_exists($url);
 	}
-	
 	
 	/**
 	* Function used to check weather error exists or not
@@ -1759,7 +1758,6 @@
 		$from = $from*$limit;
 		return $from.','.$result;
 	}
-	
 	
 	/**
 	* Function used to get value from $_GET
@@ -1835,7 +1833,6 @@
 			}
 		}
 		return $phrase;
-		
 	}
 
 	/**
