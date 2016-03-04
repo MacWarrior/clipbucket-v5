@@ -2647,38 +2647,34 @@
 	
 	
 	/**
-	 * Function used to check time span
-	 * A time difference function that outputs the 
-	 * time passed in facebook's style: 1 day ago, 
-	 * or 4 months ago. I took andrew dot
-	 * macrobert at gmail dot com function 
-	 * and tweaked it a bit. On a strict enviroment 
-	 * it was throwing errors, plus I needed it to 
-	 * calculate the difference in time between 
-	 * a past date and a future date. 
-	 * thanks to yasmary at gmail dot com
-	 */
+	* Function used to check time span a time difference function that outputs the 
+	* time passed in facebook's style: 1 day ago, or 4 months ago. I took andrew dot
+	* macrobert at gmail dot com function and tweaked it a bit. On a strict enviroment 
+	* it was throwing errors, plus I needed it to calculate the difference in time between 
+	* a past date and a future date
+	* thanks to yasmary at gmail dot com
+	*
+	* @param : { string } { $date } { date to be converted in nicetime }
+	* @param : { boolean } { false by default, considers date to be in time format if true }
+	*/
+
 	function nicetime($date,$istime=false)
 	{
 		if(empty($date)) {
 			return lang('no_date_provided');
 		}
-	   
-		$periods         = array(lang("second"), lang("minute"), lang("hour"), lang("day"), lang("week"), lang("month"), lang("year"), lang("decade"));
-		$lengths         = array(lang("60"),lang("60"),lang("24"),lang("7"),lang("4.35"),lang("12"),lang("10"));
-	   
-		$now             = time();
-		
-		if(!$istime)
-		$unix_date         = strtotime($date);
-	    else
-	   $unix_date         = $date;
-	   
+		$periods = array(lang("second"), lang("minute"), lang("hour"), lang("day"), lang("week"), lang("month"), lang("year"), lang("decade"));
+		$lengths = array(lang("60"),lang("60"),lang("24"),lang("7"),lang("4.35"),lang("12"),lang("10"));
+		$now = time();		
+		if(!$istime) {
+			$unix_date = strtotime($date);
+		} else {
+	   		$unix_date = $date;
+		}
 		   // check validity of date
 		if(empty($unix_date)  || $unix_date<1) {   
 			return lang("bad_date");
 		}
-	
 		// is it future date or past date
 		if($now > $unix_date) {   
 			//time_ago
@@ -2690,18 +2686,14 @@
 			$difference     = $unix_date - $now;
 			$tense         = "from_now";
 		}
-	   
 		for($j = 0; $difference >= $lengths[$j] && $j < count($lengths)-1; $j++) {
 			$difference /= $lengths[$j];
 		}
-	   
 		$difference = round($difference);
 	   
 		if($difference != 1) {
 			$periods[$j].= "s";
 		}
-	   	
-		
 		return sprintf(lang($tense),$difference,$periods[$j]);
 	}
 	
