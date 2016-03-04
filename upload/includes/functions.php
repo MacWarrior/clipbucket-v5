@@ -3149,22 +3149,6 @@
 		//echo " ".SUBTITLE;
 	}
 	
-	
-	/**
-	 * @Script : ClipBucket
-	 * @Author : Arslan Hassan
-	 * @License : CBLA
-	 * @Since : 2007
-	 *
-	 * function whos_your_daddy
-	 * Simply tells the name of  script owner
-	 * @return INTELLECTUAL BADASS
-	 */
-
-	function whos_your_daddy() {
-		echo  "<h1>Arslan Hassan</h1>";
-	}
-	
 	/**
 	* Adds subtitle for any given page
 	* @param : { string } { $title } { title to be given to page }
