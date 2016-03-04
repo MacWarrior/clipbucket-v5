@@ -1546,10 +1546,11 @@
 	
 	
 	/**
-	 * Function used to get error_list
-	 */
-	function error_list()
-	{
+	* Function used to get error_list
+	* @uses : { class : $eh } { function : $error_list }
+	*/
+
+	function error_list() {
 		global $eh;
 		return $eh->error_list;
 	}
