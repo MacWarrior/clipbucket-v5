@@ -2707,53 +2707,57 @@
 	
 	
 	/**
-	 * Function used to format outgoing link
-	 */
-	function outgoing_link($out)
-	{
+	* Function used to format outgoing link
+	* @param : { string } { $out } { link to some webpage }
+	* @return : { string } { HTML anchor tag with link in place }
+	*/
+
+	function outgoing_link($out) {
 		preg_match("/http/",$out,$matches);
-		if(empty($matches[0]))
+		if(empty($matches[0])) {
 			$out = "http://".$out;
+		}
 		return '<a href="'.$out.'" target="_blank">'.$out.'</a>';
 	}
 	
 	/**
-	 * Function used to get country via country code
-	 */
-	function get_country($code)
-	{
+	* Function used to get country via country code
+	*
+	* @param : { string } { $code } { country code name }
+	* @return : { string } { country name of flag }
+	*/
+
+	function get_country($code) {
 		global $db;
 		$result = $db->select(tbl("countries"),"name_en,iso2"," iso2='$code' OR iso3='$code'");
-		if($db->num_rows>0)
-		{
+		if($db->num_rows>0) {
 			$flag = '';
 			$result = $result[0];
-			if(SHOW_COUNTRY_FLAG)
+			if(SHOW_COUNTRY_FLAG) {
 				$flag = '<img src="'.BASEURL.'/images/icons/country/'.strtolower($result['iso2']).'.png" alt="" border="0">&nbsp;';
+			}
 			return $flag.$result['name_en'];
-		}else
+		} else {
 			return false;
+		}
 	}
 
-
-	
 	/**
-	 * function used to get photos
-	 */
-	function get_collections($param)
-	{
+	* function used to get collections
+	* @uses : { class : $cbcollection } { function : get_collections }
+	*/
+
+	function get_collections($param) {
 		global $cbcollection;
 		return $cbcollection->get_collections($param);
 	}
 	
-	
 	/**
-	* function used to get vidos
+	* function used to get users
 	* @uses : { class : $userquery } { function : get_users }
 	*/
 
-	function get_users($param)
-	{
+	function get_users($param) {
 		global $userquery;
 		return $userquery->get_users($param);
 	}
