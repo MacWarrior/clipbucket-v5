@@ -1410,48 +1410,52 @@
 	}
 	 
 	/**
-	 * Function used to get array value
-	 * if you know partial value of array and wants to know complete 
-	 * value of an array, this function is being used then
-	 */
-	function array_find($needle, $haystack)
-	{
-	   foreach ($haystack as $item)
-	   {
-		  if (strpos($item, $needle) !== FALSE)
-		  {
+	* Function used to get array value
+	* if you know partial value of array and wants to know complete 
+	* value of an array, this function is being used then
+	*
+	* @param : { string / int } { $needle } { element to find }
+	* @param : { array / string }  { $haystack } { element to do search in }
+	* @return : { string / int } { item if it is found }
+	*/
+
+	function array_find($needle, $haystack) {
+	   foreach ($haystack as $item) {
+		  if (strpos($item, $needle) !== FALSE) {
 			 return $item;
 			 break;
 		  }
 	   }
 	}
 
-	
-	
 	/**
-	 * Function used to give output in proper form 
-	 */
-	function input_value($params)
-	{
+	* Function used to give output in proper form 
+	* @param : { array } { $params } { array of parameters e.g $params['input'] }
+	* @return : { string } { string value depending on input type }
+	*/
+
+	function input_value($params) {
 		$input = $params['input'];
 		$value = $input['value'];
-		
-		if($input['value_field']=='checked')
+		if($input['value_field'] == 'checked') {
 			$value = $input['checked'];
+		}
 			
-		if($input['return_checked'])
+		if($input['return_checked']) {
 			return $input['checked'];
+		}
 			
-		if(function_exists($input['display_function']))
+		if(function_exists($input['display_function'])) {
 			return $input['display_function']($value);
-		elseif($input['type']=='dropdown')
-		{
-			if($input['checked'])
+		} elseif($input['type'] == 'dropdown') {
+			if($input['checked']) {
 				return $value[$input['checked']];
-			else
+			} else {
 				return $value[0];
-		}else
+			}
+		} else {
 			return $input['value'];
+		}
 	}
 	
 	/**
