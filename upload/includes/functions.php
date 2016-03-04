@@ -1231,19 +1231,19 @@
 	}
 	
 	/**
-	 * Function used to validate YES or NO input
-	 */
-	function yes_or_no($input,$return=yes)
-	{
-		$input = strtolower($input);
-		if($input!=yes && $input !=no)
-			return $return;
-		else
-			return $input;
-	}
-	
+	* Function used to validate YES or NO input
+	* @param : { string } { $input } { field to be checked }
+	*/
 
-	
+	function yes_or_no($input,$return=yes) {
+		$input = strtolower($input);
+		if($input!=yes && $input !=no) {
+			return $return;
+		} else {
+			return $input;
+		}
+	}
+
 	/**
 	* Function used to validate group category
 	* @uses : { class : $cbcollection } { function : validate_collection_category }
