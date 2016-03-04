@@ -1636,16 +1636,16 @@
 
 	
 	/**
-	 * Function used to validate username
-	 * @input USERNAME
-	 */
-	function username_check($username)
-	{
+	* Function used to validate username
+	* @param : { string } { $username } { username to be checked }
+	* @return : { boolean } { true or false depending on situation }
+	*/
+
+	function username_check($username) {
 		global $Cbucket;
 		$banned_words = $Cbucket->configs['disallowed_usernames'];
 		$banned_words = explode(',',$banned_words);
-		foreach($banned_words as $word)
-		{
+		foreach($banned_words as $word) {
 			preg_match("/$word/Ui",$username,$match);
 			if(!empty($match[0]))
 				return false;
@@ -1654,10 +1654,12 @@
 		$multi = config('allow_unicode_usernames');
 		
 		//Checking Spaces
-		if(!config('allow_username_spaces'))
-		preg_match('/ /',$username,$matches);
-		if(!is_valid_syntax('username',$username) && $multi!='yes' || $matches)
+		if(!config('allow_username_spaces')) {
+			preg_match('/ /',$username,$matches);
+		}
+		if(!is_valid_syntax('username',$username) && $multi!='yes' || $matches) {
 			e(lang("class_invalid_user"));
+		}
 		return true;
 	}
 	
