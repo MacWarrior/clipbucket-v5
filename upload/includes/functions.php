@@ -2872,13 +2872,16 @@
 	}
 	
 	/**
-	 * Sorting Links is used to return
-	 * Sorting based link
-	 */
-	function sort_link($sort,$mode='sort',$type)
-	{
-		switch($type)
-		{
+	* Sorting Links is used to return Sorting based link
+	*
+	* @param : { string } { $sort } { specifies sorting style }
+	* @param : { string } { $mode } { element to sort e.g time }
+	* @param : { string } { $type } { type of element to sort e.g channels }
+	* @return : { string } { sorting link }
+	*/
+
+	function sort_link($sort,$mode='sort',$type) {
+		switch($type) {
 			case 'video':
 			case 'videos':
 			case 'v':
@@ -2894,19 +2897,22 @@
 				if(!isset($_GET['seo_cat_name']))
 					$_GET['seo_cat_name'] = 'All';
 				
-				if($mode == 'sort')
+				if($mode == 'sort') {
 					$sorting = $sort;
-				else
+				} else {
 					$sorting = $_GET['sort'];
-				if($mode == 'time')
+				}
+				if($mode == 'time') {
 					$time = $sort;
-				else
+				} else {
 					$time = $_GET['time'];
+				}
 					
-				if(SEO=='yes')
+				if (SEO=='yes') {
 					return BASEURL.'/videos/'.$_GET['cat'].'/'.$_GET['seo_cat_name'].'/'.$sorting.'/'.$time.'/'.$_GET['page'];
-				else
+				} else {
 					return BASEURL.'/videos.php?cat='.$_GET['cat'].'&sort='.$sorting.'&time='.$time.'&page='.$_GET['page'].'&seo_cat_name='.$_GET['seo_cat_name'];
+				}
 			}
 			break;
 			
@@ -2924,19 +2930,22 @@
 				if(!isset($_GET['seo_cat_name']))
 					$_GET['seo_cat_name'] = 'All';
 				
-				if($mode == 'sort')
+				if($mode == 'sort') {
 					$sorting = $sort;
-				else
+				} else {
 					$sorting = $_GET['sort'];
-				if($mode == 'time')
+				}
+				if($mode == 'time') {
 					$time = $sort;
-				else
+				} else {
 					$time = $_GET['time'];
+				}
 					
-				if(SEO=='yes')
+				if(SEO=='yes') {
 					return BASEURL.'/channels/'.$_GET['cat'].'/'.$_GET['seo_cat_name'].'/'.$sorting.'/'.$time.'/'.$_GET['page'];
-				else
+				} else {
 					return BASEURL.'/channels.php?cat='.$_GET['cat'].'&sort='.$sorting.'&time='.$time.'&page='.$_GET['page'].'&seo_cat_name='.$_GET['seo_cat_name'];
+				}
 			}
 			break;
 			
@@ -2954,52 +2963,54 @@
 				if(!isset($_GET['seo_cat_name']))
 					$_GET['seo_cat_name'] = 'All';
 				
-				if($mode == 'sort')
+				if($mode == 'sort') {
 					$sorting = $sort;
-				else
+				} else {
 					$sorting = $_GET['sort'];
-				if($mode == 'time')
+				}
+				if($mode == 'time') {
 					$time = $sort;
-				else
+				} else {
 					$time = $_GET['time'];
+				}
 				
-				if(THIS_PAGE=='photos')
+				if(THIS_PAGE=='photos') {
 					$type = 'photos';
+				}
 				
-				if(defined("IN_MODULE"))
-				{
+				if(defined("IN_MODULE")) {
 					$url = 'cat='.$_GET['cat'].'&sort='.$sorting.'&time='.$time.'&page='.$_GET['page'].'&seo_cat_name='.$_GET['seo_cat_name'];
 					$plugURL = queryString($url,array("cat","sort","time","page","seo_cat_name"));
 					return $plugURL;
 				}
 				
-				if(SEO=='yes')
+				if(SEO=='yes') {
 					return BASEURL.'/'.$type.'/'.$_GET['cat'].'/'.$_GET['seo_cat_name'].'/'.$sorting.'/'.$time.'/'.$_GET['page'];
-				else
+				} else {
 					return BASEURL.'/'.$type.'.php?cat='.$_GET['cat'].'&sort='.$sorting.'&time='.$time.'&page='.$_GET['page'].'&seo_cat_name='.$_GET['seo_cat_name'];
+				}
 			}
 			break;		
 		}
 	}
-	
-	
-	
-	
+
 	/**
-	 * Function used to get flag options
-	 */
-	function get_flag_options()
-	{
+	* Function used to get flag options
+	* @uses : { class : $action } { var : $report_opts }
+	*/
+
+	function get_flag_options() {
 		$action = new cbactions();
 		$action->init();
 		return $action->report_opts;
 	}
 	
 	/**
-	 * Function used to display flag type
-	 */
-	function flag_type($id)
-	{
+	* Function used to display flag type
+	* @uses : { get_flag_options() function }
+	*/
+
+	function flag_type($id) {
 		$flag_opts = get_flag_options();
 		return $flag_opts[$id];
 	}
