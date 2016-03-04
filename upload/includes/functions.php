@@ -3005,34 +3005,34 @@
 	}
 	
 	
-
-
-	function get_captcha_2014()
-	{
-		global $Cbucket;
-		if(count($Cbucket->captchas)>0)
-		{   
-
-
-			return $Cbucket->captchas[0];
-			
-		}else
-			return false;
-	}
 	/**
-	 * Function used to load captcha field
-	 */
-	function get_captcha()
-	{
+	* Loads Captcha [ user get_captcha() instead ]
+	*
+	* @deprecated : { Function is not used anymore and will be removed in next version }
+	*/
+
+	function get_captcha_2014() {
 		global $Cbucket;
-		if(count($Cbucket->captchas)>0)
-		{   
-
-
+		if(count($Cbucket->captchas)>0) {   
 			return $Cbucket->captchas[0];
 			
-		}else
+		} else {
 			return false;
+		}
+	}
+
+	/**
+	* Function used to load captcha field
+	* @uses : { class : $Cbucket }  { var : $captchas }
+	*/
+
+	function get_captcha() {
+		global $Cbucket;
+		if(count($Cbucket->captchas)>0) {   
+			return $Cbucket->captchas[0];
+		} else {
+			return false;
+		}
 	}
 	
 	/**
@@ -3041,11 +3041,9 @@
 	*/
 
 	define("GLOBAL_CB_CAPTCHA","cb_captcha");
-	function load_captcha($params)
-	{
+	function load_captcha($params) {
 		global $total_captchas_loaded;
-		switch($params['load'])
-		{
+		switch($params['load']) {
 			case 'function':
 			{
 				if($total_captchas_loaded!=0)
@@ -3053,8 +3051,9 @@
 				else
 					$total_captchas_loaded = 1;
 				$_SESSION['total_captchas_loaded'] = $total_captchas_loaded;
-				if(function_exists($params['captcha']['load_function']))
+				if(function_exists($params['captcha']['load_function'])) {
 					return $params['captcha']['load_function']().'<input name="cb_captcha_enabled" type="hidden" id="cb_captcha_enabled" value="yes" />';
+				}
 			}
 			break;
 			case 'field':
