@@ -6,7 +6,7 @@
 * @license: Attribution Assurance License
 * @since: ClipBucket 1.0
 * @author[s]: Arslan Hassan, Fawaz Tahir, Fahad Abbass, Awais Tariq, Saqib Razzaq
-* @copyright: (c) 2008 - 2010 ClipBucket / PHPBucket
+* @copyright: (c) 2008 - 2016 ClipBucket / PHPBucket
 * @notice: Please maintain this section
 * @modified: March 4th, 2016 ClipBucket 2.8.1
 */
@@ -1255,11 +1255,11 @@
 	}
 
 	/**
-	 * Function used to validate category
-	 * INPUT $cat array
-	 */
-	function validate_collection_category($array=NULL)
-	{
+	* Function used to validate collection category
+	* @uses : { class : $cbcollection } { function : validate_collection_category }
+	*/
+	
+	function validate_collection_category($array=NULL)  {
 		global $cbcollection;
 		return $cbcollection->validate_collection_category($array);
 	}
