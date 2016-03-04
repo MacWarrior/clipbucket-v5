@@ -1455,51 +1455,41 @@
 	}
 	
 	/**
-	 * Function used to convert input to categories
-	 * @param input can be an array or #12# like
-	 */
-	function convert_to_categories($input)
-	{
-		if(is_array($input))
-		{
-			foreach($input as $in)
-			{		
-				if(is_array($in))
-				{
-					foreach($in as $i)
-					{
-						if(is_array($i))
-						{
-							foreach($i as $info)
-							{
+	* Function used to convert input to categories
+	* @param { string / array } { $input } { categories to be converted e.g #12# }
+	*/
+
+	function convert_to_categories($input) {
+		if(is_array($input)) {
+			foreach($input as $in) {		
+				if(is_array($in)) {
+					foreach($in as $i) {
+						if(is_array($i)) {
+							foreach($i as $info) {
 								$cat_details = get_category($info);
 								$cat_array[] = array($cat_details['categoryid'],$cat_details['category_name']);
 							}
-						}elseif(is_numeric($i)){
+						} elseif (is_numeric($i)){
 							$cat_details = get_category($i);
 							$cat_array[] = array($cat_details['categoryid'],$cat_details['category_name']);
 						}
 					}
-				}elseif(is_numeric($in)){
+				} elseif (is_numeric($in)){
 					$cat_details = get_category($in);
 					$cat_array[] = array($cat_details['categoryid'],$cat_details['category_name']);
 				}
 			}
-		}else{
+		} else {
 			preg_match_all('/#([0-9]+)#/',$default['category'],$m);
 			$cat_array = array($m[1]);
-			foreach($cat_array as $i)
-			{
+			foreach($cat_array as $i) {
 				$cat_details = get_category($i);
 				$cat_array[] = array($cat_details['categoryid'],$cat_details['category_name']);
 			}
 		}
-		
 		$count = 1;
-		if(is_array($cat_array))
-		{
-			foreach($cat_array as $cat)
-			{
+		if(is_array($cat_array)) {
+			foreach($cat_array as $cat) {
 				echo '<a href="'.$cat[0].'">'.$cat[1].'</a>';
 				if($count!=count($cat_array))
 				echo ', ';
@@ -1508,25 +1498,22 @@
 		}
 	}
 	
-	
-	
 	/**
-	 * Function used to get categorie details
-	 */
-	function get_category($id)
-	{
+	* Function used to get categorie details
+	* @uses : { class : $myquery } { function : get_category }
+	*/
+
+	function get_category($id) {
 		global $myquery;
 		return $myquery->get_category($id);
 	}
 	
-	
 	/**
-	 * Sharing OPT displaying
-	 */
-	function display_sharing_opt($input)
-	{
-		foreach($input as $key => $i)
-		{
+	* Sharing OPT displaying
+	*/
+
+	function display_sharing_opt($input) {
+		foreach($input as $key => $i) {
 			return $key;
 			break;
 		}
