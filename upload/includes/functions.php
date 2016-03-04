@@ -2748,8 +2748,10 @@
 	
 	
 	/**
-	 * function used to get vidos
-	 */
+	* function used to get vidos
+	* @uses : { class : $userquery } { function : get_users }
+	*/
+
 	function get_users($param)
 	{
 		global $userquery;
@@ -2758,10 +2760,12 @@
 	
 	
 	/**
-	 * function used to get groups
-	 */
-	function get_groups($param)
-	{
+	* function used to get groups
+	* @uses : { class : $cbgroup } { function : get_groups }
+	* @deprecated : { function is deprecated and will be removed in next version }
+	*/
+
+	function get_groups($param) {
 		global $cbgroup;
 		return $cbgroup->get_groups($param);
 	}
