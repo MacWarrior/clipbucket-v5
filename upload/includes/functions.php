@@ -2455,12 +2455,13 @@
 	
 	
 	/**
-	 * Function used to count pages
-	 * @param TOTAL RESULTS NUM
-	 * @param NUMBER OF RESULTS to DISPLAY NUM
-	 */
-	function count_pages($total,$count)
-	{
+	* Function used to count pages and return total divided
+	* @param { integer } { $total } { total number of pages }
+	* @param { integer } { $count } { numeber of pages to be displayed }
+	* @return : { integer } { $total_pages } { $total / $count }
+	*/
+
+	function count_pages($total,$count) {
 		if($count<1) $count = 1;
 		$records = $total/$count;
 		return $total_pages = round($records+0.49,0);
@@ -2471,8 +2472,7 @@
 	* @uses : { class : $userquery } { function : usr_levels() }
 	*/
 
-	function get_user_level($id)
-	{
+	function get_user_level($id) {
 		global $userquery;
 		return $userquery->usr_levels[$id];
 	}
