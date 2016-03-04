@@ -2440,19 +2440,24 @@
 		Template("/blocks/collection_form.html");	
 	}
 	
-	
-	function cbdate($format=NULL,$timestamp=NULL)
-	{
-		if(!$format)
-		{
+	/**
+	* Convert timestam to date
+	*
+	* @param : { string } { $format } { current format of date }
+	* @param : { string } { $timestamp } { time to be converted to date }
+	* @return : { string } { time formatted into date }
+	*/
+
+	function cbdate($format=NULL,$timestamp=NULL) {
+		if(!$format) {
 			$format = config("datE_format");
 		}
-		if(!$timestamp)
+		if(!$timestamp) {
 			return date($format);
-		else
+		} else {
 			return date($format,$timestamp);
+		}
 	}
-	
 	
 	/**
 	* Function used to count pages and return total divided
