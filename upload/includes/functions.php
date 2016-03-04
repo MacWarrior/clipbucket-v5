@@ -3160,26 +3160,27 @@
 	 * Simply tells the name of  script owner
 	 * @return INTELLECTUAL BADASS
 	 */
-	function whos_your_daddy()
-	{
+
+	function whos_your_daddy() {
 		echo  "<h1>Arslan Hassan</h1>";
 	}
 	
 	/**
-	 * function used to set website subtitle
-	 */
-	function subtitle($title)
-	{
+	* Adds subtitle for any given page
+	* @param : { string } { $title } { title to be given to page }
+	*/
+
+	function subtitle($title) {
 		global $cbsubtitle;
 		$cbsubtitle = $title;
 	}
 	
-	
 	/**
-	 * FUnction used to get username from userid
-	 */
-	function get_username($uid)
-	{
+	* Extract user's name using userid
+	* @uses : { class : $userquery } { function : get_username }
+	*/
+
+	function get_username($uid) {
 		global $userquery;
 		return $userquery->get_username($uid,'username');
 	}
