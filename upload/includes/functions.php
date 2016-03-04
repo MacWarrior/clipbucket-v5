@@ -1620,18 +1620,20 @@
 	
 	
 	/**
-	 * Function used to check username is disallowed or not
-	 * @param USERNAME
-	 */
-	function check_disallowed_user($username)
-	{
+	* Function used to check username is disallowed or not
+	* @param : { string } { $username } { username to be checked }
+	* @return : { boolean } { false if found, else true }
+	*/
+
+	function check_disallowed_user($username) {
 		global $Cbucket;
 		$disallowed_user = $Cbucket->configs['disallowed_usernames'];
 		$censor_users = explode(',',$disallowed_user);
-		if(in_array($username,$censor_users))
+		if(in_array($username,$censor_users)) {
 			return false;
-		else
+		} else {
 			return true;
+		}
 	}
 
 	
