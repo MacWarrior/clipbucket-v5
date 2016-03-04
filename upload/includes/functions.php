@@ -790,15 +790,15 @@
 	
 	/**
 	* FUNCTION USED TO GET CATEGORY LIST
+	* @param : { array } { $params } { array of paramters e.g type }
+	* @return : { array } { $cats } { array of categories }
 	*/
-	function getCategoryList($params=false)
-	{
+
+	function getCategoryList($params=false) {
 		global $cats;
 		$cats = "";
-		
 		$type = $params['type'];
-		switch($type)
-		{
+		switch($type) {
 			default:
 			{
 				 cb_call_functions('categoryListing',$params);
@@ -840,96 +840,12 @@
 		
 		return $cats;
 	}
-	/*function getCategoryList($type='video',$with_all=false,$return_html=false)
-	{
-		$use_subs = config('use_subs');
 
-		switch ($type)
-		{
-			case "video":
-			default:
-			{
-				global $cbvid;
+	/**
+	* @deprecated  { function has been deprecated and will be removed in next version }
+	*/
 
-				if($return_html && $use_subs == "1") {
-					$cats = $cbvid->cb_list_categories($type,$with_all);
-				} else {
-					if($with_all)
-						$all_cat = array(array('category_id'=>'all','category_name'=>'All'));
-						
-					$cats = $cbvid->get_categories();
-					
-					if($all_cat && is_array($cats))
-						$cats = array_merge($all_cat,$cats);
-				}
-				return $cats;
-			}
-			break;
-			case "user":
-			{
-				global $userquery;
-
-				
-				if($return_html && $use_subs == "1") {
-					$cats = $userquery->cb_list_categories($type,$with_all);
-				} else {
-					if($with_all)
-						$all_cat = array(array('category_id'=>'all','category_name'=>'All'));
-						
-					$cats = $userquery->get_categories();
-					
-					if($all_cat && is_array($cats))
-						$cats = array_merge($all_cat,$cats);
-				}
-				return $cats;
-			}
-			break;
-			
-			case "group":
-			case "groups":
-			{
-				global $cbgroup;
-				
-				
-				if($return_html && $use_subs == "1") {
-					$cats = $cbgroup->cb_list_categories($type,$with_all);
-				} else {
-					if($with_all)
-						$all_cat = array(array('category_id'=>'all','category_name'=>'All'));
-						
-					$cats = $cbgroup->get_categories();
-						
-					if($all_cat && is_array($cats))
-						$cats = array_merge($all_cat,$cats);
-				}
-				return $cats;
-			}
-			break;
-			
-			case "collection":
-			case "collections":
-			{
-				global $cbcollection;
-				
-				
-				if($return_html && $use_subs == "1") {
-					$cats = $cbcollection->cb_list_categories($type,$with_all);
-				} else {
-					if($with_all)
-						$all_cat = array(array('category_id'=>'all','category_name'=>'All'));
-						
-					$cats = $cbcollection->get_categories();
-						
-					if($all_cat && is_array($cats))
-						$cats = array_merge($all_cat,$cats);
-				}
-				return $cats;
-			}
-			break;
-		}
-	}*/
-	function cb_bottom()
-	{
+	function cb_bottom() {
 		//Woops..its gone
 	}
 	
