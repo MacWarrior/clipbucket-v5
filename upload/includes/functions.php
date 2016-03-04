@@ -2498,117 +2498,109 @@
 	
 	
 	/**
-	 * ClipBucket Form Validator
-	 * this function controls the whole logic of how to operate input
-	 * validate it, generate proper error
-	 */
-	function validate_cb_form($input,$array)
-	{
-		
+	* ClipBucket Form Validator
+	* this function controls the whole logic of how to operate input
+	* validate it, generate proper error
+	* 
+	* @param : { array } { $input } { array of form values }
+	* @param : { array } { $array } { array of form fields }
+	* @return : { boolean } { true or false based on validation }
+	*/
+
+	function validate_cb_form($input,$array) {
 		//Check the Collpase Category Checkboxes 
-		
-		if($input['cat']['title']=='Video Category'){
+		if($input['cat']['title']=='Video Category') {
 			global $db;
 			$query = "SELECT * FROM ".tbl("config")." WHERE configid=234";
-			$row=db_select($query);
+			$row = db_select($query);
 			$row[0]['value'].$input['cat']['title'];
-
-			if($row[0]['value']=='0')
-			{
+			if($row[0]['value']=='0') {
 				unset($input['cat']);	
 			}
 		}
 		
-		if(is_array($input))
-		foreach($input as $field)
-		{
-			$field['name'] = formObj::rmBrackets($field['name']);
-			
-			//pr($field);
-			$title = $field['title'];
-			$val = $array[$field['name']];
-			$req = $field['required'];
-			$invalid_err =  $field['invalid_err'];
-			$function_error_msg = $field['function_error_msg'];
-			if(is_string($val))
-			{
-				if(!isUTF8($val))
-					$val = utf8_decode($val);
-				$length = strlen($val);
-			}
-			$min_len = $field['min_length'];
-			$min_len = $min_len ? $min_len : 0;
-			$max_len = $field['max_length'] ;
-			$rel_val = $array[$field['relative_to']];
-			
-			if(empty($invalid_err))
-				$invalid_err =  sprintf("Invalid '%s'",$title);
-			if(is_array($array[$field['name']]))
-				$invalid_err = '';
-				
-			//Checking if its required or not
-			if($req == 'yes')
-			{
-				if(empty($val) && !is_array($array[$field['name']]))
-				{
-					e($invalid_err);
-					$block = true;
-				}else{
-					$block = false;
+		if(is_array($input)) {
+			foreach($input as $field) {
+				$field['name'] = formObj::rmBrackets($field['name']);
+				$title = $field['title'];
+				$val = $array[$field['name']];
+				$req = $field['required'];
+				$invalid_err =  $field['invalid_err'];
+				$function_error_msg = $field['function_error_msg'];
+				if(is_string($val)) {
+					if(!isUTF8($val))
+						$val = utf8_decode($val);
+					$length = strlen($val);
 				}
-			}
-			$funct_err = is_valid_value($field['validate_function'],$val);
-			if($block!=true)
-			{
+				$min_len = $field['min_length'];
+				$min_len = $min_len ? $min_len : 0;
+				$max_len = $field['max_length'] ;
+				$rel_val = $array[$field['relative_to']];
 				
-				//Checking Syntax
-				if(!$funct_err)
-				{
-					if(!empty($function_error_msg))
-						e($function_error_msg);
-					elseif(!empty($invalid_err))
+				if(empty($invalid_err)) {
+					$invalid_err =  sprintf("Invalid '%s'",$title);
+				}
+				if(is_array($array[$field['name']])) {
+					$invalid_err = '';
+				}
+					
+				//Checking if its required or not
+				if($req == 'yes') {
+					if(empty($val) && !is_array($array[$field['name']])) {
 						e($invalid_err);
-				}
-				
-				if(!is_valid_syntax($field['syntax_type'],$val))
-				{
-					if(!empty($invalid_err))
-						e($invalid_err);
-				}
-				if(isset($max_len))
-				{
-					if($length > $max_len || $length < $min_len)
-					e(sprintf(lang('please_enter_val_bw_min_max'),
-							  $title,$min_len,$field['max_length']));
-				}
-				if(function_exists($field['db_value_check_func']))
-				{
-
-					$db_val_result = $field['db_value_check_func']($val);
-					if($db_val_result != $field['db_value_exists'])
-						if(!empty($field['db_value_err']))
-							e($field['db_value_err']);
-						elseif(!empty($invalid_err))
-							e($invalid_err);
-				}
-				if($field['relative_type']!='')
-				{
-					switch($field['relative_type'])
-					{
-						case 'exact':
-						{
-							if($rel_val != $val)
-							{
-								if(!empty($field['relative_err']))
-									e($field['relative_err']);
-								elseif(!empty($invalid_err))
-									e($invalid_err);
-							}
-						}
-						break;
+						$block = true;
+					} else {
+						$block = false;
 					}
 				}
-			}	
+				$funct_err = is_valid_value($field['validate_function'],$val);
+				if($block!=true) {
+					//Checking Syntax
+					if(!$funct_err) {
+						if(!empty($function_error_msg)) {
+							e($function_error_msg);
+						} elseif(!empty($invalid_err)) {
+							e($invalid_err);
+						}
+					}
+					
+					if(!is_valid_syntax($field['syntax_type'],$val)) {
+						if(!empty($invalid_err)) {
+							e($invalid_err);
+						}
+					}
+					if(isset($max_len)) {
+						if($length > $max_len || $length < $min_len) {
+							e(sprintf(lang('please_enter_val_bw_min_max'),$title,$min_len,$field['max_length']));
+						}
+					}
+					if(function_exists($field['db_value_check_func'])) {
+						$db_val_result = $field['db_value_check_func']($val);
+						if($db_val_result != $field['db_value_exists']) {
+							if(!empty($field['db_value_err'])) {
+								e($field['db_value_err']);
+							} elseif(!empty($invalid_err)) {
+								e($invalid_err);
+							}
+						}	
+					}
+					if($field['relative_type']!='') {
+						switch($field['relative_type']) {
+							case 'exact':
+							{
+								if($rel_val != $val) {
+									if(!empty($field['relative_err'])) {
+										e($field['relative_err']);
+									} elseif(!empty($invalid_err)) {
+										e($invalid_err);
+									}
+								}
+							}
+							break;
+						}
+					}
+				}	
+			}
 		}
 	}
 
