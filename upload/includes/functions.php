@@ -538,158 +538,131 @@
 		$data = shell_exec( $cmd );
 		return $data;
 	}
-	
-
-	
-	
-	/**
-	 * Function used to tell ClipBucket that it has closed the script
-	 */
-	function the_end()
-	{
-		if(!$isWorthyBuddy) 
-		{
-				/*
-				echo base64_decode("PGgyPklsbGVnYWwgT3BlcmF0aW9uIEZvdW5k");
-				echo "- Please VISIT ";
-				echo base64_decode("PGEgaHJlZj0iaHR0cDovL2NsaXAtYnVja2V0LmNvbS8iPkNsaXBCdWNrZXQ8L2E+");
-				echo " for Details</h2>";
-				*/
-				
-				//Dear user, i have spent too much time of my life on developing
-				//This software and if you want to return me in this way, 
-				//its ok for me, but for those who told you how to do this...
-				
-		}
-	}
 
 	/**
-	 * Group Link
-	 */
-	function group_link($params)
-	{
+	* Group Link
+	* @deprecated : { function has been deprecated and will be removed in next version }
+	*/
+
+	function group_link($params) {
 		$grp = $params['details'];
 		$id = $grp['group_id'];
 		$name = $grp['group_name'];
 		$url = $grp['group_url'];
-		
-		if($params['type']=='' || $params['type']=='group')
-		{
-			if(SEO==yes)
+		if($params['type']=='' || $params['type']=='group') {
+			if(SEO==yes) {
 				return BASEURL.'/group/'.$url;
-			else
+			} else {
 				return BASEURL.'/view_group.php?url='.$url;
+			}
 		}
 		
-		if($params['type']=='view_members')
-		{
+		if($params['type']=='view_members') {
 			return BASEURL.'/view_group_members.php?url='.$url;
-			if(SEO==yes)
+			if(SEO==yes) {
 				return BASEURL.'/group_members/'.$url;
-			else
+			} else {
 				return BASEURL.'/view_group_members.php?url='.$url;
+			}
 		}
 		
-		if($params['type']=='view_videos')
-		{
+		if($params['type']=='view_videos') {
 			return BASEURL.'/view_group_videos.php?url='.$url;
-			if(SEO==yes)
+			if(SEO==yes) {
 				return BASEURL.'/group_videos/'.$url;
-			else
+			} else {
 				return BASEURL.'/view_group_videos.php?url='.$url;
+			}
 		}
 		
-		if($params['type'] == 'view_topics')
-		{
-			if(SEO == "yes")
+		if($params['type'] == 'view_topics') {
+			if(SEO == "yes") {
 				return BASEURL."/group/".$url."?mode=view_topics";
-			else
+			} else {
 				return BASEURL."/view_group.php?url=".$url."&mode=view_topics";		
+			}
 		}
-		
-		if($params['type'] == 'view_report_form')
-		{
-			if(SEO == "yes")
+		if($params['type'] == 'view_report_form') {
+			if(SEO == "yes") {
 				return BASEURL."/group/".$url."?mode=view_report_form";
-			else
+			} else {
 				return BASEURL."/view_group.php?url=".$url."&mode=view_report_form";	
+			}
 		}
 	}
 	
 	/**
 	* FUNCTION USED TO GET COMMENTS
-	* @param : array();
+	* @param : { array } { $params } { array of parameters e.g order,limit,type }
+	* @return : { array } { $results } { array of fetched comments }
 	*/
-	function getComments($params=NULL)
-	{
+
+	function getComments($params=NULL) {
 		global $db;
 		$order = $params['order'];
 		$limit = $params['limit'];
 		$type = $params['type'];
 		$cond = '';
-
-		if(!empty($params['videoid']))
-		{
+		if(!empty($params['videoid'])) {
 			$cond .= 'type_id='.$params['videoid'];
 			$cond .= ' AND ';
 		}
-
-		if(empty($type))
+		if(empty($type)) {
 			$type = "v";
+		}
 		$cond .= tbl("comments.type")." = '".$type."'";
-		
-		if($params['type_id'] && $params['sectionTable'])
-		{
+		if($params['type_id'] && $params['sectionTable']) {
 			if($cond != "")
 				$cond .= " AND ";
 			$cond .= tbl("comments.type_id")." = ".tbl($params['sectionTable'].".".$params['type_id']);
 		}
 				
-		if($params['cond'])
-		{
+		if($params['cond']) {
 			if($cond != "")
 				$cond .= " AND ";
 			$cond .= $params['cond'];
 		}
 
-
         $query = "SELECT * FROM ".tbl("comments".($params['sectionTable']?",".$params['sectionTable']:NULL));
 
-        if($cond)
+        if($cond) {
             $query .= " WHERE ".$cond;
-        if($order)
+        }
+        if($order) {
             $query .=" ORDER BY ".$order;
-
-        if($limit)
-            $query .=" LIMIT ".$limit;
-
-		if(!$params['count_only'])
-        {
-   
-            $result = db_select($query);
-            //$result = db_select(tbl("comments".($params['sectionTable']?",".$params['sectionTable']:NULL)),"*",$cond,$limit,$order);
         }
 
+        if($limit) {
+            $query .=" LIMIT ".$limit;
+        }
 
-		//echo $db->db_query;	
-		if($params['count_only'])
+		if(!$params['count_only']) {
+            $result = db_select($query);
+        }
+
+		if($params['count_only']) {
 			$result = $db->count(tbl("comments"),"*",$cond);
-			
-		if($result)
+		}
+		if($result) {
 			return $result;
-		else
+		} else {
 			return false;						
+		}
 	}
 	
-	function getSmartyComments($params)
-	{
+	/**
+	* Fetches comments using params, built for smarty
+	* @uses : { class : $myquery } { function : getComments }
+	*/
+
+	function getSmartyComments($params) {
 		global $myquery;
 		$comments  =  $myquery->getComments($params);
-		
-		if($params['assign'])
+		if($params['assign']) {
 			assign($params['assign'],$comments);
-		else
+		} else {
 			return $comments;
+		}
 	}
 	
 	/**
