@@ -46,99 +46,110 @@
 	}
 	
 	//QuotesReplace
-	function Replacer($string)
-	{
-	//Wp-Magic Quotes
-	$string = preg_replace("/'s/", '&#8217;s', $string);
-	$string = preg_replace("/'(\d\d(?:&#8217;|')?s)/", "&#8217;$1", $string);
-	$string = preg_replace('/(\s|\A|")\'/', '$1&#8216;', $string);
-	$string = preg_replace('/(\d+)"/', '$1&#8243;', $string);
-	$string = preg_replace("/(\d+)'/", '$1&#8242;', $string);
-	$string = preg_replace("/(\S)'([^'\s])/", "$1&#8217;$2", $string);
-	$string = preg_replace('/(\s|\A)"(?!\s)/', '$1&#8220;$2', $string);
-	$string = preg_replace('/"(\s|\S|\Z)/', '&#8221;$1', $string);
-	$string = preg_replace("/'([\s.]|\Z)/", '&#8217;$1', $string);
-	$string = preg_replace("/ \(tm\)/i", ' &#8482;', $string);
-	$string = str_replace("''", '&#8221;', $string);
+	function Replacer($string) {
+		//Wp-Magic Quotes
+		$string = preg_replace("/'s/", '&#8217;s', $string);
+		$string = preg_replace("/'(\d\d(?:&#8217;|')?s)/", "&#8217;$1", $string);
+		$string = preg_replace('/(\s|\A|")\'/', '$1&#8216;', $string);
+		$string = preg_replace('/(\d+)"/', '$1&#8243;', $string);
+		$string = preg_replace("/(\d+)'/", '$1&#8242;', $string);
+		$string = preg_replace("/(\S)'([^'\s])/", "$1&#8217;$2", $string);
+		$string = preg_replace('/(\s|\A)"(?!\s)/', '$1&#8220;$2', $string);
+		$string = preg_replace('/"(\s|\S|\Z)/', '&#8221;$1', $string);
+		$string = preg_replace("/'([\s.]|\Z)/", '&#8217;$1', $string);
+		$string = preg_replace("/ \(tm\)/i", ' &#8482;', $string);
+		$string = str_replace("''", '&#8221;', $string);
 
-	$array = array('/& /');
-	$replace = array('&amp; ') ;
-	return $string = preg_replace($array,$replace,$string);
-	}
-	//This Funtion is used to clean a String
-	
-	function clean($string,$allow_html=false) {
- 	 //$string = $string;
- 	 //$string = htmlentities($string);
-	 if($allow_html==false){
- 		 $string = strip_tags($string);
-		 $string =  Replacer($string);
-	 }
-	// $string = utf8_encode($string);
- 	 return $string;
+		$array = array('/& /');
+		$replace = array('&amp; ') ;
+		return $string = preg_replace($array,$replace,$string);
 	}
 	
-	function cb_clean($string,$array=array('no_html'=>true,'mysql_clean'=>false))
-	{
-		if($array['no_html'])
+	/**
+	* Cleans given string 
+	* @param : { string } { $string } { string to be cleaned }
+	* @return : { string } { $string } { cleaned string }
+	*/
+
+	function cb_clean($string,$array=array('no_html'=>true,'mysql_clean'=>false)) {
+		if($array['no_html']) {
 			$string = htmlentities($string);
-		if($array['special_html'])
+		}
+		if($array['special_html']) {
 			$string = htmlspecialchars($string);
-		if($array['mysql_clean'])
+		}
+		if($array['mysql_clean']) {
 			$string = mysql_real_escape_string($string);
-		if($array['nl2br'])
+		}
+		if($array['nl2br']) {
 			$string = nl2br($string);
+		}
 		return $string;
 	}
-	
-	//This Fucntion is for Securing Password, you may change its combination for security reason but make sure dont not rechange once you made your script run
-	
+	/**
+	* This Fucntion is for Securing Password, you may change its combination for security reason but 
+	* make sure dont not rechange once you made your script run
+	*/
+
 	function pass_code($string) {
- 	 $password = md5(md5(sha1(sha1(md5($string)))));
- 	 return $password;
+ 	 	$password = md5(md5(sha1(sha1(md5($string)))));
+ 	 	return $password;
 	}
 	
-	//Mysql Clean Queries
-	function sql_free($id)
-	{
-		if (!get_magic_quotes_gpc())
-		{
+	/**
+	* Cleans mysql queries [ user mysql_clean() instead ]
+	* @deprecated : { function has been deprecated and will be removed in next version }
+	*/
+
+	function sql_free($id) {
+		if (!get_magic_quotes_gpc()) {
 			$id = addslashes($id);
 		}
 		return $id;
 	}
 	
+	/**
+	* Clean a string and remove malicious stuff before insertin
+	* that string into the database
+	* @param : { string } { $id } { string to be cleaned }
+	*/
 	
-	function mysql_clean($id,$replacer=true){
-		//$id = clean($id);
+	function mysql_clean($id,$replacer=true) {
 		global $db;
-		if (get_magic_quotes_gpc())
-		{
+		if (get_magic_quotes_gpc()) {
 			$id = stripslashes($id);
 		}
 		$id = htmlspecialchars(mysqli_real_escape_string($db->mysqli,$id));
-		if($replacer)
+		if($replacer) {
 			$id = Replacer($id);
+		}
 		return $id;
 	}
 	
-	function escape_gpc($in)
-	{
-		if (get_magic_quotes_gpc())
-		{
+	/**
+	* Escape characters with backslash
+	* @param : { string } { $in } { string to escape characters from }
+	* @return : { string } { $in } { espcaped cleaned string }
+	*/
+
+	function escape_gpc($in) {
+		if (get_magic_quotes_gpc()) {
 			$in = stripslashes($in);
 		}
 		return $in;
 	}
 
-	//Funtion of Random String
-	function RandomString($length)
-	{
+	/**
+	* Generate random string of given length
+	* @param : { integer } { $length } { length of random string }
+	* @return : { string } { $randomString  } { new genrated random string }
+	*/
+
+	function RandomString($length) {
 		$string = md5(microtime());
 		$highest_startpoint = 32-$length;
 		$randomString = substr($string,rand(0,$highest_startpoint),$length);
 		return $randomString;
-	
 	}
 
 	/**
