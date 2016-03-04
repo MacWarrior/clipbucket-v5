@@ -1597,19 +1597,7 @@
 		elseif(file_exists($file))
 			Template($file,false);
 	}
-	
-	
 
-	
-	
-	/**
-	 * Function used to display hint
-	 */
-	function hint($hint)
-	{
-		
-	}
-	
 	/**
 	* Displays pagination for given type of object
 	* @uses : { class : $pages } { function : $pagination }
