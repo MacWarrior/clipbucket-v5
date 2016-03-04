@@ -2814,58 +2814,59 @@
 	
 	
 	/**
-	 * Category Link is used to return
-	 * Category based link
-	 */
-	function category_link($data,$type)
-	{
-		switch($type)
-		{
+	* Category Link is used to return category based link
+	*
+	* @param : { array } { $data } { array with category details }
+	* @param : { string } { $type } { type of category e.g videos }
+	* @return : { string } { sorting link }
+	*/
+
+	function category_link($data,$type) {
+		switch($type) {
 			case 'video':case 'videos':case 'v':
 			{
-				
-					
-				if(SEO=='yes')
+				if(SEO=='yes') {
 					return BASEURL.'/videos/'.$data['category_id'].'/'.SEO($data['category_name']).'/'.$_GET['sort'].'/'.$_GET['time'].'/';
-				else
+				} else {
 					return BASEURL.'/videos.php?cat='.$data['category_id'].'&sort='.$_GET['sort'].'&time='.$_GET['time'].'&seo_cat_name='.$_GET['seo_cat_name'];
+				}
 			}
 			break;
 			
 			case 'channels':case 'channel':case'c':case'user':
 			{
-					
-				if(SEO=='yes')
+				if(SEO=='yes') {
 					return BASEURL.'/channels/'.$data['category_id'].'/'.SEO($data['category_name']).'/'.$_GET['sort'].'/'.$_GET['time'].'/';
-				else
+				} else {
 					return BASEURL.'/channels.php?cat='.$data['category_id'].'&sort='.$_GET['sort'].'&time='.$_GET['time'].'&seo_cat_name='.$_GET['seo_cat_name'];
+				}
 			}
 			break;
 			
 			default:
 			{
-				
-				if(THIS_PAGE=='photos')
+				if(THIS_PAGE=='photos') {
 					$type = 'photos';
+				}
 
-				if(defined("IN_MODULE"))
-				{
-					$url = 'cat='.$data['category_id'].'&sort='.$_GET['sort'].'&time='.$_GET['time'].'&page='.$_GET['page'].'&seo_cat_name='.$_GET['seo_cat_name'];
+				if(defined("IN_MODULE")) {
 					global $prefix_catlink;
+					$url = 'cat='.$data['category_id'].'&sort='.$_GET['sort'].'&time='.$_GET['time'].'&page='.$_GET['page'].'&seo_cat_name='.$_GET['seo_cat_name'];
 					$url = $prefix_catlink.$url;
-					
 					$rm_array = array("cat","sort","time","page","seo_cat_name");
 					$p = "";
-					if($prefix_catlink)
+					if($prefix_catlink) {
 						$rm_array[] = 'p';
+					}
 					$plugURL = queryString($url,$rm_array);
 					return $plugURL;
 				}
 								
-				if(SEO=='yes')
+				if(SEO=='yes') {
 					return BASEURL.'/'.$type.'/'.$data['category_id'].'/'.SEO($data['category_name']).'/'.$_GET['sort'].'/'.$_GET['time'].'/';
-				else
+				} else {
 					return BASEURL.'/'.$type.'.php?cat='.$data['category_id'].'&sort='.$_GET['sort'].'&time='.$_GET['time'].'&seo_cat_name='.$_GET['seo_cat_name'];
+				}
 			}
 			break;
 		}
