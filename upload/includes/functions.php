@@ -1217,14 +1217,19 @@
 			return true;
 	}
 	
-	function apply_func($func,$val)
-	{
-		if(is_array($func))
-		{
+	/**
+	* Calls an array of functions with parameters
+	* @param : { array } { $func } { array with functions to be called }
+	* @param : { string } { $val } { paramters for functions }
+	*/
+
+	function apply_func($func,$val) {
+		if(is_array($func)) {
 			foreach($func as $f)
-				if(function_exists($f))
+				if(function_exists($f)) {
 					$val = $f($val);
-		}else{
+				}
+		} else {
 			$val = $func($val);
 		}
 		return $val;
