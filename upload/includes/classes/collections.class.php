@@ -989,33 +989,37 @@ class Collections extends CBCategory
 	}
 	
 	/**
-	 * Function used to get collection field vlaue
-	 */
-	function get_collection_field($cid,$field=NULL)
-	{
+	* Extract collection's name using Collection's id
+	* function is mostly used via Smarty template engine
+	* 
+	* @param : { integer } { $cid } { collection id to get name for }
+	* @param : { string } { $field } { collection name by default, field you need to fetch for id }
+	*/
+
+	function get_collection_field($cid,$field=NULL) {
 		global $db;
-		if($field==NULL)
+		if($field==NULL) {
 			$field = "*";
-		else
+		} else {
 			$field = $field;
-			
-		if(is_array($cid))
+		}		
+		if(is_array($cid)) {
 			$id = $cid['collection_id'];
-		else
+		} else {
 			$id = $cid;
-		
+		}	
 		$cid = mysql_clean($cid);
-		$field = mysql_clean($field);
-		
+		$field = mysql_clean($field);	
 		$result = $db->select(tbl($this->section_tbl),$field," collection_id = $id");
-		if($result)
-		{
-			if(count($result[0]) > 2)
+		if($result) {
+			if(count($result[0]) > 2) {
 				return $result[0];
-			else
+			} else {
 				return $result[0][$field];	
-		} else
+			}
+		} else {
 			return false;
+		}
 	}
 	
 	/**

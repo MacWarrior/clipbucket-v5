@@ -3185,11 +3185,13 @@
 	}
 	
 	/**
-	 * Function used to get collection name from id
-	 * Smarty Function
-	 */
-	function get_collection_field($cid,$field='collection_name')
-	{
+	* Extract collection's name using Collection's id
+	* function is mostly used via Smarty template engine
+	* 
+	* @uses : { class : $cbcollection } { function : get_collection_field }
+	*/
+
+	function get_collection_field($cid,$field='collection_name') {
 		global $cbcollection;
 		return $cbcollection->get_collection_field($cid,$field);
 	}
