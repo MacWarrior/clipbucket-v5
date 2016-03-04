@@ -1245,11 +1245,12 @@
 
 	
 	/**
-	 * Function used to validate category
-	 * INPUT $cat array
-	 */
-	function validate_group_category($array=NULL)
-	{
+	* Function used to validate group category
+	* @uses : { class : $cbcollection } { function : validate_collection_category }
+	* @deprecated : { function has been deprecated and will be removed in next version }
+	*/
+
+	function validate_group_category($array=NULL) {
 		global $cbgroup;
 		return $cbgroup->validate_group_category($array);
 	}
@@ -1258,7 +1259,7 @@
 	* Function used to validate collection category
 	* @uses : { class : $cbcollection } { function : validate_collection_category }
 	*/
-	
+
 	function validate_collection_category($array=NULL)  {
 		global $cbcollection;
 		return $cbcollection->validate_collection_category($array);
