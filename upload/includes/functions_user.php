@@ -65,7 +65,7 @@ function profile_fileds_check($array)
             }
         }
 
-        if (!empty($array['web_url']) && !filter_var($array['web_url'], FILTER_VALIDATE_URL))
+        if (empty($array['web_url']) || is_numeric($array['web_url']) )
         {   
             e('Invalid URL provided.');
             $post_clean = false;
