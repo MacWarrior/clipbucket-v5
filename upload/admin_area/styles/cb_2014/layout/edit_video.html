@@ -262,7 +262,7 @@
             </table>
             <div class="row">
             <div class="col-md-9">
-                {assign var=vidthumbs value=get_thumb($data,1,TRUE,FALSE,TRUE,FALSE)}
+                {assign var=vidthumbs value=get_thumb($data,1,TRUE,FALSE,TRUE,FALSE,'original')}
                 <ul class="ace-thumbnails">
                 {foreach from=$vidthumbs item=vid_thumb}
                     <li style="display: inline">
