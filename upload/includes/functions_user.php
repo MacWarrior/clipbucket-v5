@@ -56,15 +56,6 @@ function profile_fileds_check($array)
             $post_clean = false;
         }
 
-        if (!empty($array['profile_tags']))
-        {
-            if (preg_match('/[0-9]+/', $array['profile_tags']) || !strpos($array['profile_tags'], ','))
-            {
-                 e('Invalid tags. Kindly review!');
-                $post_clean = false;
-            }
-        }
-
         if (empty($array['web_url']) || is_numeric($array['web_url']) )
         {   
             e('Invalid URL provided.');
