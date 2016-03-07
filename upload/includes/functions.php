@@ -70,6 +70,17 @@
 		$replace = array('&amp; ') ;
 		return $string = preg_replace($array,$replace,$string);
 	}
+
+	function clean($string,$allow_html=false) {
+ 	 //$string = $string;
+ 	 //$string = htmlentities($string);
+	 if($allow_html==false){
+ 		 $string = strip_tags($string);
+		 $string =  Replacer($string);
+	 }
+	// $string = utf8_encode($string);
+ 	 return $string;
+	}
 	
 	/**
 	* Cleans given string 
@@ -305,6 +316,20 @@
       }
       return "< 1 min";
     }
+
+    function old_set_time($temps) {
+		round($temps);
+		$heures = floor($temps / 3600);
+		$minutes = round(floor(($temps - ($heures * 3600)) / 60));
+		if ($minutes < 10) {
+			$minutes = "0" . round($minutes);
+		}
+		$secondes = round($temps - ($heures * 3600) - ($minutes * 60));
+		if ($secondes < 10) {
+			$secondes = "0" .  round($secondes);
+		}
+		return $minutes . ':' . $secondes;
+	}
 
     /**
 	* Function Used TO Get Extensio Of File
@@ -1007,7 +1032,7 @@
 	* @author : Fwhite
 	*/
 
-	function NOWNOW() {
+	function NOW() {
 		return date('Y-m-d H:i:s', time());
 	}
 	
