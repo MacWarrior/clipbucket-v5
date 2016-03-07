@@ -115,6 +115,9 @@
 	//$ffmpeg->logs = $log;
 	logData('Going to call ClipBucket Function','checkpoints');
 	$ffmpeg->ClipBucket();
+	logData($ffmpeg->video_files,'video_files');
+	$video_files = json_encode($ffmpeg->video_files);
+	$db->update(tbl('video'), array("video_files"), array($video_files), " file_name = '{$outputFileName}'");
 	
 
 	if (stristr(PHP_OS, 'WIN'))

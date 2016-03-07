@@ -35,6 +35,13 @@ class FFMpeg{
 	public $big_thumb_dim = "";
 	public $cb_combo_res = "";
 	public $res_configurations = "";
+	public $thumbs_res_settings = array(
+		"original" => "original",
+		'80' => array('128','80'),
+		'240' => array('384','240'),
+		'320' => array('512','320'),
+		'480' => array('768','480')
+		);
 	public $res169 = array(
 		'240' => array('428','240'),
 		'360' => array('640','360'),
@@ -346,14 +353,6 @@ class FFMpeg{
 			$this->output = new stdClass();
 			$this->output->videoDetails = $videoDetails;
 
-			//$this->logs->writeLine("Thumbs Generation", "Starting");
-				$this->log .= "\r\n Starting : Thumbs Generation \r\n";
-			try{
-				$this->generateThumbs($this->inputFile, $videoDetails['duration']);
-			}catch(Exception $e){
-				$this->log .= "\r\nErrot Occured : ".$e->getMessage()."\r\n";
-			}
-
 			/*
 				Comversion Starts here 
 			*/
@@ -420,6 +419,7 @@ class FFMpeg{
 				
 				if (file_exists($this->sdFile))
 				{
+					$this->video_files[] =  'sd';
 					$this->sdFile1 = "{$this->outputFile}.{$this->options['format']}";
 					$path = explode("/", $this->sdFile1);
 					$name = array_pop($path);
@@ -459,7 +459,7 @@ class FFMpeg{
 				$this->log .= "\r\n output : ".$output." \r\n";
 				if (file_exists($this->hdFile))
 				{
-
+					$this->video_files[] =  'hd';
 					$this->sdFile1 = "{$this->outputFile}.{$this->options['format']}";
 					$path = explode("/", $this->sdFile1);
 					$name = array_pop($path);
@@ -498,6 +498,7 @@ class FFMpeg{
 				$this->log .= "\r\n output : ".$output." \r\n";
 				if (file_exists($this->sdFile))
 				{
+					$this->video_files[] =  'sd';
 					$this->sdFile1 = "{$this->outputFile}.{$this->options['format']}";
 					//logData(json_encode($this->sdFile1));
 					$path = explode("/", $this->sdFile1);
@@ -884,6 +885,35 @@ class FFMpeg{
 					$nr='360';
 				/*End*/
 
+				//$this->logs->writeLine("Thumbs Generation", "Starting");
+				$this->log .= "\r\n ====== Starting : Thumbs Generation =======  \r\n";
+				$this->log .= "\r\n === OutPut Thumbs Files === \r\n";
+				try{
+					$thumbs_settings = $this->thumbs_res_settings;
+					logData($thumbs_settings,'checkpoints');
+					foreach ($thumbs_settings as $key => $thumbs_size){
+						$height_setting = $thumbs_size[1];
+						$width_setting = $thumbs_size[0];
+						$dimension_setting = $width_setting.'x'.$height_setting;
+						if($key == 'original'){
+							$dimension_setting = $key;
+							$dim_identifier = $key;	
+						}else{
+							$dim_identifier = $width_setting.'x'.$height_setting;	
+						}
+						$thumbs_settings['vid_file'] = $this->input_file;
+						$thumbs_settings['duration'] = $this->input_details['duration'];
+						$thumbs_settings['num']      = thumbs_number;
+						$thumbs_settings['dim']      = $dimension_setting;
+						$thumbs_settings['size_tag'] = $dim_identifier;
+						$this->generateThumbs($thumbs_settings);
+					}
+					
+				}catch(Exception $e){
+					$this->log .= "\r\n Errot Occured : ".$e->getMessage()."\r\n";
+				}
+				$this->log .= "\r\n ====== End : Thumbs Generation ======= \r\n";
+
 				logData('Parsing configurations to Video convert Functions','checkpoints');
 				$hr = $this->configs['high_res'];
 				$this->configs['video_width'] = $res[$nr][0];
@@ -902,11 +932,6 @@ class FFMpeg{
 				{
 					case 'yes':
 					{
-						
-					
-
-						/*$configs = $this->configs;
-						logdata($configs,'checkpoints');*/
 						$res169 = $this->reindex_required_resolutions($res169);
 						
 						logdata($res169,'checkpoints');
@@ -959,20 +984,7 @@ class FFMpeg{
 				$this->log .= "\r\n\r\nTime Took : ";
 				$this->log .= $this->total_time.' seconds'."\r\n\r\n";
 		
-				
-				$this->gen_thumbs = true;
-				$this->gen_big_thumb = true;
-
-				//Generating Thumb
-				//logData($this->input_file.$this->output_details['duration'],"thumb");
-				if ($this->resolutions == 'yes')
-				{
-					$this->thumb_dim = config('thumb_width').'x'.config('thumb_height');
-					$this->big_thumb_dim = config('big_thumb_width').'x'.config('big_thumb_height');
-					$this->generateThumbs($this->input_file, $this->output_details['duration'],$this->thumb_dim,thumbs_number,NULL);
-					$this->generateThumbs($this->input_file, $this->output_details['duration'],$this->big_thumb_dim,thumbs_number,NULL,"big");
-				}
-				
+			
 
 				if(!file_exists($this->output_file))
 					$this->log("conversion_status","failed");
@@ -1935,10 +1947,27 @@ class FFMpeg{
 		return false;
 	}
 
-	 private function generateThumbs($input_file,$duration,$dim='501x283',$num=thumbs_number,$rand=NULL,$is_big=false){
-
-		$tmpDir = TEMP_DIR.'/'.getName($input_file);
+	public function generateThumbs($array){
+	 	
+		$input_file = $array['vid_file'];
+		$duration = $array['duration'];
+		$dim = $array['dim'];
+		$num = $array['num'];
+		if (!empty($array['size_tag'])){
+			$size_tag= $array['size_tag'];
+		}
+		if (!empty($array['file_directory'])){
+			$regenerateThumbs = true;
+			$file_directory = $array['file_directory'];
+		}
+		if (!empty($array['file_name'])){
+			$filename = $array['file_name'];
+		}
+		if (!empty($array['rand'])){
+				$rand = $array['rand'];		
+		}
 		
+		$tmpDir = TEMP_DIR.'/'.getName($input_file);	
 
 		/*
 			The format of $this->options["outputPath"] should be like this
@@ -1948,19 +1977,30 @@ class FFMpeg{
 		if(substr($this->options["outputPath"], strlen($this->options["outputPath"]) - 1) !== "/"){
 			$this->options["outputPath"] .= "/";
 		}
-		mkdir($tmpDir,0777);
-
+		
+		mkdir($tmpDir,0777);	
 
 		$output_dir = THUMBS_DIR;
 		$dimension = '';
 
 		$big = "";
 		
-		if($is_big=='big')
+		if(!empty($size_tag))
 		{
-			$big = 'big-';
+			$size_tag = $size_tag.'-';
+		}
+
+		if (!empty($file_directory && !empty($filename))){
+			$thumbs_outputPath = $file_directory.'/';
+		}else{
+			$thumbs_outputPath = $this->options['outputPath'];
 		}
 		
+
+		if($dim!='original'){
+			$dimension = " -s $dim  ";
+		}
+
 		if($num > 1 && $duration > 14)
 		{
 			$duration = $duration - 5;
@@ -1970,23 +2010,23 @@ class FFMpeg{
 			
 			for($id=3;$id<=$duration;$id++)
 			{
-				$file_name = getName($input_file)."-{$big}{$count}.jpg";
-				$file_path = THUMBS_DIR.'/' . $this->options['outputPath'] . $file_name;
+				if (empty($filename)){
+					$file_name = getName($input_file)."-{$size_tag}{$count}.jpg";	
+				}else{
+					$file_name = $filename."-{$size_tag}{$count}.jpg";	
+				}
+				
+				$file_path = THUMBS_DIR.'/' . $thumbs_outputPath . $file_name;
 				$id	= $id + $division - 1;
+
 				if($rand != "") {
 					$time = $this->ChangeTime($id,1);
 				} elseif($rand == "") {
 					$time = $this->ChangeTime($id);
 				}
 				
-				if($dim!='original')
-				{
-					$dimension = " -s $dim  ";
-					$mplayer_dim = "-vf scale=$width:$height";
-				}
-				
 				$command = $this->ffMpegPath." -i $input_file -an -ss $time -an -r 1 $dimension -y -f image2 -vframes 1 $file_path ";
-				
+				/*logdata("Thumbs COmmand : ".$command,'checkpoints');*/
 				$output = $this->executeCommand($command);	
 				//$this->//logData($output);
 				//checking if file exists in temp dir
@@ -1995,12 +2035,25 @@ class FFMpeg{
 					rename($tmpDir.'/00000001.jpg',THUMBS_DIR.'/'.$file_name);
 				}
 				$count = $count+1;
+				if (!$regenerateThumbs){
+					$this->log .= "\r\n File : $file_path ";	
+				}
+				
 			}
 		}else{
-			$file_name = getName($input_file)."-{$big}1.jpg";
-			$file_path = THUMBS_DIR.'/' . $this->options['outputPath'] . "/" . $file_name;
-			$command = $this->ffMpegPath." -i $input_file -an -s $dim -y -f image2 -vframes $num $file_path ";
+			
+			if (empty($filename)){
+				$file_name = getName($input_file)."-{$size_tag}1.jpg";	
+			}else{
+				$file_name = $filename."-{$size_tag}1.jpg";	
+			}
+			
+			$file_path = THUMBS_DIR.'/' . $thumbs_outputPath . $file_name;
+			echo $command = $this->ffMpegPath." -i $input_file -an $dimension -y -f image2 -vframes $num $file_path ";
 			$output = $this->executeCommand($command);
+			if (!$regenerateThumbs){
+				$this->log .= "\r\n File : $file_path ";
+			}
 		}
 		
 		rmdir($tmpDir);
@@ -2044,17 +2097,12 @@ public function regenerateThumbs($input_file,$test,$duration,$dim,$num,$rand=NUL
 				$id	= $id + $division - 1;
                 $time = $this->ChangeTime($id,1);
 				
-				
-                
-
 				if($dim!='original')
 				{
 					$dimension = " -s $dim  ";
 					$mplayer_dim = "-vf scale=$width:$height";
 				}
                 
-				
-				
 				$command = $this->ffMpegPath." -i $input_file -an -ss $time -an -r 1 $dimension -y -f image2 -vframes 1 $file_path ";
 			
 				$output = $this->executeCommand($command);	

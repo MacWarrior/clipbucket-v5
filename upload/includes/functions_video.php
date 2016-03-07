@@ -211,7 +211,7 @@ function get_thumb($vdetails,$num='default',$multi=false,$count=false,$return_fu
        $file_dir =  "/" . $thumbDir;
     }
     $vid_thumbs = glob(THUMBS_DIR."/" .$file_dir.$vdetails['file_name']."*");
-    
+ 
    
     #replace Dir with URL
     if(is_array($vid_thumbs))
@@ -222,17 +222,25 @@ function get_thumb($vdetails,$num='default',$multi=false,$count=false,$return_fu
                 $thumb_parts = explode('/',$thumb);
                 $thumb_file = $thumb_parts[count($thumb_parts)-1];
 
-                if(!is_big($thumb_file) || $return_big)
-                {
+                //Saving All Thumbs
+                if(!is_big($thumb_file) || $return_big){
                     if($return_full_path)
                         $thumbs[] = THUMBS_URL.'/'. $thumbDir . $thumb_file;
                     else
                         $thumbs[] = $thumb_file;
                 }
+                //Saving Original Thumbs
+                if (is_original($thumb_file)){
+                    if($return_full_path)
+                        $original_thumbs[] = THUMBS_URL.'/'. $thumbDir . $thumb_file;
+                    else
+                        $original_thumbs[] = $thumb_file;
+                }
+
             }elseif(file_exists($thumb))
                 unlink($thumb);
         }
-
+    #pr($thumbs,true);
     if(count($thumbs)==0)
     {
         if($count)
@@ -243,8 +251,18 @@ function get_thumb($vdetails,$num='default',$multi=false,$count=false,$return_fu
     }
     else
     {
-        if($multi)
-            return $thumbs;
+        
+        //Initializing thumbs settings
+        $thumbs_res_settings = thumbs_res_settings_28();
+
+        if($multi){
+            if (!empty($original_thumbs) && $size == 'original'){
+                return $original_thumbs;    
+            }else{
+                return $thumbs;
+            }
+        }
+
         if($count)
             return count($thumbs);
 
@@ -257,18 +275,39 @@ function get_thumb($vdetails,$num='default',$multi=false,$count=false,$return_fu
         {
 
             $num = 'big-'.$vdetails['default_thumb'];
-            if(!file_exists(THUMBS_DIR.'/'.$vdetails['file_name'].'-'.$num.'.jpg'))
-                $num = 'big';
+            $num_big_28 = implode('x', $thumbs_res_settings['320']).'-'.$vdetails['default_thumb'];
+            
+            $big_thumb_cb26 = THUMBS_DIR.'/'.$vdetails['file_name'].'-'.$num.'.jpg';
+            $big_thumb_cb27 = THUMBS_DIR.'/'.$thumbDir.$vdetails['file_name'].'-'.$num.'.jpg';
+            $big_thumb_cb28 = THUMBS_DIR.'/'.$thumbDir.$vdetails['file_name'].'-'.$num_big_28.'.jpg';
+
+            if(file_exists($big_thumb_cb26)){
+                return THUMBS_URL.'/'.$vdetails['file_name'].'-'.$num.'.jpg';
+            }elseif (file_exists($big_thumb_cb27)){
+                return THUMBS_URL.'/'.$thumbDir.$vdetails['file_name'].'-'.$num.'.jpg';
+            }elseif (file_exists($big_thumb_cb28)){
+                return THUMBS_URL.'/'.$thumbDir.$vdetails['file_name'].'-'.$num_big_28.'.jpg';
+            }
         }
 
-        $default_thumb = array_find($vdetails['file_name'].'-'.$num,$thumbs);
-
-        if(!empty($default_thumb))
+       $default_thumb = array_find($vdetails['file_name'].'-'.$size.'-'.$num,$thumbs);
+        
+        if(!empty($default_thumb)){
             return $default_thumb;
-        return $thumbs[0];
+        }
+        elseif(empty($default_thumb)){
+            $default_thumb = array_find($vdetails['file_name'].'-'.$num,$thumbs);
+            if (!empty($default_thumb)){
+                return $default_thumb;
+            }else{
+                return $thumbs[0];    
+            }
+        }
+       
     }
 
 }
+
 
 
 /**
@@ -281,6 +320,18 @@ function is_big($thumb_file)
     else
         return false;
 }
+
+/**
+ * Function used to check weaether given thumb is original or not
+ */
+function is_original($thumb_file)
+{
+    if(strstr($thumb_file,'original'))
+        return true;
+    else
+        return false;
+}
+
 function GetThumb($vdetails,$num='default',$multi=false,$count=false)
 {
 
@@ -904,24 +955,28 @@ function get_thumb_num($name)
 
 
 /**
- * Function used to remove thumb
+ * Function used to remove specific thumbs number
  */
-function delete_video_thumb($file_dir,$file)
+function delete_video_thumb($file_dir,$file_name,$num)
 {
     global $LANG;
-    if($file_dir!=NULL){
-    $path = THUMBS_DIR.'/'.$file_dir.'/'.$file;
-     }
-     else{
-       $path = THUMBS_DIR.'/'.$file; 
-     }
-    
-    if(file_exists($path))
-    {
-        unlink($path);
+    if(!empty($file_dir)){
+        $files = glob(THUMBS_DIR.'/'.$file_dir.'/'.$file_name.'*'.$num.'.*');
+    }
+    else{
+        $files = glob(THUMBS_DIR.'/'.$file_name.'*'.$num.'.*');
+    }
+    //pr($files,true);
+
+    if ($files){
+        foreach ($files as $key => $file){
+            if (file_exists($file)){
+                unlink($file);
+            }
+        }
         e(lang('video_thumb_delete_msg'),'m');
     }else{
-        e(lang('video_thumb_delete_err'));
+         e(lang('video_thumb_delete_err'));
     }
 }
 
@@ -1318,7 +1373,7 @@ function get_video_files($vdetails,$return_default=true,$with_path=true,$multi=f
 function upload_thumb($array)
 {
 
-    global $file_name,$LANG;
+    global $file_name,$LANG,$Upload;
     
     //Get File Name
     $file       = $array['name'];
@@ -1336,14 +1391,32 @@ function upload_thumb($array)
             //exit($file_directory);
         }
         if($image->ValidateImage($array['tmp_name'],$ext)){
-            $file = BASEDIR.'/files/thumbs/'.$file_directory.$_POST['file_name'].'.'.$ext;
-            $bfile = BASEDIR.'/files/thumbs/'.$file_directory.$_POST['file_name'].'.-big.'.$ext;
-            if(!file_exists($file))
-            {
-                move_uploaded_file($array['tmp_name'],$file);
-                $image->CreateThumb($file,$bfile,config('big_thumb_width'),$ext,config('big_thumb_height'),false);
-                $image->CreateThumb($file,$file,THUMB_WIDTH,$ext,THUMB_HEIGHT,false);
+
+            $imageDetails = getimagesize($array['tmp_name']);
+            $file_num = $Upload->get_available_file_num($_POST['file_name']);
+            $temp_file = THUMBS_DIR.'/'.$file_directory.'/'.$_POST['file_name'].'-'.$file_num.'.'.$ext;
+            
+            move_uploaded_file($array['tmp_name'],$temp_file);
+
+            $thumbs_settings_28 = thumbs_res_settings_28();
+
+            foreach ($thumbs_settings_28 as $key => $thumbs_size) {
+                
+                $height_setting = $thumbs_size[1];
+                $width_setting = $thumbs_size[0];
+                if ( $key != 'original' ){
+                    $dimensions = implode('x',$thumbs_size);
+                }else{
+                    $dimensions = 'original';
+                    $width_setting  = $imageDetails[0];
+                    $height_setting = $imageDetails[1];
+                }
+
+                $outputFilePath = THUMBS_DIR.'/'.$file_directory.'/'.$_POST['file_name'].'-'.$dimensions.'-'.$file_num.'.'.$ext;  
+                //echo $outputFilePath.'<br>';
+                $image->CreateThumb($temp_file,$outputFilePath,$width_setting,$ext,$height_setting,false);
             }
+            unlink($temp_file);
         }else{
             e(lang('vdo_thumb_up_err'));
         }
@@ -1528,4 +1601,108 @@ function is_phone_user( $data )
         }
     }
 }
+/**
+* @author : Fahad Abbas
+* @param : { Null }
+* @return : { Array } { Clipbucket version 2.8 thumbs default settings }
+* @date : 02-03-2016
+*/
+function thumbs_res_settings_28(){
+    
+    $thumbs_res_settings = array(
+        "original" => "original",
+        '80' => array('128','80'),
+        '240' => array('384','240'),
+        '320' => array('512','320'),
+        '480' => array('768','480')
+        );
 
+    return $thumbs_res_settings;
+}
+
+/**
+* @author : Fahad Abbas
+* @param : { Array } { Video Details }
+* @return : { Variable or boolean } { Max resolution file }
+* @date : 03-03-2016
+*/
+function get_high_res_file($vdetails,$dir=false){
+    //Getting video Files array
+    $video_files = $vdetails['video_files'];
+    $video_files = json_decode($video_files,true);
+    //Getting video actual files source
+    $v_files = get_video_files($vdetails,true,true);
+
+    if (empty($v_files)){
+        return false;
+    }
+    //Checking if video_files field is not empty (greater versions than CB 2.8)
+    if (!empty($video_files)){
+
+        $pre_check_file = $video_files[0];
+        if (is_int($pre_check_file)){
+            $max_file_res = max($video_files);
+        }else{
+            if (in_array("hd", $video_files)) {
+                $max_file_res = "hd";
+            }else{
+                $max_file_res = "sd";
+            }
+
+        }
+    }else{
+        //Checking if video_files field is empty (lower versions than CB 2.8.1)
+        foreach ($v_files as $key => $file) {
+            $video_files[] = get_video_file_quality($file);
+        }
+        $pre_check_file = $video_files[0];
+        if (is_int($pre_check_file)){
+            $max_file_res = max($video_files);
+        }else{
+            if (in_array("hd", $video_files)) {
+                $max_file_res = "hd";
+            }else{
+                $max_file_res = "sd";
+            }
+        }
+
+    }
+    // now saving the max resolution file in a variable
+
+    if ($dir){
+        $Ext = GetExt($v_files[0]);
+        $max_res_file = VIDEOS_DIR.'/'.$vdetails['file_directory'].'/'.$vdetails['file_name'].'-'.$max_file_res.'.'.$Ext;
+
+    }else{
+        
+        foreach ($v_files as $key => $file) {
+            $video_quality =  get_video_file_quality($file);
+            if ($max_file_res == $video_quality){
+                $max_res_file = $file;
+            }
+        }
+    }
+   
+    if (!empty($max_res_file)){
+        return $max_res_file;
+    }else{
+        return false;
+    }
+   
+}
+
+/**
+* @author : Fahad Abbas
+* @param : { Var } { quality of input file }
+* @return : { Variable } { resolution of a file }
+* @date : 03-03-2016
+*/
+function get_video_file_quality($file){
+    
+    $quality = explode('-',$file);
+    $quality = end($quality);
+    $quality = explode('.',$quality);
+    $quality = $quality[0];
+    return $quality;
+   
+}

@@ -572,36 +572,15 @@ class CBvideo extends CBCategory
 				{
 					if (strstr($thumb,'timthumb'))
 						$thumb = $this->convert_tim_thumb_url_to_file($thumb,$file_name=false);
-					else
-						$thumb = substr($thumb, 0, -6);
 
-					$file = THUMBS_DIR.'/'.$thumb;
-					if(file_exists($file) && is_file($file))
+					if (!empty($vdetails['file_directory'])){
+						$file = THUMBS_DIR.'/'.$vdetails['file_directory'].'/'.$thumb;
+					}else{
+						$file = THUMBS_DIR.'/'.$thumb;
+					}
+					
+					if(file_exists($file) && is_file($file)){
 						unlink($file);
-				}
-				
-				foreach($thumbs as $thumb)
-				{
-					
-					if (strstr($thumb,'timthumb'))
-						$fn = $this->convert_tim_thumb_url_to_file($thumb,$file_name=true);
-					else
-						$fn = substr($thumb, 0, -6);
-					
-					$result = db_select("SELECT * FROM ".tbl("video")." WHERE file_name = '$fn'");
-					if($result)
-					{
-						
-						foreach($result as $result1)
-						{
-							$str = '/'.$result1['file_directory'].'/';
-							$file1 = THUMBS_DIR.$str.$thumb;
-							if(file_exists($file1) && is_file($file1))
-							{
-								unlink($file1);
-							}
-						}
-
 					}
 				}
 			}
