@@ -553,7 +553,7 @@ class Collections extends CBCategory
 		
 		if(!$count_only)
 		{
-			$result = $db->select($tables,"$itemsTbl.ci_id,$itemsTbl.collection_id,$objTbl.*,".tbl('users').".username"," $itemsTbl.collection_id = '$id' AND $itemsTbl.object_id = $objTbl.".$this->objFieldID." AND $objTbl.userid = ".tbl('users').".userid",$limit,$order);
+			$result = $db->select($tables,"$itemsTbl.ci_id,$itemsTbl.collection_id,$objTbl.*,".tbl('users').".username"," $itemsTbl.collection_id = '$id' AND active = 'yes' AND $itemsTbl.object_id = $objTbl.".$this->objFieldID." AND $objTbl.userid = ".tbl('users').".userid",$limit,$order);
 			//echo $db->db_query;
 		} else {
 			$result = $db->count($itemsTbl,"ci_id"," collection_id = $id");	
