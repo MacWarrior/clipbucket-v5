@@ -1634,7 +1634,7 @@ function get_high_res_file($vdetails,$dir=false){
     $v_files = get_video_files($vdetails,true,true);
 
     if (empty($v_files)){
-        return false;
+         e(lang('Video file doesn\'t exists'),'e');
     }
     //Checking if video_files field is not empty (greater versions than CB 2.8)
     if (!empty($video_files)){
@@ -1656,7 +1656,7 @@ function get_high_res_file($vdetails,$dir=false){
             $video_files[] = get_video_file_quality($file);
         }
         $pre_check_file = $video_files[0];
-        if (is_int($pre_check_file)){
+        if (is_numeric($pre_check_file)){
             $max_file_res = max($video_files);
         }else{
             if (in_array("hd", $video_files)) {

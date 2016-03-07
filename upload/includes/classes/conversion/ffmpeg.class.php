@@ -2049,7 +2049,7 @@ class FFMpeg{
 			}
 			
 			$file_path = THUMBS_DIR.'/' . $thumbs_outputPath . $file_name;
-			echo $command = $this->ffMpegPath." -i $input_file -an $dimension -y -f image2 -vframes $num $file_path ";
+			$command = $this->ffMpegPath." -i $input_file -an $dimension -y -f image2 -vframes $num $file_path ";
 			$output = $this->executeCommand($command);
 			if (!$regenerateThumbs){
 				$this->log .= "\r\n File : $file_path ";
@@ -2057,81 +2057,6 @@ class FFMpeg{
 		}
 		
 		rmdir($tmpDir);
-	}
-
-
-
-
-/**
-	 * Function used to regenrate thumbs for a video
-	 * @param : 
-	 * @parma : 
-	 */
-
-public function regenerateThumbs($input_file,$test,$duration,$dim,$num,$rand=NULL,$is_big=false,$filename){
-
-		$tmpDir = TEMP_DIR.'/'.getName($input_file);
-		
-        $output_dir = THUMBS_DIR;
-		$dimension = '';
-
-		$big = "";
-		
-		if($is_big=='big')
-		{
-			$big = 'big-';
-		}
-		
-		if($num > 1 && $duration > 14)
-		{
-			$duration = $duration - 5;
-			$division = $duration / $num;
-			$count=1;
-			
-			
-			for($id=3;$id<=$duration;$id++)
-			{
-				$file_name = $filename."-{$big}{$count}.jpg";
-				$file_path = THUMBS_DIR.'/' . $test .'/'. $file_name;
-				
-				$id	= $id + $division - 1;
-                $time = $this->ChangeTime($id,1);
-				
-				if($dim!='original')
-				{
-					$dimension = " -s $dim  ";
-					$mplayer_dim = "-vf scale=$width:$height";
-				}
-                
-				$command = $this->ffMpegPath." -i $input_file -an -ss $time -an -r 1 $dimension -y -f image2 -vframes 1 $file_path ";
-			
-				$output = $this->executeCommand($command);	
-					 //e(lang($output),'m');
-
-				//$this->//logData($output);
-				//checking if file exists in temp dir
-				if(file_exists($tmpDir.'/00000001.jpg'))
-				{
-					rename($tmpDir.'/00000001.jpg',THUMBS_DIR.'/'.$file_name);
-				}
-				$count = $count+1;
-			}
-		}else
-
-		{
-
-			$time = $this->ChangeTime($duration,1);
-			$file_name = getName($input_file).".jpg";
-			$file_path = THUMBS_DIR.'/' . $test . "/" . $file_name;
-			$command = $this->ffMpegPath." -i $input_file -an -ss $time -an -r 1 $dimension -y -f image2 -vframes $num $file_path ";
-			$output = $this->executeCommand($command);
-			$output;
-			//e(lang($num),'m');
-			
-
-		}
-		
-		//rmdir($tmpDir);
 	}
 
 
