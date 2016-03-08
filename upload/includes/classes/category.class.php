@@ -581,8 +581,10 @@ abstract class CBCategory
 		$desc = ($array['desc']);
 		$default = mysql_clean($array['default_categ']);
 		$pcat = mysql_clean($array['parent_cat']);
-		$flds = array("category_name","category_desc","isdefault");
-		$values = array($name,$desc, $default);
+
+		#exit($pcat);
+		$flds = array("category_name","category_desc","isdefault","parent_id");
+		$values = array($name,$desc, $default, $pcat);
 		$cur_name = mysql_clean($array['cur_name']);
 		$cid = mysql_clean($array['cid']);
 		if(!empty($this->use_sub_cats)) {
@@ -601,7 +603,7 @@ abstract class CBCategory
 			$db->update(tbl($this->cat_tbl),array("isdefault"),"no"," category_id!='$cid' ");
 			$db->update(tbl($this->cat_tbl),$flds,$values," category_id='$cid' ");
 			
-			if($default=='yes' || !$this->get_default_category())
+			if($default=='yes')
 				$this->make_default_category($cid);
 			e(lang("cat_update_msg"),'m');
 			
