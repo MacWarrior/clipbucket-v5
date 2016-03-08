@@ -178,6 +178,7 @@
 	*/
 
 	function cbmail($array) {
+		return true;
 		$func_array = get_functions('email_functions');
 		if(is_array($func_array)) {
 			foreach($func_array as $func) {
@@ -3018,6 +3019,21 @@
 			echo $cbsubtitle." $sub_sep ";
 			echo TITLE;	
 		}
+	}
+
+	/**
+ 	* @Script : ClipBucket
+ 	* @Author : Arslan Hassan
+ 	* @License : CBLA
+ 	* @Since : 2007
+ 	*
+ 	* function whos_your_daddy
+ 	* Simply tells the name of  script owner
+ 	* @return INTELLECTUAL BADASS
+ 	*/
+ 
+	function whos_your_daddy() {
+		echo  "<h1>Arslan Hassan</h1>";
 	}
 	
 	/**
