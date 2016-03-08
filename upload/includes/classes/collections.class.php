@@ -1693,17 +1693,14 @@ class Collections extends CBCategory
 		
 		/* THIS MEANS OBJECT IS ORPHAN MOST PROBABLY AND HOPEFULLY - PHOTO 
 		   NOW WE WILL ADD $OBJ TO $NEW */
+
 		if($old == 0 || $old == NULL)
 		{
 			$this->add_collection_item($obj,$new);
 		} else {
 			$update = $db->update(tbl($this->items),array('collection_id'),array($new)," collection_id = $old AND type = '".$this->objType."' AND object_id = $obj");
-			
-			if(!empty($update))
-			{
-				$this->update_collection_counts($new,1,'+');
-				$this->update_collection_counts($old,1,'-');
-			}
+			$this->update_collection_counts($new,1,'+');
+			$this->update_collection_counts($old,1,'-');
 		}
 	}
 	
