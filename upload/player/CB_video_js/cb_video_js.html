@@ -24,7 +24,7 @@
 
 <script type="text/javascript">
 var vid_id = "{$vdata.videoid}";
-var videotitle = "{$vdata.title}";
+var videotitle = "{$vdata.title|escape_quotes}";
 var uploader = "{$vdata.username}";
 var branding_logo  = "{$cb_logo}";
 var product_link = "{$player_config.player_logo_url}";
