@@ -3657,7 +3657,7 @@
 			case 'ffmpeg':
 			{
 				//Gett FFMPEG SVN version
-				dump($result);
+				//dump($result);
 				preg_match("/svn-r([0-9]+)/i",strtolower($result),$matches);
 				//pr($matches);
 				if(is_numeric(floatval($matches[1])) && $matches[1]) {

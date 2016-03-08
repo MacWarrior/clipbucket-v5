@@ -1,5 +1,6 @@
 <?php
 define('FFMPEG_BINARY', get_binaries('ffmpeg'));
+define('MP4Box_BINARY', get_binaries('mp4box'));
 define('MEDIAINFO_BINARY', get_binaries('media_info'));
 define('FFPROBE', get_binaries('ffprobe_path'));
 
