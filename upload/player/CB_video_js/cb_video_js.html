@@ -45,12 +45,27 @@ var show_logo = true;
 		"uploader" : uploader,
 		"branding_logo" : branding_logo,
 		"show_logo" : show_logo,
-		"product_link" : product_link
+		"product_link" : product_link,
 	};
 	//Initializing
 	var player = videojs('cb_video_js', cb_player_setup , function(){
 		var cb_video_js = this;
 	});
 
+	// saves audio settings
+	isMuted = $.cookie("isMuted");
+
+	if (isMuted != "false") {
+		$('video').attr('muted','muted');
+		$('.vjs-mute-control').trigger('click');
+	}
+
+	$('.vjs-mute-control').on("click",function(){
+		if (isMuted != "false") {
+			$.cookie("isMuted", "false");
+		} else {
+			$.cookie("isMuted", "muted"); 
+		}
+	});
 </script>
 <script src="{$cb_vjs_player_url}/js/cb_vjs_custom.js"></script>
