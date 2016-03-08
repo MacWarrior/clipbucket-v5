@@ -108,6 +108,7 @@
                             </ul>  
                             {/foreach}
 						</div>
+						{if isSectionEnabled('photos')}
 						<div class="col-lg-2 col-md-2 col-sm-4 col-xs-12">
 							<h2><i class="fa fa-camera"></i>&nbsp;Photos</h2>
 							{$sorting_links=sorting_links()}     
@@ -119,6 +120,7 @@
                             </ul>  
                             {/foreach}
 						</div>
+						{/if}
 						<div class="col-lg-2 col-md-2 col-sm-4 col-xs-12">
 							<h2><i class="fa fa-desktop"></i>&nbsp;Channels</h2>
 							{$sorting_links=sorting_links()}     
@@ -189,7 +191,9 @@
 				<a href="{link name='upload'}" class="dropdown-toggle" data-toggle="dropdown">{lang code="Uploads"} <b class="caret"></b></a>
 				<ul role="menu" class="dropdown-menu">
 					<li><a href="{link name='upload'}">{lang code="Upload Video"}</a></li>
+					{if isSectionEnabled('photos')}
 					<li><a href="{link name='photo_upload'}">{lang code="Upload Photo"}</a></li>
+					{/if}
 					{ANCHOR place="aud_upload_link"}
 				</ul>
 			</li>
@@ -303,7 +307,9 @@
 				</button>
 				<ul role="menu" class="dropdown-menu upload-dropdown">
 					<li><a href="{link name='upload'}">{lang code="Upload Video"}</a></li>
+					{if isSectionEnabled('photos')}
 					<li><a href="{link name='photo_upload'}">{lang code="Upload Photo"}</a></li>
+					{/if}
 					{ANCHOR place="aud_upload_link"}
 				</ul>
 			</div>
