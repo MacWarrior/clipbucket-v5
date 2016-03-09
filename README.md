@@ -9,6 +9,7 @@ You can start a fully dedicated video sharing website or photo sharing websites 
 <a href="https://github.com/arslancb/clipbucket/blob/master/why_clipbucket.MD">ClipBucket Features</a>
 </br>
 <a href="http://clip-bucket.com">ClipBucket Official Website </a>
+<a href="http://docs.clip-bucket.com">ClipBucket Documentation</a>
 
 # Server Requirements
 ![alt tag](http://www.gold-i.com/media/13165/servers-700-x-300.jpg)
@@ -40,3 +41,5 @@ ClipBucket core features aren't enough for you? We got plugins. Yeah, we got awe
 We have a very active community that is always there for your help. Interact with people, get your problems solved, learn new things, have fun. 
 
 <a href="http://discourse.clipbucket.com/">ClipBucket Discourse</a>
+
+If you need to know anything else, have an idea to discuss or just some suggestions to drop, <a href="http://clip-bucket.com/contact">Contact Us</a> here or find us on live chat at <a href="http://clip-bucket.com">Our Website</a>
