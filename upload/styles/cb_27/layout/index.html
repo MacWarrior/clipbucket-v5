@@ -88,7 +88,8 @@
 										<span class="play-icon fa fa-play"></span>
 										<img class="cb_img_thum" src="{getThumb vdetails=$video_01 num='4' size='500x283'}" width="500" height="285" border="0" {ANCHOR place="video_thumb" data=$video_01} />
 									</a>
-									<div class="cbHomeVidTitle cbHomeVidTitle_Big mouse_hover_on">{$video_01.title|truncate:30}</div>
+										<img src="{$imageurl}/dot.gif" data-quick="quick-{$video_01.videoid}" class="add_icon cb_quickie cb-btn-quick-{$video_01.videoid}" onclick="add_quicklist(this,'{$video_01.videoid}')" title="Add {$video_01.title} to Quicklist" alt="Quicklist" />
+									
 								</div>
 					            <div class="cbHomeVidDuration mouse_hover_on">
 					            {if $video_01.duration>1}{$video_01.duration|SetTime}{else}00:00ewwew{/if}
@@ -104,11 +105,12 @@
 									<a href="{videoLink vdetails=$video_02}" title="{$video_02.title}">
 										<span class="play-icon fa fa-play"></span>
 										<img class="cb_img_thum" src="{getThumb vdetails=$video_02 size='501x283' }" width="240" height="133" {ANCHOR place="video_thumb" data=$video_02} />
-										<div class="cbHomeVidTitle mouse_hover_on1">{$video_02.title|truncate:10}</div>
+										
 										<div class="cbHomeVidDuration mouse_hover_on1">
 						            		{if $video_02.duration>1}{$video_02.duration|SetTime}{else}00:00{/if}
 						            	</div>
 									</a>
+										<img src="{$imageurl}/dot.gif" data-quick="quick-{$video_02.videoid}" class="add_icon cb_quickie cb-btn-quick-{$video_02.videoid}" onclick="add_quicklist(this,'{$video_02.videoid}')" title="Add {$video_02.title} to Quicklist" alt="Quicklist" />
 								</div>
 								{/if}
 
@@ -121,13 +123,13 @@
 									<a href="{videoLink vdetails=$video_02}" title="{$video_02.title}">
 										<span class="play-icon fa fa-play"></span>
 										<img class="cb_img_thum" src="{getThumb vdetails=$video_02 size='501x283'}" width="240" height="133" {ANCHOR place="video_thumb" data=$video_02} />
-									
 										<div class="cbHomeVidTitle mouse_hover_on">{$video_02.title|truncate:10}</div>
 
 										<div class="cbHomeVidDuration mouse_hover_on">
 							            {if $video_02.duration>1}{$video_02.duration|SetTime}{else}00:00{/if}
 							            </div>
 									</a>
+										<img src="{$imageurl}/dot.gif" data-quick="quick-{$video_02.videoid}" class="add_icon cb_quickie cb-btn-quick-{$video_02.videoid}" onclick="add_quicklist(this,'{$video_02.videoid}')" title="Add {$video_02.title} to Quicklist" alt="Quicklist" />
 								</div>
 							{/if}
 							{/foreach}
