@@ -9,6 +9,7 @@ You can start a fully dedicated video sharing website or photo sharing websites 
 <a href="https://github.com/arslancb/clipbucket/blob/master/why_clipbucket.MD">ClipBucket Features</a>
 </br>
 <a href="http://clip-bucket.com">ClipBucket Official Website </a>
+</br>
 <a href="http://docs.clip-bucket.com">ClipBucket Documentation</a>
 
 # Server Requirements
