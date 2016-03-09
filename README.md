@@ -11,7 +11,7 @@ You can start a fully dedicated video sharing website or photo sharing websites 
 <a href="http://clip-bucket.com">ClipBucket Official Website </a>
 
 # Server Requirements
-![alt tag](http://www.disklessworkstations.com/images/thin-client-servers.jpg)
+![alt tag](http://www.gold-i.com/media/13165/servers-700-x-300.jpg)
 </br>
 In order for you to be able to run ClipBucket, there are certain tools that need to be installed on your server. Don't worry, they are all FREE. To have a look at complete list of required tools, click the link below.
 
@@ -27,9 +27,16 @@ Installation of ClipBucket is simple and straight forward. Click the link below 
 # ClipBucket Themes
 ClipBucket comes with various themes to help you set a tone for your website according to your Niche. These themes include originals as well as clones of popular websites such as YouTube. 
 
+<a href="http://clip-bucket.com/products/list/themes-/">ClipBucket Themes</a>
+
 # ClipBucket Plugins
 ![alt tag](http://cdn2.business2community.com/wp-content/uploads/2014/08/BLOG3PLUGIN.jpg)
 </br>
+ClipBucket core features aren't enough for you? We got plugins. Yeah, we got awesome ones. With plugins you can enhance the functionality and power of ClipBucket while having 100% control in your hands. To see our available plugins, click below link
+
+<a href="http://clip-bucket.com/products/list/plugins/">ClipBucket Plugins</a>
 
 # ClipBucket Discourse (Forum)
+We have a very active community that is always there for your help. Interact with people, get your problems solved, learn new things, have fun. 
 
+<a href="http://discourse.clipbucket.com/">ClipBucket Discourse</a>
