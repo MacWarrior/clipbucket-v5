@@ -2081,7 +2081,6 @@
 			{
 				if(!isset($_COOKIE['video_'.$id])) {
 					$currentTime = time();
-					file_put_contents("/home/sajjad/Desktop/log.txt", json_encode($videoViewsRecord));
 					$views = (int)$videoViewsRecord["video_views"] + 1;
 					$db->update(tbl("video_views"),array("video_views","last_updated"),array($views,$currentTime)," video_id='$id' OR videokey='$id'");
 					$query = "UPDATE " . tbl("video_views") . " SET video_views = video_views + 1 WHERE video_id = {$id}";
