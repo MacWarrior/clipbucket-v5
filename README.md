@@ -28,6 +28,8 @@ Installation of ClipBucket is simple and straight forward. Click the link below 
 ClipBucket comes with various themes to help you set a tone for your website according to your Niche. These themes include originals as well as clones of popular websites such as YouTube. 
 
 # ClipBucket Plugins
+![alt tag](http://cdn2.business2community.com/wp-content/uploads/2014/08/BLOG3PLUGIN.jpg)
+</br>
 
 # ClipBucket Discourse (Forum)
 
