@@ -67,6 +67,16 @@ if(isset($_POST['deactivate_selected'])){
 	$eh->flush();
 	e("Selected users have been deactivated","m");
 }
+
+if (isset($_GET['resend_verif'])) {
+	$revrfy_user = $_GET['resend_verif'];
+	$send_mail = resend_verification($revrfy_user);
+	if ($send_mail) {
+		e("Reverification email has been sent to user <strong>".$send_mail."</strong>","m");
+	} else {
+		e("Something went wrong trying to send reverification email");
+	}
+}
 			
 //Make User Featured
 if(isset($_GET['featured'])){
