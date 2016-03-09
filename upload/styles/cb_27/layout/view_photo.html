@@ -6,7 +6,7 @@
         <div class="ad">{AD place='ad_468x60'}</div>
         <div class="cb-box pad-bottom-sm">  
             <div class="photo-holder relative">
-                <a {if $nextLink} {assign var='nextItem' value=$nextLink} {else}  {assign var='nextItem' value=$preLink} {/if}
+                <a class="img-responsive" {if $nextLink} {assign var='nextItem' value=$nextLink} {else}  {assign var='nextItem' value=$preLink} {/if}
                 href="{$cbphoto->photo_links($nextItem.0,'view_item')}">{get_photo details=$photo size='l' class='img-responsive center-block' output='html' height="100"}</a>
                 {assign var=objctid value=$object.ci_id}
                 {assign var=collid value=$object.collection_id}
@@ -226,6 +226,10 @@
 
 {literal}
 <style>
+#theMainImg {
+    float: none;
+    margin: 0 auto;
+}
     .clip_read:hover{
       cursor: pointer;
   }
