@@ -217,7 +217,7 @@ if(!function_exists('server_thumb'))
                     }    
 
                     if($output=='html')
-                        return "<img src='$photo_link'>";
+                        return "<img class='img-responsive' id='theMainImg' src='$photo_link'>";
                     else
                         return $photo_link;
                 }
