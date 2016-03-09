@@ -91,6 +91,7 @@
         {if $u.usr_status == Ok}
         <li><a role="menuitem" tabindex="-1" href="?deactivate={$u.userid}">Deactivate</a></li>
         {elseif $u.usr_status == ToActivate}
+        <li><a role="menuitem" tabindex="-1" href="?resend_verif={$u.userid}">Resend Verification</a></li>
         <li><a role="menuitem" tabindex="-1" href="?activate={$u.userid}">Activate</a></li>
         {/if}
         {if $u.ban_status == yes}
