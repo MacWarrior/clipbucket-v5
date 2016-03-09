@@ -1,4 +1,6 @@
 # What is ClipBucket
+![alt tag](http://blog.clip-bucket.com/wp-content/uploads/2012/08/cbv32.png)
+</br>
 ClipBucket is an Open Source and freely downloadable PHP script that will let you start your own Video Sharing website (YouTube Clone) in a matter of minutes. ClipBucket is the fastest growing video script with the most advanced video sharing and social features.
 
 With ClipBucket, you will have almost all social media features in your hand. You can let your users create groups, playlists, collections and much more. They can send friend requests and private messages to each other as well.
@@ -17,6 +19,8 @@ In order for you to be able to run ClipBucket, there are certain tools that need
 Installation of ClipBucket is simple and straight forward. Click the link below to watch a complete ClipBucket setup guide video
 
 <a href="http://clip-bucket.com/index.php?mode=view_guide&action=13"> [Video] How To Install ClipBucket </a>
+</br>
+<a href="http://clip-bucket.com/index.php?mode=guides&action=list">View All Video Guides</a>
 
 # ClipBucket Themes
 ClipBucket comes with various themes to help you set a tone for your website according to your Niche. These themes include originals as well as clones of popular websites such as YouTube. 
