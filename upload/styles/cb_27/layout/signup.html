@@ -4,15 +4,16 @@
 {ANCHOR place="all_conn_btns"}
 
 {if $mode == 'signup_success'}
-<div class="simple_container">
-        {if $udetails.usr_status !='Ok'}
-            {lang code='signup_success_usr_ok'}
-        {else}
-            {lang code='signup_success_usr_emailverify' assign='signupsuccessusremailverify'}
-            {link name='login' assign='login_link'}
-            {$signupsuccessusremailverify|sprintf:$login_link}
-{/if} </div>
-{else}    
+<div class="simple_container alert-success alert">
+    {if $udetails.usr_status !='Ok'}
+        {lang code='signup_success_usr_ok'}
+    {else}
+        {$signupsuccessusremailverify = lang('signup_success_usr_emailverify')}
+        {$login_link = cblink(["name"=>"login"])}
+        {sprintf($signupsuccessusremailverify,$login_link)}
+</div>
+{/if} 
+{else}       
 <div class="container">
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
