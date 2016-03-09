@@ -6,15 +6,13 @@ You can start a fully dedicated video sharing website or photo sharing websites 
 
 <a href="clip-bucket.com">ClipBucket Official Website </a>
 
-# Get Started
-
-# ClipBucket Discourse (Forum)
-
 # Server Requirements
+
+# How To Install ClipBucket
 
 # ClipBucket Themes
 
 # ClipBucket Plugins
 
-
+# ClipBucket Discourse (Forum)
 
