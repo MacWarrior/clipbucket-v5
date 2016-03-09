@@ -19,6 +19,7 @@ Installation of ClipBucket is simple and straight forward. Click the link below 
 <a href="http://clip-bucket.com/index.php?mode=view_guide&action=13"> [Video] How To Install ClipBucket </a>
 
 # ClipBucket Themes
+ClipBucket comes with various themes to help you set a tone for your website according to your Niche. These themes include originals as well as clones of popular websites such as YouTube. 
 
 # ClipBucket Plugins
 
