@@ -5,6 +5,7 @@ With ClipBucket, you will have almost all social media features in your hand. Yo
 You can start a fully dedicated video sharing website or photo sharing websites and also both at the same time as well.
 
 <a href="https://github.com/arslancb/clipbucket/blob/master/why_clipbucket.MD">ClipBucket Features</a>
+</br>
 <a href="http://clip-bucket.com">ClipBucket Official Website </a>
 
 # Server Requirements
