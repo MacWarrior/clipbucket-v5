@@ -69,3 +69,33 @@ function profile_fileds_check($array)
         }
 }
 
+function resend_verification($userid) {
+    global $db;
+    $raw_data = $db->select(tbl("users"),"usr_status,username,email","userid = '$userid'");
+    $usr_status = $raw_data[0]['usr_status'];
+    $uname = $raw_data[0]['username'];
+    $email = $raw_data[0]['email'];
+    if (trim($usr_status) == "ToActivate") {
+        global $cbemail;
+        $avcode = RandomString(10);
+        $tpl = $cbemail->get_template('email_verify_template');
+        $more_var = array
+        ('{username}'   => $uname,
+         '{email}'      => $email,
+         '{avcode}'     => $avcode,
+        );
+        if(!is_array($var)) {
+            $var = array();
+        }
+        $var = array_merge($more_var,$var);
+        $subj = $cbemail->replace($tpl['email_template_subject'],$var);
+        $msg = nl2br($cbemail->replace($tpl['email_template'],$var));
+
+        //Now Finally Sending Email
+        cbmail(array('to'=>post('email'),'from'=>WEBSITE_EMAIL,'subject'=>$subj,'content'=>$msg));
+        return $uname;
+    } else {
+        return false;
+    }
+}
+
