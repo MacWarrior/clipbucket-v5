@@ -78,6 +78,7 @@ function resend_verification($userid) {
     if (trim($usr_status) == "ToActivate") {
         global $cbemail;
         $avcode = RandomString(10);
+        $db->update(tbl("users"),array("avcode"),array($avcode),"userid = '$userid'");
         $tpl = $cbemail->get_template('email_verify_template');
         $more_var = array
         ('{username}'   => $uname,
@@ -90,7 +91,6 @@ function resend_verification($userid) {
         $var = array_merge($more_var,$var);
         $subj = $cbemail->replace($tpl['email_template_subject'],$var);
         $msg = nl2br($cbemail->replace($tpl['email_template'],$var));
-
         //Now Finally Sending Email
         cbmail(array('to'=>post('email'),'from'=>WEBSITE_EMAIL,'subject'=>$subj,'content'=>$msg));
         return $uname;
