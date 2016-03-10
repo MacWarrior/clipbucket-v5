@@ -1704,7 +1704,6 @@ function get_video_file_quality($file){
     $quality = explode('.',$quality);
     $quality = $quality[0];
     return $quality;
-   
 }
 
 function pre_upload() {
@@ -1713,6 +1712,14 @@ function pre_upload() {
             $alliswell = $_GET['alliswell'];
         }
     }
+    $directories = array('files','cache','includes');
+    foreach ($directories as $dir) {
+        $full_path = BASEDIR.'/'.$dir;
+        if (!is_writable($full_path)) {
+            e("<strong>".$full_path."</strong> is not writeable, video upload might not work");
+        }
+    }
+
     $ffmpeg = check_ffmpeg("ffmpeg");
     $phpVersion = check_php_cli("php");
     $MP4BoxVersion = check_mp4box("MP4Box");
@@ -1732,19 +1739,21 @@ function pre_upload() {
         if (!$tool) {
             $errs[$name] = "not found";
         } else {
-            if ($name == 'php') {
-                if ($phpVersion > "5.4.45") {
-                    e("Installed PHP Version is <strong>".$phpVersion."</strong> but recomended version is 5.4.x","w");
+            if (has_access("admin_access")) {
+                if ($name == 'php') {
+                    if ($phpVersion > "5.4.45") {
+                        e("[Admin only message] Installed PHP Version is <strong>".$phpVersion."</strong> but recomended version is 5.4.x","w");
+                    }
                 }
             }
         }
 
         if ($alliswell) {
             if ($alliswell == 'all') {
-                e($name." seems good to go","m");
+                e($name."[Admin only message] seems good to go","m");
             } else {
                 if (strtolower($name) == $alliswell) {
-                    e(strtoupper($name)." seems good to go","m");
+                    e(strtoupper($name)."[Admin only message] seems good to go","m");
                 }
             }
         }
