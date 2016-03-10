@@ -13,8 +13,7 @@ You can start a fully dedicated video sharing website or photo sharing websites 
 <a href="http://docs.clip-bucket.com">ClipBucket Documentation</a>
 
 # Server Requirements
-![alt tag](http://www.gold-i.com/media/13165/servers-700-x-300.jpg)
-</br>
+
 In order for you to be able to run ClipBucket, there are certain tools that need to be installed on your server. Don't worry, they are all FREE. To have a look at complete list of required tools, click the link below.
 
 <a href="http://clip-bucket.com/cb-install-requirements/">ClipBucket Server Requiremenets </a>
