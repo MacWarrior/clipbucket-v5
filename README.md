@@ -31,8 +31,7 @@ ClipBucket comes with various themes to help you set a tone for your website acc
 <a href="http://clip-bucket.com/products/list/themes-/">ClipBucket Themes</a>
 
 # ClipBucket Plugins
-![alt tag](http://cdn2.business2community.com/wp-content/uploads/2014/08/BLOG3PLUGIN.jpg)
-</br>
+
 ClipBucket core features aren't enough for you? We got plugins. Yeah, we got awesome ones. With plugins you can enhance the functionality and power of ClipBucket while having 100% control in your hands. To see our available plugins, click below link
 
 <a href="http://clip-bucket.com/products/list/plugins/">ClipBucket Plugins</a>
