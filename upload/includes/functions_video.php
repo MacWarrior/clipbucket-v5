@@ -1709,6 +1709,8 @@ function get_video_file_quality($file){
 /**
 * Checks ram of a Linux server e.g Ubutnu, CentOS
 * @param : { none }
+* @since : 10th March, 2016 ClipBucket 2.8.1
+* @author : Saqib Razzaq
 * @return : { integer } { $total_ram } { total RAM in GB's }
 */
 
