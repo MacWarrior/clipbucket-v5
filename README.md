@@ -1,5 +1,10 @@
 #ClipBucket - Broadcasting like a boss!
 !['ClipBucket Screenshot'](http://clip-bucket.com/styles/default/images/laptop-large2.png)
+</br>
+
+<div align="center">
+<a href="http://demo.clipbucket.com/">Vide Demo</a>
+</div>
 
 ClipBucket is an Open Source and freely downloadable PHP script that will let you start your own Video Sharing website (YouTube Clone) in a matter of minutes. ClipBucket is the fastest growing video script with the most advanced video sharing and social features.
 
