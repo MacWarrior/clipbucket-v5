@@ -1706,3 +1706,59 @@ function get_video_file_quality($file){
     return $quality;
    
 }
+
+function pre_upload() {
+    if (isset($_GET['alliswell'])) {
+        if (has_access("admin_access")) {
+            $alliswell = $_GET['alliswell'];
+        }
+    }
+    $ffmpeg = check_ffmpeg("ffmpeg");
+    $phpVersion = check_php_cli("php");
+    $MP4BoxVersion = check_mp4box("MP4Box");
+    $imagick_version = check_imagick("i_magick");
+    $media_info = check_media_info('media_info');
+    $ffprobe_path = check_ffprobe_path('ffprobe_path');
+    $errs = array();
+    $alltools = array(
+        "ffmpeg" => $ffmpeg, 
+        "php" => $phpVersion, 
+        "mp4box" => $MP4BoxVersion, 
+        "imagick" => $imagick_version, 
+        "mediainfo" => $media_info, 
+        "ffprobe" =>$ffprobe_path
+        );
+    foreach ($alltools as $name => $tool) {
+        if (!$tool) {
+            $errs[$name] = "not found";
+        } else {
+            if ($name == 'php') {
+                if ($phpVersion > "5.4.45") {
+                    e("Installed PHP Version is <strong>".$phpVersion."</strong> but recomended version is 5.4.x","w");
+                }
+            }
+        }
+
+        if ($alliswell) {
+            if ($alliswell == 'all') {
+                e($name." seems good to go","m");
+            } else {
+                if (strtolower($name) == $alliswell) {
+                    e(strtoupper($name)." seems good to go","m");
+                }
+            }
+        }
+    }
+    
+    if (!empty($errs)) {
+        if (has_access("admin_access")) {
+            foreach ($errs as $name => $issue) {
+                e(strtoupper("[Admin only message] <strong>".$name."</strong>")." couldn't be found or isn't installed properly hence video might not work, check <a href=".BASEURL."admin_area/cb_mod_check.php>Server Modules</a> page to know more");
+            }
+        } else {
+            e("Video upload might not work properly, kindly contact website admin");
+        }
+    } else {
+        return true;
+    }
+}
