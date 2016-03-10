@@ -48,10 +48,34 @@ Field Name: <input type="text" name="fieldname" size="20" class="fieldname"/> Fi
             <td>Custom Field Name</td>
             <td>Custom Field Title</td>
             <td>Custom Field Type</td>
-            <td>DB Field</td>
-            <td>&nbsp;</td>
+            <td>Action</td>
         </tr>
-    {section name=listscustom loop=$listscustom}
+        {foreach from=$custom_fields key=k item=field}
+            <tr>
+                <td>{$field.custom_field_list_id}</td>
+                <td>{$field.custom_field_name}</td>
+                <td>{$field.custom_field_title}</td>
+                <td>{$field.custom_field_type}</td>
+                <td>
+                  
+                  <div class="dropdown">
+                    <button class="btn btn-primary btn-xs dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown">Actions
+                    <i class="icon-angle-down icon-on-right"></i></button>
+                    <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu1" style="margin-left:100px;">
+                       <li>
+                        <a href='{$baseurl}/{$custom_field_edit_page}&custom_edit={$field.custom_field_list_id}'>Edit</a>
+                      </li>
+                      <li>
+                      </li>
+                        <li>
+            <a tabindex="-1" href="{$smarty.server.REQUEST_URI}&deletefield={$listscustom[listscustom].custom_field_list_id}&deletefield_name={$listscustom[listscustom].field_name}&dbfield_name={$listscustom[listscustom].db_field}&page_type={$listscustom[listscustom].customfields_flag}" role="menuitem">Delete</a></li></ul>
+                  </div>
+
+                </td>
+            </tr>
+        {/foreach}
+
+    {section name=listscustom loop=$custom_fields}
     {if $listscustom[listscustom].customfields_flag =='video'}
 <tr>
     <td>{$listscustom[listscustom].custom_field_list_id}</td>

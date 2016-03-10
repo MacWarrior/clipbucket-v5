@@ -16,7 +16,19 @@
             e("Something went wrong trying to insert custom field");
         }
     }
-    
-    template_files('add_custom_field.html',CUSTOM_FIELDS_ADMIN_DIR);
+
+    if (isset($_POST['update_field'])) {
+        pr($_POST,true);
+    }
+
+    if (isset($_GET['custom_edit'])) {
+        $cfield = $_GET['custom_edit'];
+        $data = pull_custom_fields(false, $cfield);
+        assign("field_to_edit", $data[0]);
+    }
+
+    $custom_fields = pull_custom_fields();
+    assign("custom_fields",$custom_fields);
+    template_files('edit_field.html',CUSTOM_FIELDS_ADMIN_DIR);
 
 ?>
