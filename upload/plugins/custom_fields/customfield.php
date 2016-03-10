@@ -27,7 +27,7 @@ if(!function_exists("customfield"))
 	 */
    function add_custom_file($field_name,$field_title,$field_type,$db_field,$default_value,$type_page,$date){
     global $db;
-   $result=$db->insert(tbl('custom_field'),array("field_name","field_title","field_type","db_field","default_value","customfields_flag","date_added"),array($field_name,$field_title,$field_type,$db_field,$default_value,$type_page,$date));
+   $result=$db->insert(tbl('custom_fields'),array("custom_field_name","fcustom_field_title","custom_field_type","custom_db_field","default_value","customfields_flag","date_added"),array($field_name,$field_title,$field_type,$db_field,$default_value,$type_page,$date));
   }
       /**
       *This function is used to list custom fields on custom field plugin page for editing and deleting
