@@ -1605,7 +1605,7 @@ function is_phone_user( $data )
 * @author : Fahad Abbas
 * @param : { Null }
 * @return : { Array } { Clipbucket version 2.8 thumbs default settings }
-* @date : 02-03-2016
+* @since : 02-03-2016
 */
 function thumbs_res_settings_28(){
     
@@ -1624,7 +1624,7 @@ function thumbs_res_settings_28(){
 * @author : Fahad Abbas
 * @param : { Array } { Video Details }
 * @return : { Variable or boolean } { Max resolution file }
-* @date : 03-03-2016
+* @since : 03-03-2016
 */
 function get_high_res_file($vdetails,$dir=false){
     //Getting video Files array
@@ -1695,7 +1695,7 @@ function get_high_res_file($vdetails,$dir=false){
 * @author : Fahad Abbas
 * @param : { Var } { quality of input file }
 * @return : { Variable } { resolution of a file }
-* @date : 03-03-2016
+* @since : 03-03-2016
 */
 function get_video_file_quality($file){
     
@@ -1815,4 +1815,67 @@ function pre_upload() {
     } else {
         return true;
     }
+
+   
+}
+
+
+/**
+* This Function is used to log the input video File procession 
+*
+* @param : { Array } { filename } { file directory } { content }
+* @return : { boolean } { Null } 
+* @since : 8th March, 2016 ClipBucket 2.8.1
+* @author : Fahad Abbas 
+* @email: <fahad.dev@iu.com.pk>
+*/
+
+function log_file_procession($input){
+    
+    $File_name = $input['file_name'];
+    $File_dir  = $input['file_dir'];
+    $data      = $input['data'];
+
+    $PlogFilePath = BASEDIR. "/files/logs/".$File_dir."/".$File_name.".plog";
+
+
+    if(file_exists($PlogFilePath)) {
+        $text = file_get_contents($PlogFilePath);
+    }
+     logData($PlogFilePath,'plogs_tester');
+    $text .= " \n \n  <br><br> > {$data}";
+    file_put_contents($PlogFilePath, $text);
+}
+
+
+/**
+* This Function is used to get video file procession log  
+*
+* @param : { Array } { video Details } 
+* @return : { File } {  } 
+* @since : 9th March, 2016 ClipBucket 2.8.1
+* @author : Fahad Abbas 
+* @email: <fahad.dev@iu.com.pk>
+*/
+
+function get_file_procession_log($vdetails){
+
+    $file_dir = $vdetails['file_directory'];
+    $file_name = $vdetails['file_name'];
+    $multiserver_file = $vdetails['file_server_path'];
+    if (empty($multiserver_file)){
+        $plog_file  =  LOGS_DIR.'/'.$file_dir.'/'.$file_name.'.plog';
+    }else{
+        $plog_file  =  $multiserver_file.'/logs/'.$file_dir.'/'.$filename.'.plog';
+    }
+    
+   
+
+    if (file_exists($plog_file)){
+        $data = file_get_contents($plog_file);
+        return $data;
+    }else{
+        return false;
+    }
+    
 }
