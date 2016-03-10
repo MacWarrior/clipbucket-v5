@@ -1729,6 +1729,16 @@ function check_server_ram() {
     return $total_ram;
 }
 
+/**
+* Checks different sections to make sure video uploading is good to go
+*
+* @param : { none } { everything handled inside function }
+* @checks : { server ram, directory permissions, PHP path, module installations, versions }
+* @action : { string } { error messages depending on situation }
+* @author : Saqib Razzaq
+* @since : 10th March, 2016 ClipBucket 2.8.1
+*/
+
 function pre_upload() {
     if (isset($_GET['alliswell'])) {
         if (has_access("admin_access")) {
