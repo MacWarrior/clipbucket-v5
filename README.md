@@ -3,8 +3,9 @@
 </br>
 
 <div align="center">
-<a href="http://demo.clipbucket.com/">Vide Demo</a>
+<a href="http://demo.clipbucket.com/">View Demo</a> | <a href="http://clipbucket.com/download">Download</a>
 </div>
+</br>
 
 ClipBucket is an Open Source and freely downloadable PHP script that will let you start your own Video Sharing website (YouTube Clone) in a matter of minutes. ClipBucket is the fastest growing video script with the most advanced video sharing and social features.
 
