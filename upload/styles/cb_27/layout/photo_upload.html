@@ -147,6 +147,15 @@
   {/if}
 
   <script type="text/javascript">
+    var selected_col = $('#collectionSelection').val();
+    $('#collectionSelection').change(function(){
+        selected_col = $('#collectionSelection').val();
+        var sel = $('#collection_id').val();
+       $('#collection_id').val(selected_col).trigger('change');
+       $('#collection_id').val(selected_col).trigger('change');
+       $('#collection_id [value='+selected_col+']').attr('selected','selected');
+    });
+
    (function(window){
        $(document).ready(function(){
            var baseurl = '{$baseurl}';
