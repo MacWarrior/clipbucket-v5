@@ -1706,10 +1706,36 @@ function get_video_file_quality($file){
     return $quality;
 }
 
+function check_server_ram() {
+    $fh = fopen('/proc/meminfo','r');
+    $mem = 0;
+    while ($line = fgets($fh)) {
+        $pieces = array();
+        if (preg_match('/^MemTotal:\s+(\d+)\skB$/', $line, $pieces)) {
+          $mem = $pieces[1];
+          break;
+        }
+    }
+    fclose($fh);
+    $total_ram = $mem / 1024 / 1024;
+    return $total_ram;
+}
+
 function pre_upload() {
     if (isset($_GET['alliswell'])) {
         if (has_access("admin_access")) {
             $alliswell = $_GET['alliswell'];
+        }
+    }
+    if (PHP_OS == 'Linux') {
+        $ramsize = check_server_ram();
+        if ($ramsize < 5) {
+            if ($ramsize < 1) {
+                $mode = 'MB';
+            } else {
+                $mode = 'GB';
+            }
+            e("Current Memory Size (RAM) of server is <strong>".round($ramsize, 2)." ".$mode."</strong> but recomended RAM is atleast 5 GB");
         }
     }
     $directories = array('files','cache','includes');
@@ -1735,13 +1761,14 @@ function pre_upload() {
         "mediainfo" => $media_info, 
         "ffprobe" =>$ffprobe_path
         );
+
     foreach ($alltools as $name => $tool) {
         if (!$tool) {
             $errs[$name] = "not found";
         } else {
             if (has_access("admin_access")) {
                 if ($name == 'php') {
-                    if ($phpVersion > "5.4.45") {
+                    if ($phpVersion > "5.4.45" || $phpVersion < "5.4") {
                         e("[Admin only message] Installed PHP Version is <strong>".$phpVersion."</strong> but recomended version is 5.4.x","w");
                     }
                 }
