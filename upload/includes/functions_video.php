@@ -1706,6 +1706,12 @@ function get_video_file_quality($file){
     return $quality;
 }
 
+/**
+* Checks ram of a Linux server e.g Ubutnu, CentOS
+* @param : { none }
+* @return : { integer } { $total_ram } { total RAM in GB's }
+*/
+
 function check_server_ram() {
     $fh = fopen('/proc/meminfo','r');
     $mem = 0;
