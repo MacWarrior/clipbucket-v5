@@ -43,14 +43,6 @@ if(!function_exists("customfield"))
 		}
 	   return $list;
   }
-  /**
-  *This function is used to delete custom field
-  */
-  function delete_custom_field($fid){
-        global $db;
-  			$db->delete(tbl('custom_field'),array('custom_field_list_id'),array($fid));
-        /*remove column also from video*/
-  }
 
   /**
   *This function is used to list specific custom field for editing purpose
