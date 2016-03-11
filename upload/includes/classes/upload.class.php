@@ -1003,9 +1003,13 @@ class Upload{
 	* @return : { array } { $new_array } { an array with all custom fields }
 	*/
 
-	function load_custom_form_fields($data, $insertion = false,$group_based=false) {
+	function load_custom_form_fields($data, $insertion = false,$group_based=false, $user = false) {
 		if(!$group_based) {
-			$array = pull_custom_fields('video');
+			if ($user) {
+				$array = pull_custom_fields('signup');
+			} else {
+				$array = pull_custom_fields('video');
+			}
 			$cleaned = array();
 			#pr($array,true);
 			if (!$insertion) {
