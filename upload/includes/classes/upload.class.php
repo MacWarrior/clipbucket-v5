@@ -1005,7 +1005,7 @@ class Upload{
 
 	function load_custom_form_fields($data, $insertion = false,$group_based=false) {
 		if(!$group_based) {
-			$array = pull_custom_fields();
+			$array = pull_custom_fields('video');
 			$cleaned = array();
 			#pr($array,true);
 			if (!$insertion) {
