@@ -25,7 +25,12 @@
 		$vals = array($name, $label, $type, $df_val, $ptype);
 		$insert_id = $db->insert(tbl("custom_fields"), $flds, $vals);
 		if ($insert_id) {
-			$db->Execute("ALTER TABLE ".tbl('video')." ADD `cfld_".$name."` varchar(255) NOT NULL");
+			if ($ptype == 'video') {
+				$table = 'video';
+			} else {
+				$table = 'users';
+			}
+			$db->Execute("ALTER TABLE ".tbl($table)." ADD `cfld_".$name."` varchar(255) NOT NULL");
 			return $insert_id;
 		} else {
 			return false;
@@ -71,6 +76,15 @@
 
 	function delete_custom_field($fid) {
         global $db;
+        $file_data = pull_custom_fields(false, $fid);
+        $type = $file_data[0]['custom_field_ptype'];
+        $name = $file_data[0]['custom_field_name'];
+        if ($type == 'video') {
+        	$table = 'video';
+        } else {
+        	$table = 'users';
+        }
+  		$db->Execute("ALTER TABLE ".tbl($table)." DROP `cfld_".$name."` varchar(255) NOT NULL");
   		$db->delete(tbl('custom_fields'),array('custom_field_list_id'),array($fid));
   	}
 
