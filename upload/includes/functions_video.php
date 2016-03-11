@@ -19,93 +19,93 @@
 
     /**
      * Function used to check video is playlable or not
-     * @param vkey,vid
+     * @param : { string / id } { $id } { id of key of video }
+     * @return : { boolean } { true if playable, else false }
      */
 
-    function video_playable($id)
-    {
+    function video_playable($id) {
         global $cbvideo,$userquery;
 
-        if(isset($_POST['watch_protected_video']))
+        if(isset($_POST['watch_protected_video'])) {
             $video_password = mysql_clean(post('video_password'));
-        else
+        } else {
             $video_password = '';
+        }
 
-        if(!is_array($id))
+        if(!is_array($id)) {
             $vdo = $cbvideo->get_video($id);
-        else
+        } else {
             $vdo = $id;
+        }
         $uid = userid();
-        if(!$vdo)
-        {
+        if (!$vdo) {
             e(lang("class_vdo_del_err"));
             return false;
-        }elseif($vdo['status']!='Successful')
-        {
+        } elseif ($vdo['status']!='Successful') {
             e(lang("this_vdo_not_working"));
-            if(!has_access('admin_access',TRUE))
+            if(!has_access('admin_access',TRUE)) {
                 return false;
-            else
+            } else {
                 return true;
-        }elseif($vdo['broadcast']=='private'
+            }
+        } elseif ($vdo['broadcast']=='private'
             && !$userquery->is_confirmed_friend($vdo['userid'],userid())
             && !is_video_user($vdo)
             && !has_access('video_moderation',true)
             && $vdo['userid']!=$uid){
             e(lang('private_video_error'));
             return false;
-        }elseif($vdo['active'] == 'pen'){
+        } elseif ($vdo['active'] == 'pen') {
             e(lang("video_in_pending_list"));
-            if(has_access('admin_access',TRUE) || $vdo['userid'] == userid())
+            if (has_access('admin_access',TRUE) || $vdo['userid'] == userid()) {
                 return true;
-            else
+            } else {
                 return false;
-        }elseif($vdo['broadcast']=='logged'
+            }
+        } elseif ($vdo['broadcast']=='logged'
             && !userid()
             && !has_access('video_moderation',true)
-            && $vdo['userid']!=$uid){
+            && $vdo['userid']!=$uid) {
             e(lang('not_logged_video_error'));
             return false;
-        }elseif($vdo['active']=='no' )
-        {
+        } elseif ($vdo['active']=='no' ) {
             e(lang("vdo_iac_msg"));
-            if(!has_access('admin_access',TRUE))
+            if(!has_access('admin_access',TRUE)) {
                 return false;
-            else
+            } else {
                 return true;
-        }
-        //No Checking for video password
-        elseif($vdo['video_password']
+            }
+        } elseif ($vdo['video_password']
             && $vdo['broadcast']=='unlisted'
             && $vdo['video_password']!=$video_password
             && !has_access('video_moderation',true)
-            && $vdo['userid']!=$uid)
-        {
-            if(!$video_password)
+            && $vdo['userid']!=$uid) {
+            if(!$video_password) {
                 e(lang("video_pass_protected"));
-            else
+            } else {
                 e(lang("invalid_video_password"));
+            }
             template_files("blocks/watch_video/video_password.html",false,false);
-        }
-        else
-        {
+        } else {
             $funcs = cb_get_functions('watch_video');
 
-            if($funcs)
-                foreach($funcs as $func)
-                {
+            if ($funcs) {
+                foreach($funcs as $func) {
                     $data = $func['func']($vdo);
-                    if($data)
+                    if ($data) {
                         return $data;
+                    }
                 }
+            }
             return true;
         }
     }
 
+
     /**
-     * FUNCTION USED TO GET THUMBNAIL
-     * @param ARRAY video_details, or videoid will also work
-     */
+    * FUNCTION USED TO GET THUMBNAIL
+    * @param ARRAY video_details, or videoid will also work
+    */
 
     function get_thumb($vdetails,$num='default',$multi=false,$count=false,$return_full_path=true,$return_big=true,$size=false){
         
