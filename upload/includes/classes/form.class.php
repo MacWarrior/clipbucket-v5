@@ -174,6 +174,9 @@ class formObj
 		}
 		
 		$count=0;
+		if (!is_array($field['value'])) {
+			$field['value'] = explode(",", $field['value']);
+		}
 		foreach($field['value'] as $key => $value)
 		{
 			$count++;
@@ -192,10 +195,9 @@ class formObj
 				}
 			}
 			
-			if(!$multi)
+			if(!$multi) {
 				$field_name = $field['name'];
-			else
-			{
+			} else {
 				$field_name = $field['name'];
 				$field_name = $this->rmBrackets($field_name);
 				$field_name = $field_name.$multi_cat_id.'[]';
