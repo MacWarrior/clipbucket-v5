@@ -34,15 +34,18 @@ if($userquery->login_check('',true)){
 	}
 			
 	if(isset($_POST['signup'])){
-		
+		#pex($_POST,true);
 		if(!config('allow_registeration')){
 			e(lang('usr_reg_err'));
 		}
 			
 		else
 		{
+			pr($_POST,true);
 			$form_data = $_POST;
 			$signup_data = $form_data;
+			$signup_data['password'] = mysql_clean(clean($signup_data['password']));
+			$signup_data['cpassword'] = mysql_clean(clean($signup_data['cpassword']));
 			$signup_data['email'] = mysql_clean($signup_data['email']);
 			$signup = $userquery->signup_user($signup_data,true);
 			if($signup)
