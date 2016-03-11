@@ -2,6 +2,7 @@
 {$requiredFields = $videoFields[0]}
 {$sharingOptions = $videoFields[1]}
 {$dateAndLocation = $videoFields[2]}
+{$custom_fields = $videoFields[4]}
 <div class="uploaderContainer clearfix" id="uploaderContainer">
     <div class="upload-area col-md-12">
         <div class="fileUploaderForm">
@@ -57,6 +58,31 @@
                         </div>
                     {/foreach}
                     {ANCHOR place="upload_video_form"}
+                </div>
+
+                <div class="formSection clear">
+                    <h4>{$custom_fields.group_name} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
+                    <div class="sectionContent hidden">
+                        {foreach $custom_fields.fields as $field}
+                        <div class="form-group">
+                        {$field.class='form-control'}
+                        {$field.notShowSeprator='yes'}
+                            {if $field.type == 'radiobutton'}
+                                {$field.label_class='radio'}
+                                {$field.class=''}
+                                {$formObj->createField($field)}
+                            {elseif $field.type == 'checkbox'}
+                                <h4>{$field.title}</h4>
+                                {$field.label_class='checkbox'}
+                                {$field.class='checkbox'}
+                                {$formObj->createField($field)}
+                            {else}
+                                <label for="{$field.id}">{$field.title}</label>
+                                {$formObj->createField($field)}
+                            {/if}
+                            </div>
+                        {/foreach}    
+                    </div>
                 </div>
 
                 <div class="formSection clear">
