@@ -938,7 +938,7 @@ class userquery extends CBCategory{
 			$msg = nl2br($cbemail->replace($tpl['email_template'],$var));
 			
 			//Now Finally Sending Email
-			cbmail(array('to'=>$friend['email'],'from'=>WEBSITE_EMAIL,'subject'=>$subj,'content'=>$msg));		
+			#cbmail(array('to'=>$friend['email'],'from'=>WEBSITE_EMAIL,'subject'=>$subj,'content'=>$msg));		
 		}
 		
 	}
@@ -3388,7 +3388,7 @@ class userquery extends CBCategory{
 			$email = (isset($default['email'])) ? $default['email'] : "";
 			if(isset($default['country'])){
 				$dcountry = (isset($default['country'])) ? $default['country'] : $Cbucket->configs['default_country_iso2'];
-			}else{
+			} else {
 				$dcountry = "";
 			}
 			$dob = (isset($default['dob'])) ? $default['dob'] : "";
@@ -3518,6 +3518,8 @@ class userquery extends CBCategory{
 	             $new_array[$id] = $the_array;
 
 	         }
+
+	         $new_array[] = $this->load_custom_profile_fields($default,false);
 	         //die();
 			 return $new_array;
 		 
@@ -3565,7 +3567,6 @@ class userquery extends CBCategory{
 		if(is_array($_FILES))
 			$array = array_merge($array,$_FILES);
 		$this->validate_form_fields($array);
-
 		//checking terms and policy agreement
 		if($array['agree']!='yes' && !has_access('admin_access',true))
 			e(lang('usr_ament_err'));
@@ -3644,6 +3645,14 @@ class userquery extends CBCategory{
 				$query_field[] = "level";
 				$query_val[] = $array['level'];
 			}
+			global $Upload;
+			$custom_fields_array = $Upload->load_custom_form_fields(false,false,false,true);
+			foreach ($custom_fields_array as $key => $cfield) {
+				$db_field = $cfield['db_field'];
+				$query_field[] = $db_field;
+				$query_val[] = $array[$db_field];
+			}
+			#pr($array,true);
 
 			$query_field[] = "usr_status";
 			$query_val[] = $usr_status;
@@ -3686,12 +3695,14 @@ class userquery extends CBCategory{
 
 			$query_field[] = "user_session_code";
 			$query_val[] = $sess_code;
+			#pr($query_field,true);
 
 			$query = "INSERT INTO ".tbl("users")." (";
 			$total_fields = count($query_field);
 
 			//Adding Fields to query
 			$i = 0;
+			
 			foreach($query_field as $qfield)
 			{
 				$i++;
@@ -3703,6 +3714,7 @@ class userquery extends CBCategory{
 			$query .= ") VALUES (";
 
 			$i = 0;
+			#pr($query_val,true);
 			//Adding Fields Values to query
 			foreach($query_val as $qval)
 			{
@@ -3714,7 +3726,7 @@ class userquery extends CBCategory{
 
 			//Finalzing Query
 			$query .= ")";
-
+			#exit($query);
 			$db->Execute($query);
 			$insert_id = $db->insert_id();
 			$db->insert(tbl($userquery->dbtbl['user_profile']),array("userid"),array($insert_id));
