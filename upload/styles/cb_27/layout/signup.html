@@ -1,5 +1,5 @@
 {$required_fields=$userquery->load_signup_fields()}
-{$cutom_fields=$Upload->load_custom_form_fields(false,false,false,true)}
+{$custom_fields=$Upload->load_custom_form_fields(false,false,false,true)}
 
 {ANCHOR place="all_conn_btns"}
 
@@ -84,22 +84,23 @@
                             {/if}
                         </div>
                     {/foreach}
-                    <!-- Loading Custom Fields -->
-                    {foreach from=$custom_field item=field}
+                    {foreach from=$custom_fields item=field}
+                        {if $field.type!='checkbox' && $field.type!='radiobutton'}
+                            {$field.class='form-control'}
+                        {/if}
                         <div class="form-group">
                             <label for="{$field.id}">{$field.title}</label>
                             {if $field.type=='radiobutton'}
-                            {$field.label_class="radio-inline"}
-                            {$field.sep=" "}
-                            <div></div>
+                                {$field.label_class="radio-inline"}
+                                {$field.sep=" "}
+                                <div></div>
                             {/if}
 
                             {if $field.type=='checkbox'}
-                            {$field.label_class="checkbox-inline"}
-                            {$field.sep=" "}
-                            <div></div>
+                                {$field.label_class="checkbox-inline"}
+                                {$field.sep=" "}
+                                <div></div>
                             {/if}
-
 
                             {if $field.hint_before}
                             <span class="help-block">{$field.hint_before}</span>
