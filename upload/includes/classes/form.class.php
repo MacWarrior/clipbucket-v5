@@ -437,6 +437,7 @@ class formObj
 		
 		$ddFieldStart = '<select name="'.$field_name.'" id="'.$field['id'].'" class="'.$field['class'].'">';
 		$arrayName = $this->rmBrackets($field['name']);
+		$field['value'] = explode(",", $field['value']);
 		if(is_array($field['value']))
 		foreach($field['value'] as $key => $value)
 		{
