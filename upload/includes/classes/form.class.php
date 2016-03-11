@@ -345,6 +345,9 @@ class formObj
 		$count = 0;
 		$sep = $field['sep'];
 		$arrayName = $this->rmBrackets($field['name']);
+		if (!is_array($field['value'])) {
+			$field['value'] = explode(",", $field['value']);
+		}
 		foreach($field['value'] as $key => $value)
 		{
 			if(!empty($_POST[$arrayName]) || !empty($field['checked']))
