@@ -346,10 +346,14 @@ class CBvideo extends CBCategory
 			$upload_fields = array_merge($required_fields,$location_fields,$option_fields);
 			
 			//Adding Custom Upload Fields
-			if(count($Upload->custom_upload_fields)>0)
-			$upload_fields = array_merge($upload_fields,$Upload->custom_upload_fields);
+			if (function_exists('custom_fields_list')) {
+				$custom_flds = $Upload->load_custom_form_fields($array,true);
+				#pr($custom_flds,true);
+				$upload_fields = array_merge($upload_fields,$custom_flds);
+			}
 			
-			//Adding Custom Form Fields
+			
+			/*//Adding Custom Form Fields
 			if(count($Upload->custom_form_fields)>0)
 				$upload_fields = array_merge($upload_fields,$Upload->custom_form_fields);
 			
@@ -364,7 +368,7 @@ class CBvideo extends CBCategory
 				}						
 				
 				$upload_fields = array_merge($upload_fields,$custom_fields_from_group_fields);
-			}
+			}*/
 			
 			
 			if(!$array)
@@ -476,7 +480,7 @@ class CBvideo extends CBCategory
 				e(lang("no_edit_video"));
 			}else{
 				//pr($upload_fields);	
-	
+				#pr($query_field,true);
 				$db->update(tbl('video'),$query_field,$query_val," videoid='$vid'");
 
                 cb_do_action( 'update_video', array(
@@ -1065,6 +1069,7 @@ class CBvideo extends CBCategory
             $query .= $order ? " ORDER BY ".$order : false;
             $query .= $limit ? " LIMIT ".$limit : false;
             #pr( $query, true );
+
             $result = select( $query );
 
 			#if(!empty($cond))
