@@ -41,7 +41,6 @@ if($userquery->login_check('',true)){
 			
 		else
 		{
-			pr($_POST,true);
 			$form_data = $_POST;
 			$signup_data = $form_data;
 			$signup_data['password'] = mysql_clean(clean($signup_data['password']));
