@@ -74,7 +74,7 @@ class Upload{
 
 		// $_POST['embed_code'] = htmlspecialchars($_POST['embed_code']);
 		$this->validate_video_upload_form($array,TRUE);
-		
+
 		if(empty($eh->error_list))
 		{
 
@@ -238,12 +238,12 @@ class Upload{
 			{
 				e(lang("you_not_logged_in"));
 				//exit();
-			}else{
+			} else {
 								
 				$insert_id = file_name_exists($file_name);
 				if(!$insert_id)
 				{
-					
+					#echo "$query";
 					$db->Execute($query);
 					$insert_id = $db->insert_id();
 					
@@ -534,6 +534,7 @@ class Upload{
 							 'required'=>'yes',
 							 'validate_function'=>'genTags'	
 							 ),
+
 		 );
 		//Setting Anchors
 		$uploadFormRequiredFieldsArray['desc']['anchor_before'] = 'before_desc_compose_box';
@@ -541,6 +542,47 @@ class Upload{
 		//Setting Sizes
 		return $uploadFormRequiredFieldsArray;
 	}
+
+	function mycustom_field_load($default=NULL)
+	{
+		global $LANG;		
+		if($default == NULL)
+			$default = $_POST;
+		
+		$mycustom_fields_array = array
+		(
+		 'MR WHite'	=> array('title'=> lang('vdo_title'),
+							 'type'=> 'textfield',
+							 'name'=> 'title',
+							 'id'=> 'title',
+							 'value'=>  "AMNY",
+							 'size'=>'45',
+							 'db_field'=>'title',
+							 'required'=>'yes',
+							 'min_length' => config("video_min_title"),
+							 'max_length'=>config("video_max_title")
+
+							 ),
+		 'and the test'		=> array('title'=> lang('vdo_desc'),
+							 'type'=> 'textarea',
+							 'name'=> 'description',
+							 'id'=> 'desc',
+							 'value'=> "TEST",
+							 'size'=>'35',
+							 'extra_params'=>' rows="4"',
+							 'db_field'=>'description',
+							 'required'=>'yes',
+							 'anchor_after'=>'after_desc_compose_box',
+							 
+							 ),
+		 );
+		//Setting Anchors
+		$mycustom_fields_array['desc']['anchor_before'] = 'before_desc_compose_box';
+		
+		//Setting Sizes
+		return $mycustom_fields_array;
+	}
+	
 	
 	/**
 	* FUNCTION USED TO LOAD FORM OPTION FIELDS
@@ -959,26 +1001,43 @@ class Upload{
 	/**
 	 * Function used to load custom form fields
 	 */
-	function load_custom_form_fields($data,$group_based=false)
-	{
-		if(!$group_based)
-		{
-			$array = $this->custom_form_fields;
-			foreach($array as $key => $fields)
-			{
-					if($data[$fields['db_field']])
+	function load_custom_form_fields($data, $insertion = false,$group_based=false) {
+		if(!$group_based) {
+			$array = pull_custom_fields();
+			$cleaned = array();
+			#pr($array,true);
+			if (!$insertion) {
+				foreach ($array as $key => $field) {
+					$cleaned[$key]['title'] = $field['custom_field_title'];
+					$cleaned[$key]['type'] = $field['custom_field_type'];
+					$cleaned[$key]['name'] = 'cfld_'.$field['custom_field_name'];
+					$cleaned[$key]['value'] = $field['custom_field_value'];
+					$cleaned[$key]['db_field'] = 'cfld_'.$field['custom_field_name'];
+				}
+			} else {
+				foreach ($array as $key => $field) {
+					$cleaned[$field['custom_field_name']]['title'] = $field['custom_field_title'];
+					$cleaned[$field['custom_field_name']]['type'] = $field['custom_field_type'];
+					$cleaned[$field['custom_field_name']]['name'] = 'cfld_'.$field['custom_field_name'];
+					$cleaned[$field['custom_field_name']]['value'] = $field['custom_field_value'];
+					$cleaned[$field['custom_field_name']]['db_field'] = 'cfld_'.$field['custom_field_name'];
+				}
+			}
+			foreach($cleaned as $key => $fields) {
+					if($data[$fields['db_field']]) {
 						$value = $data[$fields['db_field']];
-					elseif($data[$fields['name']])
+					} elseif($data[$fields['name']]) {
 						$value = $data[$fields['name']];
+					}
 						
 						
-					if($fields['type']=='radiobutton' || 
+					if($fields['type']=='radiobutton' ||  
 					   $fields['type']=='checkbox' ||
-					   $fields['type']=='dropdown')
-					$fields['checked'] = $value;
-					else
-					$fields['value'] = $value;
-					
+					   $fields['type']=='dropdown') {
+						$fields['checked'] = $value;
+					} else {
+						$fields['value'] = $fields['value'];
+					}
 						
 					$new_array[$key] = $fields;
 			}
