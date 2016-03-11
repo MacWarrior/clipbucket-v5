@@ -999,8 +999,10 @@ class Upload{
 	
 	
 	/**
-	 * Function used to load custom form fields
-	 */
+	* Function used to load custom form fields
+	* @return : { array } { $new_array } { an array with all custom fields }
+	*/
+
 	function load_custom_form_fields($data, $insertion = false,$group_based=false) {
 		if(!$group_based) {
 			$array = pull_custom_fields();
@@ -1029,8 +1031,6 @@ class Upload{
 					} elseif($data[$fields['name']]) {
 						$value = $data[$fields['name']];
 					}
-						
-						
 					if($fields['type']=='radiobutton' ||  
 					   $fields['type']=='checkbox' ||
 					   $fields['type']=='dropdown') {
