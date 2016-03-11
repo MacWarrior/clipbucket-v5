@@ -47,7 +47,7 @@
 				}
 				//Calling Functions When Video Is going to play
 				call_watch_video_function($vdo);
-				subtitle($vdo['title']);
+				subtitle(ucfirst($vdo['title']));
 			} else {
 				$Cbucket->show_page = false;
 			}
