@@ -3,7 +3,7 @@
 </br>
 
 <div align="center">
-<a href="http://demo.clipbucket.com/">View Demo</a> | <a href="http://clipbucket.com/download">Download</a>
+<a href="http://demo.clipbucket.com/">View Demo</a> | <a href="http://clip-bucket.com/download">Download</a>
 </div>
 </br>
 
