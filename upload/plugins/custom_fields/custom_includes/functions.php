@@ -1,5 +1,10 @@
 <?php
 
+	/**
+	* Lists all of custom fields by name
+	* @return : { array } { $flds } { an array with fields }
+	*/
+
 	function custom_fields_list() {
 		global $db;
 		$raw_flds = $db->select(tbl("custom_fields"),'custom_field_name','custom_field_list_id != 0');
