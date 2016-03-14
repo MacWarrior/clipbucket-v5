@@ -1005,10 +1005,12 @@ class Upload{
 
 	function load_custom_form_fields($data, $insertion = false,$group_based=false, $user = false) {
 		if(!$group_based) {
-			if ($user) {
-				$array = pull_custom_fields('signup');
-			} else {
-				$array = pull_custom_fields('video');
+			if (function_exists('pull_custom_fields')) {
+				if ($user) {
+					$array = pull_custom_fields('signup');
+				} else {
+					$array = pull_custom_fields('video');
+				}
 			}
 			$cleaned = array();
 			#pr($array,true);
