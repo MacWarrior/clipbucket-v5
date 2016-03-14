@@ -38,30 +38,25 @@
     /**
     * Function used to check fields in myaccount section (edit_account.php?mode=profile)
     * It checks certain important fields to make sure user enters correct data
-    * @param $array : array of fields data
-    * @since ClipBucket 2.7.7
+    * @param: { array } : { $array } { array of fields data }
+    * @since: ClipBucket 2.8
+    * @return: { boolean }  { true or false depending on situation }
     */
 
-    function profile_fileds_check($array)
-    {
-            $post_clean = true;
-            if (preg_match('/[0-9]+/', $array['first_name']) || preg_match('/[0-9]+/', $array['last_name']))
-            {
-                e('Name contains numbers! Seriously? Are you alien?');
-                $post_clean = false;
-            }
-
-            if (empty($array['web_url']) || is_numeric($array['web_url']) )
-            {   
-                e('Invalid URL provided.');
-                $post_clean = false;
-            }
-
-            if (!is_numeric($array['postal_code']) && !empty($array['postal_code']))
-            {
-                e("Don't fake it! Postal Code can't be words!");
-                $post_clean = false;
-            }
+    function profile_fileds_check($array) {
+        $post_clean = true;
+        if (preg_match('/[0-9]+/', $array['first_name']) || preg_match('/[0-9]+/', $array['last_name'])) {
+            e('Name contains numbers! Seriously? Are you alien?');
+            $post_clean = false;
+        }
+        if (empty($array['web_url']) || is_numeric($array['web_url'])) {   
+            e('Invalid URL provided.');
+            $post_clean = false;
+        }
+        if (!is_numeric($array['postal_code']) && !empty($array['postal_code'])) {
+            e("Don't fake it! Postal Code can't be words!");
+            $post_clean = false;
+        }
     }
 
     function resend_verification($userid) {
