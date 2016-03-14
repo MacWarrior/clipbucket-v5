@@ -59,6 +59,14 @@
         }
     }
 
+    /**
+    * Resend verification email to a given user
+    * @param: { integer } { $userid } { id of user to resend verification to }
+    * @return: { boolean } { true if success, else false }
+    * @since: March 10th, 2016 ClipBucket 2.8.1
+    * @author: Saqib Razzaq
+    */
+
     function resend_verification($userid) {
         global $db;
         $raw_data = $db->select(tbl("users"),"usr_status,username,email","userid = '$userid'");
