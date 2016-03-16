@@ -14,12 +14,12 @@
     */
 
     function get_website_configurations() {
-        $query = "SELECT name, value FROM ".tbl( 'config' );
-        $results = select( $query );
+        $query = "SELECT name, value FROM ".tbl('config');
+        $results = select($query);
         $data = array();
-        if ( $results ) {
-            foreach( $results as $config ) {
-                $data[ $config[ 'name' ] ] = $config[ 'value' ];
+        if ($results) {
+            foreach($results as $config) {
+                $data[$config[ 'name' ]] = $config['value'];
             }
         }
         return $data;
@@ -128,4 +128,22 @@
         }
 
         return $open.$attributes.$close;
+    }
+
+    /**
+    * Returns theme currently uploaded for your ClipBucket powered website
+    * @param : { none }
+    * @return : { array } { $conts } { an array with names of uploaded themes }
+    * @since : March 16th, 2016 ClipBucket 2.8.1
+    * @author : Saqib Razzaq
+    */
+
+    function installed_themes() {
+        $dir = BASEDIR.'/styles';
+        $conts = scandir($dir);
+        for ($i=0; $i < 3; $i++) { 
+            unset($conts[$i]);
+        }
+        
+        return $conts;
     }
