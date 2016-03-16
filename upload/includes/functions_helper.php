@@ -26,14 +26,15 @@
     }
 
     /**
-     * Function used to get config value
-     * of ClipBucket
-     */
-    function config($input)
-    {
+    * Function used to get config value of ClipBucket
+    * @uses: { class : Cbucket } { var : configs }
+    */
+
+    function config($input) {
         global $Cbucket;
         return $Cbucket->configs[$input];
     }
+
     function get_config($input){ return config($input); }
 
     /**
