@@ -38,6 +38,29 @@
 	</div>
 {/if}
 
+{if $display_type=='ajaxHome'}
+<div class="item-video col-lg-4 col-md-4 col-sm-4 col-xs-6">
+	<div class="clearfix thumb-holder">
+		<a class="video-link" href="{videoLink($video)}" title="{$video.title|title}">
+			<img class="img-responsive" src="{getThumb vdetails=$video size=600x338 }">
+			<span class="duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</span>
+		</a>
+		{ANCHOR place='in_video_thumb' data=$video}
+		<img data-quick="quick-{$video.videoid}"
+	 class="icon-add add_icon cb_quickie cb-btn-quick-{$video.videoid}" onclick="add_quicklist(this,'{$video.videoid}')" src="{$imageurl}/dot.gif" title="Add {$video.title} to Quicklist">
+	</div>
+	<div class="clearfix video-info">
+		<h2 class="title"><a href="{videoLink($pop_video)}">{$video.title|truncate:50}</a></h2>
+		<span class="author">by <a href="{$userquery->profile_link($video)}">{$video.username}</a></span>
+		<div class="clearfix views-date">
+			<span>{$video.views}&nbsp;views</span>
+			<time class="date" datetime="2016-15-03">{$video.date_added|niceTime}</time>
+		</div>
+	</div>
+</div>
+{/if}
+
+
 {if $display_type=='featuredVideos'}
 	<div class="clearfix thumb-holder">
 		<a class="video-link" href="{videoLink($video)}" title="{$video.title|title}">
