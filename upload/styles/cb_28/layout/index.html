@@ -57,7 +57,7 @@
 			{/if}
 
 			{$videos=get_videos(["order" =>"date_added DESC", "limit" =>6])}
-			<section class="clearfix videos">
+			<section id="recent_vids_sec" class="clearfix videos">
 				<h1>{lang code="Recent Videos"}</h1>
 				<div class="clearfix row">
 					{foreach $videos as $video}
@@ -65,6 +65,7 @@
 					{include file="$style_dir/blocks/videos/video.html" display_type='homeVideos'}
 					</div>
 					{/foreach}
+					<button id="home_load_more" class="btn btn-primary col-md-12 col-sm-12" loadtype="video" loadmode="recent" loadlimit="8" loadhit="1">Load More</button>
 				</div>
 			</section>
 		</div>
@@ -147,42 +148,45 @@
 	</div>	
 </div>
 <script>
-	// var WinWidHome = 0;
-	// function popVidHeight(){
-	// 	WinWidHome = $(window).width();
-	// 	if(WinWidHome > 991)
-	// 	{
-	// 		console.log("height "+WinWidHome);
-	// 		var bannerHeight = $("#banner").height();
-	// 		console.log("height "+bannerHeight);
-	// 		$(".popular-vids").css({
-	// 								"max-height" : bannerHeight+"px",
-	// 								"overflow-y" : "auto"
-	// 								});
-	// 	}
-	// 	else
-	// 	{
-	// 		console.log("height "+WinWidHome);
-		
-			
-	// 		$(".popular-vids").css("max-height","auto");
-	// 	}
-	// }
-	// function removeSideactive(){
-	// 	WinWidHome = $(window).width();
-	// 	if(WinWidHome > 1024){
-	// 		$("body").addClass('sideactive');
-	// 	}
-	// 	else{
-	// 		$("body").removeClass('sideactive');
-	// 	}
-	// }
+	$('#home_load_more').on("click",function(){
+		var loadLink = baseurl + '/ajax/home.php',
+		main_object = $(this),
+		sendType = 'post',
+		dataType = 'html',
+		loadType = $(main_object).attr('loadtype'),
+		loadMode = $(main_object).attr('loadmode'),
+		loadLimit = $(main_object).attr('loadlimit'),
+		loadHit = $(main_object).attr('loadhit'),
+		newloadHit = parseInt(loadHit) + 1
+		;
+		alert(loadHit);
+		alert(newloadHit);
+		$.ajax({
+			url: loadLink,
+			type: sendType,
+			dataType: dataType,
+			data: {
+				"load_type":loadType,
+				"load_mode":loadMode,
+				"load_limit":loadLimit,
+				"load_hit":loadHit
+			},
 
-	// $(document).ready(function(){
-	// 	popVidHeight();
-	// 	removeSideactive();
-	// });
-	// $(window).resize(function() {
-	// 	popVidHeight();
-	// });
+			beforeSend: function() {
+		        // setting a timeout
+		        $(main_object).text("Loading..");
+		    },
+
+			success: function(data) {
+				$('#home_load_more').remove();
+				//$(main_object).attr('loadhit',load_hit);
+				$(main_object).text("Load More");
+				if (loadType == 'video') {
+					$('#recent_vids_sec').append(data);
+				} 
+
+				$('#recent_vids_sec').append('<button id="home_load_more" class="btn btn-primary col-md-12 col-sm-12" loadtype="video" loadmode="recent" loadlimit="8" loadhit="'+newloadHit+'">Load More</button>');
+			}
+		});
+	});
 </script>
