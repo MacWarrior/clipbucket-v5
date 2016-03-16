@@ -1,0 +1,209 @@
+{if $display_type=='popVideos'}
+	<div class="col-lg-5 col-md-6 col-sm-6 col-xs-6 thumb-holder">
+		<a class="video_link" href="{videoLink($pop_video)}" title="{$pop_video.title|title}">
+			<img class="img-responsive" src="{getThumb vdetails=$pop_video size=600x338 }">
+			<span class="duration">{if $pop_video.duration>1}{$pop_video.duration|SetTime}{else}00:00{/if}</span>
+		</a>
+		{ANCHOR place='in_video_thumb' data=$pop_video}
+		<img data-quick="quick-{$pop_video.videoid}"
+	 class="icon-add add_icon cb_quickie cb-btn-quick-{$pop_video.videoid}" onclick="add_quicklist(this,'{$pop_video.videoid}')" src="{$imageurl}/dot.gif" title="Add {$pop_video.title} to Quicklist">
+	</div>
+	<div class="col-lg-7 col-md-6 col-sm-6 col-xs-6 vid-info">
+		<strong class="title"><a href="{videoLink($pop_video)}">{$pop_video.title|truncate:50}</a></strong>
+		<span class="author">by <a href="{$userquery->profile_link($pop_video)}">{$pop_video.username}</a></span>
+		<div class="clearfix view-date">
+			<span class="icon-eye"><i class="fa fa-eye"></i>&nbsp;&nbsp;{$pop_video.views} views</span>
+			<span class="icon-date"><i class="fa fa-clock-o"></i>&nbsp;&nbsp;{$pop_video.date_added|niceTime}</span>
+		</div>
+	</div>
+{/if}
+
+{if $display_type=='homeVideos'}
+	<div class="clearfix thumb-holder">
+		<a class="video-link" href="{videoLink($video)}" title="{$video.title|title}">
+			<img class="img-responsive" src="{getThumb vdetails=$video size=600x338 }">
+			<span class="duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</span>
+		</a>
+		{ANCHOR place='in_video_thumb' data=$video}
+		<img data-quick="quick-{$video.videoid}"
+	 class="icon-add add_icon cb_quickie cb-btn-quick-{$video.videoid}" onclick="add_quicklist(this,'{$video.videoid}')" src="{$imageurl}/dot.gif" title="Add {$video.title} to Quicklist">
+	</div>
+	<div class="clearfix video-info">
+		<h2 class="title"><a href="{videoLink($pop_video)}">{$video.title|truncate:50}</a></h2>
+		<span class="author">by <a href="{$userquery->profile_link($video)}">{$video.username}</a></span>
+		<div class="clearfix views-date">
+			<span>{$video.views}&nbsp;views</span>
+			<time class="date" datetime="2016-15-03">{$video.date_added|niceTime}</time>
+		</div>
+	</div>
+{/if}
+
+{if $display_type=='featuredVideos'}
+	<div class="clearfix thumb-holder">
+		<a class="video-link" href="{videoLink($video)}" title="{$video.title|title}">
+			<img class="img-responsive" src="{getThumb vdetails=$video size=600x338 }">
+			<h2 class="title">{$video.title|truncate:50}</h2>
+			<span class="duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</span>
+		</a>
+		{ANCHOR place='in_video_thumb' data=$video}
+		<img data-quick="quick-{$video.videoid}"
+	 class="icon-add add_icon cb_quickie cb-btn-quick-{$video.videoid}" onclick="add_quicklist(this,'{$video.videoid}')" src="{$imageurl}/dot.gif" title="Add {$video.title} to Quicklist">
+	</div>
+{/if}
+
+{if $display_type=='normal' || $display_type==''}
+<div class="item_video col-lg-12 col-md-12 col-sm-6 clearfix">
+	<div class="row clearfix">
+		<div class="col-xs-6">
+			<div class="cb_item_thumb video_thumb">
+				<a class="video-link" href="{videoLink($video)}" title="{$video.title|title}">
+					<span class="duration">{if
+						$video.duration>1}{$video.duration|SetTime}{else}00:00{/if}{*$video.duration|date_format:$config.time*}
+					</span>
+					<i class="icon-playweb play-icon"></i>
+					<img class="img-responsive" src="{getThumb vdetails=$video size=600x338 } " border="1" />
+				</a>
+				{ANCHOR place='in_video_thumb' data=$video}
+				<img src="{$imageurl}/dot.gif" data-quick="quick-{$video.videoid}"
+			 class="add_icon cb_quickie cb-btn-quick-{$video.videoid}" onclick="add_quicklist(this,'{$video.videoid}')" title="Add {$video.title} to Quicklist" alt="Quicklist">
+			</div>
+		</div>
+		
+		{$show_dropdown ='yes'}
+		{if $dis_type == 'no-dropdown' || $related == 'yes'}
+			{$show_dropdown ='no'}
+		{/if}
+		<div class="col-xs-6">
+			<h5 class="dropdown hide_btn">
+				<a onClick="location.href='{videoLink($video)}'" href="{videoLink($video)}">
+				{$video.title|truncate:30}
+				</a>
+			</h5>
+			
+			<h5>by <a href="{$userquery->profile_link($video)}">{name($video)}</a></h5>
+			{if $show_dropdown = 'yes'}
+			<div class="clearfix views-time">
+				<span><i class="icon-eye"></i>&nbsp;{$video.views} views</span>
+				<span><i class="icon-clock"></i>&nbsp;{$video.date_added|niceTime}</span>
+			</div>
+			{/if}
+		</div>
+	</div>
+</div>
+{/if}
+
+{if $display_type=='user_videos'}
+<div class="col-md-3  col-sm-4  col-xs-6">
+	<a href="{videoLink($video)}" title="{$video.title|title}">
+		<img alt="{$video.title|title}" src="{getThumb vdetails=$video size='171x120'}" id="thumbs_{$video.videoid}"  title="{$video.title|title}"/>
+	</a>
+	<p class="cbHomeVidDuration duration_view">
+		{if $video.duration>1}
+			{$video.duration|SetTime}
+		{else}
+			00:00
+		{/if}
+	</p>
+	<a href="{videoLink($video)}" title="{$video.title|title}"><h5>
+	<b> {$video.title|truncate:25}</b></h5></a>                     
+	<span class="pull-left"><h5><small>{$video.views} views</small></h5></span>
+	<span class="pull-right"><h5><small>{$video.date_added|niceTime}</small></h5></span>
+</div>
+{/if}
+
+{if $display_type=='playlistVideos'}
+	<div class="video_thumb">
+		<a class="video_link" href="{videoLink($video)}" title="{$video.title|title}">
+			<img class="img-responsive" src="{getThumb vdetails=$video size=600x338 }">
+			<div class="play-info">
+				<strong class="title">{$video.title|truncate:30}</strong>
+				<i class="icon-playweb"></i>
+				<span class="duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</span>
+			</div>
+		</a>
+		{ANCHOR place='in_video_thumb' data=$video}
+		<i data-quick="quick-{$video.videoid}"
+	 class="icon-add add_icon cb_quickie cb-btn-quick-{$video.videoid}" onclick="add_quicklist(this,'{$video.videoid}')" title="Add {$video.title} to Quicklist"></i>
+	</div>
+{/if}
+
+{if $display_type=='related'}
+	<div class="item_video row clearfix">
+	<div class="col-xs-6">
+		<div class="row cb_item_thumb video_thumb">
+			<a class="video-link" href="{videoLink($video)}" title="{$video.title|title}">
+				<span class="duration">{if
+					$video.duration>1}{$video.duration|SetTime}{else}00:00{/if}{*$video.duration|date_format:$config.time*}
+				</span>
+				<i class="icon-playweb play-icon"></i>
+				<img class="img-responsive" src="{getThumb vdetails=$video size=600x338 } " border="1" />
+			</a>
+			{ANCHOR place='in_video_thumb' data=$video}
+			 <img src="{$imageurl}/dot.gif" data-quick="quick-{$video.videoid}"
+		 class="add_icon cb_quickie cb-btn-quick-{$video.videoid}" onclick="add_quicklist(this,'{$video.videoid}')" title="Add {$video.title} to Quicklist" alt="Quicklist">
+		</div>
+	</div>
+	<div class="col-xs-6">
+		<h5 class="dropdown hide_btn">
+			<a data-hover="dropdown" data-toggle="dropdown" class="dropdown-toggle" data-delay="1000" data-close-others="false" onClick="location.href='{videoLink($video)}'" href="{videoLink($video)}">{$video.title|truncate:15} </a>
+		</h5>
+		
+		<h5>by <a href="{$userquery->profile_link($video)}">{name($video)}</a></h5>
+		<div class="clearfix views-time">
+			<span><i class="icon-eye"></i> {$video.views} views</span>
+		</div>
+	</div>
+</div>
+{/if}
+
+{if $display_type=='morefrom-channel'}
+	<div class="item_video clearfix">
+		<div class="clearfix vid_thumb">
+			<div class="cb_item_thumb video_thumb">
+				<a class="video-link" href="{videoLink($video)}" title="{$video.title|title}">
+					<span class="duration">{if
+						$video.duration>1}{$video.duration|SetTime}{else}00:00{/if}{*$video.duration|date_format:$config.time*}
+					</span>
+					<i class="icon-playweb play-icon"></i>
+					<img class="img-responsive" src="{getThumb vdetails=$video size=600x338 } " border="1" />
+				</a>
+				{ANCHOR place='in_video_thumb' data=$video}
+			 <img src="{$imageurl}/dot.gif" data-quick="quick-{$video.videoid}"
+		 class="add_icon cb_quickie cb-btn-quick-{$video.videoid}" onclick="add_quicklist(this,'{$video.videoid}')" title="Add {$video.title} to Quicklist" alt="Quicklist">
+			</div>
+		</div>
+		<div class="clearfix">
+			<h5 class="dropdown hide_btn">
+				<a data-hover="dropdown" data-toggle="dropdown" class="dropdown-toggle" data-delay="1000" data-close-others="false" onClick="location.href='{videoLink($video)}'" href="{videoLink($video)}">{$video.title|truncate:15} </a>
+			</h5>
+		</div>
+</div>
+{/if}
+
+{if $display_type=='view_videos'}
+<div class="item_video">
+	<div class="clearfix">
+		<div class="cb_item_thumb video_thumb">
+			<a class="video-link" href="{videoLink($video)}" title="{$video.title|title}">
+				<span class="duration">{if
+					$video.duration>1}{$video.duration|SetTime}{else}00:00{/if}{*$video.duration|date_format:$config.time*}
+				</span>
+				<i class="icon-playweb play-icon"></i>
+				<img class="img-responsive" src="{getThumb vdetails=$video size=600x338 } " border="1" />
+			</a>
+			{ANCHOR place='in_video_thumb' data=$video}
+			 <img src="{$imageurl}/dot.gif" data-quick="quick-{$video.videoid}"
+		 class="add_icon cb_quickie cb-btn-quick-{$video.videoid}" onclick="add_quicklist(this,'{$video.videoid}')" title="Add {$video.title} to Quicklist" alt="">
+		</div>
+	</div>
+	<div class="clearfix">
+		<h5 class="dropdown hide_btn">
+			<a data-hover="dropdown" data-toggle="dropdown" class="dropdown-toggle" data-delay="1000" data-close-others="false" onClick="location.href='{videoLink($video)}'" href="{videoLink($video)}">{$video.title|truncate:30} </a>
+			
+		</h5>
+		
+		<h5>by <a href="{$userquery->profile_link($video)}">{name($video)}</a>&nbsp;{$video.date_added|niceTime}</h5>
+		<h5><i class="icon-eye"></i> {$video.views} views</h5>
+	</div>
+</div>
+{/if}

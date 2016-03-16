@@ -16,7 +16,7 @@
 	    {ANCHOR place='global'} 
 	    <!--	</div> -->
 	    <div class="clearfix"></div>
-	       
+	    <button id="home_load_more" class="btn btn-primary" loadtype="video" loadmode="recent" loadlimit="8" loadhit="1">Load More</button>
 		{if is_installed('editorspick')}
 		{if $editor_picks}
 		<div class="row">
@@ -484,6 +484,99 @@
 	        autoslide: 2000,
 			easing: 'easeOutBounce'
 	    });
+	});
+
+	/*$('.cb_item_thumb').on("click",function(e){
+		e.preventDefault();
+		var url2Fetch = $(this).closest('a').attr('src');
+		$.get( url2Fetch, function( data ) {
+			console.log(data);
+		  $( "#container" ).html( "<h1>YES" );
+		  alert( "Load was performed." );
+		});
+	});*/
+
+	function cleanup_videos(json_data) {
+		console.log(json_data);
+		var total_elements = json_data.array_meta.length;
+		var read_elements = json_data.array_meta;
+		for (var i = 0; i < total_elements; i++) {
+			console.log("VIDEO ID  = "+read_elements[i].videoid)
+		}
+	}
+
+	function cleanup_photos(json_data) {
+		console.log(json_data);
+		var total_elements = json_data.array_meta.length;
+		var read_elements = json_data.array_meta;
+		for (var i = 0; i < total_elements; i++) {
+			console.log("PHOTO ID  = "+read_elements[i].photo_id)
+		}
+	}
+
+	function cleanup_users(json_data) {
+		console.log(json_data);
+		var total_elements = json_data.array_meta.length;
+		var read_elements = json_data.array_meta;
+		for (var i = 0; i < total_elements; i++) {
+			console.log("USER ID  = "+read_elements[i].userid)
+		}
+	}
+
+	function cleanup_collections(json_data) {
+		console.log(json_data);
+		var total_elements = json_data.array_meta.length;
+		var read_elements = json_data.array_meta;
+		for (var i = 0; i < total_elements; i++) {
+			console.log("COLLECTION ID  = "+read_elements[i].collection_id)
+		}
+	}
+
+
+
+	$('#home_load_more').on("click",function(){
+		var loadLink = baseurl + '/ajax/home.php',
+		main_object = $(this),
+		sendType = 'post',
+		dataType = 'html',
+		loadType = $(main_object).attr('loadtype'),
+		loadMode = $(main_object).attr('loadmode'),
+		loadLimit = $(main_object).attr('loadlimit'),
+		loadHit = $(main_object).attr('loadhit')
+		;
+
+		$.ajax({
+			url: loadLink,
+			type: sendType,
+			dataType: dataType,
+			data: {
+				"load_type":loadType,
+				"load_mode":loadMode,
+				"load_limit":loadLimit,
+				"load_hit":loadHit
+			},
+
+			beforeSend: function() {
+		        // setting a timeout
+		        $(main_object).text("Loading..");
+		    },
+
+			success: function(data) {
+				var json_data = $.parseJSON(data);
+				var load_hit = json_data.loadhit;
+				$(main_object).attr('loadhit',load_hit);
+				$(main_object).text("Load More");
+				if (loadType == 'video') {
+					cleanup_videos(json_data);
+				} else if (loadType == 'users') {
+					cleanup_users(json_data);
+				} else if (loadType == 'photos') {
+					cleanup_photos(json_data);
+				} else if (loadType == 'collections') {
+					cleanup_collections(json_data);
+				}
+			}
+		});
 	});
 </script>
 

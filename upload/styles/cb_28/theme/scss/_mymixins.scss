@@ -1,0 +1,260 @@
+/* variables */
+$sprite : url(../images/sprite.png) no-repeat;
+$black:#000;
+$white:#fff;
+$search-txt:#a8a8a8;
+$bg-theme:#17181a;
+$grey-txt:#757575;
+$lt-grey:#f9f9f9;
+$green: #4caf50;
+$sidebar-color:#1a1e21;
+$orange:#ffa000;
+$dark-btn:#17181a;
+$header-btn:#262727;
+$duration-bg:rgba(0,0,0,0.8);
+
+$blue-color:#0080b4;
+$body-bg:#eee;
+$block-bg:#eee;
+$block-color:#333;
+$heading-color:#666;
+$search-toggle:#999;
+$base-font:'Source Sans Pro', sans-serif;
+$base-color:#000;
+$iconfont: 'icomoon';
+$default-border:1px solid #d9d9d9;
+$fb-color:#2b4b90;
+$tw-color:#1c95d0;
+$gplus-color:#d34332;
+$com-color:#2d2d2d;
+$probox-bg: #f8f8f8;
+/**/
+@mixin gradient-bg(){
+	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#000000+0,000000+100&0.6+0,0.59+43,0.55+49,0.26+70,0.12+82,0.05+90,0.01+100 */
+	background: -moz-linear-gradient(top,  rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.59) 43%, rgba(0,0,0,0.55) 49%, rgba(0,0,0,0.26) 70%, rgba(0,0,0,0.12) 82%, rgba(0,0,0,0.05) 90%, rgba(0,0,0,0.01) 100%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(top,  rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.59) 43%,rgba(0,0,0,0.55) 49%,rgba(0,0,0,0.26) 70%,rgba(0,0,0,0.12) 82%,rgba(0,0,0,0.05) 90%,rgba(0,0,0,0.01) 100%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to bottom,  rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.59) 43%,rgba(0,0,0,0.55) 49%,rgba(0,0,0,0.26) 70%,rgba(0,0,0,0.12) 82%,rgba(0,0,0,0.05) 90%,rgba(0,0,0,0.01) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#99000000', endColorstr='#03000000',GradientType=0 ); /* IE6-9 */
+}
+@mixin after(){
+	display: block;
+	clear: both;
+	content: "";
+}
+@mixin list-style(){
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+@mixin transition-property($transitionProperty){
+	-webkit-transition-property: $transitionProperty;
+	-moz-transition-property: $transitionProperty;
+	-ms-transition-property: $transitionProperty;
+	-o-transition-property: $transitionProperty;
+	transition-property: $transitionProperty;
+}
+@mixin transition($transition) {
+	-webkit-transition: $transition;  
+	-moz-transition:    $transition;
+	-ms-transition:     $transition; 
+	-o-transition:      $transition;
+}
+@mixin boxsizing(){
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+@mixin text-replacement(){
+	text-indent:-9999px;
+	overflow: hidden;
+}
+@mixin pro-box-mix(){
+	background: #f8f8f8;
+	border:1px solid #e1e1e1;
+}
+
+@mixin img-thumb(){
+	.row{
+		margin: 0 -10px;
+	}
+	.img-holder{
+		padding: 0 10px;
+		margin: 0 auto 20px;
+		img{
+			width: 100%;
+		}
+	}
+}
+@mixin vertical-top(){
+	display: inline-block;
+	vertical-align: top;
+}
+
+@mixin vertical-middle(){
+	display: inline-block;
+	vertical-align: middle;
+}
+
+@mixin vertical-bottom(){
+	display: inline-block;
+	vertical-align: bottom;
+}
+/**/
+@mixin text-shadow ($string: 0 1px 3px rgba(0, 0, 0, 0.25)) {
+	text-shadow: $string;
+}
+@mixin box-shadow ($string) {
+	-webkit-box-shadow: $string;
+	-moz-box-shadow:    $string;
+	box-shadow:         $string;
+}
+@mixin drop-shadow ($x: 0, $y: 1px, $blur: 2px, $spread: 0, $alpha: 0.25) {
+	-webkit-box-shadow:	$x $y $blur $spread rgba(0, 0, 0, $alpha);
+	-moz-box-shadow:	$x $y $blur $spread rgba(0, 0, 0, $alpha);
+	box-shadow:		$x $y $blur $spread rgba(0, 0, 0, $alpha);
+}
+@mixin inner-shadow ($x: 0, $y: 1px, $blur: 2px, $spread: 0, $alpha: 0.25) {
+	-webkit-box-shadow: inset $x $y $blur $spread rgba(0, 0, 0, $alpha);
+	-moz-box-shadow:    inset $x $y $blur $spread rgba(0, 0, 0, $alpha);
+	box-shadow:         inset $x $y $blur $spread rgba(0, 0, 0, $alpha);
+}
+@mixin gradient ($startColor: #eee, $endColor: white) {
+	background-color: $startColor;
+	background: -webkit-gradient(linear, left top, left bottom, from($startColor), to($endColor));
+	background: -webkit-linear-gradient(top, $startColor, $endColor);
+	background: -moz-linear-gradient(top, $startColor, $endColor);
+	background: -ms-linear-gradient(top, $startColor, $endColor);
+	background: -o-linear-gradient(top, $startColor, $endColor);
+}
+@mixin horizontal-gradient ($startColor: #eee, $endColor: white) {
+ 	background-color: $startColor;
+	background-image: -webkit-gradient(linear, left top, right top, from($startColor), to($endColor));
+	background-image: -webkit-linear-gradient(left, $startColor, $endColor);
+	background-image: -moz-linear-gradient(left, $startColor, $endColor);
+	background-image: -ms-linear-gradient(left, $startColor, $endColor);
+	background-image: -o-linear-gradient(left, $startColor, $endColor);
+}
+
+@mixin myanimation ($name, $duration, $ease) {
+	-webkit-animation: $name $duration $ease;
+	-moz-animation:    $name $duration $ease;
+	-ms-animation:     $name $duration $ease;
+	-o-animation: $name $duration $ease;
+	animation: $name $duration $ease;
+}
+
+@mixin transform($string){
+	-webkit-transform: $string;
+	-moz-transform: 	 $string;
+	-ms-transform: 		 $string;
+	-o-transform: 		 $string;
+}
+@mixin scale ($factor) {
+	-webkit-transform: scale($factor);
+	-moz-transform: 	 scale($factor);
+	-ms-transform: 		 scale($factor);
+	-o-transform: 		 scale($factor);
+}
+@mixin rotate ($deg) {
+	-webkit-transform: rotate($deg);
+	-moz-transform: 	 rotate($deg);
+	-ms-transform: 		 rotate($deg);
+	-o-transform: 		 rotate($deg);
+}
+@mixin skew ($deg, $deg2) {
+	-webkit-transform:       skew($deg, $deg2);
+	-moz-transform: 	 skew($deg, $deg2);
+	-ms-transform: 		 skew($deg, $deg2);
+	-o-transform: 		 skew($deg, $deg2);
+}
+@mixin translate ($x, $y:0) {
+	-webkit-transform:       translate($x, $y);
+	-moz-transform: 	 translate($x, $y);
+	-ms-transform: 		 translate($x, $y);
+	-o-transform: 		 translate($x, $y);
+}
+@mixin translate3d ($x, $y: 0, $z: 0) {
+	-webkit-transform:       translate3d($x, $y, $z);
+	-moz-transform: 	 translate3d($x, $y, $z);
+	-ms-transform: 		 translate3d($x, $y, $z);
+	-o-transform: 		 translate3d($x, $y, $z);
+}
+@mixin perspective ($value: 1000) {
+	-webkit-perspective: 	$value;
+	-moz-perspective: 	$value;
+	-ms-perspective: 	$value;
+	perspective: 		$value;
+}
+@mixin transform-origin ($x:center, $y:center) {
+	-webkit-transform-origin: $x $y;
+	-moz-transform-origin:    $x $y;
+	-ms-transform-origin:     $x $y;
+	-o-transform-origin:      $x $y;
+}
+/* buttons */
+.btn-default{
+	background:#ededed;
+	border-color: #e0e0e0;
+	font-weight: 700;
+	color: $base-color;
+	&:hover,
+	&:focus,
+	&:active,
+	&.active,
+	&:hover{
+		background:#ededed;
+		border-color: #e0e0e0;
+		//color: @base-color;
+	}
+}
+.btn-primary{
+	background:#1976d2;
+	border-color:#1976d2;
+	font-weight: 700;
+	color:#fff;
+	&:hover,
+	&:focus,
+	&:active,
+	&.active,
+	&:hover{
+		background:#1976d2;
+		border-color:#1976d2;
+		color:#fff;
+	}
+}
+.btn-success{
+	background:#4caf50;
+	border-color:#4caf50;
+	font-weight: 700;
+	color:#fff;
+	&:hover,
+	&:focus,
+	&:active,
+	&.active,
+	&:hover{
+		background:#4caf50;
+		border-color:#4caf50;
+		color:#fff;
+	}
+}
+/* sprite */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 100dpi) {
+	.playlists-dropdown .item_playlist .playlist-thumb .date-time,
+	.playlists-dropdown .playlist-header .close-playlists,
+	.headerIcon.active.playlist-icon a,
+	.headerIcon.active.channels-icon a,
+	.headerIcon.active.video-icon a,
+	.headerIcon.playlist-icon a,
+	.headerIcon.channels-icon a,
+	.headerIcon.video-icon a,
+	.navbar-default .right-menu.navbar-nav > li > a.user-area .btn-setting,
+	.navbar-default .right-menu.navbar-nav > li > a.btn-upload,
+	.ch-playlists .playlist-thumb .date-time,
+	.rating .like-dislike a.btn-dislike i,
+	.rating .like-dislike a.btn-like i{
+		// Reference the @2x Sprite
+		background-image:url('../images/sprite@2x.png') !important;
+		/* Translate the @2x sprite's dimensions back to 1x */
+		background-size: 60px 4400px !important;
+	}
+}

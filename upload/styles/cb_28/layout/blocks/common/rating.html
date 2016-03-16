@@ -1,0 +1,53 @@
+<!-- CB like and dislike section -->
+<div class="rating clearfix">
+	<div class="clearfix rating-holder">
+		<div class="like-dislike">
+			<a {if !$disable} onclick="rate('{$id}','5','{$type}')"{/if} href="javascript:void(0)" class="btn-like">Likes <i></i></a>
+			<span>{$likes} Likes</span>
+		</div>
+
+		<div id="circle"></div>
+
+		<div class="like-dislike">
+			<a {if !$disable} onclick="rate('{$id}','1','{$type}')"{/if} href="javascript:void(0)" class="btn-dislike"><i></i> Dislike</a>
+			<span>{$dislikes} Dislike</span>
+		</div>
+	</div>
+	{if $rating_msg}
+	<div id="rating_result_container" class="like-error clearfix">
+		{$rating_msg}  
+	</div>
+	{/if}
+</div>
+
+<script type="text/javascript">
+	var _percent = 0; 
+	
+	{if $perc}
+		_percent = '{$perc}';
+		_percent = parseInt(_percent);
+	{/if}
+	
+	var _numb = parseInt(_percent);
+	if ( _numb > 49 )
+	$('._percentage').addClass('likes_perc_more');
+	else
+	$('._percentage').addClass('likes_perc_less');
+	
+	 function updateLikeCircle(pre) {
+ 
+	 if(pre)
+		 _percent=pre;
+
+		console.log('hello '+_percent);
+		$( '#circle' ).progressCircle({    
+			nPercent        : _percent,
+			showPercentText : _percent,
+			thickness       : 5,
+			/*circleSize      : 50*/
+		  });
+	}
+	
+	updateLikeCircle();
+	
+</script>

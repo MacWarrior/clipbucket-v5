@@ -1,0 +1,81 @@
+{$myAccountLinks = $userquery->my_account_links()}
+{$leftMenuLinks = array_slice($myAccountLinks, 6)}
+<div id="main" class="clearfix">
+	<div class="custom-container clearfix">
+		{*include file="$style_dir/blocks/manage/account_menu.html"*}
+		<div class="clearfix photos-block">
+		<!-- Page Heading -->
+			<header class="heading clearfix">
+				{assign var=sorting_links value=sorting_links()}
+				<h1>{lang code="Browsing All Categories"}<i class="icon-arrow-right"></i></h1>
+				<div class="dropdowns clearfix">
+					<!--Sorting By View-->
+					<div class="dropdown">
+						{if $smarty.get.sort}
+						{foreach from=$sorting_links item=name key=sort name=sorts}
+							{if $smarty.get.sort==$sort && isset($smarty.get.sort)} 
+							<a href="javascript:void(0)" data-toggle="dropdown" class="dropdown-toggle">{$name} <span class="icon-arrow-down"></span></a>
+							{/if}
+						{/foreach}
+						{else}
+							<a href="javascript:void(0)" data-toggle="dropdown" class="dropdown-toggle">Recent <span class="icon-arrow-down"></span></a>
+						{/if}    
+
+						<ul class="dropdown-menu">
+							{foreach from=$sorting_links item=name key=sort}
+							<li>
+								<a href="{link name=sort sort=$sort type=photos}&sorting=sort" {if $smarty.get.sort==$sort} class="selected" {/if}>{if $smarty.get.sort==$sort}<i class="icon-check"></i>{/if}{$name}</a>
+							</li>
+							{/foreach}
+						</ul>
+					</div>
+
+					<!--Sorting By time-->
+					{assign var=time_links value=time_links()}
+					<div class="dropdown">
+						{if $smarty.get.time} 
+
+						{foreach from=$time_links item=name key=sort name=times}
+							{if $smarty.get.time==$sort && isset($smarty.get.time)} 
+							<a href="javascript:void(0)" data-toggle="dropdown" class="dropdown-toggle">{$name} <span class="icon-arrow-down"></span></a>
+							{/if}
+						{/foreach}
+						{else}
+							<a href="javascript:void(0)" data-toggle="dropdown" class="dropdown-toggle">all time <span class="icon-arrow-down"></span></a>
+						{/if}  
+						  <ul class="dropdown-menu">
+							{foreach from=$time_links item=name key=sort name=times}
+								<li>
+									<a href="{link name=time sort=$sort type=photos}&timing=time" {if $smarty.get.time==$sort} class="selected"{/if}>{if $smarty.get.time==$sort}<i class="icon-check"></i>{/if}{$name}</a>
+								</li>
+							{/foreach}
+						  </ul>
+					</div>
+				</div>
+			</header>
+
+			<!-- /Page Heading -->
+			<div class="clearfix row">
+
+				{$counter=0}
+				
+				{section name=p_list loop=$photos}
+				
+				{$photos[p_list].counter=$counter}
+				
+				{include file="$style_dir/blocks/photo.html" photo=$photos[p_list]}
+
+				{$counter=$counter+1}
+
+				{sectionelse}
+				<div class="clearfix">{lang code='no_results_found'}</div>
+				{/section}
+
+			</div>
+			<div align="center" class="clearfix">
+				{include file="$style_dir/blocks/pagination.html"}
+			</div>
+			
+		</div>
+	</div>
+</div>

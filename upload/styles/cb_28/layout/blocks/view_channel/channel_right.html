@@ -1,0 +1,23 @@
+<div class="channel_right hidden-xs">
+	<section class="clearfix">
+		<header class="heading clearfix">
+			<h1>{lang code="Recent Activities"} <i class="icon-arrow-right"></i></h1>
+		</header>
+		<div id="content_1" class="content user-activities">
+			<div class="feeds1" id="selectedDiv">
+				<div id="userFeeds" >
+					{assign var=userFeeds value=$cbfeeds->getUserFeeds($u)}
+					{if $userFeeds}
+					{foreach from=$userFeeds item=userFeed}
+						{include file="$style_dir/blocks/feed.html" feed=$userFeed}
+					{/foreach}
+					{else}
+					<div align="center" class="no_comments">
+					  {lang code='no_activity' assign=no_activity} {$no_activity|sprintf:$u.username}
+					</div>
+					{/if}
+				</div>
+			</div>
+		</div>
+	</section>
+</div>

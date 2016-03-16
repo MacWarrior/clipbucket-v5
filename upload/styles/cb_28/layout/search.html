@@ -1,0 +1,43 @@
+{$myAccountLinks = $userquery->my_account_links()}
+<div id="main" class="clearfix">
+	<div class="custom-container">
+		<div class="inner-block search-page">
+			
+				<header class="heading clearfix">
+					<h1>{$search_type_title}</h1>
+				</header>
+				<div class="clearfix">
+					{if $results}
+						{foreach item=result from=$results}
+							{assign var=$template_var value =$result}
+							{include file="$display_template" }
+						{/foreach}
+					{else}
+						{lang code='no_results_found'}
+					{/if}
+				</div>
+				{include file="$style_dir/blocks/pagination.html"}
+			
+		</div>
+	</div>
+</div>
+<script>
+	$(document).ready(function(){
+		$("#cbsearchtype a").on({
+			click: function(e){
+				e.preventDefault();
+				var searchtype = $("#SearchType").val();
+				var buttonText = $(this).text().toLowerCase();
+				if($("#SearchType option[value='"+ buttonText +"']").length > 0){
+					$("#SearchType option:selected").removeAttr("selected");
+					$("#SearchType option[value='"+ buttonText +"']").attr("selected" , "selected");
+					$(this).parents("ul").find(".active").removeClass("active");
+					$(this).parent().addClass("active");
+
+				}
+			}
+		});
+
+	});
+
+</script>

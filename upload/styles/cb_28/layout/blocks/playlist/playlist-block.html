@@ -1,0 +1,22 @@
+{$list_id=$playlist.playlist_id}
+{$first=get_playlist_items($list_id,1)}
+{$count_items = $cbvid->action->count_playlist_items($list_id)}
+
+<!-- storing default thumb in variable -->
+{assign var='playlist_def_thumb' value=get_playlist_thumb($playlist)}
+
+{if $playlist_def_thumb|substr:-18 == 'playlist_thumb.png'}
+{assign var='playlist_def_thumb' value=$theme|cat:'/images/playlist-default.png'}
+{/if}
+
+<div class="playlist-thumb">
+	<h2><a href="{videoLink vdetails=$first[0]}">{$playlist.playlist_name}</a></h2>
+	<a href="{videoLink vdetails=$first[0]}" class="playlist-box">
+		<img class="img-responsive" src="{$playlist_def_thumb}">
+		<span>
+			{$count_items}<br>Videos
+			<img src="{$theme}/images/folder-icon.png">
+		</span>
+	</a>
+	<time datetime="{$playlist.date_added}" class="date-time">{$playlist.date_added|niceTime}</time>
+</div>

@@ -1,0 +1,134 @@
+@import "mymixins";
+#footer{
+	position:absolute;
+    width:100%;
+    bottom:0;
+    background:$blue-color;
+	padding:18px 0;
+	font-size: 16px;
+	line-height:20px;
+	color: #fff;
+	z-index: 5;
+	.container{
+		padding: 0;
+	}
+	a{
+		color: #fff;
+		&:hover{
+			text-decoration: none;
+			//color: $blue-color;
+		}
+	}
+	.icon-holder{
+		display: table-cell;
+		vertical-align: middle;
+		width: 50px;
+		height:50px;
+		background: #000;
+		border-radius: 50%;
+		span{
+			display: block;
+			width: 50px;
+			height: 50px;
+			padding: 11px;
+		}
+	}
+	ul{
+		@include list-style();
+		text-transform: capitalize;
+		li{
+			margin: 0 0 0 25px;
+			float: left;
+			&:first-child{
+				margin: 0;
+			}
+		}
+	}
+	.footer-holder{
+		display: table;
+		width: 100%;
+	}
+	.column{
+		padding: 0 5px;
+		display: table-cell;
+		vertical-align:middle;
+		form{
+			//float: right;
+		}
+		&.copyright-poweredby{
+			text-align: right;
+			p{
+				font-weight: 700;
+				span{
+					font-weight: 400;
+				}
+				~span{
+					font-size: 12px;
+				}
+			}
+		}
+	}
+}
+/**/
+@media only screen and (max-width: 991px) {
+	#footer{
+		.footer-holder{
+			padding: 0;
+		}
+		.icon-holder,
+		.column{
+			display: block;
+		}
+		.icon-holder{
+			float: left;
+		}
+		.column.copyright-poweredby,
+		.lang_wrapper,
+		.footer-links{
+			overflow: hidden;
+			text-align: center;
+		}
+		ul{
+			margin: 0 0 10px;
+			li{
+				float: none;
+				@include vertical-top();
+				margin: 0 10px;
+				&:first-child{
+					margin: 0 10px;
+				}
+			}
+		}
+		.lang_wrapper{
+			margin: 0 0 10px;
+		}
+		.column.copyright-poweredby{
+			padding: 0 5px 0 50px;
+		}
+	}
+}
+@media only screen and (max-width: 767px) {
+	#footer{
+		.custom-container{
+			padding: 0 15px;
+		}
+		.footer-holder{
+			padding: 0 0 0 60px;
+			position: relative;
+		}
+		.icon-holder{
+			position: absolute;
+			left: 0;
+			top: 0;
+		}
+		ul li{
+			margin: 0 10px 5px;
+			&:first-child{
+				margin: 0 10px 5px;
+			}
+		}
+		.column.copyright-poweredby{
+			padding: 0 5px;
+		}
+	}
+}

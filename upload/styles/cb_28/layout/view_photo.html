@@ -1,0 +1,217 @@
+<!-- Defining object type-->
+{lang code='photo' assign='object_type'}
+<div class="custom-container photos-block clearfix">
+	{assign var=json value=$photo.photo_details|json_decode}
+	<div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 mouse_hover">
+		<section class="clearfix photo-area">  
+			<div class="photo-holder relative">
+				{get_photo details=$photo size='l' class='img-responsive center-block' output='html' height="100"}
+
+				{assign var=objctid value=$object.ci_id}
+				{assign var=collid value=$object.collection_id}
+				
+				{assign var=preLink value=$cbphoto->collection->get_next_prev_item($objctid,$collid,'prev')}
+
+				{assign var=nextLink value=$cbphoto->collection->get_next_prev_item($objctid,$collid,'next')}
+				
+				<a class="btn view-photo-nxt fa fa-angle-right fa-3x" href="{$cbphoto->photo_links($nextLink.0,'view_item')}"><i>next</i></a>
+
+				<a class="btn view-photo-pre fa fa-angle-left fa-3x" href="{$cbphoto->photo_links($preLink.0,'view_item')}"><i>prev</i></a>
+			</div>
+	
+			<div class="video_info_actions clearfix">
+				<div class="clearfix title-area">
+					<div class="clearfix title-area">
+						<h1>{wordwrap($photo.photo_title,8, "\n", true)}</h1>
+						<span class="views-count clearfix">
+							<i class="fa fa-eye"></i>&nbsp;{*$vdo.views|number_format*}
+						</span>
+					</div>
+					<div class="user-likes-count clearfix">
+						<div class="user-info col-lg-6 col-md-6 col-sm-6 col-xs-12">
+							<a href="{$userquery->profile_link($channel)}" class="avatar">
+								<img src="{$userquery->getUserThumb($user)}" width="55" height="55">
+							</a>
+							<div class="sub-title">
+								<strong class="user_title">
+									<a href="{$userquery->profile_link($user)}">{$user.username}</a>
+								</strong>
+								{if $photo.userid != userid()}
+								<a id="subscribeUser" class="btn btn-subscribe btn-primary" href="javascript:void(0)">
+									<span>{lang('Subscribe')}</span>
+								</a>
+								{/if}
+							</div>
+						</div>
+						<div class="clearfix like-rating col-lg-6 col-md-6 col-sm-6 col-xs-12" id="rating_container">
+							{if $vdo.allow_rating != 'no'}
+		                        {show_video_rating  rating=$vdo.rating ratings=$vdo.rated_by total='10' id=$vdo.videoid type=video}
+							{/if}
+						</div>
+					</div>
+				</div>
+				
+				<div class="tune-tabs clearfix">
+					<div id="messageFav" class="alert alert-info marginTop" style="display:none"></div>
+					<ul class="clearfix nav nav-tabs">
+						<li class="active">
+							<a href="#cb-item-info" data-toggle="tab"><span class="icon-info"></span>{lang('Info')}</a>
+						</li>
+						<li>
+							<a href="#comments-block" data-toggle="tab"><span class="icon-chat"></span>Comments</a>
+						</li>
+						<li>
+							<a href="https://twitter.com/share" target="_blank">
+								<span class="icon-tw"></span> twitter
+							</a>
+						</li>
+						<li>
+							<a href="http://www.facebook.com/sharer/sharer.php?s=100&p[url]={videoLink($video)|urlencode}&p[images][0]={get_thumb vdetails=$video}&p[title]={$video.title|title|urlencode}&p[summary]={$video.description|description|urlencode}" target="_blank">
+								<span class="icon-fb"></span> facebook
+							</a>
+						</li>
+						<li>
+							<a href="https://plus.google.com/share?url={urlencode(videolink($video))}" target="_blank">
+								<span class="icon-google"></span>
+							</a>
+						</li>
+						<li>
+							<a href="#cb-item-share" data-toggle="tab"><span class="icon-share"></span>{lang('Share')}</a>
+						</li>
+						<li>
+							<a href="#cb-item-addto" data-toggle="tab"><span class="icon-add"></span>{lang('Add to')}</a>
+						</li>
+						<li>
+							<a href="#cb-item-report" data-toggle="tab"><span class="icon-flag"></span>{lang('Report')}
+							</a>
+						</li>
+					</ul>
+					<div class="tab-content clearfix">
+						<div class="tab-pane fade in clearfix active" id="cb-item-info">
+							<div class="clearfix watch-vid-details">
+								<ul class="clearfix desc-list">
+									<li><strong>{lang('Photo description')}</strong>:&nbsp;{$photo.photo_description|truncate:90}</li>
+									
+									{assign var=category value=$userquery->get_category($user.category)}
+
+									<li><strong>{lang('Category')}</strong>:&nbsp;{$category.category_name}</li>
+									<li><strong>{lang('Tags')}</strong>:&nbsp;{$photo.photo_tags|tags:photos}</li>
+									<li><strong>{$photo.views|number_format}</strong>&nbsp;{lang('View')}{if $photo.views > 1}{lang('s')}{/if}</li>
+								</ul>
+							</div>
+						</div>
+
+						<div class="tab-pane fade in clearfix" id="cb-item-share">
+							{show_share_form id=$photo.photo_id type=Photo}
+						</div>
+
+						<div class="tab-pane fade in clearfix" id="cb-item-addto">
+							<div class="clearfix form-horizontal row">
+							{$codes=$cbphoto->photo_embed_codes(['type'=>'all','with_url'=>true, 'details'=>$photo])}
+								{foreach from=$codes item=item}
+								
+								<div class="photo-share-tab col-lg-6 col-md-6 col-sm-6 col-xs-12 form-group">
+									<label class="col-sm-2 col-xs-3 control-label" for="{$item.type}">{$item.name}</label>
+									<div class="col-sm-10 col-xs-9">
+										<input class="form-control" onFocus="this.select();" value="{$item.code}" id="{$item.type}">
+									</div>
+								</div>
+								
+								{/foreach}
+							</div>
+						</div>
+
+						<div class="tab-pane fade in clearfix" id="cb-item-report">
+							{show_flag_form id=$photo.photo_id type=Photo}
+						</div>
+
+						<div class="tab-pane fade in clearfix" id="comments-block">
+							<div id="test1"></div>
+							<div id="reply" class="clearfix"> 
+								<div class="pad-bottom">
+									<div  class="addComment clearfix">
+										<div class="com_count" id="com_count">
+											<span>{lang code='comments'} </span> {$photo.total_comments}
+										</div>
+										{if $myquery->is_commentable($photo,'p')}
+										{include file="$style_dir/blocks/comments/add_comment.html" id=$photo.photo_id type=p}
+										{else}
+										<div class="alert alert-warning">{lang code='Comments disabled for this photo'}</div>
+										{/if}
+									</div>
+									<div id="comments"></div>
+									<div id="userCommentsList">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<section class="clearfix 3inner-block">
+			<header class="heading">
+				<h1>{lang code='Most Popular'}<i class="icon-arrow-right"></i></h1>
+			</header>
+			<div class="clearfix view-photo-thumbs row">
+				{section name=p_list loop=$photos}
+				{include file="$style_dir/blocks/PopularPhotos.html" photo=$photos[p_list]}
+				{sectionelse}
+				{lang code='no_results_found'}
+				{/section}
+			</div>
+		</section>
+	</div>
+	<aside class="col-lg-4 col-md-4 hidden-sm hidden-xs">
+		<div class="ad">{AD place='ad_320x250'}</div>
+		<section class="clearfix">
+			<header class="heading">
+				<h1>{lang code='Top Collections'} <i class="icon-arrow-right"></i></h1>
+			</header>
+			<div class="collections clearfix">
+			{section name=c_list loop=$collections}
+				<div class="clearfix">
+				{include file="$style_dir/blocks/topCollection.html" collection=$collections[c_list]}
+				</div>
+			{sectionelse}
+			{lang code='no_results_found'}
+			{/section} 
+			</div>
+		</section>
+	</aside>
+	{section name=list loop=$uphotos}
+	{include file="$style_dir/blocks/photo.html" display_type="related_photos" photo=$uphotos[list]}
+	{/section}
+</div>
+
+
+<script>
+	$(document).ready(function()
+		{ldelim}
+		$(".clip_read").click(function() {
+			$(this).toggleClass('clip_hide');
+			if(!$(this).hasClass('clip_hide')) 
+
+			{
+			  $('.not_show').show();
+			  $('.will_show').hide();
+			  $(".clip_read").text("Show Less");
+		  }
+
+		  else
+		  {
+		   $('.not_show').hide();
+		   $('.will_show').show();
+		   $(".clip_read").text("Show More");
+	   }
+   });
+
+	comments_voting = 'no';
+	getComments('p','{$photo.photo_id}','{$photo.last_commented}',1,'{$photo.total_comments}','{$object_type}')
+	{rdelim}
+	);
+</script>
+
+{literal}
+
+{/literal}

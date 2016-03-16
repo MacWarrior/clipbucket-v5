@@ -1,0 +1,40 @@
+<footer id="footer" class="clearfix">
+	{$Cbucket->footer()}
+	<div class="container">
+		<div class="footer-holder">
+			<ul class="footer-links column">
+				{$foot_menu=foot_menu()}
+				{foreach from=$foot_menu item=fm}
+				{if $fm.name!=''}
+					<li><a href="{$fm.link}" {if $fm.target} target="{$fm.target}"{/if} {if $fm.onclick} onclick="{$fm.onclick}" {/if}>{$fm.name}</a></li>
+				{/if}
+				{/foreach}
+			</ul>
+			<div class="lang_wrapper column">
+				<p>#ClipBucket#</p>
+				{*if config("allow_language_change")}
+				<form action="" method="post" name="change_lang">
+					{$cbobjects->_display_languages()}              
+				</form>
+				{/if*}
+			</div>
+			<div class="copyright-poweredby column">
+				<p><span>&copy;</span> CBTune {$smarty.now|date_format:"%Y"}</p>
+				<span>Powered by <i><a href="#">ClipBucket</a><i></span>
+			</div>
+		</div>
+	</div><!-- end of custom-container -->
+</footer>
+
+<script>
+	$(".lang_ul li a").on({
+		click: function(e){
+		e.preventDefault();
+		var prent_li = $(this).parents();
+		$('.lang').html($(this).html()+" <span class='caret'></span>");
+		$('.lang_ul li').removeClass('active');
+		prent_li.addClass('active');
+		}
+	});
+</script>
+{$Cbucket->footer()}

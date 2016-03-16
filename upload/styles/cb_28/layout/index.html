@@ -1,0 +1,188 @@
+<div id="main" class="clearfix container">
+	<div id="messageFav" class="alert alert-info marginTop" style="display:none; height:66px;">
+	</div>
+	<div class="clearfix">
+		<div id="content">
+			<div class="clearfix leaderboard-ad">
+				<div class="ad">{AD place='ad_728x90'}</div>
+			</div>
+			{$row = $myquery->Get_Website_Details()}
+			{if is_installed('editorspick')}
+			{if $editor_picks}
+			<div class="clearfix editorpick">
+				<div class="editorpick-holder">
+					<!-- Editor Pick Video Main Container START //-->
+					<div id="ep_video_container">
+						{if is_installed('editorspick')}
+						{section name=e_list loop=$editor_picks max=1}
+						{include file="$style_dir/blocks/editor_pick/video_block.html" video=$editor_picks[e_list]}
+						{sectionelse}
+						There is no video in editor's pick, Please Add Videos In Editor's Pick<br />Videos Manager > Add to editor's pick
+						{/section}
+						{/if}
+					</div>
+					<!-- Editor Pick Video Main Container END //-->
+				</div>
+
+				<!-- Editor Pick Videos Slider Container START //-->
+				<div class="editorpick-videos custom-elements">
+					<div class="scrollable-area vscrollable">
+						{section name=e_list loop=$editor_picks}
+						{include file="$style_dir/blocks/editor_pick/index_featured_video.html" video=$editor_picks[e_list]}
+						{/section}
+					</div>
+				</div>
+				<!-- Editor Pick Videos Slider Container END //-->
+			</div>
+			{/if}
+			{/if}
+			<!-- ******************************************* -->
+			<!-- ************ EDITORS BLOCK END ************ -->
+			<!-- ******************************************* -->
+			{$limit = '2'}
+			{$featured=$cbvid->get_videos(["featured"=>"yes","limit"=>$limit])}
+			{if $featured}
+			<section class="clearfix featured-videos">
+				<h1>{lang code="Featured Videos"}</h1>
+				<div class="clearfix row">
+					{foreach from=$featured item=video}
+					<div class="item-video col-lg-6 col-md-6 col-sm-6 col-xs-12">
+					{include file="$style_dir/blocks/videos/video.html" display_type='featuredVideos'}
+					</div>
+					{/foreach}
+				</div>
+			</section>
+			{else}
+				<div class="well well-info">No Videos Found !</div>
+			{/if}
+
+			{$videos=get_videos(["order" =>"date_added DESC", "limit" =>6])}
+			<section class="clearfix videos">
+				<h1>{lang code="Recent Videos"}</h1>
+				<div class="clearfix row">
+					{foreach $videos as $video}
+					<div class="item-video col-lg-4 col-md-4 col-sm-4 col-xs-6">
+					{include file="$style_dir/blocks/videos/video.html" display_type='homeVideos'}
+					</div>
+					{/foreach}
+				</div>
+			</section>
+		</div>
+		<aside id="sidebar">
+			<div class="box-ad ad">{AD place='ad_300x250'}</div>
+			<!-- ******************************************* -->
+			<!-- ************* USER BLOCK START ************ -->
+			<!-- ******************************************* -->
+			{$feature_users=get_users(['featured'=>'yes','limit'=>5])}
+			{if $feature_users}
+			<h2>{lang code="Featured Users"}</h2>
+			<div class="clearfix sidebar-channels">
+				{foreach $feature_users as $user}
+				
+				<div class="clearfix channel-item">
+					<a href="{$userquery->profile_link($user)}" class="avatar">
+						<img src="{$userquery->getuserthumb($user,'small')}" width="50" height="50" class="cb-rounded">
+					</a>
+					<div class="channel-info">
+						<h3><a href="{$userquery->profile_link($user)}">{$user.username}</a></h3>
+						<div class="clearfix views-videos">
+							<span>{$user.profile_hits|number_format} {lang code='views'}</span>
+							<span>{$user.total_videos|number_format} {lang code='Videos'}</span>
+						</div>
+					</div>
+				</div>
+				{/foreach}
+			</div>
+			{/if}
+			<!-- ******************************************* -->
+			<!-- ************* USER BLOCK END ************** -->
+			<!-- ******************************************* -->
+			
+			{if $row.collectionsSection == 'yes'}
+			{$collections = $cbcollection->get_collections(['limit'=>5, 'active'=>'yes'])}
+			<h2>{lang code="Top Collections"}</h2>
+			<div class="clearfix collections-grid">
+				<div class="clearfix row">
+				{$limit=10}
+				{if $collections}        
+				{foreach from=$collections item=collection}
+				
+					<div class="clearfix collection-item col-lg-6 col-md-6 col-sm-6 col-xs-6"> 
+					{if $collection.type=='photos'}
+						{$items = $cbphoto->collection->get_collection_items_with_details($collection.collection_id,0,$limit,false)}
+					{else}
+						{$items = get_videos_of_collection($collection.collection_id,0,$limit,false) }
+					{/if}	
+
+
+					{if $items}
+						<div class="collection-holder">
+						{foreach from=$items item=item}
+							<div class="photo-block">
+								<a href="{$cbphoto->photo_links($item,'view_item')}">
+									{if $collection.type=='photos'}
+										{get_photo details=$item output='html' size="l" class="img-responsive"}
+									{else}
+										<img alt="{$item.title}" title="{$item.title}" class="img-responsive" id="photo_{$item.ci_id}" src="{getThumb vdetails=$item}">
+									{/if}
+								</a>
+							</div>
+						{/foreach}
+						<img src="{$theme}/images/photo-bg.png" alt="" class="photo-bg">
+						</div>
+						<div class="collection-info">
+							<span class="photos-count">{$collection.total_objects}</span>
+						</div>
+						<span>{$collection.collection_name}</span>
+					{/if}
+					</div>
+				{/foreach}
+				</div>
+				{else}
+				<div class="col-md-12 nopadding">No Collection</div>
+				{/if}
+			</div>
+			{/if}
+		</aside>
+	</div>	
+</div>
+<script>
+	// var WinWidHome = 0;
+	// function popVidHeight(){
+	// 	WinWidHome = $(window).width();
+	// 	if(WinWidHome > 991)
+	// 	{
+	// 		console.log("height "+WinWidHome);
+	// 		var bannerHeight = $("#banner").height();
+	// 		console.log("height "+bannerHeight);
+	// 		$(".popular-vids").css({
+	// 								"max-height" : bannerHeight+"px",
+	// 								"overflow-y" : "auto"
+	// 								});
+	// 	}
+	// 	else
+	// 	{
+	// 		console.log("height "+WinWidHome);
+		
+			
+	// 		$(".popular-vids").css("max-height","auto");
+	// 	}
+	// }
+	// function removeSideactive(){
+	// 	WinWidHome = $(window).width();
+	// 	if(WinWidHome > 1024){
+	// 		$("body").addClass('sideactive');
+	// 	}
+	// 	else{
+	// 		$("body").removeClass('sideactive');
+	// 	}
+	// }
+
+	// $(document).ready(function(){
+	// 	popVidHeight();
+	// 	removeSideactive();
+	// });
+	// $(window).resize(function() {
+	// 	popVidHeight();
+	// });
+</script>

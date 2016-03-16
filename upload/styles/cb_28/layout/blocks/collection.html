@@ -1,0 +1,54 @@
+{if $display_type == "" || $display_type == "normal"}
+<div class="collection-item">
+	<div class="thumb">
+		<img class="img-responsive" src="{$cbcollection->get_thumb($collection,'',TRUE)}">
+	</div>
+	<a href="{$baseurl}/view_collection.php?cid={$collection.collection_id}&type={$collection.type}" title="{$collection.collection_name}">
+		<div class="details">
+			<span>{$collection.collection_name|truncate:30}<br>{$collection.total_objects} {$collection.type}</span>
+		</div>
+	</a>
+</div>
+{/if}
+
+{if $display_type == "view_collection"}
+
+	<div class="collectItemBox">
+		{if $type == "videos"}
+
+		<div class="the_item">
+			<div class="onePhotoContainer oneVideoContainer">
+				<div class="onePhotoTitle">
+					<a href="{$cbphoto->photo_links($object,'view_item')}">{$object.title|truncate:15}</a>
+				</div>
+
+				<a class="CollectThumb" href="{$cbphoto->photo_links($object,'view_item')}">
+					<img src="{getThumb vdetails=$object}" alt="{$object.title}" />
+				</a>
+			</div>
+		</div>
+
+		{/if}
+		{if $type == "photos"}
+		<a class="CollectThumb" href="{$cbphoto->photo_links($object,'view_item')}">
+			{get_photo details=$object size='l' class='img-responsive' output='html'}
+			<div class="hover">
+				{$object.photo_title|truncate:15}
+				<span class="plus">plus</span>
+			</div>
+		</a>
+		{/if}
+	</div>  
+{/if}
+
+{if $display_type == "user_collections"}
+	<div class="moveL">
+		<a href="{$cbcollection->collection_links($collection,'view')}" style="width:47px; height:47px;" title="{$collection.collection_name}">
+			<img src="{$imageurl}/dot.gif" style="background:url({$cbcollection->get_thumb($collection,'small')}) center top no-repeat;" />
+		</a>
+	</div>
+{/if}
+
+
+
+

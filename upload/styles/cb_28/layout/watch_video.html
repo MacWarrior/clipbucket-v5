@@ -1,0 +1,234 @@
+{$video=$vdo}
+{$type='video'}
+{$channel = $userquery->get_user_details($video.userid)}
+<div id="main" class="clearfix">
+	<div class="custom-container clearfix">
+		<div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 player-holder">
+			<div id="cb_player" class="cb_player">
+				{FlashPlayer vdetails=$video width='100%' height='100%'}
+			</div><!-- cb_player end -->
+		</div>
+		<!-- end of player-holder -->
+
+		<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 pull-right popular-vids watch_vids clearfix">
+			<div class="adbox-holder clearfix hidden-xs">
+				<p>Advertisement <span class="caret"></span></p>
+				{AD place='ad_300x250'}
+			</div>
+			
+			{if $smarty.get.play_list}
+				{section name=plist loop=$items}
+				  {include file="$style_dir/blocks/manage/account_video.html" video=$items[plist] control="onWatch" pid=$playlist.playlist_id}
+				{/section}
+			{else}
+
+				{$most_viewed=$cbvid->get_videos(["order"=>"views DESC","limit"=>$limit])}				    	
+				{if $most_viewed}
+					{foreach from=$most_viewed item=pop_video}
+			
+					{if $pop_video@iteration == 9}
+						{break}
+					{/if}
+					<div class="clearfix popular-video">
+						{include file="$style_dir/blocks/videos/video.html" display_type='popVideos'}
+					</div>
+					{/foreach}
+			
+				{else}
+					<div class="well well-info">No Videos Found !</div>
+				{/if}
+			{/if}
+		</div>
+		<!-- end of related videos and ad box -->
+
+		<div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 video_info_actions clearfix">
+
+			<div class="clearfix title-area">
+				<h1>{$video.title|truncate:55}</h1>
+				<span class="views-count clearfix">
+					<i class="fa fa-eye"></i>&nbsp;{$vdo.views|number_format}
+				</span>
+			</div>
+			<div class="user-likes-count clearfix">
+				<div class="user-info col-lg-6 col-md-6 col-sm-6 col-xs-12">
+					<a href="{$userquery->profile_link($channel)}" class="avatar">
+						<img src="{$userquery->avatar($video,'small',userid())}" width="55" height="55">
+					</a>
+					<div class="sub-title">
+						<strong class="user_title">
+							<a href="{$userquery->profile_link($video)}"> {$video.username}</a>
+						</strong>
+
+						{if $video.userid != userid()}
+						<a id="subscribeUser" class="btn btn-subscribe btn-primary" href="javascript:void(0)">
+							<span>{lang('Subscribe')}</span>
+							<i>{$video.subscribers}</i>
+						</a>
+						{/if}
+					</div>
+				</div>
+				<div class="clearfix like-rating col-lg-6 col-md-6 col-sm-6 col-xs-12" id="rating_container">
+					{if $vdo.allow_rating != 'no'}
+						{show_video_rating  rating=$vdo.rating ratings=$vdo.rated_by total='10' id=$vdo.videoid type=video}
+					{/if}
+				</div>
+			</div>
+			
+			<div class="tune-tabs clearfix">
+				<div id="messageFav" class="alert alert-info marginTop" style="display:none"></div>
+				<ul class="clearfix nav nav-tabs">
+					<li class="active">
+						<a href="#cb-item-info" data-toggle="tab"><span class="icon-info"></span>{lang('Info')}</a>
+					</li>
+					<li>
+						<a href="#cb-item-share" data-toggle="tab"><span class="icon-share"></span>Share/Embed</a>
+					</li>
+					<li>
+						<a href="#cb-item-addto" data-toggle="tab"><span class="icon-add"></span>{lang('Add to')}</a>
+					</li>
+					<li>
+						<a href="#cb-item-report" data-toggle="tab"><span class="icon-flag"></span>{lang('Report')}
+						</a>
+					</li>
+				</ul>
+				<div class="tab-content clearfix">
+					<div class="tab-pane fade in clearfix active" id="cb-item-info">
+						<div class="clearfix watch-vid-details">
+							<h2>{description($video.description)}</h2>
+							<ul class="clearfix desc-list">
+								<li><strong>{lang('Category')}</strong>:&nbsp;{$vdo.category|categories:video}</li>
+								<li><strong>{lang('Duration')}</strong>:&nbsp;{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</li>
+								<li><strong>{lang('Date')}</strong>:&nbsp; {$video.date_added}</li>
+								<li>
+									<strong class="pull-left">{lang('Tags')}:&nbsp;&nbsp;</strong>
+									<span class="pull-left">{$vdo.tags|tags:videos}</span>
+								</li>
+							</ul>
+						</div>
+					</div>
+
+					<div class="tab-pane fade in clearfix" id="cb-item-share">
+						<ul class="social-share">
+							<li>
+								<a href="http://www.facebook.com/sharer/sharer.php?s=100&p[url]={videoLink($video)|urlencode}&p[images][0]={get_thumb vdetails=$video}&p[title]={$video.title|title|urlencode}&p[summary]={$video.description|description|urlencode}" target="_blank" class="btn btn-fb">
+									<span class="fa fa-facebook"></span> Facebook
+								</a>
+							</li>
+							<li>
+								<a href="https://twitter.com/share" target="_blank" class="btn btn-tw">
+									<span class="fa fa-twitter"></span> Twitter
+								</a>
+							</li>
+							<li>
+								<a href="https://plus.google.com/share?url={urlencode(videolink($video))}" target="_blank" class="btn btn-gplus">
+									<span class="fa fa-google-plus"></span> Google Plus
+								</a>
+							</li>
+						</ul>
+						{show_share_form id=$vdo.videoid type=video}
+					</div>
+					<div class="tab-pane fade in clearfix" id="cb-item-addto">
+						<div class="clearfix btn-fav">
+							<div id="video_action_result_cont"></div>
+							<a  class="btn btn-block btn-primary" href="javascript:void(0)" onclick="add_to_fav('video','{$vdo.videoid}');">Add to My Favorites</a>
+						</div>
+						<div class="clearfix">
+							{show_playlist_form id=$vdo.videoid type=video}
+							{if userid()}
+							<div class="clearfix">
+								<div class="clearfix btn-holder text-right">
+									<a href="javascript:void(0)" onclick="$('#addCollectionCont').toggle()" class="btn btn-primary">+ {lang code='add_to_my_collection'}</a>
+								</div>
+								<div id="addCollectionCont" style="display:none">
+								{show_collection_form id=$vdo.videoid type=Video}
+								</div>
+							</div>
+							{/if}    
+						</div>
+					</div>
+					<div class="tab-pane fade in clearfix" id="cb-item-report">
+						<h2>Report Video</h2>
+						{show_flag_form id=$vdo.videoid type=video}
+					</div>
+				</div>
+			</div>
+			<div class="clearfix" id="comments-block">
+				<div id="test1"></div>
+				<div id="reply" class="clearfix"> 
+					<div class="pad-bottom">
+						<div  class="addComment clearfix">
+							<h2 class="com_count" id="com_count">
+								{$vdo.comments_count} <span>{lang code='comments'} </span>
+							</h2>
+							{if $myquery->is_commentable($vdo,'v')}
+								{include file="$style_dir/blocks/comments/add_comment.html" id=$vdo.videoid type=v}
+							{else}
+							<div class="alert alert-warning">
+								{lang code='comm_disabled_for_vid'}
+							</div>
+							{/if}
+						</div>
+						<div id="userCommentsList">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	//var aspect_ratio = 1.77778
+	var aspect_ratio = 2.2
+	var $cb_player = $("#cb_player");
+
+	$(document).ready(function(){
+		$cb_player.height( $cb_player.width() / aspect_ratio );
+
+		var videoInfo = $("#videoDescription").text();
+		var newInfo = videoInfo.replace(/(((https?:\/\/)|([\s\t]))(www.)?([a-z0-9]+)\.[a-z]+)/g, '<a href="$1">$1</a>');
+		$("#videoDescription").html(newInfo);
+
+		comments_voting = '{$vdo.comment_voting}';
+		_cb.getAllComments(
+			'{$type}',
+			'{$vdo.videoid}',
+			'{$vdo.last_commented}',1,
+			'{$vdo.comments_count}',
+			'{$object_type}'
+		);
+
+		$("#reportVideo").on({
+			click : function(e){
+				e.preventDefault();
+				$("#flag_item").show();
+			}
+		});
+
+		$("#subscribeUser").on({
+			click: function(e){
+				e.preventDefault();
+				_cb.subscribeToChannel('{$video.userid}','subscribe_user','video_detail_result_cont');
+			}
+		});
+		var adHtml = $('.ad-holder').html();
+		if(adHtml<1){
+			$('.ad-holder').remove();
+		}
+		/*//Progress Bar
+		  $( '#circle' ).progressCircle();
+		  $( '#circle' ).progressCircle({
+			nPercent        : nPercent,
+			showPercentText : showPercentText,
+			thickness       : thickness,
+			circleSize      : circleSize
+		  });*/
+	});
+
+	var resizePlayer =  _cb.debounce(function() {
+		$cb_player.height( $cb_player.width() / aspect_ratio );
+	}, 500, false);
+
+	$(window).resize(resizePlayer);
+
+</script>
