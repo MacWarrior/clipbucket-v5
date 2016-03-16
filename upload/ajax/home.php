@@ -60,7 +60,11 @@
 		if (is_array($data)) {
 			$json_string['loadhit'] = $cur_load_hit + 1;
 			$json_string['array_meta'] = $data;
-			echo json_encode($json_string);
+			foreach ($data as $key => $video) {
+				assign("video",$video);
+				assign("display_type",'ajaxHome');
+				Template('blocks/videos/video.html');
+			}
 		}
 	} else {
 		$msg = array();
