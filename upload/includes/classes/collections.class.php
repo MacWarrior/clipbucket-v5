@@ -1953,12 +1953,16 @@ class Collections extends CBCategory
                 return $results;
         }
 
-        function coll_first_thumb($col_data) {
+        function coll_first_thumb($col_data, $size = false) {
         	global $cbphoto;
         	if (is_array($col_data)) {
         		$first_col = $cbphoto->collection->get_collection_items_with_details($col_data['collection_id'],0,1,false);
         		$param['details'] = $first_col[0];
-        		$param['size'] = 's';
+        		if (!$size) {
+        			$param['size'] = 's';
+        		} else {
+        			$param['size'] = $size;
+        		}
         		$param['class'] = 'img-responsive';
         		$first_col = get_photo($param);
         		return $first_col;
