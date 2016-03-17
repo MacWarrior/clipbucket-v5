@@ -116,10 +116,10 @@
 									<img alt="{$collection.title}" title="{$collection.title}" class="img-responsive" id="photo_{$collection.ci_id}" src="{$first_col_thumb}">
 								</a>
 							</div>
-						<img src="{$theme}/images/photo-bg.png" alt="" class="photo-bg">
-						</div>
-						<div class="collection-info">
-							<span class="photos-count">{$collection.total_objects}</span>
+							<div class="collection-info">
+								<span>{$collection.total_objects}</span>Photo(s)
+							</div>
+							<img src="{$theme}/images/photo-bg.png" alt="" class="photo-bg">
 						</div>
 						<span>{$collection.collection_name}</span>
 					</div>
@@ -130,6 +130,45 @@
 				{/if}
 			</div>
 			{/if}
+
+			<!-- playlists -->
+			{$playlists = get_playlists(['limit'=>5, 'order'=>'total_items DESC'])}
+			<div class="clearfix sidebar-playlists">
+				<h2>{lang code="Top Playlists"}</h2>
+				{if $playlists}
+				{foreach $playlists as $playlist}
+				<div class="playlist clearfix"> 
+					<h3>{$playlist.playlist_name}</h3>	
+					{$items = get_playlist_items($playlist.playlist_id)}
+					<div class="clearfix row">
+					{foreach $items as $item}
+						{if $item@iteration == 5} 
+							{break}
+						{/if}
+						<div class="video col-lg-3 col-md-4 col-sm-6 col-xs-6">
+							{$videoid = $item.videoid}
+							{if $videoid}
+								{$videos = get_videos(['videoid'=>$videoid,'limit'=>'2'])}
+								{foreach $videos as $video}
+									<a href="{videoLink($video)}">
+										{$thumb = get_thumb($video)}
+										<img src="{$thumb}" class="img-responsive">
+									</a>
+								{/foreach}
+							{else}
+							<span class="clearfix">no items</span>
+							{/if}
+						</div>
+					
+					{/foreach}
+					</div>
+					<span class="videos-count">{$cbvid->action->count_playlist_items($playlist.playlist_id)|number_format}&nbsp;video(s)</span>
+				</div>
+				{/foreach}
+				{else}
+					<div class="clearfix">No Playlists</div>
+				{/if}
+			</div>
 		</aside>
 	</div>	
 </div>
@@ -157,9 +196,9 @@
 			},
 
 			beforeSend: function() {
-		        // setting a timeout
-		        $(main_object).text("Loading..");
-		    },
+				// setting a timeout
+				$(main_object).text("Loading..");
+			},
 
 			success: function(data) {
 				$(main_object).text("Load More");

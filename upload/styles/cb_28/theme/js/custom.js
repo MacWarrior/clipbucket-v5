@@ -29,7 +29,7 @@ function responsiveFixes(){
 		else
 		{
 			$(".btn-newacc").html("Create new account");
-			$("<div class='col search'>"+searchHtml+"</div>").insertBefore(".btn-holder");
+			$("<div class='col search'>"+searchHtml+"</div>").insertBefore("#header .btn-holder");
 			HeaderSearchDefault.remove();
 		}
 		

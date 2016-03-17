@@ -1052,9 +1052,21 @@ iframe {
       border-radius: 2px; }
   .item-video .thumb-holder .cb_quickie {
     position: absolute;
-    bottom: 10px;
     left: 10px;
-    z-index: 3; }
+    bottom: 10px;
+    z-index: 3;
+    width: 24px;
+    height: 20px;
+    padding: 0;
+    font-size: 13px;
+    line-height: 20px;
+    text-align: center;
+    color: #fff;
+    border: 1px solid #fff;
+    border-radius: 2px;
+    background: url(../images/icons/quicklist_small.png) no-repeat 50% 50% !important; }
+    .item-video .thumb-holder .cb_quickie.check_icon {
+      background: #fff url(../images/icons/quicklist_check_small.jpg) no-repeat 50% 50% !important; }
   .item-video .thumb-holder .vid-type {
     position: absolute;
     top: 10px;
@@ -1148,62 +1160,7 @@ iframe {
         background: #757575;
         border-radius: 2px; }
 
-/* collections grid */
-.collections-grid {
-  padding: 16px;
-  background: #fff; }
-  .collections-grid .row {
-    margin: 0 -8px; }
-  .collections-grid .collection-item {
-    padding: 0 8px; }
-  .collections-grid .collection-holder {
-    position: relative; }
-  .collections-grid .photo-bg {
-    position: absolute;
-    width: 100%;
-    z-index: 2;
-    top: -9%;
-    left: 0;
-    height: auto; }
-  .collections-grid .collection-info {
-    width: 60px;
-    height: 60px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin: -30px 0 0 -30px;
-    z-index: 4;
-    border-radius: 30px;
-    overflow: hidden;
-    background: rgba(0, 0, 0, 0.7);
-    color: #fff;
-    font-size: 12px;
-    line-height: 14px;
-    font-weight: 300;
-    text-align: center;
-    padding: 12px 4px; }
-    .collections-grid .collection-info span {
-      display: block; }
-    .collections-grid .collection-info .photos-count {
-      font-size: 16px;
-      line-height: 16px;
-      font-weight: 600;
-      margin: 0 0 5px; }
-  .collections-grid .photo-block {
-    position: absolute;
-    width: 100%;
-    height: auto;
-    left: 0;
-    bottom: 0;
-    z-index: 1; }
-    .collections-grid .photo-block:first-child {
-      position: relative;
-      z-index: 3; }
-    .collections-grid .photo-block a {
-      display: block; }
-
 /* quick list */
-/* QUCKLIST ICON */
 .quick_container {
   width: 1000px;
   margin: 0px auto;
@@ -1328,6 +1285,86 @@ iframe {
   border: 0px; }
 
 /**/
+/* collections grid */
+.collections-grid {
+  padding: 22px 16px 0;
+  background: #fff;
+  margin: 0 0 20px; }
+  .collections-grid .row {
+    margin: 0 -8px; }
+  .collections-grid .collection-item {
+    padding: 0 8px;
+    margin: 0 0 20px;
+    font-size: 16px;
+    line-height: 16px; }
+  .collections-grid .collection-holder {
+    position: relative;
+    margin: 0 0 10px; }
+  .collections-grid .photo-bg {
+    position: absolute;
+    width: 100%;
+    z-index: 2;
+    top: -9%;
+    left: 0;
+    height: auto; }
+  .collections-grid .collection-info {
+    width: 60px;
+    height: 60px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -30px 0 0 -30px;
+    z-index: 4;
+    border-radius: 30px;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    font-size: 12px;
+    line-height: 14px;
+    font-weight: 300;
+    text-align: center;
+    padding: 12px 4px; }
+    .collections-grid .collection-info span {
+      display: block;
+      font-size: 16px;
+      line-height: 16px;
+      font-weight: 600;
+      margin: 0 0 6px; }
+  .collections-grid .photo-block {
+    position: relative;
+    z-index: 3; }
+    .collections-grid .photo-block img {
+      width: 100%;
+      height: 88px; }
+    .collections-grid .photo-block a {
+      display: block; }
+
+/* end of sidebar collection */
+/* sidebar playlists */
+.sidebar-playlists {
+  margin: 0 0 20px; }
+  .sidebar-playlists .playlist {
+    background: #fff;
+    padding: 10px 16px;
+    margin: 0 0 20px; }
+    .sidebar-playlists .playlist h3 {
+      font-size: 16px;
+      line-height: 16px;
+      font-weight: 400;
+      margin: 0 0 10px; }
+    .sidebar-playlists .playlist .row {
+      margin: 0 -3px; }
+    .sidebar-playlists .playlist .video {
+      padding: 0 3px;
+      margin: 0 0 10px; }
+    .sidebar-playlists .playlist .videos-count {
+      display: block;
+      font-size: 14px;
+      line-height: 14px;
+      font-weight: 300;
+      color: #757575; }
+
+/* end of sidebar playlists */
 .video-block,
 .popular-video {
   margin: 12px 0 0; }
@@ -1356,25 +1393,6 @@ iframe {
     font-size: 12px;
     line-height: 18px;
     z-index: 2; }
-  .video-block .cb_quickie,
-  .popular-video .cb_quickie {
-    position: absolute;
-    right: 5px;
-    bottom: 5px;
-    z-index: 2;
-    width: 26px;
-    height: 26px;
-    padding: 4px 0 2px;
-    padding: 0;
-    font-size: 13px;
-    line-height: 20px;
-    text-align: center;
-    border-radius: 50%;
-    color: #fff;
-    background: #000 url(../images/icons/quicklist_small.png) no-repeat 50% 50% !important; }
-    .video-block .cb_quickie.check_icon,
-    .popular-video .cb_quickie.check_icon {
-      background: #fff url(../images/icons/quicklist_check_small.jpg) no-repeat 50% 50% !important; }
   .video-block .vid-info,
   .popular-video .vid-info {
     padding: 0 5px 0 10px;
