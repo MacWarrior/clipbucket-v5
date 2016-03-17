@@ -17,6 +17,8 @@
 	    <!--	</div> -->
 	    <div class="clearfix"></div>
 	    <button id="home_load_more" class="btn btn-primary" loadtype="video" loadmode="recent" loadlimit="8" loadhit="1">Load More</button>
+
+	    <button id="add_toQuicklist">Add to QuickList</button>
 		{if is_installed('editorspick')}
 		{if $editor_picks}
 		<div class="row">
@@ -495,6 +497,11 @@
 		  alert( "Load was performed." );
 		});
 	});*/
+
+	$('#add_toQuicklist').on("click",function(){
+		$.cookie("btn-q-1035", "yes", { expires : 10 });
+		console.log("yes");
+	});
 
 	function cleanup_videos(json_data) {
 		console.log(json_data);
