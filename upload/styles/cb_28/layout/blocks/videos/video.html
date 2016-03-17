@@ -74,6 +74,21 @@
 	</div>
 {/if}
 
+{if $display_type=='featuredHome'}
+<div class="item-video col-lg-6 col-md-6 col-sm-6 col-xs-12">
+	<div class="clearfix thumb-holder">
+		<a class="video-link" href="{videoLink($video)}" title="{$video.title|title}">
+			<img class="img-responsive" src="{getThumb vdetails=$video size=600x338 }">
+			<h2 class="title">{$video.title|truncate:50}</h2>
+			<span class="duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</span>
+		</a>
+		{ANCHOR place='in_video_thumb' data=$video}
+		<img data-quick="quick-{$video.videoid}"
+	 class="icon-add add_icon cb_quickie cb-btn-quick-{$video.videoid}" onclick="add_quicklist(this,'{$video.videoid}')" src="{$imageurl}/dot.gif" title="Add {$video.title} to Quicklist">
+	</div>
+</div>
+{/if}
+
 {if $display_type=='normal' || $display_type==''}
 <div class="item_video col-lg-12 col-md-12 col-sm-6 clearfix">
 	<div class="row clearfix">

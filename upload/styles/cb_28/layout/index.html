@@ -42,7 +42,7 @@
 			{$limit = '2'}
 			{$featured=$cbvid->get_videos(["featured"=>"yes","limit"=>$limit])}
 			{if $featured}
-			<section class="clearfix featured-videos">
+			<section id="featured_vid_sec" class="clearfix featured-videos">
 				<h1>{lang code="Featured Videos"}</h1>
 				<div class="clearfix row">
 					{foreach from=$featured item=video}
@@ -50,6 +50,7 @@
 					{include file="$style_dir/blocks/videos/video.html" display_type='featuredVideos'}
 					</div>
 					{/foreach}
+					<button id="home_load_more" class="btn btn-primary col-md-12 col-sm-12" loadtype="video" loadmode="featured" loadlimit="2" loadhit="1">Load More</button>
 				</div>
 			</section>
 			{else}
@@ -143,10 +144,7 @@
 		loadMode = $(main_object).attr('loadmode'),
 		loadLimit = $(main_object).attr('loadlimit'),
 		loadHit = $(main_object).attr('loadhit'),
-		newloadHit = parseInt(loadHit) + 1
-		;
-		alert(loadHit);
-		alert(newloadHit);
+		newloadHit = parseInt(loadHit) + 1;
 		$.ajax({
 			url: loadLink,
 			type: sendType,
@@ -165,13 +163,24 @@
 
 			success: function(data) {
 				$('#home_load_more').remove();
-				//$(main_object).attr('loadhit',load_hit);
+				if (data === '') {
+					if (loadMode == 'recent') {
+						$('#recent_vids_sec').append('<button id="home_load_more" class="btn btn-primary col-md-12 col-sm-12" disabled="disabled">You have reached end of list</button>');
+					} else {
+						$('#featured_vid_sec').append('<button id="home_load_more" class="btn btn-primary col-md-12 col-sm-12" disabled="disabled">You have reached end of list</button>');
+					}
+					return true;
+				}
 				$(main_object).text("Load More");
 				if (loadType == 'video') {
-					$('#recent_vids_sec').append(data);
+					if (loadMode == 'recent') {
+						$('#recent_vids_sec').append(data);
+						$('#recent_vids_sec').append('<button id="home_load_more" class="btn btn-primary col-md-12 col-sm-12" loadtype="video" loadmode="recent" loadlimit="8" loadhit="'+newloadHit+'">Load More</button>');
+					} else {
+						$('#featured_vid_sec').append(data);
+						$('#featured_vid_sec').append('<button id="home_load_more" class="btn btn-primary col-md-12 col-sm-12" loadtype="video" loadmode="featured" loadlimit="2" loadhit="'+newloadHit+'">Load More</button>');
+					}
 				} 
-
-				$('#recent_vids_sec').append('<button id="home_load_more" class="btn btn-primary col-md-12 col-sm-12" loadtype="video" loadmode="recent" loadlimit="8" loadhit="'+newloadHit+'">Load More</button>');
 			}
 		});
 	});
