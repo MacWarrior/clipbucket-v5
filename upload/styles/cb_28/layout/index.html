@@ -50,7 +50,7 @@
 					{include file="$style_dir/blocks/videos/video.html" display_type='featuredVideos'}
 					</div>
 					{/foreach}
-					<button id="featured_load_more" class="btn btn-primary col-md-12 col-sm-12" loadtype="video" loadmode="featured" loadlimit="2" loadhit="1">Load More</button>
+					<button id="featured_load_more" class="btn btn-primary col-md-12 col-sm-12" loadtype="video" loadmode="featured" loadlimit="2" loadhit="2">Load More</button>
 				</div>
 			</section>
 			{else}
@@ -66,7 +66,7 @@
 					{include file="$style_dir/blocks/videos/video.html" display_type='homeVideos'}
 					</div>
 					{/foreach}
-					<button id="recent_load_more" class="btn btn-primary col-md-12 col-sm-12" loadtype="video" loadmode="recent" loadlimit="8" loadhit="1">Load More</button>
+					<button id="recent_load_more" class="btn btn-primary col-md-12 col-sm-12" loadtype="video" loadmode="recent" loadlimit="8" loadhit="2">Load More</button>
 				</div>
 			</section>
 		</div>
@@ -164,8 +164,7 @@
 			success: function(data) {
 				$(main_object).text("Load More");
 				if (data === '') {
-					$(main_object).text("You have reached end of list");
-					$(main_object).attr("disabled","disabled");
+					$(main_object).remove();
 					return true;
 				}
 				if (loadType == 'video') {
