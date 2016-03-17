@@ -50,7 +50,7 @@
 					{include file="$style_dir/blocks/videos/video.html" display_type='featuredVideos'}
 					</div>
 					{/foreach}
-					<button id="home_load_more" class="btn btn-primary col-md-12 col-sm-12" loadtype="video" loadmode="featured" loadlimit="2" loadhit="1">Load More</button>
+					<button id="featured_load_more" class="btn btn-primary col-md-12 col-sm-12" loadtype="video" loadmode="featured" loadlimit="2" loadhit="1">Load More</button>
 				</div>
 			</section>
 			{else}
@@ -66,7 +66,7 @@
 					{include file="$style_dir/blocks/videos/video.html" display_type='homeVideos'}
 					</div>
 					{/foreach}
-					<button id="home_load_more" class="btn btn-primary col-md-12 col-sm-12" loadtype="video" loadmode="recent" loadlimit="8" loadhit="1">Load More</button>
+					<button id="recent_load_more" class="btn btn-primary col-md-12 col-sm-12" loadtype="video" loadmode="recent" loadlimit="8" loadhit="1">Load More</button>
 				</div>
 			</section>
 		</div>
@@ -135,7 +135,7 @@
 </div>
 <script>
 
-	$('#container').on("click","#home_load_more",function(){
+	$('#container').on("click","#recent_load_more,#featured_load_more",function(){
 		var loadLink = baseurl + '/ajax/home.php',
 		main_object = $(this),
 		sendType = 'post',
@@ -162,23 +162,21 @@
 		    },
 
 			success: function(data) {
-				$('#home_load_more').remove();
+				$(main_object).text("Load More");
 				if (data === '') {
-					if (loadMode == 'recent') {
-						$('#recent_vids_sec').append('<button id="home_load_more" class="btn btn-primary col-md-12 col-sm-12" disabled="disabled">You have reached end of list</button>');
-					} else {
-						$('#featured_vid_sec').append('<button id="home_load_more" class="btn btn-primary col-md-12 col-sm-12" disabled="disabled">You have reached end of list</button>');
-					}
+					$(main_object).text("You have reached end of list");
+					$(main_object).attr("disabled","disabled");
 					return true;
 				}
-				$(main_object).text("Load More");
 				if (loadType == 'video') {
 					if (loadMode == 'recent') {
+						$('#recent_load_more').remove();
 						$('#recent_vids_sec').append(data);
-						$('#recent_vids_sec').append('<button id="home_load_more" class="btn btn-primary col-md-12 col-sm-12" loadtype="video" loadmode="recent" loadlimit="8" loadhit="'+newloadHit+'">Load More</button>');
+						$('#recent_vids_sec').append('<button id="recent_load_more" class="btn btn-primary col-md-12 col-sm-12" loadtype="video" loadmode="recent" loadlimit="8" loadhit="'+newloadHit+'">Load More</button>');
 					} else {
+						$('#featured_load_more').remove();
 						$('#featured_vid_sec').append(data);
-						$('#featured_vid_sec').append('<button id="home_load_more" class="btn btn-primary col-md-12 col-sm-12" loadtype="video" loadmode="featured" loadlimit="2" loadhit="'+newloadHit+'">Load More</button>');
+						$('#featured_vid_sec').append('<button id="featured_load_more" class="btn btn-primary col-md-12 col-sm-12" loadtype="video" loadmode="featured" loadlimit="2" loadhit="'+newloadHit+'">Load More</button>');
 					}
 				} 
 			}
