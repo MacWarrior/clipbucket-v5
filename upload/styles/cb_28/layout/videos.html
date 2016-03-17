@@ -1,11 +1,10 @@
 {$myAccountLinks = $userquery->my_account_links()}
 {$leftMenuLinks = array_slice($myAccountLinks, 7)}
-<div id="main" class="clearfix">
-	<div class="clearfix leaderboard-holder">
-		<p>Advertisement <span class="caret"></span></p>
+<div id="main" class="clearfix container">
+	<div class="clearfix leaderboard-ad ad">
 		{AD place='ad_728x90'}
 	</div>
-	<div class="custom-container clearfix">
+	<div class="clearfix">
 		<section class="clearfix inner-block videos">
 			<header class="heading clearfix">
 				{assign var=sorting_links value=sorting_links()}
