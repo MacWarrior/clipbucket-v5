@@ -107,35 +107,20 @@
 				{$limit=10}
 				{if $collections}        
 				{foreach from=$collections item=collection}
-				
+				{$first_col_thumb = $cbcollection->coll_first_thumb($collection)}
 					<div class="clearfix collection-item col-lg-6 col-md-6 col-sm-6 col-xs-6"> 
-					{if $collection.type=='photos'}
-						{$items = $cbphoto->collection->get_collection_items_with_details($collection.collection_id,0,$limit,false)}
-					{else}
-						{$items = get_videos_of_collection($collection.collection_id,0,$limit,false) }
-					{/if}	
-
-
-					{if $items}
 						<div class="collection-holder">
-						{foreach from=$items item=item}
 							<div class="photo-block">
 								<a href="{$cbphoto->photo_links($item,'view_item')}">
-									{if $collection.type=='photos'}
-										{get_photo details=$item output='html' size="l" class="img-responsive"}
-									{else}
-										<img alt="{$item.title}" title="{$item.title}" class="img-responsive" id="photo_{$item.ci_id}" src="{getThumb vdetails=$item}">
-									{/if}
+									<img alt="{$collection.title}" title="{$collection.title}" class="img-responsive" id="photo_{$collection.ci_id}" src="{$first_col_thumb}">
 								</a>
 							</div>
-						{/foreach}
 						<img src="{$theme}/images/photo-bg.png" alt="" class="photo-bg">
 						</div>
 						<div class="collection-info">
 							<span class="photos-count">{$collection.total_objects}</span>
 						</div>
 						<span>{$collection.collection_name}</span>
-					{/if}
 					</div>
 				{/foreach}
 				</div>
@@ -148,7 +133,8 @@
 	</div>	
 </div>
 <script>
-	$('#home_load_more').on("click",function(){
+
+	$('#container').on("click","#home_load_more",function(){
 		var loadLink = baseurl + '/ajax/home.php',
 		main_object = $(this),
 		sendType = 'post',
