@@ -11,7 +11,7 @@
 	*/
 
 	require '../includes/config.inc.php';
-
+	$params = array();
 	if (isset($_POST['load_type'])) {
 		$load_type = $_POST['load_type'];
 
@@ -36,7 +36,6 @@
 			$start = "1";
 		}
 
-		$params = array();
 		$params['limit'] = "$start,$load_limit";
 		switch ($load_type) {
 			case 'video':
@@ -56,13 +55,24 @@
 				$data = get_videos($params);
 				break;
 		}
-
+		#pr($params,true);
 		if (is_array($data)) {
+			if (count($data) < 1) {
+				$msg = array();
+				$msg['notice'] = "You've reached end of list";
+				#echo json_encode($msg);
+				return false;
+			}
 			$json_string['loadhit'] = $cur_load_hit + 1;
 			$json_string['array_meta'] = $data;
+			if ($load_mode == 'recent') {
+				$display_type = 'ajaxHome';
+			} else {
+				$display_type = 'featuredHome';
+			}
 			foreach ($data as $key => $video) {
 				assign("video",$video);
-				assign("display_type",'ajaxHome');
+				assign("display_type",$display_type);
 				Template('blocks/videos/video.html');
 			}
 		}
