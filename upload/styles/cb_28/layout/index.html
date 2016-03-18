@@ -320,6 +320,7 @@
 
 	$(document).on("click",".ql_delete",function(){
 		vid = $(this).attr('todel');
+		$(this).removeClass("check_icon");
 		currentList = $.cookie("fast_qlist");
 		cleaned = currentList.replace(vid, '');
 		console.log(cleaned);
