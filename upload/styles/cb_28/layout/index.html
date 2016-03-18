@@ -48,8 +48,8 @@
 					</div>
 					{/foreach} -->
 				</div>
-				<div class="clearfix">
-					<button id="featured_load_more" class="btn btn-primary btn-block" loadtype="video" loadmode="featured" loadlimit="2" loadhit="1">Load More</button>
+				<div class="clearfix text-center">
+					<button id="featured_load_more" class="btn btn-loadmore" loadtype="video" loadmode="featured" loadlimit="2" loadhit="1">Load More</button>
 				</div>
 			</section>
 
@@ -64,8 +64,8 @@
 					</div>
 					{/foreach} -->
 				</div>
-				<div class="clearfix">
-					<button id="recent_load_more" class="btn btn-primary col-md-12 col-sm-12" loadtype="video" loadmode="recent" loadlimit="8" loadhit="1">Load More</button>
+				<div class="clearfix text-center">
+					<button id="recent_load_more" class="btn btn-loadmore" loadtype="video" loadmode="recent" loadlimit="8" loadhit="1">Load More</button>
 				</div>
 			</section>
 		</div>
@@ -292,11 +292,11 @@
 					if (loadMode == 'recent') {
 						$('#recent_load_more').remove();
 						$('#recent_vids_sec').append(data);
-						$('#recent_vids_sec').append('<button id="recent_load_more" class="btn btn-primary col-md-12 col-sm-12" loadtype="video" loadmode="recent" loadlimit="8" loadhit="'+newloadHit+'">Load More</button>');
+						$('#recent_vids_sec').append('<button id="recent_load_more" class="btn btn-loadmore" loadtype="video" loadmode="recent" loadlimit="8" loadhit="'+newloadHit+'">Load More</button>');
 					} else {
 						$('#featured_load_more').remove();
 						$('#featured_vid_sec').append(data);
-						$('#featured_vid_sec').append('<button id="featured_load_more" class="btn btn-primary col-md-12 col-sm-12" loadtype="video" loadmode="featured" loadlimit="2" loadhit="'+newloadHit+'">Load More</button>');
+						$('#featured_vid_sec').append('<button id="featured_load_more" class="btn btn-loadmore" loadtype="video" loadmode="featured" loadlimit="2" loadhit="'+newloadHit+'">Load More</button>');
 					}
 				} 
 			}
