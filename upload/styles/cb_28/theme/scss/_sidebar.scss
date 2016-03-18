@@ -72,3 +72,21 @@
 	 	}
 	 }
 }
+.sidebar-videos{
+	background: $white;
+	padding: 6px 16px 0;
+	.featured-video{
+		font-size: 14px;
+		line-height: 14px;
+		.title{
+			font-size: 15px;
+			line-height: 17px;
+			font-weight: 600;
+			margin: 0 0 6px;
+		}
+		.author{
+			font-size: 13px;
+			line-height: 13px;
+		}
+	}
+}
