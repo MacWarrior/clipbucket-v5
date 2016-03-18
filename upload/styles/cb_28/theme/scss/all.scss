@@ -122,6 +122,13 @@ iframe{
 	width: 73%;
 	float: left;
 }
+h1{
+	font-size: 23px;
+	line-height: 23px;
+	font-weight: 600;
+	margin: 0 0 20px;
+	color: #000;
+}
 .banner-popular{
 	padding: 0 0 5px;
 	border-bottom: $default-border;
@@ -181,7 +188,7 @@ iframe{
 		bottom: 5px;
 		right: 5px;
 		z-index: 2;
-		background: $duration-bg;
+		background: $black;
 		border-radius: 2px;
 	}
 	.details_block{
@@ -237,13 +244,6 @@ iframe{
 		}
 	}
 }
-#content h1{
-	font-size: 23px;
-	line-height: 23px;
-	font-weight: 600;
-	margin: 0 0 20px;
-	color: #000;
-}
 .item-video{
 	.thumb-holder{
 		position: relative;
@@ -269,27 +269,32 @@ iframe{
 				padding: 15px 94px 15px 20px;
 				margin: 0;
 			}
-			.duration{
-				position: absolute;
-				font-size: 14px;
-				line-height: 20px;
-				font-weight: 300;
-				text-align: center;
-				height: 20px;
-				width: 44px;
-				bottom: 10px;
-				right: 10px;
-				z-index: 2;
-				padding: 0 4px;
-				background: $duration-bg;
-				border-radius: 2px;
-			}
+		}
+		.item-footer{
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			width: 100%;
+			z-index: 2;
+			padding:10px;
+			@include gradientbottom-bg();
+			overflow: hidden;
+			color: #fff;
+		}
+		.duration{
+			font-size: 14px;
+			line-height: 20px;
+			font-weight: 300;
+			text-align: center;
+			height: 20px;
+			width: 44px;
+			padding: 0 4px;
+			background: $black;
+			border-radius: 2px;
+			float: right;
 		}
 		.cb_quickie{
-			position: absolute;
-			left: 10px;
-			bottom: 10px;
-			z-index: 3;
+			float: left;
 			width: 24px;
 			height: 20px;
 			padding: 0;
@@ -336,9 +341,8 @@ iframe{
 		.title{
 			padding: 15px 94px 15px 20px;
 		}
-		.duration{
-			bottom: 20px;
-			right: 20px;
+		.item-footer{
+			padding: 20px;
 		}
 	}
 	.cb_quickie{
@@ -416,6 +420,16 @@ iframe{
 		}
 	}
 }
+.btn-loadmore{
+	background: #eee;
+	font-size: 14px;
+	line-height: 22px;
+	font-weight: 600;
+	border: 2px solid $black;
+	border-radius: 4px;
+	padding: 4px 12px;
+	min-width: 200px;
+}
 /* quick list */
 .quick_container{ 
 	width:1000px; 
@@ -466,13 +480,13 @@ iframe{
 .add_icon,
 .cross_icon,
 .check_icon{
-	height:16px; 
-	width:16px; 
-	background-repeat:no-repeat; 
-	cursor:pointer;
-	position:absolute; 
-	right:5px; 
-	bottom:5px;
+	// height:16px; 
+	// width:16px; 
+	// background-repeat:no-repeat; 
+	// cursor:pointer;
+	// //position:absolute; 
+	// right:5px; 
+	// bottom:5px;
 }
 .check_icon{
 	background-image:url(../images/icons/quicklist_check_small.jpg); 
@@ -638,103 +652,6 @@ iframe{
 	}
 }
 /* end of sidebar playlists */
-.video-block,
-.popular-video{
-	margin: 12px 0 0;
-	&:first-child{
-		margin: 0;
-	}
-	>div{
-		padding: 0;
-	}
-	.video_link{
-		display: block;
-		position: relative;
-		color: #fff;
-		z-index: 1;
-	}
-	.thumb-holder{
-		position: relative;	
-	}
-	.duration{
-		position: absolute;
-		top: 5px;
-		right: 5px;
-		padding: 1px 5px;
-		background:rgba(0,0,0,0.6);
-		font-size: 12px;
-		line-height: 18px;
-		z-index: 2;
-	}
-	
-	.vid-info{
-		padding: 0 5px 0 10px;
-		position: relative;
-		min-height: 100px;
-	}
-	.title,
-	.author{
-		display: block;
-		font-size: 14px;
-		line-height: 18px;
-		margin: 0 0 10px;
-	}
-	.title{
-		color: $block-color;
-		white-space: normal;
-		a{
-			color: $block-color;
-			&:hover{
-				text-decoration: none;
-				color: $blue-color;
-			}
-		}
-	}
-	.view-date{
-		font-size: 12px;
-		line-height: 16px;
-		i{
-			font-size: 14px;
-		}
-	}
-	.icon-eye{
-		float: left;
-	}
-	.icon-date{
-		float: right;
-	}
-}
-.popular-video .view-date{
-	margin: 15% 0 0;
-}
-/* video-block */
-.video-block{
-	margin: 0;
-	padding: 0 15px 0 0;
-	
-	&:first-child{
-		margin: 0;
-	}
-	>div{
-		padding: 0;
-	}
-	.video_link{
-		display: block;
-		position: relative;
-		color: #fff;
-		z-index: 1;
-	}
-	.thumb-holder{
-		margin: 0 0 8px;
-	}
-	.vid-info{
-		padding: 0;
-		min-height: auto;
-	}
-	.view-date{
-		padding: 0 0 10px;
-	}	
-}
 .cat-videos{
 	border-bottom: $default-border;
 	margin: 0 0 20px;
@@ -790,7 +707,82 @@ iframe{
 		height:auto !important;
 	}
 }
+
 /* videos page */
+%heading{
+	margin: 0;
+	position: relative;
+	@include vertical-top();
+	padding: 0 10px 0 0;
+}
+.heading{
+	margin: 0 0 20px;
+	h2,
+	h1{
+		@extend %heading;
+	}
+	.sub-heading{
+		padding: 10px 0 0;
+		h2{
+			float: left;
+			font-size: 22px;
+			line-height: 34px;
+			font-weight: 300;
+			margin: 0 10px 0 0;
+		}
+	}
+	.dropdowns{
+		font-size: 14px;
+		line-height: 16px;
+		text-transform: capitalize;
+		font-weight: 300;
+		float: right;
+		padding: 5px 0 4px;
+		width: 200px;
+		text-align: right;
+		.dropdown{
+			@include vertical-top();
+			margin: 0 0 0 5px;
+			>a:hover{
+				text-decoration: none;
+				color: $bg-theme;
+			}
+		}
+		.icon-arrow-down{
+			font-size: 8px;
+			@include vertical-middle();
+			margin: 0 0 0 3px;
+		}
+		.dropdown-menu{
+			left: auto;
+			right: 0;
+			@include box-shadow ($string:0 0 5px 0 rgba(0,0,0,0.6));
+			padding: 5px;
+			> li > a{
+				border-radius: 2px;
+				position: relative;
+				padding:1px 26px;
+				&:hover,
+				&.selected,
+				&.selected:hover{
+					color: #fff;
+					background:$bg-theme;
+				}
+				i{
+					position: absolute;
+					width: 14px;
+					height: 14px;
+					z-index: 1000;
+					top: 50%;
+					left: 5px;
+					margin: -7px 0 0;
+					font-size: 12px;
+					line-height: 14px;
+				}
+			}
+		}
+	}
+}
 .videos-block{
 	.video-block{
 		float: none;
@@ -1136,27 +1128,7 @@ iframe{
 		color: #000;
 	}
 }
-%heading{
-	font-size: 20px;
-	line-height: 22px;
-	text-transform: uppercase;
-	font-weight: 300;
-	margin: 0;
-	position: relative;
-	@include vertical-top();
-	padding: 0 38px 0 0;
-	i{
-		font-size:18px;
-		line-height:25px;
-		width: 20px;
-		height: 25px;
-		text-align: center;
-		position: absolute;
-		top:50%;
-		right: 0;
-		margin: -12px 0 0;
-	}
-}
+
 .photos-block .heading{
 	margin: 0 0 10px;
 	h2,
@@ -1164,79 +1136,7 @@ iframe{
 		@extend %heading;
 	}
 }
-.inner-block{
-	padding: 0 0 0 15px;
-	margin: 0 0 20px;
-	.heading{
-		margin: 0 0 10px -4px;
-		padding: 0 15px 0 0;
-		h2,
-		h1{
-			@extend %heading;
-		}
-		.sub-heading{
-			padding: 10px 0 0;
-			h2{
-				float: left;
-				font-size: 22px;
-				line-height: 34px;
-				font-weight: 300;
-				margin: 0 10px 0 0;
-			}
-		}
-		.dropdowns{
-			font-size: 14px;
-			line-height: 16px;
-			text-transform: capitalize;
-			font-weight: 300;
-			float: right;
-			padding: 5px 0 4px;
-			width: 200px;
-			text-align: right;
-			.dropdown{
-				@include vertical-top();
-				margin: 0 0 0 5px;
-				>a:hover{
-					text-decoration: none;
-					color: $bg-theme;
-				}
-			}
-			.icon-arrow-down{
-				font-size: 8px;
-				@include vertical-middle();
-				margin: 0 0 0 3px;
-			}
-			.dropdown-menu{
-				left: auto;
-				right: 0;
-				@include box-shadow ($string:0 0 5px 0 rgba(0,0,0,0.6));
-				padding: 5px;
-				> li > a{
-					border-radius: 2px;
-					position: relative;
-					padding:1px 26px;
-					&:hover,
-					&.selected,
-					&.selected:hover{
-						color: #fff;
-						background:$bg-theme;
-					}
-					i{
-						position: absolute;
-						width: 14px;
-						height: 14px;
-						z-index: 1000;
-						top: 50%;
-						left: 5px;
-						margin: -7px 0 0;
-						font-size: 12px;
-						line-height: 14px;
-					}
-				}
-			}
-		}
-	}
-}
+
 .search-page{
 	&.inner-block{
 		padding: 0;
