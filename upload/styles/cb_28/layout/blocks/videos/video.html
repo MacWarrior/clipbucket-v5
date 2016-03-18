@@ -1,12 +1,14 @@
 {if $display_type=='popVideos'}
 	<div class="col-lg-5 col-md-6 col-sm-6 col-xs-6 thumb-holder">
 		<a class="video_link" href="{videoLink($pop_video)}" title="{$pop_video.title|title}">
-			<img class="img-responsive" src="{getThumb vdetails=$pop_video size=600x338 }">
-			<span class="duration">{if $pop_video.duration>1}{$pop_video.duration|SetTime}{else}00:00{/if}</span>
+			<img class="img-responsive" src="{getThumb vdetails=$pop_video size=512x320 }">
 		</a>
-		{ANCHOR place='in_video_thumb' data=$pop_video}
-		<img data-quick="quick-{$pop_video.videoid}"
+		<div class="item-footer">
+			<span class="duration">{if $pop_video.duration>1}{$pop_video.duration|SetTime}{else}00:00{/if}</span>
+			{ANCHOR place='in_video_thumb' data=$pop_video}
+			<img data-quick="quick-{$pop_video.videoid}"
 	 class="icon-add add_icon cb_quickie cb-btn-quick-{$pop_video.videoid}" onclick="add_quicklist(this,'{$pop_video.videoid}')" src="{$imageurl}/dot.gif" title="Add {$pop_video.title} to Quicklist">
+		</div>
 	</div>
 	<div class="col-lg-7 col-md-6 col-sm-6 col-xs-6 vid-info">
 		<strong class="title"><a href="{videoLink($pop_video)}">{$pop_video.title|truncate:50}</a></strong>
@@ -21,12 +23,14 @@
 {if $display_type=='homeVideos'}
 	<div class="clearfix thumb-holder">
 		<a class="video-link" href="{videoLink($video)}" title="{$video.title|title}">
-			<img class="img-responsive" src="{getThumb vdetails=$video size=600x338 }">
-			<span class="duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</span>
+			<img class="img-responsive" src="{getThumb vdetails=$video size=512x320 }">
 		</a>
-		{ANCHOR place='in_video_thumb' data=$video}
-		<img data-quick="quick-{$video.videoid}"
+		<div class="item-footer">
+			{ANCHOR place='in_video_thumb' data=$video}
+			<img data-quick="quick-{$video.videoid}"
 	 class="icon-add add_icon cb_quickie cb-btn-quick-{$video.videoid}" src="{$imageurl}/dot.gif" vtitle="{$video.title}" v-id="{$video.videoid}" vlink="{videoLink($video)}" vthumb="{getThumb vdetails=$video size=600x338 }" vduration="{$video.duration|SetTime}" title="Add {$video.title} to Quicklist">
+			<span class="duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</span>
+		</div>
 	</div>
 	<div class="clearfix video-info">
 		<h2 class="title"><a href="{videoLink($pop_video)}">{$video.title|truncate:50}</a></h2>
@@ -42,12 +46,14 @@
 <div class="item-video col-lg-4 col-md-4 col-sm-4 col-xs-6">
 	<div class="clearfix thumb-holder">
 		<a class="video-link" href="{videoLink($video)}" title="{$video.title|title}">
-			<img class="img-responsive" src="{getThumb vdetails=$video size=600x338 }">
-			<span class="duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</span>
+			<img class="img-responsive" src="{getThumb vdetails=$video size=512x320 }">
 		</a>
-		{ANCHOR place='in_video_thumb' data=$video}
-		<img data-quick="quick-{$video.videoid}"
+		<div class="item-footer">
+			<span class="duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</span>
+			{ANCHOR place='in_video_thumb' data=$video}
+			<img data-quick="quick-{$video.videoid}"
 	 class="icon-add add_icon cb_quickie cb-btn-quick-{$video.videoid}" src="{$imageurl}/dot.gif" vtitle="{$video.title}" v-id="{$video.videoid}" vlink="{videoLink($video)}" vthumb="{getThumb vdetails=$video size=600x338 }" vduration="{$video.duration|SetTime}" title="Add {$video.title} to Quicklist">
+		</div>
 	</div>
 	<div class="clearfix video-info">
 		<h2 class="title"><a href="{videoLink($pop_video)}">{$video.title|truncate:50}</a></h2>
@@ -64,13 +70,15 @@
 {if $display_type=='featuredVideos'}
 	<div class="clearfix thumb-holder">
 		<a class="video-link" href="{videoLink($video)}" title="{$video.title|title}">
-			<img class="img-responsive" src="{getThumb vdetails=$video size=600x338 }">
+			<img class="img-responsive" src="{getThumb vdetails=$video size=512x320 }">
 			<h2 class="title">{$video.title|truncate:50}</h2>
-			<span class="duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</span>
 		</a>
-		{ANCHOR place='in_video_thumb' data=$video}
-		<img data-quick="quick-{$video.videoid}"
+		<div class="item-footer">
+			<span class="duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</span>
+			{ANCHOR place='in_video_thumb' data=$video}
+			<img data-quick="quick-{$video.videoid}"
 	 class="icon-add add_icon cb_quickie cb-btn-quick-{$video.videoid}" src="{$imageurl}/dot.gif" vtitle="{$video.title}" v-id="{$video.videoid}" vlink="{videoLink($video)}" vthumb="{getThumb vdetails=$video size=600x338 }" vduration="{$video.duration|SetTime}" title="Add {$video.title} to Quicklist">
+	 	</div>
 	</div>
 
 {/if}
@@ -79,13 +87,15 @@
 <div class="item-video col-lg-6 col-md-6 col-sm-6 col-xs-12">
 	<div class="clearfix thumb-holder">
 		<a class="video-link" href="{videoLink($video)}" title="{$video.title|title}">
-			<img class="img-responsive" src="{getThumb vdetails=$video size=600x338 }">
+			<img class="img-responsive" src="{getThumb vdetails=$video size=512x320 }">
 			<h2 class="title">{$video.title|truncate:50}</h2>
-			<span class="duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</span>
 		</a>
-		{ANCHOR place='in_video_thumb' data=$video}
-		<img data-quick="quick-{$video.videoid}"
-	 class="icon-add add_icon cb_quickie cb-btn-quick-{$video.videoid}" src="{$imageurl}/dot.gif" vtitle="{$video.title}" v-id="{$video.videoid}" vlink="{videoLink($video)}" vthumb="{getThumb vdetails=$video size=600x338 }" vduration="{$video.duration|SetTime}" title="Add {$video.title} to Quicklist">
+		<div class="item-footer">
+			<span class="duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</span>
+			{ANCHOR place='in_video_thumb' data=$video}
+			<img data-quick="quick-{$video.videoid}"
+		 class="icon-add add_icon cb_quickie cb-btn-quick-{$video.videoid}" onclick="add_quicklist(this,'{$video.videoid}')" src="{$imageurl}/dot.gif" vtitle="{$video.title}" v-id="{$video.videoid}" vlink="{videoLink($video)}" vthumb="{getThumb vdetails=$video size=600x338 }" vduration="{$video.duration|SetTime}"  title="Add {$video.title} to Quicklist">
+		 </div>
 	</div>
 </div>
 {/if}
@@ -100,7 +110,7 @@
 						$video.duration>1}{$video.duration|SetTime}{else}00:00{/if}{*$video.duration|date_format:$config.time*}
 					</span>
 					<i class="icon-playweb play-icon"></i>
-					<img class="img-responsive" src="{getThumb vdetails=$video size=600x338 } " border="1" />
+					<img class="img-responsive" src="{getThumb vdetails=$video size=512x320 } " border="1" />
 				</a>
 				{ANCHOR place='in_video_thumb' data=$video}
 				<img src="{$imageurl}/dot.gif" data-quick="quick-{$video.videoid}"
@@ -153,7 +163,7 @@
 {if $display_type=='playlistVideos'}
 	<div class="video_thumb">
 		<a class="video_link" href="{videoLink($video)}" title="{$video.title|title}">
-			<img class="img-responsive" src="{getThumb vdetails=$video size=600x338 }">
+			<img class="img-responsive" src="{getThumb vdetails=$video size=512x320 }">
 			<div class="play-info">
 				<strong class="title">{$video.title|truncate:30}</strong>
 				<i class="icon-playweb"></i>
@@ -175,7 +185,7 @@
 					$video.duration>1}{$video.duration|SetTime}{else}00:00{/if}{*$video.duration|date_format:$config.time*}
 				</span>
 				<i class="icon-playweb play-icon"></i>
-				<img class="img-responsive" src="{getThumb vdetails=$video size=600x338 } " border="1" />
+				<img class="img-responsive" src="{getThumb vdetails=$video size=512x320 } " border="1" />
 			</a>
 			{ANCHOR place='in_video_thumb' data=$video}
 			 <img src="{$imageurl}/dot.gif" data-quick="quick-{$video.videoid}"
@@ -204,7 +214,7 @@
 						$video.duration>1}{$video.duration|SetTime}{else}00:00{/if}{*$video.duration|date_format:$config.time*}
 					</span>
 					<i class="icon-playweb play-icon"></i>
-					<img class="img-responsive" src="{getThumb vdetails=$video size=600x338 } " border="1" />
+					<img class="img-responsive" src="{getThumb vdetails=$video size=512x320 } " border="1" />
 				</a>
 				{ANCHOR place='in_video_thumb' data=$video}
 			 <img src="{$imageurl}/dot.gif" data-quick="quick-{$video.videoid}"
@@ -228,7 +238,7 @@
 					$video.duration>1}{$video.duration|SetTime}{else}00:00{/if}{*$video.duration|date_format:$config.time*}
 				</span>
 				<i class="icon-playweb play-icon"></i>
-				<img class="img-responsive" src="{getThumb vdetails=$video size=600x338 } " border="1" />
+				<img class="img-responsive" src="{getThumb vdetails=$video size=512x320 } " border="1" />
 			</a>
 			{ANCHOR place='in_video_thumb' data=$video}
 			 <img src="{$imageurl}/dot.gif" data-quick="quick-{$video.videoid}"
