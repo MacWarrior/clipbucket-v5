@@ -14,7 +14,9 @@
 	$params = array();
 	if (isset($_POST['load_type'])) {
 		$load_type = $_POST['load_type'];
-
+		if ($load_type == 'recent') {
+			$params['order'] = 'DESC';
+		}
 		if (isset($_POST['load_mode'])) {
 			$load_mode = $_POST['load_mode'];
 			if ($load_mode == 'featured') {
@@ -29,11 +31,8 @@
 		if (isset($_POST['load_hit'])) {
 			$cur_load_hit = $_POST['load_hit'];
 			$start = $load_limit * $cur_load_hit - $load_limit;
-			if ($start < 1)  {
-				$start = "1";
-			}
 		} else {
-			$start = "1";
+			$start = "0";
 		}
 
 		$params['limit'] = "$start,$load_limit";
