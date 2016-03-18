@@ -39,7 +39,7 @@
 			<!-- ******************************************* -->
 			<!-- ************ EDITORS BLOCK END ************ -->
 			<!-- ******************************************* -->
-			<section id="featured_vid_sec" class="clearfix featured-videos">
+			<section class="clearfix featured-videos">
 				<h1>{lang code="Featured Videos"}</h1>
 				<div id="featured_vid_sec" class="clearfix row">
 					<!-- {foreach from=$featured item=video}
@@ -48,23 +48,23 @@
 					</div>
 					{/foreach} -->
 				</div>
-				<div class="clearfix text-center">
+				<div id="featured-loadmore" class="clearfix text-center">
 					<button id="featured_load_more" class="btn btn-loadmore" loadtype="video" loadmode="featured" loadlimit="2" loadhit="1">Load More</button>
 				</div>
 			</section>
 
 
 			<!-- {$videos=get_videos(["order" =>"date_added DESC", "limit" =>6])} -->
-			<section id="recent_vids_sec" class="clearfix videos">
+			<section class="clearfix videos">
 				<h1>{lang code="Recent Videos"}</h1>
-				<div class="clearfix row">
+				<div id="recent_vids_sec" class="clearfix row">
 					<!-- {foreach $videos as $video}
 					<div class="item-video col-lg-4 col-md-4 col-sm-4 col-xs-6">
 					{include file="$style_dir/blocks/videos/video.html" display_type='homeVideos'}
 					</div>
 					{/foreach} -->
 				</div>
-				<div class="clearfix text-center">
+				<div id="recent-loadmore" class="clearfix text-center">
 					<button id="recent_load_more" class="btn btn-loadmore" loadtype="video" loadmode="recent" loadlimit="8" loadhit="1">Load More</button>
 				</div>
 			</section>
@@ -292,11 +292,11 @@
 					if (loadMode == 'recent') {
 						$('#recent_load_more').remove();
 						$('#recent_vids_sec').append(data);
-						$('#recent_vids_sec').append('<button id="recent_load_more" class="btn btn-loadmore" loadtype="video" loadmode="recent" loadlimit="8" loadhit="'+newloadHit+'">Load More</button>');
+						$('#recent-loadmore').append('<button id="recent_load_more" class="btn btn-loadmore" loadtype="video" loadmode="recent" loadlimit="8" loadhit="'+newloadHit+'">Load More</button>');
 					} else {
 						$('#featured_load_more').remove();
 						$('#featured_vid_sec').append(data);
-						$('#featured_vid_sec').append('<button id="featured_load_more" class="btn btn-loadmore" loadtype="video" loadmode="featured" loadlimit="2" loadhit="'+newloadHit+'">Load More</button>');
+						$('#featured-loadmore').append('<button id="featured_load_more" class="btn btn-loadmore" loadtype="video" loadmode="featured" loadlimit="2" loadhit="'+newloadHit+'">Load More</button>');
 					}
 				} 
 			}
