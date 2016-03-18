@@ -26,7 +26,7 @@
 		</a>
 		{ANCHOR place='in_video_thumb' data=$video}
 		<img data-quick="quick-{$video.videoid}"
-	 class="icon-add add_icon cb_quickie cb-btn-quick-{$video.videoid}" onclick="add_quicklist(this,'{$video.videoid}')" src="{$imageurl}/dot.gif" title="Add {$video.title} to Quicklist">
+	 class="icon-add add_icon cb_quickie cb-btn-quick-{$video.videoid}" src="{$imageurl}/dot.gif" vtitle="{$video.title}" v-id="{$video.videoid}" vlink="{videoLink($video)}" vthumb="{getThumb vdetails=$video size=600x338 }" vduration="{$video.duration|SetTime}" title="Add {$video.title} to Quicklist">
 	</div>
 	<div class="clearfix video-info">
 		<h2 class="title"><a href="{videoLink($pop_video)}">{$video.title|truncate:50}</a></h2>
@@ -47,7 +47,7 @@
 		</a>
 		{ANCHOR place='in_video_thumb' data=$video}
 		<img data-quick="quick-{$video.videoid}"
-	 class="icon-add add_icon cb_quickie cb-btn-quick-{$video.videoid}" onclick="add_quicklist(this,'{$video.videoid}')" src="{$imageurl}/dot.gif" title="Add {$video.title} to Quicklist">
+	 class="icon-add add_icon cb_quickie cb-btn-quick-{$video.videoid}" src="{$imageurl}/dot.gif" vtitle="{$video.title}" v-id="{$video.videoid}" vlink="{videoLink($video)}" vthumb="{getThumb vdetails=$video size=600x338 }" vduration="{$video.duration|SetTime}" title="Add {$video.title} to Quicklist">
 	</div>
 	<div class="clearfix video-info">
 		<h2 class="title"><a href="{videoLink($pop_video)}">{$video.title|truncate:50}</a></h2>
@@ -70,8 +70,9 @@
 		</a>
 		{ANCHOR place='in_video_thumb' data=$video}
 		<img data-quick="quick-{$video.videoid}"
-	 class="icon-add add_icon cb_quickie cb-btn-quick-{$video.videoid}" onclick="pushToQlist('{$video.videoid}')" src="{$imageurl}/dot.gif" title="Add {$video.title} to Quicklist" style="background: red !important;">
+	 class="icon-add add_icon cb_quickie cb-btn-quick-{$video.videoid}" src="{$imageurl}/dot.gif" vtitle="{$video.title}" v-id="{$video.videoid}" vlink="{videoLink($video)}" vthumb="{getThumb vdetails=$video size=600x338 }" vduration="{$video.duration|SetTime}" title="Add {$video.title} to Quicklist">
 	</div>
+
 {/if}
 
 {if $display_type=='featuredHome'}
@@ -84,7 +85,7 @@
 		</a>
 		{ANCHOR place='in_video_thumb' data=$video}
 		<img data-quick="quick-{$video.videoid}"
-	 class="icon-add add_icon cb_quickie cb-btn-quick-{$video.videoid}" onclick="add_quicklist(this,'{$video.videoid}')" src="{$imageurl}/dot.gif" title="Add {$video.title} to Quicklist">
+	 class="icon-add add_icon cb_quickie cb-btn-quick-{$video.videoid}" src="{$imageurl}/dot.gif" vtitle="{$video.title}" v-id="{$video.videoid}" vlink="{videoLink($video)}" vthumb="{getThumb vdetails=$video size=600x338 }" vduration="{$video.duration|SetTime}" title="Add {$video.title} to Quicklist">
 	</div>
 </div>
 {/if}
@@ -245,14 +246,3 @@
 	</div>
 </div>
 {/if}
-
-<script type="text/javascript">
-	function pushToQlist(id) {
-		id = parseInt(id);
-		$.cookie("btn-q-"+id, "yes", { expires : 10 });
-		currentList = $.cookie("quick_list");
-		cleanList = currentList+",8900";
-		$.cookie("thenewcookie", cleanList, { expires : 10 });
-		console.log(cleanList);
-	}
-</script>
