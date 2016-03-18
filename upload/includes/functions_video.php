@@ -316,14 +316,17 @@
 
 
     /**
-     * Function used to check weaether given thumb is big or not
-     */
-    function is_big($thumb_file)
-    {
-        if(strstr($thumb_file,'big'))
+    * Function used to check weaether given thumb is big or not
+    * @param : { string } { $thumb_file } { the file to be checked for size }
+    * @return : { boolean } { true if thumb is big, false }
+    */
+
+    function is_big($thumb_file) {
+        if(strstr($thumb_file,'big')) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 
     /**
@@ -1883,4 +1886,23 @@
             return false;
         }
         
+    }
+
+    function get_fast_qlist($cookie_name = false) {
+        global $cbvid;
+        if ($cookie_name) {
+            $cookie = $cookie_name;
+        } else {
+            $cookie = 'fast_qlist';
+        }
+
+        $raw_cookies = $_COOKIE[$cookie];
+        $clean_cookies = str_replace(array("[","]"), "", $raw_cookies);
+        $vids = explode(",", $clean_cookies);
+        $vid_dets = array();
+        foreach ($vids as $key => $vid) {
+            $vid_dets[] = $cbvid->get_video_details($vid);
+        }
+
+        return array_filter($vid_dets);
     }
