@@ -21,6 +21,7 @@
 {/if}
 
 {if $display_type=='homeVideos'}
+
 	<div class="clearfix thumb-holder">
 		<a class="video-link" href="{videoLink($video)}" title="{$video.title|title}">
 			<img class="img-responsive" src="{getThumb vdetails=$video size=512x320 }">
@@ -28,7 +29,7 @@
 		<div class="item-footer">
 			{ANCHOR place='in_video_thumb' data=$video}
 			<img data-quick="quick-{$video.videoid}"
-	 class="icon-add add_icon cb_quickie cb-btn-quick-{$video.videoid}" src="{$imageurl}/dot.gif" vtitle="{$video.title}" v-id="{$video.videoid}" vlink="{videoLink($video)}" vthumb="{getThumb vdetails=$video size=600x338 }" vduration="{$video.duration|SetTime}" title="Add {$video.title} to Quicklist">
+	 class="icon-add add_icon cb_quickie cb-btn-quick-{$video.videoid} {if in_array($video.videoid, $qlist_vids)}check_icon{/if}" src="{$imageurl}/dot.gif" vtitle="{$video.title}" v-id="{$video.videoid}" vlink="{videoLink($video)}" vthumb="{getThumb vdetails=$video size=600x338 }" vduration="{$video.duration|SetTime}" title="Add {$video.title} to Quicklist">
 			<span class="duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</span>
 		</div>
 	</div>
@@ -52,7 +53,7 @@
 			<span class="duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</span>
 			{ANCHOR place='in_video_thumb' data=$video}
 			<img data-quick="quick-{$video.videoid}"
-	 class="icon-add add_icon cb_quickie cb-btn-quick-{$video.videoid}" src="{$imageurl}/dot.gif" vtitle="{$video.title}" v-id="{$video.videoid}" vlink="{videoLink($video)}" vthumb="{getThumb vdetails=$video size=600x338 }" vduration="{$video.duration|SetTime}" title="Add {$video.title} to Quicklist">
+	 class="icon-add add_icon cb_quickie cb-btn-quick-{$video.videoid} {if in_array($video.videoid, $qlist_vids)}check_icon{/if}" src="{$imageurl}/dot.gif" vtitle="{$video.title}" v-id="{$video.videoid}" vlink="{videoLink($video)}" vthumb="{getThumb vdetails=$video size=600x338 }" vduration="{$video.duration|SetTime}" title="Add {$video.title} to Quicklist">
 		</div>
 	</div>
 	<div class="clearfix video-info">
@@ -94,7 +95,7 @@
 			<span class="duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</span>
 			{ANCHOR place='in_video_thumb' data=$video}
 			<img data-quick="quick-{$video.videoid}"
-		 class="icon-add add_icon cb_quickie cb-btn-quick-{$video.videoid}" onclick="add_quicklist(this,'{$video.videoid}')" src="{$imageurl}/dot.gif" vtitle="{$video.title}" v-id="{$video.videoid}" vlink="{videoLink($video)}" vthumb="{getThumb vdetails=$video size=600x338 }" vduration="{$video.duration|SetTime}"  title="Add {$video.title} to Quicklist">
+		 class="icon-add add_icon cb_quickie cb-btn-quick-{$video.videoid} {if in_array($video.videoid, $qlist_vids)}check_icon{/if}" src="{$imageurl}/dot.gif" vtitle="{$video.title}" v-id="{$video.videoid}" vlink="{videoLink($video)}" vthumb="{getThumb vdetails=$video size=600x338 }" vduration="{$video.duration|SetTime}"  title="Add {$video.title} to Quicklist">
 		 </div>
 	</div>
 </div>
