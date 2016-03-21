@@ -138,36 +138,36 @@ function homePageVideos(qlist_items) {
 						$('#featured_vid_sec').append(data);
 						$(document).find('#featured-loadmore').append('<button id="featured_load_more" class="btn btn-loadmore" loadtype="video" loadmode="featured" loadlimit="2" loadhit="'+newloadHit+'">Load More</button>');
 					}
-				}
+				} 
+			}
+		});
 
-				$.ajax({
-					url: loadLink,
-					type: sendType,
-					dataType: dataType,
-					data: {
-						"load_type":'count',
-						"load_mode":loadMode,
-						"load_limit":loadLimit,
-						"load_hit": parseInt(loadHit) + 1
-					},
+		$.ajax({
+			url: loadLink,
+			type: sendType,
+			dataType: dataType,
+			data: {
+				"load_type":'count',
+				"load_mode":loadMode,
+				"load_limit":loadLimit,
+				"load_hit": parseInt(loadHit) + 1
+			},
 
-					beforeSend: function() {
-						// setting a timeout
-						
-					},
+			beforeSend: function() {
+				// setting a timeout
+				
+			},
 
-					success: function(data) {
-						var jsonData = $.parseJSON(data);
-						num = jsonData.more_vids;
-						if (num == 'none') {
-							if (loadMode == 'recent') {
-								$('#recent_load_more').remove();
-							} else {
-								$('#featured_load_more').remove();
-							}
-						}
+			success: function(data) {
+				var jsonData = $.parseJSON(data);
+				num = jsonData.more_vids;
+				if (num == 'none') {
+					if (loadMode == 'recent') {
+						$('#recent_load_more').remove();
+					} else {
+						$('#featured_load_more').remove();
 					}
-				}); 
+				}
 			}
 		});
 	});
