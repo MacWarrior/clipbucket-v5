@@ -21,7 +21,6 @@
 {/if}
 
 {if $display_type=='homeVideos'}
-{if in_array($video.videoid, $qlist_vids)}<h1>YES</h1>{/if}
 	<div class="clearfix thumb-holder">
 		<a class="video-link" href="{videoLink($video)}" title="{$video.title|title}">
 			<img class="img-responsive" src="{getThumb vdetails=$video size=512x320 }">
