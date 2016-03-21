@@ -14,19 +14,21 @@
 	$params = array();
 	if (isset($_POST['load_type'])) {
 		$load_type = $_POST['load_type'];
-		if ($load_type == 'recent') {
-			$params['order'] = 'DESC';
-		}
 		if (isset($_POST['load_mode'])) {
 			$load_mode = $_POST['load_mode'];
 			if ($load_mode == 'featured') {
 				$params['featured'] = "yes";
 			}
+			if ($load_mode == 'recent') {
+				$params['order'] = 'date_added DESC';
+			} else {
+				$params['order'] = 'views';
+			}
 		}
 		if (isset($_POST['load_limit'])) {
 			$load_limit = $_POST['load_limit'];
 		} else {
-			$load_limit = "8";
+			$load_limit = "6";
 		}
 		if (isset($_POST['load_hit'])) {
 			$cur_load_hit = $_POST['load_hit'];
@@ -36,6 +38,21 @@
 		}
 
 		$params['limit'] = "$start,$load_limit";
+		
+		if ($load_type == 'count') {
+			$arr = array();
+			$videos = get_videos($params);
+			$vcount = count($videos);
+			if ($vcount < 1) {
+				$arr['more_vids'] = "none";
+				echo json_encode($arr);
+				return false;
+			} else {
+				$arr['more_vids'] = $vcount;
+				echo json_encode($arr);
+				return true;
+			}
+		}
 		switch ($load_type) {
 			case 'video':
 				$data = get_videos($params);
@@ -69,7 +86,13 @@
 			} else {
 				$display_type = 'featuredHome';
 			}
+			$quicklists = $_COOKIE['fast_qlist'];
+			$clean_cookies = str_replace(array("[","]"), "", $quicklists);
+        	$clean_cookies = explode(",", $clean_cookies);
+			$clean_cookies = array_filter($clean_cookies);
+			assign("qlist_vids", $clean_cookies);
 			foreach ($data as $key => $video) {
+
 				assign("video",$video);
 				assign("display_type",$display_type);
 				Template('blocks/videos/video.html');
