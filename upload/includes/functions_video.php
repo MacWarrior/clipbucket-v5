@@ -1907,6 +1907,7 @@
         $raw_cookies = $_COOKIE[$cookie];
         $clean_cookies = str_replace(array("[","]"), "", $raw_cookies);
         $vids = explode(",", $clean_cookies);
+        assign("qlist_vids", $vids);
         $vid_dets = array();
         foreach ($vids as $key => $vid) {
             $vid_dets[] = $cbvid->get_video_details($vid);
