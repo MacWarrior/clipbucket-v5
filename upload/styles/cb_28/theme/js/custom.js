@@ -107,7 +107,11 @@ function homePageVideos(qlist_items) {
 
 			beforeSend: function() {
 				// setting a timeout
-				$(main_object).text("Loading..");
+				//$(main_object).text("Loading..");
+				if (loadType != 'count' && loadMode == 'featured') {
+				$(document).find('#featured_vid_sec').append('<div id="featured-pre"><div class="item-video col-lg-6 col-md-6 col-sm-6 col-xs-12"><div style="height:200px" class="thumb-video background-masker clearfix"></div></div></div>');
+				}
+
 			},
 
 			success: function(data) {
@@ -123,6 +127,7 @@ function homePageVideos(qlist_items) {
 						$(document).find('#recent-loadmore').append('<button id="recent_load_more" class="btn btn-loadmore" loadtype="video" loadmode="recent" loadlimit="6" loadhit="'+newloadHit+'">Load More</button>');
 					} else {
 						$('#featured_load_more').remove();
+						$('#featured-pre').remove();
 						$('#featured_vid_sec').append(data);
 						$(document).find('#featured-loadmore').append('<button id="featured_load_more" class="btn btn-loadmore" loadtype="video" loadmode="featured" loadlimit="2" loadhit="'+newloadHit+'">Load More</button>');
 					}
