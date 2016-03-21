@@ -73,6 +73,99 @@ $(document).ready(function(){
 	}
 });
 
+
+function homePageVideos(qlist_items) {
+	$('#container').on("click","#recent_load_more, #featured_load_more",function(){
+		var loadLink = baseurl + '/ajax/home.php',
+		main_object = $(this),
+		sendType = 'post',
+		dataType = 'html',
+		loadType = $(main_object).attr('loadtype'),
+		loadMode = $(main_object).attr('loadmode'),
+		loadLimit = $(main_object).attr('loadlimit'),
+		loadHit = $(main_object).attr('loadhit'),
+		newloadHit = parseInt(loadHit) + 1;
+		$.ajax({
+			url: loadLink,
+			type: sendType,
+			dataType: dataType,
+			data: {
+				"load_type":loadType,
+				"load_mode":loadMode,
+				"load_limit":loadLimit,
+				"load_hit":loadHit
+			},
+
+			beforeSend: function() {
+				// setting a timeout
+				$(main_object).text("Loading..");
+			},
+
+			success: function(data) {
+				$(main_object).text("Load More");
+				if (data === '') {
+					$(main_object).remove();
+					return true;
+				}
+				if (loadType == 'video') {
+					if (loadMode == 'recent') {
+						$('#recent_load_more').remove();
+						$('#recent_vids_sec').append(data);
+						$('#recent-loadmore').append('<button id="recent_load_more" class="btn btn-loadmore" loadtype="video" loadmode="recent" loadlimit="8" loadhit="'+newloadHit+'">Load More</button>');
+					} else {
+						$('#featured_load_more').remove();
+						$('#featured_vid_sec').append(data);
+						if (loadHit == 2) {
+							$('#featured-loadmore').append('<button id="featured_load_more" class="btn btn-loadmore" loadtype="video" loadmode="featured" loadlimit="2" loadhit="'+newloadHit+'">Load More</button>');
+						}
+					}
+				}
+
+				$.ajax({
+					url: loadLink,
+					type: sendType,
+					dataType: dataType,
+					data: {
+						"load_type":'count',
+						"load_mode":loadMode,
+						"load_limit":loadLimit,
+						"load_hit": parseInt(loadHit) + 1
+					},
+
+					beforeSend: function() {
+						// setting a timeout
+						
+					},
+
+					success: function(data) {
+						var jsonData = $.parseJSON(data);
+						num = jsonData.more_vids;
+						if (num == 'none') {
+							if (loadMode == 'recent') {
+								$('#recent_load_more').remove();
+							} else {
+								$('#featured_load_more').remove();
+							}
+						}
+					}
+				}); 
+			}
+		});
+	});
+
+	// trigger clicks on doc load to get
+	// initial videos
+
+	$(document).ready(function(){
+
+		$('#featured_load_more').trigger("click");
+		$('#featured_load_more').hide();
+		$('#recent_load_more').trigger("click");
+		$('#recent_load_more').hide();
+
+	});
+}
+
 //on resize functions
 $(window).resize(function(){
  	headerFooter();
