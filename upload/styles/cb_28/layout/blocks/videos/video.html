@@ -68,20 +68,21 @@
 {/if}
 
 
-{if $display_type=='featuredVideos'}
-	<div class="clearfix thumb-holder">
-		<a class="video-link" href="{videoLink($video)}" title="{$video.title|title}">
-			<img class="img-responsive" src="{getThumb vdetails=$video size=512x320 }">
-			<h2 class="title">{$video.title|truncate:50}</h2>
-		</a>
-		<div class="item-footer">
-			<span class="duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</span>
-			{ANCHOR place='in_video_thumb' data=$video}
-			<img data-quick="quick-{$video.videoid}"
-	 class="icon-add add_icon cb_quickie cb-btn-quick-{$video.videoid}" src="{$imageurl}/dot.gif" vtitle="{$video.title}" v-id="{$video.videoid}" vlink="{videoLink($video)}" vthumb="{getThumb vdetails=$video size=600x338 }" vduration="{$video.duration|SetTime}" title="Add {$video.title} to Quicklist">
-	 	</div>
+{if $display_type=='featuredVideos_sidebar'}
+	<div class="featured-video clearfix">
+		<div class="video_thumb">
+			<img src="{getThumb vdetails=$video size=128x80}" {ANCHOR place="video_thumb" data=$video} class="img-responsive">
+			<time datetime="2016-15-03" class="duration">
+			{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</time>
+		</div> <!--VIDEO_THUMB END-->
+		<div class="details_block">
+			<strong class="title"><a href="#">{$video.title|truncate:50}</a></strong>
+			<span class="author">by <a href="{$userquery->profile_link($video)}">{$video.username}</a></span>
+			<div class="views-date">
+				<span>{$video.views}&nbsp;views</span>
+			</div>
+		</div>
 	</div>
-
 {/if}
 
 {if $display_type=='featuredHome'}
