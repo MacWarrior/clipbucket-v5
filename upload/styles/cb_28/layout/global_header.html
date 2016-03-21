@@ -63,14 +63,20 @@
 		</script>
 		<script src="{$baseurl}/js/clipbucket.js"></script>
 		<script src="{$theme}/js/uslider_js/jquery.mousewheel.js"></script>
-		<script type="text/javascript" src="{$baseurl}/js/functions.js"></script>
 		
 
 		<!-- Script For Home Page Videos Slider //-->
 
+		<!-- Getting quicklist videos and assigning -->
+		{assign var=qlist_videos value=get_fast_qlist()}
+		{assign var=litems_count value=$qlist_videos|@count}
+		{if $litems_count >= 1} 
+			{assign var=got_qlitems value="yes"}
+		{/if}
 		{assign var=quicklist value=$cbvid->get_quicklist()|@json_encode}
 		
 		<script>
+			var fastQitems = "{$got_qlitems}";
 			$(document).ready(function(){
 				var quicklist_videos = '{$quicklist}';
 				if (quicklist_videos)
@@ -82,5 +88,8 @@
 				})
 			})
 		</script>
+		{include file="$style_dir/blocks/quicklist/qlist_main.html"}
+		<script type="text/javascript" src="{$theme}/js/fast_qlist.js"></script>
+		<script type="text/javascript" src="{$theme}/js/uslider_js/jquery.mousewheel.js"></script>
 		{include_header file='global_header'}
 	</head>
