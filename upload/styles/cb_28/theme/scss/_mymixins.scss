@@ -141,7 +141,6 @@ $probox-bg: #f8f8f8;
 	background-image: -ms-linear-gradient(left, $startColor, $endColor);
 	background-image: -o-linear-gradient(left, $startColor, $endColor);
 }
-
 @mixin myanimation ($name, $duration, $ease) {
 	-webkit-animation: $name $duration $ease;
 	-moz-animation:    $name $duration $ease;

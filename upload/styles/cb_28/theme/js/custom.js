@@ -35,11 +35,20 @@ function responsiveFixes(){
 		
 	}
 }
-
+function preLoadingBlock(){
+	//two videos in a row
+	var ftthumbWidth = $('.featured-videos .thumb-video').width();
+	var	ftthumbHeight = ftthumbWidth * (10/16);
+	$(".featured-videos .thumb-video").css('height', ftthumbHeight+'px');
+	//three videos in a row
+	var thumbWidth = $('.videos .thumb-video').width();
+	var	thumbHeight = thumbWidth * (10/16);
+	$(".videos .thumb-video").css('height', thumbHeight+'px');
+}
 $(document).ready(function(){
 	//footer at bototm
 	headerFooter();
-	
+	preLoadingBlock();
 	responsiveFixes();
 
 	$("body").on('click', '.btn-playlist, .close-playlists', function(){
@@ -167,5 +176,6 @@ function homePageVideos(qlist_items) {
 //on resize functions
 $(window).resize(function(){
  	headerFooter();
+ 	preLoadingBlock();
  	responsiveFixes();
 });
