@@ -138,7 +138,6 @@ function homePageVideos(qlist_items) {
 	});
 }
 
-
 	var notInList = false;
 	function pushToQlist(obj, id) {
 		id = parseInt(id);
@@ -157,7 +156,7 @@ function homePageVideos(qlist_items) {
 				return false;
 			}
 		} else {
-			console.log("Really");
+			//console.log("Really");
 			notInList = true;
 			newCookie = "[" + id + "]";
 		}
