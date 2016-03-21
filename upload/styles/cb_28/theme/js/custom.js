@@ -48,7 +48,7 @@ function preLoadingBlock(){
 $(document).ready(function(){
 	//footer at bototm
 	headerFooter();
-	preLoadingBlock();
+	
 	responsiveFixes();
 
 	$("body").on('click', '.btn-playlist, .close-playlists', function(){
@@ -107,11 +107,17 @@ function homePageVideos(qlist_items) {
 
 			beforeSend: function() {
 				// setting a timeout
-				//$(main_object).text("Loading..");
-				if (loadType != 'count' && loadMode == 'featured') {
-				$(document).find('#featured_vid_sec').append('<div id="featured-pre"><div class="item-video col-lg-6 col-md-6 col-sm-6 col-xs-12"><div style="height:200px" class="thumb-video background-masker clearfix"></div></div><div class="item-video col-lg-6 col-md-6 col-sm-6 col-xs-12"><div style="height:200px" class="thumb-video background-masker clearfix"></div></div></div>');
+				$(main_object).text("Loading..");
+				if (loadType != 'count') {
+					if (loadMode == 'featured') {
+						$(document).find('#featured_vid_sec').append('<div id="featured_pre"><div class="item-video col-lg-6 col-md-6 col-sm-6 col-xs-12"><div style="height:200px" class="thumb-video background-masker clearfix"></div></div><div class="item-video col-lg-6 col-md-6 col-sm-6 col-xs-12"><div style="height:200px" class="thumb-video background-masker clearfix"></div></div></div>');
+					} else {
+						for (var i = 0; i < 6; i++) {
+							$(document).find('#recent_pre').append('<div class="item-video col-lg-4 col-md-4 col-sm-4 col-xs-6"><div class="thumb-video background-masker clearfix"></div><div class="loadingInfo video-info relative clearfix"><div class="background-masker heading clearfix"></div><div class="background-masker paragraph clearfix"></div><div class="background-masker clearfix views-date"></div></div></div>');
+						}
+						preLoadingBlock();
+					}
 				}
-
 			},
 
 			success: function(data) {
@@ -123,11 +129,12 @@ function homePageVideos(qlist_items) {
 				if (loadType == 'video') {
 					if (loadMode == 'recent') {
 						$('#recent_load_more').remove();
+						$('#recent_pre').html('');
 						$('#recent_vids_sec').append(data);
 						$(document).find('#recent-loadmore').append('<button id="recent_load_more" class="btn btn-loadmore" loadtype="video" loadmode="recent" loadlimit="6" loadhit="'+newloadHit+'">Load More</button>');
 					} else {
 						$('#featured_load_more').remove();
-						$('#featured-pre').remove();
+						$('#featured_pre').remove();
 						$('#featured_vid_sec').append(data);
 						$(document).find('#featured-loadmore').append('<button id="featured_load_more" class="btn btn-loadmore" loadtype="video" loadmode="featured" loadlimit="2" loadhit="'+newloadHit+'">Load More</button>');
 					}
