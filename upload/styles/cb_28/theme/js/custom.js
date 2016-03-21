@@ -111,13 +111,11 @@ function homePageVideos(qlist_items) {
 					if (loadMode == 'recent') {
 						$('#recent_load_more').remove();
 						$('#recent_vids_sec').append(data);
-						$('#recent-loadmore').append('<button id="recent_load_more" class="btn btn-loadmore" loadtype="video" loadmode="recent" loadlimit="8" loadhit="'+newloadHit+'">Load More</button>');
+						$(document).find('#recent-loadmore').append('<button id="recent_load_more" class="btn btn-loadmore" loadtype="video" loadmode="recent" loadlimit="6" loadhit="'+newloadHit+'">Load More</button>');
 					} else {
 						$('#featured_load_more').remove();
 						$('#featured_vid_sec').append(data);
-						if (loadHit == 2) {
-							$('#featured-loadmore').append('<button id="featured_load_more" class="btn btn-loadmore" loadtype="video" loadmode="featured" loadlimit="2" loadhit="'+newloadHit+'">Load More</button>');
-						}
+						$(document).find('#featured-loadmore').append('<button id="featured_load_more" class="btn btn-loadmore" loadtype="video" loadmode="featured" loadlimit="2" loadhit="'+newloadHit+'">Load More</button>');
 					}
 				}
 
