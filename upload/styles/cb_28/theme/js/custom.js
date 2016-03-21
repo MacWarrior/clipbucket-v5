@@ -94,6 +94,32 @@ function homePageVideos(qlist_items) {
 		loadLimit = $(main_object).attr('loadlimit'),
 		loadHit = $(main_object).attr('loadhit'),
 		newloadHit = parseInt(loadHit) + 1;
+		moreRecent = true;
+		moreFeatured = true;
+		$.ajax({
+			url: loadLink,
+			type: sendType,
+			dataType: dataType,
+			data: {
+				"load_type":'count',
+				"load_mode":loadMode,
+				"load_limit":loadLimit,
+				"load_hit": parseInt(loadHit) + 1
+			},
+
+			success: function(data) {
+				var jsonData = $.parseJSON(data);
+				num = jsonData.more_vids;
+				if (num == 'none') {
+					if (loadMode == 'recent') {
+						moreRecent = false;
+					} else {
+						moreFeatured = false;
+					}
+				}
+			}
+		});
+
 		$.ajax({
 			url: loadLink,
 			type: sendType,
@@ -131,43 +157,18 @@ function homePageVideos(qlist_items) {
 						$('#recent_load_more').remove();
 						$('#recent_pre').html('');
 						$('#recent_vids_sec').append(data);
-						$(document).find('#recent-loadmore').append('<button id="recent_load_more" class="btn btn-loadmore" loadtype="video" loadmode="recent" loadlimit="6" loadhit="'+newloadHit+'">Load More</button>');
+						if (moreRecent == true) {
+							$(document).find('#recent-loadmore').append('<button id="recent_load_more" class="btn btn-loadmore" loadtype="video" loadmode="recent" loadlimit="6" loadhit="'+newloadHit+'">Load More</button>');
+						}
 					} else {
 						$('#featured_load_more').remove();
 						$('#featured_pre').remove();
 						$('#featured_vid_sec').append(data);
-						$(document).find('#featured-loadmore').append('<button id="featured_load_more" class="btn btn-loadmore" loadtype="video" loadmode="featured" loadlimit="2" loadhit="'+newloadHit+'">Load More</button>');
+						if (moreFeatured == true) {
+							$(document).find('#featured-loadmore').append('<button id="featured_load_more" class="btn btn-loadmore" loadtype="video" loadmode="featured" loadlimit="2" loadhit="'+newloadHit+'">Load More</button>');
+						}
 					}
 				} 
-			}
-		});
-
-		$.ajax({
-			url: loadLink,
-			type: sendType,
-			dataType: dataType,
-			data: {
-				"load_type":'count',
-				"load_mode":loadMode,
-				"load_limit":loadLimit,
-				"load_hit": parseInt(loadHit) + 1
-			},
-
-			beforeSend: function() {
-				// setting a timeout
-				
-			},
-
-			success: function(data) {
-				var jsonData = $.parseJSON(data);
-				num = jsonData.more_vids;
-				if (num == 'none') {
-					if (loadMode == 'recent') {
-						$('#recent_load_more').remove();
-					} else {
-						$('#featured_load_more').remove();
-					}
-				}
 			}
 		});
 	});
