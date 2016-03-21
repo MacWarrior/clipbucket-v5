@@ -41,8 +41,10 @@
 		
 		if ($load_type == 'count') {
 			$arr = array();
+			$params['count_only'] = true;
+			$shown = $load_limit * ($cur_load_hit - 1);
 			$videos = get_videos($params);
-			$vcount = count($videos);
+			$vcount = $videos - $shown;
 			if ($vcount < 1) {
 				$arr['more_vids'] = "none";
 				echo json_encode($arr);
