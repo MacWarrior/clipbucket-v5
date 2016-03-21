@@ -3634,3 +3634,6 @@ textarea#comment_box {
       margin: 0 0 5px; } }
 
 /*# sourceMappingURL=all.css.map */
+.icon-add:hover, .video_thumb:hover {
+  cursor: pointer;
+}
