@@ -42,27 +42,15 @@
 			<section class="clearfix featured-videos">
 				<h1>{lang code="Featured Videos"}</h1>
 				<div id="featured_vid_sec" class="clearfix row">
-					<!-- {foreach from=$featured item=video}
-					<div class="item-video col-lg-6 col-md-6 col-sm-6 col-xs-12">
-					{include file="$style_dir/blocks/videos/video.html" display_type='featuredVideos'}
-					</div>
-					{/foreach} -->
 				</div>
 				<div id="featured-loadmore" class="clearfix text-center">
 					<button id="featured_load_more" class="btn btn-loadmore" loadtype="video" loadmode="featured" loadlimit="2" loadhit="1">Load More</button>
 				</div>
 			</section>
 
-
-			<!-- {$videos=get_videos(["order" =>"date_added DESC", "limit" =>6])} -->
 			<section class="clearfix videos">
 				<h1>{lang code="Recent Videos"}</h1>
 				<div id="recent_vids_sec" class="clearfix row">
-					<!-- {foreach $videos as $video}
-					<div class="item-video col-lg-4 col-md-4 col-sm-4 col-xs-6">
-					{include file="$style_dir/blocks/videos/video.html" display_type='homeVideos'}
-					</div>
-					{/foreach} -->
 				</div>
 				<div id="recent-loadmore" class="clearfix text-center">
 					<button id="recent_load_more" class="btn btn-loadmore" loadtype="video" loadmode="recent" loadlimit="8" loadhit="1">Load More</button>
@@ -171,6 +159,7 @@
 		</aside>
 	</div>	
 </div>
+
 {assign var=qlist_videos value=get_fast_qlist()}
 {assign var=litems_count value=$qlist_videos|@count}
 {if $litems_count >= 1} 
@@ -194,6 +183,7 @@
 </div>
 
 <script type="text/javascript">
+alert("{$you}");
 	// handles initial and load more
 	// for home page videos
 	homePageVideos("{$got_qlitems}");
