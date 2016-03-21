@@ -1888,6 +1888,14 @@
         
     }
 
+    /**
+    * Fetches quicklists stored in cookies
+    * @param : { string } { $cookie_name } { false by default, read from certain cookie }
+    * @return : { array } { $vid_dets } { an array with all details of videos in quicklists }
+    * @since : 18th March, 2016 ClipBucket 2.8.1
+    * @author : Saqib Razzaq <saqi.cb@gmail.com>
+    */
+
     function get_fast_qlist($cookie_name = false) {
         global $cbvid;
         if ($cookie_name) {
