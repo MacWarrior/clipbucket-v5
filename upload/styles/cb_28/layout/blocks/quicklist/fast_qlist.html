@@ -8,7 +8,7 @@
 			<span class="pl_duration">{if $ql_item.duration>1}{$ql_item.duration|SetTime}{else}00:00{/if}</span>
 		</div>
 		<div class="pl_details" onclick="window.location=''">
-			<p><a href="{videoLink($ql_item)}" target="blank" >{$ql_item.title}</a></p>
+			<p><a href="{videoLink($ql_item)}" target="blank" >{$ql_item.title|truncate:35}</a></p>
 			<p>by {$ql_item.username}</p>
 		</div>
 		<button todel={$ql_item.videoid} class="ql_delete glyphicon glyphicon-trash btn btn-danger btn-sm" onclick="remove_qucklist('#quicklist_playlist_cont_{$ql_item.videoid}','{$ql_item.videoid}')" title="remove {$ql_item.title} from qucklist" alt="quicklist">
