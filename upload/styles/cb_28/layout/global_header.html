@@ -73,8 +73,7 @@
 		{if $litems_count >= 1} 
 			{assign var=got_qlitems value="yes"}
 		{/if}
-		{assign var=quicklist value=$cbvid->get_quicklist()|@json_encode}
-		
+
 		<script>
 			var fastQitems = "{$got_qlitems}";
 			$(document).ready(function(){

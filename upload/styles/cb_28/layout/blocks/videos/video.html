@@ -7,7 +7,7 @@
 			<span class="duration">{if $pop_video.duration>1}{$pop_video.duration|SetTime}{else}00:00{/if}</span>
 			{ANCHOR place='in_video_thumb' data=$pop_video}
 			<img data-quick="quick-{$pop_video.videoid}"
-	 class="icon-add add_icon cb_quickie cb-btn-quick-{$pop_video.videoid}" onclick="add_quicklist(this,'{$pop_video.videoid}')" src="{$imageurl}/dot.gif" title="Add {$pop_video.title} to Quicklist">
+	 class="icon-add add_icon cb_quickie cb-btn-quick-{$pop_video.videoid} {if in_array($video.videoid, $qlist_vids)}check_icon{/if}" src="{$imageurl}/dot.gif" title="Add {$pop_video.title} to Quicklist">
 		</div>
 	</div>
 	<div class="col-lg-7 col-md-6 col-sm-6 col-xs-6 vid-info">
@@ -21,7 +21,7 @@
 {/if}
 
 {if $display_type=='homeVideos'}
-
+{if in_array($video.videoid, $qlist_vids)}<h1>YES</h1>{/if}
 	<div class="clearfix thumb-holder">
 		<a class="video-link" href="{videoLink($video)}" title="{$video.title|title}">
 			<img class="img-responsive" src="{getThumb vdetails=$video size=512x320 }">
@@ -116,7 +116,7 @@
 				</a>
 				{ANCHOR place='in_video_thumb' data=$video}
 				<img src="{$imageurl}/dot.gif" data-quick="quick-{$video.videoid}"
-			 class="add_icon cb_quickie cb-btn-quick-{$video.videoid}" onclick="add_quicklist(this,'{$video.videoid}')" title="Add {$video.title} to Quicklist" alt="Quicklist">
+			 class="add_icon cb_quickie cb-btn-quick-{$video.videoid} {if in_array($video.videoid, $qlist_vids)}check_icon{/if}" onclick="add_quicklist(this,'{$video.videoid}')" title="Add {$video.title} to Quicklist" alt="Quicklist">
 			</div>
 		</div>
 		
@@ -174,7 +174,7 @@
 		</a>
 		{ANCHOR place='in_video_thumb' data=$video}
 		<i data-quick="quick-{$video.videoid}"
-	 class="icon-add add_icon cb_quickie cb-btn-quick-{$video.videoid}" onclick="add_quicklist(this,'{$video.videoid}')" title="Add {$video.title} to Quicklist"></i>
+	 class="icon-add add_icon cb_quickie cb-btn-quick-{$video.videoid} {if in_array($video.videoid, $qlist_vids)}check_icon{/if}" title="Add {$video.title} to Quicklist"></i>
 	</div>
 {/if}
 
@@ -191,7 +191,7 @@
 			</a>
 			{ANCHOR place='in_video_thumb' data=$video}
 			 <img src="{$imageurl}/dot.gif" data-quick="quick-{$video.videoid}"
-		 class="add_icon cb_quickie cb-btn-quick-{$video.videoid}" onclick="add_quicklist(this,'{$video.videoid}')" title="Add {$video.title} to Quicklist" alt="Quicklist">
+		 class="add_icon cb_quickie cb-btn-quick-{$video.videoid} {if in_array($video.videoid, $qlist_vids)}check_icon{/if}" title="Add {$video.title} to Quicklist" alt="Quicklist">
 		</div>
 	</div>
 	<div class="col-xs-6">
@@ -220,7 +220,7 @@
 				</a>
 				{ANCHOR place='in_video_thumb' data=$video}
 			 <img src="{$imageurl}/dot.gif" data-quick="quick-{$video.videoid}"
-		 class="add_icon cb_quickie cb-btn-quick-{$video.videoid}" onclick="add_quicklist(this,'{$video.videoid}')" title="Add {$video.title} to Quicklist" alt="Quicklist">
+		 class="add_icon cb_quickie cb-btn-quick-{$video.videoid} {if in_array($video.videoid, $qlist_vids)}check_icon{/if}" title="Add {$video.title} to Quicklist" alt="Quicklist">
 			</div>
 		</div>
 		<div class="clearfix">
@@ -244,7 +244,7 @@
 			</a>
 			{ANCHOR place='in_video_thumb' data=$video}
 			 <img src="{$imageurl}/dot.gif" data-quick="quick-{$video.videoid}"
-		 class="add_icon cb_quickie cb-btn-quick-{$video.videoid}" onclick="add_quicklist(this,'{$video.videoid}')" title="Add {$video.title} to Quicklist" alt="">
+		 class="add_icon cb_quickie cb-btn-quick-{$video.videoid} {if in_array($video.videoid, $qlist_vids)}check_icon{/if}" title="Add {$video.title} to Quicklist" alt="">
 		</div>
 	</div>
 	<div class="clearfix">

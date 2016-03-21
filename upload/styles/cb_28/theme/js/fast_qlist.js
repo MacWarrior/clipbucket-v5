@@ -77,7 +77,8 @@
 	$(document).on("click",".ql_rem",function(e){
 		e.preventDefault();
 		$.cookie("fast_qlist", null, { expires : 10 });
-		$('#qlist_main').remove();
+		$('.qlist_item').remove();
+		$('#qlist_main').hide();
 		$('.cb_quickie').removeClass('check_icon');
 	});
 	
