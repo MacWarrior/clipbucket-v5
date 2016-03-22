@@ -27,11 +27,59 @@
 .icon-down-arrow:before {
 	content: "\e901";
 }
-.icon-search:before {
+.icon-facebook:before {
 	content: "\e902";
 }
-.icon-upload:before {
+.icon-flag:before {
 	content: "\e903";
+}
+.icon-gplus:before {
+	content: "\e904";
+}
+.icon-info:before {
+	content: "\e905";
+}
+.icon-left-arrow:before {
+	content: "\e906";
+}
+.icon-plus:before {
+	content: "\e907";
+}
+.icon-plusrounded:before {
+	content: "\e908";
+}
+.icon-radio-off:before {
+	content: "\e909";
+}
+.icon-radio-on:before {
+	content: "\e90a";
+}
+.icon-right-arrow:before {
+	content: "\e90b";
+}
+.icon-search:before {
+	content: "\e90c";
+}
+.icon-share:before {
+	content: "\e90d";
+}
+.icon-thumbdown:before {
+	content: "\e90e";
+}
+.icon-thumbup:before {
+	content: "\e90f";
+}
+.icon-tick:before {
+	content: "\e910";
+}
+.icon-twitter:before {
+	content: "\e911";
+}
+.icon-upload:before {
+	content: "\e912";
+}
+.icon-zoom:before {
+	content: "\e913";
 }
 .icon-cc:before {
 	content: "\e900";

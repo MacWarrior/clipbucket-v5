@@ -305,9 +305,9 @@ h1{
 			color: #fff;
 			border:1px solid #fff;
 			border-radius: 2px;
-			background: url(../images/icons/quicklist_small.png) no-repeat 50% 50% !important;
+			//background: url(../images/icons/quicklist_small.png) no-repeat 50% 50% !important;
 			&.check_icon{
-				background:#fff url(../images/icons/quicklist_check_small.jpg) no-repeat 50% 50% !important;
+				//background:#fff url(../images/icons/quicklist_check_small.jpg) no-repeat 50% 50% !important;
 			}
 		}
 		.vid-type{
@@ -538,18 +538,12 @@ h1{
 .add_icon,
 .cross_icon,
 .check_icon{
-	// height:16px; 
-	// width:16px; 
-	// background-repeat:no-repeat; 
-	// cursor:pointer;
-	// //position:absolute; 
-	// right:5px; 
-	// bottom:5px;
+	cursor:pointer;
 }
 .check_icon{
-	background-image:url(../images/icons/quicklist_check_small.jpg); 
-	font-size: 0;
-	line-height: 0;
+	//background-image:url(../images/icons/quicklist_check_small.jpg); 
+	// font-size: 0;
+	// line-height: 0;
 }
 .cross_icon{ 
 	background-image:url(../images/icons/cross.png);
@@ -795,15 +789,20 @@ h1{
 		text-transform: capitalize;
 		font-weight: 300;
 		float: right;
-		padding: 5px 0 4px;
+		// padding: 5px 0 4px;
 		width: 200px;
 		text-align: right;
 		.dropdown{
 			@include vertical-top();
+			background: lighten($black,13%);
 			margin: 0 0 0 5px;
+			>a{
+				color: #fff;
+				display: block;
+			}
 			>a:hover{
 				text-decoration: none;
-				color: $bg-theme;
+				//color: $bg-theme;
 			}
 		}
 		.icon-arrow-down{
@@ -1236,7 +1235,24 @@ h1{
 /* end of watch video */
 /* pagination */
 .pagination{
+	background: $white;
+	font-size: 18px;
 	> li {
+		a{
+			background:$white;
+			border-color:$white;
+			color: $black;
+			&:hover{
+				background:$white;
+				border-color:$white;
+				color: $blue-color;
+			}
+			i{
+				@include vertical-top();
+				font-size: 14px;
+				line-height: 26px;
+			}
+		}
 		&.active{
 			> a,
 			> a:focus,
@@ -1244,8 +1260,9 @@ h1{
 			> span,
 			> span:focus,
 			> span:hover{
-				background:$blue-color;
-				border-color:$blue-color; 
+				background:$white;
+				border-color:$white;
+				color: $blue-color;
 			}
 		}
 	}

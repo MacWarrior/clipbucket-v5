@@ -5,36 +5,36 @@
 		<li>
 			<a href="javascript:void(0)"
 		  onclick="_cb.getAllComments('{$type}','{$type_id}','{$last_update}','1','{$total}','{$object_type}')">
-				<i class="fa fa-angle-double-left"></i>
+				<i class="icon-left-arrow"></i>
 			</a>
 		</li>
 		{/if}
 
-		{if $pre_link !=''}
+		{*if $pre_link !=''}
 		<li>
 			<a href="javascript:void(0)" 
 		onclick="_cb.getAllComments('{$type}','{$type_id}','{$last_update}','{$pre_page}','{$total}','{$object_type}')">
 				<i class="fa fa-angle-left"></i>
 			</a>
 		</li>
-		{/if} 
+		{/if*} 
 
 		{$pagination}  
 
-		{if $next_link !=''}
+		{*if $next_link !=''}
 		<li>
 			<a href="javascript:void(0)" 
 		onclick="_cb.getAllComments('{$type}','{$type_id}','{$last_update}','{$next_page}','{$total}','{$object_type}')">
 				<i class="fa fa-angle-right"></i>
 			</a>
 		</li>
-		{/if}
+		{/if*}
 	   
 		{if $last_link !=''}
 		<li>
 			<a href="javascript:void(0)"
 		onclick="_cb.getAllComments('{$type}','{$type_id}','{$last_update}','{$total_pages}','{$total}','{$object_type}')">
-				<i class="fa fa-angle-double-right"></i>
+				<i class="icon-right-arrow"></i>
 			</a>
 		</li>
 		{/if}

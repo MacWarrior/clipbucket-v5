@@ -131,7 +131,7 @@
   z-index: 5;
   background: #fff; }
   #header .icon-down-arrow {
-    font-size: 6px;
+    font-size: 11px;
     line-height: 34px;
     display: inline-block;
     vertical-align: bottom;
@@ -1091,10 +1091,7 @@ h1 {
     text-align: center;
     color: #fff;
     border: 1px solid #fff;
-    border-radius: 2px;
-    background: url(../images/icons/quicklist_small.png) no-repeat 50% 50% !important; }
-    .item-video .thumb-holder .cb_quickie.check_icon {
-      background: #fff url(../images/icons/quicklist_check_small.jpg) no-repeat 50% 50% !important; }
+    border-radius: 2px; }
   .item-video .thumb-holder .vid-type {
     position: absolute;
     top: 10px;
@@ -1300,10 +1297,10 @@ h1 {
   width: 100%;
   float: left; }
 
+.add_icon,
+.cross_icon,
 .check_icon {
-  background-image: url(../images/icons/quicklist_check_small.jpg);
-  font-size: 0;
-  line-height: 0; }
+  cursor: pointer; }
 
 .cross_icon {
   background-image: url(../images/icons/cross.png);
@@ -1525,16 +1522,18 @@ h1 {
     text-transform: capitalize;
     font-weight: 300;
     float: right;
-    padding: 5px 0 4px;
     width: 200px;
     text-align: right; }
     .heading .dropdowns .dropdown {
       display: inline-block;
       vertical-align: top;
+      background: #212121;
       margin: 0 0 0 5px; }
+      .heading .dropdowns .dropdown > a {
+        color: #fff;
+        display: block; }
       .heading .dropdowns .dropdown > a:hover {
-        text-decoration: none;
-        color: #17181a; }
+        text-decoration: none; }
     .heading .dropdowns .icon-arrow-down {
       font-size: 8px;
       display: inline-block;
@@ -1876,14 +1875,31 @@ h1 {
 
 /* end of watch video */
 /* pagination */
-.pagination > li.active > a,
-.pagination > li.active > a:focus,
-.pagination > li.active > a:hover,
-.pagination > li.active > span,
-.pagination > li.active > span:focus,
-.pagination > li.active > span:hover {
-  background: #0080b4;
-  border-color: #0080b4; }
+.pagination {
+  background: #fff;
+  font-size: 18px; }
+  .pagination > li a {
+    background: #fff;
+    border-color: #fff;
+    color: #000; }
+    .pagination > li a:hover {
+      background: #fff;
+      border-color: #fff;
+      color: #0080b4; }
+    .pagination > li a i {
+      display: inline-block;
+      vertical-align: top;
+      font-size: 14px;
+      line-height: 26px; }
+  .pagination > li.active > a,
+  .pagination > li.active > a:focus,
+  .pagination > li.active > a:hover,
+  .pagination > li.active > span,
+  .pagination > li.active > span:focus,
+  .pagination > li.active > span:hover {
+    background: #fff;
+    border-color: #fff;
+    color: #0080b4; }
 
 /* add to playlist */
 #cb-item-addto .btn-holder {
@@ -3634,6 +3650,3 @@ textarea#comment_box {
       margin: 0 0 5px; } }
 
 /*# sourceMappingURL=all.css.map */
-.icon-add:hover, .video_thumb:hover {
-  cursor: pointer;
-}
