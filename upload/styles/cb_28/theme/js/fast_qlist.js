@@ -37,7 +37,7 @@
 		vduration = $(obj).attr("vduration");
 		
 		if (notInList == true) {
-			$('#my_quicklist').append('<div class="qlist_item clearfix" style="background-color:#fff; "  id="quicklist_playlist_cont_'+thevid+'"><div class="pl_num"></div><div class="pl_thumb"><a href="'+obj.attr("vlink")+'" target="blank"><img src="'+vthumb+'"/></a><span class="pl_duration">'+vduration+'</span></div><div class="pl_details" "><p><a href="'+vlink+'" target="blank" >'+vtitle+'</a></p></div><button todel="'+thevid+'" class="ql_delete glyphicon glyphicon-trash btn btn-danger btn-sm"  title="remove '+vtitle+' from qucklist" alt="quicklist"></button></div>');
+			$('<div style="display:none" class="qlist_item clearfix" style="background-color:#fff; "  id="quicklist_playlist_cont_'+thevid+'"><div class="pl_num"></div><div class="pl_thumb"><a href="'+obj.attr("vlink")+'" target="blank"><img src="'+vthumb+'"/></a><span class="pl_duration">'+vduration+'</span></div><div class="pl_details" "><p><a href="'+vlink+'" target="blank" >'+vtitle+'</a></p></div><button todel="'+thevid+'" class="ql_delete glyphicon glyphicon-trash btn btn-danger btn-sm"  title="remove '+vtitle+' from qucklist" alt="quicklist"></button></div>').appendTo('#my_quicklist').fadeIn('slow');
 		}
 
 		$.cookie("quick_list_box", "show", { expires : 10 });
@@ -71,14 +71,14 @@
 		cleaned = currentList.replace(vid, '');
 		console.log(cleaned);
 		$.cookie("fast_qlist", cleaned, { expires : 10 });
-		$(this).closest('.qlist_item').remove();
+		$(this).closest('.qlist_item').fadeOut('slow');
 	});
 
 	$(document).on("click",".ql_rem",function(e){
 		e.preventDefault();
 		$.cookie("fast_qlist", null, { expires : 10 });
-		$('.qlist_item').remove();
-		$('#qlist_main').hide();
+		$('.qlist_item').fadeOut('slow');
+		$('#qlist_main').fadeOut('slow');
 		$('.cb_quickie').removeClass('check_icon');
 	});
 	
