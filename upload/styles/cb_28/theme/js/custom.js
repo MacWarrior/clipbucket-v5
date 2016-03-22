@@ -158,14 +158,14 @@ function homePageVideos(qlist_items) {
 						$('#recent_pre').html('');
 						$(data).appendTo('#recent_vids_sec').fadeIn('slow');
 						if (moreRecent == true) {
-							$(document).find('#recent-loadmore').append('<button id="recent_load_more" class="btn btn-loadmore" loadtype="video" loadmode="recent" loadlimit="6" loadhit="'+newloadHit+'">Load More</button>');
+							$(document).find('#recent-loadmore').append('<button id="recent_load_more" class="btn btn-loadmore" loadtype="video" loadmode="recent" loadlimit="'+loadLimit+'" loadhit="'+newloadHit+'">Load More</button>');
 						}
 					} else {
 						$('#featured_load_more').remove();
 						$('#featured_pre').remove();
 						$(data).appendTo('#featured_vid_sec').fadeIn('slow');
 						if (moreFeatured == true) {
-							$(document).find('#featured-loadmore').append('<button id="featured_load_more" class="btn btn-loadmore" loadtype="video" loadmode="featured" loadlimit="2" loadhit="'+newloadHit+'">Load More</button>');
+							$(document).find('#featured-loadmore').append('<button id="featured_load_more" class="btn btn-loadmore" loadtype="video" loadmode="featured" loadlimit="'+loadLimit+'" loadhit="'+newloadHit+'">Load More</button>');
 						}
 					}
 				} 
