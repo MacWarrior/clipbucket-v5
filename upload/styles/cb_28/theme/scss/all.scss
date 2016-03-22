@@ -299,15 +299,17 @@ h1{
 			width: 24px;
 			height: 20px;
 			padding: 0;
-			font-size: 13px;
-			line-height: 20px;
+			font-size: 12px;
+			line-height: 18px;
 			text-align: center;
 			color: #fff;
 			border:1px solid #fff;
 			border-radius: 2px;
-			//background: url(../images/icons/quicklist_small.png) no-repeat 50% 50% !important;
-			&.check_icon{
-				//background:#fff url(../images/icons/quicklist_check_small.jpg) no-repeat 50% 50% !important;
+			background: none;
+			cursor: pointer;
+			&.icon-tick{
+				background:$blue-color;
+				border-color:$blue-color;
 			}
 		}
 		.vid-type{
@@ -535,15 +537,8 @@ h1{
 	width: 100%;
 	float: left;
 }
-.add_icon,
-.cross_icon,
-.check_icon{
+.cross_icon{
 	cursor:pointer;
-}
-.check_icon{
-	//background-image:url(../images/icons/quicklist_check_small.jpg); 
-	// font-size: 0;
-	// line-height: 0;
 }
 .cross_icon{ 
 	background-image:url(../images/icons/cross.png);
@@ -767,58 +762,79 @@ h1{
 	@include vertical-top();
 	padding: 0 10px 0 0;
 }
-.heading{
-	margin: 0 0 20px;
-	h2,
-	h1{
-		@extend %heading;
+.filter-dropdowns{
+	margin: 0 0 16px;
+	font-size: 15px;
+	line-height: 20px;
+	text-transform: capitalize;
+	font-weight: 600;
+	.cat-col{
+		text-align: left;
+		padding: 0 10px 0 0;
 	}
-	.sub-heading{
-		padding: 10px 0 0;
-		h2{
-			float: left;
-			font-size: 22px;
-			line-height: 34px;
-			font-weight: 300;
-			margin: 0 10px 0 0;
-		}
-	}
-	.dropdowns{
-		font-size: 14px;
-		line-height: 16px;
-		text-transform: capitalize;
-		font-weight: 300;
-		float: right;
-		// padding: 5px 0 4px;
-		width: 200px;
+	.sorting-col{
 		text-align: right;
-		.dropdown{
-			@include vertical-top();
-			background: lighten($black,13%);
-			margin: 0 0 0 5px;
-			>a{
-				color: #fff;
-				display: block;
-			}
-			>a:hover{
-				text-decoration: none;
-				//color: $bg-theme;
-			}
-		}
-		.icon-arrow-down{
-			font-size: 8px;
-			@include vertical-middle();
-			margin: 0 0 0 3px;
-		}
+		padding: 0 0 0 10px;
 		.dropdown-menu{
 			left: auto;
 			right: 0;
-			@include box-shadow ($string:0 0 5px 0 rgba(0,0,0,0.6));
-			padding: 5px;
-			> li > a{
-				border-radius: 2px;
+		}
+	}
+	.dropdown{
+		@include vertical-top();
+		background: lighten($black,13%);
+		padding: 6px 10px;
+		height: 34px;
+		border-radius: 4px;
+		margin: 0 0 0 5px;
+		&.open{
+			border-radius: 4px 4px 0 0;
+		}
+		>a{
+			color: #fff;
+			display: block;
+			span{
+				@include vertical-top();
+				line-height: 20px;
+				margin: 0 0 0 10px;
+			}
+		}
+		>a:hover{
+			text-decoration: none;
+			//color: $bg-theme;
+		}
+	}
+	.icon-arrow-down{
+		font-size: 8px;
+		@include vertical-middle();
+		margin: 0 0 0 3px;
+	}
+	.dropdown-menu{
+		background:$dropdown-bg;
+		box-shadow:none;
+		padding:0;
+		margin: 0;
+		border-radius: 0 0 4px 4px;
+		border:none;
+		> li{
+			position:relative;
+			-webkit-user-select: none; /* Chrome/Safari */        
+			-moz-user-select: none; /* Firefox */
+			-ms-user-select: none; /* IE10+ */
+			/* Rules below not implemented in browsers yet */
+			-o-user-select: none;
+			user-select: none;
+			cursor:pointer;
+			
+			&:last-child > a{
+				border-radius: 0 0 4px 4px;
+				border: none;
+			}
+			> a{
 				position: relative;
-				padding:1px 26px;
+				padding:6px 20px 6px 12px;
+				color: $white;
+				border-bottom: 1px solid lighten($dropdown-bg,6%);
 				&:hover,
 				&.selected,
 				&.selected:hover{
@@ -826,20 +842,51 @@ h1{
 					background:$bg-theme;
 				}
 				i{
+					font-size: 10px;
+					line-height: 20px;
 					position: absolute;
-					width: 14px;
-					height: 14px;
 					z-index: 1000;
 					top: 50%;
-					left: 5px;
-					margin: -7px 0 0;
-					font-size: 12px;
-					line-height: 14px;
+					right: 10px;
+					margin: -10px 0 0;
+				}
+			}
+		}
+		.sub-menu {
+			left: 100%;
+			position: absolute;
+			top: 0;
+			display:none;
+			border-radius: 0 4px 4px 0;
+			background: lighten($dropdown-bg,12%);
+			>li {
+				&:first-child > a{
+					border-radius: 4px 4px 0 0;
+				}
+				>a{
+					border-color: lighten($dropdown-bg,15%);
+				}
+			}
+			.sub-menu{
+				background: lighten($dropdown-bg,20%);
+				>li {
+					>a{
+						border-color: lighten($dropdown-bg,24%);
+					}
+				}
+				.sub-menu{
+					background: lighten($dropdown-bg,28%);
+					>li {
+						>a{
+							border-color: lighten($dropdown-bg,32%);
+						}
+					}
 				}
 			}
 		}
 	}
 }
+/**/
 .videos-block{
 	.video-block{
 		float: none;
