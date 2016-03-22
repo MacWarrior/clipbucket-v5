@@ -27,8 +27,9 @@
 		</a>
 		<div class="item-footer">
 			{ANCHOR place='in_video_thumb' data=$video}
-			<img data-quick="quick-{$video.videoid}"
-	 class="icon-add add_icon cb_quickie cb-btn-quick-{$video.videoid} {if in_array($video.videoid, $qlist_vids)}check_icon{/if}" src="{$imageurl}/dot.gif" vtitle="{$video.title}" v-id="{$video.videoid}" vlink="{videoLink($video)}" vthumb="{getThumb vdetails=$video size=600x338 }" vduration="{$video.duration|SetTime}" title="Add {$video.title} to Quicklist">
+			<button style="color:black" data-quick="quick-{$video.videoid}"
+	 class="icon-plus cb_quickie cb-btn-quick-{$video.videoid} {if in_array($video.videoid, $qlist_vids)}icon-tick{/if}" vtitle="{$video.title}" v-id="{$video.videoid}" vlink="{videoLink($video)}" vthumb="{getThumb vdetails=$video size=600x338 }" vduration="{$video.duration|SetTime}" title="Add {$video.title} to Quicklist">
+			</button>
 			<span class="duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</span>
 		</div>
 	</div>

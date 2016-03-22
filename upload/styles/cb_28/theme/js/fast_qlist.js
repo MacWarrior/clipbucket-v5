@@ -53,7 +53,7 @@
 
 	$(document).on("click",".cb_quickie",function(){
 		obj = $(this);
-		$(this).addClass('check_icon');
+		$(this).addClass('icon-tick');
 		id = $(this).attr('v-id');
 		title = $(this).attr('vtitle');
 		thumb = $(this).attr('vthumb');
@@ -66,7 +66,7 @@
 		e.preventDefault();
 		vid = $(this).attr('todel');
 		//$(document).find('quick-1046').removeClass("check_icon");
-		$(".cb_quickie[v-id="+vid+"]").removeClass('check_icon');
+		$(".cb_quickie[v-id="+vid+"]").removeClass('icon-tick');
 		currentList = $.cookie("fast_qlist");
 		cleaned = currentList.replace(vid, '');
 		console.log(cleaned);
@@ -79,6 +79,6 @@
 		$.cookie("fast_qlist", null, { expires : 10 });
 		$('.qlist_item').fadeOut('slow');
 		$('#qlist_main').fadeOut('slow');
-		$('.cb_quickie').removeClass('check_icon');
+		$('.cb_quickie').removeClass('icon-tick');
 	});
 	
