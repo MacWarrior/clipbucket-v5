@@ -69,13 +69,15 @@
 
 {if $display_type=='featuredVideos_sidebar'}
 	<div class="featured-video clearfix">
-		<div class="video_thumb">
-			<img src="{getThumb vdetails=$video size=128x80}" {ANCHOR place="video_thumb" data=$video} class="img-responsive">
-			<time datetime="2016-15-03" class="duration">
-			{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</time>
-		</div> <!--VIDEO_THUMB END-->
+		<a href="{videoLink($video)}">
+			<div class="video_thumb">
+				<img src="{getThumb vdetails=$video size=128x80}" {ANCHOR place="video_thumb" data=$video} class="img-responsive">
+				<time datetime="2016-15-03" class="duration">
+				{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</time>
+			</div> <!--VIDEO_THUMB END-->
+		</a>
 		<div class="details_block">
-			<strong class="title"><a href="#">{$video.title|truncate:50}</a></strong>
+			<strong class="title"><a href="{videoLink($video)}">{$video.title|truncate:50}</a></strong>
 			<span class="author">by <a href="{$userquery->profile_link($video)}">{$video.username}</a></span>
 			<div class="views-date">
 				<span>{$video.views}&nbsp;views</span>
