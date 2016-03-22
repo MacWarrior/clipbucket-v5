@@ -6,6 +6,7 @@
 			<div class="clearfix leaderboard-ad ad">
 				{AD place='ad_728x90'}
 			</div>
+			{$categories = pullCategories()}
 			
 			{assign var=sorting_links value=sorting_links()}
 			<div class="filter-dropdowns clearfix">
@@ -13,31 +14,51 @@
 					<div class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">All <span class="icon-down-arrow"></span></a>
 						<ul class="dropdown-menu">
-							<li>
-								<a class="trigger">Level 1 <i class="icon-right-arrow"></i></a>
-								<ul class="dropdown-menu sub-menu">
-									<li><a href="#">Level 2</a></li>
-									<li>
-										<a class="trigger">Level 2 <i class="icon-right-arrow"></i></a>
+							{foreach from=$categories item=maincat}
+								<li>
+									<a class="trigger">{$maincat.category_name} {if $maincat.children}<i class="icon-right-arrow"></i>{/if}</a>
+									{if $maincat.children} 
 										<ul class="dropdown-menu sub-menu">
-											<li><a href="#">Level 3</a></li>
-											<li><a href="#">Level 3</a></li>
+										{foreach from=$maincat.children item=sub1}
 											<li>
-												<a class="trigger">Level 3 <i class="icon-right-arrow"></i></a>
-												<ul class="dropdown-menu sub-menu">
-													<li><a href="#">Level 4</a></li>
-													<li><a href="#">Level 4</a></li>
-													<li><a href="#">Level 4</a></li>
-												</ul>
+												<a class="trigger">{$sub1.category_name} {if $sub1.children}<i class="icon-right-arrow"></i>{/if}</a>
+												{if $sub1.children}
+													<ul class="dropdown-menu sub-menu"> 
+													{foreach from=$sub1.children item=sub2}
+													<li>
+														<a class="trigger">{$sub2.category_name} {if $sub2.children}<i class="icon-right-arrow"></i>{/if}</a>
+														{if $sub2.children}
+															<ul class="dropdown-menu sub-menu">
+															{foreach from=$sub2.children item=sub3}
+															<li>
+																<a class="trigger">{$sub3.category_name} {if $sub3.children}<i class="icon-right-arrow"></i>{/if}</a>
+															
+																{if $sub3.children}
+
+																	<ul class="dropdown-menu sub-menu">
+																		{foreach from=$sub3.children item=sub4}
+																			<li>
+																				<a class="trigger">{$sub4.category_name}</a>
+																			</li>
+																		{/foreach}
+																	</ul>
+																{/if}
+																</li>
+															{/foreach}
+															</ul>
+														{/if}
+														</li>
+													{/foreach}
+													</ul>
+												{/if}
 											</li>
+										{/foreach}
 										</ul>
-									</li>
-									<li><a href="#">Level 2</a></li>
-								</ul>
-							</li>
-							<li><a href="#">Level 1</a></li>
-							<li><a href="#">Level 1</a></li>
+									{/if}
+								</li>
+							{/foreach}
 						</ul>
+						
 					</div>
 				</div>
 				
