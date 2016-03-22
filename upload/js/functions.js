@@ -208,9 +208,9 @@ var loading_img_2 = "<img style='vertical-align:middle' src='"+imageurl+"/ajax-l
 	function youtube_upload()
 	{
 
-		$('#remoteUploadBttn').button('loading');
+		$('#remoteUploadBttn').attr('disabled','disabled');
 		//$('#ytUploadBttn').attr("disabled","disabled");
-		$('#ytUploadBttn').button('loading');
+		$('#ytUploadBttn').attr('disabled','disabled');
 		var file = $("#remote_file_url").val();
 		force_stop = false;		
 		if(!file || file=='undefined')
