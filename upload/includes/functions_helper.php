@@ -148,3 +148,38 @@
         
         return $conts;
     }
+
+    /**
+    * Pulls categories without needing any paramters
+    * making it easy to use in smarty. Decides type using page
+    *
+    * @return : { array } { $all_cats } { array with all details of all categories }
+    * @since : March 22nd, 2016 ClipBucket 2.8.1
+    * @author : Saqib Razzaq
+    */
+
+    function pullCategories() {
+        global $cbvid;
+        $params = array();
+        switch (THIS_PAGE) {
+            case 'videos':
+                $type = 'video';
+                break;
+            case 'photos':
+                $type = 'photo';
+                break;
+            
+            default:
+                $type = 'video';
+                break;
+        }
+
+        $params['type'] = $type;
+        $params['echo'] = false;
+        $all_cats = $cbvid->cbCategories($params);
+        if (is_array($all_cats)) {
+            return $all_cats;
+        } else {
+            return false;
+        }
+    }
