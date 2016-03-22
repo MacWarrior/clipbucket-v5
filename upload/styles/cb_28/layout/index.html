@@ -46,7 +46,7 @@
 				</div>
 
 				<div id="featured-loadmore" class="clearfix text-center">
-					<button id="featured_load_more" class="btn btn-loadmore" loadtype="video" loadmode="featured" loadlimit="2" loadhit="1">Load More</button>
+					<button id="featured_load_more" class="btn btn-loadmore" loadtype="video" loadmode="featured" loadlimit="{$row.index_featured}" loadhit="1">Load More</button>
 				</div>
 			</section>
 
@@ -56,7 +56,7 @@
 				</div>
 				<div id="recent_pre"></div>
 				<div id="recent-loadmore" class="clearfix text-center">
-					<button id="recent_load_more" class="btn btn-loadmore" loadtype="video" loadmode="recent" loadlimit="6" loadhit="1">Load More</button>
+					<button id="recent_load_more" class="btn btn-loadmore" loadtype="video" loadmode="recent" loadlimit="{$row.index_recent}" loadhit="1">Load More</button>
 				</div>
 			</section>
 		</div>
