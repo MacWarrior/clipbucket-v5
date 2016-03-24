@@ -128,7 +128,7 @@
 				{if $playlists}
 				{foreach $playlists as $playlist}
 				<div class="playlist clearfix"> 
-					<h3>{$playlist.playlist_name}</h3>	
+					<a href="{videoLink vdetails=$playlist['first_item']|@json_decode}&play_list={$playlist.playlist_id}"><h3>{$playlist.playlist_name}</h3></a>
 					{$items = get_playlist_items($playlist.playlist_id)}
 					<div class="clearfix row">
 					{foreach $items as $item}
