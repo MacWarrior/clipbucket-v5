@@ -356,15 +356,15 @@ $vidDetails = array
 $vid = $Upload->submit_upload($vidDetails);
 
 echo json_encode(array('vid'=>$vid));
-
-
+$file_dir = $vidDetails['file_directory'];
+$logFile = LOGS_DIR.'/'.$file_dir.'/'.$file_name.".log";
 if($quick_conv=='yes' || $use_crons=='no')
 {
 	//exec(php_path()." -q ".BASEDIR."/actions/video_convert.php &> /dev/null &");
 	if (stristr(PHP_OS, 'WIN')) {
 			exec(php_path()." -q ".BASEDIR."/actions/video_convert.php $targetFileName sleep");
 		} else {
-			exec(php_path()." -q ".BASEDIR."/actions/video_convert.php $targetFileName sleep&> /dev/null &");
+			exec(php_path()." -q ".BASEDIR."/actions/video_convert.php $targetFileName $file_name $file_dir $logFile > /dev/null &");
 	}
 }
 

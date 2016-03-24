@@ -26,7 +26,7 @@
 	$log = new SLog($logFile);
 	
 	$log->newSection("Starting Conversion Log");
-	$TempLogData = "Filename : {$_filename}\n";
+	$TempLogData = "Filename : {$fileName}\n";
 	$TempLogData .= "File directory : {$file_directory_}\n";
 	$TempLogData .= "Log file : {$logFile}\n";
 	$log->writeLine("Getting Arguments",$TempLogData, true, true);
@@ -127,7 +127,7 @@
 	$ffmpeg->configs = $configs;
 	$ffmpeg->file_name = $tmp_file;
 	$ffmpeg->filetune_directory = $file_directory;
-	$ffmpeg->raw_path = VIDEOS_DIR.'/'.$file_directory.$_filename;
+	$ffmpeg->raw_path = VIDEOS_DIR.'/'.$file_directory.$fileName;
 	//$ffmpeg->logs = $log;
 
 	

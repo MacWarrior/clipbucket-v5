@@ -238,6 +238,8 @@ switch($mode)
 	{
 		$Upload->validate_video_upload_form();
 		$_POST['videoid'] = trim($_POST['videoid']);
+		$_POST['title'] = addslashes($_POST['title']);
+		$_POST['description'] = addslashes($_POST['description']);
 		if(empty($eh->error_list))
 		{
 			$cbvid->update_video();
