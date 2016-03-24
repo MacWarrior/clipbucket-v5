@@ -209,15 +209,15 @@ h1{
 			color: $black;
 			text-decoration: none;
 			&:hover{
-				color: $blue-color;
+				color: $blue;
 			}
 		}
 	}
 	.author{
 		margin: 0 0 2px;
-		color:$blue-color;
+		color:$blue;
 		a{
-			color: $blue-color;
+			color: $blue;
 			text-decoration: none;
 		}
 	}
@@ -308,8 +308,8 @@ h1{
 			background: none;
 			cursor: pointer;
 			&.icon-tick{
-				background:$blue-color;
-				border-color:$blue-color;
+				background:$blue;
+				border-color:$blue;
 			}
 		}
 		.vid-type{
@@ -436,16 +436,16 @@ h1{
 				color: $black;
 				text-decoration: none;
 				&:hover{
-					color: $blue-color;
+					color: $blue;
 				}
 			}
 		}
 		.author{
 			display: block;
 			margin: 0 0 5px;
-			color:$blue-color;
+			color:$blue;
 			a{
-				color: $blue-color;
+				color: $blue;
 				text-decoration: none;
 			}
 		}
@@ -724,11 +724,11 @@ h1{
 				font-size: 15px;
 				@include vertical-top();
 				i{
-					color: $blue-color;
+					color: $blue;
 					@include transition($transition:all 0.1s ease-in-out);
 				}
 				&:hover{
-					color: $blue-color;
+					color: $blue;
 					text-decoration: none;
 					i{
 						margin: 0 0 0 5px;
@@ -916,174 +916,116 @@ h1{
 .video_player{
 	height: inherit;
 }
-
-.watch_vids{
-	.popular-video .cb_quickie{
-		padding: 3px 0;
-	}
-}
-
 .video-details{
 	background: $white;
-	padding: 0;
-	.title-area{
-		margin: 0 0 13px;
+	padding: 16px;
+	header.details{
+		margin: 0 0 20px;
 		h1{
-			float: left;
-			font-size: 20px;
-			line-height: 28px;
-			margin: 0 5px 0 0;
-			font-weight: 400;
+			font-size: 25px;
+			line-height: 25 px;
+			margin: 0 0 16px;
+			font-weight: 600;
 			color:$block-color;
 		}
-		.views-count{
-			float: right;
-			font-size: 14px;
-			line-height: 28px;
+		.user-video-info{
+			margin: 0 0 12px;
+			display: table;
+			width: 100%;
+			.views-counter,
+			.avatar,
+			.user-title{
+				display: table-cell;
+				vertical-align: middle;
+			}
+			.avatar{
+				width: 58px;
+				img{
+					width:58px;
+					height:58px;
+					border-radius: 29px;
+				}
+			}
+			.user-title{
+				font-size: 18px;
+				line-height: 20px;
+				font-weight: 400;
+				margin: 0;
+				padding: 0 0 0 16px;
+				a{
+					color: $black;
+				}
+			}
+			.views-counter{
+				text-align: right;
+				width: 166px;
+				font-size: 25px;
+				line-height: 25px;
+				padding: 12px 0 11px 16px;
+				span{
+					@include vertical-top();
+					border-bottom: 3px solid darken($body-bg,2.6%);
+					width: 100%;
+					height: 34px;
+
+				}
+			}
 		}
 	}
-	.user-likes-count{
+	.user-likes-sub{
 		margin: 0 -15px;
-		.user-info{
-			.avatar{
-				@include vertical-middle();
-				width: 55px;
-				height: 55px;
-				margin: 0 5px 0 0;
-				border-radius: 50%;
-				img{
-					display: block;
-					width: 100%;
-					height: auto;
-					border-radius: 50%;
-				}
+		.like-rating{
+			.rating{
+				padding: 3px 0 2px;
 			}
-			.sub-title{
-				@include vertical-middle();
-				.user_title{
-					display: block;
-					font-size: 16px;
-					line-height: 22px;
-					font-weight: 600;
-					margin: 0 0 3px;
-					a{
-						color:$block-color;
-						&:hover{
-							text-decoration: none;
-						}
-					}
-				}
-				.btn-subscribe{
-					font-size: 12px;
-					line-height: 18px;
-					font-weight: 400;
-					padding: 0;
-					border:none;
-					span{
-						float: left;
-						padding: 0 6px;
-						border:solid #0059b3;
-						border-width: 1px 0 1px 1px;
-						border-radius:2px 0 0 2px;
-					}
-					i{
-						float: right;
-						background:#f0f0f0;
-						color:$block-color;
-						padding: 0 6px;
-						width: 25px;
-						border:solid #adadad;
-						border-width: 1px 1px 1px 0;
-						border-radius: 0 2px 2px 0;
-						font-style: normal;
-					}
-				}
-			}
+		}
+		.subscribe-col{
+			text-align: right;
+		}
+		.btn-subscribe{
+			font-size: 14px;
+			line-height: 14px;
 		}
 	}
 }
 /* rating */
 .rating{
-	text-align: right;
-	color: #7e7e7e;
-	font-size: 12px;
-	line-height: 17px;
-	padding: 0 0 40px;
-	margin: 0 0 -40px;
-	position: relative;
-	.rating-holder{
-		position: relative;
-		@include vertical-top();
-		&:before,
-		&:after{
-			content: "";
-			position: absolute;
-			width: 85px;
-			height: 1px;
-			background:#e1e1e1;
-			top: 50%;
-			left: 0;
-		}
-		&:after{
-			left: auto;
-			right: 0;
-		}
-	}
-	#circle,
+	color: darken($body-bg,18%);
+	font-size: 16px;
+	line-height: 20px;
 	.like-dislike{
 		@include vertical-middle();
-	}
-	.like-dislike{
-		width: 80px;
-		margin: 0 0 0 5px;
-		text-align:right;
-		&:first-child{
-			margin: 0 5px 0 0;
-			text-align:left;
-		}
+		margin: 0 16px 0 0;
 		a{
-			display: block;
-			&:hover{
-				text-decoration: none;
-			}
-			i{
+			color: darken($body-bg,18%);
+			span{
+				font-size: 18px;
+				line-height: 20px;
 				@include vertical-middle();
-				height: 14px;
-				width: 24px;
+				margin: 0 10px 0 0;
 			}
-			&.btn-like{
-				i{
-					margin: 0 5px 0 0;
-					background: $sprite -15px -1361px;
-				}
-				&:hover i{
-					background-position: -15px -1380px;
-				}
-			}
-			&.btn-dislike{
-				i{
-					margin: 0 5px 0 0;
-					background: $sprite -12px -1411px;
-				}
-				&:hover i{
-					background-position: -12px -1428px;
-				}
+		}
+		&.likes{
+			color: $blue;
+			a{
+				color: $blue;
 			}
 		}
 	}
 	.like-error{
-		text-align: left;
-		position: absolute;
-		left: 0;
-		bottom: 0;
-		width: 100%;
-		height: 40px;
+		display: block;
 		span{
 			display: block;
 		}
 	}
 }
-/* tune-tabs */
+.error{
+	display: block;
+	padding: 10px;
+	background: #f97373;
+	color: #fff;
+}
+/* view-tabs */
 .cat-tabs{
 	margin: 0 0 20px;
 	border:$default-border;
@@ -1101,19 +1043,19 @@ h1{
 				border-bottom: 3px solid transparent;
 				&:hover{
 					text-decoration: none;
-					border-color: $blue-color;
+					border-color: $blue;
 				}
 			}
 			&.selected{
 				a{
-					border-color: $blue-color;
+					border-color: $blue;
 					font-weight: 700;
 				}
 			}
 		}
 	}
 }
-.tune-tabs{
+.view-tabs{
 	color: $block-color;
 	margin: 0 0 20px;
 	h2{
@@ -1130,27 +1072,32 @@ h1{
 		padding: 0;
 	}
 	.nav-tabs.nav{
-		font-size: 13px;
-		border-bottom:$default-border;
-		border-bottom-width: 1px;		
+		font-size: 16px;
+		border:$default-border;
+		border-width: 1px 0;
 		>li{
-			margin: 0 0 -1px;
+			margin: 0;
 			>a{
-				border-bottom:$default-border;
-				border-width: 0 0 2px;
-				border-color:transparent;
+				border:none;
 				margin: 0;
+				padding: 10px 16px 10px 0;
+				color: lighten($grey-txt,2.7%);
 				&:hover{
-					border-color:$blue-color;
+					border-color:$blue;
 					background: none;
 					color: $block-color;
+				}
+				span{
+					@include vertical-top();
+					margin: 0 10px 0 0;
+					font-size: 18px;
+					line-height: 22px;
 				}
 			}
 			&.active > a,
 			&.active > a:hover,
 			&.active > a:focus{
-				border-color:$blue-color;
-				color: $block-color;
+				color: $blue;
 				background: none;
 			}
 		}
@@ -1182,10 +1129,10 @@ h1{
 		li{
 			margin: 0 0 10px;
 			a{
-				color: $blue-color;
+				color: $blue;
 				&:hover{
 					text-decoration: none;
-					color: darken($blue-color,10%);
+					color: darken($blue,10%);
 				}
 			}
 		}
@@ -1302,7 +1249,7 @@ h1{
 			&:hover{
 				background:$white;
 				border-color:$white;
-				color: $blue-color;
+				color: $blue;
 			}
 			i{
 				@include vertical-top();
@@ -1319,7 +1266,7 @@ h1{
 			> span:hover{
 				background:$white;
 				border-color:$white;
-				color: $blue-color;
+				color: $blue;
 			}
 		}
 	}
@@ -1607,7 +1554,7 @@ textarea#comment_box{
 		&:hover{
 			text-decoration: none;
 			.avatar{
-				background:$blue-color;
+				background:$blue;
 			}
 		}
 	}
@@ -1618,7 +1565,7 @@ textarea#comment_box{
 		border-radius:50%;
 		padding: 3px;
 		background: #fff;
-		border:1px solid $blue-color;
+		border:1px solid $blue;
 		margin: 0 auto 10px;
 	}
 	h2{
@@ -1857,7 +1804,7 @@ textarea#comment_box{
 	}
 	.changeCover{
 		display: none;
-		background: $blue-color;
+		background: $blue;
 		border-radius: 4px;
 		color: #fff;
 		position: absolute;
@@ -2032,7 +1979,7 @@ textarea#comment_box{
 			font-size: 20px;
 			line-height: 20px;
 			&:hover{
-				color: $blue-color;
+				color: $blue;
 			}
 		}
 	}
@@ -2222,11 +2169,7 @@ textarea#comment_box{
 }
 
 
-.error{
-	padding: 10px;
-	background: #f97373;
-	color: #fff;
-}
+
 .form_result,
 #flag_form_result{
 	margin: 0 0 10px;
@@ -2703,7 +2646,7 @@ textarea#comment_box{
 			padding: 5px 10px;
 			min-width: 50px;
 			border-radius:12px;
-			background:$blue-color;
+			background:$blue;
 			color: #fff;
 			i{
 				vertical-align: middle;
@@ -2711,7 +2654,7 @@ textarea#comment_box{
 				line-height: 8px;
 				background: #fff;
 				padding: 2px 5px 1px;
-				color: $blue-color;
+				color: $blue;
 				margin: 0 5px 0 0;
 			}
 		}

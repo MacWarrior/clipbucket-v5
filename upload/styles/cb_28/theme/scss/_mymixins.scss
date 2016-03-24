@@ -13,15 +13,13 @@ $dark-btn:#17181a;
 $header-btn:#262727;
 $dropdown-bg:#424242;
 // $duration-bg:rgba(0,0,0,0.8);
-
-$blue-color:#0080b4;
+$blue:#0080b4;
 $body-bg:#eee;
-$block-bg:#eee;
 $block-color:#333;
 $heading-color:#666;
 $search-toggle:#999;
 $base-font:'Source Sans Pro', sans-serif;
-$base-color:#000;
+$base-color:$black;
 $iconfont: 'icomoon';
 $default-border:1px solid #d9d9d9;
 $fb-color:#2b4b90;
@@ -215,17 +213,17 @@ $probox-bg: #f8f8f8;
 	}
 }
 .btn-primary{
-	background:#1976d2;
-	border-color:#1976d2;
-	font-weight: 700;
+	background:$blue;
+	border-color:$blue;
+	font-weight: 400;
 	color:#fff;
 	&:hover,
 	&:focus,
 	&:active,
 	&.active,
 	&:hover{
-		background:#1976d2;
-		border-color:#1976d2;
+		background:$blue;
+		border-color:$blue;
 		color:#fff;
 	}
 }
