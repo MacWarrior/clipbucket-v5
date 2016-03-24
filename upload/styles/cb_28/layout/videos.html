@@ -10,58 +10,7 @@
 			
 			{assign var=sorting_links value=sorting_links()}
 			<div class="filter-dropdowns clearfix">
-				<div class="cat-col col-lg-6 col-md-6 col-sm-6 col-xs-12 clearfix">
-					<div class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">All <span class="icon-down-arrow"></span></a>
-						<ul class="dropdown-menu">
-							{foreach from=$categories item=maincat}
-								<li>
-									<a href="{cblink(['name'=>'category','data'=>$maincat,'type'=>'video'])}" class="trigger">{$maincat.category_name} {if $maincat.children}<i class="icon-right-arrow"></i>{/if}</a>
-									{if $maincat.children} 
-										<ul class="dropdown-menu sub-menu">
-										{foreach from=$maincat.children item=sub1}
-											<li>
-												<a href="{cblink(['name'=>'category','data'=>$sub1,'type'=>'video'])}" class="trigger">{$sub1.category_name} {if $sub1.children}<i class="icon-right-arrow"></i>{/if}</a>
-												{if $sub1.children}
-													<ul class="dropdown-menu sub-menu"> 
-													{foreach from=$sub1.children item=sub2}
-													<li>
-														<a href="{cblink(['name'=>'category','data'=>$sub2,'type'=>'video'])}"  class="trigger">{$sub2.category_name} {if $sub2.children}<i class="icon-right-arrow"></i>{/if}</a>
-														{if $sub2.children}
-															<ul class="dropdown-menu sub-menu">
-															{foreach from=$sub2.children item=sub3}
-															<li>
-																<a href="{cblink(['name'=>'category','data'=>$sub3,'type'=>'video'])}"  class="trigger">{$sub3.category_name} {if $sub3.children}<i class="icon-right-arrow"></i>{/if}</a>
-															
-																{if $sub3.children}
-
-																	<ul class="dropdown-menu sub-menu">
-																		{foreach from=$sub3.children item=sub4}
-																			<li>
-																				<a class="trigger">{$sub4.category_name}</a>
-																			</li>
-																		{/foreach}
-																	</ul>
-																{/if}
-																</li>
-															{/foreach}
-															</ul>
-														{/if}
-														</li>
-													{/foreach}
-													</ul>
-												{/if}
-											</li>
-										{/foreach}
-										</ul>
-									{/if}
-								</li>
-							{/foreach}
-						</ul>
-						
-					</div>
-				</div>
-				
+				{include file="$style_dir/blocks/category_list.html"}
 				<div class="sorting-col col-lg-6 col-md-6 col-sm-6 col-xs-12 clearfix">
 					<!--Sorting By View-->
 					<div class="dropdown">
