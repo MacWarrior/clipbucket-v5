@@ -20,6 +20,25 @@
 	</div>
 {/if}
 
+{if $display_type=='popVideos_sidebar'}
+<div class="featured-video clearfix">
+	<a href="{videoLink($video)}">
+		<div class="video_thumb">
+			<img src="{getThumb vdetails=$pop_video size=128x80}" {ANCHOR place="video_thumb" data=$pop_video} class="img-responsive">
+			<time datetime="2016-15-03" class="duration">
+			{if $pop_video.duration>1}{$pop_video.duration|SetTime}{else}00:00{/if}</time>
+		</div> <!--VIDEO_THUMB END-->
+	</a>
+	<div class="details_block">
+		<strong class="title"><a href="{videoLink($pop_video)}">{$pop_video.title|truncate:50}</a></strong>
+		<span class="author">by <a href="{$userquery->profile_link($pop_video)}">{$pop_video.username}</a></span>
+		<div class="views-date">
+			<span>{$pop_video.views}&nbsp;views</span>
+		</div>
+	</div>
+</div>
+{/if}
+
 {if $display_type=='homeVideos'}
 	<div class="clearfix thumb-holder">
 		<a class="video-link" href="{videoLink($video)}" title="{$video.title|title}">

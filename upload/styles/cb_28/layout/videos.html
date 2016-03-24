@@ -27,7 +27,7 @@
 						<ul class="dropdown-menu">
 							{foreach from=$sorting_links item=name key=sort}
 							<li>
-								<a href="{link name=sort sort=$sort type=videos}&sorting=sort" {if $smarty.get.sort==$sort} class="selected" {/if}>{if $smarty.get.sort==$sort}<i class="icon-check"></i>{/if}{$name}</a>
+								<a href="{link name=sort sort=$sort type=videos}&sorting=sort" {if $smarty.get.sort==$sort} class="selected" {/if}>{if $smarty.get.sort==$sort}{/if}{$name}</a>
 							</li>
 							{/foreach}
 						</ul>
@@ -91,17 +91,26 @@
 </div>
 <script>
 	$(function(){
-		$(".dropdown-menu > li > a.trigger").on("click",function(e){
-			var current=$(this).next();
-			var grandparent=$(this).parent().parent();
-			if($(this).children().hasClass('icon-left-arrow')||$(this).children().hasClass('icon-right-arrow'))
-				$(this).children().toggleClass('icon-right-arrow icon-left-arrow');
+		$(".dropdown-menu > li > div > i.trigger").on("click",function(e){
+			var current=$(this).parent().next();
+			var grandparent=$(this).parent().parent().parent();
+			var list_siblings = $(this).parent().parent().siblings().children('div').children('i.trigger');
+
+			if($(this).hasClass('icon-right-arrow')){
+				$(list_siblings).addClass('icon-right-arrow');
+				$(list_siblings).removeClass('icon-left-arrow');
+			}
+
+			if($(this).hasClass('icon-left-arrow')||$(this).hasClass('icon-right-arrow'))
+				$(this).toggleClass('icon-right-arrow icon-left-arrow');
+
+
 			grandparent.find('.icon-left-arrow').not(this).children().toggleClass('icon-right-arrow icon-left-arrow');
 			grandparent.find(".sub-menu:visible").not(current).hide();
 			current.toggle();
 			e.stopPropagation();
 		});
-		$(".dropdown-menu > li > a:not(.trigger)").on("click",function(){
+		$(".dropdown-menu > li > div > i:not(.trigger)").on("click",function(){
 			var root=$(this).closest('.dropdown');
 			root.find('.icon-left-arrow').toggleClass('icon-right-arrow icon-left-arrow');
 			root.find('.sub-menu:visible').hide();

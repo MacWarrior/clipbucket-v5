@@ -762,6 +762,22 @@ h1{
 	@include vertical-top();
 	padding: 0 10px 0 0;
 }
+%dropmenu-anchor{
+	display: block;
+	text-decoration: none;
+	font-weight: 400;
+	position: relative;
+	z-index: 2;
+	padding:6px 20px 6px 12px;
+	color: $white;
+	border-bottom: 1px solid lighten($dropdown-bg,6%);
+	&:hover,
+	&.selected,
+	&.selected:hover{
+		color: #fff;
+		background:$bg-theme;
+	}
+}
 .filter-dropdowns{
 	margin: 0 0 16px;
 	font-size: 15px;
@@ -816,6 +832,7 @@ h1{
 		margin: 0;
 		border-radius: 0 0 4px 4px;
 		border:none;
+		z-index: 10;
 		> li{
 			position:relative;
 			-webkit-user-select: none; /* Chrome/Safari */        
@@ -825,30 +842,29 @@ h1{
 			-o-user-select: none;
 			user-select: none;
 			cursor:pointer;
-			
-			&:last-child > a{
+			&:last-child > a,
+			&:last-child > div > a{
 				border-radius: 0 0 4px 4px;
 				border: none;
 			}
 			> a{
+				@extend %dropmenu-anchor;
+			}
+			>div{
 				position: relative;
-				padding:6px 20px 6px 12px;
-				color: $white;
-				border-bottom: 1px solid lighten($dropdown-bg,6%);
-				&:hover,
-				&.selected,
-				&.selected:hover{
-					color: #fff;
-					background:$bg-theme;
+				z-index: 2;
+				>a{
+					@extend %dropmenu-anchor;
 				}
 				i{
 					font-size: 10px;
 					line-height: 20px;
 					position: absolute;
-					z-index: 1000;
+					z-index: 3;
 					top: 50%;
 					right: 10px;
 					margin: -10px 0 0;
+					color: $white;
 				}
 			}
 		}
@@ -859,25 +875,26 @@ h1{
 			display:none;
 			border-radius: 0 4px 4px 0;
 			background: lighten($dropdown-bg,12%);
+			z-index: 4;
 			>li {
-				&:first-child > a{
+				&:first-child > div > a{
 					border-radius: 4px 4px 0 0;
 				}
-				>a{
+				>div>a{
 					border-color: lighten($dropdown-bg,15%);
 				}
 			}
 			.sub-menu{
 				background: lighten($dropdown-bg,20%);
 				>li {
-					>a{
+					>div>a{
 						border-color: lighten($dropdown-bg,24%);
 					}
 				}
 				.sub-menu{
 					background: lighten($dropdown-bg,28%);
 					>li {
-						>a{
+						>div>a{
 							border-color: lighten($dropdown-bg,32%);
 						}
 					}
@@ -886,19 +903,11 @@ h1{
 		}
 	}
 }
-/**/
-.videos-block{
-	.video-block{
-		float: none;
-		@include vertical-top();
-		margin: 0 0 20px -4px;
-	}
-}
 /* watch video */
-#cb_player,
 .player-holder{
-	padding: 0;
-	margin: 0 0 13px;
+	margin: 0 0 18px;
+}
+#cb_player{
 	#link_v{
 		display: inline-block;
 		vertical-align: top;
@@ -914,7 +923,8 @@ h1{
 	}
 }
 
-.video_info_actions{
+.video-details{
+	background: $white;
 	padding: 0;
 	.title-area{
 		margin: 0 0 13px;
@@ -3057,7 +3067,7 @@ textarea#comment_box{
 			font-size: 14px;
 		}
 	}
-	.video_info_actions{
+	.video-details{
 		padding: 0 15px;
 		.user-info{
 			margin: 0 0 10px;
