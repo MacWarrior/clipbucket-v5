@@ -140,7 +140,7 @@
 							{if $videoid}
 								{$videos = get_videos(['videoid'=>$videoid,'limit'=>'2'])}
 								{foreach $videos as $video}
-									<a href="{videoLink($video)}">
+									<a href="{videoLink($video)}&play_list={$playlist.playlist_id}">
 										{$thumb = get_thumb($video)}
 										<img src="{$thumb}" class="img-responsive">
 									</a>
