@@ -183,3 +183,36 @@
             return false;
         }
     }
+
+    /**
+    * Takes a number and returns more human friendly format of it e.g 1000 == 1K
+    * @param : { integer } { $num } { number to convert to pretty number}
+    * @return : { integer } { $kviews } { pretty number after processing }
+    * @since : 24th March, 2016 ClipBucket 2.8.1
+    * @author : Saqib Razzaq
+    */
+
+    function prettyNum($num) {
+        $prettyNum = preg_replace("/[^0-9\.]/", '', $num);
+        if ($prettyNum >= 100 && $prettyNum < 1000000) {
+            $kviews = 235325 / 1000;
+            if ($prettyNum > 1000) {
+                $kviews = round($kviews,0);
+            }
+            $kviews = $kviews.' K'; // number is in thousands
+        } elseif ($prettyNum >= 1000000 && $prettyNum < 1000000000) {
+            $kviews = $prettyNum / 1000000;
+            $kviews = $kviews.' M'; // number is in millions
+        } elseif ($prettyNum >= 1000000000) {
+            $kviews = $prettyNum / 1000000000;
+            $kviews = $kviews.' B'; // number is in billions
+        } elseif ($prettyNum < 100) {
+            return $prettyNum;
+        }
+
+        if (!empty($kviews)) {
+            return $kviews;
+        } else {
+            return false;
+        }
+    }
