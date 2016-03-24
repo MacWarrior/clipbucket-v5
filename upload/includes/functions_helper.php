@@ -194,8 +194,8 @@
 
     function prettyNum($num) {
         $prettyNum = preg_replace("/[^0-9\.]/", '', $num);
-        if ($prettyNum >= 100 && $prettyNum < 1000000) {
-            $kviews = 235325 / 1000;
+        if ($prettyNum >= 1000 && $prettyNum < 1000000) {
+            $kviews = $prettyNum / 1000;
             if ($prettyNum > 1000) {
                 $kviews = round($kviews,0);
             }
@@ -206,7 +206,7 @@
         } elseif ($prettyNum >= 1000000000) {
             $kviews = $prettyNum / 1000000000;
             $kviews = $kviews.' B'; // number is in billions
-        } elseif ($prettyNum < 100) {
+        } elseif ($prettyNum < 1000) {
             return $prettyNum;
         }
 
