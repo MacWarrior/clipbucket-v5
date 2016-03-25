@@ -21,13 +21,37 @@ $search-toggle:#999;
 $base-font:'Source Sans Pro', sans-serif;
 $base-color:$black;
 $iconfont: 'icomoon';
-$default-border:1px solid #d9d9d9;
+$bordercolor:#d9d9d9;
+$default-border:1px solid $bordercolor;
 $fb-color:#2b4b90;
 $tw-color:#1c95d0;
 $gplus-color:#d34332;
 $com-color:#2d2d2d;
 $probox-bg: #f8f8f8;
+$input-bg: #f6f6f6;
 /**/
+@mixin txtinput(){
+	color:$base-color;
+	background: $input-bg;
+	border-color: $bordercolor;
+	font-size: 15px;
+	line-height: 28px;
+	height: 42px;
+	/* placeholder input styles */
+	input[type="text"]::-webkit-input-placeholder { /* WebKit browsers */
+			color: lighten($base-color,74%);
+	}
+	input[type="text"]:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+		color: lighten($base-color,74%);
+	}
+	input[type="text"]::-moz-placeholder { /* Mozilla Firefox 19+ */
+		color: lighten($base-color,74%);
+		opacity: 1;
+	}
+	input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
+		color: lighten($base-color,74%);
+	}
+}
 @mixin gradient-bg(){
 	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#000000+0,000000+100&0.6+0,0.59+43,0.55+49,0.26+70,0.12+82,0.05+90,0.01+100 */
 	background: -moz-linear-gradient(top,  rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.59) 43%, rgba(0,0,0,0.55) 49%, rgba(0,0,0,0.26) 70%, rgba(0,0,0,0.12) 82%, rgba(0,0,0,0.05) 90%, rgba(0,0,0,0.01) 100%); /* FF3.6-15 */
@@ -75,7 +99,7 @@ $probox-bg: #f8f8f8;
 	overflow: hidden;
 }
 @mixin pro-box-mix(){
-	background: #f8f8f8;
+	background: $probox-bg;
 	border:1px solid #e1e1e1;
 }
 
@@ -241,6 +265,10 @@ $probox-bg: #f8f8f8;
 		border-color:#4caf50;
 		color:#fff;
 	}
+}
+/* form elements */
+.form-control{
+	@include txtinput();
 }
 /* sprite */
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 100dpi) {

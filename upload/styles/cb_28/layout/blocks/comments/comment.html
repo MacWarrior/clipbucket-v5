@@ -7,6 +7,7 @@
 {/if}
 
 {if $rep_mode}
+
 <li id="reply-{$comment.comment_id}" class="commentBox clearfix reply-{$comment.comment_id}">
 	<div class="reply-holder">
 		<div class="comments-box clearfix">
@@ -17,9 +18,17 @@
 			</div>
 			<div class="comment-info">
 				 <a href="{$userquery->profile_link($user)}">
-					<span>{name($user)}</span>
+					<span>
+						{if $comment.anonym_name != ''}
+							{$comment.anonym_name} (Annonymous)
+						{else}
+							<a href="{$userquery->profile_link($user)}" >
+							{name($user)}
+						{/if}
+					</span>
 				</a>
 				<p>{$comment.comment|comment}</p>
+				{if !empty(userid())}
 				<div class="com-info-actions clearfix">
 					<span>{$comment.date_added|niceTime}</span>
 					<div class="reply">
@@ -29,6 +38,7 @@
 						{if has_access('admin_del_access') || $comment.userid==userid() || $comment.type_owner_id==userid()} &middot; <a href="javascript:void(0)" onclick="delete_comment('{$comment.comment_id}','{$type}')">{lang code='delete'}</a>{/if}
 					</div>
 				</div>
+				{/if}
 			</div>
 		</div>
 	</div>
@@ -45,13 +55,21 @@
 			<img src="{avatar details=$user}" alt="" class="comnt_pic">
 		</div>
 		<div class="comment-info">
-			<a href="{$userquery->profile_link($user)}" >
-				<strong>{name($user)}</strong>
-			</a>
-			 <!-- <i class="text-muted">- {$comment.date_added|niceTime}</i> -->
-			<p>{$comment.comment|comment}</p>
-			<div class="com-info-actions clearfix">
+			<strong  class="commenter">
+				{if $comment.anonym_name != ''}
+					{$comment.anonym_name} (Annonymous)
+				{else}
+				<a href="{$userquery->profile_link($user)}" >
+					{name($user)}
+				</a>
+				{/if}
 				<span>{$comment.date_added|niceTime}</span>
+			</strong>
+			<div class="clearfix commented-txt">
+				<p>{$comment.comment|comment}</p>
+			</div>
+			{if !empty(userid())}
+			<div class="com-info-actions clearfix">
 				<div class="reply">
 					{if $userquery->login_check('',true)}
 					
@@ -63,6 +81,7 @@
 					{if has_access('admin_del_access') || $comment.userid==userid() || $comment.type_owner_id==userid()} &nbsp; <a href="javascript:void(0)" onclick="delete_comment('{$comment.comment_id}','{$type}')">{lang code='delete'}</a>{/if}
 				</div>
 			</div>
+			{/if}
 		</div>
 	   <!--  <div class="clearfix text-right">
 			<i class="text-muted">{$comment.date_added|niceTime}</i>
@@ -78,7 +97,7 @@
 		{foreach from=$child_comment item=replies}
 			{foreach from=$replies|@array_reverse item=reply}
 				{if $reply@iteration < 4}
-			  
+
 					<li id="reply-{$comment.comment_id}" class="commentBox clearfix reply-{$reply.comment_id}">
 						<div class="reply-holder">
 							<div class="comments-box clearfix">
@@ -88,12 +107,22 @@
 									<img src="{avatar details=$user}" alt="" class="reply_pic">
 								</div>
 								<div class="comment-info">
-									 <a href="{$userquery->profile_link($user)}">
-										<span>{name($user)}</span>
-									</a>
-									<p>{$reply.comment|comment}</p>
-									<div class="com-info-actions clearfix">
+									<strong  class="commenter">
+										{if $comment.anonym_name != ''}
+											{$comment.anonym_name} (Annonymous)
+										{else}
+										<a href="{$userquery->profile_link($user)}" >
+											{name($user)}
+										</a>
+										{/if}
+										
 										<span>{$reply.date_added|niceTime}</span>
+									</strong>
+									<div class="clearfix commented-txt">
+										<p>{$reply.comment|comment}</p>
+									</div>
+									{if !empty(userid())}
+									<div class="com-info-actions clearfix">
 										<div class="reply">
 											{if !$comment.userid==userid() || has_access('admin_access',true)}
 											 <a href="javascript:void(0)" onclick="spam_comment('{$reply.comment_id}','{$type}','{$type_id}')">{lang code='spam'}</a>
@@ -101,6 +130,7 @@
 											{if has_access('admin_del_access') || $comment.userid==userid() || $comment.type_owner_id==userid()} &middot; <a href="javascript:void(0)" onclick="delete_comment('{$reply.comment_id}','{$type}')">{lang code='delete'}</a>{/if}
 										</div>
 									</div>
+									{/if}
 								</div>
 							</div>
 						</div>
@@ -117,17 +147,28 @@
 									<img src="{avatar details=$user}" alt="" class="reply_pic">
 								</div>
 								<div class="comment-info">
-									 <a href="{$userquery->profile_link($user)}">
-										<span>{name($user)}</span>
-									</a>
-									<p>{$reply.comment|comment}</p>
-									<div class="com-info-actions clearfix">
+									<strong  class="commenter">
+										{if $comment.anonym_name != ''}
+											{$comment.anonym_name} (Annonymous)
+										{else}
+										<a href="{$userquery->profile_link($user)}" >
+											{name($user)}
+										</a>
+										{/if}
+										
 										<span>{$reply.date_added|niceTime}</span>
+									</strong>
+									<div class="clearfix commented-txt">
+										<p>{$reply.comment|comment}</p>
+									</div>
+									{if !empty(userid())}
+									<div class="com-info-actions clearfix">
 										<div class="reply">
 											 <a href="javascript:void(0)" onclick="spam_comment('{$reply.comment_id}','{$type}','{$type_id}')">{lang code='spam'}</a>
 											{if has_access('admin_del_access') || $comment.userid==userid() || $comment.type_owner_id==userid()} &middot; <a href="javascript:void(0)" onclick="delete_comment('{$reply.comment_id}','{$type}')">{lang code='delete'}</a>{/if}
 										</div>
 									</div>
+									{/if}
 								</div>
 							</div>
 							

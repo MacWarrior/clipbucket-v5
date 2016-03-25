@@ -78,18 +78,18 @@
 						<div class="tab-pane fade in clearfix" id="cb-item-share">
 							<ul class="social-share">
 								<li>
-									<a href="http://www.facebook.com/sharer/sharer.php?s=100&p[url]={videoLink($video)|urlencode}&p[images][0]={get_thumb vdetails=$video}&p[title]={$video.title|title|urlencode}&p[summary]={$video.description|description|urlencode}" target="_blank" class="btn btn-fb">
-										<span class="fa fa-facebook"></span> Facebook
+									<a href="http://www.facebook.com/sharer/sharer.php?s=100&p[url]={videoLink($video)|urlencode}&p[images][0]={get_thumb vdetails=$video}&p[title]={$video.title|title|urlencode}&p[summary]={$video.description|description|urlencode}" target="_blank" class="btn-fb icon-facebook">
+										<span>Facebook</span>
 									</a>
 								</li>
 								<li>
-									<a href="https://twitter.com/share" target="_blank" class="btn btn-tw">
-										<span class="fa fa-twitter"></span> Twitter
+									<a href="https://twitter.com/share" target="_blank" class="btn-tw icon-twitter">
+										<span>Twitter</span>
 									</a>
 								</li>
 								<li>
-									<a href="https://plus.google.com/share?url={urlencode(videolink($video))}" target="_blank" class="btn btn-gplus">
-										<span class="fa fa-google-plus"></span> Google Plus
+									<a href="https://plus.google.com/share?url={urlencode(videolink($video))}" target="_blank" class="btn-gplus icon-gplus">
+										<span>Google Plus</span>
 									</a>
 								</li>
 							</ul>
@@ -120,25 +120,24 @@
 						</div>
 					</div>
 				</div>
-				<div class="clearfix" id="comments-block">
-					<div id="test1"></div>
-					<div id="reply" class="clearfix"> 
-						<div class="pad-bottom">
-							<div  class="addComment clearfix">
-								<h2 class="com_count" id="com_count">
-									{$vdo.comments_count} <span>{lang code='comments'} </span>
-								</h2>
-								{if $myquery->is_commentable($vdo,'v')}
-									{include file="$style_dir/blocks/comments/add_comment.html" id=$vdo.videoid type=v}
-								{else}
-								<div class="alert alert-warning">
-									{lang code='comm_disabled_for_vid'}
-								</div>
-								{/if}
-							</div>
-							<div id="userCommentsList">
-							</div>
+			</div>
+
+			<div class="clearfix comments-block" id="comments-block">
+				<div id="test1"></div>
+				<div id="reply" class="clearfix"> 
+					<div  class="addComment clearfix">
+						<h2 class="com_count" id="com_count">
+							{$vdo.comments_count} <span>{lang code='comments'} </span>
+						</h2>
+						{if $myquery->is_commentable($vdo,'v')}
+							{include file="$style_dir/blocks/comments/add_comment.html" id=$vdo.videoid type=v}
+						{else}
+						<div class="alert alert-warning">
+							{lang code='comm_disabled_for_vid'}
 						</div>
+						{/if}
+					</div>
+					<div id="userCommentsList">
 					</div>
 				</div>
 			</div>

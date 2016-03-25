@@ -919,6 +919,7 @@ h1{
 .video-details{
 	background: $white;
 	padding: 16px;
+	margin: 0 0 16px;
 	header.details{
 		margin: 0 0 20px;
 		h1{
@@ -1057,7 +1058,6 @@ h1{
 }
 .view-tabs{
 	color: $block-color;
-	margin: 0 0 20px;
 	h2{
 		font-size: 16px;
 		line-height: 18px;
@@ -1104,7 +1104,7 @@ h1{
 	}
 	.tab-content{
 		> .tab-pane{
-			padding: 10px 0 0;
+			padding: 16px 0 0;
 		}
 		.infotable table td{
 			width: 50%;
@@ -1140,35 +1140,48 @@ h1{
 }
 .social-share{
 	@include list-style();
-	margin: 0 0 20px;
+	margin: 0 0 16px;
+	font-size: 44px;
+	line-height: 44px;
 	li{
 		@include vertical-top();
-		margin: 0 5px 0 0;
+		margin: 0 10px 0 0;
 		a{
-			color: #fff;
+			display: block;
+			background: $white;
+			width: 44px;
+			height: 44px;
 			&:hover{
-				color: #fff;
+				text-decoration: none;
 			}
 			&.btn-fb{
-				background: $fb-color;
+				color: $fb-color;
 			}
 			&.btn-tw{
-				background: $tw-color;
+				color: $tw-color;
 			}
 			&.btn-gplus{
-				background: $gplus-color;
+				color: $gplus-color;
 			}
-
+			span{
+				font-size: 0;
+				line-height: 0;
+			}
 		}
 	}
 }
 .share_form{
 	.form-group{
-		label:first-child{
+		label.block-label{
 			font-size: 18px;
-			line-height: 20px;
-			font-weight: 500;
-			margin: 0 5px 10px 0;
+			line-height: 18px;
+			font-weight: 600;
+			margin: 0 0 16px;
+			display: block;
+			span{
+				font-size: 14px;
+				color: $grey-txt;
+			}
 		}
 		.radio-inline{
 			input[type="radio"]{
@@ -1179,7 +1192,13 @@ h1{
 	textarea{
 		resize:none;
 	}
+	.btn-submit{
+		font-size: 15px;
+		line-height: 15px;
+		font-weight: 600;
+	}
 }
+/* end of watch video */
 .custom-container{
 	max-width: 1170px;
 	padding: 0 15px;
@@ -1277,41 +1296,45 @@ h1{
 }
 
 /* comments */
+.comments-block{
+	background: $white;
+	padding: 16px;
+}
 .addComment{
 	color:$com-color;
 	h2{
-		font-size: 18px;
-		line-height: 22px;
-		font-weight: 500;
-		text-transform: uppercase;
-		margin: 0 0 20px;
+		font-size: 25px;
+		line-height: 25px;
+		font-weight: 400;
+		margin: 0 0 11px;
+		padding: 0 0 16px;
+		border-bottom: $default-border;
+		color: $black;
 	}
 	.com-txtarea{
+		margin: 0 0 16px;
+	}
+	.block-label{
+		display: block;
 		margin: 0 0 10px;
 	}
-	#add_comment_button{
-		border-radius: 0;
-		font-weight: 400;
-		padding: 8px 30px;
-	}
-	.btn-holder{
-		padding: 0 5px 0 67px;
-		margin: 0 0 10px;
+	.btn-submit{
+		font-size: 15px;
+		line-height: 15px;
+		font-weight: 600;
 	}
 }
 textarea#comment_box{
-	height: 100px;
-	border-radius: 4px;
+	height: 58px;
 	resize:none;
 	width: 100%;
-	border-color:#dfdfdf;
 }
 .avatar_comment_as{
-	width: 46px;
-	height: 46px;
+	width: 58px;
+	height: 58px;
 	border-radius: 50%;
 	float: left;
-	margin: 5px 17px 0 0;
+	margin: 0 16px 0 0;
 	img{
 		display: block;
 		width: 100%;
@@ -1320,44 +1343,51 @@ textarea#comment_box{
 }
 .comment_txt_area{
 	overflow: hidden;
-	padding: 5px;
+	.form-control{
+		box-shadow:none;
+	}
 }
 
 //new comments add
 
 .comments {
 	> ul {
-		list-style-type: none;
-		padding: 0;
-		margin: 0;
+		@include list-style();
+		
 		> li {
-			padding:10px 0px 0;
+			padding:0 0 10px;
 			position: relative;
+			&:last-child{
+				padding: 0;
+			}
 			.comment-avatar {
 				float: left;
-				width: 46px;
-				margin:0 22px 0 0;
+				width: 58px;
+				margin:0 16px 0 0;
 				img {
-					width: 46px;
-					height: 46px;
+					width: 58px;
+					height: 58px;
 					border-radius: 50%;
 				}
 			}
 			>ul{
-				padding: 0 0 0 66px;
+				padding: 0 0 0 74px;
 			}
 			.comment-info {
 				overflow: hidden;
-				padding: 4px 10px 10px 0;
+				padding: 0 0 10px;
 				font-size: 15px;
-				border-bottom:1px solid #f3f3f3;
-				a {
-					color: #141414;
-					strong{
-						font-weight: 500;
+				.commenter{
+					display: block;
+					font-size: 16px;
+					line-height: 16px;
+					font-weight: 600;
+					margin: 0 0 10px;
+					span{
+						@include vertical-top();
+						margin: 0 0 0 10px;
+						color: lighten($black, 62%);
 					}
-				}
-				span {
 				}
 			}
 			.comments-box {
@@ -1425,15 +1455,19 @@ textarea#comment_box{
 					}
 				}
 			}
-			p {
-				font-size: 13px;
-				line-height: 20px;
-				margin:7px 0 10px; 
-				color: $com-color;
+			.commented-txt{
+				font-size: 15px;
+				line-height: 17px;
+				margin: 0 0 8px;
+				p{
+					margin: 0;
+				}
 			}
 			.com-info-actions{
-				color: #6d6d6d;
-				font-size: 13px;
+				color: lighten($black, 62%);
+				font-size: 15px;
+				list-style: 15px;
+				font-weight: 600;
 				overflow: hidden;
 				span{
 					@include vertical-middle();
@@ -1442,7 +1476,7 @@ textarea#comment_box{
 				.reply {
 					@include vertical-middle();
 					a{
-						color: #6d6d6d;
+						color: lighten($black, 62%);
 					}
 				}
 			}
@@ -1480,46 +1514,16 @@ textarea#comment_box{
 			}
 			//new add
 			.reply-holder {
-				padding:20px 0 0;
-				position: relative;
-				border-top: none;
-				z-index: 1;
 				.comment-avatar {
 					float: left;
-					width: 28px;
-					margin: 0 22px 0 0;
-					position: relative;
-					z-index: 2;
+					width: 46px;
+					height: 46px;
+					margin: 0 16px 0 0;
 					img {
-						width: 28px;
-						height: 28px;
+						width: 46px;
+						height: 46px;
 						border-radius: 50%;
-						border: 1px solid #eee;
 					}
-				}
-				
-				&:before {
-					content: '';
-					display: block;
-					clear: both;
-					position: absolute;
-					top: 0;
-					left: 14px;
-					width: 1px;
-					height: 100%;
-					background-color: $base-color;
-					z-index: 1;
-				}
-				&:after {
-					content: '';
-					display: block;
-					clear: both;
-					position: absolute;
-					top: 34px;
-					left: 28px;
-					width: 14px;
-					height: 1px;
-					background-color: $base-color;
 				}
 			}
 		}
