@@ -1,5 +1,5 @@
 <div class="heading">
-  <h2>Showing {$total_logs} log entries</h2>
+  <h2>Showing <b>{$total_logs}</b> log entries {if $smarty.get.type}for<b> {$smarty.get.type|ucfirst}</b> action{/if}</h2>
   <div class="btn-group-xs text-center" role="group" aria-label="...">
   <a href="{$baseurl}/admin_area/action_logs.php?show=all"><button type="button" class="btn btn-primary">All</button></a>
   <a href="{$baseurl}/admin_area/action_logs.php?type=login"><button type="button" class="btn btn-primary">Login Only</button>
