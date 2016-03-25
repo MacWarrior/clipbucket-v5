@@ -5265,7 +5265,69 @@
 		}
 	}
 
-	
+	function fetch_action_logs($params) {
+		global $db;
+		$cond = array();
+		if ($params['type']) {
+			$type = $params['type'];
+			$cond['action_type'] = $type;
+		}
+
+		if ($params['user']) {
+			$user = $params['user'];
+			if (is_numeric($user)) {
+				$cond['action_userid'] = $user;
+			} else {
+				$cond['action_username'] = $user;
+			}
+		}
+
+		if ($params['umail']) {
+			$mail = $params['umail'];
+			$cond['action_usermail'] = $mail;
+		}
+
+		if ($params['ulevel']) {
+			$level = $params['ulevel'];
+			$cond['action_userlevel'] = $level;
+		}
+
+		if ($params['limit']) {
+			$limit = $params['limit'];
+		} else {
+			$limit = 20;
+		}
+
+		if (isset($_GET['page'])) {
+			$page = $_GET['page'];
+			$start = $limit * $page - $limit;
+		} else {
+			$start = 0;
+		}
+
+
+		$count = 0;
+		$final_query = '';
+		foreach ($cond as $field => $value) {
+			if ($count > 0) {
+				$final_query .= " AND `$field` = '$value' ";
+			} else {
+				$final_query .= " `$field` = '$value' ";
+			}
+			$count++;
+		}
+		if (!empty($cond)) {
+			$final_query .= " ORDER BY `action_id` DESC LIMIT $start,$limit";
+			$logs = $db->select(tbl("action_log"),"*","$final_query");
+		} else {
+			$logs = $db->select(tbl("action_log"),"*");
+		}
+		if (is_array($logs)) {
+			return $logs;
+		} else {
+			return false;
+		}
+	}
 	
     include( 'functions_db.php' );
     include( 'functions_filter.php' );
