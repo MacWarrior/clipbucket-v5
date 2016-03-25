@@ -5,7 +5,7 @@
 <script src="{$cb_vjs_player_url}/js/video.dev.js"></script>
 <script src="{$cb_vjs_player_url}/js/cb_vjs_res.js"></script>
 
-<video id="cb_video_js" class="video-js vjs-default-skin" width="{$width}" height="{$height}" poster="{getThumb vdetails=$vdata size=500x283}" >
+<video id="cb_video_js" class="video-js vjs-default-skin" width="{$width}" height="{$height}" poster="{getThumb vdetails=$vdata size=768x480}" >
     {foreach $video_files as $file}
     {$quality = explode('-', $file)}
     {$quality = end($quality)}
@@ -47,25 +47,28 @@ var show_logo = true;
 		"show_logo" : show_logo,
 		"product_link" : product_link,
 	};
-	//Initializing
-	var player = videojs('cb_video_js', cb_player_setup , function(){
-		var cb_video_js = this;
-	});
-
-	// saves audio settings
-	isMuted = $.cookie("isMuted");
-
-	if (isMuted != "false") {
-		$('video').attr('muted','muted');
-		$('.vjs-mute-control').trigger('click');
+	
+	//Setting CallBack
+	var cb_vjs_callback = function(){
+			var cb_vjs = this;
+			console.log("CB Player Ready !");
 	}
-
-	$('.vjs-mute-control').on("click",function(){
-		if (isMuted != "false") {
-			$.cookie("isMuted", "false");
-		} else {
-			$.cookie("isMuted", "muted"); 
+	//Initializing
+	var cb_player = videojs('cb_video_js', cb_player_setup , cb_vjs_callback);
+	
+	$(document).ready(function(){	
+		
+		// Editing Video Js > to be Improved in near Future ! 
+		var cb_vjs_settings = function(){
+			var cb_video_js = cb_player;
+			var is_this_player_muted = $.cookie("_this_player_muted");
+			if (is_this_player_muted == 'Muted' ){
+				$( ".vjs-mute-control" ).trigger( "click" );
+			}
 		}
+		
+		cb_vjs_settings();
 	});
+	
 </script>
 <script src="{$cb_vjs_player_url}/js/cb_vjs_custom.js"></script>

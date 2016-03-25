@@ -86,28 +86,51 @@
 				<div class="well well-info">No Videos Found !</div>
 			{/if}
 			</div>
+
 		</aside>
 	</div>
 </div>
 <script>
-	$(function(){
+	var last_clicked;
+	$(document).ready(function(){
 		$(".dropdown-menu > li > div > i.trigger").on("click",function(e){
 			var current=$(this).parent().next();
 			var grandparent=$(this).parent().parent().parent();
-			var list_siblings = $(this).parent().parent().siblings().children('div').children('i.trigger');
-
+			var list_siblings=$(this).parent().parent().siblings();
+			var parent_li = $(this).parent().parent();
+			var sibling_triggers=list_siblings.children('div').children('i.trigger');
+			var level = $(this).data("level");
+			var last_level = "";
+			
 			if($(this).hasClass('icon-right-arrow')){
-				$(list_siblings).addClass('icon-right-arrow');
-				$(list_siblings).removeClass('icon-left-arrow');
+				$(sibling_triggers).addClass('icon-right-arrow');
+				$(sibling_triggers).removeClass('icon-left-arrow');
 			}
 
 			if($(this).hasClass('icon-left-arrow')||$(this).hasClass('icon-right-arrow'))
 				$(this).toggleClass('icon-right-arrow icon-left-arrow');
 
-
 			grandparent.find('.icon-left-arrow').not(this).children().toggleClass('icon-right-arrow icon-left-arrow');
 			grandparent.find(".sub-menu:visible").not(current).hide();
 			current.toggle();
+
+			last_clicked = $(".lastclicked").data("lastClicked");
+			last_level = $(".lastlevel").data("lastLevel");
+
+			if (last_clicked  && last_level > level){
+				var last_clicked_triggers_next = last_clicked.find('i.trigger');
+				last_clicked_triggers_next.addClass('icon-right-arrow');
+				last_clicked_triggers_next.removeClass('icon-left-arrow');
+
+				var last_clicked_triggers_prev = last_clicked.parents(".sub-menu").find('div i.trigger');
+				console.log(last_clicked.prev().find('i.trigger').length);
+				last_clicked_triggers_prev.addClass('icon-right-arrow');
+				last_clicked_triggers_prev.removeClass('icon-left-arrow');
+			}
+		
+			$(".lastclicked").data("lastClicked", parent_li);
+			$(".lastlevel").data("lastLevel", level);
+
 			e.stopPropagation();
 		});
 		$(".dropdown-menu > li > div > i:not(.trigger)").on("click",function(){

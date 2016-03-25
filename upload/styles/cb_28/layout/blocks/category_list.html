@@ -1,46 +1,53 @@
 		<div class="cat-col col-lg-6 col-md-6 col-sm-6 col-xs-12 clearfix">
+			<span class="lastclicked" style="display:none;"></span>
+			<span class="lastlevel" style="display:none;"></span>
 			<div class="dropdown"> <!-- Start of category code -->
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">All <span class="icon-down-arrow"></span></a>
 				<ul class="dropdown-menu">
+					{$level = '1'}
 					{foreach from=$categories item=maincat}
 						<li>
 							<div>
 								<a href="" class="">{$maincat.category_name}</a>
-								{if $maincat.children}<i class="icon-right-arrow trigger"></i>{/if}
+								{if $maincat.children}<i class="icon-right-arrow trigger" data-level="1"></i>{/if}
 							</div>
 							{if $maincat.children} 
 								<ul class="dropdown-menu sub-menu">
+								{$level = '2'}
 								{foreach from=$maincat.children item=sub1}
 									<li>
 										<div>
 											<a class="">{$sub1.category_name} </a>
-											{if $sub1.children}<i class="icon-right-arrow trigger"></i>{/if}
+											{if $sub1.children}<i class="icon-right-arrow trigger" data-level="2" ></i>{/if}
 										</div>
 										{if $sub1.children}
 											<ul class="dropdown-menu sub-menu"> 
+											{$level = '3'}
 											{foreach from=$sub1.children item=sub2}
 											<li>
 												<div>
 													<a class="">{$sub2.category_name} </a>
-													{if $sub2.children}<i class="icon-right-arrow trigger"></i>{/if}
+													{if $sub2.children}<i class="icon-right-arrow trigger"data-level="3" ></i>{/if}
 												</div>
 												{if $sub2.children}
 													<ul class="dropdown-menu sub-menu">
+													{$level = '4'}
 													{foreach from=$sub2.children item=sub3}
 													<li>
 														<div>
 															<a  class="">{$sub3.category_name} </a>
-															{if $sub3.children}<i class="icon-right-arrow trigger"></i>{/if}
+															{if $sub3.children}<i class="icon-right-arrow trigger" data-level="4" ></i>{/if}
 														</div>
 													
 														{if $sub3.children}
-
 															<ul class="dropdown-menu sub-menu">
+																{$level = '5'}
+																<li>{$level}</li>
 																{foreach from=$sub3.children item=sub4}
 																	<li>
 																		<div>
 																			<a class="">{$sub4.category_name}</a>
-																			{if $sub4.children}<i class="icon-right-arrow trigger"></i>{/if}
+																			{if $sub4.children}<i class="icon-right-arrow trigger" data-level="5" ></i>{/if}
 																		</div>
 																	</li>
 																{/foreach}
@@ -64,3 +71,11 @@
 				
 			</div> <!-- End of category code -->
 		</div>
+
+<script type="text/javascript">
+	//$(document).ready(function(){
+			var level = '{$level}';
+	//});
+	
+
+</script>

@@ -215,128 +215,129 @@ class FFMpeg{
 	
 
 	function get_file_info($file_path=NULL)
-    {
-        if(!$path_source)
-            $path_source = $this->input_file;
+	{
+		if(!$file_path)
+			$file_path = $this->input_file;
 
-        $info['format']          = 'N/A';
-        $info['duration']       = 'N/A';
-        $info['size']           = 'N/A';
-        $info['bitrate']        = 'N/A';
-        $info['video_width']    = 'N/A';
-        $info['video_height']   = 'N/A';
-        $info['video_wh_ratio'] = 'N/A';
-        $info['video_codec']    = 'N/A';
-        $info['video_rate']     = 'N/A';
-        $info['video_bitrate']  = 'N/A';
-        $info['video_color']    = 'N/A';
-        $info['audio_codec']    = 'N/A';
-        $info['audio_bitrate']  = 'N/A';
-        $info['audio_rate']     = 'N/A';
-        $info['audio_channels'] = 'N/A';
-        $info['path']           = $file_path;
-
-
-
-        $cmd = FFPROBE. " -v quiet -print_format json -show_format -show_streams '".$path_source."' ";
-        logData($cmd,'command');
-        $output = shell_output($cmd);
-        logData($cmd,'output');
-        //$output = trim($output);
-        //$output = preg_replace('/(\n]+){/', '', $output);
-        $output = preg_replace('/([a-zA-Z 0-9\r\n]+){/', '{', $output, 1);
+		$info['format']          = 'N/A';
+		$info['duration']       = 'N/A';
+		$info['size']           = 'N/A';
+		$info['bitrate']        = 'N/A';
+		$info['video_width']    = 'N/A';
+		$info['video_height']   = 'N/A';
+		$info['video_wh_ratio'] = 'N/A';
+		$info['video_codec']    = 'N/A';
+		$info['video_rate']     = 'N/A';
+		$info['video_bitrate']  = 'N/A';
+		$info['video_color']    = 'N/A';
+		$info['audio_codec']    = 'N/A';
+		$info['audio_bitrate']  = 'N/A';
+		$info['audio_rate']     = 'N/A';
+		$info['audio_channels'] = 'N/A';
+		$info['path']           = $file_path;
 
 
-        $data = json_decode($output,true);
 
-       
-        if($data['streams'][0]['codec_type'] == 'video')
-        {
-            $video = $data['streams'][0];
-            $audio = $data['streams'][1];
-        }else
-        {
-            $video = $data['streams'][1];
-            $audio = $data['streams'][0];
-        }
-        
-        
-        $info['format']         = $data['format']['format_name'];
-        $info['duration']       = (float) round($video['duration'],2);
-
-        $info['bitrate']        = (int) $data['format']['bit_rate'];
-        $info['video_bitrate']  = (int) $video['bit_rate'];
-        $info['video_width']    = (int) $video['width'];
-        $info['video_height']   = (int) $video['height'];
-
-        if($video['height'])
-        $info['video_wh_ratio'] = (int) $video['width'] / (int) $video['height'];
-        $info['video_codec']    = $video['codec_name'];
-        $info['video_rate']     = $video['r_frame_rate'];
-        $info['size']           = filesize($path_source);
-        $info['audio_codec']    = $audio['codec_name'];;
-        $info['audio_bitrate']  = (int) $audio['bit_rate'];;
-        $info['audio_rate']     = (int) $audio['sample_rate'];;
-        $info['audio_channels'] = (float) $audio['channels'];;
-        $info['rotation']       = (float) $video['tags']['rotate'];
+		$cmd = FFPROBE. " -v quiet -print_format json -show_format -show_streams '".$file_path."' ";
+		logData($cmd,'command');
+		$output = shell_output($cmd);
+		//pr($output,true);
+		logData($cmd,'output');
+		//$output = trim($output);
+		//$output = preg_replace('/(\n]+){/', '', $output);
+		$output = preg_replace('/([a-zA-Z 0-9\r\n]+){/', '{', $output, 1);
 
 
-        if(!$info['duration'] || 1)
-        {
-            $CMD = MEDIAINFO_BINARY . "   '--Inform=General;%Duration%'  '". $path_source."' 2>&1 ";
-            logData($CMD,'command');
-            $duration = $info['duration'] = round(shell_output( $CMD )/1000,2);
-        }
+		$data = json_decode($output,true);
 
-        $this->raw_info = $info;
-        $video_rate = explode('/',$info['video_rate']);
-        $int_1_video_rate = (int)$video_rate[0];
-        $int_2_video_rate = (int)$video_rate[1];
-        
-        
+	   
+		if($data['streams'][0]['codec_type'] == 'video')
+		{
+			$video = $data['streams'][0];
+			$audio = $data['streams'][1];
+		}else
+		{
+			$video = $data['streams'][1];
+			$audio = $data['streams'][0];
+		}
+		
+		
+		$info['format']         = $data['format']['format_name'];
+		$info['duration']       = (float) round($video['duration'],2);
 
-        $CMD = MEDIAINFO_BINARY . "   '--Inform=Video;'  ". $path_source;
-        logData($CMD,'command');
+		$info['bitrate']        = (int) $data['format']['bit_rate'];
+		$info['video_bitrate']  = (int) $video['bit_rate'];
+		$info['video_width']    = (int) $video['width'];
+		$info['video_height']   = (int) $video['height'];
 
-        $results = shell_output($CMD);
-        $needle_start = "Original height";
-        $needle_end = "pixels"; 
-        $original_height = find_string($needle_start,$needle_end,$results);
-        $original_height[1] = str_replace(' ', '', $original_height[1]);
-        if(!empty($original_height)&&$original_height!=false)
-        {
-        	$o_height = trim($original_height[1]);
-        	$o_height = (int)$o_height;
-        	if($o_height!=0&&!empty($o_height))
-        	{
-        		$info['video_height'] = $o_height;
-        	}
-        	//logData(,'height');
-        }
-        $needle_start = "Original width";
-        $needle_end = "pixels"; 
-        $original_width = find_string($needle_start,$needle_end,$results);
-        $original_width[1] = str_replace(' ', '', $original_width[1]);
-        if(!empty($original_width)&&$original_width!=false)
-        {
-        	$o_width = trim($original_width[1]);
-        	$o_width = (int)$o_width;
-        	if($o_width!=0&&!empty($o_width))
-        	{
-        		$info['video_width'] = $o_width;
-        	}
-        	
-        }
-        
-        if($int_2_video_rate!=0)
-       	{
-       	 	$info['video_rate'] = $int_1_video_rate/$int_2_video_rate;
-       	}
+		if($video['height'])
+		$info['video_wh_ratio'] = (int) $video['width'] / (int) $video['height'];
+		$info['video_codec']    = $video['codec_name'];
+		$info['video_rate']     = $video['r_frame_rate'];
+		$info['size']           = filesize($file_path);
+		$info['audio_codec']    = $audio['codec_name'];;
+		$info['audio_bitrate']  = (int) $audio['bit_rate'];;
+		$info['audio_rate']     = (int) $audio['sample_rate'];;
+		$info['audio_channels'] = (float) $audio['channels'];;
+		$info['rotation']       = (float) $video['tags']['rotate'];
 
-        logData(json_encode($info),$this->file_name.'_configs');
-        return $info;
 
-    }
+		if(!$info['duration'] || 1)
+		{
+			$CMD = MEDIAINFO_BINARY . "   '--Inform=General;%Duration%'  '". $file_path."' 2>&1 ";
+			logData($CMD,'command');
+			$duration = $info['duration'] = round(shell_output( $CMD )/1000,2);
+		}
+
+		$this->raw_info = $info;
+		$video_rate = explode('/',$info['video_rate']);
+		$int_1_video_rate = (int)$video_rate[0];
+		$int_2_video_rate = (int)$video_rate[1];
+		
+		
+
+		$CMD = MEDIAINFO_BINARY . "   '--Inform=Video;'  ". $file_path;
+		logData($CMD,'command');
+
+		$results = shell_output($CMD);
+		$needle_start = "Original height";
+		$needle_end = "pixels"; 
+		$original_height = find_string($needle_start,$needle_end,$results);
+		$original_height[1] = str_replace(' ', '', $original_height[1]);
+		if(!empty($original_height)&&$original_height!=false)
+		{
+			$o_height = trim($original_height[1]);
+			$o_height = (int)$o_height;
+			if($o_height!=0&&!empty($o_height))
+			{
+				$info['video_height'] = $o_height;
+			}
+			//logData(,'height');
+		}
+		$needle_start = "Original width";
+		$needle_end = "pixels"; 
+		$original_width = find_string($needle_start,$needle_end,$results);
+		$original_width[1] = str_replace(' ', '', $original_width[1]);
+		if(!empty($original_width)&&$original_width!=false)
+		{
+			$o_width = trim($original_width[1]);
+			$o_width = (int)$o_width;
+			if($o_width!=0&&!empty($o_width))
+			{
+				$info['video_width'] = $o_width;
+			}
+			
+		}
+		
+		if($int_2_video_rate!=0)
+		{
+			$info['video_rate'] = $int_1_video_rate/$int_2_video_rate;
+		}
+
+		logData(json_encode($info),$this->file_name.'_configs');
+		return $info;
+
+	}
 	public function convertVideo($inputFile = false, $options = array(), $isHd = false){
 		$this->log->TemplogData = "";
 		$this->log->TemplogData .= "\r\n======Converting Video=========\r\n";
@@ -347,8 +348,8 @@ class FFMpeg{
 				$this->setOptions($options);
 			}
 			$this->inputFile = $inputFile;
-       		//$myfile = fopen("testfile.txt", "w")
-       		//fwrite($myfile, $inputFile);
+			//$myfile = fopen("testfile.txt", "w")
+			//fwrite($myfile, $inputFile);
 			$this->outputFile = $this->videosDirPath . '/'. $this->options['outputPath'] . '/' . $this->getInputFileName($inputFile);
 			$videoDetails = $this->getVideoDetails($inputFile);
 			//logData(json_encode($videoDetails));
@@ -868,7 +869,7 @@ class FFMpeg{
 				$this->start_log();
 				$this->prepare();
 				
-				$ratio = substr($this->input_details['video_wh_ratio'],0,3);
+				$ratio = substr($this->input_details['video_wh_ratio'],0,7);
 				
 				$max_duration = config('max_video_duration') * 60;
 
@@ -891,8 +892,8 @@ class FFMpeg{
 					break;
 					return false;
 				}
-				
-				if($ratio=='1.7' || $ratio=='1.6')
+				$ratio = (float) $ratio;
+				if($ratio>=1.6)
 				{
 					$res = $this->configs['res169'];
 				}else
@@ -1335,29 +1336,29 @@ class FFMpeg{
 			{ 
 				if($more_res['name'] == '240')
 				{
-                	$vbrate = '240000';
-                	$div_parm = 3;
-                }
-                if($more_res['name'] == '360')
-                {
-                	$vbrate = '360000';
-                	$div_parm = 2;
-                }
-                if($more_res['name'] == '480')
-                {
-                	$vbrate = '480000';
-                	$div_parm = 1;
-                }
-                if($more_res['name'] == '720')
-                {
-                	$vbrate = '720000';
-                }
-                if($more_res['name'] == '1080')
-                {
-                	$vbrate = '1080000';
-                }
-             }
-              $opt_av .= " -vb $vbrate ";
+					$vbrate = '240000';
+					$div_parm = 3;
+				}
+				if($more_res['name'] == '360')
+				{
+					$vbrate = '360000';
+					$div_parm = 2;
+				}
+				if($more_res['name'] == '480')
+				{
+					$vbrate = '480000';
+					$div_parm = 1;
+				}
+				if($more_res['name'] == '720')
+				{
+					$vbrate = '720000';
+				}
+				if($more_res['name'] == '1080')
+				{
+					$vbrate = '1080000';
+				}
+			 }
+			  $opt_av .= " -vb $vbrate ";
 
 		}
 
@@ -1434,26 +1435,24 @@ class FFMpeg{
 					$opt_av .= $arate_cmd = " -ar $arate ";
 			}
 		}
+
+		if ($i['rotation'] != 0 ){
+			if ($i['video_wh_ratio'] >= 1.6){
+				$opt_av .= " -vf pad='ih*16/9:ih:(ow-iw)/2:(oh-ih)/2' ";
+			}else{
+				$opt_av .= " -vf pad='ih*4/3:ih:(ow-iw)/2:(oh-ih)/2' ";
+			}
+		}
 		
 		
 		$tmp_file = time().RandomString(5).'.tmp';
-		
-		//$opt_av .= " -map_meta_data ".$this->output_file.":".$this->input_file;
-		logData('Convert() function => setting options opt_av :'.$opt_av,'checkpoints');
-		
-		
 
-		if(!$for_iphone)
-		{
+		if(!$for_iphone){
+			
 			$this->log->TemplogData .= "\r\nConverting Video file ".$more_res['name']." @ ".date("Y-m-d H:i:s")." \r\n";
-			#$this->output_file = str_replace('.flv', '.mp4', $this->output_file);
-			#checking if audio channels are greater than 2 , conver video without audio
-			#$command = $this->ffmpeg." -i ".$this->input_file." $opt_av ".$this->output_file."  2> ".TEMP_DIR."/".$tmp_file;
-			//logData($more_res['name'].$p['gen_1080']);
 			if($more_res==NULL){
 				echo 'here';
-			}
-			else{
+			}else{
 				$resolution_log_data = array('file'=>$this->file_name,'more_res'=>$more_res);
 				#create all posible resolutions of selected video
 				if($more_res['name'] == '240' && $p['gen_240'] == 'yes' || $more_res['name'] == '360' && $p['gen_360'] == 'yes' || $more_res['name'] == '480' && $p['gen_480'] == 'yes' ||
@@ -1461,60 +1460,47 @@ class FFMpeg{
 				{
 					$command  = $this->ffmpeg." -i ".$this->input_file." $opt_av ".$this->raw_path."-".$more_res['name'].".mp4  2> ".TEMP_DIR."/".$tmp_file;
 				}
-			    else{
+				else{
 					$command = '';
 					$resolution_error_log = array('err'=>'empty command');
 					logData(json_encode($resolution_error_log),'resolution command');
 				}
 
 			}
-			if($more_res!=NULL)
-			{
+			if($more_res!=NULL){
 				$output = $this->exec($command);
 			}
-			if(file_exists(TEMP_DIR.'/'.$tmp_file))
-			{
+			if(file_exists(TEMP_DIR.'/'.$tmp_file)){
 				$output = $output ? $output : join("", file(TEMP_DIR.'/'.$tmp_file));
 				unlink(TEMP_DIR.'/'.$tmp_file);
 			}
 			
 
-			if(file_exists($this->raw_path."-".$more_res['name'].".mp4") && filesize($this->raw_path."-".$more_res['name'].".mp4")>0)
-			{
+			if(file_exists($this->raw_path."-".$more_res['name'].".mp4") && filesize($this->raw_path."-".$more_res['name'].".mp4")>0){
 				$this->has_resolutions = 'yes';
 				$this->video_files[] =  $more_res['name'];
 				$this->log->TemplogData  .="\r\nFiles resolution : ".$more_res['name']." \r\n";
-				
-			}
-			else {
+			}else{
 				$this->log->TemplogData  .="\r\n\r\nFile doesnot exist. Path: ".$this->raw_path."-".$more_res['name'].".mp4 \r\n\r\n";
 			}
 
 			$this->output_file = $this->raw_path."-".$more_res['name'].".mp4";
-			
-
-	  	   
-			//Updating DB
-			//$db->update($this->tbl,array('command_used'),array($command)," id = '".$this->row_id."'");
-			if($more_res!=NULL)
-			{	
+			  
+			if($more_res!=NULL){	
 				$this->log->TemplogData .= "\r\n\r\n== Conversion Command == \r\n\r\n";
 				$this->log->TemplogData .= $command;
 				$this->log->TemplogData .="\r\n\r\n== Conversion OutPut == \r\n\r\n";
 				$this->log->TemplogData .=$output;
 			}
-			#FFMPEG GNERETAES Damanged File
+
+
+			#FFMPEG GNERETAES Damanged File (MP4Box)
 			#Injecting MetaData using Mp4Box - you must have update version of Mp4Box ie 1.0.6 FInal or greater
 			$mp4_output = "";
-			
-			
-			if($more_res==NULL)
-			{
+					
+			if($more_res==NULL){
 				echo 'here';
-				//$command = $this->mp4box." -inter 0.5 ".$this->raw_path.".mp4 -tmp ".$this->tmp_dir." 2> ".TEMP_DIR."/mp4_output.tmp ";
-			}
-			else
-			{
+			}else{
 				$resolution_log_data = array('file'=>$this->file_name,'more_res'=>$more_res,'command'=>'mp4box');
 				logData(json_encode($resolution_log_data),'resolution command');
 				#create all posible resolutions of selected video
@@ -1523,37 +1509,31 @@ class FFMpeg{
 				{
 					$command = $this->mp4box." -inter 0.5 ".$this->raw_path."-".$more_res['name'].".mp4 -tmp ".$this->tmp_dir." 2> ".TEMP_DIR."/".$this->file_name."_mp4_output.tmp";
 				}
-			    else {
+				else{
 					$command = '';
 					$resolution_error_log = array('err'=>'empty command');
 					logData(json_encode($resolution_error_log),'resolution command');
 				}
 			}
-			if($more_res!=NULL)
-			{
+			if($more_res!=NULL){
 				$mp4_output .= $this->exec($command);
 			}
-			if(file_exists(TEMP_DIR."/".$this->file_name."_mp4_output.tmp"))
-			{
+			if(file_exists(TEMP_DIR."/".$this->file_name."_mp4_output.tmp")){
 				$mp4_output = $mp4_output ? $mp4_output : join("", file(TEMP_DIR."/".$this->file_name."_mp4_output.tmp"));
 				unlink(TEMP_DIR."/".$this->file_name."_mp4_output.tmp");
 			}
-			if($more_res!=NULL)
-			{
+			if($more_res!=NULL){
 				$this->log->TemplogData .= "\n\n==  Mp4Box Command ==\n\n";
 				$this->log->TemplogData .=$command;
+				$this->log->TemplogData .= "\n\n==  MP4Box OutPut ==\n\n";
+				$this->log->TemplogData .=$output;
 			}	
 
 		}
-		if($more_res!=NULL)
-		{
-			$this->log->TemplogData .= "\n\n==  MP4Box OutPut ==\n\n";
-			$this->log->TemplogData .=$output;
-		} 
+
 		$this->log->TemplogData .="\r\n\r\nEnd resolutions @ ".date("Y-m-d H:i:s")."\r\n\r\n";
 		$this->log->writeLine('Converiosn Ouput',$this->log->TemplogData,true);
 		
-
 		$this->log->TemplogData = "";
 		$this->output_details = $this->get_file_info($this->output_file);
 		$this->log->TemplogData .= "\r\n\r\n";
@@ -1589,31 +1569,31 @@ class FFMpeg{
 			$opt_av .= " -vcodec ".$i['video_codec'];
 		if($p['video_codec'] == 'libx264')
 			$opt_av .= " -vpre normal ";
-                # video rate
-                if($p['use_video_rate'])
-                {
-                    if(isset($p['video_rate']))
-                        $vrate = $p['video_rate'];
-                    elseif(isset($i['video_rate']))
-                        $vrate = $i['video_rate'];
-                    if(isset($p['video_max_rate']) && !empty($vrate))
-                        $vrate = min($p['video_max_rate'],$vrate);
-                    if(!empty($vrate))
-                        $opt_av .= " -r $vrate ";
-                }
-                
-                # video bitrate
-                if($p['use_video_bit_rate'])
-                {
-                    if(isset($p['video_bitrate']))
-                        $vbrate = $p['video_bitrate'];
-                    elseif(isset($i['video_bitrate']))
-                        $vbrate = $i['video_bitrate'];
-                    if(!empty($vbrate))
-                        $opt_av .= " -b:v $vbrate ";
-                }
-                
-                
+				# video rate
+				if($p['use_video_rate'])
+				{
+					if(isset($p['video_rate']))
+						$vrate = $p['video_rate'];
+					elseif(isset($i['video_rate']))
+						$vrate = $i['video_rate'];
+					if(isset($p['video_max_rate']) && !empty($vrate))
+						$vrate = min($p['video_max_rate'],$vrate);
+					if(!empty($vrate))
+						$opt_av .= " -r $vrate ";
+				}
+				
+				# video bitrate
+				if($p['use_video_bit_rate'])
+				{
+					if(isset($p['video_bitrate']))
+						$vbrate = $p['video_bitrate'];
+					elseif(isset($i['video_bitrate']))
+						$vbrate = $i['video_bitrate'];
+					if(!empty($vbrate))
+						$opt_av .= " -b:v $vbrate ";
+				}
+				
+				
 		# video size, aspect and padding
 		
 		$this->calculate_size_padding( $p, $i, $width, $height, $ratio, $pad_top, $pad_bottom, $pad_left, $pad_right );
@@ -1964,7 +1944,7 @@ class FFMpeg{
 	}
 
 	public function generateThumbs($array){
-	 	
+		
 		$input_file = $array['vid_file'];
 		$duration = $array['duration'];
 		$dim = $array['dim'];
@@ -1982,6 +1962,10 @@ class FFMpeg{
 		if (!empty($array['rand'])){
 				$rand = $array['rand'];		
 		}
+
+		$dim_temp = explode('x',$dim);
+		$height = $dim_temp[1];
+		$suffix = $width  = $dim_temp[0];
 		
 		$tmpDir = TEMP_DIR.'/'.getName($input_file);	
 
@@ -2015,6 +1999,7 @@ class FFMpeg{
 
 		if($dim!='original'){
 			$dimension = " -s $dim  ";
+			//$dimension = " -vf scale='gte(iw/ih\,".$suffix."/".$suffix*0.8.")*".$suffix."+lt(iw/ih\,".$suffix."/".$suffix*0.8.")*((".$suffix*0.8."*iw)/ih):lte(iw/ih\,".$suffix."/".$suffix*0.8.")*".$suffix*0.8."+gt(iw/ih\,".$suffix."/".$suffix*0.8.")*((".$suffix."*ih)/iw)',pad='".$suffix.":".$suffix*0.8.":(".$suffix."-gte(iw/ih\,".$suffix."/".$suffix*0.8.")*".$suffix."-lt(iw/ih\,".$suffix."/".$suffix*0.8.")*((".$suffix*0.8."*iw)/ih))/2:(".$suffix*0.8."-lte(iw/ih\,".$suffix."/".$suffix*0.8.")*".$suffix*0.8."-gt(iw/ih\,".$suffix."/".$suffix*0.8.")*((".$suffix."*ih)/iw))/2:black'";
 		}
 
 		if($num > 1 && $duration > 14)
@@ -2041,7 +2026,7 @@ class FFMpeg{
 					$time = $this->ChangeTime($id);
 				}
 				
-				$command = $this->ffMpegPath." -i $input_file -an -ss $time -an -r 1 $dimension -y -f image2 -vframes 1 $file_path ";
+				$command = $this->ffMpegPath." -ss {$time} -i $input_file -an -r 1 $dimension -y -f image2 -vframes 1 $file_path ";
 				/*logdata("Thumbs COmmand : ".$command,'checkpoints');*/
 				$output = $this->executeCommand($command);	
 				//$this->//logData($output);
