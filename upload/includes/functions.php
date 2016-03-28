@@ -5305,7 +5305,6 @@
 			$start = 0;
 		}
 
-
 		$count = 0;
 		$final_query = '';
 		foreach ($cond as $field => $value) {
@@ -5320,7 +5319,8 @@
 			$final_query .= " ORDER BY `action_id` DESC LIMIT $start,$limit";
 			$logs = $db->select(tbl("action_log"),"*","$final_query");
 		} else {
-			$logs = $db->select(tbl("action_log"),"*");
+			$final_query = " `action_id` != '' ORDER BY `action_id` DESC LIMIT $start,$limit";
+			$logs = $db->select(tbl("action_log"),"*", "$final_query");
 		}
 		if (is_array($logs)) {
 			return $logs;
