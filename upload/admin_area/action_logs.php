@@ -20,6 +20,12 @@ if(!defined('SUB_PAGE')){
 }
 
 //Getting User List
+
+if (isset($_GET['clean'])) {
+	global $db;
+	$db->Execute('TRUNCATE TABLE '.tbl('action_log'));
+}
+
 if (isset($_GET['type'])) {
 	$type = $_GET['type'];
 	$result_array['type'] = $type;
