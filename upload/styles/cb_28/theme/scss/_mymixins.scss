@@ -12,7 +12,7 @@ $orange:#ffa000;
 $dark-btn:#17181a;
 $header-btn:#262727;
 $dropdown-bg:#424242;
-// $duration-bg:rgba(0,0,0,0.8);
+$opacity:0.6;
 $blue:#0080b4;
 $body-bg:#eee;
 $block-color:#333;
@@ -20,7 +20,7 @@ $heading-color:#666;
 $search-toggle:#999;
 $base-font:'Source Sans Pro', sans-serif;
 $base-color:$black;
-$iconfont: 'icomoon';
+$font-icon: 'icomoon';
 $bordercolor:#d9d9d9;
 $default-border:1px solid $bordercolor;
 $fb-color:#2b4b90;
@@ -30,6 +30,9 @@ $com-color:#2d2d2d;
 $probox-bg: #f8f8f8;
 $input-bg: #f6f6f6;
 /**/
+@mixin overlaybg($color, $opacity){
+    background: rgba($color, $opacity);
+}
 @mixin txtinput(){
 	color:$base-color;
 	background: $input-bg;
@@ -52,6 +55,7 @@ $input-bg: #f6f6f6;
 		color: lighten($base-color,74%);
 	}
 }
+
 @mixin gradient-bg(){
 	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#000000+0,000000+100&0.6+0,0.59+43,0.55+49,0.26+70,0.12+82,0.05+90,0.01+100 */
 	background: -moz-linear-gradient(top,  rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.59) 43%, rgba(0,0,0,0.55) 49%, rgba(0,0,0,0.26) 70%, rgba(0,0,0,0.12) 82%, rgba(0,0,0,0.05) 90%, rgba(0,0,0,0.01) 100%); /* FF3.6-15 */

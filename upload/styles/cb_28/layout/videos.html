@@ -76,7 +76,7 @@
 		<aside id="sidebar">
 			<div class="box-ad ad">{AD place='ad_300x250'}</div>
 			<h2>Featured Videos</h2>
-			<div class="clearfix sidebar-videos">
+			<div class="clearfix sidebar-items">
 			{$featured=$cbvid->get_videos(["featured"=>"yes","limit"=>6])}
 			{if $featured}
 				{foreach $featured as $video}

@@ -11,7 +11,7 @@
 			<input type="hidden" name="alternate_embed_code" id="alternate_embed_code" value="{if $Cbucket->configs.embed_type=='iframe'}{$cbvid->embed_code($vdo,'embed_object')|htmlspecialchars}{else}{$cbvid->embed_code($vdo,'iframe')|htmlspecialchars}{/if}">
 		</div>
 
-		<div class="form-group">
+		<div class="form-group custom-elements">
 			<label class="block-label">{lang('Player size')}</label>
 			<div class="clearfix">
 				<label class="radio-inline">
@@ -34,28 +34,32 @@
 					{lang('Large')} (600x370)
 				</label>
 			</div>
-        </div>
+		</div>
 
 		{if $pakplayer=='yes'}
-		<div class="form-group">
+		<div class="form-group custom-elements">
 			Autoplay video : 
 			<label>
-				<input type="radio" name="autoplay" value="yes" onclick="{$updateEmbedCode}(embedPlayerWidth,embedPlayerHeight,'yes')" {if $Cbucket->configs.autoplay_embed=='yes'} checked{/if}>Yes
+				<input type="radio" name="autoplay" value="yes" onclick="{$updateEmbedCode}(embedPlayerWidth,embedPlayerHeight,'yes')" {if $Cbucket->configs.autoplay_embed=='yes'} checked{/if}>
+				Yes
 			</label>
 			<label>
-				<input type="radio" name="autoplay" value="no"  onclick="{$updateEmbedCode}(embedPlayerWidth,embedPlayerHeight,'no')" {if $Cbucket->configs.autoplay_embed!='yes'} checked{/if}>No
+				<input type="radio" name="autoplay" value="no"  onclick="{$updateEmbedCode}(embedPlayerWidth,embedPlayerHeight,'no')" {if $Cbucket->configs.autoplay_embed!='yes'} checked{/if}>
+				No
 			</label>
 		</div>
 		{/if}
 
-		<div class="form-group">
+		<div class="form-group custom-elements">
 			<label class="block-label">{lang('Embed type')}</label>
 			<div class="clearfix">
 				<label class="radio-inline">
-					<input type="radio" name="embed_type" value="iframe" onclick="switchEmbedCode('iframe')" {if $Cbucket->configs.embed_type=='iframe'} checked{/if}>Iframe
+					<input type="radio" name="embed_type" value="iframe" onclick="switchEmbedCode('iframe')" {if $Cbucket->configs.embed_type=='iframe'} checked{/if}>
+					Iframe
 				</label>
 				<label class="radio-inline">
-					<input type="radio" name="embed_type" value="iframe"  onclick="switchEmbedCode('embed_object')" {if $Cbucket->configs.embed_type=='embed_object'} checked{/if}>Embed Object
+					<input type="radio" name="embed_type" value="iframe"  onclick="switchEmbedCode('embed_object')" {if $Cbucket->configs.embed_type=='embed_object'} checked{/if}>
+					Embed Object
 				</label>
 			</div>
 		</div>

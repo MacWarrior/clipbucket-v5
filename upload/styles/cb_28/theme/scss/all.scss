@@ -1184,6 +1184,8 @@ h1{
 			}
 		}
 		.radio-inline{
+			padding: 0;
+			line-height: 22px;
 			input[type="radio"]{
 				margin-top: 2px;
 			}
@@ -1199,6 +1201,87 @@ h1{
 	}
 }
 /* end of watch video */
+/* photos page */
+.photos-block{
+	.row{
+		margin: 0 -8px;
+	}
+}
+.item-photo{
+	padding: 0 8px;
+	margin: 0 0 16px;
+	.photo-holder{
+		display: block;
+		position: relative;
+		text-decoration: none;
+		color: $white;
+		z-index: 1;
+		&:after{
+			@include  overlaybg($color:$black, $opacity:0.8);
+			content: "";
+			position: absolute;
+			z-index: 2;
+			width: 100%;
+			height: 100%;
+			top: 0;
+			left: -9999px;	
+		}
+		i{
+			position: absolute;
+			z-index: 3;
+			width: 40px;
+			height: 40px;
+			font-size: 40px;
+			line-height: 40px;
+			top: 50%;
+			left: -9999px;
+			margin: -20px 0 0 -20px;
+		}
+		&:hover{
+			&:after{
+				left: 0;
+			}
+			i{
+				left: 50%;
+			}
+		}
+	}
+	.photo-info{
+		overflow: hidden;
+		background: $white;
+		padding: 10px;
+		font-size: 14px;
+		line-height: 14px;
+		font-weight: 300;
+		position: relative;
+		z-index: 1;
+		height: 82px;
+		strong,
+		span{
+			display: block;
+		}
+		strong{
+			font-size: 18px;
+			line-height: 20px;
+			font-weight: 400;
+			margin: 0 0 8px;
+			a{
+				color: $black;
+			}
+		}
+		span{
+			position: absolute;
+			z-index: 2;
+			left: 10px;
+			bottom: 10px;
+			color: $blue;
+			a{
+				color: $blue;
+			}
+		}
+	}
+}
+/**/
 .custom-container{
 	max-width: 1170px;
 	padding: 0 15px;
@@ -2351,30 +2434,7 @@ textarea#comment_box{
 .vid-detail-sec .avatar{
 
 }
-.photo-holder {
-	position: relative;
-	border-bottom: 1px solid #ddd;
-	padding: 0 0 20px;
-	margin: 0 0 20px;
-	&:hover{
-		.view-photo-nxt,
-		.view-photo-pre{
-			display: block;
-		}
-	}
-	> img{
-		max-width: 100%;
-		height: auto;
-		margin: 0 auto;
-	}
-	.img_bg_area {
-		height: 100%;
-		border-right: 1px solid #bbbbbb;
-	}
-	.img_bg_small {
-		height: 100%;
-	}
-}
+
 #collectionItemView{
 	.photos-block{
 		padding: 0;

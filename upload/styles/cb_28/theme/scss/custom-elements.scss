@@ -1,3 +1,4 @@
+@import "mymixins";
 $custom-elements-sprite-bg: url('../images/custom-elements-sprite.png') no-repeat;
 .jcf-hidden {
 	display: block !important;
@@ -8,10 +9,9 @@ $custom-elements-sprite-bg: url('../images/custom-elements-sprite.png') no-repea
 .chk-area {
 	margin: 0 10px 0 0;
 	float: left;
-	width: 19px; 
-	height: 20px;
+	width: 22px; 
+	height: 22px;
 	background: $custom-elements-sprite-bg -253px -14px;
-
 }
 .chk-checked {
 	background-position: -253px -45px;
@@ -76,18 +76,31 @@ $custom-elements-sprite-bg: url('../images/custom-elements-sprite.png') no-repea
 .rad-area {
 	margin: 0 10px 0 0;
 	float: left;
-	width: 20px;
-	height: 20px;
-	background: $custom-elements-sprite-bg -283px -15px;
+	width: 22px;
+	height: 22px;
+	border-radius: 11px;
+	font: 22px/22px $font-icon;
+	background:$input-bg;
+	color: darken($input-bg,22%);
+	&:after{
+		content: "\e909";
+	}
+	//background: $custom-elements-sprite-bg -283px -15px;
 }
+
 .rad-checked {
-	background-position: -283px -48px;
+	//background-position: -283px -48px;
+	background:$input-bg;
+	color:$blue;
+	&:after{
+		content: "\e90a";
+	}
 }
 .rad-focus {
 	//border-color: #f00;
 }
 .rad-disabled {
-	background-position: -283px -80px;
+	//background-position: -283px -80px;
 }
 /* custom select styles */
 .select-area {
@@ -262,8 +275,7 @@ $custom-elements-sprite-bg: url('../images/custom-elements-sprite.png') no-repea
 	position: absolute;
 	top: 0px;
 	right: 0;
-	width: 4px;
-	border-radius: 2px;
+	width: 10px;
 }
 .scrollable-area-wrapper .hscroll-left,
 .scrollable-area-wrapper .vscroll-up,
@@ -277,17 +289,15 @@ $custom-elements-sprite-bg: url('../images/custom-elements-sprite.png') no-repea
 }
 .scrollable-area-wrapper .hscroll-line,
 .scrollable-area-wrapper .vscroll-line {
-	// background: #ecf0f1;
-	width: 4px;
+	background: #ecf0f1;
+	width: 11px;
 	float: left;
-	border-radius: 2px;
 }
 .scrollable-area-wrapper .hscroll-slider,
 .scrollable-area-wrapper .vscroll-slider {
-	background: #0080b4;
-	width: 4px;
-	height: 80px !important;
-	border-radius: 2px;
+	background: #34495e;
+	width: 11px;
+	height: 20px;
 }
 .scrollable-area-wrapper .hscrollbar {
 	position: static;
@@ -300,29 +310,28 @@ $custom-elements-sprite-bg: url('../images/custom-elements-sprite.png') no-repea
 }
 /* Retian Sprite */
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 100dpi) { 
-    
     /*logo sprite*/
-    .chk-area,
-    .chk-checked,
-    .chk-disabled,
-    .rad-area,
-    .rad-checked,
-	.rad-disabled,
-	.no-yes .chk-area,
-	.no-yes .chk-checked,
-	.no-yes .chk-disabled,
-	.check-out .chk-area,
-	.check-out .chk-checked,
-	.check-out .chk-disabled,
-	.on-off .chk-area,
-	.on-off .chk-checked,
-	.on-off .chk-disabled,
-	.select-area .select-opener,
-	.select-circle .jcf-upload-button
-    {
-        /* Reference the @2x Sprite */
-        background-image:url('../images/custom-elements-sprite@2x.png') !important;
-        /* Translate the @2x sprite's dimensions back to 1x */
-        background-size: 320px 150px !important;
-    }
+ //    .chk-area,
+ //    .chk-checked,
+ //    .chk-disabled,
+ //    .rad-area,
+ //    .rad-checked,
+	// .rad-disabled,
+	// .no-yes .chk-area,
+	// .no-yes .chk-checked,
+	// .no-yes .chk-disabled,
+	// .check-out .chk-area,
+	// .check-out .chk-checked,
+	// .check-out .chk-disabled,
+	// .on-off .chk-area,
+	// .on-off .chk-checked,
+	// .on-off .chk-disabled,
+	// .select-area .select-opener,
+	// .select-circle .jcf-upload-button
+ //    {
+ //        /* Reference the @2x Sprite */
+ //        background-image:url('../images/custom-elements-sprite@2x.png') !important;
+ //        /* Translate the @2x sprite's dimensions back to 1x */
+ //        background-size: 320px 150px !important;
+ //    }
 }

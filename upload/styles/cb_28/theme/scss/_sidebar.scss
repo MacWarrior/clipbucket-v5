@@ -72,12 +72,15 @@
 	 	}
 	 }
 }
-.sidebar-videos{
+.sidebar-items{
 	background: $white;
-	padding: 6px 16px 0;
+	padding: 16px 16px 0;
 	.featured-video{
 		font-size: 14px;
 		line-height: 14px;
+		&:first-child{
+			padding: 0 0 14px;
+		}
 		.title{
 			font-size: 15px;
 			line-height: 17px;
@@ -87,6 +90,20 @@
 		.author{
 			font-size: 13px;
 			line-height: 13px;
+		}
+	}
+	.row{
+		margin: 0 -8px;
+	}
+	.item-photo{
+		.photo-holder{
+			i{
+				width: 30px;
+				height: 30px;
+				font-size: 30px;
+				line-height: 30px;
+				margin: -15px 0 0 -15px;
+			}
 		}
 	}
 }

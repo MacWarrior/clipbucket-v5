@@ -1,3 +1,77 @@
+/* variables */
+/**/
+/**/
+/* buttons */
+.btn-default {
+  background: #ededed;
+  border-color: #e0e0e0;
+  font-weight: 700;
+  color: #000; }
+  .btn-default:hover, .btn-default:focus, .btn-default:active, .btn-default.active, .btn-default:hover {
+    background: #ededed;
+    border-color: #e0e0e0; }
+
+.btn-primary {
+  background: #0080b4;
+  border-color: #0080b4;
+  font-weight: 400;
+  color: #fff; }
+  .btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .btn-primary:hover {
+    background: #0080b4;
+    border-color: #0080b4;
+    color: #fff; }
+
+.btn-success {
+  background: #4caf50;
+  border-color: #4caf50;
+  font-weight: 700;
+  color: #fff; }
+  .btn-success:hover, .btn-success:focus, .btn-success:active, .btn-success.active, .btn-success:hover {
+    background: #4caf50;
+    border-color: #4caf50;
+    color: #fff; }
+
+/* form elements */
+.form-control {
+  color: #000;
+  background: #f6f6f6;
+  border-color: #d9d9d9;
+  font-size: 15px;
+  line-height: 28px;
+  height: 42px;
+  /* placeholder input styles */ }
+  .form-control input[type="text"]::-webkit-input-placeholder {
+    /* WebKit browsers */
+    color: #bdbdbd; }
+  .form-control input[type="text"]:-moz-placeholder {
+    /* Mozilla Firefox 4 to 18 */
+    color: #bdbdbd; }
+  .form-control input[type="text"]::-moz-placeholder {
+    /* Mozilla Firefox 19+ */
+    color: #bdbdbd;
+    opacity: 1; }
+  .form-control input[type="text"]:-ms-input-placeholder {
+    /* Internet Explorer 10+ */
+    color: #bdbdbd; }
+
+/* sprite */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 100dpi) {
+  .playlists-dropdown .item_playlist .playlist-thumb .date-time,
+  .playlists-dropdown .playlist-header .close-playlists,
+  .headerIcon.active.playlist-icon a,
+  .headerIcon.active.channels-icon a,
+  .headerIcon.active.video-icon a,
+  .headerIcon.playlist-icon a,
+  .headerIcon.channels-icon a,
+  .headerIcon.video-icon a,
+  .navbar-default .right-menu.navbar-nav > li > a.user-area .btn-setting,
+  .navbar-default .right-menu.navbar-nav > li > a.btn-upload,
+  .ch-playlists .playlist-thumb .date-time,
+  .rating .like-dislike a.btn-dislike i,
+  .rating .like-dislike a.btn-like i {
+    background-image: url("../images/sprite@2x.png") !important;
+    /* Translate the @2x sprite's dimensions back to 1x */
+    background-size: 60px 4400px !important; } }
 .jcf-hidden {
   display: block !important;
   position: absolute !important;
@@ -8,8 +82,8 @@
 .chk-area {
   margin: 0 10px 0 0;
   float: left;
-  width: 19px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   background: url("../images/custom-elements-sprite.png") no-repeat -253px -14px; }
 
 .chk-checked {
@@ -64,15 +138,20 @@
 .rad-area {
   margin: 0 10px 0 0;
   float: left;
-  width: 20px;
-  height: 20px;
-  background: url("../images/custom-elements-sprite.png") no-repeat -283px -15px; }
+  width: 22px;
+  height: 22px;
+  border-radius: 11px;
+  font: 22px/22px "icomoon";
+  background: #f6f6f6;
+  color: #bebebe; }
+  .rad-area:after {
+    content: "\e909"; }
 
 .rad-checked {
-  background-position: -283px -48px; }
-
-.rad-disabled {
-  background-position: -283px -80px; }
+  background: #f6f6f6;
+  color: #0080b4; }
+  .rad-checked:after {
+    content: "\e90a"; }
 
 /* custom select styles */
 .select-area {
@@ -238,8 +317,7 @@
   position: absolute;
   top: 0px;
   right: 0;
-  width: 4px;
-  border-radius: 2px; }
+  width: 10px; }
 
 .scrollable-area-wrapper .hscroll-left,
 .scrollable-area-wrapper .vscroll-up,
@@ -253,16 +331,15 @@
 
 .scrollable-area-wrapper .hscroll-line,
 .scrollable-area-wrapper .vscroll-line {
-  width: 4px;
-  float: left;
-  border-radius: 2px; }
+  background: #ecf0f1;
+  width: 11px;
+  float: left; }
 
 .scrollable-area-wrapper .hscroll-slider,
 .scrollable-area-wrapper .vscroll-slider {
-  background: #0080b4;
-  width: 4px;
-  height: 80px !important;
-  border-radius: 2px; }
+  background: #34495e;
+  width: 11px;
+  height: 20px; }
 
 .scrollable-area-wrapper .hscrollbar {
   position: static;
@@ -275,27 +352,6 @@
 
 /* Retian Sprite */
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 100dpi) {
-  /*logo sprite*/
-  .chk-area,
-  .chk-checked,
-  .chk-disabled,
-  .rad-area,
-  .rad-checked,
-  .rad-disabled,
-  .no-yes .chk-area,
-  .no-yes .chk-checked,
-  .no-yes .chk-disabled,
-  .check-out .chk-area,
-  .check-out .chk-checked,
-  .check-out .chk-disabled,
-  .on-off .chk-area,
-  .on-off .chk-checked,
-  .on-off .chk-disabled,
-  .select-area .select-opener,
-  .select-circle .jcf-upload-button {
-    /* Reference the @2x Sprite */
-    background-image: url("../images/custom-elements-sprite@2x.png") !important;
-    /* Translate the @2x sprite's dimensions back to 1x */
-    background-size: 320px 150px !important; } }
+  /*logo sprite*/ }
 
 /*# sourceMappingURL=custom-elements.css.map */

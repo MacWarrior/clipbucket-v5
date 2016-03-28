@@ -51,12 +51,6 @@ $(document).ready(function(){
 	
 	responsiveFixes();
 
-	$("body").on('click', '.btn-playlist, .close-playlists', function(){
-		$(".playlists-dropdown").toggleClass('active');
-		jcf.customForms.replaceAll('.custom-elements');
-	});
-
-
 	$(".navbar-sm-login-links a").click(function(){
 		$("body").removeClass('sideactive');
 	});
