@@ -24,7 +24,11 @@ if (isset($_GET['type'])) {
 	$type = $_GET['type'];
 	$result_array['type'] = $type;
 }
-$result_array['limit'] = 20;
+if (isset($_GET['limit'])) {
+	$result_array['limit'] = $_GET['limit'];
+} else {
+	$result_array['limit'] = 20;
+}
 if(!$array['order'])
     $result_array['order'] = " DESC ";
 

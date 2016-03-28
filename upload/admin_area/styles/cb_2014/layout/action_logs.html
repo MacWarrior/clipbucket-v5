@@ -76,9 +76,13 @@
 </table>
 {$type = $smarty.get.type}
 {$nextPage = $smarty.get.page + 1}
-
+{if $smarty.get.limit}
+  {$limit = $smarty.get.limit}
+{/if}
 {if $type != ''}
     <a href="{$baseurl}/admin_area/action_logs.php?type={$type}&page={$nextPage}"><button class="col-md-5 btn btn-primary" id="fetch_more_logs" loadHit="1" loadType="{$type}" {if $total_logs < 1}disabled="disabled"{/if}>{if $total_logs < 1}End of results{else}Load More{/if}</button></a>
+{else}
+  <a href="{$baseurl}/admin_area/action_logs.php?page={$nextPage}{if $limit > 1}&limit={$limit}{/if}"><button class="col-md-5 btn btn-primary" id="fetch_more_logs" loadHit="1" loadType="{$type}" {if $total_logs < 1}disabled="disabled"{/if}>{if $total_logs < 1}End of results{else}Load More{/if}</button></a>
 {/if}
 
 <style type="text/css">
