@@ -323,13 +323,14 @@ class language
 					{
 						if(!empty($sql))
 							$sql .=",\n";
-						$sql .= "('".$data['iso_code']."','$code','".mysql_real_escape_string($phrase)."')";
+						$sql .= "('".$data['iso_code']."','$code','".htmlspecialchars($phrase,ENT_QUOTES, "UTF-8")."')";
 					}
 					$sql .= ";";
 					$query = "INSERT INTO ".tbl("phrases")." (lang_iso,varname,text) VALUES \n";
 					$query .= $sql;
 					$db->execute($query);
 					e(lang("lang_added"),"m");
+					e(lang("lange_upload_after"),"m");;
 				}
 			}
 			
