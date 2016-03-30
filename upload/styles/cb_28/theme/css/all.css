@@ -696,7 +696,8 @@
 
 .sidebar-items {
   background: #fff;
-  padding: 16px 16px 0; }
+  padding: 16px 16px 0;
+  margin: 0 0 16px; }
   .sidebar-items .featured-video {
     font-size: 14px;
     line-height: 14px; }
@@ -1730,59 +1731,76 @@ h1 {
 .video_player {
   height: inherit; }
 
+.view-details,
 .video-details {
   background: #fff;
   padding: 16px;
   margin: 0 0 16px; }
+  .view-details header.details,
   .video-details header.details {
     margin: 0 0 20px; }
+    .view-details header.details h1,
     .video-details header.details h1 {
       font-size: 25px;
       line-height: 25 px;
       margin: 0 0 16px;
       font-weight: 600;
       color: #333; }
+    .view-details header.details .user-video-info,
     .video-details header.details .user-video-info {
       margin: 0 0 12px;
       display: table;
       width: 100%; }
+      .view-details header.details .user-video-info .views-counter,
+      .view-details header.details .user-video-info .avatar,
+      .view-details header.details .user-video-info .user-title,
       .video-details header.details .user-video-info .views-counter,
       .video-details header.details .user-video-info .avatar,
       .video-details header.details .user-video-info .user-title {
         display: table-cell;
         vertical-align: middle; }
+      .view-details header.details .user-video-info .avatar,
       .video-details header.details .user-video-info .avatar {
         width: 58px; }
+        .view-details header.details .user-video-info .avatar img,
         .video-details header.details .user-video-info .avatar img {
           width: 58px;
           height: 58px;
           border-radius: 29px; }
+      .view-details header.details .user-video-info .user-title,
       .video-details header.details .user-video-info .user-title {
         font-size: 18px;
         line-height: 20px;
         font-weight: 400;
         margin: 0;
         padding: 0 0 0 16px; }
+        .view-details header.details .user-video-info .user-title a,
         .video-details header.details .user-video-info .user-title a {
           color: #000; }
+      .view-details header.details .user-video-info .views-counter,
       .video-details header.details .user-video-info .views-counter {
         text-align: right;
         width: 166px;
         font-size: 25px;
         line-height: 25px;
         padding: 12px 0 11px 16px; }
+        .view-details header.details .user-video-info .views-counter span,
         .video-details header.details .user-video-info .views-counter span {
           display: inline-block;
           vertical-align: top;
           border-bottom: 3px solid #e7e7e7;
           width: 100%;
           height: 34px; }
+  .view-details .user-likes-sub,
   .video-details .user-likes-sub {
     margin: 0 -15px; }
+    .view-details .user-likes-sub .like-rating .rating,
     .video-details .user-likes-sub .like-rating .rating {
       padding: 3px 0 2px; }
+    .view-details .user-likes-sub .subscribe-col,
     .video-details .user-likes-sub .subscribe-col {
       text-align: right; }
+    .view-details .user-likes-sub .btn-subscribe,
     .video-details .user-likes-sub .btn-subscribe {
       font-size: 14px;
       line-height: 14px; }
@@ -2026,17 +2044,48 @@ h1 {
         color: #0080b4; }
 
 /**/
-.custom-container {
-  max-width: 1170px;
-  padding: 0 15px;
-  margin: 0 auto; }
-  .custom-container.small-container {
-    max-width: 550px;
-    color: #000; }
-
 .photos-block .heading {
   margin: 0 0 10px; }
 
+/* view photo */
+.photo-view {
+  position: relative;
+  background: #fff;
+  margin: 0 0 16px; }
+  .photo-view img {
+    margin: 0 auto; }
+  .photo-view .btn-holder {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    z-index: 4;
+    width: 112px; }
+  .photo-view .view-photo-nxt,
+  .photo-view .view-photo-pre {
+    border: none;
+    width: 48px;
+    height: 48px;
+    padding: 12px;
+    font-size: 24px;
+    line-height: 24px;
+    background: #f3f3f3;
+    border-radius: 50%;
+    text-align: center;
+    float: left; }
+    .photo-view .view-photo-nxt i,
+    .photo-view .view-photo-pre i {
+      font-size: 0;
+      line-height: 0; }
+    .photo-view .view-photo-nxt:focus, .photo-view .view-photo-nxt:hover,
+    .photo-view .view-photo-pre:focus,
+    .photo-view .view-photo-pre:hover {
+      background: #f3f3f3;
+      box-shadow: none;
+      color: #0080b4; }
+  .photo-view .view-photo-nxt {
+    float: right; }
+
+/**/
 .search-page.inner-block {
   padding: 0; }
   .search-page.inner-block .heading {
@@ -2386,7 +2435,7 @@ textarea#comment_box {
       margin: 0 0 5px; }
 
 /* end of channels block */
-/* tune pk ended */
+/* cutomization ended */
 /**/
 .manageVid_thumb {
   display: block;
@@ -3103,25 +3152,6 @@ textarea#comment_box {
 .cb-box {
   background: #fff;
   padding: 10px; }
-
-.view-photo-nxt,
-.view-photo-pre {
-  position: absolute;
-  top: 50%;
-  width: 30px;
-  height: 30px;
-  margin: -15px 0 0;
-  left: 0;
-  padding: 0;
-  text-align: center; }
-  .view-photo-nxt i,
-  .view-photo-pre i {
-    font-size: 0;
-    line-height: 0; }
-
-.view-photo-nxt {
-  left: auto;
-  right: 0; }
 
 .view-photo-thumbs {
   margin: 0 -10px; }

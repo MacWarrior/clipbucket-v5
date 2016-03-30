@@ -46,6 +46,13 @@
 	</div>
 {/if}
 
+{if $display_type == "relatedPhoto_sidebar"}
+	<a class="photo-holder" href="{$cbphoto->photo_links($photo,'view_item')}" title="Tolpis barbata (mariluzpicado)">		
+		{get_photo details=$photo output='html' size='l' class='img-responsive'}
+		<i class="icon-zoom"></i>
+	</a>
+{/if}
+
 {if $display_type == 'subscription'}
 	<div class="grid_view clearfix" style="width:auto; margin-right:4px;">
 		<a href="{$cbphoto->photo_links($photo,'view_item')}">{get_photo details=$photo output='html' class='photoThumbBox' width='110'}</a>

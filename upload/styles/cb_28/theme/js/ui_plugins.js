@@ -18,7 +18,7 @@ function initCarousel() {
 		pagerLinks: '.slider-pagination li',
 		stretchSlideToMask: true,
 		maskAutoSize: true,
-		autoRotation: true,
+		autoRotation: false,
 		switchTime: 3000,
 		animSpeed: 500,
 		step: 1

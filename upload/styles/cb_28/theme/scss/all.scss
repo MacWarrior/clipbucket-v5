@@ -916,6 +916,7 @@ h1{
 .video_player{
 	height: inherit;
 }
+.view-details,
 .video-details{
 	background: $white;
 	padding: 16px;
@@ -1282,16 +1283,6 @@ h1{
 	}
 }
 /**/
-.custom-container{
-	max-width: 1170px;
-	padding: 0 15px;
-	margin: 0 auto;
-	&.small-container{
-		max-width: 550px;
-		color: #000;
-	}
-}
-
 .photos-block .heading{
 	margin: 0 0 10px;
 	h2,
@@ -1299,7 +1290,49 @@ h1{
 		@extend %heading;
 	}
 }
-
+/* view photo */
+.photo-view{
+	position: relative;
+	background: $white;
+	margin: 0 0 16px;
+	img{
+		margin: 0 auto;
+	}
+	.btn-holder{
+		position: absolute;
+		bottom: 20px;
+		right: 20px;
+		z-index: 4;
+		width: 112px;
+	}
+	.view-photo-nxt,
+	.view-photo-pre{
+		border:none;
+		width: 48px;
+		height: 48px;
+		padding: 12px;
+		font-size: 24px;
+		line-height: 24px;
+		background: #f3f3f3;
+		border-radius:50%;
+		text-align: center;
+		float: left;
+		i{
+			font-size: 0;
+			line-height: 0;
+		}
+		&:focus,
+		&:hover{
+			background: #f3f3f3;
+			box-shadow: none;
+			color: $blue;
+		}
+	}
+	.view-photo-nxt {
+		float: right;
+	}
+}
+/**/
 .search-page{
 	&.inner-block{
 		padding: 0;
@@ -1747,7 +1780,7 @@ textarea#comment_box{
 
 /* end of channels block */
 
-/* tune pk ended */
+/* cutomization ended */
 /**/
 .manageVid_thumb{
 	display:block;
@@ -1926,7 +1959,6 @@ textarea#comment_box{
 			}
 		}
 	}
-	
 	.shadow{
 		position: absolute;
 		z-index: 1;
@@ -2534,25 +2566,7 @@ textarea#comment_box{
 	background: #fff;
 	padding: 10px;
 }
-.view-photo-nxt,
-.view-photo-pre{
-	position: absolute;
-	top: 50%;
-	width: 30px;
-	height: 30px;
-	margin: -15px 0 0;
-	left: 0;
-	padding: 0;
-	text-align: center;
-	i{
-		font-size: 0;
-		line-height: 0;
-	}
-}
-.view-photo-nxt {
-	left: auto;
-	right: 0;
-}
+
 
 
 .view-photo-thumbs{
