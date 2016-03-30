@@ -26,6 +26,7 @@
 			
 			<section class="view-details clearfix">
 				<header class="clearfix details">
+					<div id="result_cont"></div>
 					<h1>{$photo.photo_title|truncate:55}</h1>
 					<div class="user-video-info clearfix">
 						<a href="{$userquery->profile_link($video)}" class="avatar">
@@ -46,7 +47,7 @@
 						</div>
 						<div class="clearfix subscribe-col col-lg-6 col-md-6 col-sm-6 col-xs-12">
 							{if $photo.userid != userid()}
-								<a id="subscribeUser" class="btn btn-subscribe btn-primary" href="javascript:void(0)">
+								<a id="subscribeUser" class="btn btn-subscribe btn-primary" href="javascript:void(0)" onclick="subscriber('{$user.userid}','subscribe_user','video_detail_result_cont')">
 									<span>{lang('Subscribe')}</span>
 								</a>
 							{/if}
