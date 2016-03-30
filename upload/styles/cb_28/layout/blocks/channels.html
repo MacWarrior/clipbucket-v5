@@ -58,10 +58,27 @@
 		<img class="avatar" src="{avatar details=$user}">
 		<h2>{$user.username}</h2>
 	</a>
-	<div class="info">
-		<span>{$user.total_videos|number_format} {lang code="videos"}</span>
-		<span>{$user.profile_hits|number_format} {lang code="views"}</span>
-		<span>{lang code="subscribers"}:  {$user.subscribers|number_format}</span>
+	<div class="info clearfix">
+		<div class="col">
+			<strong>
+				{lang code="views"}
+				<span>{$user.profile_hits|number_format}</span>
+			</strong>
+			<strong>
+				{lang code="videos"}
+				<span>{$user.total_videos|number_format}</span>
+			</strong>
+		</div>
+		<div class="col">
+			<strong>
+				{lang code="subscribers"}
+				<span>{$user.subscribers|number_format}</span>
+			</strong>
+			<strong>
+				{lang code="photos"}
+				<span>{$user.total_photos|number_format}</span>
+			</strong>
+		</div>
 	</div>
 	
 </div>

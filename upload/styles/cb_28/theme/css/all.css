@@ -1633,6 +1633,8 @@ h1 {
   .filter-dropdowns .cat-col {
     text-align: left;
     padding: 0 10px 0 0; }
+    .filter-dropdowns .cat-col .dropdown {
+      margin: 0; }
   .filter-dropdowns .sorting-col {
     text-align: right;
     padding: 0 0 0 10px; }
@@ -2330,50 +2332,73 @@ textarea#comment_box {
 
 /* end of comments */
 /* channels page */
-.channels-block {
+.channels {
   padding: 0 15px 0 0; }
-  .channels-block.inner-block .heading {
+  .channels.inner-block .heading {
     padding: 0 0 0 15px; }
+  .channels .row {
+    margin: 0 -10px; }
 
-.item_channel {
-  padding: 0 0 0 15px; }
-  .item_channel .channel-holder {
-    min-height: 120px;
-    padding: 20px 5px;
-    margin: 0 0 15px;
-    border: 1px solid #e8e8e8;
-    color: #333;
-    font-size: 15px;
-    line-height: 20px;
-    text-align: center; }
-  .item_channel .user-block {
-    display: block;
-    color: #333;
-    margin: 0 0 10px; }
-    .item_channel .user-block:hover {
-      text-decoration: none; }
-      .item_channel .user-block:hover .avatar {
-        background: #0080b4; }
-  .item_channel .avatar {
-    display: block;
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    padding: 3px;
+.item-channel {
+  padding: 0 10px;
+  margin: 0 0 20px; }
+  .item-channel .channel-holder {
     background: #fff;
-    border: 1px solid #0080b4;
-    margin: 0 auto 10px; }
-  .item_channel h2 {
+    border: 1px solid #d9d9d9;
+    color: #000;
+    font-size: 13px;
+    line-height: 13px;
+    text-align: center; }
+  .item-channel .user-block {
+    display: block;
+    background: #fff;
+    color: #000;
+    padding: 22px 0 0;
+    border-bottom: 1px solid #d9d9d9; }
+    .item-channel .user-block:hover {
+      text-decoration: none; }
+  .item-channel .avatar {
+    display: block;
+    width: 66px;
+    height: 66px;
+    border-radius: 50%;
+    background: #fff;
+    margin: 0 auto 14px; }
+  .item-channel h2 {
     font-size: 18px;
     line-height: 20px;
-    font-weight: 700;
-    margin: 0;
-    padding: 0;
-    text-transform: capitalize; }
-  .item_channel span {
-    display: block;
-    margin: 0 0 5px; }
-  .item_channel .btn-subscribe {
+    font-weight: 600;
+    margin: 0 0 12px; }
+  .item-channel .info {
+    padding: 10px 0;
+    background: #f6f6f6; }
+    .item-channel .info .col {
+      width: 50%;
+      float: left;
+      padding: 0 10px;
+      border-left: 1px solid #d9d9d9; }
+      .item-channel .info .col:first-child {
+        border: none; }
+    .item-channel .info strong {
+      display: block;
+      padding: 10px 0 0;
+      margin: 0 0 10px;
+      border-top: 1px solid #d9d9d9;
+      font-size: 13px;
+      line-height: 13px;
+      font-weight: 300;
+      color: #a3a3a3; }
+      .item-channel .info strong:first-child {
+        border: none;
+        padding: 0; }
+      .item-channel .info strong span {
+        display: block;
+        margin: 10px 0 0;
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 14px;
+        color: #000; }
+  .item-channel .btn-subscribe {
     display: inline-block;
     vertical-align: top;
     font-style: normal;
@@ -2384,55 +2409,10 @@ textarea#comment_box {
     font-weight: 400;
     padding: 5px 10px;
     margin: 0 0 10px; }
-    .item_channel .btn-subscribe.unsub {
+    .item-channel .btn-subscribe.unsub {
       background: #0066cd;
       border-color: #0066cd;
       color: #fff; }
-
-.featured-channels {
-  padding: 0 0 0 15px; }
-  .featured-channels .item_channel {
-    padding: 0; }
-    .featured-channels .item_channel h2 {
-      margin: 0 0 10px; }
-    .featured-channels .item_channel .channel-holder {
-      padding: 0;
-      margin: 0 0 20px; }
-    .featured-channels .item_channel .avatar {
-      position: absolute;
-      top: -30px;
-      left: 20px;
-      width: 116px;
-      height: 116px;
-      margin: 0; }
-    .featured-channels .item_channel .sm-cover {
-      display: block;
-      height: auto;
-      max-height: 124px;
-      width: 100%; }
-    .featured-channels .item_channel .info {
-      height: 100px;
-      background: #1a1e21;
-      padding: 10px 10px 10px 160px;
-      position: relative;
-      text-align: left; }
-    .featured-channels .item_channel .btn-subscribe {
-      margin: 0 0 20px; }
-  .featured-channels .featured-userlink {
-    display: block;
-    color: #fff;
-    margin: 0 0 20px; }
-    .featured-channels .featured-userlink:hover {
-      text-decoration: none; }
-  .featured-channels .popular-vids {
-    padding: 0; }
-  .featured-channels .video-block {
-    padding: 0 0 0 15px; }
-    .featured-channels .video-block .view-date .icon-date,
-    .featured-channels .video-block .view-date .icon-eye {
-      float: none;
-      display: block;
-      margin: 0 0 5px; }
 
 /* end of channels block */
 /* cutomization ended */

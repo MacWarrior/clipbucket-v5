@@ -787,6 +787,9 @@ h1{
 	.cat-col{
 		text-align: left;
 		padding: 0 10px 0 0;
+		.dropdown{
+			margin: 0;
+		}
 	}
 	.sorting-col{
 		text-align: right;
@@ -1649,57 +1652,84 @@ textarea#comment_box{
 
 /* channels page */
 
-.channels-block{
+.channels{
 	padding: 0 15px 0 0;
 	&.inner-block .heading{
 		padding: 0 0 0 15px;
 	}
+	.row{
+		margin: 0 -10px;
+	}
 }
-.item_channel{
-	padding: 0 0 0 15px;
+.item-channel{
+	padding: 0 10px;
+	margin: 0 0 20px;
 	.channel-holder{
-		min-height: 120px;
-		padding:20px 5px;
-		margin: 0 0 15px;
-		border:1px solid #e8e8e8;
-		color: $block-color;
-		font-size: 15px;
-		line-height: 20px;
+		background: $white;
+		border:$default-border;
+		color: $black;
+		font-size: 13px;
+		line-height: 13px;
 		text-align: center;
 	}
 	.user-block{
 		display: block;
-		color: $block-color;
-		margin: 0 0 10px;
+		background:$white;
+		color: $black;
+		padding: 22px 0 0;
+		border-bottom:$default-border;
 		&:hover{
 			text-decoration: none;
-			.avatar{
-				background:$blue;
-			}
 		}
 	}
 	.avatar{
 		display: block;
-		width: 100px;
-		height: 100px;
+		width: 66px;
+		height: 66px;
 		border-radius:50%;
-		padding: 3px;
 		background: #fff;
-		border:1px solid $blue;
-		margin: 0 auto 10px;
+		margin: 0 auto 14px;
 	}
 	h2{
 		font-size: 18px;
 		line-height: 20px;
-		font-weight: 700;
-		margin: 0;
-		padding: 0;
-		text-transform: capitalize;
+		font-weight: 600;
+		margin: 0 0 12px;
 	}
-	span{
-		display: block;
-		// padding: 0 5px;
-		margin: 0 0 5px;
+	.info{
+		padding: 10px 0;
+		background:darken($lt-grey,1%);
+		.col{
+			width: 50%;
+			float: left;
+			padding: 0 10px;
+			border-left:$default-border;
+			&:first-child{
+				border:none;
+			}
+		}
+		strong{
+			display: block;
+			padding: 10px 0 0;
+			margin: 0 0 10px;
+			border-top:$default-border;
+			font-size: 13px;
+			line-height: 13px;
+			font-weight: 300;
+			color: lighten($grey-txt,18%);
+			&:first-child{
+				border:none;
+				padding: 0;
+			}
+			span{
+				display: block;
+				margin: 10px 0 0;
+				font-weight: 600;
+				font-size: 14px;
+				line-height: 14px;
+				color:$black;
+			}
+		}
 	}
 	.btn-subscribe{
 		@include vertical-top();
@@ -1718,66 +1748,6 @@ textarea#comment_box{
 		}
 	}
 }
-.featured-channels{
-	padding: 0 0 0 15px;
-	.item_channel{
-		padding: 0;
-		h2{
-			margin: 0 0 10px;
-		}
-		.channel-holder{
-			padding: 0;
-			margin: 0 0 20px;
-		}
-		.avatar{
-			position: absolute;
-			top: -30px;
-			left: 20px;
-			width: 116px;
-			height: 116px;
-			margin: 0; 
-		}
-		.sm-cover{
-			display: block;
-			height: auto;
-			max-height: 124px;
-			width: 100%;
-		}
-		.info{
-			height: 100px;
-			background: #1a1e21;
-			padding: 10px 10px 10px 160px;
-			position: relative;
-			text-align: left;
-		}
-		.btn-subscribe{
-			margin: 0 0 20px;
-		}
-	}
-	.featured-userlink{
-		display: block;
-		color: #fff;
-		margin: 0 0 20px;
-		&:hover{
-			text-decoration: none;
-		}
-	}
-	.popular-vids{
-		padding: 0;
-	}
-	.video-block{
-		padding: 0 0 0 15px;
-		.view-date{
-		.icon-date,
-		.icon-eye{
-				float: none;
-				display: block;
-				margin: 0 0 5px;
-			}
-		}
-	}
-}
-
 /* end of channels block */
 
 /* cutomization ended */
