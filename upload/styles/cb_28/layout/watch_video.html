@@ -147,11 +147,17 @@
 			<h2>Popular Videos</h2>
 			<div class="clearfix sidebar-items">
 			{if $smarty.get.play_list}
-				{section name=plist loop=$items}
-				  {include file="$style_dir/blocks/manage/account_video.html" video=$items[plist] control="onWatch" pid=$playlist.playlist_id}
-				{/section}
+				<div id="playlist_items">
+					{$cur_playlist = $smarty.get.play_list}
+					{$total_items = $cbvid->action->count_playlist_items($cur_playlist)}
+					{section name=plist loop=$items}
+					  {include file="$style_dir/blocks/manage/account_video.html" video=$items[plist] control="onWatch" pid=$playlist.playlist_id}
+					{/section}
+				</div>
+				{if $total_items > 10}
+					<button class="btn btn-primary text-centre" id="playlist-pull" dataList={$cur_playlist} dataLimit="10" dataHit="2">Load More</button>
+				{/if}
 			{else}
-
 				{$most_viewed=$cbvid->get_videos(["order"=>"views DESC","limit"=>$limit])}				    	
 				{if $most_viewed}
 					{foreach from=$most_viewed item=pop_video}
@@ -174,6 +180,33 @@
 </div>
 
 <script>
+	$('#playlist-pull').on("click",function(){
+		console.log("RIGHT HERE");
+		loadHit = $(this).attr('dataHit');
+		loadLimit = $(this).attr('dataLimit');
+		playlist = $(this).attr('dataList');
+
+		$.ajax({
+			url: 'http://localhost/github_cb_test/ajax/watch.php',
+			type: 'post',
+			dataType: 'html',
+			data: {
+				"mode":'playlistMore',
+				"loadHit":loadHit,
+				"loadLimit":loadLimit,
+				"playlist": playlist
+			},
+
+			success: function(data) {
+				if (data == 'none') {
+					$('#playlist-pull').remove();
+				}
+				$(data).appendTo('#playlist_items').fadeIn('slow');
+				$('#playlist-pull').attr('dataHit', parseInt(loadHit) + 1);
+			}
+		});
+	});
+
 	//var aspect_ratio = 1.77778
 	var aspect_ratio = 2.2
 	var $cb_player = $("#cb_player");
