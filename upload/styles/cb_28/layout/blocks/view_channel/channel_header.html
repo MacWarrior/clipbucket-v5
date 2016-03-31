@@ -2,37 +2,66 @@
 <div class="cover" id="coverContainer">
 	<div class="cover-holder clearfix">
 		<img class="img-responsive cb-live-background" src="{if $coverPhoto != ''}{$coverPhoto}{else}{$theme}/images/cover_default.jpg {/if}" size='1140x276' alt="">
-		<div class="avatar-block">
-			<a class="avatar" href="#">
-				<img class="img-responsive img-circle" src="{$userquery->getUserThumb($user)}">
-			</a>
-			<h2>{$user.username}</h2>
-			<div class="clearfix btn-holder">
-				{if $user.userid != userid()}
-				
-				<span class="subscribers">{lang code="Subscribers"}&nbsp;&nbsp; {$user.subscribers}</span>
-				
-				<div class="clearfix">
-					<button id="subscribe_channel" class="btn btn-primary btn-subscribe">{lang code="Subscribe"}</button>
-				</div>
-				{/if}
-				{if $user.userid == userid()}
-				<span class="subscribers">{lang code="Subscribers"}&nbsp;&nbsp; {$user.subscribers}</span>
-				{/if}
-			</div>
-			{if $user.userid == userid()}
-			<ul class="clearfix counts-info">
-				<li>
-					<span>{$user.total_videos}</span> <i class="fa fa-video-camera"></i>
-				</li>
-				<li>
-					<span>{$user.profile_hits}</span> <i class="fa fa-eye"></i>
-				</li>
-			</ul>
-			{/if}
-		</div>
+		
 		{if $user.userid == userid()}
 		<a href="#" class="btn btn-sm changeCover" id="changeCover">{lang code="Update Cover"}<span class="icon-photo"></span></a>
 		{/if}
+
+		<div class="ratting-counts clearfix">
+			<div class="user-ratting" id="rating_container">
+				{show_video_rating rating=$p.rating ratings=$p.rated_by total='10' id=$p.userid type=user}
+			</div>
+			<ul class="counters">
+				<li>
+					<i class="icon-videos"></i>{$user.total_videos} &nbsp;Videos
+				</li>
+				<li>
+					<i class="icon-photos"></i>{$user.total_photos} &nbsp;Photos
+				</li>
+				<li>
+					<i class="icon-views"></i>{$user.profile_hits} &nbsp;Views
+				</li>
+				<li>
+					<i class="icon-subscribers"></i>{$user.subscribers} &nbsp;Contacts
+				</li>
+			</ul>
+		</div>
+		<div class="friend-block clearfix">
+			{if $user.userid != userid()}
+				{if $friend_status == "yes" && userid()}
+				<a href="{$baseurl}/manage_contacts.php?mode=delete&userid={$u.userid}"  class="btn btn-danger btn-sm new1">
+					<i class="glyphicon glyphicon-ok white"></i> 
+					{lang code="Unfriend"}
+				</a>
+				{elseif $friend_status == "no"}
+				<a href="{$baseurl}/manage_contacts.php?mode=requests&confirm={$u.userid}"  class="btn btn-primary btn-sm new1">
+					<i class="glyphicon glyphicon-ok white"></i> 
+					{lang code="Accept Request"}
+				</a>
+				{elseif !$friends && userid()}
+				<a href="javascript:void(0)"  class="btn btn-primary btn-sm new1" 
+				   onclick="add_friend('{$user.userid}','result_cont')">
+					<i class="glyphicon glyphicon-plus-sign white"></i> 
+					{lang code="Add As Friend"}
+				{/if}
+				</a>
+			{/if}
+		</div>
+	</div>
+
+	<div class="avatar">
+		<img class="img-responsive img-circle" src="{$userquery->getUserThumb($user)}">
+	</div>
+
+	<div class="profile-buttons clearfix">
+		<h2>{$user.username}</h2>
+		<div class="btn-holder">
+			{if $user.userid != userid()}
+				<a href="{$baseurl}/private_message.php?mode=new_msg&to={$user.username}" class="btn btn-default">
+					{lang code="Send Message"}
+				</a>
+				<button id="subscribe_channel" class="btn btn-default">{lang code="Subscribe"}</button>
+			{/if}
+		</div>
 	</div>
 </div>

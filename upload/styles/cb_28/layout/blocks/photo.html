@@ -13,6 +13,21 @@
 	</div>
 {/if}
 
+{if $display_type == "user_photos"}
+	<a class="photo-holder" href="{$cbphoto->photo_links($photo,'view_item')}" title="Tolpis barbata (mariluzpicado)">
+		{get_photo details=$photo size='l' class='img-responsive photo-land' output='html'}
+		<i class="icon-zoom"></i>
+	</a>
+	<div class="photo-info">
+		{if $photo.photo_title=='no-tag'}
+			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="Tolpis barbata (mariluzpicado)">no-title</a></strong>
+		{else}
+			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="Tolpis barbata (mariluzpicado)">{$photo.photo_title|truncate:50}</a></strong>
+		{/if}
+		<span>By&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{$photo.username}</a></span>
+	</div>
+{/if}
+
 {if $display_type == "featuredPhoto_sidebar"}
 	<a class="photo-holder" href="{$cbphoto->photo_links($photo,'view_item')}" title="Tolpis barbata (mariluzpicado)">
 		{get_photo details=$photo size='l' class='img-responsive photo-land' output='html'}
