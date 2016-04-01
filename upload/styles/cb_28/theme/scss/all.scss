@@ -1060,10 +1060,11 @@ h1{
 		}
 	}
 }
-.cb-tabs{
+.flat-tabs{
 	h2{
-		font-size: 16px;
-		line-height: 18px;
+		font-size: 20px;
+		line-height: 20px;
+		font-weight: 600;
 		margin: 0 0 10px;
 	}
 	.alert-info{
@@ -1074,32 +1075,29 @@ h1{
 		padding: 0;
 	}
 	.nav-tabs.nav{
-		font-size: 16px;
+		font-size: 14px;
 		border-bottom:$default-border;
 		>li{
-			//margin: 0;
+			margin: 0;
 			>a{
-				border:none;
+				border-width: 0 0 3px;
+				border-color: $white;
 				margin: 0;
-				padding: 10px 16px 10px 0;
-				color: lighten($grey-txt,2.7%);
+				padding: 8px 15px;
+				color: $black;
 				&:hover{
-					border-color:$blue;
+					border-width: 0 0 3px;
+					border-color: $blue;
 					background: none;
-					color: $black;
-				}
-				span{
-					@include vertical-top();
-					margin: 0 10px 0 0;
-					font-size: 18px;
-					line-height: 22px;
+					color: $black
 				}
 			}
 			&.active > a,
 			&.active > a:hover,
-			&.active > a:focus{
-				color: $blue;
-				background: none;
+			&.active > a:active{
+				border-color: $blue;
+				color: black;
+				font-weight: 700;
 			}
 		}
 	}
@@ -1114,6 +1112,13 @@ h1{
 				margin: 0 5px 0 0;
 			}
 		}
+	}
+	.item-photo .photo-info,
+	.videos .video-info{
+		background: darken($lt-grey, 1);
+	}
+	.playlist-item{
+		margin: 0 0 10px;
 	}
 }
 .view-tabs{
@@ -1174,19 +1179,17 @@ h1{
 		}
 	}
 }
-/**/
 .watch-vid-details{
-	h2{
-		font-size: 16px;
-		line-height: 18px;
-		margin: 0 0 10px;
-	}
 	.desc-list{
 		@include list-style();
 		color: #000;
 		font-size: 14px;
 		li{
 			margin: 0 0 10px;
+			img{
+				@include vertical-middle();
+				margin: 0 5px 0 0;
+			}
 			a{
 				color: $blue;
 				&:hover{
@@ -1837,7 +1840,7 @@ textarea#comment_box{
 		color: #fff;
 		position: absolute;
 		top: 10px;
-		right: 10px;
+		left: 10px;
 		span{
 			@include vertical-top();
 			font-size: 18px;
@@ -1929,74 +1932,6 @@ textarea#comment_box{
 .channel-tabs{
 	background: $white;
 	padding: 10px 16px;
-}
-// .ch-vid-details{
-// 	font-size: 13px;
-// 	line-height: 18px;
-// 	color: $base-color;
-// 	h2{
-// 		font-size: 13px;
-// 		line-height: 18px;
-// 		font-weight: 700;
-// 		color: $com-color;
-// 		margin: 0 0 10px;
-// 		~span{
-// 			display: block;
-// 			margin: 0 0 10px;
-// 		}
-// 	}
-// 	.views-date{
-// 		span{
-// 			float: right;
-// 			&:first-child{
-// 				float: left;
-// 			}
-// 		}
-// 	}
-// }
-// .player-area{
-// 	margin-bottom: 20px;
-// 	>div{
-// 		padding: 0 0 0 15px;
-// 		&:first-child{
-// 			padding: 0;
-// 		}
-// 	}
-// }
-// .ch-user-vids{
-// 	padding: 0 0 0 4px;
-// 	.video-block{
-// 		float: none;
-// 		@include vertical-top();
-// 		margin: 0 0 20px -4px;
-// 	}
-// }
-.channel-tabs{
-	.tune-tabs{
-		border-bottom: $default-border;
-	}
-	
-	.nav-tabs{
-		float: left;
-		border:none;
-	}
-	.btn-channel-actions{
-		float: right;
-		.btn{
-			font-size: 20px;
-			line-height: 20px;
-			&:hover{
-				color: $blue;
-			}
-		}
-	}
-	h1{
-		font-size: 18px;
-		line-height: 20px;
-		margin: 0 0 10px;
-		font-weight: 500;
-		color: $block-color;
-	}
 }
 /* recent activities */
 .user-activities{
@@ -2092,52 +2027,6 @@ textarea#comment_box{
 		}
 	}
 }
-
-.ch-right{
-	color: $block-color;
-	.widget{
-		margin: 0 0 20px;
-		&.ch-rating{
-			margin: 0;
-		}
-		.rating{
-			margin: 0;
-			text-align: center;
-		}
-		h2{
-			font-size: 18px;
-			line-height:18px;
-			margin: 0 0 10px;
-			font-weight: 700;
-		}
-		&.ch-playlists{
-			padding: 0 15px;
-		}
-		.subscription-list{
-			@include list-style();
-			text-align: center;
-			li{
-				@include vertical-top();
-				margin: 0 0 10px;
-				width: 30%;
-				a{
-					display: block;
-					width: 46px;
-					height: 46px;
-					margin: 0 auto 5px;
-					img{
-						width: 100%;
-						height: 100%;
-					}
-				}
-			}
-		}
-	}
-	.adbox-holder{
-		background: none;
-	}
-}
-
 /* end view channel page */
 /* playlist */
 .item_playlist{

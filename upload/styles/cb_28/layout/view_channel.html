@@ -13,7 +13,7 @@
 				</div>
 			</div>
 			<div id="messageFav" class="alert alert-info marginTop" style="display:none"></div>
-			<div class="channel-tabs cb-tabs clearfix">
+			<div class="channel-tabs flat-tabs clearfix">
 				<ul class="clearfix nav nav-tabs">
 					<li class="active">
 						<a href="#user-info" data-toggle="tab">{lang code='Info'}</a>
@@ -31,7 +31,7 @@
 					</li>
 				</ul>
 				<div class="tab-content clearfix">
-					<div class="tab-pane fade in clearfix active" id="user-info">
+					<div class="tab-pane fade in clearfix" id="user-info">
 						<div class="clearfix watch-vid-details">
 							<h2>{lang code='user_activity'}</h2>
 							<ul class="clearfix desc-list">
@@ -97,62 +97,52 @@
 							</div>
 						</div>
 					</div>
-					<div class="tab-pane" id="user-videos">
-						<section class="clearfix">
-							<h1>{$user.username}'s videos</h1>
-							<div class="clearfix ch-user-vids">
-								{$uservideos=get_videos(["user"=>$user.userid])}
-								{if $uservideos}
-									{foreach $uservideos as $video}
-										<div class="video-block col-lg-4 col-md-4 col-sm-6 col-xs-12">
-										{include file="$style_dir/blocks/videos/video.html" display_type='homeVideos'}
-										</div>
-									{/foreach}
-								{else}
-									<div class="well well-info">No Videos Found !</div>
-								{/if}
-							</div>
-						</section>
+					<div class="tab-pane videos fade in clearfix active" id="user-videos">
+						<div class="clearfix row">
+							{$uservideos=get_videos(["user"=>$user.userid])}
+							{if $uservideos}
+								{foreach $uservideos as $video}
+									<div class="item-video col-lg-4 col-md-4 col-sm-6 col-xs-12">
+									{include file="$style_dir/blocks/videos/video.html" display_type='homeVideos'}
+									</div>
+								{/foreach}
+							{else}
+								<div class="well well-info">No Videos Found !</div>
+							{/if}
+						</div>
 					</div>
 					<div class="tab-pane" id="user-photos">
-						<section class="clearfix">
-							<h1>User Photos</h1>
-							<div class="clearfix row">
-							{$photos=get_photos(["user"=>userid(),"limit" =>5])}
-								{if $photos}
-									{foreach from=$photos item=p_list}
-									<div class="item-photo col-lg-4 col-md-4 col-sm-6 col-xs-6">
-										{include file="$style_dir/blocks/photo.html" photo=$p_list}
-									</div>
-									{/foreach}
-								{else}
-									<div class="well well-info">{lang code='no_results_found'}</div>
-								{/if}
-								
-							</div>
-						</section>
-					</div>
-					<div class="tab-pane" id="user-playlist">
-						<section class="clearfix ch-playlists">
-							<h1>{$user.username}'s Playlists</h1>
-							<div class="clearfix row">
-							{*$u.userid*}
-							{$playlists = $cbvid->action->get_playlists(["user"=>$u.userid,"order"=>"date_added DESC","limit"=>""])}
-							
-							{if $playlists}
-							{*pr($playlists,true)*}
-							
-							{foreach $playlists as $playlist}
-								<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-								{include file="$style_dir/blocks/playlist/playlist-block.html"}
+						<div class="clearfix row">
+						{$photos=get_photos(["user"=>userid(),"limit" =>5])}
+							{if $photos}
+								{foreach from=$photos item=p_list}
+								<div class="item-photo col-lg-4 col-md-4 col-sm-6 col-xs-6">
+									{include file="$style_dir/blocks/photo.html" photo=$p_list}
 								</div>
-							{/foreach}
-							
+								{/foreach}
 							{else}
-								<div class="well well-info">no playlist found</div>
+								<div class="well well-info">{lang code='no_results_found'}</div>
 							{/if}
+						</div>
+					</div>
+					<div class="tab-pane fade in clearfix" id="user-playlist">
+						<div class="clearfix row ch-playlists">
+						{*$u.userid*}
+						{$playlists = $cbvid->action->get_playlists(["user"=>$u.userid,"order"=>"date_added DESC","limit"=>""])}
+						
+						{if $playlists}
+						{*pr($playlists,true)*}
+						
+						{foreach $playlists as $playlist}
+							<div class="playlist-item col-lg-4 col-md-4 col-sm-6 col-xs-12">
+							{include file="$style_dir/blocks/playlist/playlist-block.html"}
 							</div>
-						</section>
+						{/foreach}
+						
+						{else}
+							<div class="well well-info">no playlist found</div>
+						{/if}
+						</div>
 					</div>
 				</div>
 			</div>
@@ -171,11 +161,11 @@
 				</div>
 				{/if}
 			</div>
-			{$feature_users=get_users(['featured'=>'yes','limit'=>6])}
-			{if $feature_users}
-			<h2>{lang code="Featured Users"}</h2>
+			{$popular = get_users(['order'=>'profile_hits DESC limit 5'])}
+			{if $popular}
+			<h2>{lang code="Popular Users"}</h2>
 			<div class="clearfix sidebar-channels">
-				{foreach $feature_users as $user}
+				{foreach $popular as $user}
 				
 				<div class="clearfix channel-item">
 					<a href="{$userquery->profile_link($user)}" class="avatar">
