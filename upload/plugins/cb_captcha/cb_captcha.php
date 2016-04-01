@@ -18,7 +18,7 @@
 
 			if ($result == '')
 			{
-				header("Location: http://localhost/cb_svn/upload/signup.php?valid=fail");
+				header("Location: ".BASEURL."/signup.php?valid=fail");
 			}
 		}
 	}
