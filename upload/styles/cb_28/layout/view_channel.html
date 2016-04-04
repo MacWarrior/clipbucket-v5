@@ -17,11 +17,11 @@
 			<div id="messageFav" class="alert alert-info marginTop" style="display:none"></div>
 			<div class="channel-tabs flat-tabs clearfix">
 				<ul class="clearfix nav nav-tabs">
-					<li class="active">
+					<li>
 						<a href="#user-info" data-toggle="tab">{lang code='Info'}</a>
 					</li>
 					{if isSectionEnabled('videos') && $u_control.show_my_videos == 'yes'}
-					<li>
+					<li class="active">
 						<a href="#user-videos" data-toggle="tab">{lang code='videos'}</a>
 					</li>
 					{/if}

@@ -2921,7 +2921,7 @@ textarea#comment_box {
   .signin-block .user-form {
     background: #fff;
     width: 54%;
-    padding: 20px 90px; }
+    padding: 50px 90px; }
     .signup-block .user-form h2,
     .forgot-block .user-form h2,
     .signin-block .user-form h2 {
@@ -2954,18 +2954,19 @@ textarea#comment_box {
   .signup-block .form-control,
   .forgot-block .form-control,
   .signin-block .form-control {
-    height: 56px;
+    height: 50px;
     font-size: 18px;
-    line-height: 25px;
+    line-height: 26px;
     font-weight: 300;
-    padding: 14px 20px;
+    padding: 13px 20px;
     background: #fff;
     box-shadow: none; }
   .signup-block input[type="submit"],
   .forgot-block input[type="submit"],
   .signin-block input[type="submit"] {
     margin: 0 0 10px;
-    font-size: 25px; }
+    font-size: 25px;
+    line-height: 28px; }
     .signup-block input[type="submit"].btn-success,
     .forgot-block input[type="submit"].btn-success,
     .signin-block input[type="submit"].btn-success {

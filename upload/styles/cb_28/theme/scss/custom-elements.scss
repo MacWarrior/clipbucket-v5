@@ -147,9 +147,9 @@ $custom-elements-sprite-bg: url('../images/custom-elements-sprite.png') no-repea
 	display: block;
 	float: left;
 	font-size: 18px;
-	line-height: 56px;
+	line-height: 50px;
 	font-weight: 300;
-	height: 56px;
+	height: 50px;
 	padding: 0px 12px;
 	transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
 	width: 100% !important;
@@ -178,6 +178,8 @@ $custom-elements-sprite-bg: url('../images/custom-elements-sprite.png') no-repea
 	right: 15px;
 	top: 50%;
 	margin: -11px 0 0;
+	text-decoration: none;
+	cursor: pointer;
 	&:after{
 		content: "\e901";
 	}

@@ -2281,7 +2281,7 @@ textarea#comment_box{
 	.user-form{
 		background:$white;
 		width: 54%;
-		padding: 20px 90px;
+		padding: 50px 90px;
 
 		h2{
 			margin: 0 0 40px;
@@ -2309,17 +2309,18 @@ textarea#comment_box{
 		position: relative;
 	}
 	.form-control{
-		height: 56px;
+		height: 50px;
 		font-size: 18px;
-		line-height: 25px;
+		line-height: 26px;
 		font-weight: 300;
-		padding: 14px 20px;
+		padding: 13px 20px;
 		background: $white;
 		box-shadow: none;
 	}
 	input[type="submit"]{
 		margin: 0 0 10px;
 		font-size: 25px;
+		line-height: 28px;
 		&.btn-success{
 			margin: 0;
 		}
