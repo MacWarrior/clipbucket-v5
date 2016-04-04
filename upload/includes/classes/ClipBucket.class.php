@@ -651,8 +651,8 @@ class ClipBucket
         $this->foot_menu[] = array('name' => lang("contact_us"), 'link' => cblink(array('name' => 'contact_us')), "this" => "home");
 
 
-        if (userid())
-            //$this->foot_menu[] = array('name' => lang("my_account"), 'link' => cblink(array('name' => 'my_account')), "this" => "home");
+        
+        //$this->foot_menu[] = array('name' => lang("my_account"), 'link' => cblink(array('name' => 'my_account')), "this" => "home");
 
         $pages = $cbpage->get_pages(array('active' => 'yes', 'display_only' => 'yes', 'order' => 'page_order ASC'));
 
