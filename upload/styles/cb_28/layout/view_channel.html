@@ -124,7 +124,7 @@
 							{if $photos}
 								{foreach from=$photos item=p_list}
 								<div class="item-photo col-lg-4 col-md-4 col-sm-6 col-xs-6">
-									{include file="$style_dir/blocks/photo.html" photo=$p_list}
+									{include file="$style_dir/blocks/photo.html" photo=$p_list display_type = "default_photo"}
 								</div>
 								{/foreach}
 							{else}
