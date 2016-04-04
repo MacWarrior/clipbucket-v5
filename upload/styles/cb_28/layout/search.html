@@ -1,24 +1,23 @@
 {$myAccountLinks = $userquery->my_account_links()}
-<div id="main" class="clearfix">
-	<div class="custom-container">
-		<div class="inner-block search-page">
-			
-				<header class="heading clearfix">
-					<h1>{$search_type_title}</h1>
-				</header>
-				<div class="clearfix">
-					{if $results}
-						{foreach item=result from=$results}
-							{assign var=$template_var value =$result}
-							{include file="$display_template" }
-						{/foreach}
-					{else}
-						{lang code='no_results_found'}
-					{/if}
-				</div>
-				{include file="$style_dir/blocks/pagination.html"}
-			
-		</div>
+<div id="main" class="clearfix container">
+	<div class="clearfix">
+		<section class="clearfix videos">
+			<div class="clearfix leaderboard-ad ad">
+				{AD place='ad_728x90'}
+			</div>
+			<h1>{$search_type_title}</h1>
+			<div class="clearfix row">
+				{if $results}
+					{foreach item=result from=$results}
+						{assign var=$template_var value =$result}
+						{include file="$display_template" }
+					{/foreach}
+				{else}
+					{lang code='no_results_found'}
+				{/if}
+			</div>
+			{include file="$style_dir/blocks/pagination.html"}
+		</section>
 	</div>
 </div>
 <script>

@@ -1755,6 +1755,19 @@ h1 {
     padding: 0 10px 0 0; }
     .filter-dropdowns .cat-col .dropdown {
       margin: 0; }
+    .filter-dropdowns .cat-col .btn-default {
+      background: #eee;
+      border: 2px solid #000;
+      padding: 5px 10px;
+      font-weight: 400;
+      font-size: 15px;
+      line-height: 21px;
+      color: #000;
+      margin: 0 0 0 10px; }
+      .filter-dropdowns .cat-col .btn-default:hover, .filter-dropdowns .cat-col .btn-default:active {
+        background: #0080b4;
+        border-color: #0080b4;
+        color: #fff; }
   .filter-dropdowns .sorting-col {
     text-align: right;
     padding: 0 0 0 10px; }
@@ -2155,6 +2168,8 @@ h1 {
     text-decoration: none;
     color: #fff;
     z-index: 1; }
+    .item-photo .photo-holder img {
+      width: 100%; }
     .item-photo .photo-holder:after {
       background: rgba(0, 0, 0, 0.8);
       content: "";

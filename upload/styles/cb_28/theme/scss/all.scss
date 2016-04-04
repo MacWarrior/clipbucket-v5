@@ -880,6 +880,22 @@ h1{
 		.dropdown{
 			margin: 0;
 		}
+		.btn-default{
+			background: $body-bg;
+			border: 2px solid $black;
+			padding: 5px 10px;
+			font-weight: 400;
+			font-size: 15px;
+			line-height: 21px;
+			color:$black;
+			margin: 0 0 0 10px;
+			&:hover,
+			&:active{
+				background:$blue;
+				border-color:$blue;
+				color:$white;
+			}
+		}
 	}
 	.sorting-col{
 		text-align: right;
@@ -1368,6 +1384,9 @@ h1{
 		text-decoration: none;
 		color: $white;
 		z-index: 1;
+		img{
+			width: 100%;
+		}
 		&:after{
 			@include  overlaybg($color:$black, $opacity:0.8);
 			content: "";
