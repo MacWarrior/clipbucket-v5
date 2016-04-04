@@ -103,12 +103,16 @@
 					<div class="tab-pane videos fade in clearfix active" id="user-videos">
 						<div class="clearfix row user_vids">
 							{if $uservideos}
+								<div class="clearfix">
 								{foreach $uservideos as $video}
 									<div class="item-video col-lg-4 col-md-4 col-sm-6 col-xs-12">
 									{include file="$style_dir/blocks/videos/video.html" display_type='homeVideos'}
 									</div>
 								{/foreach}
-								<button id="more-view-channel" class="btn btn-primary text-centre" dataLimit="10" dataHit="2">Load More</button>
+								</div>
+								<div class="clearfix text-center">
+									<button id="more-view-channel" class="btn btn-loadmore" dataLimit="10" dataHit="2">Load More</button>
+								</div>
 							{else}
 								<div class="well well-info">No Videos Found !</div>
 							{/if}
@@ -333,7 +337,7 @@ $('#cover_info').show();
 				$('#more-view-channel').remove();
 				if (data.length > 1) {
 					$(data).appendTo('.user_vids').fadeIn('slow');
-					$('<button id="more-view-channel" class="btn btn-primary text-centre" dataLimit="'+loadLimit+'" dataHit="'+nextHit+'">Load More</button>').appendTo('.user_vids').fadeIn('slow');
+					$('<div class="clearfix text-center"><button id="more-view-channel" class="btn btn-loadmore" dataLimit="'+loadLimit+'" dataHit="'+nextHit+'">Load More</button></div>').appendTo('.user_vids').fadeIn('slow');
 				}
 
 				
