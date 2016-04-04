@@ -93,7 +93,7 @@
 			{if $row.collectionsSection == 'yes'}
 			{$collections = $cbcollection->get_collections(['limit'=>5, 'active'=>'yes'])}
 			<h2>{lang code="Top Collections"}</h2>
-			<div class="clearfix collections-grid">
+			<div class="clearfix sidebar-items collections-grid">
 				<div class="clearfix row">
 				{$limit=10}
 				{if $collections}        
@@ -102,18 +102,16 @@
 					<div class="clearfix collection-item col-lg-6 col-md-6 col-sm-6 col-xs-6"> 
 						<div class="collection-holder">
 							<div class="photo-block">
-								<a href="{$baseurl}/view_collection.php?cid={$collection.collection_id}&type={$collection.type}">
+								<a href="{$cbphoto->photo_links($item,'view_item')}">
 									<img alt="{$collection.title}" title="{$collection.title}" class="img-responsive" id="photo_{$collection.ci_id}" src="{$first_col_thumb}">
+									<div class="collection-info">
+										<span>{$collection.total_objects}</span>Photo(s)
+									</div>
 								</a>
-							</div>
-							<div class="collection-info">
-								<span>{$collection.total_objects}</span>Photo(s)
 							</div>
 							<img src="{$theme}/images/photo-bg.png" alt="" class="photo-bg">
 						</div>
-						<span>
-							<a href="{$baseurl}/view_collection.php?cid={$collection.collection_id}&type={$collection.type}">{$collection.collection_name}</a>
-						</span>
+						<span class="title">{$collection.collection_name}</span>
 					</div>
 				{/foreach}
 				</div>
