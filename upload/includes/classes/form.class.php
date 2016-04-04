@@ -71,9 +71,9 @@ class formObj
 
 		//Starting Text Field
 		if($field['type']=='textfield')
-			$textField = '<input type="text"';
+			$textField = '<input type="text" placeholder="'.$field['placehoder'].'"';
 		if($field['type']=='password')
-			$textField = '<input type="password"';
+			$textField = '<input type="password" placeholder="'.$field['placehoder'].'"';
 		elseif($field['type']=='textarea')
 			$textField = '<textarea';			
 		if(!empty($field['name']))

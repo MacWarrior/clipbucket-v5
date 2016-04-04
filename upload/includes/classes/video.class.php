@@ -1773,7 +1773,7 @@ class CBvideo extends CBCategory
 	/**
 	 * Function used to get playlist items
 	 */
-	function get_playlist_items( $playlist_id, $order = null, $limit = -1 )
+	function get_playlist_items( $playlist_id, $order = null, $limit = 10 )
 	{
         global $db, $cb_columns;
 
