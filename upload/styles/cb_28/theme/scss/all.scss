@@ -2249,6 +2249,7 @@ textarea#comment_box{
 	text-align: center;
 	font-size: 18px;
 	line-height: 20px;
+	overflow-y: auto;
 	color:lighten($grey-txt, 10%);
 	a{
 		color:lighten($grey-txt, 10%);

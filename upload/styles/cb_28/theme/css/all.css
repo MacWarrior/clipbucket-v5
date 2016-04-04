@@ -870,7 +870,8 @@
     list-style: none;
     padding: 0;
     margin: 0;
-    text-transform: capitalize; }
+    text-transform: capitalize;
+    width: 440px; }
     #footer ul li {
       margin: 0 0 0 25px;
       float: left; }
@@ -2884,6 +2885,7 @@ textarea#comment_box {
   text-align: center;
   font-size: 18px;
   line-height: 20px;
+  overflow-y: auto;
   color: #8f8f8f; }
   .account-container a {
     color: #8f8f8f; }

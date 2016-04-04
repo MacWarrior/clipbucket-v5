@@ -11,16 +11,14 @@
 				{/foreach}
 			</ul>
 			<div class="lang_wrapper column">
-				<p>#ClipBucket#</p>
-				{*if config("allow_language_change")}
-				<form action="" method="post" name="change_lang">
+				{if config("allow_language_change")}
+				<form action="" method="post" name="change_lang" class="">
 					{$cbobjects->_display_languages()}              
 				</form>
-				{/if*}
+				{/if}
 			</div>
 			<div class="copyright-poweredby column">
-				<p><span>&copy;</span> CBTune {$smarty.now|date_format:"%Y"}</p>
-				<span>Powered by <i><a href="#">ClipBucket</a><i></span>
+				<span>#ClipBucket#</span>
 			</div>
 		</div>
 	</div><!-- end of custom-container -->

@@ -12,7 +12,9 @@ function headerFooter(){
 	$("#container").css('padding-top',headerheight+'px');
 	$("#container").css('padding-bottom',footerheight+'px');
 
-	$(".account-container").css('max-height',cont_height+'px');
+	$(".account-container").css('height',cont_height+'px');
+	//console.log($(window).height());
+	console.log(cont_height);
 }
 var flag = 0;
 function responsiveFixes(){
