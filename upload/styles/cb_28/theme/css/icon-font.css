@@ -23,18 +23,25 @@
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
-.icon-photos:before {
+.icon-close:before {
 	content: "\e914";
 }
-.icon-subscribers:before {
+.icon-linkedin:before {
 	content: "\e915";
 }
-.icon-videos:before {
+.icon-photos:before {
 	content: "\e916";
 }
-.icon-views:before {
+.icon-subscribers:before {
 	content: "\e917";
 }
+.icon-videos:before {
+	content: "\e918";
+}
+.icon-views:before {
+	content: "\e919";
+}
+/**/
 .icon-down-arrow:before {
 	content: "\e901";
 }

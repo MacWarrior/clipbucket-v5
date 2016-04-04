@@ -1,21 +1,22 @@
 {if $display_type == "" || $display_type == "normal"}
-<div class="collection-item">
-	<div class="thumb">
-		<img class="img-responsive" src="{$cbcollection->coll_first_thumb($collection,'l')}">
+<div class="collection-holder">
+	<div class="photo-block">
+		<a href="{$baseurl}/view_collection.php?cid={$collection.collection_id}&type={$collection.type}">
+			<img src="{$cbcollection->coll_first_thumb($collection,'l')}" alt="{$collection.title}" title="{$collection.title}" class="img-responsive" id="photo_{$collection.ci_id}">
+			<div class="collection-info">
+				<span>{$collection.total_objects}</span>Photo(s)
+			</div>
+		</a>
 	</div>
-	<a href="{$baseurl}/view_collection.php?cid={$collection.collection_id}&type={$collection.type}" title="{$collection.collection_name}">
-		<div class="details">
-			<span>{$collection.collection_name|truncate:30}<br>{$collection.total_objects} {$collection.type}</span>
-		</div>
-	</a>
+	<img src="{$theme}/images/photo-bg.png" alt="" class="img-responsive photo-bg">
 </div>
+<span class="title">
+	<a href="{$baseurl}/view_collection.php?cid={$collection.collection_id}&type={$collection.type}" title="{$collection.collection_name}">{$collection.collection_name}</a>
+</span>
 {/if}
 
 {if $display_type == "view_collection"}
-
-	<div class="collectItemBox">
-		{if $type == "videos"}
-
+	{if $type == "videos"}
 		<div class="the_item">
 			<div class="onePhotoContainer oneVideoContainer">
 				<div class="onePhotoTitle">
@@ -27,18 +28,17 @@
 				</a>
 			</div>
 		</div>
-
-		{/if}
-		{if $type == "photos"}
-		<a class="CollectThumb" href="{$cbphoto->photo_links($object,'view_item')}">
+	{/if}
+	{if $type == "photos"}
+		<a class="photo-holder" href="{$cbphoto->photo_links($photo,'view_item')}" title="Tolpis barbata (mariluzpicado)">
 			{get_photo details=$object size='l' class='img-responsive' output='html'}
-			<div class="hover">
-				{$object.photo_title|truncate:15}
-				<span class="plus">plus</span>
-			</div>
+			<i class="icon-zoom"></i>
 		</a>
-		{/if}
-	</div>  
+		<div class="photo-info">
+			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="Tolpis barbata (mariluzpicado)">{$object.photo_title|truncate:50}</a></strong>
+			<span>By&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{$photo.username}</a></span>
+		</div>
+	{/if}	
 {/if}
 
 {if $display_type == "user_collections"}
@@ -48,7 +48,3 @@
 		</a>
 	</div>
 {/if}
-
-
-
-

@@ -13,6 +13,38 @@ $custom-elements-sprite-bg: url('../images/custom-elements-sprite.png') no-repea
 	height: 22px;
 	background: $custom-elements-sprite-bg -253px -14px;
 }
+.account-container{
+	.form-group{
+		&.radio,
+		&.checkbox{
+			line-height: 20px;
+			label{
+				padding: 0;
+			}
+		}
+		.radio-inline{
+			padding: 0;
+		}
+		.chk-area{
+			width: 20px;
+			height: 20px;
+			border-radius: 4px;
+			border:1px solid $bordercolor;
+			border:$default-border;
+			background: $white;
+			font: 14px/16px $font-icon;
+			text-align: center;
+		}
+		.chk-checked{
+			border-color: $blue;
+			background:$blue;
+			color:$white;
+			&:after{
+				content: "\e910";
+			}
+		}
+	}
+}
 .chk-checked {
 	background-position: -253px -45px;
 }
@@ -104,22 +136,23 @@ $custom-elements-sprite-bg: url('../images/custom-elements-sprite.png') no-repea
 }
 /* custom select styles */
 .select-area {
-	background-color: #fff;
-    background-image: none;
-    border: 1px solid #e7e9e9;
-    border-radius: 4px;
-    color: #555;
-    position: relative;
+	color:$base-color;
+	background: $white;
+	border:1px solid $bordercolor;
+	background-image: none;
+	border-radius: 4px;
+	position: relative;
 	overflow: hidden;
 	cursor: default;
 	display: block;
 	float: left;
-	font-size: 14px;
-    height: 45px;
-    line-height: 45px;
-    padding: 0px 12px;
-    transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
-    width: 100% !important;
+	font-size: 18px;
+	line-height: 56px;
+	font-weight: 300;
+	height: 56px;
+	padding: 0px 12px;
+	transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+	width: 100% !important;
 }
 .select-focus {
 	border-color: #2c3e50;
@@ -136,18 +169,24 @@ $custom-elements-sprite-bg: url('../images/custom-elements-sprite.png') no-repea
 	background: #eee;
 }
 .select-area .select-opener {
-	background: $custom-elements-sprite-bg -18px -119px;
+	background: $white;
+	color: $black;
 	position: absolute;
-	width: 22px; 
-	height: 12px;
+	width: 22px;
+	height: 22px;
+	font: 22px/22px $font-icon;
 	right: 15px;
-	top: 16px;
+	top: 50%;
+	margin: -11px 0 0;
+	&:after{
+		content: "\e901";
+	}
 }
 .select-options {
 	position: absolute;
 	overflow: hidden;
 	background: #fff;
-	z-index: 2000;
+	z-index: 10;
 }
 .select-options .opt-disabled a {
 	background: #fff !important;
@@ -156,7 +195,7 @@ $custom-elements-sprite-bg: url('../images/custom-elements-sprite.png') no-repea
 .select-options .drop-holder {
 	border: 1px solid #ededed;
 	overflow: hidden;
-	height: 1%;
+	
 }
 .select-options .drop-holder .drop-list {
 	overflow-x: hidden; 
@@ -179,7 +218,7 @@ $custom-elements-sprite-bg: url('../images/custom-elements-sprite.png') no-repea
 	display: block;
 	cursor: default;
 	color: #555;
-	height: 1%;
+	
 }
 .select-options .item-selected a {
 	text-decoration: none;
@@ -310,7 +349,7 @@ $custom-elements-sprite-bg: url('../images/custom-elements-sprite.png') no-repea
 }
 /* Retian Sprite */
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 100dpi) { 
-    /*logo sprite*/
+	/*logo sprite*/
  //    .chk-area,
  //    .chk-checked,
  //    .chk-disabled,

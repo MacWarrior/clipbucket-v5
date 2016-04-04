@@ -26,9 +26,11 @@ $default-border:1px solid $bordercolor;
 $fb-color:#2b4b90;
 $tw-color:#1c95d0;
 $gplus-color:#d34332;
+$linkedin-color:#007bb5;
 $com-color:#2d2d2d;
 $probox-bg: #f8f8f8;
 $input-bg: #f6f6f6;
+$error-color:#f44336;
 /**/
 @mixin overlaybg($color, $opacity){
     background: rgba($color, $opacity);
@@ -228,16 +230,12 @@ $input-bg: #f6f6f6;
 .btn-default{
 	background:#ededed;
 	border-color: #e0e0e0;
-	font-weight: 700;
+	font-weight: 400;
 	color: $base-color;
 	&:hover,
-	&:focus,
-	&:active,
-	&.active,
-	&:hover{
+	&:active{
 		background:#ededed;
 		border-color: #e0e0e0;
-		//color: @base-color;
 	}
 }
 .btn-primary{
@@ -246,10 +244,7 @@ $input-bg: #f6f6f6;
 	font-weight: 400;
 	color:#fff;
 	&:hover,
-	&:focus,
-	&:active,
-	&.active,
-	&:hover{
+	&:active{
 		background:$blue;
 		border-color:$blue;
 		color:#fff;
@@ -258,15 +253,25 @@ $input-bg: #f6f6f6;
 .btn-success{
 	background:#4caf50;
 	border-color:#4caf50;
-	font-weight: 700;
+	font-weight: 400;
 	color:#fff;
 	&:hover,
-	&:focus,
-	&:active,
-	&.active,
-	&:hover{
+	&:active{
 		background:#4caf50;
 		border-color:#4caf50;
+		color:#fff;
+	}
+}
+.btn-black{
+	background: lighten($black,13%);
+	border-color:lighten($black,13%);
+	font-weight: 400;
+	font-size: 15px;
+	color:#fff;
+	&:hover,
+	&:active{
+		background: lighten($black,13%);
+		border-color:lighten($black,13%);
 		color:#fff;
 	}
 }

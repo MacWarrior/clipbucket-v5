@@ -2,11 +2,17 @@ function headerFooter(){
 	var headerheight = "";
 	var footerheight = "";
 	var search_hight = "";
+	var cont_height = $("#container").height();
+
 	headerheight = $("#header").outerHeight();
 	footerheight = $("#footer").outerHeight();
 	
+	cont_height = cont_height - headerheight - footerheight;
+	
 	$("#container").css('padding-top',headerheight+'px');
-	$("#container").css('padding-bottom',footerheight+20+'px');
+	$("#container").css('padding-bottom',footerheight+'px');
+
+	$(".account-container").css('max-height',cont_height+'px');
 }
 var flag = 0;
 function responsiveFixes(){

@@ -1,7 +1,7 @@
 <!-- Defining object type-->
 {lang code='photo' assign='object_type'}
 {assign var=json value=$photo.photo_details|json_decode}
-<div id="main" class="clearfix container">
+
 	<div class="clearfix">
 		<section id="content" class="clearfix">
 			<div class="clearfix leaderboard-ad ad">
@@ -9,12 +9,12 @@
 			</div>
 			<div class="clearfix photo-view">
 				{get_photo details=$photo size='l' class='img-responsive center-block' output='html' height="100"}
-
+		
 				{assign var=objctid value=$object.ci_id}
 				{assign var=collid value=$object.collection_id}
 				
 				{assign var=preLink value=$cbphoto->collection->get_next_prev_item($objctid,$collid,'prev')}
-
+		
 				{assign var=nextLink value=$cbphoto->collection->get_next_prev_item($objctid,$collid,'next')}
 				
 				<div class="btn-holder clearfix">
@@ -78,14 +78,14 @@
 									<li><strong>{lang('Photo description')}</strong>:&nbsp;{$photo.photo_description|truncate:90}</li>
 									
 									{assign var=category value=$userquery->get_category($user.category)}
-
+		
 									<li><strong>{lang('Category')}</strong>:&nbsp;{$category.category_name}</li>
 									<li><strong>{lang('Tags')}</strong>:&nbsp;{$photo.photo_tags|tags:photos}</li>
 									<li><strong>{$photo.views|number_format}</strong>&nbsp;{lang('View')}{if $photo.views > 1}{lang('s')}{/if}</li>
 								</ul>
 							</div>
 						</div>
-
+		
 						<div class="tab-pane fade in clearfix" id="cb-item-share">
 							<ul class="social-share">
 								<li>
@@ -106,7 +106,7 @@
 							</ul>
 							{show_share_form id=$photo.photo_id type=Photo}
 						</div>
-
+		
 						<div class="tab-pane fade in clearfix" id="cb-item-addto">
 							<div class="clearfix form-horizontal row">
 							{$codes=$cbphoto->photo_embed_codes(['type'=>'all','with_url'=>true, 'details'=>$photo])}
@@ -122,7 +122,7 @@
 								{/foreach}
 							</div>
 						</div>
-
+		
 						<div class="tab-pane fade in clearfix" id="cb-item-report">
 							{show_flag_form id=$photo.photo_id type=Photo}
 						</div>
@@ -135,7 +135,7 @@
 					<div class="pad-bottom">
 						<div  class="addComment clearfix">
 							<div class="com_count" id="com_count">
-								<span>{lang code='comments'} </span> {$photo.total_comments}
+								<h2>{$photo.total_comments}&nbsp;<span>{lang code='comments'}</span></h2>
 							</div>
 							{if $myquery->is_commentable($photo,'p')}
 							{include file="$style_dir/blocks/comments/add_comment.html" id=$photo.photo_id type=p}
@@ -150,15 +150,15 @@
 				</div>
 			</div>
 		</section>
-
+		
 		<aside id="sidebar">
 			<div class="box-ad ad">{AD place='ad_300x250'}</div>
 			<h2>{lang code='Related Photos'}</h2>
 			<div class="clearfix sidebar-items">
-
+		
 			{$related_photos=get_photos(['title'=>$photo.photo_title,'tags'=>$photo.photo_tags,
 			'exclude'=>$photo.photo_id,'show_related'=>'yes','limit'=>6,'order'=>'date_added DESC'])}
-
+		
 			{if $related_photos}
 				<div class="row">
 					{foreach $related_photos as $photo}
@@ -171,12 +171,12 @@
 				<div class="well well-info">No Photos Found !</div>
 			{/if}
 			</div>
-
+		
 			{$row = $myquery->Get_Website_Details()}
 			{if $row.collectionsSection == 'yes'}
 			{$collections = $cbcollection->get_collections(['limit'=>5, 'active'=>'yes'])}
 			<h2>{lang code="Top Collections"}</h2>
-			<div class="clearfix collections-grid">
+			<div class="clearfix sidebar-items collections-grid">
 				<div class="clearfix row">
 				{$limit=10}
 				{if $collections}        
@@ -187,14 +187,14 @@
 							<div class="photo-block">
 								<a href="{$cbphoto->photo_links($item,'view_item')}">
 									<img alt="{$collection.title}" title="{$collection.title}" class="img-responsive" id="photo_{$collection.ci_id}" src="{$first_col_thumb}">
+									<div class="collection-info">
+										<span>{$collection.total_objects}</span>Photo(s)
+									</div>
 								</a>
-							</div>
-							<div class="collection-info">
-								<span>{$collection.total_objects}</span>Photo(s)
 							</div>
 							<img src="{$theme}/images/photo-bg.png" alt="" class="photo-bg">
 						</div>
-						<span>{$collection.collection_name}</span>
+						<span class="title">{$collection.collection_name}</span>
 					</div>
 				{/foreach}
 				</div>
@@ -208,8 +208,6 @@
 		{include file="$style_dir/blocks/photo.html" display_type="related_photos" photo=$uphotos[list]}
 		{/section*}
 	</div>
-</div>
-
 
 <script>
 	$(document).ready(function()

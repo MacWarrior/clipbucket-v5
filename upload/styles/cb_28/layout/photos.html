@@ -14,17 +14,17 @@
 						{if $smarty.get.sort}
 						{foreach from=$sorting_links item=name key=sort name=sorts}
 							{if $smarty.get.sort==$sort && isset($smarty.get.sort)} 
-							<a href="javascript:void(0)" data-toggle="dropdown" class="dropdown-toggle">{$name} <span class="icon-arrow-down"></span></a>
+							<a href="javascript:void(0)" data-toggle="dropdown" class="dropdown-toggle">{$name} <span class="icon-down-arrow"></span></a>
 							{/if}
 						{/foreach}
 						{else}
-							<a href="javascript:void(0)" data-toggle="dropdown" class="dropdown-toggle">Recent <span class="icon-arrow-down"></span></a>
+							<a href="javascript:void(0)" data-toggle="dropdown" class="dropdown-toggle">Recent <span class="icon-down-arrow"></span></a>
 						{/if}    
 
 						<ul class="dropdown-menu">
 							{foreach from=$sorting_links item=name key=sort}
 							<li>
-								<a href="{link name=sort sort=$sort type=photos}&sorting=sort" {if $smarty.get.sort==$sort} class="selected" {/if}>{if $smarty.get.sort==$sort}<i class="icon-check"></i>{/if}{$name}</a>
+								<a href="{link name=sort sort=$sort type=photos}&sorting=sort" {if $smarty.get.sort==$sort} class="selected" {/if}>{if $smarty.get.sort==$sort}{/if}{$name}</a>
 							</li>
 							{/foreach}
 						</ul>
@@ -37,11 +37,11 @@
 
 						{foreach from=$time_links item=name key=sort name=times}
 							{if $smarty.get.time==$sort && isset($smarty.get.time)} 
-							<a href="javascript:void(0)" data-toggle="dropdown" class="dropdown-toggle">{$name} <span class="icon-arrow-down"></span></a>
+							<a href="javascript:void(0)" data-toggle="dropdown" class="dropdown-toggle">{$name} <span class="icon-down-arrow"></span></a>
 							{/if}
 						{/foreach}
 						{else}
-							<a href="javascript:void(0)" data-toggle="dropdown" class="dropdown-toggle">all time <span class="icon-arrow-down"></span></a>
+							<a href="javascript:void(0)" data-toggle="dropdown" class="dropdown-toggle">all time <span class="icon-down-arrow"></span></a>
 						{/if}  
 						  <ul class="dropdown-menu">
 							{foreach from=$time_links item=name key=sort name=times}
@@ -84,41 +84,40 @@
 					{/foreach}
 				</div>
 			{else}
-				<div class="well well-info">No Videos Found !</div>
+				<div class="well well-info">No Photo(s) Found !</div>
 			{/if}
 			</div>
 			{$row = $myquery->Get_Website_Details()}
 			{if $row.collectionsSection == 'yes'}
-			{$collections = $cbcollection->get_collections(['limit'=>5, 'active'=>'yes'])}
-			<h2>{lang code="Top Collections"}</h2>
-			<div class="clearfix collections-grid">
-				<div class="clearfix row">
-				{$limit=10}
-				{if $collections}        
-				{foreach from=$collections item=collection}
-				{$first_col_thumb = $cbcollection->coll_first_thumb($collection,'l')}
-					<div class="clearfix collection-item col-lg-6 col-md-6 col-sm-6 col-xs-6"> 
-						<div class="collection-holder">
-							<div class="photo-block">
-								<a href="{$cbphoto->photo_links($item,'view_item')}">
-									<img alt="{$collection.title}" title="{$collection.title}" class="img-responsive" id="photo_{$collection.ci_id}" src="{$first_col_thumb}">
-								</a>
+				{$collections = $cbcollection->get_collections(['limit'=>5, 'active'=>'yes'])}
+				<h2>{lang code="Top Collections"}</h2>
+				<div class="clearfix sidebar-items collections-grid">
+					{$limit=10}
+					{if $collections}
+					<div class="clearfix row">
+						{foreach from=$collections item=collection}
+							{$first_col_thumb = $cbcollection->coll_first_thumb($collection,'l')}
+							<div class="clearfix collection-item col-lg-6 col-md-6 col-sm-6 col-xs-6"> 
+								<div class="collection-holder">
+									<div class="photo-block">
+										<a href="{$cbphoto->photo_links($item,'view_item')}">
+											<img alt="{$collection.title}" title="{$collection.title}" class="img-responsive" id="photo_{$collection.ci_id}" src="{$first_col_thumb}">
+											<div class="collection-info">
+												<span>{$collection.total_objects}</span>Photo(s)
+											</div>
+										</a>
+									</div>
+									<img src="{$theme}/images/photo-bg.png" alt="" class="photo-bg">
+								</div>
+								<span class="title">{$collection.collection_name}</span>
 							</div>
-							<div class="collection-info">
-								<span>{$collection.total_objects}</span>Photo(s)
-							</div>
-							<img src="{$theme}/images/photo-bg.png" alt="" class="photo-bg">
-						</div>
-						<span>{$collection.collection_name}</span>
+						{/foreach}
 					</div>
-				{/foreach}
+					{else}
+					<div class="well well-info">No Collection</div>
+					{/if}
 				</div>
-				{else}
-				<div class="well well-info">No Collection</div>
-				{/if}
-			</div>
 			{/if}
-
 		</aside>
 	</div>
 </div>
