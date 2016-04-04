@@ -1859,4 +1859,12 @@ function decode64(input) {
 		$("#add_comment_button").attr("disabled",false);
 		$(".add-reply").attr("disabled",false);
 	}
+
+	function isValidEmail(email) {
+		if (email.match(/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/)) {
+			return email;
+		} else {
+			return false;
+		}
+	}
 	
