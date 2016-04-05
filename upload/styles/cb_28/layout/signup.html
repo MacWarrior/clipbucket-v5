@@ -43,10 +43,12 @@
 							<a href="{$baseurl}/forgot.php">{lang code='Forgot Password?'}</a>
 							<a href="{$baseurl}/forgot.php?mode=recover_username">{lang code='Forgot Username?'}</a>
 						</div>
-						<div class="clearfix social-links">
+						{if function_exists('show_all_btns')} 
+						  <div class="clearfix social-links">
 							<span>or login with</span>
 							{ANCHOR place="show_all_btns"}
 						</div>
+						{/if}
 					</form>
 					<div class="side-box">
 						<h2>Creat Account</h2>
