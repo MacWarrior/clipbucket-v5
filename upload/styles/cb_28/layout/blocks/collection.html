@@ -30,13 +30,13 @@
 		</div>
 	{/if}
 	{if $type == "photos"}
-		<a class="photo-holder" href="{$cbphoto->photo_links($photo,'view_item')}" title="Tolpis barbata (mariluzpicado)">
+		<a class="photo-holder" href="{$cbphoto->photo_links($object,'view_item')}" title="Tolpis barbata (mariluzpicado)">
 			{get_photo details=$object size='l' class='img-responsive' output='html'}
 			<i class="icon-zoom"></i>
 		</a>
 		<div class="photo-info">
-			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="Tolpis barbata (mariluzpicado)">{$object.photo_title|truncate:50}</a></strong>
-			<span>By&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{$photo.username}</a></span>
+			<strong><a href="{$cbphoto->photo_links($object,'view_item')}" title="Tolpis barbata (mariluzpicado)">{$object.photo_title|truncate:50}</a></strong>
+			<span>By&nbsp;<a href="{$userquery->profile_link($object.userid)}">{$object.username}</a></span>
 		</div>
 	{/if}	
 {/if}
