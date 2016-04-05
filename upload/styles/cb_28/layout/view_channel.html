@@ -14,6 +14,7 @@
 				<div id="cb_player" class="clearfix cb_player">
 					{FlashPlayer vdetails=$first_video width='100%' height='355'}
 				</div>
+				<img src="{$theme}/images/player-ratio.png" class="playerRatio">
 			</div>
 			<div id="messageFav" class="alert alert-info marginTop" style="display:none"></div>
 			<div class="channel-tabs flat-tabs clearfix">
@@ -348,5 +349,35 @@ $('#cover_info').show();
 				
 			}
 		});
+	});
+	/**/
+	/* player height and editerpick activities height */
+	var WinWidHome = "";
+	function editpickVideos(){
+		WinWidHome = $(window).width();
+		if(WinWidHome > 991)
+		{
+			console.log("height "+WinWidHome);
+			var bannerHeight = $(".player-holder").height();
+			bannerHeight = bannerHeight - 43;
+			console.log("height "+bannerHeight);
+			$(".user-activities").css({
+				"max-height" : bannerHeight+"px",
+				"overflow-y" : "auto"
+			});
+		}
+		else
+		{
+			console.log("height "+WinWidHome);
+			
+			$(".user-activities").css("max-height","auto");
+		}
+	}
+	
+	$('.playerRatio').load(function(){
+		editpickVideos();
+	});
+	$(window).resize(function() {
+		editpickVideos();
 	});
 </script>

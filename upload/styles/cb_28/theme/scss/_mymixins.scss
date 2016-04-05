@@ -228,14 +228,14 @@ $error-color:#f44336;
 }
 /* buttons */
 .btn-default{
-	background:#ededed;
-	border-color: #e0e0e0;
+	background:darken($lt-grey,5%);
+	border-color: darken($lt-grey,5%);
 	font-weight: 400;
-	color: $base-color;
+	color: $black;
 	&:hover,
 	&:active{
-		background:#ededed;
-		border-color: #e0e0e0;
+		background:darken($lt-grey,5%);
+		border-color: darken($lt-grey,5%);
 	}
 }
 .btn-ghost{
@@ -257,24 +257,24 @@ $error-color:#f44336;
 	background:$blue;
 	border-color:$blue;
 	font-weight: 400;
-	color:#fff;
+	color:$white;
 	&:hover,
 	&:active{
 		background:$blue;
 		border-color:$blue;
-		color:#fff;
+		color:$white;
 	}
 }
 .btn-success{
-	background:#4caf50;
-	border-color:#4caf50;
+	background:$green;
+	border-color:$green;
 	font-weight: 400;
-	color:#fff;
+	color:$white;
 	&:hover,
 	&:active{
-		background:#4caf50;
-		border-color:#4caf50;
-		color:#fff;
+		background:$green;
+		border-color:$green;
+		color:$white;
 	}
 }
 .btn-black{
@@ -282,12 +282,12 @@ $error-color:#f44336;
 	border-color:lighten($black,13%);
 	font-weight: 400;
 	font-size: 15px;
-	color:#fff;
+	color:$white;
 	&:hover,
 	&:active{
 		background: lighten($black,13%);
 		border-color:lighten($black,13%);
-		color:#fff;
+		color:$white;
 	}
 }
 /* form elements */

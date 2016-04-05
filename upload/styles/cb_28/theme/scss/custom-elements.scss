@@ -315,7 +315,7 @@ $custom-elements-sprite-bg: url('../images/custom-elements-sprite.png') no-repea
 	position: absolute;
 	top: 0px;
 	right: 0;
-	width: 10px;
+	width: 4px;
 }
 .scrollable-area-wrapper .hscroll-left,
 .scrollable-area-wrapper .vscroll-up,
@@ -329,15 +329,16 @@ $custom-elements-sprite-bg: url('../images/custom-elements-sprite.png') no-repea
 }
 .scrollable-area-wrapper .hscroll-line,
 .scrollable-area-wrapper .vscroll-line {
-	background: #ecf0f1;
-	width: 11px;
+	background: $white;
+	width: 4px;
 	float: left;
 }
 .scrollable-area-wrapper .hscroll-slider,
 .scrollable-area-wrapper .vscroll-slider {
-	background: #34495e;
-	width: 11px;
+	background: $blue;
+	width: 4px;
 	height: 20px;
+	border-radius: 2px;
 }
 .scrollable-area-wrapper .hscrollbar {
 	position: static;

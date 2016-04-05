@@ -3,13 +3,13 @@
 /**/
 /* buttons */
 .btn-default {
-  background: #ededed;
-  border-color: #e0e0e0;
+  background: #ececec;
+  border-color: #ececec;
   font-weight: 400;
   color: #000; }
   .btn-default:hover, .btn-default:active {
-    background: #ededed;
-    border-color: #e0e0e0; }
+    background: #ececec;
+    border-color: #ececec; }
 
 .btn-ghost {
   background: #fff;
@@ -368,7 +368,7 @@
   position: absolute;
   top: 0px;
   right: 0;
-  width: 10px; }
+  width: 4px; }
 
 .scrollable-area-wrapper .hscroll-left,
 .scrollable-area-wrapper .vscroll-up,
@@ -382,15 +382,16 @@
 
 .scrollable-area-wrapper .hscroll-line,
 .scrollable-area-wrapper .vscroll-line {
-  background: #ecf0f1;
-  width: 11px;
+  background: #fff;
+  width: 4px;
   float: left; }
 
 .scrollable-area-wrapper .hscroll-slider,
 .scrollable-area-wrapper .vscroll-slider {
-  background: #34495e;
-  width: 11px;
-  height: 20px; }
+  background: #0080b4;
+  width: 4px;
+  height: 20px;
+  border-radius: 2px; }
 
 .scrollable-area-wrapper .hscrollbar {
   position: static;

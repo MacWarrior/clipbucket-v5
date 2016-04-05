@@ -12,16 +12,19 @@
 			<div class="clearfix editorpick">
 				<div class="editorpick-holder">
 					<!-- Editor Pick Video Main Container START //-->
-					<div id="ep_video_container">
-						{if is_installed('editorspick')}
-						{section name=e_list loop=$editor_picks max=1}
-						{include file="$style_dir/blocks/editor_pick/video_block.html" video=$editor_picks[e_list]}
-						{sectionelse}
-						There is no video in editor's pick, Please Add Videos In Editor's Pick<br />Videos Manager > Add to editor's pick
-						{/section}
-						{/if}
+					<div class="absolute-div">
+						<div id="ep_video_container">
+							{if is_installed('editorspick')}
+							{section name=e_list loop=$editor_picks max=1}
+							{include file="$style_dir/blocks/editor_pick/video_block.html" video=$editor_picks[e_list]}
+							{sectionelse}
+							There is no video in editor's pick, Please Add Videos In Editor's Pick<br />Videos Manager > Add to editor's pick
+							{/section}
+							{/if}
+						</div>
 					</div>
 					<!-- Editor Pick Video Main Container END //-->
+					<img src="{$theme}/images/player-ratio.png" class="playerRatio">
 				</div>
 
 				<!-- Editor Pick Videos Slider Container START //-->
@@ -167,4 +170,32 @@
 	// handles initial and load more
 	// for home page videos
 	homePageVideos("{$got_qlitems}");
+	//
+	/* player height and editerpick videos height */
+	var WinWidHome = "";
+	function editpickVideos(){
+		WinWidHome = $(window).width();
+		if(WinWidHome > 991)
+		{
+			console.log("height "+WinWidHome);
+			var bannerHeight = $(".editorpick-holder").height();
+			console.log("height "+bannerHeight);
+			$(".editorpick-videos .scrollable-area").css({
+				"height" : bannerHeight+"px",
+			});
+		}
+		else
+		{
+			console.log("height "+WinWidHome);
+			
+			$(".editorpick-videos .scrollable-area").css("height","auto");
+		}
+	}
+	
+	$('.playerRatio').load(function(){
+		editpickVideos();
+	});
+	$(window).resize(function() {
+		editpickVideos();
+	});
 </script>

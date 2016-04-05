@@ -139,6 +139,16 @@ h1{
 	padding: 0 16px 0 0;
 	float: left;
 	width: 65.3%;
+	position: relative;
+}
+.absolute-div{
+	position: absolute;
+	z-index: 2;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	padding: 0 16px 0 0;
 }
 .editorpick-videos{
 	padding: 6px 6px 6px 0;
@@ -153,6 +163,10 @@ h1{
 .editorpick{
 	background:$white;
 	margin: 0 0 20px;
+}
+.playerRatio{
+	width: 100%;
+	height: auto;
 }
 .popular-vids{
 	padding: 0 0 0 15px;
@@ -1015,6 +1029,15 @@ h1{
 /* watch video */
 .player-holder{
 	margin: 0 0 18px;
+	position: relative;
+	.cb_player{
+		position: absolute;
+		z-index: 3;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+	}
 }
 #cb_player{
 	#link_v{
@@ -1512,10 +1535,6 @@ h1{
 		left: 0;
 		z-index: 10;
 	}
-}
-.playerRatio{
-	width: 100%;
-	height: auto;
 }
 /* end of watch video */
 /* pagination */
@@ -2053,6 +2072,7 @@ textarea#comment_box{
 }
 /* recent activities */
 .user-activities{
+	overflow-y:auto;
 	.feed{
 		font-size: 13px;
 		line-height: 16px;
@@ -2442,6 +2462,44 @@ textarea#comment_box{
 		.error-txt,
 		.help-block{
 			color: $error-color;
+		}
+	}
+	.success-ind{
+		.form-control{
+			border-color: $green;
+		}
+		&:after{
+			color: $green;
+			position: absolute;
+			content: "\e910";
+			z-index: 4;
+			width: 22px;
+			height: 22px;
+			font: 22px/22px $font-icon;
+			top: 14px;
+			right: 10px;
+		}
+		.help-block{
+			color: $green;
+		}
+	}
+	.warning-ind{
+		.form-control{
+			border-color: $orange;
+		}
+		&:after{
+			color: $orange;
+			position: absolute;
+			content: "\e910";
+			z-index: 4;
+			width: 22px;
+			height: 22px;
+			font: 22px/22px $font-icon;
+			top: 14px;
+			right: 10px;
+		}
+		.help-block{
+			color: $orange;
 		}
 	}
 }
