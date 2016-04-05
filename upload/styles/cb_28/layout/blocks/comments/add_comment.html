@@ -17,14 +17,16 @@
 					<input type="text" name="email" id="email" class="form-control" placeholder="Your Email">
 				</div>
 			{else}
-				<label class="block-label">{lang code="name"}</label>
-				<span class="capitalize">
-					{if $userquery->udetails.fullname}
-						{$userquery->udetails.fullname}
-					{else}
-						{$userquery->username}
-					{/if}
-				</span>
+				<div class="clearfix ">
+					<label>{lang code="Comment as"}&nbsp;</label>
+					<span>
+						{if $userquery->udetails.fullname}
+							{$userquery->udetails.fullname}
+						{else}
+							{$userquery->username}
+						{/if}
+					</span>
+				</div>
 			{/if}
 
 			{if config('comments_captcha')=='all' || ( config('comments_captcha')=='guests' && !$userquery->login_check('',true) )}

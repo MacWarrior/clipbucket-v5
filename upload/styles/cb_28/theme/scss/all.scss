@@ -1285,6 +1285,7 @@ h1{
 		}
 	}
 }
+.fav-repo,
 .watch-vid-details{
 	.desc-list{
 		@include list-style();
@@ -1503,23 +1504,6 @@ h1{
 	}
 }
 /**/
-.search-page{
-	&.inner-block{
-		padding: 0;
-		.heading{
-			padding: 0 6px;
-		}
-	}
-	.video-block,
-	.popular-video{
-		padding: 0 6px;
-	}
-	.photo-item,
-	.item_channel{
-		padding: 0 6px;
-	}
-}
-
 #messageFav{
 	&.channel-alert{
 		position: fixed;
@@ -1528,14 +1512,6 @@ h1{
 		left: 0;
 		z-index: 10;
 	}
-}
-.editorpick-container{
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	z-index: 3;
-	top: 0;
-	left: 0;
 }
 .playerRatio{
 	width: 100%;
@@ -1596,8 +1572,41 @@ h1{
 	}
 }
 /* add to playlist */
-#cb-item-addto .btn-holder{
-	margin: 0 0 15px;
+#cb-item-addto{
+	.btn-fav,
+	.btn-holder{
+		margin: 0 0 15px;
+	}
+}
+/* playlist form */
+#new_playlist_form,
+#add_playlist_form{
+	.form-group > div{
+		padding: 0 0 0 15px;
+		&:first-child{
+			padding: 0 15px 0 0;
+		}
+	}
+}
+#flag_form{
+	.label-block{
+		display: block;
+		margin: 0 0 10px;
+	}
+}
+.fav-repo{
+	background: $white;
+	padding: 16px;
+	margin: 0 0 20px;
+	.photoStats{
+		margin: 0 0 10px;
+		.btn:first-child{
+			margin: 0 10px 0 0;
+		}
+	}
+	input[type="button"]{
+		margin: 0 0 16px;
+	}
 }
 /* comments */
 .comments-block{
@@ -2964,31 +2973,6 @@ textarea#comment_box{
 			}
 		}
 	}
-	/* channels page fixes */
-	.sideactive{
-		.featured-channels .item_channel{
-			.avatar{
-				width: 80px;
-				height: 80px;
-				top:-10px;
-				left: 10px;
-			}
-			.info{
-				padding: 5px 5px 5px 100px;
-				height: auto;
-			}
-		}
-		.featured-channels{
-			.video-block,
-			.popular-video{
-				.cb_quickie,
-				.duration{
-					display: none;
-				}
-			}
-		}
-	}
-	/**/
 }
 @media only screen and (max-width: 767px) {
 	.buy-premium{
@@ -3250,13 +3234,6 @@ textarea#comment_box{
 			width: 100%;
 		}
 	}
-	/* playlist form */
-	#add_playlist_form{
-		.form-group.row >div{
-			margin: 0 0 15px;
-		}
-	}
-	/**/
 	.btn-sqr{
 		height: 34px;
 		float: right;

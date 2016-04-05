@@ -238,6 +238,21 @@ $error-color:#f44336;
 		border-color: #e0e0e0;
 	}
 }
+.btn-ghost{
+	background: $white;
+	border: 2px solid $black;
+	padding: 5px 10px;
+	font-weight: 400;
+	font-size: 15px;
+	line-height: 21px;
+	color:$black;
+	&:hover,
+	&:active{
+		background:$blue;
+		border-color:$blue;
+		color:$white;
+	}
+}
 .btn-primary{
 	background:$blue;
 	border-color:$blue;
