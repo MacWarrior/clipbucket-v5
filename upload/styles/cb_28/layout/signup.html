@@ -1,6 +1,5 @@
-{$required_fields=$userquery->load_signup_fields()}
+{$required_fields=$userquery->load_signup_fields()|@array_filter}
 {$cutom_fields=$userquery->custom_signup_fields}
-
 {if $mode == 'signup_success'}
 	<div class="simple_container">
 		{if $udetails.usr_status !='Ok'}
