@@ -1779,7 +1779,7 @@
             },
 
             beforeSend: function() {
-            	$('#load-more-comments').text('loading comments..');
+            	$(document).find('#load-more-comments').text('loading comments..');
             },
 
             success: function(comments){
@@ -1788,7 +1788,7 @@
               	  $('#load-more-comments').attr('disabled','disabled');
               } else {
 	              $("#userCommentsList").append(comments);
-	              $('#load-more-comments').text('Load More');
+	              $(document).find('#load-more-comments').text('Load More');
               }
             },
             dataType: 'text'
