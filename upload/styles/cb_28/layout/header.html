@@ -35,7 +35,7 @@
 								{$head_menu=cb_menu()}
 								<ul>
 									{foreach $head_menu as $menu}
-									{if $menu@iteration < 5}
+									{if $menu@iteration < 6}
 									{if $menu.name|lower == 'home'}
 										{continue}
 									{/if}
@@ -45,7 +45,7 @@
 									<li {if $menu.name|lower == $smarty.const.THIS_PAGE|lower}class="active"{/if}><a href="{$menu.link}">{$menu.name}</a></li>
 									{/if}
 									{/foreach}
-									<li class="dropdown">
+									<!-- <li class="dropdown">
 										<a href="#" data-toggle="dropdown">more <span class="icon-down-arrow"></span></a>
 										<ul class="dropdown-menu pull-right">
 											{foreach $head_menu as $menu}
@@ -54,7 +54,7 @@
 											{/if}
 											{/foreach}
 										</ul>
-									</li>
+									</li> -->
 								</ul>
 							</nav>
 						</div>
@@ -70,6 +70,9 @@
 										<ul class="dropdown-menu">
 											{$counter = 1}
 											{foreach from=$Cbucket->search_types item=t key=stypes}
+											{if $stypes|lower == 'groups'}
+												{continue}
+											{/if}
 											{if $counter == 3}
 											<li value="{$stypes}" {if $smarty.get.type==$stypes || $smarty.get.type==''}  class="active"  {/if}>
 												<a  class="s-types" href="#">{$stypes|ucfirst}</a>
