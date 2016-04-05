@@ -181,10 +181,12 @@
 		"user_exists":"{lang code='usr_uname_err2'}",
 		"email_exists":"{lang code='usr_email_err3'}"
 	};
-	function removeErrClass(obj) {
+	function removeErrClass(obj, passSec = false) {
 		$(obj).closest('.form-group').removeClass('invalid-error');
 		$(obj).next('span').remove();
-		theVal = $(obj).val();
+		if (passSec == true) {
+			theVal = 'password';
+		}
 		$('<span class="help-block"><strong>'+theVal+'</strong> seems good to go</span>').insertAfter(obj);
 	}
 
@@ -270,7 +272,7 @@
 	     if (passLen == 0 || passVal == '') {
 	     	addErrClass(passSec, errors["empty_pass"], true, false);
 	     } else {
-	     	removeErrClass(passSec);
+	     	removeErrClass(passSec,true);
 	     }
 	});
 
