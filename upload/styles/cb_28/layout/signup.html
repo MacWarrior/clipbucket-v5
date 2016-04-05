@@ -180,19 +180,31 @@
 		"empty_email" : "{lang code='usr_email_err1'}" , 
 		"invalid_email":"{lang code='usr_email_err2'}",
 		"user_exists":"{lang code='usr_uname_err2'}",
-		"email_exists":"{lang code='usr_email_err3'}"
+		"email_exists":"{lang code='usr_email_err3'}",
+		"weak_pass":"pass is weak"
 	};
 	function removeErrClass(obj, passSec = false) {
 		$(obj).closest('.form-group').removeClass('invalid-error');
+		$(obj).closest('.form-group').removeClass('warning-ind');
+		$(obj).closest('.form-group').addClass('success-ind');
 		$(obj).next('span').remove();
 		if (passSec == true) {
 			theVal = 'password';
+		} else {
+			theVal = $(obj).val();
 		}
 		$('<span class="help-block"><strong>'+theVal+'</strong> seems good to go</span>').insertAfter(obj);
 	}
 
-	function addErrClass(obj, msg, override = false, scroll = true) {
-		$(obj).closest('.form-group').addClass('invalid-error');
+	function addErrClass(obj, msg, override = false, scroll = true, tclass = false) {
+		$(obj).closest('.form-group').removeClass('success-ind');
+		if (tclass != false) {
+			$(obj).closest('.form-group').removeClass('invalid-error');
+			$(obj).closest('.form-group').addClass(tclass);
+		} else {
+			$(obj).closest('.form-group').removeClass('warning-ind');
+			$(obj).closest('.form-group').addClass('invalid-error');
+		}
 		if (override == true) {
 			$(obj).next('span').remove();
 		}
@@ -273,7 +285,11 @@
 	     if (passLen == 0 || passVal == '') {
 	     	addErrClass(passSec, errors["empty_pass"], true, false);
 	     } else {
-	     	removeErrClass(passSec,true);
+	     	if (passLen < 8) {
+	     		addErrClass(passSec,errors["weak_pass"],true, false ,'warning-ind');
+	     	} else {
+	     		removeErrClass(passSec,true);
+	     	}
 	     }
 	});
 

@@ -98,6 +98,10 @@ function homePageVideos(qlist_items) {
 		newloadHit = parseInt(loadHit) + 1;
 		moreRecent = true;
 		moreFeatured = true;
+
+		featuredFound = '';
+		recentFound = '';
+
 		$.ajax({
 			url: loadLink,
 			type: sendType,
@@ -112,6 +116,20 @@ function homePageVideos(qlist_items) {
 			success: function(data) {
 				var jsonData = $.parseJSON(data);
 				num = jsonData.more_vids;
+				if (loadMode == 'recent') {
+					if (num > 6) {
+						recentFound = 6;
+					} else {
+						recentFound = 53;
+					}
+				} else {
+					if (num > 2) {
+						featuredFound = 2;
+					} else {
+						featuredFound = 45;
+					}
+				}
+
 				if (num == 'none') {
 					if (loadMode == 'recent') {
 						moreRecent = false;
