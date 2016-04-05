@@ -100,9 +100,42 @@ function homePageVideos(qlist_items) {
 		moreFeatured = true;
 
 		featuredFound = '';
-		recentFound = '';
+		if (loadHit == 1) {
+			recentFound = 6;
+			featuredFound = 2;
+		} else {
+			featuredSect = $('#container').find('#total_videos_featured').text();
+			recentSect = $('#container').find('#total_videos_recent').text();
 
-		$.ajax({
+			totalFeaturedVids = featuredSect;
+			totalRecentVids = recentSect;
+
+			featuredShown = loadHit * 2 - 2;
+			recentShown = loadHit * 6 - 6;
+
+			gotMoreFeatured = parseInt(totalFeaturedVids) - parseInt(featuredShown);
+			gotMoreRecent = parseInt(totalRecentVids) - parseInt(recentShown);
+			console.log(gotMoreRecent);
+			/*console.log("LOAD HIT " + loadHit);
+			console.log("SHOWN " + shownVideos);
+			console.log("To fetch" + vidsToFetch);*/
+
+			if (gotMoreFeatured > 2) {
+				featuredFound = 2;
+			} else {
+				moreFeatured = false;
+				featuredFound = gotMoreFeatured;
+			}
+
+			if (gotMoreRecent > 6) {
+				recentFound = 6;
+			} else {
+				moreRecent = false;
+				recentFound = gotMoreRecent;
+			}
+		}
+
+		/*$.ajax({
 			url: loadLink,
 			type: sendType,
 			dataType: dataType,
@@ -138,7 +171,7 @@ function homePageVideos(qlist_items) {
 					}
 				}
 			}
-		});
+		});*/
 
 		$.ajax({
 			url: loadLink,
@@ -156,9 +189,11 @@ function homePageVideos(qlist_items) {
 				$(main_object).text("Loading..");
 				if (loadType != 'count') {
 					if (loadMode == 'featured') {
-						$(document).find('#featured_vid_sec').append('<div id="featured_pre"><div class="item-video col-lg-6 col-md-6 col-sm-6 col-xs-12"><div style="height:200px" class="thumb-video background-masker clearfix"></div></div><div class="item-video col-lg-6 col-md-6 col-sm-6 col-xs-12"><div style="height:200px" class="thumb-video background-masker clearfix"></div></div></div>');
+						for (var i = 0; i < featuredFound; i++) {
+							$(document).find('#featured_pre').append('<div class="item-video col-lg-6 col-md-6 col-sm-6 col-xs-12"><div style="height:200px" class="thumb-video background-masker clearfix"></div></div>');
+						}
 					} else {
-						for (var i = 0; i < 6; i++) {
+						for (var i = 0; i < recentFound; i++) {
 							$(document).find('#recent_pre').append('<div class="item-video col-lg-4 col-md-4 col-sm-4 col-xs-6"><div class="thumb-video background-masker clearfix"></div><div class="loadingInfo video-info relative clearfix"><div class="background-masker heading clearfix"></div><div class="background-masker paragraph clearfix"></div><div class="background-masker clearfix views-date"></div></div></div>');
 						}
 						preLoadingBlock();
@@ -178,17 +213,19 @@ function homePageVideos(qlist_items) {
 						$('#recent_pre').html('');
 						$(data).appendTo('#recent_vids_sec').fadeIn('slow');
 						if (moreRecent == true) {
-							$(document).find('#recent-loadmore').append('<button id="recent_load_more" class="btn btn-loadmore" loadtype="video" loadmode="recent" loadlimit="'+loadLimit+'" loadhit="'+newloadHit+'">Load More</button>');
+							$(document).find('#recent-loadmore').append('<div class="clearfix text-center"><button id="recent_load_more" class="btn btn-loadmore" loadtype="video" loadmode="recent" loadlimit="'+loadLimit+'" loadhit="'+newloadHit+'">Load More</button></div>');
 						}
 					} else {
 						$('#featured_load_more').remove();
-						$('#featured_pre').remove();
+						$('#featured_pre').html('');
 						$(data).appendTo('#featured_vid_sec').fadeIn('slow');
 						if (moreFeatured == true) {
-							$(document).find('#featured-loadmore').append('<button id="featured_load_more" class="btn btn-loadmore" loadtype="video" loadmode="featured" loadlimit="'+loadLimit+'" loadhit="'+newloadHit+'">Load More</button>');
+							$(document).find('#featured-loadmore').append('<div class="clearfix text-center"><button id="featured_load_more" class="btn btn-loadmore" loadtype="video" loadmode="featured" loadlimit="'+loadLimit+'" loadhit="'+newloadHit+'">Load More</button></div>');
 						}
 					}
 				} 
+				$('#container').find('#total_videos_recent').hide();
+				$('#container').find('#total_videos_featured').hide();
 			}
 		});
 	});

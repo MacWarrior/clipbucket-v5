@@ -12,6 +12,7 @@
 
 	require '../includes/config.inc.php';
 	$params = array();
+	sleep(2);
 	if (isset($_POST['load_type'])) {
 		$load_type = $_POST['load_type'];
 		if (isset($_POST['load_mode'])) {
@@ -39,7 +40,7 @@
 
 		$params['limit'] = "$start,$load_limit";
 		
-		if ($load_type == 'count') {
+		if ($cur_load_hit == 1) {
 			$arr = array();
 			$params['count_only'] = true;
 			$shown = $load_limit * ($cur_load_hit - 1);
@@ -47,16 +48,18 @@
 			$vcount = $videos - $shown;
 			if ($vcount < 1) {
 				$arr['more_vids'] = "none";
-				echo json_encode($arr);
-				return false;
+				#echo $arr;
+				#return false;
 			} else {
 				$arr['more_vids'] = $vcount;
-				echo json_encode($arr);
-				return true;
+				#echo $arr;
+				#return true;
 			}
 		}
 		switch ($load_type) {
 			case 'video':
+				$total_vids = get_videos($params);
+				$params['count_only'] = false;
 				$data = get_videos($params);
 				break;
 			case 'users':
@@ -93,11 +96,17 @@
         	$clean_cookies = explode(",", $clean_cookies);
 			$clean_cookies = array_filter($clean_cookies);
 			assign("qlist_vids", $clean_cookies);
+			$count = 0;
 			foreach ($data as $key => $video) {
-
+				if ($cur_load_hit == 1 && $count == 0) {
+					assign("total_vids", $total_vids);
+				} else {
+					assign("total_vids","");
+				}
 				assign("video",$video);
 				assign("display_type",$display_type);
 				Template('blocks/videos/video.html');
+				$count = $count + 1;
 			}
 		}
 	} else {
