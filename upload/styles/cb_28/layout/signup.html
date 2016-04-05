@@ -240,7 +240,6 @@
 	     } else if (!isValidEmail(email)) {
 	     	addErrClass(emailSec, errors["invalid_email"], true, false);
 	     } else {
-	     	console.log("HASDsad");
 	     	$.ajax({
 				url: baseurl + "/ajax/commonAjax.php",
 				type: "post",
