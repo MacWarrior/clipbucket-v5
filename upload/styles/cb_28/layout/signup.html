@@ -177,18 +177,118 @@
 		"pass_mismatch" : "{lang code='usr_pass_err3'}", 
 		"empty_pass" : "{lang code='usr_pass_err2'}", 
 		"empty_email" : "{lang code='usr_email_err1'}" , 
-		"invalid_email":"{lang code='usr_email_err2'}"
+		"invalid_email":"{lang code='usr_email_err2'}",
+		"user_exists":"{lang code='usr_uname_err2'}",
+		"email_exists":"{lang code='usr_email_err3'}"
 	};
-
-	function addErrClass(obj, msg) {
-		$(obj).closest('.form-group').addClass('invalid-error');
-		$('<span class="help-block">'+msg+"</span>").insertAfter(obj);
-		 $("html, body").animate({ scrollTop: 0 }, "slow");
+	function removeErrClass(obj) {
+		$(obj).closest('.form-group').removeClass('invalid-error');
+		$(obj).next('span').remove();
+		theVal = $(obj).val();
+		$('<span class="help-block"><strong>'+theVal+'</strong> seems good to go</span>').insertAfter(obj);
 	}
+
+	function addErrClass(obj, msg, override = false, scroll = true) {
+		$(obj).closest('.form-group').addClass('invalid-error');
+		if (override == true) {
+			$(obj).next('span').remove();
+		}
+		$('<span class="help-block">'+msg+"</span>").insertAfter(obj);
+		if (scroll == true) {
+			$("html, body").animate({ scrollTop: 0 }, "slow");
+		}
+	}
+
+	$('input#username').on('keyup', function() {
+	     var userSect = $('#username'),
+	     usernameVal = userSect.val(),
+	     usernameLen = usernameVal.length;
+	     if (usernameVal == '') {
+	     	addErrClass(userSect, errors["empty_name"], true, false);
+	     } else if (usernameLen <= 2 || usernameLen >= 50) {
+	     	addErrClass(userSect, errors["name_length"], true, false);
+	     } else {
+	     	$.ajax({
+				url: baseurl + "/ajax/commonAjax.php",
+				type: "post",
+				dataType: "html",
+				data: {
+					"mode":'userExists',
+					"username":usernameVal,
+				},
+				beforeSend: function() {
+					$(document).find('#more-view-channel').text('Loading videos..')
+				},
+
+				success: function(data) {
+					if (data == 'NO') {
+						removeErrClass(userSect);	
+					} else {
+						addErrClass(userSect, errors['user_exists'], true, false)
+					}
+				}
+			});
+	     }
+	});
+
+	$('input#email').on('keyup', function() {
+	     var emailSec = $('#email'),
+	     email = emailSec.val(),
+	     emailLen = email.length;
+	     if (emailLen == 0 || email == '') {
+	     	addErrClass(emailSec, errors["empty_email"], true, false);
+	     } else if (!isValidEmail(email)) {
+	     	addErrClass(emailSec, errors["invalid_email"], true, false);
+	     } else {
+	     	console.log("HASDsad");
+	     	$.ajax({
+				url: baseurl + "/ajax/commonAjax.php",
+				type: "post",
+				dataType: "html",
+				data: {
+					"mode":'emailExists',
+					"email":email,
+				},
+				beforeSend: function() {
+					$(document).find('#more-view-channel').text('Loading videos..')
+				},
+
+				success: function(data) {
+					if (data == 'NO') {
+						removeErrClass(emailSec);	
+					} else {
+						addErrClass(emailSec, errors['email_exists'], true, false)
+					}
+				}
+			});
+	     }
+	});
+
+	$('input#password').on('keyup', function() {
+	     var passSec = $('#password'),
+	     passVal = passSec.val(),
+	     passLen = passVal.length;
+	     if (passLen == 0 || passVal == '') {
+	     	addErrClass(passSec, errors["empty_pass"], true, false);
+	     } else {
+	     	removeErrClass(passSec);
+	     }
+	});
+
+	$('input#cpassword').on('keyup', function() {
+	     var cPassSec = $('#cpassword'),
+	     cPassVal = cPassSec.val();
+	     passVal = $('#password').val();
+	     if (cPassVal != passVal) {
+	     	addErrClass(cPassSec, errors["pass_mismatch"], true, false);
+	     } else {
+	     	removeErrClass(cPassSec);
+	     }
+	});
 
 	$('#signup_submit').on("click",function(e){
 		e.preventDefault();
-		$('span').remove();
+		$('.help-block').remove();
 		$('div').removeClass('invalid-error');
 		var usernameSect = $('#username'),
 		username = usernameSect.val(),

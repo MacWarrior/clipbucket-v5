@@ -1678,47 +1678,47 @@ if(!empty($mode))
 		}
 		break;
                 
-                
-                case "become_contributor" :
-                {
-                    $uid = userid();
-                    $cid = $_POST['cid'];
-                    
-                    $array = array();
-                    
-                    if($cbcollection->add_contributor($cid,$uid))
-                    {
-                        $array['msg'] = 'Successfully added as contributor';
-                    }  else
-                    {
-                        $array['err'] = error('single');
-                    }
-                    
-                    
-                    echo json_encode($array);
-                }
-                break;
+        
+        case "become_contributor" :
+        {
+            $uid = userid();
+            $cid = $_POST['cid'];
             
-                case "remove_contributor" :
-                {
-                    $uid = userid();
-                    $cid = $_POST['cid'];
-                    
-                    $array = array();
-                    
-                    if($cbcollection->remove_contributor($cid,$uid))
-                    {
-                        $array['msg'] = 'Successfully removed from contributors';
-                    }  else
-                    {
-                        $array['err'] = error('single');
-                    }
-                    
-                    
-                    echo json_encode($array);
-                }
-                break;
+            $array = array();
             
+            if($cbcollection->add_contributor($cid,$uid))
+            {
+                $array['msg'] = 'Successfully added as contributor';
+            }  else
+            {
+                $array['err'] = error('single');
+            }
+            
+            
+            echo json_encode($array);
+        }
+        break;
+    
+        case "remove_contributor" :
+        {
+            $uid = userid();
+            $cid = $_POST['cid'];
+            
+            $array = array();
+            
+            if($cbcollection->remove_contributor($cid,$uid))
+            {
+                $array['msg'] = 'Successfully removed from contributors';
+            }  else
+            {
+                $array['err'] = error('single');
+            }
+            
+            
+            echo json_encode($array);
+        }
+        break;
+    
             
 		default:
 		header('location:'.BASEURL);
