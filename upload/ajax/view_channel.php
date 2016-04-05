@@ -2,6 +2,7 @@
 
 	require '../includes/config.inc.php';
 	if (isset($_POST['mode'])) {
+		sleep(5);
 		$mode = $_POST['mode'];
 		switch ($mode) {
 			case 'channelMore':
