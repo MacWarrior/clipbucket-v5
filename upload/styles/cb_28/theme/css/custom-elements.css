@@ -19,6 +19,9 @@
   font-size: 15px;
   line-height: 21px;
   color: #000; }
+  .btn-ghost.btn-lg {
+    font-size: 18px;
+    line-height: 36px; }
   .btn-ghost:hover, .btn-ghost:active {
     background: #0080b4;
     border-color: #0080b4;

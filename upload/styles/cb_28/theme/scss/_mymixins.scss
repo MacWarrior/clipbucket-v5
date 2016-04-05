@@ -246,6 +246,10 @@ $error-color:#f44336;
 	font-size: 15px;
 	line-height: 21px;
 	color:$black;
+	&.btn-lg{
+		font-size: 18px;
+		line-height: 36px;
+	}
 	&:hover,
 	&:active{
 		background:$blue;

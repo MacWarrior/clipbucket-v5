@@ -19,6 +19,9 @@
   font-size: 15px;
   line-height: 21px;
   color: #000; }
+  .btn-ghost.btn-lg {
+    font-size: 18px;
+    line-height: 36px; }
   .btn-ghost:hover, .btn-ghost:active {
     background: #0080b4;
     border-color: #0080b4;
@@ -117,6 +120,9 @@
   font-size: 15px;
   line-height: 21px;
   color: #000; }
+  .btn-ghost.btn-lg {
+    font-size: 18px;
+    line-height: 36px; }
   .btn-ghost:hover, .btn-ghost:active {
     background: #0080b4;
     border-color: #0080b4;
@@ -629,6 +635,9 @@
   font-size: 15px;
   line-height: 21px;
   color: #000; }
+  .btn-ghost.btn-lg {
+    font-size: 18px;
+    line-height: 36px; }
   .btn-ghost:hover, .btn-ghost:active {
     background: #0080b4;
     border-color: #0080b4;
@@ -813,6 +822,9 @@
   font-size: 15px;
   line-height: 21px;
   color: #000; }
+  .btn-ghost.btn-lg {
+    font-size: 18px;
+    line-height: 36px; }
   .btn-ghost:hover, .btn-ghost:active {
     background: #0080b4;
     border-color: #0080b4;
@@ -1926,13 +1938,6 @@ h1 {
 .player-holder {
   margin: 0 0 18px;
   position: relative; }
-  .player-holder .cb_player {
-    position: absolute;
-    z-index: 3;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%; }
 
 #cb_player #link_v {
   display: inline-block;
@@ -1940,6 +1945,18 @@ h1 {
 
 .video_player {
   height: inherit; }
+
+/* player having sidebar items relation */
+.player-items {
+  margin: 0 0 18px;
+  position: relative; }
+  .player-items .player-holder {
+    position: absolute;
+    z-index: 3;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; }
 
 .view-details,
 .video-details {
@@ -3298,7 +3315,21 @@ textarea#comment_box {
     .manage-page .manage-tab-header > div:first-child {
       padding: 20px 0 0; }
 
-/* search page */
+/* upload page */
+.photoupload-block {
+  padding: 20px 0 0; }
+
+.uploadFormSidebarDiv .categoriesContainer {
+  overflow-y: auto;
+  height: 408px; }
+  .uploadFormSidebarDiv .categoriesContainer .radio,
+  .uploadFormSidebarDiv .categoriesContainer .checkbox {
+    padding: 0 0 0 20px; }
+
+.upload_info .upload_form .field {
+  overflow-y: auto;
+  height: 200px; }
+
 /* allProgress */
 .upload-area {
   padding: 0; }
@@ -3506,7 +3537,7 @@ textarea#comment_box {
 /**/
 .cb-box {
   background: #fff;
-  padding: 10px; }
+  padding: 16px; }
 
 /* groups */
 .creat_group .checkbox {

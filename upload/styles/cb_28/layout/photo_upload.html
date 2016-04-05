@@ -22,9 +22,9 @@
 		</div>
 	</div>
 
-	<div class="container">
-		<div class="cb-box marginTop" id="mainUploadContainer">
-			<div class="pad-bottom video-info-container tabs-bar-style">
+	<div class="clearfix photoupload-block">
+		<div class="cb-box container" id="mainUploadContainer">
+			<div class="pad-bottom video-info-container flat-tabs">
 				<ul class="nav nav-tabs uploaderTabs">
 					<li class="active"><a href="#file-upload" data-toggle="tab">Photo Upload</a></li>
 				</ul>
@@ -43,7 +43,7 @@
 							<div class="row">
 								<div id="SelectionDIV" class="col-md-9">
 				   					{if $collections}
-									<div class="form-group">
+									<div class="form-group clearfix custom-elements">
 										<select class="form-control" id="collectionSelection" name="collectionSelection">
 											{foreach from=$collections item=item}
 											<option value="{$item.collection_id}">{$item.collection_name}</option>
@@ -61,7 +61,7 @@
 									{/if}
 								</div>
 								<div class="col-md-3 text-center">
-									<a href="#" class="btn btn-success" id="createNewCollection">Create New Collection</a>
+									<a href="#" class="btn btn-ghost btn-lg" id="createNewCollection">Create New Collection</a>
 								</div>
 							</div>
 							{/if}
