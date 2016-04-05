@@ -61,6 +61,7 @@ if($udetails)
     $results = $db->select(tbl('users'),'*');
     Assign('user_s',$results);
 
+
 // pulls user profile
 $profile = $userquery->get_user_profile($udetails['userid']);
 Assign('u_control', $profile);	

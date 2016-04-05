@@ -1594,6 +1594,46 @@ if(!empty($mode))
 
 		}
 		break;
+
+		case "getCommentsNew":
+		{
+			$params = array();
+			 
+			$limit = config('comment_per_page') ? config('comment_per_page') : 10;
+			$page = $_POST['page'];
+			$params['type'] = mysql_clean($_POST['type']);
+			$params['type_id'] = mysql_clean($_POST['type_id']);
+			$params['last_update'] = mysql_clean($_POST['last_update']);
+			$params['limit'] = create_query_limit($page,$limit);
+            $params['cache'] = 'no';
+			
+			$admin = "";
+			if($_POST['admin']=='yes' && has_access('admin_access',true))
+			{
+				$params['cache'] ='no';
+				$admin = "yes";
+			}
+			$comments = $myquery->getComments($params);
+			//Adding Pagination
+			$total_pages = count_pages($_POST['total_comments'],$limit);
+			assign('object_type',mysql_clean($_POST['object_type']));       
+
+			assign('comments',$comments);
+			assign('type',$params['type']);
+			assign('type_id',$params['type_id']);
+			assign('last_update',$params['last_update']);
+			assign('total',$_POST['total_comments']);
+			assign('total_pages',$total_pages);
+			assign('comments_voting',$_POST['comments_voting']);
+			assign('commentPagination','yes');
+			if ($comments) {
+				Template('blocks/comments/comments.html');
+			} else {
+				echo "none";
+			}
+
+		}
+		break;
 		
 		
 		

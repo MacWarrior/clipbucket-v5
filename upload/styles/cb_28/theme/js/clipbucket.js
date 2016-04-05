@@ -1552,6 +1552,7 @@
 
 		var comments_voting = 'no';
 		this.getComments = function(type,type_id,last_update,pageNum,total,object_type,admin){
+			alert("ASD");
 			var self = this;
 			$('#comments').html("<div style='padding:5px 0px;'>"+this.loading+"</div>");
 			$.ajax({

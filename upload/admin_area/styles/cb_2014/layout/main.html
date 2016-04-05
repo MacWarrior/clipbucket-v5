@@ -529,6 +529,11 @@
           </div>
 
           <div class="col-md-6">
+              <label for="adminPassword">Admin Password</label>
+              <input type="text" name="adminPassword" value="{$row.adminPassword}"></input>
+          </div>
+
+          <div class="col-md-6">
               <div class="checkbox">
                   <label for="video_rating">
                       <input name="video_rating" type="checkbox" id="video_rating" value="1" {if $row.video_rating=='1'}checked="checked"{/if} />Allow  videos ratings

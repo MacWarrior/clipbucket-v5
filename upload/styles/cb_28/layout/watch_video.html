@@ -139,6 +139,11 @@
 					</div>
 					<div id="userCommentsList">
 					</div>
+					{if $vdo.comments_count > 10}
+						<div class="clearfix text-center">
+							<button class="btn btn-loadmore" id="load-more-comments" page="2">Load More</button>
+						</div>
+					{/if}
 				</div>
 			</div>
 		</section>
@@ -181,7 +186,6 @@
 
 <script>
 	$('#playlist-pull').on("click",function(){
-		console.log("RIGHT HERE");
 		loadHit = $(this).attr('dataHit');
 		loadLimit = $(this).attr('dataLimit');
 		playlist = $(this).attr('dataList');
@@ -219,7 +223,7 @@
 		$("#videoDescription").html(newInfo);
 
 		comments_voting = '{$vdo.comment_voting}';
-		_cb.getAllComments(
+		_cb.getCommentsNew(
 			'{$type}',
 			'{$vdo.videoid}',
 			'{$vdo.last_commented}',1,
@@ -253,6 +257,22 @@
 			circleSize      : circleSize
 		  });*/
 	});
+
+	$(document).on('click','#load-more-comments',function(){
+		var page = $(this).attr('page');
+		page = parseInt(page);
+		nextPage = page + 1;
+		$(this).text("Loading comments..")
+		_cb.getCommentsNew(
+			'{$type}',
+			'{$vdo.videoid}',
+			'{$vdo.last_commented}',page,
+			'{$vdo.comments_count}',
+			'{$object_type}'
+		);
+		$(this).attr('page', nextPage);
+		$(this).text("Load More")
+	})
 
 	var resizePlayer =  _cb.debounce(function() {
 		$cb_player.height( $cb_player.width() / aspect_ratio );

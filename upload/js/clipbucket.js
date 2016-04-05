@@ -1761,6 +1761,40 @@
           });
       };
 
+      this.getCommentsNew = function(type,type_id,last_update,pageNum,total,object_type,admin){
+			 var self = this;
+          $.ajax({
+            type: 'POST',
+            url: page,
+            data: {
+					mode:'getCommentsNew',
+					page:pageNum,
+					type:type,
+					type_id:type_id,
+					object_type : object_type,
+					last_update : last_update,
+					total_comments : total,
+					comments_voting : comments_voting,
+					admin : admin
+            },
+
+            beforeSend: function() {
+            	$('#load-more-comments').text('loading comments..');
+            },
+
+            success: function(comments){
+              if (comments == 'none') {
+              	  $('#load-more-comments').text('End of comments list');
+              	  $('#load-more-comments').attr('disabled','disabled');
+              } else {
+	              $("#userCommentsList").append(comments);
+	              $('#load-more-comments').text('Load More');
+              }
+            },
+            dataType: 'text'
+          });
+      };
+
 		this.addToFav = function(type,id){
 			 var self = this;
 			$('#messageFav').show();
