@@ -1850,7 +1850,7 @@
 			};
 	   }
 
-	   this.throwHeaderr = function(tclass, msg, hideAfter) {
+	   this.throwHeaderr = function(tclass, msg, hideAfter,scroll) {
 	   		var self = this;
 			$(document).find('#headErr').remove();
 			hideAfter = parseInt(hideAfter);
