@@ -168,6 +168,9 @@
             case 'photos':
                 $type = 'photo';
                 break;
+            case 'channels':
+                $type = 'channels';
+                break;
             
             default:
                 $type = 'video';

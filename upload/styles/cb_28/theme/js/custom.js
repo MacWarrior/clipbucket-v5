@@ -203,8 +203,21 @@ function homePageVideos(qlist_items) {
 
 			success: function(data) {
 				$(main_object).text("Load More");
-				if (data === '') {
+				if (data.length < 10) {
 					$(main_object).remove();
+					if (loadHit == 1) {
+						if (loadMode = 'featured') {
+							$('#featured_load_more').hide();
+							$('#featured_pre').hide();
+							$("#featured_vid_sec").html('<div class="break2"></div><span class="well well-info btn-block">No featured videos found</span>');
+							return false;
+						} else if (loadMode == 'recent') {
+							$('#recent_load_more').remove();
+							$('#recent_pre').remove();
+							$("#recent_vids_sec").html('<div class="break2"></div><span class="well well-info btn-block">No recent videos found</span>');
+							return false;
+						}
+					}
 					return true;
 				}
 				if (loadType == 'video') {
