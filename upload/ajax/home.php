@@ -12,7 +12,6 @@
 
 	require '../includes/config.inc.php';
 	$params = array();
-	sleep(2);
 	if (isset($_POST['load_type'])) {
 		$load_type = $_POST['load_type'];
 		if (isset($_POST['load_mode'])) {
