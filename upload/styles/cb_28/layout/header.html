@@ -1,3 +1,6 @@
+{$currentPage = $smarty.const.THIS_PAGE|lower}
+{if $currentPage == 'view_channel'}{$currentPage = 'channels'}{elseif $currentPage == 'view_item' || $currentPage == 'collections' || $currentPage == 'view_collection'}{$currentPage = 'photos'}{elseif $currentPage == 'watch_video'}{$currentPage = 'videos'}{/if}
+{$pageType = $smarty.get.type|lower}
 <div id="quick_container">
 	<div id="quicklist_box">
 	</div>
@@ -64,7 +67,7 @@
 								<div class="cbsearchtype">
 									<div class="search-drop">
 										<button tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle search-drop-btn" type="button">
-											<span class="search-type">{if $smarty.get.type}{$smarty.get.type}{else}Videos{/if}</span>
+											<span class="search-type">{if $pageType}{$pageType|ucfirst}{elseif $currentPage == 'videos' || $currentPage == 'channels' || $currentPage == 'photos'}{$currentPage|ucfirst}{else}Videos{/if}</span>
 											<span class="icon-down-arrow"></span>
 										</button>
 										<ul class="dropdown-menu">
@@ -74,11 +77,11 @@
 												{continue}
 											{/if}
 											{if $counter == 3}
-											<li value="{$stypes}" {if $smarty.get.type==$stypes || $smarty.get.type==''}  class="active"  {/if}>
+											<li value="{$stypes}" {if $pageType == $stypes || $currentPage == $stypes}  class="active"  {/if}>
 												<a  class="s-types" href="#">{$stypes|ucfirst}</a>
 											</li>
 											{else}
-											<li value="{$stypes}" {if $smarty.get.type==$stypes}  class="active" {/if}>
+											<li value="{$stypes}" {if $pageType == $stypes || $currentPage == $stypes}  class="active" {/if}>
 												<a  class="s-types" href="#">{$stypes|ucfirst}</a>
 											</li>
 											{/if}

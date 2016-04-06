@@ -1,10 +1,10 @@
 {if $display_type == ""}
 	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-6 mbm ft-hover">
-		<a class="searchresult-photo" href="{$cbphoto->photo_links($photo,'view_item')}" title="Tolpis barbata (mariluzpicado)">
+		<a class="searchresult-photo" href="{$cbphoto->photo_links($photo,'view_item')}" title="{$photo.photo_title}">
 			{get_photo details=$photo size='l' class='photo-land' output='html'}
 		</a>
 		<div class="hover">
-			<a href="{$cbphoto->photo_links($photo,'view_item')}" title="Tolpis barbata (mariluzpicado)">
+			<a href="{$cbphoto->photo_links($photo,'view_item')}" title="{$photo.photo_title}">
 				<span class="photo-title">
 				{if $photo.photo_title=='no-tag'}no-title
 				{else}

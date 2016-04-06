@@ -1,14 +1,14 @@
 {if $display_type == ""}
 <div class="item-photo col-lg-4 col-md-4 col-sm-6 col-xs-6">
-	<a class="photo-holder" href="{$cbphoto->photo_links($photo,'view_item')}" title="Tolpis barbata (mariluzpicado)">
+	<a class="photo-holder" href="{$cbphoto->photo_links($photo,'view_item')}" title="{$photo.photo_title}">
 		{get_photo details=$photo size='l' class='img-responsive photo-land' output='html'}
 		<i class="icon-zoom"></i>
 	</a>
 	<div class="photo-info">
 		{if $photo.photo_title=='no-tag'}
-			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="Tolpis barbata (mariluzpicado)">no-title</a></strong>
+			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{$photo.photo_title}">no-title</a></strong>
 		{else}
-			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="Tolpis barbata (mariluzpicado)">{$photo.photo_title|truncate:50}</a></strong>
+			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{$photo.photo_title}">{$photo.photo_title|truncate:50}</a></strong>
 		{/if}
 		<span>By&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{$photo.username}</a></span>
 	</div>
@@ -16,44 +16,44 @@
 {/if}
 
 {if $display_type == "default_photo"}
-	<a class="photo-holder" href="{$cbphoto->photo_links($photo,'view_item')}" title="Tolpis barbata (mariluzpicado)">
+	<a class="photo-holder" href="{$cbphoto->photo_links($photo,'view_item')}" title="{$photo.photo_title}">
 		{get_photo details=$photo size='l' class='img-responsive photo-land' output='html'}
 		<i class="icon-zoom"></i>
 	</a>
 	<div class="photo-info">
 		{if $photo.photo_title=='no-tag'}
-			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="Tolpis barbata (mariluzpicado)">no-title</a></strong>
+			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{$photo.photo_title}">no-title</a></strong>
 		{else}
-			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="Tolpis barbata (mariluzpicado)">{$photo.photo_title|truncate:50}</a></strong>
+			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{$photo.photo_title}">{$photo.photo_title|truncate:50}</a></strong>
 		{/if}
 		<span>By&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{$photo.username}</a></span>
 	</div>
 {/if}
 
 {if $display_type == "user_photos"}
-	<a class="photo-holder" href="{$cbphoto->photo_links($photo,'view_item')}" title="Tolpis barbata (mariluzpicado)">
+	<a class="photo-holder" href="{$cbphoto->photo_links($photo,'view_item')}" title="{$photo.photo_title}">
 		{get_photo details=$photo size='l' class='img-responsive photo-land' output='html'}
 		<i class="icon-zoom"></i>
 	</a>
 	<div class="photo-info">
 		{if $photo.photo_title=='no-tag'}
-			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="Tolpis barbata (mariluzpicado)">no-title</a></strong>
+			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{$photo.photo_title}">no-title</a></strong>
 		{else}
-			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="Tolpis barbata (mariluzpicado)">{$photo.photo_title|truncate:50}</a></strong>
+			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{$photo.photo_title}">{$photo.photo_title|truncate:50}</a></strong>
 		{/if}
 		<span>By&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{$photo.username}</a></span>
 	</div>
 {/if}
 
 {if $display_type == "featuredPhoto_sidebar"}
-	<a class="photo-holder" href="{$cbphoto->photo_links($photo,'view_item')}" title="Tolpis barbata (mariluzpicado)">
+	<a class="photo-holder" href="{$cbphoto->photo_links($photo,'view_item')}" title="{$photo.photo_title}">
 		{get_photo details=$photo size='l' class='img-responsive photo-land' output='html'}
 		<i class="icon-zoom"></i>
 	</a>
 {/if}
 
 {if $display_type == "search_photos"}
-	<a class="searchresult-photo" href="{$cbphoto->photo_links($photo,'view_item')}" title="Tolpis barbata (mariluzpicado)">
+	<a class="searchresult-photo" href="{$cbphoto->photo_links($photo,'view_item')}" title="{$photo.photo_title}">
 		{get_photo details=$photo size='l' class='img-responsive photo-land' output='html'}
 		<div class="hover hidden-xs hidden-sm">
 			<i class="icon-zoom"></i>
@@ -61,9 +61,9 @@
 	</a>
 	<div class="photo-info">
 		{if $photo.photo_title=='no-tag'}
-			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="Tolpis barbata (mariluzpicado)">no-title</a></strong>
+			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{$photo.photo_title}">no-title</a></strong>
 		{else}
-			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="Tolpis barbata (mariluzpicado)">{$photo.photo_title|truncate:50}</a></strong>
+			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{$photo.photo_title}">{$photo.photo_title|truncate:50}</a></strong>
 		{/if}
 		<span>By&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{$photo.username}</a></span>
 	</div>
@@ -79,7 +79,7 @@
 {/if}
 
 {if $display_type == "relatedPhoto_sidebar"}
-	<a class="photo-holder" href="{$cbphoto->photo_links($photo,'view_item')}" title="Tolpis barbata (mariluzpicado)">		
+	<a class="photo-holder" href="{$cbphoto->photo_links($photo,'view_item')}" title="{$photo.photo_title}">		
 		{get_photo details=$photo output='html' size='l' class='img-responsive'}
 		<i class="icon-zoom"></i>
 	</a>
