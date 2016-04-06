@@ -90,7 +90,7 @@
 										</ul>
 									</div>
 									<input type="text" class="form-control" name="query" placeholder="search keyword here" value="{'query'|get_form_val:true}" id="query">
-									<input type="hidden" name="type" class="type" value="{if isset($smarty.get.type)}{$smarty.get.type}{else}videos{/if}" id="type">
+									<input type="hidden" name="type" class="type" value="{if isset($smarty.get.type)}{$smarty.get.type}{elseif $currentPage}{$currentPage}{else}videos{/if}" id="type">
 									<button tabindex="-1" type="submit" name="cbsearch" id="cbsearch" class="btn btn-default btn-search icon-search"></button>
 								</div>
 							</form><!-- form Ends -->
