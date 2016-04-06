@@ -45,7 +45,7 @@
 									{if $menu.name == "home"}
 										{continue}
 									{/if}
-									<li {if $menu.name|lower == $smarty.const.THIS_PAGE|lower}class="active"{/if}><a href="{$menu.link}">{$menu.name}</a></li>
+									<li {if $menu.name|lower == $smarty.const.THIS_PAGE|lower || $menu.name|lower == $currentPage}class="active"{/if}><a href="{$menu.link}">{$menu.name}</a></li>
 									{/if}
 									{/foreach}
 									<!-- <li class="dropdown">
