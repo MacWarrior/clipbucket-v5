@@ -14,7 +14,7 @@ function headerFooter(){
 
 	$(".account-container").css('height',cont_height+'px');
 	//console.log($(window).height());
-	console.log(cont_height);
+	//console.log(cont_height);
 }
 var flag = 0;
 function responsiveFixes(){

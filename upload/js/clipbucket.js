@@ -1850,6 +1850,21 @@
 			};
 	   }
 
+	   this.throwHeaderr = function(tclass, msg, hideAfter) {
+	   		var self = this;
+			$(document).find('#headErr').remove();
+			hideAfter = parseInt(hideAfter);
+			if (hideAfter < 10) {
+				hideAfter = 3000;
+			}
+
+			if (tclass.length < 3) {
+				tclass = 'info';
+			}
+
+			$('<span style="display:none" class="help-block alert alert-'+tclass+'" id="headErr">'+msg+'</span>').insertAfter('#header').fadeIn('slow').delay(hideAfter).fadeOut();
+		};
+
 	};
 
 	window._cb = new _cb();
