@@ -39,6 +39,27 @@
 									<span>{lang('Subscribe')}</span>
 								</a>
 							{/if}
+							{if $Cbucket->configs.video_download==1 && $cbvid->downloadable($vdo)}
+                                <div class="dropdown col-lg-12 pull-right no-padding text-right">
+                                  <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true" style="margin-top: 10px;">
+                                    Download
+                                        <span class="caret"></span>
+                                  </button>
+                                  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                  {$files = get_video_files($vdo,true,true)}
+                                  {foreach $files as $file}
+                                  {$quality = explode('-',$file)}
+                                  {$quality = explode('.',$quality.1)}
+                                  {$file_quality = $quality.0}
+                                    <li role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="{$file}"  download>
+                                        <span class="glyphicon glyphicon-download-alt"></span>{$file_quality}</a>
+                                        
+                                    </li>
+                                  {/foreach}
+                                  </ul>
+                                </div>
+                                {/if}  
 						</div>
 					</div>
 				</header>
