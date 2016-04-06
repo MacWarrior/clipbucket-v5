@@ -8,7 +8,7 @@
 					{foreach from=$categories item=maincat}
 						<li>
 							<div>
-								<a href="" class="">{$maincat.category_name}</a>
+								<a href="{cblink(['name'=>'category','data'=>$maincat,'type'=>$type])}" class="">{$maincat.category_name}</a>
 								{if $maincat.children}<i class="icon-right-arrow trigger" data-level="1"></i>{/if}
 							</div>
 							{if $maincat.children} 
@@ -17,7 +17,7 @@
 								{foreach from=$maincat.children item=sub1}
 									<li>
 										<div>
-											<a class="">{$sub1.category_name} </a>
+											<a href="{cblink(['name'=>'category','data'=>$sub1,'type'=>$type])}" class="">{$sub1.category_name} </a>
 											{if $sub1.children}<i class="icon-right-arrow trigger" data-level="2" ></i>{/if}
 										</div>
 										{if $sub1.children}
@@ -26,7 +26,7 @@
 											{foreach from=$sub1.children item=sub2}
 											<li>
 												<div>
-													<a class="">{$sub2.category_name} </a>
+													<a href="{cblink(['name'=>'category','data'=>$sub2,'type'=>$type])}" class="">{$sub2.category_name} </a>
 													{if $sub2.children}<i class="icon-right-arrow trigger"data-level="3" ></i>{/if}
 												</div>
 												{if $sub2.children}
@@ -35,7 +35,7 @@
 													{foreach from=$sub2.children item=sub3}
 													<li>
 														<div>
-															<a  class="">{$sub3.category_name} </a>
+															<a href="{cblink(['name'=>'category','data'=>$sub3,'type'=>$type])}"  class="">{$sub3.category_name} </a>
 															{if $sub3.children}<i class="icon-right-arrow trigger" data-level="4" ></i>{/if}
 														</div>
 													
