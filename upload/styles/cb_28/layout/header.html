@@ -20,11 +20,9 @@
 							<span>clipbucket</span>
 						</a>
 					</h1>
-					<button class="navbar-toggle" data-toggle="collapse" data-target="#bs-collapse">
-						<span></span>
-						<span></span>
-						<span></span>
-					</button>
+					
+					<button class="navbar-toggle" data-toggle="collapse" data-target="#bs-collapse">Menu<span class="icon-down-arrow"></span></button>
+					
 					<a href="javascript:void(0)" class="btn-search-toggle btn visible-xs">
 						<i class="icon-search"></i>
 					</a>
@@ -62,41 +60,42 @@
 							</nav>
 						</div>
 
-						<div class="col search">
-							<form class="search-form" action="{link name='search_result'}">
-								<div class="cbsearchtype">
-									<div class="search-drop">
-										<button tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle search-drop-btn" type="button">
-											<span class="search-type">{if $pageType}{$pageType|ucfirst}{elseif $currentPage == 'videos' || $currentPage == 'channels' || $currentPage == 'photos'}{$currentPage|ucfirst}{else}Videos{/if}</span>
-											<span class="icon-down-arrow"></span>
-										</button>
-										<ul class="dropdown-menu">
-											{$counter = 1}
-											{foreach from=$Cbucket->search_types item=t key=stypes}
-											{if $stypes|lower == 'groups'}
-												{continue}
-											{/if}
-											{if $counter == 3}
-											<li value="{$stypes}" {if $pageType == $stypes || $currentPage == $stypes}  class="active"  {/if}>
-												<a  class="s-types" href="#">{$stypes|ucfirst}</a>
-											</li>
-											{else}
-											<li value="{$stypes}" {if $pageType == $stypes || $currentPage == $stypes}  class="active" {/if}>
-												<a  class="s-types" href="#">{$stypes|ucfirst}</a>
-											</li>
-											{/if}
-											{$counter = $counter + 1}
-											{/foreach}
-										</ul>
-									</div>
-									<input type="text" class="form-control" name="query" placeholder="search keyword here" value="{'query'|get_form_val:true}" id="query">
-									<input type="hidden" name="type" class="type" value="{if isset($smarty.get.type)}{$smarty.get.type}{elseif $currentPage}{$currentPage}{else}videos{/if}" id="type">
-									<button tabindex="-1" type="submit" name="cbsearch" id="cbsearch" class="btn btn-default btn-search icon-search"></button>
-								</div>
-							</form><!-- form Ends -->
-						</div>
 
-						<div class="col btn-holder text-right">
+						<div class="col btn-holder user_menu text-right">
+							<div class="search">
+								<form class="search-form" action="{link name='search_result'}">
+									<div class="cbsearchtype">
+										<div class="search-drop">
+											<button tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle search-drop-btn" type="button">
+												<span class="search-type">{if $pageType}{$pageType|ucfirst}{elseif $currentPage == 'videos' || $currentPage == 'channels' || $currentPage == 'photos'}{$currentPage|ucfirst}{else}Videos{/if}</span>
+												<span class="icon-down-arrow"></span>
+											</button>
+											<ul class="dropdown-menu">
+												{$counter = 1}
+												{foreach from=$Cbucket->search_types item=t key=stypes}
+												{if $stypes|lower == 'groups'}
+													{continue}
+												{/if}
+												{if $counter == 3}
+												<li value="{$stypes}" {if $pageType == $stypes || $currentPage == $stypes}  class="active"  {/if}>
+													<a  class="s-types" href="#">{$stypes|ucfirst}</a>
+												</li>
+												{else}
+												<li value="{$stypes}" {if $pageType == $stypes || $currentPage == $stypes}  class="active" {/if}>
+													<a  class="s-types" href="#">{$stypes|ucfirst}</a>
+												</li>
+												{/if}
+												{$counter = $counter + 1}
+												{/foreach}
+											</ul>
+										</div>
+										<input type="text" class="form-control" name="query" placeholder="search keyword here" value="{'query'|get_form_val:true}" id="query">
+										<input type="hidden" name="type" class="type" value="{if isset($smarty.get.type)}{$smarty.get.type}{elseif $currentPage}{$currentPage}{else}videos{/if}" id="type">
+										<button tabindex="-1" type="submit" name="cbsearch" id="cbsearch" class="btn btn-default btn-search icon-search"></button>
+									</div>
+								</form><!-- form Ends -->
+							</div>
+
 							<ul class="nav navbar-nav navbar-right right-menu">
 								{if userid()}
 								<li class="dropdown upload_link">

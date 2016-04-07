@@ -19,28 +19,69 @@ function headerFooter(){
 var flag = 0;
 function responsiveFixes(){
 	var WinWidth = $(window).width();
-	var HeaderSearchDefault = $("#header ").find('.search'); 
-	var searchHtml = HeaderSearchDefault.html();
-	var navSearchHtml = $("#header .navbar-header");
-	if(flag==0)
+	console.log(WinWidth);
+	var SearchHtml = $("#header .menu-holder .user_menu").html();
+	var navseach = $('#header .navbar-header');
+	var menuLinks = $("#header .menu-holder");
+
+	if (WinWidth <992)
 	{
-		if (WinWidth <992)
+		var length1 = navseach.find('.user_menu').length;
+		if(length1==0)
 		{
-			$("<div class='search'>"+searchHtml+"</div>").appendTo(navSearchHtml);
-			HeaderSearchDefault.remove();
-			
+			$(navseach).append('<div class="col btn-holder user_menu text-right logged-out">'+SearchHtml+"</div>");
 		}
-		else if( WinWidth <1260 )
+		$('.menu-holder').find('.user_menu').remove();
+	}
+	else
+	{
+		var searchBtns = navseach.find('.user_menu').html();
+		var length2 = menuLinks.find('.user_menu').length;
+
+		if(length2==0)
 		{
-			$(".btn-newacc").html("Signup");
+			menuLinks.append('<div class="col btn-holder user_menu text-right logged-out">'+searchBtns+"</div>");
 		}
-		else
+		navseach.find('.user_menu').remove();
+
+	}
+	if( WinWidth <1280 )
+	{
+		$(".btn-newacc").html("Signup");
+	}
+	else
+	{
+		$(".btn-newacc").html("Create new account");
+	}
+
+	if(userid)
+	{
+		$(".user_menu").addClass('logged-in');
+		$(".user_menu").removeClass('logged-out');
+	}
+	else{
+		$(".user_menu").removeClass('logged-in');
+		$(".user_menu").addClass('logged-out');
+	}
+
+	if( WinWidth <768 )
+	{
+		var length3 = $('.menu-holder').find('.newuser-links').length;
+		if(length3==0)
 		{
-			$(".btn-newacc").html("Create new account");
-			$("<div class='col search'>"+searchHtml+"</div>").insertBefore("#header .btn-holder");
-			HeaderSearchDefault.remove();
+			var rightLinkHtml = $('.navbar-right').html();
+			$('.menu-holder').prepend("<ul class='newuser-links'>"+rightLinkHtml+"</ul>");
+			$('.navbar-right').remove();
 		}
-		
+	}
+	else{
+		var length4 = $('.user_menu').find('.right-menu').length;
+		if(length4==0)
+		{	
+			var newLinkHtml = $('.newuser-links').html();
+			$('.user_menu').append("<ul class='nav navbar-nav navbar-right right-menu'>"+newLinkHtml+"</ul>");
+			$('.newuser-links').remove();
+		}
 	}
 }
 function preLoadingBlock(){
@@ -53,10 +94,23 @@ function preLoadingBlock(){
 	var	thumbHeight = thumbWidth * (10/16);
 	$(".videos .thumb-video").css('height', thumbHeight+'px');
 }
+function loginHeight(){
+	var loginHeight = $("#login_form").outerHeight();
+	loginHeight = loginHeight - 40;
+	$(".account-holder .side-box").css('height', loginHeight+'px');
+}
 $(document).ready(function(){
 	//footer at bototm
 	headerFooter();
-	
+	if(userid)
+	{
+		$(".user_menu").addClass('logged-in');
+		$(".user_menu").removeClass('logged-out');
+	}
+	else{
+		$(".user_menu").removeClass('logged-in');
+		$(".user_menu").addClass('logged-out');
+	}
 	responsiveFixes();
 
 	$(".navbar-sm-login-links a").click(function(){
@@ -69,19 +123,10 @@ $(document).ready(function(){
 		$('.adbox-holder').hide();
 	}
 
-	$('#header ul li.dropdown, .search-drop').hover(function() {
-		$(this).find('.dropdown-menu').stop(true, true).delay(100).fadeIn(100);
-		}, function() {
-		$(this).find('.dropdown-menu').stop(true, true).delay(100).fadeOut(100);
+	$(".btn-search-toggle").click(function() {
+		$(".navbar-header").toggleClass('show-search');
 	});
-	var sign_count = '';
-	sign_count = $('#header').find('.navbar-sm-login-links').length;
-	if(sign_count!=0){
-		$('#header .btn-holder').addClass('logged-out');
-	}
-	else{
-		$('#header .btn-holder').removeClass('logged-out');
-	}
+	loginHeight();
 });
 
 
@@ -253,6 +298,9 @@ function homePageVideos(qlist_items) {
 		$('#recent_load_more').trigger("click");
 		$('#recent_load_more').hide();
 
+		// var windowWith = $(window).width();
+		// alert(windowWith);
+
 	});
 }
 
@@ -261,4 +309,5 @@ $(window).resize(function(){
  	headerFooter();
  	preLoadingBlock();
  	responsiveFixes();
+ 	loginHeight();
 });

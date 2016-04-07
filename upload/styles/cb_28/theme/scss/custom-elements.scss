@@ -309,6 +309,7 @@ $custom-elements-sprite-bg: url('../images/custom-elements-sprite.png') no-repea
 	position: relative;
 	overflow: hidden;
 	width: 100% !important;
+	height: auto !important;
 }
 .scrollable-area-wrapper .hscrollbar,
 .scrollable-area-wrapper .vscrollbar {

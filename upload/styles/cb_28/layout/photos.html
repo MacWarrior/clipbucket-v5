@@ -2,7 +2,7 @@
 {$leftMenuLinks = array_slice($myAccountLinks, 6)}
 <div id="main" class="clearfix container">
 	<div class="clearfix">
-		<section id="content" class="clearfix">
+		<section id="content" class="clearfix photos">
 			<div class="clearfix leaderboard-ad ad">
 				{AD place='ad_728x90'}
 			</div>
@@ -57,7 +57,7 @@
 			<div class="clearfix row">
 			{if $photos}
 				{foreach from=$photos item=p_list}
-				<div class="item-photo col-lg-4 col-md-4 col-sm-6 col-xs-6">
+				<div class="item-photo col-lg-4 col-md-4 col-sm-6 col-xs-12">
 					{include file="$style_dir/blocks/photo.html" photo=$p_list display_type = "default_photo"}
 				</div>
 				{/foreach}
@@ -97,7 +97,7 @@
 					<div class="clearfix row">
 						{foreach from=$collections item=collection}
 							{$first_col_thumb = $cbcollection->coll_first_thumb($collection,'l')}
-							<div class="clearfix collection-item col-lg-6 col-md-6 col-sm-6 col-xs-6"> 
+							<div class="clearfix collection-item col-lg-6 col-md-6 col-sm-12 col-xs-12"> 
 								<div class="collection-holder">
 									<div class="photo-block">
 										<a href="{$baseurl}/view_collection.php?cid={$collection.collection_id}&type={$collection.type}" title="{$collection.collection_name}">

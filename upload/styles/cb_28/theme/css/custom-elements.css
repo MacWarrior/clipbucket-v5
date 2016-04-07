@@ -364,7 +364,8 @@
 .scrollable-area-wrapper {
   position: relative;
   overflow: hidden;
-  width: 100% !important; }
+  width: 100% !important;
+  height: auto !important; }
 
 .scrollable-area-wrapper .hscrollbar,
 .scrollable-area-wrapper .vscrollbar {

@@ -47,6 +47,12 @@
 		<script src="{$theme}/js/jquery-1.11.3.min.js"></script>
 		<link rel="stylesheet" href="{$baseurl}/styles/global/jquery_ui.css">
 
+		<script>
+			var loading = '<i class="glyphicon glyphicon-refresh animate-spin"></i> {lang code="loading"}...';
+			var baseurl = "{$baseurl}";
+			var imageurl = "{$imageurl}";
+			var userid = "{userid()}";
+		</script>
 		<script src="{$theme}/js/custom.js"></script>
 
 		<script src="{$theme}/js/bootstrap.min.js"></script>
@@ -56,11 +62,6 @@
 
 		<script src="{$theme}/js/progress-circle.js"></script>
 		
-		<script>
-			var loading = '<i class="glyphicon glyphicon-refresh animate-spin"></i> {lang code="loading"}...';
-			var baseurl = "{$baseurl}";
-			var imageurl = "{$imageurl}";
-		</script>
 		<script src="{$baseurl}/js/clipbucket.js"></script>
 		<script src="{$theme}/js/uslider_js/jquery.mousewheel.js"></script>
 		<script src='https://www.google.com/recaptcha/api.js'></script>
