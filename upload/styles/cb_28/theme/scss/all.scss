@@ -300,7 +300,7 @@ h1{
 			font-weight: 300;
 			text-align: center;
 			height: 20px;
-			width: 44px;
+			min-width: 44px;
 			padding: 0 4px;
 			background: $black;
 			border-radius: 2px;
@@ -1118,7 +1118,11 @@ h1{
 		}
 		.subscribe-col{
 			text-align: right;
+			.dropdown{
+				@include vertical-middle();
+			}
 		}
+		.dropdown-toggle,
 		.btn-subscribe{
 			font-size: 14px;
 			line-height: 14px;
@@ -3111,6 +3115,21 @@ textarea#comment_box{
 		.btn-holder{
 			bottom: 10px;
 			right: 10px;
+		}
+	}
+	.user-video-info .views-counter{
+		font-size: 14px;
+	}
+	.video-details,
+	.view-details{
+		.user-likes-sub{
+			text-align: center;
+			.like-rating{
+				margin: 0 0 10px;
+			}
+			.subscribe-col{
+				text-align: center;
+			}
 		}
 	}
 }

@@ -33,7 +33,7 @@ $input-bg: #f6f6f6;
 $error-color:#f44336;
 /**/
 @mixin overlaybg($color, $opacity){
-    background: rgba($color, $opacity);
+	background: rgba($color, $opacity);
 }
 @mixin txtinput(){
 	color:$base-color;
@@ -163,7 +163,7 @@ $error-color:#f44336;
 	background: -o-linear-gradient(top, $startColor, $endColor);
 }
 @mixin horizontal-gradient ($startColor: #eee, $endColor: white) {
- 	background-color: $startColor;
+	background-color: $startColor;
 	background-image: -webkit-gradient(linear, left top, right top, from($startColor), to($endColor));
 	background-image: -webkit-linear-gradient(left, $startColor, $endColor);
 	background-image: -moz-linear-gradient(left, $startColor, $endColor);
@@ -297,6 +297,86 @@ $error-color:#f44336;
 /* form elements */
 .form-control{
 	@include txtinput();
+}
+/* error messages */
+/* error animations */
+@mixin error-animation ($name:bounce, $duration:800ms, $ease:ease-out){
+	-webkit-animation: $name $duration $ease;
+	-moz-animation:    $name $duration $ease;
+	-ms-animation:     $name $duration $ease;
+	-o-animation: $name $duration $ease;
+	animation: $name $duration $ease;
+}
+@mixin animatetop(){
+	0% {
+		transform:translateY(-100%);
+		opacity: 0;
+	}
+	5% {
+		transform:translateY(-100%);
+		opacity: 0;
+	}
+	15% {
+		transform:translateY(0);
+		padding-bottom: 5px;
+	}
+	30% {
+		transform:translateY(-50%);
+	}
+	40% {
+		transform:translateY(0%);
+		padding-bottom: 6px;
+	}
+	50% {
+		transform:translateY(-30%);
+	}
+	70% {
+		transform:translateY(0%);
+		padding-bottom: 7px;
+	}
+	80% {
+		transform:translateY(-15%);
+ 	}
+	90% {
+		transform:translateY(0%);
+		padding-bottom: 8px;
+	}
+	95% {
+		transform:translateY(-7%);
+	}
+	97% {
+		transform:translateY(0%);
+		padding-bottom: 9px;
+	}
+	99% {
+		transform:translateY(-3%);
+	}
+	100% {
+		transform:translateY(0);
+		padding-bottom: 9px;
+		opacity: 1;
+	}
+}
+@-webkit-keyframes bounce {
+	@include animatetop();
+}
+
+@-moz-keyframes bounce {
+	@include animatetop();
+}
+@-o-keyframes bounce {
+	@include animatetop();
+}
+@keyframes bounce {
+	@include animatetop();
+}
+.alert-msg-holder {
+	margin: 0 auto;
+	text-align: center;
+	max-width: 1170px !important;
+}
+.alert-ajax {
+	@include error-animation();
 }
 /* sprite */
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 100dpi) {
