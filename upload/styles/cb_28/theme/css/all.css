@@ -1428,9 +1428,12 @@ h1 {
 .photo-view {
   position: relative;
   background: #fff;
-  margin: 0 0 16px; }
+  margin: 0 0 16px;
+  height: 474px; }
   .photo-view img {
-    margin: 0 auto; }
+    margin: 0 auto;
+    height: 100%;
+    width: auto; }
   .photo-view .btn-holder {
     position: absolute;
     bottom: 20px;
@@ -3831,7 +3834,10 @@ textarea#comment_box {
   .signin-block .user-form {
     padding: 30px 40px; }
   .signin-block .side-box {
-    padding: 80px 40px; } }
+    padding: 80px 40px; }
+
+  .photo-view {
+    height: 300px; } }
 @media only screen and (max-width: 767px) {
   #content {
     width: 100%;
@@ -3927,6 +3933,12 @@ textarea#comment_box {
     .signup-block .user-form h2,
     .forgot-block .user-form h2 {
       margin: 0 0 20px;
-      font-size: 30px; } }
+      font-size: 30px; }
+
+  .photo-view {
+    height: 200px; }
+    .photo-view .btn-holder {
+      bottom: 10px;
+      right: 10px; } }
 
 /*# sourceMappingURL=all.css.map */

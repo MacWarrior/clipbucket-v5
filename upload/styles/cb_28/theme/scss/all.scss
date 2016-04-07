@@ -1493,8 +1493,11 @@ h1{
 	position: relative;
 	background: $white;
 	margin: 0 0 16px;
+	height: 474px;
 	img{
 		margin: 0 auto;
+		height: 100%;
+		width: auto;
 	}
 	.btn-holder{
 		position: absolute;
@@ -2963,6 +2966,9 @@ textarea#comment_box{
 			padding: 80px 40px;
 		}
 	}
+	.photo-view{
+		height: 300px;
+	}
 }
 @media only screen and (max-width: 767px) {
 	#content{
@@ -3098,6 +3104,13 @@ textarea#comment_box{
 		h2{
 			margin: 0 0 20px;
 			font-size: 30px;
+		}
+	}
+	.photo-view{
+		height: 200px;
+		.btn-holder{
+			bottom: 10px;
+			right: 10px;
 		}
 	}
 }
