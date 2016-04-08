@@ -123,7 +123,7 @@
 					</div>
 					<div class="tab-pane" id="user-photos">
 						<div class="clearfix row">
-						{$photos=get_photos(["user"=>userid(),"limit" =>5])}
+						{$photos=get_photos(["user"=>$user.userid,"limit" =>5])}
 							{if $photos}
 								{foreach from=$photos item=p_list}
 								<div class="item-photo col-lg-4 col-md-4 col-sm-6 col-xs-12">
