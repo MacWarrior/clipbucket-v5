@@ -1855,6 +1855,11 @@
 	   		var self = this;
 			$(document).find('#headErr').remove();
 			hideAfter = parseInt(hideAfter);
+			
+			if (scroll == true) {
+				$("html, body").animate({ scrollTop: 0 }, "slow");
+			}
+
 			if (hideAfter < 10) {
 				hideAfter = 3000;
 			}
@@ -1869,6 +1874,7 @@
 		};
 
 		this.rate = function (id,rating,type) {
+			curObj = this;
 			var page = baseurl+'/ajax.php';
 			$.post(page, { 	
 				mode : 'rating',
@@ -1881,11 +1887,18 @@
 				if(!data) {
 					alert("No data");
 				} else {
-					console.log(data);
-					console.log($(data).find('span.error'));
-					console.log($(data).filter('.error'));
-					var success =  $($.parseHTML(data)).filter("#rating_result_container").find('span'); 
-					console.log(success); 
+					isError = $(data).find('span.error').html();
+					isOk = $(data).find('span.msg').html();
+					if (isError) {
+						if (isError.length > 2) {
+							curObj.throwHeaderr('danger',isError, 5000, true);
+						}
+					} else if (isOk) {
+						if (isOk.length > 2) {
+							curObj.throwHeaderr('success',isOk, 5000, true);
+						}
+					}
+					/*var success =  $($.parseHTML(data)).filter("#rating_result_container").find('span'); */
 					//$("#rating_container").html(data);
 				}
 			},'text');
