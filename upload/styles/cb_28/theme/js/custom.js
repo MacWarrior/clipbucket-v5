@@ -266,11 +266,6 @@ function homePageVideos(qlist_items) {
 				}
 				if (loadType == 'video') {
 					if (loadMode == 'recent') {
-						featuredSect = $('#container').find('#total_videos_recent').text();
-						if (featuredSect <= 2) {
-							moreRecent = false;
-						}
-
 						$('#recent_load_more').remove();
 						$('#recent_pre').html('');
 						$(data).appendTo('#recent_vids_sec').fadeIn('slow');
