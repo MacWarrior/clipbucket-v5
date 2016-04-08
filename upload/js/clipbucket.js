@@ -1872,6 +1872,12 @@
 
 			/*$('<span style="display:none" class="help-block alert alert-'+tclass+'" id="headErr">'+msg+'</span>').insertAfter('#header').fadeIn('slow').delay(hideAfter).fadeOut();*/
 		};
+		
+		/**
+		* New improved version of ClipBucket rating system
+		* @since: 8th, April 2016 ClipBucket 2.8.1
+		* @author: Saqib Razzaq
+		*/
 
 		this.rate = function (id,rating,type) {
 			curObj = this;
@@ -1887,6 +1893,11 @@
 				if(!data) {
 					alert("No data");
 				} else {
+					likesSect = $('.likes').find('span:nth-child(2)').html();
+					dislikesSect = $('.dislikes').find('span:nth-child(2)').html();
+					currLikes = parseInt(likesSect);
+					currDislikes = parseInt(dislikesSect);
+
 					isError = $(data).find('span.error').html();
 					isOk = $(data).find('span.msg').html();
 					if (isError) {
@@ -1895,11 +1906,19 @@
 						}
 					} else if (isOk) {
 						if (isOk.length > 2) {
+							if (rating == 5) {
+								newRating = currLikes + 1;
+								$('.likes').find('span:nth-child(2)').html(newRating);
+							} else {
+								newRating = currDislikes - 1;
+								if (newRating < 0) {
+									newRating = 0;
+								}
+								$('.dislikes').find('span:nth-child(2)').html(newRating);
+							}
 							curObj.throwHeaderr('success',isOk, 5000, true);
 						}
 					}
-					/*var success =  $($.parseHTML(data)).filter("#rating_result_container").find('span'); */
-					//$("#rating_container").html(data);
 				}
 			},'text');
 		}
