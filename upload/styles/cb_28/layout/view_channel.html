@@ -113,9 +113,11 @@
 									</div>
 								{/foreach}
 								</div>
-								<div class="clearfix text-center">
-									<button id="more-view-channel" class="btn btn-loadmore" dataLimit="10" dataHit="2">Load More</button>
-								</div>
+								{if $total_videos > 10}
+									<div class="clearfix text-center">
+										<button id="more-view-channel" class="btn btn-loadmore" dataLimit="10" dataHit="2">Load More</button>
+									</div>
+								{/if}
 							{else}
 								<div class="well well-info">No Videos Found !</div>
 							{/if}
