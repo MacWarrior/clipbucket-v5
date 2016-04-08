@@ -420,6 +420,16 @@ h1 {
     overflow-y: auto;
     padding: 0 4px 0 0; }
 
+#ep_video_container {
+  width: 100%;
+  height: 100%; }
+  #ep_video_container > div {
+    width: 100%;
+    height: 100%; }
+  #ep_video_container iframe {
+    width: 100%;
+    height: 100%; }
+
 .editorpick {
   background: #fff;
   margin: 0 0 20px; }
