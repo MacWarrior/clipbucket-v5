@@ -53,13 +53,13 @@
 			}
 			&.user_menu{
 				text-align: right;
-				width: 740px;
+				width: 650px;
 				.search{
 					width: 320px;
 					@include vertical-middle();
 				}
 				&.logged-out{
-					width: 600px;
+					width: 560px;
 				}
 			}
 		}
@@ -75,7 +75,7 @@
 				&>a{
 					color: $black;
 					display: block;
-					padding:12px 5px;
+					padding:12px 15px;
 					&:focus,
 					&:hover{
 						color:$black;
@@ -449,13 +449,10 @@
 		.main-links > ul{
 			font-size: 15px;
 			line-height: 36px;
-			> li > a{
-				padding: 12px 5px;
-			}
 		}
 		.menu-holder .col{
 			&.user_menu{
-				width: 600px;
+				width: 510px;
 				.search{
 					width: 286px;
 				}
@@ -491,7 +488,7 @@
 			font-size: 14px;
 			line-height: 36px;
 			> li > a{
-				padding: 12px 5px;
+				padding: 12px 10px;
 			}
 		}
 

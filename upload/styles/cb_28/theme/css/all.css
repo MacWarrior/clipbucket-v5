@@ -3156,13 +3156,13 @@ textarea#comment_box {
         width: 320px; }
       #header .menu-holder .col.user_menu {
         text-align: right;
-        width: 740px; }
+        width: 650px; }
         #header .menu-holder .col.user_menu .search {
           width: 320px;
           display: inline-block;
           vertical-align: middle; }
         #header .menu-holder .col.user_menu.logged-out {
-          width: 600px; }
+          width: 560px; }
   #header .main-links {
     display: inline-block;
     vertical-align: middle; }
@@ -3178,7 +3178,7 @@ textarea#comment_box {
         #header .main-links > ul > li > a {
           color: #000;
           display: block;
-          padding: 12px 5px; }
+          padding: 12px 15px; }
           #header .main-links > ul > li > a:focus, #header .main-links > ul > li > a:hover {
             color: #000;
             text-decoration: none;
@@ -3476,10 +3476,8 @@ textarea#comment_box {
   #header .main-links > ul {
     font-size: 15px;
     line-height: 36px; }
-    #header .main-links > ul > li > a {
-      padding: 12px 5px; }
   #header .menu-holder .col.user_menu {
-    width: 600px; }
+    width: 510px; }
     #header .menu-holder .col.user_menu .search {
       width: 286px; }
     #header .menu-holder .col.user_menu.logged-out {
@@ -3503,7 +3501,7 @@ textarea#comment_box {
     font-size: 14px;
     line-height: 36px; }
     #header .main-links > ul > li > a {
-      padding: 12px 5px; }
+      padding: 12px 10px; }
   #header .menu-holder .col.user_menu {
     width: 410px; }
   #header .menu-holder .col.logged-out {
