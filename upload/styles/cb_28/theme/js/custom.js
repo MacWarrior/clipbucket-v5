@@ -160,11 +160,10 @@ function homePageVideos(qlist_items) {
 
 			gotMoreFeatured = parseInt(totalFeaturedVids) - parseInt(featuredShown);
 			gotMoreRecent = parseInt(totalRecentVids) - parseInt(recentShown);
-			console.log(gotMoreRecent);
 			/*console.log("LOAD HIT " + loadHit);
 			console.log("SHOWN " + shownVideos);
 			console.log("To fetch" + vidsToFetch);*/
-
+			console.log(gotMoreFeatured);
 			if (gotMoreFeatured > 2) {
 				featuredFound = 2;
 			} else {
@@ -267,9 +266,18 @@ function homePageVideos(qlist_items) {
 				}
 				if (loadType == 'video') {
 					if (loadMode == 'recent') {
+						featuredSect = $('#container').find('#total_videos_recent').text();
+						if (featuredSect <= 2) {
+							moreRecent = false;
+						}
+
 						$('#recent_load_more').remove();
 						$('#recent_pre').html('');
 						$(data).appendTo('#recent_vids_sec').fadeIn('slow');
+						recentSect = $('#container').find('#total_videos_recent').text();
+						if (loadHit == 1 && recentSect <= 2) {
+							moreRecent = false;
+						}
 						if (moreRecent == true) {
 							$(document).find('#recent-loadmore').append('<div class="clearfix text-center"><button id="recent_load_more" class="btn btn-loadmore" loadtype="video" loadmode="recent" loadlimit="'+loadLimit+'" loadhit="'+newloadHit+'">Load More</button></div>');
 						}
@@ -277,6 +285,11 @@ function homePageVideos(qlist_items) {
 						$('#featured_load_more').remove();
 						$('#featured_pre').html('');
 						$(data).appendTo('#featured_vid_sec').fadeIn('slow');
+						featuredSect = $('#container').find('#total_videos_featured').text();
+						if (loadHit == 1 && featuredSect <= 2) {
+							moreFeatured = false;
+						}
+
 						if (moreFeatured == true) {
 							$(document).find('#featured-loadmore').append('<div class="clearfix text-center"><button id="featured_load_more" class="btn btn-loadmore" loadtype="video" loadmode="featured" loadlimit="'+loadLimit+'" loadhit="'+newloadHit+'">Load More</button></div>');
 						}
