@@ -22,7 +22,6 @@
 				$total_items = $_POST['totalVids'];
 				$items = get_videos(array("user"=>$user, "order"=>"date_added DESC","limit"=>$sql_limit));
 				if ($start >= $total_items) {
-					echo "none";
 					return false;
 				}
 				foreach ($items as $key => $video) {
