@@ -1,4 +1,12 @@
 <?php
+	
+	/**
+	* File: View Channel Ajax
+	* Description: View channel ajax request will be handled by this file
+	* @since: 4th April, 2016, ClipBucket 2.8.1 
+	* @author: Saqib Razzaq
+	* @modified: 8th April, 2016
+	*/
 
 	require '../includes/config.inc.php';
 	if (isset($_POST['mode'])) {

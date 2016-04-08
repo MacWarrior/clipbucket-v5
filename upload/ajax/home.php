@@ -7,7 +7,7 @@
 	* for ClipBucket's home page
 	* @since: 14th March, 2016, ClipBucket 2.8.1 
 	* @author: Saqib Razzaq
-	* @modified: 14th March, 2016
+	* @modified: 8th April, 2016
 	*/
 
 	require '../includes/config.inc.php';
@@ -47,12 +47,8 @@
 			$vcount = $videos - $shown;
 			if ($vcount < 1) {
 				$arr['more_vids'] = "none";
-				#echo $arr;
-				#return false;
 			} else {
 				$arr['more_vids'] = $vcount;
-				#echo $arr;
-				#return true;
 			}
 		}
 		switch ($load_type) {
