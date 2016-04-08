@@ -1590,6 +1590,7 @@
 		 * Function used to rate object
 		 */
 		this.rate = function(id,rating,type){
+			alert("ASDsadas");
 			var self = this;
 			var page = this.baseurl+'/ajax.php';
 			$.post(page, 
@@ -1862,9 +1863,33 @@
 				tclass = 'info';
 			}
 
-			$('<span style="display:none" class="help-block alert alert-'+tclass+'" id="headErr">'+msg+'</span>').insertAfter('#header').fadeIn('slow').delay(hideAfter).fadeOut();
+			$('<div id="headErr" style="display:none" class="alert-msg-holder"><div class="alert alert-'+tclass+' alert-dismissible alert-ajax" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+msg+'</div></div>').insertAfter('#header').fadeIn('slow').delay(hideAfter).fadeOut();
+
+			/*$('<span style="display:none" class="help-block alert alert-'+tclass+'" id="headErr">'+msg+'</span>').insertAfter('#header').fadeIn('slow').delay(hideAfter).fadeOut();*/
 		};
 
+		this.rate = function (id,rating,type) {
+			var page = baseurl+'/ajax.php';
+			$.post(page, { 	
+				mode : 'rating',
+				id:id,
+				rating:rating,
+				type:type
+			},
+			function(data)
+			{
+				if(!data) {
+					alert("No data");
+				} else {
+					console.log(data);
+					console.log($(data).find('span.error'));
+					console.log($(data).filter('.error'));
+					var success =  $($.parseHTML(data)).filter("#rating_result_container").find('span'); 
+					console.log(success); 
+					//$("#rating_container").html(data);
+				}
+			},'text');
+		}
 	};
 
 	window._cb = new _cb();
