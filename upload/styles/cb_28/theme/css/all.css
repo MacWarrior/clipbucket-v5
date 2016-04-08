@@ -3604,7 +3604,8 @@ textarea#comment_box {
     padding: 0;
     margin: 0;
     font-size: 16px;
-    line-height: 24px; }
+    line-height: 24px;
+    margin: 0 0 5px; }
     .newuser-links:after {
       content: "";
       display: block;
