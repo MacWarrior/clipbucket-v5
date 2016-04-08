@@ -112,7 +112,7 @@
 										{$user_det = $userquery->get_user_details(userid())}
 										<img src="{$userquery->getUserThumb($user_det)}" width="35" height="35">
 
-										<span>{$userquery->username}</span>
+										<span>{$userquery->username|truncate:15}</span>
 										
 
 									</a>
