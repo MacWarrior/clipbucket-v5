@@ -40,20 +40,12 @@
 		$params['limit'] = "$start,$load_limit";
 		
 		if ($cur_load_hit == 1) {
-			$arr = array();
 			$params['count_only'] = true;
-			$shown = $load_limit * ($cur_load_hit - 1);
-			$videos = get_videos($params);
-			$vcount = $videos - $shown;
-			if ($vcount < 1) {
-				$arr['more_vids'] = "none";
-			} else {
-				$arr['more_vids'] = $vcount;
-			}
+			$total_vids = get_videos($params);
 		}
+
 		switch ($load_type) {
 			case 'video':
-				$total_vids = get_videos($params);
 				$params['count_only'] = false;
 				$data = get_videos($params);
 				break;
