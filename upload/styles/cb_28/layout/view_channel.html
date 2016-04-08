@@ -1,7 +1,7 @@
 {$myAccountLinks = $userquery->my_account_links()}
 {$leftMenuLinks = array_slice($myAccountLinks, 7)}
 {lang code='channel' assign='object_type'}
-{$uservideos=get_videos(["user"=>$user.userid, "order"=>"date_added DESC","limit" =>10])}
+{$uservideos=get_videos(["user"=>$user.userid, "order"=>"date_added DESC","limit" =>9])}
 {$first_video = $uservideos.0}
 {$total_videos = $user.total_videos}
 <div id="main" class="container clearfix">
