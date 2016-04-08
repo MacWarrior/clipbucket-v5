@@ -299,7 +299,31 @@ $('#cover_info').show();
   });
 })(window);
 
+/* player height and editerpick activities height */
+	var WinWidHome = "";
+	function editpickVideos(){
+		WinWidHome = $(window).width();
+		if(WinWidHome > 991)
+		{
+			console.log("height "+WinWidHome);
+			var bannerHeight = $(".player-items").height();
+			bannerHeight = bannerHeight - 43;
+			console.log("height "+bannerHeight);
+			$(".user-activities").css({
+				"max-height" : bannerHeight+"px",
+				"overflow-y" : "auto"
+			});
+		}
+		else
+		{
+			console.log("height "+WinWidHome);
+			
+			$(".user-activities").css("max-height","auto");
+		}
+	}
+/* */
 	$(document).ready(function (){
+		editpickVideos();
 		var id ='{$user.userid}';
 		$('#subscribe_channel').on({
 		click: function(e){
@@ -416,28 +440,7 @@ $('#cover_info').show();
 		});
 	});
 	/**/
-	/* player height and editerpick activities height */
-	var WinWidHome = "";
-	function editpickVideos(){
-		WinWidHome = $(window).width();
-		if(WinWidHome > 991)
-		{
-			console.log("height "+WinWidHome);
-			var bannerHeight = $(".player-items").height();
-			bannerHeight = bannerHeight - 43;
-			console.log("height "+bannerHeight);
-			$(".user-activities").css({
-				"max-height" : bannerHeight+"px",
-				"overflow-y" : "auto"
-			});
-		}
-		else
-		{
-			console.log("height "+WinWidHome);
-			
-			$(".user-activities").css("max-height","auto");
-		}
-	}
+	
 	
 	$('.playerRatio').load(function(){
 		editpickVideos();
