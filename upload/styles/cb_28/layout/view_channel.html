@@ -4,6 +4,7 @@
 {$uservideos=get_videos(["user"=>$user.userid, "order"=>"date_added DESC","limit" =>9])}
 {$first_video = $uservideos.0}
 {$total_videos = $user.total_videos}
+{$total_photos = $user.total_photos}
 <div id="main" class="container clearfix">
 	<div class="clearfix">
 		{include file="$style_dir/blocks/view_channel/channel_header.html"}
@@ -113,7 +114,7 @@
 									</div>
 								{/foreach}
 								</div>
-								{if $total_videos > 10}
+								{if $total_videos > 9}
 									<div class="clearfix text-center">
 										<button id="more-view-channel" class="btn btn-loadmore" dataLimit="9" dataHit="2">Load More</button>
 									</div>
@@ -124,14 +125,19 @@
 						</div>
 					</div>
 					<div class="tab-pane" id="user-photos">
-						<div class="clearfix row">
-						{$photos=get_photos(["user"=>$user.userid,"limit" =>5])}
+						<div id="usr-photos" class="clearfix row user_photos">
+						{$photos=get_photos(["user"=>$user.userid,"limit" =>9])}
 							{if $photos}
 								{foreach from=$photos item=p_list}
 								<div class="item-photo col-lg-4 col-md-4 col-sm-6 col-xs-12">
 									{include file="$style_dir/blocks/photo.html" photo=$p_list display_type = "default_photo"}
 								</div>
 								{/foreach}
+								{if $user.total_photos > 9} 
+									<div class="clearfix text-center">
+										<button id="more-channel-photos" class="btn btn-loadmore" dataLimit="9" dataHit="2">Load More</button>
+									</div>
+								{/if}
 							{else}
 								<div class="well well-info">{lang code='no_results_found'}</div>
 							{/if}
@@ -354,6 +360,51 @@ $('#cover_info').show();
 					$(data).appendTo('#usr-vids').fadeIn('slow');
 					if (loadMore == true) {
 						$('<div class="clearfix text-center"><button id="more-view-channel" class="btn btn-loadmore" dataLimit="'+loadLimit+'" dataHit="'+nextHit+'">Load More</button></div>').appendTo('.user_vids').fadeIn('slow');
+					}
+					
+				} else {
+					$('<div class="clearfix text-center"><button id="more-view-channel" class="btn btn-loadmore" disabled="disabled">Unable to fetch more</button></div>').appendTo('.user_vids').fadeIn('slow');
+				}
+
+				
+			}
+		});
+	});
+
+	$('#container').on("click","#more-channel-photos",function(){
+		loadHit = $(this).attr('dataHit');
+		loadLimit = $(this).attr('dataLimit');
+		user = "{$smarty.get.user}";
+		totalPhotos = "{$total_photos}";
+		totalShown = loadHit * 9 - 9;
+		if (totalPhotos - totalShown <= 9) {
+			loadMore = false;
+		} else {
+			loadMore = true;
+		}
+
+		nextHit = parseInt(loadHit) + 1;
+		$.ajax({
+			url: baseurl + "/ajax/view_channel.php",
+			type: "post",
+			dataType: "html",
+			data: {
+				"mode":'channelMorePhotos',
+				"loadHit":loadHit,
+				"loadLimit":loadLimit,
+				"totalPhotos":totalPhotos,
+				"userid":user,
+			},
+			beforeSend: function() {
+				$(document).find('#more-channel-photos').text('Loading videos..')
+			},
+
+			success: function(data) {
+				$('#more-channel-photos').remove();
+				if (data.length > 1) {
+					$(data).appendTo('#usr-photos').fadeIn('slow');
+					if (loadMore == true) {
+						$('<div class="clearfix text-center"><button id="more-channel-photos" class="btn btn-loadmore" dataLimit="'+loadLimit+'" dataHit="'+nextHit+'">Load More</button></div>').appendTo('.user_photos').fadeIn('slow');
 					}
 					
 				} else {

@@ -30,6 +30,23 @@
 	</div>
 {/if}
 
+{if $display_type == "view_channelAjax"}
+<div style="display: none" class="item-photo col-lg-4 col-md-4 col-sm-6 col-xs-12">
+	<a class="photo-holder" href="{$cbphoto->photo_links($photo,'view_item')}" title="{$photo.photo_title}">
+		{get_photo details=$photo size='l' class='img-responsive photo-land' output='html'}
+		<i class="icon-zoom"></i>
+	</a>
+	<div class="photo-info">
+		{if $photo.photo_title=='no-tag'}
+			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{$photo.photo_title}">no-title</a></strong>
+		{else}
+			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{$photo.photo_title}">{$photo.photo_title|truncate:50}</a></strong>
+		{/if}
+		<span>By&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{$photo.username}</a></span>
+	</div>
+</div>
+{/if}
+
 {if $display_type == "user_photos"}
 	<a class="photo-holder" href="{$cbphoto->photo_links($photo,'view_item')}" title="{$photo.photo_title}">
 		{get_photo details=$photo size='l' class='img-responsive photo-land' output='html'}
