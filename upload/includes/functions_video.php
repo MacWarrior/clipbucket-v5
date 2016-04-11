@@ -1619,10 +1619,10 @@
         
         $thumbs_res_settings = array(
             "original" => "original",
-            '80' => array('128','80'),
-            '240' => array('384','240'),
-            '320' => array('512','320'),
-            '480' => array('768','480')
+            '105' => array('168','105'),
+            '260' => array('416','260'),
+            '320' => array('632','395'),
+            '480' => array('768','432')
             );
 
         return $thumbs_res_settings;
