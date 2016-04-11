@@ -148,7 +148,7 @@
 						</div>
 						{ANCHOR place="the_form"}
 						<input type="hidden" name="signup" value="signup"></input>
-						<button type="submit" name="signup" value="signup" class="btn btn-success btn-lg btn-block" id="signup_submit">{lang code='Sign up'}</button>
+						<button type="submit" name="signup" value="signup" class="btn btn-success btn-lg btn-block" id="signup_submit">{lang code='Signup'}</button>
 						{ANCHOR place='signup_form'}
 					</form>
 					{/if}
@@ -166,9 +166,12 @@
 			selectOtherMonths: false,
 			changeMonth: true,
 			dateFormat:"yy-mm-dd",
-			changeYear: true
+			changeYear: true,
+			yearRange: "-56:+0"
 		});
 		$('.simple_container').addClass('alert-success alert');
+		var currentDate = new Date("1988,04,07");
+		$("#dob").datepicker("setDate", currentDate);
 	 });
 
 	var errors = {
