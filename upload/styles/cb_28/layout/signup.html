@@ -67,6 +67,7 @@
 					{else}
 					<form name="signup_form" id="signup_form" method="post" action="{$baseurl}/signup.php"  class="user-form custom-elements">
 						<h2>Signup!</h2>
+						{$newFields = $required_fields|array_push:$required_fields['country']}
 						{foreach from=$required_fields item=field}
 							{if $field.type!='checkbox' && $field.type!='radiobutton'}
 								{$field.class='form-control'}
