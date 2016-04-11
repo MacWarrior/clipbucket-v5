@@ -28,7 +28,7 @@ class formObj
 	/**
 	* FUNCTION USED TO CREATE TEXT FIELD
 	*/
-	function createField($field,$multi=FALSE)
+	function createField($field,$multi=FALSE, $skipall = false)
 	{
 		$field['sep'] = $field['sep'] ? $field['sep'] : '<br>';
 		
@@ -48,7 +48,7 @@ class formObj
 			$fields=$this->createRadioButton($field,$multi);
 			break;
 			case 'dropdown':
-			$fields=$this->createDropDown($field,$multi);
+			$fields=$this->createDropDown($field,$multi, $skipall);
 			break;
 			
 
@@ -417,7 +417,7 @@ class formObj
 		return $catArray = getCategoryList(array("type" => $type));
 	}
 
-	function createDropDown($field,$multi=FALSE)
+	function createDropDown($field,$multi=FALSE, $skipall = false)
 	{
 		global $LANG;
 		//First Checking if value is CATEGORY
@@ -431,6 +431,12 @@ class formObj
 
 			foreach ($catArray as $cat)
 			{
+				if ($skipall == true) {
+					if ($cat['category_id'] == 'all') {
+						continue;
+					}
+				}
+
 				$field['value'][$cat['category_id']] = $cat['category_name'];
 			}
 		}
