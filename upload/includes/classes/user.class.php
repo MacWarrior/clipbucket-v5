@@ -3399,7 +3399,6 @@ class userquery extends CBCategory{
 			$countries = $Cbucket->get_countries(iso2);
 			$user_ip = $_SERVER['REMOTE_ADDR']; // getting user's ip
 			$user_country = ip_info($user_ip, 'country'); // get country using IP
-
 			foreach ($countries as $code => $name) {
 				$name = strtolower($name);
 				$user_country = strtolower($user_country);
@@ -3408,7 +3407,7 @@ class userquery extends CBCategory{
 				}
 			}
 
-			if (strlen($selected_cont) > 2) {
+			if (strlen($selected_cont) != 2) {
 				$selected_cont = "PK";
 			}
 
