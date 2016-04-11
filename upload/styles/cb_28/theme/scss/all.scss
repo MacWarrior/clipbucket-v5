@@ -209,7 +209,7 @@ h1{
 		color:$white;
 		text-align: center;
 		height: 16px;
-		width: 34px;
+		min-width: 34px;
 		bottom: 5px;
 		right: 5px;
 		z-index: 2;
@@ -1157,10 +1157,7 @@ h1{
 				@include vertical-middle();
 				margin: 0 10px 0 0;
 			}
-		}
-		&.likes{
-			color: $blue;
-			a{
+			&:hover{
 				color: $blue;
 			}
 		}

@@ -6,16 +6,18 @@
 				{AD place='ad_728x90'}
 			</div>
 			<h1>{$search_type_title}</h1>
+			{if $results}
 			<div class="clearfix row">
-				{if $results}
-					{foreach item=result from=$results}
-						{assign var=$template_var value =$result}
-						{include file="$display_template" }
-					{/foreach}
-				{else}
-					{lang code='no_results_found'}
-				{/if}
+				{foreach item=result from=$results}
+					{assign var=$template_var value =$result}
+					{include file="$display_template" }
+				{/foreach}
 			</div>
+			{else}
+			<div class="clearfix well">
+				{lang code='no_results_found'}
+			</div>
+			{/if}
 			{include file="$style_dir/blocks/pagination.html"}
 		</section>
 	</div>

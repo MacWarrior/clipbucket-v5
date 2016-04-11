@@ -467,7 +467,7 @@ h1 {
     color: #fff;
     text-align: center;
     height: 16px;
-    width: 34px;
+    min-width: 34px;
     bottom: 5px;
     right: 5px;
     z-index: 2;
@@ -1323,9 +1323,7 @@ h1 {
         display: inline-block;
         vertical-align: middle;
         margin: 0 10px 0 0; }
-    .rating .like-dislike.likes {
-      color: #0080b4; }
-      .rating .like-dislike.likes a {
+      .rating .like-dislike a:hover {
         color: #0080b4; }
   .rating .like-error {
     display: block; }
