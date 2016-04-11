@@ -34,7 +34,7 @@ if($userquery->login_check('',true)){
 	}
 			
 	if(isset($_POST['signup'])){
-		#pex($_POST,true);
+		pex($_POST,true);
 		if(!config('allow_registeration')){
 			e(lang('usr_reg_err'));
 		}

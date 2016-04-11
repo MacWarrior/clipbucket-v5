@@ -3395,8 +3395,23 @@ class userquery extends CBCategory{
 			//var_dump($_POST);
 			//die();
 			 $dob =  $dob ? date(config("date_format"),strtotime($dob)) : date(config("date_format"),strtotime('14-10-1989'));
-				
-					 
+			
+			$countries = $Cbucket->get_countries(iso2);
+			$user_ip = $_SERVER['REMOTE_ADDR']; // getting user's ip
+			$user_country = ip_info($user_ip, 'country'); // get country using IP
+
+			foreach ($countries as $code => $name) {
+				$name = strtolower($name);
+				$user_country = strtolower($user_country);
+				if ($name == $user_country) {
+					$selected_cont = $code;
+				}
+			}
+
+			if (strlen($selected_cont) > 2) {
+				$selected_cont = "PK";
+			}
+
 			 $user_signup_fields = array
 			 (
 			  'username' => array(
@@ -3475,10 +3490,10 @@ class userquery extends CBCategory{
 			  'country'	=> array(
 								 'title'=> lang('country'),
 								 'type' => 'dropdown',
-								 'value' => $Cbucket->get_countries(iso2),
+								 'value' => $countries,
 								 'id'	=> 'country',
 								 'name'	=> 'country',
-								 'checked'=> $dcountry,
+								 'checked'=> $selected_cont,
 								 'db_field'=>'country',
 								 'required'=>'yes',
 								 ),
