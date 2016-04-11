@@ -40,7 +40,7 @@
 		searchForm = $('.search-form');
 		searchQuery = $('#query').val();
 		queryLen = searchQuery.length;
-		if (queryLen <= 3) {
+		if (queryLen <= 2) {
 			msg = 'Search query<strong> '+searchQuery+'</strong> is too short. Open up!';
 			_cb.throwHeaderr('info', msg, 3000);
 			//alert("Search term is too short");
