@@ -17,7 +17,7 @@
 			<div class="clearfix signin-block">
 				<div class="account-holder">
 					<form name="login_form" method="post" action="" id="login_form" class="user-form">
-						<h2>Sign in</h2>
+						<h2>{lang('Login')}</h2>
 						<div class="form-group">
 							{*<label for="login_username_sp">{lang code="Username"}</label>*}
 							<input type="text" id="login_username_sp" placeholder="{lang code='Type Username'}"
@@ -37,12 +37,13 @@
 							</label>
 						</div>
 
-						<input type="submit" name="login" value="{lang('Login')}" class="btn btn-primary btn-lg btn-block">
+						<input id="login_btn" type="submit" name="login" value="{lang('Login')}" class="btn btn-primary btn-lg btn-block">
 
 						<div class="clearfix links">
 							<a href="{$baseurl}/forgot.php">{lang code='Forgot Password?'}</a>
 							<a href="{$baseurl}/forgot.php?mode=recover_username">{lang code='Forgot Username?'}</a>
 						</div>
+						<input type="hidden" name="login" value="login"></input>
 						{if function_exists('show_all_btns')} 
 						  <div class="clearfix social-links">
 							<span>or login with</span>
@@ -156,10 +157,15 @@
 		{/if}
 	</div>
 {/if}
+
 <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 <script>
 
 	$(document).ready(function(){
+		var pageMode = "{$smarty.get.mode}";
+		if (pageMode == 'login') {
+			document.title = 'Login - {$Cbucket->configs.site_title}';
+		}
 		jQuery('#dob').datepicker({
 			showOtherMonths: true,
 			selectOtherMonths: false,
@@ -183,7 +189,8 @@
 		"invalid_email":"{lang code='usr_email_err2'}",
 		"user_exists":"{lang code='usr_uname_err2'}",
 		"email_exists":"{lang code='usr_email_err3'}",
-		"weak_pass":"pass is weak"
+		"weak_pass":"{lang code='weak_pass'}",
+		"username_spaces":"{lang code='username_spaces'}",
 	};
 	function removeErrClass(obj, passSec = false) {
 		$(obj).closest('.form-group').removeClass('invalid-error');
@@ -304,6 +311,28 @@
 	     } else {
 	     	removeErrClass(cPassSec,true);
 	     }
+	});
+
+	$('input#login_username_sp').on('keyup', function() {
+	     var userName = $('#login_username_sp'),
+	     user = userName.val(),
+	     userLen = user.length;
+	     if (userLen > 50 || userLen < 2) {
+	     	$('#login_btn').attr('disabled','disabled');
+	     	addErrClass(userName, errors["name_length"], true, false);
+	     } else if (user.indexOf(' ') >= 0) {
+	     	$('#login_btn').attr('disabled','disabled');
+	     	addErrClass(userName, errors["username_spaces"], true, false);
+	     } else {
+	     	removeErrClass(userName);
+	     	$('#login_btn').removeAttr('disabled');
+
+	     }
+	});
+
+	$('#login_btn').on("click",function(e){
+		e.preventDefault();
+		$('#login_form').submit();
 	});
 
 	$('#signup_submit').on("click",function(e){
