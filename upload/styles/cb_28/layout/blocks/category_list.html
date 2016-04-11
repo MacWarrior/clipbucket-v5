@@ -1,8 +1,14 @@
-		
+			{$category = $smarty.get.cat}
+			{if $category != 'All' && is_numeric($category)} 
+				{$catname = $cbvid->get_category_name($category)}
+				{$catname = $catname.category_name}
+			{else}
+				{$catname = 'All'}
+			{/if}
 			<span class="lastclicked" style="display:none;"></span>
 			<span class="lastlevel" style="display:none;"></span>
 			<div class="dropdown"> <!-- Start of category code -->
-				<a href="#" class="dropdown-toggle" data-toggle="dropdown">All <span class="icon-down-arrow"></span></a>
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown">{$catname}<span class="icon-down-arrow"></span></a>
 				<ul class="dropdown-menu">
 					{$level = '1'}
 					{foreach from=$categories item=maincat}
