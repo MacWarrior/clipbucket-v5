@@ -93,7 +93,7 @@
 			<!-- ******************************************* -->
 			
 			{if $row.collectionsSection == 'yes'}
-			{$collections = $cbcollection->get_collections(['limit'=>5, 'active'=>'yes'])}
+			{$collections = $cbcollection->get_collections(['limit'=>4, 'active'=>'yes'])}
 			<h2>{lang code="Top Collections"}</h2>
 			<div class="clearfix sidebar-items collections-grid">
 				<div class="clearfix row">
@@ -124,7 +124,7 @@
 			{/if}
 
 			<!-- playlists -->
-			{$playlists = get_playlists(['limit'=>5, 'order'=>'total_items DESC'])}
+			{$playlists = get_playlists(['limit'=>4, 'order'=>'total_items DESC'])}
 			<div class="clearfix sidebar-playlists">
 				<h2>{lang code="Top Playlists"}</h2>
 				{if $playlists}
