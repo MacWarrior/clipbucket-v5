@@ -1986,7 +1986,6 @@
 	               alert("No data");
 	           }
 	           else{
-	           	   console.log(this);
 	               curObj.showMeTheMsg(data);
 	           }
 	       },'text');
