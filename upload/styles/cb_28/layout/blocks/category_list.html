@@ -1,6 +1,10 @@
 			{$category = $smarty.get.cat}
 			{if $category != 'All' && is_numeric($category)} 
-				{$catname = $cbvid->get_category_name($category)}
+				{if $smarty.const.THIS_PAGE == 'videos'}
+					{$catname = $cbvid->get_category_name($category)}
+				{else}
+					{$catname = $userquery->get_category_name($category)}
+				{/if}
 				{$catname = $catname.category_name}
 			{else}
 				{$catname = 'All'}

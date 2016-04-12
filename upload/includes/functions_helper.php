@@ -159,27 +159,24 @@
     */
 
     function pullCategories() {
-        global $cbvid;
+        global $cbvid, $userquery, $cbphoto;
         $params = array();
         switch (THIS_PAGE) {
             case 'videos':
-                $type = 'video';
+                $all_cats = $cbvid->cbCategories($params);
                 break;
             case 'photos':
-                $type = 'photo';
+                $all_cats = $cbphoto->cbCategories($params);
                 break;
             case 'channels':
-                $type = 'channels';
+                $all_cats = $userquery->cbCategories($params);
                 break;
             
             default:
-                $type = 'video';
+                $all_cats = $cbvid->cbCategories($params);
                 break;
         }
 
-        $params['type'] = $type;
-        $params['echo'] = false;
-        $all_cats = $cbvid->cbCategories($params);
         if (is_array($all_cats)) {
             return $all_cats;
         } else {
