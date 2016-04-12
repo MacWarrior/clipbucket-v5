@@ -47,7 +47,7 @@
 						</div>
 						<div class="clearfix subscribe-col col-lg-6 col-md-6 col-sm-6 col-xs-12">
 							{if $photo.userid != userid()}
-								<a id="subscribeUser" class="btn btn-subscribe btn-primary" href="javascript:void(0)" onclick="subscriber('{$user.userid}','subscribe_user','video_detail_result_cont')">
+								<a id="subscribeUser" class="btn btn-subscribe btn-primary" href="javascript:void(0)" onclick="_cb.subscribeToChannelNew('{$user.userid}','subscribe_user','video_detail_result_cont')">
 									<span>{lang('Subscribe')}</span>
 								</a>
 							{/if}

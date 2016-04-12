@@ -260,7 +260,7 @@
 		$("#subscribeUser").on({
 			click: function(e){
 				e.preventDefault();
-				_cb.subscribeToChannel('{$video.userid}','subscribe_user','video_detail_result_cont');
+				_cb.subscribeToChannelNew('{$video.userid}','subscribe_user');
 			}
 		});
 		var adHtml = $('.ad-holder').html();
