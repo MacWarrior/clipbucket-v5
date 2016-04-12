@@ -72,10 +72,10 @@
 		</section>
 		<aside id="sidebar">
 			<div class="box-ad ad">{AD place='ad_300x250'}</div>
-			<h2>Featured Photos</h2>
-			<div class="clearfix sidebar-items">
 			{$featured=get_photos(["featured"=>"yes","limit"=>6])}
 			{if $featured}
+			<h2>Featured Photos</h2>
+			<div class="clearfix sidebar-items">
 				<div class="row">
 					{foreach $featured as $photo}
 						<div class="item-photo col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -83,10 +83,8 @@
 						</div>
 					{/foreach}
 				</div>
-			{else}
-				<div class="well well-info">No Photo(s) Found !</div>
-			{/if}
 			</div>
+			{/if}
 			{$row = $myquery->Get_Website_Details()}
 			{if $row.collectionsSection == 'yes'}
 				{$collections = $cbcollection->get_collections(['limit'=>5, 'active'=>'yes'])}

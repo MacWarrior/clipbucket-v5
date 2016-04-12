@@ -11,6 +11,7 @@
 	</div>
 	<div class="clearfix">
 		<section id="content" class="clearfix">
+			{if $uservideos}
 			<div class="player-items">
 				<div class="clearfix player-holder">
 					<div id="cb_player" class="clearfix cb_player">
@@ -19,6 +20,7 @@
 				</div>
 				<img src="{$theme}/images/player-ratio.png" class="playerRatio">
 			</div>
+			{/if}
 			<div id="messageFav" class="alert alert-info marginTop" style="display:none"></div>
 			<div class="channel-tabs flat-tabs clearfix">
 				<ul class="clearfix nav nav-tabs">
@@ -144,12 +146,12 @@
 						</div>
 					</div>
 					<div class="tab-pane fade in clearfix" id="user-playlist">
-						<div class="clearfix row ch-playlists">
 						{*$u.userid*}
 						{$playlists = $cbvid->action->get_playlists(["user"=>$u.userid,"order"=>"date_added DESC","limit"=>""])}
 						
 						{if $playlists}
 						{*pr($playlists,true)*}
+						<div class="clearfix row ch-playlists">
 						
 						{foreach $playlists as $playlist}
 							<div class="playlist-item col-lg-4 col-md-4 col-sm-6 col-xs-12">
@@ -157,28 +159,24 @@
 							</div>
 						{/foreach}
 						
+						</div>
 						{else}
 							<div class="well well-info">no playlist found</div>
 						{/if}
-						</div>
 					</div>
 				</div>
 			</div>
 		</section>
 		<aside id="sidebar">
+			{assign var=userFeeds value=$cbfeeds->getUserFeeds($u)}
+			{if $userFeeds}
 			<h2>{lang code="Recent Activities"}</h2>
 			<div id="userFeeds" class="user-activities clearfix sidebar-items">
-				{assign var=userFeeds value=$cbfeeds->getUserFeeds($u)}
-				{if $userFeeds}
 				{foreach from=$userFeeds item=userFeed}
 					{include file="$style_dir/blocks/feed.html" feed=$userFeed}
 				{/foreach}
-				{else}
-				<div class="well well-info clearfix">
-				  {lang code='no_activity' assign=no_activity} {$no_activity|sprintf:$u.username}
-				</div>
-				{/if}
 			</div>
+			{/if}
 			{$popular = get_users(['order'=>'profile_hits DESC limit 5'])}
 			{if $popular}
 			<h2>{lang code="Popular Users"}</h2>

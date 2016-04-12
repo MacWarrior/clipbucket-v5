@@ -1161,6 +1161,11 @@ h1{
 				color: $blue;
 			}
 		}
+		&.rated{
+			a{
+				color: $blue;
+			}
+		}
 	}
 	.like-error{
 		display: block;
@@ -2131,10 +2136,10 @@ textarea#comment_box{
 		}
 	}
 }
-.ch-playlists{
-	.playlist-block{
-		margin: 0 0 20px;
-	}
+/* end view channel page */
+/* playlist */
+.playlist-item{
+	margin: 0 0 20px;
 	.playlist-thumb{
 		color:$block-color;
 		h2{
@@ -2153,125 +2158,53 @@ textarea#comment_box{
 			display: block;
 			position: relative;
 			color: #fff;
-			margin: 0 0 5px;
-			span{
+			.playlist-count{
 				background: rgba(0, 0, 0, 0.8);
-				height: 100%;
-				padding: 15px 20px;
-				position: absolute;
-				right: 0;
-				text-align: center;
-				top: 0;
 				width: 80px;
+				height: 80px;
+				border-radius: 50%;
+				padding: 18px 10px;
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				margin: -40px 0 0 -40px;
+				text-align: center;
 				font-size:12px;
 				line-height: 18px;
-				img{
+				span{
 					display: block;
-    				height: auto;
-    				margin: 10px auto 0;
-					max-width: 20px;
+    				margin: 0 0 5px;
 				}
 			}
 			>img{
-				max-height: 100px;
 				width: 100%;
 			}
 		}
-		.date-time{
-			display: block;
-			background: $sprite -23px -1323px;
-			color: #a3a3a3;
-			font-size: 10px;
-			line-height: 14px;
-			margin: 5px 0 0;
-			padding: 2px 0 2px 25px;
-		}
-	}
-}
-/* end view channel page */
-/* playlist */
-.item_playlist{
-	margin: 0 0 20px;
-	.playlist-thumb{
-		@include vertical-middle();
-		margin: 0 10px 0 0;
-		width: 100px;
-		height: 100px;
-		img{
-			width: 100%;
-			height: 100%;
-		}
-		a{
-			display: block;
-			height: 100%;
-			color: #fff;
+		.playlist-info{
+			font-size: 14px;
+			line-height: 16px;
+			font-weight: 300;
+			color: $grey-txt;
+			padding: 8px;
+			background: darken($lt-grey, 1);
 			position: relative;
-			&:hover{
-				text-decoration: none;
-				&:after{
-					content: "";
-					background: rgba(0,0,0,0.6);
-					position: absolute;
-					width: 100%;
-					height: 100%;
-					top: 0;
-					left: 0;
-					z-index: 1;
+			h2{
+				max-height: 20px;
+				overflow: hidden;
+				color: $black;
+				font-size: 18px;
+				line-height: 20px;
+				font-weight: 400;
+				margin:0 0 5px;
+				a{
+					color: $black;
+					text-decoration: none;
+					&:hover{
+						color: $blue;
+					}
 				}
-				i{
-					left: 50%;
-				}
-			}
-			i{
-				font-size: 12px;
-				line-height: 12px;
-				position: absolute;
-				z-index: 2;
-				top: 50%;
-				left: -9999px;
-				width: 24px;
-				height: 24px;
-				border-radius:50%;
-				padding: 4px 3px 4px 5px;
-				margin: -10px 0 0 -10px;
-				text-align: center;
-				border:2px solid #fff;
 			}
 		}
-	}
-	h3{
-		margin: 0 0 5px;
-		font-size: 14px;
-		line-height: 24px;
-		font-weight: 700;
-		span{
-			float: right;
-			font-size: 12px;
-			line-height: 14px;
-			font-weight: 400;
-			margin: 0 0 0 5px;
-			padding: 5px 10px;
-			min-width: 50px;
-			border-radius:12px;
-			background:$blue;
-			color: #fff;
-			i{
-				vertical-align: middle;
-				font-size: 8px;
-				line-height: 8px;
-				background: #fff;
-				padding: 2px 5px 1px;
-				color: $blue;
-				margin: 0 5px 0 0;
-			}
-		}
-	}
-	.date-time{
-		float: right;
-		font-size: 18px;
-		padding: 25px 10px;
-		line-height: 30px;
-		font-weight: 300;
 	}
 }
 /**/
