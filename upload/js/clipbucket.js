@@ -1921,6 +1921,21 @@
 			},'text');
 		}
 
+		this.showMeTheMsg = function(data) {
+			curObj = this;
+			isError = $(data).filter('div.error').html();
+       		isOk = $(data).filter('div.msg').html();
+       		if (isError) {
+				if (isError.length > 2) {
+					curObj.throwHeaderr('danger',isError, 5000, true);
+				}
+			} else if (isOk) {
+				if (isOk.length > 2) {
+					curObj.throwHeaderr('success',isOk, 5000, true);
+				}
+			}
+		}
+
 		this.subscribeToChannelNew = function(user,type){
 		   curObj = this;
 	       $.post(page, {  
@@ -1932,17 +1947,7 @@
 	               alert("No data");
 	           }
 	           else{
-	           		isError = $(data).filter('div.error').html();
-	           		isOk = $(data).filter('div.msg').html();
-	           		if (isError) {
-						if (isError.length > 2) {
-							curObj.throwHeaderr('danger',isError, 5000, true);
-						}
-					} else if (isOk) {
-						if (isOk.length > 2) {
-							curObj.throwHeaderr('success',isOk, 5000, true);
-						}
-					}
+	           		curObj.showMeTheMsg(data);
 	           }
 	       },'text');
 	   };
@@ -1964,18 +1969,7 @@
 				else
 				{
 					$("#"+result_cont).css("display","none");
-
-					isError = $(data).filter('div.error').html();
-	           		isOk = $(data).filter('div.msg').html();
-					if (isError) {
-						if (isError.length > 2) {
-							curObj.throwHeaderr('danger',isError, 5000, true);
-						}
-					} else if (isOk) {
-						if (isOk.length > 2) {
-							curObj.throwHeaderr('success',isOk, 5000, true);
-						}
-					}
+					curObj.showMeTheMsg(data);
 				}
 			},'text');
 		};
@@ -1992,20 +1986,34 @@
 	               alert("No data");
 	           }
 	           else{
-	               isError = $(data).filter('div.error').html();
-	           		isOk = $(data).filter('div.msg').html();
-					if (isError) {
-						if (isError.length > 2) {
-							curObj.throwHeaderr('danger',isError, 5000, true);
-						}
-					} else if (isOk) {
-						if (isOk.length > 2) {
-							curObj.throwHeaderr('success',isOk, 5000, true);
-						}
-					}
+	           	   console.log(this);
+	               curObj.showMeTheMsg(data);
 	           }
 	       },'text');
 	   };
+
+	   this.add_to_favNew = function(type,id){
+			var curObj = this;
+			$("#video_action_result_cont").css("display","block");
+			$("#video_action_result_cont").html(curObj.loading);
+			
+			$.post(page, 
+			{ 	
+				mode : 'add_to_fav',
+				type : type,
+				id : id
+			},
+			function(data)
+			{
+				if(!data)
+					alert("No data");
+				else
+				{
+					$("#video_action_result_cont").hide();
+					curObj.showMeTheMsg(data);
+				}
+			},'text');
+		};
 	};
 
 	window._cb = new _cb();

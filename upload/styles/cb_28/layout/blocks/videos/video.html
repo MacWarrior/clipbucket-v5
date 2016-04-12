@@ -69,7 +69,7 @@
 <div style="display: none" class="item-video col-lg-4 col-md-4 col-sm-4 col-xs-12">
 	<div class="clearfix thumb-holder">
 		<a class="video-link" href="{videoLink($video)}" title="{$video.title|title}">
-			<img class="img-responsive" src="{getThumb vdetails=$video size=416x260 }">
+			<img class="lazy img-responsive" src="{getThumb vdetails=$video size=416x260 }">
 		</a>
 		<div class="item-footer">
 			<span class="duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</span>
