@@ -5409,6 +5409,7 @@
 	* @param : { integer } { $itemid } { id of item to check rating for }
 	* @param : { boolean } { false by default, type of item [video / photo] }
 	* 
+	* @example : has_rated(1,1033, 'video') // will check if userid 1 has rated video with id 1033
 	* @return : { string / boolean } { rating status if found, else false }
 	* @since : 12th April, 2016 ClipBucket 2.8.1
 	* @author : Saqib Razzaq
