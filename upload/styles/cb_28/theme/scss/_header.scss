@@ -178,6 +178,11 @@
 						@include vertical-middle();
 					}
 				}
+				&.open{
+					.icon-down-arrow{
+						@include rotate ($deg:-90deg);
+					}
+				}
 			}
 		}
 		input[type="text"]{

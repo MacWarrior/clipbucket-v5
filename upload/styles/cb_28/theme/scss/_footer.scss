@@ -7,16 +7,75 @@
 	padding:18px 0;
 	font-size: 16px;
 	line-height:20px;
-	color: #fff;
+	color: $white;
 	z-index: 5;
 	.container{
 		padding: 0;
 	}
 	a{
-		color: #fff;
+		color: $white;
 		&:hover{
 			text-decoration: none;
-			//color: $blue;
+		}
+	}
+	.langdrop{
+		width: 160px;
+		.dropdown-menu{
+			padding: 0;
+			border: none;
+			box-shadow: none;
+			overflow: hidden;
+			li{
+				a{
+					color: $black;
+					&:hover{
+						color: $white;
+						background: $blue;
+					}
+				}
+				&:first-child a{
+					border-radius:2px 2px 0 0;
+				}
+				&:last-child a{
+					border-radius:0 0 2px 2px;
+				}
+				&.selected{
+					a{
+						color: $white;
+						background: $blue;
+					}
+				}
+			}
+		}
+		button{
+			font-size: 16px;
+			line-height: 18px;
+			padding: 5px 30px 5px 10px;
+			border: none;
+			height: 28px;
+			width: 100%;
+			text-align: left;
+			background: lighten($blue, 54);
+			overflow: hidden;
+			position: relative;
+			span{
+				@include vertical-middle();
+			}
+			i{
+				position: absolute;
+				font-size: 16px;
+				line-height: 16px;
+				width:16px;
+				height: 16px;
+				top: 50%;
+				right: 10px;
+				margin: -8px 0 0;
+				z-index: 2;
+				@include rotate ($deg:-180deg);
+			}
+		}
+		&.open button i{
+			@include rotate ($deg:-90deg);
 		}
 	}
 	.icon-holder{
@@ -33,21 +92,22 @@
 			padding: 11px;
 		}
 	}
-	ul{
-		@include list-style();
-		text-transform: capitalize;
-		width: 440px;
-		li{
-			margin: 0 0 0 25px;
-			float: left;
-			&:first-child{
-				margin: 0;
-			}
-		}
-	}
+	
 	.footer-holder{
 		display: table;
 		width: 100%;
+		>ul{
+			@include list-style();
+			text-transform: capitalize;
+			width: 440px;
+			li{
+				margin: 0 0 0 25px;
+				float: left;
+				&:first-child{
+					margin: 0;
+				}
+			}
+		}
 	}
 	.column{
 		padding: 0 5px;
@@ -73,16 +133,18 @@
 /**/
 @media only screen and (max-width: 991px) {
 	#footer{
-		ul{
-			width: 400px;
-			li{
-				float: none;
-				@include vertical-top();
-				width: 33%;
-				margin: 0 0 10px -4px;
-				padding: 0 5px;
-				&:first-child{
+		.footer-holder{
+			>ul{
+				width: 400px;
+				li{
+					float: none;
+					@include vertical-top();
+					width: 33%;
 					margin: 0 0 10px -4px;
+					padding: 0 5px;
+					&:first-child{
+						margin: 0 0 10px -4px;
+					}
 				}
 			}
 		}
@@ -92,6 +154,20 @@
 	#footer{
 		.footer-holder{
 			display: block;
+			>ul{
+				width: 100%;
+				padding: 0 0 0 8px;
+				li{
+					float: none;
+					@include vertical-top();
+					width: 50%;
+					margin: 0 0 10px -4px;
+					padding: 0 5px;
+					&:first-child{
+						margin: 0 0 10px -4px;
+					}
+				}
+			}
 		}
 		.column{
 			display: block;
@@ -107,19 +183,8 @@
 				}
 			}
 		}
-		ul{
-			width: 100%;
-			li{
-				float: none;
-				@include vertical-top();
-				width: 50%;
-				margin: 0 0 10px -4px;
-				padding: 0 5px;
-				&:first-child{
-					margin: 0 0 10px -4px;
-				}
-			}
+		.langdrop{
+			margin: 0 auto;
 		}
-
 	}
 }

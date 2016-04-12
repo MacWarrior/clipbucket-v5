@@ -25,6 +25,7 @@ class language
 	
 	var $lang = 'en';
 	var $lang_iso = 'en';
+	var $lang_name = 'English';
 	
 	/** 
 	 * __Constructor
@@ -64,7 +65,9 @@ class language
 	
 		if($default['language_code'])
 		{
+
 			$this->lang = $this->lang_iso = $default['language_code'];
+			$this->lang_name = $this->lang_iso = $default['language_name'];
 		}
 	}
 	 
