@@ -1,5 +1,14 @@
 {$currentPage = $smarty.const.THIS_PAGE|lower}
-{if $currentPage == 'view_channel'}{$currentPage = 'channels'}{elseif $currentPage == 'view_item' || $currentPage == 'collections' || $currentPage == 'view_collection'}{$currentPage = 'photos'}{elseif $currentPage == 'watch_video'}{$currentPage = 'videos'}{else}{$currentPage = 'videos'}{/if}
+{if $currentPage == 'view_channel' || $currentPage == 'channels'}
+	{$currentPage = 'channels'}
+{elseif $currentPage == 'view_item' || $currentPage == 'photos'}
+	{$currentPage = 'photos'}
+{elseif $currentPage == 'collections' || $currentPage == 'view_collection'}
+	{$currentPage = 'collections'}
+{elseif $currentPage == 'watch_video'}
+	{$currentPage = 'videos'}{else}{$currentPage = 'videos'}
+{/if}
+
 {$pageType = $smarty.get.type|lower}
 <div id="quick_container">
 	<div id="quicklist_box">
