@@ -5402,6 +5402,47 @@
 	    }
 	    return $output;
 	}
+
+	/**
+	* Checks if a user has rated a video / photo and returns rating status
+	* @param : { integer } { $userid } { id of user to check rating by }
+	* @param : { integer } { $itemid } { id of item to check rating for }
+	* @param : { boolean } { false by default, type of item [video / photo] }
+	* 
+	* @return : { string / boolean } { rating status if found, else false }
+	* @since : 12th April, 2016 ClipBucket 2.8.1
+	* @author : Saqib Razzaq
+	*/
+
+	function has_rated($userid, $itemid, $type = false) {
+		global $db;
+		switch ($type) {
+			case 'video':
+				$toselect = 'videoid';
+				break;
+			case 'photo':
+				$toselect = 'photo_id';
+				break;
+			
+			default:
+				$type = 'video';
+				$toselect = 'videoid';
+				break;
+		}
+		$raw_rating = $db->select(tbl($type),'voter_ids',"$toselect = $itemid");
+		$ratedby_json = $raw_rating[0]['voter_ids'];
+		$ratedby_cleaned = json_decode($ratedby_json,true);
+		foreach ($ratedby_cleaned as $key => $rating_data) {
+			if ($rating_data['userid'] == $userid) {
+				if ($rating_data['rating'] == 0) {
+					return 'disliked';
+				} else {
+					return 'liked';
+				}
+			}
+		}
+		return false;
+	}
 	
     include( 'functions_db.php' );
     include( 'functions_filter.php' );
