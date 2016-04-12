@@ -2795,6 +2795,9 @@ textarea#comment_box{
 		display: block;
 	}
 }
+.well{
+	border-radius: 0;
+}
 /**/
 @import "header";
 @import "sidebar";
