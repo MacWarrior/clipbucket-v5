@@ -42,7 +42,7 @@
 		queryLen = searchQuery.length;
 		if (queryLen <= 2) {
 			msg = 'Search query<strong> '+searchQuery+'</strong> is too short. Open up!';
-			_cb.throwHeaderr('info', msg, 3000);
+			_cb.throwHeaderr('info', msg, 3000,true);
 			//alert("Search term is too short");
 		} else {
 			$('.search-form').submit();
