@@ -40,7 +40,7 @@
 				</a>
 				{elseif !$friends && userid()}
 				<a href="javascript:void(0)"  class="btn btn-primary btn-sm new1" 
-				   onclick="add_friend('{$user.userid}','result_cont')">
+				   onclick="_cb.add_friendNew('{$user.userid}','result_cont')">
 					<i class="glyphicon glyphicon-plus-sign white"></i> 
 					{lang code="Add As Friend"}
 				{/if}

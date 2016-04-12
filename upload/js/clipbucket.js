@@ -1946,6 +1946,39 @@
 	           }
 	       },'text');
 	   };
+
+	   this.add_friendNew = function (uid,result_cont){
+	   		curObj = this;
+			$("#"+result_cont).css("display","block");
+			$("#"+result_cont).html(this.loading);
+			
+			$.post(page, 
+			{ 	
+				mode : 'add_friend',
+				uid : uid
+			},
+			function(data)
+			{
+				if(!data)
+					alert("No data");
+				else
+				{
+					$("#"+result_cont).css("display","none");
+
+					isError = $(data).filter('div.error').html();
+	           		isOk = $(data).filter('div.msg').html();
+					if (isError) {
+						if (isError.length > 2) {
+							curObj.throwHeaderr('danger',isError, 5000, true);
+						}
+					} else if (isOk) {
+						if (isOk.length > 2) {
+							curObj.throwHeaderr('success',isOk, 5000, true);
+						}
+					}
+				}
+			},'text');
+		};
 	};
 
 	window._cb = new _cb();
