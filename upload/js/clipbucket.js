@@ -2013,6 +2013,106 @@
 				}
 			},'text');
 		};
+
+		this.flag_objectNew = function(form_id,id,type){
+			var curObj = this;
+			$("#flag_form_result").css("display","block");
+			$("#flag_form_result").html(this.loading);
+			$.post(page, 
+			{ 	
+				mode : 'flag_object',
+				type : type,
+				flag_type : $("#"+form_id+" select option:selected").val(),
+				id : id
+			},
+			function(data)
+			{
+				if(!data)
+					alert("No data");
+				else
+				{
+					$("#flag_form_result").hide();
+					curObj.showMeTheMsg(data);
+				}
+			},'text');
+		};
+
+		this.add_playlistNew = function (mode,vid,form_id,objtype){
+			curObj = this;
+			$("#playlist_form_result").css("display","block");
+			$("#playlist_form_result").html("loading");
+			switch(mode)
+			{
+				case 'add':
+				{
+					$.post(page, 
+					{ 	
+						mode : 'add_playlist',
+						id : vid,
+						objtype : objtype,
+						pid : $("#playlist_id option:selected").val()
+			},
+					function(data)
+					{
+						if(!data)
+							alert("No data");
+						else
+						{	
+							if(data.err.length > 2)
+							{
+								cleanedHtml = $.parseHTML(data.err);
+								var msg = $(cleanedHtml).html();
+								curObj.throwHeaderr('danger',msg, 5000, true);
+							}
+							
+							if(data.msg.length > 2)
+							{
+								cleanedHtml = $.parseHTML(data.msg);
+								var msg = $(cleanedHtml).html();
+								curObj.throwHeaderr('success',msg, 5000, true);
+								$("#"+form_id).css("display","none");
+							}	
+							
+						}
+					},'json');
+				}
+				break;
+				
+				case 'new':
+				{
+
+					$.post(page, 
+					{ 	
+						mode : 'add_new_playlist',
+						id : vid,
+						objtype : objtype,
+						plname : $("#playlist_name").val()
+			},
+					function(data)
+					{
+						if(!data)
+							alert("No data");
+						else
+						{	
+							if(data.err )
+							{
+								$("#playlist_form_result").css("display","block");
+								$("#playlist_form_result").html(data.err);
+							}
+							
+							if(data.msg)
+							{
+								$("#playlist_form_result").css("display","block");
+								$("#playlist_form_result").html(data.msg);
+								$("#"+form_id).css("display","none");
+							}	
+							
+						}
+					},'json');
+				}
+				break;
+			}
+		};
 	};
 
 	window._cb = new _cb();

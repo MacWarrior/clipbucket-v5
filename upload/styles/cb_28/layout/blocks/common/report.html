@@ -15,7 +15,7 @@
 					{/foreach}
 				</select>
 			</div>
-			<input type="button" name="send_content" value="{sprintf(lang("Flag this %s"),$params.type)}" class="btn btn-primary" onclick="flag_object('flag_form','{$params.id}','{$params.type}')"/>
+			<input type="button" name="send_content" value="{sprintf(lang("Flag this %s"),$params.type)}" class="btn btn-primary" onclick="_cb.flag_objectNew('flag_form','{$params.id}','{$params.type}')"/>
 		</form>
 	</div>
 </div>

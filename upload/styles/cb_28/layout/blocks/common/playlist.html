@@ -18,7 +18,7 @@
 
 			<div class="form-group clearfix">
 				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-					<input type="button" class="btn mtm btn-block btn-primary" name="add_to_playlist" value="Add to playlist" class="cb_button" onclick="add_playlist('add','{$params.id}','add_playlist_form','{$type}')">
+					<input type="button" class="btn mtm btn-block btn-primary" name="add_to_playlist" value="Add to playlist" class="cb_button" onclick="_cb.add_playlistNew('add','{$params.id}','add_playlist_form','{$type}')">
 				</div>
 				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 					<a class="btn btn-block mtm btn-success" href="javascript:void(0)" onClick="$('#add_playlist_form').css('display','none');$('#new_playlist_form').css('display','block')">{lang('create new playlist')}</a>
