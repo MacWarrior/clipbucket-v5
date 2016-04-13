@@ -1850,7 +1850,7 @@
 			};
 	   }
 
-	   this.throwHeaderr = function(tclass, msg, hideAfter,scroll) {
+	   this.throwHeadMsg = function(tclass, msg, hideAfter,scroll) {
 	   		var self = this;
 			$(document).find('#headErr').remove();
 			hideAfter = parseInt(hideAfter);
@@ -1899,7 +1899,7 @@
 					isOk = $(data).find('span.msg').html();
 					if (isError) {
 						if (isError.length > 2) {
-							curObj.throwHeaderr('danger',isError, 5000, true);
+							curObj.throwHeadMsg('danger',isError, 5000, true);
 						}
 					} else if (isOk) {
 						if (isOk.length > 2) {
@@ -1915,7 +1915,7 @@
 								$('.dislikes').addClass('rated');
 								$('.dislikes').find('span:nth-child(2)').html(newRating);
 							}
-							curObj.throwHeaderr('success',isOk, 5000, true);
+							curObj.throwHeadMsg('success',isOk, 5000, true);
 						}
 					}
 				}
@@ -1933,11 +1933,11 @@
 			
        		if (isError) {
 				if (isError.length > 2) {
-					curObj.throwHeaderr('danger',isError, 5000, true);
+					curObj.throwHeadMsg('danger',isError, 5000, true);
 				}
 			} else if (isOk) {
 				if (isOk.length > 2) {
-					curObj.throwHeaderr('success',isOk, 5000, true);
+					curObj.throwHeadMsg('success',isOk, 5000, true);
 				}
 			}
 		}
@@ -2068,14 +2068,14 @@
 							{
 								cleanedHtml = $.parseHTML(data.err);
 								var msg = $(cleanedHtml).html();
-								curObj.throwHeaderr('danger',msg, 5000, true);
+								curObj.throwHeadMsg('danger',msg, 5000, true);
 							}
 							
 							if(data.msg.length > 2)
 							{
 								cleanedHtml = $.parseHTML(data.msg);
 								var msg = $(cleanedHtml).find('div.alert').html();
-								curObj.throwHeaderr('success',msg, 5000, true);
+								curObj.throwHeadMsg('success',msg, 5000, true);
 								$("#"+form_id).css("display","none");
 							}	
 							
