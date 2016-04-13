@@ -39,33 +39,43 @@
 </footer>
 
 <script>
-		$(document).on('click','.pick-lang',function(){
-			var _this = $(this);
-			var lang_code = _this.data('lang');
-			var $currentLocation = window.location.href,
-			matchedElement = $currentLocation.match(/\?/);
-				  
-			if(matchedElement == null)
-			{
-				window.location = "?set_site_lang="+lang_code;    
-			} else {
-				window.location = window.location+"&set_site_lang="+lang_code;    
-			}
-		});
+	$(document).on('click','.pick-lang',function(){
+		var _this = $(this);
+		var lang_code = _this.data('lang');
+		var $currentLocation = window.location.href,
+		matchedElement = $currentLocation.match(/\?/);
+			  
+		if(matchedElement == null)
+		{
+			window.location = "?set_site_lang="+lang_code;    
+		} else {
+			window.location = window.location+"&set_site_lang="+lang_code;    
+		}
+	});
 
-		$(document).on('click','#cbsearch',function(e){
-			e.preventDefault();
-			searchForm = $('.search-form');
-			searchQuery = $('#query').val();
-			queryLen = searchQuery.length;
-			if (queryLen <= 2) {
-				msg = 'Search query<strong> '+searchQuery+'</strong> is too short. Open up!';
-				_cb.throwHeadMsg('warning', msg, 3000,true);
-				//alert("Search term is too short");
-			} else {
-				$('.search-form').submit();
-			}
-		});
+	$(document).on('click','#cbsearch',function(e){
+		e.preventDefault();
+		searchForm = $('.search-form');
+		searchQuery = $('#query').val();
+		queryLen = searchQuery.length;
+		if (queryLen <= 2) {
+			msg = 'Search query<strong> '+searchQuery+'</strong> is too short. Open up!';
+			_cb.throwHeadMsg('warning', msg, 3000,true);
+			//alert("Search term is too short");
+		} else {
+			$('.search-form').submit();
+		}
+	});
+
+	$('.dropdown-menu li').on('click',function(){
+		var searchType = $('#searchTypes').find('span.search-type').html();
+		var searchQuery = $('input#query').val();
+		if (searchQuery.length > 1) {
+			$('#cbsearch').trigger('click');
+		}
+	});
+
+
 
 </script>
 {$Cbucket->footer()}
