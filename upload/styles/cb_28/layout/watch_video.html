@@ -87,7 +87,7 @@
 								<ul class="clearfix desc-list">
 									<li><strong>{lang('Category')}</strong>:&nbsp;{$vdo.category|categories:video}</li>
 									<li><strong>{lang('Duration')}</strong>:&nbsp;{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</li>
-									<li><strong>{lang('Date')}</strong>:&nbsp; {$video.date_added}</li>
+									<li><strong>{lang('Date')}</strong>:&nbsp; {$video.date_added|nicetime}</li>
 									<li>
 										<strong class="pull-left">{lang('Tags')}:&nbsp;&nbsp;</strong>
 										<span class="pull-left">{$vdo.tags|tags:videos}</span>
