@@ -28,6 +28,7 @@
 			li{
 				a{
 					color: $black;
+					padding: 3px 10px;
 					&:hover{
 						color: $white;
 						background: $blue;
@@ -50,7 +51,7 @@
 		button{
 			font-size: 16px;
 			line-height: 18px;
-			padding: 5px 30px 5px 10px;
+			padding: 4px 30px 6px 10px;
 			border: none;
 			height: 28px;
 			width: 100%;
