@@ -75,7 +75,7 @@
 								<form class="search-form" action="{link name='search_result'}">
 									<div class="cbsearchtype">
 										<div class="search-drop">
-											<button tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle search-drop-btn" type="button">
+											<button id="searchTypes" tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle search-drop-btn" type="button">
 												<span class="search-type">{if $pageType}{$pageType|ucfirst}{elseif $currentPage == 'videos' || $currentPage == 'channels' || $currentPage == 'photos'}{$currentPage|ucfirst}{else}Videos{/if}</span>
 												<span class="icon-down-arrow"></span>
 											</button>
@@ -191,5 +191,4 @@
 		});
 
 	});
-
 </script>
