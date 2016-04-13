@@ -42,23 +42,23 @@
 			<!-- ************ EDITORS BLOCK END ************ -->
 			<!-- ******************************************* -->
 			<section class="clearfix featured-videos">
-				<h1>{lang code="Featured Videos"}</h1>
+				<h1>{lang code="featured_videos"}</h1>
 				<div id="featured_vid_sec" class="clearfix row">
 
 				</div>
 				<div id="featured_pre"></div>
 				<div id="featured-loadmore" class="clearfix text-center">
-					<button id="featured_load_more" class="btn btn-loadmore" loadtype="video" loadmode="featured" loadlimit="{$row.index_featured}" loadhit="1">Load More</button>
+					<button id="featured_load_more" class="btn btn-loadmore" loadtype="video" loadmode="featured" loadlimit="{$row.index_featured}" loadhit="1">{lang code="load_more"}</button>
 				</div>
 			</section>
 
 			<section class="clearfix videos">
-				<h1>{lang code="Recent Videos"}</h1>
+				<h1>{lang code="recent_videos"}</h1>
 				<div id="recent_vids_sec" class="clearfix row">
 				</div>
 				<div id="recent_pre"></div>
 				<div id="recent-loadmore" class="clearfix text-center">
-					<button id="recent_load_more" class="btn btn-loadmore" loadtype="video" loadmode="recent" loadlimit="{$row.index_recent}" loadhit="1">Load More</button>
+					<button id="recent_load_more" class="btn btn-loadmore" loadtype="video" loadmode="recent" loadlimit="{$row.index_recent}" loadhit="1">{lang code="load_more"}</button>
 				</div>
 			</section>
 		</div>
@@ -69,7 +69,7 @@
 			<!-- ******************************************* -->
 			{$feature_users=get_users(['featured'=>'yes','limit'=>5])}
 			{if $feature_users}
-			<h2>{lang code="Featured Users"}</h2>
+			<h2>{lang code="featured_users"}</h2>
 			<div class="clearfix sidebar-channels">
 				{foreach $feature_users as $user}
 				
@@ -81,7 +81,7 @@
 						<h3><a href="{$userquery->profile_link($user)}">{$user.username}</a></h3>
 						<div class="clearfix views-videos">
 							<span>{$user.profile_hits|number_format} {lang code='views'}</span>
-							<span>{$user.total_videos|number_format} {lang code='Videos'}</span>
+							<span>{$user.total_videos|number_format} {lang code='videos'}</span>
 						</div>
 					</div>
 				</div>
@@ -94,7 +94,7 @@
 			
 			{if $row.collectionsSection == 'yes'}
 			{$collections = $cbcollection->get_collections(['limit'=>4, 'active'=>'yes'])}
-			<h2>{lang code="Top Collections"}</h2>
+			<h2>{lang code="top_collections"}</h2>
 			<div class="clearfix sidebar-items collections-grid">
 				<div class="clearfix row">
 				{$limit=10}
@@ -107,7 +107,7 @@
 								<a href="{$baseurl}/view_collection.php?cid={$collection.collection_id}&type={$collection.type}" title="{$collection.collection_name}">
 									<img alt="{$collection.title}" title="{$collection.title}" class="img-responsive" id="photo_{$collection.ci_id}" src="{$first_col_thumb}">
 									<div class="collection-info">
-										<span>{$collection.total_objects}</span>Photo(s)
+										<span>{$collection.total_objects}</span>{lang code="photos"}
 									</div>
 								</a>
 							</div>
@@ -118,48 +118,49 @@
 				{/foreach}
 				</div>
 				{else}
-				<div class="col-md-12 nopadding">No Collection</div>
+				<div class="clearfix">No Collection</div>
 				{/if}
 			</div>
 			{/if}
 
 			<!-- playlists -->
 			{$playlists = get_playlists(['limit'=>4, 'order'=>'total_items DESC'])}
+			{if $playlists}
 			<div class="clearfix sidebar-playlists">
-				<h2>{lang code="Top Playlists"}</h2>
-				{if $playlists}
+				<h2>{lang code="top_playlists"}</h2>
 				{foreach $playlists as $playlist}
 				<div class="playlist clearfix"> 
 					<a href="{videoLink vdetails=$playlist['first_item']|@json_decode}&play_list={$playlist.playlist_id}"><h3>{$playlist.playlist_name}</h3></a>
 					{$items = get_playlist_items($playlist.playlist_id)}
 					<div class="clearfix row">
 					{foreach $items as $item}
-						{if $item@iteration == 5} 
+						{if $item@iteration == 5}
 							{break}
 						{/if}
-						<div class="video col-lg-3 col-md-4 col-sm-6 col-xs-6">
-							{$videoid = $item.videoid}
-							{if $videoid}
+						{$videoid = $item.videoid}
+						{if $videoid}
+							<div class="video col-lg-3 col-md-4 col-sm-6 col-xs-6">
 								{$videos = get_videos(['videoid'=>$videoid,'limit'=>'2'])}
 								{foreach $videos as $video}
 									<a href="{videoLink($video)}&play_list={$playlist.playlist_id}">
 										<img src="{getThumb vdetails=$video size=168x105}" class="img-responsive">
 									</a>
 								{/foreach}
-							{else}
-							<span class="clearfix">no items</span>
-							{/if}
-						</div>
-					
+							</div>
+						{else}
+						<div class="clearfix well">no items</div>
+						{/if}
 					{/foreach}
 					</div>
-					<span class="videos-count">{$cbvid->action->count_playlist_items($playlist.playlist_id)|number_format}&nbsp;video(s)</span>
+					<span class="videos-count">{$cbvid->action->count_playlist_items($playlist.playlist_id)|number_format}&nbsp;{lang code="videos"}</span>
 				</div>
 				{/foreach}
-				{else}
-					<div class="clearfix">No Playlists</div>
-				{/if}
 			</div>
+			{else}
+				{if has_access('admin_access')}
+					<div class="clearfix well">{lang code="no_playlists"}</div>
+				{/if}
+			{/if}
 		</aside>
 	</div>	
 </div>
