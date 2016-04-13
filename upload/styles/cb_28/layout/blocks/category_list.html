@@ -2,6 +2,7 @@
 			{if $category != 'All' && is_numeric($category)} 
 				{if $smarty.const.THIS_PAGE == 'videos'}
 					{$catname = $cbvid->get_category_name($category)}
+					{$nowdo = "videos"}
 				{else}
 					{$catname = $userquery->get_category_name($category)}
 				{/if}
@@ -14,6 +15,7 @@
 			<div class="dropdown"> <!-- Start of category code -->
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">{$catname}<span class="icon-down-arrow"></span></a>
 				<ul class="dropdown-menu">
+				<li><a href="{$baseurl}/{if $smarty.const.THIS_PAGE == 'videos'}videos.php{else}channels.php{/if}">All</a></li>
 					{$level = '1'}
 					{foreach from=$categories item=maincat}
 						<li>
