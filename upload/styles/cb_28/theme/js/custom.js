@@ -230,6 +230,7 @@ function homePageVideos(qlist_items) {
 
 			beforeSend: function() {
 				// setting a timeout
+				$(main_object).attr('disabled','disabled');
 				$(main_object).text("Loading..");
 				if (loadType != 'count') {
 					if (loadMode == 'featured') {
@@ -246,6 +247,7 @@ function homePageVideos(qlist_items) {
 			},
 
 			success: function(data) {
+				$(main_object).removeAttr('disabled');
 				$(main_object).text("Load More");
 				if (data.length < 10) {
 					$(main_object).remove();
