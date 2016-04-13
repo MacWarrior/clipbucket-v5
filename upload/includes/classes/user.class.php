@@ -3416,7 +3416,7 @@ class userquery extends CBCategory{
 			  'username' => array(
 								  'title'=> lang('username'),
 								  'type'=> "textfield",
-								  'placehoder'=>"Enter your username",
+								  'placehoder'=>"Username",
 								  'name'=> "username",
 								  'id'=> "username",
 								  'value'=> $username,
@@ -3431,12 +3431,12 @@ class userquery extends CBCategory{
 								  'db_value_err'=>lang('usr_uname_err2'),
 								  'min_length'	=> config('min_username'),
 								  'max_length' => config('max_username'),
-								  'placeholder'=>"Enter your email bitch",
+								  'placeholder'=>"Username",
 								  ),
 			  'email' => array(
 								  'title'=> lang('email'),
 								  'type'=> "textfield",
-								  'placehoder'=>"Enter your email address",
+								  'placehoder'=>"Email",
 								  'name'=> "email",
 								  'id'=> "email",
 								  'value'=> $email,
@@ -3451,7 +3451,7 @@ class userquery extends CBCategory{
 			  'password' => array(
 								  'title'=> lang('password'),
 								  'type'=> "password",
-								  'placehoder'=>"Enter your password",
+								  'placehoder'=>"Password",
 								  'name'=> "password",
 								  'id'=> "password",
 								  'db_field'=>'password',
@@ -3466,7 +3466,7 @@ class userquery extends CBCategory{
 			  'cpassword' => array(
 								  'title'=> lang('user_confirm_pass'),
 								  'type'=> "password",
-								  'placehoder'=>"Re-enter your password",
+								  'placehoder'=>"Re-enter password",
 								  'name'=> "cpassword",
 								  'id'=> "cpassword",
 								  'required'=>'no',
