@@ -1590,7 +1590,6 @@
 		 * Function used to rate object
 		 */
 		this.rate = function(id,rating,type){
-			alert("ASDsadas");
 			var self = this;
 			var page = this.baseurl+'/ajax.php';
 			$.post(page, 
@@ -1877,7 +1876,7 @@
 		* @author: Saqib Razzaq
 		*/
 
-		this.rate = function (id,rating,type) {
+		this.rateNew = function (id,rating,type) {
 			curObj = this;
 			var page = baseurl+'/ajax.php';
 			$.post(page, { 	
@@ -1906,12 +1905,14 @@
 						if (isOk.length > 2) {
 							if (rating == 5) {
 								newRating = currLikes + 1;
+								$('.likes').addClass('rated');
 								$('.likes').find('span:nth-child(2)').html(newRating);
 							} else {
-								newRating = currDislikes - 1;
+								newRating = currDislikes + 1;
 								if (newRating < 0) {
 									newRating = 0;
 								}
+								$('.dislikes').addClass('rated');
 								$('.dislikes').find('span:nth-child(2)').html(newRating);
 							}
 							curObj.throwHeaderr('success',isOk, 5000, true);
