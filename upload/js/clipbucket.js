@@ -1921,10 +1921,15 @@
 			},'text');
 		}
 
-		this.showMeTheMsg = function(data) {
+		this.showMeTheMsg = function(data, alertDiv = false) {
 			curObj = this;
+			if (alertDiv == true) {
+				isOk = $(data).filter('div.msg').find('div.alert').html();
+			} else {
+				isOk = $(data).filter('div.msg').html();
+			}
 			isError = $(data).filter('div.error').html();
-       		isOk = $(data).filter('div.msg').html();
+			
        		if (isError) {
 				if (isError.length > 2) {
 					curObj.throwHeaderr('danger',isError, 5000, true);
@@ -2009,7 +2014,7 @@
 				else
 				{
 					$("#video_action_result_cont").hide();
-					curObj.showMeTheMsg(data);
+					curObj.showMeTheMsg(data, true);
 				}
 			},'text');
 		};
@@ -2068,7 +2073,7 @@
 							if(data.msg.length > 2)
 							{
 								cleanedHtml = $.parseHTML(data.msg);
-								var msg = $(cleanedHtml).html();
+								var msg = $(cleanedHtml).find('div.alert').html();
 								curObj.throwHeaderr('success',msg, 5000, true);
 								$("#"+form_id).css("display","none");
 							}	
