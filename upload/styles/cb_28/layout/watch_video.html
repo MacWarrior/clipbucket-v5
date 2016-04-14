@@ -36,13 +36,13 @@
 						<div class="clearfix subscribe-col col-lg-6 col-md-6 col-sm-6 col-xs-12">
 							{if $video.userid != userid()}
 								<a id="subscribeUser" class="btn btn-subscribe btn-primary" href="javascript:void(0)">
-									<span>{lang('Subscribe')}</span>
+									<span>{lang code='subscribe'}</span>
 								</a>
 							{/if}
 							{if $Cbucket->configs.video_download==1 && $cbvid->downloadable($vdo)}
 								<div class="dropdown">
 									<button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-									Download
+									{lang code='download'}
 										<span class="caret"></span>
 									</button>
 									<ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu1">
@@ -67,17 +67,16 @@
 				<div class="view-tabs clearfix">
 					<ul class="clearfix nav nav-tabs">
 						<li class="active">
-							<a href="#cb-item-info" data-toggle="tab"><span class="icon-info"></span>{lang('Info')}</a>
+							<a href="#cb-item-info" data-toggle="tab"><span class="icon-info"></span>{lang code='info'}</a>
 						</li>
 						<li>
-							<a href="#cb-item-share" data-toggle="tab"><span class="icon-share"></span>Share/Embed</a>
+							<a href="#cb-item-share" data-toggle="tab"><span class="icon-share"></span>{lang code='share_embed'}</a>
 						</li>
 						<li>
-							<a href="#cb-item-addto" data-toggle="tab"><span class="icon-plusrounded"></span>{lang('Add to')}</a>
+							<a href="#cb-item-addto" data-toggle="tab"><span class="icon-plusrounded"></span>{lang code='add_to'}</a>
 						</li>
 						<li>
-							<a href="#cb-item-report" data-toggle="tab"><span class="icon-flag"></span>{lang('Report')}
-							</a>
+							<a href="#cb-item-report" data-toggle="tab"><span class="icon-flag"></span>{lang code='report_this'}</a>
 						</li>
 					</ul>
 					<div class="tab-content clearfix">
@@ -85,11 +84,11 @@
 							<div class="clearfix watch-vid-details">
 								<h2>{description($video.description)}</h2>
 								<ul class="clearfix desc-list">
-									<li><strong>{lang('Category')}</strong>:&nbsp;{$vdo.category|categories:video}</li>
-									<li><strong>{lang('Duration')}</strong>:&nbsp;{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</li>
-									<li><strong>{lang('Date')}</strong>:&nbsp; {$video.date_added|nicetime}</li>
+									<li><strong>{lang code='category'}</strong>:&nbsp;{$vdo.category|categories:video}</li>
+									<li><strong>{lang code='duration'}</strong>:&nbsp;{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</li>
+									<li><strong>{lang code='date'}</strong>:&nbsp; {$video.date_added|nicetime}</li>
 									<li>
-										<strong class="pull-left">{lang('Tags')}:&nbsp;&nbsp;</strong>
+										<strong class="pull-left">{lang('tags')}:&nbsp;&nbsp;</strong>
 										<span class="pull-left">{$vdo.tags|tags:videos}</span>
 									</li>
 								</ul>
@@ -119,7 +118,7 @@
 						<div class="tab-pane fade in clearfix custom-elements" id="cb-item-addto">
 							<div class="clearfix btn-fav">
 								<div id="video_action_result_cont"></div>
-								<a  class="btn btn-block btn-primary" href="javascript:void(0)" onclick="_cb.add_to_favNew('video','{$vdo.videoid}');">Add to My Favorites</a>
+								<a  class="btn btn-block btn-primary" href="javascript:void(0)" onclick="_cb.add_to_favNew('video','{$vdo.videoid}');">{lang code='add_to_my_favorites'}</a>
 							</div>
 							<div class="clearfix">
 								{show_playlist_form id=$vdo.videoid type=video}
@@ -136,7 +135,7 @@
 							</div>
 						</div>
 						<div class="tab-pane fade in clearfix custom-elements" id="cb-item-report">
-							<h2>Report Video</h2>
+							<h2>{lang code='report_video'}</h2>
 							{show_flag_form id=$vdo.videoid type=video}
 						</div>
 					</div>
@@ -167,7 +166,7 @@
 					</div>
 					{if $vdo.comments_count > 10}
 						<div class="clearfix text-center">
-							<button class="btn btn-loadmore" id="load-more-comments" page="2">Load More</button>
+							<button class="btn btn-loadmore" id="load-more-comments" page="2">{lang code='load_more'}</button>
 						</div>
 					{/if}
 				</div>

@@ -4,7 +4,7 @@
 		<img class="img-responsive cb-live-background" src="{if $coverPhoto != ''}{$coverPhoto}{else}{$theme}/images/cover_default.jpg {/if}" size='1140x276' alt="">
 		
 		{if $user.userid == userid()}
-		<a href="#" class="btn btn-sm changeCover" id="changeCover">{lang code="Update Cover"}<span class="icon-photo"></span></a>
+		<a href="#" class="btn btn-sm changeCover" id="changeCover">{lang code="update_cover"}<span class="icon-photo"></span></a>
 		{/if}
 
 		<div class="ratting-counts clearfix">
@@ -13,16 +13,16 @@
 			</div>
 			<ul class="counters">
 				<li>
-					<i class="icon-videos"></i>{$user.total_videos} &nbsp;<span>Videos</span>
+					<i class="icon-videos"></i>{$user.total_videos} &nbsp;<span>{lang code='videos'}</span>
 				</li>
 				<li>
-					<i class="icon-photos"></i>{$user.total_photos} &nbsp;<span>Photos</span>
+					<i class="icon-photos"></i>{$user.total_photos} &nbsp;<span>{lang code='photos'}</span>
 				</li>
 				<li>
-					<i class="icon-views"></i>{$user.profile_hits} &nbsp;<span>Views</span>
+					<i class="icon-views"></i>{$user.profile_hits} &nbsp;<span>{lang code='views'}</span>
 				</li>
 				<li>
-					<i class="icon-subscribers"></i>{$user.subscribers} &nbsp;<span>Contacts</span>
+					<i class="icon-subscribers"></i>{$user.subscribers} &nbsp;<span>{lang code='contacts'}</span>
 				</li>
 			</ul>
 		</div>
@@ -31,18 +31,18 @@
 				{if $friend_status == "yes" && userid()}
 				<a href="{$baseurl}/manage_contacts.php?mode=delete&userid={$u.userid}"  class="btn btn-danger btn-sm new1">
 					<i class="glyphicon glyphicon-ok white"></i> 
-					{lang code="Unfriend"}
+					{lang code="unfriend"}
 				</a>
 				{elseif $friend_status == "no"}
 				<a href="{$baseurl}/manage_contacts.php?mode=requests&confirm={$u.userid}"  class="btn btn-primary btn-sm new1">
 					<i class="glyphicon glyphicon-ok white"></i> 
-					{lang code="Accept Request"}
+					{lang code="accept_request"}
 				</a>
 				{elseif !$friends && userid()}
 				<a href="javascript:void(0)"  class="btn btn-primary btn-sm new1" 
 				   onclick="_cb.add_friendNew('{$user.userid}','result_cont')">
 					<i class="glyphicon glyphicon-plus-sign white"></i> 
-					{lang code="Add As Friend"}
+					{lang code="add_as_friend"}
 				{/if}
 				</a>
 			{/if}
@@ -58,9 +58,9 @@
 		<div class="btn-holder">
 			{if $user.userid != userid()}
 				<a href="{$baseurl}/private_message.php?mode=new_msg&to={$user.username}" class="btn btn-default">
-					{lang code="Send Message"}
+					{lang code="user_send_message"}
 				</a>
-				<button id="subscribe_channel" class="btn btn-default">{lang code="Subscribe"}</button>
+				<button id="subscribe_channel" class="btn btn-default">{lang code="subscribe"}</button>
 			{/if}
 		</div>
 	</div>

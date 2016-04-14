@@ -48,7 +48,7 @@
 						<div class="clearfix subscribe-col col-lg-6 col-md-6 col-sm-6 col-xs-12">
 							{if $photo.userid != userid()}
 								<a id="subscribeUser" class="btn btn-subscribe btn-primary" href="javascript:void(0)" onclick="_cb.subscribeToChannelNew('{$user.userid}','subscribe_user','video_detail_result_cont')">
-									<span>{lang('Subscribe')}</span>
+									<span>{lang('subscribe')}</span>
 								</a>
 							{/if}
 						</div>
@@ -58,30 +58,27 @@
 				<div class="view-tabs clearfix">
 					<ul class="clearfix nav nav-tabs">
 						<li class="active">
-							<a href="#cb-item-info" data-toggle="tab"><span class="icon-info"></span>{lang('Info')}</a>
+							<a href="#cb-item-info" data-toggle="tab"><span class="icon-info"></span>{lang code='info'}</a>
 						</li>
 						<li>
-							<a href="#cb-item-share" data-toggle="tab"><span class="icon-share"></span>Share/Embed</a>
+							<a href="#cb-item-share" data-toggle="tab"><span class="icon-share"></span>{lang code='share_embed'}</a>
 						</li>
 						<li>
-							<a href="#cb-item-addto" data-toggle="tab"><span class="icon-plusrounded"></span>{lang('Add to')}</a>
+							<a href="#cb-item-addto" data-toggle="tab"><span class="icon-plusrounded"></span>{lang code='add_to'}</a>
 						</li>
 						<li>
-							<a href="#cb-item-report" data-toggle="tab"><span class="icon-flag"></span>{lang('Report')}
-							</a>
+							<a href="#cb-item-report" data-toggle="tab"><span class="icon-flag"></span>{lang code='report_this'}</a>
 						</li>
 					</ul>
 					<div class="tab-content clearfix">
 						<div class="tab-pane fade in clearfix active" id="cb-item-info">
 							<div class="clearfix watch-vid-details">
 								<ul class="clearfix desc-list">
-									<li><strong>{lang('Photo description')}</strong>:&nbsp;{$photo.photo_description|truncate:90}</li>
-									
+									<li><strong>{lang code='photo_description'}</strong>:&nbsp;{$photo.photo_description|truncate:90}</li>
 									{assign var=category value=$userquery->get_category($user.category)}
-		
-									<li><strong>{lang('Category')}</strong>:&nbsp;{$category.category_name}</li>
-									<li><strong>{lang('Tags')}</strong>:&nbsp;{$photo.photo_tags|tags:photos}</li>
-									<li><strong>{$photo.views|number_format}</strong>&nbsp;{lang('View')}{if $photo.views > 1}{lang('s')}{/if}</li>
+									<li><strong>{lang code='category'}</strong>:&nbsp;{$category.category_name}</li>
+									<li><strong>{lang code='tags'}</strong>:&nbsp;{$photo.photo_tags|tags:photos}</li>
+									<li><strong>{$photo.views|number_format}</strong>&nbsp;{lang code='views'}{if $photo.views > 1}{lang('s')}{/if}</li>
 								</ul>
 							</div>
 						</div>
@@ -153,13 +150,13 @@
 		
 		<aside id="sidebar">
 			<div class="box-ad ad">{AD place='ad_300x250'}</div>
-			<h2>{lang code='Related Photos'}</h2>
-			<div class="clearfix sidebar-items">
-		
 			{$related_photos=get_photos(['title'=>$photo.photo_title,'tags'=>$photo.photo_tags,
 			'exclude'=>$photo.photo_id,'show_related'=>'yes','limit'=>6,'order'=>'date_added DESC'])}
 		
 			{if $related_photos}
+			<h2>{lang code='Related Photos'}</h2>
+			<div class="clearfix sidebar-items">
+		
 				<div class="row">
 					{foreach $related_photos as $photo}
 						<div class="item-photo col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -167,15 +164,13 @@
 						</div>
 					{/foreach}
 				</div>
-			{else}
-				<div class="well well-info">No Photos Found !</div>
-			{/if}
 			</div>
+			{/if}
 		
 			{$row = $myquery->Get_Website_Details()}
 			{if $row.collectionsSection == 'yes'}
 			{$collections = $cbcollection->get_collections(['limit'=>5, 'active'=>'yes'])}
-			<h2>{lang code="Top Collections"}</h2>
+			<h2>{lang code="top_collections"}</h2>
 			<div class="clearfix sidebar-items collections-grid">
 				<div class="clearfix row">
 				{$limit=10}
@@ -188,7 +183,7 @@
 								<a href="{$cbphoto->photo_links($item,'view_item')}">
 									<img alt="{$collection.title}" title="{$collection.title}" class="img-responsive" id="photo_{$collection.ci_id}" src="{$first_col_thumb}">
 									<div class="collection-info">
-										<span>{$collection.total_objects}</span>Photo(s)
+										<span>{$collection.total_objects}</span>{lang code='photos'}
 									</div>
 								</a>
 							</div>

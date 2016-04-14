@@ -74,7 +74,7 @@
 			<div class="box-ad ad">{AD place='ad_300x250'}</div>
 			{$featured=get_photos(["featured"=>"yes","limit"=>6])}
 			{if $featured}
-			<h2>Featured Photos</h2>
+			<h2>{lang code="featured_photos"}</h2>
 			<div class="clearfix sidebar-items">
 				<div class="row">
 					{foreach $featured as $photo}
@@ -88,7 +88,7 @@
 			{$row = $myquery->Get_Website_Details()}
 			{if $row.collectionsSection == 'yes'}
 				{$collections = $cbcollection->get_collections(['limit'=>5, 'active'=>'yes'])}
-				<h2>{lang code="Top Collections"}</h2>
+				<h2>{lang code="top_collections"}</h2>
 				<div class="clearfix sidebar-items collections-grid">
 					{$limit=10}
 					{if $collections}
@@ -101,7 +101,7 @@
 										<a href="{$baseurl}/view_collection.php?cid={$collection.collection_id}&type={$collection.type}" title="{$collection.collection_name}">
 											<img alt="{$collection.title}" title="{$collection.title}" class="img-responsive" id="photo_{$collection.ci_id}" src="{$first_col_thumb}">
 											<div class="collection-info">
-												<span>{$collection.total_objects}</span>Photo(s)
+												<span>{$collection.total_objects}</span>{lang code="photos"}
 											</div>
 										</a>
 									</div>
@@ -112,7 +112,7 @@
 						{/foreach}
 					</div>
 					{else}
-					<div class="well well-info">No Collection</div>
+					<div class="well well-info">{lang code="no_collection_found"}</div>
 					{/if}
 				</div>
 			{/if}

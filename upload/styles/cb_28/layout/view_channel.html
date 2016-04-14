@@ -25,7 +25,7 @@
 			<div class="channel-tabs flat-tabs clearfix">
 				<ul class="clearfix nav nav-tabs">
 					<li>
-						<a href="#user-info" data-toggle="tab">{lang code='Info'}</a>
+						<a href="#user-info" data-toggle="tab">{lang code='info'}</a>
 					</li>
 					{if isSectionEnabled('videos') && $u_control.show_my_videos == 'yes'}
 					<li class="active">
@@ -33,10 +33,10 @@
 					</li>
 					{/if}
 					<li>
-						<a href="#user-photos" data-toggle="tab">{lang code='Photos'}</a>
+						<a href="#user-photos" data-toggle="tab">{lang code='photos'}</a>
 					</li>
 					<li>
-						<a href="#user-playlist" data-toggle="tab">{lang code='Playlists'}</a>
+						<a href="#user-playlist" data-toggle="tab">{lang code='playlists'}</a>
 					</li>
 				</ul>
 				<div class="tab-content clearfix">
@@ -118,11 +118,11 @@
 								</div>
 								{if $total_videos > 9}
 									<div class="clearfix text-center">
-										<button id="more-view-channel" class="btn btn-loadmore" dataLimit="9" dataHit="2">Load More</button>
+										<button id="more-view-channel" class="btn btn-loadmore" dataLimit="9" dataHit="2">{lang code='load_more'}</button>
 									</div>
 								{/if}
 							{else}
-								<div class="well well-info">No Videos Found !</div>
+								<div class="well well-info">{lang code='no_results_found'}</div>
 							{/if}
 						</div>
 					</div>
@@ -137,7 +137,7 @@
 								{/foreach}
 								{if $user.total_photos > 9} 
 									<div class="clearfix text-center">
-										<button id="more-channel-photos" class="btn btn-loadmore" dataLimit="9" dataHit="2">Load More</button>
+										<button id="more-channel-photos" class="btn btn-loadmore" dataLimit="9" dataHit="2">{lang code='load_more'}</button>
 									</div>
 								{/if}
 							{else}
@@ -161,7 +161,7 @@
 						
 						</div>
 						{else}
-							<div class="well well-info">no playlist found</div>
+							<div class="well well-info">{lang code='no_playlists'}</div>
 						{/if}
 					</div>
 				</div>
@@ -170,7 +170,7 @@
 		<aside id="sidebar">
 			{assign var=userFeeds value=$cbfeeds->getUserFeeds($u)}
 			{if $userFeeds}
-			<h2>{lang code="Recent Activities"}</h2>
+			<h2>{lang code="user_activity"}</h2>
 			<div id="userFeeds" class="user-activities clearfix sidebar-items">
 				{foreach from=$userFeeds item=userFeed}
 					{include file="$style_dir/blocks/feed.html" feed=$userFeed}
@@ -191,7 +191,7 @@
 						<h3><a href="{$userquery->profile_link($user)}">{$user.username}</a></h3>
 						<div class="clearfix views-videos">
 							<span>{$user.profile_hits|number_format} {lang code='views'}</span>
-							<span>{$user.total_videos|number_format} {lang code='Videos'}</span>
+							<span>{$user.total_videos|number_format} {lang code='videos'}</span>
 						</div>
 					</div>
 				</div>

@@ -12,26 +12,26 @@
 		</div>
 
 		<div class="form-group custom-elements">
-			<label class="block-label">{lang('Player size')}</label>
+			<label class="block-label">{lang code='player_size'}</label>
 			<div class="clearfix">
 				<label class="radio-inline">
 					<input type="radio" name="player_size" value="default" id="player_size_0" checked="checked" onclick="{$updateEmbedCode}('{$Cbucket->configs.embed_player_width}' ,'{$Cbucket->configs.embed_player_height}',autoPlayEmbed)">
-					{lang('Default')} ({$Cbucket->configs.embed_player_width}x{$Cbucket->configs.embed_player_height})
+					{lang code='default'} ({$Cbucket->configs.embed_player_width}x{$Cbucket->configs.embed_player_height})
 				</label>
 				
 				<label class="radio-inline">
 					<input type="radio" name="player_size" value="small" id="player_size_1" onclick="{$updateEmbedCode}('440','272',autoPlayEmbed)">
-					{lang('Small')} (440x272)
+					{lang code='small'} (440x272)
 				            </label>
 				
 				<label class="radio-inline">
 					<input type="radio" name="player_size" value="medium" id="player_size_2"  onclick="{$updateEmbedCode}('540','334',autoPlayEmbed)">
-					{lang('Medium')} (540x334)
+					{lang code='medium'} (540x334)
 				</label>
 				
 				<label class="radio-inline">
 					<input type="radio" name="player_size" value="large" id="player_size_3"  onclick="{$updateEmbedCode}('600','370',autoPlayEmbed)">
-					{lang('Large')} (600x370)
+					{lang code='large'} (600x370)
 				</label>
 			</div>
 		</div>
@@ -55,11 +55,11 @@
 			<div class="clearfix">
 				<label class="radio-inline">
 					<input type="radio" name="embed_type" value="iframe" onclick="switchEmbedCode('iframe')" {if $Cbucket->configs.embed_type=='iframe'} checked{/if}>
-					Iframe
+					{lang code='iframe'}
 				</label>
 				<label class="radio-inline">
 					<input type="radio" name="embed_type" value="iframe"  onclick="switchEmbedCode('embed_object')" {if $Cbucket->configs.embed_type=='embed_object'} checked{/if}>
-					Embed Object
+					{lang code='embed_object'}
 				</label>
 			</div>
 		</div>
@@ -82,13 +82,13 @@
 			</div>
 			<div class="form-group">
 				<label for="message" class="block-label">
-					{lang('Message')}<span>&nbsp;&nbsp;{lang('optional')}</span>
+					{lang code='message'}<span>&nbsp;&nbsp;{lang code='optional'}</span>
 				</label>
 				<textarea name="message" id="message"  rows="5" class="form-control"></textarea>
 				<input name="objectid" id="objectid" type="hidden" value="{$params.id}">
 			</div>
 			<div class="clearfix text-right">
-				<input type="submit" name="send_content" value="Send" class="btn btn-submit btn-primary">
+				<input type="submit" name="send_content" value="{lang code='send'}" class="btn btn-submit btn-primary">
 			</div>
 	    </form>
 	</div>

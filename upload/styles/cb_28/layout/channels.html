@@ -65,7 +65,7 @@
 				</div>
 				{/foreach}
 				{else}
-				<div class="well well-info">No Channel Found !</div>
+				<div class="well well-info">{lang code="no_channel_found"}</div>
 				{/if}
 			</div>
 			{include file="$style_dir/blocks/pagination.html"}
@@ -74,7 +74,7 @@
 			<div class="box-ad ad">{AD place='ad_300x250'}</div>
 			{$feature_users=get_users(['featured'=>'yes','limit'=>6])}
 			{if $feature_users}
-			<h2>{lang code="Featured Users"}</h2>
+			<h2>{lang code="featured_users"}</h2>
 			<div class="clearfix sidebar-channels">
 				{foreach $feature_users as $user}
 				
@@ -86,7 +86,7 @@
 						<h3><a href="{$userquery->profile_link($user)}">{$user.username}</a></h3>
 						<div class="clearfix views-videos">
 							<span>{$user.profile_hits|number_format} {lang code='views'}</span>
-							<span>{$user.total_videos|number_format} {lang code='Videos'}</span>
+							<span>{$user.total_videos|number_format} {lang code='videos'}</span>
 						</div>
 					</div>
 				</div>

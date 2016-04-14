@@ -29,8 +29,8 @@
 
 			<div class="clearfix fav-repo">
 				<div class="show clearfix photoStats">
-					<a href="javascript:void(0)" class="btn btn-ghost" id="addToFav" onclick="slide_up_watch_video('#video_action_result_cont');add_to_fav('collection','{$c.collection_id}');">Add to Favorites</a>
-					<a href="javascript:void(0)" class="btn btn-ghost" id="flagPhotoButton" onclick="$('#flag_item').toggle();">Report</a>
+					<a href="javascript:void(0)" class="btn btn-ghost" id="addToFav" onclick="slide_up_watch_video('#video_action_result_cont');add_to_fav('collection','{$c.collection_id}');">{lang code='add_to_my_favorites'}</a>
+					<a href="javascript:void(0)" class="btn btn-ghost" id="flagPhotoButton" onclick="$('#flag_item').toggle();">{lang code='report_this'}</a>
 				</div>
 				
 				<div class="video_action_result_boxes clearfix">
@@ -41,16 +41,16 @@
 
 				<ul class="clearfix desc-list">
 					<li>
-						<strong>{lang code="Uploaded:"}</strong>&nbsp;{$c.date_added|niceTime}
+						<strong>{lang code="uploaded"}:</strong>&nbsp;{$c.date_added|niceTime}
 					</li>
 					<li>
-						<strong>{lang code="Views:"}</strong>&nbsp;{$c.views|number_format}
+						<strong>{lang code="views"}:</strong>&nbsp;{$c.views|number_format}
 					</li>
 					<li>
-						<strong>{lang code="Categories:"}</strong>&nbsp;{$c.category|categories:collections}
+						<strong>{lang code="category"}:</strong>&nbsp;{$c.category|categories:collections}
 					</li>
 					<li>	
-						<strong>{lang code="Tags:"}</strong>&nbsp;{$c.collection_tags|tags:collections}
+						<strong>{lang code="tags"}:</strong>&nbsp;{$c.collection_tags|tags:collections}
 					</li>
 				</ul>
 			</div>
@@ -80,10 +80,10 @@
 		</section>
 		<aside id="sidebar">
 			<div class="box-ad ad">{AD place='ad_300x250'}</div>
-			<h2>Featured Photos</h2>
-			<div class="clearfix sidebar-items">
 			{$featured=get_photos(["featured"=>"yes","limit"=>6])}
 			{if $featured}
+			<h2>{lang code='featured_photos'}</h2>
+			<div class="clearfix sidebar-items">
 				<div class="row">
 					{foreach $featured as $photo}
 						<div class="item-photo col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -91,14 +91,12 @@
 						</div>
 					{/foreach}
 				</div>
-			{else}
-				<div class="well well-info">No Photo(s) Found !</div>
-			{/if}
 			</div>
+			{/if}
 			{$row = $myquery->Get_Website_Details()}
 			{if $row.collectionsSection == 'yes'}
 				{$collections = $cbcollection->get_collections(['limit'=>5, 'active'=>'yes'])}
-				<h2>{lang code="Top Collections"}</h2>
+				<h2>{lang code="top_collections"}</h2>
 				<div class="clearfix sidebar-items collections-grid">
 					{$limit=10}
 					{if $collections}
@@ -111,7 +109,7 @@
 										<a href="{$baseurl}/view_collection.php?cid={$collection.collection_id}&type={$collection.type}" title="{$collection.collection_name}">
 											<img alt="{$collection.title}" title="{$collection.title}" class="img-responsive" id="photo_{$collection.ci_id}" src="{$first_col_thumb}">
 											<div class="collection-info">
-												<span>{$collection.total_objects}</span>Photo(s)
+												<span>{$collection.total_objects}</span>{lang code='photos'}
 											</div>
 										</a>
 									</div>
@@ -122,7 +120,7 @@
 						{/foreach}
 					</div>
 					{else}
-					<div class="well well-info">No Collection</div>
+					<div class="well well-info">{lang code='no_items_found_in_collect'}</div>
 					{/if}
 				</div>
 			{/if}

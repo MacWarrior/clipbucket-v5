@@ -4,7 +4,7 @@
 		<a href="{$baseurl}/view_collection.php?cid={$collection.collection_id}&type={$collection.type}">
 			<img src="{$cbcollection->coll_first_thumb($collection,'l')}" alt="{$collection.title}" title="{$collection.title}" class="img-responsive" id="photo_{$collection.ci_id}">
 			<div class="collection-info">
-				<span>{$collection.total_objects}</span>Photo(s)
+				<span>{$collection.total_objects}</span>{lang code='photos'}
 			</div>
 		</a>
 	</div>
@@ -24,7 +24,7 @@
 				</div>
 
 				<a class="CollectThumb" href="{$cbphoto->photo_links($object,'view_item')}">
-					<img src="{getThumb vdetails=$object}" alt="{$object.title}" />
+					<img src="{getThumb vdetails=$object}" alt="{$object.title}">
 				</a>
 			</div>
 		</div>
@@ -36,7 +36,7 @@
 		</a>
 		<div class="photo-info">
 			<strong><a href="{$cbphoto->photo_links($object,'view_item')}" title="Tolpis barbata (mariluzpicado)">{$object.photo_title|truncate:50}</a></strong>
-			<span>By&nbsp;<a href="{$userquery->profile_link($object.userid)}">{$object.username}</a></span>
+			<span>{lang code='by'}&nbsp;<a href="{$userquery->profile_link($object.userid)}">{$object.username}</a></span>
 		</div>
 	{/if}	
 {/if}

@@ -6,9 +6,9 @@
 	</div> <!--VIDEO_THUMB END-->
 	<div class="details_block">
 		<strong class="title"><a href="#">{$video.title|truncate:50}</a></strong>
-		<span class="author">by <a href="{$userquery->profile_link($video)}">{$video.username}</a></span>
+		<span class="author">{lang code='by'}&nbsp;<a href="{$userquery->profile_link($video)}">{$video.username}</a></span>
 		<div class="views-date">
-			<span>{$video.views}&nbsp;views</span>
+			<span>{$video.views}&nbsp;{lang code='views'}</span>
 			<time datetime="2016-15-03" class="date">{$video.date_added|niceTime}</time>
 		</div>
 	</div>
