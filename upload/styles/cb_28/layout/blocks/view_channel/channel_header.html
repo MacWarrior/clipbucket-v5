@@ -13,16 +13,16 @@
 			</div>
 			<ul class="counters">
 				<li>
-					<i class="icon-videos"></i>{$user.total_videos} &nbsp;<span>{lang code='videos'}</span>
+					<i class="icon-videos"></i>{prettyNum($user.total_videos)} &nbsp;<span>{lang code='videos'}</span>
 				</li>
 				<li>
-					<i class="icon-photos"></i>{$user.total_photos} &nbsp;<span>{lang code='photos'}</span>
+					<i class="icon-photos"></i>{prettyNum($user.total_photos)} &nbsp;<span>{lang code='photos'}</span>
 				</li>
 				<li>
-					<i class="icon-views"></i>{$user.profile_hits} &nbsp;<span>{lang code='views'}</span>
+					<i class="icon-views"></i>{prettyNum($user.profile_hits)} &nbsp;<span>{lang code='views'}</span>
 				</li>
 				<li>
-					<i class="icon-subscribers"></i>{$user.subscribers} &nbsp;<span>{lang code='contacts'}</span>
+					<i class="icon-subscribers"></i>{prettyNum($user.subscribers)} &nbsp;<span>{lang code='contacts'}</span>
 				</li>
 			</ul>
 		</div>
