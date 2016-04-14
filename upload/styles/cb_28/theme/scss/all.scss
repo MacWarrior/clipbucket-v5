@@ -586,7 +586,6 @@ h1{
 }
 .pl_thumb{
 	width: 144px;
-	height: 64px;
 	float: left;
 	margin-right: 10px;
 	position: relative;
@@ -879,17 +878,8 @@ h1{
 	display: block;
 	text-decoration: none;
 	font-weight: 400;
-	position: relative;
-	z-index: 2;
 	padding:6px 20px 6px 12px;
 	color: $white;
-	border-bottom: 1px solid lighten($dropdown-bg,6%);
-	&:hover,
-	&.selected,
-	&.selected:hover{
-		color: #fff;
-		background:$bg-theme;
-	}
 }
 .filter-dropdowns{
 	margin: 0 0 16px;
@@ -986,17 +976,27 @@ h1{
 			>div{
 				position: relative;
 				z-index: 2;
+				padding: 0 30px 0 0;
+				border-bottom: 1px solid lighten($dropdown-bg,6%);
+				&:hover{
+					background:$bg-theme;
+				}
 				>a{
 					@extend %dropmenu-anchor;
 				}
 				i{
 					font-size: 10px;
-					line-height: 20px;
+					line-height: 22px;
+					width: 22px;
+					height: 22px;
+					padding: 0 7px;
+					border-radius: 50%;
 					position: absolute;
 					z-index: 3;
 					top: 50%;
-					right: 10px;
-					margin: -10px 0 0;
+					right: 5px;
+					margin: -11px 0 0;
+					background: lighten($black,13%);
 					color: $white;
 				}
 			}

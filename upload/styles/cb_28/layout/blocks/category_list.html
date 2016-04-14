@@ -15,7 +15,11 @@
 			<div class="dropdown"> <!-- Start of category code -->
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">{$catname}<span class="icon-down-arrow"></span></a>
 				<ul class="dropdown-menu">
-				<li><a href="{$baseurl}/{if $smarty.const.THIS_PAGE == 'videos'}videos.php{else}channels.php{/if}">All</a></li>
+				<li>
+					<div>
+						<a href="{$baseurl}/{if $smarty.const.THIS_PAGE == 'videos'}videos.php{else}channels.php{/if}">All</a>
+					</div>
+				</li>
 					{$level = '1'}
 					{foreach from=$categories item=maincat}
 						<li>
@@ -54,7 +58,6 @@
 														{if $sub3.children}
 															<ul class="dropdown-menu sub-menu">
 																{$level = '5'}
-																<li>{$level}</li>
 																{foreach from=$sub3.children item=sub4}
 																	<li>
 																		<div>
