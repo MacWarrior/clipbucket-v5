@@ -13,7 +13,9 @@
 			<div class="lang_wrapper column">
 				{if config("allow_language_change")}
 				{$langs = $lang_obj->get_langs('yes')}
-				<div class="langdrop dropup">
+				{$total_langs = count($langs)}
+				{if $total_langs >= 2}
+					<div class="langdrop dropup">
 					<button class="btn btn-default dropdown-toggle" id="cblang-selector" type="button" data-toggle="dropdown">
 						<span>{$lang_obj->lang_name}</span>
 						<i class="icon-down-arrow"></i>
@@ -29,6 +31,7 @@
 						{/foreach}
 				 	</ul>
 				</div>
+				{/if}
 				{/if}
 			</div>
 			<div class="copyright-poweredby column">
