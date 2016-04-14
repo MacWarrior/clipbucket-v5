@@ -12,8 +12,9 @@
 <div class="playlist-thumb">
 	<a href="{videoLink vdetails=$first[0]}" class="playlist-box">
 		<img class="img-responsive" src="{$playlist_def_thumb}">
+		<img src="{$theme}/images/thumb-ratio.png" class="thumb-ratio" alt="">
 		<div class="playlist-count">
-			<span>{prettyNum($count_items)}</span>Videos
+			<span>{prettyNum($count_items)}</span>{lang code='videos'}
 		</div>
 	</a>
 	<div class="playlist-info">
