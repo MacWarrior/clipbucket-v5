@@ -202,9 +202,11 @@
             $kviews = $kviews.' K'; // number is in thousands
         } elseif ($prettyNum >= 1000000 && $prettyNum < 1000000000) {
             $kviews = $prettyNum / 1000000;
+            $kviews = round($kviews,2);
             $kviews = $kviews.' M'; // number is in millions
         } elseif ($prettyNum >= 1000000000) {
             $kviews = $prettyNum / 1000000000;
+            $kviews = round($kviews,2);
             $kviews = $kviews.' B'; // number is in billions
         } elseif ($prettyNum < 1000) {
             return $prettyNum;
