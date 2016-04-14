@@ -4305,7 +4305,8 @@
 		$snatching_file= rawurldecode($snatching_file);
 		if(PHP_OS == "Linux") {
 			$destination.'/'.$dest_name;
-			$fp = fopen ($destination.'/'.$dest_name, 'w+');
+			$saveTo = $destination.'/'.$dest_name;
+			$fp = fopen ($saveTo, 'w+');
 		} elseif (PHP_OS == "WINNT") {
 			$destination.'\\'.$dest_name;
 			$fp = fopen ($destination.'\\'.$dest_name, 'w+');
@@ -4318,6 +4319,7 @@
 		curl_exec($ch);
 		curl_close($ch);
 		fclose($fp);
+		return $saveTo;
 	}	
 	
 	/**
@@ -5443,6 +5445,94 @@
 			}
 		}
 		return false;
+	}
+
+	/**
+	* Fetches max quality thumbnail of a youtube video
+	* @param : { string / array } { $video } { youtube video id or json decoded api content }
+	* 
+	* @return : { array } { $toreturn } { width, height and thumb url }
+	* @since : 14th April, 2016 ClipBucket 2.8.1
+	* @author : Saqib Razzaq
+	*/
+
+	function maxres_youtube($video) {
+		if (is_array($video)) {
+			$content = $video;
+			$thumbs_array = $content['items'][0]['snippet']['thumbnails'];
+			$maxres = $thumbs_array['maxres'];
+			$standard = $thumbs_array['standard'];
+			$high = $thumbs_array['high'];
+			$medium = $thumbs_array['medium'];
+			$default = $thumbs_array['default'];
+
+			$all_qualities = array($maxres, $standard, $high, $medium, $default);
+
+			foreach ($all_qualities as $key => $value) {
+				if (!empty($value['url'])) {
+					$toreturn = array();
+					$toreturn['width'] = $value['width'];
+					$toreturn['height'] = $value['height'];
+					$toreturn['thumb'] = $value['url'];
+					return $toreturn;
+				}
+			}
+		} else {
+			$youtube_content = file_get_contents('https://www.googleapis.com/youtube/v3/videos?id='.$video.'&key=AIzaSyDOkg-u9jnhP-WnzX5WPJyV1sc5QQrtuyc&part=snippet,contentDetails');
+			$content = json_decode($youtube_content,true);
+			$maxres = $thumbs_array['maxres'];
+			$standard = $thumbs_array['standard'];
+			$high = $thumbs_array['high'];
+			$medium = $thumbs_array['medium'];
+			$default = $thumbs_array['default'];
+
+			$all_qualities = array($maxres, $standard, $high, $medium, $default);
+
+			foreach ($all_qualities as $key => $value) {
+				if (!empty($value['url'])) {
+					$toreturn = array();
+					$toreturn['width'] = $value['width'];
+					$toreturn['height'] = $value['height'];
+					$toreturn['thumb'] = $value['url'];
+					return $toreturn;
+				}
+			}
+		}
+	}
+
+	/**
+	* Takes thumb file and generates upto 5 possible qualities from it
+	* @param : { array } { $params } { an array of paramters }
+	* @since : 14th April, 2016 ClipBucket 2.8.1
+	* @author : Saqib Razzaq
+	*/
+
+	function thumbs_black_magic($params) {
+		global $imgObj,$Upload;
+		$files_dir = $params['files_dir'];
+		$file_name = $params['file_name'];
+		$filepath = $params['filepath'];
+		$width = $params['width'];
+		$height = $params['height'];
+		$ext = pathinfo($filepath, PATHINFO_EXTENSION);
+		
+		$thumbs_settings_28 = thumbs_res_settings_28();
+		foreach ($thumbs_settings_28 as $key => $thumbs_size) {
+			$file_num = $Upload->get_available_file_num($file_name);
+			$height_setting = $thumbs_size[1];
+			$width_setting = $thumbs_size[0];
+			if ( $key != 'original' ){
+				$dimensions = implode('x',$thumbs_size);
+			}else{
+				$dimensions = 'original';
+				$width_setting  = $width;
+				$height_setting = $height;
+			}
+
+			$outputFilePath = THUMBS_DIR.'/'.$files_dir.'/'.$file_name.'-'.$dimensions.'-'.$file_num.'.'.$ext;	
+			$imgObj->CreateThumb($filepath,$outputFilePath,$width_setting,$ext,$height_setting,false);
+		}
+		unlink($filepath);
 	}
 	
     include( 'functions_db.php' );
