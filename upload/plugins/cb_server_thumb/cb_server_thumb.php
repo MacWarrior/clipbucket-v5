@@ -153,7 +153,7 @@ if(!function_exists('server_thumb'))
     }
 
     global $Cbucket;
-    $Cbucket->custom_get_thumb_funcs[] = 'server_thumb';
+    #$Cbucket->custom_get_thumb_funcs[] = 'server_thumb';
 
     if(!function_exists('get_server_img'))
     {
