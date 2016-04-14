@@ -29,7 +29,7 @@
 						<ul class="dropdown-menu">
 							{foreach from=$sorting_links item=name key=sort}
 							<li>
-								<a href="{link name=sort sort=$sort type=videos}&sorting=sort" {if $smarty.get.sort==$sort} class="selected" {/if}>{if $smarty.get.sort==$sort}{/if}{$name}</a>
+								<a href="{link name=sort sort=$sort type=videos}&sorting=sort" {if $smarty.get.sort==$sort} class="selected" {/if}>{if $smarty.get.sort==$sort}<i class="icon-tick"></i>{/if}{$name}</a>
 							</li>
 							{/foreach}
 						</ul>
@@ -51,7 +51,7 @@
 						  <ul class="dropdown-menu">
 							{foreach from=$time_links item=name key=sort name=times}
 								<li>
-									<a href="{link name=time sort=$sort type=videos}&timing=time" {if $smarty.get.time==$sort} class="selected"{/if}>{if $smarty.get.time==$sort}<i class="icon-check"></i>{/if}{$name}</a>
+									<a href="{link name=time sort=$sort type=videos}&timing=time" {if $smarty.get.time==$sort} class="selected"{/if}>{if $smarty.get.time==$sort}<i class="icon-tick"></i>{/if}{$name}</a>
 								</li>
 							{/foreach}
 						  </ul>

@@ -920,7 +920,6 @@ h1{
 	line-height: 20px;
 	text-transform: capitalize;
 	font-weight: 600;
-
 	.cat-col{
 		text-align: left;
 		padding: 0 10px 0 0;
@@ -950,6 +949,25 @@ h1{
 		.dropdown-menu{
 			left: auto;
 			right: 0;
+			>li {
+				a{
+					position: relative;
+					i{
+						position: absolute;
+						z-index: 1;
+						width: 16px;
+						height: 16px;
+						text-align: center;
+						top: 50%;
+						right: 5px;
+						margin: -8px 0 0;
+					}
+				}
+				a.selected,
+				a:hover{
+					background:$bg-theme;
+				}
+			}
 		}
 	}
 	.dropdown{
