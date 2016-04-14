@@ -27,7 +27,7 @@
 			<section class="view-details clearfix">
 				<header class="clearfix details">
 					<div id="result_cont"></div>
-					<h1>{$photo.photo_title|truncate:55}</h1>
+					<h1>{$photo.photo_title}</h1>
 					<div class="user-video-info clearfix">
 						<a href="{$userquery->profile_link($user)}" class="avatar">
 							<img src="{$userquery->avatar($video,'small',userid())}" class="img-responsive">
@@ -36,7 +36,7 @@
 							<a href="{$userquery->profile_link($user)}">{$user.username}</a>
 						</h2>
 						<div class="views-counter">
-							<span>{prettyNum($photo.views)}</span>
+							<span>{prettyNum($photo.views)}&nbsp;{lang code='views'}</span>
 						</div>
 					</div>
 					<div class="user-likes-sub clearfix">
@@ -78,7 +78,7 @@
 									{assign var=category value=$userquery->get_category($user.category)}
 									<li><strong>{lang code='category'}</strong>:&nbsp;{$category.category_name}</li>
 									<li><strong>{lang code='tags'}</strong>:&nbsp;{$photo.photo_tags|tags:photos}</li>
-									<li><strong>{$photo.views|number_format}</strong>&nbsp;{lang code='views'}{if $photo.views > 1}{lang('s')}{/if}</li>
+									{*<li><strong>{$photo.views|number_format}</strong>&nbsp;{lang code='views'}</li>*}
 								</ul>
 							</div>
 						</div>
