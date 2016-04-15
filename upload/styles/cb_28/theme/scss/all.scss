@@ -298,6 +298,7 @@ h1{
 	.thumb-holder{
 		position: relative;
 		z-index: 2;
+		color: $white;
 		.video-link{
 			position: absolute;
 			width: 100%;
@@ -327,17 +328,23 @@ h1{
 				padding: 10px 94px 15px 10px;
 				margin: 0;
 			}
+			&:after{
+				content: "";
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				width: 100%;
+				height: 40px;
+				z-index: 2;
+				@include gradientbottom-bg();
+			}
 		}
-		.item-footer{
+		.duration,
+		.cb_quickie{
 			position: absolute;
-			bottom: 0;
-			left: 0;
-			width: 100%;
-			z-index: 2;
-			padding:10px;
-			@include gradientbottom-bg();
-			overflow: hidden;
-			color: #fff;
+			z-index: 3;
+			bottom: 10px;
+			left: 10px;
 		}
 		.duration{
 			font-size: 14px;
@@ -349,10 +356,10 @@ h1{
 			padding: 0 4px;
 			background: $black;
 			border-radius: 2px;
-			float: right;
+			left:auto;
+			right: 10px;
 		}
 		.cb_quickie{
-			float: left;
 			width: 24px;
 			height: 20px;
 			padding: 0;
@@ -559,7 +566,7 @@ h1{
 	bottom:0; 
 	right:0; 
 	background-color:#f1f1f1; 
-	width:350px; 
+	width:350px;
 	color:#fff; 
 	position:fixed; 
 	z-index:1000; 
@@ -603,8 +610,10 @@ h1{
 	z-index:10;
 }
 .quicklist_cont{
-	float: left;
 	width: 100%;
+	height: 100%;
+	max-height: 334px;
+	overflow-y: auto;
 	display: none;
 }
 .my_quicklist{
@@ -641,10 +650,15 @@ h1{
 	width: 100%;
 	height: 100%;
 	display: block;
-}
-.pl_thumb a img{
-	width: 100%;
-	height: 100%;
+	position: relative;
+	.img-responsive{
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 1;
+	}
 }
 .ql_delete{
 	position: absolute;

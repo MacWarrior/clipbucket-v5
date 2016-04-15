@@ -5,7 +5,8 @@
 	<div class="pl_num">{$smarty.section.item.iteration}</div>
 	<div class="pl_thumb">
 		<a href="{videoLink($video)}" target="blank">
-			<img src="{getThumb vdetails=$video}"/>
+			<img src="{getThumb vdetails=$video}" class="img-responsive" alt="">
+			<img src="{$theme}/images/thumb-ratio.png" alt="" class="thumb-ratio">
 		</a>
 		<span class="pl_duration">{$video.duration|SetTime}</span>
 	</div>
