@@ -28,17 +28,23 @@
 		</div>
 		<div class="friend-block clearfix">
 			{if $user.userid != userid()}
-				{if $friend_status == "yes" && userid()}
+				{$friend_status = $userquery->friendship_status(userid(), $user.userid)}
+				{if $friend_status == "f"}
 				<a href="{$baseurl}/manage_contacts.php?mode=delete&userid={$u.userid}"  class="btn btn-danger btn-sm new1">
 					<i class="glyphicon glyphicon-ok white"></i> 
 					{lang code="unfriend"}
 				</a>
-				{elseif $friend_status == "no"}
+				{elseif $friend_status == "r"}
 				<a href="{$baseurl}/manage_contacts.php?mode=requests&confirm={$u.userid}"  class="btn btn-primary btn-sm new1">
 					<i class="glyphicon glyphicon-ok white"></i> 
 					{lang code="accept_request"}
 				</a>
-				{elseif !$friends && userid()}
+				{elseif $friend_status == 's'}
+				<a href="{$baseurl}/manage_contacts.php?mode=delete&userid={$u.userid}"  class="btn btn-primary btn-sm new1">
+					<i class="glyphicon glyphicon-ok white"></i> 
+					{lang code="cancel_request"}
+				</a>
+				{else}
 				<a href="javascript:void(0)"  class="btn btn-primary btn-sm new1" 
 				   onclick="_cb.add_friendNew('{$user.userid}','result_cont')">
 					<i class="glyphicon glyphicon-plus-sign white"></i> 
