@@ -23,6 +23,36 @@
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
+.icon-shuffle:before {
+    content: "\e91a";
+}
+.icon-repeat2:before {
+    content: "\e91b";
+}
+.icon-prev:before {
+    content: "\e91c";
+}
+.icon-plus2:before {
+    content: "\e91d";
+}
+.icon-play222:before {
+    content: "\e91e";
+}
+.icon-pause22:before {
+    content: "\e91f";
+}
+.icon-next:before {
+    content: "\e920";
+}
+.icon-audio-volume3:before {
+    content: "\e921";
+}
+.icon-audio-volume2:before {
+    content: "\e922";
+}
+.icon-audio-volume1:before {
+    content: "\e923";
+}
 .icon-close:before {
 	content: "\e914";
 }
