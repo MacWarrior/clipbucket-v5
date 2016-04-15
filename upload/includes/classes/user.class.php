@@ -5709,6 +5709,16 @@ function getSubscriptionsUploadsWeek($uid,$limit=20,$uploadsType="both",$uploads
 		return $data;
 	}
 
+	/**
+	* Fetches friendship status of two users
+	* @param : { integer } { $logged_in_user } { id of logged in user }
+	* @param : { integer } { $channel_user } { id of channel being viewed }
+	*
+	* @return : { string } { s = sent, r = recieved, f = friends }
+	* @since : 15th April, 2016, ClipBucket 2.8.1
+	* @author : Saqib Razzaq
+	*/
+
 	function friendship_status($logged_in_user, $channel_user) {
 		$sent = $this->sent_contact_requests($logged_in_user);
 		$pending = $this->recieved_contact_requests($logged_in_user);
@@ -5731,10 +5741,6 @@ function getSubscriptionsUploadsWeek($uid,$limit=20,$uploadsType="both",$uploads
 				return 'f'; // friends
 			}
 		}
-
-		/*pr($sent,true);
-		pr($pending,true);
-		pex($friends,true);*/
 	}
 
 }
