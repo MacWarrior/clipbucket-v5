@@ -30,7 +30,7 @@
 					<h1>{$photo.photo_title}</h1>
 					<div class="user-video-info clearfix">
 						<a href="{$userquery->profile_link($user)}" class="avatar">
-							<img src="{$userquery->avatar($video,'small',userid())}" class="img-responsive">
+							<img src="{$userquery->avatar($user,'small',userid())}" class="img-responsive">
 						</a>
 						<h2 class="user-title">
 							<a href="{$userquery->profile_link($user)}">{$user.username}</a>
