@@ -117,6 +117,7 @@
 	<a href="{videoLink($video)}">
 		<div class="video_thumb">
 			<img src="{getThumb vdetails=$video size=128x80}" {ANCHOR place="video_thumb" data=$video} class="img-responsive">
+			<img src="{$theme}/images/thumb-ratio.png" alt="" class="thumb-ratio">
 			<time datetime="2016-15-03" class="duration">
 			{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</time>
 		</div> <!--VIDEO_THUMB END-->
@@ -124,7 +125,7 @@
 	<div class="details_block">
 		<strong class="title"><a href="{videoLink($video)}">{$video.title|truncate:50}</a></strong>
 		<div class="views-date">
-			<span>{$video.views}&nbsp;views</span>
+			<span>{$video.views}&nbsp;{lang code='views'}</span>
 		</div>
 	</div>
 </div>
