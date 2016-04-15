@@ -5694,6 +5694,15 @@ function getSubscriptionsUploadsWeek($uid,$limit=20,$uploadsType="both",$uploads
 		return $data;
 	}
 
+	/**
+	* Fetches all friends of given user
+	* @param : { integer } { $user } { id of user to fetch friends against }
+	*
+	* @return : { array } { $data } { array with all friends details }
+	* @since : 15th April, 2016, ClipBucket 2.8.1
+	* @author : Saqib Razzaq
+	*/
+
 	function added_contacts($user) {
 		global $db;
 		$data = $db->select(tbl('contacts'),"*","(contact_userid = $user OR userid = $user) AND confirmed = 'yes'");
