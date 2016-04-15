@@ -5678,6 +5678,16 @@ function getSubscriptionsUploadsWeek($uid,$limit=20,$uploadsType="both",$uploads
 		return $data;
 	}
 
+
+	/**
+	* Fetches all friend requests recieved by given user
+	* @param : { integer } { $user } { id of user to fetch requests against }
+	*
+	* @return : { array } { $data } { array with all recieved requests details }
+	* @since : 15th April, 2016, ClipBucket 2.8.1
+	* @author : Saqib Razzaq
+	*/
+
 	function recieved_contact_requests($user) {
 		global $db;
 		$data = $db->select(tbl('contacts'),"*","contact_userid = $user AND confirmed = 'no'");
