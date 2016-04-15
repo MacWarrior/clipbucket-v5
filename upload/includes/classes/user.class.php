@@ -5662,5 +5662,52 @@ function getSubscriptionsUploadsWeek($uid,$limit=20,$uploadsType="both",$uploads
 			}
 		}
 	}
+
+	function sent_contact_requests($user) {
+		global $db;
+		$data = $db->select(tbl('contacts'),"*","userid = $user AND confirmed = 'no'");
+		return $data;
+	}
+
+	function recieved_contact_requests($user) {
+		global $db;
+		$data = $db->select(tbl('contacts'),"*","contact_userid = $user AND confirmed = 'no'");
+		return $data;
+	}
+
+	function added_contacts($user) {
+		global $db;
+		$data = $db->select(tbl('contacts'),"*","(contact_userid = $user OR userid = $user) AND confirmed = 'yes'");
+		return $data;
+	}
+
+	function friendship_status($logged_in_user, $channel_user) {
+		$sent = $this->sent_contact_requests($logged_in_user);
+		$pending = $this->recieved_contact_requests($logged_in_user);
+		$friends = $this->added_contacts($logged_in_user);
+		
+		foreach ($sent as $key => $data) {
+			if ($data['contact_userid'] == $channel_user) {
+				return 's'; // sent
+			}
+		}
+
+		foreach ($pending as $key => $data) {
+			if ($data['userid'] == $channel_user) {
+				return 'r'; // received
+			}
+		}
+
+		foreach ($friends as $key => $data) {
+			if ($data['contact_userid'] == $channel_user) {
+				return 'f'; // friends
+			}
+		}
+
+		/*pr($sent,true);
+		pr($pending,true);
+		pex($friends,true);*/
+	}
+
 }
 ?>
