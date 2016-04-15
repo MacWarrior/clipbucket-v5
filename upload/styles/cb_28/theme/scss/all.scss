@@ -834,6 +834,18 @@ h1{
 			padding: 0 3px;
 			margin: 0 0 10px;
 		}
+		.playlist-video{
+			display: block;
+			position: relative;
+			.img-responsive{
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				z-index: 1;
+				top: 0;
+				left: 0;
+			}
+		}
 		.videos-count{
 			display: block;
 			font-size: 14px;

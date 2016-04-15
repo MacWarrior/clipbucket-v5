@@ -142,8 +142,9 @@
 							<div class="video col-lg-3 col-md-4 col-sm-6 col-xs-6">
 								{$videos = get_videos(['videoid'=>$videoid,'limit'=>'2'])}
 								{foreach $videos as $video}
-									<a href="{videoLink($video)}&play_list={$playlist.playlist_id}">
+									<a href="{videoLink($video)}&play_list={$playlist.playlist_id}" class="playlist-video">
 										<img src="{getThumb vdetails=$video size=168x105}" class="img-responsive">
+										<img src="{$theme}/images/thumb-ratio.png" alt="" class="thumb-ratio">
 									</a>
 								{/foreach}
 							</div>
