@@ -8,9 +8,11 @@
 		{/if}
 
 		<div class="ratting-counts clearfix">
+			{if $user.userid != userid()}
 			<div class="user-ratting" id="rating_container">
 				{show_video_rating rating=$p.rating ratings=$p.rated_by total='10' id=$p.userid type=user}
 			</div>
+			{/if}
 			<ul class="counters">
 				<li>
 					<i class="icon-videos"></i>{prettyNum($user.total_videos)} &nbsp;<span>{lang code='videos'}</span>

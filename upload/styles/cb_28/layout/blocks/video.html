@@ -4,6 +4,7 @@
 		<a class="video-link" href="{videoLink($video)}" title="{$video.title|title}">
 			<img class="img-responsive" src="{getThumb vdetails=$video size=512x320 }">
 		</a>
+		<img src="{$theme}/images/thumb-ratio.png" class="thumb-ratio" alt="">
 		<div class="item-footer">
 			{ANCHOR place='in_video_thumb' data=$video}
 			<button data-quick="quick-{$video.videoid}"
