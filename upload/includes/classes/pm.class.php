@@ -50,7 +50,9 @@ define('CB_PM_MAX_INBOX',500); // 0 - OFF , U - Unlimited
 			assign('video',$cbvid->get_video_details($vkey));
 			assign('only_once',true);
 			echo '<h3>Attached Video</h3>';
-			template('blocks/video.html');
+			echo '<div class="clearfix videos row" >';
+			template('blocks//videos/video.html');
+			echo '</div>';
 		}
 	}
 	
