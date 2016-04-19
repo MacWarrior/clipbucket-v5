@@ -378,24 +378,3 @@ $error-color:#f44336;
 .alert-ajax {
 	@include error-animation();
 }
-/* sprite */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 100dpi) {
-	.playlists-dropdown .item_playlist .playlist-thumb .date-time,
-	.playlists-dropdown .playlist-header .close-playlists,
-	.headerIcon.active.playlist-icon a,
-	.headerIcon.active.channels-icon a,
-	.headerIcon.active.video-icon a,
-	.headerIcon.playlist-icon a,
-	.headerIcon.channels-icon a,
-	.headerIcon.video-icon a,
-	.navbar-default .right-menu.navbar-nav > li > a.user-area .btn-setting,
-	.navbar-default .right-menu.navbar-nav > li > a.btn-upload,
-	.ch-playlists .playlist-thumb .date-time,
-	.rating .like-dislike a.btn-dislike i,
-	.rating .like-dislike a.btn-like i{
-		// Reference the @2x Sprite
-		background-image:url('../images/sprite@2x.png') !important;
-		/* Translate the @2x sprite's dimensions back to 1x */
-		background-size: 60px 4400px !important;
-	}
-}

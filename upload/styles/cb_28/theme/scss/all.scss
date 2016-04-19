@@ -181,7 +181,6 @@ h1{
 	padding: 0 0 0 15px;
 }
 .featured-video{
-	cursor: pointer;
 	background:$white;
 	font-size: 13px;
 	line-height: 15px;
@@ -196,6 +195,7 @@ h1{
 		border: none;
 	}
 	.video_thumb{
+		cursor: pointer;
 		position: relative;
 		float: left;
 		width: 112px;
@@ -2910,6 +2910,12 @@ textarea#comment_box{
 	
 }
 @media only screen and (max-width: 991px) {
+	#ep_video_container > div{
+		&.featured_video_details{
+			overflow: hidden;
+			height: auto;
+		}
+	}
 	.editorpick-holder{
 		float: none;
 		width: 100%;
@@ -2933,6 +2939,10 @@ textarea#comment_box{
 				clear: both;
 			}
 		}
+	}
+	.scrollable-area-wrapper .hscrollbar,
+	.scrollable-area-wrapper .vscrollbar{
+		display: none !important;
 	}
 	.featured-video{
 		width: 50%;
@@ -3032,7 +3042,8 @@ textarea#comment_box{
 	}
 	.videos{
 		.video-info{
-			height: 80px;
+			padding: 8px 8px 26px;
+			height: auto;
 			.title{
 				font-size: 14px;
 			}
@@ -3078,15 +3089,27 @@ textarea#comment_box{
 		padding: 8px;
 	}
 	.cover{
+		.cover-holder{
+			height: 130px;
+			> img{
+				max-height: 100%;
+				height: 100%;
+			}
+		}
+		.changeCover{
+			left: auto;
+			right: 10px;
+		}
 		.avatar{
 			width: 60px;
 			height: 60px;
-			left: 20px;
-			bottom: 100px;
+			left: 10px;
+			bottom: auto;
+			top: 62px;
 		}
 		.ratting-counts{
 			padding: 10px 0 10px 90px;
-			height:80px;
+			height:74px;
 			.user-ratting{
 				float: none;
 				width: 100%;
@@ -3161,6 +3184,15 @@ textarea#comment_box{
 			}
 			.subscribe-col{
 				text-align: center;
+			}
+		}
+	}
+	.collections{
+		.title{
+			a{
+				display: block;
+				overflow: hidden;
+				height: 20px;
 			}
 		}
 	}
