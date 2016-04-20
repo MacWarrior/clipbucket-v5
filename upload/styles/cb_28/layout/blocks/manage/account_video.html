@@ -7,8 +7,8 @@
 <tr>
 	<td>
 		<div class="col-md-3">
-			<a class="manageVid_thumb" href="edit_video.php?video={$video.videoid}">
-				<img src="{getThumb vdetails=$video}" class="img-responsive" width="130" height="80" id="thumbs_{$video.videoid}" class="vthumb" title=""/>
+			<a class="manageVid_thumb" href="{$baseurl}/edit_video.php?vid={$video.videoid}">
+				<img src="{getThumb vdetails=$video}" class="img-responsive" width="130" height="80" id="thumbs_{$video.videoid}" class="vthumb" title="">
 				<span class="duration">({if
 				$video.duration>1}{$video.duration|SetTime}{else}00:00{/if})</span>
 			</a>
@@ -30,16 +30,15 @@
 		</div>
 	</td>
 	
-	{*<td>
+	<td>
 		<div class="clearfix">
 			{if $video.broadcast=='public'}
-			<div class="col-md-1"><i class="icon-globe"></i></div>
+			<div class="col-md-1"><i class="fa fa-globe"></i></div>
 			{elseif $video.broadcast!='public'}
-			<div class="col-md-1"><i class="icon-lock"></i></div>
+			<div class="col-md-1"><i class="fa fa-lock"></i></div>
 			{/if}
 		</div>
-		<a href="view_user.php?uid={$video.userid}">{$video.username}</a>
-	</td>*}
+	</td>
 		
 	<td>
 		<div class="dropdown text-center">
