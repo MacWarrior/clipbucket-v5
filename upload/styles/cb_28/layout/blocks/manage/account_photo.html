@@ -5,8 +5,8 @@
             <input type="checkbox" name="check_photo[]" id="check_photo-{$photo.photo_id}" value="{$photo.photo_id}" />
         </td>
         <td valign="middle">
-            <label for="check_photo-{$photo.photo_id}">{get_photo details=$photo output='html' class='acc_usr_video_thumb' style='width:auto;'}</label>
-            {$photo.photo_title|truncate:100}<br />
+            <label for="check_photo-{$photo.photo_id}">{get_photo details=$photo output='html' class='acc_usr_video_thumb img-responsive'}</label>
+            <br>{$photo.photo_title|truncate:100}<br>
             <span class="btn-group show">
                 <a class="btn btn-primary btn-sm" href="{$cbphoto->photo_links($photo,'view_item')}">view</a>
                 <a class="btn btn-primary btn-sm" href="{$baseurl}/edit_photo.php?photo={$photo.photo_id}">edit</a>
@@ -31,7 +31,7 @@
         	<tr>
             	<td><input type="checkbox" name="check_photo[]" id="check_photo-{$photo.photo_id}" value="{$photo.photo_id}" /></td>
                 <td valign="middle">
-                	<label for="check_photo-{$photo.photo_id}">{get_photo details=$photo output='html' class='acc_usr_video_thumb' style='width:auto;'}</label>
+                	<label for="check_photo-{$photo.photo_id}">{get_photo details=$photo output='html' class='acc_usr_video_thumb  img-responsive'}</label>
                     {$photo.photo_title|truncate:100}<br />
                     <span class="btn-group show">
                     	<a class="btn btn-primary btn-sm" href="{$cbphoto->photo_links($photo,'view_item')}">view</a> 
@@ -52,7 +52,7 @@
             	<td><input type="checkbox" name="check_photo[]" id="check_photo-{$photo.photo_id}" value="{$photo.photo_id}" /></td>
 
                  <td valign="middle">
-                	<label for="check_photo-{$photo.photo_id}">{get_photo details=$photo output='html' class='acc_usr_video_thumb' style='width:auto;'}</label>
+                	<label for="check_photo-{$photo.photo_id}">{get_photo details=$photo output='html' class='acc_usr_video_thumb img-responsive'}</label>
                     {$photo.photo_title|truncate:100}<br />
                     <span class="btn-group show">
                     	<a class="btn btn-primary btn-sm" href="{$baseurl}/edit_photo.php?photo={$photo.photo_id}">edit</a>  

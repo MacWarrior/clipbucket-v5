@@ -41,14 +41,14 @@
  	      <label for="checkbox"></label></td>
  	    <td valign="middle">
         <div style="padding-left:10px; float:left;width:300px">
-       <label for="check_item-{$collection.videoid}"> <img src="{getThumb vdetails=$collection}" width="40" height="30" border="0" class="acc_usr_video_thumb" /></label>{$collection.title|truncate:100}<br />
+       <label for="check_item-{$collection.videoid}"> <img src="{getThumb vdetails=$collection}" width="40" height="30" border="0" class="acc_usr_video_thumb  img-responsive"></label>{$collection.title|truncate:100}<br>
 <span class="video_control"><a href="{$cbcollection->collection_links($collection,'view_item')}">{lang code="view"}</a></span>
         </div>
         </td>
  	    <td width="100">{$collection.date_added|date_format}</td>
  	    <td width="100">{$collection.views|number_format}</td>
  	    <td width="100">
-        <a onclick="collection_actions('collectionItem','remove_collection_item','{$collection.videoid}','#removeItemContainer','{$type}','{$c.collection_id}')" id="collectionItem{$collection.videoid}" href="javascript:void(0);"><img src="{$imageurl}/cancel.png" width="16" height="16" /></a>
+        <a onclick="collection_actions('collectionItem','remove_collection_item','{$collection.videoid}','#removeItemContainer','{$type}','{$c.collection_id}')" id="collectionItem{$collection.videoid}" href="javascript:void(0);"><img src="{$imageurl}/cancel.png" width="16" height="16"></a>
         <div id="removeItemContainer_{$collection.videoid}" style="display:none"></div>
         </td>
  	    </tr>
@@ -65,14 +65,14 @@
  	    <td valign="middle">
         <div style="padding-left:10px; float:left;">
         <label for="check_item-{$collection.photo_id}">{get_photo style='padding:1px; border:1px solid #999; float:left;' details=$collection output="html"}</label>
-        {$collection.photo_title|truncate:100}<br />
+        {$collection.photo_title|truncate:100}<br>
 <span class="video_control"><a href="{$cbphoto->photo_links($collection,'view_item')}">{lang code="view"}</a></span>
         </div>
         </td>
  	    <td width="100">{$collection.date_added|date_format}</td>
  	    <td width="100">{$collection.views|number_format}</td>
  	    <td width="100">
-        <a onclick="collection_actions('collectionItem','remove_collection_item','{$collection.photo_id}','#removeItemContainer','{$type}','{$c.collection_id}')" id="collectionItem{$collection.photo_id}" href="javascript:void(0);"><img src="{$imageurl}/cancel.png" width="16" height="16" /></a>
+        <a onclick="collection_actions('collectionItem','remove_collection_item','{$collection.photo_id}','#removeItemContainer','{$type}','{$c.collection_id}')" id="collectionItem{$collection.photo_id}" href="javascript:void(0);"><img src="{$imageurl}/cancel.png" width="16" height="16"></a>
         <div id="removeItemContainer_{$collection.photo_id}" style="display:none"></div>
         </td>
  	    </tr>
@@ -89,7 +89,7 @@
  	      </td>
  	    <td valign="middle">
         	<label for="check_col-{$collection.collection_id}">
-                <img src="{$cbcollection->get_thumb($collection,'small',TRUE)}" border="0" class="acc_usr_video_thumb" />
+                <img src="{$cbcollection->get_thumb($collection,'small',TRUE)}" border="0" class="acc_usr_video_thumb img-responsive">
             </label>
             {$collection.collection_name} 			
             <div class="btn-group show">
