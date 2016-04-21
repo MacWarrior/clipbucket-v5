@@ -2685,7 +2685,7 @@ textarea#comment_box{
 		}
 	}
 }
-
+#updateVideoInfoForm,
 .upload_form{
 	.input-group{
 		margin: 0 0 15px;
@@ -2905,9 +2905,6 @@ textarea#comment_box{
 			}
 		}
 	}
-}
-@media only screen and (max-width:1100px) {
-	
 }
 @media only screen and (max-width: 991px) {
 	#ep_video_container > div{
