@@ -23,6 +23,15 @@
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
+.icon-audio:before {
+	content: "\e924";
+}
+.icon-photo:before {
+	content: "\e925";
+}
+.icon-video:before {
+	content: "\e926";
+}
 .icon-shuffle:before {
     content: "\e91a";
 }

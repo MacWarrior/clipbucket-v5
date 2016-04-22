@@ -1,3 +1,47 @@
+@font-face {
+	font-family: 'source_sans_probold';
+	src: url('../fonts/sourcesanspro-bold-webfont.eot');
+	src: url('../fonts/sourcesanspro-bold-webfont.eot?#iefix') format('embedded-opentype'),
+		 url('../fonts/sourcesanspro-bold-webfont.woff2') format('woff2'),
+		 url('../fonts/sourcesanspro-bold-webfont.woff') format('woff'),
+		 url('../fonts/sourcesanspro-bold-webfont.ttf') format('truetype'),
+		 url('../fonts/sourcesanspro-bold-webfont.svg#source_sans_probold') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'source_sans_prolight';
+	src: url('../fonts/sourcesanspro-light-webfont.eot');
+	src: url('../fonts/sourcesanspro-light-webfont.eot?#iefix') format('embedded-opentype'),
+		 url('../fonts/sourcesanspro-light-webfont.woff2') format('woff2'),
+		 url('../fonts/sourcesanspro-light-webfont.woff') format('woff'),
+		 url('../fonts/sourcesanspro-light-webfont.ttf') format('truetype'),
+		 url('../fonts/sourcesanspro-light-webfont.svg#source_sans_prolight') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'source_sans_proregular';
+	src: url('../fonts/sourcesanspro-regular-webfont.eot');
+	src: url('../fonts/sourcesanspro-regular-webfont.eot?#iefix') format('embedded-opentype'),
+		 url('../fonts/sourcesanspro-regular-webfont.woff2') format('woff2'),
+		 url('../fonts/sourcesanspro-regular-webfont.woff') format('woff'),
+		 url('../fonts/sourcesanspro-regular-webfont.ttf') format('truetype'),
+		 url('../fonts/sourcesanspro-regular-webfont.svg#source_sans_proregular') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'source_sans_prosemibold';
+	src: url('../fonts/sourcesanspro-semibold-webfont.eot');
+	src: url('../fonts/sourcesanspro-semibold-webfont.eot?#iefix') format('embedded-opentype'),
+		 url('../fonts/sourcesanspro-semibold-webfont.woff2') format('woff2'),
+		 url('../fonts/sourcesanspro-semibold-webfont.woff') format('woff'),
+		 url('../fonts/sourcesanspro-semibold-webfont.ttf') format('truetype'),
+		 url('../fonts/sourcesanspro-semibold-webfont.svg#source_sans_prosemibold') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
 /* variables */
 $sprite : url(../images/sprite.png) no-repeat;
 $black:#000;
@@ -18,7 +62,10 @@ $body-bg:#eee;
 $block-color:#333;
 $heading-color:#666;
 $search-toggle:#999;
-$base-font:'Source Sans Pro', sans-serif;
+$base-font:'source_sans_proregular', sans-serif;
+$bold-font:'source_sans_probold', sans-serif;
+$semibold-font:'source_sans_prosemibold', sans-serif;
+$light-font:'source_sans_prolight', sans-serif;
 $base-color:$black;
 $font-icon: 'icomoon';
 $bordercolor:#d9d9d9;
@@ -88,6 +135,13 @@ $error-color:#f44336;
 	-ms-transition-property: $transitionProperty;
 	-o-transition-property: $transitionProperty;
 	transition-property: $transitionProperty;
+}
+@mixin alltransition($ease-property, $ease-time, $ease){
+	-webkit-transition: $ease-property $ease-time $ease;
+	-moz-transition: $ease-property $ease-time $ease;
+	-ms-transition: $ease-property $ease-time $ease;
+	-o-transition: $ease-property $ease-time $ease;
+	transition: $ease-property $ease-time $ease;
 }
 @mixin transition($transition) {
 	-webkit-transition: $transition;  
@@ -230,7 +284,7 @@ $error-color:#f44336;
 .btn-default{
 	background:darken($lt-grey,5%);
 	border-color: darken($lt-grey,5%);
-	font-weight: 400;
+	font-family:$base-font;
 	color: $black;
 	&:hover,
 	&:active{
@@ -242,7 +296,7 @@ $error-color:#f44336;
 	background: $white;
 	border: 2px solid $black;
 	padding: 5px 10px;
-	font-weight: 400;
+	font-family:$base-font;
 	font-size: 15px;
 	line-height: 21px;
 	color:$black;
@@ -260,7 +314,7 @@ $error-color:#f44336;
 .btn-primary{
 	background:$blue;
 	border-color:$blue;
-	font-weight: 400;
+	font-family:$base-font;
 	color:$white;
 	&:hover,
 	&:active{
@@ -272,7 +326,7 @@ $error-color:#f44336;
 .btn-success{
 	background:$green;
 	border-color:$green;
-	font-weight: 400;
+	font-family:$base-font;
 	color:$white;
 	&:hover,
 	&:active{
@@ -284,7 +338,7 @@ $error-color:#f44336;
 .btn-black{
 	background: lighten($black,13%);
 	border-color:lighten($black,13%);
-	font-weight: 400;
+	font-family:$base-font;
 	font-size: 15px;
 	color:$white;
 	&:hover,
