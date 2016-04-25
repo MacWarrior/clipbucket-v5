@@ -247,9 +247,7 @@ h1{
 	}
 	.title{
 		color: $black;
-		font-size: 16px;
-		line-height: 18px;
-		font-family:$base-font;
+		font:400 16px/18px $base-font;
 		margin:0 0 4px;
 		a{
 			color: $black;
@@ -319,9 +317,7 @@ h1{
 			.title{
 				position: absolute;
 				z-index: 2;
-				font-size: 18px;
-				line-height: 20px;
-				font-family:$base-font;
+				font:400 18px/20px $base-font;
 				left: 0;
 				top: 0;
 				width: 100%;
@@ -469,10 +465,6 @@ h1{
 		.item-footer{
 			padding: 20px;
 		}
-	}
-	.cb_quickie{
-		bottom: 20px;
-		left: 20px;
 	}
 	.vid-type{
 		top:14px;
@@ -1556,9 +1548,7 @@ h1{
 			display: block;
 		}
 		strong{
-			font-size: 18px;
-			line-height: 20px;
-			font-family:$base-font;
+			font: 18px/20px $base-font;
 			margin: 0 0 8px;
 			a{
 				color: $black;
@@ -1811,9 +1801,7 @@ textarea#comment_box{
 				font-size: 15px;
 				.commenter{
 					display: block;
-					font-size: 16px;
-					line-height: 16px;
-					font-family:$semibold-font;
+					font: 16px/16px $semibold-font;
 					margin: 0 0 10px;
 					span{
 						@include vertical-top();
@@ -2033,9 +2021,7 @@ textarea#comment_box{
 			span{
 				display: block;
 				margin: 10px 0 0;
-				font-family:$semibold-font;
-				font-size: 14px;
-				line-height: 14px;
+				font:14px/14px $semibold-font;
 				color:$black;
 			}
 		}
@@ -3022,6 +3008,13 @@ textarea#comment_box{
 		width: 100%;
 		float: none;
 		padding: 0 10px;
+	}
+	.item-video{
+		.thumb-holder{
+			.cb_quickie{
+				display: none;
+			}
+		}
 	}
 	.featured-video{
 		.title{
