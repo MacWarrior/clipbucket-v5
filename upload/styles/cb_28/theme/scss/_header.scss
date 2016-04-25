@@ -627,7 +627,7 @@
 		@include list-style();
 		font-size: 16px;
 		line-height: 24px;
-		margin: 0 0 5px;
+		margin: 0 0 10px;
 		position: relative;
 		text-align: center;
 		&:after{
@@ -637,7 +637,7 @@
 		}
 		>li{
 			float: none;
-			width: 100%;
+			
 			>a{
 				display: block;
 				width: 100%;
@@ -673,12 +673,19 @@
 				}
 				img{
 					@include vertical-middle();
-					margin: 0 -2px 0 0;
+					margin: 0;
 					width: 100px;
 					height: 100px;
 					border-radius: 50%;
 				}
 
+			}
+			&.myaccount-dd{
+				>a{
+					width: 100px;
+					margin: 0 auto;
+				}
+				word-wrap: break-word;
 			}
 			&.upload_link{
 				position: absolute;
@@ -798,7 +805,7 @@
 				
 				height: auto;
 				> li{
-					margin: 0;
+					margin: 2px 0 0;
 					opacity: 1;
 				}
 			}
