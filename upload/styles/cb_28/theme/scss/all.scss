@@ -2720,20 +2720,55 @@ textarea#comment_box{
 	width: 100%;
 	margin-top: 100px;
 }
-.error-pix-403 {
+.page-error{
+	.alert-text{
+		font-size: 30px;
+		line-height: 40px;
+		text-align: center;
+		margin: 0 0 20px;
+		i{
+			@include vertical-top();
+		}
+	}
+	.error-img{
+		max-width: 200px;
+		margin: 0 auto 20px;
+		img{
+			width: 100%;
+			margin: 0 auto;
+		}
+	}
+	.search-form{
+		padding: 0 8px;
+		max-width: 600px;
+		margin: 0 auto 20px;
+		>div{
+			border:$default-border;
+		}
+		.form-control{
+			box-shadow: none;
+			border: none;
+			&:focus{
+				box-shadow: none;
+			}
+		}
+	}
+}
+
+.error-pix-403{
 	width: 312px;
 	height: 157px;
-	margin: 0px auto;
-	background-image: url(../../images/403.png);
-	background-repeat: no-repeat;
+	margin: 0 auto;
+	background: url(../../images/403.png) no-repeat;
+	background-size: 100%;
 	display: block;
 }
 .error-pix-404 {
 	width: 312px;
 	height: 157px;
-	margin: 0px auto;
-	background-image: url(../../images/404.png);
-	background-repeat: no-repeat;
+	margin: 0 auto;
+	background: url(../../images/404.png) no-repeat;
+	background-size: 100%;
 	display: block;
 }
 .error-text-sec {
