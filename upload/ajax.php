@@ -1754,7 +1754,6 @@ if(!empty($mode))
 					$response['photo'] = $link;
 					$response['photo_key'] = $photo_key;
 					$response['src_string'] = $srcString;   // Image source.
-					sleep(1); 
 					echo json_encode($response);    		 
 				}
 			}
