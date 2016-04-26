@@ -84,4 +84,11 @@
 		<script type="text/javascript" src="{$theme}/js/fast_qlist.js"></script>
 		<script type="text/javascript" src="{$theme}/js/uslider_js/jquery.mousewheel.js"></script>
 		{include_header file='global_header'}
+		{if $Cbucket->header_files}
+		    <!-- Including Headers -->
+		    {foreach from=$Cbucket->header_files key=file item=type}
+		        {include_header type=$type file=$file}
+		    {/foreach}
+		    <!-- Ending Headers -->
+		{/if}
 	</head>

@@ -271,6 +271,11 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES (NULL, 'ge
 INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES (NULL, 'gen_1080', 'no');
 INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES (NULL, 'photo_activation', '1');
 
+-- Addition for 2.8.1
+INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES ('index_recent','6');
+INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES ('index_featured','2');
+
+
 
 
 
