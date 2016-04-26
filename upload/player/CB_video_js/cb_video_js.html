@@ -9,16 +9,21 @@
 {/if}
 {/if}
 <!-- End  -->
-
+{if $development_mode}
+<link rel="stylesheet" href="{$cb_vjs_player_url}/css/video-js.css" />
+{else}
 <link rel="stylesheet" href="{$cb_vjs_player_url}/css/video-js.min.css" />
+{/if}
 <link href="{$cb_vjs_player_url}/css/cb_vjs_plugin.css" rel="stylesheet">
 <link href="{$cb_vjs_player_url}/css/videojs.ads.css" rel="stylesheet">
 <link href="{$cb_vjs_player_url}/css/videojs.ima.css" rel="stylesheet">
 <link href="{$cb_vjs_player_url}/css/cb_vjs_resolution.css" rel="stylesheet">
 
-<!-- <link href='//fonts.googleapis.com/css?family=PT+Sans:400,700,700italic,400italic' rel='stylesheet' type='text/css'> -->
-
+{if $development_mode}
+<script src="{$cb_vjs_player_url}/js/video-js.js"></script>
+{else}
 <script src="{$cb_vjs_player_url}/js/video-js.min.js"></script>
+{/if}
 <script src="{$cb_vjs_player_url}/js/cb_vjs_custom.js"></script>
 <script src="{$cb_vjs_player_url}/js/cb_vjs_plugin.js"></script>
 <script src="{$cb_vjs_player_url}/js/cb_vjs_resolution.js"></script>
