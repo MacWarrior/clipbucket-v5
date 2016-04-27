@@ -7,6 +7,8 @@
 	{$currentPage = 'collections'}
 {elseif $currentPage == 'watch_video' || $currentPage == 'videos'}
 	{$currentPage = 'videos'}
+{elseif $currentPage == 'index'}
+	{$currentPage = 'videos'}
 {/if}
 
 {$pageType = $smarty.get.type|lower}
