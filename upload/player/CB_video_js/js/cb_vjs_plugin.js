@@ -49,6 +49,7 @@ cbvjsheader.prototype.init = function(){
 	var CbVjsHeader = document.createElement("div");
 	CbVjsHeader.id = "vjs-cb-header";
 	CbVjsHeader.className = "vjs-cb-header-caption";
+	CbVjsHeader.innerHTML = "<div class='captionBlock'><div class='vidTitle col'><p>Intersteller movie review 2015</p></div><div class='uploaderName col'>by Arslan</div></div>";
 
 	var BigPlayButton = cbvjsheader.player.getChild('bigPlayButton').el_;
 	cbvjsheader.player.el_.insertBefore(CbVjsHeader, BigPlayButton);
