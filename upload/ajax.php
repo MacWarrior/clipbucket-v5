@@ -1719,41 +1719,79 @@ if(!empty($mode))
         }
         break;
 
-        case 'photo_ajax':
+        case 'photo_ajax':{
         	try{
-				if(isset($_POST['photo'])) {           // Exception Handling.
+
+		/*		if(isset($_POST['photo']) && isset($_POST['user'])) {           // Exception Handling.
 					$photo = $_POST['photo']; 
-					$params['details'] = $photo; 
-					$params['size'] = '_l';			 // Size of an image.
+					$user = $_POST['user'];
+					$params['details'] = $photo;
+					//pex($user,true);
+					if($myquery->is_commentable($photo,'p')) {
+						assign('id',$photo['photo_id']);
+						assign('type',"p");
+						$temp = Fetch($style_dir.'/blocks/comments/add_image_comment.html');
+					}
+				
+					$category = $userquery->get_category($user['category']);
+					$collection = $photo['collection_id']; 
+					$total_comments = $photo['total_comments'];
+					$photo_title = $photo['photo_title'];
+					$photo_description = $photo['photo_description'];
+					$photo_tags = $photo['photo_tags'];
+					$photo_views = $photo['views'];
+					$photo_id = $photo['photo_id'];
+
+					$details = json_encode($photo['photo_details']);
+					$size = '_'.$details[4]; // size of an image
 					if(is_null($photo)) {
 						throw new Exception("Value is not coming from the ajax call");
 					}
 					$img = get_photos($params['details']);   // Getting photos. 
-					$srcString = BASEURL.'/files/photos/'.$photo['file_directory'].'/'.$photo['filename'].$params['size'].'.'.$photo['ext'];
+					$srcString = BASEURL.'/files/photos/'.$photo['file_directory'].'/'.$photo['filename'].$size.'.'.$photo['ext'];
 					$photo_key = $photo['photo_key'];
+					$response['photo'] = $photo;
 					$response['src_string'] = $srcString;  // Image Source.
-					$response['photo_key'] = $photo_key;   // Image key.
-					echo json_encode($response);           // Json Respons. 
-					}
-
-				if(isset($_POST['photo_pre']) || isset($_POST['photo_nxt'])) { 
-					if($_POST['photo_pre']) {
-						$items ="prev";
-						$photo = $_POST['photo_pre']; 
-					}
-					if($_POST['photo_nxt']) {
-						$items = "next";
-						$photo = $_POST['photo_nxt'];  
-					}
-
-					$ci_id = $photo['ci_id'];					// images order id.
+					$response['photo_key'] = $photo_key; 
+					$response['collection_id'] = $collection; // Image key.
+					$response['photo_title'] = $photo_title;
+					$response['photo_description'] = $photo_description;
+					$response['photo_views'] = $photo_views;
+					$response['photo_tags'] = $photo_tags;
+					$response['category'] = $category['category_name'];
+					$response['template'] = $temp;
+					$response['total_comments'] = $total_comments;
+					$response['photo_id'] = $photo_id;
+					echo json_encode($response);           // Json Response. 
+				}*/
+				if(isset($_POST['photo_pre']) ) { 
+					$photo = $_POST['photo_pre'];
+					$user = $_POST['user']; 
+					$items = $_POST['item'];
+					$ci_id = $photo['ci_id'];
+					$photo_title = $photo['photo_title'];
+					$category = $userquery->get_category($user['category']);
+					$photo_description = $photo['photo_description'];
+					$photo_tags = $photo['photo_tags'];
+					$photo_views = $photo['views'];
 					$collection = $photo['collection_id']; 	// collection id.
 					$link = $cbcollection->get_next_prev_item($ci_id,$collection,$item=$items,$limit=1,$check_only=false);  // getting Previous item
-					$srcString = BASEURL.'/files/photos/'.$link[0]['file_directory'].'/'.$link[0]['filename'].$link[0]['size'].'.'.$link[0]['ext'];  // Image Source... 
+					$srcString =BASEURL.'/files/photos/'.$link[0]['file_directory'].'/'.$link[0]['filename'].$link[0]['size'].'.'.$link[0]['ext'];  // Image Source... 
 					$photo_key = $link[0]['photo_key'];  // Image Key.
+					$total_comments = $link[0]['total_comments'];
+					
 					$response['photo'] = $link;
 					$response['photo_key'] = $photo_key;
 					$response['src_string'] = $srcString;   // Image source.
+					$response['collection_id'] = $collection;
+					$response['photo_title'] = $photo_title;
+					$response['photo_description'] = $photo_description;
+					$response['photo_views'] = $photo_views;
+					$response['photo_tags'] = $photo_tags;
+					$response['category'] = $category['category_name'];
+					$response['template'] = $temp;
+					$response['total_comments'] = $total_comments;
+					sleep(1);
 					echo json_encode($response);    		 
 				}
 			}
@@ -1763,8 +1801,8 @@ if(!empty($mode))
 				$response["msg"] = 'Message: ' .$e->getMessage();  // Error message.. 
 				echo (json_encode($response));
 			}
-        	break;
-    
+        }
+    	break;
             
 		default:
 		header('location:'.BASEURL);
