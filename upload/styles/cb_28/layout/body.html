@@ -1,9 +1,12 @@
 {include file="$style_dir/global_header.html"}
     <body>
+    	
 		<div id="container">
 			{ANCHOR place='premium_button'}
-			{include file="$style_dir/header.html" }
-
+			<!-- This Condition is added for view photo ajx based request -->
+			{if ($_GET['moto'] != 'ajax')}
+           		 {include file="$style_dir/header.html"}
+        	{/if}
 			{*if this_page('channels')*}
 			{*include file="$style_dir/sidebar.html" display_type='channels'*}
 
