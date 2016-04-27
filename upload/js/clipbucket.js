@@ -2060,6 +2060,7 @@
 			},
 					function(data)
 					{
+						$("#playlist_form_result").html("");
 						if(!data)
 							alert("No data");
 						else
