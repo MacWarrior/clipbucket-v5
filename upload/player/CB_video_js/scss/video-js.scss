@@ -38,7 +38,9 @@
 @import "components/adaptive";
 @import "components/captions-settings";
 @import "components/modal-dialog";
-
+.player-holder {
+	overflow: hidden;
+}
 .vjs-cb-header-caption {
 	position: absolute;
 	display: none;
@@ -96,11 +98,14 @@
 }
 @media only screen and (max-width: 767px) {
 	.video-js .vjs-big-play-button {
-		font-size: 60px;
-		line-height: 50px;
-		height: 60px;
-		width: 60px; // Firefox bug: For some reason without width the icon wouldn't show up. Switched to using width and removed padding.
-		margin-top: -30px;
-		margin-left: -30px;
+		&:before {
+			font-size: 60px;
+			line-height: 50px;
+			height: 60px;
+			width: 60px; // Firefox bug: For some reason without width the icon wouldn't show up. Switched to using width and removed padding.
+			display: block;
+			margin-top: -30px;
+			margin-left: -30px;
+		}
 	}
 }

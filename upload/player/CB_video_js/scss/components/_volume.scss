@@ -60,7 +60,7 @@
 	// Volume handle
 	&:before {
 		position: absolute;
-		font-size: 0.9em; // Doing this to match the handle on play progress.
+		font-size: 1em; // Doing this to match the handle on play progress.
 		color: $primary-foreground-color;
 	}
 }
@@ -79,7 +79,7 @@
 
 	// Volume handle
 	&:before {
-		top: -0.3em;
+		top: -0.23em;
 		right: -0.5em;
 	}
 }
@@ -141,7 +141,4 @@
 	// An inline volume should never have a menu background color.
 	//  This protects it from external changes to background colors.
 	background-color: transparent !important;
-}
-.vjs-menu-button-inline .vjs-menu {
-	top: 6px;
 }
