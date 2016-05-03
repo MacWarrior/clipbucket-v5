@@ -100,7 +100,11 @@ if (play_ad){
 			cb_vjs.cb_vjs_elements(el_options);
 
 			//Calling Resolution switcher plugin
-			cb_vjs.videoJsResolutionSwitcher();
+			var res_options = {
+				default : 'high',
+				dynamicLabel : false
+			}
+			cb_vjs.videoJsResolutionSwitcher(res_options);
 
 			//Calling Resolution switcher plugin
 			if (play_ad){
