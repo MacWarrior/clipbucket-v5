@@ -1192,8 +1192,6 @@ ALTER TABLE  `{tbl_prefix}video` ADD  `file_directory` VARCHAR( 10 ) NOT NULL AF
 -- Alterations for 2.8.1
 
 ALTER TABLE `{tbl_prefix}video` ADD  `thumbs_version` varchar(5)  NOT NULL DEFAULT  "2.6";
-INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES ('index_recent','6')
-INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES ('index_featured','2')
 
 /*Indexing of following tables*/
 /*Author: Sikander Ali  */
