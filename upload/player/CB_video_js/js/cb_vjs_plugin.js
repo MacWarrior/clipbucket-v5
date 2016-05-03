@@ -1,3 +1,4 @@
+//Starting CB logo custom elements class
 var cbvjslogo = function(player,options){
 	var cbvjslogo = this;
 	
@@ -33,7 +34,7 @@ cbvjslogo.prototype.onclick = function(){
 	});
 }
 
-
+//Starting Captions Menu Holder Class
 var cbvjsheader = function(player,options){
 	var cbvjsheader = this;
 	
@@ -49,7 +50,7 @@ cbvjsheader.prototype.init = function(){
 	var CbVjsHeader = document.createElement("div");
 	CbVjsHeader.id = "vjs-cb-header";
 	CbVjsHeader.className = "vjs-cb-header-caption";
-	CbVjsHeader.innerHTML = "<div class='captionBlock'><div class='vidTitle col'><p>Intersteller movie review 2015</p></div><div class='uploaderName col'>by Arslan</div></div>";
+	CbVjsHeader.innerHTML = "<div class='captionBlock'><div class='vidTitle col'><p>"+cbvjsheader.title+"</p></div><div class='uploaderName col'>by "+cbvjsheader.uploader+"</div></div>";
 
 	var BigPlayButton = cbvjsheader.player.getChild('bigPlayButton').el_;
 	cbvjsheader.player.el_.insertBefore(CbVjsHeader, BigPlayButton);
@@ -57,11 +58,14 @@ cbvjsheader.prototype.init = function(){
 
 
 function cb_vjs_elements(settings){
+
 	var logo_settings = settings.logo;
 	var header_settings = settings.header;
+
 	CbVjsLogo = new cbvjslogo(this,logo_settings);
 	CbVjsHeader = new cbvjsheader(this,header_settings);
 }
+
 videojs.plugin('cb_vjs_elements', cb_vjs_elements);
 
     
