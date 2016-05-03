@@ -3,6 +3,7 @@
 {assign var=json value=$photo.photo_details|json_decode}
 {$curr_photo = $photo|@json_encode}
 {$user_admin = $user|@json_encode}
+{$srcfirst = {get_photo(['details'=>$photo])}}
 
 <input type="hidden" value="{$curr_photo}" id="xyz">
 
@@ -13,16 +14,11 @@
 			</div>
 
 			<div class="clearfix photo-view" >
-		<!-- 	<i id="enlarge" class="fa fa-expand fa-3x" style="float:right; cursor:pointer" data-toggle="modal" data-target="#myModal"></i> -->
 			<div id="gallery">
 				<i id="enlarge" class="fa fa-expand fa-3x" style="float:right; cursor:pointer" data-toggle="modal" data-target="#myModal"></i>
-			{get_photo details=$photo size='l' class='img-responsive center-block' output='html' height="100"}
+			{get_photo details=$photo  class='img-responsive center-block' output='html' height="100"}
 			</div>
 				<!-- Enlarge icon -->
-		
-
-				
-				<!-- <img id="gallery" class="img-responsive center-block" src="" height="42px"/> -->
 
 				<!-- overlay div when clicked on extend icon -->
 						<div id="myNav" class="overlay">
@@ -35,7 +31,7 @@
 							</div>
 
 							    <div class="overlay-content">
-							     <img id="gallery-exd" class="img-responsive center-block" src="{get_photo(['details'=>$photo,'size'=>'l'])}"/>
+							     <img id="gallery-exd" class="img-responsive center-block" src="{get_photo(['details'=>$photo])}"/>
 							   </div>
 						 </div>
 						 <!-- Next and Previous button  -->
@@ -59,8 +55,8 @@
 							<a href="{$userquery->profile_link($user)}">{$user.username}</a>
 						</h2>
 						<div class="views-counter">
-							<!-- <span>{prettyNum($photo.views)}</span> -->
-							<span id="no-of-views"></span>
+							<span>{prettyNum($photo.views)}</span>
+					
 						</div>
 					</div>
 					<div class="user-likes-sub clearfix">
@@ -102,18 +98,18 @@
 						<div class="tab-pane fade in clearfix active" id="cb-item-info">
 							<div class="clearfix watch-vid-details">
 								<ul class="clearfix desc-list">
-									<li><strong>{lang('Photo description: ')}</strong> <span id="description"></span><!-- :&nbsp;{$photo.photo_description|truncate:90} --></li>
+									<li><strong>{lang('Photo description: ')}</strong> <span id="description"></span>:&nbsp;{$photo.photo_description|truncate:90}</li>
 									
-								<!-- 	 {assign var=category value=$userquery->get_category($user.category)}  -->
+									 {assign var=category value=$userquery->get_category($user.category)} 
 
-									<!-- <li id="category"></li>
-		 -->
-									<li><strong>{lang('Category')}</strong>:&nbsp;<!-- {$category.category_name} -->
+									<li id="category"></li>
+		
+									<li><strong>{lang('Category')}</strong>:&nbsp;{$category.category_name}
 									<span id="category"></span>
 									</li>
-									<li><strong>{lang('Tags')}</strong>:&nbsp;<span id="tags"></span></strong><!-- {$photo.photo_tags|tags:photos} --></li>
+									<li><strong>{lang('Tags')}</strong>:&nbsp;<span id="tags"></span></strong>{$photo.photo_tags|tags:photos}</li>
 
-									<li><strong>{lang('Views')}</strong>:&nbsp; <span id="views"></span></li>
+									<li><strong>{lang('Views')}</strong>:&nbsp; <span id="views">{$photo.views}</span></li>
 								</ul>
 							</div>
 						</div>
@@ -121,7 +117,7 @@
 						<div class="tab-pane fade in clearfix" id="cb-item-share">
 							<ul class="social-share">
 								<li>
-									<a href="http://www.facebook.com/sharer/sharer.php?s=100&p[url]={videoLink($video)|urlencode}&p[images][0]={get_thumb vdetails=$video}&p[title]={$video.title|title|urlencode}&p[summary]={$video.description|description|urlencode}" target="_blank" class="btn-fb icon-facebook">
+									<a href="http://www.facebook.com/sharer/sharer.php?s=100&p[url]={$cbphoto->photo_links($photo,view_photo)|urlencode}&p[images][0]={$cbphoto->get_image_file($photo.photo_id,o)}&p[title]={$photo.title|title|urlencode}&p[summary]={$photo.description|description|urlencode}" target="_blank" class="btn-fb icon-facebook">
 										<span>Facebook</span>
 									</a>
 								</li>
@@ -167,12 +163,14 @@
 					<div class="pad-bottom">
 						<div  class="addComment clearfix">
 							<div class="com_count" id="com_count">
-								<h2><span id="total_cmt"></span>&nbsp;<span>{lang code='comments'}</span></h2>
+								<h2><span>{$photo.total_comments} 
+								{if $photo.total_comments <= 1 }
+								{lang code='comment'} 
+								{else}
+								{{lang code='comments'} }
+								{/if}
+								</span></h2>
 							</div>
-							<div id="cmts">
-							</div>
-						<!-- 	<div id="c">
-							</div> -->
 
  						{if $myquery->is_commentable($photo,'p')}
 							{include file="$style_dir/blocks/comments/add_image_comment.html" id=$photo.photo_id type=p}
@@ -222,7 +220,7 @@
 					<div class="clearfix collection-item col-lg-6 col-md-6 col-sm-6 col-xs-6"> 
 						<div class="collection-holder">
 							<div class="photo-block">
-								<a href="{$cbphoto->photo_links($item,'view_item')}">
+								<a href="{$cbphoto->photo_links($item,'view_photos')}">
 									<img alt="{$collection.title}" title="{$collection.title}" class="img-responsive" id="photo_{$collection.ci_id}" src="{$first_col_thumb}">
 									<div class="collection-info">
 										<span>{$collection.total_objects}</span>Photo(s)
@@ -254,10 +252,11 @@ var collection_id;
 var mode = "photo_ajax";
 var key; // for passing key to different attributes
 var d = {$curr_photo}; // photo info
+var curr_photo = {$curr_photo};
 var user = {$user_admin};
 var r = $('<i class="glyphicon glyphicon-refresh animate-spin pic-glyp" style="position:absolute;left:50%;top: 50%;font-size:16px;line-height:16px;width:16px;height:16px;margin:-8px 0 0 -8px;"></i>');  // Ajax loader 
 var b = $('<i class="glyphicon glyphicon-refresh animate-spin pic-glyp" style="position:absolute;left:50%;top: 50%;font-size:16px;line-height:16px;width:16px;height:16px;margin:-8px 0 0 -8px; color:#fff;"></i>'); // Extend Ajax Loader
-//getComments('p','{$photo.photo_id}','{$photo.last_commented}',1,'{$photo.total_comments}','{$object_type}')
+
 
 $(document).ready(function()
 	{ldelim}
@@ -283,8 +282,6 @@ $(document).ready(function(){
 	var form_selector = 'comment_form';
 	var type = $(this).data('type');
 	var dataId = $(this).data('id');
-	//var type = '{$type}';
-	//var video_id = '{$vdo.video_id}';
 	$('body').on("click","#add_comment_button",function(){
 		add_comment_js(form_selector,type,dataId);
 	});
@@ -301,7 +298,7 @@ $(document).ready(function(){
 
 // event which brings previous image from the collection 	
 $(document).on("click", ".view-photo", function () {
-	var curr_photo = d;
+//	var curr_photo = d;
 	var user_admin = user;
 	var check = $(this).data('check');
 	if(check == "prev") {
@@ -337,15 +334,13 @@ $(document).on("click", ".view-photo", function () {
   					$('.view-photo').prop("disabled",false);
 					$("#gallery").fadeTo("normal",0.99);
 					$('#gallery-exd').fadeTo( "normal", 0.99 );
-					d = xhr.photo[0];
-
-					
+					//d = xhr.photo[0];
 					$('#gallery-exd').attr("src",key_globel);	
 					$("#gallery").attr("src",key_globel);
-					$('#cmts').html(xhr.template);
-					$('#total_cmt').text(d.total_comments);
+
 
   				 	window.history.pushState("", "", baseurl+"/view_item.php?item="+xhr.photo_key+"&type=photos&collection="+xhr.collection_id);
+  				 	$('.dropdown-toggle').dropdown();
 					$('.pic-glyp').remove();
   			});
   			
@@ -364,11 +359,9 @@ $(document).on("click", ".en-large", function () {
 	var check = $(this).data('check');
 	if(check == "prev") {
 		var pre_next = "prev";	
-		//alert(pre_next);
 	}
 	if(check == "next"){
 		var pre_next = "next";
-		//alert(pre_next);
 	}	
 		data = {
 		'mode': mode,
@@ -382,8 +375,6 @@ $(document).on("click", ".en-large", function () {
 		data: data,
 		dataType: 'json',
 		beforeSend: function() {
-			//$('.photo-view').append(r);
-			//$('#gallery').fadeTo( "slow", 0.33 );
 			$('.overlay-content').append(b);
 			$('#gallery-exd').fadeTo( "slow", 0.33 );
 			$('.en-large').prop("disabled",true);
@@ -393,15 +384,11 @@ $(document).on("click", ".en-large", function () {
 			$("#gallery").fadeTo("normal",0.99);
 			$('#gallery-exd').fadeTo( "normal", 0.99 );
 			d = xhr.photo[0];
-			key = d.photo_key;
-			console.log(key);
-			//console.log(xhr.collection_id);
 			key_globel = xhr.src_string;
+			console.log(key_globel);
 			collection_id = xhr.collection_id;
 			$('#gallery-exd').attr("src",key_globel);
-			//$("#gallery").attr("src",key_globel);
 			$("#btn-close").attr("data-check",key);
-			//window.history.pushState("", "", baseurl+"/view_item.php?item="+key+"&type=photos&collection="+xhr.collection_id);
 			$('.pic-glyp').remove();
 		}
 	});
@@ -409,26 +396,23 @@ $(document).on("click", ".en-large", function () {
 });
 
 $(document).on("click", "#enlarge", function () {
-	
+
 	document.getElementById("myNav").style.width = "100%";
-	$('#gallery-exd').attr("src",key_globel);
+	document.getElementById("myNav").style.left = "0";
+	$('#gallery-exd').attr("src","{$srcfirst}");
+	d=curr_photo;
 });
 
 // On closing modal update image source..
 $(document).on("click", "#btn-close", function () {
 
-	document.getElementById("myNav").style.width = "0%";
-	//$("#gallery-exd").attr("src",first_source);
-	//console.log(key);
-	//console.log(key_globel);
-	//$("#gallery").attr("src",key_globel);
-	//$("body").load(baseurl+"/view_item.php?item="+key+"&type=photos&collection="+collection_id);
+	 document.getElementById("myNav").style.left = "-100%";
 
 });
 
 $( document ).on( 'keydown', function ( e ) {
     if ( e.keyCode === 27 ) { // ESC
-        document.getElementById("myNav").style.width = "0%";
+       document.getElementById("myNav").style.left = "-100%";
     }
 });
 
@@ -443,16 +427,19 @@ $( document ).on( 'keydown', function ( e ) {
     position: fixed; /* Stay in place */
     z-index: 6; /* Sit on top */
     left: 0;
+    right: 100%;
     top: 0;
     background-color: rgb(0,0,0); /* Black fallback color */
     background-color: rgba(0,0,0, 0.9); /* Black w/opacity */
     overflow-x: hidden; /* Disable horizontal scroll */
     overflow-y: hidden;
-    transition: 0.5s; /* 0.5 second transition effect to slide in or slide down the overlay (height or width, depending on reveal) */
+    transition: 0.3s; /* 0.5 second transition effect to slide in or slide down the overlay (height or width, depending on reveal) */
+
+  /*	transform: translateX(100%);*/
 }
 .overlay img{
 	position: relative;
-  	top: 10%;
+  	/*top: 10%;*/
   
 
 }
