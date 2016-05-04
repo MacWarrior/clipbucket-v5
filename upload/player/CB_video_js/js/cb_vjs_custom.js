@@ -7,7 +7,7 @@ function new_player_height (argument) {
 	$(".video-js").css("height",h+"px");
 }
 //new_player_height();
-$(document).load(function(){
+$(window).load(function(){
 	new_player_height();
 });
 $(document).ready(function() {
