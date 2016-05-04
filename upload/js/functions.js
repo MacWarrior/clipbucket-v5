@@ -1861,7 +1861,7 @@ function decode64(input) {
 	}
 
 	function isValidEmail(email) {
-		if (email.match(/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/)) {
+		if (email.match(/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/)) {
 			return email;
 		} else {
 			return false;
