@@ -5,7 +5,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 (2, 'site_slogan', 'A way to broadcast yourself'),
 (3, 'baseurl', ''),
 (4, 'basedir', ''),
-(5, 'template_dir', 'cbv2.7'),
+(5, 'template_dir', 'cb_28'),
 (6, 'player_file', 'cb_video_js.php'),
 (7, 'closed', '0'),
 (8, 'closed_msg', 'We Are Updating Our Website, Please Visit us after few hours.'),
