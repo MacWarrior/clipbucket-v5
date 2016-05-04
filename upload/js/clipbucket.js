@@ -1922,7 +1922,7 @@
 			},'text');
 		}
 
-		this.showMeTheMsg = function(data, alertDiv = false) {
+		this.showMeTheMsg = function(data, alertDiv) {
 			curObj = this;
 			if (alertDiv == true) {
 				isOk = $(data).filter('div.msg').find('div.alert').html();
