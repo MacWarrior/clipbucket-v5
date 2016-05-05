@@ -3,7 +3,7 @@
 				{if $smarty.const.THIS_PAGE == 'videos'}
 					{$catname = $cbvid->get_category_name($category)}
 					{$nowdo = "videos"}
-				{elseif $smarty.const.BEATSLIST}
+				{elseif $smarty.const.BEATSLIST && function_exists('beat_catname')}
 				 {$catname = beat_catname($category)}
 				{else}
 					{$catname = $userquery->get_category_name($category)}
