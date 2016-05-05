@@ -9,6 +9,8 @@
 	{$currentPage = 'videos'}
 {elseif $currentPage == 'index'}
 	{$currentPage = 'videos'}
+{elseif $currentPage == 'list'}
+	{$currentPage = 'audios'}
 {/if}
 
 {$pageType = $smarty.get.type|lower}
@@ -99,6 +101,7 @@
 												{/if}
 												{$counter = $counter + 1}
 												{/foreach}
+												{ANCHOR place="beat_search"}
 											</ul>
 										</div>
 										<input type="text" class="form-control" name="query" placeholder="search keyword here" value="{'query'|get_form_val:true}" id="query">
