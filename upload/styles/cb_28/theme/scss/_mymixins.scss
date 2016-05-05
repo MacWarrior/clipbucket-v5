@@ -113,11 +113,11 @@ $error-color:#f44336;
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#99000000', endColorstr='#03000000',GradientType=0 ); /* IE6-9 */
 }
 @mixin gradientbottom-bg(){
-	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#000000+0,000000+100&0.01+0,0.02+8,0.09+18,0.23+28,0.43+41,0.57+58,0.69+78,0.76+100 */
-	background: -moz-linear-gradient(top,  rgba(0,0,0,0.01) 0%, rgba(0,0,0,0.02) 8%, rgba(0,0,0,0.09) 18%, rgba(0,0,0,0.23) 28%, rgba(0,0,0,0.43) 41%, rgba(0,0,0,0.57) 58%, rgba(0,0,0,0.69) 78%, rgba(0,0,0,0.76) 100%); /* FF3.6-15 */
-	background: -webkit-linear-gradient(top,  rgba(0,0,0,0.01) 0%,rgba(0,0,0,0.02) 8%,rgba(0,0,0,0.09) 18%,rgba(0,0,0,0.23) 28%,rgba(0,0,0,0.43) 41%,rgba(0,0,0,0.57) 58%,rgba(0,0,0,0.69) 78%,rgba(0,0,0,0.76) 100%); /* Chrome10-25,Safari5.1-6 */
-	background: linear-gradient(to bottom,  rgba(0,0,0,0.01) 0%,rgba(0,0,0,0.02) 8%,rgba(0,0,0,0.09) 18%,rgba(0,0,0,0.23) 28%,rgba(0,0,0,0.43) 41%,rgba(0,0,0,0.57) 58%,rgba(0,0,0,0.69) 78%,rgba(0,0,0,0.76) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#03000000', endColorstr='#c2000000',GradientType=0 ); /* IE6-9 */
+	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#000000+0,000000+100&0+0,0.01+9,0.07+21,0.24+36,0.53+55,0.78+76,0.8+81,0.8+100 */
+	background: -moz-linear-gradient(top,  rgba(0,0,0,0) 0%, rgba(0,0,0,0.01) 9%, rgba(0,0,0,0.07) 21%, rgba(0,0,0,0.24) 36%, rgba(0,0,0,0.53) 55%, rgba(0,0,0,0.78) 76%, rgba(0,0,0,0.8) 81%, rgba(0,0,0,0.8) 100%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(top,  rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 9%,rgba(0,0,0,0.07) 21%,rgba(0,0,0,0.24) 36%,rgba(0,0,0,0.53) 55%,rgba(0,0,0,0.78) 76%,rgba(0,0,0,0.8) 81%,rgba(0,0,0,0.8) 100%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to bottom,  rgba(0,0,0,0) 0%,rgba(0,0,0,0.01) 9%,rgba(0,0,0,0.07) 21%,rgba(0,0,0,0.24) 36%,rgba(0,0,0,0.53) 55%,rgba(0,0,0,0.78) 76%,rgba(0,0,0,0.8) 81%,rgba(0,0,0,0.8) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#cc000000',GradientType=0 ); /* IE6-9 */
 }
 @mixin after(){
 	display: block;
