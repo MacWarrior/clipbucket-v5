@@ -10,6 +10,13 @@
 				{lang code='collection' assign='object_type'}
 				{uploadButton details=$c output='link' target="_blank" class='btn btn-success pull-right'}
 			</h1>
+			{if $c.type == 'photos'}
+			{$type = 'p'}
+			{else}
+			{$type = 'v'}
+			{/if}
+
+			{if $type == 'p'} 
 			<div id="photos" class="clearfix row">
 				{section name=list loop=$objects}
 				<div class="item-photo col-lg-4 col-md-4 col-sm-6 col-xs-12">
@@ -23,6 +30,21 @@
 				<div class="item-photo col-lg-4 col-md-4 col-sm-6 col-xs-6">
 				{/section}
 			</div>
+			{else}
+			<div class="videos clearfix">
+				<div class="clearfix row">
+				{if $objects}
+					{foreach $objects as $video}
+						<div class="item-video col-lg-3 col-md-4 col-sm-4 col-xs-12">
+						{include file="$style_dir/blocks/videos/video.html" display_type='homeVideos'}
+						</div>
+					{/foreach}
+				{else}
+					<div class="well well-info">No Videos Found !</div>
+				{/if}
+				</div>
+			</div>
+			{/if}
 			<div align="center" class="clearfix">
 				{include file="$style_dir/blocks/pagination.html"}
 			</div>
