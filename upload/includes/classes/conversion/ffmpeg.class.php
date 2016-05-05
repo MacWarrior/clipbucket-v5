@@ -1990,7 +1990,8 @@ class FFMpeg{
 			$size_tag = $size_tag.'-';
 		}
 
-		if (!empty($file_directory && !empty($filename))){
+		if (!empty($file_directory) && !empty($filename))
+		{
 			$thumbs_outputPath = $file_directory.'/';
 		}else{
 			$thumbs_outputPath = $this->options['outputPath'];
