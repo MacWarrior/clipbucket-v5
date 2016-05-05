@@ -1,3 +1,8 @@
+{if $collection.type == 'photos'}
+{$type = 'p'}
+{else}
+{$type = 'v'}
+{/if}
 <div class="collection-holder">
 	<div class="photo-block">
 		<a href="{$baseurl}/view_collection.php?cid={$collection.collection_id}&type={$collection.type}" title="{$collection.collection_name}">
