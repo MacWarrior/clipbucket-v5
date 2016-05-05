@@ -1736,7 +1736,6 @@ if(!empty($mode))
 					$response['photo_key'] = $photo_key;
 					$response['src_string'] = $srcString;   // Image source.
 					$response['collection_id'] = $collection;
-					sleep(1);
 					echo json_encode($response);    		 
 				}
 			}
