@@ -1735,7 +1735,7 @@ function decode64(input) {
 	function add_comment_js(form_id,type)
 	{   
 		$("#add_comment_result").css("display","block");
-		$("#add_comment_button").val('Uploading...');
+		$("#add_comment_button").val('Adding...');
 		$("#add_comment_button").attr("disabled",true);
 		$(".add-reply").attr("disabled",true);
 
