@@ -52,7 +52,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 (49, 'user_rate_opt1', ''),
 (50, 'captcha_type', '0'),
 (51, 'allow_upload', ''),
-(52, 'allowed_types', 'wmv,avi,divx,3gp,mov,mpeg,mpg,xvid,flv,asf,rm,dat,mp4'),
+(52, 'allowed_types', 'wmv,avi,divx,3gp,mov,mpeg,mpg,xvid,flv,asf,rm,dat,mp4,png,jpg'),
 (53, 'version', '2.0.1'),
 (54, 'version_type', 'Alpha'),
 (55, 'allow_template_change', '1'),
