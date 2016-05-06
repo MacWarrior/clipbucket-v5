@@ -20,7 +20,7 @@
 
 				<!-- overlay div when clicked on extend icon -->
 						<div id="myNav" class="overlay">
-							<button type="button" class="close" id="btn-close" data-dismiss="modal" data-check="">&times;</button>
+							<button type="button" class="img-close" id="btn-close" data-dismiss="modal" data-check="">&times;</button>
 							<!-- Next and Previous Button inside overlay -->
 							<div class="btn-holder clearfix">
 								<button class="btn view-photo-nxt icon-right-arrow next en-large" data-check="next" ><i>next</i></button>
@@ -401,91 +401,4 @@ $( document ).on( 'keydown', function ( e ) {
        document.getElementById("myNav").style.left = "-100%";
     }
 });
-
 </script>
-
-<style type="text/css">
-	/* The Overlay (background) */
-#gallery {
-	background: #fff none repeat scroll 0 0;
-    height: 474px;
-    margin: 0 0 16px;
-    position: relative;
-}
-.overlay {
-    /* Height & width depends on how you want to reveal the overlay (see JS below) */   
-    height: 100%;
-    width: 0;
-    position: fixed; /* Stay in place */
-    z-index: 6; /* Sit on top */
-    left: 0;
-    right: 100%;
-    top: 0;
-    background-color: rgb(0,0,0); /* Black fallback color */
-    background-color: rgba(0,0,0, 0.9); /* Black w/opacity */
-    overflow-x: hidden; /* Disable horizontal scroll */
-    overflow-y: hidden;
-    transition: 0.3s; /* 0.5 second transition effect to slide in or slide down the overlay (height or width, depending on reveal) */
-
-  /*	transform: translateX(100%);*/
-}
-.overlay img{
-	position: relative;
-  	/*top: 10%;*/
-  
-
-}
-.overlay .photo-view .btn-holder{
-	z-index: 7;
-
-}
-.overlay .close{
-	position: absolute;
-	z-index: 7;
-	width: 40px;
-	height: 40px;
-	padding: 10px;
-	border-radius: 50%;
-	background: #fff;
-	top: 0;
-	right: 0;
-}
-/* Position the content inside the overlay */
-.overlay-content {
-    position: relative;
-    height: 100%;
-    width: 100%; /* 100% width */
-    text-align: center; /* Centered text/links */
-   
-}
-
-/* The navigation links inside the overlay */
-.overlay a {
-    padding: 8px;
-    text-decoration: none;
-    font-size: 36px;
-    color: #818181;
-    display: block; /* Display block instead of inline */
-    transition: 0.3s; /* Transition effects on hover (color) */
-}
-
-/* When you mouse over the navigation links, change their color */
-.overlay a:hover, .overlay a:focus {
-    color: #f1f1f1;
-}
-
-/* Position the close button (top right corner) */
-.closebtn {
-    position: absolute;
-    top: 20px;
-    right: 45px;
-    font-size: 60px !important; /* Override the font-size specified earlier (36px) for all navigation links */
-}
-#enlarge{
-	  cursor: pointer;
-    float: right;
-    padding: 10px;
-    position: absolute;
-    right: 0;
-}
-</style>
