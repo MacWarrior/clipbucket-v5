@@ -174,7 +174,7 @@
 		</section>
 		<aside id="sidebar">
 			{assign var=userFeeds value=$cbfeeds->getUserFeeds($u)}
-			{if $userFeeds}
+			{if $userFeeds && userid()}
 			<h2>{lang code="user_activity"}</h2>
 			<div id="userFeeds" class="user-activities clearfix sidebar-items">
 				{foreach from=$userFeeds item=userFeed}
