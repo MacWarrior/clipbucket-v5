@@ -6,8 +6,6 @@
 {$first_video = $cbvid->get_video($uservideos.0.videokey)}
 {/if}
 
-
-
 {$total_videos = $user.total_videos}
 {$total_photos = $user.total_photos}
 <div id="main" class="container clearfix">
@@ -37,10 +35,12 @@
 						<a href="#user-videos" data-toggle="tab">{lang code='videos'}</a>
 					</li>
 					{/if}
+					{if isSectionEnabled('photos') && $u_control.show_my_photos == 'yes'}
 					<li>
 						<a href="#user-photos" data-toggle="tab">{lang code='photos'}</a>
 					</li>
 					<li>
+					{/if}
 						<a href="#user-playlist" data-toggle="tab">{lang code='playlists'}</a>
 					</li>
 				</ul>
