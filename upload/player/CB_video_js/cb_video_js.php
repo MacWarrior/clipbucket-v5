@@ -32,7 +32,7 @@ if (!function_exists('cb_video_js'))
 		$vdetails = $in['vdetails'];
 
 		$video_play = get_video_files($vdetails,true,true);
-
+	
 		vids_assign($video_play);
 
 		if(!strstr($in['width'],"%"))

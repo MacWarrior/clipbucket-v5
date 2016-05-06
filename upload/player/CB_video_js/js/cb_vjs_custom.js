@@ -11,8 +11,8 @@ $(window).load(function(){
 	new_player_height();
 });
 $(document).ready(function() {
+	new_player_height();	
+});
+$(window).resize(function(event) {
 	new_player_height();
-	$(window).resize(function(event) {
-		new_player_height();
-	});
 });

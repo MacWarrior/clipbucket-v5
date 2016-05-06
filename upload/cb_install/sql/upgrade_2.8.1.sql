@@ -30,3 +30,5 @@ ALTER TABLE `{tbl_prefix}videos` ADD INDEX(`last_viewed`);
 ALTER TABLE `{tbl_prefix}videos` ADD INDEX(`rating`);
 ALTER TABLE `{tbl_prefix}videos` ADD INDEX(`total_comments`);
 ALTER TABLE `{tbl_prefix}videos` ADD INDEX(`last_viewed`);
+
+UPDATE `{tbl_prefix}config` SET value = 'cb_28' WHERE name = 'template_dir';
