@@ -1114,9 +1114,13 @@ h1{
 	position: relative;
 }
 #cb_player{
+	height: 100%;
 	#link_v{
 		display: inline-block;
 		vertical-align: top;
+	}
+	iframe{
+		height: 100%;
 	}
 }
 .video_player{
