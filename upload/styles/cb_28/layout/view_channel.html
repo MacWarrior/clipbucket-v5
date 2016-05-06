@@ -187,7 +187,9 @@
 			<h2>{lang code="Popular Users"}</h2>
 			<div class="clearfix sidebar-channels">
 				{foreach $popular_users as $popular}
-				
+				{if $popular.username == $smarty.get.user}
+					{continue}
+				{/if}
 				<div class="clearfix channel-item">
 					<a href="{$userquery->profile_link($popular)}" class="avatar">
 						<img src="{$userquery->getuserthumb($popular,'small')}" width="50" height="50" class="cb-rounded">
@@ -328,7 +330,6 @@ $('#cover_info').show();
 	$(document).ready(function (){
 		editpickVideos();
 		var id ='{$user.userid}';
-		
 		$('#subscribe_channel').on({
 		click: function(e){
 			e.preventDefault();
