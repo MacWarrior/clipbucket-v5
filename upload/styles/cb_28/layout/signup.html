@@ -315,7 +315,7 @@
 	     }
 	});
 
-	$('input#login_username_sp').on('keyup', function() {
+	$('input#login_username_sp').on('keyup change', function() {
 	     var userName = $('#login_username_sp'),
 	     user = userName.val(),
 	     userLen = user.length;
