@@ -362,13 +362,11 @@ $(document).on("click", ".en-large", function () {
 		dataType: 'json',
 		beforeSend: function() {
 			$('.overlay-content').append(b);
-			$('#gallery-exd').fadeTo( "slow", 0.33 );
 			$('.en-large').prop("disabled",true);
 		},
 		success:function(xhr) {	
 			$('.en-large').prop("disabled",false);
 			$("#gallery").fadeTo("normal",0.99);
-			$('#gallery-exd').fadeTo( "normal", 0.99 );
 			d = xhr.photo[0];
 			key_globel = xhr.src_string;
 			console.log(key_globel);
