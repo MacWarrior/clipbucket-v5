@@ -1149,7 +1149,10 @@ class CBvideo extends CBCategory
 		if($params['pr']) pr($result,true);
 		if($params['count_only']){
 			if (!empty($superCond)){
-				$cond .= " AND ".$superCond;
+				if (!empty($cond)){
+					$cond .= " AND ";
+				}
+				$cond .= $superCond;
 			}
 			return $result = $db->count( cb_sql_table('video') , 'videoid' ,$cond );
 		}
