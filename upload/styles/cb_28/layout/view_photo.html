@@ -316,7 +316,7 @@ $(document).on("click", ".view-photo", function () {
 
 			
 			
-  			$("body").load("view_item.php?item="+xhr.photo_key+"&type=photos&collection="+xhr.collection_id+"&moto=ajax",function(){
+  			$("#main").load("view_item.php?item="+xhr.photo_key+"&type=photos&collection="+xhr.collection_id+"&moto=ajax",function(){
   					$('.view-photo').prop("disabled",false);
 					$("#gallery").fadeTo("normal",0.99);
 					$('#gallery-exd').fadeTo( "normal", 0.99 );
