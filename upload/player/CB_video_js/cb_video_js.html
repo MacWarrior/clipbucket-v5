@@ -44,7 +44,7 @@
     {if $flv_vid == true}
     	<source src='{$file}' type="video/x-flv" />
     {else}
-    	<source src='{$file}' type="video/mp4" label="{$quality}" res="{$quality}"  />
+    	<source src='{$file}' type="video/mp4" label="{strtoupper($quality)}" res="{$quality}"  />
     {/if}
     {/foreach}
     {ANCHOR place="play_def_sub"}
