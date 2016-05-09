@@ -64,7 +64,7 @@
 				{lang code="views"}
 				<span>{$user.profile_hits|number_format}</span>
 			</strong>
-			if isSectionEnabled('videos')
+			{if isSectionEnabled('videos')}
 			<strong>
 				{lang code="videos"}
 				<span>{$user.total_videos|number_format}</span>
