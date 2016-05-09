@@ -48,6 +48,9 @@
 								{$head_menu=cb_menu()}
 								<ul>
 									{foreach $head_menu as $menu}
+									{if $menu.name|lower == 'groups'}
+										{continue}
+									{/if}
 									{if $menu@iteration < 6}
 									{if $menu.name|lower == 'home'}
 										{continue}
