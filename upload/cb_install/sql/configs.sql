@@ -274,6 +274,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES (NULL, 'ph
 -- Addition for 2.8.1
 INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES ('index_recent','6');
 INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES ('index_featured','2');
+UPDATE `{tbl_prefix}config` SET value = 'cb_28' WHERE name = 'template_dir';
 
 
 
