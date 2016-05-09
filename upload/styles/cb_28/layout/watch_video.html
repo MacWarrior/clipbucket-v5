@@ -24,7 +24,7 @@
 							<a href="{$userquery->profile_link($video)}"> {$video.username}</a>
 						</h2>
 						<div class="views-counter">
-							<span>{prettyNum($vdo.views)} {lang code='views'}</span>
+							<span>{prettyNum($vdo.views)} {if $vdo.views > 1}{lang code='views'}{else}view{/if}</span>
 						</div>
 					</div>
 					<div class="user-likes-sub clearfix">
@@ -224,6 +224,9 @@
 				"loadLimit":loadLimit,
 				"playlist": playlist
 			},
+			beforeSend: function() {
+				$(this).text("loading");
+			},
 
 			success: function(data) {
 				if (data == 'none') {
@@ -235,8 +238,11 @@
 		});
 	});
 
+	var aspect_ratio = 1.77778
+	var $cb_player = $("#cb_player");
 
 	$(document).ready(function(){
+		$cb_player.height( $cb_player.width() / aspect_ratio );
 
 		var videoInfo = $("#videoDescription").text();
 		var newInfo = videoInfo.replace(/(((https?:\/\/)|([\s\t]))(www.)?([a-z0-9]+)\.[a-z]+)/g, '<a href="$1">$1</a>');
