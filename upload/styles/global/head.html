@@ -480,8 +480,7 @@ $(document).ready(function() {
     {if $object.videoid}{assign var=vdo value=$object} {/if}
     <meta property="og:title" content="{$vdo.title}" />
     <meta property="og:description" content="{$vdo.description|description|strip_tags}" />
-    <meta property="og:image" content="{getThumb vdetails=$vdo}" />
-    
+    <meta property="og:image" content="{getThumb vdetails=$vdo size=768x432}" />
     {if $Cbucket->configs.facebook_embed=='yes'}
         <meta property="og:type" content="video">
         <meta property="og:video" content='{fb_embed_video video=$vdo}'>
