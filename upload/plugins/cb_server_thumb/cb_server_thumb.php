@@ -461,7 +461,7 @@ if(!function_exists('user_thumb'))
         else if($size=='m')
         {
           $w = 100;
-          $h = 100;  
+          $h = 80;  
         }
         else if($size=='t' || $size=='small' )
         {
