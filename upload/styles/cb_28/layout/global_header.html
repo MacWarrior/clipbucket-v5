@@ -17,13 +17,16 @@
 
 		<!-- RSS FEEDS -->
 		{rss_feeds link_tag=true}
+		{if $ninja_fighting}
+            {ANCHOR place='seo_ninja'}
+        {else}
+        	<meta name="keywords" content="{$Cbucket->configs.keywords}">
+			<meta name="description" content="{$Cbucket->configs.description}">
+			<meta name="distribution" content="global">
 
-		<meta name="keywords" content="{$Cbucket->configs.keywords}">
-		<meta name="description" content="{$Cbucket->configs.description}">
-		<meta name="distribution" content="global">
 
-
-		<title>{cbtitle}</title>
+			<title>{cbtitle}</title>
+        {/if}
 
 		<link rel="stylesheet" href="{$theme}/css/bootstrap.min.css?cache={$cache_buster}">
 
