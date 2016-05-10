@@ -1541,6 +1541,15 @@ class userquery extends CBCategory{
 	{
 		global $Cbucket;
 		$remote = false;
+		if (function_exists('check_adv_social_con_license')) {
+			global $db;
+			$user = $udetails['userid'];
+			$template = $Cbucket->configs['template_dir'];
+			$url = $db->select(tbl('users'),'*',"userid = $user");
+			if ($url[0]['soclid'] != '' && $template == 'cb_28') {
+				return $url[0]['avatar_url'];
+			}
+		}
 		if(empty($udetails['userid']) && $uid)
 			$udetails = $this->get_user_details($uid);
 		//$thumbnail = $udetails['avatar'] ? $udetails['avatar'] : NO_AVATAR;
