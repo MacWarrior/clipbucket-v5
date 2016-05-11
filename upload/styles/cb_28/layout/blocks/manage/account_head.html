@@ -104,72 +104,74 @@
 </div>
 <div class="flaggedtable accountprofile1">
 	<table class="table table-bordered table-striped">
-		<div id="fobjects" class="tab-pane" >
-			<div class="widget-box">
-				<td>
-					<div class="widget-header">
-						<h5><i class="glyphicon glyphicon-flag"></i>Flagged Objects</h5>
-					</div>
+		{if has_access("admin_access")}
+			<div id="fobjects" class="tab-pane" >
+				<div class="widget-box">
+					<td>
+						<div class="widget-header">
+							<h5><i class="glyphicon glyphicon-flag"></i>Flagged Objects</h5>
+						</div>
 
-					<div class="widget-body">
+						<div class="widget-body">
 
-						<div class="tabbable tabs-left">
-							<ul class="nav nav-tabs" id="myTab">
-								<li class="active">
-									<a data-toggle="tab" href="#fvideos">Videos</a>
-								</li>
+							<div class="tabbable tabs-left">
+								<ul class="nav nav-tabs" id="myTab">
+									<li class="active">
+										<a data-toggle="tab" href="#fvideos">Videos</a>
+									</li>
 
-								<li class="photos">
-									<a data-toggle="tab" href="#fphotos">Photos</a>
-								</li>
-							</ul>
-							<br>
-							<div class="tab-content">
-								<div id="fvideos" class="tab-pane active">
-									{section name=list loop=$flagedVideos}
-									<div class="row">
-										<div class="col-md-3">
-											<img src="{getThumb vdetails=$flagedVideos[list]}" width="85" height="70" id="thumbs_{$flagedVideos[list].videoid}" title=""/>
+									<li class="photos">
+										<a data-toggle="tab" href="#fphotos">Photos</a>
+									</li>
+								</ul>
+								<br>
+								<div class="tab-content">
+									<div id="fvideos" class="tab-pane active">
+										{section name=list loop=$flagedVideos}
+										<div class="row">
+											<div class="col-md-3">
+												<img src="{getThumb vdetails=$flagedVideos[list]}" width="85" height="70" id="thumbs_{$flagedVideos[list].videoid}" title=""/>
+											</div>
+											<div class="col-md-6 fvideos">
+												{$flagedVideos[list].title|truncate:50}
+											</div>
+
+											<div class="col-md-7 fvideos">
+												<label class="label label-danger">Uploaded  {$flagedVideos[list].date_added|niceTime}</label>
+												<label class="label label-default"> {lang code='views'} : {$flagedVideos.views|number_format}</label>
+												<label class="label label-primary"> Flags:{$flagedVideos[list].total_flags}</label>
+											</div>
 										</div>
-										<div class="col-md-6 fvideos">
-											{$flagedVideos[list].title|truncate:50}
-										</div>
-
-										<div class="col-md-7 fvideos">
-											<label class="label label-danger">Uploaded  {$flagedVideos[list].date_added|niceTime}</label>
-											<label class="label label-default"> {lang code='views'} : {$flagedVideos.views|number_format}</label>
-											<label class="label label-primary"> Flags:{$flagedVideos[list].total_flags}</label>
-										</div>
+										<hr class="newhr">
+										{/section}
 									</div>
-									<hr class="newhr">
-									{/section}
-								</div>
-								<div id="fphotos" class="tab-pane">
-									{section name=list loop=$flagedPhotos}
-									<div class="row">
-										<div class="col-md-3">
-											<img src="{getThumb vdetails=$flagedPhotos[list]}" width="85" height="70" id="thumbs_{$flagedPhotos[list].photoid}" title=""/>
-										</div>
-										<div class="col-md-6 fusers">
-											{$flagedphotos[list].title|truncate:50}
-										</div>
-										<div class="col-md-2">
-											<strong class="btn btn-primary btn-xs pull-right"> Flags:{$flagedPhotos[list].total_flags}</strong>
-										</div>
-										<div class="col-md-7 fusers">
-											<label class="label label-danger">Uploaded  {$flagedPhotos[list].date_added|niceTime}</label>
-											<label class="label label-default"> {lang code='views'} : {$flagedPhotos.views|number_format}</label>
+									<div id="fphotos" class="tab-pane">
+										{section name=list loop=$flagedPhotos}
+										<div class="row">
+											<div class="col-md-3">
+												<img src="{getThumb vdetails=$flagedPhotos[list]}" width="85" height="70" id="thumbs_{$flagedPhotos[list].photoid}" title=""/>
+											</div>
+											<div class="col-md-6 fusers">
+												{$flagedphotos[list].title|truncate:50}
+											</div>
+											<div class="col-md-2">
+												<strong class="btn btn-primary btn-xs pull-right"> Flags:{$flagedPhotos[list].total_flags}</strong>
+											</div>
+											<div class="col-md-7 fusers">
+												<label class="label label-danger">Uploaded  {$flagedPhotos[list].date_added|niceTime}</label>
+												<label class="label label-default"> {lang code='views'} : {$flagedPhotos.views|number_format}</label>
 
+											</div>
 										</div>
+										{/section}
 									</div>
-									{/section}
 								</div>
 							</div>
-						</div>
-						<!-- /widget-main -->
-					</div><!-- /widget-body -->
+							<!-- /widget-main -->
+						</div><!-- /widget-body -->
+				</div>
 			</div>
-		</div>
+		{/if}
 	</table>
 </div>
 
