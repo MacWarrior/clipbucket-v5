@@ -1,12 +1,16 @@
 {$currentPage = $smarty.const.THIS_PAGE|lower}
 {if $currentPage == 'view_channel' || $currentPage == 'channels'}
 	{$currentPage = 'channels'}
+	{$toSearch = 'channels'}
 {elseif $currentPage == 'view_item' || $currentPage == 'photos'}
 	{$currentPage = 'photos'}
+	{$toSearch = 'photos'}
 {elseif $currentPage == 'collections' || $currentPage == 'view_collection'}
 	{$currentPage = 'collections'}
+	{$toSearch = 'collections'}
 {elseif $currentPage == 'watch_video' || $currentPage == 'videos'}
 	{$currentPage = 'videos'}
+	{$toSearch = 'videos'}
 
 {elseif $currentPage == 'list'}
 	{$currentPage = 'audios'}
@@ -107,7 +111,7 @@
 											</ul>
 										</div>
 										<input type="text" class="form-control" name="query" placeholder="search keyword here" value="{'query'|get_form_val:true}" id="query">
-										<input type="hidden" name="type" class="type" value="{if isset($smarty.get.type)}{$smarty.get.type}{elseif $currentPage}{$currentPage}{else}videos{/if}" id="type">
+										<input type="hidden" name="type" class="type" value="{if isset($smarty.get.type)}{$smarty.get.type}{elseif $toSearch}{$toSearch}{else}videos{/if}" id="type">
 										<button tabindex="-1" type="submit" name="cbsearch" id="cbsearch" class="btn btn-default btn-search icon-search"></button>
 									</div>
 								</form><!-- form Ends -->
