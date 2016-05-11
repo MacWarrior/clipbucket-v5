@@ -20,7 +20,7 @@
 				 <a href="{$userquery->profile_link($user)}">
 					<span>
 						{if $comment.anonym_name != ''}
-							{$comment.anonym_name} (Annonymous)
+							{$comment.anonym_name} (Guest)
 						{else}
 							<a href="{$userquery->profile_link($user)}" >
 							{name($user)}
@@ -57,7 +57,7 @@
 		<div class="comment-info">
 			<strong  class="commenter">
 				{if $comment.anonym_name != ''}
-					{$comment.anonym_name} (Annonymous)
+					{$comment.anonym_name} (Guest)
 				{else}
 				<a href="{$userquery->profile_link($user)}" >
 					{name($user)}
@@ -109,7 +109,7 @@
 								<div class="comment-info">
 									<strong  class="commenter">
 										{if $comment.anonym_name != ''}
-											{$comment.anonym_name} (Annonymous)
+											{$comment.anonym_name} (Guest)
 										{else}
 										<a href="{$userquery->profile_link($user)}" >
 											{name($user)}
