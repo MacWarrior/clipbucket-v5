@@ -44,7 +44,15 @@ class Collections extends CBCategory
 
 		$this->cat_tbl = "collection_categories";
 		$this->section_tbl = "collections";
-		$this->types = array('videos' => lang("Videos"),'photos' => lang("Photos"));
+		$this->types = array();
+		if (isSectionEnabled('videos')) {
+			$this->types['videos'] = lang("Videos");
+		}
+
+		if (isSectionEnabled('photos')) {
+			$this->types['photos'] = lang("Photos");
+		}
+
 		ksort($this->types);
 		$this->setting_up_collections();
 		$this->init_actions();
