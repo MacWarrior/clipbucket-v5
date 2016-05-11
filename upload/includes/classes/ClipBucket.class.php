@@ -254,14 +254,14 @@ class ClipBucket
                 'Mass Email' => 'mass_email.php'
             ),
             //Groups
-            'Groups' =>
+           /* 'Groups' =>
             array(
                 'Add Group' => 'add_group.php',
                 'Manage Groups' => 'groups_manager.php',
                 'Manage Categories' => 'group_category.php?view=show_category',
                 'View Inactive Groups' => 'groups_manager.php?active=no&search=yes',
                 'View Reported Groups' => 'flagged_groups.php',
-            ),
+            ),*/
             //Advertisments
             'Advertisement' =>
             array(
@@ -343,12 +343,12 @@ class ClipBucket
         }
         
         
-        if ($per['group_moderation'] == "yes")
+        /*if ($per['group_moderation'] == "yes")
             $NewMenu['Groups'] = array('Add Group' => 'add_group.php',
                 'Manage Groups' => 'groups_manager.php',
                 'Manage Categories' => 'group_category.php?view=show_category',
                 'View Inactive Groups' => 'groups_manager.php?active=no&search=yes',
-                'View Reported Groups' => 'flagged_groups.php');
+                'View Reported Groups' => 'flagged_groups.php');*/
 
         if ($per['ad_manager_access'] == "yes")
             $NewMenu['Advertisement'] = array(
