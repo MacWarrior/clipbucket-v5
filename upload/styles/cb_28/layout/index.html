@@ -116,6 +116,7 @@
 
 			<!-- playlists -->
 			{$playlists = get_playlists(['limit'=>4, 'order'=>'total_items DESC'])}
+			{$playlists = activePlaylists($playlists)}
 			{if $playlists}
 			<div class="clearfix sidebar-playlists">
 				<h2>{lang code="top_playlists"}</h2>
