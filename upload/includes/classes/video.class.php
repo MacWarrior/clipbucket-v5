@@ -469,7 +469,7 @@ class CBvideo extends CBCategory
 					$query_val[] = $array['rated_by'];
 				}
 			}
-			
+
 			if(!userid())
 			{
 				e(lang("you_dont_have_permission_to_update_this_video"));
@@ -478,6 +478,8 @@ class CBvideo extends CBCategory
 			}elseif(!$this->is_video_owner($vid,userid()) && !has_access('admin_access',TRUE))
 			{
 				e(lang("no_edit_video"));
+			}elseif(strlen($array['title']) > 70){
+				e(lang("Title exceeds max length of 70 characters"));
 			}else{
 				//pr($upload_fields);	
 				#pr($query_field,true);
