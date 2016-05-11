@@ -2000,6 +2000,29 @@ class Collections extends CBCategory
         	}
         }
 
+        /**
+		* Get collections that have atleast 1 item
+		* @param : { array } { $collections } { array of all collections fetched from database }
+		* @since : May 11th, 2016 ClipBucket 2.8.1
+		* @author : Saqib Razzaq
+		*
+		* @return : { array } { $collections } { collections with items only }
+        */
+
+        function activeCollections($collections) {
+        	if (is_array($collections)) {
+        		foreach ($collections as $key => $coll) {
+        			$totalObjs = $coll['total_objects'];
+        			if ($totalObjs >= 1) {
+        				continue;
+        			} else {
+        				unset($collections[$key]);
+        			}
+        		}
+        	return $collections;
+        	}
+        }
+
 }
 
 ?>
