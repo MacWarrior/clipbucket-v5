@@ -34,9 +34,9 @@
 						 </div>
 						 <!-- Next and Previous button  -->
 					<div class="btn-holder clearfix">
-						<button class="btn view-photo-nxt icon-right-arrow next view-photo" data-check="next" ><i>next</i></button>
+						<button id="mainNextBtn" class="btn view-photo-nxt icon-right-arrow next view-photo" data-check="next" ><i>next</i></button>
 
-						<button class="btn view-photo-pre icon-left-arrow prev view-photo" data-check="prev"><i>prev</i></button>
+						<button id="mainPrevBtn" class="btn view-photo-pre icon-left-arrow prev view-photo" data-check="prev"><i>prev</i></button>
 					</div>
 			</div>
 			
@@ -171,7 +171,7 @@
 							</div>
 
  						{if $myquery->is_commentable($photo,'p')}
-							{include file="$style_dir/blocks/comments/add_image_comment.html" id=$photo.photo_id type=p}
+							{include file="$style_dir/blocks/comments/add_comment.html" id=$photo.photo_id type=p}
 							{else}
 							<div class="alert alert-warning">{lang code='Comments disabled for this photo'}</div>
 						{/if}
@@ -233,6 +233,8 @@
 
 
 <script type="text/javascript">
+var seoUrls = "{$Cbucket->configs.seo}";
+var srcFirst = "{$srcfirst}";
 var key_globel; // image source key0
 var first_source; 
 var collection_id;
@@ -264,7 +266,7 @@ comments_voting = 'no';
 {rdelim}
 );
 
-$(document).ready(function(){
+/*$(document).ready(function(){
 	var form_selector = 'comment_form';
 	var type = $(this).data('type');
 	var dataId = $(this).data('id');
@@ -280,123 +282,5 @@ $(document).ready(function(){
 		});
 	});
 	
-// image is loading via an Ajax call .. 
-
-// event which brings previous image from the collection 	
-$(document).on("click", ".view-photo", function () {
-//	var curr_photo = d;
-	var user_admin = user;
-	var check = $(this).data('check');
-	if(check == "prev") {
-		var pre_next = "prev";
-	}
-	if(check == "next"){
-		var pre_next = "next";
-	}
-	data = {
-		'mode': mode,
-		'photo_pre' : curr_photo,
-		'user': user_admin,
-		'item': pre_next,
-	}
-
-	$.ajax({
-		url: baseurl+'/ajax.php'+'?moto=ajax', 
-		type: "post",
-		data: data,
-		dataType: 'json',
-		beforeSend: function() {
-			$('.photo-view').append(r);
-			$('#gallery').fadeTo( "slow", 0.33 );
-			$('.overlay-content').append(b);
-			$('#gallery-exd').fadeTo( "slow", 0.33 );
-			$('.view-photo').prop("disabled",true);
-		},
-		success:function(xhr) {	
-
-			
-			
-  			$("#main").load("view_item.php?item="+xhr.photo_key+"&type=photos&collection="+xhr.collection_id+"&moto=ajax",function(){
-  					$('.view-photo').prop("disabled",false);
-					$("#gallery").fadeTo("normal",0.99);
-					$('#gallery-exd').fadeTo( "normal", 0.99 );
-					//d = xhr.photo[0];
-					$('#gallery-exd').attr("src",key_globel);	
-					$("#gallery").attr("src",key_globel);
-
-
-  				 	window.history.pushState("", "", baseurl+"/view_item.php?item="+xhr.photo_key+"&type=photos&collection="+xhr.collection_id);
-  				 	$('.dropdown-toggle').dropdown();
-					$('.pic-glyp').remove();
-  			});
-  			
-			
-		}
-
-	})
-
-});
-
-
-// Event which enlarge the image size in model. 
-
-$(document).on("click", ".en-large", function () {
-	var curr_photo = d;
-	var check = $(this).data('check');
-	if(check == "prev") {
-		var pre_next = "prev";	
-	}
-	if(check == "next"){
-		var pre_next = "next";
-	}	
-		data = {
-		'mode': mode,
-		'photo_pre' : curr_photo,
-		'item': pre_next,
-	}
-
-	$.ajax({
-		url: baseurl+'/ajax.php',
-		type: "post",
-		data: data,
-		dataType: 'json',
-		beforeSend: function() {
-			$('.overlay-content').append(b);
-			$('.en-large').prop("disabled",true);
-		},
-		success:function(xhr) {	
-			$('.en-large').prop("disabled",false);
-			$("#gallery").fadeTo("normal",0.99);
-			d = xhr.photo[0];
-			key_globel = xhr.src_string;
-			console.log(key_globel);
-			collection_id = xhr.collection_id;
-			$('#gallery-exd').attr("src",key_globel);
-			$("#btn-close").attr("data-check",key);
-			$('.pic-glyp').remove();
-		}
-	});
-
-});
-
-$(document).on("click", "#enlarge", function () {
-
-	document.getElementById("myNav").style.width = "100%";
-	document.getElementById("myNav").style.left = "0";
-	$('#gallery-exd').attr("src","{$srcfirst}");
-	d=curr_photo;
-});
-
-// On closing modal update image source..
-$(document).on("click", "#btn-close", function () {
-
-	 document.getElementById("myNav").style.left = "-100%";
-
-});
-
-$( document ).on( 'keydown', function ( e ) {
-    if ( e.keyCode === 27 ) { // ESC
-       document.getElementById("myNav").style.left = "-100%";
-    }
-});
+*/
 </script>
