@@ -84,6 +84,10 @@ function responsiveFixes(){
 		}
 	}
 }
+function thakkiLoading(yawnTo) {
+	$("html, body").animate({ scrollTop: yawnTo}, 1900, "swing");
+}
+
 function preLoadingBlock(){
 	//two videos in a row
 	var ftthumbWidth = $('.featured-videos .thumb-video').width();
@@ -278,6 +282,12 @@ function homePageVideos(qlist_items) {
 						if (moreRecent == true) {
 							$(document).find('#recent-loadmore').append('<div class="clearfix text-center"><button id="recent_load_more" class="btn btn-loadmore" loadtype="video" loadmode="recent" loadlimit="'+loadLimit+'" loadhit="'+newloadHit+'">Load More</button></div>');
 						}
+						var currWidth = $(window).width();
+						if (loadHit >= 2 && currWidth > 767) {
+							var moveTo = $( ".recentAppending" ).last().offset().top;
+							moveTo = moveTo - 350;
+							thakkiLoading(moveTo);
+						}
 					} else {
 						$('#featured_load_more').remove();
 						$('#featured_pre').html('');
@@ -289,6 +299,12 @@ function homePageVideos(qlist_items) {
 
 						if (moreFeatured == true) {
 							$(document).find('#featured-loadmore').append('<div class="clearfix text-center"><button id="featured_load_more" class="btn btn-loadmore" loadtype="video" loadmode="featured" loadlimit="'+loadLimit+'" loadhit="'+newloadHit+'">Load More</button></div>');
+						}
+						var currWidth = $(window).width();
+						if (loadHit >= 2 && currWidth > 767) {
+							var moveTo = $( ".featAppending" ).last().offset().top;
+							moveTo = moveTo - 350;
+							thakkiLoading(moveTo);
 						}
 					}
 				} 
