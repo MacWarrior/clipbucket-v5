@@ -8,6 +8,8 @@ function buildPhotoUrl(xhr,display) {
 
 	if (seoUrls == 'yes' && display == 'aho') {
 		mainUrl = theSeoUrl;
+	} else if (display == 'aho') {
+		mainUrl = nonSeoUrl;
 	} else {
 		mainUrl += "&moto=ajax";
 	}
