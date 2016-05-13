@@ -208,7 +208,8 @@
 			{$row = $myquery->Get_Website_Details()}
 			{if $row.collectionsSection == 'yes'}
 			{$collections = $cbcollection->get_collections(['limit'=>5, 'active'=>'yes'])}
-			<h2>{lang code="Top Collections"}</h2>
+			{$collections = $cbcollection->activeCollections($collections)}
+			<h2>{lang code="top_collections"}</h2>
 			<div class="clearfix sidebar-items collections-grid">
 				<div class="clearfix row">
 				{$limit=10}
