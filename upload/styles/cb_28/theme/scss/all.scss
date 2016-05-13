@@ -2543,28 +2543,28 @@ textarea#comment_box{
 					background: $gplus-color;
 					color: $gplus-color;
 					&:after{
-						content: "\e904";
+						content: "\e90f";
 					}
 				}
 				&.facebook-btn{
 					background: $fb-color;
 					color: $fb-color;
 					&:after{
-						content: "\e902";
+						 content: "\e90d";
 					}
 				}
 				&.twitter-btn{
 					background: $tw-color;
 					color: $tw-color;
 					&:after{
-						content: "\e911";
+						content: "\e920";
 					}
 				}
 				&.linkedin-btn{
 					background: $linkedin-color;
 					color: $linkedin-color;
 					&:after{
-						content: "\e915";
+						content: "\e912";
 					}
 				}
 			}
@@ -2580,7 +2580,7 @@ textarea#comment_box{
 		&:after{
 			color: $error-color;
 			position: absolute;
-			content: "\e914";
+			content: "\e910";
 			z-index: 4;
 			width: 22px;
 			height: 22px;
@@ -2600,7 +2600,7 @@ textarea#comment_box{
 		&:after{
 			color: $green;
 			position: absolute;
-			content: "\e910";
+			 content: "\e91f";
 			z-index: 4;
 			width: 22px;
 			height: 22px;
