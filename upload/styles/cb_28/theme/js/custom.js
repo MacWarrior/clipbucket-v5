@@ -20,41 +20,45 @@ function headerFooter(){
 function shortKeys() {
 	$(document).keypress(function (e) {
 		var key = e.which;
-		if (pageNow == 'index') {
-			if(e.which == 70 && e.shiftKey)  // shift + f = featured load more
-			{
-			   $('#featured_load_more').trigger("click");
+		if  ($('#query,textarea,#name,#email').is(":focus")) {
+			// typing in field so shutup
+		} else {
+			if (pageNow == 'index') {
+				if(e.which == 70 && e.shiftKey)  // shift + f = featured load more
+				{
+				   $('#featured_load_more').trigger("click");
+				}
+
+				if(e.which == 82 && e.shiftKey)  // shift + r = recent load more
+				{
+				   $('#recent_load_more').trigger("click");
+				}
 			}
 
-			if(e.which == 82 && e.shiftKey)  // shift + r = recent load more
+			if(e.which == 83 && e.shiftKey)  // shift + s = search something
 			{
-			   $('#recent_load_more').trigger("click");
+			   $('#query').focus().select();
 			}
-		}
 
-		if(e.which == 83 && e.shiftKey)  // shift + s = search something
-		{
-		   $('#query').focus().select();
-		}
+			if(e.which == 86 && e.shiftKey)  // shift + v = videos page
+			{
+			   window.location.href = baseurl+"/videos";
+			}
 
-		if(e.which == 86 && e.shiftKey)  // shift + v = videos page
-		{
-		   window.location.href = baseurl+"/videos";
-		}
+			if(e.which == 80 && e.shiftKey)  // shift + p = photos page
+			{
+			   window.location.href = baseurl+"/photos";
+			}
 
-		if(e.which == 80 && e.shiftKey)  // shift + p = photos page
-		{
-		   window.location.href = baseurl+"/photos";
-		}
+			if(e.which == 67 && e.shiftKey)  // shift + c = collections page
+			{
+			   window.location.href = baseurl+"/collections";
+			}
 
-		if(e.which == 67 && e.shiftKey)  // shift + c = collections page
-		{
-		   window.location.href = baseurl+"/collections";
-		}
-
-		if(e.which == 85 && e.shiftKey)  // shift + u = channel page
-		{
-		   window.location.href = baseurl+"/channels";
+			if(e.which == 85 && e.shiftKey)  // shift + u = channel page
+			{
+			   window.location.href = baseurl+"/channels";
+			}
 		}
 
 	});  
