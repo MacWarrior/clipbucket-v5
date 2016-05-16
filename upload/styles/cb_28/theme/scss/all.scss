@@ -978,8 +978,9 @@ h1{
 			left: auto;
 			right: 0;
 			>li {
+				position: relative;
 				a{
-					position: relative;
+					
 					i{
 						position: absolute;
 						z-index: 1;
@@ -1034,7 +1035,6 @@ h1{
 		margin: 0;
 		border-radius: 0 0 4px 4px;
 		border:none;
-		z-index: 10;
 		> li{
 			position:relative;
 			-webkit-user-select: none; /* Chrome/Safari */        
@@ -3136,6 +3136,17 @@ textarea#comment_box{
 	}
 	.photo-view{
 		height: 300px;
+	}
+	.filter-dropdowns{
+		.sorting-col{
+			.dropdown-menu{
+				display: block;
+				right: -9999px;
+			}
+			.open > .dropdown-menu{
+				right: 0;
+			}
+		}
 	}
 }
 @media only screen and (max-width: 767px) {
