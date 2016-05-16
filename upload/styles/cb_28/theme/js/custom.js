@@ -84,6 +84,8 @@ function responsiveFixes(){
 		}
 	}
 }
+
+// automatically scrolls to new loaded videos
 function thakkiLoading(yawnTo) {
 	$("html, body").animate({ scrollTop: yawnTo}, 1900, "swing");
 }
