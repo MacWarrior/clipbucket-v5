@@ -16,6 +16,50 @@ function headerFooter(){
 	//console.log($(window).height());
 	//console.log(cont_height);
 }
+
+function shortKeys() {
+	$(document).keypress(function (e) {
+		var key = e.which;
+		if (pageNow == 'index') {
+			if(e.which == 70 && e.shiftKey)  // shift + f = featured load more
+			{
+			   $('#featured_load_more').trigger("click");
+			}
+
+			if(e.which == 82 && e.shiftKey)  // shift + r = recent load more
+			{
+			   $('#recent_load_more').trigger("click");
+			}
+		}
+
+		if(e.which == 83 && e.shiftKey)  // shift + s = search something
+		{
+		   $('#query').focus().select();
+		}
+
+		if(e.which == 86 && e.shiftKey)  // shift + v = videos page
+		{
+		   window.location.href = baseurl+"/videos";
+		}
+
+		if(e.which == 80 && e.shiftKey)  // shift + p = photos page
+		{
+		   window.location.href = baseurl+"/photos";
+		}
+
+		if(e.which == 67 && e.shiftKey)  // shift + c = collections page
+		{
+		   window.location.href = baseurl+"/collections";
+		}
+
+		if(e.which == 85 && e.shiftKey)  // shift + u = channel page
+		{
+		   window.location.href = baseurl+"/channels";
+		}
+
+	});  
+}
+
 var flag = 0;
 function responsiveFixes(){
 	var WinWidth = $(window).width();
@@ -339,3 +383,5 @@ $(window).resize(function(){
  	responsiveFixes();
  	loginHeight();
 });
+
+shortKeys();
