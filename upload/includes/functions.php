@@ -2761,6 +2761,7 @@
 				if(!isset($_GET['seo_cat_name']))
 					$_GET['seo_cat_name'] = 'All';
 				
+				$_GET['page'] = 1;
 				if($mode == 'sort') {
 					$sorting = $sort;
 				} else {
