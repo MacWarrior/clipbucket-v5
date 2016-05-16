@@ -1,3 +1,12 @@
+function photoPos() {
+	var actOn = $('#gallery-exd'),
+	photoHeight = actOn.height(),
+	halfHeight = photoHeight / 2,
+	newHeight = halfHeight + "px";
+	actOn.removeAttr('style');
+	actOn.css("margin-top",newHeight);
+}
+
 function buildPhotoUrl(xhr,display) {
 	var collectionId = xhr.collection_id,
 	photo_key = xhr.photo_key,
@@ -48,6 +57,7 @@ $(document).on("click", "#mainNextBtn,#mainPrevBtn", function () {
 			$('.view-photo').prop("disabled",true);
 		},
 		success:function(xhr) {	
+				photoPos();
 				var getUrl = baseurl + "/" + buildPhotoUrl(xhr);
 				console.log(getUrl);
 				$.get( getUrl, function( data ) {
@@ -113,6 +123,7 @@ $(document).on("click", ".en-large", function () {
 			$('.en-large').prop("disabled",true);
 		},
 		success:function(xhr) {	
+			photoPos();
 			$('.en-large').prop("disabled",false);
 			$("#gallery").fadeTo("normal",0.99);
 			d = xhr.photo[0];
@@ -133,6 +144,7 @@ $(document).on("click", "#enlarge", function () {
 	document.getElementById("myNav").style.left = "0";
 	$('#gallery-exd').attr("src",srcFirst);
 	d=curr_photo;
+	photoPos();
 });
 
 // On closing modal update image source..
@@ -147,3 +159,9 @@ $( document ).on( 'keydown', function ( e ) {
        document.getElementById("myNav").style.left = "-100%";
     }
 });
+
+window.onresize = doALoadOfStuff;
+
+function doALoadOfStuff() {
+    photoPos();
+}
