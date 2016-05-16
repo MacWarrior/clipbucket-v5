@@ -17,6 +17,7 @@
 	//error_reporting(E_ALL);
 	logData(json_encode($argv),"argvs");
 	$fileName = (isset($argv[1])) ? $argv[1] : false;
+	//This is exact file name of a video e.g 132456789
 	$_filename = (isset($argv[2])) ? $argv[2] : false;
 	$file_directory_ = (isset($argv[3])) ? $argv[3] : false;
 	$file_directory = $file_directory_.'/';
@@ -127,7 +128,7 @@
 	$ffmpeg->configs = $configs;
 	$ffmpeg->file_name = $tmp_file;
 	$ffmpeg->filetune_directory = $file_directory;
-	$ffmpeg->raw_path = VIDEOS_DIR.'/'.$file_directory.$fileName;
+	$ffmpeg->raw_path = VIDEOS_DIR.'/'.$file_directory.$_filename;
 	//$ffmpeg->logs = $log;
 
 	
