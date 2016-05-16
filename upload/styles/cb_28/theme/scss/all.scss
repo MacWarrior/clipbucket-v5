@@ -1635,6 +1635,76 @@ h1{
 	.view-photo-nxt {
 		float: right;
 	}
+	.overlay {
+		/* Height & width depends on how you want to reveal the overlay (see JS below) */   
+		height: 100%;
+		width: 0;
+		position: fixed; /* Stay in place */
+		z-index: 6; /* Sit on top */
+		left: 0;
+		right: 100%;
+		top: 0;
+		background:rgba(0,0,0,0.98); /* Black w/opacity */
+		overflow-y: hidden;
+		transition: 0.3s; /* 0.5 second transition effect to slide in or slide down the overlay (height or width, depending on reveal) */
+		display: table;
+		img{
+			position: relative;
+		}
+		.photo-view .btn-holder{
+			z-index: 7;
+		}
+		.img-close{
+			z-index: 7;
+			cursor: pointer;
+			padding: 5px;
+			position: absolute;
+			right: 20px;
+			top: 20px;
+			border:none;
+			width: 30px;
+			height: 30px;
+			font-size: 20px;
+			line-height: 20px;
+			background: $photo-btn-color;
+			border-radius:50%;
+			text-align: center;
+		}
+		a {
+			padding: 8px;
+			text-decoration: none;
+			font-size: 36px;
+			color: #818181;
+			display: block; /* Display block instead of inline */
+			transition: 0.3s; /* Transition effects on hover (color) */
+			&:hover,
+			&:focus {
+				color: #f1f1f1;
+			}
+		}
+		.closebtn {
+			position: absolute;
+			top: 20px;
+			right: 45px;
+			font-size: 60px !important; /* Override the font-size specified earlier (36px) for all navigation links */
+		}
+		.overlay-content {
+			position: relative;
+			height:auto;
+			max-height:100%;
+			width: 100%; /* 100% width */
+			text-align: center; /* Centered text/links */
+			display: table-cell;
+			vertical-align: middle;
+			img{
+				width: 100%;
+				height: auto;
+			}
+			.btn-holder{
+				position: fixed;
+			}
+		}
+	}
 }
 /* The Overlay (background) */
 #gallery {
@@ -1658,66 +1728,9 @@ h1{
 		text-align: center;
 	}
 }
-.overlay {
-	/* Height & width depends on how you want to reveal the overlay (see JS below) */   
-	height: 100%;
-	width: 0;
-	position: fixed; /* Stay in place */
-	z-index: 6; /* Sit on top */
-	left: 0;
-	right: 100%;
-	top: 0;
-	background-color: rgb(0,0,0); /* Black fallback color */
-	background-color: rgba(0,0,0, 0.9); /* Black w/opacity */
-	overflow-x: hidden; /* Disable horizontal scroll */
-	overflow-y: hidden;
-	transition: 0.3s; /* 0.5 second transition effect to slide in or slide down the overlay (height or width, depending on reveal) */
-	img{
-		position: relative;
-	}
-	.photo-view .btn-holder{
-		z-index: 7;
-	}
-	.img-close{
-		z-index: 7;
-		cursor: pointer;
-		padding: 5px;
-		position: absolute;
-		right: 20px;
-		top: 20px;
-		border:none;
-		width: 30px;
-		height: 30px;
-		font-size: 20px;
-		line-height: 20px;
-		background: $photo-btn-color;
-		border-radius:50%;
-		text-align: center;
-	}
-	a {
-		padding: 8px;
-		text-decoration: none;
-		font-size: 36px;
-		color: #818181;
-		display: block; /* Display block instead of inline */
-		transition: 0.3s; /* Transition effects on hover (color) */
-		&:hover,
-		&:focus {
-			color: #f1f1f1;
-		}
-	}
-	.closebtn {
-		position: absolute;
-		top: 20px;
-		right: 45px;
-		font-size: 60px !important; /* Override the font-size specified earlier (36px) for all navigation links */
-	}
-	.overlay-content {
-		position: relative;
-		height: 100%;
-		width: 100%; /* 100% width */
-		text-align: center; /* Centered text/links */
-	}
+
+.image-zoom{
+	overflow: hidden;
 }
 /**/
 #messageFav{
@@ -3148,6 +3161,9 @@ textarea#comment_box{
 			}
 		}
 	}
+	#gallery{
+		height: 300px;
+	}
 }
 @media only screen and (max-width: 767px) {
 	#content{
@@ -3335,5 +3351,8 @@ textarea#comment_box{
 				height: 20px;
 			}
 		}
+	}
+	#gallery{
+		height: 200px;
 	}
 }
