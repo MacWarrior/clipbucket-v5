@@ -57,7 +57,6 @@ $(document).on("click", "#mainNextBtn,#mainPrevBtn", function () {
 			$('.view-photo').prop("disabled",true);
 		},
 		success:function(xhr) {	
-				photoPos();
 				var getUrl = baseurl + "/" + buildPhotoUrl(xhr);
 				console.log(getUrl);
 				$.get( getUrl, function( data ) {
@@ -73,22 +72,9 @@ $(document).on("click", "#mainNextBtn,#mainPrevBtn", function () {
 				 	window.history.pushState("", "", baseurl+"/"+buildPhotoUrl(xhr,"aho"));
 				 	$('.dropdown-toggle').dropdown();
 				$('.pic-glyp').remove();
+
 			});
-  			/*$("#main").load("view_item.php?item="+xhr.photo_key+"&type=photos&collection="+xhr.collection_id+"&moto=ajax",function(){
-  					$('.view-photo').prop("disabled",false);
-					$("#gallery").fadeTo("normal",0.99);
-					$('#gallery-exd').fadeTo( "normal", 0.99 );
-					//d = xhr.photo[0];
-					$('#gallery-exd').attr("src",key_globel);	
-					$("#gallery").attr("src",key_globel);
-
-
-  				 	window.history.pushState("", "", baseurl+"/view_item.php?item="+xhr.photo_key+"&type=photos&collection="+xhr.collection_id);
-  				 	$('.dropdown-toggle').dropdown();
-					$('.pic-glyp').remove();
-  			});*/
-  			
-			
+				photoPos();
 		}
 
 	})
@@ -123,7 +109,6 @@ $(document).on("click", ".en-large", function () {
 			$('.en-large').prop("disabled",true);
 		},
 		success:function(xhr) {	
-			photoPos();
 			$('.en-large').prop("disabled",false);
 			$("#gallery").fadeTo("normal",0.99);
 			d = xhr.photo[0];
@@ -133,6 +118,7 @@ $(document).on("click", ".en-large", function () {
 			$('#gallery-exd').attr("src",key_globel);
 			$("#btn-close").attr("data-check",key);
 			$('.pic-glyp').remove();
+			photoPos();
 		}
 	});
 
