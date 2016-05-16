@@ -31,7 +31,7 @@
             <div class="col-md-10">
                 <div class="row">
                     <div class="col-md-3">
-                    <img src="{$cbcollection->get_thumb($c[list],'small',TRUE)}"/>
+                    <img src="{$cbcollection->coll_first_thumb($c[list],'l')}"/>
                         </div>
                 <div class="col-md-9">
                     <a href="{$baseurl}/admin_area/edit_collection.php?collection={$c[list].collection_id}">{$c[list].collection_name}</a> ({$c[list].total_objects} {$c[list].type})
