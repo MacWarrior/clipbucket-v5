@@ -33,6 +33,26 @@ function shortKeys() {
 				{
 				   $('#recent_load_more').trigger("click");
 				}
+			} else if (pageNow == 'watch_video') {
+				if(e.which == 70 && e.shiftKey)  // shift + f = featured load more
+				{
+				   $('.icon-plusrounded').trigger("click");
+				   $('#addfav').trigger("click");
+				}
+				if(e.which == 82 && e.shiftKey)  // shift + r = recent load more
+				{
+				   $('.icon-flag').trigger("click");
+				}
+
+				if(e.which == 84 && e.shiftKey)  // shift + r = recent load more
+				{
+					$('#comment_box').focus().select();
+				}
+
+				if(e.which == 69 && e.shiftKey)  // shift + r = recent load more
+				{
+					$('.icon-share').trigger("click");
+				}
 			}
 
 			if(e.which == 83 && e.shiftKey)  // shift + s = search something
