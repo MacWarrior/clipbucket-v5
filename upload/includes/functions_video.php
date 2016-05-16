@@ -1820,7 +1820,7 @@
         if (!empty($errs)) {
             if (has_access("admin_access")) {
                 foreach ($errs as $name => $issue) {
-                    e(strtoupper("[Admin only message] <strong>".$name."</strong>")." couldn't be found or isn't installed properly hence video might not work, check <a href=".BASEURL."admin_area/cb_mod_check.php>Server Modules</a> page to know more");
+                    e(strtoupper("[Admin only message] <strong>".$name."</strong>")." couldn't be found or isn't installed properly hence video might not work, check <a href=".BASEURL."/admin_area/cb_mod_check.php>Server Modules</a> page to know more");
                 }
             } else {
                 e("Video upload might not work properly, kindly contact website admin");
