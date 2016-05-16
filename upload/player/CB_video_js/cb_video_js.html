@@ -33,13 +33,10 @@
 <script src="{$cb_vjs_player_url}/js/videojs.ads.js"></script>
 <script src="{$cb_vjs_player_url}/js/videojs.ima.js"></script>
 <script src="{$cb_vjs_player_url}/js/cb_ultimate_ads.js"></script>
-
+{$default_quality = get_cbvjs_quality_type($video_files)}
 <video id="cb_video_js" class="video-js vjs-default-skin" height="{$height}" width="{$width}" poster="{getThumb vdetails=$vdata size=768x432}" >
     {foreach $video_files as $file}
-    {$quality = explode('-', $file)}
-    {$quality = end($quality)}
-    {$quality = explode('.',$quality)}
-    {$quality = $quality.0}
+    {$quality = get_cbvjs_quality($file)}
 
     {if $flv_vid == true}
     	<source src='{$file}' type="video/x-flv" />
@@ -59,6 +56,8 @@ var branding_logo  = "{$cb_logo}";
 var product_link = "{$player_config.player_logo_url}";
 var show_logo = true;
 var autoplay = "{$player_config.autoplay}";
+var default_res = "{$default_quality}";
+alert(default_res);
 if (autoplay == 'no'){
 	autoplay = false;
 }else{
@@ -101,7 +100,7 @@ if (play_ad){
 
 			//Calling Resolution switcher plugin
 			var res_options = {
-				default : 'high',
+				default : default_res,
 				dynamicLabel : false
 			}
 			cb_vjs.videoJsResolutionSwitcher(res_options);
