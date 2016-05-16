@@ -690,7 +690,13 @@ if(!empty($mode))
 					if($comment=='undefined')
 						$comment = '';
 					$reply_to = $_POST['reply_to'];
-					
+					$email = $_POST['email'];
+					if (!is_valid_email($email)) {
+						$err = array();
+						$err['err'] = "Invalid email provided";
+						echo json_encode($err);
+						return false;
+					}
 					$cid = $cbvid->add_comment($comment,$id,$reply_to);
 				}
 				break;
