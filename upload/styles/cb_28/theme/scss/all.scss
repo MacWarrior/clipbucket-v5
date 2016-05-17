@@ -2535,7 +2535,7 @@ textarea#comment_box{
 		}
 		#social_buttons{
 			@include vertical-middle();
-			width: 240px;
+			width: 250px;
 			overflow: hidden;
 			a{
 				width: 48px;
@@ -3163,6 +3163,27 @@ textarea#comment_box{
 	}
 	#gallery{
 		height: 300px;
+	}
+	.signup-block,
+	.forgot-block,
+	.signin-block{
+		.social-links{
+			span{
+				display: block;
+				margin: 0 0 10px;
+			}
+			#social_buttons{
+				display: block;
+				margin: 0 auto;
+				text-align: center;
+				width: 260px;
+				a{
+					float: none;
+					@include vertical-top();
+					margin: 0 5px;
+				}
+			}
+		}
 	}
 }
 @media only screen and (max-width: 767px) {
