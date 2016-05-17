@@ -1221,6 +1221,9 @@ ALTER TABLE `{tbl_prefix}videos` ADD INDEX(`rating`);
 ALTER TABLE `{tbl_prefix}videos` ADD INDEX(`total_comments`);
 ALTER TABLE `{tbl_prefix}videos` ADD INDEX(`last_viewed`);
 
+INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES ('clientid', 'your_client_id_here');
+
+INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES ('secretId', 'your_client_secret_here');
 
 
 
