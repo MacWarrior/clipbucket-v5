@@ -3206,11 +3206,83 @@ textarea#comment_box{
 		}
 	}
 	.filter-dropdowns{
-		.cat-col{
-			display: none;
+		.dropdown{
+			display: block;
+			margin: 0 0 2px;
+			background: none;
+			border-radius: 0;
+			border-bottom:$default-border;
+			line-height: 36px;
+			height: 48px;
+			>a{
+				color:lighten($black,13%);
+				span{
+					float: right;
+					line-height: 36px;
+				}
+			}
 		}
 		.sorting-col{
+			.dropdown-menu{
+				> li{
+					a{
+						&.selected,
+						&:hover{
+							background: none;
+						}
+					}
+				}
+			}
+		}
+		.dropdown-menu{
+			width:100%;
+			background:$white;
+			font-size: 15px;
+			line-height: 36px;
+			.sub-menu{
+				position: static;
+				left: 0;
+				border-radius: 0;
+				background:lighten($black,95%);
+				.sub-menu{
+					background:lighten($black,80%);
+					.sub-menu{
+						background:lighten($black,70%);
+					}
+				}
+			}
+			> li{
+				overflow: hidden;
+				> div > a,
+				> a{
+					color:lighten($black,13%);
+				}
+				> div{
+					padding: 0 40px 0 0;
+					border-color: $bordercolor;
+					i{
+						@include rotate ($deg:90deg);
+						color:$black;
+						background: none;
+						margin: 0;
+						top: 0;
+						width: 48px;
+						right: 0;
+						height: 48px;
+						padding: 12px 16px 14px 20px;
+						//background: lighten($black,80%);
+						border-radius: 0;
+					}
+					&:hover{
+						background:none;
+					}
+				}
+			}
+		}
+		.cat-col,
+		.sorting-col{
 			padding: 0;
+			text-align: left;
 		}
 	}
 	.item-photo{
