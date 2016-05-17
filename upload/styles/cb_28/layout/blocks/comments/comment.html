@@ -28,7 +28,7 @@
 					</span>
 				</a>
 				<p>{$comment.comment|comment}</p>
-				{if !empty(userid())}
+				{if userid()}
 				<div class="com-info-actions clearfix">
 					<span>{$comment.date_added|niceTime}</span>
 					<div class="reply">
@@ -68,7 +68,7 @@
 			<div class="clearfix commented-txt">
 				<p>{$comment.comment|comment}</p>
 			</div>
-			{if !empty(userid())}
+			{if userid()}
 			<div class="com-info-actions clearfix">
 				<div class="reply">
 					{if $userquery->login_check('',true)}
@@ -161,7 +161,7 @@
 									<div class="clearfix commented-txt">
 										<p>{$reply.comment|comment}</p>
 									</div>
-									{if !empty(userid())}
+									{if userid()}
 									<div class="com-info-actions clearfix">
 										<div class="reply">
 											 <a href="javascript:void(0)" onclick="spam_comment('{$reply.comment_id}','{$type}','{$type_id}')">{lang code='spam'}</a>
