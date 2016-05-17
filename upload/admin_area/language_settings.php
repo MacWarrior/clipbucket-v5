@@ -12,6 +12,10 @@ $userquery->admin_login_check();
 $userquery->login_check('web_config_access');
 $pages->page_redir();
 
+
+// $as = $Cbucket->configs['clientid'];
+// pex($as,true);
+
 /* Assigning page and subpage */
 if(!defined('MAIN_PAGE')){
 	define('MAIN_PAGE', 'Stats And Configurations');
@@ -19,6 +23,7 @@ if(!defined('MAIN_PAGE')){
 if(!defined('SUB_PAGE')){
 	define('SUB_PAGE', 'Language Settings');
 }
+
 
 //Making Language Default
 if(isset($_POST['make_default']))
@@ -56,7 +61,9 @@ if(isset($_POST['update_language']))
 //Downloading Language
 if(isset($_GET['download']))
 {
-	$lang_obj->export_lang(mysql_clean($_GET['download']));
+	//$lang_obj->export_lang(mysql_clean($_GET['download']));
+	$lang_obj->export_lang_Json(mysql_clean($_GET['download']));
+	
 }
 
 //Downloading Language
@@ -78,8 +85,21 @@ if(isset($_GET['recreate_from_pack']))
 	if($lang_obj->updateFromPack($_GET['recreate_from_pack']))
 		e("Language database has been updated","m");
 }
+if(isset($_POST['set_language']))
+{	
 
+	$ClientId = $_POST['client_id'];
+	$secertId = $_POST['sec_id'];
+	$c =strlen($ClientId);
+	$csec =strlen($secertId);
+	 if($c < 10 || $csec < 10){
+		e("invalid keys");
+	 }else{
+	$lang_obj->set_lang($ClientId,$secertId);
+	e("keys set","m");
+	}
 
+}
 
 //Get List Of Languages
 assign('language_list',$lang_obj->get_langs());
@@ -122,7 +142,8 @@ if($lang_obj->lang_exists(mysql_clean($_GET['edit_language'])))
 	$total_phrases = $lang_obj->count_phrases($edit_id,$extra_param);
 	
 	assign('lang_phrases',$lang_phrases);
-
+	
+	
     //Collecting Data for Pagination
     //echo 'id='.$edit_id.',toalal='.$total_phrases;
 	
@@ -133,6 +154,8 @@ if($lang_obj->lang_exists(mysql_clean($_GET['edit_language'])))
 
 }
 
+	assign('client_id',$Cbucket->configs['clientid']);
+	assign('secret_Id',$Cbucket->configs['secretId']);	
 
 subtitle("Language Settings");
 template_files('language_settings.html');
