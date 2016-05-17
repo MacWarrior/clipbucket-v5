@@ -2,6 +2,9 @@ ALTER TABLE `{tbl_prefix}video` ADD  `thumbs_version` varchar(5)  NOT NULL DEFAU
 INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES ('index_recent','6');
 INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES ('index_featured','2');
 
+INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES ('clientid', 'your_client_id_here');
+
+INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES ('secretId', 'your_client_secret_here');
 
 /*Indexing of following tables*/
 /*Author: Sikander Ali 	*/
