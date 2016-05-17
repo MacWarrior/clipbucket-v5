@@ -45,7 +45,7 @@
 						</div>
 						<input type="hidden" name="login" value="login"></input>
 						{if function_exists('show_all_btns')} 
-						  <div class="clearfix social-links">
+						<div class="clearfix social-links">
 							<span>or login with</span>
 							<div id="social_buttons">
 								{ANCHOR place="show_all_btns"}
@@ -138,8 +138,6 @@
 							</div>
 						
 						{/if}
-					
-				   <!--{$captcha|@print_r}-->
 
 						<div class="form-group checkbox">
 							<label>
@@ -150,8 +148,18 @@
 						</div>
 						{ANCHOR place="the_form"}
 						<input type="hidden" name="signup" value="signup"></input>
-						<button type="submit" name="signup" value="signup" class="btn btn-success btn-lg btn-block" id="signup_submit">{lang code='Signup'}</button>
+						<div class="form-group checkbox">
+							<button type="submit" name="signup" value="signup" class="btn btn-success btn-lg btn-block" id="signup_submit">{lang code='signup'}</button>
+						</div>
 						{ANCHOR place='signup_form'}
+						{if function_exists('show_all_btns')} 
+						<div class="clearfix social-links">
+							<span>or login with</span>
+							<div id="social_buttons">
+								{ANCHOR place="show_all_btns"}
+							</div>
+						</div>
+						{/if}
 					</form>
 					{/if}
 				</div>
