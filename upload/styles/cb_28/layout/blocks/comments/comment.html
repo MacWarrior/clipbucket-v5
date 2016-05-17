@@ -121,7 +121,7 @@
 									<div class="clearfix commented-txt">
 										<p>{$reply.comment|comment}</p>
 									</div>
-									{if !empty(userid())}
+									{if userid()}
 									<div class="com-info-actions clearfix">
 										<div class="reply">
 											{if !$comment.userid==userid() || has_access('admin_access',true)}
