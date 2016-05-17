@@ -361,7 +361,7 @@ Remember and note the Client ID and Client Secret fields. You will need these wh
     var UploadText = $('<p><strong>Importing Language Pack. Please sit back and relax while magic happens.</strong></p>');
     function timeCheck(){
          process = setInterval(function() {
-                $.get('percent.lang', function(data) {
+                $.get(baseurl+'/files/percent.lang', function(data) {
                //process text file line by line
                percentPakro = data.responseText;
                allTextLines = data.split(/\r\n|\n/);
