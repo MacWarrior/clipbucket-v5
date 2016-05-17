@@ -4500,7 +4500,7 @@ class userquery extends CBCategory{
 			{
 				$pass =  RandomString(10);
 				
-				if($_SERVER['HTTP_HOST']!='localhost')
+				if($_SERVER['HTTP_HOST']!='localhost' && $_SERVER['HTTP_HOST']!='127.0.0.1')
 					$email = 'anonymous'.RandomString(5).'@'.$_SERVER['HTTP_HOST'];
 				else
 					$email = 'anonymous'.RandomString(5).'@'.$_SERVER['HTTP_HOST'].'.tld';
