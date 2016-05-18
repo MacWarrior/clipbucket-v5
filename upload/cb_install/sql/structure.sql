@@ -1080,7 +1080,7 @@ ALTER TABLE `{tbl_prefix}user_levels_permissions` ADD `photos_moderation` ENUM( 
 ADD `collection_moderation` ENUM( 'yes', 'no' ) NOT NULL DEFAULT 'no' AFTER `photos_moderation` ,
 ADD `plugins_moderation` ENUM( 'yes', 'no' ) NOT NULL DEFAULT 'no' AFTER `collection_moderation` ,
 ADD `tool_box` ENUM( 'yes', 'no' ) NOT NULL DEFAULT 'no' AFTER `plugins_moderation` ,
-ADD `plugins_perms` TEXT NOT NULL AFTER `tool_box` ;
+ADD `plugins_perms` varchar(20) NOT NULL DEFAULT 'none'  AFTER `tool_box` ;
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}mass_emails` (
   `id` int(255) NOT NULL AUTO_INCREMENT,
