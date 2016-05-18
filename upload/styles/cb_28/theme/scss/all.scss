@@ -1697,11 +1697,12 @@ h1{
 			display: table-cell;
 			vertical-align: middle;
 			img{
-				width: 100%;
+				width: auto;
 				height: auto;
 			}
 			.btn-holder{
 				position: fixed;
+				right: -112px;
 			}
 		}
 	}
@@ -1731,6 +1732,9 @@ h1{
 
 .image-zoom{
 	overflow: hidden;
+	.photo-view .overlay .overlay-content .btn-holder{
+		right: 20px;
+	}
 }
 /**/
 #messageFav{
