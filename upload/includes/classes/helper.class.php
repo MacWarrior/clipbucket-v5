@@ -67,6 +67,7 @@
 			$related_videos = get_videos(array('title'=>$title,'tags'=>$tags,
 			'exclude'=>$videoid,'show_related'=>'yes','limit'=>12,'order'=>'date_added DESC'));
 			if(!$related_videos){
+				$relMode = "ono";
 				$related_videos  = get_videos(array('exclude'=>$videoid,'limit'=>12,'order'=>'date_added DESC'));
 			}
 			$playlist = $cbvid->action->get_playlist($pid,userid());
@@ -75,6 +76,7 @@
 						$items = $cbvid->get_playlist_items( $pid, 'playlist_items.date_added DESC' );
 						$assign_arry['items'] = $items;
 			$assign_arry['videos'] = $related_videos;
+			$assign_arry['relMode'] = $relMode;
 			# assigning all variables
 			$this->assign($assign_arry);
 			template_files('watch_video.html');
