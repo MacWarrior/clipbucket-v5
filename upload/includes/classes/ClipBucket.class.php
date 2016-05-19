@@ -435,9 +435,12 @@ class ClipBucket
     /**
      * Function used to set template (Frontend)
      */
-    function set_the_template()
+    function set_the_template($ctemplate = false)
     {
         global $cbtpl, $myquery;
+        if ($ctemplate) {
+            $_GET['template'] = $ctemplate;
+        }
         $template = $this->template;
 
         if (isset($_SESSION['the_template']) && $cbtpl->is_template($_SESSION['the_template']))
