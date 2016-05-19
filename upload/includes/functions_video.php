@@ -1766,7 +1766,9 @@
                 } else {
                     $mode = 'GB';
                 }
-                e("Current Memory Size (RAM) of server is <strong>".round($ramsize, 2)." ".$mode."</strong> but recomended RAM is atleast 5 GB");
+                if (has_access('admin_access')) {
+                    e("Current Memory Size (RAM) of server is <strong>".round($ramsize, 2)." ".$mode."</strong> but recomended RAM is atleast 5 GB");
+                }
             }
         }
         $directories = array('files','cache','includes');
