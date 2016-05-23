@@ -133,6 +133,9 @@
 
 	
 	$ffmpeg->ClipBucket();
+	if ($ffmpeg->lock_file && file_exists($ffmpeg->lock_file)){
+		unlink($ffmpeg->lock_file);
+	}
 	logData($ffmpeg->video_files,'video_files');
 
 	
