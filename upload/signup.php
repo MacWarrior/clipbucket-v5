@@ -12,7 +12,7 @@ define("THIS_PAGE","signup");
 define("PARENT_PAGE","signup");
 
 require 'includes/config.inc.php';
-	
+global $Cbucket,$userquery;
 if($userquery->login_check('',true)){
 	redirect_to(BASEURL);
 }
@@ -52,7 +52,12 @@ if($userquery->login_check('',true)){
 				$udetails = $userquery->get_user_details($signup);
 				$eh->flush();
 				assign('udetails',$udetails);
-				assign('mode','signup_success');
+				if (empty($Cbucket->configs['email_verification'])) {
+					$userquery->login_as_user($udetails['userid']);
+					header("Location: ".BASEURL);
+				} else {
+					assign('mode','signup_success');
+				}
 			}
 		}
 	}
