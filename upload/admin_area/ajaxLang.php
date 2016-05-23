@@ -33,7 +33,7 @@ function language_translate($iso,$language_detact){
           foreach ($fileContent as $key => $value) {
             $phrase_code = $key;
             $newLang[$key] = str_replace('', '+', $value);
-            $newlang[$key] =  $MrsTranslator->translate($value,$iso_code,'en',"text/html");
+            $newlang[$key] = $MrsTranslator->translate($value,$iso_code,'en',"text/html");
             $percentageCal = ($counter/$totalSize)*100;
             $interger_val = intval($percentageCal); 
             fwrite($percent_content, $interger_val."\n");
@@ -41,7 +41,7 @@ function language_translate($iso,$language_detact){
          }
         $lang_obj->import_packlang($iso_code,$newlang,$language_name);
         $lang_obj->createPack($iso_code);
-        //fclose($percent_content);
+       // fclose($percent_content);
         $code_exists = $lang_obj->lang_exists($iso_code);
         $id = mysql_clean($_POST['make_default']);
         $lang_obj->make_default($id);
