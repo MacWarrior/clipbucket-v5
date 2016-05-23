@@ -246,7 +246,7 @@ function homePageVideos(qlist_items) {
 			}
 
 			if (gotMoreRecent > 6) {
-				recentFound = 6;
+				recentFound = 3;
 			} else {
 				moreRecent = false;
 				recentFound = gotMoreRecent;
@@ -311,11 +311,23 @@ function homePageVideos(qlist_items) {
 						for (var i = 0; i < featuredFound; i++) {
 							$(document).find('#featured_pre').append('<div class="item-video col-lg-6 col-md-6 col-sm-6 col-xs-12"><div style="height:200px" class="thumb-video background-masker clearfix"></div></div>');
 						}
+						var currWidth = $(window).width();
+						if (loadHit >= 2 && currWidth > 767) {
+							var moveTo = $( ".featAppending" ).last().offset().top;
+							moveTo = moveTo;
+							thakkiLoading(moveTo);
+						}
 					} else {
 						for (var i = 0; i < recentFound; i++) {
 							$(document).find('#recent_pre').append('<div class="item-video col-lg-4 col-md-4 col-sm-4 col-xs-6"><div class="thumb-video background-masker clearfix"></div><div class="loadingInfo video-info relative clearfix"><div class="background-masker heading clearfix"></div><div class="background-masker paragraph clearfix"></div><div class="background-masker clearfix views-date"></div></div></div>');
 						}
 						preLoadingBlock();
+						var currWidth = $(window).width();
+						if (loadHit >= 2 && currWidth > 767) {
+							var moveTo = $( "#recent_pre" ).last().offset().top;
+							moveTo = moveTo;
+							thakkiLoading(moveTo);
+						}
 					}
 				}
 			},
@@ -352,12 +364,7 @@ function homePageVideos(qlist_items) {
 						if (moreRecent == true) {
 							$(document).find('#recent-loadmore').append('<div class="clearfix text-center"><button id="recent_load_more" class="btn btn-loadmore" loadtype="video" loadmode="recent" loadlimit="'+loadLimit+'" loadhit="'+newloadHit+'">Load More</button></div>');
 						}
-						var currWidth = $(window).width();
-						if (loadHit >= 2 && currWidth > 767) {
-							var moveTo = $( ".recentAppending" ).last().offset().top;
-							moveTo = moveTo - 350;
-							thakkiLoading(moveTo);
-						}
+						
 					} else {
 						$('#featured_load_more').remove();
 						$('#featured_pre').html('');
@@ -369,12 +376,6 @@ function homePageVideos(qlist_items) {
 
 						if (moreFeatured == true) {
 							$(document).find('#featured-loadmore').append('<div class="clearfix text-center"><button id="featured_load_more" class="btn btn-loadmore" loadtype="video" loadmode="featured" loadlimit="'+loadLimit+'" loadhit="'+newloadHit+'">Load More</button></div>');
-						}
-						var currWidth = $(window).width();
-						if (loadHit >= 2 && currWidth > 767) {
-							var moveTo = $( ".featAppending" ).last().offset().top;
-							moveTo = moveTo - 350;
-							thakkiLoading(moveTo);
 						}
 					}
 				} 
@@ -408,4 +409,4 @@ $(window).resize(function(){
  	loginHeight();
 });
 
-shortKeys();
+//shortKeys();
