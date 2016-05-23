@@ -1635,7 +1635,7 @@ if(!empty($mode))
 			if ($comments) {
 				Template('blocks/comments/comments.html');
 			} else {
-				echo "none";
+				echo "";
 			}
 
 		}
