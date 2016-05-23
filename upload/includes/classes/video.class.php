@@ -469,6 +469,9 @@ class CBvideo extends CBCategory
 					$query_val[] = $array['rated_by'];
 				}
 			}
+			$query_val[0] = str_replace('&lt;!--', '', $query_val[0]);
+			$query_val[1] = str_replace('&lt;!--', '', $query_val[1]);
+			$query_val[3] = strtolower($query_val[3]);
 
 			if(!userid())
 			{
