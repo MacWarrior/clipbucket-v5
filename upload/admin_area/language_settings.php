@@ -11,11 +11,13 @@ require'../includes/admin_config.php';
 $userquery->admin_login_check();
 $userquery->login_check('web_config_access');
 $pages->page_redir();
+$access_token = $MrsTranslator->get_access_token();
 
-
-// $as = $Cbucket->configs['clientid'];
-// pex($as,true);
-
+  if(isset($_COOKIE['bing_access_token'])){
+    //Do nothing
+  }else{
+  	setcookie('bing_access_token', $access_token, time()+600);
+  }
 /* Assigning page and subpage */
 if(!defined('MAIN_PAGE')){
 	define('MAIN_PAGE', 'Stats And Configurations');
@@ -29,7 +31,7 @@ if(!defined('SUB_PAGE')){
 if(isset($_POST['make_default']))
 {
 	$id = mysql_clean($_POST['make_default']);
-	$lang_obj->make_default($id);
+	$lang_obj->make_default($id);	
 }
 //Making Language Default
 if(isset($_GET['make_default']))
@@ -152,7 +154,7 @@ if($lang_obj->lang_exists(mysql_clean($_GET['edit_language'])))
 	//Pagination
 	$pages->paginate($total_pages-2,$current_page);
 
-}
+}	
 
 	assign('client_id',$Cbucket->configs['clientid']);
 	assign('secret_Id',$Cbucket->configs['secretId']);	
