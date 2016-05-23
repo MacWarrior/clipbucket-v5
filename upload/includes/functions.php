@@ -178,7 +178,7 @@
 	*/
 
 	function cbmail($array) {
-		return true;
+		#return true;
 		$func_array = get_functions('email_functions');
 		if(is_array($func_array)) {
 			foreach($func_array as $func) {
