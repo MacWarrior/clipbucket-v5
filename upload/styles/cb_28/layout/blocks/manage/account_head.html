@@ -10,8 +10,8 @@
 					<div class="row">
 						<div class="col-md-6 procolor">
 							<h4 class="media-heading headcolor">{$user.username}</h4>
-							<b>{lang code='Since:'}</b> ({$user.doj|date_format})
-							<b>{lang code='last Login:'}</b> ({$user.last_logged|nicetime})
+							<b>{lang code='since:'}</b> ({$user.doj|date_format})
+							<b>{lang code='last_Login:'}</b> ({$user.last_logged|nicetime})
 						</div>
 					</div>
 				</div>
@@ -22,12 +22,12 @@
 <hr class="newhr1">
 <div class="mvideo accountprofile">
 	<span class="lead">
-		{lang code='Latest Videos'}
+		{lang code='Latest_Videos'}
 	</span>
 	<table class="table table-bordered table-striped manageUsersTable">
 		<tr>
-			<td><i class="icon-facetime-video"></i> Videos Details</td>
-			<td>Option</td>
+			<td><i class="icon-facetime-video"></i> {lang code="Videos_Details"}</td>
+			<td>{lang code="option"}</td>
 		</tr>
 		{if $videos}
 		
@@ -99,7 +99,7 @@
 		{/foreach}
 	</table>
 	{else}
-	<div align="center"><strong><em>No Video Found</em></strong></div>
+	<div align="center"><strong><em>{lang code="no_videos_found"}</em></strong></div>
 	{/if}
 </div>
 <div class="flaggedtable accountprofile1">
@@ -109,7 +109,7 @@
 				<div class="widget-box">
 					<td>
 						<div class="widget-header">
-							<h5><i class="glyphicon glyphicon-flag"></i>Flagged Objects</h5>
+							<h5><i class="glyphicon glyphicon-flag"></i>{lang code="flagged_obj"}</h5>
 						</div>
 
 						<div class="widget-body">
@@ -117,11 +117,11 @@
 							<div class="tabbable tabs-left">
 								<ul class="nav nav-tabs" id="myTab">
 									<li class="active">
-										<a data-toggle="tab" href="#fvideos">Videos</a>
+										<a data-toggle="tab" href="#fvideos">{lang code="videos"}</a>
 									</li>
 
 									<li class="photos">
-										<a data-toggle="tab" href="#fphotos">Photos</a>
+										<a data-toggle="tab" href="#fphotos">{lang code="photos"}</a>
 									</li>
 								</ul>
 								<br>
@@ -189,7 +189,7 @@
 			<span class="btn btn-primary new1" style="background-color: #000000;color: #ffffff">
 													<span class="line-height-1 bigger-170 blue">{$user.total_photos}</span>
 													<br>
-													<span class="line-height-1 smaller-90 new1"> Photos </span>
+													<span class="line-height-1 smaller-90 new1"> {lang code="photos"} </span>
 												</span>
 	<span class="btn btn-primary new1" style="background-color: #000000;color: #ffffff">
 													<span class="line-height-1 bigger-170 blue">{$user.num_visits|number_format}</span>
@@ -204,22 +204,22 @@
 	<span class="btn btn-primary new1" style="background-color: #000000;color: #ffffff">
 													<span class="line-height-1 bigger-170 blue">{$user.total_comments|number_format}</span>
 													<br>
-													<span class="line-height-1 smaller-90 new1"> {lang code='Comments'} </span>
+													<span class="line-height-1 smaller-90 new1"> {lang code='comments'} </span>
 												</span>
 	<span class="btn btn-primary new1" style="background-color: #000000;color: #ffffff">
 													<span class="line-height-1 bigger-170 blue">{$user.total_collections|number_format}</span>
 													<br>
-													<span class="line-height-1 smaller-90 new1"> {lang code='Collections'} </span>
+													<span class="line-height-1 smaller-90 new1"> {lang code='collections'} </span>
 												</span>
 			<span class="btn btn-primary new1" style="background-color: #000000; color: #ffffff">
 													<span class="line-height-1 bigger-170 blue">{$user.profile_hits}</span>
 													<br>
-													<span class="line-height-1 smaller-90 new1"> {lang code='Views'} </span>
+													<span class="line-height-1 smaller-90 new1"> {lang code='views'} </span>
 												</span>
 			<span class="btn btn-primary new1" style="background-color: #000000;color: #ffffff">
 													<span class="line-height-1 bigger-170 blue">{$user.subscribers}</span>
 													<br>
-													<span class="line-height-1 smaller-90 new1"> {lang code='Subscribers'} </span>
+													<span class="line-height-1 smaller-90 new1"> {lang code='subscribers'} </span>
 												</span>
 		{/if}
 	</div>
