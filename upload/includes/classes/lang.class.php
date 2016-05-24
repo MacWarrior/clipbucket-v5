@@ -427,7 +427,6 @@ class language
 		$sql .= ";";
 		$query = "INSERT INTO ".tbl("phrases")." (lang_iso,varname,text) VALUES \n";
 		$query .= $sql;
-		//pex($query,true);
 		$db->execute($query);
 	
 		// checking dublicate value..
@@ -506,7 +505,7 @@ class language
 	 * Function used to create new language pack
 	 * that can be used by clipbucket
 	 * 
-	 */
+	 **/
 	function createPack($lang=false)
 	{
 		if(!$lang)
@@ -516,8 +515,10 @@ class language
 		if(count($phrases)==0) return false;
 		$new_array = array();
 		foreach($phrases as $phrase)
-		{
-			$new_array[$phrase['varname']] = $phrase['text'];
+		{	
+			$new_array[$phrase['varname']] =html_entity_decode(html_entity_decode($phrase['text']));
+			//$new_array[$phrase['varname']] = unhtmlentities($phrase['text']);
+			//pr($new_array,true);
 		}
 		$fo = fopen(BASEDIR.'/includes/langs/'.$lang.'.lang','w+');
 		fwrite($fo,json_encode($new_array));
