@@ -8,7 +8,7 @@
            
        
         {if $mode == 'uploaded'}
-            <h2>{lang code="Manage Photos"}</h2>
+            <h2>{lang code="manage_photos"}</h2>
             <form clasws="form-inline" id="form1" name="form1" method="get" action="">
                 <div class="row">
                     <div class="col-md-6 col-md-offset-3">
@@ -48,7 +48,7 @@
                         {sectionelse}
                         <tr>
                         <td colspan="5">
-                    	<div align="center" style="padding:5px"><strong><em>{lang code='You dont have any photos'}</em></strong></div>
+                    	<div align="center" style="padding:5px"><strong><em>{lang code='you_dont_have_photos'}</em></strong></div>
                         </td>
                         </tr>
                     {/section}
@@ -106,7 +106,7 @@
                 {sectionelse}
                 	<tr>
                         <td colspan="5">
-                        <div align="center" style="padding:5px"><strong><em>{lang code='You dont have any favorite photos'}</em></strong></div>
+                        <div align="center" style="padding:5px"><strong><em>{lang code='you_dont_have_photos'}</em></strong></div>
                         </td>
                         </tr>
                 {/section}  
@@ -118,19 +118,19 @@
         {if $mode == 'orphan'}
          	<h2>{lang code="manage_my_album"}</h2>
             <div align="right">
-                Make my album
+                {lang code="make_my_album"}
                 <label>
-                    <input type="radio" name="my_album_privacy" value="public" {if $user.album_privacy =='public'} checked="checked" {/if} onclick="window.location = '{$albumPrivacyUrl}album_privacy=public'"/> Public
+                    <input type="radio" name="my_album_privacy" value="public" {if $user.album_privacy =='public'} checked="checked" {/if} onclick="window.location = '{$albumPrivacyUrl}album_privacy=public'"/>{lang code="public"}
                 </label>
                 <label>
-                    <input type="radio" name="my_album_privacy" value="private" {if $user.album_privacy =='private'} checked="checked" {/if} onclick="window.location = '{$albumPrivacyUrl}album_privacy=private'"/> Private
+                    <input type="radio" name="my_album_privacy" value="private" {if $user.album_privacy =='private'} checked="checked" {/if} onclick="window.location = '{$albumPrivacyUrl}album_privacy=private'"/> {lang code="private"}
                 </label>
 
                 <label>
-                    <input type="radio" name="my_album_privacy" value="friends" {if $user.album_privacy =='friends'} checked="checked" {/if} onclick="window.location = '{$albumPrivacyUrl}album_privacy=friends'"/>For friends
+                    <input type="radio" name="my_album_privacy" value="friends" {if $user.album_privacy =='friends'} checked="checked" {/if} onclick="window.location = '{$albumPrivacyUrl}album_privacy=friends'"/>{lang code="for_friends"}
                 </label>
             </div>
-            <p>All the photos uploaded are dependent on their collections/albums. When you remove some photo from collection/album, this will not delete photo permenently. It will move photo here. You can also use this to make your photos private. Direct link is available for you to share with your friends.</p>
+            <p>{lang code="long_txt"}</p>
            
             <div class="row">
             <div class="col-md-6 col-md-offset-3">
