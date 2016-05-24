@@ -650,8 +650,9 @@ class ClipBucket
     function foot_menu($params = NULL)
     {
         global $cbpage;
-        $this->foot_menu[] = array('name' => lang("menu_home"), 'link' => BASEURL, "this" => "home");
-        $this->foot_menu[] = array('name' => lang("contact_us"), 'link' => cblink(array('name' => 'contact_us')), "this" => "home");
+        //$this->foot_menu[] = array('name' => lang("menu_home"), 'link' => BASEURL, "this" => "home");
+        //$this->foot_menu[] = array('name' => lang("contact_us"), 'link' => cblink(array('name' => 'contact_us')), "this" => "home");
+        //$this->foot_menu[] = array('name' => lang("about_us"), 'link' => cblink(array('name' => 'about_us')), "this" => "home");
 
 
         
@@ -661,7 +662,7 @@ class ClipBucket
 
         if ($pages)
             foreach ($pages as $p)
-                $this->foot_menu[] = array('name' => $p['page_name'], 'link' => $cbpage->page_link($p), "this" => "home");
+               $this->foot_menu[] = array('name' => lang($p['page_name']), 'link' => $cbpage->page_link($p), "this" => "home");
 
 //		if($cbpage->is_active(2))
 //			$this->foot_menu[] = array('name'=>lang("privacy_policy"),'link'=>$cbpage->get_page_link(2),"this"=>"home");
