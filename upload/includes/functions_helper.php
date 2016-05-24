@@ -218,3 +218,62 @@
             return false;
         }
     }
+
+    /**
+    * Returns static URL for provided scheme
+    * @param : { string } { $sort } { type of sorting }
+    * @param : { string } { $type } { type of sorting e.g photos, videos }
+    *
+    * $type paramter options are:
+    *
+    * videos
+    * photos
+    * channels
+    * collections
+    * 
+    * @param : { string } { $time } { this_month by default}
+    *
+    * $time paramter options are:
+    *
+    * today
+    * yesterday
+    * this_week
+    * last_week
+    * last_month
+    * top_rated
+    * last_year
+    *
+    * @since : 24th May, 2016 ClipBucket 2.8.1
+    * @author : Saqib Razzaq
+    */
+
+    function prettySort($sort, $type, $time = 'this_month') {
+        global $Cbucket;
+        $seoMode = $Cbucket->configs['seo'];
+        switch ($sort) {
+            case 'recent':
+                if ($seoMode == 'yes') {
+                    return BASEURL.'/'.$type.'/all/All/most_recent/all_time/1&sorting=sort';
+                } else {
+                    return BASEURL.'/'.$type.'.php?cat=all&sort=most_recent&time=all_time&page=1&seo_cat_name=All&sorting=sort';
+                }
+                break;
+            case 'trending':
+                if ($seoMode == 'yes') {
+                    return BASEURL.'/'.$type.'/all/All/most_viewed/all_time/1&sorting=sort';
+                } else {
+                    return BASEURL.'/'.$type.'.php?cat=all&sort=most_viewed&time=all_time&page=1&seo_cat_name=All&sorting=sort';
+                }
+                break;
+            case 'popular':
+                if ($seoMode == 'yes') {
+                    return BASEURL.'/'.$type.'/all/All/top_rated/'.$time.'/1&timing=time';
+                } else {
+                    return BASEURL.'/'.$type.'.php?cat=all&sort=top_rated&time='.$time.'&page=1&seo_cat_name=All&timing=time';
+                }
+                break;
+            default:
+                return BASEURL.'/'.$type.'/all/All/most_recent/all_time/1&sorting=sort';
+                break;
+        }
+    }
