@@ -216,9 +216,10 @@
 
           <select class="form-control" name="default_time_zone" id="default_time_zone">
             {$timezone_abbreviations = DateTimeZone::listAbbreviations()}
-           {foreach $timezone_abbreviations.est as $tz }
- 						<option value="{$tz['timezone_id']}" {if $row.default_time_zone==$tz['timezone_id']} selected="selected"{/if}>(GMT {$tz['offset']/3600}) {$tz['timezone_id']}</option>
-  				 
+           {foreach $timezone_abbreviations as $timeZone }
+                {foreach $timeZone as $tz}
+ 						<option value="{$tz['timezone_id']}" {if $row.default_time_zone==$tz['timezone_id']} selected="selected"{/if}>(GMT {round($tz['offset']/3600)}) {$tz['timezone_id']}</option>
+  				{/foreach}
 					{/foreach}
           </select>
         </div>
