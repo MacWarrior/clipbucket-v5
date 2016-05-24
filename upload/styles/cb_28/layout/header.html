@@ -87,7 +87,7 @@
 									<div class="cbsearchtype">
 										<div class="search-drop">
 											<button id="searchTypes" tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle search-drop-btn" type="button">
-												<span class="search-type">{if $pageType}{$pageType|ucfirst}{elseif $currentPage == 'videos' || $currentPage == 'channels' || $currentPage == 'photos'}{$currentPage|ucfirst}{else}Videos{/if}</span>
+												<span class="search-type">{if $pageType}{$pageType|ucfirst}{elseif $currentPage == 'videos' || $currentPage == 'channels' || $currentPage == 'photos'}{$currentPage|ucfirst}{else}{lang code="videos"}{/if}</span>
 												<span class="icon-down-arrow"></span>
 											</button>
 											<ul class="dropdown-menu">
@@ -98,11 +98,11 @@
 												{/if}
 												{if $counter == 3}
 												<li value="{$stypes}" {if $pageType == $stypes || $currentPage == $stypes}  class="active"  {/if}>
-													<a  class="s-types" href="#">{$stypes|ucfirst}</a>
+													<a  class="s-types" href="#">{lang code ="{$stypes}"}</a>
 												</li>
 												{else}
 												<li value="{$stypes}" {if $pageType == $stypes || $currentPage == $stypes}  class="active" {/if}>
-													<a  class="s-types" href="#">{$stypes|ucfirst}</a>
+													<a  class="s-types" href="#">{lang code ="{$stypes}"}</a>
 												</li>
 												{/if}
 												{$counter = $counter + 1}
@@ -110,7 +110,7 @@
 												{ANCHOR place="beat_search"}
 											</ul>
 										</div>
-										<input type="text" class="form-control" name="query" placeholder="search keyword here" value="{'query'|get_form_val:true}" id="query">
+										<input type="text" class="form-control" name="query" placeholder="{lang code="search_keyword_feed"}" value="{'query'|get_form_val:true}" id="query">
 										<input type="hidden" name="type" class="type" value="{if isset($smarty.get.type)}{$smarty.get.type}{elseif $toSearch}{$toSearch}{else}videos{/if}" id="type">
 										<button tabindex="-1" type="submit" name="cbsearch" id="cbsearch" class="btn btn-default btn-search icon-search"></button>
 									</div>
@@ -120,7 +120,7 @@
 							<ul class="nav navbar-nav navbar-right right-menu">
 								{if userid()}
 								<li class="dropdown upload_link">
-									<a href="{link name='upload'}" class="dropdown-toggle btn-upload btn btn-default" data-toggle="dropdown"><i class="icon-upload"></i><span>{lang code="uploads"}</span><b class="icon-down-arrow"></b></a>
+									<a href="{link name='upload'}" class="dropdown-toggle btn-upload btn btn-default" data-toggle="dropdown"><i class="icon-upload"></i><span>{lang code="upload"}</span><b class="icon-down-arrow"></b></a>
 									<ul role="menu" class="dropdown-menu">
 									{if isSectionEnabled('videos')}
 										<li class="up_vid"><a href="{link name='upload'}">{lang code="upload_video"}<i class="icon-video visible-xs"></i></a></li>
