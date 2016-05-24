@@ -1,3 +1,7 @@
+{lang code='no_featured_videos_found' assign='no_found_fe'}
+{$vae = {lang code="no_featured_videos_found"}}
+{$no_recent = {lang code="no_recent_videos_found"}}
+{$loadMoreLang ={lang code="load_more"}}
 {ANCHOR place="display_head_sec"}
 <div id="main" class="clearfix container">
 	<div id="messageFav" class="alert alert-info marginTop" style="display:none; height:66px;"></div>
@@ -46,7 +50,7 @@
 			<section class="clearfix featured-videos">
 				<h1>{lang code="featured_videos"}</h1>
 				<div id="featured_vid_sec" class="clearfix row">
-
+				
 				</div>
 				<div id="featured_pre" class="clearfix"></div>
 				<div id="featured-loadmore" class="clearfix text-center">
@@ -162,6 +166,11 @@
 <script type="text/javascript">
 	// handles initial and load more
 	// for home page videos
+	var langCo = "{$vae}";
+	var noRecent = "{$no_recent}";
+	var loadMoreLang = "{$loadMoreLang}";
+
+	console.log(langCo);
 	homePageVideos("{$got_qlitems}");
 	//
 	/* player height and editerpick videos height */
