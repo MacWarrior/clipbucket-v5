@@ -1,3 +1,4 @@
+
 {$secret_Id = $secret_Id|@json_encode}
     {if $edit_lang != 'yes'}
     <h3>API KEYS</h3> 
@@ -340,6 +341,7 @@ Remember and note the Client ID and Client Secret fields. You will need these wh
     <div id = "lang-ex">
     </div>
     <div id= "div"></div> 
+    <div id="ref"></div>
     </br>
 
     <script type="text/javascript">
@@ -352,6 +354,7 @@ Remember and note the Client ID and Client Secret fields. You will need these wh
     var lastElementArray;
     var langExists; 
     var set=true;
+    var cook = "{$cook}";
     var sec = {$secret_Id};
     //var sec;
     var dialogLangPack= $('<div class="alert-msg-holder" id="headErr"><div role="alert" class="alert alert-success alert-dismissible alert-ajax"><button aria-label="Close" data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span></button><strong>Language Pack Uploaded </strong></div></div>');
@@ -359,6 +362,8 @@ Remember and note the Client ID and Client Secret fields. You will need these wh
 
     var dialogLangExisit = $('<div class="alert-msg-holder"  id="lang-exist"><div role="alert" class="alert alert-danger alert-dismissible alert-ajax"><button aria-label="Close" data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span></button><strong>Language Already Exisits </strong></div></div>');
     var UploadText = $('<p><strong>Importing Language Pack. Please sit back and relax while magic happens.</strong></p>');
+
+    var refresh_ch = $('<div class="alert-msg-holder"  id="lang-exist"><div role="alert" class="alert alert-danger alert-dismissible alert-ajax"><button aria-label="Close" data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span></button><strong>Refresh to set cookie </strong></div></div>');
     function timeCheck(){
          process = setInterval(function() {
                 $.get(baseurl+'/files/percent.lang', function(data) {
@@ -368,6 +373,9 @@ Remember and note the Client ID and Client Secret fields. You will need these wh
                lastElementArray = allTextLines.slice(-2, -1)[0];
                if(lastElementArray == undefined){
                 lastElementArray = 0;
+               }
+                 if(lastElementArray == 99){
+                lastElementArray = 100;
                }
                console.log(lastElementArray);
             });
@@ -381,7 +389,7 @@ Remember and note the Client ID and Client Secret fields. You will need these wh
         $('#progress-bar').attr('class','progress-bar progress-bar-success');
         $("#bar").delay(2000).fadeOut("slow",function(){
               $( "#progress-bar").removeClass("progress-bar progress-bar-success").addClass( "progress-bar");
-              lastElementArray = 0;
+              //lastElementArray = 0;
             $('#loaderVal').text(lastElementArray+'%');
             $('#progress-bar').css('width',lastElementArray+'%');
 
@@ -398,9 +406,9 @@ Remember and note the Client ID and Client Secret fields. You will need these wh
         $('.progress-bar').css('width',lastElementArray+'%');
         $('#progress-bar').attr('class','progress-bar progress-bar-success');
         //$("#bar").delay(2000).fadeOut(500);
-        $("#bar").delay(2000).fadeOut("slow",function(){
+        $("#bar").delay(500).fadeOut("slow",function(){
             $( "#progress-bar").removeClass("progress-bar progress-bar-success").addClass( "progress-bar");
-                lastElementArray = 0;
+            //lastElementArray = 0;
             $('#loaderVal').text(lastElementArray+'%');
             $('#progress-bar').css('width',lastElementArray+'%');
         });
@@ -467,8 +475,8 @@ Remember and note the Client ID and Client Secret fields. You will need these wh
     })
 
 
-
     $(document).on("click", "#submit_lang1", function () {
+if($.cookie('bing_access_token') != null){ 
         var selectFieldValue = $('select.changeStatus').val();
        var langDetect = $('option:selected', '#lang_option').attr('data-check');
     
@@ -495,8 +503,9 @@ Remember and note the Client ID and Client Secret fields. You will need these wh
                         progress = setInterval(function() {
                             $('#loaderVal').text(lastElementArray+'%');
                             $('.progress-bar').css('width',lastElementArray+'%');
-                           if(lastElementArray == 80) {
+                           if(lastElementArray == 99) {
                                clearInterval(progress);
+                               lastElementArray = 100;
                             }
                         }, 1000);
                     }   
@@ -513,7 +522,6 @@ Remember and note the Client ID and Client Secret fields. You will need these wh
                             readLate();
                         }
                         window.location.href = baseurl+"/admin_area/language_settings.php";
-                        lastElementArray = 0;
                     }
                     else {
                         checkExists();
@@ -521,9 +529,11 @@ Remember and note the Client ID and Client Secret fields. You will need these wh
                 }
             })
         } else {
-            //alert("Invalid Keys combo");
             $('#div').html(log);
         }  
+      } else {
+        $('#ref').html(refresh_ch);
+      }
     });
 
     </script>
