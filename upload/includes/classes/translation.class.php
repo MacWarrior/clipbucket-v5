@@ -18,8 +18,8 @@ class MrsTranslator
     public function get_access_token()
     {	
         # if access token is not expired and is stored in COOKIE
-        if(isset($_COOKIE['bing_access_token']))
-                return $_COOKIE['bing_access_token'];
+        // if(isset($_COOKIE['bing_access_token']))
+        //         return $_COOKIE['bing_access_token'];
 
         # Get a 10-minute access token for Microsoft Translator API.
         $url = 'https://datamarket.accesscontrol.windows.net/v2/OAuth2-13';
@@ -33,8 +33,10 @@ class MrsTranslator
         $rsp = curl_exec($ch); 
         $rsp = json_decode($rsp);
         $access_token = $rsp->access_token;
+        //pr($access_token,true);
+
         
-        setcookie('bing_access_token', $access_token, $rsp->expires_in);
+       // setcookie('bing_access_token', $access_token, time()+$rsp->expires_in);
         
         return $access_token;
     }
@@ -65,6 +67,7 @@ class MrsTranslator
         preg_match_all('/<string (.*?)>(.*?)<\/string>/s', $rsp, $matches);
 	
         return $matches[2][0];
+        //unset($_COOKIE['bing_access_token']);
     }
             
     /**
