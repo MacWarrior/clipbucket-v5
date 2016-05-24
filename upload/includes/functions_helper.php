@@ -247,7 +247,7 @@
     * @author : Saqib Razzaq
     */
 
-    function prettySort($sort = 'videos', $type, $time = 'this_month') {
+    function prettySort($sort, $type, $time = 'this_month') {
         global $Cbucket;
         $seoMode = $Cbucket->configs['seo'];
         switch ($sort) {
