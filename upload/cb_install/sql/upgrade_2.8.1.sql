@@ -5,7 +5,7 @@ INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES ('index_featured','2');
 INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES ('clientid', 'your_client_id_here');
 
 INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES ('secretId', 'your_client_secret_here');
-
+ALTER TABLE `{tbl_prefix}collection_categories` ADD `parent_id` int DEFAULT 1;
 /*Indexing of following tables*/
 /*Author: Sikander Ali 	*/
 

@@ -107,6 +107,7 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}collections` (
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}collection_categories` (
   `category_id` int(255) NOT NULL AUTO_INCREMENT,
+  `parent_id` int(255) NOT NULL DEFAULT 1,
   `category_name` varchar(30) NOT NULL,
   `category_order` int(5) NOT NULL,
   `category_desc` text NOT NULL,
