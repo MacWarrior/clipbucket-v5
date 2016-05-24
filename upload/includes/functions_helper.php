@@ -158,10 +158,13 @@
     * @author : Saqib Razzaq
     */
 
-    function pullCategories() {
+    function pullCategories($page = false) {
         global $cbvid, $userquery, $cbphoto;
         $params = array();
-        switch (THIS_PAGE) {
+        if (!$page) {
+            $page = THIS_PAGE;
+        }
+        switch ($page) {
             case 'videos':
                 $all_cats = $cbvid->cbCategories($params);
                 break;
