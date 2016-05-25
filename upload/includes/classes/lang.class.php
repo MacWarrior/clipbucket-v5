@@ -415,11 +415,9 @@ class language
 		$phrases = $transLang;
 		$data['iso_code'] = $iso_code;
 		$data['name'] = $lang_name;
-		$db->insert(tbl("languages"),array("language_code","language_name","language_regex","language_default"),
-									  array($data['iso_code'],$data['name'],"/^".$data['iso_code']."/i","no"));
+		$db->insert(tbl("languages"),array("language_code","language_name","language_regex","language_default"),array($data['iso_code'],$data['name'],"/^".$data['iso_code']."/i","no"));
 		$sql = '';
-		foreach($phrases as $code => $phrase)
-		{
+		foreach($phrases as $code => $phrase) {
 			if(!empty($sql))
 				$sql .=",\n";
 			$sql .= "('".$data['iso_code']."','$code','".htmlspecialchars($phrase,ENT_QUOTES, "UTF-8")."')";
