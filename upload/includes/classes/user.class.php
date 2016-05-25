@@ -3177,13 +3177,13 @@ class userquery extends CBCategory{
                 lang('user_fav_videos')=>'manage_videos.php?mode=favorites',
             );
 
-        if(isSectionEnabled('groups'))
-            $array[lang('groups')] =  array
-            (
-                lang('grp_groups_title') =>'manage_groups.php',
-                lang('user_create_group') =>cblink(array('name'=>'create_group')),
-                lang('grp_joined_groups')=>'manage_groups.php?mode=joined',
-            );
+        // if(isSectionEnabled('groups'))
+        //     $array[lang('groups')] =  array
+        //     (
+        //         lang('grp_groups_title') =>'manage_groups.php',
+        //         lang('user_create_group') =>cblink(array('name'=>'create_group')),
+        //         lang('grp_joined_groups')=>'manage_groups.php?mode=joined',
+        //     );
 
         if(isSectionEnabled('playlists'))
             $array[lang('playlists')]=array
@@ -3192,7 +3192,7 @@ class userquery extends CBCategory{
             );
         $array[lang('messages')] = array
         (
-            lang('inbox ('.$this->get_unread_msgs($this->userid).')')	=> 'private_message.php?mode=inbox',
+            lang('inbox').'('.$this->get_unread_msgs($this->userid).')'=> 'private_message.php?mode=inbox',
             lang('notifications') => 'private_message.php?mode=notification',
             lang('sent')	=> 'private_message.php?mode=sent',
             lang('title_crt_new_msg')=> cblink(array('name'=>'compose_new')),
@@ -3205,8 +3205,6 @@ class userquery extends CBCategory{
                 lang('add_contact_list') => 'manage_contacts.php?mode=new_group',
             );
 
-
-
         if(count($this->user_account)>0)
         {
             foreach($this->user_account as $key => $acc)
@@ -3218,6 +3216,7 @@ class userquery extends CBCategory{
                 }else
                     $array[$key] = $acc;
             }
+           // pex($array,true);
             //$array = array_merge($array,$this->user_account);
         }
 
