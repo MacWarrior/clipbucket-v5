@@ -88,7 +88,7 @@ class Collections extends CBCategory
 		$per = $userquery->get_user_level(userid());
 		// Adding My Account Links	
 		if(isSectionEnabled('collections'))
-		$userquery->user_account[lang('Collections')] = array(
+		$userquery->user_account[lang('collections')] = array(
 											lang('add_new_collection') => cblink(array('name'=>'manage_collections','extra_params'=>'mode=add_new')),
 											lang('manage_collections') => cblink(array('name'=>'manage_collections')),
 											lang('manage_favorite_collections') => cblink(array('name'=>'manage_collections','extra_params'=>'mode=favorite'))
