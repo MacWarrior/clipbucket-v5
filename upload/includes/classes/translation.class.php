@@ -1,26 +1,20 @@
 <?php
-//require('../includes/config.inc.php');
-    global $lang_obj;
-    $cl = $Cbucket->configs['clientid'];
-    $sc = $Cbucket->configs['secretId'];
-    define('BING_CLIENT_ID',$cl);
-    define('BING_CLIENT_SEC', $sc);
+
+global $lang_obj;
+$cl = $Cbucket->configs['clientid'];
+$sc = $Cbucket->configs['secretId'];
+define('BING_CLIENT_ID',$cl);
+define('BING_CLIENT_SEC', $sc);
+
 class MrsTranslator
 {
-    //public $client_id = $values[0];
-   // public $client_secret = $values[1];
-       
     /**
      * Get access token
      *
      * @return string 
      */
-    public function get_access_token()
-    {	
-        # if access token is not expired and is stored in COOKIE
-        // if(isset($_COOKIE['bing_access_token']))
-        //         return $_COOKIE['bing_access_token'];
-
+    public function get_access_token() {	
+     
         # Get a 10-minute access token for Microsoft Translator API.
         $url = 'https://datamarket.accesscontrol.windows.net/v2/OAuth2-13';
         $postParams = 'grant_type=client_credentials&client_id='.urlencode(BING_CLIENT_ID).
@@ -33,10 +27,6 @@ class MrsTranslator
         $rsp = curl_exec($ch); 
         $rsp = json_decode($rsp);
         $access_token = $rsp->access_token;
-        //pr($access_token,true);
-
-        
-       // setcookie('bing_access_token', $access_token, time()+$rsp->expires_in);
         
         return $access_token;
     }
@@ -48,8 +38,7 @@ class MrsTranslator
      * @param string $from  language of text   
      * @return string       Translated text
      */
-    public function translate($text, $to, $from = null)
-    {
+    public function translate($text, $to, $from = null) {
         $access_token = $this->get_access_token();
 
         if (is_null($from)) {
@@ -78,14 +67,12 @@ class MrsTranslator
      * @param array $tos     languages to be translated to
      * @return array        Translations of the text to given languages
      */
-    public function multiTranslate($text, $from, $tos)
-    {        
+    public function multiTranslate($text, $from, $tos) {        
         $access_token = $this->get_access_token();
         $result = array();        
         $result[$from] = $text;
         
-        foreach($tos as $to)
-        {
+        foreach($tos as $to) {
             $url = 'http://api.microsofttranslator.com/V2/Http.svc/Translate?text='.urlencode($text).'&from='.$from.'&to='.$to;
             
             $ch = curl_init();
@@ -108,8 +95,7 @@ class MrsTranslator
      * @param String $text 
      * @return String           Language of text
      */
-    public function detectLang($text)
-    {
+    public function detectLang($text) {
         $access_token = $this->get_access_token();
 
         $url = "http://api.microsofttranslator.com/V2/Http.svc/Detect?text=".urlencode($text);
