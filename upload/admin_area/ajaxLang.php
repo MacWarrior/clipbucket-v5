@@ -17,17 +17,13 @@ if(isset($_POST['selectFieldValue'])) {
 	*/
 
 function language_translate($iso,$language_detact){
-    global $lang_obj;
-    global $MrsTranslator;
-     $iso_code = $iso;
-     $language_name = $language_detact;
-    if($code_exists = $lang_obj->lang_exists($iso_code) == '' ){
-
+    global $lang_obj,$MrsTranslator;
+    $language_name = $language_detact;
+    $iso_code = $iso;
+    $code_exists = $lang_obj->lang_exists($iso_code);
+    if($code_exists == '' ){
         $percent_content = fopen(BASEDIR."/files/percent.lang","w");
-        $iso_code = $iso;
         $counter = 1;
-        $resp = array();
-        $posts = array();
         $fileContent = $lang_obj->getPhrasesFromPack('en');
         $totalSize = count($fileContent);
           foreach ($fileContent as $key => $value) {
@@ -36,13 +32,12 @@ function language_translate($iso,$language_detact){
             $newlang[$key] = $MrsTranslator->translate($value,$iso_code,'en',"text/html");
             $percentageCal = ($counter/$totalSize)*100;
             $interger_val = intval($percentageCal); 
-            fwrite($percent_content, $interger_val."\n");
+            file_put_contents(BASEDIR."/files/percent.lang", $interger_val."\n");
             $counter++;
          }
         $lang_obj->import_packlang($iso_code,$newlang,$language_name);
         $lang_obj->createPack($iso_code);
-       // fclose($percent_content);
-        $code_exists = $lang_obj->lang_exists($iso_code);
+        fclose($percent_content);
         $id = mysql_clean($_POST['make_default']);
         $lang_obj->make_default($id);
         $response['iso-code_exits'] = $code_exists;
