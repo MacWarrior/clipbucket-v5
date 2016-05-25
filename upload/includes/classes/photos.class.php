@@ -235,7 +235,7 @@ class CBPhotos
 							lang('manage_my_album') => "manage_photos.php?mode=my_album",
 							);
 		if(isSectionEnabled('photos'))
-		$userquery->user_account[lang('Photos')] = $accountLinks;
+		$userquery->user_account[lang('photos')] = $accountLinks;
 											
 		//Setting Cbucket links
 
