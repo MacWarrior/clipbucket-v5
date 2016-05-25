@@ -35,6 +35,7 @@
 			$vkey = @$_GET['v'];
 			$vkey = mysql_clean($vkey);
 			$vdo = $cbvid->get_video($vkey);
+			$cbvid->update_comments_count($vdo['videoid']);
 			$assign_arry['vdo'] = $vdo;
 			if(video_playable($vdo)) {	
 				//Checking for playlist
