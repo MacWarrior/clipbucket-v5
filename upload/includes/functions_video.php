@@ -1154,18 +1154,20 @@
 
         if(!$user)
             $user = username();
+
         if(is_array($vdo))
             $video_users = $vdo['video_users'];
         else
             $video_users = $vdo;
 
-
         $users_array = explode(',',$video_users);
-
-        if(in_array($user,$users_array))
+        $users_array = array_filter(array_map('trim', $users_array));
+        if(in_array($user,$users_array)){
             return true;
-        else
+        }
+        else{
             return false;
+        }
     }
 
     /**
