@@ -303,7 +303,7 @@ class Clipbucket_db
     */
 
     function delete($tbl,$flds,$vls,$ep=NULL) {
-        global $db ;
+        global $db, $__devmsgs;
         $total_fields = count($flds);
         $fields_query = "";
         $count = 0;
@@ -326,7 +326,15 @@ class Clipbucket_db
         if(isset($this->total_queries)) $this->total_queries++;
         $this->total_queries_sql[] = $query;
         try {
-            $this->mysqli->query($query);
+            if (is_array($__devmsgs)) {
+                $start = microtime();
+                $this->mysqli->query($query);
+                $end = microtime();
+                $timetook = $end - $start;
+                devWitch($query, 'delete', $timetook);
+            } else {
+                $this->mysqli->query($query);
+            }
         } catch(DB_Exception $e) {
             $e->getError();
         }
