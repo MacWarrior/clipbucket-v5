@@ -1,3 +1,4 @@
+
 <h2>Manage Items - <a href="{$baseurl}/admin_area/edit_collection.php?collection={$data.collection_id}">{$data.collection_name}</a></h2>
 <form action="" method="post">
     <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
@@ -43,7 +44,7 @@
         <tr>
             <td class="moveL PhotoCheckBox">
                 <div>
-                    <input name="check_obj[]" type="checkbox" id="check_obj" value="{$obj[list].photo_id}" style="display: inline"/>
+                    <input name="check_obj[]" type="checkbox" id="check_obj-{$collection.videoid}" value="{$obj[list].photo_id}" style="display: inline"/>
                 </div>
             </td>
 
@@ -75,18 +76,49 @@
                     </div>
                 </div>
                 {/if}
+
+                {if $type == 'videos'}
+                 <tr>
+           <td width="25"><input type="checkbox" name="check_obj[]" id="check_obj-{$collection.videoid}" value="{$obj[list].videoid}" />
+          <label for="checkbox"></label></td>
+            <td>{$obj[list].videoid}</td>
+
+
+
+         <div class="row">
+                    <div class="col-md-10">
+                        <div class="row">
+                            <div class="col-md-3">
+                               <img src="{get_thumb vdetails=$obj[list]}" width="120" height="70" id="video_{$obj[list].videoid}" style="padding:2px; border:1px solid #ccc" />
+                            </div>
+                            <div class="col-md-9">
+                                <a href="{$baseurl}/admin_area/edit_video.php?video={$obj[list].videoid}" target="_blank">{$obj[list].title}</a>
+                         <span class="labels1"> <strong>{$obj[list].date_added|niceTime}</strong>
+                            {lang code='views'} : <strong>{$obj[list].views|number_format}</strong></span>
+                                <div class="labels">
+                                    {if $obj[list].featured=='yes'}<span class="label label-primary">Featured{else}{/if}</span>
+                                    <span class="label {if $obj[list].active=='yes'}label-success{else}label-warning{/if}">
+                                        {if $obj[list].active=='yes'}Active{else}InActive{/if} </span>
+                                    <span class="label label-info">
+                                       Viewed {$obj[list].last_viewed|niceTime}</span>
+                                </div>
+                            <!--     <div id="vid_opt-{$obj[list].videoid}" style="display:none" class="AdminPhotoActions">
+                                    <a target="_blank" href="{$cbcollection->collection_links($obj[list],'view_item')}">View</a>
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+                {/if}
                 {/section}
     </table>
+   
     {/if}
     {/if}
 </form>
+    {*section name=list loop=$obj*}
+    {*if $type == 'videos'*}
 
-    {if $type == 'videos'}
-
-
-
-
-<li id="collectionItem_{$obj[list].videoid}" class="clearfix myAdminList" style="background:#{cycle values='FFFFFF,EEEEEE'}"
+<!-- <li id="collectionItem_{$obj[list].videoid}" class="clearfix myAdminList" style="background:#{cycle values='FFFFFF,EEEEEE'}"
         OnMouseOver="$('#vid_opt-{$obj[list].videoid}').show()"
         OnMouseOut="$('#vid_opt-{$obj[list].videoid}').hide()">
     <div class="moveL PhotoCheckBox">
@@ -112,6 +144,7 @@
             </div>
         </div>
     </div>
-    </li>
+    </li> -->
 
-    {/if}
+    {*/if*}
+    {*/section*}
