@@ -50,7 +50,8 @@
 				call_watch_video_function($vdo);
 				subtitle(ucfirst($vdo['title']));
 			} else {
-				$Cbucket->show_page = false;
+				return $Cbucket->show_page = false;
+
 			}
 
 			//Return category id without '#'
