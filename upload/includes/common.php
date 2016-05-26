@@ -32,6 +32,21 @@
 
 	if(file_exists(dirname(__FILE__).'/development.dev')) {
 		define("DEVELOPMENT_MODE",true);
+		$__devmsgs = array(
+			'insert_queries'=>array(),
+			'select_queries'=>array(),
+			'update_queries'=>array(),
+			'delete_queries'=>array(),
+			'count_queries'=>array(),
+			'execute_queries'=>array(),
+			'insert'=>"0",
+			'select'=>"0",
+			'update'=>"0",
+			'delete'=>"0",
+			'count'=>"0",
+			'execute'=>"0",
+			'total'=>"0",
+			);
 	} else {
 		define("DEVELOPMENT_MODE",false);
 	}
