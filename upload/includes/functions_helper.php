@@ -281,6 +281,17 @@
         }
     }
 
+    /**
+    * Handles everything going in ClipBucket development mode
+    * @param : { string } { $query } { MySQL query for which to run process }
+    * @param : { string } { $query_type } { type of query, select, delete etc }
+    * @param : { integer } { $time } { time took to execute query }
+    * 
+    * @return : { array } { $__devmsgs } { array with all debugging data }
+    * @since : 27th May, 2016
+    * @author : Saqib Razzaq
+    */
+
     function devWitch($query, $query_type, $time) {
         global $__devmsgs;
         $memoryBefore = $__devmsgs['total_memory_used'];
