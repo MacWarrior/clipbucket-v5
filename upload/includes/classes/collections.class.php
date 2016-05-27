@@ -249,6 +249,7 @@ class Collections extends CBCategory
 		"".tbl($this->section_tbl).".*,".tbl('users').".userid,".tbl('users').".username",
 		" ".tbl($this->section_tbl).".collection_id = $id AND ".tbl($this->section_tbl).".userid = ".tbl('users').".userid $cond");
 		//echo $db->db_query;
+		//pex($result,true);
 		if($result)
 			return $result[0];
 		else
@@ -283,10 +284,10 @@ class Collections extends CBCategory
 	/**
 	 * Function used to get collections
 	 */
-	function get_collections($p=NULL)
+	function get_collections($p=NULL,$brace)
 	{
 		global $db;
-		
+		//pex($p,true);
 		$limit = $p['limit'];
 		$order = $p['order'];	
 		$cond = "";
@@ -346,21 +347,25 @@ class Collections extends CBCategory
 				$cond .= ' AND ';
 			$cond .= " ".cbsearch::date_margin("date_added",$p['date_span']);	
 		}
-		
-		if($p['user'])
-		{
-			if($cond != '')
-				$cond .= " AND ";
-			$cond .= " ".tbl('collections.userid')." = '".$p['user']."'";		
-		}
-		
-		if($p['type'])
+			if($p['type'])
 		{
 			if($cond != '')
 				$cond .= " AND ";
 			$cond .= " ".tbl('collections.type')." = '".$p['type']."'";		
 		}
 			
+
+		if($p['user'])
+		{
+			if($cond != '')
+				$cond .= " AND ";
+			if($brace)
+				$cond.='(';
+			$cond .= " ".tbl('collections.userid')." = '".$p['user']."'";
+			//$cond .=')';		
+		}
+		
+	
 		if($p['featured'])
 		{
 			if($cond != '')	
@@ -368,11 +373,16 @@ class Collections extends CBCategory
 			$cond .= " ".tbl('collections.featured')." = '".$p['featured']."'";	
 		}
 		
+		//$user_public_upload =  
 		if($p['public_upload'])
 		{
 			if($cond != '')
-				$cond .= " AND ";
+				$cond .= " OR ";
+
 			$cond .= " ".tbl('collections.public_upload')." = '".$p['public_upload']."'";	
+			if($brace)
+				$cond.=")";
+
 		}
 		
 		if($p['exclude'])
@@ -437,6 +447,7 @@ class Collections extends CBCategory
 			$cond .= " ($title_tag) ";		
 		}
 		
+
 		if(!$p['count_only'])
 		{
 			if($cond != "")
@@ -449,6 +460,7 @@ class Collections extends CBCategory
 						
 		}
 		
+
 		if($p['count_only'])
 		{
 			return $result = $db->count(tbl("collections"),"collection_id",$cond);
