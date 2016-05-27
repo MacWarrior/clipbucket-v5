@@ -2284,11 +2284,12 @@
 
 	function show_collection_form($params) {
 		global $db,$cbcollection;
+		$brace = 1;
 		if(!userid()) {
 			$loggedIn = "not";
 		} else {		
-			$collectArray = array("order"=>" collection_name ASC","type"=>"videos","user"=>userid());
-			$collections = $cbcollection->get_collections($collectArray);           
+			$collectArray = array("order"=>" collection_name ASC","type"=>"videos","user"=>userid(),"public_upload"=>'yes');
+			$collections = $cbcollection->get_collections($collectArray,$brace);           
             $contributions = $cbcollection->get_contributor_collections(userid());
             if($contributions) {
                 if(!$collections) {
