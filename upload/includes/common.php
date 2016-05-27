@@ -45,7 +45,11 @@
 			'delete'=>"0",
 			'count'=>"0",
 			'execute'=>"0",
-			'total'=>"0",
+			'total_queries'=>"0",
+			'total_query_exec_time'=>"0",
+			'total_memory_used'=>"0",
+			'expensive_query'=>'',
+			'cheapest_query'=>''
 			);
 	} else {
 		define("DEVELOPMENT_MODE",false);
