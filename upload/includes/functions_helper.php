@@ -280,3 +280,55 @@
                 break;
         }
     }
+
+    function devWitch($query, $query_type, $time) {
+        global $__devmsgs;
+        $memoryBefore = $__devmsgs['total_memory_used'];
+        $memoryNow = memory_get_usage()/1048576;
+        $memoryDif = $memoryNow - $memoryBefore;
+        $__devmsgs[$query_type.'_queries'][$__devmsgs[$query_type]]['q'] = $query;
+        $__devmsgs[$query_type.'_queries'][$__devmsgs[$query_type]]['timetook'] = $time;
+        $__devmsgs['total_query_exec_time'] = $__devmsgs['total_query_exec_time'] + $time;
+        $__devmsgs[$query_type.'_queries'][$__devmsgs[$query_type]]['memBefore'] = $memoryBefore;
+        $__devmsgs[$query_type.'_queries'][$__devmsgs[$query_type]]['memAfter'] = $memoryNow;
+        $__devmsgs[$query_type.'_queries'][$__devmsgs[$query_type]]['memUsed'] = $memoryDif;
+        $queryDetails = $__devmsgs[$query_type.'_queries'][$__devmsgs[$query_type]];
+
+        $expesiveQuery = $__devmsgs['expensive_query'];
+        $cheapestQuery = $__devmsgs['cheapest_query'];
+        
+        $insert_qs = $__devmsgs['insert_queries'];
+        $select_qs = $__devmsgs['select_queries'];
+        $update_qs = $__devmsgs['update_queries'];
+        $count_qs = $__devmsgs['delete_queries'];
+        $execute_qs = $__devmsgs['execute_queries'];
+
+        $count = 0;
+        
+        if (empty($expesiveQuery) || empty($cheapestQuery)) {
+            $expesiveQuery = $queryDetails;
+            $cheapestQuery = $queryDetails;
+        } else {
+            $memUsed = $queryDetails['memUsed'];
+            if ($memUsed > $expesiveQuery['memUsed']) {
+                $expesiveQuery = $queryDetails;
+            }
+
+            if ($memUsed < $cheapestQuery['memUsed']) {
+                $cheapestQuery = $queryDetails;
+            }
+        }
+
+        $__devmsgs['expensive_query'] = $expesiveQuery;
+        $__devmsgs['cheapest_query'] = $cheapestQuery;
+        $__devmsgs['total_memory_used'] = $memoryNow;
+        $__devmsgs[$query_type] = $__devmsgs[$query_type] + 1;
+        $__devmsgs['total_queries'] = $__devmsgs['total_queries'] + 1;
+
+        return $__devmsgs;
+    }
+
+    function showDevWitch() {
+        $file = BASEDIR.'/styles/global/devmode.html';
+        Template($file, false);
+    }
