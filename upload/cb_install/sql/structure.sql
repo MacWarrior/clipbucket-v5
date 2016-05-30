@@ -1191,12 +1191,16 @@ ALTER TABLE  `{tbl_prefix}video` ADD  `file_directory` VARCHAR( 10 ) NOT NULL AF
 
 
 -- Alterations for 2.8.1
+INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES ('index_recent','6');
+INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES ('index_featured','2');
+INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES ('clientid', 'your_client_id_here');
+INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES ('secretId', 'your_client_secret_here');
+UPDATE `{tbl_prefix}config` SET value = 'cb_28' WHERE name = 'template_dir';
 
-ALTER TABLE `{tbl_prefix}video` ADD  `thumbs_version` varchar(5)  NOT NULL DEFAULT  "2.6";
+ALTER TABLE `{tbl_prefix}collection_categories` ADD `parent_id` int DEFAULT 1;
 
 /*Indexing of following tables*/
 /*Author: Sikander Ali  */
-
 /*Cb_collection*/
 ALTER TABLE `{tbl_prefix}cb_collections` ADD INDEX(`userid`);
 ALTER TABLE `{tbl_prefix}cb_collections` ADD INDEX(`featured`);
@@ -1214,17 +1218,15 @@ ALTER TABLE `{tbl_prefix}photos` ADD INDEX(`total_comments`);
 ALTER TABLE `{tbl_prefix}photos` ADD INDEX(`last_viewed`);
 
 /*Cb_videos*/
-ALTER TABLE `{tbl_prefix}videos` ADD INDEX(`userid`);
-ALTER TABLE `{tbl_prefix}videos` ADD INDEX(`collection_id`);
-ALTER TABLE `{tbl_prefix}videos` ADD INDEX(`featured`);
-ALTER TABLE `{tbl_prefix}videos` ADD INDEX(`last_viewed`);
-ALTER TABLE `{tbl_prefix}videos` ADD INDEX(`rating`);
-ALTER TABLE `{tbl_prefix}videos` ADD INDEX(`total_comments`);
-ALTER TABLE `{tbl_prefix}videos` ADD INDEX(`last_viewed`);
+ALTER TABLE `{tbl_prefix}video` ADD  `thumbs_version` varchar(5)  NOT NULL DEFAULT  "2.6";
+ALTER TABLE `{tbl_prefix}video` ADD INDEX(`userid`);
+ALTER TABLE `{tbl_prefix}video` ADD INDEX(`featured`);
+ALTER TABLE `{tbl_prefix}video` ADD INDEX(`last_viewed`);
+ALTER TABLE `{tbl_prefix}video` ADD INDEX(`rating`);
+ALTER TABLE `{tbl_prefix}video` ADD INDEX(`total_comments`);
+ALTER TABLE `{tbl_prefix}video` ADD INDEX(`last_viewed`);
 
-INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES ('clientid', 'your_client_id_here');
 
-INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES ('secretId', 'your_client_secret_here');
 
 
 
