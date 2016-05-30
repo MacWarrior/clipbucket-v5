@@ -26,12 +26,11 @@ ALTER TABLE `{tbl_prefix}photos` ADD INDEX(`total_comments`);
 ALTER TABLE `{tbl_prefix}photos` ADD INDEX(`last_viewed`);
 
 /*Cb_videos*/
-ALTER TABLE `{tbl_prefix}videos` ADD INDEX(`userid`);
-ALTER TABLE `{tbl_prefix}videos` ADD INDEX(`collection_id`);
-ALTER TABLE `{tbl_prefix}videos` ADD INDEX(`featured`);
-ALTER TABLE `{tbl_prefix}videos` ADD INDEX(`last_viewed`);
-ALTER TABLE `{tbl_prefix}videos` ADD INDEX(`rating`);
-ALTER TABLE `{tbl_prefix}videos` ADD INDEX(`total_comments`);
-ALTER TABLE `{tbl_prefix}videos` ADD INDEX(`last_viewed`);
+ALTER TABLE `{tbl_prefix}video` ADD INDEX(`userid`);
+ALTER TABLE `{tbl_prefix}video` ADD INDEX(`featured`);
+ALTER TABLE `{tbl_prefix}video` ADD INDEX(`last_viewed`);
+ALTER TABLE `{tbl_prefix}video` ADD INDEX(`rating`);
+ALTER TABLE `{tbl_prefix}video` ADD INDEX(`total_comments`);
+ALTER TABLE `{tbl_prefix}video` ADD INDEX(`last_viewed`);
 
 UPDATE `{tbl_prefix}config` SET value = 'cb_28' WHERE name = 'template_dir';
