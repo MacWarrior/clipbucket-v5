@@ -5550,6 +5550,63 @@
 			}
 		}
 	}
+
+	function build_sort($sort, $vid_cond) {
+		if (!empty($sort)) {
+			switch($sort) {
+				case "most_recent":
+				default:
+					$vid_cond['order'] = " date_added DESC ";
+				break;
+				case "most_viewed":
+					$vid_cond['order'] =  "views DESC ";
+					$vid_cond['date_span_column'] = 'last_viewed';
+				break;
+				case "most_viewed":
+					$vid_cond['order'] = " views DESC ";
+				break;
+				case "featured":
+					$vid_cond['featured'] = "yes";
+				break;
+				case "top_rated":
+					$vid_cond['order'] = " rating DESC, rated_by DESC";
+				break;
+				case "most_commented":
+					$vid_cond['order'] = " comments_count DESC";
+				break;
+			}
+			return $vid_cond;
+		}
+	}
+
+
+		function build_sort_photos($sort, $vid_cond) {
+			if (!empty($sort)) {
+				switch($sort) {
+					case "most_recent":
+					default:
+						$vid_cond['order'] = " date_added DESC ";
+					break;
+					case "most_viewed":
+						$vid_cond['order'] =  " photos.views DESC ";
+						$vid_cond['date_span_column'] = 'last_viewed';
+					break;
+					case "most_viewed":
+						$vid_cond['order'] = " views DESC ";
+					break;
+					case "featured":
+						$vid_cond['featured'] = "yes";
+					break;
+					case "top_rated":
+						$vid_cond['order'] = " photos.rating DESC";
+					break;
+					case "most_commented":
+						$vid_cond['order'] = " comments_count DESC";
+					break;
+				}
+				return $vid_cond;
+			}
+		}
 	
     include( 'functions_db.php' );
     include( 'functions_filter.php' );
