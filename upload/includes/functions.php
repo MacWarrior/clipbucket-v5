@@ -178,7 +178,7 @@
 	*/
 
 	function cbmail($array) {
-		#return true;
+		return true;
 		$func_array = get_functions('email_functions');
 		if(is_array($func_array)) {
 			foreach($func_array as $func) {
@@ -5540,6 +5540,15 @@
 			$imgObj->CreateThumb($filepath,$outputFilePath,$width_setting,$ext,$height_setting,false);
 		}
 		unlink($filepath);
+	}
+
+	function array_val_assign($vals) {
+		if (is_array($vals)) {
+			$total_vars = count($vals);
+			foreach ($vals as $name => $value) {
+				assign($name, $value);
+			}
+		}
 	}
 	
     include( 'functions_db.php' );
