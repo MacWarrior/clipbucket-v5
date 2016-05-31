@@ -2837,6 +2837,28 @@ textarea#comment_box{
 	margin-top: 100px;
 }
 .page-error{
+	background: darken($white,3%);
+	position: relative;
+	z-index: 1;
+	img.error-bg{
+		width: 100%;
+		height: auto;
+	}
+	.error-holder{
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 2;
+	}
+	.content-txt{
+		position: absolute;
+		max-width: 460px;
+		padding: 0 30px;
+		right: 13%;
+		top:10%;
+	}
 	.alert-text{
 		font-size: 30px;
 		line-height: 40px;

@@ -180,7 +180,7 @@
 				}
 				&.open{
 					.icon-down-arrow{
-						@include rotate ($deg:-90deg);
+						@include rotate ($deg:-180deg);
 					}
 				}
 			}
@@ -272,6 +272,8 @@
 	color:$white;
 	font-size:0;
 	line-height:0;
+	width: 100%;
+	height: 100%;
 	&:hover{
 		text-decoration: none;
 	}
