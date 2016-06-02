@@ -2069,7 +2069,7 @@
 			},'text');
 		}*/
 
-		this.uploadSubtitle = function(videoid, honeyAjax) {
+		this.uploadSubtitle = function(videoid, lang, honeyAjax) {
 			if (honeyAjax.length < 5) {
 				return false;
 			}
@@ -2078,6 +2078,7 @@
 			var file_data = $('#captions').prop('files')[0];   
 		    var form_data = new FormData();                  
 		    var themode = 'yes';
+		    form_data.append('subtitle_lang',lang);
 		    form_data.append('file', file_data);
 		    form_data.append('videoid', videoid);
 		    $.ajax({

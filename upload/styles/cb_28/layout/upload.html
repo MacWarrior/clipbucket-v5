@@ -297,7 +297,8 @@
 								type : "post",
 								data : data
 							}).success(function(msg){
-								_cb.uploadSubtitle(theVideoId, "{$honey_ajax}");
+								var lang = $('#subtitle_lang').val();
+								_cb.uploadSubtitle(theVideoId, lang, "{$honey_ajax}");
 								msg = $.parseJSON(msg);
 								$("#uploadMessage").removeClass("hidden");
 								if(msg.error){
