@@ -228,7 +228,7 @@
 				*/
 
 				var currentFileIndex = 0;
-				
+				var theVideoId = '';
 
 				uploader.bind('FileUploaded', function(plupload, fileDetails, response){
 					$("#overallProgress").css("width", ((100/files.length)*(++filesUploaded))+"%");
@@ -254,11 +254,11 @@
 							file_name : fileName
 						}
 					}).success(function(msg){
-						console.log(msg);
+						//console.log(msg);
 						res = $.parseJSON(msg);
-						console.log(res);
+						//console.log(res);
 						fileId = res.videoid;
-
+						theVideoId = fileId;
 						// creating the hidden form fields
 						var hiddenVideoIdField = document.createElement('input');
 						hiddenVideoIdField.name = 'videoid';
@@ -291,11 +291,13 @@
 							e.preventDefault();
 							var self = this;
 							var data = $(this).serialize();
+							var theid = $(this).videoid;
 							$.ajax({
 								url : baseurl + "/actions/file_uploader.php",
 								type : "post",
 								data : data
 							}).success(function(msg){
+								_cb.uploadSubtitle(theVideoId, "{$honey_ajax}");
 								msg = $.parseJSON(msg);
 								$("#uploadMessage").removeClass("hidden");
 								if(msg.error){
