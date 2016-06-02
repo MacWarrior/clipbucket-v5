@@ -132,8 +132,10 @@ class CBEmail
 	 */
 	function add_mass_email($array=NULL)
 	{
+
 		if(!$array)
 			$array = $_POST;
+		//pex($array,true);
 		
 		global $userquery,$db;
 		
@@ -145,7 +147,7 @@ class CBEmail
 		$method = $array['method']; 	unset($array['method']);
 		
 		$settings = $array;
-		
+		//pex($users,true);
 		unset($array);
 		
 		if(!isValidEmail($from))
@@ -229,6 +231,21 @@ class CBEmail
 			return false;
 		}
 	}
+
+
+	function get_email_by_userid($id)
+	{
+		global $db;
+		$result = $db->select(tbl("users"),"email","userid='$id'");
+		if($db->num_rows>0)
+		{
+			return $result[0];
+		}else
+		{
+			return false;
+		}
+	}
+
 	function email_exists($id){ return $this->get_email($id); }
 	
 	
@@ -376,6 +393,14 @@ class CBEmail
 			return $send_msg;
 			
 		}
+	}
+
+
+	function friend_request_email($email,$username){
+		$msg = $username." wants to add you as a friend"."</br> <button href='http://127.0.0.1/lang_checkout/trunk/upload/manage_contacts.php?mode=manage'>view request</button>"; 
+		$subj = "Friend Request";
+		cbmail(array('from_name'=>TITLE, 'to'=>$email,'from'=>WEBSITE_EMAIL,'subject'=>$subj,'content'=>$msg));
+
 	}
 }
 
