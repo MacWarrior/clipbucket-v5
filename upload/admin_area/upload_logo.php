@@ -60,6 +60,7 @@ if (isset($_POST['submit']))
 }
 
 assign('source',$source);
+subtitle("Update Logo");
 template_files('upload_logo.html');
 display_it();
 ?>
