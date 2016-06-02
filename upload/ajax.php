@@ -566,9 +566,13 @@ if(!empty($mode))
 		
 		case 'add_friend':
 		{
+			global $cbemail;
 			$friend = mysql_clean($_POST['uid']);
 			$userid = userid();
-			
+			$username = username();
+			$mailId = $cbemail->get_email_by_userid($friend);
+			$cbemail->friend_request_email($mailId['email'],$username);
+
 			if($userid) {
 				$userquery->add_contact($userid,$friend);
 						
