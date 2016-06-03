@@ -2275,6 +2275,11 @@ textarea#comment_box{
 		}
 	}
 }
+.report-block{
+	padding:16px;
+	background: $white;
+	margin: 0 0 16px;
+}
 .channel-tabs{
 	background: $white;
 	padding: 10px 16px;
@@ -3407,8 +3412,16 @@ textarea#comment_box{
 				text-align: center;
 			}
 			.btn-default{
-				margin: 0 5px;
+				display: block;
+				margin: 0 auto 5px;
+				width: 200px;
 			}
+		}
+	}
+	.report-block{
+		margin: 0 10px 16px;
+		.alert{
+			position: static;
 		}
 	}
 	.signin-block{
