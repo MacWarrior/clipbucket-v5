@@ -5,12 +5,15 @@
 {if $uservideos}
 {$first_video = $cbvid->get_video($uservideos.0.videokey)}
 {/if}
- 
+
 {$total_videos = $user.total_videos}
 {$total_photos = $user.total_photos}
 <div id="main" class="container clearfix">
 	<div class="clearfix">
 		{include file="$style_dir/blocks/view_channel/channel_header.html"}
+	</div>
+	<div class="clearfix" id="report-user-form" style="display:none">
+		{show_flag_form id=$user.userid type=user}	
 	</div>
 	<div class="clearfix">
 		<section id="content" class="clearfix">
@@ -219,16 +222,11 @@ $('#cover_info').show();
 });*/
 
 
-
-
 (function(window){
   $(document).ready(function(){
-	$("#reportVideo").on({
-			click : function(e){
-				e.preventDefault();
-				$("#flag_item").show();
-			}
-		});
+	$("#report-user").on("click",function(){
+		$("#report-user-form").toggle();
+	});
 	var extensions = "{$extensions}";
 	var baseurl = '{$baseurl}';
 	var channelId = "{$user['userid']}";
