@@ -284,7 +284,7 @@ class Collections extends CBCategory
 	/**
 	 * Function used to get collections
 	 */
-	function get_collections($p=NULL,$brace)
+	function get_collections($p=NULL,$brace = false)
 	{
 		global $db;
 		//pex($p,true);
