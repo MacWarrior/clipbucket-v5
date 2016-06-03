@@ -65,21 +65,11 @@
 									<li {if $menu.name|lower == $smarty.const.THIS_PAGE|lower || $menu.name|lower == $currentPage}class="active"{/if}><a href="{$menu.link}">{$menu.name}</a></li>
 									{/if}
 									{/foreach}
-									<!-- <li class="dropdown">
-										<a href="#" data-toggle="dropdown">more <span class="icon-down-arrow"></span></a>
-										<ul class="dropdown-menu pull-right">
-											{foreach $head_menu as $menu}
-											{if $menu@iteration > 4}
-											<li><a href="{$menu.link}">{$menu.name}</a></li>
-											{/if}
-											{/foreach}
-										</ul>
-									</li> -->
+									
 									{ANCHOR place="cb_28_head"}
 								</ul>
 							</nav>
 						</div>
-
 
 						<div class="col btn-holder user_menu text-right">
 							<div class="search">
@@ -134,13 +124,9 @@
 
 								<li class="dropdown myaccount-dd">
 									<a href="javascript:void(0)" class="user-area dropdown-toggle" data-toggle="dropdown">
-
 										{$user_det = $userquery->get_user_details(userid())}
 										<img src="{$userquery->getUserThumb($user_det)}" width="35" height="35">
-
 										<span>{$userquery->username|truncate:15}</span>
-										
-
 									</a>
 									<ul class="dropdown-menu">
 									{if has_access('admin_access')}
