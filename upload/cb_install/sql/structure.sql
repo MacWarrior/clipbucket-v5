@@ -201,8 +201,8 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}conversion_queue` (
   `cqueue_tmp_ext` varchar(3) CHARACTER SET utf8 NOT NULL,
   `cqueue_conversion` enum('yes','no','p') CHARACTER SET utf8 NOT NULL DEFAULT 'no',
   `date_added` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `time_started` varchar(32) NOT NULL,
-  `time_completed` varchar(32) NOT NULL,
+  `time_started` varchar(32) NOT NULL DEFAULT 0,
+  `time_completed` varchar(32) NOT NULL DEFAULT 0,
   PRIMARY KEY (`cqueue_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=262 ;
 
@@ -943,6 +943,7 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}video` (
   `is_hd` enum('yes','no') NOT NULL DEFAULT 'no',
   `unique_embed_code` varchar(50) NOT NULL,
   `remote_play_url` text NOT NULL,
+  `video_files` text(33) NOT NULL,
   `server_ip` varchar(20) NOT NULL,
   `file_server_path` text NOT NULL,
   `files_thumbs_path` text NOT NULL,
