@@ -21,9 +21,9 @@ if (isset($_POST['submit']))
 	$file_basename = substr($filename, 0, strripos($filename, '.')); // get file extention
 	$file_ext = substr($filename, strripos($filename, '.')); // get file name
 	$filesize = $_FILES["fileToUpload"]["size"];
-	$allowed_file_types = array('.png','.jpg','.jpeg','.gif');	
+	$allowed_file_types = array('.png');	
 
-	if (in_array($file_ext,$allowed_file_types) && ($filesize < 400000))
+	if (in_array($file_ext,$allowed_file_types) && ($filesize < 4000000))
 	{	
 		// Rename file
 		$newfilename = 'logo' . $file_ext;
@@ -43,18 +43,17 @@ if (isset($_POST['submit']))
 	elseif (empty($file_basename))
 	{	
 		// file selection error
-			e(lang("Please select a file to upload."),"m");
+		e(lang("Please select a file to upload."),"m");
 	} 
-	elseif ($filesize > 400000)
+	elseif ($filesize > 4000000)
 	{	
 		// file size error
-			e(lang("The file you are trying to upload is too large."),"w");
+		e(lang("The file you are trying to upload is too large."),"e");
 	}
 	else
 	{
-		// file type error
-		//echo "Only these file typs are allowed for upload: " . implode(', ',$allowed_file_types);
-			e(lang("Only these file typs are allowed for upload:".implode(', ',$allowed_file_types)),"m");
+
+		e(lang("Only these file typs are allowed for upload: ".implode(', ',$allowed_file_types)),"e");
 		unlink($_FILES["fileToUpload"]["tmp_name"]);
 	}
 }
