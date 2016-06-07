@@ -22,7 +22,7 @@ else
 
 if(has_access('allow_video_upload',false,$verify_logged_user))
 {
-	pre_upload();
+	#pre_upload();
 	$file_name = time().RandomString(5);
 	assign('file_name',$file_name);
 			
