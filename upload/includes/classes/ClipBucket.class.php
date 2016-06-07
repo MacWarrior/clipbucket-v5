@@ -230,6 +230,7 @@ class ClipBucket
                 'Add New Phrases' => 'add_phrase.php',
                 'Manage Pages' => 'manage_pages.php',
                 'Manage Comments' => 'comments.php',
+                'Update Logo'=>'upload_logo.php',
             ),
             //Video
             'Videos' =>
@@ -312,7 +313,8 @@ class ClipBucket
                 'Language Settings' => 'language_settings.php',
                 'Add New Phrases' => 'add_phrase.php',
                 'Manage Pages' => 'manage_pages.php',
-                'Manage Comments' => 'comments.php'
+                'Manage Comments' => 'comments.php',
+                'Update Logo'=>'upload_logo.php'
             );
         if ($per['video_moderation'] == "yes")
             $NewMenu['Videos'] = array(
@@ -378,6 +380,9 @@ class ClipBucket
 
         if ($per['web_config_access'] == "yes")
             $NewMenu['Tool Box']['Maintenance'] = 'maintenance.php';
+
+        //$NewMenu['Logo'] = array('Upload Logo'=>'upload_logo.php');
+
         return (isset($NewMenu)) ? $NewMenu : false;
     }
 
