@@ -718,17 +718,19 @@ class userquery extends CBCategory{
 	/**
 	 * Function used to get user details using userid
 	 */
-	function get_user_details( $id=NULL, $checksess=false )
+	function get_user_details( $id=NULL, $checksess=false, $email=false )
 	{
 		global $db,$sess;
 		/*if(!$id)
 			$id = userid();*/
 
-
         $is_email = ( strpos( $id , '@' ) !== false ) ? true : false;
         $select_field = ( !$is_email and !is_numeric( $id ) ) ? 'username' : ( !is_numeric( $id ) ? 'email' : 'userid' );
-
-        $fields = tbl_fields( array( 'users' => array( '*' ) ) );
+        if($email == false){
+        	$fields = tbl_fields( array( 'users' => array( '*' ) ) );
+        }else{
+        	$fields = tbl_fields( array( 'users' => array( 'email' ) ) );
+        }
 
         $query = "SELECT $fields FROM ".cb_sql_table( 'users' );
         $query .= " WHERE users.$select_field = '$id'";
