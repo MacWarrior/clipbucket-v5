@@ -13,8 +13,6 @@ function headerFooter(){
 	$("#container").css('padding-bottom',footerheight+'px');
 
 	$(".account-container").css('height',cont_height+'px');
-	//console.log($(window).height());
-	//console.log(cont_height);
 }
 
 function shortKeys() {
@@ -235,10 +233,7 @@ function homePageVideos(qlist_items) {
 
 			gotMoreFeatured = parseInt(totalFeaturedVids) - parseInt(featuredShown);
 			gotMoreRecent = parseInt(totalRecentVids) - parseInt(recentShown);
-			/*console.log("LOAD HIT " + loadHit);
-			console.log("SHOWN " + shownVideos);
-			console.log("To fetch" + vidsToFetch);*/
-			//console.log(gotMoreFeatured);
+
 			if (gotMoreFeatured > 2) {
 				featuredFound = 2;
 			} else {
@@ -253,44 +248,6 @@ function homePageVideos(qlist_items) {
 				recentFound = gotMoreRecent;
 			}
 		}
-
-		/*$.ajax({
-			url: loadLink,
-			type: sendType,
-			dataType: dataType,
-			data: {
-				"load_type":'count',
-				"load_mode":loadMode,
-				"load_limit":loadLimit,
-				"load_hit": parseInt(loadHit) + 1
-			},
-
-			success: function(data) {
-				var jsonData = $.parseJSON(data);
-				num = jsonData.more_vids;
-				if (loadMode == 'recent') {
-					if (num > 6) {
-						recentFound = 6;
-					} else {
-						recentFound = 53;
-					}
-				} else {
-					if (num > 2) {
-						featuredFound = 2;
-					} else {
-						featuredFound = 45;
-					}
-				}
-
-				if (num == 'none') {
-					if (loadMode == 'recent') {
-						moreRecent = false;
-					} else {
-						moreFeatured = false;
-					}
-				}
-			}
-		});*/
 
 		$.ajax({
 			url: loadLink,
@@ -390,15 +347,10 @@ function homePageVideos(qlist_items) {
 	// initial videos
 
 	$(document).ready(function(){
-
 		$('#featured_load_more').trigger("click");
 		$('#featured_load_more').hide();
 		$('#recent_load_more').trigger("click");
 		$('#recent_load_more').hide();
-
-		// var windowWith = $(window).width();
-		// alert(windowWith);
-
 	});
 }
 
