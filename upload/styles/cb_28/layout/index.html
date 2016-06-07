@@ -170,7 +170,7 @@
 	var noRecent = "{$no_recent}";
 	var loadMoreLang = "{$loadMoreLang}";
 
-	console.log(langCo);
+	//console.log(langCo);
 	homePageVideos("{$got_qlitems}");
 	//
 	/* player height and editerpick videos height */
@@ -179,10 +179,10 @@
 		WinWidHome = $(window).width();
 		if(WinWidHome > 991)
 		{
-			console.log("height "+WinWidHome);
+			//console.log("height "+WinWidHome);
 			var bannerHeight = $(".editorpick-holder").height();
 			bannerHeight = bannerHeight - 12;
-			console.log("height "+bannerHeight);
+			//console.log("height "+bannerHeight);
 			$(".editorpick-videos .scrollable-area").css({
 				"height" : bannerHeight+"px",
 			});
