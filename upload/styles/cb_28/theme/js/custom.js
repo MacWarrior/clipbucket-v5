@@ -87,7 +87,7 @@ function shortKeys() {
 var flag = 0;
 function responsiveFixes(){
 	var WinWidth = $(window).width();
-	console.log(WinWidth);
+	//console.log(WinWidth);
 	var SearchHtml = $("#header .menu-holder .user_menu").html();
 	var navseach = $('#header .navbar-header');
 	var menuLinks = $("#header .menu-holder");
@@ -205,6 +205,7 @@ $(document).ready(function(){
 
 
 function homePageVideos(qlist_items) {
+	console.log("Hey there Pumpkin! Looks like you really like what we do, hence trying to look under the hood. Happy sneaking buddy! Drop us an email for any questions : info@clipbucket.com")
 	$('#container').on("click","#recent_load_more, #featured_load_more",function(){
 		var loadLink = baseurl + '/ajax/home.php',
 		main_object = $(this),
@@ -237,7 +238,7 @@ function homePageVideos(qlist_items) {
 			/*console.log("LOAD HIT " + loadHit);
 			console.log("SHOWN " + shownVideos);
 			console.log("To fetch" + vidsToFetch);*/
-			console.log(gotMoreFeatured);
+			//console.log(gotMoreFeatured);
 			if (gotMoreFeatured > 2) {
 				featuredFound = 2;
 			} else {
