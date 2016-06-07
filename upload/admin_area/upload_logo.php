@@ -17,16 +17,16 @@ $source = BASEURL.'/styles/cb_28/theme/images/logo.png';
 if (isset($_POST['submit']))
 {
 
-	$filename = $_FILES["fileToUpload"]["name"];
-	$file_basename = substr($filename, 0, strripos($filename, '.')); // get file extention
-	$file_ext = substr($filename, strripos($filename, '.')); // get file name
+	$filename = $_FILES["fileToUpload"]["name"]; 
+	$file_basename = basename($filename,".png"); 
+	$file_ext = pathinfo($filename, PATHINFO_EXTENSION);
 	$filesize = $_FILES["fileToUpload"]["size"];
-	$allowed_file_types = array('.png');	
+	$allowed_file_types = array('png');	
 
 	if (in_array($file_ext,$allowed_file_types) && ($filesize < 4000000))
 	{	
 		// Rename file
-		$newfilename = 'logo' . $file_ext;
+		$newfilename = 'logo.' . $file_ext;
 		unlink($target_dir."logo.png");
 		if (file_exists($target_dir . $newfilename))
 		{
