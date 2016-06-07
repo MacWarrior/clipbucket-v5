@@ -233,18 +233,6 @@ class CBEmail
 	}
 
 
-	function get_email_by_userid($id)
-	{
-		global $db;
-		$result = $db->select(tbl("users"),"email","userid='$id'");
-		if($db->num_rows>0)
-		{
-			return $result[0];
-		}else
-		{
-			return false;
-		}
-	}
 
 	function email_exists($id){ return $this->get_email($id); }
 	
@@ -397,10 +385,20 @@ class CBEmail
 
 
 	function friend_request_email($email,$username){
-		$msg = $username." wants to add you as a friend"."</br> <button href='http://127.0.0.1/lang_checkout/trunk/upload/manage_contacts.php?mode=manage'>view request</button>"; 
-		$subj = "Friend Request";
+		global $db;
+		$condition = "email = '$email'";
+		$receiver_name = $db->select(tbl('users'),'username',$condition);
+		$var = array
+				('{sender}'	=> username(),
+				 '{website_title}'=> TITLE,
+				 '{reciever}'	=> $receiver_name[0]['username'],
+				 '{sender_link}'=>  BASEURL.'/user/'.$username,
+				 '{request_link}'=> BASEURL.'/manage_contacts.php?mode=manage',
+				);
+		$templates = $this->get_templates();
+		$subj = $this->replace($templates[10]['email_template_subject'],$var);
+		$msg = nl2br($this->replace($templates[10]['email_template'],$var));
 		cbmail(array('from_name'=>TITLE, 'to'=>$email,'from'=>WEBSITE_EMAIL,'subject'=>$subj,'content'=>$msg));
-
 	}
 }
 
