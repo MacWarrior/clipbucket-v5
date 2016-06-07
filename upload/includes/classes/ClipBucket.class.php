@@ -369,6 +369,7 @@ class ClipBucket
 
         if ($per['tool_box'] == "yes")
             $NewMenu['Tool Box'] = array('PHP Info' => 'phpinfo.php',
+                'Development Mode' => 'dev_mode.php',
                 'View online users' => 'online_users.php',
                 'Action Logs' => 'action_logs.php?type=login',
                 'Server Modules Info' => 'cb_mod_check.php',
