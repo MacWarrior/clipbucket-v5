@@ -1203,8 +1203,8 @@ ALTER TABLE `{tbl_prefix}collection_categories` ADD `parent_id` int DEFAULT 1;
 /*Indexing of following tables*/
 /*Author: Sikander Ali  */
 /*Cb_collection*/
-ALTER TABLE `{tbl_prefix}cb_collections` ADD INDEX(`userid`);
-ALTER TABLE `{tbl_prefix}cb_collections` ADD INDEX(`featured`);
+ALTER TABLE `{tbl_prefix}collections` ADD INDEX(`userid`);
+ALTER TABLE `{tbl_prefix}collections` ADD INDEX(`featured`);
 /*Editor Pick*/
 ALTER TABLE `{tbl_prefix}editors_picks` ADD INDEX(`videoid`);
 /*Favourites*/
@@ -1224,7 +1224,7 @@ ALTER TABLE `{tbl_prefix}video` ADD INDEX(`userid`);
 ALTER TABLE `{tbl_prefix}video` ADD INDEX(`featured`);
 ALTER TABLE `{tbl_prefix}video` ADD INDEX(`last_viewed`);
 ALTER TABLE `{tbl_prefix}video` ADD INDEX(`rating`);
-ALTER TABLE `{tbl_prefix}video` ADD INDEX(`total_comments`);
+ALTER TABLE `{tbl_prefix}video` ADD INDEX(`comments_count`);
 ALTER TABLE `{tbl_prefix}video` ADD INDEX(`last_viewed`);
 
 
