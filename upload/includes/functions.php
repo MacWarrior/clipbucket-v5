@@ -178,7 +178,6 @@
 	*/
 
 	function cbmail($array) {
-		return true;
 		$func_array = get_functions('email_functions');
 		if(is_array($func_array)) {
 			foreach($func_array as $func) {
@@ -5608,6 +5607,43 @@
 			}
 		}
 	
+	function upload_logo() {
+
+	$target_dir = STYLES_DIR."/cb_28/theme/images/";	
+	$filename = $_FILES["fileToUpload"]["name"]; 
+	$file_basename = basename($filename,".png"); 
+	$file_ext = pathinfo($filename, PATHINFO_EXTENSION);
+	$filesize = $_FILES["fileToUpload"]["size"];
+	$allowed_file_types = array('png');	
+	
+		if (in_array($file_ext,$allowed_file_types) && ($filesize < 4000000)) {	
+		// Rename file
+			$newfilename = 'logo.' . $file_ext;
+			unlink($target_dir."logo.png");
+			if (file_exists($target_dir . $newfilename)) {
+				// file already exists error
+					e(lang("You have already uploaded this file."),"e");
+			}
+			else {		
+				move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_dir . $newfilename);	
+				e(lang("File uploaded successfully."),"m");
+			}
+		}
+		elseif (empty($file_basename)) {	
+			// file selection error
+			e(lang("Please select a file to upload."),"m");
+		} 
+		elseif ($filesize > 4000000) {	
+			// file size error
+			e(lang("The file you are trying to upload is too large."),"e");
+		}
+		else {
+			e(lang("Only these file typs are allowed for upload: ".implode(', ',$allowed_file_types)),"e");
+			unlink($_FILES["fileToUpload"]["tmp_name"]);
+		}
+	}
+
+
     include( 'functions_db.php' );
     include( 'functions_filter.php' );
     include( 'functions_player.php' );
