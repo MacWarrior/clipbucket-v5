@@ -47,13 +47,20 @@
 			var imageurl = "{$imageurl}";
 			var userid = "{userid()}";
 		</script>
-		<script src="{$theme}/js/custom.js"></script>
+		{if $__devmsgs}
+			<script src="{$theme}/js/custom.js"></script>
+		{else}
+			<script src="{$theme}/js/custom.min.js"></script>
+		{/if}
 
 		<script src="{$theme}/js/bootstrap.min.js"></script>
 		
 		<script src="{$theme}/js/ui_plugins.js"></script>
-		
-		<script src="{$baseurl}/js/clipbucket.js"></script>
+		{if $__devmsgs}
+			<script src="{$baseurl}/js/clipbucket.js"></script>
+		{else}
+			<script src="{$baseurl}/js/clipbucket.min.js"></script>
+		{/if}
 		<script src="{$theme}/js/uslider_js/jquery.mousewheel.js"></script>
 		<script src='https://www.google.com/recaptcha/api.js'></script>
 		
@@ -82,7 +89,11 @@
 			var pageNow = "{$smarty.const.THIS_PAGE}";
 		</script>
 		{include file="$style_dir/blocks/quicklist/qlist_main.html"}
-		<script type="text/javascript" src="{$theme}/js/fast_qlist.js"></script>
+		{if $__devmsgs}
+			<script type="text/javascript" src="{$theme}/js/fast_qlist.js"></script>
+		{else}
+			<script type="text/javascript" src="{$theme}/js/fast_qlist.min.js"></script>
+		{/if}
 		<script type="text/javascript" src="{$theme}/js/uslider_js/jquery.mousewheel.js"></script>
 		{include_header file='global_header'}
 		{if $Cbucket->header_files}
