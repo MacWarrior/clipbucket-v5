@@ -39,7 +39,11 @@
 		{*/if*}
 
 		<script src="{$theme}/js/jquery-1.11.3.min.js"></script>
-		<link rel="stylesheet" href="{$baseurl}/styles/global/jquery_ui.css">
+		{if $__devmsgs}
+			<link rel="stylesheet" href="{$baseurl}/styles/global/jquery_ui.css">
+		{else}
+			<link rel="stylesheet" href="{$baseurl}/styles/global/jquery_ui.min.css">
+		{/if}
 
 		<script>
 			var loading = '<i class="glyphicon glyphicon-refresh animate-spin"></i> {lang code="loading"}...';
