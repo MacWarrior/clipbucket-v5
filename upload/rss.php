@@ -11,7 +11,7 @@
 define("THIS_PAGE",'rss');
 require 'includes/config.inc.php';
 header ("Content-type: text/xml; charset=utf-8");
-echo '<?xml version=\'1.0\' encoding=\'UTF-8\'?>'."\n";
+
 
 $limit = 20;
 $page = $_GET['page'];
