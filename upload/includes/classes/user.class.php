@@ -2139,7 +2139,11 @@ class userquery extends CBCategory{
 		global $db;
 		if($cond!=NULL)
 			$cond = " AND $cond ";
-			
+		
+		if ($myacc) {
+			$cond .= " LIMIT 0,15 ";
+		}
+
 		$results = $db->select(tbl("video"),"*"," userid = '$uid' $cond");
 		if($db->num_rows > 0) {
 			if ($myacc) {
