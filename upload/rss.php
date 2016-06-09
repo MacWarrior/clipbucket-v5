@@ -126,7 +126,7 @@ subtitle($title);
         <pubDate><?=$video['date_added']?></pubDate>
         <media:player url="<?=video_link($video)?>" />
         <media:thumbnail url="<?=get_thumb($video)?>" width="120" height="90" />
-        <media:title><?=substr($video['title'],0,50)?></media:title>
+        <![CDATA[<media:title><?=substr($video['title'],0,50)?></media:title> ]]>
         <media:category label="Tags"><?=strip_tags(tags($video['tags'],'video'))?></media:category>
         <media:credit><?=$video['username']?></media:credit>
         <enclosure url="<?=video_link($video)?>" type="application/x-shockwave-flash" />
