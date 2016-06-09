@@ -43,7 +43,7 @@ TimeComments.prototype.Structure = function(){
 	var iteration = "";
 	for (var i = 0; i < timecomments.comments.length ; i ++ ){
 		iteration = i + 1;
-		console.log("iteration"+ iteration);
+		//console.log("iteration"+ iteration);
 		list_comm = document.createElement("li");
 		list_comm.id = timecomments.comments[i].time; 
 		list_comm.className = "cb-vjs-comments-list";
@@ -67,12 +67,12 @@ TimeComments.prototype.TriggerComment = function(){
 	if (typeof comments != 'undefined'){
 		var CurrentTime = player.currentTime();
 		if (!player.timecomments.c_fired && CurrentTime >= comments.time && player.timecomments.currentIndex < player.timecomments.comments.length){
-			console.log(comments.comment);
+			//console.log(comments.comment);
 			player.timecomments.c_fired = true;	
 			player.timecomments.currentIndex++;
 		}
 	}else{
-		console.log("WTH :O no comments ? ");
+		//console.log("WTH :O no comments ? ");
 	}
 } 
 
