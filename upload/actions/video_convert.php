@@ -43,11 +43,15 @@
 		$queue_details = get_queued_video(TRUE,$fileName);
 
 	$log->writeLine("Conversion queue","Getting the file information from the queue for conversion", true);
-
-	$fileDir 	= $queue_details["date_added"];
+	if(!$file_directory_){
+		$fileDir 	= $queue_details["date_added"];
+	}
+	else{
+		$fileDir = $file_directory;
+	}
 	$dateAdded 	= explode(" ", $fileDir);
 	$dateAdded 	= array_shift($dateAdded);
-	$fileDir 	= implode("/", explode("-", $dateAdded));
+	$file_directory = implode("/", explode("-", $dateAdded));
 	//logData($fileDir);
 
 	/*
