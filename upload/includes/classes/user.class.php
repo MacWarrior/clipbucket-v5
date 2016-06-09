@@ -2134,20 +2134,24 @@ class userquery extends CBCategory{
 	 * @param INT userid
 	 * @param Conditions
 	 */
-	function get_user_vids($uid,$cond=NULL,$count_only=false)
+	function get_user_vids($uid,$cond=NULL,$count_only=false, $myacc = false)
 	{
 		global $db;
 		if($cond!=NULL)
 			$cond = " AND $cond ";
 			
 		$results = $db->select(tbl("video"),"*"," userid = '$uid' $cond");
-		if($db->num_rows > 0)
-		{
-			if($count_only)
+		if($db->num_rows > 0) {
+			if ($myacc) {
+				return $results;
+			}
+
+			if($count_only) {
 				return $db->num_rows;
-			else
+			} else {
 				return $results[0];
-		}else{
+			}
+		} else {
 			return false;
 		}
 	}
