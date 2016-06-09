@@ -1,10 +1,10 @@
 <?php
 /* 
  *******************************************************************
- | Copyright (c) 2007-2008 Clip-Bucket.com. All rights reserved.	
+ | Copyright (c) 2007-2016 Clip-Bucket.com. All rights reserved.	
  | @ Author   : ArslanHassan										
- | @ Software : ClipBucket , © PHPBucket.com
- | @ Modified : June 14, 2009 by Arslan Hassan
+ | @ Software : ClipBucket
+ | @ Modified : June 9, 2016 by Saqib Razzaq
  *******************************************************************
 */
 
@@ -46,15 +46,6 @@ if(has_access('allow_video_upload',false,$verify_logged_user))
 			
 			$vid = $Upload->submit_upload();
 			$Upload->do_after_video_upload($vid);
-
-
-            /**
-            * Function used to get direct URL of YT video on Embed Upload
-            */
-            if ( defined('YT_CLIP_INSTALLED') )
-            {
-				get_direct_url_embed_upload($vid);
-            }
 
 			echo '<div class="alert alert-success embed_video">
    			Video has been Embeded succesfully ..
