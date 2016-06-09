@@ -24,6 +24,7 @@
 <script src="{$cb_vjs_player_url}/js/cb_vjs_custom.js"></script>
 <script src="{$cb_vjs_player_url}/js/cb_vjs_plugin.js"></script>
 <script src="{$cb_vjs_player_url}/js/cb_vjs_resolution.js"></script>
+<script src="{$cb_vjs_player_url}/js/timecomments.js"></script>
 {if $play_ad == true}
 <script src="//imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
 {/if}
@@ -46,28 +47,26 @@
 </video>
 
 <script type="text/javascript">
-var vid_id = "{$vdata.videoid}";
-var videotitle = "{$vdata.title|escape_quotes}";
-var uploader = "{$vdata.username}";
-var branding_logo  = "{$cb_logo}";
-var product_link = "{$player_config.player_logo_url}";
-var show_logo = true;
-var autoplay = "{$player_config.autoplay}";
-var default_res = "{$default_quality}";
-if (autoplay == 'no'){
-	autoplay = false;
-}else{
-	autoplay = true;
-}
+	var vid_id = "{$vdata.videoid}";
+	var videotitle = "{$vdata.title|escape_quotes}";
+	var uploader = "{$vdata.username}";
+	var branding_logo  = "{$cb_logo}";
+	var product_link = "{$player_config.player_logo_url}";
+	var show_logo = true;
+	var autoplay = "{$player_config.autoplay}";
+	var default_res = "{$default_quality}";
+	var timecomments = "{$cb_timecomments_plugin}";
+	var play_ad = "{$play_ad}"; //  Ad settings starts to pass on to player
+	if (play_ad){
+		var ad_code = "{$current_ad.ad_tag}";
+		var ad_id = "{$current_ad.ad_id}";
+	}
 
-
-//  Ad settings starts to pass on to player
-var play_ad = "{$play_ad}";
-if (play_ad){
-	var ad_code = "{$current_ad.ad_tag}";
-	var ad_id = "{$current_ad.ad_id}";
-}	
-
+	if (autoplay == 'no'){
+		autoplay = false;
+	}else{
+		autoplay = true;
+	}
 	//player settings
 	var cb_player_setup = {
 		plugins : { }, 
@@ -76,44 +75,72 @@ if (play_ad){
 		"autoplay": autoplay,
 		"preload": "auto",
 	};
-	
+
 	//Setting CallBack
 	var cb_vjs_callback = function(){
-			var cb_vjs = this;
-			//Calling Custom videoJs Elements Plugin
-			var el_options = {
-				logo : { 
-						branding_logo : branding_logo,
-					    product_link : product_link,
-					    show_logo : true 
-				},
-				header : { 
-						uploader : uploader,
-						videotitle : videotitle
-				}
+		var cb_vjs = this;
+		//Calling Custom videoJs Elements Plugin
+		var el_options = {
+			logo : { 
+					branding_logo : branding_logo,
+				    product_link : product_link,
+				    show_logo : true 
+			},
+			header : { 
+					uploader : uploader,
+					videotitle : videotitle
 			}
-			cb_vjs.cb_vjs_elements(el_options);
+		}
+		cb_vjs.cb_vjs_elements(el_options);
 
-			//Calling Resolution switcher plugin
-			var res_options = {
-				default : default_res,
-				dynamicLabel : false
+		//Calling Resolution switcher plugin
+		var res_options = {
+			default : default_res,
+			dynamicLabel : false
+		}
+		cb_vjs.videoJsResolutionSwitcher(res_options);
+
+		//Calling Resolution switcher plugin
+		if (play_ad){
+			var ad_options = {
+			  	ad_id: ad_id,
+			    ad_code: ad_code,
+			    autoplay: autoplay
+			};
+			cb_vjs.cb_ultimate_ads(ad_options);
+		}
+		
+		var  stateCheck = setInterval(function(){
+		  	if (document.readyState === 'complete') {
+		    	clearInterval(stateCheck);
+		  		var cbVjsMenuBtn = document.querySelector('.vjs-resolution-button');
+		  		if (cbVjsMenuBtn){
+		  			var cbVjsMenu = cbVjsMenuBtn.children[0];
+					var cbVjsMenuContent = cbVjsMenu.children[0];
+					var cbVjsMenuContentRes = cbVjsMenuContent.children;
+					
+					for (var i = 0; i < cbVjsMenuContentRes.length; i++ ){
+						cbVjsMenuContent.insertBefore(cbVjsMenuContentRes[i],cbVjsMenuContent.firstChild);
+					}
+		  		}
+		  	}
+		},100);  
+
+		if ( timecomments == 'installed' && timecomments != '' && typeof timecomments != 'undefined'){
+			var comments_settings = {
+				show : true
 			}
-			cb_vjs.videoJsResolutionSwitcher(res_options);
+			cb_vjs.timecomments(comments_settings);
+		}
 
-			//Calling Resolution switcher plugin
-			if (play_ad){
-				var ad_options = {
-				  	ad_id: ad_id,
-				    ad_code: ad_code,
-				    autoplay: autoplay
-				};
-				cb_vjs.cb_ultimate_ads(ad_options);
-			}	
+
 	}
 	//Initializing
 	var cb_player = videojs('cb_video_js', cb_player_setup , cb_vjs_callback);
-	
+    
+
+    
+
 </script>
 
 
