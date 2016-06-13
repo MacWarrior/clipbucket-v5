@@ -35,7 +35,7 @@ TimeComments.prototype.Structure = function(){
 
 	var UnOrderedList = document.createElement('ul');
 	UnOrderedList.id = "cb-vjs-comments-list-main";
-	UnOrderedList.className = "cb-vjs-comments-list";
+	UnOrderedList.className = "cb-vjs-comments";
 	
 	CommentsParent.appendChild(UnOrderedList);
 	
@@ -66,7 +66,7 @@ TimeComments.prototype.Structure = function(){
 		commentStructure.username.innerHTML = "jameel Rehman";
 
 		commentStructure.comment = document.createElement("div");
-		commentStructure.comment.className = "cb-vjs-comment";
+		commentStructure.comment.className = "comment";
 		commentStructure.comment.innerHTML = timecomments.comments[i].comment; 
 
 		if ( commentStructure.iteration  == 5 ){
