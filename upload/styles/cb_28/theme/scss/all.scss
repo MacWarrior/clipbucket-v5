@@ -2755,6 +2755,20 @@ textarea#comment_box{
 		}
 	}
 }
+.sectionContent{
+	.radio,
+	.radio-inline,
+	.checkbox,
+	.checkbox-inline{
+		padding: 0 0 0 20px;
+		 input[type="radio"],
+		 input[type="checkbox"]{
+		 	margin: -6px 0 0;
+		 	left: 0;
+		 	top: 50%;
+		 }
+	}
+}
 /* allProgress */
 .upload-area{
 	padding:0;
