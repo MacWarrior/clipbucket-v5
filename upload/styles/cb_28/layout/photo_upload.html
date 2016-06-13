@@ -322,6 +322,10 @@
 							dataType: "JSON",
 					   }).success(function(msg){
 						  //creating the hidden form fields
+						  var slicedTitle = $('#photo_title').val().slice(0, -4);
+						  var slicedDesc = $('#photo_description').val().slice(0, -4);
+						  $('#photo_title').val(slicedTitle);
+						  $('#photo_description').val(slicedDesc);
 						  $(uploadForm).find("img").attr("src", msg.photoPreview);
 						  $(".submitPhoto").removeAttr("disabled");
 						  
