@@ -8,12 +8,12 @@ var TimeComments = function(player,settings){
 }
 TimeComments.prototype.DummyComments = function(){
 	var comments =  [
-						{"id":"1", "comment" : "This is first comment","time" : "2.25635"},
-					 	{"id":"2", "comment" : "This is Second comment","time" : "6.12353"},
-					 	{"id":"3", "comment" : "This is Third comment","time" : "9.25635"},
-					 	{"id":"4", "comment" : "This is Fourth comment","time" : "12.25635"},
-					 	{"id":"5", "comment" : "This is Fifth comment","time" : "15.25635"},
-					 	{"id":"6", "comment" : "This is Sixth comment","time" : "18.25635"},
+						{"id":"1", "comment" : "This is first comment","time" : "2.25635","avatar":"http://demo.clipbucket.com/images/avatars/1.jpg"},
+					 	{"id":"2", "comment" : "This is Second comment","time" : "6.12353","avatar":"http://demo.clipbucket.com/images/avatars/1.jpg"},
+					 	{"id":"3", "comment" : "This is Third comment","time" : "9.25635","avatar":"http://demo.clipbucket.com/images/avatars/1.jpg"},
+					 	{"id":"4", "comment" : "This is Fourth comment","time" : "12.25635","avatar":"http://demo.clipbucket.com/images/avatars/1.jpg"},
+					 	{"id":"5", "comment" : "This is Fifth comment","time" : "15.25635","avatar":"http://demo.clipbucket.com/images/avatars/1.jpg"},
+					 	{"id":"6", "comment" : "This is Sixth comment","time" : "18.25635","avatar":"http://demo.clipbucket.com/images/avatars/1.jpg"},
 					]
 	return comments;
 }
@@ -39,18 +39,46 @@ TimeComments.prototype.Structure = function(){
 	
 	CommentsParent.appendChild(UnOrderedList);
 	
-	var list_comm = "";
-	var iteration = "";
+	var commentStructure = { "listComm" : "",
+							 "iteration" : "",
+							 "commentBox" : "",
+							 "avatar" : "",
+							 "username" : "",
+							 "comment" : ""
+						};
+
 	for (var i = 0; i < timecomments.comments.length ; i ++ ){
-		iteration = i + 1;
-		//console.log("iteration"+ iteration);
-		list_comm = document.createElement("li");
-		list_comm.id = timecomments.comments[i].time; 
-		list_comm.className = "cb-vjs-comments-list";
-		if ( iteration  == 5 ){
-			list_comm.className = "cb-vjs-comments-list active";
+		commentStructure.iteration = i + 1;
+		commentStructure.listComm = document.createElement("li");
+		commentStructure.listComm.id = "comment-"+timecomments.comments[i].id; 
+		commentStructure.listComm.className = "cb-vjs-comments-list";
+
+		commentStructure.avatar = document.createElement("img");
+		commentStructure.avatar.className = "cb-vjs-comments-avatar";
+		commentStructure.avatar.src = timecomments.comments[i].avatar;
+
+		commentStructure.commentBox = document.createElement("div");
+		commentStructure.commentBox.className = "cb-vjs-comment-box";
+		
+
+		commentStructure.username = document.createElement("span");
+		commentStructure.username.className = "cb-vjs-comment-username";
+		commentStructure.username.innerHTML = "jameel Rehman";
+
+		commentStructure.comment = document.createElement("div");
+		commentStructure.comment.className = "cb-vjs-comment";
+		commentStructure.comment.innerHTML = timecomments.comments[i].comment; 
+
+		if ( commentStructure.iteration  == 5 ){
+			commentStructure.listComm.className = "cb-vjs-comments-list active";
 		}
-		UnOrderedList.appendChild(list_comm);
+
+		commentStructure.commentBox.appendChild(commentStructure.username);
+		commentStructure.commentBox.appendChild(commentStructure.comment);
+
+		commentStructure.listComm.appendChild(commentStructure.avatar);
+		commentStructure.listComm.appendChild(commentStructure.commentBox);
+		UnOrderedList.appendChild(commentStructure.listComm);
 	}
 }
 
