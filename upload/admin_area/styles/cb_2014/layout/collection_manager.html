@@ -36,6 +36,7 @@
                 <div class="col-md-9">
                     <a href="{$baseurl}/admin_area/edit_collection.php?collection={$c[list].collection_id}">{$c[list].collection_name}</a> ({$c[list].total_objects} {$c[list].type})
                     </a>
+
                     <div class="labels">
                         {if $c[list].featured=='yes'}<span class="label label-primary">Featured{else}{/if}</span>
                         <span class="label {if $c[list].active=='yes'}label-success{else}label-warning{/if}">{if $c[list].active=='yes'}Active{else}NotActive{/if} </span>
@@ -55,7 +56,7 @@
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" role="menu">
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="edit_collection.php?collection={$c[list].collection_id}" class="">Edit</a> </li>
 
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="{$baseurl}/view_collection.php?cid={$c[list].collection_id}">View</a> </li>
+                    <li role="presentation"><a target="_blank" role="menuitem" tabindex="-1" href="{$baseurl}/view_collection.php?cid={$c[list].collection_id}&type={$c[list].type}">View</a> </li>
                     <!-- {if $c[list].featured == yes}
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="?make_unfeature={$c[list].collection_id}">Make Unfeatured</a></li> {/if}
                     {if $c[list].featured == no}
