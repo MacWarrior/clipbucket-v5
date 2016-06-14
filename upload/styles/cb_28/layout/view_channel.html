@@ -1,6 +1,7 @@
 {$myAccountLinks = $userquery->my_account_links()}
 {$leftMenuLinks = array_slice($myAccountLinks, 7)}
 {lang code='channel' assign='object_type'}
+{$loadMoreLang ={lang code="load_more"}}
 {$uservideos=get_videos(["user"=>$user.userid, "order"=>"date_added DESC","limit" =>9])}
 {if $uservideos}
 {$first_video = $cbvid->get_video($uservideos.0.videokey)}
@@ -355,6 +356,7 @@ $('#cover_info').show();
 	  load_more(limit,mode,inner_mode,append_id,attrb,cat_id,total);
 	 });
 
+	var loadMoreLang = "{$loadMoreLang}";
 	$('#container').on("click","#more-view-channel",function(){
 		loadHit = $(this).attr('dataHit');
 		loadLimit = $(this).attr('dataLimit');
@@ -388,7 +390,7 @@ $('#cover_info').show();
 				if (data.length > 1) {
 					$(data).appendTo('#usr-vids').fadeIn('slow');
 					if (loadMore == true) {
-						$('<div class="clearfix text-center"><button id="more-view-channel" class="btn btn-loadmore" dataLimit="'+loadLimit+'" dataHit="'+nextHit+'">Load More</button></div>').appendTo('.user_vids').fadeIn('slow');
+						$('<div class="clearfix text-center"><button id="more-view-channel" class="btn btn-loadmore" dataLimit="'+loadLimit+'" dataHit="'+nextHit+'">'+loadMoreLang+'</button></div>').appendTo('.user_vids').fadeIn('slow');
 					}
 					var moveTo = $( ".recentAppending" ).last().offset().top,
 					currWidth = $(window).width();
