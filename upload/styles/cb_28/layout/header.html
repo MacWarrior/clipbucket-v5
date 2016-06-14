@@ -15,7 +15,9 @@
 {elseif $currentPage == 'list'}
 	{$currentPage = 'audios'}
 {/if}
-
+{$vidMode = {lang code="videos"}}
+{$photoMode = {lang code="photos"}}
+{$channelsMode = {lang code="channels"}}
 {$pageType = $smarty.get.type|lower}
 <div id="quick_container">
 	<div id="quicklist_box">
@@ -88,11 +90,11 @@
 												{/if}
 												{if $counter == 3}
 												<li value="{$stypes}" {if $pageType == $stypes || $currentPage == $stypes}  class="active"  {/if}>
-													<a  class="s-types" href="#">{lang code ="{$stypes}"}</a>
+													<a  class="s-types" href="#" valNow="{$stypes}">{lang code ="{$stypes}"}</a>
 												</li>
 												{else}
 												<li value="{$stypes}" {if $pageType == $stypes || $currentPage == $stypes}  class="active" {/if}>
-													<a  class="s-types" href="#">{lang code ="{$stypes}"}</a>
+													<a  class="s-types" href="#" valNow="{$stypes}">{lang code ="{$stypes}"}</a>
 												</li>
 												{/if}
 												{$counter = $counter + 1}
@@ -165,11 +167,24 @@
 
 <script>
 	$(document).ready(function(){
+		var vidMode = "{$vidMode}",
+		photoMode = "{$photoMode}",
+		channelsMode = "{$channelsMode}",
+		currentDisplay = $('span.search-type').text();
+		if (currentDisplay == 'Videos') {
+			$('span.search-type').text(vidMode);
+		} else if (currentDisplay == 'Channels') {
+			$('span.search-type').text(channelsMode);
+		} else if (currentDisplay == 'Photos') {
+			$('span.search-type').text(photoMode);
+		}
+
 		$(".cbsearchtype a").on({
 			click: function(e){
 				e.preventDefault();
 				var prent_li = $(this).parents();
-				$('.type').val($(this).html());
+				var theNewVal = $(this).attr('valNow');
+				$('.type').val(theNewVal);
 				$('.cbsearchtype li').removeClass('active');
 				prent_li.addClass('active');
 			}
@@ -180,6 +195,8 @@
 			var text = _this.html();
 			$('.search-type').html(text);
 		});
+
+
 
 	});
 </script>
