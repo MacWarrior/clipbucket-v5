@@ -207,6 +207,7 @@ class CBPhotos
 		if($per['photos_moderation'] == "yes")
 		$am['Photos'] = array(
 							  'Photo Manager' => 'photo_manager.php',
+							  'Inactive Photos' => 'photo_manager.php?search=search&active=no',
 							  'Flagged Photos' => 'flagged_photos.php',
 							  'Orphan Photos' => 'orphan_photos.php',					
 							  'Photo Settings' => 'photo_settings.php',
