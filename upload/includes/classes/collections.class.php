@@ -2013,7 +2013,7 @@ class Collections extends CBCategory
         }
 
         /**
-		* Get collections that have atleast 1 item
+		* Get collections that have atleast 1 item, skips photos collection if photos are disabled from admin area
 		* @param : { array } { $collections } { array of all collections fetched from database }
 		* @since : May 11th, 2016 ClipBucket 2.8.1
 		* @author : Saqib Razzaq
@@ -2022,10 +2022,14 @@ class Collections extends CBCategory
         */
 
         function activeCollections($collections) {
+        	global $Cbucket;
+        	$photosEnabled = $Cbucket->configs['photosSection'];
+        	
         	if (is_array($collections)) {
         		foreach ($collections as $key => $coll) {
         			$totalObjs = $coll['total_objects'];
-        			if ($totalObjs >= 1) {
+        			$skipPhoto = ($coll['type'] == 'photos' && $photosEnabled != 'yes' ? true : false);
+        			if ($totalObjs >= 1 && !$skipPhoto) {
         				continue;
         			} else {
         				unset($collections[$key]);
