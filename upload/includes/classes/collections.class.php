@@ -1976,6 +1976,9 @@ class Collections extends CBCategory
         function coll_first_thumb($col_data, $size = false) {
         	global $cbphoto,$cbvid;
         	if (is_array($col_data)) {
+        		if (isset($_GET['h']) && isset($_GET['w'])) {
+        			$size = $_GET['h']."x".$_GET['w'];
+        		}
         		switch ($col_data['type']){
         			case 'photos':
         			default : {
