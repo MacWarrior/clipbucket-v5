@@ -67,9 +67,6 @@ TimeComments.prototype.AddComment = function(){
 		var Player_  = timecomments.player.el_;
 		commentBoxForm = document.createElement('form');
 		commentBoxForm.className = 'cb-vjs-timecomment-form';
-		commentBoxForm.style.display = "none";
-		commentBoxForm.style.position = "absolute";
-		commentBoxForm.style.zIndex = "10";
 
 		var commentData = document.createElement('div');
 		commentData.className = 'cb-vjs-comment-data';
@@ -78,10 +75,14 @@ TimeComments.prototype.AddComment = function(){
 		var btnHolder = document.createElement('div');
 		btnHolder.className = 'cb-vjs-comments-btn-holder';
 		btnHolder.innerHTML = "<span id='timecomment-box-dismiss' class='timecomment-box-dismiss'>Cancel</span><span id='add-timecomment' class='add-timecomment'>Add Comment</span>";
-		
+			
+		var commentWrapper  = document.createElement('div');
+		commentWrapper.className = "comment-wrapper";
+
 		Player_.insertBefore(commentBoxForm,controlBar_);
-		commentBoxForm.appendChild(commentData);
-		commentBoxForm.appendChild(btnHolder);
+		commentBoxForm.appendChild(commentWrapper);
+		commentWrapper.appendChild(commentData);
+		commentWrapper.appendChild(btnHolder);
 	}
 
 	var showCommentBox = function (){
@@ -90,12 +91,12 @@ TimeComments.prototype.AddComment = function(){
 			alert("Please Login to Comment !");
 			return;
 		}
-		commentBoxForm.style.display = "block";
+		commentBoxForm.className = "cb-vjs-timecomment-form open-comment";
 		timecomments.player.pause();
 	}
 
 	var dismissCommentBox = function(){
-		commentBoxForm.style.display = "none";
+		commentBoxForm.className = "cb-vjs-timecomment-form";
 		document.getElementById('timecommnts-send-box').value = "";
 		timecomments.player.play();
 	}
