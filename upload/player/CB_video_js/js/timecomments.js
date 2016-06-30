@@ -34,6 +34,7 @@ TimeComments.prototype.AddComment = function(){
 	var mouseDisplay_time    = "";
 	var dataSetTime    = "0:00";
 	var addCommentHolder = "";
+	var addCommentChildHolder = "";
 	var cTimeDisplay = "";
 	var commentBoxForm = "";
 
@@ -46,8 +47,12 @@ TimeComments.prototype.AddComment = function(){
 
 		addCommentHolder = document.createElement('div');
 		addCommentHolder.className = "add-comment-holder";
-		addCommentHolder.innerHTML = "<span class='cb-vjs-addcomment-clicker'>"+dataSetTime+" | Add Comment "+"</span>";
-		console.log(progressControl_.el_.firstChild);
+		addCommentChildHolder = document.createElement('div');
+		addCommentChildHolder.className = "add-comment-child-holder";
+
+		addCommentChildHolder.innerHTML = "<span class='cb-vjs-addcomment-clicker'>"+dataSetTime+" | Add Comment "+"</span>";
+		
+		addCommentHolder.appendChild(addCommentChildHolder);
 		progressControl.insertBefore(addCommentHolder,progressControl_.el_.firstChild);
 		progressControl.childNodes[1].insertBefore(cTimeDisplay, mouseDisplay);
 	}
