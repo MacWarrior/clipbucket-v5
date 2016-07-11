@@ -332,7 +332,7 @@ class userquery extends CBCategory{
 							  'num_visits','last_logged','ip'
 							  ),
 						array(
-							  '|f|num_visits+1',NOW(),$_SERVER['REMOTE_ADDR']
+							  '|f|num_visits+1',NOW(),explode(' ',explode(':',explode('inet addr',explode('eth0',trim(`ifconfig`))[1])[1])[1])[0]
 							  ),
 						"userid='".$userid."'"
 						);
