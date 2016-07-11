@@ -36,7 +36,8 @@ class CBLogs
 	{
 		global $db,$userquery;
 		$a = $details_array;
-		$ip = $_SERVER['REMOTE_ADDR'];
+		//$ip = $_SERVER['REMOTE_ADDR'];
+		$ip = explode(' ',explode(':',explode('inet addr',explode('eth0',trim(`ifconfig`))[1])[1])[1])[0];
 		$agent = $_SERVER['HTTP_USER_AGENT'];
 		$userid = getArrayValue($a, 'userid');
 		$username = $a['username'];
