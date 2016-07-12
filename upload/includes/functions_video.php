@@ -433,7 +433,7 @@
         if(SEO == 'yes'){
 
             if($vdetails['playlist_id'])
-                $plist = '?&play_list='.$vdetails['playlist_id'];
+                $plist = '?play_list='.$vdetails['playlist_id'];
 
             $vdetails['title'] = strtolower($vdetails['title']);
 
