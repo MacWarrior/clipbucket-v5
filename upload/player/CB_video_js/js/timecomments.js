@@ -108,7 +108,9 @@ TimeComments.prototype.AddComment = function(){
 
 		var alertDismissable = document.createElement('div');
 		alertDismissable.className = "alert alert-danger alert-dismissible";
+		alertDismissable.id = "time-error";
 		alertDismissable.setAttribute("role", "alert");
+		alertDismissable.style.display = "none";
 		var dismissBtn = document.createElement('button');
 		dismissBtn.className = "close";
 		dismissBtn.setAttribute("type","button");
@@ -117,12 +119,13 @@ TimeComments.prototype.AddComment = function(){
 		dismissBtn.innerHTML = "<span aria-hidden='true'>&times;</span>";
 		var message = document.createElement('p');
 		message.className = "message-show";
+		message.id = "message-show";
 		message.innerHTML = "Warning ! Fuck Off ";
 		alertDismissable.appendChild(dismissBtn);
 		alertDismissable.appendChild(message);
 
 		var tCommentsDismiss = document.createElement('span');
-		tCommentsDismiss.className = "timecomment-box-dismiss";
+		tCommentsDismiss.className = "timecomment-box-dismiss icon-close";
 		tCommentsDismiss.id = "timecomment-box-dismiss";
 
 		var commentData = document.createElement('div');
@@ -134,13 +137,11 @@ TimeComments.prototype.AddComment = function(){
 		charCounter.className = "character-counter";
 		charCounter.innerHTML = "60";
 
-
 		var btnHolder = document.createElement('div');
 		btnHolder.className = 'cb-vjs-comments-btn-holder';
 		btnHolder.innerHTML = "<span id='current-time-show' class='current-time-show'>0:00</span>"+
 							 "<span id='add-timecomment' class='add-timecomment'>Add Comment</span>";
 			
-		
 
 		Player_.insertBefore(commentBoxForm,controlBar_);
 		commentBoxForm.appendChild(commentWrapper);
@@ -157,7 +158,8 @@ TimeComments.prototype.AddComment = function(){
 		sendTimeWith = mouseDisplay_time;
 		sendTimeDisplay = dataSetTime;
 		if (typeof userid == 'undefined' || userid == '' || !userid){
-			alert("Please Login to Comment !");
+			var message = "Please Login to Comment !";
+			_cb.throwHeadMsg('warning',message,4000,true);
 			return;
 		}
 		commentBoxForm.className = "cb-vjs-timecomment-form open-comment";
@@ -182,20 +184,39 @@ TimeComments.prototype.AddComment = function(){
 			var message = "your Comment has been added and will be popped up at time : "+sendTimeDisplay;
 			_cb.throwHeadMsg('success',message,4000,true);
 		}else{
-			alert("Please Write something text field !");
+			throwError("Please Write something text field !");
 		}
 		
 	}
-	var consoleMe = function(){
+	var consoleMe = function(e){
 		var words = this.value.length;
-		if (words > 59 ){
-			alert("You've reached the maximum allowed words. Extra words removed.");
+		var charCounter = document.getElementById('character-counter');
+		charCounter.innerHTML = 60 - words;
+		console.log(words);
+
+		if (!e.ctrlKey ){
+			if (words > 59 ){
+				throwError("You've reached the maximum allowed words. Extra words removed.");
+			}
 		}
+		
 	}
+
+	var throwError  = function(msg){
+		var message = document.getElementById('message-show');
+		var alertDismissable = document.getElementById('time-error');
+		message.innerHTML = msg;
+		alertDismissable.style.display = "block";
+		setTimeout(function(){ 
+			alertDismissable.style.display = "none";
+			message.innerHTML = "";
+		}, 4000);
+	}
+
 
 	setCommentBox();
 	commentTimeDisplay();
-	document.getElementById('timecommnts-send-box').addEventListener('keyup',consoleMe);
+	document.getElementById('timecommnts-send-box').addEventListener('keydown',consoleMe);
 	addCommentHolder.addEventListener('click',showCommentBox);
 	progressControl.addEventListener("mouseover", showAddComment);
 	progressControl.addEventListener("mouseleave", hideAddComment);
