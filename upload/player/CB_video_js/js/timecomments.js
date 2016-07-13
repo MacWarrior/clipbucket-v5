@@ -130,7 +130,13 @@ TimeComments.prototype.AddComment = function(){
 
 		var commentData = document.createElement('div');
 		commentData.className = 'cb-vjs-comment-data';
-		commentData.innerHTML = "<img src="+timecomments.settings.userprofile+"><span class='time-username'>"+timecomments.settings.username+"</span><<textarea id='timecommnts-send-box' class='timecommnts-send-box' maxlength='60'></textarea>";
+		commentData.innerHTML = "<div>"+
+								"<img src="+timecomments.settings.userprofile+">"+
+								"<span class='time-username'>"+timecomments.settings.username+"</span>"+
+								"</div>"+
+								"<div>"+
+								"<textarea id='timecommnts-send-box' class='timecommnts-send-box' maxlength='60'></textarea>"+
+								"</div>";
 		
 		var charCounter = document.createElement('span');
 		charCounter.id = "character-counter";
