@@ -125,7 +125,7 @@ TimeComments.prototype.AddComment = function(){
 		alertDismissable.appendChild(message);
 
 		var tCommentsDismiss = document.createElement('span');
-		tCommentsDismiss.className = "timecomment-box-dismiss icon-close";
+		tCommentsDismiss.className = "timecomment-box-dismiss glyphicon glyphicon-remove-circle";
 		tCommentsDismiss.id = "timecomment-box-dismiss";
 
 		var commentData = document.createElement('div');
