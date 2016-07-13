@@ -138,6 +138,9 @@ TimeComments.prototype.AddComment = function(){
 								"<textarea id='timecommnts-send-box' class='timecommnts-send-box' maxlength='60'></textarea>"+
 								"</div>";
 		
+		var timeCommentsFooter = document.createElement('div');
+		timeCommentsFooter.className = "timecomments-footer";
+
 		var charCounter = document.createElement('span');
 		charCounter.id = "character-counter";
 		charCounter.className = "character-counter";
@@ -155,8 +158,9 @@ TimeComments.prototype.AddComment = function(){
 		innerWrapper.appendChild(alertDismissable);
 		innerWrapper.appendChild(tCommentsDismiss);
 		innerWrapper.appendChild(commentData);
-		innerWrapper.appendChild(btnHolder);
-		innerWrapper.insertBefore(charCounter,btnHolder);
+		innerWrapper.appendChild(timeCommentsFooter);
+		timeCommentsFooter.appendChild(charCounter);
+		timeCommentsFooter.appendChild(btnHolder);
 	}
 
 	var showCommentBox = function (){
