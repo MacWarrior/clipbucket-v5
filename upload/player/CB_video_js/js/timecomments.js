@@ -106,6 +106,9 @@ TimeComments.prototype.AddComment = function(){
 		var innerWrapper  = document.createElement('div');
 		innerWrapper.className = "inner-wrapper";
 
+		var timeCommentsHeader = document.createElement('div');
+		timeCommentsHeader.className = "timecomments-header";
+
 		var alertDismissable = document.createElement('div');
 		alertDismissable.className = "alert alert-danger alert-dismissible";
 		alertDismissable.id = "time-error";
@@ -155,7 +158,8 @@ TimeComments.prototype.AddComment = function(){
 		Player_.insertBefore(commentBoxForm,controlBar_);
 		commentBoxForm.appendChild(commentWrapper);
 		commentWrapper.appendChild(innerWrapper);
-		innerWrapper.appendChild(alertDismissable);
+		innerWrapper.appendChild(timeCommentsHeader);
+		timeCommentsHeader.appendChild(alertDismissable);
 		innerWrapper.appendChild(tCommentsDismiss);
 		innerWrapper.appendChild(commentData);
 		innerWrapper.appendChild(timeCommentsFooter);
