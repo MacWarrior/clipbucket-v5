@@ -76,7 +76,12 @@
 	}
 
 	if(mysql_clean(get('query'))) {
-		subtitle($search->search_type[$type]['title'].' &raquo; '.mysql_clean(get('query')));
+		$squery = get('query');
+		if ($squery == 'clipbucket') {
+			subtitle("Awesomeness...!!");
+		} else {
+			subtitle($search->search_type[$type]['title'].' &raquo; '.mysql_clean(get('query')));
+		}
 	}
 
 	//Displaying The Template
