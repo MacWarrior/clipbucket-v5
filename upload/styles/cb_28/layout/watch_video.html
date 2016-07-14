@@ -210,6 +210,22 @@
 </div>
 
 <script>
+	var current_video = "{$video.videoid}",
+	cookieToSave = 'comment_data_u'+userid+"v"+current_video,
+	commentDataCheck = $.cookie(cookieToSave);
+
+	if (commentDataCheck !== null) {
+		$('#comment_box').val(commentDataCheck);
+	}
+	$('#comment_box').on('keyup', function() {
+	    var comment_data = $('#comment_box').val();
+	    $.cookie(cookieToSave, comment_data, { expires : 10, path : "/" });
+	});
+
+	$('#add_comment_button').on("click",function(){
+		$.cookie(cookieToSave, null, { path : "/" });
+	});
+
 	var playlist_total = "{$total_items}";
 	$('#playlist-pull').on("click",function(){
 		var __this = $(this);
