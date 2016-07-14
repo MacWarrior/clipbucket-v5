@@ -119,7 +119,6 @@ TimeComments.prototype.AddComment = function(){
 		dismissBtn.setAttribute("type","button");
 		dismissBtn.setAttribute("data-dismiss","alert");
 		dismissBtn.setAttribute("aria-label","Close");
-		dismissBtn.innerHTML = "<span aria-hidden='true'>&times;</span>";
 		var message = document.createElement('p');
 		message.className = "message-show";
 		message.id = "message-show";
@@ -169,8 +168,10 @@ TimeComments.prototype.AddComment = function(){
 
 	var showCommentBox = function (){
 		var userid = timecomments.settings.userid;
+		var currentTimeShow = document.getElementById('current-time-show');
 		sendTimeWith = mouseDisplay_time;
 		sendTimeDisplay = dataSetTime;
+		currentTimeShow.innerHTML = sendTimeDisplay;
 		if (typeof userid == 'undefined' || userid == '' || !userid){
 			var message = "Please Login to Comment !";
 			_cb.throwHeadMsg('warning',message,4000,true);
@@ -182,8 +183,17 @@ TimeComments.prototype.AddComment = function(){
 
 	var dismissCommentBox = function(){
 		commentBoxForm.className = "cb-vjs-timecomment-form";
-		document.getElementById('timecommnts-send-box').value = "";
 		timecomments.player.play();
+	}
+
+	var forceDismissCommentBox = function(e){
+		if (e.keyCode == 27){
+			if (commentBoxForm != null && commentBoxForm.className == 'cb-vjs-timecomment-form open-comment'){
+				commentBoxForm.className = "cb-vjs-timecomment-form";
+				timecomments.player.play();
+			}
+			
+		}
 	}
 
 	var sendComment = function(){
@@ -198,7 +208,7 @@ TimeComments.prototype.AddComment = function(){
 			var message = "your Comment has been added and will be popped up at time : "+sendTimeDisplay;
 			_cb.throwHeadMsg('success',message,4000,true);
 		}else{
-			throwError("Please Write something text field !");
+			throwError("Please Write something in text field !");
 		}
 		
 	}
@@ -206,14 +216,6 @@ TimeComments.prototype.AddComment = function(){
 		var words = this.value.length;
 		var charCounter = document.getElementById('character-counter');
 		charCounter.innerHTML = 60 - words;
-		console.log(words);
-
-		if (!e.ctrlKey ){
-			if (words > 59 ){
-				throwError("You've reached the maximum allowed words. Extra words removed.");
-			}
-		}
-		
 	}
 
 	var throwError  = function(msg){
@@ -224,19 +226,21 @@ TimeComments.prototype.AddComment = function(){
 		setTimeout(function(){ 
 			alertDismissable.style.display = "none";
 			message.innerHTML = "";
-		}, 4000);
+		}, 3500);
 	}
 
 
 	setCommentBox();
 	commentTimeDisplay();
-	document.getElementById('timecommnts-send-box').addEventListener('keydown',consoleMe);
+	document.getElementById('timecommnts-send-box').addEventListener('keyup',consoleMe);
 	addCommentHolder.addEventListener('click',showCommentBox);
 	progressControl.addEventListener("mouseover", showAddComment);
 	progressControl.addEventListener("mouseleave", hideAddComment);
 	progressControl.addEventListener("mousemove", setCommentTime);
-	document.getElementById('timecomment-box-dismiss').addEventListener('click',dismissCommentBox);
 	document.getElementById('add-timecomment').addEventListener('click',sendComment);
+	document.getElementById('timecomment-box-dismiss').addEventListener('click',dismissCommentBox);
+	document.addEventListener('keyup',forceDismissCommentBox);
+	
 }
 
 TimeComments.prototype.AddControlBArMenu = function(){
@@ -481,7 +485,7 @@ TimeComments.prototype.TriggerComment = function(){
 	}
 	if (previousIndex>-1) {
 		var lastActiveDiff = CurrentTime - previousComment.time
-		console.log(lastActiveDiff);
+		//console.log(lastActiveDiff);
 		if ( lastActiveDiff > 5){
 			player.timecomments.HideComments();
 		}
