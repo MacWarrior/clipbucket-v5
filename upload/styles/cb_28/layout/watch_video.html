@@ -210,7 +210,9 @@
 </div>
 
 <script>
+	var playlist_total = "{$total_items}";
 	$('#playlist-pull').on("click",function(){
+		var __this = $(this);
 		loadHit = $(this).attr('dataHit');
 		loadLimit = $(this).attr('dataLimit');
 		playlist = $(this).attr('dataList');
@@ -226,10 +228,16 @@
 				"playlist": playlist
 			},
 			beforeSend: function() {
-				$(this).text("loading");
+				$(__this).text("loading");
 			},
 
 			success: function(data) {
+				var loaded = loadLimit * loadHit;
+				if (playlist_total <= loaded) {
+					$(__this).remove();
+				} else {
+					$(__this).text("Load More");
+				}
 				if (data == 'none') {
 					$('#playlist-pull').remove();
 				}
