@@ -210,6 +210,8 @@
 </div>
 
 <script>
+
+	/*Cookie based comments backup start*/
 	var current_video = "{$video.videoid}",
 	cookieToSave = 'comment_data_u'+userid+"v"+current_video,
 	commentDataCheck = $.cookie(cookieToSave);
@@ -225,7 +227,33 @@
 	$('#add_comment_button').on("click",function(){
 		$.cookie(cookieToSave, null, { path : "/" });
 	});
+	/*Cookie based comments backup end*/
 
+	var playlist_total = "{$total_items}";
+	$('#ShareUsers').on("keyup",function(){
+		var typed = $(this).val();
+		$.ajax({
+			url: baseurl+'/ajax.php',
+			type: 'post',
+			dataType: 'html',
+			data: {
+				"mode":'user_suggest',
+				"typed": typed
+			},
+			beforeSend: function() {
+			},
+
+			success: function(data) {
+				$('#suggested_users').html('');
+				var jsoned = $.parseJSON(data);
+				$( jsoned.matching_users ).each(function( index, element ) {
+					$('#suggested_users').append("<option label='"+element+"' value='"+element+"'>");
+			  	});
+			}
+		});
+	});
+
+	/*Playlist load more start*/
 	var playlist_total = "{$total_items}";
 	$('#playlist-pull').on("click",function(){
 		var __this = $(this);
@@ -262,6 +290,7 @@
 			}
 		});
 	});
+	/*Playlist load more end*/
 
 	var aspect_ratio = 1.77778
 	var $cb_player = $("#cb_player");
