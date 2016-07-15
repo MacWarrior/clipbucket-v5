@@ -429,9 +429,17 @@ $blue-player:#0080b4;
 	.video-js{
 		#cb-vjs-comments{
 			height: 124px;
+			.cb-vjs-comment-username{
+				margin: 0 0 2px;
+			}
 			.cb-vjs-comment-box{
+				padding: 0;
 				.comment{
+					height: auto;
 					max-width: 220px;
+					font-size: 12px;
+					line-height: 14px;
+					padding: 3px 5px;
 				}
 			}
 		}
