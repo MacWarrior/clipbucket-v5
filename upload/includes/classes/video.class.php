@@ -1578,12 +1578,16 @@ class CBvideo extends CBCategory
 	 */
 	function show_video_rating($params)
 	{
+
 		$rating 	= $params['rating'];
 		$ratings 	= $params['ratings'];
 		$total 		= $params['total'];
 		$id 			= $params['id'];
 		$type 		= $params['type'];
 		
+		if (empty($ratings)) {
+			$ratings = $params['rated_by'];
+		}
 		//Checking Percent
 		{
 			if($total<=10)
