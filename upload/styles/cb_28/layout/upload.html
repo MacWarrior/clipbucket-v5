@@ -21,7 +21,7 @@
 						</div>
 					</div>
 				</div>
-
+				
 				<div class="cb-item-desc-container clearfix flat-tabs" id="mainUploadContainer">
 					<div class="video-info-container">
 						<ul class="nav nav-tabs uploaderTabs">
@@ -75,6 +75,7 @@
 
 
 			var baseurl = '{$baseurl}';
+			var config_for_mp4 = '{$config_for_mp4}';
 			if('{$uploaderDetails.uploadScriptPath}'!=''){
 			var uploadurl = '{$uploaderDetails.uploadScriptPath}';
 			}else{
@@ -85,6 +86,7 @@
 			var extensions = "{$extensions}";
 			extensions = extensions.substring(0, extensions.length-1);
 			/* files uploading */
+		
 			$.get("{$theme}/js/plupload/js/plupload.full.min.js", function(e){
 				var files = [];
 				var filesIndex = 0;
@@ -159,8 +161,13 @@
 						wrapperDiv.id = "tab"+i;
 						oneUploadForm.className = "";
 						$(oneUploadForm).find("input[name='title']").val(files[i].name.slice(0, -4));
+
+						console.log($(oneUploadForm).find("input[name='title']").val(files[0].name.slice(0, -4)));
+
 						$(oneUploadForm).find("textarea#desc").val(files[i].name.slice(0, -4));
 						$(oneUploadForm).find("input[name='category[]']:first").attr('checked', 'checked');
+
+						console.log(oneUploadForm);
 						wrapperDiv.appendChild(oneUploadForm);   
 						uploadForms.push(wrapperDiv);
 					}
@@ -197,8 +204,11 @@
 				});
 
 				uploader.bind("BeforeUpload", function(){
+				
 					$("#fileUploadProgress").removeClass("hidden");
+					
 					$(".progress-container").removeClass("hidden");
+					
 				});
 				var totalUploaded = 0;
 				/*
@@ -231,12 +241,21 @@
 				var theVideoId = '';
 
 				uploader.bind('FileUploaded', function(plupload, fileDetails, response){
+
+					
+
+
 					$("#overallProgress").css("width", ((100/files.length)*(++filesUploaded))+"%");
 					$("#overallProgress").parents(".row").find("#uploadedFilesInfo").text("Uploaded " + (filesUploaded) + " of " + files.length);
 					var serverResponse = $.parseJSON(response.response);
+						
+					if(serverResponse.extension == 'mp4' && config_for_mp4 == 'yes' ){
+						$("#duration").removeClass("hidden");
+					}
 					var fileName = serverResponse.file_name;
 					var uploadForm = $("#tab"+currentFileIndex+" form");
 					totalUploaded++;
+
 					//enabling savedetails button for Current form 
 					var _upload_form_Div_ = $('#tab'+currentFileIndex);
 					_upload_form_Div_.find("#saveVideoDetails").attr("disabled",false);
@@ -251,7 +270,8 @@
 						data : {
 							insertVideo : "yes",
 							title : fileDetails.name,
-							file_name : fileName
+							file_name : fileName,
+
 						}
 					}).success(function(msg){
 						//console.log(msg);
@@ -286,20 +306,27 @@
 					Submit the form with all the video details and options 
 					to update the video information in the system
 					*/
+				
 					$(uploadForm).on({
 						submit: function(e){
 							e.preventDefault();
 							var self = this;
-							var data = $(this).serialize();
+							
+							//var data = new FormData();
+							//var fd = new FormData(document.getElementById( "updateVideoInfoForm" ));
+							
+							data = $(this).serialize();
 							var theid = $(this).videoid;
+
 							$.ajax({
 								url : baseurl + "/actions/file_uploader.php",
 								type : "post",
-								data : data
+       							data : data
 							}).success(function(msg){
 								var lang = $('#subtitle_lang').val();
+								console.log(msg);
 								_cb.uploadSubtitle(theVideoId, lang, "{$honey_ajax}");
-								msg = $.parseJSON(msg);
+								//msg = $.parseJSON(msg);
 								$("#uploadMessage").removeClass("hidden");
 								if(msg.error){
 									$("#uploadMessage").html(msg.error).attr("class", "alert alert-danger");
@@ -321,6 +348,7 @@
 
 				uploader.bind("UploadComplete", function(plupload, files){
 					$("#fileUploadProgress").addClass("hidden");
+
 					$("#uploadMore").removeClass("hidden");
 					$(".uploadingProgressContainer").hide();
 					uploader.refresh();
@@ -355,6 +383,9 @@
 				});
 
 			});
+		
+			// end of get,,
+		
 
 		});
 	})(window);
