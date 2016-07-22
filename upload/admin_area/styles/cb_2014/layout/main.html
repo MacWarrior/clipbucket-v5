@@ -595,6 +595,19 @@
       </div>
     </div>
 
+  
+   <div class="col-md-4">
+      <label for="">Stay MP4 as it is</label>
+      <div class="checkboxes">
+          <label class="checkbox-inline">
+            <input type="checkbox" name="stay_mp4" {if $row['stay_mp4'] =='yes'} checked="checked"{/if} value="yes"/>
+          </label>
+             <a href="javascript:void(0)" target="_blank"><img src="{$imageurl}/help.png" alt="VF information" border="0" class="tipsy_tip" title="Only MP4 videos will be uploaded as it is. If you want to upload other video extensions uncheck this box ." /></a>
+      </div>
+
+    </div>
+
+
     <div class="col-md-4">
       <h5>Use Crons</h5>
       <label class="radio-inline">
