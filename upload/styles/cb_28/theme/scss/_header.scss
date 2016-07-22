@@ -495,6 +495,18 @@
 		}
 	}
 }
+@media only screen and (max-width: 1130px) {
+	#header{
+		.menu-holder .col{
+			&.user_menu{
+				&.logged-out{
+					width: 515px;
+				}
+			}
+		}
+
+	}
+}
 @media only screen and (max-width: 1100px) {
 	#header{
 		.main-links > ul{
