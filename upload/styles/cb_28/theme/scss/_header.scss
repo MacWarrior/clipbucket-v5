@@ -562,7 +562,7 @@
 		display: block !important;
 		width: 100%;
 		.search{
-			width: 300px;
+			width: 273px;
 			@include vertical-middle();
 		}
 	}
@@ -571,6 +571,12 @@
 		width: 450px;
 	}
 	#header{
+		.search .cbsearchtype{
+			padding: 0 40px 0 86px;
+			.search-drop{
+				width: 86px;
+			}
+		}
 		.menu-holder{
 			display: block;
 			.col{
