@@ -508,9 +508,9 @@
 		.menu-holder .col{
 			&.user_menu{
 				width: 410px;
-			}
-			&.logged-out{
-				width: 440px;
+				&.logged-out{
+					width: 460px;
+				}
 			}
 		}
 
