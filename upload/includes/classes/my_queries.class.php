@@ -613,7 +613,7 @@ class myquery {
 			$result = $result[0];
 			if($result['userid'])
 				$udetails = $userquery->get_user_details($result['userid']);
-				$avatar_url = $userquery->getuserthumb($udetails,true);
+				$avatar_url = $userquery->getUserThumb($udetails,true);
 				$udetails['avatar_url'] = $avatar_url;
 			if($udetails)
 			$result = array_merge($result,$udetails);
