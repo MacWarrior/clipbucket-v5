@@ -465,11 +465,12 @@
 		.menu-holder .col{
 			&.user_menu{
 				width: 510px;
+				padding: 0;
 				.search{
-					width: 286px;
+					width: 280px;
 				}
 				&.logged-out{
-					width: 430px;
+					width: 510px;
 				}
 			}
 		}
