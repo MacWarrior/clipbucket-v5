@@ -61,9 +61,6 @@
 		</div>
 	<div>
 </div>
-
-
-
 <script type="text/javascript">
 	(function(window){
 		$(document).ready(function(){
@@ -138,8 +135,6 @@
 						li.appendChild(link);
 						ul.appendChild(li);
 					});
-
-
 
 					$("#files").html("");
 					$("#files").append(ul);
@@ -241,10 +236,6 @@
 				var theVideoId = '';
 
 				uploader.bind('FileUploaded', function(plupload, fileDetails, response){
-
-					
-
-
 					$("#overallProgress").css("width", ((100/files.length)*(++filesUploaded))+"%");
 					$("#overallProgress").parents(".row").find("#uploadedFilesInfo").text("Uploaded " + (filesUploaded) + " of " + files.length);
 					var serverResponse = $.parseJSON(response.response);
