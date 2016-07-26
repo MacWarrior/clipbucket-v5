@@ -62,6 +62,7 @@
 	<div>
 </div>
 <script type="text/javascript">
+	var grabbed_json = 'nothing';
 	(function(window){
 		$(document).ready(function(){
 			 setTimeout(function(){
@@ -389,6 +390,36 @@
 			return null;
 		}
 	};
+
+	$(document).on('click','#youtube_update',function(e){
+		e.preventDefault();
+		$(document).find('.__theClassHere').find('form').attr('id','youtube_update_form');
+		var theForm = $('#youtube_update_form');
+		data = $('#youtube_update_form').serialize();
+		console.log(data);
+		data += '&updateVideo=yes&videoid='+grabbed_json.vid;
+		console.log(data);
+		var theid = '200';
+
+		$.ajax({
+			url : baseurl + "/actions/file_uploader.php",
+			type : "post",
+				data : data
+		}).success(function(msg){
+			//msg = $.parseJSON(msg);
+			$("#uploadMessage").removeClass("hidden");
+			if(msg.error){
+				$("#uploadMessage").html(msg.error).attr("class", "alert alert-danger");
+			}else{
+				$("#uploadMessage").html(msg.msg).attr("class", "alert alert-success");
+			}
+			setTimeout(function(){
+				$("#uploadMessage").addClass("hidden");
+			}, 5000);
+		}).fail(function(err){
+			console.log(err);
+		});
+	});
 </script>
 
 

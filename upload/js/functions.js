@@ -255,18 +255,23 @@ var loading_img_2 = "<img style='vertical-align:middle' src='"+imageurl+"/ajax-l
                     var wrapperDiv = document.createElement("div");
                     var i=0;
                     if(i == 0){
-                        wrapperDiv.className = "tab-pane active uploadFormContainer";
+                        wrapperDiv.className = "tab-pane active uploadFormContainer __theClassHere";
                     }else{
                         wrapperDiv.className = "tab-pane uploadFormContainer";
                     }
+                    $('.__theClassHere').find('#updateVideoInfoForm').remove();
                     wrapperDiv.id = "tab"+i;
                     oneUploadForm.className = "";
+                    console.log('.__theClassHere');
+
+                    //$('#youtube_form').find('#updateVideoInfoForm').attr('id','the_new_one_here');
                     $(oneUploadForm).find("input[name='title']").val(data.title);
                     $(oneUploadForm).find("textarea#desc").val(data.desc);
                     $(oneUploadForm).find("input[name='category[]']:first").attr('checked', 'checked');
                     wrapperDiv.appendChild(oneUploadForm);
                     $(wrapperDiv).appendTo('#remote_upload_div');
                     $(oneUploadForm).find("#saveVideoDetails").removeAttr("disabled");
+                    grabbed_json = data;
                       /*vid = data.vid;
 					  $('#remoteUploadBttn').attr("disabled","disabled").hide();
 					  $('#ytUploadBttn').attr("disabled","disabled").hide();
@@ -290,6 +295,9 @@ var loading_img_2 = "<img style='vertical-align:middle' src='"+imageurl+"/ajax-l
 					  },'text');*/
 					  
 				  }
+
+				$(document).find('.__theClassHere').find('#saveVideoDetails').attr('id','youtube_update');
+				$(document).find('.__theClassHere').find('#youtube_update').text('Update Grabbed Video');
 				  $("#loading").html('');
 
 			  }
