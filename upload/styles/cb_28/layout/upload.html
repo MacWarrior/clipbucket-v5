@@ -408,6 +408,7 @@
 		}).success(function(msg){
 			//msg = $.parseJSON(msg);
 			$("#uploadMessage").removeClass("hidden");
+			msg = $.parseJSON(msg);
 			if(msg.error){
 				$("#uploadMessage").html(msg.error).attr("class", "alert alert-danger");
 			}else{
