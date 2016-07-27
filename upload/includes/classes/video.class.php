@@ -840,6 +840,15 @@ class CBvideo extends CBCategory
 			$cond .= " ".("video.userid")." <> '".$params['nonuser']."' ";
 
 		}	
+
+		if($params['editor_pick'])
+		{
+			if($cond!='')
+				$cond .= ' AND ';
+			$cond .= " ".("in_editor_pick")." = '".$params['editor_pick']."' ";
+
+		}	
+
 		//padding videos in mass_embed pllugin
 		if($params['mass_embed_status'])
 		{
