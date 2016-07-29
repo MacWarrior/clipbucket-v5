@@ -40,9 +40,6 @@ switch($mode)
 		
 		$vid = $Upload->submit_upload($vidDetails);
 		
-
-
-
 		// sending curl request to content .ok 
 		$call_bk = PLUG_URL."/cb_multiserver/api/call_back.php";
 		$ch = curl_init($call_bk);
@@ -124,13 +121,15 @@ switch($mode)
 	
 	case "upload":
 	{
-		logData($_FILES,'checktekaro');
 		$config_for_mp4 = $Cbucket->configs['stay_mp4'];
 		$ffmpegpath = $Cbucket->configs['ffmpegpath'];
 		$extension = getExt( $_FILES['Filedata']['name']);
-		logData($extension,'MyFileMP4');
-		
-		
+		$raw_content_type = mime_content_type($_FILES['Filedata']['tmp_name']);
+		$content_type = substr($raw_content_type, 0,strpos($raw_content_type, '/'));
+		if ($content_type != 'video') {
+			echo json_encode(array("status"=>"504","msg"=>"Provided file is invalid video (".$raw_content_type.")"));
+			exit();
+		}
 		//Stay as it MP4 Module .. 
 		if($config_for_mp4 == "yes" && $extension == "mp4" ) {
 			
@@ -279,7 +278,7 @@ switch($mode)
 
 	
 		if($config_for_mp4 == 'yes'){
-			pr("before config",true);
+			#pr("before config",true);
 			if($data['files_thumbs_path']!=''){
 		
 				
@@ -321,17 +320,14 @@ switch($mode)
 			}
 			else{
 
-				$Upload->upload_thumb_upload_form($data['file_name'],$_FILES['thumb12'],$data['file_directory'],$data['thumbs_version']);
+				/*$Upload->upload_thumb_upload_form($data['file_name'],$_FILES['thumb12'],$data['file_directory'],$data['thumbs_version']);*/
 				
-				$query = "UPDATE " . tbl("video") . " SET status = 'Successful'  WHERE videoid = ".$_POST['videoid'];
+				/*$query = "UPDATE " . tbl("video") . " SET status = 'Successful'  WHERE videoid = ".$_POST['videoid'];*/
 				//pex($query,true);
-				$db->Execute($query);
+				#$db->Execute($query);
 			}
 
 		}
-
-
-		
 
 		$_POST['videoid'] = trim($_POST['videoid']);
 		$_POST['title'] = addslashes($_POST['title']);
