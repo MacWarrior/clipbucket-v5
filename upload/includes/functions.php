@@ -4307,11 +4307,13 @@
 		if(PHP_OS == "Linux") {
 			$destination.'/'.$dest_name;
 			$saveTo = $destination.'/'.$dest_name;
+			#exit($saveTo);
 			$fp = fopen ($saveTo, 'w+');
 		} elseif (PHP_OS == "WINNT") {
 			$destination.'\\'.$dest_name;
 			$fp = fopen ($destination.'\\'.$dest_name, 'w+');
 		}
+
 		$ch = curl_init($snatching_file);
 		curl_setopt($ch, CURLOPT_TIMEOUT, 600);
 		curl_setopt($ch, CURLOPT_FILE, $fp);
@@ -5519,6 +5521,7 @@
 		$filepath = $params['filepath'];
 		$width = $params['width'];
 		$height = $params['height'];
+		$ms = $params['ms'];
 		$ext = pathinfo($filepath, PATHINFO_EXTENSION);
 		
 		$thumbs_settings_28 = thumbs_res_settings_28();
@@ -5534,7 +5537,12 @@
 				$height_setting = $height;
 			}
 
-			$outputFilePath = THUMBS_DIR.'/'.$files_dir.'/'.$file_name.'-'.$dimensions.'-'.$file_num.'.'.$ext;	
+			if (!$ms) {
+				$outputFilePath = THUMBS_DIR.'/'.$files_dir.'/'.$file_name.'-'.$dimensions.'-'.$file_num.'.'.$ext;	
+			} else {
+				$outputFilePath = $files_dir.'/'.$file_name.'-'.$dimensions.'-'.$file_num.'.'.$ext;	
+			}
+
 			$imgObj->CreateThumb($filepath,$outputFilePath,$width_setting,$ext,$height_setting,false);
 		}
 		unlink($filepath);
