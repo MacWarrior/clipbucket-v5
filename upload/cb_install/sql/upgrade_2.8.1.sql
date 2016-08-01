@@ -37,3 +37,4 @@ ALTER TABLE `{tbl_prefix}video` ADD INDEX(`last_viewed`);
 UPDATE `{tbl_prefix}config` SET value = 'cb_28' WHERE name = 'template_dir';
 INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES ('stay_mp4','');
 INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES ('youtube_api_key','');
+ALTER TABLE `{tbl_prefix}video` ADD `video_files` text(33) NOT NULL;
