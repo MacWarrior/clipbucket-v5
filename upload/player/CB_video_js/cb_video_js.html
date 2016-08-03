@@ -1,15 +1,17 @@
 <!-- Following is the code for cb ultimate invideo ads settings  -->
-{if $cb_ultimate_ads == 'installed'}
-{$ads_array = ["filter_ad"=>true,"status"=>"1","non_expiry"=>'true']}
-{$current_ad = $cbuads->get_ultimate_ads($ads_array)}
+{$tcomments_params = ['function'=>'get_ultimate_ads']}
+{$current_ad = get_my_function($tcomments_params)}
 {if !empty($current_ad)}
 	{$play_ad = true}
-{else}
-	{$play_ad = false}
-{/if}
 {/if}
 <!-- End  -->
 
+<!-- This code is added for timecomments plugin-->
+{$tcomments_params = ['function'=>'get_timeCommnets','videoid'=>$vdata.videoid]}
+{$timecomments = get_my_function($tcomments_params)}
+<!-- End -->
+{$v_editor_params = ['function'=>'get_video_editor']}
+{$video_editor_enabled = get_my_function($v_editor_params)}
 
 
 <link rel="stylesheet" href="{$cb_vjs_player_url}/css/video-js.min.css">
@@ -17,6 +19,7 @@
 <link href="{$cb_vjs_player_url}/css/videojs.ads.css" rel="stylesheet">
 <link href="{$cb_vjs_player_url}/css/videojs.ima.css" rel="stylesheet">
 <link href="{$cb_vjs_player_url}/css/cb_vjs_resolution.css" rel="stylesheet">
+<link href="{$cb_vjs_player_url}/css/videojs.relatedCarousel.css" rel="stylesheet">
 
 {if $development_mode}
 <script src="{$cb_vjs_player_url}/js/video-js.js"></script>
@@ -32,9 +35,14 @@
 {if $play_ad == true}
 <script src="//imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
 {/if}
+{if $video_editor_enabled}
+<script type="text/javascript" src="{$cb_ia_ads_url}/assets/js/instance_manager.js"></script>
+{/if}
 <script src="{$cb_vjs_player_url}/js/videojs.ads.js"></script>
 <script src="{$cb_vjs_player_url}/js/videojs.ima.js"></script>
 <script src="{$cb_vjs_player_url}/js/cb_ultimate_ads.js"></script>
+<script type="text/javascript" src="{$cb_vjs_player_url}/js/videojs.relatedCarousel.js"></script>
+
 {$default_quality = get_cbvjs_quality_type($video_files)}
 <video id="cb_video_js" class="video-js vjs-default-skin" height="{$height}" width="{$width}" poster="{getThumb vdetails=$vdata size=768x432}" >
     {foreach $video_files as $file}
@@ -99,7 +107,8 @@
 			},
 			header : { 
 					uploader : uploader,
-					videotitle : videotitle
+					videotitle : videotitle,
+					videoid : vid_id
 			}
 		}
 		cb_vjs.cb_vjs_elements(el_options);
@@ -141,6 +150,12 @@
 			}
 			
 		}
+
+
+		cb_vjs.relatedCarousel([
+	      	{ imageSrc: 'http://127.0.0.1/clipbucket-git/files/thumbs/2016/05/16/1463349407399cf-168x105-1.jpg', url: '/video1-url.html', title: 'video 1 title' },
+	      	{ imageSrc: 'http://127.0.0.1/clipbucket-git/files/thumbs/2016/05/06/1462545475f7ded-168x105-1.jpg', url: '/video2-url.html', title: 'video 2 title' }
+	    ]);
 
 		var  stateCheck = setInterval(function(){
 		  	if (document.readyState === 'complete') {

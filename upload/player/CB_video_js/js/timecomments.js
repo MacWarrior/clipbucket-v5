@@ -467,25 +467,23 @@ TimeComments.prototype.HideComments = function(){
 TimeComments.prototype.TriggerComment = function(){
 	var player = this;
 	var previousIndex = player.timecomments.currentIndex -1;
+	var CurrentTime = player.currentTime();
 	var curr_comment = player.timecomments.comments[player.timecomments.currentIndex];
 	if (previousIndex >-1 ){
 		var previousComment = player.timecomments.comments[previousIndex];	
 	}
 	
 	if (typeof curr_comment != 'undefined'){
-		var CurrentTime = player.currentTime();
 		if (CurrentTime >= curr_comment.time && player.timecomments.currentIndex < player.timecomments.comments.length){
-	
 			player.timecomments.SetActiveComment(curr_comment);
 			player.timecomments.currentIndex++;
-
 		}
 	}else{
 		//console.error("WTH :O no comments ? ");
 	}
 	if (previousIndex>-1) {
 		var lastActiveDiff = CurrentTime - previousComment.time
-		//console.log(lastActiveDiff);
+		/*console.log(CurrentTime +"  "+"  " +previousComment.time);*/
 		if ( lastActiveDiff > 5){
 			player.timecomments.HideComments();
 		}

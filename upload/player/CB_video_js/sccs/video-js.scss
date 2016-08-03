@@ -64,13 +64,15 @@
 		.vidTitle {
 			width: 70%;
 		}
-		p {
+		a {
 			font-size: 16px;
 			margin: 0;
 			line-height: normal;
 			overflow: hidden;
 			text-overflow: ellipsis;
 			white-space: nowrap;
+			color:#fff;
+			text-decoration:none;
 		}
 		.uploaderName {
 			float: right;
