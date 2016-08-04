@@ -455,7 +455,7 @@ class Clipbucket_db
      */
     function clean_var($var)
     {
-        return $var;
+        return mysql_clean($var);
     }
 
     /**
