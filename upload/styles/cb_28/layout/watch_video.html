@@ -49,11 +49,12 @@
 									{$files = get_video_files($vdo,true,true)}
 									{foreach $files as $file}
 									{$quality = explode('-',$file)}
-									{$quality = explode('.',$quality.1)}
+									{$quality = array_reverse($quality)}
+									{$quality = explode('.',$quality.0)}
 									{$file_quality = $quality.0}
 									<li role="presentation">
 										<a role="menuitem" tabindex="-1" href="{$file}"  download>
-										<span class="glyphicon glyphicon-download-alt"></span>{$file_quality}</a>
+										<span class="glyphicon glyphicon-download-alt"></span> {$file_quality}</a>
 										
 									</li>
 									{/foreach}
