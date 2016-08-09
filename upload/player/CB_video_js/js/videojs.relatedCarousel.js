@@ -151,7 +151,7 @@
     player.carousel = new carousel();
 
     /* Menu Button */
-    player.carousel.controlBarButton.className = 'vjs-button vjs-control vjs-related-carousel-button icon-videojs-carousel-toggle';
+    player.carousel.controlBarButton.className = 'vjs-button vjs-control vjs-related-carousel-button icon-videojs-carousel-toggle icon-related';
     player.carousel.controlBarButton.title = "More Videos";
      
     player.carousel.holderDiv.className = 'vjs-related-carousel-holder';
@@ -159,9 +159,9 @@
     player.carousel.viewport.className = 'vjs-carousel-viewport';
     player.carousel.items.className = 'carousel-items';
     player.carousel.leftButton.className = 'vjs-carousel-left-button';
-    player.carousel.leftButtonContent.className = 'icon-videojs-carousel-left';
+    player.carousel.leftButtonContent.className = 'icon-videojs-carousel-left icon-prev';
     player.carousel.rightButton.className = 'vjs-carousel-right-button';
-    player.carousel.rightButtonContent.className = 'icon-videojs-carousel-right';
+    player.carousel.rightButtonContent.className = 'icon-videojs-carousel-right icon-next';
 
     // Add all items to DOM
     var controlBarChilds =  player.controlBar.el().childNodes;
