@@ -56,7 +56,7 @@ if (!function_exists('cb_video_js'))
 	*/
 	function cb_logo()
 	{
-		$l_details = BASEURL.'/images/icons/country/hp-cb.png';
+		$l_details = BASEDIR.'/images/icons/country/hp-cb.png';
 		$l_convert = base64_encode(file_get_contents($l_details));
 		return $l_convert;
 	}

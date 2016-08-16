@@ -181,16 +181,19 @@ TimeComments.prototype.AddComment = function(){
 		timecomments.player.pause();
 	}
 
-	var dismissCommentBox = function(){
+	var dismissCommentBox = function(clear){
 		commentBoxForm.className = "cb-vjs-timecomment-form";
 		timecomments.player.play();
+		if ( clear == true ){
+			var comment = document.getElementById('timecommnts-send-box');
+			comment.value = "";
+		}
 	}
 
 	var forceDismissCommentBox = function(e){
 		if (e.keyCode == 27){
 			if (commentBoxForm != null && commentBoxForm.className == 'cb-vjs-timecomment-form open-comment'){
-				commentBoxForm.className = "cb-vjs-timecomment-form";
-				timecomments.player.play();
+				dismissCommentBox();
 			}
 			
 		}
@@ -203,7 +206,7 @@ TimeComments.prototype.AddComment = function(){
 		var time = sendTimeWith;
 		if (comment != ''){
 			timecomments.setNewCommentTemp_(comment,time);
-			dismissCommentBox();
+			dismissCommentBox(true);
 			sendTimeComment_(videoid,userid,comment,time);
 			var message = "your Comment has been added and will be popped up at time : "+sendTimeDisplay;
 			_cb.throwHeadMsg('success',message,4000,true);

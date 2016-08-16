@@ -31,7 +31,6 @@
 <link href="{$cb_vjs_player_url}/css/videojs.ads.css" rel="stylesheet">
 <link href="{$cb_vjs_player_url}/css/videojs.ima.css" rel="stylesheet">
 <link href="{$cb_vjs_player_url}/css/cb_vjs_resolution.css" rel="stylesheet">
-<link href="{$cb_vjs_player_url}/css/videojs.relatedCarousel.css" rel="stylesheet">
 
 {if $development_mode}
 <script src="{$cb_vjs_player_url}/js/video-js.js"></script>
@@ -173,7 +172,8 @@
 		}
 
 		//Calling related Videos Plugin  
-		if (related_videos != "" && typeof related_videos != 'undefined' && related_videos_active){
+		if ( related_videos != "" && typeof related_videos != 'undefined' && related_videos_active &&   
+			!video_editor_enabled ){
 			related_videos = JSON.parse(related_videos);
 			cb_vjs.relatedCarousel(related_videos);
 		}
