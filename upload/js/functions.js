@@ -272,6 +272,10 @@ var loading_img_2 = "<img style='vertical-align:middle' src='"+imageurl+"/ajax-l
                     $(wrapperDiv).appendTo('#remote_upload_div');
                     $(oneUploadForm).find("#saveVideoDetails").removeAttr("disabled");
                     grabbed_json = data;
+
+                    $(oneUploadForm).on('submit',function(e){
+                    	e.preventDefault();
+                    });
                       /*vid = data.vid;
 					  $('#remoteUploadBttn').attr("disabled","disabled").hide();
 					  $('#ytUploadBttn').attr("disabled","disabled").hide();
