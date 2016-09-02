@@ -1888,6 +1888,20 @@ textarea#comment_box{
 	.form-control{
 		box-shadow:none;
 	}
+	textarea{
+		resize:none;
+	}
+}
+.comment_txt_area,
+.textarea-comment{
+	textarea{
+		resize:none !important;
+	}
+}
+.textarea-comment{
+	textarea.form-control{
+		padding: 6px 24px 6px 12px;
+	}
 }
 .comments {
 	> ul {
