@@ -130,3 +130,35 @@
 		z-index: 2;
 	}
 }
+@media only screen and (max-width: 991px){
+	.video-js{
+		/* interactive ad front style */
+		.cb-vjs-instance-info-front{
+			margin:0 !important;
+			max-width: 614px;
+			max-height: 614px;
+			top: 0;
+			left: 0;
+			padding: 24px 10px 10px;
+			h2{
+				font-size: 16px;
+				line-height: 18px;
+				margin: 0 0 10px;
+			}
+		}
+	}
+}
+@media only screen and (max-width: 767px){
+	.video-js{
+		/* interactive ad front style */
+		.cb-vjs-instance-info-front{
+			.cb-vjs-instance-info-holder-front{
+				.media-frame{
+					width: 100px;
+					height: 62.5px;
+					margin: 0 10px 0 0;
+				}
+			}
+		}
+	}
+}
