@@ -1,4 +1,13 @@
 .video-js{
+	.cb-vjs-coordinates-child{
+		width: 100px;
+		background: rgba(255,255,255,0.9);
+		color: #000;
+		font-size: 12px;
+		line-height: 16px;
+		padding: 4px;
+		border-radius: 2px;
+	}
 	.cb-vjs-instance-viewer,
 	.cb-vjs-instance-manager{
 		width: 16px;
