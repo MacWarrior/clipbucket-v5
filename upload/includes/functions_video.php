@@ -68,7 +68,7 @@
             && $vdo['userid']!=$uid) {
             e(lang('not_logged_video_error'));
             return false;
-        } elseif ($vdo['active']=='no' ) {
+        } elseif ($vdo['active']=='no' && $vdo['userid'] != userid() ) {
             e(lang("vdo_iac_msg"));
             if(!has_access('admin_access',TRUE)) {
                 return false;
