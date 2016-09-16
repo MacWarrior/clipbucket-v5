@@ -221,7 +221,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 (221, 'collection_rating', '1'),
 (222, 'own_collection_rating', '1'),
 (223, 'own_video_rating', '1'),
-(224, 'vbrate_hd', '500000');
+(224, 'vbrate_hd', '500000'),
+(224, 'store_guest_session', 'no');
 
 
 
