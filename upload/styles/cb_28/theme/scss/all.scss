@@ -1647,7 +1647,9 @@ h1{
 		background:rgba(0,0,0,0.98); /* Black w/opacity */
 		overflow-y: hidden;
 		transition: 0.3s; /* 0.5 second transition effect to slide in or slide down the overlay (height or width, depending on reveal) */
-		display: table;
+		&.maximized{
+			display: table;
+		}
 		img{
 			position: relative;
 		}
