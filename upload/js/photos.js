@@ -115,8 +115,8 @@ $(document).on("click", ".en-large", function () {
 
 $(document).on("click", "#enlarge", function () {
 	$('body').addClass('image-zoom');
-	document.getElementById("myNav").style.width = "100%";
-	document.getElementById("myNav").style.left = "0";
+	$('#myNav').attr("style","width:100%;left:0;");
+	$('#myNav').addClass('maximized');
 	$('#gallery-exd').attr("src",srcFirst);
 	d=curr_photo;
 });
@@ -124,7 +124,8 @@ $(document).on("click", "#enlarge", function () {
 // On closing modal update image source..
 $(document).on("click", "#btn-close", function () {
 	$('body').removeClass('image-zoom');
-	 document.getElementById("myNav").style.left = "-100%";
+	 $('#myNav').attr("style","left:-100%;");
+	 $('#myNav').removeClass('maximized');
 
 });
 
