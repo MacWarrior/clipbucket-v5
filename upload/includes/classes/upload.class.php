@@ -201,7 +201,7 @@ class Upload{
 			$query_val[] = $active;
 			
 			$query_field[] = "date_added";
-			$query_val[] = now();
+			$query_val[] = dateNow();
 			$config_for_mp4 = $Cbucket->configs['stay_mp4'];
 			
 			if ($config_for_mp4 == 'yes') {
