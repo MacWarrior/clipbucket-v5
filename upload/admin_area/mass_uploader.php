@@ -12,7 +12,7 @@ require_once(dirname(dirname(__FILE__))."/includes/classes/sLog.php");
 $userquery->admin_login_check();
 $pages->page_redir();
 global $Cbucket;
-$mass_upload_config = config('delete_mass_upload');
+$delMassUpload = config('delete_mass_upload');
 /* Assigning page and subpage */
 if(!defined('MAIN_PAGE')){
 	define('MAIN_PAGE', 'Videos');
@@ -107,8 +107,8 @@ if(isset($_POST['mass_upload_video']))
 				}
 				
 			}
-			if($mass_upload_config == 'no') {
-				if(!file_exists($file_path.'processed')){
+			/*if($delMassUpload != 'no') {
+				if(!file_exists($file_path.'processedmass')){
 					$oldmask = umask(0);
 					mkdir($file_path.'processed', 0777);
 					umask($oldmask);
@@ -116,6 +116,10 @@ if(isset($_POST['mass_upload_video']))
 				rename($file_path.$file_orgname, $file_path.'processed/'.$file_orgname);
 			}
 			else{
+				unlink($file_path.$file_orgname);
+			}*/
+
+			if ($delMassUpload != 'no') {
 				unlink($file_path.$file_orgname);
 			}
 		}
