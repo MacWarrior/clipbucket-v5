@@ -1948,3 +1948,7 @@
         $returnData[4] = FILES_DIR.'/logs/'.$dateDir.'/'.$filedata['cqueue_name'].'.log';
         return $returnData;
     }
+    
+    function dateNow() {
+        return date("Y-m-d H:i:s");
+    }
