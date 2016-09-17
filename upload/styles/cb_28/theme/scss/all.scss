@@ -3239,6 +3239,9 @@ textarea#comment_box{
 		&:first-child{
 			padding: 0 8px;
 		}
+		&:nth-child(n+9){
+			display: none;
+		}
 	}
 	.item-video .thumb-holder .video-link .title{
 		font-size: 16px;
