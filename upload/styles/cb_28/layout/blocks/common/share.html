@@ -33,6 +33,18 @@
 					<input type="radio" name="player_size" value="large" id="player_size_3"  onclick="{$updateEmbedCode}('600','370',autoPlayEmbed)">
 					{lang code='large'} (600x370)
 				</label>
+				<label class="block-label clearfix">Custom Size</label>
+				<form class="form-inline">
+				  <div class="form-group">
+				    <label for="player_size_width">Width</label>
+				    <input type="text" class="form-control" id="player_size_4" value="640" placeholder="Player width here">
+				  </div>
+				  <div class="form-group">
+				    <label for="player_size_height">Height</label>
+				    <input type="text" class="form-control" id="player_size_5" value="360" placeholder="Player height here">
+				  </div>
+				</form>
+
 			</div>
 		</div>
 
@@ -110,4 +122,18 @@
             _cb.submit_share_form('share_form','{$params.type}');return false;
         })
     })
+
+    $( "#player_size_4, #player_size_5" ).keyup(function() {
+	  var newWidth = '',
+	  newHeight = '',
+	  currentVal = $(this).val();
+
+	  if ($.isNumeric( currentVal )) {
+	  	newWidth = $('#player_size_4').val();
+	  	newHeight = $('#player_size_5').val();
+	  	updateEmbed(newWidth,newHeight,autoPlayEmbed);
+	  } else {
+	  	alert("Only integer values are allowed");
+	  }
+	});
 </script>
