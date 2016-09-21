@@ -1697,8 +1697,12 @@ h1{
 			display: table-cell;
 			vertical-align: middle;
 			img{
-				width: auto;
 				height: auto;
+				&.tallest{
+					height: 100%;
+					height: 100vh;
+				}
+				// max-height: 100%;
 			}
 			.btn-holder{
 				position: fixed;
@@ -1736,7 +1740,24 @@ h1{
 		.inner-holder{
 			display: table-cell;
 			vertical-align: middle;
+			img{
+				height: auto;
+				&.tall_img{
+					max-height: 100%;
+				}
+			}
 		}
+	}
+}
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+	/* IE10+ CSS styles go here */
+	#gallery .image-holder .inner-holder img.tall_img{
+		height: 100%;
+	}
+
+	.photo-view .overlay .overlay-content img.tallest{
+		height: 100%;
+		max-height: 100%;
 	}
 }
 
