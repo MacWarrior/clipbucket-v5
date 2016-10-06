@@ -299,7 +299,7 @@ function homePageVideos(qlist_items) {
 				if (data.length < 10) {
 					$(main_object).remove();
 					if (loadHit == 1) {
-						alert(loadMode);
+						//alert(loadMode);
 						if (loadMode == 'featured') {
 							$('#featured_load_more').hide();
 							$('#featured_pre').hide();
