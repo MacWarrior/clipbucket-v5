@@ -514,8 +514,7 @@ ul.mainTabs{
     display: block;
     padding: 6px;
     text-align: right;
-    
-
+	white-space: nowrap;
 }
 
 .myTable .last {
@@ -644,4 +643,8 @@ ul.mainTabs{
 .addTodoText {
 	width: 80%;
 	display: inline;
+}
+
+.userInfoSettings input{
+	width: 100%;
 }
