@@ -223,7 +223,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 (223, 'own_video_rating', '1'),
 (224, 'vbrate_hd', '500000'),
 (225, 'store_guest_session', 'no'),
-(226, 'delete_mass_upload', 'no');
+(226, 'delete_mass_upload', 'no'),
+(227, 'pseudostreaming', 'yes');
 
 
 
