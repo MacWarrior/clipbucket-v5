@@ -56,11 +56,9 @@
 <!-- for bootstrap wysiwyg -->
 
 <!-- for popovers -->
-<script src="{$theme_url}/bootstrap/js/bootstrap.js"></script>
 <script>
-    $(function (){
-        $(".popoverButton").popover();
-    });
+	if( $(".popoverButton").length > 0 )
+		$(".popoverButton").popover();
 </script>
 
 <!-- bootstrap x-editable -->
