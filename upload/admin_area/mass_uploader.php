@@ -3,7 +3,7 @@
  **************************************************************
  | Copyright (c) 2007-2010 Clip-Bucket.com. All rights reserved.
  | @ Author : ArslanHassan										
- | @ Software : ClipBucket , © PHPBucket.com					
+ | @ Software : ClipBucket , Â© PHPBucket.com
  **************************************************************
 */
 
@@ -41,7 +41,10 @@ if(isset($_POST['mass_upload_video']))
 	$vtitle=$_POST['title'];
 	$total = count($_POST['mass_up']);
 	for($i=0;$i<$total;$i++)
-	{	
+	{
+		if( !isset($_POST['filesToImport'][$i]) ) // Check if file is checked for import
+			continue;
+
 		$file_key = time().RandomString(5);
 		$file_arr = $files[$i];
 		$file_path = $files[$i]['path'];
@@ -51,13 +54,12 @@ if(isset($_POST['mass_upload_video']))
 		{
 			$code = $i+1;
 			//Inserting Video Data...
-			$array = array
-			(
-			'title' => $_POST['title'][$i],
-			'description' => $_POST['description'][$i],
-			'tags' => $_POST['tags'][$i],
-			'category' => $_POST['category'.$code],
-			'file_name' => $file_key,
+			$array = array(
+				'title' => $_POST['title'][$i],
+				'description' => $_POST['description'][$i],
+				'tags' => $_POST['tags'][$i],
+				'category' => $_POST['category'.$code],
+				'file_name' => $file_key,
 			);
 			$vid = $Upload->submit_upload($array);
 		}else{

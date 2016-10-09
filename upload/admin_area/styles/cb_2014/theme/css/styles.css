@@ -648,3 +648,24 @@ ul.mainTabs{
 .userInfoSettings input{
 	width: 100%;
 }
+
+.checkboxMassImport {
+	vertical-align: middle;
+}
+
+#massUploadSelectAll{
+	display: inline-block;
+}
+
+#massUploadSelect{
+	margin-left: 20px;
+}
+
+#massUploadCategoriesSelection{
+	display: inline-block;
+	margin-left: 30px;
+}
+
+#massUploadCategoriesSelection label{
+	margin-left: 5px;
+}
