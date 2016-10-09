@@ -640,3 +640,8 @@ ul.mainTabs{
     width: 100%;
     z-index: 10;
 }
+
+.addTodoText {
+	width: 80%;
+	display: inline;
+}
