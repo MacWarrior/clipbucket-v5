@@ -689,7 +689,7 @@
 	*/
 
 	function pullSmartyRating($param) {
-		return pullRating($param['id'],$param['show5'],$param['showPerc'],$aram['showVotes'],$param['static']);	
+		return pullRating($param['id'],$param['show5'],$param['showPerc'],$param['showVotes'],$param['static']);
 	}
 	
 	/**
