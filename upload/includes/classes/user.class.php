@@ -764,10 +764,11 @@ class userquery extends CBCategory{
 
         return false;
 
-	}function GetUserData($id=NULL){ return $this->get_user_details($id); }
-	
+	}
 
-	
+	function GetUserData($id=NULL){
+		return $this->get_user_details($id);
+	}
 
 	//Function Used To Activate User
 	function activate_user_with_avcode($user,$avcode)
