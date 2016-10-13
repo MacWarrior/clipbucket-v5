@@ -3607,7 +3607,10 @@ class userquery extends CBCategory{
 
 		//die();
 
-
+		$isSocial = false;
+		if (isset($_POST['social_ac_id'])) {
+			$isSocial = true;
+		}
 		if($array==NULL)
 			$array = $_POST;
 
@@ -3620,7 +3623,7 @@ class userquery extends CBCategory{
 
 		// first checking if captha plugin is enabled
 		// do not trust the form cb_captcha_enabled value
-		if(get_captcha() && !$userquery->admin_login_check(true)){
+		if(get_captcha() && !$userquery->admin_login_check(true) && !$isSocial){
 			// now checking if the user posted captha value is not empty and cb_captcha_enabled == yes
 			if(!isset($array['cb_captcha_enabled']) || $array['cb_captcha_enabled'] == 'no'){
 				e(lang('usr_ccode_err'));
