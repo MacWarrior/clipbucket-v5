@@ -320,15 +320,18 @@ class userquery extends CBCategory{
 			//$sess->set('user_session_key',$udetails['user_session_key']);
 			//$sess->set('user_session_code',$udetails['user_session_code']);
 			
-			//local client ip access
-			$ip = $cblog->get_local_ipv4();
+			//local client ip access - only works on linux : is it really useful ??
+			/*$ip = $cblog->get_local_ipv4();
 
-			if($ip['eth0']){
+			if( isset($ip['eth0']) ){
 				$ipv = $ip['eth0'];
 			}
-			if($ip['wlan0']){
+			if( isset($ip['wlan0']) ){
 				$ipv = $ip['wlan0'];
-			}
+			}*/
+
+			$ipv = $_SERVER["REMOTE_ADDR"];
+
 			//Setting Vars
 			$this->userid = $udetails['userid'];
 			$this->username = $udetails['username'];
@@ -764,10 +767,11 @@ class userquery extends CBCategory{
 
         return false;
 
-	}function GetUserData($id=NULL){ return $this->get_user_details($id); }
-	
+	}
 
-	
+	function GetUserData($id=NULL){
+		return $this->get_user_details($id);
+	}
 
 	//Function Used To Activate User
 	function activate_user_with_avcode($user,$avcode)

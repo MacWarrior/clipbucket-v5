@@ -689,7 +689,7 @@
 	*/
 
 	function pullSmartyRating($param) {
-		return pullRating($param['id'],$param['show5'],$param['showPerc'],$aram['showVotes'],$param['static']);	
+		return pullRating($param['id'],$param['show5'],$param['showPerc'],$param['showVotes'],$param['static']);
 	}
 	
 	/**
@@ -2378,10 +2378,9 @@
 	function validate_cb_form($input,$array) {
 		//Check the Collpase Category Checkboxes 
 		if($input['cat']['title']=='Video Category') {
-			global $db;
-			$query = "SELECT * FROM ".tbl("config")." WHERE configid=234";
+			$query = "SELECT * FROM ".tbl("config")." WHERE name=234"; // On fresh install, id 234 = max_topic_length, this must be wrong
 			$row = db_select($query);
-			$row[0]['value'].$input['cat']['title'];
+			$row[0]['value'].$input['cat']['title']; // Something must be wrong here
 			if($row[0]['value']=='0') {
 				unset($input['cat']);	
 			}
