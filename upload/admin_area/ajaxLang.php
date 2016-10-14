@@ -1,12 +1,18 @@
 <?php
-require('../includes/config.inc.php');
+
+    /**
+    * File : ajaxLang
+    * Description : Handles language translation in Languages area of admin section
+    */
+    
+    require('../includes/config.inc.php');
     
     /**
     * Creates initial logs file to store translation progress related data
     * @param : { string } { $langName } { iso lang code }
     * @param : { integer } { $total } { total number of phrases that are to be translated }
-    *
-    * @return : { string / boolean } { full path to log file else false }
+    
+*    * @return : { string / boolean } { full path to log file else false }
     * @since : 8th October, 2016 ClipBucket 2.8.1
     * @author : Saqib Razzaq
     */
@@ -40,7 +46,7 @@ require('../includes/config.inc.php');
     * @author : Saqib Razzaq
     */
 
-    function translate_phrase($phrase, $phrase_code, $to) {
+    function translate_phrase($phrase, $phrase_code, $to, $total, $current) {
         global $MrsTranslator;
         /**
         * There is no point in starting with empty phrase
@@ -58,13 +64,14 @@ require('../includes/config.inc.php');
 
             if (!empty($translation)) {
                 # build default translation log path
-                $file = FILES_DIR.'/translation_'.$to.'.log';
+                $transFile = BASEDIR.'/includes/langs/'.$to.'.lang';
+                $logFile = FILES_DIR.'/translation_'.$to.'.log';
 
                 # check if file exists or not because handling will matter 
-                if (file_exists($file)) {
+                if (file_exists($transFile)) {
                     
                     # read data of file to ease up appending
-                    $existingData = file_get_contents($file);
+                    $existingData = file_get_contents($transFile);
 
                     # Make data readable by converting in Json
                     $data = json_decode($existingData,true);
@@ -81,8 +88,20 @@ require('../includes/config.inc.php');
                 }
 
                 if (!empty($data)) {
+                    if (file_exists($logFile)) {
+                        $langLogData = file_get_contents($logFile);
+                    } else {
+                        $langLogData = "";
+                    }
+                    $progressPercent = ($current/$total)*100;
+                    $progressPercent = intval($progressPercent); 
+                    
+                    file_put_contents($logFile, $langLogData."\n"."[DONE] ".$current." / ".$total." [$progressPercent %] Translated phrase : $phrase");
+
+                    file_put_contents(BASEDIR."/files/percent.lang", $progressPercent."\n");
+
                     $data = json_encode($data);
-                    if (!file_put_contents($file, $data)) {
+                    if (!file_put_contents($transFile, $data)) {
                         return false;
                     }
                 }
@@ -94,35 +113,47 @@ require('../includes/config.inc.php');
         }
     }
 
-
+    // When there is data in _POST, run the process
     if(isset($_POST['selectFieldValue'])) {
-        sleep(2);
+        #sleep(2);
         $output = array();
         $iso_code = $_POST['selectFieldValue'];
         $language_detact = $_POST['langDetect'];
         $phrase = $_POST['phrase'];
         $phrase_code = $_POST['phrase_code'];
-        $translation = translate_phrase($phrase,$phrase_code,$iso_code);
+        
+        $totalPhrases = $_POST['totalPhrases'];
+        $phraseNum = $_POST['phraseNum'];
+
+        $translation = translate_phrase($phrase,$phrase_code,$iso_code, $totalPhrases, $phraseNum);
+
         if (!empty($translation)) {
+            # translation was success, lets proceed
+            
+            $progressPercent = ($phraseNum/$totalPhrases)*100;
+            $progressPercent = intval($progressPercent); 
+
             $output['status'] = 'success';
             $output['phrase_code'] = $phrase_code;
             $output['phrase'] = $phrase;
             $output['translation'] = $translation;
+            $output['progress'] = $progressPercent;
             echo json_encode($output);
         } else {
+            # unable to translate, throw error
             $output['status'] = 'error';
             return false;
         }
     }
 
     /**
-    	* Function use for translating phrases.
-    	* @param : { string } { $iso } { Language code e.g "en" }
-    	* 		  : {string} {$language_detact} { Language name e.g "english"}
-    	* @return : { file } { save file }
-    	* @since : 17 may, 2016 ClipBucket 2.8.1
-    	* @author : Sikander Ali 
-    	*/
+        * Function use for translating phrases.
+        * @param : { string } { $iso } { Language code e.g "en" }
+        *         : {string} {$language_detact} { Language name e.g "english"}
+        * @return : { file } { save file }
+        * @since : 17 may, 2016 ClipBucket 2.8.1
+        * @author : Sikander Ali 
+        */
 
     /*function language_translate($iso,$language_detact){
         global $lang_obj,$MrsTranslator;
