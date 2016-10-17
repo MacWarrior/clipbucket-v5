@@ -11,7 +11,7 @@
                         <h4 class="media-heading headcolor">{$user.username}  ({assign var=category value=$userquery->get_category($user.category)}
                             {$category.category_name})</h4>
                         <b>{lang code='Since:'}</b> ({$user.doj|date_format})
-                               <b>{lang code='last Login:'}</b> ({$user.last_logged|nicetime})
+                               <b>{lang code='user_last_login'} :</b> ({$user.last_logged|nicetime})
 
                     </div>
                     <!--<div class="col-md-4 procolor">-->
