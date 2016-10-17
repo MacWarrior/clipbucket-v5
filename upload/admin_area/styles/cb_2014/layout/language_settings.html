@@ -354,6 +354,9 @@
         $('#lang-pack').html(dialogLangPack);
     
     }*/
+
+    var goodToGo = true;
+
     function checkExists(){
         clearInterval(process);
         $('#lang-ex').append(dialogLangExisit);
@@ -413,48 +416,31 @@
     thePhrases = {$langData|@json_encode};
     var cleanRunway = true,
     totalPhrases = 0,
-    phraseNum = 1;
-
+    phraseNum = 1,
+    interval = '',
+    currentKey = 0,
+    phrase_code = Object.keys(thePhrases)[0],
+    phrase = thePhrases[phrase_code],
+    selectFieldValue = $('select.changeStatus').val(),
+    langDetect = $('option:selected', '#lang_option').attr('data-check');
     $.each( thePhrases, function( phrase_code, phrase ) {
             totalPhrases = totalPhrases + 1;
-        });
+    });
 
-    $(document).on("click", "#submit_lang1", function () {  
-        $('#submit_lang1').text("Translating...");
-        $.each( thePhrases, function( phrase_code, phrase ) {
-            var selectFieldValue = $('select.changeStatus').val();
-            var langDetect = $('option:selected', '#lang_option').attr('data-check');
-            data = {
-             'selectFieldValue': selectFieldValue,
-             'langDetect': langDetect,
-             'phrase_code' : phrase_code,
-             'phrase' : phrase,
-             'totalPhrases' : totalPhrases,
-             'phraseNum' : phraseNum
-            }
+    function sendAjax(data) {
+        goodToGo = false;
+        $.ajax({
+            //async: false,
+            url: 'ajaxLang.php', 
+            type: "post",
+            data: data,
+            dataType: 'json',
+            beforeSend: function() {
+                },
+            success:function(xhr) {
+                
+                if (xhr.phrase != 'aye') {
 
-            $.ajax({
-                async: false,
-                url: 'ajaxLang.php', 
-                type: "post",
-                data: data,
-                dataType: 'json',
-                beforeSend: function() {
-                       // timeCheck();
-                        /*progress = setInterval(function() {
-                            if(lastElementArray == undefined){
-                                lastElementArray = 0;
-                            }
-                            $('#loaderVal').text(lastElementArray+'%');
-                            $('.progress-bar').css('width',lastElementArray+'%');
-                           if(lastElementArray == 99) {
-                               clearInterval(progress);
-                               lastElementArray = 100;
-                            }
-                        }, 1000);*/
-                    },
-                success:function(xhr) {
-                    firstHit = false;
                     var progressNow = xhr.progress,
                     existingLog = $('#progMsg').html();
                     $('#bar').show();
@@ -462,20 +448,55 @@
                     $('#loaderVal').text(progressNow);
                     $('.progress-bar').attr('aria-valuenow',progressNow);
                     $('.progress-bar').css('width', progressNow+"%");
-                    if (xhr.phrase != 'aye') {
-                        $('#progMsg').html(existingLog+"<br>Translated : "+xhr.phrase+" ( phrase #"+phraseNum+" out of "+totalPhrases+" phrases )");
-                    } else {
-                        $('#submit_lang1').text('Successfully completed');
+
+                    $('#progMsg').html(existingLog+"<br>Translated : "+xhr.phrase+" ( phrase #"+phraseNum+" out of "+totalPhrases+" phrases )");
+
+                    currentKey = currentKey + 1;
+                    phrase_code = Object.keys(thePhrases)[currentKey];
+                    phrase = thePhrases[phrase_code];
+                    phraseNum = phraseNum + 1;
+
+                    data = {
+                     'selectFieldValue': selectFieldValue,
+                     'langDetect': langDetect,
+                     'phrase_code' : phrase_code,
+                     'phrase' : phrase,
+                     'totalPhrases' : totalPhrases,
+                     'phraseNum' : phraseNum
                     }
-                    if (!xhr.success) {
-                        alert("Unable to translate "+phrase);
-                    }
+
+                    sendAjax(data);
+                } else {
+                    $('#submit_lang1').text('Successfully completed');
                 }
-            });
-            phraseNum = phraseNum + 1;
+                if (!xhr.status == 'success') {
+                    alert("Unable to translate "+phrase);
+                }
+                //alert("NOW");
+                goodToGo = true;
+                return true;
+            }
         });
-        $('#submit_lang1').text('Successfully completed');
-        return false;
+    }
+
+
+    $(document).on("click", "#submit_lang1", function () {  
+        $('#submit_lang1').text("Translating...");
+        
+        data = {
+             'selectFieldValue': selectFieldValue,
+             'langDetect': langDetect,
+             'phrase_code' : phrase_code,
+             'phrase' : phrase,
+             'totalPhrases' : totalPhrases,
+             'phraseNum' : phraseNum
+            }
+            
+            //console.log(data);
+            sendAjax(data);
+            
+
+            phraseNum = phraseNum + 1;
         
   });
 
