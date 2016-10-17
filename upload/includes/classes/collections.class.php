@@ -46,11 +46,11 @@ class Collections extends CBCategory
 		$this->section_tbl = "collections";
 		$this->types = array();
 		if (isSectionEnabled('videos')) {
-			$this->types['videos'] = lang("Videos");
+			$this->types['videos'] = lang("videos");
 		}
 
 		if (isSectionEnabled('photos')) {
-			$this->types['photos'] = lang("Photos");
+			$this->types['photos'] = lang("photos");
 		}
 
 		ksort($this->types);
@@ -89,10 +89,10 @@ class Collections extends CBCategory
 		// Adding My Account Links	
 		if(isSectionEnabled('collections'))
 		$userquery->user_account[lang('collections')] = array(
-											lang('add_new_collection') => cblink(array('name'=>'manage_collections','extra_params'=>'mode=add_new')),
-											lang('manage_collections') => cblink(array('name'=>'manage_collections')),
-											lang('manage_favorite_collections') => cblink(array('name'=>'manage_collections','extra_params'=>'mode=favorite'))
-											);
+			lang('add_new_collection') => cblink(array('name'=>'manage_collections','extra_params'=>'mode=add_new')),
+			lang('manage_collections') => cblink(array('name'=>'manage_collections')),
+			lang('manage_favorite_collections') => cblink(array('name'=>'manage_collections','extra_params'=>'mode=favorite'))
+		);
 		
 		// Adding Search Type
 		//if(isSectionEnabled('collections'))
@@ -101,22 +101,30 @@ class Collections extends CBCategory
 		// Adding Collection links in Admin Area
 		if($per['collection_moderation'] == "yes")
 		$Cbucket->AdminMenu['Collections'] = array(
-													lang('Manage Collections')=>'collection_manager.php',
-													lang('Manage Categories')=>'collection_category.php',
-													lang('Flagged Collections')=>'flagged_collections.php');
-		
+			lang('manage_collections')	=>'collection_manager.php',
+			lang('manage_categories')	=>'collection_category.php',
+			lang('flagged_collections')	=>'flagged_collections.php'
+		);
 
 		// Adding Collection links in Cbucket Class
-		$Cbucket->links['collections'] = array('collections.php','collections/');
-		$Cbucket->links['manage_collections'] = array('manage_collections.php','manage_collections.php');
-		$Cbucket->links['edit_collection'] = array('manage_collections.php?mode=edit_collection&amp;cid=',
-												   'manage_collections.php?mode=edit_collection&amp;cid=');
-		$Cbucket->links['manage_items'] = array('manage_collections.php?mode=manage_items&amp;cid=%s&amp;type=%s',
-												'manage_collections.php?mode=manage_items&amp;cid=%s&amp;type=%s');
-		$Cbucket->links['user_collections'] = array('user_collections.php?mode=uploaded&user=','user_collections.php?mode=uploaded&user=');
-		$Cbucket->links['user_fav_collections'] = array('user_collections.php?mode=favorite&user=','user_collections.php?mode=favorite&user=');										
-												
-																																													
+		$Cbucket->links['collections'] 			= array('collections.php','collections/');
+		$Cbucket->links['manage_collections'] 	= array('manage_collections.php','manage_collections.php');
+		$Cbucket->links['edit_collection'] 		= array(
+			'manage_collections.php?mode=edit_collection&amp;cid=',
+			'manage_collections.php?mode=edit_collection&amp;cid='
+		);
+		$Cbucket->links['manage_items'] 		= array(
+			'manage_collections.php?mode=manage_items&amp;cid=%s&amp;type=%s',
+			'manage_collections.php?mode=manage_items&amp;cid=%s&amp;type=%s'
+		);
+		$Cbucket->links['user_collections'] 	= array(
+			'user_collections.php?mode=uploaded&user=',
+			'user_collections.php?mode=uploaded&user='
+		);
+		$Cbucket->links['user_fav_collections'] = array(
+			'user_collections.php?mode=favorite&user=',
+			'user_collections.php?mode=favorite&user='
+		);
 	}
 		
 	/**
@@ -137,19 +145,19 @@ class Collections extends CBCategory
 		$this->search->template_var = 'collection';
 		$this->search->has_user_id = true;
 			
-		$sorting	= 	array(
-						'date_added'=> lang("date_added"),
-						'views'		=> lang("views"),
-						'total_comments'  => lang("comments"),
-						'total_objects' 	=> lang("Items")
-						);
+		$sorting = array(
+			'date_added'	=> lang("date_added"),
+			'views'			=> lang("views"),
+			'total_comments'=> lang("comments"),
+			'total_objects' => lang("Items")
+		);
 								
 		$this->search->sorting	= array(
-						'date_added'=> " date_added DESC",
-						'views'		=> " views DESC",
-						'total_comments'  => " total_comments DESC ",
-						'total_objects' 	=> " total_objects DESC"
-						);
+			'date_added'	=> " date_added DESC",
+			'views'			=> " views DESC",
+			'total_comments'=> " total_comments DESC ",
+			'total_objects' => " total_objects DESC"
+		);
 						
 		$default = $_GET;
 		if(is_array($default['category']))
@@ -161,36 +169,36 @@ class Collections extends CBCategory
 		$this->search->results_per_page = config('videos_items_search_page');
 		
 		$fields = array(
-		'query'	=> array(
-						'title'=> lang('keywords'),
-						'type'=> 'textfield',
-						'name'=> 'query',
-						'id'=> 'query',
-						'value'=>cleanForm($default['query'])
-						),
-		'category'	=>  array(
-						'title'		=> lang('category'),
-						'type'		=> 'checkbox',
-						'name'		=> 'category[]',
-						'id'		=> 'category',
-						'value'		=> array('category',$cat_array),
-						'category_type'	=> 'collections'
-						),
-		'uploaded'	=>  array(
-						'title'		=> lang('uploaded'),
-						'type'		=> 'dropdown',
-						'name'		=> 'datemargin',
-						'id'		=> 'datemargin',
-						'value'		=> $this->search->date_margins(),
-						'checked'	=> $uploaded,
-						),
-		'sort'		=> array(
-						'title'		=> lang('sort_by'),
-						'type'		=> 'dropdown',
-						'name'		=> 'sort',
-						'value'		=> $sorting,
-						'checked'	=> $sort
-						)
+			'query'	=> array(
+				'title'=> lang('keywords'),
+				'type'=> 'textfield',
+				'name'=> 'query',
+				'id'=> 'query',
+				'value'=>cleanForm($default['query'])
+			),
+			'category'	=>  array(
+				'title'		=> lang('category'),
+				'type'		=> 'checkbox',
+				'name'		=> 'category[]',
+				'id'		=> 'category',
+				'value'		=> array('category',$cat_array),
+				'category_type'	=> 'collections'
+			),
+			'uploaded'	=>  array(
+				'title'		=> lang('uploaded'),
+				'type'		=> 'dropdown',
+				'name'		=> 'datemargin',
+				'id'		=> 'datemargin',
+				'value'		=> $this->search->date_margins(),
+				'checked'	=> $uploaded,
+			),
+			'sort'		=> array(
+				'title'		=> lang('sort_by'),
+				'type'		=> 'dropdown',
+				'name'		=> 'sort',
+				'value'		=> $sorting,
+				'checked'	=> $sort
+			)
 		);
 
 		$this->search->search_type['collections']['fields'] = $fields;											
@@ -222,8 +230,7 @@ class Collections extends CBCategory
 		$result = $db->count(tbl($this->section_tbl),"collection_id"," collection_id = $id");
 		if($result)
 			return true;
-		else
-			return false;		
+		return false;
 	}
 	
 	/**
@@ -252,8 +259,7 @@ class Collections extends CBCategory
 		//pex($result,true);
 		if($result)
 			return $result[0];
-		else
-			return false;		
+		return false;
 	}
 	
 	function is_viewable($cid)
@@ -269,16 +275,14 @@ class Collections extends CBCategory
 			e(lang('collection_not_active'));
 			if(!has_access('admin_access',TRUE))
 				return false;
-			else
-				return true;		
+			return true;
 		} elseif($c['broadcast'] == 'private' && !$userquery->is_confirmed_friend($c['userid'],userid())
 				&& $c['userid']!=userid() && !has_access('admin_access',TRUE))
 		{
 			e(lang('collection_is_private'));
 			return false;
-		} else {
-			return true;	
 		}
+		return true;
 	}
 	
 	/**
@@ -353,7 +357,6 @@ class Collections extends CBCategory
 				$cond .= " AND ";
 			$cond .= " ".tbl('collections.type')." = '".$p['type']."'";		
 		}
-			
 
 		if($p['user'])
 		{
@@ -364,8 +367,7 @@ class Collections extends CBCategory
 			$cond .= " ".tbl('collections.userid')." = '".$p['user']."'";
 			//$cond .=')';		
 		}
-		
-	
+
 		if($p['featured'])
 		{
 			if($cond != '')	
@@ -382,7 +384,6 @@ class Collections extends CBCategory
 			$cond .= " ".tbl('collections.public_upload')." = '".$p['public_upload']."'";	
 			if($brace)
 				$cond.=")";
-
 		}
 		
 		if($p['exclude'])
@@ -455,9 +456,8 @@ class Collections extends CBCategory
 			$result =   $db->select(tbl("collections,users"),
 						tbl("collections.*,users.userid,users.username"),
 						$cond.tbl("collections.userid")." = ".tbl("users.userid"),$limit,$order);
-									
-			//echo $db->db_query;	
-						
+
+			//echo $db->db_query;
 		}
 		
 
@@ -484,8 +484,7 @@ class Collections extends CBCategory
 		$result = $db->select(tbl($this->items),"*"," collection_id = $id",$limit,$order);
 		if($result)
 			return $result;
-		else
-			return false;		
+		return false;
 	}
 	
 	/**
@@ -545,9 +544,7 @@ class Collections extends CBCategory
 		//echo $db->db_query;
 		if($result)
 			return $result;
-		else
-			return false;			
-		
+		return false;
 	}
 	
 	/**
@@ -582,11 +579,8 @@ class Collections extends CBCategory
 		}
 		
 		if($result)
-		{
-			return $result;	
-		}
-		else
-			return false;	
+			return $result;
+		return false;
 	}
 	
 	/**
@@ -599,8 +593,7 @@ class Collections extends CBCategory
 		$result = $db->select(tbl($this->items),$fields," object_id = $objID AND collection_id = $cid");
 		if($result)
 			return $result;
-		else
-			return false;	
+		return false;
 	}
 		
 	/**
@@ -971,8 +964,7 @@ class Collections extends CBCategory
 		$result = $db->select(tbl($this->section_tbl.",users"),tbl($this->section_tbl).".*,$user_tbl.userid,$user_tbl.username"," collection_id = $cid AND ".tbl($this->section_tbl).".userid = $user_tbl.userid");
 		if($db->num_rows > 0)
 			return $result[0]['userid'];
-		else
-			return false;	
+		return false;
 	}
 	
 	/**
@@ -1073,8 +1065,7 @@ class Collections extends CBCategory
 			
 		if($details['userid'] == $userid)
 			return true;
-		else
-			return false;				
+		return false;
 	}
 	
 	/**
@@ -1124,7 +1115,7 @@ class Collections extends CBCategory
 	{
 		global $db;
 		$cid = mysql_clean($cid);
-		$collection = $this->get_collection($id);
+		$collection = $this->get_collection($cid);
 		if(!$collection)
 			e(lang("collection_not_exists"));
 		elseif($collection['userid'] != userid() && !has_access('admin_access',true))
@@ -1175,8 +1166,7 @@ class Collections extends CBCategory
 		$count = $db->count($this->items,"ci_id"," collection_id = $cid");	
 		if($count)
 			return $count;
-		else
-			return 0;	
+		return 0;
 	}
 		
 	/**
@@ -1403,15 +1393,13 @@ class Collections extends CBCategory
 			
 			if($thumb)
 				return $thumb;
-			else
+
+			foreach($exts as $ext)
 			{
-				foreach($exts as $ext)
-				{
-					if($size=="small")
-						$s = "-small";
-					if(file_exists(COLLECT_THUMBS_DIR."/".$cid.$s.".".$ext))
-						return COLLECT_THUMBS_URL."/".$cid.$s.".".$ext;	
-				}				
+				if($size=="small")
+					$s = "-small";
+				if(file_exists(COLLECT_THUMBS_DIR."/".$cid.$s.".".$ext))
+					return COLLECT_THUMBS_URL."/".$cid.$s.".".$ext;
 			}
 		}
 		

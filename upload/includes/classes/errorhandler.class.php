@@ -8,7 +8,7 @@ class EH extends ClipBucket
 	var $error_list = array();
 	var $message_list = array();
 	var $warning_list = array();
-
+	
 	/**
 	 * A CONSTRUCTOR
 	 */
@@ -16,29 +16,24 @@ class EH extends ClipBucket
 
 	/**
 	 * Function used to add new Error
-	 *
-	 * @param null $message
-	 * @param null $id
 	 */
-	function add_error($message=NULL, $id=NULL)
+	function add_error($message=NULL,$id=NULL)
 	{
 		global $ignore_cb_errors;
 		//if id is set, error will be generated from error message list
 		if(!$ignore_cb_errors)
-			$this->error_list[] = $message;
+		$this->error_list[] = $message;
 	}
+
 
 	/**
 	 * Function usd to add new warning
-	 *
-	 * @param null $message
-	 * @param null $id
 	 */
-	function add_warning($message=NULL, $id=NULL)
+	function add_warning($message=NULL,$id=NULL)
 	{
 		$this->warning_list[] = $message;
 	}
-
+	
 	/**
 	 * Function used to get error list
 	 */
@@ -46,29 +41,26 @@ class EH extends ClipBucket
 	{
 		return $this->error_list;
 	}
-
+	 
 	/**
 	 * Function used to flush errors
 	 */
 	function flush_error()
 	{
-	  $this->error_list = '';
+		$this->error_list = '';
 	}
 
 	/**
-	 * Function used to add message_list
-	 *
-	 * @param null $message
-	 * @param null $id
+	 * Functio nused to add message_list
 	 */
-	function add_message($message=NULL, $id=NULL)
+	function add_message($message=NULL,$id=NULL)
 	{
 		global $ignore_cb_errors;
 		//if id is set, error will be generated from error message list
 		if(!$ignore_cb_errors)
-			$this->message_list[] = $message;
+		$this->message_list[] = $message;
 	}
-
+	   
 	/**
 	 * Function used to get message list
 	 */
@@ -107,14 +99,11 @@ class EH extends ClipBucket
 	 * Function used to add error or either message using simple
 	 * and small object
 	 *
-	 * @param null   $message
-	 * @param string $type
-	 * @param null   $id
+	 * @param : message, @param :type,@param:id
 	 *
 	 * @return null
-	 * @internal param $ : message, @param :type,@param:id
 	 */
-	function e($message=NULL, $type='e', $id=NULL)
+	function e($message=NULL,$type='e',$id=NULL)
 	{
 		switch($type)
 		{
@@ -124,22 +113,19 @@ class EH extends ClipBucket
 			case 'message':
 				$this->add_message($message,$id);
 				break;
-
+			
 			case 'e':
 			case 'err':
 			case 'error':
+			default:
 				$this->add_error($message,$id);
 				break;
-
+			
 			case 'w':
 			case 2:
 			case 'war':
 			case 'warning':
 				$this->add_warning($message,$id);
-				break;
-
-			default:
-				$this->error_list($message,$id);
 				break;
 		}
 		return $message;
