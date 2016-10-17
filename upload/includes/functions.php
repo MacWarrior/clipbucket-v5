@@ -1729,10 +1729,12 @@
 				}
 			}
 		}
+
 		if($LANG != null && !isset($LANG[$var]))
 		{
 			error_log('[LANG] Missing translation for "'.$var.'"');
-			error_log(print_r(debug_backtrace(), TRUE));
+			if (DEVELOPMENT_MODE)
+				error_log(print_r(debug_backtrace(), TRUE));
 		}
 
 		return $phrase;
@@ -5212,10 +5214,8 @@
 	 */
 
 	function trace_func($file = false, $pex = false) {
-		if (!$file) {
-			$trace = debug_backtrace();
-		} else {
-			$trace = debug_backtrace();
+		$trace = debug_backtrace();
+		if ($file) {
 			$trace = $trace[1]['file'];
 		}
 
