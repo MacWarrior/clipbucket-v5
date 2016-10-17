@@ -202,7 +202,7 @@
 				$content = wrap_email_content($content);
 			}
 		}
-		$message .= $content;
+		$message = $content;
 		
 		//ClipBucket uses PHPMailer for sending emails
 		include_once("classes/phpmailer/class.phpmailer.php");
