@@ -5682,6 +5682,29 @@
 		}
 	}
 
+	function AutoLinkUrls($str,$popup = FALSE){
+	    if (preg_match_all("#(^|\s|\()((http(s?)://)|(www\.))(\w+[^\s\)\<]+)#i", $str, $matches)){
+			$pop = ($popup == TRUE) ? " target=\"_blank\" " : "";
+			for ($i = 0; $i < count($matches['0']); $i++){
+				$period = '';
+				if (preg_match("|\.$|", $matches['6'][$i])){
+					$period = '.';
+					$matches['6'][$i] = substr($matches['6'][$i], 0, -1);
+				}
+				$str = str_replace($matches['0'][$i],
+						$matches['1'][$i].'<a href="http'.
+						$matches['4'][$i].'://'.
+						$matches['5'][$i].
+						$matches['6'][$i].'"'.$pop.'>http'.
+						$matches['4'][$i].'://'.
+						$matches['5'][$i].
+						$matches['6'][$i].'</a>'.
+						$period, $str);
+			}//end for
+	    }//end if
+	    return $str;
+	}//end AutoLinkUrls
+
 
     include( 'functions_db.php' );
     include( 'functions_filter.php' );
