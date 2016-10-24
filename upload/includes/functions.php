@@ -5706,6 +5706,35 @@
 	}//end AutoLinkUrls
 
 
+	/*
+    * Generates a random characters (strings only) string
+    */
+
+    function charsRandomStr($length = 5) {
+        $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
+    }
+
+    /*
+    * Creates an array contains all alphabets and then reverses it with keys
+    */
+
+    function swapedAlphabets() {
+        $alphabets = range('a', 'z');
+        return array_flip($alphabets);
+    }
+
+    function dateStamp() {
+        $date = new DateTime();
+        return $date->getTimestamp();
+    }
+
+
     include( 'functions_db.php' );
     include( 'functions_filter.php' );
     include( 'functions_player.php' );
