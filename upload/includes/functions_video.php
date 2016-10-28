@@ -1952,3 +1952,148 @@
     function dateNow() {
         return date("Y-m-d H:i:s");
     }
+
+    /**
+    * Set status for any video
+    * @param : { integer / string } { $video } { videoid or video key }
+    * @param : { string } { $status } { new status of video }
+    * @^ options :
+    *       #
+    *       # For regular videos
+    *       #
+    *       // Processing
+    *       // Successful
+    *       // Failed
+    *       # 
+    *       # For video reconverting
+    *       #
+    *       // pending
+    *       // started
+    *       // success
+    *       // failed
+    * @param : { boolean } { $reconv } { if true, sets reconversion status }
+    * @author : Saqib Razzaq
+    */
+
+    function setVideoStatus($video, $status, $reconv = false) {
+        global $db;
+        if (is_numeric($video)) {
+            $type = 'videoid';
+        } else {
+            $type = 'videokey';
+        }
+
+        if ($reconv) {
+            $field = 're_conv_status';
+        } else {
+            $field = 'status';
+        }
+
+        $db->update(tbl('video'),array($field),array($status),"$type=$video");          
+    }
+
+    /**
+    * Checks if given video is reconvertable 
+    * @param : { array } { $vdetails } { An array with all details of video }
+    * @author :  Saqib Razzaq
+    * 
+    * @return : { boolean }
+    */
+
+    function isReconvertAble($vdetails) {
+        global $cbvid;
+        if (is_array($vdetails)) {
+            if (empty($vdetails['embed_code'])) {
+                $files = get_video_files($vdetails);
+                if (!empty($files)) {
+                    if (is_array($files) || !strpos($files, 'no_video.mp4')) {
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+    * Reconvert any given video in ClipBucket. It will work fine with flv as well as other older files
+    * as well. You must have at least one video quality available in system for this to work
+    * @param : { array } { $data } { $_POST data to read video ids to run re converter against }
+    * @since : October 28th, 2016
+    * @author : { Saqib Razzaq }
+    */
+
+    function reConvertVideos($data) {
+        global $cbvid,$db,$Upload;
+        // if nothing is passed in data array, read from $_POST
+        if (!is_array($data)) {
+            $data = $_POST;
+        }
+
+        // a list of videos to be reconverted
+        $videos = $data['check_video'];
+
+        // Loop through all video ids
+        foreach ($videos as $id => $daVideo) {
+            // get details of single video
+            $vdetails = $cbvid->get_video($daVideo);
+
+            if (!isReconvertAble($vdetails)) {
+                continue;
+            }
+
+            // grab all video files against single video
+            $video_files = get_video_files($vdetails);
+
+            // possible array of video qualities
+            $qualities = array('1080','720','480','360','240','hd','sd');
+
+            // loop though possible qualities, from high res to low
+            foreach ($qualities as $qualNow) {
+
+                // loop through all video files of current video 
+                // and match theme with current possible quality
+                foreach ($video_files as $key => $file) {
+
+                    // get quality of current url
+                    $currentQuality = getStringBetween($file, '-', '.');
+
+                    // if current video file matches with possible quality,
+                    // we have found best quality video
+                    if ($qualNow === $currentQuality) {
+
+                        // You got best quality here, perform action on video
+                        $subPath = str_replace(BASEURL, '', $video_files[$key]);
+                        $fullPath = BASEDIR.$subPath;
+
+
+                        // change video status to processing
+                        setVideoStatus($daVideo, 'Processing');
+
+                        $file_name = $vdetails['file_name']; // e.g : 147765247515e0e
+                        $targetFileName = $file_name.'.mp4'; // e.g : 147765247515e0e.mp4
+                        $file_directory = $vdetails['file_directory']; // e.g : 2016/10/28
+                        $logFile = LOGS_DIR.'/'.$file_directory.'/'.$file_name.'.log'; // e.g : /var/www/html/cb_root/files/logs/2016/10/28/147765247515e0e.log
+
+                        // remove old log file
+                        unlink($logFile);
+
+                        // path of file in temp dir
+                        $newDest = TEMP_DIR.'/'.$targetFileName;
+
+                        // move file from original source to temp
+                        $toTemp = copy($fullPath, $newDest);
+
+                        // add video in conversion qeue
+                        $Upload->add_conversion_queue($targetFileName);
+
+                        // begin the process of brining back from dead
+                        exec(php_path()." -q ".BASEDIR."/actions/video_convert.php {$targetFileName} {$file_name} {$file_directory} {$logFile} > /dev/null &");
+
+                        // set reconversion status
+                        setVideoStatus($daVideo, 'started',true);
+                        break 2;
+                    }
+                }
+            }
+        }
+    }
