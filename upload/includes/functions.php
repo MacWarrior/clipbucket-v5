@@ -5618,43 +5618,42 @@
 	}
 
 
-		function build_sort_photos($sort, $vid_cond) {
-			if (!empty($sort)) {
-				switch($sort) {
-					case "most_recent":
-					default:
-						$vid_cond['order'] = " date_added DESC ";
-					break;
-					case "most_viewed":
-						$vid_cond['order'] =  " photos.views DESC ";
-						$vid_cond['date_span_column'] = 'last_viewed';
-					break;
-					case "most_viewed":
-						$vid_cond['order'] = " views DESC ";
-					break;
-					case "featured":
-						$vid_cond['featured'] = "yes";
-					break;
-					case "top_rated":
-						$vid_cond['order'] = " photos.rating DESC";
-					break;
-					case "most_commented":
-						$vid_cond['order'] = " comments_count DESC";
-					break;
-				}
-				return $vid_cond;
+	function build_sort_photos($sort, $vid_cond) {
+		if (!empty($sort)) {
+			switch($sort) {
+				case "most_recent":
+				default:
+					$vid_cond['order'] = " date_added DESC ";
+				break;
+				case "most_viewed":
+					$vid_cond['order'] =  " photos.views DESC ";
+					$vid_cond['date_span_column'] = 'last_viewed';
+				break;
+				case "most_viewed":
+					$vid_cond['order'] = " views DESC ";
+				break;
+				case "featured":
+					$vid_cond['featured'] = "yes";
+				break;
+				case "top_rated":
+					$vid_cond['order'] = " photos.rating DESC";
+				break;
+				case "most_commented":
+					$vid_cond['order'] = " comments_count DESC";
+				break;
 			}
+			return $vid_cond;
 		}
+	}
 	
 	function upload_logo() {
-
-	$target_dir = STYLES_DIR."/cb_28/theme/images/";	
-	$filename = $_FILES["fileToUpload"]["name"]; 
-	$file_basename = basename($filename,".png"); 
-	$file_ext = pathinfo($filename, PATHINFO_EXTENSION);
-	$filesize = $_FILES["fileToUpload"]["size"];
-	$allowed_file_types = array('png');	
-	
+		$target_dir = STYLES_DIR."/cb_28/theme/images/";	
+		$filename = $_FILES["fileToUpload"]["name"]; 
+		$file_basename = basename($filename,".png"); 
+		$file_ext = pathinfo($filename, PATHINFO_EXTENSION);
+		$filesize = $_FILES["fileToUpload"]["size"];
+		$allowed_file_types = array('png');	
+		
 		if (in_array($file_ext,$allowed_file_types) && ($filesize < 4000000)) {	
 		// Rename file
 			$newfilename = 'logo.' . $file_ext;
@@ -5682,7 +5681,7 @@
 		}
 	}
 
-	function AutoLinkUrls($str,$popup = FALSE){
+	function AutoLinkUrls($str,$popup = FALSE) {
 	    if (preg_match_all("#(^|\s|\()((http(s?)://)|(www\.))(\w+[^\s\)\<]+)#i", $str, $matches)){
 			$pop = ($popup == TRUE) ? " target=\"_blank\" " : "";
 			for ($i = 0; $i < count($matches['0']); $i++){
