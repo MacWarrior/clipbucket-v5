@@ -2024,6 +2024,7 @@
 
     function reConvertVideos($data) {
         global $cbvid,$db,$Upload;
+        $toConvert = 0;
         // if nothing is passed in data array, read from $_POST
         if (!is_array($data)) {
             $data = $_POST;
@@ -2032,13 +2033,21 @@
         // a list of videos to be reconverted
         $videos = $data['check_video'];
 
+        if (isset($_GET['reconvert_video'])) {
+            $videos[] = $_GET['reconvert_video'];
+        }
+
         // Loop through all video ids
         foreach ($videos as $id => $daVideo) {
             // get details of single video
             $vdetails = $cbvid->get_video($daVideo);
 
             if (!isReconvertAble($vdetails)) {
+                e("Video with id ".$vdetails['videoid']." is not re-convertable");
                 continue;
+            } else {
+                $toConvert++;
+                e("Started re-conversion process for id ".$vdetails['videoid'],"m");
             }
 
             // grab all video files against single video
@@ -2096,4 +2105,8 @@
                 }
             }
         }
+        if ($toConvert >= 1) {
+            e("Reconversion is underway. Kindly don't run reconversion on videos that are already reconverting. Doing so may cause things to become lunatic fringes :P","w");
+        }
     }
+
