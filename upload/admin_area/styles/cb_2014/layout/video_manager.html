@@ -30,7 +30,11 @@
         </tr>
         {if $videos}
        {foreach from=$videos item=video}
-        
+       {if !isReconvertAble($video)}
+        {$noReconv = true}
+        {else}
+        {$noReconv = false}
+       {/if}
         <tr>
             <td>
                 <input name="check_video[]" type="checkbox" id="check_video" value="{$video.videoid}"/>
@@ -55,6 +59,8 @@
                                         {if $video.active=='yes'}Active{else}Inactive{/if} </span>
                                     <span class="label {if $video.status=='Successful'}label-success{else}label-warning{/if}">
                                         {$video.status} </span>
+                                        <span class="label {if $video.re_conv_status=='started'}label-warning{else if $video.re_conv_status=='failed'}label-danger{else if $video.re_conv_status=='done'}label-success{else}label-primary{/if}">
+                                        {if $video.re_conv_status == 'done'}Reconverted{else if $video.re_conv_status == 'started'}Reconverting{else if $video.re_conv_status == 'failed' } Reconverting Failed {else if $noReconv == true} Non-reconvertable {/if} </span>
                                         {if $video.featured=='yes'}
                                          <span class="label label-info">
                                           Featured</span>

@@ -8,7 +8,7 @@
     * @author[s]: Arslan Hassan, Fawaz Tahir, Fahad Abbass, Saqib Razzaq
     * @copyright: (c) 2008 - 2016 ClipBucket / PHPBucket
     * @notice: Please maintain this section
-    * @modified: October 28th, 2016 ClipBucket 2.8.1
+    * @modified: March 11th, 2016 ClipBucket 2.8.1
     */
 
 
@@ -1952,28 +1952,17 @@
     function dateNow() {
         return date("Y-m-d H:i:s");
     }
-
-    /**
-    * Set status for any video
-    * @param : { integer / string } { $video } { videoid or video key }
-    * @param : { string } { $status } { new status of video }
-    * @^ options :
-    *       #
-    *       # For regular videos
-    *       #
-    *       // Processing
-    *       // Successful
-    *       // Failed
-    *       # 
-    *       # For video reconverting
-    *       #
-    *       // pending
-    *       // started
-    *       // success
-    *       // failed
-    * @param : { boolean } { $reconv } { if true, sets reconversion status }
-    * @author : Saqib Razzaq
-    */
+    
+    // Processing
+    // Successful
+    // Failed
+    # 
+    # For video reconverting
+    #
+    // pending
+    // started
+    // success
+    // failed
 
     function setVideoStatus($video, $status, $reconv = false, $byFilename = false) {
         global $db;
@@ -1996,13 +1985,15 @@
         $db->update(tbl('video'),array($field),array($status),"$type='$video'");          
     }
 
-    /**
-    * Checks if given video is reconvertable 
-    * @param : { array } { $vdetails } { An array with all details of video }
-    * @author :  Saqib Razzaq
-    * 
-    * @return : { boolean }
-    */
+    function checkReConvStatus($vid) {
+        global $db;
+        $data = $db->select(tbl('video'),'re_conv_status','videoid='.$vid);
+        if (isset($data[0]['re_conv_status'])) {
+            return $data[0]['re_conv_status'];
+        }
+    }
+
+    // vdetails
 
     function isReconvertAble($vdetails) {
         global $cbvid;
@@ -2049,6 +2040,9 @@
             if (!isReconvertAble($vdetails)) {
                 e("Video with id ".$vdetails['videoid']." is not re-convertable");
                 continue;
+            } elseif (checkReConvStatus($vdetails['videoid']) == 'started') {
+                e("Video with id : ".$vdetails['videoid']." is already processing");
+                continue;
             } else {
                 $toConvert++;
                 e("Started re-conversion process for id ".$vdetails['videoid'],"m");
@@ -2070,9 +2064,12 @@
                     // get quality of current url
                     $currentQuality = getStringBetween($file, '-', '.');
 
+                    // get extension of file
+                    $currentExt = pathinfo($file, PATHINFO_EXTENSION);
+
                     // if current video file matches with possible quality,
                     // we have found best quality video
-                    if ($qualNow === $currentQuality) {
+                    if ($qualNow === $currentQuality || $currentExt == 'flv') {
 
                         // You got best quality here, perform action on video
                         $subPath = str_replace(BASEURL, '', $video_files[$key]);
@@ -2113,4 +2110,3 @@
             e("Reconversion is underway. Kindly don't run reconversion on videos that are already reconverting. Doing so may cause things to become lunatic fringes :P","w");
         }
     }
-
