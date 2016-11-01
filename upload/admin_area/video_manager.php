@@ -25,7 +25,7 @@ if(!defined('SUB_PAGE')){
 		define('SUB_PAGE', 'Videos Manager');
 }
 
-if (isset($_POST['reconvert_selected'])) {
+if (isset($_POST['reconvert_selected']) || isset($_GET['reconvert_video'])) {
 	reConvertVideos();
 }
 
