@@ -1975,12 +1975,16 @@
     * @author : Saqib Razzaq
     */
 
-    function setVideoStatus($video, $status, $reconv = false) {
+    function setVideoStatus($video, $status, $reconv = false, $byFilename = false) {
         global $db;
-        if (is_numeric($video)) {
-            $type = 'videoid';
+        if ($byFilename) {
+            $type = 'file_name';
         } else {
-            $type = 'videokey';
+            if (is_numeric($video)) {
+            $type = 'videoid';
+            } else {
+                $type = 'videokey';
+            }
         }
 
         if ($reconv) {
@@ -1989,7 +1993,7 @@
             $field = 'status';
         }
 
-        $db->update(tbl('video'),array($field),array($status),"$type=$video");          
+        $db->update(tbl('video'),array($field),array($status),"$type='$video'");          
     }
 
     /**
