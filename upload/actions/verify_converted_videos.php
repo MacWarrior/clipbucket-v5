@@ -67,7 +67,7 @@ foreach($files as $file)
 
 	
 		update_processed_video($file,'Successful');
-
+		setVideoStatus($file['cqueue_name'], 'done',true,true);
 		$db->update(tbl("conversion_queue"),
 		array("cqueue_conversion","time_completed"),
 		array("yes",time())," cqueue_id = '".$file['cqueue_id']."'");
