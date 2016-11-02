@@ -16,7 +16,7 @@
 		{if $mode == 'login'}
 			<div class="clearfix signin-block">
 				<div class="account-holder">
-					<form name="login_form" method="post" action="" id="login_form" class="user-form">
+					<form name="login_form" method="post" style="display:block;margin:auto;" id="login_form" class="user-form">
 						<h2>{lang code="login"}</h2>
 						<div class="form-group">
 							{*<label for="login_username_sp">{lang code="Username"}</label>*}
@@ -53,13 +53,6 @@
 						</div>
 						{/if}
 					</form>
-					<div class="side-box">
-						<h2>{lang code='get_your_account'}</h2>
-						<div class="text-box">
-							<p>{lang code='create_account_msg'}</p>
-						</div>
-						<a class="btn btn-default btn-lg" href="{link name='signup'}">{lang code='get_your_account'}</a>
-					</div>
 				</div>
 			</div>
 		{else}

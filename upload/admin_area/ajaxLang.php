@@ -116,6 +116,7 @@
     // When there is data in _POST, run the process
     if(isset($_POST['selectFieldValue'])) {
         #sleep(2);
+        global $lang_obj;
         $output = array();
         $iso_code = $_POST['selectFieldValue'];
         $language_detact = $_POST['langDetect'];
@@ -124,7 +125,6 @@
         
         $totalPhrases = $_POST['totalPhrases'];
         $phraseNum = $_POST['phraseNum'];
-
         $translation = translate_phrase($phrase,$phrase_code,$iso_code, $totalPhrases, $phraseNum);
 
         if (!empty($translation)) {
@@ -138,6 +138,10 @@
             $output['phrase'] = $phrase;
             $output['translation'] = $translation;
             $output['progress'] = $progressPercent;
+            if ($phrase == 'aye') {
+                $lang_obj->import_packlang($iso_code,$iso_code,$language_detact);
+                header("refresh: 2;");
+            }
             echo json_encode($output);
         } else {
             # unable to translate, throw error
@@ -145,59 +149,3 @@
             return false;
         }
     }
-
-    /**
-        * Function use for translating phrases.
-        * @param : { string } { $iso } { Language code e.g "en" }
-        *         : {string} {$language_detact} { Language name e.g "english"}
-        * @return : { file } { save file }
-        * @since : 17 may, 2016 ClipBucket 2.8.1
-        * @author : Sikander Ali 
-        */
-
-    /*function language_translate($iso,$language_detact){
-        global $lang_obj,$MrsTranslator;
-        $language_name = $language_detact;
-        $iso_code = $iso;
-        $code_exists = $lang_obj->lang_exists($iso_code);
-        if($code_exists == '' ){
-            $percent_content = fopen(BASEDIR."/files/percent.lang","w");
-            $counter = 1;
-            $fileContent = $lang_obj->getPhrasesFromPack('en');
-            $totalSize = count($fileContent);
-            $logFile = initLog($iso_code, $totalSize);
-            if (!$logFile) {
-                $err = array();
-                $err['error'] = "Unable to create log file for language";
-                echo json_encode($err);
-                exit();
-            }
-              foreach ($fileContent as $key => $value) {
-                $langLogData = file_get_contents($logFile);
-                $phrase_code = $key;
-                $newLang[$key] = str_replace('', '+', $value);
-                $newlang[$key] = $MrsTranslator->translate($value,$iso_code,'en',"text/html");
-                $percentageCal = ($counter/$totalSize)*100;
-                $interger_val = intval($percentageCal); 
-                if (!empty($newLang[$key])) {
-                    file_put_contents($logFile, $langLogData."\n"."[DONE] ".$counter." / ".$totalSize." [$interger_val %] Translated phrase : $value");
-                } else {
-                    file_put_contents($logFile, $langLogData."\n"."Something went wrong trying to convert : $value");
-                }
-                file_put_contents(BASEDIR."/files/percent.lang", $interger_val."\n");
-                $counter++;
-             }
-            $lang_obj->import_packlang($iso_code,$newlang,$language_name);
-            $lang_obj->createPack($iso_code);
-            fclose($percent_content);
-            $id = mysql_clean($_POST['make_default']);
-            $lang_obj->make_default($id);
-            $response['iso-code_exits'] = $code_exists;
-            $response['set'] = false;
-            echo json_encode($response);
-        }else{
-            $message = "Code Already Exists";
-            $response['message'] = $message;
-            echo json_encode($response);
-        }
-    }*/
