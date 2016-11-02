@@ -503,7 +503,7 @@ class Upload{
 		 'desc'		=> array('title'=> lang('vdo_desc'),
 							 'type'=> 'textarea',
 							 'name'=> 'description',
-							 'id'=> 'desc',
+							 'class'=> 'desc',
 							 'value'=> cleanForm($desc),
 							 'size'=>'35',
 							 'extra_params'=>' rows="4"',
