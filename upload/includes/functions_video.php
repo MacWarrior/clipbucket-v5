@@ -1993,12 +1993,19 @@
         }
     }
 
-    // vdetails
+    /**
+    * Checks if given video is reconvertable or not
+    * @param : { array } { $vdetails } { an array with all details regarding video }
+    * @since : 31st October, 2016
+    * @author : Saqib Razzaq 
+    *
+    * @return : { boolean } { returns true or false depending on matched case }
+    */
 
     function isReconvertAble($vdetails) {
         global $cbvid;
         if (is_array($vdetails)) {
-            if (empty($vdetails['embed_code'])) {
+            if (empty($vdetails['embed_code']) || $vdetails['embed_code'] == 'none') {
                 $files = get_video_files($vdetails);
                 if (!empty($files)) {
                     if (is_array($files) || !strpos($files, 'no_video.mp4')) {
