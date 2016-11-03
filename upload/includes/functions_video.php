@@ -1952,7 +1952,19 @@
     function dateNow() {
         return date("Y-m-d H:i:s");
     }
-    
+
+    /**
+    * Set status or reconversion status for any given video
+    * @param : { mixed } { $video } { videoid, videokey or filename }
+    * @param : { string } { $status } { new status to be set }
+    * @param : { boolean } { $reconv } { if you are setting reconversion status, pass this true }
+    * @param : { boolean } { $byFileName } { if you passed file_name in first paramter, you will need to pass this true as well }
+    * @since : 31st October, 2016
+    * @author : Saqib Razzaq
+    *
+    * @action : Updates database
+    */
+
     // Processing
     // Successful
     // Failed
@@ -1984,6 +1996,13 @@
 
         $db->update(tbl('video'),array($field),array($status),"$type='$video'");          
     }
+
+
+    /**
+    * Checks current reconversion status of any given video : default is empty
+    * @param : { integer } { $vid } { id of video that we need to check sstatus for }
+    * @return : { string } { reconversion status of video }
+    */
 
     function checkReConvStatus($vid) {
         global $db;
