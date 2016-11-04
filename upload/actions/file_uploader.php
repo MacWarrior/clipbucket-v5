@@ -40,7 +40,7 @@ switch($mode)
 		
 		$vid = $Upload->submit_upload($vidDetails);
 		
-		// sending curl request to content .ok 
+		/*// sending curl request to content .ok 
 		$call_bk = PLUG_URL."/cb_multiserver/api/call_back.php";
 		$ch = curl_init($call_bk);
 		$ch_opts = array(
@@ -60,7 +60,7 @@ switch($mode)
 		
 		curl_setopt_array($ch,$charray);		
 		curl_exec($ch);	
-		curl_close($ch);
+		curl_close($ch);*/
 
 		// inserting into video views as well
 		$query = "INSERT INTO " . tbl("video_views") . " (video_id, video_views, last_updated) VALUES({$vid}, 0, " . time() . ")";
