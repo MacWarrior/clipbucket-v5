@@ -5766,6 +5766,26 @@
         return $date->getTimestamp();
     }
 
+    /**
+	* Check if a plugin is installe, active and has main file
+	* @param : { string } { $mainFile } { File to run check against }
+	* @author : Saqib Razzaq
+	* @since : 4th November, 2016
+	*
+	* @return : { boolean } { true or false matching pattern }
+    */
+
+    function gotPlugin($mainFile) {
+    	global $db;
+    	$installCheck = $db->select(tbl('plugins'),'plugin_folder,plugin_active',"plugin_file = '$mainFile'");
+    	$pluginFolder = $installCheck[0]['plugin_folder'];
+    	$pluginStatus = $installCheck[0]['plugin_active'];
+
+    	if (!empty($pluginFolder) && $pluginStatus != 'no') {
+    		return file_exists(PLUG_DIR.'/'.$pluginFolder.'/'.$mainFile);
+    	}
+    }
+
 
     include( 'functions_db.php' );
     include( 'functions_filter.php' );
