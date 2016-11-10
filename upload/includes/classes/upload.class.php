@@ -169,6 +169,11 @@ class Upload{
 				$query_val[] = $userid;
 			else
 				$query_val[] = $array['userid'];
+
+			if (isset($array['serverUrl'])) {
+				$query_field[] = 'file_thumbs_path';
+				$query_val[] = $array['thumbsUrl'];
+			}
 			
 
 			//video_version

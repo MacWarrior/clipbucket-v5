@@ -24,7 +24,11 @@ switch($mode)
 	{
 		$title 	= getName($_POST['title']);
 		$file_name	= $_POST['file_name'];
-		$file_directory = createDataFolders();
+		if ($_POST['serverUrl']) {
+			$file_directory = date('Y/m/d');
+		} else {
+			$file_directory = createDataFolders();
+		}
 		//dump($file_directory);
 		$vidDetails = array
 		(
@@ -37,6 +41,14 @@ switch($mode)
 			'userid' => userid(),
 			'video_version' => '2.7',
 		);
+
+
+		/*if (isset($_POST['serverUrl'])) {
+			$serverUrl = $_POST['serverUrl'];
+			$thumbsUrl = $_POST['thumbsUrl'];
+			$vidDetails['serverUrl'] = $serverUrl;
+			$vidDetails['thumbsUrl'] = $thumbsUrl;
+		}*/
 		
 		$vid = $Upload->submit_upload($vidDetails);
 		
