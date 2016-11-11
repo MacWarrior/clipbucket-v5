@@ -4373,7 +4373,7 @@
 			'uploadSwfPath' => JS_URL.'/uploadify/uploadify.swf',
 			'uploadScriptPath' => BASEURL.'/actions/photo_uploader.php',
 		);
-
+		
 		assign('uploaderDetails',$uploaderDetails);	
 		assign('photoUploaderDetails',$photoUploaderDetails);		
 		//Calling Custom Functions

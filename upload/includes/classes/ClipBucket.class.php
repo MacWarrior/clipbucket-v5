@@ -38,6 +38,7 @@ class ClipBucket
     var $in_footer = false;
     var $cbinfo = array();
     var $search_types = array();
+    var $theUploaderDetails = array();
 
     /**
      * All Functions that are called

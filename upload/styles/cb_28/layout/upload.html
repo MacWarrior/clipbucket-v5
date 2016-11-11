@@ -255,6 +255,16 @@
 					Insert the video in the database and get the video db id from the
 					database which will be sent with the final form
 					*/
+
+					var serverUrl = false,
+					thumbsUrl = false;
+
+					if(typeof serverResponse.server_url != 'undefined'){
+					    var serverUrl = serverResponse.server_url,
+					    thumbsUrl = serverResponse.thumbs_url;
+					}
+
+
 					var fileId = false;
 					$.ajax({
 						url : baseurl + "/actions/file_uploader.php",
@@ -263,6 +273,8 @@
 							insertVideo : "yes",
 							title : fileDetails.name,
 							file_name : fileName,
+							serverUrl : serverUrl,
+							thumbsUrl : thumbsUrl,
 
 						}
 					}).success(function(msg){
