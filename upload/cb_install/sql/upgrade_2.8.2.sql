@@ -3,3 +3,4 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES (NULL, 'st
 INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES (NULL, 'pseudostreaming', 'yes');
 
 ALTER TABLE `{tbl_prefix}video` ADD `re_conv_status` text(33) NOT NULL;
+ALTER TABLE `{tbl_prefix}video` ADD `conv_progress` int(33) NOT NULL;
