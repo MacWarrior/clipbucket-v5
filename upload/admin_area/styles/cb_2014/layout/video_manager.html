@@ -62,11 +62,11 @@
                                     <span class="label {if $video.status=='Successful'}label-success{else}label-warning{/if}">
                                         {$video.status}
                                     </span>
-                                    {if $video.status=='Processing' || $video.conv_progress  < 100}
-                                        <span class="label label-info">
+                                    {*if $video.status=='Processing' || $video.conv_progress  < 100}
+                                        <!-- <span class="label label-info">
                                             {$video.conv_progress} % Converted
-                                        </span>
-                                    {/if}
+                                        </span> -->
+                                    {/if*}
                                         <span class="label {if $video.re_conv_status=='started'}label-warning{else if $video.re_conv_status=='failed'}label-danger{else if $video.re_conv_status=='done'}label-success{else}label-primary{/if}">
                                         {if $video.re_conv_status == 'done'}Reconverted{else if $video.re_conv_status == 'started'}Reconverting{else if $video.re_conv_status == 'failed' } Reconverting Failed {else if $noReconv == true} Non-reconvertable {/if} </span>
                                         {if $video.featured=='yes'}
