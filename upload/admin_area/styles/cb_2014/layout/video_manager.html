@@ -31,11 +31,7 @@
         </tr>
         {if $videos}
        {foreach from=$videos item=video}
-       {if !isReconvertAble($video)}
-        {$noReconv = true}
-        {else}
-        {$noReconv = false}
-       {/if}
+       
         <tr>
             <td>
                 <input name="check_video[]" type="checkbox" id="check_video" value="{$video.videoid}"/>
@@ -67,8 +63,9 @@
                                             {$video.conv_progress} % Converted
                                         </span> -->
                                     {/if*}
-                                        <span class="label {if $video.re_conv_status=='started'}label-warning{else if $video.re_conv_status=='failed'}label-danger{else if $video.re_conv_status=='done'}label-success{else}label-primary{/if}">
-                                        {if $video.re_conv_status == 'done'}Reconverted{else if $video.re_conv_status == 'started'}Reconverting{else if $video.re_conv_status == 'failed' } Reconverting Failed {else if $noReconv == true} Non-reconvertable {/if} </span>
+                                        <!-- <span class="label {if $video.re_conv_status=='started'}label-warning{else if $video.re_conv_status=='failed'}label-danger{else if $video.re_conv_status=='done'}label-success{else}label-primary{/if}">
+                                        {if $video.re_conv_status == 'done'}Reconverted{else if $video.re_conv_status == 'started'}Reconverting{else if $video.re_conv_status == 'failed' } Reconverting Failed {else if $noReconv == true} Non-reconvertable {/if} </span> -->
+                                       
                                         {if $video.featured=='yes'}
                                          <span class="label label-info">
                                           Featured</span>
@@ -78,6 +75,11 @@
                                         {foreach from=$cbvid->video_manager_link_new item=links}
                                         {$cbvid->video_manager_link_new($links,$video)}
                                         {/foreach}
+                                         {if !isReconvertAble($video)}
+                                        <span class="label label-warning">Non-Convertable</span>
+                                        {else}
+                                        <span class="label label-info">Re-Convertable</span>
+                                        {/if}
                                        
                                 </div>
                             </div>

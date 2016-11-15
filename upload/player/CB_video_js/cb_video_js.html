@@ -8,6 +8,7 @@
 
 <!-- This code is added for timecomments plugin-->
 {$tcomments_params = ['function'=>'get_timeCommnets','videoid'=>$vdata.videoid]}
+{$Comments_allowed =  $myquery->is_commentable($vdata,'v') }
 {$timecomments = get_my_function($tcomments_params)}
 <!-- End -->
 
@@ -15,6 +16,13 @@
 {$v_editor_params = ['function'=>'get_video_editor']}
 {$video_editor_enabled = get_my_function($v_editor_params)}
 <!-- End -->
+
+{$svg_manager_params = ['function'=>'get_svg_manager']}
+{$svg_manager = get_my_function($svg_manager_params)}
+{if $svg_manager}
+{$svg_manager}	
+{/if}
+
 
 <!-- This code is added for instance manager Interactive ads plugin intances-->
 {if !$video_editor_enabled }
@@ -69,6 +77,7 @@
 
 {$default_quality = get_cbvjs_quality_type($video_files)}
 <video id="cb_video_js" class="video-js vjs-default-skin" height="{$height}" width="{$width}" poster="{getThumb vdetails=$vdata size=768x432}" >
+
     {foreach $video_files as $file}
     {$quality = get_cbvjs_quality($file)}
 
@@ -81,6 +90,7 @@
     {ANCHOR place="play_def_sub"}
     <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
 </video>
+
 
 
 <script type="text/javascript">
@@ -112,6 +122,7 @@
 		var user_id = "{userid()}";
 		var username = "{username()}";
 		var user_profile  = "{$userquery->avatar('','m',userid())}";
+		var allow_comments = "{$Comments_allowed}";
 	}
 
 	var play_ad = "{$play_ad}"; //  Ad settings starts to pass on to player
@@ -173,6 +184,7 @@
 				userid : user_id,
 				userprofile : user_profile,
 				username : username,
+				allowComments : allow_comments, 
 				forceShow : true
 			}
 			cb_vjs.timecomments(comments_options);

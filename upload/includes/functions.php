@@ -4309,23 +4309,47 @@
 		if(PHP_OS == "Linux") {
 			$destination.'/'.$dest_name;
 			$saveTo = $destination.'/'.$dest_name;
-			#exit($saveTo);
-			$fp = fopen ($saveTo, 'w+');
 		} elseif (PHP_OS == "WINNT") {
 			$destination.'\\'.$dest_name;
-			$fp = fopen ($destination.'\\'.$dest_name, 'w+');
+			$saveTo = $destination.'/'.$dest_name;
 		}
-
-		$ch = curl_init($snatching_file);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 600);
-		curl_setopt($ch, CURLOPT_FILE, $fp);
-		curl_setopt($ch, CURLOPT_USERAGENT, 
-		'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.2) Gecko/20070219 Firefox/2.0.0.2');
-		curl_exec($ch);
-		curl_close($ch);
-		fclose($fp);
+		cURLdownload($snatching_file, $saveTo);
 		return $saveTo;
-	}	
+	}
+
+	/**
+	* This Function gets a file using curl method in php
+	* 
+	* @param : { string } { $url } { file to be downloaded }
+	* @param : { string } { $file } { where to save the downloaded file }
+	*/
+	function cURLdownload($url, $file) { 
+	
+		$ch = curl_init(); 
+		if($ch) 
+		{ 
+		    $fp = fopen($file, "w"); 
+		    if($fp) 
+		    { 
+			    if( !curl_setopt($ch, CURLOPT_URL, $url) ) { 
+			        fclose($fp); // to match fopen() 
+			        curl_close($ch); // to match curl_init() 
+			        return "FAIL: curl_setopt(CURLOPT_URL)"; 
+			    } 
+			    if( !curl_setopt($ch, CURLOPT_FILE, $fp) ) return "FAIL: curl_setopt(CURLOPT_FILE)"; 
+			    if( !curl_setopt($ch, CURLOPT_HEADER, 0) ) return "FAIL: curl_setopt(CURLOPT_HEADER)"; 
+			    if( !curl_exec($ch) ) return "FAIL: curl_exec()"; 
+			    curl_close($ch); 
+			   	fclose($fp); 
+			    return "SUCCESS: $file [$url]"; 
+		    } 
+		    else{
+				return "FAIL: fopen()"; 
+		    }
+		}else{
+			return "FAIL: curl_init()";	
+		}  
+	} 	
 	
 	/**
 	* Checks if CURL is installed on server
@@ -5752,6 +5776,34 @@
     		return file_exists(PLUG_DIR.'/'.$pluginFolder.'/'.$mainFile);
     	}
     }
+
+    /**
+	* Check if a url exists using curl
+	* @param : { string } { $mainFile } { File to run check against }
+	* @author : Fahad Abbas
+	* @since : 14th November, 2016
+	*
+	* @return : { boolean } { true or false matching pattern }
+    */
+
+    function is_url_exist($url){
+    	try{
+    		$ch = curl_init($url);    
+		    curl_setopt($ch, CURLOPT_NOBODY, true);
+		    curl_exec($ch);
+		    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		    if($code == 200){
+		       $status = true;
+		    }else{
+		      $status = false;
+		    }
+		    curl_close($ch);
+		   	return $status;
+    	}catch(Exception $e){
+    		echo 'Caught exception: ',  $e->getMessage(), "\n";
+    	}
+	    
+	}
 
 
     include( 'functions_db.php' );
