@@ -8,7 +8,9 @@
 //Sleeping..
 //sometimes video is inserted after video conversion so in this case, video can get lost
 
-
+// sometimes this file gets executed before video insertion completes
+// so it needs to be put to sleep for a short short time
+sleep(5);
 $in_bg_cron = true;
 
 include(dirname(__FILE__)."/../includes/config.inc.php");
