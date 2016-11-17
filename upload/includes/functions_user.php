@@ -114,22 +114,23 @@
             $userid = $userquery->userid;
             foreach ($userVideos as $key => $video) {
                 $vBroadcast = trim($video['broadcast']);
+                $vKey = $video['videokey'];
                 switch ($vBroadcast) {
                     case 'private':
                         if (is_numeric($userid)) {
                             $allowedUsers = explode(',', $video['video_users']);
                             if (in_array($userid, $allowedUsers)) {
-                                return $video;
+                                return $vKey;
                             }
                         }
                         break;
                     case 'logged':
                         if (is_numeric($userid)) {
-                            return $video;
+                            return $vKey;
                         }
                         break;
                     case 'public':
-                        return $video['videokey'];
+                        return $vKey;
                         break;
                 }
 
