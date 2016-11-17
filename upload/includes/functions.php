@@ -2268,7 +2268,7 @@
 		// depending on the parameters passed to it
 		if (!empty($array['user'])) {
 			$playlists = $cbvid->action->get_playlists($array);
-		} else {
+		} elseif (userid()) {
 			$playlists = $cbvid->action->get_playlists();
 		}
 		assign('playlists',$playlists);
