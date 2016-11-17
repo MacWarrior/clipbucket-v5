@@ -4114,6 +4114,16 @@ class userquery extends CBCategory{
 	function action($case,$uid)
 	{
 		global $db;
+		$udetails = $this->get_user_details(userid());
+		$logged_user_level = $udetails['level'];
+		if ($logged_user_level > 1) {
+			$data = $this->get_user_details($uid);
+			if ($data['level'] == 1) {
+				e("You do not have sufficient permissions to edit an Admininstrator");
+				return false;
+			}
+		}
+
 		if(!$this->user_exists($uid))
 			return false;
 		//Lets just check weathter user exists or not
