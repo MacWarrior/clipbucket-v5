@@ -408,6 +408,12 @@ class Collections extends CBCategory
 				$cond .= " AND ";
 			$cond .= " ".tbl('collections.total_objects')." >= '1'";		
 		}
+
+		if (!has_access("admin_access")) {
+			if($cond != '')
+				$cond .= " AND ";
+			$cond .= " ".tbl('collections.broadcast')." != 'private'";
+		}
 		
 		
 		$title_tag = '';
