@@ -1055,6 +1055,10 @@ class CBvideo extends CBCategory
                'users' =>  $cb_columns->object('users')->temp_change('featured','user_featured')->get_columns()
         );
 
+        if (!isset($fields['video_users'])) {
+        	$fields[] = 'video_users';
+        }
+
         $fields = tbl_fields( $fields );
 		
 		if(!$params['count_only'] &&  !$params['show_related'])
