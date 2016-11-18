@@ -328,8 +328,8 @@
 					$(uploadForm).on({
 						submit: function(e){
 							e.preventDefault();
-							window.location.href = baseurl+"/?moreMsg="+theVideoId;
-							/*var self = this;
+							//window.location.href = baseurl+"/?moreMsg="+theVideoId;
+							var self = this;
 							
 							//var data = new FormData();
 							//var fd = new FormData(document.getElementById( "updateVideoInfoForm" ));
@@ -357,7 +357,7 @@
 								}, 5000);
 							}).fail(function(err){
 								console.log(err);
-							});*/
+							});
 						}
 					});
 
