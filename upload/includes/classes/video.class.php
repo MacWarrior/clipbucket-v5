@@ -480,6 +480,8 @@ class CBvideo extends CBCategory
 			$query_val[1] = str_replace('&lt;!--', '', $query_val[1]);
 			$query_val[3] = strtolower($query_val[3]);
 
+
+			
 			if(!userid())
 			{
 				e(lang("you_dont_have_permission_to_update_this_video"));
