@@ -469,6 +469,12 @@ class CBvideo extends CBCategory
 					$query_field[] = 'rated_by';
 					$query_val[] = $array['rated_by'];
 				}
+
+				if (!empty($array['embed_code'])) 
+				{
+					$query_field[] = 'embed_code';
+					$query_val[] = $array['embed_code'];
+				}
 			}
 			$query_val[0] = str_replace('&lt;!--', '', $query_val[0]);
 			$query_val[1] = str_replace('&lt;!--', '', $query_val[1]);
