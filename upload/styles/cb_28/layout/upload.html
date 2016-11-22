@@ -170,6 +170,10 @@
 					  	plFileId = fileNow.id;					   	
 					  	//<button class="clearfix cancel_button btn btn-danger" style="float:right; margin-top: -20px">Cancel Uploading</button>
 
+					  	// appends progress bar along with title
+					  	// this progress bar is later updated on realtime
+					  	// via fileprogress event of pluploader
+
 					    $(".realProgressBars").append('<h5 class="realProgTitle_'+plFileId+'">'+currentTitle+'</h5><button class="clearfix cancel_button btn btn-danger" to_cancel="'+plFileId+'" style="float:right; margin-top: -8px; margin-left:10px;">Cancel Uploading</button><div class="progress"><div class="progress-bar progress-bar_'+plFileId+'" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:0%"><span class="sr-only">70% Complete</span><span class="realProgText_'+plFileId+'">50% completed</span></div></div>');
 
 					    
@@ -365,16 +369,22 @@
 
 				});
 
+				// runs on progress of file uplaoder
 
 				uploader.bind('UploadProgress', function(up, file) {
+					// this the unique ID assigned to each file upload
 					var pluploadFileId = file.id,
 					filePercentage = file.percent;
-					console.log(filePercentage);
+					// update progress bar widht
 					$('.progress-bar_'+pluploadFileId).css("width",filePercentage+"%");
+					//updawte progress bar text to show percentage
 					$('.realProgText_'+pluploadFileId).text(filePercentage+"% Completed");
 
+					// meaning file has completely uploaded
 					if (filePercentage == 100) {
+						// remove cancel button
 						$(".cancel_button[to_cancel='" + pluploadFileId + "']").fadeOut('slow');
+						// tunr progress bar into green to show success
 						$('.progress-bar_'+pluploadFileId).addClass('progress-bar-success');
 					}
 				});
