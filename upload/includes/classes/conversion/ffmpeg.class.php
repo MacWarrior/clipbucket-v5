@@ -2058,6 +2058,7 @@ class FFMpeg{
 				}
 				$count = $count+1;
 				if (!$regenerateThumbs){
+					$this->TemplogData .= "\r\n Command : $command ";
 					$this->TemplogData .= "\r\n File : $file_path ";	
 				}
 				
@@ -2074,6 +2075,7 @@ class FFMpeg{
 			$command = $this->ffMpegPath." -i $input_file -an $dimension -y -f image2 -vframes $num $file_path ";
 			$output = $this->executeCommand($command);
 			if (!$regenerateThumbs){
+				$this->TemplogData .= "\r\n Command : $command ";
 				$this->TemplogData .= "\r\n File : $file_path ";
 			}
 		}
