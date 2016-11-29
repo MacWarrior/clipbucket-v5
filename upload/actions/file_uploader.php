@@ -24,7 +24,7 @@ switch($mode)
 	{
 		$title 	= getName($_POST['title']);
 		$file_name	= $_POST['file_name'];
-		if ($_POST['serverUrl']) {
+		if ($_POST['serverUrl'] && $_POST['serverUrl'] != "none") {
 			$file_directory = date('Y/m/d');
 		} else {
 			$file_directory = createDataFolders();

@@ -469,11 +469,19 @@ class CBvideo extends CBCategory
 					$query_field[] = 'rated_by';
 					$query_val[] = $array['rated_by'];
 				}
+
+				if (!empty($array['embed_code'])) 
+				{
+					$query_field[] = 'embed_code';
+					$query_val[] = $array['embed_code'];
+				}
 			}
 			$query_val[0] = str_replace('&lt;!--', '', $query_val[0]);
 			$query_val[1] = str_replace('&lt;!--', '', $query_val[1]);
 			$query_val[3] = strtolower($query_val[3]);
 
+
+			
 			if(!userid())
 			{
 				e(lang("you_dont_have_permission_to_update_this_video"));
@@ -1054,6 +1062,10 @@ class CBvideo extends CBCategory
            // 'users' => get_user_fields()
                'users' =>  $cb_columns->object('users')->temp_change('featured','user_featured')->get_columns()
         );
+
+        if (!isset($fields['video_users'])) {
+        	$fields[] = 'video_users';
+        }
 
         $fields = tbl_fields( $fields );
 		
