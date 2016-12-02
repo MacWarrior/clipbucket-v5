@@ -2198,3 +2198,16 @@
             e("Reconversion is underway. Kindly don't run reconversion on videos that are already reconverting. Doing so may cause things to become lunatic fringes :P","w");
         }
     }
+
+    /**
+    * Returns cleaned string containing video qualities
+    * @since : 2nd December, 2016
+    */
+
+    function resString($res) {
+        $qual = str_replace(array('[',']','"'), '', $res);
+        $qual = preg_replace("/[^a-zA-Z0-9-,]+/", "", html_entity_decode($qual, ENT_QUOTES));
+        if (!empty($qual)) {
+            return $qual;
+        }
+    }
