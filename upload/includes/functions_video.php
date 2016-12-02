@@ -2205,8 +2205,7 @@
     */
 
     function resString($res) {
-        $qual = str_replace(array('[',']','"'), '', $res);
-        $qual = preg_replace("/[^a-zA-Z0-9-,]+/", "", html_entity_decode($qual, ENT_QUOTES));
+        $qual = preg_replace("/[^a-zA-Z0-9-,]+/", "", html_entity_decode($res, ENT_QUOTES));
         if (!empty($qual)) {
             return $qual;
         }
