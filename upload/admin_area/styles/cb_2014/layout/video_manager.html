@@ -84,8 +84,18 @@
                                         <span class="label label-primary">
                                             {resString($video.video_files)} 
                                         </span>
+                                        <div class="clearfix"></div>
+                                        {$catString = {$video.category|categories:video}}
+                                        {$catString = strip_tags($catString)}
+                                        {$toArray = explode(',',$catString)}
+                                        {$totalItems = count($toArray)}
+                                        {if $totalItems > 4}
+                                            {$moreText = ' + more '}
+                                        {/if}
+                                        {$finalItems = array_slice($toArray, 0, 4)}
+                                        {$vcategories = implode(',',$finalItems)}
                                         <span>
-                                            Categories: {$video.category|categories:video}
+                                            <span class="label label-info">Categories : {$vcategories} {$moreText}</span> 
                                         </span>
                                        
                                 </div>
