@@ -81,9 +81,12 @@
                                         <span class="label label-info">Re-Convertable</span>
                                         {/if}
 
-                                        <span class="label label-primary">
-                                            {resString($video.video_files)} 
-                                        </span>
+                                        {$quals = resString($video.video_files)} 
+                                        {if $quals}
+                                            <span class="label label-primary">
+                                                {$quals}
+                                            </span>
+                                        {/if}
                                         <div class="clearfix"></div>
                                         {$catString = {$video.category|categories:video}}
                                         {$catString = strip_tags($catString)}
