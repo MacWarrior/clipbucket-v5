@@ -5689,7 +5689,7 @@
 		}
 		elseif (empty($file_basename)) {	
 			// file selection error
-			e(lang("Please select a file to upload."),"m");
+			e(lang("Please select a file to upload."));
 		} 
 		elseif ($filesize > 4000000) {	
 			// file size error
