@@ -5717,18 +5717,12 @@
 		// Rename file
 			$newfilename = 'logo.' . $file_ext;
 			unlink($target_dir."logo.png");
-			if (file_exists($target_dir . $newfilename)) {
-				// file already exists error
-					e(lang("You have already uploaded this file."),"e");
-			}
-			else {		
-				move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_dir . $newfilename);	
+			move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_dir . $newfilename);	
 				e(lang("File uploaded successfully."),"m");
-			}
 		}
 		elseif (empty($file_basename)) {	
 			// file selection error
-			e(lang("Please select a file to upload."),"m");
+			e(lang("Please select a file to upload."));
 		} 
 		elseif ($filesize > 4000000) {	
 			// file size error
