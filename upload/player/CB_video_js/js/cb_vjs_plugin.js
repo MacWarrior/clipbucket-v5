@@ -78,7 +78,8 @@ cbvjsvolume.prototype.init = function(){
 	}else{
 		console.log("Ninja : Dont Mess Around Here! ");
 	}
-	cbvjsvolume.player.on('volumechange',function(){
+	cbvjsvolume.player.on('volumechange',function()
+    {
 		cbvjsvolume.Currvol = cbvjsvolume.player.volume();
 		cbvjsvolume.Muted = cbvjsvolume.player.muted();
 		
@@ -87,7 +88,6 @@ cbvjsvolume.prototype.init = function(){
 		}else{
 			$.cookie("cb_volume", cbvjsvolume.Currvol , { expires : 10 });
 		}
-
 	});
 }
 

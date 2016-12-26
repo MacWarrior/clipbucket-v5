@@ -22,7 +22,25 @@ $(document).ready(function() {
 	new_player_height();
 	$(".video-js").on("contextmenu",function() {
        return false;
-    }); 	
+    });
+
+    $('body').keydown(function(e)
+    {
+        if(e.keyCode == 0 || e.keyCode == 32)
+        {
+            e.preventDefault();
+            if( cb_player.paused() )
+                cb_player.play();
+            else
+                cb_player.pause()
+        }
+    });
+
+    $('body').keyup(function(e)
+    {
+        if(e.keyCode == 0 || e.keyCode == 32)
+            e.preventDefault();
+    });
 });
 
 $(window).resize(function(event) {
