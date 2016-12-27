@@ -769,7 +769,7 @@ var loading_img_2 = "<img style='vertical-align:middle' src='"+imageurl+"/ajax-l
 	
 	
 	/**
-	 * Function used to add and remove video from qucklist
+	 * Function used to add and remove video from quicklist
 	 * THIS FEATURE IS SPECIALLY ADDED ON REQUEST BY JAHANZEB HASSAN
 	 */
 	
@@ -804,10 +804,10 @@ var loading_img_2 = "<img style='vertical-align:middle' src='"+imageurl+"/ajax-l
 	}
 	
 	/**
-	 * Function used to remove video from qucklist
+	 * Function used to remove video from quicklist
 	 */
 	
-	function remove_qucklist(obj,vid)
+	function remove_quicklist(obj,vid)
 	{
 		
 		$.cookie("btn-q-"+vid, null);
