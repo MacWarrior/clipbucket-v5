@@ -84,28 +84,7 @@ class userquery extends CBCategory{
 		{
 			$this->userid = $this->sessions['smart_sess']['session_user'];
 		}
-		//$this->level = $sess->get('level');
-		
-		//Setting Access
-		//Get list Of permission
-		//$perms = $this->get_permissions();
-		//foreach($perms as $perm)
-		//{
-		//	$this->add_access_type($perm['permission_code'],$perm['permission_name']);
-		//}
-		
-		/*$this->add_access_type('admin_access','Admin Access');
-		$this->add_access_type('upload_access','Upload Access');
-		$this->add_access_type('channel_access','Channel Access');
-		$this->add_access_type('mod_access','Moderator Access');*/
-		
-		//Fetching List Of User Levels
-		/*$levels = $this->get_levels();
-		foreach($levels as $level)
-		{
-			$this->usr_levels[$level['user_level_id']]=$level["user_level_name"];
-		}
-		*/
+
 		$udetails = "";
 		
 		if($this->userid)
@@ -295,13 +274,6 @@ class userquery extends CBCategory{
 			
 			$log_array['level'] = $level  = $udetails['level'];
 
-			//Adding Sessing In Database 
-			//$sess->add_session($userid,'logged_in');
-			
-			//$sess->set('username',$username);
-			//$sess->set('userid',$userid);
-			
-			//Setting Timeout
 			if($remember)
 				$sess->timeout = 86400*REMBER_DAYS;
 				
@@ -314,21 +286,6 @@ class userquery extends CBCategory{
 			
 			$db->delete(tbl("sessions"),array("session","session_string"),array($sess->id,"guest"));
 			$sess->add_session($userid,'smart_sess',$smart_sess);
-			
-			//$sess->set('user_sess',$smart_sess);
-			
-			//$sess->set('user_session_key',$udetails['user_session_key']);
-			//$sess->set('user_session_code',$udetails['user_session_code']);
-			
-			//local client ip access - only works on linux : is it really useful ??
-			/*$ip = $cblog->get_local_ipv4();
-
-			if( isset($ip['eth0']) ){
-				$ipv = $ip['eth0'];
-			}
-			if( isset($ip['wlan0']) ){
-				$ipv = $ip['wlan0'];
-			}*/
 
 			$ipv = $_SERVER["REMOTE_ADDR"];
 
