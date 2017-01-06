@@ -8,7 +8,7 @@
 * @author[s]: Arslan Hassan, Fawaz Tahir, Fahad Abbass, Awais Tariq, Saqib Razzaq
 * @copyright: (c) 2008 - 2016 ClipBucket / PHPBucket
 * @notice: Please maintain this section
-* @modified: March 4th, 2016 ClipBucket 2.8.1
+* @modified: { January 6th, 2016 } { ClipBucket 2.8.2 } { fixed styling, cleaned notices, added function documentation } { Saqib Razzaq }
 */
 
 	define("SHOW_COUNTRY_FLAG",TRUE);
@@ -5609,6 +5609,11 @@
 		}
 	}
 
+	/**
+	* Assigns smarty values to an array
+	* @param : { array } { $vals } { an associative array to assign vals }
+	*/
+
 	function array_val_assign($vals) {
 		if (is_array($vals)) {
 			$total_vars = count($vals);
@@ -5674,6 +5679,10 @@
 			return $vid_cond;
 		}
 	}
+
+	/**
+	* Allows admin to upload logo via admin area
+	*/
 	
 	function upload_logo() {
 		global $Cbucket;
@@ -5730,8 +5739,9 @@
 	}//end AutoLinkUrls
 
 
-	/*
+	/**
     * Generates a random characters (strings only) string
+    * @param : { integer } { $length } { length of random string to generate }
     */
 
     function charsRandomStr($length = 5) {
@@ -5787,23 +5797,24 @@
 	* @return : { boolean } { true or false matching pattern }
     */
 
-    function is_url_exist($url){
-    	try{
+    function is_url_exist($url) {
+    	try {
     		$ch = curl_init($url);    
 		    curl_setopt($ch, CURLOPT_NOBODY, true);
 		    curl_exec($ch);
 		    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		    if($code == 200){
+
+		    if($code == 200) {
 		       $status = true;
-		    }else{
+		    } else {
 		      $status = false;
 		    }
+
 		    curl_close($ch);
 		   	return $status;
-    	}catch(Exception $e){
+    	} catch(Exception $e) {
     		echo 'Caught exception: ',  $e->getMessage(), "\n";
     	}
-	    
 	}
 
 
