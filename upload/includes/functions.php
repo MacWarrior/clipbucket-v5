@@ -269,8 +269,8 @@
 		}
 		//for srever thumb files 
 		$parts = parse_url($file);
-        parse_str($parts['query'], $query);
-        $get_file_name = $query['src'];
+        $query = isset($query) ? parse_str($parts['query'], $query) : false;
+        $get_file_name = isset($query['src']) ? $query['src'] : false;
         $path = explode('.',$get_file_name);
         $server_thumb_name = $path[0];
         if (!empty($server_thumb_name)) {
@@ -665,10 +665,10 @@
 	function getAd($params) {
 		global $adsObj;
 		$data = '';
-		if($params['style'] || $params['class'] || $params['align'])
+		if(isset($params['style']) || isset($params['class']) || isset($params['align']))
 			$data .= '<div style="'.$params['style'].'" class="'.$params['class'].'" align="'.$params['align'].'">';
 		$data .= ad($adsObj->getAd($params['place']));
-		if($params['style'] || $params['class'] || $params['align'])
+		if(isset($params['style']) || isset($params['class']) || isset($params['align']))
 			$data .= '</div>';
 		return $data;
 	}
@@ -867,8 +867,9 @@
 	*/
 
 	function cbRocks() {
-		define("isCBSecured",TRUE); 
-		//echo cbSecured(CB_SIGN);
+		if (!defined('isCBSecured')) {
+			define("isCBSecured",TRUE);
+		}
 	}
 	
 	/**
@@ -1664,7 +1665,7 @@
 
 	function get_form_val($val,$filter=false) {
 		if($filter) {
-			return form_val($_GET[$val]);
+			return isset($_GET[$val]) ? form_val($_GET[$val]) : false;
 		} else {
 			return $_GET[$val];
 		}
@@ -1742,7 +1743,7 @@
 		if(getArrayValue($param, 'assign')=='') {
 			return lang($param['code'],getArrayValue($param, 'sprintf'));
 		} else {
-			assign($param['assign'],lang($param['code'],$param['sprintf']));
+			assign($param['assign'],lang($param['code'],isset($param['sprintf']) ? $param['sprintf'] : false));
 		}
 	}
 

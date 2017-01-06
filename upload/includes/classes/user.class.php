@@ -1622,7 +1622,7 @@ class userquery extends CBCategory{
 				$thumb = USER_THUMBS_URL.'/'.$file.'-'.$size.'.'.$ext;
 				$thumb_path = $file.'.'.$ext;
 			}
-			elseif(!$thumb)
+			elseif(!isset($thumb) || !$thumb)
 			{
 				$thumb = USER_THUMBS_URL.'/'.$file.'.'.$ext;
 				$thumb_path = "";
@@ -3892,18 +3892,18 @@ class userquery extends CBCategory{
 	{
 		global $db;
 		
-		$limit = $params['limit'];
-		$order = $params['order'];
+		$limit = isset($params['limit']);
+		$order = isset($params['order']);
 		
 		$cond = "";
 		if(!has_access('admin_access',TRUE) && !$force_admin)
 			$cond .= " 	users.usr_status='Ok' AND users.ban_status ='no' ";
 		else
 		{
-			if($params['ban'])
+			if(isset($params['ban']))
 				$cond .= " users.ban_status ='".$params['ban']."'";
 				
-			if($params['status'])
+			if(isset($params['status']))
 			{
 				if($cond!='')
 					$cond .=" AND ";
@@ -3913,17 +3913,17 @@ class userquery extends CBCategory{
 		}
 		
 		//Setting Category Condition
-		if(!is_array($params['category']))
+		if(isset($params['category']) && !is_array($params['category']))
 			$is_all = strtolower($params['category']);
 			
-		if($params['category'] && $is_all!='all')
+		if(isset($params['category']) && $is_all!='all')
 		{
 			if($cond!='')
 				$cond .= ' AND ';
 				
 			$cond .= " (";
 			
-			if(!is_array($params['category']))
+			if(isset($params['category']) && !is_array($params['category']))
 			{
 				$cats = explode(',',$params['category']);
 			}else
@@ -3943,7 +3943,7 @@ class userquery extends CBCategory{
 		}
 		
 		//date span
-		if($params['date_span'])
+		if(isset($params['date_span']))
 		{
 			if($cond!='')
 				$cond .= ' AND ';
@@ -4001,7 +4001,7 @@ class userquery extends CBCategory{
 		}*/
 		
 		//FEATURED
-		if($params['featured'])
+		if(isset($params['featured']))
 		{
 			if($cond!='')
 				$cond .= ' AND ';
@@ -4009,7 +4009,7 @@ class userquery extends CBCategory{
 		}
 		
 		//Email
-		if($params['username'])
+		if(isset($params['username']))
 		{
 			if($cond!='')
 				$cond .= ' AND ';
@@ -4017,7 +4017,7 @@ class userquery extends CBCategory{
 		}
 		
 		//Email
-		if($params['email'])
+		if(isset($params['email']))
 		{
 			if($cond!='')
 				$cond .= ' AND ';
@@ -4025,7 +4025,7 @@ class userquery extends CBCategory{
 		}
 		
 		//Exclude Users
-		if($params['exclude'])
+		if(isset($params['exclude']))
 		{
 			if($cond!='')
 				$cond .= ' AND ';
@@ -4033,7 +4033,7 @@ class userquery extends CBCategory{
 		}
 		
 		//Getting specific User
-		if($params['userid'])
+		if(isset($params['userid']))
 		{
 			if($cond!='')
 				$cond .= ' AND ';
@@ -4041,7 +4041,7 @@ class userquery extends CBCategory{
 		}
 		
 		//Sex
-		if($params['gender'])
+		if(isset($params['gender']))
 		{
 			if($cond!='')
 				$cond .= ' AND ';
@@ -4049,14 +4049,14 @@ class userquery extends CBCategory{
 		}
 		
 		//Level
-		if($params['level'])
+		if(isset($params['level']))
 		{
 			if($cond!='')
 				$cond .= ' AND ';
 			$cond .= " users.level = '".$params['level']."' ";
 		}
 		
-		if($params['cond'])
+		if(isset($params['cond']))
 		{
 			if($cond!='')
 				$cond .= ' AND ';
@@ -4066,7 +4066,7 @@ class userquery extends CBCategory{
 
 
                 
-		if(!$params['count_only'])
+		if(isset($params['count_only']) && !$params['count_only'])
         {
 
             $fields = array(
@@ -4095,17 +4095,17 @@ class userquery extends CBCategory{
         }
 		
 		
-		if($params['count_only']){
+		if(isset($params['count_only'])){
 
             //$cond= substr($cond,8);
 			$result = $db->count(tbl('users')." AS users ",'userid',$cond);
             //echo $cond;
             //return $result;
 		}
-		if($params['assign'])
+		if(isset($params['assign']))
 			assign($params['assign'],$result);
 		else
-			return $result;
+			return isset($result) ? $result : false;
 	}
 	
 	/**
