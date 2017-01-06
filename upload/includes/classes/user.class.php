@@ -124,7 +124,7 @@ class userquery extends CBCategory{
 			//exit();
 
 			//Calling Logout Functions
-			$funcs = $this->init_login_functions;
+			$funcs = isset($this->init_login_functions) ? $this->init_login_functions : false;
 			if(is_array($funcs) && count($funcs)>0)
 			{
 				foreach($funcs as $func)
@@ -1802,11 +1802,11 @@ class userquery extends CBCategory{
 		}
 		else
 		{
-			$level = $this->udetails['level'];
+			$level = isset($this->udetails['level']) ? $this->udetails['level'] : false;
 		}
 
         if ( $level == userid() or $level == $this->udetails[ 'level' ] ) {
-            if ( $this->permission ) {
+            if ( isset($this->permission) ) {
                 return $this->permission;
             }
         }
@@ -1831,7 +1831,7 @@ class userquery extends CBCategory{
 		$a_results = $access_results[0];*/
 		
 		//Now Merging the two arrays
-		$user_level = $result[0];
+		$user_level = isset($result[0]) ? $result[0] : false;
 		//pr($user_level);
 		return $user_level;
 	}

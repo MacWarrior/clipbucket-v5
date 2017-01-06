@@ -1705,8 +1705,8 @@
 			return $_REQUEST[$val];
 		}
 	}
-	
-	
+
+
 	/**
 	* Function used to return LANG variable
 	*/
@@ -1714,7 +1714,7 @@
 	function lang($var,$sprintf=false) {
 		global $LANG,$Cbucket;
 		$array_str = array( '{title}');
-		$array_replace = array( $Cbucket->configs['site_title'] );
+		$array_replace = array( "Title" );
 		if(isset($LANG[$var])) {
 			$phrase =  str_replace($array_str,$array_replace,$LANG[$var]);
 		} else {
@@ -1805,7 +1805,7 @@
 			return BASEURL.'/search_result.php?category[]='.$params['category'].'&type='.$params['type'];
 		}
 		
-		if (SEO!='yes') {
+		if (defined('SEO') && SEO !='yes') {
 			preg_match('/http:\/\//',$ClipBucket->links[$name][0],$matches);
 			if($matches) {
 				$link = $ClipBucket->links[$name][0];
@@ -1813,11 +1813,15 @@
 				$link = BASEURL.'/'.$ClipBucket->links[$name][0];
 			}
 		} else {
-			preg_match('/http:\/\//',$ClipBucket->links[$name][1],$matches);
-			if($matches) {
-				$link = $ClipBucket->links[$name][1];
+			if (isset($ClipBucket->links[$name])) {
+				preg_match('/http:\/\//',$ClipBucket->links[$name][1],$matches);
+				if($matches) {
+					$link = $ClipBucket->links[$name][1];
+				} else {
+					$link = BASEURL.'/'.$ClipBucket->links[$name][1];
+				}
 			} else {
-				$link = BASEURL.'/'.$ClipBucket->links[$name][1];
+				$link = false;
 			}
 		}
 		

@@ -1913,7 +1913,7 @@
             $cookie = 'fast_qlist';
         }
 
-        $raw_cookies = $_COOKIE[$cookie];
+        $raw_cookies = isset($_COOKIE[$cookie]) ? $_COOKIE[$cookie] : false;
         $clean_cookies = str_replace(array("[","]"), "", $raw_cookies);
         $vids = explode(",", $clean_cookies);
         assign("qlist_vids", $vids);
