@@ -39,6 +39,7 @@ class ClipBucket
     var $cbinfo = array();
     var $search_types = array();
     var $theUploaderDetails = array();
+  #  var $version = VERSION;
 
     /**
      * All Functions that are called
@@ -209,7 +210,7 @@ class ClipBucket
     function get_anchor_function_list($place)
     {
         //Geting list of functions
-        $list = $this->anchor_function_list[$place];
+        $list = isset($this->anchor_function_list[$place]) ? $this->anchor_function_list[$place] : false;
         return $list;
     }
 

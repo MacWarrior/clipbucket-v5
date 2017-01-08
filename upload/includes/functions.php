@@ -8,7 +8,7 @@
 * @author[s]: Arslan Hassan, Fawaz Tahir, Fahad Abbass, Awais Tariq, Saqib Razzaq
 * @copyright: (c) 2008 - 2016 ClipBucket / PHPBucket
 * @notice: Please maintain this section
-* @modified: March 4th, 2016 ClipBucket 2.8.1
+* @modified: { January 6th, 2016 } { ClipBucket 2.8.2 } { fixed styling, cleaned notices, added function documentation } { Saqib Razzaq }
 */
 
 	define("SHOW_COUNTRY_FLAG",TRUE);
@@ -269,8 +269,8 @@
 		}
 		//for srever thumb files 
 		$parts = parse_url($file);
-        parse_str($parts['query'], $query);
-        $get_file_name = $query['src'];
+        $query = isset($query) ? parse_str($parts['query'], $query) : false;
+        $get_file_name = isset($query['src']) ? $query['src'] : false;
         $path = explode('.',$get_file_name);
         $server_thumb_name = $path[0];
         if (!empty($server_thumb_name)) {
@@ -665,10 +665,10 @@
 	function getAd($params) {
 		global $adsObj;
 		$data = '';
-		if($params['style'] || $params['class'] || $params['align'])
+		if(isset($params['style']) || isset($params['class']) || isset($params['align']))
 			$data .= '<div style="'.$params['style'].'" class="'.$params['class'].'" align="'.$params['align'].'">';
 		$data .= ad($adsObj->getAd($params['place']));
-		if($params['style'] || $params['class'] || $params['align'])
+		if(isset($params['style']) || isset($params['class']) || isset($params['align']))
 			$data .= '</div>';
 		return $data;
 	}
@@ -867,8 +867,9 @@
 	*/
 
 	function cbRocks() {
-		define("isCBSecured",TRUE); 
-		//echo cbSecured(CB_SIGN);
+		if (!defined('isCBSecured')) {
+			define("isCBSecured",TRUE);
+		}
 	}
 	
 	/**
@@ -1664,7 +1665,7 @@
 
 	function get_form_val($val,$filter=false) {
 		if($filter) {
-			return form_val($_GET[$val]);
+			return isset($_GET[$val]) ? form_val($_GET[$val]) : false;
 		} else {
 			return $_GET[$val];
 		}
@@ -1705,8 +1706,8 @@
 			return $_REQUEST[$val];
 		}
 	}
-	
-	
+
+
 	/**
 	* Function used to return LANG variable
 	*/
@@ -1714,7 +1715,7 @@
 	function lang($var,$sprintf=false) {
 		global $LANG,$Cbucket;
 		$array_str = array( '{title}');
-		$array_replace = array( $Cbucket->configs['site_title'] );
+		$array_replace = array( "Title" );
 		if(isset($LANG[$var])) {
 			$phrase =  str_replace($array_str,$array_replace,$LANG[$var]);
 		} else {
@@ -1753,7 +1754,7 @@
 		if(getArrayValue($param, 'assign')=='') {
 			return lang($param['code'],getArrayValue($param, 'sprintf'));
 		} else {
-			assign($param['assign'],lang($param['code'],$param['sprintf']));
+			assign($param['assign'],lang($param['code'],isset($param['sprintf']) ? $param['sprintf'] : false));
 		}
 	}
 
@@ -1816,7 +1817,7 @@
 			return BASEURL.'/search_result.php?category[]='.$params['category'].'&type='.$params['type'];
 		}
 		
-		if (SEO!='yes') {
+		if (defined('SEO') && SEO !='yes') {
 			preg_match('/http:\/\//',$ClipBucket->links[$name][0],$matches);
 			if($matches) {
 				$link = $ClipBucket->links[$name][0];
@@ -1824,11 +1825,15 @@
 				$link = BASEURL.'/'.$ClipBucket->links[$name][0];
 			}
 		} else {
-			preg_match('/http:\/\//',$ClipBucket->links[$name][1],$matches);
-			if($matches) {
-				$link = $ClipBucket->links[$name][1];
+			if (isset($ClipBucket->links[$name])) {
+				preg_match('/http:\/\//',$ClipBucket->links[$name][1],$matches);
+				if($matches) {
+					$link = $ClipBucket->links[$name][1];
+				} else {
+					$link = BASEURL.'/'.$ClipBucket->links[$name][1];
+				}
 			} else {
-				$link = BASEURL.'/'.$ClipBucket->links[$name][1];
+				$link = false;
 			}
 		}
 		
@@ -5637,6 +5642,11 @@
 		}
 	}
 
+	/**
+	* Assigns smarty values to an array
+	* @param : { array } { $vals } { an associative array to assign vals }
+	*/
+
 	function array_val_assign($vals) {
 		if (is_array($vals)) {
 			$total_vars = count($vals);
@@ -5702,6 +5712,10 @@
 			return $vid_cond;
 		}
 	}
+
+	/**
+	* Allows admin to upload logo via admin area
+	*/
 	
 	function upload_logo() {
 		global $Cbucket;
@@ -5758,8 +5772,9 @@
 	}//end AutoLinkUrls
 
 
-	/*
+	/**
     * Generates a random characters (strings only) string
+    * @param : { integer } { $length } { length of random string to generate }
     */
 
     function charsRandomStr($length = 5) {
@@ -5815,23 +5830,24 @@
 	* @return : { boolean } { true or false matching pattern }
     */
 
-    function is_url_exist($url){
-    	try{
+    function is_url_exist($url) {
+    	try {
     		$ch = curl_init($url);    
 		    curl_setopt($ch, CURLOPT_NOBODY, true);
 		    curl_exec($ch);
 		    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		    if($code == 200){
+
+		    if($code == 200) {
 		       $status = true;
-		    }else{
+		    } else {
 		      $status = false;
 		    }
+
 		    curl_close($ch);
 		   	return $status;
-    	}catch(Exception $e){
+    	} catch(Exception $e) {
     		echo 'Caught exception: ',  $e->getMessage(), "\n";
     	}
-	    
 	}
 
 
