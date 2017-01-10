@@ -6,9 +6,9 @@
 * @license: Attribution Assurance License
 * @since: ClipBucket 1.0
 * @author[s]: Arslan Hassan, Fawaz Tahir, Fahad Abbass, Awais Tariq, Saqib Razzaq
-* @copyright: (c) 2008 - 2016 ClipBucket / PHPBucket
+* @copyright: (c) 2008 - 2017 ClipBucket / PHPBucket
 * @notice: Please maintain this section
-* @modified: { January 6th, 2016 } { ClipBucket 2.8.2 } { fixed styling, cleaned notices, added function documentation } { Saqib Razzaq }
+* @modified: { January 10th, 2017 } { Saqib Razzaq } { Updated copyright date }
 */
 
 	define("SHOW_COUNTRY_FLAG",TRUE);

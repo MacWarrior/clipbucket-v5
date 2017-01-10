@@ -6,9 +6,9 @@
     * @license: Attribution Assurance License
     * @since: ClipBucket 1.0
     * @author[s]: Arslan Hassan, Fawaz Tahir, Fahad Abbass, Saqib Razzaq
-    * @copyright: (c) 2008 - 2016 ClipBucket / PHPBucket
+    * @copyright: (c) 2008 - 2017 ClipBucket / PHPBucket
     * @notice: Please maintain this section
-    * @modified: March 11th, 2016 ClipBucket 2.8.1
+    * @modified: { January 10th, 2017 } { Saqib Razzaq } { Updated copyright date }
     */
 
 
