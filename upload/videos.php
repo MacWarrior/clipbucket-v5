@@ -60,7 +60,7 @@
 	$tag='<li><a #params#>#page#</a><li>';
 	$pages->paginate($total_pages,$page,$link,$extra_params,$tag);
 	if (!$subtitle) {
-		$subtitle = 'videos';
+		$subtitle = 'Videos';
 	}
 	subtitle(lang($subtitle));
 	array_val_assign($assign_arry);

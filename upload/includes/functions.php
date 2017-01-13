@@ -1730,25 +1730,14 @@
 				}
 			}
 		}
-
-		if($LANG != null && !isset($LANG[$var]))
-		{
-			error_log('[LANG] Missing translation for "'.$var.'"');
-			if (DEVELOPMENT_MODE)
-				error_log(print_r(debug_backtrace(), TRUE));
-		}
-
 		return $phrase;
 	}
 
 	/**
-	 * Fetch lang value from smarty using lang code
-	 *
-	 * @param : { array } { $param } { array of parameters }
-	 *
-	 * @uses : { function lang() }
-	 * @return mixed|string
-	 */
+	* Fetch lang value from smarty using lang code
+	* @param : { array } { $param } { array of parameters }
+	* @uses : { function lang() }
+	*/
 
 	function smarty_lang($param) {
 		if(getArrayValue($param, 'assign')=='') {
@@ -2539,8 +2528,8 @@
 			return lang('no_date_provided');
 		}
 		$periods = array(lang("second"), lang("minute"), lang("hour"), lang("day"), lang("week"), lang("month"), lang("year"), lang("decade"));
-		$lengths = array(60,60,24,7,4.35,12,10);
-		$now = time();
+		$lengths = array(lang("60"),lang("60"),lang("24"),lang("7"),lang("4.35"),lang("12"),lang("10"));
+		$now = time();		
 		if(!$istime) {
 			$unix_date = strtotime($date);
 		} else {
@@ -5033,24 +5022,24 @@
 		if(!isset($_GET['time']))
 			$_GET['time'] = 'all_time';
 
-		$array = array(
-			'view_all'		=> lang('all'),
-			'most_recent' 	=> lang('recent'),
-		 	'most_viewed'	=> lang('viewed'),
-		 	'featured'		=> lang('featured'),
-		 	'top_rated'		=> lang('top_rated'),
-		 	'most_commented'=> lang('commented')
-		);
+		$array = array
+		('view_all'	=> lang('All'),
+		'most_recent' 	=> lang('recent'),
+		 'most_viewed'	=> lang('viewed'),
+		 'featured'		=> lang('featured'),
+		 'top_rated'	=> lang('top_rated'),
+		 'most_commented'	=> lang('commented')
+		 );
 		return $array;
 	}
 
 	/**
-	 * Function used for building time links that are used
-	 * on main pages such as videos.php, photos.php etc
-	 * @return array : { array } { $array } { an array with all possible time sorts }
-	 * { $array } { an array with all possible time sorts }
-	 * @internal param $ : { none }
-	 */
+	* Function used for building time links that are used
+	* on main pages such as videos.php, photos.php etc
+	*
+	* @param : { none }
+	* @return : { array } { $array } { an array with all possible time sorts }
+	*/
 
 	function time_links() {
 		$array = array
@@ -5068,20 +5057,14 @@
 	}
 
 	/**
-	 * Fetch videos from video collections
-	 *
-	 * @param      $id
-	 * @param      $order
-	 * @param      $limit
-	 * @param bool $count_only
-	 *
-	 * @return array { array } { $items } { an array with videos data }
-	 * { $items } { an array with videos data }
-	 * @internal param $ : { integer } { $id } { id of collection from which to fetch videos } { $id } { id of collection from which to fetch videos }
-	 * @internal param $ : { string } { $order } { sorting of videos } { $order } { sorting of videos }
-	 * @internal param $ : { integer } { $limit } { number of videos to fetch } { $limit } { number of videos to fetch }
-	 * @internal param $ : { boolean } { $count_only } { false by default, if true, returns videos count only } { $count_only } { false by default, if true, returns videos count only }
-	 */
+	* Fetch videos from video collections
+	*
+	* @param : { integer } { $id } { id of collection from which to fetch videos }
+	* @param : { string } { $order } { sorting of videos } 
+	* @param : { integer } { $limit } { number of videos to fetch }
+	* @param : { boolean } { $count_only } { false by default, if true, returns videos count only }
+	* @return { array } { $items } { an array with videos data }
+	*/
 
 	function get_videos_of_collection($id,$order,$limit,$count_only=false) {
 		global $cbvideo;
@@ -5124,24 +5107,20 @@
 	}
 
 
-	/**
-	 * function uses to parse certain string from bulk string
-	 * @author : Awais Tariq
-	 *
-	 * @param $needle_start
-	 * @param $needle_end
-	 * @param $results
-	 *
-	 * @return array|bool {bool/string/int} {true/$return_arr}
-	 * {true/$return_arr}
-	 * @internal param $ : {string} {$needle_start} { string from where the parse starts} {$needle_start} { string from where the parse starts}
-	 * @internal param $ : {string} {$needle_end} { string from where the parse end} {$needle_end} { string from where the parse end}
-	 * @internal param $ : {string} {$results} { total string in which we search} {$results} { total string in which we search}
-	 *
-	 * @todo {.....}
-	 *
-	 *
-	 */
+
+
+	/** 
+	* function uses to parse certain string from bulk string
+	* @author : Awais Tariq
+	* @param : {string} {$needle_start} { string from where the parse starts}
+	* @param : {string} {$needle_end} { string from where the parse end}
+	*@param : {string} {$results} { total string in which we search}
+	*
+	* @todo {.....}
+	*
+	*
+	* @return {bool/string/int} {true/$return_arr}
+	*/
 
 	function find_string($needle_start,$needle_end,$results) {
 		if(empty($results)||empty($needle_start)||empty($needle_end)) {
@@ -5187,16 +5166,13 @@
 	}
 
 	/**
-	 * Pulls subscribers ids for given userid
-	 *
-	 * @param : { integer } { $userid } { id of user to get subscribers for }
-	 * @param bool $limit
-	 *
-	 * @return array : { array } { $ids } { ids of subscribers }
-	 * { $ids } { ids of subscribers }
-	 * @author : Saqib Razzaq
-	 * @since : ClipBucket 2.8.1
-	 */
+	* Pulls subscribers ids for given userid
+	* @param : { integer } { $userid } { id of user to get subscribers for }
+	* @param : { integer / boolean } { false by default, number of subscribers to get }
+	* @return : { array } { $ids } { ids of subscribers }
+	* @author : Saqib Razzaq
+	* @since : ClipBucket 2.8.1
+	*/
 
 	function get_user_subscibers($userid, $limit = false) {
 		global $db;
@@ -5231,20 +5207,18 @@
 	}
 
 	/**
-	 * Check where a function is being called from
-	 *
-	 * @param bool $file
-	 * @param bool $pex
-	 *
-	 * @internal param $ : { boolean } { $file } { false by default, returns file path if true } { $file } { false by default, returns file path if true }
-	 * @internal param $ : { boolean } { $pex } { false by default, exists after pr() if true } { $pex } { false by default, exists after pr() if true }
-	 * @since : 2nd March, 2016 ClipBucket 2.8.1
-	 * @author : Saqib Razzaq
-	 */
+	* Check where a function is being called from
+	* @param : { boolean } { $file } { false by default, returns file path if true }
+	* @param : { boolean } { $pex } { false by default, exists after pr() if true }
+	* @since : 2nd March, 2016 ClipBucket 2.8.1
+	* @author : Saqib Razzaq
+	*/
 
 	function trace_func($file = false, $pex = false) {
-		$trace = debug_backtrace();
-		if ($file) {
+		if (!$file) {
+			$trace = debug_backtrace();
+		} else {
+			$trace = debug_backtrace();
 			$trace = $trace[1]['file'];
 		}
 
@@ -5255,16 +5229,14 @@
 		}
 	}
 
-	/**
-	 * Display an image or build image tag
-	 *
-	 * @param : { string } { $src } { link to image file }
-	 * @param bool $return
-	 *
-	 * @return string
-	 * @since : 2nd March, 2016 ClipBucket 2.8.1
-	 * @author : Saqib Razzaq
-	 */
+    /**
+	* Display an image or build image tag
+	*
+	* @param : { string } { $src } { link to image file }
+	* @param : { boolean } { $return } { false by default, returns img tag if true }
+	* @since : 2nd March, 2016 ClipBucket 2.8.1
+	* @author : Saqib Razzaq
+    */
 
     function view_image($src, $return = false) {
 		if (!empty($src)) {
@@ -5277,20 +5249,15 @@
 	}
 
 	/**
-	 * Get part of a string between two characters
-	 *
-	 * @param $str
-	 * @param $from
-	 * @param $to
-	 *
-	 * @return string : { string } { requested part of stirng }
-	 * { requested part of stirng }
-	 * @internal param $ : { string } { $str } { string to read } { $str } { string to read }
-	 * @internal param $ : { string } { $from } { character to start cutting } { $from } { character to start cutting }
-	 * @internal param $ : { string } { $to } { character to stop cutting } { $to } { character to stop cutting }
-	 * @since : 3rd March, 2016 ClipBucket 2.8.1
-	 * @author : Saqib Razzaq
-	 */
+	* Get part of a string between two characters
+	* 
+	* @param : { string } { $str } { string to read }
+	* @param : { string } { $from } { character to start cutting }
+	* @param : { string } { $to } { character to stop cutting }
+	* @return : { string } { requested part of stirng }
+	* @since : 3rd March, 2016 ClipBucket 2.8.1
+	* @author : Saqib Razzaq
+	*/
 
 	function getStringBetween($str,$from,$to) {
 	    $sub = substr($str, strpos($str,$from)+strlen($from),strlen($str));

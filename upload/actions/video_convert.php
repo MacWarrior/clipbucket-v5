@@ -60,8 +60,8 @@
 	else{
 		$fileDir = $file_directory;
 	}
-	$dateAdded = explode(" ", $fileDir);
-	$dateAdded = array_shift($dateAdded);
+	$dateAdded 	= explode(" ", $fileDir);
+	$dateAdded 	= array_shift($dateAdded);
 	$file_directory = implode("/", explode("-", $dateAdded));
 	//logData($fileDir);
 
@@ -69,14 +69,14 @@
 		Getting the file information from the queue for conversion
 	*/
 
-	$tmp_file = $queue_details['cqueue_name'];
-	$tmp_ext  = $queue_details['cqueue_tmp_ext'];
-	$ext 	  = $queue_details['cqueue_ext'];
+	$tmp_file 	= $queue_details['cqueue_name'];
+	$tmp_ext 	=  $queue_details['cqueue_tmp_ext'];
+	$ext 		=  $queue_details['cqueue_ext'];
 	$outputFileName = $tmp_file;
 	if(!empty($tmp_file)){
 
-	$temp_file = TEMP_DIR.'/'.$tmp_file.'.'.$tmp_ext;
-	$orig_file = CON_DIR.'/'.$tmp_file.'.'.$ext;
+	$temp_file 	= TEMP_DIR.'/'.$tmp_file.'.'.$tmp_ext;
+	$orig_file 	= CON_DIR.'/'.$tmp_file.'.'.$ext;
 
 	/*
 		Delete the uploaded file from temp directory 

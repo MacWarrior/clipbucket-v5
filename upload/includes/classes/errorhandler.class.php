@@ -2,6 +2,7 @@
 /**
  * Very basic error handler
  */
+ 
 
 class EH extends ClipBucket
 {
@@ -12,11 +13,15 @@ class EH extends ClipBucket
 	/**
 	 * A CONSTRUCTOR
 	 */
-	function error_handler(){}
-
+	function error_handler()
+	{
+		
+	}
+	
 	/**
 	 * Function used to add new Error
 	 */
+	 
 	function add_error($message=NULL,$id=NULL)
 	{
 		global $ignore_cb_errors;
@@ -25,7 +30,7 @@ class EH extends ClipBucket
 		$this->error_list[] = $message;
 	}
 
-
+	
 	/**
 	 * Function usd to add new warning
 	 */
@@ -37,19 +42,20 @@ class EH extends ClipBucket
 	/**
 	 * Function used to get error list
 	 */
-	function error_list()
-	{
-		return $this->error_list;
-	}
 	 
-	/**
-	 * Function used to flush errors
-	 */
-	function flush_error()
-	{
-		$this->error_list = '';
-	}
-
+	 function error_list()
+	 { 
+	 	return $this->error_list;
+	 }
+	 
+	 /**
+	  * Function used to flush errors
+	  */
+	  function flush_error()
+	  {
+		  $this->error_list = '';
+	  }
+	  
 	/**
 	 * Functio nused to add message_list
 	 */
@@ -94,40 +100,49 @@ class EH extends ClipBucket
 		$this->flush_error();
 		$this->flush_warning();
 	}
-
+	
 	/**
 	 * Function used to add error or either message using simple
 	 * and small object
-	 *
 	 * @param : message, @param :type,@param:id
-	 *
-	 * @return null
 	 */
 	function e($message=NULL,$type='e',$id=NULL)
 	{
+	
 		switch($type)
 		{
 			case 'm':
 			case 1:
 			case 'msg':
 			case 'message':
-				$this->add_message($message,$id);
-				break;
+			$this->add_message($message,$id);
+			break;
 			
 			case 'e':
 			case 'err':
 			case 'error':
 			default:
-				$this->add_error($message,$id);
-				break;
+			$this->add_error($message,$id);
+			break;
 			
 			case 'w':
 			case 2:
 			case 'war':
 			case 'warning':
+			{
 				$this->add_warning($message,$id);
-				break;
+			}
+			break;
+			
+			default:
+			$this->error_list($message,$id);
+			break;
 		}
+		
 		return $message;
 	}
+	
 }
+
+
+?>
