@@ -450,8 +450,6 @@ class Smarty_Template_Cached
 
     function smarty_catch_error()
     {
-    	return;
-
         global $Cbucket;
 
         if( !replaceable() || defined('LOVE_CLIPBUCKET')  || BACK_END ) return;

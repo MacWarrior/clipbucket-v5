@@ -924,7 +924,7 @@
 		
 		
 		/**
-		 * Function used to add and remove video from quicklist
+		 * Function used to add and remove video from qucklist
 		 * THIS FEATURE IS SPECIALLY ADDED ON REQUEST BY JAHANZEB HASSAN
 		 */
 		this.add_quicklist = function (obj,vid){
@@ -955,7 +955,7 @@
 		};
 
 
-		this.remove_quicklist = function(obj,vid){
+		this.remove_qucklist = function(obj,vid){
 			var self = this;
 			
 			$.post(page, 

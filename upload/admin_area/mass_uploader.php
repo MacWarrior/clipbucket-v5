@@ -41,7 +41,7 @@ if(isset($_POST['mass_upload_video']))
 	$total = count($_POST['mass_up']);
 	for($i=0;$i<$total;$i++)
 	{
-		if( !isset($_POST['filesToImport_'.$i]) ) // Check if file is checked for import
+		if( !isset($_POST['filesToImport'][$i]) ) // Check if file is checked for import
 			continue;
 
 		$file_key = time().RandomString(5);
