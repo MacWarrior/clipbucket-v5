@@ -14,12 +14,12 @@ cbvjslogo.prototype.init = function(){
 	var cbvjslogo = this;
 	var CbLogoBrand = document.createElement("div");
 	CbLogoBrand.id = "vjs-cb-logo";
-	CbLogoBrand.className = "vjs-cblogo-brand";
+/*	CbLogoBrand.className = "vjs-cblogo-brand";
 	CbLogoBrand.className += " vjs-menu-button";
 	CbLogoBrand.className += " vjs-control";
 	CbLogoBrand.className += " vjs-button";
 	CbLogoBrand.innerHTML = '<img style="display:block !important; cursor : pointer;margin:5px 0 0 4px;" src="data:image/png;base64, '+cbvjslogo.path+'" alt="">';
-
+*/
 	var FullScreenToggle = cbvjslogo.player.controlBar.getChild('fullscreenToggle').el_;
 	cbvjslogo.player.controlBar.el_.insertBefore(CbLogoBrand, FullScreenToggle);
 
@@ -78,7 +78,8 @@ cbvjsvolume.prototype.init = function(){
 	}else{
 		console.log("Ninja : Dont Mess Around Here! ");
 	}
-	cbvjsvolume.player.on('volumechange',function(){
+	cbvjsvolume.player.on('volumechange',function()
+    {
 		cbvjsvolume.Currvol = cbvjsvolume.player.volume();
 		cbvjsvolume.Muted = cbvjsvolume.player.muted();
 		
@@ -87,7 +88,6 @@ cbvjsvolume.prototype.init = function(){
 		}else{
 			$.cookie("cb_volume", cbvjsvolume.Currvol , { expires : 10 });
 		}
-
 	});
 }
 

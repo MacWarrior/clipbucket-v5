@@ -13,7 +13,7 @@
     </div>
     {if $show_delete=='yes'}
     <div class="ql_delete">
-        <img src="{$imageurl}/dot.gif" class="cross_icon" onclick="remove_qucklist('#{$unique_id}playlist_cont_{$video.videoid}','{$video.videoid}')" title="remove {$video.title} from qucklist" alt="quicklist">
+        <img src="{$imageurl}/dot.gif" class="cross_icon" onclick="remove_quicklist('#{$unique_id}playlist_cont_{$video.videoid}','{$video.videoid}')" title="remove {$video.title} from quicklist" alt="quicklist">
     </div>
     {/if}
     <div class="pl_duration">{$video.duration|SetTime}</div>        

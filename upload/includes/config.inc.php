@@ -47,7 +47,7 @@ if(config('closed') && THIS_PAGE!='ajax' && !$in_bg_cron && THIS_PAGE!='cb_insta
 		template("message.html");
 		exit();
 	}else{
-		e(lang("ATTENTION: THIS WEBSITE IS IN OFFLINE MODE"),"w");
+		e(lang("website_offline"),"w");
 	}
 }
 

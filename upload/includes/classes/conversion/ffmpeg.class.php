@@ -440,7 +440,7 @@ class FFMpeg{
 					$name = substr($name, 0, strrpos($name, "."));
 					$status = "Successful";
 					$this->log->TemplogData .= "\r\n Conversion Status : ".$status." @ ".date("Y-m-d H:i:s")." \r\n";
-					$this->log->writeLine("Converiosn Ouput",$this->log->TemplogData, true);
+					$this->log->writeLine("Conversion Ouput",$this->log->TemplogData, true);
 					
 					$this->output_file = $this->sdFile;
 					$this->output_details = $this->get_file_info($this->output_file);
@@ -485,7 +485,7 @@ class FFMpeg{
 					//logData(json_encode($this->sdFile1));
 					$status = "Successful";
 					$this->log->TemplogData .= "\r\n Conversion Status : ".$status." @ ".date("Y-m-d H:i:s")."\r\n";
-					$this->log->writeLine("Converiosn Ouput",$this->log->TemplogData, true);
+					$this->log->writeLine("Conversion Ouput",$this->log->TemplogData, true);
 
 					$this->output_file = $this->hdFile;
 					$this->output_details = $this->get_file_info($this->output_file);
@@ -530,7 +530,7 @@ class FFMpeg{
 					$name = substr($name, 0, strrpos($name, "."));
 					$status = "Successful";
 					$this->log->TemplogData .= "\r\n Conversion Status : ".$status." @ ".date("Y-m-d H:i:s")." \r\n";
-					$this->log->writeLine("Converiosn Ouput",$this->log->TemplogData, true);
+					$this->log->writeLine("Conversion Ouput",$this->log->TemplogData, true);
 
 					$this->output_file = $this->sdFile;
 					$this->output_details = $this->get_file_info($this->output_file);
@@ -794,16 +794,15 @@ class FFMpeg{
 
 
 	/**
-	* @Reason : this funtion is used to rearrange required resolution for conversion 
-	* @params : { resolutions (Array) , ffmpeg ( Object ) }
-	* @date : 23-12-2015
-	* return : refined reslolution array
+	* @Reason : this function is used to rearrange required resolution for conversion
+	* @params : { resolutions (Array) }
+	* @date : 13-12-2016
+	* return : refined resolution array
 	*/
 	function reindex_required_resolutions($resolutions)
 	{
-		
 		$original_video_height = $this->input_details['video_height'];
-		
+
 		// Setting threshold for input video to convert
 		$valid_dimensions = array(240,360,480,720,1080);
 		$input_video_height = $this->getClosest($original_video_height, $valid_dimensions);
@@ -816,23 +815,19 @@ class FFMpeg{
 		}
 		foreach ($resolutions as $key => $value) 
 		{
-			$video_width=(int)$value[0];
+			//$video_width=(int)$value[0];
 			$video_height=(int)$value[1];	
-			if($input_video_height != $video_height && $this->configs['gen_'.$video_height]  == 'yes'){
+			if($input_video_height != $video_height && $this->configs['gen_'.$video_height] == 'yes'){
 				$final_res[$video_height] = $value;	
 			}
 		}
 		
 		logData("Final Res : ".$final_res,"checkpoints");
-		
-		$revised_resolutions = $final_res;
-		if ( $revised_resolutions ){
-			return $revised_resolutions;
-		}
-		else{
-			return false;
-		}
 
+		$revised_resolutions = $final_res;
+		if ( $revised_resolutions )
+			return $revised_resolutions;
+		return false;
 	}
 
 	function isLocked($num=1)
@@ -862,54 +857,47 @@ class FFMpeg{
 		//We will now add a loop
 		//that will check weather
 		logData('Checking conversion locks','checkpoints');
-		while(1)
+		while( true )
 		{
 			$use_crons = config('use_crons');
 			//logData($this->isLocked(PROCESSESS_AT_ONCE)."|| ".$use_crons."||".$this->set_conv_lock);
-			if(!$this->isLocked(PROCESSESS_AT_ONCE) || $use_crons=='yes')
+			if( !$this->isLocked(PROCESSESS_AT_ONCE) || $use_crons == 'yes' )
 			{
-				
-				if($use_crons=='no')
+				if( $use_crons == 'no' )
 				{
 					//Lets make a file
 					$file = fopen($conv_file,"w+");
 					fwrite($file,"converting..");
 					fclose($file);
 				}
-				
-				
+
 				$this->start_time_check();
 				$this->start_log();
 				$this->prepare();
 				
-				$ratio = substr($this->input_details['video_wh_ratio'],0,7);
+				$ratio = substr($this->input_details['video_wh_ratio'], 0, 7);
 				
 				$max_duration = config('max_video_duration') * 60;
 
-				if($this->input_details['duration']>$max_duration)
+				if( $this->input_details['duration'] > $max_duration )
 				{
-				
 					$max_duration_seconds = $max_duration / 60; 
 					$this->TemplogData   = "Video duration was ".$this->input_details['duration']." minutes and Max video duration is {$max_duration_seconds} minutes, Therefore Video cancelled\n";
 					$this->TemplogData  .= "Conversion_status : failed\n";
 					$this->TemplogData  .= "Failed Reason : Max Duration Configurations\n";
 					
-					$this->log->writeLine("Max Duration configs",$this->TemplogData , true);
+					$this->log->writeLine("Max Duration configs",$this->TemplogData, true);
 					//$this->create_log_file();
 					
 					$this->failed_reason = 'max_duration';
 	
 					break;
-					return false;
 				}
-				$ratio = (float) $ratio;
-				if($ratio>=1.6)
-				{
+				$ratio = (float)$ratio;
+				if( $ratio >= 1.6 )
 					$res = $this->configs['res169'];
-				}else
-				{
+				else
 					$res = $this->configs['res43'];
-				}
 
 				logData('Video is about to convert','checkpoints');
 				
@@ -921,17 +909,19 @@ class FFMpeg{
 
 				$this->log->writeLine("Thumbs Generation", "Starting");
 				$this->TemplogData = "";
-				try{
+				try {
 					$thumbs_settings = $this->thumbs_res_settings;
 					logData($thumbs_settings,'checkpoints');
-					foreach ($thumbs_settings as $key => $thumbs_size){
+					foreach( $thumbs_settings as $key => $thumbs_size )
+					{
 						$height_setting = $thumbs_size[1];
 						$width_setting = $thumbs_size[0];
 						$dimension_setting = $width_setting.'x'.$height_setting;
-						if($key == 'original'){
+						if( $key == 'original' )
+						{
 							$dimension_setting = $key;
 							$dim_identifier = $key;	
-						}else{
+						} else {
 							$dim_identifier = $width_setting.'x'.$height_setting;	
 						}
 						$thumbs_settings['vid_file'] = $this->input_file;
@@ -942,8 +932,8 @@ class FFMpeg{
 						$this->generateThumbs($thumbs_settings);
 					}
 					
-				}catch(Exception $e){
-					$this->TemplogData .= "\r\n Errot Occured : ".$e->getMessage()."\r\n";
+				} catch(Exception $e) {
+					$this->TemplogData .= "\r\n Error Occured : ".$e->getMessage()."\r\n";
 				}
 				$this->TemplogData .= "\r\n ====== End : Thumbs Generation ======= \r\n";
 				$this->log->writeLine("Thumbs Files", $this->TemplogData , true );
@@ -959,64 +949,50 @@ class FFMpeg{
 				// setting type of conversion, fetching from configs
 				$this->resolutions = $this->configs['cb_combo_res'];
 
-				$res169 = $this->res169;
-
-				switch ($this->resolutions) 
+				switch( $this->resolutions )
 				{
 					case 'yes':
-					{
-						$res169 = $this->reindex_required_resolutions($res169);
+						$res169 = $this->reindex_required_resolutions($this->res169);
 						
 						$this->ratio = $ratio;
-						foreach ($res169 as $value) 
+						foreach( $res169 as $value )
 						{
-							$video_width=(int)$value[0];
-							$video_height=(int)$value[1];
+							$video_width  = (int)$value[0];
+							$video_height = (int)$value[1];
 
-							$bypass = $this->check_threshold($this->input_details['video_height'],$video_height);
-							logData($bypass,'reindex');
-							if($this->input_details['video_height'] > $video_height-1 || $bypass)
+							// Here we must check width instead of height to be able to import other formats than 16/9 (For example : 1920x800)
+							if( $this->input_details['video_width'] >= $video_width )
 							{
-								$more_res['video_width'] = $video_width;
-								$more_res['video_height'] = $video_height;
-								$more_res['name'] = $video_height;
-								logData($more_res['video_height'],'reindex');
-								$this->convert(NULL,false,$more_res);
-							
+								$more_res['video_width'] 	= $video_width;
+								$more_res['video_height']	= $video_height;
+								$more_res['name'] 			= $video_height;
+								logData($more_res['video_height'], 'reindex');
+								$this->convert(NULL, false, $more_res);
 							}
 						}
-					}
-					break;
+						break;
 
 					case 'no':
 					default :
-					{
 						$this->convertVideo($orig_file);
-					}
-					break;
+						break;
 				}
-				
-				
-				
 
 				$this->end_time_check();
 				$this->total_time();
 				
 				//Copying File To Original Folder
-				if($this->keep_original=='yes')
+				if( $this->keep_original == 'yes' )
 				{
 					$this->log->TemplogData .= "\r\nCopy File to original Folder";
-					if(copy($this->input_file,$this->original_output_path))
+					if( copy($this->input_file, $this->original_output_path) )
 						$this->log->TemplogData .= "\r\nFile Copied to original Folder...";
 					else
 						$this->log->TemplogData.= "\r\nUnable to copy file to original folder...";
 				}
-				
-				
+
 				$this->log->TemplogData .= "\r\n\r\nTime Took : ";
 				$this->log->TemplogData .= $this->total_time.' seconds'."\r\n\r\n";
-				
-			
 
 				if(file_exists($this->output_file) && filesize($this->output_file) > 0)
 					$this->log->TemplogData .= "conversion_status : completed ";
@@ -1027,41 +1003,20 @@ class FFMpeg{
 				//$this->create_log_file();
 				
 				break;
-			}else
-			{
+			} else {
 				#do nothing
 			}
 		}
 		
 	}
-
-	/**
-    * Used to checks if video is under threshold for conversion 
-    * @param   : { Array } { app_id }
-    * @todo    : This Function checks if video is under threshold 
-    * @example : check_threshold($input_vidoe_height,$current_video_height) { will check the threshold for 240p }
-    * @return  : { Boolean } { True/ False }
-    * @since   : 27th Oct, 2016 Feedback 1.0
-    * @author  : Fahad Abbas
-    */
-	function check_threshold($input_video_height,$current_video_height){
-		
-		$threshold = '200';
-		if ($current_video_height == "240"){
-			if ($input_video_height > $threshold){
-				return True;
-			}
-		}
-		return False;
-	}
 	
-	public function generate_thumbs($input_file,$duration,$dim='120x90',$num=3,$prefix=NULL, $rand=NULL,$gen_thumb=FALSE,$output_file_path=false,$specific_dura=false)
+	public function generate_thumbs($input_file,$duration, $dim='120x90', $num=3, $prefix=NULL, $rand=NULL, $gen_thumb=FALSE, $output_file_path=false, $specific_dura=false)
 	{
 
 		if($specific_dura)
 		{
 			$durations_format = gmdate("H:i:s", $duration);
-			$command = $this->ffmpeg."     -i $input_file  -ss ".$durations_format."   -r 1 $dimension -y -f image2 -vframes 1 $output_file_path ";
+			$command = $this->ffmpeg."     -i $input_file  -ss ".$durations_format."   -r 1 $dim -y -f image2 -vframes 1 $output_file_path ";
 			//pr($command,true);
 			shell_output($command);
 			
@@ -1562,7 +1517,7 @@ class FFMpeg{
 		}
 
 		$this->log->TemplogData .="\r\n\r\nEnd resolutions @ ".date("Y-m-d H:i:s")."\r\n\r\n";
-		$this->log->writeLine('Converiosn Ouput',$this->log->TemplogData,true);
+		$this->log->writeLine('Conversion Ouput',$this->log->TemplogData,true);
 		
 		$this->log->TemplogData = "";
 		$this->output_details = $this->get_file_info($this->output_file);
@@ -2093,11 +2048,7 @@ class FFMpeg{
 		rmdir($tmpDir);
 	}
 
-
-
-
-
-		/**
+	/**
 	 * Function used to convert seconds into proper time format
 	 * @param : INT duration
 	 * @parma : rand

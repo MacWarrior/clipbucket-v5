@@ -22,17 +22,24 @@ class Clipbucket_db
 
     var $num_rows = 0;
 
-    /**
-     * Connect to mysqli Database
-     *
-     * @param : { string } { $host } { your database host e.g localhost }
-     * @param : { string } { $name } { name of database to connect to }
-     * @param : { string } { $uname } { your database username }
-     * @param : { string } { $pwd } { password of database to connect to }
-     * @return { boolean } { true or false }
-     */
+	/**
+	 * Connect to mysqli Database
+	 *
+	 * @param $host
+	 * @param $name
+	 * @param $uname
+	 * @param $pwd
+	 *
+	 * @return bool { boolean } { true or false }
+	 * { true or false }
+	 * @internal param $ : { string } { $host } { your database host e.g localhost } { $host } { your database host e.g localhost }
+	 * @internal param $ : { string } { $name } { name of database to connect to } { $name } { name of database to connect to }
+	 * @internal param $ : { string } { $uname } { your database username } { $uname } { your database username }
+	 * @internal param $ : { string } { $pwd } { password of database to connect to } { $pwd } { password of database to connect to }
+	 */
 
-    function connect($host=String,$name=String,$uname=String,$pwd=String) {
+    function connect($host=String, $name=String, $uname=String, $pwd=String)
+	{
         try {
             if(!$host) $host = $this->db_host;
             if(!$name) $name = $this->db_name;
@@ -40,11 +47,14 @@ class Clipbucket_db
             if(!$pwd) $pwd = $this->db_pwd;
 
             $this->mysqli = new mysqli($host,$uname, $pwd, $name);
-            if($this->mysqli->connect_errno) return false;
+            if($this->mysqli->connect_errno)
+            	return false;
             $this->db_host = $host;
             $this->db_name = $name;
             $this->uname = $uname;
             $this->pwd = $pwd;
+
+            $this->execute('SET NAMES "utf8"');
 
         } catch(DB_Exception $e) {
             $e->getError();
@@ -270,9 +280,12 @@ class Clipbucket_db
      * @return : { boolean } { true of false }
      */
 
-    function db_update($tbl, $fields, $cond) {
+    function db_update($tbl, $fields, $cond)
+	{
         $count = 0;
-        foreach ($fields as $field => $val) {
+		$fields_query = '';
+        foreach ($fields as $field => $val)
+        {
             if ($count > 0)
                 $fields_query .= ',';
             $needle = substr($val, 0, 2);
@@ -289,6 +302,7 @@ class Clipbucket_db
         //Complete Query
         $query = "UPDATE $tbl SET $fields_query WHERE $cond $ep";
         try {
+        	global $db;
             $db->mysqli->query($query);
         } catch(DB_Exception $e) {
             $e->getError();
@@ -409,6 +423,8 @@ class Clipbucket_db
 
     function db_insert($tbl, $fields)
     {
+    	global $db;
+
         $count = 0;
         $query_fields = array();
         $query_values = array();
@@ -465,7 +481,6 @@ class Clipbucket_db
     /**
      * Get effect rows
      */
-
     function Affected_Rows()
     {
         return $this->mysqli->affected_rows;
@@ -473,4 +488,3 @@ class Clipbucket_db
 
 }
 
-?>
