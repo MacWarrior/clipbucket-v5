@@ -26,20 +26,24 @@ $(document).ready(function() {
 
     $('body').keydown(function(e)
     {
-        if( $(document.activeElement).is('body') && (e.keyCode == 0 || e.keyCode == 32) )
+        if( $(document.activeElement).is('body') || $(document.activeElement).is('button.vjs-fullscreen-control.vjs-control.vjs-button') )
         {
-            e.preventDefault();
-            if( cb_player.paused() )
-                cb_player.play();
-            else
-                cb_player.pause()
+            if( e.keyCode == 0 || e.keyCode == 32 )
+            {
+                e.preventDefault();
+                if( cb_player.paused() )
+                    cb_player.play();
+                else
+                    cb_player.pause()
+            }
         }
     });
 
     $('body').keyup(function(e)
     {
-        if($(document.activeElement).is('body') && (e.keyCode == 0 || e.keyCode == 32) )
-            e.preventDefault();
+        if( $(document.activeElement).is('body') || $(document.activeElement).is('button.vjs-fullscreen-control.vjs-control.vjs-button') )
+            if( e.keyCode == 0 || e.keyCode == 32 )
+                e.preventDefault();
     });
 });
 
