@@ -8,14 +8,11 @@
     {else}
     	<div class="break2"></div>
     	<li class="col-lg-12 no-related no-comments clearfix">
-       		<span class="well well-info btn-block">No Comments Added</span>
+       		<span class="well well-info btn-block">{lang code='no_comment_added'}</span>
         </li>
     {/if}
     </ul>
 </div>
-
-
-
 
 <style type="text/css">
     li {
@@ -36,14 +33,13 @@
         top: 10px;
         right: 10px;
     }
-
 </style>
- <script type="text/javascript">
-//user page user popover
-            $('.comments-load-more').on("click", function(){
-                var _this = $(this).data("flag");
-                show_replies(_this);
-                $(this).hide();
-                console.log('nae g ');
-            });
- </script>
+<script type="text/javascript">
+	//user page user popover
+	$('.comments-load-more').on("click", function(){
+		var _this = $(this).data("flag");
+		show_replies(_this);
+		$(this).hide();
+		console.log('nae g ');
+	});
+</script>

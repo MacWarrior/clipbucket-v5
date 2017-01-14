@@ -51,15 +51,15 @@
 				subtitle(ucfirst($vdo['title']));
 			} else {
 				return $Cbucket->show_page = false;
-
 			}
 
 			//Return category id without '#'
 			$v_cat = $vdo['category'];
 			if($v_cat[2] =='#') {
-			$video_cat = $v_cat[1];
+				$video_cat = $v_cat[1];
 			} else {
-			$video_cat = $v_cat[1].$v_cat[2];}
+				$video_cat = $v_cat[1].$v_cat[2];
+			}
 			$vid_cat = str_replace('%#%','',$video_cat);
 			#assign('vid_cat',$vid_cat);
 			$assign_arry['vid_cat'] = $vid_cat;
@@ -70,7 +70,7 @@
 			'exclude'=>$videoid,'show_related'=>'yes','limit'=>12,'order'=>'date_added DESC'));
 			if(!$related_videos){
 				$relMode = "ono";
-				$related_videos  = get_videos(array('exclude'=>$videoid,'limit'=>12,'order'=>'date_added DESC'));
+				$related_videos = get_videos(array('exclude'=>$videoid,'limit'=>12,'order'=>'date_added DESC'));
 			}
 			$playlist = $cbvid->action->get_playlist($pid,userid());
 			$assign_arry['playlist'] = $playlist;

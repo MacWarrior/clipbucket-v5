@@ -29,7 +29,7 @@
 
 	//Create an empty development.dev file in includes folder
 	//To Activate Development mode
-	
+
 	if(file_exists(dirname(__FILE__).'/development.dev')) {
 		define("DEVELOPMENT_MODE",true);
 		$__devmsgs = array(

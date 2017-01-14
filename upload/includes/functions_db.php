@@ -282,5 +282,3 @@ function select( $query ) {
     return cb_select( $query );
 }
 
-
-?>

@@ -18,8 +18,6 @@ if(!defined('SUB_PAGE')){
     define('SUB_PAGE', 'Edit Members');
 }
 
-
-
 $uid = $_GET['uid'];
 $udetails = $userquery->get_user_details($uid);
 
@@ -85,34 +83,7 @@ if($udetails)
 	assign("catparmas",'catparmas');
 
 
-    /*$type = "u";
-    $comment_cond = array();
-    $comment_cond['type'] = $type;
-    $comment_cond['order'] = " comment_id DESC";
-    $comment_cond['type_id'] = 'userid';
-    $comment_cond['sectionTable'] = 'users';
-    $comment_cond['count_only'] = false;
-    $comments = getComments($comment_cond);
-
-    $comments = $myquery->get_comments(array(
-        'type_id' 		=> 'userid',
-        'type' 			=> 'u',
-        'count_only' 	=> false,
-        'get_type' 		=> 'user',
-        'parent_id' 	=> '',
-        'cache'			=> $useCache
-    );)
-
-    pr($comments,true);
-    assign("comments",$comments);
-
-    */
-
-
-
-
-
-}else{
+} else {
 	e("No User Found");
 	$CBucket->show_page = false;
 }
@@ -120,4 +91,3 @@ if($udetails)
 subtitle("View User");
 template_files("view_user.html");
 display_it();
-?>

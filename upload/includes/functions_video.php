@@ -1059,7 +1059,6 @@
 
         if(userid())
             $userquery->increment_watched_vides(userid());
-
     }
 
     /**

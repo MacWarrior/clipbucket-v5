@@ -173,12 +173,18 @@ class CBvideo extends CBCategory
 	}
 	function exists($vid){return $this->video_exists($vid);}
 	function videoexists($vid){return $this->video_exists($vid);}
-	
-	
+
+
 	/**
 	 * Function used to get video data
+	 *
+	 * @param      $vid
+	 * @param bool $file
+	 * @param bool $basic
+	 *
+	 * @return bool|mixed|STRING
 	 */
-	function get_video( $vid, $file=false, $basic = false )
+	function get_video($vid, $file=false, $basic = false )
 	{
 		global $db, $cb_columns;
 		
@@ -193,7 +199,6 @@ class CBvideo extends CBCategory
             'video' => $videoFields,
             'users' => $userFields
         );
-
 
         $cond = ( ( $file ) ? 'video.file_name' : ( is_numeric( $vid ) ? 'video.videoid' : 'video.videokey' ) )." = '%s' ";
 
@@ -683,6 +688,10 @@ class CBvideo extends CBCategory
 	 * this function has all options
 	 * that you need to fetch videos
 	 * please see docs.clip-bucket.com for more details
+	 *
+	 * @param $params
+	 *
+	 * @return bool|STRING
 	 */
 	function get_videos($params)
 	{

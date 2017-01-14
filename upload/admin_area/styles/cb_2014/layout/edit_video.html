@@ -6,7 +6,7 @@
 <div class="row">
     <div class="heading clearfix">
 
-            <h2 class="pull-left paddingLeftLarge">Editing <small>&gt; {$data.title|truncate:80}</small>
+            <h2 class="pull-left paddingLeftLarge">Editing <small>&gt; {display_clean($data.title)|truncate:80}</small>
 <div class="btn-group">
                   <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                     Actions <span class="caret caret_margin"></span>
@@ -35,13 +35,6 @@
                 <br>
                 <span class="line-height-1 smaller-90"> Views </span>
                 </span>
-               <!-- <span class="btn btn-app btn-sm btn-yellow no-hover">
-                <span class="line-height-1 smaller-90"> {$data.comments_count} </span>
-
-                <br>
-                <span class="line-height-1 smaller-90"> Comments </span>
-                </span>-->
-
                 <span class="btn btn-app btn-sm btn-pink no-hover">
                 <span class="line-height-1"> {if $data.active=='yes'}<span class="glyphicon glyphicon-ok smaller-90"></span>
                 {else}<span class="glyphicon glyphicon-remove">{/if}</span>
@@ -51,9 +44,6 @@
                 </span>
             
                 {*pr($data,true)*}
-               <!--  <span class="btn btn-app btn-sm btn-grey no-hover">
-                <span class="line-height-1"> {*if $data.featured!='yes'*}<span class="glyphicon glyphicon-remove"></span>
-                {*else*}<span class=" glyphicon glyphicon-ok smaller-90">{*/if*}</span> -->
 
                 <br>
                  <span class="btn btn-app btn-sm btn-grey no-hover">
@@ -64,18 +54,6 @@
                 <span class="line-height-1 smaller-90">Featured</span>
                 </span>
                 </span>
-                <!--
-                <span class="btn btn-app btn-sm btn-success no-hover">
-                <span class="line-height-1">
-                                        {foreach from=$cbvid->video_manager_links_neww item=links}
-                                        {$cbvid->video_manager_link_neww($links,$data)}
-                                        {/foreach}
-                <br>
-                <span class="line-height-1 smaller-90">Editor Pick</span>
-                </span>
-                </span>
-            -->
-
 
                  <span class="btn btn-app btn-sm btn-success no-hover">
                 <span class="line-height-1"> {if $data.in_editor_pick=='yes'}<span class="glyphicon glyphicon-ok smaller-90"></span>
@@ -93,44 +71,6 @@
                 <span class="line-height-1 smaller-90"> FLAGGED</span>
                 </span>
                 </span>
-
-
-                <!-- <div class="btn-group">
-                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                    Actions <span class="caret caret_margin"></span>
-                  </button>
-                <ul class="dropdown-menu pull-right" role="menu">
-                <li><a href="{videoLink vdetails=$data}">Watch this video</a></li>
-                {if $data.active!='yes'}
-                <li><a href="edit_video.php?video={$data.videoid}&amp;mode=activate">Activate</a></li>
-                {else}
-                <li><a href="edit_video.php?video={$data.videoid}&amp;mode=deactivate">Deactivate</a></li>
-                {/if}
-                {if $data.featured!='yes'}
-                <li><a href="edit_video.php?video={$data.videoid}&amp;mode=featured">Make Featured</a></li>
-                {else}
-                <li><a href="edit_video.php?video={$data.videoid}&amp;mode=unfeature">Make Unfeatured</a></li>
-                {/if}
-                <li><a href="javascript:void(0)" onClick="javascript:Confirm_Delete('video_manager.php?delete_video={$data.videoid}')">Delete This Video</a></li>
-                </ul>
-                </div> -->
-
-
-
-
-<!--
-                <span class="btn btn-app btn-sm btn-primary no-hover">
-                {section name=list loop=$flagedVideos}
-
-                <span class="line-height-1 bigger-170"> {$flagedVideos[list].total_flags} </span>
-                {/section}
-                <br>
-                <span class="line-height-1 smaller-90"> Flagged </span>
-                </span>
--->
-
-
-
 
             </div>
         </div>
@@ -222,7 +162,7 @@
                         <tr>
                             <td class="first"><label>User Name</label></td>
                             <td class="last">
-                                <p><span>{$data.userid|get_username}</span></p>
+                                <p><span>{display_clean($data.userid|get_username)}</span></p>
                             </td>
                         </tr>
                         <tr>
@@ -286,7 +226,7 @@
                 </ul>
             </div>
             <div class="dropdown col-md-3">
-                <a class="btn btn-primary btn-sm dropdown-toggle pull-right" style="margin-top: 10px" data-toggle="dropdown"  href="">Manage Thumbs  <i class="caret"></i></a>
+                <a class="btn btn-primary btn-sm dropdown-toggle pull-right" style="margin-top: 10px" data-toggle="dropdown" href="">Manage Thumbs <i class="caret"></i></a>
                 <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu">
                     {if $data.embeded !=yes}
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="upload_thumbs.php?video={$data.videoid}&gen_more=true">Regenerate</a>{/if}
@@ -308,7 +248,7 @@
                 </div>
                 <div class="col-md-5" style="margin-top: 30px">
                     <label for="duration">Duration:</label>
-                    <input  name="duration" type="text" id="duration" class="form-control" value="{$data.duration}    (Seconds) ">
+                    <input  name="duration" type="text" id="duration" class="form-control" value="{$data.duration} (Seconds)">
                         
                 </div>
             </div>
@@ -353,7 +293,7 @@
                 {ANCHOR place="upload_subtitle"}
                 {ANCHOR place="edit_video_form"}
                 <div class="form-group">
-                    <input type="submit" class="btn btn-primary btn-sm" value="Update video details" style="margin:5px 0px 15px 0px" name="update">
+                    <input type="submit" class="btn btn-primary btn-sm" value="Update video details" style="margin:5px 0 15px 0;" name="update">
                 </div>
             </div>
         </div>
@@ -497,7 +437,7 @@
 <div class="widget-box" style="margin-top: 30px">
     <div class="widget-header header-color-blue2 fontawesome-icons">
 
-        <h5>{$data.title|truncate:80}- <b>Comments</b></h5>
+        <h5>{display_clean($data.title)|truncate:80}- <b>Comments</b></h5>
 
         <div class="widget-toolbar">
             <a href="#" data-action="reload">
@@ -530,9 +470,6 @@
                     {/foreach}
                     <div class="body clearfix">
                     <div class="col-md-3" style="float:right;">
-                            <!-- <a href="#" class="btn btn-minier btn-info">
-                                <i class="icon-only icon-share-alt"></i>
-                            </a> -->
                             <input type="hidden" name="cmt_id" value="{$comment.comment_id}" />
                             <input class="btn btn-primary" type="submit" name="del_cmt" value="Delete" />
                         </div>
@@ -541,10 +478,10 @@
                             <span class="green">{$comment.date_added|date_format}</span>
                         </div>
                         <div class="name col-md-3">
-                            <a href="#">{$comment.anonym_name}</a>
+                            <a href="#">{display_clean($comment.anonym_name)}</a>
                         </div>
                         <div class="text col-md-3">
-                            {$comment.comment}
+                            {display_clean($comment.comment)}
                         </div>  
                     </div>
                 </div>
@@ -559,15 +496,15 @@
 
         </div><!-- /widget-main -->
 
-    <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-    <script>
-        $(document).ready(function(){
-            $( "#datecreated" ).datepicker({
-                showOtherMonths: true,
-                selectOtherMonths: false,
-                dateFormat:"yy-mm-dd"
-            });
-        });
-    </script>
+		<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+		<script>
+			$(document).ready(function(){
+				$( "#datecreated" ).datepicker({
+					showOtherMonths: true,
+					selectOtherMonths: false,
+					dateFormat:"yy-mm-dd"
+				});
+			});
+		</script>
 	</div>
 </div>

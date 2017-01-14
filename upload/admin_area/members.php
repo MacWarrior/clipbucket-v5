@@ -219,4 +219,4 @@ if(isset($_POST['unban_selected'])){
 subtitle("Members Manager");
 template_files('members.html');
 display_it();
-?>
+

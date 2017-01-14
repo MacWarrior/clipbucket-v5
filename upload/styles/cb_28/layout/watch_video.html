@@ -15,13 +15,13 @@
 			</div>
 			<section class="video-details clearfix">
 				<header class="clearfix details">
-					<h1>{$video.title}</h1>
+					<h1>{display_clean($video.title)}</h1>
 					<div class="user-video-info clearfix">
 						<a href="{$userquery->profile_link($video)}" class="avatar">
 							<img src="{$userquery->avatar($video,'m',userid())}" class="img-responsive">
 						</a>
 						<h2 class="user-title">
-							<a href="{$userquery->profile_link($video)}"> {$video.username}</a>
+							<a href="{$userquery->profile_link($video)}"> {display_clean($video.username)}</a>
 						</h2>
 						<div class="views-counter">
 							<span>{prettyNum($vdo.views)} {if $vdo.views > 1}{lang code='views'}{else}{lang code="view"}{/if}</span>
@@ -35,7 +35,7 @@
 						</div>
 						<div class="clearfix subscribe-col col-lg-6 col-md-6 col-sm-6 col-xs-12">
 							{if $video.userid != userid()}
-								<a id="subscribeUser" class="btn btn-subscribe btn-primary" href="javascript:void(0)">
+								<a id="subscribeUser" class="btn btn-subscribe btn-primary" href="javascript:void(0);">
 									<span>{lang code='subscribe'}</span>
 								</a>
 							{/if}
@@ -53,9 +53,8 @@
 									{$quality = explode('.',$quality.0)}
 									{$file_quality = $quality.0}
 									<li role="presentation">
-										<a role="menuitem" tabindex="-1" href="{$file}"  download>
+										<a role="menuitem" tabindex="-1" href="{$file}" download>
 										<span class="glyphicon glyphicon-download-alt"></span> {$file_quality}</a>
-										
 									</li>
 									{/foreach}
 									</ul>
@@ -64,7 +63,7 @@
 						</div>
 					</div>
 				</header>
-				<div id="messageFav" class="alert alert-info marginTop" style="display:none"></div>
+				<div id="messageFav" class="alert alert-info marginTop" style="display:none;"></div>
 				<div class="view-tabs clearfix">
 					<ul class="clearfix nav nav-tabs">
 						<li class="active">
@@ -83,14 +82,14 @@
 					<div class="tab-content clearfix">
 						<div class="tab-pane fade in clearfix active" id="cb-item-info">
 							<div class="clearfix watch-vid-details">
-								<p>{AutoLinkUrls($video.description|unescape:"html")}</p>
+								<p>{display_clean(AutoLinkUrls($video.description)|unescape:"html")}</p>
 								<ul class="clearfix desc-list">
-									<li><strong>{lang code='category'}</strong>:&nbsp;{$vdo.category|categories:video}</li>
+									<li><strong>{lang code='category'}</strong>:&nbsp;{display_clean($vdo.category)|categories:video}</li>
 									<li><strong>{lang code='duration'}</strong>:&nbsp;{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</li>
 									<li><strong>{lang code='date'}</strong>:&nbsp; {$video.date_added|nicetime}</li>
 									<li>
 										<strong class="pull-left">{lang('tags')}:&nbsp;&nbsp;</strong>
-										<span class="pull-left">{$vdo.tags|tags:videos}</span>
+										<span class="pull-left">{display_clean($vdo.tags)|tags:videos}</span>
 									</li>
 								</ul>
 							</div>
@@ -119,16 +118,16 @@
 						<div class="tab-pane fade in clearfix custom-elements" id="cb-item-addto">
 							<div class="clearfix btn-fav">
 								<div id="video_action_result_cont"></div>
-								<a id="addfav" class="btn btn-block btn-primary" href="javascript:void(0)" onclick="_cb.add_to_favNew('video','{$vdo.videoid}');">{lang code='add_to_my_favorites'}</a>
+								<a id="addfav" class="btn btn-block btn-primary" href="javascript:void(0);" onclick="_cb.add_to_favNew('video','{$vdo.videoid}');">{lang code='add_to_my_favorites'}</a>
 							</div>
 							<div class="clearfix">
 								{show_playlist_form id=$vdo.videoid type=video user=userid() }
 								{if userid()}
 								<div class="clearfix">
 									<div class="clearfix btn-holder text-right">
-										<a href="javascript:void(0)" onclick="$('#addCollectionCont').toggle()" class="btn btn-primary">+ {lang code='add_to_my_collection'}</a>
+										<a href="javascript:void(0);" onclick="$('#addCollectionCont').toggle()" class="btn btn-primary">+ {lang code='add_to_my_collection'}</a>
 									</div>
-									<div id="addCollectionCont" style="display:none">
+									<div id="addCollectionCont" style="display:none;">
 									{show_collection_form id=$vdo.videoid type=Video}
 									</div>
 								</div>
@@ -161,9 +160,8 @@
 					
 					<div id="userCommentsList">
 						<div class="comments clearfix">
-    					<ul id="comments-ul">
-    					</ul>
-    				</div>
+    						<ul id="comments-ul"></ul>
+    					</div>
 					</div>
 					{if $vdo.comments_count > 10}
 						<div class="clearfix text-center">
@@ -176,7 +174,7 @@
 		<aside id="sidebar">
 			<div class="box-ad ad">{AD place='ad_300x250'}</div>
 
-			<h2>{if $smarty.get.play_list}Playlist Videos{elseif $relMode != 'ono'}Related Videos{else}Popular Videos{/if}</h2>
+			<h2>{if $smarty.get.play_list}{lang code='playlist_videos'}{elseif $relMode != 'ono'}{lang code='related_videos'}{else}{lang code='popular_videos'}{/if}</h2>
 			<div class="clearfix sidebar-items">
 			{if $smarty.get.play_list}
 				<div id="playlist_items">
@@ -187,7 +185,7 @@
 					{/section}
 				</div>
 				{if $total_items > 10}
-					<button class="btn btn-primary text-centre" id="playlist-pull" dataList={$cur_playlist} dataLimit="10" dataHit="2">Load More</button>
+					<button class="btn btn-primary text-centre" id="playlist-pull" dataList={$cur_playlist} dataLimit="10" dataHit="2">{lang code='load_more'}</button>
 				{/if}
 			{else}			    	
 				{if $videos}
@@ -202,7 +200,7 @@
 					{/foreach}
 			
 				{else}
-					<div class="well well-info">No Videos Found !</div>
+					<div class="well well-info">{lang code='no_videos_found'}</div>
 				{/if}
 			{/if}
 			</div>
@@ -211,7 +209,6 @@
 </div>
 
 <script>
-
 	/*Cookie based comments backup start*/
 	var current_video = "{$video.videoid}",
 	cookieToSave = 'comment_data_u'+userid+"v"+current_video,
@@ -230,7 +227,6 @@
 	});
 	/*Cookie based comments backup end*/
 
-	var playlist_total = "{$total_items}";
 	$('#ShareUsers').on("keyup",function(){
 		var typed = $(this).val();
 		$.ajax({
@@ -257,10 +253,10 @@
 	/*Playlist load more start*/
 	var playlist_total = "{$total_items}";
 	$('#playlist-pull').on("click",function(){
-		var __this = $(this);
-		loadHit = $(this).attr('dataHit');
-		loadLimit = $(this).attr('dataLimit');
-		playlist = $(this).attr('dataList');
+		var __this = $(this),
+			loadHit = $(this).attr('dataHit'),
+			loadLimit = $(this).attr('dataLimit'),
+			playlist = $(this).attr('dataList');
 
 		$.ajax({
 			url: baseurl+'/ajax/watch.php',
@@ -299,9 +295,10 @@
 	$(document).ready(function(){
 		$cb_player.height( $cb_player.width() / aspect_ratio );
 
-		var videoInfo = $("#videoDescription").text();
+        var video_description = $("#videoDescription");
+		var videoInfo = video_description.text();
 		var newInfo = videoInfo.replace(/(((https?:\/\/)|([\s\t]))(www.)?([a-z0-9]+)\.[a-z]+)/g, '<a href="$1">$1</a>');
-		$("#videoDescription").html(newInfo);
+        video_description.html(newInfo);
 
 		comments_voting = '{$vdo.comment_voting}';
 		_cb.getCommentsNew(
@@ -329,14 +326,6 @@
 		if(adHtml<1){
 			$('.ad-holder').remove();
 		}
-		/*//Progress Bar
-		  $( '#circle' ).progressCircle();
-		  $( '#circle' ).progressCircle({
-			nPercent        : nPercent,
-			showPercentText : showPercentText,
-			thickness       : thickness,
-			circleSize      : circleSize
-		  });*/
 	});
 
 	$(document).on('click','#load-more-comments',function(){
@@ -353,12 +342,11 @@
 		);
 		$(this).attr('page', nextPage);
 		$(this).text("Load More")
-	})
+	});
 
 	var resizePlayer =  _cb.debounce(function() {
 		$cb_player.height( $cb_player.width() / aspect_ratio );
 	}, 500, false);
 
 	$(window).resize(resizePlayer);
-
 </script>
