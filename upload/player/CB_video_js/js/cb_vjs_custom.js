@@ -26,7 +26,9 @@ $(document).ready(function() {
 
     $('body').keydown(function(e)
     {
-        if( $(document.activeElement).is('body') || $(document.activeElement).is('button.vjs-fullscreen-control.vjs-control.vjs-button') )
+        if( $(document.activeElement).is('body') ||
+            $(document.activeElement).is('button.vjs-fullscreen-control.vjs-control.vjs-button') ||
+            $(document.activeElement).is('div.vjs-volume-menu-button.vjs-menu-button.vjs-menu-button-inline.vjs-control.vjs-button.vjs-volume-menu-button-horizontal.vjs-vol-0') )
         {
             if( e.keyCode == 0 || e.keyCode == 32 )
             {
@@ -41,9 +43,13 @@ $(document).ready(function() {
 
     $('body').keyup(function(e)
     {
-        if( $(document.activeElement).is('body') || $(document.activeElement).is('button.vjs-fullscreen-control.vjs-control.vjs-button') )
+        if( $(document.activeElement).is('body') ||
+            $(document.activeElement).is('button.vjs-fullscreen-control.vjs-control.vjs-button') ||
+            $(document.activeElement).is('div.vjs-volume-menu-button.vjs-menu-button.vjs-menu-button-inline.vjs-control.vjs-button.vjs-volume-menu-button-horizontal.vjs-vol-0') )
+        {
             if( e.keyCode == 0 || e.keyCode == 32 )
                 e.preventDefault();
+        }
     });
 });
 
