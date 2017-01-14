@@ -3469,7 +3469,7 @@ class userquery extends CBCategory{
 	                         'validate_function' => 'verify_age',
 							 'db_field'=>'dob',
 							 'required'=>'yes',
-	                         'invalid_err'=>lang('You must be atleast '.config('min_age_reg').' to register'),
+	                         'invalid_err'=>lang("register_min_age_request",config('min_age_reg'))
 							 ),
 
 			  'country'	=> array(
@@ -3495,7 +3495,7 @@ class userquery extends CBCategory{
 								'required'=>'yes',
 								),
 							 						 					 
-			  'cat'		=> array('title'=> lang('Category'),
+			  'cat'		=> array('title'=> lang('category'),
 								 'type'=> 'dropdown',
 								 'name'=> 'category',
 								 'id'=> 'category',
@@ -3503,7 +3503,7 @@ class userquery extends CBCategory{
 								 'db_field'=>'category',
 								 'checked'=> $default['category'],
 								 'required'=>'yes',
-								 'invalid_err'=>lang("Please select your category"),
+								 'invalid_err'=>lang("select_category"),
 								 'display_function' => 'convert_to_categories',
 								 'category_type'=>'user',
 								 )
