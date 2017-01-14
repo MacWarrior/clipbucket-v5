@@ -569,7 +569,7 @@ if(!empty($mode))
 			global $cbemail;
 			$friend = mysql_clean($_POST['uid']);
 			$userid = userid();
-			$username = username();
+			$username = user_name();
 			$mailId = $userquery->get_user_details($friend,false,true);
 
 			//$mailId = $cbemail->get_email_by_userid($friend);
@@ -698,7 +698,7 @@ if(!empty($mode))
 						$comment = '';
 					$reply_to = $_POST['reply_to'];
 					$email = $_POST['email'];
-					if (!is_valid_email($email)) {
+					if (!isValidEmail($email)) {
 						$err = array();
 						$err['err'] = "Invalid email provided";
 						echo json_encode($err);

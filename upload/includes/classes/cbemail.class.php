@@ -67,7 +67,7 @@ class CBEmail
 		 '{website_url}'	=> BASEURL,
 		 '{date_format}'	=> cbdate(DATE_FORMAT),
 		 '{date}'			=> cbdate(),
-		 '{username}'		=> username(),
+		 '{username}'		=> user_name(),
 		 '{userid}'			=> userid(),
 		 '{date_year}'		=> cbdate("Y"),
 		 '{date_month}'		=> cbdate("m"),
@@ -389,7 +389,7 @@ class CBEmail
 		$condition = "email = '$email'";
 		$receiver_name = $db->select(tbl('users'),'username',$condition);
 		$var = array
-				('{sender}'	=> username(),
+				('{sender}'	=> user_name(),
 				 '{website_title}'=> TITLE,
 				 '{reciever}'	=> $receiver_name[0]['username'],
 				 '{sender_link}'=>  BASEURL.'/user/'.$username,

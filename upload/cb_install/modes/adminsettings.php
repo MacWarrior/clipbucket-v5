@@ -11,7 +11,6 @@ we now update installation details and insert language phrases.</p>
 <p>
 <?php
 
-
 function GetServerProtocol()
 {
 	if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on'){
@@ -83,6 +82,6 @@ echo '<br><span class="glyphicon glyphicon-ok"  style="color:#fff"></span><span 
     
     <input type="hidden" name="mode" value="sitesettings" /><br>
      
-   <?php echo button('Save and Continue',' onclick="$(\'#installation\').submit()" ');?>
+   <?php button('Save and Continue',' onclick="$(\'#installation\').submit()" '); ?>
 </form>
 </p>

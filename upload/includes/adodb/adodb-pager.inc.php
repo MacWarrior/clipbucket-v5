@@ -85,7 +85,7 @@ class ADODB_Pager {
 	global $PHP_SELF;
 		if ($anchor) {
 	?>
-		<a href="<?php echo $PHP_SELF,'?',$this->id;?>_next_page=1"><?php echo $this->first;?></a> &nbsp; 
+		<a href="<?php echo $PHP_SELF,'?',$this->id; ?>_next_page=1"><?php echo $this->first; ?></a> &nbsp;
 	<?php
 		} else {
 			print "$this->first &nbsp; ";
@@ -100,7 +100,7 @@ class ADODB_Pager {
 	
 		if ($anchor) {
 		?>
-		<a href="<?php echo $PHP_SELF,'?',$this->id,'_next_page=',$this->rs->AbsolutePage() + 1 ?>"><?php echo $this->next;?></a> &nbsp; 
+		<a href="<?php echo $PHP_SELF,'?',$this->id,'_next_page=',$this->rs->AbsolutePage() + 1 ?>"><?php echo $this->next; ?></a> &nbsp;
 		<?php
 		} else {
 			print "$this->next &nbsp; ";
@@ -121,7 +121,7 @@ class ADODB_Pager {
 		
 		if ($anchor) {
 		?>
-			<a href="<?php echo $PHP_SELF,'?',$this->id,'_next_page=',$this->rs->LastPageNo() ?>"><?php echo $this->last;?></a> &nbsp; 
+			<a href="<?php echo $PHP_SELF,'?',$this->id,'_next_page=',$this->rs->LastPageNo(); ?>"><?php echo $this->last; ?></a> &nbsp;
 		<?php
 		} else {
 			print "$this->last &nbsp; ";
@@ -170,7 +170,7 @@ class ADODB_Pager {
 	global $PHP_SELF;
 		if ($anchor) {
 	?>
-		<a href="<?php echo $PHP_SELF,'?',$this->id,'_next_page=',$this->rs->AbsolutePage() - 1 ?>"><?php echo $this->prev;?></a> &nbsp; 
+		<a href="<?php echo $PHP_SELF,'?',$this->id,'_next_page=',$this->rs->AbsolutePage() - 1; ?>"><?php echo $this->prev; ?></a> &nbsp;
 	<?php 
 		} else {
 			print "$this->prev &nbsp; ";

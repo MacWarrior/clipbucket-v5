@@ -1131,7 +1131,7 @@
         $new_users = array();
         foreach($users_array as $user)
         {
-            if($user!=username() && !is_numeric($user) && $userquery->user_exists($user))
+            if($user!=user_name() && !is_numeric($user) && $userquery->user_exists($user))
             {
                 $new_users[] = $user;
             }
@@ -1153,7 +1153,7 @@
     {
 
         if(!$user)
-            $user = username();
+            $user = user_name();
 
         if(is_array($vdo))
             $video_users = $vdo['video_users'];

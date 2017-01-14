@@ -87,7 +87,7 @@ Assign('u_control', $profile);
 		//Checking if user is not banned by admin
 		if(userid())
 		{
-			if($userquery->is_user_banned(username(),$udetails['userid'],$udetails['banned_users']))
+			if($userquery->is_user_banned(user_name(),$udetails['userid'],$udetails['banned_users']))
 			{
 				e(sprintf(lang('you_are_not_allowed_to_view_user_channel'),$udetails['username']));
 				assign('isBlocked','yes');

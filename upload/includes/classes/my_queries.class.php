@@ -496,7 +496,7 @@ class myquery {
 			$own_details = $userquery->get_user_field_only($obj_owner,'email');
 			
 			
-			$username = username();
+			$username = user_name();
 			$username = $username ? $username : post('name');	
 			$useremail = $email;
                         

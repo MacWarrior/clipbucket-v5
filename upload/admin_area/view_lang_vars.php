@@ -61,9 +61,9 @@ $query = mysql_query("SELECT * FROM ".tbl("phrases")." ORDER BY text ASC");
 while($data=mysql_fetch_array($query))
 {
 ?>
-<td align="left"><?=$data['varname']?>
+<td align="left"><?php echo $data['varname']; ?>
 </td>
-<td align="left"><?=$data['text']?>
+<td align="left"><?php echo $data['text']; ?>
 </td>
 </tr>
 

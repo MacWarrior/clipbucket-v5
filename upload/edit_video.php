@@ -47,4 +47,3 @@ if($vdetails['userid'] != userid())
 subtitle(lang("vdo_edit_vdo"));
 template_files('edit_video.html');
 display_it();
-?>

@@ -218,7 +218,7 @@ class cb_pm
 				$user_id = $this->get_the_user($username);
 				if($userquery->is_user_banned($username,userid())) {
 					e(sprintf(lang("cant_pm_banned_user"),$username));
-				} elseif($userquery->is_user_banned(username(),$username)){
+				} elseif($userquery->is_user_banned(user_name(),$username)){
 					e(sprintf(lang("cant_pm_user_banned_you"),$username));
 				}elseif(!$userquery->user_exists($username)) {
 					e(lang("unknown_reciever"));

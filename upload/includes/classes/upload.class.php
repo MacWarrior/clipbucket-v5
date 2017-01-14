@@ -121,7 +121,7 @@ class Upload{
 				if(!$field['clean_func'] || (!apply_func($field['clean_func'],$val) && !is_array($field['clean_func'])))
 					$val = mysql_clean($val);
 				else
-						$val = apply_func($field['clean_func'],sql_free($val));
+						$val = apply_func($field['clean_func'], mysql_clean($val));
 				
 				if(empty($val) && !empty($field['default_value']))
 					$val = $field['default_value'];

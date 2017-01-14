@@ -35,28 +35,33 @@ if(function_exists('get_refer_url_from_embed_code'))
   <?php
   if(!$ytcode):
   ?>
-  <file><?=$vid_file?></file>
+  <file><?php echo $vid_file; ?></file>
   <?php
   else:
   ?>
-   <file>http://youtube.com/watch?v=<?=$ytcode?></file>
+   <file>http://youtube.com/watch?v=<?php echo $ytcode; ?></file>
   <?php
   endif;
   ?>
   
-  <autostart><?php
-  if($_GET['autoplay']=='yes') echo 'true'; else echo 'false';
-  ?></autostart>
+  <autostart>
+<?php
+  	if($_GET['autoplay']=='yes')
+  		echo 'true';
+  	else
+  		echo 'false';
+ ?>
+  </autostart>
   
-  <image><?=get_thumb($video,'big');?></image>
+  <image><?php echo get_thumb($video,'big'); ?></image>
   <repeat>true</repeat>
-  <skin><?=CB_PLAYER_URL?>/skins/glow/glow.xml</skin>
+  <skin><?php echo CB_PLAYER_URL; ?>/skins/glow/glow.xml</skin>
   <plugins><?php if($hd_file || $ytcode){ ?>hd-2<?php } ?>,plugins/related/related.swf</plugins>
   
   <?php if($hd_file): ?>
-  <hd.file><?=$hd_file?></hd.file>
+  <hd.file><?php echo $hd_file; ?></hd.file>
   <?php endif; ?>
-  <bufferlength><?=config('buffer_time')?></bufferlength>
+  <bufferlength><?php echo config('buffer_time'); ?></bufferlength>
   
   <?php if(config('pseudostreaming')=='yes'): ?>
   
@@ -75,10 +80,10 @@ if(function_exists('get_refer_url_from_embed_code'))
   <?php endif; ?>
   
   <!-- Setting Related videos -->
-  <related.file><?=CB_PLAYER_URL;
-  ?>/plugins/related/related_videos.php?vid=<?=$video['videoid'];
-  ?>&title=<?=urlencode($video['title']);
-  ?>&tags=<?=urlencode($video['tags']);
+  <related.file><?php echo CB_PLAYER_URL;
+  ?>/plugins/related/related_videos.php?vid=<?php echo $video['videoid'];
+  ?>&title=<?php echo urlencode($video['title']);
+  ?>&tags=<?php echo urlencode($video['tags']);
   ?></related.file>
   <related.usedock>false</related.usedock>
   <related.heading>More suggested videos</related.heading>
@@ -87,18 +92,18 @@ if(function_exists('get_refer_url_from_embed_code'))
   
   <!-- For Licensensed Players -->
   <!-- Setting Logo -->
-  <logo.file><?=website_logo()?></logo.file>
-  <logo.link><?=BASEURL?></logo.link>
-  <logo.margin><?=config('logo_padding')?></logo.margin>
-  <logo.position><?=cb_player_logo_position()?></logo.position>
+  <logo.file><?php echo website_logo(); ?></logo.file>
+  <logo.link><?php echo BASEURL; ?></logo.link>
+  <logo.margin><?php echo config('logo_padding'); ?></logo.margin>
+  <logo.position><?php echo cb_player_logo_position(); ?></logo.position>
   <logo.timeout>3</logo.timeout>
   <logo.over>1</logo.over>
   <logo.out>0.5</logo.out>
   <!-- Ending Logo Settings-->
   
   <!-- Setting context menu -->
-  <abouttext><?=config('pakplayer_contextmsg')?></abouttext>
-  <aboutlink><?=BASEURL?></aboutlink>
+  <abouttext><?php echo config('pakplayer_contextmsg'); ?></abouttext>
+  <aboutlink><?php echo BASEURL; ?></aboutlink>
   <!-- Setting context menu ends -->
   
 </config>

@@ -76,19 +76,19 @@ subtitle($title);
 
 <rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/">
 <channel>
-<title><?=cbtitle()?></title>
-<link><?=BASEURL?></link>
+<title><?php echo cbtitle(); ?></title>
+<link><?php echo BASEURL; ?></link>
     <image> 
-        <url><?=website_logo()?></url>
-        <link><?=BASEURL?></link>
-        <title><?=cbtitle()?></title>
+        <url><?php echo website_logo(); ?></url>
+        <link><?php echo BASEURL; ?></link>
+        <title><?php echo cbtitle(); ?></title>
     </image>
-    <description><?=$Cbucket->configs['description']?></description>
+    <description><?php echo $Cbucket->configs['description']; ?></description>
     <?php
 	if($total_vids)
 	{
 	?>
-    <total_videos><?=$total_vids?></total_videos>
+    <total_videos><?php echo $total_vids; ?></total_videos>
     <?php
 	}
 	?>
@@ -98,38 +98,37 @@ subtitle($title);
     {
     ?>
     <item>
-        <author><?=$video['username']?></author>
-        <title><?=substr($video['title'],0,50)?></title>
-        <link><?=video_link($video)?></link>
+        <author><?php echo $video['username']; ?></author>
+        <title><?php echo substr($video['title'],0,50); ?></title>
+        <link><?php echo video_link($video); ?></link>
         <description>
         <![CDATA[   
         <table width="600" border="0" cellspacing="0" cellpadding="0">
         <tr>
-        <td width="130" height="90" align="center" valign="middle"><img src="<?=get_thumb($video)?>"  border="1"/></td>
+        <td width="130" height="90" align="center" valign="middle"><img src="<?php echo get_thumb($video); ?>"  border="1"/></td>
         <td valign="top">
-        <a href="<?=video_link($video)?>"><?=$video['title']?></a><br />
-        <?=$video['description']?>
+        <a href="<?php echo video_link($video); ?>"><?php echo $video['title']; ?></a><br />
+        <?php echo $video['description']; ?>
         </td>
         <td width="100" valign="top" align="right">
-        Rating <?=$video['rating']?>/10<br />
-        Views <?=$video['views']?><br />
-        Duration <?=SetTime($video['duration'])?>
-
+        Rating <?php echo $video['rating']; ?>/10<br />
+        Views <?php echo $video['views']; ?><br />
+        Duration <?php echo SetTime($video['duration']); ?>
 
         </tr>
         </table>
          <hr size="1" noshade>
         ]]>           
         </description>
-        <category><?=strip_tags(categories($video['category'],'video'))?></category>
-        <guid isPermaLink="true"><?=video_link($video)?></guid>
-        <pubDate><?=$video['date_added']?></pubDate>
-        <media:player url="<?=video_link($video)?>" />
-        <media:thumbnail url="<?=get_thumb($video)?>" width="120" height="90" />
-        <![CDATA[<media:title><?=substr($video['title'],0,50)?></media:title> 
-        <media:category label="Tags"><?=strip_tags(tags($video['tags'],'video'))?></media:category>]]>
-        <media:credit><?=$video['username']?></media:credit>
-        <enclosure url="<?=video_link($video)?>" type="application/x-shockwave-flash" />
+        <category><?php echo strip_tags(categories($video['category'],'video')); ?></category>
+        <guid isPermaLink="true"><?php echo video_link($video); ?></guid>
+        <pubDate><?php echo $video['date_added']; ?></pubDate>
+        <media:player url="<?php echo video_link($video); ?>" />
+        <media:thumbnail url="<?php echo get_thumb($video); ?>" width="120" height="90" />
+        <![CDATA[<media:title><?php echo substr($video['title'],0,50); ?></media:title>
+        <media:category label="Tags"><?php echo strip_tags(tags($video['tags'],'video')); ?></media:category>]]>
+        <media:credit><?php echo $video['username']; ?></media:credit>
+        <enclosure url="<?php echo video_link($video); ?>" type="application/x-shockwave-flash" />
 
     </item>
     <?php

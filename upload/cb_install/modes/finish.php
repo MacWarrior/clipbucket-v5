@@ -3,7 +3,6 @@ if(file_exists(FILES_DIR.'/temp/install.me'))
 	unlink(FILES_DIR.'/temp/install.me');
 ?>
 
-
 </div>
 <div id="fb-root"></div>
 <script>(function(d, s, id) {
@@ -14,29 +13,18 @@ if(file_exists(FILES_DIR.'/temp/install.me'))
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
 
-
-
 <div class="nav_des clearfix">
     <div class="cb_container">
     <h4 style="color:#fff">ClipBucket has been installed successfully</h4>
     <p style="color:#fff; font-size:13px;">now you have succesfully installed clipbucket, you may be insterested in following plugins to <strong>enhance your website</strong></p>
 
-
-
 </div><!--cb_container-->
 </div><!--nav_des-->
 
-
-
 <div id="sub_container" class="br5px">
 
-
-<!--<h2>ClipBucket has been installed successfully</h2>
-<p>
-<div id="fb-root"></div><script src="http://connect.facebook.net/en_US/all.js#appId=152608291474175&amp;xfbml=1"></script><fb:like href="http://www.facebook.com/ClipBucket" send="true" width="450" show_faces="true" font=""></fb:like>
--->
 <div class="errorDiv br5px" id="dbresult" style="">
-<?=msg_arr(array('err'=>'<span style="color:#A32727;">Please delete cb_install directory</span>'))?></div>
+<?php echo msg_arr(array('err'=>'<span style="color:#A32727;">Please delete cb_install directory</span>')); ?></div>
 
 
 <div class="fb_finish"><div class="fb-like-box" data-href="https://www.facebook.com/ClipBucket" data-width="348" data-height="500" 
@@ -81,8 +69,6 @@ if(file_exists(FILES_DIR.'/temp/install.me'))
  <div class="line"></div>
 </div>
 
-
-
 <div class="product br5px" style="">
 	<div class="title">
     <a href="http://clip-bucket.com/product/Paid-Subscription-Module-Billing-System/95">	
@@ -95,18 +81,13 @@ Paid Subscription Module </a></div>
 <div style="clear:both"></div>
 
 </div>
-  
-    
-   <!-- <div style="font-size:13px; margin:5px 0px" align="center">
-    	Please read our "<a href="http://docs.clip-bucket.com/clipbucket-docs/clipbucket-installation" style="text-decoration:none"><strong>what to do after installation</strong></a>" guide...
-    </div>
-</p>-->
 
 <div align="center" style="margin-top:40px"><form name="installation" method="post" id="installation">
 
     <input type="hidden" name="mode" value="finish" />
-    <?=button_danger("Continue to Admin Area",' onclick="window.location=\''.BASEURL.'/admin_area\'" ');?>
-     <?=button("Continue to ".config('site_title'),' onclick="window.location=\''.BASEURL.'\'" ');?>
+    <?php
+		button_danger("Continue to Admin Area",' onclick="window.location=\''.BASEURL.'/admin_area\'" ');
+		button("Continue to ".config('site_title'),' onclick="window.location=\''.BASEURL.'\'" ');
+	?>
 
-  
 </form></div>

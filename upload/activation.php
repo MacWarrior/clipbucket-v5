@@ -23,7 +23,7 @@ if($userquery->udetails['usr_status']=='Ok'){
 	if(isset($_REQUEST['av_username']) || isset($_POST['activate_user']))
 	{
 		$user = mysql_clean($_REQUEST['av_username']);
-		$avcode = mysql_clean($_REQUEST['avcode']);
+		$avcode = $_REQUEST['avcode'];
 		$userquery->activate_user_with_avcode($user,$avcode);
 	}
 			
@@ -41,4 +41,3 @@ if($userquery->udetails['usr_status']=='Ok'){
 
 template_files('activation.html');
 display_it();
-?>

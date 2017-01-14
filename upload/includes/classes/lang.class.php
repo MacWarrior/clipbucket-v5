@@ -283,10 +283,10 @@ class language
 			echo '<?xml version="1.0" encoding="UTF-8"?>';
 			?>
 			<clipbucket_language>
-				<name><?=$lang_details['language_name']?></name>
-				<iso_code><?=$lang_details['language_code']?></iso_code>
+				<name><?php echo $lang_details['language_name']; ?></name>
+				<iso_code><?php echo $lang_details['language_code']; ?></iso_code>
 				<phrases>
-					<?=array2xml(array('lang'=>$this->lang_phrases()));?>
+					<?php echo array2xml(array('lang'=>$this->lang_phrases())); ?>
 				</phrases>
 			</clipbucket_language>
 <?php

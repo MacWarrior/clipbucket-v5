@@ -313,9 +313,9 @@ class cbactions
 						$emails = implode(',',$emails_array);
 						
 						//Now Finally Sending Email
-						$from = $userquery->get_user_field_only(username(),"email");
+						$from = $userquery->get_user_field_only(user_name(),"email");
 						
-						cbmail(array('to'=>$emails_array,'from'=>$from,'from_name'=>username(),'subject'=>$subj,'content'=>$msg,'use_boundary'=>true));
+						cbmail(array('to'=>$emails_array,'from'=>$from,'from_name'=>user_name(),'subject'=>$subj,'content'=>$msg,'use_boundary'=>true));
 						e(sprintf(lang("thnx_sharing_msg"),$this->name),'m');
 						
 					}
@@ -570,100 +570,6 @@ class cbactions
 
         return $group;
     }
-	
-	/**
-	 * Function used to create new playlist
-	 * @param ARRAY
-	 */
-	/*function create_playlist( $array = null )
-	{
-		global $db;
-
-        if ( is_null( $array ) ) {
-            $array = $_POST;
-        }
-
-		$name = mysql_clean( $array['name'] );
-		if(!userid())
-			e(lang("please_login_create_playlist"));
-		/*elseif(empty($name))
-			e(lang("please_enter_playlist_name"));
-		elseif($this->playlist_exists($name,userid(),$this->type))
-			e(sprintf(lang("play_list_with_this_name_arlready_exists"),$name));
-		else
-		{
-
-            $upload_fields = $this->load_playlist_fields( $array );
-            $fields = array();
-
-            foreach( $upload_fields as $group ) {
-
-                $fields = array_merge( $fields, $group[ 'fields' ] );
-
-            }
-
-            validate_cb_form( $fields, $array );
-            if ( !error() ) {
-
-                foreach($fields as $field)
-                {
-                    $name = formObj::rmBrackets($field['name']);
-                    $val = $array[ $name ];
-
-                    if($field['use_func_val'])
-                        $val = $field['validate_function']($val);
-
-                    if(is_array($val))
-                    {
-                        $new_val = '';
-                        foreach($val as $v)
-                        {
-                            $new_val .= "#".$v."# ";
-                        }
-                        $val = $new_val;
-                    }
-                    if(!$field['clean_func'] || (!function_exists($field['clean_func']) && !is_array($field['clean_func'])))
-                        $val = ($val);
-                    else
-                        $val = apply_func($field['clean_func'],sql_free('|no_mc|'.$val));
-
-                    if(!empty($field['db_field']))
-                        $query_values[ $name ] = $val;
-                }
-
-
-                $query_values[ 'date_added' ] = NOW();
-                $query_values[ 'userid' ] = $array[ 'userid' ] ? $array[ 'userid' ] : userid();
-                $query_values[ 'playlist_type' ] = $this->type;
-
-                $db->insert( tbl( $this->playlist_tbl ), array_keys( $query_values ), array_values( $query_values ) );
-                e(lang("new_playlist_created"),"m");
-
-                return true;
-            }
-
-
-			/*$pid = $db->insert_id();
-			
-			//Logging Playlist			
-			$log_array = array
-			(
-			 'success'=>'yes',
-			 'details'=> "created playlist",
-			 'action_obj_id' => $pid,
-			);
-			
-			insert_log('add_playlist',$log_array);
-					
-			return $pid;
-			
-		}
-		
-		return false;
-	}
-	*/
-
-
 
 	function create_playlist($params)
 	{
@@ -683,17 +589,7 @@ class cbactions
 			//return true;
 			$pid = $db->insert_id();
 			e(lang("new_playlist_created"),"m");
-			//Logging Playlist			
-			/*$log_array = array
-			(
-			 'success'=>'yes',
-			 'details'=> "created playlist",
-			 'action_obj_id' => $pid,
-			);
-			
-			insert_log('add_playlist',$log_array);*/
-					
-			
+
 			return $pid;
 		}
 		
@@ -712,8 +608,7 @@ class cbactions
 
 		if($count)
 			return true;
-		else
-			return false;
+		return false;
 	}
 	
 	/**
@@ -722,7 +617,6 @@ class cbactions
 	function get_playlist( $id, $user = null )
 	{
 		global $db, $cb_columns;
-
 
         $fields = array(
             'playlists' => $cb_columns->object( 'playlists' )->temp_add( 'rated_by,voters,rating,allow_rating,allow_comments' )->get_columns()
@@ -780,35 +674,8 @@ class cbactions
             return $data;
         }
 
-
         return false;
-
- 
-        
 	}
-	
-	
-
-
-	/**
-	 * Function used to get playlist
-	 */
-/*function get_playlist($id,$user=NULL)
-	{
-		global $db;
-		
-		$user_cond;
-		if($user)
-			$user_cond = " AND userid='$user'";
-			
-		$result = $db->select(tbl($this->playlist_tbl),"*"," playlist_id='$id' $user_cond");
-		if($db->num_rows>0)
-			return $result[0];
-		else
-			return false;
-	}*/
-	
-
 
 	/**
 	 * Function used to add new item in playlist
@@ -861,13 +728,6 @@ class cbactions
                 e('<div class="alert alert-success">This video has been added to playlist</div>', "m" );
                 return $video;
             }
-
-            /*
-			$db->insert(tbl($this->playlist_items_tbl),array("object_id","playlist_id","date_added","playlist_item_type","userid"),
-											array($id,$pid,now(),$this->type,userid()));
-			e(sprintf(lang('this_thing_added_playlist'),$this->name),"m");
-			return $db->insert_id();
-            */
 		}
 	}
 	
@@ -1074,7 +934,7 @@ class cbactions
                     if(!$field['clean_func'] || (!function_exists($field['clean_func']) && !is_array($field['clean_func'])))
                         $val = ($val);
                     else
-                        $val = apply_func($field['clean_func'],sql_free('|no_mc|'.$val));
+                        $val = apply_func($field['clean_func'], mysql_clean('|no_mc|'.$val));
 
                     if(!empty($field['db_field']))
                         $query_values[ $name ] = $val;

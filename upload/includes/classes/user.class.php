@@ -2426,7 +2426,7 @@ class userquery extends CBCategory{
 			if(!$field['clean_func'] || (!function_exists($field['clean_func']) && !is_array($field['clean_func'])))
 				$val = mysql_clean($val);
 			else
-				$val = apply_func($field['clean_func'],sql_free(/*'|no_mc|'.*/$val));
+				$val = apply_func($field['clean_func'], mysql_clean($val));
 
 			
 			if(!empty($field['db_field']))
@@ -2459,7 +2459,7 @@ class userquery extends CBCategory{
 			if(!$field['clean_func'] || (!function_exists($field['clean_func']) && !is_array($field['clean_func'])))
 				$val = mysql_clean($val);
 			else
-				$val = apply_func($field['clean_func'],sql_free(/*'|no_mc|'.*/$val));
+				$val = apply_func($field['clean_func'], mysql_clean($val));
 			
 			if(!empty($field['db_field']))
 			$uquery_val[] = $val;
@@ -2670,7 +2670,7 @@ class userquery extends CBCategory{
 				if(!$field['clean_func'] || (!function_exists($field['clean_func']) && !is_array($field['clean_func'])))
 					$val = mysql_clean($val);
 				else
-					$val = apply_func($field['clean_func'],sql_free(/*'|no_mc|'.*/$val));
+					$val = apply_func($field['clean_func'], mysql_clean($val));
 	
 				
 				if(!empty($field['db_field']))
@@ -2683,9 +2683,7 @@ class userquery extends CBCategory{
 			$db->update(tbl($this->dbtbl['users']),$uquery_field,$uquery_val," userid='".mysql_clean($array['userid'])."'");
 			e(lang("usr_upd_succ_msg"),'m');
 		}
-		
-		
-		
+
 		//updating user profile
 		if(!error())
 		{
@@ -3240,7 +3238,7 @@ class userquery extends CBCategory{
 		$new_users = array();
 		foreach($users_array as $user)
 		{
-			if($user!=username() && !is_numeric($user) && $this->user_exists($user))
+			if($user!=user_name() && !is_numeric($user) && $this->user_exists($user))
 			{
 				$new_users[] = $user;
 			}
@@ -3267,7 +3265,7 @@ class userquery extends CBCategory{
 		
 		if(!$uid)
 			e(lang('you_not_logged_in'));
-		elseif($user!=username() && !is_numeric($user) && $this->user_exists($user))
+		elseif($user!=user_name() && !is_numeric($user) && $this->user_exists($user))
 		{
 			$banned_users = $this->udetails['banned_users'];
 			if($banned_users)
@@ -3432,7 +3430,7 @@ class userquery extends CBCategory{
 								  'required'=>'yes',
 								  'syntax_type'=> 'email',
 								  'db_value_check_func'=> 'email_exists',
-								  'validate_function'=> 'is_valid_email',
+								  'validate_function'=> 'isValidEmail',
 								  'db_value_exists'=>false,
 								  'db_value_err'=>lang('usr_email_err3')
 								  ),
@@ -3626,7 +3624,7 @@ class userquery extends CBCategory{
 				if(!$field['clean_func'] || (!function_exists($field['clean_func']) && !is_array($field['clean_func'])))
 					$val = mysql_clean($val);
 				else
-					$val = apply_func($field['clean_func'],sql_free('|no_mc|'.$val));
+					$val = apply_func($field['clean_func'], mysql_clean('|no_mc|'.$val));
 
 				if(!empty($field['db_field']))
 				$query_val[] = $val;
@@ -5483,7 +5481,7 @@ function getSubscriptionsUploadsWeek($uid,$limit=20,$uploadsType="both",$uploads
 				"time"	=>	now(),
 				"rating"	=>	$rating,
 				"userid"	=>	userid(),
-				"username"	=>	username()
+				"username"	=>	user_name()
 			);	
 			/* Updating user details */		
 			update_user_voted($userDetails);			

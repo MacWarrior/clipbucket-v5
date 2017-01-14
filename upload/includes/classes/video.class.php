@@ -391,11 +391,10 @@ class CBvideo extends CBCategory
 					if(!$field['clean_func'] || (!apply_func($field['clean_func'],$val) && !is_array($field['clean_func'])))
 						$val = ($val);
 					else
-						$val = apply_func($field['clean_func'],sql_free('|no_mc|'.$val));
+						$val = apply_func($field['clean_func'], mysql_clean('|no_mc|'.$val));
 					
 					if(!empty($field['db_field']))
-					$query_val[] = $val;
-
+						$query_val[] = $val;
 				}
 				
 			}
@@ -1632,7 +1631,7 @@ class CBvideo extends CBCategory
 		{
 			$voters[userid()] = array(
 				"userid"	=>	userid(),
-				"username"	=>	username(),
+				"username"	=>	user_name(),
 				"time"	=>	now(),
 				"rating"	=>	$rating
 			);
@@ -1658,7 +1657,7 @@ class CBvideo extends CBCategory
 				"time"	=>	now(),
 				"rating"	=>	$rating,
 				"userid"	=>	userid(),
-				"username"	=>	username()
+				"username"	=>	user_name()
 			);	
 			/* Updating user details */		
 			update_user_voted($userDetails);

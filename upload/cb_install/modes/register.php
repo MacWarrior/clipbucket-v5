@@ -18,15 +18,8 @@ $myquery->Set_Website_Details('baseurl',$baseurl);
     <h4 style="color:#fff">Registeration (Optional)</h4>
     <p style="color:#fff; font-size:13px;">As you have installed ClipBucket Succesffuly, we highly recommend you to register your website on our Clipbucket. its really simple, just click on Register and continue and your website will be register on Clipbucket website</p>
 
-
-
 </div><!--cb_container-->
 </div><!--nav_des-->
-<!--<h2>Registeration (Optional)</h2>
-As you have installed ClipBucket Succesffuly, we highly recommend you to register your website on our Clipbucket. its really simple, just click on Register and continue and your website will be register on Clipbucket website<br />
-<br />-->
-
-
 
 <div id="sub_container" class="br5px">
 <h3>Why we suggest registeration?</h3>
@@ -47,8 +40,8 @@ As you have installed ClipBucket Succesffuly, we highly recommend you to registe
 <form name="installation" method="post" id="installation">
     <input type="hidden" name="mode" value="finish" />
 	<?php
-		echo button('Skip & Finish',' onclick="$(\'#installation\').submit()" ',true);
-    	echo button('Register & Finish',' onclick="register(\''.$adminemail.'\',\''.urlencode(BASEURL).'\')" ');
+		button('Skip & Finish',' onclick="$(\'#installation\').submit()" ',true);
+    	button('Register & Finish',' onclick="register(\''.$adminemail.'\',\''.urlencode(BASEURL).'\')" ');
     ?>
     <span id="loadingReg"></span>
 </form>

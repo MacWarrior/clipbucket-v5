@@ -835,7 +835,7 @@ class Collections extends CBCategory
 				if(!$field['clean_func'] || (!function_exists($field['clean_func']) && !is_array($field['clean_func'])))
 					$val = ($val);
 				else
-					$val = apply_func($field['clean_func'],sql_free('|no_mc|'.$val));
+					$val = apply_func($field['clean_func'], mysql_clean('|no_mc|'.$val));
 
 				if(!empty($field['db_field']))
 					$query_val[] = $val;	
@@ -924,7 +924,7 @@ class Collections extends CBCategory
 				}
 
 				else
-					$val = apply_func($field['clean_func'],sql_free('|no_mc|'.$val));
+					$val = apply_func($field['clean_func'], mysql_clean('|no_mc|'.$val));
 
 				if(!empty($field['db_field']))
 					$query_val[] = $val;	
@@ -1282,7 +1282,7 @@ class Collections extends CBCategory
 				if(!$field['clean_func'] || (!function_exists($field['clean_func']) && !is_array($field['clean_func'])))
 					$val = ($val);
 				else
-					$val = apply_func($field['clean_func'],sql_free('|no_mc|'.$val));
+					$val = apply_func($field['clean_func'], mysql_clean('|no_mc|'.$val));
 				
 				if(!empty($field['db_field']))
 				$query_val[] = $val;
@@ -1527,7 +1527,7 @@ class Collections extends CBCategory
 				"time"	=>	now(),
 				"rating"	=>	$rating,
 				"userid"	=>	userid(),
-				"username"	=>	username()
+				"username"	=>	user_name()
 			);	
 			/* Updating user details */		
 			update_user_voted($userDetails);			

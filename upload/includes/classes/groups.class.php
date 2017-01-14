@@ -378,7 +378,7 @@ class CBGroups extends CBCategory
 				if(!$field['clean_func'] || (!function_exists($field['clean_func']) && !is_array($field['clean_func'])))
 					$val = ($val);
 				else
-					$val = apply_func($field['clean_func'],sql_free('|no_mc|'.$val));
+					$val = apply_func($field['clean_func'], mysql_clean('|no_mc|'.$val));
 				
 				if(!empty($field['db_field']))
 				$query_val[] = $val;
@@ -495,7 +495,7 @@ class CBGroups extends CBCategory
 				if(!$field['clean_func'] || (!function_exists($field['clean_func']) && !is_array($field['clean_func'])))
 					$val = ($val);
 				else
-					$val = apply_func($field['clean_func'],sql_free('|no_mc|'.$val));
+					$val = apply_func($field['clean_func'], mysql_clean('|no_mc|'.$val));
 				
 				if(!empty($field['db_field']))
 				$query_val[] = $val;
@@ -697,7 +697,7 @@ class CBGroups extends CBCategory
 				if(!$field['clean_func'] || (!apply_func($field['clean_func'],$val) && !is_array($field['clean_func'])))
 					$val = $val;
 				else
-					$val = apply_func($field['clean_func'],sql_free($val));
+					$val = apply_func($field['clean_func'], mysql_clean($val));
 				
 				if(empty($val) && !empty($field['default_value']))
 					$val = $field['default_value'];

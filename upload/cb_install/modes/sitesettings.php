@@ -14,7 +14,6 @@ $userquery->login_user(post('username'),post('password'))
 
 ?>
 
-
 </div>
 
 <div class="nav_des clearfix">
@@ -25,10 +24,7 @@ $userquery->login_user(post('username'),post('password'))
 
     </div><!--cb_container-->
     </div><!--nav_des-->
-<!--<h2>Website basic configurations</h2>
-here you can set basic configuration of your website, you can change them later by going to Admin area &gt; Website Configurations
 
-<p>-->
 <div id="sub_container" class="br5px">
 
  <div class="db_image"><img src="<?php echo installer_path(); ?>images/site_setting.png" style="margin-top: 28px;margin-left: 545px;"  width="280" height="280"/></div>
@@ -37,7 +33,7 @@ here you can set basic configuration of your website, you can change them later 
     
     <div class="field" >
     <label for="title">Website title</label>
-    <input name="title" type="text" id="title" class="form-control" value="ClipBucket v<?php echo VERSION.' '.STATE?>">
+    <input name="title" type="text" id="title" class="form-control" value="ClipBucket v<?php echo VERSION.' '.STATE; ?>">
      <p class="grey-text font-size" style="margin-top:0px;">Its your website title and you can change it from admin area.</p>
     </div>
     
@@ -49,7 +45,7 @@ here you can set basic configuration of your website, you can change them later 
     
     <div class="field">
     <label for="baseurl">Website URL</label>
-    <input name="baseurl" type="text" id="baseurl" class="form-control" value="<?=BASEURL?>">
+    <input name="baseurl" type="text" id="baseurl" class="form-control" value="<?php echo BASEURL; ?>">
 	  <p class="grey-text font-size" style="margin-top:0px;">without trailing slash '/'</p>
     </div>
     
@@ -57,7 +53,7 @@ here you can set basic configuration of your website, you can change them later 
   <input type="hidden" name="mode" value="register" />
      <p><br>
     
-   <?=button('Save and Continue',' onclick="$(\'#installation\').submit()" ');?>
+   <?php button('Save and Continue',' onclick="$(\'#installation\').submit()" '); ?>
 </form>
 
 </div>

@@ -14,24 +14,26 @@
 	define("SHOW_COUNTRY_FLAG",TRUE);
 	require 'define_php_links.php';
 	include_once 'upload_forms.php';
- 
- 	/**
-    * Function used to throw error
-	* @param { string } { $message } { message to show }
-	* @return { string } { $message } { error message }
-    */
+
+	/**
+	 * Function used to throw error
+	 *
+	 * @param { string } { $message } { message to show }
+	 * @param string $pointer
+	 *
+	 * @throws Exception
+	 */
     function throw_error($message,$pointer="") {
         global $Cbucket;
         if($pointer)
         $Cbucket->error_pointer[$pointer] = $message;
-          throw new Exception($message);
+		throw new Exception($message);
     }
- 
-	/**
-	* This Funtion is use to get CURRENT PAGE DIRECT URL
-	* @return : { string } { $pageURL } { url of current page }
-	*/
 
+	/**
+	 * This Funtion is use to get CURRENT PAGE DIRECT URL
+	 * @return string : { string } { $pageURL } { url of current page }
+	 */
 	function curPageURL() {
  		$pageURL = 'http';
 		if (@$_SERVER["HTTPS"] == "on") {
@@ -46,13 +48,14 @@
 		}
  		return $pageURL;
 	}
-	
-	/**
-	* Cleans a string by putting it through multiple layers
-	* @param : { string } { string to be cleaned }
-	* @return : { string } { $string } { cleaned string }
-	*/
 
+	/**
+	 * Cleans a string by putting it through multiple layers
+	 *
+	 * @param : { string } { string to be cleaned }
+	 *
+	 * @return mixed : { string } { $string } { cleaned string }
+	 */
 	function Replacer($string) {
 		//Wp-Magic Quotes
 		$string = preg_replace("/'s/", '&#8217;s', $string);
@@ -81,87 +84,44 @@
 	// $string = utf8_encode($string);
  	 return $string;
 	}
-	
-	/**
-	* Cleans given string 
-	* @param : { string } { $string } { string to be cleaned }
-	* @return : { string } { $string } { cleaned string }
-	*/
 
-	function cb_clean($string,$array=array('no_html'=>true,'mysql_clean'=>false)) {
-		if($array['no_html']) {
-			$string = htmlentities($string);
-		}
-		if($array['special_html']) {
-			$string = htmlspecialchars($string);
-		}
-		if($array['mysql_clean']) {
-			$string = mysql_real_escape_string($string);
-		}
-		if($array['nl2br']) {
-			$string = nl2br($string);
-		}
-		return $string;
-	}
 	/**
-	* This Fucntion is for Securing Password, you may change its combination for security reason but 
-	* make sure dont not rechange once you made your script run
+	* This function is for Securing Password, you may change its combination for security reason but
+	* make sure do not change once you made your script run
+	* TODO : Multiple md5/sha1 is useless + this is totally unsecure, must be replaced by sha512 + salt
 	*/
-
 	function pass_code($string) {
  	 	$password = md5(md5(sha1(sha1(md5($string)))));
  	 	return $password;
 	}
-	
-	/**
-	* Cleans mysql queries [ user mysql_clean() instead ]
-	* @deprecated : { function has been deprecated and will be removed in next version }
-	*/
 
-	function sql_free($id) {
-		if (!get_magic_quotes_gpc()) {
-			$id = addslashes($id);
-		}
-		return $id;
-	}
-	
 	/**
-	* Clean a string and remove malicious stuff before insertin
-	* that string into the database
-	* @param : { string } { $id } { string to be cleaned }
-	*/
-	
-	function mysql_clean($id,$replacer=true) {
+	 * Clean a string and remove malicious stuff before insertin
+	 * that string into the database
+	 *
+	 * @param : { string } { $id } { string to be cleaned }
+	 *
+	 * @return string
+	 */
+	function mysql_clean($var)
+	{
 		global $db;
-		if (get_magic_quotes_gpc()) {
-			$id = stripslashes($id);
-		}
-		$id = htmlspecialchars(mysqli_real_escape_string($db->mysqli,$id));
-		if($replacer) {
-			$id = Replacer($id);
-		}
-		return $id;
+		return mysqli_real_escape_string($db->mysqli, $var);
 	}
-	
-	/**
-	* Escape characters with backslash
-	* @param : { string } { $in } { string to escape characters from }
-	* @return : { string } { $in } { espcaped cleaned string }
-	*/
 
-	function escape_gpc($in) {
-		if (get_magic_quotes_gpc()) {
-			$in = stripslashes($in);
-		}
-		return $in;
+	function display_clean($var)
+	{
+		return htmlspecialchars($var);
 	}
 
 	/**
-	* Generate random string of given length
-	* @param : { integer } { $length } { length of random string }
-	* @return : { string } { $randomString  } { new genrated random string }
-	*/
-
+	 * Generate random string of given length
+	 *
+	 * @param : { integer } { $length } { length of random string }
+	 *
+	 * @return string : { string } { $randomString  } { new genrated random string }
+	 * { $randomString  } { new genrated random string }
+	 */
 	function RandomString($length) {
 		$string = md5(microtime());
 		$highest_startpoint = 32-$length;
@@ -170,13 +130,15 @@
 	}
 
 	/**
-	* Function used to send emails. this is a very basic email function 
-	* you can extend or replace this function easily
-	* @param : { array } { $array } { array with all details of email }
-	* @param_list : { content, subject, to, from, to_name, from_name }
-	* @author : Arslan Hassan
-	*/
-
+	 * Function used to send emails. this is a very basic email function
+	 * you can extend or replace this function easily
+	 *
+	 * @param : { array } { $array } { array with all details of email }
+	 * @param_list : { content, subject, to, from, to_name, from_name }
+	 *
+	 * @author : Arslan Hassan
+	 * @return bool
+	 */
 	function cbmail($array) {
 		$func_array = get_functions('email_functions');
 		if(is_array($func_array)) {
@@ -186,8 +148,8 @@
 				}
 			}
 		}
-		$content = escape_gpc($array['content']);
-		$subject = escape_gpc($array['subject']);
+		$content = display_clean($array['content']);
+		$subject = display_clean($array['subject']);
 		$to		 = $array['to'];
 		$from	 = $array['from'];
 		$to_name = $array['to_name'];
@@ -202,7 +164,7 @@
 				$content = wrap_email_content($content);
 			}
 		}
-		$message .= $content;
+		$message = $content;
 		
 		//ClipBucket uses PHPMailer for sending emails
 		include_once("classes/phpmailer/class.phpmailer.php");
@@ -214,10 +176,10 @@
 			$mail->IsSMTP(); // telling the class to use SMTP
 			$mail->Host       = config('smtp_host'); // SMTP server
 			if(config('smtp_auth')=='yes')
-			$mail->SMTPAuth   = true;                  // enable SMTP authentication
-			$mail->Port       = config('smtp_port');                    // set the SMTP port for the GMAIL server
+				$mail->SMTPAuth   = true;			 // enable SMTP authentication
+			$mail->Port       = config('smtp_port'); // set the SMTP port for the GMAIL server
 			$mail->Username   = config('smtp_user'); // SMTP account username
-			$mail->Password   = config('smtp_pass');        // SMTP account password
+			$mail->Password   = config('smtp_pass'); // SMTP account password
 		}
 		//--- Ending Smtp Settings
 		$mail->SetFrom($from, $from_name);
@@ -235,34 +197,43 @@
 		  		e("Mailer Error: " . $mail->ErrorInfo);
 			}
 		  	return false;
-		} else {
-			return true;
 		}
+		return true;
 	}
 
 	/**
-	* Send email from PHP
-	* @uses : { function : cbmail }
-	*/
-
+	 * Send email from PHP
+	 * @uses : { function : cbmail }
+	 *
+	 * @param $from
+	 * @param $to
+	 * @param $subj
+	 * @param $message
+	 *
+	 * @return bool
+	 */
 	function send_email($from,$to,$subj,$message) {
 		return cbmail(array('from'=>$from,'to'=>$to,'subject'=>$subj,'content'=>$message));
 	}
-	
-	/**
-	* Function used to wrap email content in adds HTML AND BODY TAGS
-	* @param : { string } { $content } { contents of email to be wrapped }
-	*/
 
+	/**
+	 * Function used to wrap email content in adds HTML AND BODY TAGS
+	 *
+	 * @param : { string } { $content } { contents of email to be wrapped }
+	 *
+	 * @return string
+	 */
 	function wrap_email_content($content) {
 		return '<html><body>'.$content.'</body></html>';
 	}
-	
-	/**
-	* Function used to get file name
-	* @param : { string } { $file } { file path to get name for }
-	*/
 
+	/**
+	 * Function used to get file name
+	 *
+	 * @param : { string } { $file } { file path to get name for }
+	 *
+	 * @return bool|string
+	 */
 	function GetName($file) {
 		if(!is_string($file)) {
 			return false;
@@ -286,10 +257,14 @@
 	}
 
 	/**
-	* Get time elapsed
-	* @deprecated : { function has been deprecated and will be removed in next version }
-	*/
-
+	 * Get time elapsed
+	 * @deprecated : { function has been deprecated and will be removed in next version }
+	 *
+	 * @param     $ts
+	 * @param int $datetime
+	 *
+	 * @return string
+	 */
     function get_elapsed_time($ts,$datetime=1) {
       if($datetime == 1) {
       	$ts = date('U',strtotime($ts));
@@ -303,13 +278,13 @@
       $days -= $weeks * 7;
       $t = "";
       if ($weeks > 0) {
-        return "$weeks week" . ($weeks > 1 ? "s" : "");
+        return "$weeks ".lang("week") . ($weeks > 1 ? "s" : "");
       }
       if ($days > 0) {
-        return "$days day" . ($days > 1 ? "s" : "");
+        return "$days ".lang("day") . ($days > 1 ? "s" : "");
       }
       if ($hours > 0) {
-        return "$hours hour" . ($hours > 1 ? "s" : "");
+        return "$hours ".lang("hour") . ($hours > 1 ? "s" : "");
       }
       if ($mins > 0) {
         return "$mins min" . ($mins > 1 ? "s" : "");
@@ -331,22 +306,26 @@
 		return $minutes . ':' . $secondes;
 	}
 
-    /**
-	* Function Used TO Get Extensio Of File
-	* @param : { string } { $file } { file to get extension of }
-	* @return : { string } { extension of file }
-    */
-	
+	/**
+	 * Function Used TO Get Extensio Of File
+	 *
+	 * @param : { string } { $file } { file to get extension of }
+	 *
+	 * @return string : { string } { extension of file }
+	 * { extension of file }
+	 */
 	function GetExt($file) {
 		return strtolower(substr($file, strrpos($file,'.') + 1));
 	}
 
 	/**
-	* Convert given seconds in Hours Minutes Seconds format
-	* @param : { integer } { $sec } { seconds to conver }
-	* @return : { string } { $hms } { formatted time string }
-	*/
-
+	 * Convert given seconds in Hours Minutes Seconds format
+	 *
+	 * @param : { integer } { $sec } { seconds to conver }
+	 * @param bool $padHours
+	 *
+	 * @return string : { string } { $hms } { formatted time string }
+	 */
 	function SetTime($sec, $padHours = true) {
 		if($sec < 3600) {
 			return old_set_time($sec);
@@ -374,59 +353,38 @@
 		$hms .= str_pad($seconds, 2, "0", STR_PAD_LEFT);
 		return $hms;
 	}
-	
+
 	/**
-	* Check if provided is a valid string
-	* @param : { string } { $text } { string to be checked }
-	* @return : { boolean } { true if string, else fasle }
-	*/
-
+	 * Check if provided is a valid string
+	 *
+	 * @param : { string } { $text } { string to be checked }
+	 *
+	 * @return bool : { boolean } { true if string, else false }
+	 */
 	function isValidText($text){
-      $pattern = "^^[_a-z0-9-]+$";
-      if (eregi($pattern, $text)){
-         return true;
-      	} else {
-         return false;
-      }   
+		$pattern = "^^[_a-z0-9-]+$";
+      	if (eregi($pattern, $text))
+         	return true;
+      	return false;
    }
 
-    /**
-	* Checks if provided email is valid or not
-	* @param : { string } { $email } { email address to check }
-	* @return : { boolean } { if valid return true, else false }
-    */
-	
-	function isValidEmail($email){
-      $pattern = "/[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/i";
-	  preg_match($pattern, $email,$matches);
-      if ($matches[0]!='') {
-        	return true;
-      } else {
-			return true;
-      }   
-   }
-
-    /**
-	* Checks if provided email is valid or not
-	* @param : { string } { $email } { email address to check }
-	* @return : { boolean } { if valid return true, else false }
-    */
-
-    function is_valid_email($email) {
-	    $pattern = "/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/";
-	    if(preg_match($pattern, $email)) {
-	        return true;
-	    } else {
-	     return false;
-	    }
-	}
+	/**
+	 * Checks if provided email is valid or not
+	 *
+	 * @param : { string } { $email } { email address to check }
+	 *
+	 * @return bool : { boolean } { if valid return true, else false }
+	 */
+	function isValidEmail($email)
+	{
+		return filter_var($email, FILTER_VALIDATE_EMAIL);
+   	}
 
 	/**
 	* Decode html special characters
 	* @param : { string } { $text } { text to decode }
 	* @return : { string } { $text } { decoded string }
 	*/
-
 	if(!function_exists('htmlspecialchars_decode')) {
 		function htmlspecialchars_decode($text, $ent_quotes = "") {
 			$text = str_replace("&quot;", "\"", $text);
@@ -436,34 +394,15 @@
 			$text = str_replace("&amp;", "&", $text);
 			return $text;
 		}
-	} 
-
-	/**
-	*THIS FUNCTION IS USED TO LIST FILE TYPES IN FLASH UPLOAD
-	* INPUT FILE TYPES
-	* OUTPUT FILE TYPE IN PROPER FORMAT
-	* @deprecated : { function has been deprecated and will be removed in next version }
-	*/
-
-	function ListFileTypes($types){
-		$types_array = preg_replace('/,/',' ',$types);
-		$types_array = explode(' ',$types_array);
-		$list = 'Video,';
-		for($i=0;$i<=count($types_array);$i++){
-		if($types_array[$i]!=''){
-		$list .= '*.'.$types_array[$i];
-		if($i!=count($types_array))$list .= ';';
-		}
-		}
-		return $list;
 	}
 
 	/**
-	* Get Directory Size - get_video_file($vdata,$no_video,false);
-	* @param : { string } { $path } { path to directory to determine size of }
-	* @return : { integer } { $total } { size of directory }
-	*/
-
+	 * Get Directory Size - get_video_file($vdata,$no_video,false);
+	 *
+	 * @param : { string } { $path } { path to directory to determine size of }
+	 *
+	 * @return mixed : { integer } { $total } { size of directory }
+	 */
 	function get_directory_size($path) {
 		$totalsize = 0;
 		$totalcount = 0;
@@ -491,36 +430,40 @@
 		$total['dircount'] = $dircount;
 		return $total;
 	}
-	
-	/**
-	* Format filze size in readable format
-	* @param : { integer } { $data } { size in bytes }
-	* @return : { string } { $data } { file size in readable format }
-	*/
 
+	/**
+	 * Format filze size in readable format
+	 *
+	 * @param : { integer } { $data } { size in bytes }
+	 *
+	 * @return string : { string } { $data } { file size in readable format }
+	 */
 	function formatfilesize( $data ) {
         // bytes
         if( $data < 1024 ) {
             return $data . " bytes";
         }
+
         // kilobytes
-        else if( $data < 1024000 ) {
-				return round( ( $data / 1024 ), 1 ) . "KB";
+       	if( $data < 1024000 ) {
+			return round( ( $data / 1024 ), 1 ) . "KB";
         }
+
         // megabytes
-        else if($data < 1024000000){
+        if($data < 1024000000){
             return round( ( $data / 1024000 ), 1 ) . " MB";
-        }else{
-			 return round( ( $data / 1024000000 ), 1 ) . " GB";
-		}
-    
+        }
+
+		return round( ( $data / 1024000000 ), 1 ) . " GB";
     }
 
 	/**
-	* Function used to get shell output
-	* @param : { string } { $cmd } { command to run }
-	*/
-
+	 * Function used to get shell output
+	 *
+	 * @param : { string } { $cmd } { command to run }
+	 *
+	 * @return string
+	 */
 	function shell_output($cmd) {
 		if (stristr(PHP_OS, 'WIN')) { 
 			$cmd = $cmd;
@@ -535,60 +478,56 @@
 	* Group Link
 	* @deprecated : { function has been deprecated and will be removed in next version }
 	*/
-
 	function group_link($params) {
 		$grp = $params['details'];
-		$id = $grp['group_id'];
-		$name = $grp['group_name'];
+		//$id = $grp['group_id'];
+		//$name = $grp['group_name'];
 		$url = $grp['group_url'];
 		if($params['type']=='' || $params['type']=='group') {
 			if(SEO==yes) {
 				return BASEURL.'/group/'.$url;
-			} else {
-				return BASEURL.'/view_group.php?url='.$url;
 			}
+			return BASEURL.'/view_group.php?url='.$url;
 		}
 		
 		if($params['type']=='view_members') {
 			return BASEURL.'/view_group_members.php?url='.$url;
-			if(SEO==yes) {
+			/*if(SEO==yes) {
 				return BASEURL.'/group_members/'.$url;
-			} else {
-				return BASEURL.'/view_group_members.php?url='.$url;
 			}
+			return BASEURL.'/view_group_members.php?url='.$url;*/
 		}
 		
 		if($params['type']=='view_videos') {
 			return BASEURL.'/view_group_videos.php?url='.$url;
-			if(SEO==yes) {
+			/*if(SEO==yes) {
 				return BASEURL.'/group_videos/'.$url;
-			} else {
-				return BASEURL.'/view_group_videos.php?url='.$url;
 			}
+			return BASEURL.'/view_group_videos.php?url='.$url;*/
 		}
 		
 		if($params['type'] == 'view_topics') {
 			if(SEO == "yes") {
 				return BASEURL."/group/".$url."?mode=view_topics";
-			} else {
-				return BASEURL."/view_group.php?url=".$url."&mode=view_topics";		
 			}
+			return BASEURL."/view_group.php?url=".$url."&mode=view_topics";
 		}
 		if($params['type'] == 'view_report_form') {
 			if(SEO == "yes") {
 				return BASEURL."/group/".$url."?mode=view_report_form";
-			} else {
-				return BASEURL."/view_group.php?url=".$url."&mode=view_report_form";	
 			}
+			return BASEURL."/view_group.php?url=".$url."&mode=view_report_form";
 		}
 	}
-	
-	/**
-	* FUNCTION USED TO GET COMMENTS
-	* @param : { array } { $params } { array of parameters e.g order,limit,type }
-	* @return : { array } { $results } { array of fetched comments }
-	*/
 
+	/**
+	 * FUNCTION USED TO GET COMMENTS
+	 *
+	 * @param : { array } { $params } { array of parameters e.g order,limit,type }
+	 *
+	 * @return array|bool : { array } { $results } { array of fetched comments }
+	 * { $results } { array of fetched comments }
+	 */
 	function getComments($params=NULL) {
 		global $db;
 		$order = $params['order'];
@@ -637,16 +576,14 @@
 		}
 		if($result) {
 			return $result;
-		} else {
-			return false;						
 		}
+		return false;
 	}
 	
 	/**
 	* Fetches comments using params, built for smarty
 	* @uses : { class : $myquery } { function : getComments }
 	*/
-
 	function getSmartyComments($params) {
 		global $myquery;
 		$comments  =  $myquery->getComments($params);
@@ -656,12 +593,14 @@
 			return $comments;
 		}
 	}
-	
-	/**
-	* FUNCTION USED TO GET ADVERTISMENT
-	* @param : { array } { $params } { array of parameters }
-	*/
 
+	/**
+	 * FUNCTION USED TO GET ADVERTISMENT
+	 *
+	 * @param : { array } { $params } { array of parameters }
+	 *
+	 * @return string
+	 */
 	function getAd($params) {
 		global $adsObj;
 		$data = '';
@@ -672,32 +611,25 @@
 			$data .= '</div>';
 		return $data;
 	}
-	
-	/**
-	* FUNCTION USED TO GET THUMBNAIL, MADE FOR SMARTY
-	* @param : { array } { $params } { array of parameters }
-	*/
 
+	/**
+	 * FUNCTION USED TO GET THUMBNAIL, MADE FOR SMARTY
+	 *
+	 * @param : { array } { $params } { array of parameters }
+	 *
+	 * @return mixed
+	 */
 	function getSmartyThumb($params) {
 		return get_thumb($params['vdetails'],$params['num'],$params['multi'],$params['count_only'],true,true,$params['size']);
 	}
 
 	/**
-	* FUNCTION USED TO GET VIDEO RATING IN SMARTY
-	* @param : { array } { $param } { array of parameters }
-	* @param : array(pullRating($videos[$id]['videoid'],false,false,false,'novote');
-	*/
-
-	function pullSmartyRating($param) {
-		return pullRating($param['id'],$param['show5'],$param['showPerc'],$param['showVotes'],$param['static']);
-	}
-	
-	/**
-	* FUNCTION USED TO CLEAN VALUES THAT CAN BE USED IN FORMS
-	* @param : { string } { $string } { string to be cleaned }  
-	* @return : { string } { $string } { cleaned string }  
-	*/
-
+	 * FUNCTION USED TO CLEAN VALUES THAT CAN BE USED IN FORMS
+	 *
+	 * @param : { string } { $string } { string to be cleaned }
+	 *
+	 * @return string : { string } { $string } { cleaned string }
+	 */
 	function cleanForm($string) {
 		if(is_string($string)) {
 			$string = htmlspecialchars($string);
@@ -711,19 +643,26 @@
 	}
 
 	/**
-	* Cleans form values
-	* @uses : { function : cleanForm }
-	*/
+	 * Cleans form values
+	 * @uses : { function : cleanForm }
+	 *
+	 * @param $string
+	 *
+	 * @return string
+	 */
+	function form_val($string){
+		return cleanForm($string);
+	}
 
-	function form_val($string){return cleanForm($string); }
-	
 	/**
-	* FUNCTION USED TO MAKE TAGS MORE PERFECT
-	* @author : Arslan Hassan <arslan@clip-bucket.com,arslan@labguru.com>
-	* @param : { string } { $tags } { text unformatted }
-	* @return : { string } { $tagString } { text formatted }
-	*/
-
+	 * FUNCTION USED TO MAKE TAGS MORE PERFECT
+	 * @author : Arslan Hassan <arslan@clip-bucket.com,arslan@labguru.com>
+	 *
+	 * @param : { string } { $tags } { text unformatted }
+	 * @param string $sep
+	 *
+	 * @return string : { string } { $tagString } { text formatted }
+	 */
 	function genTags($tags,$sep=',') {
 		//Remove fazool spaces
 		$tags = preg_replace(array('/ ,/','/, /'),',',$tags);
@@ -743,31 +682,32 @@
 		}
 		return $tagString;
 	}
-	
-	/**
-	* FUNCTION USED TO VALIDATE TAG
-	* @author : Arslan Hassan <arslan@clip-bucket.com,arslan@labguru.com>
-	* @param { string } { $tag } { tag to be validated }
-	* @return : { boolean } { true or false }
-	*/
 
+	/**
+	 * FUNCTION USED TO VALIDATE TAG
+	 * @author : Arslan Hassan <arslan@clip-bucket.com,arslan@labguru.com>
+	 *
+	 * @param { string } { $tag } { tag to be validated }
+	 *
+	 * @return bool : { boolean } { true or false }
+	 */
 	function isValidtag($tag) {
 		$disallow_array = array
 		('of','is','no','on','off','a','the','why','how','what','in');
 		if(!in_array($tag,$disallow_array) && strlen($tag)>2) {
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
-	
-	
-	/**
-	* FUNCTION USED TO GET CATEGORY LIST
-	* @param : { array } { $params } { array of paramters e.g type }
-	* @return : { array } { $cats } { array of categories }
-	*/
 
+	/**
+	 * FUNCTION USED TO GET CATEGORY LIST
+	 *
+	 * @param bool $params
+	 *
+	 * @return array|bool|string : { array } { $cats } { array of categories }
+	 * @internal param $ : { array } { $params } { array of parameters e.g type } { $params } { array of parameters e.g type }
+	 */
 	function getCategoryList($params=false) {
 		global $cats;
 		$cats = "";
@@ -816,102 +756,114 @@
 	}
 
 	/**
-	* @deprecated  { function has been deprecated and will be removed in next version }
-	*/
-
-	function cb_bottom() {
-		//Woops..its gone
-	}
-	
-	/**
-	* Get list of categories from smarty
-	* @uses { function : getCategoryList }
-	*/
-	
+	 * Get list of categories from smarty
+	 * @uses { function : getCategoryList }
+	 *
+	 * @param $params
+	 *
+	 * @return array|bool|string
+	 */
 	function getSmartyCategoryList($params) {
 		return getCategoryList($params);
 	}
 
 	/**
-	* Function used to insert data in database
-	* @uses : { class : $db } { function : dbInsert }
-	*/
-
+	 * Function used to insert data in database
+	 * @uses : { class : $db } { function : dbInsert }
+	 *
+	 * @param      $tbl
+	 * @param      $flds
+	 * @param      $vls
+	 * @param null $ep
+	 */
 	function dbInsert($tbl,$flds,$vls,$ep=NULL) {
 		global $db ;
 		$db->insert($tbl,$flds,$vls,$ep);
 	}
-	
-	/**
-	* Function used to Update data in database
-	* @uses : { class : $db } { function : dbUpdate }
-	*/
 
+	/**
+	 * Function used to Update data in database
+	 * @uses : { class : $db } { function : dbUpdate }
+	 *
+	 * @param      $tbl
+	 * @param      $flds
+	 * @param      $vls
+	 * @param      $cond
+	 * @param null $ep
+	 */
 	function dbUpdate($tbl,$flds,$vls,$cond,$ep=NULL) {
 		global $db ;
 		return $db->update($tbl,$flds,$vls,$cond,$ep);		
 	}
-
-	/**
-	* Function used to Delete data in database
-	* @uses : { class : $db } { function : dbDelete }
-	*/
-
-	function dbDelete($tbl,$flds,$vls,$ep=NULL) {
-		global $db ;
-		return $db->delete($tbl,$flds,$vls,$ep);		
-	}
-	
-	/**
-	*
-	*/
 
 	function cbRocks() {
 		if (!defined('isCBSecured')) {
 			define("isCBSecured",TRUE);
 		}
 	}
-	
+
 	/**
 	 * Insert Id
+	 *
+	 * @param $code
+	 *
+	 * @return
 	 */
 	 function get_id($code) {
 		 global $Cbucket;
 		 $id = $Cbucket->ids[$code];
-		 if(empty($id)) $id = $code;
+		 if(empty($id))
+		 	$id = $code;
 		 return $id;
 	 }
-	 
+
 	/**
 	 * Set Id
+	 *
+	 * @param $code
+	 * @param $id
+	 *
+	 * @return mixed
 	 */
-
 	function set_id($code,$id) {
 		global $Cbucket;
 		return $Cbucket->ids[$code]=$id;
 	}
-	 
-	
-	/**
-	* Function used to select data from database
-	* @uses : { class : $db } { function dbselect }
-	*/
 
+
+	/**
+	 * Function used to select data from database
+	 * @uses : { class : $db } { function dbselect }
+	 *
+	 * @param        $tbl
+	 * @param string $fields
+	 * @param bool   $cond
+	 * @param bool   $limit
+	 * @param bool   $order
+	 * @param bool   $p
+	 *
+	 * @return
+	 */
 	function dbselect($tbl,$fields='*',$cond=false,$limit=false,$order=false,$p=false) {
 		global $db;
 		return $db->dbselect($tbl,$fields,$cond,$limit,$order,$p);
 	}
-	
-	
-	
+
+
 	/**
-	* An easy function for erorrs and messages (e is basically short form of exception)
-	* I dont want to use the whole Trigger and Exception code, so e pretty works for me :D
-	* @param { string } { $msg } { message to display }
-	* @param { string } { $type } { e for error and m for message }
-	* @param { integer } { $id } { Any Predefined Message ID }
-	*/
-	
+	 * An easy function for erorrs and messages (e is basically short form of exception)
+	 * I dont want to use the whole Trigger and Exception code, so e pretty works for me :D
+	 *
+	 * @param null   $msg
+	 * @param string $type
+	 * @param null   $id
+	 *
+	 * @return null
+	 * @internal param $ { string } { $msg } { message to display } { $msg } { message to display }
+	 * @internal param $ { string } { $type } { e for error and m for message } { $type } { e for error and m for message }
+	 * @internal param $ { integer } { $id } { Any Predefined Message ID } { $id } { Any Predefined Message ID }
+	 *
+	 */
 	function e($msg=NULL,$type='e',$id=NULL) {
 		global $eh;
 		if(!empty($msg)) {
@@ -923,18 +875,17 @@
 	* Function used to get subscription template
 	* @uses : { function : lang }
 	*/
-
 	function get_subscription_template() {
-		global $LANG;
+		//global $LANG;
 		return lang('user_subscribe_message');
 	}
-	
-	/**
-	* Print an array in pretty way 
-	* @param : { string / array } { $text } { Element to be printed }
-	* @param : { boolean } { $pretty } { false by default, prnints in pretty way if true }
-	*/
 
+	/**
+	 * Print an array in pretty way
+	 *
+	 * @param : { string / array } { $text } { Element to be printed }
+	 * @param bool $pretty
+	 */
 	function pr($text,$pretty=false) {
 		if(!$pretty) {
 			print_r($text);
@@ -946,11 +897,11 @@
 	}
 
 	/**
-	* Print an array in pretty way and exit right after
-	* @param : { string / array } { $text } { Element to be printed }
-	* @param : { boolean } { $pretty } { false by default, prnints in pretty way if true }
-	*/
-
+	 * Print an array in pretty way and exit right after
+	 *
+	 * @param : { string / array } { $text } { Element to be printed }
+	 * @param bool $pretty
+	 */
 	function pex($text,$pretty=false) {
 		if(!$pretty) {
 			print_r($text);
@@ -961,17 +912,15 @@
 			exit("PEX Ran!");
 		}
 	}
-	
-	/**
-	* This function is used to call function in smarty template
-	* This wont let you pass parameters to the function, but it will only call it
-	*/
 
+	/**
+	 * This function is used to call function in smarty template
+	 * This wont let you pass parameters to the function, but it will only call it
+	 *
+	 * @param $params
+	 */
 	function FUNC($params) {
-		global $Cbucket;
-		//Function used to call functions by
-		//{func namefunction_name}
-		// in smarty
+		//global $Cbucket;
 		$func=$params['name'];
 		if(function_exists($func))
 			$func();
@@ -982,114 +931,113 @@
 	* if there is no user_id it will return false
 	* @uses : { class : $userquery } { var : userid }
 	*/
-
 	function user_id() {
 		global $userquery;
-		if($userquery->userid !='' && $userquery->is_login) return $userquery->userid; else false;
+		if($userquery->userid !='' && $userquery->is_login)
+			return $userquery->userid;
+		return false;
 	}
 	
 	/**
 	* Get current user's userid
 	* @uses : { function : user_id }
 	*/
-
-	function userid(){return user_id();}
+	function userid(){
+		return user_id();
+	}
 	
 	/**
 	* Function used to get username anywhere 
 	* if there is no usern_name it will return false
 	* @uses : { class : $userquery } { var : $username }
 	*/
-
 	function user_name() {
 		global $userquery;
 		if($userquery->user_name) {
 			return $userquery->user_name;
-		} else {
-			return $userquery->get_logged_username();
 		}
+		return $userquery->get_logged_username();
 	}
 
 	/**
-	* Get loggedin user's username
-	* @uses : { function : user_name }
-	*/
-
-	function username(){return user_name();}
-	
-	/**
-	* Function used to check weather user access or not
-	* @uses : { class : $userquery } { function : login_check }
-	*/
-
+	 * Function used to check weather user access or not
+	 * @uses : { class : $userquery } { function : login_check }
+	 *
+	 * @param      $access
+	 * @param bool $check_only
+	 * @param bool $verify_logged_user
+	 *
+	 * @return bool
+	 */
 	function has_access($access,$check_only=TRUE,$verify_logged_user=true) {
 		global $userquery;
 		return $userquery->login_check($access,$check_only,$verify_logged_user);
 	}
-	
-	/**
-	* Function used to return mysql time
-	* @return : { current time }
-	* @author : Fwhite
-	*/
 
+	/**
+	 * Function used to return mysql time
+	 * @return false|string : { current time }
+	 * @author : Fwhite
+	 */
 	function NOW() {
 		return date('Y-m-d H:i:s', time());
 	}
-	
-	
-	/**
-	* Function used to get Regular Expression from database
-	* @param : { string } { $code } { code to be filtered }
-	*/
 
+	/**
+	 * Function used to get Regular Expression from database
+	 *
+	 * @param : { string } { $code } { code to be filtered }
+	 *
+	 * @return bool
+	 */
 	function get_re($code) {
 		global $db;
 		$results = $db->select(tbl("validation_re"),"*"," re_code='$code'");
 		if($db->num_rows>0) {
 			return $results[0]['re_syntax'];
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	/**
-	* Get regular expression from code
-	* @uses : { function : get_re }
-	*/
-
-	function get_regular_expression($code) {
-		return get_re($code); 
-	}
-	
-	/**
-	* Function used to check weather input is valid or not
-	* based on preg_match
-	*/
-
+	 * Function used to check weather input is valid or not
+	 * based on preg_match
+	 *
+	 * @param $syntax
+	 * @param $text
+	 *
+	 * @return bool
+	 */
 	function check_re($syntax,$text) {
 		preg_match('/'.$syntax.'/i',$text,$matches);
 		if(!empty($matches[0])) {
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	/**
-	* Check regular expression
-	* @uses: { function : check_re }
-	*/
-
+	 * Check regular expression
+	 * @uses: { function : check_re }
+	 *
+	 * @param $code
+	 * @param $text
+	 *
+	 * @return bool
+	 */
 	function check_regular_expression($code,$text) {
 		return check_re($code,$text); 
 	}
-	
-	/**
-	* Function used to check field directly
-	* @uses : { function : check_regular_expression }
-	*/
 
+	/**
+	 * Function used to check field directly
+	 * @uses : { function : check_regular_expression }
+	 *
+	 * @param $code
+	 * @param $text
+	 *
+	 * @return bool
+	 */
 	function validate_field($code,$text) {
 		$syntax =  get_re($code);
 		if(empty($syntax)) {
@@ -1099,37 +1047,49 @@
 	}
 
 	/**
-	* Check if syntax is valid
-	* @uses : { function : validate_field }
-	*/
-
+	 * Check if syntax is valid
+	 * @uses : { function : validate_field }
+	 *
+	 * @param $code
+	 * @param $text
+	 *
+	 * @return bool
+	 */
 	function is_valid_syntax($code,$text) {
 		if(DEV_INGNORE_SYNTAX) {
 			return true;
 		}
 		return validate_field($code,$text);
 	}
-	
-	/**
-	* Function used to apply function on a value
-	*/
 
+	/**
+	 * Function used to apply function on a value
+	 *
+	 * @param $func
+	 * @param $val
+	 *
+	 * @return bool
+	 */
 	function is_valid_value($func,$val) {
 		if(!function_exists($func)) {
 			return true;
-		} elseif(!$func($val)) {
-			return false;
-		} else {
-			return true;
 		}
-	}
-	
-	/**
-	* Calls an array of functions with parameters
-	* @param : { array } { $func } { array with functions to be called }
-	* @param : { string } { $val } { paramters for functions }
-	*/
 
+		if(!$func($val)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Calls an array of functions with parameters
+	 *
+	 * @param : { array } { $func } { array with functions to be called }
+	 * @param : { string } { $val } { paramters for functions }
+	 *
+	 * @return mixed
+	 */
 	function apply_func($func,$val) {
 		if(is_array($func)) {
 			foreach($func as $f)
@@ -1141,49 +1101,60 @@
 		}
 		return $val;
 	}
-	
-	/**
-	* Function used to validate YES or NO input
-	* @param : { string } { $input } { field to be checked }
-	*/
 
+	/**
+	 * Function used to validate YES or NO input
+	 *
+	 * @param : { string } { $input } { field to be checked }
+	 *
+	 * @param $return
+	 *
+	 * @return string
+	 */
 	function yes_or_no($input,$return=yes) {
 		$input = strtolower($input);
 		if($input!=yes && $input !=no) {
 			return $return;
-		} else {
-			return $input;
 		}
+		return $input;
 	}
 
 	/**
-	* Function used to validate group category
-	* @uses : { class : $cbcollection } { function : validate_collection_category }
-	* @deprecated : { function has been deprecated and will be removed in next version }
-	*/
-
+	 * Function used to validate group category
+	 * @uses : { class : $cbcollection } { function : validate_collection_category }
+	 * @deprecated : { function has been deprecated and will be removed in next version }
+	 *
+	 * @param null $array
+	 *
+	 * @return bool
+	 */
 	function validate_group_category($array=NULL) {
 		global $cbgroup;
 		return $cbgroup->validate_group_category($array);
 	}
 
 	/**
-	* Function used to validate collection category
-	* @uses : { class : $cbcollection } { function : validate_collection_category }
-	*/
-
+	 * Function used to validate collection category
+	 * @uses : { class : $cbcollection } { function : validate_collection_category }
+	 *
+	 * @param null $array
+	 *
+	 * @return bool
+	 */
 	function validate_collection_category($array=NULL)  {
 		global $cbcollection;
 		return $cbcollection->validate_collection_category($array);
 	}
-	
-	/**
-	* Function used to get user avatar
-	* @param { array } { $param } { array with paramters }
-	* @params_in_$param : details, size, uid
-	* @uses : { class : $userquery } { function : avatar }
-	*/
 
+	/**
+	 * Function used to get user avatar
+	 *
+	 * @param { array } { $param } { array with paramters }
+	 * @params_in_$param : details, size, uid
+	 *
+	 * @uses : { class : $userquery } { function : avatar }
+	 * @return string
+	 */
 	function avatar($param) {
 		global $userquery;
 		$udetails = $param['details'];
@@ -1191,13 +1162,14 @@
 		$uid = $param['uid'];
 		return $userquery->avatar($udetails,$size,$uid);
 	}
-	
-	
-	/**
-	* This funcion used to call function dynamically in smarty
-	* @param : { array } { $param } { array with parameters e.g $param['name'] }
-	*/
 
+	/**
+	 * This funcion used to call function dynamically in smarty
+	 *
+	 * @param : { array } { $param } { array with parameters e.g $param['name'] }
+	 *
+	 * @return mixed
+	 */
 	function load_form($param) {
 		$func = $param['name'];
 		if(function_exists($func)) {
@@ -1208,20 +1180,20 @@
 	/**
 	* Function used to get PHP Path
 	*/
-
 	function php_path() {
 		if(PHP_PATH !='') {
 			return PHP_PATH;
-		} else {
-		 	return "/usr/bin/php";
 		}
+		return "/usr/bin/php";
 	 }
-	 
-	/**
-	* Functon used to get binary paths
-	* @param : { string } { $path } { element to get path for }
-	*/
 
+	/**
+	 * Function used to get binary paths
+	 *
+	 * @param : { string } { $path } { element to get path for }
+	 *
+	 * @return string
+	 */
 	function get_binaries($path)
 	{
 		if(is_array($path)) {
@@ -1267,75 +1239,62 @@
 				$return_path = shell_output("which php");
 				if($return_path) {
 					return $return_path;
-				} else {
-					return "Unable to find PHP path";
 				}
+				return "Unable to find PHP path";
 				break;
 				
 				case "mp4box":
 				$return_path =  shell_output("which MP4Box");
 				if($return_path) {
 					return $return_path;
-				} else {
-					return "Unable to find mp4box path";
 				}
+				return "Unable to find mp4box path";
 				break;
 				
 				case "flvtool2":
 				$return_path =  shell_output("which flvtool2");
 				if($return_path) {
 					return $return_path;
-				} else {
-					return "Unable to find flvtool2 path";
 				}
+				return "Unable to find flvtool2 path";
 				break;
 				
 				case "ffmpeg":
 				$return_path =  shell_output("which ffmpeg");
 				if($return_path) {
 					return $return_path;
-				} else {
-					return "Unable to find ffmpeg path";
 				}
+				return "Unable to find ffmpeg path";
 				break;
 			}
 		}
 	}
-	 
-	/**
-	* Function in case htmlspecialchars_decode does not exist
-	* @param : { string } { $string } { string to decode }
-	*/
 
-	function unhtmlentities ($string) {
+	/**
+	 * Function in case htmlspecialchars_decode does not exist
+	 *
+	 * @param : { string } { $string } { string to decode }
+	 *
+	 * @return string
+	 */
+	function unhtmlentities($string) {
 		$trans_tbl =get_html_translation_table (HTML_ENTITIES );
 		$trans_tbl =array_flip ($trans_tbl );
 		return strtr ($string ,$trans_tbl );
 	}
-	
-	/**
-	* Function used to execute command in background
-	* @param : { string } { $cmd } { command to be executed }
-	*/
 
-	function bgexec($cmd) {
-		if (substr(php_uname(), 0, 7) == "Windows"){
-			exec($cmd);
-		} else {
-			exec($cmd . " > /dev/null &");  
-		}
-	}
-	 
 	/**
-	* Function used to get array value
-	* if you know partial value of array and wants to know complete 
-	* value of an array, this function is being used then
-	*
-	* @param : { string / int } { $needle } { element to find }
-	* @param : { array / string }  { $haystack } { element to do search in }
-	* @return : { string / int } { item if it is found }
-	*/
-
+	 * Function used to get array value
+	 * if you know partial value of array and wants to know complete
+	 * value of an array, this function is being used then
+	 *
+	 * @param $needle
+	 * @param $haystack
+	 *
+	 * @return mixed : { string / int } { item if it is found }
+	 * @internal param $ : { string / int } { $needle } { element to find } { $needle } { element to find }
+	 * @internal param $ : { array / string }  { $haystack } { element to do search in }  { $haystack } { element to do search in }
+	 */
 	function array_find($needle, $haystack) {
 	   foreach ($haystack as $item) {
 		  if (strpos($item, $needle) !== FALSE) {
@@ -1346,11 +1305,13 @@
 	}
 
 	/**
-	* Function used to give output in proper form 
-	* @param : { array } { $params } { array of parameters e.g $params['input'] }
-	* @return : { string } { string value depending on input type }
-	*/
-
+	 * Function used to give output in proper form
+	 *
+	 * @param : { array } { $params } { array of parameters e.g $params['input'] }
+	 *
+	 * @return mixed : { string } { string value depending on input type }
+	 * { string value depending on input type }
+	 */
 	function input_value($params) {
 		$input = $params['input'];
 		$value = $input['value'];
@@ -1364,22 +1325,22 @@
 			
 		if(function_exists($input['display_function'])) {
 			return $input['display_function']($value);
-		} elseif($input['type'] == 'dropdown') {
+		}
+
+		if($input['type'] == 'dropdown')
+		{
 			if($input['checked']) {
 				return $value[$input['checked']];
-			} else {
-				return $value[0];
 			}
-		} else {
-			return $input['value'];
+			return $value[0];
 		}
+		return $input['value'];
 	}
 	
 	/**
 	* Function used to convert input to categories
 	* @param { string / array } { $input } { categories to be converted e.g #12# }
 	*/
-
 	function convert_to_categories($input) {
 		if(is_array($input)) {
 			foreach($input as $in) {		
@@ -1418,33 +1379,44 @@
 			}
 		}
 	}
-	
-	/**
-	* Function used to get categorie details
-	* @uses : { class : $myquery } { function : get_category }
-	*/
 
+	/**
+	 * Function used to get categorie details
+	 * @uses : { class : $myquery } { function : get_category }
+	 *
+	 * @param $id
+	 *
+	 * @return
+	 */
 	function get_category($id) {
 		global $myquery;
 		return $myquery->get_category($id);
 	}
-	
-	/**
-	* Sharing OPT displaying
-	*/
 
+	/**
+	 * Sharing OPT displaying
+	 *
+	 * @param $input
+	 *
+	 * @return int|string
+	 */
 	function display_sharing_opt($input) {
 		foreach($input as $key => $i) {
 			return $key;
 			break;
 		}
 	}
-	
-	/**
-	* Function used to get number of videos uploaded by user
-	* @uses : { class : $userquery } { function : get_user_vids }
-	*/
 
+	/**
+	 * Function used to get number of videos uploaded by user
+	 * @uses : { class : $userquery } { function : get_user_vids }
+	 *
+	 * @param      $uid
+	 * @param null $cond
+	 * @param bool $count_only
+	 *
+	 * @return array|bool|int
+	 */
 	function get_user_vids($uid,$cond=NULL,$count_only=false) {
 		global $userquery;
 		return $userquery->get_user_vids($uid,$cond,$count_only);
@@ -1454,34 +1426,27 @@
 	* Function used to get error_list
 	* @uses : { class : $eh } { function : $error_list }
 	*/
-
 	function error_list() {
 		global $eh;
 		return $eh->error_list;
 	}
-	
-	
+
 	/**
 	* Function used to get msg_list
 	* @uses : { class : $eh } { function : $message_list }
 	*/
-
 	function msg_list() {
 		global $eh;
 		return $eh->message_list;
 	}
-	
-	/**
-	* Function used to add tempalte in display template list
-	* @param : { string } { $file } { file of the template }
-	* @param : { string } { $folder } { weather to add template folder or not }
-	* if set to true, file will be loaded from inside the template
-	* such that file path will becom $templatefolder/$file
-	* @param : { boolean } { follow_show_page } { this param tells weather to follow ClipBucket->show_page }
-	* variable or not, if show_page is set to false and follow is true, this template will not load
-	* otherwise there it WILL
-	*/
 
+	/**
+	 * Function used to add template in display template list
+	 *
+	 * @param : { string } { $file } { file of the template }
+	 * @param bool $folder
+	 * @param bool $follow_show_page
+	 */
 	function template_files($file,$folder=false,$follow_show_page=true) {
 		global $ClipBucket;
 		if(!$folder) {
@@ -1491,14 +1456,14 @@
 			'folder'=>$folder,'follow_show_page'=>$follow_show_page);
 		}
 	}
-	
-	/**
-	* Function used to include file
-	* @param : { array } { $params } { paramets inside array e.g $param['file'] }
-	* @return : { null }
-	* @action : { displays template }
-	*/
 
+	/**
+	 * Function used to include file
+	 *
+	 * @param : { array } { $params } { paramets inside array e.g $param['file'] }
+	 *
+	 * @action : { displays template }
+	 */
 	function include_template_file($params) {
 		$file = $params['file'];
 		if(file_exists(LAYOUT.'/'.$file)) {
@@ -1509,38 +1474,12 @@
 	}
 
 	/**
-	* Displays pagination for given type of object
-	* @uses : { class : $pages } { function : $pagination }
-	*/
-	
-	function showpagination($total,$page,$link,$extra_params=NULL,$tag='<a #params#>#page#</a>') {
-		global $pages;
-		return $pages->pagination($total,$page,$link,$extra_params,$tag);
-	}
-	
-	/**
-	* Function used to check username is disallowed or not
-	* @param : { string } { $username } { username to be checked }
-	* @return : { boolean } { false if found, else true }
-	*/
-
-	function check_disallowed_user($username) {
-		global $Cbucket;
-		$disallowed_user = $Cbucket->configs['disallowed_usernames'];
-		$censor_users = explode(',',$disallowed_user);
-		if(in_array($username,$censor_users)) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-
-	/**
-	* Function used to validate username
-	* @param : { string } { $username } { username to be checked }
-	* @return : { boolean } { true or false depending on situation }
-	*/
-
+	 * Function used to validate username
+	 *
+	 * @param : { string } { $username } { username to be checked }
+	 *
+	 * @return bool : { boolean } { true or false depending on situation }
+	 */
 	function username_check($username) {
 		global $Cbucket;
 		$banned_words = $Cbucket->configs['disallowed_usernames'];
@@ -1562,43 +1501,54 @@
 		}
 		return true;
 	}
-	
-	/**
-	* Function used to check weather username already exists or not
-	* @uses : { class : $userquery } { function : username_exists }
-	*/
 
+	/**
+	 * Function used to check weather username already exists or not
+	 * @uses : { class : $userquery } { function : username_exists }
+	 *
+	 * @param $user
+	 *
+	 * @return bool
+	 */
 	function user_exists($user) {
 		global $userquery;
 		return $userquery->username_exists($user);
 	}
-	
-	/**
-	* Function used to check weather email already exists or not
-	* @param : { string } { $user } { email address to check }
-	* @uses : { class : $userquery } { function : duplicate_email }
-	*/
 
+	/**
+	 * Function used to check weather email already exists or not
+	 *
+	 * @param : { string } { $user } { email address to check }
+	 *
+	 * @uses : { class : $userquery } { function : duplicate_email }
+	 * @return bool
+	 */
 	function email_exists($user) {
 		global $userquery;
 		return $userquery->duplicate_email($user);
 	}
-	
-	/**
-	* function used to check weather group URL exists or not
-	* @uses : { class : cbgroup } { function : group_url_exists }
-	* @deprecated : { function has been deprecated and will be removed in next version }
-	*/
 
+	/**
+	 * function used to check weather group URL exists or not
+	 * @uses : { class : cbgroup } { function : group_url_exists }
+	 * @deprecated : { function has been deprecated and will be removed in next version }
+	 *
+	 * @param $url
+	 *
+	 * @return bool
+	 */
 	function group_url_exists($url) {
 		global $cbgroup;
 		return $cbgroup->group_url_exists($url);
 	}
-	
-	/**
-	* Function used to check weather error exists or not
-	*/
 
+	/**
+	 * Function used to check weather error exists or not
+	 *
+	 * @param string $param
+	 *
+	 * @return array|bool
+	 */
 	function error($param='array') {
 		if (count(error_list())>0) {
 			if($param!='array') {
@@ -1609,15 +1559,17 @@
 				return $msg[$param];
 			}
 			return error_list();
-		} else {
-			return false;
 		}
+		return false;
 	}
-	
-	/**
-	* Function used to check weather msg exists or not
-	*/
 
+	/**
+	 * Function used to check weather msg exists or not
+	 *
+	 * @param string $param
+	 *
+	 * @return array|bool
+	 */
 	function msg($param='array') {
 		if(count(msg_list())>0)
 		{
@@ -1629,24 +1581,25 @@
 				return $msg[$param];
 			}
 			return msg_list();
-		}else{
-			return false;
 		}
+		return false;
 	}
 	
 	/**
 	* Function used to load plugin
 	*/
-
 	function load_plugin() {
 		global $cbplugin;
-		
 	}
-	
-	/**
-	* Function used to create limit functoin from current page & results
-	*/
 
+	/**
+	 * Function used to create limit functoin from current page & results
+	 *
+	 * @param $page
+	 * @param $result
+	 *
+	 * @return string
+	 */
 	function create_query_limit($page,$result) {
 		$limit  = $result;	
 		if(empty($page) || $page == 0 || !is_numeric($page)) {
@@ -1656,62 +1609,72 @@
 		$from = $from*$limit;
 		return $from.','.$result;
 	}
-	
-	/**
-	* Function used to get value from $_GET
-	* @param : { string } { $val } { value to fetch from $_GET }
-	* @param : { boolean } { $filter } { false by default, filters value if true }
-	*/
 
+	/**
+	 * Function used to get value from $_GET
+	 *
+	 * @param : { string } { $val } { value to fetch from $_GET }
+	 * @param bool $filter
+	 *
+	 * @return bool|string
+	 */
 	function get_form_val($val,$filter=false) {
 		if($filter) {
 			return isset($_GET[$val]) ? form_val($_GET[$val]) : false;
-		} else {
-			return $_GET[$val];
 		}
+		return $_GET[$val];
 	}
 
 	/**
-	* Function used to get value from $_GET
-	* @uses : { function : get_form_val }
-	*/
+	 * Function used to get value from $_GET
+	 * @uses : { function : get_form_val }
+	 *
+	 * @param $val
+	 *
+	 * @return bool|string
+	 */
+	function get($val){
+		return get_form_val($val);
+	}
 
-	function get($val){ return get_form_val($val); }
-	
 	/**
-	* Function used to get value from $_POST
-	* @param : { string } { $val } { value to fetch from $_POST }
-	* @param : { boolean } { $filter } { false by default, filters value if true }
-	*/
-
+	 * Function used to get value from $_POST
+	 *
+	 * @param : { string } { $val } { value to fetch from $_POST }
+	 * @param bool $filter
+	 *
+	 * @return string
+	 */
 	function post_form_val($val,$filter=false) {
 		if($filter) {
 			return form_val($_POST[$val]);
-		} else {
-			return $_POST[$val];
 		}
+		return $_POST[$val];
 	}
-	
-	
-	/**
-	* Function used to get value from $_REQUEST
-	* @param : { string } { $val } { value to fetch from $_REQUEST }
-	* @param : { boolean } { $filter } { false by default, filters value if true }
-	*/
 
+	/**
+	 * Function used to get value from $_REQUEST
+	 *
+	 * @param : { string } { $val } { value to fetch from $_REQUEST }
+	 * @param bool $filter
+	 *
+	 * @return string
+	 */
 	function request_form_val($val,$filter=false) {
 		if($filter) {
 			return form_val($_REQUEST[$val]);
-		} else {
-			return $_REQUEST[$val];
 		}
+		return $_REQUEST[$val];
 	}
 
-
 	/**
-	* Function used to return LANG variable
-	*/
-
+	 * Function used to return LANG variable
+	 *
+	 * @param      $var
+	 * @param bool $sprintf
+	 *
+	 * @return mixed|string
+	 */
 	function lang($var,$sprintf=false) {
 		global $LANG,$Cbucket;
 		$array_str = array( '{title}');
@@ -1749,7 +1712,6 @@
 	 * @uses : { function lang() }
 	 * @return mixed|string
 	 */
-
 	function smarty_lang($param) {
 		if(getArrayValue($param, 'assign')=='') {
 			return lang($param['code'],getArrayValue($param, 'sprintf'));
@@ -1759,44 +1721,48 @@
 	}
 
 	/**
-	* Get an array element by key
-	* @param : { array } { $array } { array to check for element }
-	* @param : { string / integeger } { $key } { element name or key }
-	* @return : { value / false } { element value if found, else false }
-	*/
-
+	 * Get an array element by key
+	 *
+	 * @param array $array
+	 * @param bool  $key
+	 *
+	 * @return bool|mixed : { value / false } { element value if found, else false }
+	 * @internal param $ : { array } { $array } { array to check for element } { $array } { array to check for element }
+	 * @internal param $ : { string / integeger } { $key } { element name or key } { $key } { element name or key }
+	 */
 	function getArrayValue($array = array(), $key = false){
 		if(!empty($array) && $key){
 			if(isset($array[$key])){
 				return $array[$key];
-			} else {
-				return false;
 			}
+			return false;
 		}
 		return false;
 	}
 
 	/**
-	* Fetch value of a constant 
-	* @param : { string } { $constantName } { false by default, name of constant }
-	* @return : { val / false } { constant value if found, else fasle }
-	* @ref: { http://php.net/manual/en/function.constant.php }
-	*/
-
+	 * Fetch value of a constant
+	 *
+	 * @param bool $constantName
+	 *
+	 * @return bool|mixed : { val / false } { constant value if found, else false }
+	 * @internal param $ : { string } { $constantName } { false by default, name of constant } { $constantName } { false by default, name of constant }
+	 * @ref: { http://php.net/manual/en/function.constant.php }
+	 */
 	function getConstant($constantName = false){
 		if($constantName && defined($constantName))  {
 			return constant($constantName);
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	/**
-	* Function used to assign link
-	* @param : { array } { $params } { an array of parameters }
-	* @return : { stirng } { buils link }
-	*/
-
+	 * Function used to assign link
+	 *
+	 * @param : { array } { $params } { an array of parameters }
+	 *
+	 * @return string : { string } { buils link }
+	 */
 	function cblink($params) {
 		global $ClipBucket;
 		$name = getArrayValue($params, 'name');
@@ -1854,12 +1820,13 @@
 		}
 	}
 
-	
 	/**
-	* Function used to show rating
-	* @param : { array } { $params } { array of parameters }
-	*/
-
+	 * Function used to show rating
+	 *
+	 * @param : { array } { $params } { array of parameters }
+	 *
+	 * @return string
+	 */
 	function show_rating($params) {
 		$class 	= $params['class'] ? $params['class'] : 'rating_stars';
 		$rating 	= $params['rating'];
@@ -1948,61 +1915,69 @@
 	}
 
 	/**
-	* Function used to display an ad
-	*/
-
+	 * Function used to display an ad
+	 *
+	 * @param $in
+	 *
+	 * @return string
+	 */
 	function ad($in) {
 		return stripslashes(htmlspecialchars_decode($in));
 	}
-	
-	
-	/**
-	* Function used to get available function list
-	* for special place , read docs.clip-bucket.com
-	*/
 
+
+	/**
+	 * Function used to get available function list
+	 * for special place , read docs.clip-bucket.com
+	 *
+	 * @param $name
+	 *
+	 * @return bool
+	 */
 	function get_functions($name) {
 		global $Cbucket;
 		if(isset($Cbucket->$name)){
 			$funcs = $Cbucket->$name;
 			if(is_array($funcs) && count($funcs)>0) {
 				return $funcs;
-			} else {
-				return false;
 			}
+			return false;
 		}
 	}
-	
-	/**
-	* Function used to add js in ClipBuckets JSArray
-	* @uses { class : $Cbucket } { function : addJS }
-	*/
 
+	/**
+	 * Function used to add js in ClipBuckets JSArray
+	 * @uses { class : $Cbucket } { function : addJS }
+	 *
+	 * @param $files
+	 */
 	function add_js($files) {
 		global $Cbucket;
 		return $Cbucket->addJS($files);
 	}
-	
-	/**
-	* Function add_header()
-	* this will be used to add new files in header array
-	* this is basically for plugins
-	* for specific page array('page'=>'file') 
-	* ie array('uploadactive'=>'datepicker.js')
-	*
-	* @uses : { class : $Cbucket } { function : add_header }
-	*/
 
+	/**
+	 * Function add_header()
+	 * this will be used to add new files in header array
+	 * this is basically for plugins
+	 * for specific page array('page'=>'file')
+	 * ie array('uploadactive'=>'datepicker.js')
+	 *
+	 * @uses : { class : $Cbucket } { function : add_header }
+	 *
+	 * @param $files
+	 */
 	function add_header($files) {
 		global $Cbucket;
 		return $Cbucket->add_header($files);
 	}
 
 	/**
-	* Adds admin header
-	* @uses : { class : $Cbucket } { function : add_admin_header }
-	*/
-
+	 * Adds admin header
+	 * @uses : { class : $Cbucket } { function : add_admin_header }
+	 *
+	 * @param $files
+	 */
 	function add_admin_header($files) {
 		global $Cbucket;
 		return $Cbucket->add_admin_header($files);
@@ -2012,7 +1987,6 @@
 	* Functions used to call functions when users views a channel
 	* @param : { array } { $u } { array with details of user }
 	*/
-
 	function call_view_channel_functions($u) {
 		$funcs = get_functions('view_channel_functions');
 		if(is_array($funcs) && count($funcs)>0) {
@@ -2030,7 +2004,6 @@
 	* @param : { array } { $tdetails } { array with details of group topic }
 	* @deprecated : { function has been deprecated and will be removed in next version }
 	*/
-
 	function call_view_topic_functions($tdetails) {
 		$funcs = get_functions('view_topic_functions');
 		if(is_array($funcs) && count($funcs)>0) {
@@ -2048,7 +2021,6 @@
 	* @param : { array } { $gdetails } { array with details of group }
 	* @deprecated : { function has been deprecated and will be removed in next version }
 	*/
-
 	function call_view_group_functions($gdetails) {
 		$funcs = get_functions('view_group_functions');
 		if(is_array($funcs) && count($funcs)>0) {
@@ -2065,7 +2037,6 @@
 	* Functions used to call functions when users views a collection
 	* @param : { array } { $cdetails } { array with details of collection }
 	*/
-
 	function call_view_collection_functions($cdetails) {
 		$funcs = get_functions('view_collection_functions');
 		if(is_array($funcs) && count($funcs)>0) {
@@ -2079,14 +2050,15 @@
 	}
 
 	/**
-	* Function used to increment views of an object
-	* 
-	* @param : { integer } { $id } { id of element to update views for }
-	* @param : { string } { $type } { type of object e.g video, user }
-	* @return : { null }
-	* @action : database updating
-	*/
-
+	 * Function used to increment views of an object
+	 *
+	 * @param      $id
+	 * @param null $type
+	 *
+	 * @internal param $ : { integer } { $id } { id of element to update views for } { $id } { id of element to update views for }
+	 * @internal param $ : { string } { $type } { type of object e.g video, user } { $type } { type of object e.g video, user }
+	 * @action : database updating
+	 */
 	function increment_views($id,$type=NULL) {
 		global $db;
 		switch($type) {
@@ -2159,14 +2131,15 @@
 	}
 
 	/**
-	* Function used to increment views of an object
-	* 
-	* @param : { integer } { $id } { id of element to update views for }
-	* @param : { string } { $type } { type of object e.g video, user }
-	* @return : { null }
-	* @action : database updating
-	*/
-
+	 * Function used to increment views of an object
+	 *
+	 * @param      $id
+	 * @param null $type
+	 *
+	 * @internal param $ : { integer } { $id } { id of element to update views for } { $id } { id of element to update views for }
+	 * @internal param $ : { string } { $type } { type of object e.g video, user } { $type } { type of object e.g video, user }
+	 * @action : database updating
+	 */
 	function increment_views_new($id,$type=NULL) {
 		global $db;
 		switch($type) {
@@ -2233,22 +2206,22 @@
 		}
 		
 	}
-	
-	/**
-	* Function used to get post var
-	* @param : { string } { $var } { variable to get value for }
-	*/
 
+	/**
+	 * Function used to get post var
+	 *
+	 * @param : { string } { $var } { variable to get value for }
+	 *
+	 * @return mixed
+	 */
 	function post($var) {
 		return $_POST[$var];
 	}
-	
-	
+
 	/**
 	* Function used to show flag form
 	* @param : { array } { $array } { array of parameters }
 	*/
-
 	function show_share_form($array) {
 		assign('params',$array);
         if(SMARTY_VERSION>2) {
@@ -2262,7 +2235,6 @@
 	* Function used to show flag form
 	* @param : { array } { $array } { array of parameters }
 	*/
-
 	function show_flag_form($array) {
 		assign('params',$array);
         if(SMARTY_VERSION>2) {
@@ -2276,7 +2248,6 @@
 	* Function used to show playlist form
 	* @param : { array } { $array } { array of parameters }
 	*/
-
 	function show_playlist_form($array) {
 		global $cbvid;
 		assign('params',$array);
@@ -2291,13 +2262,12 @@
         Template('blocks/common/playlist.html');
        
 	}
-	
-	/**
-	* Function used to show collection form
-	* @param : { array } { $params } { array with paramters }
-	*/
 
-	function show_collection_form($params) {
+	/**
+	 * Function used to show collection form
+	 * @internal param $ : { array } { $params } { array with parameters }
+	 */
+	function show_collection_form() {
 		global $db,$cbcollection;
 		$brace = 1;
 		if(!userid()) {
@@ -2318,57 +2288,64 @@
 		}
 		Template("/blocks/collection_form.html");	
 	}
-	
-	/**
-	* Convert timestam to date
-	*
-	* @param : { string } { $format } { current format of date }
-	* @param : { string } { $timestamp } { time to be converted to date }
-	* @return : { string } { time formatted into date }
-	*/
 
+	/**
+	 * Convert timestamp to date
+	 *
+	 * @param null $format
+	 * @param null $timestamp
+	 *
+	 * @return false|string : { string } { time formatted into date }
+	 * @internal param $ : { string } { $format } { current format of date } { $format } { current format of date }
+	 * @internal param $ : { string } { $timestamp } { time to be converted to date } { $timestamp } { time to be converted to date }
+	 */
 	function cbdate($format=NULL,$timestamp=NULL) {
 		if(!$format) {
 			$format = config("datE_format");
 		}
 		if(!$timestamp) {
 			return date($format);
-		} else {
-			return date($format,$timestamp);
 		}
+		return date($format,$timestamp);
 	}
-	
-	/**
-	* Function used to count pages and return total divided
-	* @param { integer } { $total } { total number of pages }
-	* @param { integer } { $count } { numeber of pages to be displayed }
-	* @return : { integer } { $total_pages } { $total / $count }
-	*/
 
+	/**
+	 * Function used to count pages and return total divided
+	 *
+	 * @param $total
+	 * @param $count
+	 *
+	 * @return float : { integer } { $total_pages }
+	 * @internal param $ { integer } { $total } { total number of pages }
+	 * @internal param $ { integer } { $count } { number of pages to be displayed }
+	 */
 	function count_pages($total,$count) {
 		if($count<1) $count = 1;
 		$records = $total/$count;
 		return $total_pages = round($records+0.49,0);
 	}
-	
-	/**
-	* Fetch user leve against a given userid
-	* @uses : { class : $userquery } { function : usr_levels() }
-	*/
 
+	/**
+	 * Fetch user level against a given userid
+	 * @uses : { class : $userquery } { function : usr_levels() }
+	 *
+	 * @param $id
+	 *
+	 * @return
+	 */
 	function get_user_level($id) {
 		global $userquery;
 		return $userquery->usr_levels[$id];
 	}
 
 	/**
-	* This function used to check weather user is online or not
-	*
-	* @param : { string } { $time } { last active time }
-	* @param : { integer } { $margin } { time margin }
-	* @return : { string  }{ status of user e.g online or ofline }
-	*/
-
+	 * This function used to check weather user is online or not
+	 *
+	 * @param : { string } { $time } { last active time }
+	 * @param string $margin
+	 *
+	 * @return string : { string  }{ status of user e.g online or offline }
+	 */
 	function is_online($time,$margin='5') {
 		$margin = $margin*60;
 		$active = strtotime($time);
@@ -2376,21 +2353,21 @@
 		$diff = $curr - $active;
 		if($diff > $margin) {
 			return 'offline';
-		} else {
-			return 'online';
 		}
+		return 'online';
 	}
 
 	/**
-	* ClipBucket Form Validator
-	* this function controls the whole logic of how to operate input
-	* validate it, generate proper error
-	* 
-	* @param : { array } { $input } { array of form values }
-	* @param : { array } { $array } { array of form fields }
-	* @return : { boolean } { true or false based on validation }
-	*/
-
+	 * ClipBucket Form Validator
+	 * this function controls the whole logic of how to operate input
+	 * validate it, generate proper error
+	 *
+	 * @param $input
+	 * @param $array
+	 *
+	 * @internal param $ : { array } { $input } { array of form values } { $input } { array of form values }
+	 * @internal param $ : { array } { $array } { array of form fields } { $array } { array of form fields }
+	 */
 	function validate_cb_form($input,$array) {
 		//Check the Collpase Category Checkboxes 
 		if($input['cat']['title']=='Video Category') {
@@ -2488,28 +2465,12 @@
 	}
 
 	/**
-	* Function used to check weather tempalte file exists or not
-	* 
-	* @param : { string } { $file } { file name to be checked }
-	* @param : { string } { $dir } { directory to check file in }
-	* @return : { boolean } { true if file exists, else false }
-	*/
-
-	function template_file_exists($file,$dir) {
-		if(!file_exists($dir.'/'.$file) && !empty($file) && !file_exists($file)) {
-			echo sprintf(lang("temp_file_load_err"),$file,$dir);
-			return false;
-		} else {
-			return true;
-		}
-	}
-	
-	/** 
-	* Function used to count age from date
-	* @param : { string } { $input } { date to count age }
-	* @return : { integer } { $iYears } { years old }
-	*/
-
+	 * Function used to count age from date
+	 *
+	 * @param : { string } { $input } { date to count age }
+	 *
+	 * @return float : { integer } { $iYears } { years old }
+	 */
 	function get_age($input) { 
 		$time = strtotime($input);
 		$iMonth = date("m",$time);
@@ -2522,18 +2483,19 @@
 	}
 
 	/**
-	* Function used to check time span a time difference function that outputs the 
-	* time passed in facebook's style: 1 day ago, or 4 months ago. I took andrew dot
-	* macrobert at gmail dot com function and tweaked it a bit. On a strict enviroment 
-	* it was throwing errors, plus I needed it to calculate the difference in time between 
-	* a past date and a future date
-	* thanks to yasmary at gmail dot com
-	*
-	* @param : { string } { $date } { date to be converted in nicetime }
-	* @param : { boolean } { false by default, considers date to be in time format if true }
-	* @uses : { function : lang() }
-	*/
-
+	 * Function used to check time span a time difference function that outputs the
+	 * time passed in facebook's style: 1 day ago, or 4 months ago. I took andrew dot
+	 * macrobert at gmail dot com function and tweaked it a bit. On a strict enviroment
+	 * it was throwing errors, plus I needed it to calculate the difference in time between
+	 * a past date and a future date
+	 * thanks to yasmary at gmail dot com
+	 *
+	 * @param : { string } { $date } { date to be converted in nicetime }
+	 * @param bool $istime
+	 *
+	 * @return string
+	 * @uses : { function : lang() }
+	 */
 	function nicetime($date,$istime=false) {
 		if(empty($date)) {
 			return lang('no_date_provided');
@@ -2574,14 +2536,14 @@
 		}
 		return sprintf(lang($tense),$difference,$periods[$j]);
 	}
-	
-	
-	/**
-	* Function used to format outgoing link
-	* @param : { string } { $out } { link to some webpage }
-	* @return : { string } { HTML anchor tag with link in place }
-	*/
 
+	/**
+	 * Function used to format outgoing link
+	 *
+	 * @param : { string } { $out } { link to some webpage }
+	 *
+	 * @return string : { string } { HTML anchor tag with link in place }
+	 */
 	function outgoing_link($out) {
 		preg_match("/http/",$out,$matches);
 		if(empty($matches[0])) {
@@ -2589,14 +2551,14 @@
 		}
 		return '<a href="'.$out.'" target="_blank">'.$out.'</a>';
 	}
-	
-	/**
-	* Function used to get country via country code
-	*
-	* @param : { string } { $code } { country code name }
-	* @return : { string } { country name of flag }
-	*/
 
+	/**
+	 * Function used to get country via country code
+	 *
+	 * @param : { string } { $code } { country code name }
+	 *
+	 * @return bool|string : { string } { country name of flag }
+	 */
 	function get_country($code) {
 		global $db;
 		$result = $db->select(tbl("countries"),"name_en,iso2"," iso2='$code' OR iso3='$code'");
@@ -2607,51 +2569,59 @@
 				$flag = '<img src="'.BASEURL.'/images/icons/country/'.strtolower($result['iso2']).'.png" alt="" border="0">&nbsp;';
 			}
 			return $flag.$result['name_en'];
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	/**
-	* function used to get collections
-	* @uses : { class : $cbcollection } { function : get_collections }
-	*/
-
+	 * function used to get collections
+	 * @uses : { class : $cbcollection } { function : get_collections }
+	 *
+	 * @param $param
+	 *
+	 * @return array|bool
+	 */
 	function get_collections($param) {
 		global $cbcollection;
 		return $cbcollection->get_collections($param);
 	}
-	
-	/**
-	* function used to get users
-	* @uses : { class : $userquery } { function : get_users }
-	*/
 
+	/**
+	 * function used to get users
+	 * @uses : { class : $userquery } { function : get_users }
+	 *
+	 * @param $param
+	 *
+	 * @return bool|mixed
+	 */
 	function get_users($param) {
 		global $userquery;
 		return $userquery->get_users($param);
 	}
-	
-	
-	/**
-	* function used to get groups
-	* @uses : { class : $cbgroup } { function : get_groups }
-	* @deprecated : { function is deprecated and will be removed in next version }
-	*/
 
+	/**
+	 * function used to get groups
+	 * @uses : { class : $cbgroup } { function : get_groups }
+	 * @deprecated : { function is deprecated and will be removed in next version }
+	 *
+	 * @param $param
+	 *
+	 * @return array|bool
+	 */
 	function get_groups($param) {
 		global $cbgroup;
 		return $cbgroup->get_groups($param);
 	}
-	
-	/**
-	* Function used to call functions
-	* 
-	* @param : { array } { $in } { array with functions to be called }
-	* @param : { array } { $params } { array with parameters for functions }
-	* @return : { null }
-	*/
 
+	/**
+	 * Function used to call functions
+	 *
+	 * @param      $in
+	 * @param null $params
+	 *
+	 * @internal param $ : { array } { $in } { array with functions to be called } { $in } { array with functions to be called }
+	 * @internal param $ : { array } { $params } { array with parameters for functions } { $params } { array with parameters for functions }
+	 */
 	function call_functions($in,$params=NULL) {
 		if(is_array($in)) {
 			foreach($in as $i) {
@@ -2676,41 +2646,40 @@
 	}
 
 	/**
-	* In each plugin we will define a CONST such as plguin_installed
-	* that will be used weather plugin is installed or not
-	* ie define("editorspick_install","installed");
-	* is_installed('editorspic');
-	* 
-	* @param : { string } { $plugin } { name of the plguin to check }
-	* @return : { boolean } { true if plugin installed, else false }
-	*/
-
+	 * In each plugin we will define a CONST such as plguin_installed
+	 * that will be used weather plugin is installed or not
+	 * ie define("editorspick_install","installed");
+	 * is_installed('editorspic');
+	 *
+	 * @param : { string } { $plugin } { name of the plguin to check }
+	 *
+	 * @return bool : { boolean } { true if plugin installed, else false }
+	 */
 	function is_installed($plugin) {
 		if(defined($plugin."_install")) {
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
-	
-	
-	/**
-	* Category Link is used to return category based link
-	*
-	* @param : { array } { $data } { array with category details }
-	* @param : { string } { $type } { type of category e.g videos }
-	* @return : { string } { sorting link }
-	*/
 
+	/**
+	 * Category Link is used to return category based link
+	 *
+	 * @param $data
+	 * @param $type
+	 *
+	 * @return string : { string } { sorting link }
+	 * @internal param $ : { array } { $data } { array with category details } { $data } { array with category details }
+	 * @internal param $ : { string } { $type } { type of category e.g videos } { $type } { type of category e.g videos }
+	 */
 	function category_link($data,$type) {
 		switch($type) {
 			case 'video':case 'videos':case 'v':
 			{
 				if(SEO=='yes') {
 					return BASEURL.'/videos/'.$data['category_id'].'/'.SEO($data['category_name']).'/'.$_GET['sort'].'/'.$_GET['time'].'/';
-				} else {
-					return BASEURL.'/videos.php?cat='.$data['category_id'].'&sort='.$_GET['sort'].'&time='.$_GET['time'].'&seo_cat_name='.$_GET['seo_cat_name'];
 				}
+				return BASEURL.'/videos.php?cat='.$data['category_id'].'&sort='.$_GET['sort'].'&time='.$_GET['time'].'&seo_cat_name='.$_GET['seo_cat_name'];
 			}
 			break;
 			
@@ -2718,9 +2687,8 @@
 			{
 				if(SEO=='yes') {
 					return BASEURL.'/channels/'.$data['category_id'].'/'.SEO($data['category_name']).'/'.$_GET['sort'].'/'.$_GET['time'].'/';
-				} else {
-					return BASEURL.'/channels.php?cat='.$data['category_id'].'&sort='.$_GET['sort'].'&time='.$_GET['time'].'&seo_cat_name='.$_GET['seo_cat_name'];
 				}
+				return BASEURL.'/channels.php?cat='.$data['category_id'].'&sort='.$_GET['sort'].'&time='.$_GET['time'].'&seo_cat_name='.$_GET['seo_cat_name'];
 			}
 			break;
 			
@@ -2745,23 +2713,25 @@
 								
 				if(SEO=='yes') {
 					return BASEURL.'/'.$type.'/'.$data['category_id'].'/'.SEO($data['category_name']).'/'.$_GET['sort'].'/'.$_GET['time'].'/';
-				} else {
-					return BASEURL.'/'.$type.'.php?cat='.$data['category_id'].'&sort='.$_GET['sort'].'&time='.$_GET['time'].'&seo_cat_name='.$_GET['seo_cat_name'];
 				}
+				return BASEURL.'/'.$type.'.php?cat='.$data['category_id'].'&sort='.$_GET['sort'].'&time='.$_GET['time'].'&seo_cat_name='.$_GET['seo_cat_name'];
 			}
 			break;
 		}
 	}
-	
-	/**
-	* Sorting Links is used to return Sorting based link
-	*
-	* @param : { string } { $sort } { specifies sorting style }
-	* @param : { string } { $mode } { element to sort e.g time }
-	* @param : { string } { $type } { type of element to sort e.g channels }
-	* @return : { string } { sorting link }
-	*/
 
+	/**
+	 * Sorting Links is used to return Sorting based link
+	 *
+	 * @param        $sort
+	 * @param string $mode
+	 * @param        $type
+	 *
+	 * @return string : { string } { sorting link }
+	 * @internal param $ : { string } { $sort } { specifies sorting style } { $sort } { specifies sorting style }
+	 * @internal param $ : { string } { $mode } { element to sort e.g time } { $mode } { element to sort e.g time }
+	 * @internal param $ : { string } { $type } { type of element to sort e.g channels } { $type } { type of element to sort e.g channels }
+	 */
 	function sort_link($sort,$mode='sort',$type) {
 		switch($type) {
 			case 'video':
@@ -2793,9 +2763,8 @@
 					
 				if (SEO=='yes') {
 					return BASEURL.'/videos/'.$_GET['cat'].'/'.$_GET['seo_cat_name'].'/'.$sorting.'/'.$time.'/'.$_GET['page'];
-				} else {
-					return BASEURL.'/videos.php?cat='.$_GET['cat'].'&sort='.$sorting.'&time='.$time.'&page='.$_GET['page'].'&seo_cat_name='.$_GET['seo_cat_name'];
 				}
+				return BASEURL.'/videos.php?cat='.$_GET['cat'].'&sort='.$sorting.'&time='.$time.'&page='.$_GET['page'].'&seo_cat_name='.$_GET['seo_cat_name'];
 			}
 			break;
 			
@@ -2826,9 +2795,8 @@
 					
 				if(SEO=='yes') {
 					return BASEURL.'/channels/'.$_GET['cat'].'/'.$_GET['seo_cat_name'].'/'.$sorting.'/'.$time.'/'.$_GET['page'];
-				} else {
-					return BASEURL.'/channels.php?cat='.$_GET['cat'].'&sort='.$sorting.'&time='.$time.'&page='.$_GET['page'].'&seo_cat_name='.$_GET['seo_cat_name'];
 				}
+				return BASEURL.'/channels.php?cat='.$_GET['cat'].'&sort='.$sorting.'&time='.$time.'&page='.$_GET['page'].'&seo_cat_name='.$_GET['seo_cat_name'];
 			}
 			break;
 			
@@ -2869,9 +2837,8 @@
 				
 				if(SEO=='yes') {
 					return BASEURL.'/'.$type.'/'.$_GET['cat'].'/'.$_GET['seo_cat_name'].'/'.$sorting.'/'.$time.'/'.$_GET['page'];
-				} else {
-					return BASEURL.'/'.$type.'.php?cat='.$_GET['cat'].'&sort='.$sorting.'&time='.$time.'&page='.$_GET['page'].'&seo_cat_name='.$_GET['seo_cat_name'];
 				}
+				return BASEURL.'/'.$type.'.php?cat='.$_GET['cat'].'&sort='.$sorting.'&time='.$time.'&page='.$_GET['page'].'&seo_cat_name='.$_GET['seo_cat_name'];
 			}
 			break;		
 		}
@@ -2881,59 +2848,41 @@
 	* Function used to get flag options
 	* @uses : { class : $action } { var : $report_opts }
 	*/
-
 	function get_flag_options() {
 		$action = new cbactions();
 		$action->init();
 		return $action->report_opts;
 	}
-	
-	/**
-	* Function used to display flag type
-	* @uses : { get_flag_options() function }
-	*/
 
+	/**
+	 * Function used to display flag type
+	 * @uses : { get_flag_options() function }
+	 *
+	 * @param $id
+	 *
+	 * @return
+	 */
 	function flag_type($id) {
 		$flag_opts = get_flag_options();
 		return $flag_opts[$id];
-	}
-	
-	
-	/**
-	* Loads Captcha [ user get_captcha() instead ]
-	*
-	* @deprecated : { Function is not used anymore and will be removed in next version }
-	*/
-
-	function get_captcha_2014() {
-		global $Cbucket;
-		if(count($Cbucket->captchas)>0) {   
-			return $Cbucket->captchas[0];
-			
-		} else {
-			return false;
-		}
 	}
 
 	/**
 	* Function used to load captcha field
 	* @uses : { class : $Cbucket }  { var : $captchas }
 	*/
-
 	function get_captcha() {
 		global $Cbucket;
 		if(count($Cbucket->captchas)>0) {   
 			return $Cbucket->captchas[0];
-		} else {
-			return false;
 		}
+		return false;
 	}
 	
 	/**
 	* Function used to load captcha
 	* @param : { array } { $params } { an array of parametrs }
 	*/
-
 	define("GLOBAL_CB_CAPTCHA","cb_captcha");
 	function load_captcha($params) {
 		global $total_captchas_loaded;
@@ -2962,19 +2911,16 @@
 	/**
 	* Function used to verify captcha
 	*/
-
 	function verify_captcha() {
 		$var = post('cb_captcha_enabled');
 		if($var == 'yes') {
 			$captcha = get_captcha();
 			$val = $captcha['validate_function'](post(GLOBAL_CB_CAPTCHA));
 			return $val;
-		} else {
-			return true;
 		}
+		return true;
 	}
-	
-	
+
 	/**
 	* Function used to ingore errors
 	* that are created when there is wrong action done
@@ -2982,30 +2928,14 @@
 	* 
 	* @deprecated : { function is not used anymore and will be removed in next version }
 	*/
-
 	function ignore_errors() {
 		global $ignore_cb_errors;
 		$ignore_cb_errors = TRUE;
 	}
-	
-	/**
-	* Function used to set $ignore_cb_errors 
-	* back to TRUE so our error catching system
-	* can generate errors
-	*
-	* @deprecated : { function is not used anymore and will be removed in next version }
-	*/
 
-	function catch_error() {
-		global $ignore_cb_errors;
-		$ignore_cb_errors = FALSE;
-	}
-	
-	
 	/**
 	* Function used to call sub_menu_easily
 	*/
-
 	function sub_menu() {
 		# Submenu function used to used to display submenu links
 		# after navbar
@@ -3018,12 +2948,14 @@
 			}
 		}
 	}
-	
-	/**
-	* Adds title for ClipBucket powered website
-	* @param : { string } { $title } { title to be given to page }
-	*/
 
+	/**
+	 * Adds title for ClipBucket powered website
+	 *
+	 * @param bool $params
+	 *
+	 * @internal param $ : { string } { $title } { title to be given to page } { $title } { title to be given to page }
+	 */
 	function cbtitle($params=false) {
 		global $cbsubtitle;
 		$sub_sep = getArrayValue($params, 'sub_sep');
@@ -3038,63 +2970,53 @@
 			echo TITLE;	
 		}
 	}
-
-	/**
- 	* @Script : ClipBucket
- 	* @Author : Arslan Hassan
- 	* @License : CBLA
- 	* @Since : 2007
- 	*
- 	* function whos_your_daddy
- 	* Simply tells the name of  script owner
- 	* @return INTELLECTUAL BADASS
- 	*/
- 
-	function whos_your_daddy() {
-		echo  "<h1>Arslan Hassan</h1>";
-	}
 	
 	/**
 	* Adds subtitle for any given page
 	* @param : { string } { $title } { title to be given to page }
 	*/
-
 	function subtitle($title) {
 		global $cbsubtitle;
 		$cbsubtitle = $title;
 	}
-	
-	/**
-	* Extract user's name using userid
-	* @uses : { class : $userquery } { function : get_username }
-	*/
 
+	/**
+	 * Extract user's name using userid
+	 * @uses : { class : $userquery } { function : get_username }
+	 *
+	 * @param $uid
+	 *
+	 * @return
+	 */
 	function get_username($uid) {
 		global $userquery;
 		return $userquery->get_username($uid,'username');
 	}
-	
-	/**
-	* Extract collection's name using Collection's id
-	* function is mostly used via Smarty template engine
-	* 
-	* @uses : { class : $cbcollection } { function : get_collection_field }
-	*/
 
+	/**
+	 * Extract collection's name using Collection's id
+	 * function is mostly used via Smarty template engine
+	 *
+	 * @uses : { class : $cbcollection } { function : get_collection_field }
+	 *
+	 * @param        $cid
+	 * @param string $field
+	 *
+	 * @return bool
+	 */
 	function get_collection_field($cid,$field='collection_name') {
 		global $cbcollection;
 		return $cbcollection->get_collection_field($cid,$field);
 	}
-	
-	/**
-	* Deletes all photos found inside of given collection 
-	* function is used when whole collection is being deleted
-	*
-	* @param : { array } { $details } { an array with collection's details }
-	* @return : { null }
-	* @action: makes photos orphan
-	*/
 
+	/**
+	 * Deletes all photos found inside of given collection
+	 * function is used when whole collection is being deleted
+	 *
+	 * @param : { array } { $details } { an array with collection's details }
+	 *
+	 * @action: makes photos orphan
+	 */
 	function delete_collection_photos($details) {
 		global $cbcollection,$cbphoto;
 		$type = $details['type'];
@@ -3108,44 +3030,56 @@
 			}
 		}
 	}
-	
-	/**
-	* Get ClipBucket's header menu
-	* @uses : { class : $Cbucket } { function : head_menu }
-	*/
 
+	/**
+	 * Get ClipBucket's header menu
+	 * @uses : { class : $Cbucket } { function : head_menu }
+	 *
+	 * @param null $params
+	 *
+	 * @return array
+	 */
 	function head_menu($params=NULL) {
 		global $Cbucket;
 		return $Cbucket->head_menu($params);
 	}
 
 	/**
-	* Get ClipBucket's menu
-	* @uses : { class : $Cbucket } { function : cbMenu }
-	*/
-	
+	 * Get ClipBucket's menu
+	 * @uses : { class : $Cbucket } { function : cbMenu }
+	 *
+	 * @param null $params
+	 *
+	 * @return array|string
+	 */
 	function cbMenu($params=NULL) {
 		global $Cbucket;
 		return $Cbucket->cbMenu($params);
 	}
-	
-	/**
-	* Get ClipBucket's footer menu
-	* @uses : { class : $Cbucket } { function : foot_menu }
-	*/
 
+	/**
+	 * Get ClipBucket's footer menu
+	 * @uses : { class : $Cbucket } { function : foot_menu }
+	 *
+	 * @param null $params
+	 *
+	 * @return array
+	 */
 	function foot_menu($params=NULL) {
 		global $Cbucket;
 		return $Cbucket->foot_menu($params);
 	}
-	
-	/**
-	* Converts given array XML into a PHP array
-	* 
-	* @param : { array } { $array } { array to be converted into XML }
-	* @return : { string } { $xml } { array converted into XML }
-	*/
 
+	/**
+	 * Converts given array XML into a PHP array
+	 *
+	 * @param : { array } { $array } { array to be converted into XML }
+	 * @param int    $get_attributes
+	 * @param string $priority
+	 * @param bool   $is_url
+	 *
+	 * @return array : { string } { $xml } { array converted into XML }
+	 */
 	function xml2array($url, $get_attributes = 1, $priority = 'tag',$is_url=true) {
 		$contents = "";
 		if (!function_exists('xml_parser_create')) {
@@ -3156,13 +3090,13 @@
 			if (!($fp = @ fopen($url, 'rb'))) {
 				$ch = curl_init();
 				curl_setopt($ch,CURLOPT_URL,$url);
-				curl_setopt($ch, CURLOPT_USERAGENT, 
+				curl_setopt($ch, CURLOPT_USERAGENT,
 				'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.2) Gecko/20070219 Firefox/3.0.0.2');
 				curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
 				curl_setopt($ch,CURLOPT_FOLLOWLOCATION,true);
 				$contents = curl_exec($ch);
 				curl_close($ch);
-				
+
 				if(!$contents)
 					return false;
 			}
@@ -3183,13 +3117,13 @@
 			return; //Hmm...
 		}
 		$xml_array = array ();
-		$parents = array ();
-		$opened_tags = array ();
-		$arr = array ();
+		//$parents = array ();
+		//$opened_tags = array ();
+		//$arr = array ();
 		$current = & $xml_array;
 		$repeated_tag_index = array ();
 		foreach ($xml_values as $data) {
-			
+
 			unset ($attributes, $value);
 			extract($data);
 			$result = array ();
@@ -3274,14 +3208,15 @@
 		}
 		return ($xml_array);
 	}
-	
-	/**
-	* Converts given array into valid XML
-	* 
-	* @param : { array } { $array } { array to be converted into XML }
-	* @return : { string } { $xml } { array converted into XML }
-	*/
 
+	/**
+	 * Converts given array into valid XML
+	 *
+	 * @param : { array } { $array } { array to be converted into XML }
+	 * @param int $level
+	 *
+	 * @return string : { string } { $xml } { array converted into XML }
+	 */
 	function array2xml($array, $level=1) {
 		$xml = '';
 		foreach ($array as $key=>$value) {
@@ -3333,13 +3268,10 @@
 		return $xml;
 	}
 
-
-	
 	/**
 	* FUnction used to display widget
  	* @deprecated : { function is not used anymore and will be removed }	 
 	*/
-
 	function widget($params) {
 		$name = $params['name'];
 		$content = $params['content'];
@@ -3354,39 +3286,18 @@
 			</div>
 		</div>';
 	}
-	
-	
+
 	/**
- 	* Function used to get latest ClipBucket version info
- 	* @deprecated : { function is not used anymore and will be removed }
-	*/
-
-	function get_latest_cb_info() {
-		if($_SERVER['HTTP_HOST']!='localhost') {
-			$url = 'http://clip-bucket.com/versions.xml';
-		} else {
-			$url = 'http://localhost/clipbucket/2.x/2/upload/tester/versions.xml';
-		}
-		$version = xml2array($url);
-		if (!$version) {
-			return false;
-		} else {
-			return $version['phpbucket']['clipbucket'][0];
-		}
-	}
-
-	
-	/**
-	* This function used to include headers in <head> tag
-	* it will check weather to include the file or not
-	* it will take file and its type as an array
-	* then compare its type with THIS_PAGE constant
-	* if header has TYPE of THIS_PAGE then it will be inlucded
-	*
-	* @param : { array } { $params } { paramters array e.g file, type }
-	* @return : { false } 
-	*/
-
+	 * This function used to include headers in <head> tag
+	 * it will check weather to include the file or not
+	 * it will take file and its type as an array
+	 * then compare its type with THIS_PAGE constant
+	 * if header has TYPE of THIS_PAGE then it will be inlucded
+	 *
+	 * @param : { array } { $params } { paramters array e.g file, type }
+	 *
+	 * @return bool : { false }
+	 */
 	function include_header($params) {
 		$file = getArrayValue($params, 'file');
 		$type = getArrayValue($params, 'type');
@@ -3409,23 +3320,22 @@
 	}
 
 	/**
-	* Function used to check weather to include given file or not
-	* it will take array of pages if array has ACTIVE PAGE or has GLOBAL value
-	* it will return true otherwise FALSE
-	* 
-	* @param : { array } { $array } { array with files to include }
-	* @return : { boolean } { true or false depending on situation }
-	*/
-
+	 * Function used to check weather to include given file or not
+	 * it will take array of pages if array has ACTIVE PAGE or has GLOBAL value
+	 * it will return true otherwise FALSE
+	 *
+	 * @param : { array } { $array } { array with files to include }
+	 *
+	 * @return bool : { boolean } { true or false depending on situation }
+	 */
 	function is_includeable($array) {
 		if(!is_array($array)) {
 			$array = array($array);
 		}
 		if(in_array(THIS_PAGE,$array) || in_array('global',$array)) {
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 	
 	/**
@@ -3436,7 +3346,6 @@
 	* @param : { arary } { $params } { array with parameters e.g  file, type}
 	* @return : { string } { javascript tag with file in src }
 	*/
-
 	$the_js_files = array();
 	function include_js($params) {
 		global $the_js_files;
@@ -3457,13 +3366,15 @@
 		}
 		return false;
 	}
-		
-	/**
-	* Checks if FFMPEG has all required modules installed on server
-	* @param : { string } { $data } { false by default, version of ffmpeg }
-	* @return : { array } { $codecs } { an array with all required modules }
-	*/
 
+	/**
+	 * Checks if FFMPEG has all required modules installed on server
+	 *
+	 * @param bool $data
+	 *
+	 * @return array : { array } { $codecs } { an array with all required modules }
+	 * @internal param $ : { string } { $data } { false by default, version of ffmpeg } { $data } { false by default, version of ffmpeg }
+	 */
 	function get_ffmpeg_codecs($data=false) {
 		if (PHP_OS == "Linux") {
 			$a = 'libfaac';
@@ -3508,13 +3419,14 @@
 		$the_codecs =  array_merge($the_req_codecs,$the_codecs);
 		return $the_codecs;
 	}
-	
+
 	/**
-	* Check if a module is installed on server or not using path
-	* @param : { array } { $params } { array with paramters including path }
-	* @return : { string / boolean } { path if found, else fasle }
-	*/
-	
+	 * Check if a module is installed on server or not using path
+	 *
+	 * @param : { array } { $params } { array with paramters including path }
+	 *
+	 * @return array|bool|string : { string / boolean } { path if found, else false }
+	 */
 	function check_module_path($params) {
 		$rPath = $path = $params['path'];
 		if($path['get_path'])
@@ -3534,9 +3446,8 @@
 				$array['version'] = parse_version($params['path'],$result);
 				assign($params['assign'],$array);
 				return $array;
-			} else {
-				return $result;
 			}
+			return $result;
 		} else {
 			if($params['assign']) {
 				assign($params['assign']['error'],"error");
@@ -3547,12 +3458,12 @@
 	}
 
 	/**
-	* Check if FFMPEG is installed by exracting its version
-	*
-	* @param : { string } { $path } { path to FFMPEG }
-	* @return : { string } { version if found, else false }
-	*/
-
+	 * Check if FFMPEG is installed by exracting its version
+	 *
+	 * @param : { string } { $path } { path to FFMPEG }
+	 *
+	 * @return bool|mixed|string : { string } { version if found, else false }
+	 */
 	function check_ffmpeg($path) {	
 		$path = get_binaries($path);
 		$matches = array();
@@ -3577,19 +3488,17 @@
 				}
 			}
 			return false;
-		} else {
-			return false;
 		}
-			
+		return false;
 	}
-	
-	/**
-	* Check if PHP_CLI is installed by exracting its version
-	*
-	* @param : { string } { $path } { path to PHP_CLI }
-	* @return : { string } { version if found, else false }
-	*/
 
+	/**
+	 * Check if PHP_CLI is installed by exracting its version
+	 *
+	 * @param : { string } { $path } { path to PHP_CLI }
+	 *
+	 * @return bool|mixed : { string } { version if found, else false }
+	 */
 	function check_php_cli($path) {	
 		$path = get_binaries($path);
 		$matches = array();
@@ -3601,9 +3510,8 @@
 				return $version;
 			}
 			return false;
-		} else {
-			return false;
-		}	
+		}
+		return false;
 	}
 
 	/**
@@ -3612,7 +3520,6 @@
 	* @param : { string } { $path } { path to MediaInfo }
 	* @return : { string } { version if found, else false }
 	*/
-
 	function check_media_info($path) {	
 		$path = get_binaries($path);
 		$result = shell_output($path." --version");
@@ -3626,7 +3533,6 @@
 	* @param : { string } { $path } { path to ImageMagick }
 	* @return : { string } { version if found, else false }
 	*/
-
 	function check_imagick($path) {	
 		$path = get_binaries($path);
 		$result = shell_output($path." --version");
@@ -3635,12 +3541,12 @@
 	}
 
 	/**
-	* Check if FFPROBE is installed by exracting its version
-	*
-	* @param : { string } { $path } { path to FFPROBE }
-	* @return : { string } { version if found, else false }
-	*/
-
+	 * Check if FFPROBE is installed by exracting its version
+	 *
+	 * @param : { string } { $path } { path to FFPROBE }
+	 *
+	 * @return array|string : { string } { version if found, else false }
+	 */
 	function check_ffprobe_path($path) {	
 		$path = get_binaries($path);
 		$result = shell_output($path." -version");
@@ -3648,14 +3554,14 @@
 		$result = $result[2];
 		return $result;
 	}
-	
-	/**
-	* Check if MP4Box is installed by exracting its version
-	*
-	* @param : { string } { $path } { path to MP4Box }
-	* @return : { string / false } { version if found, else false }
-	*/
 
+	/**
+	 * Check if MP4Box is installed by exracting its version
+	 *
+	 * @param : { string } { $path } { path to MP4Box }
+	 *
+	 * @return bool|mixed|string : { string / false } { version if found, else false }
+	 */
 	function check_mp4box($path) {	
 		$path = get_binaries($path);
 		$matches = array();
@@ -3667,25 +3573,28 @@
 				return $version;
 			}
 			return false;
-		} elseif (preg_match("/GPAC version/i", $result)) {
-				preg_match('@^(?:GPAC version)?([^-]+)@i',$result, $matches);
-				$host = $matches[1];
-				// get last two segments of host name
-				preg_match('/[^.]+\.[^.]+$/', $host, $matches);
-				//echo "{$matches[0]}\n";
-				$version = "{$matches[0]}";
-				return $version;
-			} else {
-			return false;
-		}	
+		}
+		if (preg_match("/GPAC version/i", $result))
+		{
+			preg_match('@^(?:GPAC version)?([^-]+)@i',$result, $matches);
+			$host = $matches[1];
+			// get last two segments of host name
+			preg_match('/[^.]+\.[^.]+$/', $host, $matches);
+			//echo "{$matches[0]}\n";
+			$version = "{$matches[0]}";
+			return $version;
+		}
+		return false;
 	}
-	
-	/**
-	* Function used to parse versions from info
-	* @param : { string } { $path } { tool to check }
-	* @param : { string } { $result } { data to parse version from }
-	*/
 
+	/**
+	 * Function used to parse versions from info
+	 *
+	 * @param : { string } { $path } { tool to check }
+	 * @param : { string } { $result } { data to parse version from }
+	 *
+	 * @return bool
+	 */
 	function parse_version($path,$result) {
 		switch($path) {
 			case 'ffmpeg':
@@ -3719,9 +3628,8 @@
 				preg_match("/flvtool2 ([0-9\.]+)/i",$result,$matches);
 				if(is_numeric(floatval($matches[1]))){
 					return $matches[1];
-				} else {
-					return false;	
 				}
+				return false;
 			}
 			break;
 			case 'mp4box':
@@ -3730,18 +3638,15 @@
 				//pr($matches);
 				if(is_numeric(floatval($matches[1]))){
 					return $matches[1];
-				} else {
-					return false;	
 				}
+				return false;
 			}
 		}
 	}
-	
-	/**
-	* Calls ClipBucket footer into the battlefield
-	* @return : { null } 
-	*/
 
+	/**
+	 * Calls ClipBucket footer into the battlefield
+	 */
 	function footer() {
 		$funcs = get_functions('clipbucket_footer');
 		if(is_array($funcs) && count($funcs)>0) {
@@ -3754,10 +3659,12 @@
 	}
 
 	/**
-	* Function used to generate RSS FEED links
-	* @param : { array } { $params } { array with paramets }
-	*/
-
+	 * Function used to generate RSS FEED links
+	 *
+	 * @param : { array } { $params } { array with parameters }
+	 *
+	 * @return mixed
+	 */
 	function rss_feeds($params) {
 
 		/**
@@ -3786,12 +3693,14 @@
 			}
 		}
 	}
-	
-	/**
-	* Function used to insert Log
-	* @uses { class : $cblog } { function : insert }
-	*/
 
+	/**
+	 * Function used to insert Log
+	 * @uses { class : $cblog } { function : insert }
+	 *
+	 * @param $type
+	 * @param $details
+	 */
 	function insert_log($type,$details) {
 		global $cblog;
 		$cblog->insert($type,$details);
@@ -3801,7 +3710,6 @@
 	* Function used to get database size
 	* @return : { array } { $dbsize } { array with data size }
 	*/
-
 	function get_db_size() {
 		global $db;
 		$results = $db->_select("SHOW TABLE STATUS");
@@ -3811,31 +3719,30 @@
 		return $dbsize;
 	}
 
-	
 	/**
-	* Function used to check weather user has marked comment as spam or not
-	* @param : { array } { $comment } { array with all details of comment }
-	* @return : { boolean } { true if marked as spam, else fasle }
-	*/
-
+	 * Function used to check weather user has marked comment as spam or not
+	 *
+	 * @param : { array } { $comment } { array with all details of comment }
+	 *
+	 * @return bool : { boolean } { true if marked as spam, else false }
+	 */
 	function marked_spammed($comment) {
 		$spam_voters = explode("|",$comment['spam_voters']);
 		$spam_votes = $comment['spam_votes'];
 		$admin_vote = in_array('1',$spam_voters);
 		if(userid() && in_array(userid(),$spam_voters)) {
 			return true;
-		} elseif($admin_vote) {
-			return true;
-		} else {
-			return false;
 		}
+
+		if($admin_vote) {
+			return true;
+		}
+		return false;
 	}
-	
-	
+
 	/**
 	* function used to get all time zones
 	*/
-
 	function get_time_zones() {
 		$timezoneTable = array(
 			"-12" => "(GMT -12:00) Eniwetok, Kwajalein",
@@ -3871,14 +3778,14 @@
 		);
 		return $timezoneTable;
 	}
-	
-	/**
-	* Function used to get object type from its code
-	* 
-	* @param : { string } { $type } { shortcode of type ie v=>video }
-	* @return : { string } { complete type name }
-	*/
 
+	/**
+	 * Function used to get object type from its code
+	 *
+	 * @param : { string } { $type } { shortcode of type ie v=>video }
+	 *
+	 * @return string : { string } { complete type name }
+	 */
 	function get_obj_type($type) {
 		switch($type) {
 			case "v":
@@ -3897,14 +3804,14 @@
 				// echo cbSecured(CB_SIGN_C);
 		}
 	}
-	
-	/**
-	* Determines conversio status using provided string
-	*
-	* @param : {  string } { $in } { string with conversion value }
-	* @return : { string } { determined conversion status }
-	*/
 
+	/**
+	 * Determines conversion status using provided string
+	 *
+	 * @param : {  string } { $in } { string with conversion value }
+	 *
+	 * @return string : { string } { determined conversion status }
+	 */
 	function conv_status($in) {
 		switch($in) {
 			case "p":
@@ -3920,10 +3827,12 @@
 	}
 
 	/**
-	* Check installation of ClipBucket
-	* @param : { string } { $type } { type of check e.g before, after }
-	*/
-
+	 * Check installation of ClipBucket
+	 *
+	 * @param : { string } { $type } { type of check e.g before, after }
+	 *
+	 * @return bool
+	 */
     function check_install($type) {
     	if(DEVELOPMENT_MODE) return true;
 		global $while_installing,$Cbucket;
@@ -3948,12 +3857,11 @@
 		}       
     }
 
-    /**
-	* Function to get server URL
-	* @param : { none }
-	* @return { string } { url of server }
-    */
-
+	/**
+	 * Function to get server URL
+	 * @return string { string } { url of server }
+	 * @internal param $ : { none }
+	 */
     function get_server_url() {
         $DirName = dirname($_SERVER['PHP_SELF']);
         if(preg_match('/admin_area/i', $DirName)) {
@@ -3967,11 +3875,10 @@
         return get_server_protocol().$_SERVER['HTTP_HOST'].$DirName;
     }
 
-    /**
-	* Get current protocol of server that CB is running on
-	* @return { string } { $protocol } { http or https }
-    */
-
+	/**
+	 * Get current protocol of server that CB is running on
+	 * @return mixed|string { string } { $protocol } { http or https }
+	 */
     function get_server_protocol() {
         if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
             return 'https://';
@@ -3981,8 +3888,7 @@
             return $protocol;
         }
     }
-	
-	
+
 	/**
 	* Returns <kbd>true</kbd> if the string or array of string is encoded in UTF8.
 	*
@@ -3995,67 +3901,21 @@
 	* @param mixed A string, or an array from a file() function.
 	* @return boolean
 	*/
-
 	function isUTF8($string) {
 		if (is_array($string)) {
 			$enc = implode('', $string);
 			return @!((ord($enc[0]) != 239) && (ord($enc[1]) != 187) && (ord($enc[2]) != 191));
-		} else {
-			return (utf8_encode(utf8_decode($string)) == $string);
-		}   
+		}
+		return (utf8_encode(utf8_decode($string)) == $string);
 	}
 
-    /**
-    * Extract file extension from any given path or url
-    * 
-    * @param : { string } { $filepath } { path to be filtered for extension }
-    * @return : { string } { $matches } { extension of file filtered from string }
-    */
-
-    function fetch_file_extension($filepath) {
-        preg_match('/[^?]*/', $filepath, $matches);
-        $string = $matches[0];
-        $pattern = preg_split('/\./', $string, -1, PREG_SPLIT_OFFSET_CAPTURE);
-        # check if there is any extension
-        if(count($pattern) == 1) {
-            // no file extension found
-            return;
-        }
-
-        if(count($pattern) > 1) {
-            $filenamepart = $pattern[count($pattern)-1][0];
-            preg_match('/[^?]*/', $filenamepart, $matches);
-            return $matches[0];
-        }
-    }
-
-    /**
-    * Extract the file filename from any given path or url
-    * 
-    * @param : { string } { $filepath } { path to be filtered for filename }
-    * @return : { string } { $filename } { name of file filtered from string }
-    */
-
-    function fetch_filename($filepath) {
-        preg_match('/[^?]*/', $filepath, $matches);
-        $string = $matches[0];
-        #split the string by the literal dot in the filename
-        $pattern = preg_split('/\./', $string, -1, PREG_SPLIT_OFFSET_CAPTURE);
-        #get the last dot position
-        $lastdot = $pattern[count($pattern)-1][1];
-        #now extract the filename using the basename function
-        $filename = basename(substr($string, 0, $lastdot-1));
-        #return the filename part
-        return $filename;
-    }    
-	
 	/**
-	* Generate embed code of provided video
-	*
-	* @param : { array } { $vdetails } { all details of video }
-	* @return : { string } { $code } { embed code for video }
-	*/
-
+	 * Generate embed code of provided video
+	 *
+	 * @param : { array } { $vdetails } { all details of video }
+	 *
+	 * @return string : { string } { $code } { embed code for video }
+	 */
 	function embeded_code($vdetails) {
 		$code = '';
 		$code .= '<object width="'.EMBED_VDO_WIDTH.'" height="'.EMBED_VDO_HEIGHT.'">';
@@ -4069,15 +3929,14 @@
 		$code .= '</object>';
 		return $code;
 	}
-	
-	
-	/**
-	* function used to convert input to proper date created formate
-	* 
-	* @param : { string } { date in string }
-	* @return : { string } { proper date format }
-	*/
 
+	/**
+	 * function used to convert input to proper date created format
+	 *
+	 * @param : { string } { date in string }
+	 *
+	 * @return false|string : { string } { proper date format }
+	 */
 	function datecreated($in) {
 		$date_els = explode('-',$in);
 		//checking date format
@@ -4091,80 +3950,75 @@
 		$year = $date_els[$yid];
 		if($in) {
 			return date("Y-m-d",strtotime($year.'-'.$month.'-'.$day));
-		} else {
-			return '0000-00-00';
 		}
+		return '0000-00-00';
 	}
-	
-	/**
-	* Get baseurl of working ClipBucket
-	* 
-	* @param : { none } 
-	* @return : { string } { url of website }
-	*/
 
+	/**
+	 * Get baseurl of working ClipBucket
+	 * @return string : { string } { url of website }
+	 * @internal param $ : { none }
+	 */
 	function baseurl() {
 		$protocol = is_ssl() ? 'https://' : 'http://';
 		if(!$sub_dir) {
 			return $base = $protocol.$_SERVER['HTTP_HOST'].untrailingslashit(stripslashes(dirname(($_SERVER['SCRIPT_NAME']))));
-		} else {
-			return $base = $protocol.$_SERVER['HTTP_HOST'].untrailingslashit(stripslashes(dirname(dirname($_SERVER['SCRIPT_NAME']))));
 		}
+		return $base = $protocol.$_SERVER['HTTP_HOST'].untrailingslashit(stripslashes(dirname(dirname($_SERVER['SCRIPT_NAME']))));
 	}
 
 	/**
 	* Get baseurl of website
 	* @uses : baseurl()
 	*/
+	function base_url(){
+		return baseurl();
+	}
 
-	function base_url(){ return baseurl();}
-	
 	/**
-	* SRC (WordPress)
-	* Appends a trailing slash.
-	*
-	* Will remove trailing slash if it exists already before adding a trailing
-	* slash. This prevents double slashing a string or path.
-	*
-	* The primary use of this is for paths and thus should be used for paths. It is
-	* not restricted to paths and offers no specific path support.
-	*
-	* @since 1.2.0
-	* @uses untrailingslashit() Unslashes string if it was slashed already.
-	*
-	* @param { string } { $string } { What to add the trailing slash to }
-	* @return { string } { $string } { String with trailing slash added}
-	*/
-
+	 * SRC (WordPress)
+	 * Appends a trailing slash.
+	 *
+	 * Will remove trailing slash if it exists already before adding a trailing
+	 * slash. This prevents double slashing a string or path.
+	 *
+	 * The primary use of this is for paths and thus should be used for paths. It is
+	 * not restricted to paths and offers no specific path support.
+	 *
+	 * @since 1.2.0
+	 * @uses untrailingslashit() Unslashes string if it was slashed already.
+	 *
+	 * @param { string } { $string } { What to add the trailing slash to }
+	 *
+	 * @return string { string } { $string } { String with trailing slash added}
+	 */
 	function trailingslashit($string) {
 		return untrailingslashit($string) . '/';
 	}
 
 	/**
-	* SRC (WordPress)
-	* Removes trailing slash if it exists.
-	*
-	* The primary use of this is for paths and thus should be used for paths. It is
-	* not restricted to paths and offers no specific path support.
-	*
-	* @since 2.2.0
-	*
-	* @param { string } { $string } { What to remove the trailing slash from }
-	* @return { string } { $string } { String without the trailing slash }
-	*/
-
+	 * SRC (WordPress)
+	 * Removes trailing slash if it exists.
+	 *
+	 * The primary use of this is for paths and thus should be used for paths. It is
+	 * not restricted to paths and offers no specific path support.
+	 *
+	 * @since 2.2.0
+	 *
+	 * @param { string } { $string } { What to remove the trailing slash from }
+	 *
+	 * @return string { string } { $string } { String without the trailing slash }
+	 */
 	function untrailingslashit($string) {
 		return rtrim($string, '/');
 	}
-	
-	/**
-	* Check if website is using SSL or not
-	*
-	* @param { none }
-	* @return { boolean } { true if SSL, else fasle }
-	* @since 2.6.0
-	*/
 
+	/**
+	 * Check if website is using SSL or not
+	 * @return bool { boolean } { true if SSL, else false }
+	 * @internal param $ { none }
+	 * @since 2.6.0
+	 */
 	function is_ssl() {
 		if (isset($_SERVER['HTTPS'])) {
 			if ('on' == strtolower($_SERVER['HTTPS'])) {
@@ -4178,17 +4032,17 @@
 		}
 		return false;
 	}
-	
-	/**
-	* This will update stats like Favorite count, Playlist count
-	* 
-	* @param : { string } { $type } { favorite by default, type of stats to update }
-	* @param : { string } { $object } { video by default, object to update stats for e.g video, photo }
-	* @param : { integer } { $id } { id of item to update stats for }
-	* @param : { string } { $op } { + by default, increment of decrement }
-	* @action : databse updation
-	*/
 
+	/**
+	 * This will update stats like Favorite count, Playlist count
+	 *
+	 * @param string $type
+	 * @param string $object
+	 * @param : { string } { $type } { favorite by default, type of stats to update }
+	 * @param string $op
+	 *
+	 * @action : database updation
+	 */
 	function updateObjectStats($type='favorite',$object='video',$id,$op='+') {
 		global $db;
 		switch($type) {
@@ -4227,28 +4081,30 @@
 			}
 		}
 	}
-	
+
 	/**
 	 * Function used to check weather conversion lock exists or not
-	 * if converson log exists it means no further conersion commands will be executed
-	 *
-	 * @return { boolean } { true if conversion lock exists, else false }
+	 * if conversion log exists it means no further conersion commands will be executed
+	 * @return bool { boolean } { true if conversion lock exists, else false }
+	 * { true if conversion lock exists, else false }
 	 */
-
 	function conv_lock_exists() {
 		if(file_exists(TEMP_DIR.'/conv_lock.loc')) {
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
-	
-	/**
-	* Function used to return a well-formed queryString
-	* for passing variables to url
-	* @input variable_name
-	*/
 
+	/**
+	 * Function used to return a well-formed queryString
+	 * for passing variables to url
+	 * @input variable_name
+	 *
+	 * @param bool $var
+	 * @param bool $remove
+	 *
+	 * @return string
+	 */
 	function queryString($var=false,$remove=false) {
 		$queryString = $_SERVER['QUERY_STRING'];
 		if($var) {
@@ -4273,51 +4129,21 @@
 		$preUrl = preg_replace(array("/(\&{2,10})/","/\?\&/"),array("&","?"),$preUrl);
 		return $preUrl.$var;
 	}
-	
-	
+
 	/**
-	 * Following two functions are taken from
-	 * tutorialzine.com's post 'Creating a Facebook-like Registration Form with jQuery'
-	 * These function are written by Martin Angelov.
-	 * Read post here: http://tutorialzine.com/2009/08/creating-a-facebook-like-registration-form-with-jquery/
+	 * Download a remote file and store in given directory
+	 *
+	 * @param      $snatching_file
+	 * @param      $destination
+	 * @param      $dest_name
+	 * @param bool $rawdecode
+	 *
+	 * @return string
+	 * @internal param $ : { string } { $snatching_file } { file to be downloaded }
+	 * @internal param $ : { string } { $destination } { where to save the downloaded file }
+	 * @internal param $ : { string } { $dest_name } { new name for file }
+	 *
 	 */
-
-	function generate_options($params) {
-		$reverse=false;
-		if($params['from']>$params['to']) {
-			$tmp=$params['from'];
-			$params['from']=$params['to'];
-			$params['to']=$tmp;
-			$reverse=true;
-		}
-		
-		$return_string=array();
-		for($i=$params['from'];$i<=$params['to'];$i++) {
-			//$return_string[$i] = ($callback?$callback($i):$i);
-			$return_string[] = '<option value="'.$i.'">'.($params['callback']?$params['callback']($i):$i).'</option>';
-		}
-		
-		if($reverse) {
-			$return_string=array_reverse($return_string);
-		}
-
-		return join('',$return_string);
-	}
-
-	function callback_month($month)
-	{
-		return date('M',mktime(0,0,0,$month,1));
-	}
-	
-	
-	/**
-	* Download a remote file and store in given directory
-	* 
-	* @param : { string } { $snatching_file } { file to be downloaded }
-	* @param : { string } { $destination } { where to save the downloaded file }
-	* @param : { string } { $dest_name } { new name for file }
-	*/
-
 	function snatch_it($snatching_file,$destination,$dest_name,$rawdecode=true) {
 		global $curl;
 		if($rawdecode==true)
@@ -4334,13 +4160,14 @@
 	}
 
 	/**
-	* This Function gets a file using curl method in php
-	* 
-	* @param : { string } { $url } { file to be downloaded }
-	* @param : { string } { $file } { where to save the downloaded file }
-	*/
-	function cURLdownload($url, $file) { 
-	
+	 * This Function gets a file using curl method in php
+	 *
+	 * @param : { string } { $url } { file to be downloaded }
+	 * @param : { string } { $file } { where to save the downloaded file }
+	 *
+	 * @return string
+	 */
+	function cURLdownload($url, $file) {
 		$ch = curl_init(); 
 		if($ch) 
 		{ 
@@ -4358,36 +4185,28 @@
 			    curl_close($ch); 
 			   	fclose($fp); 
 			    return "SUCCESS: $file [$url]"; 
-		    } 
-		    else{
-				return "FAIL: fopen()"; 
 		    }
-		}else{
-			return "FAIL: curl_init()";	
-		}  
-	} 	
-	
-	/**
-	* Checks if CURL is installed on server
-	*
-	* @param : { none }
-	* @return : { boolean } { true if curl found, else false }
-	*/
+			return "FAIL: fopen()";
+		}
+		return "FAIL: curl_init()";
+	}
 
+	/**
+	 * Checks if CURL is installed on server
+	 * @return bool : { boolean } { true if curl found, else false }
+	 * @internal param $ : { none }
+	 */
 	function isCurlInstalled()
 	{
 		if  (in_array('curl',get_loaded_extensions())) {
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
-	
-	/**
-	* Load configruation related files for uploader (video, photo)
-	* @return : { null }
-	*/
 
+	/**
+	 * Load configuration related files for uploader (video, photo)
+	 */
 	function uploaderDetails() {
 		global $uploaderType;
 
@@ -4408,25 +4227,23 @@
 		//Calling Custom Functions
 		cb_call_functions('uploaderDetails');
 	}
-	
-	
-	/**
-	* Checks if given section is enabled or not e.g videos, photos
-	*
-	* @param : { string } { $input } { section to check }
-	* @param : { boolean } { $restrict } { false by default, returns true on cb_install }
-	* @return : { boolean } { true of false depending on situation }
-	*/
 
+	/**
+	 * Checks if given section is enabled or not e.g videos, photos
+	 *
+	 * @param : { string } { $input } { section to check }
+	 * @param bool $restrict
+	 *
+	 * @return bool : { boolean } { true of false depending on situation }
+	 */
 	function isSectionEnabled($input,$restrict=false) {
 		global $Cbucket;
 		$section = $Cbucket->configs[$input.'Section'];
 		if(!$restrict) {
 			if($section =='yes') {
 				return true;
-			} else {
-				return false;
 			}
+			return false;
 		} else {
 			if($section =='yes' || THIS_PAGE=='cb_install') {
 				return true;
@@ -4436,16 +4253,15 @@
 				exit();
 			}
 		}
-		
 	}
 
 	/**
-	* Get depth of an array ( nested elements )
-	*
-	* @param : { array } { $array } { array to find depth for }
-	* @return : { integer } { $ini_depth } { depth of array }
-	*/
-
+	 * Get depth of an array ( nested elements )
+	 *
+	 * @param : { array } { $array } { array to find depth for }
+	 *
+	 * @return int : { integer } { $ini_depth } { depth of array }
+	 */
 	function array_depth($array) {
 		$ini_depth = 0;
 		foreach($array as $arr) {
@@ -4456,17 +4272,16 @@
 				}
 			}
 		}
-		
 		return $ini_depth;
 	}
-	
-	
+
 	/**
 	 * JSON_ENCODE short
 	 */
     if( !function_exists( 'je' ) ) {
         function je($in){ return json_encode($in); }
     }
+
 	/**
 	 * JSON_DECODE short
 	 */
@@ -4478,9 +4293,8 @@
 	* Updates last commented data - helps cache refresh
 	* @param : { string } { $type } { type of comment e.g video, channel }
 	* @param : { integer } { $id } { id of element to update }
-	* @action : databse updation
+	* @action : database updation
 	*/
-
 	function update_last_commented($type,$id) {
 		global $db;
 		if($type && $id) {
@@ -4534,8 +4348,11 @@
 	 * 1 - Protected
 	 * 2 - Private
 	 * @note : groups have been deprecated and will be removed soon
+	 *
+	 * @param $privacyID
+	 *
+	 * @return mixed|string
 	 */
-
 	 function getGroupPrivacy($privacyID) {
 		switch($privacyID) {
 			case "0": default:
@@ -4564,7 +4381,6 @@
 	* @param : { array } { $array } { array with all details of feed e.g userid, action etc }
 	* @action : inserts feed into database 
 	*/
-
 	function addFeed($array) {
 		global $cbfeeds,$cbphoto,$userquery;
 		$action = $array['action'];
@@ -4645,14 +4461,14 @@
 			}
 		}
 	}
-	
-	/**
-	* Fetch directory of a plugin to make it dynamic
-	*
-	* @param : { string } { $pluginFile } { false by default, main file of plugin }
-	* @return :	{ string } { basename($pluginFile) } { directory path of plugin }
-	*/
 
+	/**
+	 * Fetch directory of a plugin to make it dynamic
+	 *
+	 * @param : { string } { $pluginFile } { false by default, main file of plugin }
+	 *
+	 * @return string :    { string } { basename($pluginFile) } { directory path of plugin }
+	 */
 	function this_plugin($pluginFile=NULL) {
 		if(!$pluginFile)
 			global $pluginFile;
@@ -4660,13 +4476,13 @@
 	}
 
 	/**
-	* Fetch browser details for current user
-	* 
-	* @param : { string } { $in } { false by default, HTTP_USER_AGENT } 
-	* @param : { boolean } { $assign } { false by default, assigns browser details to this if true }
-	* @return : { array } { $array } { array with all details of user }
-	*/
-
+	 * Fetch browser details for current user
+	 *
+	 * @param : { string } { $in } { false by default, HTTP_USER_AGENT }
+	 * @param bool $assign
+	 *
+	 * @return array : { array } { $array } { array with all details of user }
+	 */
 	function get_browser_details($in=NULL,$assign=false) {
 		//Checking if browser is firefox
 		if(!$in) {
@@ -4675,7 +4491,7 @@
 		$u_agent = $in;
 		$bname = 'Unknown';
 		$platform = 'Unknown';
-		$version= "";
+		//$version= "";
 	
 		//First get the platform?
 		if (preg_match('/linux/i', $u_agent)) {
@@ -4767,18 +4583,18 @@
 	* @param : { array } { $vdetails } { video details of video to be deleted }
 	* @action : { calls function from video class }
 	*/
-
 	function delete_video_from_collection($vdetails) {
 		global  $cbvid;
 		$cbvid->collection->deleteItemFromCollections($vdetails['videoid']);
 	}
-	
+
 	/**
-	* Check if a remote file exists or not via curl without downloading it
-	* @param : { string } { $url } { URL of file to check }
-	* @return : { boolean } { true if file exists, else fasle }
-	*/
-	
+	 * Check if a remote file exists or not via curl without downloading it
+	 *
+	 * @param : { string } { $url } { URL of file to check }
+	 *
+	 * @return bool : { boolean } { true if file exists, else false }
+	 */
 	function checkRemoteFile($url) {
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL,$url);
@@ -4790,20 +4606,20 @@
 		$result = curl_exec($ch);
 		if($result!==FALSE) {
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
-	
-	
-	/**
-	* Fetch total count for videos, photos and channels
-	* 
-	* @param : { string } { $section } { section to select count for } 
-	* @param : { string } { $query } { query to fetch data against }
-	* @return : { integer } { $select[0]['counts'] } { count for requested field }
-	*/
 
+	/**
+	 * Fetch total count for videos, photos and channels
+	 *
+	 * @param $section
+	 * @param $query
+	 *
+	 * @return bool : { integer } { $select[0]['counts'] } { count for requested field }
+	 * @internal param $ : { string } { $section } { section to select count for }
+	 * @internal param $ : { string } { $query } { query to fetch data against }
+	 */
 	function get_counter($section,$query) {
 		global $db;
 
@@ -4820,20 +4636,21 @@
 		AND '$validTime' < date_added");
 		if($db->num_rows>0) {
 			return $select[0]['counts'];
-		} else {
-			return false;	
 		}
+		return false;
 	}
-	
-	/**
-	* Updates total count for videos, photos and channels
-	* 
-	* @param : { string } { $section } { section to update counter for } 
-	* @param : { string } { $query } { query to run for updating }
-	* @param : { integer } { $counter } { count to update }
-	* @return : { null }
-	*/
 
+	/**
+	 * Updates total count for videos, photos and channels
+	 *
+	 * @param $section
+	 * @param $query
+	 * @param $counter
+	 *
+	 * @internal param $ : { string } { $section } { section to update counter for }
+	 * @internal param $ : { string } { $query } { query to run for updating }
+	 * @internal param $ : { integer } { $counter } { count to update }
+	 */
 	function update_counter($section,$query,$counter) {
 		global $db;
 		unset($query['order']);
@@ -4850,23 +4667,9 @@
 	}
 	
 	/**
-	* Function for registering module file 
-	*
-	* @param : { string } { $mod_name } { name of module }
-	* @param : { string } { $file } { file to be loaded for module }
-	* @action : Adds module details into an existing array
-	*/
-
-	function register_module($mod_name,$file) {
-		global $Cbucket;
-		$Cbucket->modules_list[$mod_name][] = $file;
-	}
-	
-	/**
 	* Loads all module files (mostly used with plugins)
 	* @param : { none } { all things handled inside function }
 	*/
-
 	function load_modules()	{
 		global $Cbucket,$lang_obj,$signup,$Upload,$cbgroup,
 		$adsObj,$formObj,$cbplugin,$eh,$sess,$cblog,$imgObj,
@@ -4879,60 +4682,61 @@
 			}
 		}
 	}
-        
-        
-    /**
-    * function used to verify user age
-    * @param : { string } { $dob } { date of birth of user }\
-    * @return : { boolean } { true / flase depending on situation }
-    */
 
+	/**
+	 * function used to verify user age
+	 *
+	 * @param : { string } { $dob } { date of birth of user }\
+	 *
+	 * @return bool : { boolean } { true / false depending on situation }
+	 */
     function verify_age($dob) {
         $allowed_age = config('min_age_reg');
-        if($allowed_age < 1) return true;
+        if($allowed_age < 1)
+        	return true;
         $age_time = strtotime($dob);
         $diff = time() - $age_time;
         $diff = $diff / 60 / 60 / 24 / 364;
-        if($diff >= $allowed_age ) return true;
+        if($diff >= $allowed_age )
+        	return true;
         return false;
     }
-
 
     /**
      * Checks development mode
      *
      * @return Boolean
      */
-
     function in_dev() {
         if(defined('DEVELOPMENT_MODE')) {
             return DEVELOPMENT_MODE;
-        } else {
-            return false;
         }
+		return false;
     }
 
     /**
 	* Dumps data in pretty format [ latest CB prefers pr() instead ]
 	* @param : { array } { $data } { data to be dumped }
     */
-
     function dump($data) {
     	echo "<pre>";
     	var_dump($data);
     	echo "</pre>";
     }
 
-    
-    /**
-	* Creates log files for video conversion
-	* 
-	* @param : { string } { $data } { data to be written in file }
-	* @param : { string } { $file } { name of file to write data for }
-	* @param : { string } { $path } { false by default, path to file }
-	* @param : { boolean } { $force } { false by default, forces file creation }
-    */
-
+	/**
+	 * Creates log files for video conversion
+	 *
+	 * @param      $data
+	 * @param null $file
+	 * @param bool $path
+	 * @param bool $force
+	 *
+	 * @internal param $ : { string } { $data } { data to be written in file }
+	 * @internal param $ : { string } { $file } { name of file to write data for }
+	 * @internal param $ : { string } { $path } { false by default, path to file }
+	 * @internal param $ : { boolean } { $force } { false by default, forces file creation }
+	 */
 	function logData($data,$file=NULL,$path=false,$force=false) {
 		if($force!=false&&!empty($path)) {
 			$file =$path;
@@ -4963,7 +4767,6 @@
     *
     * @param { Object } { $e } { complete current object }
     */
-
     function show_cb_error($e) {
         echo $e->getMessage();
         echo '<br>';
@@ -4975,21 +4778,21 @@
     }
 
 	/**
-	* Returns current page name or boolean for the given string
-	*
-	* @param { string } { $name } { name of page to check against }
-	* @return : { string / boolean } { page name if found, else false }
-	*/
-
+	 * Returns current page name or boolean for the given string
+	 *
+	 * @param string $name
+	 *
+	 * @return bool|mixed|string : { string / boolean } { page name if found, else false }
+	 * @internal param $ { string } { $name } { name of page to check against } { $name } { name of page to check against }
+	 */
 	function this_page($name="") {
 	    if(defined('THIS_PAGE')) {
 	        $page = THIS_PAGE;
 	        if($name) {
 	            if($page==$name) {
 	                return true; 
-	            } else {
-	                return false;
 	            }
+				return false;
 	        }
 	        return $page;
 	    }
@@ -4997,36 +4800,32 @@
 	}
 
 	/**
-	* Returns current page's parent name or boolean for the given string
-	*
-	* @param { string } { $name } { name of page to check against }
-	* @return : { string / boolean } { page name if found, else false }
-	*/
-
+	 * Returns current page's parent name or boolean for the given string
+	 *
+	 * @param string $name
+	 *
+	 * @return bool|mixed|string : { string / boolean } { page name if found, else false }
+	 * @internal param $ { string } { $name } { name of page to check against } { $name } { name of page to check against }
+	 */
 	function parent_page($name="") {
 	    if(defined('PARENT_PAGE')) {
 	        $page = PARENT_PAGE;
 	        if($name) {
 	            if($page==$name)
 	                return true;
-	            else
-	                return false;
+				return false;
 	        }
 	        return $page;
 	    }
 	    return false;
 	}
 
-
-		
 	/**
-	* Function used for building sort links that are used
-	* on main pages such as videos.php, photos.php etc
-	*
-	* @param : { none }
-	* @return : { array } { $array } { an array with all possible sort sorts }
-	*/
-
+	 * Function used for building sort links that are used
+	 * on main pages such as videos.php, photos.php etc
+	 * @return array : { array } { $array } { an array with all possible sort sorts }
+	 * @internal param $ : { none }
+	 */
 	function sorting_links() {
 		if(!isset($_GET['sort']))
 			$_GET['sort'] = 'most_recent';
@@ -5048,10 +4847,8 @@
 	 * Function used for building time links that are used
 	 * on main pages such as videos.php, photos.php etc
 	 * @return array : { array } { $array } { an array with all possible time sorts }
-	 * { $array } { an array with all possible time sorts }
 	 * @internal param $ : { none }
 	 */
-
 	function time_links() {
 		$array = array
 		('all_time' 	=> lang('alltime'),
@@ -5076,13 +4873,11 @@
 	 * @param bool $count_only
 	 *
 	 * @return array { array } { $items } { an array with videos data }
-	 * { $items } { an array with videos data }
-	 * @internal param $ : { integer } { $id } { id of collection from which to fetch videos } { $id } { id of collection from which to fetch videos }
-	 * @internal param $ : { string } { $order } { sorting of videos } { $order } { sorting of videos }
-	 * @internal param $ : { integer } { $limit } { number of videos to fetch } { $limit } { number of videos to fetch }
-	 * @internal param $ : { boolean } { $count_only } { false by default, if true, returns videos count only } { $count_only } { false by default, if true, returns videos count only }
+	 * @internal param $ : { integer } { $id } { id of collection from which to fetch videos }
+	 * @internal param $ : { string } { $order } { sorting of videos }
+	 * @internal param $ : { integer } { $limit } { number of videos to fetch }
+	 * @internal param $ : { boolean } { $count_only } { false by default, if true, returns videos count only }
 	 */
-
 	function get_videos_of_collection($id,$order,$limit,$count_only=false) {
 		global $cbvideo;
 		$items = array();
@@ -5094,12 +4889,10 @@
 	* Calls $lang_obj variable and returns a string
 	* @return String
 	*/
-
 	function get_locale() {
 		global $lang_obj;
 		return $lang_obj->lang_iso;
 	}
-
 
 	/*assign results to template for load more buttons on all_videos.html*/
 	function template_assign($results,$limit,$total_results,$template_path,$assigned_variable_smarty)
@@ -5115,14 +4908,11 @@
 	    	//Template('blocks/videos/all_video.html');
 	   		}
 			$arr = array("template"=>$html, 'count' => $count, 'total' => $limit);
-	  	}
-	  	else
-	  	{
+	  	} else {
 	   		$arr = 'limit_exceeds';
 	  	}
 	  	return $arr;
 	}
-
 
 	/**
 	 * function uses to parse certain string from bulk string
@@ -5137,12 +4927,7 @@
 	 * @internal param $ : {string} {$needle_start} { string from where the parse starts} {$needle_start} { string from where the parse starts}
 	 * @internal param $ : {string} {$needle_end} { string from where the parse end} {$needle_end} { string from where the parse end}
 	 * @internal param $ : {string} {$results} { total string in which we search} {$results} { total string in which we search}
-	 *
-	 * @todo {.....}
-	 *
-	 *
 	 */
-
 	function find_string($needle_start,$needle_end,$results) {
 		if(empty($results)||empty($needle_start)||empty($needle_end)) {
 			return false;
@@ -5169,7 +4954,6 @@
 	* Checks : MEMORY_LIMIT, UPLOAD_MAX_FILESIZE, POST_MAX_SIZE, MAX_EXECUTION_TIME
 	* If any of these configs are less than required value, warning is shown
     */
-
 	function check_server_confs() {
 		define('POST_MAX_SIZE', ini_get('post_max_size'));
 	    define('MEMORY_LIMIT', ini_get('memory_limit'));
@@ -5187,75 +4971,6 @@
 	}
 
 	/**
-	 * Pulls subscribers ids for given userid
-	 *
-	 * @param : { integer } { $userid } { id of user to get subscribers for }
-	 * @param bool $limit
-	 *
-	 * @return array : { array } { $ids } { ids of subscribers }
-	 * { $ids } { ids of subscribers }
-	 * @author : Saqib Razzaq
-	 * @since : ClipBucket 2.8.1
-	 */
-
-	function get_user_subscibers($userid, $limit = false) {
-		global $db;
-		$result = $db->select(tbl("subscriptions"), "userid", "subscribed_to = '$userid'", "$limit");
-		$ids = array();
-		foreach ($result as $key => $value) {
-			$ids[] = $value['userid'];
-		}
-		return $ids;
-	}
-
-	/**
-	* Consider it an aleternative of regular template_files()
-	* It is being introduced because plugin files load before
-	* anything else and if we load an HTML file via plugin, 
-	* it kills Cb structure because html loads before global_header()
-	* with usage of this function, things will run smoothly instead
-	* @param: { string } { $display_file } { path to html to be displayed }
-	* @since : 31st December, 2015
-	* @author : Saqib Razzaq
-	*/
-
-	function display_module_file($display_file) {
-		if (file_exists( $display_file )) {
-			global $ClipBucket;
-			$ClipBucket->template_files[] = array('file' => $display_file);
-		} else {
-			if (has_access("admin_access"))	{
-				e("Display template couldn't be loaded (admin only message)", "e");
-			}
-		}
-	}
-
-	/**
-	 * Check where a function is being called from
-	 *
-	 * @param bool $file
-	 * @param bool $pex
-	 *
-	 * @internal param $ : { boolean } { $file } { false by default, returns file path if true } { $file } { false by default, returns file path if true }
-	 * @internal param $ : { boolean } { $pex } { false by default, exists after pr() if true } { $pex } { false by default, exists after pr() if true }
-	 * @since : 2nd March, 2016 ClipBucket 2.8.1
-	 * @author : Saqib Razzaq
-	 */
-
-	function trace_func($file = false, $pex = false) {
-		$trace = debug_backtrace();
-		if ($file) {
-			$trace = $trace[1]['file'];
-		}
-
-		if (!$pex) {
-			pr($trace,true);
-		} else {
-			pex($trace,true);
-		}
-	}
-
-	/**
 	 * Display an image or build image tag
 	 *
 	 * @param : { string } { $src } { link to image file }
@@ -5265,7 +4980,6 @@
 	 * @since : 2nd March, 2016 ClipBucket 2.8.1
 	 * @author : Saqib Razzaq
 	 */
-
     function view_image($src, $return = false) {
 		if (!empty($src)) {
 			if (!$return) {
@@ -5291,21 +5005,20 @@
 	 * @since : 3rd March, 2016 ClipBucket 2.8.1
 	 * @author : Saqib Razzaq
 	 */
-
 	function getStringBetween($str,$from,$to) {
 	    $sub = substr($str, strpos($str,$from)+strlen($from),strlen($str));
 	    return substr($sub,0,strpos($sub,$to));
 	}
 
 	/**
-	* Convert default youtube api timestamp in usable CB time
-	*
-	* @param : { string } { $time } { youtube time stamp }
-	* @return : { integer } { $total } { video duration in seconds }
-	* @since : 3rd March, 2016 ClipBucket 2.8.1
-	* @author : Saqib Razzaq
-	*/
-
+	 * Convert default youtube api timestamp in usable CB time
+	 *
+	 * @param : { string } { $time } { youtube time stamp }
+	 *
+	 * @return bool|string : { integer } { $total } { video duration in seconds }
+	 * @since : 3rd March, 2016 ClipBucket 2.8.1
+	 * @author : Saqib Razzaq
+	 */
 	function yt_time_convert($time) {
 		if (!empty($time)) {
 			$str = $time;
@@ -5325,12 +5038,10 @@
 			$total = $hours + $mins + $secs;
 			if (is_numeric($total)) {
 				return $total;
-			} else {
-				return false;
 			}
-		} else {
 			return false;
 		}
+		return false;
 	}
 
 	function fetch_action_logs($params) {
@@ -5392,20 +5103,22 @@
 		}
 		if (is_array($logs)) {
 			return $logs;
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	/**
-	* Fetch user's geolocation related data
-	* @param : { string } { $ip } { ip address to perform checks against }
-	* @param : { string } { $purpose } { data you need about IP }
-	* @since : 11th April, 2016 ClipBucket 2.8.1
-	*
-	* @author: manuelbcd [http://stackoverflow.com/users/3518053/manuelbcd]
-	*/
-
+	 * Fetch user's geolocation related data
+	 *
+	 * @param : { string } { $ip } { ip address to perform checks against }
+	 * @param string $purpose
+	 * @param bool   $deep_detect
+	 *
+	 * @return array|null|string
+	 * @since : 11th April, 2016 ClipBucket 2.8.1
+	 *
+	 * @author: manuelbcd [http://stackoverflow.com/users/3518053/manuelbcd]
+	 */
 	function ip_info($ip = NULL, $purpose = "location", $deep_detect = TRUE) {
 	    $output = NULL;
 	    if (filter_var($ip, FILTER_VALIDATE_IP) === FALSE) {
@@ -5472,17 +5185,21 @@
 	}
 
 	/**
-	* Checks if a user has rated a video / photo and returns rating status
-	* @param : { integer } { $userid } { id of user to check rating by }
-	* @param : { integer } { $itemid } { id of item to check rating for }
-	* @param : { boolean } { false by default, type of item [video / photo] }
-	* 
-	* @example : has_rated(1,1033, 'video') // will check if userid 1 has rated video with id 1033
-	* @return : { string / boolean } { rating status if found, else false }
-	* @since : 12th April, 2016 ClipBucket 2.8.1
-	* @author : Saqib Razzaq
-	*/
-
+	 * Checks if a user has rated a video / photo and returns rating status
+	 *
+	 * @param      $userid
+	 * @param      $itemid
+	 * @param bool $type
+	 *
+	 * @return bool|string : { string / boolean } { rating status if found, else false }
+	 * @internal param $ : { integer } { $userid } { id of user to check rating by } { $userid } { id of user to check rating by }
+	 * @internal param $ : { integer } { $itemid } { id of item to check rating for } { $itemid } { id of item to check rating for }
+	 * @internal param $ : { boolean } { false by default, type of item [video / photo] } { false by default, type of item [video / photo] }
+	 *
+	 * @example : has_rated(1,1033, 'video') // will check if userid 1 has rated video with id 1033
+	 * @since : 12th April, 2016 ClipBucket 2.8.1
+	 * @author : Saqib Razzaq
+	 */
 	function has_rated($userid, $itemid, $type = false) {
 		global $db;
 		switch ($type) {
@@ -5505,24 +5222,23 @@
 			if ($rating_data['userid'] == $userid) {
 				if ($rating_data['rating'] == 0) {
 					return 'disliked';
-				} else {
-					return 'liked';
 				}
+				return 'liked';
 			}
 		}
 		return false;
 	}
 
 	/**
-	* Fetches max quality thumbnail of a youtube video
-	* @param : { string / array } { $video } { youtube video id or json decoded api content }
-	* @param : { array } { $thumbarray } { false by default, array of thumbs }
-	* 
-	* @return : { array } { $toreturn } { width, height and thumb url }
-	* @since : 14th April, 2016 ClipBucket 2.8.1
-	* @author : Saqib Razzaq
-	*/
-
+	 * Fetches max quality thumbnail of a youtube video
+	 *
+	 * @param : { string / array } { $video } { youtube video id or json decoded api content }
+	 * @param bool $thumbarray
+	 *
+	 * @return array : { array } { $toreturn } { width, height and thumb url }
+	 * @since : 14th April, 2016 ClipBucket 2.8.1
+	 * @author : Saqib Razzaq
+	 */
 	function maxres_youtube($video, $thumbarray = false) {
 		if (is_array($video) || $thumbarray) {
 			$content = $video;
@@ -5549,8 +5265,8 @@
 				}
 			}
 		} else {
-			$youtube_content = file_get_contents('https://www.googleapis.com/youtube/v3/videos?id='.$video.'&key=AIzaSyDOkg-u9jnhP-WnzX5WPJyV1sc5QQrtuyc&part=snippet,contentDetails');
-			$content = json_decode($youtube_content,true);
+			//$youtube_content = file_get_contents('https://www.googleapis.com/youtube/v3/videos?id='.$video.'&key=AIzaSyDOkg-u9jnhP-WnzX5WPJyV1sc5QQrtuyc&part=snippet,contentDetails');
+			//$content = json_decode($youtube_content,true);
 			$maxres = $thumbs_array['maxres'];
 			$standard = $thumbs_array['standard'];
 			$high = $thumbs_array['high'];
@@ -5577,7 +5293,6 @@
 	* @since : 14th April, 2016 ClipBucket 2.8.1
 	* @author : Saqib Razzaq
 	*/
-
 	function thumbs_black_magic($params) {
 		global $imgObj,$Upload;
 		$files_dir = $params['files_dir'];
@@ -5613,43 +5328,12 @@
 	}
 
 	/**
-	* Get size of a directory in different tyoes
-	* @param : { string } { $dir } { path to directory for which you want to get size }
-	* @param : { string } { $sizeType } { type to get size in e.g mb, kb, gb }
-	*
-	* @return : { string } { $size } { size of given directory }
-	* @since : 15th August, 2016 ClipBucket 2.8.1
-	* @author : Saqib Razzaq
-	*/
-
-	function getDirSize($dir, $sizeType = 'mb') {
-		if (file_exists($dir) || is_dir($dir)) {
-			$to_open = popen ('/usr/bin/du -sk ' . $dir, 'r' );
-			$size = fgets ( $to_open, 4096);
-			$size = substr ( $size, 0, strpos ( $size, "\t" ) );
-			pclose ( $io );
-			if ($sizeType == 'kb') {
-				return $size.' KB';
-			} elseif ($sizeType == 'gb') {
-				$size = $size / 1024 / 1024;
-				return $size.' GB';
-			} else {
-				$size = $size / 1024;
-				return $size.' MB';
-			}
-		} else {
-			return false;
-		}
-	}
-
-	/**
 	* Assigns smarty values to an array
 	* @param : { array } { $vals } { an associative array to assign vals }
 	*/
-
 	function array_val_assign($vals) {
 		if (is_array($vals)) {
-			$total_vars = count($vals);
+			//$total_vars = count($vals);
 			foreach ($vals as $name => $value) {
 				assign($name, $value);
 			}
@@ -5684,7 +5368,6 @@
 		}
 	}
 
-
 	function build_sort_photos($sort, $vid_cond) {
 		if (!empty($sort)) {
 			switch($sort) {
@@ -5716,7 +5399,6 @@
 	/**
 	* Allows admin to upload logo via admin area
 	*/
-	
 	function upload_logo() {
 		global $Cbucket;
 		$active_template = $Cbucket->configs['template_dir'];
@@ -5733,16 +5415,13 @@
 			unlink($target_dir."logo.png");
 			move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_dir . $newfilename);	
 				e(lang("File uploaded successfully."),"m");
-		}
-		elseif (empty($file_basename)) {	
+		} elseif (empty($file_basename)) {
 			// file selection error
 			e(lang("Please select a file to upload."));
-		} 
-		elseif ($filesize > 4000000) {	
+		} elseif ($filesize > 4000000) {
 			// file size error
 			e(lang("The file you are trying to upload is too large."),"e");
-		}
-		else {
+		} else {
 			e(lang("Only these file typs are allowed for upload: ".implode(', ',$allowed_file_types)),"e");
 			unlink($_FILES["fileToUpload"]["tmp_name"]);
 		}
@@ -5771,45 +5450,16 @@
 	    return $str;
 	}//end AutoLinkUrls
 
-
 	/**
-    * Generates a random characters (strings only) string
-    * @param : { integer } { $length } { length of random string to generate }
-    */
-
-    function charsRandomStr($length = 5) {
-        $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $charactersLength = strlen($characters);
-        $randomString = '';
-        for ($i = 0; $i < $length; $i++) {
-            $randomString .= $characters[rand(0, $charactersLength - 1)];
-        }
-        return $randomString;
-    }
-
-    /*
-    * Creates an array contains all alphabets and then reverses it with keys
-    */
-
-    function swapedAlphabets() {
-        $alphabets = range('a', 'z');
-        return array_flip($alphabets);
-    }
-
-    function dateStamp() {
-        $date = new DateTime();
-        return $date->getTimestamp();
-    }
-
-    /**
-	* Check if a plugin is installe, active and has main file
-	* @param : { string } { $mainFile } { File to run check against }
-	* @author : Saqib Razzaq
-	* @since : 4th November, 2016
-	*
-	* @return : { boolean } { true or false matching pattern }
-    */
-
+	 * Check if a plugin is installed, active and has main file
+	 *
+	 * @param : { string } { $mainFile } { File to run check against }
+	 *
+	 * @return bool : { boolean } { true or false matching pattern }
+	 * @author : Saqib Razzaq
+	 * @since : 4th November, 2016
+	 *
+	 */
     function gotPlugin($mainFile) {
     	global $db;
     	$installCheck = $db->select(tbl('plugins'),'plugin_folder,plugin_active',"plugin_file = '$mainFile'");
@@ -5821,45 +5471,13 @@
     	}
     }
 
-    /**
-	* Check if a url exists using curl
-	* @param : { string } { $mainFile } { File to run check against }
-	* @author : Fahad Abbas
-	* @since : 14th November, 2016
-	*
-	* @return : { boolean } { true or false matching pattern }
-    */
-
-    function is_url_exist($url) {
-    	try {
-    		$ch = curl_init($url);    
-		    curl_setopt($ch, CURLOPT_NOBODY, true);
-		    curl_exec($ch);
-		    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-		    if($code == 200) {
-		       $status = true;
-		    } else {
-		      $status = false;
-		    }
-
-		    curl_close($ch);
-		   	return $status;
-    	} catch(Exception $e) {
-    		echo 'Caught exception: ',  $e->getMessage(), "\n";
-    	}
-	}
-
-
-    include( 'functions_db.php' );
-    include( 'functions_filter.php' );
-    include( 'functions_player.php' );
-    include( 'functions_template.php' );
-    include( 'functions_helper.php' );
-
-    include( 'functions_video.php' );
-    include( 'functions_user.php' );
-    include( 'functions_photo.php' );
+    include('functions_db.php');
+    include('functions_filter.php');
+    include('functions_player.php');
+    include('functions_template.php');
+    include('functions_helper.php');
+    include('functions_video.php');
+    include('functions_user.php');
+    include('functions_photo.php');
     include('functions_actions.php');
     include('functions_playlist.php');
-?>
