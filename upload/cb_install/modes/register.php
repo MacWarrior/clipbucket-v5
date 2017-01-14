@@ -31,8 +31,8 @@ As you have installed ClipBucket Succesffuly, we highly recommend you to registe
 <div id="sub_container" class="br5px">
 <h3>Why we suggest registeration?</h3>
 <div class="register">
-  <div class="db_image"><img src="<?php echo installer_path(); ?>images/reg_thumb.png" style="margin-top: 15px;margin-left: 740px;"  width="130" height="120"/></div>
-<ul  class="grey-text" style="margin-top:-145px;">
+  <div class="db_image"><img src="<?php echo installer_path(); ?>images/reg_thumb.png" style="margin-top: 15px;margin-left: 740px;" width="130" height="120"/></div>
+<ul class="grey-text" style="margin-top:-145px;">
   <br>
   <li>Get imediate security updates</li>
   <li>Help us count how many websites are using Clipbucket</li>
@@ -46,9 +46,10 @@ As you have installed ClipBucket Succesffuly, we highly recommend you to registe
 <br>
 <form name="installation" method="post" id="installation">
     <input type="hidden" name="mode" value="finish" />
-     <?=button('Skip & Finish',' onclick="$(\'#installation\').submit()" ',true);?>
-    <?=button('Register & Finish',' onclick="register(\''.$adminemail.'\',\''.urlencode(BASEURL).'\')" ');?>
+	<?php
+		echo button('Skip & Finish',' onclick="$(\'#installation\').submit()" ',true);
+    	echo button('Register & Finish',' onclick="register(\''.$adminemail.'\',\''.urlencode(BASEURL).'\')" ');
+    ?>
     <span id="loadingReg"></span>
-  
 </form>
 

@@ -363,4 +363,3 @@ function upload_error($error)
 {
 	echo json_encode(array("error"=>$error));
 }
-?>

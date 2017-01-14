@@ -10,7 +10,7 @@
  * -- history
  * all function that were in my_query
  * has been transfered here
- * however thhey will still work from there
+ * however they will still work from there
  * too
  */
  
@@ -100,7 +100,8 @@ class CBvideo extends CBCategory
         return $this->extra_fields = $fields;
     }
 
-    function get_video_fields( $extra_fields = array() ) {
+    function get_video_fields( $extra_fields = array() )
+	{
         $fields = $this->get_basic_fields();
         $extra = $this->get_extra_fields();
 
@@ -127,7 +128,8 @@ class CBvideo extends CBCategory
         return $fields;
     }
 
-    function add_video_field( $field ) {
+    function add_video_field( $field )
+	{
         $extra_fields = $this->get_extra_fields();
 
         if ( is_array( $field ) ) {
@@ -135,7 +137,6 @@ class CBvideo extends CBCategory
         } else {
             $extra_fields[] = $field;
         }
-
 
         return $this->set_extra_fields( $extra_fields );
     }
@@ -153,11 +154,13 @@ class CBvideo extends CBCategory
 		$this->collection->objFunction = "video_exists";
 		$this->collection->objFieldID = "videoid";	
 	}
-	
-	
+
 	/**
 	 * Function used to check weather video exists or not
+	 *
 	 * @param VID or VKEY
+	 *
+	 * @return bool
 	 */
 	function video_exists($vid)
 	{
@@ -224,9 +227,8 @@ class CBvideo extends CBCategory
             ) );
 
             return $result;
-        } else {
-            return false;
         }
+		return false;
 	}
 
 	function getvideo($vid){return $this->get_video($vid);}
@@ -326,9 +328,7 @@ class CBvideo extends CBCategory
 			break;
 		}
 	}
-	
-	
-	
+
 	/**
 	 * Function used to update video
 	 */
@@ -352,26 +352,7 @@ class CBvideo extends CBCategory
 				#pr($custom_flds,true);
 				$upload_fields = array_merge($upload_fields,$custom_flds);
 			}
-			
-			
-			/*//Adding Custom Form Fields
-			if(count($Upload->custom_form_fields)>0)
-				$upload_fields = array_merge($upload_fields,$Upload->custom_form_fields);
-			
-			//Adding custom fields from group
-			if(count($Upload->custom_form_fields_groups)>0)
-			{
-				$custom_fields_from_group_fields = array();
-				$custom_fields_from_group = $Upload->custom_form_fields_groups;
-				foreach($custom_fields_from_group as $cffg)
-				{
-					$custom_fields_from_group_fields = array_merge($custom_fields_from_group_fields,$cffg['fields']);
-				}						
-				
-				$upload_fields = array_merge($upload_fields,$custom_fields_from_group_fields);
-			}*/
-			
-			
+
 			if(!$array)
 			 $array = $_POST;
 			 
@@ -417,17 +398,7 @@ class CBvideo extends CBCategory
 
 				}
 				
-			}		
-			
-			#$query = "INSERT INTO video (";
-			$total_fields = count($query_field);
-			
-			/*for($key=0;$key<$total_fields;$key++)
-			{
-				$query .= query_field[$key]." = '".$query_val[$key]."'" ;
-				if($key<$total_fields-1)
-				$query .= ',';
-			}*/
+			}
 			
 			if(has_access('admin_access',TRUE))
 			{
@@ -480,8 +451,6 @@ class CBvideo extends CBCategory
 			$query_val[1] = str_replace('&lt;!--', '', $query_val[1]);
 			$query_val[3] = strtolower($query_val[3]);
 
-
-			
 			if(!userid())
 			{
 				e(lang("you_dont_have_permission_to_update_this_video"));
@@ -514,8 +483,7 @@ class CBvideo extends CBCategory
 			
 		}
 	}
-	
-	
+
 	/**
 	 * Function used to delete a video
 	 */
@@ -525,7 +493,6 @@ class CBvideo extends CBCategory
 		
 		if($this->video_exists($vid))
 		{
-			
 			$vdetails = $this->get_video($vid);
 
 			if($this->is_video_owner($vid,userid()) || has_access('admin_access',TRUE))
@@ -533,23 +500,17 @@ class CBvideo extends CBCategory
 				#THIS SHOULD NOT BE REMOVED :O
 				//list of functions to perform while deleting a video
 				$del_vid_funcs = $this->video_delete_functions;
-				
-				
+
 				if(is_array($del_vid_funcs))
 				{
 					foreach($del_vid_funcs as $func)
 					{
-						
-						
-
 						if(function_exists($func))
 						{
 							$func($vdetails);
 						}
 					}
 				}
-
-
 
 				//Finally Removing Database entry of video
 				$db->execute("DELETE FROM ".tbl("video")." WHERE videoid='$vid'");
@@ -564,13 +525,12 @@ class CBvideo extends CBCategory
 				$db->delete(tbl("favorites"),array("type","id"),array("v",$vdetails['videoid']));
 				
 				e(lang("class_vdo_del_msg"),'m');
-			}else{
+			} else {
 				e(lang("You cannot delete this video"));
 			}
-		}else{
+		} else {
 			e(lang("class_vdo_del_err"));
 		}
-		
 	}
 	
 	/**
@@ -583,7 +543,6 @@ class CBvideo extends CBCategory
 
 		if(!is_default_thumb($thumbs))
 		{
-		
 			if(is_array($thumbs))
 			{
 				foreach($thumbs as $thumb)
@@ -601,9 +560,7 @@ class CBvideo extends CBCategory
 						unlink($file);
 					}
 				}
-			}
-			else
-			{
+			} else {
 				if (strstr($thumbs,'timthumb'))
 					$thumbs_ = $this->convert_tim_thumb_url_to_file($thumbs,$file_name=false);
 				else
@@ -637,9 +594,7 @@ class CBvideo extends CBCategory
 			e(lang("vid_thumb_removed_msg"),'m');
 		}
 	}
-	
-	
-	
+
 	/**
 	 * Function used to remove video log
 	 */
@@ -705,9 +660,7 @@ class CBvideo extends CBCategory
 				}
 
 			}
-		}
-		else
-		{
+		} else {
 			if(file_exists(VIDEOS_DIR.'/'.$files) && is_file(VIDEOS_DIR.'/'.$files))
 					unlink(VIDEOS_DIR.'/'.$files);
 			$fn = substr($files, 0, -7);
@@ -725,8 +678,7 @@ class CBvideo extends CBCategory
 		}
 		e(lang("vid_files_removed_msg"),'m');
 	}
-	
-	
+
 	/**
 	 * Function used to get videos
 	 * this function has all options
@@ -746,10 +698,7 @@ class CBvideo extends CBCategory
 		{
 			$superCond = " ".("video.status")."='Successful' AND
 			".("video.active")."='yes' AND ".("video.broadcast")." !='unlisted' ";
-		}
-			
-		else
-		{
+		} else {
 			if($params['active'])
 				$cond .= " ".("video.active")."='".$params['active']."'";
 
@@ -821,8 +770,7 @@ class CBvideo extends CBCategory
 				if($cond!='')
 					$cond .= ' AND ';
 				$cond .= " ".("video.userid")."='".$params['user']."'";
-			}else
-			{
+			} else {
 				if($cond!='')
 						$cond .= ' AND (';
 				
@@ -837,7 +785,6 @@ class CBvideo extends CBCategory
 				
 				$cond .=" ) ";
 			}
-
 		}
 
 		//non-uid to exclude user videos from related
@@ -846,7 +793,6 @@ class CBvideo extends CBCategory
 			if($cond!='')
 				$cond .= ' AND ';
 			$cond .= " ".("video.userid")." <> '".$params['nonuser']."' ";
-
 		}	
 
 		if($params['editor_pick'])
@@ -854,7 +800,6 @@ class CBvideo extends CBCategory
 			if($cond!='')
 				$cond .= ' AND ';
 			$cond .= " ".("in_editor_pick")." = '".$params['editor_pick']."' ";
-
 		}	
 
 		//padding videos in mass_embed pllugin
@@ -863,7 +808,6 @@ class CBvideo extends CBCategory
 			if($cond!='')
 				$cond .= ' AND ';
 			$cond .= " ".("video.mass_embed_status")." = '".$params['mass_embed_status']."' ";
-
 		}	
 					
 		$tag_n_title='';
@@ -886,8 +830,7 @@ class CBvideo extends CBCategory
 					$loop++;
 					
 				}
-			}else
-			{
+			} else {
 				if($tag_n_title!='')
 					$tag_n_title .= ' OR ';
 				$tag_n_title .= " ".('video.tags')." LIKE '%".$params['tags']."%'";
@@ -950,14 +893,12 @@ class CBvideo extends CBCategory
 		//VIDEO KEY
 		if($params['videokey'])
 		{
-			
 			if(!is_array($params['videokey']))
 			{
 				if($cond!='')
 					$cond .= ' AND ';
 				$cond .= " ".tbl("video.videokey")." = '".$params['videokey']."' ";
-			}else
-			{
+			} else {
 				if($cond!='')
 						$cond .= ' AND (';
 				
@@ -973,8 +914,7 @@ class CBvideo extends CBCategory
 				$cond .=" ) ";
 			}
 		}		
-		
-		
+
 		//Exclude Vids
 		if($params['exclude'])
 		{
@@ -1015,8 +955,7 @@ class CBvideo extends CBCategory
 				if($cond!='')
 					$cond .= ' AND ';
 				$cond .= " ".('video.file_name')." <> '".$params['filename']."' ";
-			}else
-			{
+			} else {
 				if($cond!='')
 						$cond .= ' AND (';
 				
@@ -1040,8 +979,7 @@ class CBvideo extends CBCategory
 					$cond .= ' AND ';
 			$cond .= " ".$params['cond'];
 		}
-		
-		
+
 		$functions = cb_get_functions('get_videos');
 		if($functions)
 		{
@@ -1080,9 +1018,7 @@ class CBvideo extends CBCategory
 				if ($cond !=="")
             	{
             		$cond .=  " AND ".$superCond;
-            	}
-            	else
-            	{
+            	} else {
             		$cond .= $superCond;
             	}	
             }
@@ -1096,11 +1032,6 @@ class CBvideo extends CBCategory
             #pr( $query, true );
 
             $result = select( $query );
-
-			#if(!empty($cond))
-			#	$cond .= " AND ";
-			#$result = $db->select(tbl('video,users'),tbl('video.*,users.userid,users.username'),$cond." ".tbl("video.userid")." = ".tbl("users.userid"),$limit,$order);
-			//echo $db->db_query;
 		}
 
         global $cbsearch;
@@ -1134,9 +1065,6 @@ class CBvideo extends CBCategory
 
             $result = select( $query );
 
-			#$result = $db->select(tbl('video,users'),tbl('video.*,users.userid,users.username'),
-			#$cond." AND ".tbl("video.userid")." = ".tbl("users.userid"),$limit,$order);
-
 			if($db->num_rows == 0)
 			{
 				$cond = "";
@@ -1165,15 +1093,14 @@ class CBvideo extends CBCategory
                 $query .= $limit ? " LIMIT ".$limit : false;
 
                 $result = select( $query );
-
-				#$result = $db->select(tbl('video,users'),tbl('video.*,users.userid,users.username'),
-				#$cond." AND ".tbl("video.userid")." = ".tbl("users.userid"),$limit,$order);
 			}
 			
 			assign($params['assign'],$result);
 		}
 		
-		if($params['pr']) pr($result,true);
+		if($params['pr'])
+			pr($result,true);
+
 		if($params['count_only']){
 			if (!empty($superCond)){
 				if (!empty($cond)){
@@ -1290,8 +1217,7 @@ class CBvideo extends CBCategory
 					break;
 			}
 		}
-		
-		
+
 		if($type=='iframe')
 		{
 			$embed_code = '<iframe width="'.config('embed_player_width').'" height="'.config('embed_player_height').'" ';
@@ -1302,7 +1228,6 @@ class CBvideo extends CBCategory
 		
 		if(!$embed_code)
 		{
-		
 			//Default ClipBucket Embed Code
 			if(function_exists('default_embed_code'))
 			{				
@@ -1321,18 +1246,13 @@ class CBvideo extends CBCategory
 					$code .= '<embed src="'.PLAYER_URL.'/embed_player.php?vid='.$vdetails['videoid'].'"';
 					$code .= 'type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="300" height="250"></embed>';
 					return $code .= '</object>';
-				}else
-				{
-					return embeded_code($vdetails);
 				}
+				return embeded_code($vdetails);
 			}
 		}
-		
 		return $embed_code;
-		
 	}
-	
-	
+
 	/**
 	 * Function used to initialize action class
 	 * in order to call actions.class.php to
@@ -1349,9 +1269,7 @@ class CBvideo extends CBCategory
 		$this->action->type_tbl = $this->dbtbl['video'];
 		$this->action->type_id_field = 'videoid';
 	}
-	
-	
-		
+
 	/**
 	 * Function used to create value array for email templates
 	 * @param video_details ARRAY
@@ -1370,15 +1288,13 @@ class CBvideo extends CBCategory
 		$this->action->share_template_name = 'share_video_template';
 		$this->action->val_array = $this->email_template_vars;
 	}
-	
-	
+
 	/**
 	 * Function used to use to initialize search object for video section
 	 * op=>operator (AND OR)
 	 */
 	function init_search()
 	{
-			
 		$this->search = new cbsearch;
 		$this->search->db_tbl = "video";
 		$this->search->columns =array(
@@ -1430,7 +1346,7 @@ class CBvideo extends CBCategory
 		$this->search->results_per_page = config('videos_items_search_page');
 		
 		$fields = array(
-		'query'	=> array(
+		'query'		=> array(
 						'title'=> lang('keywords'),
 						'type'=> 'textfield',
 						'name'=> 'query',
@@ -1458,7 +1374,7 @@ class CBvideo extends CBCategory
 						'name'		=> 'sort',
 						'value'		=> $sorting,
 						'checked'	=> $sort
-							)
+						)
 		);
 
 		$this->search->search_type['videos']['fields'] = $fields;
@@ -1474,7 +1390,7 @@ class CBvideo extends CBCategory
 	{
 		global $db,$LANG;
 		$num = get_thumb_num($thumb);
-		$file = THUMBS_DIR.'/'.$thumb;
+		//$file = THUMBS_DIR.'/'.$thumb;
 		//if(file_exists($file))
 		//{
 			$db->update(tbl("video"),array("default_thumb"),array($num)," videoid='$vid'");
@@ -1496,14 +1412,12 @@ class CBvideo extends CBCategory
 			$results = $db->select(tbl("video"),"userid"," videoid='$vid' ",1);
 			if($db->num_rows>0)
 				return $results[0]['userid'];
-			else
-				return false;
-		}else{
+			return false;
+		} else {
 			$results = $db->select(tbl("video"),"*"," videoid='$vid' ",1);
 			if($db->num_rows>0)
 				return $results[0];
-			else
-				return false;
+			return false;
 		}
 	}
 	
@@ -1517,8 +1431,7 @@ class CBvideo extends CBCategory
 		$result = $db->count(tbl($this->dbtbl['video']),'videoid',"videoid='$vid' AND userid='$uid' ");
 		if($result>0)
 			return true;
-		else
-			return false;
+		return false;
 	}
 	
 	/**
@@ -1529,15 +1442,13 @@ class CBvideo extends CBCategory
 		if(function_exists($link) && !is_array($link))
 		{
 			return $link($vid);
-		}else
+		}
+
+		if(!empty($link['title']) && !empty($link['link']))
 		{
-			if(!empty($link['title']) && !empty($link['link']))
-			{
-				return '<a href="'.$link['link'].'">'.$link['title'].'</a>';
-			}
+			return '<a href="'.$link['link'].'">'.$link['title'].'</a>';
 		}
 	}
-	
 
 	/**
 	 * Function used to display video manger link temporay
@@ -1547,15 +1458,13 @@ class CBvideo extends CBCategory
 		if(function_exists($link) && !is_array($link))
 		{
 			return $link($vid);
-		}else
+		}
+
+		if(!empty($link['title']) && !empty($link['link']))
 		{
-			if(!empty($link['title']) && !empty($link['link']))
-			{
-				return '<a href="'.$link['link'].'">'.$link['title'].'</a>';
-			}
+			return '<a href="'.$link['link'].'">'.$link['title'].'</a>';
 		}
 	}
-
 
 	/**
 	 * Function used to display video categories manger link temporay
@@ -1565,12 +1474,11 @@ class CBvideo extends CBCategory
 		if(function_exists($link) && !is_array($link))
 		{
 			return $link($vid);
-		}else
+		}
+
+		if(!empty($link['title']) && !empty($link['link']))
 		{
-			if(!empty($link['title']) && !empty($link['link']))
-			{
-				return '<a href="'.$link['link'].'">'.$link['title'].'</a>';
-			}
+			return '<a href="'.$link['link'].'">'.$link['title'].'</a>';
 		}
 	}
 	
@@ -1582,14 +1490,13 @@ class CBvideo extends CBCategory
 	{
 		global $db;
 		if(is_numeric($id))
-		{
 			$results = $db->select(tbl("video"),"userid,allow_rating,rating,rated_by,voter_ids"," videoid='$id'");
-		}else
+		else
 			$results = $db->select(tbl("video"),"userid,allow_rating,rating,rated_by,voter_ids"," videokey='$id'");
+
 		if($db->num_rows>0)
 			return $results[0];
-		else
-			return false;
+		return false;
 	}
 	
 	/**
@@ -1603,22 +1510,20 @@ class CBvideo extends CBCategory
 		$rating 	= $params['rating'];
 		$ratings 	= $params['ratings'];
 		$total 		= $params['total'];
-		$id 			= $params['id'];
+		$id 		= $params['id'];
 		$type 		= $params['type'];
 		
 		if (empty($ratings)) {
 			$ratings = $params['rated_by'];
 		}
 		//Checking Percent
-		{
-			if($total<=10)
-				$total = 10;
-			$perc = $rating*100/$total;
-			$perc = round($perc);
-			$disperc = 100 - $perc;
-			if($ratings <= 0 && $disperc == 100)
-				$disperc = 0;
-		}
+		if($total<=10)
+			$total = 10;
+		$perc = $rating*100/$total;
+		$perc = round($perc);
+		$disperc = 100 - $perc;
+		if($ratings <= 0 && $disperc == 100)
+			$disperc = 0;
 				
 		$perc = $perc.'%';
 		$disperc = $disperc.'%';
@@ -1648,12 +1553,10 @@ class CBvideo extends CBCategory
 		assign("dislikes",($ratings-$likes));
 		assign('disable',$params['disable']);
 
-
         if(SMARTY_VERSION>2)
             Template('blocks/common/rating.html');
         else
 		    Template('blocks/rating.html');
-		
 	}
 	
 	/** 
@@ -1666,13 +1569,10 @@ class CBvideo extends CBCategory
 	{
 		$ratings 	= $video['rated_by'];
 		$rating 	= $video['rating'];
-
 		$perc 		= $rating * 10;
-
-		$likes = round(($perc * $ratings / 100) );
+		$likes 		= round(($perc * $ratings / 100) );
 
 		return array('likes' => $likes, 'dislikes' => $ratings - $likes);
-
 	}
 	
 	/**
@@ -1710,8 +1610,7 @@ class CBvideo extends CBCategory
 					);
 				}
 			}
-		}else
-		{
+		} else {
 			if(!empty($js))
 				$voters = $js->json_decode($voter_id,TRUE);
 			else
@@ -1768,43 +1667,6 @@ class CBvideo extends CBCategory
 		
 		$result = array('rating'=>$newrate,'ratings'=>$new_by,'total'=>10,'id'=>$id,'type'=>'video','disable'=>'disabled');
 		return $result;
-		
-		
-		/*
-		Following code is unused
-		$niddle = "|";
-		$niddle .= userid();
-		$niddle .= "|";
-		$flag = strstr($voter_id, $niddle);
-		
-		//checking if raings are allowed or not
-		$vid_rating = config('video_rating');
-		
-		if(!userid())
-			e(lang("please_login_to_rate"));
-		elseif(userid()==$rating_details['userid'] && !config('own_video_rating'))
-			e(lang("you_cant_rate_own_video"));
-		elseif(!empty($flag))
-			e(lang("you_hv_already_rated_vdo"));
-		elseif(!config('video_rating') || $rating_details['allow_rating'] !='yes' )
-			e(lang("vid_rate_disabled"));
-		else
-		{
-			if(empty($voter_id))
-				$voter_id .= "|";
-			$voter_id .= userid();
-			$voter_id .= "|";
-			$t = $rating_details['rated_by'] * $rating_details['rating'];
-			$new_by = $rating_details['rated_by'] + 1;
-			$newrate = ($t + $rating) / $new_by;
-			
-			$db->update(tbl($this->dbtbl['video']),array("rating","rated_by","voter_ids"),array($newrate,$new_by,$voter_id)," videoid='$id'");
-			e(lang("thnx_for_voting"),"m");	
-		}
-		
-		$result = array('rating'=>$newrate,'ratings'=>$new_by,'total'=>10,'id'=>$id,'type'=>'video','disable'=>'disabled');
-		return $result;
-		*/
 	}
 	
 	
@@ -1821,11 +1683,9 @@ class CBvideo extends CBCategory
             'video' => $cb_columns->object( 'videos' )->get_columns()
         );
 
-
         $query = "SELECT ".table_fields( $fields )." FROM ".table( 'playlist_items' );
         $query .= " LEFT JOIN ".table( 'playlists' )." ON playlist_items.playlist_id = playlists.playlist_id";
         $query .= " LEFT JOIN ".table( 'video' )." ON playlist_items.object_id = video.videoid";
-
         $query .= " WHERE playlist_items.playlist_id = '".$playlist_id."' ";
 
         if ( !is_null( $order ) ) {
@@ -1844,7 +1704,6 @@ class CBvideo extends CBCategory
             return $data;
         }
 
-
         $data = select( $query );
 
         if ( $data ) {
@@ -1858,7 +1717,6 @@ class CBvideo extends CBCategory
         }
 
         return false;
-
 	}	
 	
 	/**
@@ -1873,47 +1731,22 @@ class CBvideo extends CBCategory
             if(phpversion() < '5.2.0')
             {
 			    $list = $json->decode($sess->get_cookie(QUICK_LIST_SESS), true);
-            }
-            else
-            {
+            } else {
 			    $list = json_decode($sess->get_cookie(QUICK_LIST_SESS), true);
             }
 			
 			$list[] = $id;
 			$new_list = array_unique($list);
 
-			/*//Getting list of videos
-			$vids = $this->get_videos(array('videoids'=>$new_list));
-			$newlist = array();
-			//setting up the list
-			if($vids)
-			foreach($vids as $vid)
-			{
-				$newlist[$vid['videoid']] = 
-				array(
-				'title' => $vid['title'],
-				'description' => $vid['description'],
-				'duration' => SetTime($vid['duration']),
-				'thumb'	=> get_thumb($vid),
-				'url'	=> video_link($video),
-				'owner' => $vid['username'],
-				'ownner_url' => $userquery->profile_link($vid),
-				'date_added' => $vid['date_added'],
-				'views'	=> $vid['views'],
-				);
-			}*/
             if(phpversion() < '5.2.0')
             {
 			    $sess->set_cookie(QUICK_LIST_SESS,$json->encode($new_list));
-            }
-            else
-            {
+            } else {
                 $sess->set_cookie(QUICK_LIST_SESS,json_encode($new_list));
             }
 			return true;
-
-		}else
-			return false;
+		}
+		return false;
 	}
 	
 	/**
@@ -1926,9 +1759,7 @@ class CBvideo extends CBCategory
         if(phpversion() < '5.2.0')
         {
 		    $list = $json->decode($sess->get_cookie(QUICK_LIST_SESS), true);
-        }
-        else
-        {
+        } else {
             $list = json_decode($sess->get_cookie(QUICK_LIST_SESS), true);
         }
 		$key = array_search($id,$list);
@@ -1936,9 +1767,7 @@ class CBvideo extends CBCategory
         if(phpversion() < '5.2.0')
         {
 		    $sess->set_cookie(QUICK_LIST_SESS,$json->encode($list));
-        }
-        else
-        {
+        } else {
 		    $sess->set_cookie(QUICK_LIST_SESS,json_encode($list));
         }
 		return true;
@@ -1957,9 +1786,7 @@ class CBvideo extends CBCategory
         if(phpversion() < '5.2.0')
         {
 		    $total = $json->decode($total, true);
-        }
-        else
-        {
+        } else {
             $total = json_decode($total, true);
         }
 		
@@ -1975,9 +1802,7 @@ class CBvideo extends CBCategory
         if(phpversion() < '5.2.0')
         {
 		    return $json->decode($sess->get_cookie(QUICK_LIST_SESS), true);
-        }
-        else
-        {
+        } else {
             return json_decode($sess->get_cookie(QUICK_LIST_SESS), true);
         }
 	}
@@ -1999,8 +1824,7 @@ class CBvideo extends CBCategory
 		$file = get_video_file($vdo,false);
 		if($file)
 			return true;
-		else
-			return false;
+		return false;
 	}
 	
 	/**
@@ -2080,75 +1904,73 @@ class CBvideo extends CBCategory
 		}
 		if($params['count_only'])
 			return $result = $db->count(tbl("comments,video"),"*",$cond);
-		else
-			return $result;
+		return $result;
 	}
 	
 	/**
 	 * Function used get single comment
-	 */	
-
+	 */
 	function get_comment($cid) {
 		global $db;
 		$result = $db->select(tbl("comments"),"*", " comment_id = $cid");
 		if($result)
 			return $result[0];
-		else
-			return false;
+		return false;
 	}
+
 	/**
 	 * Function used get single comment
-	 */	
-
-	function send_notifications() {
+	 */
+	function send_notifications()
+	{
 		// Put your device token here (without spaces):
-                $deviceToken = '610b18964b4ec3ccb8157ff22cb917fe0f6b9c1673cd4229674d87eb9aa0e5b1';
+		$deviceToken = '610b18964b4ec3ccb8157ff22cb917fe0f6b9c1673cd4229674d87eb9aa0e5b1';
 
-                // Put your private key's passphrase here:
-                $passphrase = 'janjua';
+		// Put your private key's passphrase here:
+		$passphrase = 'janjua';
 
-                // Put your alert message here:
-                $message = 'Jeevay Pakistan!';
+		// Put your alert message here:
+		$message = 'Jeevay Pakistan!';
 
-                ////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////////////////
 
-                $ctx = stream_context_create();
-                stream_context_set_option($ctx, 'ssl', 'local_cert', 'ck.pem');
-                stream_context_set_option($ctx, 'ssl', 'passphrase', $passphrase);
+		$ctx = stream_context_create();
+		stream_context_set_option($ctx, 'ssl', 'local_cert', 'ck.pem');
+		stream_context_set_option($ctx, 'ssl', 'passphrase', $passphrase);
 
-                // Open a connection to the APNS server
-                $fp = stream_socket_client(
-                        'ssl://gateway.sandbox.push.apple.com:2195', $err,
-                        $errstr, 60, STREAM_CLIENT_CONNECT|STREAM_CLIENT_PERSISTENT, $ctx);
+		// Open a connection to the APNS server
+		$fp = stream_socket_client(
+			'ssl://gateway.sandbox.push.apple.com:2195', $err,
+			$errstr, 60, STREAM_CLIENT_CONNECT|STREAM_CLIENT_PERSISTENT, $ctx
+		);
 
-                if (!$fp)
-                        exit("Failed to connect: $err $errstr" . PHP_EOL);
+		if (!$fp)
+			exit("Failed to connect: $err $errstr" . PHP_EOL);
 
-                echo 'Connected to APNS' . PHP_EOL;
+		echo 'Connected to APNS' . PHP_EOL;
 
-                // Create the payload body
-                $body['aps'] = array(
-                        'alert' => $message,
-                        'sound' => 'default'
-                        );
+		// Create the payload body
+		$body['aps'] = array(
+			'alert' => $message,
+			'sound' => 'default'
+		);
 
-                // Encode the payload as JSON
-                $payload = json_encode($body);
+		// Encode the payload as JSON
+		$payload = json_encode($body);
 
-                // Build the binary notification
-                $msg = chr(0) . pack('n', 32) . pack('H*', $deviceToken) . pack('n', strlen($payload)) . $payload;
+		// Build the binary notification
+		$msg = chr(0) . pack('n', 32) . pack('H*', $deviceToken) . pack('n', strlen($payload)) . $payload;
 
-                // Send it to the server
-                $result = fwrite($fp, $msg, strlen($msg));
+		// Send it to the server
+		$result = fwrite($fp, $msg, strlen($msg));
 
-                if (!$result)
-                        echo 'Message not delivered' . PHP_EOL;
-                else
-                        echo 'Message successfully delivered' . PHP_EOL;
+		if (!$result)
+			echo 'Message not delivered' . PHP_EOL;
+		else
+			echo 'Message successfully delivered' . PHP_EOL;
 
-                // Close the connection to the server
-                fclose($fp);
-
+		// Close the connection to the server
+		fclose($fp);
 	}
 
 	/**
@@ -2157,8 +1979,7 @@ class CBvideo extends CBCategory
 	 * @date   : 6/2/2015
 	 * @author : Fahad Abbas
 	 * @reason : to delete the thumb from server forcefully  
-	 */	
-
+	 */
 	function convert_tim_thumb_url_to_file($url,$file_name=false)
 	{
 		$thumb = explode('src=',$url);
@@ -2171,20 +1992,4 @@ class CBvideo extends CBCategory
 		return $fn;
 	}
 
-	
-	/**
-	 * Function used update comment
-	 */	
-	
-//	function update_comment($cid,$comment) {
-//			global $db;
-//			if(!$comment) {
-//				e(lang('usr_cmt_err1'),e);
-//			} else {
-//				$db->update(tbl("comments"),array("comment"),array($comment)," comment_id = $cid");
-//				e(lang("Comment Updated"),m);
-//			}
-//	}
-	
 }
-?>

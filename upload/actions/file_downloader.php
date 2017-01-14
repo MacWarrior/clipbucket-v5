@@ -340,5 +340,3 @@ if($quick_conv=='yes' || $use_crons=='no')
 			exec(php_path()." -q ".BASEDIR."/actions/video_convert.php $targetFileName $file_name $file_dir $logFile > /dev/null &");
 	}
 }
-
-?>
