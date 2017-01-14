@@ -29,7 +29,7 @@
 
 	//Create an empty development.dev file in includes folder
 	//To Activate Development mode
-
+	
 	if(file_exists(dirname(__FILE__).'/development.dev')) {
 		define("DEVELOPMENT_MODE",true);
 		$__devmsgs = array(
@@ -98,7 +98,7 @@
 	$myquery = new myquery();
 	$row = $myquery->Get_Website_Details();
 	
-	if(!DEVELOPMENT_MODE) {
+	if( !in_dev() ) {
 		define('DEBUG_LEVEL', 2);
 	} else {
 		define('DEBUG_LEVEL',0);

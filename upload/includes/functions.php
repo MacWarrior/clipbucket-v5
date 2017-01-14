@@ -1697,7 +1697,7 @@
 		if($LANG != null && !isset($LANG[$var]))
 		{
 			error_log('[LANG] Missing translation for "'.$var.'"');
-			if (DEVELOPMENT_MODE)
+			if( in_dev() )
 				error_log(print_r(debug_backtrace(), TRUE));
 		}
 
@@ -3834,7 +3834,8 @@
 	 * @return bool
 	 */
     function check_install($type) {
-    	if(DEVELOPMENT_MODE) return true;
+    	if( in_dev() )
+    		return true;
 		global $while_installing,$Cbucket;
 		switch($type) {
 			case "before":
@@ -4756,7 +4757,7 @@
 				$text = file_get_contents($logFilePath);
 			}
 			$text .= " \n \n  {$data}";
-			if(DEVELOPMENT_MODE||$force) {
+			if( in_dev() || $force ) {
 				file_put_contents($logFilePath, $text);
 			}
 		}

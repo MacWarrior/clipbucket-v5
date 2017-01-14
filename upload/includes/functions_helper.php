@@ -1,5 +1,4 @@
 <?php
-
     /**
     * File: Functions Helper
     * Description: Functions written for making things simpler for developers
@@ -7,12 +6,11 @@
     * @since: August 28th, 2013
     */
 
-    /**
-    * Pulls website configurations from the database
-    * @param : { none } { handled inside function }
-    * @return { array } { $data } { array with all configurations }
-    */
-
+	/**
+	 * Pulls website configurations from the database
+	 * @return array { array } { $data } { array with all configurations }
+	 * @internal param $ : { none } { handled inside function }
+	 */
     function get_website_configurations() {
         $query = "SELECT name, value FROM ".tbl('config');
         $results = select($query);
@@ -25,14 +23,23 @@
         return $data;
     }
 
-    /**
-    * Function used to get config value of ClipBucket
-    * @uses: { class : Cbucket } { var : configs }
-    */
-
+	/**
+	 * Function used to get config value of ClipBucket
+	 * @uses: { class : Cbucket } { var : configs }
+	 *
+	 * @param $input
+	 *
+	 * @return bool
+	 */
     function config($input) {
         global $Cbucket;
-        return isset($Cbucket->configs[$input]) ? $Cbucket->configs[$input] : false;
+
+        if( isset($Cbucket->configs[$input]) )
+        	return $Cbucket->configs[$input];
+
+		if( in_dev() )
+			error_log('Missing config : '.$input);
+		return false;
     }
 
     function get_config($input){ return config($input); }
@@ -49,19 +56,21 @@
         return BASEURL.'/images/logo.png';
     }
 
-    /**
-     * createDataFolders()
-     *
-     * create date folders with respect to date. so that no folder gets overloaded
-     * with number of files.
-     *
-     * @param string FOLDER, if set to null, sub-date-folders will be created in
-     * all data folders
-     * @return string
-     */
+	/**
+	 * createDataFolders()
+	 *
+	 * create date folders with respect to date. so that no folder gets overloaded
+	 * with number of files.
+	 *
+	 * @param null $headFolder
+	 * @param null $custom_date
+	 *
+	 * @return string
+	 * @internal param FOLDER $string , if set to null, sub-date-folders will be created in
+	 * all data folders
+	 */
     function createDataFolders($headFolder = NULL, $custom_date = NULL)
     {
-
         $time = time();
 
         if ($custom_date)
@@ -89,9 +98,7 @@
             @mkdir(ORIGINAL_DIR . '/' . $folder, 0777, true);
             @mkdir(PHOTOS_DIR . '/' . $folder, 0777, true);
             @mkdir(LOGS_DIR . '/' . $folder, 0777, true);
-        }
-        else
-        {
+        } else {
             if (!file_exists($headFolder . '/' . $folder))
             {
                 @mkdir($headFolder . '/' . $folder, 0777, true);
@@ -131,14 +138,13 @@
         return $open.$attributes.$close;
     }
 
-    /**
-    * Returns theme currently uploaded for your ClipBucket powered website
-    * @param : { none }
-    * @return : { array } { $conts } { an array with names of uploaded themes }
-    * @since : March 16th, 2016 ClipBucket 2.8.1
-    * @author : Saqib Razzaq
-    */
-
+	/**
+	 * Returns theme currently uploaded for your ClipBucket powered website
+	 * @return array : { array } { $conts } { an array with names of uploaded themes }
+	 * @internal param $ : { none }
+	 * @since : March 16th, 2016 ClipBucket 2.8.1
+	 * @author : Saqib Razzaq
+	 */
     function installed_themes() {
         $dir = BASEDIR.'/styles';
         $conts = scandir($dir);
@@ -149,15 +155,16 @@
         return $conts;
     }
 
-    /**
-    * Pulls categories without needing any paramters
-    * making it easy to use in smarty. Decides type using page
-    *
-    * @return : { array } { $all_cats } { array with all details of all categories }
-    * @since : March 22nd, 2016 ClipBucket 2.8.1
-    * @author : Saqib Razzaq
-    */
-
+	/**
+	 * Pulls categories without needing any paramters
+	 * making it easy to use in smarty. Decides type using page
+	 *
+	 * @param bool $page
+	 *
+	 * @return array|bool : { array } { $all_cats } { array with all details of all categories }
+	 * @since : March 22nd, 2016 ClipBucket 2.8.1
+	 * @author : Saqib Razzaq
+	 */
     function pullCategories($page = false) {
         global $cbvid, $userquery, $cbphoto;
         $params = array();
@@ -187,14 +194,15 @@
         }
     }
 
-    /**
-    * Takes a number and returns more human friendly format of it e.g 1000 == 1K
-    * @param : { integer } { $num } { number to convert to pretty number}
-    * @return : { integer } { $kviews } { pretty number after processing }
-    * @since : 24th March, 2016 ClipBucket 2.8.1
-    * @author : Saqib Razzaq
-    */
-
+	/**
+	 * Takes a number and returns more human friendly format of it e.g 1000 == 1K
+	 *
+	 * @param : { integer } { $num } { number to convert to pretty number}
+	 *
+	 * @return bool|float|int|mixed|string : { integer } { $kviews } { pretty number after processing }
+	 * @since : 24th March, 2016 ClipBucket 2.8.1
+	 * @author : Saqib Razzaq
+	 */
     function prettyNum($num) {
         $prettyNum = preg_replace("/[^0-9\.]/", '', $num);
         if ($prettyNum >= 1000 && $prettyNum < 1000000) {
@@ -222,34 +230,39 @@
         }
     }
 
-    /**
-    * Returns static URL for provided scheme
-    * @param : { string } { $sort } { type of sorting }
-    * @param : { string } { $type } { type of sorting e.g photos, videos }
-    *
-    * $type paramter options are:
-    *
-    * videos
-    * photos
-    * channels
-    * collections
-    * 
-    * @param : { string } { $time } { this_month by default}
-    *
-    * $time paramter options are:
-    *
-    * today
-    * yesterday
-    * this_week
-    * last_week
-    * last_month
-    * top_rated
-    * last_year
-    *
-    * @since : 24th May, 2016 ClipBucket 2.8.1
-    * @author : Saqib Razzaq
-    */
-
+	/**
+	 * Returns static URL for provided scheme
+	 *
+	 * @param        $sort
+	 * @param        $type
+	 * @param string $time
+	 *
+	 * @return string
+	 * @internal param $ : { string } { $sort } { type of sorting } { $sort } { type of sorting }
+	 * @internal param $ : { string } { $type } { type of sorting e.g photos, videos } { $type } { type of sorting e.g photos, videos }
+	 *
+	 * $type paramter options are:
+	 *
+	 * videos
+	 * photos
+	 * channels
+	 * collections
+	 *
+	 * @internal param $ : { string } { $time } { this_month by default} { $time } { this_month by default}
+	 *
+	 * $time paramter options are:
+	 *
+	 * today
+	 * yesterday
+	 * this_week
+	 * last_week
+	 * last_month
+	 * top_rated
+	 * last_year
+	 *
+	 * @since : 24th May, 2016 ClipBucket 2.8.1
+	 * @author : Saqib Razzaq
+	 */
     function prettySort($sort, $type, $time = 'this_month') {
         global $Cbucket;
         $seoMode = $Cbucket->configs['seo'];
@@ -291,7 +304,6 @@
     * @since : 27th May, 2016
     * @author : Saqib Razzaq
     */
-
     function devWitch($query, $query_type, $time) {
         global $__devmsgs;
         $memoryBefore = $__devmsgs['total_memory_used'];

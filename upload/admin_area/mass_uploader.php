@@ -30,15 +30,15 @@ for ($i=0; $i < $total_cats ; $i++) {
 	$category_names[$category_values] = $cats[$i]['category_name'];
 }
 //pr($category_names,true);
-assign("cats",$cats);
-assign("cat_values",$category_values);
-assign("total_cats",$total_cats);
+assign("cats", $cats);
+assign("cat_values", $category_values);
+assign("total_cats", $total_cats);
 
 if(isset($_POST['mass_upload_video']))
 {
-	$files = $cbmass->get_video_files();
-	$vtitle=$_POST['title'];
-	$total = count($_POST['mass_up']);
+	$files  = $cbmass->get_video_files();
+	$vtitle = $_POST['title'];
+	$total  = count($_POST['mass_up']);
 	for($i=0;$i<$total;$i++)
 	{
 		if( !isset($_POST['filesToImport_'.$i]) ) // Check if file is checked for import
@@ -104,7 +104,6 @@ if(isset($_POST['mass_upload_video']))
 					e("Error moving file : ".curl_error($ch));
 				}
 				exit("FAILED");
-				return false;
 			}
 
 			$array = array(
@@ -119,7 +118,7 @@ if(isset($_POST['mass_upload_video']))
 			e("\"".$file_arr['title']."\" is not available");
 		}
 		
-		if(error())
+		if( error() )
 		{
 			$error_lists[] = "Unable to upload \"".$file_arr['title']."\"";
 			$errors = error();
@@ -157,7 +156,7 @@ if(isset($_POST['mass_upload_video']))
 				unlink(CON_DIR.'/'.$file_name);
 				foreach ($vtitle as &$title) 
 				{
-					$resul1=glob(FILES_DIR.'/videos/'.$title.".*");
+					$resul1 = glob(FILES_DIR.'/videos/'.$title.".*");
 					unlink($resul1[0]);
 				}
 				
@@ -188,4 +187,3 @@ subtitle("Mass Uploader");
 
 template_files("mass_uploader.html");
 display_it();
-?>

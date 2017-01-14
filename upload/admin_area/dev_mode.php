@@ -40,7 +40,7 @@
 		}
 	}
 
-	if (DEVELOPMENT_MODE) {
+	if( in_dev() ) {
 		$devpower = file_get_contents(DEVFILE);
 		assign("devpower",$devpower);
 		assign("devmode","yes");
@@ -51,5 +51,3 @@
 	subtitle("Development Mode");
 	template_files('dev_mode.html');
 	display_it();
-
-?>

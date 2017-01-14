@@ -8,19 +8,15 @@
 
 {if $data.title neq ""}
 
-
-
-
-
 <table width="98%" border="0" align="center" cellpadding="0" cellspacing="0">
   <tr>
-    <td width="200" align="left" class="left_head" style="text-indent:10px">Editing {$data.title}</td>
+    <td width="200" align="left" class="left_head" style="text-indent:10px;">Editing {$data.title}</td>
     <td class="head">&nbsp;</td>
     <td width="200" align="right" class="right_head">&nbsp;</td>
   </tr>
 </table>
 
-<div style="width:98%; margin:auto; padding:10px">
+<div style="width:98%; margin:auto; padding:10px;">
 <button onClick="location.href='view_video.php?video={$data.videoid}'" class="button">View This video</button>
 
 <input type="button" onClick="window.open('{videoLink vdetails=$data}')" class="button" value="Watch this video" />
@@ -111,7 +107,7 @@
         <select name="status">
           <option value="Successful" {if $data.status=='Successful'} selected {/if}>Successfull</option>
           <option value="processing" {if $data.status=='processing'} selected {/if}>Processing</option>
-          <option value="Failed" 	{if $data.status=='Failed'} selected {/if}>Failed</option>
+          <option value="Failed" {if $data.status=='Failed'} selected {/if}>Failed</option>
         </select>
       </td>
     </tr>
@@ -126,8 +122,6 @@ seconds</td>
   </table>
 </fieldset>
 
-
-
 <fieldset class="fieldset">
   <legend>Recording Details</legend>
   <table width="98%" border="0" align="center" cellpadding="0" cellspacing="0" class="block">
@@ -140,8 +134,6 @@ seconds</td>
                 {/foreach}
   </table>
 </fieldset>
-
-
 
 <fieldset class="fieldset">
   <legend>Sharing</legend>
@@ -156,8 +148,6 @@ seconds</td>
   {/foreach}
   </table>
 </fieldset>
-
-
 
 <fieldset class="fieldset">
   <legend>Custom Form Fields</legend>
@@ -187,8 +177,8 @@ seconds</td>
   {/foreach}
   </table>
 </fieldset>
-<div style="width:98%; margin:auto">
-<input type="submit" class="button" value="Update video details" style="margin:5px 0px 15px 0px" name="update">
+<div style="width:98%; margin:auto;">
+<input type="submit" class="button" value="Update video details" style="margin:5px 0 15px 0;" name="update">
 </div>
 </form>
 {/if}

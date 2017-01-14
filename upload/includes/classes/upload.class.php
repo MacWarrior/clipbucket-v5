@@ -497,14 +497,14 @@ class Upload{
 							 'type'=> 'textfield',
 							 'name'=> 'title',
 							 'id'=> 'title',
-							 'value'=>  cleanForm($title),
-							 'size'=>'45',
-							 'db_field'=>'title',
-							 'required'=>'yes',
-							 'min_length' => config("video_min_title"),
-							 'max_length'=>config("video_max_title")
-
+							 'value'=> cleanForm($title),
+							 'size'=> '45',
+							 'db_field'=> 'title',
+							 'required'=> 'yes',
+							 'min_length'=> config("video_min_title"),
+							 'max_length'=> config("video_max_title")
 							 ),
+
 		 'desc'		=> array('title'=> lang('vdo_desc'),
 							 'type'=> 'textarea',
 							 'name'=> 'description',
@@ -515,29 +515,28 @@ class Upload{
 							 'db_field'=>'description',
 							 'required'=>'yes',
 							 'anchor_after'=>'after_desc_compose_box',
-							 
 							 ),
+
 		 'cat'		=> array('title'=> lang('vdo_cat'),
 							 'type'=> 'checkbox',
 							 'name'=> 'category[]',
 							 'id'=> 'category',
 							 'value'=> array('category',$cat_array),
-							 'hint_1'=>  sprintf(lang('vdo_cat_msg'),ALLOWED_VDO_CATS),
+							 'hint_1'=> sprintf(lang('vdo_cat_msg'),ALLOWED_VDO_CATS),
 							 'db_field'=>'category',
 							 'required'=>'yes',
 							 'validate_function'=>'validate_vid_category',
 							 'invalid_err'=>lang('vdo_cat_err3'),
 							 'display_function' => 'convert_to_categories'
-
-							 
 							 ),
+
 		 'tags'		=> array('title'=> lang('tag_title'),
 							 'type'=> 'textfield',
 							 'name'=> 'tags',
 							 'id'=> 'tags',
 							 'value'=> cleanForm(genTags($tags)),
 							 'hint_1'=> '',
-							 'hint_2'=>  lang('vdo_tags_msg'),
+							 'hint_2'=> lang('vdo_tags_msg'),
 							 'db_field'=>'tags',
 							 'required'=>'yes',
 							 'validate_function'=>'genTags'	
