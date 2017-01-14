@@ -26,7 +26,7 @@ $(document).ready(function() {
 
     $('body').keydown(function(e)
     {
-        if(e.keyCode == 0 || e.keyCode == 32)
+        if( $(document.activeElement).is('body') && (e.keyCode == 0 || e.keyCode == 32) )
         {
             e.preventDefault();
             if( cb_player.paused() )
@@ -38,7 +38,7 @@ $(document).ready(function() {
 
     $('body').keyup(function(e)
     {
-        if(e.keyCode == 0 || e.keyCode == 32)
+        if($(document.activeElement).is('body') && (e.keyCode == 0 || e.keyCode == 32) )
             e.preventDefault();
     });
 });
