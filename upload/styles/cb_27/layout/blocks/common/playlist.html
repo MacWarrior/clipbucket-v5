@@ -12,7 +12,7 @@
                         <option value="{$playlist.playlist_id}">{$playlist.playlist_name}</option>
                     {/foreach}
                 {else}
-                    <option value="" placeholder>--- {lang("No playlist exists")} ---</option>
+                    <option value="" placeholder>--- {lang("no_playlist_exists")} ---</option>
                 {/if}
             </select>
 
@@ -22,7 +22,7 @@
 
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                    <a class="btn btn-block mtm btn-success" href="javascript:void(0)" onClick="$('#add_playlist_form').css('display','none');$('#new_playlist_form').css('display','block')">{lang('create new playlist')}</a>
+                    <a class="btn btn-block mtm btn-success" href="javascript:void(0);" onClick="$('#add_playlist_form').css('display','none');$('#new_playlist_form').css('display','block')">{lang('create_new_playlist')}</a>
                 </div>
             </div>
 
