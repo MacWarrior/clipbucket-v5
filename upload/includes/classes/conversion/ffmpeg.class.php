@@ -1,11 +1,21 @@
 <?php
-define('FFMPEG_BINARY', get_binaries('ffmpeg'));
-define('MP4Box_BINARY', get_binaries('mp4box'));
-define('MEDIAINFO_BINARY', get_binaries('media_info'));
-define('FFPROBE', get_binaries('ffprobe_path'));
 
-define("thumbs_number",config('num_thumbs'));
-define('PROCESSESS_AT_ONCE',config('max_conversion'));
+	/**
+	* File : FFMPEG Conversion Class
+	* Description : Handles all FFMPEG and video conversion related process
+	* like generating video qualities, generating thumbs, extracting meta data etc
+	* @since : ClipBucket 1.0
+	* @author : Arslan Hassan, Awais Tariq, Fawaz Tahir, Fahad Abass
+	* @notice : File to be maintained and only by those who properly understand what they are doing
+	*/
+
+	define('FFMPEG_BINARY', get_binaries('ffmpeg'));
+	define('MP4Box_BINARY', get_binaries('mp4box'));
+	define('MEDIAINFO_BINARY', get_binaries('media_info'));
+	define('FFPROBE', get_binaries('ffprobe_path'));
+
+	define("thumbs_number",config('num_thumbs'));
+	define('PROCESSESS_AT_ONCE',config('max_conversion'));
 
 $size12 = "0";
 class FFMpeg{

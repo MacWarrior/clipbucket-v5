@@ -13,7 +13,7 @@
 * License First and Agree its
 * Terms of use at http://www.opensource.org/licenses/attribution.php
 *******************************************************************
-* Copyright (c) 2007 - 2016 Clip-Bucket.com. All rights reserved.
+* Copyright (c) 2007 - 2017 Clip-Bucket.com. All rights reserved.
 *******************************************************************
 */
 
