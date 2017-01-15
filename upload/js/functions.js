@@ -1742,8 +1742,6 @@ function decode64(input) {
 
 	}
 
-	
-
 	function add_comment_js(form_id,type)
 	{   
 		$("#add_comment_result").css("display","block");
@@ -1761,9 +1759,7 @@ function decode64(input) {
 			{
 				if(!data){
 					alert("No data");
-				}
-				else
-				{
+				} else {
 					$("#add_comment_result").css("display","block");
 					if(data.err!='')
 					{
@@ -1826,7 +1822,6 @@ function decode64(input) {
 		},'json');
 	}
 
-
 	function reply_box(cid,type,type_id)
 	{
 		var replying_to_user = $(document).find('#says_'+cid).attr('speaker');
@@ -1876,8 +1871,7 @@ function decode64(input) {
 	function isValidEmail(email) {
 		if (email.match(/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/)) {
 			return email;
-		} else {
-			return false;
 		}
+        return false;
 	}
 	

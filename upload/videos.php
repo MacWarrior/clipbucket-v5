@@ -1,5 +1,4 @@
 <?php
-	
 	/**
 	* File: videos
 	* Description: Used to display list of videos
@@ -66,4 +65,3 @@
 	array_val_assign($assign_arry);
 	template_files('videos.html');
 	display_it();
-?>

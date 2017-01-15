@@ -1,5 +1,4 @@
 <?php
-
 /**
  *************************************************************
  | Copyright (c) 2007-2017 Clip-Bucket.com. All rights reserved.
@@ -18,7 +17,8 @@
 	$type = $type ? $type : 'videos';
 	$chkType = $type;
 	//Checking if search for specific section is allowed or not
-	if($type=='users')	$chkType = 'channels';
+	if($type=='users')
+		$chkType = 'channels';
 	isSectionEnabled($chkType,true);
 
 	$search = cbsearch::init_search($type);
@@ -73,7 +73,7 @@
 	if(empty($search->key)) {
 		assign('search_type_title',$search->search_type[$type]['title']);
 	} else {
-		assign('search_type_title',sprintf(lang('searching_keyword_in_obj'),mysql_clean(get('query')),$search->search_type[$type]['title']));
+		assign('search_type_title',sprintf(lang('searching_keyword_in_obj'), mysql_clean(get('query')),$search->search_type[$type]['title']));
 	}
 
 	if(mysql_clean(get('query'))) {
@@ -89,4 +89,3 @@
 	template_files('search.html');
 	display_it();
 
-?>

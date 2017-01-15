@@ -19,11 +19,11 @@
 						{if $smarty.get.sort}
 						{foreach from=$sorting_links item=name key=sort name=sorts}
 							{if $smarty.get.sort==$sort && isset($smarty.get.sort)} 
-							<a href="javascript:void(0)" data-toggle="dropdown" class="dropdown-toggle">{$name} <span class="icon-down-arrow"></span></a>
+							<a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{$name} <span class="icon-down-arrow"></span></a>
 							{/if}
 						{/foreach}
 						{else}
-							<a href="javascript:void(0)" data-toggle="dropdown" class="dropdown-toggle">Recent <span class="icon-down-arrow"></span></a>
+							<a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">Recent <span class="icon-down-arrow"></span></a>
 						{/if}    
 					
 						<ul class="dropdown-menu">
@@ -42,11 +42,11 @@
 					
 						{foreach from=$time_links item=name key=sort name=times}
 							{if $smarty.get.time==$sort && isset($smarty.get.time)} 
-							<a href="javascript:void(0)" data-toggle="dropdown" class="dropdown-toggle">{$name} <span class="icon-down-arrow"></span></a>
+							<a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{$name} <span class="icon-down-arrow"></span></a>
 							{/if}
 						{/foreach}
 						{else}
-							<a href="javascript:void(0)" data-toggle="dropdown" class="dropdown-toggle">all time <span class="icon-down-arrow"></span></a>
+							<a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">all time <span class="icon-down-arrow"></span></a>
 						{/if}  
 						  <ul class="dropdown-menu">
 							{foreach from=$time_links item=name key=sort name=times}

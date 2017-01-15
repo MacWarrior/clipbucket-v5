@@ -1,5 +1,4 @@
 <?php
-
 /**
  *************************************************************
  | Copyright (c) 2007-2017 Clip-Bucket.com. All rights reserved.
@@ -41,5 +40,3 @@
     subtitle(lang("my_account"));
     template_files('myaccount.html');
     display_it();
-
-?>

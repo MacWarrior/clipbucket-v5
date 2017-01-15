@@ -2,23 +2,23 @@
 <h2>Video Manager</h2>
 
 <img src="{$imageurl}/dot.gif" class="sarch_button" onclick="toggle_search('searchdiv')" />
-<div class="search_box" id="searchdiv" {if $smarty.cookies.show_searchdiv_search!='show'} style="display:none"{/if}>  <form id="video_search" name="video_search" method="get" action="video_manager.php" class="video_search">
+<div class="search_box" id="searchdiv" {if $smarty.cookies.show_searchdiv_search!='show'} style="display:none;"{/if}>  <form id="video_search" name="video_search" method="get" action="video_manager.php" class="video_search">
   <table width="400" border="0" cellpadding="2" cellspacing="2">
     <tr>
       <td width="106" align="right"><label for="title">Video title</label></td>
-      <td width="280"><input name="title" type="text" class="input" id="title" value="{'title'|get_form_val:true}" //></td>
+      <td width="280"><input name="title" type="text" class="input" id="title" value="{'title'|get_form_val:true}"/></td>
     </tr>
     <tr>
       <td align="right"><label for="videokey">Video key</label></td>
-      <td><input name="videokey" type="text" class="input" id="videokey" value="{'videokey'|get_form_val:true}" //></td>
+      <td><input name="videokey" type="text" class="input" id="videokey" value="{'videokey'|get_form_val:true}"/></td>
     </tr>
     <tr>
       <td align="right"><label for="videoid">Video id</label></td>
-      <td><input name="videoid" type="text" class="input" id="videoid" value="{'videoid'|get_form_val:true}" //></td>
+      <td><input name="videoid" type="text" class="input" id="videoid" value="{'videoid'|get_form_val:true}"/></td>
     </tr>
     <tr>
       <td align="right"><label for="tags">Video tags</label></td>
-      <td><input name="tags" type="text" class="input" id="tags" value="{'tags'|get_form_val:true}" /></td>
+      <td><input name="tags" type="text" class="input" id="tags" value="{'tags'|get_form_val:true}"/></td>
     </tr>
     <tr>
       <td align="right">Featured</td>

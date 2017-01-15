@@ -84,7 +84,7 @@
 							<div class="clearfix watch-vid-details">
 								<p>{display_clean(AutoLinkUrls($video.description)|unescape:"html")}</p>
 								<ul class="clearfix desc-list">
-									<li><strong>{lang code='category'}</strong>:&nbsp;{display_clean($vdo.category)|categories:video}</li>
+									<li><strong>{lang code='category'}</strong>:&nbsp;{$vdo.category|categories:video}</li>
 									<li><strong>{lang code='duration'}</strong>:&nbsp;{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</li>
 									<li><strong>{lang code='date'}</strong>:&nbsp; {$video.date_added|nicetime}</li>
 									<li>

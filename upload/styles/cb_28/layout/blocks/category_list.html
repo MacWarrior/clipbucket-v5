@@ -1,5 +1,5 @@
 			{$category = $smarty.get.cat}
-			{if $category != 'All' && is_numeric($category)} 
+			{if $category != {lang code='cat_all'} && is_numeric($category)}
 				{if $smarty.const.THIS_PAGE == 'videos'}
 					{$catname = $cbvid->get_category_name($category)}
 					{$nowdo = "videos"}
@@ -8,7 +8,7 @@
 				{/if}
 				{$catname = $catname.category_name}
 			{else}
-				{$catname = 'All'}
+				{$catname = {lang code='cat_all'}}
 			{/if}
 			{if $smarty.const.BEATSLIST}
 				{$cats_array = $beats->get_categories()}
@@ -18,18 +18,18 @@
 			<span class="lastclicked" style="display:none;"></span>
 			<span class="lastlevel" style="display:none;"></span>
 			<div class="dropdown"> <!-- Start of category code -->
-				<a href="#" class="dropdown-toggle" data-toggle="dropdown">{$catname}<span class="icon-down-arrow"></span></a>
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown">{display_clean($catname)}<span class="icon-down-arrow"></span></a>
 				<ul class="dropdown-menu">
 				<li>
 					<div>
-						<a href="{$baseurl}/{if $smarty.const.THIS_PAGE == 'videos'}videos.php{else}channels.php{/if}">All</a>
+						<a href="{$baseurl}/{if $smarty.const.THIS_PAGE == 'videos'}videos.php{else}channels.php{/if}">{lang code='cat_all'}</a>
 					</div>
 				</li>
 					{$level = '1'}
 					{foreach from=$categories item=maincat}
 						<li>
 							<div>
-								<a href="{cblink(['name'=>'category','data'=>$maincat,'type'=>$type])}" class="">{$maincat.category_name}</a>
+								<a href="{cblink(['name'=>'category','data'=>$maincat,'type'=>$type])}">{display_clean($maincat.category_name)}</a>
 								{if $maincat.children}<i class="icon-right-arrow trigger" data-level="1"></i>{/if}
 							</div>
 							{if $maincat.children} 
@@ -38,8 +38,8 @@
 								{foreach from=$maincat.children item=sub1}
 									<li>
 										<div>
-											<a href="{cblink(['name'=>'category','data'=>$sub1,'type'=>$type])}" class="">{$sub1.category_name} </a>
-											{if $sub1.children}<i class="icon-right-arrow trigger" data-level="2" ></i>{/if}
+											<a href="{cblink(['name'=>'category','data'=>$sub1,'type'=>$type])}">{display_clean($sub1.category_name)} </a>
+											{if $sub1.children}<i class="icon-right-arrow trigger" data-level="2"></i>{/if}
 										</div>
 										{if $sub1.children}
 											<ul class="dropdown-menu sub-menu"> 
@@ -47,8 +47,8 @@
 											{foreach from=$sub1.children item=sub2}
 											<li>
 												<div>
-													<a href="{cblink(['name'=>'category','data'=>$sub2,'type'=>$type])}" class="">{$sub2.category_name} </a>
-													{if $sub2.children}<i class="icon-right-arrow trigger"data-level="3" ></i>{/if}
+													<a href="{cblink(['name'=>'category','data'=>$sub2,'type'=>$type])}">{display_clean($sub2.category_name)} </a>
+													{if $sub2.children}<i class="icon-right-arrow trigger"data-level="3"></i>{/if}
 												</div>
 												{if $sub2.children}
 													<ul class="dropdown-menu sub-menu">
@@ -56,8 +56,8 @@
 													{foreach from=$sub2.children item=sub3}
 													<li>
 														<div>
-															<a href="{cblink(['name'=>'category','data'=>$sub3,'type'=>$type])}"  class="">{$sub3.category_name} </a>
-															{if $sub3.children}<i class="icon-right-arrow trigger" data-level="4" ></i>{/if}
+															<a href="{cblink(['name'=>'category','data'=>$sub3,'type'=>$type])}">{display_clean($sub3.category_name)} </a>
+															{if $sub3.children}<i class="icon-right-arrow trigger" data-level="4"></i>{/if}
 														</div>
 													
 														{if $sub3.children}
@@ -66,8 +66,8 @@
 																{foreach from=$sub3.children item=sub4}
 																	<li>
 																		<div>
-																			<a class="">{$sub4.category_name}</a>
-																			{if $sub4.children}<i class="icon-right-arrow trigger" data-level="5" ></i>{/if}
+																			<a class="">{display_clean($sub4.category_name)}</a>
+																			{if $sub4.children}<i class="icon-right-arrow trigger" data-level="5"></i>{/if}
 																		</div>
 																	</li>
 																{/foreach}
@@ -96,6 +96,4 @@
 	//$(document).ready(function(){
 			var level = '{$level}';
 	//});
-	
-
 </script>

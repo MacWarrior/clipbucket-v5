@@ -6,7 +6,7 @@
 <div class="row">
     <div class="heading clearfix">
 
-            <h2 class="pull-left paddingLeftLarge">Editing <small>&gt; {display_clean($data.title)|truncate:80}</small>
+            <h2 class="pull-left paddingLeftLarge">Editing <small>&gt; {display_clean($data.title|truncate:80)}</small>
 <div class="btn-group">
                   <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                     Actions <span class="caret caret_margin"></span>
@@ -437,7 +437,7 @@
 <div class="widget-box" style="margin-top: 30px">
     <div class="widget-header header-color-blue2 fontawesome-icons">
 
-        <h5>{display_clean($data.title)|truncate:80}- <b>Comments</b></h5>
+        <h5>{display_clean($data.title|truncate:80)}- <b>Comments</b></h5>
 
         <div class="widget-toolbar">
             <a href="#" data-action="reload">

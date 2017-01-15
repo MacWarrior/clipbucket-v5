@@ -1144,9 +1144,16 @@ class CBvideo extends CBCategory
 		$total_comments = $this->count_video_comments($id);
 		$db->update(tbl("video"),array("comments_count","last_commented"),array($total_comments,now())," videoid='$id'");
 	}
-	
+
 	/**
 	 * Function used to add video comment
+	 *
+	 * @param      $comment
+	 * @param      $obj_id
+	 * @param null $reply_to
+	 * @param bool $force_name_email
+	 *
+	 * @return bool|mixed
 	 */
 	function add_comment($comment,$obj_id,$reply_to=NULL,$force_name_email=false)
 	{

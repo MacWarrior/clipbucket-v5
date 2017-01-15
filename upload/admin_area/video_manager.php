@@ -126,9 +126,7 @@ if(isset($_POST['delete_selected']))
 		if ( $_GET['category'][0] == 'all')
 		{
 			$cat_field = "";
-		}
-		else 
-		{
+		} else {
 			$cat_field = $_GET['category'];
 		}
 	}
@@ -151,10 +149,10 @@ if(isset($_POST['delete_selected']))
 		 );		
 	}
 	
-	if(is_installed('cb_mass_embed'))
+	/*if(is_installed('cb_mass_embed'))
 	{
 		//$array['mass_embed_status'] = 'approved';
-	}
+	}*/
 
 	$result_array = $array;
 	//Getting Video List
@@ -162,12 +160,10 @@ if(isset($_POST['delete_selected']))
 	if(!$array['order'])
 		$result_array['order'] = " videoid DESC ";
 
-	
 	$videos = get_videos($result_array);
 	
 	Assign('videos', $videos);	
 	//pr($videos,true);
-
 
 	//Collecting Data for Pagination
 	$vcount = $array;
@@ -193,9 +189,7 @@ if(isset($_POST['delete_selected']))
 					'display_function' => 'convert_to_categories');
 
 	assign('cat_array',$cat_array);
-//echo $db->db_query;
-subtitle("Video Manager");
-template_files('video_manager.html');
-display_it();
-
-?>
+	//echo $db->db_query;
+	subtitle("Video Manager");
+	template_files('video_manager.html');
+	display_it();

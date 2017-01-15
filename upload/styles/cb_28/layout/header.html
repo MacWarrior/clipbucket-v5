@@ -41,7 +41,7 @@
 					
 					<button class="navbar-toggle" data-toggle="collapse" data-target="#bs-collapse">Menu<span class="icon-down-arrow"></span></button>
 					
-					<a href="javascript:void(0)" class="btn-search-toggle btn visible-xs">
+					<a href="javascript:void(0);" class="btn-search-toggle btn visible-xs">
 						<i class="icon-search"></i>
 					</a>
 				</div>
@@ -128,7 +128,7 @@
 									<a href="javascript:void(0)" class="user-area dropdown-toggle" data-toggle="dropdown">
 										{$user_det = $userquery->get_user_details(userid())}
 										<img src="{$userquery->getUserThumb($user_det)}" width="35" height="35">
-										<span>{$userquery->username|truncate:15}</span>
+										<span>{display_clean($userquery->username|truncate:15)}</span>
 									</a>
 									<ul class="dropdown-menu">
 									{if has_access('admin_access')}

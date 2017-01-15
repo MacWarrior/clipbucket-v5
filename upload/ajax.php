@@ -700,7 +700,7 @@ if(!empty($mode))
 					$email = $_POST['email'];
 					if (!isValidEmail($email)) {
 						$err = array();
-						$err['err'] = "Invalid email provided";
+						$err['err'] = lang('invalid_email');
 						echo json_encode($err);
 						return false;
 					}

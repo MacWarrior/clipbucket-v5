@@ -45,7 +45,7 @@
                             </div>
                             <div class="col-md-9">
                                 <a href="edit_video.php?video={$video.videoid}">
-                                    {$video.title|truncate:80} </a>({if
+                                    {display_clean($video.title|truncate:80)} </a>({if
                                 $video.duration>1}{$video.duration|SetTime}{else}00:00{/if})<br>
                          <span class="labels1"> <strong>{$video.date_added|niceTime}</strong> | 
                             {lang code='views'} : <strong>{$video.views|number_format}</strong></span>
@@ -57,20 +57,10 @@
                                     <span class="label {if $video.status=='Successful'}label-success{else}label-warning{/if}">
                                         {$video.status}
                                     </span>
-                                    
-                                    {*if $video.status=='Processing' || $video.conv_progress  < 100}
-                                        <!-- <span class="label label-info">
-                                            {$video.conv_progress} % Converted
-                                        </span> -->
-                                    {/if*}
-                                        <!-- <span class="label {if $video.re_conv_status=='started'}label-warning{else if $video.re_conv_status=='failed'}label-danger{else if $video.re_conv_status=='done'}label-success{else}label-primary{/if}">
-                                        {if $video.re_conv_status == 'done'}Reconverted{else if $video.re_conv_status == 'started'}Reconverting{else if $video.re_conv_status == 'failed' } Reconverting Failed {else if $noReconv == true} Non-reconvertable {/if} </span> -->
-                                       
                                         {if $video.featured=='yes'}
                                          <span class="label label-info">
                                           Featured</span>
                                            {/if}
-                                    
 
                                         {foreach from=$cbvid->video_manager_link_new item=links}
                                         {$cbvid->video_manager_link_new($links,$video)}
@@ -98,7 +88,7 @@
                                         {$finalItems = array_slice($toArray, 0, 4)}
                                         {$vcategories = implode(',',$finalItems)}
                                         <span>
-                                            <span class="label label-info">Categories : {$vcategories} {$moreText}</span> 
+                                            <span class="label label-info">{lang code='categories'} : {$vcategories} {$moreText}</span>
                                         </span>
                                        
                                 </div>
@@ -106,7 +96,7 @@
                         </div>
                     </div>
                     <div class="col-md-2">
-                        <a href="view_user.php?uid={$video.userid}">{$video.username}</a>
+                        <a href="view_user.php?uid={$video.userid}">{display_clean($video.username)}</a>
                     </div>
                 </div>
             </td>
@@ -174,5 +164,3 @@
 <!-- DIsplaying Videos Ends-->
 {include file="$style_dir/blocks/pagination.html" }
 <div class="marginBottomLarge"></div>
-
-
