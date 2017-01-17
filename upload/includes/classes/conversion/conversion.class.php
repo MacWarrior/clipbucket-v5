@@ -12,20 +12,51 @@
 
 	class ffmpeg {
 
+		# stores path for ffmepg binary file, used for basic conversion actions
 		private $ffmpegPath = '';
+
+		# stores path for ffprobe binary file, used for video meta extraction
 		private $ffprobePath = '';
+
+		# stores path for mediainfo, also used for video meta exraction
 		private $mediainfoPath = '';
+
+		# stores number of maximum allowed processes for ffmpeg
 		private $maxProsessesAtOnce = '';
+
+		# stores filename of video being currently being processed
 		private $fileName = '';
+
+		# stores directory of video file currently being processed
 		private $fileDirectory = '';
+
+		# stores directory where output (processed / converted) file is to be stored
 		private $outputDirectory = '';
+
+		# stores directory to save video conversion logs
 		private $logsDir = LOGS_DIR;
+
+		# stores name of file that should be used for dumping video conversion log
 		private $logFile = '';
+
+		# stores path to temporary directory where file stay before they are moved
+		# either to conversion qeue or final destination
 		private $tempDirectory = TEMP_DIR;
+
+		# stores path to conversion lock file which is used to check if more processes
+		# are allowed at a time or not
 		public $ffmpegLock = '';
+
+		# stores settings for generating video thumbs
 		private $thumbsResSettings = '';
+
+		# stores settings for 16:9 ratio conversion
 		private $res169 = '';
+
+		# stores settings for 4:3 ratio conversion
 		private $resolution4_3 = '';
+
+		# stores basic ffmpeg configurations for processing video
 		private $ffmpegConfigs = '';
 
 		function __construct($ffmpegParams) {
