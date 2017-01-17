@@ -7,6 +7,7 @@
 	* video qualities and other similar actions
 	* @since : ClipBucket 2.8.1 January 17th, 2017
 	* @author : Saqib Razzaq
+	* @modified : { 17th January, 2017 } { Created file and added functions } { Saqib Razzaq }
 	* @notice : File to be maintained
 	*/
 
@@ -60,7 +61,8 @@
 		private $ffmpegConfigs = '';
 
 		/**
-		* Function that runs everytime class is initiated
+		* Action : Function that runs everytime class is initiated
+		* Description : 
 		* @param : { array } { $ffmpegParams } { an array of paramters }
 		* @param : { string } { $ffmpegParams : fileName } { fileName of video to process }
 		* @param : { string } { $ffmpegParams : fileDirectory } { Directory name of video to process }
@@ -135,18 +137,51 @@
 			);
 		}
 
+		/**
+		* Action : Execute a command and return output 
+		* Description : Its better to keep shell_exec at one place instead pulling string everywhere
+		* @param : { string } { $command } { command to run }
+		* @author : Saqib Razzaq
+		* @since : 17th January, 2017
+		*
+		* @return : { mixed } { output of command ran }
+		*/
+
 		private function executeCommand($command) {
 			return shell_exec($command);
 		}
 
-		public function extractVideoDetails($durationOnly = false) {
-			$fileFullPath = $this->fileDirectory.'/'.$this->fileName;
+		/**
+		* Action : Parse required meta details of a video
+		* Description : Conversion system can't proceed to do anything without first properly
+		* knowing what kind of video it is dealing with. It is used to ensures that video resoloutions are 
+		* extracted properly, thumbs positioning is proper, video qualities are legit etc.
+		* If we bypass this information, we can end up with unexpected outputs. For example, you upload
+		* a video of 240p and system will try to convert it to 1080 which means? You guessed it, DISASTER!
+		* Hence, we extract details and then do video processing accordingly
+		* @param : { boolean } { $filePath } { false by default, file to extract information out of }
+		* @param : { boolean } { $durationOnly } { false by default, returns only duration of video }
+		* @author : Saqib Razzaq
+		* @since : 17th January, 2017
+		*
+		* @return : { array } { $responseData } { an array with response according to params }
+		*/
+
+		public function extractVideoDetails($filePath = false, $durationOnly = false) {
+			
+			if ($filePath) {
+				$fileFullPath = $filePath;
+			} else {
+				$fileFullPath = $this->fileDirectory.'/'.$this->fileName;
+			}
+
 			if (file_exists($fileFullPath)) {
 				$responseData = array();
 				if ($durationOnly) {
-
+					$mediainfoDurationCommand = $this->mediainfoPath."   '--Inform=General;%Duration%'  '". $fileFullPath."' 2>&1 ";
+					$duration = $responseData['duration'] = round($this->executeCommand($mediainfoDurationCommand) / 1000,2);
+					return $responseData;
 				} else {
-
 					$responseData['format'] = 'N/A';
 					$responseData['duration'] = 'N/A';
 					$responseData['size'] = 'N/A';
@@ -238,8 +273,9 @@
 					if($int_2_video_rate > 0 ) {
 						$responseData['videoRate'] = $int_1_videoRate / $int_2_videoRate;
 					}
-
 				}
+
+				return $responseData;
 			}
 		}
 	}
