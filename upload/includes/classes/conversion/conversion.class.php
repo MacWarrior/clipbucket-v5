@@ -59,6 +59,15 @@
 		# stores basic ffmpeg configurations for processing video
 		private $ffmpegConfigs = '';
 
+		/**
+		* Function that runs everytime class is initiated
+		* @param : { array } { $ffmpegParams } { an array of paramters }
+		* @param : { string } { $ffmpegParams : fileName } { fileName of video to process }
+		* @param : { string } { $ffmpegParams : fileDirectory } { Directory name of video to process }
+		* @param : { string } { $ffmpegParams : outputDirectory } { Directory name where converted video is to be saved }
+		* @param : { string } { $ffmpegParams : logFile } { file path to log file for dumping conversion logs }
+		*/
+
 		function __construct($ffmpegParams) {
 			$this->ffmpegPath = get_binaries('ffmpeg');
 			$this->ffprobePath = get_binaries('ffprobe_path');
@@ -69,6 +78,7 @@
 			$this->outputDirectory = $ffmpegParams['outputDirectory'];
 			$this->logFile = $ffmpegParams['logFile'];
 
+			# Set thumb resoloution settings
 			$this->thumbsResSettings = array(
 				"original" => "original",
 				'105' => array('168','105'),
@@ -77,6 +87,7 @@
 				'480' => array('768','432')
 				);
 
+			# Set 16:9 ratio conversion settings
 			$this->res169 = array(
 				'240' => array('428','240'),
 				'360' => array('640','360'),
@@ -85,6 +96,7 @@
 				'1080' => array('1920','1080'),
 				);
 
+			# Set 4:3 ratio conversion settings
 			$this->resolution4_3 = array(
 				'240' => array('428','240'),
 				'360' => array('640','360'),
@@ -93,6 +105,7 @@
 				'1080' => array('1920','1080'),
 				);
 
+			# Set basic ffmpeg configurations
 			$this->ffmpegConfigs = array(
 				'use_video_rate' => true,
 				'use_video_bit_rate' => true,
