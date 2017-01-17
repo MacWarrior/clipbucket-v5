@@ -501,8 +501,8 @@ class Upload{
 							 'size'=>'45',
 							 'db_field'=>'title',
 							 'required'=>'yes',
-							 'min_length' => config("video_min_title"),
-							 'max_length'=>config("video_max_title")
+							 'min_length' => config("min_video_title"),
+							 'max_length'=>config("max_video_title")
 
 							 ),
 		 'desc'		=> array('title'=> lang('vdo_desc'),
