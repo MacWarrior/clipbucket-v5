@@ -177,43 +177,58 @@
 
 			if (file_exists($fileFullPath)) {
 				$responseData = array();
+				# if user passed paramter to get duration only
 				if ($durationOnly) {
+					# build mediainfo command for duration extraction
 					$mediainfoDurationCommand = $this->mediainfoPath."   '--Inform=General;%Duration%'  '". $fileFullPath."' 2>&1 ";
-					$duration = $responseData['duration'] = round($this->executeCommand($mediainfoDurationCommand) / 1000,2);
+					
+					# execute command and store duration in array after rounding
+					$responseData['duration'] = round($this->executeCommand($mediainfoDurationCommand) / 1000,2);
+
+					# return resposneData array containing duration only
 					return $responseData;
 				} else {
+
+					# Set default values for all required indexes before checking if they were found
 					$responseData['format'] = 'N/A';
 					$responseData['duration'] = 'N/A';
 					$responseData['size'] = 'N/A';
 					$responseData['bitrate'] = 'N/A';
-					$responseData['video_width'] = 'N/A';
-					$responseData['video_height'] = 'N/A';
-					$responseData['video_wh_ratio'] = 'N/A';
-					$responseData['video_codec'] = 'N/A';
-					$responseData['video_rate'] = 'N/A';
-					$responseData['video_bitrate'] = 'N/A';
-					$responseData['video_color'] = 'N/A';
-					$responseData['audio_codec'] = 'N/A';
-					$responseData['audio_bitrate'] = 'N/A';
-					$responseData['audio_rate'] = 'N/A';
-					$responseData['audio_channels'] = 'N/A';
+					$responseData['videoWidth'] = 'N/A';
+					$responseData['videoHeight'] = 'N/A';
+					$responseData['videoWhRatio'] = 'N/A';
+					$responseData['videoCodec'] = 'N/A';
+					$responseData['videoRate'] = 'N/A';
+					$responseData['videoBitrate'] = 'N/A';
+					$responseData['videoColor'] = 'N/A';
+					$responseData['audioCodec'] = 'N/A';
+					$responseData['audioBitrate'] = 'N/A';
+					$responseData['audioRate'] = 'N/A';
+					$responseData['audioChannels'] = 'N/A';
 					$responseData['path'] = $file_path;
 
+					# Start building ffprobe command for extracting extensive video meta
 					$ffprobeMetaCommand = $this->ffprobePath;
 					$ffprobeMetaCommand .= " -v quiet -print_format json -show_format -show_streams ";
 					$ffprobeMetaCommand .= " '$fileFullPath' ";
+
+					# Execute command and store data into variable
 					$ffprobeMetaData = $this->executeCommand($ffprobeMetaCommand);
+
+					# Since returned data is json, we need to decode it to be able to use it
 					$videoMetaCleaned = json_decode($ffprobeMetaData);
 
+					# stores name of codecs and indexes
 					$firstCodecType = $videoMetaCleaned->streams[0]->codec_type;
 					$secondCodecType = $videoMetaCleaned->streams[1]->codec_type;
 
+					# assign codecs to variable with values accordingly
 					$$firstCodecType = $videoMetaCleaned->streams[0];
 					$$secondCodecType = $videoMetaCleaned->streams[1];
 
+					# start to store required data into responseData array
 					$responseData['format'] = $videoMetaCleaned->format->format_name;
 					$responseData['duration'] = (float) round($video->duration,2);
-
 					$responseData['bitrate'] = (int) $videoMetaCleaned->format->bit_rate;
 					$responseData['videoBitrate'] = (int) $video->bit_rate;
 					$responseData['videoWidth'] = (int) $video->width;
@@ -232,6 +247,12 @@
 					$responseData['audioChannels'] = (float) $audio->channels;
 					$responseData['rotation'] = (float) $video->tags->rotate;
 
+					/*
+					* in some rare cases, ffprobe won't be able to extract video duration
+					* we'll check if duration is empty and if so, we'll try extracting duration
+					* via mediainfo instead
+					*/
+
 					if(!$responseData['duration'])	{
 						$mediainfoDurationCommand = $this->mediainfoPath."   '--Inform=General;%Duration%'  '". $fileFullPath."' 2>&1 ";
 						$duration = $responseData['duration'] = round($this->executeCommand($mediainfoDurationCommand) / 1000,2);
@@ -241,9 +262,19 @@
 					$int_1_videoRate = (int) $videoRate[0];
 					$int_2_videoRate = (int) $videoRate[1];
 					
+					/*
+					* There are certain info bits that are not provided in ffprobe Json Streams
+					* like video's original height and width. When dealing with videos like SnapChat
+					* and Instagram or other mobile formats, it becomes crucial to fetch video height
+					* and width properly or video will be stretched or blurred out due to poor params
+					* Lets build command for exracting video meta using mediainfo
+					*/
 					$mediainfoMetaCommand = $this->mediainfoPath . "   '--Inform=Video;'  ". $fileFullPath;
+
+					# extract data and store into variable
 					$mediainfoMetaData = $this->executeCommand($mediainfoMetaCommand);
 
+					# parse out video's original height and save in responseData array
 					$needleStart = "Original height";
 					$needleEnd = "pixels"; 
 					$originalHeight = find_string($needleStart,$needleEnd,$mediainfoMetaData);
@@ -257,6 +288,7 @@
 						}
 					}
 
+					# parse out video's original width and save in responseData array
 					$needleStart = "Original width";
 					$needleEnd = "pixels"; 
 					$originalWidth = find_string($needleStart,$needleEnd,$mediainfoMetaData);
@@ -270,7 +302,7 @@
 						}
 					}
 
-					if($int_2_video_rate > 0 ) {
+					if($int_2_videoRate > 0 ) {
 						$responseData['videoRate'] = $int_1_videoRate / $int_2_videoRate;
 					}
 				}
