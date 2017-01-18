@@ -897,20 +897,14 @@
 	}
 
 	/**
-	 * Print an array in pretty way and exit right after
-	 *
-	 * @param : { string / array } { $text } { Element to be printed }
-	 * @param bool $pretty
+	* Print an array in pretty way and exit right after
+	* @param : { string / array } { $text } { Element to be printed }
+	* @param : { string } { $msg } { pex by default, message to exit with }
+	*/
 	 */
-	function pex($text,$pretty=false) {
-		if(!$pretty) {
-			print_r($text);
-		} else {
-			echo "<pre>";
-			print_r($text);
-			echo "</pre>";
-			exit("PEX Ran!");
-		}
+	function pex($text,$msg="PeX") {
+		pr($text);
+		exit($msg);
 	}
 
 	/**
