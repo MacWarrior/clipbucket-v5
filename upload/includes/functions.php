@@ -901,7 +901,6 @@
 	* @param : { string / array } { $text } { Element to be printed }
 	* @param : { string } { $msg } { pex by default, message to exit with }
 	*/
-	 */
 	function pex($text,$msg="PeX") {
 		pr($text);
 		exit($msg);
