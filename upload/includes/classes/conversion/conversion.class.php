@@ -5,9 +5,9 @@
 	* Description : ClipBucket conversion system fully depends on this class. All conversion related
 	* processes pass through here like generating thumbs, extrating video meta, extracting
 	* video qualities and other similar actions
-	* @since : ClipBucket 2.8.1 January 17th, 2017
+	* @since : ClipBucket 2.8.2 January 17th, 2017
 	* @author : Saqib Razzaq
-	* @modified : { 17th January, 2017 } { Created file and added functions } { Saqib Razzaq }
+	* @modified : { 19th January, 2017 } { Progressed video conversion, added thumb function } { Saqib Razzaq }
 	* @notice : File to be maintained
 	*/
 
@@ -241,15 +241,17 @@
 					$$secondCodecType = $videoMetaCleaned->streams[1];
 
 					# start to store required data into responseData array
+					$video->width; = (int) $video->width;
+					$video->height = (int) $video->height;
 					$responseData['format'] = $videoMetaCleaned->format->format_name;
 					$responseData['duration'] = (float) round($video->duration,2);
 					$responseData['bitrate'] = (int) $videoMetaCleaned->format->bit_rate;
 					$responseData['videoBitrate'] = (int) $video->bit_rate;
-					$responseData['videoWidth'] = (int) $video->width;
-					$responseData['videoHeight'] = (int) $video->height;
+					$responseData['videoWidth'] = $video->width;
+					$responseData['videoHeight'] = $video->height;
 
 					if( $video->height ) {
-						$responseData['videoWhRatio'] = (int) $video->width / (int) $video->height;
+						$responseData['videoWhRatio'] = $video->width / $video->height;
 					}
 
 					$responseData['videoCodec'] = $video->codec_name;
@@ -418,7 +420,7 @@
 			//Gett FFMPEG version
 			$ffmpegVersionCommand = FFMPEG_BINARY." -version";
 			$result = $this->executeCommand( $ffmpegVersionCommand );
-			$version = parse_version('ffmpeg',$result);
+			$version = parse_version( 'ffmpeg',$result );
 			
 			$this->vconfigs['map_meta_data'] = 'map_meta_data';
 			
@@ -430,6 +432,9 @@
 		/**
 		* Generates upto 5 thumbs for a given video
 		* @param : { array } { $array } { an array of parameters }
+		* @param : { string } { $array : videoFile } { video file path }
+		* @param : { integer } { $array : duration } { video file duration } 
+		* @param : { string } { $array : dim } { dimensions of thumbs }
 		*/
 
 		private function generateThumbs( $array ) {
@@ -498,7 +503,7 @@
 					}
 					
 					$fileDirectory = THUMBS_DIR.'/'.$this->outputDirectory.'/'.$videoFileName;
-					exit($fileDirectory);
+
 					$id	= $id + $division - 1;
 
 					if( $random != "" ) {
@@ -506,6 +511,8 @@
 					} elseif( $random == "" ) {
 						$time = $this->ChangeTime( $id );
 					}
+
+					# finall, time to build ffmpeg command
 					
 					$command = $this->ffmpegPath." -ss {$time} -i $inputFile -an -r 1 $dimension -y -f image2 -vframes 1 $fileDirectory ";
 
@@ -524,7 +531,7 @@
 					}
 				}
 			} else {
-				
+				# This section handles conversion for files less than 14 seconds
 				if ( empty( $filename ) ){
 					$videoFileName = getName($inputFile)."-{$sizeTag}1.jpg";	
 				} else {
@@ -546,6 +553,12 @@
 			rmdir( $temporaryDirectory );
 		}
 
+		/**
+		* This is where all begins and video conversion is initiated.
+		* This function then takes care of everything like setting resoloutions,
+		* generating thumbs and other stuff
+		* @param : { none }
+		*/
 
 		public function convert() {
 			$useCrons = config( 'use_crons' );
