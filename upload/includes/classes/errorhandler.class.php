@@ -4,47 +4,37 @@
  */
  
 
-class EH extends ClipBucket
-{
-	var $error_list = array();
-	var $message_list = array();
-	var $warning_list = array();
-	
-	/**
-	 * A CONSTRUCTOR
-	 */
-	function error_handler()
-	{
-		
-	}
+class errorhandler extends ClipBucket {
+
+	public $error_list = array();
+	public $message_list = array();
+	public $warning_list = array();
 	
 	/**
 	 * Function used to add new Error
 	 */
 	 
-	function add_error($message=NULL,$id=NULL)
-	{
+	/*function add_error($message=NULL,$id=NULL) {
 		global $ignore_cb_errors;
 		//if id is set, error will be generated from error message list
 		if(!$ignore_cb_errors)
 		$this->error_list[] = $message;
-	}
+	}*/
 
 	
 	/**
 	 * Function usd to add new warning
 	 */
-	function add_warning($message=NULL,$id=NULL)
+	/*function add_warning($message=NULL,$id=NULL)
 	{
 		$this->warning_list[] = $message;
 	}
-	
+	*/
 	/**
 	 * Function used to get error list
 	 */
 	 
-	 function error_list()
-	 { 
+	 function error_list() { 
 	 	return $this->error_list;
 	 }
 	 

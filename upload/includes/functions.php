@@ -952,7 +952,7 @@
 	*/
 
 	function pex($text,$msg="PeX") {
-		pr($text);
+		pr($text,true);
 		exit($msg);
 	}
 	

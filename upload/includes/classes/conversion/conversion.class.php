@@ -46,7 +46,8 @@
 
 		# stores path to conversion lock file which is used to check if more processes
 		# are allowed at a time or not
-		public $ffmpegLock = '';
+		private $ffmpegLockPath = '';
+		private $ffmpegLock = '';
 
 		# stores settings for generating video thumbs
 		private $thumbsResSettings = '';
@@ -79,6 +80,7 @@
 			$this->fileDirectory = $ffmpegParams['fileDirectory'];
 			$this->outputDirectory = $ffmpegParams['outputDirectory'];
 			$this->logFile = $ffmpegParams['logFile'];
+			$this->ffmpegLockPath = TEMP_DIR.'/conv_lock';
 
 			# Set thumb resoloution settings
 			$this->thumbsResSettings = array(
@@ -309,6 +311,34 @@
 
 				return $responseData;
 			}
+		}
+
+		private static final function isLocked($defaultLockLimit = 1) {
+			for ($i=0; $i<$defaultLockLimit; $i++)	{
+				$convLockFile = $this->ffmpegLockPath.$i.'.loc';
+				if (!file_exists($convLockFile)) {
+					$this->ffmpegLock = $convLockFile;
+					file_put_contents($file,"Video conversion processes running. Newly uploaded videos will stack up into qeueu for conversion until this lock clears itself out");
+					return false;
+				}
+			}
+			
+			return true;
+		}
+
+		private static final function createLock($file) {
+			file_put_contents($file,"converting..");
+		}
+
+		public function convert() {
+			$useCrons = config('use_crons');
+			if(!$this->isLocked($this->maxProsessesAtOnce) || $useCrons == 'yes') {
+				if($useCrons == 'no') {
+					//Lets make a file
+					
+				}
+			}
+
 		}
 	}
 
