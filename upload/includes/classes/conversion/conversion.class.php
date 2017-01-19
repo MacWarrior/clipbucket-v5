@@ -427,8 +427,12 @@
 			}
 		}
 
-		private function generateThumbs( $array ) {
+		/**
+		* Generates upto 5 thumbs for a given video
+		* @param : { array } { $array } { an array of parameters }
+		*/
 
+		private function generateThumbs( $array ) {
 			$inputFile = $array['videoFile'];
 			$duration = $array['duration'];
 			$dimension = $array['dim'];
@@ -493,8 +497,8 @@
 						$videoFileName = $filename."-{$sizeTag}{$count}.jpg";	
 					}
 					
-					$thumbsFilePath = THUMBS_DIR.'/'.$this->outputDirectory.'/'.$videoFileName;
-
+					$fileDirectory = THUMBS_DIR.'/'.$this->outputDirectory.'/'.$videoFileName;
+					exit($fileDirectory);
 					$id	= $id + $division - 1;
 
 					if( $random != "" ) {
@@ -503,7 +507,7 @@
 						$time = $this->ChangeTime( $id );
 					}
 					
-					$command = $this->ffmpegPath." -ss {$time} -i $inputFile -an -r 1 $dimension -y -f image2 -vframes 1 $file_path ";
+					$command = $this->ffmpegPath." -ss {$time} -i $inputFile -an -r 1 $dimension -y -f image2 -vframes 1 $fileDirectory ";
 
 					$output = $this->executeCommand( $command );	
 
@@ -538,6 +542,7 @@
 				}
 			}
 			
+			# Time to throw out temporary directory
 			rmdir( $temporaryDirectory );
 		}
 
@@ -570,13 +575,6 @@
 
 						$ratio = substr( $this->inputDetails['videoWhRatio'], 0,7 );
 						$ratio = (float) $ratio;
-
-						/*if ($ratio >= 1.6) {
-							$videoResoloution = $this->res169;
-						} else {
-							$videoResoloution = $this->resolution4_3;
-						}
-						*/
 
 						$videoHeight = $this->configs['normal_res'];
 						if( $videoHeight == '320' ) {
@@ -612,7 +610,8 @@
 						} catch(Exception $e) {
 							$this->TemplogData .= "\r\n Errot Occured : ".$e->getMessage()."\r\n";
 						}
-						
+
+						exit("TADA");
 						$this->TemplogData .= "\r\n ====== End : Thumbs Generation ======= \r\n";
 						$this->log->writeLine("Thumbs Files", $this->TemplogData , true );
 						
