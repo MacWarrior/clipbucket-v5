@@ -918,6 +918,19 @@
 			return $eh->e($msg,$type,$id);
 		}
 	}
+
+	/**
+	* An easy function for developer erorrs and messages
+	* @param { string } { $error } { error to display }
+	* @param { string } { $state } { state for message e.g m : medium, l : low, c : critical }
+	*/
+
+	function deverr($erorr, $state = 'l') {
+		global $eh;
+		if (!empty($erorr)) {
+			return $eh->deverr($erorr, $state);
+		}
+	}
 	
 	/**
 	* Function used to get subscription template

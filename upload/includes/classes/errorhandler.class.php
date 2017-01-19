@@ -9,16 +9,17 @@ class errorhandler extends ClipBucket {
 	public $error_list = array();
 	public $message_list = array();
 	public $warning_list = array();
+	public $developer_errors = array();
 	
 	/**
 	* Function used to add new Error
 	*/
-	 
+
 	private static function add_error($message=NULL,$id=NULL) {
 		global $ignore_cb_errors;
 		//if id is set, error will be generated from error message list
 		if(!$ignore_cb_errors)
-		$this->error_list[] = $message;
+			$this->error_list[] = $message;
 	}
 
 	
@@ -126,6 +127,36 @@ class errorhandler extends ClipBucket {
 		}
 		
 		return $message;
+	}
+
+	/**
+	* Handles developer related errors to ease up debugging process
+	*/
+
+	public function deverr($error, $state = 'm') {
+		global $developer_errors;		
+		switch ($state) {
+			case 'l':
+				$state = 'lower_priority';
+				break;
+			case 'c':
+				$state = 'critical_priority';
+				break;
+			
+			default:
+				$state = 'medium_priority';
+				break;
+		}
+
+		if (!$developer_errors) {
+			$this->developer_errors[$state][] = $error;
+		} else {
+
+		}
+
+
+		$this->error_list['developer_errors'] = $this->developer_errors;
+		pex($this->error_list);
 	}
 	
 }
