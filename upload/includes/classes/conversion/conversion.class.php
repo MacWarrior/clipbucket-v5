@@ -88,6 +88,7 @@
 			$this->fileDirectory = $ffmpegParams['fileDirectory'];
 			$this->fullUploadedFilePath = $this->fileDirectory.'/'.$this->fileName;
 			$this->outputDirectory = $ffmpegParams['outputDirectory'];
+
 			$this->logFile = $ffmpegParams['logFile'];
 			$this->ffmpegLockPath = TEMP_DIR.'/conv_lock';
 			$this->maxDuration = config( 'max_video_duration' ) * 60;
@@ -431,6 +432,7 @@
 			$inputFile = $array['videoFile'];
 			$duration = $array['duration'];
 			$dimension = $array['dim'];
+
 			$num = $array['num'];
 
 			if ( !empty( $array['sizeTag'] ) ) {
@@ -455,22 +457,20 @@
 			$suffix = $width  = $dimTemporary[0];
 			
 			$temporaryDirectory = TEMP_DIR.'/'.getName($inputFile);	
-			
 			mkdir($temporaryDirectory,0777);	
-			$dimension = '';
 
 			if( !empty($sizeTag) ) {
 				$sizeTag = $sizeTag.'-';
 			}
 
-			if ( !empty( $fileDirectory ) && !empty( $filename ) ) {
-				$thumbs_outputPath = $fileDirectory.'/';
-			} else {
-				$thumbs_outputPath = $this->options['outputPath'];
+			if ( !isset( $fileDirectory ) ) {
+				$fileDirectory = THUMBS_DIR.'/'.$this->outputDirectory.'/'.$videoFileName;
 			}
 
 			if( $dimension != 'original' ) {
 				$dimension = " -s $dimension  ";
+			} else {
+				$dimension = '';
 			}
 
 			/**
@@ -483,7 +483,7 @@
 
 				$duration = $duration - 5;
 				$division = $duration / $num;
-				$count=1;
+				$count = 1;
 
 				for ( $id=3; $id <= $duration; $id++ ) {
 
@@ -493,27 +493,28 @@
 						$videoFileName = $filename."-{$sizeTag}{$count}.jpg";	
 					}
 					
-					$file_path = THUMBS_DIR.'/' . $thumbs_outputPath . $videoFileName;
+					$thumbsFilePath = THUMBS_DIR.'/'.$this->outputDirectory.'/'.$videoFileName;
+
 					$id	= $id + $division - 1;
 
-					if($random != "") {
-						$time = $this->ChangeTime($id,1);
-					} elseif($random == "") {
-						$time = $this->ChangeTime($id);
+					if( $random != "" ) {
+						$time = $this->ChangeTime( $id,1 );
+					} elseif( $random == "" ) {
+						$time = $this->ChangeTime( $id );
 					}
 					
 					$command = $this->ffmpegPath." -ss {$time} -i $inputFile -an -r 1 $dimension -y -f image2 -vframes 1 $file_path ";
 
-					$output = $this->executeCommand($command);	
+					$output = $this->executeCommand( $command );	
 
 					//checking if file exists in temp dir
-					if(file_exists($temporaryDirectory.'/00000001.jpg')) {
-						rename($temporaryDirectory.'/00000001.jpg',THUMBS_DIR.'/'.$videoFileName);
+					if( file_exists( $temporaryDirectory.'/00000001.jpg' ) ) {
+						rename( $temporaryDirectory.'/00000001.jpg', THUMBS_DIR.'/'.$videoFileName );
 					}
 
 					$count = $count+1;
 
-					if (!$regenerateThumbs){
+					if ( !$regenerateThumbs ) {
 						$this->TemplogData .= "\r\n Command : $command ";
 						$this->TemplogData .= "\r\n File : $file_path ";	
 					}
@@ -526,14 +527,14 @@
 					$videoFileName = $filename."-{$sizeTag}1.jpg";	
 				}
 
-				$file_path = THUMBS_DIR.'/' . $thumbs_outputPath . $videoFileName;
-				$command = $this->ffmpegPath." -i $inputFile -an $dimension -y -f image2 -vframes $num $file_path ";
-				exit($command);
+				$thumbsOutputPath = $fileDirectory . $videoFileName;
+				$command = $this->ffmpegPath." -i $inputFile -an $dimension -y -f image2 -vframes 5 $thumbsOutputPath ";
+
 				$output = $this->executeCommand( $command );
 
 				if ( !$regenerateThumbs ) {
 					$this->TemplogData .= "\r\n Command : $command ";
-					$this->TemplogData .= "\r\n File : $file_path ";
+					$this->TemplogData .= "\r\n File : $thumbsOutputPath ";
 				}
 			}
 			
@@ -611,8 +612,7 @@
 						} catch(Exception $e) {
 							$this->TemplogData .= "\r\n Errot Occured : ".$e->getMessage()."\r\n";
 						}
-
-						exit("SAd");
+						
 						$this->TemplogData .= "\r\n ====== End : Thumbs Generation ======= \r\n";
 						$this->log->writeLine("Thumbs Files", $this->TemplogData , true );
 						
