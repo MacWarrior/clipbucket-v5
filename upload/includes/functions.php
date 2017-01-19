@@ -1464,7 +1464,7 @@
 
 	function error_list() {
 		global $eh;
-		return $eh->error_list;
+		return $eh->error_list();
 	}
 	
 	

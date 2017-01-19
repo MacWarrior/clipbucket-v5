@@ -9,17 +9,16 @@ class errorhandler extends ClipBucket {
 	public $error_list = array();
 	public $message_list = array();
 	public $warning_list = array();
-	public $developer_errors = array();
-	
 	/**
 	* Function used to add new Error
 	*/
 
-	private static function add_error($message=NULL,$id=NULL) {
+	private function add_error($message=NULL,$id=NULL) {
 		global $ignore_cb_errors;
 		//if id is set, error will be generated from error message list
 		if(!$ignore_cb_errors)
 			$this->error_list[] = $message;
+			$this->error_list['all_errors']['user_error']['critical_priority'][] = $message;
 	}
 
 	
@@ -27,8 +26,9 @@ class errorhandler extends ClipBucket {
 	* Function usd to add new warning
 	*/
 	
-	private static function add_warning($message=NULL,$id=NULL) {
+	private function add_warning($message=NULL,$id=NULL) {
 		$this->warning_list[] = $message;
+		$this->user_errors['medium_priority'][] = $message;
 	}
 	
 	/**
@@ -36,7 +36,18 @@ class errorhandler extends ClipBucket {
 	*/
 	 
 	public function error_list() { 
-	 	return $this->error_list;
+	 	global $developer_errors;
+	 	if ($developer_errors) {
+	 		return $this->error_list;
+	 	} else {
+	 		$error_list = array();
+	 		foreach ($this->error_list as $key => $error) {
+	 			if (!is_array($error)) {
+	 				$error_list[] = $error;
+	 			}
+	 		}
+	 		return $error_list;
+	 	}
 	 }
 	 
 	/**
@@ -55,7 +66,8 @@ class errorhandler extends ClipBucket {
 		global $ignore_cb_errors;
 		//if id is set, error will be generated from error message list
 		if(!$ignore_cb_errors)
-		$this->message_list[] = $message;
+			$this->message_list[] = $message;
+			$this->user_errors['lower_priority'][] = $message;
 	}
 	   
 	/**
@@ -99,7 +111,7 @@ class errorhandler extends ClipBucket {
 	*/
 
 	function e($message=NULL,$type='e',$id=NULL) {
-	
+		
 		switch($type) {
 			case 'm':
 			case 1:
@@ -129,6 +141,10 @@ class errorhandler extends ClipBucket {
 		return $message;
 	}
 
+	private function addAll($error, $state, $type) {
+		return $this->error_list['all_errors'][$type][$state][] = $error;
+	}
+
 	/**
 	* Handles developer related errors to ease up debugging process
 	*/
@@ -149,14 +165,24 @@ class errorhandler extends ClipBucket {
 		}
 
 		if (!$developer_errors) {
-			$this->developer_errors[$state][] = $error;
+			$this->addAll($error, $state, 'developer_errors');
 		} else {
+			$thrown_error = array();
+			$back_traced = debug_backtrace();
+			$calling_sect = $back_traced[0];
+			$calling_file_path = $calling_sect['file'];
+			$calling_file = basename($calling_file_path);
+			$calling_line = $calling_sect['line'];
 
+			$thrown_error['message'] = $error;
+			$thrown_error['file_path'] = $calling_file_path;
+			$thrown_error['file_name'] = $calling_file;
+			$thrown_error['file_line'] = $calling_line;
+			
+			$this->addAll($thrown_error, $state, 'developer_errors');
 		}
 
-
-		$this->error_list['developer_errors'] = $this->developer_errors;
-		pex($this->error_list);
+		pex($this->error_list());
 	}
 	
 }
