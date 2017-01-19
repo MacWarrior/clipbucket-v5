@@ -141,12 +141,25 @@ class errorhandler extends ClipBucket {
 		return $message;
 	}
 
+	/**
+	* Adds a new error in list of all errors
+	* @param : { mixed } { $error } { error to be listed }
+	* @param : { string } { $state } { state of error e.g critical_priority }
+	* @param : { string } { $type } { type of error e.g user_errors or developer_errors }
+	* @author : Saqib Razzaq
+	* @since : 19th January, 2017
+	*/
+
 	private function addAll($error, $state, $type) {
 		return $this->error_list['all_errors'][$type][$state][] = $error;
 	}
 
 	/**
 	* Handles developer related errors to ease up debugging process
+	* @param : { mixed } { $error } { error to be listed }
+	* @param : { string } { $state } { state for message e.g m : medium, l : low, c : critical }
+	* @author : Saqib Razzaq
+	* @since : 19th January, 2017
 	*/
 
 	public function deverr($error, $state = 'm') {
@@ -181,8 +194,6 @@ class errorhandler extends ClipBucket {
 			
 			$this->addAll($thrown_error, $state, 'developer_errors');
 		}
-
-		pex($this->error_list());
 	}
 	
 }
