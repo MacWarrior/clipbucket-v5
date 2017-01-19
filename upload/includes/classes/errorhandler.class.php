@@ -8,7 +8,7 @@ class errorhandler extends ClipBucket {
 
 	public $error_list = array();
 	public $message_list = array();
-	public $warning_list = array();
+	public $warning_list = array(); 
 	/**
 	* Function used to add new Error
 	*/
