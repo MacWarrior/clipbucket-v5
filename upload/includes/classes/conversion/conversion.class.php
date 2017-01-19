@@ -313,7 +313,12 @@
 			}
 		}
 
-		private static final function isLocked($defaultLockLimit = 1) {
+		/**
+		* Check if conversion is locked or not
+		* @param : { integer } { $defaultLockLimit } { Limit of number of max process }
+		*/
+
+		private final function isLocked($defaultLockLimit = 1) {
 			for ($i=0; $i<$defaultLockLimit; $i++)	{
 				$convLockFile = $this->ffmpegLockPath.$i.'.loc';
 				if (!file_exists($convLockFile)) {
@@ -326,8 +331,33 @@
 			return true;
 		}
 
+		/**
+		* Creates a conversion loc file
+		* @param : { string } { $file } { file to be created }
+		*/
+
 		private static final function createLock($file) {
 			file_put_contents($file,"converting..");
+		}
+
+		private function timeCheck() {
+			$time = microtime();
+			$time = explode(' ',$time);
+			$time = $time[1]+$time[0];
+			return $time;
+		}
+
+		/**
+		* Function used to start log that is later modified by conversion
+		* process to add required details. Conversion logs are available
+		* in admin area for users to view what went wrong with their video
+		*/
+
+		function start_log() {
+			$this->TemplogData  = "Started on ".NOW()." - ".date("Y M d")."\n\n";
+			$this->TemplogData  .= "Checking File...\n";
+			$this->TemplogData  .= "File : {$this->input_file}";
+			$this->log->writeLine("Starting Conversion",$this->TemplogData , true);
 		}
 
 		public function convert() {
@@ -335,7 +365,9 @@
 			if(!$this->isLocked($this->maxProsessesAtOnce) || $useCrons == 'yes') {
 				if($useCrons == 'no') {
 					//Lets make a file
-					
+					$locFile = $this->ffmpegLockPath.'.loc';
+					$this->createLock($locFile);
+					$this->startTime = $this->timeCheck();
 				}
 			}
 
