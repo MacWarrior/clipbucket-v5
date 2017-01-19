@@ -86,6 +86,7 @@
 			$this->maxProsessesAtOnce = config( 'max_conversion' );
 			$this->fileName = $ffmpegParams['fileName'];
 			$this->fileDirectory = $ffmpegParams['fileDirectory'];
+			$this->fullUploadedFilePath = $this->fileDirectory.'/'.$this->fileName;
 			$this->outputDirectory = $ffmpegParams['outputDirectory'];
 			$this->logFile = $ffmpegParams['logFile'];
 			$this->ffmpegLockPath = TEMP_DIR.'/conv_lock';
@@ -454,17 +455,6 @@
 			$suffix = $width  = $dimTemporary[0];
 			
 			$temporaryDirectory = TEMP_DIR.'/'.getName($inputFile);	
-
-
-			/*
-			* The format of $this->options["outputPath"] should be like this
-			* year/month/day/ 
-			* the trailing slash is important in creating directories for thumbs
-			*/
-
-			if( substr( $this->options["outputPath"], strlen( $this->options["outputPath"] ) - 1 ) !== "/" ) {
-				$this->options["outputPath"] .= "/";
-			}
 			
 			mkdir($temporaryDirectory,0777);	
 			$dimension = '';
@@ -478,7 +468,6 @@
 			} else {
 				$thumbs_outputPath = $this->options['outputPath'];
 			}
-			
 
 			if( $dimension != 'original' ) {
 				$dimension = " -s $dimension  ";
@@ -491,11 +480,13 @@
 			*/
 
 			if( $num > 1 && $duration > 14 ) {
+
 				$duration = $duration - 5;
 				$division = $duration / $num;
 				$count=1;
 
 				for ( $id=3; $id <= $duration; $id++ ) {
+
 					if ( empty( $filename ) ){
 						$videoFileName = getName($inputFile)."-{$sizeTag}{$count}.jpg";	
 					} else {
@@ -529,22 +520,24 @@
 				}
 			} else {
 				
-				if (empty($filename)){
+				if ( empty( $filename ) ){
 					$videoFileName = getName($inputFile)."-{$sizeTag}1.jpg";	
-				}else{
+				} else {
 					$videoFileName = $filename."-{$sizeTag}1.jpg";	
 				}
-				
+
 				$file_path = THUMBS_DIR.'/' . $thumbs_outputPath . $videoFileName;
 				$command = $this->ffmpegPath." -i $inputFile -an $dimension -y -f image2 -vframes $num $file_path ";
-				$output = $this->executeCommand($command);
-				if (!$regenerateThumbs){
+				exit($command);
+				$output = $this->executeCommand( $command );
+
+				if ( !$regenerateThumbs ) {
 					$this->TemplogData .= "\r\n Command : $command ";
 					$this->TemplogData .= "\r\n File : $file_path ";
 				}
 			}
 			
-			rmdir($temporaryDirectory);
+			rmdir( $temporaryDirectory );
 		}
 
 
@@ -557,7 +550,7 @@
 					$this->createLock( $locFile );
 					$this->startTime = $this->timeCheck();
 					$this->startLog();
-					$this->prepare();
+					$this->prepare( $this->fullUploadedFilePath );
 				
 					$maxDuration = $this->maxDuration;
 					$currentDuration = $this->inputDetails['duration'];
@@ -602,22 +595,23 @@
 
 								if( $key == 'original' ){
 									$dimensionSetting = $key;
-									$dim_identifier = $key;	
+									$dimensionIdentifier = $key;	
 								} else {
-									$dim_identifier = $widthSetting.'x'.$heightSetting;	
+									$dimensionIdentifier = $widthSetting.'x'.$heightSetting;	
 								}
 
 								$thumbsSettings['videoFile'] = $this->inputFile;
 								$thumbsSettings['duration'] = $this->input_details['duration'];
 								$thumbsSettings['num']      = thumbs_number;
 								$thumbsSettings['dim']      = $dimensionSetting;
-								$thumbsSettings['sizeTag'] = $dim_identifier;
+								$thumbsSettings['sizeTag'] = $dimensionIdentifier;
 								$this->generateThumbs( $thumbsSettings );
 							}
 							
 						} catch(Exception $e) {
 							$this->TemplogData .= "\r\n Errot Occured : ".$e->getMessage()."\r\n";
 						}
+
 						exit("SAd");
 						$this->TemplogData .= "\r\n ====== End : Thumbs Generation ======= \r\n";
 						$this->log->writeLine("Thumbs Files", $this->TemplogData , true );
