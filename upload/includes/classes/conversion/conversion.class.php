@@ -388,9 +388,8 @@
 		}
 
 		/**
-		* Prepare file to be converted
-		* this will first get info of the file
-		* and enter its info into database
+		* Prepare file to be converted this will first get info of the file
+		* @param : { string } { $file } { false by default, file to prepare }
 		*/
 
 		private function prepare( $file = false ) {
