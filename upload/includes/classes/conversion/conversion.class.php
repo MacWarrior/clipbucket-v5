@@ -429,7 +429,7 @@
 
 			$inputFile = $array['videoFile'];
 			$duration = $array['duration'];
-			$dim = $array['dim'];
+			$dimension = $array['dim'];
 			$num = $array['num'];
 
 			if ( !empty( $array['sizeTag'] ) ) {
@@ -446,14 +446,15 @@
 			}
 
 			if ( !empty( $array['rand'] ) ){
-				$rand = $array['rand'];		
+				$random = $array['rand'];		
 			}
 
-			$dimTemporary = explode( 'x', $dim );
+			$dimTemporary = explode( 'x', $dimension );
 			$height = $dimTemporary[1];
 			$suffix = $width  = $dimTemporary[0];
 			
-			$tmpDir = TEMP_DIR.'/'.getName($inputFile);	
+			$temporaryDirectory = TEMP_DIR.'/'.getName($inputFile);	
+
 
 			/*
 			* The format of $this->options["outputPath"] should be like this
@@ -465,7 +466,7 @@
 				$this->options["outputPath"] .= "/";
 			}
 			
-			mkdir($tmpDir,0777);	
+			mkdir($temporaryDirectory,0777);	
 			$dimension = '';
 
 			if( !empty($sizeTag) ) {
@@ -479,9 +480,15 @@
 			}
 			
 
-			if( $dim != 'original' ) {
-				$dimension = " -s $dim  ";
+			if( $dimension != 'original' ) {
+				$dimension = " -s $dimension  ";
 			}
+
+			/**
+			* Files larger than 14 seconds have enough data for ClipBucket to generate thumbs 
+			* smartly and videos less than that are thrown in else case to generate thumbs
+			* without providing specific directions to ffmpeg
+			*/
 
 			if( $num > 1 && $duration > 14 ) {
 				$duration = $duration - 5;
@@ -498,29 +505,29 @@
 					$file_path = THUMBS_DIR.'/' . $thumbs_outputPath . $videoFileName;
 					$id	= $id + $division - 1;
 
-					if($rand != "") {
+					if($random != "") {
 						$time = $this->ChangeTime($id,1);
-					} elseif($rand == "") {
+					} elseif($random == "") {
 						$time = $this->ChangeTime($id);
 					}
 					
-					$command = $this->ffMpegPath." -ss {$time} -i $inputFile -an -r 1 $dimension -y -f image2 -vframes 1 $file_path ";
-					/*logdata("Thumbs COmmand : ".$command,'checkpoints');*/
+					$command = $this->ffmpegPath." -ss {$time} -i $inputFile -an -r 1 $dimension -y -f image2 -vframes 1 $file_path ";
+
 					$output = $this->executeCommand($command);	
-					//$this->//logData($output);
+
 					//checking if file exists in temp dir
-					if(file_exists($tmpDir.'/00000001.jpg'))
-					{
-						rename($tmpDir.'/00000001.jpg',THUMBS_DIR.'/'.$videoFileName);
+					if(file_exists($temporaryDirectory.'/00000001.jpg')) {
+						rename($temporaryDirectory.'/00000001.jpg',THUMBS_DIR.'/'.$videoFileName);
 					}
+
 					$count = $count+1;
+
 					if (!$regenerateThumbs){
 						$this->TemplogData .= "\r\n Command : $command ";
 						$this->TemplogData .= "\r\n File : $file_path ";	
 					}
-					
 				}
-			}else{
+			} else {
 				
 				if (empty($filename)){
 					$videoFileName = getName($inputFile)."-{$sizeTag}1.jpg";	
@@ -529,7 +536,7 @@
 				}
 				
 				$file_path = THUMBS_DIR.'/' . $thumbs_outputPath . $videoFileName;
-				$command = $this->ffMpegPath." -i $inputFile -an $dimension -y -f image2 -vframes $num $file_path ";
+				$command = $this->ffmpegPath." -i $inputFile -an $dimension -y -f image2 -vframes $num $file_path ";
 				$output = $this->executeCommand($command);
 				if (!$regenerateThumbs){
 					$this->TemplogData .= "\r\n Command : $command ";
@@ -537,7 +544,7 @@
 				}
 			}
 			
-			rmdir($tmpDir);
+			rmdir($temporaryDirectory);
 		}
 
 
