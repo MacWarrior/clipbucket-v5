@@ -61,10 +61,13 @@
 		# stores basic ffmpeg configurations for processing video
 		private $ffmpegConfigs = '';
 
+		# physical file that is under processing at time
 		private $inputFile = '';
 
+		# log data will be stored here while video converts
 		public $log = '';
 
+		# maximum video duration allowed by admin settings
 		private $maxDuration = '';
 
 		/**
@@ -241,7 +244,7 @@
 					$$secondCodecType = $videoMetaCleaned->streams[1];
 
 					# start to store required data into responseData array
-					$video->width; = (int) $video->width;
+					$video->width = (int) $video->width;
 					$video->height = (int) $video->height;
 					$responseData['format'] = $videoMetaCleaned->format->format_name;
 					$responseData['duration'] = (float) round($video->duration,2);
@@ -307,13 +310,13 @@
 					# parse out video's original width and save in responseData array
 					$needleStart = "Original width";
 					$needleEnd = "pixels"; 
-					$originalWidth = find_string($needleStart,$needleEnd,$mediainfoMetaData);
-					$originalWidth[1] = str_replace(' ', '', $originalWidth[1]);
+					$originalWidth = find_string( $needleStart, $needleEnd, $mediainfoMetaData );
+					$originalWidth[1] = str_replace( ' ', '', $originalWidth[1] );
 
-					if(!empty($originalWidth) && $originalWidth != false) {
-						$origWidth = trim($originalWidth[1]);
+					if( !empty( $originalWidth ) && $originalWidth != false ) {
+						$origWidth = trim( $originalWidth[1] );
 						$origWidth = (int)$origWidth;
-						if($origWidth > 0 && !empty($origWidth)) {
+						if( $origWidth > 0 && !empty( $origWidth ) ) {
 							$responseData['videoWidth'] = $origWidth;
 						}
 					}
@@ -375,6 +378,35 @@
 		}
 
 		/**
+		* Function used to convert seconds into proper time format
+		* @param : INT duration
+		* @parma : rand
+		*/
+		 
+		private function ChangeTime( $duration, $rand = "" ) {
+			if( $rand != "" ) {
+				if( $duration / 3600 > 1 ) {
+					$time = date( "H:i:s", $duration - rand( 0,$duration ) );
+				} else {
+					$time =  "00:";
+					$time .= date( "i:s", $duration - rand( 0,$duration ) );
+				}
+
+				return $time;
+			} elseif ( $rand == "" ) {
+				if( $duration / 3600 > 1 ) {
+					$time = date( "H:i:s",$duration );
+				} else {
+					$time = "00:";
+					$time .= date( "i:s",$duration );
+				}
+
+				return $time;
+			}
+		}
+
+
+		/**
 		* Function used to log video info
 		*/
 
@@ -430,11 +462,14 @@
 		}
 
 		/**
-		* Generates upto 5 thumbs for a given video
+		* Generates upto 5 thumbs for a given video. Those thumbs are taken
+		* from same time stamp with different sizez
+		*
 		* @param : { array } { $array } { an array of parameters }
 		* @param : { string } { $array : videoFile } { video file path }
 		* @param : { integer } { $array : duration } { video file duration } 
 		* @param : { string } { $array : dim } { dimensions of thumbs }
+		* @author : Arslan Hassan or Awais Tariq or Fawaz Tahir or is it me? [ Saqib Razzaq ] (wondering)
 		*/
 
 		private function generateThumbs( $array ) {
@@ -489,7 +524,6 @@
 			*/
 
 			if( $num > 1 && $duration > 14 ) {
-
 				$duration = $duration - 5;
 				$division = $duration / $num;
 				$count = 1;
@@ -515,7 +549,7 @@
 					# finall, time to build ffmpeg command
 					
 					$command = $this->ffmpegPath." -ss {$time} -i $inputFile -an -r 1 $dimension -y -f image2 -vframes 1 $fileDirectory ";
-
+					pr($command,true);
 					$output = $this->executeCommand( $command );	
 
 					//checking if file exists in temp dir
@@ -574,6 +608,15 @@
 					$maxDuration = $this->maxDuration;
 					$currentDuration = $this->inputDetails['duration'];
 
+					/**
+					* ClipBucket allows admins to set max duration video which is saved
+					* in global admin configs. Our top priority should be to make sure
+					* video larger than that duration never makes it to database but there
+					* can always be glitches. This below part is final check for that.
+					* If video longer than allowed duration, it simply won't convert
+					* and error will be stored in video conversion log
+					*/
+
 					if ( $currentDuration > $this->maxDuration ) {
 						$maxDurationMinutes = $this->maxDuration / 60; 
 						$this->TemplogData   = "Video duration was ".$currentDuration." minutes and Max video duration is {$maxDurationMinutes} minutes, Therefore Video cancelled... Wohooo.\n";
@@ -613,9 +656,9 @@
 								}
 
 								$thumbsSettings['videoFile'] = $this->inputFile;
-								$thumbsSettings['duration'] = $this->input_details['duration'];
-								$thumbsSettings['num']      = thumbs_number;
-								$thumbsSettings['dim']      = $dimensionSetting;
+								$thumbsSettings['duration'] = $this->inputDetails['duration'];
+								$thumbsSettings['num'] = 2;
+								$thumbsSettings['dim'] = $dimensionSetting;
 								$thumbsSettings['sizeTag'] = $dimensionIdentifier;
 								$this->generateThumbs( $thumbsSettings );
 							}
