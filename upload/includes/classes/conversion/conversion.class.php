@@ -365,6 +365,22 @@
 		}
 
 		/**
+		* Function used to end timing
+		*/
+		
+		function endTimeCheck() {
+			$this->endTime = $this->timeCheck();
+		}
+
+		/** 
+		* Function used to check total time 
+		*/
+		
+		function totalTime() {
+			$this->totalTime = round( ( $this->endTime - $this->startTime ), 4 );
+		}
+
+		/**
 		* Function used to start log that is later modified by conversion
 		* process to add required details. Conversion logs are available
 		* in admin area for users to view what went wrong with their video
@@ -595,7 +611,7 @@
 		*/
 		
 		private function reIndexReqResoloutions( $resolutions ) {
-			
+
 			$originalVideoHeight = $this->inputDetails['videoHeight'];
 			
 			// Setting threshold for input video to convert
@@ -622,7 +638,141 @@
 			} else {
 				return false;
 			}
+		}
 
+		private function getInputFileName() {
+			return $this->fileDirectory.'/'.$this->fileName;
+		}
+
+		private function convertVideo( $inputFile = false, $options = array(), $isHd = false ) {
+			$this->log->TemplogData = "";
+			$this->log->TemplogData .= "\r\n======Converting Video=========\r\n";
+
+			if( $inputFile ){
+				
+				if( !empty( $options ) ){
+					$this->setOptions( $options );
+				}
+
+				$this->inputFile = $inputFile;
+
+				$this->outputFile = $this->videosDirPath . '/'. $this->options['outputPath'] . '/' . $this->getInputFileName( $inputFile );
+				$videoDetails = $this->inputDetails;
+				$this->output = new stdClass();
+				$this->output->videoDetails = $videoDetails;
+
+				if($videoDetails) {
+
+					//logData(json_encode($videoDetails));
+					$this->hdFile = "{$this->outputFile}-hd.{$this->options['format']}";
+					$out= shell_exec($this->ffmpegPath ." -i {$this->inputFile} -acodec copy -vcodec copy -y -f null /dev/null 2>&1");
+					$len = strlen($out);
+					$findme = 'Video';
+					$findme1 = 'fps';
+					$pos = strpos($out, $findme);
+					$pos = $pos + 48;
+					$pos1 = strpos($out, $findme1);
+					$bw = $len - ($pos1 - 5);
+					$rest = substr($out, $pos, -$bw);
+					$rest = ','.$rest;
+					$dura = explode(',',$rest);
+					$dura[1] = $dura[1].'x';
+					$dura = explode('x',$dura[1]);
+					if($dura[1] >= "720" || $videoDetails['video_height'] >= "720")
+					{
+						
+						$this->log->TemplogData .="\r\n\r\n=======Low Resolution Conversion=======\r\n\r\n";
+						$this->log->TemplogData .= "\r\n Sarting : Generating Low resolution video @ ".date("Y-m-d H:i:s")." \r\n";
+						$this->log->TemplogData .= "\r\n Converting Video SD File  \r\n";
+						$this->sdFile = "{$this->outputFile}-sd.{$this->options['format']}";
+						$fullCommand = $this->ffMpegPath . " -i {$this->inputFile}" . $this->generateCommand($videoDetails, false) . " {$this->sdFile}";
+						
+
+						//$this->logs->writeLine("command", $fullCommand);
+						$this->log->TemplogData .= "\r\n Command : ".$fullCommand." \r\n";
+
+						$conversionOutput = $this->executeCommand($fullCommand);
+						$this->log->TemplogData .= "\r\n ffmpeg output : ".$conversionOutput." \r\n";
+
+						$this->log->TemplogData .= "\r\n outputFile : ".$this->sdFile." \r\n";
+						
+						//$this->logs->writeLine("MP4Box Conversion for SD", "Starting");
+						$this->log->TemplogData .= "\r\n Sarting : MP4Box Conversion for SD \r\n";
+						$fullCommand = $this->mp4BoxPath . " -inter 0.5 {$this->sdFile}  -tmp ".TEMP_DIR;
+						if (PHP_OS == "WINNT")
+						{
+							$fullCommand = str_replace("/","\\",$fullCommand);	
+						}
+						$this->log->TemplogData .= "\r\n MP4Box Command : ".$fullCommand." \r\n";
+						$output = $this->executeCommand($fullCommand);
+						$this->log->TemplogData .= "\r\n output : ".$output." \r\n";
+						
+						if (file_exists($this->sdFile))
+						{
+							$this->video_files[] =  'sd';
+							$this->sdFile1 = "{$this->outputFile}.{$this->options['format']}";
+							$path = explode("/", $this->sdFile1);
+							$name = array_pop($path);
+							$name = substr($name, 0, strrpos($name, "."));
+							$status = "Successful";
+							$this->log->TemplogData .= "\r\n Conversion Status : ".$status." @ ".date("Y-m-d H:i:s")." \r\n";
+							$this->log->writeLine("Converiosn Ouput",$this->log->TemplogData, true);
+							
+							$this->output_file = $this->sdFile;
+							$this->output_details = $this->get_file_info($this->output_file);
+							$this->log_ouput_file_info();
+						}
+						$this->log->TemplogData .="\r\n\r\n=======High Resolution Conversion=======\r\n\r\n";
+						$this->log->TemplogData .= "\r\n Sarting : Generating high resolution video @ ".date("Y-m-d H:i:s")."\r\n";
+
+						$this->log->TemplogData .= "\r\n Converting Video HD File   \r\n";
+						
+						$this->hdFile = "{$this->outputFile}-hd.{$this->options['format']}";
+						$log_file_tmp = TEMP_DIR."/".$this->file_name.".tmp";
+						$fullCommand = $this->ffMpegPath . " -i {$this->inputFile}" . $this->generateCommand($videoDetails, true) . " {$this->hdFile} > {$log_file_tmp}";
+					
+						$this->log->TemplogData .= "\r\n Command : ".$fullCommand." \r\n";
+						//logData(json_encode($fullCommand));
+						$conversionOutput = $this->executeCommand($fullCommand);
+						if(file_exists($log_file_tmp))
+						{
+							$data = file_get_contents($log_file_tmp);
+							unlink($log_file_tmp);
+						}
+						$this->log->TemplogData .= "\r\n ffmpeg output : ".$data." \r\n";
+
+						$this->log->TemplogData .= "\r\n Sarting : MP4Box Conversion for HD \r\n";
+						$fullCommand = $this->mp4BoxPath . " -inter 0.5 {$this->hdFile}  -tmp ".TEMP_DIR;
+						//logData(json_encode($fullCommand));
+						if (PHP_OS == "WINNT")
+						{
+							$fullCommand = str_replace("/","\\",$fullCommand);	
+						}
+						$this->log->TemplogData .= "\r\n MP4Box Command : ".$fullCommand." \r\n";
+						$output = $this->executeCommand($fullCommand);
+						$this->log->TemplogData .= "\r\n output : ".$output." \r\n";
+						if (file_exists($this->hdFile))
+						{
+							$this->video_files[] =  'hd';
+							$this->sdFile1 = "{$this->outputFile}.{$this->options['format']}";
+							$path = explode("/", $this->sdFile1);
+							$name = array_pop($path);
+							$name = substr($name, 0, strrpos($name, "."));
+							//logData(json_encode($this->sdFile1));
+							$status = "Successful";
+							$this->log->TemplogData .= "\r\n Conversion Status : ".$status." @ ".date("Y-m-d H:i:s")."\r\n";
+							$this->log->writeLine("Converiosn Ouput",$this->log->TemplogData, true);
+
+							$this->output_file = $this->hdFile;
+							$this->output_details = $this->get_file_info($this->output_file);
+							$this->log_ouput_file_info();
+						}
+					}
+
+					$this->log->TemplogData = "";
+				}
+
+			}
 		}
 
 		/**
@@ -754,11 +904,8 @@
 							break;
 						}
 						
-						
-						
-
-						$this->end_time_check();
-						$this->total_time();
+						$this->endTimeCheck();
+						$this->totalTime();
 						
 						//Copying File To Original Folder
 						if($this->keep_original=='yes')
@@ -772,7 +919,7 @@
 						
 						
 						$this->log->TemplogData .= "\r\n\r\nTime Took : ";
-						$this->log->TemplogData .= $this->total_time.' seconds'."\r\n\r\n";
+						$this->log->TemplogData .= $this->totalTime.' seconds'."\r\n\r\n";
 						
 					
 
@@ -783,8 +930,6 @@
 						
 						$this->log->writeLine("Conversion Completed", $this->log->TemplogData , true );
 						//$this->create_log_file();
-						
-						break;
 					}
 				}
 			}
