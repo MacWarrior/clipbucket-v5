@@ -184,7 +184,7 @@
 		* @return : { array } { $responseData } { an array with response according to params }
 		*/
 
-		public function extractVideoDetails( $filePath = false, $durationOnly = false ) {
+		private function extractVideoDetails( $filePath = false, $durationOnly = false ) {
 			
 			if ( $filePath ) {
 				$fileFullPath = $filePath;
@@ -410,7 +410,7 @@
 		* Function used to log video info
 		*/
 
-		function logFileInfo() {
+		private function logFileInfo() {
 			$details = $this->inputDetails;
 			if ( is_array( $details ) ) {
 				foreach( $details as $name => $value ) {
@@ -588,6 +588,44 @@
 		}
 
 		/**
+		* @Reason : this funtion is used to rearrange required resolution for conversion 
+		* @params : { resolutions (Array) , ffmpeg ( Object ) }
+		* @date : 23-12-2015
+		* return : refined reslolution array
+		*/
+		
+		private function reIndexReqResoloutions( $resolutions ) {
+			
+			$originalVideoHeight = $this->inputDetails['videoHeight'];
+			
+			// Setting threshold for input video to convert
+			$validDimensions = array(240,360,480,720,1080);
+			$inputVideoHeight = $this->getClosest( $originalVideoHeight, $validDimensions );
+
+			//Setting contidion to place resolution to first near to input video 
+			if ( $this->configs['gen'.$inputVideoHeight]  == 'yes' ) {
+				$finalRes[$inputVideoHeight] = $resolutions[$inputVideoHeight];
+			}
+
+			foreach ( $resolutions as $key => $value ) {
+				$videoWidth=(int)$value[0];
+				$videoHeight=(int)$value[1];	
+				if( $inputVideoHeight != $videoHeight && $this->configs['gen'.$videoHeight]  == 'yes' ) {
+					$finalRes[$videoHeight] = $value;	
+				}
+			}
+			
+			$revised_resolutions = $finalRes;
+
+			if ( $revised_resolutions ){
+				return $revised_resolutions;
+			} else {
+				return false;
+			}
+
+		}
+
+		/**
 		* This is where all begins and video conversion is initiated.
 		* This function then takes care of everything like setting resoloutions,
 		* generating thumbs and other stuff
@@ -648,7 +686,7 @@
 								$widthSetting = $thumbSize[0];
 								$dimensionSetting = $widthSetting.'x'.$heightSetting;
 
-								if( $key == 'original' ){
+								if( $key == 'original' ) {
 									$dimensionSetting = $key;
 									$dimensionIdentifier = $key;	
 								} else {
@@ -667,40 +705,40 @@
 							$this->TemplogData .= "\r\n Errot Occured : ".$e->getMessage()."\r\n";
 						}
 
-						exit("TADA");
+						
 						$this->TemplogData .= "\r\n ====== End : Thumbs Generation ======= \r\n";
 						$this->log->writeLine("Thumbs Files", $this->TemplogData , true );
 						
 						$hr = $this->configs['high_res'];
-						$this->configs['video_width'] = $res[$nr][0];
+						$this->configs['videoWidth'] = $res[$nr][0];
 						$this->configs['format'] = 'mp4';
-						$this->configs['video_height'] = $res[$nr][1];
-						$this->configs['hq_video_width'] = $res[$hr][0];
-						$this->configs['hq_video_height'] = $res[$hr][1];
+						$this->configs['videoHeight'] = $res[$nr][1];
+						$this->configs['hqVideoWidth'] = $res[$hr][0];
+						$this->configs['hqVideoHeight'] = $res[$hr][1];
 						$orig_file = $this->inputFile;
 						
 						// setting type of conversion, fetching from configs
-						$this->resolutions = $this->configs['cb_combo_res'];
+						$this->resolutions = $this->configs['cbComboRes'];
 
 						$res169 = $this->res169;
 						switch ($this->resolutions) {
 							case 'yes': {
-								$res169 = $this->reindex_required_resolutions($res169);
+								$res169 = $this->reIndexReqResoloutions($res169);
 								
 								$this->ratio = $ratio;
 								foreach ($res169 as $value) 
 								{
-									$video_width=(int)$value[0];
-									$video_height=(int)$value[1];
+									$videoWidth=(int)$value[0];
+									$videoHeight=(int)$value[1];
 
-									$bypass = $this->check_threshold($this->input_details['video_height'],$video_height);
+									$bypass = $this->check_threshold($this->input_details['videoHeight'],$videoHeight);
 									logData($bypass,'reindex');
-									if($this->input_details['video_height'] > $video_height-1 || $bypass)
+									if($this->input_details['videoHeight'] > $videoHeight-1 || $bypass)
 									{
-										$more_res['video_width'] = $video_width;
-										$more_res['video_height'] = $video_height;
-										$more_res['name'] = $video_height;
-										logData($more_res['video_height'],'reindex');
+										$more_res['videoWidth'] = $videoWidth;
+										$more_res['videoHeight'] = $videoHeight;
+										$more_res['name'] = $videoHeight;
+										logData($more_res['videoHeight'],'reindex');
 										$this->convert(NULL,false,$more_res);
 									
 									}
@@ -750,7 +788,6 @@
 					}
 				}
 			}
-
 		}
 	}
 
