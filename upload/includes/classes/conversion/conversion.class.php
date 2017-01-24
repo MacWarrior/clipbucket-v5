@@ -373,7 +373,8 @@
 		}
 
 		/** 
-		* Function used to check total time 
+		* Function used to check total time elapsed in video conversion process
+		* @action : saves time into $this->totalTime
 		*/
 		
 		function totalTime() {
@@ -398,7 +399,7 @@
 		* @param : INT duration
 		* @parma : rand
 		*/
-		 
+
 		private function ChangeTime( $duration, $rand = "" ) {
 			if( $rand != "" ) {
 				if( $duration / 3600 > 1 ) {
@@ -644,134 +645,147 @@
 			return $this->fileDirectory.'/'.$this->fileName;
 		}
 
-		private function convertVideo( $inputFile = false, $options = array(), $isHd = false ) {
-			$this->log->TemplogData = "";
-			$this->log->TemplogData .= "\r\n======Converting Video=========\r\n";
+		private function generateCommand($videoDetails = false, $isHd = false){
+			if($videoDetails){
 
-			if( $inputFile ){
-				
-				if( !empty( $options ) ){
-					$this->setOptions( $options );
-				}
-
-				$this->inputFile = $inputFile;
-
-				$this->outputFile = $this->videosDirPath . '/'. $this->options['outputPath'] . '/' . $this->getInputFileName( $inputFile );
-				$videoDetails = $this->inputDetails;
-				$this->output = new stdClass();
-				$this->output->videoDetails = $videoDetails;
-
-				if($videoDetails) {
-
-					//logData(json_encode($videoDetails));
-					$this->hdFile = "{$this->outputFile}-hd.{$this->options['format']}";
-					$out= shell_exec($this->ffmpegPath ." -i {$this->inputFile} -acodec copy -vcodec copy -y -f null /dev/null 2>&1");
-					$len = strlen($out);
-					$findme = 'Video';
-					$findme1 = 'fps';
-					$pos = strpos($out, $findme);
-					$pos = $pos + 48;
-					$pos1 = strpos($out, $findme1);
-					$bw = $len - ($pos1 - 5);
-					$rest = substr($out, $pos, -$bw);
-					$rest = ','.$rest;
-					$dura = explode(',',$rest);
-					$dura[1] = $dura[1].'x';
-					$dura = explode('x',$dura[1]);
-					if($dura[1] >= "720" || $videoDetails['video_height'] >= "720")
+				$result = shell_output("ffmpeg -version");
+				preg_match("/(?:ffmpeg\\s)(?:version\\s)?(\\d\\.\\d\\.(?:\\d|[\\w]+))/i", strtolower($result), $matches);
+				if(count($matches) > 0)
 					{
-						
-						$this->log->TemplogData .="\r\n\r\n=======Low Resolution Conversion=======\r\n\r\n";
-						$this->log->TemplogData .= "\r\n Sarting : Generating Low resolution video @ ".date("Y-m-d H:i:s")." \r\n";
-						$this->log->TemplogData .= "\r\n Converting Video SD File  \r\n";
-						$this->sdFile = "{$this->outputFile}-sd.{$this->options['format']}";
-						$fullCommand = $this->ffMpegPath . " -i {$this->inputFile}" . $this->generateCommand($videoDetails, false) . " {$this->sdFile}";
-						
+						$version = array_pop($matches);
+					}
+				$commandSwitches = "";
+				$videoRatio = substr($videoDetails['videoWhRatio'], 0, 3);
+				/*
+					Setting the aspect ratio of output video
+				*/
+					$aspectRatio = $videoDetails['videoWhRatio'];
+				if (empty($videoRatio)){
+					$videoRatio = $videoDetails['videoWhRatio'];
+				}
+				if($videoRatio>=1.7)
+				{
+					$ratio = 1.7;
+				}
+				elseif($videoRatio<=1.6)
+				{
+					$ratio = 1.6;
+				}
+				else
+				{
+					$ratio = 1.7;
+				}
+				$commandSwitches .= "";
 
-						//$this->logs->writeLine("command", $fullCommand);
-						$this->log->TemplogData .= "\r\n Command : ".$fullCommand." \r\n";
+				if(isset($this->options['videoCodec'])){
+					$commandSwitches .= " -vcodec " .$this->options['videoCodec'];
+				}
+				if(isset($this->options['audioCodec'])){
+					$commandSwitches .= " -acodec " .$this->options['audioCodec'];
+				}
+				/*
+					Setting Size Of output video
+				*/
+				if ($version == "0.9")
+				{
+					if($isHd)
+					{
+						$height_tmp = min($videoDetails['videoHeight'],720);
+						$width_tmp = min($videoDetails['videoWidth'],1280);
+						$defaultVideoHeight = $this->options['high_res'];
+						$size = "{$width_tmp}x{$height_tmp}";
+						$vpre = "hq";
+					}
+					else
+					{
+						$height_tmp = max($videoDetails['videoHeight'],360);
+						$width_tmp = max($videoDetails['videoWidth'],360);
+						$size = "{$width_tmp}x{$height_tmp}";
+						$vpre = "normal";
+					}
+				}
+				else
+					if($isHd)
+					{
+						$height_tmp = min($videoDetails['videoHeigt'],720);
+						$width_tmp = min($videoDetails['videoWidth'],1280);
+						$defaultVideoHeight = $this->options['highRes'];
+						$size = "{$width_tmp}x{$height_tmp}";
+						$vpre = "slow";
+					}else{
+						$defaultVideoHeight = $this->options['normalRes'];
+						$height_tmp = max($videoDetails['videoHeigt'],360);
+						$width_tmp = max($videoDetails['videoWidth'],360);
+						$size = "{$width_tmp}x{$height_tmp}";
 
-						$conversionOutput = $this->executeCommand($fullCommand);
-						$this->log->TemplogData .= "\r\n ffmpeg output : ".$conversionOutput." \r\n";
-
-						$this->log->TemplogData .= "\r\n outputFile : ".$this->sdFile." \r\n";
-						
-						//$this->logs->writeLine("MP4Box Conversion for SD", "Starting");
-						$this->log->TemplogData .= "\r\n Sarting : MP4Box Conversion for SD \r\n";
-						$fullCommand = $this->mp4BoxPath . " -inter 0.5 {$this->sdFile}  -tmp ".TEMP_DIR;
-						if (PHP_OS == "WINNT")
-						{
-							$fullCommand = str_replace("/","\\",$fullCommand);	
-						}
-						$this->log->TemplogData .= "\r\n MP4Box Command : ".$fullCommand." \r\n";
-						$output = $this->executeCommand($fullCommand);
-						$this->log->TemplogData .= "\r\n output : ".$output." \r\n";
-						
-						if (file_exists($this->sdFile))
-						{
-							$this->video_files[] =  'sd';
-							$this->sdFile1 = "{$this->outputFile}.{$this->options['format']}";
-							$path = explode("/", $this->sdFile1);
-							$name = array_pop($path);
-							$name = substr($name, 0, strrpos($name, "."));
-							$status = "Successful";
-							$this->log->TemplogData .= "\r\n Conversion Status : ".$status." @ ".date("Y-m-d H:i:s")." \r\n";
-							$this->log->writeLine("Converiosn Ouput",$this->log->TemplogData, true);
-							
-							$this->output_file = $this->sdFile;
-							$this->output_details = $this->get_file_info($this->output_file);
-							$this->log_ouput_file_info();
-						}
-						$this->log->TemplogData .="\r\n\r\n=======High Resolution Conversion=======\r\n\r\n";
-						$this->log->TemplogData .= "\r\n Sarting : Generating high resolution video @ ".date("Y-m-d H:i:s")."\r\n";
-
-						$this->log->TemplogData .= "\r\n Converting Video HD File   \r\n";
-						
-						$this->hdFile = "{$this->outputFile}-hd.{$this->options['format']}";
-						$log_file_tmp = TEMP_DIR."/".$this->file_name.".tmp";
-						$fullCommand = $this->ffMpegPath . " -i {$this->inputFile}" . $this->generateCommand($videoDetails, true) . " {$this->hdFile} > {$log_file_tmp}";
-					
-						$this->log->TemplogData .= "\r\n Command : ".$fullCommand." \r\n";
-						//logData(json_encode($fullCommand));
-						$conversionOutput = $this->executeCommand($fullCommand);
-						if(file_exists($log_file_tmp))
-						{
-							$data = file_get_contents($log_file_tmp);
-							unlink($log_file_tmp);
-						}
-						$this->log->TemplogData .= "\r\n ffmpeg output : ".$data." \r\n";
-
-						$this->log->TemplogData .= "\r\n Sarting : MP4Box Conversion for HD \r\n";
-						$fullCommand = $this->mp4BoxPath . " -inter 0.5 {$this->hdFile}  -tmp ".TEMP_DIR;
-						//logData(json_encode($fullCommand));
-						if (PHP_OS == "WINNT")
-						{
-							$fullCommand = str_replace("/","\\",$fullCommand);	
-						}
-						$this->log->TemplogData .= "\r\n MP4Box Command : ".$fullCommand." \r\n";
-						$output = $this->executeCommand($fullCommand);
-						$this->log->TemplogData .= "\r\n output : ".$output." \r\n";
-						if (file_exists($this->hdFile))
-						{
-							$this->video_files[] =  'hd';
-							$this->sdFile1 = "{$this->outputFile}.{$this->options['format']}";
-							$path = explode("/", $this->sdFile1);
-							$name = array_pop($path);
-							$name = substr($name, 0, strrpos($name, "."));
-							//logData(json_encode($this->sdFile1));
-							$status = "Successful";
-							$this->log->TemplogData .= "\r\n Conversion Status : ".$status." @ ".date("Y-m-d H:i:s")."\r\n";
-							$this->log->writeLine("Converiosn Ouput",$this->log->TemplogData, true);
-
-							$this->output_file = $this->hdFile;
-							$this->output_details = $this->get_file_info($this->output_file);
-							$this->log_ouput_file_info();
-						}
+						$vpre = "medium";
+					}
+					if ($version == "0.9")
+					{
+						$commandSwitches .= " -s {$size} -vpre {$vpre}";
+					}
+					else
+					{
+						$commandSwitches .= " -s {$size} -preset {$vpre}";
 					}
 
-					$this->log->TemplogData = "";
+				if(isset($this->options['format'])){
+					$commandSwitches .= " -f " .$this->options['format'];
 				}
+				
+				if(isset($this->options['videoBitrate'])){
+					$videoBitrate = (int)$this->options['videoBitrate'];
+					if($isHd){
+						$videoBitrate = (int)($this->options['videoBitrateHd']);
+						////logData($this->options);
+					}
+					$commandSwitches .= " -b:v " . $videoBitrate." -minrate ".$videoBitrate. " -maxrate ".$videoBitrate;
+				}
+				if(isset($this->options['audioBitrate'])){
+					$commandSwitches .= " -b:a " .$this->options['audioBitrate']." -minrate ".$this->options['audioBitrate']. " -maxrate ".$this->options['audioBitrate'];
+				}
+				if(isset($this->options['videoRate'])){
+					$commandSwitches .= " -r " .$this->options['videoRate'];
+				}
+				if(isset($this->options['audioRate'])){
+					$commandSwitches .= " -ar " .$this->options['audioRate'];
+				}
+				return $commandSwitches;
+			}
+			return false;
+		}
 
+		private function possibleQualities($originalFileDetails) {
+			$mainQualities = array('240','360','480','720','1080');
+
+			$finalQualities = array();
+			$currentVideoHeight = $originalFileDetails['videoHeight'];
+
+			if ( $currentVideoHeight > 700 ) {
+				$finalQualities[] = 'hd';
+				$finalQualities[] = 'sd';
+			} elseif  ( $currentVideoHeight > 200 && $currentVideoHeight < 700 ) {
+				$finalQualities[] = 'sd';
+			}
+
+			$incrementedCurrentHeight = $currentVideoHeight + 20;
+
+			foreach ( $mainQualities as $key => $quality ) {
+				if ( $quality <= $incrementedCurrentHeight ) {
+					$finalQualities[] = $quality;
+				}
+			}
+
+			return $finalQualities;
+		}
+
+		private function convertVideo( $inputFile = false, $options = array(), $isHd = false ) {
+
+			if( $inputFile ){
+				if( $this->inputDetails ) {
+					$videoDetails = $this->inputDetails;
+					$possibleQualities = $this->possibleQualities($videoDetails);
+				}
 			}
 		}
 
@@ -865,7 +879,7 @@
 						$this->configs['videoHeight'] = $res[$nr][1];
 						$this->configs['hqVideoWidth'] = $res[$hr][0];
 						$this->configs['hqVideoHeight'] = $res[$hr][1];
-						$orig_file = $this->inputFile;
+						$origFile = $this->inputFile;
 						
 						// setting type of conversion, fetching from configs
 						$this->resolutions = $this->configs['cbComboRes'];
@@ -899,7 +913,7 @@
 							case 'no':
 							default :
 							{
-								$this->convertVideo($orig_file);
+								$this->convertVideo($origFile);
 							}
 							break;
 						}
