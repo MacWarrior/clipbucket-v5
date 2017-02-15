@@ -1,5 +1,5 @@
 <?php
-		require'../includes/admin_config.php';
+		include('../includes/config.inc.php');
 		
 		global $Upload;
 
