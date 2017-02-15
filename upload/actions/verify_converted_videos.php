@@ -1,4 +1,6 @@
 <?php
+		require'../includes/admin_config.php';
+		
 		global $Upload;
 
 		// creates folders to hold files
