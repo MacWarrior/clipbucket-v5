@@ -870,6 +870,19 @@
 			return $eh->e($msg,$type,$id);
 		}
 	}
+
+	/**
+	* An easy function for developer erorrs and messages
+	* @param { string } { $error } { error to display }
+	* @param { string } { $state } { state for message e.g m : medium, l : low, c : critical }
+	*/
+
+	function deverr($erorr, $state = 'l') {
+		global $eh;
+		if (!empty($erorr)) {
+			return $eh->deverr($erorr, $state);
+		}
+	}
 	
 	/**
 	* Function used to get subscription template
@@ -902,7 +915,7 @@
 	* @param : { string } { $msg } { pex by default, message to exit with }
 	*/
 	function pex($text,$msg="PeX") {
-		pr($text);
+		pr($text,true);
 		exit($msg);
 	}
 
@@ -1421,7 +1434,7 @@
 	*/
 	function error_list() {
 		global $eh;
-		return $eh->error_list;
+		return $eh->error_list();
 	}
 
 	/**

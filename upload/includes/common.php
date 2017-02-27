@@ -62,6 +62,12 @@
 		
 		//IGNORE CB ERRORS
 		$ignore_cb_errors = FALSE;		
+		$developer_errors = false;
+
+		if (defined('DEVELOPMENT_MODE') && DEVELOPMENT_MODE) {
+			$developer_errors = true;
+		}
+
 		session_start();
 	}
 
@@ -213,7 +219,7 @@
 	$formObj	= new formObj();
 	
 	$cbplugin	= new CBPlugin();
-	$eh			= new EH();
+	$eh			= new errorhandler();
 	
 	$sess		= new Session();
 	$cblog		= new CBLogs();
