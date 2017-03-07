@@ -97,7 +97,7 @@ Paid Subscription Module </a></div>
     <input type="hidden" name="mode" value="finish" />
 <?php
 	button_danger("Continue to Admin Area",' onclick="window.location=\''.BASEURL.'/admin_area\'" ');
-	button("Continue to ".config('site_title'),' onclick="window.location=\''.BASEURL.'\'" ');
+	button("Continue to ".display_clean(config('site_title')),' onclick="window.location=\''.BASEURL.'\'" ');
 ?>
 
 </form></div>

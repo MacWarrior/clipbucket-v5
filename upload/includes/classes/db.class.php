@@ -222,10 +222,6 @@ class Clipbucket_db
 
     function update($tbl,$flds,$vls,$cond,$ep=NULL) {
         global $__devmsgs;
-        # handling ( ' ) in title problem (ex: you can't)
-        if (strpos($vls[0], "'")) {
-            $vls[0] = str_replace("'", "&#39;", $vls[0]);
-        }
 
         $total_fields = count($flds);
         $count = 0;
