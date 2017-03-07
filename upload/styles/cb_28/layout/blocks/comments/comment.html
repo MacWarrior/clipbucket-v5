@@ -27,7 +27,7 @@
 						{/if}
 					</span>
 				</a>
-				<p>{display_clear($comment.comment|comment)}</p>
+				<p>{display_clean($comment.comment|comment)}</p>
 				{if userid()}
 				<div class="com-info-actions clearfix">
 					<span>{$comment.date_added|niceTime}</span>
