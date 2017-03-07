@@ -3,15 +3,13 @@
 {assign var=war value=$eh->warning_list}
 
 {if $err.0 neq '' || $err.1 neq ''}
-
 <div class="msg error">
     <ul>
-    {foreach from=$err item=show_msg}
-   		<li><img src="{$imageurl}/cross.png" />{$show_msg}</li>
-    {/foreach}
+        {foreach from=$err item=show_msg}
+            <li><img src="{$imageurl}/cross.png" />{$show_msg}</li>
+        {/foreach}
     </ul>
 </div>
-
 {/if}
 
 {if $msg.0 neq ''}
