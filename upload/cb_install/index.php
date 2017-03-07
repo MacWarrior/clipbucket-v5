@@ -1,5 +1,4 @@
 <?php
-
 	define("THIS_PAGE","cb_install");
 	include('clipbucket.php');
 	include("upgradeable.php");
@@ -62,5 +61,3 @@
  
  include("functions.php");
  include('modes/body.php');
- 
-?>

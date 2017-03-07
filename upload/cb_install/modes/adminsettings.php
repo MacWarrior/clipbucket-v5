@@ -59,24 +59,17 @@ echo '<br><span class="glyphicon glyphicon-ok"  style="color:#fff"></span><span 
     
     <div class="field" style="margin-top:-310px;">
     <label class="grey-text" for="username">Admin username</label>
-    <input name="username" type="text" id="username" class="form-control"  value="admin">
+    <input name="username" type="text" id="username" class="form-control" value="admin">
     <p class="grey-text font-size" style="margin-top:0px;">Username can have only alphanumeric characters, Underscores.</p>
     </div><br>
     <div class="field">
     <label class="grey-text" for="password">Admin Password</label>
-    <input name="password" type="password" id="password" class="form-control"  value="admin">
-    	<a href="javascript:void(0)" onclick="
-
-        var pass = password(8,true);
-        
-        $('#genPass').html(pass);
-        $('#password').val(pass);
-
-        " >Generate</a> | <strong>Current</strong> : <span id="genPass" style="color:#09c"><strong>admin</strong></span>
+    <input name="password" type="password" id="password" class="form-control" value="admin">
+    	<a href="javascript:void(0)" onclick="newpassword();" >Generate</a> | <strong>Current</strong> : <span id="genPass" style="color:#09c"><strong>admin</strong></span>
     </div><br>
     <div class="field">
     <label class="grey-text" for="email">Admin Email</label>
-    <input name="email" type="text" id="email" class="form-control"  value="admin@thiswebsite.com">
+    <input name="email" type="text" id="email" class="form-control" value="admin@thiswebsite.com">
     <p class="grey-text font-size" style="margin-top:0px;">Double check your email address before continuing.</p>
     </div>
     

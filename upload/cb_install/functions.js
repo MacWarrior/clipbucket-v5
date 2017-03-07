@@ -1,7 +1,6 @@
 var p = 'ajax.php';
 var img = '<img src="images/loading.gif" />';
 
-
 function dbconnect()
 {
 	$('#loading').html(img);
@@ -18,7 +17,6 @@ function dbconnect()
 		}
 	},"json");
 }
-
 
 function dodatabase(step)
 {
@@ -65,6 +63,14 @@ function password(length, special) {
   return password;
 }
 
+function newpassword()
+{
+    var pass = password(8,true);
+
+    $('#genPass').html(pass);
+    $('#password').val(pass);
+}
+
 function register(email,website)
 {
 	$('#loadingReg').html(img);
@@ -76,6 +82,4 @@ function register(email,website)
 		success:function(data){$('#installation').submit()}
 		
 	})
-	
-
 }
