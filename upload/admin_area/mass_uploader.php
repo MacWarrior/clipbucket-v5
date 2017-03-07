@@ -120,14 +120,9 @@ if(isset($_POST['mass_upload_video']))
 		
 		if( error() )
 		{
-			$error_lists[] = "Unable to upload \"".$file_arr['title']."\"";
-			$errors = error();
-			foreach($errors as $e)
-				$error_lists[] = $e;
-			
-			$eh->flush_error();
+			e('Unable to upload "'.$file_arr['title'].'"', 'e');
 		}else{
-			e("\"".$file_arr['title']."\" Has been uploaded successfully","m");
+			e('"'.$file_arr['title'].'" Has been uploaded successfully','m');
 		}
 		
 		if($vid)

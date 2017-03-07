@@ -65,7 +65,6 @@ class Upload{
 		
 		if(!$array)
 			$array = $_POST;
-			
 
 		// $_POST['embed_code'] = htmlspecialchars($_POST['embed_code']);
 		$this->validate_video_upload_form($array,TRUE);
@@ -103,8 +102,7 @@ class Upload{
 				
 				if($field['use_func_val'])
 					$val = $field['validate_function']($val);
-				
-				
+
 				if(!empty($field['db_field']))
 				$query_field[] = $field['db_field'];
 				
