@@ -10,40 +10,49 @@
 * @author : Arslan Hassan, Saqib Razzaq
 * @modified : { January 19th, 2017 } { Saqib Razzaq } { Added developer related functions, documented }
 */
- 
-
-class errorhandler extends ClipBucket {
-
+class errorhandler extends ClipBucket
+{
 	public $error_list = array();
 	public $message_list = array();
-	public $warning_list = array(); 
-	/**
-	* Function used to add new Error
-	*/
+	public $warning_list = array();
 
+    /**
+     * Function used to add new Error
+     * @param null $message
+     * @param null $id
+     */
 	private function add_error($message=NULL,$id=NULL) {
 		global $ignore_cb_errors;
 		//if id is set, error will be generated from error message list
 		if(!$ignore_cb_errors)
 			$this->error_list[] = $message;
-			$this->error_list['all_errors']['user_error']['critical_priority'][] = $message;
+        $this->error_list['all_errors']['user_error']['critical_priority'][] = $message;
 	}
 
-	
-	/**
-	* Function usd to add new warning
-	*/
-	
+	public function get_error()
+    {
+        return $this->error_list['all_errors']['user_error']['critical_priority'];
+    }
+
+    /**
+     * Function usd to add new warning
+     * @param null $message
+     * @param null $id
+     */
 	private function add_warning($message=NULL,$id=NULL) {
 		$this->warning_list[] = $message;
 		$this->user_errors['medium_priority'][] = $message;
 		$this->error_list['all_errors']['user_error']['medium_priority'][] = $message;
 	}
-	
+
+    public function get_warning()
+    {
+        return $this->error_list['all_errors']['user_error']['medium_priority'];
+    }
+
 	/**
 	* Function used to get error list
 	*/
-	 
 	public function error_list() { 
 	 	global $developer_errors;
 	 	if ($developer_errors) {
@@ -58,31 +67,35 @@ class errorhandler extends ClipBucket {
 	 		return $error_list;
 	 	}
 	 }
-	 
+
 	/**
 	* Function used to flush errors
 	*/
-	
 	public function flush_error() {
 		$this->error_list = '';
 	}
-	  
-	/**
-	* Functio nused to add message_list
-	*/
 
+    /**
+     * Function used to add message_list
+     * @param null $message
+     * @param null $id
+     */
 	public function add_message($message=NULL,$id=NULL) {
 		global $ignore_cb_errors;
 		//if id is set, error will be generated from error message list
 		if(!$ignore_cb_errors)
 			$this->message_list[] = $message;
-			$this->user_errors['lower_priority'][] = $message;
+        $this->user_errors['all_errors']['user_error']['lower_priority'][] = $message;
 	}
-	   
+
+    public function get_message()
+    {
+        return $this->error_list['all_errors']['user_error']['lower_priority'];
+    }
+
 	/**
 	* Function used to get message list
 	*/
-
 	public function message_list() {
 		return $this->message_list;
 	}
@@ -90,7 +103,6 @@ class errorhandler extends ClipBucket {
 	/**
 	* Function used to flush message
 	*/
-	
 	public function flush_msg() {
 		$this->message_list = '';
 	}
@@ -98,7 +110,6 @@ class errorhandler extends ClipBucket {
 	/**
 	* Function used to flush warning
 	*/
-
 	public function flush_warning() {
 		$this->warning_list = '';
 	}
@@ -106,50 +117,47 @@ class errorhandler extends ClipBucket {
 	/**
 	* Function used to flush , both messages and error
 	*/
-	
 	public function flush() {
 		$this->flush_msg();
 		$this->flush_error();
 		$this->flush_warning();
 	}
-	
-	/**
-	* Function for throwing errors that users can see
-	* @param : { string } { $message } { error message to throw }
-	* @param : { string } { $type } { type of error message e.g m : message, e : error, w : warning }
-	* @author : Arslan Hassan
-	* 
-	* @return : { array } { $this->error_list } { an array of all currently logged errors }
-	*/
 
+    /**
+     * Function for throwing errors that users can see
+     * @param : { string } { $message } { error message to throw }
+     * @param string $type
+     * @return array : { array } { $this->error_list } { an array of all currently logged errors }
+     * @author : Arslan Hassan
+     *
+     */
 	function e($message = NULL, $type ='e') {
-		
-		switch($type) {
+		switch($type)
+        {
 			case 'm':
 			case 1:
 			case 'msg':
 			case 'message':
-			$this->add_message($message);
-			break;
-			
+                $this->add_message($message);
+                break;
+
 			case 'e':
 			case 'err':
 			case 'error':
 				$this->add_error($message);
-			break;
-			
+			    break;
+
 			case 'w':
 			case 2:
 			case 'war':
 			case 'warning':
 				$this->add_warning($message);
-			break;
-			
+			    break;
+
 			default:
 				$this->error_list($message);
-			break;
+			    break;
 		}
-		
 		return $this->error_list;
 	}
 
@@ -161,20 +169,21 @@ class errorhandler extends ClipBucket {
 	* @author : Saqib Razzaq
 	* @since : 19th January, 2017
 	*/
-
 	private function addAll($error, $state, $type) {
 		return $this->error_list['all_errors'][$type][$state][] = $error;
 	}
 
-	/**
-	* Handles developer related errors to ease up debugging process
-	* @param : { mixed } { $error } { error to be listed }
-	* @param : { string } { $state } { state for message e.g m : medium, l : low, c : critical }
-	* @author : Saqib Razzaq
-	* @since : 19th January, 2017
-	*/
-
-	public function deverr($error, $state = 'm') {
+    /**
+     * Handles developer related errors to ease up debugging process
+     * @param $error
+     * @param string $state
+     * @internal param $ : { mixed } { $error } { error to be listed } { $error } { error to be listed }
+     * @internal param $ : { string } { $state } { state for message e.g m : medium, l : low, c : critical } { $state } { state for message e.g m : medium, l : low, c : critical }
+     * @author : Saqib Razzaq
+     * @since : 19th January, 2017
+     */
+	public function deverr($error, $state = 'm')
+    {
 		global $developer_errors;		
 		switch ($state) {
 			case 'l':
@@ -205,11 +214,7 @@ class errorhandler extends ClipBucket {
 			$thrown_error['file_line'] = $calling_line;
 			
 			$this->addAll($thrown_error, $state, 'developer_errors');
-			
 		}
 	}
 	
 }
-
-
-?>
