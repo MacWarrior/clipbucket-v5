@@ -4046,8 +4046,8 @@ class userquery extends CBCategory{
             if( $limit )
                 $query .= " LIMIT  ".$limit;
 
-    //$result = $db->select(tbl('users'),'*',$cond,$limit,$order);
-            echo $query;
+    		//$result = $db->select(tbl('users'),'*',$cond,$limit,$order);
+            //echo $query;
             $result = select( $query );
         }
 		
