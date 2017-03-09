@@ -3849,8 +3849,8 @@ class userquery extends CBCategory{
 	{
 		global $db;
 		
-		$limit = isset($params['limit']);
-		$order = isset($params['order']);
+		$limit = $params['limit'];
+		$order = $params['order'];
 		
 		$cond = "";
 		if(!has_access('admin_access',TRUE) && !$force_admin)
@@ -4023,7 +4023,7 @@ class userquery extends CBCategory{
 
 
                 
-		if(isset($params['count_only']) && !$params['count_only'])
+		if(!isset($params['count_only']) && !$params['count_only'])
         {
 
             $fields = array(
@@ -4047,7 +4047,7 @@ class userquery extends CBCategory{
                 $query .= " LIMIT  ".$limit;
 
     //$result = $db->select(tbl('users'),'*',$cond,$limit,$order);
-
+            echo $query;
             $result = select( $query );
         }
 		
