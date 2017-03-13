@@ -308,7 +308,7 @@ class ClipBucket
         global $userquery;
         $per = $userquery->get_user_level(userid());
         if ($per['web_config_access'] == "yes")
-            $NewMenu['Stats And Configurations'] = array(
+            $NewMenu['General Configurations'] = array(
                 'Reports &amp; Stats' => 'reports.php',
                 'Website Configurations' => 'main.php',
                 'Email Settings' => 'email_settings.php',
