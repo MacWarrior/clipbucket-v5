@@ -74,6 +74,8 @@
 			var totalFiles = 0;
 			var baseurl = '{$baseurl}';
 			var config_for_mp4 = '{$config_for_mp4}';
+			var defaultCategory = "{$cbvid->get_default_cid()}";
+			alert(defaultCategory);
 			if('{$uploaderDetails.uploadScriptPath}'!=''){
 			var uploadurl = '{$uploaderDetails.uploadScriptPath}';
 			}else{
@@ -159,7 +161,12 @@
 						$(oneUploadForm).find("input[name='title']").val(files[i].name.slice(0, -4));
 
 						$(oneUploadForm).find("textarea#desc").val(files[i].name.slice(0, -4));
-						$(oneUploadForm).find("input[name='category[]']:first").attr('checked', 'checked');
+						var categories = $(oneUploadForm).find("input[name='category[]']");
+						$.each(categories,function(i,v){ 
+							if ($(this).val() == defaultCategory ){ 
+								$(this).attr('checked', 'checked');
+							}; 
+						});
 						wrapperDiv.appendChild(oneUploadForm);   
 						uploadForms.push(wrapperDiv);
 					}
