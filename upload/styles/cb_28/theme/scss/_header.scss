@@ -449,6 +449,65 @@
 		}
 	}
 }
+
+.cd-popup{
+	position:fixed;
+	visibility:hidden;
+	height:100%;
+	width:100%;
+	opacity:0;
+	background:$pop-bg;
+	top:0;
+	.cb-popup-container {
+		position:relative;
+		width:50%;
+		max-width:680;
+		margin:8em auto;
+		text-align:center;
+		background:$white;
+		z-index:1000;
+		padding:10px;
+		.modal-inset{
+			.col{
+				padding:0;
+			}
+		}
+	}
+	.cd-popup-close {
+	 	position: absolute;
+	  	top: 8px;
+	  	right: 8px;
+	  	width: 30px;
+	  	height: 30px;
+	  	font-size:0;
+		&:before,
+		&:after {
+			content: '';
+		  	position: absolute;
+		  	top: 12px;
+		  	width: 14px;
+		  	height: 3px;
+		  	background-color:$white;
+		}
+		&:before{
+			-webkit-transform: rotate(45deg);
+			left: 8px;
+		}
+		&:after {
+			-webkit-transform: rotate(-45deg);
+			right: 8px;
+		}
+	}
+}
+.is-visible{
+	visibility:visible;
+	opacity:1;
+	transition:opacity 0.3s 0s, visibility 0s 0s;
+	z-index:100;
+	.cb-popup-container{
+		@include  myanimation ($name:horizontal, $duration:1.0s, $ease:ease);
+	}
+}
 @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
 	/* IE10+ CSS styles go here */
 	#header{
@@ -890,5 +949,13 @@
 			}
 		}
 	}
+}
+@-webkit-keyframes horizontal {
+0%{
+  	transform: translateX(-90px);
 
+}
+100% { 
+  	transform: translateX(0px);
+  }
 }

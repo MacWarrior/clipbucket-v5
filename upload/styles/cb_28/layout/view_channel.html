@@ -205,7 +205,7 @@
 			{/if}
 			{$popular_users = get_users(['order'=>'profile_hits DESC limit 5'])}
 			{if $popular_users}
-			<h2>{lang code="popular_users"}</h2>
+			<h2>{lang code="Popular Users"}</h2>
 			<div class="clearfix sidebar-channels">
 				{foreach $popular_users as $popular}
 				{if $popular.username == $smarty.get.user} 
