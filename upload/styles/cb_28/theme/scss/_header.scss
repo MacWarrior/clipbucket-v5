@@ -505,7 +505,7 @@
 	transition:opacity 0.3s 0s, visibility 0s 0s;
 	z-index:100;
 	.cb-popup-container{
-		@include  myanimation ($name:horizontal, $duration:1.0s, $ease:ease);
+		@include  myanimation ($name:horizontal, $duration:0.6s, $ease:ease);
 	}
 }
 @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
@@ -951,11 +951,12 @@
 	}
 }
 @-webkit-keyframes horizontal {
-0%{
-  	transform: translateX(-90px);
-
-}
-100% { 
-  	transform: translateX(0px);
+  0% {
+    transform: scale(0.1);
+    opacity:0;
+  }
+  100% {
+    transform: scale(1.0);
+    opacity:1;
   }
 }
