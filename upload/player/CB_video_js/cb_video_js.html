@@ -78,7 +78,7 @@
 
 
 {$default_quality = get_cbvjs_quality_type($video_files)}
-<video playsinline id="cb_video_js" class="video-js vjs-default-skin" height="{$height}" width="{$width}" poster="{getThumb vdetails=$vdata size=768x432}" >
+<video playsinline id="cb_video_js_{$vdata.videoid}" class="video-js vjs-default-skin" height="{$height}" width="{$width}" poster="{getThumb vdetails=$vdata size=768x432}" >
 
     {foreach $video_files as $file}
     {$quality = get_cbvjs_quality($file)}
@@ -242,7 +242,7 @@
 
 	}
 	//Initializing
-	var cb_player = videojs('cb_video_js', cb_player_setup , cb_vjs_callback);
+	var cb_player = videojs('cb_video_js_'+vid_id, cb_player_setup , cb_vjs_callback);
     
 
     

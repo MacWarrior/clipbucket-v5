@@ -5,7 +5,7 @@
 		this.baseurl = baseurl;
 		this.imageurl = "";
 		this.page = this.baseurl+'/ajax.php';
-		this.loading_img = "<img style='vertical-align:middle' src='" + this.imageurl + "/ajax-loader.gif'>";
+		this.loading_img = "<img allign='center' style='vertical-align:middle' src='" + imageurl + "/ajax-loader-big.gif'>";
 		this.loading = this.loading_img+" Loading...";
 		this.download = 0;
 		this.total_size = 0;
@@ -2177,9 +2177,48 @@
 				break;
 			}
 		};
+
+		this.getModalVideo = function(video_id){
+			var _thisLoading = this.loading_img;
+			console.log(loading);
+			$.ajax({
+				type: 'post',
+				url: baseurl+"/ajax/commonAjax.php",
+				data: { videoid : video_id , mode : "get_video"},
+				dataType: 'json',
+				beforeSend: function (data) {
+					$(".my-modal-content").html('<div align="center" style="color:#fff">'+loading+'</div>');
+					$(".my-modal-content").attr("id","");
+		    	},
+				success: function (data) {
+					if (data.success){
+						var videoLink = data.video_link;
+						var vData = data.video_details;
+						$(".my-modal-content").attr("id",vData.videoid);
+						$(".my-modal-content").html(data.video);
+						
+						var cbModalPlayer = $(document).find("#cb_video_js_"+vData.videoid+"_html5_api"); 
+						var cbModalPlayer = cbModalPlayer[0];
+						var isPlaying = cbModalPlayer.paused;
+
+						var modalPlayerInterval = setInterval(function(){ 
+							cbModalPlayer.play();
+							var cbModalPlayerCont = $(document).find("#cb_video_js_"+vData.videoid); 
+							$(cbModalPlayerCont).find(".uploaderName").append('<a href="'+videoLink+'" title="Watch Video Page" style="margin:-2px 5px 0 0;"><i class="glyphicon glyphicon-log-in pull-right" style="font-size:20px;color:#fff;"></i></a>'); 
+							if (isPlaying){
+								clearInterval(modalPlayerInterval);
+							}
+						}, 300);
+					}else if(data.failure){
+						$(".my-modal-content").html('<div class="alert alert-warning">'+data.message+'</div>');
+					}
+		    	}
+			});
+		}
 	};
 
 	window._cb = new _cb();
 	window._cb.setRemoteId();
 
 })(window);
+
