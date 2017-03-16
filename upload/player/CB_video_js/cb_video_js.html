@@ -243,9 +243,16 @@
 	}
 	//Initializing
 	var cb_player = videojs('cb_video_js_'+vid_id, cb_player_setup , cb_vjs_callback);
-    
 
-    
+	$(document).ready(function() {
+		new_player_height(vid_id);
+		$(".video-js").on("contextmenu",function() {
+	       return false;
+	    }); 	
+	});
+	$(window).resize(function(event) {
+		new_player_height(vid_id);
+	});
 
 </script>
 
