@@ -2180,14 +2180,13 @@
 
 		this.getModalVideo = function(video_id){
 			var _thisLoading = this.loading_img;
-			console.log(loading);
 			$.ajax({
 				type: 'post',
 				url: baseurl+"/ajax/commonAjax.php",
 				data: { videoid : video_id , mode : "get_video"},
 				dataType: 'json',
 				beforeSend: function (data) {
-					$(".my-modal-content").html('<div align="center" style="color:#fff">'+loading+'</div>');
+					$(".my-modal-content").html('<div align="center" style="color:#fff;font-size:25px;padding:10px 10px 10px 10px;">'+loadingImg+'</div>');
 					$(".my-modal-content").attr("id","");
 		    	},
 				success: function (data) {
@@ -2205,6 +2204,22 @@
 							var isPlaying = !cbModalPlayer.paused;
 							var cbModalPlayerCont = $(document).find("#cb_video_js_"+vData.videoid); 
 							$(cbModalPlayerCont).find(".uploaderName").append('<a href="'+videoLink+'" title="Watch Video Page" style="margin:-2px 5px 0 0;"><i class="glyphicon glyphicon-log-in pull-right" style="font-size:20px;color:#fff;"></i></a>'); 
+							
+							// Making Videos paused if any other video playing in Dom 
+							var domVideos = $(document).find("video");
+							if (domVideos.length > 0){
+
+								for (var i = 0 ; i < domVideos.length ; i++) {
+									var id = $(domVideos[i]).attr("id");
+									var video_id = id.split("_");
+									video_id = video_id[3];
+									if (vData.videoid != video_id){
+										$(domVideos[i])[0].pause();
+									}
+								}
+
+							}
+
 							if (isPlaying){
 								clearInterval(modalPlayerInterval);
 							}
@@ -2214,6 +2229,16 @@
 					}
 		    	}
 			});
+		}
+
+		this.getPlayerEl =  function(videoid){
+			var videoId = videoid;
+			var player = $(document).find(".cb_video_js_"+videoId+"-dimensions");
+			if (player){
+				return player[0];
+			}else{
+				return false;
+			}
 		}
 	};
 

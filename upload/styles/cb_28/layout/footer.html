@@ -95,10 +95,14 @@
 			}
 		});
 	//close popup when clicking the esc keyboard button
-		$(document).keyup(function(event){
+		$(document).keydown(function(event){
 			if(event.which=='27'){
-			$('.cd-popup').removeClass('is-visible');
-			$(".my-modal-content").html("");
+				var videoId = $(".my-modal-content").attr("id");
+				var cbPlayer = _cb.getPlayerEl(videoId);
+				if (!$(cbPlayer).hasClass("vjs-fullscreen")){
+					$('.cd-popup').removeClass('is-visible');
+					$(".my-modal-content").html("");
+				}
 			}
 		});
 	});
