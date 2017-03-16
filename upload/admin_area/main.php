@@ -243,7 +243,8 @@ if(isset($_POST['update'])){
 					'vbrate_hd',
 					'store_guest_session',
 					'delete_mass_upload',
-					'stay_mp4'
+					'stay_mp4',
+					'popup_video'
 					
 					);
 	

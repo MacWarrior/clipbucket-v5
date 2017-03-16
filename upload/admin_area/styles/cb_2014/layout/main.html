@@ -1142,6 +1142,17 @@
             <input class="form-control" name="videos_items_uvid_page" type="text" id="videos_items_uvid_page" value="{$row.videos_items_uvid_page}" size="6" maxlength="3" />
             - 'user videos' page
         </div>
+        <div class="col-md-4">
+            <label for="videos_items_uvid_page">Home Page Popup Video</label>
+            <select class="form-control" name="popup_video">
+                <option value="no" {if $row.popup_video == "no"}
+                selected="selected"
+                {/if}>No</option>
+                <option value="yes" {if $row.popup_video == "yes"}
+                selected="selected"
+                {/if}>Yes</option>
+            </select>
+        </div>
         </div>
     </div>
 
