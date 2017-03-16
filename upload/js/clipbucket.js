@@ -2199,10 +2199,10 @@
 						
 						var cbModalPlayer = $(document).find("#cb_video_js_"+vData.videoid+"_html5_api"); 
 						var cbModalPlayer = cbModalPlayer[0];
-						var isPlaying = cbModalPlayer.paused;
 
 						var modalPlayerInterval = setInterval(function(){ 
 							cbModalPlayer.play();
+							var isPlaying = !cbModalPlayer.paused;
 							var cbModalPlayerCont = $(document).find("#cb_video_js_"+vData.videoid); 
 							$(cbModalPlayerCont).find(".uploaderName").append('<a href="'+videoLink+'" title="Watch Video Page" style="margin:-2px 5px 0 0;"><i class="glyphicon glyphicon-log-in pull-right" style="font-size:20px;color:#fff;"></i></a>'); 
 							if (isPlaying){
