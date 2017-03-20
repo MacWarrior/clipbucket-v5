@@ -15,7 +15,6 @@
 class CBPhotos
 {
 	var $action = '';
-	var $action_ = '';
 	var $collection = '';
 	var $p_tbl = "photos";
 	var $i_tbl = "collection_items";
@@ -260,7 +259,7 @@ class CBPhotos
 	{
 		$this->search = new cbsearch;
 		$this->search->db_tbl = "photos";
-		$this->search->use_match_method = TRUE;
+		$this->search->use_match_method = FALSE;
 		
 		$this->search->columns = array(
 			array("field"=>"photo_title","type"=>"LIKE","var"=>"%{KEY}%"),
@@ -572,11 +571,6 @@ class CBPhotos
 		{
             $query = $main_query;
             if ( $cond ) {
-
-            	if (!has_access("admin_access")) {
-            		// get collections that are either not private or created by logged in user
-					$cond .= " AND collections.broadcast != 'private' OR collections.userid = 'userid()'";
-            	}
                 $query .= " WHERE ".$cond;
             }
 
@@ -585,7 +579,7 @@ class CBPhotos
 
             $result = select( $query );
 		}
-
+		
 		if($p['show_related'])
 		{
             $query = $main_query;
@@ -620,7 +614,7 @@ class CBPhotos
             $query .= $limit;
 
             $result = select( $query );
-			
+									  
 			// We found nothing from TITLE of Photos, let's try TAGS
 			if($db->num_rows == 0)
 			{
