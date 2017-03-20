@@ -3179,13 +3179,13 @@ class userquery extends CBCategory{
             lang('title_crt_new_msg')=> cblink(array('name'=>'compose_new')),
         );
 
-        if(isSectionEnabled('channels'))
-            $array[lang('contacts')] =  array
-            (
-                lang('com_manage_contacts') => 'manage_contacts.php?mode=manage',
-                lang('add_contact_list') => 'manage_contacts.php?mode=new_group',
-            );
-
+        // if(isSectionEnabled('channels'))
+        //     $array[lang('contacts')] =  array
+        //     (
+        //         lang('com_manage_contacts') => 'manage_contacts.php?mode=manage',
+        //         lang('add_contact_list') => 'manage_contacts.php?mode=new_group',
+        //     );
+		
         if(count($this->user_account)>0)
         {
             foreach($this->user_account as $key => $acc)
@@ -3200,7 +3200,7 @@ class userquery extends CBCategory{
            // pex($array,true);
             //$array = array_merge($array,$this->user_account);
         }
-
+     
         return $array;
     }
 	
