@@ -15,6 +15,7 @@
 class CBPhotos
 {
 	var $action = '';
+	var $action_ = '';
 	var $collection = '';
 	var $p_tbl = "photos";
 	var $i_tbl = "collection_items";
