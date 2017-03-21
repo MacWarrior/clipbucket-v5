@@ -312,6 +312,7 @@ class ClipBucket
                 'Reports &amp; Stats' => 'reports.php',
                 'Website Configurations' => 'main.php',
                 'Email Settings' => 'email_settings.php',
+                'Email Tester' => 'email_tester.php',
                 'Language Settings' => 'language_settings.php',
                 'Add New Phrases' => 'add_phrase.php',
                 'Manage Pages' => 'manage_pages.php',
