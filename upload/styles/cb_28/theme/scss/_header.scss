@@ -688,6 +688,7 @@
 		display: block !important;
 	}
 }
+
 @media only screen and (max-width: 767px) {
 	.navbar-header{
 		padding: 10px 20px 10px 10px;
@@ -949,6 +950,15 @@
 			}
 		}
 	}
+}
+
+@media only screen and (max-width:767px) {
+	.cd-popup{
+		.cb-popup-container {
+			width:90% ;
+		}
+	} 
+
 }
 @-webkit-keyframes horizontal {
   0% {
