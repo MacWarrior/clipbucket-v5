@@ -672,14 +672,18 @@ ul.mainTabs{
 
 
 .footer {
-    width: 100%;
-    bottom: 0;
-    background: #2B2B2B;
+    background: #2b2b2b none repeat scroll 0 0;
+    color: #fff;
     font-size: 13px;
     line-height: 20px;
-    color: #fff;
+    padding: 8px 6px;
+    float: left;
+    width: 100%;
     z-index: 5;
-    padding:8px 6px
+    position:absolute;
+    bottom:-5%;
+    left:0;
+
 }
 .footer_grey_bar{
     padding:5px;
