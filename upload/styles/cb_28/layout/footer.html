@@ -109,9 +109,18 @@
 			if(event.which=='27'){
 				var videoId = $(".my-modal-content").attr("id");
 				var cbPlayer = _cb.getPlayerEl(videoId);
+				
 				if (!$(cbPlayer).hasClass("vjs-fullscreen")){
 					$('.cd-popup').removeClass('is-visible');
 					$(".my-modal-content").html("");
+					var modalPlayerInterval = setInterval(function(){ 
+						var player = $(cbPlayer).find('video');
+						var isPlaying = !$(player)[0].paused;
+						if (isPlaying){
+							$(player)[0].pause()
+							clearInterval(modalPlayerInterval);
+						}
+					},100);
 				}
 			}
 		});
