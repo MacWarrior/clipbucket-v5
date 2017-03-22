@@ -2203,10 +2203,10 @@
 							
 							if (!navigator.userAgent.match(/Android/i)){
 								cbModalPlayer.play();
+							    $(cbModalPlayerCont).find(".uploaderName").append('<a href="'+videoLink+'" title="Watch Video Page" style="margin:-2px 5px 0 0;"><i class="glyphicon glyphicon-log-in pull-right" style="font-size:20px;color:#fff;"></i></a>'); 
 							}
 							var isPlaying = !cbModalPlayer.paused;
 							var cbModalPlayerCont = $(document).find("#cb_video_js_"+vData.videoid); 
-							$(cbModalPlayerCont).find(".uploaderName").append('<a href="'+videoLink+'" title="Watch Video Page" style="margin:-2px 5px 0 0;"><i class="glyphicon glyphicon-log-in pull-right" style="font-size:20px;color:#fff;"></i></a>'); 
 							
 							// Making Videos paused if any other video playing in Dom 
 							var domVideos = $(document).find("video");
