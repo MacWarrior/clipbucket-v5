@@ -2201,10 +2201,9 @@
 
 						var modalPlayerInterval = setInterval(function(){ 
 							
-							if (navigator.userAgent.match(/Android/i)[0] != "Android"){
+							if (!navigator.userAgent.match(/Android/i)){
 								cbModalPlayer.play();
 							}
-
 							var isPlaying = !cbModalPlayer.paused;
 							var cbModalPlayerCont = $(document).find("#cb_video_js_"+vData.videoid); 
 							$(cbModalPlayerCont).find(".uploaderName").append('<a href="'+videoLink+'" title="Watch Video Page" style="margin:-2px 5px 0 0;"><i class="glyphicon glyphicon-log-in pull-right" style="font-size:20px;color:#fff;"></i></a>'); 
