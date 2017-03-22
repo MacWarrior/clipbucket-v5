@@ -789,6 +789,31 @@
 			}
 		}
 
+		public function generate_sprites(){
+			$this->log->writeLine("Genrating Video Sprite","Starting" );
+			try{
+
+				$interval = $this->inputDetails['duration'] / 10 ;
+				mkdir(SPRITES_DIR . '/' . $this->fileDirectory, 0777, true);				
+				$this->sprite_output = SPRITES_DIR.'/'.$this->outputDirectory.'/'.$this->fileName."%d.png";
+				
+				$command = $this->ffmpegPath." -i ".$this->input_file." -f image2 -s 168x105 -bt 20M -vf fps=1/".$interval." ".$this->sprite_output;
+				$this->TemplogData .= "\r\nSprite Command : ".$command."\r\n";
+				$this->TemplogData .= "\r\nOutput : ".$this->sprite_output."\r\n";
+				$this->exec($command);
+				$this->TemplogData .= "\r\n File : ".$this->sprite_file."\r\n";
+
+
+			}catch(Exception $e){
+
+				$this->TemplogData .= "\r\n Errot Occured : ".$e->getMessage()."\r\n";
+
+			}
+
+			$this->TemplogData .= "\r\n ====== End : Sprite Generation ======= \r\n";
+			$this->log->writeLine("End Sprite", $this->TemplogData , true );
+		}
+
 		/**
 		* This is where all begins and video conversion is initiated.
 		* This function then takes care of everything like setting resoloutions,
@@ -868,6 +893,8 @@
 						} catch(Exception $e) {
 							$this->TemplogData .= "\r\n Errot Occured : ".$e->getMessage()."\r\n";
 						}
+						//Genrating sprite for the video 
+						$this->generate_sprites();
 
 						
 						$this->TemplogData .= "\r\n ====== End : Thumbs Generation ======= \r\n";

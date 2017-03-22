@@ -46,6 +46,7 @@ class FFMpeg{
 	public $big_thumb_dim = "";
 	public $cb_combo_res = "";
 	public $res_configurations = "";
+	public $sprite_count = 0;
 	public $thumbs_res_settings = array(
 		"original" => "original",
 		'105' => array('168','105'),
@@ -947,7 +948,8 @@ class FFMpeg{
 				}
 				$this->TemplogData .= "\r\n ====== End : Thumbs Generation ======= \r\n";
 				$this->log->writeLine("Thumbs Files", $this->TemplogData , true );
-				
+
+
 				$hr = $this->configs['high_res'];
 				$this->configs['video_width'] = $res[$nr][0];
 				$this->configs['format'] = 'mp4';
