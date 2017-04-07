@@ -3569,7 +3569,7 @@ class userquery extends CBCategory{
 		//die();
 
 		$isSocial = false;
-		if (isset($_POST['social_ac_id'])) {
+		if (isset($array['social_account_id'])) {
 			$isSocial = true;
 		}
 		if($array==NULL)
