@@ -77,8 +77,7 @@
 <script src="{$cb_vjs_player_url}/js/cb_ultimate_ads.js"></script>
 <script src="{$cb_vjs_player_url}/js/videojs.relatedCarousel.js"></script>
 <script src="{$cb_vjs_player_url}/js/iphone-inline-video.browser.js"></script>
-<script src="http://www.gstatic.com/cv/js/sender/v1/cast_sender.js"></script>
-<script src="{$cb_vjs_player_url}/js/videojs-chromecast.js"></script>
+
 <script src="{$cb_vjs_player_url}/js/videojs.thumbnails.js"></script>
 
 
@@ -244,18 +243,17 @@
 			cb_vjs.interactiveAds(i_instances_settings);	
 		}
 
-		
-
+		new_player_height(vid_id);
 	}
 	//Initializing
 	var cb_player = videojs('cb_video_js_'+vid_id, cb_player_setup , cb_vjs_callback);
 
 	$(document).ready(function() {
-		new_player_height(vid_id);
 		$(".video-js").on("contextmenu",function() {
 	       return false;
 	    }); 	
 	});
+	
 	$(window).resize(function(event) {
 		new_player_height(vid_id);
 	});

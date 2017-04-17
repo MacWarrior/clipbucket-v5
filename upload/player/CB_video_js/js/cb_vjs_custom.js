@@ -7,6 +7,8 @@ function new_player_height (videoid) {
 	var native_player_width = native_player.width();
 	var player_container_width = embed_player.width();
 	
+
+
 	var native_player_height  = native_player_width/player_ratio;
 	var embed_player_height = player_container_width/player_ratio;
 
