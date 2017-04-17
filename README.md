@@ -1,4 +1,4 @@
-#ClipBucket - Broadcasting like a boss!
+# ClipBucket - Broadcasting like a boss!
 !['ClipBucket Screenshot'](http://clip-bucket.com/styles/default/images/laptop-large2.png)
 </br>
 
