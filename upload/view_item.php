@@ -141,6 +141,7 @@ $photos = get_photos($clist);
 Assign('photos', $photos);
 
 /* CREATING LIMIT1 */
+///////////////////////////////
 $page = mysql_clean($_GET['page']);
 $get_limit = create_query_limit($page,RESULTS);
 
@@ -151,8 +152,8 @@ else
     $carray['order'] = "DESC";
 
 $collections = $cbcollection->get_collections($carray);
-assign('c',$collections);
-
+assign('co',$collections);     //previously assign('c',$collections);
+////////////////////////////////
 
 template_files('view_item.html');
 display_it();
