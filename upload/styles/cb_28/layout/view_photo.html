@@ -107,10 +107,10 @@
 									<li><strong>{lang('collection_name')}</strong>:&nbsp;
 
 									{if $Cbucket->configs.seo == 'yes'}
-									<span id="category"><a href="{$baseurl}/collection/{$co.collection_id}/{$co.type}/{$co.collection_name}">{$co.collection_name}</a></span>
+									<span id="category"><a href="{$baseurl}/collection/{$c.collection_id}/{$c.type}/{$c.collection_name}">{$c.collection_name}</a></span>
 									</li>
 									{else}
-										<span id="category"><a href="{$baseurl}/view_collection.php?cid={$co.collection_id}&type={$co.type}">{$co.collection_name}</a></span>
+										<span id="category"><a href="{$baseurl}/view_collection.php?cid={$c.collection_id}&type={$c.type}">{$c.collection_name}</a></span>
 									</li>
 									{/if}
 									<li><strong>{lang('tags')}</strong>:&nbsp;<span id="tags"></span></strong>{$photo.photo_tags|tags:photos}</li>
