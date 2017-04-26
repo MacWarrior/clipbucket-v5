@@ -2275,7 +2275,9 @@
 
 	function show_playlist_form($array) {
 		global $cbvid;
+		
 		assign('params',$array);
+		assign('type',$array['type']);
 		// decides to show all or user only playlists
 		// depending on the parameters passed to it
 		if (!empty($array['user'])) {
