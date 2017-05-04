@@ -40,6 +40,7 @@
 								{$counter = $counter + 1}
 							{/foreach}
 						</ul>
+						<!-- the div for upload file remote/normal-->
 						<div class="tab-content uploadFormDiv">
 							{$counter = 1}
 							{foreach from=$opt_list item=opt key=divid}     
@@ -48,12 +49,14 @@
 								{if $Cbucket->configs.$uploadOptId=='yes'} 
 								{if $counter == 1}{$class = "active"}{else}{$class = ""}{/if}
 								<div class="tab-pane fade in clearfix {$class} uploadForm" id="{$divid}">
+								<!-- this line call everything related to upload on the page -->
 									{load_form name=$opt.load_func button_class='cb_button_2' class='upload_form'} 
 								</div>
 								{/if}
 								{$counter = $counter + 1}
 							{/foreach}
 						</div>
+						<!-- ending of the div for upload file remote/normal-->
 					</div>
 				</div>
 					
@@ -170,6 +173,7 @@
 						uploadForms.push(wrapperDiv);
 					}
 
+					//function for real progress bar
 					$.each( uploadedFiles, function( key, fileNow ) {
 						console.log("filenow "+fileNow);
 					  	var currentTitle = fileNow.name,
@@ -184,6 +188,7 @@
 
 					    
 					});
+					//end function
 
 					$("#allUploadForms").html("");
 					$("#allUploadForms").append(uploadForms);
@@ -361,6 +366,7 @@
 									$("#uploadMessage").html(msg.error).attr("class", "alert alert-danger");
 								}else{
 									$("#uploadMessage").html(msg.msg).attr("class", "alert alert-success");
+									window.location = "{$baseurl}/manage_videos.php";
 								}
 								setTimeout(function(){
 									$("#uploadMessage").addClass("hidden");
