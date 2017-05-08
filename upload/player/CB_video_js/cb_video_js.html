@@ -108,8 +108,10 @@
 	var show_logo = true;
 	var autoplay = "{$player_config.autoplay}";
 	var default_res = "{$default_quality}";
-	
-	if (autoplay == 'no'){
+	console.log("Fuck : "+navigator.userAgent);
+
+
+	if (autoplay == 'no' || navigator.userAgent.match(/Android/i) ){
 		autoplay = false;
 	}else{
 		autoplay = true;

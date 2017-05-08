@@ -364,7 +364,7 @@ class cb_pm
 	/**
 	 * Function used to get user inbox messages
 	 */
-	function get_user_messages($uid,$box='in',$count_only=false)
+	function get_user_messages($uid,$box='all',$count_only=false)
 	{
 		global $db;
 		
@@ -372,6 +372,19 @@ class cb_pm
 			$uid = userid();
 		switch ($box)
 		{
+
+			case 'all':
+			{
+				if($count_only)
+				{
+					$result = $db->count(tbl($this->tbl),'message_id'," message_to LIKE '%#$uid#%' AND message_type='pm' ");
+				}else{
+					$result = $db->select(tbl($this->tbl.',users'),tbl($this->tbl.'.*,users.username AS message_from_user '),
+										  tbl($this->tbl).".message_to LIKE '%#$uid#%' AND ".tbl("users").".userid = ".tbl($this->tbl).".message_from 
+										   AND message_type='pm'",NULL," date_added DESC");
+				}
+			}
+			break;
 			
 			case 'in':
 			{
@@ -385,6 +398,7 @@ class cb_pm
 				}
 			}
 			break;
+
 			
 			
 			case 'out':

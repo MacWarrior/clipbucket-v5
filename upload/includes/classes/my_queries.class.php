@@ -691,6 +691,13 @@ class myquery {
 				$type='p';
 			}
 			break;
+
+			case "social":
+			case "s":
+			{
+				$type='s';
+			}
+			break;
 			
 			case "topic":
 			case "t":
