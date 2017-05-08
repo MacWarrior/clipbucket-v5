@@ -344,10 +344,12 @@ switch($mode)
 
 		}
 
-		$_POST['videoid'] = trim($_POST['videoid']);
-		$_POST['title'] = addslashes($_POST['title']);
-		$_POST['description'] = addslashes($_POST['description']);
-		$_POST['duration'] = addslashes($_POST['duration']);
+
+		//changes made
+		// $_POST['videoid'] = trim($_POST['videoid']);
+		// $_POST['title'] = addslashes($_POST['title']);
+		// $_POST['description'] = addslashes($_POST['description']);
+		// $_POST['duration'] = addslashes($_POST['duration']);
 
 		if(empty($eh->error_list))
 		{
