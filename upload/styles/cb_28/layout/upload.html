@@ -1,7 +1,6 @@
-
 		{if $msg}
 		<div class="alert alert-block alert-info">
-			{$msg}
+		{$msg}
 		</div>
 		{/if}
 		<div id="uploadMessage" class=""></div>
@@ -365,12 +364,20 @@
 								if(msg.error){
 									$("#uploadMessage").html(msg.error).attr("class", "alert alert-danger");
 								}else{
+									//Update message on submit changes
+									$("#uploadMessage").html("Video details have been updated Successfully").attr("class", "alert alert-success container"); 
+									
 									$("#uploadMessage").html(msg.msg).attr("class", "alert alert-success");
-									window.location = "{$baseurl}/manage_videos.php";
-								}
+									
+									$('html,body').animate({
+					        		scrollTop: $("body").offset().top},
+					        		'medium');
+					        		//Update message on submit changes
+					        	}
 								setTimeout(function(){
 									$("#uploadMessage").addClass("hidden");
-								}, 5000);
+									window.location = "{$baseurl}/manage_videos.php";
+								}, 3000);
 							}).fail(function(err){
 								console.log(err);
 							});
