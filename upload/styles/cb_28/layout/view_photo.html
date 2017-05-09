@@ -1,6 +1,6 @@
 <!-- Defining object type-->
 {lang code='photo' assign='object_type'}
-	
+
 {assign var=json value=$photo.photo_details|json_decode}
 {$curr_photo = $photo|@json_encode}
 {$user_admin = $user|@json_encode}
@@ -8,248 +8,252 @@
 {$shareableThumb = get_photo_file($photo.photo_id)}
 {$shareableThumb = $shareableThumb.0}
 
-	<div class="clearfix">
-		<section id="content" class="clearfix">
-			<div class="clearfix leaderboard-ad ad">
-				{AD place='ad_728x90'}
-			</div>
+<div class="clearfix">
+	<section id="content" class="clearfix">
+		<div class="clearfix leaderboard-ad ad">
+			{AD place='ad_728x90'}
+		</div>
 
-			<div class="clearfix photo-view" >
-				<div id="gallery">
-					<i id="enlarge" class="fa fa-expand fa-2x" style="float:right; cursor:pointer" data-toggle="modal" data-target="#myModal"></i>
-					<div class="image-holder">
-						<div class="inner-holder">
-							{get_photo details=$photo size='l' class='img-responsive center-block' output='html' height="100"}
-						</div>
+		<div class="clearfix photo-view" >
+			<div id="gallery">
+				<i id="enlarge" class="fa fa-expand fa-2x" style="float:right; cursor:pointer" data-toggle="modal" data-target="#myModal"></i>
+				<div class="image-holder">
+					<div class="inner-holder">
+						{get_photo details=$photo size='l' class='img-responsive center-block' output='html' height="100"}
 					</div>
 				</div>
-				<!-- Enlarge icon -->
-				<!-- overlay div when clicked on extend icon -->
-				<div id="myNav" class="overlay">
-					<div class="overlay-content">
-						<img id="gallery-exd" class="img-responsive center-block">
-						<button type="button" class="img-close" id="btn-close" data-dismiss="modal" data-check="">&times;</button>
-						<!-- Next and Previous Button inside overlay -->
-						<div class="btn-holder clearfix">
-							<button class="btn view-photo-nxt icon-right-arrow next en-large" data-check="next" ><i>next</i></button>
-							<button class="btn view-photo-pre icon-left-arrow prev en-large" data-check="prev"><i>prev</i></button>
-						</div>
+			</div>
+			<!-- Enlarge icon -->
+			<!-- overlay div when clicked on extend icon -->
+			<div id="myNav" class="overlay">
+				<div class="overlay-content">
+					<img id="gallery-exd" class="img-responsive center-block">
+					<button type="button" class="img-close" id="btn-close" data-dismiss="modal" data-check="">&times;</button>
+					<!-- Next and Previous Button inside overlay -->
+					<div class="btn-holder clearfix">
+						<button class="btn view-photo-nxt icon-right-arrow next en-large" data-check="next" ><i>next</i></button>
+						<button class="btn view-photo-pre icon-left-arrow prev en-large" data-check="prev"><i>prev</i></button>
 					</div>
 				</div>
-				<!-- Next and Previous button  -->
-				<div class="btn-holder clearfix">
-					<button id="mainNextBtn" class="btn view-photo-nxt icon-right-arrow next view-photo" data-check="next" ><i>next</i></button>
-
-					<button id="mainPrevBtn" class="btn view-photo-pre icon-left-arrow prev view-photo" data-check="prev"><i>prev</i></button>
-				</div>
 			</div>
-			
-			<section class="view-details clearfix">
-				<header class="clearfix details">
-					<div id="result_cont"></div>
-					<h1>{$photo.photo_title}</h1>
-					<h1 id="img-title"></h1>
-					<div class="user-video-info clearfix">
-						<a href="{$userquery->profile_link($user)}" class="avatar">
-							<img src="{$userquery->avatar($video,'m',userid())}" class="img-responsive">
+			<!-- Next and Previous button  -->
+			<div class="btn-holder clearfix">
+				<button id="mainNextBtn" class="btn view-photo-nxt icon-right-arrow next view-photo" data-check="next" ><i>next</i></button>
+
+				<button id="mainPrevBtn" class="btn view-photo-pre icon-left-arrow prev view-photo" data-check="prev"><i>prev</i></button>
+			</div>
+		</div>
+
+		<section class="view-details clearfix">
+			<header class="clearfix details">
+				<div id="result_cont"></div>
+				<h1>{$photo.photo_title}</h1>
+				<h1 id="img-title"></h1>
+				<div class="user-video-info clearfix">
+					<a href="{$userquery->profile_link($user)}" class="avatar">
+						<img src="{$userquery->avatar($video,'m',userid())}" class="img-responsive">
+					</a>
+					<h2 class="user-title">
+						<a href="{$userquery->profile_link($user)}">{$user.username}</a>
+					</h2>
+					<div class="views-counter">
+						<span>{lang code="views"} {prettyNum($photo.views)}</span>
+
+					</div>
+				</div>
+				<div class="user-likes-sub clearfix">
+					<div class="clearfix like-rating col-lg-6 col-md-6 col-sm-6 col-xs-12" id="rating_container">
+
+						{if $photo.allow_rating != 'no'}
+						{show_video_rating  rating=$photo.rating ratings=$photo.rated_by total='10' id=$photo.photo_id type=photo}
+						{/if}
+
+						<!-- <div id="rate"></div> -->
+					</div>
+					<div class="clearfix subscribe-col col-lg-6 col-md-6 col-sm-6 col-xs-12">
+						{if $photo.userid != userid()}
+						<a id="subscribeUser" class="btn btn-subscribe btn-primary" href="javascript:void(0)" onclick="_cb.subscribeToChannelNew('{$user.userid}','subscribe_user')">
+							<span>{lang('Subscribe')}</span>
 						</a>
-						<h2 class="user-title">
-							<a href="{$userquery->profile_link($user)}">{$user.username}</a>
-						</h2>
-						<div class="views-counter">
-							<span>{lang code="views"} {prettyNum($photo.views)}</span>
-					
-						</div>
+						{/if}
 					</div>
-					<div class="user-likes-sub clearfix">
-						<div class="clearfix like-rating col-lg-6 col-md-6 col-sm-6 col-xs-12" id="rating_container">
+				</div>
+			</header>
+			<div id="messageFav" class="alert alert-info marginTop" style="display:none"></div>
+			<div class="view-tabs clearfix">
+				<ul class="clearfix nav nav-tabs">
+					<li class="active">
+						<a href="#cb-item-info" data-toggle="tab"><span class="icon-info"></span>{lang code='info'}</a>
+					</li>
+					<li>
+						<a href="#cb-item-share" data-toggle="tab"><span class="icon-share"></span>{lang code='Share / Embed'}</a>
+					</li>
+					<li>
+						<a href="#cb-item-addto" data-toggle="tab"><span class="icon-plusrounded"></span>{lang('add_to')}</a>
+					</li>
+					<li>
+						<a href="#cb-item-report" data-toggle="tab"><span class="icon-flag"></span>{lang('report_this')}
+						</a>
+					</li>
+				</ul>
+				<div class="tab-content clearfix">
+					<div class="tab-pane fade in clearfix active" id="cb-item-info">
+						<div class="clearfix watch-vid-details">
+							<ul class="clearfix desc-list">
+								<li><strong>{lang('photo_description')}</strong> <span id="description"></span>:&nbsp;{$photo.photo_description|truncate:90}</li>
 
-							{if $photo.allow_rating != 'no'}
-								{show_video_rating  rating=$photo.rating ratings=$photo.rated_by total='10' id=$photo.photo_id type=photo}
-							{/if}
+								<li id="category"></li>
 
-							<!-- <div id="rate"></div> -->
-						</div>
-						<div class="clearfix subscribe-col col-lg-6 col-md-6 col-sm-6 col-xs-12">
-							{if $photo.userid != userid()}
-								<a id="subscribeUser" class="btn btn-subscribe btn-primary" href="javascript:void(0)" onclick="_cb.subscribeToChannelNew('{$user.userid}','subscribe_user')">
-									<span>{lang('Subscribe')}</span>
-								</a>
-							{/if}
-						</div>
-					</div>
-				</header>
-				<div id="messageFav" class="alert alert-info marginTop" style="display:none"></div>
-				<div class="view-tabs clearfix">
-					<ul class="clearfix nav nav-tabs">
-						<li class="active">
-							<a href="#cb-item-info" data-toggle="tab"><span class="icon-info"></span>{lang code='info'}</a>
-						</li>
-						<li>
-							<a href="#cb-item-share" data-toggle="tab"><span class="icon-share"></span>{lang code='Share'}</a>
-						</li>
-						<li>
-							<a href="#cb-item-addto" data-toggle="tab"><span class="icon-plusrounded"></span>{lang('add_to')}</a>
-						</li>
-						<li>
-							<a href="#cb-item-report" data-toggle="tab"><span class="icon-flag"></span>{lang('report_this')}
-							</a>
-						</li>
-					</ul>
-					<div class="tab-content clearfix">
-						<div class="tab-pane fade in clearfix active" id="cb-item-info">
-							<div class="clearfix watch-vid-details">
-								<ul class="clearfix desc-list">
-									<li><strong>{lang('photo_description')}</strong> <span id="description"></span>:&nbsp;{$photo.photo_description|truncate:90}</li>
-	
-									<li id="category"></li>
-									
-									<li><strong>{lang('collection_name')}</strong>:&nbsp;
+								<li><strong>{lang('collection_name')}</strong>:&nbsp;
 
 									{if $Cbucket->configs.seo == 'yes'}
 									<span id="category"><a href="{$baseurl}/collection/{$c.collection_id}/{$c.type}/{$c.collection_name}">{$c.collection_name}</a></span>
-									</li>
-									{else}
-										<span id="category"><a href="{$baseurl}/view_collection.php?cid={$c.collection_id}&type={$c.type}">{$c.collection_name}</a></span>
-									</li>
-									{/if}
-									<li><strong>{lang('tags')}</strong>:&nbsp;<span id="tags"></span></strong>{$photo.photo_tags|tags:photos}</li>
-
-									<li><strong>{lang('views')}</strong>:&nbsp; <span id="views">{$photo.views}</span></li>
-								</ul>
-							</div>
-						</div>
-		
-						<div class="tab-pane fade in clearfix" id="cb-item-share">
-							<ul class="social-share">
-								<li>
-								 <a class="btn-fb icon-facebook" href="http://www.facebook.com/sharer/sharer.php?s=100&p[url]={videoLink($photo)|urlencode}&p[images][0]={$shareableThumb}&p[title]={$photo.photo_title|title|urlencode}&p[summary]={$photo.photo_description|description|urlencode}" target="_blank">
-										<span>Facebook</span>
-									</a>
 								</li>
-								<li>
-									<a href="https://twitter.com/share" target="_blank" class="btn-tw icon-twitter">
-										<span>Twitter</span>
-									</a>
-								</li>
-								<li>
-									<a href="https://plus.google.com/share?url={urlencode(videolink($video))}" target="_blank" class="btn-gplus icon-gplus">
-										<span>Google Plus</span>
-									</a>
-								</li>
-							</ul>
-							{show_share_form id=$photo.photo_id type=Photo}
-						</div>
-		
-						<div class="tab-pane fade in clearfix" id="cb-item-addto">
-							<div class="clearfix form-horizontal row">
-							{$codes=$cbphoto->photo_embed_codes(['type'=>'all','with_url'=>true, 'details'=>$photo])}
-								{foreach from=$codes item=item}
-								
-								<div class="photo-share-tab col-lg-6 col-md-6 col-sm-6 col-xs-12 form-group">
-									<label class="col-sm-2 col-xs-3 control-label" for="{$item.type}">{$item.name}</label>
-									<div class="col-sm-10 col-xs-9">
-										<input class="form-control" onFocus="this.select();" value="{$item.code}" id="{$item.type}">
-									</div>
-								</div>
-								
-								{/foreach}
-							</div>
-							<!-- add photo to fav -->
-							<div class="clearfix btn-fav">
-								<div id="video_action_result_cont"></div>
-								<a id="addfav" class="btn btn-block btn-primary" href="javascript:void(0)" onclick="_cb.add_to_favNew('photo','{$photo.photo_id}');">{lang code='add_to_my_favorites'}</a>
-							</div>
-							<!-- add photo to fav -->
-						</div>
-		
-						<div class="tab-pane fade in clearfix custom-elements" id="cb-item-report">
-							{show_flag_form id=$photo.photo_id type=Photo}
-						</div>
-					</div>
-				</div>
-			</section>
-			<div class="clearfix comments-block" id="comments-block">
-				<div id="test1"></div>
-				<div id="reply" class="clearfix"> 
-					<div class="pad-bottom">
-						<div  class="addComment clearfix">
-							<div class="com_count" id="com_count">
-								<h2><span>{$photo.total_comments} 
-								{if $photo.total_comments <= 1 }
-								{lang code='comment'} 
 								{else}
-								{{lang code='comments'} }
-								{/if}
-								</span></h2>
-							</div>
+								<span id="category"><a href="{$baseurl}/view_collection.php?cid={$c.collection_id}&type={$c.type}">{$c.collection_name}</a></span>
+							</li>
+							{/if}
+							<li><strong>{lang('tags')}</strong>:&nbsp;<span id="tags"></span></strong>{$photo.photo_tags|tags:photos}</li>
 
- 						{if $myquery->is_commentable($photo,'p')}
-							{include file="$style_dir/blocks/comments/add_comment.html" id=$photo.photo_id type=p}
+							<li><strong>{lang('views')}</strong>:&nbsp; <span id="views">{$photo.views}</span></li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="tab-pane fade in clearfix" id="cb-item-share">
+					<ul class="social-share">
+						<li>
+							<a class="btn-fb icon-facebook" href="http://www.facebook.com/sharer/sharer.php?s=100&p[url]={videoLink($photo)|urlencode}&p[images][0]={$shareableThumb}&p[title]={$photo.photo_title|title|urlencode}&p[summary]={$photo.photo_description|description|urlencode}" target="_blank">
+								<span>Facebook</span>
+							</a>
+						</li>
+						<li>
+							<a href="https://twitter.com/share" target="_blank" class="btn-tw icon-twitter">
+								<span>Twitter</span>
+							</a>
+						</li>
+						<li>
+							<a href="https://plus.google.com/share?url={urlencode(videolink($video))}" target="_blank" class="btn-gplus icon-gplus">
+								<span>Google Plus</span>
+							</a>
+						</li>
+					</ul>
+					<!-- Embeding code to own forum -->
+					<div class="clearfix form-horizontal row">
+						{$codes=$cbphoto->photo_embed_codes(['type'=>'all','with_url'=>true, 'details'=>$photo])}
+						{foreach from=$codes item=item}
+
+						<div class="photo-share-tab col-lg-6 col-md-6 col-sm-6 col-xs-12 form-group">
+							<label class="col-sm-2 col-xs-3 control-label" for="{$item.type}">{$item.name}</label>
+							<div class="col-sm-10 col-xs-9">
+								<input class="form-control" onFocus="this.select();" value="{$item.code}" id="{$item.type}">
+							</div>
+						</div>
+
+						{/foreach}
+					</div>
+					<!-- Embeding code to own forum -->
+
+					{show_share_form id=$photo.photo_id type=Photo}
+
+				</div>
+
+				<div class="tab-pane fade in clearfix" id="cb-item-addto">
+					<!-- add photo to fav -->
+					<div class="clearfix btn-fav">
+						<div id="video_action_result_cont"></div>
+						<a id="addfav" class="btn btn-block btn-primary" href="javascript:void(0)" onclick="_cb.add_to_favNew('photo','{$photo.photo_id}');">{lang code='add_to_my_favorites'}</a>
+					</div>
+					<!-- add photo to fav -->
+				</div>
+
+				<div class="tab-pane fade in clearfix custom-elements" id="cb-item-report">
+					{show_flag_form id=$photo.photo_id type=Photo}
+				</div>
+			</div>
+		</div>
+	</section>
+	<div class="clearfix comments-block" id="comments-block">
+		<div id="test1"></div>
+		<div id="reply" class="clearfix"> 
+			<div class="pad-bottom">
+				<div  class="addComment clearfix">
+					<div class="com_count" id="com_count">
+						<h2><span>{$photo.total_comments} 
+							{if $photo.total_comments <= 1 }
+							{lang code='comment'} 
 							{else}
-							<div class="alert alert-warning">{lang code='Comments disabled for this photo'}</div>
-						{/if}
-						</div>
-						<div id="comments"></div>
-						<div id="userCommentsList">
-						</div>
+							{{lang code='comments'} }
+							{/if}
+						</span></h2>
 					</div>
+
+					{if $myquery->is_commentable($photo,'p')}
+					{include file="$style_dir/blocks/comments/add_comment.html" id=$photo.photo_id type=p}
+					{else}
+					<div class="alert alert-warning">{lang code='Comments disabled for this photo'}</div>
+					{/if}
+				</div>
+				<div id="comments"></div>
+				<div id="userCommentsList">
 				</div>
 			</div>
-		</section>
-		
-		<aside id="sidebar">
-			<div class="box-ad ad">{AD place='ad_300x250'}</div>
-			<h2>{lang code='related_photos'}</h2>
-			<div class="clearfix sidebar-items">
-		
-			{$related_photos=get_photos(['title'=>$photo.photo_title,'tags'=>$photo.photo_tags,
-			'exclude'=>$photo.photo_id,'show_related'=>'yes','limit'=>6,'order'=>'date_added DESC'])}
-		
-			{if $related_photos}
-				<div class="row">
-					{foreach $related_photos as $photo}
-						<div class="item-photo col-lg-6 col-md-6 col-sm-12 col-xs-12">
-							{include file="$style_dir/blocks/photo.html" display_type='relatedPhoto_sidebar'}
-						</div>
-					{/foreach}
-				</div>
-			{else}
-				<div class="well well-info">{lang code="no_photos_found"}</div>
-			{/if}
-			</div>
-		
-			{$row = $myquery->Get_Website_Details()}
-			{if $row.collectionsSection == 'yes'}
-			{$collections = $cbcollection->get_collections(['limit'=>5, 'active'=>'yes'])}
-			{$collections = $cbcollection->activeCollections($collections)}
-			<h2>{lang code="top_collections"}</h2>
-			<div class="clearfix sidebar-items collections-grid">
-				<div class="clearfix row">
-				{$limit=10}
-				{if $collections}        
-				{foreach from=$collections item=collection}
-				{$first_col_thumb = $cbcollection->coll_first_thumb($collection,'l')}
-					<div class="clearfix collection-item col-lg-6 col-md-6 col-sm-12 col-xs-12">
-						{include file="$style_dir/blocks/collection-item.html"}
-					</div>
-				{/foreach}
-				</div>
-				{else}
-				<div class="clearfix">{lang code='no_collection_found'}</div>
-				{/if}
-			</div>
-			{/if}
-		</aside>
-		{*section name=list loop=$uphotos}
-		{include file="$style_dir/blocks/photo.html" display_type="related_photos" photo=$uphotos[list]}
-		{/section*}
+		</div>
 	</div>
+</section>
+
+<aside id="sidebar">
+	<div class="box-ad ad">{AD place='ad_300x250'}</div>
+	<h2>{lang code='related_photos'}</h2>
+	<div class="clearfix sidebar-items">
+		
+		{$related_photos=get_photos(['title'=>$photo.photo_title,'tags'=>$photo.photo_tags,
+		'exclude'=>$photo.photo_id,'show_related'=>'yes','limit'=>6,'order'=>'date_added DESC'])}
+		
+		{if $related_photos}
+		<div class="row">
+			{foreach $related_photos as $photo}
+			<div class="item-photo col-lg-6 col-md-6 col-sm-12 col-xs-12">
+				{include file="$style_dir/blocks/photo.html" display_type='relatedPhoto_sidebar'}
+			</div>
+			{/foreach}
+		</div>
+		{else}
+		<div class="well well-info">{lang code="no_photos_found"}</div>
+		{/if}
+	</div>
+
+	{$row = $myquery->Get_Website_Details()}
+	{if $row.collectionsSection == 'yes'}
+	{$collections = $cbcollection->get_collections(['limit'=>5, 'active'=>'yes'])}
+	{$collections = $cbcollection->activeCollections($collections)}
+	<h2>{lang code="top_collections"}</h2>
+	<div class="clearfix sidebar-items collections-grid">
+		<div class="clearfix row">
+			{$limit=10}
+			{if $collections}        
+			{foreach from=$collections item=collection}
+			{$first_col_thumb = $cbcollection->coll_first_thumb($collection,'l')}
+			<div class="clearfix collection-item col-lg-6 col-md-6 col-sm-12 col-xs-12">
+				{include file="$style_dir/blocks/collection-item.html"}
+			</div>
+			{/foreach}
+		</div>
+		{else}
+		<div class="clearfix">{lang code='no_collection_found'}</div>
+		{/if}
+	</div>
+	{/if}
+</aside>
+{*section name=list loop=$uphotos}
+{include file="$style_dir/blocks/photo.html" display_type="related_photos" photo=$uphotos[list]}
+{/section*}
+</div>
 
 
 <script type="text/javascript">
-var seoUrls = "{$Cbucket->configs.seo}";
-var srcFirst = "{$srcfirst}";
+	var seoUrls = "{$Cbucket->configs.seo}";
+	var srcFirst = "{$srcfirst}";
 var key_globel; // image source key0
 var first_source; 
 var collection_id;
@@ -269,17 +273,17 @@ $(document).ready(function()
 			$('.not_show').show();
 			$('.will_show').hide();
 			$(".clip_read").text("Show Less");
-	  	} else {
-		   $('.not_show').hide();
-		   $('.will_show').show();
-		   $(".clip_read").text("Show More");
-   		}
-		});
+		} else {
+			$('.not_show').hide();
+			$('.will_show').show();
+			$(".clip_read").text("Show More");
+		}
+	});
 
-comments_voting = 'no';
- getComments('p','{$photo.photo_id}','{$photo.last_commented}',1,'{$photo.total_comments}','{$object_type}')
-{rdelim}
-);
+	comments_voting = 'no';
+	getComments('p','{$photo.photo_id}','{$photo.last_commented}',1,'{$photo.total_comments}','{$object_type}')
+	{rdelim}
+	);
 
 /*$(document).ready(function(){
 	var form_selector = 'comment_form';
@@ -297,5 +301,5 @@ comments_voting = 'no';
 		});
 	});
 	
-*/
+	*/
 </script>
