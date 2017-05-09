@@ -132,15 +132,35 @@ class cbactions
 					
 					$db->insert(tbl($this->fav_tbl),array('type','id','userid','date_added'),array($this->type,$id,userid(),NOW()));
 					addFeed(array('action'=>'add_favorite','object_id' => $id,'object'=>'video'));
+					//adding according to type
+					switch ($this->type) {
+						case 'cl':
+							# code...
+							$the_type = 'collection';
+							break;
+						case 'p':
+							# code...
+							$the_type = 'photo';
+							break;							
+						
+						default:
+							# code...
+							$the_type = 'video';
+							break;
+					}
 
-					if ($this->type == 'cl') 
-					{
-						$the_type = 'collection';
-					}
-					else
-					{
-						$the_type = 'video';
-					}
+					// if ($this->type == 'cl') 
+					// {
+					// 	$the_type = 'collection';
+					// }
+					// else if($this->type == 'v')
+					// {		
+					// 	$the_type = 'video';
+					// }
+					// else
+					// {
+					// 	$the_type = 'photo';
+					// }
 
 					//Loggin Favorite			
 					$log_array = array
