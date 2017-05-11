@@ -322,6 +322,7 @@ class ClipBucket
         if ($per['video_moderation'] == "yes")
             $NewMenu['Videos'] = array(
                 'Videos Manager' => 'video_manager.php',
+                'Manage Playlists' => 'manage_playlist.php',
                 'Manage Categories' => 'category.php',
                 'List Flagged Videos' => 'flagged_videos.php',
                 'Mass Upload Videos' => 'mass_uploader.php',

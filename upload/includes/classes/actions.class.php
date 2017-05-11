@@ -100,7 +100,7 @@ class cbactions
 		lang('other')		
 		);
 
-        $fields = array( 'playlist_id', 'playlist_name', 'description', 'tags', 'category',
+        $fields = array( 'playlist_id', 'playlist_name','userid', 'description', 'tags', 'category',
                          'played', 'privacy', 'total_comments', 'total_items', 'runtime',
                          'last_update', 'date_added', 'first_item', 'playlist_type', 'cover' );
 
@@ -1163,11 +1163,20 @@ class cbactions
 
         $order = $params[ 'order' ];
         $limit = $params[ 'limit' ];
+        
+        //changes made
+        
+        $playlist_name = $params[ 'playlist_name' ];
+        $tags = $params[ 'tags' ];
+        $userid = $params[ 'userid' ];
+        
 
         $main_query = $query = "SELECT ".table_fields( $fields )." FROM ".table( 'playlists' );
-        $condition = "playlists.playlist_type = 'v'";
+        // $condition = "playlists.playlist_type = 'v'";
 
-        if ( !has_access( 'admin_access' ) ) {
+        
+
+		if ( !has_access( 'admin_access' ) ) {
             $condition .= ( $condition ) ? " AND " : "";
             $condition .= "playlists.privacy = 'public'";
         } else {
@@ -1218,6 +1227,24 @@ class cbactions
             $condition .= ( $condition ) ? " AND " : "";
             $condition .= " playlists.userid = '".$params[ 'user' ]."' ";
         }
+        ////////////CHANGES/////////////
+
+        if( isset($userid) ) {
+            $condition .= ( $condition ) ? " AND " : "";
+            $condition .= " playlists.userid = '".$userid."' ";
+        }
+
+        if( isset($tags) ) {
+            $condition .= ( $condition ) ? " AND " : "";
+            $condition .= " playlists.tags LIKE '%$tags%' ";
+        }
+
+        if( isset($playlist_name) ) {
+            $condition .= ( $condition ) ? " AND " : "";
+            $condition .= " playlists.playlist_name LIKE '%$playlist_name%' ";
+        }                
+
+        ////////////CHANGES/////////////
 
         if ( isset($params[ 'has_items' ]) ) {
             $condition .= ( $condition ) ? " AND " : "";
@@ -1225,7 +1252,7 @@ class cbactions
         }
 
         if(isset($params['count_only'])){
-              $result = $db->count( cb_sql_table('playlists') , 'playlist_id'  );
+              $result = $db->count( cb_sql_table('playlists') , 'playlist_id' , $condition);
             	return $result;
 		}
 
