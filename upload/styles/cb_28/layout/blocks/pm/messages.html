@@ -19,7 +19,9 @@
       <td>{lang code='subject'}</td>
       <td width="100">{lang code='date_sent'}</td>
       <td>{lang code='date_added'}</td>
-      <td>{lang code='Reply'}</td>
+      {if $mode =='inbox'}
+      <td width="75">{lang code='Reply'}</td>
+      {/if}
     </tr>
     {section name=msg loop=$user_msgs}
     <tr id="message-{$user_msgs[msg].message_id}">
@@ -36,7 +38,7 @@
         <a href="?mode={$mode}&mid={$user_msgs[msg].message_id}"> 
           {$to_id = $user_msgs[msg].message_to}
           {$trimed_to = str_replace('#','', $to_id)}
-          
+
           {ucfirst(get_username($trimed_to))}
 
         </a>
@@ -51,7 +53,9 @@
         </a>
       </td>
       <td>{$user_msgs[msg].date_added}</td>
+      {if $mode =='inbox'}
       <td><a href="{$baseurl}/private_message.php?mode=new_msg&to={$user_msgs[msg].message_from_user}" class="btn btn-primary" title="">{lang code=' Reply '}</a></td>
+      {/if}
     </tr>
     {sectionelse}
     <strong><em>{lang code='you_dont_hv_any_pm'}</em></strong>
