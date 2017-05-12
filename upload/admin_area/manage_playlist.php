@@ -99,7 +99,7 @@
  		if(!$array['order'])
  			$result_array['order'] = " playlists.date_added DESC ";
  		$playlists = $cbvid->action->get_playlists($result_array);
-
+ 		
 		//Collecting Data for Pagination
  		$pcount = $array;
  		$pcount['count_only'] = true;
