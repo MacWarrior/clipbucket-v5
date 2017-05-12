@@ -30,6 +30,13 @@
 								<td width="130"><strong>{lang code='View/Edit'}</strong></td>
 								<td width="80"><strong>{lang code='Delete'}</strong></td>
 							</tr>
+								
+								{if $playlists!=true}
+								<h4 style="text-align: center;">
+								<strong>{lang code='No Playlist Found'}</strong>
+								</h4>
+								{/if}
+							
 							{section name=plist loop=$playlists}
 							<tr>
 								<td>
