@@ -5,57 +5,59 @@
     <input type="submit" name="delete_pm" id="delete_fav_videos" value="{lang code='delete'}" class="btn btn-primary" />
   </div>
   <div id="messages_container" class="account_table marginTop">
-     <table class="table table-bordered table-striped">
-  	  <tr>
-  	    <td width="25">
-          <input type="checkbox" name="checkall" onclick="checkUncheckAll(this);"/>
-        </td>
-  	    {if $show_from}
-          <td width="100">{lang code='from'}</td>
-        {/if}
-        {if $show_to}
-          <td width="100">{lang code='to'}</td>
-        {/if}
-  	    <td>{lang code='subject'}</td>
-  	    <td width="100">{lang code='date_sent'}</td>
-        <td>{lang code='date_added'}</td>
-      </tr>
-        {section name=msg loop=$user_msgs}
-        <tr id="message-{$user_msgs[msg].message_id}">
-          <td>
-            <input type="checkbox" name="msg_id[]" id="msg_id" value="{$user_msgs[msg].message_id}" />
-          </td>
-          {if $show_from}
-            <td>
-              <a href="?mode={$mode}&mid={$user_msgs[msg].message_id}">{$user_msgs[msg].message_from_user}</a>
-            </td>
-          {/if}
-          {if $show_to}
-            <td>
-              <a href="?mode={$mode}&mid={$user_msgs[msg].message_id}"> 
-              {$to_id = $user_msgs[msg].message_to}
-              {$trimed_to = str_replace('#','', $to_id)}
-              
-             {ucfirst(get_username($trimed_to))}
+   <table class="table table-bordered table-striped">
+     <tr>
+       <td width="25">
+        <input type="checkbox" name="checkall" onclick="checkUncheckAll(this);"/>
+      </td>
+      {if $show_from}
+      <td width="100">{lang code='from'}</td>
+      {/if}
+      {if $show_to}
+      <td width="100">{lang code='to'}</td>
+      {/if}
+      <td>{lang code='subject'}</td>
+      <td width="100">{lang code='date_sent'}</td>
+      <td>{lang code='date_added'}</td>
+      <td>{lang code='Reply'}</td>
+    </tr>
+    {section name=msg loop=$user_msgs}
+    <tr id="message-{$user_msgs[msg].message_id}">
+      <td>
+        <input type="checkbox" name="msg_id[]" id="msg_id" value="{$user_msgs[msg].message_id}" />
+      </td>
+      {if $show_from}
+      <td>
+        <a href="?mode={$mode}&mid={$user_msgs[msg].message_id}">{$user_msgs[msg].message_from_user}</a>
+      </td>
+      {/if}
+      {if $show_to}
+      <td>
+        <a href="?mode={$mode}&mid={$user_msgs[msg].message_id}"> 
+          {$to_id = $user_msgs[msg].message_to}
+          {$trimed_to = str_replace('#','', $to_id)}
+          
+          {ucfirst(get_username($trimed_to))}
 
-              </a>
-            </td>
-          {/if}
-          <td>
-            <a href="?mode={$mode}&mid={$user_msgs[msg].message_id}">{$user_msgs[msg].message_subject|truncate:70}</a>
-          </td>
-          <td>
-            <a id="delete_icon-{$pr_msg.message_id}" href="?mode={$mode}&delete_mid={$user_msgs[msg].message_id}">
-              <img src="{$imageurl}/dot.gif" border="0" class="delete_icon" />
-            </a>
-          </td>
-          <td>{$user_msgs[msg].date_added}</td>
-        </tr>
-        {sectionelse}
-          <strong><em>{lang code='you_dont_hv_any_pm'}</em></strong>
-        {/section}
-  	  </table>
-  </div>
+        </a>
+      </td>
+      {/if}
+      <td>
+        <a href="?mode={$mode}&mid={$user_msgs[msg].message_id}">{$user_msgs[msg].message_subject|truncate:70}</a>
+      </td>
+      <td>
+        <a id="delete_icon-{$pr_msg.message_id}" href="?mode={$mode}&delete_mid={$user_msgs[msg].message_id}">
+          <img src="{$imageurl}/dot.gif" border="0" class="delete_icon" />
+        </a>
+      </td>
+      <td>{$user_msgs[msg].date_added}</td>
+      <td><a href="{$baseurl}/private_message.php?mode=new_msg&to={$user_msgs[msg].message_from_user}" class="btn btn-primary" title="">{lang code=' Reply '}</a></td>
+    </tr>
+    {sectionelse}
+    <strong><em>{lang code='you_dont_hv_any_pm'}</em></strong>
+    {/section}
+  </table>
+</div>
 </form>
 
 
@@ -78,8 +80,8 @@
     <div class="pm_line">
       {lang code='To'} : 
       <strong>
-      {$to_id = $pr_msg.message_to}
-      {$trimed_to = str_replace('#','', $to_id)}
+        {$to_id = $pr_msg.message_to}
+        {$trimed_to = str_replace('#','', $to_id)}
         <a href="{$userquery->profile_link($trimed_to)}"> 
           {ucfirst(get_username($trimed_to))}
         </a>
