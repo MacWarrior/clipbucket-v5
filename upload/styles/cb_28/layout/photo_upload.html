@@ -62,9 +62,17 @@
 									</div>
 									{/if}
 								</div>
+								{if (has_access('allow_create_collection',false,$verify_logged_user))}
 								<div class="col-md-3 text-center">
 									<a href="#" class="btn btn-ghost btn-lg" id="createNewCollection">{lang code="create_new_collection_btn"}</a>
 								</div>
+								{else}
+								<div class="col-md-3 text-center">
+								<div class="alert alert-danger">
+								  <strong>{lang code="creating_collection_is_disabled"}</strong>
+								</div>
+								</div>
+								{/if}
 							</div>
 							{/if}
 							<div class="row">

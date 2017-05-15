@@ -687,6 +687,7 @@ class cbactions
 
 	function create_playlist($params)
 	{
+		if(has_access('allow_create_playlist',false,$verify_logged_user)) {
 		global $db;
 		$name = mysql_clean($params['name']);
 		if(!userid())
@@ -718,6 +719,8 @@ class cbactions
 		}
 		
 		return false;
+	}
+
 	}
 	
 	/**

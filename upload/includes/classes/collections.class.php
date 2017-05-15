@@ -878,6 +878,7 @@ class Collections extends CBCategory
 
 	function create_collection($array=NULL)
 	{
+		if(has_access('allow_create_collection',false,$verify_logged_user)) {
 		global $db, $userquery;
 		
 		if($array==NULL)
@@ -963,6 +964,7 @@ class Collections extends CBCategory
 			
 			e(lang("collect_added_msg"),"m");
 			return $insert_id;	
+			}
 		}
 	}
 	
