@@ -881,7 +881,7 @@ class cbactions
                 $db->update( tbl( 'playlists' ), array_keys( $fields ), array_values( $fields ), " playlist_id = '".$pid."' " );
 
                 //e( sprintf( lang( 'this_thing_added_playlist' ), $this->name ), "m" );
-                e('<div class="alert alert-success">This video has been added to playlist</div>', "m" );
+                e('<div class="alert alert-success">'.lang( 'video_added_to_playlist' ).'</div>', "m" );
                 return $video;
             }
 

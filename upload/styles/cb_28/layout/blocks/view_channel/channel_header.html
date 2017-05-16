@@ -66,7 +66,7 @@
 		<h2>{$user.username}</h2>
 		<div class="btn-holder">
 			{if $user.userid != userid()}
-				<button id="report-user" class="btn btn-default">{lang code="Report"}</button>
+				<button id="report-user" class="btn btn-default">{lang code="report_usr"}</button>
 				<a href="{$baseurl}/private_message.php?mode=new_msg&to={$user.username}" class="btn btn-default">
 					{lang code="user_send_message"}
 				</a>

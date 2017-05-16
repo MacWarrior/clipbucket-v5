@@ -24,9 +24,9 @@
 			<div class="labels">
 				{if $video.featured=='yes'}
 				<span class="label label-primary">Featured{else}{/if}</span>
-				<span class="label {if $video.active=='yes'}label-success{else}label-warning{/if} mlabel">{if $video.active=='yes'}Active{else}InActive{/if}</span>
-				<span class="label {if $video.status=='Successful'}label-success{else}label-warning{/if}">{if $video.status=='Successful'}Successful{else}Processing{/if}</span>
-				<span class="label label-info">Viewed {$video.last_viewed|niceTime}</span>
+				<span class="label {if $video.active=='yes'}label-success{else}label-warning{/if} mlabel">{if $video.active=='yes'}{lang code='active'}{else}{lang code='inactive'}{/if}</span>
+				<span class="label {if $video.status=='Successful'}label-success{else}label-warning{/if}">{if $video.status=='Successful'}{lang code='successful'}{else}{lang code='processing'}{/if}</span>
+				<span class="label label-info">{lang code='viewed'} {$video.last_viewed|niceTime}</span>
 			</div>
 		</div>
 	</td>
@@ -45,15 +45,15 @@
 	<td>
 		<div class="dropdown text-center">
 			<button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
-				Actions <i class="caret"></i></button>
+				{lang code='vdo_actions'} <i class="caret"></i></button>
 			<ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
 			{if $cbvid->is_video_owner($video.videoid,$user.userid) || has_access('admin_access')}
-				<li><a role="menuitem" tabindex="-1" href="{$baseurl}/edit_video.php?vid={$video.videoid}" class="">Edit</a></li>
+				<li><a role="menuitem" tabindex="-1" href="{$baseurl}/edit_video.php?vid={$video.videoid}" class="">{lang code='edit_video'}</a></li>
 
-				<li><a role="menuitem" tabindex="-1" href="javascript:_cb.Confirm_Delete('?vid_delete={$video.videoid}')">Delete</a>
+				<li><a role="menuitem" tabindex="-1" href="javascript:_cb.Confirm_Delete('?vid_delete={$video.videoid}')">{lang code='del_video'}</a>
 				</li>
 			{/if}
-				<li><a role="menuitem" tabindex="-1" href="{$baseurl}/watch_video.php?v={$video.videokey}"target="_blank">Watch</a>
+				<li><a role="menuitem" tabindex="-1" href="{$baseurl}/watch_video.php?v={$video.videokey}"target="_blank">{lang code='watch'}</a>
 					
 				</li>
 
