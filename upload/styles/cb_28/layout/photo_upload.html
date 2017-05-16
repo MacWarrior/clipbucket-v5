@@ -445,6 +445,11 @@ uploader.bind("BeforeUpload", function(){
 					   		}).success(function(msg){
 					   			$("#uploadMessage").removeClass("hidden");
 					   			$("#uploadMessage").html("Picture details are successfully updated").attr("class", "alert alert-success");
+									
+									$('html,body').animate({
+					        		scrollTop: $("body").offset().top},
+					        		'medium');
+					        							   			
 					   			setTimeout(function(){
 					   				$("#uploadMessage").addClass("hidden");
 					   			}, 5000);
