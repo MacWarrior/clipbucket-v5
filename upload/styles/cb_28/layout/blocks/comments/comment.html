@@ -48,6 +48,7 @@
 {else}
 
 <li id="comment_{$comment.comment_id}" class="clearfix"  {$comment_attr}>
+	<hr>
 	<div class="comments-box clearfix">
 		{$user_id=$comment.userid}
 		{$user=$userquery->get_user_details($user_id)}
