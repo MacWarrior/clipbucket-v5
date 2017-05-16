@@ -71,8 +71,6 @@ INSERT INTO `{tbl_prefix}user_permissions` (
 `permission_default`
 )VALUES (
 NULL , '3', 'Allow photo moderation', 'photos_moderation', 'Allow user to moderation photos from admin panel', 'yes'), (
-NULL , '2', 'Allow create collection', 'allow_create_collection', 'Allow users to create collection', 'yes'), (
-NULL , '2', 'Allow create playlist', 'allow_create_playlist', 'Allow users to create playlist', 'yes'), (
 NULL , '3', 'Collection moderation', 'collection_moderation', 'Allow users to moderate collection', 'yes'), (
 NULL , '3', 'Plugins moderation', 'plugins_moderation', 'Allow user to moderate plugins', 'yes'), (
 NULL , '3', 'Tool Box', 'tool_box', 'Allow users to access tool box', 'yes');
@@ -88,3 +86,21 @@ UPDATE `{tbl_prefix}user_levels_permissions` SET `photos_moderation` = 'yes',
 ALTER TABLE  `{tbl_prefix}user_levels_permissions` ADD  `allow_manage_user_level` ENUM(  'yes',  'no' ) NOT NULL DEFAULT  'no' AFTER  `plugins_perms`;
 UPDATE  `{tbl_prefix}user_levels_permissions` SET  `allow_manage_user_level` =  'yes' WHERE  `cb_user_levels_permissions`.`user_level_permission_id` =1;
 INSERT INTO `{tbl_prefix}user_permissions` (`permission_id`, `permission_type`, `permission_name`, `permission_code`, `permission_desc`, `permission_default`) VALUES (NULL, '3', 'Allow manage user levels', 'allow_manage_user_level', 'Allow user to edit user levels', 'no');
+
+
+-- 2.8
+-- Adding new user level permission
+-- Author Awais
+
+ALTER TABLE  `{tbl_prefix}user_levels_permissions` ADD  `allow_create_collection` ENUM(  'yes',  'no' ) NOT NULL DEFAULT  'yes' AFTER  `allow_manage_user_level`;
+ALTER TABLE  `{tbl_prefix}user_levels_permissions` ADD  `allow_create_playlist` ENUM(  'yes',  'no' ) NOT NULL DEFAULT  'yes' AFTER  `allow_create_collection`;
+INSERT INTO `{tbl_prefix}user_permissions` (
+`permission_id` ,
+`permission_type` ,
+`permission_name` ,
+`permission_code` ,
+`permission_desc` ,
+`permission_default`
+)VALUES ((
+NULL , '2', 'Allow create collection', 'allow_create_collection', 'Allow users to create collection', 'yes'), (
+NULL , '2', 'Allow create playlist', 'allow_create_playlist', 'Allow users to create playlist', 'yes');
