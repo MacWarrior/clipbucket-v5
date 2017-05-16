@@ -11,6 +11,6 @@ INSERT INTO `{tbl_prefix}user_permissions` (
 `permission_code` ,
 `permission_desc` ,
 `permission_default`
-)VALUES ((
+)VALUES(
 NULL , '2', 'Allow create collection', 'allow_create_collection', 'Allow users to create collection', 'yes'), (
 NULL , '2', 'Allow create playlist', 'allow_create_playlist', 'Allow users to create playlist', 'yes');
