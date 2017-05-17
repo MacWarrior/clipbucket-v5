@@ -48,18 +48,27 @@
 <script type="text/javascript" src="{$theme_url}/../../../../js/admin_functions.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 <script type="text/javascript" src="{$baseurl}/js/jquery_plugs/jquery.cookie.js"></script>
+
 <!-- for bootstrap wysiwyg -->
 <link rel="stylesheet" href="{$theme_url}/css/summernote.css" />
 <script src="{$theme_url}/js/editor.js"></script>
 <script src="{$theme_url}/js/main.js"></script>
-<script src="{$theme_url}/js/tinymce/tinymce.min.js"></script>
+<script src="{$theme_url}/js/jquery.amcharts.js" type="text/javascript"></script>
+<script src="{$theme_url}/js/jquery.pie.js" type="text/javascript"></script>
+<script src="{$theme_url}/js/jquery.light.js" type="text/javascript"></script>
+
+<script src="{$theme_url}/js/jquery.serial.js" type="text/javascript"></script>
+<script src="{$theme_url}/js/jquery.bootstrap.newsbox.js" type="text/javascript"></script>
+<script src="{$theme_url}/js/jquery.bootstrap.newsbox.min.js" type="text/javascript"></script>
+<script src="Chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
 
 <!-- for bootstrap wysiwyg -->
 
 <!-- for popovers -->
 <script>
-	if( $(".popoverButton").length > 0 )
-		$(".popoverButton").popover();
+    if( $(".popoverButton").length > 0 )
+        $(".popoverButton").popover();
 </script>
 
 <!-- bootstrap x-editable -->
@@ -74,7 +83,7 @@
             url:baseurl+'/admin_area/index.php?mode=update_pharse',
             pk: function(){
                 var id = $(this).attr("id");
-                
+
                 id = id.match(/([0-9]+)$/g);
                return id.pop();
             },
@@ -95,7 +104,7 @@
     });
 
     $(function()
-	{
+    {
         $(".saveTodo").click(function(e){
             var self = this;
              var newVal = $(this).parent().parent().find("input[name='todo']").val();
@@ -128,26 +137,26 @@
              }
         });
 
-		$("#todolist").on("click", ".editable-clear-x", function(e){
-			e.preventDefault();
-				var self = this;
-				var id = $(this).parents(".editable-container").prev().attr("id");
-				id = id.match(/([0-9]+)$/g);
-				id = id.pop();
-				var ajaxCall = $.ajax({
-					url: "{$baseurl}" + "/admin_area/index.php",
-					type: "post",
-					data: {
-						id: id,
-						mode: "delete_todo",
-					},
-				});
-				ajaxCall.success(function(data){
-					$(self).parents("p").remove();
-					$(self).parents(".editable-container").remove();
-				});
-				e.stopPropagation();
-		});
+        $("#todolist").on("click", ".editable-clear-x", function(e){
+            e.preventDefault();
+                var self = this;
+                var id = $(this).parents(".editable-container").prev().attr("id");
+                id = id.match(/([0-9]+)$/g);
+                id = id.pop();
+                var ajaxCall = $.ajax({
+                    url: "{$baseurl}" + "/admin_area/index.php",
+                    type: "post",
+                    data: {
+                        id: id,
+                        mode: "delete_todo",
+                    },
+                });
+                ajaxCall.success(function(data){
+                    $(self).parents("p").remove();
+                    $(self).parents(".editable-container").remove();
+                });
+                e.stopPropagation();
+        });
     });
 </script>
 
