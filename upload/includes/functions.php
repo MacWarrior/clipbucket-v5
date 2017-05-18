@@ -615,7 +615,7 @@
 			$cond .= $params['cond'];
 		}
 
-        $query = "SELECT * FROM ".tbl("comments".($params['sectionTable']?",".$params['sectionTable']:NULL));
+        $query = "SELECT *".", ".tbl("comments.userid")." AS "."c_userid"." FROM ".tbl("comments".($params['sectionTable']?",".$params['sectionTable']:NULL));
 
         if($cond) {
             $query .= " WHERE ".$cond;
@@ -627,14 +627,16 @@
         if($limit) {
             $query .=" LIMIT ".$limit;
         }
-
+        // pr($query,true);
 		if(!$params['count_only']) {
             $result = db_select($query);
         }
-
+        // pr($result,true);
 		if($params['count_only']) {
+			$cond = tbl("comments.type")."= '". $params['type'] ."'";
 			$result = $db->count(tbl("comments"),"*",$cond);
 		}
+		// pr($result,true);
 		if($result) {
 			return $result;
 		} else {
