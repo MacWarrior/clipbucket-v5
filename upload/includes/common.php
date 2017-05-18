@@ -322,6 +322,7 @@
 	define('FILES_DIR',BASEDIR.'/files');
 	define('VIDEOS_DIR',FILES_DIR.'/videos');
 	define('THUMBS_DIR',FILES_DIR.'/thumbs');
+	define('AUDIOS_DIR',FILES_DIR.'/audios');
 	define('SPRITES_DIR',FILES_DIR.'/sprites');
 	define('ORIGINAL_DIR',FILES_DIR.'/original');
 	define('TEMP_DIR',FILES_DIR.'/temp');

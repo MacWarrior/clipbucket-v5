@@ -3964,7 +3964,14 @@ class userquery extends CBCategory{
 				$cond .= ' AND ';
 			$cond .= " users.featured = '".$params['featured']."' ";
 		}
-		
+
+		if(!empty($params['search_username']))
+		{
+			if($cond!='')
+				$cond .= ' AND ';
+			$cond .= " users.username LIKE '%".$params['search_username']."%'";
+		}
+
 		//Email
 		if(!empty($params['username']))
 		{
