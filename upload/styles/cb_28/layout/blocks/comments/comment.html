@@ -46,10 +46,14 @@
 
 
 	{else}
+	<!-- changes made -->
+	<script>
+	var assigningClassToId = document.getElementById("comment_{$comment.comment_id}");
+	assigningClassToId.className += " heighlightacomment";
+	</script>
+	<!-- changes made -->
 
-
-
-	<li id="comment_{$comment.comment_id}" class="clearfix"  {$comment_attr} >
+	<li id="comment_{$comment.comment_id}" class="clearfix"  {$comment_attr} style="padding:10px;">
 		<hr>
 		<div class="comments-box clearfix">
 			{$user_id=$comment.userid}
@@ -205,29 +209,6 @@
 <!-- <script>
 $("html, body").delay(500).animate({ scrollTop: $('#comment_{$comment.comment_id}').offset().top }, 500);
 </script> -->
-
-<style type="text/css" media="screen">
-	@keyframes highlight{
-	  0% {
-	    background: #e0e0e0;
-
-	  }
-	  100% {
-	    background: none;
-
-	  }
-	}
-
-	#comment_{$comment.comment_id}:target {
-		animation: highlight 5s;
-	}
-	#comment_{$comment.comment_id}{
-		padding:10px;
-		border-radius: 10px;
-	}
-
-</style>
-
 
 
 
