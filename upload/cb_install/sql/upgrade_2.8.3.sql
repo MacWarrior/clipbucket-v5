@@ -14,3 +14,4 @@ INSERT INTO `{tbl_prefix}user_permissions` (
 )VALUES(
 NULL , '2', 'Allow create collection', 'allow_create_collection', 'Allow users to create collection', 'yes'), (
 NULL , '2', 'Allow create playlist', 'allow_create_playlist', 'Allow users to create playlist', 'yes');
+INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES (NULL, 'video_round_views', 'yes');

@@ -23,8 +23,20 @@
 						<h2 class="user-title">
 							<a href="{$userquery->profile_link($video)}"> {$video.username}</a>
 						</h2>
+						<!-- look at  -->
 						<div class="views-counter">
-							<span>{prettyNum($vdo.views)} {if $vdo.views > 1}{lang code='views'}{else}{lang code="view"}{/if}</span>
+							<span>
+							{if $Cbucket->configs.video_round_views=='yes'}
+							{prettyNum($vdo.views)}
+							{else}
+							{( $vdo.views )}
+							{/if}
+							{if $vdo.views > 1}
+							{lang code='views'}
+							{else}
+							{lang code="view"}
+							{/if}
+							</span>
 						</div>
 					</div>
 					<div class="user-likes-sub clearfix">

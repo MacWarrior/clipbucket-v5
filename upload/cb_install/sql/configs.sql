@@ -284,5 +284,8 @@ INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES ('youtube_api_key','');
 -- Addition for 2.8.2
 INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES ('popup_video','yes');
 
+-- Addition for 2.8.3
+INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES (NULL, 'video_round_views', 'yes');
+
 
 

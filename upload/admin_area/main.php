@@ -244,7 +244,8 @@ if(isset($_POST['update'])){
 					'store_guest_session',
 					'delete_mass_upload',
 					'stay_mp4',
-					'popup_video'
+					'popup_video',
+					'video_round_views'
 					
 					);
 	

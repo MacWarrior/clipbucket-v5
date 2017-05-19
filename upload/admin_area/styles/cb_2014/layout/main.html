@@ -399,6 +399,22 @@
               <label for="php_path8">Max categories for each video</label>
               <input class="form-control" name="video_categories" type="text" id="php_path8" value="{$row.video_categories}" size="15" maxlength="5" />
           </div>
+         
+
+
+          <!-- changes made -->
+          <div class="col-md-4">
+              <label for="video_round_views">Enable round views on watch video page</label>
+              <select name="video_round_views" id="video_round_views" class="form-control">
+                  <option value="yes" {if $row.video_round_views!='no'} selected="selected"{/if}>Yes</option>
+                  <option value="no" {if $row.video_round_views=='no'} selected="selected"{/if}>No</option>
+              </select>
+          </div>
+          <!-- changes made -->
+
+
+
+
               </div>
             <div class="row">
           <div class="col-md-4">
