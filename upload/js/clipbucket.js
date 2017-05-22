@@ -1856,9 +1856,10 @@
 			$(document).find('#headErr').remove();
 			hideAfter = parseInt(hideAfter);
 			
+			/*
 			if (scroll == true) {
 				$("html, body").animate({ scrollTop: 0 }, "slow");
-			}
+			}*/
 
 			if (hideAfter < 10) {
 				hideAfter = 3000;
@@ -1868,7 +1869,9 @@
 				tclass = 'info';
 			}
 
-			$('<div id="headErr" style="display:none" class="alert-msg-holder"><div class="alert alert-'+tclass+' alert-dismissible alert-ajax" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+msg+'</div></div>').insertAfter('#header').fadeIn('slow').delay(hideAfter).fadeOut();
+			/*$('<div id="headErr" style="display:none" class="alert-msg-holder"><div class="alert alert-'+tclass+' alert-dismissible alert-ajax" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+msg+'</div></div>').insertAfter('#header').fadeIn('slow').delay(hideAfter).fadeOut();*/
+			$('<div id="headErr" class="alert_messages_holder" style="display:none"><div class="alert alert-'+tclass+' alert-messages alert-ajax" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+msg+'</div></div>').insertAfter('#header').fadeIn('slow').delay(hideAfter).fadeOut();
+
 		};
 		
 		/**
