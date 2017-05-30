@@ -455,6 +455,7 @@ if(!function_exists('user_thumb'))
         
         $size = ( !in_array( $size, $default ) or !$size ) ? 't' : $size;
 
+        list($width,$height) = explode('x',$params['size']);
         
         if( $size=='l')
         {
@@ -471,7 +472,12 @@ if(!function_exists('user_thumb'))
           $w = 40;
           $h = 40;  
         }
-
+        if(isset($width) && is_numeric($width) && isset($height) && is_numeric($height) )
+        {
+            $w = $width;
+            $h = $height;   
+        }
+      
         $tim_postfix = '&type=users&h='.$h.'&w='.$w.'&zc=1';
 
         $timthumb_path = CB_SERVER_THUMB_URL.'/timthumb.php?src=';
