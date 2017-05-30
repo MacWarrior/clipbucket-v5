@@ -48,6 +48,20 @@ if(isset($_FILES["coverPhoto"])){
 	die();
 }
 
+if(isset($_FILES["avatar_file"]) && $_GET['ajax'] == true){
+	$array = $_FILES;
+	$array['userid'] = userid();
+	$userquery->update_user_avatar_bg($array);
+	$timeStamp = time();
+	$response = array(
+		"status" => $coverUpload["status"],
+		"msg" => $coverUpload["msg"],
+		"url" => $userquery->getUserThumb(false,false,userid()) . "?{$timeStamp}",
+		);
+	echo json_encode($response);
+	die();
+}
+
 //Changing Email
 if(isset($_POST['change_email']))
 {

@@ -4588,6 +4588,17 @@
 				$cbfeeds->addFeed($feed);
 			}
 			break;
+			case "add_comment":
+			{
+
+				$feed['action'] = 'add_comment';
+				$feed['object'] = $array['object'];
+				$feed['object_id'] = $array['object_id'];		
+				$feed['uid'] = $userid;;
+				
+				$cbfeeds->addFeed($feed);
+			}
+			break;
 			case "upload_video":
 			case "add_favorite":
 			{
@@ -5829,6 +5840,8 @@
     		echo 'Caught exception: ',  $e->getMessage(), "\n";
     	}
 	}
+
+	
 
 
     include( 'functions_db.php' );

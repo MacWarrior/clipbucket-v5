@@ -67,7 +67,9 @@ foreach($files as $file)
 
 	
 		update_processed_video($file,'Successful');
-
+		if (SOCIAL_APP_INSTALLED == 'INSTALLED'){
+			$cbPosts->special_video_post_update($file_name,"active");
+		}
 		$db->update(tbl("conversion_queue"),
 		array("cqueue_conversion","time_completed"),
 		array("yes",time())," cqueue_id = '".$file['cqueue_id']."'");
