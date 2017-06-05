@@ -67,8 +67,11 @@
 
 <!-- for popovers -->
 <script>
-    if( $(".popoverButton").length > 0 )
-        $(".popoverButton").popover();
+    $(document).ready(function(){
+        if( $(".popoverButton").length > 0 ){
+            $(".popoverButton").popover();
+        }     
+    });
 </script>
 
 <!-- bootstrap x-editable -->
