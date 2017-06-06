@@ -499,7 +499,6 @@ $(document).ready(function() {
 {/if}
 
 {if $object.photo_id}
-	<meta property="og:url"   content="" />
 	<meta property="og:title" content="{$object.photo_title}" />
 	<meta property="og:description" content="{$object.photo_description|description}" />
 	<meta property="og:image" content="{get_photo details=$object size='m' output='non_html' alt=$object.photo_title}" />

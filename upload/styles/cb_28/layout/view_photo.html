@@ -119,11 +119,12 @@
 						</ul>
 					</div>
 				</div>
-
+				<!-- {$cbphoto->photo_links($photo,'view_item')} -->
+				<!-- {assign var="photo_url" value="{$baseurl}/view_item.php?item={$photo.photo_key}&type=photos&collection={$photo.collection_id}"}  -->
 				<div class="tab-pane fade in clearfix" id="cb-item-share">
 					<ul class="social-share">
 						<li>
-							<a class="btn-fb icon-facebook" href="http://www.facebook.com/sharer/sharer.php?s=100&p[url]={videoLink($photo)|urlencode}&p[images][0]={$shareableThumb}&p[title]={$photo.photo_title|title|urlencode}&p[summary]={$photo.photo_description|description|urlencode}" target="_blank">
+							<a class="btn-fb icon-facebook" href="http://www.facebook.com/sharer/sharer.php?s=100&p[url]={$cbphoto->photo_links($photo,'view_item')|urlencode}&p[images][0]={$shareableThumb}&p[title]={$photo.photo_title|title|urlencode}&p[summary]={$photo.photo_description|description|urlencode}" target="_blank">
 								<span>Facebook</span>
 							</a>
 						</li>
