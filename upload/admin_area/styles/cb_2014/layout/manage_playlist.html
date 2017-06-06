@@ -27,13 +27,13 @@
 								<td><strong>{lang code='Details'}</strong></td>
 								<td width="130"><strong>{lang code='date_added'}</strong></td>
 								<td width="80" class="last_td"><strong>{lang code='total_items'}</strong></td>
-								<td width="130"><strong>{lang code='View/Edit'}</strong></td>
-								<td width="80"><strong>{lang code='Delete'}</strong></td>
+								<td width="130"><strong>{lang code='view_edit_playlist'}</strong></td>
+								<td width="80"><strong>{lang code='delete'}</strong></td>
 							</tr>
 								
 								{if $playlists!=true}
 								<h4 style="text-align: center;">
-								<strong>{lang code='No Playlist Found'}</strong>
+								<strong>{lang code='no_playlist_found'}</strong>
 								</h4>
 								{/if}
 							
@@ -49,17 +49,17 @@
 									{$playlists[plist].playlist_name|truncate:100}
 								</td>
 									<td valign="middle">
-									<span class="label label-primary"> <strong>Owner : 
+									<span class="label label-primary"> <strong>{lang code='playlist_owner'} : 
 										<!-- changes made -->
 										{assign var=obj value=$userquery->get_user_details($playlists[plist].userid)}
 										{$obj['username']}
 										<!-- changes made -->
 									</strong></span>
-									<span class="label label-primary"> <strong>Privacy : {$playlists[plist].privacy}</strong></span>
+									<span class="label label-primary"> <strong>{lang code='playlist_privacy'} : {$playlists[plist].privacy}</strong></span>
 									</td>
 								<td>{$playlists[plist].date_added|date_format}</td>
 								<td>{$cbvid->action->count_playlist_items($playlists[plist].playlist_id)|number_format}</td>
-								<td><a href="?mode=edit_playlist&amp;pid={$playlists[plist].playlist_id}">{lang code='View/Edit'}</a></td>
+								<td><a href="?mode=edit_playlist&amp;pid={$playlists[plist].playlist_id}">{lang code='view_edit_playlist'}</a></td>
 								<td><a href="javascript:void(0)"  onmousedown="delete_video('delete_icon_a','{$playlists[plist].playlist_id}','{lang code="remove_playlist_confirm"}','?mode=manage_playlist&amp;delete_pl={$playlists[plist].playlist_id}')" id="delete_icon_a-{$playlists[plist].playlist_id}">{lang code='delete'}</a></td>
 							</tr>
 							{/section}
@@ -96,6 +96,7 @@
 					{/if}
 					<form name="edit_playlist" method="post">
 						<input type="submit" class="btn btn-primary" value="{lang code='delete_selected'}" name="delete_playlist_item"/>
+						<div style="padding:5px;"></div>
 						<div class="account_table">
 							<table class="table table-striped table-bordered">
 								<tr>
