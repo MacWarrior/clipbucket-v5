@@ -3,15 +3,15 @@
 {assign var=war value=$eh->warning_list}
 
 {if $err.0 neq '' || $err.1 != ''}
-<!-- <div class="alert alert-danger alert-dismissable container">
+<div class="alert alert-danger alert-dismissable container">
     <button class="close" type="button" data-dismiss="alert" aria-hidden="true">x</button>
     <ul  class="list-unstyled">
         {foreach from=$err item=show_msg}
         <li> {$show_msg} </li>
         {/foreach}
     </ul>
-</div> -->
-<div class="alert_messages_holder">
+</div>
+<!-- <div class="alert_messages_holder">
     <div class="alert alert-danger alert-messages" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <ul  class="list-unstyled">
@@ -20,20 +20,20 @@
         {/foreach}
         </ul>
     </div>
-</div>
+</div> -->
 {/if}
 
 
 {if $msg.0 neq ''}
-<!-- <div class="alert alert-success alert-dismissable container">
+<div class="alert alert-success alert-dismissable container">
     <button class="close" type="button" data-dismiss="alert" aria-hidden="true">x</button>
     <ul class="list-unstyled">
         {foreach from=$msg item=show_msg}
         <li>{$show_msg}</li>
         {/foreach}
     </ul>
-</div> -->
-<div class="alert_messages_holder">
+</div>
+<!-- <div class="alert_messages_holder">
     <div class="alert alert-success alert-messages" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <ul class="list-unstyled">
@@ -42,12 +42,12 @@
         {/foreach}
         </ul>
     </div>
-</div>
+</div> -->
 {/if}
 
 
 {if $war.0 neq ''}
-<!-- <div class="alert alert-warning alert-dismissable container">
+<div class="alert alert-warning alert-dismissable container">
     <button class="close" type="button" data-dismiss="alert" aria-hidden="true">x</button>
     <ul class="list-unstyled">
         <img src="{$imageurl}/messagebox_warning.png" style="float:left" />
@@ -56,8 +56,8 @@
         {/foreach}
     </ul>
     <div class="clearfix"></div>
-</div> -->
-<div class="alert_messages_holder">
+</div>
+<!-- <div class="alert_messages_holder">
     <div class="alert alert-warning alert-messages" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <ul class="list-unstyled">
@@ -67,5 +67,5 @@
         {/foreach}
         </ul>
     </div>
-</div>
+</div> -->
 {/if}
