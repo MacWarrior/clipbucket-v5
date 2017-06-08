@@ -794,6 +794,8 @@ if(!empty($mode))
 			$parent_id = $new_com['parent_id'];
 			assign('type_id',$type_id);
 
+			$new_com['comment']=html_entity_decode(stripslashes($new_com['comment']));
+
 			if ($parent_id)
 			{
 

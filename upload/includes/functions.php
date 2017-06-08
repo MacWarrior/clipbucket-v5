@@ -638,7 +638,14 @@
 		}
 		// pr($result,true);
 		if($result) {
+			
+
+			foreach ($result as $key=>$val) 
+			{
+			  $result[$key]['comment'] = html_entity_decode(stripslashes($result[$key]['comment']));
+			}
 			return $result;
+			
 		} else {
 			return false;						
 		}
