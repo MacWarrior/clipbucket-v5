@@ -87,8 +87,13 @@ class userquery extends CBCategory{
 
 		$udetails = "";
 		
-		if($this->userid)
+		if($this->userid){
 			$udetails = $this->get_user_details($this->userid,true);
+			$user_profile = $this->get_user_profile($this->userid);
+			if ($udetails && $user_profile){
+				$udetails['profile'] = $user_profile;
+			}
+		}
 
 
 
