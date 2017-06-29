@@ -88,7 +88,7 @@ if(isset($_POST['youtube']))
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($ch, CURLOPT_URL, $request);
-
+	curl_setopt($ch, CURLOPT_TIMEOUT, 60);
 	$youtube_content = curl_exec($ch);
 	curl_close($ch);
 
