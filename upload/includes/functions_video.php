@@ -1127,7 +1127,9 @@
     function video_users($users)
     {
         global $userquery;
-        $users_array = explode(',',$users);
+        if (!empty($users)){
+            $users_array = explode(',',$users);
+        }
         $new_users = array();
         foreach($users_array as $user)
         {
