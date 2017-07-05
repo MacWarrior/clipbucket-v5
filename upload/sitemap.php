@@ -25,7 +25,7 @@ $videos = get_videos(array('limit'=>$limit,'active'=>'yes','order'=>'date_added 
 <video:content_loc><?=get_video_file($video)?></video:content_loc>
 <video:player_loc allow_embed="yes"><?=BASEURL ?>/player/old_players/embed_player.swf?file=<?=get_video_file($video)?></video:player_loc>
 <video:thumbnail_loc><?=get_thumb($video)?></video:thumbnail_loc>
-<video:title><![CDATA[<?=substr($video['title'],0,50)?>]]></video:title>
+<video:title><![CDATA[<?=substr($video['title'],0,500)?>]]></video:title>
 <video:description><![CDATA[<?=substr($video['description'],0,300)?>]]></video:description>
 <video:rating><?php 
 $vrating = $video['rating'] / 2;
