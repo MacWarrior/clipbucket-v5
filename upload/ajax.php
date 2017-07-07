@@ -692,68 +692,48 @@ if(!empty($mode))
 				case 'v':
 				case 'video':
 				default:
-				{
 					$id = mysql_clean($_POST['obj_id']);
 					if($comment=='undefined')
 						$comment = '';
 					$reply_to = $_POST['reply_to'];
-					$email = $_POST['email'];
-					if (!isValidEmail($email)) {
-						$err = array();
-						$err['err'] = lang('invalid_email');
-						echo json_encode($err);
-						return false;
-					}
 					$cid = $cbvid->add_comment($comment,$id,$reply_to);
-				}
-				break;
+					break;
+
 				case 'u':
 				case 'c':
-				{
-					
 					$id = mysql_clean($_POST['obj_id']);
 					if($comment=='undefined')
 						$comment = '';
 					$reply_to = $_POST['reply_to'];
-					
 					$cid = $userquery->add_comment($comment,$id,$reply_to);
-				}
-				break;
+					break;
+
 				case 't':
 				case 'topic':
-				{
-					
 					$id = mysql_clean($_POST['obj_id']);
 					if($comment=='undefined')
 						$comment = '';
 					$reply_to = $_POST['reply_to'];
-					
 					$cid = $cbgroup->add_comment($comment,$id,$reply_to);
-				}
-				break;
+					break;
 				
 				case 'cl':
 				case 'collection':
-				{
 					$id = mysql_clean($_POST['obj_id']);
 					if($comment=='undefined')
 						$comment = '';
 					$reply_to = $_POST['reply_to'];
-					
-					$cid = $cbcollection->add_comment($comment,$id,$reply_to);	
-				}
-				break;
+					$cid = $cbcollection->add_comment($comment,$id,$reply_to);
+					break;
 				
 				case "p":
 				case "photo":
-				{
 					$id = mysql_clean($_POST['obj_id']);
 					if($comment=='undefined')
 						$comment = '';
 					$reply_to = $_POST['reply_to'];
-					$cid = $cbphoto->add_comment($comment,$id,$reply_to);	
-				}
-				break;
+					$cid = $cbphoto->add_comment($comment,$id,$reply_to);
+					break;
 				
 			}
 			
