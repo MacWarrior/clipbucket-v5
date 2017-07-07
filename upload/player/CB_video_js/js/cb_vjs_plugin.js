@@ -75,8 +75,6 @@ cbvjsvolume.prototype.init = function(){
 		}else{
 			cbvjsvolume.player.volume(cbvjsvolume.vol_cookie);
 		}
-	}else{
-		console.log("Ninja : Dont Mess Around Here! ");
 	}
 	cbvjsvolume.player.on('volumechange',function()
     {
