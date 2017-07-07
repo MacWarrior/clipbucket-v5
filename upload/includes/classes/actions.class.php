@@ -100,7 +100,7 @@ class cbactions
 		lang('other')		
 		);
 
-        $fields = array( 'playlist_id', 'playlist_name', 'description', 'tags', 'category',
+        $fields = array( 'playlist_id', 'playlist_name','userid', 'description', 'tags', 'category',
                          'played', 'privacy', 'total_comments', 'total_items', 'runtime',
                          'last_update', 'date_added', 'first_item', 'playlist_type', 'cover' );
 
@@ -132,15 +132,35 @@ class cbactions
 					
 					$db->insert(tbl($this->fav_tbl),array('type','id','userid','date_added'),array($this->type,$id,userid(),NOW()));
 					addFeed(array('action'=>'add_favorite','object_id' => $id,'object'=>'video'));
+					//adding according to type
+					switch ($this->type) {
+						case 'cl':
+							# code...
+							$the_type = 'collection';
+							break;
+						case 'p':
+							# code...
+							$the_type = 'photo';
+							break;							
+						
+						default:
+							# code...
+							$the_type = 'video';
+							break;
+					}
 
-					if ($this->type == 'cl') 
-					{
-						$the_type = 'collection';
-					}
-					else
-					{
-						$the_type = 'video';
-					}
+					// if ($this->type == 'cl') 
+					// {
+					// 	$the_type = 'collection';
+					// }
+					// else if($this->type == 'v')
+					// {		
+					// 	$the_type = 'video';
+					// }
+					// else
+					// {
+					// 	$the_type = 'photo';
+					// }
 
 					//Loggin Favorite			
 					$log_array = array
@@ -573,6 +593,7 @@ class cbactions
 
 	function create_playlist($params)
 	{
+		if(has_access('allow_create_playlist',false,$verify_logged_user)) {
 		global $db;
 		$name = mysql_clean($params['name']);
 		if(!userid())
@@ -594,6 +615,8 @@ class cbactions
 		}
 		
 		return false;
+	}
+
 	}
 	
 	/**
@@ -725,7 +748,7 @@ class cbactions
                 $db->update( tbl( 'playlists' ), array_keys( $fields ), array_values( $fields ), " playlist_id = '".$pid."' " );
 
                 //e( sprintf( lang( 'this_thing_added_playlist' ), $this->name ), "m" );
-                e('<div class="alert alert-success">This video has been added to playlist</div>', "m" );
+                e('<div class="alert alert-success">'.lang( 'video_added_to_playlist' ).'</div>', "m" );
                 return $video;
             }
 		}
@@ -1003,11 +1026,20 @@ class cbactions
 
         $order = $params[ 'order' ];
         $limit = $params[ 'limit' ];
+        
+        //changes made
+        
+        $playlist_name = $params[ 'playlist_name' ];
+        $tags = $params[ 'tags' ];
+        $userid = $params[ 'userid' ];
+        
 
         $main_query = $query = "SELECT ".table_fields( $fields )." FROM ".table( 'playlists' );
-        $condition = "playlists.playlist_type = 'v'";
+        // $condition = "playlists.playlist_type = 'v'";
 
-        if ( !has_access( 'admin_access' ) ) {
+        
+
+		if ( !has_access( 'admin_access' ) ) {
             $condition .= ( $condition ) ? " AND " : "";
             $condition .= "playlists.privacy = 'public'";
         } else {
@@ -1058,6 +1090,24 @@ class cbactions
             $condition .= ( $condition ) ? " AND " : "";
             $condition .= " playlists.userid = '".$params[ 'user' ]."' ";
         }
+        ////////////CHANGES/////////////
+
+        if( isset($userid) ) {
+            $condition .= ( $condition ) ? " AND " : "";
+            $condition .= " playlists.userid = '".$userid."' ";
+        }
+
+        if( isset($tags) ) {
+            $condition .= ( $condition ) ? " AND " : "";
+            $condition .= " playlists.tags LIKE '%$tags%' ";
+        }
+
+        if( isset($playlist_name) ) {
+            $condition .= ( $condition ) ? " AND " : "";
+            $condition .= " playlists.playlist_name LIKE '%$playlist_name%' ";
+        }                
+
+        ////////////CHANGES/////////////
 
         if ( isset($params[ 'has_items' ]) ) {
             $condition .= ( $condition ) ? " AND " : "";
@@ -1065,7 +1115,7 @@ class cbactions
         }
 
         if(isset($params['count_only'])){
-              $result = $db->count( cb_sql_table('playlists') , 'playlist_id'  );
+              $result = $db->count( cb_sql_table('playlists') , 'playlist_id' , $condition);
             	return $result;
 		}
 

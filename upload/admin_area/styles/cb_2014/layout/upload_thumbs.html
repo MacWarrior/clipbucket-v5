@@ -40,15 +40,17 @@
     </div>
 </form>
 <form action="upload_thumbs.php?video={$data.videoid}" method="post" enctype="multipart/form-data" name="form1">
-    <div id="thumb_fileds" class="form-group">
-        <a href="javascript:void(0)" onclick="$('#thumb_fileds').append('<input name=\'vid_thumb[]\' type=\'file\' /><br>')">+ Insert More</a></div>
+<!--     <div id="thumb_fileds" class="form-group">
+        <a href="javascript:void(0)" onclick="$('#thumb_fileds').append('<input name=\'vid_thumb[]\' type=\'file\' /><br>')">+ Insert More</a></div> -->
+        <h5>Upload New Thumb</h5>
         <input name="vid_thumb[]" type="file" />
         <label for="thumb_file"></label>
-    </div>
-    <div class="form-group pull-right">
-        <input type="submit" name="upload_thumbs" value="Upload Thumb(s)" class="btn btn-primary btn-sm"/>
-    </div>
-    </form>
+        <div class="form-group pull-right">
+            <input type="submit" name="upload_thumbs" value="Upload Thumb(s)" class="btn btn-primary btn-sm"/>
+        </div>
+        
+
+</form>
         {/if}
 
 

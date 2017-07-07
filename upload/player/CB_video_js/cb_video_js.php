@@ -47,6 +47,7 @@ if (!function_exists('cb_video_js'))
 		assign('vdata',$vdetails);
 		assign('cb_logo',cb_logo());
 		#assign('video_files',$video_play);
+		
 		Template(CB_VJS_PLAYER_DIR.'/cb_video_js.html',false);
 		return true;
 	}

@@ -1,7 +1,7 @@
 <div id="messageFav" class="channel-alert"></div>
 <div class="cover" id="coverContainer">
 	<div class="cover-holder clearfix">
-		<img class="img-responsive cb-live-background" src="{if $coverPhoto != ''}{$coverPhoto}{else}{$theme}/images/cover_default.jpg {/if}" size='1140x276' alt="">
+		<img class="img-responsive cb-live-background" src="{if $coverPhoto != ''}{$coverPhoto}{else}{$baseurl}/images/cover_default.jpg {/if}" size='1140x276' alt="">
 		
 		{if $user.userid == userid()}
 		<a href="#" class="btn btn-sm changeCover" id="changeCover">{lang code="update_cover"}<span class="icon-photo"></span></a>
@@ -28,7 +28,8 @@
 					<i class="icon-views"></i>{prettyNum($user.profile_hits)} &nbsp;<span>{lang code='views'}</span>
 				</li>
 				<li>
-					<i class="icon-subscribers"></i>{prettyNum($user.subscribers)} &nbsp;<span>{if $user.subscribers <= 1}{lang code='contact'}{else}{lang code='contacts'}{/if}</span>
+					<i class="icon-subscribers"></i>{prettyNum($user.subscribers)} &nbsp;<span>{if $user.subscribers <= 1}{lang code='Subscriber'}{else}{lang code='Subscribers'}{/if}</span>
+				
 				</li>
 			</ul>
 		</div>
@@ -65,7 +66,7 @@
 		<h2>{$user.username}</h2>
 		<div class="btn-holder">
 			{if $user.userid != userid()}
-				<button id="report-user" class="btn btn-default">{lang code="Report"}</button>
+				<button id="report-user" class="btn btn-default">{lang code="report_usr"}</button>
 				<a href="{$baseurl}/private_message.php?mode=new_msg&to={$user.username}" class="btn btn-default">
 					{lang code="user_send_message"}
 				</a>

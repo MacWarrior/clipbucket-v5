@@ -87,8 +87,13 @@ class userquery extends CBCategory{
 
 		$udetails = "";
 		
-		if($this->userid)
+		if($this->userid){
 			$udetails = $this->get_user_details($this->userid,true);
+			$user_profile = $this->get_user_profile($this->userid);
+			if ($udetails && $user_profile){
+				$udetails['profile'] = $user_profile;
+			}
+		}
 
 
 
@@ -3163,13 +3168,13 @@ class userquery extends CBCategory{
             lang('title_crt_new_msg')=> cblink(array('name'=>'compose_new')),
         );
 
-        if(isSectionEnabled('channels'))
-            $array[lang('contacts')] =  array
-            (
-                lang('com_manage_contacts') => 'manage_contacts.php?mode=manage',
-                lang('add_contact_list') => 'manage_contacts.php?mode=new_group',
-            );
-
+        // if(isSectionEnabled('channels'))
+        //     $array[lang('contacts')] =  array
+        //     (
+        //         lang('com_manage_contacts') => 'manage_contacts.php?mode=manage',
+        //         lang('add_contact_list') => 'manage_contacts.php?mode=new_group',
+        //     );
+		
         if(count($this->user_account)>0)
         {
             foreach($this->user_account as $key => $acc)
@@ -3184,7 +3189,7 @@ class userquery extends CBCategory{
            // pex($array,true);
             //$array = array_merge($array,$this->user_account);
         }
-
+     
         return $array;
     }
 	
@@ -3553,7 +3558,7 @@ class userquery extends CBCategory{
 		//die();
 
 		$isSocial = false;
-		if (isset($_POST['social_ac_id'])) {
+		if (isset($array['social_account_id'])) {
 			$isSocial = true;
 		}
 		if($array==NULL)
@@ -3838,18 +3843,18 @@ class userquery extends CBCategory{
 	{
 		global $db;
 		
-		$limit = isset($params['limit']);
-		$order = isset($params['order']);
+		$limit = $params['limit'];
+		$order = $params['order'];
 		
 		$cond = "";
 		if(!has_access('admin_access',TRUE) && !$force_admin)
 			$cond .= " users.usr_status='Ok' AND users.ban_status ='no' ";
 		else
 		{
-			if(isset($params['ban']))
+			if(!empty($params['ban']))
 				$cond .= " users.ban_status ='".$params['ban']."'";
 				
-			if(isset($params['status']))
+			if(!empty($params['status']))
 			{
 				if( $cond != '' )
 					$cond .= ' AND';
@@ -3858,9 +3863,9 @@ class userquery extends CBCategory{
 		}
 		
 		//Setting Category Condition
-		if(isset($params['category']) && !is_array($params['category']))
+		if(!empty($params['category']) && !is_array($params['category']))
 			$is_all = strtolower($params['category']);
-			
+
 		if(isset($params['category']) && $params['category'] != '' && $is_all != lang('all'))
 		{
 			if($cond!='')
@@ -3868,7 +3873,7 @@ class userquery extends CBCategory{
 				
 			$cond .= " (";
 			
-			if(isset($params['category']) && !is_array($params['category']))
+			if(!empty($params['category']) && !is_array($params['category']))
 			{
 				$cats = explode(',',$params['category']);
 			}else
@@ -3888,7 +3893,7 @@ class userquery extends CBCategory{
 		}
 		
 		//date span
-		if(isset($params['date_span']))
+		if(!empty($params['date_span']))
 		{
 			if($cond!='')
 				$cond .= ' AND';
@@ -3896,13 +3901,20 @@ class userquery extends CBCategory{
 		}
 
 		//FEATURED
-		if(isset($params['featured']))
+		if(!empty($params['featured']))
 		{
 			if($cond!='')
 				$cond .= ' AND';
 			$cond .= " users.featured = '".$params['featured']."' ";
 		}
-		
+
+		if(!empty($params['search_username']))
+		{
+			if($cond!='')
+				$cond .= ' AND ';
+			$cond .= " users.username LIKE '%".$params['search_username']."%'";
+		}
+
 		//Email
 		if(isset($params['username']) && $params['username'] != '')
 		{
@@ -3920,7 +3932,7 @@ class userquery extends CBCategory{
 		}
 		
 		//Exclude Users
-		if(isset($params['exclude']))
+		if(!empty($params['exclude']))
 		{
 			if($cond!='')
 				$cond .= ' AND';
@@ -3936,7 +3948,7 @@ class userquery extends CBCategory{
 		}
 		
 		//Sex
-		if(isset($params['gender']))
+		if(!empty($params['gender']))
 		{
 			if($cond!='')
 				$cond .= ' AND';
@@ -3951,7 +3963,7 @@ class userquery extends CBCategory{
 			$cond .= " users.level = '".$params['level']."' ";
 		}
 		
-		if(isset($params['cond']))
+		if(!empty($params['cond']))
 		{
 			if($cond!='')
 				$cond .= ' AND';
@@ -3982,12 +3994,15 @@ class userquery extends CBCategory{
 
             $result = select( $query );
         }
-		
-		
-		if( isset($params['count_only']) )
-			$result = $db->count(tbl('users')." AS users ",'userid',$cond);
 
-		if(isset($params['assign']))
+		if(!empty($params['count_only'])){
+
+            //$cond= substr($cond,8);
+			$result = $db->count(tbl('users')." AS users ",'userid',$cond);
+            //echo $cond;
+            //return $result;
+		}
+		if(isset($params['assign']) && $params['assign'] != '')
 			assign($params['assign'],$result);
 		else
 			return isset($result) ? $result : false;

@@ -1,7 +1,6 @@
-
 		{if $msg}
 		<div class="alert alert-block alert-info">
-			{$msg}
+		{$msg}
 		</div>
 		{/if}
 		<div id="uploadMessage" class=""></div>
@@ -40,6 +39,7 @@
 								{$counter = $counter + 1}
 							{/foreach}
 						</ul>
+						<!-- the div for upload file remote/normal-->
 						<div class="tab-content uploadFormDiv">
 							{$counter = 1}
 							{foreach from=$opt_list item=opt key=divid}     
@@ -48,12 +48,14 @@
 								{if $Cbucket->configs.$uploadOptId=='yes'} 
 								{if $counter == 1}{$class = "active"}{else}{$class = ""}{/if}
 								<div class="tab-pane fade in clearfix {$class} uploadForm" id="{$divid}">
+								<!-- this line call everything related to upload on the page -->
 									{load_form name=$opt.load_func button_class='cb_button_2' class='upload_form'} 
 								</div>
 								{/if}
 								{$counter = $counter + 1}
 							{/foreach}
 						</div>
+						<!-- ending of the div for upload file remote/normal-->
 					</div>
 				</div>
 					
@@ -74,6 +76,7 @@
 			var totalFiles = 0;
 			var baseurl = '{$baseurl}';
 			var config_for_mp4 = '{$config_for_mp4}';
+			var defaultCategory = "{$cbvid->get_default_cid()}";
 			if('{$uploaderDetails.uploadScriptPath}'!=''){
 			var uploadurl = '{$uploaderDetails.uploadScriptPath}';
 			}else{
@@ -159,11 +162,17 @@
 						$(oneUploadForm).find("input[name='title']").val(files[i].name.slice(0, -4));
 
 						$(oneUploadForm).find("textarea#desc").val(files[i].name.slice(0, -4));
-						$(oneUploadForm).find("input[name='category[]']:first").attr('checked', 'checked');
+						var categories = $(oneUploadForm).find("input[name='category[]']");
+						$.each(categories,function(i,v){ 
+							if ($(this).val() == defaultCategory ){ 
+								$(this).attr('checked', 'checked');
+							}; 
+						});
 						wrapperDiv.appendChild(oneUploadForm);   
 						uploadForms.push(wrapperDiv);
 					}
 
+					//function for real progress bar
 					$.each( uploadedFiles, function( key, fileNow ) {
 						console.log("filenow "+fileNow);
 					  	var currentTitle = fileNow.name,
@@ -178,6 +187,7 @@
 
 					    
 					});
+					//end function
 
 					$("#allUploadForms").html("");
 					$("#allUploadForms").append(uploadForms);
@@ -354,11 +364,20 @@
 								if(msg.error){
 									$("#uploadMessage").html(msg.error).attr("class", "alert alert-danger");
 								}else{
+									//Update message on submit changes
+									$("#uploadMessage").html("Video details have been updated Successfully").attr("class", "alert alert-success container"); 
+									
 									$("#uploadMessage").html(msg.msg).attr("class", "alert alert-success");
-								}
+									
+									$('html,body').animate({
+					        		scrollTop: $("body").offset().top},
+					        		'medium');
+					        		//Update message on submit changes
+					        	}
 								setTimeout(function(){
 									$("#uploadMessage").addClass("hidden");
-								}, 5000);
+									window.location = "{$baseurl}/manage_videos.php";
+								}, 3000);
 							}).fail(function(err){
 								console.log(err);
 							});
@@ -379,7 +398,7 @@
 					$('.progress-bar_'+pluploadFileId).css("width",filePercentage+"%");
 					//updawte progress bar text to show percentage
 					$('.realProgText_'+pluploadFileId).text(filePercentage+"% Completed");
-
+					// $("#progressNumber").text(file.percent + "%");
 					// meaning file has completely uploaded
 					if (filePercentage == 100) {
 						// remove cancel button

@@ -26,6 +26,7 @@ class errorhandler extends ClipBucket
 		//if id is set, error will be generated from error message list
 		if(!$ignore_cb_errors)
 			$this->error_list[] = $message;
+
         $this->error_list['all_errors']['user_error']['critical_priority'][] = $message;
 	}
 
@@ -42,7 +43,7 @@ class errorhandler extends ClipBucket
 	private function add_warning($message=NULL,$id=NULL) {
 		$this->warning_list[] = $message;
 		$this->user_errors['medium_priority'][] = $message;
-		$this->error_list['all_errors']['user_error']['medium_priority'][] = $message;
+		//$this->error_list['all_errors']['user_error']['medium_priority'][] = $message;
 	}
 
     public function get_warning()
@@ -170,7 +171,7 @@ class errorhandler extends ClipBucket
 	* @since : 19th January, 2017
 	*/
 	private function addAll($error, $state, $type) {
-		return $this->error_list['all_errors'][$type][$state][] = $error;
+		//return $this->error_list['all_errors'][$type][$state][] = $error;
 	}
 
     /**

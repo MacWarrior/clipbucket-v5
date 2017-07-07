@@ -11,6 +11,16 @@
         {/foreach}
     </ul>
 </div>
+<!-- <div class="alert_messages_holder">
+    <div class="alert alert-danger alert-messages" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <ul  class="list-unstyled">
+        {foreach from=$err item=show_msg}
+        <li> {$show_msg} </li>
+        {/foreach}
+        </ul>
+    </div>
+</div> -->
 {/if}
 
 
@@ -23,6 +33,16 @@
         {/foreach}
     </ul>
 </div>
+<!-- <div class="alert_messages_holder">
+    <div class="alert alert-success alert-messages" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <ul class="list-unstyled">
+        {foreach from=$msg item=show_msg}
+        <li>{$show_msg}</li>
+        {/foreach}
+        </ul>
+    </div>
+</div> -->
 {/if}
 
 
@@ -37,4 +57,15 @@
     </ul>
     <div class="clearfix"></div>
 </div>
+<!-- <div class="alert_messages_holder">
+    <div class="alert alert-warning alert-messages" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <ul class="list-unstyled">
+        <img src="{$imageurl}/messagebox_warning.png" style="float:left" />
+        {foreach from=$war item=show_msg}
+        <li>{$show_msg}</li>
+        {/foreach}
+        </ul>
+    </div>
+</div> -->
 {/if}

@@ -20,9 +20,15 @@
 				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 					<input type="button" class="btn mtm btn-block btn-primary" name="add_to_playlist" value="{lang code='add_to_playlist'}" class="cb_button" onclick="_cb.add_playlistNew('add','{$params.id}','add_playlist_form','{$type}')">
 				</div>
+				{if (has_access('allow_create_playlist',false,$verify_logged_user))}
 				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 					<a class="btn btn-block mtm btn-success" href="javascript:void(0);" onClick="$('#add_playlist_form').css('display','none');$('#new_playlist_form').css('display','block')">{lang code='create_new_playlist'}</a>
 				</div>
+				{else}
+				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+					<strong><a class="btn btn-block mtm alert-danger disabled" href="#">{lang code='creating_playlist_is_disabled'}</a></strong>
+				</div>
+				{/if}
 			</div>
 		</form>
 

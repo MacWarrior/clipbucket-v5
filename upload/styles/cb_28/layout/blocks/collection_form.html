@@ -9,13 +9,13 @@
 					{section name=clist loop=$collections}
 					<option value="{$collections[clist].collection_id}">{$collections[clist].collection_name} ({$collections[clist].total_objects})</option>
 					{sectionelse}
-					<option>No Collection Found</option>    
+					<option>{lang code="no_collection_found"}</option>    
 					{/section}
 				</select>
 			</div>
 
 			<div class="form-group clearfix">
-				<input type="button" name="add_to_playlist" value="Add to collection" class="btn btn-primary mtm btn-block" onclick="collection_actions('add_collection_form','add_new_item','{$id}','#collection_form_result','video');">
+				<input type="button" name="add_to_playlist" value="{lang code='add_to_collection'}" class="btn btn-primary mtm btn-block" onclick="collection_actions('add_collection_form','add_new_item','{$id}','#collection_form_result','video');">
 			</div>
 		</form>
 	</div>

@@ -2,290 +2,41 @@
     <h2>ClipBucket V{$VERSION} {$STATE} Dashboard</h2>
 </div>
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-12">
         <div class="tabbable">
-            <ul class="nav nav-tabs" id="myTab">
-                <li class="active">
-                    <a data-toggle="tab" href="#statistics">
-                        <h5>Statistics</h5>
-                    </a>
-               </li>
-                <li class="">
-                    <a data-toggle="tab" href="#nusers">
-                        <h5>New Users</h5>
-                    </a>
-                </li>
-                <li class="">
-                    <a data-toggle="tab" href="#mvideos">
-                        <h5>Most Viewed Videos</h5>
-                    </a>
-                </li>
-                <li class="">
-                    <a data-toggle="tab" href="#fobjects">
-                        <h5>Flagged Objects</h5>
-                    </a>
-                </li>
-            </ul>
-            <div class="tab-content">
-                <div id="statistics" class="tab-pane active">
-                    <div class="tabbable tabs-left">
-                        <ul class="nav nav-tabs" id="myTab1">
-                            <li class="active">
-                                <a data-toggle="tab" href="#sweek">
-                                    This Week
-                                </a>
-                            </li>
-                            <li class="">
-                                <a data-toggle="tab" href="#smonth">
-                                    This Month
-                                </a>
-                            </li>
-                            <li class="">
-                                <a data-toggle="tab" href="#soday">
-                                    Today
-                                </a>
-                            </li>
-                        </ul>
-                        <div class="tab-content">
-                            <div id="sweek" class="tab-pane active">
-                                <div id="weekly_stats" class="flot_chart1"><img class="loading-image" src="./styles/cb_2014/images/ajax-loader.gif"/></div>
-                            </div>
-                            <div id="smonth" class="tab-pane">
-                                <div id="monthly_stats"  class="flot_chart1"><img class="loading-image" src="./styles/cb_2014/images/ajax-loader.gif"/></div>
-                            </div>
-                            <div id="soday" class="tab-pane">
-                                <div id="daily_stats" class="flot_chart1">
-                                    <img class="loading-image" src="./styles/cb_2014/images/ajax-loader.gif"/>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="nusers" class="tab-pane">
-                    <div class="tabbable tabs-left">
-                        <ul class="nav nav-tabs" id="myTab1">
-                            <li class="active">
-                                <a data-toggle="tab" href="#uweek">
-                                    This Week
-                                </a>
-                            </li>
-                            <li class="">
-                                <a data-toggle="tab" href="#umonth">
-                                    This Month
-                                </a>
-                            </li>
-                            <li class="">
-                                <a data-toggle="tab" href="#utoday">
-                                    Today
-                                </a>
-                            </li>
-                        </ul>
-                        <div class="tab-content">
-                            <div id="uweek" class="tab-pane active">
-                                <div id="weekly_users" class="flot_chart1"><img class="loading-image" src="./styles/cb_2014/images/ajax-loader.gif"/></div>
-                            </div>
-                            <div id="umonth" class="tab-pane">
-                                <div id="monthly_users"  class="flot_chart1"><img class="loading-image" src="./styles/cb_2014/images/ajax-loader.gif"/></div>
-                            </div>
-                            <div id="utoday" class="tab-pane">
-                                <div id="daily_users" class="flot_chart1">
-                                    <img class="loading-image" src="./styles/cb_2014/images/ajax-loader.gif"/></div>
-                            </div>
-
-
-                        </div>
-                        <div class="users marginTopLarge">
-                            {if $users}
-                                {foreach from=$users item=u}
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="row marginBottom">
-                                            <div class="col-md-2">
-                                                <a href="view_user.php?uid={$u.userid}"> <img src="{$userquery->getUserThumb($u,'small')}" class="img-thumbnail oneUserImage" />
-                                                </a>
-                                            </div>
-                                            <div class="col-md-10">
-                                                <a href="view_user.php?uid={$u.userid}" target="_blank">{$u.username}        </a>({$u.email})
-                                                <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle pull-right" data-toggle="dropdown">
-                                                    <i class="glyphicon glyphicon-cog"></i><i class="icon-angle-down icon-on-right"></i>
-                                                </button>
-                                                <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
-                                                    {if $u.ban_status == yes}
-                                                    <li><a role="menuitem" tabindex="-1" href="?unban={$u.userid}">Unban Member</a></li>
-                                                    {/if}
-                                                    {if $u.ban_status == no}
-                                                    <li><a role="menuitem" tabindex="-1" href="?ban={$u.userid}">Ban Member</a></li>
-                                                    {/if}
-                                                    <li><a role="menuitem" tabindex="-1" href="view_user.php?uid={$u.userid}">Edit</a></li>
-                                                    <li><a role="menuitem" tabindex="-1" href="members.php?deleteuser={$u.userid}">Delete</a></li>
-                                                </ul>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                {/foreach}
-                                {/if}
-                        </div>
-                    </div>
-                </div>
-                <div id="mvideos" class="tab-pane">
-                    <div class="tabbable tabs-left">
-                        <ul class="nav nav-tabs" id="myTab1">
-                            <li class="active">
-                                <a data-toggle="tab" href="#vweek">
-                                    This Week
-                                </a>
-                            </li>
-                            <li class="">
-                                <a data-toggle="tab" href="#vmonth">
-                                    This Month
-                                </a>
-                            </li>
-                            <li class="">
-                                <a data-toggle="tab" href="#vtoday">
-                                    Today
-                                </a>
-                            </li>
-                        </ul>
-                        <div class="tab-content">
-                            <div id="vweek" class="tab-pane active">
-                                <div id="weekly_users" class="flot_chart1"><img class="loading-image" src="./styles/cb_2014/images/ajax-loader.gif"/></div>
-                            </div>
-                            <div id="vmonth" class="tab-pane">
-                                <div id="monthly_users"  class="flot_chart1"><img class="loading-image" src="./styles/cb_2014/images/ajax-loader.gif"/></div>
-                            </div>
-                            <div id="vtoday" class="tab-pane">
-                                <div id="daily_users" class="flot_chart1">
-                                    <img class="loading-image" src="./styles/cb_2014/images/ajax-loader.gif"/></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="vids marginTopLarge">
-                        {if $videos}
-                        {foreach from=$videos item=video}
-                        <div class="row">
-                            <div class="col-md-3">
-                                <img src="{getThumb vdetails=$video}" height="80" class="img-thumbnail" id="thumbs_{$video.videoid}" title="{$video.title}"/>
-                            </div>
-                            <div class="col-md-9">
-                                <a href="{$baseurl}/watch_video.php?v={$video.videokey}"target="_blank">
-                                    {display_clean($video.title|truncate:45)} </a>
-                                <strong class="btn btn-primary btn-xs pull-right"> {lang code='views'} : {$video.views|format_number}</strong>
-                            </div>
-                        </div>
-                        <hr>
-                        {/foreach}
-                        {/if}
-                    </div>
-                </div>
-                <div id="fobjects" class="tab-pane">
-                    <div class="tabbable tabs-left">
-                        <ul class="nav nav-tabs" id="myTab1">
-                            <li class="active">
-                                <a data-toggle="tab" href="#fweek">
-                                    This Week
-                                </a>
-                            </li>
-                            <li class="">
-                                <a data-toggle="tab" href="#fmonth">
-                                    This Month
-                                </a>
-                            </li>
-                            <li class="">
-                                <a data-toggle="tab" href="#ftoday">
-                                    Today
-                                </a>
-                            </li>
-                        </ul>
-                        <div class="tab-content">
-                            <div id="fweek" class="tab-pane active">
-                                <div id="weekly_users" class="flot_chart1"><img class="loading-image" src="./styles/cb_2014/images/ajax-loader.gif"/></div>
-                            </div>
-                            <div id="fmonth" class="tab-pane">
-                                <div id="monthly_users"  class="flot_chart1"><img class="loading-image" src="./styles/cb_2014/images/ajax-loader.gif"/></div>
-                            </div>
-                            <div id="ftoday" class="tab-pane">
-                                <div id="daily_users" class="flot_chart1">
-                                    <img class="loading-image" src="./styles/cb_2014/images/ajax-loader.gif"/></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flaggedUser marginTopLarge">
-                        {if $flaggedUsers}
-                            {foreach from=$flaggedUsers item=u}
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <a href="view_user.php?uid={$u.userid}"> <img src="{$userquery->getUserThumb($u,'small')}" class="oneUserImage" width="85" />
-                                    </a>
-                                </div>
-                                <div class="col-md-6">
-                                    ({$u.email}) {$u.username}
-                                </div>
-
-                                <div class="col-md-7">
-                                    <label class="label label-danger">Last Active  {$u.last_active|niceTime}</label>
-                                    <label class="label label-primary"> {lang code='Flags'} : {$u.flag_type}</label>
-
-                                </div>
-                            </div>
-                            {/foreach}
-                        {/if}
-                    </div>
-                </div>
-           
-                <div class="widget-main">
-                    <hr>
-                    <table class="table table-stripped table-bordered">
-                        <tr>
-                            <td>
-                                <div class="stats_subitem_d">Total Videos : <strong>{get_videos|number_format count_only=yes}</strong> </div>
-                            </td>
-                            <td>
-                                <div class="stats_subitem_d">Total Groups : <strong>{get_groups count_only=yes}</strong> </div>
-                            </td>
-                            <td>
-                                <div class="stats_subitem_d">Total Collection : <strong>{get_collections count_only=yes}</strong> </div>
-                            </td>
-                            <td>
-                                <div class="stats_subitem_d">Total Users : <strong>{get_users count_only=yes}</strong> </div>
-                            </td>
-                            <td>
-                                <div class="stats_subitem_d">Total Photos: <strong>{get_photos count_only=yes}</strong> </div>
-                            </td>
-                    </table>
+                <div class="row">
+                <div id="roundchart">
+                <div class="col-md-6">
+                    <div id="piechart" style="width: 90%; height: 430px; background-color: #FFFFFF;" ></div>
                 </div>
 
-            </div>
+                <div class="col-md-6">
+                    <div id="donutchart" style="width: 80%; height: 430px; background-color: #FFFFFF;" ></div>
+                </div>
+                </div>
+                <hr>
+                <div>
+                <div class="col-md-6">
+                <hr>
+                     <div id="ubarchart" style="width: 90%; height: 400px; background-color: #FFFFFF;" ></div>
+                </div>
+
+                <div class="col-md-6">
+                <hr>
+                    <div id="vbarchart" style="width: 90%; height: 400px; padding: left; background-color: #FFFFFF;" ></div>
+                </div>
+                </div>
+                <hr>
+              </div>
+             <hr>
         </div>
     </div>
-
-    <div class="col-md-6">
-        <div class="widget-box">
-            <div class="widget-header header-color-red">
-                <h5><i class="glyphicon glyphicon-book"></i>ClipBucket News</h5>
-                <div class="widget-toolbar">
-                    <a href="#" data-action="collapse">
-                        <i class="icon-chevron-down"></i>
-                    </a>
-                    <a href="#" data-action="close">
-                        <i class="icon-remove"></i>
-                    </a>
-                </div>
-            </div>
-            <div class="widget-body">
-                <div id="clipbucket_news" class="widget-main" style="height:419px;overflow:auto">
-                    
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <hr>
-   <!--  <div class="tabbable tabs-left" > -->
-    <div class=" col-md-8 todotab" >
-   
-        <ul class="nav nav-tabs" id="myTab" >
+<hr>
+<div class="row">
+   <div class="col-md-6">
+     <div class="tabbable tabs-left" >
+         <div class=" col-md-6 todotab" >
+          <ul class="nav nav-tabs" id="myTab" > 
             <li class="active">
                 <a data-toggle="tab" href="#todolist">
                     <h5><i class="glyphicon glyphicon-list-alt"></i> ToDo List</h5>
@@ -308,13 +59,12 @@
                     <div class="addTodo paddingRightSmall paddingLeftLarge marginBottomLarge">
                         <div class="row">
                             <div class="from-group relative">
-								<div class="from-group">
-									<input type="text" name="addTodo" class="form-control addTodoText">
-									<button id="addTodo" class="btn btn-primary btn-sm">Add</button>
-								</div>
+                                <div class="from-group">
+                                    <input type="text" name="addTodo" class="form-control addTodoText">
+                                    <button id="addTodo" class="btn btn-primary btn-sm">Add</button>
+                                </div>
                             </div>
                         </div>
-                        
                     </div>
                     {assign var=todos value=$myquery->get_todos()}
                     <ul class="row todosList" id="note-{$the_note.note_id}" >
@@ -328,8 +78,8 @@
                                 </div>
                             </li>
                         {/foreach}
-                        </ul>
-                </div>
+                    </ul>
+               </div>
             </div>
             <div id="pnotes" class="tab-pane">
                     <div class="widgetBox">
@@ -353,7 +103,6 @@
                             {/foreach}
                         </ul>
                     </div>
-
             </div>
             <div id="rcomments" class="tab-pane">
                 <div class="widget-box">
@@ -391,9 +140,9 @@
                                                             <span class="green">{$comment.date_added|date_format}</span>
                                                         </div>
                                                         <div class="name">
-                                                            <a href="#">{display_clean($comment.anonym_name)}</a>
+                                                            <a href="#">{$comment.anonym_name}</a>
                                                         </div>
-                                                        <div class="text">{display_clean($comment.comment)}</div>
+                                                        <div class="text">{$comment.comment}</div>
                                                         <div class="tools">
                                                             <a href="#" class="btn btn-minier btn-info">
                                                                 <i class="icon-only icon-share-alt"></i>
@@ -404,7 +153,7 @@
                                                 {/foreach}
                                                 {/if}
                                             </div>
-                                        </div>/widget-main
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -412,15 +161,35 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
-
-
-
-
-
+</div>
+    <div class="col-md-6">
+        <div class="panel panel-danger">
+                    <div class="panel-heading "> <span class="glyphicon glyphicon-list-alt"></span><b>&nbsp CLIPBUCKET NEWS</b>
+                    </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <ul class="newsbox">
+                                       <li class="news-item">
+                                        <table cellpadding="8">
+                                            <tr>
+                                                <td>
+                                                <div id="clipbucket_news" class="widget-main" style="height:130px">
+                                                </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
 <div class="well" style="margin-top: 14px;background:;border:1px solid rgba(128, 213, 255, 1);" >
@@ -472,14 +241,11 @@
     <p><button id="addTodo" class="btn btn-primary btn-sm clip_read clip_hide" style="float:right;margin-right:10px;margin-top:-30px;">Read More</button></p>
 </div>
 
-
-
-
 <style type="text/css">
 
 .to_display{
 
-   display: none; 
+   display: none;
 }
     .flot_chart1{
         height: 200px;
@@ -493,10 +259,237 @@
     }
 </style>
 
+<script type="text/javascript">
+            AmCharts.makeChart("piechart",
+                {
+                    "type": "pie",
+                    "adjustPrecision": true,
+                    "angle": 12,
+                    "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[value]]</b> ([[percents]]%)</span>",
+                    "depth3D": 15,
+                    "maxLabelWidth": 150,
+                    "titleField": "category",
+                    "valueField": "column-1",
+                    "processTimeout": 5,
+                    "theme": "light",
+                    "allLabels": [],
+                    "balloon": {},
+                    "legend": {
+                        "enabled": true,
+                        "align": "left",
+                        "markerType": "circle"
+                    },
+                    "titles": [
+                        {
+                            "bold": false,
+                            "id": "Title-1",
+                            "size": 15,
+                            "text": "Overall Statistics"
+                        }
+                    ],
+                    "dataProvider": [
+                        {
+                            "category": "Users",
+                            "column-1": '{get_users count_only=yes}'
+                        },
+                        {
+                            "category": "Photos",
+                            "column-1": '{get_photos count_only=yes}'
+                        },
+                        {
+                            "category": "Videos",
+                            "column-1": '{get_videos|number_format count_only=yes}'
+                        },
+                        {
+                            "category": "Collections",
+                            "column-1": '{get_collections count_only=yes}'
+                        },
 
+                    ]
+                }
+            );
+</script>
 
+<script type="text/javascript">
+            // var test =  '{$flaggedPhotos.0.total_flags}';
+            AmCharts.makeChart("donutchart",
+                {
+                    "type": "pie",
+                    "angle": 12,
+                    "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[value]]</b> ([[percents]]%)</span>",
+                    "depth3D": 15,
+                    "innerRadius": "30%",
+                    "titleField": "category",
+                    "valueField": "column-1",
+                    "processTimeout": 5,
+                    "theme": "light",
+                    "allLabels": [],
+                    "balloon": {},
+                    "legend": {
+                        "enabled": true,
+                        "align": "center",
+                        "markerType": "circle"
+                    },
+                    "titles": [
+                        {
+                            "bold": false,
+                            "id": "Title-1",
+                            "size": 15,
+                            "text": "Flagged Objects"
+                        }
+                    ],
+                    "dataProvider": [
 
+                        {
+                            "category": "Photos",
+                            "column-1": '{$cbphoto->action->count_flagged_objects()}'
+                        },
+                        {
+                            "category": "Videos",
+                            "column-1": '{$cbvid->action->count_flagged_objects()}'
+                        }
+                    ]
+                }
+            );
+</script>
 
+<script type="text/javascript">
+            AmCharts.makeChart("ubarchart",
+                {
+                    "type": "serial",
+                    "categoryField": "category",
+                    "startDuration": 1,
+                    "mouseWheelZoomEnabled": true,
+                    "startEffect": "easeOutSine",
+                    "autoDisplay": true,
+                    "theme": "light",
+                    "categoryAxis": {
+                        "gridPosition": "start"
+                    },
+                    "trendLines": [],
+                    "graphs": [
+                        {
+                            "colorField": "color",
+                            "fillAlphas": 1,
+                            "id": "AmGraph-1",
+                            "lineColorField": "color",
+                            "title": "graph 1",
+                            "type": "column",
+                            "valueField": "column-1"
+                        }
+                    ],
+                    "guides": [],
+                    "valueAxes": [
+                        {
+                            "id": "ValueAxis-1",
+                            "title": "Users"
+                        }
+                    ],
+                    "allLabels": [],
+                    "balloon": {},
+                    "titles": [
+                        {
+                            "bold": false,
+                            "id": "Title-1",
+                            "size": 15,
+                            "text": "Users Statistics"
+                        }
+                    ],
+                    "dataProvider": [
+                        {
+                            "category": "Total",
+                            "column-1": '{get_users count_only=yes}'
+                        },
+                        {
+                            "category": "Active",
+                            "column-1": '{get_users count_only=yes status='Ok'}'
+                        },
+                        {
+                            "category": "Inactive",
+                            "column-1": '{get_users count_only=yes status='ToActivate'}'
+                        }
+                    ]
+                }
+            );
+</script>
+
+<script type="text/javascript">
+            AmCharts.makeChart("vbarchart",
+                {
+                    "type": "serial",
+                    "categoryField": "category",
+                    "startDuration": 1,
+                    "mouseWheelZoomEnabled": true,
+                    "startEffect": "easeOutSine",
+                    "autoDisplay": true,
+                    "theme": "light",
+                    "categoryAxis": {
+                        "gridPosition": "start"
+                    },
+                    "trendLines": [],
+                    "graphs": [
+                        {
+                            "colorField": "color",
+                            "fillAlphas": 1,
+                            "id": "AmGraph-1",
+                            "lineColorField": "color",
+                            "title": "graph 1",
+                            "type": "column",
+                            "valueField": "column-1"
+                        }
+                    ],
+                    "guides": [],
+                    "valueAxes": [
+                        {
+                            "id": "ValueAxis-1",
+                            "title": "Videos"
+                        }
+                    ],
+                    "allLabels": [],
+                    "balloon": {},
+                    "titles": [
+                        {
+                            "bold": false,
+                            "id": "Title-1",
+                            "size": 15,
+                            "text": "Video Statistics"
+                        }
+                    ],
+                    "dataProvider": [
+                        {
+                            "category": "Total",
+                            "column-1": '{get_videos count_only=yes}'
+                        },
+                        {
+                            "category": "Active",
+                            "column-1": '{get_videos count_only=yes active="yes"}'
+                        },
+                        {
+                            "category": "Deactive",
+                            "column-1": '{get_videos count_only=yes active='no'}'
+                        },
+                        {
+                            "category": "Reported",
+                            "column-1": '{$cbvid->action->count_flagged_objects()}'
+                        }
+                    ]
+                }
+            );
+ </script>
+
+ <script type="text/javascript">
+   $(function () {
+         $(".newsbox").bootstrapNews({
+         newsPerPage: 4,
+         autoplay: true,
+         pauseOnHover:true,
+         direction: 'down',
+         newsTickerInterval: 7000,
+         onToDo: function () {
+            }
+        });
+    });
+</script>
 
 <script type="text/javascript">
 $( document ).ready(function() {
@@ -506,45 +499,37 @@ $( document ).ready(function() {
         $(this).toggleClass('clip_hide');
 
 
-        if(!$(this).hasClass('clip_hide')) 
-           
+        if(!$(this).hasClass('clip_hide'))
+
            {
             $('.to_display').show();
             $(".clip_read").text("Hide");
            }
-        
+
         else
            {
             $('.to_display').hide();
             $(".clip_read").text("Read More");
-           }     
+           }
     });
 
 var baseurl="{$baseurl}";
 
 $.ajax({
-                   // url: baseurl+'/ajax.php',
+   // url: baseurl+'/ajax.php',
 
-                   url:baseurl+'/ajax.php',
-                    type: "POST",
-                    dataType : 'text',
-                    data: { mode: "get_news"},
-                    success : function(news){ $('#clipbucket_news').html(news) },
-                    timeout : 5000,
-                    error  :  function(err) { $('#clipbucket_news').html(' <div align="center"><em><strong>Connect with Internet to get News</strong></em></div>')},
-
-
-                });
-
- 
+   url:baseurl+'/ajax.php',
+    type: "POST",
+    dataType : 'text',
+    data: { mode: "get_news"},
+    success : function(news){
+        $('#clipbucket_news').html(news);
+    },
+    timeout : 5000,
+    error  :  function(err) { $('#clipbucket_news').html(' <div align="center"><em><strong>Connect with Internet to get News</strong></em></div>')},
+    });
 });
-
-
-
-
-
-  $(function() {
-
+ $(function() {
 
         var options = {
 
@@ -566,169 +551,14 @@ $.ajax({
                 alignTicksWithAxis: false
             },
             grid: {
-                hoverable: true, 
+                hoverable: true,
                 clickable: true,
                 labelMargin: 30,
                 borderWidth: 0
             }
         };
 
-
-        var ChartsWorker = function(options){
-            this.options = options;
-
-       
-
-
-            this.getUsersStatistics = function(callback){
-                var self = this;
-                var ajaxCall = $.ajax({
-                    url: "charts/reports/dashboard/get_users_data.php",
-                    type: "POST",
-                    data:"videos=videos",
-                    dataType: "json",
-                    success: function(data){
-                        callback.call(self, data);
-                    },
-                    error: function() {
-                        //alert('error');
-                    },
-                });
-            };
-
-            this.getVideosStatistics = function(callback){
-                var self = this;
-                var ajaxCall = $.ajax({
-                    url: "charts/reports/dashboard/get_videos_data.php",
-                    type: "POST",
-                    data:"videos=videos",
-                    dataType: "json",
-                    success: function(data){
-                        callback.call(self, data);
-                    },
-                    error: function() {
-                        //alert('error');
-                    },
-                });
-            };
-
-            this.getFlaggedStatistics = function(callback){
-                var self = this;
-                var ajaxCall = $.ajax({
-                    url: "charts/reports/dashboard/get_flagged_objects_data.php",
-                    type: "POST",
-                    data:"videos=videos",
-                    dataType: "json",
-                    success: function(data){
-                        callback.call(self, data);
-                    },
-                    error: function() {
-                        //alert('error');
-                    },
-                });
-            };
-
-            this.getOverallStatistics = function(callback){
-                var self = this;
-                var ajaxCall = $.ajax({
-                    url: "charts/reports/dashboard/get_total_status_data.php",
-                    type: "POST",
-                    data:"videos=videos",
-                    dataType: "json",
-                    success: function(data){
-                        callback.call(self, data);
-                    },
-                    error: function() {
-                        //alert('error');
-                    },
-                });
-            };
-
-        };
-
-
-        var chartsWorker = new ChartsWorker(options);
-
-        chartsWorker.getUsersStatistics(function(data){
-            var today = data.today;
-            var week = data.this_week;
-            var month = data.this_month;
-            $.plot("#nusers #weekly_users", [week] , this.options);
-            $.plot("#nusers #monthly_users", [month] , this.options);
-            $.plot("#nusers #daily_users", [today], this.options);
-        });
-
-        chartsWorker.getVideosStatistics(function(data){
-            var today = data.today;
-            var week = data.this_week;
-            var month = data.this_month;
-            $.plot("#mvideos #weekly_users", [week] , this.options);
-            $.plot("#mvideos #monthly_users", [month] , this.options);
-            $.plot("#mvideos #daily_users", [today], this.options);
-        });
-
-        chartsWorker.getFlaggedStatistics(function(data){
-            var today = data.today;
-            var week = data.this_week;
-            var month = data.this_month;
-            $.plot("#fobjects #weekly_users", [week] , this.options);
-            $.plot("#fobjects #monthly_users", [month] , this.options);
-            $.plot("#fobjects #daily_users", [today], this.options);
-        });
-
-        chartsWorker.getOverallStatistics(function(data){
-            var today = data.today;
-            var week = data.this_week;
-            var month = data.this_month;
-            $.plot("#statistics #weekly_stats", [week] , this.options);
-            $.plot("#statistics #monthly_stats", [month] , this.options);
-            $.plot("#statistics #daily_stats", [today], this.options);
-        });
-
         // $.plot("#placeholder", data, options);
-
-        var iteration = 0;
-
-        function showTooltip(x, y, contents) {
-            $('<div id="tooltip">' + contents + '</div>').css( {
-                position: 'absolute',
-                display: 'none',
-                top: y + 5,
-                left: x + 5,
-                border: '1px solid #fdd',
-                padding: '2px',
-                'background-color': '#fee',
-                opacity: 0.80
-            }).appendTo("body").fadeIn(200);
-        }
-
-        var previousPoint = null;
-        function tooltip(chart_id,tooltip_id){
-
-            $(chart_id).bind("plothover", function (event, pos, item) {
-                $("#x").text(pos.x.toFixed(2));
-                $("#y").text(pos.y.toFixed(2));
-
-                if ($(tooltip_id).is(':checked')) {
-                    if (item) {
-                        if (previousPoint != item.dataIndex) {
-                            previousPoint = item.dataIndex;
-
-                            $("#tooltip").remove();
-                            var x = item.datapoint[0].toFixed(2),
-                                    y = item.datapoint[1].toFixed(2);
-
-                            showTooltip(item.pageX, item.pageY,
-                                    item.series.label + " = " + y);
-                        }
-                    }
-                    else {
-                        $("#tooltip").remove();
-                        previousPoint = null;
-                    }
-                }
-            });
-        }
 
         var page = '{$baseurl}/admin_area/index.php';
 
@@ -751,7 +581,7 @@ $.ajax({
                 }
                 else{
                     $(this).parents(".widgetBox").find("textarea").val("");
-                    $.post(page, {   
+                    $.post(page, {
                         mode : 'add_note',
                         note : note,
                     },function(data) {
@@ -789,56 +619,56 @@ $.ajax({
                 var newVal = $(this).parents(".addTodo").find("input").val();
                 if(newVal.length)
                 {
-					$(this).parents(".addTodo").find("input").val("");
-					var ajaxCall = $.ajax({
-						url: page,
-						type: "post",
-						data: {
-							val: newVal,
-							mode: "add_todo",
-						},
-					});
-					ajaxCall.success(function(data){
-						data = $.parseJSON(data);
-						var li = document.createElement("li");
-						li.className = "col-md-12";
-						var p = document.createElement("p");
-						p.className = "oneTodo paddingLeftSmall col-md-10";
-						p.id = data.id;
-						p.innerHTML = data.todo;
-						var a = document.createElement("a");
-						a.href = "#";
-						a.className = "col-md-2 btn btn-danger btn-xs delete";
-						a.innerHTML = "Delete";
-						$(a).on("click", function(e){
-							e.preventDefault();
-							var self = this;
-							var id = $(this).prev().attr("id");
-							var ajaxCall = $.ajax({
-								url: page,
-								type: "post",
-								data: {
-									id: id,
-									mode: "delete_todo",
-								},
-							});
-							ajaxCall.success(function(data){
-								$(self).parents("li").remove();
-							});
+                    $(this).parents(".addTodo").find("input").val("");
+                    var ajaxCall = $.ajax({
+                        url: page,
+                        type: "post",
+                        data: {
+                            val: newVal,
+                            mode: "add_todo",
+                        },
+                    });
+                    ajaxCall.success(function(data){
+                        data = $.parseJSON(data);
+                        var li = document.createElement("li");
+                        li.className = "col-md-12";
+                        var p = document.createElement("p");
+                        p.className = "oneTodo paddingLeftSmall col-md-10";
+                        p.id = data.id;
+                        p.innerHTML = data.todo;
+                        var a = document.createElement("a");
+                        a.href = "#";
+                        a.className = "col-md-2 btn btn-danger btn-xs delete";
+                        a.innerHTML = "Delete";
+                        $(a).on("click", function(e){
+                            e.preventDefault();
+                            var self = this;
+                            var id = $(this).prev().attr("id");
+                            var ajaxCall = $.ajax({
+                                url: page,
+                                type: "post",
+                                data: {
+                                    id: id,
+                                    mode: "delete_todo",
+                                },
+                            });
+                            ajaxCall.success(function(data){
+                                $(self).parents("li").remove();
+                            });
 
-						});
-						var div = document.createElement("div");
-						div.className = "col-md-12";
+                        });
+                        var div = document.createElement("div");
+                        div.className = "col-md-12";
 
-						$(li).append(div).find("div").append(p).append(a);
-						$(self).parents(".widgetBox").find("ul").prepend(li);
-					});
+                        $(li).append(div).find("div").append(p).append(a);
+                        $(self).parents(".widgetBox").find("ul").prepend(li);
+                    });
                 }else{
-                	alert("Please enter a valid value");
+                    alert("Please enter a valid value");
                 }
             }
         });
-        
+
         $("#todolist .delete").on("click", function(e){
             e.preventDefault();
             var self = this;
@@ -859,6 +689,3 @@ $.ajax({
     });
 
 </script>
-
-
-

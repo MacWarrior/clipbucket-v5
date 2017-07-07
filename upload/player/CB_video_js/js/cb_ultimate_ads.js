@@ -12,7 +12,7 @@ var Ads = function(player,settings){
 
 Ads.prototype.init = function (){
 	var ads = this;
-	console.log("Fuck : "+navigator.userAgent);
+	
 	var startEvent = 'click';
 	if (navigator.userAgent.match(/iPhone/i) ||  navigator.userAgent.match(/iPad/i) ||navigator.userAgent.match(/Android/i)) 
 	{

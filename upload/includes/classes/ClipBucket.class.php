@@ -308,10 +308,11 @@ class ClipBucket
         global $userquery;
         $per = $userquery->get_user_level(userid());
         if ($per['web_config_access'] == "yes")
-            $NewMenu['Stats And Configurations'] = array(
+            $NewMenu['General Configurations'] = array(
                 'Reports &amp; Stats' => 'reports.php',
                 'Website Configurations' => 'main.php',
                 'Email Settings' => 'email_settings.php',
+                'Email Tester' => 'email_tester.php',
                 'Language Settings' => 'language_settings.php',
                 'Add New Phrases' => 'add_phrase.php',
                 'Manage Pages' => 'manage_pages.php',
@@ -321,6 +322,7 @@ class ClipBucket
         if ($per['video_moderation'] == "yes")
             $NewMenu['Videos'] = array(
                 'Videos Manager' => 'video_manager.php',
+                'Manage Playlists' => 'manage_playlist.php',
                 'Manage Categories' => 'category.php',
                 'List Flagged Videos' => 'flagged_videos.php',
                 'Mass Upload Videos' => 'mass_uploader.php',

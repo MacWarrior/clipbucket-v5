@@ -18,10 +18,11 @@ define("DEFAULT_HEIGHT",120);
 define("CB_SERVER_THUMB_DIR_NAME",basename(__DIR__));
 define("CB_SERVER_THUMB_URL",PLUG_URL.'/'.CB_SERVER_THUMB_DIR_NAME);
 define("CB_SERVER_THUMB_DIR",PLUG_DIR.'/'.CB_SERVER_THUMB_DIR_NAME);
+define ('FILE_CACHE_DIRECTORY', dirname(dirname(dirname(__FILE__))).'/cache');
 
 $__resize_thumbs = true;
 
-if(!is_writable(CB_SERVER_THUMB_DIR.'/cache'))
+if(!is_writable(FILE_CACHE_DIRECTORY))
 {
     $__resize_thumbs  =false;
 
@@ -454,6 +455,7 @@ if(!function_exists('user_thumb'))
         
         $size = ( !in_array( $size, $default ) or !$size ) ? 't' : $size;
 
+        list($width,$height) = explode('x',$params['size']);
         
         if( $size=='l')
         {
@@ -470,7 +472,12 @@ if(!function_exists('user_thumb'))
           $w = 40;
           $h = 40;  
         }
-
+        if(isset($width) && is_numeric($width) && isset($height) && is_numeric($height) )
+        {
+            $w = $width;
+            $h = $height;   
+        }
+      
         $tim_postfix = '&type=users&h='.$h.'&w='.$w.'&zc=1';
 
         $timthumb_path = CB_SERVER_THUMB_URL.'/timthumb.php?src=';

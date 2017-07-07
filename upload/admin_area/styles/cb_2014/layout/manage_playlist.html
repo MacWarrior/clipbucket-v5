@@ -1,0 +1,127 @@
+
+<!-- Manage playlist backend -->
+{$myAccountLinks = $userquery->my_account_links()}
+	<div class="row cb-box">
+		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			<div class="account_box">
+				{if $mode =='manage_playlist'}
+				<h2>{lang code='manage_playlists'}</h2>
+				<!-- searching -->
+				<div class="heading clearfix">
+					{include file="$layout_dir/blocks/advanced_playlist_search.html" }
+				</div>
+				<!-- searching -->		  
+
+				<!-- Getting List of Playlist -->
+				<form class="marginTop" name="manage_playlists" method="post">
+					<div>
+						<input type="submit" class="btn btn-primary btn-sm" value="{lang code='delete_selected'}" name="delete_playlists"/>
+					</div><br>
+					<div class="account_table">
+						<table class="table table-bordered table-striped marginTop">
+							<tr>
+								<td width="25">
+									<input type="checkbox" name="checkall" onclick="checkUncheckAll(this);"/>
+								</td>
+								<td width="150"><strong>{lang code='vdo_title'}</strong></td>
+								<td><strong>{lang code='Details'}</strong></td>
+								<td width="130"><strong>{lang code='date_added'}</strong></td>
+								<td width="80" class="last_td"><strong>{lang code='total_items'}</strong></td>
+								<td width="130"><strong>{lang code='view_edit_playlist'}</strong></td>
+								<td width="80"><strong>{lang code='delete'}</strong></td>
+							</tr>
+								
+								{if $playlists!=true}
+								<h4 style="text-align: center;">
+								<strong>{lang code='no_playlist_found'}</strong>
+								</h4>
+								{/if}
+							
+							{section name=plist loop=$playlists}
+							<tr>
+								<td>
+									<input type="checkbox" name="check_playlist[]" id="check_playlist-{$playlists[plist].playlist_id}" value="{$playlists[plist].playlist_id}" />
+								</td>
+								<td valign="middle">
+									<!-- playlist thumb code not functional right now-->
+									<!--<span>{$cbvid->action->getPlaylistThumb($playlists[plist].playlist_id)}</span> -->
+									<!-- playlist name code -->
+									{$playlists[plist].playlist_name|truncate:100}
+								</td>
+									<td valign="middle">
+									<span class="label label-primary"> <strong>{lang code='playlist_owner'} : 
+										<!-- changes made -->
+										{assign var=obj value=$userquery->get_user_details($playlists[plist].userid)}
+										{$obj['username']}
+										<!-- changes made -->
+									</strong></span>
+									<span class="label label-primary"> <strong>{lang code='playlist_privacy'} : {$playlists[plist].privacy}</strong></span>
+									</td>
+								<td>{$playlists[plist].date_added|date_format}</td>
+								<td>{$cbvid->action->count_playlist_items($playlists[plist].playlist_id)|number_format}</td>
+								<td><a href="?mode=edit_playlist&amp;pid={$playlists[plist].playlist_id}">{lang code='view_edit_playlist'}</a></td>
+								<td><a href="javascript:void(0)"  onmousedown="delete_video('delete_icon_a','{$playlists[plist].playlist_id}','{lang code="remove_playlist_confirm"}','?mode=manage_playlist&amp;delete_pl={$playlists[plist].playlist_id}')" id="delete_icon_a-{$playlists[plist].playlist_id}">{lang code='delete'}</a></td>
+							</tr>
+							{/section}
+						</table>
+					</div>
+				</form>
+				<!-- Getting List of Playlist -->
+				{/if}
+
+				{if $mode =='edit_playlist'}
+				<h2>{lang code='manage_playlists'}</h2>
+				<div class="account_form">
+					<form method="post" name="edit_profile">
+
+						<h3>{lang code='edit_playlist'}</h3>
+						{assign var='playlist_fields' value=$cbvid->action->load_playlist_fields($playlist)}
+
+						{foreach from=$playlist_fields item=group}
+						{foreach from=$group.fields item=field}
+						<div class="form-group">
+							<label class="label-heading" for="{$field.id}">{$field.title}</label>
+							{$field.class='form-control'}
+							{$formObj->createField($field)}
+						</div>
+						{/foreach}
+						{/foreach}
+						<div>
+							<button name="edit_playlist" id="button1" value="submit" class="btn btn-primary">{lang code='edit_playlist'}</button></div><br>
+						</form>
+					</div>
+
+					{if $items}
+					<a href="{videoLink vdetails=$items[0]}" ><button class="btn btn-success" style="float:right">{lang code='play_now'}</button></a>
+					{/if}
+					<form name="edit_playlist" method="post">
+						<input type="submit" class="btn btn-primary" value="{lang code='delete_selected'}" name="delete_playlist_item"/>
+						<div style="padding:5px;"></div>
+						<div class="account_table">
+							<table class="table table-striped table-bordered">
+								<tr>
+									<td width="25">
+										<input type="checkbox" name="checkall" onclick="checkUncheckAll(this);"/>
+									</td>
+									<td>{lang code='vdo_title'}</td>
+									<td width="100">{lang code='date_added'}</td>
+									<td width="100">{lang code='views'}</td>
+									<td width="100">{lang code='comments'}</td>
+								</tr>
+								{section name=plist loop=$items}
+								{include file="$style_dir/blocks/manage/account_video.html" video=$items[plist] bg=$bg control="playlist" pid=$playlist.playlist_id}
+								{sectionelse}
+								<div align="center" style="padding:5px"><strong><em>{lang code='no_video_in_playlist'}</em></strong></div>
+								{/section}
+							</table>
+						</div>
+					</form>
+					{/if}
+				</div>
+			</div>
+		</div>
+	
+	<!-- Manage playlist backend -->
+	<!-- lines added for pagination -->
+	{include file="$style_dir/blocks/pagination.html" }
+	<div class="marginBottomLarge"></div>

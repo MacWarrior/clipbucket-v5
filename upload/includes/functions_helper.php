@@ -98,6 +98,7 @@
             @mkdir(ORIGINAL_DIR . '/' . $folder, 0777, true);
             @mkdir(PHOTOS_DIR . '/' . $folder, 0777, true);
             @mkdir(LOGS_DIR . '/' . $folder, 0777, true);
+			@mkdir(AUDIOS_DIR . '/' . $folder, 0777, true);
         } else {
             if (!file_exists($headFolder . '/' . $folder))
             {

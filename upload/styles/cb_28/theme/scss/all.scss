@@ -3181,6 +3181,29 @@ textarea#comment_box{
 		padding: 10px 40px 10px 10px;
 	}
 }
+.alert_messages_holder {
+	position:fixed;
+	top:70px;
+	right:10px;
+	z-index: 1050;
+	.alert-messages {
+		position: relative;
+		width: 300px;
+		margin: 0 0 10px;
+	}
+	.close_message{
+		position: absolute;
+		top: 8px;
+		right: 8px;
+		z-index: 5;
+		border:none;
+		background:none; 
+		font-size: 21px;
+		font-weight: 700;
+		line-height: 1;
+		text-shadow: 0 1px 0 #FFF;
+	}
+}
 /**/
 @import "header";
 @import "sidebar";
@@ -3681,3 +3704,43 @@ textarea#comment_box{
 		}
 	}
 }
+
+@media only screen and (max-width:360) {
+	.cd-popup{
+		.cb-popup-container {
+			width:90% ;
+		}
+	} 
+
+}
+// **
+	.heighlightacomment{
+		
+	    &:target {
+	        animation: heighlight_comment 5s;
+	        border-radius: 10px;
+	    }
+
+	}	
+
+	@mixin heighlight_comment_function(){
+		0%{
+			background: #e0e0e0;
+		}
+		100%{
+			background: none;
+		}
+	}
+	@-webkit-keyframes heighlight_comment {
+		@include heighlight_comment_function();
+	}
+
+	@-moz-keyframes heighlight_comment {
+		@include heighlight_comment_function();
+	}
+	@-o-keyframes heighlight_comment {
+		@include heighlight_comment_function();
+	}
+	@keyframes heighlight_comment {
+		@include heighlight_comment_function();
+	}

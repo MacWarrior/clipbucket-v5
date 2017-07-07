@@ -23,14 +23,26 @@
 						<h2 class="user-title">
 							<a href="{$userquery->profile_link($video)}"> {display_clean($video.username)}</a>
 						</h2>
+						<!-- look at  -->
 						<div class="views-counter">
-							<span>{prettyNum($vdo.views)} {if $vdo.views > 1}{lang code='views'}{else}{lang code="view"}{/if}</span>
+							<span>
+								{if $Cbucket->configs.video_round_views=='yes'}
+								{prettyNum($vdo.views)}
+								{else}
+								{( $vdo.views )}
+								{/if}
+								{if $vdo.views > 1}
+								{lang code='views'}
+								{else}
+								{lang code="view"}
+								{/if}
+							</span>
 						</div>
 					</div>
 					<div class="user-likes-sub clearfix">
 						<div class="clearfix like-rating col-lg-6 col-md-6 col-sm-6 col-xs-12" id="rating_container">
 							{if $vdo.allow_rating != 'no'}
-								{show_video_rating  rating=$vdo.rating ratings=$vdo.rated_by total='10' id=$vdo.videoid type=video}
+							{show_video_rating  rating=$vdo.rating ratings=$vdo.rated_by total='10' id=$vdo.videoid type=video}
 							{/if}
 						</div>
 						<div class="clearfix subscribe-col col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -40,14 +52,14 @@
 								</a>
 							{/if}
 							{if $Cbucket->configs.video_download==1 && $cbvid->downloadable($vdo)}
-								<div class="dropdown">
-									<button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+							<div class="dropdown">
+								<button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
 									{lang code='download'}
-										<span class="caret"></span>
-									</button>
-									<ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu1">
-									{$files = get_video_files($vdo,true,true)}
-									{foreach $files as $file}
+									<span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu1">
+								{$files = get_video_files($vdo,true,true)}
+								{foreach $files as $file}
 									{$quality = explode('-',$file)}
 									{$quality = array_reverse($quality)}
 									{$quality = explode('.',$quality.0)}
@@ -56,14 +68,14 @@
 										<a role="menuitem" tabindex="-1" href="{$file}" download>
 										<span class="glyphicon glyphicon-download-alt"></span> {$file_quality}</a>
 									</li>
-									{/foreach}
-									</ul>
-								</div>
+								{/foreach}
+								</ul>
+							</div>
 							{/if}
 						</div>
 					</div>
 				</header>
-				<div id="messageFav" class="alert alert-info marginTop" style="display:none;"></div>
+				<div id="messageFav" class="alert alert-info marginTop" style="display:none"></div>
 				<div class="view-tabs clearfix">
 					<ul class="clearfix nav nav-tabs">
 						<li class="active">
@@ -82,7 +94,7 @@
 					<div class="tab-content clearfix">
 						<div class="tab-pane fade in clearfix active" id="cb-item-info">
 							<div class="clearfix watch-vid-details">
-								<p>{display_clean(AutoLinkUrls($video.description)|unescape:"html")}</p>
+								<p style="white-space: pre-line;">{display_clean(AutoLinkUrls($video.description|unescape:"html"))}</p>
 								<ul class="clearfix desc-list">
 									<li><strong>{lang code='category'}</strong>:&nbsp;{$vdo.category|categories:video}</li>
 									<li><strong>{lang code='duration'}</strong>:&nbsp;{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</li>
@@ -118,17 +130,17 @@
 						<div class="tab-pane fade in clearfix custom-elements" id="cb-item-addto">
 							<div class="clearfix btn-fav">
 								<div id="video_action_result_cont"></div>
-								<a id="addfav" class="btn btn-block btn-primary" href="javascript:void(0);" onclick="_cb.add_to_favNew('video','{$vdo.videoid}');">{lang code='add_to_my_favorites'}</a>
+								<a id="addfav" class="btn btn-block btn-primary" href="javascript:void(0)" onclick="_cb.add_to_favNew('video','{$vdo.videoid}');">{lang code='add_to_my_favorites'}</a>
 							</div>
 							<div class="clearfix">
 								{show_playlist_form id=$vdo.videoid type=video user=userid() }
 								{if userid()}
 								<div class="clearfix">
 									<div class="clearfix btn-holder text-right">
-										<a href="javascript:void(0);" onclick="$('#addCollectionCont').toggle()" class="btn btn-primary">+ {lang code='add_to_my_collection'}</a>
+										<a href="javascript:void(0)" onclick="$('#addCollectionCont').toggle()" class="btn btn-primary">+ {lang code='add_to_my_collection'}</a>
 									</div>
-									<div id="addCollectionCont" style="display:none;">
-									{show_collection_form id=$vdo.videoid type=Video}
+									<div id="addCollectionCont" style="display:none">
+										{show_collection_form id=$vdo.videoid type=Video}
 									</div>
 								</div>
 								{/if}    
@@ -150,23 +162,24 @@
 							{$vdo.comments_count} <span>{lang code='comments'} </span>
 						</h2>
 						{if $myquery->is_commentable($vdo,'v')}
-							{include file="$style_dir/blocks/comments/add_comment.html" id=$vdo.videoid type=v}
+						{include file="$style_dir/blocks/comments/add_comment.html" id=$vdo.videoid type=v}
 						{else}
 						<div class="alert alert-warning">
 							{lang code='comm_disabled_for_vid'}
 						</div>
 						{/if}
 					</div>
-					
+
 					<div id="userCommentsList">
 						<div class="comments clearfix">
-    						<ul id="comments-ul"></ul>
-    					</div>
+							<ul id="comments-ul">
+							</ul>
+						</div>
 					</div>
 					{if $vdo.comments_count > 10}
-						<div class="clearfix text-center">
-							<button class="btn btn-loadmore" id="load-more-comments" page="2">{lang code='load_more'}</button>
-						</div>
+					<div class="clearfix text-center">
+						<button class="btn btn-loadmore" id="load-more-comments" page="2">{lang code='load_more'}</button>
+					</div>
 					{/if}
 				</div>
 			</div>
@@ -174,35 +187,62 @@
 		<aside id="sidebar">
 			<div class="box-ad ad">{AD place='ad_300x250'}</div>
 
-			<h2>{if $smarty.get.play_list}{lang code='playlist_videos'}{elseif $relMode != 'ono'}{lang code='related_videos'}{else}{lang code='popular_videos'}{/if}</h2>
+			<h2>{if $smarty.get.play_list}Playlist Videos{elseif $relMode != 'ono'}{lang code='related_videos'}{else}{lang code='popular_videos'}{/if}</h2>
 			<div class="clearfix sidebar-items">
-			{if $smarty.get.play_list}
+				{if $smarty.get.play_list}
+
+				{foreach $items as  $key => $item}
+				{if $item.videokey == $vdo.videokey}
+				{$current_key = $key}
+				{/if}
+				{/foreach}
+
+				{$next_item_key = $current_key+1}
+				{$prev_item_key = $current_key-1}
+				{assign var=count_index value=count($items)}
+				
+				{if $next_item_key==$count_index}
+				{$next_videoLink = '#'}
+				{else}
+				{$next_videoLink = videoLink($items.$next_item_key)}
+				{/if}
+
+				{if $items.$prev_item_key==0}
+				{$prev_videoLink = '#'}
+				{else}
+				{$prev_videoLink = videoLink($items.$prev_item_key)}
+				{/if}
+
+				<div class="clearfix" style="padding-bottom:10px;">
+					<a href="{$prev_videoLink }"  id="" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-step-backward"></span> {lang code='previous'} </a>
+					<a href="{$next_videoLink }"  id=""  class="btn btn-primary btn-xs"> {lang code='next'} <span class="glyphicon glyphicon-step-forward"></span></a>
+				</div>
+
 				<div id="playlist_items">
 					{$cur_playlist = $smarty.get.play_list}
 					{$total_items = $cbvid->action->count_playlist_items($cur_playlist)}
 					{section name=plist loop=$items}
-					  {include file="$style_dir/blocks/manage/account_video.html" video=$items[plist] control="onWatch" pid=$playlist.playlist_id}
+					{include file="$style_dir/blocks/manage/account_video.html" video=$items[plist] control="onWatch" pid=$playlist.playlist_id}
 					{/section}
 				</div>
 				{if $total_items > 10}
-					<button class="btn btn-primary text-centre" id="playlist-pull" dataList={$cur_playlist} dataLimit="10" dataHit="2">{lang code='load_more'}</button>
+				<button class="btn btn-primary text-centre" id="playlist-pull" dataList={$cur_playlist} dataLimit="10" dataHit="2">{lang code='load_more'}</button>
 				{/if}
-			{else}			    	
+				{else}			    	
 				{if $videos}
-					{foreach from=$videos item=pop_video}
-			
-					{if $pop_video@iteration == 9}
-						{break}
-					{/if}
-					<div class="clearfix popular-video">
-						{include file="$style_dir/blocks/videos/video.html" display_type='popVideos_sidebar'}
-					</div>
-					{/foreach}
-			
-				{else}
-					<div class="well well-info">{lang code='no_videos_found'}</div>
+				{foreach from=$videos item=pop_video}
+
+				{if $pop_video@iteration == 9}
+				{break}
 				{/if}
-			{/if}
+				<div class="clearfix popular-video">
+					{include file="$style_dir/blocks/videos/video.html" display_type='popVideos_sidebar'}
+				</div>
+				{/foreach}
+				{else}
+				<div class="well well-info">{lang code='no_videos_found'}</div>
+				{/if}
+				{/if}
 			</div>
 		</aside>
 	</div>
@@ -218,8 +258,8 @@
 		$('#comment_box').val(commentDataCheck);
 	}
 	$('#comment_box').on('keyup', function() {
-	    var comment_data = $('#comment_box').val();
-	    $.cookie(cookieToSave, comment_data, { expires : 10, path : "/" });
+		var comment_data = $('#comment_box').val();
+		$.cookie(cookieToSave, comment_data, { expires : 10, path : "/" });
 	});
 
 	$('#add_comment_button').on("click",function(){
@@ -227,6 +267,7 @@
 	});
 	/*Cookie based comments backup end*/
 
+	var playlist_total = "{$total_items}";
 	$('#ShareUsers').on("keyup",function(){
 		var typed = $(this).val();
 		$.ajax({
@@ -245,7 +286,7 @@
 				var jsoned = $.parseJSON(data);
 				$( jsoned.matching_users ).each(function( index, element ) {
 					$('#suggested_users').append("<option label='"+element+"' value='"+element+"'>");
-			  	});
+				});
 			}
 		});
 	});
@@ -253,10 +294,10 @@
 	/*Playlist load more start*/
 	var playlist_total = "{$total_items}";
 	$('#playlist-pull').on("click",function(){
-		var __this = $(this),
-			loadHit = $(this).attr('dataHit'),
-			loadLimit = $(this).attr('dataLimit'),
-			playlist = $(this).attr('dataList');
+		var __this = $(this);
+		loadHit = $(this).attr('dataHit');
+		loadLimit = $(this).attr('dataLimit');
+		playlist = $(this).attr('dataList');
 
 		$.ajax({
 			url: baseurl+'/ajax/watch.php',
@@ -295,10 +336,9 @@
 	$(document).ready(function(){
 		$cb_player.height( $cb_player.width() / aspect_ratio );
 
-        var video_description = $("#videoDescription");
-		var videoInfo = video_description.text();
+		var videoInfo = $("#videoDescription").text();
 		var newInfo = videoInfo.replace(/(((https?:\/\/)|([\s\t]))(www.)?([a-z0-9]+)\.[a-z]+)/g, '<a href="$1">$1</a>');
-        video_description.html(newInfo);
+		$("#videoDescription").html(newInfo);
 
 		comments_voting = '{$vdo.comment_voting}';
 		_cb.getCommentsNew(
@@ -307,7 +347,7 @@
 			'{$vdo.last_commented}',1,
 			'{$vdo.comments_count}',
 			'{$object_type}'
-		);
+			);
 
 		$("#reportVideo").on({
 			click : function(e){
@@ -339,10 +379,10 @@
 			'{$vdo.last_commented}',page,
 			'{$vdo.comments_count}',
 			'{$object_type}'
-		);
+			);
 		$(this).attr('page', nextPage);
 		$(this).text("Load More")
-	});
+	})
 
 	var resizePlayer =  _cb.debounce(function() {
 		$cb_player.height( $cb_player.width() / aspect_ratio );

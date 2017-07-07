@@ -99,7 +99,7 @@ subtitle($title);
     ?>
     <item>
         <author><?php echo $video['username']; ?></author>
-        <title><?php echo substr($video['title'],0,50); ?></title>
+        <title><?php echo substr($video['title'],0,500); ?></title>
         <link><?php echo video_link($video); ?></link>
         <description>
         <![CDATA[   
@@ -125,7 +125,7 @@ subtitle($title);
         <pubDate><?php echo $video['date_added']; ?></pubDate>
         <media:player url="<?php echo video_link($video); ?>" />
         <media:thumbnail url="<?php echo get_thumb($video); ?>" width="120" height="90" />
-        <![CDATA[<media:title><?php echo substr($video['title'],0,50); ?></media:title>
+        <![CDATA[<media:title><?php echo substr($video['title'],0,500); ?></media:title>
         <media:category label="Tags"><?php echo strip_tags(tags($video['tags'],'video')); ?></media:category>]]>
         <media:credit><?php echo $video['username']; ?></media:credit>
         <enclosure url="<?php echo video_link($video); ?>" type="application/x-shockwave-flash" />

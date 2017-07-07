@@ -117,7 +117,7 @@ class cbfeeds
 	{
 		$objects = array
 		('signup','video','photo','group',
-		'user','friend','collection');
+		'user','friend','collection','post');
 		
 		if(!in_array($object,$objects))
 			return false;
@@ -202,6 +202,7 @@ class cbfeeds
 				$farr['user'] = $user;
 				$farr['file']			= getName($feed['file']);
 				$farr['datetime'] = nicetime($farr['time'],true);
+				
 				$userlink = '<a href="'.$userquery->profile_link($user).'">'.$user['username'].'</a>';
 				//Creating Links
 				switch($action)
@@ -368,6 +369,37 @@ class cbfeeds
 							$farr['links'][] = array('link'=>$collection_link,'text'=>lang('view_collection'));
 						}
 					}
+					break;
+					case "add_comment":
+					{
+						global $myquery;
+						$comment = $myquery->get_comment($object_id);		
+						
+						//If photo does not exists, simply remove the feed
+						if(!$comment)
+						{
+							$this->deleteFeed($uid,$feed['file']);
+							$remove_feed = true;
+						}else{
+							
+							//Content Title
+							$farr['title'] = $comment['title'];
+							
+							$farr['action_title'] = $userlink." ".lang('commented on a post');
+						
+							$farr['link'] 			= videoLink($video);
+							$farr['object_content'] = $video['description'];
+							$farr['thumb'] 			= get_thumb($video);
+							
+							$farr['links'][] = array('link'=>videoLink($video),'text'=>lang('watch_video'));
+							
+							$farr['icon'] = 'video.png';
+							
+							if($action=='add_favorite')
+								$farr['icon'] = 'heart.png';
+						}
+					}
+					break;
 					
 				}
 				

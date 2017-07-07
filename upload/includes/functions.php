@@ -556,7 +556,7 @@
 			$cond .= $params['cond'];
 		}
 
-        $query = "SELECT * FROM ".tbl("comments".($params['sectionTable']?",".$params['sectionTable']:NULL));
+        $query = "SELECT *".", ".tbl("comments.userid")." AS "."c_userid"." FROM ".tbl("comments".($params['sectionTable']?",".$params['sectionTable']:NULL));
 
         if($cond) {
             $query .= " WHERE ".$cond;
@@ -568,15 +568,23 @@
         if($limit) {
             $query .=" LIMIT ".$limit;
         }
-
+        // pr($query,true);
 		if(!$params['count_only']) {
             $result = db_select($query);
         }
-
+        // pr($result,true);
 		if($params['count_only']) {
+			$cond = tbl("comments.type")."= '". $params['type'] ."'";
 			$result = $db->count(tbl("comments"),"*",$cond);
 		}
+		// pr($result,true);
 		if($result) {
+			
+
+			foreach ($result as $key=>$val) 
+			{
+			  $result[$key]['comment'] = html_entity_decode(stripslashes($result[$key]['comment']));
+			}
 			return $result;
 		}
 		return false;
@@ -2258,7 +2266,9 @@
 	*/
 	function show_playlist_form($array) {
 		global $cbvid;
+		
 		assign('params',$array);
+		assign('type',$array['type']);
 		// decides to show all or user only playlists
 		// depending on the parameters passed to it
 		if (!empty($array['user'])) {
@@ -3098,6 +3108,8 @@
 				'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.2) Gecko/20070219 Firefox/3.0.0.2');
 				curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
 				curl_setopt($ch,CURLOPT_FOLLOWLOCATION,true);
+				curl_setopt($ch, CURLOPT_CONNECTTIMEOUT ,0); 
+				curl_setopt($ch, CURLOPT_TIMEOUT_MS, 600);
 				$contents = curl_exec($ch);
 				curl_close($ch);
 
@@ -4407,6 +4419,17 @@
 				$cbfeeds->addFeed($feed);
 			}
 			break;
+			case "add_comment":
+			{
+
+				$feed['action'] = 'add_comment';
+				$feed['object'] = $array['object'];
+				$feed['object_id'] = $array['object_id'];		
+				$feed['uid'] = $userid;;
+				
+				$cbfeeds->addFeed($feed);
+			}
+			break;
 			case "upload_video":
 			case "add_favorite":
 			{
@@ -5476,13 +5499,42 @@
     	}
     }
 
-    include('functions_db.php');
-    include('functions_filter.php');
-    include('functions_player.php');
-    include('functions_template.php');
-    include('functions_helper.php');
-    include('functions_video.php');
-    include('functions_user.php');
-    include('functions_photo.php');
+    /**
+	* Check if a url exists using curl
+	* @param : { string } { $mainFile } { File to run check against }
+	* @author : Fahad Abbas
+	* @since : 14th November, 2016
+	*
+	* @return : { boolean } { true or false matching pattern }
+    */
+
+    function is_url_exist($url) {
+    	try {
+    		$ch = curl_init($url);    
+		    curl_setopt($ch, CURLOPT_NOBODY, true);
+		    curl_exec($ch);
+		    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+		    if($code == 200) {
+		       $status = true;
+		    } else {
+		      $status = false;
+		    }
+
+		    curl_close($ch);
+		   	return $status;
+    	} catch(Exception $e) {
+    		echo 'Caught exception: ',  $e->getMessage(), "\n";
+    	}
+	}
+
+    include( 'functions_db.php' );
+    include( 'functions_filter.php' );
+    include( 'functions_player.php' );
+    include( 'functions_template.php' );
+    include( 'functions_helper.php' );
+    include( 'functions_video.php' );
+    include( 'functions_user.php' );
+    include( 'functions_photo.php' );
     include('functions_actions.php');
     include('functions_playlist.php');

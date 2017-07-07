@@ -315,7 +315,7 @@ class Collections extends CBCategory
 			}
 		}
 		
-		if(isset($p['category']))
+		if(isset($p['category']) && !empty($p['category']))
 		{
 			$get_all = false;
 			if(!is_array($p['category']))
@@ -455,6 +455,7 @@ class Collections extends CBCategory
 			$cond .= " ($title_tag) ";		
 		}
 		
+		
 
 		if(!isset($p['count_only']))
 		{
@@ -463,8 +464,6 @@ class Collections extends CBCategory
 			$result =   $db->select(tbl("collections,users"),
 						tbl("collections.*,users.userid,users.username"),
 						$cond.tbl("collections.userid")." = ".tbl("users.userid"),$limit,$order);
-
-			//echo $db->db_query;
 		}
 		
 
@@ -872,6 +871,7 @@ class Collections extends CBCategory
 
 	function create_collection($array=NULL)
 	{
+		if(has_access('allow_create_collection',false,$verify_logged_user)) {
 		global $db, $userquery;
 		
 		if($array==NULL)
@@ -957,6 +957,7 @@ class Collections extends CBCategory
 			
 			e(lang("collect_added_msg"),"m");
 			return $insert_id;	
+			}
 		}
 	}
 	

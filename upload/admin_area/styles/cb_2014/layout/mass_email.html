@@ -105,6 +105,9 @@
                     <div id="usercategory" class="tab-pane">
                     <h4>User category<br><small>User category</small></h4>
                     {assign var=cats value=$userquery->get_categories()}
+                    <label class="checkbox-inline">
+                        <input type='checkbox' name="cat[]" value="0" checked="checked"/>All
+                    </label>
                     {foreach from=$cats item=cat}
                     <label class="checkbox-inline">
                         <input type='checkbox' name="cat[]" value="{$cat.category_id}" checked="checked"/>{$cat.category_name}</label>

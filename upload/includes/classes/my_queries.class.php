@@ -617,6 +617,7 @@ class myquery {
 				$udetails['avatar_url'] = $avatar_url;
 			if($udetails)
 			$result = array_merge($result,$udetails);
+			$result['comment'] = htmlspecialchars_decode($result['comment']);
 			return $result ;
 		}else{
 			return false;
@@ -688,6 +689,13 @@ class myquery {
 			case "photos":
 			{
 				$type='p';
+			}
+			break;
+
+			case "social":
+			case "s":
+			{
+				$type='s';
 			}
 			break;
 			
@@ -777,7 +785,12 @@ class myquery {
 			$query .= " LIMIT $limit";
 
 			$results = db_select($query);
-                         
+            
+            foreach ($results as $key=>$val) 
+			{
+			  $results[$key]['comment'] = html_entity_decode(stripslashes($results[$key]['comment']));
+			}
+
 			 if(!$results)
 			 	return false;
 			 
@@ -791,6 +804,12 @@ class myquery {
 					$query = "SELECT * FROM ".tbl('comments');
 					$query .= " WHERE type='$type' $typeid_query AND parent_id='".$result['comment_id']."' ";
 					$replies = db_select($query);
+
+					foreach ($replies as $key=>$val) 
+					{
+					  $replies[$key]['comment'] = html_entity_decode(stripslashes($replies[$key]['comment']));
+					}
+					
 					if ($replies )
 					{
 						$replies = array("comments"=>$replies);
@@ -820,9 +839,15 @@ class myquery {
                        
                         
 			 //Caching comment file
-			 if($file)
+			 if($file){
 			 	file_put_contents(COMM_CACHE_DIR.'/'.$file,json_encode($comment));
-			 return $comment;
+			 }
+			foreach ($comment['comments'] as $key => $c) {
+                $c['comment'] = htmlspecialchars_decode($c['comment']);
+                $tempCom[] = $c;
+            }
+            $comment['comments'] = $tempCom;
+			return $comment;
                          
 			 
 		}else

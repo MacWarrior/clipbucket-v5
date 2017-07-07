@@ -1126,7 +1126,9 @@
     function video_users($users)
     {
         global $userquery;
-        $users_array = explode(',',$users);
+        if (!empty($users)){
+            $users_array = explode(',',$users);
+        }
         $new_users = array();
         foreach($users_array as $user)
         {
@@ -2209,3 +2211,57 @@
             return $qual;
         }
     }
+
+    /**
+    * Used to get Sprite file against video
+    * @since : 21 March, 2017
+    */
+
+    function get_video_sprite($video) {
+        try {
+
+            $filename = $video['file_name'];
+            $videoid = $video['videoid'];
+            $file_directory = $video['file_directory'];
+
+            $file = SPRITES_DIR.'/'.$file_directory.'/'.$filename.'-sprite.png';
+            if (file_exists($file)){
+                $file = SPRITES_URL.'/'.$file_directory.'/'.$filename.'-sprite.png';
+                $response['file']  = $file;
+            }else{
+                $response['file']  = false;
+            }
+
+            $sprite_count = get_video_sprite_count($videoid);
+            $response['count'] = $sprite_count;
+            return $response;
+        }catch(Exception $e){
+            echo "Caught Exception". $e->getMessage();
+        }
+    }
+
+    /**
+    * Used to get Sprite count against video
+    * @since : 21 March, 2017
+    */
+    function get_video_sprite_count($videoid){
+        try{
+            $videoid = (int)$videoid;
+            if ($videoid){
+                $query = " SELECT sprite_count FROM ".tbl("video");
+                $query .= " WHERE videoid='".$videoid."' ";
+
+                $sprite_count = db_select($query);
+                if (is_array($sprite_count)){
+                    $sprite_count = $sprite_count[0]['sprite_count'];
+                }else{
+                    $sprite_count = 0;
+                }
+                return $sprite_count;
+            }
+        }catch(Exception $e){
+             echo "Caught Exception". $e->getMessage();
+        }
+    }
+
+

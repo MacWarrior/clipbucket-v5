@@ -1,19 +1,19 @@
 {$currentPage = $smarty.const.THIS_PAGE|lower}
 {if $currentPage == 'view_channel' || $currentPage == 'channels'}
-	{$currentPage = 'channels'}
-	{$toSearch = 'channels'}
+{$currentPage = 'channels'}
+{$toSearch = 'channels'}
 {elseif $currentPage == 'view_item' || $currentPage == 'photos'}
-	{$currentPage = 'photos'}
-	{$toSearch = 'photos'}
+{$currentPage = 'photos'}
+{$toSearch = 'photos'}
 {elseif $currentPage == 'collections' || $currentPage == 'view_collection'}
-	{$currentPage = 'collections'}
-	{$toSearch = 'collections'}
+{$currentPage = 'collections'}
+{$toSearch = 'collections'}
 {elseif $currentPage == 'watch_video' || $currentPage == 'videos'}
-	{$currentPage = 'videos'}
-	{$toSearch = 'videos'}
+{$currentPage = 'videos'}
+{$toSearch = 'videos'}
 
 {elseif $currentPage == 'list'}
-	{$currentPage = 'audios'}
+{$currentPage = 'audios'}
 {/if}
 {$vidMode = {lang code="videos"}}
 {$photoMode = {lang code="photos"}}
@@ -55,14 +55,14 @@
 								<ul>
 									{foreach $head_menu as $menu}
 									{if $menu.name|lower == 'groups'}
-										{continue}
+									{continue}
 									{/if}
 									{if $menu@iteration < 6}
 									{if $menu.this|lower == 'home'}
-										{continue}
+									{continue}
 									{/if}
 									{if $menu.this == "home"}
-										{continue}
+									{continue}
 									{/if}
 									<li {if $menu.name|lower == $smarty.const.THIS_PAGE|lower || $menu.name|lower == $currentPage}class="active"{/if}><a href="{$menu.link}">{$menu.name}</a></li>
 									{/if}
@@ -72,7 +72,9 @@
 								</ul>
 							</nav>
 						</div>
-
+						<!-- <div class="col">
+							<a href="#" class="fancy-btn btn btn-default cd-popup-trigger">Animation</a>
+						</div> -->
 						<div class="col btn-holder user_menu text-right">
 							<div class="search">
 								<form class="search-form" action="{link name='search_result'}">
@@ -86,7 +88,7 @@
 												{$counter = 1}
 												{foreach from=$Cbucket->search_types item=t key=stypes}
 												{if $stypes|lower == 'groups'}
-													{continue}
+												{continue}
 												{/if}
 												{if $counter == 3}
 												<li value="{$stypes}" {if $pageType == $stypes || $currentPage == $stypes}  class="active"  {/if}>
@@ -108,15 +110,14 @@
 									</div>
 								</form><!-- form Ends -->
 							</div>
-
 							<ul class="nav navbar-nav navbar-right right-menu">
 								{if userid()}
 								<li class="dropdown upload_link">
 									<a href="{link name='upload'}" class="dropdown-toggle btn-upload btn btn-default" data-toggle="dropdown"><i class="icon-upload"></i><span>{lang code="upload"}</span><b class="icon-down-arrow"></b></a>
 									<ul role="menu" class="dropdown-menu">
-									{if isSectionEnabled('videos')}
+										{if has_access('allow_video_upload',true,true) && isSectionEnabled('videos')}
 										<li class="up_vid"><a href="{link name='upload'}">{lang code="upload_video"}<i class="icon-video visible-xs"></i></a></li>
-									{/if}
+										{/if}
 										{if isSectionEnabled('photos')}
 										<li class="up_img"><a href="{link name='photo_upload'}">{lang code="upload_photo"}<i class="icon-photo visible-xs"></i></a></li>
 										{/if}
@@ -131,13 +132,16 @@
 										<span>{display_clean($userquery->username|truncate:15)}</span>
 									</a>
 									<ul class="dropdown-menu">
-									{if has_access('admin_access')}
+										{if has_access('admin_access')}
 										<li class="hidden-xs"><a href="{$admin_baseurl}">{lang code="admin_area"}</a></li>
-									{/if}
+										{/if}
 										<li class="hidden-xs"><a href="{link name='my_account' }{userid}">{lang code="my_account"}</a></li>
 										<li class="hidden-xs"><a href="{link name='my_videos'}">{lang code="manage_videos"}</a></li>
 										{ANCHOR place="head_audio_dropdown"}
 										<li><a href="{link name='channels'}">{lang code="view_channels"}</a></li>
+										<!-- changes made-->
+										<li><a href="{$baseurl}/manage_playlists.php?user={$userquery->username}">{lang code="my_playlists"}</a></li>
+										<!-- /changes made-->
 										<li><a href="{$baseurl}/view_channel.php?user={$userquery->username}">{lang code="my_channel"}</a></li>
 										{ANCHOR place='premium_button_link'}
 										<li class="divider"></li>
@@ -145,7 +149,7 @@
 									</ul>
 								</li>
 								{else}
-						
+								
 								<!-- Shown to small devices only Start  @todo : Add condition for logged in user -->
 								<li class="navbar-sm-login-links">
 									<a class="btn btn-default btn-newacc" href="{link name='signup'}">{lang code='create_new_account'}</a>

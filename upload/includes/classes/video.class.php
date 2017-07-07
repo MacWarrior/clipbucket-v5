@@ -61,7 +61,7 @@ class CBvideo extends CBCategory
             'videoid', 'videokey', 'userid', 'title','server_ip', 'description', 'tags', 'category','file_directory',
             'active', 'date_added', 'broadcast', 'rating', 'file_server_path', 'files_thumbs_path',
             'file_thumbs_count', 'duration', 'has_hq', 'has_mobile', 'views', 'file_name', 'rated_by',
-            'default_thumb', 'comments_count', 'last_viewed', 'featured', 'featured_date', 'status','re_conv_status','conv_progress'
+            'default_thumb', 'comments_count', 'last_viewed', 'featured', 'featured_date', 'status','re_conv_status','conv_progress','embed_code'
         );
 
         $cb_columns->object( 'videos' )->register_columns( $basic_fields );
@@ -451,8 +451,14 @@ class CBvideo extends CBCategory
 					$query_val[] = $array['embed_code'];
 				}
 			}
+			//changes made
+			//title index
 			$query_val[0] = str_replace('&lt;!--', '', $query_val[0]);
+			$query_val[0] = str_replace("'", "’", $query_val[0]);
+			//description index
 			$query_val[1] = str_replace('&lt;!--', '', $query_val[1]);
+			$query_val[1] = str_replace("'", "’", $query_val[1]);
+			//Tag index
 			$query_val[3] = strtolower($query_val[3]);
 
 			if(!userid())
