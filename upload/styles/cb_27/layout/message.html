@@ -1,6 +1,6 @@
-{assign var=msg value=$eh->message_list}
-{assign var=err value=$eh->error_list}
-{assign var=war value=$eh->warning_list}
+{assign var=msg value=$eh->get_message()}
+{assign var=err value=$eh->get_error()}
+{assign var=war value=$eh->get_warning()}
 
 <div class="container">
     <div class="row">
