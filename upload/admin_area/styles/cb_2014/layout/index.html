@@ -140,9 +140,9 @@
                                                             <span class="green">{$comment.date_added|date_format}</span>
                                                         </div>
                                                         <div class="name">
-                                                            <a href="#">{$comment.anonym_name}</a>
+                                                            <a href="#">{display_clean($comment.anonym_name)}</a>
                                                         </div>
-                                                        <div class="text">{$comment.comment}</div>
+                                                        <div class="text">{display_clean($comment.comment)}</div>
                                                         <div class="tools">
                                                             <a href="#" class="btn btn-minier btn-info">
                                                                 <i class="icon-only icon-share-alt"></i>
