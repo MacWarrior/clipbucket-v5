@@ -38,7 +38,7 @@
 {foreach $videos as $video}
 	{$related['imageSrc'] = get_thumb($video,1,FALSE,FALSE,TRUE,FALSE,'168x105')}
 	{$related['url'] = video_link($video)}
-	{$related['title'] = $video.title|truncate:30}
+	{$related['title'] = display_clean($video.title)|truncate:30}
 	{$related_videos[] = $related}
 {/foreach}
 {$related_videos = json_encode($related_videos)}
@@ -97,7 +97,7 @@
 
 <script type="text/javascript">
 	var vid_id = "{$vdata.videoid}";
-	var videotitle = "{$vdata.title|escape_quotes}";
+	var videotitle = "{display_clean($vdata.title)}";
 	var uploader = "{$vdata.username}";
 	var branding_logo  = "{$cb_logo}";
 	var product_link = "{$player_config.player_logo_url}";

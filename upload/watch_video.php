@@ -67,4 +67,3 @@
 	array_val_assign($assign_arry);
 	template_files('watch_video.html');
 	display_it();
-?> 

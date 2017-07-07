@@ -8,7 +8,7 @@ $videoid = mysql_clean($_GET['vid']);
 $related_videos = get_videos(array('title'=>$title,'tags'=>$tags,
 'exclude'=>$videoid,'show_related'=>'yes','limit'=>8,'order'=>'date_added DESC'));
 if(!$related_videos)
-	$related_videos  = get_videos(array('exclude'=>$videoid,'limit'=>12,'order'=>'date_added DESC'));
+	$related_videos = get_videos(array('exclude'=>$videoid,'limit'=>12,'order'=>'date_added DESC'));
 ?>
 <rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/">
 <channel>

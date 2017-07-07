@@ -267,7 +267,6 @@ class userquery extends CBCategory{
 			$msg[] = e(lang('usr_ban_err'));
 		else
 		{
-			
 			$log_array['userid'] = $userid  = $udetails['userid'];
 			$log_array['useremail'] = $udetails['email'];
 			$log_array['success'] = 1;
@@ -296,16 +295,11 @@ class userquery extends CBCategory{
 			
 			//Updating User last login , num of visist and ip
 			$db->update(tbl('users'),
-						array(
-							  'num_visits','last_logged','ip'
-							  ),
-						array(
-							  '|f|num_visits+1',NOW(),$ipv
-							  ),
-						"userid='".$userid."'"
-						);
-			
-			
+                array('num_visits','last_logged','ip'),
+                array('|f|num_visits+1',NOW(),$ipv),
+                "userid='".$userid."'"
+            );
+
 			$this->init();
 			//Logging Actiong
 			$cblog->insert('login',$log_array);
@@ -322,16 +316,14 @@ class userquery extends CBCategory{
 			$cblog->insert('login',$log_array);
 		}
 	}
-	
-	
-	
-	
-	/**
-	 * Function used to check weather user is login or not
-	 * it will also check weather user has access or not
-	 * @param VARCHAR acess type it can be admin_access, upload_acess etc
-	 * you can either set it as level id
-	 */
+
+    /**
+     * Function used to check weather user is login or not
+     * it will also check weather user has access or not
+     * @param VARCHAR acess type it can be admin_access, upload_acess etc
+     * you can either set it as level id
+     * @return bool
+     */
 	function login_check($access=NULL,$check_only=FALSE,$verify_logged_user=TRUE)
 	{
 		global $LANG,$Cbucket,$sess;
@@ -341,32 +333,31 @@ class userquery extends CBCategory{
 			//First check weather userid is here or not
 			if(!userid())
 			{
-				
 				if(!$check_only)
 					e(lang('you_not_logged_in'));
 				return false;
-
 			}
-			elseif(!$this->session_auth(userid()))
+
+			if(!$this->session_auth(userid()))
 			{
-				
 				if(!$check_only)
 				e(lang('usr_invalid_session_err'));
 				return false;
 			}
 			
 			//Now Check if logged in user exists or not
-			elseif(!$this->user_exists(userid(),TRUE))
+			if(!$this->user_exists(userid(),TRUE))
 			{
 				if(!$check_only)
 				e(lang('invalid_user'));
 				return false;
 			}
+
 			//Now Check logged in user is banned or not
-			elseif($this->is_banned(userid())=='yes')
+			if($this->is_banned(userid())=='yes')
 			{
 				if(!$check_only)
-				e(lang('usr_ban_err'));
+				    e(lang('usr_ban_err'));
 				return false;
 			}
 		}
@@ -653,27 +644,23 @@ class userquery extends CBCategory{
 				if($result>0)
 				{
 					$this->user_exist = 'yes';
-				}else{
+				} else {
 					$this->user_exist = 'no';
 				}	
 			}
 			
 			if($this->user_exist=='yes')
 				return true;
-			else
-				return false;
-		}else
-		{
+            return false;
+		} else {
 			if(is_numeric($id))
 				$result = $db->count(tbl($this->dbtbl['users']),"userid"," userid='".$id."'");
 			else
 				$result = $db->count(tbl($this->dbtbl['users']),"userid"," username='".$id."'");
+
 			if($result>0)
-			{
 				return true;
-			}else{
-				return false;
-			}	
+            return false;
 		}
 		
 	}
@@ -705,25 +692,24 @@ class userquery extends CBCategory{
 
         $result = select( $query );
 
-        if ( $result ) {
+        if ( $result )
+        {
             $details = $result[ 0 ];
 
             if ( !$checksess ) {
                 return apply_filters( $details, 'get_user' );
-            } else {
-                $session = $this->sessions['smart_sess'];
-                $smart_sess = md5($details['user_session_key'] . $sess->get('sess_salt'));
-                if ( $smart_sess == $session['session_value'] ) {
-                    $this->is_login = true;
-                    return apply_filters( $details, 'get_user' );
-                } else {
-                    return false;
-                }
+            }
+
+            $session = $this->sessions['smart_sess'];
+            $smart_sess = md5($details['user_session_key'] . $sess->get('sess_salt'));
+
+            if ( $smart_sess == $session['session_value'] ) {
+                $this->is_login = true;
+                return apply_filters( $details, 'get_user' );
             }
         }
 
         return false;
-
 	}
 
 	function GetUserData($id=NULL){
@@ -4256,21 +4242,6 @@ class userquery extends CBCategory{
 		{
 			if(!$realtime)
 			{
-				/*			
-				$sess->set('dummy_username',$sess->get("username"));
-				$sess->set('dummy_level',$sess->get("level"));
-				$sess->set('dummy_userid',$sess->get("userid"));
-				$sess->set('dummy_user_session_key',$sess->get("user_session_key"));
-				$sess->set('dummy_user_session_code',$sess->get("user_session_code"));
-				
-				
-				$sess->set('username',$udetails['username']);
-				$sess->set('level',$udetails['level']);
-				$sess->set('userid',$udetails['userid']);
-				$sess->set('user_session_key',$udetails['session_key']);
-				$sess->set('user_session_code',$udetails['session_code']);
-				*/
-								
 				$sess->set('dummy_sess_salt',$sess->get("sess_salt"));
 				$sess->set('dummy_PHPSESSID',$sess->get("PHPSESSID"));
 				$sess->set('dummy_userid',userid());
@@ -4286,8 +4257,7 @@ class userquery extends CBCategory{
 				$db->delete(tbl("sessions"),array("session"),array($sess->id));
 				$sess->add_session($userid,'smart_sess',$smart_sess);
 			
-			}else
-			{
+			} else {
 				if($this->login_check(NULL,true))
 					$msg[] = e(lang('you_already_logged'));
 				elseif(!$this->user_exists($udetails['username']))
@@ -4300,7 +4270,6 @@ class userquery extends CBCategory{
 					$msg[] = e(lang('usr_ban_err'));
 				else
 				{
-					
 					$userid = $udetails['userid'];
 					$log_array['userid'] = $userid  = $udetails['userid'];
 					$log_array['useremail'] = $udetails['email'];
@@ -4341,16 +4310,11 @@ class userquery extends CBCategory{
 					
 					//Updating User last login , num of visist and ip
 					$db->update(tbl('users'),
-								array(
-									  'num_visits','last_logged','ip'
-									  ),
-								array(
-									  '|f|num_visits+1',NOW(),$_SERVER['REMOTE_ADDR']
-									  ),
-								"userid='".$userid."'"
-								);
-					
-					
+                        array('num_visits','last_logged','ip'),
+                        array('|f|num_visits+1',NOW(),$_SERVER['REMOTE_ADDR']),
+                        "userid='".$userid."'"
+                    );
+
 					$this->init();
 					//Logging Actiong
 					$cblog->insert('login',$log_array);

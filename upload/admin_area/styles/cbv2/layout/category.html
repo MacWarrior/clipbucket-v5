@@ -40,12 +40,8 @@
     <tr>
       <td valign="top" class="td_body">Make Default Category</td>
       <td class="td_body"><p>
-        <label>
-          <input type="radio" name="default" value="yes" id="default_0" />
-          Yes</label>
-        <label>
-          <input name="default" type="radio" id="default_1" value="no" checked="checked" />
-          No</label>
+        <label><input type="radio" name="default" value="yes" id="default_0" />Yes</label>
+        <label><input type="radio" name="default" value="no" id="default_1" selected="selected" />No</label>
         <br />
       </p></td>
     </tr>
@@ -90,12 +86,8 @@
      <tr>
       <td valign="top" class="td_body">Make Default Category</td>
       <td class="td_body"><p>
-        <label>
-          <input type="radio" name="default" value="yes" id="default_0" {if $cat_details.isdefault=='yes'} checked="checked"{/if} />
-          Yes</label>
-        <label>
-          <input name="default" type="radio" id="default_1" value="no" {if $cat_details.isdefault=='no'} checked="checked"{/if} />
-          No</label>
+        <label><input type="radio" name="default" id="default_0" value="yes"  {if $cat_details.isdefault=='yes'} selected="selected"{/if} />Yes</label>
+        <label><input type="radio" name="default" id="default_1" value="no" {if $cat_details.isdefault=='no'} selected="selected"{/if} />No</label>
         <br />
       </p></td>
     </tr>

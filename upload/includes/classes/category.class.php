@@ -237,7 +237,7 @@ abstract class CBCategory
 			$html .= "<li class='cbCategoryItem ".$class.$selected."'";
 			if($params['id'])
 				$html .= " id = '".$params['id']."'";					
-			$html .= "><a href='".cblink(array("name"=>"category","data"=>$cat,"type"=>$params['type']))."'>".$cat['category_name']."</a>";
+			$html .= "><a href='".cblink(array("name"=>"category","data"=>$cat,"type"=>$params['type']))."'>".display_clean($cat['category_name'])."</a>";
 			if($cat['children'])
 			{
 				$html .= "<ul id='".$cat['category_id']."_categories' class='sub_categories'>";
@@ -263,7 +263,7 @@ abstract class CBCategory
 				$value = cblink(array("name"=>"category","data"=>$cat,"type"=>$params['type'])); else $value = $cat['category_id'];
 
 			$html .= "<option value='$value' $selected>";
-			$html .= $spacer.$cat['category_name'];
+			$html .= $spacer.display_clean($cat['category_name']);
 			$html .= "</option>";
 
 			if($cat['children'])
@@ -432,7 +432,7 @@ abstract class CBCategory
 				$selected = "";
 				
 			$html .= "<li class='".$selected."'>";
-			$html .= "<a href='".category_link($cats[$i],$type)."' title='".$cats[$i]['category_name']."'>".$cats[$i]['category_name']."</a>";
+			$html .= "<a href='".category_link($cats[$i],$type)."' title='".display_clean($cats[$i]['category_name'])."'>".display_clean($cats[$i]['category_name'])."</a>";
 			if($this->is_parent($cats[$i]['category_id']))
 			{
 				$html .= $this->cb_list_subs($cats[$i]['category_id'],$type);
@@ -460,7 +460,7 @@ abstract class CBCategory
 					$selected = "";
 
 				$html .= "<li class='".$selected."'>";
-				$html .= "<a href='".category_link($result,$type)."' title='".$result['category_name']."'>".$result['category_name']."</a>";
+				$html .= "<a href='".category_link($result,$type)."' title='".display_clean($result['category_name'])."'>".display_clean($result['category_name'])."</a>";
 				if($this->is_parent($result['category_id']))
 				{
 					$html .= $this->cb_list_subs($result['category_id'],$type);

@@ -262,7 +262,7 @@ class formObj
 				echo "<div class='uploadCategoryCheckBlock' style='position:relative'>";
 				echo $field['sep'];
 				echo '<label><input name="'.$fieldName.'" type="checkbox" value="'.$cat['category_id'].'" '.$field_id.'
-				 '.$checked.' '.$field['extra_tags'].'>'.$cat['category_name'].'</label>';
+				 '.$checked.' '.$field['extra_tags'].'>'.display_clean($cat['category_name']).'</label>';
 				 if($cat['children'])
 				 {
 				 		echo "<span id='".$cat['category_id']."_toggler' alt='".$cat['category_id']."_".$rand."' class='CategoryToggler CheckBoxCategoryToggler ".$display."' style='display:block;' onclick='toggleCategory(this);'>&nbsp;</span>";
@@ -318,7 +318,7 @@ class formObj
                 if(!isset($field['notShowSeprator']))
 					echo $field['sep'];
 				echo '<label '.$label_class.'><input name="'.$field_name.'" type="checkbox" value="'.$cat['category_id'].'" '.$field_id.'
-				 '.$checked.' '.$field['extra_tags'].'>'.$cat['category_name'].'</label>'	;
+				 '.$checked.' '.$field['extra_tags'].'>'.display_clean($cat['category_name']).'</label>'	;
 				 if($cat['children'])
 				 {
 					$childField = $field;

@@ -76,7 +76,7 @@
                 <label>Make Default Category</label>
                 <select class="form-control">
                     <option class="form-control" name="default" id="default_0" {if $cat_details.isdefault=='yes'} checked="checked"{/if} >Yes</option>
-                    <option class="form-control" name="default" id="default_1" {if $cat_details.isdefault=='no'} checked="checked"{/if}>No</option>
+                    <option class="form-control" name="default" id="default_1" {if $cat_details.isdefault=='no' || $cat_details.isdefault==''} checked="checked"{/if}>No</option>
                 </select>
             </div>
         </div>
@@ -119,7 +119,7 @@
         {section name=list loop=$category}
         <tr>
             <td><input name="check_user[]" type="checkbox" id="check_user" value="{$u.userid}" /></td>
-            <td>{$category[list].category_name}
+            <td>{display_clean($category[list].category_name)}
                 <a id="thumbs_{$category[list].category_id}" class="label label-danger arrowed popoverButton" data-html="true"
                    data-placement="top" data-toggle="popover" data-content="<img src='{$cbvid->get_category_thumb($category[list], 'collections')}' height='90' width='90' />" href="javascript:void(0)">View Thumb</a></td>
 
@@ -130,16 +130,16 @@
             {else}
             {assign var=p_name value=$cbvid->get_category_field($category[list].parent_id,'category_name')}
             {/if}
-            <td>{$p_name}</td>
-            <td>{if $category[list].category_desc}{$category[list].category_desc}{else}<em>N/A</em>{/if}</td>
+            <td>{display_clean($p_name)}</td>
+            <td>{if $category[list].category_desc}{display_clean($category[list].category_desc)}{else}<em>N/A</em>{/if}</td>
             <td>{$category[list].isdefault}</td>
             <td>
                 <div class="lead dropdown">
                     <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">Options <i class="caret"></i></button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" role="menu">
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="?category={$category[list].category_id}">Edit</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="?category={$category[list].category_id}">{lang code='edit'}</a></li>
                         {if $category[list].isdefault!="yes"}
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:_cb.Confirm_Delete('?delete_category={$category[list].category_id}')">Delete</a>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:_cb.Confirm_Delete('?delete_category={$category[list].category_id}')">{lang code="delete"}</a>
                         </li>
                         <li><a href="?make_default={$category[list].category_id}">Make Default</a></li>{/if}
                     </ul>

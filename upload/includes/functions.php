@@ -109,9 +109,11 @@
 		return mysqli_real_escape_string($db->mysqli, $var);
 	}
 
-	function display_clean($var)
+	function display_clean($var, $clean_quote = true)
 	{
-		return htmlspecialchars($var);
+	    if($clean_quote)
+		    return htmlentities($var, ENT_QUOTES);
+        return htmlentities($var);
 	}
 
 	/**
@@ -2680,26 +2682,24 @@
 	 */
 	function category_link($data,$type) {
 		switch($type) {
-			case 'video':case 'videos':case 'v':
-			{
+			case 'video':
+            case 'videos':
+			case 'v':
 				if(SEO=='yes') {
 					return BASEURL.'/videos/'.$data['category_id'].'/'.SEO($data['category_name']).'/'.$_GET['sort'].'/'.$_GET['time'].'/';
 				}
 				return BASEURL.'/videos.php?cat='.$data['category_id'].'&sort='.$_GET['sort'].'&time='.$_GET['time'].'&seo_cat_name='.$_GET['seo_cat_name'];
-			}
-			break;
 			
-			case 'channels':case 'channel':case'c':case'user':
-			{
+			case 'channels':
+            case 'channel':
+            case 'c':
+            case 'user':
 				if(SEO=='yes') {
 					return BASEURL.'/channels/'.$data['category_id'].'/'.SEO($data['category_name']).'/'.$_GET['sort'].'/'.$_GET['time'].'/';
 				}
 				return BASEURL.'/channels.php?cat='.$data['category_id'].'&sort='.$_GET['sort'].'&time='.$_GET['time'].'&seo_cat_name='.$_GET['seo_cat_name'];
-			}
-			break;
-			
+
 			default:
-			{
 				if(THIS_PAGE=='photos') {
 					$type = 'photos';
 				}
@@ -2721,8 +2721,6 @@
 					return BASEURL.'/'.$type.'/'.$data['category_id'].'/'.SEO($data['category_name']).'/'.$_GET['sort'].'/'.$_GET['time'].'/';
 				}
 				return BASEURL.'/'.$type.'.php?cat='.$data['category_id'].'&sort='.$_GET['sort'].'&time='.$_GET['time'].'&seo_cat_name='.$_GET['seo_cat_name'];
-			}
-			break;
 		}
 	}
 
@@ -4970,7 +4968,7 @@
 		if ( POST_MAX_SIZE >= 50 && MEMORY_LIMIT >= 128 && UPLOAD_MAX_FILESIZE >= 50 && MAX_EXECUTION_TIME >= 7200 ) {
 			define("SERVER_CONFS", true);
 		} elseif ( POST_MAX_SIZE < 50 || MEMORY_LIMIT < 128 || UPLOAD_MAX_FILESIZE < 50 && MAX_EXECUTION_TIME < 7200 ) {
-			e('You must update <strong>"Server Configurations"</strong>. Click here <a href='.BASEURL.'/admin_area/cb_server_conf_info.php>for details</a>',w);
+			e('You must update <strong>"Server Configurations"</strong>. Click here <a href='.BASEURL.'/admin_area/cb_server_conf_info.php>for details</a>','w');
 			define("SERVER_CONFS", false);
 		} else {
 			define("SERVER_CONFS", false);
