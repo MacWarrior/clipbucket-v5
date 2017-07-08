@@ -103,14 +103,14 @@
                         <li role="presentation"><a role="menuitem" tabindex="-1"
                             href="?edit_language={$language_list[l_list].language_id}" >Edit Phrases</a></li>
                         <li role="presentation"><a role="menuitem" tabindex="-1"
-                            href="?edit_language={$language_list[l_list].language_id}">Edit</a></li>
+                            href="?edit_language={$language_list[l_list].language_id}">{lang code='edit'}</a></li>
                         <li role="presentation"><a role="menuitem" tabindex="-1"
                             href="javascript:void(0)" onclick="if(confirm_it('Are you sure you want to delete \'{$language_list[l_list].language_name}\' pack')) window.location = '?delete={$language_list[l_list].language_id}'">{lang code='delete'}</a>
                         <li role="presentation"><a role="menuitem" tabindex="-1"
                             href="?download={$language_list[l_list].language_id}" target="_blank">Export</a></li>
                         {if $language_list[l_list].language_active!='yes'}
                         <li role="presentation"><a role="menuitem" tabindex="-1"
-                            href="?action=activate&id={$language_list[l_list].language_id}">Activate</a></li>
+                            href="?action=activate&id={$language_list[l_list].language_id}">{lang code='activate'}</a></li>
                         {/if}
                         <li role="presentation" class="divider"></li>
                         {if $language_list[l_list].language_active=='yes'}
@@ -153,7 +153,7 @@
 {else}
 <span class="lead">Editing {$lang_details.language_name}</span>
 <div class="form-group">
-    <form id="form1" name="form1" method="post" action="">
+    <form id="form1" name="form1" method="post">
         <div class="row">
             <div class="col-md-4">
                 <div class="form-group">

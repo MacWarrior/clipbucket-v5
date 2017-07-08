@@ -1,6 +1,6 @@
 <div class="add-comments clearfix" id="add_comment">
 	{if $userquery->login_check('',true) || $Cbucket->configs.anonym_comments == 'yes' }
-	<form name="comment_form" method="post" action="" id="comment_form" onsubmit="return false;">
+	<form name="comment_form" method="post" id="comment_form" onsubmit="return false;">
 		<div class="clearfix com-txtarea">
 			<span id="comment_err_output" class="alert alert-danger comment_err_output pull-left" style="display:none;width:100%"></span>
 			<span id="comment_msg_output" class="alert alert-success comment_msg_output pull-left" style="display:none;"></span>

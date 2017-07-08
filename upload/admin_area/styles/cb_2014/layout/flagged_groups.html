@@ -55,13 +55,13 @@
                             data-toggle="dropdown">Actions <i class="caret"></i></button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" role="menu">
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="{group_link details=$groups[gp_list]}"target="_blank">View</a></li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="edit_group.php?group_id={$groups[gp_list].group_id}">Edit</a>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="edit_group.php?group_id={$groups[gp_list].group_id}">{lang code='edit'}</a>
                         </li>
                         {if $groups[gp_list].active == yes}
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="?deactivate={$groups[gp_list].group_id}">Deactivate</a>
                             {else}
                         </li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="?activate={$groups[gp_list].group_id}">Activate</a>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="?activate={$groups[gp_list].group_id}">{lang code='activate'}</a>
                             {/if}
                         </li>
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="?mode=view_flags&gid={$groups[gp_list].group_id}">View Flags</a>

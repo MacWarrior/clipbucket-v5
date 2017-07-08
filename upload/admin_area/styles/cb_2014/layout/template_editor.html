@@ -4,7 +4,7 @@
 
     {assign var='templates' value=$cbtpl->get_templates()}
     {if $templates}
-    <form name="select_template" action="" method="get">
+    <form name="select_template" method="get">
         <div class="form-group">
             <label for="$template.id">Select Theme To Edit</label>
             <select class="form-control" name="dir">
@@ -42,10 +42,10 @@
         </ul>
     </div>
     <div class="col-md-9">
-        <form name="file_content" action="" method="post">
+        <form name="file_content" method="post">
             <div class="form-group">
                 <label for="file_content"><h3>Edit Template</h3></label>
-                <textarea rows="30" class="form-control" name="thecontent" class="file_content" id="">
+                <textarea rows="30" class="form-control" name="thecontent" class="file_content" id="file_content">
                     {if $content}{$content}{else}<em>No File Selected</em>{/if}
                 </textarea>
             </div>

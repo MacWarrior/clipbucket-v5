@@ -6,7 +6,7 @@
 	
 	{assign var='templates' value=$cbtpl->get_templates()}
     {if $templates}
-    	<form name="select_template" action="" method="get">
+    	<form name="select_template" method="get">
 <label>Select Theme To Edit
     	<select name="dir">
         	{foreach from=$templates item=template}
@@ -41,7 +41,7 @@
     </ul>
 </div>
 </td>
-    <td align="center" valign="top"><form name="file_content" action="" method="post">
+    <td align="center" valign="top"><form name="file_content" method="post">
 <div class="file_content"><textarea name="thecontent" class="file_content">{if $content}{$content}{else}<em>No File Selected</em>{/if}</textarea></div><br><div align="center">{if $writeable=='no'}This file is not writeable, please set <em><strong>{$smarty.get.file}</strong></em> permissions to 0777 - <a href="http://docs.clip-bucket.com/clipbucket-docs/files-folder-permissions" target="_blank"><strong>More Details</strong></a></div>
 {else}
 	<div align="right"><input type="submit" value="Update File" name="update_file" class="button"></div>

@@ -19,11 +19,11 @@
             <div class="cb-box signup-box">
                 <h3>Login</h3>
 
-                <form name="login_form" id="login_form" method="post" action="" >
+                <form name="login_form" id="login_form" method="post">
                     <div class="form-group">
                         <label for="login_username_sp">{lang code="Username"}</label>
                         <input type="text" id="login_username_sp" placeholder="{lang code='Enter your username..'}"
-                               class="form-control" name="username" />
+                               class="form-control" name="username"/>
                     </div>
 
                     <div class="form-group">
@@ -52,7 +52,7 @@
                     {$allow_registeration}
                 {else}
                 <h3>Signup!</h3>
-                <form name="signup_form" id="signup_form" method="post" action="" >
+                <form name="signup_form" id="signup_form" method="post">
                     {foreach from=$required_fields item=field}
                         {if $field.type!='checkbox' && $field.type!='radiobutton'}
                             {$field.class='form-control'}

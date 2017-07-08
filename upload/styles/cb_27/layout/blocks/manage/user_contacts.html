@@ -21,9 +21,9 @@
                 <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
                 Actions <i class="caret"></i></button>
                 <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
-                    <li><a role="menuitem" href="{$userquery->profile_link($user_detail)}" class="">View Profile</a></li>
-                    <li><a role="menuitem" href="{$baseurl}/user_videos.php?user={$user_detail.username}" class="">View Videos</a></li>
-                    <li><a role="menuitem" href="{$baseurl}/private_message.php?mode=new_msg&to={$user_detail.username}" class="">Send Message</a></li>
+                    <li><a role="menuitem" href="{$userquery->profile_link($user_detail)}">View Profile</a></li>
+                    <li><a role="menuitem" href="{$baseurl}/user_videos.php?user={$user_detail.username}">View Videos</a></li>
+                    <li><a role="menuitem" href="{$baseurl}/private_message.php?mode=new_msg&to={$user_detail.username}">Send Message</a></li>
                     {if $friend.confirmed =='yes'}
                     <li><a role="menuitem" href="?mode=delete&userid={$user_detail.userid}">UnFriend</a></li>
                     {else}
@@ -63,10 +63,10 @@
                 <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
                 Actions <i class="caret"></i></button>
                 <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
-                    <li><a role="menuitem" href="{$userquery->profile_link($user_detail)}" class="">View Profile</a></li>
-                    <li><a role="menuitem" href="?mode=requests&confirm={$friend.userid}" class="">Accept Request</a></li>
-                    <li><a role="menuitem" href="{$baseurl}/user_videos.php?user={$user_detail.username}" class="">View Videos</a></li>
-                    <li><a role="menuitem" href="{$baseurl}/private_message.php?mode=new_msg&to={$user_detail.username}" class="">Send Message</a></li>
+                    <li><a role="menuitem" href="{$userquery->profile_link($user_detail)}">View Profile</a></li>
+                    <li><a role="menuitem" href="?mode=requests&confirm={$friend.userid}">Accept Request</a></li>
+                    <li><a role="menuitem" href="{$baseurl}/user_videos.php?user={$user_detail.username}">View Videos</a></li>
+                    <li><a role="menuitem" href="{$baseurl}/private_message.php?mode=new_msg&to={$user_detail.username}">Send Message</a></li>
                     <li><a role="menuitem" href="?mode=delete&userid={$user_detail.userid}">Reject Request</a>
 
                 </ul>

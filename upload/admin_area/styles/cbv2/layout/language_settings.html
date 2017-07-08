@@ -21,11 +21,11 @@
       <div><a href="?create_package={$language_list[l_list].language_code}">Recreate Pack</a>
        -  <a href="?recreate_from_pack={$language_list[l_list].language_code}" >Recreate from pack</a>
         -  <a href="?edit_language={$language_list[l_list].language_id}" >Edit Phrases</a>
-        - <a href="?edit_language={$language_list[l_list].language_id}">Edit</a>
+        - <a href="?edit_language={$language_list[l_list].language_id}">{lang code='edit'}</a>
         - <a href="javascript:void(0)" onclick="if(confirm_it('Are you sure you want to delete \'{$language_list[l_list].language_name}\' pack')) window.location = '?delete={$language_list[l_list].language_id}'">{lang code='delete'}</a>
         - <a href="?download={$language_list[l_list].language_id}" target="_blank">Export</a>{if $language_list[l_list].language_active!='yes'}
-        - <a href="?action=activate&id={$language_list[l_list].language_id}">Activate</a>{/if}{if $language_list[l_list].language_active=='yes'}
-        - <a href="?action=deactivate&id={$language_list[l_list].language_id}">Dectivate</a>{/if}</div></td>
+        - <a href="?action=activate&id={$language_list[l_list].language_id}">{lang code='activate'}</a>{/if}{if $language_list[l_list].language_active=='yes'}
+        - <a href="?action=deactivate&id={$language_list[l_list].language_id}">Deactivate</a>{/if}</div></td>
     </tr>
 </table>
 </div>
@@ -49,14 +49,14 @@
 {else}
 <span class="page_title">Edit {$lang_details.language_name}</span>
 
-<div class="search_box">  <form id="form1" name="form1" method="post" action="">
+<div class="search_box"> <form id="form1" name="form1" method="post">
     <label>Language Name 
       <input name="name" type="text" id="name" value="{$lang_details.language_name}" />
 Language Code   </label>
     <input name="code" type="text" id="code" value="{$lang_details.language_code}" />
 Language Regex 
 <input name="regex" type="text" id="regex" value="{$lang_details.language_regex}" /> 
-<input type="submit" name="update_language" class="button" value="Update"  style="margin-top:10px" id="update_language"/>
+<input type="submit" name="update_language" class="button" value="Update" style="margin-top:10px" id="update_language"/>
 <br />
 </form></div>
   

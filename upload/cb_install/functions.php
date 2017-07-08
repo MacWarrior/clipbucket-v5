@@ -36,45 +36,36 @@
 
 	function button($text,$params=NULL,$alt=false)
 	{
-		echo '<span class="" '.$params.'>&nbsp;</span>';
+		echo '<span '.$params.'>&nbsp;</span>';
 		
 	    echo '<span class="btn btn-primary" '.$params.'>'.$text.'</span>'; 
 		if(!$alt)
-			echo '<span class="" '.$params.'>&nbsp;</span>';
+			echo '<span '.$params.'>&nbsp;</span>';
 		else
-			echo '<span class="" '.$params.'>&nbsp;</span>';
+			echo '<span '.$params.'>&nbsp;</span>';
 	}
 
 	function button_green($text,$params=NULL,$alt=false)
 	{
-		echo '<span class="" '.$params.'>&nbsp;</span>';
+		echo '<span '.$params.'>&nbsp;</span>';
 		
 	    echo '<span class="btn btn-success" '.$params.'>'.$text.'</span>'; 
 		if(!$alt)
-			echo '<span class="" '.$params.'>&nbsp;</span>';
+			echo '<span '.$params.'>&nbsp;</span>';
 		else
-			echo '<span class="" '.$params.'>&nbsp;</span>';
+			echo '<span '.$params.'>&nbsp;</span>';
 	}
 
 	function button_danger($text,$params=NULL,$alt=false)
 	{
-		echo '<span class="" '.$params.'>&nbsp;</span>';
+		echo '<span '.$params.'>&nbsp;</span>';
 		
 	    echo '<span class="btn btn-danger" '.$params.'>'.$text.'</span>'; 
 		if(!$alt)
-			echo '<span class="" '.$params.'>&nbsp;</span>';
+			echo '<span '.$params.'>&nbsp;</span>';
 		else
-			echo '<span class="" '.$params.'>&nbsp;</span>';
+			echo '<span '.$params.'>&nbsp;</span>';
 	}
-/*
-	function msg_arr($arr)
-	{
-		if(@$arr['msg'])
-			return emsg($arr['msg'],'ok');
-		else
-			return emsg($arr['err'],'alert');
-	}
-*/
 
    function msg_arr($arr)
 	{
@@ -83,8 +74,6 @@
 		else
 			return emsg($arr['err'],'alert_cross');
 	}
-
-	
 	
 	if(!function_exists('emsg'))
 	{
@@ -93,8 +82,7 @@
 			return '<span class="msg '.$type.'">'.$text.'</span>';
 		}
 	}
-	
-	
+
 	function check_module($type)
 	{
 		$return = array();
@@ -160,8 +148,6 @@
 					$return['err'] = _("Unable to find MP4Box");
 				else
 					$return['msg'] = sprintf(_("Found MP4Box %s : %s"),$version,$mp4boxpath);
-
-
 			}
 			break;
 			
@@ -196,9 +182,7 @@
 					$return['msg'] = _("Imagick extension is enabled");
 			}
 			break;
-			
-			
-			
+
 		}
 		
 		return $return;

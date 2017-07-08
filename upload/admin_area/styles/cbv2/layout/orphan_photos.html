@@ -1,14 +1,13 @@
 <h2>Orphan Photos</h2>
-<form action="" method="post" name="manage_orpahns">
+<form method="post" name="manage_orpahns">
 
 <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
   <tr>
     <td width="30" align="center" valign="middle"><img src="{$imageurl}/arrow_return.png" width="25" height="25"></td>
     <td height="50" style="padding-left:15px">
-            <input type="submit" name="make_featured_selected" value="Make Featured" class="button"/>
-            <input type="submit" name="make_unfeatured_selected" value="Make Unfeatured" class="button"/>
-            <input type="submit" name="delete_selected" value="{lang code='delete'}" class="button" onclick="return confirm_it('Are you sure you want to delete selected photos(s)')"/>
-    
+		<input type="submit" name="make_featured_selected" value="Make Featured" class="button"/>
+		<input type="submit" name="make_unfeatured_selected" value="Make Unfeatured" class="button"/>
+		<input type="submit" name="delete_selected" value="{lang code='delete'}" class="button" onclick="return confirm_it('Are you sure you want to delete selected photos(s)')"/>
     </td>
     </tr>
 </table>
@@ -52,7 +51,7 @@
             </span>
             <div style="height:4px;"></div>
             <div id="vid_opt-{$photos[list].photo_id}" style="display:none" class="AdminPhotoActions">              
-                <a href="edit_photo.php?photo={$photos[list].photo_id}">Edit</a> | 
+                <a href="edit_photo.php?photo={$photos[list].photo_id}">{lang code='edit'}</a> |
 				<a href="javascript:void(0);" id="delete-{$photos[list].photo_id}" onmousedown="delete_item('delete','{$photos[list].photo_id}','Are you sure you want to delete? This will permanently delete {$photos[list].photo_title} from website.','?delete_photo={$photos[list].photo_id}');">{lang code='delete'}</a>
             </div>
         </div>

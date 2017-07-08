@@ -34,7 +34,7 @@
                         data-toggle="dropdown">Actions <i class="caret"></i></button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" role="menu">
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="{group_link details=$group}"target="_blank">View</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="edit_group.php?group_id={$group.group_id}">Edit</a>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="edit_group.php?group_id={$group.group_id}">{lang code='edit'}</a>
                     </li>
                     {if $group.featured == yes}
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="?unfeature={$group.group_id}">Make
@@ -49,7 +49,7 @@
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="?deactivate={$group.group_id}">Deactivate</a>
                         {else}
                     </li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="?activate={$group.group_id}">Activate</a>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="?activate={$group.group_id}">{lang code='activate'}</a>
                         {/if}
                     </li>
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="{$baseurl}/manage_groups.php?mode=manage_videos&gid={$group.group_id}">Manage</a>
@@ -62,11 +62,7 @@
         </td>
     </tr>
 
-
-
 {/if}
-
-
 
 {if $control =='basic'}
     <tr>
@@ -104,28 +100,6 @@
             <button id="dropdownMenu" class="btn btn-primary btn-xs dropdown-toggle pull-right" data-toggle="dropdown">Actions <i class="caret"></i></button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" role="menu">
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="{group_link details=$group}"target="_blank">View</a></li>
-                    <!-- <li role="presentation"><a role="menuitem" tabindex="-1" href="edit_group.php?group_id={$group.group_id}">Edit</a>
-                    </li>
-                    {if $group.featured == yes}
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="?unfeature={$group.group_id}">Make
-                        Unfeatured</a> {/if}
-                    </li>
-                    {if $group.featured == no}
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="?feature={$group.group_id}">Make
-                        Featured</a> {/if}
-                    </li>
-                    {if $group.active == yes}
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="?deactivate={$group.group_id}">Deactivate</a>
-                        {else}
-                    </li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="?activate={$group.group_id}">Activate</a>
-                        {/if}
-                    </li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="{$baseurl}/manage_groups.php?mode=manage_videos&gid={$group.group_id}">Manage</a>
-                    </li>
-                    <li class="divider"></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="?delete_group={$group.group_id}">{lang code='delete'}</a>
-                    </li> -->
                 </ul>
             </div>
         </td>

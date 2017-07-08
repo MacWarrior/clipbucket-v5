@@ -157,7 +157,7 @@
     <div id="vid_opt-{$cbpages[list].page_id}" style="display:none" class="vid_opts">
    	 
       <a href="{$cbpage->page_link($cbpages[list])}">View</a> | 
-      <a href="?mode=edit&pid={$cbpages[list].page_id}">Edit</a>
+      <a href="?mode=edit&pid={$cbpages[list].page_id}">{lang code='edit'}</a>
       {if $cbpages[list].active == yes}  | 
       <a href="?deactivate={$cbpages[list].page_id}">Deactivate</a> {else} | 
       <a href="?activate={$cbpages[list].page_id}">Activate</a> {/if}  | 

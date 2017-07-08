@@ -63,7 +63,7 @@
                     <a role="menuitem" tabindex="-1" href="view_user.php?uid={$u.userid}">View</a>
                 </li>
                 <li role="presentation">
-                    <a role="menuitem" tabindex="-1" href="view_user.php?uid={$u.userid}">Edit</a>
+                    <a role="menuitem" tabindex="-1" href="view_user.php?uid={$u.userid}">{lang code='edit'}</a>
                 </li>
                 {if $u.usr_status == Ok}
                 <li role="presentation">
@@ -71,7 +71,7 @@
                 </li>
                 {elseif $u.usr_status == ToActivate}
                 <li role="presentation">
-                    <a role="menuitem" tabindex="-1" href="?activate={$u.userid}">Activate</a>
+                    <a role="menuitem" tabindex="-1" href="?activate={$u.userid}">{lang code='activate'}</a>
                 </li>
                 {/if}
                 <li role="presentation">

@@ -39,7 +39,7 @@
       Author:<strong><a href="{$plug.website}">{$plug.author}</a></strong> &#8226;
       Version:<strong>{$plug.version}</strong></span>
       <div style="margin-bottom:10px"> {$plug.description}</div>
-      <span class="vdo_sets">{if $plug.plugin_active == 'yes'}<a href="?deactivate={$plug.plugin_file}{if $plug.folder!=''}&f={$plug.folder}{/if}">Deactivate</a>{else}<a href="?activate={$plug.plugin_file}{if $plug.folder!=''}&f={$plug.folder}{/if}">Activate</a>{/if} | 
+      <span class="vdo_sets">{if $plug.plugin_active == 'yes'}<a href="?deactivate={$plug.plugin_file}{if $plug.folder!=''}&f={$plug.folder}{/if}">Deactivate</a>{else}<a href="?activate={$plug.plugin_file}{if $plug.folder!=''}&f={$plug.folder}{/if}">{lang code='activate'}</a>{/if} |
     <a href="javascript:Confirm_Uninstall('?uninstall={$plug.plugin_file}{if $plug.folder!=''}&f={$plug.folder}{/if}')">Uninstall</a></span>
     <div style="height:5px"></div>
      </td>

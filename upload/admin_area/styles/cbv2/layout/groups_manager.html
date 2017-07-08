@@ -109,7 +109,7 @@
     <div id="vid_opt-{$groups[gp_list].group_id}" style="display:none" class="vid_opts">
    	 
       <a href="{group_link details=$groups[gp_list]}" target="_blank">View</a> | 
-      <a href="edit_group.php?group_id={$groups[gp_list].group_id}">Edit</a>
+      <a href="edit_group.php?group_id={$groups[gp_list].group_id}">{lang code='edit'}</a>
       {if $groups[gp_list].featured == yes}
        | <a href="?unfeature={$groups[gp_list].group_id}">Make Unfeatured</a> {/if} 
       {if $groups[gp_list].featured == no} | 
@@ -117,7 +117,7 @@
       
       {if $groups[gp_list].active == yes}  | 
       <a href="?deactivate={$groups[gp_list].group_id}">Deactivate</a> {else} | 
-      <a href="?activate={$groups[gp_list].group_id}">Activate</a> {/if}  | 
+      <a href="?activate={$groups[gp_list].group_id}">{lang code='activate'}</a> {/if}  |
       <a href="{$baseurl}/manage_groups.php?mode=manage_videos&gid={$groups[gp_list].group_id}">Manage</a> |  
       <a href="?delete_group={$groups[gp_list].group_id}">{lang code='delete'}</a>
     </div>

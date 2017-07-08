@@ -114,7 +114,7 @@
             </span>
             <div style="height:4px;"></div>
             <div id="vid_opt-{$photos[list].photo_id}" style="display:none" class="AdminPhotoActions">              
-                <a href="edit_photo.php?photo={$photos[list].photo_id}">Edit</a> | 
+                <a href="edit_photo.php?photo={$photos[list].photo_id}">{lang code='edit'}</a> |
                 <a href="{$baseurl}/view_item.php?item={$photos[list].photo_key}&amp;type=photos&amp;collection={$photos[list].collection_id}" target="_blank">View</a> {if $photos[list].featured == yes} | 
                 <a href="?make_unfeature={$photos[list].photo_id}">Make Unfeatured</a> {/if} 
                 {if $photos[list].featured == no} | 

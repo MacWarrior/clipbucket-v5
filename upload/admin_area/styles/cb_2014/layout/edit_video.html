@@ -2,7 +2,7 @@
 {assign var='video_fields' value=$Upload->load_video_fields($data)}
 {if $data.title neq ""}
 
-<form action="" method="post" name="edit_video" id="edit_video" enctype="multipart/form-data">
+<form method="post" name="edit_video" id="edit_video" enctype="multipart/form-data">
 <div class="row">
     <div class="heading clearfix">
 
@@ -14,7 +14,7 @@
                 <ul class="dropdown-menu pull-right" role="menu">
                 <li><a href="{videoLink vdetails=$data}">Watch this video</a></li>
                 {if $data.active!='yes'}
-                <li><a href="edit_video.php?video={$data.videoid}&amp;mode=activate">Activate</a></li>
+                <li><a href="edit_video.php?video={$data.videoid}&amp;mode=activate">{lang code='activate'}</a></li>
                 {else}
                 <li><a href="edit_video.php?video={$data.videoid}&amp;mode=deactivate">Deactivate</a></li>
                 {/if}
@@ -83,7 +83,7 @@
                     <span class="glyphicon glyphicon-facetime-video"></span>
                 </a>
             </li>
-            <li class="">
+            <li>
                 <a data-toggle="tab" href="#uinformation1">
                     <i class="glyphicon glyphicon-user"></i>
                     Uploader Information
@@ -99,7 +99,7 @@
                             <td class="last">
                                 <p><span>{$data.videoid}</span></p>
                             </td>
-                            <input class="form-control" name="videoid" type="hidden" id="videoid"  value="{$data.videoid}"/>
+                            <input class="form-control" name="videoid" type="hidden" id="videoid" value="{$data.videoid}"/>
                         </tr>
                         <tr>
                             <td class="first"><label for="videokey">Video Key</label></td>
@@ -460,7 +460,7 @@
 				<div class="widget-main">
 					<div class="slimScrollDiv fontawesome-icons">
 						{foreach from=$comments item=comment}
-						<form action="" method="post" name="delete_Comment" id="edit_video">
+						<form method="post" name="delete_Comment" id="edit_video">
 						{if $comment != ''}
 						<div class="itemdiv dialogdiv">
 							{foreach from=$users item=u}

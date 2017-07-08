@@ -15,13 +15,13 @@ if(userid() || $old_version < 2.3 ):
 
 <div id="sub_container" >
 <form name="installation" method="post" id="installation">
-	<input type="hidden" name="mode" value="permission" />
+	<input type="hidden" name="mode" value="permission"/>
     <div style="padding:10px 0px" align="right"><?php button('Continue to upgrade!',' onclick="$(\'#installation\').submit()" '); ?></div>
 </form>
 <?php
 else:
 ?>
-<div class="errorDiv br5px" id="dbresult" style="">
+<div class="errorDiv br5px" id="dbresult">
 <?php
 	echo msg_arr(array('err'=>'Please first login as Website adminstrator by going to admin_area and then try upgrading your website')); ?></div><?php
 endif;

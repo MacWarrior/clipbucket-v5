@@ -14,7 +14,7 @@
         <ul id="side-menu" class="nav list-group">
 
             {foreach $leftMenuLinks as $key => $value}
-            <li class="">
+            <li>
                 <a href="#" class="tgl" data-toggle="dropdown" style="background: none repeat scroll 0% 0% rgb(231, 231, 231); border-bottom: 1px solid rgb(204, 204, 204);"><!--<i class="fa fa-files-o fa-fw"></i>-->{$key}<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse">
                     {foreach $value as $subKey => $subValue}
@@ -31,22 +31,6 @@
 </nav>
 
 </div>
-
-    
-<!--<div class="leftSidebar col-md-3">
-    <ul class="">
-        {foreach $leftMenuLinks as $key => $value}
-        <li class="">
-            <a href="#" class="" data-toggle="dropdown">{$key}</a>
-            <ul class="">
-                {foreach $value as $subKey => $subValue}
-                <li><a href="{$subValue}">{$subKey}</a></li>
-                {/foreach}
-            </ul>
-        </li>
-        {/foreach}
-    </ul>
-</div>-->
         <script>
         $('#sidebar > a').on('click', function (e) {
     e.preventDefault();

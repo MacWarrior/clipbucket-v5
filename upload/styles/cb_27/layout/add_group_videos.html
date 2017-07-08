@@ -33,7 +33,7 @@
 
         {if $usr_vids}
 
-        <form name="add_group_videos" id="add_group_videos" method="post" action="" style=" margin-top: 92px;">
+        <form name="add_group_videos" id="add_group_videos" method="post" style="margin-top:92px;">
             <hr>
         {foreach from=$usr_vids item=video}
             {if $cbgroup->is_group_video($video.videoid,$group.group_id)}

@@ -128,7 +128,7 @@
     <br />
     <div id="vid_opt-{$videos[list].videoid}" style="display:none" class="vid_opts">
    	 
-      <a href="edit_video.php?video={$videos[list].videoid}">Edit</a> | 
+      <a href="edit_video.php?video={$videos[list].videoid}">{lang code='edit'}</a> |
       <a href="{$baseurl}/watch_video.php?v={$videos[list].videokey}" target="_blank">Watch</a> {if $videos[list].featured == yes} | 
       <a href="javascript:Confirm_Delete('?delete_video={$videos[list].videoid}')">{lang code='delete'}</a> |
       <a href="?make_unfeature={$videos[list].videoid}">Make Unfeatured</a> {/if} 
@@ -136,7 +136,7 @@
       <a href="?make_feature={$videos[list].videoid}">Make Featured</a> {/if}
       {if $videos[list].active == yes}  | 
       <a href="?deactivate={$videos[list].videoid}">Deactivate</a> {else} | 
-      <a href="?activate={$videos[list].videoid}">Activate</a> {/if}  | 
+      <a href="?activate={$videos[list].videoid}">{lang code='activate'}</a> {/if}  |
       <a href="view_conversion_log.php?file_name={$videos[list].file_name}">File conversion details</a> | 
       <a href="?delete_video={$videos[list].videoid}">{lang code='delete'}</a>
       {foreach from=$cbvid->video_manager_links item=links}

@@ -25,7 +25,7 @@ if(isset($_POST['button']))
 $query = mysql_query("SELECT * FROM ".tbl("phrases")." ORDER BY text ASC");
 
 ?>
-<form id="form1" name="form1" method="post" action="">
+<form id="form1" name="form1" method="post">
 
 <table width="99%" border="0" cellspacing="0" cellpadding="0">
   <tr style="color:#fff; font-weight:bold">

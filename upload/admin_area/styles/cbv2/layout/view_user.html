@@ -3,7 +3,7 @@
 {assign var='signup_fields' value=$userquery->load_signup_fields($u)}
 {assign var='channel_profile_fields' value=$userquery->load_user_fields($p)}
 
-<form action="" method="post" enctype="multipart/form-data" name="form1" id="form1" class="cbform">
+<form method="post" enctype="multipart/form-data" name="form1" id="form1" class="cbform">
   <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" >
   <tr>
     <td><table width="99%" border="0" align="center" cellpadding="0" cellspacing="0">
@@ -16,7 +16,7 @@
     <td><table width="99%" border="0" align="center" cellpadding="0" cellspacing="0">
       <tr>
         <td width="15" align="center" valign="middle" class="left_head">&nbsp;</td>
-        <td class="head">ACtions</td>
+        <td class="head">Actions</td>
         <td width="50" class="right_head">&nbsp;</td>
       </tr>
     </table></td>
@@ -142,7 +142,7 @@
         {if $u.usr_status=="Ok"}
         <li><a href="?uid={$u.userid}&amp;deactivate=yes">Deactivate</a></li>
         {else}
-        <li><a href="?uid={$u.userid}&amp;activate=yes">Activate</a></li>
+        <li><a href="?uid={$u.userid}&amp;activate=yes">{lang code='activate'}</a></li>
 		{/if}
         {if $u.ban_status=="yes"}
         <li><a href="?uid={$u.userid}&amp;unban=yes">Unban</a></li>
@@ -233,11 +233,11 @@
 {section loop=$logs name=log}
 
   <tr>
-    <td width="40" align="center" valign="middle" class="">{$logs[log].action_id}</td>
-    <td width="50" class="" style="padding-left:10px">{$logs[log].action_userid}</td>
-    <td width="100" class=""><div class="" style="width:100px">{$logs[log].action_username}</div></td>
-    <td width="100" class=""><div class="" style="width:100px">{$logs[log].date_added}</div></td>
-    <td class=""><div class="">Type : {$logs[log].action_type} &#8211;{if $logs[log].action_details!=''}{$logs[log].action_details} &#8211;{/if} Success : {$logs[log].action_success} &#8211 {$logs[log].action_ip}</div></td>
+    <td width="40" align="center" valign="middle">{$logs[log].action_id}</td>
+    <td width="50"style="padding-left:10px">{$logs[log].action_userid}</td>
+    <td width="100"><div style="width:100px">{$logs[log].action_username}</div></td>
+    <td width="100"><div style="width:100px">{$logs[log].date_added}</div></td>
+    <td><div>Type : {$logs[log].action_type} &#8211;{if $logs[log].action_details!=''}{$logs[log].action_details} &#8211;{/if} Success : {$logs[log].action_success} &#8211 {$logs[log].action_ip}</div></td>
     </tr>
 {sectionelse}
 	<!--<tr><td><em>No user action log found</em></td></tr>-->

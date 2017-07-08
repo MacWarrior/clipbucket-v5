@@ -4,7 +4,7 @@
             <div class=" col-md-5 thumb row ">
                <a href="{videoLink($video)}" title="{$video.title|title}" >
                 <span class="fa fa-play play-icon"></span>
-                    <img class="" src="{getThumb vdetails=$video}">
+                    <img src="{getThumb vdetails=$video}">
                     <span class="duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</span>
                 </a>
             </div>

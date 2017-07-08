@@ -8,14 +8,14 @@
 
 	<div class="clearfix forgot-block">
 		<div class="account-holder">
-			<form action="" method="post" name="actvation" id="actvation" class="user-form">
+			<form method="post" name="actvation" id="actvation" class="user-form">
 				<h2>{lang code='user_forgot_message'}</h2>
 				<div class="clearfix text-box">
 					<p>Please enter your username and verification code in the box, password reset instructions will be sent to your mailbox.</p>
 				</div>
 				{*<label for="login_username_sp">{lang code="username"}</label>*}
 				<div class="form-group">
-					<input type="text" name="forgot_username" class="form-control" placeholder="User Name" required autofocus>
+					<input type="text" name="forgot_username" id="login_username_sp" class="form-control" placeholder="User Name" required autofocus>
 				</div>
 				<input name="reset" type="submit" class="btn btn-success btn-block" id="reset" value="{lang code='user_reset'}">
 			</form>
@@ -28,7 +28,7 @@
 	{if $mode=='recover_username'}
 	<div class="clearfix forgot-block">
 		<div class="account-holder">
-			<form action="" method="post" name="activation" id="activation" class="user-form">
+			<form method="post" name="activation" id="activation" class="user-form">
 				<h2>{lang code='user_recover_user'}</h2>
 				{*<label for="forgot_email" >{lang code='email'}</label>*}
 				<div class="form-group">

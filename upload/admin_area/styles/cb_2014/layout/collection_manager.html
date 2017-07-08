@@ -54,7 +54,7 @@
             <div class="dropdown">
                 <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">Actions <i class="caret"></i></button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" role="menu">
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="edit_collection.php?collection={$c[list].collection_id}" class="">Edit</a> </li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="edit_collection.php?collection={$c[list].collection_id}">{lang code='edit'}</a> </li>
 
                     <li role="presentation"><a target="_blank" role="menuitem" tabindex="-1" href="{$baseurl}/view_collection.php?cid={$c[list].collection_id}&type={$c[list].type}">View</a> </li>
                     <!-- {if $c[list].featured == yes}
@@ -65,7 +65,7 @@
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="?deactivate={$c[list].collection_id}">Deactivate</a>
                     </li>
                     {else}
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="?activate={$c[list].collection_id}">Activate</a>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="?activate={$c[list].collection_id}">{lang code='activate'}</a>
                     </li>
                     {/if}
                     <li class="divider"></li>

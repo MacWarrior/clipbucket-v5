@@ -105,10 +105,8 @@
                     <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
                         Actions <i class="caret"></i></button>
                     <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
-                        <li><a role="menuitem" tabindex="-1"
-                                                   href="edit_video.php?video={$video.videoid}" class="">Edit</a></li>
-                        <li><a role="menuitem" tabindex="-1"
-                            href="{$baseurl}/watch_video.php?v={$video.videokey}"target="_blank">Watch</a>
+                        <li><a role="menuitem" tabindex="-1" href="edit_video.php?video={$video.videoid}">{lang code='edit'}</a></li>
+                        <li><a role="menuitem" tabindex="-1" href="{$baseurl}/watch_video.php?v={$video.videokey}"target="_blank">Watch</a>
                         </li>
 
                         
@@ -123,7 +121,7 @@
                         <li><a role="menuitem" tabindex="-1" href="?deactivate={$video.videoid}">Deactivate</a>
                         </li>
                         {else}
-                        <li><a role="menuitem" tabindex="-1" href="?activate={$video.videoid}">Activate</a>
+                        <li><a role="menuitem" tabindex="-1" href="?activate={$video.videoid}">{lang code='activate'}</a>
                         </li>
                         {/if}
                         <li><a role="menuitem" tabindex="-1"

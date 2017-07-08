@@ -29,7 +29,7 @@
 					{foreach from=$categories item=maincat}
 						<li>
 							<div>
-								<a href="{cblink(['name'=>'category','data'=>$maincat,'type'=>$type])}" class="">{$maincat.category_name}</a>
+								<a href="{cblink(['name'=>'category','data'=>$maincat,'type'=>$type])}">{$maincat.category_name}</a>
 								{if $maincat.children}<i class="icon-right-arrow trigger" data-level="1"></i>{/if}
 							</div>
 							{if $maincat.children} 
@@ -38,8 +38,8 @@
 								{foreach from=$maincat.children item=sub1}
 									<li>
 										<div>
-											<a href="{cblink(['name'=>'category','data'=>$sub1,'type'=>$type])}" class="">{$sub1.category_name} </a>
-											{if $sub1.children}<i class="icon-right-arrow trigger" data-level="2" ></i>{/if}
+											<a href="{cblink(['name'=>'category','data'=>$sub1,'type'=>$type])}">{$sub1.category_name} </a>
+											{if $sub1.children}<i class="icon-right-arrow trigger" data-level="2"></i>{/if}
 										</div>
 										{if $sub1.children}
 											<ul class="dropdown-menu sub-menu"> 
@@ -47,8 +47,8 @@
 											{foreach from=$sub1.children item=sub2}
 											<li>
 												<div>
-													<a href="{cblink(['name'=>'category','data'=>$sub2,'type'=>$type])}" class="">{$sub2.category_name} </a>
-													{if $sub2.children}<i class="icon-right-arrow trigger"data-level="3" ></i>{/if}
+													<a href="{cblink(['name'=>'category','data'=>$sub2,'type'=>$type])}">{$sub2.category_name} </a>
+													{if $sub2.children}<i class="icon-right-arrow trigger"data-level="3"></i>{/if}
 												</div>
 												{if $sub2.children}
 													<ul class="dropdown-menu sub-menu">
@@ -56,8 +56,8 @@
 													{foreach from=$sub2.children item=sub3}
 													<li>
 														<div>
-															<a href="{cblink(['name'=>'category','data'=>$sub3,'type'=>$type])}"  class="">{$sub3.category_name} </a>
-															{if $sub3.children}<i class="icon-right-arrow trigger" data-level="4" ></i>{/if}
+															<a href="{cblink(['name'=>'category','data'=>$sub3,'type'=>$type])}">{$sub3.category_name} </a>
+															{if $sub3.children}<i class="icon-right-arrow trigger" data-level="4"></i>{/if}
 														</div>
 													
 														{if $sub3.children}
@@ -66,8 +66,8 @@
 																{foreach from=$sub3.children item=sub4}
 																	<li>
 																		<div>
-																			<a class="">{$sub4.category_name}</a>
-																			{if $sub4.children}<i class="icon-right-arrow trigger" data-level="5" ></i>{/if}
+																			<a>{$sub4.category_name}</a>
+																			{if $sub4.children}<i class="icon-right-arrow trigger" data-level="5"></i>{/if}
 																		</div>
 																	</li>
 																{/foreach}

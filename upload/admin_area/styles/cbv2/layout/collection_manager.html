@@ -124,14 +124,14 @@
                     User:<strong><a href="view_user.php?uid={$c[list].userid}">{$c[list].username}</a></strong>
                 </span>
                     <div id="vid_opt-{$c[list].collection_id}" style="display:none" class="AdminPhotoActions">              
-                    <a href="edit_collection.php?collection={$c[list].collection_id}">Edit</a> | 
+                    <a href="edit_collection.php?collection={$c[list].collection_id}">{lang code='edit'}</a> |
                     <a href="{$baseurl}/view_collection.php?cid={$c[list].collection_id}" target="_blank">View</a> {if $c[list].featured == yes} | 
                     <a href="?make_unfeature={$c[list].collection_id}">Make Unfeatured</a> {/if} 
                     {if $c[list].featured == no} | 
                     <a href="?make_feature={$c[list].collection_id}">Make Featured</a> {/if}
                     {if $c[list].active == yes}  | 
                     <a href="?deactivate={$c[list].collection_id}">Deactivate</a> {else} | 
-                    <a href="?activate={$c[list].collection_id}">Activate</a> {/if}  |  
+                    <a href="?activate={$c[list].collection_id}">{lang code='activate'}</a> {/if}  |
                     <a href="?delete_collection={$c[list].collection_id}">{lang code='delete'}</a>
                 </div>
             </div>

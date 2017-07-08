@@ -15,7 +15,7 @@
         {if $u.usr_status=="Ok"}
         <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;deactivate=yes">Deactivate</a></li>
         {else}
-        <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;activate=yes">Activate</a></li>
+        <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;activate=yes">{lang code='activate'}</a></li>
         {/if}
         {if $u.ban_status=="yes"}
         <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;unban=yes">Unban</a></li>
@@ -31,17 +31,6 @@
     </h3>
 
     <div class="pull-right marginBottomLarge">
-         <!--<span class="btn btn-app btn-sm btn-light no-hover">
-            <span class="line-height-1 blue">{*$u.num_visits*}</span>
-            <br>
-            <span class="line-height-1 smaller-90"> Views </span>  
-        </span> -->
-        <!-- <span class="btn btn-app btn-sm btn-yellow no-hover">
-            <span class="line-height-1"> {*$u.total_comments*} </span>
-
-            <br>
-            <span class="line-height-1 smaller-90"> Comments </span>
-        </span> -->
         <span class="btn btn-app btn-sm btn-pink no-hover">
             <span class="line-height-1"> {if $u.usr_status=='Ok'}<span class="glyphicon glyphicon-ok"></span>
                 {else}<span class="glyphicon glyphicon-remove">{/if}</span>
@@ -57,66 +46,36 @@
                 <span class="line-height-1 smaller-90">Banned</span>
             </span>
         </span>
-        <!-- <span class="btn btn-app btn-sm btn-primary no-hover">
-
-            <span class="line-height-1"> {*$u.total_flags*} </span>
-
-            <br>
-            <span class="line-height-1 smaller-90"> Flagged </span>
-        </span> -->
     </div>
 </div>
-<!-- <div class="alignRight clearfix">
-    <a class="btn btn-primary btn-sm dropdown-toggle pull-right" data-toggle="dropdown" href="">Actions <i class="caret"></i></a>
-    <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu1">
-        <li><a role="menuitem" tabindex="-1" href="{$userquery->profile_link($u)}">View {$u.username} channel</a></li>
-        <li><a role="menuitem" tabindex="-1" href="login_as_user.php?uid={$u.userid}">Login as user</a></li>
-        {if $u.usr_status=="Ok"}
-        <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;deactivate=yes">Deactivate</a></li>
-        {else}
-        <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;activate=yes">Activate</a></li>
-        {/if}
-        {if $u.ban_status=="yes"}
-        <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;unban=yes">Unban</a></li>
-        {else}
-        <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;ban=yes">Ban</a></li>
-        {/if}
-        <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;delete=yes">{lang code='delete'}</a></li>
-        <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;delete_vids=yes">Delete Videos</a></li>
-        <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;delete_contacts=yes">Delete Contacts</a></li>
-        <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;delete_pm=yes">Delete Private Messages</a></li>
-    </ul>
-</div> -->
+
 </div>
 
-<form action="" method="post" enctype="multipart/form-data" name="form1" id="form1" class="cbform">
+<form method="post" enctype="multipart/form-data" name="form1" id="form1" class="cbform">
 <div class="col-sm-6 col-md-6 col-lg-6 col x1-12">
 <div class="tabbable">
     <ul class="nav nav-tabs" id="myTab">
         <li class="active">
             <a data-toggle="tab" href="#userinfo">
                 User Information
-
             </a>
         </li>
-         <li class="">
+         <li>
             <a data-toggle="tab" href="#test">
               Channel Settings
             </a>
         </li>
-        <li class="">
+        <li>
             <a data-toggle="tab" href="#basicinfo">
-
                 Basic Info
             </a>
         </li>
-        <li class="">
+        <li>
             <a data-toggle="tab" href="#location">
-
                location
             </a>
         </li>
-        <li class="">
+        <li>
             <a data-toggle="tab" href="#education">
                 Education, etc
             </a>
@@ -140,43 +99,43 @@
     <div id="userinfo" class="tab-pane active">
         <div class="userInfoSettings">
             <div class="form-group">
-                <img src="{$userquery->getUserThumb($u,'small')}" class="btn btn-app btn-primary btn-xs" />
+                <img src="{$userquery->getUserThumb($u,'small')}" class="btn btn-app btn-primary btn-xs"/>
             </div>
             <div class="table-responsive">
                 <table class="myTable">
                     <tr>
-                        <td class="first"><label class="">User Id</label></td>
+                        <td class="first"><label>User Id</label></td>
                         <td class="last">
 							<p>
-								<input disabled="disabled" name="uid" type="text" id="uid" value="{$u.userid}" max-size="45" />
-								<input name="userid" type="hidden" id="userid" value="{$u.userid}" />
+								<input disabled="disabled" name="uid" type="text" id="uid" value="{$u.userid}" max-size="45"/>
+								<input name="userid" type="hidden" id="userid" value="{$u.userid}"/>
 							</p>
 						</td>
                     </tr>
                     <tr>
-                        <td class="first"><label class="">User Name</label></td>
+                        <td class="first"><label>User Name</label></td>
                         <td class="last">
 							<p>
-								<input name="username" type="text" id="username" value="{$u.username}" max-size="45" />
-								<input name="dusername" type="hidden" id="dusername" value="{$u.username}" />
-								<input name="admin_manager" type="hidden" value="yes" />
+								<input name="username" type="text" id="username" value="{$u.username}" max-size="45"/>
+								<input name="dusername" type="hidden" id="dusername" value="{$u.username}"/>
+								<input name="admin_manager" type="hidden" value="yes"/>
 							</p>
 						</td>
                     </tr>
                     <tr>
-                        <td class="first"><label class="">Email</label></td>
+                        <td class="first"><label>Email</label></td>
                         <td class="last">
 							<p>
 								<input name="email" type="text" id="email" value="{$u.email}" max-size="45"/>
-								<input name="demail" type="hidden" id="demail" value="{$u.email}" />
+								<input name="demail" type="hidden" id="demail" value="{$u.email}"/>
 							</p>
 						</td>
                     </tr>
                     <tr>
-                        <td class="first"> <label for="laevel">User level</label></td>
+                        <td class="first"> <label for="level">User level</label></td>
                         <td class="last">
                             <p>
-								<select class="form-control" name="level" id="level" >
+								<select class="form-control" name="level" id="level">
 									{assign var=levels value=$userquery->get_levels()}
 									{foreach from=$levels item=level}
 									<option value="{$level.user_level_id}" {if $u.level==$level.user_level_id} selected="selected"{/if}>{$level.user_level_name}</option>
@@ -189,7 +148,7 @@
                         <td class="first"> <label for="category">User Category</label></td>
                         <td class="last">
                             <p>
-								<select class="form-control" name="category" id="category" >
+								<select class="form-control" name="category" id="category">
 									{foreach from=$thecats item=cat}
 									<option value="{$cat.category_id}" {if $cat.category_id == $u.category}selected="selected"{/if}>{$cat.category_name}</option>
 									{/foreach}
@@ -234,10 +193,6 @@
                 </table>
             </div>
 
-
-
-
-
             <div class="custSignup">
                 {assign var=cust_signup value=$userquery->load_custom_signup_fields($u,true)}
                 {if $cust_signup}
@@ -254,8 +209,6 @@
 
         </div>
     </div>
-   
-
 
      <div id="test" class="tab-pane">
   <h2>Channel Settings</h2>
@@ -471,21 +424,13 @@
             <li class="active">
                 <a data-toggle="tab" href="#recent">
                     Recent Activity Log
-
                 </a>
             </li>
-            <li class="">
+            <li>
                 <a data-toggle="tab" href="#avatar">
                     User Avatar
-
                 </a>
             </li>
-            <!-- <li class="">
-                <a data-toggle="tab" href="#background">
-                    User Background image
-
-                </a>
-            </li> -->
             </ul>
         <div class="tab-content">
             <div id="recent" class="tab-pane active">
@@ -504,8 +449,8 @@
         <tr>
           <td>{$logs[log].action_id}</td>
           <td>{$logs[log].action_userid}</td>
-          <td width="100" class="">{$logs[log].action_username}</td>
-          <td width="100" class="">{$logs[log].date_added}</td>
+          <td width="100">{$logs[log].action_username}</td>
+          <td width="100">{$logs[log].date_added}</td>
           <td>
             Type : {$logs[log].action_type} &#8211;{if $logs[log].action_details!=''}{$logs[log].action_details} &#8211;{/if} Success : {$logs[log].action_success} &#8211 {$logs[log].action_ip}
           </td>
@@ -531,7 +476,7 @@
         <div class="uploadNewAvatar col-md-9">
           <div class="form-group">
             <label for="avatar_file">User Avatar/Profile Pic<small>Please select image file</small></label>
-            <input class="" type="file" name="avatar_file" id="avatar_file" />
+            <input type="file" name="avatar_file" id="avatar_file" />
           </div>
           <h4>OR</h4>
           <div class="form-group">

@@ -124,11 +124,11 @@
           </button>
           <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
           <li role="presentation"><a role="menuitem" tabindex="-1" href="{$cbpage->page_link($cbpages[list])}">View</a></li>
-          <li role="presentation"><a role="menuitem" tabindex="-1" href="?mode=edit&pid={$cbpages[list].page_id}">Edit</a></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="?mode=edit&pid={$cbpages[list].page_id}">{lang code='edit'}</a></li>
           {if $cbpages[list].active == yes}
           <li role="presentation"><a role="menuitem" tabindex="-1" href="?deactivate={$cbpages[list].page_id}">Deactivate</a></li>
           {else}
-          <li role="presentation"><a role="menuitem" tabindex="-1" href="?activate={$cbpages[list].page_id}">Activate</a></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="?activate={$cbpages[list].page_id}">{lang code='activate'}</a></li>
           {/if}
           <li role="presentation"><a class="disabled" role="menuitem" tabindex="-1" href="#">{lang code='delete'}</a></li>
           {if $cbpages[list].display!='yes'}

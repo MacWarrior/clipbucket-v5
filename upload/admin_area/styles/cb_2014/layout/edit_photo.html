@@ -1,4 +1,4 @@
-<form action="" method="post" name="edit_photo" id="edit_photo">
+<form method="post" name="edit_photo" id="edit_photo">
     <div class="heading">
         <h2>Editing <small>&gt; {$data.photo_title|truncate:40}</small></h2>
     </div>
@@ -28,14 +28,14 @@
         <a class="btn btn-primary btn-xs" href="javascript:void(0)" onClick="javascript:_cb.Confirm_Delete('photo_manager.php?delete_photo={$data.photo_id}')">
             Delete This Photo
         </a>
-        <input name="admin" type="hidden" id="admin" value="true" />
-        <input name="photo_id" type="hidden"  value="{$data.photo_id}" />
+        <input name="admin" type="hidden" id="admin" value="true"/>
+        <input name="photo_id" type="hidden" value="{$data.photo_id}"/>
     </div>
 
         <div class="row">
             <div class="col-md-6">
                 <div class="userInformation">
-                    <div class="">
+                    <div>
                         <h4>User : <a href="view_user.php?uid={$data.userid}">{$data.userid|get_username}</a></h4>
                     </div>
                 </div>
@@ -53,12 +53,12 @@
                                 Important Details
                             </a>
                         </li>
-                        <li class="">
+                        <li>
                             <a data-toggle="tab" href="#photodetails">
                                 Photo Details
                             </a>
                         </li>
-                        <li class="">
+                        <li>
                             <a data-toggle="tab" href="#photostats">
                                Photo Stats
                             </a>
@@ -187,12 +187,12 @@
                         Comments
                     </a>
                 </li>
-                <li class="">
+                <li>
                     <a data-toggle="tab" href="#embedding">
                         Embedding
                     </a>
                 </li>
-                <li class="">
+                <li>
                     <a data-toggle="tab" href="#rating2">
                         Rating
                     </a>

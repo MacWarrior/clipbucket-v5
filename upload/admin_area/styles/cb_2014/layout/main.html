@@ -118,7 +118,7 @@
   <li onClick='display_tab(this,"div_4",true)' id="tab_4"><a href="#">User Settings &amp; registration</a></li>
 </ul>
 
-<form name="form1" method="post" action="" id="main_form">
+<form name="form1" method="post" id="main_form">
   <input name="baseurl" value="{$row.baseurl}" type="hidden" />
   <input name="basedir" value="{$row.baseurl}" type="hidden" />
   
@@ -240,36 +240,25 @@
           <li class="active">
               <a data-toggle="tab" href="#esettings">
                   Email Settings
-
               </a>
           </li>
-          <li class="">
+          <li>
               <a data-toggle="tab" href="#comments">
-
                   Comments
               </a>
           </li>
-          <li class="">
+          <li>
               <a data-toggle="tab" href="#videos">
-
                   Video Settings
               </a>
           </li>
-          <li class="">
+          <li>
               <a data-toggle="tab" href="#channelsphotos">
-
                   Channels & Photos
               </a>
           </li>
-         <!--  <li class="">
-             <a data-toggle="tab" href="#groups">
-         
-                 Groups
-             </a>
-         </li> -->
-          <li class="">
+          <li>
               <a data-toggle="tab" href="#general">
-
                   General
               </a>
           </li>
@@ -858,12 +847,12 @@
               Video Upload Settings
           </a>
       </li>
-      <li class="">
+      <li>
           <a data-toggle="tab" href="#conversionsetttings">
               Conversion Settings
           </a>
       </li>
-      <li class="">
+      <li>
           <a data-toggle="tab" href="#videoconversion">
               Video Conversion
           </a>
@@ -1036,32 +1025,21 @@
 
 
   <div id="div_3" class="main_page_div" >
-
-    <!--<div class="" style="overflow:hidden;">
-      <div class="row">
-        <div class="col-md-4">Current Template</div>
-        <div class="col-md-8"><a href="manage_players.php">manage flv players</a></div>
-      </div>
-      <div class="row">
-        <div class="col-md-4">Current FLV Player</div>
-        <div class="col-md-8"><a href="manage_players.php">manage flv players</a></div>
-      </div>
-    </div>-->
     <h2>Main Settings</h2>
     <div class="row">
       <div class="col-md-3">
-        <div class="">
+        <div>
           <label for="use_cached_pagin">Use cached pagination</label>    
           <input value="yes"  name="use_cached_pagin" id="use_cached_pagin" {if $row.use_cached_pagin == 'yes'}checked="checked"{/if} type="checkbox" class="ace ace-switch ace-switch-5">
           <span class="show lbl"></span>
         </div>
       </div>
       <div class="col-md-3">
-        <div class="">
+        <di>
           <label for="cached_pagin_time">Pagination caching time</label>
           <input class="form-control" name="cached_pagin_time" type="text" id="cached_pagin_time" value="{$row.cached_pagin_time}" size="45" /> 
           in minutes
-        </div>
+        </di>
       </div>
     </div>
 
@@ -1073,26 +1051,26 @@
                 Video Listings
             </a>
         </li>
-        <li class="">
+        <li>
             <a data-toggle="tab" href="#photolistings">
                 Photos Listings
             </a>
         </li>
-        <li class="">
+        <l>
             <a data-toggle="tab" href="#collectionsettings">
                 Collection Listings
             </a>
-        </li>
-        <li class="">
+        </l>
+        <l>
             <a data-toggle="tab" href="#usersettings">
                 User Listings
             </a>
-        </li>
-        <li class="">
+        </l>
+        <l>
             <a data-toggle="tab" href="#groupsgeneral">
                 Groups & General
             </a>
-        </li>
+        </l>
     </ul>
 
     <div class="tab-content">
@@ -1180,26 +1158,26 @@
         <div class="col-md-4">
             <label for="photo_main_list">Main Limit</label>
             <input class="form-control" name="photo_main_list" type="text" id="photo_main_list" value="{$row.photo_main_list}" size="6" maxlength="3" />
-            <span class="">We use this limit in most of place where photo is displayed like, My Account, Manage Photos, Manage Favotires Photos etc.</span>
+            <span>We use this limit in most of place where photo is displayed like, My Account, Manage Photos, Manage Favotires Photos etc.</span>
         </div>
 
         <div class="col-md-4">
             <label for="photo_home_tabs">Home Tabs</label>
             <input class="form-control" name="photo_home_tabs" type="text" id="photo_home_tabs" value="{$row.photo_home_tabs}" size="6" maxlength="3" />
-            <span class="">Number of photos to display on Homepage.</span>
+            <span>Number of photos to display on Homepage.</span>
         </div>
 
         <div class="col-md-4">
             <label for="photo_search_result">Search Result</label>
             <input class="form-control" name="photo_search_result" type="text" id="photo_search_result" value="{$row.photo_search_result}" size="6" maxlength="3" />
-            <span class="">Number of photos to display on Search page.</span>
+            <span>Number of photos to display on Search page.</span>
         </div>
             </div>
         <div class="row">
         <div class="col-md-4">
             <label for="photo_channel_page">Channel Page</label>
             <input class="form-control" name="photo_channel_page" type="text" id="photo_channel_page" value="{$row.photo_channel_page}" size="6" maxlength="3" />
-            <span class="">Number of photos to display on User's page.</span>
+            <span>Number of photos to display on User's page.</span>
         </div>
 
         <div class="col-md-4">

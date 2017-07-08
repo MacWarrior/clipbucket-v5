@@ -99,11 +99,11 @@
                         {if $photos[list]['active'] == 'yes'}
                         <a href="?deactivate={$photos[list].photo_id}">Deactivate</a>
                         {else}
-                        <a href="?activate={$photos[list].photo_id}">Activate</a>
+                        <a href="?activate={$photos[list].photo_id}">{lang code='activate'}</a>
                         {/if}
                     </li>
                     <li>
-                        <a href="edit_photo.php?photo={$photos[list].photo_id}">Edit</a>
+                        <a href="edit_photo.php?photo={$photos[list].photo_id}">{lang code='edit'}</a>
                     </li>
                     <li>
                         <a href="{$baseurl}/view_item.php?item={$photos[list].photo_key}&amp;type=photos&amp;collection={$photos[list].collection_id}" target="_blank">View</a>

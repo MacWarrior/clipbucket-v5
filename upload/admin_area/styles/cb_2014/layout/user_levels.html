@@ -21,7 +21,7 @@
     <td>{$levels[l].user_level_name}</td>
     <td>{$levels[l].user_level_active}</td>
     <td>{$userquery->get_level_users($levels[l].user_level_id,true)}</td>
-    <td><a href="?mode=edit&lid={$levels[l].user_level_id}">Edit</a>{if $levels[l].user_level_is_default !=yes} | <a href="?action=delete&lid={$levels[l].user_level_id}">Remove</a>{/if}</td>
+    <td><a href="?mode=edit&lid={$levels[l].user_level_id}">{lang code='edit'}</a>{if $levels[l].user_level_is_default !=yes} | <a href="?action=delete&lid={$levels[l].user_level_id}">Remove</a>{/if}</td>
   </tr>
   {sectionelse}
   <tr>
@@ -32,7 +32,7 @@
 
 {elseif $view=='edit'}
 
-<form action="" method="post">
+<form method="post">
 <h3>Edit {$level_details.user_level_name|form_val} Level Permissions</h3>
 
 <div class="form-group">
@@ -47,17 +47,17 @@
 
         </a>
     </li>
-    <li class="">
+    <li>
         <a data-toggle="tab" href="#upermission">
             Uploading Permission
         </a>
     </li>
-    <li class="">
+    <li>
         <a data-toggle="tab" href="#apermission">
             Administrator Permission
         </a>
     </li>
-    <li class="">
+    <li>
         <a data-toggle="tab" href="#gpermission">
             General Permission
         </a>
@@ -331,7 +331,7 @@
 
 </form>
 {elseif $view=='add'}
-<form action="" method="post">
+<form method="post">
 <h3>User Level Details</h3>
 <div class="form-group">
   <label for="level_name2">Level name</label>

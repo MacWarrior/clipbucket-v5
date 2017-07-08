@@ -54,11 +54,11 @@
     <div id="usr_opt-{$u.userid}"  class="vid_opts" style="display:none">
    	 
     <a href="view_user.php?uid={$u.userid}">View</a> or 
-    <a href="view_user.php?uid={$u.userid}">Edit</a> |
+    <a href="view_user.php?uid={$u.userid}">{lang code='edit'}</a> |
     {if $u.usr_status == Ok}
     <a href="?deactivate={$u.userid}">Deactivate</a>
     {elseif $u.usr_status == ToActivate}
-    <a href="?activate={$u.userid}">Activate</a>
+    <a href="?activate={$u.userid}">{lang code='activate'}</a>
     {/if}  | 
     <a href="?delete_user={$u.userid}">{lang code='delete'}</a> |
       <a href="?mode=view_flags&uid={$u.userid}">View Flags</a> |

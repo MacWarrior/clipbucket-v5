@@ -10,7 +10,7 @@
         <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
             {if $mode=='manage'}
 
-            <h2 class="">{lang code='grp_groups_title'}</h2>
+            <h2>{lang code='grp_groups_title'}</h2>
 
             <table class="table table-bordered table-striped">
                 <tr>
@@ -75,7 +75,7 @@
             {assign var=grp_pend_mems value=$cbgroup->get_members($group.group_id,"no")}
 
             {if $grp_pend_mems}
-            <form name="pending_members" id="pending_members" action="" method="post">
+            <form name="pending_members" id="pending_members" method="post">
                 <h2>{lang code='pending_mems'} ({$grp_pend_mems|@count})</h2>
 
                 <div style="float:left; width:300px">
@@ -106,7 +106,7 @@
 
             <!-- Listing ALl Active Members -->
             {if $gp_mems}
-            <form name="pending_members" id="pending_members" action="" method="post">
+            <form name="pending_members" id="pending_members" method="post">
                 <h3>{lang code='active_mems'} ({$gp_mems|@count})</h3>
                 <div style="float:left; width:300px">
                     <img src="{$imageurl}/dot.gif" class="arrow_pointing" style="margin-left:20px; margin-right:10px;" />
@@ -155,7 +155,7 @@
         {assign var=grp_pend_videos value=$cbgroup->get_group_videos($group.group_id,"no")}
 
         {if $grp_pend_videos}
-        <form name="pending_members" id="pending_members" action="" method="post">
+        <form name="pending_members" id="pending_members" method="post">
             <h3>{lang code='pending_vids'} ({$grp_pend_videos|@count})</h3>
             <div style="float:left; width:300px">
                 <img src="{$imageurl}/dot.gif" class="arrow_pointing" style="margin-left:20px; margin-right:10px;" />
@@ -202,7 +202,7 @@
 
         <!-- Listing ALl Active Members -->
         {if $grp_vids}
-        <form name="pending_members" id="pending_members" action="" method="post">
+        <form name="pending_members" id="pending_members" method="post">
             <h3>{lang code='active_videos'} ({$grp_vids|@count})</h3>
             <div style="float:left; width:300px">
                 <img src="{$imageurl}/dot.gif" class="arrow_pointing" style="margin-left:20px; margin-right:10px;" />

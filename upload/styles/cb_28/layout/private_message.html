@@ -44,7 +44,7 @@
                       <h2>{lang code='private_messages'} &raquo; {lang code='title_crt_new_msg'}</h2>
                       {assign var='form_fields' value=$cbpm->load_compose_form()}
                       <div class="account_form">
-                          <form id="pm_msg" name="pm_msg" method="post" action="">
+                          <form id="pm_msg" name="pm_msg" method="post">
 
                               <h3>{lang code='new_private_msg'}</h3>
                               {foreach from=$form_fields item=field}

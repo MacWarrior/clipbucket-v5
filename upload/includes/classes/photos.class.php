@@ -1390,7 +1390,7 @@ class CBPhotos
         return $output;
 
 		$should_include = $p['includeHeader'] ? $p['includeHeader'] : TRUE;
-		$output = '<form action="" method="post"';
+		$output = '<form method="post"';
 		if($p['formName'])
 			$output .= " name = '".$p['formName']."'";
 		else

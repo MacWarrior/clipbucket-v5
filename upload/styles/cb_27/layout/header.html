@@ -28,7 +28,6 @@
 		{$head_menu=cb_menu()}
 
 		<div class="responsive-search collapse" id="navbar-search-collapse">
-			<!--<form class="" role="search" action="{$baseurl}">-->
 			<form class="navbar-form navbar-left no-border" role="search" action="{link name='search_result'}">
 				<div class="input-group cbsearchtype">
 					<input type="text" class="form-control" name="query" placeholder="search keyword here" value="{'query'|get_form_val:true}" id="query">
@@ -83,11 +82,11 @@
 						  	<!-- Controls -->
 							<a class="left carousel-control" href="#menCollection" role="button" data-slide="prev">
 								<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-								<span class="sr-only">Previous</span>
+								<span class="sr-only">{lang code='previous'}</span>
 							</a>
 							<a class="right carousel-control" href="#menCollection" role="button" data-slide="next">
 								<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-								<span class="sr-only">Next</span>
+								<span class="sr-only">{lang code='next'}</span>
 							</a>
 						</div><!-- /.carousel -->
 						{else}
@@ -103,7 +102,7 @@
                             {foreach from=$sorting_links item=name key=sort}
                             <ul>
                                 <li class="head_sort_link">
-                                	<a class="" href="{link name=sort sort=$sort type=videos}">{$name}</a>
+                                	<a href="{link name=sort sort=$sort type=videos}">{$name}</a>
                                 </li>
                             </ul>  
                             {/foreach}
@@ -115,7 +114,7 @@
                             {foreach from=$sorting_links item=name key=sort}
                             <ul>
                                 <li class="head_sort_link">
-                                	<a class="" href="{link name=sort sort=$sort type=photos}">{$name}</a>
+                                	<a href="{link name=sort sort=$sort type=photos}">{$name}</a>
                                 </li>
                             </ul>  
                             {/foreach}
@@ -127,7 +126,7 @@
                             {foreach from=$sorting_links item=name key=sort}
                             <ul>
                                 <li class="head_sort_link">
-                                	<a class="" href="{link name=sort sort=$sort type=channels}">{$name}</a>
+                                	<a href="{link name=sort sort=$sort type=channels}">{$name}</a>
                                 </li>
                             </ul>  
                             {/foreach}
@@ -138,7 +137,7 @@
                             {foreach from=$sorting_links item=name key=sort}
                             <ul>
                                 <li class="head_sort_link">
-                                	<a class="" href="{link name=sort sort=$sort type=collections}">{$name}</a>
+                                	<a href="{link name=sort sort=$sort type=collections}">{$name}</a>
                                 </li>
                             </ul>  
                             {/foreach}
@@ -149,7 +148,7 @@
                             {foreach from=$sorting_links item=name key=sort}
                             <ul>
                                 <li class="head_sort_link">
-                                	<a class="" href="{link name=sort sort=$sort type=groups}">{$name}</a>
+                                	<a href="{link name=sort sort=$sort type=groups}">{$name}</a>
                                 </li>
                             </ul>  
                             {/foreach}

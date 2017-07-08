@@ -61,7 +61,7 @@ jwplayer("mediaplayer").setup( {ldelim}
 	<video id="myVideo" class="myVideo largevid" {if $autoplay==true}autoplay{else}{/if}>
 
 		{if $ms_videos}
-		<source src="{$ms_videos.360}" type="video/mp4" data-res="" id=""/>
+		<source src="{$ms_videos.360}" type="video/mp4" data-res=""/>
 		{else}
 		{/if}
 
@@ -124,7 +124,7 @@ jwplayer("mediaplayer").setup( {ldelim}
 
 	<div class="control">
 		<div class="topControl">
-			<div class="">
+			<div>
 				<div class="progress">
 					<span class="bufferBar"> </span>
 					<span class="timeBar"><div class="buffer btns"></div></span>

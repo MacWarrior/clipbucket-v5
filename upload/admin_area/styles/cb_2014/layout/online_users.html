@@ -30,7 +30,7 @@
             <button id="hideshow" class="btn btn-primary btn-xs drop" value="See Details">See Details..</button>
           </div>
 
-          <span class="" title="{$user.referer}">
+          <span title="{$user.referer}">
               <b>Right Now</b>      <a href="{$user.current_page}">{$user.current_page|truncate:40:'..':false:true}</a>
               {if $user.referer}
               <a href="{$user.referer}" target="_blank" ><label class="label label-warning">View Referer</label></a>

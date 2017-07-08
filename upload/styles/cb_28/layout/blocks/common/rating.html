@@ -1,6 +1,6 @@
 {$ratedBy = has_rated(userid(),$id,$type)}
 <!--CB like and dislike section-->
-<div id="" class="clearfix rating">
+<div class="clearfix rating">
 	<div class="clearfix rating-holder">
 		<div class="likes like-dislike {if $ratedBy == 'liked'}rated{/if}">
 			<a {if !$disable} onclick="_cb.rateNew('{$id}','5','{$type}')"{/if} href="javascript:void(0)"><span class="icon-thumbup"></span></a>

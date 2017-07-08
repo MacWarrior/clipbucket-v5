@@ -42,12 +42,12 @@
                     <h5><i class="glyphicon glyphicon-list-alt"></i> ToDo List</h5>
                 </a>
             </li>
-            <li class="">
+            <li>
                 <a data-toggle="tab" href="#pnotes">
                     <h5><i class="glyphicon glyphicon-pencil"></i> Personal Notes</h5>
                 </a>
             </li>
-            <li class="">
+            <li>
                 <a data-toggle="tab" href="#rcomments">
                     <h5><i class="glyphicon glyphicon-comment"></i> Recent Comments</h5>
                 </a>
@@ -93,7 +93,7 @@
                         <ul class="notesList row paddingRightSmall" id="note-{$the_note.note_id}" >
                             {foreach from=$notes item=note}
                                 <li class="col-md-4">
-                                    <div class="">
+                                    <div>
                                         <p class="oneNote" id="{$note.note_id}">
                                         {$note.note}
                                         <a href="#" class="delete">×</a>

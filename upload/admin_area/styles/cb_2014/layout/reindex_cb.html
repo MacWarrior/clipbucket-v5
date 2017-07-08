@@ -51,8 +51,8 @@
                 <label for="index_vids">Reindex Videos<br>
                     <small>this will reindex total playlists, total favorites and total comments made on video</small>
                 </label>
-                <form name="reindex_videos" method="get" action="">
-                    <input type="hidden" name="loop_size" value="" id="loop_start" />
+                <form name="reindex_videos" method="get">
+                    <input type="hidden" name="loop_size" value="" id="loop_start"/>
                     <input type="submit" name="index_vids" id="index_vids" value="Reindex" class="btn btn-primary btn-xs btn-danger" onclick="$('#loop_start').val($('#the_loop_size').val())"/>
                 </form>
             </div>
@@ -90,7 +90,7 @@
                         This will reindex total videos, total comments, total comments made, total subscribers and subscriptions, total groups owned
                     </small>
                 </label>
-                <form name="reindex_users" method="get" action="">
+                <form name="reindex_users" method="get">
                     <input type="hidden" name="loop_size" value="" id="loop_start_user" />
                     <input type="submit" name="index_usrs" id="index_usrs" value="Reindex" class="btn btn-primary btn-xs btn-danger"
                            onclick="$('#loop_start_user').val($('#the_loop_size').val())"/>
@@ -105,7 +105,7 @@
                         This will reindex all groups , update total members, total videos , total topics
                     </small>
                 </label>
-                <form name="reindex_groups" method="get" action="">
+                <form name="reindex_groups" method="get">
                     <input type="hidden" name="loop_size" value="" id="loop_start_gp" />
                     <input type="submit" name="index_gps" id="index_gps" value="Reindex" class="btn btn-primary btn-xs btn-danger"
                            onclick="$('#loop_start_gp').val($('#the_loop_size').val())"/>
@@ -118,7 +118,7 @@
                     Reindex Collections<br>
                     <small>This will reindex all collections , update total objects, total comments</small>
                 </label>
-                <form name="reindex_collections" method="get" action="">
+                <form name="reindex_collections" method="get">
                     <input type="hidden" name="loop_size" value="" id="loop_start_cl" />
                     <input type="submit" name="index_collections" id="index_collections" value="Reindex" class="btn btn-primary btn-xs btn-danger" onclick="$('#loop_start_gp').val($('#the_loop_size').val())"/>
                 </form>
@@ -130,8 +130,8 @@
                     Reindex Photos<br>
                     <small>This will reindex all photos , update total favorites, total comments</small>
                 </label>
-                <form name="reindex_photos" method="get" action="">
-                    <input type="hidden" name="loop_size" value="" id="loop_start_ph" />
+                <form name="reindex_photos" method="get">
+                    <input type="hidden" name="loop_size" value="" id="loop_start_ph"/>
                     <input type="submit" name="index_photos" id="index_photos" value="Reindex" class="btn btn-primary btn-xs btn-danger"
                            onclick="$('#loop_start_gp').val($('#the_loop_size').val())"/>
                 </form>

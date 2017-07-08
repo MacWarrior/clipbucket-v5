@@ -1,7 +1,7 @@
 <div class="heading">
   <h2>Orphan Photos</h2>
 </div>
-<form action="" method="post" name="manage_orpahns">
+<form method="post" name="manage_orpahns">
 <div class="btn-group">
     <input type="submit" name="make_featured_selected" value="Make Featured" class="btn btn-primary btn-xs"/>
     <input type="submit" name="make_unfeatured_selected" value="Make Unfeatured" class="btn btn-primary btn-xs"/>
@@ -51,7 +51,7 @@
             <button class="btn btn-primary btn-xs dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown">Actions<i class="icon-angle-down icon-on-right"></i></button>
             <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
               <li>
-                <a href="edit_photo.php?photo={$photos[list].photo_id}">Edit</a>
+                <a href="edit_photo.php?photo={$photos[list].photo_id}">{lang code='edit'}</a>
               </li>
                 <li><a role="menuitem" tabindex="-1" id="delete-{$photos[list].photo_id}" href="?delete_photo={$photos[list].photo_id}">{lang code='delete'}</a></li>
             </ul>

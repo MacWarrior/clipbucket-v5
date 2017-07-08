@@ -27,7 +27,7 @@ Website : <a href="{$curtpl.website.link}">{$curtpl.website.title}</a></td>
     {if $selected != $template.dir}
         <div class="template_box" align="center">
             <img src="{$cbtpl->get_preview_thumb($template.dir)}" class="preview_thumb_template" >
-    <div align="center" style="" class="tpl_title">
+    <div align="center" class="tpl_title">
                 {$template.name} <br /><em>by <strong>{$template.author}</strong></em><br />
             <a href="templates.php?change={$template.dir}">Activate This Template</a><br />
             <a href="{$baseurl}?template={$template.dir}" target="_blank">Preview</a><br />

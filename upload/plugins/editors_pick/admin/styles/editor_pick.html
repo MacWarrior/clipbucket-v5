@@ -2,7 +2,7 @@
     <h2>Editor's Pick</h2>
 </div>
 
-<form name="editors_pick" action="" method="post">
+<form name="editors_pick" method="post">
 <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
   <tr>
     <td width="30" align="center" valign="middle"><img src="{$imageurl}/arrow_return.png" width="25" height="25"></td>
@@ -71,7 +71,7 @@
                         Actions <i class="caret"></i>
                     </button>
                     <ul role="menu" aria-labelledby="dropdownMenu1" class="dropdown-menu">
-                        <li><a class="" href="{$baseurl}/admin_area/plugin.php?folder=editors_pick/admin&file=editor_pick.php&remove={$video.videoid}" tabindex="-1" role="menuitem">Remove From Editor's Pick</a></li>
+                        <li><a href="{$baseurl}/admin_area/plugin.php?folder=editors_pick/admin&file=editor_pick.php&remove={$video.videoid}" tabindex="-1" role="menuitem">Remove From Editor's Pick</a></li>
                     </ul>
                 </div>
             </td>

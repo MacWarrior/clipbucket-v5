@@ -33,7 +33,7 @@ if(file_exists(FILES_DIR.'/temp/install.me'))
 
 <div id="sub_container" class="br5px">
 
-<div class="errorDiv br5px" id="dbresult" style="">
+<div class="errorDiv br5px" id="dbresult">
 <?php echo msg_arr(array('err'=>'<span style="color:#A32727;">Please delete cb_install directory</span>')); ?></div>
 
 
@@ -79,7 +79,7 @@ if(file_exists(FILES_DIR.'/temp/install.me'))
  <div class="line"></div>
 </div>
 
-<div class="product br5px" style="">
+<div class="product br5px">
     <div class="title">
     <a href="http://clip-bucket.com/product/Paid-Subscription-Module-Billing-System/95">    
 Paid Subscription Module </a></div>

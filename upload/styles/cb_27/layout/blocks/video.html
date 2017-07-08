@@ -45,7 +45,7 @@
 	    <a class="thumb-holder" href="{videoLink($video)}" title="{$video.title|title}">
 	     <span class="fa fa-play play-icon"></span>
 	        <img src="{getThumb vdetails=$video size='big'}"  width="203" height="115" id="thumbs_{$video.videoid}"  title=""/>
-	        <span class="duration1" style="">
+	        <span class="duration1">
 	        {if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</span>
 		</a>
 	    <h5><a href="{videoLink($video)}" title="{$video.title|title}"><b>{$video.title|truncate:22}</b></a></h5>

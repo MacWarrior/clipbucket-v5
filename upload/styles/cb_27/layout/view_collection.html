@@ -107,7 +107,7 @@
 
     <div class="col-md-12 cb-box" style="margin-top: 20px">
         {if $myquery->is_commentable($c,'collection')}
-        <div class="">
+        <div>
             <h2 class="commentHead">{lang code="comments"} ({$c.total_comments})</h2>
         </div>
         <div class="collectionComments">
@@ -123,7 +123,7 @@
         <script>
             $(document).ready(function(){
                 function getAllComments(type,type_id,last_update,pageNum,total,object_type,admin){
-                    $('#userCommentsList').html("<div style='padding:5px 0px;'>"+loading+"</div>");
+                    $('#userCommentsList').html("<div style='padding:5px 0;'>"+loading+"</div>");
                     $.ajax({
                         type: 'POST',
                         url: page,

@@ -3,7 +3,7 @@
   <h2>Edit Advertisement here</h2>
 </div>
 <p class="alert alert-info">all fields are required</p>
-<form id="form1" name="form1" method="post" action="">
+<form id="form1" name="form1" method="post">
   <input type="hidden" name="ad_id" value="{$ad_data.ad_id}" />
     <div class="row">
   <div class="col-md-6">
@@ -118,7 +118,7 @@
         <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">Actions <i class="caret"></i></button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" role="menu">
           <li role="presentation">
-            <a role="menuitem" tabindex="-1" href="ads_manager.php?ad_id={$ad.ad_id}">Edit</a>
+            <a role="menuitem" tabindex="-1" href="ads_manager.php?ad_id={$ad.ad_id}">{lang code='edit'}</a>
           </li>
           <li role="presentation">
             <a role="menuitem" tabindex="-1" href="ads_manager.php?delete={$ad.ad_id}">{lang code='delete'}</a>
@@ -126,7 +126,7 @@
           <li role="presentation">
             {if $ad.ad_status!=1}
             {$ad.ad_status}
-            <a role="menuitem" tabindex="-1" href="?activate={$ad.ad_id}">Activate</a>
+            <a role="menuitem" tabindex="-1" href="?activate={$ad.ad_id}">{lang code='activate'}</a>
             {else}
             <a role="menuitem" tabindex="-1" href="?deactivate={$ad.ad_id}">Deactivate</a>
             {/if}

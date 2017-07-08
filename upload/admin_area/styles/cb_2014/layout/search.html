@@ -2,13 +2,13 @@
     <div id="simple_search" class="cb-box marginBottom">
         <div class="quick_search marginBottom">
             <h2>Search</h2>
-            <form name="search-form" method="get" action="" class="form-inline">
+            <form name="search-form" method="get" class="form-inline">
                 <div class="form-group">
                     <label class="sr-only" for='query'>{$title} &#8250; {lang code='search'} &#8211;</label>
                     <input class="form-control" type="text" name="query" value="{'query'|get_form_val:true}" id="query" />
                 </div>
                 <div class="form-group">
-                    <label class="sr-only" for="type">Type</label>
+                    <label class="sr-only" for="SearchType">Type</label>
                     <select id="SearchType" name="type" class="form-control">
                         {foreach from=$Cbucket->search_types item=t key=stypes}
                         <option value="{$stypes}" {if $smarty.get.type==$stypes} selected="selected"{/if}>{$stypes}</option>
@@ -31,11 +31,11 @@
             {assign var='types' value=$type->search_type}
 
             {foreach from=$types key=stype item=search}
-            <div id="{$stype}" class="">
+            <div id="{$stype}">
                 {lang code='search_for_s' assign='searchfor'}
                 <h2>{$searchfor|sprintf:$search.title}</h2>
                 <div>
-                    <form name="search-form-{$search.title}" method="get" action="">
+                    <form name="search-form-{$search.title}" method="get">
                         <input type="hidden" name="type" value="{$stype}" />
                         {foreach from=$search.fields item=field}
                         <div class="form-group">
@@ -50,7 +50,7 @@
                             {$formObj->createField($field)}
                         </div>
                         {/foreach}
-                        <label for="button"></label>
+                        <label for="cbsearch"></label>
                         <input type="submit" name="cbsearch" id="cbsearch" value="Search" class="btn btn-primary btn-xs" />
                     </form>
                 </div>
