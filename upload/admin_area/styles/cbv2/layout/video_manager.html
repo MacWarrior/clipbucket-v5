@@ -70,12 +70,11 @@
   <tr>
     <td width="30" align="center" valign="middle"><img src="{$imageurl}/arrow_return.png" width="25" height="25"></td>
     <td height="50" style="padding-left:15px">
-     		<input type="submit" name="activate_selected" value="Activate"  class="button"/>
+     		<input type="submit" name="activate_selected" value="Activate" class="button"/>
             <input type="submit" name="deactivate_selected" value="Deactivate" class="button" />
-            <input type="submit" name="make_featured_selected" value="Make Featured"  class="button"/>
-            <input type="submit" name="make_unfeatured_selected" value="Make Unfeatured"  class="button"/>
-            <input type="submit" name="delete_selected" value="Delete"  class="button" onclick="return confirm_it('Are you sure you want to delete selected video(s)')"/>
-    
+            <input type="submit" name="make_featured_selected" value="Make Featured" class="button"/>
+            <input type="submit" name="make_unfeatured_selected" value="Make Unfeatured" class="button"/>
+            <input type="submit" name="delete_selected" value="{lang code='delete'}" class="button" onclick="return confirm_it('Are you sure you want to delete selected video(s)')"/>
     </td>
     </tr>
 </table>
@@ -131,7 +130,7 @@
    	 
       <a href="edit_video.php?video={$videos[list].videoid}">Edit</a> | 
       <a href="{$baseurl}/watch_video.php?v={$videos[list].videokey}" target="_blank">Watch</a> {if $videos[list].featured == yes} | 
-      <a href="javascript:Confirm_Delete('?delete_video={$videos[list].videoid}')">Delete</a> | 
+      <a href="javascript:Confirm_Delete('?delete_video={$videos[list].videoid}')">{lang code='delete'}</a> |
       <a href="?make_unfeature={$videos[list].videoid}">Make Unfeatured</a> {/if} 
       {if $videos[list].featured == no} | 
       <a href="?make_feature={$videos[list].videoid}">Make Featured</a> {/if}
@@ -139,7 +138,7 @@
       <a href="?deactivate={$videos[list].videoid}">Deactivate</a> {else} | 
       <a href="?activate={$videos[list].videoid}">Activate</a> {/if}  | 
       <a href="view_conversion_log.php?file_name={$videos[list].file_name}">File conversion details</a> | 
-      <a href="?delete_video={$videos[list].videoid}">Delete</a>
+      <a href="?delete_video={$videos[list].videoid}">{lang code='delete'}</a>
       {foreach from=$cbvid->video_manager_links item=links}
       	{$cbvid->video_manager_link($links,$videos[list])}
       {/foreach}
@@ -163,11 +162,11 @@
   <tr>
     <td width="30" align="center" valign="middle"><img src="{$imageurl}/arrow_return_invert.png" width="25" height="25"></td>
     <td height="50" style="padding-left:15px">
-     <input type="submit" name="activate_selected" value="Activate"  class="button"/>
+     <input type="submit" name="activate_selected" value="Activate" class="button"/>
             <input type="submit" name="deactivate_selected" value="Deactivate" class="button" />
-            <input type="submit" name="make_featured_selected" value="Make Featured"  class="button"/>
-            <input type="submit" name="make_unfeatured_selected" value="Make Unfeatured"  class="button"/>
-            <input type="submit" name="delete_selected" value="Delete"  class="button" onclick="return confirm_it('Are you sure you want to delete selected video(s)')"/>
+            <input type="submit" name="make_featured_selected" value="Make Featured" class="button"/>
+            <input type="submit" name="make_unfeatured_selected" value="Make Unfeatured" class="button"/>
+            <input type="submit" name="delete_selected" value="{lang code='delete'}" class="button" onclick="return confirm_it('Are you sure you want to delete selected video(s)')"/>
     
     </td>
     </tr>

@@ -14,7 +14,7 @@
 <div id="massUploadCategoriesSelection">
 	<h3>Mass Category Selection</h3>
 	{foreach $cats as $cat}
-	<label><input type="checkbox" class="checkall" value='{$cat['category_id']}'/> {$cat['category_name']}</label>
+	<label><input type="checkbox" class="checkall" value='{$cat['category_id']}'/> {display_clean($cat['category_name'])}</label>
 	{$i = $i+1}
 	{/foreach}
 </div>

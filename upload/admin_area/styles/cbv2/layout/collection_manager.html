@@ -84,7 +84,7 @@
             <input type="submit" name="deactivate_selected" value="Deactivate" class="button" />
             <input type="submit" name="make_featured_selected" value="Make Featured"  class="button"/>
             <input type="submit" name="make_unfeatured_selected" value="Make Unfeatured"  class="button"/>
-            <input type="submit" name="delete_selected" value="Delete"  class="button" onclick="return confirm_it('Are you sure you want to delete selected collection(s)')"/>
+            <input type="submit" name="delete_selected" value="{lang code='delete'}"  class="button" onclick="return confirm_it('Are you sure you want to delete selected collection(s)')"/>
     
     </td>
     </tr>
@@ -132,7 +132,7 @@
                     {if $c[list].active == yes}  | 
                     <a href="?deactivate={$c[list].collection_id}">Deactivate</a> {else} | 
                     <a href="?activate={$c[list].collection_id}">Activate</a> {/if}  |  
-                    <a href="?delete_collection={$c[list].collection_id}">Delete</a>
+                    <a href="?delete_collection={$c[list].collection_id}">{lang code='delete'}</a>
                 </div>
             </div>
         </div>
@@ -150,7 +150,7 @@
             <input type="submit" name="deactivate_selected" value="Deactivate" class="button" />
             <input type="submit" name="make_featured_selected" value="Make Featured"  class="button"/>
             <input type="submit" name="make_unfeatured_selected" value="Make Unfeatured"  class="button"/>
-            <input type="submit" name="delete_selected" value="Delete"  class="button" onclick="return confirm_it('Are you sure you want to delete selected collection(s)')"/>
+            <input type="submit" name="delete_selected" value="{lang code='delete'}"  class="button" onclick="return confirm_it('Are you sure you want to delete selected collection(s)')"/>
     
     </td>
     </tr>

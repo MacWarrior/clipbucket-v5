@@ -106,10 +106,10 @@
   <tr>
     <td width="30" align="center" valign="middle"><img src="{$imageurl}/arrow_return.png" width="25" height="25"></td>
     <td height="50" style="padding-left:15px">
-     		<input type="submit" name="activate_selected" value="Activate"  class="button"/>
+     		<input type="submit" name="activate_selected" value="Activate" class="button"/>
             <input type="submit" name="deactivate_selected" value="Deactivate" class="button" />
             <input type="submit" name="update_order" value="Update order" class="button" />
-            <input type="submit" name="delete_selected" value="Delete"  class="button" onclick="return confirm_it('Are you sure you want to delete selected page(s)')"/>
+            <input type="submit" name="delete_selected" value="{lang code='delete'}" class="button" onclick="return confirm_it('Are you sure you want to delete selected page(s)')"/>
     
     </td>
     <td align="right" style="padding-left:15px"><input type="button" value="Create New Page" class="button" onClick="window.location='?mode=new'"/></td>
@@ -161,7 +161,7 @@
       {if $cbpages[list].active == yes}  | 
       <a href="?deactivate={$cbpages[list].page_id}">Deactivate</a> {else} | 
       <a href="?activate={$cbpages[list].page_id}">Activate</a> {/if}  | 
-      <a href="?delete={$cbpages[list].page_id}">Delete</a> |
+      <a href="?delete={$cbpages[list].page_id}">{lang code='delete'}</a> |
       
       {if $cbpages[list].display!='yes'}
       	<a href="?display={$cbpages[list].page_id}">Display in footer</a>
@@ -185,10 +185,10 @@
   <tr>
     <td width="30" align="center" valign="middle"><img src="{$imageurl}/arrow_return_invert.png" width="25" height="25"></td>
     <td height="50" style="padding-left:15px">
-     <input type="submit" name="activate_selected" value="Activate"  class="button"/>
+     <input type="submit" name="activate_selected" value="Activate" class="button"/>
             <input type="submit" name="deactivate_selected" value="Deactivate" class="button" />
             <input type="submit" name="update_order" value="Update order" class="button" />
-            <input type="submit" name="delete_selected" value="Delete"  class="button" onclick="return confirm_it('Are you sure you want to delete selected page(s)')"/>
+            <input type="submit" name="delete_selected" value="{lang code='delete'}" class="button" onclick="return confirm_it('Are you sure you want to delete selected page(s)')"/>
     
     </td>
   </tr>

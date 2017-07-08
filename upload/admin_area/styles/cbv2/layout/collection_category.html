@@ -143,7 +143,7 @@ cat_div = "#thumbs_{$category[list].category_id}";
     <td>{$category[list].isdefault}</td>
     <td>
       <li><a href="?category={$category[list].category_id}">Edit</a></li>
-      <li><a href="javascript:Confirm_Delete('?delete_category={$category[list].category_id}')">Delete</a></li>
+      <li><a href="javascript:Confirm_Delete('?delete_category={$category[list].category_id}')">{lang code='delete'}</a></li>
      {if $category[list].isdefault!="yes"}<li><a href="?make_default={$category[list].category_id}">Make Default</a></li>{/if}
     </td>
     <td>&nbsp;</td>

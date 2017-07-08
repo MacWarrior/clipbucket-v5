@@ -60,7 +60,7 @@
     {elseif $u.usr_status == ToActivate}
     <a href="?activate={$u.userid}">Activate</a>
     {/if}  | 
-    <a href="?delete_user={$u.userid}">Delete</a> |
+    <a href="?delete_user={$u.userid}">{lang code='delete'}</a> |
       <a href="?mode=view_flags&uid={$u.userid}">View Flags</a> |
       <a href="?delete_flags={$u.userid}">Delete Flags</a>
     </div>

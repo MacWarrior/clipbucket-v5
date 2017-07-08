@@ -113,7 +113,7 @@
                    
                     
                     <li class="divider"></li>
-                    <li><a role="menuitem" tabindex="-1" href="{$baseurl}/myaccount.php?delete_video={$video.videoid}">Delete</a>
+                    <li><a role="menuitem" tabindex="-1" href="{$baseurl}/myaccount.php?delete_video={$video.videoid}">{lang code='delete'}</a>
                     </li>
                     {foreach from=$cbvid->video_manager_links item=links}
                     {$cbvid->video_manager_link($links,$video)}

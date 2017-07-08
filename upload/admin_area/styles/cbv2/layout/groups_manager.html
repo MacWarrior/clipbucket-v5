@@ -62,7 +62,7 @@
             <input type="submit" name="deactivate_selected" value="Deactivate" class="button" />
             <input type="submit" name="make_featured_selected" value="Make Featured"  class="button"/>
             <input type="submit" name="make_unfeatured_selected" value="Make Unfeatured"  class="button"/>
-            <input type="submit" name="delete_selected" value="Delete"  class="button"  onclick="return confirm_it('Are you sure you want to delete selected Groups(s)')"/>
+            <input type="submit" name="delete_selected" value="{lang code='delete'}"  class="button"  onclick="return confirm_it('Are you sure you want to delete selected Groups(s)')"/>
     
     </td>
     </tr>
@@ -119,7 +119,7 @@
       <a href="?deactivate={$groups[gp_list].group_id}">Deactivate</a> {else} | 
       <a href="?activate={$groups[gp_list].group_id}">Activate</a> {/if}  | 
       <a href="{$baseurl}/manage_groups.php?mode=manage_videos&gid={$groups[gp_list].group_id}">Manage</a> |  
-      <a href="?delete_group={$groups[gp_list].group_id}">Delete</a>
+      <a href="?delete_group={$groups[gp_list].group_id}">{lang code='delete'}</a>
     </div>
     </td>
     <td width="50" valign="top" class="video_opt_td">&nbsp;</td>
@@ -138,11 +138,11 @@
   <tr>
     <td width="30" align="center" valign="middle"><img src="{$imageurl}/arrow_return_invert.png" width="25" height="25"></td>
     <td height="50" style="padding-left:15px">
-     		<input type="submit" name="activate_selected" value="Activate"  class="button"/>
+     		<input type="submit" name="activate_selected" value="Activate" class="button"/>
             <input type="submit" name="deactivate_selected" value="Deactivate" class="button" />
-            <input type="submit" name="make_featured_selected" value="Make Featured"  class="button"/>
-            <input type="submit" name="make_unfeatured_selected" value="Make Unfeatured"  class="button"/>
-            <input type="submit" name="delete_selected" value="Delete"  class="button"  onclick="return confirm_it('Are you sure you want to delete selected Groups(s)')"/>
+            <input type="submit" name="make_featured_selected" value="Make Featured" class="button"/>
+            <input type="submit" name="make_unfeatured_selected" value="Make Unfeatured" class="button"/>
+            <input type="submit" name="delete_selected" value="{lang code='delete'}" class="button" onclick="return confirm_it('Are you sure you want to delete selected Groups(s)')"/>
     
     </td>
     </tr>

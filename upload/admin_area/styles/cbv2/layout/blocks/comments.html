@@ -23,7 +23,7 @@
             <td ><div class="edit_comment" id="{$comment.comment_id}">{$comment.comment}</div></td>
             <td width="200" align="left" >{$comment.date_added|date_format}</td>
             <td width="70" align="left" >{$comment.vote}</td>
-            <td width="100" ><a href="?{$link}&amp;delete_comment={$comment.comment_id}">Delete</a></td>
+            <td width="100" ><a href="?{$link}&amp;delete_comment={$comment.comment_id}">{lang code='delete'}</a></td>
     </tr>
         
    	{if $bgcolor == 'F2F2F2'}

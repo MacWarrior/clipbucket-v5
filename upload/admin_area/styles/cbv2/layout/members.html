@@ -72,13 +72,13 @@
   <tr>
     <td width="30" align="center" valign="middle"><img src="{$imageurl}/arrow_return.png" width="25" height="25"></td>
     <td height="50" style="padding-left:15px">
-     		<input type="submit" name="activate_selected" value="Activate"  class="button"/>
+     		<input type="submit" name="activate_selected" value="Activate" class="button"/>
             <input type="submit" name="deactivate_selected" value="Deactivate" class="button" />
-            <input type="submit" name="make_featured_selected" value="Make Featured"  class="button"/>
-            <input type="submit" name="ban_selected2" value="Make Unfeatured"  class="button" id="ban_selected2"/>
-            <input type="submit" name="ban_selected" value="Ban Selected"  class="button" id="ban_selected"/>
-            <input type="submit" name="unban_selected" value="Unban Selected"  class="button" id="unban_selected"/>
-        <input type="submit" name="delete_selected" value="Delete"  class="button" onclick="return confirm_it('Are you sure you want to delete selected video(s)')"/>
+            <input type="submit" name="make_featured_selected" value="Make Featured" class="button"/>
+            <input type="submit" name="ban_selected2" value="Make Unfeatured" class="button" id="ban_selected2"/>
+            <input type="submit" name="ban_selected" value="Ban Selected" class="button" id="ban_selected"/>
+            <input type="submit" name="unban_selected" value="Unban Selected" class="button" id="unban_selected"/>
+        <input type="submit" name="delete_selected" value="{lang code='delete'}" class="button" onclick="return confirm_it('Are you sure you want to delete selected video(s)')"/>
     
     </td>
     </tr>
@@ -136,7 +136,7 @@
     {if $u.featured == Yes}       
     <a href="?unfeatured={$u.userid}">Unfeature Member</a> 
     {/if}|
-    <a href="login_as_user.php?uid={$u.userid}">Login as user</a> | <a href="?deleteuser={$u.userid}">Delete</a>
+    <a href="login_as_user.php?uid={$u.userid}">Login as user</a> | <a href="?deleteuser={$u.userid}">{lang code='delete'}</a>
     </div>
     </td>
     <td width="50" valign="top" class="video_opt_td">&nbsp;</td>
@@ -158,13 +158,13 @@
   <tr>
     <td width="30" align="center" valign="middle"><img src="{$imageurl}/arrow_return_invert.png" width="25" height="25"></td>
     <td height="50" style="padding-left:15px">
-     		<input type="submit" name="activate_selected" value="Activate"  class="button"/>
+     		<input type="submit" name="activate_selected" value="Activate" class="button"/>
             <input type="submit" name="deactivate_selected" value="Deactivate" class="button" />
-            <input type="submit" name="make_featured_selected" value="Make Featured"  class="button"/>
-            <input type="submit" name="ban_selected2" value="Make Unfeatured"  class="button" id="ban_selected2"/>
-            <input type="submit" name="ban_selected" value="Ban Selected"  class="button" id="ban_selected"/>
-            <input type="submit" name="unban_selected" value="Unban Selected"  class="button" id="unban_selected"/>
-        <input type="submit" name="delete_selected" value="Delete"  class="button" onclick="return confirm_it('Are you sure you want to delete selected video(s)')"/>
+            <input type="submit" name="make_featured_selected" value="Make Featured" class="button"/>
+            <input type="submit" name="ban_selected2" value="Make Unfeatured" class="button" id="ban_selected2"/>
+            <input type="submit" name="ban_selected" value="Ban Selected" class="button" id="ban_selected"/>
+            <input type="submit" name="unban_selected" value="Unban Selected" class="button" id="unban_selected"/>
+        <input type="submit" name="delete_selected" value="{lang code='delete'}" class="button" onclick="return confirm_it('Are you sure you want to delete selected video(s)')"/>
     
     </td>
     </tr>

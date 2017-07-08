@@ -140,7 +140,7 @@
         <div>
             <strong>{$email.email_subj}</strong> &#8212; 
           <a href="?send_email={$email.id}">Send Email</a> | 
-          <a href="?delete={$email.id}">Delete</a> | <a href="javascript:void(0)" onclick="$('#mytest').dialog('open')">View</a><br />
+          <a href="?delete={$email.id}">{lang code='delete'}</a> | <a href="javascript:void(0)" onclick="$('#mytest').dialog('open')">View</a><br />
             <span style="font-size:11px; color:#666"><strong>From</strong> 
             : {$email.email_from} &#8226; <strong>Method</strong> : {$email.method}
           &#8226; <strong>Sent</strong> : {$email.sent} &#8226; <strong>Status</strong> : {$email.status}</span><br />

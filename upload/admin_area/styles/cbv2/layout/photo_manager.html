@@ -65,9 +65,9 @@
   <tr>
     <td width="30" align="center" valign="middle"><img src="{$imageurl}/arrow_return.png" width="25" height="25"></td>
     <td height="50" style="padding-left:15px">
-            <input type="submit" name="make_featured_selected" value="Make Featured"  class="button"/>
-            <input type="submit" name="make_unfeatured_selected" value="Make Unfeatured"  class="button"/>
-            <input type="submit" name="delete_selected" value="Delete"  class="button" onclick="return confirm_it('Are you sure you want to delete selected photos(s). This will permanently delete these photos from website.')"/><br />
+            <input type="submit" name="make_featured_selected" value="Make Featured" class="button"/>
+            <input type="submit" name="make_unfeatured_selected" value="Make Unfeatured" class="button"/>
+            <input type="submit" name="delete_selected" value="{lang code='delete'}" class="button" onclick="return confirm_it('Are you sure you want to delete selected photos(s). This will permanently delete these photos from website.')"/><br />
     
     </td>
     </tr>
@@ -119,7 +119,7 @@
                 <a href="?make_unfeature={$photos[list].photo_id}">Make Unfeatured</a> {/if} 
                 {if $photos[list].featured == no} | 
                 <a href="?make_feature={$photos[list].photo_id}">Make Featured</a> {/if} |  
-                <a href="javascript:void(0);" id="delete-{$photos[list].photo_id}" onmousedown="delete_item('delete','{$photos[list].photo_id}','Are you sure you want to delete? This will permanently delete {$photos[list].photo_title} from website.','?delete_photo={$photos[list].photo_id}');">Delete</a>
+                <a href="javascript:void(0);" id="delete-{$photos[list].photo_id}" onmousedown="delete_item('delete','{$photos[list].photo_id}','Are you sure you want to delete? This will permanently delete {$photos[list].photo_title} from website.','?delete_photo={$photos[list].photo_id}');">{lang code='delete'}</a>
             </div>
         </div>
     </div>
@@ -131,10 +131,10 @@
   <tr>
     <td width="30" align="center" valign="middle"><img src="{$imageurl}/arrow_return.png" width="25" height="25"></td>
     <td height="50" style="padding-left:15px">
-    		<input type="submit" name="move_to_selected" value="Move To"  class="button"/>
-            <input type="submit" name="make_featured_selected" value="Make Featured"  class="button"/>
-            <input type="submit" name="make_unfeatured_selected" value="Make Unfeatured"  class="button"/>
-            <input type="submit" name="delete_selected" value="Delete"  class="button" onclick="return confirm_it('Are you sure you want to delete selected photos(s)')"/>
+    		<input type="submit" name="move_to_selected" value="Move To" class="button"/>
+            <input type="submit" name="make_featured_selected" value="Make Featured" class="button"/>
+            <input type="submit" name="make_unfeatured_selected" value="Make Unfeatured" class="button"/>
+            <input type="submit" name="delete_selected" value="{lang code='delete'}" class="button" onclick="return confirm_it('Are you sure you want to delete selected photos(s)')"/>
     
     </td>
     </tr>

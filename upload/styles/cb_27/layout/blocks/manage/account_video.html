@@ -58,7 +58,7 @@
                        href="{$baseurl}/watch_video.php?v={$video.videokey}"target="_blank">Watch</a>
                     
                 <li class="divider"></li>
-                <li><a role="menuitem"  href="?vid_delete={$video.videoid}">Delete</a>
+                <li><a role="menuitem"  href="?vid_delete={$video.videoid}">{lang code='delete'}</a>
                 </li>
                 {foreach from=$cbvid->video_manager_links item=links}
                 {$cbvid->video_manager_link($links,$video)}
