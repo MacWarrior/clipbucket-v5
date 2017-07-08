@@ -677,13 +677,11 @@ ul.mainTabs{
     font-size: 13px;
     line-height: 20px;
     padding: 8px 6px;
-    float: left;
     width: 100%;
     z-index: 5;
     position:absolute;
-    bottom:-5%;
     left:0;
-
+	bottom:0;
 }
 .footer_grey_bar{
     padding:5px;
