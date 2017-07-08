@@ -27,7 +27,7 @@
                 <td>{if $comment.comment}{$comment.comment}{else}{$comment.username}{/if}</td>
                 <td>{$comment.date_added|date_format}</td>
                 <td>{$comment.vote}</td>
-                <td><a href="?{$link}&amp;delete_comment={$comment.comment_id}">Delete</a></td>
+                <td><a href="?{$link}&amp;delete_comment={$comment.comment_id}">{lang code='delete'}</a></td>
             </tr>
             {/foreach}
             </tbody>

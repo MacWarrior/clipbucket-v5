@@ -130,7 +130,7 @@
           {else}
           <li role="presentation"><a role="menuitem" tabindex="-1" href="?activate={$cbpages[list].page_id}">Activate</a></li>
           {/if}
-          <li role="presentation"><a class="disabled" role="menuitem" tabindex="-1" href="#">Delete</a></li>
+          <li role="presentation"><a class="disabled" role="menuitem" tabindex="-1" href="#">{lang code='delete'}</a></li>
           {if $cbpages[list].display!='yes'}
             <li role="presentation"><a role="menuitem" tabindex="-1" href="?display={$cbpages[list].page_id}">Display in footer</a></li>
           {else}

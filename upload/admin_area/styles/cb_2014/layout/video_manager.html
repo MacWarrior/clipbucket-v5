@@ -132,7 +132,7 @@
                             <li><a role="menuitem" tabindex="-1" href="?reconvert_video={$video.videoid}">Re Convert</a>
                         </li>
                         <li class="divider"></li>
-                        <li><a role="menuitem" tabindex="-1" href="?delete_video={$video.videoid}">Delete</a>
+                        <li><a role="menuitem" tabindex="-1" href="?delete_video={$video.videoid}">{lang code='delete'}</a>
                         </li>
                         {foreach from=$cbvid->video_manager_link item=links}
                         {$cbvid->video_manager_link($links,$video)}

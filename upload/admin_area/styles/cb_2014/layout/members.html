@@ -118,7 +118,7 @@
         <li><a role="menuitem" tabindex="-1" href="?private={$u.userid}">Make Private</a></li>
         {/if}
         {/if}
-        <li><a role="menuitem" tabindex="-1" href="?deleteuser={$u.userid}">Delete</a></li>
+        <li><a role="menuitem" tabindex="-1" href="?deleteuser={$u.userid}">{lang code='delete'}</a></li>
         
         
        {foreach from=$userquery->user_manager_link item=links}

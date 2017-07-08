@@ -50,7 +50,7 @@
 			{if $cbvid->is_video_owner($video.videoid,$user.userid) || has_access('admin_access')}
 				<li><a role="menuitem" tabindex="-1" href="{$baseurl}/edit_video.php?vid={$video.videoid}" class="">Edit</a></li>
 
-				<li><a role="menuitem" tabindex="-1" href="javascript:_cb.Confirm_Delete('?vid_delete={$video.videoid}')">Delete</a>
+				<li><a role="menuitem" tabindex="-1" href="javascript:_cb.Confirm_Delete('?vid_delete={$video.videoid}')">{lang code='delete'}</a>
 				</li>
 			{/if}
 				<li><a role="menuitem" tabindex="-1" href="{$baseurl}/watch_video.php?v={$video.videokey}"target="_blank">Watch</a>
