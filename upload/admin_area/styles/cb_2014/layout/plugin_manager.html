@@ -6,8 +6,8 @@
 
 <form name="installed_plugins" id="installed_plugins" method="post" action="plugin_manager.php">
   <div class="btn-group" style="margin-bottom:  10px">
- 		<input class="btn btn-primary btn-sm" type="submit" name="activate_selected" value="Activate" />
-    <input class="btn btn-primary btn-sm" type="submit" name="deactivate_selected" value="Deactivate" />
+ 		<input class="btn btn-primary btn-sm" type="submit" name="activate_selected" value="{lang code='activate'}"/>
+    <input class="btn btn-primary btn-sm" type="submit" name="deactivate_selected" value="Deactivate"/>
     <input class="btn btn-primary btn-sm" type="submit" name="uninstall_selected" value="Uninstall" onclick="return confirm_it('Are you sure you want to uninstall selected plugin(s)')" id="uninstall_selected"/>
   </div>
   <table class="table table-bordered table-striped">
@@ -63,8 +63,8 @@
     </tr>
   </table>
   <div class="btn-group">
-      <input class="btn btn-primary btn-sm" type="submit" name="activate_selected" value="Activate" />
-      <input class="btn btn-primary btn-sm" type="submit" name="deactivate_selected" value="Deactivate" />
+      <input class="btn btn-primary btn-sm" type="submit" name="activate_selected" value="{lang code='activate'}"/>
+      <input class="btn btn-primary btn-sm" type="submit" name="deactivate_selected" value="Deactivate"/>
       <input class="btn btn-primary btn-sm" type="submit" name="uninstall_selected" value="Uninstall" onclick="return confirm_it('Are you sure you want to uninstall selected plugin(s)')" id="uninstall_selected"/>
   </div>
 </form>
