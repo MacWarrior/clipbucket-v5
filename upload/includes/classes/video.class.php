@@ -1612,6 +1612,7 @@ class CBvideo extends CBCategory
 		$total 		= $params['total'];
 		$id 			= $params['id'];
 		$type 		= $params['type'];
+		$data_only 		= $params['data_only'];
 		
 		if (empty($ratings)) {
 			$ratings = $params['rated_by'];
@@ -1644,7 +1645,21 @@ class CBvideo extends CBCategory
 				$rating_msg = '<span class="msg">'.$rating_msg[0].'</span>';
 			}
 		}
-		
+			
+		if($data_only){
+			$data = array(
+					'perc'=>$perc,
+					'disperc'=>$disperc,
+					'id'=>$id,
+					'type'=>$type,
+					'id'=>$id,
+					'rating_msg'=>$rating_msg,
+					'likes'=>$likes,
+					'dislikes'=>($ratings-$likes),
+					'disable'=>$params['disable']
+				);
+			return $data;	
+		}
 		assign('perc',$perc);
 		assign('disperc',$disperc);
 		assign('id',$id);
