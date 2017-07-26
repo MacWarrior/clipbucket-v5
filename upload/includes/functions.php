@@ -5427,7 +5427,7 @@
 	        "SA" => "South America"
 	    );
 	    if (filter_var($ip, FILTER_VALIDATE_IP) && in_array($purpose, $support)) {
-	        $ipdat = @json_decode(get_data("http://www.geoplugin.net/json.gp?ip=" . $ip));
+	        $ipdat = @json_decode(cb_curl("http://www.geoplugin.net/json.gp?ip=" . $ip));
 	        if (@strlen(trim($ipdat->geoplugin_countryCode)) == 2) {
 	            switch ($purpose) {
 	                case "location":
