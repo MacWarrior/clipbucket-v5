@@ -51,7 +51,7 @@ cbvjsheader.prototype.init = function(){
 	var CbVjsHeader = document.createElement("div");
 	CbVjsHeader.id = "vjs-cb-header";
 	CbVjsHeader.className = "vjs-cb-header-caption";
-	CbVjsHeader.innerHTML = "<div class='captionBlock'><div class='vidTitle col'><a target='_blank' href='"+baseurl+"/watch_video.php?v="+cbvjsheader.videoid+"'>"+cbvjsheader.title+"</a></div><div class='uploaderName col'>by "+cbvjsheader.uploader+"</div></div>";
+	CbVjsHeader.innerHTML = "<div class='captionBlock'><div class='vidTitle col'><a target='_blank' href='"+baseurl+"/watch_video.php?v="+cbvjsheader.videoid+"'>"+cbvjsheader.title+"</a></div><div class='uploaderName col'>par "+cbvjsheader.uploader+"</div></div>";
 
 	var BigPlayButton = cbvjsheader.player.getChild('bigPlayButton').el_;
 	cbvjsheader.player.el_.insertBefore(CbVjsHeader, BigPlayButton);

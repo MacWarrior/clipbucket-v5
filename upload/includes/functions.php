@@ -5170,7 +5170,7 @@
 	        "SA" => "South America"
 	    );
 	    if (filter_var($ip, FILTER_VALIDATE_IP) && in_array($purpose, $support)) {
-	        $ipdat = @json_decode(file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $ip));
+	        $ipdat = @json_decode(cb_curl("http://www.geoplugin.net/json.gp?ip=" . $ip));
 	        if (@strlen(trim($ipdat->geoplugin_countryCode)) == 2) {
 	            switch ($purpose) {
 	                case "location":
@@ -5526,6 +5526,18 @@
     	} catch(Exception $e) {
     		echo 'Caught exception: ',  $e->getMessage(), "\n";
     	}
+	}
+
+	function cb_curl($url)
+	{
+	  $ch = curl_init();
+	  $timeout = 5;
+	  curl_setopt($ch,CURLOPT_URL,$url);
+	  curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+	  curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,$timeout);
+	  $data = curl_exec($ch);
+	  curl_close($ch);
+	  return $data;
 	}
 
     include( 'functions_db.php' );

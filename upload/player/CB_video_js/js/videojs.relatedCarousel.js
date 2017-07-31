@@ -152,10 +152,10 @@
 
     /* Menu Button */
     player.carousel.controlBarButton.className = 'vjs-button vjs-control vjs-related-carousel-button icon-videojs-carousel-toggle icon-related';
-    player.carousel.controlBarButton.title = "More Videos";
+    player.carousel.controlBarButton.title = "Plus de vidéos";
      
     player.carousel.holderDiv.className = 'vjs-related-carousel-holder';
-    player.carousel.title.innerHTML = 'More Videos';
+    player.carousel.title.innerHTML = 'Plus de vidéos';
     player.carousel.viewport.className = 'vjs-carousel-viewport';
     player.carousel.items.className = 'carousel-items';
     player.carousel.leftButton.className = 'vjs-carousel-left-button';

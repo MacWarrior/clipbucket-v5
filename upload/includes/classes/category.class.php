@@ -589,14 +589,10 @@ abstract class CBCategory
 		$pcat = mysql_clean($array['parent_cat']);
 
 		#exit($pcat);
-		$flds = array("category_name","category_desc","isdefault","parent_id");
+		$flds = array("category_name","category_desc","isdefault");
 		$values = array($name,$desc, $default, $pcat);
 		$cur_name = mysql_clean($array['cur_name']);
 		$cid = mysql_clean($array['cid']);
-		if(!empty($this->use_sub_cats)) {
-			$flds[] = "parent_id";
-			$values[] = $pcat;	
-		}
 
 		if($this->get_cat_by_name($name) && $cur_name !=$name) {
 			e(lang("add_cat_erro"));

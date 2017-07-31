@@ -14,6 +14,7 @@ include('common.php');
 
 include('plugins.php');		
 
+
 define('TEMPLATEDIR',BASEDIR.'/'.TEMPLATEFOLDER.'/'.$Cbucket->template);
 define('TEMPLATEURL',BASEURL.'/'.TEMPLATEFOLDER.'/'.$Cbucket->template);
 define('LAYOUT',TEMPLATEDIR.'/layout');

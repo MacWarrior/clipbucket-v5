@@ -3974,7 +3974,7 @@ class userquery extends CBCategory{
         {
             $fields = array(
                 'users' => get_user_fields(),
-                'profile' => array( 'rating', 'rated_by', 'voters', 'first_name', 'last_name', 'profile_title', 'profile_desc'),
+                'profile' => array( 'rating', 'rated_by', 'voters', 'first_name', 'last_name', 'profile_title', 'profile_desc','city','hometown'),
             );
             $fields['users'][] = 'last_active';
             $fields['users'][] = 'total_collections';
