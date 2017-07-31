@@ -72,7 +72,7 @@
                             <li class="col-md-12">
                                 <div class="col-md-12">
                                     <p class="oneTodo paddingLeftSmall col-md-10" id="{$note.todo_id}">
-                                        {$note.todo}
+                                        {display_clean($note.todo)}
                                     </p>
                                     <a href="#" class="btn btn-danger btn-xs delete">{lang code='delete'}</a>
                                 </div>
@@ -95,7 +95,7 @@
                                 <li class="col-md-4">
                                     <div>
                                         <p class="oneNote" id="{$note.note_id}">
-                                        {$note.note}
+                                        {display_clean($note.note)}
                                         <a href="#" class="delete">×</a>
                                     </p>
                                     </div>
