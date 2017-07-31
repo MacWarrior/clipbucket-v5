@@ -240,7 +240,7 @@
 
 	# $cbmenu		= new MenuHandler();
 	check_install('after');
-	@include("clipbucket.php");
+	@include($Cbucket->BASEDIR.'/includes/clipbucket.php');
 	$Cbucket->cbinfo = array("version"=>VERSION,"state"=>STATE,"rev"=>REV,"release_date"=>RELEASED);
 
 	# Holds Advertisment IDS that are being Viewed

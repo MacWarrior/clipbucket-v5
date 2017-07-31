@@ -210,9 +210,6 @@ switch($mode)
 
 /////////////////////////ending notes
 
-
-
-
 if(!$array['order'])
     $result_array['order'] = " views DESC LIMIT 8 ";
 $videos = get_videos($result_array);
@@ -221,7 +218,7 @@ Assign('videos', $videos);
 
 $comment_cond['limit'] = 10;
 $comments = getComments($comment_cond);
-assign("comments",$comments);
+Assign("comments",$comments);
 
 $get_limit = create_query_limit($page,5);
 $videos = $cbvid->action->get_flagged_objects($get_limit);
@@ -235,7 +232,7 @@ Assign('flaggedUsers', $users);
 
 $get_limit = create_query_limit($page,5);
 $photos = $cbphoto->action->get_flagged_objects($get_limit);
-assign('flaggedPhotos', $photos);
+Assign('flaggedPhotos', $photos);
 
 $numbers = array(100,1000,15141,3421);
 function format_number($number) {
@@ -247,16 +244,10 @@ function format_number($number) {
     }
 }
 
-Assign(BASEURL,'baseurl');
-assign("VERSION", VERSION);
-assign("STATE", $Cbucket->cbinfo['state']);
+Assign('baseurl', BASEURL);
+Assign('VERSION', VERSION);
+Assign('STATE', $Cbucket->cbinfo['state']);
 
 //subtitle(lang('video_manager'));
 template_files('index.html');
 display_it();
-?>
-
-
-
-
-
