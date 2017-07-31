@@ -81,6 +81,3 @@ $array_group = array('label' => 'Groups','data'=>$G);
 
 echo json_encode(array($array_user,$array_video,$array_group));
 //echo json_encode(array($array2));
-
-
-?>
