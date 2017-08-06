@@ -446,13 +446,13 @@ abstract class CBCategory
 	{
 		global $db;
 		$html = "";
-		$query = mysql_query("SELECT * FROM ".tbl($this->cat_tbl)." WHERE parent_id = $cid");
+		$query = mysqli_query("SELECT * FROM ".tbl($this->cat_tbl)." WHERE parent_id = $cid");
 
 		if(!empty($query))
 		{
 			
 			$html .= "<ul id='".$cid."_subs' class='sub_categories'>";
-			while($result = mysql_fetch_array($query))
+			while($result = mysqli_fetch_array($query))
 			{	
 				if($_GET['cat'] == $result['category_id'])
 					$selected = "selected";

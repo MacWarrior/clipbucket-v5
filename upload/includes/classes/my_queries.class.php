@@ -61,7 +61,6 @@ define('STATIC_COMM',false);
 class myquery {
 
 	function Set_Website_Details($name,$value){
-		//mysql_query("UPDATE config SET value = '".$value."' WHERE name ='".$name."'");
 		global $db,$Cbucket;
 		$db->update(tbl("config"),array('value'),array($value)," name = '".$name."'");
 		//echo $db->db_query."<br/><br/>";
@@ -70,14 +69,11 @@ class myquery {
 	
 	function Get_Website_Details()
 	{
-		
-		//$query = mysql_query("SELECT * FROM ".tbl("config"));
 		$query = ("SELECT * FROM ".tbl("config"));
 		$data = db_select($query);
 
 		if($data)
 			foreach($data as $row)
-			//while($row = mysql_fetch_array($query))
 			{
 				$name = $row['name'];
 				$data[$name] = $row['value'];

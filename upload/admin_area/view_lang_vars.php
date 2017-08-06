@@ -22,7 +22,7 @@ if(isset($_POST['button']))
 
 //Getting lang variables
 
-$query = mysql_query("SELECT * FROM ".tbl("phrases")." ORDER BY text ASC");
+$query = mysqli_query("SELECT * FROM ".tbl("phrases")." ORDER BY text ASC");
 
 ?>
 <form id="form1" name="form1" method="post">
@@ -58,7 +58,7 @@ $query = mysql_query("SELECT * FROM ".tbl("phrases")." ORDER BY text ASC");
 </td>
 </tr>
 <?
-while($data=mysql_fetch_array($query))
+while($data=mysqli_fetch_array($query))
 {
 ?>
 <td align="left"><?php echo $data['varname']; ?>
