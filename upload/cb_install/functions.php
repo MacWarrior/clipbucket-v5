@@ -20,19 +20,6 @@
 		}
 		return $license;
 	}
-	
-	/*
-	function button($text,$params=NULL,$alt=false)
-	{
-		echo '<span class="bttnleft" '.$params.'>&nbsp;</span>';
-		echo '<span class="bttncenter" '.$params.'>'.$text.'</span>';
-		if(!$alt)
-			echo '<span class="bttnright" '.$params.'>&nbsp;</span>';
-		else
-			echo '<span class="bttnrightalt" '.$params.'>&nbsp;</span>';
-	}
-	*/
-
 
 	function button($text,$params=NULL,$alt=false)
 	{
