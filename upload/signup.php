@@ -24,8 +24,7 @@
 	if(cb_get_functions('signup_page')){
 		cb_call_functions('signup_page'); 
 	} 
-		
-		
+
 	/**
 	 * Signing up new user
 	 */
@@ -33,7 +32,7 @@
 		assign('allow_registeration',lang('usr_reg_err'));
         //
 	}
-				
+
 	if(isset($_POST['signup'])){
 		if(!config('allow_registeration')){
 			e(lang('usr_reg_err'));
@@ -92,6 +91,4 @@
 	subtitle(lang("signup"));
 	//Displaying The Template
 	template_files('signup.html');
-	display_it()
-
-?>
+	display_it();

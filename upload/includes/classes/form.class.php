@@ -24,11 +24,17 @@ class formObj
 {
 	
 	var $multi_cat_id =  0;
-	
+
 	/**
-	* FUNCTION USED TO CREATE TEXT FIELD
-	*/
-	function createField($field,$multi=FALSE, $skipall = false)
+	 * FUNCTION USED TO CREATE TEXT FIELD
+	 *
+	 * @param      $field
+	 * @param bool $multi
+	 * @param bool $skipall
+	 *
+	 * @return bool|string|void
+	 */
+	function createField($field, $multi=FALSE, $skipall = false)
 	{
 		$field['sep'] = $field['sep'] ? $field['sep'] : '<br>';
 		
@@ -50,25 +56,21 @@ class formObj
 			case 'dropdown':
 			$fields=$this->createDropDown($field,$multi, $skipall);
 			break;
-			
-
 		}
 		return $fields;
 	}
-	
-	
-	/**
-	* FUNCTION USED TO CREATE TEXT FIELD
-	* @param name
-	* @param id
-	* @param value
-	* @param class
-	* @param extra_tags
-	* @param label
-	*/
-	function createTextfield($field,$multi=FALSE)
-	{
 
+
+	/**
+	 * FUNCTION USED TO CREATE TEXT FIELD
+	 *
+	 * @param      name
+	 * @param bool $multi
+	 *
+	 * @return string
+	 */
+	function createTextfield($field, $multi=FALSE)
+	{
 		//Starting Text Field
 		if($field['type']=='textfield')
 			$textField = '<input type="text" placeholder="'.$field['placehoder'].'"';
@@ -87,9 +89,11 @@ class formObj
 			$textField .= ' id="'.$field['id'].'" ';
 		if(!empty($field['class']))
 			$textField .= ' class="'.$field['class'].'" ';
+		if(!empty($field['title']))
+			$textField .= ' title="'.$field['title'].'" ';
 		if(!empty($field['size']))
 		{
-			if($$field['type']=='textfield' ||$field['type']=='password')
+			if($field['type']=='textfield' ||$field['type']=='password')
 			$textField .= ' size="'.$field['size'].'" ';
 			else
 			$textField .= ' cols="'.$field['size'].'" ';
@@ -106,7 +110,6 @@ class formObj
 		{
 			if($field['type']=='textfield' ||$field['type']=='password')
 				$textField .= ' value="'.escape_quotes(htmlspecialchars_decode($field['value'])).'" ';
-			
 		}
 		
 		if($field['type']=='textarea')
@@ -125,18 +128,20 @@ class formObj
 		$formTextField = $textField;
 		
 		return $formTextField;
-		
 	}
-	
-	
+
+
 	/**
-	 * FUNCTION USED TO CREATE CHECK BOXES 
+	 * FUNCTION USED TO CREATE CHECK BOXES
+	 *
 	 * @param name
 	 * @param id
 	 * @param value = array('value'=>'name')
 	 * @param class
 	 * @param extra_tags
 	 * @param label
+	 *
+	 * @return bool|string
 	 */
 	function createCheckBox($field,$multi=FALSE)
 	{

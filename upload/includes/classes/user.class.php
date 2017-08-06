@@ -3349,12 +3349,7 @@ class userquery extends CBCategory{
 		 *       anchor_after [anchor after field]
 		 *      )
 		 */
-		// ini_set('display_errors',1);
-		// ini_set('display_startup_errors',1);
-		// error_reporting(-1);
-		
 
-		
 			if(empty($default))
 				$default = $_POST;
 			
@@ -3388,117 +3383,113 @@ class userquery extends CBCategory{
 				$selected_cont = "PK";
 			}
 
-			 $user_signup_fields = array
-			 (
-			  'username' => array(
-								  'title'=> lang('username'),
-								  'type'=> "textfield",
-								  'placehoder'=>"Username",
-								  'name'=> "username",
-								  'id'=> "username",
-								  'value'=> $username,
-								  'hint_2'=> lang('user_allowed_format'),
-								  'db_field'=>'username',
-								  'required'=>'yes',
-								 // 'syntax_type'=> 'username',
-								  'validate_function'=> 'username_check',
-								  'function_error_msg' => lang('user_contains_disallow_err'),
-								  'db_value_check_func'=> 'user_exists',
-								  'db_value_exists'=>false,
-								  'db_value_err'=>lang('usr_uname_err2'),
-								  'min_length'	=> config('min_username'),
-								  'max_length' => config('max_username'),
-								  'placeholder'=>"Username",
-								  ),
+				$user_signup_fields = array(
+				'username' => array(
+				  'title' => lang('username'),
+				  'type' => "textfield",
+				  'placehoder' => lang('username'),
+				  'name' => "username",
+				  'id' => "username",
+				  'value' => $username,
+				  'hint_2' => lang('user_allowed_format'),
+				  'db_field' => 'username',
+				  'required' => 'yes',
+				  'validate_function' => 'username_check',
+				  'function_error_msg' => lang('user_contains_disallow_err'),
+				  'db_value_check_func'=> 'user_exists',
+				  'db_value_exists' => false,
+				  'db_value_err' => lang('usr_uname_err2'),
+				  'min_length' => config('min_username'),
+				  'max_length' => config('max_username')
+			  ),
 			  'email' => array(
-								  'title'=> lang('email'),
-								  'type'=> "textfield",
-								  'placehoder'=>"Email",
-								  'name'=> "email",
-								  'id'=> "email",
-								  'value'=> $email,
-								  'db_field'=>'email',
-								  'required'=>'yes',
-								  'syntax_type'=> 'email',
-								  'db_value_check_func'=> 'email_exists',
-								  'validate_function'=> 'isValidEmail',
-								  'db_value_exists'=>false,
-								  'db_value_err'=>lang('usr_email_err3')
-								  ),
+				  'title'=> lang('email'),
+				  'type'=> "textfield",
+				  'placehoder'=>"Email",
+				  'name'=> "email",
+				  'id'=> "email",
+				  'value'=> $email,
+				  'db_field'=>'email',
+				  'required'=>'yes',
+				  'syntax_type'=> 'email',
+				  'db_value_check_func'=> 'email_exists',
+				  'validate_function'=> 'isValidEmail',
+				  'db_value_exists'=>false,
+				  'db_value_err'=>lang('usr_email_err3')
+			  ),
 			  'password' => array(
-								  'title'=> lang('password'),
-								  'type'=> "password",
-								  'placehoder'=>"Password",
-								  'name'=> "password",
-								  'id'=> "password",
-								  'db_field'=>'password',
-								  'required'=>'yes',
-								  'invalid_err'=>lang('usr_pass_err2'),
-								  'relative_to' => 'cpassword',
-								  'relative_type' => 'exact',
-								  'relative_err' => lang('usr_pass_err3'),
-								  'validate_function' => 'pass_code',
-								  'use_func_val'=>true
-								  ),
+				  'title' => lang('password'),
+				  'type' => "password",
+				  'placehoder'=> lang('password'),
+				  'name' => "password",
+				  'id' => "password",
+				  'db_field' =>'password',
+				  'required' =>'yes',
+				  'invalid_err' => lang('usr_pass_err2'),
+				  'relative_to' => 'cpassword',
+				  'relative_type' => 'exact',
+				  'relative_err' => lang('usr_pass_err3'),
+				  'validate_function' => 'pass_code',
+				  'use_func_val' => true
+			  ),
 			  'cpassword' => array(
-								  'title'=> lang('user_confirm_pass'),
-								  'type'=> "password",
-								  'placehoder'=>"Re-enter password",
-								  'name'=> "cpassword",
-								  'id'=> "cpassword",
-								  'required'=>'no',
-								  'invalid_err'=>lang('usr_cpass_err'),
-								  ),
+				  'title' => lang('user_confirm_pass'),
+				  'type' => "password",
+				  'placehoder' => lang('user_confirm_pass'),
+				  'name' => "cpassword",
+				  'id' => "cpassword",
+				  'required' => 'no',
+				  'invalid_err' => lang('usr_cpass_err'),
+			  ),
 			  'dob'	=> array(
-							 'title' => lang('user_date_of_birth'),
-							 'type' => 'textfield',
-							 'name' => 'dob',
-							 'readonly' => 'true',
-							 'id' => 'dob',
-							 'anchor_after' => 'date_picker',
-							 'value'=> $dob,
-	                         'validate_function' => 'verify_age',
-							 'db_field'=>'dob',
-							 'required'=>'yes',
-	                         'invalid_err'=>lang("register_min_age_request",config('min_age_reg'))
-							 ),
-
+				  'title' => lang('user_date_of_birth'),
+				  'type' => 'textfield',
+				  'name' => 'dob',
+				  'readonly' => 'true',
+				  'id' => 'dob',
+				  'anchor_after' => 'date_picker',
+				  'value' => $dob,
+				  'validate_function' => 'verify_age',
+				  'db_field' => 'dob',
+				  'required' => 'yes',
+				  'invalid_err' => lang("register_min_age_request",config('min_age_reg'))
+			  ),
 			  'country'	=> array(
-								 'title'=> lang('country'),
-								 'type' => 'dropdown',
-								 'value' => $countries,
-								 'id'	=> 'country',
-								 'name'	=> 'country',
-								 'checked'=> $selected_cont,
-								 'db_field'=>'country',
-								 'required'=>'yes',
-								 ),
+				  'title' => lang('country'),
+				  'type' => 'dropdown',
+				  'value' => $countries,
+				  'id' => 'country',
+				  'name' => 'country',
+				  'checked' => $selected_cont,
+				  'db_field' => 'country',
+				  'required' => 'yes',
+			  ),
 			  'gender' => array(
-								'title' => lang('gender'),
-								'type' => 'radiobutton',
-								'name' => 'gender',
-								'class' => 'radio',
-								'id' => 'gender',
-								'value' => array('Male'=>lang('male'),'Female'=>lang('female')),
-								'sep'=> '&nbsp;',
-								'checked'=>'Male',
-								'db_field'=>'sex',
-								'required'=>'yes',
-								),
+				  'title' => lang('gender'),
+				  'type' => 'radiobutton',
+				  'name' => 'gender',
+				  'class' => 'radio',
+				  'id' => 'gender',
+				  'value' => array('Male'=>lang('male'),'Female'=>lang('female')),
+				  'sep' => '&nbsp;',
+				  'checked' => 'Male',
+				  'db_field' => 'sex',
+				  'required' => 'yes',
+			  ),
 							 						 					 
-			  'cat'		=> array('title'=> lang('category'),
-								 'type'=> 'dropdown',
-								 'name'=> 'category',
-								 'id'=> 'category',
-								 'value'=> array('category', $default['category']),
-								 'db_field'=>'category',
-								 'checked'=> $default['category'],
-								 'required'=>'yes',
-								 'invalid_err'=>lang("select_category"),
-								 'display_function' => 'convert_to_categories',
-								 'category_type'=>'user',
-								 )
-			  );
+			  'cat'	=> array('title'=> lang('category'),
+					'type' => 'dropdown',
+					'name' => 'category',
+					'id' => 'category',
+					'value' => array('category', $default['category']),
+					'db_field' => 'category',
+					'checked' => $default['category'],
+					'required' =>'yes',
+					'invalid_err' => lang("select_category"),
+					'display_function' => 'convert_to_categories',
+					'category_type' => 'user',
+			  )
+		);
 
 
 	         $new_array = array();
@@ -3519,7 +3510,6 @@ class userquery extends CBCategory{
 	         $new_array[] = $this->load_custom_profile_fields($default,false);
 	         //die();
 			 return $new_array;
-		 
 	}
 	
 	
@@ -3541,10 +3531,8 @@ class userquery extends CBCategory{
 		$signup_fields = array_merge($fields,$this->custom_signup_fields);
 		
 		validate_cb_form($signup_fields,$array);
-		
 	}
-	
-	
+
 	/**
 	 * Function used to validate signup form
 	 */

@@ -2,7 +2,7 @@
 {$cutom_fields=$userquery->custom_signup_fields}
 {if $mode == 'signup_success'}
 	<div class="simple_container">
-		{if $udetails.usr_status !='Ok'}
+		{if $udetails.usr_status != 'Ok'}
 			{lang code='signup_success_usr_ok'}
 		{else}
 			{lang code='signup_success_usr_emailverify' assign='signupsuccessusremailverify'}
@@ -19,13 +19,13 @@
 					<form name="login_form" method="post" style="display:block;margin:auto;" id="login_form" class="user-form">
 						<h2>{lang code="login"}</h2>
 						<div class="form-group">
-							{*<label for="login_username_sp">{lang code="Username"}</label>*}
+							{*<label for="login_username_sp">{lang code="username"}</label>*}
 							<input type="text" id="login_username_sp" placeholder="{lang code='type_username_here'}"
 							class="form-control" name="username">
 						</div>
 
 						<div class="form-group">
-							{*<label for="login_password_sp">{lang code="Password"}</label>*}
+							{*<label for="login_password_sp">{lang code="password"}</label>*}
 							<input type="password" id="login_password_sp" placeholder="{lang code='type_password_here'}"
 							class="form-control" name="password">
 						</div>
@@ -37,7 +37,7 @@
 							</label>
 						</div>
 
-						<input id="login_btn" type="submit" name="login" value="{lang('Login')}" class="btn btn-primary btn-lg btn-block">
+						<input id="login_btn" type="submit" name="login" value="{lang code='login'}" class="btn btn-primary btn-lg btn-block">
 
 						<a href="{$baseurl}/forgot.php?mode=recover_username">{lang code='user_forgot_username'}</a> - <a href="{$baseurl}/forgot.php">{lang code='user_forgot_message'}</a>
 						<input type="hidden" name="login" value="login"></input>
@@ -58,8 +58,8 @@
 					{if $allow_registeration}
 						{$allow_registeration}
 					{else}
-					<form name="signup_form" id="signup_form" method="post" action="{$baseurl}/signup.php"  class="user-form custom-elements">
-						<h2>Signup!</h2>
+					<form name="signup_form" id="signup_form" method="post" action="{$baseurl}/signup.php" class="user-form custom-elements">
+						<h2>{lang code='signup'}!</h2>
 						{foreach from=$required_fields item=field}
 							{if $field.type!='checkbox' && $field.type!='radiobutton'}
 								{$field.class='form-control'}
@@ -137,7 +137,7 @@
 							</label>
 						</div>
 						{ANCHOR place="the_form"}
-						<input type="hidden" name="signup" value="signup"></input>
+						<input type="hidden" name="signup" value="signup"/>
 						<div class="form-group checkbox">
 							<button type="submit" name="signup" value="signup" class="btn btn-success btn-lg btn-block" id="signup_submit">{lang code='signup'}</button>
 						</div>
@@ -317,23 +317,6 @@
 	     }
 	});
 
-	/*$('input#login_username_sp').on('keyup change', function() {
-	     var userName = $('#login_username_sp'),
-	     user = userName.val(),
-	     userLen = user.length;
-	     if (userLen > 50 || userLen < 2) {
-	     	$('#login_btn').attr('disabled','disabled');
-	     	addErrClass(userName, errors["name_length"], true, false);
-	     } else if (user.indexOf(' ') >= 0) {
-	     	$('#login_btn').attr('disabled','disabled');
-	     	addErrClass(userName, errors["username_spaces"], true, false);
-	     } else {
-	     	removeErrClass(userName);
-	     	$('#login_btn').removeAttr('disabled');
-
-	     }
-	});*/
-
 	$('#login_btn').on("click",function(e){
 		e.preventDefault();
 		$('#login_form').submit();
@@ -362,11 +345,6 @@
 			goodToGo = false;
 		} 
 
-		/*if (gotNums != null) {
-			addErrClass(usernameSect, errors["name_invalid_chars"]);
-			goodToGo = false;
-		} */
-
 		if (email.length == 0) {
 			addErrClass(emailSect, errors["empty_email"]);
 			goodToGo = false;
@@ -389,7 +367,6 @@
 			$('#signup_form').submit();
 		}
 	});
-
 </script>
 
 	<style>
