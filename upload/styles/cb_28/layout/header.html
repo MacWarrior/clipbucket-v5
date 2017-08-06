@@ -72,9 +72,6 @@
 								</ul>
 							</nav>
 						</div>
-						<!-- <div class="col">
-							<a href="#" class="fancy-btn btn btn-default cd-popup-trigger">Animation</a>
-						</div> -->
 						<div class="col btn-holder user_menu text-right">
 							<div class="search">
 								<form class="search-form" action="{link name='search_result'}">
@@ -92,11 +89,11 @@
 												{/if}
 												{if $counter == 3}
 												<li value="{$stypes}" {if $pageType == $stypes || $currentPage == $stypes}  class="active"  {/if}>
-													<a  class="s-types" href="#" valNow="{$stypes}">{lang code ="{$stypes}"}</a>
+													<a class="s-types" href="#" valNow="{$stypes}">{lang code ="{$stypes}"}</a>
 												</li>
 												{else}
 												<li value="{$stypes}" {if $pageType == $stypes || $currentPage == $stypes}  class="active" {/if}>
-													<a  class="s-types" href="#" valNow="{$stypes}">{lang code ="{$stypes}"}</a>
+													<a class="s-types" href="#" valNow="{$stypes}">{lang code ="{$stypes}"}</a>
 												</li>
 												{/if}
 												{$counter = $counter + 1}
@@ -104,7 +101,7 @@
 												{ANCHOR place="beat_search"}
 											</ul>
 										</div>
-										<input type="text" class="form-control" name="query" placeholder="{lang code="search_keyword_feed"}" value="{'query'|get_form_val:true}" id="query">
+										<input type="text" class="form-control" name="query" placeholder="{lang code='search_keyword_feed'}" value="{'query'|get_form_val:true}" id="query">
 										<input type="hidden" name="type" class="type" value="{if isset($smarty.get.type)}{$smarty.get.type}{elseif $toSearch}{$toSearch}{else}videos{/if}" id="type">
 										<button tabindex="-1" type="submit" name="cbsearch" id="cbsearch" class="btn btn-default btn-search icon-search"></button>
 									</div>
@@ -152,7 +149,7 @@
 								
 								<!-- Shown to small devices only Start  @todo : Add condition for logged in user -->
 								<li class="navbar-sm-login-links">
-									<a class="btn btn-default btn-newacc" href="{link name='signup'}">{lang code='create_new_account'}</a>
+									<a class="btn btn-default btn-newacc" href="{link name='signup'}"><span class="big">{lang code='create_new_account'}</span><span class="little" style="display:none;">{lang code='signup'}</span></a>
 								</li>
 								<li class="navbar-sm-login-links">
 									<a class="btn btn-default btn-login" href="{link name='signup'}?mode=login">{lang code='login'}</a>

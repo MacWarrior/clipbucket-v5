@@ -116,19 +116,18 @@ function responsiveFixes(){
 	}
 	if( WinWidth <1280 )
 	{
-		$(".btn-newacc").html("Signup");
-	}
-	else
-	{
-		$(".btn-newacc").html("Create new account");
+        $(".btn-newacc .big").hide();
+        $(".btn-newacc .little").show();
+	} else {
+        $(".btn-newacc .big").show();
+        $(".btn-newacc .little").hide();
 	}
 
 	if(userid)
 	{
 		$(".user_menu").addClass('logged-in');
 		$(".user_menu").removeClass('logged-out');
-	}
-	else{
+	} else {
 		$(".user_menu").removeClass('logged-in');
 		$(".user_menu").addClass('logged-out');
 	}
