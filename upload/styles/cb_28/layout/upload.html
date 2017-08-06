@@ -466,9 +466,7 @@
 		$(document).find('.__theClassHere').find('form').attr('id','youtube_update_form');
 		var theForm = $('#youtube_update_form');
 		data = $('#youtube_update_form').serialize();
-		//console.log(data);
 		data += '&updateVideo=yes&videoid='+grabbed_json.vid;
-		//console.log(data);
 		var theid = '200';
 
 		$.ajax({

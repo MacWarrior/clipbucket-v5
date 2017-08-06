@@ -489,16 +489,6 @@
 	    });
 	});
 
-	/*$('.cb_item_thumb').on("click",function(e){
-		e.preventDefault();
-		var url2Fetch = $(this).closest('a').attr('src');
-		$.get( url2Fetch, function( data ) {
-			console.log(data);
-		  $( "#container" ).html( "<h1>YES" );
-		  alert( "Load was performed." );
-		});
-	});*/
-
 	$('#add_toQuicklist').on("click",function(){
 		$.cookie("btn-q-1035", "yes", { expires : 10 });
 		console.log("yes");

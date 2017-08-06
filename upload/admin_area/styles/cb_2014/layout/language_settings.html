@@ -492,74 +492,9 @@
              'totalPhrases' : totalPhrases,
              'phraseNum' : phraseNum
             }
-            
-            //console.log(data);
+
             sendAjax(data);
-            
 
             phraseNum = phraseNum + 1;
-        
   });
-
-/*  $(document).on("click", "#submit_lang1", function () {
-    if($.cookie('bing_access_token') != null){ 
-        var selectFieldValue = $('select.changeStatus').val();
-       var langDetect = $('option:selected', '#lang_option').attr('data-check');
-    
-     //var len = sec.toString();
-      var lenghtOfKey = sec.length;      
-        data = {
-         'selectFieldValue': selectFieldValue,
-         'langDetect': langDetect,
-        }
-       if(lenghtOfKey>10){
-            $.ajax({
-                url: 'ajaxLang.php', 
-                type: "post",
-                data: data,
-                dataType: 'json',
-                beforeSend: function() {
-                    if(set != false){
-                       $('#bar').toggle();
-                       $('#lang_option,#submit_lang1').toggle();
-                       $('#uploadPack').toggle();
-                       timeCheck();
-                        progress = setInterval(function() {
-                            if(lastElementArray == undefined){
-                                lastElementArray = 0;
-                            }
-                            $('#loaderVal').text(lastElementArray+'%');
-                            $('.progress-bar').css('width',lastElementArray+'%');
-                           if(lastElementArray == 99) {
-                               clearInterval(progress);
-                               lastElementArray = 100;
-                            }
-                        }, 1000);
-                    }   
-                    
-                    },
-                success:function(xhr) {
-                    set = xhr.set;
-                    $('#lang_option,#submit_lang1').toggle();
-                    if(xhr.message == null){
-                        if(lastElementArray != 100){
-                            readLate();
-                        } else {
-                            readLate();
-                        }
-                        window.location.href = baseurl+"/admin_area/language_settings.php";
-                    }
-                    else {
-                        checkExists();
-                    }
-                }
-            })
-        } else {
-            $('#div').html(log);
-        }  
-      } else {
-        $('#ref').html(refresh_ch);
-      }
-    });*/
-    
 </script>

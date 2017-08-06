@@ -44,9 +44,7 @@
 			var size = $("input[name=size]").val();
 			var desc = $("textarea[name=special_thumb]").val();
 
-			
 			var data = new FormData(this);
-			console.log(data);
 			$.ajax({
 	            url: ajaxurl,
 	            type: "POST",
