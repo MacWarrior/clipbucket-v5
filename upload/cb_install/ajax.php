@@ -125,7 +125,7 @@ include('clipbucket.php');
 					if (substr(trim($line), -1, 1) == ';') 
 					{
 						@$templine = preg_replace("/{tbl_prefix}/",$dbprefix,$templine);
-						mysqli_query($templine);
+						mysqli_query($cnnct, $templine);
 						$templine = '';
 					}
 				}
@@ -156,7 +156,7 @@ include('clipbucket.php');
 						if (substr(trim($line), -1, 1) == ';') 
 						{
 							@$templine = preg_replace("/{tbl_prefix}/",$dbprefix,$templine);
-							mysqli_query($templine);
+							mysqli_query($cnnct, $templine);
 							$templine = '';
 						}
 					}
@@ -180,7 +180,7 @@ include('clipbucket.php');
 						if (substr(trim($line), -1, 1) == ';') 
 						{
 							@$templine = preg_replace("/{tbl_prefix}/",$dbprefix,$templine);
-							mysqli_query($templine);
+							mysqli_query($cnnct, $templine);
 							$templine = '';
 						}
 					}
@@ -193,7 +193,7 @@ include('clipbucket.php');
 			 
 			 case "create_files":
 			 {
-				 mysql_close($cnnct);
+				 mysqli_close($cnnct);
 				 $dbconnect = file_get_contents(BASEDIR.'/cb_install/dbconnect.php');
                  $dbconnect = str_replace('_DB_HOST_', $dbhost, $dbconnect);
                  $dbconnect = str_replace('_DB_NAME_', $dbname, $dbconnect);
@@ -280,7 +280,7 @@ include('clipbucket.php');
 		 //therefore we are dumping all existing email templates and re-import them
 		 if($upgrade<'2.4.5')
 		 {
-			 mysqli_query('TRUNCATE '.TABLE_PREFIX.'email_templates');
+			 mysqli_query($cnnct,'TRUNCATE '.TABLE_PREFIX.'email_templates');
 			 //Dumping
 			 $sqlfile = BASEDIR."/cb_install/sql/email_templates.sql";
 			 if(file_exists($sqlfile))

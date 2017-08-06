@@ -725,7 +725,7 @@ class ADODB_mysql extends ADOConnection {
 	//global $ADODB_COUNTRECS;
 		//if($ADODB_COUNTRECS) 
 		$this->db_query = $sql;
-		return mysqli_query($sql,$this->_connectionID);
+		return mysqli_query($this->_connectionID, $sql);
 	}
 
 	/*	Returns: the last error message from previous database operation	*/	
