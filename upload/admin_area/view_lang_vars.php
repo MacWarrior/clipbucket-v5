@@ -1,28 +1,28 @@
 <?php
-/* 
- ****************************************************************************************************
- | Copyright (c) 2007-2008 Clip-Bucket.com. All rights reserved.											|
- | @ Author : ArslanHassan																			|
- | @ Software : ClipBucket , © PHPBucket.com														|
- ****************************************************************************************************
-*/
+	/*
+	 ****************************************************************************************************
+	 | Copyright (c) 2007-2008 Clip-Bucket.com. All rights reserved.											|
+	 | @ Author : ArslanHassan																			|
+	 | @ Software : ClipBucket , © PHPBucket.com														|
+	 ****************************************************************************************************
+	*/
 
-require_once '../includes/admin_config.php';
-$userquery->admin_login_check();
-//$userquery->admin_login_check();
-$pages->page_redir();
+	require_once '../includes/admin_config.php';
+	$userquery->admin_login_check();
+	//$userquery->admin_login_check();
+	$pages->page_redir();
 
-//Adding new phrase
-if(isset($_POST['button']))
-{
-	$name = $_POST['name'];
-	$text = $_POST['text'];
-	$lang_obj->add_phrase($name,$text);
-}
+	//Adding new phrase
+	if(isset($_POST['button']))
+	{
+		$name = $_POST['name'];
+		$text = $_POST['text'];
+		$lang_obj->add_phrase($name,$text);
+	}
 
-//Getting lang variables
-
-$query = mysqli_query("SELECT * FROM ".tbl("phrases")." ORDER BY text ASC");
+	//Getting lang variables
+	global $db;
+	$query = mysqli_query($db,"SELECT * FROM ".tbl("phrases")." ORDER BY text ASC");
 
 ?>
 <form id="form1" name="form1" method="post">

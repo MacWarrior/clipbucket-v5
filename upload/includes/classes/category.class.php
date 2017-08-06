@@ -446,7 +446,7 @@ abstract class CBCategory
 	{
 		global $db;
 		$html = "";
-		$query = mysqli_query("SELECT * FROM ".tbl($this->cat_tbl)." WHERE parent_id = $cid");
+		$query = mysqli_query($db,"SELECT * FROM ".tbl($this->cat_tbl)." WHERE parent_id = $cid");
 
 		if(!empty($query))
 		{

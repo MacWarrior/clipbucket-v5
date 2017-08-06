@@ -47,7 +47,7 @@ class API extends REST
 		{
 		   $this->response('',406);
 		}
-		$sql = mysqli_query("SELECT user_id, user_fullname, user_email FROM users WHERE user_status = 1", $this->db);
+		$sql = mysqli_query($this->db, "SELECT user_id, user_fullname, user_email FROM users WHERE user_status = 1");
 		if(mysqli_num_rows($sql) > 0)
 		{
 		$result = array();
@@ -70,9 +70,9 @@ class API extends REST
 		if($id > 0)
 		{
 
-			mysqli_query("DELETE FROM users WHERE user_id = $id");
+			mysqli_query($this->db, "DELETE FROM users WHERE user_id = $id");
 		  
-		  if (mysql_affected_rows() > 0) 
+		  if (mysqli_affected_rows() > 0)
           $success = array('status' => "Success", "msg" => "Successfully one record deleted.");
 		  else
 		  $success = array('status' => "Failure", "msg" => "No such id exist in database");
