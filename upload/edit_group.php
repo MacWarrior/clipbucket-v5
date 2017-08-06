@@ -3,7 +3,7 @@
  *************************************************************
  | Copyright (c) 2007-2010 Clip-Bucket.com. All rights reserved.
  | @ Author	   : ArslanHassan									
- | @ Software  : ClipBucket , © PHPBucket.com					
+ | @ Software  : ClipBucket , Â© PHPBucket.com
  *************************************************************
 */
 
@@ -19,7 +19,6 @@ assign('p',$userquery->get_user_profile($udetails['userid']));
 $gid = mysql_clean($_GET['group_id']);
 //get group details
 $gdetails = $cbgroup->get_group_details($gid);
-
 
 $gArray = 
 		array

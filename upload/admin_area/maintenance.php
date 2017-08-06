@@ -141,7 +141,7 @@ if(@$_GET['mode']=='remove_activity_feed')
 		$i++;
 		
 	}
-	e($start_index+1 ." - ".$to."  Activity feeds have been deleted.","m");			
+	e($start_index+1 ." - ".$to." Activity feeds have been deleted.","m");
 	assign("index_msgs",$msg);
 	assign("indexing","yes");
 	assign('mode','remove_activity_feed');
@@ -151,4 +151,3 @@ if(@$_GET['mode']=='remove_activity_feed')
 subtitle("Maintenance");
 template_files('maintenance.html');
 display_it();
-?>

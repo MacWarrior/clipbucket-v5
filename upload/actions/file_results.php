@@ -77,7 +77,7 @@ if(file_exists($dummy_file))
 
 if(file_exists($log_file))
 {
-	$details =  file_get_contents($log_file);
+	$details = file_get_contents($log_file);
 	//echo json_encode(json_decode($details));die();
 	//var_dump(json_decode($details));die();
 	$details = json_decode($details,true);

@@ -105,10 +105,10 @@ switch($mode)
 		
 		$vidDetails = array
 		(
-			'title'		=> $title,
-			'description' => $desc,
-			'tags'		  => $tags,
-			'category' => array($cbvid->get_default_cid()),
+			'title'			=> $title,
+			'description' 	=> $desc,
+			'tags'			=> $tags,
+			'category'		=> array($cbvid->get_default_cid()),
 		);
 		
 		assign("objId",$_POST['objId']);
@@ -118,12 +118,6 @@ switch($mode)
 		assign('videoid',$vid);
 
 		$videoFields = $Upload->load_video_fields($vidDetails);
-		//$requiredFields = array_shift($videoFields);
-		// echo "<pre>";
-		// var_dump($videoFields[0]);
-		// echo "</pre>";
-		//echo json_encode($videoFields);
-		//Template('blocks/upload/form.html');
 		Template('blocks/upload/upload_form.html');
 	}
 	break;
@@ -323,22 +317,13 @@ switch($mode)
 					e(lang($response),'w');
 				elseif((int)($response)){
 					e(lang(' remote upload successfully'),'m');
-					$query = "UPDATE " . tbl("video") . " SET file_thumbs_count = ".(int)($response)."  WHERE videoid = ".$data['videoid'];
+					$query = "UPDATE " . tbl("video") . " SET file_thumbs_count = ".(int)($response)." WHERE videoid = ".$data['videoid'];
 					$db->Execute($query);
 					$data['file_thumbs_count'] = (int)($response);
 				}
 				else
 					e(lang($response),'e');
 			}
-			else{
-
-				/*$Upload->upload_thumb_upload_form($data['file_name'],$_FILES['thumb12'],$data['file_directory'],$data['thumbs_version']);*/
-				
-				/*$query = "UPDATE " . tbl("video") . " SET status = 'Successful'  WHERE videoid = ".$_POST['videoid'];*/
-				//pex($query,true);
-				#$db->Execute($query);
-			}
-
 		}
 
 		$_POST['videoid'] = trim($_POST['videoid']);

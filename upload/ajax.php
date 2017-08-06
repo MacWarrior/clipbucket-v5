@@ -97,7 +97,7 @@ if(!empty($mode))
 						$count_next = count($videos_next);
 					}
 					$total_results = $total;
-					$template_path  = 'blocks/videos/video.html';
+					$template_path = 'blocks/videos/video.html';
 					$assigned_variable_smarty = 'video';
 				}
 				break;
@@ -118,7 +118,7 @@ if(!empty($mode))
 					}
 					$count_next = (int)$count_next;
 					$total_results = $total;
-					$template_path  = 'blocks/channels.html';
+					$template_path = 'blocks/channels.html';
 					$assigned_variable_smarty = 'user';
 
 				}
@@ -144,7 +144,7 @@ if(!empty($mode))
 					$count_next = (int)$count_next;
 					//pr($count_next,true);
 					$total_results = $total;
-					$template_path  = 'blocks/playlist/playlist.html';
+					$template_path = 'blocks/playlist/playlist.html';
 					$assigned_variable_smarty = 'playlist';
 
 				}
@@ -724,7 +724,7 @@ if(!empty($mode))
 		{
 			$id = mysql_clean($_POST['cid']);
 			$type_id = mysql_clean($_POST['type_id']);
-			$new_com  = $myquery->get_comment($id);
+			$new_com = $myquery->get_comment($id);
 
 			//getting parent id if it is a reply comment
 			$parent_id = $new_com['parent_id'];
@@ -1645,8 +1645,7 @@ case "get_news":
             if($cbcollection->add_contributor($cid,$uid))
             {
                 $array['msg'] = 'Successfully added as contributor';
-            }  else
-            {
+            } else {
                 $array['err'] = error('single');
             }
 
@@ -1665,11 +1664,9 @@ case "get_news":
             if($cbcollection->remove_contributor($cid,$uid))
             {
                 $array['msg'] = 'Successfully removed from contributors';
-            }  else
-            {
+            }  else {
                 $array['err'] = error('single');
             }
-
 
             echo json_encode($array);
         }
@@ -1685,12 +1682,12 @@ case "get_news":
 					$items = $_POST['item'];
 					$ci_id = $photo['ci_id'];
 					$collection = $photo['collection_id']; 	// collection id.
-					$link = $cbcollection->get_next_prev_item($ci_id,$collection,$item=$items,$limit=1,$check_only=false);  // getting Previous item
-					$srcString =BASEURL.'/files/photos/'.$link[0]['file_directory'].'/'.$link[0]['filename'].'.'.$link[0]['ext'];  // Image Source...
-					$photo_key = $link[0]['photo_key'];  // Image Key.
+					$link = $cbcollection->get_next_prev_item($ci_id,$collection,$item=$items,$limit=1,$check_only=false); // getting Previous item
+					$srcString =BASEURL.'/files/photos/'.$link[0]['file_directory'].'/'.$link[0]['filename'].'.'.$link[0]['ext']; // Image Source...
+					$photo_key = $link[0]['photo_key']; // Image Key.
 					$response['photo'] = $link;
 					$response['photo_key'] = $photo_key;
-					$response['src_string'] = $srcString;   // Image source.
+					$response['src_string'] = $srcString; // Image source.
 					$response['collection_id'] = $collection;
 					echo json_encode($response);
 				}
@@ -1698,7 +1695,7 @@ case "get_news":
 
 			catch(Exception $e) {
 				$response["error_ex"] = true;
-				$response["msg"] = 'Message: ' .$e->getMessage();  // Error message..
+				$response["msg"] = 'Message: ' .$e->getMessage(); // Error message..
 				echo (json_encode($response));
 			}
         }

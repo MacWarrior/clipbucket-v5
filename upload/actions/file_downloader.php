@@ -235,7 +235,7 @@ $svfile = TEMP_DIR.'/'.$file_name.'.'.$ext;
 if(empty($file))
 {
 	echo "error";
-	$array['error'] = "Please  2enter file url";
+	$array['error'] = "Please enter file url";
 	echo json_encode($array);
 	exit();
 }
@@ -305,7 +305,7 @@ fclose($temp_fo);
 //var_dump($curlOpt);
 
 sleep(2);
-$details =  $logDetails;//file_get_contents($log_file);
+$details = $logDetails;//file_get_contents($log_file);
 //$details = json_decode($details,true);
 $targetFileName = $file_name . '.' . $ext;
 $Upload->add_conversion_queue($targetFileName);

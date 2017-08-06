@@ -3,7 +3,7 @@
  ****************************************************************************************************
  | Copyright (c) 2007-2008 Clip-Bucket.com. All rights reserved.											|
  | @ Author : ArslanHassan																			|
- | @ Software : ClipBucket , © PHPBucket.com														|
+ | @ Software : ClipBucket , Â© PHPBucket.com														|
  ****************************************************************************************************
 */
 
@@ -16,4 +16,3 @@ subtitle("Logo Changer");
 
 template_files('under_development.html');
 display_it();
-?>

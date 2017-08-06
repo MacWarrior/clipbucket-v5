@@ -53,7 +53,7 @@
         * or invalid language code
         */
 
-        if (!empty($phrase) && strlen($to) == 2)  {
+        if (!empty($phrase) && strlen($to) == 2) {
             # Feed file to Bing API for translation
             $translation = $MrsTranslator->translate($phrase,$to,'en',"text/html");
 

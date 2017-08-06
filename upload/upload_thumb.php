@@ -67,7 +67,7 @@ if($myquery->VideoExists($video)){
 					e(lang($response),'w');
 				elseif((int)($response)){
 					e(lang(' remote upload successfully'),'m');
-					$query = "UPDATE " . tbl("video") . " SET file_thumbs_count = ".(int)($response)."  WHERE videoid = ".$data['videoid'];
+					$query = "UPDATE " . tbl("video") . " SET file_thumbs_count = ".(int)($response)." WHERE videoid = ".$data['videoid'];
 					$db->Execute($query);
 					$data['file_thumbs_count'] = (int)($response);
 				}
@@ -128,7 +128,7 @@ if($myquery->VideoExists($video)){
 	        curl_setopt($request, CURLOPT_SSL_VERIFYPEER, false);
 
 	        $returnCode = (int)curl_getinfo($request, CURLINFO_HTTP_CODE);
-	        $results =  curl_exec($request);
+	        $results = curl_exec($request);
 	      
 	        $decoded_results = json_decode($results,true);
 	        // pr($decoded_results,true);

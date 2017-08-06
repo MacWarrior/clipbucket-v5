@@ -67,25 +67,20 @@
 
  		}
 
-
-
  		//if search is activated
  		if(isset($_GET['search']))
  		{
  			
- 			if (!empty($_GET['playlist_name'])  &&  isset($_GET['playlist_name'])){
+ 			if (!empty($_GET['playlist_name']) && isset($_GET['playlist_name'])){
 				$array['playlist_name'] = $_GET['playlist_name'];
 			}
-			if (!empty($_GET['tags'])  &&  isset($_GET['tags'])){
+			if (!empty($_GET['tags']) && isset($_GET['tags'])){
 				$array['tags'] = $_GET['tags'];
 			}
-			if (!empty($_GET['userid'])  &&  isset($_GET['userid'])){
+			if (!empty($_GET['userid']) && isset($_GET['userid'])){
 				$array['user'] = $_GET['userid'];
 			}
  		}
-
-		
-	
 
  		assign('mode','manage_playlist');
 
@@ -107,11 +102,7 @@
  		$total_pages = count_pages($total_rows,RESULTS);
  		$pages->paginate($total_pages,$page);
 
-
  		assign('playlists',$playlists);
-
-
-
  	}
 
  	break;
@@ -195,8 +186,5 @@
 
 //- manageplay front end
 
-
-
  template_files('manage_playlist.html');
  display_it();
- ?>

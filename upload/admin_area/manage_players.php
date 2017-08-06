@@ -28,19 +28,18 @@ assign('mode',$_GET['mode']);
 
 if(isset($_POST['update'])){
 	$configs = $Cbucket->configs;
-	
-	
+
 	$rows = array(
-				  	'autoplay_video',
-					'buffer_time',
-					'logo_placement',
-					'use_playlist',
-					'youtube_enabled',
-					'enlarge_button',
-					'embed_player_height',
-					'embed_player_width','autoplay_embed','pseudostreaming','pak_license','pakplayer_contextmsg'
-					);
-	
+		'autoplay_video',
+		'buffer_time',
+		'logo_placement',
+		'use_playlist',
+		'youtube_enabled',
+		'enlarge_button',
+		'embed_player_height',
+		'embed_player_width','autoplay_embed','pseudostreaming','pak_license','pakplayer_contextmsg'
+	);
+
 	//Checking for logo
 	if(isset($_FILES['logo_file']['name']))
 	{
@@ -48,8 +47,7 @@ if(isset($_POST['update'])){
 		if($logo_file)
 			$myquery->Set_Website_Details('player_logo_file',$logo_file);
 	}
-	
-	
+
 	if($_POST['pak_license'] && !file_exists(BASEDIR.'/player/pak_player/pakplayer.unlimited.swf'))
 	$_POST['pak_license'] = "";	
 	

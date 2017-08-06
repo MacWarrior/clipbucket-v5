@@ -31,7 +31,7 @@ $videos['comments'] = $vid_comments[0]['total_comments'];
 /**
  * Testing
  * * PASSED
- *  echo json_encode($videos);
+ * echo json_encode($videos);
  */
 
  

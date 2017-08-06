@@ -3,7 +3,7 @@
  ****************************************************************
  | Copyright (c) 2007-2010 Clip-Bucket.com. All rights reserved.
  | @ Author : ArslanHassan										
- | @ Software : ClipBucket , © PHPBucket.com						
+ | @ Software : ClipBucket , Â© PHPBucket.com
  ****************************************************************
 */
 
@@ -67,18 +67,19 @@ else
 	preg_match_all('/#([0-9]+)#/',$_POST['category'],$m);
 	$cats_array = array($m[1]);
 }
-$cat_array =	array(lang('vdo_cat'),
-				'type'=> 'checkbox',
-				'name'=> 'category[]',
-				'id'=> 'category',
-				'value'=> array('category',$cats_array),
-				'hint_1'=>  lang('vdo_cat_msg'),
-				'display_function' => 'convert_to_categories',
-				'category_type'=>'user');
+$cat_array = array(
+	lang('vdo_cat'),
+	'type'=> 'checkbox',
+	'name'=> 'category[]',
+	'id'=> 'category',
+	'value'=> array('category',$cats_array),
+	'hint_1'=> lang('vdo_cat_msg'),
+	'display_function' => 'convert_to_categories',
+	'category_type'=>'user'
+);
 assign('cat_array',$cat_array);
 
 //Displaying template...
 subtitle("Mass Email");
 template_files("mass_email.html");
 display_it();
-?>

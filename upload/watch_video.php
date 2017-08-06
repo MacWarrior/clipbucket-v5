@@ -54,7 +54,7 @@
 	'exclude'=>$videoid,'show_related'=>'yes','limit'=>12,'order'=>'date_added DESC'));
 	if(!$related_videos){
 		$relMode = "ono";
-		$related_videos  = get_videos(array('exclude'=>$videoid,'limit'=>12,'order'=>'date_added DESC'));
+		$related_videos = get_videos(array('exclude'=>$videoid,'limit'=>12,'order'=>'date_added DESC'));
 	}
 	$playlist = $cbvid->action->get_playlist($pid,userid());
 	$assign_arry['playlist'] = $playlist;

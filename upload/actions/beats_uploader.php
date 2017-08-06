@@ -55,15 +55,15 @@ switch($mode)
 		
 		// These are found in $_FILES. We can access them like $_FILES['file']['error'].
 		$upErrors = array(
-						  0 => "There is no error, the file uploaded with success.",
-						  1 => "The uploaded file exceeds the upload_max_filesize directive in php.ini.",
-						  2 => " The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.",
-						  3 => "The uploaded file was only partially uploaded.",
-						  4 => "No file was uploaded.",
-						  6 => "Missing a temporary folder.",
-						  7 => "Failed to write file to disk."
-						  );
-						  
+			0 => "There is no error, the file uploaded with success.",
+			1 => "The uploaded file exceeds the upload_max_filesize directive in php.ini.",
+			2 => " The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.",
+			3 => "The uploaded file was only partially uploaded.",
+			4 => "No file was uploaded.",
+			6 => "Missing a temporary folder.",
+			7 => "Failed to write file to disk."
+		);
+
 		// Let's see if everything is working fine by checking $_FILES.
 		if(!isset($_FILES[$form])) {
 			upload_error("No upload found in \$_FILES for " . $form);
@@ -97,7 +97,7 @@ switch($mode)
 		
 		//Checking Extension of File
 		$info = pathinfo($_FILES[$form]['name']);
-		$extension  = strtolower($info['extension']);
+		$extension = strtolower($info['extension']);
 		$valid_extension = false;
 		
 		foreach ($exts as $ext) {

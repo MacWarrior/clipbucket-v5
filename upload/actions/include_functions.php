@@ -90,7 +90,7 @@ function formatfilesize( $data ) {
 					$minutes = "0" . round($minutes);
 			$secondes = round($temps - ($heures * 3600) - ($minutes * 60));
 			if ($secondes < 10)
-					$secondes = "0" .  round($secondes);
+					$secondes = "0" . round($secondes);
 			return $minutes . ':' . $secondes;
 	}
 	function SetTime($sec, $padHours = true) {

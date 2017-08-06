@@ -31,7 +31,7 @@ switch($mode)
 	default:
 	{
 		 $videos = get_videos(array('limit'=>$limit,'order'=>'date_added DESC'));
-		 $title  = "Recently Added Videos";
+		 $title = "Recently Added Videos";
 	}
 	break;
 	
@@ -105,7 +105,7 @@ subtitle($title);
         <![CDATA[   
         <table width="600" border="0" cellspacing="0" cellpadding="0">
         <tr>
-        <td width="130" height="90" align="center" valign="middle"><img src="<?php echo get_thumb($video); ?>"  border="1"/></td>
+        <td width="130" height="90" align="center" valign="middle"><img src="<?php echo get_thumb($video); ?>" border="1"/></td>
         <td valign="top">
         <a href="<?php echo video_link($video); ?>"><?php echo $video['title']; ?></a><br />
         <?php echo $video['description']; ?>

@@ -148,7 +148,7 @@ if(!defined('SUB_PAGE')){
 					'name'=> 'category[]',
 					'id'=> 'category',
 					'value'=> array('category',$cats_array),
-					'hint_1'=>  lang('vdo_cat_msg'),
+					'hint_1'=> lang('vdo_cat_msg'),
 					'display_function' => 'convert_to_categories',
 					'category_type'=>'groups');
 	assign('cat_array',$cat_array);

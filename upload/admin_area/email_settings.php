@@ -40,14 +40,13 @@ if(isset($_POST['update_settings'])){
 	$configs = $Cbucket->configs;
 	
 	$rows = array(
-				  	'mail_type',
-				  	'smtp_host',
-					'smtp_user',
-				  	'smtp_pass',
-					'smtp_auth',
-					'smtp_port'
-					);
-	
+		'mail_type',
+		'smtp_host',
+		'smtp_user',
+		'smtp_pass',
+		'smtp_auth',
+		'smtp_port'
+	);
 
 	foreach($rows as $field)
 	{

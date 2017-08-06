@@ -70,7 +70,7 @@ switch($mode)
 		if(get('query')!='')
 		{
 			$vid_array['title'] = mysql_clean(get('query'));
-			$vid_array['tags'] =  mysql_clean(get('query'));
+			$vid_array['tags']  = mysql_clean(get('query'));
 		}
 			
 		$videos = get_videos($vid_array);

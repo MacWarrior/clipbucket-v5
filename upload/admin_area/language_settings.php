@@ -140,7 +140,7 @@ if($lang_obj->lang_exists(mysql_clean($_GET['edit_language'])))
 		{
 			if(!empty($text_query) && !empty($varname_query) )
 				$or = ' OR ';
-			$extra_param = " AND ( $varname_query $or  $text_query )";
+			$extra_param = " AND ( $varname_query $or $text_query )";
 		}
 	}
 	

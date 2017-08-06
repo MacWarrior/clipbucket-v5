@@ -47,7 +47,7 @@
 		//Collecting Data for Pagination
 		$ucount = $u_cond;
 		$ucount['count_only'] = true;
-		$total_rows  = get_users($ucount);
+		$total_rows = get_users($ucount);
 		$counter = $total_rows;
 		update_counter('channel',$count_query,$counter);
 	}

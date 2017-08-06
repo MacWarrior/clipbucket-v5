@@ -3,7 +3,7 @@
  ****************************************************************************************************
  | Copyright (c) 2007-2010 Clip-Bucket.com. All rights reserved.									|
  | @ Author : ArslanHassan																			|
- | @ Software : ClipBucket , � PHPBucket.com														|
+ | @ Software : ClipBucket , © PHPBucket.com														|
  ****************************************************************************************************
 */
 
@@ -24,7 +24,7 @@ $result_array = $array;
 //Getting Video List
 $result_array['limit'] = $get_limit;
 if(!$array['order'])
-    $result_array['order'] = " doj DESC LIMIT 5  ";
+    $result_array['order'] = " doj DESC LIMIT 5 ";
 
 $users = get_users($result_array);
 

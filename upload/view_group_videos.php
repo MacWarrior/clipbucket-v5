@@ -3,7 +3,7 @@
  ****************************************************************
  | Copyright (c) 2007-2010 Clip-Bucket.com. All rights reserved.
  | @ Author : ArslanHassan										
- | @ Software : ClipBucket , © PHPBucket.com					
+ | @ Software : ClipBucket , Â© PHPBucket.com
  ****************************************************************
 */
 
@@ -28,7 +28,7 @@ if($details)
 	//Getting List of all videos
 	$videos = $cbgroup->get_group_videos($details['group_id'],"yes",$get_limit);
 	
-	$total_rows  =  $details['total_videos'];
+	$total_rows  = $details['total_videos'];
 	$total_pages = count_pages($total_rows,28);
 	//Pagination
 	$pages->paginate($total_pages,$page);
