@@ -439,76 +439,33 @@ if(!empty($mode))
 				case 'v':
 				case 'video':
 				default:
-				{
 					$id = $_POST['id'];
 					$reported = $cbvideo->action->report_it($id);
-					/*if(!error()){
-						/*  SENDING EMAIL TO ADMIN
-						$template =  $cbemail->get_template('flag_template');
-						$video = $cbvideo->get_video_details($id);
-						$emailVars = array(
-							"{video_link}" => videoLink($video),
-							"{video_title}" => $video['title'],
-							"{flag_reason}" => flag_type(post('flag_type')),
-							"{type}" => "video"
-						);
-						$admins = $userquery->get_level_users(1,false,'userid,email');
-							$libs =  $userquery->get_level_users(17,false,'userid,email');
-							if($libs)
-								$users = array_merge($admins,$libs);
-							else
-								$users = $admins;
-						foreach ($users as $user)
-						{
-							if(isValidEmail($user['email']))
-								$emailsArray[] = $user['email'];
-						}
-
-						if(!is_array($var))
-							$var = array();
-						$vars = array_merge($emailVars,$var);
-						$subj = $cbemail->replace($template['email_template_subject'],$vars);
-						$msg = nl2br($cbemail->replace($template['email_template'],$vars));
-
-						cbmail(array('to'=>$emailsArray,'from'=>WEBSITE_EMAIL,'subject'=>$subj,'content'=>$msg));
-					}*/
-				}
-				break;
+					break;
 
 				case 'g':
 				case 'group':
-				default:
-				{
 					$id = $_POST['id'];
 					$cbgroup->action->report_it($id);
-				}
-				break;
+					break;
 
 				case 'u':
 				case 'user':
-				default:
-				{
 					$id = $_POST['id'];
 					$userquery->action->report_it($id);
-				}
-				break;
+					break;
 
 				case 'p':
 				case 'photo':
-				{
 					$id = $_POST['id'];
 					$cbphoto->action->report_it($id);
-				}
-				break;
+					break;
 
 				case "cl":
 				case "collection":
-				{
 					$id = $_POST['id'];
 					$cbcollection->action->report_it($id);
-				}
-				break;
-
+					break;
 			}
 
 			if(msg())
