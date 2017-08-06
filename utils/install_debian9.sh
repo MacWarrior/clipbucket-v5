@@ -5,7 +5,7 @@ apt-get update
 apt-get dist-upgrade -f
 
 # Install all necessary
-apt-get install php7.0 apache2 mariadb-server git php-curl php-imagick ffmpeg gpac ruby php7.0-mysqli --yes
+apt-get install php7.0 apache2 mariadb-server git php-curl php-imagick ffmpeg gpac ruby php7.0-mysqli php7.0-xml sendmail --yes
 gem install flvtool2
 
 # Creating directory et get sources
