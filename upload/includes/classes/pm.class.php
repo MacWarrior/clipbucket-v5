@@ -663,25 +663,16 @@ class cb_pm
 		{
 			case 'pm':
 			default:
-			{
 				$count = $db->count(tbl($this->tbl),"message_id"," message_to LIKE '%#$uid#%' AND message_box='in' AND message_type='pm' AND 	message_status='unread'");
-				
-			}
-			break;
+				break;
 			
 			case 'notification':
-			default:
-			{
 				$count = $db->count(tbl($this->tbl),"message_id"," message_to LIKE '%#$uid#%' AND message_box='in' AND message_type='notification' AND message_status='unread'");
-			}
-			break;
+				break;
 		}
 		
 		if($count>0)
 			return $count;
-		else
-			return "0";
+		return "0";
 	}
 }
-
-?>
