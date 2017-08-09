@@ -1595,9 +1595,15 @@ class userquery extends CBCategory{
 				'is_remote' => $remote,
 			);
 
+			//pr($Cbucket->custom_user_thumb,true);
 			if( count( $Cbucket->custom_user_thumb ) > 0 ) {
 				
 		        $functions = $Cbucket->custom_user_thumb;
+
+		        if (in_array("social_app_avatar", $functions)) {
+				    $params["thumb_name"] = $udetails["avatar"];
+				    $params["thumb_path"] = $params["thumb_path"].$udetails['userid']."/"; 
+				}
 		        foreach( $functions as $func ) {
 		            if( function_exists( $func ) ) {
 		                $func_data = $func( $params );
