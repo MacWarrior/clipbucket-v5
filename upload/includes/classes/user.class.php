@@ -1616,7 +1616,11 @@ class userquery extends CBCategory{
 
 		        if (in_array("social_app_avatar", $functions)) {
 				    $params["thumb_name"] = $udetails["avatar"];
-				    $params["thumb_path"] = $params["thumb_path"].$udetails['userid']."/"; 
+				    if ( empty($params["thumb_name"]) ){
+				    	$params["thumb_name"] = "no_avatar.png";
+				    }else{
+				    	$params["thumb_path"] = $params["thumb_path"].$udetails['userid']."/"; 
+				    }
 				}
 		        foreach( $functions as $func ) {
 		            if( function_exists( $func ) ) {
