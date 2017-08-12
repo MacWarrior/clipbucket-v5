@@ -23,6 +23,14 @@
  */
 function smarty_function_math($params, $template)
 {
+	// HACK : Temp fix error Parameter X is Empty
+	if(isset($params['x']) && $params['x'] == '')
+		$params['x'] = '0';
+	if(isset($params['a']) && $params['a'] == '')
+		$params['a'] = '0';
+	if(isset($params['e']) && $params['e'] == '')
+		$params['e'] = '0';
+
     static $_allowed_funcs = array(
         'int' => true, 'abs' => true, 'ceil' => true, 'cos' => true, 'exp' => true, 'floor' => true,
         'log' => true, 'log10' => true, 'max' => true, 'min' => true, 'pi' => true, 'pow' => true,
@@ -60,7 +68,6 @@ function smarty_function_math($params, $template)
             // make sure value is not empty
             if (strlen($val)==0) {
                 trigger_error("math: parameter $key is empty",E_USER_WARNING);
-
                 return;
             }
             if (!is_numeric($val)) {
