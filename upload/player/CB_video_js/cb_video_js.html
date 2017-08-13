@@ -90,7 +90,7 @@
     {if $flv_vid == true}
     	<source src='{$file}' type="video/x-flv" />
     {else}
-    	<source src='{$file}' type="video/mp4" label="{strtoupper($quality)}" res="{$quality}"  />
+    	<source src='{$file}' type="video/mp4" label="{strtoupper($quality)}" res="{$quality}" />
     {/if}
     {/foreach}
     {ANCHOR place="play_def_sub"}
@@ -102,7 +102,7 @@
 <script type="text/javascript">
 	var vid_id = "{$vdata.videoid}";
 	var videotitle = "{display_clean($vdata.title)}";
-	var uploader = "{$vdata.username}";
+	var uploader = "{display_clean($vdata.username)}";
 	var branding_logo  = "{$cb_logo}";
 	var product_link = "{$player_config.player_logo_url}";
 	var show_logo = true;

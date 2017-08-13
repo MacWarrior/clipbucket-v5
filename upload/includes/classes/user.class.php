@@ -2148,25 +2148,31 @@ class userquery extends CBCategory{
 	{
 		return $this->get_user_field_only($uid,'username');
 	}
-	
+
 	/**
 	 * Function used to create profile link
+	 *
+	 * @param $udetails
+	 *
+	 * @return string
 	 */
 	function profile_link($udetails)
 	{
 		if(!is_array($udetails) && is_numeric($udetails))
 			$udetails = $this->get_user_details($udetails);
+
+		$username = display_clean($udetails['username']);
 		if(SEO!="yes")
-			return BASEURL.'/view_channel.php?user='.$udetails['username'];
+			return BASEURL.'/view_channel.php?user='.$username;
 		else
-			return BASEURL.'/user/'.$udetails['username'];
+			return BASEURL.'/user/'.$username;
 	}
+
 	function get_user_link($u)
 	{
 		return $this->profile_link($u);
 	}
-	
-	
+
 	/**
 	 * Function used to get permission types
 	 */

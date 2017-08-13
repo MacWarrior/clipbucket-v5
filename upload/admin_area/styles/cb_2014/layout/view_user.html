@@ -5,12 +5,12 @@
 <div class="row">
 <div class="lead dropdown">
 <div class="heading clearfix">
-    <h3 class="paddingLeftLarge pull-left">Editing <small>&gt; {$u.username}</small>
+    <h3 class="paddingLeftLarge pull-left">Editing <small>&gt; {display_clean($u.username)}</small>
     <!-- peecha show action button here -->
     <div class="actionBox clearfix">
     <a class="btn btn-primary btn-sm dropdown-toggle pull-left" data-toggle="dropdown" href="">Actions <i class="caret"></i></a>
     <ul class="dropdown-menu pull-left actionDropmenu" role="menu" aria-labelledby="dropdownMenu1">
-        <li><a role="menuitem" tabindex="-1" href="{$userquery->profile_link($u)}">View {$u.username} channel</a></li>
+        <li><a role="menuitem" tabindex="-1" href="{$userquery->profile_link($u)}">View {display_clean($u.username)} channel</a></li>
         <li><a role="menuitem" tabindex="-1" href="login_as_user.php?uid={$u.userid}">Login as user</a></li>
         {if $u.usr_status=="Ok"}
         <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;deactivate=yes">Deactivate</a></li>
@@ -116,8 +116,8 @@
                         <td class="first"><label>User Name</label></td>
                         <td class="last">
 							<p>
-								<input name="username" type="text" id="username" value="{$u.username}" max-size="45"/>
-								<input name="dusername" type="hidden" id="dusername" value="{$u.username}"/>
+								<input name="username" type="text" id="username" value="{display_clean($u.username)}" max-size="45"/>
+								<input name="dusername" type="hidden" id="dusername" value="{display_clean($u.username)}"/>
 								<input name="admin_manager" type="hidden" value="yes"/>
 							</p>
 						</td>

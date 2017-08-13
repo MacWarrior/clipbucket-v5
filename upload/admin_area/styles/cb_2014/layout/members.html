@@ -45,7 +45,7 @@
                         <img src="{$userquery->getUserThumb($u)}" class="img-thumbnail oneUserImage"style="height: 80px; width: 80px;" />
                     </div>
                     <div class="col-md-9">
-                        <a href="{$userquery->profile_link($u)}" target="_blank" class="oneUserName">{$u.username} </a>
+                        <a href="{$userquery->profile_link($u)}" target="_blank" class="oneUserName">{display_clean($u.username)} </a>
                         <span>{$u.email}</span>
                         <div class="labels">
                             {if $u.featured=='Yes'}<span class="label label-primary">Featured{else}{/if}</span>
