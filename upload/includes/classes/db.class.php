@@ -70,8 +70,6 @@ class Clipbucket_db
             $this->pwd = $pwd;
 
             $this->execute('SET NAMES "utf8"');
-
-			ini_set('mysqli.reconnect', 'on');
         } catch(DB_Exception $e) {
             $e->getError();
         }
