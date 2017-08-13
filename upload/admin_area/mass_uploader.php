@@ -150,8 +150,6 @@ if(isset($_POST['mass_upload_video']))
 				$log->writeLine('System hardware Information', 'Unable log System hardware information, plaese install "lshw" ', true);	
 			}
 
-
-
 			$results=$Upload->add_conversion_queue($file_name);
 			$str = "/".date("Y")."/".date("m")."/".date("d")."/";
 			$str1 = date("Y")."/".date("m")."/".date("d");
