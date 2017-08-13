@@ -10,17 +10,19 @@
  * This class can be edited for own purpose..
  * it handles all uploading that is done on ClipBucket or with ClipBucket
  */
- 
- 
-class Upload{
- 
+
+class Upload
+{
  	var $custom_form_fields = array();  //Step 1 of Uploading
 	var $custom_form_fields_groups = array() ; //Groups of custom fields
 	var $custom_upload_fields = array(); //Step 2 of Uploading
 	var $actions_after_video_upload = array('activate_video_with_file');
-	
- 	/**
+
+	/**
 	 * Function used to vlidate upload form fields
+	 *
+	 * @param null $array
+	 * @param bool $is_upload
 	 */
 	function validate_video_upload_form($array=NULL,$is_upload=FALSE){
 		global $LANG;
@@ -119,13 +121,13 @@ class Upload{
 				if(!$field['clean_func'] || (!apply_func($field['clean_func'],$val) && !is_array($field['clean_func'])))
 					$val = mysql_clean($val);
 				else
-						$val = apply_func($field['clean_func'], mysql_clean($val));
+					$val = apply_func($field['clean_func'], mysql_clean($val));
 				
 				if(empty($val) && !empty($field['default_value']))
 					$val = $field['default_value'];
 					
 				if(!empty($field['db_field']))
-				$query_val[] = $val;
+					$query_val[] = $val;
 				
 			}
 			
@@ -138,28 +140,17 @@ class Upload{
 			$query_field[] = "videokey";
 			$query_val[] = $this->video_keygen();
 
-
-			
-
-
-
 			if(!isset($array['file_directory']) && isset($array['time_stamp']))
 			{
 				$query_field[] = "file_directory";
 				$file_directory = create_dated_folder(NULL,$array['time_stamp']);
 				$query_val[] = $file_directory;
-
-				//pr($array,true);exit();
-
-			}elseif(isset($array['file_directory']))
-			{
+			} elseif(isset($array['file_directory'])) {
 				$query_field[] = "file_directory";
 				$file_directory = mysql_clean($array['file_directory']);
 				$query_val[] = $file_directory;
 			}
-			
-			
-			
+
 			//Userid
 			$query_field[] = "userid";
 			
@@ -172,7 +163,6 @@ class Upload{
 				$query_field[] = 'file_thumbs_path';
 				$query_val[] = $array['thumbsUrl'];
 			}
-			
 
 			//video_version
             $query_field[] = "video_version";
@@ -265,28 +255,29 @@ class Upload{
 					$db->update(tbl("users"),array("total_videos"),array("|f|total_videos+1")," userid='".$userid."'");
 				}
 			}
-			
 		}
 		
 		//Adding Video Feed
 		addFeed(array('action' => 'upload_video','object_id' => $insert_id,'object'=>'video'));;
 		return $insert_id;
-				
 	}
-	
+
 	/**
 	 * Function used to get available name for video thumb
-	 * @param FILE_Name
+	 *
+	 * @param      FILE_Name
+	 * @param bool $big
+	 *
+	 * @return int
 	 */
 	function get_available_file_num($file_name,$big=false)
 	{
-
 		$code = 1;
         if($big)
 			$big = "big-";
 
-       	if(defined('dir')){ 
-          
+       	if(defined('dir'))
+       	{
             while(1){
 		  		//setting variable for CB 2.8 gretaer versions
               	$path = THUMBS_DIR.'/'.dir.'/'.$file_name.'-original-'.$code.'.';
@@ -297,28 +288,23 @@ class Upload{
 
 		      	if(!file_exists($path.'jpg') && !file_exists($path.'png') && !file_exists($path.'gif'))
 		          	break;
-		       	else
 			  	$code = $code + 1;
 			}
-		}else{
-            
-            while(1){
+		} else {
+            while(1)
+			{
 		        $path = THUMBS_DIR.'/'.$file_name.'-'.$big.$code.'.';
 			    if(!file_exists($path.'jpg') && !file_exists($path.'png') && !file_exists($path.'gif'))
 			      	break;
-			    else
 				$code = $code + 1;
 			}
 	    }
 		return $code;
 	}
-	
-	
-	
+
 	function upload_thumb($file_name,$file_array,$key=0,$files_dir=NULL,$thumbs_ver=false)
 	{
-
-		global $imgObj,$LANG;
+		global $imgObj;
 		$file = $file_array;
 		if(!empty($file['name'][$key]))
 		{   
@@ -330,8 +316,8 @@ class Upload{
 			{
 				//One more IF statement considering CB 2.8.1 thumbs strucure 
 				//Author : Fahad Abbas 
-				if (!empty($thumbs_ver) && $thumbs_ver == '2.8'){
-
+				if (!empty($thumbs_ver) && $thumbs_ver == '2.8')
+				{
 					$thumbs_settings_28 = thumbs_res_settings_28();
 					$temp_file_path = THUMBS_DIR.'/'.$files_dir.'/'.$file_name.'-'.$file_num.'.'.$ext;
 					
@@ -354,13 +340,11 @@ class Upload{
 					}
 
 					unlink($temp_file_path);
-
-				}else{
+				} else {
 					if($files_dir!=NULL){
 						$file_path = THUMBS_DIR.'/'.$files_dir.'/'.$file_name.'-'.$file_num.'.'.$ext;
 						$big_file_path = THUMBS_DIR.'/'.$files_dir.'/'.$file_name.'-big-'.$file_num.'.'.$ext;	
-					}
-					else{
+					} else {
 						$file_path = THUMBS_DIR.'/'.$file_name.'-'.$file_num.'.'.$ext;
 						$big_file_path = THUMBS_DIR.'/'.$file_name.'-big-'.$file_num.'.'.$ext;
 					}
@@ -368,20 +352,23 @@ class Upload{
 					$imgObj->CreateThumb($file_path,$big_file_path,config('big_thumb_width'),$ext,config('big_thumb_height'),false);
 					$imgObj->CreateThumb($file_path,$file_path,config('thumb_width'),$ext,config('thumb_height'),false);
 				}
-				
-			
-				
+
 				e(lang('upload_vid_thumb_msg'),'m');
 			}	
 		}
 	}
-	
+
 	/**
 	 * Function used to upload big thumb
-	 * @param FILE_NAME
-	 * @param $_FILES array name
-	 */	
-	function upload_big_thumb($file_name,$file_array) {
+	 *
+	 * @param $file_name
+	 * @param $file_array
+	 *
+	 * @internal param $FILE_NAME
+	 * @internal param array $_FILES name
+	 */
+	function upload_big_thumb($file_name,$file_array)
+	{
 		global $imgObj,$LANG;
 		$file = $file_array;
 		$ext = getExt($file['name']);
@@ -396,16 +383,20 @@ class Upload{
 			e(lang('Video big thumb uploaded'),'m');
 		}
 	}
-	
+
 	/**
 	 * Function used to upload video thumbs
-	 * @param FILE_NAME
-	 * @param $_FILES array name
+	 *
+	 * @param      $file_name
+	 * @param      $file_array
+	 * @param null $files_dir
+	 * @param bool $thumbs_ver
+	 *
+	 * @internal param $FILE_NAME
+	 * @internal param array $_FILES name
 	 */
-	
 	function upload_thumbs($file_name,$file_array,$files_dir=NULL,$thumbs_ver=false)
 	{
-		global $LANG;
 		if(count($file_array[name])>1)
 		{
 			for($i=0;$i<count($file_array['name']);$i++)
@@ -419,28 +410,25 @@ class Upload{
 		}
 	}
 	
-	function UploadThumb($flv,$thumbid){
-
+	function UploadThumb($flv,$thumbid)
+	{
 		$file = $_FILES["upload_thumb_$thumbid"]['tmp_name'];
 		$ext = GetExt($_FILES["upload_thumb_$thumbid"]['name']);
-		if(!empty($file) && $ext =='jpg'){
+		if(!empty($file) && $ext =='jpg')
+		{
 			$image = new ResizeImage();
-			if($image->ValidateImage($file,$ext)){
+			if($image->ValidateImage($file,$ext))
+			{
 				$thumb = FILES_DIR.'/thumbs/'.GetThumb($flv,$thumbid);
 				move_uploaded_file($file,$thumb);
 				$image->CreateThumb($thumb,$thumb,THUMB_WIDTH,$ext,THUMB_HEIGHT,false);
 				return true;
-			}else{
-				return false;
-			}	
-		}else{
+			}
 			return false;
 		}
-		
+		return false;
 	}
-		
-		
-	
+
 	/**
 	* FUNCTION USED TO LOAD UPLOAD FORM REQUIRED FIELDS
 	* title [Text Field]
@@ -448,10 +436,8 @@ class Upload{
 	* tags [Text Field]
 	* categories [Check Box]
 	*/
-	
 	function loadRequiredFields($default=NULL)
 	{
-		global $LANG;		
 		if($default == NULL)
 			$default = $_POST;
 
@@ -550,10 +536,6 @@ class Upload{
 
 	function mycustom_field_load($default=NULL)
 	{
-		global $LANG;		
-		if($default == NULL)
-			$default = $_POST;
-		
 		$mycustom_fields_array = array
 		(
 		 'MR WHite'	=> array('title'=> lang('vdo_title'),
@@ -587,19 +569,22 @@ class Upload{
 		//Setting Sizes
 		return $mycustom_fields_array;
 	}
-	
-	
+
 	/**
-	* FUNCTION USED TO LOAD FORM OPTION FIELDS
-	* broadacast [Radio Button]
-	* embedding [Radio Button]
-	* rating [Radio Button]
-	* comments [Radio Button]
-	* comments rating [Radio Button]
-	*/
+	 * FUNCTION USED TO LOAD FORM OPTION FIELDS
+	 * broadacast [Radio Button]
+	 * embedding [Radio Button]
+	 * rating [Radio Button]
+	 * comments [Radio Button]
+	 * comments rating [Radio Button]
+	 *
+	 * @param null $default
+	 *
+	 * @return array
+	 */
 	function loadOptionFields($default=NULL)
 	{
-		global $LANG,$uploadFormOptionFieldsArray;
+		global $uploadFormOptionFieldsArray;
 		
 		
 		if($default == NULL)
@@ -620,8 +605,7 @@ class Upload{
 		elseif($broadcast=='private')
 			$video_user_disable = '';
 			
-		$uploadFormOptionFieldsArray = array
-		(
+		$uploadFormOptionFieldsArray = array(
 		 'broadcast'=> array('title'=>lang('vdo_br_opt'),
 							 'type'=>'radiobutton',
 							 'name'=>'broadcast',
@@ -720,16 +704,20 @@ class Upload{
 		 );
 		return $uploadFormOptionFieldsArray;
 	}
-	
+
 	/**
-	* FUNCTION USED TO LOAD DATE AND LOCATION OPTION OF UPLOAD FORM
-	* - day - month - year
-	* - country
-	* - city
-	*/
+	 * FUNCTION USED TO LOAD DATE AND LOCATION OPTION OF UPLOAD FORM
+	 * - day - month - year
+	 * - country
+	 * - city
+	 *
+	 * @param null $default
+	 *
+	 * @return array
+	 */
 	function loadLocationFields($default=NULL)
 	{
-		global $LANG,$LocationFieldsArray,$CBucket;
+		global $LocationFieldsArray;
 		
 		if($default == NULL)
 			$default = $_POST;
@@ -784,13 +772,17 @@ class Upload{
 		 );
 		return $LocationFieldsArray;
 	}
-	
+
 	/**
-	* FUNCTION USED TO DISPLAY DATE FORM
-	*/
+	 * FUNCTION USED TO DISPLAY DATE FORM
+	 *
+	 * @param null   $date
+	 * @param string $sep
+	 * @param bool   $bg_process
+	 */
 	function loadDateForm($date=NULL,$sep='/',$bg_process=FALSE)
 	{
-		global $LANG,$formObj;
+		global $formObj;
 		$month_array = array(''=>'--');
 		$day_array = array(''=>'--');
 		$year_array = array(''=>'----');
@@ -817,11 +809,8 @@ class Upload{
 			echo $formObj->createField('dropdown','year','',$year_array,NULL,NULL,NULL,NULL,$d_year); 
 			echo lang('vdo_for_date');
 		}
-		
 	}
-	
-	
-	
+
 	/**
 	 * Function used to load upload form fields
 	 * it will load all the values that are submited in the upload form
@@ -835,7 +824,7 @@ class Upload{
 		$option_fields = $this->loadOptionFields($array);
 		$upload_fields = array_merge($required_fields,$location_fields,$option_fields);
 		if(count($this->custom_form_fields)>0)
-				$upload_fields = array_merge($upload_fields,$this->custom_form_fields);
+			$upload_fields = array_merge($upload_fields,$this->custom_form_fields);
 				
 		foreach($upload_fields as $field)
 		{
@@ -849,7 +838,6 @@ class Upload{
 				$loop = count($val);
 				for($i=0;$i<$loop;$i++)
 				{
-					$val = $_POST[$name][$i];
 					$val = cleanForm($_POST[$name][$i]);
 					echo '<input type="hidden" name="'.$name.'[]" value="'.$val.'">';
 				}
@@ -860,69 +848,44 @@ class Upload{
 
 	/**
 	 * Function used to add files in conversion queue
+	 *
+	 * @param $file
+	 *
+	 * @return bool
 	 */
 	function add_conversion_queue($file)
 	{
 		global $Cbucket,$db;
 		$tmp_ext = $Cbucket->temp_exts;
-		
-		$count = 1;
-		while(1)
-		{
-			$exists = 'no';
-			foreach($tmp_ext as $exts)
-			{
-				
-				if(file_exists(TEMP_DIR.'/' .getName($file).'.'.$exts))
-				{
-					$exists = 'yes';
-					break;
-				}
-			}
-			
-			if($exists !='yes')
-			break;
-			
-			$new_file = getName($file).'-'.$count.'.'.strtolower(getExt($file));
-			rename(TEMP_DIR.'/'.$file,TEMP_DIR.'/'.$new_file);
-			$file = $new_file;
-			
-			$count++;
-			if($count>50)
-			break;
-		}
-	
-		//Checking file existsi or not
+
+		//Checking file exists or not
 		if(file_exists(TEMP_DIR.'/'.$file))
 		{
-			$ext = mysql_clean(strtolower(getExt($file)));
-			$name = mysql_clean(getName($file));
+			$ext = strtolower(getExt($file));
+			$name = getName($file);
+			if(!$name)
+				return false;
 			//Get Temp Ext
-			$tmp_ext = mysql_clean($tmp_ext[rand(0,count($tmp_ext)-1)]);
+			$tmp_ext = $tmp_ext[rand(0,count($tmp_ext)-1)];
 			//Creating New File Name
 			$new_file = $name.'.'.$tmp_ext;
 			//Renaming File for security purpose
-			if(!file_exists(TEMP_DIR.'/'.$file) || !$name)
-				return false;
+
 			rename(TEMP_DIR.'/'.$file,TEMP_DIR.'/'.$new_file);
 			//Adding Details to database
 			$db->Execute("INSERT INTO ".tbl("conversion_queue")." (cqueue_name,cqueue_ext,cqueue_tmp_ext,date_added)
-							VALUES ('".$name."','".$ext."','".$tmp_ext."','".NOW()."') ");
-			return $db->insert_id;
-		}else{
-			return false;
+							VALUES ('".mysql_clean($name)."','".mysql_clean($ext)."','".mysql_clean($tmp_ext)."','".NOW()."') ");
+			return $db->insert_id();
 		}
+		return false;
 	}
-	
-	
+
 	/**
 	 * Video Key Gen
 	 * * it is use to generate video key
 	 */
 	function video_keygen()
 	{
-		global $db;
-		
 		$char_list = "ABDGHKMNORSUXWY";
 		$char_list .= "123456789";
 		while(1)
@@ -940,10 +903,7 @@ class Upload{
 		
 		return $vkey;
 	}
-	
-	
-	
-	
+
 	/**
 	 * Function used to load upload form
 	 */
@@ -959,9 +919,7 @@ class Upload{
 		
 		return $opt_list;
 	}
-	
-	
-	
+
 	/**
 	 * Function used to perform some actions , after video is upload
 	 * @param Videoid
@@ -974,10 +932,15 @@ class Upload{
 				$funcs($vid);
 		}
 	}
-	
-	
+
 	/**
 	 * Function used to load custom upload fields
+	 *
+	 * @param      $data
+	 * @param bool $ck_display_admin
+	 * @param bool $ck_display_user
+	 *
+	 * @return mixed
 	 */
 	function load_custom_upload_fields($data,$ck_display_admin=FALSE,$ck_display_user=FALSE)
 	{
@@ -1001,13 +964,19 @@ class Upload{
 		
 		return $new_array;
 	}
-	
-	
-	/**
-	* Function used to load custom form fields
-	* @return : { array } { $new_array } { an array with all custom fields }
-	*/
 
+
+	/**
+	 * Function used to load custom form fields
+	 *
+	 * @param      $data
+	 * @param bool $insertion
+	 * @param bool $group_based
+	 * @param bool $user
+	 *
+	 * @return array : { array } { $new_array } { an array with all custom fields }
+	 * { $new_array } { an array with all custom fields }
+	 */
 	function load_custom_form_fields($data, $insertion = false,$group_based=false, $user = false) {
 		if(!$group_based) {
 			if (function_exists('pull_custom_fields')) {
@@ -1042,9 +1011,7 @@ class Upload{
 					} elseif($data[$fields['name']]) {
 						$value = $data[$fields['name']];
 					}
-					if($fields['type']=='radiobutton' ||  
-					   $fields['type']=='checkbox' ||
-					   $fields['type']=='dropdown') {
+					if($fields['type']=='radiobutton' || $fields['type']=='checkbox' || $fields['type']=='dropdown') {
 						$fields['checked'] = $value;
 					} else {
 						$fields['value'] = $fields['value'];
@@ -1053,15 +1020,19 @@ class Upload{
 					$new_array[$key] = $fields;
 			}
 			return $new_array;
-		}else
-		{
-			return $array = $this->custom_form_fields_groups;
 		}
+		return $array = $this->custom_form_fields_groups;
 	}
-	
-	
+
+
 	/**
 	 * function used to upload user avatar and or background
+	 *
+	 * @param string $type
+	 * @param        $file
+	 * @param        $uid
+	 *
+	 * @return string
 	 */
 	function upload_user_file($type='a',$file,$uid)
 	{
@@ -1090,12 +1061,12 @@ class Upload{
 							{
 								e(lang("Invalid file type"));
 								@unlink($file_path);
-							}else{
+							} else {
 								$small_size = $avatar_dir.$uid.'-small.'.$ext;
 								$cbphoto->CreateThumb($file_path,$file_path,$ext,AVATAR_SIZE,AVATAR_SIZE);
 								$cbphoto->CreateThumb($file_path,$small_size,$ext,AVATAR_SMALL_SIZE,AVATAR_SMALL_SIZE);
 							}
-						}else{
+						} else {
 							e(lang("class_error_occured"));
 						}
 					}
@@ -1103,7 +1074,7 @@ class Upload{
 				break;
 			}
 			return $file_name;
-		}else
+		} else
 			e(lang('user_doesnt_exist'));
 	}
 	
@@ -1115,7 +1086,7 @@ class Upload{
 	 */
 	function upload_website_logo($file)
 	{
-		global $imgObj,$LANG;
+		global $imgObj;
 
 		if(!empty($file['name']))
 		{
@@ -1136,14 +1107,12 @@ class Upload{
 				//$imgObj->CreateThumb($file_path,$file_path,200,$ext,200,false);
 				e("Logo has been uploaded",'m');
 				return $file_name.'.'.$ext;
-			}else
+			} else
 				e("Invalid Image file");
 		}
 		return false;
 	}
-	
-	
-	
+
 	/**
 	 * load_video_fields
 	 * 
@@ -1203,7 +1172,6 @@ class Upload{
 		
 			foreach($custFieldGroups as $gKey => $fieldGroup)
 			{
-				
 				foreach($fieldGroup['fields'] as $mainKey => $nField)
 				{
 					$updatedNewFields[$mainKey] = $nField;
@@ -1212,38 +1180,26 @@ class Upload{
 					elseif($input[$nField['name']])
 						$value = $input[$nField['name']];
 						
-					if($nField['type']=='radiobutton' || 
-					   $nField['type']=='checkbox' ||
-					   $nField['type']=='dropdown')
-					$updatedNewFields[$mainKey]['checked'] = $value;
+					if($nField['type']=='radiobutton' || $nField['type']=='checkbox' || $nField['type']=='dropdown')
+						$updatedNewFields[$mainKey]['checked'] = $value;
 					else
-					$updatedNewFields[$mainKey]['value'] = $value;
-									
-			
+						$updatedNewFields[$mainKey]['value'] = $value;
 				}
 				
 				$fieldGroup['fields'] = $updatedNewFields;
-				
 				$group_id = $fieldGroup['group_id'];
 				
 				foreach($fields as $key => $field)
-				{ 
-					
+				{
 					if($field['group_id'] == $group_id)
 					{
 						$inputFields = $field['fields'];
 						//Setting field values
 						$newFields = $fieldGroup['fields'];
-						
-						
-						
 						$mergeField = array_merge($inputFields,$newFields);
-						
-						
+
 						//Finally Updating array
-						$newGroupArray =
-						array
-						(
+						$newGroupArray = array(
 							'group_name' => $field['group_name'],
 							'group_id' => $field['group_id'],
 							'fields' => $mergeField,
@@ -1253,13 +1209,12 @@ class Upload{
 						
 						$matched = true;
 						break;
-					}else
-						$matched = false;
+					}
+					$matched = false;
 				}
-				
+
 				if(!$matched)
 					$fields[] = $fieldGroup;
-				
 			}
 		}
 		
@@ -1274,15 +1229,14 @@ class Upload{
 		preg_match("/(([0-9]?[0-9]{1}):)?([0-5]{1}[0-9]{1}):([0-5]{1}[0-9]{1})/",$time,$match);
 		if(!empty($match[0]))
 			return ($match[0]);
-		else
-			return false;		
+		return false;
 	}	
 	
-	function time_to_sec($time) {
+	function time_to_sec($time)
+	{
 		if(!$this->isTime($time))
 			e(lang("Format of time is not right."));
-		else
-		{		 
+		else {
 			$hours = substr($time, 0, -6); 
 			$minutes = substr($time, -5, 2); 
 			$seconds = substr($time, -2); 
@@ -1290,4 +1244,3 @@ class Upload{
 		}
 	}
 }	
-?>

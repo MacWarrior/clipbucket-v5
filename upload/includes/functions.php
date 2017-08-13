@@ -106,7 +106,7 @@
 	function mysql_clean($var)
 	{
 		global $db;
-		return mysqli_real_escape_string($db->mysqli, $var);
+		return $db->clean_var($var);
 	}
 
 	function display_clean($var, $clean_quote = true)
@@ -240,7 +240,7 @@
 		if(!is_string($file)) {
 			return false;
 		}
-		//for srever thumb files 
+		//for server thumb files
 		$parts = parse_url($file);
         $query = isset($query) ? parse_str($parts['query'], $query) : false;
         $get_file_name = isset($query['src']) ? $query['src'] : false;

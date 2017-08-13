@@ -30,21 +30,36 @@ class Clipbucket_db
 	 * @param $uname
 	 * @param $pwd
 	 *
-	 * @return bool { boolean } { true or false }
-	 * { true or false }
-	 * @internal param $ : { string } { $host } { your database host e.g localhost } { $host } { your database host e.g localhost }
-	 * @internal param $ : { string } { $name } { name of database to connect to } { $name } { name of database to connect to }
-	 * @internal param $ : { string } { $uname } { your database username } { $uname } { your database username }
-	 * @internal param $ : { string } { $pwd } { password of database to connect to } { $pwd } { password of database to connect to }
+	 * @return bool { boolean }
+	 *
+	 * @internal param $ : { string } { $host } { your database host e.g localhost }
+	 * @internal param $ : { string } { $name } { name of database to connect to }
+	 * @internal param $ : { string } { $uname } { your database username }
+	 * @internal param $ : { string } { $pwd } { password of database to connect to }
 	 */
-
-    function connect($host=String, $name=String, $uname=String, $pwd=String)
+    function connect($host="", $name="", $uname="", $pwd="")
 	{
-        try {
-            if(!$host) $host = $this->db_host;
-            if(!$name) $name = $this->db_name;
-            if(!$uname) $uname = $this->db_uname;
-            if(!$pwd) $pwd = $this->db_pwd;
+        try
+		{
+            if(!$host)
+            	$host = $this->db_host;
+            else
+            	$this->db_host = $host;
+
+            if(!$name)
+            	$name = $this->db_name;
+            else
+				$this->db_name = $name;
+
+            if(!$uname)
+            	$uname = $this->db_uname;
+            else
+				$this->db_uname = $uname;
+
+            if(!$pwd)
+            	$pwd = $this->db_pwd;
+            else
+				$this->db_pwd = $pwd;
 
             $this->mysqli = new mysqli($host,$uname, $pwd, $name);
             if($this->mysqli->connect_errno)
@@ -56,19 +71,23 @@ class Clipbucket_db
 
             $this->execute('SET NAMES "utf8"');
 
+			ini_set('mysqli.reconnect', 'on');
         } catch(DB_Exception $e) {
             $e->getError();
         }
     }
 
-    /**
-    * Select elements from database with query
-    *
-    * @param : { string } { $query } { mysql query to run }
-    * @return : { array } { $data } { array of selected data }
-    */
+	/**
+	 * Select elements from database with query
+	 *
+	 * @param : { string } { $query } { mysql query to run }
+	 *
+	 * @return array : { array } { $data } { array of selected data }
+	 */
+    function _select($query)
+	{
+		$this->ping();
 
-    function _select($query) {
         global $__devmsgs;
         if (is_array($__devmsgs)) {
             $start = microtime();
@@ -93,20 +112,20 @@ class Clipbucket_db
         return $data;
     }
 
-
-    /**
-    * Select elements from database with numerous conditions
-    *
-    * @param : { string } { $tbl } { table to select data from }
-    * @param : { string } { $fields } { all by default, element to fetch }
-    * @param : { string } { $cond } { false by default, mysql condition for fetching data }
-    * @param : { integer } { $limit } { false by default, number of entires to fetch }
-    * @param : { string } { $order } { false by default, order to sort results }
-    * @return : { array } { $data } { array of selected data }
-    */
-
-    function select($tbl,$fields='*',$cond=false,$limit=false,$order=false,$ep=false) {
-        //return dbselect($tbl,$fields,$cond,$limit,$order);
+	/**
+	 * Select elements from database with numerous conditions
+	 *
+	 * @param : { string } { $tbl } { table to select data from }
+	 * @param string $fields
+	 * @param bool   $cond
+	 * @param bool   $limit
+	 * @param bool   $order
+	 * @param bool   $ep
+	 *
+	 * @return array : { array } { $data } { array of selected data }
+	 */
+    function select($tbl,$fields='*',$cond=false,$limit=false,$order=false,$ep=false)
+	{
         global $__devmsgs;
         
         $query_params = '';
@@ -135,22 +154,22 @@ class Clipbucket_db
             $timetook = $end - $start;
             devWitch($query, 'select', $timetook);
             return $data;
-        } else {
-            return $this->_select($query);
         }
+		return $this->_select($query);
     }
 
-    /**
-    * Count values in given table using MySQL COUNT
-    * 
-    * @param : { string }   { $tbl } { table to count data from }
-    * @param : { string } { $fields } { field that you want to count }
-    * @param : { string } { $cond } { condition for mysql }
-    * @return : { integer } { $field } { count of elements }
-    */
-
-    function count($tbl,$fields='*',$cond=false) {
-        global $db,$__devmsgs;
+	/**
+	 * Count values in given table using MySQL COUNT
+	 *
+	 * @param : { string }   { $tbl } { table to count data from }
+	 * @param string $fields
+	 * @param bool   $cond
+	 *
+	 * @return bool : { integer } { $field } { count of elements }
+	 */
+    function count($tbl,$fields='*',$cond=false)
+	{
+        global $__devmsgs;
         if ($cond)
             $condition = " Where $cond ";
         $query = "Select Count($fields) From $tbl $condition";
@@ -174,25 +193,31 @@ class Clipbucket_db
         return false;
     }
 
-    /**
-     * Get row using query
-     * @param : { string } { $query } { query to run to get row }
-     */
-
+	/**
+	 * Get row using query
+	 *
+	 * @param : { string } { $query } { query to run to get row }
+	 *
+	 * @return mixed
+	 */
     function GetRow($query)
     {
         $result = $this->_select($query);
-        if($result) return $result[0];
+        if($result)
+        	return $result[0];
     }
 
-    /**
-     * Execute a MYSQL query directly without processing
-     * @param : { string } { $query } { query that you want to execute }
-     * @return : { array } { array of data depending on query }
-     */
-
+	/**
+	 * Execute a MYSQL query directly without processing
+	 *
+	 * @param : { string } { $query } { query that you want to execute }
+	 *
+	 * @return mixed : { array } { array of data depending on query }
+	 */
     function Execute($query)
     {
+		$this->ping();
+
         global $__devmsgs;
         try {
             if (is_array($__devmsgs)) {
@@ -210,18 +235,25 @@ class Clipbucket_db
         }
     }
 
-    /**
-     * Update database fields { table, fields, values style }
-     *
-     * @param : { string } { $tbl } { table to ujpdate values in }
-     * @param : { array } { $flds } { array of fields you want to update }
-     * @param : { array } { $vls } { array of values to update against fields }
-     * @param : { string } { $cond } { mysql condition for query }
-     * @param : { string } { $ep } { extra parameter after condition }
-     * @return : { null }
-     */
+	/**
+	 * Update database fields { table, fields, values style }
+	 *
+	 * @param      $tbl
+	 * @param      $flds
+	 * @param      $vls
+	 * @param      $cond
+	 * @param null $ep
+	 *
+	 * @internal param $ : { string } { $tbl } { table to ujpdate values in }
+	 * @internal param $ : { array } { $flds } { array of fields you want to update }
+	 * @internal param $ : { array } { $vls } { array of values to update against fields }
+	 * @internal param $ : { string } { $cond } { mysql condition for query }
+	 * @internal param $ : { string } { $ep } { extra parameter after condition }
+	 */
+    function update($tbl,$flds,$vls,$cond,$ep=NULL)
+	{
+		$this->ping();
 
-    function update($tbl,$flds,$vls,$cond,$ep=NULL) {
         global $__devmsgs;
 
         $total_fields = count($flds);
@@ -268,17 +300,23 @@ class Clipbucket_db
         }
     }
 
-    /**
-     * Update database fields { table, associative array style }
-     *
-     * @param : { string } { $tbl } { table to ujpdate values in }
-     * @param : { array } { $fields } { associative array with fields and values }
-     * @param : { string } { $cond } { mysql condition for query }
-     * @return : { boolean } { true of false }
-     */
-
+	/**
+	 * Update database fields { table, associative array style }
+	 *
+	 * @param $tbl
+	 * @param $fields
+	 * @param $cond
+	 *
+	 * @return bool : { boolean }
+	 *
+	 * @internal param $ : { string } { $tbl } { table to update values in }
+	 * @internal param $ : { array } { $fields } { associative array with fields and values }
+	 * @internal param $ : { string } { $cond } { mysql condition for query }
+	 */
     function db_update($tbl, $fields, $cond)
 	{
+		$this->ping();
+
         $count = 0;
 		$fields_query = '';
         foreach ($fields as $field => $val)
@@ -307,18 +345,24 @@ class Clipbucket_db
         return true;
     }
 
-    /**
-    * Delete an element from database
-    *
-    * @param : { string } { $tbl } { table to delete value from }
-    * @param : { array } { $flds } { array of fields to update }
-    * @param : { array } { $vlds } { array of values to update against fields }
-    * @param : { string } { $ep } { extra paramters to consider }
-    * @return : { null }
-    */
+	/**
+	 * Delete an element from database
+	 *
+	 * @param      $tbl
+	 * @param      $flds
+	 * @param      $vls
+	 * @param null $ep
+	 *
+	 * @internal param $ : { string } { $tbl } { table to delete value from }
+	 * @internal param $ : { array } { $flds } { array of fields to update }
+	 * @internal param $ : { array } { $vlds } { array of values to update against fields }
+	 * @internal param $ : { string } { $ep } { extra parameters to consider }
+	 */
+    function delete($tbl,$flds,$vls,$ep=NULL)
+	{
+		$this->ping();
 
-    function delete($tbl,$flds,$vls,$ep=NULL) {
-        global $db, $__devmsgs;
+        global $__devmsgs;
         $total_fields = count($flds);
         $fields_query = "";
         $count = 0;
@@ -355,17 +399,25 @@ class Clipbucket_db
         }
     }
 
+	/**
+	 * Function used to insert values in database { table, fields, values style }
+	 *
+	 * @param      $tbl
+	 * @param      $flds
+	 * @param      $vls
+	 * @param null $ep
+	 *
+	 * @return mixed : { integer } { $insert_id } { id of inserted element }
+	 *
+	 * @internal param $ : { string } { $tbl } { table to insert values in }
+	 * @internal param $ : { array } { $flds } { array of fields to update }
+	 * @internal param $ : { array } { $vlds } { array of values to update against fields }
+	 * @internal param $ : { string } { $ep } { extra parameters to consider }
+	 */
+    function insert($tbl,$flds,$vls,$ep=NULL)
+	{
+		$this->ping();
 
-    /**
-    * Function used to insert values in database { table, fields, values style }
-    * @param : { string } { $tbl } { table to insert values in }
-    * @param : { array } { $flds } { array of fields to update }
-    * @param : { array } { $vlds } { array of values to update against fields }
-    * @param : { string } { $ep } { extra paramters to consider }
-    * @return : { integer } { $insert_id } { id of inserted element }
-    */
-
-    function insert($tbl,$flds,$vls,$ep=NULL) {
         $total_fields = count($flds);
         $count = 0;
         $fields_query = "";
@@ -405,22 +457,27 @@ class Clipbucket_db
 
         try {
             $this->mysqli->query($query);
-            return $this->mysqli->insert_id;
+            return $this->insert_id();
         } catch(DB_Exception $e) {
             echo $e->getError();
         }
 
     }
-    /**
-    * Function used to insert values in database { table, associative array style }
-    * @param : { string } { $tbl } { table to insert values in }
-    * @param : { array } { $flds } { array of fields and values to update (accosiatve array) }
-    * @return : { integer } { $insert_id } { id of inserted element }
-    */
 
+	/**
+	 * Function used to insert values in database { table, associative array style }
+	 *
+	 * @param $tbl
+	 * @param $fields
+	 *
+	 * @return mixed : { integer } { $insert_id } { id of inserted element }
+	 *
+	 * @internal param $ : { string } { $tbl } { table to insert values in }
+	 * @internal param $ : { array } { $flds } { array of fields and values to update (associative array) }
+	 */
     function db_insert($tbl, $fields)
     {
-    	global $db;
+		$this->ping();
 
         $count = 0;
         $query_fields = array();
@@ -442,15 +499,15 @@ class Clipbucket_db
         $values_query = implode(',', $query_values);
         //Complete Query
         $query = "INSERT INTO $tbl ($fields_query) VALUES ($values_query) $ep";
-        $db->total_queries++;
-        $db->total_queries_sql[] = $query;
+        $this->total_queries++;
+		$this->total_queries_sql[] = $query;
         try {
-            $db->mysqli->query($query);
+			$this->mysqli->query($query);
         } catch(DB_Exception $e) {
-            $e->getError();
+			$this->getError();
         }
 
-        return $db->insert_id();
+        return $this->insert_id();
     }
 
     /**
@@ -465,15 +522,35 @@ class Clipbucket_db
         return $this->mysqli->insert_id;
     }
 
-    /**
-     * Clean variable for mysql
-     *
-     * @todo : Write method to clean stuff otherwise SQL injection is easily achievable
-     */
+	/**
+	 * Clean variable for mysql
+	 *
+	 * @param $var
+	 *
+	 * @return mixed
+	 */
     function clean_var($var)
     {
-        return mysql_clean($var);
+    	$this->ping();
+        return $this->mysqli->real_escape_string($var);
     }
+
+    function get_error()
+	{
+		if( mysqli_connect_errno() )
+			return "Failed to connect to MySQL: ".mysqli_connect_error();
+		if( $this->mysqli->error )
+			return "Error : ".$this->mysqli->error;
+		return "";
+	}
+
+	private function ping()
+	{
+		if( !$this->mysqli->ping() ) {
+			error_log("SQL ERROR : ".$this->mysqli->error);
+			$this->connect();
+		}
+	}
 
     /**
      * Get effect rows
@@ -484,4 +561,3 @@ class Clipbucket_db
     }
 
 }
-
