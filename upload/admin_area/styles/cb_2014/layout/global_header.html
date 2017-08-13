@@ -36,18 +36,18 @@
 
 <!-- ace settings handler -->
 <script src="{$theme_url}/assets/js/ace-extra.min.js"></script>
-<script src="{$baseurl}/js/clipbucket.js"></script>
+<script src="/js/clipbucket.js"></script>
 
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 
 <!--[if lt IE 9]>
-<script src="assets/js/html5shiv.js"></script>
-<script src="assets/js/respond.min.js"></script>
+<script src="{$theme_url}/assets/js/html5shiv.js"></script>
+<script src="{$theme_url}/assets/js/respond.min.js"></script>
 <![endif]-->
-<script type="text/javascript" src="{$theme_url}/../../../../js/functions.js"></script>
-<script type="text/javascript" src="{$theme_url}/../../../../js/admin_functions.js"></script>
+<script type="text/javascript" src="/js/functions.js"></script>
+<script type="text/javascript" src="/js/admin_functions.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-<script type="text/javascript" src="{$baseurl}/js/jquery_plugs/jquery.cookie.js"></script>
+<script type="text/javascript" src="/js/jquery_plugs/jquery.cookie.js"></script>
 
 <!-- for bootstrap wysiwyg -->
 <link rel="stylesheet" href="{$theme_url}/css/summernote.css" />
@@ -79,19 +79,6 @@
 
 
 <script type="text/javascript">
-    $(document).ready(function() {
-      /*  $('.xedit').editable({
-            mode: 'inline',
-            url:baseurl+'/admin_area/index.php?mode=update_pharse',
-            pk: function(){
-                var id = $(this).attr("id");
-
-                id = id.match(/([0-9]+)$/g);
-               return id.pop();
-            },
-        });*/
-    });
-
     $(document).ready(function(){
         $(".drop").on({
             click: function(e){

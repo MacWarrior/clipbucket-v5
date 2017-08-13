@@ -1851,9 +1851,13 @@ class CBvideo extends CBCategory
 		global $sess;
 		$sess->set_cookie(QUICK_LIST_SESS,'');
 	}
-	
+
 	/**
 	 * Function used to check weather video is downloadable or not
+	 *
+	 * @param $vdo
+	 *
+	 * @return bool
 	 */
 	function downloadable($vdo)
 	{
