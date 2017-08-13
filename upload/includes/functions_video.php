@@ -700,30 +700,31 @@
                         return $func_returned;
                 }
 			}
+		}
 
-			$fileDirectory = "";
-			if(isset($vdetails['file_directory']) && !empty($vdetails['file_directory'])){
-				$fileDirectory = "{$vdetails['file_directory']}/";
-			}
+		$fileDirectory = "";
+		if(isset($vdetails['file_directory']) && !empty($vdetails['file_directory'])){
+			$fileDirectory = "{$vdetails['file_directory']}/";
 		}
 
         #Now there is no function so lets continue as
         if(isset($vdetails['file_name']))
-            $vid_files = glob(VIDEOS_DIR."/".$fileDirectory . $vdetails['file_name']."*");
+            $vid_files = glob(VIDEOS_DIR.'/'.$fileDirectory . $vdetails['file_name']."*");
 
         #replace Dir with URL
         if(is_array($vid_files))
 		{
             foreach($vid_files as $file)
             {
-                if(filesize($file) < 100) continue;
+                if(filesize($file) < 100)
+                	continue;
                 $files_part = explode('/',$file);
                 $video_file = $files_part[count($files_part)-1];
 
                 if($with_path)
-                    $files[]    = VIDEOS_URL.'/' . $fileDirectory . $video_file;
+                    $files[] = VIDEOS_URL . '/' . $fileDirectory . $video_file;
                 else
-                    $files[]    = $video_file;
+                    $files[] = $video_file;
             }
 		}
 
