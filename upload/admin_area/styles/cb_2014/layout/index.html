@@ -167,30 +167,30 @@
 </div>
     <div class="col-md-6">
         <div class="panel panel-danger">
-                    <div class="panel-heading "> <span class="glyphicon glyphicon-list-alt"></span><b>&nbsp CLIPBUCKET NEWS</b>
-                    </div>
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <ul class="newsbox">
-                                       <li class="news-item">
-                                        <table cellpadding="8">
-                                            <tr>
-                                                <td>
-                                                <div id="clipbucket_news" class="widget-main" style="height:130px">
-                                                </div>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+			<div class="panel-heading ">
+				<span class="glyphicon glyphicon-list-alt"></span>
+				<b>&nbsp CLIPBUCKET NEWS</b>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-12">
+						<ul class="newsbox">
+							<li class="news-item">
+								<table cellpadding="8">
+									<tr>
+										<td>
+											<div id="clipbucket_news" class="widget-main"></div>
+										</td>
+									</tr>
+								</table>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
 <div class="well" style="margin-top: 14px;background:;border:1px solid rgba(128, 213, 255, 1);" >
     <h3>WHO WE ARE</h3>
@@ -480,13 +480,12 @@
  <script type="text/javascript">
    $(function () {
          $(".newsbox").bootstrapNews({
-         newsPerPage: 4,
-         autoplay: true,
-         pauseOnHover:true,
-         direction: 'down',
-         newsTickerInterval: 7000,
-         onToDo: function () {
-            }
+			 newsPerPage: 4,
+			 autoplay: true,
+			 pauseOnHover:true,
+			 direction: 'down',
+			 newsTickerInterval: 7000,
+			 onToDo: function () { }
         });
     });
 </script>

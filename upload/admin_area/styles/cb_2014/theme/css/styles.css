@@ -704,3 +704,11 @@ ul.mainTabs{
         padding:4px 0;
     }
 }
+
+.newsbox{
+	list-style:none;
+}
+
+#clipbucket_news{
+	height: 130px;
+}
