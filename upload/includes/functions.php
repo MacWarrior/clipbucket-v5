@@ -477,10 +477,15 @@
 	}
 
 	/**
-	* Group Link
-	* @deprecated : { function has been deprecated and will be removed in next version }
-	*/
-	function group_link($params) {
+	 * Group Link
+	 * @deprecated : { function has been deprecated and will be removed in next version }
+	 *
+	 * @param $params
+	 *
+	 * @return string
+	 */
+	function group_link($params)
+	{
 		$grp = $params['details'];
 		//$id = $grp['group_id'];
 		//$name = $grp['group_name'];
@@ -494,18 +499,10 @@
 		
 		if($params['type']=='view_members') {
 			return BASEURL.'/view_group_members.php?url='.$url;
-			/*if(SEO==yes) {
-				return BASEURL.'/group_members/'.$url;
-			}
-			return BASEURL.'/view_group_members.php?url='.$url;*/
 		}
 		
 		if($params['type']=='view_videos') {
 			return BASEURL.'/view_group_videos.php?url='.$url;
-			/*if(SEO==yes) {
-				return BASEURL.'/group_videos/'.$url;
-			}
-			return BASEURL.'/view_group_videos.php?url='.$url;*/
 		}
 		
 		if($params['type'] == 'view_topics') {
@@ -530,7 +527,8 @@
 	 * @return array|bool : { array } { $results } { array of fetched comments }
 	 * { $results } { array of fetched comments }
 	 */
-	function getComments($params=NULL) {
+	function getComments($params=NULL)
+	{
 		global $db;
 		$order = $params['order'];
 		$limit = $params['limit'];
@@ -578,9 +576,8 @@
 			$result = $db->count(tbl("comments"),"*",$cond);
 		}
 		// pr($result,true);
-		if($result) {
-			
-
+		if($result)
+		{
 			foreach ($result as $key=>$val) 
 			{
 			  $result[$key]['comment'] = html_entity_decode(stripslashes($result[$key]['comment']));
@@ -611,7 +608,8 @@
 	 *
 	 * @return string
 	 */
-	function getAd($params) {
+	function getAd($params)
+	{
 		global $adsObj;
 		$data = '';
 		if(isset($params['style']) || isset($params['class']) || isset($params['align']))
@@ -629,7 +627,8 @@
 	 *
 	 * @return mixed
 	 */
-	function getSmartyThumb($params) {
+	function getSmartyThumb($params)
+	{
 		return get_thumb($params['vdetails'],$params['num'],$params['multi'],$params['count_only'],true,true,$params['size']);
 	}
 
@@ -640,7 +639,8 @@
 	 *
 	 * @return string : { string } { $string } { cleaned string }
 	 */
-	function cleanForm($string) {
+	function cleanForm($string)
+	{
 		if(is_string($string)) {
 			$string = htmlspecialchars($string);
 		}
@@ -673,7 +673,8 @@
 	 *
 	 * @return string : { string } { $tagString } { text formatted }
 	 */
-	function genTags($tags,$sep=',') {
+	function genTags($tags,$sep=',')
+	{
 		//Remove fazool spaces
 		$tags = preg_replace(array('/ ,/','/, /'),',',$tags);
 		$tags = preg_replace( "`[,]+`" , ",", $tags);
@@ -701,7 +702,8 @@
 	 *
 	 * @return bool : { boolean } { true or false }
 	 */
-	function isValidtag($tag) {
+	function isValidtag($tag)
+	{
 		$disallow_array = array
 		('of','is','no','on','off','a','the','why','how','what','in');
 		if(!in_array($tag,$disallow_array) && strlen($tag)>2) {
@@ -718,7 +720,8 @@
 	 * @return array|bool|string : { array } { $cats } { array of categories }
 	 * @internal param $ : { array } { $params } { array of parameters e.g type } { $params } { array of parameters e.g type }
 	 */
-	function getCategoryList($params=false) {
+	function getCategoryList($params=false)
+	{
 		global $cats;
 		$cats = "";
 		$type = $params['type'];
@@ -840,7 +843,6 @@
 		return $Cbucket->ids[$code]=$id;
 	}
 
-
 	/**
 	 * Function used to select data from database
 	 * @uses : { class : $db } { function dbselect }
@@ -861,7 +863,7 @@
 
 
 	/**
-	 * An easy function for erorrs and messages (e is basically short form of exception)
+	 * An easy function for errors and messages (e is basically short form of exception)
 	 * I dont want to use the whole Trigger and Exception code, so e pretty works for me :D
 	 *
 	 * @param null   $msg
@@ -869,9 +871,9 @@
 	 * @param null   $id
 	 *
 	 * @return null
-	 * @internal param $ { string } { $msg } { message to display } { $msg } { message to display }
-	 * @internal param $ { string } { $type } { e for error and m for message } { $type } { e for error and m for message }
-	 * @internal param $ { integer } { $id } { Any Predefined Message ID } { $id } { Any Predefined Message ID }
+	 * @internal param $ { string } { $msg } { message to display }
+	 * @internal param $ { string } { $type } { e for error and m for message }
+	 * @internal param $ { integer } { $id } { Any Predefined Message ID }
 	 *
 	 */
 	function e($msg=NULL,$type='e',$id=NULL) {
@@ -882,11 +884,11 @@
 	}
 
 	/**
-	* An easy function for developer erorrs and messages
-	* @param { string } { $error } { error to display }
-	* @param { string } { $state } { state for message e.g m : medium, l : low, c : critical }
-	*/
-
+	 * An easy function for developer errors and messages
+	 *
+	 * @param { string } { $error } { error to display }
+	 * @param string $state
+	 */
 	function deverr($erorr, $state = 'l') {
 		global $eh;
 		if (!empty($erorr)) {
@@ -920,10 +922,11 @@
 	}
 
 	/**
-	* Print an array in pretty way and exit right after
-	* @param : { string / array } { $text } { Element to be printed }
-	* @param : { string } { $msg } { pex by default, message to exit with }
-	*/
+	 * Print an array in pretty way and exit right after
+	 *
+	 * @param : { string / array } { $text } { Element to be printed }
+	 * @param string $msg { pex by default, message to exit with }
+	 */
 	function pex($text,$msg="PeX") {
 		pr($text,true);
 		exit($msg);
@@ -3094,14 +3097,20 @@
 	 *
 	 * @return array : { string } { $xml } { array converted into XML }
 	 */
-	function xml2array($url, $get_attributes = 1, $priority = 'tag',$is_url=true) {
+	function xml2array($url, $get_attributes = 1, $priority = 'tag',$is_url=true)
+	{
 		$contents = "";
-		if (!function_exists('xml_parser_create')) {
-			return false;
-		}
-		$parser = xml_parser_create('');
-		if($is_url) {
-			if (!($fp = @ fopen($url, 'rb'))) {
+
+		if($is_url)
+		{
+			$fp = @ fopen($url, 'rb');
+			if( $fp )
+			{
+				while(!feof($fp))
+				{
+					$contents .= fread($fp, 8192);
+				}
+			} else {
 				$ch = curl_init();
 				curl_setopt($ch,CURLOPT_URL,$url);
 				curl_setopt($ch, CURLOPT_USERAGENT,
@@ -3112,47 +3121,49 @@
 				curl_setopt($ch, CURLOPT_TIMEOUT_MS, 600);
 				$contents = curl_exec($ch);
 				curl_close($ch);
-
-				if(!$contents)
-					return false;
-			}
-			while (!feof($fp)) {
-				$contents .= fread($fp, 8192);
 			}
 			fclose($fp);
+
+			if(!$contents)
+				return false;
 		} else {
 			$contents = $url;
 		}
 
+		if (!function_exists('xml_parser_create')) {
+			return false;
+		}
+		$parser = xml_parser_create('');
 		xml_parser_set_option($parser, XML_OPTION_TARGET_ENCODING, "UTF-8");
 		xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
 		xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
 		xml_parse_into_struct($parser, trim($contents), $xml_values);
 		xml_parser_free($parser);
 		if (!$xml_values) {
-			return; //Hmm...
+			return false;
 		}
 		$xml_array = array ();
-		//$parents = array ();
-		//$opened_tags = array ();
-		//$arr = array ();
+
 		$current = & $xml_array;
 		$repeated_tag_index = array ();
-		foreach ($xml_values as $data) {
-
+		foreach ($xml_values as $data)
+		{
 			unset ($attributes, $value);
 			extract($data);
 			$result = array ();
 			$attributes_data = array ();
-			if (isset ($value)) {
+			if (isset ($value))
+			{
 				if ($priority == 'tag') {
 					$result = $value;
 				} else {
 					$result['value'] = $value;
 				}
 			}
-			if (isset ($attributes) and $get_attributes) {
-				foreach ($attributes as $attr => $val) {
+			if (isset ($attributes) and $get_attributes)
+			{
+				foreach ($attributes as $attr => $val)
+				{
 					if ($priority == 'tag') {
 						$attributes_data[$attr] = $val;
 					} else{
@@ -3160,9 +3171,11 @@
 					}
 				}
 			}
-			if ($type == "open") {
+			if ($type == "open")
+			{
 				$parent[$level -1] = & $current;
-				if (!is_array($current) or (!in_array($tag, array_keys($current)))) {
+				if (!is_array($current) or (!in_array($tag, array_keys($current))))
+				{
 					$current[$tag] = $result;
 					if ($attributes_data) {
 						$current[$tag . '_attr'] = $attributes_data;
@@ -3206,7 +3219,8 @@
 							$result
 						);
 						$repeated_tag_index[$tag . '_' . $level] = 1;
-						if ($priority == 'tag' and $get_attributes) {
+						if ($priority == 'tag' and $get_attributes)
+						{
 							if (isset ($current[$tag . '_attr'])) {
 								$current[$tag]['0_attr'] = $current[$tag . '_attr'];
 								unset ($current[$tag . '_attr']);
