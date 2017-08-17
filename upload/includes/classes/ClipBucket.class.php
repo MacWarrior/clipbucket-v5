@@ -710,17 +710,15 @@ class ClipBucket
 
         $news = xml2array($url);
         if (!$news)
-        {
             return false;
-        } else
-        {
-            $items = array();
-            $item = $news['rss']['channel']['item'];
-            for ($i = 0; $i < $feeds; $i++)
-                $items[] = $item[$i];
 
-            return $items;
-        }
+		$items = array();
+		$item = $news['rss']['channel']['item'];
+
+		for ($i = 0; $i < $feeds; $i++)
+			$items[] = $item[$i];
+
+		return $items;
     }
 
     /**

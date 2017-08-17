@@ -1280,7 +1280,6 @@ if(!empty($mode))
 
 				case "groups":
 				{
-
 					$groups = get_groups(array("user"=>$u['userid'],"order"=>" date_added DESC","limit"=>config('photo_channel_page')));
 					if($groups)
 					{
@@ -1298,7 +1297,6 @@ if(!empty($mode))
 
 				case "playlists":
 				{
-
 					$playlists = get_playlists(array("user"=>$u['userid'],"order"=>" date_added DESC","limit"=>5));
 
 					if($playlists)
@@ -1400,10 +1398,7 @@ if(!empty($mode))
 				break;
 
 				case "info":
-				{
-
-				}
-				break;
+					break;
 			}
 
 			if($content)
@@ -1428,52 +1423,36 @@ if(!empty($mode))
 			{
 				case "last_viewed":
 				default:
-				{
 					$cond['order'] = " last_viewed DESC";
-				}
-				break;
+					break;
 
 				case "most_recent":
-				{
 					$cond['order'] = " date_added DESC";
-				}
-				break;
+					break;
 
 				case "featured":
-				{
 					$cond['featured'] = "yes";
-				}
-				break;
+					break;
 
 				case "most_favorited":
-				{
 					$cond['order'] = " total_favorites DESC";
-				}
-				break;
+					break;
 
 				case "most_commented":
-				{
 					$cond['order'] = " total_comments DESC";
-				}
-				break;
+					break;
 
 				case "highest_rated":
-				{
 					$cond['order'] = " rating DESC, rated_by DESC";
-				}
-				break;
+					break;
 
 				case "most_viewed":
-				{
 					$cond['order'] = " views DESC";
-				}
-				break;
+					break;
 
 				case "most_downloaded":
-				{
 					$cond['order'] = " downloaded DESC";
-				}
-				break;
+					break;
 			}
 
 			$photos = get_photos($cond);
@@ -1523,9 +1502,6 @@ if(!empty($mode))
 			onClick="_cb.getAllComments(\''.$params['type'].'\',\''.$params['type_id'].'\',\''.$params['last_update'].'\',
 			\'#page#\',\''.$_POST['total_comments'].'\',\''.mysql_clean($_POST['object_type']).'\',\''.$admin.'\')">#page#</a></li>');
 
-
-
-
 			assign('comments',$comments);
 			assign('type',$params['type']);
 			assign('type_id',$params['type_id']);
@@ -1534,15 +1510,10 @@ if(!empty($mode))
 			assign('total_pages',$total_pages);
 			assign('comments_voting',$_POST['comments_voting']);
 			assign('commentPagination','yes');
-
-
-			Template('blocks/comments/comments.html');
-
 			assign('commentPagination','yes');
 
-
+			Template('blocks/comments/comments.html');
 			Template('blocks/pagination.html');
-
 		}
 		break;
 
@@ -1587,32 +1558,33 @@ if(!empty($mode))
 		break;
 
 
-case "get_news":
+		case "get_news":
 		{
 			$news = $Cbucket->get_cb_news();
 
 			if($news)
-			foreach($news as $n)
 			{
-				echo "<li class='news-item'>";
-					echo '<div class="item news">';
-						echo "<tr>";
-							echo "<td>";
-					echo '<div class="news_title" style="margin-bottom:5px;">
-					<span class="title" style="font-weight:bold;"><a href="'.$n['link'].'">'.$n['title'].'</a></span>
-					<span class="date">'.date("m-d-Y",strtotime($n['pubDate'])).'</span></div>
-					<span class="clearfix"></span>';
-					echo '<div style="margin-bottom:15px;">';
-					echo $n['description'];
-					echo '</div>';
-					echo '<div style="height: 1px; background-color: #C9C9C9; margin-top: 10px; margin-bottom: 15px;"></div>';
-							echo "</td>";
-						echo "</tr>";
-					echo '</div>';
-				echo "</li>";
-			}
-			else
-			echo '<div align="center"><em><strong>Connect with Internet to get News</strong></em></div>';
+				foreach($news as $n)
+				{
+					echo "<li class='news-item'>";
+						echo '<div class="item news">';
+							echo "<tr>";
+								echo "<td>";
+						echo '<div class="news_title" style="margin-bottom:5px;">
+						<span class="title" style="font-weight:bold;"><a href="'.$n['link'].'">'.$n['title'].'</a></span>
+						<span class="date">'.date("m-d-Y",strtotime($n['pubDate'])).'</span></div>
+						<span class="clearfix"></span>';
+						echo '<div style="margin-bottom:15px;">';
+						echo $n['description'];
+						echo '</div>';
+						echo '<div style="height:1px;background-color:#C9C9C9;margin-top:10px;margin-bottom:15px;"></div>';
+								echo "</td>";
+							echo "</tr>";
+						echo '</div>';
+					echo "</li>";
+				}
+			} else
+				echo '<div align="center"><em><strong>Connect with Internet to get News</strong></em></div>';
 		}
 		break;
 

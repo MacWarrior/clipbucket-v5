@@ -1455,8 +1455,7 @@ class CBGroups extends CBCategory
 		$result = $db->count(tbl($this->gp_tbl),"group_id"," group_id='$gid'");
 		if($result>0)
 			return true;
-		else
-			return false;
+		return false;
 	}
 	
 	
@@ -1528,14 +1527,9 @@ class CBGroups extends CBCategory
 		
 		if(count($new_icons)>0)
 			return $new_icons;
-		else
-			return false;
+		return false;
 	}
-	
-	
-	
 
-	
 	/**
 	 * Function used to load ADD Topic Form
 	 */
@@ -1547,23 +1541,21 @@ class CBGroups extends CBCategory
 		$topic_title = $_POST['topic_title'];
 		$topic_post = $_POST['topic_post'];
 
-		$fields = array
-		(
-		'title'	=> array(	
-						 'title'=> lang('topic_title'),
-						 'type'=> 'textfield',
-						 'name'=> 'topic_title',
-						 'id'=> 'topic_title',
-						 'value'=>  cleanForm($topic_title),
-						 'size'=>'45',
-						 'db_field'=>'topic_title',
-						 'required'=>'yes',
-						 'min_length' => 1,
-						// 'max_length'=>config('max_topic_title'),
-						  'max_length'=>200,
-						 
-						 ),
-		'topic_post'	=> array(	
+		$fields = array (
+			'title'	=> array(
+				 'title'=> lang('topic_title'),
+				 'type'=> 'textfield',
+				 'name'=> 'topic_title',
+				 'id'=> 'topic_title',
+				 'value'=>  cleanForm($topic_title),
+				 'size'=>'45',
+				 'db_field'=>'topic_title',
+				 'required'=>'yes',
+				 'min_length' => 1,
+				// 'max_length'=>config('max_topic_title'),
+				  'max_length'=>200,
+			),
+			'topic_post'	=> array(
 						 'title'=> lang("topic_post"),
 						 'type'=> 'textarea',
 						 'name'=> 'topic_post',
@@ -1577,7 +1569,7 @@ class CBGroups extends CBCategory
 						 'max_length'=> 1500,
 						 'anchor_before' => 'before_topic_post_box',
 						 'anchor_after' => 'after_topic_post_box',
-						 )								 
+			)
 		);
 		return $fields;
 	}
@@ -1589,7 +1581,7 @@ class CBGroups extends CBCategory
 	 */
 	function add_comment($comment,$obj_id,$reply_to=NULL)
 	{
-		global $myquery,$db;
+		global $myquery;
 		
 		if(!$this->topic_exists($obj_id))
 			e(lang("grp_tpc_err4"));
@@ -1683,20 +1675,23 @@ class CBGroups extends CBCategory
 	{
 		if(SEO==yes)
 			return BASEURL.'/view_topic/'.SEO($tdetails['topic_title']).'_tid_'.$tdetails['topic_id'];
-		else
-			return BASEURL.'/view_topic.php?tid='.$tdetails['topic_id'];
+		return BASEURL.'/view_topic.php?tid='.$tdetails['topic_id'];
 	}
-	
-	
+
+
 	/**
 	 * function and show otpion links
+	 *
+	 * @param        $group
+	 * @param        $type
+	 * @param string $attr
+	 *
+	 * @return bool|string
 	 */
 	function group_opt_link($group,$type,$attr='')
 	{
 		global $userquery;
-		$gArray = 
-		array
-		(
+		$gArray = array(
 			'group' => $group,
 			'groupid'	=> $group['group_id'],
 			'uid'	=> userid(),
@@ -1711,8 +1706,6 @@ class CBGroups extends CBCategory
 		{
 			case 'join':
 			{
-
-
 				if($this->is_joinable($group))
 				{
 					if(SEO=="yes")
@@ -1817,13 +1810,14 @@ class CBGroups extends CBCategory
 			if($gen_err)
 			e(lang('grp_join_error'));
 			return false;
-		}elseif($group['group_privacy']!=2 || $this->is_invited($uid,$group_id,$group['userid'],$gen_err))
+		}
+
+		if($group['group_privacy']!=2 || $this->is_invited($uid,$group_id,$group['userid'],$gen_err))
 			return true;
-		else
-			return false;	
+		return false;
 	}
-	
-	
+
+
 	/**
 	 * Function used to check weather to view
 	 * group details ot user or not.
@@ -1832,8 +1826,13 @@ class CBGroups extends CBCategory
 	 * Second - $privacy == 1 and user is not member of group. Display group but with warning message.
 	 * Third - $privacy == 1 and user is member of group. Display group but with warning message about pending approval.
 	 * Fourth - $privacy == 2 and user is not member. Dont display group with error message
+	 *
+	 * @param      $group
+	 * @param null $uid
+	 *
+	 * @return bool
 	 */
-	function is_viewable($group,$uid=NULL)
+	function is_viewable($group, $uid=NULL)
 	{
 		if(!$uid)
 			$uid = userid();
@@ -1844,26 +1843,19 @@ class CBGroups extends CBCategory
 		{
 			e(lang("you_need_owners_approval_to_view_group"),"w");
 			return true;	
-		} elseif($privacy == 1 && !$this->is_active_member($uid,$group['group_id']))
+		}
+		if($privacy == 1 && !$this->is_active_member($uid,$group['group_id']))
 		{
-				e(lang("grp_inactive_account"),"w");
-				return true;
-		} elseif($privacy == 2 && !$isMember && !$this->is_invited($uid,$group['group_id'],$group['userid'])) {
+			e(lang("grp_inactive_account"),"w");
+			return true;
+		}
+
+		if($privacy == 2 && !$isMember && !$this->is_invited($uid,$group['group_id'],$group['userid'])) {
 			e(lang("grp_prvt_err1"));
 			return false;	
-		} else {
-			return true;	
 		}
-		
-/*		$group_id = $group['group_id'];
-		$is_Member = $this->is_member($uid,$group['group_id'],true);
-		
-		if($group['group_privacy'] == 2 && !$is_Member)
-			return array("privacy"=>$group['group_privacy'],"isMember"=>$is_Member);
-		elseif($group['group_privacy'] == 1 && !$is_Member)
-			return array("privacy"=>$group['group_privacy'],"isMember"=>$is_Member);
-		else
-			return true;	*/
+
+		return true;
 	}
 	
 	

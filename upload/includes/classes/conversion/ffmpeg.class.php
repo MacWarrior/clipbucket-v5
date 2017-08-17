@@ -1468,7 +1468,7 @@ class FFMpeg{
 				$this->video_files[] =  $more_res['name'];
 				$this->log->TemplogData  .="\r\nFiles resolution : ".$more_res['name']." \r\n";
 			}else{
-				$this->log->TemplogData  .="\r\n\r\nFile doesnot exist. Path: ".$this->raw_path."-".$more_res['name'].".mp4 \r\n\r\n";
+				$this->log->TemplogData  .="\r\n\r\nFile doesn't exist. Path: ".$this->raw_path."-".$more_res['name'].".mp4 \r\n\r\n";
 			}
 
 			$this->output_file = $this->raw_path."-".$more_res['name'].".mp4";

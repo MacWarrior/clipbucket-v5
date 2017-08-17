@@ -343,8 +343,7 @@ class language
 			if(!$content)
 			{
 				e(lang("err_reading_file_content"));
-			}else
-			{
+			} else {
 				//Converting data from xml to array
 				$data = xml2array($content,1,'tag',false);
 				//now checkinf if array has lang code, phrases and name etc or not
