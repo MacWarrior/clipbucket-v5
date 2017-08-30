@@ -93,7 +93,7 @@
 
 
 {if $mode=='view_flags'}
-<span class="page_title">Viewing {$video.title} flags</span> &#8212; <a href="{$baseurl}/watch_video.php?v={$video.videokey}">View video</a> &#8226; <a href="edit_video.php?video={$video.videoid}">Edit video</a> &#8226; <a href="?delete_flags={$video.videoid}">Delete Flags</a> &#8226; <a href="?delete_video={$video.videoid}">Delete Video</a>
+<span class="page_title">Viewing {display_clean($video.title)} flags</span> &#8212; <a href="{$baseurl}/watch_video.php?v={$video.videokey}">View video</a> &#8226; <a href="edit_video.php?video={$video.videoid}">Edit video</a> &#8226; <a href="?delete_flags={$video.videoid}">Delete Flags</a> &#8226; <a href="?delete_video={$video.videoid}">Delete Video</a>
 <div  style="margin-bottom:10px"></div>
 <!-- DIsplaying Videos -->
 <form name="video_manage" method="post">

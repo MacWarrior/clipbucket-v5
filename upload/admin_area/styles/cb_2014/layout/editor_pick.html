@@ -30,17 +30,17 @@
             <td>
                 <input name="check_video[]" type="checkbox" id="check_video" value="{$video.videoid}"/>
             </td>
-           <td><input name="ep_order_{$video.pick_id}" type="text" id="order" style="border:1px solid #999; padding:2px; width:30px" value="{$video.sort}" size="5" maxlength="5" /></td>
+           <td><input name="ep_order_{$video.pick_id}" type="text" id="order" style="border:1px solid #999; padding:2px; width:30px" value="{$video.sort}" size="5" maxlength="5"/></td>
             <td>
                 <div class="row">
                     <div class="col-md-10">
                         <div class="row">
                             <div class="col-md-3">
-                                <img src="{getThumb vdetails=$video}" width="130" height="80" id="thumbs_{$video.videoid}" title=""/>
+                                <img src="{getThumb vdetails=$video}" width="130" height="80" id="thumbs_{$video.videoid}"/>
                             </div>
                             <div class="col-md-9">
                                 <a href="edit_video.php?video={$video.videoid}">
-                                    {$video.title|truncate:80} </a>({if
+                                    {display_clean($video.title)|truncate:80} </a>({if
                                 $video.duration>1}{$video.duration|SetTime}{else}00:00{/if})<br>
                          <span class="labels1"> <strong>{$video.date_added|niceTime}</strong>
                             {lang code='views'} : <strong>{$video.views|number_format}</strong></span>
@@ -60,7 +60,7 @@
                         </div>
                     </div>
                     <div class="col-md-2">
-                        <a href="view_user.php?uid={$video.userid}">{$video.username}</a>
+                        <a href="view_user.php?uid={$video.userid}">{display_clean($video.username)}</a>
                     </div>
                 </div>
             </td>

@@ -36,8 +36,8 @@
                     </a>
 
                     <div class="labels">
-                        {if $c[list].featured=='yes'}<span class="label label-primary">Featured{else}{/if}</span>
-                        <span class="label {if $c[list].active=='yes'}label-success{else}label-warning{/if}">{if $c[list].active=='yes'}Active{else}NotActive{/if} </span>
+                        {if $c[list].featured=='yes'}<span class="label label-primary">Featured</span>{/if}
+                        <span class="label {if $c[list].active=='yes'}label-success{else}label-warning{/if}">{if $c[list].active=='yes'}Active{else}NotActive{/if}</span>
                         <span class="label label-info"><strong>{$c[list].type}</strong>Type </span>
                         <span class="label label-info"><strong>{$c[list].date_added|niceTime}</strong> </span>
                     </div>

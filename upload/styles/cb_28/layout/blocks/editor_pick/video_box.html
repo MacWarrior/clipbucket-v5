@@ -1,10 +1,10 @@
-<div class="feature_heading2">{$video.title|truncate:35}</div>
+<div class="feature_heading2">{display_clean($video.title)|truncate:35}</div>
 <div class="featured_video_player2">
     {FlashPlayer vdetails = $video height='250' width='440' }
 </div>
 <div class="featured_video_details2">
     <div style="float:left; width:70%">
-    {$video.description|description|truncate:35}</div>
+    {display_clean($video.description|description)|truncate:35}</div>
     
     <div style="float:left; width:30%;">
 <div class="vid_stats" style="float:left; width:75%; margin:0; padding:0; margin-top:-7px;">
@@ -18,5 +18,4 @@
 	</div>
 
   <div class="clearfix"></div>
- <!-- - <a href="{*videoLink vdetails=$video*}">{*lang code='view_video'*}</a> //-->
  </div>

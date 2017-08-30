@@ -54,7 +54,7 @@
 		{else}
 			class="video-link" 
 		{/if} 
-		href="{videoLink($video)}" title="{$video.title|title}">
+		href="{videoLink($video)}" title="{display_clean($video.title|title)}">
 			<img class="lazy img-responsive" src="{getThumb vdetails=$video size=416x260 }">
 		</a>
 		<img src="{$theme}/images/thumb-ratio.png" class="thumb-ratio" alt="">
@@ -108,7 +108,7 @@
 		{else}
 			class="video-link" 
 		{/if} 
-		href="{videoLink($video)}" title="{$video.title|title}">
+		href="{videoLink($video)}" title="{display_clean($video.title|title)}">
 			<img class="img-responsive" src="{getThumb vdetails=$video size=632x395 }">
 			<h2 class="title">{display_clean($video.title|truncate:50)}</h2>
 		</a>
@@ -162,7 +162,7 @@
 		{/if}
 	</p>
 	<a href="{videoLink($video)}" title="{display_clean($video.title)|title}"><h5>
-	<b> {$video.title|truncate:25}</b></h5></a>                     
+	<b> {display_clean($video.title)|truncate:25}</b></h5></a>
 	<span class="pull-left"><h5><small>{$video.views}&nbsp;{lang code="views"}</small></h5></span>
 	<span class="pull-right"><h5><small>{$video.date_added|niceTime}</small></h5></span>
 </div>

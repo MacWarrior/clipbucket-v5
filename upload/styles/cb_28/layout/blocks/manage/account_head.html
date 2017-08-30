@@ -10,8 +10,8 @@
 					<div class="row">
 						<div class="col-md-12 procolor">
 							<h4 class="media-heading headcolor">{display_clean($user.username)}</h4>
-							<b>{lang code='since'}:</b> ({$user.doj|date_format})
-							<b>{lang code='last_Login'}:</b> ({$user.last_logged|nicetime})
+							<b>{lang code='since'} :</b> ({$user.doj|date_format})
+							<b>{lang code='last_Login'} :</b> ({$user.last_logged|nicetime})
 						</div>
 					</div>
 				</div>
@@ -40,9 +40,8 @@
 						<div class="row">
 							<div class="col-md-3">
 							  <a class="manageVid_thumb" href="{$baseurl}/edit_video.php?vid={$video.videoid}">
-								<img src="{getThumb vdetails=$video}" class="img-responsive" width="130" height="80" id="thumbs_{$video.videoid}" class="vthumb" title=""/>
-								<span class="duration">({if
-									$video.duration>1}{$video.duration|SetTime}{else}00:00{/if})</span>
+								<img src="{getThumb vdetails=$video}" class="img-responsive" width="130" height="80" id="thumbs_{$video.videoid}" class="vthumb"/>
+								<span class="duration">({if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if})</span>
 							   </a>     
 							</div>
 							<div class="col-md-9">
@@ -128,7 +127,7 @@
 										{section name=list loop=$flagedVideos}
 										<div class="row">
 											<div class="col-md-3">
-												<img src="{getThumb vdetails=$flagedVideos[list]}" width="85" height="70" id="thumbs_{$flagedVideos[list].videoid}" title=""/>
+												<img src="{getThumb vdetails=$flagedVideos[list]}" width="85" height="70" id="thumbs_{$flagedVideos[list].videoid}"/>
 											</div>
 											<div class="col-md-6 fvideos">
 												{display_clean($flagedVideos[list].title|truncate:50)}
@@ -147,7 +146,7 @@
 										{section name=list loop=$flagedPhotos}
 										<div class="row">
 											<div class="col-md-3">
-												<img src="{getThumb vdetails=$flagedPhotos[list]}" width="85" height="70" id="thumbs_{$flagedPhotos[list].photoid}" title=""/>
+												<img src="{getThumb vdetails=$flagedPhotos[list]}" width="85" height="70" id="thumbs_{$flagedPhotos[list].photoid}"/>
 											</div>
 											<div class="col-md-6 fusers">
 												{display_clean($flagedphotos[list].title|truncate:50)}

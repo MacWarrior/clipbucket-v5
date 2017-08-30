@@ -10,16 +10,16 @@
                 <div class="col-md-10">
                     <div class="row">
                         <div class="col-md-3">
-                            <img src="{$cbgroup->get_group_thumb($groups)}"  width="50" height="50"/>
+                            <img src="{$cbgroup->get_group_thumb($groups)}" width="50" height="50"/>
                         </div>
                         <div class="col-md-9">
-                            <a href="{$baseurl}/view_group.php?url={$group.group_url}" target="_blank"> {$group.group_name}
+                            <a href="{$baseurl}/view_group.php?url={$group.group_url}" target="_blank"> {display_clean($group.group_name)}
                             </a>
                             <div class="labels">
-                                {if $group.featured=='yes'}<span class="label label-primary">Featured{else}{/if}</span>
+                                {if $group.featured=='yes'}<span class="label label-primary">Featured</span>{/if}
                                 <span class="label label-danger"><span>Members:</span>{$group.total_members|number_format}</span>
-                                <span class="label {if $group.active=='yes'}label-success{else}label-warning{/if}"><span></span>{if
-                                    $group.active=="yes"} Active{else}Inactive{/if}</span>
+                                <span class="label {if $group.active=='yes'}label-success{else}label-warning{/if}"></span>
+								<span>{if $group.active=="yes"} Active{else}Inactive{/if}</span>
                                 <span class="label label-info"> {if $group.group_privacy =="0"}Public{elseif $group.group_privacy =="1"}Private{else}Invited{/if}</span>
                             </div>
                         </div>
@@ -37,20 +37,17 @@
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="edit_group.php?group_id={$group.group_id}">{lang code='edit'}</a>
                     </li>
                     {if $group.featured == yes}
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="?unfeature={$group.group_id}">Make
-                        Unfeatured</a> {/if}
-                    </li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="?unfeature={$group.group_id}">Make Unfeatured</a></li>
+					{/if}
                     {if $group.featured == no}
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="?feature={$group.group_id}">Make
-                        Featured</a> {/if}
-                    </li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="?feature={$group.group_id}">Make Featured</a></li>
+					{/if}
 
                     {if $group.active == yes}
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="?deactivate={$group.group_id}">Deactivate</a>
-                        {else}
-                    </li>
+					{else}
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="?activate={$group.group_id}">{lang code='activate'}</a>
-                        {/if}
+					{/if}
                     </li>
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="{$baseurl}/manage_groups.php?mode=manage_videos&gid={$group.group_id}">Manage</a>
                     </li>
@@ -82,20 +79,20 @@
                             <img src="{$cbgroup->get_group_thumb($groups)}"  width="50" height="50"/>
                         </div>
                         <div class="col-md-9">
-                            <a href="{$baseurl}/view_group.php?url={$group.group_url}" target="_blank"> {$group.group_name}
+                            <a href="{$baseurl}/view_group.php?url={$group.group_url}" target="_blank"> {display_clean($group.group_name)}
                             </a>
                             <div class="labels">
-                                {if $group.featured=='yes'}<span class="label label-primary">Featured{else}{/if}</span>
+                                {if $group.featured=='yes'}<span class="label label-primary">Featured</span>{/if}
                                 <span class="label label-danger">Members:{$group.total_members|number_format}</span>
-                                <span class="label {if $group.active=='yes'}label-success{else}label-warning{/if}"><span></span>{if
-                                    $group.active=="yes"} Active{else}Inactive{/if}</span>
+                                <span class="label {if $group.active=='yes'}label-success{else}label-warning{/if}"></span>
+								<span>{if $group.active=="yes"} Active{else}Inactive{/if}</span>
                                 <span class="label label-info"> {if $group.group_privacy =="0"}Public{elseif $group.group_privacy =="1"}Private{else}Invited{/if}</span>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-2">
-                    Owner: <a href="view_user.php?uid={$group.userid}">{$group.userid|get_username}</a></strong>
+                    Owner: <a href="view_user.php?uid={$group.userid}">{display_clean($group.userid|get_username)}</a></strong>
                 </div>
             </div>
         </td>

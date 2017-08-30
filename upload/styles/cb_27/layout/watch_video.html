@@ -18,10 +18,10 @@
                     </div> 
                     <div class="watch-vid-user-sec">
                         <div class="watch-vid-user-name mtm">
-                            <a href="{$userquery->profile_link($video)}"> {$video.username}</a>
+                            <a href="{$userquery->profile_link($video)}"> {display_clean($video.username)}</a>
                         </div>
                         {if $video.userid != userid()}
-                        <a id="subscribeUser" class="btn btn-xs btn-primary" href="javascript:void(0)">
+                        <a id="subscribeUser" class="btn btn-xs btn-primary" href="javascript:void(0);">
                         {lang('Subscribe')}
                         </a>{/if}
                     </div>
@@ -59,7 +59,7 @@
                     <div class="tab-content">
                         <div class="tab-pane active" id="cb-item-info">
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-7 no-padding">
-                            	<p>{description($video.description)|description}</p>
+                            	<p>{display_clean(description($video.description)|description)}</p>
                                 <div class="watch-vid-tag">
                                     <strong >{lang('Category:')}&nbsp;</strong>
                                     <span >{$vdo.category|categories:video}</span>

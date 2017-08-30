@@ -34,10 +34,10 @@
                             <img src="{$cbgroup->get_group_thumb($groups[gp_list])}"  width="50" height="50"/>
                                 </div>
                             <div class="col-md-9">
-                                <a href="{$baseurl}/view_group.php?url={$groups[gp_list].group_url}" target="_blank"> {$groups[gp_list].group_name}
+                                <a href="{$baseurl}/view_group.php?url={$groups[gp_list].group_url}" target="_blank"> {display_clean($groups[gp_list].group_name)}
                                 </a>
                                 <div class="labels">
-                                    {if $groups[gp_list].featured=='yes'}<span class="label label-primary">Featured{else}{/if}</span>
+                                    {if $groups[gp_list].featured=='yes'}<span class="label label-primary">Featured</span>{/if}
                                     <span class="label"><span>Members:</span>{$groups[gp_list].total_members|number_format}</span>
                                 <span class="label {if $groups[gp_list].active=='yes'}label-success{else}label-warning{/if}"><span></span>{if
                                     $groups[gp_list].active=="yes"} Active{else}Inactive{/if}</span>
@@ -47,7 +47,7 @@
                             </div>
                         </div>
                             <div class="col-md-2">
-                               Owner: <a href="view_user.php?uid={$groups[gp_list].userid}">{$groups[gp_list].userid|get_username}</a></strong>
+                               Owner: <a href="view_user.php?uid={$groups[gp_list].userid}">{display_clean($groups[gp_list].userid|get_username)}</a></strong>
                             </div>
                         </div>
                 </td>
@@ -60,12 +60,10 @@
                                 <li role="presentation"><a role="menuitem" tabindex="-1" href="edit_group.php?group_id={$groups[gp_list].group_id}">{lang code='edit'}</a>
                                 </li>
                                 {if $groups[gp_list].featured == yes}
-                                <li role="presentation"><a role="menuitem" tabindex="-1" href="?unfeature={$groups[gp_list].group_id}">Make
-                                    Unfeatured</a> {/if}
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="?unfeature={$groups[gp_list].group_id}">Make Unfeatured</a> {/if}
                                 </li>
                                 {if $groups[gp_list].featured == no}
-                                <li role="presentation"><a role="menuitem" tabindex="-1" href="?feature={$groups[gp_list].group_id}">Make
-                                    Featured</a> {/if}
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="?feature={$groups[gp_list].group_id}">Make Featured</a> {/if}
                                 </li>
 
                                 {if $groups[gp_list].active == yes}

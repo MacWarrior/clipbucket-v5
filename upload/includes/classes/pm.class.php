@@ -1,9 +1,7 @@
 <?php
-
-
 /**
  * This Class is used to
- * Send and recieve
+ * Send and receive
  * private or personal messages
  * within the CLIPBUCKET system
  *
@@ -28,7 +26,10 @@ define('CB_PM_MAX_INBOX',500); // 0 - OFF , U - Unlimited
 
 	/**
 	 * Function used to to attach video to pm
+	 *
 	 * @param array => 'attachment_video'
+	 *
+	 * @return string
 	 */
 	function attach_video($array)
 	{
@@ -36,22 +37,24 @@ define('CB_PM_MAX_INBOX',500); // 0 - OFF , U - Unlimited
 		if($cbvid->video_exists($array['attach_video']))
 			return '{v:'.$array['attach_video'].'}';
 	}
-	
+
 	/**
-	 * Function used to pars video from attachemtn
+	 * Function used to pars video from attachment
+	 *
+	 * @param $att
 	 */
 	function parse_and_attach_video($att)
 	{
 		global $cbvid;
-		preg_match('/{v:(.*)}/',$att,$matches);
+		preg_match('/{v:(.*)}/', $att, $matches);
 		$vkey = $matches[1];
 		if(!empty($vkey))
 		{
-			assign('video',$cbvid->get_video_details($vkey));
+			assign('video', $cbvid->get_video_details($vkey));
 			assign('only_once',true);
 			echo '<h3>Attached Video</h3>';
-			echo '<div class="clearfix videos row" >';
-			template('blocks//videos/video.html');
+			echo '<div class="clearfix videos row">';
+			template('blocks/videos/video.html');
 			echo '</div>';
 		}
 	}
@@ -65,22 +68,26 @@ define('CB_PM_MAX_INBOX',500); // 0 - OFF , U - Unlimited
 		$vid_array = array('user'=>userid(),'order'=>'date_added DESC','limit'=>15);
 		$videos = $cbvid->get_videos($vid_array);
 		$vids_array = array('' => lang("no_video"));
+
 		if($videos)
-		foreach($videos as $video)
 		{
-			$vids_array[$video['videokey']] = $video['title'];
+			foreach($videos as $video)
+			{
+				$vids_array[$video['videokey']] = display_clean($video['title']);
+			}
 		}
+
 		$field = array(
-					   'video_form' => array
-					   ('title'=> lang('usr_attach_video'),
-						'type'=>'dropdown',
-						'name'=> 'attach_video',
-						'id'=> 'attach_video',
-						'value'=> $vids_array,
-						'checked'=>post('attach_video'),
-						'anchor_before'=>'before_video_attach_box',
-						)
-					  );
+		   'video_form' => array(
+				'title'=> lang('usr_attach_video'),
+				'type'=>'dropdown',
+				'name'=> 'attach_video',
+				'id'=> 'attach_video',
+				'value'=> $vids_array,
+				'checked'=>post('attach_video'),
+				'anchor_before'=>'before_video_attach_box',
+			)
+		);
 		return $field;
 	}
 	
@@ -139,7 +146,7 @@ class cb_pm
 	 */
 	function send_pm($array)
 	{
-		global $userquery,$db;
+		global $userquery, $db;
 		$to = $this->check_users($array['to'],$array['from']);
 
 		//checking from user
@@ -193,13 +200,18 @@ class cb_pm
 			e(lang("pm_sent_success"),"m");
 		}		
 	}
-	
-	
+
+
 	/**
 	 * Function used to check input users
 	 * are valid or not
+	 *
+	 * @param $input
+	 * @param $sender
+	 *
+	 * @return bool|string
 	 */
-	function check_users($input,$sender)
+	function check_users($input, $sender)
 	{
 		global $userquery;
 		
@@ -475,19 +487,23 @@ class cb_pm
 	function get_user_inbox_messages($uid,$count_only=false){ return $this->get_user_messages($uid,'in',$count_only); }
 	function get_user_outbox_messages($uid,$count_only=false){ return $this->get_user_messages($uid,'out',$count_only); }
 	function get_user_notification_messages($uid,$count_only=false){ return $this->get_user_messages($uid,'notification',$count_only); }
-	
+
 	/**
 	 * Function used parse attachments
+	 *
+	 * @param $attachment
 	 */
 	function  parse_attachments($attachment)
 	{
 		$funcs = $this->pm_attachments_parse;
 		if(is_array($funcs))
-		foreach($funcs as $func)
 		{
-			if(function_exists($func))
+			foreach($funcs as $func)
 			{
-				$attachments .= $func($attachment);
+				if(function_exists($func))
+				{
+					$attachments .= $func($attachment);
+				}
 			}
 		}
 	}
@@ -501,38 +517,34 @@ class cb_pm
 		$to = post('to');
 		$to = $to ? $to : get('to');
 		
-		$array = array
-		(
-		 'to'	=>array(
-						'title'=> lang('to'),
-						'type'=>'textfield',
-						'name'=> 'to',
-						'id'=> 'to',
-						'value'=> $to,
-						//'hint_2'=> "seperate usernames by comma ','",
-						'required'=>'yes'
-					),
-		 'subj'	=>array(
-						'title'=> lang('subject'),
-						'type'=>'textfield',
-						'name'=> 'subj',
-						'id'=> 'subj',
-						'value'=> post('subj'),
-						'required'=>'yes'
-					),
-		 'content'	=>array(
-						'title'=> lang('content'),
-						'type'=>'textarea',
-						'name'=> 'content',
-						'id'=> 'pm_content',
-						'value'=> post('content'),
-						'required'=>'yes',
-						'anchor_before'=>'before_pm_compose_box',
-					),
-		 
-		 
+		$array = array(
+			'to'	=>array(
+				'title'=> lang('to'),
+				'type'=>'textfield',
+				'name'=> 'to',
+				'id'=> 'to',
+				'value'=> $to,
+				//'hint_2'=> "seperate usernames by comma ','",
+				'required'=>'yes'
+			),
+			'subj'	=>array(
+				'title'=> lang('subject'),
+				'type'=>'textfield',
+				'name'=> 'subj',
+				'id'=> 'subj',
+				'value'=> post('subj'),
+				'required'=>'yes'
+			),
+			'content'	=>array(
+				'title'=> lang('content'),
+				'type'=>'textarea',
+				'name'=> 'content',
+				'id'=> 'pm_content',
+				'value'=> post('content'),
+				'required'=>'yes',
+				'anchor_before'=>'before_pm_compose_box',
+			)
 		 );
-
 
         $videos = video_attachment_form();
         $this->add_custom_field( $videos );

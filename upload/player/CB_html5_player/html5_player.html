@@ -58,7 +58,7 @@ jwplayer("mediaplayer").setup( {ldelim}
 <div class="cont" id="cont" style="height:{$height};width:{$width};">
 {ANCHOR place='overlay_ads'}
 
-	<video id="myVideo" class="myVideo largevid" {if $autoplay==true}autoplay{else}{/if}>
+	<video id="myVideo" class="myVideo largevid" {if $autoplay==true}autoplay{/if}>
 
 		{if $ms_videos}
 		<source src="{$ms_videos.360}" type="video/mp4" data-res=""/>
@@ -67,7 +67,7 @@ jwplayer("mediaplayer").setup( {ldelim}
 
 		{if $application_videos}
 		<source src="{$normal_vid_file}" type="video/mp4"/>
-		<source src="{$hq_vid_file}" type="video/mp4" data-quality="hd" />
+		<source src="{$hq_vid_file}" type="video/mp4" data-quality="hd"/>
 		{else}
 		{/if}   
 
@@ -78,10 +78,10 @@ jwplayer("mediaplayer").setup( {ldelim}
 
 	<div class="caption">
 		<span class="title align-middle-marginLeft">
-			{if !$vdata.title} No Video Found {else}{$vdata.title|truncate:30} {/if}
+			{if !$vdata.title} No Video Found {else}{display_clean($vdata.title)|truncate:30} {/if}
 		</span>
 		<span class="user align-middle-marginLeft">
-			Uploaded By {if !$vdata.username} Anonymous {else} {$vdata.username} {/if}  
+			Uploaded By {if !$vdata.username} Anonymous {else} {display_clean($vdata.username)} {/if}
 		</span>
 	</div>
 
@@ -102,7 +102,7 @@ jwplayer("mediaplayer").setup( {ldelim}
 		  {foreach $final_related as $video}
 			<a id="link_v" href="{videoLink($video)}" >
 			<img id="thumb_v" src="{getThumb vdetails=$video}" border="1" height="100" width="160"/>
-			<p id="name_v"> {$video.title|truncate:20}</p>
+			<p id="name_v"> {display_clean($video.title)|truncate:20}</p>
 			</a>
 		  {/foreach}
 		{else}

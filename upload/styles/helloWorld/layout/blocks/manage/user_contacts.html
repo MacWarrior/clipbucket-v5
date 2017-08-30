@@ -50,15 +50,15 @@
  <td>
         <div class="col-md-2 col-sm-3">
                 <a href="{$userquery->profile_link($user_detail)}">
-                <img src="{$userquery->getUserThumb($user_detail)}"  id="thumbs_{$video.videoid}" class="vthumb" title=""/>
+                <img src="{$userquery->getUserThumb($user_detail)}" id="thumbs_{$video.videoid}" class="vthumb"/>
             </a>
             </div>
         
             <div class="col-md-10  col-sm-9">
-                <a href="{$userquery->profile_link($user_detail)}">{$user_detail.username} </a><br>
+                <a href="{$userquery->profile_link($user_detail)}">{display_clean($user_detail.username)} </a><br>
             <div class="labels">
                 {if $video.featured=='yes'}
-                <span class="label label-primary">Featured{else}{/if}</span>
+                <span class="label label-primary">Featured</span>{/if}
                 <span class="label {if $friend.confirmed=='yes'}label-success{elseif $friend.confirmed!='yes'}label-danger{else}label-warning{/if} mlabel">
                 {if $friend.confirmed!='yes'}Pending{elseif $friend.confirmed =='yes'}Friends{/if}</span>
                 <span class="label label-success">Videos: {$user_detail.total_videos|number_format}</span>

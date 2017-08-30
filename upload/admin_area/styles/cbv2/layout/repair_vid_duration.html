@@ -19,7 +19,7 @@ Clipbucket repair video duration using file conversion logs of each file, if the
   <div style="margin-bottom:5px">
         		<div style="display:inline-block; float:left"><img src="{getThumb vdetails=$video}" height="20" width="20"/></div>
 	<div style="padding-left:25px">{if $fixed_array.$filename}<strong>[FIXED]</strong> {/if}<a href='edit_video.php?video={$video.videoid}' style="color:#06c; font-weight:bold; text-decoration:{if $fixed_array.$filename}line-through {else}none{/if}
-    ">{$video.title}</a> (duration : <strong>{$vdo.duration|setTime}</strong> | Has Log :<strong>{if $log} <span style="color:#060">yes</span>{else}<span style="color:#ed0000">no</span>{/if} </strong>  )</div>
+    ">{display_clean($video.title)}</a> (duration : <strong>{$vdo.duration|setTime}</strong> | Has Log :<strong>{if $log} <span style="color:#060">yes</span>{else}<span style="color:#ed0000">no</span>{/if} </strong>  )</div>
        		<div  style="clear:both"></div>
   </div>
     {/foreach}

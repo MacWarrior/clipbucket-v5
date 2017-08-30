@@ -20,7 +20,7 @@
       <td width="100">{lang code='date_sent'}</td>
       <td>{lang code='date_added'}</td>
       {if $mode =='inbox'}
-      <td width="75">{lang code='Reply'}</td>
+      <td width="75">{lang code='reply'}</td>
       {/if}
     </tr>
     {section name=msg loop=$user_msgs}
@@ -45,16 +45,16 @@
       </td>
       {/if}
       <td>
-        <a href="?mode={$mode}&mid={$user_msgs[msg].message_id}">{$user_msgs[msg].message_subject|truncate:70}</a>
+        <a href="?mode={$mode}&mid={$user_msgs[msg].message_id}">{display_clean($user_msgs[msg].message_subject)|truncate:70}</a>
       </td>
       <td>
         <a id="delete_icon-{$pr_msg.message_id}" href="?mode={$mode}&delete_mid={$user_msgs[msg].message_id}">
-          <img src="{$imageurl}/dot.gif" border="0" class="delete_icon" />
+          <img src="{$imageurl}/dot.gif" border="0" class="delete_icon"/>
         </a>
       </td>
       <td>{$user_msgs[msg].date_added}</td>
       {if $mode =='inbox'}
-      <td><a href="{$baseurl}/private_message.php?mode=new_msg&to={$user_msgs[msg].message_from_user}" class="btn btn-primary" title="">{lang code=' Reply '}</a></td>
+      <td><a href="{$baseurl}/private_message.php?mode=new_msg&to={$user_msgs[msg].message_from_user}" class="btn btn-primary">{lang code='reply'}</a></td>
       {/if}
     </tr>
     {sectionelse}
@@ -70,29 +70,29 @@
 {if $pr_msg !=''}
 
 <div>
-  <div style="padding:5px" align="right">
+  <div style="padding:5px;" align="right">
     <a id="delete_icon-{$pr_msg.message_id}" href="?mode={$mode}&delete_mid={$pr_msg.message_id}"><img src="{$imageurl}/dot.gif" border="0" class="delete_icon" /></a>
-    <a id="reply_icon-{$pr_msg.message_id}" href="?mode=new_msg&reply={$pr_msg.message_id}"><img src="{$imageurl}/dot.gif" border="0" class="reply_icon" title="Reply!" /></a>
+    <a id="reply_icon-{$pr_msg.message_id}" href="?mode=new_msg&reply={$pr_msg.message_id}"><img src="{$imageurl}/dot.gif" border="0" class="reply_icon" title="{lang code='reply'}!"/></a>
   </div>
   <div class="pm_message_top" align="left">
     <div class="pm_line">
       {lang code='from'} : 
       <strong>
-        <a href="{$userquery->profile_link($pr_msg)}">{$pr_msg.username}</a>
+        <a href="{$userquery->profile_link($pr_msg)}">{display_clean($pr_msg.username)}</a>
       </strong> - {$pr_msg.date_added|date_format:"%A, %B %e, %Y %I:%M %p"}
     </div>
     <div class="pm_line">
-      {lang code='To'} : 
+      {lang code='to'} :
       <strong>
         {$to_id = $pr_msg.message_to}
         {$trimed_to = str_replace('#','', $to_id)}
         <a href="{$userquery->profile_link($trimed_to)}"> 
-          {ucfirst(get_username($trimed_to))}
+          {display_clean(ucfirst(get_username($trimed_to)))}
         </a>
       </strong> 
     </div>
     <div class="pm_line">
-      {lang code='Subject'} : <strong>{$pr_msg.message_subject}</strong>
+      {lang code='subject'} : <strong>{display_clean($pr_msg.message_subject)}</strong>
     </div>
   </div>
   {private_message pm=$pr_msg}
@@ -100,4 +100,4 @@
 
 {/if}
 
-<div class="clearfix" style="height:10px"></div>
+<div class="clearfix" style="height:10px;"></div>

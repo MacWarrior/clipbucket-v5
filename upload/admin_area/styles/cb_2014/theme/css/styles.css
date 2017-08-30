@@ -21,9 +21,7 @@
     padding: 8px 20px 150px !important;
 }
 ul.mainTabs{
-    height: 50px;
     margin-bottom: 20px;
-    border: solid 1px #ddd;
 }
 .todotab{
     width:100%
@@ -38,11 +36,6 @@ ul.mainTabs{
     margin: 0 0 10px 0;
     width: 100%;
     text-align: center;
-}
-
-
-.vdo_sets{
-
 }
 
 .vdo_sets strong{
@@ -74,10 +67,6 @@ ul.mainTabs{
 }
 
 /* Users Styles */
-
-.manageUsersTable{
-
-}
 
 .manageUsersTable .dropdown{
     
@@ -191,10 +180,7 @@ ul.mainTabs{
 }
 .ecollection1 {
     width: 450px;
-
 }
-
-
 
 /* sticky note */
 

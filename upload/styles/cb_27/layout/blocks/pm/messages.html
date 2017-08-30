@@ -58,25 +58,22 @@
   </div>
 </form>
 
-
-
-
 {if $pr_msg !=''}
 
 <div>
   <div style="padding:5px" align="right">
-    <a id="delete_icon-{$pr_msg.message_id}" href="?mode={$mode}&delete_mid={$pr_msg.message_id}"><img src="{$imageurl}/dot.gif" border="0" class="delete_icon" /></a>
-    <a id="reply_icon-{$pr_msg.message_id}" href="?mode=new_msg&reply={$pr_msg.message_id}"><img src="{$imageurl}/dot.gif" border="0" class="reply_icon" title="Reply!" /></a>
+    <a id="delete_icon-{$pr_msg.message_id}" href="?mode={$mode}&delete_mid={$pr_msg.message_id}"><img src="{$imageurl}/dot.gif" border="0" class="delete_icon"/></a>
+    <a id="reply_icon-{$pr_msg.message_id}" href="?mode=new_msg&reply={$pr_msg.message_id}"><img src="{$imageurl}/dot.gif" border="0" class="reply_icon" title="{lang code='reply'}!"/></a>
   </div>
   <div class="pm_message_top" align="left">
     <div class="pm_line">
       {lang code='from'} : 
       <strong>
-        <a href="{$userquery->profile_link($pr_msg)}">{$pr_msg.username}</a>
+        <a href="{$userquery->profile_link($pr_msg)}">{display_clean($pr_msg.username)}</a>
       </strong> - {$pr_msg.date_added|date_format:"%A, %B %e, %Y %I:%M %p"}
     </div>
     <div class="pm_line">
-      {lang code='Subject'} : <strong>{$pr_msg.message_subject}</strong>
+      {lang code='subject'} : <strong>{display_clean($pr_msg.message_subject)}</strong>
     </div>
   </div>
   {private_message pm=$pr_msg}

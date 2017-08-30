@@ -3,7 +3,7 @@
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>ClipBucket v<?php echo VERSION?> <?php echo STATE?> Installer</title>
+<title>ClipBucket v<?php echo VERSION.' '.STATE; ?> Installer</title>
 <link href="style.css" rel="stylesheet" type="text/css" />
 <link href='http://fonts.googleapis.com/css?family=Cabin:regular,bold' rel='stylesheet' type='text/css'>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script>
@@ -18,13 +18,13 @@
      <div class="top clearfix">
     <div class="top_tabs">
         <ul>
-            <li><a href="http://clip-bucket.com/clipbucket-overview"  target="blank">V<?php echo VERSION?> Overview </a><span>|</span></li>
+            <li><a href="http://clip-bucket.com/clipbucket-overview"  target="blank">V<?php echo VERSION; ?> Overview </a><span>|</span></li>
                 <li><a href="http://discourse.clipbucket.com/"  target="blank">Forums </a><span>|</span></li>
                  <li><a href="https://code.google.com/p/clipbucket/issues/list"  target="blank">Bug Reporter </a><span>|</span></li>
             <li><a href="http://clip-bucket.com/contact"  target="blank">Support </a></li>
         </ul>
     </div><!--top_tabs-->
-   <p></p> <span id="logo"><span style="color:#09c">ClipBucket</span> Installer v<?php echo VERSION?> <?php echo STATE ?></span><p></p>
+   <p></p> <span id="logo"><span style="color:#09c">ClipBucket</span> Installer v<?php echo VERSION; ?> <?php echo STATE; ?></span><p></p>
 </div><!--top-->
 
 
@@ -53,10 +53,10 @@
   <div class="cb_container">
     <div class="cb_navbar">
         <ul class="headstatus" >
-           <li  <?php echo selected('upgrade'); ?>>Upgrade</li>
-            <li  <?php echo selected('permission'); ?>>Permission<span></span></li>
-            <li  <?php echo selected('dataimport'); ?>>Data import<span></span></li>
-            <li  <?php echo selected('finish_upgrade'); ?>>Finish Upgrade<span></span></li>
+           <li <?php echo selected('upgrade'); ?>>Upgrade</li>
+            <li <?php echo selected('permission'); ?>>Permission<span></span></li>
+            <li <?php echo selected('dataimport'); ?>>Data import<span></span></li>
+            <li <?php echo selected('finish_upgrade'); ?>>Finish Upgrade<span></span></li>
           
         </ul>
     </div><!--top_tabs-->
@@ -68,11 +68,8 @@
 <?php endif; ?>
 
     <div id="container" class="br5px">
-        <?php include(__DIR__."/".$mode.'.php'); ?>
+        <?php include(__DIR__."/".$mode.'.php'); /* Not secure, TODO : Fix it */ ?>
     </div>
-    
 
-    
-    
 </body>
 </html>

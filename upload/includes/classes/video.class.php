@@ -1100,8 +1100,8 @@ class CBvideo extends CBCategory
                 $query .= " ON video.userid = users.userid ";
                 
                 if( $cond ) {
-                $query .= " WHERE ".$cond;
-                 }
+                	$query .= " WHERE ".$cond;
+				}
 
                 $query .= $order ? " ORDER BY ".$order : false;
                 $query .= $limit ? " LIMIT ".$limit : false;

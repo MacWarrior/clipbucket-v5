@@ -92,7 +92,7 @@
     </td>
     <td valign="top"  class="video_opt_td"
                   onmouseover="$('#vid_opt-{$cbpages[list].page_id}').show()"
-                  onmouseout="$('#vid_opt-{$cbpages[list].page_id}').hide()"  style="padding-left:10px">
+                  onmouseout="$('#vid_opt-{$cbpages[list].page_id}').hide()" style="padding-left:10px">
       </a>
       <br>
         <div class="row">
@@ -100,13 +100,13 @@
                 <div class="row">
                     <div class="col-md-3">
                         <a href="{$cbpage->page_link($cbpages[list])}" target="_blank" style="text-indent:10px">
-                            {$cbpages[list].page_name}</a>
+                            {display_clean($cbpages[list].page_name)}</a>
                         </div>
      <div class="col-md-9">
         <div class="labels">
             <span class="label {if $cbpages[list].active=='yes'}label-success{else}label-warning{/if}"><span>{if $cbpages[list].active=='yes'}Active{else}InActive{/if}</span></span>
             <span class="label label-info"><span>Added:{$cbpages[list].date_added|niceTime}</span></span>
-            {if $u.usr.featured=='yes'}<span class="label label-primary">Featured{else}{/if}</span>
+            {if $u.usr.featured=='yes'}<span class="label label-primary">Featured</span>{/if}
             <span class="label {if $cbpages[list].delete_able=='yes'}label-success{else}label-warning{/if}">
            <span>{if $cbpages[list].delete_able =='no'}UNDELETE-ABLE{else}{$cbpages[list].delete_able =='yes'}DELETE-ABLE{/if}</span>
                 </span>

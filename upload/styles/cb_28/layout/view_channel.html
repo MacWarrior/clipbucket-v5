@@ -133,29 +133,30 @@
 						</div>
 					</div>
 					<div class="tab-pane videos fade in clearfix {if $u_control.show_my_videos != 'no'}active{/if}" id="user-videos">
-						<div class="clearfix row user_vids">
 							{if $uservideos}
-								<div id="usr-vids" class="clearfix">
+						<div class="clearfix row user_vids">
+							<div id="usr-vids" class="clearfix">
 								{foreach $uservideos as $video}
-									<div class="item-video col-lg-4 col-md-4 col-sm-6 col-xs-12">
+								<div class="item-video col-lg-4 col-md-4 col-sm-6 col-xs-12">
 									{include file="$style_dir/blocks/videos/video.html" display_type='homeVideos'}
-									</div>
-								{/foreach}
 								</div>
+								{/foreach}
+							</div>
 								{if $total_videos > 9}
-									<div class="clearfix text-center">
-										<button id="more-view-channel" class="btn btn-loadmore" dataLimit="9" dataHit="2">{lang code='load_more'}</button>
-									</div>
+							<div class="clearfix text-center">
+								<button id="more-view-channel" class="btn btn-loadmore" dataLimit="9" dataHit="2">{lang code='load_more'}</button>
+							</div>
+						</div>
 								{/if}
 							{else}
-								<div class="well well-info">{lang code='no_results_found'}</div>
+						<div class="well well-info">{lang code='no_results_found'}</div>
 							{/if}
-						</div>
 					</div>
 					<div class="tab-pane fade in clearfix {if $u_control.show_my_videos == 'no'}active{/if}" id="user-photos">
-						<div id="usr-photos" class="clearfix row user_photos">
+
 						{$photos=get_photos(["user"=>$user.userid,"limit" =>9])}
 							{if $photos}
+						<div id="usr-photos" class="clearfix row user_photos">
 								{foreach from=$photos item=p_list}
 								<div class="item-photo col-lg-4 col-md-4 col-sm-6 col-xs-12">
 									{include file="$style_dir/blocks/photo.html" photo=$p_list display_type = "default_photo"}
@@ -166,10 +167,10 @@
 										<button id="more-channel-photos" class="btn btn-loadmore" dataLimit="9" dataHit="2">{lang code='load_more'}</button>
 									</div>
 								{/if}
-							{else}
-								<div class="well well-info">{lang code='no_results_found'}</div>
-							{/if}
 						</div>
+							{else}
+						<div class="well well-info">{lang code='no_results_found'}</div>
+							{/if}
 					</div>
 					<div class="tab-pane fade in clearfix" id="user-playlist">
 						{*$u.userid*}

@@ -9,13 +9,13 @@
 	<td>
 		<div class="col-md-3">
 			<a class="manageVid_thumb" href="edit_video.php?video={$video.videoid}">
-				<img src="{getThumb vdetails=$video}" class="img-responsive" width="130" height="80" id="thumbs_{$video.videoid}" class="vthumb" title=""/>
+				<img src="{getThumb vdetails=$video}" class="img-responsive" width="130" height="80" id="thumbs_{$video.videoid}" class="vthumb"/>
 				<span class="duration">({if
 					$video.duration>1}{$video.duration|SetTime}{else}00:00{/if})</span>
 				</a>
 			</div>
 			<div class="col-md-9">
-				<a href="edit_video.php?vid={$video.videoid}">{$video.title|truncate:80}</a>
+				<a href="edit_video.php?vid={$video.videoid}">{display_clean($video.title)|truncate:80}</a>
 				<br>
 				<span class="maccountlabels">
 					<strong>{$video.date_added|niceTime}</strong>
@@ -23,7 +23,7 @@
 				</span>
 				<div class="labels">
 					{if $video.featured=='yes'}
-					<span class="label label-primary">Featured{else}{/if}</span>
+					<span class="label label-primary">Featured</span>{/if}
 					<span class="label {if $video.active=='yes'}label-success{else}label-warning{/if} mlabel">{if $video.active=='yes'}{lang code='active'}{else}{lang code='inactive'}{/if}</span>
 					<span class="label {if $video.status=='Successful'}label-success{else}label-warning{/if}">{if $video.status=='Successful'}{lang code='successful'}{else}{lang code='processing'}{/if}</span>
 					<span class="label label-info">{lang code='viewed'} {$video.last_viewed|niceTime}</span>
@@ -39,7 +39,7 @@
 			<div class="col-md-1"><i class="icon-lock"></i></div>
 			{/if}
 		</div>
-		<a href="view_user.php?uid={$video.userid}">{$video.username}</a>
+		<a href="view_user.php?uid={$video.userid}">{display_clean($video.username)}</a>
 	</td>*}
 
 	<td>
@@ -56,8 +56,6 @@
 					<li><a role="menuitem" tabindex="-1" href="{$baseurl}/watch_video.php?v={$video.videokey}"target="_blank">{lang code='watch'}</a>
 
 					</li>
-
-
 
 					{foreach from=$cbvid->video_manager_links item=links}
 					{$cbvid->video_manager_link($links,$video)}
@@ -76,15 +74,15 @@
 		<td>
 			<div>
 				<img class="edit-img-thumbnail" src="{getThumb vdetails=$video}">
-				<p class="marginTop">{$video.title|truncate:100}</p>
+				<p class="marginTop">{display_clean($video.title)|truncate:100}</p>
 				<div class="btn-group show">
 					<a class="btn btn-primary btn-sm" href="{videoLink vdetails=$video}">view</a>
-					<a class="btn btn-primary btn-sm" href="javascript:void(0)"  onmousedown="delete_video('delete_icon_a','{$video.playlist_item_id}','{lang code="remove_playlist_item_confirm"}','?mode=edit_playlist&pid={$pid}&amp;delete_item={$video.playlist_item_id}')" id="delete_icon_a-{$video.playlist_item_id}">
+					<a class="btn btn-primary btn-sm" href="javascript:void(0);" onmousedown="delete_video('delete_icon_a','{$video.playlist_item_id}','{lang code="remove_playlist_item_confirm"}','?mode=edit_playlist&pid={$pid}&amp;delete_item={$video.playlist_item_id}')" id="delete_icon_a-{$video.playlist_item_id}">
 						delete
 					</a>
 				</div>
 			</div>
-			<a href="javascript:void(0)"  onmousedown="delete_video('delete_icon','{$video.playlist_item_id}','{lang code="remove_playlist_item_confirm"}','?mode=edit_playlist&pid={$pid}&amp;delete_item={$video.playlist_item_id}')" id="delete_icon-{$video.playlist_item_id}"><img src="{$imageurl}/dot.gif" border="0" class="delete_icon" /></a>
+			<a href="javascript:void(0);" onmousedown="delete_video('delete_icon','{$video.playlist_item_id}','{lang code="remove_playlist_item_confirm"}','?mode=edit_playlist&pid={$pid}&amp;delete_item={$video.playlist_item_id}')" id="delete_icon-{$video.playlist_item_id}"><img src="{$imageurl}/dot.gif" border="0" class="delete_icon" /></a>
 		</td>
 		<td width="100">
 			{$video.date_added|date_format}
@@ -108,7 +106,7 @@
 	<div class="clearfix">
 		<a href="{videoLink vdetails=$video}">
 			<img  src="{getThumb vdetails=$video}" width="130" height="80" id="thumbs_{$video.videoid}" class="vthumb" />
-			<p class="marginTop">{$video.title|truncate:100}</p>
+			<p class="marginTop">{display_clean($video.title)|truncate:100}</p>
 		</a>
 	</div>
 
@@ -131,7 +129,7 @@
 			</div> <!--VIDEO_THUMB END-->
 		</a>
 		<div class="details_block">
-			<strong class="title"><a href="{videoLink($video)}">{$video.title|truncate:50}</a></strong>
+			<strong class="title"><a href="{videoLink($video)}">{display_clean($video.title)|truncate:50}</a></strong>
 			<div class="views-date">
 				<span>{$video.views}&nbsp;{lang code='views'}</span>
 			</div>

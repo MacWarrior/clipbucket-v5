@@ -49,11 +49,11 @@
                                 <img src="{get_photo details=$obj[list]}" id="photo" style="padding:2px; border:1px solid #ccc" />
                             </div>
                             <div class="col-md-9">
-                                <a class="block" href="{$baseurl}/admin_area/edit_photo.php?photo={$obj[list].photo_id}">{$obj[list].photo_title}</a>
+                                <a class="block" href="{$baseurl}/admin_area/edit_photo.php?photo={$obj[list].photo_id}">{display_clean($obj[list].photo_title)}</a>
                                 <span class="labels1"> <strong>{$obj[list].date_added|niceTime}</strong>
                                 {lang code='views'} : <strong>{$obj[list].views|number_format}</strong></span>
                                 <div class="labels">
-                                    {if $obj[list].featured=='yes'}<span class="label label-primary">Featured{else}{/if}</span>
+                                    {if $obj[list].featured=='yes'}<span class="label label-primary">Featured</span>{/if}
                                     <span class="label {if $obj[list].active=='yes'}label-success{else}label-warning{/if}">
                                     {if $obj[list].active=='yes'}Active{else}InActive{/if} </span>
                                     <span class="label label-info">
@@ -63,7 +63,7 @@
                         </div>
                     </div>
                     <div class="col-md-2">
-                        <a href="view_user.php?uid={$obj[list].userid}">{$obj[list].username}</a>
+                        <a href="view_user.php?uid={$obj[list].userid}">{display_clean($obj[list].username)}</a>
                     </div>
                 </div>
         </tr>
@@ -78,10 +78,6 @@
                 </div>
             </td>
             <td>{$obj[list].videoid}</td>
-            <!--   <td width="25"><input type="checkbox" name="check_obj[]" id="check_obj-{$collection.videoid}" value="{$obj[list].videoid}" />
-                <label for="checkbox"></label></td>
-                  <td>{$obj[list].videoid}</td>
-                -->        
             <td>
                 <div class="row">
                     <div class="col-md-10">
@@ -90,24 +86,21 @@
                                 <img src="{get_thumb vdetails=$obj[list]}" width="120" height="70" id="video_{$obj[list].videoid}" style="padding:2px; border:1px solid #ccc" />
                             </div>
                             <div class="col-md-9">
-                                <a href="{$baseurl}/admin_area/edit_video.php?video={$obj[list].videoid}" target="_blank">{$obj[list].title}</a>
+                                <a href="{$baseurl}/admin_area/edit_video.php?video={$obj[list].videoid}" target="_blank">{display_clean($obj[list].title)}</a>
                                 <span class="labels1"> <strong>{$obj[list].date_added|niceTime}</strong>
                                 {lang code='views'} : <strong>{$obj[list].views|number_format}</strong></span>
                                 <div class="labels">
-                                    {if $obj[list].featured=='yes'}<span class="label label-primary">Featured{else}{/if}</span>
+                                    {if $obj[list].featured=='yes'}<span class="label label-primary">Featured</span>{/if}
                                     <span class="label {if $obj[list].active=='yes'}label-success{else}label-warning{/if}">
                                     {if $obj[list].active=='yes'}Active{else}InActive{/if} </span>
                                     <span class="label label-info">
                                     Viewed {$obj[list].last_viewed|niceTime}</span>
                                 </div>
-                                <!--     <div id="vid_opt-{$obj[list].videoid}" style="display:none" class="AdminPhotoActions">
-                                    <a target="_blank" href="{$cbcollection->collection_links($obj[list],'view_item')}">View</a>
-                                    </div> -->
                             </div>
                         </div>
                     </div>
                     <div class="col-md-2">
-                        <a href="view_user.php?uid={$obj[list].userid}">{$obj[list].username}</a>
+                        <a href="view_user.php?uid={$obj[list].userid}">{display_clean($obj[list].username)}</a>
                     </div>
                 </div>
         </tr>

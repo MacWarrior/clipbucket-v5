@@ -155,7 +155,6 @@
 					<hr>
 					<label for="seo">SEO Urls</label>
 					<label class="pull-right inline">
-						{$row.seo}
 						<input value="yes" name="seo" id="seo" {if $row.seo=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 						<span class="lbl"></span>
 					</label>
@@ -1225,7 +1224,7 @@
 
 			<div class="col-md-4">
 				<label for="varification_captcha">Image verification (captcha)</label>
-				<select class="form-control" name="captcha_type">
+				<select class="form-control" id="varification_captcha" name="captcha_type">
 					<option value="0" {if $row.captcha_type==0}selected{/if}>No</option>
 					<option value="1" {if $row.captcha_type==1}selected{/if}>Simple</option>
 					<option value="2" {if $row.captcha_type==2}selected{/if}>Secured</option>
