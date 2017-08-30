@@ -277,4 +277,10 @@ UPDATE `{tbl_prefix}video_files` SET output_audio_rate = convert(cast(convert(ou
 UPDATE `{tbl_prefix}video_files` SET output_audio_channels = convert(cast(convert(output_audio_channels using  latin1) as binary) using utf8);
 UPDATE `{tbl_prefix}video_views` SET video_id = convert(cast(convert(video_id using  latin1) as binary) using utf8);
 
-INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES ('vbrate_hd','512000');
+INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
+	('vbrate_hd','4096000'),
+	('vbrate_1080','4096000'),
+	('vbrate_720','2500000'),
+	('vbrate_480','700000'),
+	('vbrate_360','400000'),
+	('vbrate_240','240000');

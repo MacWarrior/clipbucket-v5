@@ -287,5 +287,12 @@ INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES ('popup_video','yes');
 -- Addition for 2.8.3
 INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES (NULL, 'video_round_views', 'yes');
 
-
+-- Addition for 3.0
+INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
+	('vbrate_hd','4096000'),
+	('vbrate_1080','4096000'),
+	('vbrate_720','2500000'),
+	('vbrate_480','700000'),
+	('vbrate_360','400000'),
+	('vbrate_240','240000');
 

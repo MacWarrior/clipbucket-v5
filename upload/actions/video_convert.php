@@ -1,5 +1,4 @@
 <?php
-
 	// This script runs only via command line
 	sleep(5);
 	include(dirname(__FILE__)."/../includes/config.inc.php");
@@ -16,8 +15,6 @@
 		$argv = convertWithCron();
 	}
 
-	//error_reporting(E_ALL);
-	#file_put_contents('__argv__', $argv[1]."\n".$argv[2]."\n".$argv[3]."\n".$argv[4]."\n");
 	logData(json_encode($argv),"argvs");
 	$fileName = (isset($argv[1])) ? $argv[1] : false;
 	//This is exact file name of a video e.g 132456789
@@ -89,9 +86,9 @@
 		}
 
 		if ($renamed){
-			$log->writeLine("Conversion queue","File has been moved from Temporary dir to Conversion Queue", true);
+			$log->writeLine("Conversion queue","File has been moved from temporary dir to Conversion Queue", true);
 		} else {
-			$log->writeLine("Conversion queue","Some Thing Went wrong in moving the file to Conversion Queue", true);
+			$log->writeLine("Conversion queue","Something went wrong in moving the file to Conversion Queue", true);
 		}
 
 		/*
@@ -138,9 +135,7 @@
 
 		$ffmpeg = new FFMpeg($configs, $log);
 		$ffmpeg->ffmpeg($orig_file);
-		$ffmpeg->configs = $configs;
 		$ffmpeg->file_name = $tmp_file;
-		$ffmpeg->filetune_directory = $file_directory;
 		$ffmpeg->raw_path = VIDEOS_DIR.'/'.$file_directory.$_filename;
 
 		$ffmpeg->ClipBucket();
@@ -166,94 +161,3 @@
 		if(!isset($_GET['test']))
 			unlink($orig_file);
 	}
-
-exit();
-$str = "/".date("Y")."/".date("m")."/".date("d")."/";
-$orig_file1 = FILES_DIR.'/videos'.$str.$tmp_file.'-sd.'.$ext;
-
-if($orig_file1)
-{
-	$status = "Successful";
-	if(PHP_OS == "Linux")
-	{
-		$ffMpegPath = FFMPEG_BINARY;
-		file_put_contents('test.txt', $ffMpegPath." -i ".$orig_file1." -acodec copy -vcodec copy -y -f null /dev/null 2>&1");
-		$out = shell_exec($ffMpegPath." -i ".$orig_file1." -acodec copy -vcodec copy -y -f null /dev/null 2>&1");
-		
-		sleep(1);
-		
-		$log->writeLog();
-		$len = strlen($out);
-		$findme = 'Duration';
-		$findme1 = 'start';
-		$pos = strpos($out, $findme);
-		$pos = $pos + 10;
-		$pos1 = strpos($out, $findme1);
-		$bw = $len - ($pos1 - 5);
-		$rest = substr($out, $pos, -$bw);
-		$duration = explode(':',$rest);
-		//Convert Duration to seconds
-		$hours = $duration[0];
-		$minutes = $duration[1];
-		$seconds = $duration[2];
-			
-		$hours = $hours * 60 * 60;
-		$minutes = $minutes * 60;
-					
-		$duration = $hours+$minutes+$seconds;
-		//$duration =  (int) $ffmpeg->videoDetails['duration'];
-		if($duration > 0)
-		{
-			$status = "Successful";
-			$log->writeLine("Conversion Result", "Successful");
-		} else {
-			$status = "Failure";
-			$log->writeLine("Conversion Result", "Failure");
-		}
-	} else {
-		$ffMpegPath = FFMPEG_BINARY;
-		$out = shell_exec($ffMpegPath." -i ".$orig_file1." -acodec copy -vcodec copy -y -f null /dev/null 2>&1");
-		sleep(1);
-		
-		$log->writeLog();
-		$len = strlen($out);
-		$findme = 'Duration';
-		$findme1 = 'start';
-		$pos = strpos($out, $findme);
-		$pos = $pos + 10;
-		$pos1 = strpos($out, $findme1);
-		$bw = $len - ($pos1 - 5);
-		$rest = substr($out, $pos, -$bw);
-		$duration = explode(':',$rest);
-		//Convert Duration to seconds
-		$hours = $duration[0];
-		$minutes = $duration[1];
-		$seconds = $duration[2];
-			
-		$hours = $hours * 60 * 60;
-		$minutes = $minutes * 60;
-					
-		$duration = $hours+$minutes+$seconds;
-		//$duration =  (int) $ffmpeg->videoDetails['size'];
-		if($duration > "0")
-		{
-			$status = "Successful";
-
-			$db->update(tbl('video'), array("duration"), array($duration), " file_name = '{$outputFileName}'");
-			$db->update(tbl('video'), array("status"), array($status), " file_name = '{$outputFileName}'");
-
-			$log->writeLine("Conversion Result", "Successful");
-		} else {
-			$status = "Failed";
-			$db->update(tbl('video'), array("duration"), array($duration), " file_name = '{$outputFileName}'");
-			$db->update(tbl('video'), array("status"), array($status), " file_name = '{$outputFileName}'");
-			$log->writeLine("Conversion Result", "Failed");
-		}
-	}
-}
-// update the video details in the database as successful conversion or not and video duration
-$myfile = fopen("123.txt", "w");
-$txt = " file_name = '{$outputFileName}'";
-fwrite($myfile, $duration.$status.$txt);
-fclose($myfile);
-
