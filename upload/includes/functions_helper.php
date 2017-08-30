@@ -11,7 +11,8 @@
 	 * @return array { array } { $data } { array with all configurations }
 	 * @internal param $ : { none } { handled inside function }
 	 */
-    function get_website_configurations() {
+    function get_website_configurations()
+	{
         $query = "SELECT name, value FROM ".tbl('config');
         $results = select($query);
         $data = array();
@@ -31,7 +32,8 @@
 	 *
 	 * @return bool
 	 */
-    function config($input) {
+    function config($input)
+	{
         global $Cbucket;
 
         if( isset($Cbucket->configs[$input]) )
@@ -42,7 +44,10 @@
 		return false;
     }
 
-    function get_config($input){ return config($input); }
+    function get_config($input)
+	{
+		return config($input);
+	}
 
     /**
      * Function used to get player logo
@@ -50,7 +55,7 @@
     function website_logo()
     {
         $logo_file = config('player_logo_file');
-        if(file_exists(BASEDIR.'/images/'.$logo_file) && $logo_file)
+        if($logo_file && file_exists(BASEDIR.'/images/'.$logo_file))
             return BASEURL.'/images/'.$logo_file;
 
         return BASEURL.'/images/logo.png';
@@ -80,18 +85,14 @@
             else
                 $time = $custom_date;
         }
-            
 
-        $year = date("Y", $time);
-        $month = date("m", $time);
-        $day = date("d", $time);
-        $folder = $year . '/' . $month . '/' . $day;
+        $folder = date("Y/m/d", $time);
 
         $data = cb_call_functions('dated_folder');
-        if ($data)
+        if($data)
             return $data;
 
-        if (!$headFolder)
+        if(!$headFolder)
         {
             @mkdir(VIDEOS_DIR . '/' . $folder, 0777, true);
             @mkdir(THUMBS_DIR . '/' . $folder, 0777, true);
@@ -99,12 +100,9 @@
             @mkdir(PHOTOS_DIR . '/' . $folder, 0777, true);
             @mkdir(LOGS_DIR . '/' . $folder, 0777, true);
 			@mkdir(AUDIOS_DIR . '/' . $folder, 0777, true);
-        } else {
-            if (!file_exists($headFolder . '/' . $folder))
-            {
-                @mkdir($headFolder . '/' . $folder, 0777, true);
-            }
-        }
+        } else if (!file_exists($headFolder . '/' . $folder)) {
+			@mkdir($headFolder . '/' . $folder, 0777, true);
+		}
 
         $folder = apply_filters($folder, 'dated_folder');
         return $folder;
@@ -115,17 +113,17 @@
         return createDataFolders($headFolder, $custom_date);
     }
 
-    function cb_create_html_tag( $tag = 'p', $self_closing = false, $attrs = array(), $content = null ) {
-
+    function cb_create_html_tag($tag = 'p', $self_closing = false, $attrs = array(), $content = null)
+	{
         $open = '<'.$tag;
         $close = ( $self_closing === true ) ? '/>' : '>'.( !is_null( $content ) ? $content : '' ).'</'.$tag.'>';
 
         $attributes = '';
 
-        if( is_array( $attrs ) and count( $attrs ) > 0 ) {
-
-            foreach( $attrs as $attr => $value ) {
-
+        if( is_array( $attrs ) and count( $attrs ) > 0 )
+        {
+            foreach( $attrs as $attr => $value )
+            {
                 if( strtolower( $attr ) == 'extra' ) {
                     $attributes .= ( $value );
                 } else {
@@ -135,7 +133,6 @@
             }
 
         }
-
         return $open.$attributes.$close;
     }
 
@@ -146,7 +143,8 @@
 	 * @since : March 16th, 2016 ClipBucket 2.8.1
 	 * @author : Saqib Razzaq
 	 */
-    function installed_themes() {
+    function installed_themes()
+	{
         $dir = BASEDIR.'/styles';
         $conts = scandir($dir);
         for ($i=0; $i < 3; $i++) { 
@@ -166,13 +164,15 @@
 	 * @since : March 22nd, 2016 ClipBucket 2.8.1
 	 * @author : Saqib Razzaq
 	 */
-    function pullCategories($page = false) {
+    function pullCategories($page = false)
+	{
         global $cbvid, $userquery, $cbphoto;
         $params = array();
         if (!$page) {
             $page = THIS_PAGE;
         }
-        switch ($page) {
+        switch ($page)
+		{
             case 'videos':
                 $all_cats = $cbvid->cbCategories($params);
                 break;
@@ -188,11 +188,9 @@
                 break;
         }
 
-        if (is_array($all_cats)) {
+        if (is_array($all_cats))
             return $all_cats;
-        } else {
-            return false;
-        }
+		return false;
     }
 
 	/**
@@ -204,7 +202,8 @@
 	 * @since : 24th March, 2016 ClipBucket 2.8.1
 	 * @author : Saqib Razzaq
 	 */
-    function prettyNum($num) {
+    function prettyNum($num)
+	{
         $prettyNum = preg_replace("/[^0-9\.]/", '', $num);
         if ($prettyNum >= 1000 && $prettyNum < 1000000) {
             $kviews = $prettyNum / 1000;
@@ -224,11 +223,9 @@
             return $prettyNum;
         }
 
-        if (!empty($kviews)) {
+        if (!empty($kviews))
             return $kviews;
-        } else {
-            return false;
-        }
+		return false;
     }
 
 	/**
@@ -239,8 +236,8 @@
 	 * @param string $time
 	 *
 	 * @return string
-	 * @internal param $ : { string } { $sort } { type of sorting } { $sort } { type of sorting }
-	 * @internal param $ : { string } { $type } { type of sorting e.g photos, videos } { $type } { type of sorting e.g photos, videos }
+	 * @internal param $ : { string } { $sort } { type of sorting }
+	 * @internal param $ : { string } { $type } { type of sorting e.g photos, videos }
 	 *
 	 * $type paramter options are:
 	 *
@@ -249,7 +246,7 @@
 	 * channels
 	 * collections
 	 *
-	 * @internal param $ : { string } { $time } { this_month by default} { $time } { this_month by default}
+	 * @internal param $ : { string } { $time } { this_month by default}
 	 *
 	 * $time paramter options are:
 	 *
@@ -264,34 +261,26 @@
 	 * @since : 24th May, 2016 ClipBucket 2.8.1
 	 * @author : Saqib Razzaq
 	 */
-    function prettySort($sort, $type, $time = 'this_month') {
+    function prettySort($sort, $type, $time = 'this_month')
+	{
         global $Cbucket;
         $seoMode = $Cbucket->configs['seo'];
-        switch ($sort) {
+        switch ($sort)
+		{
             case 'recent':
-                if ($seoMode == 'yes') {
+                if ($seoMode == 'yes')
                     return BASEURL.'/'.$type.'/all/All/most_recent/all_time/1&sorting=sort';
-                } else {
-                    return BASEURL.'/'.$type.'.php?cat=all&sort=most_recent&time=all_time&page=1&seo_cat_name=All&sorting=sort';
-                }
-                break;
+				return BASEURL.'/'.$type.'.php?cat=all&sort=most_recent&time=all_time&page=1&seo_cat_name=All&sorting=sort';
             case 'trending':
-                if ($seoMode == 'yes') {
+                if ($seoMode == 'yes')
                     return BASEURL.'/'.$type.'/all/All/most_viewed/all_time/1&sorting=sort';
-                } else {
-                    return BASEURL.'/'.$type.'.php?cat=all&sort=most_viewed&time=all_time&page=1&seo_cat_name=All&sorting=sort';
-                }
-                break;
+				return BASEURL.'/'.$type.'.php?cat=all&sort=most_viewed&time=all_time&page=1&seo_cat_name=All&sorting=sort';
             case 'popular':
-                if ($seoMode == 'yes') {
+                if ($seoMode == 'yes')
                     return BASEURL.'/'.$type.'/all/All/top_rated/'.$time.'/1&timing=time';
-                } else {
-                    return BASEURL.'/'.$type.'.php?cat=all&sort=top_rated&time='.$time.'&page=1&seo_cat_name=All&timing=time';
-                }
-                break;
+				return BASEURL.'/'.$type.'.php?cat=all&sort=top_rated&time='.$time.'&page=1&seo_cat_name=All&timing=time';
             default:
                 return BASEURL.'/'.$type.'/all/All/most_recent/all_time/1&sorting=sort';
-                break;
         }
     }
 
@@ -305,7 +294,8 @@
     * @since : 27th May, 2016
     * @author : Saqib Razzaq
     */
-    function devWitch($query, $query_type, $time) {
+    function devWitch($query, $query_type, $time)
+	{
         global $__devmsgs;
         $memoryBefore = $__devmsgs['total_memory_used'];
         $memoryNow = memory_get_usage()/1048576;
@@ -320,14 +310,6 @@
 
         $expesiveQuery = $__devmsgs['expensive_query'];
         $cheapestQuery = $__devmsgs['cheapest_query'];
-        
-        $insert_qs = $__devmsgs['insert_queries'];
-        $select_qs = $__devmsgs['select_queries'];
-        $update_qs = $__devmsgs['update_queries'];
-        $count_qs = $__devmsgs['delete_queries'];
-        $execute_qs = $__devmsgs['execute_queries'];
-
-        $count = 0;
         
         if (empty($expesiveQuery) || empty($cheapestQuery)) {
             $expesiveQuery = $queryDetails;

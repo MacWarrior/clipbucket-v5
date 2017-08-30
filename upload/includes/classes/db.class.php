@@ -87,7 +87,8 @@ class Clipbucket_db
 		$this->ping();
 
         global $__devmsgs;
-        if (is_array($__devmsgs)) {
+        if (is_array($__devmsgs))
+        {
             $start = microtime();
             $result = $this->mysqli->query($query);
             $end = microtime();
@@ -99,7 +100,8 @@ class Clipbucket_db
         $this->num_rows = $result->num_rows ;
         $data = array();
 
-        for ($row_no = 0; $row_no < $this->num_rows; $row_no++) {
+        for ($row_no = 0; $row_no < $this->num_rows; $row_no++)
+        {
             $result->data_seek($row_no);
             $data[] = $result->fetch_assoc();
         }
@@ -122,7 +124,7 @@ class Clipbucket_db
 	 *
 	 * @return array : { array } { $data } { array of selected data }
 	 */
-    function select($tbl,$fields='*',$cond=false,$limit=false,$order=false,$ep=false)
+    function select($tbl,$fields='*', $cond=false, $limit=false, $order=false, $ep=false)
 	{
         global $__devmsgs;
         
@@ -165,12 +167,12 @@ class Clipbucket_db
 	 *
 	 * @return bool : { integer } { $field } { count of elements }
 	 */
-    function count($tbl,$fields='*',$cond=false)
+    function count($tbl, $fields='*', $cond=false)
 	{
         global $__devmsgs;
         if ($cond)
-            $condition = " Where $cond ";
-        $query = "Select Count($fields) From $tbl $condition";
+            $condition = " WHERE $cond ";
+        $query = "SELECT COUNT($fields) FROM $tbl $condition";
         if (is_array($__devmsgs)) {
             $start = microtime();
             $result = $this->_select($query);
@@ -412,7 +414,7 @@ class Clipbucket_db
 	 * @internal param $ : { array } { $vlds } { array of values to update against fields }
 	 * @internal param $ : { string } { $ep } { extra parameters to consider }
 	 */
-    function insert($tbl,$flds,$vls,$ep=NULL)
+    function insert($tbl, $flds, $vls, $ep=NULL)
 	{
 		$this->ping();
 
@@ -428,7 +430,8 @@ class Clipbucket_db
         }
         $total_values = count($vls);
         $count = 0;
-        foreach($vls as $value) {
+        foreach($vls as $value)
+        {
             $count++;
             preg_match('/\|no_mc\|/',$value,$matches);
             if($matches) {
@@ -451,7 +454,8 @@ class Clipbucket_db
         }
         $query = "INSERT INTO $tbl ($fields_query) VALUES ($values_query) $ep";
         $this->total_queries_sql[] = $query;
-        if(isset($this->total_queries)) $this->total_queries++;
+        if(isset($this->total_queries))
+        	$this->total_queries++;
 
         try {
             $this->mysqli->query($query);
@@ -480,7 +484,8 @@ class Clipbucket_db
         $count = 0;
         $query_fields = array();
         $query_values = array();
-        foreach ($fields as $field => $val) {
+        foreach ($fields as $field => $val)
+        {
             $query_fields[] = $field;
             $needle = substr($val, 0, 2);
             if ($needle != '{{') {

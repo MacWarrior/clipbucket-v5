@@ -76,7 +76,7 @@ if(isset($_POST['experiment']))
 			
 			$victimFile = $testVidsDir.'/'.$victim;
 			//getting video details..
-			$ffmpegObj = new ffmpeg($victimFile);
+			$ffmpegObj = new ffmpeg_experiments($victimFile);
 			$vidDetails = $ffmpegObj->get_file_info();
 			if($vidDetails)
 			{
@@ -187,7 +187,7 @@ if(isset($_POST['experiment']))
 			
 			
 			
-			$ffmpeg = new ffmpeg($victimFile);
+			$ffmpeg = new ffmpeg_experiments($victimFile);
 			$ffmpeg->configs = $configs;
 			$ffmpeg->gen_thumbs = false;
 			$ffmpeg->gen_big_thumb = false;

@@ -3,7 +3,7 @@ define("THIS_PAGE","cb_install");
 include('clipbucket.php');
 
 /**
- * ClipBucket v2.1 Installat Ajax
+ * ClipBucket v2.1 Installation Ajax
  */
  $mode = $_POST['mode'];
  
@@ -318,5 +318,3 @@ include('clipbucket.php');
 	 
 	 echo json_encode($return);
  }
-
-?>

@@ -11,7 +11,7 @@
 	* @notice : File to be maintained
 	*/
 
-	class ffmpeg {
+	class ffmpeg_experiments {
 
 		# stores path for ffmepg binary file, used for basic conversion actions
 		private $ffmpegPath = '';
