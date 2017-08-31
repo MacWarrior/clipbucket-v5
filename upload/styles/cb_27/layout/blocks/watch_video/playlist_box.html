@@ -5,7 +5,7 @@
 {if $cb_playlist}
 <span class="watch_vids_head" onclick='$(this).toggleClass("watch_vids_head_closed");$("#my_playlist").slideToggle("fast")'>Playlist : {$cb_playlist.playlist_name}</span>
 <div class="watch_vids_cont" id="my_playlist">
-<div align="right"><span class="auto_play"><a href="javascript:void(0)" onclick="swap_auto_play()">Auto Play is <span id="ap_status">{if $smarty.cookies.auto_play_playlist!="true"}off{else}on{/if}</span></a></span></div>
+<div align="right"><span class="auto_play"><a href="javascript:void(0);" onclick="swap_auto_play()">Auto Play is <span id="ap_status">{if $smarty.cookies.auto_play_playlist!="true"}off{else}on{/if}</span></a></span></div>
 <!-- Getting Playlist Items-->
 {if $cb_playlist_items==''}
 {assign var=cb_playlist_items value=$cbvid->get_playlist_items($cb_playlist.playlist_id)}

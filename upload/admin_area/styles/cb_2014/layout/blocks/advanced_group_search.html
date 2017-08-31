@@ -31,8 +31,8 @@
                 <label for="featured">Featured</label>
                 <select name="featured" id="featured" class="form-control">
                     <option value=""></option>
-                    <option value="yes"{if $smarty.get.featured=='yes'} selected="selected"{/if}>Yes</option>
-                    <option value="no"{if $smarty.get.featured=='no'} selected="selected"{/if}>No</option>
+                    <option value="yes"{if $smarty.get.featured=='yes'} selected{/if}>Yes</option>
+                    <option value="no"{if $smarty.get.featured=='no'} selected{/if}>No</option>
                 </select>
             </div>
         </div>
@@ -41,8 +41,8 @@
                 <label for="active">Active</label>
                 <select name="active" id="active" class="form-control">
                     <option value=""></option>
-                    <option class="f" value="yes" {if $smarty.get.active=='yes'} selected="selected"{/if}>Yes</option>
-                    <option class="f" value="no" {if $smarty.get.active=='no'} selected="selected"{/if}>No</option>
+                    <option class="f" value="yes" {if $smarty.get.active=='yes'} selected{/if}>Yes</option>
+                    <option class="f" value="no" {if $smarty.get.active=='no'} selected{/if}>No</option>
                 </select>
             </div>
         </div>

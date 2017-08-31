@@ -13,9 +13,9 @@
                 </small></P>
             </label>
             <select class="form-control" name="photo_ratio">
-                <option class="form-control" id="ratio_1" value="4:3" {if $row.photo_ratio == '4:3'} selected="selected"{/if} >4:3</option>
-                <option class="form-control" id="ratio_3" value="16:9" {if $row.photo_ratio == '16:9'} selected="selected"{/if}>16:9</option>
-                <option class="form-control" id="ratio_2" value="16:10" {if $row.photo_ratio == '16:10'} selected="selected"{/if}>16:10</option>
+                <option class="form-control" id="ratio_1" value="4:3" {if $row.photo_ratio == '4:3'} selected{/if} >4:3</option>
+                <option class="form-control" id="ratio_3" value="16:9" {if $row.photo_ratio == '16:9'} selected{/if}>16:9</option>
+                <option class="form-control" id="ratio_2" value="16:10" {if $row.photo_ratio == '16:10'} selected{/if}>16:10</option>
             </select>
         </div>
         <div class="col-md-4">
@@ -94,8 +94,8 @@
                 Crop Image
             </label>
             <select class="form-control" name="photo_crop">
-                <option class="form-control" id="crop_yes" value="1" {if $row.photo_crop == '1'}selected="selected"{/if}>Enable</option>
-                <option class="form-control" id="crop_no" value="0" {if $row.photo_crop == '0'}selected="selected"{/if}>Disable</option>
+                <option class="form-control" id="crop_yes" value="1" {if $row.photo_crop == '1'}selected{/if}>Enable</option>
+                <option class="form-control" id="crop_no" value="0" {if $row.photo_crop == '0'}selected{/if}>Disable</option>
             </select>
             <small>
                 If Enable, your thumb and medium size will be cropped excatly to above dimensions if required.
@@ -116,7 +116,7 @@
         <div class="watermarSettings">
             <div class="col-md-4">
                 <label class="pull-right inline" style="  margin-right: 238px;">
-                    <input name="watermark_photo" id="watermark_photo" type="checkbox" value="1"{if $row.watermark_photo == '1'}checked="checked"{/if}  name="closed"  type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on" >
+                    <input name="watermark_photo" id="watermark_photo" type="checkbox" value="1"{if $row.watermark_photo == '1'}checked{/if}  name="closed"  type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on" >
                     Enable Watermark
                     <span class="lbl"></span>
                 </label>
@@ -130,15 +130,15 @@
                     <small>Set your Placement</small>
                 </label>
                 <select name="watermark_placement" class="form-control">
-                    <option value="left:top" class="form-control" name="watermark_placement" id="top_left" {if $row.watermark_placement == 'left:top'} selected="selected" {/if}>Top - Left</option>
-                    <option value="right:top" class="form-control" name="watermark_placement" id="top_right" {if $row.watermark_placement == 'right:top'} selected="selected" {/if}>Top - Right</option>
-                    <option value="center:top" class="form-control" name="watermark_placement" id="top_center" {if $row.watermark_placement == 'center:top'} selected="selected" {/if}>Top - Center</option>
-                    <option value="left:bottom" class="form-control" name="watermark_placement" id="bottom_left" {if $row.watermark_placement == 'left:bottom'} selected="selected" {/if} >Bottom - Left</option>
-                    <option value="righ:bottom" class="form-control" name="watermark_placement" id="bottom_right" {if $row.watermark_placement == 'righ:bottom'} selected="selected" {/if} >Bottom - Right</option>
-                    <option value="center:bottom" class="form-control" name="watermark_placement" id="bottom_center" {if $row.watermark_placement == 'center:bottom'} selected="selected" {/if}>Bottom - Center</option>
-                    <option value="left:center" class="form-control" name="watermark_placement" id="left" {if $row.watermark_placement == 'left:center'} selected="selected" {/if}>Left</option>
-                    <option value="right:center" class="form-control" name="watermark_placement" id="right" {if $row.watermark_placement == 'right:center'} selected="selected" {/if}>Right</option>
-                    <option value="center:center" class="form-control" name="watermark_placement" id="center" {if $row.watermark_placement == 'center:center'} selected="selected" {/if}>Center</option>
+                    <option value="left:top" class="form-control" name="watermark_placement" id="top_left" {if $row.watermark_placement == 'left:top'} selected {/if}>Top - Left</option>
+                    <option value="right:top" class="form-control" name="watermark_placement" id="top_right" {if $row.watermark_placement == 'right:top'} selected {/if}>Top - Right</option>
+                    <option value="center:top" class="form-control" name="watermark_placement" id="top_center" {if $row.watermark_placement == 'center:top'} selected {/if}>Top - Center</option>
+                    <option value="left:bottom" class="form-control" name="watermark_placement" id="bottom_left" {if $row.watermark_placement == 'left:bottom'} selected {/if} >Bottom - Left</option>
+                    <option value="righ:bottom" class="form-control" name="watermark_placement" id="bottom_right" {if $row.watermark_placement == 'righ:bottom'} selected {/if} >Bottom - Right</option>
+                    <option value="center:bottom" class="form-control" name="watermark_placement" id="bottom_center" {if $row.watermark_placement == 'center:bottom'} selected {/if}>Bottom - Center</option>
+                    <option value="left:center" class="form-control" name="watermark_placement" id="left" {if $row.watermark_placement == 'left:center'} selected {/if}>Left</option>
+                    <option value="right:center" class="form-control" name="watermark_placement" id="right" {if $row.watermark_placement == 'right:center'} selected {/if}>Right</option>
+                    <option value="center:center" class="form-control" name="watermark_placement" id="center" {if $row.watermark_placement == 'center:center'} selected {/if}>Center</option>
                 </select>
             </div>
         </div>

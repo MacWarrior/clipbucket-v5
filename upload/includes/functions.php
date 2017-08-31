@@ -74,15 +74,14 @@
 		return $string = preg_replace($array,$replace,$string);
 	}
 
-	function clean($string,$allow_html=false) {
- 	 //$string = $string;
- 	 //$string = htmlentities($string);
-	 if($allow_html==false){
- 		 $string = strip_tags($string);
-		 $string =  Replacer($string);
-	 }
-	// $string = utf8_encode($string);
- 	 return $string;
+	function clean($string,$allow_html=false)
+	{
+		 if($allow_html==false){
+			 $string = strip_tags($string);
+			 $string = Replacer($string);
+		 }
+
+		 return $string;
 	}
 
 	/**
@@ -96,7 +95,7 @@
 	}
 
 	/**
-	 * Clean a string and remove malicious stuff before insertin
+	 * Clean a string and remove malicious stuff before insertion
 	 * that string into the database
 	 *
 	 * @param : { string } { $id } { string to be cleaned }

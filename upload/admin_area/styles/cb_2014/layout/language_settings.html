@@ -87,7 +87,7 @@
         {section name=l_list loop=$language_list}
         <tr id="showWala">
             <td><label>
-                <input type="checkbox" name="make_default" id="radio" value="{$language_list[l_list].language_id}" {if $language_list[l_list].language_default =='yes'}checked="checked"{/if} onclick="document.default_lang.submit()"/></label>
+                <input type="checkbox" name="make_default" id="radio" value="{$language_list[l_list].language_id}" {if $language_list[l_list].language_default =='yes'}checked{/if} onclick="document.default_lang.submit()"/></label>
             </td>
             <td>{$language_list[l_list].language_id}</td>
             <td>{$language_list[l_list].language_name}({$language_list[l_list].language_code}){if $language_list[l_list].language_default=='yes'} <span style="color: #cccccc"> as <i>Default Language</i></span>{/if}</td>
@@ -105,7 +105,7 @@
                         <li role="presentation"><a role="menuitem" tabindex="-1"
                             href="?edit_language={$language_list[l_list].language_id}">{lang code='edit'}</a></li>
                         <li role="presentation"><a role="menuitem" tabindex="-1"
-                            href="javascript:void(0)" onclick="if(confirm_it('Are you sure you want to delete \'{$language_list[l_list].language_name}\' pack')) window.location = '?delete={$language_list[l_list].language_id}'">{lang code='delete'}</a>
+                            href="javascript:void(0);" onclick="if(confirm_it('Are you sure you want to delete \'{$language_list[l_list].language_name}\' pack')) window.location = '?delete={$language_list[l_list].language_id}'">{lang code='delete'}</a>
                         <li role="presentation"><a role="menuitem" tabindex="-1"
                             href="?download={$language_list[l_list].language_id}" target="_blank">Export</a></li>
                         {if $language_list[l_list].language_active!='yes'}

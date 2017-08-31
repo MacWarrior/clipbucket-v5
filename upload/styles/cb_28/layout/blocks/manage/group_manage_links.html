@@ -10,7 +10,7 @@
     <li><a href="{$baseurl}/manage_groups.php?mode=manage_videos&gid={$group.group_id}">{lang code='com_manage_vids'}</a></li>
     
     {if $group.userid == userid()}
-    <li><a href="javascript:void(0)" onClick="
+    <li><a href="javascript:void(0);" onClick="
     	  if (confirm('{lang code='are_you_sure_del_grp'}'))
 				document.location = '{$baseurl}/manage_groups.php??mode=delete&gid={$group.group_id}';">{lang code='grp_del_group_title'}</a></li>
     {/if}

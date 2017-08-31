@@ -926,8 +926,7 @@ class FFMpeg
 					$this->log->TemplogData .= "conversion_status : failed ";
 				
 				$this->log->writeLine("Conversion Completed", $this->log->TemplogData , true );
-				//$this->create_log_file();
-				
+
 				break;
 			}
 		}
@@ -939,7 +938,7 @@ class FFMpeg
 		if($specific_dura)
 		{
 			$durations_format = gmdate("H:i:s", $duration);
-			$command = $this->ffmpeg."     -i $input_file  -ss ".$durations_format."   -r 1 $dim -y -f image2 -vframes 1 $output_file_path ";
+			$command = $this->ffmpeg." -i $input_file -ss ".$durations_format." -r 1 $dim -y -f image2 -vframes 1 $output_file_path ";
 			//pr($command,true);
 			shell_output($command);
 		} else {

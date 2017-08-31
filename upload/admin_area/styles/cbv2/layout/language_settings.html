@@ -15,14 +15,14 @@
   <tr>
     <td width="20" height="25" valign="top" style="padding-left:5px">{$language_list[l_list].language_id}</td>
     <td width="100" align="left" valign="top"><label>
-      <input type="radio" name="make_default" id="radio" value="{$language_list[l_list].language_id}" {if $language_list[l_list].language_default =='yes'}checked="checked"{/if} onclick="document.default_lang.submit()"/>
+      <input type="radio" name="make_default" id="radio" value="{$language_list[l_list].language_id}" {if $language_list[l_list].language_default =='yes'}checked{/if} onclick="document.default_lang.submit()"/>
     </label></td>
     <td valign="top">{$language_list[l_list].language_name}({$language_list[l_list].language_code})
       <div><a href="?create_package={$language_list[l_list].language_code}">Recreate Pack</a>
        -  <a href="?recreate_from_pack={$language_list[l_list].language_code}" >Recreate from pack</a>
         -  <a href="?edit_language={$language_list[l_list].language_id}" >Edit Phrases</a>
         - <a href="?edit_language={$language_list[l_list].language_id}">{lang code='edit'}</a>
-        - <a href="javascript:void(0)" onclick="if(confirm_it('Are you sure you want to delete \'{$language_list[l_list].language_name}\' pack')) window.location = '?delete={$language_list[l_list].language_id}'">{lang code='delete'}</a>
+        - <a href="javascript:void(0);" onclick="if(confirm_it('Are you sure you want to delete \'{$language_list[l_list].language_name}\' pack')) window.location = '?delete={$language_list[l_list].language_id}'">{lang code='delete'}</a>
         - <a href="?download={$language_list[l_list].language_id}" target="_blank">Export</a>{if $language_list[l_list].language_active!='yes'}
         - <a href="?action=activate&id={$language_list[l_list].language_id}">{lang code='activate'}</a>{/if}{if $language_list[l_list].language_active=='yes'}
         - <a href="?action=deactivate&id={$language_list[l_list].language_id}">Deactivate</a>{/if}</div></td>

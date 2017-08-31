@@ -122,14 +122,14 @@
 			<div align="right">
 				{lang code="make_my_album"}
 				<label>
-					<input type="radio" name="my_album_privacy" value="public" {if $user.album_privacy =='public'} checked="checked" {/if} onclick="window.location = '{$albumPrivacyUrl}album_privacy=public'"/>{lang code="public"}
+					<input type="radio" name="my_album_privacy" value="public" {if $user.album_privacy =='public'} checked {/if} onclick="window.location = '{$albumPrivacyUrl}album_privacy=public'"/>{lang code="public"}
 				</label>
 				<label>
-					<input type="radio" name="my_album_privacy" value="private" {if $user.album_privacy =='private'} checked="checked" {/if} onclick="window.location = '{$albumPrivacyUrl}album_privacy=private'"/> {lang code="private"}
+					<input type="radio" name="my_album_privacy" value="private" {if $user.album_privacy =='private'} checked {/if} onclick="window.location = '{$albumPrivacyUrl}album_privacy=private'"/> {lang code="private"}
 				</label>
 
 				<label>
-					<input type="radio" name="my_album_privacy" value="friends" {if $user.album_privacy =='friends'} checked="checked" {/if} onclick="window.location = '{$albumPrivacyUrl}album_privacy=friends'"/>{lang code="for_friends"}
+					<input type="radio" name="my_album_privacy" value="friends" {if $user.album_privacy =='friends'} checked {/if} onclick="window.location = '{$albumPrivacyUrl}album_privacy=friends'"/>{lang code="for_friends"}
 				</label>
 			</div>
 			<p>{lang code="long_txt"}</p>

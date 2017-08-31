@@ -117,12 +117,12 @@ $(document).ready(function(){
               <td valign="top"><select name="closed" id="select">
       <option value="1"  
        {if $row.closed == 1}
-        selected="selected"
+        selected
       {/if}
         >Yes</option>
         <option value="0"
         {if $row.closed == 0}
-          selected="selected"
+          selected
           {/if}
           >No</option>
         </select></td>
@@ -144,12 +144,12 @@ $(document).ready(function(){
               <td><select name="seo" id="select2">
                 <option value="yes"
        {if $row.seo == yes}
-        selected="selected"
+        selected
       {/if}
         >Yes</option>
                 <option value="no"
         {if $row.seo == no}
-          selected="selected"
+          selected
           {/if}
           >No</option>
               </select></td>
@@ -159,12 +159,12 @@ $(document).ready(function(){
               <td><select name="allow_template_change" id="allow_template_change">
                 <option value="1"  
        {if $row.allow_template_change == 1}
-        selected="selected"
+        selected
       {/if}
         >Yes</option>
                 <option value="0"
         {if $row.allow_template_change == 0}
-          selected="selected"
+          selected
           {/if}
           >No</option>
               </select></td>
@@ -174,12 +174,12 @@ $(document).ready(function(){
               <td><select name="allow_language_change" id="allow_language_change">
                 <option value="1"
        {if $row.allow_language_change == 1}
-        selected="selected"
+        selected
       {/if}
         >Yes</option>
                 <option value="0"
         {if $row.allow_language_change == 0}
-          selected="selected"
+          selected
           {/if}
           >No</option>
               </select></td>
@@ -195,7 +195,7 @@ $(document).ready(function(){
                 <select name="default_time_zone" id="default_time_zone">
                 {assign var='tzs' value=func->get_time_zones()}
                 {foreach from=$tzs item=name key=tz}
-                	<option value="{$tz}" {if $row.default_time_zone==$tz} selected="selected"{/if}>{$name}</option>
+                	<option value="{$tz}" {if $row.default_time_zone==$tz} selected{/if}>{$name}</option>
                 {/foreach}
                 </select>
             </tr>
@@ -205,7 +205,7 @@ $(document).ready(function(){
                 <select name="default_country_iso2" id="default_country_iso2">
                 {assign var=countries value=$Cbucket->get_countries(iso2)}
                 {foreach from=$countries item=country key=code}
-                	<option  {if $code == $row.default_country_iso2} selected="selected" {/if} value="{$code}">
+                	<option  {if $code == $row.default_country_iso2} selected {/if} value="{$code}">
                     	{$country}
                     </option>
                 {/foreach}
@@ -217,12 +217,12 @@ $(document).ready(function(){
               <td><select name="use_subs" id="use_subs">
                 <option value="1"
        {if $row.use_subs == 1}
-        selected="selected"
+        selected
       {/if}
         >Yes</option>
                 <option value="0"
         {if $row.use_subs == 0}
-          selected="selected"
+          selected
           {/if}
           >No</option>
               </select></td>
@@ -232,12 +232,12 @@ $(document).ready(function(){
               <td><select name="show_collapsed_checkboxes" id="show_collapsed_checkboxes">
                 <option value="1"
        {if $row.show_collapsed_checkboxes == 1}
-        selected="selected"
+        selected
       {/if}
         >Yes</option>
                 <option value="0"
         {if $row.show_collapsed_checkboxes == 0}
-          selected="selected"
+          selected
           {/if}
           >No</option>
               </select>
@@ -267,16 +267,16 @@ $(document).ready(function(){
               <td>Send Comment Notification</td>
               <td>
                 <select name="send_comment_notification" id="send_comment_notification">
-                  <option value="yes" {if $row.send_comment_notification=='yes'} selected="selected"{/if}>Yes</option>
-                  <option value="no" {if $row.send_comment_notification=='no'} selected="selected"{/if}>No</option>
+                  <option value="yes" {if $row.send_comment_notification=='yes'} selected{/if}>Yes</option>
+                  <option value="no" {if $row.send_comment_notification=='no'} selected{/if}>No</option>
                 </select>
               </td>
             </tr>
             <tr>
               <td>Send Video Approve Noticfication</td>
               <td><select name="approve_video_notification" id="approve_video_notification">
-                <option value="yes" {if $row.approve_video_notification=='yes'} selected="selected"{/if}>Yes</option>
-                <option value="no" {if $row.approve_video_notification=='no'} selected="selected"{/if}>No</option>
+                <option value="yes" {if $row.approve_video_notification=='yes'} selected{/if}>Yes</option>
+                <option value="no" {if $row.approve_video_notification=='no'} selected{/if}>No</option>
               </select></td>
             </tr>
             <tr>
@@ -288,11 +288,11 @@ $(document).ready(function(){
             </tr>
             <tr>
               <td valign="top"><label for="video_comments">Allow Video Comments</label></td>
-              <td valign="top"><input name="video_comments" type="checkbox" id="video_comments" value="1" {if $row.video_comments=='1'}checked="checked"{/if} /></td>
+              <td valign="top"><input name="video_comments" type="checkbox" id="video_comments" value="1" {if $row.video_comments=='1'}checked{/if} /></td>
             </tr>
             <tr>
               <td valign="top">Allow Channel Comments</td>
-              <td valign="top"><input name="channel_comments" type="checkbox" id="channel_comments" value="1" {if $row.channel_comments=='1'}checked="checked"{/if} /></td>
+              <td valign="top"><input name="channel_comments" type="checkbox" id="channel_comments" value="1" {if $row.channel_comments=='1'}checked{/if} /></td>
             </tr>
             <tr>
               <td valign="top">Allow Guests to Comment</td>
@@ -304,24 +304,24 @@ $(document).ready(function(){
             </tr>
             <tr>
               <td>Allow comments rating</td>
-              <td><input name="comment_rating" type="checkbox" id="comment_rating" value="1" {if $row.comment_rating=='1'}checked="checked"{/if} /></td>
+              <td><input name="comment_rating" type="checkbox" id="comment_rating" value="1" {if $row.comment_rating=='1'}checked{/if} /></td>
             </tr>
             <tr>
               <td>Comments Captcha</td>
               <td><p>
                 <label>
                   <input type="radio" name="comments_captcha" value="all" id="comments_captcha_0" 
-                  {if $row.comments_captcha==all} checked="checked"{/if} />
+                  {if $row.comments_captcha==all} checked{/if} />
                   For Everyone</label>
                 
                 <label>
                   <input type="radio" name="comments_captcha" value="guests" id="comments_captcha_1"
-                  {if $row.comments_captcha==guests} checked="checked"{/if} />
+                  {if $row.comments_captcha==guests} checked{/if} />
                   For Guests Only</label>
                 
                 <label>
                   <input type="radio" name="comments_captcha" value="none" id="comments_captcha_2" 
-                  {if $row.comments_captcha==none} checked="checked"{/if} />
+                  {if $row.comments_captcha==none} checked{/if} />
                 Disable</label>
                 <br />
               </p></td>
@@ -338,25 +338,25 @@ $(document).ready(function(){
               <td>Enable video section</td>
               <td><label for="videosSection"></label>
                 <select name="videosSection" id="videosSection">
-                  <option value="yes" {if $row.videosSection!='no'} selected="selected"{/if}>Yes</option>
-                  <option value="no" {if $row.videosSection=='no'} selected="selected"{/if}>No</option>
+                  <option value="yes" {if $row.videosSection!='no'} selected{/if}>Yes</option>
+                  <option value="no" {if $row.videosSection=='no'} selected{/if}>No</option>
               </select></td>
             </tr>
             <tr>
               <td>Enable facebook embed</td>
               <td><label for="facebook_embed"></label>
                 <select name="facebook_embed" id="facebook_embed">
-                   <option value="yes" {if $row.facebook_embed!='no'} selected="selected"{/if}>Yes</option>
-                  <option value="no" {if $row.facebook_embed=='no'} selected="selected"{/if}>No</option>
+                   <option value="yes" {if $row.facebook_embed!='no'} selected{/if}>Yes</option>
+                  <option value="no" {if $row.facebook_embed=='no'} selected{/if}>No</option>
               </select></td>
             </tr>
             <tr>
               <td><label for="video_embed">Allow video embedding</label></td>
-              <td><input name="video_embed" type="checkbox" id="video_embed" value="1" {if $row.video_embed=='1'} checked="checked"{/if} /></td>
+              <td><input name="video_embed" type="checkbox" id="video_embed" value="1" {if $row.video_embed=='1'} checked{/if} /></td>
             </tr>
             <tr>
               <td><labe for="video_download">Allow video download</labe></td>
-              <td><input name="video_download" type="checkbox" id="video_download" value="1" {if $row.video_download=='1'}checked="checked"{/if} /></td>
+              <td><input name="video_download" type="checkbox" id="video_download" value="1" {if $row.video_download=='1'}checked{/if} /></td>
             </tr>
             <tr>
               <td>Max categories for each video</td>
@@ -374,8 +374,8 @@ $(document).ready(function(){
               <td>Embed type</td>
               <td><label for="embed_type"></label>
                 <select name="embed_type" id="embed_type">
-                  <option value="iframe" {if $row.embed_type=='iframe'} selected="selected"{/if}>Iframe</option>
-                  <option value="embed_object" {if $row.embed_type=='embed_object'} selected="selected"{/if}>Embed object</option>
+                  <option value="iframe" {if $row.embed_type=='iframe'} selected{/if}>Iframe</option>
+                  <option value="embed_object" {if $row.embed_type=='embed_object'} selected{/if}>Embed object</option>
               </select></td>
             </tr>
             <tr>
@@ -383,22 +383,22 @@ $(document).ready(function(){
               <td>
                 <label>
                   <input type="radio" name="seo_vido_url" value="0" id="seo_vido_url_0"
-                   {if !$row.seo_vido_url || $row.seo_vido_url==0} checked="checked"{/if}	 />
+                   {if !$row.seo_vido_url || $row.seo_vido_url==0} checked{/if}	 />
                   {$baseurl}/video/ABCDXYZ/video-title</label>
                 <br />
                 <label>
                   <input type="radio" name="seo_vido_url" value="1" id="seo_vido_url_1"
-                   {if $row.seo_vido_url==1} checked="checked"{/if}/>
+                   {if $row.seo_vido_url==1} checked{/if}/>
                   {$baseurl}/video-title-v123</label>
                 <br />
                 <label>
                   <input type="radio" name="seo_vido_url" value="2" id="seo_vido_url_2"
-                   {if $row.seo_vido_url==2} checked="checked"{/if}/>
+                   {if $row.seo_vido_url==2} checked{/if}/>
                   {$baseurl}/video/123/video-title</label>
                <br />
                 <label>
                   <input type="radio" name="seo_vido_url" value="3" id="seo_vido_url_3"
-                   {if $row.seo_vido_url==3} checked="checked"{/if}/>
+                   {if $row.seo_vido_url==3} checked{/if}/>
                   {$baseurl}/video/123_video-title</label>
                 </td>
             </tr>
@@ -413,8 +413,8 @@ $(document).ready(function(){
               <td>Enable channels</td>
               <td><label for="channelsSection"></label>
                 <select name="channelsSection" id="channelsSection">
-                  <option value="yes" {if $row.channelsSection!='no'} selected="selected"{/if}>Yes</option>
-                  <option value="no" {if $row.channelsSection=='no'} selected="selected"{/if}>No</option>
+                  <option value="yes" {if $row.channelsSection!='no'} selected{/if}>Yes</option>
+                  <option value="no" {if $row.channelsSection=='no'} selected{/if}>No</option>
               </select></td>
             </tr>
             <tr>
@@ -428,8 +428,8 @@ $(document).ready(function(){
               <td>Enable group section</td>
               <td><label for="groupsSection"></label>
                 <select name="groupsSection" id="groupsSection">
-                  <option value="yes" {if $row.groupsSection!='no'} selected="selected"{/if}>Yes</option>
-                  <option value="no" {if $row.groupsSection=='no'} selected="selected"{/if}>No</option>
+                  <option value="yes" {if $row.groupsSection!='no'} selected{/if}>Yes</option>
+                  <option value="no" {if $row.groupsSection=='no'} selected{/if}>No</option>
               </select></td>
             </tr>
             <tr>
@@ -471,8 +471,8 @@ $(document).ready(function(){
               <td>Enable photos</td>
               <td><label for="photosSection"></label>
                 <select name="photosSection" id="photosSection">
-                  <option value="yes" {if $row.photosSection!='no'} selected="selected"{/if}>Yes</option>
-                  <option value="no" {if $row.photosSection=='no'} selected="selected"{/if}>No</option>
+                  <option value="yes" {if $row.photosSection!='no'} selected{/if}>Yes</option>
+                  <option value="no" {if $row.photosSection=='no'} selected{/if}>No</option>
               </select></td>
             </tr>
             <tr>
@@ -486,32 +486,32 @@ $(document).ready(function(){
               <td>Enable Collections</td>
               <td><label for="collectionsSection"></label>
                 <select name="collectionsSection" id="collectionsSection">
-                  <option value="yes" {if $row.collectionsSection!='no'} selected="selected"{/if}>Yes</option>
-                  <option value="no" {if $row.collectionsSection=='no'} selected="selected"{/if}>No</option>
+                  <option value="yes" {if $row.collectionsSection!='no'} selected{/if}>Yes</option>
+                  <option value="no" {if $row.collectionsSection=='no'} selected{/if}>No</option>
               </select></td>
             </tr>
             <tr>
-              <td colspan="2"><input name="video_rating" type="checkbox" id="video_rating" value="1" {if $row.video_rating=='1'}checked="checked"{/if} />
+              <td colspan="2"><input name="video_rating" type="checkbox" id="video_rating" value="1" {if $row.video_rating=='1'}checked{/if} />
                 Allow  videos ratings
                 
               - 
-                  <input name="own_video_rating" type="checkbox" id="own_video_rating" value="1" {if $row.own_video_rating=='1'}checked="checked"{/if} />
+                  <input name="own_video_rating" type="checkbox" id="own_video_rating" value="1" {if $row.own_video_rating=='1'}checked{/if} />
               Allow user to rate own videos </td>
             </tr>
             <tr>
-              <td colspan="2"><input name="collection_rating" type="checkbox" id="collection_rating" value="1" {if $row.collection_rating=='1'}checked="checked"{/if} />
+              <td colspan="2"><input name="collection_rating" type="checkbox" id="collection_rating" value="1" {if $row.collection_rating=='1'}checked{/if} />
                 Allow collection ratings
                 
                 - 
-                  <input name="own_collection_rating" type="checkbox" id="own_collection_rating" value="1" {if $row.own_collection_rating=='1'}checked="checked"{/if} />
+                  <input name="own_collection_rating" type="checkbox" id="own_collection_rating" value="1" {if $row.own_collection_rating=='1'}checked{/if} />
                 Allow user to rate own collections </td>
             </tr>
             <tr>
-              <td colspan="2"><input name="channel_rating" type="checkbox" id="channel_rating" value="1" {if $row.channel_rating=='1'}checked="checked"{/if} />
+              <td colspan="2"><input name="channel_rating" type="checkbox" id="channel_rating" value="1" {if $row.channel_rating=='1'}checked{/if} />
                 Allow channel ratings
                  
                 - 
-                  <input name="own_channel_rating" type="checkbox" id="own_channel_rating" value="1" {if $row.own_channel_rating=='1'}checked="checked"{/if} />
+                  <input name="own_channel_rating" type="checkbox" id="own_channel_rating" value="1" {if $row.own_channel_rating=='1'}checked{/if} />
                 Allow users to rate own channels </td>
             </tr>
         </table>
@@ -526,7 +526,7 @@ $(document).ready(function(){
           <td valign="top"> 	
     {foreach from=$opt_list item=opt}
 	{assign var=uploadOptId value=$opt.load_func}
-		<label><input type="checkbox" name="{$uploadOptId}" {if $row.$uploadOptId=='yes'} checked="checked"{/if} value="yes"/>{$opt.title}</label>
+		<label><input type="checkbox" name="{$uploadOptId}" {if $row.$uploadOptId=='yes'} checked{/if} value="yes"/>{$opt.title}</label>
 	{/foreach}
     </td>
         </tr>
@@ -534,11 +534,11 @@ $(document).ready(function(){
           <td valign="top">Use Crons</td>
           <td valign="top">
             <label>
-              <input type="radio" name="use_crons" value="yes" id="use_crons_0" {if $row.use_crons =='yes'} checked="checked"{/if} />
+              <input type="radio" name="use_crons" value="yes" id="use_crons_0" {if $row.use_crons =='yes'} checked{/if} />
               Yes</label>
           
             <label>
-              <input type="radio" name="use_crons" value="no" id="use_crons_1" {if $row.use_crons =='no'} checked="checked"{/if} />
+              <input type="radio" name="use_crons" value="no" id="use_crons_1" {if $row.use_crons =='no'} checked{/if} />
               No</label>
             </td>
         </tr>
@@ -554,7 +554,7 @@ $(document).ready(function(){
               <label>
                 <input type="radio" name="use_ffmpeg_vf" value="no" id="use_ffmpeg_vf_1"  {if $row.use_ffmpeg_vf=='no'} checked{/if}/>
                 No</label> 
-              <a href="javascript:void(0)" target="_blank"><img src="{$imageurl}/help.png" border="0" class="tipsy_tip" title="In latest releases of FFMPEG (greator than 20000) Pad flag has been changed from pad* to vf , if your ffmpeg is greator than r20000 please check YES " /></a></td>
+              <a href="javascript:void(0);" target="_blank"><img src="{$imageurl}/help.png" border="0" class="tipsy_tip" title="In latest releases of FFMPEG (greator than 20000) Pad flag has been changed from pad* to vf , if your ffmpeg is greator than r20000 please check YES " /></a></td>
         </tr>
         <tr>
           <td valign="top">PHP Path</td>
@@ -591,14 +591,14 @@ $(document).ready(function(){
         <tr>
           <td valign="top">Turn on Quick Conversion</td>
           <td valign="top">
-              <input type="checkbox" name="quick_conv" id="quick_conv" value="yes" {if $row.quick_conv=='yes'} checked="checked"{/if}/>
-            <a href="javascript:void(0)" target="_blank"><img src="{$imageurl}/help.png" alt="" border="0" class="tipsy_tip" title="If you check this option, videos will be converted as soon as uploading is complete, make sure your php path is correct before enabling this option otherwise may cause your website inaccessible" /></a></td>
+              <input type="checkbox" name="quick_conv" id="quick_conv" value="yes" {if $row.quick_conv=='yes'} checked{/if}/>
+            <a href="javascript:void(0);" target="_blank"><img src="{$imageurl}/help.png" alt="" border="0" class="tipsy_tip" title="If you check this option, videos will be converted as soon as uploading is complete, make sure your php path is correct before enabling this option otherwise may cause your website inaccessible" /></a></td>
         </tr>
         <tr>
           <td valign="top">Server Friendly Conversion</td>
           <td valign="top">
-            <input type="checkbox" name="server_friendly_conversion" id="server_friendly_conversion" {if $row.server_friendly_conversion=='yes'} checked="checked"{/if} value="yes"/>
-            <a href="javascript:void(0)" target="_blank"><img src="{$imageurl}/help.png" alt="" border="0" class="tipsy_tip" title="If you enable this option then sever will process 1 video at a time, once it is finished, it will start processing new video" /></a></td>
+            <input type="checkbox" name="server_friendly_conversion" id="server_friendly_conversion" {if $row.server_friendly_conversion=='yes'} checked{/if} value="yes"/>
+            <a href="javascript:void(0);" target="_blank"><img src="{$imageurl}/help.png" alt="" border="0" class="tipsy_tip" title="If you enable this option then sever will process 1 video at a time, once it is finished, it will start processing new video" /></a></td>
         </tr>
         <tr>
           <td valign="top">Max Video Processes at once</td>
@@ -632,21 +632,21 @@ $(document).ready(function(){
         </tr>
         <tr>
           <td>Save original file </td>
-          <td><input name="keep_original" type="checkbox" id="keep_original" value="1" {if $row.keep_original} checked="checked"{/if} /></td>
+          <td><input name="keep_original" type="checkbox" id="keep_original" value="1" {if $row.keep_original} checked{/if} /></td>
         </tr>
         <tr>
           <td>Mp4 HQ Output</td>
-          <td><input name="hq_output" type="checkbox" id="hq_output" value="yes" {if $row.hq_output} checked="checked"{/if} />
-            <a href="javascript:void(0)" target="_blank"><img src="{$imageurl}/help.png" alt="" border="0" class="tipsy_tip" title="if enabled, ClipBucket will generate Highh Quality mp4 video if possible" /></a></td>
+          <td><input name="hq_output" type="checkbox" id="hq_output" value="yes" {if $row.hq_output} checked{/if} />
+            <a href="javascript:void(0);" target="_blank"><img src="{$imageurl}/help.png" alt="" border="0" class="tipsy_tip" title="if enabled, ClipBucket will generate Highh Quality mp4 video if possible" /></a></td>
         </tr>
         <tr>
           <td>Keep Mp4 As Is</td>
-          <td><input name="keep_mp4_as_is" type="checkbox" id="keep_mp4_as_is" value="yes" {if $row.keep_mp4_as_is} checked="checked"{/if} />
-            <a href="javascript:void(0)" target="_blank"><img src="{$imageurl}/help.png" border="0" class="tipsy_tip" title="if enabled, ClipBucket will keep mp4 vieo as is and will be playable as HQ video" /></a></td>
+          <td><input name="keep_mp4_as_is" type="checkbox" id="keep_mp4_as_is" value="yes" {if $row.keep_mp4_as_is} checked{/if} />
+            <a href="javascript:void(0);" target="_blank"><img src="{$imageurl}/help.png" border="0" class="tipsy_tip" title="if enabled, ClipBucket will keep mp4 vieo as is and will be playable as HQ video" /></a></td>
         </tr>
         <tr>
           <td>Activation required</td>
-          <td><input name="activation" type="checkbox" id="activation" value="1" {if $row.activation==1} checked="checked"{/if} /></td>
+          <td><input name="activation" type="checkbox" id="activation" value="1" {if $row.activation==1} checked{/if} /></td>
         </tr>
         <tr>
           <td>&nbsp;</td>
@@ -689,17 +689,17 @@ $(document).ready(function(){
           <td><label for="convProfile"></label>
             <label for="normal_resolution"></label>
             <select name="normal_resolution" id="normal_resolution">
-              <option value="240" {if $row.normal_resolution=='240'} selected="selected"{/if}>240p</option>
-              <option value="320" {if $row.normal_resolution=='320'} selected="selected"{/if}>320p</option>
-              <option value="480" {if $row.normal_resolution=='480'} selected="selected"{/if}>480p</option>
+              <option value="240" {if $row.normal_resolution=='240'} selected{/if}>240p</option>
+              <option value="320" {if $row.normal_resolution=='320'} selected{/if}>320p</option>
+              <option value="480" {if $row.normal_resolution=='480'} selected{/if}>480p</option>
             </select>
             <label for="high_resolution"></label></td>
         </tr>
         <tr>
           <td>HQ video resolution</td>
           <td><select name="high_resolution" id="high_resolution">
-            <option value="720" {if $row.high_resolution=='720'} selected="selected"{/if}>720p</option>
-              <option value="1080" {if $row.high_resolution=='1080'} selected="selected"{/if}>1080p</option>
+            <option value="720" {if $row.high_resolution=='720'} selected{/if}>720p</option>
+              <option value="1080" {if $row.high_resolution=='1080'} selected{/if}>1080p</option>
           </select></td>
         </tr>
         <tr>
@@ -733,7 +733,7 @@ $(document).ready(function(){
           <td>Select profile</td>
           <td><label for="convProfile"></label>
             <select name="convProfile" id="convProfile">
-              <option selected="selected" value="0">Choose from list</option>
+              <option selected value="0">Choose from list</option>
               <option value="1">H.264, AAC - Youtube like</option>
               <option value="3">High Configurations with H264</option>
               <option value="2">Normal Configurations</option>
@@ -795,10 +795,10 @@ $(document).ready(function(){
           <td valign="top">Use cached pagination</td>
           <td valign="top"><select name="use_cached_pagin" id="use_cached_pagin">
             <option value="yes" {if $row.use_cached_pagin==yes}
-selected="selected"
+selected
 {/if}>Yes</option>
             <option value="no" {if $row.use_cached_pagin!=yes}
-selected="selected"
+selected
 {/if}>No</option>
           </select></td>
         </tr>
@@ -1021,23 +1021,23 @@ selected="selected"
         </tr>
         <tr>
           <td width="200" valign="top">Turn on registrations</td>
-          <td valign="top"><input name="allow_registeration" type="checkbox" id="allow_registeration" value="1" {if $row.allow_registeration=='1'}checked="checked"{/if} /></td>
+          <td valign="top"><input name="allow_registeration" type="checkbox" id="allow_registeration" value="1" {if $row.allow_registeration=='1'}checked{/if} /></td>
         </tr>
         <tr>
           <td valign="top">Email verification</td>
-          <td valign="top"><input name="email_verification" type="checkbox" id="email_verification" value="1" {if $row.email_verification=='1'}checked="checked"{/if} /></td>
+          <td valign="top"><input name="email_verification" type="checkbox" id="email_verification" value="1" {if $row.email_verification=='1'}checked{/if} /></td>
         </tr>
         <tr>
           <td valign="top">Image verification (captcha)</td>
           <td valign="top"><select name="captcha_type">
             <option value="0" {if $row.captcha_type == 0}
-          selected="selected"
+          selected
           {/if}>No</option>
             <option value="1" {if $row.captcha_type == 1}
-          selected="selected"
+          selected
           {/if}>Simple</option>
             <option value="2" {if $row.captcha_type == 2}
-          selected="selected"
+          selected
           {/if}>Secured</option>
             </select></td>
         </tr>
@@ -1056,12 +1056,12 @@ selected="selected"
         <tr>
           <td valign="top">Allow Special Characters in usernames</td>
           <td valign="top"><input name="allow_unicode_usernames" type="checkbox" 
-          id="allow_unicode_usernames" value="yes" {if $row.allow_unicode_usernames=='yes'}checked="checked"{/if} /></td>
+          id="allow_unicode_usernames" value="yes" {if $row.allow_unicode_usernames=='yes'}checked{/if} /></td>
         </tr>
         <tr>
           <td valign="top">Allow spaces in usernames</td>
           <td valign="top"><input name="allow_username_spaces" type="checkbox" 
-          id="allow_username_spaces" value="yes" {if $row.allow_username_spaces=='yes'}checked="checked"{/if} /></td>
+          id="allow_username_spaces" value="yes" {if $row.allow_username_spaces=='yes'}checked{/if} /></td>
         </tr>
         <tr>
           <td valign="top">Minimum Username Length</td>
@@ -1091,11 +1091,11 @@ selected="selected"
 <select name="gravatars" id="gravatars">
 <option value="yes"
 {if $row.gravatars == yes}
-selected="selected"
+selected
 {/if}>Yes</option>
               <option value=""
 {if $row.gravatars == ''}
-selected="selected"
+selected
 {/if}>No</option>
             </select>
           </label></td>
@@ -1116,10 +1116,10 @@ selected="selected"
 <select name="picture_url" id="select4">
 <option value="yes" 
 {if $row.picture_url == yes}
-selected="selected"
+selected
 {/if}>Yes</option>
 <option value="no" {if $row.picture_url == no}
-selected="selected"
+selected
 {/if}>No</option>
           </select></td>
         </tr>
@@ -1127,10 +1127,10 @@ selected="selected"
           <td valign="top">Allow Picture Upload</td>
           <td valign="top"><select name="picture_upload" id="select5">
             <option value="yes" {if $row.picture_upload == yes}
-selected="selected"
+selected
 {/if}>Yes</option>
             <option value="no" {if $row.picture_upload == no}
-selected="selected"
+selected
 {/if}>No</option>
           </select></td>
         </tr>
@@ -1148,10 +1148,10 @@ selected="selected"
           <td valign="top">Allow Background URL</td>
           <td valign="top"><select name="background_url" id="select6">
             <option value="yes" {if $row.background_url == yes}
-selected="selected"
+selected
 {/if}>Yes</option>
             <option value="no" {if $row.background_url == no}
-selected="selected"
+selected
 {/if}>No</option>
           </select></td>
         </tr>
@@ -1159,10 +1159,10 @@ selected="selected"
           <td valign="top">Allow Background Upload</td>
           <td valign="top"><select name="background_upload" id="select7">
             <option value="yes" {if $row.background_upload == yes}
-selected="selected"
+selected
 {/if}>Yes</option>
             <option value="no" {if $row.background_upload == no}
-selected="selected"
+selected
 {/if}>No</option>
           </select></td>
         </tr>
@@ -1170,10 +1170,10 @@ selected="selected"
           <td valign="top">Allow Background Color</td>
           <td valign="top"><select name="background_color" id="background_color">
             <option value="yes" {if $row.background_color == yes}
-selected="selected"
+selected
 {/if}>Yes</option>
             <option value="no" {if $row.background_color == no}
-selected="selected"
+selected
 {/if}>No</option>
           </select></td>
         </tr>

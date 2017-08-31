@@ -463,13 +463,13 @@ class formObj
 			{
 				if ($_POST[$arrayName] == $key || $field['checked']== $key)
 				{
-					$checked = ' selected="selected" ';
+					$checked = ' selected ';
 				}else{
 					$checked = '  ';
 				}
 			}else{
 				if($count==0)
-					$checked = ' selected="selected" ';
+					$checked = ' selected ';
 				else
 					$checked = '';
 				$count++;

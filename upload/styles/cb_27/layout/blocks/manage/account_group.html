@@ -33,7 +33,7 @@
                 <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle pull-right"
                         data-toggle="dropdown">Actions <i class="caret"></i></button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" role="menu">
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="{group_link details=$group}"target="_blank">View</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="{group_link details=$group}"target="_blank">{lang code='views'}</a></li>
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="edit_group.php?group_id={$group.group_id}">{lang code='edit'}</a>
                     </li>
                     {if $group.featured == yes}
@@ -97,7 +97,7 @@
             <div id="vid_opt-{$group.group_id}1" class="dropdown">
             <button id="dropdownMenu" class="btn btn-primary btn-xs dropdown-toggle pull-right" data-toggle="dropdown">Actions <i class="caret"></i></button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" role="menu">
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="{group_link details=$group}"target="_blank">View</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="{group_link details=$group}"target="_blank">{lang code='views'}</a></li>
                 </ul>
             </div>
         </td>

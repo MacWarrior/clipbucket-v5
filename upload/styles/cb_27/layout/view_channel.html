@@ -14,14 +14,14 @@
 				<hr class="hr">
 				<div class="tabbable viewChanelTabs">
 					<ul class="nav nav-tabs" id="myTab">
-						<li class="active"><a href="javascript:void(0)" class="selected" rel="infoDIV"  id="infoTab" onClick="channelObjects(this,'#channelDetailsBox','info','{$u.userid}'); return false;">{lang code='info'}</a></li>
+						<li class="active"><a href="javascript:void(0);" class="selected" rel="infoDIV"  id="infoTab" onClick="channelObjects(this,'#channelDetailsBox','info','{$u.userid}'); return false;">{lang code='info'}</a></li>
 				                {if isSectionEnabled('videos') && $u_control.show_my_videos == 'yes'}
-						<li><a href="javascript:void(0)" onClick="channelObjects(this,'#channelDetailsBox','videos','{$u.userid}'); return false;">{lang code='videos'}</a></li>{/if}
+						<li><a href="javascript:void(0);" onClick="channelObjects(this,'#channelDetailsBox','videos','{$u.userid}'); return false;">{lang code='videos'}</a></li>{/if}
 						{if isSectionEnabled('groups') && $u_control.show_my_friends == 'yes'}
-						<li><a href="javascript:void(0)" onClick="channelObjects(this,'#channelDetailsBox','groups','{$u.userid}'); return false;">{lang code='groups'}</a></li>{/if}
+						<li><a href="javascript:void(0);" onClick="channelObjects(this,'#channelDetailsBox','groups','{$u.userid}'); return false;">{lang code='groups'}</a></li>{/if}
 						{if isSectionEnabled('photos') && $u_control.show_my_photos == 'yes'}
-						<li><a href="javascript:void(0)" onClick="channelObjects(this,'#channelDetailsBox','photos','{$u.userid}'); return false;">{lang code='photos'}</a></li>{/if}
-						<li><a href="javascript:void(0)" onClick="channelObjects(this,'#channelDetailsBox','playlists','{$u.userid}'); return false;">{lang code='Playlists'}</a></li>
+						<li><a href="javascript:void(0);" onClick="channelObjects(this,'#channelDetailsBox','photos','{$u.userid}'); return false;">{lang code='photos'}</a></li>{/if}
+						<li><a href="javascript:void(0);" onClick="channelObjects(this,'#channelDetailsBox','playlists','{$u.userid}'); return false;">{lang code='Playlists'}</a></li>
 					</ul>
 
 					<div  id="channelDetailsBox">
@@ -100,7 +100,7 @@
 						{/foreach}
 					    
 							<div id="moreDetails" class="channelFieldset">
-								<a class="btn btn-primary btn-sm channelLegend" href="javascript:void(0)" onClick="$('#moreDetails').hide(); $('#moreDetailsDIV').show();">{lang code='more'}</a>
+								<a class="btn btn-primary btn-sm channelLegend" href="javascript:void(0);" onClick="$('#moreDetails').hide(); $('#moreDetailsDIV').show();">{lang code='more'}</a>
 							</div>
 						</div>
 					</div>

@@ -18,7 +18,7 @@
                 <a class="btn btn-primary btn-sm" href="?mode=manage_items&amp;cid={$collection.collection_id}&amp;type={$collection.type}">
                     {lang("manage_items")}
                 </a>
-                <a class="btn btn-primary btn-sm" href="javascript:void(0)" onmousedown="delete_item('delete_coll','{$collection.collection_id}','{lang code="confirm_collection_delete"}','?mode={$mode}&amp;delete_collection={$collection.collection_id}');" id="delete_coll-{$collection.collection_id}">
+                <a class="btn btn-primary btn-sm" href="javascript:void(0);" onmousedown="delete_item('delete_coll','{$collection.collection_id}','{lang code="confirm_collection_delete"}','?mode={$mode}&amp;delete_collection={$collection.collection_id}');" id="delete_coll-{$collection.collection_id}">
                     {lang("delete")}
                 </a>
             </div>
@@ -95,7 +95,7 @@
             {$collection.collection_name} 			
             <div class="btn-group show">
                 <a class="btn btn-primary btn-sm" href="{$cbcollection->collection_links($collection,'view')}">{lang code="view"}</a>
-                 <a class="btn btn-primary btn-sm" href="javascript:void(0)" onmousedown="delete_item('delete_coll','{$collection.collection_id}','{lang code="Are you sure you want to remove this collection from favorites?"}','?mode={$mode}&amp;remove_fav_collection={$collection.collection_id}');" id="delete_coll-{$collection.collection_id}">
+                 <a class="btn btn-primary btn-sm" href="javascript:void(0);" onmousedown="delete_item('delete_coll','{$collection.collection_id}','{lang code="Are you sure you want to remove this collection from favorites?"}','?mode={$mode}&amp;remove_fav_collection={$collection.collection_id}');" id="delete_coll-{$collection.collection_id}">
                     {lang code="remove"}
                  </a>
              </div>

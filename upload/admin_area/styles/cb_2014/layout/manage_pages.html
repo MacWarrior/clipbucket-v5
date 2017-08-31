@@ -123,7 +123,7 @@
             Actions <i class="caret"></i>
           </button>
           <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-          <li role="presentation"><a role="menuitem" tabindex="-1" href="{$cbpage->page_link($cbpages[list])}">View</a></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="{$cbpage->page_link($cbpages[list])}">{lang code='views'}</a></li>
           <li role="presentation"><a role="menuitem" tabindex="-1" href="?mode=edit&pid={$cbpages[list].page_id}">{lang code='edit'}</a></li>
           {if $cbpages[list].active == yes}
           <li role="presentation"><a role="menuitem" tabindex="-1" href="?deactivate={$cbpages[list].page_id}">Deactivate</a></li>

@@ -68,18 +68,18 @@
                   <select class="form-control" name="country" id="country">
                     {assign var='countries' value=$Cbucket->get_countries(iso2)}
                     {foreach from=$countries item=country key=code}
-                    <option value="{$code}" {if $user.country==$code} selected="selected"{/if}>{$country}</option>
+                    <option value="{$code}" {if $user.country==$code} selected{/if}>{$country}</option>
                     {/foreach}
                   </select>
                 </div>
                 <div class="form-group">
                   <label for="country" class="show">{lang code='gender'}</label>
                   <label class="radio-inline">
-                    <input type="radio" name="sex" value="male" id="sex_0" {if $user.sex == male} checked="checked"{/if} />
+                    <input type="radio" name="sex" value="male" id="sex_0" {if $user.sex == male} checked{/if} />
                     {lang code='male'}
                   </label>
                   <label class="radio-inline">
-                    <input type="radio" name="sex" value="female" id="sex_1" {if $user.sex == female} checked="checked"{/if}/>
+                    <input type="radio" name="sex" value="female" id="sex_1" {if $user.sex == female} checked{/if}/>
                     {lang code='female'}
                   </label>
                 </div>

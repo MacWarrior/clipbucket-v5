@@ -53,7 +53,7 @@ class CBObjects
 		foreach($langs as $lang)
 		{
 			if($lang_obj->lang == $lang['language_code'])
-				$selected = ' selected="selected" ';
+				$selected = ' selected ';
 			else
 				$selected =  '';
 				

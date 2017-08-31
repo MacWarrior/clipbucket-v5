@@ -18,8 +18,8 @@
     <small>if yes, all videos will be played automatically</small>
   </label>
     <select class="form-control" name="autoplay_video" id="autoplay_video">
-        <option value="yes"  {if $row.autoplay_video=='yes'} selected="selected" {/if} >Yes</option>
-        <option value="no" {if $row.autoplay_video=='no'} selected="selected" {/if} >No</option>
+        <option value="yes"  {if $row.autoplay_video=='yes'} selected {/if} >Yes</option>
+        <option value="no" {if $row.autoplay_video=='no'} selected {/if} >No</option>
     </select>
 </div>
 <div class="col-md-4">
@@ -28,8 +28,8 @@
     <small>By turning this on, player will turn on playlists feature in player (if available)</small>
   </label>
     <select class="form-control" name="use_playlist" id="use_playlist">
-        <option value="yes"  {if $row.autoplay_video=='yes'} selected="selected" {/if} >Yes</option>
-        <option value="no"  {if $row.use_playlist=='no'} selected="selected" {/if}} >No</option>
+        <option value="yes"  {if $row.autoplay_video=='yes'} selected {/if} >Yes</option>
+        <option value="no"  {if $row.use_playlist=='no'} selected {/if}} >No</option>
     </select>
 </div>
 <div class="col-md-4">
@@ -60,10 +60,10 @@
     Placement of logo, top, left , right or bottom
   </label>
   <select class="form-control" name="logo_placement" id="logo_placement">
-      <option value="tl" {if $row.logo_placement=='tl'} selected="selected"{/if}>Top Left</option>
-      <option value="tr" {if $row.logo_placement=='tr'} selected="selected"{/if}>Top Right</option>
-      <option value="br" {if $row.logo_placement=='br'} selected="selected"{/if}>Bottom Right</option>
-      <option value="bl" {if $row.logo_placement=='bl'} selected="selected"{/if}>Bottom Left</option>
+      <option value="tl" {if $row.logo_placement=='tl'} selected{/if}>Top Left</option>
+      <option value="tr" {if $row.logo_placement=='tr'} selected{/if}>Top Right</option>
+      <option value="br" {if $row.logo_placement=='br'} selected{/if}>Bottom Right</option>
+      <option value="bl" {if $row.logo_placement=='bl'} selected{/if}>Bottom Left</option>
     </select>
 </div>
 <div class="col-md-4">
@@ -82,8 +82,8 @@
     <small>this will let you play youtube videos in your player</small>
   </label>
     <select class="form-control" name="youtube_enabled" id="youtube_enabled">
-        <option value="yes"  {if $row.youtube_enabled=='yes'} selected="selected" {/if}>Yes</option>
-        <option value="no"  {if $row.youtube_enabled=='no'} selected="selected" {/if}>No</option>
+        <option value="yes"  {if $row.youtube_enabled=='yes'} selected {/if}>Yes</option>
+        <option value="no"  {if $row.youtube_enabled=='no'} selected {/if}>No</option>
     </select>
 </div> -->
 
@@ -100,8 +100,8 @@
     <small>Autoplay embeded video by default</small>
   </label>
     <select class="form-control" name="autoplay_embed" id="autoplay_embed">
-        <option value="yes"  {if $row.autoplay_embed=='yes'} selected="selected" {/if}>Yes</option>
-        <option value="no" {if $row.autoplay_embed=='no'} selected="selected" {/if}>No</option>
+        <option value="yes"  {if $row.autoplay_embed=='yes'} selected {/if}>Yes</option>
+        <option value="no" {if $row.autoplay_embed=='no'} selected {/if}>No</option>
     </select>
 </div>
 <div class="col-md-4">
@@ -110,8 +110,8 @@
     <small>this will let you enable enlarge/small button for CB_html5_player</small>
   </label>
     <select class="form-control" name="enlarge_button" id="enlarge_button">
-        <option value="yes"  {if $row.enlarge_button=='yes'} selected="selected" {/if}>Yes</option>
-        <option value="no"  {if $row.enlarge_button=='no'} selected="selected" {/if}>No</option>
+        <option value="yes"  {if $row.enlarge_button=='yes'} selected {/if}>Yes</option>
+        <option value="no"  {if $row.enlarge_button=='no'} selected {/if}>No</option>
     </select>
 </div>
 
@@ -124,8 +124,8 @@
     <small>Let users to play video from anywhere, requires h264 streaming module from webserver</small>  
   </label>
     <select class="form-control" name="pseudostreaming" id="pseudostreaming">
-        <option value="yes" {if $row.pseudostreaming=='yes'} selected="selected" {/if}>Yes</option>
-        <option value="no"  {if $row.pseudostreaming=='no'} selected="selected" {/if} >No</option>
+        <option value="yes" {if $row.pseudostreaming=='yes'} selected {/if}>Yes</option>
+        <option value="no"  {if $row.pseudostreaming=='no'} selected {/if} >No</option>
     </select>
 </div>
 </div>

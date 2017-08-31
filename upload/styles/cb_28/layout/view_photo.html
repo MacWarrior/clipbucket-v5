@@ -72,7 +72,7 @@
 					</div>
 					<div class="clearfix subscribe-col col-lg-6 col-md-6 col-sm-6 col-xs-12">
 						{if $photo.userid != userid()}
-						<a id="subscribeUser" class="btn btn-subscribe btn-primary" href="javascript:void(0)" onclick="_cb.subscribeToChannelNew('{$user.userid}','subscribe_user')">
+						<a id="subscribeUser" class="btn btn-subscribe btn-primary" href="javascript:void(0);" onclick="_cb.subscribeToChannelNew('{$user.userid}','subscribe_user')">
 							<span>{lang code='subscribe_btn'}</span>
 						</a>
 						{/if}
@@ -163,7 +163,7 @@
 					<!-- add photo to fav -->
 					<div class="clearfix btn-fav">
 						<div id="video_action_result_cont"></div>
-						<a id="addfav" class="btn btn-block btn-primary" href="javascript:void(0)" onclick="_cb.add_to_favNew('photo','{$photo.photo_id}');">{lang code='add_to_my_favorites'}</a>
+						<a id="addfav" class="btn btn-block btn-primary" href="javascript:void(0);" onclick="_cb.add_to_favNew('photo','{$photo.photo_id}');">{lang code='add_to_my_favorites'}</a>
 					</div>
 					<!-- add photo to fav -->
 				</div>

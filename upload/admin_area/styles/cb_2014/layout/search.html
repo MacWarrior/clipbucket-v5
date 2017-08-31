@@ -11,7 +11,7 @@
                     <label class="sr-only" for="SearchType">Type</label>
                     <select id="SearchType" name="type" class="form-control">
                         {foreach from=$Cbucket->search_types item=t key=stypes}
-                        <option value="{$stypes}" {if $smarty.get.type==$stypes} selected="selected"{/if}>{$stypes}</option>
+                        <option value="{$stypes}" {if $smarty.get.type==$stypes} selected{/if}>{$stypes}</option>
                         {/foreach}
                     </select>
                 </div>
@@ -62,7 +62,7 @@
         </div>
     </div>
     <div class="col-md-7">
-        <a class="btn btn-primary btn-sm" href="javascript:void(0)" onClick="_cb.showAdvanceSearch('simple_search','advance_search','more_button','more_button_up');">
+        <a class="btn btn-primary btn-sm" href="javascript:void(0);" onClick="_cb.showAdvanceSearch('simple_search','advance_search','more_button','more_button_up');">
             {lang code='more_options'}
         </a>
         </div>

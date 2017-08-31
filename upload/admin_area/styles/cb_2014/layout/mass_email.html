@@ -67,7 +67,7 @@
                     <div id="activestatus" class="tab-pane active">
                     <h4>Active status<br /><small>Choose whether to send to active users or non active</small></h4>
                     <label class="radio">
-                        <input name="active" type="radio" value="yes" checked="checked" />Yes
+                        <input name="active" type="radio" value="yes" checked />Yes
                     </label>
                     <label class="radio">
                         <input type="radio" name="active" value="no" />No
@@ -83,7 +83,7 @@
                         <input type="radio" name="ban" value="yes" />Yes
                     </label>
                     <label class="radio">
-                        <input name="ban" type="radio" value="no" checked="checked" />No
+                        <input name="ban" type="radio" value="no" checked />No
                     </label>
                     <label class="radio">
                         <input name="ban" type="radio" value="any" />Any
@@ -96,7 +96,7 @@
                     {foreach from=$levels item=level}
                     {if $level.user_level_id !='4'}
                     <label class="checkbox-inline">
-                        <input type='checkbox' name="level[]" value="{$level.user_level_id}" checked="checked"/>{$level.user_level_name}
+                        <input type='checkbox' name="level[]" value="{$level.user_level_id}" checked />{$level.user_level_name}
                     </label>
                     {/if}
                     {/foreach}
@@ -106,11 +106,11 @@
                     <h4>User category<br><small>User category</small></h4>
                     {assign var=cats value=$userquery->get_categories()}
                     <label class="checkbox-inline">
-                        <input type='checkbox' name="cat[]" value="0" checked="checked"/>All
+                        <input type='checkbox' name="cat[]" value="0" checked />All
                     </label>
                     {foreach from=$cats item=cat}
                     <label class="checkbox-inline">
-                        <input type='checkbox' name="cat[]" value="{$cat.category_id}" checked="checked"/>{$cat.category_name}</label>
+                        <input type='checkbox' name="cat[]" value="{$cat.category_id}" checked />{$cat.category_name}</label>
                     {/foreach}
                 </div>
                     </div>
@@ -138,7 +138,7 @@
     <div class="cb_field_cont" style="display:none">
     	<div class="cb_fieldL"><strong>Email delivery method</strong>
         <br />Please choose weather you want browser to send emails or create a background process </div>
-        <div class="cb_fieldR"><label><input type="radio" name="method" value="browser" checked="checked"/>Browser</label>
+        <div class="cb_fieldR"><label><input type="radio" name="method" value="browser" checked />Browser</label>
         <label><input type="radio" name="method" value="background" />Background Process</label></div>
     	<div class="clear clearfix"></div>
     </div>
@@ -169,7 +169,7 @@
                     <td><strong>{$email.email_subj}</strong></td>
                     <td>
                         <a href="?send_email={$email.id}">Send Email</a> |
-                        <a href="?delete={$email.id}">{lang code='delete'}</a> | <a href="javascript:void(0)" onclick="alert($('#mytest_{$email.id}').html())">View</a><br />
+                        <a href="?delete={$email.id}">{lang code='delete'}</a> | <a href="javascript:void(0);" onclick="alert($('#mytest_{$email.id}').html())">{lang code='views'}</a><br />
                         <span style="font-size:11px; color:#666"><strong>From</strong>
                         : {$email.email_from} &#8226; <strong>Method</strong> : {$email.method}
                         &#8226; <strong>Sent</strong> : {$email.sent} &#8226; <strong>Status</strong> : {$email.status}</span><br />
@@ -212,7 +212,7 @@
                 <div id="mytest" style="display:none" class="email_content ">{$email.email_msg|nl2br}</div>
             </td>
             <td>
-                <a class="btn btn-info btn-sm" href="javascript:void(0)" onclick="alert($('#mytest').html())" >View</a>
+                <a class="btn btn-info btn-sm" href="javascript:void(0);" onclick="alert($('#mytest').html())" >{lang code='views'}</a>
             </td>
         </tr>
     </table>

@@ -25,25 +25,25 @@
       <td><label for="featured"></label>
         <select name="featured" id="featured" class="input">
           <option value="" ></option>
-          <option value="yes" {if $smarty.get.featured=='yes'} selected="selected"{/if}>Yes</option>
-          <option value="no" {if $smarty.get.featured=='no'} selected="selected"{/if}>No</option>
+          <option value="yes" {if $smarty.get.featured=='yes'} selected{/if}>Yes</option>
+          <option value="no" {if $smarty.get.featured=='no'} selected{/if}>No</option>
         </select></td>
     </tr>
     <tr>
       <td align="right">Active</td>
       <td><select name="active" id="active" class="input">
       <option value="" ></option>
-        <option value="yes" {if $smarty.get.active=='yes'} selected="selected"{/if}>Yes</option>
-        <option value="no" {if $smarty.get.active=='no'} selected="selected"{/if}>No</option>
+        <option value="yes" {if $smarty.get.active=='yes'} selected{/if}>Yes</option>
+        <option value="no" {if $smarty.get.active=='no'} selected{/if}>No</option>
       </select></td>
     </tr>
     <tr>
       <td align="right">Conversion Status</td>
       <td><select name="status" id="status" class="input">
       <option value="" ></option>
-        <option value="Successful" {if $smarty.get.status=='Successful'} selected="selected"{/if}>Successful</option>
-        <option value="Processing" {if $smarty.get.status=='Processing'} selected="selected"{/if}>Processing</option>
-        <option value="Failed" {if $smarty.get.status=='Failed'} selected="selected"{/if}>Failed</option>
+        <option value="Successful" {if $smarty.get.status=='Successful'} selected{/if}>Successful</option>
+        <option value="Processing" {if $smarty.get.status=='Processing'} selected{/if}>Processing</option>
+        <option value="Failed" {if $smarty.get.status=='Failed'} selected{/if}>Failed</option>
 </select></td>
     </tr>
     <tr>

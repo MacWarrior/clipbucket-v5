@@ -38,8 +38,8 @@
                 <label for="active">Active</label>
                     <select name="active" id="active" class="form-control">
                         <option value="" ></option>
-                        <option value="yes" {if $smarty.get.active=='yes'} selected="selected"{/if}>Yes</option>
-                        <option value="no" {if $smarty.get.active=='no'} selected="selected"{/if}>No</option>
+                        <option value="yes" {if $smarty.get.active=='yes'} selected{/if}>Yes</option>
+                        <option value="no" {if $smarty.get.active=='no'} selected{/if}>No</option>
                     </select>
             </div>
         </div>
@@ -48,8 +48,8 @@
                 <label for="broadcast">Broadcast</label>
                     <select name="broadcast" id="broadcast" class="form-control">
                         <option value="" ></option>
-                        <option value="public" {if $smarty.get.broadcast=='public'} selected="selected"{/if}>Public</option>
-                        <option value="private" {if $smarty.get.broadcast=='private'} selected="selected"{/if}>Private</option>
+                        <option value="public" {if $smarty.get.broadcast=='public'} selected{/if}>Public</option>
+                        <option value="private" {if $smarty.get.broadcast=='private'} selected{/if}>Private</option>
                     </select>
             </div>
         </div>
@@ -57,8 +57,8 @@
             <div class="form-group">
                 <label for="featured">Featured</label>
                     <select name="featured" id="featured" class="form-control">
-                        <option value="yes" {if $smarty.get.featured=='yes'} selected="selected"{/if}>Yes</option>
-                        <option value="no" {if $smarty.get.featured=='no'} selected="selected"{/if}>No</option>
+                        <option value="yes" {if $smarty.get.featured=='yes'} selected{/if}>Yes</option>
+                        <option value="no" {if $smarty.get.featured=='no'} selected{/if}>No</option>
                     </select>
             </div>
         </div>
@@ -68,7 +68,7 @@
                     <select name="collection_type" id="collection_type" class="form-control">
                         <option value="" ></option>
                         {foreach from=$cbcollection->types item=name key=type}
-                        <option value="{$type}" {if $smarty.get.collection_type == $type}selected="selected"{/if}>{$name}</option>
+                        <option value="{$type}" {if $smarty.get.collection_type == $type}selected{/if}>{$name}</option>
                         {/foreach}
                     </select>
             </div>
@@ -77,10 +77,10 @@
             <div class="form-group">
                 <label for="order">Order</label>
                     <select name="order" id="order" class="form-control">
-                        <option value="collection_id" {if $smarty.get.order == 'collection_id'}selected="selected"{/if}>ID</option>
-                        <option value="total_objects" {if $smarty.get.order == 'total_objects'}selected="selected"{/if}>Total Items</option>
-                        <option value="collection_name" {if $smarty.get.order == 'collection_name'}selected="selected"{/if}>Name</option>
-                        <option value="views" {if $smarty.get.order == 'views'}selected="selected"{/if}>Views</option>
+                        <option value="collection_id" {if $smarty.get.order == 'collection_id'}selected{/if}>ID</option>
+                        <option value="total_objects" {if $smarty.get.order == 'total_objects'}selected{/if}>Total Items</option>
+                        <option value="collection_name" {if $smarty.get.order == 'collection_name'}selected{/if}>Name</option>
+                        <option value="views" {if $smarty.get.order == 'views'}selected{/if}>Views</option>
                     </select>
             </div>
         </div>

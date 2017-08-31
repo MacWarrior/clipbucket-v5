@@ -32,8 +32,8 @@
                 <label for="status">Status</label>
                     <select name="status" id="status" class="form-control">
                     <option value="" >----</option>
-                    <option value="Ok" {if $smarty.get.status=='Ok'} selected="selected"{/if}>Active</option>
-                    <option value="ToActivate" {if $smarty.get.status=='ToActivate'} selected="selected"{/if}>Inactive</option>
+                    <option value="Ok" {if $smarty.get.status=='Ok'} selected{/if}>Active</option>
+                    <option value="ToActivate" {if $smarty.get.status=='ToActivate'} selected{/if}>Inactive</option>
                 </select>
             </div>
         </div>
@@ -45,8 +45,8 @@
             <label for="banned">Banned</label>
                 <select name="ban" id="ban" class="form-control">
                    <option value="" >----</option>
-                    <option value="no" {if $smarty.get.ban=='no'} selected="selected"{/if}>No</option>
-                     <option value="yes" {if $smarty.get.ban=='yes'} selected="selected"{/if}>Yes</option>
+                    <option value="no" {if $smarty.get.ban=='no'} selected{/if}>No</option>
+                     <option value="yes" {if $smarty.get.ban=='yes'} selected{/if}>Yes</option>
                 </select>
             </div>
         </div>
@@ -55,8 +55,8 @@
                 <label for="featured">Featured</label>
                 <select name="featured" id="featured" class="form-control">
                    <option value="" >----</option>
-                    <option value="No" {if $smarty.get.featured=='No'} selected="selected"{/if}>No</option>
-                     <option value="Yes" {if $smarty.get.featured=='Yes'} selected="selected"{/if}>Yes</option>
+                    <option value="No" {if $smarty.get.featured=='No'} selected{/if}>No</option>
+                     <option value="Yes" {if $smarty.get.featured=='Yes'} selected{/if}>Yes</option>
                 </select>
             </div>
         </div>
@@ -67,7 +67,7 @@
                     <option value="">------</option>
                     {assign var=levels value=$userquery->get_levels()}
                     {foreach from=$levels item=level}
-                    <option value="{$level.user_level_id}" {if $smarty.get.level==$level.user_level_id} selected="selected"{/if}>{$level.user_level_name}</option>
+                    <option value="{$level.user_level_id}" {if $smarty.get.level==$level.user_level_id} selected{/if}>{$level.user_level_name}</option>
                     {/foreach}
                 </select>
             </div>

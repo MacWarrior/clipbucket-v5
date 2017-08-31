@@ -33,9 +33,9 @@
         <div class="reply">
             <div class="sizeSmaller bold" style="font-size:12px;">
                 {if !$comment.userid==userid() || has_access('admin_access',true)}
-                <a href="javascript:void(0)" onclick="spam_comment('{$comment.comment_id}','{$type}','{$type_id}')">{lang code='spam'}</a>
+                <a href="javascript:void(0);" onclick="spam_comment('{$comment.comment_id}','{$type}','{$type_id}')">{lang code='spam'}</a>
                 {/if}
-                {if has_access('admin_del_access') || $comment.userid==userid() || $comment.type_owner_id==userid()} &middot; <a href="javascript:void(0)" onclick="delete_comment('{$comment.comment_id}','{$type}')">{lang code='delete'}</a>{/if}
+                {if has_access('admin_del_access') || $comment.userid==userid() || $comment.type_owner_id==userid()} &middot; <a href="javascript:void(0);" onclick="delete_comment('{$comment.comment_id}','{$type}')">{lang code='delete'}</a>{/if}
             </div>
         </div>
     </div>
@@ -73,12 +73,12 @@
               
                 {if $userquery->login_check('',true)}
                 
-                <a href="javascript:void(0)" onclick="reply_box('{$comment.comment_id}','{$comment.type}','{$comment.type_id}')">{lang code='reply'}</a>
+                <a href="javascript:void(0);" onclick="reply_box('{$comment.comment_id}','{$comment.type}','{$comment.type_id}')">{lang code='reply'}</a>
                 {/if}
                 {if !$comment.userid==userid() || has_access('admin_access',true)}
-                &middot; <a href="javascript:void(0)" onclick="spam_comment('{$comment.comment_id}','{$type}','{$type_id}')">{lang code='spam'}</a>
+                &middot; <a href="javascript:void(0);" onclick="spam_comment('{$comment.comment_id}','{$type}','{$type_id}')">{lang code='spam'}</a>
                 {/if}
-                {if has_access('admin_del_access') || $comment.userid==userid() || $comment.type_owner_id==userid()} &middot; <a href="javascript:void(0)" onclick="delete_comment('{$comment.comment_id}','{$type}')">{lang code='delete'}</a>{/if}
+                {if has_access('admin_del_access') || $comment.userid==userid() || $comment.type_owner_id==userid()} &middot; <a href="javascript:void(0);" onclick="delete_comment('{$comment.comment_id}','{$type}')">{lang code='delete'}</a>{/if}
             </div>
         </div>
     </div>
@@ -118,9 +118,9 @@
                             <div class="reply">
                                 <div class="sizeSmaller bold" style="font-size:12px;">
                                      {if !$comment.userid==userid() || has_access('admin_access',true)}
-                                     <a href="javascript:void(0)" onclick="spam_comment('{$reply.comment_id}','{$type}','{$type_id}')">{lang code='spam'}</a>
+                                     <a href="javascript:void(0);" onclick="spam_comment('{$reply.comment_id}','{$type}','{$type_id}')">{lang code='spam'}</a>
                                      {/if}
-                                    {if has_access('admin_del_access') || $comment.userid==userid() || $comment.type_owner_id==userid()} &middot; <a href="javascript:void(0)" onclick="delete_comment('{$reply.comment_id}','{$type}')">{lang code='delete'}</a>{/if}
+                                    {if has_access('admin_del_access') || $comment.userid==userid() || $comment.type_owner_id==userid()} &middot; <a href="javascript:void(0);" onclick="delete_comment('{$reply.comment_id}','{$type}')">{lang code='delete'}</a>{/if}
                                 </div>
                             </div>
                         </div>
@@ -151,8 +151,8 @@
                             </div>
                             <div class="reply">
                                 <div class="sizeSmaller bold" style="font-size:12px;">
-                                     <a href="javascript:void(0)" onclick="spam_comment('{$reply.comment_id}','{$type}','{$type_id}')">{lang code='spam'}</a>
-                                    {if has_access('admin_del_access') || $comment.userid==userid() || $comment.type_owner_id==userid()} &middot; <a href="javascript:void(0)" onclick="delete_comment('{$reply.comment_id}','{$type}')">{lang code='delete'}</a>{/if}
+                                     <a href="javascript:void(0);" onclick="spam_comment('{$reply.comment_id}','{$type}','{$type_id}')">{lang code='spam'}</a>
+                                    {if has_access('admin_del_access') || $comment.userid==userid() || $comment.type_owner_id==userid()} &middot; <a href="javascript:void(0);" onclick="delete_comment('{$reply.comment_id}','{$type}')">{lang code='delete'}</a>{/if}
                                 </div>
                             </div>
                         </div>

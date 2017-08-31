@@ -35,7 +35,7 @@
           <input type="radio" name="default" value="yes" id="default_0" />
           Yes</label>
         <label>
-          <input name="default" type="radio" id="default_1" value="no" checked="checked" />
+          <input name="default" type="radio" id="default_1" value="no" checked />
           No</label>
         <br />
       </p></td>
@@ -76,10 +76,10 @@
       <td valign="top" class="td_body">Make Default Category</td>
       <td class="td_body"><p>
         <label>
-          <input type="radio" name="default" value="yes" id="default_0" {if $cat_details.isdefault=='yes'} checked="checked"{/if} />
+          <input type="radio" name="default" value="yes" id="default_0" {if $cat_details.isdefault=='yes'} checked{/if} />
           Yes</label>
         <label>
-          <input name="default" type="radio" id="default_1" value="no" {if $cat_details.isdefault=='no'} checked="checked"{/if} />
+          <input name="default" type="radio" id="default_1" value="no" {if $cat_details.isdefault=='no'} checked{/if} />
           No</label>
         <br />
       </p></td>
@@ -126,7 +126,7 @@ cat_div = "#thumbs_{$category[list].category_id}";
   {/literal}
 </script>
   <tr bgcolor="{$bgcolor}" class="item_listing">
-    <td style="text-indent:10px">{$category[list].category_name} - <a id="thumbs_{$category[list].category_id}"  title="<img src='{$userquery->get_category_thumb($category[list])}'  />" href="javascript:void(0)">View Thumb</a></td>
+    <td style="text-indent:10px">{$category[list].category_name} - <a id="thumbs_{$category[list].category_id}"  title="<img src='{$userquery->get_category_thumb($category[list])}'  />" href="javascript:void(0);">View Thumb</a></td>
     <td >
     <input name="category_order_{$category[list].category_id}" type="text" id="order" style="border:1px solid #999; padding:2px; width:30px" value="{$category[list].category_order}" size="5" maxlength="5" /></td>
   

@@ -54,11 +54,7 @@
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" role="menu">
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="edit_collection.php?collection={$c[list].collection_id}">{lang code='edit'}</a> </li>
 
-                    <li role="presentation"><a target="_blank" role="menuitem" tabindex="-1" href="{$baseurl}/view_collection.php?cid={$c[list].collection_id}&type={$c[list].type}">View</a> </li>
-                    <!-- {if $c[list].featured == yes}
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="?make_unfeature={$c[list].collection_id}">Make Unfeatured</a></li> {/if}
-                    {if $c[list].featured == no}
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="?make_feature={$c[list].collection_id}">Make Featured</a></li> {/if} -->
+                    <li role="presentation"><a target="_blank" role="menuitem" tabindex="-1" href="{$baseurl}/view_collection.php?cid={$c[list].collection_id}&type={$c[list].type}">{lang code='views'}</a> </li>
                     {if $c[list].active == yes}
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="?deactivate={$c[list].collection_id}">Deactivate</a>
                     </li>

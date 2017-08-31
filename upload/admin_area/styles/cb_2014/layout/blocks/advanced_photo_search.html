@@ -44,8 +44,8 @@
           <label for="featured">Featured</label>
           <select class="form-control" name="featured" id="featured">
             <option value="" ></option>
-            <option value="yes" {if $smarty.get.featured=='yes'} selected="selected"{/if}>Yes</option>
-            <option value="no" {if $smarty.get.featured=='no'} selected="selected"{/if}>No</option>
+            <option value="yes" {if $smarty.get.featured=='yes'} selected{/if}>Yes</option>
+            <option value="no" {if $smarty.get.featured=='no'} selected{/if}>No</option>
           </select>
         </div>
       </div>
@@ -55,7 +55,7 @@
           <select class="form-control" name="extension" id="extension">
             <option value="" ></option>
             {foreach from=$cbphoto->exts item=ext}
-              <option value="{$ext}"{if $smarty.get.extension == $ext} selected="selected"{/if}>{$ext|capitalize}</option>
+              <option value="{$ext}"{if $smarty.get.extension == $ext} selected{/if}>{$ext|capitalize}</option>
             {/foreach}
           </select>
         </div>
@@ -65,11 +65,11 @@
           <label for="order">Order</label>
           <select class="form-control" name="order" id="order">
             <option value="" ></option>
-            <option value="photo_id" {if $smarty.get.order == 'photo_id'}selected="selected"{/if}>ID</option>
-            <option value="photo_title" {if $smarty.get.order == 'photo_title'}selected="selected"{/if}>
+            <option value="photo_id" {if $smarty.get.order == 'photo_id'}selected{/if}>ID</option>
+            <option value="photo_title" {if $smarty.get.order == 'photo_title'}selected{/if}>
               Name
             </option>        
-            <option value="views" {if $smarty.get.order == 'views'}selected="selected"{/if}>Views</option>
+            <option value="views" {if $smarty.get.order == 'views'}selected{/if}>Views</option>
           </select>
         </div>
       </div>

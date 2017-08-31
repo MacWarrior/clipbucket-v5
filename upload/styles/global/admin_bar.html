@@ -66,7 +66,7 @@ $(document).ready(function(){
     {assign var=adminLinks value=$Cbucket->AdminMenu}
     {foreach from=$adminLinks item=menu key=name}
           <li class="CBadminBarHeading">
-          	<a href="javascript:void(0)">{$name}</a>
+          	<a href="javascript:void(0);">{$name}</a>
             <ul class="CBadminBarSubMenuWrapper" id="{$name}">
             {foreach from=$menu key=sub_menu item=sub_link}        	
                 	<li class="CBadminBarSubMenu"><a target="_blank" href="{$baseurl}/admin_area/{$sub_link}">{$sub_menu}</a></li>                           	

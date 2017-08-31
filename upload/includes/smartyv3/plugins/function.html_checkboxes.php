@@ -218,10 +218,10 @@ function smarty_function_html_checkboxes_output($name, $value, $output, $selecte
 
     if (is_array($selected)) {
         if (isset($selected[$value])) {
-            $_output .= ' checked="checked"';
+            $_output .= ' checked';
         }
     } elseif ($value === $selected) {
-        $_output .= ' checked="checked"';
+        $_output .= ' checked';
     }
 
     $_output .= $extra . ' />' . $output;

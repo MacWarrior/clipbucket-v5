@@ -47,7 +47,7 @@
     <div class="cb_field_cont" style="display:none">
     	<div class="cb_fieldL"><strong>Email delivery method</strong>
         <br />Please choose weather you want browser to send emails or create a background process </div>
-        <div class="cb_fieldR"><label><input type="radio" name="method" value="browser" checked="checked" />Browser</label>
+        <div class="cb_fieldR"><label><input type="radio" name="method" value="browser" checked />Browser</label>
         <label><input type="radio" name="method" value="background" />Background Process</label></div>
     	<div class="clear clearfix"></div>
     </div>
@@ -63,7 +63,7 @@
     	<div class="cb_fieldL"><strong>Active status</strong>
         <br />
       Choose whether to send to active users or non active</div>
-        <div class="cb_fieldR"><label><input name="active" type="radio" value="yes" checked="checked" />Yes</label>
+        <div class="cb_fieldR"><label><input name="active" type="radio" value="yes" checked />Yes</label>
         <label><input type="radio" name="active" value="no" />No</label><label><input name="active" type="radio" value="any" />Any</label></div>
     	<div class="clear clearfix"></div>
     </div>
@@ -73,7 +73,7 @@
     	<div class="cb_fieldL"><strong>Banned status</strong>
         <br />Send email to banned users</div>
         <div class="cb_fieldR"><label><input type="radio" name="ban" value="yes" />Yes</label>
-        <label><input name="ban" type="radio" value="no" checked="checked" />No</label>
+        <label><input name="ban" type="radio" value="no" checked />No</label>
         <label><input name="ban" type="radio" value="any" />Any</label></div>
     	<div class="clear clearfix"></div>
     </div>
@@ -88,7 +88,7 @@
         {foreach from=$levels item=level}
         	{if $level.user_level_id !='4'}
        	  <label style="width:120px; float:left"><input type='checkbox' 
-          name="level[]" value="{$level.user_level_id}" checked="checked"/>{$level.user_level_name}</label>
+          name="level[]" value="{$level.user_level_id}" checked />{$level.user_level_name}</label>
             {/if}
         {/foreach}
         </div>
@@ -105,7 +105,7 @@
         {foreach from=$cats item=cat}
 
         	<label style="width:120px; float:left">
-            <input type='checkbox' name="cat[]" value="{$cat.category_id}" checked="checked"/>{$cat.category_name}</label>
+            <input type='checkbox' name="cat[]" value="{$cat.category_id}" checked />{$cat.category_name}</label>
 
         {/foreach}
         </div>
@@ -140,7 +140,7 @@
         <div>
             <strong>{$email.email_subj}</strong> &#8212; 
           <a href="?send_email={$email.id}">Send Email</a> | 
-          <a href="?delete={$email.id}">{lang code='delete'}</a> | <a href="javascript:void(0)" onclick="$('#mytest').dialog('open')">View</a><br />
+          <a href="?delete={$email.id}">{lang code='delete'}</a> | <a href="javascript:void(0);" onclick="$('#mytest').dialog('open')">{lang code='views'}</a><br />
             <span style="font-size:11px; color:#666"><strong>From</strong> 
             : {$email.email_from} &#8226; <strong>Method</strong> : {$email.method}
           &#8226; <strong>Sent</strong> : {$email.sent} &#8226; <strong>Status</strong> : {$email.status}</span><br />
@@ -172,7 +172,7 @@ Sending emails &#8212; <a href="mass_email.php">Go back to mass email page</a></
     <div class="cb_row">
         <div>
             <strong>{$email.email_subj}</strong> &#8212; 
-           	<a href="javascript:void(0)" onclick="$('#mytest').dialog('open')">View</a><br />
+           	<a href="javascript:void(0);" onclick="$('#mytest').dialog('open')">{lang code='views'}</a><br />
             <span style="font-size:11px; color:#666"><strong>From</strong> 
             : {$email.email_from} &#8226; <strong>Method</strong> : {$email.method}
           &#8226; <strong>Sent</strong> : {$email.sent} &#8226; <strong>Status</strong> : {$email.status}</span><br />

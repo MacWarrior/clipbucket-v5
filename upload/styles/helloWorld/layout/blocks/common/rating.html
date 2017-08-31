@@ -3,11 +3,11 @@
 <div class="clearfix rating">
 	<div class="clearfix rating-holder">
 		<div class="likes like-dislike {if $ratedBy == 'liked'}rated{/if}">
-			<a {if !$disable} onclick="_cb.rateNew('{$id}','5','{$type}')"{/if} href="javascript:void(0)"><span class="icon-thumbup"></span></a>
+			<a {if !$disable} onclick="_cb.rateNew('{$id}','5','{$type}')"{/if} href="javascript:void(0);"><span class="icon-thumbup"></span></a>
 			<span>{prettyNum($likes)}</span>
 		</div>
 		<div class="dislikes like-dislike {if $ratedBy == 'disliked'}rated{/if}">
-			<a {if !$disable} onclick="_cb.rateNew('{$id}','1','{$type}')"{/if} href="javascript:void(0)"><span class="icon-thumbdown"></span></a>
+			<a {if !$disable} onclick="_cb.rateNew('{$id}','1','{$type}')"{/if} href="javascript:void(0);"><span class="icon-thumbdown"></span></a>
 			<span>{prettyNum($dislikes)}</span>
 		</div>
 	</div>

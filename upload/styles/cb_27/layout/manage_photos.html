@@ -121,14 +121,14 @@
             <div align="right">
                 Make my album
                 <label>
-                    <input type="radio" name="my_album_privacy" value="public" {if $user.album_privacy =='public'} checked="checked" {/if} onclick="window.location = '{$albumPrivacyUrl}album_privacy=public'"/> Public
+                    <input type="radio" name="my_album_privacy" value="public" {if $user.album_privacy =='public'} checked {/if} onclick="window.location = '{$albumPrivacyUrl}album_privacy=public'"/> Public
                 </label>
                 <label>
-                    <input type="radio" name="my_album_privacy" value="private" {if $user.album_privacy =='private'} checked="checked" {/if} onclick="window.location = '{$albumPrivacyUrl}album_privacy=private'"/> Private
+                    <input type="radio" name="my_album_privacy" value="private" {if $user.album_privacy =='private'} checked {/if} onclick="window.location = '{$albumPrivacyUrl}album_privacy=private'"/> Private
                 </label>
 
                 <label>
-                    <input type="radio" name="my_album_privacy" value="friends" {if $user.album_privacy =='friends'} checked="checked" {/if} onclick="window.location = '{$albumPrivacyUrl}album_privacy=friends'"/>For friends
+                    <input type="radio" name="my_album_privacy" value="friends" {if $user.album_privacy =='friends'} checked {/if} onclick="window.location = '{$albumPrivacyUrl}album_privacy=friends'"/>For friends
                 </label>
             </div>
             <p>All the photos uploaded are dependent on their collections/albums. When you remove some photo from collection/album, this will not delete photo permenently. It will move photo here. You can also use this to make your photos private. Direct link is available for you to share with your friends.</p>

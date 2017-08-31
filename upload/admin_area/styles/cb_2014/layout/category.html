@@ -31,7 +31,7 @@
             <label>Make Default Category</label>
             <select class="form-control" name="default">
             <option class="form-control" id="default_0" value="yes">Yes</option>
-            <option class="form-control" id="default_1" value="no" selected="selected">No</option>
+            <option class="form-control" id="default_1" value="no" selected>No</option>
                 </select>
         </div>
         </div>
@@ -79,8 +79,8 @@
             <div class="col-md-4">
                 <label>Make Default Category</label>
                 <select class="form-control" name="default_categ">
-                    <option class="form-control" name="default" id="default_0" {if $cat_details.isdefault=='yes'} selected="selected"{/if} >Yes</option>
-                    <option class="form-control" name="default" id="default_1" {if $cat_details.isdefault=='no' || $cat_details.isdefault==''} selected="selected"{/if}>No</option>
+                    <option class="form-control" name="default" id="default_0" {if $cat_details.isdefault=='yes'} selected{/if} >Yes</option>
+                    <option class="form-control" name="default" id="default_1" {if $cat_details.isdefault=='no' || $cat_details.isdefault==''} selected{/if}>No</option>
                 </select>
             </div>
             </div>
@@ -124,7 +124,7 @@
              <td><input name="check_user[]" type="checkbox" id="check_user" value="{$u.userid}" /></td>
             <td>{display_clean($category[list].category_name)}
                 <a id="thumbs_{$category[list].category_id}" class="label label-danger arrowed popoverButton" data-html="true"
-             data-placement="top" data-toggle="popover" data-content="<img src='{$cbvid->get_category_thumb($category[list], 'video')}' height='90' width='90'/>" href="javascript:void(0)">View Thumb</a></td>
+             data-placement="top" data-toggle="popover" data-content="<img src='{$cbvid->get_category_thumb($category[list], 'video')}' height='90' width='90'/>" href="javascript:void(0);">View Thumb</a></td>
 
 
             <td> <input name="category_order_{$category[list].category_id}" type="text" id="order" style="border:1px solid #999; padding:2px; width:30px" value="{$category[list].category_order}" size="5" maxlength="5" /></td>

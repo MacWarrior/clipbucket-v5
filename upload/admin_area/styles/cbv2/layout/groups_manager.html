@@ -20,16 +20,16 @@
       <td><label for="featured"></label>
         <select name="featured" id="featured" class="input">
           <option value="" ></option>
-          <option value="yes" {if $smarty.get.featured=='yes'} selected="selected"{/if}>Yes</option>
-          <option value="no" {if $smarty.get.featured=='no'} selected="selected"{/if}>No</option>
+          <option value="yes" {if $smarty.get.featured=='yes'} selected{/if}>Yes</option>
+          <option value="no" {if $smarty.get.featured=='no'} selected{/if}>No</option>
         </select></td>
     </tr>
     <tr>
       <td align="right">Active</td>
       <td><select name="active" id="active" class="input">
       <option value="" ></option>
-        <option value="yes" {if $smarty.get.active=='yes'} selected="selected"{/if}>Yes</option>
-        <option value="no" {if $smarty.get.active=='no'} selected="selected"{/if}>No</option>
+        <option value="yes" {if $smarty.get.active=='yes'} selected{/if}>Yes</option>
+        <option value="no" {if $smarty.get.active=='no'} selected{/if}>No</option>
       </select></td>
     </tr>
   
@@ -107,7 +107,7 @@
     <br />
     <div id="vid_opt-{$groups[gp_list].group_id}" style="display:none" class="vid_opts">
    	 
-      <a href="{group_link details=$groups[gp_list]}" target="_blank">View</a> | 
+      <a href="{group_link details=$groups[gp_list]}" target="_blank">{lang code='views'}</a> |
       <a href="edit_group.php?group_id={$groups[gp_list].group_id}">{lang code='edit'}</a>
       {if $groups[gp_list].featured == yes}
        | <a href="?unfeature={$groups[gp_list].group_id}">Make Unfeatured</a> {/if} 

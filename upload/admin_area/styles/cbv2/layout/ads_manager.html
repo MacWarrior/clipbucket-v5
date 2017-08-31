@@ -29,7 +29,7 @@
          {assign var='ads_placements' value=$adsObj->get_placements()}
          {section name=a_list loop=$ads_placements}
          {if $ads_placements[a_list].placement_name!=''}
-            <option value="{$ads_placements[a_list].placement}" {if $ad_data.ad_placement==$ads_placements[a_list].placement} selected="selected"{/if} >{$ads_placements[a_list].placement_name}</option>
+            <option value="{$ads_placements[a_list].placement}" {if $ad_data.ad_placement==$ads_placements[a_list].placement} selected{/if} >{$ads_placements[a_list].placement_name}</option>
          {/if}
 		 {/section}
 		  
@@ -44,10 +44,10 @@
         <tr>
           <td>Status</td>
           <td><label>
-            <input name="status" type="radio" value="1" {if $ad_data.ad_status=='1'}checked="checked" {/if} />
+            <input name="status" type="radio" value="1" {if $ad_data.ad_status=='1'}checked {/if} />
             Active</label>
             <label>
-              <input type="radio" name="status" value="0"{if $ad_data.ad_status=='0'}checked="checked"{/if}  />
+              <input type="radio" name="status" value="0"{if $ad_data.ad_status=='0'}checked{/if}  />
             Inactive</label></td>
         </tr>
         <tr>
@@ -102,7 +102,7 @@
         <tr>
           <td>Status</td>
           <td><label>
-            <input name="status" type="radio" value="1" checked="checked" />
+            <input name="status" type="radio" value="1" checked />
             Active</label>
             <label>
               <input type="radio" name="status" value="0" />

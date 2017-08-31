@@ -267,7 +267,7 @@ function smarty_function_html_select_date($params, $template)
             $op = $start_year > $end_year ? -1 : 1;
             for ($i=$start_year; $op > 0 ? $i <= $end_year : $i >= $end_year; $i += $op) {
                 $_html_years .= '<option value="' . $i . '"'
-                    . ($_year == $i ? ' selected="selected"' : '')
+                    . ($_year == $i ? ' selected' : '')
                     . '>' . $i . '</option>' . $option_separator;
             }
 
@@ -307,7 +307,7 @@ function smarty_function_html_select_date($params, $template)
             $_text = isset($month_names) ? smarty_function_escape_special_chars($month_names[$i]) : ($month_format == "%m" ? $_val : strftime($month_format, $_month_timestamps[$i]));
             $_value = $month_value_format == "%m" ? $_val : strftime($month_value_format, $_month_timestamps[$i]);
             $_html_months .= '<option value="' . $_value . '"'
-                . ($_val == $_month ? ' selected="selected"' : '')
+                . ($_val == $_month ? ' selected' : '')
                 . '>' . $_text . '</option>' . $option_separator;
         }
 
@@ -346,7 +346,7 @@ function smarty_function_html_select_date($params, $template)
             $_text = $day_format == '%02d' ? $_val : sprintf($day_format, $i);
             $_value = $day_value_format ==  '%02d' ? $_val : sprintf($day_value_format, $i);
             $_html_days .= '<option value="' . $_value . '"'
-                . ($_val == $_day ? ' selected="selected"' : '')
+                . ($_val == $_day ? ' selected' : '')
                 . '>' . $_text . '</option>' . $option_separator;
         }
 

@@ -231,7 +231,7 @@ function smarty_function_html_select_time($params, $template)
 
             $selected = $_hour !== null ? ($use_24_hours ? $_hour == $_val : $_hour12 == $_val) : null;
             $_html_hours .= '<option value="' . $_value . '"'
-                . ($selected ? ' selected="selected"' : '')
+                . ($selected ? ' selected' : '')
                 . '>' . $_text . '</option>' . $option_separator;
         }
 
@@ -271,7 +271,7 @@ function smarty_function_html_select_time($params, $template)
             $_text = $minute_format == '%02d' ? $_val : sprintf($minute_format, $i);
             $_value = $minute_value_format == '%02d' ? $_val : sprintf($minute_value_format, $i);
             $_html_minutes .= '<option value="' . $_value . '"'
-                . ($selected === $i ? ' selected="selected"' : '')
+                . ($selected === $i ? ' selected' : '')
                 . '>' . $_text . '</option>' . $option_separator;
         }
 
@@ -311,7 +311,7 @@ function smarty_function_html_select_time($params, $template)
             $_text = $second_format == '%02d' ? $_val : sprintf($second_format, $i);
             $_value = $second_value_format == '%02d' ? $_val : sprintf($second_value_format, $i);
             $_html_seconds .= '<option value="' . $_value . '"'
-                . ($selected === $i ? ' selected="selected"' : '')
+                . ($selected === $i ? ' selected' : '')
                 . '>' . $_text . '</option>' . $option_separator;
         }
 
@@ -345,8 +345,8 @@ function smarty_function_html_select_time($params, $template)
             $_html_meridian .= '<option value="">' . ( isset($meridian_empty) ? $meridian_empty : $all_empty ) . '</option>' . $option_separator;
         }
 
-        $_html_meridian .= '<option value="am"'. ($_hour > 0 && $_hour < 12 ? ' selected="selected"' : '') .'>AM</option>' . $option_separator
-            . '<option value="pm"'. ($_hour < 12 ? '' : ' selected="selected"') .'>PM</option>' . $option_separator
+        $_html_meridian .= '<option value="am"'. ($_hour > 0 && $_hour < 12 ? ' selected' : '') .'>AM</option>' . $option_separator
+            . '<option value="pm"'. ($_hour < 12 ? '' : ' selected') .'>PM</option>' . $option_separator
             . '</select>';
     }
 

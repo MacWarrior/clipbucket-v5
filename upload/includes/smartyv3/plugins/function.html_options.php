@@ -154,10 +154,10 @@ function smarty_function_html_options_optoutput($key, $value, $selected, $id, $c
         $_html_result = '<option value="' . $_key . '"';
         if (is_array($selected)) {
             if (isset($selected[$_key])) {
-                $_html_result .= ' selected="selected"';
+                $_html_result .= ' selected';
             }
         } elseif ($_key === $selected) {
-            $_html_result .= ' selected="selected"';
+            $_html_result .= ' selected';
         }
         $_html_class = !empty($class) ? ' class="'.$class.' option"' : '';
         $_html_id = !empty($id) ? ' id="'.$id.'-'.$idx.'"' : '';

@@ -7,8 +7,8 @@
   Select Mailer Type php Mail() or SMTP</label></td>
 <td width="813" valign="top">
   <select name="mail_type" id="mail_type">
-    <option value="mail" {if $row.mail_type=='mail'} selected="selected"{/if}>PHP mail()</option>
-    <option value="smtp" {if $row.mail_type=='smtp'} selected="selected"{/if}>smtp</option>
+    <option value="mail" {if $row.mail_type=='mail'} selected{/if}>PHP mail()</option>
+    <option value="smtp" {if $row.mail_type=='smtp'} selected{/if}>smtp</option>
   </select></td>
 </tr>
 <tr>
@@ -40,8 +40,8 @@
     Enable SMTP Authentication
 </td>
   <td valign="top"><select name="smtp_auth" id="smtp_auth">
-    <option value="yes" {if $row.smtp_auth=='yes'} selected="selected"{/if}>yes</option>
-    <option value="no" {if $row.smtp_auth=='no'} selected="selected"{/if}>no</option>
+    <option value="yes" {if $row.smtp_auth=='yes'} selected{/if}>yes</option>
+    <option value="no" {if $row.smtp_auth=='no'} selected{/if}>no</option>
   </select></td>
 </tr>
 <tr>

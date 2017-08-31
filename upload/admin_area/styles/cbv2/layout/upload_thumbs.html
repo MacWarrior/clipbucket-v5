@@ -9,7 +9,7 @@
  
 <div style="width:140px; float:left" align="center">
     	<label for="{$vid_thumb|getname}"><img src="{$vid_thumb}" border="1" style="margin:4px; max-width:120px" /><br />
-        <input type="radio" value="{$vid_thumb|getname}.{$vid_thumb|getext}" id="{$vid_thumb|getname}" name="default_thumb" {if $data.default_thumb==$vid_thumb|getname|get_thumb_num} checked="checked"{/if} />Default</label><br />
+        <input type="radio" value="{$vid_thumb|getname}.{$vid_thumb|getext}" id="{$vid_thumb|getname}" name="default_thumb" {if $data.default_thumb==$vid_thumb|getname|get_thumb_num} checked{/if} />Default</label><br />
   {if $vid_thumb|getname!='processing'}
   <a href="?video={$data.videoid}&delete={$vid_thumb|getname}.{$vid_thumb|getext}">{lang code='delete'}</a>
   {/if}
@@ -25,7 +25,7 @@
 <form action="upload_thumbs.php?video={$data.videoid}" method="post" enctype="multipart/form-data" name="form1">
     <h2>Upload New Thumb</h2>
      <fieldset class="fieldset">
-    <div align="right" style="width:500px;"><a href="javascript:void(0)" onclick="$('#thumb_fileds').append('<input name=\'vid_thumb[]\' type=\'file\' /><br>')">+ Insert More</a></div>
+    <div align="right" style="width:500px;"><a href="javascript:void(0);" onclick="$('#thumb_fileds').append('<input name=\'vid_thumb[]\' type=\'file\' /><br>')">+ Insert More</a></div>
     <div id="thumb_fileds" style="margin:10px">
     <input name="vid_thumb[]" type="file" />
     <label for="thumb_file"></label>

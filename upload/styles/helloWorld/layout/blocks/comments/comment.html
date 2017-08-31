@@ -33,9 +33,9 @@
 					<span>{$comment.date_added|niceTime}</span>
 					<div class="reply">
 						{if !$comment.userid==userid() || has_access('admin_access',true)}
-						<a href="javascript:void(0)" onclick="spam_comment('{$comment.comment_id}','{$type}','{$type_id}')">{lang code='spam'}</a>
+						<a href="javascript:void(0);" onclick="spam_comment('{$comment.comment_id}','{$type}','{$type_id}')">{lang code='spam'}</a>
 						{/if}
-						{if has_access('admin_del_access') || $comment.userid==userid() || $comment.type_owner_id==userid()} &middot; <a href="javascript:void(0)" onclick="delete_comment('{$comment.comment_id}','{$type}')">{lang code='delete'}</a>{/if}
+						{if has_access('admin_del_access') || $comment.userid==userid() || $comment.type_owner_id==userid()} &middot; <a href="javascript:void(0);" onclick="delete_comment('{$comment.comment_id}','{$type}')">{lang code='delete'}</a>{/if}
 					</div>
 				</div>
 				{/if}
@@ -75,12 +75,12 @@
 				<div class="reply">
 					{if $userquery->login_check('',true)}
 					
-					<a href="javascript:void(0)" onclick="reply_box('{$comment.comment_id}','{$comment.type}','{$comment.type_id}')">{lang code='reply'}</a>
+					<a href="javascript:void(0);" onclick="reply_box('{$comment.comment_id}','{$comment.type}','{$comment.type_id}')">{lang code='reply'}</a>
 					{/if}
 					{if !$comment.userid==userid() || has_access('admin_access',true)}
-					&nbsp; <a href="javascript:void(0)" onclick="spam_comment('{$comment.comment_id}','{$type}','{$type_id}')">{lang code='spam'}</a>
+					&nbsp; <a href="javascript:void(0);" onclick="spam_comment('{$comment.comment_id}','{$type}','{$type_id}')">{lang code='spam'}</a>
 					{/if}
-					{if has_access('admin_del_access') || $comment.userid==userid() || $comment.type_owner_id==userid()} &nbsp; <a href="javascript:void(0)" onclick="delete_comment('{$comment.comment_id}','{$type}')">{lang code='delete'}</a>{/if}
+					{if has_access('admin_del_access') || $comment.userid==userid() || $comment.type_owner_id==userid()} &nbsp; <a href="javascript:void(0);" onclick="delete_comment('{$comment.comment_id}','{$type}')">{lang code='delete'}</a>{/if}
 				</div>
 			</div>
 			{/if}
@@ -127,9 +127,9 @@
 									<div class="com-info-actions clearfix">
 										<div class="reply">
 											{if !$comment.userid==userid() || has_access('admin_access',true)}
-											 <a href="javascript:void(0)" onclick="spam_comment('{$reply.comment_id}','{$type}','{$type_id}')">{lang code='spam'}</a>
+											 <a href="javascript:void(0);" onclick="spam_comment('{$reply.comment_id}','{$type}','{$type_id}')">{lang code='spam'}</a>
 											 {/if}
-											{if has_access('admin_del_access') || $comment.userid==userid() || $comment.type_owner_id==userid()} &middot; <a href="javascript:void(0)" onclick="delete_comment('{$reply.comment_id}','{$type}')">{lang code='delete'}</a>{/if}
+											{if has_access('admin_del_access') || $comment.userid==userid() || $comment.type_owner_id==userid()} &middot; <a href="javascript:void(0);" onclick="delete_comment('{$reply.comment_id}','{$type}')">{lang code='delete'}</a>{/if}
 										</div>
 									</div>
 									{/if}
@@ -166,8 +166,8 @@
 									{if userid()}
 									<div class="com-info-actions clearfix">
 										<div class="reply">
-											 <a href="javascript:void(0)" onclick="spam_comment('{$reply.comment_id}','{$type}','{$type_id}')">{lang code='spam'}</a>
-											{if has_access('admin_del_access') || $comment.userid==userid() || $comment.type_owner_id==userid()} &middot; <a href="javascript:void(0)" onclick="delete_comment('{$reply.comment_id}','{$type}')">{lang code='delete'}</a>{/if}
+											 <a href="javascript:void(0);" onclick="spam_comment('{$reply.comment_id}','{$type}','{$type_id}')">{lang code='spam'}</a>
+											{if has_access('admin_del_access') || $comment.userid==userid() || $comment.type_owner_id==userid()} &middot; <a href="javascript:void(0);" onclick="delete_comment('{$reply.comment_id}','{$type}')">{lang code='delete'}</a>{/if}
 										</div>
 									</div>
 									{/if}

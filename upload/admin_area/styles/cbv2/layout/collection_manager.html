@@ -24,8 +24,8 @@
       <td><label for="active"></label>
         <select name="active" id="active" class="input">
           <option value="" ></option>
-          <option value="yes" {if $smarty.get.active=='yes'} selected="selected"{/if}>Yes</option>
-          <option value="no" {if $smarty.get.active=='no'} selected="selected"{/if}>No</option>
+          <option value="yes" {if $smarty.get.active=='yes'} selected{/if}>Yes</option>
+          <option value="no" {if $smarty.get.active=='no'} selected{/if}>No</option>
         </select></td>
     </tr>
     <tr>
@@ -33,8 +33,8 @@
       <td><label for="broadcast"></label>
         <select name="broadcast" id="broadcast" class="input">
           <option value="" ></option>
-          <option value="public" {if $smarty.get.broadcast=='public'} selected="selected"{/if}>Public</option>
-          <option value="private" {if $smarty.get.broadcast=='private'} selected="selected"{/if}>Private</option>
+          <option value="public" {if $smarty.get.broadcast=='public'} selected{/if}>Public</option>
+          <option value="private" {if $smarty.get.broadcast=='private'} selected{/if}>Private</option>
         </select></td>
     </tr>
     <tr>
@@ -42,8 +42,8 @@
       <td><label for="featured"></label>
         <select name="featured" id="featured" class="input">
           <option value="" ></option>
-          <option value="yes" {if $smarty.get.featured=='yes'} selected="selected"{/if}>Yes</option>
-          <option value="no" {if $smarty.get.featured=='no'} selected="selected"{/if}>No</option>
+          <option value="yes" {if $smarty.get.featured=='yes'} selected{/if}>Yes</option>
+          <option value="no" {if $smarty.get.featured=='no'} selected{/if}>No</option>
         </select></td>
     </tr>
     <tr>
@@ -52,7 +52,7 @@
       <select name="collection_type" id="collection_type">
       	<option value="" ></option>
         {foreach from=$cbcollection->types item=name key=type}
-        	<option value="{$type}" {if $smarty.get.collection_type == $type}selected="selected"{/if}>{$name}</option>
+        	<option value="{$type}" {if $smarty.get.collection_type == $type}selected{/if}>{$name}</option>
         {/foreach}
       </select>
       </td>
@@ -62,10 +62,10 @@
       <td>
       <select name="order" id="order">
       	<option value="" ></option>
-        <option value="collection_id" {if $smarty.get.order == 'collection_id'}selected="selected"{/if}>ID</option>
-        <option value="total_objects" {if $smarty.get.order == 'total_objects'}selected="selected"{/if}>Total Items</option>
-		<option value="collection_name" {if $smarty.get.order == 'collection_name'}selected="selected"{/if}>Name</option>        
-        <option value="views" {if $smarty.get.order == 'views'}selected="selected"{/if}>Views</option>
+        <option value="collection_id" {if $smarty.get.order == 'collection_id'}selected{/if}>ID</option>
+        <option value="total_objects" {if $smarty.get.order == 'total_objects'}selected{/if}>Total Items</option>
+		<option value="collection_name" {if $smarty.get.order == 'collection_name'}selected{/if}>Name</option>
+        <option value="views" {if $smarty.get.order == 'views'}selected{/if}>Views</option>
       </select>
       </td>
     </tr>
@@ -125,7 +125,7 @@
                 </span>
                     <div id="vid_opt-{$c[list].collection_id}" style="display:none" class="AdminPhotoActions">              
                     <a href="edit_collection.php?collection={$c[list].collection_id}">{lang code='edit'}</a> |
-                    <a href="{$baseurl}/view_collection.php?cid={$c[list].collection_id}" target="_blank">View</a> {if $c[list].featured == yes} | 
+                    <a href="{$baseurl}/view_collection.php?cid={$c[list].collection_id}" target="_blank">{lang code='views'}</a> {if $c[list].featured == yes} |
                     <a href="?make_unfeature={$c[list].collection_id}">Make Unfeatured</a> {/if} 
                     {if $c[list].featured == no} | 
                     <a href="?make_feature={$c[list].collection_id}">Make Featured</a> {/if}

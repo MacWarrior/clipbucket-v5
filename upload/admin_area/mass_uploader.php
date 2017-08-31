@@ -80,12 +80,13 @@ if(isset($_POST['mass_upload_video']))
 				if ($response) {
 					$cleaned = json_decode($response,true);
 					$file_name = $cleaned['file_name'];
-					if (!empty($file_name)) {
-							$vCategory = $_POST['category'.$code];
-							if (empty($vCategory)) {
-								$vCategory = "#1#";
-							}
-							$array = array(
+					if (!empty($file_name))
+					{
+						$vCategory = $_POST['category'.$code];
+						if (empty($vCategory)) {
+							$vCategory = "#1#";
+						}
+						$array = array(
 							'title' => $_POST['title'][$i],
 							'description' => $_POST['description'][$i],
 							'tags' => $_POST['tags'][$i],
@@ -138,7 +139,6 @@ if(isset($_POST['mass_upload_video']))
 			
 			createDataFolders(LOGS_DIR);
 			$logFile = LOGS_DIR.'/'.$file_directory.'/'.$file_key.'.log';
-			//pex($logFile,true);
 			$log = new SLog($logFile);
 
 			$log->newSection("Pre-Check Configurations");

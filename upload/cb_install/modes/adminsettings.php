@@ -65,7 +65,7 @@ echo '<br><span class="glyphicon glyphicon-ok"  style="color:#fff"></span><span 
     <div class="field">
     <label class="grey-text" for="password">Admin Password</label>
     <input name="password" type="password" id="password" class="form-control" value="admin">
-    	<a href="javascript:void(0)" onclick="newpassword();" >Generate</a> | <strong>Current</strong> : <span id="genPass" style="color:#09c"><strong>admin</strong></span>
+    	<a href="javascript:void(0);" onclick="newpassword();" >Generate</a> | <strong>Current</strong> : <span id="genPass" style="color:#09c"><strong>admin</strong></span>
     </div><br>
     <div class="field">
     <label class="grey-text" for="email">Admin Email</label>

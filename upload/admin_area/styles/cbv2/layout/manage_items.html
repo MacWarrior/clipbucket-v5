@@ -8,7 +8,7 @@
             <input type="submit" name="move_selected" value="Move Selected"  class="button"/>
             <select name="collection_id" id="collection_id">
             	{foreach from=$c item=item}
-                		<option value="{$item.collection_id}"{if $smarty.get.collection == $item.collection_id} selected="selected"{/if}>{$item.collection_name}</option>
+                		<option value="{$item.collection_id}"{if $smarty.get.collection == $item.collection_id} selected{/if}>{$item.collection_name}</option>
                 {/foreach}
             </select>
             <br />
@@ -60,7 +60,7 @@
             </span>
             <div style="height:4px;"></div>
             <div id="vid_opt-{$obj[list].photo_id}" style="display:none" class="AdminPhotoActions">
-            	<a target="_blank" href="{$cbcollection->collection_links($obj[list],'view_item')}">View</a>
+            	<a target="_blank" href="{$cbcollection->collection_links($obj[list],'view_item')}">{lang code='views'}</a>
             </div>
         </div>
     </div>
@@ -90,7 +90,7 @@
             </span>
             <div style="height:4px;"></div>
             <div id="vid_opt-{$obj[list].videoid}" style="display:none" class="AdminPhotoActions">
-            	<a target="_blank" href="{$cbcollection->collection_links($obj[list],'view_item')}">View</a>
+            	<a target="_blank" href="{$cbcollection->collection_links($obj[list],'view_item')}">{lang code='views'}</a>
             </div>
         </div>
     </div>
@@ -106,8 +106,8 @@
   <tr>
     <td width="30" align="center" valign="middle"><img src="{$imageurl}/arrow_return.png" width="25" height="25"></td>
     <td height="50" style="padding-left:15px">
-            <input type="submit" name="remove_selected" value="Remove Selected"  class="button"/>
-            <input type="submit" name="move_selected" value="Move Selected"  class="button"/>
+            <input type="submit" name="remove_selected" value="Remove Selected" class="button"/>
+            <input type="submit" name="move_selected" value="Move Selected" class="button"/>
             <br />
     </td>
     </tr>

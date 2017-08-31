@@ -577,7 +577,7 @@
 					<label class="radio-inline">
 						<input type="radio" name="use_ffmpeg_vf" value="no" id="use_ffmpeg_vf_1" {if $row.use_ffmpeg_vf=='no'}checked{/if}/> No
 					</label>
-					<a href="javascript:void(0)" target="_blank"><img src="{$imageurl}/help.png" alt="VF information" border="0" class="tipsy_tip" title="In latest releases of FFMPEG (greator than 20000) Pad flag has been changed from pad* to vf , if your ffmpeg is greator than r20000 please check YES"/></a>
+					<a href="javascript:void(0);" target="_blank"><img src="{$imageurl}/help.png" alt="VF information" border="0" class="tipsy_tip" title="In latest releases of FFMPEG (greator than 20000) Pad flag has been changed from pad* to vf , if your ffmpeg is greator than r20000 please check YES"/></a>
 				</div>
 
 				<div class="col-md-4">
@@ -693,7 +693,7 @@
 				<label class="checkbox" for="quick_conv">
 					<input type="checkbox" name="quick_conv" id="quick_conv" value="yes" {if $row.quick_conv=='yes'}checked{/if}/>
 					Turn on Quick Conversion
-					<a href="javascript:void(0)" target="_blank">
+					<a href="javascript:void(0);" target="_blank">
 						<img src="{$imageurl}/help.png" alt="info" border="0" class="tipsy_tip" title="If you check this option, videos will be converted as soon as uploading is complete, make sure your php path is correct before enabling this option otherwise may cause your website inaccessible"/>
 					</a>
 				</label>

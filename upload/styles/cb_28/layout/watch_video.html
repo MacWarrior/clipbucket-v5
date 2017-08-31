@@ -130,14 +130,14 @@
 						<div class="tab-pane fade in clearfix custom-elements" id="cb-item-addto">
 							<div class="clearfix btn-fav">
 								<div id="video_action_result_cont"></div>
-								<a id="addfav" class="btn btn-block btn-primary" href="javascript:void(0)" onclick="_cb.add_to_favNew('video','{$vdo.videoid}');">{lang code='add_to_my_favorites'}</a>
+								<a id="addfav" class="btn btn-block btn-primary" href="javascript:void(0);" onclick="_cb.add_to_favNew('video','{$vdo.videoid}');">{lang code='add_to_my_favorites'}</a>
 							</div>
 							<div class="clearfix">
 								{show_playlist_form id=$vdo.videoid type=video user=userid() }
 								{if userid()}
 								<div class="clearfix">
 									<div class="clearfix btn-holder text-right">
-										<a href="javascript:void(0)" onclick="$('#addCollectionCont').toggle()" class="btn btn-primary">+ {lang code='add_to_my_collection'}</a>
+										<a href="javascript:void(0);" onclick="$('#addCollectionCont').toggle()" class="btn btn-primary">+ {lang code='add_to_my_collection'}</a>
 									</div>
 									<div id="addCollectionCont" style="display:none">
 										{show_collection_form id=$vdo.videoid type=Video}

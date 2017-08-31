@@ -21,7 +21,7 @@
 
                         </label>
                         <div class="tools tools-bottom">
-                            <input class="select_control" id="{$vid_thumb|getname}" name="default_thumb" type="radio" value="{$vid_thumb|getname}.{$vid_thumb|getext}"{if $data.default_thumb==$vid_thumb|get_thumb_num} checked="checked"{/if} />
+                            <input class="select_control" id="{$vid_thumb|getname}" name="default_thumb" type="radio" value="{$vid_thumb|getname}.{$vid_thumb|getext}"{if $data.default_thumb==$vid_thumb|get_thumb_num} checked{/if} />
                             {if $vid_thumb|getname!='processing'}
                             <a href="?video={$data.videoid}&delete={$vid_thumb|getname}.{$vid_thumb|getext}">
                                 <i class="icon-remove red"></i>
@@ -41,7 +41,7 @@
 </form>
 <form action="upload_thumbs.php?video={$data.videoid}" method="post" enctype="multipart/form-data" name="form1">
 <!--     <div id="thumb_fileds" class="form-group">
-        <a href="javascript:void(0)" onclick="$('#thumb_fileds').append('<input name=\'vid_thumb[]\' type=\'file\' /><br>')">+ Insert More</a></div> -->
+        <a href="javascript:void(0);" onclick="$('#thumb_fileds').append('<input name=\'vid_thumb[]\' type=\'file\' /><br>')">+ Insert More</a></div> -->
         <h5>Upload New Thumb</h5>
         <input name="vid_thumb[]" type="file" />
         <label for="thumb_file"></label>

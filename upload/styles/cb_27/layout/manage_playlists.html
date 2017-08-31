@@ -47,7 +47,7 @@
                     <td valign="middle">
                       {$playlists[plist].playlist_name|truncate:100}
                       <span class="video_control">
-                        <a href="?mode=edit_playlist&amp;pid={$playlists[plist].playlist_id}">{lang code='view'}</a> - <a href="javascript:void(0)"  onmousedown="delete_video('delete_icon_a','{$playlists[plist].playlist_id}','{lang code="remove_playlist_confirm"}','?mode=manage_playlist&amp;delete_pl={$playlists[plist].playlist_id}')" id="delete_icon_a-{$playlists[plist].playlist_id}">{lang code='delete'}</a>
+                        <a href="?mode=edit_playlist&amp;pid={$playlists[plist].playlist_id}">{lang code='view'}</a> - <a href="javascript:void(0);"  onmousedown="delete_video('delete_icon_a','{$playlists[plist].playlist_id}','{lang code="remove_playlist_confirm"}','?mode=manage_playlist&amp;delete_pl={$playlists[plist].playlist_id}')" id="delete_icon_a-{$playlists[plist].playlist_id}">{lang code='delete'}</a>
                       </span>
                     </td>
                     <td>{$playlists[plist].date_added|date_format}</td>

@@ -30,7 +30,7 @@
 {else}
 <li><a href="edit_video.php?video={$data.videoid}&amp;mode=unfeature">Make Unfeatured</a></li>
 {/if}
-<li><a href="javascript:void(0)" onClick="javascript:Confirm_Delete('video_manager.php?delete_video={$data.videoid}');">Delete This Video</a></li>
+<li><a href="javascript:void(0);" onClick="javascript:Confirm_Delete('video_manager.php?delete_video={$data.videoid}');">Delete This Video</a></li>
 </ul>
 </div>
 
@@ -86,7 +86,7 @@
     {foreach from=$vidthumbs item=vid_thumb}
     	<div style="width:140px; float:left" align="center">
     	<label for="{$vid_thumb|getname}"><img src="{$vid_thumb}" border="1" style="margin:4px;max-width:120px" /><br />
-        <input type="radio" value="{$vid_thumb|getname}.{$vid_thumb|getext}" id="{$vid_thumb|getname}" name="default_thumb" {if $data.default_thumb==$vid_thumb|get_thumb_num} checked="checked"{/if} />Default</label><br />
+        <input type="radio" value="{$vid_thumb|getname}.{$vid_thumb|getext}" id="{$vid_thumb|getname}" name="default_thumb" {if $data.default_thumb==$vid_thumb|get_thumb_num} checked{/if} />Default</label><br />
   {if $vid_thumb|getname!='processing'}
   <a href="?video={$data.videoid}&delete={$vid_thumb|getname}.{$vid_thumb|getext}">{lang code='delete'}</a>
   {/if}

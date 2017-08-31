@@ -19,8 +19,8 @@
       <td align="right">Status</td>
       <td><select name="status" id="status" class="input">
           <option value="" ></option>
-          <option value="Ok" {if $smarty.get.status=='Ok'} selected="selected"{/if}>OK</option>
-          <option value="ToActivate" {if $smarty.get.status=='ToActivate'} selected="selected"{/if}>Inactive</option>
+          <option value="Ok" {if $smarty.get.status=='Ok'} selected{/if}>OK</option>
+          <option value="ToActivate" {if $smarty.get.status=='ToActivate'} selected{/if}>Inactive</option>
         </select></td>
     </tr>
     <tr>
@@ -28,16 +28,16 @@
       <td>
         <select name="ban" id="ban" class="input">
           <option value="" ></option>
-          <option value="yes" {if $smarty.get.ban=='yes'} selected="selected"{/if}>Yes</option>
-          <option value="no" {if $smarty.get.ban=='no'} selected="selected"{/if}>No</option>
+          <option value="yes" {if $smarty.get.ban=='yes'} selected{/if}>Yes</option>
+          <option value="no" {if $smarty.get.ban=='no'} selected{/if}>No</option>
         </select></td>
     </tr>
     <tr>
       <td align="right">Featured</td>
       <td><select name="featured" id="featured" class="input">
       <option value="" ></option>
-        <option value="Yes" {if $smarty.get.featured=='Yes'} selected="selected"{/if}>Yes</option>
-        <option value="No" {if $smarty.get.featured=='No'} selected="selected"{/if}>No</option>
+        <option value="Yes" {if $smarty.get.featured=='Yes'} selected{/if}>Yes</option>
+        <option value="No" {if $smarty.get.featured=='No'} selected{/if}>No</option>
       </select></td>
     </tr>
     <tr>
@@ -49,7 +49,7 @@
     <option value="">------</option>
         {assign var=levels value=$userquery->get_levels()}
         {foreach from=$levels item=level}
-        	<option value="{$level.user_level_id}" {if $smarty.get.level==$level.user_level_id} selected="selected"{/if}>{$level.user_level_name}</option>
+        	<option value="{$level.user_level_id}" {if $smarty.get.level==$level.user_level_id} selected{/if}>{$level.user_level_name}</option>
         {/foreach}
         </select>
     </td>
@@ -116,7 +116,7 @@
     <br />
     <div id="usr_opt-{$u.userid}"  class="vid_opts" style="display:none">
    	 
-    <a href="view_user.php?uid={$u.userid}">View</a> or 
+    <a href="view_user.php?uid={$u.userid}">{lang code='views'}</a> or
     <a href="view_user.php?uid={$u.userid}">{lang code='edit'}</a> |
     {if $u.usr_status == Ok}
     <a href="?deactivate={$u.userid}">Deactivate</a>

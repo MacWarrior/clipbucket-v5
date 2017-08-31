@@ -13,7 +13,7 @@
 
 include("includes/config.inc.php");
 
-//Username of account you want to changge password
+//Username of account you want to change password
 $username = 'admin';
 
 //Set password
@@ -26,8 +26,7 @@ $user = $userquery->get_user_details($username);
 if(!$user)
 {
 	e("User does not exist");
-}else
-{
+} else {
 	$pass = pass_code($password);
 	$db->update(tbl('users'),array('password'),array($pass),"username='$username'");
 	e("Password for your account has been changed, please delete this file","m");	
@@ -35,4 +34,3 @@ if(!$user)
 
 display_it();
 
-?>
