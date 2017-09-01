@@ -676,7 +676,7 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}users` (
   `username` text NOT NULL,
   `user_session_key` varchar(32) NOT NULL,
   `user_session_code` int(5) NOT NULL,
-  `password` varchar(40) NOT NULL DEFAULT '',
+  `password` varchar(128) NOT NULL DEFAULT '',
   `email` varchar(80) NOT NULL DEFAULT '',
   `usr_status` enum('Ok','ToActivate') NOT NULL DEFAULT 'ToActivate',
   `msg_notify` enum('yes','no') NOT NULL DEFAULT 'yes',

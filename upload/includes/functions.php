@@ -85,13 +85,25 @@
 	}
 
 	/**
-	* This function is for Securing Password, you may change its combination for security reason but
-	* make sure do not change once you made your script run
-	* TODO : Multiple md5/sha1 is useless + this is totally unsecure, must be replaced by sha512 + salt
-	*/
-	function pass_code($string) {
+	 * This function is for Securing Password, you may change its combination for security reason but
+	 * make sure do not change once you made your script run
+	 * TODO : Multiple md5/sha1 is useless + this is totally unsecure, must be replaced by sha512 + salt
+	 *
+	 * @deprecated for security !
+	 *
+	 * @param $string
+	 *
+	 * @return string
+	 */
+	function pass_code_unsecure($string) {
  	 	$password = md5(md5(sha1(sha1(md5($string)))));
  	 	return $password;
+	}
+
+	function pass_code($string, $userid)
+	{
+		$salt = ''; // TODO : Generate during installation and get it here
+		return hash('sha512', $string.$userid.$salt);
 	}
 
 	/**
@@ -2388,7 +2400,8 @@
 	 * @internal param $ : { array } { $input } { array of form values } { $input } { array of form values }
 	 * @internal param $ : { array } { $array } { array of form fields } { $array } { array of form fields }
 	 */
-	function validate_cb_form($input,$array) {
+	function validate_cb_form($input,$array)
+	{
 		//Check the Collpase Category Checkboxes 
 		if($input['cat']['title']=='Video Category') {
 			$query = "SELECT * FROM ".tbl("config")." WHERE name=234"; // On fresh install, id 234 = max_topic_length, this must be wrong
@@ -2399,8 +2412,10 @@
 			}
 		}
 		
-		if(is_array($input)) {
-			foreach($input as $field) {
+		if(is_array($input))
+		{
+			foreach($input as $field)
+			{
 				$field['name'] = formObj::rmBrackets($field['name']);
 				$title = $field['title'];
 				$val = $array[$field['name']];
@@ -2434,7 +2449,8 @@
 					}
 				}
 				$funct_err = is_valid_value($field['validate_function'],$val);
-				if($block!=true) {
+				if($block!=true)
+				{
 					//Checking Syntax
 					if(!$funct_err) {
 						if(!empty($function_error_msg)) {
@@ -2464,10 +2480,11 @@
 							}
 						}	
 					}
-					if($field['relative_type']!='') {
-						switch($field['relative_type']) {
+					if($field['relative_type']!='')
+					{
+						switch($field['relative_type'])
+						{
 							case 'exact':
-							{
 								if($rel_val != $val) {
 									if(!empty($field['relative_err'])) {
 										e($field['relative_err']);
@@ -2475,8 +2492,7 @@
 										e($invalid_err);
 									}
 								}
-							}
-							break;
+								break;
 						}
 					}
 				}	

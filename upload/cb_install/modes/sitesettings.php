@@ -3,7 +3,7 @@
 //Lets just save admin settings so we can move forward
 
 $uid = 1;
-$pass = pass_code(post('password'));
+$pass = pass_code(post('password'), $uid);
 
 $db->update(tbl("users"),array
 ('username','password','email','doj','num_visits','ip','signup_ip','background_color','total_groups','banned_users'),array
@@ -48,8 +48,7 @@ $userquery->login_user(post('username'),post('password'))
     <input name="baseurl" type="text" id="baseurl" class="form-control" value="<?php echo BASEURL; ?>">
 	  <p class="grey-text font-size" style="margin-top:0px;">without trailing slash '/'</p>
     </div>
-    
-    
+
   <input type="hidden" name="mode" value="register" />
      <p><br>
     
