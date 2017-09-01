@@ -132,8 +132,7 @@
 	 *
 	 * @param : { integer } { $length } { length of random string }
 	 *
-	 * @return string : { string } { $randomString  } { new genrated random string }
-	 * { $randomString  } { new genrated random string }
+	 * @return string : { string } { $randomString  } { new generated random string }
 	 */
 	function RandomString($length) {
 		$string = md5(microtime());
@@ -278,31 +277,32 @@
 	 *
 	 * @return string
 	 */
-    function get_elapsed_time($ts,$datetime=1) {
-      if($datetime == 1) {
-      	$ts = date('U',strtotime($ts));
-      }
-      $mins = floor((time() - $ts) / 60);
-      $hours = floor($mins / 60);
-      $mins -= $hours * 60;
-      $days = floor($hours / 24);
-      $hours -= $days * 24;
-      $weeks = floor($days / 7);
-      $days -= $weeks * 7;
-      $t = "";
-      if ($weeks > 0) {
-        return "$weeks ".lang("week") . ($weeks > 1 ? "s" : "");
-      }
-      if ($days > 0) {
-        return "$days ".lang("day") . ($days > 1 ? "s" : "");
-      }
-      if ($hours > 0) {
-        return "$hours ".lang("hour") . ($hours > 1 ? "s" : "");
-      }
-      if ($mins > 0) {
-        return "$mins min" . ($mins > 1 ? "s" : "");
-      }
-      return "< 1 min";
+    function get_elapsed_time($ts,$datetime=1)
+	{
+		if($datetime == 1) {
+			$ts = date('U',strtotime($ts));
+		}
+		$mins = floor((time() - $ts) / 60);
+		$hours = floor($mins / 60);
+		$mins -= $hours * 60;
+		$days = floor($hours / 24);
+		$hours -= $days * 24;
+		$weeks = floor($days / 7);
+		$days -= $weeks * 7;
+
+		if ($weeks > 0) {
+			return "$weeks ".lang("week") . ($weeks > 1 ? "s" : "");
+		}
+		if ($days > 0) {
+			return "$days ".lang("day") . ($days > 1 ? "s" : "");
+		}
+		if ($hours > 0) {
+			return "$hours ".lang("hour") . ($hours > 1 ? "s" : "");
+		}
+		if ($mins > 0) {
+			return "$mins min" . ($mins > 1 ? "s" : "");
+		}
+		return "< 1 min";
     }
 
     function old_set_time($temps) {

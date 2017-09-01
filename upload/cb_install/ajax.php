@@ -76,8 +76,7 @@ include('clipbucket.php');
 	}
 	 
 	 $step = $_POST['step'];
-	 $files = array
-	 (
+	 $files = array(
 		 'structure' 		=> 'structure.sql',
 		 'configs'			=> 'configs.sql',
 		 'ads_placements'	=> 'ads_placements.sql',

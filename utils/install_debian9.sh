@@ -8,7 +8,7 @@ apt-get dist-upgrade -f
 apt-get install php7.0 apache2 mariadb-server git php-curl php-imagick ffmpeg gpac ruby php7.0-mysqli php7.0-xml sendmail --yes
 gem install flvtool2
 
-# Creating directory et get sources
+# Creating directory and get sources
 mkdir -p /home/http/clipbucket/ && cd "$_"
 git clone https://github.com/MacWarrior/clipbucket.git ./
 

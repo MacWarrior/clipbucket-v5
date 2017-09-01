@@ -226,17 +226,13 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 (226, 'delete_mass_upload', 'no'),
 (227, 'pseudostreaming', 'yes');
 
-
-
 INSERT INTO `{tbl_prefix}languages` (`language_id`, `language_code`, `language_name`, `language_regex`, `language_active`, `language_default`) VALUES
 (5, 'en', 'English', '/^en/i', 'yes', 'yes');
-
 
 INSERT INTO `{tbl_prefix}validation_re` (`re_id`, `re_name`, `re_code`, `re_syntax`) VALUES
 (1, 'Username', 'username', '^^[a-zA-Z0-9_]+$'),
 (2, 'Email', 'email', '^[_a-z0-9-]+(\\.[_a-z0-9-]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,10})$'),
 (3, 'Field Text', 'field_text', '^^[_a-z0-9-]+$');
-
 
 INSERT INTO `{tbl_prefix}config` (`configid` ,`name` ,`value`)VALUES 
 (NULL , 'comments_per_page', '15'),
@@ -245,13 +241,8 @@ INSERT INTO `{tbl_prefix}config` (`configid` ,`name` ,`value`)VALUES
 -- Addition for 2.7
 INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES (NULL, 'feedsSection', 'yes');
 INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES (NULL, 'enlarge_button', 'no');
-
-
-
-
 INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES (NULL, 'max_topic_length', '1500');
 INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES (NULL, 'max_topic_title', '300');
-
 
 -- Addition for 2.6
 INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES (NULL, 'facebook_embed', 'yes');
@@ -295,4 +286,3 @@ INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 	('vbrate_480','700000'),
 	('vbrate_360','400000'),
 	('vbrate_240','240000');
-
