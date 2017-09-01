@@ -27,12 +27,7 @@ a{color:#06c}
 }
 
 #head{margin:auto;width:900px; margin-bottom:10px}
-.highlight{
 
-
-
-
-}
 #header
 {
 	height:25px; width:900px; border:1px solid #d4d4d4;
@@ -44,47 +39,32 @@ a{color:#06c}
 
 .cb_container.arvixe_banner{
 background:url(images/Arvixe-Banner.png) ;
-
 }
 
 .grey-text{
 color:#797979;
-
-
 }
+
 .font-size{
 font-size: 9px;
-
 }
 
 
 .register{
-
 	background: #F2F2F2;
     margin:auto;
 	width:880px;
 	border:1px solid #CFCFCF;
 	padding:0px;
 	margin-top: 20px;
-
 }
-
-.br5px
-{
-	
-}
-
 
 .finish{
 width: 50%;
-
-
-
-
 }
+
 .headstatus
 {
-	
 	background-repeat:repeat-x;
 	background-position:center;
 	width:100%; margin:auto
@@ -100,7 +80,7 @@ width: 50%;
 font-size: 10px;
 float: left;
 line-height: 29px;
-margin-left: 6px;}
+}
 
 .top_nav{background: -moz-linear-gradient(top, #ffffff 0%, #e3e3e3 100%); /* FF3.6+ */
 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#e3e3e3)); /* Chrome,Safari4+ */
@@ -111,17 +91,17 @@ background: linear-gradient(to bottom, #ffffff 0%,#e3e3e3 100%); /* W3C */
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e3e3e3',GradientType=0 ); /* IE6-9 */
 height:40px; border-top:1px solid #aaaaaa;}
 .cb_container{  width:990px; margin:auto;}
-.cb_navbar { float: left;margin-top: 3px;padding: 0px;clear: both;overflow: hidden;}
-.cb_navbar ul { margin:0px; padding:0px; list-style:none; float:left; position:relative; left:50%;  }
+.cb_navbar { float: left;margin-top: 3px;padding: 0;clear: both;overflow: hidden;}
+.cb_navbar ul { margin:0; padding:0; list-style:none; float:left; position:relative; left:50%;  }
 .cb_navbar .headstatus li 
 { 
-margin:0px; 
+margin:0;
 padding:4px 4px; 
 float:left; 
 list-style:none; 
 position:relative; 
 right:50%; 
-top:0px; 
+top:0;
 color:#000; 
 font-weight:bold; 
 }
@@ -144,8 +124,6 @@ font-weight:bold;
 }
 .cb_navbar ul li a {display:block; padding:5px 4px; cursor:default; font-weight:bold;  text-align:center; float:left; text-decoration:none; color:#5b5959; margin-right:0px; font-size:14px;font-family:Arial, Helvetica, sans-serif; font-weight:bold;}
 
-
-
 .cb_navbar .headstatus   span { background:url(images/nav_arrow.png) no-repeat; height:26px; width:14px;float: left;margin-right: 5px; margin-top: -4px;}
 .nav_des{ background:#09c; padding:10px;}
 .license_des{ height:200px; background:#f5f5f5; border:1px solid #cfcece; padding:10px; overflow:auto;}
@@ -161,53 +139,16 @@ font-weight:bold;
 .finish-left{ width:360px; float:left;}
 .finish-right{ width:630px; float:left; background:#f5f5f5; padding:10px; border:1px solid #cfcece;}
 
-
-
-
 #sub_container .db_fields .field .form-control{
-
 	width: 350px;
 	font-size: 15px;
 }
-
-
 
 #sub_container .field .form-control{
 
 	width: 350px;
 	font-size: 15px;
 }
-
-
-
-
-
-
-
-
-/*.headstatus li 
-{
-	
-	background-repeat:repeat-x;
-	background-position:center;
-	display:inline-block;
-	margin:0px 5px;
-	padding:0px 5px;
-	color:#999
-}
-
-/*.headstatus li a
-{
-	
-	background-repeat:repeat-x;
-	background-position:center;
-	display:inline-block;
-	margin:0px 5px;
-	padding:0px 5px;
-	color:#999
-}*/
-
-/*.headstatus .selected { color:yellow; font-weight:bold}*/
 
 #logo{font-family: 'Cabin', arial, serif; font-size:28px; font-weight:bold; padding: 5px 0px 15px 20px;}
 
@@ -246,7 +187,6 @@ dl{background-color:#F7F7F7; padding:0px; border:1px dotted #999}
 	padding:5px; margin:10px 0px;
 	background-color:rgba(255, 214, 214, 1);
 	border-radius: 8px;
-	/*border:1px solid #FA7C80;*/
 }
 
 .alert{background:url(images/cross_arrow.png) no-repeat left 0px bottom 0px; height:10px;
@@ -262,10 +202,6 @@ line-height:20px}
 .product{margin-top:0px; width:94%; padding:0px;   float:left; margin:0px 10px}
 .product a{font-size:15px; font-weight:bold; font-family:Arial, Helvetica, sans-serif; color:#0099CC; text-decoration:none; display:block}
 .product .desc{color:#666; font-size:12px; margin-top:5px}
-
-/*.product:hover{background-color:#eaeaea; border:1px solid #09c}*/
-
-/* usman css start cb-install */
 
 .cb-instal-licenc-holder{
 	padding:5px; 

@@ -5,8 +5,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>ClipBucket v<?php echo VERSION.' '.STATE; ?> Installer</title>
 <link href="style.css" rel="stylesheet" type="text/css" />
-<link href='http://fonts.googleapis.com/css?family=Cabin:regular,bold' rel='stylesheet' type='text/css'>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script>
+<link href='//fonts.googleapis.com/css?family=Cabin:regular,bold' rel='stylesheet' type='text/css'>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script>
 <script type="text/javascript" src="functions.js"></script>
 
 <link href="bootstrap/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css" />
@@ -18,13 +18,13 @@
      <div class="top clearfix">
     <div class="top_tabs">
         <ul>
-            <li><a href="http://clip-bucket.com/clipbucket-overview"  target="blank">V<?php echo VERSION; ?> Overview </a><span>|</span></li>
-                <li><a href="http://discourse.clipbucket.com/"  target="blank">Forums </a><span>|</span></li>
-                 <li><a href="https://code.google.com/p/clipbucket/issues/list"  target="blank">Bug Reporter </a><span>|</span></li>
-            <li><a href="http://clip-bucket.com/contact"  target="blank">Support </a></li>
+            <li><a href="http://clip-bucket.com/clipbucket-overview" target="blank">V<?php echo VERSION; ?> Overview</a><span>|</span></li>
+                <li><a href="http://discourse.clipbucket.com/" target="blank">Forums</a><span>|</span></li>
+                 <li><a href="https://code.google.com/p/clipbucket/issues/list" target="blank">Bug Reporter</a><span>|</span></li>
+            <li><a href="http://clip-bucket.com/contact" target="blank">Support</a></li>
         </ul>
     </div><!--top_tabs-->
-   <p></p> <span id="logo"><span style="color:#09c">ClipBucket</span> Installer v<?php echo VERSION; ?> <?php echo STATE; ?></span><p></p>
+   <p></p> <span id="logo"><span style="color:#09c;">ClipBucket</span> Installer v<?php echo VERSION.' '.STATE; ?></span><p></p>
 </div><!--top-->
 
 
