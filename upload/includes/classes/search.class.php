@@ -449,5 +449,3 @@ class cbsearch
 		return $this->key = preg_replace($pattern, $replacement, $string);
 	}
 }
-
-?>

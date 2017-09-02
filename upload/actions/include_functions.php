@@ -1,24 +1,21 @@
 <?php
-
-function RandomString($length)
+	function RandomString($length)
 	{
-    // Generate random 32 charecter string
-    $string = md5(microtime());
+		// Generate random 32 charecter string
+		$string = md5(microtime());
 
-    // Position Limiting
-    $highest_startpoint = 32-$length;
+		// Position Limiting
+		$highest_startpoint = 32-$length;
 
-    // Take a random starting point in the randomly
-    // Generated String, not going any higher then $highest_startpoint
-    $randomString = substr($string,rand(0,$highest_startpoint),$length);
+		// Take a random starting point in the randomly
+		// Generated String, not going any higher then $highest_startpoint
+		$randomString = substr($string,rand(0,$highest_startpoint),$length);
 
-    return $randomString;
+		return $randomString;
+	}
 
-}
-
-
-
-function formatfilesize( $data ) {
+	function formatfilesize( $data )
+	{
         // bytes
         if( $data < 1024 ) {
             return $data . " bytes";
@@ -33,11 +30,9 @@ function formatfilesize( $data ) {
         }else{
 			 return round( ( $data / 1024000000 ), 1 ) . " GB";
 		}
-    
     }
-	
-	
-		/**
+
+	/**
 	 * Function used to get file name
 	 */
 	function GetName($file)
@@ -51,50 +46,26 @@ function formatfilesize( $data ) {
 		return $new_name;
 	}
 
-        function get_elapsed_time($ts,$datetime=1)
-        {
-          if($datetime == 1)
-          {
-          $ts = date('U',strtotime($ts));
-          }
-          $mins = floor((time() - $ts) / 60);
-          $hours = floor($mins / 60);
-          $mins -= $hours * 60;
-          $days = floor($hours / 24);
-          $hours -= $days * 24;
-          $weeks = floor($days / 7);
-          $days -= $weeks * 7;
-          $t = "";
-          if ($weeks > 0)
-            return "$weeks week" . ($weeks > 1 ? "s" : "");
-          if ($days > 0)
-            return "$days day" . ($days > 1 ? "s" : "");
-          if ($hours > 0)
-            return "$hours hour" . ($hours > 1 ? "s" : "");
-          if ($mins > 0)
-            return "$mins min" . ($mins > 1 ? "s" : "");
-          return "< 1 min";
-        }
-
-	//Function Used TO Get Extensio Of File
-		function GetExt($file){
-			return substr($file, strrpos($file,'.') + 1);
-			}
+	//Function Used TO Get Extension of File
+	function GetExt($file){
+		return substr($file, strrpos($file,'.') + 1);
+	}
 
 	function old_set_time($temps)
 	{
-			round($temps);
-			$heures = floor($temps / 3600);
-			$minutes = round(floor(($temps - ($heures * 3600)) / 60));
-			if ($minutes < 10)
-					$minutes = "0" . round($minutes);
-			$secondes = round($temps - ($heures * 3600) - ($minutes * 60));
-			if ($secondes < 10)
-					$secondes = "0" . round($secondes);
-			return $minutes . ':' . $secondes;
+		round($temps);
+		$heures = floor($temps / 3600);
+		$minutes = round(floor(($temps - ($heures * 3600)) / 60));
+		if ($minutes < 10)
+				$minutes = "0" . round($minutes);
+		$secondes = round($temps - ($heures * 3600) - ($minutes * 60));
+		if ($secondes < 10)
+				$secondes = "0" . round($secondes);
+		return $minutes . ':' . $secondes;
 	}
-	function SetTime($sec, $padHours = true) {
-	
+
+	function SetTime($sec, $padHours = true)
+	{
 		if($sec < 3600)
 			return old_set_time($sec);
 			
