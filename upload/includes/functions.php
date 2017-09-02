@@ -102,7 +102,7 @@
 
 	function pass_code($string, $userid)
 	{
-		$salt = ''; // TODO : Generate during installation and get it here
+		$salt = config('password_salt');
 		return hash('sha512', $string.$userid.$salt);
 	}
 
@@ -268,44 +268,8 @@
 		return $new_name;
 	}
 
-	/**
-	 * Get time elapsed
-	 * @deprecated : { function has been deprecated and will be removed in next version }
-	 *
-	 * @param     $ts
-	 * @param int $datetime
-	 *
-	 * @return string
-	 */
-    function get_elapsed_time($ts,$datetime=1)
+    function old_set_time($temps)
 	{
-		if($datetime == 1) {
-			$ts = date('U',strtotime($ts));
-		}
-		$mins = floor((time() - $ts) / 60);
-		$hours = floor($mins / 60);
-		$mins -= $hours * 60;
-		$days = floor($hours / 24);
-		$hours -= $days * 24;
-		$weeks = floor($days / 7);
-		$days -= $weeks * 7;
-
-		if ($weeks > 0) {
-			return "$weeks ".lang("week") . ($weeks > 1 ? "s" : "");
-		}
-		if ($days > 0) {
-			return "$days ".lang("day") . ($days > 1 ? "s" : "");
-		}
-		if ($hours > 0) {
-			return "$hours ".lang("hour") . ($hours > 1 ? "s" : "");
-		}
-		if ($mins > 0) {
-			return "$mins min" . ($mins > 1 ? "s" : "");
-		}
-		return "< 1 min";
-    }
-
-    function old_set_time($temps) {
 		round($temps);
 		$heures = floor($temps / 3600);
 		$minutes = round(floor(($temps - ($heures * 3600)) / 60));
@@ -325,7 +289,7 @@
 	 * @param : { string } { $file } { file to get extension of }
 	 *
 	 * @return string : { string } { extension of file }
-	 * { extension of file }
+	 *
 	 */
 	function GetExt($file) {
 		return strtolower(substr($file, strrpos($file,'.') + 1));
@@ -339,8 +303,10 @@
 	 *
 	 * @return string : { string } { $hms } { formatted time string }
 	 */
-	function SetTime($sec, $padHours = true) {
-		if($sec < 3600) {
+	function SetTime($sec, $padHours = true)
+	{
+		if($sec < 3600)
+		{
 			return old_set_time($sec);
 		}
 		$hms = "";
@@ -368,20 +334,6 @@
 	}
 
 	/**
-	 * Check if provided is a valid string
-	 *
-	 * @param : { string } { $text } { string to be checked }
-	 *
-	 * @return bool : { boolean } { true if string, else false }
-	 */
-	function isValidText($text){
-		$pattern = "^^[_a-z0-9-]+$";
-      	if (eregi($pattern, $text))
-         	return true;
-      	return false;
-   }
-
-	/**
 	 * Checks if provided email is valid or not
 	 *
 	 * @param : { string } { $email } { email address to check }
@@ -398,7 +350,8 @@
 	* @param : { string } { $text } { text to decode }
 	* @return : { string } { $text } { decoded string }
 	*/
-	if(!function_exists('htmlspecialchars_decode')) {
+	if(!function_exists('htmlspecialchars_decode'))
+	{
 		function htmlspecialchars_decode($text, $ent_quotes = "") {
 			$text = str_replace("&quot;", "\"", $text);
 			$text = str_replace("&#039;", "'", $text);
@@ -416,7 +369,8 @@
 	 *
 	 * @return mixed : { integer } { $total } { size of directory }
 	 */
-	function get_directory_size($path) {
+	function get_directory_size($path)
+	{
 		$totalsize = 0;
 		$totalcount = 0;
 		$dircount = 0;
@@ -451,7 +405,8 @@
 	 *
 	 * @return string : { string } { $data } { file size in readable format }
 	 */
-	function formatfilesize( $data ) {
+	function formatfilesize( $data )
+	{
         // bytes
         if( $data < 1024 ) {
             return $data . " bytes";
@@ -477,7 +432,8 @@
 	 *
 	 * @return string
 	 */
-	function shell_output($cmd) {
+	function shell_output($cmd)
+	{
 		if (stristr(PHP_OS, 'WIN')) { 
 			$cmd = $cmd;
 		} else {
@@ -498,8 +454,6 @@
 	function group_link($params)
 	{
 		$grp = $params['details'];
-		//$id = $grp['group_id'];
-		//$name = $grp['group_name'];
 		$url = $grp['group_url'];
 		if($params['type']=='' || $params['type']=='group') {
 			if(SEO==yes) {
@@ -875,7 +829,7 @@
 
 	/**
 	 * An easy function for errors and messages (e is basically short form of exception)
-	 * I dont want to use the whole Trigger and Exception code, so e pretty works for me :D
+	 * I don't want to use the whole Trigger and Exception code, so e pretty works for me :D
 	 *
 	 * @param null   $msg
 	 * @param string $type

@@ -285,4 +285,5 @@ INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 	('vbrate_720','2500000'),
 	('vbrate_480','700000'),
 	('vbrate_360','400000'),
-	('vbrate_240','240000');
+	('vbrate_240','240000'),
+	('password_salt', SUBSTRING(HEX(SHA2(CONCAT(NOW(), RAND(), UUID()), 512)),1, 32) );
