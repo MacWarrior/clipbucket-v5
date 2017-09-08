@@ -9,7 +9,6 @@
  */
 class ClipBucket
 {
-
     var $BASEDIR;
     var $JSArray = array();
     var $AdminJSArray = array();
@@ -84,7 +83,6 @@ class ClipBucket
             'functions.js' => 'global',
         ));
 
-
         //This is used to create Admin Menu
         //$this->AdminMenu = $this->get_admin_menu();
         //Updating Upload Options		
@@ -150,13 +148,14 @@ class ClipBucket
         }
     }
 
-    /**
-     * Function add_header()
-     * this will be used to add new files in header array
-     * this is basically for plugins
-     * @param FILE
-     * @param PAGES (array)
-     */
+	/**
+	 * Function add_header()
+	 * this will be used to add new files in header array
+	 * this is basically for plugins
+	 *
+	 * @param        FILE
+	 * @param string $place
+	 */
     function add_header($file, $place = 'global')
     {
         if (!is_array($place))
@@ -166,13 +165,14 @@ class ClipBucket
         $this->header_files[$file] = $place;
     }
 
-    /**
-     * Function add_admin_header()
-     * this will be used to add new files in header array
-     * this is basically for plugins
-     * @param FILE
-     * @param PAGES (array)
-     */
+	/**
+	 * Function add_admin_header()
+	 * this will be used to add new files in header array
+	 * this is basically for plugins
+	 *
+	 * @param        FILE
+	 * @param string $place
+	 */
     function add_admin_header($file, $place = 'global')
     {
         if (!is_array($place))
@@ -182,10 +182,13 @@ class ClipBucket
         $this->admin_header_files[$file] = $place;
     }
 
-    /**
-     * Function used to get list of function of any type
-     * @param : type (category,title,date etc)
-     */
+	/**
+	 * Function used to get list of function of any type
+	 *
+	 * @param : type (category,title,date etc)
+	 *
+	 * @return mixed
+	 */
     function getFunctionList($type)
     {
         return $this->actionList[$type];
@@ -196,7 +199,7 @@ class ClipBucket
      */
     function get_anchor_codes($place)
     {
-        //Geting list of codes available for $place
+        //Getting list of codes available for $place
         if(isset($this->anchorList[$place])){
             $list = $this->anchorList[$place];
             return $list;
@@ -209,7 +212,7 @@ class ClipBucket
      */
     function get_anchor_function_list($place)
     {
-        //Geting list of functions
+        //Getting list of functions
         $list = isset($this->anchor_function_list[$place]) ? $this->anchor_function_list[$place] : false;
         return $list;
     }
@@ -250,21 +253,11 @@ class ClipBucket
                 'Add Member' => 'add_member.php',
                 'Manage categories' => 'user_category.php',
                 'User Levels' => 'user_levels.php',
-              //  'Search Members' => 'members.php?view=search',
                 'Inactive Only' => 'members.php?search=yes&status=ToActivate',
                 'Active Only' => 'members.php?search=yes&status=Ok',
                 'Reported Users' => 'flagged_users.php',
                 'Mass Email' => 'mass_email.php'
             ),
-            //Groups
-           /* 'Groups' =>
-            array(
-                'Add Group' => 'add_group.php',
-                'Manage Groups' => 'groups_manager.php',
-                'Manage Categories' => 'group_category.php?view=show_category',
-                'View Inactive Groups' => 'groups_manager.php?active=no&search=yes',
-                'View Reported Groups' => 'flagged_groups.php',
-            ),*/
             //Advertisments
             'Advertisement' =>
             array(
@@ -287,7 +280,6 @@ class ClipBucket
             //Tool Box
             'Tool Box' =>
             array(
-                //'ClipBucket Module Manager'=>'module_manager.php',
                 'PHP Info' => 'phpinfo.php',
                 'Server Modules Info' => 'cb_mod_check.php',
                 'Conversion Queue Manager' => 'cb_conversion_queue.php',
@@ -347,14 +339,6 @@ class ClipBucket
             if($per['allow_manage_user_level']=='yes' || $userquery->level == 1)
             $NewMenu['Users']['User Levels'] = 'user_levels.php';
         }
-        
-        
-        /*if ($per['group_moderation'] == "yes")
-            $NewMenu['Groups'] = array('Add Group' => 'add_group.php',
-                'Manage Groups' => 'groups_manager.php',
-                'Manage Categories' => 'group_category.php?view=show_category',
-                'View Inactive Groups' => 'groups_manager.php?active=no&search=yes',
-                'View Reported Groups' => 'flagged_groups.php');*/
 
         if ($per['ad_manager_access'] == "yes")
             $NewMenu['Advertisement'] = array(
@@ -523,7 +507,6 @@ class ClipBucket
      */
     function head_menu($params = NULL)
     {
-        global $cbpage;
         $this->head_menu[] = array('name' => lang("menu_home"),'icon'=>'<i class="fa fa-home"></i>', 'link' => BASEURL, "this" => "home", "section" => "home", "extra_attr" => "");
         $this->head_menu[] = array('name' => lang("videos"), 'icon' => '<i class="fa fa-video-camera"></i>', 'link' => cblink(array('name' => 'videos')), "this" => "videos", "section" => "home");
         $this->head_menu[] = array('name' => lang("photos"), 'icon' => '<i class="fa fa-camera"></i>','link' => cblink(array('name' => 'photos')), "this" => "photos");
@@ -545,13 +528,8 @@ class ClipBucket
     {
         $this->head_menu($params);
 
-
-
-        if (!$params['tag'])
-        //$params['tag'] = 'li';
-            if (!$params['class'])
-                $params['class'] = '';
-
+		if (!$params['class'])
+			$params['class'] = '';
 
         if (!isset($params['getSubTab']))
             $params['getSubTab'] = '';
@@ -561,112 +539,95 @@ class ClipBucket
 
         if (!isset($params['selectedTab']))
             $params['selectedTab'] = '';
-        {
-            $headMenu = $this->head_menu;
 
-            $custom = (isset($this->custom_menu)) ? $this->custom_menu : false;
-            if (is_array($custom))
-                $headMenu = array_merge($headMenu, $custom);
-            /* Excluding tabs from menu */
-            if (isset($params['exclude']))
-            {
-                if (is_array($params['exclude']))
-                    $exclude = $params['exclude'];
-                else
-                    $exclude = explode(",", $params['exclude']);
+		$headMenu = $this->head_menu;
 
-                foreach ($headMenu as $key => $hm) {
-                    foreach ($exclude as $ex) {
-                        $ex = trim($ex);
-                        if (strtolower(trim($hm['name'])) == strtolower($ex))
-                            unset($headMenu[$key]);
-                    }
-                }
-            }
+		$custom = (isset($this->custom_menu)) ? $this->custom_menu : false;
+		if (is_array($custom))
+			$headMenu = array_merge($headMenu, $custom);
+		/* Excluding tabs from menu */
+		if (isset($params['exclude']))
+		{
+			if (is_array($params['exclude']))
+				$exclude = $params['exclude'];
+			else
+				$exclude = explode(",", $params['exclude']);
 
-            $main_menu = array();
-            foreach($headMenu as $menu)
-            {
-                if (isSectionEnabled($menu['this']))
-                {
+			foreach ($headMenu as $key => $hm)
+			{
+				foreach ($exclude as $ex)
+				{
+					$ex = trim($ex);
+					if (strtolower(trim($hm['name'])) == strtolower($ex))
+						unset($headMenu[$key]);
+				}
+			}
+		}
 
-                    $selected = current_page(array("page" => $menu['this']));
-                    if($selected)
-                        $menu['active'] = true;
+		$main_menu = array();
+		foreach($headMenu as $menu)
+		{
+			if (isSectionEnabled($menu['this']))
+			{
+				$selected = current_page(array("page" => $menu['this']));
+				if($selected)
+					$menu['active'] = true;
 
-                    $main_menu[] = $menu;
-                }
+				$main_menu[] = $menu;
+			}
 
-            }
+		}
 
+		$output = "";
+		foreach ($main_menu as $menu)
+		{
+			$selected = getArrayValue($menu, 'active');
+			$output .= "<li ";
+			$output .= "id = 'cb" . $menu['name'] . "Tab'";
 
-            $output = "";
-            //if(($params['tag']))
-            //		$output .= "<".$params['tag'].">";
-            foreach ($main_menu as $menu)
-            {
+			$output .= " class = '";
+			if ($params['class'])
+				$output .= $params['class'];
+			if ($selected)
+				$output .= " selected";
+			$output .= "'";
 
-                $selected = getArrayValue($menu, 'active');
-                $output .= "<li ";
-                $output .= "id = 'cb" . $menu['name'] . "Tab'";
+			if (isset($params['extra_params']))
+				$output .= ($params['extra_params']);
+			$output .= ">";
+			$output .= "<a href='" . $menu['link'] . "'>";
+			$output .= $menu['name'] . "</a>";
+			$output .= "</li>";
+		}
 
-                $output .= " class = '";
-                if ($params['class'])
-                    $output .= $params['class'];
-                if ($selected)
-                    $output .= " selected";
-                $output .= "'";
-
-                if (isset($params['extra_params']))
-                    $output .= ($params['extra_params']);
-                $output .= ">";
-                $output .= "<a href='" . $menu['link'] . "'>";
-                $output .= $menu['name'] . "</a>";
-                $output .= "</li>";
-            }
-
-
-            //if(($params['tag']))
-            //		$output .= "</".$params['tag'].">";
-
-
-
-            if(SMARTY_VERSION<3)
-            {
-
-                if ($params['echo'])
-                {
-                    echo $output;
-                }else
-                {
-                    return $output;
-                }
-            }else
-            {
-                if (isset($params['echo']))
-                {
-                    echo $output;
-                }else
-                {
-                    return $main_menu;
-                }
-            }
-        }
+		if(SMARTY_VERSION<3)
+		{
+			if ($params['echo'])
+			{
+				echo $output;
+			} else {
+				return $output;
+			}
+		} else {
+			if (isset($params['echo']))
+			{
+				echo $output;
+			} else {
+				return $main_menu;
+			}
+		}
     }
 
-    /**
-     * Function used to load head menu
-     */
+	/**
+	 * Function used to load head menu
+	 *
+	 * @param null $params
+	 *
+	 * @return array
+	 */
     function foot_menu($params = NULL)
     {
         global $cbpage;
-        //$this->foot_menu[] = array('name' => lang("menu_home"), 'link' => BASEURL, "this" => "home");
-        //$this->foot_menu[] = array('name' => lang("contact_us"), 'link' => cblink(array('name' => 'contact_us')), "this" => "home");
-        //$this->foot_menu[] = array('name' => lang("about_us"), 'link' => cblink(array('name' => 'about_us')), "this" => "home");
-
-
-        
-        //$this->foot_menu[] = array('name' => lang("my_account"), 'link' => cblink(array('name' => 'my_account')), "this" => "home");
 
         $pages = $cbpage->get_pages(array('active' => 'yes', 'display_only' => 'yes', 'order' => 'page_order ASC'));
 
@@ -674,15 +635,6 @@ class ClipBucket
             foreach ($pages as $p)
                $this->foot_menu[] = array('name' => lang($p['page_name']), 'link' => $cbpage->page_link($p), "this" => "home");
 
-//		if($cbpage->is_active(2))
-//			$this->foot_menu[] = array('name'=>lang("privacy_policy"),'link'=>$cbpage->get_page_link(2),"this"=>"home");
-//		
-//		if($cbpage->is_active(3))
-//			$this->foot_menu[] = array('name'=>lang("terms_of_serivce"),'link'=>$cbpage->get_page_link(3),"this"=>"home");
-//		
-//		if($cbpage->is_active(4))
-//			$this->foot_menu[] = array('name'=>lang("help"),'link'=>$cbpage->get_page_link(4),"this"=>"groups");
-//		
         if ($params['assign'])
             assign($params['assign'], $this->foot_menu);
         else
@@ -703,7 +655,6 @@ class ClipBucket
     function get_cb_news()
     {
         $feeds = 5;
-        $text = 400;
 
         //if($_SERVER['HTTP_HOST']!='localhost')
         $url = 'http://blog.clip-bucket.com/feed/';
@@ -722,7 +673,7 @@ class ClipBucket
     }
 
     /**
-     * Fucntion used to clean requests
+     * Function used to clean requests
      */
     function clean_requests()
     {
@@ -734,7 +685,8 @@ class ClipBucket
         if (is_array($posts) && count($posts) > 0)
         {
             $clean_posts = array();
-            foreach ($posts as $key => $post) {
+            foreach ($posts as $key => $post)
+            {
                 if (!is_array($post))
                 {
                     $clean_posts[$key] = preg_replace(array('/\|no_mc\|/', '/\|f\|/'), '', $post);
@@ -750,7 +702,8 @@ class ClipBucket
         if (is_array($gets) && count($gets) > 0)
         {
             $clean_gets = array();
-            foreach ($gets as $key => $get) {
+            foreach ($gets as $key => $get)
+            {
                 if (!is_array($get))
                 {
                     $clean_gets[$key] = preg_replace(array('/\|no_mc\|/', '/\|f\|/'), '', $get);
@@ -765,7 +718,8 @@ class ClipBucket
         if (is_array($request) && count($request) > 0)
         {
             $clean_request = array();
-            foreach ($request as $key => $request) {
+            foreach ($request as $key => $request)
+            {
                 if (!is_array($request))
                 {
                     $clean_request[$key] = preg_replace(array('/\|no_mc\|/', '/\|f\|/'), '', $request);
@@ -776,9 +730,6 @@ class ClipBucket
             $_REQUEST = $clean_request;
         }
 
-        //dump($_POST);
     }
 
 }
-
-?>

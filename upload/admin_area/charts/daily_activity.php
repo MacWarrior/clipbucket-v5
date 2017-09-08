@@ -50,7 +50,7 @@ echo $_post['videos'];
 if(isset($_post['videos'])){
 
 }
-//Geting the data for Flot Charts
+//Getting the data for Flot Charts
 
 //videos
 $videos['uploads'] = $cbvid->get_videos(array("count_only"=>true,"date_added"=>"'%$date_pattern%'"),TRUE);
