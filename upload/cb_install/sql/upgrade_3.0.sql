@@ -287,3 +287,10 @@ INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 	('password_salt', SUBSTRING(HEX(SHA2(CONCAT(NOW(), RAND(), UUID()), 512)),1, 32) );
 
 ALTER TABLE `{tbl_prefix}users` CHANGE `password` `password` VARCHAR(128) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
+
+ALTER TABLE `{tbl_prefix}user_levels_permissions` ADD `view_photos` ENUM('yes', 'no') NOT NULL DEFAULT 'yes' AFTER `view_video`;
+ALTER TABLE `{tbl_prefix}user_levels_permissions` ADD `view_collections` ENUM('yes', 'no') NOT NULL DEFAULT 'yes' AFTER `view_photos`;
+
+INSERT INTO `{tbl_prefix}user_permissions` (`permission_type`, `permission_name`, `permission_code`, `permission_desc`, `permission_default`) VALUES
+	(1, 'View Photos Page', 'view_photos', 'User can view photos page', 'yes'),
+	(1, 'View Collections Page', 'view_collections', 'User can view collections page', 'yes');

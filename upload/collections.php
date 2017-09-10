@@ -11,7 +11,7 @@ define("THIS_PAGE",'collections');
 define("PARENT_PAGE",'collections');
 require 'includes/config.inc.php';
 $pages->page_redir();
-
+$userquery->perm_check('view_collections',true);
 $sort = $_GET['sort'];
 $cond = array("category"=>mysql_clean($_GET['cat']),"date_span"=>mysql_clean($_GET['time']));
 $content = mysql_clean($_GET['content']);

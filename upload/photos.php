@@ -14,6 +14,7 @@
 	require 'includes/config.inc.php';
 	global $cbphoto, $cbcollection, $pages;
 	$pages->page_redir();
+	$userquery->perm_check('view_photos',true);
 	$assign_arry = array();
 	$sort = $_GET['sort'];
 	$cond = array("category"=>mysql_clean($_GET['cat']),"date_span"=>$_GET['time'], "active"=>"yes");
@@ -45,4 +46,3 @@
 	array_val_assign($assign_arry);
 	template_files('photos.html');
 	display_it();
-?>
