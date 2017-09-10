@@ -2300,85 +2300,72 @@ class userquery extends CBCategory{
 		}else
 			e(lang("perm_doesnt_exist"));
 	}
-	
-	
+
+
 	/**
 	 * Function used to check weather current user has permission
 	 * to view page or not
-	 * it will also check weather current page requires login 
+	 * it will also check weather current page requires login
 	 * if login is required, user will be redirected to signup page
+	 *
+	 * @param string $access
+	 * @param bool   $check_login
+	 * @param bool   $control_page
+	 *
+	 * @return bool
 	 */
 	function perm_check($access='',$check_login=FALSE,$control_page=true)
 	{
 		global $Cbucket;
-		/*if($check_login)
+		$access_details = $this->permission;
+		if(is_numeric($access))
 		{
-			return $this->login_check($access);
-		}else
-		{*/
-			$access_details = $this->permission;
-			//pr($access_details);
-			if(is_numeric($access))
-			{
-				if($access_details['level_id'] == $access)
-				{
-					return true;
-				}else{
-					if(!$check_only)
-					e(lang('insufficient_privileges'));
-					
-					if($control_page)
-					$Cbucket->show_page(false);
-					return false;
-				}
-			}else
-			{
-				
-				if($access_details[$access] == 'yes')
-				{
-					return true;
-				}
-				else
-				{
-					
-					if(!$check_login)
-						e(lang('insufficient_privileges'));
-					else
-					{	if(userid())
-							e(lang('insufficient_privileges'));
-						else
-							e(sprintf(lang('insufficient_privileges_loggin'),cblink(array('name'=>'signup')),cblink(array('name'=>'signup'))));
-					}
-					
-					if($control_page)
-					$Cbucket->show_page(false);
-					return false;
-				}
-			}
-		//}
+			if($access_details['level_id'] == $access)
+				return true;
+
+			if(!$check_only)
+				e(lang('insufficient_privileges'));
+
+			if($control_page)
+				$Cbucket->show_page(false);
+			return false;
+		}
+
+		if($access_details[$access] == 'yes')
+			return true;
+
+		if(!$check_login || userid())
+			e(lang('insufficient_privileges'));
+		else
+			e(sprintf(lang('insufficient_privileges_loggin'),cblink(array('name'=>'signup')),cblink(array('name'=>'signup'))));
+
+		if($control_page)
+			$Cbucket->show_page(false);
+		return false;
 	}
-	
-	
-	/** 
+
+	/**
 	 * Function used to get user profile details
+	 *
+	 * @param $uid
+	 *
+	 * @return bool
 	 */
 	function get_user_profile($uid)
 	{
 		global $db;
 		$result = $db->select(tbl($this->dbtbl['user_profile']),"*"," userid='$uid'");
 		if($db->num_rows>0)
-		{
 			return $result[0];
-		}else
-			return false;
+		return false;
 	}
-	
-	
-	
-	
-	
+
 	/**
 	 * User Profile Fields
+	 *
+	 * @param $default
+	 *
+	 * @return array
 	 */
 	function load_profile_fields($default)
 	{
@@ -2392,13 +2379,11 @@ class userquery extends CBCategory{
 		$privacy_field = $this->load_privacy_field($default);
 		return array_merge($profile_fields,$other_details,$more_details,$channel,$privacy_field);
 	}
-	
-	
-	
-	
-	
+
 	/**
 	 * Function used to update use details
+	 *
+	 * @param $array
 	 */
 	function update_user($array)
 	{
@@ -2433,7 +2418,7 @@ class userquery extends CBCategory{
 		validate_cb_form($custom_signup_fields,$array);
 		
 		validate_cb_form($userfields,$array);
-	//	pr();
+
 		foreach($userfields as $field)
 		{
 			$name = formObj::rmBrackets($field['name']);
@@ -2493,9 +2478,7 @@ class userquery extends CBCategory{
 			if(!empty($field['db_field']))
 				$uquery_val[] = $val;
 		}
-		
 
-		
 		//updating user detail
 		if(has_access('admin_access',TRUE) && isset($array['admin_manager']))
 		{
