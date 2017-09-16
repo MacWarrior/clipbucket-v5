@@ -1,5 +1,4 @@
 <?php
-
 	/**
 	* File: Index
 	* Description: This is home page of your wesbite. Anyone who lands on your website
@@ -14,12 +13,15 @@
 	define('THIS_PAGE','index');
 	require 'includes/config.inc.php';
 	$pages->page_redir();
+
 	if(is_installed('editorspick')) {
 		assign('editor_picks',get_ep_videos());
 	}
 
-	//Displaying The Template
-	template_files('index.html');
+	if( !$userquery->perm_check('view_videos',false, false, true) && !userid() )
+	{
+		template_files('signup_or_login.html');
+	} else {
+		template_files('index.html');
+	}
 	display_it();
-
-?>

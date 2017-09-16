@@ -2312,9 +2312,11 @@ class userquery extends CBCategory{
 	 * @param bool   $check_login
 	 * @param bool   $control_page
 	 *
+	 * @param bool   $silent
+	 *
 	 * @return bool
 	 */
-	function perm_check($access='',$check_login=FALSE,$control_page=true)
+	function perm_check($access='',$check_login=FALSE,$control_page=true, $silent = false)
 	{
 		global $Cbucket;
 		$access_details = $this->permission;
@@ -2323,7 +2325,7 @@ class userquery extends CBCategory{
 			if($access_details['level_id'] == $access)
 				return true;
 
-			if(!$check_only)
+			if(!$check_only && !$silent)
 				e(lang('insufficient_privileges'));
 
 			if($control_page)
@@ -2334,10 +2336,13 @@ class userquery extends CBCategory{
 		if($access_details[$access] == 'yes')
 			return true;
 
-		if(!$check_login || userid())
-			e(lang('insufficient_privileges'));
-		else
-			e(sprintf(lang('insufficient_privileges_loggin'),cblink(array('name'=>'signup')),cblink(array('name'=>'signup'))));
+		if( !$silent)
+		{
+			if(!$check_login || userid())
+				e(lang('insufficient_privileges'));
+			else
+				e(sprintf(lang('insufficient_privileges_loggin'),cblink(array('name'=>'signup')),cblink(array('name'=>'signup'))));
+		}
 
 		if($control_page)
 			$Cbucket->show_page(false);
