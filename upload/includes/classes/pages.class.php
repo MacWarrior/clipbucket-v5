@@ -233,14 +233,17 @@ class pages{
 
 	/**
 	 * Function used to create pagination
-	 * @param : total number of pags
-	 * @param : current page
-	 * @param : extra paraments in the tag ie <a other_params_go_here
-	 * @param : tag used for pagination
+	 *
+	 * @param        $total
+	 * @param        $page
+	 * @param null   $link
+	 * @param null   $extra_params
+	 * @param string $tag
+	 *
+	 * @return string
 	 */
 	function pagination($total,$page,$link=NULL,$extra_params=NULL,$tag='<a #params#>#page#</a>')
 	{
-		
 		if($total==0)
 			return false;
 		if($page<=0||$page==''||!is_numeric($page))
@@ -328,27 +331,16 @@ class pages{
 			//First Page
 			if($selected!=$total)
 				$this->last_link = $this->create_link($total,$link,$extra_params,$tag,true);
-				
+
 			return $start.$first_hellip.$mid.$second_hellip.$end;
 		}else{
 			$pagination_smart = '';
 			for($i=1;$i<=$total_pages;$i++)
 			{
-				if($i==1)
-				{
-					//$pagination_smart .="<li>";
-				}
-				
 				if($i == $selected)
 					$pagination_smart .= '<li class ="active"><a href="#">'.$i.'</a></li>';
 				else
 					$pagination_smart .=$this->create_link($i,$link,$extra_params,$tag);
-
-				if($i==1)
-				{
-					//$pagination_smart .="</li>";
-				}	
-					
 			}
 			
 			//Previous Page
@@ -363,32 +355,39 @@ class pages{
 			//First Page
 			if($selected!=$total)
 				$this->last_link = $this->create_link($total,$link,$extra_params,$tag,true);
-				
+
 			return $pagination_smart;
 		}
 	}
-	
-	
+
+
 	/**
 	 * Function used to create pagination and assign values that can bee used in template
+	 *
+	 * @param        $total
+	 * @param        $page
+	 * @param null   $link
+	 * @param null   $extra_params
+	 * @param string $tag
 	 */
 	function paginate($total,$page,$link=NULL,$extra_params=NULL,$tag='<li><a #params#>#page#</a></li>')
 	{
-		
-		$this->pagination = $this->pagination($total,$page,$link,$extra_params,$tag);
-		
-		//Assigning Variable that can be used in templates
-		assign('pagination',$this->pagination);
-		
-		assign('next_link',$this->next_link);
-		assign('pre_link',$this->pre_link);
-		
-		assign('next_page',$page+1);
-		assign('pre_page',$page-1);
-		
-		assign('first_link',$this->first_link);
-		assign('last_link',$this->last_link);
+		if( $total > 1) // One page pagination is useless
+		{
+			$this->pagination = $this->pagination($total,$page,$link,$extra_params,$tag);
+
+			//Assigning Variable that can be used in templates
+			assign('pagination',$this->pagination);
+
+			assign('next_link',$this->next_link);
+			assign('pre_link',$this->pre_link);
+
+			assign('next_page',$page+1);
+			assign('pre_page',$page-1);
+
+			assign('first_link',$this->first_link);
+			assign('last_link',$this->last_link);
+		}
 	}
 	
 }
-?>
