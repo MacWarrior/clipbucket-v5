@@ -88,4 +88,3 @@ Assign('collections', $collections);
 
 template_files('view_collection.html');
 display_it();	
-?>
