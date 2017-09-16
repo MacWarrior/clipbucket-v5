@@ -74,7 +74,15 @@
 								</ul>
 							</nav>
 						</div>
+						{$types_list = array()}
+						{foreach from=$Cbucket->search_types item=t key=stypes}
+							{if $stypes|lower == 'groups' || !$userquery->perm_check('view_'|cat:$stypes|lower, false, false, true)}
+								{continue}
+							{/if}
+							{$types_list[] = $stypes|lower}
+						{/foreach}
 						<div class="col btn-holder user_menu text-right">
+							{if count($types_list) > 0}
 							<div class="search">
 								<form class="search-form" action="{link name='search_result'}">
 									<div class="cbsearchtype">
@@ -84,21 +92,10 @@
 												<span class="icon-down-arrow"></span>
 											</button>
 											<ul class="dropdown-menu">
-												{$counter = 1}
-												{foreach from=$Cbucket->search_types item=t key=stypes}
-												{if $stypes|lower == 'groups'}
-												{continue}
-												{/if}
-												{if $counter == 3}
-												<li value="{$stypes}" {if $pageType == $stypes || $currentPage == $stypes}  class="active"  {/if}>
-													<a class="s-types" href="#" valNow="{$stypes}">{lang code ="{$stypes}"}</a>
-												</li>
-												{else}
-												<li value="{$stypes}" {if $pageType == $stypes || $currentPage == $stypes}  class="active" {/if}>
-													<a class="s-types" href="#" valNow="{$stypes}">{lang code ="{$stypes}"}</a>
-												</li>
-												{/if}
-												{$counter = $counter + 1}
+												{foreach $types_list item=stype}
+													<li value="{$stypes}" {if $pageType == $stype || $currentPage == $stype} class="active" {/if}>
+														<a class="s-types" href="#" valNow="{$stype}">{lang code ="{$stype}"}</a>
+													</li>
 												{/foreach}
 												{ANCHOR place="beat_search"}
 											</ul>
@@ -109,6 +106,7 @@
 									</div>
 								</form><!-- form Ends -->
 							</div>
+							{/if}
 							<ul class="nav navbar-nav navbar-right right-menu">
 								{if userid()}
 								<li class="dropdown upload_link">

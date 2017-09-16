@@ -21,6 +21,8 @@
 		$chkType = 'channels';
 	isSectionEnabled($chkType,true);
 
+	$userquery->perm_check('view_'.$type);
+
 	$search = cbsearch::init_search($type);
 
 	$search->key = mysql_clean($_GET['query']);
