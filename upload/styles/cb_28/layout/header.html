@@ -54,18 +54,20 @@
 								{$head_menu=cb_menu()}
 								<ul>
 									{foreach $head_menu as $menu}
-									{if $menu.name|lower == 'groups'}
-									{continue}
-									{/if}
-									{if $menu@iteration < 6}
-									{if $menu.this|lower == 'home'}
-									{continue}
-									{/if}
-									{if $menu.this == "home"}
-									{continue}
-									{/if}
+										{if $menu.name|lower == 'groups'}
+											{continue}
+										{/if}
+										{if $menu@iteration < 6}
+											{if $menu.this|lower == 'home'}
+												{continue}
+											{/if}
+											{if $menu.this == "home"}
+												{continue}
+											{/if}
+											{if $userquery->perm_check('view_'|cat:$menu.this, false, false, true)}
 									<li {if $menu.name|lower == $smarty.const.THIS_PAGE|lower || $menu.name|lower == $currentPage}class="active"{/if}><a href="{$menu.link}">{$menu.name}</a></li>
-									{/if}
+											{/if}
+										{/if}
 									{/foreach}
 									
 									{ANCHOR place="cb_28_head"}
