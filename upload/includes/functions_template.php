@@ -71,10 +71,8 @@ function display_it()
 {
     try
     {
-        global $ClipBucket, $db,$__devmsgs;
-        $dir = LAYOUT;
+        global $ClipBucket,$__devmsgs;
         if (is_array($__devmsgs)) {
-            #pr($__devmsgs,true);
             assign("thebase", BASEDIR);
             assign("__devmsgs",$__devmsgs);
         }
@@ -82,11 +80,7 @@ function display_it()
         {
             if(file_exists(LAYOUT.'/'.$file['file']) || is_array($file))
             {
-
-                if(!$ClipBucket->show_page && $file['follow_show_page'])
-                {
-
-                }else
+                if($ClipBucket->show_page || !$file['follow_show_page'])
                 {
                     if(!is_array($file))
                         $new_list[] = $file;

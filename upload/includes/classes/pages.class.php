@@ -62,8 +62,7 @@ class pages{
 		
 		
 		$sus_dirs = array('admin_area','includes','plugins','files','actions','cb_install');
-		
-		
+
 		$remove_arr = array();
 		$remove_arr[] = '/:\/\/www\./';
 		
@@ -106,19 +105,19 @@ class pages{
 		Assign('pageredir',@$_COOKIE['pageredir']);
 	}
 	
-	//This Funtion is use to Show Admin Panels Pages
-	
-	function show_admin_page($page){
-	$pages = array(
-	'main' 				=> 'main.php',
-	'server_check'		=> 'verifier.php',
-	'members_showall'	=> 'members.php?view=showall',
-	'members_inactive'	=> 'members.php?view=inactive',
-	'members_active'	=> 'members.php?view=active',
-	'members_addmember'	=> 'members.php?view=addmember',
-	'members_search'	=> 'members.php?view=search'
-	);
-	return @$pages[$page];
+	//This Function is use to Show Admin Panels Pages
+	function show_admin_page($page)
+	{
+		$pages = array(
+			'main' 				=> 'main.php',
+			'server_check'		=> 'verifier.php',
+			'members_showall'	=> 'members.php?view=showall',
+			'members_inactive'	=> 'members.php?view=inactive',
+			'members_active'	=> 'members.php?view=active',
+			'members_addmember'	=> 'members.php?view=addmember',
+			'members_search'	=> 'members.php?view=search'
+		);
+		return @$pages[$page];
 	}
 	
 	
@@ -155,8 +154,7 @@ class pages{
 		return $new_link;
 	}
 	
-	//This Fucntion is used to Redirect to respective URL
-	
+	//This Function is used to Redirect to respective URL
 	function redirect($url){
 		echo '<script type="text/javascript">
 		window.location = "'.$url.'"
