@@ -189,31 +189,30 @@
 		<aside id="sidebar">
 			<div class="box-ad ad">{AD place='ad_300x250'}</div>
 
-			<h2>{if $smarty.get.play_list}Playlist Videos{elseif $relMode != 'ono'}{lang code='related_videos'}{else}{lang code='popular_videos'}{/if}</h2>
+			<h2>{if $smarty.get.play_list}{lang code='playlist_videos'}{elseif $relMode != 'ono'}{lang code='related_videos'}{else}{lang code='popular_videos'}{/if}</h2>
 			<div class="clearfix sidebar-items">
 				{if $smarty.get.play_list}
+					{foreach $items as $key => $item}
+						{if $item.videokey == $vdo.videokey}
+							{$current_key = $key}
+						{/if}
+					{/foreach}
 
-				{foreach $items as  $key => $item}
-				{if $item.videokey == $vdo.videokey}
-				{$current_key = $key}
-				{/if}
-				{/foreach}
-
-				{$next_item_key = $current_key+1}
-				{$prev_item_key = $current_key-1}
-				{assign var=count_index value=count($items)}
+					{$next_item_key = $current_key+1}
+					{$prev_item_key = $current_key-1}
+					{assign var=count_index value=count($items)}
 				
-				{if $next_item_key==$count_index}
-				{$next_videoLink = '#'}
-				{else}
-				{$next_videoLink = videoLink($items.$next_item_key)}
-				{/if}
+					{if $next_item_key==$count_index}
+						{$next_videoLink = '#'}
+					{else}
+						{$next_videoLink = videoLink($items.$next_item_key)}
+					{/if}
 
-				{if $items.$prev_item_key==0}
-				{$prev_videoLink = '#'}
-				{else}
-				{$prev_videoLink = videoLink($items.$prev_item_key)}
-				{/if}
+					{if $items.$prev_item_key==0}
+						{$prev_videoLink = '#'}
+					{else}
+						{$prev_videoLink = videoLink($items.$prev_item_key)}
+					{/if}
 
 				<div class="clearfix" style="padding-bottom:10px;">
 					<a href="{$prev_videoLink }" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-step-backward"></span> {lang code='previous'} </a>
@@ -224,26 +223,25 @@
 					{$cur_playlist = $smarty.get.play_list}
 					{$total_items = $cbvid->action->count_playlist_items($cur_playlist)}
 					{section name=plist loop=$items}
-					{include file="$style_dir/blocks/manage/account_video.html" video=$items[plist] control="onWatch" pid=$playlist.playlist_id}
+						{include file="$style_dir/blocks/manage/account_video.html" video=$items[plist] control="onWatch" pid=$playlist.playlist_id}
 					{/section}
 				</div>
-				{if $total_items > 10}
+					{if $total_items > 10}
 				<button class="btn btn-primary text-centre" id="playlist-pull" dataList={$cur_playlist} dataLimit="10" dataHit="2">{lang code='load_more'}</button>
-				{/if}
+					{/if}
 				{else}			    	
-				{if $videos}
-				{foreach from=$videos item=pop_video}
-
-				{if $pop_video@iteration == 9}
-				{break}
-				{/if}
+					{if $videos}
+						{foreach from=$videos item=pop_video}
+							{if $pop_video@iteration == 9}
+								{break}
+							{/if}
 				<div class="clearfix popular-video">
-					{include file="$style_dir/blocks/videos/video.html" display_type='popVideos_sidebar'}
+							{include file="$style_dir/blocks/videos/video.html" display_type='popVideos_sidebar'}
 				</div>
-				{/foreach}
-				{else}
+						{/foreach}
+					{else}
 				<div class="well well-info">{lang code='no_videos_found'}</div>
-				{/if}
+					{/if}
 				{/if}
 			</div>
 		</aside>
