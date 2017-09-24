@@ -7,29 +7,25 @@
  ****************************************************************************************************
 */
 
-require'../includes/admin_config.php';
-$userquery->admin_login_check();
-$userquery->login_check('video_moderation');
-$pages->page_redir();
+	require'../includes/admin_config.php';
+	$userquery->admin_login_check();
+	$userquery->login_check('video_moderation');
+	$pages->page_redir();
 
 
-if(!defined('MAIN_PAGE')){
-	define('MAIN_PAGE', 'Videos');
-}
-if(!defined('SUB_PAGE')){
-	if($_GET['active'] == 'no')
-		define('SUB_PAGE', 'List Inactive Videos');
-	else
-		define('SUB_PAGE', 'Videos Manager');
-}
+	if(!defined('MAIN_PAGE')){
+		define('MAIN_PAGE', 'Videos');
+	}
+	if(!defined('SUB_PAGE')){
+		if($_GET['active'] == 'no')
+			define('SUB_PAGE', 'List Inactive Videos');
+		else
+			define('SUB_PAGE', 'Videos Manager');
+	}
 
-
-
-
-if(@$_GET['msg']){
-	$msg[] = clean($_GET['msg']);
-}
-
+	if(@$_GET['msg']){
+		$msg[] = clean($_GET['msg']);
+	}
 
 	$video = mysql_clean($_GET['video']);
 
@@ -44,10 +40,8 @@ if(@$_GET['msg']){
 			$myquery->set_default_thumb($video,$_POST['default_thumb']);
 		}
 	}
-	
 
-
-	//Performing Video Acttions
+	//Performing Video Actions
 	if($_GET['mode']!=''){
 		$modedata = $cbvid->action($_GET['mode'],$video);
 		assign("modedata",$modedata);
@@ -85,56 +79,53 @@ if(@$_GET['msg']){
 		$myquery->delete_comment($cid);
 	}
 
-if(!$array['order'])
-    $result_array['order'] = " doj DESC LIMIT 1 ";
+	if(!$array['order'])
+		$result_array['order'] = " doj DESC LIMIT 1 ";
 
-$users = get_users($result_array);
+	$users = get_users($result_array);
 
-Assign('users', $users);
+	Assign('users', $users);
 
+	if(!$array['order'])
+		$result_array['order'] = " views DESC LIMIT 8 ";
+	$videos = get_videos($result_array);
 
-if(!$array['order'])
-    $result_array['order'] = " views DESC LIMIT 8 ";
-$videos = get_videos($result_array);
+	Assign('videos', $videos);
 
-Assign('videos', $videos);
-
-
-$numbers = array(100,1000,15141,3421);
-function format_number($number) {
-    if($number >= 1000) {
-        return $number/1000 . "k"; // NB: you will want to round this
-    }
-	return $number;
-}
-
-
-if(function_exists("get_ep_videos")){
-	$ep_videos = get_ep_videos();
-	if(isset($_POST['update_order'])){
-	    if(is_array($ep_videos))
-	    {
-	        foreach($ep_videos as $epvid)
-	        {
-	            $order = $_POST['ep_order_'.$epvid['pick_id']];
-	            move_epick($epvid['videoid'],$order);
-	        }
-	    }
-	    $ep_videos = get_ep_videos();
-
+	$numbers = array(100,1000,15141,3421);
+	function format_number($number) {
+		if($number >= 1000) {
+			return $number/1000 . "k"; // NB: you will want to round this
+		}
+		return $number;
 	}
-}
+
+	if(function_exists("get_ep_videos"))
+	{
+		$ep_videos = get_ep_videos();
+		if(isset($_POST['update_order']))
+		{
+			if(is_array($ep_videos))
+			{
+				foreach($ep_videos as $epvid)
+				{
+					$order = $_POST['ep_order_'.$epvid['pick_id']];
+					move_epick($epvid['videoid'],$order);
+				}
+			}
+			$ep_videos = get_ep_videos();
+
+		}
+	}
 
 
-$get_limit = create_query_limit($page,5);
-$videos = $cbvid->action->get_flagged_objects($get_limit);
-Assign('flagedVideos', $videos);
+	$get_limit = create_query_limit($page,5);
+	$videos = $cbvid->action->get_flagged_objects($get_limit);
+	Assign('flagedVideos', $videos);
 
-$comments = getComments($comment_cond);
-assign("comments",$comments);
+	$comments = getComments($comment_cond);
+	assign("comments",$comments);
 
-subtitle("Edit Video");
-template_files('edit_video.html');
-display_it();
-
-?>
+	subtitle("Edit Video");
+	template_files('edit_video.html');
+	display_it();

@@ -186,8 +186,6 @@ class CBvideo extends CBCategory
 	 */
 	function get_video($vid, $file=false, $basic = false )
 	{
-		global $db, $cb_columns;
-		
 		$userFields = get_user_fields();
         $videoFields = array( 'video' => '*' );
 
@@ -220,8 +218,8 @@ class CBvideo extends CBCategory
         //pr($query,true);
         $result = select( $query );
 
-        if ( $result ) {
-
+        if ( $result )
+        {
             $result = apply_filters( $result[ 0 ], 'get_video' );
 
             cb_do_action( 'return_video', array(
