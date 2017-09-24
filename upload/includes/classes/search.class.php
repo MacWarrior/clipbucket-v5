@@ -114,20 +114,17 @@ class cbsearch
 	function search()
 	{
 		global $db;
-		
-		$ma_query = "";
-		
+
 		#Checking for columns
 		if(!$this->use_match_method)
+		{
 			foreach($this->columns as $column)
 			{
 				$this->query_cond($column);
 			}
-		else
-		{
+		} else {
 			if($this->key)
 			{
-
 				$this->set_the_key();
 				$ma_query = $this->match_against_query();
 				$this->add_cond($ma_query);

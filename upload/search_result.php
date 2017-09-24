@@ -58,6 +58,13 @@
 			}
 		}
 		$search->category = $child_ids;
+
+		if( !has_access('admin_access',TRUE) )
+		{
+			$search->query_conds[] = tbl('video').'.status = "Successful"';
+			$search->query_conds[] = tbl('video').'.active = "yes"';
+			$search->query_conds[] = tbl('video').'.broadcast != "unlisted"';
+		}
 	}
 
 	$search->date_margin = mysql_clean($_GET['datemargin']);
