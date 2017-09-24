@@ -1,5 +1,4 @@
 <?php
-	
 	/**
 	* File: Watch Video Ajax
 	* Description: File handles watch video ajax requests
@@ -9,10 +8,12 @@
 	*/
 
 	require '../includes/config.inc.php';
-	if (isset($_POST['mode'])) {
+	if (isset($_POST['mode']))
+	{
 		$mode = $_POST['mode'];
 
-		switch ($mode) {
+		switch ($mode)
+		{
 			case 'playlistMore':
 				global $db, $cbvid, $Smarty;
 				$load_hit = $_POST['loadHit'];
@@ -33,11 +34,5 @@
 					echo trim(Fetch('/blocks/manage/account_video.html'));
 				}
 				break;
-			
-			default:
-				# code...
-				break;
 		}
 	}
-
-?>
