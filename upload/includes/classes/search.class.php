@@ -80,9 +80,13 @@ class cbsearch
 	 * Fields to use for MATCH - AGAINST method
 	 */
 	var $match_fields = array();
-	 
+
 	/**
 	 * INITIATION SEARCH
+	 *
+	 * @param string $type
+	 *
+	 * @return
 	 */
 	function init_search($type='video')
 	{
@@ -118,7 +122,6 @@ class cbsearch
 			foreach($this->columns as $column)
 			{
 				$this->query_cond($column);
-
 			}
 		else
 		{
@@ -131,9 +134,6 @@ class cbsearch
 				//add order
 				$add_select_field = ",".$ma_query." AS Resource";
 				//$sorting = "Resource ASC";
-			}else
-			{
-				//do nothing
 			}
 			
 			foreach($this->columns as $column)
@@ -142,9 +142,7 @@ class cbsearch
 				$this->query_cond($column);
 			}
 		}
-		
-		
-		
+
 		#Checking for category
 		if(isset($this->category))
 		{
@@ -176,46 +174,40 @@ class cbsearch
 				$query_cond .= " AND ";
 			else
 				$query_cond = $condition;
+
 			if(!has_access('admin_access',TRUE)){
 				$results = $db->select(tbl($this->db_tbl.",users"),
 								tbl($this->db_tbl.'.*,users.userid,users.username').$add_select_field,
 							$query_cond." ".tbl($this->db_tbl).".userid=".tbl("users.userid")." AND ".tbl($this->db_tbl).".active='yes'"."AND".tbl($this->db_tbl).".broadcast='public'",$this->limit,$sorting);
-			}
-			else{
+			} else {
 				$results = $db->select(tbl($this->db_tbl.",users"),
 								tbl($this->db_tbl.'.*,users.userid,users.username').$add_select_field,
 							$query_cond." ".tbl($this->db_tbl).".userid=".tbl("users.userid")." AND ".tbl($this->db_tbl).".active='yes'",$this->limit,$sorting);
 			}
 
-		$this->total_results = $db->count(tbl($this->db_tbl),'*',$condition);
-			
-		}else
-		{
+			$this->total_results = $db->count(tbl($this->db_tbl),'*',$condition);
+		} else {
 			$results = $db->select(tbl($this->db_tbl),'*',$condition,$this->limit,$sorting);
-			//echo $db->db_query;
 			$this->total_results = $db->count(tbl($this->db_tbl),'*',$condition);
 		}
-		
-		
-		
+
 		return $results;
 	}
-	
-	
+
 	/**
 	 * function used to add query cond
+	 *
+	 * @param        $cond
+	 * @param string $op
 	 */
 	function add_cond($cond,$op='AND')
 	{
-		if(count($this->query_conds)>0)
-			$op = $op;
-		else
+		if(count($this->query_conds) <= 0)
 			$op = '';
-			
+
 		$this->query_conds[] = $op." ".$cond;
 	}
-	
-	
+
 	/**
 	 * Function used to convert array to query condition
 	 */
@@ -366,10 +358,7 @@ class cbsearch
 				case "last_month":
 				case "lastmonth":
 				{
-					$lastmonth = date("Ym", strtotime("last month"));
-					//$cond = " CONCAT(YEAR($date_column),MONTH($date_column)) ='$lastmonth' ";
-                                        //Thanks to netwibe.com
-                                        $cond = " CONCAT(YEAR(curdate()),MONTH(curdate())-1) = CONCAT(YEAR($date_column),MONTH($date_column)) ";
+					$cond = " CONCAT(YEAR(curdate()),MONTH(curdate())-1) = CONCAT(YEAR($date_column),MONTH($date_column)) ";
 				}
 				break;
 				

@@ -9,10 +9,10 @@
 */
 
 	define('THIS_PAGE','search_result');
-	require 'includes/config.inc.php';
+	require_once 'includes/config.inc.php';
 	$pages->page_redir();
 							
-	$page = mysql_clean($_GET['page']);
+	$page = display_clean($_GET['page']);
 	$type = mysql_clean(strtolower($_GET['type'])) ;
 	$type = $type ? $type : 'videos';
 	$chkType = $type;
@@ -35,14 +35,19 @@
 		$search->category = $_GET['category'];
 	} else {
 		$child_ids = array();
-		if($_GET['category']) {
-			foreach($_GET['category'] as $category) {
+		if($_GET['category'])
+		{
+			foreach($_GET['category'] as $category)
+			{
 				$childs = $cbvid->get_sub_categories(mysql_clean($category));
-				if($childs) {
-					foreach($childs as $child) {
+				if($childs)
+				{
+					foreach($childs as $child)
+					{
 						$child_ids[] = $child['category_id'];
 						$subchilds = $childs = $cbvid->get_sub_categories($child['category_id']);
-						if($subchilds) {
+						if($subchilds)
+						{
 							foreach($subchilds as $subchild) {
 								$child_ids[] = $subchild['category_id'];
 							}
@@ -52,7 +57,6 @@
 				}
 			}
 		}
-		
 		$search->category = $child_ids;
 	}
 
@@ -78,7 +82,8 @@
 		assign('search_type_title',sprintf(lang('searching_keyword_in_obj'), display_clean(get('query')), lang($type)));
 	}
 
-	if(mysql_clean(get('query'))) {
+	if(get('query'))
+	{
 		$squery = get('query');
 		if ($squery == 'clipbucket') {
 			subtitle("Awesomeness...!!");

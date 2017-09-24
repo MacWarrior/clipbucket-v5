@@ -1,5 +1,4 @@
 <?php
-
 	/**
 	* File: watch_video
 	* Description: FIle used to display watch video page
@@ -21,7 +20,8 @@
 	$vdo = $cbvid->get_video($vkey);
 	$cbvid->update_comments_count($vdo['videoid']);
 	$assign_arry['vdo'] = $vdo;
-	if(video_playable($vdo)) {	
+	if(video_playable($vdo))
+	{
 		//Checking for playlist
 		$pid = $_GET['play_list'];
 		if(!empty($pid)) {
@@ -35,7 +35,6 @@
 		subtitle(ucfirst($vdo['title']));
 	} else {
 		$Cbucket->show_page = false;
-
 	}
 
 	//Return category id without '#'
