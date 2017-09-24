@@ -33,7 +33,7 @@
 		}
 		$child_ids[] = mysql_clean($_GET['cat']);
 	}
-	$vid_cond = array('category'=>$child_ids,'date_span'=>mysql_clean($_GET['time']),'sub_cats');
+	$vid_cond = array('category'=>$child_ids,'date_span'=>mysql_clean($_GET['time']),'sub_cats', 'status'=>'Successful');
 	$vid_cond = build_sort($sort, $vid_cond);
 	//Getting Video List
 	$page = mysql_clean($_GET['page']);
