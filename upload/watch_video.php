@@ -58,9 +58,9 @@
 	}
 	$playlist = $cbvid->action->get_playlist($pid,userid());
 	$assign_arry['playlist'] = $playlist;
-				//Getting Playlist Item
-				$items = $cbvid->get_playlist_items( $pid, 'playlist_items.date_added DESC' );
-				$assign_arry['items'] = $items;
+	//Getting Playlist Item
+	$items = $cbvid->get_playlist_items( $pid, 'playlist_items.date_added DESC' );
+	$assign_arry['items'] = $items;
 	$assign_arry['videos'] = $related_videos;
 	$assign_arry['relMode'] = $relMode;
 	# assigning all variables
