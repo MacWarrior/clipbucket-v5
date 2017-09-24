@@ -1709,7 +1709,7 @@ class CBvideo extends CBCategory
 	 */
 	function get_playlist_items( $playlist_id, $order = null, $limit = 10 )
 	{
-        global $db, $cb_columns;
+        global $cb_columns;
 
         $fields = array(
             'playlist_items' => $cb_columns->object( 'playlist_items' )->temp_change( 'date_added', 'item_added' )->get_columns(),
