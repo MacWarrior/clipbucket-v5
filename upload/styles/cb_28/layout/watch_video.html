@@ -5,9 +5,11 @@
 	<div class="clearfix">
 		<section id="content" class="clearfix videos">
 			<div class="clearfix player-holder">
+				{if $video.statut=='Successful'}
 				<div id="cb_player" class="cb_player">
 					{FlashPlayer vdetails=$video width='100%' height='100%'}
 				</div><!-- cb_player end -->
+				{/if}
 			</div>
 			<!-- end of player-holder -->
 			<div class="clearfix leaderboard-ad ad">
