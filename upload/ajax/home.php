@@ -57,6 +57,7 @@
 		{
 			case 'video':
 				$params['count_only'] = false;
+				$params['status'] = 'Successful';
 				$data = get_videos($params);
 				break;
 			case 'users':
