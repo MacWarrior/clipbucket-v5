@@ -75,7 +75,7 @@
 	if(empty($search->key)) {
 		assign('search_type_title',$search->search_type[$type]['title']);
 	} else {
-		assign('search_type_title',sprintf(lang('searching_keyword_in_obj'), mysql_clean(get('query')),$search->search_type[$type]['title']));
+		assign('search_type_title',sprintf(lang('searching_keyword_in_obj'), display_clean(get('query')), lang($type)));
 	}
 
 	if(mysql_clean(get('query'))) {
@@ -83,7 +83,7 @@
 		if ($squery == 'clipbucket') {
 			subtitle("Awesomeness...!!");
 		} else {
-			subtitle($search->search_type[$type]['title'].' &raquo; '.mysql_clean(get('query')));
+			subtitle($search->search_type[$type]['title'].' &raquo; '.display_clean(get('query')));
 		}
 	}
 
