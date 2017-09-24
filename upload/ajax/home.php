@@ -47,7 +47,6 @@
 		if( isset($_POST['first_launch']) && $_POST['first_launch'] = 'true' )
 		{
 			$params['count_only'] = true;
-			$params['status'] = 'Successful';
 			$total_vids = get_videos($params);
 			assign("total_vids", $total_vids);
 		} else {
@@ -58,7 +57,6 @@
 		{
 			case 'video':
 				$params['count_only'] = false;
-				$params['status'] = 'Successful';
 				$data = get_videos($params);
 				break;
 			case 'users':
