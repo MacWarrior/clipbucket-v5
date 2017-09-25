@@ -79,7 +79,7 @@
                                         {$toArray = explode(',',$catString)}
                                         {$totalItems = count($toArray)}
                                         {if $totalItems > 4}
-                                            {$moreText = ' + more '}
+                                            {$moreText = ' + '|cat:{lang code='more'}}
                                         {/if}
                                         {$finalItems = array_slice($toArray, 0, 4)}
                                         {$vcategories = implode(',',$finalItems)}
