@@ -2306,9 +2306,10 @@
 	 * @internal param $ { integer } { $count } { number of pages to be displayed }
 	 */
 	function count_pages($total,$count) {
-		if($count<1) $count = 1;
+		if($count<1)
+			$count = 1;
 		$records = $total/$count;
-		return $total_pages = round($records+0.49,0);
+		return (int)round($records+0.49,0);
 	}
 
 	/**
