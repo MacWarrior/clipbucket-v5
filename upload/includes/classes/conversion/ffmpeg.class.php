@@ -886,8 +886,8 @@ class FFMpeg
 							$video_width  = (int)$value[0];
 							$video_height = (int)$value[1];
 
-							// Here we must check width instead of height to be able to import other formats than 16/9 (For example : 1920x800)
-							if( $this->input_details['video_width'] >= $video_width )
+							// Here we must check width and height to be able to import other formats than 16/9 (For example : 1920x800, 1800x1080, ...)
+							if( $this->input_details['video_width'] >= $video_width || $this->input_details['video_height'] >= $video_height )
 							{
 								$more_res['video_width']  = $video_width;
 								$more_res['video_height'] = $video_height;
