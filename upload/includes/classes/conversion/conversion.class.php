@@ -645,9 +645,10 @@
 			return $this->fileDirectory.'/'.$this->fileName;
 		}
 
-		private function generateCommand($videoDetails = false, $isHd = false){
-			if($videoDetails){
-
+		private function generateCommand($videoDetails = false, $isHd = false)
+		{
+			if($videoDetails)
+			{
 				$result = shell_output("ffmpeg -version");
 				preg_match("/(?:ffmpeg\\s)(?:version\\s)?(\\d\\.\\d\\.(?:\\d|[\\w]+))/i", strtolower($result), $matches);
 				if(count($matches) > 0)
@@ -737,7 +738,6 @@
 					$videoBitrate = (int)$this->options['videoBitrate'];
 					if($isHd){
 						$videoBitrate = (int)($this->options['videoBitrateHd']);
-						////logData($this->options);
 					}
 					$commandSwitches .= " -b:v " . $videoBitrate." -minrate ".$videoBitrate. " -maxrate ".$videoBitrate;
 				}
@@ -755,16 +755,17 @@
 			return false;
 		}
 
-		private function possibleQualities($originalFileDetails) {
+		private function possibleQualities($originalFileDetails)
+		{
 			$mainQualities = array('240','360','480','720','1080');
 
 			$finalQualities = array();
 			$currentVideoHeight = $originalFileDetails['videoHeight'];
 
-			if ( $currentVideoHeight > 700 ) {
+			if( $currentVideoHeight >= 700 ) {
 				$finalQualities[] = 'hd';
 				$finalQualities[] = 'sd';
-			} elseif  ( $currentVideoHeight > 200 && $currentVideoHeight < 700 ) {
+			} elseif( $currentVideoHeight > 200 ) {
 				$finalQualities[] = 'sd';
 			}
 
