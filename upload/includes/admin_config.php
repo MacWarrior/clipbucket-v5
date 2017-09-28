@@ -1,24 +1,20 @@
 <?php
-
 	define("BACK_END",TRUE);
 	define("FRONT_END",FALSE);
 	define("SLOGAN","Administration Panel");        
         
 	//Admin Area
-	$admin_area	=	TRUE;
+	$admin_area	= TRUE;
 	
-	/*
-	Config.Inc.php
-	*/
+	/* Config.Inc.php */
 	include('common.php');
 		
 	//Including Massuploader Class,
 	require_once('classes/mass_upload.class.php');
 	require_once('classes/ads.class.php');
-	//require_once('classes/sysinfo.class.php');
 	
 	$cbmass 	= new mass_upload();
-	$ads_query 		= new AdsManager();
+	$ads_query 	= new AdsManager();
 	
 	
 	$admin_pages = $row['admin_pages'];
@@ -43,13 +39,12 @@
 	
  	//Do No Edit Below This Line
  	define('ADMIN_TEMPLATE', 'cb_2014');
- 	
 	define('TEMPLATEDIR',BASEDIR.'/'.ADMINDIR.'/'.TEMPLATEFOLDER.'/'.ADMIN_TEMPLATE);
 	define('SITETEMPLATEDIR',BASEDIR.'/'.TEMPLATEFOLDER.'/'.$row['template_dir']);
 	define('TEMPLATEURL',BASEURL.'/'.ADMINDIR.'/'.TEMPLATEFOLDER.'/'.ADMIN_TEMPLATE);
 	define('LAYOUT',TEMPLATEDIR.'/layout');
-        
-        define('TEMPLATE',$row['template_dir']);
+	define('TEMPLATE',$row['template_dir']);
+
     /*
 	* Calling this function to check server configs
 	* Checks : MEMORY_LIMIT, UPLOAD_MAX_FILESIZE, POST_MAX_SIZE, MAX_EXECUTION_TIME
@@ -67,20 +62,15 @@
 	Assign('theme_url',TEMPLATEURL.'/theme');
 	Assign('style_dir',LAYOUT);
 	Assign('layout_dir', LAYOUT);
-
 	Assign('logged_user',@$_SESSION['username']);
 	Assign('superadmin',@$_SESSION['superadmin']);
 	
-	$AdminArea = true;
-	
 	//Including Plugins
 	include('plugins.php');
-	
 	//Including Flv Players
 	include('flv_player.php');
-	
-	
-$Smarty->assign_by_ref( 'cbmass',$cbmass );
 
-cb_call_functions( 'clipbucket_init_completed' );
-?>
+	$Smarty->assign_by_ref( 'cbmass',$cbmass );
+
+	cb_call_functions( 'clipbucket_init_completed' );
+

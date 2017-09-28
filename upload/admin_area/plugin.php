@@ -5,7 +5,7 @@
  * this will include plugin file based on input folder and file
  */
 
-require'../includes/admin_config.php';
+require_once '../includes/admin_config.php';
 $userquery->admin_login_check();
 $userquery->login_check('video_moderation');
 $pages->page_redir();

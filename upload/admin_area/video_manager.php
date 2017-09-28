@@ -14,17 +14,13 @@
 	$userquery->login_check('video_moderation');
 	$pages->page_redir();
 
-	/* Assigning page and subpage */
-	if(!defined('MAIN_PAGE')){
-		define('MAIN_PAGE', 'Videos');
-	}
-	if(!defined('SUB_PAGE'))
-	{
-		if($_GET['active'] == 'no')
-			define('SUB_PAGE', 'List Inactive Videos');
-		else
-			define('SUB_PAGE', 'Videos Manager');
-	}
+	/* Generating breadcrumb */
+	global $breadcrumb;
+	$breadcrumb[0] = array('title' => 'Videos', 'url' => '');
+	if($_GET['active'] == 'no')
+		$breadcrumb[1] = array('title' => 'List Inactive Videos', 'url' => '/admin_area/video_manager.php');
+	else
+		$breadcrumb[1] = array('title' => 'Videos Manager', 'url' => '/admin_area/video_manager.php');
 
 	if (isset($_POST['reconvert_selected']) || isset($_GET['reconvert_video'])) {
 		reConvertVideos();

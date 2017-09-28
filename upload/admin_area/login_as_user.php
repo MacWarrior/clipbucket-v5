@@ -4,7 +4,7 @@
  * @author:Arslan
  * @Since : Oct 16 09
  */
-require'../includes/admin_config.php';
+require_once '../includes/admin_config.php';
 
 if(!$userquery->is_admin_logged_as_user())
 {

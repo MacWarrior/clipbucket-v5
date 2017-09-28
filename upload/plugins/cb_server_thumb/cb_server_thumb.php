@@ -372,7 +372,7 @@ if(!function_exists('server_thumb'))
                         $dem = getimagesize( str_replace( PHOTOS_URL, PHOTOS_DIR, $src ) );
                         $width = $dem[0];
                         $height = $dem[1];
-                        /* UPDATEING IMAGE DETAILS */
+                        /* UPDATING IMAGE DETAILS */
                         $cbphoto->update_image_details( $photo );
                     } else {
                         $width = $image_details[ $size ][ 'width' ];

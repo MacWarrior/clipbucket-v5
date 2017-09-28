@@ -1,73 +1,67 @@
 <?php
-/* 
- *******************************************
- | Copyright (c) 2007-2009 Clip-Bucket.com & (Arslan Hassan). All rights reserved.
- | @ Author : ArslanHassan
- | @ Software : ClipBucket , © PHPBucket.com
- *******************************************
-*/
+	/*
+	 *******************************************
+	 | Copyright (c) 2007-2009 Clip-Bucket.com & (Arslan Hassan). All rights reserved.
+	 | @ Author : ArslanHassan
+	 | @ Software : ClipBucket , © PHPBucket.com
+	 *******************************************
+	*/
 
-require_once '../includes/admin_config.php';
-$userquery->admin_login_check();
-$pages->page_redir();
-$userquery->perm_check('group_moderation',true);
+	require_once '../includes/admin_config.php';
+	$userquery->admin_login_check();
+	$pages->page_redir();
+	$userquery->perm_check('group_moderation',true);
 
-/* Assigning page and subpage */
-if(!defined('MAIN_PAGE')){
-	define('MAIN_PAGE', 'Groups');
-}
-if(!defined('SUB_PAGE')){
-	define('SUB_PAGE', 'Manage Categories');
-}
+	/* Generating breadcrumb */
+	global $breadcrumb;
+	$breadcrumb[0] = array('title' => 'Groups', 'url' => '');
+	$breadcrumb[1] = array('title' => 'Manage Categories', 'url' => '/admin_area/group_category.php');
 
-
-//Form Processing
-if(isset($_POST['add_cateogry'])){
-	$cbgroup->add_category($_POST);
-}
-
-//Making Categoyr as Default
-if(isset($_GET['make_default']))
-{
-	$cid = mysql_clean($_GET['make_default']);
-	$cbgroup->make_default_category($cid);
-}
-
-//Edit Categoty
-if(isset($_GET['category'])){
-	assign("edit_category","show");
-	if(isset($_POST['update_category']))
-	{
-		$cbgroup->update_category($_POST);
+	//Form Processing
+	if(isset($_POST['add_cateogry'])){
+		$cbgroup->add_category($_POST);
 	}
-	assign('cat_details',$cbgroup->get_category($_GET['category']));
-}
 
-//Delete Category
-if(isset($_GET['delete_category'])){
-	$cbgroup->delete_category($_GET['delete_category']);
-}
-	
-$cats = $cbgroup->get_categories();
-//Updating Category Order
-if(isset($_POST['update_order']))
-{
-	foreach($cats as $cat)
+	//Making Category as Default
+	if(isset($_GET['make_default']))
 	{
-		if(!empty($cat['category_id']))
+		$cid = mysql_clean($_GET['make_default']);
+		$cbgroup->make_default_category($cid);
+	}
+
+	//Edit Category
+	if(isset($_GET['category'])){
+		assign("edit_category","show");
+		if(isset($_POST['update_category']))
 		{
-			$order = $_POST['category_order_'.$cat['category_id']];
-			$cbgroup->update_cat_order($cat['category_id'],$order);
+			$cbgroup->update_category($_POST);
 		}
+		assign('cat_details',$cbgroup->get_category($_GET['category']));
 	}
+
+	//Delete Category
+	if(isset($_GET['delete_category'])){
+		$cbgroup->delete_category($_GET['delete_category']);
+	}
+
 	$cats = $cbgroup->get_categories();
-}
+	//Updating Category Order
+	if(isset($_POST['update_order']))
+	{
+		foreach($cats as $cat)
+		{
+			if(!empty($cat['category_id']))
+			{
+				$order = $_POST['category_order_'.$cat['category_id']];
+				$cbgroup->update_cat_order($cat['category_id'],$order);
+			}
+		}
+		$cats = $cbgroup->get_categories();
+	}
 
-//Assing Category Values
-assign('category',$cats);
-assign('total',$cbgroup->total_categories());
+	//Assign Category Values
+	assign('category',$cats);
+	assign('total',$cbgroup->total_categories());
 
-subtitle("Groups Category manager");	
-template_files('group_category.html'); display_it();
-
-?>
+	subtitle("Groups Category manager");
+	template_files('group_category.html'); display_it();

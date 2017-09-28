@@ -13,14 +13,12 @@
 				<div class="main-content">
 					<div id="breadcrumbs" class="breadcrumbs">
 						<ul class="breadcrumb">
-							<li>
-								<i class="icon-home home-icon"></i>
-								<a href="#">{$smarty.const.MAIN_PAGE}</a>
+							<li><a href="/admin_area/" class="icon-home home-icon"></a></li>
+							{foreach from=$breadcrumb item=page}
+								<li>{if !empty($page['url'])}<a href="{$page['url']}">{/if}{$page['title']}{if !empty($page['url'])}</a>{/if}</li>
+							{/foreach}
 							</li>
-							<li class="active"> {$smarty.const.SUB_PAGE}</li>
 						</ul><!-- .breadcrumb -->
-
-						
 					</div>
 					<div class="page-content">
 	                    {include file="$style_dir/msg.html" }

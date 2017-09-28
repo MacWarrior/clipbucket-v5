@@ -840,8 +840,9 @@
 	 */
     function get_file_details($file_name,$get_jsoned=false)
     {
+    	$file_name = mysql_clean($file_name);
         //Reading Log File
-        $result = db_select("SELECT * FROM ".tbl("video")." WHERE file_name = '$file_name'");
+        $result = db_select("SELECT * FROM ".tbl("video")." WHERE file_name = '".$file_name."'");
         
         if($result)
         {

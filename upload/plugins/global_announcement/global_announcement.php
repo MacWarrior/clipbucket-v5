@@ -25,12 +25,6 @@ if(!function_exists('global_announcement'))
      }
     }
 
-    /*
-	function global_announcement()
-	{
-		echo '<div>'.htmlspecialchars_decode(get_announcement()).'</div>';
-	}
-	*/
 	
 	function get_announcement()
 	{

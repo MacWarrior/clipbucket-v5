@@ -6,18 +6,15 @@
 	require_once '../includes/admin_config.php';
 	$userquery->admin_login_check();
 	$pages->page_redir();
-	/* Assigning page and subpage */
-	if(!defined('MAIN_PAGE')){
-		define('MAIN_PAGE', 'Stats And Configurations');
-	}
-	if(!defined('SUB_PAGE')){
-		define('SUB_PAGE', 'Update Logo');
-	}
+
+	/* Generating breadcrumb */
+	global $breadcrumb;
+	$breadcrumb[0] = array('title' => 'General Configurations', 'url' => '');
+	$breadcrumb[1] = array('title' => 'Update Logo', 'url' => '/admin_area/upload_logo.php');
 
 	$source = BASEURL.'/styles/cb_28/theme/images/logo.png';
 
 	// Upload and Rename File
-
 	if (isset($_POST['submit'])) {
 		// function used to upload site logo.
 		upload_logo() ;
@@ -27,5 +24,3 @@
 	subtitle("Update Logo");
 	template_files('upload_logo.html');
 	display_it();
-
-?>

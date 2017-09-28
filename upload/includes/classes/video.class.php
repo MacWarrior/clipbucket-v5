@@ -164,12 +164,12 @@ class CBvideo extends CBCategory
 	 */
 	function video_exists($vid)
 	{
+		$vid = mysql_clean($vid);
 		global $db;
 		if(is_numeric($vid))
-		return $db->count(tbl("video"),"videoid"," videoid='$vid' ");
+			return $db->count(tbl("video"),"videoid"," videoid='$vid' ");
 		else
-		return $db->count(tbl("video"),"videoid"," videokey='$vid' ");
-		//return $this->get_video($vid);
+			return $db->count(tbl("video"),"videoid"," videokey='$vid' ");
 	}
 	function exists($vid){return $this->video_exists($vid);}
 	function videoexists($vid){return $this->video_exists($vid);}
@@ -186,6 +186,8 @@ class CBvideo extends CBCategory
 	 */
 	function get_video($vid, $file=false, $basic = false )
 	{
+		$vid = mysql_clean($vid);
+
 		$userFields = get_user_fields();
         $videoFields = array( 'video' => '*' );
 

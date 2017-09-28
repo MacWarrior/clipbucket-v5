@@ -4,7 +4,7 @@
   * Software : ClipBucket v2
   * License : Attribution Assurance License -- http://www.opensource.org/licenses/attribution.php
   **/
-require'../includes/admin_config.php';
+require_once '../includes/admin_config.php';
 $userquery->login_check('admin_access');
 
 if($_POST['update_player_size']=='yes')

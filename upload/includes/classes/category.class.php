@@ -43,11 +43,12 @@ abstract class CBCategory
 	 */
 	function get_category($cid)
 	{
+		$cid = mysql_clean($cid);
+
 		global $db;
 		$results = $db->select(tbl($this->cat_tbl),"*"," category_id='$cid'");
 		if($db->num_rows>0)
 			return $results[0];
-
 		return false;
 	}
 
@@ -588,7 +589,6 @@ abstract class CBCategory
 		$default = mysql_clean($array['default_categ']);
 		$pcat = mysql_clean($array['parent_cat']);
 
-		#exit($pcat);
 		$flds = array("category_name","category_desc","isdefault");
 		$values = array($name,$desc, $default, $pcat);
 		$cur_name = mysql_clean($array['cur_name']);

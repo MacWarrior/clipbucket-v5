@@ -7,7 +7,7 @@
  * Since : 10 Aug, 2009
  */
 
-require'../includes/admin_config.php';
+require_once '../includes/admin_config.php';
 $userquery->admin_login_check();
 
 $cid = $_POST['id'];

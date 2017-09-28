@@ -31,7 +31,7 @@ if($myquery->VideoExists($video)){
 	#pr($data,true);
 	$vid_file = VIDEOS_DIR.'/'.$data['file_directory'].'/'.get_video_file($data,false,false);
 	
-	# Uploading Thumbss
+	# Uploading Thumbs
 	if(isset($_POST['upload_thumbs'])){
 	
 		if($data['files_thumbs_path']!=''){

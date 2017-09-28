@@ -1,20 +1,16 @@
 <?php
-    /* Assigning page and subpage */
-    if(!defined('MAIN_PAGE')){
-        define('MAIN_PAGE', 'Custom Field');
-    }
-    if (isset($_GET['custom_edit'])) {
-        if(!defined('SUB_PAGE')) {
-            define('SUB_PAGE', 'Edit Custom Field');
-        }
-    } else {
-        if(!defined('SUB_PAGE')){
-            define('SUB_PAGE', 'Add Custom Field');
-        }
-    }
+	// TODO : Complete URL
+	/* Generating breadcrumb */
+	global $breadcrumb;
+	$breadcrumb[0] = array('title' => 'Custom Field', 'url' => '');
+	if (isset($_GET['custom_edit']))
+		$breadcrumb[1] = array('title' => 'Edit Custom Field', 'url' => '');
+	else
+		$breadcrumb[1] = array('title' => 'Add Custom Field', 'url' => '');
 
     /*video fields inserted from here*/
-    if (isset($_POST['submit'])) {
+    if (isset($_POST['submit']))
+    {
         $data = $_POST;
 
         $inserted = push_custom_field($data);
@@ -54,5 +50,3 @@
         $display_file = 'edit_field.html';
     }
     template_files($display_file,CUSTOM_FIELDS_ADMIN_DIR);
-
-?>

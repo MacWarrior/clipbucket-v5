@@ -1,66 +1,63 @@
 <?php
-/* 
- ***************************************************************
- | Copyright (c) 2007-2010 Clip-Bucket.com. All rights reserved.
- | @ Author : ArslanHassan										
- | @ Software : ClipBucket , © PHPBucket.com					
- ****************************************************************
-*/
+	/*
+	 ***************************************************************
+	 | Copyright (c) 2007-2010 Clip-Bucket.com. All rights reserved.
+	 | @ Author : ArslanHassan
+	 | @ Software : ClipBucket , © PHPBucket.com
+	 ****************************************************************
+	*/
 
-require_once '../includes/admin_config.php';
-$userquery->admin_login_check();
-$userquery->login_check('web_config_access');
+	require_once '../includes/admin_config.php';
+	$userquery->admin_login_check();
+	$userquery->login_check('web_config_access');
 
-$pages->page_redir();
+	$pages->page_redir();
 
-/* Assigning page and subpage */
-if(!defined('MAIN_PAGE')){
-	define('MAIN_PAGE', 'General Configurations');
-}
-if(!defined('SUB_PAGE')){
-	define('SUB_PAGE', 'Email Settings');
-}
+	/* Generating breadcrumb */
+	global $breadcrumb;
+	$breadcrumb[0] = array('title' => 'General Configurations', 'url' => '');
+	$breadcrumb[1] = array('title' => 'Email Settings', 'url' => '/admin_area/email_settings.php');
 
-//Updatingg email templates
-if(isset($_POST['update']))
-{
-	$templates = $cbemail->get_templates();
-	
-	foreach($templates as $template)
+	//Updating email templates
+	if(isset($_POST['update']))
 	{
-		$params = array('id'=>$template['email_template_id'],'subj'=>$_POST['subject'.$template['email_template_id']],
-						'msg'=>$_POST['message'.$template['email_template_id']]);   
-		$cbemail->update_template($params);
-		$eh->flush();
-		e("Email templates have been updated","m");
+		$templates = $cbemail->get_templates();
+
+		foreach($templates as $template)
+		{
+			$params = array('id'=>$template['email_template_id'],'subj'=>$_POST['subject'.$template['email_template_id']],
+							'msg'=>$_POST['message'.$template['email_template_id']]);
+			$cbemail->update_template($params);
+			$eh->flush();
+			e("Email templates have been updated","m");
+		}
 	}
-}
 
-if(isset($_POST['update_settings'])){
-	$configs = $Cbucket->configs;
-	
-	$rows = array(
-		'mail_type',
-		'smtp_host',
-		'smtp_user',
-		'smtp_pass',
-		'smtp_auth',
-		'smtp_port'
-	);
-
-	foreach($rows as $field)
+	if(isset($_POST['update_settings']))
 	{
-		$value = ($_POST[$field]);
-		$myquery->Set_Website_Details($field,$value);
+		$configs = $Cbucket->configs;
+
+		$rows = array(
+			'mail_type',
+			'smtp_host',
+			'smtp_user',
+			'smtp_pass',
+			'smtp_auth',
+			'smtp_port'
+		);
+
+		foreach($rows as $field)
+		{
+			$value = ($_POST[$field]);
+			$myquery->Set_Website_Details($field,$value);
+		}
+		e("Email Settings Have Been Updated",'m');
+
 	}
-	e("Email Settings Have Been Updated",'m');
 
-}
+	$row = $myquery->Get_Website_Details();
+	Assign('row',$row);
 
-$row = $myquery->Get_Website_Details();
-Assign('row',$row);
-
-subtitle("Email Settings");
-template_files('email_settings.html');
-display_it();
-?>
+	subtitle("Email Settings");
+	template_files('email_settings.html');
+	display_it();

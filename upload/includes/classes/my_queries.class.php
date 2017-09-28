@@ -553,13 +553,9 @@ class myquery {
 	 */
 	function file_details($file_name)
 	{
-		global $db;
 		return get_file_details($file_name);
-		
 	}
-	
-	
-		 
+
 	/**
 	 * Function used to update video and set a thumb as default
 	 * @param VID

@@ -1,5 +1,5 @@
 <?php
-/* 
+	/*
  ****************************************************************************************************
  | Copyright (c) 2007-2010 Clip-Bucket.com. All rights reserved.											|
  | @ Author 	: ArslanHassan																		|
@@ -7,32 +7,27 @@
  ****************************************************************************************************
 */
 
-	require'../includes/admin_config.php';
+	require_once '../includes/admin_config.php';
 	$userquery->admin_login_check();
 	$userquery->login_check('video_moderation');
 	$pages->page_redir();
 
+	$video = $_GET['video'];
+	$data = get_video_details($video);
 
-	if(!defined('MAIN_PAGE')){
-		define('MAIN_PAGE', 'Videos');
-	}
-	if(!defined('SUB_PAGE')){
-		if($_GET['active'] == 'no')
-			define('SUB_PAGE', 'List Inactive Videos');
-		else
-			define('SUB_PAGE', 'Videos Manager');
-	}
+	/* Generating breadcrumb */
+	global $breadcrumb;
+	$breadcrumb[0] = array('title' => 'Videos', 'url' => '');
+	$breadcrumb[1] = array('title' => 'Videos Manager', 'url' => '/admin_area/video_manager.php');
+	$breadcrumb[2] = array('title' => 'Editing : '.display_clean($data['title']), 'url' => '/admin_area/edit_video.php?video='.display_clean($video));
 
 	if(@$_GET['msg']){
 		$msg[] = clean($_GET['msg']);
 	}
 
-	$video = mysql_clean($_GET['video']);
-
-
 	//Updating Video Details
-	if(isset($_POST['update'])){
-		
+	if(isset($_POST['update']))
+	{
 		$Upload->validate_video_upload_form();
 		if(empty($eh->error_list))
 		{
@@ -48,20 +43,18 @@
 	}
 	
 	//Check Video Exists or Not
-	if($myquery->VideoExists($video)){
+	if($myquery->VideoExists($video))
+	{
 		//Deleting Comment
 		$cid = mysql_clean($_GET['delete_comment']);
 		if(!empty($cid))
 		{
 			$myquery->delete_comment($cid);
 		}
-		
-		//pr($video,true);
-		$data = get_video_details($video);
+
 		Assign('udata',$userquery->get_user_details($data['userid']));
 		Assign('data',$data);
-		 //pr($data,true);
-	}else{
+	} else {
 		$msg[] = lang('class_vdo_del_err');
 	}
 
@@ -72,7 +65,6 @@
     $comments = getComments($comment_cond);
     assign("comments",$comments);
 
-    
 	//Deleting comment 
 	if(isset($_POST['del_cmt'])){
 		$cid = mysql_clean($_POST['cmt_id']);
@@ -93,7 +85,8 @@
 	Assign('videos', $videos);
 
 	$numbers = array(100,1000,15141,3421);
-	function format_number($number) {
+	function format_number($number)
+	{
 		if($number >= 1000) {
 			return $number/1000 . "k"; // NB: you will want to round this
 		}
@@ -114,7 +107,6 @@
 				}
 			}
 			$ep_videos = get_ep_videos();
-
 		}
 	}
 

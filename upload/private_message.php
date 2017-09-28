@@ -22,7 +22,7 @@ assign('p',$userquery->get_user_profile($udetails['userid']));
 
 $mode = $_GET['mode'];
 
-//Deleting Multple Message
+//Deleting Multiple Message
 if(isset($_POST['delete_pm']))
 {
 	if($mode=='inbox' || $mode =='notification')

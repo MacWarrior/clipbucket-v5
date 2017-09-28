@@ -2126,7 +2126,7 @@ class CBPhotos
 								$dem = getimagesize(str_replace(PHOTOS_URL,PHOTOS_DIR,$src));
 								$width = $dem[0];
 								$height = $dem[1];
-								/* UPDATEING IMAGE DETAILS */
+								/* UPDATING IMAGE DETAILS */
 								$this->update_image_details($details);	
 							} else {
 								$width = $imgDetails[$p['size']]['width'];

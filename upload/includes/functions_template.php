@@ -71,7 +71,7 @@ function display_it()
 {
     try
     {
-        global $ClipBucket,$__devmsgs;
+        global $ClipBucket,$__devmsgs,$breadcrumb;
         if (is_array($__devmsgs)) {
             assign("thebase", BASEDIR);
             assign("__devmsgs",$__devmsgs);
@@ -96,6 +96,7 @@ function display_it()
         }
 
         assign('template_files',$new_list);
+        assign('breadcrumb', $breadcrumb);
 
         Template('body.html');
 

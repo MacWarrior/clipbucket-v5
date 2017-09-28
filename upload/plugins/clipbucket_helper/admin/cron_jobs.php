@@ -1,12 +1,8 @@
 <?php
+	// TODO : Complete URL
+	/* Generating breadcrumb */
+	global $breadcrumb;
+	$breadcrumb[0] = array('title' => 'Clip-Bucket Helper', 'url' => '');
+	$breadcrumb[1] = array('title' => 'Cron Jobs', 'url' => '');
 
-/* Assigning page and subpage */
-if(!defined('MAIN_PAGE')){
-    define('MAIN_PAGE', 'Clip-Bucket Helper');
-}
-if(!defined('SUB_PAGE')){
-    define('SUB_PAGE', 'Cron Jobs');
-}
-
-template_files(PLUG_DIR.'/clipbucket_helper/admin/cron_jobs.html',true);
-?>
+	template_files(PLUG_DIR.'/clipbucket_helper/admin/cron_jobs.html',true);
