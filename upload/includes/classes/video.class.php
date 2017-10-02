@@ -1176,7 +1176,7 @@ class CBvideo extends CBCategory
 			$add_comment =  $myquery->add_comment($comment,$obj_id,$reply_to,'v',$owner_id,videoLink($video),$force_name_email);
 			if($add_comment)
 			{
-				//Loggin Comment			
+				//Logging Comment
 				$log_array = array
 				(
 				 'success'=>'yes',

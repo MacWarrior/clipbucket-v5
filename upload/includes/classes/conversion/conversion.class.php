@@ -171,7 +171,7 @@
 		/**
 		* Action : Parse required meta details of a video
 		* Description : Conversion system can't proceed to do anything without first properly
-		* knowing what kind of video it is dealing with. It is used to ensures that video resoloutions are 
+		* knowing what kind of video it is dealing with. It is used to ensures that video resolutions are
 		* extracted properly, thumbs positioning is proper, video qualities are legit etc.
 		* If we bypass this information, we can end up with unexpected outputs. For example, you upload
 		* a video of 240p and system will try to convert it to 1080 which means? You guessed it, DISASTER!
@@ -463,10 +463,10 @@
 			//Get File info
 			$this->inputDetails = $this->extractVideoDetails();
 
-			//Loging File Details
+			//Logging File Details
 			$this->logFileInfo();
 
-			//Gett FFMPEG version
+			//Get FFMPEG version
 			$ffmpegVersionCommand = FFMPEG_BINARY." -version";
 			$result = $this->executeCommand( $ffmpegVersionCommand );
 			$version = parse_version( 'ffmpeg',$result );
@@ -611,7 +611,7 @@
 		* return : refined reslolution array
 		*/
 		
-		private function reIndexReqResoloutions( $resolutions ) {
+		private function reIndexReqResolutions( $resolutions ) {
 
 			$originalVideoHeight = $this->inputDetails['videoHeight'];
 			
@@ -791,7 +791,7 @@
 		}
 
 		public function generate_sprites(){
-			$this->log->writeLine("Genrating Video Sprite","Starting" );
+			$this->log->writeLine("Generating Video Sprite","Starting" );
 			try{
 
 				$interval = $this->inputDetails['duration'] / 10 ;
@@ -816,167 +816,153 @@
 		}
 
 		/**
-		* This is where all begins and video conversion is initiated.
-		* This function then takes care of everything like setting resoloutions,
-		* generating thumbs and other stuff
-		* @param : { none }
-		*/
+		 * This is where all begins and video conversion is initiated.
+		 * This function then takes care of everything like setting resolutions,
+		 * generating thumbs and other stuff
+		 *
+		 * @param : { none }
+		 *
+		 * @return bool
+		 */
 
-		public function convert() {
+		public function convert()
+		{
 			$useCrons = config( 'use_crons' );
-			if( !$this->isLocked( $this->maxProsessesAtOnce ) || $useCrons == 'yes' ) {
-				if( $useCrons == 'no' ) {
-					//Lets make a file
-					$locFile = $this->ffmpegLockPath.'.loc';
-					$this->createLock( $locFile );
-					$this->startTime = $this->timeCheck();
-					$this->startLog();
-					$this->prepare( $this->fullUploadedFilePath );
-				
-					$maxDuration = $this->maxDuration;
-					$currentDuration = $this->inputDetails['duration'];
+			if( $useCrons == 'no' && !$this->isLocked($this->maxProsessesAtOnce) )
+			{
+				//Lets make a file
+				$locFile = $this->ffmpegLockPath.'.loc';
+				$this->createLock( $locFile );
+				$this->startTime = $this->timeCheck();
+				$this->startLog();
+				$this->prepare( $this->fullUploadedFilePath );
 
-					/**
-					* ClipBucket allows admins to set max duration video which is saved
-					* in global admin configs. Our top priority should be to make sure
-					* video larger than that duration never makes it to database but there
-					* can always be glitches. This below part is final check for that.
-					* If video longer than allowed duration, it simply won't convert
-					* and error will be stored in video conversion log
-					*/
+				$maxDuration = $this->maxDuration;
+				$currentDuration = $this->inputDetails['duration'];
 
-					if ( $currentDuration > $this->maxDuration ) {
-						$maxDurationMinutes = $this->maxDuration / 60; 
-						$this->TemplogData   = "Video duration was ".$currentDuration." minutes and Max video duration is {$maxDurationMinutes} minutes, Therefore Video cancelled... Wohooo.\n";
-						$this->TemplogData  .= "Conversion_status : failed\n";
-						$this->TemplogData  .= "Failed Reason : Max Duration Configurations\n";
-						
-						$this->log->writeLine( "Max Duration configs", $this->TemplogData , true );
-						$this->failedReason = 'max_duration';
+				/**
+				* ClipBucket allows admins to set max duration video which is saved
+				* in global admin configs. Our top priority should be to make sure
+				* video larger than that duration never makes it to database but there
+				* can always be glitches. This below part is final check for that.
+				* If video longer than allowed duration, it simply won't convert
+				* and error will be stored in video conversion log
+				*/
 
-						return false;
-					} else {
+				if( $currentDuration > $maxDuration )
+				{
+					$maxDurationMinutes = $maxDuration / 60;
+					$log  = "Video duration was ".$currentDuration." minutes and Max video duration is {$maxDurationMinutes} minutes, Therefore Video cancelled... Wohooo.\n";
+					$log .= "Conversion_status : failed\n";
+					$log .= "Failed Reason : Max Duration Configurations\n";
 
-						$ratio = substr( $this->inputDetails['videoWhRatio'], 0,7 );
-						$ratio = (float) $ratio;
+					$this->log->writeLine("Max Duration configs", $log, true);
+					$this->failedReason = 'max_duration';
+					return false;
+				} else {
+					$ratio = substr($this->inputDetails['videoWhRatio'], 0,7);
+					$ratio = (float) $ratio;
 
-						$videoHeight = $this->configs['normal_res'];
-						if( $videoHeight == '320' ) {
-							$videoHeight='360';
-						}
+					$this->log->writeLine("Thumbs Generation", "Starting");
+					$log = "";
 
-						$this->log->writeLine( "Thumbs Generation", "Starting" );
-						$this->TemplogData = "";
-						
-						try {
-
-							$thumbsSettings = $this->thumbsResSettings;
-							foreach ( $thumbsSettings as $key => $thumbSize ) {
-								$heightSetting = $thumbSize[1];
-								$widthSetting = $thumbSize[0];
-								$dimensionSetting = $widthSetting.'x'.$heightSetting;
-
-								if( $key == 'original' ) {
-									$dimensionSetting = $key;
-									$dimensionIdentifier = $key;	
-								} else {
-									$dimensionIdentifier = $widthSetting.'x'.$heightSetting;	
-								}
-
-								$thumbsSettings['videoFile'] = $this->inputFile;
-								$thumbsSettings['duration'] = $this->inputDetails['duration'];
-								$thumbsSettings['num'] = 2;
-								$thumbsSettings['dim'] = $dimensionSetting;
-								$thumbsSettings['sizeTag'] = $dimensionIdentifier;
-								$this->generateThumbs( $thumbsSettings );
-							}
-							
-						} catch(Exception $e) {
-							$this->TemplogData .= "\r\n Errot Occured : ".$e->getMessage()."\r\n";
-						}
-						//Genrating sprite for the video 
-						$this->generate_sprites();
-
-						
-						$this->TemplogData .= "\r\n ====== End : Thumbs Generation ======= \r\n";
-						$this->log->writeLine("Thumbs Files", $this->TemplogData , true );
-						
-						$hr = $this->configs['high_res'];
-						$this->configs['videoWidth'] = $res[$nr][0];
-						$this->configs['format'] = 'mp4';
-						$this->configs['videoHeight'] = $res[$nr][1];
-						$this->configs['hqVideoWidth'] = $res[$hr][0];
-						$this->configs['hqVideoHeight'] = $res[$hr][1];
-						$origFile = $this->inputFile;
-						
-						// setting type of conversion, fetching from configs
-						$this->resolutions = $this->configs['cbComboRes'];
-
-						$res169 = $this->res169;
-						switch ($this->resolutions) {
-							case 'yes': {
-								$res169 = $this->reIndexReqResoloutions($res169);
-								
-								$this->ratio = $ratio;
-								foreach ($res169 as $value) 
-								{
-									$videoWidth=(int)$value[0];
-									$videoHeight=(int)$value[1];
-
-									$bypass = $this->check_threshold($this->input_details['videoHeight'],$videoHeight);
-									logData($bypass,'reindex');
-									if($this->input_details['videoHeight'] > $videoHeight-1 || $bypass)
-									{
-										$more_res['videoWidth'] = $videoWidth;
-										$more_res['videoHeight'] = $videoHeight;
-										$more_res['name'] = $videoHeight;
-										logData($more_res['videoHeight'],'reindex');
-										$this->convert(NULL,false,$more_res);
-									
-									}
-								}
-							}
-							break;
-
-							case 'no':
-							default :
-							{
-								$this->convertVideo($origFile);
-							}
-							break;
-						}
-						
-						$this->endTimeCheck();
-						$this->totalTime();
-						
-						//Copying File To Original Folder
-						if($this->keep_original=='yes')
+					try
+					{
+						$thumbsSettings = $this->thumbsResSettings;
+						foreach( $thumbsSettings as $key => $thumbSize )
 						{
-							$this->log->TemplogData .= "\r\nCopy File to original Folder";
-							if(copy($this->inputFile,$this->original_output_path))
-								$this->log->TemplogData .= "\r\nFile Copied to original Folder...";
-							else
-								$this->log->TemplogData.= "\r\nUnable to copy file to original folder...";
-						}
-						
-						
-						$this->log->TemplogData .= "\r\n\r\nTime Took : ";
-						$this->log->TemplogData .= $this->totalTime.' seconds'."\r\n\r\n";
-						
-					
+							$heightSetting = $thumbSize[1];
+							$widthSetting = $thumbSize[0];
+							$dimensionSetting = $widthSetting.'x'.$heightSetting;
 
-						if(file_exists($this->output_file) && filesize($this->output_file) > 0)
-							$this->log->TemplogData .= "conversion_status : completed ";
-						else
-							$this->log->TemplogData .= "conversion_status : failed ";
-						
-						$this->log->writeLine("Conversion Completed", $this->log->TemplogData , true );
-						//$this->create_log_file();
+							if( $key == 'original' ) {
+								$dimensionSetting = $key;
+								$dimensionIdentifier = $key;
+							} else {
+								$dimensionIdentifier = $widthSetting.'x'.$heightSetting;
+							}
+
+							$thumbsSettings['videoFile'] = $this->inputFile;
+							$thumbsSettings['duration'] = $this->inputDetails['duration'];
+							$thumbsSettings['num'] = 2;
+							$thumbsSettings['dim'] = $dimensionSetting;
+							$thumbsSettings['sizeTag'] = $dimensionIdentifier;
+							$this->generateThumbs( $thumbsSettings );
+						}
+
+					} catch(Exception $e) {
+						$log .= "\r\n Errot Occured : ".$e->getMessage()."\r\n";
 					}
+					//Generating sprite for the video
+					$this->generate_sprites();
+
+					$log .= "\r\n ====== End : Thumbs Generation ======= \r\n";
+					$this->log->writeLine("Thumbs Files", $log, true );
+
+					$hr = $this->configs['high_res'];
+					$this->configs['videoWidth'] = $res[$nr][0];
+					$this->configs['format'] = 'mp4';
+					$this->configs['videoHeight'] = $res[$nr][1];
+					$this->configs['hqVideoWidth'] = $res[$hr][0];
+					$this->configs['hqVideoHeight'] = $res[$hr][1];
+					$origFile = $this->inputFile;
+
+					// setting type of conversion, fetching from configs
+					$this->resolutions = $this->configs['cbComboRes'];
+
+					switch($this->resolutions)
+					{
+						case 'yes':
+							$res169 = $this->reIndexReqResolutions($this->res169);
+
+							$this->ratio = $ratio;
+							foreach($res169 as $value)
+							{
+								$videoWidth = (int)$value[0];
+								$videoHeight = (int)$value[1];
+
+								$bypass = $this->check_threshold($this->input_details['videoHeight'],$videoHeight);
+								logData($bypass,'reindex');
+								if($this->input_details['videoHeight'] > $videoHeight-1 || $bypass)
+								{
+									$more_res['videoWidth'] = $videoWidth;
+									$more_res['videoHeight'] = $videoHeight;
+									$more_res['name'] = $videoHeight;
+									logData($more_res['videoHeight'],'reindex');
+									$this->convert(NULL,false,$more_res);
+								}
+							}
+							break;
+
+						case 'no':
+						default :
+							$this->convertVideo($origFile);
+							break;
+					}
+
+					$this->endTimeCheck();
+					$this->totalTime();
+
+					//Copying File To Original Folder
+					if($this->keep_original=='yes')
+					{
+						$log .= "\r\nCopy File to original Folder";
+						if(copy($this->inputFile,$this->original_output_path))
+							$log .= "\r\nFile Copied to original Folder...";
+						else
+							$log.= "\r\nUnable to copy file to original folder...";
+					}
+
+					$log .= "\r\n\r\nTime Took : ";
+					$log .= $this->totalTime.' seconds'."\r\n\r\n";
+
+					if(file_exists($this->output_file) && filesize($this->output_file) > 0)
+						$log .= "conversion_status : completed ";
+					else
+						$log .= "conversion_status : failed ";
+
+					$this->log->writeLine("Conversion Completed", $log, true );
 				}
 			}
 		}
 	}
-
-
-?>

@@ -148,8 +148,8 @@ class formObj
 		//First Checking if value is CATEGORY
 		if($field['value'][0]=='category')
 		{
-			$values_array = $field['value'][1][0];
-			//$field['value'] = '';
+			//$values_array = $field['value'][1][0];
+
 			//Generate Category list
 			$type = $field['category_type'] ? $field['category_type'] : 'video';
 			
@@ -169,7 +169,7 @@ class formObj
 			
 			
 		}
-		$arrayName = $this->rmBrackets($field['name']);
+		//$arrayName = $this->rmBrackets($field['name']);
 		//Creating Fields
 		
 		if($multi)
@@ -195,7 +195,7 @@ class formObj
 						$checked = ' checked ';
 						break;
 					}else{
-						$checked = '  ';
+						$checked = '';
 					}
 				}
 			}
@@ -223,13 +223,10 @@ class formObj
             if($field['label_class'])
                 $label_class = 'class="'.$field['label_class'].'"';
 
-             
-
-			echo '<label '.$label_class.'> <input name="'.$field_name.'" type="checkbox" value="'.$key.'" '.$field_id.' '.$checked.' '.$field['extra_tags'].'>'.$value.'</label>'	;
+			echo '<label '.$label_class.'> <input name="'.$field_name.'" type="checkbox" value="'.$key.'" '.$field_id.' '.$checked.' '.$field['extra_tags'].'> '.$value.'</label>';
 
             if($field['wrapper_class'])
                 echo '</div>';
-
         }
 	}
 	
@@ -323,7 +320,7 @@ class formObj
                 if(!isset($field['notShowSeprator']))
 					echo $field['sep'];
 				echo '<label '.$label_class.'><input name="'.$field_name.'" type="checkbox" value="'.$cat['category_id'].'" '.$field_id.'
-				 '.$checked.' '.$field['extra_tags'].'>'.display_clean($cat['category_name']).'</label>'	;
+				 '.$checked.' '.$field['extra_tags'].'> '.display_clean($cat['category_name']).'</label>';
 				 if($cat['children'])
 				 {
 					$childField = $field;

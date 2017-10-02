@@ -149,20 +149,7 @@ class cbactions
 							break;
 					}
 
-					// if ($this->type == 'cl') 
-					// {
-					// 	$the_type = 'collection';
-					// }
-					// else if($this->type == 'v')
-					// {		
-					// 	$the_type = 'video';
-					// }
-					// else
-					// {
-					// 	$the_type = 'photo';
-					// }
-
-					//Loggin Favorite			
+					//Logging Favorite
 					$log_array = array
 					(
 					 'success'=>'yes',

@@ -3595,14 +3595,14 @@
 	 *
 	 * @return bool
 	 */
-	function parse_version($path,$result) {
-		switch($path) {
+	function parse_version($path,$result)
+	{
+		switch($path)
+		{
 			case 'ffmpeg':
 			{
-				//Gett FFMPEG SVN version
-				//dump($result);
+				//Get FFMPEG SVN version
 				preg_match("/svn-r([0-9]+)/i",strtolower($result),$matches);
-				//pr($matches);
 				if(is_numeric(floatval($matches[1])) && $matches[1]) {
 					return 'Svn '.$matches[1];
 				}
@@ -3665,8 +3665,8 @@
 	 *
 	 * @return mixed
 	 */
-	function rss_feeds($params) {
-
+	function rss_feeds($params)
+	{
 		/**
 		* setting up the feeds arrays..
 		* if you want to call em in your functions..simply call the global variable $rss_feeds

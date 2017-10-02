@@ -376,7 +376,7 @@
         {/if}
         <div>
             {foreach from=$field_group.fields item=field}
-            {if $field.title=='Video Category'}
+            {if $field.title=={lang code='vdo_cat'}}
             <div>
                 {$field.class='form-control'}
                 <label ><strong>{$field.title|truncate:80}</strong></label><br>

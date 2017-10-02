@@ -100,9 +100,9 @@ session_start();
 	define('THUMB_WIDTH', $row['thumb_width']);
 	define('FFMPEG_TYPE', $row['ffmpeg_type']);
 	if(FFMPEG_TYPE == 's'){
-	define('FFMPEG_BINARY', MODULEDIR.'/encoders/ffmpeg');
+		define('FFMPEG_BINARY', MODULEDIR.'/encoders/ffmpeg');
 	}else{
- 	define('FFMPEG_BINARY', $row['ffmpegpath']);
+ 		define('FFMPEG_BINARY', $row['ffmpegpath']);
 	}
 	define('FFMPEG_FLVTOOLS_BINARY', $row['flvpath']);
 	define('PHP_PATH', $row['php_path']);

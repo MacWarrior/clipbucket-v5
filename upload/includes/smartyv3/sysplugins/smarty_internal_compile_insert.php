@@ -59,7 +59,7 @@ class Smarty_Internal_Compile_Insert extends Smarty_Internal_CompileBase
         $_script = null;
 
         $_output = '<?php ';
-        // save posible attributes
+        // save possible attributes
         eval('$_name = ' . $_attr['name'] . ';');
         if (isset($_attr['assign'])) {
             // output will be stored in a smarty variable instead of being displayed

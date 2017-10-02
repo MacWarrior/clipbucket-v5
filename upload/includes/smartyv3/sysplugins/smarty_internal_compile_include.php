@@ -62,7 +62,7 @@ class Smarty_Internal_Compile_Include extends Smarty_Internal_CompileBase
     {
         // check and get attributes
         $_attr = $this->getAttributes($compiler, $args);
-        // save posible attributes
+        // save possible attributes
         $include_file = $_attr['file'];
 
         if (isset($_attr['assign'])) {

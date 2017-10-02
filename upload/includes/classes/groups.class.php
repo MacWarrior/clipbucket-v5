@@ -322,7 +322,7 @@ class CBGroups extends CBCategory
 		if(is_array($_FILES))
 			$array = array_merge($array,$_FILES);
 
-		//Mergin Array
+		//Merging Array
 		$group_fields = array_merge($fields,$this->load_other_fields());
 		
 		validate_cb_form($group_fields,$array);
@@ -431,7 +431,7 @@ class CBGroups extends CBCategory
 			
 			
 			
-			//loggin Upload
+			//logging Upload
 			$log_array = array
 			(
 			 'success'=>'yes',
@@ -1591,7 +1591,7 @@ class CBGroups extends CBCategory
 			$add_comment =  $myquery->add_comment($comment,$obj_id,$reply_to,'t',$owner);
 			if($add_comment)
 			{
-				//Loggin Comment			
+				//Logging Comment
 				$log_array = array
 				(
 				 'success'=>'yes',

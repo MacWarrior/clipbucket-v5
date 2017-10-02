@@ -36,7 +36,7 @@ if(isset($_POST['login'])){
 	$username = mysql_clean(clean($username));
 	$password = mysql_clean(clean($_POST['password']));
 	
-	//Loggin User
+	//Logging User
 	if($userquery->login_user($username,$password))
 			redirect_to('index.php');
 

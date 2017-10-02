@@ -56,7 +56,7 @@ class Smarty_Internal_Compile_Config_Load extends Smarty_Internal_CompileBase
             $compiler->trigger_template_error('nocache option not allowed', $compiler->lex->taglineno);
         }
 
-        // save posible attributes
+        // save possible attributes
         $conf_file = $_attr['file'];
         if (isset($_attr['section'])) {
             $section = $_attr['section'];

@@ -333,10 +333,10 @@ class userquery extends CBCategory{
 			}
 		}
 		
-		//Error Loging
+		//Error Logging
 		if(!empty($msg))
 		{
-			//Loggin Action
+			//Logging Action
 			$log_array['success'] = no;
 			$log_array['details'] = $msg[0];
 			$cblog->insert('login',$log_array);
@@ -1021,7 +1021,7 @@ class userquery extends CBCategory{
 			cbmail(array('to'=>$friend['email'],'from'=>WEBSITE_EMAIL,'subject'=>$subj,'content'=>$msg));	
 			
 			
-			//Loggin Friendship
+			//Logging Friendship
 			
 			$log_array = array
 			(
@@ -1263,7 +1263,7 @@ class userquery extends CBCategory{
 											   array($this->get_user_subscribers($to,true))," userid='$to' ");
 			$db->update(tbl($this->dbtbl['users']),array('total_subscriptions'),
 											   array($this->get_user_subscriptions($user,'count'))," userid='$user' ");
-			//Loggin Comment			
+			//Logging Comment
 			$log_array = array
 			(
 			 'success'=>'yes',
@@ -2091,7 +2091,7 @@ class userquery extends CBCategory{
 		}
 		if($add_comment)
 		{
-			//Loggin Comment			
+			//Logging Comment
 			$log_array = array
 			(
 			 'success'=>'yes',
@@ -3532,7 +3532,7 @@ class userquery extends CBCategory{
 		if(is_array($_FILES))
 			$array = array_merge($array,$_FILES);
 
-		//Mergin Array
+		//Merging Array
 		$signup_fields = array_merge($fields,$this->custom_signup_fields);
 		
 		validate_cb_form($signup_fields,$array);
@@ -3564,11 +3564,11 @@ class userquery extends CBCategory{
 		if($array['agree']!='yes' && !has_access('admin_access',true))
 			e(lang('usr_ament_err'));
 
-		// first checking if captha plugin is enabled
+		// first checking if captcha plugin is enabled
 		// do not trust the form cb_captcha_enabled value
 		if(get_captcha() && !$userquery->admin_login_check(true) && !$isSocial)
 		{
-			// now checking if the user posted captha value is not empty and cb_captcha_enabled == yes
+			// now checking if the user posted captcha value is not empty and cb_captcha_enabled == yes
 			if(!isset($array['cb_captcha_enabled']) || $array['cb_captcha_enabled'] == 'no'){
 				e(lang('usr_ccode_err'));
 			}
@@ -4287,10 +4287,10 @@ class userquery extends CBCategory{
 					return true;
 				}
 				
-				//Error Loging
+				//Error Logging
 				if(!empty($msg))
 				{
-					//Loggin Action
+					//Logging Action
 					$log_array['success'] = no;
 					$log_array['details'] = $msg[0];
 					$cblog->insert('login',$log_array);
