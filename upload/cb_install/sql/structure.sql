@@ -166,10 +166,10 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}comments` (
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}config` (
   `configid` int(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) NOT NULL DEFAULT '',
+  `name` varchar(100) UNIQUE NOT NULL DEFAULT '',
   `value` mediumtext NOT NULL,
   PRIMARY KEY (`configid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=225 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 -- --------------------------------------------------------
 
