@@ -19,14 +19,13 @@ class Upload
 	var $actions_after_video_upload = array('activate_video_with_file');
 
 	/**
-	 * Function used to vlidate upload form fields
+	 * Function used to validate upload form fields
 	 *
 	 * @param null $array
 	 * @param bool $is_upload
 	 */
-	function validate_video_upload_form($array=NULL,$is_upload=FALSE){
-		global $LANG;
-		
+	function validate_video_upload_form($array=NULL,$is_upload=FALSE)
+	{
 		//First Load All Fields in an array
 		$required_fields = $this->loadRequiredFields($array);
 		$location_fields = $this->loadLocationFields($array);
@@ -39,7 +38,7 @@ class Upload
 		if(is_array($_FILES))
 			$array = array_merge($array,$_FILES);
 
-		//Mergin Array
+		//Merging Array
 		$upload_fields = array_merge($required_fields,$location_fields,$option_fields);
 		
 		//Adding Custom Upload Fields
@@ -128,7 +127,6 @@ class Upload
 					
 				if(!empty($field['db_field']))
 					$query_val[] = $val;
-				
 			}
 			
 			//Adding Video Code
@@ -243,13 +241,13 @@ class Upload
 					$db->Execute($query);
 					$insert_id = $db->insert_id();
 					
-					//loggin Upload
-					$log_array = array
-					(
-					 'success'=>'yes',
-					 'action_obj_id' => $insert_id,
-					 'userid' => $userid,
-					 'details'=> "uploaded a video");
+					//logging Upload
+					$log_array = array(
+						'success'=>'yes',
+						'action_obj_id' => $insert_id,
+						'userid' => $userid,
+						'details'=> "uploaded a video"
+					);
 					insert_log('upload_video',$log_array);
 					
 					$db->update(tbl("users"),array("total_videos"),array("|f|total_videos+1")," userid='".$userid."'");
@@ -454,79 +452,95 @@ class Upload
 		
 		$tags = $default['tags'];
 		
-		$uploadFormRequiredFieldsArray = array
-		(
-		/**
-		 * this function will create initial array for fields
-		 * this will tell 
-		 * array(
-		 *       title [text that will represents the field]
-		 *       type [type of field, either radio button, textfield or text area]
-		 *       name [name of the fields, input NAME attribute]
-		 *       id [id of the fields, input ID attribute]       
-		 *       value [value of the fields, input VALUE attribute]
-		 *       id [name of the fields, input NAME attribute]
-		 *       size
-		 *       class
-		 *       label
-		 *       extra_params
-		 *       hint_1 [hint before field]
-		 *       hint_2 [hint after field]
-		 *       anchor_before [before after field]
-		 *       anchor_after [anchor after field]
-		 *      )
-		 */
-		 
-		 'title'	=> array('title'=> lang('vdo_title'),
-							 'type'=> 'textfield',
-							 'name'=> 'title',
-							 'id'=> 'title',
-							 'value'=> cleanForm($title),
-							 'size'=> '45',
-							 'db_field'=> 'title',
-							 'required'=> 'yes',
-							 'min_length'=> config("min_video_title"),
-							 'max_length'=> config("max_video_title")
-							 ),
+		$uploadFormRequiredFieldsArray = array(
+			/**
+			 * this function will create initial array for fields
+			 * this will tell
+			 * array(
+			 *       title [text that will represents the field]
+			 *       type [type of field, either radio button, textfield or text area]
+			 *       name [name of the fields, input NAME attribute]
+			 *       id [id of the fields, input ID attribute]
+			 *       value [value of the fields, input VALUE attribute]
+			 *       id [name of the fields, input NAME attribute]
+			 *       size
+			 *       class
+			 *       label
+			 *       extra_params
+			 *       hint_1 [hint before field]
+			 *       hint_2 [hint after field]
+			 *       anchor_before [before after field]
+			 *       anchor_after [anchor after field]
+			 *      )
+			 */
 
-		 'desc'		=> array('title'=> lang('vdo_desc'),
-							 'type'=> 'textarea',
-							 'name'=> 'description',
-							 'class'=> 'desc',
-							 'value'=> cleanForm($desc),
-							 'size'=>'35',
-							 'extra_params'=>' rows="4"',
-							 'db_field'=>'description',
-							 'required'=>'yes',
-							 'anchor_after'=>'after_desc_compose_box',
-							 ),
+			'title'	=> array(
+				'title'=> lang('vdo_title'),
+				'type'=> 'textfield',
+				'name'=> 'title',
+				'id'=> 'title',
+				'value'=> cleanForm($title),
+				'size'=> '45',
+				'db_field'=> 'title',
+				'required'=> 'yes',
+				'min_length'=> config("min_video_title"),
+				'max_length'=> config("max_video_title")
+			),
 
-		 'cat'		=> array('title'=> lang('vdo_cat'),
-							 'type'=> 'checkbox',
-							 'name'=> 'category[]',
-							 'id'=> 'category',
-							 'value'=> array('category',$cat_array),
-							 'hint_1'=> sprintf(lang('vdo_cat_msg'),ALLOWED_VDO_CATS),
-							 'db_field'=>'category',
-							 'required'=>'yes',
-							 'validate_function'=>'validate_vid_category',
-							 'invalid_err'=>lang('vdo_cat_err3'),
-							 'display_function' => 'convert_to_categories'
-							 ),
+			'desc' => array(
+				'title'=> lang('vdo_desc'),
+				'type'=> 'textarea',
+				'name'=> 'description',
+				'class'=> 'desc',
+				'value'=> cleanForm($desc),
+				'size'=>'35',
+				'extra_params'=>' rows="4"',
+				'db_field'=>'description',
+				'required'=>'yes',
+				'anchor_after'=>'after_desc_compose_box',
+			),
 
-		 'tags'		=> array('title'=> lang('tag_title'),
-							 'type'=> 'textfield',
-							 'name'=> 'tags',
-							 'id'=> 'tags',
-							 'value'=> cleanForm(genTags($tags)),
-							 'hint_1'=> '',
-							 'hint_2'=> lang('vdo_tags_msg'),
-							 'db_field'=>'tags',
-							 'required'=>'yes',
-							 'validate_function'=>'genTags'	
-							 ),
+			'cat' => array(
+				'title'=> lang('vdo_cat'),
+				'type'=> 'checkbox',
+				'name'=> 'category[]',
+				'id'=> 'category',
+				'value'=> array('category',$cat_array),
+				'hint_1'=> sprintf(lang('vdo_cat_msg'),ALLOWED_VDO_CATS),
+				'db_field'=>'category',
+				'required'=>'yes',
+				'validate_function'=>'validate_vid_category',
+				'invalid_err'=>lang('vdo_cat_err3'),
+				'display_function' => 'convert_to_categories'
+			),
 
-		 );
+			'tags' => array(
+				'title'=> lang('tag_title'),
+				'type'=> 'textfield',
+				'name'=> 'tags',
+				'id'=> 'tags',
+				'value'=> cleanForm(genTags($tags)),
+				'hint_1'=> '',
+				'hint_2'=> lang('vdo_tags_msg'),
+				'db_field'=>'tags',
+				'required'=>'yes',
+				'validate_function'=>'genTags'
+			)
+		);
+
+		$tracks = $default['tracks'];
+		if( !empty($tracks))
+		{
+			$uploadFormRequiredFieldsArray['audio_track'] = array(
+				'title'=> lang('track_title'),
+				'type'=> 'dropdown',
+				'name'=> 'track',
+				'id'=> 'track',
+				'value'=> $tracks,
+				'required'=>'no'
+			);
+		}
+
 		//Setting Anchors
 		$uploadFormRequiredFieldsArray['desc']['anchor_before'] = 'before_desc_compose_box';
 		

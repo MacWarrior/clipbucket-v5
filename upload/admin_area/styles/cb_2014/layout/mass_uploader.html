@@ -7,17 +7,21 @@
 
 {if $vid_files}
 {assign var = i value = 0}
-<div id="massUploadSelectAll">
-	<h3>Select/Deselect</h3>
-	<input type="checkbox" id="massUploadSelect"/>
-</div>
-<div id="massUploadCategoriesSelection">
-	<h3>Mass Category Selection</h3>
-	{foreach $cats as $cat}
-	<label><input type="checkbox" class="checkall" value='{$cat['category_id']}'/> {display_clean($cat['category_name'])}</label>
-	{$i = $i+1}
-	{/foreach}
-</div>
+<table>
+	<tr>
+		<td id="massUploadSelectAll">
+			<h3>Select/Deselect</h3>
+			<input type="checkbox" id="massUploadSelect"/>
+		</td>
+		<td id="massUploadCategoriesSelection">
+			<h3>Mass Category Selection</h3>
+			{foreach $cats as $cat}
+				<label><input type="checkbox" class="checkall" value="{$cat['category_id']}"/> {display_clean($cat['category_name'])}</label>
+				{$i = $i+1}
+			{/foreach}
+		</td>
+	</tr>
+</table>
 <form name="mass_upload" method="post" class="cbform">
 	{assign var = i value = 0}
     {foreach from=$vid_files item=file name=mass_files}
@@ -31,46 +35,59 @@
 	<input type="checkbox" name="filesToImport_{$i}[]" class="checkboxMassImport"/>
     <span class="label label-danger" style="cursor: pointer;" onclick="$(this).next().toggle();return false;"><b>{$file.title}</b>{$smarty.foreach.mass_files}</span>
     <div style="display:none">
-        {foreach from=$requiredFields item=field}
-        {$field.class='form-control'}
-        {if $field.title=='Title'}
-        <div class="row">
+		<div class="row">
+		{foreach from=$requiredFields item=field}
+        	{$field.class='form-control'}
+        	{if $field.title=={lang code='vdo_title'}}
             <div class="col-md-6">
-                <label for="{$field.id}"><b style="color: #000000">{$field.name}</b></label>
-                {$formObj->createField($field, true)}
+                <label for="{$field.id}"><b style="color: #000000">{$field.title}</b></label>
+				{$formObj->createField($field, true)}
             </div>
             {/if}
-            {/foreach}
-            {foreach from=$requiredFields item=field}
-            {if $field.title=='Description'}
-                <div class="col-md-6">
-                    <label for="{$field.id}"><b style="color: #000000">{$field.name}</b></label>
-                    {$formObj->createField($field, true)}
-                </div>
-            {/if}
-            {/foreach}
+		{/foreach}
+		{foreach from=$requiredFields item=field}
+			{$field.class='form-control'}
+			{if $field.title=={lang code='tag_title'}}
+			<div class="col-md-6">
+				<label for="{$field.id}"><b style="color: #000000">{$field.title}</b></label>
+				{$formObj->createField($field, true)}
+			</div>
+			{/if}
+		{/foreach}
         </div>
+
+		<div class="row">
+			{foreach from=$requiredFields item=field}
+			{$field.class='form-control'}
+			{if $field.title=={lang code='track_title'}}
+			<div class="col-md-6">
+				<label for="{$field.id}"><b style="color: #000000">{$field.title}</b></label>
+				{$formObj->createField($field, true)}
+			</div>
+			{/if}
+			{/foreach}
+		</div>
+
         <div class="row">
-            {foreach from=$requiredFields item=field}
-            {$field.class='form-control'}
-            {if $field.title=='Video Category'}
-            <div class="col-md-6">
-                <label for="{$field.id}"><b style="color: #000000">{$field.name}</b></label>
-                <div class="scroll categories">
-                {$formObj->createField($field, true)}
-                </div>
-            </div>
-            {/if}
-            {/foreach}
-            {foreach from=$requiredFields item=field}
-            {$field.class='form-control'}
-            {if $field.title=='Tags'}
-            <div class="col-md-6">
-                <label for="{$field.id}"><b style="color: #000000">{$field.name}</b></label>
-                {$formObj->createField($field, true)}
-            </div>
-            {/if}
-            {/foreach}
+			{foreach from=$requiredFields item=field}
+				{if $field.title=={lang code='vdo_desc'}}
+			<div class="col-md-6">
+				<label for="{$field.id}"><b style="color: #000000">{$field.title}</b></label>
+					{$formObj->createField($field, true)}
+			</div>
+				{/if}
+			{/foreach}
+			{foreach from=$requiredFields item=field}
+				{$field.class='form-control'}
+				{if $field.title=={lang code='vdo_cat'}}
+			<div class="col-md-6">
+				<label for="{$field.id}"><b style="color: #000000">{$field.title}</b></label>
+				<div class="scroll categories">
+					{$formObj->createField($field, true)}
+				</div>
+			</div>
+				{/if}
+			{/foreach}
         </div>
 
     </div>

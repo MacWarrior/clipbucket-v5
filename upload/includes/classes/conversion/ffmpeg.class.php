@@ -39,6 +39,7 @@ class FFMpeg
 	public $ratio = "";
 	public $log_file = "";
 	public $raw_path = "";
+	public $audio_track = false;
 	public $file_directory = "";
 	public $thumb_dim = "";
 	public $big_thumb_dim = "";
@@ -119,12 +120,12 @@ class FFMpeg
 		$info = $this->raw_info;
 		# search the output for specific patterns and extract info
 		# check final encoding message
-		if($args =  $this->pregMatch( 'Unknown format', $output) ) {
+		if($args = self::pregMatch( 'Unknown format', $output) ) {
 			$Unkown = "Unkown";
 		} else {
 			$Unkown = "";
 		}
-		if( $args = $this->pregMatch( 'video:([0-9]+)kB audio:([0-9]+)kB global headers:[0-9]+kB muxing overhead', $output) ) {
+		if( $args = self::pregMatch( 'video:([0-9]+)kB audio:([0-9]+)kB global headers:[0-9]+kB muxing overhead', $output) ) {
 			$video_size = (float)$args[1];
 			$audio_size = (float)$args[2];
 		} else {
@@ -132,7 +133,7 @@ class FFMpeg
 		}
 
 		# check for last enconding update message
-		if($args = $this->pregMatch( '(frame=([^=]*) fps=[^=]* q=[^=]* L)?size=[^=]*kB time=([^=]*) bitrate=[^=]*kbits\/s[^=]*$', $output) ) {
+		if($args = self::pregMatch( '(frame=([^=]*) fps=[^=]* q=[^=]* L)?size=[^=]*kB time=([^=]*) bitrate=[^=]*kbits\/s[^=]*$', $output) ) {
 			$frame_count = $args[2] ? (float)ltrim($args[2]) : 0;
 			$duration    = (float)$args[3];
 		} else {
@@ -141,8 +142,8 @@ class FFMpeg
 
 		if(!$duration)
 		{
-			$duration = $this->pregMatch( 'Duration: ([0-9.:]+),', $output );
-			$duration    = $duration[1];
+			$duration = self::pregMatch( 'Duration: ([0-9.:]+),', $output );
+			$duration = $duration[1];
 			
 			$duration = explode(':',$duration);
 			//Convert Duration to seconds
@@ -167,46 +168,34 @@ class FFMpeg
 			if( $audio_size > 0 )
 				$info['audio_bitrate'] = (integer)($audio_size * 8 / $duration);
 				# get format information
-			if($args =  $this->pregMatch( "Input #0, ([^ ]+), from", $output) ) {
+			if($args = self::pregMatch( "Input #0, ([^ ]+), from", $output) ) {
 				$info['format'] = $args[1];
 			}
 		}
 
 		# get video information
-		if(  $args= $this->pregMatch( '([0-9]{2,4})x([0-9]{2,4})', $output ) )
+		if($args = self::pregMatch( '([0-9]{2,4})x([0-9]{2,4})', $output ) )
 		{
-			$info['video_width'  ] = $args[1];
-			$info['video_height' ] = $args[2];
-			
-		/*	if( $args[5] ) {
-				$par1 = $args[6];
-				$par2 = $args[7];
-				$dar1 = $args[8];
-				$dar2 = $args[9];
-				if( (int)$dar1 > 0 && (int)$dar2 > 0  && (int)$par1 > 0 && (int)$par2 > 0 )
-					$info['video_wh_ratio'] = ( (float)$dar1 / (float)$dar2 ) / ( (float)$par1 / (float)$par2 );
-			}
-
-			# laking aspect ratio information, assume pixel are square
-			if( $info['video_wh_ratio'] === 'N/A' )*/
-				$info['video_wh_ratio'] = (float)$info['video_width'] / (float)$info['video_height'];
+			$info['video_width'   ] = $args[1];
+			$info['video_height'  ] = $args[2];
+			$info['video_wh_ratio'] = (float)$info['video_width'] / (float)$info['video_height'];
 		}
 		
 		if($args= $this->pregMatch('Video: ([^ ^,]+)',$output))
 		{
-			$info['video_codec'  ] = $args[1];
+			$info['video_codec'] = $args[1];
 		}
 
 		# get audio information
-		if($args =  $this->pregMatch( "Audio: ([^ ]+), ([0-9]+) Hz, ([^\n,]*)", $output) ) {
-			$audio_codec = $info['audio_codec'   ] = $args[1];
-			$audio_rate = $info['audio_rate'    ] = $args[2];
+		if($args = self::pregMatch( "Audio: ([^ ]+), ([0-9]+) Hz, ([^\n,]*)", $output) ) {
+			$audio_codec = $info['audio_codec'] = $args[1];
+			$audio_rate = $info['audio_rate'] = $args[2];
 			$info['audio_channels'] = $args[3];
 		}
 		
 		if(!$audio_codec || !$audio_rate)
 		{
-			$args =  $this->pregMatch( "Audio: ([a-zA-Z0-9]+)(.*), ([0-9]+) Hz, ([^\n,]*)", $output);
+			$args = self::pregMatch( "Audio: ([a-zA-Z0-9]+)(.*), ([0-9]+) Hz, ([^\n,]*)", $output);
 			$info['audio_codec'   ] = $args[1];
 			$info['audio_rate'    ] = $args[3];
 			$info['audio_channels'] = $args[4];
@@ -335,8 +324,8 @@ class FFMpeg
 
 		logData(json_encode($info),$this->file_name.'_configs');
 		return $info;
-
 	}
+
 	public function convertVideo($inputFile = false, $options = array(), $isHd = false)
 	{
 		$this->log->TemplogData = "";
@@ -354,7 +343,7 @@ class FFMpeg
 			$this->output->videoDetails = $videoDetails;
 
 			/*
-				Comversion Starts here 
+				Conversion Starts here
 			*/
 			$this->convertToLowResolutionVideo($videoDetails);
 		}
@@ -1298,6 +1287,12 @@ class FFMpeg
 			}
 		}
 
+		#audio track
+		if( $this->audio_track && is_numeric($this->audio_track) && $this->audio_track > 0 ) // 0 = default, don't require to specify anything
+		{
+			// TODO : Specify track to use on conversion
+		}
+
 		if ($i['rotation'] != 0 )
 		{
 			if ($i['video_wh_ratio'] >= 1.6){
@@ -1315,7 +1310,7 @@ class FFMpeg
 			if($more_res==NULL){
 				echo 'here';
 			} else {
-				#create all posible resolutions of selected video
+				#create all possible resolutions of selected video
 				if( $more_res['name'] == '240' && $p['gen_240'] == 'yes' ||
 					$more_res['name'] == '360' && $p['gen_360'] == 'yes' ||
 					$more_res['name'] == '480' && $p['gen_480'] == 'yes' ||
@@ -1364,7 +1359,7 @@ class FFMpeg
 			} else {
 				$resolution_log_data = array('file'=>$this->file_name,'more_res'=>$more_res,'command'=>'mp4box');
 				logData(json_encode($resolution_log_data),'resolution command');
-				#create all posible resolutions of selected video
+				#create all possible resolutions of selected video
 				if( $more_res['name'] == '240' && $p['gen_240'] == 'yes' ||
 					$more_res['name'] == '360' && $p['gen_360'] == 'yes' ||
 					$more_res['name'] == '480' && $p['gen_480'] == 'yes' ||
@@ -1424,10 +1419,10 @@ class FFMpeg
 		
 		//Get File info
 		$this->input_details = $this->get_file_info($this->input_file);
-		//Loging File Details
+		//Logging File Details
 		$this->log_file_info();
 
-		//Gett FFMPEG version
+		//Get FFMPEG version
 		$result = shell_output(FFMPEG_BINARY." -version");
 		$version = parse_version('ffmpeg',$result);
 
@@ -1484,14 +1479,13 @@ class FFMpeg
 		$info['size'] = $size;
 		$audio_codec = false;
 
-		if( $args = $this->pregMatch( 'video:([0-9]+)kB audio:([0-9]+)kB global headers:[0-9]+kB muxing overhead', $output) ) {
+		if( $args = self::pregMatch( 'video:([0-9]+)kB audio:([0-9]+)kB global headers:[0-9]+kB muxing overhead', $output) ) {
 			$video_size = (float)$args[1];
 			$audio_size = (float)$args[2];
 		}
 
-		# check for last enconding update message
-		if($args =  $this->pregMatch( '(frame=([^=]*) fps=[^=]* q=[^=]* L)?size=[^=]*kB time=([^=]*) bitrate=[^=]*kbits\/s[^=]*$', $output) ) {
-			
+		# check for last encoding update message
+		if($args = self::pregMatch( '(frame=([^=]*) fps=[^=]* q=[^=]* L)?size=[^=]*kB time=([^=]*) bitrate=[^=]*kbits\/s[^=]*$', $output) ) {
 			$frame_count = $args[2] ? (float)ltrim($args[2]) : 0;
 		}
 
@@ -1526,35 +1520,36 @@ class FFMpeg
 			if( $audio_size > 0 )
 				$info['audio_bitrate']	= (integer)($audio_size * 8 / $duration);
 				# get format information
-			if($args =  $this->pregMatch( "Input #0, ([^ ]+), from", $output) ) {
+			if($args = self::pregMatch( "Input #0, ([^ ]+), from", $output) ) {
 				$info['format'] = $args[1];
 			}
 		}
 
 		# get video information
-		if( $args= $this->pregMatch( '([0-9]{2,4})x([0-9]{2,4})', $output ) )
+		if( $args = self::pregMatch( '([0-9]{2,4})x([0-9]{2,4})', $output ) )
 		{
 			$info['video_width'  ] = $args[1];
 			$info['video_height' ] = $args[2];
 			$info['video_wh_ratio'] = (float) $info['video_width'] / (float)$info['video_height'];
 		}
 		
-		if($args= $this->pregMatch('Video: ([^ ^,]+)',$output))
+		if($args = self::pregMatch('Video: ([^ ^,]+)',$output))
 		{
-			$info['video_codec'  ] = $args[1];
+			$info['video_codec'] = $args[1];
 		}
 
 		# get audio information
-		if($args =  $this->pregMatch( "Audio: ([^ ]+), ([0-9]+) Hz, ([^\n,]*)", $output) )
+		if($args = self::pregMatch( "Audio: ([^ ]+), ([0-9]+) Hz, ([^\n,]*)", $output) )
 		{
-			$audio_codec = $info['audio_codec'   ] = $args[1];
-			$audio_rate = $info['audio_rate'    ] = $args[2];
+			$audio_codec = $info['audio_codec'] = $args[1];
+			$audio_rate = $info['audio_rate'  ] = $args[2];
 			$info['audio_channels'] = $args[3];
 		}
 
 		if((isset($audio_codec) && !$audio_codec) || !$audio_rate)
 		{
-			$args =  $this->pregMatch( "Audio: ([a-zA-Z0-9]+)(.*), ([0-9]+) Hz, ([^\n,]*)", $output);
+			$args = self::pregMatch( "Audio: ([a-zA-Z0-9]+)(.*), ([0-9]+) Hz, ([^\n,]*)", $output);
+			dump($args);
 			$info['audio_codec'   ] = $args[1];
 			$info['audio_rate'    ] = $args[3];
 			$info['audio_channels'] = $args[4];
@@ -1563,7 +1558,7 @@ class FFMpeg
 		return $info;
 	}
 
-	private function pregMatch($in = false, $str = false)
+	private static function pregMatch($in = false, $str = false)
 	{
 		if($in && $str)
 		{
@@ -1762,6 +1757,53 @@ class FFMpeg
 		if($channels>2)
 			return false;
 		return true;
+	}
+
+
+	public static function get_video_tracks($filepath)
+	{
+		$stats = stat($filepath);
+		if($stats && is_array($stats))
+		{
+			$json = shell_exec(FFPROBE . ' -i "'.$filepath.'" -v error -select_streams a -of compact=p=0:nk=1 -print_format json -show_entries stream_tags=language,title 2>&1');
+			$tracks_json = json_decode($json, true)['streams'];
+			$langs = array();
+			foreach($tracks_json as $track)
+			{
+				if( !isset($track['tags']) )
+					continue;
+				$track = $track['tags'];
+
+				if( !isset($track['language']) && !isset($track['LANGUAGE']) )
+					continue;
+				if( isset($track['language']) )
+					$language = $track['language'];
+				else
+					$language = $track['LANGUAGE'];
+
+				if( $language == 'und' )
+					continue;
+
+				$title = '';
+				if( isset($track['title']) )
+					$title = $track['title'];
+
+				if( !empty($title) )
+				{
+					$lang = $language.' : '.$title;
+				} else {
+					$lang = $language;
+				}
+
+				if( count($langs) == 0 )
+					$lang .= ' (Default)';
+
+				$langs[] = $lang;
+			}
+			return $langs;
+		} else {
+			return array();
+		}
 	}
 
 }

@@ -90,7 +90,7 @@
 								'tags' => $_POST['tags'][$i],
 								'category' => array($cbvid->get_default_cid()),
 								'file_name' => $file_name,
-								'file_directory' => $file_directory,
+								'file_directory' => $file_directory
 							);
 
 							$vid = $Upload->submit_upload($array);
@@ -115,7 +115,7 @@
 					'file_name' => $file_key,
 					'file_directory' => $file_directory,
 				);
-				//pex($array,true);
+
 				$vid = $Upload->submit_upload($array);
 			}else{
 				e("\"".$file_arr['title']."\" is not available");
@@ -148,6 +148,10 @@
 					$log->writeLine('System hardware Information', 'Unable log System hardware information, plaese install "lshw" ', true);
 				}
 
+				$track = '';
+				if( isset($_POST['track']) && isset($_POST['track'][$i]) )
+					$track = $_POST['track'][$i];
+
 				$results=$Upload->add_conversion_queue($file_name);
 				$str = "/".date("Y")."/".date("m")."/".date("d")."/";
 				$str1 = date("Y")."/".date("m")."/".date("d");
@@ -157,7 +161,7 @@
 				$fname=explode('.', $file_name);
 				$cond='file_name='.'\''.$fname[0].'\'';
 				$result=db_update($tbl, $fields, $cond);
-				$result=exec(php_path()." -q ".BASEDIR."/actions/video_convert.php {$file_name} {$file_key} {$file_directory} {$logFile} > /dev/null &");
+				$result=exec(php_path()." -q ".BASEDIR."/actions/video_convert.php {$file_name} {$file_key} {$file_directory} {$logFile} {$track} > /dev/null &");
 				if(file_exists(CON_DIR.'/'.$file_name))
 				{
 					unlink(CON_DIR.'/'.$file_name);
@@ -166,7 +170,6 @@
 						$resul1 = glob(FILES_DIR.'/videos/'.$title.".*");
 						unlink($resul1[0]);
 					}
-
 				}
 
 				crapCleanStep:
@@ -185,7 +188,7 @@
 
 	//Collecting Data for Pagination
 	$limit = config('comments_per_page');
-	$total_rows=count($cbmass->get_video_files());
+	$total_rows = count($cbmass->get_video_files());
 	$total_pages = $total_rows/$limit;
 	$total_pages = round($total_pages+0.49,0);
 	$pages->paginate($total_pages,$page);

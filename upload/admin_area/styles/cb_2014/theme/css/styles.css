@@ -640,22 +640,30 @@ ul.mainTabs{
 }
 
 #massUploadSelectAll{
-	display: inline-block;
+	vertical-align: top
 }
 
 #massUploadSelect{
 	margin-left: 20px;
 }
 
+.note-editor{
+	background-color: #fff;
+}
+
 #massUploadCategoriesSelection{
-	display: inline-block;
-	margin-left: 30px;
+	padding-left: 30px;
 }
 
 #massUploadCategoriesSelection label{
 	margin-left: 5px;
 }
 
+.categories{
+	height: 276px;
+	border: 1px solid #a9a9a9;
+	padding-left:10px;
+}
 
 .footer {
     background: #2b2b2b none repeat scroll 0 0;

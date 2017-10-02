@@ -19,14 +19,17 @@
 	$fileName = (isset($argv[1])) ? $argv[1] : false;
 	//This is exact file name of a video e.g 132456789
 	$_filename = (isset($argv[2])) ? $argv[2] : false;
+
 	$file_directory_ = (isset($argv[3])) ? $argv[3] : false;
 	$file_directory = $file_directory_.'/';
+
 	$logFile = (isset($argv[4])) ? $argv[4] : false;
 	logData($logFile,'argvs');
-
 	if (empty($logFile)) {
 		$logFile = LOGS_DIR.'/'.$file_directory.$_filename.'.log';
 	}
+
+	$audio_track = (isset($argv[5])) ? $argv[5] : false;
 
 	$file = FILES_DIR.'/temp/args.txt';
 	$text = "fileName [".$fileName.'] _filename ['.$_filename.'] file_directory ['.$file_directory.'] logfile ['.$logFile.']';
@@ -137,6 +140,9 @@
 		$ffmpeg->ffmpeg($orig_file);
 		$ffmpeg->file_name = $tmp_file;
 		$ffmpeg->raw_path = VIDEOS_DIR.'/'.$file_directory.$_filename;
+
+		if( $audio_track )
+			$ffmpeg->audio_track = $audio_track;
 
 		$ffmpeg->ClipBucket();
 		if ($ffmpeg->lock_file && file_exists($ffmpeg->lock_file)){

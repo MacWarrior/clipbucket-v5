@@ -65,6 +65,7 @@ class mass_upload extends Upload
 	 */
 	function get_video_files($with_path=false)
 	{
+		require_once(BASEDIR.'/includes/classes/conversion/ffmpeg.class.php');
 		$exts = get_vid_extensions($with_path);
 		
 		$vid_files = array();
@@ -75,7 +76,11 @@ class mass_upload extends Upload
 			{
 				$ext = getext($file['file']);
 				if(in_array($ext,$exts))
+				{
+					$file['tracks'] = FFMpeg::get_video_tracks($file['path'].$file['file']);
+
 					$vid_files[] = $file;
+				}
 			}
 		}
 		return $vid_files;
