@@ -1549,7 +1549,6 @@ class FFMpeg
 		if((isset($audio_codec) && !$audio_codec) || !$audio_rate)
 		{
 			$args = self::pregMatch( "Audio: ([a-zA-Z0-9]+)(.*), ([0-9]+) Hz, ([^\n,]*)", $output);
-			dump($args);
 			$info['audio_codec'   ] = $args[1];
 			$info['audio_rate'    ] = $args[3];
 			$info['audio_channels'] = $args[4];
