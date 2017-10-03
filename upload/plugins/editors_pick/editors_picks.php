@@ -267,12 +267,11 @@ $cbvid->video_manager_funcs[] = 'editors_pick';
 register_anchor_function(array('show_editor_pick'=>'index_right_top'));
 //Registering Delete Action
 register_action_remove_video('remove_vid_editors_pick');
-//ADding Header.html
+//Adding Header.html
 $file = PLUG_DIR.'/editors_pick/header.html';
 $Cbucket->add_header($file,array('index'));
 
-//ADding Admin Menu
+//Adding Admin Menu
 add_admin_menu('Videos','Editor\'s Pick','editor_pick.php',CB_EP_BASE.'/admin');
 
 }
-?>
