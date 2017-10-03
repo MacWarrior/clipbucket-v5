@@ -67,10 +67,9 @@ class Upload
 		if(!$array)
 			$array = $_POST;
 
-		// $_POST['embed_code'] = htmlspecialchars($_POST['embed_code']);
 		$this->validate_video_upload_form($array,TRUE);
 
-		if(empty($eh->error_list))
+		if( empty($eh->get_error()) && empty($eh->get_warning()) )
 		{
 			$required_fields = $this->loadRequiredFields($array);
 			$location_fields = $this->loadLocationFields($array);
@@ -89,7 +88,6 @@ class Upload
 			if(!userid() && has_access('allow_video_upload',true,false))
 			{
 				$userid = $userquery->get_anonymous_user();
-				//$userid = $user['userid'];
 			}elseif(userid() && !has_access('allow_video_upload',true,true))
 				return false;
 			
@@ -134,7 +132,7 @@ class Upload
 			$file_name = mysql_clean($array['file_name']);
 			$query_val[] = $file_name;
 			
-			//ADding Video Key
+			//Adding Video Key
 			$query_field[] = "videokey";
 			$query_val[] = $this->video_keygen();
 
@@ -204,7 +202,7 @@ class Upload
 				$i++;
 				$query .= $qfield;
 				if($i<$total_fields)
-				$query .= ',';
+					$query .= ',';
 			}
 			
 			$query .= ") VALUES (";
@@ -220,24 +218,19 @@ class Upload
 				$i++;
 				$query .= "'$qval'";
 				if($i<$total_fields)
-				$query .= ',';
+					$query .= ',';
 			}
 			
-			//Finalzing Query
+			//Finalizing Query
 			$query .= ")";
-			
-			//exit($query);
-			
+
 			if(!userid() && !has_access('allow_video_upload',false,false))
 			{
 				e(lang("you_not_logged_in"));
-				//exit();
 			} else {
-								
 				$insert_id = file_name_exists($file_name);
 				if(!$insert_id)
 				{
-					#echo "$query";
 					$db->Execute($query);
 					$insert_id = $db->insert_id();
 					
