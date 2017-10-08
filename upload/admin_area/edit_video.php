@@ -33,6 +33,8 @@
 		{
 			$myquery->update_video();
 			$myquery->set_default_thumb($video,$_POST['default_thumb']);
+
+			$data = get_video_details($video);
 		}
 	}
 
