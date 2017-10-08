@@ -1094,42 +1094,48 @@ class myquery {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Function used to get list of items in conversion queue
 	 * @params $Cond, $limit,$order
+	 *
+	 * @param null   $cond
+	 * @param null   $limit
+	 * @param string $order
+	 *
+	 * @return array|bool
 	 */
 	function get_conversion_queue($cond=NULL,$limit=NULL,$order='date_added DESC')
 	{
 		global $db;
-		$result = $db->select(tbl("conversion_queue"),"*",$cond,$limit,$oder);
+		$result = $db->select(tbl("conversion_queue"),"*",$cond,$limit,$order);
 		if($db->num_rows>0)
 			return $result;
-		else
-			return false;
+		return false;
 	}
-	
+
 	/**
 	 * function used to remove queue
+	 *
+	 * @param $action
+	 * @param $id
 	 */
-	function queue_action($action,$id)
+	function queue_action($action, $id)
 	{
 		global $db;
+
+		$id = mysql_clean($id);
 		switch($action)
 		{
 			case "delete":
-			$db->execute("DELETE from ".tbl('conversion_queue')." WHERE cqueue_id ='$id' ");
-			break;
+				$db->execute("DELETE from ".tbl('conversion_queue')." WHERE cqueue_id ='$id' ");
+				break;
 			case "processed":
-			$db->update(tbl('conversion_queue'),array('cqueue_conversion'),array('yes')," cqueue_id ='$id' ");
-			break;
+				$db->update(tbl('conversion_queue'),array('cqueue_conversion'),array('yes')," cqueue_id ='$id' ");
+				break;
 			case "pending":
-			$db->update(tbl('conversion_queue'),array('cqueue_conversion'),array('no')," cqueue_id ='$id' ");
-			break;
+				$db->update(tbl('conversion_queue'),array('cqueue_conversion'),array('no')," cqueue_id ='$id' ");
+				break;
 		}
 	}
-	
-	
-
 }
-?>
