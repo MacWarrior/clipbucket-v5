@@ -210,7 +210,7 @@ class FFMpeg
 	}
 
 	/**
-	 * Function used to get file information using FFMPEG
+	 * Function used to get file information using FFPROBE
 	 *
 	 * @param FILE_PATH
 	 *
@@ -221,7 +221,7 @@ class FFMpeg
 		if(!$file_path)
 			$file_path = $this->input_file;
 
-		$info['format']          = 'N/A';
+		$info['format']         = 'N/A';
 		$info['duration']       = 'N/A';
 		$info['size']           = 'N/A';
 		$info['bitrate']        = 'N/A';
@@ -246,13 +246,24 @@ class FFMpeg
 
 		$data = json_decode($output,true);
 
-		if($data['streams'][0]['codec_type'] == 'video')
+		$video = NULL;
+		$audio = NULL;
+		foreach($data['streams'] as $stream)
 		{
-			$video = $data['streams'][0];
-			$audio = $data['streams'][1];
-		} else {
-			$video = $data['streams'][1];
-			$audio = $data['streams'][0];
+			if( $stream['codec_type'] == 'video' && empty($video) )
+			{
+				$video = $stream;
+				continue;
+			}
+
+			if( $stream['codec_type'] == 'audio' && empty($audio) )
+			{
+				$audio = $stream;
+				continue;
+			}
+
+			if( !empty($video) && !empty($audio) )
+				break;
 		}
 
 		$info['format']         = $data['format']['format_name'];
@@ -268,10 +279,10 @@ class FFMpeg
 		$info['video_codec']    = $video['codec_name'];
 		$info['video_rate']     = $video['r_frame_rate'];
 		$info['size']           = filesize($file_path);
-		$info['audio_codec']    = $audio['codec_name'];;
-		$info['audio_bitrate']  = (int) $audio['bit_rate'];;
-		$info['audio_rate']     = (int) $audio['sample_rate'];;
-		$info['audio_channels'] = (float) $audio['channels'];;
+		$info['audio_codec']    = $audio['codec_name'];
+		$info['audio_bitrate']  = (int) $audio['bit_rate'];
+		$info['audio_rate']     = (int) $audio['sample_rate'];
+		$info['audio_channels'] = (float) $audio['channels'];
 		$info['rotation']       = (float) $video['tags']['rotate'];
 
 		if(!$info['duration'] || 1)
@@ -751,7 +762,6 @@ class FFMpeg
 		for($i=0;$i<$num;$i++)
 		{
 			$conv_file = TEMP_DIR.'/conv_lock'.$i.'.loc';
-			//logData($conv_file);
 			if(!file_exists($conv_file))
 			{
 				$this->lock_file = $conv_file;
@@ -767,14 +777,12 @@ class FFMpeg
 	function ClipBucket()
 	{
 		$conv_file = TEMP_DIR.'/conv_lock.loc';
-		//logData("procees_atonce_".PROCESSESS_AT_ONCE);
-		//We will now add a loop
-		//that will check weather
+
+		//We will now add a loop that will check weather
 		logData('Checking conversion locks','checkpoints');
 		while( true )
 		{
 			$use_crons = config('use_crons');
-			//logData($this->isLocked(PROCESSESS_AT_ONCE)."|| ".$use_crons."||".$this->set_conv_lock);
 			if( !$this->isLocked(PROCESSESS_AT_ONCE) || $use_crons == 'yes' )
 			{
 				if( $use_crons == 'no' )
@@ -796,13 +804,10 @@ class FFMpeg
 				if( $this->input_details['duration'] > $max_duration )
 				{
 					$max_duration_seconds = $max_duration / 60; 
-					$this->TemplogData   = "Video duration was ".$this->input_details['duration']." minutes and Max video duration is {$max_duration_seconds} minutes, Therefore Video cancelled\n";
-					$this->TemplogData  .= "Conversion_status : failed\n";
-					$this->TemplogData  .= "Failed Reason : Max Duration Configurations\n";
-					
-					$this->log->writeLine("Max Duration configs",$this->TemplogData, true);
-					//$this->create_log_file();
-					
+					$log = "Video duration was ".$this->input_details['duration']." minutes and Max video duration is {$max_duration_seconds} minutes, Therefore Video cancelled\n";
+					$log .= "Conversion_status : failed\n";
+					$log .= "Failed Reason : Max Duration Configurations\n";
+					$this->log->writeLine("Max Duration configs", $log, true);
 					$this->failed_reason = 'max_duration';
 	
 					break;
@@ -822,7 +827,7 @@ class FFMpeg
 				/*End*/
 
 				$this->log->writeLine("Thumbs Generation", "Starting");
-				$this->TemplogData = "";
+				$log = "";
 				try {
 					$thumbs_settings = $this->thumbs_res_settings;
 					logData($thumbs_settings,'checkpoints');
@@ -847,10 +852,10 @@ class FFMpeg
 					}
 					
 				} catch(Exception $e) {
-					$this->TemplogData .= "\r\n Error Occured : ".$e->getMessage()."\r\n";
+					$log .= "\r\n Error Occured : ".$e->getMessage()."\r\n";
 				}
-				$this->TemplogData .= "\r\n ====== End : Thumbs Generation ======= \r\n";
-				$this->log->writeLine("Thumbs Files", $this->TemplogData , true );
+				$log .= "\r\n ====== End : Thumbs Generation ======= \r\n";
+				$this->log->writeLine("Thumbs Files", $log, true );
 
 
 				$hr = $this->options['high_res'];
@@ -899,25 +904,28 @@ class FFMpeg
 				//Copying File To Original Folder
 				if( $this->keep_original == 'yes' )
 				{
-					$this->log->TemplogData .= "\r\nCopy File to original Folder";
+					$log .= "\r\nCopy File to original Folder";
 					if( copy($this->input_file, $this->original_output_path) )
-						$this->log->TemplogData .= "\r\nFile Copied to original Folder...";
+						$log .= "\r\nFile Copied to original Folder...";
 					else
-						$this->log->TemplogData.= "\r\nUnable to copy file to original folder...";
+						$log .= "\r\nUnable to copy file to original folder...";
 				}
 
-				$this->log->TemplogData .= "\r\n\r\nTime Took : ";
-				$this->log->TemplogData .= $this->total_time.' seconds'."\r\n\r\n";
+				$log .= "\r\n\r\nTime Took : ";
+				$log .= $this->total_time.' seconds'."\r\n\r\n";
 
 				if(file_exists($this->output_file) && filesize($this->output_file) > 0)
-					$this->log->TemplogData .= "conversion_status : completed ";
+					$log .= "conversion_status : completed ";
 				else
-					$this->log->TemplogData .= "conversion_status : failed ";
+					$log .= "conversion_status : failed ";
 				
-				$this->log->writeLine("Conversion Completed", $this->log->TemplogData , true );
+				$this->log->writeLine("Conversion Completed", $log, true );
 
 				break;
 			}
+
+			// Prevent video_convert action to use 100% cpu while waiting for queued videos to end conversion
+			sleep(5);
 		}
 		
 	}
@@ -928,7 +936,6 @@ class FFMpeg
 		{
 			$durations_format = gmdate("H:i:s", $duration);
 			$command = $this->ffmpeg." -i $input_file -ss ".$durations_format." -r 1 $dim -y -f image2 -vframes 1 $output_file_path ";
-			//pr($command,true);
 			shell_output($command);
 		} else {
 			$tmpDir = TEMP_DIR.'/'.getName($input_file);
