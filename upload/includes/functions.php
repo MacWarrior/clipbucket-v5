@@ -4398,7 +4398,7 @@
 				$feed['action'] = 'upload_photo';
 				$feed['object'] = 'photo';
 				$feed['object_id'] = $array['object_id'];		
-				$feed['uid'] = $userid;;
+				$feed['uid'] = $userid;
 				
 				$cbfeeds->addFeed($feed);
 			}
@@ -4409,7 +4409,7 @@
 				$feed['action'] = 'add_comment';
 				$feed['object'] = $array['object'];
 				$feed['object_id'] = $array['object_id'];		
-				$feed['uid'] = $userid;;
+				$feed['uid'] = $userid;
 				
 				$cbfeeds->addFeed($feed);
 			}
@@ -4433,7 +4433,7 @@
 				$feed['action'] = 'signup';
 				$feed['object'] = 'signup';
 				$feed['object_id'] = $array['object_id'];		
-				$feed['uid'] =  $userid;;
+				$feed['uid'] =  $userid;
 				
 				$cbfeeds->addFeed($feed);
 			}

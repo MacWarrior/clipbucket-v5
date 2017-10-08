@@ -2128,10 +2128,10 @@
                             // move file from original source to temp
                             $toTemp = copy($fullPath, $newDest);
 
-                            // add video in conversion qeue
+                            // add video in conversion queue
                             $Upload->add_conversion_queue($targetFileName);
 
-                            // begin the process of brining back from dead
+                            // begin the process of bringing back from dead
                             exec(php_path()." -q ".BASEDIR."/actions/video_convert.php {$targetFileName} {$file_name} {$file_directory} {$logFile} > /dev/null &");
 
                             // set reconversion status

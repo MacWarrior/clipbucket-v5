@@ -53,9 +53,9 @@
 									<input type="checkbox" name="check_playlist[]" id="check_playlist-{$playlists[plist].playlist_id}" value="{$playlists[plist].playlist_id}" />
 								</td>
 								<td valign="middle">
-									{$playlists[plist].playlist_name|truncate:100}
+									{display_clean($playlists[plist].playlist_name)|truncate:100}
 									<span class="video_control">
-										- <a class="btn btn-primary btn-xs" href="?mode=edit_playlist&amp;pid={$playlists[plist].playlist_id}">{lang code='view'}</a> 
+										- <a class="btn btn-primary btn-xs" href="?mode=edit_playlist&amp;pid={$playlists[plist].playlist_id}">{lang code='edit'}</a>
 										<!-- changes made -->
 										{assign var=firstitem value=$playlists[plist].first_item|json_decode:1}
 										{if $firstitem}

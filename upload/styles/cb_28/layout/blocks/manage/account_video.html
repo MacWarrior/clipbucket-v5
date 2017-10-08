@@ -1,8 +1,8 @@
 {if $control=='' || $control =='view'}
-{if $mode ==''}{assign var='mode' value='favorites'}{/if}
-
+	{if $mode ==''}
+		{assign var='mode' value='favorites'}
+	{/if}
 {/if}
-
 
 {if $control =='full'}
 <tr>
@@ -76,9 +76,9 @@
 				<img class="edit-img-thumbnail" src="{getThumb vdetails=$video}">
 				<p class="marginTop">{display_clean($video.title)|truncate:100}</p>
 				<div class="btn-group show">
-					<a class="btn btn-primary btn-sm" href="{videoLink vdetails=$video}">{lang code='views'}</a>
+					<a class="btn btn-primary btn-sm" href="{videoLink vdetails=$video}">{lang code='view_video'}</a>
 					<a class="btn btn-primary btn-sm" href="javascript:void(0);" onmousedown="delete_video('delete_icon_a','{$video.playlist_item_id}','{lang code="remove_playlist_item_confirm"}','?mode=edit_playlist&pid={$pid}&amp;delete_item={$video.playlist_item_id}')" id="delete_icon_a-{$video.playlist_item_id}">
-						delete
+						{lang code="delete"}
 					</a>
 				</div>
 			</div>

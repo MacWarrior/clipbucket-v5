@@ -41,7 +41,7 @@
 		private $logFile = '';
 
 		# stores path to temporary directory where file stay before they are moved
-		# either to conversion qeue or final destination
+		# either to conversion queue or final destination
 		private $tempDirectory = TEMP_DIR;
 
 		# stores path to conversion lock file which is used to check if more processes
@@ -340,7 +340,7 @@
 				$convLockFile = $this->ffmpegLockPath.$i.'.loc';
 				if ( !file_exists($convLockFile) ) {
 					$this->ffmpegLock = $convLockFile;
-					file_put_contents($file,"Video conversion processes running. Newly uploaded videos will stack up into qeueu for conversion until this lock clears itself out");
+					file_put_contents($file,"Video conversion processes running. Newly uploaded videos will stack up into queue for conversion until this lock clears itself out");
 					return false;
 				}
 			}

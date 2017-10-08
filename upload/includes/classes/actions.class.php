@@ -13,8 +13,6 @@
  * @Script : ClipBucket v2
  * @Since : Bakra Eid 2009
  */
- 
-
 
 class cbactions
 {
@@ -89,15 +87,14 @@ class cbactions
 	{
         global $cb_columns;
 
-		$this->report_opts = array
-		(
-		lang('inapp_content'),
-		lang('copyright_infring'),
-		lang('sexual_content'),
-		lang('violence_replusive_content'),
-		lang('spam'),
-		lang('disturbing'),
-		lang('other')		
+		$this->report_opts = array(
+			lang('inapp_content'),
+			lang('copyright_infring'),
+			lang('sexual_content'),
+			lang('violence_replusive_content'),
+			lang('spam'),
+			lang('disturbing'),
+			lang('other')
 		);
 
         $fields = array( 'playlist_id', 'playlist_name','userid', 'description', 'tags', 'category',
@@ -192,9 +189,7 @@ class cbactions
 		$results = $db->select(tbl($this->fav_tbl),"favorite_id"," id='".$id."' AND userid='".$uid."' AND type='".$this->type."'");
 		if($db->num_rows>0)
 			return true;
-		else
-			return false;
-	
+		return false;
 	}
 	 
 	/**
@@ -236,7 +231,7 @@ class cbactions
 				e(lang("you_not_logged_in"));
 			}
 		}else{
-		 e(sprintf(lang("obj_not_exists"),$this->name));
+			e(sprintf(lang("obj_not_exists"),$this->name));
 		}
 	}
 	function flag_it($id){ return $this->report_id($id); }
@@ -264,8 +259,7 @@ class cbactions
 		$results = $db->select(tbl($this->flag_tbl),"flag_id"," id='".$id."' AND type='".$this->type."' AND userid='".userid()."'");
 		if($db->num_rows>0)
 			return true;
-		else
-			return false;
+		return false;
 	}
 	
 	
@@ -283,7 +277,6 @@ class cbactions
 		//First checking weather object exists or not
 		if($this->exists($id))
 		{
-			global $eh;
 			if(userid())
 			{
 				
@@ -317,14 +310,13 @@ class cbactions
 						$msg = $cbemail->replace($tpl['email_template'],$var);
 						
 						//Setting Emails
-						$emails = implode(',',$emails_array);
+						//$emails = implode(',',$emails_array);
 						
 						//Now Finally Sending Email
 						$from = $userquery->get_user_field_only(user_name(),"email");
 						
 						cbmail(array('to'=>$emails_array,'from'=>$from,'from_name'=>user_name(),'subject'=>$subj,'content'=>$msg,'use_boundary'=>true));
 						e(sprintf(lang("thnx_sharing_msg"),$this->name),'m');
-						
 					}
 				}else{
 					e(sprintf(lang("share_video_no_user_err"),$this->name));
@@ -334,7 +326,7 @@ class cbactions
 				e(lang("you_not_logged_in"));
 			}
 		}else{
-		 e(sprintf(lang("obj_not_exists"),$this->name));
+			e(sprintf(lang("obj_not_exists"),$this->name));
 		}
 	}
 	
@@ -371,8 +363,7 @@ class cbactions
 		
 		if($db->num_rows>0)
 			return $results;
-		else
-			return false;
+		return false;
 	}
 	
 	/**
@@ -410,15 +401,13 @@ class cbactions
 	function get_flagged_objects($limit=NULL)
 	{
 		global $db;
-		$type = $this->type;
    
-    $results = $db->select(tbl($this->flag_tbl.",".$this->type_tbl),"*,
+    	$results = $db->select(tbl($this->flag_tbl.",".$this->type_tbl),"*,
 							   count(*) AS total_flags",tbl($this->flag_tbl).".id = ".tbl($this->type_tbl).".".$this->type_id_field." 
 							   AND ".tbl($this->flag_tbl).".type='".$this->type."' GROUP BY ".tbl($this->flag_tbl).".id ,".tbl($this->flag_tbl).".type ",$limit);				   
 		if($db->num_rows>0)
 			return $results;
-		else
-			return false;
+		return false;
 	}
 	
 	/**
@@ -427,12 +416,10 @@ class cbactions
 	function get_flags($id)
 	{
 		global $db;
-		$type = $this->type;
 		$results = $db->select(tbl($this->flag_tbl),"*","id = '$id' AND type='".$this->type."'");
 		if($db->num_rows>0)
 			return $results;
-		else
-			return false;
+		return false;
 	}
 	
 	
@@ -442,39 +429,37 @@ class cbactions
 	function count_flagged_objects()
 	{
 		global $db;
-		$type = $this->type;
 		$results = $db->select(tbl($this->flag_tbl.",".$this->type_tbl),"id",tbl($this->flag_tbl).".id = ".tbl($this->type_tbl).".".$this->type_id_field." 
 							   AND type='".$this->type."' GROUP BY ".tbl($this->flag_tbl).".id ,".tbl($this->flag_tbl).".type ");
 		if($db->num_rows>0)
 			return count($results);
-		else
-			return 0;
+		return 0;
 	}
 
-    function load_basic_fields( $array = null ) {
-
+    function load_basic_fields( $array = null )
+	{
         if ( is_null( $array ) ) {
             $array = $_POST;
         }
 
-        $title = $array[ 'playlist_name' ];
-        $description = $array[ 'description' ];
-        $tags = $array[ 'tags' ];
-        $privacy = $array[ 'privacy' ];
+        $title = $array['playlist_name'];
+        $description = $array['description'];
+        $tags = $array['tags'];
+        $privacy = $array['privacy'];
 
         $fields = array(
             'title' => array(
-                'title' => lang( 'Playlist Name' ),
+                'title' => lang('playlist_name'),
                 'type' => 'textfield',
                 'name' => 'playlist_name',
                 'id' => 'playlist_name',
                 'db_field' => 'playlist_name',
                 'value' => $title,
                 'required' => 'yes',
-                'invalid_err' => lang( 'Please decide a name for your playlist' )
+                'invalid_err' => lang('please_enter_playlist_name')
             ),
             'description' => array(
-                'title' => lang ( 'Description' ),
+                'title' => lang ('playlist_description'),
                 'type' => 'textarea',
                 'name' => 'description',
                 'id' => 'description',
@@ -482,7 +467,7 @@ class cbactions
                 'value' => $description
             ),
             'tags' => array(
-                'title' => lang( 'Tags' ),
+                'title' => lang('tags'),
                 'type' => 'textfield',
                 'name' => 'tags',
                 'id' => 'tags',
@@ -490,15 +475,14 @@ class cbactions
                 'value' => $tags
             ),
             'privacy' => array(
-                'title' => 'Privacy',
+                'title' => lang('playlist_privacy'),
                 'type' => 'dropdown',
                 'name' => 'privacy',
                 'id' => 'privacy',
                 'db_field' => 'privacy',
                 'value' => array(
-                    'public' => lang( 'Public' ),
-                    'private' => lang( 'Private' ),
-                    #'unlisted' => lang( 'Unlisted' )
+                    'public' => lang('public'),
+                    'private' => lang('private')
                 ),
                 'default_value' => 'public',
                 'checked' => $privacy
@@ -508,39 +492,38 @@ class cbactions
         return $fields;
     }
 
-    function load_other_options ( $array = null ) {
-
+    function load_other_options( $array = null )
+	{
         if ( is_null( $array ) ) {
             $array = $_POST;
         }
 
-
-        $allow_comments = $array[ 'allow_comments' ];
-        $allow_rating = $array[ 'allow_rating' ];
+        $allow_comments = $array['allow_comments'];
+        $allow_rating = $array['allow_rating'];
 
         $fields = array(
             'allow_comments' => array(
-                'title' => lang( 'Allow Comments' ),
+                'title' => lang('playlist_allow_comments'),
                 'id' => 'allow_comments',
                 'type' => 'radiobutton',
                 'name' => 'allow_comments',
                 'db_field' => 'allow_comments',
                 'value' => array(
-                    'no' => lang( 'No' ),
-                    'yes' => lang( 'Yes' )
+                    'no' => lang('no'),
+                    'yes' => lang('yes')
                 ),
                 'default_value' => 'yes',
                 'checked' => $allow_comments
             ),
             'allow_rating' => array(
-                'title' => lang( 'Allow Rating' ),
+                'title' => lang('playlist_allow_rating'),
                 'id' => 'allow_rating',
                 'type' => 'radiobutton',
                 'name' => 'allow_rating',
                 'db_field' => 'allow_rating',
                 'value' => array(
-                    'no' => lang( 'No' ),
-                    'yes' => lang( 'Yes' )
+                    'no' => lang('no'),
+                    'yes' => lang('yes')
                 ),
                 'default_value' => 'yes',
                 'checked' => $allow_rating
@@ -551,8 +534,8 @@ class cbactions
     }
 
 
-    function load_playlist_fields( $array = null ) {
-
+    function load_playlist_fields( $array = null )
+	{
         if ( is_null( $array ) ) {
             $array = $_POST;
         }
@@ -626,16 +609,13 @@ class cbactions
 	 */
 	function get_playlist( $id, $user = null )
 	{
-		global $db, $cb_columns;
+		global $cb_columns;
 
         $fields = array(
             'playlists' => $cb_columns->object( 'playlists' )->temp_add( 'rated_by,voters,rating,allow_rating,allow_comments' )->get_columns()
         );
 
-
         $fields[ 'users' ] = $cb_columns->object( 'users' )->temp_remove('usr_status,user_session_key')->get_columns();
-
-
 
         $query = "SELECT ".table_fields( $fields )." FROM ".table( 'playlists' );
         $query .= " LEFT JOIN ".table( 'users' )." ON playlists.userid = users.userid";
@@ -692,7 +672,7 @@ class cbactions
 	 */
 	function add_playlist_item($pid,$id)
 	{
-		global $db, $cb_columns;
+		global $db;
 
         $playlist = $this->get_playlist($pid);
         
@@ -734,7 +714,6 @@ class cbactions
 
                 $db->update( tbl( 'playlists' ), array_keys( $fields ), array_values( $fields ), " playlist_id = '".$pid."' " );
 
-                //e( sprintf( lang( 'this_thing_added_playlist' ), $this->name ), "m" );
                 e('<div class="alert alert-success">'.lang( 'video_added_to_playlist' ).'</div>', "m" );
                 return $video;
             }
@@ -822,7 +801,7 @@ class cbactions
 	 */
 	function playlist_item( $id, $join_playlist = false )
 	{
-		global $db, $cb_columns;
+		global $cb_columns;
 
         $fields = array(
             'playlist_items' => $cb_columns->object( 'playlist_items' )->get_columns()
@@ -850,25 +829,16 @@ class cbactions
 
         $data = select( $query );
 
-        if ( $data ) {
-
+        if ( $data )
+        {
             cb_do_action( 'return_playlist_item', array(
                 'query_id' => $query_id,
                 'results' => $data[ 0 ]
             ));
 
             return $data[ 0 ];
-        } else {
-            return false;
         }
-
-        /*
-		$result = $db->select(tbl($this->playlist_items_tbl),"*"," playlist_item_id='$id' ");
-		if($db->num_rows>0)
-			return $result[0];
-		else
-			return false;
-        */
+		return false;
 	}
 	
 	/**
@@ -883,8 +853,7 @@ class cbactions
 		$result = $db->select(tbl($this->playlist_items_tbl),"*"," object_id='$id' $pid_cond");
 		if($db->num_rows>0)
 			return $result[0];
-		else
-			return false;
+		return false;
 	}
 	
 	/**
@@ -896,7 +865,6 @@ class cbactions
 
         if( is_null( $array ) ) {
             $array = $_POST;
-
         }
 
 		$name = mysql_clean($array['name']);
@@ -970,8 +938,6 @@ class cbactions
                 ));
             }
 
-			/*$db->update(tbl($this->playlist_tbl),array("playlist_name"),
-									  array($name)," playlist_id='".$params['pid']."'");*/
 			e(lang("play_list_updated"),"m");
 
 		}
@@ -1001,8 +967,6 @@ class cbactions
 	/**
 	 * Function used to get playlists
 	 */
-
-	
 	function get_playlists( $params = array() )
 	{
         global $cb_columns, $db;
@@ -1155,8 +1119,7 @@ class cbactions
 		
 		if($db->num_rows>0)
 			return $result;
-		else
-			return false;
+		return false;
 	}
 
 	/**
@@ -1170,20 +1133,17 @@ class cbactions
     function getPlaylistThumb($pid)
     {
         $pid = (int) $pid;
-        $array = array();
-
         $items = $this->get_playlist_items($pid, NULL, 3);
-
-        global $cbvid, $cbaudio;
         $array = array();
 
         if ($items)
+        {
             foreach ($items as $item)
             {
                 $item['type'] == 'v';
                 $array[] = GetThumb($item['object_id']);
             }
-        else
+		} else
             return array(TEMPLATEURL . '/images/playlist-default.png');
 
         $array = array_unique($array);
@@ -1208,8 +1168,7 @@ class cbactions
 		$result = $db->select(tbl($this->playlist_items_tbl),"*","playlist_id='$pid'");
 		if($db->num_rows>0)
 			return $result;
-		else
-			return false;
+		return false;
 	}
 	
 	/**
@@ -1232,12 +1191,8 @@ class cbactions
 		{
 			$result = $db->count(tbl($this->playlist_tbl),"*"," playlist_type='".$this->type."' ");
 			return $result;
-		}else{
-			return $db->count(tbl($this->playlist_items_tbl),"playlist_item_id"," playlist_item_type='".$this->type."'");
 		}
+		return $db->count(tbl($this->playlist_items_tbl),"playlist_item_id"," playlist_item_type='".$this->type."'");
 	}
 
-	
 }
-
-?>

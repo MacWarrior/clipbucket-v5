@@ -171,7 +171,7 @@ switch($mode)
 		if ($hardware){
 			$log->writeLine("System hardware Information", $hardware, true);	
 		}else{
-			$log->writeLine('System hardware Information', 'Unable log System hardware information, plaese install "lshw" ', true);	
+			$log->writeLine('System hardware Information', 'Unable log System hardware information, please install "lshw" ', true);
 		}
 
 

@@ -314,7 +314,7 @@
     define('SUBTITLE',$row['code_dev']);
 	//Javascript Directory Name
 	define('ADMINDIR','admin_area');
-	define('ADMINBASEDIR',BASEDIR.'/admin_area');							//Admin Accissble Folder
+	define('ADMINBASEDIR',BASEDIR.'/admin_area');				//Admin Accessible Folder
 	define('ADMIN_BASEURL',BASEURL.'/'.ADMINDIR);
 	define('MODULEDIR',BASEDIR.'/modules');						//Modules Directory
 	

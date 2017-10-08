@@ -122,7 +122,7 @@ session_start();
 	define('TEMPLATE',$row['template_dir']);					//Select Any Template Name, usually 'clipbucketblue'
 	define('FLVPLAYER',$row['player_file']);					//Select FLV Player For Your Script
 	define('JSDIR','js');										//Javascript Directory Name
-	define('ADMINDIR','admin_area');							//Admin Accissble Folder
+	define('ADMINDIR','admin_area');							//Admin Accessible Folder
 	define('MODULEDIR',BASEDIR.'/modules');						//Modules Directory
 	
  //DIRECT PATHS OF VIDEO FILES
