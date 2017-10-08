@@ -145,7 +145,7 @@
 				if ($hardware){
 					$log->writeLine("System hardware Information", $hardware, true);
 				} else {
-					$log->writeLine('System hardware Information', 'Unable log System hardware information, plaese install "lshw" ', true);
+					$log->writeLine('System hardware Information', 'Unable log System hardware information, please install "lshw" ', true);
 				}
 
 				$track = '';
@@ -173,8 +173,16 @@
 				}
 
 				crapCleanStep:
-				if ($delMassUpload != 'no') {
-					unlink($file_path.$file_orgname);
+				if ($delMassUpload != 'no')
+				{
+					if( is_writable($file_path.$file_orgname) )
+					{
+						$unlink = unlink($file_path.$file_orgname);
+						if( !$unlink )
+							e('Can\'t delete file "'.$file_path.$file_orgname.'"', 'w');
+					} else {
+						e('File "'.$file_path.$file_orgname.'" is not writable', 'w');
+					}
 				}
 			}
 		}
