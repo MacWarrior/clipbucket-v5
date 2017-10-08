@@ -339,7 +339,7 @@ class CBvideo extends CBCategory
 	 */
 	function update_video($array=NULL)
 	{
-		global $eh,$Cbucket,$db,$Upload;		
+		global $eh,$db,$Upload;
 			 
 		$Upload->validate_video_upload_form(NULL,TRUE);
 		
@@ -352,30 +352,26 @@ class CBvideo extends CBCategory
 			$upload_fields = array_merge($required_fields,$location_fields,$option_fields);
 			
 			//Adding Custom Upload Fields
-			if (function_exists('custom_fields_list')) {
+			if (function_exists('custom_fields_list'))
+			{
 				$custom_flds = $Upload->load_custom_form_fields($array,true);
-				#pr($custom_flds,true);
 				$upload_fields = array_merge($upload_fields,$custom_flds);
 			}
 
 			if(!$array)
-			 $array = $_POST;
-			 
-			#pr($array,true);
+				$array = $_POST;
+
 			$vid = $array['videoid'];
 
 			if(is_array($_FILES))
 			$array = array_merge($array,$_FILES);
-			
-		
+
 			foreach($upload_fields as $field)
 			{
 				$name = formObj::rmBrackets($field['name']);
 				$val = $array[$name];
 				
-				if(empty($val) && $field['use_if_value'])
-				{
-				}else
+				if(!empty($val) || !$field['use_if_value'])
 				{
 					if($field['use_func_val'])
 						$val = $field['validate_function']($val);
@@ -401,7 +397,6 @@ class CBvideo extends CBCategory
 					if(!empty($field['db_field']))
 						$query_val[] = $val;
 				}
-				
 			}
 			
 			if(has_access('admin_access',TRUE))
@@ -464,16 +459,13 @@ class CBvideo extends CBCategory
 			if(!userid())
 			{
 				e(lang("you_dont_have_permission_to_update_this_video"));
-			}elseif(!$this->video_exists($vid)){
+			} elseif(!$this->video_exists($vid)) {
 				e(lang("class_vdo_del_err"));
-			}elseif(!$this->is_video_owner($vid,userid()) && !has_access('admin_access',TRUE))
-			{
+			} elseif(!$this->is_video_owner($vid,userid()) && !has_access('admin_access',TRUE)) {
 				e(lang("no_edit_video"));
-			}elseif(strlen($array['title']) > 100){
-				e(lang("Title exceeds max length of 100 characters"));
-			}else{
-				//pr($upload_fields);	
-				#pr($query_field,true);
+			} elseif(strlen($array['title']) > 100) {
+				e(lang("Title exceeds max length of 100 characters")); // TODO : Translation
+			} else {
 				$db->update(tbl('video'),$query_field,$query_val," videoid='$vid'");
 
                 cb_do_action( 'update_video', array(
@@ -481,13 +473,12 @@ class CBvideo extends CBCategory
                     'results' => $array
                 ));
 
-				//echo $db->db_query;
 				e(lang("class_vdo_update_msg"),'m');
 
 				// condition for Clip press plugin
-				if ( function_exists('post_to_wp_upload_culr') )
+				if( function_exists('post_to_wp_upload_culr') )
 				{
-					post_to_wp_upload_culr ( $vid );
+					post_to_wp_upload_culr( $vid );
 				}
 			}
 			
