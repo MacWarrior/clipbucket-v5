@@ -33,6 +33,9 @@
 
 			foreach($FILES as $key => $file)
 			{
+				if( is_dir($file) )
+					continue;
+
 				if( filemtime( $file ) > $sec )
 				{
 					$FILE_LIST[$key]['path']		= substr( $file, 0, ( strrpos( $file, $this->dirsep ) +1 ) );
