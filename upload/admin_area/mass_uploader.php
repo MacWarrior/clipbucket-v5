@@ -194,13 +194,6 @@
 			e($e);
 	}
 
-	//Collecting Data for Pagination
-	$limit = config('comments_per_page');
-	$total_rows = count($cbmass->get_video_files());
-	$total_pages = $total_rows/$limit;
-	$total_pages = round($total_pages+0.49,0);
-	$pages->paginate($total_pages,$page);
-
 	subtitle("Mass Uploader");
 	template_files("mass_uploader.html");
 	display_it();
