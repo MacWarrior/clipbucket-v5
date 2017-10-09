@@ -277,8 +277,9 @@ class pages{
 				if($selected == $i)
 				{
 					$start .= ' <li class ="active"><a href="#">'.$i.'</a></li> ';
-				}else
+				} else {
 					$start .= $this->create_link($i,$link,$extra_params,$tag);
+				}
 				$start_last = $i; 
 			}
 			
@@ -291,8 +292,9 @@ class pages{
 				if($selected == $i)
 				{
 					$end .= ' <li class ="active"><a href="#">'.$i.'</a></li> ';
-				}else
-				$end .= $this->create_link($i,$link,$extra_params,$tag);
+				} else {
+					$end .= $this->create_link($i,$link,$extra_params,$tag);
+				}
 			}
 			
 			//Starting mid
@@ -306,8 +308,9 @@ class pages{
 					if($selected == $i)
 					{
 						$mid .= ' <li class ="active"><a href="#">'.$i.'</a></li> ';
-					}else
+					} else {
 						$mid .= $this->create_link($i,$link,$extra_params,$tag);
+					}
 				}
 				
 				$mid_last = $i;
@@ -340,7 +343,7 @@ class pages{
 				if($i == $selected)
 					$pagination_smart .= '<li class ="active"><a href="#">'.$i.'</a></li>';
 				else
-					$pagination_smart .=$this->create_link($i,$link,$extra_params,$tag);
+					$pagination_smart .= $this->create_link($i,$link,$extra_params,$tag);
 			}
 			
 			//Previous Page
