@@ -6,7 +6,7 @@
 {/if}
 
 <div class="heading clearfix marginBottomLarge paddingBottomSmall">
-    <h2 class="pull-left">Editing <small>&gt; {$data.collection_name}</small></h2>
+    <h2 class="pull-left">Editing <small>&gt; {display_clean($data.collection_name)}</small></h2>
     <div class="pull-right">
         <span class="btn btn-app btn-sm btn-light no-hover">
             <span class="line-height-1 smaller-90 blue">{$data.views|number_format}</span>
@@ -64,7 +64,7 @@
     <div class="row marginTopLarge">
         <div class="col-sm-6 col-md-6 col-lg-6 col x1-12">
         <input class="form-control" name="admin" type="hidden" id="admin" value="true" />
-        <input name="collection_id" type="hidden"  value="{$data.collection_id}" />
+        <input name="collection_id" type="hidden" value="{$data.collection_id}" />
 
             <div class="tabbable">
                 <ul class="nav nav-tabs" id="myTab">
@@ -121,7 +121,7 @@
                                 </tr>
                                 <tr>
                                     <td class="first"><label>User Name</label></td>
-                                    <td class="last"><p><span>{$data.userid|get_username}</span></p></td>
+                                    <td class="last"><p><span>{display_clean($data.userid|get_username)}</span></p></td>
                                 </tr>
                                 <tr>
                                     <td class="first"><label>DOB</label></td>
@@ -198,12 +198,8 @@
             	<legend>Collection Preview</legend>
                 <div class="form-group">
                         <img style="padding:2px; border:1px solid #ccc;" src="{$cbcollection->coll_first_thumb($data,'l')}" />
-                      <!--  <input class="forum-control" type="checkbox" value="{$data.collection_id}" name="delete_preview" id="del_{$data.collection_id}_preview" /> <label for="del_{$data.collection_id}_preview">Delete Preview</label> -->
           </div>
-                    <!-- <div class="form-group">
-                    <label for="collection_thumb">Upload New :</label>
-                    <input type="file" name="collection_thumb" id="collection_thumb" >
-          </div> -->
+
           </div>
                     <div id="citems" class="tab-pane">
 

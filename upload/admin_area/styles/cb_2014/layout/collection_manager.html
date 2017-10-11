@@ -32,7 +32,7 @@
                     <img src="{$cbcollection->coll_first_thumb($c[list],'l')}" width="100" height="80" />
                         </div>
                 <div class="col-md-9">
-                    <a href="{$baseurl}/admin_area/edit_collection.php?collection={$c[list].collection_id}">{$c[list].collection_name}</a> ({$c[list].total_objects} {$c[list].type})
+                    <a href="{$baseurl}/admin_area/edit_collection.php?collection={$c[list].collection_id}">{display_clean($c[list].collection_name)}</a> ({$c[list].total_objects} {$c[list].type})
                     </a>
 
                     <div class="labels">
@@ -45,7 +45,7 @@
                     </div>
                 </div>
                     <div class="col-md-2">
-                        <a href="view_user.php?uid={$c[list].userid}">{$c[list].username}</a>
+                        <a href="view_user.php?uid={$c[list].userid}">{display_clean($c[list].username)}</a>
                     </div>
                 </div>
         <td>

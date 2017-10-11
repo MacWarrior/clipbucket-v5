@@ -28,9 +28,9 @@
             </div>
             <div class="col-md-4">
                 <label>Make Default Category</label>
-                <select class="form-control">
-                    <option class="form-control" name="default" id="default_0">Yes</option>
-                    <option class="form-control" name="default" id="default_1">No</option>
+                <select class="form-control" name="default_categ">
+                    <option class="form-control" id="default_0">{lang code='yes'}</option>
+                    <option class="form-control" id="default_1">{lang code='no'}</option>
                 </select>
             </div>
         </div>
@@ -40,7 +40,6 @@
             </div>
         </div>
 
-
         <br>
         <div class="row">
             <div class="col-md-6">
@@ -48,41 +47,39 @@
                 <input type="file" name="cat_thumb" id="cat_thumb"/>
             </div>
             <div class="col-md-6">
-                <input type="submit" class="btn btn-primary pull-right button" name="add_cateogry" id="button" value="Add Category" onclick="return _cb.validate_category_form(add_category)"/>
+                <input type="submit" class="btn btn-primary pull-right button" name="add_cateogry" id="button" value="Add Category" onclick="return _cb.validate_category_form(add_category);"/>
             </div>
         </div>
         {/if}
     </form>
 </div>
 
-
-
 {/if}
 <div id="content">
     {if $edit_category == "show"}
     <form method="post" enctype="multipart/form-data" name="edit_category" id="Edit Category">
         <input name="cid" value="{$cat_details.category_id}" type="hidden" />
-        <input name="cur_name" value="{$cat_details.category_name}" type="hidden" />
+        <input name="cur_name" value="{display_clean($cat_details.category_name)}" type="hidden" />
         <div class="row">
             <div class="col-md-4">
                 <label>Category Name*</label>
-                <input name="name" class="form-control" type="text" id="name" value="{$cat_details.category_name}" size="45" />
+                <input name="name" class="form-control" type="text" id="name" value="{display_clean($cat_details.category_name)}" size="45" />
             </div>
             <div class="col-md-4">
                 <label>Parent Category</label>
-                {cbCategories output="dropdown" class='form-control' selected=$cat_details.parent_id name="parent_cat" id="parent_cat" blank_option=TRUE type="video" echo=TRUE}
+                {cbCategories output="dropdown" class='form-control' selected=$cat_details.parent_id name="parent_cat" id="parent_cat" blank_option=TRUE type="collection" echo=TRUE}
             </div>
             <div class="col-md-4">
                 <label>Make Default Category</label>
-                <select class="form-control">
-                    <option class="form-control" name="default" id="default_0" {if $cat_details.isdefault=='yes'} checked{/if} >Yes</option>
-                    <option class="form-control" name="default" id="default_1" {if $cat_details.isdefault=='no' || $cat_details.isdefault==''} checked{/if}>No</option>
+                <select class="form-control" name="default_categ">
+                    <option class="form-control" id="default_0" {if $cat_details.isdefault=='yes'} checked{/if} >{lang code='yes'}</option>
+                    <option class="form-control" id="default_1" {if $cat_details.isdefault=='no' || $cat_details.isdefault==''} checked{/if}>{lang code='no'}</option>
                 </select>
             </div>
         </div>
         <div class="row marginTopLarge">
             <div class="col-md-12">
-                <textarea class="form-control" name="desc" id="desc" cols="33" rows="5">{$cat_details.category_desc}</textarea>
+                <textarea class="form-control" name="desc" id="desc" cols="33" rows="5">{display_clean($cat_details.category_desc)}</textarea>
             </div>
         </div>
         <br>
@@ -123,7 +120,6 @@
                 <a id="thumbs_{$category[list].category_id}" class="label label-danger arrowed popoverButton" data-html="true"
                    data-placement="top" data-toggle="popover" data-content="<img src='{$cbvid->get_category_thumb($category[list], 'collections')}' height='90' width='90' />" href="javascript:void(0);">View Thumb</a></td>
 
-
             <td> <input name="category_order_{$category[list].category_id}" type="text" id="order" style="border:1px solid #999; padding:2px; width:30px" value="{$category[list].category_order}" size="5" maxlength="5" /></td>
             {if $category[list].parent_id == "0"}
             {assign var=p_name value="None"}
@@ -132,7 +128,7 @@
             {/if}
             <td>{display_clean($p_name)}</td>
             <td>{if $category[list].category_desc}{display_clean($category[list].category_desc)}{else}<em>N/A</em>{/if}</td>
-            <td>{$category[list].isdefault}</td>
+            <td>{lang code="{$category[list].isdefault}"}</td>
             <td>
                 <div class="lead dropdown">
                     <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">Options <i class="caret"></i></button>

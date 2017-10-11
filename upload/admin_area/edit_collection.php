@@ -12,12 +12,14 @@
 	$userquery->login_check('video_moderation');
 	$pages->page_redir();
 
+	$id = mysql_clean($_GET['collection']);
+	$c = $cbcollection->get_collection($id);
+
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'Collections', 'url' => '');
 	$breadcrumb[1] = array('title' => 'Manage Collections', 'url' => '/admin_area/collection_manager.php');
-
-	$id = mysql_clean($_GET['collection']);
+	$breadcrumb[2] = array('title' => 'Editing : '.display_clean($c['collection_name']), 'url' => '/admin_area/edit_collection.php?collection='.display_clean($id));
 
 	if(isset($_POST['update_collection']))
 	{
@@ -36,7 +38,6 @@
 		$cbcollection->collection_actions($_GET['mode'],$id);
 	}
 
-	$c = $cbcollection->get_collection($id);
 	switch($c['type'])
 	{
 		case "videos":

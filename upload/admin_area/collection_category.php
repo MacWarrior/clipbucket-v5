@@ -31,14 +31,19 @@
 	}
 
 	//Edit Category
-	if(isset($_GET['category'])){
+	if(isset($_GET['category']))
+	{
 		assign("edit_category","show");
 		if(isset($_POST['update_category']))
 		{
 			$cbcollection->thumb_dir = "collections";
 			$cbcollection->update_category($_POST);
 		}
-		assign('cat_details',$cbcollection->get_category($_GET['category']));
+		$cat_details = $cbcollection->get_category($_GET['category']);
+
+		assign('cat_details', $cat_details);
+
+		$breadcrumb[2] = array('title' => 'Editing : '.display_clean($cat_details['category_name']), 'url' => '/admin_area/collection_category.php?category='.display_clean($_GET['category']));
 	}
 
 	//Delete Category
@@ -47,12 +52,6 @@
 	}
 
 	$cats = $cbcollection->get_categories();
-	$pid = $cbcollection->get_category_field($_GET['category'],'parent_id');
-
-	if($pid)
-		$selected = $pid;
-
-	$parent_cats = $cbcollection->admin_area_cats($selected);
 
 	//Updating Category Order
 	if(isset($_POST['update_order']))
@@ -69,9 +68,8 @@
 	}
 
 	//Assign Category Values
-	assign('category',$cats);
-	assign('parent_cats',$parent_cats);
-	assign('total',$cbcollection->total_categories());
+	assign('category', $cats);
+	assign('total', $cbcollection->total_categories());
 
 	subtitle("Collection Category Manager");
 	Assign('msg',@$msg);
