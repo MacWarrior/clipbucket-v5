@@ -7,7 +7,7 @@
 			<div class="form-group clearfix">
 				<select name="collection" id="collection" class="form-control">
 					{section name=clist loop=$collections}
-					<option value="{$collections[clist].collection_id}">{$collections[clist].collection_name} ({$collections[clist].total_objects})</option>
+					<option value="{$collections[clist].collection_id}">{display_clean($collections[clist].collection_name)} ({$collections[clist].total_objects})</option>
 					{sectionelse}
 					<option>{lang code="no_collection_found"}</option>    
 					{/section}
