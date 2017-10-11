@@ -21,7 +21,7 @@
                 <hr>
             </div>
             <div class="watch-vid-title mbm">
-                <h1>{wordwrap($photo.photo_title,8, "\n", true)}</h1> 
+                <h1>{wordwrap(display_clean($photo.photo_title),8, "\n", true)}</h1>
             </div>
             <div class="vid-detail-sec">
                 <div class="watch-vid-thumb">    
@@ -72,12 +72,12 @@
                             <div class="tab-pane active" id="pinfo">
                                 <div class="col-lg-9 col-md-9 col-sm-9 col-xs-6 no-padding">
 
-                                    <p id="videoDescription" class="will_show">{$photo.photo_description|truncate:90}</p>
+                                    <p id="videoDescription" class="will_show">{display_clean($photo.photo_description)|truncate:90}</p>
 
                                     <div class="watch-vid-tag">
                                         <strong>{lang('Category')}</strong>
                                         <span>{assign var=category value=$userquery->get_category($user.category)}
-                                            {$category.category_name}
+                                            {display_clean($category.category_name)}
                                         </span>
 
                                     </div>
@@ -85,17 +85,7 @@
                                         <strong> {lang('Tags')}</strong>
                                         <span>{$photo.photo_tags|tags:photos}</span>
                                     </div>
-                                    
-                                    <!-- view sec hide on told arslan bhai -->
-                                    <!-- <div class="mtm">
-                                        <strong>{lang code='views'}</strong> : {$photo.views|number_format} &ndash;
-                                    
-                                        <strong>{lang code='comments'}</strong> : {$photo.total_comments}    
-                                    </div> -->
-
-
                                 </div>
-
 
                                 <div class="watch-vid-social-sec">
                                     <a class="cb-item-social-icon twitter" href="https://twitter.com/share" target="_blank">

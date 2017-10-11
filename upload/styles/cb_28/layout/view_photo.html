@@ -47,7 +47,7 @@
 		<section class="view-details clearfix">
 			<header class="clearfix details">
 				<div id="result_cont"></div>
-				<h1>{$photo.photo_title}</h1>
+				<h1>{display_clean($photo.photo_title)}</h1>
 				<h1 id="img-title"></h1>
 				<div class="user-video-info clearfix">
 					<a href="{$userquery->profile_link($user)}" class="avatar">
@@ -65,7 +65,7 @@
 					<div class="clearfix like-rating col-lg-6 col-md-6 col-sm-6 col-xs-12" id="rating_container">
 
 						{if $photo.allow_rating != 'no'}
-						{show_video_rating  rating=$photo.rating ratings=$photo.rated_by total='10' id=$photo.photo_id type=photo}
+							{show_video_rating  rating=$photo.rating ratings=$photo.rated_by total='10' id=$photo.photo_id type=photo}
 						{/if}
 
 						<!-- <div id="rate"></div> -->
@@ -206,7 +206,7 @@
 	<h2>{lang code='related_photos'}</h2>
 	<div class="clearfix sidebar-items">
 		
-		{$related_photos=get_photos(['title'=>$photo.photo_title,'tags'=>$photo.photo_tags,
+		{$related_photos=get_photos(['title'=>display_clean($photo.photo_title),'tags'=>$photo.photo_tags,
 		'exclude'=>$photo.photo_id,'show_related'=>'yes','limit'=>6,'order'=>'date_added DESC'])}
 		
 		{if $related_photos}
