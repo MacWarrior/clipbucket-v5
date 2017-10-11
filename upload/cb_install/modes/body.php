@@ -29,7 +29,7 @@
 
 
 <?php if(!$upgrade):?>
-<div   class="top_nav clearfix br5px" style="height:35px;">
+<div  class="top_nav clearfix br5px" style="height:35px;">
   <div class="cb_container">
     <div class="cb_navbar">
         <ul class="headstatus" >
@@ -49,7 +49,7 @@
 
 
    <?php else: ?>
-<div  class="top_nav clearfix ">
+<div class="top_nav clearfix ">
   <div class="cb_container">
     <div class="cb_navbar">
         <ul class="headstatus" >

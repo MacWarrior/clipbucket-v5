@@ -1,5 +1,4 @@
 <!DOCTYPE HTML>
-
 <html>
 	<head>
 		{if in_dev()}
@@ -27,11 +26,8 @@
         {/if}
 
 		<link rel="stylesheet" href="{$theme}/css/bootstrap.min.css?cache={$cache_buster}">
-
 		<link rel="stylesheet" href="{$theme}/css/font-awesome.min.css?cache={$cache_buster}">
-
 		<link rel="stylesheet" href="{$theme}/css/icon-font.css?cache={$cache_buster}">
-
 		<link rel="stylesheet" href="{$theme}/css/custom-elements.css?cache={$cache_buster}">
 
 		{*if !in_dev()*}
@@ -49,9 +45,9 @@
 			var loadingImg = '<i class="glyphicon glyphicon-refresh animate-spin"></i>';
 			var loading = '<i class="glyphicon glyphicon-refresh animate-spin"></i> {lang code="loading"}...';
 			var baseurl = "{$baseurl}",
-			imageurl = "{$imageurl}",
-			userid = "{userid()}",
-			THIS_PAGE = "{$smarty.const.THIS_PAGE}";
+				imageurl = "{$imageurl}",
+				userid = "{userid()}",
+				THIS_PAGE = "{$smarty.const.THIS_PAGE}";
 		</script>
 		{if isset($__devmsgs)}
 			<script src="{$theme}/js/custom.js"></script>
@@ -60,9 +56,8 @@
 		{/if}
 
 		<script src="{$theme}/js/bootstrap.min.js"></script>
-		
 		<script src="{$theme}/js/ui_plugins.js"></script>
-		<!-- <script src="{$baseurl}/js/clipbucket.js"></script> -->
+
 		{if isset($__devmsgs)}
 		<script src="{$baseurl}/js/clipbucket.js"></script>
 		{else}
@@ -72,7 +67,6 @@
 		{if $smarty.const.THIS_PAGE == 'signup'}
 			<script src='https://www.google.com/recaptcha/api.js'></script>
 		{/if}
-		
 
 		<!-- Script For Home Page Videos Slider //-->
 
@@ -88,10 +82,6 @@
 		<script>
 			var fastQitems = "{$got_qlitems}";
 			$(document).ready(function(){
-				/*var quicklist_videos = '{$quicklist}';
-				if (quicklist_videos)
-				quicklist_videos_check(quicklist_videos);*/
-
 				loading = '<i class="glyphicon glyphicon-refresh animate-spin"></i> {lang code="loading"}...';
 				$( 'ul#photos li:visible' ).each( function( i ){
 					$( this )[ (1&i) ? 'addClass' : 'removeClass' ]( 'photo-land-no' );

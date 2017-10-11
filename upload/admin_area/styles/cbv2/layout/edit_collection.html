@@ -7,7 +7,7 @@
     	<td width="50%" valign="top">
         	<table width="98%" border="0" align="center" cellpadding="0" cellspacing="0">
             <tr>
-                <td align="left" class="left_head" style="padding-left:10px"><div class="head">Editing {$data.collection_name}</div></td>
+                <td align="left" class="left_head" style="padding-left:10px"><div class="head">Editing {display_clean($data.collection_name)}</div></td>
                 <td width="20" align="right" class="right_head">&nbsp;</td>
             </tr>
             </table>
@@ -33,7 +33,7 @@
     <table width="98%" border="0" align="center" cellpadding="0" cellspacing="0" class="block">
     <tr>
       <td width="200"><strong>Useid</strong></td>
-      <td><a href="view_user.php?uid={$data.userid}">{$data.userid|get_username}</a></td>
+      <td><a href="view_user.php?uid={$data.userid}">{display_clean($data.userid|get_username)}</a></td>
     </tr>
   </table>
 </fieldset>

@@ -1,14 +1,14 @@
-<h2>Manage Items - <a href="{$baseurl}/admin_area/edit_collection.php?collection={$data.collection_id}">{$data.collection_name}</a></h2>
+<h2>Manage Items - <a href="{$baseurl}/admin_area/edit_collection.php?collection={$data.collection_id}">{display_clean($data.collection_name)}</a></h2>
 <form method="post">
     <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
         <tr>
             <td width="30" align="center" valign="middle"><img src="{$imageurl}/arrow_return.png" width="25" height="25"></td>
             <td height="50" style="padding-left:15px">
-                <input type="submit" name="remove_selected" value="Remove Selected"  class="btn btn-primary btn-xs"/>
-                <input type="submit" name="move_selected" value="Move Selected"  class="btn btn-primary btn-xs"/>
+                <input type="submit" name="remove_selected" value="Remove Selected" class="btn btn-primary btn-xs"/>
+                <input type="submit" name="move_selected" value="Move Selected" class="btn btn-primary btn-xs"/>
                 <select name="collection_id" id="collection_id">
                 {foreach from=$c item=item}
-                <option value="{$item.collection_id}"{if $smarty.get.collection == $item.collection_id} selected{/if}>{$item.collection_name}</option>
+                <option value="{$item.collection_id}"{if $smarty.get.collection == $item.collection_id} selected{/if}>{display_clean($item.collection_name)}</option>
                 {/foreach}
                 </select>
                 <br />

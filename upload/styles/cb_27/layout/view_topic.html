@@ -40,19 +40,11 @@
             {*assign var=topic_starter value=$userquery->get_user_details($topic.userid)}
             {include file="$style_dir/blocks/user.html" user=$topic_starter block_type="topic_view"*}
             {$user=$userquery->get_user_details($topic.userid)}
-            <!-- <div class="itemdiv">
-                <div class="user">
-                    <a href="{$userquery->profile_link($user)}">
-                        <span>{$user.username}</span>
-                        <img src="{avatar details=$user }" class="img-circle">
-                    </a>
-                </div>
-            </div> -->
 
             <div class="moveR topic_content" style="width:88%">
             	{$topic.topic_post|description}
                 <div style="height:5px"></div>
-                <div style="font:normal 10px Tahoma; color:#787878">{lang code="Added"}: {$topic.date_added|niceTime} &ndash; Added By: <a href="{$userquery->profile_link($user)}">{$user.username}</a></div>
+                <div style="font:normal 10px Tahoma; color:#787878">{lang code="Added"}: {$topic.date_added|niceTime} &ndash; Added By: <a href="{$userquery->profile_link($user)}">{display_clean($user.username)}</a></div>
             </div>    
         </div>
 
@@ -61,7 +53,7 @@
 
         <div id="reply" class="clearfix"> 
           <div class="pad-bottom">
-              <div  class="addComment clearfix">
+              <div class="addComment clearfix">
                   <div class="com_count" id="com_count">
                     <span>{lang('Comments')}: </span> 
                     {$topic.total_replies}

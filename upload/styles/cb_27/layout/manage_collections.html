@@ -118,7 +118,7 @@
                     {/if}
 
                     {if $mode == "manage_items" || $mode == "collection_items"}
-                        <h2>{lang code='manage_items'} - {$c.collection_name}</h2>
+                        <h2>{lang code='manage_items'} - {display_clean($c.collection_name)}</h2>
                         <div>
                             <img src="{$imageurl}/dot.gif" class="arrow_pointing" style="margin-right:10px;" />
                             <input type="submit" name="delete_selected" id="delete_selected" value="{lang code='delete'}" class="small_button" />

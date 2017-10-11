@@ -18,7 +18,7 @@
     {
 ?>
         <dt style="width:300px;" class="grey-text"><?php echo $permission['path']; ?></dt>
-        <dd  class="grey-text"><?php echo msg_arr($permission); ?></dd>
+        <dd class="grey-text"><?php echo msg_arr($permission); ?></dd>
 <?php
     }
 ?>

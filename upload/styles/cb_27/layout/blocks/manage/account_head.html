@@ -1,49 +1,24 @@
 <div class="row message">
     <div class="row accountprofile">
-    <div class="col-md-10">
-        <div class="media">
-            <a class="pull-left" href="#">
-                <img class="media-object imgobject" src="{$userquery->getUserThumb($user)}" width="142" alt="...">
-            </a>
-            <div class="media-body">
-                <div class="row">
-                    <div class="col-md-6 procolor">
-                        <h4 class="media-heading headcolor">{$user.username}  ({assign var=category value=$userquery->get_category($user.category)}
-                            {$category.category_name})</h4>
-                        <b>{lang code='Since:'}</b> ({$user.doj|date_format})
-                               <b>{lang code='user_last_login'} :</b> ({$user.last_logged|nicetime})
+		<div class="col-md-10">
+			<div class="media">
+				<a class="pull-left" href="#">
+					<img class="media-object imgobject" src="{$userquery->getUserThumb($user)}" width="142" alt="...">
+				</a>
+				<div class="media-body">
+					<div class="row">
+						<div class="col-md-6 procolor">
+							<h4 class="media-heading headcolor">{display_clean($user.username)}  ({assign var=category value=$userquery->get_category($user.category)}
+								{$category.category_name})</h4>
+							<b>{lang code='Since:'}</b> ({$user.doj|date_format})
+							<b>{lang code='user_last_login'} :</b> ({$user.last_logged|nicetime})
+						</div>
 
-                    </div>
-                    <!--<div class="col-md-4 procolor">-->
-                        <!--({assign var=category value=$userquery->get_category($user.category)}-->
-                        <!--{$category.category_name})<br>-->
-                        <!--{$user.doj|date_format}<br>-->
-                        <!--{$user.last_logged|nicetime}-->
-                    <!--</div>-->
-                </div>
-            </div>
-        </div>
-        </div>
-
-        <!--<div class="row">-->
-            <!--<div class="col-md-6">-->
-
-                <!--{lang code='username:'}<br>-->
-                <!--{lang code='joined:'}<br>-->
-                <!--{lang code='last logged in:'}<br>-->
-                <!--{lang code='category:'}<br>-->
-            <!--</div>-->
-            <!--<div class="col-md-6">-->
-                <!--{$user.username}<br>-->
-                <!--{$user.doj|date_format}<br>-->
-                <!--{$user.last_logged|nicetime}<br>-->
-                <!--{assign var=category value=$userquery->get_category($user.category)}-->
-                <!--{$category.category_name}-->
-            <!--</div>-->
-        <!--</div>-->
-
-
-        </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
         <hr class="newhr1">
         <div class="mvideo accountprofile">

@@ -16,7 +16,7 @@
 	function show_social_bookmarks($vdetails=NULL)
 	{
 		
-		echo "<span  class='st_stumbleupon_vcount' displayText='Stumble' style='font-size:10px'></span><span  class='st_twitter_vcount' displayText='Tweet'></span><span  class='st_facebook_vcount' displayText='Facebook'></span><span  class='st_plusone_vcount' ></span>";
+		echo "<span class='st_stumbleupon_vcount' displayText='Stumble' style='font-size:10px'></span><span  class='st_twitter_vcount' displayText='Tweet'></span><span  class='st_facebook_vcount' displayText='Facebook'></span><span  class='st_plusone_vcount' ></span>";
 		echo '<div style="height:10px"></div>';
 	
 		

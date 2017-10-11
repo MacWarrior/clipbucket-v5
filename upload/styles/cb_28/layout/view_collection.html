@@ -5,7 +5,7 @@
 				{AD place='ad_728x90'}
 			</div>
 			<h1>
-				{$c.collection_name|capitalize}&nbsp;&nbsp;
+				{display_clean($c.collection_name)}&nbsp;
 				({$c.total_objects}&nbsp;{$c.type|capitalize})
 				{lang code='collection' assign='object_type'}
 				{uploadButton details=$c output='link' target="_blank" class='btn btn-success pull-right'}
@@ -25,7 +25,7 @@
 				{sectionelse}
 				<div class="item-photo col-xs-12">
 					<div class="well well-info">
-						{$c.collection_name} has 0 items.
+						{display_clean($c.collection_name)} has 0 items.
 					</div>
 				<div class="item-photo col-lg-4 col-md-4 col-sm-6 col-xs-6">
 				{/section}

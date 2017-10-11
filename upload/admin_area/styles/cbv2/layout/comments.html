@@ -11,10 +11,9 @@
   <tr>
     <td width="30" align="center" valign="middle"><img src="{$imageurl}/arrow_return.png" width="25" height="25"></td>
     <td height="50" style="padding-left:15px">
-     		<input type="submit" name="mark_spam" value="Mark Spam"  class="button" id="mark_spam"/>
-     		<input type="submit" name="not_spam" value="Not Spam"  class="button" id="not_spam"/>
-     		<input type="submit" name="delete_selected" value="{lang code='delete'}"  class="button" onclick="return confirm_it('Are you sure you want to delete selected comment(s)')"/>
-    
+		<input type="submit" name="mark_spam" value="Mark Spam" class="button" id="mark_spam"/>
+		<input type="submit" name="not_spam" value="Not Spam" class="button" id="not_spam"/>
+		<input type="submit" name="delete_selected" value="{lang code='delete'}" class="button" onclick="return confirm_it('Are you sure you want to delete selected comment(s)')"/>
     </td>
     </tr>
 </table>
@@ -43,14 +42,14 @@
 <tr class="video_opt_td" id="comment_{$comment.comment_id}" style="background-color:{if $comment.spam_votes > 0} #ffd7d7{else}{$bgcolor}{/if};">
 <td width="40" align="center" valign="top" class="video_opt_td"><input name="check_comments[]" type="checkbox" id="check_comments" value="{$comment.comment_id}" /></td>
 <td width="50" align="left" valign="top" class="video_opt_td">{$comment.comment_id}</td>
-<td valign="top"  class="video_opt_td" onmouseover="$('#comm_opt-{$comment.comment_id}').show()" onmouseout="$('#comm_opt-{$comment.comment_id}').hide()" >
+<td valign="top" class="video_opt_td" onmouseover="$('#comm_opt-{$comment.comment_id}').show()" onmouseout="$('#comm_opt-{$comment.comment_id}').hide()" >
  {if $type == '' || $type == 'v'}
 <span class="vdo_sets">
- {if is_array($comment_owner)} <a href="{$userquery->profile_link($comment_owner)}"><strong>{$comment_owner.username}</strong></a> {else} <strong>{$comment_owner}</strong> {/if} commented on <strong>{$comment.date_added|date_format}</strong>  on a video named <span style="text-transform:none"><a href="{videoLink vdetails=$comment}" title="{$comment.title}">{$comment.title|truncate:40}</a></span>
+ {if is_array($comment_owner)} <a href="{$userquery->profile_link($comment_owner)}"><strong>{display_clean($comment_owner.username)}</strong></a> {else} <strong>{$comment_owner}</strong> {/if} commented on <strong>{$comment.date_added|date_format}</strong> on a video named <span style="text-transform:none"><a href="{videoLink vdetails=$comment}" title="{$comment.title}">{display_clean($comment.title)|truncate:40}</a></span>
 </span> 
 
 <div style="height:5px; clear:both;"></div>
-<span style="font-size:11px;" id="{$comment.comment_id}" class="edit_comment">{$comment.comment}</span>
+<span style="font-size:11px;" id="{$comment.comment_id}" class="edit_comment">{display_clean($comment.comment)}</span>
 <div style="height:20px;">
 <div id="comm_opt-{$comment.comment_id}" class="vid_opts" style="display:none">
 <a href="{videoLink vdetails=$comment}#{if $comment.spam_votes > 0}spam_{/if}comment_{$comment.comment_id}" target="_blank">{lang code='view'} {lang code='comment'}</a> |

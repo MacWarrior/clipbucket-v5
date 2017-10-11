@@ -265,7 +265,7 @@
 								<div class="col-md-7 big_img">
 								{foreach from=$result_photos2_01 item=result_photo2_01}
 						        	<a href="{$cbphoto->photo_links($result_photo2_01,'view_item')}">
-						        	{get_photo details=$result_photo2_01 output='html' width="420" height="235" size="l"  class="cb_img_thum"}
+						        	{get_photo details=$result_photo2_01 output='html' width="420" height="235" size="l" class="cb_img_thum"}
 						        	</a>
 						        {/foreach}
 						        </div>
@@ -314,7 +314,7 @@
 							<img src="{$userquery->getuserthumb($user,'small')}" width="56" height="56" class="img-circle" />
 						</div>
 						<div class="col-md-9 nopadding">
-							<h4 class="nopadding "><a href="{$userquery->profile_link($user)}">{$user.username}</a></h4>
+							<h4 class="nopadding "><a href="{$userquery->profile_link($user)}">{display_clean($user.username)}</a></h4>
 
 							<div class=" nopadding col-md-6 min-height-20">
 								<div class="pull-left small"><span class="bg-eye"></span>&nbsp;<span>{$user.profile_hits|number_format} {lang code='views'}</span></div>
@@ -354,11 +354,8 @@
 					{foreach from=$collections item=collection}
 					<div class="clearfix collection-section">
 						<div class="category-header row clearfix">
-							<div class="col-sm-6 clearfix">{$collection.collection_name}</div>
+							<div class="col-sm-6 clearfix">{display_clean($collection.collection_name)}</div>
 							<div class="col-sm-6 clearfix"><span class="total-obj">{$collection.total_objects}</span></div>
-
-							<!-- {*{$collection.type}*} -->
-							<!-- <div class="col-sm-6 clearfix"><span class="total-obj">{$limit}</span></div> -->
 						</div>
 						<div class="collection-grid clearfix"> 
 						{if $collection.type=='photos'}
@@ -367,8 +364,6 @@
 							{$items = get_videos_of_collection($collection.collection_id,0,$limit,false) }
 						{/if}	
 
-
-
 						{if $items}
 							{foreach from=$items item=item}
 								<div class="collection-item">
@@ -376,7 +371,7 @@
 										{if $collection.type=='photos'}
 											{get_photo details=$item output='html' size="l" class="cb_img_thum"}
 										{else}
-											<img alt="{$item.title}" title="{$item.title}" class="cb_img_thum" id="photo_{$item.ci_id}" src="{getThumb vdetails=$item}">
+											<img alt="{display_clean($item.title)}" title="{display_clean($item.title)}" class="cb_img_thum" id="photo_{$item.ci_id}" src="{getThumb vdetails=$item}">
 										{/if}
 									</a>
 								</div>
@@ -400,7 +395,7 @@
 
 						<div class="clearfix collection-section">
 							<div class="category-header row clearfix">
-								<div class="col-sm-6 clearfix"><span>{$playlist.playlist_name}</span></div>
+								<div class="col-sm-6 clearfix"><span>{display_clean($playlist.playlist_name)}</span></div>
 								<div class="col-sm-6 clearfix">
 									<span class="total-obj">
 										{$cbvid->action->count_playlist_items($playlist.playlist_id)|number_format}

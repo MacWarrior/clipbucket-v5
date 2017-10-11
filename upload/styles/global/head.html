@@ -501,13 +501,13 @@ $(document).ready(function() {
 {if $object.photo_id}
 	<meta property="og:title" content="{$object.photo_title}" />
 	<meta property="og:description" content="{$object.photo_description|description}" />
-	<meta property="og:image" content="{get_photo details=$object size='m' output='non_html' alt=$object.photo_title}" />
+	<meta property="og:image" content="{get_photo details=$object size='m' output='non_html' alt=display_clean($object.photo_title)}" />
 	<meta property="og:image:type" content="image/jpeg" />
 	<meta name="medium" content="image" />
 {/if}
 
 {if $smarty.const.THIS_PAGE=='view_channel'}
-	<meta property="og:title" content="{$user.username}" />
+	<meta property="og:title" content="{display_clean($user.username)}" />
 
 {/if}
 
@@ -516,22 +516,6 @@ $(document).ready(function() {
 	<meta property="og:description" content="this is a videos page of ClipBucket"/>
 
 {/if}
-
-{literal}
-<script>
-$(function() {
-
-	/*$( ".date_field" ).datepicker({ 
-		dateFormat: 'yy-mm-dd',
-		changeMonth: true,
-		changeYear: true,
-		yearRange : "1901 : c"
-		});*/
-});
-
-</script>
-
-{/literal}
 
 {ANCHOR place='cb_head'}
 

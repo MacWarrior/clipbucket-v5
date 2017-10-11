@@ -33,11 +33,11 @@
                                 {$counter = 1}
                                 {foreach from=$Cbucket->search_types item=t key=stypes}
                                 {if $counter == 3}
-                                <li value="{$stypes}" {if $smarty.get.type==$stypes || $smarty.get.type==''}  class="active"  {/if}>
+                                <li value="{$stypes}" {if $smarty.get.type==$stypes || $smarty.get.type==''} class="active"  {/if}>
                                     <a  href="#">{$stypes}</a>
                                 </li>
                                 {else}
-                                <li value="{$stypes}" {if $smarty.get.type==$stypes}  class="active" {/if}>
+                                <li value="{$stypes}" {if $smarty.get.type==$stypes} class="active" {/if}>
                                     <a  href="#">{$stypes}</a>
                                 </li>
                                 {/if}

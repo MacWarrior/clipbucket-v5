@@ -36,19 +36,19 @@
 			{if $user.userid != userid()}
 				{$friend_status = $userquery->friendship_status(userid(), $user.userid)}
 				{if $friend_status == "f"}
-				<a href="{$baseurl}/manage_contacts.php?mode=delete&userid={$u.userid}"  class="btn btn-danger btn-sm new1">
+				<a href="{$baseurl}/manage_contacts.php?mode=delete&userid={$u.userid}" class="btn btn-danger btn-sm new1">
 					{lang code="unfriend"}
 				</a>
 				{elseif $friend_status == "r"}
-				<a href="{$baseurl}/manage_contacts.php?mode=requests&confirm={$u.userid}"  class="btn btn-primary btn-sm new1">
+				<a href="{$baseurl}/manage_contacts.php?mode=requests&confirm={$u.userid}" class="btn btn-primary btn-sm new1">
 					{lang code="accept_request"}
 				</a>
 				{elseif $friend_status == 's'}
-				<a href="{$baseurl}/manage_contacts.php?mode=delete&userid={$u.userid}"  class="btn btn-primary btn-sm new1">
+				<a href="{$baseurl}/manage_contacts.php?mode=delete&userid={$u.userid}" class="btn btn-primary btn-sm new1">
 					{lang code="cancel_request"}
 				</a>
 				{else}
-				<a href="javascript:void(0);"  class="btn btn-primary btn-sm new1"
+				<a href="javascript:void(0);" class="btn btn-primary btn-sm new1"
 				   onclick="_cb.add_friendNew('{$user.userid}','result_cont')"> 
 					{lang code="add_as_friend"}
 				{/if}
@@ -62,11 +62,11 @@
 	</div>
 
 	<div class="profile-buttons clearfix">
-		<h2>{$user.username}</h2>
+		<h2>{display_clean($user.username)}</h2>
 		<div class="btn-holder">
 			{if $user.userid != userid()}
 				<button id="report-user" class="btn btn-default">{lang code="Report"}</button>
-				<a href="{$baseurl}/private_message.php?mode=new_msg&to={$user.username}" class="btn btn-default">
+				<a href="{$baseurl}/private_message.php?mode=new_msg&to={display_clean($user.username)}" class="btn btn-default">
 					{lang code="user_send_message"}
 				</a>
 				<button id="subscribe_channel" class="btn btn-default">{lang code="subscribe"}</button>

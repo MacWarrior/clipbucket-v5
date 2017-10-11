@@ -18,7 +18,7 @@
 <div class="errorDiv br5px" id="dbresult" style="display:none"></div>
 <div class="db_image"><img src="<?php echo installer_path(); ?>images/db_img.png" style="margin-top: 28px;margin-left: 485px;"  width="392" height="392"/></div>
 
-<div  class="db_fields" style="margin-top:-430px;">
+<div class="db_fields" style="margin-top:-430px;">
     <form name="installation" method="post" id="installation">
     
     <div class="field">

@@ -38,7 +38,7 @@
 						<div class="clearfix" id="uploaderContainer">
 							{if $c}
 							<div class="alert alert-info" role="alert">
-								Photo will be uploaded into <strong><i>{$c.collection_name}</i></strong> Collection
+								Photo will be uploaded into <strong><i>{display_clean($c.collection_name)}</i></strong> Collection
 							</div>
 							{else}
 							<h4 class="h4">{lang code="select_collection_upload"}</h4>
@@ -48,7 +48,7 @@
 									<div class="form-group clearfix">
 										<select class="form-control" id="collectionSelection" name="collectionSelection">
 											{foreach from=$collections item=item}
-											<option value="{$item.collection_id}">{$item.collection_name}</option>
+											<option value="{$item.collection_id}">{display_clean($item.collection_name)}</option>
 											{/foreach}
 										</select>
 									</div>

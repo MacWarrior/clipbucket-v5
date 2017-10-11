@@ -40,19 +40,11 @@
             {*assign var=topic_starter value=$userquery->get_user_details($topic.userid)}
             {include file="$style_dir/blocks/user.html" user=$topic_starter block_type="topic_view"*}
             {$user=$userquery->get_user_details($topic.userid)}
-            <!-- <div class="itemdiv">
-                <div class="user">
-                    <a href="{$userquery->profile_link($user)}">
-                        <span>{$user.username}</span>
-                        <img src="{avatar details=$user }" class="img-circle">
-                    </a>
-                </div>
-            </div> -->
 
             <div class="moveR topic_content" style="width:88%">
             	{$topic.topic_post|description}
                 <div style="height:5px"></div>
-                <div style="font:normal 10px Tahoma; color:#787878">{lang code="Added"}: {$topic.date_added|niceTime} &ndash; Added By: <a href="{$userquery->profile_link($user)}">{$user.username}</a></div>
+                <div style="font:normal 10px Tahoma; color:#787878">{lang code="Added"}: {$topic.date_added|niceTime} &ndash; Added By: <a href="{$userquery->profile_link($user)}">{display_clean($user.username)}</a></div>
             </div>    
         </div>
 
@@ -61,23 +53,13 @@
 
         <div id="reply" class="clearfix"> 
           <div class="pad-bottom">
-              <div  class="addComment clearfix">
-                  <!--  <h3 >{lang('Comments')}:&nbsp; 
-                   <span class="com_count" id="com_count"></span>
-                                    </h3> -->
-
+              <div class="addComment clearfix">
                   <div class="com_count" id="com_count"><span>{lang('Comments')}: </span> {$topic.total_replies}</div>
                   
                   {include file="$style_dir/blocks/comments/add_comment.html" id=$topic.topic_id type=t}
               </div>
 
               <script>
-                /*$(document).ready(function()
-                {ldelim}    
-                  comments_voting = 'no'; 
-                  getComments('t','{$topic.topic_id}','{$topic.last_post_time}',1,'{$topic.total_replies  }','{$object_type}')
-                {rdelim}
-                );*/
                 $(document).ready(function(){
                   _cb.getAllComments(
                     't','{$topic.topic_id}','{$topic.last_post_time}',1,'{$topic.total_replies}','{$object_type}'
@@ -85,14 +67,10 @@
                 });
               </script>
 
-              <!-- <div class="topic_comments">
-                  <a href="#" style="font:bold 11px Tahoma; text-decoration:none; text-align:right; display:block;" onclick="getComments('t','{$topic.topic_id}','{$topic.last_post_time}',1,'{$topic.total_replies   }','{$object_type}'); return false;">Re-load Posts</a>
-              </div> -->
               <div id="comments">
                 <ul class="list-unstyled" id="userCommentsList"></ul>
               </div>
 
-              
           </div>
         </div> 
  

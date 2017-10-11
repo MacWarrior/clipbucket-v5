@@ -50,10 +50,9 @@
             {if $users}
             	{foreach from=$users item=user name=onlines}
                 {if $user.username!=""}
-               	 <strong><a href="{$userquery->profile_link($user)}" target="_blank">{$user.username}{if $user.logins>1}({$user.logins}){/if}</a>{if !$smarty.foreach.onlines.last}, {/if}</strong>			{/if}
+               	 <strong><a href="{$userquery->profile_link($user)}" target="_blank">{display_clean($user.username)}{if $user.logins>1}({$user.logins}){/if}</a>{if !$smarty.foreach.onlines.last}, {/if}</strong>{/if}
                 {/foreach}
-               
-               
+
                 {foreach from=$users item=user name=onlines}
                     {if $user.session_string=='guest'}
                         <strong>and {$user.logins} guest{if $user.logins>1}s{/if}</strong>

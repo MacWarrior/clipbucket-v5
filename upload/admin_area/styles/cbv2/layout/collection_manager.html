@@ -80,12 +80,11 @@
   <tr>
     <td width="30" align="center" valign="middle"><img src="{$imageurl}/arrow_return.png" width="25" height="25"></td>
     <td height="50" style="padding-left:15px">
-     		<input type="submit" name="activate_selected" value="{lang code='activate'}" class="button"/>
-            <input type="submit" name="deactivate_selected" value="Deactivate" class="button" />
-            <input type="submit" name="make_featured_selected" value="Make Featured" class="button"/>
-            <input type="submit" name="make_unfeatured_selected" value="Make Unfeatured" class="button"/>
-            <input type="submit" name="delete_selected" value="{lang code='delete'}" class="button" onclick="return confirm_it('Are you sure you want to delete selected collection(s)')"/>
-    
+		<input type="submit" name="activate_selected" value="{lang code='activate'}" class="button"/>
+		<input type="submit" name="deactivate_selected" value="Deactivate" class="button" />
+		<input type="submit" name="make_featured_selected" value="Make Featured" class="button"/>
+		<input type="submit" name="make_unfeatured_selected" value="Make Unfeatured" class="button"/>
+		<input type="submit" name="delete_selected" value="{lang code='delete'}" class="button" onclick="return confirm_it('Are you sure you want to delete selected collection(s)')"/>
     </td>
     </tr>
 </table>
@@ -114,14 +113,14 @@
             	<img src="{$cbcollection->get_thumb($c[list],'small',TRUE)}" style="padding:2px; border:1px solid #ccc" />
             </div>
             <div class="moveL">
-            	<a style="font-size:12px;" href="{$baseurl}/admin_area/edit_collection.php?collection={$c[list].collection_id}">{$c[list].collection_name}</a> ({$c[list].total_objects} {$c[list].type})
+            	<a style="font-size:12px;" href="{$baseurl}/admin_area/edit_collection.php?collection={$c[list].collection_id}">{display_clean($c[list].collection_name)}</a> ({$c[list].total_objects} {$c[list].type})
             	<div style="height:4px;"></div>
                 <span class="vdo_sets">
                     Featured:<strong>{$c[list].featured} </strong> &#8226;
                     Active:<strong>{$c[list].active}</strong>  &#8226;
                     Type:<strong>{$c[list].type}</strong>  &#8226;
                     Uploaded:<strong>{$c[list].date_added|niceTime}</strong>  &#8226;
-                    User:<strong><a href="view_user.php?uid={$c[list].userid}">{$c[list].username}</a></strong>
+                    User:<strong><a href="view_user.php?uid={$c[list].userid}">{display_clean($c[list].username)}</a></strong>
                 </span>
                     <div id="vid_opt-{$c[list].collection_id}" style="display:none" class="AdminPhotoActions">              
                     <a href="edit_collection.php?collection={$c[list].collection_id}">{lang code='edit'}</a> |

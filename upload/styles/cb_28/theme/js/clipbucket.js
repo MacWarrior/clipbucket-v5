@@ -1143,7 +1143,7 @@
 		};
 
 		/** 
-		 * Funcion autplay playlist
+		 * Function autplay playlist
 		 */
 		this.swap_auto_play = function(){
 			if($.cookie("auto_play_playlist")=="true")

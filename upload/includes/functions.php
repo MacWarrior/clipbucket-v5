@@ -1148,7 +1148,7 @@
 	}
 
 	/**
-	 * This funcion used to call function dynamically in smarty
+	 * This function used to call function dynamically in smarty
 	 *
 	 * @param : { array } { $param } { array with parameters e.g $param['name'] }
 	 *

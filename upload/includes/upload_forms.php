@@ -27,7 +27,7 @@
 		echo
 		'<div class="upload_form_div clearfix form-group'.$class.'" id="remoteUploadFormDiv">
         <label for="remote_file_url" class="label">'.lang('please_enter_remote_file_url').'</label>
-        <input name="remote_file_url" type="textfield"  class="remoteUrlInput form-control" 
+        <input name="remote_file_url" type="textfield" class="remoteUrlInput form-control" 
         id="remote_file_url" value="'.lang('remote_upload_example').'"
         onclick="if($(this).val()==\''.lang('remote_upload_example').'\') $(this).val(\'\')"/>
         <input name="submit_upload" type="hidden" value="'.lang('upload_data_now').'">

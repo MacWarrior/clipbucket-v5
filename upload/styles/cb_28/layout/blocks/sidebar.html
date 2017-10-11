@@ -63,7 +63,7 @@
 								</a>
 							</div>
 							<span class="user-name">
-								<a href="{$userquery->profile_link($user)}">{$user.username}</a>
+								<a href="{$userquery->profile_link($user)}">{display_clean($user.username)}</a>
 							</span>
 						</li>
 						{/foreach}

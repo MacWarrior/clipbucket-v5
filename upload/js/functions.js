@@ -1089,7 +1089,7 @@ function hq_toggle(nplayer_div,hq_div)
 
 
 /** 
- * Funcion autplay playlist
+ * Function autplay playlist
  */
 function swap_auto_play()
 {

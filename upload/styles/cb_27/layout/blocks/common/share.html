@@ -13,7 +13,7 @@
                 {lang code='embed_code'}
             </label>
 
-            <textarea name="embed_code" id="embed_code" onclick="this.select()"  class="form-control">{if $Cbucket->configs.embed_type=='iframe'}{$cbvid->embed_code($vdo,'iframe')|htmlspecialchars}{else}{$cbvid->embed_code($vdo,'embed_object')|htmlspecialchars}{/if}</textarea>
+            <textarea name="embed_code" id="embed_code" onclick="this.select()" class="form-control">{if $Cbucket->configs.embed_type=='iframe'}{$cbvid->embed_code($vdo,'iframe')|htmlspecialchars}{else}{$cbvid->embed_code($vdo,'embed_object')|htmlspecialchars}{/if}</textarea>
 
             <input type="hidden" name="alternate_embed_code" id="alternate_embed_code" value="{if $Cbucket->configs.embed_type=='iframe'}{$cbvid->embed_code($vdo,'embed_object')|htmlspecialchars}{else}{$cbvid->embed_code($vdo,'iframe')|htmlspecialchars}{/if}" />
         </div>
@@ -72,7 +72,7 @@
     <div class="action_box_title"></div>
     <div class="form-group">
         <label for="link_video">{lang code='link_this_video'}</label>
-        <input type="text" name="link_video" id="link_video"  value="{videoLink vdetails=$vdo}"  onclick="this.select()"  class="form-control" />
+        <input type="text" name="link_video" id="link_video" value="{videoLink vdetails=$vdo}" onclick="this.select()" class="form-control" />
     </div>
 
     <div class="action_box_title"></div>

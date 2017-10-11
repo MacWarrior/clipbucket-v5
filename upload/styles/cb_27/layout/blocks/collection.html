@@ -4,9 +4,9 @@
     <div class="collection_home mouse_hover">
         <img class="cb_img_thum" src="{$cbcollection->get_thumb($collection,'',TRUE)}"/>
     </div>
-    <a href="{$baseurl}/view_collection.php?cid={$collection.collection_id}&type={$collection.type}" title="{$collection.collection_name}">
+    <a href="{$baseurl}/view_collection.php?cid={$collection.collection_id}&type={$collection.type}" title="{display_clean($collection.collection_name)}">
         <div class="details mouse_hover_on">
-            <div align="center" class="collection_name">{$collection.collection_name|truncate:30}</div>
+            <div align="center" class="collection_name">{display_clean($collection.collection_name)|truncate:30}</div>
             <div align="center" class="collection_total">{$collection.total_objects} {$collection.type}</div>
         </div>
     </a>
@@ -19,14 +19,14 @@
     <div class="collectItemBox relative">
     	{if $type == "videos"}
 
-        <div class="the_item">   <!--col-md-2 col-lg-2 col-sm-4 col-xs-6-->
+        <div class="the_item">
             <div class="onePhotoContainer oneVideoContainer">
                 <div class="onePhotoTitle">
-                    <a href="{$cbphoto->photo_links($object,'view_item')}">{$object.title|truncate:15}</a>
+                    <a href="{$cbphoto->photo_links($object,'view_item')}">{display_clean($object.title)|truncate:15}</a>
                 </div>
 
                 <a class="CollectThumb" href="{$cbphoto->photo_links($object,'view_item')}">
-                    <img src="{getThumb vdetails=$object}" alt="{$object.title}" />
+                    <img src="{getThumb vdetails=$object}" alt="{display_clean($object.title)}" />
                 </a>
             </div>
         </div>
@@ -39,7 +39,7 @@
                     {get_photo details=$object size='l' class='photo-land' output='html'}
                 </a>
             </div>
-            <span class="photoname mouse_hover_on" style="height: 30px; overflow: hidden;" >{$object.photo_title|truncate:15}</span>
+            <span class="photoname mouse_hover_on" style="height: 30px; overflow: hidden;" >{display_clean($object.photo_title)|truncate:15}</span>
         </div>
         {/if}
     </div>  
@@ -47,7 +47,7 @@
 
 {if $display_type == "user_collections"}
 	<div class="moveL">
-   		<a href="{$cbcollection->collection_links($collection,'view')}" style="width:47px; height:47px;" title="{$collection.collection_name}">
+   		<a href="{$cbcollection->collection_links($collection,'view')}" style="width:47px; height:47px;" title="{display_clean($collection.collection_name)}">
             <img src="{$imageurl}/dot.gif" style="background:url({$cbcollection->get_thumb($collection,'small')}) center top no-repeat;" />
         </a>
     </div>

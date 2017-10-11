@@ -16,7 +16,7 @@ abstract class CBCategory
 {
 	var $cat_tbl = ''; //Name of category Table
 	var $section_tbl = ''; //Name of table that related to $cat_tbl
-	var $use_sub_cats = FALSE; // Set to true if you using Sub-Cateogires
+	var $use_sub_cats = FALSE; // Set to true if you using Sub-Categories
 	var $cat_thumb_height = '125';
 	var $cat_thumb_width = '125';
 	var $default_thumb = 'no_thumb.jpg';
@@ -30,7 +30,6 @@ abstract class CBCategory
 	 */
 	function category_exists($cid)
 	{
-		//global $db;
 		return $this->get_category($cid); 
 	}
 
@@ -61,6 +60,8 @@ abstract class CBCategory
 	 */
 	function get_category_name($cid)
 	{
+		$cid = mysql_clean($cid);
+
 		global $db;
 		$results = $db->select(tbl($this->cat_tbl),"category_name"," category_id='$cid'");
 		if($db->num_rows>0)
@@ -78,6 +79,8 @@ abstract class CBCategory
 	 */
 	function get_cat_by_name($name)
 	{
+		$name = mysql_clean($name);
+
 		global $db;
 		$results = $db->select(tbl($this->cat_tbl),"*"," category_name='$name' ");
 		if($db->num_rows>0)
@@ -117,7 +120,7 @@ abstract class CBCategory
 		} else {
 			$cid = $db->insert(tbl($this->cat_tbl),$flds,$values);
 
-			$cid = $db->insert_id();
+			//$cid = $db->insert_id();
 			if($default=='yes' || !$this->get_default_category())
 				$this->make_default_category($cid);
 			e(lang("cat_add_msg"),'m');
@@ -136,6 +139,8 @@ abstract class CBCategory
 	 */
 	function make_default_category($cid)
 	{
+		$cid = mysql_clean($cid);
+
 		global $db;
 		if($this->category_exists($cid))
 		{
@@ -384,7 +389,8 @@ abstract class CBCategory
 
 		$categories = $this->getCbCategories($p);
 
-		if($categories){
+		if($categories)
+		{
 			if($p['echo'] == TRUE){
 				$html = $this->displayOutput($categories,$p);
 				if($p['assign'])
@@ -574,7 +580,6 @@ abstract class CBCategory
 		$db->execute("UPDATE ".tbl($this->section_tbl)." SET category = replace(category,'#".$to."# #".$to."#','#".$to."#') WHERE category LIKE '%#".$to."#%'");
 	}
 
-
 	/**
 	 * Function used to edit category
 	 * submit values and it will update category
@@ -584,17 +589,17 @@ abstract class CBCategory
 	function update_category($array)
 	{
 		global $db;
-		$name = ($array['name']);
-		$desc = ($array['desc']);
+		$name = $array['name'];
+		$desc = $array['desc'];
 		$default = mysql_clean($array['default_categ']);
 		$pcat = mysql_clean($array['parent_cat']);
 
 		$flds = array("category_name","category_desc","isdefault");
 		$values = array($name,$desc, $default, $pcat);
-		$cur_name = mysql_clean($array['cur_name']);
+		$cur_name = $array['cur_name'];
 		$cid = mysql_clean($array['cid']);
 
-		if($this->get_cat_by_name($name) && $cur_name !=$name) {
+		if($this->get_cat_by_name($name) && $cur_name != $name) {
 			e(lang("add_cat_erro"));
 		} elseif (empty($name)) {
 			e(lang("add_cat_no_name_err"));
@@ -602,7 +607,7 @@ abstract class CBCategory
 			e(lang("You can not make category parent of itself"));
 		} else {
 			$db->update(tbl($this->cat_tbl),$flds,$values," category_id='$cid' ");
-			if($default=='yes')
+			if($default==lang('yes'))
 				$this->make_default_category($cid);
 			e(lang("cat_update_msg"),'m');
 
@@ -627,7 +632,7 @@ abstract class CBCategory
 		global $imgObj;
 		if($this->category_exists($cid))
 		{
-			//Checking for category thumbs direcotry
+			//Checking for category thumbs directory
 			if(isset($this->thumb_dir))
 				$dir = $this->thumb_dir;
 			else
@@ -721,6 +726,8 @@ abstract class CBCategory
 	 */
 	function update_cat_order($id,$order)
 	{
+		$id = mysql_clean($id);
+
 		global $db;
 		$cat = $this->category_exists($id);
 		if(!$cat)
@@ -740,14 +747,16 @@ abstract class CBCategory
 	 *
 	 * @return array|bool
 	 */
-	 function get_parent_category($pid)
-	 {
+	function get_parent_category($pid)
+	{
+		$pid = mysql_clean($pid);
+
 		global $db;
 		$result = $db->select(tbl($this->cat_tbl),"*"," category_id = $pid");
 		if($db->num_rows>0)
 			return $result;
-		 return false;
-	 }
+		return false;
+	}
 
 	/**
 	 * Function used to check category is parent or not
@@ -758,6 +767,8 @@ abstract class CBCategory
 	 */
 	 function is_parent($cid)
 	 {
+		 $cid = mysql_clean($cid);
+
 		 global $db;
 		 $result = $db->count(tbl($this->cat_tbl),"category_id"," parent_id = $cid");
 		 
@@ -774,21 +785,24 @@ abstract class CBCategory
 	 *
 	 * @return array|bool
 	 */
-	 function has_parent($cid,$return_parent=false)
-	 {
-		 global $db;
-		 $result = $db->select(tbl($this->cat_tbl),"*"," category_id = $cid AND parent_id != 0");
+	function has_parent($cid,$return_parent=false)
+	{
+		$cid = mysql_clean($cid);
+
+		global $db;
+		$result = $db->select(tbl($this->cat_tbl),"*"," category_id = $cid AND parent_id != 0");
 		 
-		 if($result > 0) {
-		 	if($return_parent)
+		if($result > 0)
+		{
+			if($return_parent)
 			{
 				$pid = $this->get_parent_category($result[0]['parent_id']);
-				return $pid;				
+				return $pid;
 			}
-			 return true;
-		 }
-		 return false;
-	 }
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * Function used to get parent categories
@@ -797,7 +811,8 @@ abstract class CBCategory
 	 *
 	 * @return array|bool
 	 */
-	function get_parents($count=false) {
+	function get_parents($count=false)
+	{
 		global $db;
 		
 		if($count) {
@@ -819,7 +834,6 @@ abstract class CBCategory
 	 */
 	function admin_area_cats($selected)
 	{
-		//global $db;
 		$html = '';
 		$pcats = $this->get_parents();
 		
@@ -852,9 +866,10 @@ abstract class CBCategory
 	 */
 	function get_sub_categories($cid)
 	{
+		$cid = mysql_clean($cid);
+
 		global $db;
 		$result = $db->select(tbl($this->cat_tbl),"*"," parent_id = $cid");
-		//echo $db->db_query;
 		if($result > 0){
 		 	return $result;		
 		}

@@ -14,7 +14,7 @@
     <tr>
       <td width="150">
         {if $user.username}
-          <a href="view_user?uid={$user.userid}"><label class="label label-success">{$user.username}</label></a>
+          <a href="view_user?uid={$user.userid}"><label class="label label-success">{display_clean($user.username)}</label></a>
           <br>
           <a href="view_user.php?uid={$u.userid}">
              <img src="{$userquery->getUserThumb($user,'small')}" class="img-thumbnail oneUserImage" />

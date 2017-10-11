@@ -255,7 +255,7 @@ class language
 	}
 	
 	/**
-	 * Funcion used to get language detilas
+	 * Function used to get language detilas
 	 */
 	function get_lang($id)
 	{

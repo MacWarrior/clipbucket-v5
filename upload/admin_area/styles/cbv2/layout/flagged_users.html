@@ -33,9 +33,9 @@
 
 {foreach from=$users item=u}
 <tr class="video_opt_td"  bgcolor="{$bgcolor}">
-    <td width="40" align="center" valign="top" class="video_opt_td">    <input name="check_user[]" type="checkbox" id="check_user" value="{$u.userid}" /></td>
+    <td width="40" align="center" valign="top" class="video_opt_td"> <input name="check_user[]" type="checkbox" id="check_user" value="{$u.userid}" /></td>
     <td width="50" align="left" valign="top" class="video_opt_td">{$u.userid}</td>
-    <td valign="top"  class="video_opt_td" 
+    <td valign="top" class="video_opt_td"
     onmouseover="$('#usr_opt-{$u.userid}').show()" 
     onmouseout="$('#usr_opt-{$u.userid}').hide()" >
     <div style="float:left; width:35px;"><img src="{$userquery->getUserThumb($u,'small')}" class="mid_user_thumb" /></div>
@@ -49,7 +49,7 @@
     </span>
     
     <br />
-    <div id="usr_opt-{$u.userid}"  class="vid_opts" style="display:none">
+    <div id="usr_opt-{$u.userid}" class="vid_opts" style="display:none;">
    	 
     <a href="view_user.php?uid={$u.userid}">{lang code='views'}</a> or
     <a href="view_user.php?uid={$u.userid}">{lang code='edit'}</a> |
@@ -112,7 +112,7 @@
 
 {if $mode=='view_flags'}
       
-<span class="page_title">Viewing {$user.username} flags</span> &#8212; <a href="view_user.php?uid={$user.userid}">View User</a> &#8226; <a href="view_user.php?uid={$user.userid}">Edit User</a> &#8226; <a href="?delete_flags={$user.userid}">Delete Flags</a> &#8226; <a href="?delete_group={$user.user}">Delete User</a>
+<span class="page_title">Viewing {display_clean($user.username)} flags</span> &#8212; <a href="view_user.php?uid={$user.userid}">View User</a> &#8226; <a href="view_user.php?uid={$user.userid}">Edit User</a> &#8226; <a href="?delete_flags={$user.userid}">Delete Flags</a> &#8226; <a href="?delete_group={$user.user}">Delete User</a>
 <div  style="margin-bottom:10px"></div>
 <!-- DIsplaying Videos -->
 <form name="video_manage" method="post">

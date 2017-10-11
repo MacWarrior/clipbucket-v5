@@ -1,28 +1,30 @@
 <?php
-    
-    /**
-    * File: Video Functions
-    * Description: Various functions to perform operations on VIDEOS section
-    * @license: Attribution Assurance License
-    * @since: ClipBucket 1.0
-    * @author[s]: Arslan Hassan, Fawaz Tahir, Fahad Abbass, Saqib Razzaq
-    * @copyright: (c) 2008 - 2017 ClipBucket / PHPBucket
-    * @notice: Please maintain this section
-    * @modified: { January 10th, 2017 } { Saqib Razzaq } { Updated copyright date }
-    */
-
-
-    function get_video_fields( $extra = null ) {
+	/**
+	 * File: Video Functions
+	 * Description: Various functions to perform operations on VIDEOS section
+	 * @license: Attribution Assurance License
+	 * @since: ClipBucket 1.0
+	 * @author[s]: Arslan Hassan, Fawaz Tahir, Fahad Abbass, Saqib Razzaq
+	 * @copyright: (c) 2008 - 2017 ClipBucket / PHPBucket
+	 * @notice: Please maintain this section
+	 * @modified: { January 10th, 2017 } { Saqib Razzaq } { Updated copyright date }
+	 *
+	 * @param null $extra
+	 *
+	 * @return
+	 */
+    function get_video_fields($extra = null) {
         global $cb_columns;
-        return $cb_columns->set_object( 'videos' )->get_columns( $extra );
+        return $cb_columns->set_object('videos')->get_columns($extra);
     }
 
-    /**
-     * Function used to check video is playlable or not
-     * @param : { string / id } { $id } { id of key of video }
-     * @return : { boolean } { true if playable, else false }
-     */
-
+	/**
+	 * Function used to check video is playlable or not
+	 *
+	 * @param : { string / id } { $id } { id of key of video }
+	 *
+	 * @return bool : { boolean } { true if playable, else false }
+	 */
     function video_playable($id) {
         global $cbvideo,$userquery;
 
@@ -101,16 +103,22 @@
         }
     }
 
-
-    /**
-    * FUNCTION USED TO GET THUMBNAIL
-    * @param ARRAY video_details, or videoid will also work
-    */
-
-    function get_thumb($vdetails,$num='default',$multi=false,$count=false,$return_full_path=true,$return_big=true,$size=false){
-        
-        //echo $size;
-        global $db,$Cbucket,$myquery;
+	/**
+	 * FUNCTION USED TO GET THUMBNAIL
+	 *
+	 * @param        ARRAY video_details, or videoid will also work
+	 * @param string $num
+	 * @param bool   $multi
+	 * @param bool   $count
+	 * @param bool   $return_full_path
+	 * @param bool   $return_big
+	 * @param bool   $size
+	 *
+	 * @return mixed
+	 */
+    function get_thumb($vdetails,$num='default',$multi=false,$count=false,$return_full_path=true,$return_big=true,$size=false)
+	{
+        global $Cbucket;
         $num = $num ? $num : 'default';
         #checking what kind of input we have
         if(is_array($vdetails))
@@ -123,9 +131,7 @@
                     if($multi)
                         return $dthumb[0] = default_thumb();
                     return default_thumb();
-                }
-                else
-                {
+                } else {
                     if(!empty($vdetails['videoid']))
                         $vid = $vdetails['videoid'];
                     elseif(!empty($vdetails['vid']))
@@ -151,11 +157,9 @@
             }
         }
 
-
         #checking if we have vid , so fetch the details
         if(!empty($vid))
             $vdetails = get_video_details($vid);
-
 
         if(empty($vdetails['title']))
         {
@@ -164,13 +168,11 @@
             return default_thumb();
         }
 
-        
         #Checking if there is any custom function for
         if(count($Cbucket->custom_get_thumb_funcs) > 0)
         {
             foreach($Cbucket->custom_get_thumb_funcs as $funcs)
             {
-
                 //Merging inputs
                 $in_array = array(
                     'num' => $num,
@@ -188,7 +190,6 @@
                 
                 if(function_exists($funcs))
                 {
-
                     $func_returned = $funcs($vdetails,$in_array);
                     
                     if($func_returned)
@@ -196,7 +197,7 @@
                 }
             }
         }
-        // echo "hooooo";
+
         #get all possible thumbs of video
         $thumbDir = (isset($vdetails['file_directory']) && $vdetails['file_directory']) ? $vdetails['file_directory'] : "";
         if(!isset($vdetails['file_directory'])){
@@ -207,19 +208,16 @@
             $thumbDir .= "/";
         }
 
-        //$justDate = explode(" ", $vdetails['date_added']);
-        //$dateAdded = implode("/", explode("-", array_shift($justDate)));
-        
         $file_dir ="";
         if(isset($vdetails['file_name']) && $thumbDir)
         {
            $file_dir =  "/" . $thumbDir;
         }
         $vid_thumbs = glob(THUMBS_DIR."/" .$file_dir.$vdetails['file_name']."*");
-     
-       
+
         #replace Dir with URL
         if(is_array($vid_thumbs))
+		{
             foreach($vid_thumbs as $thumb)
             {
                 if(file_exists($thumb) && filesize($thumb)>0)
@@ -245,7 +243,8 @@
                 }elseif(file_exists($thumb))
                     unlink($thumb);
             }
-        #pr($thumbs,true);
+		}
+
         if(count($thumbs)==0)
         {
             if($count)
@@ -253,10 +252,7 @@
             if($multi)
                 return $dthumb[0] = default_thumb();
             return default_thumb();
-        }
-        else
-        {
-            
+        } else {
             //Initializing thumbs settings
             $thumbs_res_settings = thumbs_res_settings_28();
 
@@ -278,7 +274,6 @@
             }
             if($num=='big' || $size=='big')
             {
-
                 $num = 'big-'.$vdetails['default_thumb'];
                 $num_big_28 = implode('x', $thumbs_res_settings['320']).'-'.$vdetails['default_thumb'];
                 
@@ -300,54 +295,52 @@
             if(!empty($default_thumb)){
                 return $default_thumb;
             }
-            elseif(empty($default_thumb)){
+            if(empty($default_thumb))
+            {
                 $default_thumb = array_find($vdetails['file_name'].'-'.$num,$thumbs);
                 if (!empty($default_thumb)){
                     return $default_thumb;
-                }else{
-                    return $thumbs[0];    
                 }
+				return $thumbs[0];
             }
-           
         }
-
     }
 
-
-
-    /**
-    * Function used to check weaether given thumb is big or not
-    * @param : { string } { $thumb_file } { the file to be checked for size }
-    * @return : { boolean } { true if thumb is big, false }
-    */
-
+	/**
+	 * Function used to check weaether given thumb is big or not
+	 *
+	 * @param : { string } { $thumb_file } { the file to be checked for size }
+	 *
+	 * @return bool : { boolean } { true if thumb is big, false }
+	 */
     function is_big($thumb_file) {
         if(strstr($thumb_file,'big')) {
             return true;
-        } else {
-            return false;
         }
+		return false;
     }
 
-    /**
-     * Function used to check weaether given thumb is original or not
-     */
+	/**
+	 * Function used to check weaether given thumb is original or not
+	 *
+	 * @param $thumb_file
+	 *
+	 * @return bool
+	 */
     function is_original($thumb_file)
     {
         if(strstr($thumb_file,'original'))
             return true;
-        else
-            return false;
+		return false;
     }
 
     function GetThumb($vdetails,$num='default',$multi=false,$count=false)
     {
-
         return get_thumb($vdetails,$num,$multi,$count);
     }
 
     /**
-     * function used to get detaulf thumb of ClipBucket
+     * function used to get default thumb of ClipBucket
      */
     function default_thumb()
     {
@@ -368,17 +361,20 @@
     {
         if(getname($i)=='processing.jpg')
             return true;
-        else
-            return false;
+	   	return false;
     }
 
-    /**
-     * Function used to get video link
-     * @param ARRAY video details
-     */
+	/**
+	 * Function used to get video link
+	 *
+	 * @param      $vdetails
+	 * @param null $type
+	 *
+	 * @return string
+	 * @internal param video $ARRAY details
+	 */
     function video_link($vdetails,$type=NULL)
     {
-        global $myquery;
         #checking what kind of input we have
         if(is_array($vdetails))
         {
@@ -430,8 +426,8 @@
         }
 
         $plist = "";
-        if(SEO == 'yes'){
-
+        if(SEO == 'yes')
+		{
             if($vdetails['playlist_id'])
                 $plist = '?play_list='.$vdetails['playlist_id'];
 
@@ -444,24 +440,17 @@
                     break;
 
                 case 1:
-                {
                     $link = BASEURL.'/'.SEO(clean(str_replace(' ','-',$vdetails['title']))).'_v'.$vdetails['videoid'].$plist;
-                }
                     break;
 
                 case 2:
-                {
                     $link = BASEURL.'/video/'.$vdetails['videoid'].'/'.SEO(clean(str_replace(' ','-',$vdetails['title']))).$plist;
-                }
                     break;
 
                 case 3:
-                {
                     $link = BASEURL.'/video/'.$vdetails['videoid'].'_'.SEO(clean(str_replace(' ','-',$vdetails['title']))).$plist;
-                }
                     break;
             }
-
 
         }else{
             if($vdetails['playlist_id'])
@@ -480,7 +469,6 @@
         return video_link($vdetails,$type);
     }
 
-
 	/**
 	 * Function Used to format video duration
 	 *
@@ -488,10 +476,9 @@
 	 *
 	 * @return string
 	 */
-
     function videoSmartyLink($params)
     {
-        $link  =    VideoLink($params['vdetails'],$params['type']);
+        $link = VideoLink($params['vdetails'],$params['type']);
         if(!$params['assign'])
             return $link;
 		assign($params['assign'],$link);
@@ -507,7 +494,7 @@
 	 */
     function validate_vid_category($array=NULL)
     {
-        global $myquery,$LANG,$cbvid;
+        global $cbvid;
         if($array==NULL)
             $array = $_POST['category'];
         if(count($array)==0)
@@ -609,7 +596,6 @@
             $fileNameQuery = " AND cqueue_name ='$queueName' AND cqueue_ext ='$ext' ";
         }
 
-        //$results = $db->select(tbl("conversion_queue"),"*","cqueue_conversion='p' $fileNameQuery");
         $query = " SELECT * FROM ".tbl("conversion_queue");
         $query .= " WHERE cqueue_conversion='p' ";
 
@@ -664,6 +650,7 @@
             return count($details);
         return $details;
     }
+
     function get_all_video_files_smarty($params)
     {
         $vdetails = $params['vdetails'];
@@ -865,8 +852,7 @@
 
             if(!$get_jsoned)
                 return $data;
-            
-            //$file = file_get_contents('1260270267.log');
+
             preg_match_all('/(.*) : (.*)/',trim($data),$matches);
 
             $matches_1 = ($matches[1]);
@@ -1023,7 +1009,7 @@
     }
 
 	/**
-	 * Funcion used to call functions
+	 * Function used to call functions
 	 * when video is going to watched
 	 * ie in watch_video.php
 	 *
@@ -1052,7 +1038,7 @@
     }
 
 	/**
-	 * Funcion used to call functions
+	 * Function used to call functions
 	 * when video is going
 	 * on CBvideo::remove_files
 	 *
@@ -1074,8 +1060,8 @@
     }
 
 	/**
-	 * Funcion used to call functions
-	 * when video is going to dwnload
+	 * Function used to call functions
+	 * when video is going to download
 	 * ie in download.php
 	 *
 	 * @param $vdo
@@ -1157,7 +1143,6 @@
 	 */
     function is_video_user($vdo,$user=NULL)
     {
-
         if(!$user)
             $user = user_name();
 
@@ -1485,7 +1470,7 @@
     {
         # extract file extension
         $file_format = pathinfo($filepath, PATHINFO_EXTENSION);
-        # check if extesnon is empty
+        # check if extension is empty
         if ( empty($filepath) ) 
         {
             if ( $err_msg )
@@ -1509,7 +1494,7 @@
                 echo "Invalid extension ".$ext;
             }
 
-            # extesnions don't match or something else went wrong so return false
+            # extensions don't match or something else went wrong so return false
             return false;
         }
     }
@@ -1555,7 +1540,7 @@
 	 *
 	 * @author : Saqib Razzaq
 	 */
-    function is_phone_user( $data )
+    function is_phone_user($data)
     {
         $platform = $data['platform'];
         $useragent = $data['userAgent'];
@@ -1605,7 +1590,8 @@
 	 *
 	 * @since : 03-03-2016
 	 */
-    function get_high_res_file($vdetails,$dir=false){
+    function get_high_res_file($vdetails,$dir=false)
+	{
         //Getting video Files array
         $video_files = $vdetails['video_files'];
         $video_files = json_decode($video_files,true);
@@ -1675,8 +1661,8 @@
 	 *
 	 * @since : 03-03-2016
 	 */
-    function get_video_file_quality($file){
-        
+    function get_video_file_quality($file)
+	{
         $quality = explode('-',$file);
         $quality = end($quality);
         $quality = explode('.',$quality);
@@ -1692,7 +1678,8 @@
 	 * @since : 10th March, 2016 ClipBucket 2.8.1
 	 * @author : Saqib Razzaq
 	 */
-    function check_server_ram() {
+    function check_server_ram()
+	{
         $fh = fopen('/proc/meminfo','r');
         $mem = 0;
         while ($line = fgets($fh)) {
@@ -1718,7 +1705,8 @@
 	 * @since : 10th March, 2016 ClipBucket 2.8.1
 	 * @return bool
 	 */
-    function pre_upload() {
+    function pre_upload()
+	{
         if (isset($_GET['alliswell'])) {
             if (has_access("admin_access")) {
                 $alliswell = $_GET['alliswell'];
@@ -1807,19 +1795,18 @@
 	 * @author : Fahad Abbas
 	 * @email: <fahad.dev@iu.com.pk>
 	 */
-    function log_file_procession($input){
-        
+    function log_file_procession($input)
+	{
         $File_name = $input['file_name'];
         $File_dir  = $input['file_dir'];
         $data      = $input['data'];
 
         $PlogFilePath = FILES_DIR."/logs/".$File_dir."/".$File_name.".plog";
 
-
         if(file_exists($PlogFilePath)) {
             $text = file_get_contents($PlogFilePath);
         }
-         logData($PlogFilePath,'plogs_tester');
+		logData($PlogFilePath,'plogs_tester');
         $text .= " \n \n  <br><br> > {$data}";
         file_put_contents($PlogFilePath, $text);
     }
@@ -1835,15 +1822,15 @@
 	 * @author : Fahad Abbas
 	 * @email: <fahad.dev@iu.com.pk>
 	 */
-    function get_file_procession_log($vdetails){
-
+    function get_file_procession_log($vdetails)
+	{
         $file_dir = $vdetails['file_directory'];
         $file_name = $vdetails['file_name'];
         $multiserver_file = $vdetails['file_server_path'];
         if (empty($multiserver_file)){
             $plog_file  =  LOGS_DIR.'/'.$file_dir.'/'.$file_name.'.plog';
         }else{
-            $plog_file  =  $multiserver_file.'/logs/'.$file_dir.'/'.$filename.'.plog';
+            $plog_file  =  $multiserver_file.'/logs/'.$file_dir.'/'.$file_name.'.plog';
         }
 
         if (file_exists($plog_file)){
@@ -1864,7 +1851,8 @@
 	 * @since : 18th March, 2016 ClipBucket 2.8.1
 	 * @author : Saqib Razzaq <saqi.cb@gmail.com>
 	 */
-    function get_fast_qlist($cookie_name = false) {
+    function get_fast_qlist($cookie_name = false)
+	{
         global $cbvid;
         if ($cookie_name) {
             $cookie = $cookie_name;
@@ -1891,7 +1879,8 @@
 	 * @internal param $ : { none }
 	 * @author : { Saqib Razzaq }
 	 */
-    function convertWithCron() {
+    function convertWithCron()
+	{
         global $db;
         $toConvert = $db->select(tbl("conversion_queue"),"*","cqueue_conversion ='no' ORDER BY cqueue_id ASC LIMIT 0,1");
         $filedata = $toConvert[0];
@@ -1929,7 +1918,8 @@
 	 *
 	 * @action : Updates database
 	 */
-    function setVideoStatus($video, $status, $reconv = false, $byFilename = false) {
+    function setVideoStatus($video, $status, $reconv = false, $byFilename = false)
+	{
         global $db;
         if ($byFilename) {
             $type = 'file_name';
@@ -1953,10 +1943,11 @@
 
     /**
     * Checks current reconversion status of any given video : default is empty
-    * @param : { integer } { $vid } { id of video that we need to check sstatus for }
+    * @param : { integer } { $vid } { id of video that we need to check status for }
     * @return : { string } { reconversion status of video }
     */
-    function checkReConvStatus($vid) {
+    function checkReConvStatus($vid)
+	{
         global $db;
         $data = $db->select(tbl('video'),'re_conv_status','videoid='.$vid);
         if (isset($data[0]['re_conv_status'])) {
@@ -1975,10 +1966,11 @@
 	 * @author : Fahad Abbas
 	 *
 	 */
-    function isReconvertAble($vdetails) {
+    function isReconvertAble($vdetails)
+	{
         try
 		{
-            if (is_array($vdetails)  && !empty($vdetails))
+            if (is_array($vdetails) && !empty($vdetails))
             {
                 $fileName = $vdetails['file_name'];
                 $fileDirectory = $vdetails['file_directory'];
@@ -2016,7 +2008,8 @@
     * @since : October 28th, 2016
     * @author : { Saqib Razzaq }
     */
-    function reConvertVideos($data) {
+    function reConvertVideos($data)
+	{
         global $cbvid,$Upload;
         $toConvert = 0;
         // if nothing is passed in data array, read from $_POST
@@ -2037,8 +2030,8 @@
             // get details of single video
             $vdetails = $cbvid->get_video($daVideo);
 
-            if (!empty($vdetails['file_server_path'])){
-
+            if (!empty($vdetails['file_server_path']))
+            {
                 if(empty($vdetails['file_directory'])){
                     $vdetails['file_directory'] = str_replace('-', '/', $vdetails['datecreated']);
                 }
@@ -2053,26 +2046,23 @@
 
                 $request = curl_init($api_path);
                 curl_setopt($request, CURLOPT_POST, true);
-
                 curl_setopt($request,CURLOPT_POSTFIELDS,$encoded);
-                // output the response
                 curl_setopt($request, CURLOPT_SSL_VERIFYPEER, FALSE);
                 curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
                 $results_curl = curl_exec($request);
-                // pr($results_curl,true);
                 $results_curl_arr = json_decode($results_curl,true);
                 $returnCode = (int)curl_getinfo($request, CURLINFO_HTTP_CODE);
                 curl_close($request);
+
                 if(isset($results_curl_arr['success'])&&$results_curl_arr['success']=="yes"){
                     e( lang( 'Your request for re-encoding '.$vdetails[ 'title' ].'  has been queued.' ), 'm'  );
                 }
-               
+
                 if(isset($results_curl_arr['error'])&&$results_curl_arr['error']=="yes"){
                     e( lang( $results_curl_arr['msg'] ) );
                 }
 
             }else{
-                 #pr($vdetails,true);
                 if (!isReconvertAble($vdetails)) {
                     e("Video with id ".$vdetails['videoid']." is not re-convertable");
                     continue;
@@ -2099,7 +2089,7 @@
                     {
                         // get quality of current url
                         $currentQuality = get_video_file_quality($file, '-', '.');
-                        // pex($currentQuality,true);
+
                         // get extension of file
                         $currentExt = pathinfo($file, PATHINFO_EXTENSION);
 
@@ -2148,10 +2138,14 @@
         }
     }
 
-    /**
-    * Returns cleaned string containing video qualities
-    * @since : 2nd December, 2016
-    */
+	/**
+	 * Returns cleaned string containing video qualities
+	 * @since : 2nd December, 2016
+	 *
+	 * @param $res
+	 *
+	 * @return mixed
+	 */
     function resString($res) {
         $qual = preg_replace("/[^a-zA-Z0-9-,]+/", "", html_entity_decode($res, ENT_QUOTES));
         if (!empty($qual)) {
@@ -2199,7 +2193,8 @@
 	 *
 	 * @return array|int
 	 */
-    function get_video_sprite_count($videoid){
+    function get_video_sprite_count($videoid)
+	{
         try{
             $videoid = (int)$videoid;
             if ($videoid){

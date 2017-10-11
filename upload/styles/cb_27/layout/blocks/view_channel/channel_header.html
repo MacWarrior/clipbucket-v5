@@ -23,7 +23,7 @@
         </a>
            
         {elseif !$friends && userid()}
-        <a href="javascript:void(0);"  class="btn btn-primary btn-sm new1"
+        <a href="javascript:void(0);" class="btn btn-primary btn-sm new1"
            onclick="add_friend('{$user.userid}','result_cont')">
            <i class="glyphicon glyphicon-plus-sign white"></i> 
            {lang code="Add As Friend"}
@@ -31,16 +31,15 @@
        </a>
     {/if}
     {if $user.userid != userid()}
-        <a href="{$baseurl}/private_message.php?mode=new_msg&to={$user.username}" class="btn btn-primary btn-sm new1">
-            <i class="glyphicon glyphicon-envelope white"></i>  {lang code="Send Message"}
+        <a href="{$baseurl}/private_message.php?mode=new_msg&to={display_clean($user.username)}" class="btn btn-primary btn-sm new1">
+            <i class="glyphicon glyphicon-envelope white"></i> {lang code="Send Message"}
         </a>
 
-        <button id="subscribe_channel"class="btn btn-primary btn-sm new1"><i class="icon-rss white"></i>  {lang code="Subscribe"}</button>
+        <button id="subscribe_channel"class="btn btn-primary btn-sm new1"><i class="icon-rss white"></i> {lang code="Subscribe"}</button>
         {/if}
     </div>
     <img class="view-channel-thumb" src="{$userquery->getUserThumb($user)}">
-    <h3 class="view-channel-name">{$user.username}</h3>
-
+    <h3 class="view-channel-name">{display_clean($user.username)}</h3>
 
     <div class="btn-bootums">
         <span>

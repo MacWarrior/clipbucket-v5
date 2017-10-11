@@ -62,7 +62,7 @@
 				<img src="{avatar details=$user}" alt="" class="comnt_pic">
 			</div>
 			<div class="comment-info">
-				<strong  class="commenter">
+				<strong class="commenter">
 					{if $comment.anonym_name != ''}
 						{display_clean($comment.anonym_name)} ({lang code='guest'})
 					<div id="says_{$comment.comment_id}" speaker="{display_clean($comment.anonym_name)}"></div>
@@ -115,7 +115,7 @@
 						<img src="{avatar details=$user}" alt="" class="reply_pic">
 					</div>
 					<div class="comment-info">
-						<strong  class="commenter">
+						<strong class="commenter">
 							{if $comment.anonym_name != '' && $user.username == ''}
 								{display_clean($comment.anonym_name)} ({lang code='guest'})
 							{else}
@@ -155,7 +155,7 @@
 							<img src="{avatar details=$user}" alt="" class="reply_pic">
 						</div>
 						<div class="comment-info">
-							<strong  class="commenter">
+							<strong class="commenter">
 								{if $comment.anonym_name != ''}
 									{display_clean($comment.anonym_name)} ({lang code='anonymous'})
 								{else}

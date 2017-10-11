@@ -29,7 +29,7 @@
                 </div> 
                 <div class="watch-vid-user-sec">
                     <div class="watch-vid-user-name mtm">
-                        <a href="{$userquery->profile_link($user)}"> {$user.username}</a>
+                        <a href="{$userquery->profile_link($user)}"> {display_clean($user.username)}</a>
                     </div>
                     {if $photo.userid != userid()}
                     <button class="btn btn-primary btn-sm btn-xs" onclick="subscriber('{$user.userid}','subscribe_user','video_detail_result_cont')">{lang code='subscribe'}</button>{/if}
@@ -141,14 +141,14 @@
  <div id="test1"></div>
  <div id="reply"> 
         <div class="cb-box pad-bottom">
-         <div  class="addComment clearfix">
+         <div class="addComment clearfix">
 
             <div class="com_count" id="com_count"><span>{lang code='comments'} </span> {$photo.total_comments} </div>
 
             {if $myquery->is_commentable($photo,'p')}
             {include file="$style_dir/blocks/comments/add_comment.html" id=$photo.photo_id type=p}
             {else}
-            <div  class="alert alert-warning">{lang code='Comments disabled for this photo'}</div>
+            <div class="alert alert-warning">{lang code='Comments disabled for this photo'}</div>
             {/if}
 
             <div id="comments"></div>

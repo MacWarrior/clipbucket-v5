@@ -28,7 +28,7 @@
 <tr class="video_opt_td"  bgcolor="{$bgcolor}">
     <td width="30" align="center" valign="top" class="video_opt_td">    <input name="check_video[]" type="checkbox" id="check_video" value="{$videos[list].videoid}" /></td>
     <td width="50" align="left" valign="top" class="video_opt_td"><input name="ep_order_{$videos[list].pick_id}" type="text" id="order" style="border:1px solid #999; padding:2px; width:30px" value="{$videos[list].sort}" size="5" maxlength="5" /></td>
-    <td valign="top"  class="video_opt_td" 
+    <td valign="top" class="video_opt_td"
      
     onmouseover="$('#ep_opts-{$videos[list].videoid}').show()" 
     onmouseout="$('#ep_opts-{$videos[list].videoid}').hide()"
@@ -61,7 +61,7 @@
   <tr>
     <td width="30" align="center" valign="middle"><img src="{$imageurl}/arrow_return_invert.png" width="25" height="25"></td>
     <td height="50" style="padding-left:15px"><input type="submit" value="{lang code='update'}" name="update_order" class="button" />
-    <input type="submit" name="delete_selected" value="{lang code='delete'}"  class="button" onclick="return confirm_it('Are you sure you want to delete selected video(s)')"/>
+    <input type="submit" name="delete_selected" value="{lang code='delete'}" class="button" onclick="return confirm_it('Are you sure you want to delete selected video(s)')"/>
     
     </td>
     </tr>

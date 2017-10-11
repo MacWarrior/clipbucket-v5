@@ -83,7 +83,7 @@
 						<img src="{$userquery->getuserthumb($user,'m')}" width="50" height="50" class="img-circle">
 					</a>
 					<div class="channel-info">
-						<h3><a href="{$userquery->profile_link($user)}">{$user.username}</a></h3>
+						<h3><a href="{$userquery->profile_link($user)}">{display_clean($user.username)}</a></h3>
 						<div class="clearfix views-videos">
 							<span>{prettyNum($user.profile_hits|number_format)} {lang code='views'}</span>
 							<span>{prettyNum($user.total_videos|number_format)} {lang code='videos'}</span>

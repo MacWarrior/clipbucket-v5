@@ -54,7 +54,7 @@
 						<img src="{$userquery->avatar($video,'m',userid())}" class="img-responsive">
 					</a>
 					<h2 class="user-title">
-						<a href="{$userquery->profile_link($user)}">{$user.username}</a>
+						<a href="{$userquery->profile_link($user)}">{display_clean($user.username)}</a>
 					</h2>
 					<div class="views-counter">
 						<span>{lang code="views"} {prettyNum($photo.views)}</span>
@@ -100,17 +100,17 @@
 					<div class="tab-pane fade in clearfix active" id="cb-item-info">
 						<div class="clearfix watch-vid-details">
 							<ul class="clearfix desc-list">
-								<li><strong>{lang('photo_description')}</strong> <span id="description"></span>:&nbsp;{$photo.photo_description|truncate:90}</li>
+								<li><strong>{lang('photo_description')}</strong> <span id="description"></span>:&nbsp;{display_clean($photo.photo_description)|truncate:90}</li>
 
 								<li id="category"></li>
 
 								<li><strong>{lang('collection_name')}</strong>:&nbsp;
 
 									{if $Cbucket->configs.seo == 'yes'}
-									<span id="category"><a href="{$baseurl}/collection/{$c.collection_id}/{$c.type}/{$c.collection_name}">{$c.collection_name}</a></span>
+									<span id="category"><a href="{$baseurl}/collection/{$c.collection_id}/{$c.type}/{$c.collection_name}">{display_clean($c.collection_name)}</a></span>
 								</li>
 								{else}
-								<span id="category"><a href="{$baseurl}/view_collection.php?cid={$c.collection_id}&type={$c.type}">{$c.collection_name}</a></span>
+								<span id="category"><a href="{$baseurl}/view_collection.php?cid={$c.collection_id}&type={$c.type}">{display_clean($c.collection_name)}</a></span>
 							</li>
 							{/if}
 							<li><strong>{lang('tags')}</strong>:&nbsp;<span id="tags"></span></strong>{$photo.photo_tags|tags:photos}</li>
@@ -119,8 +119,6 @@
 						</ul>
 					</div>
 				</div>
-				<!-- {$cbphoto->photo_links($photo,'view_item')} -->
-				<!-- {assign var="photo_url" value="{$baseurl}/view_item.php?item={$photo.photo_key}&type=photos&collection={$photo.collection_id}"}  -->
 				<div class="tab-pane fade in clearfix" id="cb-item-share">
 					<ul class="social-share">
 						<li>
@@ -178,7 +176,7 @@
 		<div id="test1"></div>
 		<div id="reply" class="clearfix"> 
 			<div class="pad-bottom">
-				<div  class="addComment clearfix">
+				<div class="addComment clearfix">
 					<div class="com_count" id="com_count">
 						<h2><span>{$photo.total_comments} 
 							{if $photo.total_comments <= 1 }

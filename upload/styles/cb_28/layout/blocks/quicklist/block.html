@@ -1,7 +1,7 @@
 {assign var=quicklist value=$cbvid->get_quicklist()}
 {assign var=quicklist_json value=$quicklist|@json_encode}
 
-<div  class="quicklist_box">
+<div class="quicklist_box">
 	<div class="quicklist_box_head clearfix">
 		<span class="quick_title">{lang code='quicklists'}({$cbvid->total_quicklist()})</span>
 		<div class="btn-group">

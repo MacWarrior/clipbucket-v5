@@ -50,7 +50,7 @@
 				{$_is_parent = $cbvid->is_parent($cat_id)}
 				{if !$_is_parent}
 					<li>
-						<a {if $smarty.get.cat==$category.category_id }  class="active" {/if} href="{cblink(['name'=>'category','data'=>$category,'type'=>'v'])}">
+						<a {if $smarty.get.cat==$category.category_id } class="active" {/if} href="{cblink(['name'=>'category','data'=>$category,'type'=>'v'])}">
 							<img src="{$cbvid->get_category_thumb($category,'video')}" class="img-responsive" alt="">
 							<span>{$category.category_name}</span>
 						</a>
@@ -59,7 +59,7 @@
 			{/foreach}
 			{/if}
 			
-			{*<li id="more-icon"  class="arrow-down show">
+			{*<li id="more-icon" class="arrow-down show">
 				<a href="javascript:void(0);" >Show more</a>
 			</li>*}
 		</ul>

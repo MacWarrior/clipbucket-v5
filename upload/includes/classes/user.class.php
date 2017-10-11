@@ -1168,24 +1168,30 @@ class userquery extends CBCategory{
 	}
 		
 	/**
-	 * Funcion used to increas user total_watched field
+	 * Function used to increas user total_watched field
 	 */
 	function increment_watched_vides($userid)
 	{
 		global $db;
 		$db->update(tbl($this->dbtbl['users']),array('total_watched'),array('|f|total_watched+1')," userid='$userid'");
 	}
-			
+
 	/**
 	 * Old Function : GetNewMsgs
 	 * This function is used to get user messages
-	 * @param : user
-	 * @param : sent/inbox 
-	 * @param : count (TRUE : FALSE)
+	 *
+	 * @param        $user
+	 * @param string $box
+	 * @param bool   $count
+	 *
+	 * @return array|bool|int
+	 * @internal param $ : user
+	 * @internal param $ : sent/inbox
+	 * @internal param $ : count (TRUE : FALSE)
 	 */
-		 
-	function get_pm_msgs($user,$box='inbox',$count=FALSE){
-		global $db,$eh,$LANG;
+	function get_pm_msgs($user,$box='inbox',$count=FALSE)
+	{
+		global $db,$eh;
 		if(!$user)
 			$user = user_id();	
 		if(!user_id())
@@ -1196,32 +1202,29 @@ class userquery extends CBCategory{
 			{
 				case 'inbox':
 				default:
-				$boxtype = 'inbox';
-				break;
-				
+					$boxtype = 'inbox';
+					break;
+
 				case 'sent':
 				case 'outbox':
-				$boxtype = 'outbox';
-				break;
+					$boxtype = 'outbox';
+					break;
 			}
-			
+
 			if($count)
 				$status_query = " AND status = '0' ";
 				
 			$results = $db->select(tbl("messages"),
 						" message_id ",
 						"(".$boxtype."_user = '$user' OR ".$boxtype."_user_id = '$user') $status_query");
-			
-	
+
 			if($db->num_rows > 0)
 			{
 				if($count)
-				return $db->num_rows;
+					return $db->num_rows;
 				else
-				return $results;
-			}
-			else
-			{
+					return $results;
+			} else {
 				return false;
 			}
 		}
