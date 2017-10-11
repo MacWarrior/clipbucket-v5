@@ -1162,7 +1162,8 @@
 			var self = this;
 		};
 
-		this.collection_actions = function(form,mode,objID,result_con,type,cid){
+		this.collection_actions = function(form,mode,objID,result_con,type,cid)
+        {
 			var self = this;
 			$(result_con).css("display","block");
 			$(result_con).html(this.loading);
@@ -2078,14 +2079,13 @@
 			switch(mode)
 			{
 				case 'add':
-				{
 					$.post(page, 
-					{ 	
+					{
 						mode : 'add_playlist',
 						id : vid,
 						objtype : objtype,
 						pid : $("#playlist_id option:selected").val()
-			},
+			        },
 					function(data)
 					{
 						$("#playlist_form_result").html("");
@@ -2110,25 +2110,22 @@
 							
 						}
 					},'json');
-				}
-				break;
+				    break;
 				
 				case 'new':
-				{
-
 					$.post(page, 
 					{ 	
 						mode : 'add_new_playlist',
 						id : vid,
 						objtype : objtype,
 						plname : $("#playlist_name").val()
-			},
+			        },
 					function(data)
 					{
 						if(!data)
 							alert("No data");
 						else
-						{	
+						{
 							if(data.err )
 							{
 								$("#playlist_form_result").css("display","block");
@@ -2140,12 +2137,10 @@
 								$("#playlist_form_result").css("display","block");
 								$("#playlist_form_result").html(data.msg);
 								$("#"+form_id).css("display","none");
-							}	
-							
+							}
 						}
 					},'json');
-				}
-				break;
+				    break;
 			}
 		};
 

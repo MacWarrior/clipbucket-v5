@@ -3141,61 +3141,44 @@ class userquery extends CBCategory{
 	 */
     function my_account_links()
     {
-   
-        $array[lang('account')]	=
-            array
-            (
-                lang('my_account')	=> 'myaccount.php',
-                lang('block_users')	=> 'edit_account.php?mode=block_users',
-                lang('user_change_pass')	=>'edit_account.php?mode=change_password',
-                lang('user_change_email') 	=>'edit_account.php?mode=change_email',
-                lang('com_manage_subs')	=> 'edit_account.php?mode=subscriptions',
-                lang('contacts_manager')	=> 'manage_contacts.php'
-            );
+        $array[lang('account')]	= array(
+			lang('my_account')	=> 'myaccount.php',
+			lang('block_users')	=> 'edit_account.php?mode=block_users',
+			lang('user_change_pass')	=>'edit_account.php?mode=change_password',
+			lang('user_change_email') 	=>'edit_account.php?mode=change_email',
+			lang('com_manage_subs')	=> 'edit_account.php?mode=subscriptions',
+			lang('contacts_manager')	=> 'manage_contacts.php'
+		);
 
 
-        $array[lang('user_channel_profiles')] = array
-        (
+        $array[lang('user_channel_profiles')] = array(
             lang('account_settings') =>'edit_account.php?mode=account',
             lang('user_profile_settings') =>'edit_account.php?mode=profile',
             lang('change_avatar') 	=> 'edit_account.php?mode=avatar_bg',
         );
 
         if(isSectionEnabled('videos'))
-            $array[lang('videos')] =  array
-            (
+		{
+            $array[lang('videos')] = array(
                 lang('uploaded_videos')=>'manage_videos.php',
                 lang('user_fav_videos')=>'manage_videos.php?mode=favorites',
             );
-
-        // if(isSectionEnabled('groups'))
-        //     $array[lang('groups')] =  array
-        //     (
-        //         lang('grp_groups_title') =>'manage_groups.php',
-        //         lang('user_create_group') =>cblink(array('name'=>'create_group')),
-        //         lang('grp_joined_groups')=>'manage_groups.php?mode=joined',
-        //     );
+		}
 
         if(isSectionEnabled('playlists'))
-            $array[lang('playlists')]=array
-            (
+		{
+            $array[lang('playlists')] = array(
                 lang('manage_playlists') =>'manage_playlists.php',
             );
-        $array[lang('messages')] = array
-        (
+		}
+
+        $array[lang('messages')] = array(
             lang('inbox').'('.$this->get_unread_msgs($this->userid).')'=> 'private_message.php?mode=inbox',
             lang('notifications') => 'private_message.php?mode=notification',
             lang('sent')	=> 'private_message.php?mode=sent',
             lang('title_crt_new_msg')=> cblink(array('name'=>'compose_new')),
         );
 
-        // if(isSectionEnabled('channels'))
-        //     $array[lang('contacts')] =  array
-        //     (
-        //         lang('com_manage_contacts') => 'manage_contacts.php?mode=manage',
-        //         lang('add_contact_list') => 'manage_contacts.php?mode=new_group',
-        //     );
-		
         if(count($this->user_account)>0)
         {
             foreach($this->user_account as $key => $acc)
@@ -3207,8 +3190,6 @@ class userquery extends CBCategory{
                 }else
                     $array[$key] = $acc;
             }
-           // pex($array,true);
-            //$array = array_merge($array,$this->user_account);
         }
      
         return $array;

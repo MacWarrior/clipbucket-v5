@@ -88,15 +88,13 @@ class Collections extends CBCategory
 		$per = $userquery->get_user_level(userid());
 		// Adding My Account Links	
 		if(isSectionEnabled('collections'))
-		$userquery->user_account[lang('collections')] = array(
-			lang('add_new_collection') => cblink(array('name'=>'manage_collections','extra_params'=>'mode=add_new')),
-			lang('manage_collections') => cblink(array('name'=>'manage_collections')),
-			lang('manage_favorite_collections') => cblink(array('name'=>'manage_collections','extra_params'=>'mode=favorite'))
-		);
-		
-		// Adding Search Type
-		//if(isSectionEnabled('collections'))
-		//$Cbucket->search_types['collections'] = "cbcollection";
+		{
+			$userquery->user_account[lang('collections')] = array(
+				lang('add_new_collection') => cblink(array('name'=>'manage_collections','extra_params'=>'mode=add_new')),
+				lang('manage_collections') => cblink(array('name'=>'manage_collections')),
+				lang('manage_favorite_collections') => cblink(array('name'=>'manage_collections','extra_params'=>'mode=favorite'))
+			);
+		}
 		
 		// Adding Collection links in Admin Area
 		if($per['collection_moderation'] == "yes")
@@ -974,9 +972,12 @@ class Collections extends CBCategory
 			return $result[0]['userid'];
 		return false;
 	}
-	
+
 	/**
 	 * Function used to add item in collection
+	 *
+	 * @param $objID
+	 * @param $cid
 	 */
 	function add_collection_item($objID,$cid)
 	{
@@ -984,10 +985,7 @@ class Collections extends CBCategory
 		
 		$objID = mysql_clean($objID);
 		$cid = mysql_clean($cid);
-		
-		if($array==NULL)
-			$array = $_POST;
-		
+
 		if($this->collection_exists($cid))
 		{
 			if(!userid())

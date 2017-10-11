@@ -1161,7 +1161,8 @@
 			var self = this;
 		};
 
-		this.collection_actions = function(form,mode,objID,result_con,type,cid){
+		this.collection_actions = function(form,mode,objID,result_con,type,cid)
+        {
 			var self = this;
 			$(result_con).css("display","block");
 			$(result_con).html(this.loading);

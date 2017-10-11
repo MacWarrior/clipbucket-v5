@@ -4237,7 +4237,8 @@
 	 *
 	 * @return bool : { boolean } { true of false depending on situation }
 	 */
-	function isSectionEnabled($input,$restrict=false) {
+	function isSectionEnabled($input,$restrict=false)
+	{
 		global $Cbucket;
 		$section = $Cbucket->configs[$input.'Section'];
 		if(!$restrict) {

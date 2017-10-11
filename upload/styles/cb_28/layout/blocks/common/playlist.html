@@ -8,7 +8,7 @@
 				<select name="playlist_id" id="playlist_id" class="form-control">
 					{if $playlists}
 						{foreach $playlists as $playlist}
-							<option value="{$playlist.playlist_id}">{$playlist.playlist_name}</option>
+							<option value="{$playlist.playlist_id}">{display_clean($playlist.playlist_name)}</option>
 						{/foreach}
 					{else}
 						<option value="" placeholder>--- {lang("no_playlist_exists")} ---</option>
@@ -18,11 +18,11 @@
 
 			<div class="form-group clearfix">
 				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-					<input type="button" class="btn mtm btn-block btn-primary" name="add_to_playlist" value="{lang code='add_to_playlist'}" class="cb_button" onclick="_cb.add_playlistNew('add','{$params.id}','add_playlist_form','{$type}')">
+					<input type="button" class="btn mtm btn-block btn-primary" name="add_to_playlist" value="{lang code='add_to_playlist'}" class="cb_button" onclick="_cb.add_playlistNew('add','{$params.id}','add_playlist_form','{$type}');">
 				</div>
 				{if (has_access('allow_create_playlist',false,$verify_logged_user))}
 				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-					<a class="btn btn-block mtm btn-success" href="javascript:void(0);" onClick="$('#add_playlist_form').css('display','none');$('#new_playlist_form').css('display','block')">{lang code='create_new_playlist'}</a>
+					<a class="btn btn-block mtm btn-success" href="javascript:void(0);" onClick="$('#add_playlist_form').css('display','none');$('#new_playlist_form').css('display','block');">{lang code='create_new_playlist'}</a>
 				</div>
 				{else}
 				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -32,7 +32,7 @@
 			</div>
 		</form>
 
-		<form id="new_playlist_form" name="new_playlist_form" method="post" style="display:none">
+		<form id="new_playlist_form" name="new_playlist_form" method="post" style="display:none;">
 			<div class="form-group clearfix">
 				<label for="playlist_name">{lang code="please_enter_playlist_name"}</label>
 				<input name="playlist_name" type="text" class="form-control" id="playlist_name" value="">

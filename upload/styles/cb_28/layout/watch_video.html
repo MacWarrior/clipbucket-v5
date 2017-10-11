@@ -129,25 +129,34 @@
 							</ul>
 							{show_share_form id=$vdo.videoid type=video}
 						</div>
+
 						<div class="tab-pane fade in clearfix custom-elements" id="cb-item-addto">
-							<div class="clearfix btn-fav">
+						{if userid()}
+							<div class="clearfix btn-big">
 								<div id="video_action_result_cont"></div>
 								<a id="addfav" class="btn btn-block btn-primary" href="javascript:void(0);" onclick="_cb.add_to_favNew('video','{$vdo.videoid}');">{lang code='add_to_my_favorites'}</a>
 							</div>
-							<div class="clearfix">
-								{show_playlist_form id=$vdo.videoid type=video user=userid() }
-								{if userid()}
-								<div class="clearfix">
-									<div class="clearfix btn-holder text-right">
-										<a href="javascript:void(0);" onclick="$('#addCollectionCont').toggle()" class="btn btn-primary">+ {lang code='add_to_my_collection'}</a>
-									</div>
-									<div id="addCollectionCont" style="display:none">
-										{show_collection_form id=$vdo.videoid type=Video}
-									</div>
+
+							{if isSectionEnabled('playlists')}
+							<div class="clearfix btn-big">
+								<a href="javascript:void(0);" onclick="$('#addPlaylistCont').toggle()" class="btn btn-block btn-primary">+ {lang code='add_to_playlist'}</a>
+								<div id="addPlaylistCont" style="display:none;">
+									{show_playlist_form id=$vdo.videoid type=video user=userid() }
 								</div>
-								{/if}    
 							</div>
+							{/if}
+
+							{if isSectionEnabled('collections')}
+							<div class="clearfix btn-big">
+								<a href="javascript:void(0);" onclick="$('#addCollectionCont').toggle()" class="btn btn-block btn-primary">+ {lang code='add_to_my_collection'}</a>
+								<div id="addCollectionCont" style="display:none;">
+									{show_collection_form id=$vdo.videoid type=Video user=userid()}
+								</div>
+							</div>
+							{/if}
+						{/if}
 						</div>
+
 						<div class="tab-pane fade in clearfix custom-elements" id="cb-item-report">
 							<h2>{lang code='report_video'}</h2>
 							{show_flag_form id=$vdo.videoid type=video}
@@ -164,7 +173,7 @@
 							{$vdo.comments_count} <span>{lang code='comments'} </span>
 						</h2>
 						{if $myquery->is_commentable($vdo,'v')}
-						{include file="$style_dir/blocks/comments/add_comment.html" id=$vdo.videoid type=v}
+							{include file="$style_dir/blocks/comments/add_comment.html" id=$vdo.videoid type=v}
 						{else}
 						<div class="alert alert-warning">
 							{lang code='comm_disabled_for_vid'}

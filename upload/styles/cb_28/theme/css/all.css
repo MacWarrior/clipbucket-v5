@@ -1888,10 +1888,15 @@ h1 {
   .breadcrumb a {
     color: #555; }
 
-/* add to playlist */
-#cb-item-addto .btn-fav,
+/* add to playlist, favorite, collection */
+#cb-item-addto .btn-big,
 #cb-item-addto .btn-holder {
-  margin: 0 0 15px; }
+  margin-top: 15px;
+}
+
+#cb-item-addto .btn-big > a{
+	margin-bottom: 10px;
+}
 
 /* playlist form */
 #new_playlist_form .form-group > div,
