@@ -211,7 +211,7 @@
         $file_dir ="";
         if(isset($vdetails['file_name']) && $thumbDir)
         {
-           $file_dir =  "/" . $thumbDir;
+           $file_dir = "/" . $thumbDir;
         }
         $vid_thumbs = glob(THUMBS_DIR."/" .$file_dir.$vdetails['file_name']."*");
 
@@ -1640,7 +1640,7 @@
         }else{
             
             foreach ($v_files as $key => $file) {
-                $video_quality =  get_video_file_quality($file);
+                $video_quality = get_video_file_quality($file);
                 if ($max_file_res == $video_quality){
                     $max_res_file = $file;
                 }
@@ -1828,9 +1828,9 @@
         $file_name = $vdetails['file_name'];
         $multiserver_file = $vdetails['file_server_path'];
         if (empty($multiserver_file)){
-            $plog_file  =  LOGS_DIR.'/'.$file_dir.'/'.$file_name.'.plog';
+            $plog_file = LOGS_DIR.'/'.$file_dir.'/'.$file_name.'.plog';
         }else{
-            $plog_file  =  $multiserver_file.'/logs/'.$file_dir.'/'.$file_name.'.plog';
+            $plog_file = $multiserver_file.'/logs/'.$file_dir.'/'.$file_name.'.plog';
         }
 
         if (file_exists($plog_file)){

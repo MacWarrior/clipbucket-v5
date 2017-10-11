@@ -292,7 +292,7 @@ $(function() {
         // Daily Data //
         function onDataReceveDaily(series_daily){
 
-            data =  series_daily;
+            data = series_daily;
             //$.plot("#placeholder", data, options);
             $.plot("#daily_chart_id", data, options);
             tooltip("#daily_chart_id","#enableTooltipDaily");
@@ -317,7 +317,7 @@ $(function() {
         // Week Data //
         function onDataReceivedWeekly(series_weekly) {
 
-            data =  series_weekly ;
+            data = series_weekly ;
 
             $.plot("#weekly_chart_id", data, options);
             tooltip("#weekly_chart_id","#enableTooltipWeekly");
@@ -342,8 +342,7 @@ $(function() {
         // Monthly Data //
         function onDataReceveMonthly(series_monthly){
 
-            data =  series_monthly;
-            //$.plot("#placeholder", data, options);
+            data = series_monthly;
             $.plot("#monthly_chart_id", data, options);
             tooltip("#monthly_chart_id","#enableTooltipMonthly");
         }

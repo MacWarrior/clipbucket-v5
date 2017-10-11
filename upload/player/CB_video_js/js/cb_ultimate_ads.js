@@ -84,6 +84,6 @@ Ads.prototype.bind = function(thisObj, fn) {
 
 var cb_ultimate_ads = function(settings){
 	
-    var ultimate_ads =  new Ads(this,settings);
+    var ultimate_ads = new Ads(this,settings);
 }
 videojs.plugin('cb_ultimate_ads',cb_ultimate_ads);

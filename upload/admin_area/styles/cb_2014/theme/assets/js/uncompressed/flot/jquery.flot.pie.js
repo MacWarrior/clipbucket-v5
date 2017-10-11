@@ -283,7 +283,7 @@ More detail and specific examples can be found in the included HTML file.
 
 			// calculate maximum radius and center point
 
-			maxRadius =  Math.min(canvasWidth, canvasHeight / options.series.pie.tilt) / 2;
+			maxRadius = Math.min(canvasWidth, canvasHeight / options.series.pie.tilt) / 2;
 			centerTop = canvasHeight / 2 + options.series.pie.offset.top;
 			centerLeft = canvasWidth / 2;
 
@@ -652,7 +652,7 @@ More detail and specific examples can be found in the included HTML file.
 
 			var offset = plot.offset();
 			var canvasX = parseInt(e.pageX - offset.left);
-			var canvasY =  parseInt(e.pageY - offset.top);
+			var canvasY = parseInt(e.pageY - offset.top);
 			var item = findNearbySlice(canvasX, canvasY);
 
 			if (options.grid.autoHighlight) {

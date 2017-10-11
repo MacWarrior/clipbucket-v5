@@ -24,8 +24,8 @@ class CBGroups extends CBCategory
 	{
 		global $Cbucket;
 		$this->cat_tbl = 'group_categories';
-		$this->gp_tbl =  'groups';
-		$this->gp_mem_tbl =  'group_members';
+		$this->gp_tbl = 'groups';
+		$this->gp_mem_tbl = 'group_members';
 		//We will using CB Commenting system as posts
 		//$this->gp_post_tbl = 'group_posts';
 		$this->gp_topic_tbl = 'group_topics';
@@ -1588,22 +1588,21 @@ class CBGroups extends CBCategory
 		else
 		{
 			$owner = $this->get_group_owner_from_topic($obj_id);
-			$add_comment =  $myquery->add_comment($comment,$obj_id,$reply_to,'t',$owner);
+			$add_comment = $myquery->add_comment($comment,$obj_id,$reply_to,'t',$owner);
 			if($add_comment)
 			{
 				//Logging Comment
-				$log_array = array
-				(
-				 'success'=>'yes',
-				 'details'=> "comment on a topic",
-				 'action_obj_id' => $obj_id,
-				 'action_done_id' => $add_comment,
+				$log_array = array(
+					'success'=>'yes',
+					'details'=> "comment on a topic",
+					'action_obj_id' => $obj_id,
+					'action_done_id' => $add_comment
 				);
 				insert_log('topic_comment',$log_array);
 				
 				//Updating Number of comments of group if comment is not a reply
 				if ($reply_to < 1)
-				$this->update_comments_count($obj_id);
+					$this->update_comments_count($obj_id);
 			}
 			return $add_comment;
 		}

@@ -1746,7 +1746,7 @@ class CBPhotos
 		$photoID = '';
 		foreach($_POST as $key => $value)
 		{	
-			$parts =  explode('_',$key);
+			$parts = explode('_',$key);
 			$total = count($parts);
 			$id = $parts[$total-1];
 			$name = array_splice($parts,0,$total-1);

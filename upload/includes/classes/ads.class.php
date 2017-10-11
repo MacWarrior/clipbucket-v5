@@ -43,7 +43,7 @@ class AdsManager
 			{
 				$db->insert(tbl("ads_data"),array("ad_category","ad_name","ad_placement","ad_code","ad_status","date_added"),
 											array($category,$name,$placement,/*"|no_mc|".*/$code,$status,now()));		
-				$msg =  e(lang('ad_add_msg'),'m');
+				$msg = e(lang('ad_add_msg'),'m');
 			}
 			return $msg;
 		}		
@@ -326,7 +326,7 @@ class AdsManager
 	{
 		if (file_exists(STYLES_DIR.'/'.TEMPLATE.'/ads_placement.xml'))
 		{
-			$xml_file =  STYLES_DIR.'/'.TEMPLATE.'/ads_placement.xml'; 
+			$xml_file = STYLES_DIR.'/'.TEMPLATE.'/ads_placement.xml';
 			$xml_content = file_get_contents($xml_file);
 			$xmlSimpleElement = simplexml_load_string($xml_content) or die("Error: Cannot create object");
 			$jsonArray = json_encode($xmlSimpleElement);

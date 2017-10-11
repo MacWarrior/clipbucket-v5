@@ -348,7 +348,7 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data
             if ($merge_tpl_vars) {
                 // restore local variables
                 $_template->tpl_vars = $save_tpl_vars;
-                $_template->config_vars =  $save_config_vars;
+                $_template->config_vars = $save_config_vars;
             }
 
             return;
@@ -356,7 +356,7 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data
             if ($merge_tpl_vars) {
                 // restore local variables
                 $_template->tpl_vars = $save_tpl_vars;
-                $_template->config_vars =  $save_config_vars;
+                $_template->config_vars = $save_config_vars;
             }
             // return fetched content
             return $_output;

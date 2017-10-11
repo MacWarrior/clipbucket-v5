@@ -315,7 +315,7 @@
 	 //
 	 // PRIVATE VARS
 	 //
-	var $_oldRaiseFn =  false;
+	var $_oldRaiseFn = false;
 	var $_transOK = null;
 	var $_connectionID	= false;	/// The returned link identifier whenever a successful database connection is made.	
 	var $_errorMsg = false;		/// A variable which was used to keep the returned last error message.  The value will
@@ -3842,7 +3842,7 @@ http://www.stanford.edu/dept/itss/docs/oracle/10g/server.101/b10759/statements_1
 		
 		function _initrs()
 		{
-			$this->_numOfRows =  sizeof($this->_array);
+			$this->_numOfRows = sizeof($this->_array);
 			if ($this->_skiprow1) $this->_numOfRows -= 1;
 		
 			$this->_numOfFields =(isset($this->_fieldobjects)) ?
@@ -3873,9 +3873,9 @@ http://www.stanford.edu/dept/itss/docs/oracle/10g/server.101/b10759/statements_1
 			if (isset($this->_fieldobjects)) {
 				return $this->_fieldobjects[$fieldOffset];
 			}
-			$o =  new ADOFieldObject();
+			$o = new ADOFieldObject();
 			$o->name = $this->_colnames[$fieldOffset];
-			$o->type =  $this->_types[$fieldOffset];
+			$o->type = $this->_types[$fieldOffset];
 			$o->max_length = -1; // length not known
 			
 			return $o;

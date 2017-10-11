@@ -442,6 +442,7 @@ class userquery extends CBCategory{
 	
 	/** 
 	 * Function used to authenticate user session
+	 * @deprecated
 	 */
 	function session_auth($uid)
 	{
@@ -453,8 +454,8 @@ class userquery extends CBCategory{
 		{
 			$ufields = $this->get_user_fields($uid,'user_session_key,user_session_code');
 			//echo test;
-			$this->user_sessions['key'] =  $ufields['user_session_key'];
-			$this->user_sessions['code'] =  $ufields['user_session_code'];
+			$this->user_sessions['key'] = $ufields['user_session_key'];
+			$this->user_sessions['code'] = $ufields['user_session_code'];
 		}
 		
 		if($this->user_sessions['key']==$sess->get('user_session_key')
@@ -1098,7 +1099,7 @@ class userquery extends CBCategory{
 			else
 				return false;
 		}else{
-			$count =  $db->count(tbl("contacts"),
+			$count = $db->count(tbl("contacts"),
 			tbl("contacts.contact_userid"),
 			tbl("contacts.userid")."='$uid' 
 			$query AND ".tbl("contacts").".contact_group_id='$group' ");
@@ -1125,10 +1126,9 @@ class userquery extends CBCategory{
 				return false;
 		}else
 		{
-			$count =  $db->count(tbl("contacts"),
+			$count = $db->count(tbl("contacts"),
 			tbl("contacts.contact_userid"),
 			tbl("contacts.contact_userid")."='$uid' AND ".tbl("contacts.confirmed")."='no' AND ".tbl("contacts").".contact_group_id='$group' ");
-			//echo $db->db_query;
 			return $count;
 		}
 	}
@@ -1372,11 +1372,9 @@ class userquery extends CBCategory{
 			
 			if($db->num_rows>0)
 				return $result;
-			else
-				return false;
-		}else
-		{
-			$result =  $db->count(tbl($this->dbtbl['subtbl']),"subscription_id"," userid = '$id'");
+			return false;
+		} else {
+			$result = $db->count(tbl($this->dbtbl['subtbl']),"subscription_id"," userid = '$id'");
 			return $result;
 		}
 	}
@@ -2116,8 +2114,8 @@ class userquery extends CBCategory{
 	 */
 	function delete_comment($cid,$is_reply=FALSE)
 	{
-		global $myquery,$db;
-		$remove_comment =  $myquery->delete_comment($cid,'c',$is_reply);
+		global $myquery;
+		$remove_comment = $myquery->delete_comment($cid,'c',$is_reply);
 		if($remove_comment)
 		{
 			//Updating Number of comments of video
@@ -2125,9 +2123,7 @@ class userquery extends CBCategory{
 		}
 		return $remove_comment;
 	}
-	
-	
-	
+
 	/**
 	 * Function used to get number of videos uploaded by user
 	 * @param INT userid
@@ -3360,7 +3356,7 @@ class userquery extends CBCategory{
 		$email = (isset($default['email'])) ? $default['email'] : "";
 
 		$dob = (isset($default['dob'])) ? $default['dob'] : "";
-		$dob =  $dob ? date(config("date_format"),strtotime($dob)) : date(config("date_format"),strtotime('14-10-1989'));
+		$dob = $dob ? date(config("date_format"),strtotime($dob)) : date(config("date_format"),strtotime('14-10-1989'));
 
 		$countries = $Cbucket->get_countries(iso2);
 		$user_ip = $_SERVER['REMOTE_ADDR']; // getting user's ip
@@ -4147,27 +4143,25 @@ class userquery extends CBCategory{
 	/**
 	  * Function used to get number of users online
 	  */
-	 function get_online_users($group=true,$count=false)
-	 {
+	function get_online_users($group=true,$count=false)
+	{
 		 global $db;
 		
 		 if($group)
 		 {
-			 $results =  $db->select(tbl("sessions")." LEFT JOIN (".tbl("users").") ON 
+			 $results = $db->select(tbl("sessions")." LEFT JOIN (".tbl("users").") ON 
 			 (".tbl("sessions.session_user=").tbl("users").".userid)" ,
 			 tbl("sessions.*,users.username,users.userid,users.email").",count(".tbl("sessions.session_user").") AS logins"
 			 ," TIMESTAMPDIFF(MINUTE,".tbl("sessions.last_active").",'".NOW()."')  < 6 GROUP BY ".tbl("users.userid"));	
-		 }else
-		 {
+		 } else {
 			 if($count)
 			 {
-				  $results =  $db->count(tbl("sessions")." LEFT JOIN (".tbl("users").") ON 
+				  $results = $db->count(tbl("sessions")." LEFT JOIN (".tbl("users").") ON 
 				 (".tbl("sessions.session_user=").tbl("users").".userid)" ,
 				 tbl("sessions.session_id")
 				 ," TIMESTAMPDIFF(MINUTE,".tbl("sessions.last_active").",'".NOW()."')  < 6 ");
-			 }else
-			 {
-				  $results =  $db->select(tbl("sessions")." LEFT JOIN (".tbl("users").") ON 
+			 } else {
+				  $results = $db->select(tbl("sessions")." LEFT JOIN (".tbl("users").") ON 
 				 (".tbl("sessions.session_user=").tbl("users").".userid)" ,
 				 tbl("sessions.*,users.username,users.userid,users.email")
 				 ," TIMESTAMPDIFF(MINUTE,".tbl("sessions.last_active").",'".NOW()."')  < 6 ");
@@ -4175,7 +4169,7 @@ class userquery extends CBCategory{
 		 }
 
 	 	 return $results;
-	 }
+	}
 	 
 	 
 	 
@@ -4346,7 +4340,7 @@ class userquery extends CBCategory{
 				return $result[0]['userid'];
 			else
 			{
-				$pass =  RandomString(10);
+				$pass = RandomString(10);
 				
 				if($_SERVER['HTTP_HOST']!='localhost' && $_SERVER['HTTP_HOST']!='127.0.0.1')
 					$email = 'anonymous'.RandomString(5).'@'.$_SERVER['HTTP_HOST'];
@@ -4355,21 +4349,20 @@ class userquery extends CBCategory{
 				
 				//Create Anonymous user
 				$uid = $this->signup_user(
-				array(
-				'username' => 'anonymous'.RandomString(5),
-				'email'	=> $email,
-				'password' => $pass,
-				'cpassword' => $pass,
-				'country' => get_country(config('default_country_iso2')),
-				'gender' => 'Male',
-				'dob'	=> '2000-10-10',
-				'category' => '1',
-				'level' => '6',
-				'active' => 'yes',
-				'agree' => 'yes',
-				),false);
-				
-				
+					array(
+						'username' => 'anonymous'.RandomString(5),
+						'email'	=> $email,
+						'password' => $pass,
+						'cpassword' => $pass,
+						'country' => get_country(config('default_country_iso2')),
+						'gender' => 'Male',
+						'dob'	=> '2000-10-10',
+						'category' => '1',
+						'level' => '6',
+						'active' => 'yes',
+						'agree' => 'yes',
+					),false);
+
 			   /*Added to resolve bug 222*/    
 			   global $myquery;
 			   $myquery->Set_Website_Details('anonymous_id',$uid);

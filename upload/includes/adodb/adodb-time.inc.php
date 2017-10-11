@@ -616,7 +616,7 @@ Thursday, October 4, 1582 (Julian) was followed immediately by Friday, October 1
 	    $year--;
 	}
 	
-	$day =  floor((13 * $month - 1) / 5) +
+	$day = floor((13 * $month - 1) / 5) +
 	        $day + ($year % 100) +
 	        floor(($year % 100) / 4) +
 	        floor(($year / 100) / 4) - 2 *
@@ -789,7 +789,7 @@ function _adodb_getdate($origd=false,$fast=false,$is_gmt=false)
 static $YRS;
 global $_month_table_normal,$_month_table_leaf;
 
-	$d =  $origd - ($is_gmt ? 0 : adodb_get_gmt_diff_ts($origd));
+	$d = $origd - ($is_gmt ? 0 : adodb_get_gmt_diff_ts($origd));
 	$_day_power = 86400;
 	$_hour_power = 3600;
 	$_min_power = 60;
@@ -1313,12 +1313,8 @@ global $ADODB_DATE_LOCALE;
 		}
 	}
 	
-	if (empty($ADODB_DATE_LOCALE)) {
-	/*
-		$tstr = strtoupper(gmstrftime('%c',31366800)); // 30 Dec 1970, 1 am
-		$sep = substr($tstr,2,1);
-		$hasAM = strrpos($tstr,'M') !== false;
-	*/
+	if (empty($ADODB_DATE_LOCALE))
+	{
 		# see http://phplens.com/lens/lensforum/msgs.php?id=14865 for reasoning, and changelog for version 0.24
 		$dstr = gmstrftime('%x',31366800); // 30 Dec 1970, 1 am
 		$sep = substr($dstr,2,1);
@@ -1326,9 +1322,8 @@ global $ADODB_DATE_LOCALE;
 		$hasAM = strrpos($tstr,'M') !== false;
 		
 		$ADODB_DATE_LOCALE = array();
-		$ADODB_DATE_LOCALE[] =  strncmp($tstr,'30',2) == 0 ? 'd'.$sep.'m'.$sep.'y' : 'm'.$sep.'d'.$sep.'y';	
-		$ADODB_DATE_LOCALE[]  = ($hasAM) ? 'h:i:s a' : 'H:i:s';
-			
+		$ADODB_DATE_LOCALE[] = strncmp($tstr,'30',2) == 0 ? 'd'.$sep.'m'.$sep.'y' : 'm'.$sep.'d'.$sep.'y';
+		$ADODB_DATE_LOCALE[] = ($hasAM) ? 'h:i:s a' : 'H:i:s';
 	}
 	$inpct = false;
 	$fmtdate = '';

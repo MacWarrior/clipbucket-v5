@@ -312,7 +312,7 @@
 						relRelated;
 
 					if (data) {
-						relRelated =  $(this).data('rel') || data.rel || this.rel;
+						relRelated = $(this).data('rel') || data.rel || this.rel;
 					}
 					
 					return (relRelated === settings.rel);

@@ -344,7 +344,7 @@ function smarty_function_html_select_date($params, $template)
         for ($i = 1; $i <= 31; $i++) {
             $_val = sprintf('%02d', $i);
             $_text = $day_format == '%02d' ? $_val : sprintf($day_format, $i);
-            $_value = $day_value_format ==  '%02d' ? $_val : sprintf($day_value_format, $i);
+            $_value = $day_value_format == '%02d' ? $_val : sprintf($day_value_format, $i);
             $_html_days .= '<option value="' . $_value . '"'
                 . ($_val == $_day ? ' selected' : '')
                 . '>' . $_text . '</option>' . $option_separator;

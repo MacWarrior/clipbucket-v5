@@ -47,9 +47,9 @@ class CBvideo extends CBCategory
 		$this->init_collections();
 		
 		if(config('vid_cat_height'));
-		$this->cat_thumb_height =  config('vid_cat_height');
+		$this->cat_thumb_height = config('vid_cat_height');
 		if(config('vid_cat_width'));
-		$this->cat_thumb_width =   config('vid_cat_width');
+		$this->cat_thumb_width = config('vid_cat_width');
 		
 		if(isSectionEnabled('videos'))
 		$Cbucket->search_types['videos'] = "cbvid";
@@ -1022,7 +1022,7 @@ class CBvideo extends CBCategory
             {
 				if ($cond !=="")
             	{
-            		$cond .=  " AND ".$superCond;
+            		$cond .= " AND ".$superCond;
             	} else {
             		$cond .= $superCond;
             	}	
@@ -1154,7 +1154,7 @@ class CBvideo extends CBCategory
 	 */
 	function add_comment($comment,$obj_id,$reply_to=NULL,$force_name_email=false)
 	{
-		global $myquery,$db;
+		global $myquery;
 		
 		$video = $this->get_video_details($obj_id);
 		
@@ -1164,24 +1164,21 @@ class CBvideo extends CBCategory
 		{
 			//Getting Owner Id
 			$owner_id = $this->get_video_owner($obj_id,true);
-			$add_comment =  $myquery->add_comment($comment,$obj_id,$reply_to,'v',$owner_id,videoLink($video),$force_name_email);
+			$add_comment = $myquery->add_comment($comment,$obj_id,$reply_to,'v',$owner_id,videoLink($video),$force_name_email);
 			if($add_comment)
 			{
 				//Logging Comment
-				$log_array = array
-				(
-				 'success'=>'yes',
-				 'details'=> "comment on a video",
-				 'action_obj_id' => $obj_id,
-				 'action_done_id' => $add_comment,
+				$log_array = array(
+					'success'=>'yes',
+					'details'=> "comment on a video",
+					'action_obj_id' => $obj_id,
+					'action_done_id' => $add_comment,
 				);
 				insert_log('video_comment',$log_array);
 				
 				//Updating Number of comments of video if comment is not a reply
 				if ($reply_to < 1)
 					$this->update_comments_count($obj_id);
-				
-				
 			}
 			return $add_comment;
 		}
@@ -1192,8 +1189,8 @@ class CBvideo extends CBCategory
 	 */
 	function delete_comment($cid,$is_reply=FALSE)
 	{
-		global $myquery,$db;
-		$remove_comment =  $myquery->delete_comment($cid,'v',$is_reply);
+		global $myquery;
+		$remove_comment = $myquery->delete_comment($cid,'v',$is_reply);
 		if($remove_comment)
 		{
 			//Updating Number of comments of video
@@ -1879,7 +1876,7 @@ class CBvideo extends CBCategory
 			{
 				$sectbl = tbl('video');
 				$sectblName = 'video';
-				$secfields =  $sectbl.".videokey,".$sectbl.".videoid,".$sectbl.".file_name,".$sectbl.".title";
+				$secfields = $sectbl.".videokey,".$sectbl.".videoid,".$sectbl.".file_name,".$sectbl.".title";
 				if($cond) {
 					$cond .= " AND";
 				}
@@ -1916,7 +1913,7 @@ class CBvideo extends CBCategory
 			{
 				$sectbl = tbl('video');
 				$sectblName = 'video';
-				$secfields =  $sectbl.".videokey,".$sectbl.".videoid,".$sectbl.".file_name,".$sectbl.".title";
+				$secfields = $sectbl.".videokey,".$sectbl.".videoid,".$sectbl.".file_name,".$sectbl.".title";
 				if($cond) {
 					$cond .= " AND";
 				}
@@ -1931,7 +1928,6 @@ class CBvideo extends CBCategory
 		$result = $db->select(tbl("comments,".$sectblName.""),
 								  "$comtbl.*,$secfields",
 								  $cond,$limit,$order);
-		// echo $db->db_query;
 		}
 		if($params['count_only'])
 			return $result = $db->count(tbl("comments,video"),"*",$cond);

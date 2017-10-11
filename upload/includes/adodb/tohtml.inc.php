@@ -184,7 +184,7 @@ function arr2html(&$arr,$ztabhtml='',$zheaderarray='')
 				$s .= "	<TD>$val</TD>\n";
 			}
 		else if ($a) {
-			$s .=  '	<TD>'.$a."</TD>\n";
+			$s .= '	<TD>'.$a."</TD>\n";
 		} else $s .= "	<TD>&nbsp;</TD>\n";
 		$s .= "\n</TR>\n";
 	}

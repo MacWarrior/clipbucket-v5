@@ -148,9 +148,8 @@ function smarty_function_html_radios_output($name, $value, $output, $selected, $
     }
     $_output .= $extra . ' />' . $output;
     if ($labels) $_output .= '</label>';
-    $_output .=  $separator;
+    $_output .= $separator;
 
     return $_output;
 }
 
-?>

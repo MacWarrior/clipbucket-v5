@@ -604,15 +604,16 @@ function _adodb_getupdatesql(&$zthis,&$rs, $arrFields,$forceUpdate=false,$magicq
 		$setFields = '';
 		
 		// Loop through all of the fields in the recordset
-		for ($i=0, $max=$rs->FieldCount(); $i < $max; $i++) {
+		for ($i=0, $max=$rs->FieldCount(); $i < $max; $i++)
+		{
 			// Get the field from the recordset
 			$field = $rs->FetchField($i);
 
 			// If the recordset field is one
 			// of the fields passed in then process.
 			$upperfname = strtoupper($field->name);
-			if (adodb_key_exists($upperfname,$arrFields,$force)) {
-				
+			if (adodb_key_exists($upperfname,$arrFields,$force))
+			{
 				// If the existing field value in the recordset
 				// is different from the value passed in then
 				// go ahead and append the field name and new value to
@@ -620,12 +621,13 @@ function _adodb_getupdatesql(&$zthis,&$rs, $arrFields,$forceUpdate=false,$magicq
 				
 				if ($hasnumeric) $val = $rs->fields[$i];
 				else if (isset($rs->fields[$upperfname])) $val = $rs->fields[$upperfname];
-				else if (isset($rs->fields[$field->name])) $val =  $rs->fields[$field->name];
-				else if (isset($rs->fields[strtolower($upperfname)])) $val =  $rs->fields[strtolower($upperfname)];
+				else if (isset($rs->fields[$field->name])) $val = $rs->fields[$field->name];
+				else if (isset($rs->fields[strtolower($upperfname)])) $val = $rs->fields[strtolower($upperfname)];
 				else $val = '';
 				
 			
-				if ($forceUpdate || strcmp($val, $arrFields[$upperfname])) {
+				if ($forceUpdate || strcmp($val, $arrFields[$upperfname]))
+				{
 					// Set the counter for the number of fields that will be updated.
 					$fieldUpdatedCount++;
 
@@ -654,7 +656,7 @@ function _adodb_getupdatesql(&$zthis,&$rs, $arrFields,$forceUpdate=false,$magicq
                     switch ($force) {
 
                         //case 0:
-                        //    //Ignore empty values. This is allready handled in "adodb_key_exists" function.
+                        //    //Ignore empty values. This is already handled in "adodb_key_exists" function.
                         //break;
 
                         case 1:
@@ -1080,8 +1082,8 @@ function _adodb_backtrace($printOrArr=true,$levels=9999,$skippy=0)
 {
 	if (!function_exists('debug_backtrace')) return '';
 	 
-	$html =  (isset($_SERVER['HTTP_USER_AGENT']));
-	$fmt =  ($html) ? "</font><font color=#808080 size=-1> %% line %4d, file: <a href=\"file:/%s\">%s</a></font>" : "%% line %4d, file: %s";
+	$html = (isset($_SERVER['HTTP_USER_AGENT']));
+	$fmt = ($html) ? "</font><font color=#808080 size=-1> %% line %4d, file: <a href=\"file:/%s\">%s</a></font>" : "%% line %4d, file: %s";
 
 	$MAXSTRLEN = 128;
 
@@ -1099,7 +1101,7 @@ function _adodb_backtrace($printOrArr=true,$levels=9999,$skippy=0)
 		if ($levels < 0) break;
 		
 		$args = array();
-		for ($i=0; $i < $tabs; $i++) $s .=  ($html) ? ' &nbsp; ' : "\t";
+		for ($i=0; $i < $tabs; $i++) $s .= ($html) ? ' &nbsp; ' : "\t";
 		$tabs -= 1;
 		if ($html) $s .= '<font face="Courier New,Courier">';
 		if (isset($arr['class'])) $s .= $arr['class'].'.';

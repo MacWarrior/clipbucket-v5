@@ -39,29 +39,29 @@ class Config_File {
     /**
      * Controls whether variables with the same name overwrite each other.
      */
-    var $overwrite        =    true;
+    var $overwrite    = true;
 
     /**
      * Controls whether config values of on/true/yes and off/false/no get
      * converted to boolean values automatically.
      */
-    var $booleanize        =    true;
+    var $booleanize   = true;
 
     /**
      * Controls whether hidden config sections/vars are read from the file.
      */
-    var $read_hidden     =    true;
+    var $read_hidden  = true;
 
     /**
      * Controls whether or not to fix mac or dos formatted newlines.
      * If set to true, \r or \r\n will be changed to \n.
      */
-    var $fix_newlines =    true;
+    var $fix_newlines = true;
     /**#@-*/
 
     /** @access private */
-    var $_config_path    = "";
-    var $_config_data    = array();
+    var $_config_path = "";
+    var $_config_data = array();
     /**#@-*/
 
     /**
@@ -74,7 +74,6 @@ class Config_File {
         if (isset($config_path))
             $this->set_path($config_path);
     }
-
 
     /**
      * Set the path where configuration files can be found.

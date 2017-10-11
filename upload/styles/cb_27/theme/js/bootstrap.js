@@ -320,7 +320,7 @@ if (typeof jQuery === "undefined") { throw new Error("Bootstrap requires jQuery"
   , wrap: true
   }
 
-  Carousel.prototype.cycle =  function (e) {
+  Carousel.prototype.cycle = function (e) {
     e || (this.paused = false)
 
     this.interval && clearInterval(this.interval)

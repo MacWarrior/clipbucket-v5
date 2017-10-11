@@ -14,21 +14,18 @@ var embed_type = '{$Cbucket->configs.embed_type}';
 var video_quality = 'normal';
 function toggleQuality(obj)
 {
-	
-		if(video_quality=='normal')
-		{
-			video_quality = 'hq';
-			flowplayer(obj).stop();
-			flowplayer(obj).setClip({url:hq_video_file});
-			flowplayer(obj).play();
-		}
-		else
-		{
-			video_quality = 'normal';
-			flowplayer(obj).stop();
-			flowplayer(obj).setClip({url:normal_video_file});
-			flowplayer(obj).play();
-		}
+	if(video_quality=='normal')
+	{
+		video_quality = 'hq';
+		flowplayer(obj).stop();
+		flowplayer(obj).setClip({url:hq_video_file});
+		flowplayer(obj).play();
+	} else {
+		video_quality = 'normal';
+		flowplayer(obj).stop();
+		flowplayer(obj).setClip({url:normal_video_file});
+		flowplayer(obj).play();
+	}
 }
 
 function pakplayer_hq()
@@ -156,7 +153,7 @@ function updateEmbedCode(width,height,autoplay)
 	embedPlayerWidth = width;
 	embedPlayerHeight = height;
 	autoPlayEmbed = autoplay;
-	var embedCode =  $('#embed_code').val();
+	var embedCode = $('#embed_code').val();
 	
 	$('#embed_code').val( $('#embed_code').val().replace(/height=\"([0-9]+)\"/g,'height="'+height+'"') );
 	$('#embed_code').val( $('#embed_code').val().replace(/width=\"([0-9]+)\"/g,'width="'+width+'"') );

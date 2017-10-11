@@ -19,7 +19,7 @@ $(document).ready(function()
 	
 
     // setting player controls when video gets ready :)
-  	var ready_state_interval =  setInterval(function(){
+  	var ready_state_interval = setInterval(function(){
 
 		var vid = document.getElementById("myVideo");
 

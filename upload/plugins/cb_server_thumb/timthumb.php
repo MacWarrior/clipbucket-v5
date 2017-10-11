@@ -553,7 +553,7 @@ class timthumb {
     }
 
     // get standard input properties    
-    $new_width =  (int) abs ($this->param('w', 0));
+    $new_width = (int) abs ($this->param('w', 0));
     $new_height = (int) abs ($this->param('h', 0));
     $zoom_crop = (int) $this->param('zc', DEFAULT_ZC);
     $quality = (int) abs ($this->param('q', DEFAULT_Q));
@@ -613,7 +613,7 @@ class timthumb {
     imagealphablending ($canvas, false);
 
     if (strlen($canvas_color) == 3) { //if is 3-char notation, edit string into 6-char notation
-      $canvas_color =  str_repeat(substr($canvas_color, 0, 1), 2) . str_repeat(substr($canvas_color, 1, 1), 2) . str_repeat(substr($canvas_color, 2, 1), 2); 
+      $canvas_color = str_repeat(substr($canvas_color, 0, 1), 2) . str_repeat(substr($canvas_color, 1, 1), 2) . str_repeat(substr($canvas_color, 2, 1), 2);
     } else if (strlen($canvas_color) != 6) {
       $canvas_color = DEFAULT_CC; // on error return default canvas color
     }

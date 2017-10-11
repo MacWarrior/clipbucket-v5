@@ -8,7 +8,7 @@
 
 <!-- This code is added for timecomments plugin-->
 {$tcomments_params = ['function'=>'get_timeCommnets','videoid'=>$vdata.videoid]}
-{$Comments_allowed =  $myquery->is_commentable($vdata,'v') }
+{$Comments_allowed = $myquery->is_commentable($vdata,'v') }
 {$timecomments = get_my_function($tcomments_params)}
 <!-- End -->
 

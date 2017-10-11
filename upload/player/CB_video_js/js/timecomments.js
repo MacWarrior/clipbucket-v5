@@ -48,9 +48,9 @@ TimeComments.prototype.AddComment = function(){
 	var commentTimeDisplay = function(){
 		cTimeDisplay = document.createElement('div');
 		cTimeDisplay.className = "cb-vjs-comments-display";
-		cTimeDisplay.style.position =  'absolute';
-		cTimeDisplay.style.width =  '2px';
-		cTimeDisplay.style.height =  '100%';
+		cTimeDisplay.style.position = 'absolute';
+		cTimeDisplay.style.width = '2px';
+		cTimeDisplay.style.height = '100%';
 
 		addCommentHolder = document.createElement('div');
 		addCommentHolder.className = "add-comment-holder";
@@ -330,16 +330,17 @@ TimeComments.prototype.convertToSeconds = function(string){
 
 TimeComments.prototype.GetTimeComments = function(dummy){
 	var timecomments = this;
-	var comments =  "";
-	if (dummy){
-		comments =  [
-						{"id":"1", "comment" : "This is first comment","time" : "10.25635","avatar":"http://127.0.0.1/clipbucket-git/images/avatars/1.jpg"},
-					 	{"id":"2", "comment" : "This is Second comment","time" : "15.12353","avatar":"http://127.0.0.1/clipbucket-git/images/avatars/1.jpg"},
-					 	{"id":"3", "comment" : "This is Third comment","time" : "30.25635","avatar":"http://127.0.0.1/clipbucket-git/images/avatars/1.jpg"},
-					 	{"id":"4", "comment" : "This is Fourth comment","time" : "50.25635","avatar":"http://127.0.0.1/clipbucket-git/images/avatars/1.jpg"},
-					 	{"id":"5", "comment" : "This is Fifth comment","time" : "70.25635","avatar":"http://127.0.0.1/clipbucket-git/images/avatars/1.jpg"},
-					 	{"id":"6", "comment" : "This is Sixth comment","time" : "90.25635","avatar":"http://127.0.0.1/clipbucket-git/images/avatars/1.jpg"},
-					]
+	var comments = "";
+	if (dummy)
+	{
+		comments = [
+            {"id":"1", "comment" : "This is first comment","time" : "10.25635","avatar":"http://127.0.0.1/clipbucket-git/images/avatars/1.jpg"},
+            {"id":"2", "comment" : "This is Second comment","time" : "15.12353","avatar":"http://127.0.0.1/clipbucket-git/images/avatars/1.jpg"},
+            {"id":"3", "comment" : "This is Third comment","time" : "30.25635","avatar":"http://127.0.0.1/clipbucket-git/images/avatars/1.jpg"},
+            {"id":"4", "comment" : "This is Fourth comment","time" : "50.25635","avatar":"http://127.0.0.1/clipbucket-git/images/avatars/1.jpg"},
+            {"id":"5", "comment" : "This is Fifth comment","time" : "70.25635","avatar":"http://127.0.0.1/clipbucket-git/images/avatars/1.jpg"},
+            {"id":"6", "comment" : "This is Sixth comment","time" : "90.25635","avatar":"http://127.0.0.1/clipbucket-git/images/avatars/1.jpg"}
+        ]
 	}else{
 		comments = JSON.parse(timecomments.settings.comments);
 	}

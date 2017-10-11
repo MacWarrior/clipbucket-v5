@@ -405,7 +405,7 @@
 				if( $duration / 3600 > 1 ) {
 					$time = date( "H:i:s", $duration - rand( 0,$duration ) );
 				} else {
-					$time =  "00:";
+					$time = "00:";
 					$time .= date( "i:s", $duration - rand( 0,$duration ) );
 				}
 

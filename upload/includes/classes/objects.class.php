@@ -55,7 +55,7 @@ class CBObjects
 			if($lang_obj->lang == $lang['language_code'])
 				$selected = ' selected ';
 			else
-				$selected =  '';
+				$selected = '';
 				
 			if($lang['language_name']!='')
 				$obj .= "<option value='".$lang['language_code']."' $selected>".$lang['language_name']."</option>\n";
@@ -84,20 +84,18 @@ class CBObjects
 					
 		$obj = "<button type='button' class='btn btn-default dropdown-toggle lang' data-toggle='dropdown'>".$button_text." <span class='caret'></span></button>\n";
 		$obj .= "<ul class='dropdown-menu lang_ul' role='menu'>";
-		//$obj .= "<li><a href='#'>".lang("chane_lang")."</a></li>\n";
+
 		foreach($langs as $lang)
 		{
-				if($lang_obj->lang == $lang['language_code'])
+			if($lang_obj->lang == $lang['language_code'])
 				$selected = ' class="active" ';
-			  else
-				$selected =  '';
+		  	else
+				$selected = '';
 
-				if($lang['language_name']!='')
+			if($lang['language_name']!='')
 				$obj .= "<li ".$selected."><a href='#'>".$lang['language_name']."</a></li>\n";
 		}
 		$obj .="</ul>\n";
 		return $obj;
 	}
 }
-
-?>

@@ -393,7 +393,7 @@
 		$(this).text("Load More")
 	})
 
-	var resizePlayer =  _cb.debounce(function() {
+	var resizePlayer = _cb.debounce(function() {
 		$cb_player.height( $cb_player.width() / aspect_ratio );
 	}, 500, false);
 

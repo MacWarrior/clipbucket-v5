@@ -732,51 +732,51 @@ class Upload
 		$dcountry = $default['country'];
 		$location = $default['location'];
 		$date_recorded = $default['datecreated'];
-		$date_recorded =  $date_recorded ? date(config("date_format"),strtotime($date_recorded)) : date(config("date_format"),time());
+		$date_recorded = $date_recorded ? date(config("date_format"),strtotime($date_recorded)) : date(config("date_format"),time());
 		
 		$country_array = array("");
 
 		$country_array = @array_merge($country_array,ClipBucket::get_countries());
 		
-		$LocationFieldsArray = array
-		(
-		 'country'=> array('title'=>lang('country'),
-							'type'=> 'dropdown',
-							'name'=> 'country',
-							'id'=> 'country',
-							'value'=> $country_array,
-							'checked'=> $dcountry,
-							'db_field'=>'country',
-							'required'=>'no',
-							'default_value'=>'',
-							
-							 ),
-		 'location'=> array('title'=>lang('location'),
-							 'type'=>'textfield',
-							'name'=> 'location',
-							'id'=> 'location',
-							'value'=> $location,
-							'hint_2'=> lang('vdo_add_eg'),
-							'db_field'=>'location',
-							'required'=>'no',
-							'default_value'=>'',
-							 ),
-		 'date_recorded'	=> array(
-						 'title' => 'Date Recorded',
-						 'type' => 'textfield',
-						 'name' => 'datecreated',
-						 'id' => 'datecreated',
-						 'class'=>'date_field',
-						 'anchor_after' => 'date_picker',
-						 'value'=> $date_recorded,
-						 'db_field'=>'datecreated',
-						 'required'=>'no',
-						 'default_value'=>'',
-						 'use_func_val' => true,
-						 'validate_function' => 'datecreated',
-						 'hint_2' => config("date_format"),
-						 )
-		 );
+		$LocationFieldsArray = array(
+			'country'=> array(
+				'title'=>lang('country'),
+				'type'=> 'dropdown',
+				'name'=> 'country',
+				'id'=> 'country',
+				'value'=> $country_array,
+				'checked'=> $dcountry,
+				'db_field'=>'country',
+				'required'=>'no',
+				'default_value'=>''
+			),
+			'location'=> array(
+				'title'=>lang('location'),
+				'type'=>'textfield',
+				'name'=> 'location',
+				'id'=> 'location',
+				'value'=> $location,
+				'hint_2'=> lang('vdo_add_eg'),
+				'db_field'=>'location',
+				'required'=>'no',
+				'default_value'=>''
+			),
+		 	'date_recorded'	=> array(
+				 'title' => 'Date Recorded',
+				 'type' => 'textfield',
+				 'name' => 'datecreated',
+				 'id' => 'datecreated',
+				 'class'=>'date_field',
+				 'anchor_after' => 'date_picker',
+				 'value'=> $date_recorded,
+				 'db_field'=>'datecreated',
+				 'required'=>'no',
+				 'default_value'=>'',
+				 'use_func_val' => true,
+				 'validate_function' => 'datecreated',
+				 'hint_2' => config("date_format")
+			)
+		);
 		return $LocationFieldsArray;
 	}
 

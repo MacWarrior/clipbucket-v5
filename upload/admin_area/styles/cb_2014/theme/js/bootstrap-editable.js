@@ -2608,7 +2608,7 @@ List - abstract class for inputs that have source option loaded from js array or
                 source = this.options.source;
             }            
             
-            //if allready loaded just call success
+            //if already loaded just call success
             if(this.options.sourceCache && $.isArray(this.sourceData)) {
                 success.call(this);
                 return; 

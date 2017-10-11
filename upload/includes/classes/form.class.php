@@ -23,7 +23,7 @@ if(!function_exists('escape_quotes'))
 class formObj 
 {
 	
-	var $multi_cat_id =  0;
+	var $multi_cat_id = 0;
 
 	/**
 	 * FUNCTION USED TO CREATE TEXT FIELD

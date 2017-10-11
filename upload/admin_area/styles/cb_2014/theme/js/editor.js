@@ -526,7 +526,7 @@
         if (dom.isText(elCont)) {
           var aPrevText = dom.listPrev(elCont, func.not(dom.isText));
           var elPrevCont = list.last(aPrevText).previousSibling;
-          elNode =  elPrevCont || elCont.parentNode;
+          elNode = elPrevCont || elCont.parentNode;
           nOffset += list.sum(list.tail(aPrevText), dom.length);
           bCollapseToStart = !elPrevCont;
         } else {

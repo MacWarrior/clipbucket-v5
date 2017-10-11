@@ -13010,7 +13010,6 @@ var Slider = (function (_Component) {
 
     // If scrubbing, we could use a cached value to make the handle keep up with the user's mouse.
     // On HTML5 browsers scrubbing is really smooth, but some flash players are slow, so we might want to utilize this later.
-    // var progress =  (this.player_.scrubbing()) ? this.player_.getCache().currentTime / this.player_.duration() : this.player_.currentTime() / this.player_.duration();
     var progress = this.getPercent();
     var bar = this.bar;
 
@@ -21668,7 +21667,7 @@ module.exports = exports['default'];
       styles.writingMode = cue.vertical === "" ? "horizontal-tb"
                                                : cue.vertical === "lr" ? "vertical-lr"
                                                                        : "vertical-rl".
-      stylesunicodeBidi =  "plaintext";
+      stylesunicodeBidi = "plaintext";
     }
 
     this.applyStyles(styles);
@@ -21679,16 +21678,17 @@ module.exports = exports['default'];
     // position of the cue box. The reference edge will be resolved later when
     // the box orientation styles are applied.
     var textPos = 0;
-    switch (cue.positionAlign) {
-    case "start":
-      textPos = cue.position;
-      break;
-    case "middle":
-      textPos = cue.position - (cue.size / 2);
-      break;
-    case "end":
-      textPos = cue.position - cue.size;
-      break;
+    switch (cue.positionAlign)
+    {
+        case "start":
+            textPos = cue.position;
+            break;
+        case "middle":
+            textPos = cue.position - (cue.size / 2);
+            break;
+        case "end":
+            textPos = cue.position - cue.size;
+            break;
     }
 
     // Horizontal box orientation; textPos is the distance from the left edge of the

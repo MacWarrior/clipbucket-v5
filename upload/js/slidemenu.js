@@ -90,7 +90,7 @@ function Init(objDiv)
 		
     numMenuItem = 0;
     mainMenuDiv = objDiv.parentNode;
-    subMenuDiv =  mainMenuDiv.getElementsByTagName("DIV").item(0);
+    subMenuDiv = mainMenuDiv.getElementsByTagName("DIV").item(0);
     
 
     menuContainerDiv= mainMenuDiv.getElementsByTagName("DIV").item(1);
@@ -180,7 +180,7 @@ function Init(objDiv)
     }//end if
 
     mainMenuDiv = null;
-    subMenuDiv =  null;
+    subMenuDiv = null;
     menuContainerDiv= null;
     itemContainerDiv= null;
     
@@ -243,7 +243,7 @@ function RunSlide(objIndex)
 				menuObjArray[0][objIndex].style.opacity -= .9/(((menuObjArray[2][objIndex] * divHeight) / moveSlidePix)+1);
 		}
         menuObjArray[1][objIndex].style.display = 'none';
-        menuObjArray[4][objIndex] -=  moveSlidePix;
+        menuObjArray[4][objIndex] -= moveSlidePix;
         if (menuObjArray[4][objIndex] > 0)
             menuObjArray[0][objIndex].style.height = menuObjArray[4][objIndex] + "px";
         else
@@ -308,7 +308,7 @@ function RunSlide(objIndex)
 				menuObjArray[0][objIndex].style.opacity = opcVal;
 			}
 		}
-        menuObjArray[4][objIndex] +=  moveSlidePix;
+        menuObjArray[4][objIndex] += moveSlidePix;
         if (menuObjArray[4][objIndex] < (menuObjArray[2][objIndex] * divHeight))
             menuObjArray[0][objIndex].style.height = menuObjArray[4][objIndex] + "px";
         else

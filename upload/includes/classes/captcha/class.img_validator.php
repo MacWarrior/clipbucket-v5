@@ -162,7 +162,7 @@ class img_validator extends files
         }
         else
         {
-             $msg =  false;
+             $msg = false;
         }
 	return $msg;
     }

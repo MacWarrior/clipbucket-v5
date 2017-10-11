@@ -301,7 +301,7 @@ abstract class CBCategory
 		foreach($catArray as $catID=>$cat)
 		{
 			if($_GET['cat'] == $catID || (empty($_GET['cat']) && $cat['category_id'] == 'all'))
-				$selected =  "selected"; 
+				$selected = "selected";
 			else
 				$selected = "";
 
@@ -310,7 +310,6 @@ abstract class CBCategory
 
 			$class = form_val($class);
 			$add_class = form_val($add_class);
-			//$selected = form_val($selected);
 
 			$html .= "<li class='cbCategoryItem ".$class.$selected.$add_class."'";
 			if($params['id'])

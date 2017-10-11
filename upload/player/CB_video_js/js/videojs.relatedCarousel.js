@@ -164,7 +164,7 @@
     player.carousel.rightButtonContent.className = 'icon-videojs-carousel-right icon-next';
 
     // Add all items to DOM
-    var controlBarChilds =  player.controlBar.el().childNodes;
+    var controlBarChilds = player.controlBar.el().childNodes;
     for (var i = 0; i < controlBarChilds.length; i++) {
         if (controlBarChilds[i].id == 'vjs-cb-logo'){
             cbVjsLogo = controlBarChilds[i];

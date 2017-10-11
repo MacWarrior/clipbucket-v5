@@ -58,7 +58,7 @@ class CB_Resizer {
 
         $this->cropping = 5;
 
-        $this->preserve_aspect = $this->auto_resource =  true;
+        $this->preserve_aspect = $this->auto_resource = true;
 
         $this->exact_dimensions = false;
 

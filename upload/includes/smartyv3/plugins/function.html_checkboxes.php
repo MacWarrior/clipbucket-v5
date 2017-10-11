@@ -229,7 +229,7 @@ function smarty_function_html_checkboxes_output($name, $value, $output, $selecte
         $_output .= '</label>';
     }
 
-    $_output .=  $separator;
+    $_output .= $separator;
 
     return $_output;
 }

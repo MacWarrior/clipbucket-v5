@@ -98,7 +98,7 @@ var
 
       suppressedTracks = snapshot.suppressedTracks,
       trackSnapshot,
-      restoreTracks =  function() {
+      restoreTracks = function() {
         var i = suppressedTracks.length;
         while (i--) {
           trackSnapshot = suppressedTracks[i];

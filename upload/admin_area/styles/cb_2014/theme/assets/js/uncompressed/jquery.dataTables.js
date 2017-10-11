@@ -1717,7 +1717,7 @@
 					nTmp = _fnFeatureHtmlTable( oSettings );
 					iPushFeature = 1;
 				}
-				else if ( cOption ==  'i' && oSettings.oFeatures.bInfo )
+				else if ( cOption == 'i' && oSettings.oFeatures.bInfo )
 				{
 					/* Info */
 					nTmp = _fnFeatureHtmlInfo( oSettings );

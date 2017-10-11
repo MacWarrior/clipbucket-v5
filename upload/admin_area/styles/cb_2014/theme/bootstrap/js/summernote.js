@@ -1060,7 +1060,7 @@
         if (dom.isText(elCont)) {
           var aPrevText = dom.listPrev(elCont, func.not(dom.isText));
           var elPrevCont = list.last(aPrevText).previousSibling;
-          elNode =  elPrevCont || elCont.parentNode;
+          elNode = elPrevCont || elCont.parentNode;
           nOffset += list.sum(list.tail(aPrevText), dom.length);
           bCollapseToStart = !elPrevCont;
         } else {
@@ -1598,7 +1598,7 @@
       // protocol
       var sLinkUrlWithProtocol = sLinkUrl;
       if (sLinkUrl.indexOf('@') !== -1 && sLinkUrl.indexOf(':') === -1) {
-        sLinkUrlWithProtocol =  'mailto:' + sLinkUrl;
+        sLinkUrlWithProtocol = 'mailto:' + sLinkUrl;
       } else if (sLinkUrl.indexOf('://') === -1) {
         sLinkUrlWithProtocol = 'http://' + sLinkUrl;
       }

@@ -445,8 +445,8 @@
                     console.log('ulslideEffects.scale.slide();'); //***
                     
                 if (settings['direction'] == 'f') {
-                    var rotate_pref =  '-';
-                    var rotate_pref_i =  '';
+                    var rotate_pref = '-';
+                    var rotate_pref_i = '';
                 }
                 else {
                     var rotate_pref = '';

@@ -373,8 +373,7 @@ class Collections extends CBCategory
 				$cond .= " AND ";
 			$cond .= " ".tbl('collections.featured')." = '".$p['featured']."'";	
 		}
-		
-		//$user_public_upload =  
+
 		if(isset($p['public_upload']))
 		{
 			if($cond != '')
@@ -452,23 +451,19 @@ class Collections extends CBCategory
 				$cond .= " AND ";
 			$cond .= " ($title_tag) ";		
 		}
-		
-		
 
 		if(!isset($p['count_only']))
 		{
 			if($cond != "")
 				$cond .= " AND ";
-			$result =   $db->select(tbl("collections,users"),
+			$result = $db->select(tbl("collections,users"),
 						tbl("collections.*,users.userid,users.username"),
 						$cond.tbl("collections.userid")." = ".tbl("users.userid"),$limit,$order);
 		}
-		
 
 		if(isset($p['count_only']))
 		{
 			return $result = $db->count(tbl("collections"),"collection_id",$cond);
-			//echo $db->db_query;	
 		}
 		
 		if(isset($p['assign']))
@@ -939,7 +934,7 @@ class Collections extends CBCategory
 			if($array['userid'])
 				$query_val[] = $userid = $array['userid'];
 			else
-				$query_val[] =  $userid = userid();
+				$query_val[] = $userid = userid();
 				
 			// active
 			$query_field[] = "active";

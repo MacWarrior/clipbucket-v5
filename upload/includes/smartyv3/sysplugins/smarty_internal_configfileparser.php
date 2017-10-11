@@ -208,11 +208,11 @@ class Smarty_Internal_Configfileparser#line 79 "smarty_internal_configfileparser
     const TPC_OTHER                          = 16;
     const TPC_NEWLINE                        = 17;
     const TPC_COMMENTSTART                   = 18;
-    const YY_NO_ACTION = 60;
-    const YY_ACCEPT_ACTION = 59;
-    const YY_ERROR_ACTION = 58;
+    const YY_NO_ACTION 						 = 60;
+    const YY_ACCEPT_ACTION 					 = 59;
+    const YY_ERROR_ACTION 					 = 58;
+    const YY_SZ_ACTTAB 						 = 38;
 
-    const YY_SZ_ACTTAB = 38;
 static public $yy_action = array(
  /*     0 */    29,   30,   34,   33,   24,   13,   19,   25,   35,   21,
  /*    10 */    59,    8,    3,    1,   20,   12,   14,   31,   20,   12,

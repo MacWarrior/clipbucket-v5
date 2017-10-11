@@ -78,7 +78,7 @@
 			case "php":
 			{
 				
-				$v =  phpversion();
+				$v = phpversion();
 				$req = '5.2.1';
 				if($v<$req)
 					$return['err'] = sprintf(_("Found PHP %s but required is PHP %s "),$v,$req);

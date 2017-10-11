@@ -407,7 +407,7 @@ class FFMpeg
 				
 				if (file_exists($this->sdFile))
 				{
-					$this->video_files[] =  'sd';
+					$this->video_files[] = 'sd';
 					$this->sdFile1 = "{$this->outputFile}.{$this->options['format']}";
 					$status = "Successful";
 					$this->log->TemplogData .= "\r\n Conversion Status : ".$status." @ ".date("Y-m-d H:i:s")." \r\n";
@@ -448,7 +448,7 @@ class FFMpeg
 				$this->log->TemplogData .= "\r\n output : ".$output." \r\n";
 				if (file_exists($this->hdFile))
 				{
-					$this->video_files[] =  'hd';
+					$this->video_files[] = 'hd';
 					$this->sdFile1 = "{$this->outputFile}.{$this->options['format']}";
 					$status = "Successful";
 					$this->log->TemplogData .= "\r\n Conversion Status : ".$status." @ ".date("Y-m-d H:i:s")."\r\n";
@@ -484,7 +484,7 @@ class FFMpeg
 				$this->log->TemplogData .= "\r\n output : ".$output." \r\n";
 				if (file_exists($this->sdFile))
 				{
-					$this->video_files[] =  'sd';
+					$this->video_files[] = 'sd';
 					$this->sdFile1 = "{$this->outputFile}.{$this->options['format']}";
 					$status = "Successful";
 					$this->log->TemplogData .= "\r\n Conversion Status : ".$status." @ ".date("Y-m-d H:i:s")." \r\n";
@@ -952,13 +952,13 @@ class FFMpeg
 			foreach ($durations as $key => $duration) 
 			{
 				$key1 = $key+1;
-				$this->log .=  "\r\n=====THUMBS LOG========";	
+				$this->log .= "\r\n=====THUMBS LOG========";
 
 				$file_name = $this->file_name."-{$prefix}{$key1}.jpg";
 			
 				$file_path = THUMBS_DIR.'/'.$this->video_folder.$file_name;
 
-				$this->log .=  "\r\n";	
+				$this->log .= "\r\n";
 
 				$durations_format = gmdate("H:i:s", $duration);
 
@@ -1342,7 +1342,7 @@ class FFMpeg
 			if(file_exists($this->raw_path."-".$more_res['name'].".mp4") && filesize($this->raw_path."-".$more_res['name'].".mp4")>0)
 			{
 				$this->has_resolutions = 'yes';
-				$this->video_files[] =  $more_res['name'];
+				$this->video_files[] = $more_res['name'];
 				$TemplogData .="\r\nFiles resolution : ".$more_res['name']." \r\n";
 			} else {
 				$TemplogData .="\r\n\r\nFile doesn't exist. Path: ".$this->raw_path."-".$more_res['name'].".mp4 \r\n\r\n";

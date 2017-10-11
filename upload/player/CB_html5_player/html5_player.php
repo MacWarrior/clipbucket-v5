@@ -51,16 +51,13 @@ if(!function_exists('html5_player'))
 		
 			if($hd=='yes') $file = get_hq_video_file($vdetails); else $file = get_video_files($vdetails,true,true);
 			$hd_file = get_hq_video_file($vdetails);
-			
-			
+
 			if($ytcode)
 			{
 				assign('youtube',true);
 				assign('ytcode',$ytcode);
 			}
 
-
-			
 			if(!strstr($in['width'],"%"))
 				$in['width'] = $in['width'].'px';
 			if(!strstr($in['height'],"%"))
@@ -72,11 +69,10 @@ if(!function_exists('html5_player'))
 
 			if ($in['player_logo_url'])
 			{
-				$player_logo_url =  $in['player_logo_url'];
+				$player_logo_url = $in['player_logo_url'];
 				assign('product_link',$player_logo_url); 
 			}
 
-              
 			assign('vdata',$vdetails);
             assign('height',$in['height']);
             assign('width',$in['width']);
@@ -88,11 +84,10 @@ if(!function_exists('html5_player'))
             //Enable disable enlarge/smaal button 
             $enlarge_button = $in['enlarge_button'];
             if (THIS_PAGE == 'watch_video' &&  $enlarge_button == 'yes')
-			 assign('enlarge_small','true');
+				assign('enlarge_small','true');
 		    else
-		     assign('enlarge_small','false');	
-			
-            
+		    	assign('enlarge_small','false');
+
             assign('about',BASEURL);
             $jquery = BASEDIR.'/js/jquery.js';
             assign('jquery',$jquery);
@@ -102,25 +97,23 @@ if(!function_exists('html5_player'))
             $pos = config('logo_placement');
 		    switch($pos)
 		    {
-			case "tl":
-			$position = array("top"=>'5px',"left"=>'5px',"bottom"=>'',"right"=>'');
-			break;
-			
-			case "tr":
-			$position = array("top"=>'5px',"left"=>'',"bottom"=>'',"right"=>'5px');
-			break;
-			
-			case "br":
-			$position = array("top"=>'',"left"=>'',"bottom"=>'5px',"right"=>'5px');
-			break;
-			
-			case "bl":
-			$position = array("top"=>'',"left"=>'5px',"bottom"=>'5px',"right"=>'');
-			break;
+				case "tl":
+					$position = array("top"=>'5px',"left"=>'5px',"bottom"=>'',"right"=>'');
+					break;
+
+				case "tr":
+					$position = array("top"=>'5px',"left"=>'',"bottom"=>'',"right"=>'5px');
+					break;
+
+				case "br":
+					$position = array("top"=>'',"left"=>'',"bottom"=>'5px',"right"=>'5px');
+					break;
+
+				case "bl":
+					$position = array("top"=>'',"left"=>'5px',"bottom"=>'5px',"right"=>'');
+					break;
 		    }
-		
-            
-		
+
             assign('top',$position["top"]);
             assign('left',$position["left"]);
             assign('bottom',$position["bottom"]); 
@@ -147,9 +140,7 @@ if(!function_exists('html5_player'))
             {	
             	assign('normal_vid_file',$video_play);
                 assign('application_videos',true);
-            }
-            else
-            {
+            } else {
 	            if($video_play[0])
 	            {
 		            $quality = get_quality($video_play[0]);
@@ -160,16 +151,12 @@ if(!function_exists('html5_player'))
 			            {	
 				            assign('normal_vid_file',$video_play[0]);
 				            assign('hq_vid_file','');
-			            }
-			            else
-			            {
+			            } else {
 				            assign('normal_vid_file',$video_play[1]);	
 				            assign('hq_vid_file',$video_play[0]);
 				            assign('HQ',true);
 			            }
-		            }
-		            else
-		            {
+		            } else {
 		            	$video_play = process_app_videos($video_play);
 		            	$json_array = json_encode($video_play);
 			            assign('json_videos',$json_array);
@@ -178,9 +165,7 @@ if(!function_exists('html5_player'))
 
 		            }
 		            
-	            }
-	            else
-	            {	
+	            } else {
 		            $json_array = json_encode($video_play);
 		            assign('json_videos',$json_array);
 		            $video_play = array_reverse($video_play, true);
@@ -236,14 +221,3 @@ if(!function_exists('html5_player'))
 	register_actions_play_video('html5_player'); 
 	
 }
-
-
-//overlay 
-
-/*$ov_details = BASEURL.'/images/icons/country/ov.png';
-  $ov_convert = base64_encode(file_get_contents($ov_details));
-  assign('ov',$ov_convert);*/
-
- 
-
-?>

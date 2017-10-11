@@ -173,7 +173,7 @@
 				curl_setopt($request, CURLOPT_SSL_VERIFYPEER, false);
 
 				$returnCode = (int)curl_getinfo($request, CURLINFO_HTTP_CODE);
-				$results =  curl_exec($request);
+				$results = curl_exec($request);
 
 				$decoded_results = json_decode($results,true);
 

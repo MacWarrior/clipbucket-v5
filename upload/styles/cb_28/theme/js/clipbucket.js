@@ -232,12 +232,12 @@
 							var hiddenVideoIdField = document.createElement('input');
 							hiddenVideoIdField.name = 'videoid';
 							hiddenVideoIdField.type = 'hidden';
-							hiddenVideoIdField.value =  vid;
+							hiddenVideoIdField.value = vid;
 
 							var hiddenVideoNameField = document.createElement('input');
 							hiddenVideoNameField.name = 'file_name';
 							hiddenVideoNameField.type = 'hidden';
-							hiddenVideoNameField.value =  file_name;
+							hiddenVideoNameField.value = file_name;
 
 
 							$(oneFileForm).append(hiddenVideoIdField);
@@ -793,9 +793,7 @@
 			$("#add_comment_result").css("display","block");
 			$("#add_comment_result").html(this.loading);
 			$("#add_comment_button").attr("disabled","disabled");
-					
-			//var captcha_enabled =  $("#"+form_id+" input:#cb_captcha_enabled").val();
-			
+
 			//First we will get all values of form_id and then serialize them
 			//so we can forward details to ajax.php
 			

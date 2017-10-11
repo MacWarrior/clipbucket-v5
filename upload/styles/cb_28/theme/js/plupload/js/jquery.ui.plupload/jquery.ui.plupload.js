@@ -973,7 +973,7 @@ $.widget("ui.plupload", {
 
 			var aw = self.content.width(), ah = self.content.height();
 			cols = Math.floor(aw / tw);
-			num =  cols * (Math.ceil(ah / th) + 1);
+			num = cols * (Math.ceil(ah / th) + 1);
 		}
 
 
@@ -986,7 +986,6 @@ $.widget("ui.plupload", {
 				.filter(':not(.plupload_file_thumb_loaded)')
 				.get();
 		}
-		
 
 		function init() {
 			function mpl() {

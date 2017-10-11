@@ -2367,7 +2367,7 @@ jQuery.extend({
 			// In IE9+, Flash objects don't have .getAttribute (#12945)
 			// Support: IE9+
 			if ( typeof elem.getAttribute !== core_strundefined ) {
-				ret =  elem.getAttribute( name );
+				ret = elem.getAttribute( name );
 			}
 
 			// Non-existent attributes return null, we normalize to undefined
@@ -4122,7 +4122,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 					[];
 			}
 		};
-		Expr.filter["ID"] =  function( id ) {
+		Expr.filter["ID"] = function( id ) {
 			var attrId = id.replace( runescape, funescape );
 			return function( elem ) {
 				var node = typeof elem.getAttributeNode !== strundefined && elem.getAttributeNode("id");

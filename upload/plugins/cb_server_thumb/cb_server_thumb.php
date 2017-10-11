@@ -87,7 +87,7 @@ if(!function_exists('server_thumb'))
         $file_dir ="";
         if(isset($vdetails['file_name']) && $thumbDir)
         {
-           $file_dir =  "/" . $thumbDir;
+           $file_dir = "/" . $thumbDir;
         }
         $vid_thumbs = glob(THUMBS_DIR."/" .$file_dir.$vdetails['file_name']."*");
 
@@ -209,7 +209,7 @@ if(!function_exists('server_thumb'))
                         $image_height = ($max_width/$image_width)*$image_height;
 
                         if($details['file_directory']!="")
-                            $image_directory =  $details['file_directory'].'/';
+                            $image_directory = $details['file_directory'].'/';
                         else
                             $image_directory = '';
 

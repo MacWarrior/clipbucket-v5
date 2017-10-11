@@ -558,7 +558,7 @@
 	*/
 	function getSmartyComments($params) {
 		global $myquery;
-		$comments  =  $myquery->getComments($params);
+		$comments = $myquery->getComments($params);
 		if($params['assign']) {
 			assign($params['assign'],$comments);
 		} else {
@@ -1023,7 +1023,7 @@
 	 * @return bool
 	 */
 	function validate_field($code,$text) {
-		$syntax =  get_re($code);
+		$syntax = get_re($code);
 		if(empty($syntax)) {
 			return true;
 		}
@@ -1185,71 +1185,63 @@
 			 $path = $path['path'];
 		 }
 
-		if($type=='' || $type=='user') {
+		if($type=='' || $type=='user')
+		{
 			$path = strtolower($path);
-			switch($path) {
+			switch($path)
+			{
 				case "php":
-				return php_path();
-				break;
+					return php_path();
 				
 				case "mp4box":
-				return config("mp4boxpath");
-				break;
+					return config("mp4boxpath");
 
 				case "media_info":
-				return config("media_info");
-				break;
+					return config("media_info");
 
 				case "i_magick":
-				return config("i_magick");
-				break;
+					return config("i_magick");
 
 				case "ffprobe_path":
-				return config("ffprobe_path");
-				break;
+					return config("ffprobe_path");
 				
 				case "flvtool2":
-				return config("flvtool2path");
-				break;
+					return config("flvtool2path");
 				
 				case "ffmpeg":
-				return config("ffmpegpath");
-				break;
+					return config("ffmpegpath");
 			}
 		} else {
 			$path = strtolower($path);
-			switch($path) {
+			switch($path)
+			{
 				case "php":
-				$return_path = shell_output("which php");
-				if($return_path) {
-					return $return_path;
-				}
-				return "Unable to find PHP path";
-				break;
+					$return_path = shell_output("which php");
+					if($return_path) {
+						return $return_path;
+					}
+					return "Unable to find PHP path";
 				
 				case "mp4box":
-				$return_path =  shell_output("which MP4Box");
-				if($return_path) {
-					return $return_path;
-				}
-				return "Unable to find mp4box path";
-				break;
+					$return_path = shell_output("which MP4Box");
+					if($return_path) {
+						return $return_path;
+					}
+					return "Unable to find mp4box path";
 				
 				case "flvtool2":
-				$return_path =  shell_output("which flvtool2");
-				if($return_path) {
-					return $return_path;
-				}
-				return "Unable to find flvtool2 path";
-				break;
+					$return_path = shell_output("which flvtool2");
+					if($return_path) {
+						return $return_path;
+					}
+					return "Unable to find flvtool2 path";
 				
 				case "ffmpeg":
-				$return_path =  shell_output("which ffmpeg");
-				if($return_path) {
-					return $return_path;
-				}
-				return "Unable to find ffmpeg path";
-				break;
+					$return_path = shell_output("which ffmpeg");
+					if($return_path) {
+						return $return_path;
+					}
+					return "Unable to find ffmpeg path";
 			}
 		}
 	}
@@ -1659,19 +1651,22 @@
 	 *
 	 * @return mixed|string
 	 */
-	function lang($var,$sprintf=false) {
-		global $LANG,$Cbucket;
+	function lang($var,$sprintf=false)
+	{
+		global $LANG;
 		$array_str = array( '{title}');
 		$array_replace = array( "Title" );
 		if(isset($LANG[$var])) {
-			$phrase =  str_replace($array_str,$array_replace,$LANG[$var]);
+			$phrase = str_replace($array_str,$array_replace,$LANG[$var]);
 		} else {
 			$phrase = str_replace($array_str,$array_replace,$var);
 		}
 		
-		if($sprintf) {
+		if($sprintf)
+		{
 			$sprints = explode(',',$sprintf);
-			if(is_array($sprints)) {
+			if(is_array($sprints))
+			{
 				foreach($sprints as $sprint) {
 					$phrase = sprintf($phrase,$sprint);
 				}
@@ -2375,7 +2370,7 @@
 				$title = $field['title'];
 				$val = $array[$field['name']];
 				$req = $field['required'];
-				$invalid_err =  $field['invalid_err'];
+				$invalid_err = $field['invalid_err'];
 				$function_error_msg = $field['function_error_msg'];
 				if(is_string($val)) {
 					if(!isUTF8($val))
@@ -2388,7 +2383,7 @@
 				$rel_val = $array[$field['relative_to']];
 				
 				if(empty($invalid_err)) {
-					$invalid_err =  sprintf("Invalid '%s'",$title);
+					$invalid_err = sprintf("Invalid '%s'",$title);
 				}
 				if(is_array($array[$field['name']])) {
 					$invalid_err = '';
@@ -3416,7 +3411,7 @@
 				$the_req_codecs[$key]['installed'] = 'no';
 			}
 		}
-		$the_codecs =  array_merge($the_req_codecs,$the_codecs);
+		$the_codecs = array_merge($the_req_codecs,$the_codecs);
 		return $the_codecs;
 	}
 
@@ -4434,7 +4429,7 @@
 				$feed['action'] = 'signup';
 				$feed['object'] = 'signup';
 				$feed['object_id'] = $array['object_id'];		
-				$feed['uid'] =  $userid;
+				$feed['uid'] = $userid;
 				
 				$cbfeeds->addFeed($feed);
 			}
@@ -5361,7 +5356,7 @@
 					$vid_cond['order'] = " date_added DESC ";
 				break;
 				case "most_viewed":
-					$vid_cond['order'] =  "views DESC ";
+					$vid_cond['order'] = "views DESC ";
 					$vid_cond['date_span_column'] = 'last_viewed';
 				break;
 				case "most_viewed":
@@ -5389,7 +5384,7 @@
 					$vid_cond['order'] = " date_added DESC ";
 				break;
 				case "most_viewed":
-					$vid_cond['order'] =  " photos.views DESC ";
+					$vid_cond['order'] = " photos.views DESC ";
 					$vid_cond['date_span_column'] = 'last_viewed';
 				break;
 				case "most_viewed":

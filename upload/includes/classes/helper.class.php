@@ -251,7 +251,7 @@
 						$vid_cond['order'] = " date_added DESC ";
 					break;
 					case "most_viewed":
-						$vid_cond['order'] =  "views DESC ";
+						$vid_cond['order'] = "views DESC ";
 						$vid_cond['date_span_column'] = 'last_viewed';
 					break;
 					case "most_viewed":
@@ -280,7 +280,7 @@
 						$vid_cond['order'] = " date_added DESC ";
 					break;
 					case "most_viewed":
-						$vid_cond['order'] =  " photos.views DESC ";
+						$vid_cond['order'] = " photos.views DESC ";
 						$vid_cond['date_span_column'] = 'last_viewed';
 					break;
 					case "most_viewed":

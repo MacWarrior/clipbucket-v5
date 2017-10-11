@@ -234,12 +234,13 @@ class cbpage
 	 */
 	function is_active($id)
 	{
+		$id = mysql_clean($id);
+
 		global $db;
 		$result = $db->count(tbl($this->page_tbl),"page_id"," page_id='$id' AND active='yes' ");
 		if($result>0)
 			return true;
-		else
-			return false;
+		return false;
 	}
 	
 	
@@ -249,12 +250,10 @@ class cbpage
 	function update_order()
 	{
 		global $db;
-		$pages =  $this->get_pages();
+		$pages = $this->get_pages();
 		foreach($pages as $page)
 		{
 			$db->update(tbl($this->page_tbl),array("page_order"),array($_POST['page_ord_'.$page['page_id']])," page_id='".$page['page_id']."'");
 		}
 	}
 }
-
-?>

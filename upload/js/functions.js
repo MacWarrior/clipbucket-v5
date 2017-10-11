@@ -1733,8 +1733,6 @@ function add_comment_js(form_id,type)
     $("#add_comment_button").attr("disabled",true);
     $(".add-reply").attr("disabled",true);
 
-    //var captcha_enabled =  $("#" + form_id + " input:#cb_captcha_enabled").val();
-
     //First we will get all values of form_id and then serialize them
     //so we can forward details to ajax.php
     var formObjectData = $('#' + form_id).serialize() + '&mode=add_comment';

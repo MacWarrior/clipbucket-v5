@@ -3170,8 +3170,6 @@ vjs.Slider.prototype.update = function(){
 
   // If scrubbing, we could use a cached value to make the handle keep up with the user's mouse.
   // On HTML5 browsers scrubbing is really smooth, but some flash players are slow, so we might want to utilize this later.
-  // var progress =  (this.player_.scrubbing) ? this.player_.getCache().currentTime / this.player_.duration() : this.player_.currentTime() / this.player_.duration();
-
   var barProgress,
       progress = this.getPercent(),
       handle = this.handle,
@@ -7664,7 +7662,7 @@ vjs.Html5.registerSourceHandler(vjs.Html5.nativeSourceHandler);
  * @return {Boolean}
  */
 vjs.Html5.canControlVolume = function(){
-  var volume =  vjs.TEST_VID.volume;
+  var volume = vjs.TEST_VID.volume;
   vjs.TEST_VID.volume = (volume / 2) + 0.1;
   return volume !== vjs.TEST_VID.volume;
 };
@@ -7674,7 +7672,7 @@ vjs.Html5.canControlVolume = function(){
  * @return {[type]} [description]
  */
 vjs.Html5.canControlPlaybackRate = function(){
-  var playbackRate =  vjs.TEST_VID.playbackRate;
+  var playbackRate = vjs.TEST_VID.playbackRate;
   vjs.TEST_VID.playbackRate = (playbackRate / 2) + 0.1;
   return playbackRate !== vjs.TEST_VID.playbackRate;
 };
