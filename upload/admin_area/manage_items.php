@@ -11,13 +11,16 @@
 	$userquery->login_check('video_moderation');
 	$pages->page_redir();
 
-	// TODO : Complete URL
+	$id = mysql_clean($_GET['collection']);
+	$c = $cbcollection->get_collection($id);
+
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'Collections', 'url' => '');
-	$breadcrumb[1] = array('title' => 'Manage Collection Items', 'url' => '');
+	$breadcrumb[1] = array('title' => 'Manage Collections', 'url' => '/admin_area/flagged_collections.php');
+	$breadcrumb[2] = array('title' => 'Editing : '.display_clean($c['collection_name']), 'url' => '/admin_area/edit_collection.php?collection='.display_clean($id));
+	$breadcrumb[3] = array('title' => 'Manage Collection Items', 'url' => '/admin_area/manage_items.php?collection='.display_clean($id).'&type=videos');
 
-	$id = mysql_clean($_GET['collection']);
 	$type = mysql_clean($_GET['type']);
 	$data = $cbcollection->get_collection_items($id);
 
