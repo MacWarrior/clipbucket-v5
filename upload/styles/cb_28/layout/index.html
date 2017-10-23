@@ -14,36 +14,36 @@
 			</div>
 			{$row = $myquery->Get_Website_Details()}
 			{if is_installed('editorspick')}
-			{if $editor_picks}
-			<div class="clearfix editorpick">
-				<div class="editorpick-holder">
-					<!-- Editor Pick Video Main Container START //-->
-					<div class="absolute-div">
-						<div id="ep_video_container">
-							{if is_installed('editorspick')}
-								{section name=e_list loop=$editor_picks max=1}
-									{include file="$style_dir/blocks/editor_pick/video_block.html" video=$editor_picks[e_list]}
-								{sectionelse}
-									There is no video in editor's pick, Please Add Videos In Editor's Pick<br />Videos Manager > Add to editor's pick
-								{/section}
-							{/if}
+				{if $editor_picks}
+				<div class="clearfix editorpick">
+					<div class="editorpick-holder">
+						<!-- Editor Pick Video Main Container START //-->
+						<div class="absolute-div">
+							<div id="ep_video_container">
+								{if is_installed('editorspick')}
+									{section name=e_list loop=$editor_picks max=1}
+										{include file="$style_dir/blocks/editor_pick/video_block.html" video=$editor_picks[e_list]}
+									{sectionelse}
+										There is no video in editor's pick, Please Add Videos In Editor's Pick<br />Videos Manager > Add to editor's pick
+									{/section}
+								{/if}
+							</div>
+						</div>
+						<!-- Editor Pick Video Main Container END //-->
+						<img src="{$theme}/images/player-ratio.png" class="playerRatio">
+					</div>
+
+					<!-- Editor Pick Videos Slider Container START //-->
+					<div class="editorpick-videos custom-elements">
+						<div class="scrollable-area vscrollable">
+							{section name=e_list loop=$editor_picks}
+								{include file="$style_dir/blocks/editor_pick/index_featured_video.html" video=$editor_picks[e_list]}
+							{/section}
 						</div>
 					</div>
-					<!-- Editor Pick Video Main Container END //-->
-					<img src="{$theme}/images/player-ratio.png" class="playerRatio">
+					<!-- Editor Pick Videos Slider Container END //-->
 				</div>
-
-				<!-- Editor Pick Videos Slider Container START //-->
-				<div class="editorpick-videos custom-elements">
-					<div class="scrollable-area vscrollable">
-						{section name=e_list loop=$editor_picks}
-							{include file="$style_dir/blocks/editor_pick/index_featured_video.html" video=$editor_picks[e_list]}
-						{/section}
-					</div>
-				</div>
-				<!-- Editor Pick Videos Slider Container END //-->
-			</div>
-			{/if}
+				{/if}
 			{/if}
 			<!-- ******************************************* -->
 			<!-- ************ EDITORS BLOCK END ************ -->
@@ -97,64 +97,65 @@
 			<!-- ******************************************* -->
 
 			{if $row.collectionsSection == 'yes'}
-			{$collections = $cbcollection->get_collections(['limit'=>4, 'active'=>'yes', 'order'=>'total_objects DESC'])}
-			{$collections = $cbcollection->activeCollections($collections)}
-			<h2 title="Collections with most items">{lang code="top_collections"}</h2>
-			<div class="clearfix sidebar-items collections-grid">
-				<div class="clearfix row">
-					{$limit=10}
+				{$collections = $cbcollection->get_collections(['limit'=>4, 'active'=>'yes', 'order'=>'total_objects DESC'])}
+				{$collections = $cbcollection->activeCollections($collections)}
+				<h2 title="Collections with most items">{lang code="top_collections"}</h2>
+				<div class="clearfix sidebar-items collections-grid">
 					{if $collections}
-					{foreach from=$collections item=collection}
-					{$first_col_thumb = $cbcollection->coll_first_thumb($collection,'l')}
-					<div class="clearfix collection-item col-lg-6 col-md-6 col-sm-12 col-xs-12">
-						{include file="$style_dir/blocks/collection-item.html"}
+					<div class="clearfix row">
+						{foreach from=$collections item=collection}
+							{$first_col_thumb = $cbcollection->coll_first_thumb($collection,'l')}
+							<div class="clearfix collection-item col-lg-6 col-md-6 col-sm-12 col-xs-12">
+								{include file="$style_dir/blocks/collection-item.html"}
+							</div>
+						{/foreach}
+					</div>
+					{else}
+					<div class="clearfix well">{lang code='no_collection_found'}</div>
+					{/if}
+				</div>
+			{/if}
+
+			<!-- playlists -->
+			{if $row.playlistsSection == 'yes'}
+				{$playlists = get_playlists(['limit'=>4, 'order'=>'total_items DESC'])}
+				{$playlists = activePlaylists($playlists)}
+				{if $playlists}
+				<div class="clearfix sidebar-playlists">
+					<h2 title="Playlists with most videos">{lang code="top_playlists"}</h2>
+					{foreach $playlists as $playlist}
+					<div class="playlist clearfix">
+						<a href="{videoLink vdetails=$playlist['first_item']|@json_decode}{if $Cbucket->configs.seo == 'no'}&{else}?{/if}play_list={$playlist.playlist_id}"><h3>{display_clean($playlist.playlist_name)}</h3></a>
+						{$items = get_playlist_items($playlist.playlist_id)}
+						<div class="clearfix row">
+							{foreach $items as $item}
+							{if $item@iteration == 5}
+								{break}
+							{/if}
+							{$videoid = $item.videoid}
+							{if $videoid}
+							<div class="video col-lg-3 col-md-4 col-sm-6 col-xs-6">
+								{$videos = get_videos(['videoid'=>$videoid,'limit'=>'2'])}
+								{foreach $videos as $video}
+								<a href="{videoLink($video)}{if $Cbucket->configs.seo == 'no'}&{else}?{/if}play_list={$playlist.playlist_id}" class="playlist-video">
+									<img src="{getThumb vdetails=$video size=168x105}" class="img-responsive">
+									<img src="{$theme}/images/thumb-ratio.png" alt="" class="thumb-ratio">
+								</a>
+								{/foreach}
+							</div>
+							{else}
+							<div class="clearfix well">no items</div>
+							{/if}
+							{/foreach}
+						</div>
+						<span class="videos-count">{$cbvid->action->count_playlist_items($playlist.playlist_id)|number_format}&nbsp;{lang code="videos"}</span>
 					</div>
 					{/foreach}
 				</div>
 				{else}
-				<div class="clearfix well">{lang code='no_collection_found'}</div>
-				{/if}
-			</div>
-			{/if}
-
-			<!-- playlists -->
-			{$playlists = get_playlists(['limit'=>4, 'order'=>'total_items DESC'])}
-			{$playlists = activePlaylists($playlists)}
-			{if $playlists}
-			<div class="clearfix sidebar-playlists">
-				<h2 title="Playlists with most videos">{lang code="top_playlists"}</h2>
-				{foreach $playlists as $playlist}
-				<div class="playlist clearfix">
-					<a href="{videoLink vdetails=$playlist['first_item']|@json_decode}{if $Cbucket->configs.seo == 'no'}&{else}?{/if}play_list={$playlist.playlist_id}"><h3>{display_clean($playlist.playlist_name)}</h3></a>
-					{$items = get_playlist_items($playlist.playlist_id)}
-					<div class="clearfix row">
-						{foreach $items as $item}
-						{if $item@iteration == 5}
-						{break}
-						{/if}
-						{$videoid = $item.videoid}
-						{if $videoid}
-						<div class="video col-lg-3 col-md-4 col-sm-6 col-xs-6">
-							{$videos = get_videos(['videoid'=>$videoid,'limit'=>'2'])}
-							{foreach $videos as $video}
-							<a href="{videoLink($video)}{if $Cbucket->configs.seo == 'no'}&{else}?{/if}play_list={$playlist.playlist_id}" class="playlist-video">
-								<img src="{getThumb vdetails=$video size=168x105}" class="img-responsive">
-								<img src="{$theme}/images/thumb-ratio.png" alt="" class="thumb-ratio">
-							</a>
-							{/foreach}
-						</div>
-						{else}
-						<div class="clearfix well">no items</div>
-						{/if}
-						{/foreach}
-					</div>
-					<span class="videos-count">{$cbvid->action->count_playlist_items($playlist.playlist_id)|number_format}&nbsp;{lang code="videos"}</span>
-				</div>
-				{/foreach}
-			</div>
-			{else}
-				{if has_access('admin_access')}
-			<div class="clearfix well">{lang code="no_playlists"}</div>
+					{if has_access('admin_access')}
+				<div class="clearfix well">{lang code="no_playlists"}</div>
+					{/if}
 				{/if}
 			{/if}
 		</aside>
@@ -184,9 +185,7 @@
 			$(".editorpick-videos .scrollable-area").css({
 				"height" : bannerHeight+"px",
 			});
-		}
-		else
-		{
+		} else {
 			console.log("height "+WinWidHome);
 
 			$(".editorpick-videos .scrollable-area").css("height","auto");
