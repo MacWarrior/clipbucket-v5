@@ -399,7 +399,7 @@
 	}
 
 	/**
-	 * Format filze size in readable format
+	 * Format file size in readable format
 	 *
 	 * @param : { integer } { $data } { size in bytes }
 	 *

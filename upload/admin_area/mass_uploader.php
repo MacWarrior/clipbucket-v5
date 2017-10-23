@@ -28,7 +28,7 @@
 		$category_values = $cats[$i]['category_id'];
 		$category_names[$category_values] = $cats[$i]['category_name'];
 	}
-	//pr($category_names,true);
+
 	assign("cats", $cats);
 	assign("cat_values", $category_values);
 	assign("total_cats", $total_cats);

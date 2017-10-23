@@ -43,7 +43,7 @@
 					$FILE_LIST[$key]['title']		= getName($FILE_LIST[$key]['file']);
 					$FILE_LIST[$key]['description']	= getName($FILE_LIST[$key]['file']);
 					$FILE_LIST[$key]['tags']		= gentags(str_replace(" ",",",getName($FILE_LIST[$key]['file'])));
-					$FILE_LIST[$key]['size']		= filesize( $file );
+					$FILE_LIST[$key]['size']		= formatfilesize( filesize($file) );
 					$FILE_LIST[$key]['date']		= date('Y-m-d G:i:s', filemtime( $file ) );
 				}
 			}
@@ -83,6 +83,7 @@
 					if(in_array($ext,$exts))
 					{
 						$file['tracks'] = FFMpeg::get_video_tracks($file['path'].$file['file']);
+						$file = array_merge($file, FFMpeg::get_video_basic_infos($file['path'].$file['file']));
 
 						$vid_files[] = $file;
 					}

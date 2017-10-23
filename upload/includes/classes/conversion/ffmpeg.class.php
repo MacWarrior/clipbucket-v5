@@ -1812,4 +1812,37 @@ class FFMpeg
 		}
 	}
 
+	public static function get_video_basic_infos($filepath)
+	{
+		$stats = stat($filepath);
+		if($stats && is_array($stats))
+		{
+			$json = shell_exec(FFPROBE. ' -v quiet -print_format json -show_format -show_streams "'.$filepath.'"');
+			$data = json_decode($json,true);
+
+			$video = NULL;
+			foreach($data['streams'] as $stream)
+			{
+				if( $stream['codec_type'] == 'video' )
+				{
+					$video = $stream;
+					break;
+				}
+			}
+
+			if($video)
+			{
+				$info = array();
+				$info['duration'] = SetTime($data['format']['duration']);
+				$info['width']    = (int) $video['width'];
+				$info['height']   = (int) $video['height'];
+				return $info;
+			} else {
+				return array();
+			}
+		} else {
+			return array();
+		}
+	}
+
 }

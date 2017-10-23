@@ -33,7 +33,7 @@
 
 <div class="well">
 	<input type="checkbox" name="filesToImport_{$i}[]" class="checkboxMassImport"/>
-    <span class="label label-danger" style="cursor: pointer;" onclick="$(this).next().toggle();return false;"><b>{$file.title}</b>{$smarty.foreach.mass_files}</span>
+    <span class="label label-danger" style="cursor: pointer;" onclick="$(this).next().toggle();return false;"><b>{display_clean($file.title)}</b>{$smarty.foreach.mass_files}</span>
     <div style="display:none">
 		<div class="row">
 		{foreach from=$requiredFields item=field}
@@ -66,6 +66,18 @@
 			</div>
 			{/if}
 			{/foreach}
+			<div class="col-md-2">
+				<label for="duration"><b style="color: #000000">{lang code='duration'}</b></label>
+				<input type="text" class="form-control" title="{lang code='duration'}" id="duration" disabled value="{$file.duration}"/>
+			</div>
+			<div class="col-md-2">
+				<label for="resolution"><b style="color: #000000">{lang code='resolution'}</b></label>
+				<input type="text" class="form-control" title="{lang code='resolution'}" id="resolution" disabled value="{$file.width}x{$file.height}"/>
+			</div>
+			<div class="col-md-2">
+				<label for="filesize"><b style="color: #000000">{lang code='filesize'}</b></label>
+				<input type="text" class="form-control" title="{lang code='filesize'}" id="filesize" disabled value="{$file.size}"/>
+			</div>
 		</div>
 
         <div class="row">
