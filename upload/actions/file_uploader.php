@@ -136,8 +136,18 @@ switch($mode)
 		$config_for_mp4 = $Cbucket->configs['stay_mp4'];
 		$ffmpegpath = $Cbucket->configs['ffmpegpath'];
 		$extension = getExt( $_FILES['Filedata']['name']);
-		/*$raw_content_type = mime_content_type($_FILES['Filedata']['tmp_name']);
-		$content_type = substr($raw_content_type, 0,strpos($raw_content_type, '/'));*/
+		
+
+		$raw_content_type = mime_content_type($_FILES['Filedata']['tmp_name']);
+		$content_type = substr($raw_content_type, 0,strpos($raw_content_type, '/'));
+
+		if ( $content_type != 'video')  {
+			echo json_encode(array("status"=>"400","err"=>"Invalid Content"));
+			exit();
+		}
+
+		pex($content_type,true);
+
 		$types = strtolower(config('allowed_types'));
 		$supported_extensions = explode(',', $types);
 
