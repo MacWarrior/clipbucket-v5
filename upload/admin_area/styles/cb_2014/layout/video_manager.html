@@ -120,11 +120,12 @@
                         <li><a role="menuitem" tabindex="-1" href="?activate={$video.videoid}">{lang code='activate'}</a>
                         </li>
                         {/if}
-                        <li><a role="menuitem" tabindex="-1"
-                                                   href="view_conversion_log.php?file_name={$video.file_name}">File
-                            conversion details</a></li>
-                            <li><a role="menuitem" tabindex="-1" href="?reconvert_video={$video.videoid}">Re Convert</a>
-                        </li>
+                        <li>
+							<a role="menuitem" tabindex="-1" href="view_conversion_log.php?file_name={$video.file_name}">
+								File conversion details
+							</a>
+						</li>
+						<li><a role="menuitem" tabindex="-1" href="?reconvert_video={$video.videoid}">Re Convert</a></li>
                         <li class="divider"></li>
                         <li><a role="menuitem" tabindex="-1" href="?delete_video={$video.videoid}">{lang code='delete'}</a>
                         </li>
