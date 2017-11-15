@@ -46,46 +46,46 @@
                          <span class="labels1"> <strong>{$video.date_added|niceTime}</strong> | 
                             {lang code='views'} : <strong>{$video.views|number_format}</strong></span>
                                 <div class="labels mtl">
-                                   
                                     <span class="label {if $video.active=='yes'}label-success{else}label-danger{/if}">
                                         {if $video.active=='yes'}Active{else}Inactive{/if} 
                                     </span>
                                     <span class="label {if $video.status=='Successful'}label-success{else}label-warning{/if}">
                                         {$video.status}
                                     </span>
-                                        {if $video.featured=='yes'}
-                                         <span class="label label-info">
-                                          Featured</span>
-                                           {/if}
+									{if $video.featured=='yes'}
+									<span class="label label-info">Featured</span>
+									{/if}
 
-                                        {foreach from=$cbvid->video_manager_link_new item=links}
-                                        {$cbvid->video_manager_link_new($links,$video)}
-                                        {/foreach}
-                                         {if !isReconvertAble($video)}
-                                        <span class="label label-warning">Non-Convertable</span>
-                                        {else}
-                                        <span class="label label-info">Re-Convertable</span>
-                                        {/if}
+									{foreach from=$cbvid->video_manager_link_new item=links}
+										{$cbvid->video_manager_link_new($links,$video)}
+									{/foreach}
 
-                                        {$quals = resString($video.video_files)} 
-                                        {if $quals}
-                                            <span class="label label-primary">
-                                                {$quals}
-                                            </span>
-                                        {/if}
-                                        <div class="clearfix"></div>
-                                        {$catString = {$video.category|categories:video}}
-                                        {$catString = strip_tags($catString)}
-                                        {$toArray = explode(',',$catString)}
-                                        {$totalItems = count($toArray)}
-                                        {if $totalItems > 4}
-                                            {$moreText = ' + '|cat:{lang code='more'}}
-                                        {/if}
-                                        {$finalItems = array_slice($toArray, 0, 4)}
-                                        {$vcategories = implode(',',$finalItems)}
-                                        <span>
-                                            <span class="label label-info">{lang code='categories'} : {$vcategories} {$moreText}</span>
-                                        </span>
+									{if !isReconvertAble($video)}
+									<span class="label label-warning">Non-Convertable</span>
+									{else}
+									<span class="label label-info">Re-Convertable</span>
+									{/if}
+
+									{$quals = resString($video.video_files)}
+									{if $quals}
+										<span class="label label-primary">
+											{$quals}
+										</span>
+									{/if}
+									<div class="clearfix"></div>
+									{$catString = {$video.category|categories:video}}
+									{$catString = strip_tags($catString)}
+									{$toArray = explode(',',$catString)}
+									{if count($toArray) > 4}
+										{$moreText = ' + '|cat:{lang code='more'}}
+									{else}
+										{$moreText = ''}
+									{/if}
+									{$finalItems = array_slice($toArray, 0, 4)}
+									{$vcategories = implode(',',$finalItems)}
+									<span>
+										<span class="label label-info">{lang code='categories'} : {$vcategories} {$moreText}</span>
+									</span>
                                        
                                 </div>
                             </div>
