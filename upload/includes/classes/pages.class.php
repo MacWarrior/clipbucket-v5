@@ -171,8 +171,7 @@ class pages{
 			if($_SERVER['QUERY_STRING'])
 				$link = '?'.$_SERVER['QUERY_STRING'];
 		}
-		
-				
+
 		$page_pattern = '#page#';
 		$param_pattern = '#params#';
 		$page_url_param = $this->url_page_var;
@@ -181,10 +180,8 @@ class pages{
 		
 		preg_match('/\?/',$link,$matches);
 
-		$no_seo = false;
 		if(!empty($matches[0]))
 		{
-			$no_seo = true;
 			$page_link = '&'.$page_link_pattern;
 		}else{
 			$page_link = '?'.$page_link_pattern;
@@ -210,7 +207,7 @@ class pages{
 			$use_seo = false;
 		else
 			$use_seo = true;
-			
+
 		if(SEO=='yes' && THIS_PAGE !='search_result' && !BACK_END && $use_seo)
 		{
 			if(count($_GET)==0 || (count($_GET)==3 && isset($_GET['page'])))
@@ -218,15 +215,12 @@ class pages{
 			else
 				$params ='href="./'.$page.'"';
 		}
-		
-		
+
 		$final_link = preg_replace(array("/$page_pattern/i","/$param_pattern/i"),array($page,$params),$tag);
 		$final_link = preg_replace(array("/$page_pattern/i","/$param_pattern/i"),array($page,$params),$final_link);
 		
 		if($return_param)
-		{
 			return preg_replace("/$page_pattern/i",$page,$params);
-		}
 		
 		return ' '.$final_link.' ';
 	}
@@ -276,22 +270,22 @@ class pages{
 			{
 				if($selected == $i)
 				{
-					$start .= ' <li class ="active"><a href="#">'.$i.'</a></li> ';
+					$start .= ' <li class="active"><a href="#">'.$i.'</a></li> ';
 				} else {
 					$start .= $this->create_link($i,$link,$extra_params,$tag);
 				}
 				$start_last = $i; 
 			}
 			
-			//Starring Last
+			//Starting Last
 			for($i=$total_pages-$display_page;$i<=$total_pages;$i++)
 			{
-				if($end_first=='')
+				if($end_first == '')
 					$end_first = $i;
 				
 				if($selected == $i)
 				{
-					$end .= ' <li class ="active"><a href="#">'.$i.'</a></li> ';
+					$end .= ' <li class="active"><a href="#">'.$i.'</a></li> ';
 				} else {
 					$end .= $this->create_link($i,$link,$extra_params,$tag);
 				}
@@ -300,14 +294,14 @@ class pages{
 			//Starting mid
 			for($i=$selected-$differ;$i<=$selected+$differ;$i++)
 			{
-				if($mid_first=='')
+				if($mid_first == '')
 					$mid_first = $i;
 					
 				if($i>$start_last && $i<$end_first)
 				{
 					if($selected == $i)
 					{
-						$mid .= ' <li class ="active"><a href="#">'.$i.'</a></li> ';
+						$mid .= ' <li class="active"><a href="#">'.$i.'</a></li> ';
 					} else {
 						$mid .= $this->create_link($i,$link,$extra_params,$tag);
 					}
@@ -341,7 +335,7 @@ class pages{
 			for($i=1;$i<=$total_pages;$i++)
 			{
 				if($i == $selected)
-					$pagination_smart .= '<li class ="active"><a href="#">'.$i.'</a></li>';
+					$pagination_smart .= '<li class="active"><a href="#">'.$i.'</a></li>';
 				else
 					$pagination_smart .= $this->create_link($i,$link,$extra_params,$tag);
 			}
