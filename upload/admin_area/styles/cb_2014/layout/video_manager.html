@@ -41,19 +41,19 @@
                             </div>
                             <div class="col-md-9">
                                 <a href="edit_video.php?video={$video.videoid}">
-                                    {display_clean($video.title|truncate:80)} </a>({if
-                                $video.duration>1}{$video.duration|SetTime}{else}00:00{/if})<br>
+									{display_clean($video.title|truncate:80)}
+								</a> ({if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if})<br>
                          <span class="labels1"> <strong>{$video.date_added|niceTime}</strong> | 
                             {lang code='views'} : <strong>{$video.views|number_format}</strong></span>
                                 <div class="labels mtl">
                                     <span class="label {if $video.active=='yes'}label-success{else}label-danger{/if}">
-                                        {if $video.active=='yes'}Active{else}Inactive{/if} 
+                                        {if $video.active=='yes'}{lang code='active'}{else}{lang code='inactive'}{/if}
                                     </span>
                                     <span class="label {if $video.status=='Successful'}label-success{else}label-warning{/if}">
-                                        {$video.status}
+                                        {lang(strtolower($video.status))}
                                     </span>
 									{if $video.featured=='yes'}
-									<span class="label label-info">Featured</span>
+									<span class="label label-info">{lang code='featured'}</span>
 									{/if}
 
 									{foreach from=$cbvid->video_manager_link_new item=links}
@@ -82,7 +82,7 @@
 										{$moreText = ''}
 									{/if}
 									{$finalItems = array_slice($toArray, 0, 4)}
-									{$vcategories = implode(',',$finalItems)}
+									{$vcategories = implode(', ',$finalItems)}
 									<span>
 										<span class="label label-info">{lang code='categories'} : {$vcategories} {$moreText}</span>
 									</span>
