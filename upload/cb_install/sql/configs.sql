@@ -291,5 +291,6 @@ INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 	('vbrate_480','700000'),
 	('vbrate_360','400000'),
 	('vbrate_240','240000'),
-	('password_salt', SUBSTRING(HEX(SHA2(CONCAT(NOW(), RAND(), UUID()), 512)),1, 32) );
+	('password_salt', SUBSTRING(HEX(SHA2(CONCAT(NOW(), RAND(), UUID()), 512)),1, 32) ),
+	('show_collapsed_checkboxes', '0');
 UPDATE `{tbl_prefix}config` SET `value` = '4096000' WHERE `name` = 'vbrate_hd';

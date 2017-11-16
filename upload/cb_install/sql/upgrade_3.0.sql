@@ -284,7 +284,8 @@ INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 	('vbrate_480','700000'),
 	('vbrate_360','400000'),
 	('vbrate_240','240000'),
-	('password_salt', SUBSTRING(HEX(SHA2(CONCAT(NOW(), RAND(), UUID()), 512)),1, 32) );
+	('password_salt', SUBSTRING(HEX(SHA2(CONCAT(NOW(), RAND(), UUID()), 512)),1, 32) ),
+	('show_collapsed_checkboxes', '0');
 
 ALTER TABLE `{tbl_prefix}users` CHANGE `password` `password` VARCHAR(128) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
 
