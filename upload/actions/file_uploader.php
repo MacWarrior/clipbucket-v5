@@ -146,7 +146,7 @@ switch($mode)
 			exit();
 		}
 
-		pex($content_type,true);
+		// pex($content_type,true);
 
 		$types = strtolower(config('allowed_types'));
 		$supported_extensions = explode(',', $types);
