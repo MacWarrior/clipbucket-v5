@@ -1371,9 +1371,18 @@ function showAdvanceSearch(simple,advance,expandClass,collapseClass)
 
 function toggleCategory(object,perPage)
 {
-    var obj = $(object), childTarget = obj.attr('alt'), child = $("#"+childTarget),
-        childparts = childTarget.split("_"), childID = childparts[0];
-    var browser = $.browser.msie; var browserVersion = $.browser.version;
+    var obj = $(object),
+        childTarget = obj.attr('alt'),
+        child = $("#"+childTarget),
+        childparts = childTarget.split("_"),
+        childID = childparts[0],
+        browser = (navigator.appName == 'Microsoft Internet Explorer');
+
+    var browserVersion = -1;
+    var user_agent = navigator.userAgent;
+    var reg = new RegExp("MSIE ([0-9]{1,}[\.0-9]{0,})");
+    if (reg.exec(user_agent) != null)
+        browserVersion = parseFloat( RegExp.$1 );
 
     if(child.css('display') == "none")
     {
@@ -1382,12 +1391,14 @@ function toggleCategory(object,perPage)
             child.addClass('internetExplorer7CategoryToggleFix');
         $.cookie(childID,'expanded',{ expires: 1, path: '/' });
         obj.removeClass('none').addClass('block');
+        obj.removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
     } else {
         child.slideUp(350);
         if(browser && browserVersion == "7.0")
             child.removeClass('internetExplorer7CategoryToggleFix');
         $.cookie(childID,'collapsed',{ expires: 1, path: '/' });
         obj.removeClass('block').addClass('none');
+        obj.removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
     }
 }
 

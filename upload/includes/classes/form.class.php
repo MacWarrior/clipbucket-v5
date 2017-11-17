@@ -166,11 +166,7 @@ class formObj
 				return false;
 			}else
 				return "There is no category to select";
-			
-			
 		}
-		//$arrayName = $this->rmBrackets($field['name']);
-		//Creating Fields
 		
 		if($multi)
 		{
@@ -235,8 +231,8 @@ class formObj
 		$cats = $in['categories'];
 		$field = $in['field'];
 		$rand = (rand(0,100000));
-		if($field['sep'] == "<br/>")
-			$field['sep'] = "";
+		if($field['sep'] == '<br/>' || $field['sep'] == '<br>')
+			$field['sep'] = '';
 			
 		if(!$multi)
 			$fieldName = $field['name'];
@@ -244,7 +240,7 @@ class formObj
 		{
 			$fieldName = $field['name'];
 			$fieldName = $this->rmBrackets($fieldName);
-			$fieldName = $fieldName.$this->multi_cat_id.'[]';//$fieldName = $fieldName.$multi_cat_id.'[]';
+			$fieldName = $fieldName.$this->multi_cat_id.'[]';
 		}
 		$display = "none";
 		$values = $field['value'][1][0];
@@ -261,25 +257,24 @@ class formObj
 				$checked = "";
 				if(in_array("|".$cat['category_id']."|",$Values))
 					$checked = 'checked';
-				echo "<div class='uploadCategoryCheckBlock' style='position:relative'>";
+				echo "<div class='uploadCategoryCheckBlock' style='position:relative;'>";
 				echo $field['sep'];
-				echo '<label><input name="'.$fieldName.'" type="checkbox" value="'.$cat['category_id'].'" '.$field_id.'
-				 '.$checked.' '.$field['extra_tags'].'>'.display_clean($cat['category_name']).'</label>';
+				echo '<label><input name="'.$fieldName.'" type="checkbox" value="'.$cat['category_id'].'" '.$field_id.' '.$checked.' '.$field['extra_tags'].'>'.display_clean($cat['category_name']).'</label>';
 				 if($cat['children'])
 				 {
-				 		echo "<span id='".$cat['category_id']."_toggler' alt='".$cat['category_id']."_".$rand."' class='CategoryToggler CheckBoxCategoryToggler ".$display."' style='display:block;' onclick='toggleCategory(this);'>&nbsp;</span>";
-							$childField = $field;
-							$childField['sep'] = $field['sep'].str_repeat('&nbsp;',5); 
-						echo "<div id='".$cat['category_id']."_".$rand."' class='sub_categories sub_categories_checkbox' style='display:".$display."'>";
-							echo 	$this->listCategoryCheckBoxCollapsed(array('categories'=>$cat['children'],'field'=>$childField,'children_indent'=>true),$multi);
-						echo "</div>"; 
+					echo "<span id='".$cat['category_id']."_toggler' alt='".$cat['category_id']."_".$rand."' class='CategoryToggler CheckBoxCategoryToggler glyphicon glyphicon-chevron-down' style='float:right;margin-left:20px;' onclick='toggleCategory(this);'></span>";
+					$childField = $field;
+					$childField['sep'] = $field['sep'].str_repeat('&nbsp;',5);
+					echo "<div id='".$cat['category_id']."_".$rand."' class='sub_categories sub_categories_checkbox' style='display:".$display."'>";
+					$this->listCategoryCheckBoxCollapsed(array('categories'=>$cat['children'],'field'=>$childField,'children_indent'=>true),$multi);
+					echo '</div>';
 				 }
-				 echo "</div>";
+				 echo '</div>';
 			}
 		}
 	}
 	
-	//Creating checkbox with indent for cateogry childs
+	//Creating checkbox with indent for category childs
 	function listCategoryCheckBox($in,$multi)
 	{
 		$cats = $in['categories'];
@@ -287,7 +282,10 @@ class formObj
 		//$in['collapsed'] = true;
 		$collapsed = $in['collapsed'];
 		if($collapsed)
-			return $this->listCategoryCheckBoxCollapsed($in,$multi);
+		{
+			$this->listCategoryCheckBoxCollapsed($in,$multi);
+			return;
+		}
 		//setting up the field name
 		if(!$multi)
 			$field_name = $field['name'];
@@ -319,14 +317,13 @@ class formObj
                 	$label_class = 'class="'.$field['label_class'].'"';
                 if(!isset($field['notShowSeprator']))
 					echo $field['sep'];
-				echo '<label '.$label_class.'><input name="'.$field_name.'" type="checkbox" value="'.$cat['category_id'].'" '.$field_id.'
-				 '.$checked.' '.$field['extra_tags'].'> '.display_clean($cat['category_name']).'</label>';
-				 if($cat['children'])
-				 {
+				echo '<label '.$label_class.'><input name="'.$field_name.'" type="checkbox" value="'.$cat['category_id'].'" '.$field_id.' '.$checked.' '.$field['extra_tags'].'> '.display_clean($cat['category_name']).'</label>';
+				if($cat['children'])
+				{
 					$childField = $field;
 					$childField['sep'] = $field['sep'].str_repeat('&nbsp;',5);
 				 	$this->listCategoryCheckBox(array('categories'=>$cat['children'],'field'=>$childField,'children_indent'=>true),$multi);
-				 }
+				}
 			}
 		}
 	}
