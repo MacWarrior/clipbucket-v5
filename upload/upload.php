@@ -21,7 +21,8 @@
 		$verify_logged_user = false;
 	}
 
-	if(has_access('allow_video_upload',false,$verify_logged_user)) {
+	if(has_access('allow_video_upload',false,$verify_logged_user))
+	{
 		#pre_upload();
 		$file_name = time().RandomString(5);
 		assign('file_name',$file_name);
@@ -34,22 +35,20 @@
 			}
 		}
 		
-		if(isset($_POST['submit_upload'])) {
+		if(isset($_POST['submit_upload']))
+		{
 			if(!$_POST['file_name'])
 				$_POST['file_name'] = time().RandomString(5);
-			{
-				$file_directory = create_dated_folder(NULL,$_REQUEST['time_stamp']);
-				
-				$vid = $Upload->submit_upload();
-				$Upload->do_after_video_upload($vid);
 
-				echo '<div class="alert alert-success embed_video">
-	   			Video has been Embeded succesfully ..
-	    			</div>';
-	    			
-				if(!error())
+			$file_directory = create_dated_folder(NULL,$_REQUEST['time_stamp']);
+
+			$vid = $Upload->submit_upload();
+			$Upload->do_after_video_upload($vid);
+
+			echo '<div class="alert alert-success embed_video">Video has been Embeded succesfully...</div>';
+
+			if(!error())
 				$step=3;
-			}
 		}
 		
 		//assigning Form Name [RECOMMEND for submitting purpose]
@@ -75,5 +74,3 @@
 	}
 
 	display_it();
-
-?>

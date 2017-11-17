@@ -174,7 +174,6 @@
 
 					//function for real progress bar
 					$.each( uploadedFiles, function( key, fileNow ) {
-						console.log("filenow "+fileNow);
 					  	var currentTitle = fileNow.name,
 					  	plFileId = fileNow.id;					   	
 					  	//<button class="clearfix cancel_button btn btn-danger" style="float:right; margin-top: -20px">Cancel Uploading</button>
@@ -274,7 +273,8 @@
 				var currentFileIndex = 0;
 				var theVideoId = '';
 
-				uploader.bind('FileUploaded', function(plupload, fileDetails, response){
+				uploader.bind('FileUploaded', function(plupload, fileDetails, response)
+				{
 					$("#overallProgress").css("width", ((100/totalFiles)*(++filesUploaded))+"%");
 					$("#overallProgress").parents(".row").find("#uploadedFilesInfo").text("Inserted " + (filesUploaded) + " of " + totalFiles);
 					var serverResponse = $.parseJSON(response.response);
@@ -302,13 +302,10 @@
 						data : {
 							insertVideo : "yes",
 							title : fileDetails.name,
-							file_name : fileName,
-
+							file_name : fileName
 						}
 					}).success(function(msg){
-						//console.log(msg);
 						res = $.parseJSON(msg);
-						//console.log(res);
 						fileId = res.videoid;
 						theVideoId = fileId;
 						// creating the hidden form fields
@@ -490,9 +487,3 @@
 		});
 	});
 </script>
-
-
-
-
-
-
