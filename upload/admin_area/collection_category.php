@@ -18,7 +18,7 @@
 	$breadcrumb[1] = array('title' => 'Manage Categories', 'url' => '/admin_area/collection_category.php');
 
 	//Form Processing
-	if(isset($_POST['add_cateogry'])){
+	if(isset($_POST['add_category'])){
 		$cbcollection->thumb_dir = "collections";
 		$cbcollection->add_category($_POST);
 	}

@@ -18,7 +18,7 @@
 	$breadcrumb[1] = array('title' => 'Manage Categories', 'url' => '/admin_area/category.php');
 
 	//Form Processing
-	if(isset($_POST['add_cateogry']))
+	if(isset($_POST['add_category']))
 	{
 		$cbvid->thumb_dir = 'video';
 		$cbvid->add_category($_POST);

@@ -18,7 +18,7 @@
 	$breadcrumb[1] = array('title' => 'Manage categories', 'url' => '/admin_area/user_category.php');
 
 	//Form Processing
-	if(isset($_POST['add_cateogry']))
+	if(isset($_POST['add_category']))
 	{
 		$userquery->thumb_dir = 'users';
 		$userquery->add_category($_POST);

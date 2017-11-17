@@ -18,7 +18,7 @@
 	$breadcrumb[1] = array('title' => 'Manage Categories', 'url' => '/admin_area/group_category.php');
 
 	//Form Processing
-	if(isset($_POST['add_cateogry'])){
+	if(isset($_POST['add_category'])){
 		$cbgroup->add_category($_POST);
 	}
 

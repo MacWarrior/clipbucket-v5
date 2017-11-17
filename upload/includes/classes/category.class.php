@@ -742,7 +742,7 @@ abstract class CBCategory
 	}
 
 	/**
-	 * Function used get parent cateogry
+	 * Function used get parent category
 	 *
 	 * @param $pid
 	 *
