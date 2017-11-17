@@ -48,7 +48,7 @@
 											<li>
 												<div>
 													<a href="{cblink(['name'=>'category','data'=>$sub2,'type'=>$type])}">{display_clean($sub2.category_name)} </a>
-													{if $sub2.children}<i class="icon-right-arrow trigger"data-level="3"></i>{/if}
+													{if $sub2.children}<i class="icon-right-arrow trigger" data-level="3"></i>{/if}
 												</div>
 												{if $sub2.children}
 													<ul class="dropdown-menu sub-menu">
@@ -66,7 +66,7 @@
 																{foreach from=$sub3.children item=sub4}
 																	<li>
 																		<div>
-																			<a>{display_clean($sub4.category_name)}</a>
+																			<a href="{cblink(['name'=>'category','data'=>$sub4,'type'=>$type])}">{display_clean($sub4.category_name)}</a>
 																			{if $sub4.children}<i class="icon-right-arrow trigger" data-level="5"></i>{/if}
 																		</div>
 																	</li>
