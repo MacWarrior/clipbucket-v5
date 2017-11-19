@@ -484,6 +484,16 @@
 		}
 	}
 
+	function getCommentAdminLink($type, $id)
+	{
+		switch($type)
+		{
+			default:
+			case 'v':
+				return "/admin_area/edit_video.php?video=".$id;
+		}
+	}
+
 	/**
 	 * FUNCTION USED TO GET COMMENTS
 	 *
@@ -525,11 +535,11 @@
             $query .= " WHERE ".$cond;
         }
         if($order) {
-            $query .=" ORDER BY ".$order;
+            $query .= " ORDER BY ".$order;
         }
 
         if($limit) {
-            $query .=" LIMIT ".$limit;
+            $query .= " LIMIT ".$limit;
         }
         // pr($query,true);
 		if(!$params['count_only']) {
