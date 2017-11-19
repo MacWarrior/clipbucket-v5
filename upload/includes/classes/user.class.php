@@ -148,7 +148,7 @@ class userquery extends CBCategory{
 		define('BACKGROUND_COLOR',config('background_color'));
 		define('USE_GAVATAR', false);
 		if(isSectionEnabled('channels'))
-		$Cbucket->search_types['channels'] = "userquery";
+			$Cbucket->search_types['channels'] = "userquery";
 		
 	}
 	
@@ -3040,7 +3040,7 @@ class userquery extends CBCategory{
 			$channel_links[lang('favorites')] = array('link'=>cblink(array('name'=>'user_favorites')).$u['username']);
 		}
 		if(isSectionEnabled('channels'))
-		$channel_links[lang('contacts')] = array('link'=>cblink(array('name'=>'user_contacts')).$u['username']);
+			$channel_links[lang('contacts')] = array('link'=>cblink(array('name'=>'user_contacts')).$u['username']);
 		
 		return $channel_links;
 	}

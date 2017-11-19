@@ -17,32 +17,37 @@
 				<img src="{avatar details=$user}" alt="" class="reply_pic">
 			</div>
 			<div class="comment-info">
-				<a href="{$userquery->profile_link($user)}">
-					<span>
-						{if $comment.anonym_name != ''}
-							{display_clean($comment.anonym_name)} ({lang code='guest'})
-						{else}
-						<a href="{$userquery->profile_link($user)}" >
-							{display_clean(name($user))}
+			{if isSectionEnabled('channels')}
+				<a href="{$userquery->profile_link($video)}">
+				{if $comment.anonym_name != ''}
+					{display_clean($comment.anonym_name)} ({lang code='guest'})
+				{else}
+					{display_clean(name($user))}
+				{/if}
+				</a>
+			{else}
+				{if $comment.anonym_name != ''}
+					{display_clean($comment.anonym_name)} ({lang code='guest'})
+				{else}
+					{display_clean(name($user))}
+				{/if}
+			{/if}
+				<p>{display_clean($comment.comment|comment)}</p>
+			{if userid()}
+				<div class="com-info-actions clearfix">
+					<span>{$comment.date_added|niceTime}</span>
+					<div class="reply">
+						{if !$comment.userid==userid() || has_access('admin_access',true)}
+						<a href="javascript:void(0);" onclick="spam_comment('{$comment.comment_id}','{$type}','{$type_id}')">{lang code='spam'}</a>
 						{/if}
-						</span>
-					</a>
-					<p>{display_clean($comment.comment|comment)}</p>
-					{if userid()}
-					<div class="com-info-actions clearfix">
-						<span>{$comment.date_added|niceTime}</span>
-						<div class="reply">
-							{if !$comment.userid==userid() || has_access('admin_access',true)}
-							<a href="javascript:void(0);" onclick="spam_comment('{$comment.comment_id}','{$type}','{$type_id}')">{lang code='spam'}</a>
-							{/if}
-							{if has_access('admin_del_access') || $comment.userid==userid() || $comment.type_owner_id==userid()} &middot; <a href="javascript:void(0);" onclick="delete_comment('{$comment.comment_id}','{$type}')">{lang code='delete'}</a>{/if}
-						</div>
+						{if has_access('admin_del_access') || $comment.userid==userid() || $comment.type_owner_id==userid()} &middot; <a href="javascript:void(0);" onclick="delete_comment('{$comment.comment_id}','{$type}')">{lang code='delete'}</a>{/if}
 					</div>
-					{/if}
 				</div>
+			{/if}
 			</div>
 		</div>
-	</li>
+	</div>
+</li>
 
 
 {else}
@@ -67,9 +72,11 @@
 						{display_clean($comment.anonym_name)} ({lang code='guest'})
 					<div id="says_{$comment.comment_id}" speaker="{display_clean($comment.anonym_name)}"></div>
 					{else}
-					<a href="{$userquery->profile_link($user)}" >
-						{display_clean(name($user))}
-					</a>
+						{if isSectionEnabled('channels')}
+							<a href="{$userquery->profile_link($user)}">{display_clean(name($user))}</a>
+						{else}
+							{display_clean(name($user))}
+						{/if}
 					<div id="says_{$comment.comment_id}" speaker="{display_clean(name($user))}"></div>
 					{/if}
 					<span>{$comment.date_added|niceTime}</span>
@@ -91,13 +98,8 @@
 				</div>
 				{/if}
 			</div>
-	   <!--  <div class="clearfix text-right">
-			<i class="text-muted">{$comment.date_added|niceTime}</i>
-		</div> -->
-		
-	</div>
-	<div class="reply-box-{$comment.comment_id} clearfix" style="display:none;">
-	</div>
+		</div>
+		<div class="reply-box-{$comment.comment_id} clearfix" style="display:none;"></div>
 	<ul class="comments-reply-{$comment.comment_id}">
 
 		{if $comment.children}
@@ -119,9 +121,11 @@
 							{if $comment.anonym_name != '' && $user.username == ''}
 								{display_clean($comment.anonym_name)} ({lang code='guest'})
 							{else}
-							<a href="{$userquery->profile_link($user)}" >
-								{display_clean(name($user))}
-							</a>
+								{if isSectionEnabled('channels')}
+									<a href="{$userquery->profile_link($user)}">{display_clean(name($user))}</a>
+								{else}
+									{display_clean(name($user))}
+								{/if}
 							{/if}
 
 							<span>{$reply.date_added|niceTime}</span>
@@ -152,18 +156,19 @@
 						{$user_id = $reply.userid}
 						{$user=$userquery->get_user_details($user_id)}
 						<div class="comment-avatar">
-							<img src="{avatar details=$user}" alt="" class="reply_pic">
+							<img src="{avatar details=$user}" class="reply_pic">
 						</div>
 						<div class="comment-info">
 							<strong class="commenter">
 								{if $comment.anonym_name != ''}
 									{display_clean($comment.anonym_name)} ({lang code='anonymous'})
 								{else}
-								<a href="{$userquery->profile_link($user)}" >
-									{display_clean(name($user))}
-								</a>
+									{if isSectionEnabled('channels')}
+										<a href="{$userquery->profile_link($user)}">{display_clean(name($user))}</a>
+									{else}
+										{display_clean(name($user))}
+									{/if}
 								{/if}
-
 								<span>{$reply.date_added|niceTime}</span>
 							</strong>
 							<div class="clearfix commented-txt">

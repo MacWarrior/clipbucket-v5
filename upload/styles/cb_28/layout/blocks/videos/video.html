@@ -10,7 +10,15 @@
 	
 	<div class="details_block">
 		<strong class="title"><a href="{videoLink($pop_video)}">{display_clean($pop_video.title|truncate:50)}</a></strong>
-		<span class="author">{lang code="by"}&nbsp;<a href="{$userquery->profile_link($pop_video)}">{display_clean($pop_video.username)}</a></span>
+
+		<span class="author">{lang code="by"}
+		{if isSectionEnabled('channels')}
+			<a href="{$userquery->profile_link($pop_video)}">{display_clean($pop_video.username)}</a>
+		{else}
+			{display_clean($pop_video.username)}
+		{/if}
+		</span>
+
 		<div class="views-date">
 			<span>{$pop_video.views}&nbsp;{lang code="views"}</span>
 		</div>
@@ -34,7 +42,15 @@
 	</div>
 	<div class="clearfix video-info">
 		<h2 class="title"><a href="{videoLink($video)}">{display_clean($video.title|truncate:50)}</a></h2>
-		<span class="author">{lang code="by"}&nbsp;<a href="{$userquery->profile_link($video)}">{display_clean($video.username)}</a></span>
+
+		<span class="author">{lang code="by"}
+			{if isSectionEnabled('channels')}
+				<a href="{$userquery->profile_link($video)}">{display_clean($video.username)}</a>
+			{else}
+				{display_clean($video.username)}
+			{/if}
+		</span>
+
 		<div class="clearfix views-date">
 			<span>{$video.views}&nbsp;{lang code="views"}</span>
 			<time class="date" datetime="2016-15-03">{$video.date_added|niceTime}</time>
@@ -68,7 +84,15 @@
 	</div>
 	<div class="clearfix video-info">
 		<h2 class="title"><a href="{videoLink($video)}">{display_clean($video.title|truncate:50)}</a></h2>
-		<span class="author">{lang code="by"}&nbsp;<a href="{$userquery->profile_link($video)}">{display_clean($video.username)}</a></span>
+
+		<span class="author">{lang code="by"}
+			{if isSectionEnabled('channels')}
+				<a href="{$userquery->profile_link($video)}">{display_clean($video.username)}</a>
+			{else}
+				{display_clean($video.username)}
+			{/if}
+		</span>
+
 		<div class="clearfix views-date">
 			<span>{$video.views}&nbsp;{lang code="views"}</span>
 			<time class="date" datetime="2016-15-03">{$video.date_added|niceTime}</time>
@@ -89,7 +113,13 @@
 		
 		<div class="details_block">
 			<strong class="title"><a href="{videoLink($video)}">{display_clean($video.title|truncate:50)}</a></strong>
-			<span class="author">{lang code="by"}&nbsp;<a href="{$userquery->profile_link($video)}">{display_clean($video.username)}</a></span>
+			<span class="author">{lang code="by"}
+			{if isSectionEnabled('channels')}
+				<a href="{$userquery->profile_link($video)}">{display_clean($video.username)}</a>
+			{else}
+				{display_clean($video.username)}
+			{/if}
+			</span>
 			<div class="views-date">
 				<span>{$video.views}&nbsp;{lang code="views"}</span>
 			</div>
@@ -140,7 +170,13 @@
 	</div>
 	<div class="clearfix video-info">
 		<h2 class="title"><a href="{videoLink($video)}">{display_clean($video.title|truncate:50)}</a></h2>
-		<span class="author">{lang code="by"}&nbsp;<a href="{$userquery->profile_link($video)}">{display_clean($video.username)}</a></span>
+		<span class="author">{lang code="by"}
+			{if isSectionEnabled('channels')}
+				<a href="{$userquery->profile_link($video)}">{display_clean($video.username)}</a>
+			{else}
+				{display_clean($video.username)}
+			{/if}
+		</span>
 		<div class="clearfix views-date">
 			<span>{$video.views}&nbsp;{lang code="views"}</span>
 			<time class="date" datetime="2016-15-03">{$video.date_added|niceTime}</time>
@@ -205,8 +241,15 @@
 		<h5 class="dropdown hide_btn">
 			<a data-hover="dropdown" data-toggle="dropdown" class="dropdown-toggle" data-delay="1000" data-close-others="false" onClick="location.href='{videoLink($video)}'" href="{videoLink($video)}">{display_clean($video.title|truncate:15)} </a>
 		</h5>
-		
-		<h5>{lang code="by"}&nbsp;<a href="{$userquery->profile_link($video)}">{display_clean(name($video))}</a></h5>
+
+		<h5>{lang code="by"}
+			{if isSectionEnabled('channels')}
+				<a href="{$userquery->profile_link($video)}">{display_clean(name($video))}</a>
+			{else}
+				{display_clean(name($video))}
+			{/if}
+		</h5>
+
 		<div class="clearfix views-time">
 			<span><i class="icon-eye"></i> {$video.views}&nbsp;{lang code="views"}</span>
 		</div>
@@ -258,10 +301,16 @@
 	<div class="clearfix">
 		<h5 class="dropdown hide_btn">
 			<a data-hover="dropdown" data-toggle="dropdown" class="dropdown-toggle" data-delay="1000" data-close-others="false" onClick="location.href='{videoLink($video)}'" href="{videoLink($video)}">{display_clean($video.title|truncate:30)} </a>
-			
 		</h5>
-		
-		<h5>{lang code="by"}&nbsp;<a href="{$userquery->profile_link($video)}">{name($video)}</a>&nbsp;{$video.date_added|niceTime}</h5>
+
+		<h5>{lang code="by"}
+			{if isSectionEnabled('channels')}
+				<a href="{$userquery->profile_link($video)}">{display_clean(name($video))}</a>
+			{else}
+				{display_clean(name($video))}
+			{/if} {$video.date_added|niceTime}
+		</h5>
+
 		<h5><i class="icon-eye"></i> {$video.views}&nbsp;{lang code="views"}</h5>
 	</div>
 </div>

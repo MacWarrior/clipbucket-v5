@@ -15,7 +15,15 @@
 	</div>
 	<div class="clearfix video-info">
 		<h2 class="title"><a href="{videoLink($video)}">{display_clean($video.title|truncate:50)}</a></h2>
-		<span class="author">{lang code="by"} <a href="{$userquery->profile_link($video)}">{display_clean($video.username)}</a></span>
+
+		<span class="author">{lang code="by"}
+		{if isSectionEnabled('channels')}
+			<a href="{$userquery->profile_link($video)}">{display_clean($video.username)}</a>
+		{else}
+			{display_clean($video.username)}
+		{/if}
+		</span>
+
 		<div class="clearfix views-date">
 			<span>{$video.views}&nbsp;views</span>
 			<time class="date" datetime="2016-15-03">{$video.date_added|niceTime}</time>
@@ -64,8 +72,14 @@
 		<h5 class="dropdown hide_btn">
 			<a data-hover="dropdown" data-toggle="dropdown" class="dropdown-toggle" data-delay="1000" data-close-others="false" onClick="location.href='{videoLink($video)}'" href="{videoLink($video)}">{display_clean($video.title|truncate:15)} </a>
 		</h5>
-		{$user = display_clean($video.username)}
-		<h5>{lang code="by"} <a href="{$userquery->profile_link($user)}">{display_clean($video.username)}</a></h5>
+
+		<h5>{lang code="by"}
+		{if isSectionEnabled('channels')}
+			<a href="{$userquery->profile_link($video.username)}">{display_clean($video.username)}</a>
+		{else}
+			{display_clean($video.username)}
+		{/if}
+		</h5>
 	</div>
 </div>
 {/if}
@@ -90,10 +104,15 @@
 	<div class="col-xs-6">
 		<h5 class="dropdown hide_btn">
 			<a data-hover="dropdown" data-toggle="dropdown" class="dropdown-toggle" data-delay="1000" data-close-others="false" onClick="location.href='{videoLink($video)}'" href="{videoLink($video)}">{display_clean($video.title|truncate:15)} </a>
-			
 		</h5>
-		{$user = display_clean($video.username)}
-		<h5>by <a href="{$userquery->profile_link($user)}">{display_clean($video.username)}</a></h5>
+
+		<h5>{lang code="by"}
+			{if isSectionEnabled('channels')}
+				<a href="{$userquery->profile_link($video.username)}">{display_clean($video.username)}</a>
+			{else}
+				{display_clean($video.username)}
+			{/if}
+		</h5>
 		<div class="clearfix views-time">
 			<span><i class="icon-eye"></i> {$video.views} views</span>
 		</div>
@@ -142,7 +161,15 @@ class="icon-plus2 cb_quickie cb-btn-quick-{$video.videoid} {if in_array($video.v
 </div>
 <div class="clearfix video-info">
 	<h2 class="title"><a href="{videoLink($video)}">{display_clean($video.title|truncate:50)}</a></h2>
-	<span class="author">{lang code="by"}&nbsp;<a href="{$userquery->profile_link($video)}">{display_clean($video.username)}</a></span>
+
+	<span class="author">{lang code="by"}
+	{if isSectionEnabled('channels')}
+		<a href="{$userquery->profile_link($video)}">{display_clean($video.username)}</a>
+	{else}
+		{display_clean($video.username)}
+	{/if}
+	</span>
+
 	<div class="clearfix views-date">
 		<span>{$video.views} {lang code="views"}</span>
 		<time class="date" datetime="2016-15-03">{$video.date_added|niceTime}</time>

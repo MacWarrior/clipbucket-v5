@@ -11,7 +11,7 @@
             </div>
         
             <div class="col-md-10  col-sm-9">
-                <a href="{$userquery->profile_link($user_detail)}">{$user_detail.username} </a><br>
+                <a href="{$userquery->profile_link($user_detail)}">{display_clean($user_detail.username)} </a><br>
                 <div class="labels">
                     <span class="label {if $friend.confirmed=='yes'}label-success{else}label-warning{/if} mlabel">
                     {if $friend.confirmed!='yes'}Request Sent{elseif $friend.confirmed =='yes'}Friends{/if}</span>

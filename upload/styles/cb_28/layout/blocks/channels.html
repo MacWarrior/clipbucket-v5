@@ -94,7 +94,7 @@
 <div class="channel-holder">
 	<a href="{$userquery->profile_link($user_data.userid)}" id="user-{$my_user.userid}" class="user-block">
 		<img class="avatar" src="{$userquery->getuserthumb($user_data.userid)}">
-		<h2>{$user_data.username}</h2>
+		<h2>{display_clean($user_data.username)}</h2>
 	</a>
 	<div class="info">
 		<span>{$user_data.total_videos|number_format} {lang code="videos"}</span>
@@ -109,10 +109,10 @@
 {if $block_type == 'subscribedby_list'}
 
 {assign var="user_data" value=$userquery->get_user_details($subscriber)}
-	<a href="{$userquery->profile_link($user_data.userid)}" title="{$user_data.username}" id="user-{$user_data.userid}" class="sub-avatar">
+	<a href="{$userquery->profile_link($user_data.userid)}" title="{display_clean($user_data.username)}" id="user-{$user_data.userid}" class="sub-avatar">
 		<img class="avatar img-responsive img-circle"  src="{$userquery->getuserthumb($user_data.userid)}">
 	</a>
-	<span>{$user_data.username}</span>
+	<span>{display_clean($user_data.username)}</span>
 {/if}
 
 {if $block_type =='small'}

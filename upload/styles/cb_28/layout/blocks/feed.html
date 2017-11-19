@@ -4,9 +4,9 @@
 	</a>
 	<div class="text">
 		{if !$feed.action_title}
-		<a href="{$userquery->profile_link($feed.user)}">{$feed.user.username}</a>
+		<a href="{$userquery->profile_link($feed.user)}">{display_clean($feed.user.username)}</a>
 		{else}
-		<span>{$feed.action_title}</span>
+		<span>{display_clean($feed.action_title)}</span>
 		{/if}
 		<time datetime="2016-03-31" class="time">{$feed.datetime}</time>
 	</div>

@@ -217,7 +217,7 @@
 						<img src="{$userquery->getuserthumb($popular,'small')}" width="50" height="50" class="img-circle">
 					</a>
 					<div class="channel-info">
-						<h3><a href="{$userquery->profile_link($popular)}">{$popular.username}</a></h3>
+						<h3><a href="{$userquery->profile_link($popular)}">{display_clean($popular.username)}</a></h3>
 						<div class="clearfix views-videos">
 							<span>{$popular.profile_hits|number_format} {lang code='views'}</span>
 							<span>{$popular.total_videos|number_format} {lang code='videos'}</span>
@@ -233,13 +233,6 @@
 		
 </div>
 <script>
-/*$('#changeCover').on("click", function(){
-
-$('#cover_info').show();
-
-});*/
-
-
 (function(window){
   $(document).ready(function(){
 	$("#report-user").on("click",function(){

@@ -19,11 +19,23 @@
 				<header class="clearfix details">
 					<h1>{display_clean($video.title)}</h1>
 					<div class="user-video-info clearfix">
-						<a href="{$userquery->profile_link($video)}" class="avatar">
-							<img src="{$userquery->avatar($video,'m',userid())}" class="img-responsive">
-						</a>
+
+						{if isSectionEnabled('channels')}
+							<a href="{$userquery->profile_link($video)}" class="avatar">
+								<img src="{$userquery->avatar($video,'m',userid())}" class="img-responsive">
+							</a>
+						{else}
+							<span class="avatar">
+								<img src="{$userquery->avatar($video,'m',userid())}" class="img-responsive">
+							</span>
+						{/if}
+
 						<h2 class="user-title">
-							<a href="{$userquery->profile_link($video)}"> {display_clean($video.username)}</a>
+						{if isSectionEnabled('channels')}
+							<a href="{$userquery->profile_link($video)}">{display_clean($video.username)}</a>
+						{else}
+							{display_clean($video.username)}
+						{/if}
 						</h2>
 						<!-- look at  -->
 						<div class="views-counter">
