@@ -57,7 +57,7 @@
                 <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu1">
                     <li>
                         {if $photos[list]['active'] == 'yes'}
-                        <a href="?deactivate={$photos[list].photo_id}">Deactivate</a>
+                        <a href="?deactivate={$photos[list].photo_id}">{lang code='deactivate'}</a>
                         {else}
                         <a href="?activate={$photos[list].photo_id}">{lang code='activate'}</a>
                         {/if}

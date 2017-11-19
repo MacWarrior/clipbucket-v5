@@ -74,7 +74,7 @@
         </div>
         <div class="col-md-3">
             <div class="form-group">
-                <label for="">Category</label>
+                <label>Category</label>
                 {$cat_array.type = 'dropdown'}
                 {$cat_array.category_type = 'user'}
                 {$cat_array.class = "form-control"}
@@ -82,43 +82,25 @@
             </div>
         </div>
     </div>
-            
-        
-            
-            
-            
-            
-            
+
     <div class="button">
     <input type="submit" name="search" id="search" value="Search" class="btn btn-success btn-sm"/>
         </div>
 </form>
 </div>
 
-
-
 <script type="text/javascript">
-       
-
-        $(document).ready(function neww () {
-        $(".current").click(function() {
-        $(this).toggleClass('after');
-        if(!$(this).hasClass('after')) 
-           {
-      
-          $('.down').hide();
-          $('.up').show();
-           }
-    
-        else
-       {
- 
-        $('.down').show();
-         $('.up').hide();
-       }
- 
-});
-
-       })
-       
-</script >
+$(document).ready(function neww (){
+	$(".current").click(function() {
+		$(this).toggleClass('after');
+		if(!$(this).hasClass('after'))
+		{
+			$('.down').hide();
+			$('.up').show();
+		} else {
+			$('.down').show();
+			$('.up').hide();
+		}
+	});
+})
+</script>

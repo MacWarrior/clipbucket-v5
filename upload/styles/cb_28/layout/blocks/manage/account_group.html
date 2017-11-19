@@ -33,9 +33,9 @@
                 <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle pull-right"
                         data-toggle="dropdown">Actions <i class="caret"></i></button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" role="menu">
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="{group_link details=$group}"target="_blank">{lang code='views'}</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="edit_group.php?group_id={$group.group_id}">{lang code='edit'}</a>
-                    </li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="{group_link details=$group}" target="_blank">{lang code='views'}</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="edit_group.php?group_id={$group.group_id}">{lang code='edit'}</a></li>
+
                     {if $group.featured == yes}
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="?unfeature={$group.group_id}">Make Unfeatured</a></li>
 					{/if}
@@ -44,16 +44,15 @@
 					{/if}
 
                     {if $group.active == yes}
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="?deactivate={$group.group_id}">Deactivate</a>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="?deactivate={$group.group_id}">{lang code='deactivate'}</a></li>
 					{else}
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="?activate={$group.group_id}">{lang code='activate'}</a>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="?activate={$group.group_id}">{lang code='activate'}</a></li>
 					{/if}
-                    </li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="{$baseurl}/manage_groups.php?mode=manage_videos&gid={$group.group_id}">Manage</a>
-                    </li>
+
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="{$baseurl}/manage_groups.php?mode=manage_videos&gid={$group.group_id}">Manage</a></li>
+
                     <li class="divider"></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="?gid_delete={$group.group_id}">{lang code='delete'}</a>
-                    </li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="?gid_delete={$group.group_id}">{lang code='delete'}</a></li>
                 </ul>
             </div>
         </td>
@@ -101,7 +100,7 @@
             <button id="dropdownMenu" class="btn btn-primary btn-xs dropdown-toggle pull-right"
                         data-toggle="dropdown">Actions <i class="caret"></i></button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" role="menu">
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="{group_link details=$group}"target="_blank">{lang code='views'}</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="{group_link details=$group}" target="_blank">{lang code='views'}</a></li>
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="edit_group.php?group_id={$group.group_id}">{lang code='edit'}</a>
                     </li>
                     {if $group.featured == yes}
@@ -111,7 +110,7 @@
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="?feature={$group.group_id}">Make Featured</a> {/if}
                     </li>
                     {if $group.active == yes}
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="?deactivate={$group.group_id}">Deactivate</a>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="?deactivate={$group.group_id}">{lang code='deactivate'}</a>
                         {else}
                     </li>
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="?activate={$group.group_id}">{lang code='activate'}</a>

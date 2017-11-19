@@ -16,7 +16,7 @@
                 {if $data.active!='yes'}
                 <li><a href="edit_video.php?video={$data.videoid}&amp;mode=activate">{lang code='activate'}</a></li>
                 {else}
-                <li><a href="edit_video.php?video={$data.videoid}&amp;mode=deactivate">Deactivate</a></li>
+                <li><a href="edit_video.php?video={$data.videoid}&amp;mode=deactivate">{lang code='deactivate'}</a></li>
                 {/if}
                 {if $modedata!='featured'}
                 <li><a href="edit_video.php?video={$data.videoid}&amp;mode=featured">Make Featured</a></li>

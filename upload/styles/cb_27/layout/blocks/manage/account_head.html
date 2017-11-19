@@ -83,13 +83,11 @@
                     <li><a role="menuitem" tabindex="-1"
                            href="{$baseurl}/edit_video.php?vid={$video.videoid}">{lang code='edit'}</a></li>
                     <li><a role="menuitem" tabindex="-1"
-                           href="{$baseurl}/watch_video.php?v={$video.videokey}"target="_blank">Watch</a>
-                     
-                   
-                    
+                           href="{$baseurl}/watch_video.php?v={$video.videokey}" target="_blank">Watch</a></li>
+
                     <li class="divider"></li>
-                    <li><a role="menuitem" tabindex="-1" href="{$baseurl}/myaccount.php?delete_video={$video.videoid}">{lang code='delete'}</a>
-                    </li>
+                    <li><a role="menuitem" tabindex="-1" href="{$baseurl}/myaccount.php?delete_video={$video.videoid}">{lang code='delete'}</a></li>
+
                     {foreach from=$cbvid->video_manager_links item=links}
                     {$cbvid->video_manager_link($links,$video)}
                     {/foreach}

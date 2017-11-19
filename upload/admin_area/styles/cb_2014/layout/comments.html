@@ -75,7 +75,7 @@
 
                         </li>
 
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#" id="spam_comment_{$comment.comment_id}" onclick="admin_spam_comment({$comment.comment_id}); return false;"{if $comment.spam_votes ==0}  style="display:inline"{else} style="display:none;"{/if}>Mark {lang code='spam'}</a> <a href="#" id="remove_spam_comment_{$comment.comment_id}"  onclick="admin_remove_spam({$comment.comment_id}); return false;"
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#" id="spam_comment_{$comment.comment_id}" onclick="admin_spam_comment({$comment.comment_id}); return false;"{if $comment.spam_votes ==0}  style="display:inline"{else} style="display:none;"{/if}>Mark {lang code='spam'}</a> <a href="#" id="remove_spam_comment_{$comment.comment_id}" onclick="admin_remove_spam({$comment.comment_id}); return false;"
                           {if $comment.spam_votes !=0}  style="display:inline"{else} style="display:none;"{/if}>{lang code='remove'} {lang code='spam'}</a> </li>
 
 
@@ -95,7 +95,7 @@
 
                   <a href="{$cbgroup->topic_link($comment)}#{if $comment.spam_votes > 0}spam_{/if}comment_{$comment.comment_id}" target="_blank">{lang code='view'} {lang code='comment'}</a> |
 
-                  <a href="#" id="spam_comment_{$comment.comment_id}" onclick="admin_spam_comment({$comment.comment_id}); return false;"{if $comment.spam_votes ==0}  style="display:inline"{else} style="display:none;"{/if}>Mark {lang code='spam'}</a> <a href="#" id="remove_spam_comment_{$comment.comment_id}"  onclick="admin_remove_spam({$comment.comment_id}); return false;"
+                  <a href="#" id="spam_comment_{$comment.comment_id}" onclick="admin_spam_comment({$comment.comment_id}); return false;"{if $comment.spam_votes ==0}  style="display:inline"{else} style="display:none;"{/if}>Mark {lang code='spam'}</a> <a href="#" id="remove_spam_comment_{$comment.comment_id}" onclick="admin_remove_spam({$comment.comment_id}); return false;"
                   {if $comment.spam_votes !=0}  style="display:inline"{else} style="display:none;"{/if}>{lang code='remove'} {lang code='spam'}</a> | 
 
                   <a href="#" onclick="delete_comment('{$comment.comment_id}','v'); window.location.reload(); return false;">{lang code='delete'}</a>
@@ -111,27 +111,27 @@
                 <div class="dropdown pull-right">
                   <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">Actions  <i class="caret"></i></button>
                   <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" role="menu">
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href href="{$userquery->profile_link($comment)}#{if $comment.spam_votes > 0}spam_{/if}comment_{$comment.comment_id}" target="_blank">{lang code='view'} {lang code='comment'}</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="{$userquery->profile_link($comment)}#{if $comment.spam_votes > 0}spam_{/if}comment_{$comment.comment_id}" target="_blank">{lang code='view'} {lang code='comment'}</a></li>
 
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href href="#" id="spam_comment_{$comment.comment_id}" onclick="admin_spam_comment({$comment.comment_id}); return false;"{if $comment.spam_votes ==0}  style="display:inline"{else} style="display:none;"{/if}>Mark {lang code='spam'}</a> </li>
-                    <a href="#" id="remove_spam_comment_{$comment.comment_id}"  onclick="admin_remove_spam({$comment.comment_id}); return false;"
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" id="spam_comment_{$comment.comment_id}" onclick="admin_spam_comment({$comment.comment_id}); return false;"{if $comment.spam_votes ==0}  style="display:inline"{else} style="display:none;"{/if}>Mark {lang code='spam'}</a> </li>
+                    <a href="#" id="remove_spam_comment_{$comment.comment_id}" onclick="admin_remove_spam({$comment.comment_id}); return false;"
                     {if $comment.spam_votes !=0}  style="display:inline"{else} style="display:none;"{/if}>{lang code='remove'} {lang code='spam'}</a>
 
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href href="#" onclick="delete_comment('{$comment.comment_id}','v'); window.location.reload(); return false;">{lang code='delete'}</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="delete_comment('{$comment.comment_id}','v'); window.location.reload(); return false;">{lang code='delete'}</a></li>
                   </ul>
                 </div>
                 {/if}
 
                 {if $type == 'cl'}
                 <span class="vdo_sets">
-                 {if is_array($comment_owner)} <a href="{$userquery->profile_link($comment_owner)}"><strong>{$comment_owner.username}</strong></a> {else} <strong>{$comment_owner}- {lang code="un_reg_user"}</strong> {/if} commented on <strong>{$comment.date_added|date_format}</strong>  on a collection named <span style="text-transform:none"><a href="{$cbcollection->collection_links($comment,'vc')}" title="{$comment.collection_name}">{$comment.collection_name|truncate:40}</a></span>
+                 {if is_array($comment_owner)} <a href="{$userquery->profile_link($comment_owner)}"><strong>{$comment_owner.username}</strong></a> {else} <strong>{$comment_owner}- {lang code="un_reg_user"}</strong> {/if} commented on <strong>{$comment.date_added|date_format}</strong>  on a collection named <span style="text-transform:none"><a href="{$cbcollection->collection_links($comment,'vc')}" title="{$comment.collection_name}">{display_clean($comment.collection_name)|truncate:40}</a></span>
                </span>
 
 
                <div class="labels">
                 <a href="{$cbcollection->collection_links($comment,'vc')}#{if $comment.spam_votes > 0}spam_{/if}comment_{$comment.comment_id}" target="_blank">{lang code='view'} {lang code='comment'}</a> |
 
-                <a href="#" id="spam_comment_{$comment.comment_id}" onclick="admin_spam_comment({$comment.comment_id}); return false;"{if $comment.spam_votes ==0}  style="display:inline"{else} style="display:none;"{/if}>Mark {lang code='spam'}</a> <a href="#" id="remove_spam_comment_{$comment.comment_id}"  onclick="admin_remove_spam({$comment.comment_id}); return false;"
+                <a href="#" id="spam_comment_{$comment.comment_id}" onclick="admin_spam_comment({$comment.comment_id}); return false;"{if $comment.spam_votes ==0}  style="display:inline"{else} style="display:none;"{/if}>Mark {lang code='spam'}</a> <a href="#" id="remove_spam_comment_{$comment.comment_id}" onclick="admin_remove_spam({$comment.comment_id}); return false;"
                 {if $comment.spam_votes !=0}  style="display:inline"{else} style="display:none;"{/if}>{lang code='remove'} {lang code='spam'}</a> | 
 
                 <a href="#" onclick="delete_comment('{$comment.comment_id}','v'); window.location.reload(); return false;">{lang code='delete'}</a>
@@ -148,7 +148,7 @@
              <div class="labels">
               <a href="{$cbphoto->photo_links($comment,'view_photo')}#{if $comment.spam_votes > 0}spam_{/if}comment_{$comment.comment_id}" target="_blank">{lang code='view'} {lang code='comment'}</a> |
 
-              <a href="#" id="spam_comment_{$comment.comment_id}" onclick="admin_spam_comment({$comment.comment_id}); return false;"{if $comment.spam_votes ==0}  style="display:inline"{else} style="display:none;"{/if}>Mark {lang code='spam'}</a> <a href="#" id="remove_spam_comment_{$comment.comment_id}"  onclick="admin_remove_spam({$comment.comment_id}); return false;"
+              <a href="#" id="spam_comment_{$comment.comment_id}" onclick="admin_spam_comment({$comment.comment_id}); return false;"{if $comment.spam_votes ==0}  style="display:inline"{else} style="display:none;"{/if}>Mark {lang code='spam'}</a> <a href="#" id="remove_spam_comment_{$comment.comment_id}" onclick="admin_remove_spam({$comment.comment_id}); return false;"
               {if $comment.spam_votes !=0}  style="display:inline"{else} style="display:none;"{/if}>{lang code='remove'} {lang code='spam'}</a> | 
 
               <a href="#" onclick="delete_comment('{$comment.comment_id}','v'); window.location.reload(); return false;">{lang code='delete'}</a>

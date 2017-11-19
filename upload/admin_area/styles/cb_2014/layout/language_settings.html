@@ -115,7 +115,7 @@
                         <li role="presentation" class="divider"></li>
                         {if $language_list[l_list].language_active=='yes'}
                         <li role="presentation"><a role="menuitem" tabindex="-1"
-                            href="?action=deactivate&id={$language_list[l_list].language_id}">Deactivate</a>
+                            href="?action=deactivate&id={$language_list[l_list].language_id}">{lang code='deactivate'}</a>
                         </li>
                         {/if}
                         {if $language_list[l_list].language_default!='yes'}
@@ -157,19 +157,19 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="">Language Name</label>
+                    <label for="name">Language Name</label>
                     <input name="name" type="text" class="form-control" id="name" value="{$lang_details.language_name}" />
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="">Language Code</label>
+                    <label for="code">Language Code</label>
                     <input name="code" type="text" class="form-control" id="code" value="{$lang_details.language_code}" />
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="">Language Regex</label>
+                    <label for="regex">Language Regex</label>
                     <input name="regex" type="text" class="form-control" id="regex" value="{$lang_details.language_regex}" />
                 </div>
             </div>
@@ -183,20 +183,20 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="">Phrase Code - Name</label>
+                    <label for="varname">Phrase Code - Name</label>
                     <input name="varname" type="text" class="form-control" id="varname" value="{$smarty.get.varname|form_val}" />
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="">Phrase Text</label>
+                    <label for="text">Phrase Text</label>
                     <input name="text" class="form-control" type="text" id="text" value="{$smarty.get.text|form_val}" />
                 </div>
             </div>
         </div>
         <label>
         <input name="edit_language" type="hidden" value="{$smarty.get.edit_language}" />
-        <input type="submit" name="search_phrase" class="btn btn-primary" value="Search"   id="search_phrase"/>
+        <input type="submit" name="search_phrase" class="btn btn-primary" value="Search" id="search_phrase"/>
         </label>
     </form>
 </div>

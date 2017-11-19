@@ -5,15 +5,9 @@
 
 <form action="manage_players.php?mode=show_settings" method="post" enctype="multipart/form-data" name="player_settings">
         <div class="row">
-<!--<div class="col-md-4">
-  <label for="pak_license">
-    Pakplayer license<br>
-    <small>If you have pakplayer license, please enter it here</small>
-  </label>
-  <input class="form-control" type="text" name="pak_license" id="pak_license" value="{$row.pak_license}" />
-</div>-->
+
 <div class="col-md-4">
-  <label for="">
+  <label for="autoplay_video">
     Autoplay<br>
     <small>if yes, all videos will be played automatically</small>
   </label>
@@ -28,8 +22,8 @@
     <small>By turning this on, player will turn on playlists feature in player (if available)</small>
   </label>
     <select class="form-control" name="use_playlist" id="use_playlist">
-        <option value="yes"  {if $row.autoplay_video=='yes'} selected {/if} >Yes</option>
-        <option value="no"  {if $row.use_playlist=='no'} selected {/if}} >No</option>
+        <option value="yes" {if $row.autoplay_video=='yes'} selected {/if} >Yes</option>
+        <option value="no" {if $row.use_playlist=='no'} selected {/if}} >No</option>
     </select>
 </div>
 <div class="col-md-4">
@@ -41,15 +35,6 @@
 </div>
 </div>
         <div class="row">
-<!--<div class="col-md-4">
-  <label for="logo_file">
-    Logo File<br>
-    <small>
-      Logo file that will display on your flash player
-    </small>
-  </label>
-  <input type="file" class="form-control" name="logo_file" id="logo_file" />
-</div>-->
 <div class="col-md-4">
   <label for="buffer_time">Buffer time</label>
   <input class="form-control" type="text" name="buffer_time" id="buffer_time" value="{$row.buffer_time}" />
@@ -76,17 +61,6 @@
         <br>
         <div class="row">
 
-<!-- <div class="col-md-4">
-  <label for="youtube_enabled">
-    Play Youtube Video Inside Player<br>
-    <small>this will let you play youtube videos in your player</small>
-  </label>
-    <select class="form-control" name="youtube_enabled" id="youtube_enabled">
-        <option value="yes"  {if $row.youtube_enabled=='yes'} selected {/if}>Yes</option>
-        <option value="no"  {if $row.youtube_enabled=='no'} selected {/if}>No</option>
-    </select>
-</div> -->
-
 <div class="col-md-4">
   <label for="textfield">
     Embed Player Height<br>
@@ -95,7 +69,7 @@
   <input class="form-control" name="embed_player_height" type="text" id="textfield" value="{$row.embed_player_height}" />
 </div>
 <div class="col-md-4">
-  <label for="autoplay_embed0">
+  <label for="autoplay_embed">
     Autoplay Embed<br>
     <small>Autoplay embeded video by default</small>
   </label>
@@ -119,7 +93,7 @@
         <div class="row">
 
 <div class="col-md-4">
-  <label for="pseudostreaming_0">
+  <label for="pseudostreaming">
     Use PseudoStreaming<br>
     <small>Let users to play video from anywhere, requires h264 streaming module from webserver</small>  
   </label>
@@ -235,8 +209,6 @@
   {assign var='players' value=$cbplayer->get_players()}
 
   <div class="templates_container">
-    
-
 
       <div class="row">
       {foreach from=$players item=player}

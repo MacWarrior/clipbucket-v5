@@ -25,12 +25,12 @@
 				            </label>
 				
 				<label class="radio-inline">
-					<input type="radio" name="player_size" value="medium" id="player_size_2"  onclick="{$updateEmbedCode}('540','334',autoPlayEmbed)">
+					<input type="radio" name="player_size" value="medium" id="player_size_2" onclick="{$updateEmbedCode}('540','334',autoPlayEmbed)">
 					{lang code='medium'} (540x334)
 				</label>
 				
 				<label class="radio-inline">
-					<input type="radio" name="player_size" value="large" id="player_size_3"  onclick="{$updateEmbedCode}('600','370',autoPlayEmbed)">
+					<input type="radio" name="player_size" value="large" id="player_size_3" onclick="{$updateEmbedCode}('600','370',autoPlayEmbed)">
 					{lang code='large'} (600x370)
 				</label>
 				<label class="block-label clearfix">Custom Size</label>
@@ -56,7 +56,7 @@
 				Yes
 			</label>
 			<label>
-				<input type="radio" name="autoplay" value="no"  onclick="{$updateEmbedCode}(embedPlayerWidth,embedPlayerHeight,'no')" {if $Cbucket->configs.autoplay_embed!='yes'} checked{/if}>
+				<input type="radio" name="autoplay" value="no" onclick="{$updateEmbedCode}(embedPlayerWidth,embedPlayerHeight,'no')" {if $Cbucket->configs.autoplay_embed!='yes'} checked{/if}>
 				No
 			</label>
 		</div>
@@ -70,7 +70,7 @@
 					{lang code='iframe'}
 				</label>
 				<label class="radio-inline">
-					<input type="radio" name="embed_type" value="iframe"  onclick="switchEmbedCode('embed_object')" {if $Cbucket->configs.embed_type=='embed_object'} checked{/if}>
+					<input type="radio" name="embed_type" value="iframe" onclick="switchEmbedCode('embed_object')" {if $Cbucket->configs.embed_type=='embed_object'} checked{/if}>
 					{lang code='embed_object'}
 				</label>
 			</div>

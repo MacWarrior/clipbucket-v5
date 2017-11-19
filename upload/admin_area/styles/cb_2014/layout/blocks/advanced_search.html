@@ -76,8 +76,7 @@
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="">Category</label>
-                    
+                    <label>Category</label>
                     {$cat_array.type = 'dropdown'}
                     {$cat_array.category_type = 'video'}
                     {$cat_array.class = "form-control"}
@@ -93,28 +92,18 @@
 </div>
 
 
- <script type="text/javascript">
-       
-
-        $(document).ready(function neww () {
-        $(".current").click(function() {
-        $(this).toggleClass('after');
-        if(!$(this).hasClass('after')) 
-           {
-      
-          $('.down').hide();
-          $('.up').show();
-           }
-    
-        else
-       {
- 
-        $('.down').show();
-         $('.up').hide();
-       }
- 
-});
-
-       })
-       
-</script >
+<script type="text/javascript">
+$(document).ready(function neww () {
+	$(".current").click(function() {
+		$(this).toggleClass('after');
+		if(!$(this).hasClass('after'))
+		{
+			$('.down').hide();
+			$('.up').show();
+		} else {
+			$('.down').show();
+			$('.up').hide();
+		}
+	});
+})
+</script>

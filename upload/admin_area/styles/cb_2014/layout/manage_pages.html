@@ -63,7 +63,7 @@
 <form name="page_form" action="?" method="post">
 <div class="btn-group">
      	  <input class="btn btn-primary btn-xs btn" type="submit" name="activate_selected" value="{lang code='activate'}"/>
-          <input class="btn btn-primary btn-xs btn" type="submit" name="deactivate_selected" value="Deactivate"/>
+          <input class="btn btn-primary btn-xs btn" type="submit" name="deactivate_selected" value="{lang code='deactivate'}"/>
           <input class="btn btn-primary btn-xs btn" type="submit" name="update_order" value="Update order"/>
           <input class="btn btn-primary btn-xs btn" type="submit" name="delete_selected" value="{lang code='delete'}" onclick="return confirm_it('Are you sure you want to delete selected page(s)')"/>
     </div>
@@ -119,14 +119,14 @@
     
     <td>
       <div class="dropdown">
-          <button class="btn btn-primary btn-xs dropdown-toggle pull-right" type="button"  id="dropdownMenu1" data-toggle="dropdown">
+          <button class="btn btn-primary btn-xs dropdown-toggle pull-right" type="button" id="dropdownMenu1" data-toggle="dropdown">
             Actions <i class="caret"></i>
           </button>
           <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
           <li role="presentation"><a role="menuitem" tabindex="-1" href="{$cbpage->page_link($cbpages[list])}">{lang code='views'}</a></li>
           <li role="presentation"><a role="menuitem" tabindex="-1" href="?mode=edit&pid={$cbpages[list].page_id}">{lang code='edit'}</a></li>
           {if $cbpages[list].active == yes}
-          <li role="presentation"><a role="menuitem" tabindex="-1" href="?deactivate={$cbpages[list].page_id}">Deactivate</a></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="?deactivate={$cbpages[list].page_id}">{lang code='deactivate'}</a></li>
           {else}
           <li role="presentation"><a role="menuitem" tabindex="-1" href="?activate={$cbpages[list].page_id}">{lang code='activate'}</a></li>
           {/if}
@@ -151,7 +151,7 @@
 
     <div class="btn-group">
 		<input class="btn btn-primary btn-xs btn" type="submit" name="activate_selected" value="{lang code='activate'}"/>
-		<input class="btn btn-primary btn-xs btn" type="submit" name="deactivate_selected" value="Deactivate"/>
+		<input class="btn btn-primary btn-xs btn" type="submit" name="deactivate_selected" value="{lang code='deactivate'}"/>
 		<input class="btn btn-primary btn-xs btn" type="submit" name="update_order" value="Update order"/>
 		<input class="btn btn-primary btn-xs btn" type="submit" name="delete_selected" value="{lang code='delete'}" onclick="return confirm_it('Are you sure you want to delete selected page(s)')"/>
     </div>

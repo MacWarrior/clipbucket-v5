@@ -9,7 +9,7 @@
     <div class="btn-group">
         <input class="btn btn-primary btn-xs button" type="submit" name="activate_selected" value="{lang code='activate'}"/>
         {if $smarty.get.active!='no'}
-        <input class="btn btn-primary btn-xs button" type="submit" name="deactivate_selected" value="Deactivate"/>
+        <input class="btn btn-primary btn-xs button" type="submit" name="deactivate_selected" value="{lang code='deactivate'}"/>
         {/if}
         <input class="btn btn-primary btn-xs button" type="submit" name="make_featured_selected" value="Make Featured"/>
         <input class="btn btn-primary btn-xs button" type="submit" name="make_unfeatured_selected" value="Make Unfeatured"/>
@@ -102,19 +102,17 @@
                         Actions <i class="caret"></i></button>
                     <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
                         <li><a role="menuitem" tabindex="-1" href="edit_video.php?video={$video.videoid}">{lang code='edit'}</a></li>
-                        <li><a role="menuitem" tabindex="-1" href="{$baseurl}/watch_video.php?v={$video.videokey}"target="_blank">Watch</a>
+                        <li><a role="menuitem" tabindex="-1" href="{$baseurl}/watch_video.php?v={$video.videokey}" target="_blank">Watch</a>
                         </li>
 
-                        
                         {if $video.featured == yes}
                         <li><a role="menuitem" tabindex="-1" href="?make_unfeature={$video.videoid}">Make Unfeatured</a></li>
                         {/if}
                         {if $video.featured == no}
-                        <li><a role="menuitem" tabindex="-1" href="?make_feature={$video.videoid}">Make
-                            Featured</a></li>
+                        <li><a role="menuitem" tabindex="-1" href="?make_feature={$video.videoid}">Make Featured</a></li>
                         {/if}
                         {if $video.active == yes}
-                        <li><a role="menuitem" tabindex="-1" href="?deactivate={$video.videoid}">Deactivate</a>
+                        <li><a role="menuitem" tabindex="-1" href="?deactivate={$video.videoid}">{lang code='deactivate'}</a>
                         </li>
                         {else}
                         <li><a role="menuitem" tabindex="-1" href="?activate={$video.videoid}">{lang code='activate'}</a>
@@ -143,7 +141,7 @@
     {/if}
     <div class="btn-group marginBotoomLarge marginTopLarge paddingBotoomLarge paddingTopLarge">
         <input class="btn btn-primary btn-xs button" type="submit" name="activate_selected" value="{lang code='activate'}"/>
-        <input class="btn btn-primary btn-xs button" type="submit" name="deactivate_selected" value="Deactivate"/>
+        <input class="btn btn-primary btn-xs button" type="submit" name="deactivate_selected" value="{lang code='deactivate'}"/>
         <input class="btn btn-primary btn-xs button" type="submit" name="make_featured_selected" value="Make Featured"/>
         <input class="btn btn-primary btn-xs button" type="submit" name="make_unfeatured_selected" value="Make Unfeatured"/>
         <input class="btn btn-primary btn-xs button" type="submit" name="delete_selected" value="{lang code='delete'}"

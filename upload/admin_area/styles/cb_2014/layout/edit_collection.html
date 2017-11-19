@@ -82,25 +82,21 @@
 
                 <div class="tab-content">
 
-
                     <div id="cldetails" class="tab-pane active">
-
-
 
               <fieldset class="fieldset">
    
               <table class="myTable" width="98%" border="0" align="center" cellpadding="0" cellspacing="0" class="block">
               <tr>
-              <td class="first"><label for="collecionID">Collection Id</label></td></td>
-              <td class="last"><p><span><input disabled="disabled" name="collecionID" type="text" id="collecionID" value="{$data.collection_id}" size="30" />
-              </span></p></td>
+				  <td class="first"><label for="collecionID">Collection Id</label></td></td>
+				  <td class="last"><p><span><input disabled="disabled" name="collecionID" type="text" id="collecionID" value="{$data.collection_id}" size="30" />
+				  </span></p></td>
               </tr>
 
-             
               {foreach from=$requiredFields item=field}
               <tr>
-              <td class="first"><label for="" style="width:160px;">{$field.title}</label></td>
-              <td class="last" ><p><span>{$formObj->createField($field)}</span></p></td>
+				  <td class="first"><label>{$field.title}</label></td>
+				  <td class="last"><p><span>{$formObj->createField($field)}</span></p></td>
               </tr>
               {/foreach}
               </table>
