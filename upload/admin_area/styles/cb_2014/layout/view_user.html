@@ -10,7 +10,9 @@
     <div class="actionBox clearfix">
     <a class="btn btn-primary btn-sm dropdown-toggle pull-left" data-toggle="dropdown" href="">Actions <i class="caret"></i></a>
     <ul class="dropdown-menu pull-left actionDropmenu" role="menu" aria-labelledby="dropdownMenu1">
+		{if isSectionEnabled('channels')}
         <li><a role="menuitem" tabindex="-1" href="{$userquery->profile_link($u)}">View {display_clean($u.username)} channel</a></li>
+		{/if}
         <li><a role="menuitem" tabindex="-1" href="login_as_user.php?uid={$u.userid}">Login as user</a></li>
         {if $u.usr_status=="Ok"}
         <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;deactivate=yes">{lang code='deactivate'}</a></li>

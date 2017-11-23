@@ -42,10 +42,10 @@
             <div class="col-md-10">
                 <div class="row">
                     <div class="col-md-3">
-                        <img src="{$userquery->getUserThumb($u)}" class="img-thumbnail oneUserImage"style="height: 80px; width: 80px;"/>
+                        <img src="{$userquery->getUserThumb($u)}" class="img-thumbnail oneUserImage" style="height: 80px; width: 80px;"/>
                     </div>
                     <div class="col-md-9">
-                        <a href="{$userquery->profile_link($u)}" target="_blank" class="oneUserName">{display_clean($u.username)} </a>
+                        <a href="view_user.php?uid={$u.userid}" class="oneUserName">{display_clean($u.username)} </a>
                         <span>{$u.email}</span>
                         <div class="labels">
                             {if $u.featured=='Yes'}<span class="label label-primary">Featured</span>{/if}
@@ -85,8 +85,10 @@
         Actions<i class="icon-angle-down icon-on-right"></i>
       </button>
       <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" role="menu">
-         <li><a role="menuitem" tabindex="-1" href="view_user.php?uid={$u.userid}">{lang code='edit'}</a></li>
-        <li><a role="menuitem" tabindex="-1" href="view_user.php?uid={$u.userid}">{lang code='views'}</a></li>
+		<li><a role="menuitem" tabindex="-1" href="view_user.php?uid={$u.userid}">{lang code='edit'}</a></li>
+		  {if isSectionEnabled('channels')}
+        <li><a role="menuitem" tabindex="-1" href="{$userquery->profile_link($u)}">View {display_clean($u.username)} channel</a></li>
+		  {/if}
         <li><a role="menuitem" tabindex="-1" href="manage_playlist.php?userid={$u.userid}&search=Search">View Playlists</a></li>
 
         {if $u.usr_status == Ok}

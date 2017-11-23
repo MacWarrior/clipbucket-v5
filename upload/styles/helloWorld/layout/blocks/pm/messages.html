@@ -72,11 +72,11 @@
     <div class="pm_line">
       {lang code='from'} : 
       <strong>
-        <a href="{$userquery->profile_link($pr_msg)}">{$pr_msg.username}</a>
+        <a href="{$userquery->profile_link($pr_msg)}">{displa_clean($pr_msg.username)}</a>
       </strong> - {$pr_msg.date_added|date_format:"%A, %B %e, %Y %I:%M %p"}
     </div>
     <div class="pm_line">
-      {lang code='Subject'} : <strong>{$pr_msg.message_subject}</strong>
+      {lang code='Subject'} : <strong>{display_clean($pr_msg.message_subject)}</strong>
     </div>
   </div>
   {private_message pm=$pr_msg}

@@ -2554,7 +2554,7 @@ class CBPhotos
 					{
 						$username = get_username($id);
 						$output = "<li id='user".$id.$p['photo_id']."' class='PhotoRatingStats'>";
-						$output .= "<a href='".$userquery->profile_link($id)."'>$username</a>";
+						$output .= "<a href='".$userquery->profile_link($id)."'>display_clean($username)</a>";
 						$output .= " rated <strong>". $details['rate']/2 ."</strong> stars <small>(";
 						$output  .= niceTime($details['time']).")</small>";
 						$output .= "</li>";

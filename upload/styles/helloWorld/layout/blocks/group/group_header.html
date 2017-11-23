@@ -73,7 +73,7 @@
                     	<span><span>{lang code='grp_name_title'} </span> <span>{$group.group_name}</span></span>
                         <div class="clear"></div>
 						{assign var=owner value=$userquery->get_user_details($group.userid)}
-                    	<span><span>{lang code='group_owner'} </span> <span><a href="{$userquery->profile_link($owner)}">{$owner.username}</a></span></span>
+                    	<span><span>{lang code='group_owner'} </span> <span><a href="{$userquery->profile_link($owner)}">{display_clean($owner.username)}</a></span></span>
                         <div class="clear"></div>
                         
                         <span><span>{lang code='total_mems'} </span> <span>{$group.total_members|number_format}</span></span>
