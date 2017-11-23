@@ -41,11 +41,7 @@
                          <span class="labels1">{$videos[list].date_added|niceTime}
                                 {lang code='views'} : {$videos.views|number_format}</span>
                                     <div class="labels">
-
-                                        
-
-                                        
-                                        <span class="label {if $videos[list].active=='yes'}label-success{else}label-warning{/if}">{if $videos[list].active=='yes'}Active{else}InActive{/if}</span>
+                                        <span class="label {if $videos[list].active=='yes'}label-success{else}label-warning{/if}">{if $videos[list].active=='yes'}{lang code='active'}{else}{lang code='inactive'}{/if}</span>
 
                                         <span class="label {if $video_status == Ok}label-success{else}label-success{/if}">{$videos[list].status}</span>
                                         <a href="?mode=view_flags&vid={$videos[list].videoid}"><span class="label label-info">Flags:{$videos[list].total_flags}</span></a>
@@ -55,7 +51,7 @@
                                 </div>
                             </div>
                                 <div class="col-md-2">
-                                    Owner<a href="view_user.php?uid={$videos[list].userid}">  {$videos[list].username}</a>
+                                    Owner<a href="view_user.php?uid={$videos[list].userid}"> {display_clean($videos[list].username)}</a>
                             </div>
                         </div>
                     </td>

@@ -19,7 +19,7 @@
                                 {if $group.featured=='yes'}<span class="label label-primary">Featured</span>{/if}
                                 <span class="label label-danger"><span>Members:</span>{$group.total_members|number_format}</span>
                                 <span class="label {if $group.active=='yes'}label-success{else}label-warning{/if}"></span>
-								<span>{if $group.active=="yes"} Active{else}Inactive{/if}</span>
+								<span>{if $group.active=="yes"}{lang code='active'}{else}{lang code='inactive'}{/if}</span>
                                 <span class="label label-info"> {if $group.group_privacy =="0"}Public{elseif $group.group_privacy =="1"}Private{else}Invited{/if}</span>
                             </div>
                         </div>
@@ -84,7 +84,7 @@
                                 {if $group.featured=='yes'}<span class="label label-primary">Featured</span>{/if}
                                 <span class="label label-danger">Members:{$group.total_members|number_format}</span>
                                 <span class="label {if $group.active=='yes'}label-success{else}label-warning{/if}"></span>
-								<span>{if $group.active=="yes"} Active{else}Inactive{/if}</span>
+								<span>{if $group.active=="yes"}{lang code='active'}{else}{lang code='inactive'}{/if}</span>
                                 <span class="label label-info"> {if $group.group_privacy =="0"}Public{elseif $group.group_privacy =="1"}Private{else}Invited{/if}</span>
                             </div>
                         </div>

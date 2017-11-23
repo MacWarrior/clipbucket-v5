@@ -52,7 +52,7 @@
 								<div class="labels">
 									{if $video.featured=='yes'}<span class="label label-primary">Featured</span>{/if}
 										<span class="label {if $video.active=='yes'}label-success{else}label-warning{/if} mlabel">
-											{if $video.active=='yes'}Active{else}InActive{/if}</span>
+											{if $video.active=='yes'}{lang code='active'}{else}{lang code='inactive'}{/if}</span>
 										<span class="label {if $video.status=='Successful'}label-success{else}label-warning{/if}">
 											{if $video.status=='Successful'}Successful{else}Processing{/if}</span>
 										<span class="label label-info">

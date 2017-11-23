@@ -39,14 +39,6 @@
                                         {$cl[list].collection_name|truncate:80}</a>{if $cl[list].date_added}-({$cl[list].date_added|niceTime}){/if}<br>
                          <span class="labels1">Total Objects: {$cl[list].total_objects}</span>
                                     <div class="labels">
-
-                                       <!--  <span class="label {if $video.status == Ok}label-success{else}label-warning{/if}">
-                                            {if $video.active=='yes'}Active{else}InActive{/if}</span>
-
-                                        <span class="label {if $videos[list].active=='yes'}label-success{else}label-warning{/if}">{if $videos[list].active=='yes'}Active{else}InActive{/if}</span>
-
-                                        <span class="label {if $video_status == Ok}label-success{else}label-success{/if}">{$videos[list].status}</span> 
-                                        <a href="?mode=view_flags&vid={$videos[list].videoid}"><span class="label label-info">Flags:{$videos[list].total_flags}</span></a>-->
                                         </span>
                                     </div>
                                 </div>
@@ -64,13 +56,11 @@
                     <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">Actions <i class="caret"></i></button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" role="menu">
                        <li role="presentation"><a role="menuitem" tabindex="-1" href="edit_collection.php?collection={$cl[list].collection_id}">{lang code='edit'}</a></li>
-                        <!-- <li role="presentation"><a role="menuitem" tabindex="-1" href="?mode=view_flags&vid={$videos[list].videoid}">View Flags</a></li>-->
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="?delete_collect={$cl[list].collection_id}">Delete Collection</a></li>
                         <li class="divider"></li> 
 
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="?delete_flags={$cl[list].collection_id}">Delete Flags</a></li>
-
-
+					</ul>
                 </div>
         </tr>
         {if $bgcolor == ""}
@@ -98,12 +88,10 @@
 <div class="dropdown">
     <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle pull-right" data-toggle="dropdown">Actions <i class="caret"></i></button>
     <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
-
-        <li role="presentation"><a role="menuitem" tabindex="-1" href="{$baseurl}/watch_video.php?v={$video.videokey}">View video</a>
-        <li role="presentation"><a role="menuitem" tabindex="-1" href="edit_video.php?video={$video.videoid}">Edit video</a>
-        <li role="presentation"><a role="menuitem" tabindex="-1" href="?delete_flags={$video.videoid}">Delete Flags</a>
-        <li role="presentation"><a role="menuitem" tabindex="-1" href="?delete_video={$video.videoid}">Delete Video</a>
-        </li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="{$baseurl}/watch_video.php?v={$video.videokey}">View video</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="edit_video.php?video={$video.videoid}">Edit video</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="?delete_flags={$video.videoid}">Delete Flags</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="?delete_video={$video.videoid}">Delete Video</a></li>
     </ul>
 </div><br><br>
 
@@ -119,7 +107,7 @@
         {section name=list loop=$flags}
         <tr bgcolor="{$bgcolor}">
             <td>{$smarty.section.list.iteration}</td>
-            <td>Reported as "{$flags[list].flag_type|flag_type}" by<strong>{$flags[list].userid|get_username}</strong> {$flags[list].date_added|niceTime}</td>
+            <td>Reported as "{$flags[list].flag_type|flag_type}" by<strong>{display_clean($flags[list].userid|get_username)}</strong> {$flags[list].date_added|niceTime}</td>
         </tr>
         {if $bgcolor == ""}
         {assign var = bgcolor value = "#EEEEEE"}

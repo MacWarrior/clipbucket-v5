@@ -38,7 +38,7 @@
                             <div class="labels">
                                 <span class="label">{if $groups[gp_list].group_privacy =="0"}Public{elseif $groups[gp_list].group_privacy =="1"}Private{else}Invited{/if}</span>
                                 <span class="label {if $groups[gp_list].active=='yes'}label-success{else}label-warning{/if}"></span>
-								<span>{if $groups[gp_list].active=="yes"} Active{else}Inactive{/if}</span>
+								<span>{if $groups[gp_list].active=="yes"}{lang code='active'}{else}{lang code='inactive'}{/if}</span>
                                 <span class="label label-info"><span>Members</span>{$groups[gp_list].total_members|number_format}</span>
                                 <a href="?mode=view_flags&gid={$groups[gp_list].group_id}"><span class="label label-info"><span>Flags</span>{$groups[gp_list].total_flags}</span></a>
                             </div>

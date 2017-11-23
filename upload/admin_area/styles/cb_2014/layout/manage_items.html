@@ -55,7 +55,7 @@
                                 <div class="labels">
                                     {if $obj[list].featured=='yes'}<span class="label label-primary">Featured</span>{/if}
                                     <span class="label {if $obj[list].active=='yes'}label-success{else}label-warning{/if}">
-                                    {if $obj[list].active=='yes'}Active{else}InActive{/if} </span>
+                                    {if $obj[list].active=='yes'}{lang code='active'}{else}{lang code='inactive'}{/if} </span>
                                     <span class="label label-info">
                                     Viewed {$obj[list].last_viewed|niceTime}</span>
                                 </div>
@@ -92,7 +92,7 @@
                                 <div class="labels">
                                     {if $obj[list].featured=='yes'}<span class="label label-primary">Featured</span>{/if}
                                     <span class="label {if $obj[list].active=='yes'}label-success{else}label-warning{/if}">
-                                    {if $obj[list].active=='yes'}Active{else}InActive{/if} </span>
+                                    {if $obj[list].active=='yes'}{lang code='active'}{else}{lang code='inactive'}{/if} </span>
                                     <span class="label label-info">
                                     Viewed {$obj[list].last_viewed|niceTime}</span>
                                 </div>
