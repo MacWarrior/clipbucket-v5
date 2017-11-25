@@ -1,96 +1,15 @@
 <?php
 	/*
 	****************************************************************
-	| Copyright (c) 2007-2010 Clip-Bucket.com. All rights reserved.
-	| @ Author 	: ArslanHassan
-	| @ Software 	: ClipBucket , © PHPBucket.com
-	****************************************************************
-	****************************************************************
-	Copyright (c) 2007-2008 Clip-Bucket.com. All rights reserved.
+	| Copyright (c) 2007-2017 clipbucket.com. All rights reserved.
+	| @ Author 	 : MacWarrior
+	| @ Software : ClipBucket , © PHPBucket.com
 	****************************************************************
 	**/
 
 	class mass_upload extends Upload
 	{
 		var $dirsep = "/";
-
-		/**
-		 * FUNCTION USED TO GET FILES FROM DIRECTORY
-		 *
-		 * @param        $source_folder
-		 * @param string $ext
-		 * @param int    $sec
-		 *
-		 * @return bool
-		 */
-		function glob_files($source_folder, $ext='*', $sec=0)
-		{
-			if( !is_dir( $source_folder ) ) {
-				die ( "Invalid directory.\n\n" );
-			}
-
-			$FILES = glob($source_folder.$this->dirsep."*.".$ext);
-
-			foreach($FILES as $key => $file)
-			{
-				if( is_dir($file) )
-					continue;
-
-				if( filemtime( $file ) > $sec )
-				{
-					$FILE_LIST[$key]['path']		= substr( $file, 0, ( strrpos( $file, $this->dirsep ) +1 ) );
-					$FILE_LIST[$key]['file']		= substr( $file, ( strrpos( $file, $this->dirsep ) +1 ) );
-					$FILE_LIST[$key]['title']		= getName($FILE_LIST[$key]['file']);
-					$FILE_LIST[$key]['description']	= getName($FILE_LIST[$key]['file']);
-					$FILE_LIST[$key]['tags']		= gentags(str_replace(" ",",",getName($FILE_LIST[$key]['file'])));
-					$FILE_LIST[$key]['size']		= formatfilesize( filesize($file) );
-					$FILE_LIST[$key]['date']		= date('Y-m-d G:i:s', filemtime( $file ) );
-				}
-			}
-			if(!empty($FILE_LIST)){
-				return $FILE_LIST;
-			}
-			return false;
-		}
-
-		/**
-		 * Function used to get list of available files that can be processed
-		 */
-		function get_files()
-		{
-			$files = $this->glob_files(MASS_UPLOAD_DIR);
-			return $files;
-		}
-
-		/**
-		 * function used to get video files only3
-		 * @return array
-		 * @internal param bool $with_path
-		 *
-		 */
-		function get_video_files()
-		{
-			require_once(BASEDIR.'/includes/classes/conversion/ffmpeg.class.php');
-			$exts = get_vid_extensions();
-
-			$vid_files = array();
-			$files = $this->get_files();
-			if(is_array($files))
-			{
-				foreach($files as $file)
-				{
-					$ext = getext($file['file']);
-					if(in_array($ext,$exts))
-					{
-						$file['tracks'] = FFMpeg::get_video_tracks($file['path'].$file['file']);
-						$file = array_merge($file, FFMpeg::get_video_basic_infos($file['path'].$file['file']));
-
-						$vid_files[] = $file;
-					}
-				}
-			}
-			return $vid_files;
-		}
 
 		function get_video_files_list_clear()
 		{
