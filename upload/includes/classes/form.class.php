@@ -72,43 +72,47 @@ class formObj
 	function createTextfield($field, $multi=FALSE)
 	{
 		//Starting Text Field
-		if($field['type']=='textfield')
-			$textField = '<input type="text" placeholder="'.$field['placehoder'].'"';
-		if($field['type']=='password')
-			$textField = '<input type="password" placeholder="'.$field['placehoder'].'"';
-		elseif($field['type']=='textarea')
-			$textField = '<textarea';			
+		if($field['type'] == 'textfield')
+			$textField = '<input type="text"';
+		elseif($field['type'] == 'password')
+			$textField = '<input type="password"';
+		elseif($field['type'] == 'textarea')
+			$textField = '<textarea';
+
+		if($field['type'] == 'textfield' || $field['type'] == 'password')
+			$textField .= ' placeholder="'.$field['placehoder'].'"';
+
 		if(!empty($field['name']))
 		{
 			if(!$multi)
-				$textField .= ' name="'.$field['name'].'" ';
+				$textField .= ' name="'.$field['name'].'"';
 			else
-				$textField .= ' name="'.$field['name'].'[]" ';
+				$textField .= ' name="'.$field['name'].'[]"';
 		}
 		if(!empty($field['id']))
-			$textField .= ' id="'.$field['id'].'" ';
+			$textField .= ' id="'.$field['id'].'"';
 		if(!empty($field['class']))
-			$textField .= ' class="'.$field['class'].'" ';
+			$textField .= ' class="'.$field['class'].'"';
 		if(!empty($field['title']))
-			$textField .= ' title="'.$field['title'].'" ';
+			$textField .= ' title="'.$field['title'].'"';
 		if(!empty($field['size']))
 		{
-			if($field['type']=='textfield' ||$field['type']=='password')
-			$textField .= ' size="'.$field['size'].'" ';
+			if($field['type']=='textfield' || $field['type']=='password')
+				$textField .= ' size="'.$field['size'].'"';
 			else
-			$textField .= ' cols="'.$field['size'].'" ';
+				$textField .= ' cols="'.$field['size'].'"';
 		}
 		if(!empty($field['rows']) && $field['type']=='textarea')
 		{
-			$textField .= ' rows="'.$field['rows'].'" ';
+			$textField .= ' rows="'.$field['rows'].'"';
 		}
 		
 		if(!empty($field['extra_tags']))
-			$textField .= ' '.$field['extra_tags'].' ';
+			$textField .= ' '.$field['extra_tags'];
 		
 		if(!empty($field['value']))
 		{
-			if($field['type']=='textfield' ||$field['type']=='password')
+			if($field['type']=='textfield' || $field['type']=='password')
 				$textField .= ' value="'.escape_quotes(htmlspecialchars_decode($field['value'])).'" ';
 		}
 		
@@ -116,20 +120,19 @@ class formObj
 				$textField .= '>'.htmlspecialchars_decode($field['value']);
 				
 		//Finishing It
-		if($field['type']=='textfield' ||$field['type']=='password')
+		if($field['type']=='textfield' || $field['type']=='password')
 			$textField .= ' >';
 		elseif($field['type']=='textarea')
 			$textField .= '</textarea>';
 		
 		//Checking Label
 		if(!empty($field['label']))
-		$formTextField = '<label>'.$field['label'].$textField.'</label>';
+			$formTextField = '<label>'.$field['label'].$textField.'</label>';
 		else
-		$formTextField = $textField;
+			$formTextField = $textField;
 		
 		return $formTextField;
 	}
-
 
 	/**
 	 * FUNCTION USED TO CREATE CHECK BOXES
