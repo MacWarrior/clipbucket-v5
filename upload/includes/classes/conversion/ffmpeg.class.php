@@ -1808,7 +1808,7 @@ class FFMpeg
 			}
 			return $langs;
 		} else {
-			return array();
+			return false;
 		}
 	}
 

@@ -35,9 +35,10 @@
 
 	if(isset($_POST['mass_upload_video']))
 	{
-		$files  = $cbmass->get_video_files();
+		$files  = $cbmass->get_video_files_list_clear();
 		$vtitle = $_POST['title'];
 		$total  = count($_POST['mass_up']);
+
 		for($i=0;$i<$total;$i++)
 		{
 			if( !isset($_POST['filesToImport_'.$i]) ) // Check if file is checked for import
@@ -48,78 +49,73 @@
 			$file_path = $files[$i]['path'];
 			$file_orgname = $files[$i]['file'];
 
-			if($cbmass->is_mass_file($file_arr))
+			$code = $i+1;
+			//Inserting Video Data...
+
+			if (gotPlugin('cb_multiserver.php'))
 			{
-				$code = $i+1;
-				//Inserting Video Data...
+				// multiserver is installed
+				$uploadPath = $Cbucket->theUploaderDetails['uploadScriptPath'];
+				$fullFilePath = $file_arr['path'].$file_arr['file'];
+				//Initialise the cURL var
+				$ch = curl_init();
 
-				if (gotPlugin('cb_multiserver.php'))
+				//Get the response from cURL
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+				//Set the Url
+				curl_setopt($ch, CURLOPT_URL, $uploadPath);
+
+				//Create a POST array with the file in it
+				$postData = array('Filedata' => '@'.$fullFilePath);
+
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+
+				// Execute the request
+				$response = curl_exec($ch);
+				if ($response)
 				{
-					// multiserver is installed
-					$uploadPath = $Cbucket->theUploaderDetails['uploadScriptPath'];
-					$fullFilePath = $file_arr['path'].$file_arr['file'];
-					//Initialise the cURL var
-					$ch = curl_init();
-
-					//Get the response from cURL
-					curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-
-					//Set the Url
-					curl_setopt($ch, CURLOPT_URL, $uploadPath);
-
-					//Create a POST array with the file in it
-					$postData = array('Filedata' => '@'.$fullFilePath);
-
-					curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
-
-					// Execute the request
-					$response = curl_exec($ch);
-					if ($response)
+					$cleaned = json_decode($response,true);
+					$file_name = $cleaned['file_name'];
+					if (!empty($file_name))
 					{
-						$cleaned = json_decode($response,true);
-						$file_name = $cleaned['file_name'];
-						if (!empty($file_name))
-						{
-							$vCategory = $_POST['category'.$code];
-							if (empty($vCategory)) {
-								$vCategory = "#1#";
-							}
-							$array = array(
-								'title' => $_POST['title'][$i],
-								'description' => $_POST['description'][$i],
-								'tags' => $_POST['tags'][$i],
-								'category' => array($cbvid->get_default_cid()),
-								'file_name' => $file_name,
-								'file_directory' => $file_directory
-							);
+						$vCategory = $_POST['category'.$code];
+						if (empty($vCategory)) {
+							$vCategory = "#1#";
+						}
+						$array = array(
+							'title' => $_POST['title'][$i],
+							'description' => $_POST['description'][$i],
+							'tags' => $_POST['tags'][$i],
+							'category' => array($cbvid->get_default_cid()),
+							'file_name' => $file_name,
+							'file_directory' => $file_directory
+						);
 
-							$vid = $Upload->submit_upload($array);
-							if ($vid) {
-								goto crapCleanStep;
-							}
-						} else {
-							e("No filename returned from server");
+						$vid = $Upload->submit_upload($array);
+						if ($vid) {
+							goto crapCleanStep;
 						}
 					} else {
-						e("Error moving file : ".curl_error($ch));
+						e("No filename returned from server");
 					}
-					exit("FAILED");
+				} else {
+					e("Error moving file : ".curl_error($ch));
 				}
-
-				$file_directory = createDataFolders();
-				$array = array(
-					'title' => $_POST['title'][$i],
-					'description' => $_POST['description'][$i],
-					'tags' => $_POST['tags'][$i],
-					'category' => $_POST['category'.$code],
-					'file_name' => $file_key,
-					'file_directory' => $file_directory,
-				);
-
-				$vid = $Upload->submit_upload($array);
-			}else{
-				e("\"".$file_arr['title']."\" is not available");
+				exit("FAILED");
 			}
+
+			$file_directory = createDataFolders();
+			$array = array(
+				'title' => $_POST['title'][$i],
+				'description' => $_POST['description'][$i],
+				'tags' => $_POST['tags'][$i],
+				'category' => $_POST['category'.$code],
+				'file_name' => $file_key,
+				'file_directory' => $file_directory,
+			);
+
+			$vid = $Upload->submit_upload($array);
 
 			if( error() )
 			{
@@ -130,8 +126,6 @@
 
 			if($vid)
 			{
-				$dosleep=0;
-
 				//Moving file to temp dir and Inserting in conversion queue..
 				$file_name = $cbmass->move_to_temp($file_arr,$file_key);
 

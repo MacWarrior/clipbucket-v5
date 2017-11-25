@@ -1,0 +1,13 @@
+{foreach from=$vid_files item=file key=k}
+	{if is_dir($k) }
+		<div class="well">
+			<span class='CategoryToggler CheckBoxCategoryToggler glyphicon glyphicon-chevron-right'></span>
+			<span class="label label-info display_toggle" style="cursor: pointer;"><b>Directory : {display_clean($file.dirname)}</b></span>
+			<div style="display:none;margin-top:5px;">
+				{include file="$style_dir/blocks/mass_uploader_directory.html" vid_files=$file.files i=$i }
+			</div>
+		</div>
+	{else}
+		{include file="$style_dir/blocks/mass_uploader_files.html" data=$file i=$i}
+	{/if}
+{/foreach}

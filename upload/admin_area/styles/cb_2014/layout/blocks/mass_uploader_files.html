@@ -1,0 +1,78 @@
+{assign var='requiredFields' value=$Upload->loadRequiredFields($file)}
+{assign var='optionFields' value=$Upload->loadOptionFields($file)}
+{assign var='locationFields' value=$Upload->loadLocationFields($file)}
+{assign var='cust_fields' value=$Upload->custom_form_fields}
+<input class="lead" type="hidden" name="mass_up[]" value="{display_clean($file.title)}" />
+<div class="well">
+	<input type="checkbox" name="filesToImport_{$file.count}[]" class="checkboxMassImport"/>
+	<span class="label label-danger display_toggle" style="cursor: pointer;"><b>{display_clean($file.title)}</b>{$smarty.foreach.mass_files}</span>
+	<div style="display:none">
+		<div class="row">
+			{foreach from=$requiredFields item=field}
+			{$field.class='form-control'}
+			{if $field.title=={lang code='vdo_title'}}
+			<div class="col-md-6">
+				<label for="{$field.id}"><b style="color: #000000">{$field.title}</b></label>
+				{$formObj->createField($field, true)}
+			</div>
+			{/if}
+			{/foreach}
+			{foreach from=$requiredFields item=field}
+			{$field.class='form-control'}
+			{if $field.title=={lang code='tag_title'}}
+			<div class="col-md-6">
+				<label for="{$field.id}"><b style="color: #000000">{$field.title}</b></label>
+				{$formObj->createField($field, true)}
+			</div>
+			{/if}
+			{/foreach}
+		</div>
+
+		<div class="row">
+			{foreach from=$requiredFields item=field}
+			{$field.class='form-control'}
+			{if $field.title=={lang code='track_title'}}
+			<div class="col-md-6">
+				<label for="{$field.id}"><b style="color: #000000">{$field.title}</b></label>
+				{$formObj->createField($field, true)}
+			</div>
+			{/if}
+			{/foreach}
+			<div class="col-md-2">
+				<label for="duration"><b style="color: #000000">{lang code='duration'}</b></label>
+				<input type="text" class="form-control" title="{lang code='duration'}" id="duration" disabled value="{$file.duration}"/>
+			</div>
+			<div class="col-md-2">
+				<label for="resolution"><b style="color: #000000">{lang code='resolution'}</b></label>
+				<input type="text" class="form-control" title="{lang code='resolution'}" id="resolution" disabled value="{$file.width}x{$file.height}"/>
+			</div>
+			<div class="col-md-2">
+				<label for="filesize"><b style="color: #000000">{lang code='filesize'}</b></label>
+				<input type="text" class="form-control" title="{lang code='filesize'}" id="filesize" disabled value="{$file.size}"/>
+			</div>
+		</div>
+
+		<div class="row">
+			{foreach from=$requiredFields item=field}
+			{if $field.title=={lang code='vdo_desc'}}
+			<div class="col-md-6">
+				<label for="{$field.id}"><b style="color: #000000">{$field.title}</b></label>
+				{$formObj->createField($field, true)}
+			</div>
+			{/if}
+			{/foreach}
+			{foreach from=$requiredFields item=field}
+			{$field.class='form-control'}
+			{if $field.title=={lang code='vdo_cat'}}
+			<div class="col-md-6">
+				<label for="{$field.id}"><b style="color: #000000">{$field.title}</b></label>
+				<div class="scroll categories">
+					{$formObj->createField($field, true)}
+				</div>
+			</div>
+			{/if}
+			{/foreach}
+		</div>
+
+	</div>
+</div>

@@ -257,7 +257,7 @@ class formObj
 				$checked = "";
 				if(in_array("|".$cat['category_id']."|",$Values))
 					$checked = 'checked';
-				echo "<div class='uploadCategoryCheckBlock' style='position:relative;'>";
+				echo "<div style='position:relative;'>";
 				echo $field['sep'];
 				echo '<label><input name="'.$fieldName.'" type="checkbox" value="'.$cat['category_id'].'" '.$field_id.' '.$checked.' '.$field['extra_tags'].'>'.display_clean($cat['category_name']).'</label>';
 				 if($cat['children'])
