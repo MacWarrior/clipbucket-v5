@@ -1771,7 +1771,7 @@ class FFMpeg
 		$stats = stat($filepath);
 		if($stats && is_array($stats))
 		{
-			$json = shell_exec(FFPROBE . ' -i "'.$filepath.'" -v error -select_streams a -of compact=p=0:nk=1 -print_format json -show_entries stream_tags=language,title 2>&1');
+			$json = shell_exec(FFPROBE . ' -i "'.$filepath.'" -loglevel panic -select_streams a -of compact=p=0:nk=1 -print_format json -show_entries stream_tags=language,title 2>&1');
 			$tracks_json = json_decode($json, true)['streams'];
 			$langs = array();
 			foreach($tracks_json as $track)
