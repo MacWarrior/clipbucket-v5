@@ -113,11 +113,11 @@ class formObj
 		if(!empty($field['value']))
 		{
 			if($field['type']=='textfield' || $field['type']=='password')
-				$textField .= ' value="'.escape_quotes(htmlspecialchars_decode($field['value'])).'" ';
+				$textField .= ' value="'.display_clean($field['value']).'" ';
 		}
 		
 		if($field['type']=='textarea')
-				$textField .= '>'.htmlspecialchars_decode($field['value']);
+			$textField .= '>'.display_clean($field['value']);
 				
 		//Finishing It
 		if($field['type']=='textfield' || $field['type']=='password')
@@ -151,8 +151,6 @@ class formObj
 		//First Checking if value is CATEGORY
 		if($field['value'][0]=='category')
 		{
-			//$values_array = $field['value'][1][0];
-
 			//Generate Category list
 			$type = $field['category_type'] ? $field['category_type'] : 'video';
 			

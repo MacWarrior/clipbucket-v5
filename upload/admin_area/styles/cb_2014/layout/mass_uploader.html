@@ -40,25 +40,24 @@
 <script type="text/javascript">
     $(document).ready(function()
 	{
-		$(document).on('change', '.checkall', function()
-		{
-			var id_cat = this.value;
-			var to_check = this.checked;
+        $('.checkall').change(function() {
+            var id_cat = this.value;
+            var to_check = this.checked;
 
-			$(".categories input").each(function() {
-				if( this.value == id_cat )
-					this.checked = to_check;
-			});
-		});
+            $(".categories input").each(function() {
+                if( this.value == id_cat )
+                    this.checked = to_check;
+            });
+        });
 
-		$(document).on('change', '#massUploadSelect', function()
-		{
-			var to_check = this.checked;
+		$('#massUploadSelect').change(function() {
+            var to_check = this.checked;
 
-			$(".checkboxMassImport").each(function() {
-				this.checked = to_check;
-			});
-		});
+            $(".checkboxMassImport").each(function() {
+                this.checked = to_check;
+                $(this).trigger("change");
+            });
+        });
 
         $(".display_toggle").click(function() {
             $(this).next().toggle();
@@ -73,5 +72,19 @@
                 chevron.addClass('glyphicon-chevron-right');
 			}
         });
+
+        $('.checkboxMassImport').change(function() {
+            if($(this).is(':checked'))
+			{
+				$(this).parent().find(':input').prop('disabled', false);
+                $(this).parent().find('div.note-editable').attr('contenteditable','true');
+            } else {
+                $(this).parent().find(':input').not('.checkboxMassImport').prop('disabled', true);
+                $(this).parent().find('div.note-editable').attr('contenteditable','false');
+            }
+        });
+
+        $('.cbform').find(':input').not('.checkboxMassImport').not('#mass_upload_video').prop('disabled', true);
+        $('.cbform').find('div.note-editable').attr('contenteditable','false');
 	});
 </script>

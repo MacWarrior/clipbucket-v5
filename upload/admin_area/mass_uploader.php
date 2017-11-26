@@ -37,17 +37,26 @@
 	{
 		$files  = $cbmass->get_video_files_list_clear();
 		$vtitle = $_POST['title'];
-		$total  = count($_POST['mass_up']);
 
-		for($i=0;$i<$total;$i++)
+		foreach($files as $file)
 		{
-			if( !isset($_POST['filesToImport_'.$i]) ) // Check if file is checked for import
+			$hash = hash('sha512', $file['path'].$file['file']);
+			if( !isset($_POST[$hash]) )
 				continue;
 
 			$file_key = time().RandomString(5);
-			$file_arr = $files[$i];
-			$file_path = $files[$i]['path'];
-			$file_orgname = $files[$i]['file'];
+			$file_arr = $file;
+			$file_path = $file['path'];
+			$file_orgname = $file['file'];
+
+			$file_title = $_POST[$hash.'_title'];
+			$file_description = $_POST[$hash.'_description'];
+			$file_tags = $_POST[$hash.'_tags'];
+			$file_categories = $_POST[$hash.'_cat'];
+
+			$file_track = '';
+			if( isset($_POST[$hash.'_track']) )
+				$file_track = $_POST[$hash.'_track'];
 
 			$code = $i+1;
 			//Inserting Video Data...
@@ -79,17 +88,17 @@
 					$file_name = $cleaned['file_name'];
 					if (!empty($file_name))
 					{
-						$vCategory = $_POST['category'.$code];
+						$vCategory = $file_categories;
 						if (empty($vCategory)) {
 							$vCategory = "#1#";
 						}
 						$array = array(
-							'title' => $_POST['title'][$i],
-							'description' => $_POST['description'][$i],
-							'tags' => $_POST['tags'][$i],
+							'title' => $file_title,
+							'description' => $file_description,
+							'tags' => $file_tags,
 							'category' => array($cbvid->get_default_cid()),
 							'file_name' => $file_name,
-							'file_directory' => $file_directory
+							'file_directory' => $file_path
 						);
 
 						$vid = $Upload->submit_upload($array);
@@ -107,10 +116,10 @@
 
 			$file_directory = createDataFolders();
 			$array = array(
-				'title' => $_POST['title'][$i],
-				'description' => $_POST['description'][$i],
-				'tags' => $_POST['tags'][$i],
-				'category' => $_POST['category'.$code],
+				'title' => $file_title,
+				'description' => $file_description,
+				'tags' => $file_tags,
+				'category' => $file_categories,
 				'file_name' => $file_key,
 				'file_directory' => $file_directory,
 			);
@@ -142,10 +151,6 @@
 					$log->writeLine('System hardware Information', 'Unable log System hardware information, please install "lshw" ', true);
 				}
 
-				$track = '';
-				if( isset($_POST['track']) && isset($_POST['track'][$i]) )
-					$track = $_POST['track'][$i];
-
 				$results=$Upload->add_conversion_queue($file_name);
 				$str = "/".date("Y")."/".date("m")."/".date("d")."/";
 				$str1 = date("Y")."/".date("m")."/".date("d");
@@ -155,7 +160,7 @@
 				$fname=explode('.', $file_name);
 				$cond='file_name='.'\''.$fname[0].'\'';
 				$result=db_update($tbl, $fields, $cond);
-				$result=exec(php_path()." -q ".BASEDIR."/actions/video_convert.php {$file_name} {$file_key} {$file_directory} {$logFile} {$track} > /dev/null &");
+				$result=exec(php_path()." -q ".BASEDIR."/actions/video_convert.php {$file_name} {$file_key} {$file_directory} {$logFile} {$file_track} > /dev/null &");
 				if(file_exists(CON_DIR.'/'.$file_name))
 				{
 					unlink(CON_DIR.'/'.$file_name);
