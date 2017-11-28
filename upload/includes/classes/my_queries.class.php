@@ -31,35 +31,10 @@
  
  **/
 
-/**
- * Function used to return db table name with prefix
- * @param : table name
- * @return : prefix_table_name;
-
- 
-
-function tbl($tbl)
-{
-	global $DBNAME;
-	$prefix = TABLE_PREFIX;
-	$tbls = explode(",",$tbl);
-	$new_tbls = "";
-	foreach($tbls as $ntbl)
-	{
-		if(!empty($new_tbls))
-			$new_tbls .= ",";
-		$new_tbls .= $DBNAME.".".$prefix.$ntbl;
-	}
-
-	return $new_tbls;
-}
- */
-
-
 define('STATIC_COMM',false);
 
-class myquery {
-
+class myquery
+{
 	function Set_Website_Details($name,$value){
 		global $db,$Cbucket;
 		$db->update(tbl("config"),array('value'),array($value)," name = '".$name."'");
@@ -81,8 +56,6 @@ class myquery {
 		return $data;
 	}
 
-	
-	
 	//Function Used to Check Weather Video Exists or not
 	function VideoExists($videoid){global $cbvid;return $cbvid->exists($videoid);}
 	function video_exists($videoid){return $this->VideoExists($videoid);}
@@ -100,18 +73,19 @@ class myquery {
 	function MakeUnFeaturedVideo($videoid){global $cbvid;return $cbvid->action('unfeature',$videoid);}
 	function ActivateVideo($videoid){global $cbvid;return $cbvid->action('activate',$videoid);}
 	function DeActivateVideo($videoid){global $cbvid;return $cbvid->action('deactivate',$videoid);}
-	
-	
+
 	/**
 	 * Function used to get video details
 	 * from video table
+	 *
 	 * @param INPUT vid or videokey
+	 *
+	 * @return bool|mixed|STRING
 	 */
 	function get_video_details($vid){global $cbvid;return $cbvid->get_video($vid);}	
 	function GetVideoDetails($video){return $this->get_video_details($video);}
 	function GetVideDetails($video){return $this->get_video_details($video);}
 
-	
 	//Function Used To Update Videos Views
 	function UpdateVideoViews($vkey){increment_views($vkey,'video');}
 	
@@ -130,14 +104,17 @@ class myquery {
 		global $userquery;
 		return $userquery->email_exists($email);
 	}
-	
+
 	/**
 	 * Function used to delete comments
+	 *
 	 * @param CID
+	 *
+	 * @return bool|mixed
 	 */
 	function delete_comment($cid,$type='v',$is_reply=FALSE,$forceDelete=false)
 	{
-		global $db,$userquery,$LANG;
+		global $db;
 		//first get comment details
 		
 		$cdetails = $this->get_comment($cid);	
@@ -147,8 +124,7 @@ class myquery {
 			|| $cdetails['type_owner_id'] == userid()										 
 			|| has_access("admin_del_access",false)
 			|| $is_reply==TRUE || $forceDelete)
-		{	
-
+		{
 			$replies = $this->get_child_comments($cid);
 			if(count($replies)>0 && is_array($replies))
 			{
@@ -158,20 +134,14 @@ class myquery {
 				}
 			}
 
-
-
 			$db->Execute("DELETE FROM ".tbl("comments")." WHERE comment_id='$cid'");
-			
-			/*if($uid)
-				$myquery->update_comments_by_user($uid);*/
-			
+
 			e(lang('usr_cmt_del_msg'),"m");
 			return $cdetails['type_id'];
-		}else{
+		} else {
 			e(lang('no_comment_del_perm'));
 			return false;
 		}
-		return false;
 	}
 	function DeleteComment($id,$videoid){return $this->delete_comment($videoid);}
 	
@@ -242,14 +212,13 @@ class myquery {
 			e(lang('no_comment_exists'));	
 		}
 	 }
-	
 
 	/**
 	 * Function used to delete all comments of particlar object
 	 */
 	function delete_comments($objid,$type='v',$forceDelete=false)
 	{
-		global $db,$userquery,$LANG;
+		global $db,$userquery;
 
 		$uid = user_id();
 		
@@ -259,11 +228,10 @@ class myquery {
 			
 			e(lang('usr_cmt_del_msg'),'m');
 			return true;
-		}else{
+		} else {
 			e(lang('no_comment_del_perm'));
 			return false;
 		}
-		return false;
 	}
 	
 	/***
@@ -305,41 +273,35 @@ class myquery {
 		
 		return false;
 	}
-	
-	
-	//Function Used To Varify Syntax
-	function isValidSyntax($syntax){
-	global $LANG;
-      $pattern = "^^[_a-z0-9-]+$";
-      if (eregi($pattern, $syntax)){
-         return true;
-      	}else {
-         return false;
-      	}   
-	}
-	
-	
+
 	/**
-	* FUNCTION USED TO GET VIDEOS FROM DATABASE
-	* @param: array of query parameters array()
-	* featured => '' (yes,no)
-	* username => '' (TEXT)
-	* title => '' (TEXT)
-	* tags => '' (TEXT)
-	* category => '' (INT)
-	* limit => '' (OFFSET,LIMIT)
-	* order=>'' (BY SORT) -- (date_added DESC)
-	* extra_param=>'' ANYTHING FOR MYSQL QUERY
-	* @param: boolean
-	* @param: results type (results,query)
-	*/
-	
+	 * FUNCTION USED TO GET VIDEOS FROM DATABASE
+	 *
+	 * @param array  $param
+	 * @param bool   $global_cond
+	 * @param string $result
+	 *
+	 * @return mixed|string
+	 * @internal param $ : array of query parameters array()
+	 * featured => '' (yes,no)
+	 * username => '' (TEXT)
+	 * title => '' (TEXT)
+	 * tags => '' (TEXT)
+	 * category => '' (INT)
+	 * limit => '' (OFFSET,LIMIT)
+	 * order=>'' (BY SORT) -- (date_added DESC)
+	 * extra_param=>'' ANYTHING FOR MYSQL QUERY
+	 * @internal param $ : boolean
+	 * @internal param $ : results type (results,query)
+	 *
+	 */
 	function getVideoList($param=array(),$global_cond=true,$result='results')
 	{
 		global $db;
 		
 		$sql = "SELECT * FROM video";
-		
+
+		$cond = '';
 		//Global Condition For Videos
 		if($global_cond==true)
 			$cond = "broadcast='public' AND active='yes' AND status='Successful'";
@@ -397,13 +359,11 @@ class myquery {
 			return $sql;
 	}
 
-
 	/**
-	 * Function used to send subsribtion message
+	 * Function used to send subscription message
 	 */
 	function send_subscription($subscriber,$from,$video)
 	{
-		global $LANG;
 		//First checking weather $subscriber exists or not
 		$array = array('%subscriber%','%user%','%website_title%');
 		$replace = array($subscriber,$from,TITLE);
@@ -416,8 +376,7 @@ class myquery {
 		$msg = str_replace($array,$replace,$msg);
 		$this->SendMessage($to,$from,$subj,$msg,$video,0,0);
 	}
-	
-	
+
 	/**
 	 * Function used to add comment
 	 * This is more advance function , 
@@ -425,7 +384,6 @@ class myquery {
 	 */
 	function add_comment($comment,$obj_id,$reply_to=NULL,$type='v',$obj_owner=NULL,$obj_link=NULL,$force_name_email=false)
 	{
-		
 		global $userquery,$eh,$db,$Cbucket;
 		//Checking maximum comments characters allowed
 		if(defined("MAX_COMMENT_CHR"))
@@ -434,9 +392,7 @@ class myquery {
 			if( $comment_len > MAX_COMMENT_CHR) 
 			{
 				e(sprintf("'%d' characters allowed for comment",MAX_COMMENT_CHR));
-			}
-			elseif ( $comment_len < 5 )
-			{
+			} elseif ( $comment_len < 5 ) {
 				e("Comment is too short. It should be atleast 5 characters");
 			}
 		}
@@ -447,21 +403,7 @@ class myquery {
 		
 		$params = array('comment'=>$comment,'obj_id'=>$obj_id,'reply_to'=>$reply_to,'type'=>$type);
 		$this->validate_comment_functions($params);
-		/*		
-		if($type=='video' || $type=='v')
-		{
-			if(!$this->video_exists($obj_id))
-				e(lang("class_vdo_del_err"));
-			
-			//Checking owner of video
-			if(!USER_COMMENT_OWN)
-			{
-				if(userid()==$this->get_vid_owner($obj_id));
-					e(lang("usr_cmt_err2"));
-			}
-		}
-		*/
-		
+
 		if(!userid() && $Cbucket->configs['anonym_comments']!='yes')
 			e(lang("you_not_logged_in"));
 		
@@ -479,54 +421,51 @@ class myquery {
 		//pr(error_list(),true);
 		if(empty($eh->error_list))
 		{
-			$db->insert(tbl("comments"),array
-						 ('type,comment,type_id,userid,date_added,parent_id,anonym_name,anonym_email','comment_ip','type_owner_id'),
-						 array
-						 ($type,$comment,$obj_id,userid(),NOW(),$reply_to,$name,$email,$_SERVER['REMOTE_ADDR'],$obj_owner));
+			$db->insert(
+				tbl("comments"),
+				array('type,comment,type_id,userid,date_added,parent_id,anonym_name,anonym_email','comment_ip','type_owner_id'),
+				array($type,$comment,$obj_id,userid(),NOW(),$reply_to,$name,$email,$_SERVER['REMOTE_ADDR'],$obj_owner)
+			);
 			$cid = $db->insert_id();
 			$db->update(tbl("users"),array("total_comments"),array("|f|total_comments+1")," userid='".userid()."'");
 			
 			e(lang("grp_comment_msg"),"m");
-			
 
 			$own_details = $userquery->get_user_field_only($obj_owner,'email');
-			
-			
+
 			$username = user_name();
 			$username = $username ? $username : post('name');	
 			$useremail = $email;
-                        
-                        $fullname = $username;
-                        
-                        if($userquery->udetails['fullname'])
-                            $fullname = $userquery->udetails['fullname'];
+
+			$fullname = $username;
+
+			if($userquery->udetails['fullname'])
+				$fullname = $userquery->udetails['fullname'];
 			
 			//Adding Comment Log
-			$log_array = array
-			(
-			 'success'=>'yes',
-			 'action_obj_id' => $cid,
-			 'action_done_id' => $obj_id,
-			 'details'=> "made a comment",
-			 'username'=>$username,
-			 'useremail'=>$useremail,
+			$log_array = array(
+				'success'=>'yes',
+				'action_obj_id' => $cid,
+				'action_done_id' => $obj_id,
+				'details'=> "made a comment",
+				'username'=>$username,
+				'useremail'=>$useremail
 			 );
 			insert_log($type.'_comment',$log_array);
 			
 			//sending email
 			if(SEND_COMMENT_NOTIFICATION=='yes' && $own_details )
 			{
-				
 				global $cbemail;
 				
 				$tpl = $cbemail->get_template('user_comment_email');
 				
-				$more_var = array
-				('{username}'	=> $username,
-                                 '{fullname}' => $fullname,
-				 '{obj_link}' => $obj_link.'#comment_'.$cid,
-				 '{comment}' => $comment,
-				 '{obj}'	=> get_obj_type($type)
+				$more_var = array(
+					'{username}'	=> $username,
+					'{fullname}' => $fullname,
+					 '{obj_link}' => $obj_link.'#comment_'.$cid,
+					 '{comment}' => $comment,
+					 '{obj}'	=> get_obj_type($type)
 				);
 				if(!is_array($var))
 					$var = array();
@@ -545,9 +484,7 @@ class myquery {
 		
 		return false;
 	}
-	
 
-	
 	/**
 	 * Function used to  get file details from database
 	 */
@@ -566,10 +503,7 @@ class myquery {
 		global $cbvid;
 		return $cbvid->set_default_thumb($vid,$thumb,$version);
 	}
-	
-	
-	
-	
+
 	/**
 	 * Function used to update video
 	 */
@@ -578,9 +512,7 @@ class myquery {
 		global $cbvid;
 		return $cbvid->update_video();
 	}
-	
-	
-	
+
 	/**
 	 * Function used to get categorie details
 	 */
@@ -590,11 +522,14 @@ class myquery {
 		$results = $db->select(tbl("category"),"*"," categoryid='$id'");
 		return $results[0];
 	}
-	
-	
+
+
 	/**
 	 * Function used to get comment from its ID
+	 *
 	 * @param ID
+	 *
+	 * @return array|bool
 	 */
 	function get_comment($id)
 	{
@@ -615,14 +550,17 @@ class myquery {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Function used to get from database
-	 * @param TYPE_ID
-	 * @param TYPE
-	 * @param COUNT_ONLY Boolean
-	 * @param PARENT_ID 
-	 * @param GET_REPLYIES_ONLY Boolean
+	 *
+	 * @param string $type_id
+	 * @param string $type
+	 * @param bool   $count_only
+	 * @param string $get_type
+	 * @param        TYPE_ID
+	 *
+	 * @return bool
 	 */
 	function get_comments($type_id='*',$type='v',$count_only=FALSE,$get_type='all',$parent_id=NULL)
 	{
@@ -641,9 +579,12 @@ class myquery {
 
 	/**
 	 * Function used to get comments against parent_id from database
+	 *
 	 * @param TYPE_ID
 	 * @param TYPE
-	 * @param PARENT_ID 
+	 * @param PARENT_ID
+	 *
+	 * @return array
 	 */
 	function get_child_comments($parent_id=NULL)
 	{
@@ -659,7 +600,7 @@ class myquery {
 	function getComments($params)
 	{
             
-		global $db,$userquery;
+		global $db;
 		$cond = '';
 				
 		$p = $params;
@@ -671,56 +612,43 @@ class myquery {
 			case "videos":
 			case "v":
 			case "vdo":
-			{
 				$type = 'v';
-			}
-			break;
+				break;
 			
 			case "photo":
 			case "p":
 			case "photos":
-			{
 				$type='p';
-			}
-			break;
+				break;
 
 			case "social":
 			case "s":
-			{
 				$type='s';
-			}
-			break;
+				break;
 			
 			case "topic":
 			case "t":
 			case "topics":
-			{
 				$type='t';
-			}
-			break;
+				break;
 			
 			case "channel":
 			case "c":
 			case "channels":
-			{
 				$type='c';
-			}
-			break;
+				break;
 			
 			case "cl":
 			case "collect":
 			case "collection":
 			case "collections":
-			{
 				$type='cl';
-			}
-			break;
+				break;
 			
 		}
 		
 		if(!$count_only && STATIC_COMM)
 		{
-                    
 			$file = $type.$type_id.str_replace(',','_',$limit).'-'.strtotime($last_update).'.tmp';
 			
 			$files = glob(COMM_CACHE_DIR.'/'.$type.$type_id.str_replace(',','_',$limit).'*');
@@ -739,19 +667,15 @@ class myquery {
 		if($parent_id!=NULL && $get_reply_only)
 		{
 			$cond .= " AND parent_id='$parent_id'";
-		}else
-		{
+		} else {
 			$cond .= " AND parent_id='0' ";
 		}
 		
 		if($type_id!='*')
 			$typeid_query = "AND type_id='$type_id' ";
 
-
-		
 		if(!$count_only)
 		{
-                  
 			/**
 			 * we have to get comments in such way that
 			 * comment replies comes along with their parents
@@ -759,16 +683,8 @@ class myquery {
 			 * lets see if we can get some tips from WP commenting system ;)
 			 * HAIL Open Source
 			 */
-			 
-			 /*$results = $db->select(tbl("comments"),'*'
-			 ," type='$type' $typeid_query $cond",$limit,$order);
-			 */
-	
-
 			$query = "SELECT * FROM ".tbl('comments');
 			$query .= " WHERE type='$type' $typeid_query $cond ";
-
-			
 
 			if($order)
 			$query .= " ORDER BY ".$order;
@@ -785,8 +701,7 @@ class myquery {
 
 			 if(!$results)
 			 	return false;
-			 
-			 
+
 			 //getting relies of comments 
 			 if($results)
 			 {
@@ -806,30 +721,23 @@ class myquery {
 					{
 						$replies = array("comments"=>$replies);
 						$result['children'] = $replies;
-					}
-					else
-					{
+					} else {
 						$result['children'] = '';
 					}
-					
-					
+
 					$parents_array[] = $result;
 				}
 			 }
 
 			 $comment['comments'] = $parents_array;
-			 
-                         
+
 			 //Deleting any other previuos comment file
 			 $files = glob(COMM_CACHE_DIR.'/'.$type.$type_id.str_replace(',','_',$limit).'*');
 			 
 			 foreach($files as $delFile)
 			 	if(file_exists($delFile))
 					unlink($delFile);
-			 
-                         
-                       
-                        
+
 			 //Caching comment file
 			 if($file){
 			 	file_put_contents(COMM_CACHE_DIR.'/'.$file,json_encode($comment));
@@ -840,64 +748,10 @@ class myquery {
             }
             $comment['comments'] = $tempCom;
 			return $comment;
-                         
-			 
-		}else
-		{
+		} else {
 			return $db->count(tbl("comments"),"*"," type='$type' $typeid_query $cond");
 		}
 	}
-	
-	
-	/**
-	 * Function used to get from database
-	 * with nested replies
-	 */	
-	/*function get_comments($obj_id,$type='v',$parent_only=TRUE,$count_only=FALSE)
-	{
-		global $db;
-		$cond = '';
-		$user_flds = tbl("users.userid").",".tbl("users.username").",".tbl("users.email").",".tbl("users.avatar").",".tbl("users.avatar_url");
-		if($obj_id != "all")
-			$cond = " type_id = '$obj_id'";
-		else
-			$cond = " ";
-			
-		if(!empty($cond))
-			$cond .= " AND ";
-			
-		if($parent_only && is_numeric($parent_only))
-		{	
-			$parent_id = $parent_only;			
-			$cond .= " parent_id='$parent_id'";
-		} else {
-			$cond .= " parent_id = '0'";
-		}
-		
-		if(!$count_only) 
-		{
-			$result = $db->select(tbl("comments,users"),tbl("comments").".*, $user_flds"," $cond AND type='$type' AND ".tbl("comments.userid")." = ".tbl("users.userid")."");
-			//echo $db->db_query;
-			$ayn_result = $db->select(tbl("comments,users"),tbl("comments").".*, $user_flds"," $cond AND type='$type' AND ".tbl("comments.userid")." = '0'");
-			if($result && $ayn_result)
-				$result = array_merge($result,$ayn_result);
-			elseif(!$result && $ayn_result)
-				$result = $ayn_result;
-			
-			$arr = array();
-			foreach($result as $comment)
-			{
-					$arr[$comment['comment_id']] = $comment;
-					$replies = $this->get_replies($comment['comment_id'],$type);
-					if($replies)
-					{
-						$arr[$comment['comment_id']][] = $replies;	
-					}
-			}
-			
-			return $arr;
-		}
-	}*/
 	
 	function get_replies($p_id,$type='v')
 	{
@@ -937,8 +791,7 @@ class myquery {
 			e(lang("error_occured_changing_template"));
 			
 	}
-	
-	
+
 	/**
 	 * Function used to update comment
 	 */
@@ -989,20 +842,11 @@ class myquery {
 	{
 		$type = $params['type'];
 		$obj_id = $params['obj_id'];
-		$comment = $params['comment'];
-		$reply_to = $params['reply_to'];
 		
 		if($type=='video' || $type=='v')
 		{
 			if(!$this->video_exists($obj_id))
 				e(lang("class_vdo_del_err"));
-			
-			//Checking owner of video
-			//if(!USER_COMMENT_OWN)
-			//{
-			//	if(userid()==$this->get_vid_owner($obj_id));
-			///		e(lang("usr_cmt_err2"));
-			//}
 		}
 		
 		$func_array = get_functions('validate_comment_functions');
@@ -1016,10 +860,8 @@ class myquery {
 				}
 			}
 		}
-		
 	}
-	
-	
+
 	/**
 	 * Function used to insert note in data base for admin referance
 	 */
@@ -1044,8 +886,7 @@ class myquery {
 		global $db;
 		$db->delete(tbl("admin_notes"),array("note_id"),array($id));
 	}
-	
-	
+
 	/**
 	 * Function used to check weather object is commentable or not
 	 */
@@ -1058,39 +899,31 @@ class myquery {
 			case "vdo":
 			case "videos":
 			case "vid":
-			{
 				if($obj['allow_comments'] == 'yes' && config('video_comments')==1)
 					return true;
-			}
-			break;
+				break;
 			
 			case "channel":
 			case "user":
 			case "users":
 			case "u":
 			case "c":
-			{
 				if($obj['allow_comments'] == 'Yes' && config('channel_comments')==1)
 					return true;
-			}
-			break;
+				break;
 			
 			case "collection":
 			case "collect":
 			case "cl":
-			{
 				if($obj['allow_comments'] == 'yes')
 					return true;
-			}
-			break;
+				break;
 			
 			case "photo":
 			case "p":
 			case "photos":
-			{
 				if($obj['allow_comments'] == 'yes' && config('photo_comments') == 1)
-					return true;	
-			}
+					return true;
 		}
 		return false;
 	}
