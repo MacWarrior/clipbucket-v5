@@ -40,7 +40,7 @@ class CBPhotos
 	/**
 	 * __Constructor of CBPhotos
 	 */
-	function CBPhotos()
+	function __construct()
 	{
         global $cb_columns;
 
@@ -54,6 +54,12 @@ class CBPhotos
 
         $cb_columns->object( 'photos' )->register_columns( $basic_fields );
 	}
+
+
+    function CBPhotos()
+    {
+        self::__construct();
+    }
 
     /**
      * @return array
@@ -400,7 +406,7 @@ class CBPhotos
 	 */
 	function get_photos($p)
 	{
-		global $db, $cb_columns;
+		global $db, $cb_columns,$cbsearch;
 		$tables = "photos,users";
 		
 		$order = $p['order'];
@@ -585,7 +591,7 @@ class CBPhotos
             $query = $main_query;
 
 			$cond = "MATCH(".('photos.photo_title,photos.photo_tags').")";
-			$cond .= " AGAINST ('".cbsearch::set_the_key($p['title'])."' IN BOOLEAN MODE)";
+			$cond .= " AGAINST ('".$cbsearch->set_the_key($p['title'])."' IN BOOLEAN MODE)";
 			if($p['exclude'])
 			{
 				if($cond != "")
@@ -620,7 +626,7 @@ class CBPhotos
 			{
                 $query = $main_query;
 
-				$tags = cbsearch::set_the_key($p['tags']);
+				$tags = $cbsearch->set_the_key($p['tags']);
 				$tags = str_replace('+','',$tags);
 
 				$cond = "MATCH(".('photos.photo_title,photos.photo_tags').")";

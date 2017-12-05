@@ -438,7 +438,7 @@ if(!empty($mode))
 			{
 				case 'v':
 				case 'video':
-				default:
+				// default:
 				{
 					$id = $_POST['id'];
 					$reported = $cbvideo->action->report_it($id);
@@ -477,7 +477,7 @@ if(!empty($mode))
 
 				case 'g':
 				case 'group':
-				default:
+				// default:
 				{
 					$id = $_POST['id'];
 					$cbgroup->action->report_it($id);
@@ -486,7 +486,7 @@ if(!empty($mode))
 
 				case 'u':
 				case 'user':
-				default:
+				// default:
 				{
 					$id = $_POST['id'];
 					$userquery->action->report_it($id);
