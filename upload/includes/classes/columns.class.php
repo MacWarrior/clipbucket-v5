@@ -17,12 +17,17 @@ class cb_columns {
      * Constructor sets the object if current object
      * is null
      */
-    function cb_columns() {
+    function __construct() {
 
         if( is_null( $this->get_object() ) ) {
             $this->set_object( 'videos' );
         }
 
+    }
+
+    function cb_columns()
+    {
+        self::__construct();
     }
 
     /**

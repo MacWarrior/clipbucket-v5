@@ -29,8 +29,7 @@ class AdsManager
 		$placement 	= mysql_clean($array['placement']);
 		$category  	= $array['category'];
 		$status		= $array['status'];
-		
-		 
+
 		if(empty($name))
 		{
 			$msg = e(lang('ad_name_error'));

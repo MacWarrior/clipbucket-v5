@@ -35,13 +35,13 @@ class API extends REST
     //Database connection
     private function dbConnect()
     {
-      $this->db = mysqli_connect(self::DB_SERVER,self::DB_USER,self::DB_PASSWORD);
-      if($this->db)
-      mysqli_select_db($this->db,self::DB);
+		$this->db = mysqli_connect(self::DB_SERVER,self::DB_USER,self::DB_PASSWORD);
+		if($this->db)
+			mysqli_select_db($this->db,self::DB);
     }
     
     //Public method for access api.
-    //This method dynmically call the method based on the query string
+    //This method dynamically call the method based on the query string
     public function processApi()
     {
       $func = strtolower(trim(str_replace("/","",$_REQUEST['mode'])));
@@ -979,9 +979,6 @@ class API extends REST
 
 }
 
-// Initiiate Library
+// Initiate Library
 $api = new API;
 $api->processApi();
-
-
-?>

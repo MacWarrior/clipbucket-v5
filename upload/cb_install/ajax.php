@@ -67,7 +67,7 @@ include('clipbucket.php');
 	{
 		$dbselect = @mysqli_select_db($cnnct, $dbname);
 		if(!$dbselect)
-			$result['err'] = "<span class='alert'>Unable to select database : ".mysqli_connect_error().'</span>';
+			$result['err'] = "<span class='alert'>Unable to select database : ".mysqli_error($cnnct).'</span>';
 	}
 	
 	if(@$result['err'])
@@ -307,9 +307,7 @@ include('clipbucket.php');
 		 $return['msg'] = '<div class="ok green">upgrade_'.$files[$index].'.sql has been imported</div>';
 		 $return['status'] = $status;
 		 $return['step'] = $next;
-	 
-	 }else
-	 {
+	 } else {
 		$return['msg'] = '<div class="ok green">Upgrade clipbucket</div>';
 		$return['status'] = 'finalizing upgrade...';
 		$return['step'] = 'forward';

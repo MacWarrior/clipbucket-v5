@@ -89,7 +89,8 @@ class ADODB_mysql extends ADOConnection {
 		$this->total_queries_sql[] = $query;
 		$this->total_queries++;
 		$this->Execute($query);
-		if(mysqli_connect_error()) die ($this->db_query.'<br>'.mysqli_connect_error());
+		if(mysqli_error())
+			die ($this->db_query.'<br>'.mysqli_error());
 		return $this->insert_id();
 				
 	}
@@ -140,8 +141,8 @@ class ADODB_mysql extends ADOConnection {
 		$this->total_queries++;
 		$this->total_queries_sql[] = $query;
 		$this->Execute($query);
-		if(mysqli_connect_error())
-			die ($this->db_query.'<br>'.mysqli_connect_error());
+		if(mysqli_error())
+			die ($this->db_query.'<br>'.mysqli_error());
 		return $query;
 	}
 
@@ -178,8 +179,8 @@ class ADODB_mysql extends ADOConnection {
 		$this->total_queries++;
 		$this->total_queries_sql[] = $query;
 		$this->Execute($query);
-		if(mysqli_connect_error()) die ($this->db_query.'<br>'.mysqli_connect_error());
-		
+		if(mysqli_error())
+			die ($this->db_query.'<br>'.mysqli_error());
  	}
 
 	/**
@@ -349,7 +350,7 @@ class ADODB_mysql extends ADOConnection {
 	function _insertid()
 	{
 		return ADOConnection::GetOne('SELECT LAST_INSERT_ID()');
-		//return mysql_insert_id($this->_connectionID);
+		//return mysqli_insert_id($this->_connectionID);
 	}
 	
 	function GetOne($sql,$inputarr=false)
@@ -419,7 +420,7 @@ class ADODB_mysql extends ADOConnection {
 		}
 		
 		if ($rs) {
-			$this->genID = mysql_insert_id($this->_connectionID);
+			$this->genID = mysqli_insert_id($this->_connectionID);
 			$rs->Close();
 		} else
 			$this->genID = 0;
@@ -599,6 +600,7 @@ class ADODB_mysql extends ADOConnection {
 			$this->_connectionID = mysqli_pconnect($argHostname,$argUsername,$argPassword,$this->clientFlags);
 		else
 			$this->_connectionID = mysqli_pconnect($argHostname,$argUsername,$argPassword);
+
 		if ($this->_connectionID === false)
 			return false;
 		if ($this->autoRollback)
@@ -722,8 +724,6 @@ class ADODB_mysql extends ADOConnection {
 	// returns queryID or false
 	function _query($sql,$inputarr)
 	{
-	//global $ADODB_COUNTRECS;
-		//if($ADODB_COUNTRECS) 
 		$this->db_query = $sql;
 		return mysqli_query($this->_connectionID, $sql);
 	}
@@ -734,9 +734,9 @@ class ADODB_mysql extends ADOConnection {
 		if ($this->_logsql)
 			return $this->_errorMsg;
 		if (empty($this->_connectionID))
-			$this->_errorMsg = @mysqli_connect_error();
+			$this->_errorMsg = @mysqli_error();
 		else
-			$this->_errorMsg = @mysqli_connect_error($this->_connectionID);
+			$this->_errorMsg = @mysqli_error($this->_connectionID);
 		
 		$msg = $this->db_query.'<br>'; 
 		return $msg.$this->_errorMsg;
@@ -921,7 +921,6 @@ class ADORecordSet_mysql extends ADORecordSet{
 	
 	function _initrs()
 	{
-	//GLOBAL $ADODB_COUNTRECS;
 		$this->_numOfRows = @mysqli_num_rows($this->_queryID);
 		$this->_numOfFields = @mysqli_num_fields($this->_queryID);
 		$this->num_rows = @mysqli_num_rows($this->_queryID);
@@ -979,8 +978,6 @@ class ADORecordSet_mysql extends ADORecordSet{
 	
 	function MoveNext()
 	{
-		//return adodb_movenext($this);
-		//if (defined('ADODB_EXTENSION')) return adodb_movenext($this);
 		if (@$this->fields = mysqli_fetch_array($this->_queryID,$this->fetchMode)) {
 			$this->_currentRow += 1;
 			return true;

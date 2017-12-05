@@ -88,9 +88,6 @@ function db_insert($tbl, $fields)
     $fields_query = implode(',', $query_fields);
     $values_query = implode(',', $query_values);
 
-
-
-
     //Complete Query
     $query = "INSERT INTO $tbl ($fields_query) VALUES ($values_query) $ep";
 

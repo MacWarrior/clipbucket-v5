@@ -101,7 +101,7 @@
 
 	$Modules = new Modules();
 
-	//Ading and Displaying Module
+	//Adding and Displaying Module
 	$module_list = array();
 	$moduleQuery = @mysqli_query("SELECT * FROM modules WHERE active ='yes'");
 	while($moduleData = @mysqli_fetch_array($moduleQuery))

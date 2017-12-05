@@ -27,7 +27,7 @@ class API extends REST
 	}
 	
 	//Public method for access api.
-	//This method dynmically call the method based on the query string
+	//This method dynamically call the method based on the query string
 	public function processApi()
 	{
 	  $func = strtolower(trim(str_replace("/","",$_REQUEST['mode'])));
@@ -37,9 +37,7 @@ class API extends REST
 	  $this->response('',404);
 	// If the method not exist with in this class, response would be "Page not found".
 	}
-	
-	
-	
+
 	private function users()
 	{
 	    // Cross validation if the request method is GET else it will return "Not Acceptable" status
@@ -55,7 +53,7 @@ class API extends REST
 		{
 		$result[] = $rlt;
 		}
-		// If success everythig is good send header as "OK" and return list of users in JSON format
+		// If success everything is good send header as "OK" and return list of users in JSON format
 		$this->response($this->json($result), 200);
 		}
 		$this->response('',204); // If no records "No Content" status
@@ -64,24 +62,22 @@ class API extends REST
 	private function deleteUser()
 	{
 		if($this->get_request_method() != "DELETE"){
-		$this->response('',406);
+			$this->response('',406);
 		}
 		$id = (int)$this->_request['id'];
+
 		if($id > 0)
 		{
-
 			mysqli_query($this->db, "DELETE FROM users WHERE user_id = $id");
 		  
-		  if (mysqli_affected_rows() > 0)
-          $success = array('status' => "Success", "msg" => "Successfully one record deleted.");
-		  else
-		  $success = array('status' => "Failure", "msg" => "No such id exist in database");
-		
-		  $this->response($this->json($success),200);
-		}
-		else
-		{
-		  $this->response('',204); // If no records "No Content" status
+			if (mysqli_affected_rows($this->db) > 0)
+				$success = array('status' => "Success", "msg" => "Successfully one record deleted.");
+			else
+				$success = array('status' => "Failure", "msg" => "No such id exist in database");
+
+			$this->response($this->json($success),200);
+		} else {
+			$this->response('',204); // If no records "No Content" status
 		}
 	}
 	
@@ -95,7 +91,6 @@ class API extends REST
 	}
 }
 
-// Initiiate Library
+// Initiate Library
 $api = new API;
 $api->processApi();
-?>

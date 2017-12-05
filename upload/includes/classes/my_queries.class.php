@@ -38,7 +38,6 @@ class myquery
 	function Set_Website_Details($name,$value){
 		global $db,$Cbucket;
 		$db->update(tbl("config"),array('value'),array($value)," name = '".$name."'");
-		//echo $db->db_query."<br/><br/>";
 		$Cbucket->configs = $Cbucket->get_configs();
 	}
 	
