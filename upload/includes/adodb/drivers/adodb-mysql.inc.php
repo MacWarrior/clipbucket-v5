@@ -697,7 +697,7 @@ class ADODB_mysql extends ADOConnection {
 		$this->database = $dbName;
 		$this->databaseName = $dbName; # obsolete, retained for compat with older adodb versions
 		if ($this->_connectionID) {
-			return @mysqli_select_db($dbName,$this->_connectionID);		
+			return @mysqli_select_db($this->_connectionID,$dbName);		
 		}
 		else return false;	
 	}
