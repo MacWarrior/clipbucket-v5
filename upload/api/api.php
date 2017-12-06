@@ -23,7 +23,7 @@ class API extends REST
 	{
 	  $this->db = mysqli_connect(self::DB_SERVER,self::DB_USER,self::DB_PASSWORD);
 	  if($this->db)
-	  mysqli_select_db(self::DB,$this->db);
+	  mysqli_select_db($this->db,self::DB);
 	}
 	
 	//Public method for access api.
@@ -72,7 +72,7 @@ class API extends REST
 		
 		  mysqli_query($this->db,"DELETE FROM users WHERE user_id = $id");
 		  
-		  if (mysqli_affected_rows() > 0) 
+		  if (mysqli_affected_rows($this->db) > 0) 
           $success = array('status' => "Success", "msg" => "Successfully one record deleted.");
 		  else
 		  $success = array('status' => "Failure", "msg" => "No such id exist in database");
