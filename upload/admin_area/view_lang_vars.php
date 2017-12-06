@@ -21,8 +21,8 @@ if(isset($_POST['button']))
 }
 
 //Getting lang variables
-
-$query = mysqli_query("SELECT * FROM ".tbl("phrases")." ORDER BY text ASC");
+global $db;
+$query = mysqli_query($db,"SELECT * FROM ".tbl("phrases")." ORDER BY text ASC");
 
 ?>
 <form id="form1" name="form1" method="post" action="">
