@@ -156,7 +156,7 @@ class img_validator extends files
 		$recorded = base64_decode($_COOKIE["word_validator"]);
 		}
 		$given    = $this->encrypts_word($word);
-        if(ereg($given, $recorded))
+        if(preg_match($given, $recorded))
         {
             $msg = true;
         }
