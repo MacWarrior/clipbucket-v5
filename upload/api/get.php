@@ -37,7 +37,7 @@ class API extends REST
     {
       $this->db = mysqli_connect(self::DB_SERVER,self::DB_USER,self::DB_PASSWORD);
       if($this->db)
-      mysqli_select_db(self::DB,$this->db);
+      mysqli_select_db($this->db,self::DB);
     }
     
     //Public method for access api.
