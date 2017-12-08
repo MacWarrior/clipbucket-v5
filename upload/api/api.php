@@ -69,7 +69,7 @@ class API extends REST
 		if($id > 0)
 		{
 			mysqli_query($this->db, "DELETE FROM users WHERE user_id = $id");
-		  
+
 			if (mysqli_affected_rows($this->db) > 0)
 				$success = array('status' => "Success", "msg" => "Successfully one record deleted.");
 			else
