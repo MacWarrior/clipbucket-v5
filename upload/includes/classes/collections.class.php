@@ -201,9 +201,11 @@ class Collections extends CBCategory
 
 		$this->search->search_type['collections']['fields'] = $fields;											
 	}
-	
+
 	/**
 	 * Function used to set-up sharing
+	 *
+	 * @param $data
 	 */
 	function set_share_mail($data)
 	{
@@ -218,9 +220,13 @@ class Collections extends CBCategory
 		$this->action->share_template_name = 'collection_share_template';
 		$this->action->val_array = $this->share_variables;			
 	}
-		
+
 	/**
 	 * Function used to check if collection exists
+	 *
+	 * @param $id
+	 *
+	 * @return bool
 	 */
 	function collection_exists($id)
 	{
@@ -230,11 +236,15 @@ class Collections extends CBCategory
 			return true;
 		return false;
 	}
-	
+
 	/**
 	 * Function used to check if object exists
 	 * This is a replica of actions.class, exists function
-	 */	
+	 *
+	 * @param $id
+	 *
+	 * @return mixed
+	 */
 	function object_exists($id)
 	{
 		$obj = $this->objClass;
@@ -243,9 +253,14 @@ class Collections extends CBCategory
 		$func = $this->objFunction;
 		return $obj->{$func}($id);
 	}
-	
+
 	/**
 	 * Function used to get collection
+	 *
+	 * @param      $id
+	 * @param null $cond
+	 *
+	 * @return bool
 	 */
 	function get_collection($id,$cond=NULL)
 	{
@@ -282,9 +297,14 @@ class Collections extends CBCategory
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Function used to get collections
+	 *
+	 * @param null $p
+	 * @param bool $brace
+	 *
+	 * @return array|bool
 	 */
 	function get_collections($p=NULL,$brace = false)
 	{
@@ -397,8 +417,6 @@ class Collections extends CBCategory
 				$cond .= " AND ";
 			$cond .= " ".tbl('collections.collection_id')." = '".$p['cid']."'";		
 		}
-		
-		
 
 		/** Get only with those who have items **/
 		if(isset($p['has_items']))
@@ -467,14 +485,19 @@ class Collections extends CBCategory
 		}
 		
 		if(isset($p['assign']))
-			assign($p['assign'],$result);
+			assign($p['assign'], $result);
 		else
-			return $result;	
-		
+			return $result;
 	}
-	
+
 	/**
 	 * Function used to get collection items
+	 *
+	 * @param      $id
+	 * @param null $order
+	 * @param null $limit
+	 *
+	 * @return array|bool
 	 */
 	function get_collection_items($id,$order=NULL,$limit=NULL)
 	{
@@ -485,9 +508,17 @@ class Collections extends CBCategory
 			return $result;
 		return false;
 	}
-	
+
 	/**
 	 * Function used to get next / previous collection item
+	 *
+	 * @param        $ci_id
+	 * @param        $cid
+	 * @param string $item
+	 * @param int    $limit
+	 * @param bool   $check_only
+	 *
+	 * @return array|bool
 	 */
 	function get_next_prev_item($ci_id,$cid,$item="prev",$limit=1,$check_only=false)
 	{
@@ -501,14 +532,10 @@ class Collections extends CBCategory
 		{
 			$op = ">";
 			$order = '';
-		}
-		elseif($item == "next")
-		{
+		} elseif($item == "next") {
 			$op = "<";
 			$order = $iTbl.".ci_id DESC";
-		}
-		elseif($item == NULL)
-		{
+		} elseif($item == NULL) {
 			$op = "=";
 			$order = '';
 		}
@@ -539,16 +566,17 @@ class Collections extends CBCategory
 		{	
 			$result = $db->count($iTbl.",".$oTbl,"$iTbl.ci_id", " $iTbl.collection_id = $cid AND $iTbl.ci_id $op $ci_id AND $iTbl.object_id = $oTbl.".$this->objFieldID,$limit,$order);
 		}
-		
-		//echo $db->db_query;
+
 		if($result)
 			return $result;
 		return false;
 	}
-	
+
 	/**
 	 * Function used to set cookie on moving
 	 * forward or backward
+	 *
+	 * @param $value
 	 */
 	function set_item_cookie($value)
 	{
@@ -557,9 +585,16 @@ class Collections extends CBCategory
 		
 		setcookie('current_item',$value,time()+240);	
 	}
-	
+
 	/**
 	 * Function used to get collection items with details
+	 *
+	 * @param      $id
+	 * @param null $order
+	 * @param null $limit
+	 * @param bool $count_only
+	 *
+	 * @return array|bool
 	 */
 	function get_collection_items_with_details($id,$order=NULL,$limit=NULL,$count_only=FALSE)
 	{
@@ -567,12 +602,10 @@ class Collections extends CBCategory
 		$itemsTbl = tbl($this->items);
 		$objTbl = tbl($this->objTable);
 		$tables = $itemsTbl.",".$objTbl.",".tbl("users");
-		//$order = tbl('photos').".date_added DESC";
+
 		if(!$count_only)
 		{
 			$result = $db->select($tables,"$itemsTbl.ci_id,$itemsTbl.collection_id,$objTbl.*,".tbl('users').".username"," $itemsTbl.collection_id = '$id' AND active = 'yes' AND $itemsTbl.object_id = $objTbl.".$this->objFieldID." AND $objTbl.userid = ".tbl('users').".userid",$limit,$order);
-
-			//echo $db->db_query;
 		} else {
 			$result = $db->count($itemsTbl,"ci_id"," collection_id = $id");	
 		}
@@ -581,10 +614,16 @@ class Collections extends CBCategory
 			return $result;
 		return false;
 	}
-	
+
 	/**
 	 * Function used to get collection items with
 	 * specific fields
+	 *
+	 * @param $cid
+	 * @param $objID
+	 * @param $fields
+	 *
+	 * @return array|bool
 	 */
 	function get_collection_item_fields($cid,$objID,$fields)
 	{
@@ -594,9 +633,13 @@ class Collections extends CBCategory
 			return $result;
 		return false;
 	}
-		
+
 	/**
 	 * Function used to load collections fields
+	 *
+	 * @param null $default
+	 *
+	 * @return array
 	 */
 	function load_required_fields($default=NULL)
 	{
@@ -615,67 +658,63 @@ class Collections extends CBCategory
 			$cat_array = array($m[1]);
 		}
 		
-		$reqFileds = array
-		(
+		$reqFileds = array(
 			'name' => array(
-						   'title'=> lang("collection_name"),
-						   'type' => 'textfield',
-						   'name' => 'collection_name',
-						   'id' => 'collection_name',
-						   'value' => cleanForm($name),
-						   'db_field' => 'collection_name',
-						   'required' => 'yes',
-						   'invalid_err' => lang("collect_name_er")
-						   ),
-			
+				'title'=> lang("collection_name"),
+				'type' => 'textfield',
+				'name' => 'collection_name',
+				'id' => 'collection_name',
+				'value' => $name,
+				'db_field' => 'collection_name',
+				'required' => 'yes',
+				'invalid_err' => lang("collect_name_er")
+			),
 			'desc' => array(
-							'title' => lang("collection_description"),
-							'type' => 'textarea',
-							'name' => 'collection_description',
-							'id' => 'colleciton_desciption',
-							'value' => cleanForm($description),
-							'db_field' => 'collection_description',
-							'required' => 'yes',
-							'anchor_before' => 'before_desc_compose_box',
-							'invalid_err' => lang("collect_descp_er")
-							),
+				'title' => lang("collection_description"),
+				'type' => 'textarea',
+				'name' => 'collection_description',
+				'id' => 'colleciton_desciption',
+				'value' => $description,
+				'db_field' => 'collection_description',
+				'required' => 'yes',
+				'anchor_before' => 'before_desc_compose_box',
+				'invalid_err' => lang("collect_descp_er")
+			),
 			'tags' => array(
-							'title' => lang("collection_tags"),
-							'type' => 'textfield',
-							'name' => 'collection_tags',
-							'id' => 'collection_tags',
-							'value' => cleanForm(genTags($tags)),
-							'hint_2' => lang("collect_tag_hint"),
-							'db_field' => 'collection_tags',
-							'required' => 'yes',
-							'invalid_err' => lang("collect_tag_er"),
-							'validate_function' => 'genTags'
-							),
-							
+				'title' => lang("collection_tags"),
+				'type' => 'textfield',
+				'name' => 'collection_tags',
+				'id' => 'collection_tags',
+				'value' => genTags($tags),
+				'hint_2' => lang("collect_tag_hint"),
+				'db_field' => 'collection_tags',
+				'required' => 'yes',
+				'invalid_err' => lang("collect_tag_er"),
+				'validate_function' => 'genTags'
+			),
 			'cat' => array(
-						   'title' => lang("collect_category"),
-						   'type' => 'checkbox',
-						   'name' => 'category[]',
-						   'id' => 'category',
-						   'value' => array('category',$cat_array),
-						   'db_field' => 'category',
-						   'required' => 'yes',
-						   'validate_function' => 'validate_collection_category',
-						   'invalid_err' => lang('collect_cat_er'),
-						   'display_function' => 'convert_to_categories',
-						   'category_type' => 'collections'
-						   ),
-						   
+				'title' => lang("collect_category"),
+				'type' => 'checkbox',
+				'name' => 'category[]',
+				'id' => 'category',
+				'value' => array('category',$cat_array),
+				'db_field' => 'category',
+				'required' => 'yes',
+				'validate_function' => 'validate_collection_category',
+				'invalid_err' => lang('collect_cat_er'),
+				'display_function' => 'convert_to_categories',
+				'category_type' => 'collections'
+			),
 			'type' => array(
-							'title' => lang("collect_type"),
-							'type' => 'dropdown',
-							'name' => 'type',
-							'id' => 'type',
-							'value' => $this->types,
-							'db_field' => 'type',
-							'required' => 'yes',
-							'checked' => $type
-							)						   														   					   
+				'title' => lang("collect_type"),
+				'type' => 'dropdown',
+				'name' => 'type',
+				'id' => 'type',
+				'value' => $this->types,
+				'db_field' => 'type',
+				'required' => 'yes',
+				'checked' => $type
+			)
 		);
 		
 		return $reqFileds;	
