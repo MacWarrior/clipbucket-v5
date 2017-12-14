@@ -209,4 +209,3 @@ switch($mode)
 
 template_files('manage_collections.html');
 display_it();
-?>

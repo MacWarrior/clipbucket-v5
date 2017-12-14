@@ -825,7 +825,6 @@ class Upload
 	 */
 	function load_post_fields()
 	{
-		
 		$required_fields = $this->loadRequiredFields($array);
 		$location_fields = $this->loadLocationFields($array);
 		$option_fields = $this->loadOptionFields($array);
@@ -840,7 +839,7 @@ class Upload
 			if(!is_array($val))
 			{
 				$val = cleanForm($_POST[$name]);
-				echo '<input type="hidden" name="'.$name.'" value="'.$val .'">';
+				echo '<input type="hidden" name="'.$name.'" value="'.$val.'">';
 			}else{
 				$loop = count($val);
 				for($i=0;$i<$loop;$i++)
