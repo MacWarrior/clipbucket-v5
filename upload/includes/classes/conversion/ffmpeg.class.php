@@ -1191,6 +1191,12 @@ class FFMpeg
 		if(isset($p['format']))
 			$opt_av .= " -f {$p['format']} ";
 
+		# Selecting audio track
+		if( $this->audio_track && is_numeric($this->audio_track) )
+		{
+			$opt_av .= ' -map 0:0 -map 0:'.($this->audio_track+1);
+		}
+
 		if($p['use_video_codec'])
 		{
 			# video codec
@@ -1292,12 +1298,6 @@ class FFMpeg
 				if(!empty($arate))
 					$opt_av .= $arate_cmd = " -ar $arate ";
 			}
-		}
-
-		#audio track
-		if( $this->audio_track && is_numeric($this->audio_track) && $this->audio_track > 0 ) // 0 = default, don't require to specify anything
-		{
-			// TODO : Specify track to use on conversion
 		}
 
 		if ($i['rotation'] != 0 )
