@@ -1912,7 +1912,7 @@
 	 * @internal param $ : { mixed } { $video } { videoid, videokey or filename }
 	 * @internal param $ : { string } { $status } { new status to be set } { $status } { new status to be set }
 	 * @internal param $ : { boolean } { $reconv } { if you are setting reconversion status, pass this true }
-	 * @internal param $ : { boolean } { $byFileName } { if you passed file_name in first paramter, you will need to pass this true as well }
+	 * @internal param $ : { boolean } { $byFileName } { if you passed file_name in first parameter, you will need to pass this true as well }
 	 * @since : 31st October, 2016
 	 * @author : Saqib Razzaq
 	 *

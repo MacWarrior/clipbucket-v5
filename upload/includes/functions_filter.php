@@ -52,7 +52,7 @@
 	 * 
 	 * @param STRING filtername
 	 * @param STRING function nam
-	 * @param ARRAY paramters to be passed when registering a filter
+	 * @param ARRAY parameters to be passed when registering a filter
 	 */
 	function register_filter($name,$func,$params=false)
 	{

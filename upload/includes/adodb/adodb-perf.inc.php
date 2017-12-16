@@ -568,7 +568,7 @@ Committed_AS:   348732 kB
 	}
 	
 	/*
-		Raw function returning array of poll paramters
+		Raw function returning array of poll parameters
 	*/
 	function &PollParameters()
 	{

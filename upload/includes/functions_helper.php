@@ -155,7 +155,7 @@
     }
 
 	/**
-	 * Pulls categories without needing any paramters
+	 * Pulls categories without needing any parameters
 	 * making it easy to use in smarty. Decides type using page
 	 *
 	 * @param bool $page
@@ -239,7 +239,7 @@
 	 * @internal param $ : { string } { $sort } { type of sorting }
 	 * @internal param $ : { string } { $type } { type of sorting e.g photos, videos }
 	 *
-	 * $type paramter options are:
+	 * $type parameter options are:
 	 *
 	 * videos
 	 * photos
@@ -248,7 +248,7 @@
 	 *
 	 * @internal param $ : { string } { $time } { this_month by default}
 	 *
-	 * $time paramter options are:
+	 * $time parameter options are:
 	 *
 	 * today
 	 * yesterday

@@ -594,7 +594,7 @@ class myquery
 	}
 	
 	/**
-	 * Function used to get using ARRAY as paramter
+	 * Function used to get using ARRAY as parameter
 	 */
 	function getComments($params)
 	{

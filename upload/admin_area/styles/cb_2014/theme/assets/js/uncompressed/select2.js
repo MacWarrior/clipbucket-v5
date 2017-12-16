@@ -393,7 +393,7 @@ the specific language governing permissions and limitations under the Apache Lic
     /**
      * Produces an ajax-based query function
      *
-     * @param options object containing configuration paramters
+     * @param options object containing configuration parameters
      * @param options.params parameter map for the transport ajax call, can contain such options as cache, jsonpCallback, etc. see $.ajax
      * @param options.transport function that will be used to execute the ajax request. must be compatible with parameters supported by $.ajax
      * @param options.url url for the data

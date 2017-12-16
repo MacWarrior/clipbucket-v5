@@ -3793,7 +3793,7 @@ http://www.stanford.edu/dept/itss/docs/oracle/10g/server.101/b10759/statements_1
 		 *
 		 * @param array		is a 2-dimensional array holding the data.
 		 *			The first row should hold the column names 
-		 *			unless paramter $colnames is used.
+		 *			unless parameter $colnames is used.
 		 * @param typearr	holds an array of types. These are the same types 
 		 *			used in MetaTypes (C,B,L,I,N).
 		 * @param [colnames]	array of column names. If set, then the first row of
@@ -3817,7 +3817,7 @@ http://www.stanford.edu/dept/itss/docs/oracle/10g/server.101/b10759/statements_1
 		 *
 		 * @param array		is a 2-dimensional array holding the data.
 		 *			The first row should hold the column names 
-		 *			unless paramter $colnames is used.
+		 *			unless parameter $colnames is used.
 		 * @param fieldarr	holds an array of ADOFieldObject's.
 		 */
 		function InitArrayFields(&$array,&$fieldarr)

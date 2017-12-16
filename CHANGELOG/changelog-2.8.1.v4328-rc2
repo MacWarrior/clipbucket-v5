@@ -55,7 +55,7 @@ Added admin friendly revision info
 ------------------------------------------------------------------------
 r4155 | saqib.razzaq | 2016-05-19 15:54:57 +0500 (Thu, 19 May 2016) | 2 lines
 
-Extra paramter added into set_the_template() function
+Extra parameter added into set_the_template() function
 
 ------------------------------------------------------------------------
 r4156 | fahad.abbas | 2016-05-20 12:47:12 +0500 (Fri, 20 May 2016) | 2 lines
@@ -285,7 +285,7 @@ Added prettySort() function
 ------------------------------------------------------------------------
 r4205 | saqib.razzaq | 2016-05-24 17:39:09 +0500 (Tue, 24 May 2016) | 2 lines
 
-Set default value for paramter
+Set default value for parameter
 
 ------------------------------------------------------------------------
 r4206 | jamilrehman | 2016-05-24 17:54:20 +0500 (Tue, 24 May 2016) | 1 line

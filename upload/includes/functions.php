@@ -1080,7 +1080,7 @@
 	 * Calls an array of functions with parameters
 	 *
 	 * @param : { array } { $func } { array with functions to be called }
-	 * @param : { string } { $val } { paramters for functions }
+	 * @param : { string } { $val } { parameters for functions }
 	 *
 	 * @return mixed
 	 */
@@ -1143,7 +1143,7 @@
 	/**
 	 * Function used to get user avatar
 	 *
-	 * @param { array } { $param } { array with paramters }
+	 * @param { array } { $param } { array with parameters }
 	 * @params_in_$param : details, size, uid
 	 *
 	 * @uses : { class : $userquery } { function : avatar }
@@ -3299,7 +3299,7 @@
 	 * then compare its type with THIS_PAGE constant
 	 * if header has TYPE of THIS_PAGE then it will be inlucded
 	 *
-	 * @param : { array } { $params } { paramters array e.g file, type }
+	 * @param : { array } { $params } { parameters array e.g file, type }
 	 *
 	 * @return bool : { false }
 	 */
@@ -3428,7 +3428,7 @@
 	/**
 	 * Check if a module is installed on server or not using path
 	 *
-	 * @param : { array } { $params } { array with paramters including path }
+	 * @param : { array } { $params } { array with parameters including path }
 	 *
 	 * @return array|bool|string : { string / boolean } { path if found, else false }
 	 */
@@ -5307,7 +5307,7 @@
 
 	/**
 	* Takes thumb file and generates upto 5 possible qualities from it
-	* @param : { array } { $params } { an array of paramters }
+	* @param : { array } { $params } { an array of parameters }
 	* @since : 14th April, 2016 ClipBucket 2.8.1
 	* @author : Saqib Razzaq
 	*/

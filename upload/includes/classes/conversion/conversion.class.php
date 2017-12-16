@@ -73,7 +73,7 @@
 		/**
 		* Action : Function that runs everytime class is initiated
 		* Description : 
-		* @param : { array } { $ffmpegParams } { an array of paramters }
+		* @param : { array } { $ffmpegParams } { an array of parameters }
 		* @param : { string } { $ffmpegParams : fileName } { fileName of video to process }
 		* @param : { string } { $ffmpegParams : fileDirectory } { Directory name of video to process }
 		* @param : { string } { $ffmpegParams : outputDirectory } { Directory name where converted video is to be saved }
@@ -97,7 +97,7 @@
 			$this->maxDuration = config( 'max_video_duration' ) * 60;
 			$this->log = $log;
 
-			# Set thumb resoloution settings
+			# Set thumb resolution settings
 			$this->thumbsResSettings = array(
 				"original" => "original",
 				'105' => array('168','105'),
@@ -194,7 +194,7 @@
 
 			if ( file_exists( $fileFullPath ) ) {
 				$responseData = array();
-				# if user passed paramter to get duration only
+				# if user passed parameter to get duration only
 				if ( $durationOnly ) {
 					# build mediainfo command for duration extraction
 					$mediainfoDurationCommand = $this->mediainfoPath."   '--Inform=General;%Duration%'  '". $fileFullPath."' 2>&1 ";
@@ -202,7 +202,7 @@
 					# execute command and store duration in array after rounding
 					$responseData['duration'] = round( $this->executeCommand($mediainfoDurationCommand ) / 1000,2);
 
-					# return resposneData array containing duration only
+					# return responseData array containing duration only
 					return $responseData;
 				} else {
 

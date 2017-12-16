@@ -2139,7 +2139,7 @@ class Smarty_Compiler extends Smarty {
     /**
      * compiles call to plugin of type $type with name $name
      * returns a string containing the function-name or method call
-     * without the paramter-list that would have follow to make the
+     * without the parameter-list that would have follow to make the
      * call valid php-syntax
      *
      * @param string $type
