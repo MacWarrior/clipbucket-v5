@@ -1801,9 +1801,6 @@ class FFMpeg
 					$lang = $language;
 				}
 
-				if( count($langs) == 0 )
-					$lang .= ' (Default)';
-
 				$langs[] = $lang;
 			}
 			return $langs;
