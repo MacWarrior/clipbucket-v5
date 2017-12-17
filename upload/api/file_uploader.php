@@ -7,7 +7,7 @@ include('../includes/config.inc.php');
 
 $request = $_REQUEST;
 
-$file_name = $request['file_name'];
+$file_name = GetName($_FILES['Filedata']['name']);
 $file_directory = $request['file_directory'];
 if (!$file_directory) {
     $file_directory = createDataFolders();
@@ -17,6 +17,13 @@ $video_id = $request['videoid'];
 $tempFile = $_FILES['Filedata']['tmp_name'];
 $targetFileName = $file_name . '.' . getExt($_FILES['Filedata']['name']);
 $targetFile = TEMP_DIR . "/" . $targetFileName;
+
+if( !file_exists($targetFile) )
+{
+	header("HTTP/1.1 500 Internal Server Error"); // This will trigger an uploadError event in SWFUpload
+	upload_error("File not found");
+	exit(0);
+}
 
 $max_file_size_in_bytes = config('max_upload_size') * 1024 * 1024;
 $types = strtolower(config('allowed_types'));
