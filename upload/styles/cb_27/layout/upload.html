@@ -278,19 +278,12 @@
                             hiddenVideoIdField.type = 'hidden';
                             hiddenVideoIdField.value = fileId;
 
-                            var hiddenVideoNameField = document.createElement('input');
-                            hiddenVideoNameField.name = 'file_name';
-                            hiddenVideoNameField.type = 'hidden';
-                            hiddenVideoNameField.value = fileName;
-
                             var hiddenUploadVideoFlagField = document.createElement('input');
                             hiddenUploadVideoFlagField.type = 'hidden';
                             hiddenUploadVideoFlagField.name = 'updateVideo';
                             hiddenUploadVideoFlagField.value = 'yes';
 
-                            
                             uploadForm.append(hiddenVideoIdField);
-                            uploadForm.append(hiddenVideoNameField);
                             uploadForm.append(hiddenUploadVideoFlagField);
                             uploadForm.find("#cbSubmitUpload").removeAttr('disabled').val('Upload').addClass('btn-success');
                         });

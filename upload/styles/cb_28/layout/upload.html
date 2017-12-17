@@ -282,7 +282,6 @@
 					if(serverResponse.extension == 'mp4' && config_for_mp4 == 'yes' ){
 						$("#duration").removeClass("hidden");
 					}
-					var fileName = serverResponse.file_name;
 					var uploadForm = $("#tab"+currentFileIndex+" form");
 					totalUploaded++;
 
@@ -301,8 +300,7 @@
 						type : "post",
 						data : {
 							insertVideo : "yes",
-							title : fileDetails.name,
-							file_name : fileName
+							title : fileDetails.name
 						}
 					}).success(function(msg){
 						res = $.parseJSON(msg);
@@ -314,19 +312,12 @@
 						hiddenVideoIdField.type = 'hidden';
 						hiddenVideoIdField.value = fileId;
 
-						var hiddenVideoNameField = document.createElement('input');
-						hiddenVideoNameField.name = 'file_name';
-						hiddenVideoNameField.type = 'hidden';
-						hiddenVideoNameField.value = fileName;
-
 						var hiddenUploadVideoFlagField = document.createElement('input');
 						hiddenUploadVideoFlagField.type = 'hidden';
 						hiddenUploadVideoFlagField.name = 'updateVideo';
 						hiddenUploadVideoFlagField.value = 'yes';
 
-						
 						uploadForm.append(hiddenVideoIdField);
-						uploadForm.append(hiddenVideoNameField);
 						uploadForm.append(hiddenUploadVideoFlagField);
 						uploadForm.find("#cbSubmitUpload").removeAttr('disabled').val('Upload').addClass('btn-success');
 					});

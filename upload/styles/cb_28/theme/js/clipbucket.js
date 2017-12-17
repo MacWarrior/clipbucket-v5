@@ -234,15 +234,7 @@
 							hiddenVideoIdField.type = 'hidden';
 							hiddenVideoIdField.value = vid;
 
-							var hiddenVideoNameField = document.createElement('input');
-							hiddenVideoNameField.name = 'file_name';
-							hiddenVideoNameField.type = 'hidden';
-							hiddenVideoNameField.value = file_name;
-
-
 							$(oneFileForm).append(hiddenVideoIdField);
-							$(oneFileForm).append(hiddenVideoNameField);
-
 
 							$("#remoteForm").html("");
 							$(oneFileForm).removeClass("hidden")

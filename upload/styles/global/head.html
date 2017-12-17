@@ -68,7 +68,6 @@ function switchEmbedCode(type)
 <script type="text/javascript">
 var jsURL = '{$js}';
 var uploadError = false;
-var file_name = '{$file_name}';
 var lang = new Array();
 lang['saveData'] = '{lang code='save_data'}';
 lang['savingData'] = '{lang code='saving'}';
@@ -170,22 +169,17 @@ $(document).ready(function()
 		var vid  = "";
 		if(resObj.success=='yes')
 		{
-			var file_name = resObj.file_name;
 			$.ajax({
-				  url: baseurl+'/actions/file_uploader.php',
-				  type: "POST",
-				  data:({"insertVideo":"yes","title":fileObj.name,"file_name":file_name,'time_stamp' : time_stamp}),
-				  dataType: "text",
-				  success: function(data)
-				  {
-
-				  	if(data.error)
-				  	{
-				  		show_error(data.error,ID,true);
-				  	}else
-				  	{
-
-
+				url: baseurl+'/actions/file_uploader.php',
+				type: "POST",
+				data:({"insertVideo":"yes","title":fileObj.name,'time_stamp' : time_stamp}),
+				dataType: "text",
+				success: function(data)
+				{
+					if(data.error)
+					{
+						show_error(data.error,ID,true);
+					} else {
 						vid = data.videoid;
 						$("#uploadForm"+ID+" #title").after('<input type="hidden" name="videoid" value="'+vid+'" id="videoid" />')
 						.after('<input type="hidden" name="updateVideo" value="yes" id="updateVideo" />');
@@ -194,13 +188,12 @@ $(document).ready(function()
 						.removeAttr("disabled")
 						.attr("value",lang.saveData)
 						.attr("onClick","doUpdateVideo('#uploadForm"+ID+"','"+ID+"')");
-						
+
 						doUpdateVideo('#uploadForm'+ID,ID);
 					}
-				  }
-				});
-		}else
-		{
+				}
+			});
+		} else {
 			$("#upload_form"+ID).empty().remove();
 			show_error(resObj.error,ID,false);	
 			uploadError = true;

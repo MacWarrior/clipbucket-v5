@@ -7,7 +7,7 @@ include('../includes/config.inc.php');
 
 $request = $_REQUEST;
 
-$file_name = $request['file_name'];
+$file_name = time().RandomString(5);
 $file_directory = $request['file_directory'];
 if (!$file_directory) {
     $file_directory = createDataFolders();
