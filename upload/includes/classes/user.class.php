@@ -695,9 +695,15 @@ class userquery extends CBCategory{
 	{
 		return $this->Check_User_Exists($username,$global);
 	}
-	
+
 	/**
 	 * Function used to get user details using userid
+	 *
+	 * @param null $id
+	 * @param bool $checksess
+	 * @param bool $email
+	 *
+	 * @return bool|STRING
 	 */
 	function get_user_details( $id=NULL, $checksess=false, $email=false )
 	{
@@ -707,7 +713,7 @@ class userquery extends CBCategory{
         $select_field = ( !$is_email and !is_numeric( $id ) ) ? 'username' : ( !is_numeric( $id ) ? 'email' : 'userid' );
         if($email == false){
         	$fields = tbl_fields( array( 'users' => array( '*' ) ) );
-        }else{
+        } else {
         	$fields = tbl_fields( array( 'users' => array( 'email' ) ) );
         }
 
@@ -741,7 +747,7 @@ class userquery extends CBCategory{
 	}
 
 	//Function Used To Activate User
-	function activate_user_with_avcode($user,$avcode)
+	function activate_user_with_avcode($user, $avcode)
 	{
 		global $eh;
 		$data = $this->get_user_details($user);

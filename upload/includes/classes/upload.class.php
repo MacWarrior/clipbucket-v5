@@ -88,11 +88,11 @@ class Upload
 			if(!userid() && has_access('allow_video_upload',true,false))
 			{
 				$userid = $userquery->get_anonymous_user();
-			}elseif(userid() && !has_access('allow_video_upload',true,true))
+			} elseif(userid() && !has_access('allow_video_upload',true,true))
 				return false;
 			
 			if(is_array($_FILES))
-			$array = array_merge($array,$_FILES);
+				$array = array_merge($array,$_FILES);
 		
 			foreach($upload_fields as $field)
 			{
@@ -103,7 +103,7 @@ class Upload
 					$val = $field['validate_function']($val);
 
 				if(!empty($field['db_field']))
-				$query_field[] = $field['db_field'];
+					$query_field[] = $field['db_field'];
 				
 				if(is_array($val))
 				{
@@ -129,7 +129,7 @@ class Upload
 			
 			//Adding Video Code
 			$query_field[] = "file_name";
-			$file_name = mysql_clean($array['file_name']);
+			$file_name = time().RandomString(5);
 			$query_val[] = $file_name;
 			
 			//Adding Video Key

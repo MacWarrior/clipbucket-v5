@@ -522,7 +522,7 @@ class CBvideo extends CBCategory
 				
 				//Removing video Comments
 				$db->delete(tbl("comments"),array("type","type_id"),array("v",$vdetails['videoid']));
-				//Removing video From Favortes
+				//Removing video From Favorites
 				$db->delete(tbl("favorites"),array("type","id"),array("v",$vdetails['videoid']));
 				
 				e(lang("class_vdo_del_msg"),'m');

@@ -38,7 +38,7 @@ class Collections extends CBCategory
 	/**
 	 * Constructor function to set values of tables
 	 */
-	function Collections()
+	function __construct()
 	{
         global $cb_columns;
 
@@ -210,13 +210,13 @@ class Collections extends CBCategory
 	function set_share_mail($data)
 	{
 		$this->share_variables = array(
-				'{name}' => $data['collection_name'],
-				'{description}' => $data['collection_description'],
-				'{type}' => $data['type'],
-				'{total_items}' => $data['total_objects'],
-				'{collection_link}' => $this->collection_links($data,'view'),
-				'{collection_thumb}' => $this->get_thumb($data,'small',TRUE)
-			);
+			'{name}' => $data['collection_name'],
+			'{description}' => $data['collection_description'],
+			'{type}' => $data['type'],
+			'{total_items}' => $data['total_objects'],
+			'{collection_link}' => $this->collection_links($data,'view'),
+			'{collection_thumb}' => $this->get_thumb($data,'small',TRUE)
+		);
 		$this->action->share_template_name = 'collection_share_template';
 		$this->action->val_array = $this->share_variables;			
 	}
@@ -268,8 +268,7 @@ class Collections extends CBCategory
 		$result = $db->select(tbl($this->section_tbl).",".tbl("users"),
 		"".tbl($this->section_tbl).".*,".tbl('users').".userid,".tbl('users').".username",
 		" ".tbl($this->section_tbl).".collection_id = $id AND ".tbl($this->section_tbl).".userid = ".tbl('users').".userid $cond");
-		//echo $db->db_query;
-		//pex($result,true);
+
 		if($result)
 			return $result[0];
 		return false;
@@ -284,12 +283,14 @@ class Collections extends CBCategory
 		{
 			e(lang('collection_not_exists'));
 			return false;	
-		} elseif($c['active'] == 'no') {
+		}
+		if($c['active'] == 'no') {
 			e(lang('collection_not_active'));
 			if(!has_access('admin_access',TRUE))
 				return false;
 			return true;
-		} elseif($c['broadcast'] == 'private' && !$userquery->is_confirmed_friend($c['userid'],userid())
+		}
+		if($c['broadcast'] == 'private' && !$userquery->is_confirmed_friend($c['userid'],userid())
 				&& $c['userid']!=userid() && !has_access('admin_access',TRUE))
 		{
 			e(lang('collection_is_private'));
@@ -309,7 +310,7 @@ class Collections extends CBCategory
 	function get_collections($p=NULL,$brace = false)
 	{
 		global $db;
-		//pex($p,true);
+
 		$limit = $p['limit'];
 		$order = $p['order'];	
 		$cond = "";
@@ -431,8 +432,7 @@ class Collections extends CBCategory
 				$cond .= " AND ";
 			$cond .= " ".tbl('collections.broadcast')." != 'private'";
 		}
-		
-		
+
 		$title_tag = '';
 		
 		if(isset($p['name']))
@@ -477,10 +477,7 @@ class Collections extends CBCategory
 			$result = $db->select(tbl("collections,users"),
 						tbl("collections.*,users.userid,users.username"),
 						$cond.tbl("collections.userid")." = ".tbl("users.userid"),$limit,$order);
-		}
-
-		if(isset($p['count_only']))
-		{
+		} else {
 			return $result = $db->count(tbl("collections"),"collection_id",$cond);
 		}
 		
@@ -553,17 +550,14 @@ class Collections extends CBCategory
 				$result = $db->select($tbls,"$iTbl.*,$oTbl.*,$uTbl.username", " $iTbl.collection_id = $cid AND $iTbl.ci_id $op $ci_id AND $iTbl.object_id = $oTbl.".$this->objFieldID." AND $oTbl.userid = $uTbl.userid",$limit,$order);
 			}
 			
-			// Result was empty. Checking if we were going fowards, So bring first item
+			// Result was empty. Checking if we were going forwards, So bring first item
 			if(empty($result) && $item == "next")
 			{
 				$order = $iTbl.".ci_id DESC";
 				$op = ">";
 				$result = $db->select($tbls,"$iTbl.*,$oTbl.*,$uTbl.username", " $iTbl.collection_id = $cid AND $iTbl.ci_id $op $ci_id AND $iTbl.object_id = $oTbl.".$this->objFieldID." AND $oTbl.userid = $uTbl.userid",$limit,$order);	
 			}
-		}
-		
-		if($check_only)
-		{	
+		} else {
 			$result = $db->count($iTbl.",".$oTbl,"$iTbl.ci_id", " $iTbl.collection_id = $cid AND $iTbl.ci_id $op $ci_id AND $iTbl.object_id = $oTbl.".$this->objFieldID,$limit,$order);
 		}
 
@@ -735,50 +729,52 @@ class Collections extends CBCategory
 		$other_fields = array
 		(
 			'broadcast' => array(
-								'title' => lang("vdo_br_opt"),
-								'type' => 'radiobutton',
-								'name' => 'broadcast',
-								'id' => 'broadcast',
-								'value' => array("public"=>lang("collect_borad_pub"),"private"=>lang("collect_broad_pri")),
-								'checked' => $broadcast,
-								'db_field' => 'broadcast',
-								'required' => 'no',
-								'validate_function'=>'yes_or_no',
-								'display_function' => 'display_sharing_opt',
-								'default_value'=>'yes'
-								),
+				'title' => lang("vdo_br_opt"),
+				'type' => 'radiobutton',
+				'name' => 'broadcast',
+				'id' => 'broadcast',
+				'value' => array("public"=>lang("collect_borad_pub"),"private"=>lang("collect_broad_pri")),
+				'checked' => $broadcast,
+				'db_field' => 'broadcast',
+				'required' => 'no',
+				'validate_function'=>'yes_or_no',
+				'display_function' => 'display_sharing_opt',
+				'default_value'=>'yes'
+			),
 			'comments' => array(
-									'title' => lang("comments"),
-									'type' => 'radiobutton',
-									'id' => 'allow_comments',
-									'name' => 'allow_comments',
-									'value' => array("yes"=>lang("vdo_allow_comm"),"no"=>lang("vdo_dallow_comm")),
-									'checked' => $allow_comments,
-									'db_field' => 'allow_comments',
-									'required' => 'no',
-									'validate_function'=>'yes_or_no',
-									'display_function' => 'display_sharing_opt',
-									'default_value'=>'yes'
-									),
+				'title' => lang("comments"),
+				'type' => 'radiobutton',
+				'id' => 'allow_comments',
+				'name' => 'allow_comments',
+				'value' => array("yes"=>lang("vdo_allow_comm"),"no"=>lang("vdo_dallow_comm")),
+				'checked' => $allow_comments,
+				'db_field' => 'allow_comments',
+				'required' => 'no',
+				'validate_function'=>'yes_or_no',
+				'display_function' => 'display_sharing_opt',
+				'default_value'=>'yes'
+			),
 			'public_upload' => array(
-									'title' => lang("collect_allow_public_up"),
-									'type' => 'radiobutton',
-									'id' => 'public_upload',
-									'name' => 'public_upload',
-									'value' => array("no"=>lang("collect_pub_up_dallow"),"yes"=>lang("collect_pub_up_allow")),
-									'checked' => $public_upload,
-									'db_field' => 'public_upload',
-									'required' => 'no',
-									'validate_function'=>'yes_or_no',
-									'display_function' => 'display_sharing_opt',
-									'default_value'=>'no'
-									)									  								
+				'title' => lang("collect_allow_public_up"),
+				'type' => 'radiobutton',
+				'id' => 'public_upload',
+				'name' => 'public_upload',
+				'value' => array("no"=>lang("collect_pub_up_dallow"),"yes"=>lang("collect_pub_up_allow")),
+				'checked' => $public_upload,
+				'db_field' => 'public_upload',
+				'required' => 'no',
+				'validate_function'=>'yes_or_no',
+				'display_function' => 'display_sharing_opt',
+				'default_value'=>'no'
+			)
 		);
 		return $other_fields;	
 	}
-	
+
 	/**
 	 * Function used to validate form fields
+	 *
+	 * @param null $array
 	 */
 	function validate_form_fields($array=NULL)
 	{
@@ -789,212 +785,198 @@ class Collections extends CBCategory
 			
 		if(is_array($_FILES))
 			$array = array_merge($array,$_FILES);
-				
-		
+
 		$otherFields = $this->load_other_fields($array);
-		
 		$collection_fields = array_merge($reqFileds,$otherFields);
-		
 		validate_cb_form($collection_fields,$array);	
 	}
-	
+
 	/**
 	 * Function used to validate collection category
-	 * @param input array
-	 */	
+	 *
+	 * @param array
+	 *
+	 * @return bool
+	 */
 	function validate_collection_category($array=NULL)
 	{
 		if($array==NULL)
 			$array = $_POST['category'];
 		if(count($array)==0)
 			return false;
-		else
+
+		$new_array = array();
+		foreach($array as $arr)
 		{
-			
-			foreach($array as $arr)
-			{
-				if($this->category_exists($arr))
-					$new_array[] = $arr;
-			}
+			if($this->category_exists($arr))
+				$new_array[] = $arr;
 		}
+
 		if(count($new_array)==0)
 		{
 			e(lang('vdo_cat_err3'));
 			return false;
 		}
-		/*elseif(count($new_array)>ALLOWED_GROUP_CATEGORIES)
-		{
-			e(sprintf(lang('vdo_cat_err2'),ALLOWED_GROUP_CATEGORIES));
-			return false;
-		}*/
-			
+
 		return true;
 	}
-	
+
 	/**
 	 * Function used to create collections
+	 *
+	 * @param null $array
+	 *
+	 * @return mixed
 	 */
-	function create_default_collection($array = null){
+	function create_default_collection($array = null)
+	{
 		global $db;
 		$fields = $this->load_required_fields($array);
-			$collection_fields = array_merge($fields,$this->load_other_fields($array));
+		$collection_fields = array_merge($fields,$this->load_other_fields($array));
 
-			
-			if(count($this->custom_collection_fields) > 0)
-				$collection_fields = array_merge($collection_fields,$this->custom_collection_fields);
-				
-			foreach($collection_fields as $field)
+
+		if(count($this->custom_collection_fields) > 0)
+			$collection_fields = array_merge($collection_fields,$this->custom_collection_fields);
+
+		foreach($collection_fields as $field)
+		{
+			$name = formObj::rmBrackets($field['name']);
+			$val = $array[$name];
+
+			if($field['use_func_val'])
+				$val = $field['validate_function']($val);
+
+			if(!empty($field['db_field']))
+				$query_field[] = $field['db_field'];
+
+			if(is_array($val))
 			{
-				$name = formObj::rmBrackets($field['name']);
-				$val = $array[$name];
-				
-				if($field['use_func_val'])
-					$val = $field['validate_function']($val);
-				
-				if(!empty($field['db_field']))
-					$query_field[] = $field['db_field'];
-				
-				if(is_array($val))
+				$new_val = '';
+				foreach($val as $v)
 				{
-					$new_val = '';
-					foreach($val as $v)
-					{
-						$new_val .= "#".$v."# ";
-					}
-					$val = $new_val;
+					$new_val .= "#".$v."# ";
 				}
-				if(!$field['clean_func'] || (!function_exists($field['clean_func']) && !is_array($field['clean_func'])))
-					$val = ($val);
-				else
-					$val = apply_func($field['clean_func'], mysql_clean('|no_mc|'.$val));
-
-				if(!empty($field['db_field']))
-					$query_val[] = $val;	
+				$val = $new_val;
 			}
-			
+			if(!$field['clean_func'] || (!function_exists($field['clean_func']) && !is_array($field['clean_func'])))
+				$val = ($val);
+			else
+				$val = apply_func($field['clean_func'], mysql_clean('|no_mc|'.$val));
 
+			if(!empty($field['db_field']))
+				$query_val[] = $val;
+		}
 
-			// date_added
-			$query_field[] = "date_added";
-			$query_val[] = NOW();
-			
-			// user
-			$query_field[] = "userid";
-			$query_val[] = $userid = $array['userid'];
-				
-			// active
-			$query_field[] = "active";
-			$query_val[] = "yes";
+		// date_added
+		$query_field[] = "date_added";
+		$query_val[] = NOW();
 
-			//dump($query_field);dump($query_val);
+		// user
+		$query_field[] = "userid";
+		$query_val[] = $userid = $array['userid'];
 
-			$insert_id = $db->insert(tbl($this->section_tbl),$query_field,$query_val);
-			//dump($insert_id);die();
-			addFeed(array('action'=>'add_collection','object_id' => $insert_id,'object'=>'collection'));
+		// active
+		$query_field[] = "active";
+		$query_val[] = "yes";
 
-			
-			//Incrementing usr collection
-			$db->update(tbl("users"),array("total_collections"),array("|f|total_collections+1")," userid='".$userid."'");
-			//$insert_id = mysql_insert_id();
-			
-			e(lang("collect_added_msg"),"m");
-			return $insert_id;
+		$insert_id = $db->insert(tbl($this->section_tbl),$query_field,$query_val);
+
+		addFeed(array('action'=>'add_collection','object_id' => $insert_id,'object'=>'collection'));
+
+		//Incrementing usr collection
+		$db->update(tbl("users"),array("total_collections"),array("|f|total_collections+1")," userid='".$userid."'");
+
+		e(lang("collect_added_msg"),"m");
+		return $insert_id;
 	}
 
 	function create_collection($array=NULL)
 	{
-		if(has_access('allow_create_collection',false,$verify_logged_user)) {
-		global $db, $userquery;
-		
-		if($array==NULL)
-			$array = $_POST;
-			
-		if(is_array($_FILES))
-			$array = array_merge($array,$_FILES);
-			
-		$this->validate_form_fields($array);
-		if(!error())
+		if(has_access('allow_create_collection',false))
 		{
-			$fields = $this->load_required_fields($array);
-			$collection_fields = array_merge($fields,$this->load_other_fields($array));
-			
-			if(count($this->custom_collection_fields) > 0)
-				$collection_fields = array_merge($collection_fields,$this->custom_collection_fields);
-	
+			global $db;
 
+			if($array==NULL)
+				$array = $_POST;
 
-			foreach($collection_fields as $field)
+			if(is_array($_FILES))
+				$array = array_merge($array,$_FILES);
+
+			$this->validate_form_fields($array);
+			if(!error())
 			{
-				$name = formObj::rmBrackets($field['name']);
-				$val = $array[$name];
-				
-				if(is_array($val))
+				$fields = $this->load_required_fields($array);
+				$collection_fields = array_merge($fields,$this->load_other_fields($array));
+
+				if(count($this->custom_collection_fields) > 0)
 				{
-					$new_val = '';
-					foreach($val as $v)
+					foreach($collection_fields as $field)
 					{
-						$new_val .= "#".$v."# ";
+						$name = formObj::rmBrackets($field['name']);
+						$val = $array[$name];
+
+						if(is_array($val))
+						{
+							$new_val = '';
+							foreach($val as $v)
+							{
+								$new_val .= "#".$v."# ";
+							}
+							$val = $new_val;
+						}
+
+						$val = mysql_clean($val);
+						if($field['use_func_val']){
+							$val = $field['validate_function']($val);
+						}
+
+						if(!empty($field['db_field'])){
+							$query_field[] = $field['db_field'];
+						}
+
+						if(!$field['clean_func'] || (!function_exists($field['clean_func']) && !is_array($field['clean_func']))){
+							$val = ($val);
+						} else
+							$val = apply_func($field['clean_func'], mysql_clean('|no_mc|'.$val));
+
+						if(!empty($field['db_field']))
+							$query_val[] = $val;
 					}
-					$val = $new_val;
-					
-				}
-				//$foot[] = $val;
-				$val = mysql_clean($val);
-				if($field['use_func_val']){
-					$val = $field['validate_function']($val);
-				}
-				
-				if(!empty($field['db_field'])){
-					$query_field[] = $field['db_field'];
 				}
 
-		
-				if(!$field['clean_func'] || (!function_exists($field['clean_func']) && !is_array($field['clean_func']))){
-					$val = ($val);
-					
+				// date_added
+				$query_field[] = "date_added";
+				$query_val[] = NOW();
 
-				}
-
+				// user
+				$query_field[] = "userid";
+				if($array['userid'])
+					$query_val[] = $userid = $array['userid'];
 				else
-					$val = apply_func($field['clean_func'], mysql_clean('|no_mc|'.$val));
+					$query_val[] = $userid = userid();
 
-				if(!empty($field['db_field']))
-					$query_val[] = $val;	
+				// active
+				$query_field[] = "active";
+				$query_val[] = "yes";
 
-			}
-	
-			
-			// date_added
-			$query_field[] = "date_added";
-			$query_val[] = NOW();
-			
-			// user
-			$query_field[] = "userid";
-			if($array['userid'])
-				$query_val[] = $userid = $array['userid'];
-			else
-				$query_val[] = $userid = userid();
-				
-			// active
-			$query_field[] = "active";
-			$query_val[] = "yes";
+				$insert_id = $db->insert(tbl($this->section_tbl),$query_field,$query_val);
+				addFeed(array('action'=>'add_collection','object_id' => $insert_id,'object'=>'collection'));
 
-			$insert_id = $db->insert(tbl($this->section_tbl),$query_field,$query_val);
-			addFeed(array('action'=>'add_collection','object_id' => $insert_id,'object'=>'collection'));
+				//Incrementing usr collection
+				$db->update(tbl("users"),array("total_collections"),array("|f|total_collections+1")," userid='".$userid."'");
 
-			
-			//Incrementing usr collection
-			$db->update(tbl("users"),array("total_collections"),array("|f|total_collections+1")," userid='".$userid."'");
-			//$insert_id = mysql_insert_id();
-			
-			e(lang("collect_added_msg"),"m");
-			return $insert_id;	
+				e(lang("collect_added_msg"),"m");
+				return $insert_id;
 			}
 		}
 	}
-	
+
 	/**
 	 * Function used to get collection owner
+	 *
+	 * @param $cid
+	 *
+	 * @return bool
 	 */
 	function get_collection_owner($cid)
 	{
@@ -1040,9 +1022,14 @@ class Collections extends CBCategory
 			e(lang("collect_not_exist"));	
 		}
 	}
-	
+
 	/**
 	 * Function used to check if object exists in collection
+	 *
+	 * @param $id
+	 * @param $cid
+	 *
+	 * @return bool
 	 */
 	function object_in_collection($id,$cid)
 	{
@@ -1052,46 +1039,45 @@ class Collections extends CBCategory
 		$result = $db->select(tbl($this->items),"*"," object_id = $id AND collection_id = $cid");
 		if($result)
 			return $result[0];
-		else
-			return false;		
+		return false;
 	}
-	
-	/**
-	* Extract collection's name using Collection's id
-	* function is mostly used via Smarty template engine
-	* 
-	* @param : { integer } { $cid } { collection id to get name for }
-	* @param : { string } { $field } { collection name by default, field you need to fetch for id }
-	*/
 
+	/**
+	 * Extract collection's name using Collection's id
+	 * function is mostly used via Smarty template engine
+	 *
+	 * @param : { integer } { $cid } { collection id to get name for }
+	 * @param : { string } { $field } { collection name by default, field you need to fetch for id }
+	 *
+	 * @return bool
+	 */
 	function get_collection_field($cid,$field=NULL) {
 		global $db;
 		if($field==NULL) {
 			$field = "*";
-		} else {
-			$field = $field;
-		}		
+		}
 		if(is_array($cid)) {
-			$id = $cid['collection_id'];
-		} else {
-			$id = $cid;
-		}	
+			$cid = $cid['collection_id'];
+		}
 		$cid = mysql_clean($cid);
 		$field = mysql_clean($field);	
-		$result = $db->select(tbl($this->section_tbl),$field," collection_id = $id");
-		if($result) {
-			if(count($result[0]) > 2) {
+		$result = $db->select(tbl($this->section_tbl),$field," collection_id = $cid");
+		if($result)
+		{
+			if(count($result[0]) > 2)
 				return $result[0];
-			} else {
-				return $result[0][$field];	
-			}
-		} else {
-			return false;
+			return $result[0][$field];
 		}
+		return false;
 	}
-	
+
 	/**
 	 * Function used to check if user collection owner
+	 *
+	 * @param      $cdetails
+	 * @param null $userid
+	 *
+	 * @return bool
 	 */
 	function is_collection_owner($cdetails,$userid=NULL)
 	{
@@ -1107,9 +1093,11 @@ class Collections extends CBCategory
 			return true;
 		return false;
 	}
-	
+
 	/**
 	 * Function used to delete collection
+	 *
+	 * @param $cid
 	 */
 	function delete_collection($cid)
 	{
@@ -1141,15 +1129,17 @@ class Collections extends CBCategory
 			$db->update(tbl("users"),array("total_collections"),array("|f|total_collections-1")," userid='".$cid."'");
 			//Removing video Comments
 			$db->delete(tbl("comments"),array("type","type_id"),array("cl",$cid));
-			//Removing video From Favortes
+			//Removing video From Favorites
 			$db->delete(tbl("favorites"),array("type","id"),array("cl",$cid));
 			$eh->flush();
 			e(lang("collection_deleted"),"m");	
 		}
 	}
-	
+
 	/**
 	 * Function used to delete collection items
+	 *
+	 * @param $cid
 	 */
 	function delete_collection_items($cid)
 	{
@@ -1166,9 +1156,14 @@ class Collections extends CBCategory
 			e(lang("collect_items_deleted"),"m");	
 		}
 	}
-	
+
 	/**
 	 * Function used to delete collection items
+	 *
+	 * @param $id
+	 * @param $cid
+	 *
+	 * @return bool
 	 */
 	function remove_item($id,$cid)
 	{
@@ -1195,9 +1190,13 @@ class Collections extends CBCategory
 			return false;	
 		}
 	}
-	
+
 	/**
 	 * Function used to count collection items
+	 *
+	 * @param $cid
+	 *
+	 * @return bool|int
 	 */
 	function count_items($cid)
 	{
@@ -1208,14 +1207,16 @@ class Collections extends CBCategory
 			return $count;
 		return 0;
 	}
-		
+
 	/**
 	 * Function used to delete collection preview
+	 *
+	 * @param $cid
+	 *
+	 * @return bool
 	 */
 	function delete_thumbs($cid)
 	{
-		$cid = mysql_clean($cid);
-		
 		$glob = glob(COLLECT_THUMBS_DIR."/$cid*.jpg");
 		if($glob)
 		{
@@ -1228,13 +1229,16 @@ class Collections extends CBCategory
 			return false;	
 		}
 	}
-	
+
 	/**
 	 * Function used to create collection preview
+	 *
+	 * @param $cid
+	 * @param $file
 	 */
 	function upload_thumb($cid,$file)
 	{
-		global $imgObj,$cbphoto;
+		global $imgObj;
 		$file_ext = strtolower(getext($file['name']));
 
 		$exts = array("jpg","gif","jpeg","png");
@@ -1445,11 +1449,17 @@ class Collections extends CBCategory
 		
 		return $this->get_default_thumb($size);
 	}
-	
-	
+
+
 	/**
 	 * Used to display collection voterts details.
 	 * User who rated, how many stars and when user rated
+	 *
+	 * @param      $id
+	 * @param bool $return_array
+	 * @param bool $show_all
+	 *
+	 * @return bool|mixed
 	 */
 	function collection_voters($id,$return_array=FALSE,$show_all=FALSE)
 	{
@@ -1468,27 +1478,28 @@ class Collections extends CBCategory
 			{
 				if($return_array)
 					return $voters;
-				else
+
+				foreach($voters as $id=>$details)
 				{
-					foreach($voters as $id=>$details)
-					{
-						$username = get_username($id);
-						$output = "<li id='user".$id.$c['collection_id']."' class='PhotoRatingStats'>";
-						$output .= "<a href='".$userquery->profile_link($id)."'>$username</a>";
-						$output .= " rated <strong>". $details['rate']/2 ."</strong> stars <small>(";
-						$output  .= niceTime($details['time']).")</small>";
-						$output .= "</li>";
-						echo $output;		
-					}	
+					$username = get_username($id);
+					$output = "<li id='user".$id.$c['collection_id']."' class='PhotoRatingStats'>";
+					$output .= "<a href='".$userquery->profile_link($id)."'>$username</a>";
+					$output .= " rated <strong>". $details['rate']/2 ."</strong> stars <small>(";
+					$output  .= niceTime($details['time']).")</small>";
+					$output .= "</li>";
+					echo $output;
 				}
 			}
 		} else
 			return false;
 	}
-	
-	
+
 	/**
 	 * Used to get current rating
+	 *
+	 * @param $id
+	 *
+	 * @return bool
 	 */
 	function current_rating($id)
 	{
@@ -1497,13 +1508,16 @@ class Collections extends CBCategory
 		$result = $db->select(tbl('collections'),'allow_rating,rating,rated_by,voters,userid'," collection_id = ".$id."");
 		if($result)
 			return $result[0];
-		else
-			return false;				
+		return false;
 	}
-	
-	
+
 	/**
 	 * Used to rate photo
+	 *
+	 * @param $id
+	 * @param $rating
+	 *
+	 * @return array
 	 */
 	function rate_collection($id,$rating)
 	{
@@ -1527,8 +1541,6 @@ class Collections extends CBCategory
 
 		if(!empty($voters))
 			$already_voted = array_key_exists(userid(),$voters);
-		
-		
 
 		if(!userid())
 			e(lang("please_login_to_rate"));
@@ -1570,9 +1582,14 @@ class Collections extends CBCategory
 		$return = array("rating"=>$new_rate,"rated_by"=>$rated_by,'total'=>10,"id"=>$id,"type"=>"collection","disable"=>"disabled");
 		return $return;	
 	}
-	
+
 	/**
 	 * Function used generate collection link
+	 *
+	 * @param $cid
+	 * @param $type
+	 *
+	 * @return float
 	 */
 	function collection_rating($cid,$type)
 	{	
@@ -1580,7 +1597,6 @@ class Collections extends CBCategory
 		{
 			case "videos":
 			case "v":
-			{
 				global $cbvideo;
 				$items = $cbvideo->collection->get_collection_items_with_details($cid);
 				$total_rating = '';
@@ -1593,12 +1609,10 @@ class Collections extends CBCategory
 							$voters[] = $item['rated_by'];	
 					}
 				}
-			}
-			break;
+				break;
 			
 			case "photos":
 			case "p":
-			{
 				global $cbphoto;
 				$items = $cbphoto->collection->get_collection_items_with_details($cid);
 				$total_rating = '';
@@ -1611,8 +1625,7 @@ class Collections extends CBCategory
 							$voters[] = $item['rated_by'];	
 					}
 				}
-			}
-			break;
+				break;
 		}
 		$total_voters = count($voters);
 		if(!empty($total_rating) && $total_voters != 0)
@@ -1621,13 +1634,20 @@ class Collections extends CBCategory
 			return round($collect_rating,2);	
 		}
 	}
-	
+
 	/**
-	 * Function used to add comment 
+	 * Function used to add comment
+	 *
+	 * @param      $comment
+	 * @param      $obj_id
+	 * @param null $reply_to
+	 * @param bool $force_name_email
+	 *
+	 * @return bool|mixed
 	 */
 	function add_comment($comment,$obj_id,$reply_to=NULL,$force_name_email=false)
 	{
-		global $myquery,$db;
+		global $myquery;
 		
 		$collection = $this->get_collection($obj_id);
 		if(!$collection)
@@ -1637,28 +1657,29 @@ class Collections extends CBCategory
 			$obj_owner = $this->get_collection_field($collection,"userid");
 			$cl_link = $this->collection_links($collection,'vc');
 			$comment = $myquery->add_comment($comment,$obj_id,$reply_to,'cl',$obj_owner,$cl_link,$force_name_email);
-			//echo $comment;
+
 			if($comment)
 			{
-				$log_array = array
-				(
-				 'success'=>'yes',
-				 'details'=> "comment on a collection",
-				 'action_obj_id' => $obj_id,
-				 'action_done_id' => $comment,
+				$log_array = array(
+					'success'=>'yes',
+					'details'=> "comment on a collection",
+					'action_obj_id' => $obj_id,
+					'action_done_id' => $comment,
 				);
 				insert_log('collection_comment',$log_array);
 				
 				//Updating Number of comments of collection if comment is not a reply
 				if ($reply_to < 1)
-				$this->update_total_comments($obj_id);	
+					$this->update_total_comments($obj_id);
 			}
 			return $comment;
 		}
 	}
-	
+
 	/**
-	 * Function used to update total comments of collection 
+	 * Function used to update total comments of collection
+	 *
+	 * @param $cid
 	 */
 	function update_total_comments($cid)
 	{
@@ -1666,9 +1687,14 @@ class Collections extends CBCategory
 		$count = $db->count(tbl("comments"),"comment_id"," type = 'cl' AND type_id = '$cid' AND parent_id='0'");
 		$db->update(tbl($this->section_tbl),array("total_comments","last_commented"),array($count,now())," collection_id = '$cid'");	
 	}
-	
+
 	/**
 	 * Function used return collection links
+	 *
+	 * @param      $details
+	 * @param null $type
+	 *
+	 * @return mixed|null|string|string[]
 	 */
 	function collection_links($details,$type=NULL)
 	{		
@@ -1676,8 +1702,7 @@ class Collections extends CBCategory
 		{
 			if(empty($details['collection_id']))
 				return BASEURL;
-			else
-				$cdetails = $details;		
+			$cdetails = $details;
 		} else {
 			if(is_numeric($details))
 				$cdetails = $this->get_collection($details);
@@ -1691,68 +1716,65 @@ class Collections extends CBCategory
 			{
 				if(SEO == 'yes')
 					return BASEURL."/collections";
-				else
-					return 	BASEURL."/collections.php";	
+				return 	BASEURL."/collections.php";
 			}
 			elseif($type == "vc" || $type == "view_collection" ||$type == "view")
 			{
 				if(SEO == 'yes')
-					return BASEURL."/collection/".$cdetails['collection_id']."/".$cdetails['type']."/".SEO(($cdetails['collection_name']))."";	
-				else
-					return BASEURL."/view_collection.php?cid=".$cdetails['collection_id']."&amp;type=".$cdetails['type']; 
+					return BASEURL."/collection/".$cdetails['collection_id']."/".$cdetails['type']."/".SEO(($cdetails['collection_name']))."";
+				return BASEURL."/view_collection.php?cid=".$cdetails['collection_id']."&amp;type=".$cdetails['type'];
 			} elseif($type == "vi" || $type == "view_item" ||$type == "item") {
-				//$item_type = $this->get_collection_field($cdetails['collection_id'],'type');
+
 				if($cdetails['videoid'])
 					$item_type = 'videos';
 				else
 					$item_type = 'photos';
 				switch($item_type)
-					{
-						case "videos":
-						case "v":
-						{
-							if(SEO == "yes")
-								return BASEURL."/item/".$item_type."/".$details['collection_id']."/".$details['videokey']."/".SEO(clean(str_replace(' ','-',$details['title'])));
-							else
-								return BASEURL."/view_item.php?item=".$details['videokey']."&amp;type=".$item_type."&amp;collection=".$details['collection_id'];
-						}
-						break;
-						
-						case "photos":
-						case "p":
-						{
-							if(SEO == "yes")
-								return BASEURL."/item/".$item_type."/".$details['collection_id']."/".$details['photo_key']."/".SEO(clean(str_replace(' ','-',$details['photo_title'])));
-							else
-								return BASEURL."/view_item.php?item=".$details['photo_key']."&amp;type=".$item_type."&amp;collection=".$details['collection_id'];	
-						}
-						break;
-					}
+				{
+					case "videos":
+					case "v":
+						if(SEO == "yes")
+							return BASEURL."/item/".$item_type."/".$details['collection_id']."/".$details['videokey']."/".SEO(clean(str_replace(' ','-',$details['title'])));
+						return BASEURL."/view_item.php?item=".$details['videokey']."&amp;type=".$item_type."&amp;collection=".$details['collection_id'];
+
+					case "photos":
+					case "p":
+						if(SEO == "yes")
+							return BASEURL."/item/".$item_type."/".$details['collection_id']."/".$details['photo_key']."/".SEO(clean(str_replace(' ','-',$details['photo_title'])));
+						return BASEURL."/view_item.php?item=".$details['photo_key']."&amp;type=".$item_type."&amp;collection=".$details['collection_id'];
+				}
 			} elseif($type == 'load_more' || $type == 'more_items' || $type='moreItems') {
 				if(empty($cdetails['page_no']))
 					$cdetails['page_no'] = 2;
 					
 				if(SEO == 'yes')
 					return "?cid=".$cdetails['collection_id']."&amp;type=".$cdetails['type']."&amp;page=".$cdetails['page_no'];
-				else
-					return 	"?cid=".$cdetails['collection_id']."&amp;type=".$cdetails['type']."&amp;page=".$cdetails['page_no'];
+				return 	"?cid=".$cdetails['collection_id']."&amp;type=".$cdetails['type']."&amp;page=".$cdetails['page_no'];
 			}
 		} else {
 			return BASEURL;	
 		}
 	}
-	
+
 	/**
-	 *	Used to update counts
+	 *    Used to update counts
+	 *
+	 * @param $id
+	 * @param $amount
+	 * @param $op
 	 */
 	function update_collection_counts($id,$amount,$op)
 	{
 		global $db;
 		$db->update(tbl("collections"),array("total_objects"),array("|f|total_objects$op$amount")," collection_id = $id");	
 	}
-	
+
 	/**
-	 *	Used to change collection of product
+	 *    Used to change collection of product
+	 *
+	 * @param      $new
+	 * @param      $obj
+	 * @param null $old
 	 */
 	function change_collection($new,$obj,$old=NULL)
 	{
@@ -1779,18 +1801,21 @@ class Collections extends CBCategory
 		if(!isset($_GET['sort']))
 			$_GET['sort'] = 'most_recent';	
 		
-		$array = array
-			('most_recent' 	=> lang('recent'),
-			 'most_viewed'	=> lang('viewed'),
-			 'featured'		=> lang('featured'),
-			 'most_items'	=> lang('Most Items'),
-			 'most_commented'	=> lang('commented'),
-			 );
+		$array = array(
+			'most_recent' 	=> lang('recent'),
+			'most_viewed'	=> lang('viewed'),
+			'featured'		=> lang('featured'),
+			'most_items'	=> lang('Most Items'),
+			'most_commented'	=> lang('commented'),
+		 );
 		return $array;	 	
 	}
-	
+
 	/**
 	 * Used to perform actions on collection
+	 *
+	 * @param $action
+	 * @param $cid
 	 */
 	function collection_actions($action,$cid)
 	{
@@ -1801,52 +1826,45 @@ class Collections extends CBCategory
 			case "activate":
 			case "activation":
 			case "ac":
-			{
 				$db->update(tbl($this->section_tbl),array("active"),array("yes")," collection_id = $cid");
 				e(lang("collection_activated"),"m");
-			}
-			break;
+				break;
 			
 			case "deactivate":
 			case "deactivation":
 			case "dac":
-			{
 				$db->update(tbl($this->section_tbl),array("active"),array("no")," collection_id = $cid");
 				e(lang("collection_deactivated"),"m");
-			}
-			break;
+				break;
 			
 			case "make_feature":
 			case "featured":
 			case "mcf":
-			{
 				$db->update(tbl($this->section_tbl),array("featured"),array("yes")," collection_id = $cid");
 				e(lang("collection_featured"),"m");
-			}
-			break;
+				break;
 			
 			case "make_unfeature":
 			case "unfeatured":
 			case "mcuf":
-			{
 				$db->update(tbl($this->section_tbl),array("featured"),array("no")," collection_id = $cid");
 				e(lang("collection_unfeatured"),"m");
-			}
-			break;
+				break;
 			
 			default:
-			{
 				header("location:".BASEURL);	
-			}
+				break;
 		}
 	}
-	
+
 	/**
 	 * Function used to get collection from its Item ID and type
 	 * only get collections of logged in user
-	 * @param : OBJ_ID
-	 * @param : OBJ_Type
-	 * @return : Object
+	 *
+	 * @param      $objId
+	 * @param null $type
+	 *
+	 * @return array|bool : Object
 	 */
 	function getCollectionFromItem($objId,$type=NULL)
 	{
@@ -1865,8 +1883,7 @@ class Collections extends CBCategory
 		else
 			$assign = false;
 			
-		return $assign;	
-		
+		return $assign;
 	}
 	
 	/**
@@ -1890,207 +1907,227 @@ class Collections extends CBCategory
 			$db->execute("DELETE FROM ".tbl('collection_items')." WHERE "
 			.("type='".$type."'")."  AND ".("object_id='".$objId."'"));
 	}
-        
-        
-        /**
-         * become collection contributor
-         * 
-         * @param INT $collection_id
-         * @param INT $userid
-         * 
-         * @return BOOLEAN 
-         */
-        function add_contributor($cid,$uid)
-        {
-            global $userquery;
-            $cid = mysql_clean($cid);
-            $uid = mysql_clean($uid);
-            
-            if(!$cid){ e(lang("Invalid collection id")); return false; }
-            if(!$uid){ e(lang("Invalid user id")); return false; }
-            
-            $collection = $this->get_collection($cid);
-            if(!$collection){ e(lang("Invalid collection")); return false;}
-            
-            if(!$userquery->user_exists($uid)){ e(lang("Invalid user")); return false;}
-            
-            if($collection['broadcast']!='public'){ e(lang("Collection is not public")); return false;}
-            
-            if($this->is_contributor($cid,$uid)){ e(lang("Contributor id already exists")); return false;}
-            
-            $query = array(
-                'userid'    => $uid,
-                'collection_id' => $cid,
-                'date_added'    => now(),
-            );
-            
-            $insert_id = db_insert(tbl('collection_contributors'),$query);
-            
-            if($insert_id) return $insert_id; 
-            
-            return false;
-            
-            
-        }
-        
-        
-        /**
-         * function check if user is already a contributor
-         * 
-         * @param INT $collection_id
-         * @param INT $userid
-         * 
-         * @return BOOLEAN
-         */
-        function is_contributor($cid,$uid)
-        {
-            $cid = mysql_clean($cid);
-            $uid = mysql_clean($uid);
-            
-            $query = " SELECT contributor_id FROM ".tbl('collection_contributors');
-            $query .= " WHERE userid='$uid' AND collection_id ='$cid' LIMIT 1";
-            $data = db_select($query);
-            
-            if($data)
-                return $data[0]['contributor_id'];
-            else
-                return false;
-        }
-        
-        /**
-         * Remove contributor
-         * 
-         * @param INT $cid
-         * @param INT $uid
-         * 
-         * @return BOOLEAN
-         */
-        function remove_contributor($cid,$uid)
-        {
-            $cid = mysql_clean($cid);
-            $uid = mysql_clean($uid);
-            
-            if(!$this->is_contributor($cid,$uid)){ e(lang("User is yet a contributor")); return false;}
-            
-            $collection = $this->get_collection($cid);
-            
-            if($collection['userid'] != userid() && !has_access('collection_moderation') && $uid!=userid())
-            {
-                e(lang('You cannot remove this contributor'));
-            }
-            
-            
-            $query = "DELETE FROM ".tbl('collection_contributors')." WHERE userid='$uid' LIMIT 1";
-            global $db;
-            $db->Execute($query);
-            
-            return true;
-        }
-        
-        
-        /**
-         * function get collection for contributor
-         * 
-         * @param $uid
-         * 
-         */
-        function get_contributor_collections($uid,$type='videos',$limit=NULL,$order="date_added DESC")
-        {
-            
-            $uid = mysql_clean($uid);
-            $limit = mysql_clean($limit);
-            $order = mysql_clean($order);
-            
-            $query = " SELECT cb.contributor_id,cl.* FROM ".tbl('collection_contributors')." AS cb ";
-            $query .= " LEFT JOIN ".tbl('collections')." AS cl ON cb.collection_id=cl.collection_id ";
-            $query .= " WHERE cb.userid='$uid' ";
-            $query .= " AND cl.broadcast='public' AND cl.active='yes' AND cl.type='$type' ";
-            
-            
-            if($order)
-                $query .=" ORDER BY ".$order;
-            
-            if($limit)
-                $query .= " LIMIT ".$limit;
-            
-            
-            $results = db_select($query);
 
-            if($results)
-                return $results;
-        }
+	/**
+	 * become collection contributor
+	 *
+	 * @param $cid
+	 * @param $uid
+	 *
+	 * @return BOOLEAN
+	 */
+	function add_contributor($cid,$uid)
+	{
+		global $userquery;
+		$cid = mysql_clean($cid);
+		$uid = mysql_clean($uid);
 
-        function coll_first_thumb($col_data, $size = false) {
-        	global $cbphoto,$cbvid;
-        	if (is_array($col_data)) {
-        		if (isset($_GET['h']) && isset($_GET['w'])) {
-        			$size = $_GET['h']."x".$_GET['w'];
-        		}
-        		switch ($col_data['type']){
-        			case 'photos':
-        			default : {
-        				$order = tbl('photos').".date_added DESC";
-        				$first_col = $cbphoto->collection->get_collection_items_with_details($col_data['collection_id'],$order,1,false);
+		if(!$cid)
+		{
+			e(lang("Invalid collection id"));
+			return false;
+		}
+		if(!$uid)
+		{
+			e(lang("Invalid user id"));
+			return false;
+		}
 
-        				$param['details'] = $first_col[0];
-		        		if (!$size) {
-		        			$param['size'] = 's';
-		        		} else {
-		        			$param['size'] = $size;
-		        		}
-		        		$param['class'] = 'img-responsive';
-		        		$first_col = get_photo($param);
-        			}
-        			break;
-        			
-        			case 'videos': {
-        				$first_col = $cbvid->collection->get_collection_items_with_details($col_data['collection_id'],0,1,false);
-        				$vdata = $first_col[0];
-        				if (!$size || $size == 's') {
-		        			$size = '168x105';
-		        		} else if($size == 'l'){
-		        			$size= '632x395';
-		        		}else {
-		        			$size = '416x260';
-		        		}
-		        		$first_col = get_thumb($vdata,'default',false,false,true,false,$size);
-        			}
-        			break;
-        		}
-        		
-        		return $first_col;
-        	} else {
-        		return false;
-        	}
-        }
+		$collection = $this->get_collection($cid);
+		if(!$collection)
+		{
+			e(lang("Invalid collection"));
+			return false;
+		}
 
-        /**
-		* Get collections that have atleast 1 item, skips photos collection if photos are disabled from admin area
-		* @param : { array } { $collections } { array of all collections fetched from database }
-		* @since : May 11th, 2016 ClipBucket 2.8.1
-		* @author : Saqib Razzaq
-		*
-		* @return : { array } { $collections } { collections with items only }
-        */
+		if(!$userquery->user_exists($uid))
+		{
+			e(lang("Invalid user"));
+			return false;
+		}
 
-        function activeCollections($collections) {
-        	global $Cbucket;
-        	$photosEnabled = $Cbucket->configs['photosSection'];
-        	
-        	if (is_array($collections)) {
-        		foreach ($collections as $key => $coll) {
-        			$totalObjs = $coll['total_objects'];
-        			$skipPhoto = ($coll['type'] == 'photos' && $photosEnabled != 'yes' ? true : false);
-        			if ($totalObjs >= 1 && !$skipPhoto) {
-        				continue;
-        			} else {
-        				unset($collections[$key]);
-        			}
-        		}
-        	return $collections;
-        	}
-        }
+		if($collection['broadcast']!='public')
+		{
+			e(lang("Collection is not public"));
+			return false;
+		}
+
+		if($this->is_contributor($cid,$uid))
+		{
+			e(lang("Contributor id already exists"));
+			return false;
+		}
+
+		$query = array(
+			'userid'    => $uid,
+			'collection_id' => $cid,
+			'date_added'    => now(),
+		);
+
+		$insert_id = db_insert(tbl('collection_contributors'),$query);
+		if($insert_id)
+			return $insert_id;
+		return false;
+	}
+
+
+	/**
+	 * function check if user is already a contributor
+	 *
+	 * @param $cid
+	 * @param $uid
+	 *
+	 * @return BOOLEAN
+	 */
+	function is_contributor($cid,$uid)
+	{
+		$cid = mysql_clean($cid);
+		$uid = mysql_clean($uid);
+
+		$query = " SELECT contributor_id FROM ".tbl('collection_contributors');
+		$query .= " WHERE userid='$uid' AND collection_id ='$cid' LIMIT 1";
+		$data = db_select($query);
+
+		if($data)
+			return $data[0]['contributor_id'];
+		return false;
+	}
+
+	/**
+	 * Remove contributor
+	 *
+	 * @param INT $cid
+	 * @param INT $uid
+	 *
+	 * @return BOOLEAN
+	 */
+	function remove_contributor($cid,$uid)
+	{
+		$cid = mysql_clean($cid);
+		$uid = mysql_clean($uid);
+
+		if(!$this->is_contributor($cid,$uid)){ e(lang("User is yet a contributor")); return false;}
+
+		$collection = $this->get_collection($cid);
+
+		if($collection['userid'] != userid() && !has_access('collection_moderation') && $uid!=userid())
+		{
+			e(lang('You cannot remove this contributor'));
+		}
+
+		$query = "DELETE FROM ".tbl('collection_contributors')." WHERE userid='$uid' LIMIT 1";
+		global $db;
+		$db->Execute($query);
+
+		return true;
+	}
+
+	/**
+	 * function get collection for contributor
+	 *
+	 * @param        $uid
+	 *
+	 * @param string $type
+	 * @param null   $limit
+	 * @param string $order
+	 *
+	 * @return array
+	 */
+	function get_contributor_collections($uid,$type='videos',$limit=NULL,$order="date_added DESC")
+	{
+
+		$uid = mysql_clean($uid);
+		$limit = mysql_clean($limit);
+		$order = mysql_clean($order);
+
+		$query = " SELECT cb.contributor_id,cl.* FROM ".tbl('collection_contributors')." AS cb ";
+		$query .= " LEFT JOIN ".tbl('collections')." AS cl ON cb.collection_id=cl.collection_id ";
+		$query .= " WHERE cb.userid='$uid' ";
+		$query .= " AND cl.broadcast='public' AND cl.active='yes' AND cl.type='$type' ";
+
+		if($order)
+			$query .=" ORDER BY ".$order;
+
+		if($limit)
+			$query .= " LIMIT ".$limit;
+
+		$results = db_select($query);
+
+		if($results)
+			return $results;
+	}
+
+	function coll_first_thumb($col_data, $size = false)
+	{
+		global $cbphoto,$cbvid;
+		if (is_array($col_data))
+		{
+			if (isset($_GET['h']) && isset($_GET['w'])) {
+				$size = $_GET['h']."x".$_GET['w'];
+			}
+			switch ($col_data['type'])
+			{
+				case 'photos':
+				default :
+					$order = tbl('photos').".date_added DESC";
+					$first_col = $cbphoto->collection->get_collection_items_with_details($col_data['collection_id'],$order,1,false);
+
+					$param['details'] = $first_col[0];
+					if (!$size) {
+						$param['size'] = 's';
+					} else {
+						$param['size'] = $size;
+					}
+					$param['class'] = 'img-responsive';
+					$first_col = get_photo($param);
+					break;
+
+				case 'videos':
+					$first_col = $cbvid->collection->get_collection_items_with_details($col_data['collection_id'],0,1,false);
+					$vdata = $first_col[0];
+					if (!$size || $size == 's') {
+						$size = '168x105';
+					} else if($size == 'l') {
+						$size= '632x395';
+					} else {
+						$size = '416x260';
+					}
+					$first_col = get_thumb($vdata,'default',false,false,true,false,$size);
+					break;
+			}
+
+			return $first_col;
+		}
+		return false;
+	}
+
+	/**
+	 * Get collections that have atleast 1 item, skips photos collection if photos are disabled from admin area
+	 *
+	 * @param : { array } { $collections } { array of all collections fetched from database }
+	 *
+	 * @return  : { array } { $collections } { collections with items only }
+	 * @since : May 11th, 2016 ClipBucket 2.8.1
+	 * @author : Saqib Razzaq
+	 */
+	function activeCollections($collections)
+	{
+		global $Cbucket;
+		$photosEnabled = $Cbucket->configs['photosSection'];
+
+		if (is_array($collections))
+		{
+			foreach ($collections as $key => $coll)
+			{
+				$totalObjs = $coll['total_objects'];
+				$skipPhoto = ($coll['type'] == 'photos' && $photosEnabled != 'yes' ? true : false);
+				if ($totalObjs >= 1 && !$skipPhoto) {
+					continue;
+				}
+				unset($collections[$key]);
+			}
+			return $collections;
+		}
+	}
 
 }
-
-?>

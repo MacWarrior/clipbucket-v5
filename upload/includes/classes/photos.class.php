@@ -816,7 +816,7 @@ class CBPhotos
 			//Removing Photo Comments
 			$db->delete(tbl("comments"),array("type","type_id"),array("p",$photo['photo_id']));
 			
-			//Removing Photo From Favortes
+			//Removing Photo From Favorites
 			$db->delete(tbl("favorites"),array("type","id"),array("p",$photo['photo_id']));			
 			
 		} else 

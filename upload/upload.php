@@ -14,19 +14,11 @@
 	$pages->page_redir();
 	subtitle('upload');
 
-	//Checking if user is guest 
-	if(userid()) {
-		$verify_logged_user = true;
-	} else {
-		$verify_logged_user = false;
-	}
+	//Checking if user is guest
+	$verify_logged_user = userid() ? true : false;
 
 	if(has_access('allow_video_upload',false,$verify_logged_user))
 	{
-		#pre_upload();
-		$file_name = time().RandomString(5);
-		assign('file_name',$file_name);
-				
 		$step = 1;
 		if(isset($_POST['submit_data'])) {
 			$Upload->validate_video_upload_form();
@@ -37,9 +29,6 @@
 		
 		if(isset($_POST['submit_upload']))
 		{
-			if(!$_POST['file_name'])
-				$_POST['file_name'] = time().RandomString(5);
-
 			$file_directory = create_dated_folder(NULL,$_REQUEST['time_stamp']);
 
 			$vid = $Upload->submit_upload();
