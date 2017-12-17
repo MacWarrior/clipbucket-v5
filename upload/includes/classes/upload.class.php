@@ -129,7 +129,7 @@ class Upload
 			
 			//Adding Video Code
 			$query_field[] = "file_name";
-			$file_name = time().RandomString(5);
+			$file_name = mysql_clean($array['file_name']);
 			$query_val[] = $file_name;
 			
 			//Adding Video Key

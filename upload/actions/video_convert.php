@@ -8,7 +8,7 @@
 	define('FFMPEG_BINARY', get_binaries('ffmpeg'));
 
 	/*
-		getting the aguments
+		getting the arguments
 		$argv[1] => first argument, in our case its the path of the file
 	*/
 	if (config('use_crons') == 'yes') {

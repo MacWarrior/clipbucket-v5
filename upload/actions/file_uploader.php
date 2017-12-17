@@ -19,7 +19,6 @@
 	{
 		case "insert_video":
 			$title = getName($_POST['title']);
-			$file_name = $_POST['file_name'];
 			if ($_POST['serverUrl'] && $_POST['serverUrl'] != "none") {
 				$file_directory = date('Y/m/d');
 			} else {
@@ -31,7 +30,7 @@
 				'description' => $title,
 				'tags' => genTags(str_replace(' ',', ',$title)),
 				'category' => array($cbvid->get_default_cid()),
-				'file_name' => $file_name,
+				'file_name' => $_POST['file_name'],
 				'file_directory' => $file_directory,
 				'userid' => userid(),
 				'video_version' => '2.7'
@@ -99,10 +98,12 @@
 				echo json_encode(array("status"=>"504","msg"=>"Invalid video extension"));
 				exit();
 			}
+
+			$file_name	= time().RandomString(5);
+
 			//Stay as it MP4 Module ..
 			if($config_for_mp4 == "yes" && $extension == "mp4" )
 			{
-				$file_name	= time().RandomString(5);
 				$tempFile = $_FILES['Filedata']['tmp_name'];
 				$file_directory = date('Y/m/d');
 				@mkdir(VIDEOS_DIR . '/' . $file_directory, 0777, true);
@@ -119,7 +120,6 @@
 				exit();
 			}
 
-			$file_name	= time().RandomString(5);
 			$tempFile = $_FILES['Filedata']['tmp_name'];
 			$file_directory = date('Y/m/d');
 			$targetFileName = $file_name.'.'.getExt( $_FILES['Filedata']['name']);
