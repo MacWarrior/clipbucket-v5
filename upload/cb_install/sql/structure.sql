@@ -219,6 +219,7 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}countries` (
   `name_en` varchar(80) CHARACTER SET utf8 NOT NULL,
   `iso3` char(3) CHARACTER SET utf8 DEFAULT NULL,
   `numcode` smallint(6) DEFAULT NULL,
+  `is_blocked` int(10) NOT NULL DEFAULT 0,
   PRIMARY KEY (`country_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=240 ;
 
@@ -1168,6 +1169,7 @@ ALTER TABLE  `{tbl_prefix}playlists` ADD  `first_item` text CHARACTER SET utf8 N
 ALTER TABLE  `{tbl_prefix}playlists` ADD  `cover` text CHARACTER SET utf8 NOT NULL AFTER  `first_item`;
 
 ALTER TABLE `{tbl_prefix}users` ADD `likes` INT( 11 ) NOT NULL DEFAULT '0';
+ALTER TABLE `{tbl_prefix}users` ADD `is_live` enum('yes','no') NOT NULL DEFAULT 'no' AFTER `likes`;
 ALTER TABLE `{tbl_prefix}users` CHANGE `voted` `voted` INT( 11 ) NOT NULL DEFAULT '0';
 
 ALTER TABLE `{tbl_prefix}photos` ADD `photo_details` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ;
@@ -1229,6 +1231,11 @@ ALTER TABLE `{tbl_prefix}video` ADD INDEX(`last_viewed`);
 ALTER TABLE `{tbl_prefix}video` ADD `video_files` text(33) NOT NULL;
 ALTER TABLE `{tbl_prefix}video` ADD `re_conv_status` text(33) NOT NULL;
 ALTER TABLE `{tbl_prefix}video` ADD `conv_progress` TEXT NOT NULL;
+ALTER TABLE `{tbl_prefix}video` ADD `file_type` INT( 10 ) NOT NULL DEFAULT '0' AFTER  `file_name`;
+ALTER TABLE `{tbl_prefix}video` ADD `blocked_countries` TEXT( 255 ) NOT NULL AFTER `country`;
+ALTER TABLE `{tbl_prefix}video` ADD `sprite_count` INT(11) NOT NULL DEFAULT '0' AFTER `blocked_countries`;
+/*Cb_user_profile_info*/
+ALTER TABLE `{tbl_prefix}user_profile` ADD `fb_url` VARCHAR(200) NOT NULL AFTER `web_url`, ADD `twitter_url` VARCHAR(200) NOT NULL AFTER `fb_url`, ADD `insta_url` VARCHAR(200) NOT NULL AFTER `twitter_url`;
 
 
 
