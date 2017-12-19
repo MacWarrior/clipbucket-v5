@@ -229,13 +229,13 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 
 
 INSERT INTO `{tbl_prefix}languages` (`language_id`, `language_code`, `language_name`, `language_regex`, `language_active`, `language_default`) VALUES
-(NULL, 'en', 'English', '/^en/i', 'yes', 'yes');
+(1, 'en', 'English', '/^en/i', 'yes', 'yes');
 
 
 INSERT INTO `{tbl_prefix}validation_re` (`re_id`, `re_name`, `re_code`, `re_syntax`) VALUES
-(NULL, 'Username', 'username', '^^[a-zA-Z0-9_]+$'),
-(NULL, 'Email', 'email', '^[_a-z0-9-]+(\\.[_a-z0-9-]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,10})$'),
-(NULL, 'Field Text', 'field_text', '^^[_a-z0-9-]+$');
+(1, 'Username', 'username', '^^[a-zA-Z0-9_]+$'),
+(2, 'Email', 'email', '^[_a-z0-9-]+(\\.[_a-z0-9-]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,10})$'),
+(3, 'Field Text', 'field_text', '^^[_a-z0-9-]+$');
 
 
 INSERT INTO `{tbl_prefix}config` (`configid` ,`name` ,`value`)VALUES 
