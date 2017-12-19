@@ -287,6 +287,7 @@ INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES ('popup_video','yes');
 -- Addition for 2.8.3
 INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES (NULL, 'video_round_views', 'yes');
 
+-- Addition for 4.0
 -- Addition for Cooporate cb seting bitrates for dash/hls
 INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES ('', 'vbrate_240', '192000'),
 ('', 'vbrate_360', '272000'),
