@@ -114,7 +114,6 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 (112, 'anonymous_id', '99'),
 (113, 'date_format', 'Y-m-d'),
 (114, 'default_time_zone', '5'),
-(156, 'use_crons', 'no'),
 (115, 'autoplay_video', 'no'),
 (116, 'default_country_iso2', 'PK'),
 (117, 'channel_comments', '1'),
@@ -155,7 +154,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 (152, 'logo_placement', 'tl'),
 (153, 'buffer_time', '5'),
 (155, 'use_ffmpeg_vf', 'yes'),
-(224, 'own_photo_rating', ''),
+(156, 'own_photo_rating', ''),
 (157, 'mail_type', 'mail'),
 (158, 'smtp_host', ''),
 (159, 'smtp_user', ''),
@@ -224,18 +223,19 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 (224, 'vbrate_hd', '500000'),
 (225, 'store_guest_session', 'no'),
 (226, 'delete_mass_upload', 'no'),
-(227, 'pseudostreaming', 'yes');
+(227, 'use_crons', 'no'),
+(228, 'pseudostreaming', 'yes');
 
 
 
 INSERT INTO `{tbl_prefix}languages` (`language_id`, `language_code`, `language_name`, `language_regex`, `language_active`, `language_default`) VALUES
-(5, 'en', 'English', '/^en/i', 'yes', 'yes');
+(NULL, 'en', 'English', '/^en/i', 'yes', 'yes');
 
 
 INSERT INTO `{tbl_prefix}validation_re` (`re_id`, `re_name`, `re_code`, `re_syntax`) VALUES
-(1, 'Username', 'username', '^^[a-zA-Z0-9_]+$'),
-(2, 'Email', 'email', '^[_a-z0-9-]+(\\.[_a-z0-9-]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,10})$'),
-(3, 'Field Text', 'field_text', '^^[_a-z0-9-]+$');
+(NULL, 'Username', 'username', '^^[a-zA-Z0-9_]+$'),
+(NULL, 'Email', 'email', '^[_a-z0-9-]+(\\.[_a-z0-9-]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,10})$'),
+(NULL, 'Field Text', 'field_text', '^^[_a-z0-9-]+$');
 
 
 INSERT INTO `{tbl_prefix}config` (`configid` ,`name` ,`value`)VALUES 
