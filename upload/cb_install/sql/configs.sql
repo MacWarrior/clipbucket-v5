@@ -287,5 +287,25 @@ INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES ('popup_video','yes');
 -- Addition for 2.8.3
 INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES (NULL, 'video_round_views', 'yes');
 
+-- Addition for Cooporate cb seting bitrates for dash/hls
+INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES ('', 'vbrate_240', '192000'),
+('', 'vbrate_360', '272000'),
+('', 'vbrate_480', '352000'),
+('', 'vbrate_720', '432000'),
+('', 'vbrate_1080', '512000');
 
+-- Addition for Cooporate cb use video watermark or not
+INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES ('', 'use_watermark', 'no');
 
+-- Addition for Cooporate cb stream via hls or dash
+INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES ('', 'stream_via', 'hls');
+
+-- Addition for Cooporate cb access to logged in users
+INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES ('', 'access_to_logged_in', 'no');
+
+-- Addition for clipbucket license --
+INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES ('', 'cb_license', 'CBCORP-XXXXXXXXXXX');
+INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES ('', 'cb_license_local', '');
+
+-- Addition for Cooporate cb allowing collection and playlist page
+INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES ('', 'playlistsSection', 'yes');
