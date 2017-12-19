@@ -229,7 +229,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 
 
 INSERT INTO `{tbl_prefix}languages` (`language_id`, `language_code`, `language_name`, `language_regex`, `language_active`, `language_default`) VALUES
-(1, 'en', 'English', '/^en/i', 'yes', 'yes');
+(5, 'en', 'English', '/^en/i', 'yes', 'yes');
 
 
 INSERT INTO `{tbl_prefix}validation_re` (`re_id`, `re_name`, `re_code`, `re_syntax`) VALUES
