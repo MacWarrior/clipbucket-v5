@@ -23,10 +23,10 @@ ALTER TABLE `{tbl_prefix}users` ADD `is_live` enum('yes','no') NOT NULL DEFAULT 
 --Addition of social media link on channel
 ALTER TABLE `{tbl_prefix}user_profile` ADD `fb_url` VARCHAR(200) NOT NULL AFTER `web_url`, ADD `twitter_url` VARCHAR(200) NOT NULL AFTER `fb_url`, ADD `insta_url` VARCHAR(200) NOT NULL AFTER `twitter_url`;
 
---Updating featured videos limit for new template
-UPDATE `{tbl_prefix}config` SET value = '3' WHERE name = 'index_featured';
+
 --Updating featured videos limit for new template
 UPDATE `{tbl_prefix}config` SET value = 'yes' WHERE name = 'cb_combo_res';
+
 -- Addition for Cooporate cb access to logged in users
 INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES ('', 'access_to_logged_in', 'no');
 
@@ -35,6 +35,12 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES ('', 'cb_l
 INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES ('', 'cb_license_local', '');
 
 --Updating featured videos limit for new template
-UPDATE `{tbl_prefix}config` SET value = 'no' WHERE name = 'collectionsSection';
+-- value here is yes because no playlist page added yet in cb-git
+UPDATE `{tbl_prefix}config` SET value = 'yes' WHERE name = 'collectionsSection';
 -- Addition for Cooporate cb allowing collection and playlist page
 INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES ('', 'playlistsSection', 'yes');
+
+
+-- Updating featured videos limit for new template
+-- Commented because cb-git version has difference from corporate
+-- UPDATE `{tbl_prefix}config` SET value = '3' WHERE name = 'index_featured';
