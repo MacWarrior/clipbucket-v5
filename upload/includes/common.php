@@ -105,9 +105,9 @@
 	$row = $myquery->Get_Website_Details();
 	
 	if(!DEVELOPMENT_MODE) {
-		define('DEBUG_LEVEL', 2);
+		define('DEBUG_LEVEL', 0);
 	} else {
-		define('DEBUG_LEVEL',0);
+		define('DEBUG_LEVEL',2);
 	}
 
 	switch(DEBUG_LEVEL) {
