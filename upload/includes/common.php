@@ -127,13 +127,10 @@
 		case 2:
 		default:
 		{
-			if(phpversion() >= '5.3.0') {
-				error_reporting(E_ALL & ~(E_NOTICE | E_DEPRECATED | E_STRICT | E_WARNING));
-				ini_set('display_errors', 'on');
-			} else {
-				error_reporting(E_ALL ^E_NOTICE);
-				ini_set('display_errors', 'on');
-			}
+			
+			error_reporting(E_ALL & ~(E_NOTICE | E_DEPRECATED | E_STRICT | E_WARNING));
+			ini_set('display_errors', 'on');
+			
 		}
 	}
 
