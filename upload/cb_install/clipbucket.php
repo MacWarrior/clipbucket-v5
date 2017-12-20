@@ -13,7 +13,7 @@
  define("VERSION","4.0");
  define("STATE","STABLE");
  define("REV","4829");
- define("RELEASED","12-06-2017");
- define("AUTHORS","ARSLAN HASSAN,FAHAD ABBAS");
+ define("RELEASED","20-12-2017");
+ define("AUTHORS","ARSLAN HASSAN,FAHAD ABBAS","AWAIS FIAZ");
 
 ?>
