@@ -872,8 +872,7 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}user_profile` (
   `show_my_subscribers` enum('yes','no') NOT NULL DEFAULT 'yes',
   `show_my_friends` enum('yes','no') NOT NULL DEFAULT 'yes',
   PRIMARY KEY (`user_profile_id`),
-  KEY `ind_status_id` (`userid`),
-  FULLTEXT KEY `profile_tags` (`profile_tags`)
+  KEY `ind_status_id` (`userid`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
@@ -1040,8 +1039,7 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_files` (
   `output_audio_channels` char(16) CHARACTER SET utf8 NOT NULL,
   `hd` enum('yes','no') CHARACTER SET utf8 NOT NULL DEFAULT 'no',
   `hq` enum('yes','no') CHARACTER SET utf8 NOT NULL DEFAULT 'no',
-  PRIMARY KEY (`id`),
-  FULLTEXT KEY `src_bitrate` (`src_bitrate`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 
