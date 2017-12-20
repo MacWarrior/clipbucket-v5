@@ -955,8 +955,7 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}video` (
   `has_hd` enum('yes','no') NOT NULL DEFAULT 'no',
   `video_version` varchar(30) NOT NULL DEFAULT '2.6',
   `extras` varchar(225) NOT NULL,
-  PRIMARY KEY (`videoid`),
-  FULLTEXT KEY `description` (`description`,`title`)
+  PRIMARY KEY (`videoid`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=960 ;
 
 -- --------------------------------------------------------
