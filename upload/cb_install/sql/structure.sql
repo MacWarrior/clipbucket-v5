@@ -1051,8 +1051,8 @@ ALTER TABLE `{tbl_prefix}video` ADD `video_password` VARCHAR( 255 ) NOT NULL AFT
 ALTER TABLE `{tbl_prefix}video` ADD `video_users` TEXT NOT NULL AFTER `video_password`;
 ALTER TABLE `{tbl_prefix}video` ADD `category_parents` TEXT NOT NULL AFTER `category` ;
 
-ALTER TABLE `{tbl_prefix}_video` ADD `subscription_email` ENUM( "pending", "sent" ) NOT NULL DEFAULT 'pending' AFTER `last_commented` ;
-ALTER TABLE `{tbl_prefix}_groups` ADD `group_admins` TEXT NOT NULL AFTER `userid` ;
+ALTER TABLE `{tbl_prefix}video` ADD `subscription_email` ENUM( "pending", "sent" ) NOT NULL DEFAULT 'pending' AFTER `last_commented` ;
+
 
 -- Alterations for 2.4.5
 
@@ -1105,7 +1105,7 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}mass_emails` (
 
 -- naveed
 -- added photo_details
-ALTER TABLE `photos` ADD `{tbl_prefix}photo_details` TEXT NOT NULL AFTER `photo_id`;
+ALTER TABLE `{tbl_prefix}photos` ADD `{tbl_prefix}photo_details` TEXT NOT NULL AFTER `photo_id`;
 
 -- 2.7
 -- Added Collection contributors
@@ -1138,16 +1138,6 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_views` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
--- Adding File Directory for Photos and videos
-ALTER TABLE  `{tbl_prefix}photos` ADD  `file_directory` VARCHAR( 25 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER  `filename`;
-ALTER TABLE  `{tbl_prefix}video` ADD  `file_directory` VARCHAR( 25 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER  `file_name`;
-
-
---
--- cb_video video table change
---
-ALTER TABLE  `{tbl_prefix}video` ADD  `video_version` varchar(30)  NOT NULL DEFAULT  "2.6";
-ALTER TABLE  `{tbl_prefix}video` ADD  `extras` varchar(225)  NOT NULL;
 
 
 -- Updating playlist tables
@@ -1201,7 +1191,6 @@ INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES ('clientid', 'your_cli
 INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES ('secretId', 'your_client_secret_here');
 UPDATE `{tbl_prefix}config` SET value = 'cb_28' WHERE name = 'template_dir';
 
-ALTER TABLE `{tbl_prefix}collection_categories` ADD `parent_id` int DEFAULT 1;
 INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES (NULL, 'youtube_api_key', 'key_here');
 /*Indexing of following tables*/
 /*Author: Sikander Ali  */
@@ -1229,7 +1218,6 @@ ALTER TABLE `{tbl_prefix}video` ADD INDEX(`last_viewed`);
 ALTER TABLE `{tbl_prefix}video` ADD INDEX(`rating`);
 ALTER TABLE `{tbl_prefix}video` ADD INDEX(`comments_count`);
 ALTER TABLE `{tbl_prefix}video` ADD INDEX(`last_viewed`);
-ALTER TABLE `{tbl_prefix}video` ADD `video_files` text(33) NOT NULL;
 ALTER TABLE `{tbl_prefix}video` ADD `re_conv_status` text(33) NOT NULL;
 ALTER TABLE `{tbl_prefix}video` ADD `conv_progress` TEXT NOT NULL;
 -- Alterations for 4.0
@@ -1238,7 +1226,6 @@ ALTER TABLE `{tbl_prefix}video` ADD `blocked_countries` TEXT( 255 ) NOT NULL AFT
 ALTER TABLE `{tbl_prefix}video` ADD `sprite_count` INT(11) NOT NULL DEFAULT '0' AFTER `blocked_countries`;
 /*Cb_user_profile_info*/
 ALTER TABLE `{tbl_prefix}user_profile` ADD `fb_url` VARCHAR(200) NOT NULL AFTER `web_url`, ADD `twitter_url` VARCHAR(200) NOT NULL AFTER `fb_url`, ADD `insta_url` VARCHAR(200) NOT NULL AFTER `twitter_url`;
-
 
 
 
