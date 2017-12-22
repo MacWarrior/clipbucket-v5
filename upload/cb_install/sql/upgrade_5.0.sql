@@ -1,4 +1,4 @@
--- Addition for 3.0
+-- Addition for 5.0
 
 UPDATE `{tbl_prefix}action_log` SET action_type = convert(cast(convert(action_type using  latin1) as binary) using utf8);
 UPDATE `{tbl_prefix}action_log` SET action_username = convert(cast(convert(action_username using  latin1) as binary) using utf8);
@@ -278,12 +278,6 @@ UPDATE `{tbl_prefix}video_files` SET output_audio_channels = convert(cast(conver
 UPDATE `{tbl_prefix}video_views` SET video_id = convert(cast(convert(video_id using  latin1) as binary) using utf8);
 
 INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
-	('vbrate_hd','4096000'),
-	('vbrate_1080','4096000'),
-	('vbrate_720','2500000'),
-	('vbrate_480','700000'),
-	('vbrate_360','400000'),
-	('vbrate_240','240000'),
 	('password_salt', SUBSTRING(HEX(SHA2(CONCAT(NOW(), RAND(), UUID()), 512)),1, 32) ),
 	('show_collapsed_checkboxes', '0');
 

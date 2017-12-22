@@ -34,15 +34,15 @@
 			$vid = $Upload->submit_upload();
 			$Upload->do_after_video_upload($vid);
 
-			echo '<div class="alert alert-success embed_video">Video has been Embeded succesfully...</div>';
-
-			if(!error())
+			if(!error()){
+				e('Video has been Embeded succesfully ..','m');
 				$step=3;
+			}
 		}
-		
+
 		//assigning Form Name [RECOMMEND for submitting purpose]
 		assign('upload_form_name','UploadForm');
-			   
+
 		//Adding Uploading JS Files
 		$Cbucket->add_js(array('swfupload/swfupload.js'=>'uploadactive'));
 		$Cbucket->add_js(array('swfupload/plugins/swfupload.queue.js'=>'uploadactive'));

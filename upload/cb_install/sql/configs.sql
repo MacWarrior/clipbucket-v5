@@ -284,13 +284,30 @@ INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 	('video_round_views', 'yes');
 
--- Addition for 3.0
+-- Addition for 4.0
+-- Addition for Cooporate cb seting bitrates for dash/hls
 INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 	('vbrate_1080','4096000'),
 	('vbrate_720','2500000'),
 	('vbrate_480','700000'),
 	('vbrate_360','400000'),
-	('vbrate_240','240000'),
+	('vbrate_240','240000');
+UPDATE `{tbl_prefix}config` SET `value` = '4096000' WHERE `name` = 'vbrate_hd';
+
+INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES 
+-- Addition for Cooporate cb use video watermark or not
+	('use_watermark', 'no'),
+-- Addition for Cooporate cb stream via hls or dash
+	('stream_via', 'hls'),
+-- Addition for Cooporate cb access to logged in users
+	('access_to_logged_in', 'no'),
+-- Addition for clipbucket license --
+	('cb_license', 'CBCORP-XXXXXXXXXXX'),
+	('cb_license_local', ''),
+-- Addition for Cooporate cb allowing collection and playlist page
+	('playlistsSection', 'yes');
+	
+-- Addition for 5.0
+INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 	('password_salt', SUBSTRING(HEX(SHA2(CONCAT(NOW(), RAND(), UUID()), 512)),1, 32) ),
 	('show_collapsed_checkboxes', '0');
-UPDATE `{tbl_prefix}config` SET `value` = '4096000' WHERE `name` = 'vbrate_hd';
