@@ -1194,7 +1194,8 @@ class FFMpeg
 		# Selecting audio track
 		if( $this->audio_track && is_numeric($this->audio_track) )
 		{
-			$opt_av .= ' -map 0:0 -map 0:'.($this->audio_track);
+			$video_track_id = self::get_video_stream_id($this->input_file);
+			$opt_av .= ' -map 0:'.$video_track_id.' -map 0:'.($this->audio_track);
 		}
 
 		if($p['use_video_codec'])
@@ -1765,7 +1766,6 @@ class FFMpeg
 		return true;
 	}
 
-
 	public static function get_video_tracks($filepath)
 	{
 		$stats = stat($filepath);
@@ -1805,6 +1805,28 @@ class FFMpeg
 				$langs[$map_id] = $lang;
 			}
 			return $langs;
+		} else {
+			return false;
+		}
+	}
+
+	public static function get_video_stream_id($filepath)
+	{
+		$stats = stat($filepath);
+		if($stats && is_array($stats))
+		{
+			$json = shell_exec(FFPROBE . ' -i "'.$filepath.'" -loglevel panic -print_format json -show_entries stream 2>&1');
+			$tracks_json = json_decode($json, true)['streams'];
+			foreach($tracks_json as $track)
+			{
+				if( $track['codec_type'] != 'video' )
+					continue;
+
+				if( !isset($track['index']) )
+					continue;
+
+				return $track['index'];
+			}
 		} else {
 			return false;
 		}
