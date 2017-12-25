@@ -1791,9 +1791,6 @@ class FFMpeg
 				else
 					$language = $track['LANGUAGE'];
 
-				if( $language == 'und' )
-					continue;
-
 				$title = '';
 				if( isset($track['title']) )
 					$title = $track['title'];
