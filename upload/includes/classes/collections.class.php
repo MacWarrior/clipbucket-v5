@@ -909,39 +909,39 @@ class Collections extends CBCategory
 				$collection_fields = array_merge($fields,$this->load_other_fields($array));
 
 				if(count($this->custom_collection_fields) > 0)
+					$collection_fields = array_merge($collection_fields,$this->custom_collection_fields);
+
+				foreach($collection_fields as $field)
 				{
-					foreach($collection_fields as $field)
+					$name = formObj::rmBrackets($field['name']);
+					$val = $array[$name];
+
+					if(is_array($val))
 					{
-						$name = formObj::rmBrackets($field['name']);
-						$val = $array[$name];
-
-						if(is_array($val))
+						$new_val = '';
+						foreach($val as $v)
 						{
-							$new_val = '';
-							foreach($val as $v)
-							{
-								$new_val .= "#".$v."# ";
-							}
-							$val = $new_val;
+							$new_val .= "#".$v."# ";
 						}
-
-						$val = mysql_clean($val);
-						if($field['use_func_val']){
-							$val = $field['validate_function']($val);
-						}
-
-						if(!empty($field['db_field'])){
-							$query_field[] = $field['db_field'];
-						}
-
-						if(!$field['clean_func'] || (!function_exists($field['clean_func']) && !is_array($field['clean_func']))){
-							$val = ($val);
-						} else
-							$val = apply_func($field['clean_func'], mysql_clean('|no_mc|'.$val));
-
-						if(!empty($field['db_field']))
-							$query_val[] = $val;
+						$val = $new_val;
 					}
+
+					$val = mysql_clean($val);
+					if($field['use_func_val']){
+						$val = $field['validate_function']($val);
+					}
+
+					if(!empty($field['db_field'])){
+						$query_field[] = $field['db_field'];
+					}
+
+					if(!$field['clean_func'] || (!function_exists($field['clean_func']) && !is_array($field['clean_func']))){
+						$val = ($val);
+					} else
+						$val = apply_func($field['clean_func'], mysql_clean('|no_mc|'.$val));
+
+					if(!empty($field['db_field']))
+						$query_val[] = $val;
 				}
 
 				// date_added

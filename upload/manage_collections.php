@@ -71,7 +71,8 @@ switch($mode)
 		{
 			$cbcollection->create_collection($_POST);
 			
-			if(!error()) $_POST = '';
+			if(!error())
+				$_POST = '';
 		}
 		
 		subtitle(lang("create_collection"));
