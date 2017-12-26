@@ -55,12 +55,6 @@ class CBPhotos
         $cb_columns->object( 'photos' )->register_columns( $basic_fields );
 	}
 
-
-    function CBPhotos()
-    {
-        self::__construct();
-    }
-
     /**
      * @return array
      */

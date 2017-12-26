@@ -54,7 +54,7 @@ class userquery extends CBCategory{
     private $basic_fields = array();
     private $extra_fields = array();
 
-	function userquery()
+	function __construct()
 	{
         global $cb_columns;
        

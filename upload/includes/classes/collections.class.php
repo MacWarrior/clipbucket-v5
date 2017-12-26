@@ -38,7 +38,7 @@ class Collections extends CBCategory
 	/**
 	 * Constructor function to set values of tables
 	 */
-	function Collections()
+	function __construct()
 	{
         global $cb_columns;
 

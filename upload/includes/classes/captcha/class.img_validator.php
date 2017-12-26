@@ -91,7 +91,7 @@ class img_validator extends files
     * Checks if the system has GD support
     *
     */
-    function img_validator($folder = false, $img_folder = false)
+    function __construct($folder = false, $img_folder = false)
     {
         // If doesn't given, uses the default fonts folder
         if(!$folder)
