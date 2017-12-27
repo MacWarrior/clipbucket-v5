@@ -6,8 +6,6 @@ function new_player_height (videoid) {
 
 	var native_player_width = native_player.width();
 	var player_container_width = embed_player.width();
-	
-
 
 	var native_player_height  = native_player_width/player_ratio;
 	var embed_player_height = player_container_width/player_ratio;
@@ -26,13 +24,16 @@ $(document).ready(function() {
        return false;
     });
 
-    $('body').keydown(function(e)
+	var body = $('body');
+
+    body.keydown(function(e)
     {
         if( $(document.activeElement).is('body') ||
             $(document.activeElement).is('button.vjs-fullscreen-control') ||
-            $(document.activeElement).is('div.vjs-volume-menu-button') )
+            $(document.activeElement).is('div.vjs-volume-menu-button') ||
+            $(document.activeElement).is('video') )
         {
-            if( e.keyCode == 0 || e.keyCode == 32 )
+            if( e.keyCode === 0 || e.keyCode === 32 )
             {
                 e.preventDefault();
                 if( cb_player.paused() )
@@ -43,18 +44,19 @@ $(document).ready(function() {
         }
     });
 
-    $('body').keyup(function(e)
+    body.keyup(function(e)
     {
         if( $(document.activeElement).is('body') ||
             $(document.activeElement).is('button.vjs-fullscreen-control') ||
-            $(document.activeElement).is('div.vjs-volume-menu-button') )
+            $(document.activeElement).is('div.vjs-volume-menu-button') ||
+            $(document.activeElement).is('video') )
         {
-            if( e.keyCode == 0 || e.keyCode == 32 )
+            if( e.keyCode === 0 || e.keyCode === 32 )
                 e.preventDefault();
         }
     });
 });
 
-$(window).resize(function(event) {
+$(window).resize(function() {
 	new_player_height();
 });

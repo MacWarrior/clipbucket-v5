@@ -119,7 +119,7 @@
           this.el().appendChild(label);
         }else{
           var staticLabel = document.createElement('span');
-					videojs.addClass(staticLabel, 'vjs-resolution-button-staticlabel');
+          videojs.addClass(staticLabel, 'vjs-resolution-button-staticlabel');
           this.el().appendChild(staticLabel);
         }
        },
@@ -318,7 +318,7 @@
 
 					groupedSrc = bucketSources(_sources);
 
-					// Overwrite defualt sourcePicer function
+					// Overwrite default sourcePicer function
 					var _customSourcePicker = function(_player, _sources, _label){
 						player.tech_.ytPlayer.setPlaybackQuality(_sources[0]._yt);
 						return player;

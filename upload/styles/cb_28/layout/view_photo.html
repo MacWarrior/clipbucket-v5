@@ -283,22 +283,4 @@ $(document).ready(function()
 	getComments('p','{$photo.photo_id}','{$photo.last_commented}',1,'{$photo.total_comments}','{$object_type}')
 	{rdelim}
 	);
-
-/*$(document).ready(function(){
-	var form_selector = 'comment_form';
-	var type = $(this).data('type');
-	var dataId = $(this).data('id');
-	$('body').on("click","#add_comment_button",function(){
-		add_comment_js(form_selector,type,dataId);
-	});
-	$('#comment_box').keypress(function(e){
-		if(e.keyCode == 13 && !e.shiftKey)
-		{
-			e.preventDefault();
-			add_comment_js(form_selector,type,dataId);
-		}
-		});
-	});
-	
-	*/
 </script>
