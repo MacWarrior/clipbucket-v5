@@ -67,7 +67,7 @@ class ClipBucket
      */
     var $on_delete_video = array();
 
-    function ClipBucket()
+    function __construct()
     {
         global $pages;
         //Assign Configs

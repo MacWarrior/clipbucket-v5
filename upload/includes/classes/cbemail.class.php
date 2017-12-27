@@ -16,7 +16,7 @@ class CBEmail
 	var $smtp = false;
 	var $db_tpl = 'email_templates';
 	
-	function cbemail()
+	function __construct()
 	{
 		//Constructor - do nothing
 	}

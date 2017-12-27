@@ -25,11 +25,6 @@ class cb_columns {
 
     }
 
-    function cb_columns()
-    {
-        self::__construct();
-    }
-
     /**
      * Returns current object
      *
