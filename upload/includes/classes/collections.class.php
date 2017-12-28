@@ -926,7 +926,6 @@ class Collections extends CBCategory
 						$val = $new_val;
 					}
 
-					$val = mysql_clean($val);
 					if($field['use_func_val']){
 						$val = $field['validate_function']($val);
 					}
@@ -938,7 +937,7 @@ class Collections extends CBCategory
 					if(!$field['clean_func'] || (!function_exists($field['clean_func']) && !is_array($field['clean_func']))){
 						$val = ($val);
 					} else
-						$val = apply_func($field['clean_func'], mysql_clean('|no_mc|'.$val));
+						$val = apply_func($field['clean_func'], '|no_mc|'.$val);
 
 					if(!empty($field['db_field']))
 						$query_val[] = $val;
