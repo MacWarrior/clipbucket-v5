@@ -2782,18 +2782,30 @@ class userquery extends CBCategory{
 				$uquery_val[] = mysql_clean($file);
 			}
 		}
-		
-		$log_array = array
-			(
-			 'success'=>'yes',
-			 'details'=> "updated profile"
-			);
 
-			//Login Upload
-			insert_log('profile_update',$log_array);
-			
-		$db->update(tbl($this->dbtbl['users']),$uquery_field,$uquery_val," userid='".mysql_clean($array['userid'])."'");
-		e(lang("usr_avatar_bg_update"),'m');
+		foreach ($uquery_val as $key => $value) {
+		    $value = trim($value);
+		    if (empty($value)){
+		        $validate_empty_array=0;
+		    }else{
+		    	$validate_empty_array=1;
+		    	break;
+		    }
+		}
+		
+		if($validate_empty_array){
+			$log_array = array
+				(
+				 'success'=>'yes',
+				 'details'=> "updated profile"
+				);
+
+				//Login Upload
+				insert_log('profile_update',$log_array);
+				
+			$db->update(tbl($this->dbtbl['users']),$uquery_field,$uquery_val," userid='".mysql_clean($array['userid'])."'");
+			e(lang("usr_avatar_bg_update"),'m');
+		}
 
 	}
 
