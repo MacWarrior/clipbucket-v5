@@ -69,7 +69,7 @@ class Upload
 
 		$this->validate_video_upload_form($array,TRUE);
 
-		if( empty($eh->get_error()) && empty($eh->get_warning()) )
+		if( empty($eh->get_error()) )
 		{
 			$required_fields = $this->loadRequiredFields($array);
 			$location_fields = $this->loadLocationFields($array);
@@ -270,7 +270,7 @@ class Upload
        	if(defined('dir'))
        	{
             while(1){
-		  		//setting variable for CB 2.8 gretaer versions
+		  		//setting variable for CB 2.8 greater versions
               	$path = THUMBS_DIR.'/'.dir.'/'.$file_name.'-original-'.$code.'.';
               	if(!file_exists($path.'jpg') && !file_exists($path.'png') && !file_exists($path.'gif')){
               		//setting variable for CB 2.8 lower versions
