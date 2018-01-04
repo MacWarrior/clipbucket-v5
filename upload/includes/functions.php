@@ -1586,8 +1586,11 @@
 	 *
 	 * @return string
 	 */
-	function create_query_limit($page,$result) {
-		$limit  = $result;	
+	function create_query_limit($page,$result)
+	{
+		$page = mysql_clean($page);
+		$result = mysql_clean($result);
+		$limit = $result;
 		if(empty($page) || $page == 0 || !is_numeric($page)) {
 			$page = 1;
 		}

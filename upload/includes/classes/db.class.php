@@ -368,7 +368,7 @@ class Clipbucket_db
         $count = 0;
         for($i=0;$i<$total_fields;$i++) {
             $count++;
-            $val = mysql_clean($vls[$i]);
+            $val = $this->clean_var($vls[$i]);
             $needle = substr($val,0,3);
             if($needle != '|f|') {
                 $fields_query .= $flds[$i]."='".$val."'";

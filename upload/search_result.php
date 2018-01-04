@@ -12,8 +12,8 @@
 	require_once 'includes/config.inc.php';
 	$pages->page_redir();
 							
-	$page = display_clean($_GET['page']);
-	$type = mysql_clean(strtolower($_GET['type'])) ;
+	$page = $_GET['page'];
+	$type = strtolower($_GET['type']);
 	$type = $type ? $type : 'videos';
 	$chkType = $type;
 	//Checking if search for specific section is allowed or not
@@ -39,7 +39,7 @@
 		{
 			foreach($_GET['category'] as $category)
 			{
-				$childs = $cbvid->get_sub_categories(mysql_clean($category));
+				$childs = $cbvid->get_sub_categories($category);
 				if($childs)
 				{
 					foreach($childs as $child)
