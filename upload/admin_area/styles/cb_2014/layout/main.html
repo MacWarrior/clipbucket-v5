@@ -47,7 +47,7 @@
                 default:
                     var convConfigs = {
                         'video_codec': 'libx264',
-                        'audio_codec': 'libfaac',
+                        'audio_codec': 'aac',
                         'vrate': '25',
                         'vbrate': '512000',
                         'srate': '22050',
@@ -69,7 +69,7 @@
                 case '3':
                     var convConfigs = {
                         'video_codec': 'libx264',
-                        'audio_codec': 'libfaac',
+                        'audio_codec': 'aac',
                         'vrate': '30',
                         'vrate': '30',
                         'vbrate': '640000',
@@ -148,7 +148,6 @@
 				<div class="col-md-4">
 					<label for="delete_mass_upload">Delete Mass upload</label>
 					<label class="pull-right inline">
-						{$row.delete_mass_upload}
 						<input value="yes" name="delete_mass_upload" id="delete_mass_upload" {if $row.delete_mass_upload=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 						<span class="lbl"></span>
 					</label>

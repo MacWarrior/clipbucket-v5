@@ -82,7 +82,7 @@ class FFMpeg
 	-s 426x240 
 	-aspect 1.7777777777778 
 	-vf pad=0:0:0:0:black 
-	-acodec libfaac 
+	-acodec aac 
 	-ab 128000 
 	-ar 22050  
 	/var/www/clipbucket/files/videos/13928857226cc42-sd.mp4  
@@ -992,7 +992,7 @@ class FFMpeg
 	{
 		if(PHP_OS == "Linux")
 		{
-			$ac = 'libfaac';
+			$ac = 'aac';
 		} elseif(PHP_OS == "WINNT") {
 			$ac = 'libvo_aacenc';
 		}

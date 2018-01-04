@@ -3385,7 +3385,7 @@
 	 */
 	function get_ffmpeg_codecs($data=false) {
 		if (PHP_OS == "Linux") {
-			$a = 'libfaac';
+			$a = 'aac';
 		} elseif (PHP_OS == "WINNT") {
 			$a = 'libvo_aacenc';
 		}
