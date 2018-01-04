@@ -3389,14 +3389,14 @@
 		} elseif (PHP_OS == "WINNT") {
 			$a = 'libvo_aacenc';
 		}
-		$req_codecs = array
-		('libxvid' => 'Required for DIVX AVI files',
-		 'libmp3lame'=> 'Required for proper Mp3 Encoding',
-		 $a	=> 'Required for AAC Audio Conversion',
-		// 'libfaad'	=> 'Required for AAC Audio Conversion',
-		 'libx264'	=> 'Required for x264 video compression and conversion',
-		 'libtheora' => 'Theora is an open video codec being developed by the Xiph.org',
-		 'libvorbis' => 'Ogg Vorbis is a new audio compression format',
+		$req_codecs = array(
+			'libxvid'	=> 'Required for DIVX AVI files',
+			'libmp3lame'=> 'Required for proper Mp3 Encoding',
+			$a 			=> 'Required for AAC Audio Conversion',
+			//'libfaad'	=> 'Required for AAC Audio Conversion',
+			'libx264'	=> 'Required for x264 video compression and conversion',
+			'libtheora' => 'Theora is an open video codec being developed by the Xiph.org',
+			'libvorbis' => 'Ogg Vorbis is a new audio compression format',
 		 );
 		 
 		if($data) {
@@ -3466,7 +3466,7 @@
 	}
 
 	/**
-	 * Check if FFMPEG is installed by exracting its version
+	 * Check if FFMPEG is installed by extracting its version
 	 *
 	 * @param : { string } { $path } { path to FFMPEG }
 	 *
@@ -3481,13 +3481,6 @@
 				preg_match('@^(?:ffmpeg version)?([^C]+)@i',$result, $matches);
 				$host = $matches[1];
 				return $host;
-			} elseif (preg_match("/ffmpeg version/i", $result)) {
-				preg_match('@^(?:ffmpeg version)?([^,]+)@i',$result, $matches);
-				$host = $matches[1];
-				// get last two segments of host name
-				preg_match('/[^.]+\.[^.]+$/', $host, $matches);
-				$version = "{$matches[0]}";
-				return $version;
 			} else {
 				preg_match("/(?:ffmpeg\\s)(?:version\\s)?(\\d\\.\\d\\.(?:\\d|[\\w]+))/i", strtolower($result), $matches);
 				if(count($matches) > 0) {
@@ -3501,7 +3494,7 @@
 	}
 
 	/**
-	 * Check if PHP_CLI is installed by exracting its version
+	 * Check if PHP_CLI is installed by extracting its version
 	 *
 	 * @param : { string } { $path } { path to PHP_CLI }
 	 *
@@ -3523,7 +3516,7 @@
 	}
 
 	/**
-	* Check if MediaInfo is installed by exracting its version
+	* Check if MediaInfo is installed by extracting its version
 	*
 	* @param : { string } { $path } { path to MediaInfo }
 	* @return : { string } { version if found, else false }
@@ -3536,7 +3529,7 @@
 	}
 
 	/**
-	* Check if ImageMagick is installed by exracting its version
+	* Check if ImageMagick is installed by extracting its version
 	*
 	* @param : { string } { $path } { path to ImageMagick }
 	* @return : { string } { version if found, else false }
@@ -3549,7 +3542,7 @@
 	}
 
 	/**
-	 * Check if FFPROBE is installed by exracting its version
+	 * Check if FFPROBE is installed by extracting its version
 	 *
 	 * @param : { string } { $path } { path to FFPROBE }
 	 *
@@ -3564,7 +3557,7 @@
 	}
 
 	/**
-	 * Check if MP4Box is installed by exracting its version
+	 * Check if MP4Box is installed by extracting its version
 	 *
 	 * @param : { string } { $path } { path to MP4Box }
 	 *
