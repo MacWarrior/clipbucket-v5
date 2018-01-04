@@ -286,7 +286,7 @@
 					* like video's original height and width. When dealing with videos like SnapChat
 					* and Instagram or other mobile formats, it becomes crucial to fetch video height
 					* and width properly or video will be stretched or blurred out due to poor params
-					* Lets build command for exracting video meta using mediainfo
+					* Lets build command for extracting video meta using mediainfo
 					*/
 					$mediainfoMetaCommand = $this->mediainfoPath . "   '--Inform=Video;'  ". $fileFullPath;
 
@@ -682,6 +682,9 @@
 					$commandSwitches .= " -vcodec " .$this->options['videoCodec'];
 				}
 				if(isset($this->options['audioCodec'])){
+					$codecs = get_ffmpeg_codecs();
+					if( !isset($codecs[$this->options['audioCodec']]) || $codecs[$this->options['audioCodec']]['installed'] == 'no' )
+						$this->options['audioCodec'] = 'aac';
 					$commandSwitches .= " -acodec " .$this->options['audioCodec'];
 				}
 				/*

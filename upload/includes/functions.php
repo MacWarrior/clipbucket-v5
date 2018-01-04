@@ -3378,14 +3378,12 @@
 	/**
 	 * Checks if FFMPEG has all required modules installed on server
 	 *
-	 * @param bool $data
-	 *
 	 * @return array : { array } { $codecs } { an array with all required modules }
 	 * @internal param $ : { string } { $data } { false by default, version of ffmpeg } { $data } { false by default, version of ffmpeg }
 	 */
-	function get_ffmpeg_codecs($data=false) {
+	function get_ffmpeg_codecs() {
 		if (PHP_OS == "Linux") {
-			$a = 'aac';
+			$a = 'libfaac';
 		} elseif (PHP_OS == "WINNT") {
 			$a = 'libvo_aacenc';
 		}
@@ -3393,39 +3391,21 @@
 			'libxvid'	=> 'Required for DIVX AVI files',
 			'libmp3lame'=> 'Required for proper Mp3 Encoding',
 			$a 			=> 'Required for AAC Audio Conversion',
-			//'libfaad'	=> 'Required for AAC Audio Conversion',
+			'aac'		=> 'Default codec for AAC Audio Conversion',
 			'libx264'	=> 'Required for x264 video compression and conversion',
 			'libtheora' => 'Theora is an open video codec being developed by the Xiph.org',
 			'libvorbis' => 'Ogg Vorbis is a new audio compression format',
-		 );
-		 
-		if($data) {
-			$version = $data;
-		} else {
-			$version = shell_output(  get_binaries('ffmpeg').' -i xxx -acodec copy -vcodec copy -f null /dev/null 2>&1' );
+		);
+
+		$codec_installed = array();
+		foreach($req_codecs as $codec => $description)
+		{
+			$codecs = shell_output(  get_binaries('ffmpeg').' -codecs 2>/dev/null | grep "'.$codec.'"');
+			$codec_installed[$codec]['installed'] = $codecs ? 'yes' : 'no';
 		}
-		preg_match_all("/enable\-(.*) /Ui",$version,$matches);
-		$installed = $matches[1];
-		
-		$the_codecs = array();
-		
-		foreach($installed as $inst) {
-			if(empty($req_codecs[$inst]))
-				$the_codecs[$inst]['installed'] = 'yes';
-		}
-		
-		foreach($req_codecs as $key=>$codec) {
-			$the_req_codecs[$key] = array();
-			$the_req_codecs[$key]['required'] = 'yes';
-			$the_req_codecs[$key]['desc'] = $req_codecs[$key];
-			if(in_array($key,$installed)) {
-				$the_req_codecs[$key]['installed'] = 'yes';
-			} else {
-				$the_req_codecs[$key]['installed'] = 'no';
-			}
-		}
-		$the_codecs = array_merge($the_req_codecs,$the_codecs);
-		return $the_codecs;
+
+		dump($codec_installed);
+		return $codec_installed;
 	}
 
 	/**

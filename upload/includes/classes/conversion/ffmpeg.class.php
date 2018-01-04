@@ -553,6 +553,9 @@ class FFMpeg
 				$commandSwitches .= " -vcodec " .$this->options['video_codec'];
 			}
 			if(isset($this->options['audio_codec'])){
+				$codecs = get_ffmpeg_codecs();
+				if( !isset($codecs[$this->options['audio_codec']]) || $codecs[$this->options['audio_codec']]['installed'] == 'no' )
+					$this->options['audio_codec'] = 'aac';
 				$commandSwitches .= " -acodec " .$this->options['audio_codec'];
 			}
 
@@ -992,7 +995,11 @@ class FFMpeg
 	{
 		if(PHP_OS == "Linux")
 		{
-			$ac = 'aac';
+			$ffmpeg_codecs = get_ffmpeg_codecs();
+			if( isset($ffmpeg_codecs['libfaac']) && $ffmpeg_codecs['libfaac']['installed'] == 'yes' )
+				$ac = 'libfaac';
+			else
+				$ac = 'aac';
 		} elseif(PHP_OS == "WINNT") {
 			$ac = 'libvo_aacenc';
 		}
@@ -1262,7 +1269,11 @@ class FFMpeg
 		# audio codec, rate and bitrate
 		if($p['use_audio_codec'])
 		{
-			if(!empty($p['audio_codec']) && $p['audio_codec'] != 'None'){
+			if(!empty($p['audio_codec']) && $p['audio_codec'] != 'None')
+			{
+				$codecs = get_ffmpeg_codecs();
+				if( !isset($codecs[$p['audio_codec']]) || $codecs[$p['audio_codec']]['installed'] == 'no' )
+					$this->options['audio_codec'] = 'aac';
 				$opt_av .= " -acodec {$p['audio_codec']}";
 			}
 		}

@@ -1747,7 +1747,7 @@
             "imagick" => $imagick_version, 
             "mediainfo" => $media_info, 
             "ffprobe" =>$ffprobe_path
-            );
+		);
 
         foreach ($alltools as $name => $tool) {
             if (!$tool) {
