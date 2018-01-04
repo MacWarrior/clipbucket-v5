@@ -100,7 +100,7 @@
              var newVal = $(this).parent().parent().find("input[name='todo']").val();
              if(newVal.length){
                 var ajaxCall = $.ajax({
-                    url: "{$baseurl}" + "/admin_area/index.php",
+                    url: "/admin_area/index.php",
                     type: "post",
                     data: {
                         val: newVal,
@@ -134,7 +134,7 @@
                 id = id.match(/([0-9]+)$/g);
                 id = id.pop();
                 var ajaxCall = $.ajax({
-                    url: "{$baseurl}" + "/admin_area/index.php",
+                    url: "/admin_area/index.php",
                     type: "post",
                     data: {
                         id: id,

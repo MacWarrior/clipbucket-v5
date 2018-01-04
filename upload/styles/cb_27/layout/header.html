@@ -182,7 +182,7 @@
 					<li><a href="{link name='my_videos'}"><i class="fa fa-video-camera"></i>&nbsp;&nbsp;{lang code="Manage Videos"}</a></li>
 					{ANCHOR place="head_audio_dropdown"}
 					<li><a href="{link name='channels'}"><i class="fa fa-eye"></i>&nbsp;&nbsp;{lang code="View Channels"}</a></li>
-					<li><a href="{$baseurl}/view_channel.php?user={$userquery->username}"><i class="fa fa-desktop"></i>&nbsp;&nbsp;{lang code="My Channel"}</a></li>
+					<li><a href="/view_channel.php?user={$userquery->username}"><i class="fa fa-desktop"></i>&nbsp;&nbsp;{lang code="My Channel"}</a></li>
 				</ul>
 			</li>
 
@@ -277,7 +277,7 @@
 					<li><a href="{link name='my_videos'}"><i class="fa fa-video-camera"></i>&nbsp;&nbsp;{lang code="Manage Videos"}</a></li>
 					{ANCHOR place="head_audio_dropdown"}
 					<li><a href="{link name='channels'}"><i class="fa fa-eye"></i>&nbsp;&nbsp;{lang code="View Channels"}</a></li>
-					<li><a href="{$baseurl}/view_channel.php?user={$userquery->username}"><i class="fa fa-desktop"></i>&nbsp;&nbsp;{lang code="My Channel"}</a></li>
+					<li><a href="/view_channel.php?user={$userquery->username}"><i class="fa fa-desktop"></i>&nbsp;&nbsp;{lang code="My Channel"}</a></li>
 					<li class="divider"></li>
 					<li><a href="{link name='logout'}"><i class="fa fa-sign-out"></i>&nbsp;&nbsp;{lang code="Logout"}</a></li>
 				</ul>
@@ -415,7 +415,7 @@
 						</label>
 					</div>
 
-					<div align="center"><a href="{$baseurl}/forgot.php">{lang code='user_forgot_password'}</a> | <a href="{$baseurl}/forgot.php?mode=recover_username">{lang code='user_forgot_username'}</a></div>
+					<div align="center"><a href="/forgot.php">{lang code='user_forgot_password'}</a> | <a href="/forgot.php?mode=recover_username">{lang code='user_forgot_username'}</a></div>
 				</div>
 				<div class="modal-footer">
 					<a href="{link name='signup'}" class="btn btn-primary btn-success btn-sm pull-left">{lang code="Create Account"}</a>

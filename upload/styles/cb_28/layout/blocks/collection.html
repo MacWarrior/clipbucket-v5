@@ -1,7 +1,7 @@
 {if $display_type == "" || $display_type == "normal"}
 <div class="collection-holder">
 	<div class="photo-block">
-		<a href="{$baseurl}/view_collection.php?cid={$collection.collection_id}&type={$collection.type}">
+		<a href="/view_collection.php?cid={$collection.collection_id}&type={$collection.type}">
 			<img src="{$cbcollection->coll_first_thumb($collection,'l')}" alt="{display_clean($collection.title)}" title="{display_clean($collection.title)}" class="img-responsive" id="photo_{$collection.ci_id}">
 			<div class="collection-info">
 				<span>{$collection.total_objects}</span>{lang code='photos'}
@@ -11,7 +11,7 @@
 	<img src="{$theme}/images/photo-bg.png" alt="" class="img-responsive photo-bg">
 </div>
 <span class="title">
-	<a href="{$baseurl}/view_collection.php?cid={$collection.collection_id}&type={$collection.type}" title="{display_clean($collection.collection_name)}">{display_clean($collection.collection_name)}</a>
+	<a href="/view_collection.php?cid={$collection.collection_id}&type={$collection.type}" title="{display_clean($collection.collection_name)}">{display_clean($collection.collection_name)}</a>
 </span>
 {/if}
 

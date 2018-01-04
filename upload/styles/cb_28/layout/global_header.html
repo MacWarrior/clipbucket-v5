@@ -10,7 +10,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
 		<!-- ClipBucket v{$Cbucket->version} -->
 		<meta name="copyright" content="ClipBucket - Integrated Units 2007 - {$smarty.now|date_format:"%Y"}">
-		<link rel="icon" type="image/ico" href="{$baseurl}/favicon.ico">
+		<link rel="icon" type="image/ico" href="/favicon.ico">
 
 		<!-- RSS FEEDS -->
 		{rss_feeds link_tag=true}
@@ -36,9 +36,9 @@
 
 		<script src="{$theme}/js/jquery-1.11.3.min.js"></script>
 		{if isset($__devmsgs)}
-			<link rel="stylesheet" href="{$baseurl}/styles/global/jquery_ui.css">
+			<link rel="stylesheet" href="/styles/global/jquery_ui.css">
 		{else}
-			<link rel="stylesheet" href="{$baseurl}/styles/global/jquery_ui.min.css">
+			<link rel="stylesheet" href="/styles/global/jquery_ui.min.css">
 		{/if}
 
 		<script>
@@ -59,9 +59,9 @@
 		<script src="{$theme}/js/ui_plugins.js"></script>
 
 		{if isset($__devmsgs)}
-		<script src="{$baseurl}/js/clipbucket.js"></script>
+		<script src="/js/clipbucket.js"></script>
 		{else}
-		<script src="{$baseurl}/js/clipbucket.min.js"></script>
+		<script src="/js/clipbucket.min.js"></script>
 		{/if} 
 		<script src="{$theme}/js/uslider_js/jquery.mousewheel.js"></script>
 		{if $smarty.const.THIS_PAGE == 'signup'}

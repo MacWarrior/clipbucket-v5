@@ -10,12 +10,12 @@
       <div class="tabbable">
         <ul class="nav nav-tabs" id="myTab">
           <li class="{if $mode=='profile_settings'}active{/if}">
-            <a  href="{$baseurl}/edit_account.php?mode=profile">
+            <a  href="/edit_account.php?mode=profile">
               <h5>{lang code='channel_profile_settings'}</h5>
             </a>
           </li>
           <li class="{if $mode=='account_settings'}active{/if}">
-            <a  href="{$baseurl}/edit_account.php?mode=account">
+            <a  href="/edit_account.php?mode=account">
               <h5>{lang code='account_settings'}</h5>
             </a>
           </li>
@@ -200,23 +200,23 @@
 
 
           <li class="{if $mode =='block_users'}active {/if}">
-            <a href="{$baseurl}/edit_account.php?mode=block_users">
+            <a href="/edit_account.php?mode=block_users">
               <h5>{lang code='block_users'}</h5>
             </a>
           </li>
           <li class="{if $mode =='change_password'}active {/if}">
-           <a href="{$baseurl}/edit_account.php?mode=change_password">
+           <a href="/edit_account.php?mode=change_password">
             <h5>{lang code='user_change_pass'}</h5>
           </a>
 
         </li>
         <li class="{if $mode =='change_email'}active {/if}">
-         <a href="{$baseurl}/edit_account.php?mode=change_email">
+         <a href="/edit_account.php?mode=change_email">
           <h5>{lang code='user_change_email'}</h5>
         </a>
       </li>
       <li class="{if $mode =='subs'}active {/if}">
-        <a href="{$baseurl}/edit_account.php?mode=subscriptions">
+        <a href="/edit_account.php?mode=subscriptions">
           <h5>{lang code='com_manage_subs'}</h5>
         </a>
       </li>
@@ -369,8 +369,8 @@
         window.uploader = uploader;
         uploader.init();
         uploader.bind("FilesAdded", function(up, uploadedFiles){
-          $("#coverPhoto").attr("src", "{$baseurl}/images/loading.png");
-          console.log("{$baseurl}/images/loading.png");
+          $("#coverPhoto").attr("src", "/images/loading.png");
+          console.log("/images/loading.png");
           up.start();
         });
         uploader.bind('UploadComplete', function(plupload, files, response){

@@ -13,7 +13,7 @@
                             <img src="{$cbgroup->get_group_thumb($group)}" width="50" height="50"/>
                         </div>
                         <div class="col-md-9">
-                            <a href="{$baseurl}/view_group.php?url={$group.group_url}" target="_blank"> {display_clean($group.group_name)}
+                            <a href="/view_group.php?url={$group.group_url}" target="_blank"> {display_clean($group.group_name)}
                             </a>
                             <div class="labels">
                                 {if $group.featured=='yes'}<span class="label label-primary">Featured</span>{/if}
@@ -50,7 +50,7 @@
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="?activate={$group.group_id}">{lang code='activate'}</a></li>
 					{/if}
 
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="{$baseurl}/manage_groups.php?mode=manage_videos&gid={$group.group_id}">Manage</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="/manage_groups.php?mode=manage_videos&gid={$group.group_id}">Manage</a></li>
 
                     <li class="divider"></li>
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="?gid_delete={$group.group_id}">{lang code='delete'}</a></li>
@@ -75,7 +75,7 @@
                             <img src="{$cbgroup->get_group_thumb($groups)}" width="50" height="50"/>
                         </div>
                         <div class="col-md-9">
-                            <a href="{$baseurl}/view_group.php?url={$group.group_url}" target="_blank"> {display_clean($group.group_name)}
+                            <a href="/view_group.php?url={$group.group_url}" target="_blank"> {display_clean($group.group_name)}
                             </a>
                             <div class="labels">
                                 {if $group.featured=='yes'}<span class="label label-primary">Featured</span>{/if}

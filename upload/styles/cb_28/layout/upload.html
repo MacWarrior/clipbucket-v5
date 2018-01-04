@@ -80,7 +80,7 @@
 			if('{$uploaderDetails.uploadScriptPath}'!=''){
 			var uploadurl = '{$uploaderDetails.uploadScriptPath}';
 			}else{
-			var uploadurl = '{$baseurl}/actions/file_uploader.php';    
+			var uploadurl = '/actions/file_uploader.php';
 			}
 			//alert(uploadurl);
 			
@@ -365,7 +365,7 @@
 					        	}
 								setTimeout(function(){
 									$("#uploadMessage").addClass("hidden");
-									window.location = "{$baseurl}/manage_videos.php";
+									window.location = "/manage_videos.php";
 								}, 3000);
 							}).fail(function(err){
 								console.log(err);

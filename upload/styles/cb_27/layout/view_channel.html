@@ -166,7 +166,7 @@ $('#cover_info').show();
       window.uploader = uploader;
       uploader.init();
       uploader.bind("FilesAdded", function(up, uploadedFiles){
-        $("#coverConainer").css("background", "url({$baseurl}/images/loading.png) center #000000");
+        $("#coverConainer").css("background", "url(/images/loading.png) center #000000");
         up.start();
       });
       uploader.bind('UploadComplete', function(plupload, files, response){
@@ -208,7 +208,7 @@ $('#cover_info').show();
         }
         $.ajax({
           type: "POST",
-          url: "{$baseurl}/actions/vote_channel.php",
+          url: "/actions/vote_channel.php",
           data: { vote: vote, channelId : channelId}
         }).success(function(data){
           $("#likes").text(likes);

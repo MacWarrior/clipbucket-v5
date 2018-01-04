@@ -39,7 +39,7 @@
 
 						<input id="login_btn" type="submit" name="login" value="{lang code='login'}" class="btn btn-primary btn-lg btn-block">
 
-						<a href="{$baseurl}/forgot.php?mode=recover_username">{lang code='user_forgot_username'}</a> - <a href="{$baseurl}/forgot.php">{lang code='user_forgot_message'}</a>
+						<a href="/forgot.php?mode=recover_username">{lang code='user_forgot_username'}</a> - <a href="/forgot.php">{lang code='user_forgot_message'}</a>
 						<input type="hidden" name="login" value="login"></input>
 						{if function_exists('show_all_btns')} 
 						<div class="clearfix social-links">
@@ -58,7 +58,7 @@
 					{if $allow_registeration}
 						{$allow_registeration}
 					{else}
-					<form name="signup_form" id="signup_form" method="post" action="{$baseurl}/signup.php" class="user-form custom-elements">
+					<form name="signup_form" id="signup_form" method="post" action="/signup.php" class="user-form custom-elements">
 						<h2>{lang code='signup'}!</h2>
 						{foreach from=$required_fields item=field}
 							{if $field.type!='checkbox' && $field.type!='radiobutton'}

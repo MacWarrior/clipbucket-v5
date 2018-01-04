@@ -1,11 +1,11 @@
 <div class="heading">
   <h2>Showing <b>{$total_logs}</b> log entries {if $smarty.get.type}for<b> {$smarty.get.type|ucfirst}</b> action{/if}</h2>
   <div class="btn-group-xs text-center" role="group" aria-label="...">
-  <a href="{$baseurl}/admin_area/action_logs.php?show=all"><button type="button" class="btn btn-primary">All</button></a>
-  <a href="{$baseurl}/admin_area/action_logs.php?type=login"><button type="button" class="btn btn-primary">Login Only</button>
-  <a href="{$baseurl}/admin_area/action_logs.php?type=signup"><button type="button" class="btn btn-primary">Signup Only</button></a>
-  <a href="{$baseurl}/admin_area/action_logs.php?type=upload_video"><button type="button" class="btn btn-primary">Uploads Only</button></a>
-  <a href="{$baseurl}/admin_area/action_logs.php?clean=all"><button type="button" class="btn btn-primary">Clean All</button></a>
+  <a href="/admin_area/action_logs.php?show=all"><button type="button" class="btn btn-primary">All</button></a>
+  <a href="/admin_area/action_logs.php?type=login"><button type="button" class="btn btn-primary">Login Only</button>
+  <a href="/admin_area/action_logs.php?type=signup"><button type="button" class="btn btn-primary">Signup Only</button></a>
+  <a href="/admin_area/action_logs.php?type=upload_video"><button type="button" class="btn btn-primary">Uploads Only</button></a>
+  <a href="/admin_area/action_logs.php?clean=all"><button type="button" class="btn btn-primary">Clean All</button></a>
 </div>
 </div>
 <table class="table table-bordered table-striped">
@@ -80,9 +80,9 @@
   {$limit = $smarty.get.limit}
 {/if}
 {if $type != ''}
-    <a href="{$baseurl}/admin_area/action_logs.php?type={$type}&page={$nextPage}"><button class="col-md-5 btn btn-primary" id="fetch_more_logs" loadHit="1" loadType="{$type}" {if $total_logs < 1}disabled="disabled"{/if}>{if $total_logs < 1}End of results{else}Load More{/if}</button></a>
+    <a href="/admin_area/action_logs.php?type={$type}&page={$nextPage}"><button class="col-md-5 btn btn-primary" id="fetch_more_logs" loadHit="1" loadType="{$type}" {if $total_logs < 1}disabled="disabled"{/if}>{if $total_logs < 1}End of results{else}Load More{/if}</button></a>
 {else}
-  <a href="{$baseurl}/admin_area/action_logs.php?page={$nextPage}{if $limit > 1}&limit={$limit}{/if}"><button class="col-md-5 btn btn-primary" id="fetch_more_logs" loadHit="1" loadType="{$type}" {if $total_logs < 1}disabled="disabled"{/if}>{if $total_logs < 1}End of results{else}Load More{/if}</button></a>
+  <a href="/admin_area/action_logs.php?page={$nextPage}{if $limit > 1}&limit={$limit}{/if}"><button class="col-md-5 btn btn-primary" id="fetch_more_logs" loadHit="1" loadType="{$type}" {if $total_logs < 1}disabled="disabled"{/if}>{if $total_logs < 1}End of results{else}Load More{/if}</button></a>
 {/if}
 
 <style type="text/css">

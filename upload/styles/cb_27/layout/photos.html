@@ -97,7 +97,7 @@
                     </button>
                     <ul role="menu" class="dropdown-menu pull-right">
                         {foreach from=$collections item=collection}
-                        <li><a href="{$baseurl}/view_collection.php?cid={$collection.collection_id}&type={$collection.type}" title="{display_clean($collection.collection_name)}">{display_clean($collection.collection_name)}</a></li>
+                        <li><a href="/view_collection.php?cid={$collection.collection_id}&type={$collection.type}" title="{display_clean($collection.collection_name)}">{display_clean($collection.collection_name)}</a></li>
                         {foreachelse}
                         <li><a href="#">{lang code="No Collection Found"}</a></li>
                         {/foreach}

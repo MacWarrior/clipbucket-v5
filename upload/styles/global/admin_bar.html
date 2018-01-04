@@ -69,13 +69,13 @@ $(document).ready(function(){
           	<a href="javascript:void(0);">{$name}</a>
             <ul class="CBadminBarSubMenuWrapper" id="{$name}">
             {foreach from=$menu key=sub_menu item=sub_link}        	
-                	<li class="CBadminBarSubMenu"><a target="_blank" href="{$baseurl}/admin_area/{$sub_link}">{$sub_menu}</a></li>                           	
+                	<li class="CBadminBarSubMenu"><a target="_blank" href="/admin_area/{$sub_link}">{$sub_menu}</a></li>
             {/foreach}
             </ul>
           </li>
     {/foreach}
  	{if $userquery->is_admin_logged_as_user()}   
-    	<li class="CBadminBarHeading" style="float:right;"><a href="{$baseurl}/admin_area/login_as_user.php?revert=yes">{lang code='revert_back_to_admin'}</a></li>
+    	<li class="CBadminBarHeading" style="float:right;"><a href="/admin_area/login_as_user.php?revert=yes">{lang code='revert_back_to_admin'}</a></li>
     {/if}
     <li id="CBadminBarToggle" class="CBadminBarHeading" style="float:right;"><a href="#">Hide Menu</a></li>
     </ul>      

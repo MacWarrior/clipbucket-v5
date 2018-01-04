@@ -397,7 +397,7 @@
             console.log('value==>'+value);
             console.log('id==>'+id);
             $.ajax({
-                url: "{$baseurl}/actions/update_phrase.php",
+                url: "/actions/update_phrase.php",
                 type: "post",
                 data: { pk: pk, value: value},
                 success : function()

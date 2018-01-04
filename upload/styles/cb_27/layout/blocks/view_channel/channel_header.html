@@ -10,14 +10,14 @@
     {if $user.userid != userid()}
 
         {if $friend_status == "yes" && userid()}
-        <a href="{$baseurl}/manage_contacts.php?mode=delete&userid={$u.userid}" class="btn btn-danger btn-sm new1">
+        <a href="/manage_contacts.php?mode=delete&userid={$u.userid}" class="btn btn-danger btn-sm new1">
            <i class="glyphicon glyphicon-ok white"></i> 
            {lang code="Unfriend"}
         </a>
 
         {elseif $friend_status == "no"}
 
-        <a href="{$baseurl}/manage_contacts.php?mode=requests&confirm={$u.userid}" class="btn btn-primary btn-sm new1">
+        <a href="/manage_contacts.php?mode=requests&confirm={$u.userid}" class="btn btn-primary btn-sm new1">
            <i class="glyphicon glyphicon-ok white"></i> 
            {lang code="Accept Request"}
         </a>
@@ -31,7 +31,7 @@
        </a>
     {/if}
     {if $user.userid != userid()}
-        <a href="{$baseurl}/private_message.php?mode=new_msg&to={display_clean($user.username)}" class="btn btn-primary btn-sm new1">
+        <a href="/private_message.php?mode=new_msg&to={display_clean($user.username)}" class="btn btn-primary btn-sm new1">
             <i class="glyphicon glyphicon-envelope white"></i> {lang code="Send Message"}
         </a>
 

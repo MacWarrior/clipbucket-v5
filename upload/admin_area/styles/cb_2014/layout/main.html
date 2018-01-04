@@ -410,25 +410,25 @@
 								<div class="radio">
 									<label>
 										<input type="radio" name="seo_vido_url" value="0" id="seo_vido_url_0" {if !$row.seo_vido_url || $row.seo_vido_url==0}checked{/if} />
-										{$baseurl}/video/ABCDXYZ/video-title
+										/video/ABCDXYZ/video-title
 									</label>
 								</div>
 								<div class="radio">
 									<label>
 										<input type="radio" name="seo_vido_url" value="1" id="seo_vido_url_1" {if $row.seo_vido_url==1}checked{/if}/>
-										{$baseurl}/video-title-v123
+										/video-title-v123
 									</label>
 								</div>
 								<div class="radio">
 									<label>
 										<input type="radio" name="seo_vido_url" value="2" id="seo_vido_url_2" {if $row.seo_vido_url==2}checked{/if}/>
-										{$baseurl}/video/123/video-title
+										/video/123/video-title
 									</label>
 								</div>
 								<div class="radio">
 									<label>
 										<input type="radio" name="seo_vido_url" value="3" id="seo_vido_url_3" {if $row.seo_vido_url==3}checked{/if}/>
-										{$baseurl}/video/123_video-title
+										/video/123_video-title
 									</label>
 								</div>
 							</div>
@@ -610,7 +610,7 @@
 				</div>
 
 				<div class="col-md-4">
-					<label for="i_magick">Imagick Path</label>
+					<label for="i_magick">Imagick Path <i>(Not used anymore, will be deleted soon)</i></label>
 					<input class="form-control" name="i_magick" id="i_magick" value="{$row.i_magick}" size="45"/>
 
 				</div>

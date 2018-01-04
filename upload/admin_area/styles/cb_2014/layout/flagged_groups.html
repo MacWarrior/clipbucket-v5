@@ -33,7 +33,7 @@
                         <img src="{$cbgroup->get_group_thumb($groups[gp_list])}" width="50" height="50"/>
                                 </div>
                         <div class="col-md-9">
-                            <a href="{$baseurl}/view_group.php?url={$groups[gp_list].group_url}" target="_blank"> {display_clean($groups[gp_list].group_name)}
+                            <a href="/view_group.php?url={$groups[gp_list].group_url}" target="_blank"> {display_clean($groups[gp_list].group_name)}
                         </a>
                             <div class="labels">
                                 <span class="label">{if $groups[gp_list].group_privacy =="0"}Public{elseif $groups[gp_list].group_privacy =="1"}Private{else}Invited{/if}</span>

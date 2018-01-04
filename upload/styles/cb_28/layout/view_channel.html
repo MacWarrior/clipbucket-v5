@@ -303,7 +303,7 @@
 		}
 		$.ajax({
 		  type: "POST",
-		  url: "{$baseurl}/actions/vote_channel.php",
+		  url: "/actions/vote_channel.php",
 		  data: { vote: vote, channelId : channelId}
 		}).success(function(data){
 		  $("#likes").text(likes);
