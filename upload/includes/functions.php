@@ -3534,11 +3534,12 @@
 	* @param : { string } { $path } { path to ImageMagick }
 	* @return : { string } { version if found, else false }
 	*/
-	function check_imagick($path) {	
-		$path = get_binaries($path);
-		$result = shell_output($path." --version");
-		$result = explode(" ", $result);
-		return $result[2];
+	function check_imagick($path) {
+		$version = Imagick::getVersion();
+		preg_match('/ImageMagick ([0-9]+\.[0-9]+\.[0-9]+)/', $version['versionString'], $matches);
+		if( isset($matches[1]) )
+			return $matches[1];
+		return false;
 	}
 
 	/**
