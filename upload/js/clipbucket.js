@@ -490,7 +490,7 @@
 
 		this.upload_file = function(Val,file_name){
 			var self = this;
-			var page =this.'/actions/file_downloader.php';
+			var page ='/actions/file_downloader.php';
 			$.post(page, { 	
 				file_url : Val,
 				file_name : file_name

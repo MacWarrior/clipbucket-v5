@@ -4,7 +4,7 @@
 		// bootstrapping
 		this.baseurl = baseurl;
 		this.imageurl = "";
-		this.page = this.'/ajax.php';
+		this.page = '/ajax.php';
 		this.loading_img = "<img style='vertical-align:middle' src='" + this.imageurl + "/ajax-loader.gif'>";
 		this.loading = this.loading_img+" Loading...";
 		this.download = 0;
@@ -12,8 +12,8 @@
 		this.cur_speed = 0;
 		
 		this.status_refesh = 1 //in seconds
-		this.result_page = this.'/actions/file_results.php';
-		this.download_page = this.'/actions/file_downloader.php';
+		this.result_page = '/actions/file_results.php';
+		this.download_page = '/actions/file_downloader.php';
 		this.count = 0;
 
 		this.hasLoaded = false;
@@ -489,7 +489,7 @@
 
 		this.upload_file = function(Val,file_name){
 			var self = this;
-			var page =this.'/actions/file_downloader.php';
+			var page = '/actions/file_downloader.php';
 			$.post(page, { 	
 				file_url : Val,
 				file_name : file_name
@@ -1582,7 +1582,7 @@
 		 */
 		this.rate = function(id,rating,type){
 			var self = this;
-			var page = this.'/ajax.php';
+			var page = '/ajax.php';
 			$.post(page, 
 			{ 	
 				mode : 'rating',
