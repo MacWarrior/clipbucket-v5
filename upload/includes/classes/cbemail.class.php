@@ -346,7 +346,7 @@ class CBEmail
 				 '{email}'		=> $user['email'],
 				 '{datejoined}'		=> $user['doj'],
 				 '{avcode}'		=> $user['avcode'],
-				 '{avlink}'		=> BASEURL.'/activation.php?av_username='.$user['username'].'&avcode='.$user['avcode'],
+				 '{avlink}'		=> '/activation.php?av_username='.$user['username'].'&avcode='.$user['avcode'],
 				);
 				$subj = $cbemail->replace($email['email_subj'],$var);
 				$msg = nl2br($cbemail->replace($email['email_msg'],$var));
@@ -392,8 +392,8 @@ class CBEmail
 				('{sender}'	=> user_name(),
 				 '{website_title}'=> TITLE,
 				 '{reciever}'	=> $receiver_name[0]['username'],
-				 '{sender_link}'=>  BASEURL.'/user/'.$username,
-				 '{request_link}'=> BASEURL.'/manage_contacts.php?mode=manage',
+				 '{sender_link}'=>  '/user/'.$username,
+				 '{request_link}'=> '/manage_contacts.php?mode=manage',
 				);
 		$templates = $this->get_templates();
 		$subj = $this->replace($templates[10]['email_template_subject'],$var);
@@ -401,5 +401,3 @@ class CBEmail
 		cbmail(array('from_name'=>TITLE, 'to'=>$email,'from'=>WEBSITE_EMAIL,'subject'=>$subj,'content'=>$msg));
 	}
 }
-
-?>

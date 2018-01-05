@@ -9,21 +9,21 @@
 	include('plugins.php');
 
 	define('TEMPLATEDIR',BASEDIR.'/'.TEMPLATEFOLDER.'/'.$Cbucket->template);
-	define('TEMPLATEURL',BASEURL.'/'.TEMPLATEFOLDER.'/'.$Cbucket->template);
+	define('TEMPLATEURL','/'.TEMPLATEFOLDER.'/'.$Cbucket->template);
 	define('LAYOUT',TEMPLATEDIR.'/layout');
 	define('ADMINLAYOUT',BASEDIR.'/'.ADMINDIR.'/'.TEMPLATEFOLDER.'/'.$Cbucket->template.'/layout');
 	define("COVERS_DIR", BASEDIR . "/files/cover_photos");
 	Assign('baseurl',BASEURL);
 	Assign('imageurl',TEMPLATEURL.'/images');
-	Assign('admimageurl',BASEURL.'/'.ADMINDIR.'/'.TEMPLATEFOLDER.'/'.$Cbucket->template.'/images');
+	Assign('admimageurl','/'.ADMINDIR.'/'.TEMPLATEFOLDER.'/'.$Cbucket->template.'/images');
 	Assign('layout',TEMPLATEURL.'/layout');
 	Assign('theme',TEMPLATEURL.'/theme');
-	Assign('admtheme',BASEURL.'/'.ADMINDIR.'/'.TEMPLATEFOLDER.'/'.$Cbucket->template.'/theme');
+	Assign('admtheme','/'.ADMINDIR.'/'.TEMPLATEFOLDER.'/'.$Cbucket->template.'/theme');
 	Assign('template_dir',TEMPLATEDIR);
 	Assign('style_dir',LAYOUT);
 	Assign('covers_dir', COVERS_DIR);
 
-	assign('admin_baseurl',BASEURL.'/'.ADMINDIR);
+	assign('admin_baseurl','/'.ADMINDIR);
 
 	//Assigning JS Files
 	Assign('jsArray',$Cbucket->JSArray);

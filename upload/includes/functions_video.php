@@ -351,7 +351,7 @@
         {
             return TEMPLATEURL.'/images/thumbs/processing.jpg';
         }else
-            return BASEURL.'/files/thumbs/processing.jpg';
+            return '/files/thumbs/processing.jpg';
     }
 
     /**
@@ -383,7 +383,7 @@
                 #check for videoid
                 if(empty($vdetails['videoid']) && empty($vdetails['vid']) && empty($vdetails['videokey']))
                 {
-                    return BASEURL;
+                    return '/';
                 }else{
                     if(!empty($vdetails['videoid']))
                         $vid = $vdetails['videoid'];
@@ -392,14 +392,14 @@
                     elseif(!empty($vdetails['videokey']))
                         $vid = $vdetails['videokey'];
                     else
-                        return BASEURL;
+                        return '/';
                 }
             }
         }else{
             if(is_numeric($vdetails))
                 $vid = $vdetails;
             else
-                return BASEURL;
+                return '/';
         }
         #checking if we have vid , so fetch the details
         if(!empty($vid))
@@ -436,31 +436,31 @@
             switch(config('seo_vido_url'))
             {
                 default:
-                    $link = BASEURL.'/video/'.$vdetails['videokey'].'/'.SEO(clean(str_replace(' ','-',$vdetails['title']))).$plist;
+                    $link = '/video/'.$vdetails['videokey'].'/'.SEO(clean(str_replace(' ','-',$vdetails['title']))).$plist;
                     break;
 
                 case 1:
-                    $link = BASEURL.'/'.SEO(clean(str_replace(' ','-',$vdetails['title']))).'_v'.$vdetails['videoid'].$plist;
+                    $link = '/'.SEO(clean(str_replace(' ','-',$vdetails['title']))).'_v'.$vdetails['videoid'].$plist;
                     break;
 
                 case 2:
-                    $link = BASEURL.'/video/'.$vdetails['videoid'].'/'.SEO(clean(str_replace(' ','-',$vdetails['title']))).$plist;
+                    $link = '/video/'.$vdetails['videoid'].'/'.SEO(clean(str_replace(' ','-',$vdetails['title']))).$plist;
                     break;
 
                 case 3:
-                    $link = BASEURL.'/video/'.$vdetails['videoid'].'_'.SEO(clean(str_replace(' ','-',$vdetails['title']))).$plist;
+                    $link = '/video/'.$vdetails['videoid'].'_'.SEO(clean(str_replace(' ','-',$vdetails['title']))).$plist;
                     break;
             }
 
         }else{
             if($vdetails['playlist_id'])
                 $plist = '&play_list='.$vdetails['playlist_id'];
-            $link = BASEURL.'/watch_video.php?v='.$vdetails['videokey'].$plist;
+            $link = '/watch_video.php?v='.$vdetails['videokey'].$plist;
         }
         if(!$type || $type=='link')
             return $link;
         elseif($type=='download')
-            return BASEURL.'/download.php?v='.$vdetails['videokey'];
+            return '/download.php?v='.$vdetails['videokey'];
     }
 
     //Function That will use in creating SEO urls
@@ -1776,7 +1776,7 @@
         if (!empty($errs)) {
             if (has_access("admin_access")) {
                 foreach ($errs as $name => $issue) {
-                    e(strtoupper("[Admin only message] <strong>".$name."</strong>")." couldn't be found or isn't installed properly hence video might not work, check <a href=".BASEURL."/admin_area/cb_mod_check.php>Server Modules</a> page to know more");
+                    e(strtoupper("[Admin only message] <strong>".$name."</strong>")." couldn't be found or isn't installed properly hence video might not work, check <a href=/admin_area/cb_mod_check.php>Server Modules</a> page to know more");
                 }
             } else {
                 e("Video upload might not work properly, kindly contact website admin");

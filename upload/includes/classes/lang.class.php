@@ -306,7 +306,7 @@ class language
 	*/
 	function export_lang_Json($id){
 		$lang_details = $this->get_lang($id);
-		$file = BASEURL."/includes/langs/".$lang_details['language_code']."."."lang";
+		$file = "/includes/langs/".$lang_details['language_code']."."."lang";
 		if($lang_details)
 		{
 	header('Content-Description: File Transfer');

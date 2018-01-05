@@ -126,10 +126,10 @@ if(!function_exists('cb_player'))
 	 */
 	function cbplayer_embed_src($vdetails)
 	{	
-		$config  = urlencode(BASEURL."/player/".CB_PLAYER."/embed_player.php?vid="
+		$config  = urlencode("/player/".CB_PLAYER."/embed_player.php?vid="
 		.$vdetails['videoid']."&autoplay=".config('autoplay_embed'));
 		
-		$embed_src = BASEURL.'/player/'.CB_PLAYER.'/player.swf?config='.$config;
+		$embed_src = '/player/'.CB_PLAYER.'/player.swf?config='.$config;
 
 		
 		if(function_exists('get_refer_url_from_embed_code'))
@@ -154,9 +154,9 @@ if(!function_exists('cb_player'))
 	function cb_facebook_embed($params)
 	{
 		$vdetails = $params['video'];
-		$config  = urlencode(BASEURL."/player/".CB_PLAYER."/embed_player.php?vid="
+		$config  = urlencode("/player/".CB_PLAYER."/embed_player.php?vid="
 		.$vdetails['videoid']."&autoplay=".config('autoplay_embed'));
-		$embed_src = BASEURL.'/player/'.CB_PLAYER.'/player.swf?config='.$config;	
+		$embed_src = '/player/'.CB_PLAYER.'/player.swf?config='.$config;
 		return $embed_src;
 	}
 		

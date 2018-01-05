@@ -53,7 +53,7 @@ $player = 'embedCode';
 
 //Setting Basic Player
 if($player == 'clipbucketblue.swf' || $player == 'youtube.swf' || $player == 'youtube_glossy.swf'){
-	$swfObj->playerFile = BASEURL.'/player/'.FLVPLAYER;
+	$swfObj->playerFile = '/player/'.FLVPLAYER;
 	$swfObj->FlashObj();
 	//Writing Param
 	$swfObj->addParam('allowfullscreen','true');
@@ -64,7 +64,7 @@ if($player == 'clipbucketblue.swf' || $player == 'youtube.swf' || $player == 'yo
 	if(!empty($flv_url) && GetExt($flv_url)=='flv'){
 	$swfObj->addVar('file_url',urldecode($flv_url));
 	}else{
-	$swfObj->addVar('file_url',BASEURL.'/files/videos/'.$flv);
+	$swfObj->addVar('file_url','/files/videos/'.$flv);
 	}
 	$swfObj->CreatePlayer();
 }

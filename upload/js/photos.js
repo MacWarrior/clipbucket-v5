@@ -57,7 +57,7 @@ $(document).on("click", "#mainNextBtn,#mainPrevBtn", function () {
 	}
 
 	$.ajax({
-		url: baseurl+'/ajax.php'+'?moto=ajax', 
+		url: '/ajax.php'+'?moto=ajax',
 		type: "post",
 		data: data,
 		dataType: 'json',
@@ -69,7 +69,7 @@ $(document).on("click", "#mainNextBtn,#mainPrevBtn", function () {
 			$('.view-photo').prop("disabled",true);
 		},
 		success:function(xhr) {	
-			var getUrl = baseurl + "/" + buildPhotoUrl(xhr);
+			var getUrl = "/" + buildPhotoUrl(xhr);
 			console.log(getUrl);
 			$.get( getUrl, function( data ) {
 			  	$('#main').html(data);
@@ -79,7 +79,7 @@ $(document).on("click", "#mainNextBtn,#mainPrevBtn", function () {
 				//d = xhr.photo[0];
 				$('#gallery-exd').attr("src",key_globel);	
 				$("#gallery").attr("src",key_globel);
-				window.history.pushState("", "", baseurl+"/"+buildPhotoUrl(xhr,"aho"));
+				window.history.pushState("", "", "/"+buildPhotoUrl(xhr,"aho"));
 				$('.dropdown-toggle').dropdown();
 				$('.pic-glyp').remove();
 				galleryDimension();
@@ -109,7 +109,7 @@ $(document).on("click", ".en-large", function () {
 	}
 
 	$.ajax({
-		url: baseurl+'/ajax.php',
+		url: '/ajax.php',
 		type: "post",
 		data: data,
 		dataType: 'json',

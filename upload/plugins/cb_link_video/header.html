@@ -20,7 +20,7 @@ function check_file_url(objid)
 		return false;
 	}
 	
-	$.post(baseurl+"/actions/embed_form_verifier.php", 
+	$.post("/actions/embed_form_verifier.php",
 	{ 	
 		'mode' : 'remote_play',
 		'remote_play_url' :  $('#remote_play_url').val(),

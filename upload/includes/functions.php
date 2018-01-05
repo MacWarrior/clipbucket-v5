@@ -456,31 +456,31 @@
 		$grp = $params['details'];
 		$url = $grp['group_url'];
 		if($params['type']=='' || $params['type']=='group') {
-			if(SEO==yes) {
-				return BASEURL.'/group/'.$url;
+			if(SEO=='yes') {
+				return '/group/'.$url;
 			}
-			return BASEURL.'/view_group.php?url='.$url;
+			return '/view_group.php?url='.$url;
 		}
 		
 		if($params['type']=='view_members') {
-			return BASEURL.'/view_group_members.php?url='.$url;
+			return '/view_group_members.php?url='.$url;
 		}
 		
 		if($params['type']=='view_videos') {
-			return BASEURL.'/view_group_videos.php?url='.$url;
+			return '/view_group_videos.php?url='.$url;
 		}
 		
 		if($params['type'] == 'view_topics') {
 			if(SEO == "yes") {
-				return BASEURL."/group/".$url."?mode=view_topics";
+				return "/group/".$url."?mode=view_topics";
 			}
-			return BASEURL."/view_group.php?url=".$url."&mode=view_topics";
+			return "/view_group.php?url=".$url."&mode=view_topics";
 		}
 		if($params['type'] == 'view_report_form') {
 			if(SEO == "yes") {
-				return BASEURL."/group/".$url."?mode=view_report_form";
+				return "/group/".$url."?mode=view_report_form";
 			}
-			return BASEURL."/view_group.php?url=".$url."&mode=view_report_form";
+			return "/view_group.php?url=".$url."&mode=view_report_form";
 		}
 	}
 
@@ -1769,10 +1769,10 @@
 			return sort_link($params['sort'],'time',$params['type']);
 		}
 		if($name=='tag') {
-			return BASEURL.'/search_result.php?query='.urlencode($params['tag']).'&type='.$params['type'];
+			return '/search_result.php?query='.urlencode($params['tag']).'&type='.$params['type'];
 		}
 		if($name=='category_search') {
-			return BASEURL.'/search_result.php?category[]='.$params['category'].'&type='.$params['type'];
+			return '/search_result.php?category[]='.$params['category'].'&type='.$params['type'];
 		}
 		
 		if (defined('SEO') && SEO !='yes') {
@@ -1780,7 +1780,7 @@
 			if($matches) {
 				$link = $ClipBucket->links[$name][0];
 			} else {
-				$link = BASEURL.'/'.$ClipBucket->links[$name][0];
+				$link = '/'.$ClipBucket->links[$name][0];
 			}
 		} else {
 			if (isset($ClipBucket->links[$name])) {
@@ -1788,7 +1788,7 @@
 				if($matches) {
 					$link = $ClipBucket->links[$name][1];
 				} else {
-					$link = BASEURL.'/'.$ClipBucket->links[$name][1];
+					$link = '/'.$ClipBucket->links[$name][1];
 				}
 			} else {
 				$link = false;
@@ -2565,7 +2565,7 @@
 			$flag = '';
 			$result = $result[0];
 			if(SHOW_COUNTRY_FLAG) {
-				$flag = '<img src="'.BASEURL.'/images/icons/country/'.strtolower($result['iso2']).'.png" alt="" border="0">&nbsp;';
+				$flag = '<img src="/images/icons/country/'.strtolower($result['iso2']).'.png" alt="" border="0">&nbsp;';
 			}
 			return $flag.$result['name_en'];
 		}
@@ -2677,18 +2677,18 @@
             case 'videos':
 			case 'v':
 				if(SEO=='yes') {
-					return BASEURL.'/videos/'.$data['category_id'].'/'.SEO($data['category_name']).'/'.$_GET['sort'].'/'.$_GET['time'].'/';
+					return '/videos/'.$data['category_id'].'/'.SEO($data['category_name']).'/'.$_GET['sort'].'/'.$_GET['time'].'/';
 				}
-				return BASEURL.'/videos.php?cat='.$data['category_id'].'&sort='.$_GET['sort'].'&time='.$_GET['time'].'&seo_cat_name='.$_GET['seo_cat_name'];
+				return '/videos.php?cat='.$data['category_id'].'&sort='.$_GET['sort'].'&time='.$_GET['time'].'&seo_cat_name='.$_GET['seo_cat_name'];
 			
 			case 'channels':
             case 'channel':
             case 'c':
             case 'user':
 				if(SEO=='yes') {
-					return BASEURL.'/channels/'.$data['category_id'].'/'.SEO($data['category_name']).'/'.$_GET['sort'].'/'.$_GET['time'].'/';
+					return '/channels/'.$data['category_id'].'/'.SEO($data['category_name']).'/'.$_GET['sort'].'/'.$_GET['time'].'/';
 				}
-				return BASEURL.'/channels.php?cat='.$data['category_id'].'&sort='.$_GET['sort'].'&time='.$_GET['time'].'&seo_cat_name='.$_GET['seo_cat_name'];
+				return '/channels.php?cat='.$data['category_id'].'&sort='.$_GET['sort'].'&time='.$_GET['time'].'&seo_cat_name='.$_GET['seo_cat_name'];
 
 			default:
 				if(THIS_PAGE=='photos') {
@@ -2709,9 +2709,9 @@
 				}
 								
 				if(SEO=='yes') {
-					return BASEURL.'/'.$type.'/'.$data['category_id'].'/'.SEO($data['category_name']).'/'.$_GET['sort'].'/'.$_GET['time'].'/';
+					return '/'.$type.'/'.$data['category_id'].'/'.SEO($data['category_name']).'/'.$_GET['sort'].'/'.$_GET['time'].'/';
 				}
-				return BASEURL.'/'.$type.'.php?cat='.$data['category_id'].'&sort='.$_GET['sort'].'&time='.$_GET['time'].'&seo_cat_name='.$_GET['seo_cat_name'];
+				return '/'.$type.'.php?cat='.$data['category_id'].'&sort='.$_GET['sort'].'&time='.$_GET['time'].'&seo_cat_name='.$_GET['seo_cat_name'];
 		}
 	}
 
@@ -2757,9 +2757,9 @@
 				}
 					
 				if (SEO=='yes') {
-					return BASEURL.'/videos/'.$_GET['cat'].'/'.$_GET['seo_cat_name'].'/'.$sorting.'/'.$time.'/'.$_GET['page'];
+					return '/videos/'.$_GET['cat'].'/'.$_GET['seo_cat_name'].'/'.$sorting.'/'.$time.'/'.$_GET['page'];
 				}
-				return BASEURL.'/videos.php?cat='.$_GET['cat'].'&sort='.$sorting.'&time='.$time.'&page='.$_GET['page'].'&seo_cat_name='.$_GET['seo_cat_name'];
+				return '/videos.php?cat='.$_GET['cat'].'&sort='.$sorting.'&time='.$time.'&page='.$_GET['page'].'&seo_cat_name='.$_GET['seo_cat_name'];
 			}
 			break;
 			
@@ -2789,9 +2789,9 @@
 				}
 					
 				if(SEO=='yes') {
-					return BASEURL.'/channels/'.$_GET['cat'].'/'.$_GET['seo_cat_name'].'/'.$sorting.'/'.$time.'/'.$_GET['page'];
+					return '/channels/'.$_GET['cat'].'/'.$_GET['seo_cat_name'].'/'.$sorting.'/'.$time.'/'.$_GET['page'];
 				}
-				return BASEURL.'/channels.php?cat='.$_GET['cat'].'&sort='.$sorting.'&time='.$time.'&page='.$_GET['page'].'&seo_cat_name='.$_GET['seo_cat_name'];
+				return '/channels.php?cat='.$_GET['cat'].'&sort='.$sorting.'&time='.$time.'&page='.$_GET['page'].'&seo_cat_name='.$_GET['seo_cat_name'];
 			}
 			break;
 			
@@ -2831,9 +2831,9 @@
 				}
 				
 				if(SEO=='yes') {
-					return BASEURL.'/'.$type.'/'.$_GET['cat'].'/'.$_GET['seo_cat_name'].'/'.$sorting.'/'.$time.'/'.$_GET['page'];
+					return '/'.$type.'/'.$_GET['cat'].'/'.$_GET['seo_cat_name'].'/'.$sorting.'/'.$time.'/'.$_GET['page'];
 				}
-				return BASEURL.'/'.$type.'.php?cat='.$_GET['cat'].'&sort='.$sorting.'&time='.$time.'&page='.$_GET['page'].'&seo_cat_name='.$_GET['seo_cat_name'];
+				return '/'.$type.'.php?cat='.$_GET['cat'].'&sort='.$sorting.'&time='.$time.'&page='.$_GET['page'].'&seo_cat_name='.$_GET['seo_cat_name'];
 			}
 			break;		
 		}
@@ -3938,27 +3938,6 @@
 	}
 
 	/**
-	 * Get baseurl of working ClipBucket
-	 * @return string : { string } { url of website }
-	 * @internal param $ : { none }
-	 */
-	function baseurl() {
-		$protocol = is_ssl() ? 'https://' : 'http://';
-		if(!$sub_dir) {
-			return $base = $protocol.$_SERVER['HTTP_HOST'].untrailingslashit(stripslashes(dirname(($_SERVER['SCRIPT_NAME']))));
-		}
-		return $base = $protocol.$_SERVER['HTTP_HOST'].untrailingslashit(stripslashes(dirname(dirname($_SERVER['SCRIPT_NAME']))));
-	}
-
-	/**
-	* Get baseurl of website
-	* @uses : baseurl()
-	*/
-	function base_url(){
-		return baseurl();
-	}
-
-	/**
 	 * SRC (WordPress)
 	 * Appends a trailing slash.
 	 *
@@ -4196,13 +4175,13 @@
 		$uploaderDetails = array
 		(
 			'uploadSwfPath' => JS_URL.'/uploadify/uploadify.swf',
-			'uploadScriptPath' => BASEURL.'/actions/file_uploader.php',
+			'uploadScriptPath' => '/actions/file_uploader.php',
 		);
 		
 		$photoUploaderDetails = array
 		(
 			'uploadSwfPath' => JS_URL.'/uploadify/uploadify.swf',
-			'uploadScriptPath' => BASEURL.'/actions/photo_uploader.php',
+			'uploadScriptPath' => '/actions/photo_uploader.php',
 		);
 		
 		assign('uploaderDetails',$uploaderDetails);	
@@ -4958,7 +4937,7 @@
 		if ( POST_MAX_SIZE >= 50 && MEMORY_LIMIT >= 128 && UPLOAD_MAX_FILESIZE >= 50 && MAX_EXECUTION_TIME >= 7200 ) {
 			define("SERVER_CONFS", true);
 		} elseif ( POST_MAX_SIZE < 50 || MEMORY_LIMIT < 128 || UPLOAD_MAX_FILESIZE < 50 && MAX_EXECUTION_TIME < 7200 ) {
-			e('You must update <strong>"Server Configurations"</strong>. Click here <a href='.BASEURL.'/admin_area/cb_server_conf_info.php>for details</a>','w');
+			e('You must update <strong>"Server Configurations"</strong>. Click here <a href=/admin_area/cb_server_conf_info.php>for details</a>','w');
 			define("SERVER_CONFS", false);
 		} else {
 			define("SERVER_CONFS", false);

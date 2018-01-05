@@ -77,7 +77,7 @@ if(!function_exists('html5_player'))
             assign('height',$in['height']);
             assign('width',$in['width']);
 
-			$l_details = BASEURL.'/images/icons/country/hp-cb.png';
+			$l_details = '/images/icons/country/hp-cb.png';
 			$l_convert = base64_encode(file_get_contents($l_details));
 			assign('display',$l_convert);
             
@@ -91,8 +91,7 @@ if(!function_exists('html5_player'))
             assign('about',BASEURL);
             $jquery = BASEDIR.'/js/jquery.js';
             assign('jquery',$jquery);
-			
-			
+
             // logo placement
             $pos = config('logo_placement');
 		    switch($pos)
@@ -100,15 +99,12 @@ if(!function_exists('html5_player'))
 				case "tl":
 					$position = array("top"=>'5px',"left"=>'5px',"bottom"=>'',"right"=>'');
 					break;
-
 				case "tr":
 					$position = array("top"=>'5px',"left"=>'',"bottom"=>'',"right"=>'5px');
 					break;
-
 				case "br":
 					$position = array("top"=>'',"left"=>'',"bottom"=>'5px',"right"=>'5px');
 					break;
-
 				case "bl":
 					$position = array("top"=>'',"left"=>'5px',"bottom"=>'5px',"right"=>'');
 					break;
@@ -164,7 +160,6 @@ if(!function_exists('html5_player'))
 			            assign('ms_videos',$video_play);
 
 		            }
-		            
 	            } else {
 		            $json_array = json_encode($video_play);
 		            assign('json_videos',$json_array);
@@ -173,23 +168,20 @@ if(!function_exists('html5_player'))
 	            }
             }
 
-            if ( CB_HTML5_PLAYER_SETTINGS == 'installed' )
+            if( CB_HTML5_PLAYER_SETTINGS == 'installed' )
             {
             	$html5_configs = get_html5_configs();
            		$iv_logo_enable = $html5_configs['iv_logo_enable'];
            		if ($iv_logo_enable == 'yes')
            		{
-           			$ov_details = BASEURL.'/images/icons/country/ov.png';
+           			$ov_details = '/images/icons/country/ov.png';
 				  	$ov_convert = base64_encode(file_get_contents($ov_details));
 				  	assign('ov',$ov_convert);
 				}
            		assign('iv_logo_enbale',$iv_logo_enable);
 			}
-            
-            	      
-		      
+
 			Template(HTML5_PLAYER_DIR.'/html5_player.html',false);
-				
 			return true;
 		}
 	}

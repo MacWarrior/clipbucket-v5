@@ -1241,9 +1241,8 @@ class CBPhotos
 	function watermark_file()
 	{
 		if(file_exists(BASEDIR."/images/photo_watermark.png"))
-			return BASEURL."/images/photo_watermark.png";
-		else
-			return false;		
+			return "/images/photo_watermark.png";
+		return false;
 	}
 
 	/**
@@ -1277,45 +1276,33 @@ class CBPhotos
 		switch($x)
 		{
 			case "center":
-			{
-				$finalxPadding = $w / 2 - $ww / 2;	
-			}
-			break;
-			
+				$finalxPadding = $w / 2 - $ww / 2;
+				break;
+
 			case "left":
 			default:
-			{
 				$finalxPadding = $padding;
-			}
-			break;
+				break;
 			
 			case "right":
-			{
 				$finalxPadding = $w - $ww - $padding;
-			}
-			break;
+				break;
 		}
 		
 		switch($y)
 		{
 			case "top":
 			default:
-			{
-				$finalyPadding = $padding;	
-			}
-			break;
+				$finalyPadding = $padding;
+				break;
 			
 			case "center":
-			{
-				$finalyPadding = $h / 2 - $wh / 2;	
-			}
-			break;
+				$finalyPadding = $h / 2 - $wh / 2;
+				break;
 			
 			case "bottom":
-			{
 				$finalyPadding = $h - $wh - $padding;
-			}
-			break;
+				break;
 		}
 		
 		$values = array($finalxPadding,$finalyPadding);
@@ -2418,25 +2405,25 @@ class CBPhotos
 				case "upload":
 				{
 					if(SEO == "yes")
-						$link = BASEURL."/photo_upload";
+						$link = "/photo_upload";
 					else
-						$link = BASEURL."/photo_upload.php";		
+						$link = "/photo_upload.php";
 				}
 				break;
 				
 				case "upload_more":
 				{
 					if(SEO == "yes")
-						$link = BASEURL."/photo_upload/".$this->encode_key($details['collection_id']);
+						$link = "/photo_upload/".$this->encode_key($details['collection_id']);
 					else
-						$link = BASEURL."/photo_upload.php?collection=".$this->encode_key($details['collection_id']);		
+						$link = "/photo_upload.php?collection=".$this->encode_key($details['collection_id']);
 				}
 				break;
 				
 				case "download_photo":
 				case "download":
 				{
-					return BASEURL."/download_photo.php?download=".$this->encode_key($details['photo_key']);	
+					return "/download_photo.php?download=".$this->encode_key($details['photo_key']);
 				}
 				
 				case "view_item":

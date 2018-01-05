@@ -86,7 +86,7 @@ class MenuHandler
 				$fullURL = $params['link_name'];
 			else
 			{
-				$fullURL = BASEURL."/".$params['link_name'];	
+				$fullURL = "/".$params['link_name'];
 			}
 			
 			$resultArray = array("name"=>$menuName,"link"=>$fullURL,"this"=>strtolower($menuName));

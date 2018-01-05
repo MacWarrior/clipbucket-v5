@@ -33,7 +33,7 @@
 				<div class="navbar-header clearfix">
 					
 					<h1 class="logo">
-						<a href="{$baseurl}">
+						<a href="/">
 							<img src="{$theme}/images/logo.png" alt="cbtune" class="img-responsive">
 							<span>clipbucket</span>
 						</a>
@@ -132,7 +132,7 @@
 										{if has_access('admin_access')}
 										<li class="hidden-xs"><a href="{$admin_baseurl}">{lang code="admin_area"}</a></li>
 										{/if}
-										<li class="hidden-xs"><a href="{link name='my_account' }{userid}">{lang code="my_account"}</a></li>
+										<li class="hidden-xs"><a href="{link name='my_account'}{userid}">{lang code="my_account"}</a></li>
 										<li class="hidden-xs"><a href="{link name='my_videos'}">{lang code="manage_videos"}</a></li>
 										{ANCHOR place="head_audio_dropdown"}
 										<li><a href="{link name='channels'}">{lang code="view_channels"}</a></li>

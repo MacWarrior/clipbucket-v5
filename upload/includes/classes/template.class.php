@@ -215,13 +215,13 @@ class CBTemplate {
 	{
 		$path = TEMPLATEFOLDER.'/'.$template.'/images/preview.';
 		$exts = array('png','jpg','gif');
-		$thumb_path = BASEURL.'/images/icons/no_thumb_template.png';
+		$thumb_path = '/images/icons/no_thumb_template.png';
 		foreach($exts as $ext)
 		{
 			$file = BASEDIR.'/'.$path.$ext;
 			if(file_exists($file))
 			{
-				$thumb_path = BASEURL.'/'.$path.$ext;
+				$thumb_path = '/'.$path.$ext;
 				break;
 			}
 		}

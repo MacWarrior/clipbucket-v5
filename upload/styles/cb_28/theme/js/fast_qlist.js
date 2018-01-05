@@ -38,7 +38,7 @@
 		
 		if (notInList == true)
 		{
-			$('<div style="display:none;" class="qlist_item clearfix" style="background-color:#fff;" id="quicklist_playlist_cont_'+thevid+'"><div class="pl_num"></div><div class="pl_thumb"><a href="'+obj.attr("vlink")+'" ><img src="'+vthumb+'" class="img-responsive" ><img src="'+baseurl+'/styles/cb_28/theme/images/thumb-ratio.png" alt="" class="thumb-ratio"></a><span class="pl_duration">'+vduration+'</span></div><div class="pl_details"><p><a href="'+vlink+'" >tmptitle</a></p></div><button todel="'+thevid+'" class="ql_delete glyphicon glyphicon-trash btn btn-danger btn-sm" title="Remove '+vtitle+' from quicklist" alt="quicklist"></button></div>').appendTo('#my_quicklist');
+			$('<div style="display:none;" class="qlist_item clearfix" style="background-color:#fff;" id="quicklist_playlist_cont_'+thevid+'"><div class="pl_num"></div><div class="pl_thumb"><a href="'+obj.attr("vlink")+'" ><img src="'+vthumb+'" class="img-responsive" ><img src="'+'/styles/cb_28/theme/images/thumb-ratio.png" alt="" class="thumb-ratio"></a><span class="pl_duration">'+vduration+'</span></div><div class="pl_details"><p><a href="'+vlink+'" >tmptitle</a></p></div><button todel="'+thevid+'" class="ql_delete glyphicon glyphicon-trash btn btn-danger btn-sm" title="Remove '+vtitle+' from quicklist" alt="quicklist"></button></div>').appendTo('#my_quicklist');
 			$('#my_quicklist div:last-child div.pl_details p a').text(vtitle);
             $('#my_quicklist div:last-child').fadeIn('slow');
 		}

@@ -164,9 +164,8 @@ class cbpage
 	{
 		//baseurl/page/$id/page_name
 		if(SEO=='yes')
-			return BASEURL.'/page/'.$pdetails['page_id'].'/'.SEO(strtolower($pdetails['page_name']));
-		else
-			return BASEURL.'/view_page.php?pid='.$pdetails['page_id'];
+			return '/page/'.$pdetails['page_id'].'/'.SEO(strtolower($pdetails['page_name']));
+		return '/view_page.php?pid='.$pdetails['page_id'];
 	}
 	
 	/**
@@ -177,8 +176,7 @@ class cbpage
 		$page = $this->get_page($id);
 		return $this->page_link($page);
 	}
-	
-	
+
 	/**
 	 * Function used to activate, deactivate or to delete pages
 	 */

@@ -146,14 +146,14 @@ $('#cover_info').show();
         }
     });
     var extensions = "{$extensions}";
-    var baseurl = '{$baseurl}';
+    var baseurl = '/';
     var channelId = "{$user['userid']}";
     extensions = (extensions.substring(0, extensions.length - 1)) + ",png,jpeg,jpg";
     $.get("{$theme}/js/plupload/js/plupload.full.min.js", function(e){
       var uploader = new plupload.Uploader({
           browse_button: 'changeCover',
           runtimes : 'html5,flash,silverlight,html4',
-          url : baseurl + "/edit_account.php?mode=avatar_bg",
+          url : "/edit_account.php?mode=avatar_bg",
           file_data_name : "coverPhoto",
           filters: {
             mime_types : [

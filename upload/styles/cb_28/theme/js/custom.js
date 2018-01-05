@@ -62,22 +62,22 @@ function shortKeys()
 
             if(key === 86 && e.shiftKey)  // shift + v = videos page
             {
-                window.location.href = baseurl+"/videos";
+                window.location.href = "/videos";
             }
 
             if(key === 80 && e.shiftKey)  // shift + p = photos page
             {
-                window.location.href = baseurl+"/photos";
+                window.location.href = "/photos";
             }
 
             if(key === 67 && e.shiftKey)  // shift + c = collections page
             {
-                window.location.href = baseurl+"/collections";
+                window.location.href = "/collections";
             }
 
             if(key === 85 && e.shiftKey)  // shift + u = channel page
             {
-                window.location.href = baseurl+"/channels";
+                window.location.href = "/channels";
             }
         }
 
@@ -207,7 +207,7 @@ function homePageVideos(qlist_items)
     console.log("Hey there Pumpkin! Looks like you really like what we do, hence trying to look under the hood. Happy sneaking buddy! Drop us an email for any questions : info@clipbucket.com")
     $('#container').on("click","#recent_load_more, #featured_load_more",function()
     {
-        var loadLink = baseurl + '/ajax/home.php',
+        var loadLink = '/ajax/home.php',
             main_object = $(this),
             sendType = 'post',
             dataType = 'html',

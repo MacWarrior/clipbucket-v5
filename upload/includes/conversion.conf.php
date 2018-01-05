@@ -133,7 +133,7 @@ session_start();
 	define('TEMP_DIR',FILES_DIR.'/temp');
 
  //DIRECT URL OF VIDEO FILES
- 	define('FILES_URL',BASEURL.'/files');
+ 	define('FILES_URL','/files');
 	define('VIDEOS_URL',FILES_URL.'/videos');
 	define('THUMBS_URL',FILES_URL.'/thumbs');
 	define('ORIGINAL_URL',FILES_URL.'/original');
@@ -141,8 +141,8 @@ session_start();
 	
  //Do No Edit Below This Line
  	
-	define('TEMPLATEDIR',BASEDIR.'/'.TEMPLATEFOLDER.'/'.TEMPLATE);
-	define('TEMPLATEURL',BASEURL.'/'.TEMPLATEFOLDER.'/'.TEMPLATE);
+	define('TEMPLATEDIR','/'.TEMPLATEFOLDER.'/'.TEMPLATE);
+	define('TEMPLATEURL','/'.TEMPLATEFOLDER.'/'.TEMPLATE);
 	define('LAYOUT',TEMPLATEDIR.'/layout');
 	define('ADMINLAYOUT',BASEDIR.'/'.ADMINDIR.'/'.TEMPLATEFOLDER.'/'.TEMPLATE.'/layout');
 		

@@ -4,7 +4,7 @@
 		// bootstrapping
 		this.baseurl = baseurl;
 		this.imageurl = "";
-		this.page = this.baseurl+'/ajax.php';
+		this.page = this.'/ajax.php';
 		this.loading_img = "<img style='vertical-align:middle' src='" + this.imageurl + "/ajax-loader.gif'>";
 		this.loading = this.loading_img+" Loading...";
 		this.download = 0;
@@ -12,8 +12,8 @@
 		this.cur_speed = 0;
 		
 		this.status_refesh = 1 //in seconds
-		this.result_page = this.baseurl+'/actions/file_results.php';
-		this.download_page = this.baseurl+'/actions/file_downloader.php';
+		this.result_page = this.'/actions/file_results.php';
+		this.download_page = this.'/actions/file_downloader.php';
 		this.count = 0;
 
 		this.hasLoaded = false;
@@ -218,7 +218,7 @@
 					remoteUploadStop();  
 					$("#loading").html('');
 					var vid = data.vid;
-					$.post(self.baseurl+'/actions/getVideoDetails.php', {
+					$.post('/actions/getVideoDetails.php', {
 						"file_name":file_name,
 						"vid" : vid,
 						},function(data){
@@ -250,7 +250,7 @@
 									formData += "&updateVideo=yes";
 
 									$.ajax({
-										url : baseurl + "/actions/file_uploader.php",
+										url : "/actions/file_uploader.php",
 										type : "post",
 										data : formData,
 									}).success(function(data){
@@ -286,7 +286,7 @@
                             var data = $(this).serialize();
                             data += "&updateVideo=yes";
                             $.ajax({
-                                url : baseurl + "/actions/file_uploader.php",
+                                url : "/actions/file_uploader.php",
                                 type : "post",
                                 data : data,
                                 dataType: "JSON",
@@ -408,7 +408,7 @@
 					  $('#remoteUploadBttn').attr("disabled","disabled").hide();
 					  $('#ytUploadBttn').attr("disabled","disabled").hide();
 						
-					  $.post(baseurl+'/actions/file_uploader.php',
+					  $.post('/actions/file_uploader.php',
 					  {"getForm":"get_form",
 					  "title":data.title,
 					  "desc":data.desc,
@@ -489,7 +489,7 @@
 
 		this.upload_file = function(Val,file_name){
 			var self = this;
-			var page =this.baseurl+'/actions/file_downloader.php';
+			var page =this.'/actions/file_downloader.php';
 			$.post(page, { 	
 				file_url : Val,
 				file_name : file_name
@@ -1582,7 +1582,7 @@
 		 */
 		this.rate = function(id,rating,type){
 			var self = this;
-			var page = this.baseurl+'/ajax.php';
+			var page = this.'/ajax.php';
 			$.post(page, 
 			{ 	
 				mode : 'rating',
@@ -1620,7 +1620,7 @@
 			{
 				lastVisited = returned[returned.length - 1];	   
 				if(lastVisited)
-					window.location.href = this.baseurl+lastVisited.replace("#!",'');	
+					window.location.href = this.lastVisited.replace("#!",'');
 			}
 		};
 

@@ -15,7 +15,7 @@
         button.attr( 'disabled', 'disabled' ).html( lang.savingData );
 
         $.post(
-                baseurl+'/actions/photo_uploader.php',
+                '/actions/photo_uploader.php',
                 _formdata+"&updatePhoto=true",
                 function ( data ) {
                     if ( data.success ) {
@@ -126,7 +126,7 @@
                         folder = res.file_directory;
 
                     $.ajax( {
-                        url : baseurl+'/actions/photo_uploader.php',
+                        url : '/actions/photo_uploader.php',
                         type : 'POST',
                         data : formdata+"&filename="+res.file_name+"&ext="+res.extension+"&insertPhoto=yes&server_url="+server_url+
                                 "&folder="+folder,

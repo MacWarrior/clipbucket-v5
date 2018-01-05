@@ -239,14 +239,14 @@
 		$("#report-user-form").toggle();
 	});
 	var extensions = "{$extensions}";
-	var baseurl = '{$baseurl}';
+	var baseurl = '/';
 	var channelId = "{$user['userid']}";
 	extensions = (extensions.substring(0, extensions.length - 1)) + ",png,jpeg";
 	$.get("{$theme}/js/plupload/js/plupload.full.min.js", function(e){
 	  var uploader = new plupload.Uploader({
 		  browse_button: 'changeCover',
 		  runtimes : 'html5,flash,silverlight,html4',
-		  url : baseurl + "/edit_account.php?mode=avatar_bg",
+		  url : "/edit_account.php?mode=avatar_bg",
 		  file_data_name : "coverPhoto",
 		  filters: {
 			mime_types : [
@@ -259,7 +259,7 @@
 	  window.uploader = uploader;
 	  uploader.init();
 	  uploader.bind("FilesAdded", function(up, uploadedFiles){
-		$(".cb-live-background").attr("src",baseurl+'/images/loading.png');
+		$(".cb-live-background").attr("src",'/images/loading.png');
 		up.start();
 	  });
 	  uploader.bind('UploadComplete', function(plupload, files, response){
@@ -375,7 +375,7 @@
 
 		nextHit = parseInt(loadHit) + 1;
 		$.ajax({
-			url: baseurl + "/ajax/view_channel.php",
+			url: "/ajax/view_channel.php",
 			type: "post",
 			dataType: "html",
 			data: {
@@ -425,7 +425,7 @@
 
 		nextHit = parseInt(loadHit) + 1;
 		$.ajax({
-			url: baseurl + "/ajax/view_channel.php",
+			url: "/ajax/view_channel.php",
 			type: "post",
 			dataType: "html",
 			data: {

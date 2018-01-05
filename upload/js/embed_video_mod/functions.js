@@ -12,7 +12,7 @@ if(typeof String.prototype.escape === 'undefined'){
 	};
 }
 
-var embed_check = baseurl+"/actions/embed_form_verifier.php";
+var embed_check = "/actions/embed_form_verifier.php";
 function check_embed_code(objId){
 	var  theForm = '#embedUploadForm'+objId;
 	if($(theForm+" #embed_code").val() == "")

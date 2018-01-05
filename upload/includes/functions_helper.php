@@ -56,9 +56,8 @@
     {
         $logo_file = config('player_logo_file');
         if($logo_file && file_exists(BASEDIR.'/images/'.$logo_file))
-            return BASEURL.'/images/'.$logo_file;
-
-        return BASEURL.'/images/logo.png';
+            return '/images/'.$logo_file;
+        return '/images/logo.png';
     }
 
 	/**
@@ -269,18 +268,18 @@
 		{
             case 'recent':
                 if ($seoMode == 'yes')
-                    return BASEURL.'/'.$type.'/all/All/most_recent/all_time/1&sorting=sort';
-				return BASEURL.'/'.$type.'.php?cat=all&sort=most_recent&time=all_time&page=1&seo_cat_name=All&sorting=sort';
+                    return '/'.$type.'/all/All/most_recent/all_time/1&sorting=sort';
+				return '/'.$type.'.php?cat=all&sort=most_recent&time=all_time&page=1&seo_cat_name=All&sorting=sort';
             case 'trending':
                 if ($seoMode == 'yes')
-                    return BASEURL.'/'.$type.'/all/All/most_viewed/all_time/1&sorting=sort';
-				return BASEURL.'/'.$type.'.php?cat=all&sort=most_viewed&time=all_time&page=1&seo_cat_name=All&sorting=sort';
+                    return '/'.$type.'/all/All/most_viewed/all_time/1&sorting=sort';
+				return '/'.$type.'.php?cat=all&sort=most_viewed&time=all_time&page=1&seo_cat_name=All&sorting=sort';
             case 'popular':
                 if ($seoMode == 'yes')
-                    return BASEURL.'/'.$type.'/all/All/top_rated/'.$time.'/1&timing=time';
-				return BASEURL.'/'.$type.'.php?cat=all&sort=top_rated&time='.$time.'&page=1&seo_cat_name=All&timing=time';
+                    return '/'.$type.'/all/All/top_rated/'.$time.'/1&timing=time';
+				return '/'.$type.'.php?cat=all&sort=top_rated&time='.$time.'&page=1&seo_cat_name=All&timing=time';
             default:
-                return BASEURL.'/'.$type.'/all/All/most_recent/all_time/1&sorting=sort';
+                return '/'.$type.'/all/All/most_recent/all_time/1&sorting=sort';
         }
     }
 

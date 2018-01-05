@@ -434,7 +434,7 @@ class userquery extends CBCategory{
 		if(!$this->login_check($access))
 		{
 			if($redirect==TRUE)
-				redirect_to(BASEURL.signup_link);
+				redirect_to(signup_link);
 			return false;
 		}
 		return true;
@@ -900,11 +900,9 @@ class userquery extends CBCategory{
 		{
 			$this->confirm_friend($fid,$uid);
 			e(lang("friend_added"));
-		}elseif($uid==$fid)
-		{
+		} elseif($uid==$fid) {
 			e(lang("friend_add_himself_error"));
-		}else
-		{
+		} else {
 			$db->insert(tbl($this->dbtbl['contacts']),array('userid','contact_userid','date_added','request_type'),
 												 array($uid,$fid,now(),'out'));
 			$insert_id = $db->insert_id();
@@ -920,7 +918,7 @@ class userquery extends CBCategory{
 			 '{reciever}'	=> $friend['username'],
 			 '{sender}'		=> $sender['username'],
 			 '{sender_link}'=> $this->profile_link($sender),
-			 '{request_link}'=> BASEURL.'/manage_contacts.php?mode=request&confirm='.$uid
+			 '{request_link}'=> '/manage_contacts.php?mode=request&confirm='.$uid
 			);
 			if(!is_array($var))
 				$var = array();
@@ -1547,11 +1545,10 @@ class userquery extends CBCategory{
 		}
 		if(empty($udetails['userid']) && $uid)
 			$udetails = $this->get_user_details($uid);
-		//$thumbnail = $udetails['avatar'] ? $udetails['avatar'] : NO_AVATAR;
+
 		$thumbnail = $udetails['avatar'];
 		$thumb_file = USER_THUMBS_DIR.'/'.$thumbnail;
-		
-		
+
 		if(file_exists($thumb_file) && $thumbnail)
 			$thumb = USER_THUMBS_URL.'/'.$thumbnail;
 		elseif(!empty($udetails['avatar_url']))
@@ -1570,7 +1567,6 @@ class userquery extends CBCategory{
 					{
 						$thesize = AVATAR_SMALL_SIZE;
 						$default = $this->get_default_thumb('small');
-						
 					}
 					break;
 					default:
@@ -1588,14 +1584,12 @@ class userquery extends CBCategory{
 				$gravatar->border = "FF0000";
 				
 				$thumb = $gravatar->getSrc();
-				//echo $gravatar->toHTML();
 			}
 		}
 
 		$ext = GetExt($thumb_file);
 		$file = getName($thumb_file);
 
-				
 		if(!$remote)
 		{
 			if(!empty($size) && !$thumb)
@@ -1673,7 +1667,7 @@ class userquery extends CBCategory{
 	
 		if(!$h) $h=90;		
 
-		return	BASEURL."/includes/classes/timthumb/timthumb.php?src=$src&w=$w&h=$h";
+		return "/includes/classes/timthumb/timthumb.php?src=$src&w=$w&h=$h";
 	}
 
 	function avatar($udetails,$size='',$uid=NULL)
@@ -2194,9 +2188,9 @@ class userquery extends CBCategory{
 
 		$username = display_clean($udetails['username']);
 		if(SEO!="yes")
-			return BASEURL.'/view_channel.php?user='.$username;
+			return '/view_channel.php?user='.$username;
 		else
-			return BASEURL.'/user/'.$username;
+			return '/user/'.$username;
 	}
 
 	function get_user_link($u)
@@ -2866,7 +2860,7 @@ class userquery extends CBCategory{
 			$files = scandir($coverPath);
 			array_shift($files); array_shift($files);
 			$coverPhoto = array_shift($files);
-			return BASEURL . "/files/cover_photos/{$userId}/$coverPhoto";
+			return "/files/cover_photos/{$userId}/$coverPhoto";
 		}
 	}
 
@@ -3143,7 +3137,7 @@ class userquery extends CBCategory{
 		if (!in_array($page, $forbid)) {
 			$unread_msgs = $this->get_unread_msgs( $userid );
 			if ($unread_msgs > 0) {
-				echo "<div class='".$class." alert alert-warning'>You have <a href=".BASEURL."/private_message.php?mode=inbox><span style='color: black'><strong>".$unread_msgs."<strong> unread messages </a> in your inbox</div>";
+				echo "<div class='".$class." alert alert-warning'>You have <a href=/private_message.php?mode=inbox><span style='color: black'><strong>".$unread_msgs."<strong> unread messages </a> in your inbox</div>";
 			} else {
 				return false;
 			}

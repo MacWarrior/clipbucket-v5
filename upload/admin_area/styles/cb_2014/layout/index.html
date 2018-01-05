@@ -513,12 +513,10 @@ $( document ).ready(function() {
            }
     });
 
-var baseurl="{$baseurl}";
+var baseurl="/";
 
 $.ajax({
-   // url: baseurl+'/ajax.php',
-
-   url:baseurl+'/ajax.php',
+   url: '/ajax.php',
     type: "POST",
     dataType : 'text',
     data: { mode: "get_news"},

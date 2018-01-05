@@ -147,7 +147,7 @@ class CBPlayer
 	{
 		$path = $player.'/preview.';
 		$exts = array('png','jpg','gif');
-		$thumb_path = BASEURL.'/images/icons/no_thumb_player.png';
+		$thumb_path = '/images/icons/no_thumb_player.png';
 		foreach($exts as $ext)
 		{
 			$file = PLAYER_DIR.'/'.$path.$ext;
@@ -201,11 +201,11 @@ class CBPlayer
 		}
 		
 		$vdetails = $params['video'];
-		$config  = urlencode(BASEURL."/player/pak_player/embed_player.php?vid=".$vdetails['videoid']."&json=true&autoplay=yes");
+		$config = urlencode("/player/pak_player/embed_player.php?vid=".$vdetails['videoid']."&json=true&autoplay=yes");
 		if(!config('pak_license'))
-			$embed_src = BASEURL.'/player/pak_player/pakplayer.swf?config='.$config;
+			$embed_src = '/player/pak_player/pakplayer.swf?config='.$config;
 		else
-			$embed_src = BASEURL.'/player/pak_player/pakplayer.unlimited.swf?config='.$config;
+			$embed_src = '/player/pak_player/pakplayer.unlimited.swf?config='.$config;
 		
 		return $embed_src;
 	}

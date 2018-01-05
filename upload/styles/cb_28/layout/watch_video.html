@@ -292,7 +292,7 @@
 	$('#ShareUsers').on("keyup",function(){
 		var typed = $(this).val();
 		$.ajax({
-			url: baseurl+'/ajax.php',
+			url: '/ajax.php',
 			type: 'post',
 			dataType: 'html',
 			data: {
@@ -321,7 +321,7 @@
 		playlist = $(this).attr('dataList');
 
 		$.ajax({
-			url: baseurl+'/ajax/watch.php',
+			url: '/ajax/watch.php',
 			type: 'post',
 			dataType: 'html',
 			data: {

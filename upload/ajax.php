@@ -1655,7 +1655,7 @@ if(!empty($mode))
 					$ci_id = $photo['ci_id'];
 					$collection = $photo['collection_id']; 	// collection id.
 					$link = $cbcollection->get_next_prev_item($ci_id,$collection,$item=$items,$limit=1,$check_only=false); // getting Previous item
-					$srcString =BASEURL.'/files/photos/'.$link[0]['file_directory'].'/'.$link[0]['filename'].'.'.$link[0]['ext']; // Image Source...
+					$srcString ='/files/photos/'.$link[0]['file_directory'].'/'.$link[0]['filename'].'.'.$link[0]['ext']; // Image Source...
 					$photo_key = $link[0]['photo_key']; // Image Key.
 					$response['photo'] = $link;
 					$response['photo_key'] = $photo_key;

@@ -82,7 +82,7 @@ function plupload_photo_uploader() {
     $photoUploaderDetails = array
     (
         'uploadSwfPath' => JS_URL.'/plupload/Moxie.swf',
-        'uploadScriptPath' => BASEURL.'/actions/photo_uploader.php?plupload=true',
+        'uploadScriptPath' => '/actions/photo_uploader.php?plupload=true',
     );
 
 
@@ -165,7 +165,7 @@ function get_image_file( $params ) {
         //var_dump("get default 1");
         return get_photo_default_thumb( $size, $output );
     } else if ($static) {
-        return BASEURL.'/files/photos/'.$details['file_directory'].'/'.$details['filename'].'_'.$size.'.jpg';
+        return '/files/photos/'.$details['file_directory'].'/'.$details['filename'].'_'.$size.'.jpg';
     }
 
     if ( !is_array( $details ) ) {

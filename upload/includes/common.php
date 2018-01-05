@@ -312,7 +312,7 @@
 	//Javascript Directory Name
 	define('ADMINDIR','admin_area');
 	define('ADMINBASEDIR',BASEDIR.'/admin_area');				//Admin Accessible Folder
-	define('ADMIN_BASEURL',BASEURL.'/'.ADMINDIR);
+	define('ADMIN_BASEURL','/'.ADMINDIR);
 	define('MODULEDIR',BASEDIR.'/modules');						//Modules Directory
 	
 	# DIRECT PATHS OF VIDEO FILES
@@ -327,25 +327,25 @@
 	define('MASS_UPLOAD_DIR',FILES_DIR.'/mass_uploads');
 	define('LOGS_DIR',FILES_DIR.'/logs');
     define( 'IMAGES_DIR', BASEDIR.'/images' );
-    define( 'IMAGES_URL', BASEURL.'/images' );
+    define( 'IMAGES_URL', '/images' );
 	define("USER_THUMBS_DIR",BASEDIR.'/images/avatars');
 	define("USER_BG_DIR",BASEDIR.'/images/backgrounds');
-	define("ICONS_URL",BASEURL.'/images/icons');
+	define("ICONS_URL",'/images/icons');
 	define('JS_DIR',BASEDIR.'/js');
-	define('JS_URL',BASEURL.'/js');
+	define('JS_URL','/js');
 	
 	#DIRECT URL OF VIDEO FILES
-	define('FILES_URL',BASEURL.'/files');
+	define('FILES_URL','/files');
 	define('VIDEOS_URL',FILES_URL.'/videos');
 	define('THUMBS_URL',FILES_URL.'/thumbs');
 	define('SPRITES_URL',FILES_URL.'/sprites');
 	define('ORIGINAL_URL',FILES_URL.'/original');
 	define('TEMP_URL',FILES_URL.'/temp');
 	define("PLAYER_DIR",BASEDIR.'/player');
-	define("PLAYER_URL",BASEURL.'/player');
+	define("PLAYER_URL",'/player');
 	
-	define("USER_THUMBS_URL",BASEURL.'/images/avatars');
-	define("USER_BG_URL",BASEURL.'/images/backgrounds');
+	define("USER_THUMBS_URL",'/images/avatars');
+	define("USER_BG_URL",'/images/backgrounds');
 	
  	# Required Settings For Video Conversion
  	define('VBRATE', $row['vbrate']);
@@ -362,7 +362,7 @@
 	
 	# Defining Plugin Directory
 	define('PLUG_DIR',BASEDIR.'/plugins');
-	define('PLUG_URL',BASEURL.'/plugins');
+	define('PLUG_URL','/plugins');
 	
 	define('MAX_COMMENT_CHR',$Cbucket->configs['max_comment_chr']);
 	define('USER_COMMENT_OWN',$Cbucket->configs['user_comment_own']);
@@ -370,23 +370,23 @@
 	
 	# Defining Category Thumbs directory
 	define('CAT_THUMB_DIR',BASEDIR.'/images/category_thumbs');
-	define('CAT_THUMB_URL',BASEURL.'/images/category_thumbs');
+	define('CAT_THUMB_URL','/images/category_thumbs');
 	
 	# Defining Group Thumbs directory
 	define('GP_THUMB_DIR',BASEDIR.'/images/groups_thumbs');
-	define('GP_THUMB_URL',BASEURL.'/images/groups_thumbs');	
+	define('GP_THUMB_URL','/images/groups_thumbs');
 	
 	# TOPIC ICON DIR
 	define('TOPIC_ICON_DIR',BASEDIR.'/images/icons/topic_icons');
-	define('TOPIC_ICON_URL',BASEURL.'/images/icons/topic_icons');
+	define('TOPIC_ICON_URL','/images/icons/topic_icons');
 
 	# COLLECTIONS ICON DIR
 	define('COLLECT_THUMBS_DIR',BASEDIR.'/images/collection_thumbs');
-	define('COLLECT_THUMBS_URL',BASEURL.'/images/collection_thumbs');
+	define('COLLECT_THUMBS_URL','/images/collection_thumbs');
 	
 	# PHOTOS DETAILS	
 	define('PHOTOS_DIR',FILES_DIR."/photos");
-	define('PHOTOS_URL',FILES_URL."/photos");
+	define('PHOTOS_URL',"/photos");
 	
 	# ADVANCE CACHING
 	define('CACHE_DIR',BASEDIR.'/cache');
@@ -473,7 +473,7 @@
 	Assign('title',TITLE);
 	Assign('slogan',SLOGAN);	
 	Assign('flvplayer',FLVPLAYER);
-	Assign('avatardir',BASEURL.'/images/avatars');
+	Assign('avatardir','/images/avatars');
 	Assign('whatis',getArrayValue($row, 'whatis'));
 	Assign('category_thumbs',CAT_THUMB_URL);
 	Assign('gp_thumbs_url',GP_THUMB_URL);
@@ -481,8 +481,8 @@
 	# Assign('ads',$ads);
 
 	Assign('email_verification',EMAIL_VERIFICATION);
-	Assign('group_thumb',BASEURL.'/images/groups_thumbs');
-	Assign('bg_dir',BASEURL.'/images/backgrounds');
+	Assign('group_thumb','/images/groups_thumbs');
+	Assign('bg_dir','/images/backgrounds');
 	Assign('captcha_type',$row['captcha_type']);
 	Assign('languages',(isset($languages)) ? $languages : false);
 	
@@ -490,7 +490,7 @@
 	
 	Assign('VIDEOS_URL',VIDEOS_URL);
 	Assign('THUMBS_URL',THUMBS_URL);
-	Assign('PLUG_URL',BASEURL.'/plugins');
+	Assign('PLUG_URL','/plugins');
 	
     #Remote and Embed
 	Assign('remoteUpload',$row['remoteUpload']);
@@ -511,19 +511,18 @@
         mkdir(PLAYLIST_COVERS_DIR, 0777);
     }
 
-	$ClipBucket->upload_opt_list = array
-	(
-	 'file_upload_div'	=>	array(
-						  'title'		=>	lang('upload_file'),
-						  'func_class'	=> 	'Upload',
-						  'load_func'	=>	'load_upload_form',
-						  ),
-	 'remote_upload_div' => array(
-							  'title'	=> lang('remote_upload'),
-							  'func_class' => 'Upload',
-							  'load_func' => 'load_remote_upload_form',
-							  )
-	 );
+	$ClipBucket->upload_opt_list = array(
+		'file_upload_div'	=>	array(
+			'title'		=>	lang('upload_file'),
+			'func_class'	=> 	'Upload',
+			'load_func'	=>	'load_upload_form',
+		),
+		'remote_upload_div' => array(
+			'title'	=> lang('remote_upload'),
+			'func_class' => 'Upload',
+			'load_func' => 'load_remote_upload_form',
+		)
+	);
 	Assign('LANG',$LANG);
 	Assign('langf',getConstant('LANG'));
     Assign('lang_count',(isset($languages)) ? count($languages) : false);

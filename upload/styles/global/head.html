@@ -1,5 +1,5 @@
 <script>
-	var baseurl = '{$baseurl}';
+	var baseurl = '/';
 	var imageurl = '{$imageurl}';
 </script>
 
@@ -101,7 +101,7 @@ function doUpdateVideo(formId,ID)
 	.attr("onClick","return false;");
 	
 	$.post(
-	baseurl+'/actions/file_uploader.php',formObjectData,function(data)
+	'/actions/file_uploader.php',formObjectData,function(data)
 	{
 		if(data.msg)
 		show_message(data.msg,ID,true);
@@ -198,7 +198,7 @@ function insertAjaxPhoto(ID,filename,extension,server_url,folder)
 
 	var photoFields = $("#Form"+ID).serialize();
 	$.ajax({
-		url : baseurl+'/actions/photo_uploader.php',
+		url : '/actions/photo_uploader.php',
 		type : 'POST',
 		dataType : 'json',
 		data : photoFields+"&filename="+filename+"&ext="+extension+"&insertPhoto=yes&server_url="+server_url+
@@ -239,7 +239,7 @@ function updateAjaxPhoto(ID)
 {
 	var updateFields = $("#Form"+ID).serialize();
 	$.ajax({
-		url : baseurl+'/actions/photo_uploader.php',
+		url : '/actions/photo_uploader.php',
 		type : 'POST',
 		dataType : 'json',
 		data : updateFields+"&updatePhoto=yes",
@@ -332,7 +332,7 @@ $(document).ready(function() {
 			{
 				uploadError = false;
 				$.ajax({
-					url : baseurl+'/actions/photo_uploader.php',
+					url : '/actions/photo_uploader.php',
 					dataType : 'json',
 					type : 'POST',
 					data : ({ "photoForm":"yes" , "objID":ID , "name":fileObj.name , "collection":collectionID }),

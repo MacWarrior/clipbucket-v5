@@ -40,8 +40,8 @@
 {literal}
 <script type="text/javascript">
     $(document).ready(function() {
-		$('.edit_comment').editable(baseurl + '/actions/edit_comment.php', {
-			indicator: '<img src="' + baseurl + '/images/icons/progIndicator.gif">',
+		$('.edit_comment').editable('/actions/edit_comment.php', {
+			indicator: '<img src="' + '/images/icons/progIndicator.gif">',
 			tooltip: 'Click to edit...',
 		});
 	});

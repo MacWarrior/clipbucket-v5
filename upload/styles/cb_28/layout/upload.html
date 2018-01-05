@@ -74,7 +74,7 @@
 					}, 10000);
 
 			var totalFiles = 0;
-			var baseurl = '{$baseurl}';
+			var baseurl = '/';
 			var config_for_mp4 = '{$config_for_mp4}';
 			var defaultCategory = "{$cbvid->get_default_cid()}";
 			if('{$uploaderDetails.uploadScriptPath}'!=''){
@@ -296,7 +296,7 @@
 					*/
 					var fileId = false;
 					$.ajax({
-						url : baseurl + "/actions/file_uploader.php",
+						url : "/actions/file_uploader.php",
 						type : "post",
 						data : {
 							insertVideo : "yes",
@@ -331,7 +331,7 @@
 					$(uploadForm).on({
 						submit: function(e){
 							e.preventDefault();
-							//window.location.href = baseurl+"/?moreMsg="+theVideoId;
+							//window.location.href = "/?moreMsg="+theVideoId;
 							var self = this;
 							
 							//var data = new FormData();
@@ -341,7 +341,7 @@
 							var theid = $(this).videoid;
 
 							$.ajax({
-								url : baseurl + "/actions/file_uploader.php",
+								url : "/actions/file_uploader.php",
 								type : "post",
        							data : data
 							}).success(function(msg){
@@ -459,7 +459,7 @@
 		var theid = '200';
 
 		$.ajax({
-			url : baseurl + "/actions/file_uploader.php",
+			url : "/actions/file_uploader.php",
 			type : "post",
 				data : data
 		}).success(function(msg){

@@ -9,7 +9,7 @@
   define('CB_CUSTOM_FIELDS_PLUG_DIR',PLUG_DIR."/".CB_CUSTOM_FIELDS_DIR_NAME);
   define("SITE_MODE",'/admin_area');
 
-  define("CB_CUSTOM_FIELDS_EditPAGE_URL",BASEURL.SITE_MODE."/plugin.php?folder=".CB_CUSTOM_FIELDS_DIR_NAME."/admin&file=edit_field.php");
+  define("CB_CUSTOM_FIELDS_EditPAGE_URL",SITE_MODE."/plugin.php?folder=".CB_CUSTOM_FIELDS_DIR_NAME."/admin&file=edit_field.php");
 
   assign("cb_custom_fields_edit_page",CB_CUSTOM_FIELDS_EditPAGE_URL);
 if(!function_exists("customfield"))

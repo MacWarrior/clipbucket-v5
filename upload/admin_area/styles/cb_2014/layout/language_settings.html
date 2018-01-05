@@ -324,7 +324,7 @@
     var refresh_ch = $('<div class="alert-msg-holder"  id="lang-exist"><div role="alert" class="alert alert-danger alert-dismissible alert-ajax"><button aria-label="Close" data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span></button><strong>Refresh to set cookie </strong></div></div>');
     function timeCheck(){
          process = setInterval(function() {
-                $.get(baseurl+'/files/percent.lang', function(data) {
+                $.get('/files/percent.lang', function(data) {
                //process text file line by line
                allTextLines = data.split(/\r\n|\n/);
                lastElementArray = allTextLines.slice(-2, -1)[0];
@@ -335,25 +335,6 @@
             });
         },1000);
     }
-    
-    /*function readLate(){
-        lastElementArray == 100;
-        $('#loaderVal').text(lastElementArray+'%');
-        $('.progress-bar').css('width',lastElementArray+'%');
-        $('#progress-bar').attr('class','progress-bar progress-bar-success');
-        $("#bar").delay(2000).fadeOut("slow",function(){
-              $( "#progress-bar").removeClass("progress-bar progress-bar-success").addClass( "progress-bar");
-              //lastElementArray = 0;
-            $('#loaderVal').text(lastElementArray+'%');
-            $('#progress-bar').css('width',lastElementArray+'%');
-    
-        });
-        clearInterval(process);
-        $('#lang_option').toggle();
-        $('#headErr').css('display','block').delay(1000);
-        $('#lang-pack').html(dialogLangPack);
-    
-    }*/
 
     var goodToGo = true;
 

@@ -44,7 +44,7 @@ if(!$vdetails)
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><?php echo $vdetails['title']; ?></title>
-<script type="text/javascript" src="<?php echo BASEURL; ?>/styles/cb_28/theme/js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="/styles/cb_28/theme/js/jquery-1.11.3.min.js"></script>
 <?php
 Template(STYLES_DIR.'/global/head.html',false);
 ?>

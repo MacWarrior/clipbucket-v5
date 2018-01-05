@@ -138,11 +138,11 @@ if(!function_exists("pak_player"))
 	 */
 	function pakplayer_embed_src($vdetails)
 	{	
-		$config  = urlencode(BASEURL."/player/pak_player/embed_player.php?vid=".$vdetails['videoid']."&json=true&autoplay=".config('autoplay_embed'));
+		$config  = urlencode("/player/pak_player/embed_player.php?vid=".$vdetails['videoid']."&json=true&autoplay=".config('autoplay_embed'));
 		if(!config('pak_license'))
-			$embed_src = BASEURL.'/player/pak_player/pakplayer.swf?config='.$config;
+			$embed_src = '/player/pak_player/pakplayer.swf?config='.$config;
 		else
-			$embed_src = BASEURL.'/player/pak_player/pakplayer.unlimited.swf?config='.$config;
+			$embed_src = '/player/pak_player/pakplayer.unlimited.swf?config='.$config;
 		
 		if(function_exists('get_refer_url_from_embed_code'))
 		{

@@ -435,13 +435,13 @@
 (function(window){
   $(document).ready(function(){
     var extensions = "{$extensions}";
-    var baseurl = '{$baseurl}';
+    var baseurl = '/';
     extensions = (extensions.substring(0, extensions.length - 1)) + ",png,jpeg";
     $.get("{$theme}/js/plupload/js/plupload.full.min.js", function(e){
       var uploader = new plupload.Uploader({
           browse_button: 'selectCover',
           runtimes : 'html5,flash,silverlight,html4',
-          url : baseurl + "/edit_account.php?mode=avatar_bg",
+          url : "/edit_account.php?mode=avatar_bg",
           file_data_name : "coverPhoto",
           filters: {
             mime_types : [

@@ -229,7 +229,7 @@ if(!function_exists('editors_pick'))
 		This content requires JavaScript and Macromedia Flash Player 7 or higher. <a href=http://www.macromedia.com/go/getflash/>Get Flash</a><br/><br/>
 		</div>
 		<script type="text/javascript">
-		var ep = new FlashObject("'.BASEURL.'/plugins/editors_pick/editors_pick_player.swf?xmlfile='.BASEURL.'/plugins/editors_pick/editors_pick_player.php", "sotester", "340", "243", "9", "#FFFFFF");
+		var ep = new FlashObject("/plugins/editors_pick/editors_pick_player.swf?xmlfile=/plugins/editors_pick/editors_pick_player.php", "sotester", "340", "243", "9", "#FFFFFF");
         ep.addParam("wmode", "opaque");
         ep.addParam("allowFullScreen", "true");
 		ep.write("editors_pick");

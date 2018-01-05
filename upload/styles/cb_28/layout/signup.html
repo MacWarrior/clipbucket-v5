@@ -235,7 +235,7 @@
 	     	addErrClass(userSect, errors["username_spaces"], true, false);
 	     } else {
 	     	$.ajax({
-				url: baseurl + "/ajax/commonAjax.php",
+				url: "/ajax/commonAjax.php",
 				type: "post",
 				dataType: "html",
 				data: {
@@ -270,7 +270,7 @@
 	     	removeErrClass(emailSec);	
 	     } else {
 	     	$.ajax({
-				url: baseurl + "/ajax/commonAjax.php",
+				url: "/ajax/commonAjax.php",
 				type: "post",
 				dataType: "html",
 				data: {

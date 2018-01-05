@@ -170,4 +170,4 @@
 		$msg[] = lang('class_vdo_del_err');
 	}
 
-	redirect_to(BASEURL.'/edit_video.php?vid='.$data['videoid']);
+	redirect_to('/edit_video.php?vid='.$data['videoid']);

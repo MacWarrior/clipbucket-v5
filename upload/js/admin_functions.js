@@ -1,5 +1,5 @@
 //include('popup_image.js');
-var page = baseurl+'/actions/admin.php';
+var page = '/actions/admin.php';
 function ShowHint(text){
 	return fixedtooltip('<table bgcolor="#f1f1f1" width="400px" class="des_table"><tr><td>'+text+'</td></tr></table>', this, event, '0px');
 }

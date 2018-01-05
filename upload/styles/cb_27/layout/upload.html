@@ -78,7 +78,7 @@
                     }, 10000);
 
 
-            var baseurl = '{$baseurl}';
+            var baseurl = '/';
             if('{$uploaderDetails.uploadScriptPath}'!=''){
             var uploadurl = '{$uploaderDetails.uploadScriptPath}';
             }else{
@@ -259,7 +259,7 @@
                         */
                         var fileId = false;
                         $.ajax({
-                            url : baseurl + "/actions/file_uploader.php",
+                            url : "/actions/file_uploader.php",
                             type : "post",
                             data : {
                                 insertVideo : "yes",
@@ -298,7 +298,7 @@
                                 var self = this;
                                 var data = $(this).serialize();
                                 $.ajax({
-                                    url : baseurl + "/actions/file_uploader.php",
+                                    url : "/actions/file_uploader.php",
                                     type : "post",
                                     data : data
                                 }).success(function(msg){

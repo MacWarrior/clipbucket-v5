@@ -18,7 +18,7 @@ $pages->page_redir();
 if($_GET['revert'])
 {
 	$userquery->revert_from_user();
-	redirect_to(BASEURL.'/admin_area');
+	redirect_to('/admin_area');
 }
 $uid = $_GET['uid'];
 
