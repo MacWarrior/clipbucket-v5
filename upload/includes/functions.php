@@ -5486,6 +5486,14 @@
 	  return $data;
 	}
 
+	function execution_time($display=true)
+	{
+		if( $display )
+			dump(microtime(true) - $_SERVER["REQUEST_TIME_FLOAT"]);
+		else
+			return (microtime(true) - $_SERVER["REQUEST_TIME_FLOAT"]);
+	}
+
     include( 'functions_db.php' );
     include( 'functions_filter.php' );
     include( 'functions_player.php' );

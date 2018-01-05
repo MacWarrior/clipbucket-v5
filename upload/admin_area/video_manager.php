@@ -174,7 +174,7 @@
 		'name'=> 'category[]',
 		'id'=> 'category',
 		'value'=> array('category',$cats_array),
-		'hint_1'=>  lang('vdo_cat_msg'),
+		'hint_1'=> lang('vdo_cat_msg'),
 		'display_function' => 'convert_to_categories'
 	);
 

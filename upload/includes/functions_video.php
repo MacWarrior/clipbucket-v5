@@ -213,8 +213,12 @@
         {
            $file_dir = "/" . $thumbDir;
         }
-        $vid_thumbs = glob(THUMBS_DIR."/" .$file_dir.$vdetails['file_name']."*");
 
+        $filepath = THUMBS_DIR."/" .$file_dir.$vdetails['file_name'].$size.'-'.$vdetails['default_thumb'];
+        if( $size && isset($vdetails['default_thumb']) && file_exists($filepath) )
+			return $filepath;
+
+        $vid_thumbs = glob(THUMBS_DIR."/" .$file_dir.$vdetails['file_name']."*");
         #replace Dir with URL
         if(is_array($vid_thumbs))
 		{
@@ -252,58 +256,57 @@
             if($multi)
                 return $dthumb[0] = default_thumb();
             return default_thumb();
-        } else {
-            //Initializing thumbs settings
-            $thumbs_res_settings = thumbs_res_settings_28();
-
-            if($multi){
-                if (!empty($original_thumbs) && $size == 'original'){
-                    return $original_thumbs;    
-                }else{
-                    return $thumbs;
-                }
-            }
-
-            if($count)
-                return count($thumbs);
-
-            //Now checking for thumb
-            if($num=='default')
-            {
-                $num = $vdetails['default_thumb'];
-            }
-            if($num=='big' || $size=='big')
-            {
-                $num = 'big-'.$vdetails['default_thumb'];
-                $num_big_28 = implode('x', $thumbs_res_settings['320']).'-'.$vdetails['default_thumb'];
-                
-                $big_thumb_cb26 = THUMBS_DIR.'/'.$vdetails['file_name'].'-'.$num.'.jpg';
-                $big_thumb_cb27 = THUMBS_DIR.'/'.$thumbDir.$vdetails['file_name'].'-'.$num.'.jpg';
-                $big_thumb_cb28 = THUMBS_DIR.'/'.$thumbDir.$vdetails['file_name'].'-'.$num_big_28.'.jpg';
-
-                if(file_exists($big_thumb_cb26)){
-                    return THUMBS_URL.'/'.$vdetails['file_name'].'-'.$num.'.jpg';
-                }elseif (file_exists($big_thumb_cb27)){
-                    return THUMBS_URL.'/'.$thumbDir.$vdetails['file_name'].'-'.$num.'.jpg';
-                }elseif (file_exists($big_thumb_cb28)){
-                    return THUMBS_URL.'/'.$thumbDir.$vdetails['file_name'].'-'.$num_big_28.'.jpg';
-                }
-            }
-
-           $default_thumb = array_find($vdetails['file_name'].'-'.$size.'-'.$num,$thumbs);
-            
-            if(!empty($default_thumb)){
-                return $default_thumb;
-            }
-            if(empty($default_thumb))
-            {
-                $default_thumb = array_find($vdetails['file_name'].'-'.$num,$thumbs);
-                if (!empty($default_thumb)){
-                    return $default_thumb;
-                }
-				return $thumbs[0];
-            }
         }
+
+		//Initializing thumbs settings
+		$thumbs_res_settings = thumbs_res_settings_28();
+
+		if($multi){
+			if (!empty($original_thumbs) && $size == 'original')
+				return $original_thumbs;
+			return $thumbs;
+		}
+
+		if($count)
+			return count($thumbs);
+
+		//Now checking for thumb
+		if($num=='default')
+			$num = $vdetails['default_thumb'];
+
+		if($num=='big' || $size=='big')
+		{
+			$num = 'big-'.$vdetails['default_thumb'];
+			$num_big_28 = implode('x', $thumbs_res_settings['320']).'-'.$vdetails['default_thumb'];
+
+			$big_thumb_cb26 = THUMBS_DIR.'/'.$vdetails['file_name'].'-'.$num.'.jpg';
+			$big_thumb_cb27 = THUMBS_DIR.'/'.$thumbDir.$vdetails['file_name'].'-'.$num.'.jpg';
+			$big_thumb_cb28 = THUMBS_DIR.'/'.$thumbDir.$vdetails['file_name'].'-'.$num_big_28.'.jpg';
+
+			if(file_exists($big_thumb_cb26))
+				return THUMBS_URL.'/'.$vdetails['file_name'].'-'.$num.'.jpg';
+
+			if (file_exists($big_thumb_cb27))
+				return THUMBS_URL.'/'.$thumbDir.$vdetails['file_name'].'-'.$num.'.jpg';
+
+			if (file_exists($big_thumb_cb28))
+				return THUMBS_URL.'/'.$thumbDir.$vdetails['file_name'].'-'.$num_big_28.'.jpg';
+		}
+
+	   $default_thumb = array_find($vdetails['file_name'].'-'.$size.'-'.$num,$thumbs);
+
+		if(!empty($default_thumb)){
+			return $default_thumb;
+		}
+		if(empty($default_thumb))
+		{
+			$default_thumb = array_find($vdetails['file_name'].'-'.$num,$thumbs);
+			if (!empty($default_thumb)){
+				return $default_thumb;
+			}
+			return $thumbs[0];
+		}
+		execution_time();
     }
 
 	/**
