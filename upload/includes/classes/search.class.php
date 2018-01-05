@@ -168,18 +168,19 @@ class cbsearch
 		{
 			$query_cond = "(".$condition.")";
 			if($condition)
-				$query_cond .= " AND ";
+				$query_cond .= ' AND ';
 			else
 				$query_cond = $condition;
 
-			if(!has_access('admin_access',TRUE)){
+			if( !has_access('admin_access',TRUE) )
+			{
 				$results = $db->select(tbl($this->db_tbl.",users"),
 								tbl($this->db_tbl.'.*,users.userid,users.username').$add_select_field,
-							$query_cond." ".tbl($this->db_tbl).".userid=".tbl("users.userid")." AND ".tbl($this->db_tbl).".active='yes'"."AND".tbl($this->db_tbl).".broadcast='public'",$this->limit,$sorting);
+							$query_cond." ".tbl($this->db_tbl).".userid=".tbl("users.userid"),$this->limit,$sorting);
 			} else {
 				$results = $db->select(tbl($this->db_tbl.",users"),
 								tbl($this->db_tbl.'.*,users.userid,users.username').$add_select_field,
-							$query_cond." ".tbl($this->db_tbl).".userid=".tbl("users.userid")." AND ".tbl($this->db_tbl).".active='yes'",$this->limit,$sorting);
+							$query_cond." ".tbl($this->db_tbl).".userid=".tbl("users.userid"),$this->limit,$sorting);
 			}
 
 			$this->total_results = $db->count(tbl($this->db_tbl),'*',$condition);

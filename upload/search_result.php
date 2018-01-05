@@ -59,11 +59,11 @@
 		}
 		$search->category = $child_ids;
 
+		$search->query_conds[] = tbl('video').'.active = "yes"';
 		if( !has_access('admin_access',TRUE) )
 		{
-			$search->query_conds[] = tbl('video').'.status = "Successful"';
-			$search->query_conds[] = tbl('video').'.active = "yes"';
-			$search->query_conds[] = tbl('video').'.broadcast != "unlisted"';
+			$search->query_conds[] = 'AND '.tbl('video').'.status = "Successful"';
+			$search->query_conds[] = 'AND '.tbl('video').'.broadcast != "unlisted"';
 		}
 	}
 
