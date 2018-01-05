@@ -214,9 +214,9 @@
            $file_dir = "/" . $thumbDir;
         }
 
-        $filepath = THUMBS_DIR."/" .$file_dir.$vdetails['file_name'].$size.'-'.$vdetails['default_thumb'];
-        if( $size && isset($vdetails['default_thumb']) && file_exists($filepath) )
-			return $filepath;
+        $filepath = $file_dir.$vdetails['file_name'].'-'.$size.'-'.$vdetails['default_thumb'].'.jpg';
+        if( $size && isset($vdetails['default_thumb']) && file_exists(THUMBS_DIR.$filepath) )
+			return THUMBS_URL.$filepath;
 
         $vid_thumbs = glob(THUMBS_DIR."/" .$file_dir.$vdetails['file_name']."*");
         #replace Dir with URL
@@ -306,7 +306,6 @@
 			}
 			return $thumbs[0];
 		}
-		execution_time();
     }
 
 	/**
