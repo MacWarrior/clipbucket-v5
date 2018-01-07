@@ -72,7 +72,6 @@
 		$(".cb_quickie[v-id="+vid+"]").removeClass('icon-tick');
 		currentList = $.cookie("fast_qlist");
 		cleaned = currentList.replace(vid, '');
-		console.log(cleaned);
 		$.cookie("fast_qlist", cleaned, { expires : 10 });
 		$(this).closest('.qlist_item').fadeOut('slow');
 	});
