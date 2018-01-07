@@ -1273,7 +1273,7 @@ class FFMpeg
 			{
 				$codecs = get_ffmpeg_codecs();
 				if( !isset($codecs[$p['audio_codec']]) || $codecs[$p['audio_codec']]['installed'] == 'no' )
-					$this->options['audio_codec'] = 'aac';
+					$p['audio_codec'] = 'aac';
 				$opt_av .= " -acodec {$p['audio_codec']}";
 			}
 		}
