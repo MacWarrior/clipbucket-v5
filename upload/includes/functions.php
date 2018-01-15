@@ -5861,6 +5861,26 @@
 	  return $data;
 	}
 
+	/**
+		* Check for the content mime type of a file provided
+		* @param : { FILE } { $mainFile } { File to run check against }
+		* @author : Fahad Abbas
+		* @since : 10 January, 2018
+		* @todo : will Check for the content mime type of a file provided
+		* @return : { string/boolean } { type or false }
+		* @example : N/A
+    */
+	function get_mime_type($file){
+		
+		$raw_content_type = mime_content_type($file);
+        $cont_type = substr($raw_content_type, 0,strpos($raw_content_type, '/'));
+        if ($cont_type){
+        	return $cont_type;
+        }else{
+        	return false;
+        }
+	}
+
 	
 
 

@@ -34,7 +34,7 @@ if(isset($_POST['update_avatar_bg']))
 	$userquery->update_user_avatar_bg($array);
 }
 
-if(isset($_FILES["coverPhoto"])){
+if(isset($_FILES["coverPhoto"]) && get_mime_type($_FILES["coverPhoto"]['tmp_name']) == 'image'){
 	$array = $_FILES;
 	$array['userid'] = userid();
 	$coverUpload = $userquery->updateCover($array);
@@ -43,6 +43,14 @@ if(isset($_FILES["coverPhoto"])){
 		"status" => $coverUpload["status"],
 		"msg" => $coverUpload["msg"],
 		"url" => $userquery->getCover(userid()) . "?{$timeStamp}",
+		);
+	echo json_encode($response);
+	die();
+}else{
+	$response = array(
+		"status" => false,
+		"msg" => "Invalid Image provided",
+		"url" => false,
 		);
 	echo json_encode($response);
 	die();

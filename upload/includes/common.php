@@ -232,8 +232,8 @@
 	$cbphoto    = new CBPhotos();
 	
 	$cbfeeds 	= new cbfeeds();
-	//$MrsTranslator = new MrsTranslator($Clientid, $secretId);
-	$MrsTranslator = new MrsTranslator();
+	//$GoogleTranslator = new MrsTranslator($Clientid, $secretId);
+	$GoogleTranslator = new GoogleTranslator();
 
 	# $cbmenu		= new MenuHandler();
 	check_install('after');
