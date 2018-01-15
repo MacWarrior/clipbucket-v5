@@ -739,7 +739,7 @@ class FFMpeg
 
 		logData("input : video : ".$input_video_height,"checkpoints");
 		logData($this->options,'checkpoints');
-		//Setting contidion to place resolution to first near to input video 
+		//Setting condition to place resolution to first near to input video
 		if ($this->options['gen_'.$input_video_height]  == 'yes'){
 			$final_res[$input_video_height] = $resolutions[$input_video_height];
 		}

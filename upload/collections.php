@@ -1,98 +1,83 @@
 <?php
+	/*
+	 ********************************************************************
+	 | Copyright (c) 2007-2009 Clip-Bucket.com. All rights reserved.
+	 | @ Author : ArslanHassan
+	 | @ Software : ClipBucket , © PHPBucket.com
+	 ********************************************************************
+	*/
+	define("THIS_PAGE",'collections');
+	define("PARENT_PAGE",'collections');
+	require 'includes/config.inc.php';
+	$pages->page_redir();
+	$userquery->perm_check('view_collections',true);
+	$sort = $_GET['sort'];
+	$cond = array("category"=>mysql_clean($_GET['cat']),"date_span"=>mysql_clean($_GET['time']));
+	$content = mysql_clean($_GET['content']);
 
-/* 
- ********************************************************************
- | Copyright (c) 2007-2009 Clip-Bucket.com. All rights reserved.	
- | @ Author : ArslanHassan											
- | @ Software : ClipBucket , © PHPBucket.com							
- ********************************************************************
-*/
-define("THIS_PAGE",'collections');
-define("PARENT_PAGE",'collections');
-require 'includes/config.inc.php';
-$pages->page_redir();
-$userquery->perm_check('view_collections',true);
-$sort = $_GET['sort'];
-$cond = array("category"=>mysql_clean($_GET['cat']),"date_span"=>mysql_clean($_GET['time']));
-$content = mysql_clean($_GET['content']);
-
-switch($sort)
-{	
-	case "most_recent":
-	default:
+	switch($sort)
 	{
-		$cond['order'] = " date_added DESC";
+		case "most_recent":
+		default:
+			$cond['order'] = " date_added DESC";
+			break;
+
+		case "featured":
+			$cond['featured'] = "yes";
+			break;
+
+		case "most_viewed":
+			$cond['order'] = " views DESC";
+			break;
+
+		case "most_commented":
+			$cond['order'] = " total_comments DESC";
+			break;
+
+		case "most_items":
+			$cond['order'] = " total_objects DESC";
+			break;
 	}
-	break;
-	
-	case "featured":
+
+	switch($content)
 	{
-		$cond['featured'] = "yes";
+		case "videos":
+			$cond['type'] = "videos";
+			break;
+
+		case "photos":
+			$cond['type'] = "photos";
+			break;
 	}
-	break;
-	
-	case "most_viewed":
-	{
-		$cond['order'] = " views DESC";	
+
+	//$cond['has_items'] = true;
+
+	//Getting Collection List
+	$page = $_GET['page'];
+	$get_limit = create_query_limit($page,COLLPP);
+	$clist = $cond;
+	$clist['limit'] = $get_limit;
+	if (!isSectionEnabled('photos') && isSectionEnabled('videos')) {
+		$clist['type'] = 'videos';
+	} elseif (isSectionEnabled('photos') && !isSectionEnabled('videos')) {
+		$clist['type'] = 'photos';
+	} elseif (!isSectionEnabled('photos') && !isSectionEnabled('videos')) {
+		$clist['type'] = 'none';
 	}
-	break;
-	
-	case "most_commented":
-	{
-		$cond['order'] = " total_comments DESC";
-	}
-	break;
-	
-	case "most_items":
-	{
-		$cond['order'] = " total_objects DESC";
-	}
-	break;	
-}
+	$collections = $cbcollection->get_collections($clist);
 
-switch($content)
-{
-	case "videos":
-	{
-		$cond['type'] = "videos";	
-	}
-	break;
-	
-	case "photos":
-	{
-		$cond['type'] = "photos";	
-	}
-}
+	Assign('collections', $collections);
 
-//$cond['has_items'] = true;
+	//Collecting Data for Pagination
+	$ccount = $cond;
+	$ccount['count_only'] = true;
+	$total_rows  = $cbcollection->get_collections($ccount);
+	$total_pages = count_pages($total_rows,COLLPP);
 
-//Getting Collection List
-$page = mysql_clean($_GET['page']);
-$get_limit = create_query_limit($page,COLLPP);
-$clist = $cond;
-$clist['limit'] = $get_limit;
-if (!isSectionEnabled('photos') && isSectionEnabled('videos')) {
-	$clist['type'] = 'videos';
-} elseif (isSectionEnabled('photos') && !isSectionEnabled('videos')) {
-	$clist['type'] = 'photos';
-} elseif (!isSectionEnabled('photos') && !isSectionEnabled('videos')) {
-	$clist['type'] = 'none';
-}
-$collections = $cbcollection->get_collections($clist);
+	//Pagination
+	$pages->paginate($total_pages,$page);
 
-Assign('collections', $collections);	
-
-//Collecting Data for Pagination
-$ccount = $cond;
-$ccount['count_only'] = true;
-$total_rows  = $cbcollection->get_collections($ccount);
-$total_pages = count_pages($total_rows,COLLPP);
-
-//Pagination
-$pages->paginate($total_pages,$page);
-
-subtitle(lang('collections'));
-//Displaying The Template
-template_files('collections.html');
-display_it();
-?>
+	subtitle(lang('collections'));
+	//Displaying The Template
+	template_files('collections.html');
+	display_it();

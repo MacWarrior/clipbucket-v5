@@ -619,7 +619,7 @@
 			$validDimensions = array(240,360,480,720,1080);
 			$inputVideoHeight = $this->getClosest( $originalVideoHeight, $validDimensions );
 
-			//Setting contidion to place resolution to first near to input video 
+			//Setting condition to place resolution to first near to input video
 			if ( $this->configs['gen'.$inputVideoHeight]  == 'yes' ) {
 				$finalRes[$inputVideoHeight] = $resolutions[$inputVideoHeight];
 			}
