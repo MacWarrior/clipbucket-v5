@@ -275,7 +275,6 @@ function homePageVideos(qlist_items) {
 						var currWidth = $(window).width();
 						if (loadHit >= 2 && currWidth > 767) {
 							var moveTo = $( ".featAppending" ).last().offset().top;
-							moveTo = moveTo;
 							thakkiLoading(moveTo);
 						}
 					} else {
@@ -286,7 +285,6 @@ function homePageVideos(qlist_items) {
 						var currWidth = $(window).width();
 						if (loadHit >= 2 && currWidth > 767) {
 							var moveTo = $( "#recent_pre" ).last().offset().top;
-							moveTo = moveTo;
 							thakkiLoading(moveTo);
 						}
 					}
