@@ -335,7 +335,7 @@
 	define('JS_URL','/js');
 	
 	#DIRECT URL OF VIDEO FILES
-	define('FILES_URL','/files');
+	define('FILES_URL',BASEURL.'/files');
 	define('VIDEOS_URL',FILES_URL.'/videos');
 	define('THUMBS_URL',FILES_URL.'/thumbs');
 	define('SPRITES_URL',FILES_URL.'/sprites');

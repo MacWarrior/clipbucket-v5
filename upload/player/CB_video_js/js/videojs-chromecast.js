@@ -32,6 +32,7 @@ var _videoJs2 = _interopRequireDefault(_videoJs);
 var Component = _videoJs2['default'].getComponent('Component');
 var ControlBar = _videoJs2['default'].getComponent('ControlBar');
 var Button = _videoJs2['default'].getComponent('Button');
+var hasReceiver = false;
 
 /**
  * The base class for buttons that toggle chromecast video
@@ -59,6 +60,12 @@ var ChromeCastButton = (function (_Button) {
         this.on(player, 'loadstart', function () {
             if (_this.casting && _this.apiInitialized) {
                 _this.onSessionSuccess(_this.apiSession);
+            }
+        });
+
+        this.on(player, 'dispose', function () {
+            if (_this.casting && _this.apiSession) {
+                _this.apiSession.stop(null, null);
             }
         });
     }
@@ -127,6 +134,11 @@ var ChromeCastButton = (function (_Button) {
     }, {
         key: 'onInitSuccess',
         value: function onInitSuccess() {
+            if (hasReceiver) {
+                this.show();
+            } else {
+                this.hide();
+            }
             return this.apiInitialized = true;
         }
     }, {
@@ -142,7 +154,11 @@ var ChromeCastButton = (function (_Button) {
         key: 'receiverListener',
         value: function receiverListener(availability) {
             if (availability === 'available') {
+                hasReceiver = true;
                 return this.show();
+            } else {
+                hasReceiver = false;
+                return this.hide();
             }
         }
     }, {
@@ -173,8 +189,8 @@ var ChromeCastButton = (function (_Button) {
 
             mediaInfo = new chrome.cast.media.MediaInfo(source, type);
             mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata();
-            if (this.options_.metadata) {
-                ref = this.options_.metadata;
+            if (this.options_.playerOptions.chromecast.metadata) {
+                ref = this.options_.playerOptions.chromecast.metadata;
                 for (key in ref) {
                     value = ref[key];
                     mediaInfo.metadata[key] = value;
@@ -872,8 +888,8 @@ Chromecast.prototype['featuresNativeVideoTracks'] = false;
 
 _videoJs2['default'].options.chromecast = {};
 
-Component.registerComponent('Chromecast', Chromecast);
 Tech.registerTech('Chromecast', Chromecast);
+
 exports['default'] = Chromecast;
 module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -951,10 +967,6 @@ _videoJs2['default'].addLanguage('fr', {
     'CASTING TO': 'CAST EN COURS SUR'
 });
 
-var USER_AGENT = window.navigator.userAgent;
-
-_videoJs2['default'].browser.IS_EDGE = /Edge/i.test(USER_AGENT);
-
 Component.registerComponent('Chromecast', Chromecast);
 exports['default'] = Chromecast;
 module.exports = exports['default'];
@@ -988,7 +1000,9 @@ var plugin = function plugin(options) {
   player.addChild('Chromecast', options);
 };
 
-_videoJs2['default'].plugin('chromecast', plugin);
+var registerPlugin = _videoJs2['default'].registerPlugin || _videoJs2['default'].plugin;
+
+registerPlugin('chromecast', plugin);
 
 exports['default'] = plugin;
 module.exports = exports['default'];
