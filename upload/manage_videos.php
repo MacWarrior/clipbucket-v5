@@ -134,5 +134,3 @@ switch($mode)
 
 template_files('manage_videos.html');
 display_it();
-
-?>

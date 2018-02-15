@@ -40,7 +40,7 @@
 						<div class="row">
 							<div class="col-md-3">
 							  <a class="manageVid_thumb" href="/edit_video.php?vid={$video.videoid}">
-								<img src="{getThumb vdetails=$video}" class="img-responsive" width="130" height="80" id="thumbs_{$video.videoid}" class="vthumb"/>
+								<img src="{getThumb vdetails=$video size=168x105}" class="img-responsive" width="130" height="80" id="thumbs_{$video.videoid}" class="vthumb"/>
 								<span class="duration">({if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if})</span>
 							   </a>     
 							</div>
@@ -79,9 +79,9 @@
 						Actions <i class="caret"></i></button>
 					<ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
 						<li><a role="menuitem" tabindex="-1"
-							   href="/edit_video.php?vid={$video.videoid}">{lang code="edit_video"}</a></li>
+							   href="/edit_video.php?vid={$video.videoid}">{lang code="edit"}</a></li>
 						<li><a role="menuitem" tabindex="-1"
-							   href="/watch_video.php?v={$video.videokey}" target="_blank">{lang code="Watch"}</a>
+							   href="/watch_video.php?v={$video.videokey}" target="_blank">{lang code="watch"}</a>
 
 						<li class="divider"></li>
 						<li><a role="menuitem" tabindex="-1" href="/myaccount.php?delete_video={$video.videoid}">{lang code="delete"}</a>

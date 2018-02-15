@@ -265,7 +265,7 @@
 						<div class="adminthumb">
 							 <a href="{$userquery->profile_link($logged_in_user)}">
 							<img class="img-circle" src="{$usr_head_thumb}"/>
-							<h4>{$userquery->username}</h4>
+							<h4>{display_clean($userquery->username)}</h4>
 							</a>     
 						</div>
 					</li>
@@ -274,19 +274,23 @@
 					{/if}
 					<li><a href="{link name='my_account' }{userid}"><i class="fa fa-user"></i></i>&nbsp;&nbsp;{lang code="my_account"}</a></li>
 					{ANCHOR place='premium_button_link'}
-					<li><a href="{link name='my_videos'}"><i class="fa fa-video-camera"></i>&nbsp;&nbsp;{lang code="Manage Videos"}</a></li>
+					{if isSectionEnabled('videos')}
+					<li><a href="{link name='my_videos'}"><i class="fa fa-video-camera"></i>&nbsp;&nbsp;{lang code="manage_videos"}</a></li>
+					{/if}
 					{ANCHOR place="head_audio_dropdown"}
-					<li><a href="{link name='channels'}"><i class="fa fa-eye"></i>&nbsp;&nbsp;{lang code="View Channels"}</a></li>
-					<li><a href="/view_channel.php?user={$userquery->username}"><i class="fa fa-desktop"></i>&nbsp;&nbsp;{lang code="My Channel"}</a></li>
+					{if isSectionEnabled('channels')}
+					<li><a href="{link name='channels'}"><i class="fa fa-eye"></i>&nbsp;&nbsp;{lang code="view_channels"}</a></li>
+					<li><a href="/view_channel.php?user={display_clean($userquery->username)}"><i class="fa fa-desktop"></i>&nbsp;&nbsp;{lang code="my_channel"}</a></li>
+					{/if}
 					<li class="divider"></li>
-					<li><a href="{link name='logout'}"><i class="fa fa-sign-out"></i>&nbsp;&nbsp;{lang code="Logout"}</a></li>
+					<li><a href="{link name='logout'}"><i class="fa fa-sign-out"></i>&nbsp;&nbsp;{lang code="logout"}</a></li>
 				</ul>
 			</li>
 			{else}
 			<li>
 				<div class="mrl">
-					<a href="{link name='signup'}" class="btn btn-primary btn-success btn-sm">{lang code="Create Account"}</a>
-					<a href="#" data-toggle="modal" data-target="#login-modal" class="btn btn-primary btn-sm">{lang code="Login"}</a>
+					<a href="{link name='signup'}" class="btn btn-primary btn-success btn-sm">{lang code="create_new_account"}</a>
+					<a href="#" data-toggle="modal" data-target="#login-modal" class="btn btn-primary btn-sm">{lang code="login"}</a>
 				</div>
 			</li>
 			{/if}
