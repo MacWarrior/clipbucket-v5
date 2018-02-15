@@ -12,49 +12,45 @@ if ( isset($_REQUEST['plupload']) )
 }
 
 if($_FILES['photoUpload'])
-	$mode = "uploadPhoto";
+    $mode = "uploadPhoto";
 if($_POST['photoForm'])
-	$mode = "get_photo_form";
+    $mode = "get_photo_form";
 if($_POST['insertBeat'])
-	$mode = "insert_beat";
+    $mode = "insert_beat";
 if($_POST['updatePhoto'])
-	$mode = "update_photo";			
+    $mode = "update_photo";         
 
 switch($mode)
 {
-	case "insert_beat":
-	{
-		
-	}
-	break;
-	case "update_photo":
-	{
-		$_POST['photo_title'] = genTags(str_replace(array('_','-'),' ',mysql_clean($_POST['photo_title'])));
-		$_POST['photo_description'] = genTags(str_replace(array('_','-'),' ',mysql_clean($_POST['photo_description'])));
-		$_POST['photo_tags'] = genTags(str_replace(array(' ','_','-'),', ',mysql_clean($_POST['photo_tags'])));
-				
-		$cbphoto->update_photo();
-		
-		if(error())
-			$error = error('single');
-		if(msg())
-			$success = msg('single');
-			
-		$updateResponse['error'] = $error;
-		$updateResponse['success'] = $success;
-		
-		echo json_encode($updateResponse);		
-	}
-	break;
-	case "uploadPhoto":
-	{
-		$exts = $cbphoto->exts;
-		$max_size = 1048576; // 2MB in bytes
-		$form = "photoUpload";
-		$path = PHOTOS_DIR."/";
-		
-		// These are found in $_FILES. We can access them like $_FILES['file']['error'].
-		$upErrors = array(
+    case "insert_beat":
+		break;
+
+    case "update_photo":
+        $_POST['photo_title'] = genTags(str_replace(array('_','-'),' ',mysql_clean($_POST['photo_title'])));
+        $_POST['photo_description'] = genTags(str_replace(array('_','-'),' ',mysql_clean($_POST['photo_description'])));
+        $_POST['photo_tags'] = genTags(str_replace(array(' ','_','-'),', ',mysql_clean($_POST['photo_tags'])));
+                
+        $cbphoto->update_photo();
+        
+        if(error())
+            $error = error('single');
+        if(msg())
+            $success = msg('single');
+            
+        $updateResponse['error'] = $error;
+        $updateResponse['success'] = $success;
+        
+        echo json_encode($updateResponse);      
+		break;
+
+    case "uploadPhoto":
+        $exts = $cbphoto->exts;
+        $max_size = 1048576; // 2MB in bytes
+        $form = "photoUpload";
+        $path = PHOTOS_DIR."/";
+        
+        // These are found in $_FILES. We can access them like $_FILES['file']['error'].
+        $upErrors = array(
 			0 => "There is no error, the file uploaded with success.",
 			1 => "The uploaded file exceeds the upload_max_filesize directive in php.ini.",
 			2 => " The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.",
@@ -63,73 +59,55 @@ switch($mode)
 			6 => "Missing a temporary folder.",
 			7 => "Failed to write file to disk."
 		);
-
-		// Let's see if everything is working fine by checking $_FILES.
-		if(!isset($_FILES[$form])) {
-			upload_error("No upload found in \$_FILES for " . $form);
-			exit(0);
-		}
-		elseif(isset($_FILES[$form]['error']) && $_FILES[$form]['error'] != 0) {
-			upload_error($upErrors[$_FILES[$form]['error']]);
-			exit(0);
-		}
-		elseif(!isset($_FILES[$form]["tmp_name"]) || !@is_uploaded_file($_FILES[$form]["tmp_name"])) {
-			upload_error("Upload failed is_uploaded_file test.");
-			exit(0);
-		} elseif(empty($_FILES[$form]['name'])) {
-			upload_error("File name is empty");
-			exit(0);	
-		}
-		
-		// Time to check if Filesize is according to demands
-		//$filesize = filesize($_FILES[$form]['tmp_name']);
-		//if(!$filesize || $filesize > $max_size)
-		//{
-		//	upload_error("File exceeds the maximum allowed size");
-		//	exit(0);
-		//}
-		//
-		//if($filesize < 0)
-		//{
-		//	upload_error("File size outside allowed lower bound");
-		//	exit(0);
-		//}
-		
-		//Checking Extension of File
-		$info = pathinfo($_FILES[$form]['name']);
-		$extension = strtolower($info['extension']);
-		$valid_extension = false;
-		
-		foreach ($exts as $ext) {
-			if (strcasecmp($extension, $ext) == 0) {
-				$valid_extension = true;
-				break;
-			}
-		}
-		
-		if(!$valid_extension)
+                          
+        // Let's see if everything is working fine by checking $_FILES.
+        if(!isset($_FILES[$form])) {
+            upload_error("No upload found in \$_FILES for " . $form);
+            exit(0);
+        } elseif(isset($_FILES[$form]['error']) && $_FILES[$form]['error'] != 0) {
+            upload_error($upErrors[$_FILES[$form]['error']]);
+            exit(0);
+        } elseif(!isset($_FILES[$form]["tmp_name"]) || !@is_uploaded_file($_FILES[$form]["tmp_name"])) {
+            upload_error("Upload failed is_uploaded_file test.");
+            exit(0);
+        } elseif(empty($_FILES[$form]['name'])) {
+            upload_error("File name is empty");
+            exit(0);    
+        }
+        
+        //Checking Extension of File
+        $info = pathinfo($_FILES[$form]['name']);
+        $extension  = strtolower($info['extension']);
+        $valid_extension = false;
+        
+        foreach ($exts as $ext)
 		{
-			upload_error("Invalid file extension");
-			exit(0);	
-		}
-		
-		$filename = $cbphoto->create_filename();
-		
-		
-		//Now uploading the file
-		if(move_uploaded_file($_FILES[$form]['tmp_name'],$path.$filename.".".$extension))
-		{
-			echo json_encode(array("success"=>"yes","filename"=>$filename,"extension"=>$extension));
-			
-		} else {	
-			upload_error("File could not be saved.");
-			exit(0);	
-		}	
-	}
-	break;
+            if (strcasecmp($extension, $ext) == 0
+			{
+                $valid_extension = true;
+                break;
+            }
+        }
 
+        if(!$valid_extension)
+        {
+            upload_error("Invalid file extension");
+            exit(0);    
+        }
 
-    case 'plupload': {
+        $filename = $cbphoto->create_filename();
+
+        //Now uploading the file
+        if(move_uploaded_file($_FILES[$form]['tmp_name'],$path.$filename.".".$extension))
+        {
+            echo json_encode(array("success"=>"yes","filename"=>$filename,"extension"=>$extension));
+        } else {    
+            upload_error("File could not be saved.");
+            exit(0);    
+        }
+		break;
+
+    case 'plupload':
         $status_array = array();
         // HTTP headers for no cache etc
         header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
@@ -137,12 +115,15 @@ switch($mode)
         header("Cache-Control: no-store, no-cache, must-revalidate");
         header("Cache-Control: post-check=0, pre-check=0", false);
         header("Pragma: no-cache");
-        #exit("BEATS: ".CB_BEATS_UPLOAD_DIR."         and    PHOTO ".PHOTOS_DIR);
-        //pr($_REQUEST);
+
+        #checking for if the right file is uploaded
+        $content_type = get_mime_type($_FILES['file']['tmp_name']);
+        if ( $content_type != 'audio')  {
+            echo json_encode(array("status"=>"400","err"=>"Invalid Content"));
+            exit();
+        }
+
         $targetDir = CB_BEATS_UPLOAD_DIR;
-       # $directory = create_dated_folder( CB_BEATS_UPLOAD_DIR );
-       # $targetDir .= '/'.$directory;
-        #pr($_REQUEST,true);
 
         $cleanupTargetDir = true; // Remove old files
         $maxFileAge = 5 * 3600; // Temp file age in seconds
@@ -154,7 +135,7 @@ switch($mode)
 
         // Clean the fileName for security reasons
         $fileName = preg_replace('/[^\w\._]+/', '_', $fileName);
-       #exit($targetDir . DIRECTORY_SEPARATOR . $fileName);
+
         // Make sure the fileName is unique but only if chunking is disabled
         if ($chunks < 2 && file_exists($targetDir . DIRECTORY_SEPARATOR . $fileName))
         {
@@ -170,12 +151,11 @@ switch($mode)
         }
 
         $filePath = $targetDir . DIRECTORY_SEPARATOR . $fileName;
-        #echo $filePath;
-        #echo "</br>TARGET DIR ".$targetDir;
+
         // Create target dir
         if (!file_exists($targetDir))
         {
-        	echo "creating file";
+            echo "creating file";
             mkdir($targetDir);
         }
 
@@ -192,11 +172,10 @@ switch($mode)
                     @unlink($tmpfilePath);
                 }
             }
-
             closedir($dir);
-        } else
+        } else {
             die('{"jsonrpc" : "2.0", "error" : {"code": 100, "message": "Failed to open temp directory."}, "id" : "id"}');
-
+		}
 
         // Look for the content type header
         if (isset($_SERVER["HTTP_CONTENT_TYPE"]))
@@ -230,8 +209,7 @@ switch($mode)
                     die('{"jsonrpc" : "2.0", "error" : {"code": 102, "message": "Failed to open output stream."}, "id" : "id"}');
             } else
                 die('{"jsonrpc" : "2.0", "error" : {"code": 103, "message": "Failed to move uploaded file."}, "id" : "id"}');
-        } else
-        {
+        } else {
             // Open temp file
             $out = fopen("{$filePath}.part", $chunk == 0 ? "wb" : "ab");
             if ($out)
@@ -266,16 +244,11 @@ switch($mode)
         rename($filePath, $targetFile);
 
         echo json_encode( array("success"=>"yes","file_name"=>$filename, "extension" => getExt( $filePath ), "file_directory" => $targetDir ) );
-    }
-    break;
+		break;
 }
-
-
-
 
 //function used to display error
 function upload_error($error)
 {
-	echo json_encode(array("error"=>$error));
+    echo json_encode(array("error"=>$error));
 } 
-?> 

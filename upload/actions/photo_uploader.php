@@ -187,6 +187,13 @@ switch($mode)
         header("Cache-Control: post-check=0, pre-check=0", false);
         header("Pragma: no-cache");
 
+        #checking for if the right file is uploaded
+        $content_type = get_mime_type($_FILES['file']['tmp_name']);
+        if ( $content_type != 'image')  {
+            echo json_encode(array("status"=>"400","err"=>"Invalid Content"));
+            exit();
+        }
+
         //pr($_REQUEST);
         $targetDir = PHOTOS_DIR;
         $directory = create_dated_folder( PHOTOS_DIR );

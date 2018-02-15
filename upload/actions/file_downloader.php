@@ -54,11 +54,12 @@ if(!isCurlInstalled())
 if(!userid())
 	exit(json_encode(array('error'=>'You are not logged in')));
 
+/*Setting up file name for the video to be converted*/
+$file_name = time().RandomString(5);	
+
 if(isset($_POST['youtube']))
 {
 	$youtube_url = $_POST['file'];
-	$filename = $_POST['file_name'];	
-	
 	$ParseUrl = parse_url($youtube_url);
 	parse_str($ParseUrl['query'], $youtube_url_prop);
 	$YouTubeId = isset($youtube_url_prop['v']) ? $youtube_url_prop['v'] : '';
@@ -122,7 +123,7 @@ if(isset($_POST['youtube']))
 	$file_directory = createDataFolders();
 	$vid_array['file_directory'] = $file_directory;
 	$vid_array['category'] = array($cbvid->get_default_cid());
-	$vid_array['file_name'] = $filename;
+	$vid_array['file_name'] = $file_name;
 	$vid_array['userid'] = userid();
 	
 	$duration = $vid_array['duration'];
@@ -143,12 +144,12 @@ if(isset($_POST['youtube']))
 	$db->update(tbl("video"),array("status","refer_url","duration"),array('Successful',$ref_url,$duration)," videoid='$vid'");
 
 	//Downloading thumb
-	$downloaded_thumb = snatch_it(urlencode($max_quality_thumb),THUMBS_DIR.'/'.$file_directory,$filename."-ytmax.jpg");
+	$downloaded_thumb = snatch_it(urlencode($max_quality_thumb),THUMBS_DIR.'/'.$file_directory,$file_name."-ytmax.jpg");
 
 	$params = array();
 	$params['filepath'] = $downloaded_thumb;
 	$params['files_dir'] = $file_directory;
-	$params['file_name'] = $filename;
+	$params['file_name'] = $file_name;
 	$params['width'] = $thumb_contents['width'];
 	$params['height'] = $thumb_contents['height'];
 
@@ -218,7 +219,7 @@ function callback($resource, $download_size, $downloaded, $upload_size, $uploade
 
 
 $file = $_POST['file'];
-$file_name = mysql_clean($_POST['file_name']);
+//$file_name = mysql_clean($_POST['file_name']);
 // $file = "http://clipbucket.dev/abc.mp4";
 // $file_name = "abc";
 

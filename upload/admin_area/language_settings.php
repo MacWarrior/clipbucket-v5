@@ -11,10 +11,6 @@
 	$userquery->admin_login_check();
 	$userquery->login_check('web_config_access');
 	$pages->page_redir();
-	$access_token = $MrsTranslator->get_access_token();
-
-	if( !isset($_COOKIE['bing_access_token']) )
-		setcookie('bing_access_token', $access_token, time()+600);
 
 	/* Generating breadcrumb */
 	global $breadcrumb;
