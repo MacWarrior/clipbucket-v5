@@ -193,7 +193,14 @@ switch($mode)
             echo json_encode(array("status"=>"400","err"=>"Invalid Content"));
             exit();
         }
+        $extension = getExt( $_FILES['file']['name']);
+        $types = strtolower(config('allowed_types'));
+        $supported_extensions = explode(',', $types);
 
+        if (!in_array($extension, $supported_extensions)) {
+            echo json_encode(array("status"=>"504","msg"=>"Invalid extension"));
+            exit();
+        }
         //pr($_REQUEST);
         $targetDir = PHOTOS_DIR;
         $directory = create_dated_folder( PHOTOS_DIR );
