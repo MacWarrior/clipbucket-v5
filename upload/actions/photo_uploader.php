@@ -336,7 +336,7 @@ switch($mode)
 
         echo json_encode( array("success"=>"yes","file_name"=>$filename, "extension" => getExt( $filePath ), "file_directory" => $directory ) );
     }*/
-    break;
+   // break;
 }
 
 
