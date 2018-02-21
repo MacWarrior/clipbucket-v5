@@ -46,7 +46,7 @@ switch($mode)
         echo json_encode($updateResponse);      
     }
     break;
-    case "uploadPhoto":
+   /* case "uploadPhoto":
     {
         $exts = $cbphoto->exts;
         $max_size = 1048576; // 2MB in bytes
@@ -126,7 +126,7 @@ switch($mode)
             exit(0);    
         }   
     }
-    break;
+    break;*/
 
 
     case 'plupload': {
