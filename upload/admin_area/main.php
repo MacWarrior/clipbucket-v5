@@ -62,7 +62,7 @@
 			'collection_rating',
 			'collectionsSection',
 			'comments_per_page',
-			'captcha_type',
+			//'captcha_type',
 			'con_modules_type',
 			'comments_captcha',
 			'comment_rating',
@@ -169,7 +169,7 @@
 			'photo_user_favorites',
 			'photo_other_limit',
 
-			'quick_conv',
+			//'quick_conv',
 
 			'resize',
 			'remoteUpload',
@@ -192,7 +192,7 @@
 			'thumb_height',
 
 			'use_ffmpeg_vf',
-			'use_crons',
+			//'use_crons',
 			'user_comment_own',
 			'user_rate_opt1'	,
 			'users_items_subscriptions',

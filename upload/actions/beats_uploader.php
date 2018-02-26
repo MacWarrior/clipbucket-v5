@@ -43,70 +43,6 @@ switch($mode)
         echo json_encode($updateResponse);      
 		break;
 
-    case "uploadPhoto":
-        $exts = $cbphoto->exts;
-        $max_size = 1048576; // 2MB in bytes
-        $form = "photoUpload";
-        $path = PHOTOS_DIR."/";
-        
-        // These are found in $_FILES. We can access them like $_FILES['file']['error'].
-        $upErrors = array(
-			0 => "There is no error, the file uploaded with success.",
-			1 => "The uploaded file exceeds the upload_max_filesize directive in php.ini.",
-			2 => " The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.",
-			3 => "The uploaded file was only partially uploaded.",
-			4 => "No file was uploaded.",
-			6 => "Missing a temporary folder.",
-			7 => "Failed to write file to disk."
-		);
-                          
-        // Let's see if everything is working fine by checking $_FILES.
-        if(!isset($_FILES[$form])) {
-            upload_error("No upload found in \$_FILES for " . $form);
-            exit(0);
-        } elseif(isset($_FILES[$form]['error']) && $_FILES[$form]['error'] != 0) {
-            upload_error($upErrors[$_FILES[$form]['error']]);
-            exit(0);
-        } elseif(!isset($_FILES[$form]["tmp_name"]) || !@is_uploaded_file($_FILES[$form]["tmp_name"])) {
-            upload_error("Upload failed is_uploaded_file test.");
-            exit(0);
-        } elseif(empty($_FILES[$form]['name'])) {
-            upload_error("File name is empty");
-            exit(0);    
-        }
-        
-        //Checking Extension of File
-        $info = pathinfo($_FILES[$form]['name']);
-        $extension  = strtolower($info['extension']);
-        $valid_extension = false;
-        
-        foreach ($exts as $ext)
-		{
-            if (strcasecmp($extension, $ext) == 0
-			{
-                $valid_extension = true;
-                break;
-            }
-        }
-
-        if(!$valid_extension)
-        {
-            upload_error("Invalid file extension");
-            exit(0);    
-        }
-
-        $filename = $cbphoto->create_filename();
-
-        //Now uploading the file
-        if(move_uploaded_file($_FILES[$form]['tmp_name'],$path.$filename.".".$extension))
-        {
-            echo json_encode(array("success"=>"yes","filename"=>$filename,"extension"=>$extension));
-        } else {    
-            upload_error("File could not be saved.");
-            exit(0);    
-        }
-		break;
-
     case 'plupload':
         $status_array = array();
         // HTTP headers for no cache etc
@@ -120,6 +56,15 @@ switch($mode)
         $content_type = get_mime_type($_FILES['file']['tmp_name']);
         if ( $content_type != 'audio')  {
             echo json_encode(array("status"=>"400","err"=>"Invalid Content"));
+            exit();
+        }
+
+        $extension = getExt( $_FILES['file']['name']);
+        $types = strtolower(config('allowed_types'));
+        $supported_extensions = explode(',', $types);
+
+        if (!in_array($extension, $supported_extensions)) {
+            echo json_encode(array("status"=>"504","msg"=>"Invalid extension"));
             exit();
         }
 

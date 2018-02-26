@@ -474,6 +474,30 @@ class myquery
 				
 				//Now Finally Sending Email
 				cbmail(array('to'=>$own_details,'from'=>WEBSITE_EMAIL,'subject'=>$subj,'content'=>$msg));
+
+				if($reply_to!=0){
+
+					$tpl = $cbemail->get_template('user_reply_email');
+					
+					$more_var = array
+					('{username}'	=> $username,
+	                                 '{fullname}' => $fullname,
+					 '{obj_link}' => $obj_link.'#comment_'.$cid,
+					 '{comment}' => $comment,
+					 '{obj}'	=> get_obj_type($type)
+					);
+					if(!is_array($var))
+						$var = array();
+					$var = array_merge($more_var,$var);
+					$subj = $cbemail->replace($tpl['email_template_subject'],$var);
+					$msg = nl2br($cbemail->replace($tpl['email_template'],$var));
+
+
+					$cd = $this->get_comment($reply_to);
+					$replying_to_email = $cd['email'];
+					cbmail(array('to'=>$replying_to_email,'from'=>WEBSITE_EMAIL,'subject'=>$subj,'content'=>$msg));
+				}
+				
 			}
 			
 			//Adding Video Feed

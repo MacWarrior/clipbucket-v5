@@ -161,6 +161,14 @@ switch($mode)
 			upload_error("Invalid file extension");
 			exit(0);	
 		}
+
+		#checking for if the right file is uploaded
+        $content_type = get_mime_type($_FILES[$form]['tmp_name']);
+        if ( $content_type != 'image')  {
+            upload_error("Invalid file type");
+            exit();
+        }
+
 		
 		$filename = $cbphoto->create_filename();
 		
@@ -178,7 +186,7 @@ switch($mode)
 	break;
 
 
-    case 'plupload': {
+  /*  case 'plupload': {
         $status_array = array();
         // HTTP headers for no cache etc
         header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
@@ -191,6 +199,15 @@ switch($mode)
         $content_type = get_mime_type($_FILES['file']['tmp_name']);
         if ( $content_type != 'image')  {
             echo json_encode(array("status"=>"400","err"=>"Invalid Content"));
+            exit();
+        }
+
+        $extension = getExt( $_FILES['file']['name']);
+        $types = strtolower(config('allowed_types'));
+        $supported_extensions = explode(',', $types);
+
+        if (!in_array($extension, $supported_extensions)) {
+            echo json_encode(array("status"=>"504","msg"=>"Invalid extension"));
             exit();
         }
 
@@ -318,8 +335,8 @@ switch($mode)
         rename($filePath, $targetFile);
 
         echo json_encode( array("success"=>"yes","file_name"=>$filename, "extension" => getExt( $filePath ), "file_directory" => $directory ) );
-    }
-    break;
+    }*/
+   // break;
 }
 
 
