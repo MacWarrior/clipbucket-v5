@@ -44,3 +44,5 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES ('', 'play
 -- Updating featured videos limit for new template
 -- Commented because cb-git version has difference from corporate
 -- UPDATE `{tbl_prefix}config` SET value = '3' WHERE name = 'index_featured';
+-- Reply email template added
+INSERT INTO `{tbl_prefix}email_templates` (`email_template_id`, `email_template_name`, `email_template_code`, `email_template_subject`, `email_template`, `email_template_allowed_tags`) VALUES ('', 'User Reply Email', 'user_reply_email', '[{website_title}] {username} made reply on your comment', '{username} has replied on your comment\r\n"{comment}"\r\n\r\n<a href="{obj_link}">{obj_link}</a>\r\n\r\n{website_title} team', '');

@@ -46,7 +46,7 @@ switch($mode)
         echo json_encode($updateResponse);      
     }
     break;
-    case "uploadPhoto":
+   /* case "uploadPhoto":
     {
         $exts = $cbphoto->exts;
         $max_size = 1048576; // 2MB in bytes
@@ -126,7 +126,7 @@ switch($mode)
             exit(0);    
         }   
     }
-    break;
+    break;*/
 
 
     case 'plupload': {
@@ -144,6 +144,15 @@ switch($mode)
         $content_type = get_mime_type($_FILES['file']['tmp_name']);
         if ( $content_type != 'audio')  {
             echo json_encode(array("status"=>"400","err"=>"Invalid Content"));
+            exit();
+        }
+
+        $extension = getExt( $_FILES['file']['name']);
+        $types = strtolower(config('allowed_types'));
+        $supported_extensions = explode(',', $types);
+
+        if (!in_array($extension, $supported_extensions)) {
+            echo json_encode(array("status"=>"504","msg"=>"Invalid extension"));
             exit();
         }
 
