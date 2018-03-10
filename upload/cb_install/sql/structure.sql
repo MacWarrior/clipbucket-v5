@@ -607,7 +607,7 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}plugin_config` (
 --
 -- Table structure for table `sessions`
 --
-CREATE TABLE `{tbl_prefix}sessions` (
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}sessions` (
   `session_id` int(11) NOT NULL AUTO_INCREMENT,
   `session` varchar(100) NOT NULL,
   `session_user` int(11) NOT NULL,

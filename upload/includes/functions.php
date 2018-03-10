@@ -5514,6 +5514,21 @@
         }
 	}
 
+	/**
+		* Trims the date added to date only
+		* @param : { $date_time }
+		* @author : Awais Fiaz
+		* @since : 5 March, 2018
+		* @todo : will trim the date and time to date only
+		* @return : { Date }
+		* @example : N/A
+    */
+	function date_only($date_time)
+	{
+       $arr=explode(" ",$date_time);
+       return $arr[0];
+	}
+
     include( 'functions_db.php' );
     include( 'functions_filter.php' );
     include( 'functions_player.php' );
