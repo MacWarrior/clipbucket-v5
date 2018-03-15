@@ -20,8 +20,8 @@
 			$load_mode = $_POST['load_mode'];
 			if ($load_mode == 'featured') {
 				$params['featured'] = "yes";
-			}
-			if ($load_mode == 'recent') {
+				$params['order'] = 'featured_date DESC';
+			} else if ($load_mode == 'recent') {
 				$params['order'] = 'date_added DESC';
 			} else {
 				$params['order'] = 'views';
