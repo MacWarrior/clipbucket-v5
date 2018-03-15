@@ -186,7 +186,7 @@ switch($mode)
 	break;
 
 
-  /*  case 'plupload': {
+    case 'plupload': {
         $status_array = array();
         // HTTP headers for no cache etc
         header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
@@ -335,8 +335,8 @@ switch($mode)
         rename($filePath, $targetFile);
 
         echo json_encode( array("success"=>"yes","file_name"=>$filename, "extension" => getExt( $filePath ), "file_directory" => $directory ) );
-    }*/
-   // break;
+    }
+   break;
 }
 
 
