@@ -212,7 +212,7 @@ INSERT INTO `{tbl_prefix}phrases` (`id`, `lang_iso`, `varname`, `text`) VALUES
 (3508, 'en', 'vdo_title_err', 'Please Enter Video Title'),
 (3509, 'en', 'vdo_des_err', 'Please Enter Video Description'),
 (3510, 'en', 'vdo_tags_err', 'Please Enter Tags For The Video'),
-(3511, 'en', 'vdo_cat_err', 'Please Choose Atleast 1 Category'),
+(3511, 'en', 'vdo_cat_err', 'Please Choose At least 1 Category'),
 (3512, 'en', 'vdo_cat_err1', 'You Can Only Choose Up to 3 Categories'),
 (3513, 'en', 'vdo_sub_email_msg', ' and therefore this message is sent to you automatically that '),
 (3514, 'en', 'vdo_has_upload_nv', 'Has Uploaded New Video'),

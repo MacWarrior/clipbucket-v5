@@ -42,8 +42,7 @@ class CBGroups extends CBCategory
 		$this->action->type_id_field = 'group_id';
 		
 		if(isSectionEnabled('groups'))
-		$Cbucket->search_types['groups'] = "cbgroup";
-
+			$Cbucket->search_types['groups'] = "cbgroup";
 	}
 		
 	/**

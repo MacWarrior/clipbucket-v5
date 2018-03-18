@@ -392,7 +392,7 @@ class myquery
 			{
 				e(sprintf("'%d' characters allowed for comment",MAX_COMMENT_CHR));
 			} elseif ( $comment_len < 5 ) {
-				e("Comment is too short. It should be atleast 5 characters");
+				e("Comment is too short. It should be at least 5 characters");
 			}
 		}
 		if(!verify_captcha())

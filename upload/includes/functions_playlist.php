@@ -225,7 +225,7 @@ function increment_playlist_played( $args = array() ) {
 }
 
 /**
-* Get playlists that have atleast 1 item
+* Get playlists that have at least 1 item
 * @param : { array } { $playlists } { array of all playlists fetched from database }
 * @since : May 11th, 2016 ClipBucket 2.8.1
 * @author : Saqib Razzaq
