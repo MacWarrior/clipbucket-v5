@@ -1,50 +1,43 @@
-{if $display_type == "" || $display_type == "normal"}
+{if $Cbucket->configs.seo == 'no'}
+	{$main_url = "/view_collection.php?cid={$collection.collection_id}&type={$collection.type}"}
+{else}
+	{$main_url = "/collection/{$collection.collection_id}/{$collection.type}/{display_clean($collection.collection_name)}"}
+{/if}
+
+{if $collection.type == 'photos'}
+	{$type = 'p'}
+{else}
+	{$type = 'v'}
+{/if}
+
+{$first_col_thumb = $cbcollection->coll_first_thumb($collection,'l')}
+
+<div class="clearfix collection-item col-lg-3 col-md-3 col-sm-4 col-xs-6">
+{if $type == 'p'}
 <div class="collection-holder">
 	<div class="photo-block">
-		<a href="/view_collection.php?cid={$collection.collection_id}&type={$collection.type}">
-			<img src="{$cbcollection->coll_first_thumb($collection,'l')}" alt="{display_clean($collection.title)}" title="{display_clean($collection.title)}" class="img-responsive" id="photo_{$collection.ci_id}">
+		<a href="{$main_url}" title="{display_clean($collection.collection_name)}}">
+			<img alt="{display_clean($collection.title)}" title="{display_clean($collection.title)}" class="img-responsive" id="collection_{$collection.collection_id}" src="{$first_col_thumb}">
 			<div class="collection-info">
-				<span>{$collection.total_objects}</span>{lang code='photos'}
+				<span>{$collection.total_objects}</span>{if $type == 'v'}{lang code="videos"}{else}{lang code="photos"}{/if}
 			</div>
 		</a>
 	</div>
-	<img src="{$theme}/images/photo-bg.png" alt="" class="img-responsive photo-bg">
+	<img src="{$theme}/images/photo-bg.png" alt="" class="photo-bg">
 </div>
-<span class="title">
-	<a href="/view_collection.php?cid={$collection.collection_id}&type={$collection.type}" title="{display_clean($collection.collection_name)}">{display_clean($collection.collection_name)}</a>
-</span>
-{/if}
-
-{if $display_type == "view_collection"}
-	{if $type == "videos"}
-		<div class="the_item">
-			<div class="onePhotoContainer oneVideoContainer">
-				<div class="onePhotoTitle">
-					<a href="{$cbphoto->photo_links($object,'view_item')}">{display_clean($object.title)|truncate:15}</a>
-				</div>
-
-				<a class="CollectThumb" href="{$cbphoto->photo_links($object,'view_item')}">
-					<img src="{getThumb vdetails=$object}" alt="{display_clean($object.title)}">
-				</a>
+<span class="title">{display_clean($collection.collection_name)}</span>
+{else}
+<div class="collection-holder">
+	<div class="photo-block">
+		<a href="{$main_url}" title="{display_clean($collection.collection_name)}">
+			<img alt="{display_clean($collection.title)}" title="{display_clean($collection.title)}" class="img-responsive" id="collection_{$collection.collection_id}" src="{$first_col_thumb}">
+			<div class="collection-info">
+				<span>{$collection.total_objects}</span>{lang code="videos"}
 			</div>
-		</div>
-	{/if}
-	{if $type == "photos"}
-		<a class="photo-holder" href="{$cbphoto->photo_links($object,'view_item')}">
-			{get_photo details=$object size='l' class='img-responsive' output='html'}
-			<i class="icon-zoom"></i>
-		</a>
-		<div class="photo-info">
-			<strong><a href="{$cbphoto->photo_links($object,'view_item')}">{display_clean($object.photo_title)|truncate:50}</a></strong>
-			<span>{lang code='by'}&nbsp;<a href="{$userquery->profile_link($object.userid)}">{display_clean($object.username)}</a></span>
-		</div>
-	{/if}
-{/if}
-
-{if $display_type == "user_collections"}
-	<div class="moveL">
-		<a href="{$cbcollection->collection_links($collection,'view')}" style="width:47px; height:47px;" title="{display_clean($collection.collection_name)}">
-			<img src="{$imageurl}/dot.gif" style="background:url({$cbcollection->get_thumb($collection,'small')}) center top no-repeat;" />
 		</a>
 	</div>
+	<img src="{$theme}/images/photo-bg.png" alt="" class="photo-bg">
+</div>
+<span class="title">{display_clean($collection.collection_name)}</span>
 {/if}
+</div>

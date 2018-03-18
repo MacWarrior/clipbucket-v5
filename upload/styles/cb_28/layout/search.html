@@ -12,9 +12,7 @@
 			<div class="clearfix row">
 				{foreach item=result from=$results}
 					{assign var=$template_var value =$result}
-					<div class="clearfix collection-item col-lg-4 col-md-4 col-sm-4 col-xs-6">
-						{include file="$display_template"}
-					</div>
+					{include file="$display_template"}
 				{/foreach}
 			</div>
 			{else}

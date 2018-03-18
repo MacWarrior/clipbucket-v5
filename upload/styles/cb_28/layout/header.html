@@ -1,30 +1,33 @@
 {$currentPage = $smarty.const.THIS_PAGE|lower}
-{if $currentPage == 'view_channel' || $currentPage == 'channels'}
-{$currentPage = 'channels'}
-{$toSearch = 'channels'}
-{elseif $currentPage == 'view_item' || $currentPage == 'photos'}
-{$currentPage = 'photos'}
-{$toSearch = 'photos'}
-{elseif $currentPage == 'collections' || $currentPage == 'view_collection'}
-{$currentPage = 'collections'}
-{$toSearch = 'collections'}
-{elseif $currentPage == 'watch_video' || $currentPage == 'videos'}
-{$currentPage = 'videos'}
-{$toSearch = 'videos'}
+{$pageType = $smarty.get.type|lower}
+{$searchPage = $smarty.get.query}
 
+{if $currentPage == 'view_channel' || $currentPage == 'channels'}
+	{$currentPage = 'channels'}
+	{$toSearch = 'channels'}
+{elseif $currentPage == 'view_item' || $currentPage == 'photos'}
+	{$currentPage = 'photos'}
+	{$toSearch = 'photos'}
+{elseif $currentPage == 'collections' || $currentPage == 'view_collection'}
+	{$currentPage = 'collections'}
+	{$pageType = 'collections'}
+	{$toSearch = 'collections'}
+{elseif $currentPage == 'watch_video' || $currentPage == 'videos'}
+	{$currentPage = 'videos'}
+	{$toSearch = 'videos'}
 {elseif $currentPage == 'list'}
-{$currentPage = 'audios'}
+	{$currentPage = 'audios'}
 {/if}
+
 {$vidMode = {lang code="videos"}}
 {$photoMode = {lang code="photos"}}
 {$channelsMode = {lang code="channels"}}
-{$pageType = $smarty.get.type|lower}
+
 <div id="quick_container">
-	<div id="quicklist_box">
-	</div>
+	<div id="quicklist_box"></div>
 </div> 
 
-{$searchPage = $smarty.get.query}
+
 <header id="header" class="clearfix">
 	<nav class="navbar navbar-default">
 		<div class="container-fluid">
@@ -88,12 +91,12 @@
 									<div class="cbsearchtype">
 										<div class="search-drop">
 											<button id="searchTypes" tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle search-drop-btn" type="button">
-												<span class="search-type">{if $currentPage == 'videos' || $currentPage == 'channels' || $currentPage == 'photos' || $currentPage == 'collections'}{$currentPage|ucfirst}{else}{lang code="videos"}{/if}</span>
+												<span class="search-type">{if $pageType}{$pageType|ucfirst}{elseif $currentPage == 'videos' || $currentPage == 'channels' || $currentPage == 'photos' || $currentPage == 'collections'}{$currentPage|ucfirst}{else}{lang code="videos"}{/if}</span>
 												<span class="icon-down-arrow"></span>
 											</button>
 											<ul class="dropdown-menu">
 												{foreach $types_list item=stype}
-													<li value="{$stypes}" {if $currentPage == $stype} class="active" {/if}>
+													<li value="{$stypes}" {if $pageType == $stype || $currentPage == $stype} class="active" {/if}>
 														<a class="s-types" href="#" valNow="{$stype}">{lang code ="{$stype}"}</a>
 													</li>
 												{/foreach}

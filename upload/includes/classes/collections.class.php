@@ -143,7 +143,7 @@ class Collections extends CBCategory
 		$this->search->match_fields = array("collection_name","collection_tags");
 		$this->search->cat_tbl = $this->cat_tbl;
 		
-		$this->search->display_template = LAYOUT.'/blocks/collection-item.html';
+		$this->search->display_template = LAYOUT.'/blocks/collection.html';
 		$this->search->template_var = 'collection';
 		$this->search->has_user_id = true;
 			
