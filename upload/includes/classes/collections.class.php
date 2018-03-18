@@ -62,6 +62,10 @@ class Collections extends CBCategory
             'active', 'rating', 'rated_by', 'voters', 'total_objects' );
 
         $cb_columns->object( 'collections' )->register_columns( $fields );
+
+		global $Cbucket;
+		if(isSectionEnabled('collections'))
+			$Cbucket->search_types['collections'] = "cbcollection";
 	}
 	
 	/**
@@ -139,7 +143,7 @@ class Collections extends CBCategory
 		$this->search->match_fields = array("collection_name","collection_tags");
 		$this->search->cat_tbl = $this->cat_tbl;
 		
-		$this->search->display_template = LAYOUT.'/blocks/collection.html';
+		$this->search->display_template = LAYOUT.'/blocks/collection-item.html';
 		$this->search->template_var = 'collection';
 		$this->search->has_user_id = true;
 			
@@ -2101,7 +2105,7 @@ class Collections extends CBCategory
 	}
 
 	/**
-	 * Get collections that have atleast 1 item, skips photos collection if photos are disabled from admin area
+	 * Get collections that have at least 1 item, skips photos collection if photos are disabled from admin area
 	 *
 	 * @param : { array } { $collections } { array of all collections fetched from database }
 	 *

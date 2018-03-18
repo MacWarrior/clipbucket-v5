@@ -69,7 +69,6 @@
 				<div class="row clearfix">
 				{if $collections}
 				{foreach $collections as $collection}
-					{$first_col_thumb = $cbcollection->coll_first_thumb($collection,'l')}
 					<div class="clearfix collection-item col-lg-4 col-md-4 col-sm-4 col-xs-6">
 						{include file="$style_dir/blocks/collection-item.html"}
 					</div>
@@ -94,10 +93,9 @@
 			<div class="clearfix sidebar-items collections-grid">
 				<div class="clearfix row">
 				{$limit=10}
-				{if $collections}        
+				{if $collections}
 				{foreach from=$collections item=collection}
-					{$first_col_thumb = $cbcollection->coll_first_thumb($collection,'l')}
-					<div class="clearfix collection-item col-lg-6 col-md-6 col-sm-12 col-xs-6"> 
+					<div class="clearfix collection-item col-lg-6 col-md-6 col-sm-12 col-xs-6">
 						{include file="$style_dir/blocks/collection-item.html"}
 					</div>
 				{/foreach}

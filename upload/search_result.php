@@ -79,7 +79,8 @@
 	//Pagination
 	$pages->paginate($total_pages,$page);
 
-	assign('results',array_reverse($results) );	
+	assign('type', display_clean($type) );
+	assign('results',array_reverse($results) );
 	assign('template_var',$search->template_var);
 	assign('display_template',$search->display_template);
 

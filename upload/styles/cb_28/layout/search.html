@@ -1,7 +1,7 @@
 {$myAccountLinks = $userquery->my_account_links()}
 <div id="main" class="clearfix container">
 	<div class="clearfix">
-		<section class="clearfix videos">
+		<section class="clearfix {$type}">
 			<div class="clearfix leaderboard-ad ad">
 				{AD place='ad_728x90'}
 			</div>
@@ -12,7 +12,9 @@
 			<div class="clearfix row">
 				{foreach item=result from=$results}
 					{assign var=$template_var value =$result}
-					{include file="$display_template" }
+					<div class="clearfix collection-item col-lg-4 col-md-4 col-sm-4 col-xs-6">
+						{include file="$display_template"}
+					</div>
 				{/foreach}
 			</div>
 			{else}

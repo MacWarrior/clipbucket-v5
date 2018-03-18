@@ -88,12 +88,12 @@
 									<div class="cbsearchtype">
 										<div class="search-drop">
 											<button id="searchTypes" tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle search-drop-btn" type="button">
-												<span class="search-type">{if $pageType}{$pageType|ucfirst}{elseif $currentPage == 'videos' || $currentPage == 'channels' || $currentPage == 'photos'}{$currentPage|ucfirst}{else}{lang code="videos"}{/if}</span>
+												<span class="search-type">{if $currentPage == 'videos' || $currentPage == 'channels' || $currentPage == 'photos' || $currentPage == 'collections'}{$currentPage|ucfirst}{else}{lang code="videos"}{/if}</span>
 												<span class="icon-down-arrow"></span>
 											</button>
 											<ul class="dropdown-menu">
 												{foreach $types_list item=stype}
-													<li value="{$stypes}" {if $pageType == $stype || $currentPage == $stype} class="active" {/if}>
+													<li value="{$stypes}" {if $currentPage == $stype} class="active" {/if}>
 														<a class="s-types" href="#" valNow="{$stype}">{lang code ="{$stype}"}</a>
 													</li>
 												{/foreach}
