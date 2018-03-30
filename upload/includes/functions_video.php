@@ -716,8 +716,11 @@
                 //dump($vdetails['file_name']);
 
         #Now there is no function so lets continue as
-        if(isset($vdetails['file_name']))
+        if(isset($vdetails['file_name'])  && !empty($vdetails['file_name'])){
             $vid_files = glob(VIDEOS_DIR."/".$fileDirectory . $vdetails['file_name']."*");
+        }else{
+            return false;
+        }
         // if($hq){
         //     var_dump(glob(VIDEOS_DIR."/".$fileDirectory . $vdetails['file_name']."*"));
         // }
