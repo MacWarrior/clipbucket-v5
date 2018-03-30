@@ -1576,6 +1576,9 @@
 		if(!is_valid_syntax('username',$username) && $multi!='yes' || $matches) {
 			e(lang("class_invalid_user"));
 		}
+		if(!preg_match('/^[A-Za-z0-9_.]+$/', $username)){
+			return false;
+		}
 		return true;
 	}
 	
