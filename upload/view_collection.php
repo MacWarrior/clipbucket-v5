@@ -10,6 +10,7 @@
 	define("PARENT_PAGE",'collections');
 
 	require 'includes/config.inc.php';
+	$userquery->perm_check('view_video',true);
 	$pages->page_redir();
 
 	$c = mysql_clean((int)$_GET['cid']);
