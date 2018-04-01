@@ -311,4 +311,5 @@ INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES
 INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 	('password_salt', SUBSTRING(HEX(SHA2(CONCAT(NOW(), RAND(), UUID()), 512)),1, 32) ),
 	('show_collapsed_checkboxes', '0'),
-	('enable_advertisement', '0');
+	('enable_advertisement', '0'),
+	('chromecast', 'no');

@@ -104,6 +104,16 @@
 					<option value="no" {if $row.pseudostreaming=='no'}selected{/if}>{lang code='no'}</option>
 				</select>
 			</div>
+			<div class="col-md-4">
+				<label for="chromecast">
+					Enable Chromecast support <i>BETA</i><br>
+					<small>Allow users to stream videos on Chromecast</small>
+				</label>
+				<select class="form-control" name="chromecast" id="chromecast">
+					<option value="yes" {if $row.chromecast=='yes'}selected{/if}>{lang code='yes'}</option>
+					<option value="no" {if $row.chromecast=='no'}selected{/if}>{lang code='no'}</option>
+				</select>
+			</div>
 		</div>
 		<br>
 

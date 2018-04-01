@@ -35,7 +35,12 @@
 			'youtube_enabled',
 			'enlarge_button',
 			'embed_player_height',
-			'embed_player_width','autoplay_embed','pseudostreaming','pak_license','pakplayer_contextmsg'
+			'embed_player_width',
+			'autoplay_embed',
+			'pseudostreaming',
+			'pak_license',
+			'pakplayer_contextmsg',
+			'chromecast'
 		);
 
 		//Checking for logo
