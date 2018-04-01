@@ -80,9 +80,11 @@
                     {lang code='no_results_found'}
                     {/if}
                 </div>
+				{if config("enable_advertisement")}
                 <div>
                     {AD place='ad_160x600'}
                 </div>
+				{/if}
                 {include file="$style_dir/blocks/pagination.html"}
             </div>
         </div>

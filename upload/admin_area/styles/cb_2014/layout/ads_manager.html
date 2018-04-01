@@ -2,7 +2,7 @@
 <div class="heading">
   <h2>Edit Advertisement here</h2>
 </div>
-<p class="alert alert-info">all fields are required</p>
+<p class="alert alert-info">{lang code='all_fields_req'}</p>
 <form id="form1" name="form1" method="post">
   <input type="hidden" name="ad_id" value="{$ad_data.ad_id}" />
     <div class="row">
@@ -49,7 +49,7 @@
   <h2>Add Advertisement</h2>
 </div>
 <form id="form1" name="form1" method="post" action="ads_manager.php">
-    <p class="alert alert-info">all fields are required</p>
+    <p class="alert alert-info">{lang code='all_fields_req'}</p>
     <div class="row">
   <div class="col-md-6">
     <label for="name">Advertisement Name</label>
@@ -125,7 +125,6 @@
           </li>
           <li role="presentation">
             {if $ad.ad_status!=1}
-            {$ad.ad_status}
             <a role="menuitem" tabindex="-1" href="?activate={$ad.ad_id}">{lang code='activate'}</a>
             {else}
             <a role="menuitem" tabindex="-1" href="?deactivate={$ad.ad_id}">{lang code='deactivate'}</a>

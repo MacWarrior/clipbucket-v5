@@ -6,29 +6,24 @@
                 <ul class="nav list-unstyled pull-left">
                     {$foot_menu=foot_menu()}
                     {foreach from=$foot_menu item=fm}
-                    {if $fm.name!=''}
-                        <li><a href="{$fm.link}" {if $fm.target} target="{$fm.target}"{/if} {if $fm.onclick} onclick="{$fm.onclick}" {/if}>{$fm.name}</a></li>
-                    {/if}
+						{if $fm.name!=''}
+					<li><a href="{$fm.link}" {if $fm.target} target="{$fm.target}"{/if} {if $fm.onclick} onclick="{$fm.onclick}" {/if}>{$fm.name}</a></li>
+						{/if}
                     {/foreach}
 
                     <li>
-                         <div class="lang_wrapper">
-                          {if config("allow_language_change")}
-                            <form method="post" name="change_lang">
-                                {$cbobjects->_display_languages()}              
-                            </form>
-                          {/if}
+                    	<div class="lang_wrapper">
+                    	{if config("allow_language_change")}
+                        	<form method="post" name="change_lang">
+                    			{$cbobjects->_display_languages()}
+                        	</form>
+                    	{/if}
                         </div>
-                    </li>
-                </ul> 
+                	</li>
+            	</ul>
+        	</div>
 
-                 
-
-            </div>
-
-           <div class="col-md-3 col-sm-3 col-xs-12">
-
-            </div>
+         	<div class="col-md-3 col-sm-3 col-xs-12"></div>
             
             <div class="col-md-4 col-sm-6 col-xs-12">
                    <ul class="nav list-unstyled pull-right">

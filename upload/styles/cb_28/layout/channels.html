@@ -3,9 +3,11 @@
 <div id="main" class="clearfix container">
 	<div class="clearfix">
 		<section id="content" class="clearfix channels">
+			{if config("enable_advertisement")}
 			<div class="clearfix leaderboard-ad ad">
 				{AD place='ad_728x90'}
 			</div>
+			{/if}
 			{$categories = pullCategories()}
 			{assign var=sorting_links value=sorting_links()}
 			<div class="filter-dropdowns clearfix">

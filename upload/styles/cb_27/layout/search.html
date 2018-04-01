@@ -3,7 +3,9 @@
     <div id="simple_search" class="cb-box marginBottom">
         <div class="row">
             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-            {AD place=ad_468x60}
+				{if config("enable_advertisement")}
+            		{AD place=ad_468x60}
+				{/if}
                 <div class="heading">{$search_type_title}</div>
                 <hr>
                 {if $results}
@@ -16,9 +18,12 @@
                 {/if}
                 <div class="clearfix"></div>
             </div>
+
+			{if config("enable_advertisement")}
             <div class="col-md-3 pull-right">
                {AD place=ad_160x600}
             </div>
+			{/if}
         </div>
 
         <div>

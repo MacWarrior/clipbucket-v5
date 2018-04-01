@@ -8,9 +8,11 @@
                     {FlashPlayer vdetails=$video width='100%' height='100%'}
                 </div>
                 <!-- cb_player end -->
+				{if config("enable_advertisement")}
                 <div class="ad">{AD place='ad_468x60'}</div>
+				{/if}
                 <div class="watch-vid-title  mbm">
-                    <h1>{$video.title|ucfirst}</h1> 
+                    <h1>{display_clean($video.title)|ucfirst}</h1>
                 </div>
                 <div class="vid-detail-sec">
                     <div class="watch-vid-thumb">    
@@ -164,23 +166,25 @@
 		<!--Side bar start--> 
         <div class="col-lg-4 col-md-4 visible-lg visible-md side-video pull-right">
             <div class="cb-box">
-                 <div class="ad">{AD place='ad_300x250'}</div>
+				{if config("enable_advertisement")}
+				<div class="ad">{AD place='ad_300x250'}</div>
+				{/if}
     {if $smarty.get.play_list == ''}
-                {foreach $videos as $video}
-                 {include file="$style_dir/blocks/videos/video_popular.html"}
-                {/foreach}
-                {else}
-
+		{foreach $videos as $video}
+			 {include file="$style_dir/blocks/videos/video_popular.html"}
+		{/foreach}
+	{else}
         {section name=plist loop=$items}
                   {include file="$style_dir/blocks/manage/account_video.html" video=$items[plist] control="onWatch" pid=$playlist.playlist_id}
         {/section}
+	{/if}
 
-        {/if}
+	{if config("enable_advertisement")}
         <div class="ad">{AD place='ad_120x600'}</div>
+	{/if}
+
             </div>
         </div>
-
-
         <!-- /Side bar-->
 	</div>
 </div>

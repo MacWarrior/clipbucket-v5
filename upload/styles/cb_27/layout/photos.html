@@ -4,7 +4,9 @@
     {*include file="$style_dir/blocks/manage/account_menu.html"*}
 
     <div class="cb-box row">
-    <div class="ad">{AD place='ad_728x90'}</div>
+		{if config("enable_advertisement")}
+    	<div class="ad">{AD place='ad_728x90'}</div>
+		{/if}
     <!-- Page Heading -->
         <div class="page-hidding margin-bottom-10">
             {assign var=sorting_links value=sorting_links()}
@@ -126,15 +128,13 @@
              
             <!-- /Pagination-->
         </div>
-        <!--<div class="col-md-2 pull-right paddingright0">
-            <div class="ad">{AD place='ad_160x600'}</div>-->
-            <!--<img src="http://www.ryangiggs.cc/system/files/banner-160x600-pride-tee_0.jpg">
-            <a href="http://www.arvixe.com/clipbucket_hosting"><img class="banner pull-right" src="{$theme}/assets/images/ad-box-160x600.jpg" ></a>-->
-        <!--</div>-->
+
         <div align="center" class="col-md-12 clearfix pull-left">
                 {include file="$style_dir/blocks/pagination.html"}
         </div>
+		{if config("enable_advertisement")}
         <div class="ad">{AD place='ad_468x60'}</div>
+		{/if}
         
     </div>
 </div>

@@ -29,10 +29,12 @@
                 {include file="$style_dir/blocks/pagination.html"}
                 </div> 
             </div>
+			{if config("enable_advertisement")}
             <div class="col-md-2 pull-right">
             {*AD place='ad_160x600'*}
             <a href="http://www.arvixe.com/clipbucket_hosting"><img class="banner pull-right" src="{$theme}/assets/images/ad-box-160x600.jpg" ></a>
             </div>
+			{/if}
 
             <div class="col-md-8">
                 <br><br>

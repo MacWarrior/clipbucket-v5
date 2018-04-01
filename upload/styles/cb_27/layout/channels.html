@@ -8,7 +8,9 @@
         {include file="$style_dir/blocks/category_list.html" type='channels'}
         <!-- Listing Categories End -->
         <div class="col-md-9 nopadding">
-        <div>{AD place='ad_728x90'}</div>
+			{if config("enable_advertisement")}
+        	<div>{AD place='ad_728x90'}</div>
+			{/if}
             <!-- Page Heading -->
             <div class="page-hidding hidden-xs ">
                 {assign var=sorting_links value=sorting_links()}
@@ -113,8 +115,10 @@
             </div>
         </div>
         <div class="col-md-2  paddingright0  hidden-sm hidden-xs visible-md visible-lg">
-         
-             <div class="ad">{AD place='ad_160x600'}</div>
+
+			{if config("enable_advertisement")}
+        	<div class="ad">{AD place='ad_160x600'}</div>
+			{/if}
            <!-- <a href="http://www.arvixe.com/clipbucket_hosting"><img class="banner pull-right" src="{$theme}/assets/images/ad-box-160x600.jpg"></a>-->
         </div>
     </div>

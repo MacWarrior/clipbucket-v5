@@ -122,10 +122,42 @@
 				<div class="col-md-4">
 					<label for="site_title">Website title</label>
 					<input class="form-control" name="site_title" id="site_title" value="{$row.site_title}" size="45">
+					<br/>
+					<label for="closed_msg">Closed message</label>
+					<textarea class="form-control" name="closed_msg" id="closed_msg" cols="45" rows="5">{$row.closed_msg}</textarea>
+					<br/>
+					<label for="keywords">Meta Keywords</label>
+					<input class="form-control" name="keywords" id="keywords" value="{$row.keywords}" size="45"/>
+					<br/>
+					<label for="date_format">Date Format</label>
+					<input class="form-control" name="date_format" id="date_format" value="{$row.date_format}" size="45"/>
 				</div>
 				<div class="col-md-4">
 					<label for="site_slogan">Website slogan</label>
 					<input class="form-control" name="site_slogan" id="site_slogan" value="{$row.site_slogan}" size="45">
+					<br/>
+					<label for="description">Meta Description</label>
+					<textarea class="form-control" name="description" id="description" cols="45" rows="5">{$row.description}</textarea>
+					<br/>
+					<label for="default_country_iso2">Default Country</label>
+					<select class="form-control" name="default_country_iso2" id="default_country_iso2">
+						{assign var=countries value=$Cbucket->get_countries(iso2)}
+						{foreach from=$countries item=country key=code}
+							<option {if $code==$row.default_country_iso2}selected{/if} value="{$code}">
+								{$country}
+							</option>
+						{/foreach}
+					</select>
+					<br/>
+					<label for="default_time_zone">Default time zone</label>
+					<select class="form-control" name="default_time_zone" id="default_time_zone">
+						{$timezone_abbreviations = DateTimeZone::listAbbreviations()}
+						{foreach $timezone_abbreviations as $timeZone }
+							{foreach $timeZone as $tz}
+								<option value="{$tz['timezone_id']}" {if $row.default_time_zone==$tz['timezone_id']}selected{/if}>(GMT {round($tz['offset']/3600)}) {$tz['timezone_id']}</option>
+							{/foreach}
+						{/foreach}
+					</select>
 				</div>
 				<div class="col-md-4">
 					<label for="select">Website closed</label>
@@ -134,18 +166,6 @@
 						<span class="lbl"></span>
 					</label>
 					<hr>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-4">
-					<label for="closed_msg">Closed message</label>
-					<textarea class="form-control" name="closed_msg" id="closed_msg" cols="45" rows="5">{$row.closed_msg}</textarea>
-				</div>
-				<div class="col-md-4">
-					<label for="description">Meta Description</label>
-					<textarea class="form-control" name="description" id="description" cols="45" rows="5">{$row.description}</textarea>
-				</div>
-				<div class="col-md-4">
 					<label for="delete_mass_upload">Delete Mass upload</label>
 					<label class="pull-right inline">
 						<input value="yes" name="delete_mass_upload" id="delete_mass_upload" {if $row.delete_mass_upload=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -171,27 +191,6 @@
 					</label>
 					<span class="smallText" style="font-size:11px;">If selected <strong>YES</strong>, Categories shown while uploading <strong>video</strong> will be collapsed.</span>
 					<hr>
-				</div>
-			</div>
-
-
-			<div class="row">
-				<div class="col-md-4">
-					<label for="keywords">Meta Keywords</label>
-					<input class="form-control" name="keywords" id="keywords" value="{$row.keywords}" size="45"/>
-				</div>
-				<div class="col-md-4">
-					<label for="default_country_iso2">Default Country</label>
-					<select class="form-control" name="default_country_iso2" id="default_country_iso2">
-						{assign var=countries value=$Cbucket->get_countries(iso2)}
-						{foreach from=$countries item=country key=code}
-						<option {if $code==$row.default_country_iso2} selected {/if} value="{$code}">
-						{$country}
-						</option>
-						{/foreach}
-					</select>
-				</div>
-				<div class="col-md-4">
 					<label for="allow_language_change">Allow language change</label>
 					<label class="pull-right inline">
 						<input value="1" name="allow_language_change" id="allow_language_change" {if $row.allow_language_change=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -203,56 +202,32 @@
 						<input value="1" name="allow_template_change" id="allow_template_change" {if $row.allow_template_change==1}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 						<span class="lbl"></span>
 					</label>
+					<hr>
+					<label for="enable_advertisement">Enable advertisement</label>
+					<label class="pull-right inline">
+						<input value="1" name="enable_advertisement" id="enable_advertisement" {if $row.enable_advertisement==1}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+						<span class="lbl"></span>
+					</label>
 				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-4">
-					<label for="date_format">Date Format</label>
-					<input class="form-control" name="date_format" id="date_format" value="{$row.date_format}" size="45"/>
-				</div>
-
-				<div class="col-md-4">
-					<label for="default_time_zone">Default time zone</label>
-
-					<select class="form-control" name="default_time_zone" id="default_time_zone">
-						{$timezone_abbreviations = DateTimeZone::listAbbreviations()}
-						{foreach $timezone_abbreviations as $timeZone }
-						{foreach $timeZone as $tz}
-						<option value="{$tz['timezone_id']}" {if $row.default_time_zone==$tz['timezone_id']}selected{/if}>(GMT {round($tz['offset']/3600)}) {$tz['timezone_id']}</option>
-						{/foreach}
-						{/foreach}
-					</select>
-				</div>
-
 			</div>
 			<hr>
 
 			<div class="tabbable">
 				<ul class="nav nav-tabs" id="myTab">
 					<li class="active">
-						<a data-toggle="tab" href="#esettings">
-							Email Settings
-						</a>
+						<a data-toggle="tab" href="#esettings">Email Settings</a>
 					</li>
 					<li>
-						<a data-toggle="tab" href="#comments">
-							Comments
-						</a>
+						<a data-toggle="tab" href="#comments">Comments</a>
 					</li>
 					<li>
-						<a data-toggle="tab" href="#videos">
-							Video Settings
-						</a>
+						<a data-toggle="tab" href="#videos">Video Settings</a>
 					</li>
 					<li>
-						<a data-toggle="tab" href="#channelsphotos">
-							Channels & Photos
-						</a>
+						<a data-toggle="tab" href="#channelsphotos">Channels & Photos</a>
 					</li>
 					<li>
-						<a data-toggle="tab" href="#general">
-							General
-						</a>
+						<a data-toggle="tab" href="#general">General</a>
 					</li>
 				</ul>
 				<div class="tab-content">

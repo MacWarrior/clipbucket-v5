@@ -38,6 +38,7 @@
 			'allow_username_spaces',
 			'allow_registeration',
 			'allow_template_change',
+			'enable_advertisement',
 			'allow_upload',
 			'anonymous_id',
 			'anonym_comments',
