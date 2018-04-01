@@ -1,27 +1,27 @@
 {$currentPage = $smarty.const.THIS_PAGE|lower}
-{$pageType = $smarty.get.type|lower}
+{$pageType = lang($smarty.get.type)|lower}
 {$searchPage = $smarty.get.query}
 
 {if $currentPage == 'view_channel' || $currentPage == 'channels'}
-	{$currentPage = 'channels'}
-	{$toSearch = 'channels'}
+	{$currentPage = lang('channels')|lower}
+	{$toSearch = lang('channels')|lower}
 {elseif $currentPage == 'view_item' || $currentPage == 'photos'}
-	{$currentPage = 'photos'}
-	{$toSearch = 'photos'}
+	{$currentPage = lang('photos')|lower}
+	{$toSearch = lang('photos')|lower}
 {elseif $currentPage == 'collections' || $currentPage == 'view_collection'}
-	{$currentPage = 'collections'}
-	{$pageType = 'collections'}
-	{$toSearch = 'collections'}
+	{$currentPage = lang('collections')|lower}
+	{$pageType = lang('collections')|lower}
+	{$toSearch = lang('collections')|lower}
 {elseif $currentPage == 'watch_video' || $currentPage == 'videos'}
-	{$currentPage = 'videos'}
-	{$toSearch = 'videos'}
+	{$currentPage = lang('videos')|lower}
+	{$toSearch = lang('videos')|lower}
 {elseif $currentPage == 'list'}
 	{$currentPage = 'audios'}
 {/if}
 
-{$vidMode = {lang code="videos"}}
-{$photoMode = {lang code="photos"}}
-{$channelsMode = {lang code="channels"}}
+{$vidMode = lang('videos')|lower}
+{$photoMode = lang('photos')|lower}
+{$channelsMode = lang('channels')|lower}
 
 <div id="quick_container">
 	<div id="quicklist_box"></div>
@@ -51,7 +51,6 @@
 				<!-- Collect the nav links, forms, and other content for toggling -->
 				<div class="collapse navbar-collapse" id="bs-collapse">
 					<div class="menu-holder">
-						
 						<div class="col">
 							<nav class="main-links">
 								{$head_menu=cb_menu()}
@@ -68,11 +67,11 @@
 												{continue}
 											{/if}
 											{if $userquery->perm_check('view_'|cat:$menu.this, false, false, true)}
-									<li {if $menu.name|lower == $smarty.const.THIS_PAGE|lower || $menu.name|lower == $currentPage}class="active"{/if}><a href="{$menu.link}">{$menu.name}</a></li>
+									<li {if $menu.name|lower == $currentPage || $menu.name|lower == $pageType}class="active"{/if}><a href="{$menu.link}">{$menu.name}</a></li>
 											{/if}
 										{/if}
 									{/foreach}
-									
+
 									{ANCHOR place="cb_28_head"}
 								</ul>
 							</nav>
