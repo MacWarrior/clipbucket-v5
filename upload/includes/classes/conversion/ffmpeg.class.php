@@ -22,6 +22,7 @@ class FFMpeg
 	public $defaultOptions = array();
 	public $videoDetails = array();
 	public $num = thumbs_number;
+	public $reconvert = false;
 	private $options = array();
 	private $outputFile = false;
 	private $inputFile = false;
@@ -1194,6 +1195,9 @@ class FFMpeg
 		if(isset($p['extra_options']))
 			$opt_av .= " -y {$p['extra_options']} ";
 
+		if( $this->reconvert )
+			$opt_av .= ' -y';
+
 		# file format
 		if(isset($p['format']))
 			$opt_av .= " -f {$p['format']} ";
@@ -1215,11 +1219,15 @@ class FFMpeg
 			if($p['video_codec'] == 'libx264')
 			{
 				if($p['normal_quality']!='hq')
-					$opt_av .= " -preset medium ";
+					$opt_av .= " -preset medium";
 				else
 					$opt_av .= " -preset slow -crf 26";
 			}
 		}
+
+		// Prevent start_time to be negative
+		//$opt_av .= ' -avoid_negative_ts make_zero';
+		$opt_av .= ' -start_at_zero';
 
 		# video rate
 		if($p['use_video_rate'])
@@ -1294,22 +1302,28 @@ class FFMpeg
 		}
 		
 		# audio bitrate
-		if(!is_numeric($this->input_details['audio_rate']))
+		if($p['use_audio_rate'])
 		{
-			$opt_av .= "  ";
-		} elseif($p['use_audio_rate']) {
-			if(!$this->validChannels($this->input_details))
+			$option_ar = false;
+			if(isset($p['audio_rate']))
+				$option_ar = $p['audio_rate'];
+
+			$file_ar = false;
+			if(isset($i['audio_rate']) && is_numeric($i['audio_rate']))
+				$file_ar = $i['audio_rate'];
+
+			$arate = false;
+			if( $option_ar && $file_ar )
 			{
-				$arate = $i['audio_rate'];
-				$opt_av .= $arate_cmd = " -ar $arate ";
-			} else {
-				if(isset($p['audio_rate']))
-					$arate = $p['audio_rate'];
-				elseif(isset($i['audio_rate']))
-					$arate = $i['audio_rate'];
-				if(!empty($arate))
-					$opt_av .= $arate_cmd = " -ar $arate ";
+				$arate = min($option_ar, $file_ar);
+			} else if( $option_ar ) {
+				$arate = $option_ar;
+			} else if( $file_ar ) {
+				$arate = $file_ar;
 			}
+
+			if( $arate )
+				$opt_av .=" -ar $arate ";
 		}
 
 		if ($i['rotation'] != 0 )
@@ -1370,7 +1384,7 @@ class FFMpeg
 				$TemplogData .= $output;
 			}
 
-			#FFMPEG GNERETAES Damanged File (MP4Box)
+			#FFMPEG GENERATES Damaged File (MP4Box)
 			#Injecting MetaData using Mp4Box - you must have update version of Mp4Box ie 1.0.6 Final or greater
 
 			if($more_res==NULL){
@@ -1744,37 +1758,6 @@ class FFMpeg
 		$log = new SLog();
 		$this->logs = $log;
 		$log->setLogFile($this->logFile);
-	}
-
-	function validChannels($in)
-	{
-		if(!$in)
-			return true;
-		$in['audio_channels'] = strtolower($in['audio_channels']);
-		$channels = false;
-		if(is_numeric($in['audio_channels']))
-			$channels = $in['audio_channels'];
-		else
-		{
-			if(strstr($in['audio_channels'],'stereo'))
-				$channels = 2;
-			
-			if(strstr($in['audio_channels'],'mono'))
-				$channels = 1;
-	
-			if(!$channels)
-			{
-				preg_match('/([0-9.]+)/',$in['audio_channels'],$matches);
-				if($matches)
-					$channels = $matches[1];
-			}
-		}
-		
-		if(!$channels)
-			return true;
-		if($channels>2)
-			return false;
-		return true;
 	}
 
 	public static function get_video_tracks($filepath)

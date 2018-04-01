@@ -30,6 +30,7 @@
 	}
 
 	$audio_track = (isset($argv[5])) ? $argv[5] : false;
+	$reconvert = (isset($argv[6])) ? $argv[6] : false;
 
 	$file = FILES_DIR.'/temp/args.txt';
 	$text = "fileName [".$fileName.'] _filename ['.$_filename.'] file_directory ['.$file_directory.'] logfile ['.$logFile.']';
@@ -141,8 +142,11 @@
 		$ffmpeg->file_name = $tmp_file;
 		$ffmpeg->raw_path = VIDEOS_DIR.'/'.$file_directory.$_filename;
 
-		if( $audio_track )
+		if( $audio_track && is_numeric($audio_track) )
 			$ffmpeg->audio_track = $audio_track;
+
+		if( $reconvert )
+			$ffmpeg->reconvert = true;
 
 		$ffmpeg->ClipBucket();
 		if ($ffmpeg->lock_file && file_exists($ffmpeg->lock_file)){
@@ -153,12 +157,14 @@
 		$video_files = json_encode($ffmpeg->video_files);
 		$db->update(tbl('video'), array("video_files"), array($video_files), " file_name = '{$outputFileName}'");
 
+		if( $reconvert )
+			setVideoStatus($outputFileName, 'completed',true, true);
+
 		if (stristr(PHP_OS, 'WIN'))
 		{
 			exec(php_path()." -q ".BASEDIR."/actions/verify_converted_videos.php $orig_file $dosleep");
 		} elseif(stristr(PHP_OS, 'darwin')) {
 			exec(php_path()." -q ".BASEDIR."/actions/verify_converted_videos.php $orig_file $dosleep </dev/null >/dev/null &");
-
 		} else {
 			exec(php_path()." -q ".BASEDIR."/actions/verify_converted_videos.php $orig_file $dosleep &> /dev/null &");
 		}

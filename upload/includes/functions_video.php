@@ -2124,7 +2124,7 @@
                             $Upload->add_conversion_queue($targetFileName);
 
                             // begin the process of bringing back from dead
-                            exec(php_path()." -q ".BASEDIR."/actions/video_convert.php {$targetFileName} {$file_name} {$file_directory} {$logFile} > /dev/null &");
+                            exec(php_path()." -q ".BASEDIR."/actions/video_convert.php {$targetFileName} {$file_name} {$file_directory} {$logFile} '' 'reconvert' > /dev/null &");
 
                             // set reconversion status
                             setVideoStatus($daVideo, 'started',true);
