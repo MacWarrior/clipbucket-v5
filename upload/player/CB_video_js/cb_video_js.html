@@ -244,7 +244,9 @@
 
 		//Calling instance manager plugin for backend
 		if ( video_editor_enabled && typeof video_editor_enabled != 'undefined'){
-			instance_manager_settings = {slot_id : slot_id};
+			instance_manager_settings = {
+			    slot_id : slot_id
+			};
 			cb_vjs.instanceManager(instance_manager_settings);
 		}
 
