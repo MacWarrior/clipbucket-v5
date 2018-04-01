@@ -5,12 +5,14 @@
 		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 			<div class="account_box">
 				{if $mode =='manage_playlist'}
-				<h2>{lang code='manage_playlists'}</h2>
-				<!-- searching -->
+
 				<div class="heading clearfix">
+					<h2 class="pull-left">{lang code='manage_playlists'}</h2>
+
+					<!-- searching -->
 					{include file="$layout_dir/blocks/advanced_playlist_search.html" }
+					<!-- searching -->
 				</div>
-				<!-- searching -->		  
 
 				<!-- Getting List of Playlist -->
 				<form class="marginTop" name="manage_playlists" method="post">
@@ -46,13 +48,13 @@
 									<!-- playlist thumb code not functional right now-->
 									<!--<span>{$cbvid->action->getPlaylistThumb($playlists[plist].playlist_id)}</span> -->
 									<!-- playlist name code -->
-									{$playlists[plist].playlist_name|truncate:100}
+									{display_clean($playlists[plist].playlist_name)|truncate:100}
 								</td>
 									<td valign="middle">
 									<span class="label label-primary"> <strong>{lang code='playlist_owner'} : 
 										<!-- changes made -->
 										{assign var=obj value=$userquery->get_user_details($playlists[plist].userid)}
-										{$obj['username']}
+										{display_clean($obj['username'])}
 										<!-- changes made -->
 									</strong></span>
 									<span class="label label-primary"> <strong>{lang code='playlist_privacy'} : {$playlists[plist].privacy}</strong></span>
