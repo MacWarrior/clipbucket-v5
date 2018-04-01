@@ -457,7 +457,7 @@
         }else{
             if($vdetails['playlist_id'])
                 $plist = '&play_list='.$vdetails['playlist_id'];
-            $link = '/watch_video.php?v='.$vdetails['videokey'].$plist;
+            $link = BASEURL.'/watch_video.php?v='.$vdetails['videokey'].$plist;
         }
         if(!$type || $type=='link')
             return $link;
