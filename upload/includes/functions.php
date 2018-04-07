@@ -2674,24 +2674,46 @@
 	 * @internal param $ : { array } { $data } { array with category details } { $data } { array with category details }
 	 * @internal param $ : { string } { $type } { type of category e.g videos } { $type } { type of category e.g videos }
 	 */
-	function category_link($data,$type) {
-		switch($type) {
+	function category_link($data,$type)
+	{
+		$sort = '';
+		$time = '';
+		$seo_cat_name = '';
+
+		if(SEO=='yes')
+		{
+			if(isset($_GET['sort']) && $_GET['sort'] != '')
+				$sort = '/'.$_GET['sort'];
+			if( isset($_GET['time']) && $_GET['time'] != '')
+				$time = '/'.$_GET['time'];
+		} else {
+			if(isset($_GET['sort']) && $_GET['sort'] != '')
+				$sort = '&sort='.$_GET['sort'];
+			if( isset($_GET['time']) && $_GET['time'] != '')
+				$time = '&time='.$_GET['time'];
+			if( isset($_GET['seo_cat_name']) && $_GET['seo_cat_name'] != '')
+				$time = '&seo_cat_name='.$_GET['seo_cat_name'];
+		}
+
+		switch($type)
+		{
 			case 'video':
             case 'videos':
 			case 'v':
 				if(SEO=='yes') {
-					return '/videos/'.$data['category_id'].'/'.SEO($data['category_name']).'/'.$_GET['sort'].'/'.$_GET['time'].'/';
+					return '/videos/'.$data['category_id'].'/'.SEO($data['category_name']).$sort.$time.'/';
 				}
-				return '/videos.php?cat='.$data['category_id'].'&sort='.$_GET['sort'].'&time='.$_GET['time'].'&seo_cat_name='.$_GET['seo_cat_name'];
+
+				return '/videos.php?cat='.$data['category_id'].$sort.$time.$seo_cat_name;
 			
 			case 'channels':
             case 'channel':
             case 'c':
             case 'user':
 				if(SEO=='yes') {
-					return '/channels/'.$data['category_id'].'/'.SEO($data['category_name']).'/'.$_GET['sort'].'/'.$_GET['time'].'/';
+					return '/channels/'.$data['category_id'].'/'.SEO($data['category_name']).$sort.$time.'/';
 				}
-				return '/channels.php?cat='.$data['category_id'].'&sort='.$_GET['sort'].'&time='.$_GET['time'].'&seo_cat_name='.$_GET['seo_cat_name'];
+				return '/channels.php?cat='.$data['category_id'].$sort.$time.$seo_cat_name;
 
 			default:
 				if(THIS_PAGE=='photos') {
@@ -2700,10 +2722,9 @@
 
 				if(defined("IN_MODULE")) {
 					global $prefix_catlink;
-					$url = 'cat='.$data['category_id'].'&sort='.$_GET['sort'].'&time='.$_GET['time'].'&page='.$_GET['page'].'&seo_cat_name='.$_GET['seo_cat_name'];
+					$url = 'cat='.$data['category_id'].$sort.$time.'&page='.$_GET['page'].$seo_cat_name;
 					$url = $prefix_catlink.$url;
 					$rm_array = array("cat","sort","time","page","seo_cat_name");
-					$p = "";
 					if($prefix_catlink) {
 						$rm_array[] = 'p';
 					}
@@ -2712,9 +2733,9 @@
 				}
 								
 				if(SEO=='yes') {
-					return '/'.$type.'/'.$data['category_id'].'/'.SEO($data['category_name']).'/'.$_GET['sort'].'/'.$_GET['time'].'/';
+					return '/'.$type.'/'.$data['category_id'].'/'.SEO($data['category_name']).$sort.$time.'/';
 				}
-				return '/'.$type.'.php?cat='.$data['category_id'].'&sort='.$_GET['sort'].'&time='.$_GET['time'].'&seo_cat_name='.$_GET['seo_cat_name'];
+				return '/'.$type.'.php?cat='.$data['category_id'].$sort.$time.$seo_cat_name;
 		}
 	}
 
