@@ -1039,7 +1039,12 @@ h1 {
   .collections .title {
     display: block;
     background: #fff;
-    padding: 9px 10px; }
+    padding: 9px 10px;
+
+  	overflow: hidden;
+  	white-space: nowrap;
+  	text-overflow: ellipsis;
+  }
 
 /* end of sidebar collection */
 /* sidebar playlists */
