@@ -4,17 +4,17 @@
 
 {if $currentPage == 'view_channel' || $currentPage == 'channels'}
 	{$currentPage = lang('channels')|lower}
-	{$toSearch = lang('channels')|lower}
+	{$toSearch = 'channels'}
 {elseif $currentPage == 'view_item' || $currentPage == 'photos'}
 	{$currentPage = lang('photos')|lower}
-	{$toSearch = lang('photos')|lower}
+	{$toSearch = 'photos'}
 {elseif $currentPage == 'collections' || $currentPage == 'view_collection'}
 	{$currentPage = lang('collections')|lower}
 	{$pageType = lang('collections')|lower}
-	{$toSearch = lang('collections')|lower}
+	{$toSearch = 'collections'}
 {elseif $currentPage == 'watch_video' || $currentPage == 'videos'}
 	{$currentPage = lang('videos')|lower}
-	{$toSearch = lang('videos')|lower}
+	{$toSearch = 'videos'}
 {elseif $currentPage == 'list'}
 	{$currentPage = 'audios'}
 {/if}
