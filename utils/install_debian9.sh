@@ -1,18 +1,48 @@
-# Clipbucket install on Debian 9.1
+#!/bin/bash
+# Clipbucket install on Debian 9.0 - 9.4
+## THIS SCRIPT MUST BE LAUNCHED AS ROOT
 
-# Let's get all up to date
-apt-get update
-apt-get dist-upgrade -f
+echo ""
+echo -ne "Updating Debian system..."
+apt-get update > /dev/null
+apt-get dist-upgrade -f > /dev/null
+echo -ne " OK"
 
-# Install all necessary
-apt-get install php7.0 apache2 mariadb-server git php-curl php-imagick ffmpeg gpac ruby php7.0-mysqli php7.0-xml sendmail mediainfo --yes
-gem install flvtool2
+echo ""
+echo -ne "Installing requiered elements..."
+apt-get install php7.0 apache2 mariadb-server git php-curl php-imagick ffmpeg gpac ruby php7.0-mysqli php7.0-xml sendmail mediainfo --yes > /dev/null 2>&1
+gem install flvtool2 > /dev/null
+echo -ne " OK"
 
-# Creating directory and get sources
+echo ""
+echo -ne "Installing Clipbucket sources..."
 mkdir -p /home/http/clipbucket/ && cd "$_"
-git clone https://github.com/MacWarrior/clipbucket.git ./
+git clone https://github.com/MacWarrior/clipbucket.git ./ > /dev/null 2>&1
+echo -ne " OK"
 
-# Configuring Apache
+echo ""
+echo -ne "Updating sources access permissions..."
+chown www-data: -R ../clipbucket/
+chmod 755 -R ./upload/cache ./upload/files ./upload/images ./upload/includes/langs
+chmod 755 ./upload/includes
+echo -ne " OK"
+
+echo ""
+echo -ne "Generating DB access..."
+mysql -uroot -e "CREATE DATABASE clipbucket;"
+DB_PASS=$(date +%s | sha256sum | base64 | head -c 16)
+mysql -uroot -e "CREATE USER 'clipbucket'@'localhost' IDENTIFIED BY '$DB_PASS';"
+mysql -uroot -e "GRANT ALL PRIVILEGES ON clipbucket.* TO 'clipbucket'@'localhost' IDENTIFIED BY '$DB_PASS';"
+mysql -uroot -e "FLUSH PRIVILEGES;"
+echo -ne " OK"
+echo ""
+echo "- Database address : localhost"
+echo "- Database name : clipbucket"
+echo "- Database user : clipbucket"
+echo "- Database password : ${DB_PASS}"
+
+echo ""
+echo -ne "Configuring Apache Vhost..."
 cat << 'EOF' > /etc/apache2/sites-available/001-clipbucket.conf
 <VirtualHost *:80>
         ServerName clipbucket.local
@@ -23,7 +53,7 @@ cat << 'EOF' > /etc/apache2/sites-available/001-clipbucket.conf
 </VirtualHost>
 EOF
 
-ln -s /etc/apache2/sites-available/001-clipbucket.conf /etc/apache2/sites-enabled/001-clipbucket.conf
+a2ensite 001-clipbucket > /dev/null
 
 cat << 'EOF' >> /etc/apache2/apache2.conf
 
@@ -35,6 +65,12 @@ cat << 'EOF' >> /etc/apache2/apache2.conf
 EOF
 
 # Restarting Apache service
-service apache2 restart
+service apache2 restart > /dev/null
 
-# And it's done !
+echo -ne " OK"
+echo ""
+echo "- Website URL : http://clipbucket.local"
+
+echo ""
+echo "Clipbucket installation completed"
+echo ""
