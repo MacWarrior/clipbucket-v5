@@ -192,50 +192,83 @@
 	</div>
 </div>
 
-<div class="well" style="margin-top: 14px;background:;border:1px solid rgba(128, 213, 255, 1);" >
-    <h3>WHO WE ARE</h3>
-    <p style="text-align:left;"><strong><a href="http://clip-bucket.com/" target="self">ClipBucket</a></strong> would not been possible without its team hardwork and determination for the betterment of the products quality and its services. We are proud that over _____ users are using worlds most popular open source video,audio and photo sharing script named
-    <strong>ClipBucket</strong>. We are team who is  determined to deliver the best  features to the open source community.
-    </p>
+<div class="well" style="margin-top: 14px;border:1px solid rgba(128, 213, 255, 1);" >
+	<h3>5.0.0 Changelogs <small><i>(Non-official version)</i></small></h3>
+	<ul>
+		<li><b>Refactor data storage<small>*</small></b></li>
+		<i>Data are not transformed before storage anymore (<b>"</b>Greeting: "Hello, World!"<b>"</b> was stored as <b>"</b>Greeting: &amp;quot;Hello, World!&amp;quot;<b>"</b>)</i>
+		<li><b>Implement MySQL reconnect</b></li>
+		<i>When PHP lost the MySQL connection, it is now able to reconnect without generating a fatal error</i>
+		<li><b>Refactor back office mass upload</b></li>
+		<i>It now supports reccurcive directory, huge files import, language selection, display usefull informations, is faster, safer</i>
+		<li><b>Refactor back office breadcrumb</b></li>
+		<i>Items are now clickable, more precise and subpages are now supported</i>
+		<li><b>Refactor the front office video "add to" tab</b></li>
+		<i>New way to display elements : more mobile friendly, fix bugs, ...</i>
+		<li><b>Refactor error handling</b></li>
+		<i>Update the way error messages are managed</i>
+		<li><b>Upgrade video convertion</b></li>
+		<i>Better tasklist support (no more full cpu charge when waiting for lock), support for audio track selection, fix audio negative start time, better 16:9 resolution and codecs detection</i>
+		<li><b>Implement Chromecast Support with back office option <i><small>Beta</small></i></b></li>
+		<i>This option enable the Chromecast support on the default video player</i>
+		<li><b>Upgrade users passwords security</b></li>
+		<i>Replace the MD5 implementation with salted SHA512</i>
+		<li><b>Implement search for collections</b></li>
+		<i>Search for collection like you do it for videos</i>
+		<li><b>Implement new option to totally disable ads</b></li>
+		<i>This option disable back office menu, JS and CSS front office integration, specific HTML elements for ads</i>
+		<li><b>Implement new users permissions</b></li>
+		<i>New permissions to limit the access to photos, collections, apply existing permissions on missing spots (like search)</i>
+		<li><b>Imprement Debian 9 installation script</b></li>
+		<i>Don't search anymore for Debian 9 installation, there's a script for that now</i>
+		<li><b>Fixs</b></li>
+		<i>Fix HTML/CSS/JS error/warnings/notices, many broken configurations, installation process, infinite loops, email tester, back office and front office pagination, many thumbs display, ...</i>
+		<li><b>Others</b></li>
+		<i>Fix typos, cleanup installation SQL, cleanup code, use translation instead of hardcoded texts, remove unused code and files (including a full back office unused theme), document PHP functions, use relative URLs, don't allow to play a video while it is converting, ...</i>
+	</ul>
+	<p>
+		<small><b>*</b> The way it used to be, data were ""secured"" before saving on DB ; now data are stored without transformation and it now requiere to secure the displaying of these data to prevent XSS injection.<br/>
+		In all case, this is the right way to work with data.</small>
+	</p>
 
+	<div class="to_display">
+		<hr/>
+		<h3>WHO WE ARE</h3>
+		<p style="text-align:left;"><strong><a href="https://clipbucket.com/" target="self">ClipBucket</a></strong> would not been possible without its team hardwork and determination for the betterment of the products quality and its services. We are proud that over _____ users are using worlds most popular open source video,audio and photo sharing script named
+		<strong>ClipBucket</strong>. We are team who is  determined to deliver the best  features to the open source community.
+		</p>
+		<p style="text-align:left;margin-top:20px; "><strong>Clipbucket</strong> was made in the year 2006 with the idea to bring a better platform for organizations and companies interested in launching their own video,audio or photo sharing website. In every version our mission and goal is to simplify the technology by adopting new technological methods and techniques to cut down several frontend and backend issues faced. The idea is to give the user a chance to explore more with the flexibility of our product.
 
-    <p style="text-align:left;margin-top:20px; "><strong>Clipbucket</strong> was made in the year 2006 with the idea to bring a better platform for organizations and companies interested in launching their own video,audio or photo sharing website. In every version our mission and goal is to simplify the technology by adopting new technological methods and techniques to cut down several frontend and backend issues faced. The idea is to give the user a chance to explore more with the flexibility of our product.
+		 We never compromise on our product interactivity. We always try to create a simple yet interactive and elegant design so that the user can have the best experience of the functions. With the improved social networking options like channels and groups. With ClipBucket’s unmatched quantifiability, users will stretch their applications from family videos to photo-albums. We started off as a paid product and later realized there is more power in going open-source and here we stand today <strong>#1</strong> video sharing and media management script in the industry.</p>
+		<hr/>
 
+		<h3>OUR TEAM</h3>
+		<p style="text-align:left;padding-bottom:20px;">However the team behind ClipBucket always kept their heads and nerves, though they faced many difficulties and problems in meeting the requirements. But team’s coordination and their creative techniques of solving issues and overcoming them with the best possible solution helped us in presenting  Pakistan on international platform in the field of technology by bringing “Clip Bucket” A complete open source multimedia management script.
+		</p>
 
-
-     We never compromise on our product interactivity. We always try to create a simple yet interactive and elegant design so that the user can have the best experience of the functions. With the improved social networking options like channels and groups. With ClipBucket’s unmatched quantifiability, users will stretch their applications from family videos to photo-albums. We started off as a paid product and later realized there is more power in going open-source and here we stand today <strong>#1</strong> video sharing and media management script in the industry.</p>
-
-    <h3>OUR TEAM</h3>
-
-    <p style="text-align:left;padding-bottom:20px;">However the team behind ClipBucket always kept their heads and nerves, though they faced many difficulties and problems in meeting the requirements. But team’s coordination and their creative techniques of solving issues and overcoming them with the best possible solution helped us in presenting  Pakistan on international platform in the field of technology by bringing “Clip Bucket” A complete open source multimedia management script.
-    </p>
-
-    <div class="to_display">
         <p>Founders <strong><a href="http://www.linkedin.com/profile/view?id=273050157" target="blank">Jahanzeb Hassan</a></strong> and <strong><a href="http://www.linkedin.com/profile/view?id=37419812" target="blank">Arslan Hassan</a></strong></p>
-
-         <strong><a href="http://www.linkedin.com/profile/view?id=324544384" target="self">Fawaz Tahir</a></strong> - Web Application Team Lead<br>
-         <strong><a href="http://www.linkedin.com/profile/view?id=78646794" target="self">Ruman Malik</a></strong> - Project Manager<br>
-         <strong><a href="http://www.linkedin.com/profile/view?id=325944697" target="self">Muneeb</a></strong> - Mobile Application Team Lead<br>
-         <strong><a href="http://www.linkedin.com/profile/view?id=324542682" target="self">Zomail</a></strong> - Sales and Support<br>
-         <strong><a href="http://www.linkedin.com/profile/view?id=324542554" target="self">Shahzaib</a></strong> - Network Engineer<br>
-         <strong><a href="http://www.linkedin.com/profile/view?id=324542025" target="self">Zunair</a></strong> - SEO and Publishing Manager<br>
-        <br>
+		<strong><a href="http://www.linkedin.com/profile/view?id=324544384" target="self">Fawaz Tahir</a></strong> - Web Application Team Lead<br>
+		<strong><a href="http://www.linkedin.com/profile/view?id=78646794" target="self">Ruman Malik</a></strong> - Project Manager<br>
+		<strong><a href="http://www.linkedin.com/profile/view?id=325944697" target="self">Muneeb</a></strong> - Mobile Application Team Lead<br>
+		<strong><a href="http://www.linkedin.com/profile/view?id=324542682" target="self">Zomail</a></strong> - Sales and Support<br>
+		<strong><a href="http://www.linkedin.com/profile/view?id=324542554" target="self">Shahzaib</a></strong> - Network Engineer<br>
+		<strong><a href="http://www.linkedin.com/profile/view?id=324542025" target="self">Zunair</a></strong> - SEO and Publishing Manager<br>
+		<br>
 
         <h5><strong>Kick-ass development team of <strong>ClipBucket</strong></strong></h5>
         <strong><a href="https://github.com/fahad-cb" target="self">Fahad Abbas</a></strong> - Project Head (Developer)<br>
-         <strong><a href="https://github.com/imranhassan009" target="self">Imran Hassan</a></strong> - Web Developer<br>
-         <strong><a href="https://github.com/shoaib-dev" target="self">Muhammad Shoaib</a></strong> - Web Services provider (Developer)<br>
-         <strong><a href="https://github.com/awaistariq123" target="self">Awais Tariq</a></strong> - Video Converison Handler<br>
-         <strong><a href="https://pk.linkedin.com/in/saqirzzq" target="self">Saaqib Razzaq</a></strong> - Web Developer<br>
-         <strong><a href="https://github.com/jamilrehman" target="self">Jamil Rehman</a></strong> - Front end  Developer (Head)<br>
-         <strong><a href="https://github.com/rameez-anees" target="self">Rameez Anees</a></strong> - Front end  Developer<br>
-         <strong><a href="https://github.com/usman-des" target="self">Usman Afzal</a></strong> - Front end  Developer<br>
-         <strong><a href="https://github.com/epicPenguin" target="self">Muhammad Rizwan</a></strong> - Quality Assurance department<br><br><br>
+		<strong><a href="https://github.com/imranhassan009" target="self">Imran Hassan</a></strong> - Web Developer<br>
+		<strong><a href="https://github.com/shoaib-dev" target="self">Muhammad Shoaib</a></strong> - Web Services provider (Developer)<br>
+		<strong><a href="https://github.com/awaistariq123" target="self">Awais Tariq</a></strong> - Video Converison Handler<br>
+		<strong><a href="https://pk.linkedin.com/in/saqirzzq" target="self">Saaqib Razzaq</a></strong> - Web Developer<br>
+		<strong><a href="https://github.com/jamilrehman" target="self">Jamil Rehman</a></strong> - Front end  Developer (Head)<br>
+		<strong><a href="https://github.com/rameez-anees" target="self">Rameez Anees</a></strong> - Front end  Developer<br>
+		<strong><a href="https://github.com/usman-des" target="self">Usman Afzal</a></strong> - Front end  Developer<br>
+		<strong><a href="https://github.com/epicPenguin" target="self">Muhammad Rizwan</a></strong> - Quality Assurance department<br><br><br>
 
+		<h5><strong>We are from Pakistan with high heads and soft hearts</strong></h5>
 
-         <h5><strong>We are from Pakistan with high heads and soft hearts</strong></h5>
-
-        <p style="padding-bottom:20px;">Pakistan is always been in the news for the bad reasons and has been criticized by the rest of the world,even then the people of Pakistan are patriotic and stand united for the goodwill of their country.no matter how worst the situation gets the youth is eager enough to bring out the best in all the fields like media,communication, IT and science. IT industry is fast growing with a large potential and is regarded as a successful sector even in country’s worst financial crisis. as the IT industry in Pakistan is growing like wise the demand for the softwares and programmes has taken up a rapid growth. ClipBucket is one of the fastest and the most used media sharing script with all the latest features and enhancements in the social media. We as Pakistani feel proud on creating this product which will lead our country to the highest levels in the international market.</p>
+		<p style="padding-bottom:20px;">Pakistan is always been in the news for the bad reasons and has been criticized by the rest of the world,even then the people of Pakistan are patriotic and stand united for the goodwill of their country.no matter how worst the situation gets the youth is eager enough to bring out the best in all the fields like media,communication, IT and science. IT industry is fast growing with a large potential and is regarded as a successful sector even in country’s worst financial crisis. as the IT industry in Pakistan is growing like wise the demand for the softwares and programmes has taken up a rapid growth. ClipBucket is one of the fastest and the most used media sharing script with all the latest features and enhancements in the social media. We as Pakistani feel proud on creating this product which will lead our country to the highest levels in the international market.</p>
     </div>
 
     <p><button id="addTodo" class="btn btn-primary btn-sm clip_read clip_hide" style="float:right;margin-right:10px;margin-top:-30px;">Read More</button></p>
