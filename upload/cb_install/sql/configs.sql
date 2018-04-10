@@ -312,4 +312,6 @@ INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 	('password_salt', SUBSTRING(HEX(SHA2(CONCAT(NOW(), RAND(), UUID()), 512)),1, 32) ),
 	('show_collapsed_checkboxes', '0'),
 	('enable_advertisement', '0'),
-	('chromecast', 'no');
+	('chromecast', 'no'),
+	('vid_cat_width', '120'),
+	('vid_cat_height', '120');
