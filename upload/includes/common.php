@@ -83,10 +83,12 @@
     # file with details to connect to database
     if (isset($_GET['cdemo'])) {
     	$file = "dbconnect_".$_GET['cdemo'].".php";
-    	require $file;
     } else {
-    	require_once('dbconnect.php');
+    	$file = 'dbconnect.php';
     }
+
+	if( file_exists(realpath(dirname(__FILE__)).DIRECTORY_SEPARATOR.$file) )
+		require_once ($file);
 
     # class for storing common ClipBucket functions
 	require_once('classes/ClipBucket.class.php');

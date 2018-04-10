@@ -3846,13 +3846,14 @@
     function check_install($type) {
     	if( in_dev() )
     		return true;
-		global $while_installing,$Cbucket;
+		global $Cbucket;
 		switch($type) {
 			case "before":
 			{
 				if(file_exists('files/temp/install.me') && !file_exists('includes/clipbucket.php'))
 				{
 					header('Location: '.get_server_url().'/cb_install');
+					die();
 				}
 			}
 			break;

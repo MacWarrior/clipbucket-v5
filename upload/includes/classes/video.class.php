@@ -47,12 +47,12 @@ class CBvideo extends CBCategory
 		$this->init_collections();
 		
 		if(config('vid_cat_height'));
-		$this->cat_thumb_height = config('vid_cat_height');
+			$this->cat_thumb_height = config('vid_cat_height');
 		if(config('vid_cat_width'));
-		$this->cat_thumb_width = config('vid_cat_width');
+			$this->cat_thumb_width = config('vid_cat_width');
 		
 		if(isSectionEnabled('videos'))
-		$Cbucket->search_types['videos'] = "cbvid";
+			$Cbucket->search_types['videos'] = "cbvid";
 		$Cbucket->clipbucket_footer[] = 'check_cbvideo';
 		
 		$this->video_delete_functions[] = 'delete_video_from_collection';

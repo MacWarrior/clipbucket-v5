@@ -89,9 +89,9 @@ class Clipbucket_db
         global $__devmsgs;
         if (is_array($__devmsgs))
         {
-            $start = microtime();
+            $start = microtime(true);
             $result = $this->mysqli->query($query);
-            $end = microtime();
+            $end = microtime(true);
             $timetook = $end - $start;
             devWitch($query, 'select', $timetook);
         } else {
@@ -221,9 +221,9 @@ class Clipbucket_db
         global $__devmsgs;
         try {
             if (is_array($__devmsgs)) {
-                $start = microtime();
+                $start = microtime(true);
                 $data = $this->mysqli->query($query);
-                $end = microtime();
+                $end = microtime(true);
                 $timetook = $end - $start;
                 devWitch($query, 'execute', $timetook);
                 return $data;
