@@ -2499,6 +2499,7 @@
 	 * @uses : { function : lang() }
 	 */
 	function nicetime($date,$istime=false) {
+		global $lang_obj;
 		if(empty($date)) {
 			return lang('no_date_provided');
 		}
@@ -2533,7 +2534,10 @@
 		if($difference != 1) {
 			// *** Dont apply plural if terms ending by a "s". Typically, french word for "month" is "mois".
 			if(substr($periods[$j], -1) != "s") {
-				$periods[$j].= "s";
+				$periods[$j]= $periods[$j];
+				if($lang_obj->lang=='en'){
+					$periods[$j].= 's';
+				}
 			}
 		}
 		return sprintf(lang($tense),$difference,$periods[$j]);

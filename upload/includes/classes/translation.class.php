@@ -28,7 +28,11 @@ class GoogleTranslator
         $transClient->setSource($from); // Translate from English
         $transClient->setTarget($to); // Translate to Georgian
         $transClient->setUrlBase('http://translate.google.cn/translate_a/single'); // Set Google Translate URL base (This is not necessary, only for some countries)
+        // checkmate
+        $text=str_replace("%s","_c_b_",$text);
         $phraseTranslated = $transClient->translate($text);
+        $phraseTranslated=str_replace("_c_b_","%s",$phraseTranslated);
+        // checkmate
         return $phraseTranslated;
     }
             
