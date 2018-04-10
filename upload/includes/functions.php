@@ -3432,7 +3432,6 @@
 			$codec_installed[$codec]['installed'] = $codecs ? 'yes' : 'no';
 		}
 
-		dump($codec_installed);
 		return $codec_installed;
 	}
 
