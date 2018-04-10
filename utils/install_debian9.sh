@@ -10,14 +10,14 @@ echo -ne " OK"
 
 echo ""
 echo -ne "Installing requiered elements..."
-apt-get install php7.0 apache2 mariadb-server git php-curl php-imagick ffmpeg gpac ruby php7.0-mysqli php7.0-xml sendmail mediainfo --yes > /dev/null 2>&1
+apt-get install php7.0 apache2 mariadb-server git php-curl php-imagick ffmpeg gpac ruby php7.0-mysqli php7.0-xml php7.0-mbstring sendmail mediainfo --yes > /dev/null 2>&1
 gem install flvtool2 > /dev/null
 echo -ne " OK"
 
 echo ""
 echo -ne "Installing Clipbucket sources..."
 mkdir -p /home/http/clipbucket/ && cd "$_"
-git clone https://github.com/MacWarrior/clipbucket.git ./ > /dev/null 2>&1
+git clone https://github.com/MacWarrior/clipbucket-5.0.git ./ > /dev/null 2>&1
 echo -ne " OK"
 
 echo ""
@@ -65,7 +65,7 @@ cat << 'EOF' >> /etc/apache2/apache2.conf
 EOF
 
 # Restarting Apache service
-service apache2 restart > /dev/null
+systemctl restart apache2 > /dev/null
 
 echo -ne " OK"
 echo ""
