@@ -18,10 +18,10 @@
      <div class="top clearfix">
     <div class="top_tabs">
         <ul>
-            <li><a href="http://clip-bucket.com/clipbucket-overview" target="blank">V<?php echo VERSION; ?> Overview</a><span>|</span></li>
+            <li><a href="https://clipbucket.com/clipbucket-overview" target="blank">V<?php echo VERSION; ?> Overview</a><span>|</span></li>
                 <li><a href="http://discourse.clipbucket.com/" target="blank">Forums</a><span>|</span></li>
                  <li><a href="https://code.google.com/p/clipbucket/issues/list" target="blank">Bug Reporter</a><span>|</span></li>
-            <li><a href="http://clip-bucket.com/contact" target="blank">Support</a></li>
+            <li><a href="https://clipbucket.com/contact" target="blank">Support</a></li>
         </ul>
     </div><!--top_tabs-->
    <p></p> <span id="logo"><span style="color:#09c;">ClipBucket</span> Installer v<?php echo VERSION.' '.STATE; ?></span><p></p>
