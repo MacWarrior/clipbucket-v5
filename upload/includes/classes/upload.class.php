@@ -69,7 +69,8 @@ class Upload
 
 		$this->validate_video_upload_form($array,TRUE);
 
-		if( empty($eh->get_error()) )
+		$errors = $eh->get_error();
+		if( empty($errors) )
 		{
 			$required_fields = $this->loadRequiredFields($array);
 			$location_fields = $this->loadLocationFields($array);
