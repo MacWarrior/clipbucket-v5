@@ -445,7 +445,7 @@ class myquery {
 			}
 		}
 		if(!verify_captcha())
-			e(lang('usr_ccode_err'));
+			e(lang('recap_verify_failed'));
 		if(empty($comment))
 			e(lang("pelase_enter_something_for_comment"));
 		
