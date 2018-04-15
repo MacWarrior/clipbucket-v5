@@ -1409,7 +1409,7 @@ class userquery extends CBCategory{
 					e(lang('usr_exist_err'));
 				 //verifying captcha...
 				elseif(!verify_captcha())
-					e(lang('usr_ccode_err'));
+					e(lang('recap_verify_failed'));
 				else
 				{
 					//Sending confirmation email
@@ -1448,7 +1448,7 @@ class userquery extends CBCategory{
 					e(lang('usr_exist_err'));
 				 //verifying captcha...
 				elseif($udetails['avcode'] !=$code)
-					e(lang('usr_ccode_err'));
+					e(lang('recap_verify_failed'));
 				else
 				{
 					$newpass = RandomString(6);
@@ -1491,7 +1491,7 @@ class userquery extends CBCategory{
 		if(!$udetails)
 			e(lang('no_user_associated_with_email'));
 		elseif(!verify_captcha())
-			e(lang('usr_ccode_err'));
+			e(lang('recap_verify_failed'));
 		else
 		{
 			$tpl = $cbemail->get_template('forgot_username_request');
@@ -3562,10 +3562,10 @@ class userquery extends CBCategory{
 		{
 			// now checking if the user posted captcha value is not empty and cb_captcha_enabled == yes
 			if(!isset($array['cb_captcha_enabled']) || $array['cb_captcha_enabled'] == 'no'){
-				e(lang('usr_ccode_err'));
+				e(lang('recap_verify_failed'));
 			}
 			if(!verify_captcha()){
-				e(lang('usr_ccode_err'));
+				e(lang('recap_verify_failed'));
 			}
 		}
 		if(!error())
