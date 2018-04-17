@@ -105,6 +105,7 @@
                     </div>
             </div>
             <div id="rcomments" class="tab-pane">
+				{if $comments}
                 <div class="widget-box">
                     <div class="widget-header header-color-blue">
                         <h5>Recent Comments</h5>
@@ -120,13 +121,11 @@
                     <div class="widget-body">
                         <div class="widget-main">
                             <div class="widget-box transparent">
-                                <div class="widget-header widget-header-small">
-                                </div>
+                                <div class="widget-header widget-header-small"></div>
                                 <div class="widget-body">
                                     <div class="widget-body">
                                         <div class="widget-main no-padding">
                                             <div class="slimScrollDiv">
-                                                {if $comments}
                                                 {foreach from=$comments item=comment}
                                                 <div class="itemdiv dialogdiv">
                                                     {foreach from=$users item=u}
@@ -151,7 +150,7 @@
                                                     </div>
                                                 </div>
                                                 {/foreach}
-                                                {/if}
+
                                             </div>
                                         </div>
                                     </div>
@@ -160,6 +159,7 @@
                         </div>
                     </div>
                 </div>
+				{/if}
             </div>
         </div>
     </div>

@@ -175,6 +175,7 @@
 	Assign('videos', $videos);
 
 	$comment_cond['limit'] = 10;
+	$comment_cond['order'] = 'date_added DESC';
 	$comments = getComments($comment_cond);
 	Assign("comments",$comments);
 
