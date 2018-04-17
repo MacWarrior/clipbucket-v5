@@ -392,7 +392,7 @@
                 	{$field.hint_1}
                 {/if}
                 <div class="tab-content scroll">
-                    <div class="VideoCategory">
+                    <div class="VideoCategory"{if !config('show_collapsed_checkboxes')} style="margin-top: -30px;"{/if}>
 						{$formObj->createField($field)}
 						{if $field.hint_2}<br/>
 							{$field.hint_2}
