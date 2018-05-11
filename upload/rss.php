@@ -30,29 +30,29 @@ switch($mode)
 	case 'recent':
 	default:
 	{
-		 $videos = get_videos(array('limit'=>$limit,'order'=>'date_added DESC'));
-		 $title = "Recently Added Videos";
+		 $videos = get_videos(array('limit'=>$limit,'broadcast'=>'public','order'=>'date_added DESC'));
+		 $title  = "Recently Added Videos";
 	}
 	break;
 	
 	case 'views':
 	{
 		
-		 $videos = get_videos(array('limit'=>$limit,'order'=>'views DESC'));
+		 $videos = get_videos(array('limit'=>$limit,'broadcast'=>'public','order'=>'views DESC'));
 		 $title = "Most Viewed Videos";
 	}
 	break;
 	
 	case 'rating':
 	{
-		 $videos = get_videos(array('limit'=>$limit,'order'=>'rating DESC'));
+		 $videos = get_videos(array('limit'=>$limit,'broadcast'=>'public','order'=>'rating DESC'));
 		 $title = "Top Rated Videos";
 	}
 	break;
 	
 	case 'watching':
 	{
-		 $videos = get_videos(array('limit'=>$limit,'order'=>'last_viewed DESC'));
+		 $videos = get_videos(array('limit'=>$limit,'broadcast'=>'public','order'=>'last_viewed DESC'));
 		 $title = "Videos Being Watched";
 	}
 	break;

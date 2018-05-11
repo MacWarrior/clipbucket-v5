@@ -12,5 +12,6 @@
 	define("VERSION","5.0.0");
 	define("STATE","STABLE");
 	define("REV","5152");
-	define("RELEASED","08-04-2018");
+	define("RELEASED","11-05-2018");
 	define("AUTHORS","ARSLAN HASSAN, FAHAD ABBAS, MACWARRIOR");
+

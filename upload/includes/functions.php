@@ -2144,8 +2144,11 @@
 			{	
 				if(!isset($_COOKIE['video_'.$id])) {
 					$currentTime = time();
+					$vdetails = get_video_details($id);
+					// Cookie life time at least 1 hour else if video duration is bigger set at video time.
+					$cookieTime = ($vdetails['duration'] > 3600) ? $vdetails['duration'] : $cookieTime = 3600;
 					$db->update(tbl("video"),array("views", "last_viewed"),array("|f|views+1",$currentTime)," videoid='$id' OR videokey='$id'");
-					setcookie('video_'.$id,'watched',time()+3600);
+					setcookie('video_'.$id,'watched',time()+$cookieTime);
 				}
 			}
 			break;
@@ -4018,6 +4021,8 @@
 				return true;
 			}
 		} elseif ( isset($_SERVER['SERVER_PORT']) && ( '443' == $_SERVER['SERVER_PORT'] ) ) {
+			return true;
+		} elseif(isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
 			return true;
 		}
 		return false;
