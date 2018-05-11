@@ -24,7 +24,7 @@ class CBPlayer
 				//Skip $item_list[] = $item;
 				//$sub_dir_list = scandir(PLAYER_DIR.'/'.$item);
 			}else{
-				//Now CHecking if its file, not a directory
+				//Now Checking if its file, not a directory
 				if(!is_dir(PLAYER_DIR.'/'.$item))
 				{
 					$item_list[] = $item;
@@ -38,7 +38,7 @@ class CBPlayer
 							//Skip $item_list[] = $item;
 							//$sub_dir_list = scandir(PLUG_DIR.'/'.$item);
 						}else{
-							//Now CHecking if its file, not a directory
+							//Now Checking if its file, not a directory
 							if(!is_dir(PLAYER_DIR.'/'.$sub_dir.'/'.$item))
 							{
 								$subitem_list[$sub_dir][] = $item;

@@ -72,7 +72,7 @@ class CBPlugin extends ClipBucket
 				//Skip $item_list[] = $item;
 				//$sub_dir_list = scandir(PLUG_DIR.'/'.$item);
 			}else{
-				//Now CHecking if its file, not a directory
+				//Now Checking if its file, not a directory
 				if(!is_dir(PLUG_DIR.'/'.$item))
 				{
 					$item_list[] = $item;
@@ -86,7 +86,7 @@ class CBPlugin extends ClipBucket
 							//Skip $item_list[] = $item;
 							//$sub_dir_list = scandir(PLUG_DIR.'/'.$item);
 						}else{
-							//Now CHecking if its file, not a directory
+							//Now Checking if its file, not a directory
 							if(!is_dir(PLUG_DIR.'/'.$sub_dir.'/'.$item))
 							{
 								$subitem_list[$sub_dir][] = $item;

@@ -501,7 +501,7 @@ abstract class CBCategory
 		if(!$cat_details)
 			e(lang("cat_exist_error"));
 			
-		//CHecking if category is default or not
+		//Checking if category is default or not
 		elseif($cat_details['isdefault'] == 'yes')
 			e(lang("cat_default_err"));
 		else{

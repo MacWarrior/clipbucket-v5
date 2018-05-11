@@ -170,7 +170,7 @@
 			$content = nl2br($content);
 		}
 		
-		# CHecking Content
+		# Checking Content
 		if(preg_match('/<html>/',$content,$matches)) {
 			if(empty($matches[1])) {
 				$content = wrap_email_content($content);
