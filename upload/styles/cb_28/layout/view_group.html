@@ -7,21 +7,21 @@
 			   {include file="$style_dir/blocks/group/group_left.html"}
 			</div>
 			<div class="col-md-7">
-				<div class="well well-sm"><a class="theme_color" href="#">{$group.group_name|htmlspecialchars_decode}</a></div>
+				<div class="well well-sm"><a class="theme_color" href="#">{display_clean($group.group_name)}</a></div>
 				<div class="btn-group viewGroupTabs">   
-					<a class="btn btn-primary" {if $mode == "" || $mode == "main"}class="btn btn-primary selected"{/if} href="{group_link details=$group}" onClick="groupsAjax(event,this);" id="gpViewInfo">
+					<a class="btn btn-primary" {if $mode=="" || $mode=="main"}class="btn btn-primary selected"{/if} href="{group_link details=$group}" onClick="groupsAjax(event,this);" id="gpViewInfo">
 						{lang code="info"}
 					</a>
-					<a class="btn btn-primary" {if $mode == "view_topics"}class="btn btn-primary selected"{/if} href="{group_link details=$group type=view_topics}" onClick="groupsAjax(event,this);" id="gpViewTopics">
+					<a class="btn btn-primary" {if $mode=="view_topics"}class="btn btn-primary selected"{/if} href="{group_link details=$group type=view_topics}" onClick="groupsAjax(event,this);" id="gpViewTopics">
 						{lang code="grp_topics_title"}
 					</a>
-					<a class="btn btn-primary" {if $mode == "view_members"}class="btn btn-primary selected"{/if} href="{group_link details=$group type='view_members'}" id="gpAllMembers" onClick="groupsAjax(event,this);">
+					<a class="btn btn-primary" {if $mode=="view_members"}class="btn btn-primary selected"{/if} href="{group_link details=$group type='view_members'}" id="gpAllMembers" onClick="groupsAjax(event,this);">
 						{lang code="members"}
 					</a>
-					<a class="btn btn-primary" {if $mode == "view_videos"}class="btn btn-primary selected"{/if} href="{group_link details=$group type='view_videos'}" id="gpAllVideos" onClick="groupsAjax(event,this);">
+					<a class="btn btn-primary" {if $mode=="view_videos"}class="btn btn-primary selected"{/if} href="{group_link details=$group type='view_videos'}" id="gpAllVideos" onClick="groupsAjax(event,this);">
 						{lang code="videos"}
 					</a>
-					<a class="btn btn-primary" {if $mode == "view_report_form"}class="btn btn-primary selected"{/if} href="{group_link details=$group}{if config('seo')=='yes'}?{else}&{/if}mode=view_report_form" onClick="groupsAjax(event,this);" id="gpAllReport">
+					<a class="btn btn-primary" {if $mode=="view_report_form"}class="btn btn-primary selected"{/if} href="{group_link details=$group}{if config('seo')=='yes'}?{else}&{/if}mode=view_report_form" onClick="groupsAjax(event,this);" id="gpAllReport">
 						{lang code='Report'}
 					</a>
 				</div>
@@ -31,11 +31,11 @@
 						<table class="table table-bordered table-striped">
 							<tr>
 								<td>{lang code="Group name"}</td>
-								<td>{$group.group_name}</td>    
+								<td>{display_clean($group.group_name)}</td>
 							</tr>
 							<tr>
 								<td>{lang code="vdo_desc"}</td>
-								<td>{$group.group_description}</td>
+								<td>{display_clean($group.group_description)}</td>
 							</tr>
 							<tr>
 								<td>{lang code="category"}</td>

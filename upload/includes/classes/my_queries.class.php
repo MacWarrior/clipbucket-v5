@@ -567,11 +567,9 @@ class myquery
 				$udetails['avatar_url'] = $avatar_url;
 			if($udetails)
 			$result = array_merge($result,$udetails);
-			$result['comment'] = htmlspecialchars_decode($result['comment']);
 			return $result ;
-		}else{
-			return false;
 		}
+		return false;
 	}
 
 	/**
@@ -622,7 +620,6 @@ class myquery
 	 */
 	function getComments($params)
 	{
-            
 		global $db;
 		$cond = '';
 				
@@ -719,7 +716,7 @@ class myquery
             
             foreach ($results as $key=>$val) 
 			{
-			  $results[$key]['comment'] = html_entity_decode(stripslashes($results[$key]['comment']));
+				$results[$key]['comment'] = $results[$key]['comment'];
 			}
 
 			 if(!$results)
@@ -737,7 +734,7 @@ class myquery
 
 					foreach ($replies as $key=>$val) 
 					{
-					  $replies[$key]['comment'] = html_entity_decode(stripslashes($replies[$key]['comment']));
+						$replies[$key]['comment'] = $replies[$key]['comment'];
 					}
 					
 					if ($replies )
@@ -766,14 +763,13 @@ class myquery
 			 	file_put_contents(COMM_CACHE_DIR.'/'.$file,json_encode($comment));
 			 }
 			foreach ($comment['comments'] as $key => $c) {
-                $c['comment'] = htmlspecialchars_decode($c['comment']);
                 $tempCom[] = $c;
             }
             $comment['comments'] = $tempCom;
 			return $comment;
-		} else {
-			return $db->count(tbl("comments"),"*"," type='$type' $typeid_query $cond");
 		}
+
+		return $db->count(tbl("comments"),"*"," type='$type' $typeid_query $cond");
 	}
 	
 	function get_replies($p_id,$type='v')

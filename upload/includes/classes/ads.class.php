@@ -185,8 +185,7 @@ class AdsManager
 			//Return Ad
 			 $query = "SELECT ad_id,ad_code FROM ".tbl("ads_data")." 
 			WHERE ad_placement = '".$placement_code."'
-			AND ad_status='1'
-			";
+			AND ad_status='1'";
 
 			$code_array 	= $db->GetRow($query.$query_param.$order.$limit_query);
 			
@@ -198,12 +197,7 @@ class AdsManager
 			
 			//Incrementing Ad Impression
 			$this->incrementImpression($code_array['ad_id']);
-			return stripslashes(htmlspecialchars_decode($code_array['ad_code']));
-			
-		}else{
-			/*In that case, get all '$limit' 
-			ads from database and do the same 
-			as we did with the single ad*/
+			return stripslashes($code_array['ad_code']);
 		}
 	}
 	

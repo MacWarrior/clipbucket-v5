@@ -636,10 +636,10 @@ if(!empty($mode))
 		}
 		break;
 
-
 		case 'count_comments';
 			echo '5';
 		break;
+
 		case 'add_comment';
 		{
 			$type = $_POST['type'];
@@ -721,7 +721,6 @@ if(!empty($mode))
 		break;
 
 		case 'get_comment';
-		{
 			$id = mysql_clean($_POST['cid']);
 			$type_id = mysql_clean($_POST['type_id']);
 			$new_com = $myquery->get_comment($id);
@@ -729,26 +728,16 @@ if(!empty($mode))
 			//getting parent id if it is a reply comment
 			$parent_id = $new_com['parent_id'];
 			assign('type_id',$type_id);
-
-			$new_com['comment']=html_entity_decode(stripslashes($new_com['comment']));
+			assign('comment',$new_com);
 
 			if ($parent_id)
 			{
-
 				assign('rep_mode',true);
-				assign('comment',$new_com);
 				echo json_encode(array("parent_id"=>$parent_id,"li_data"=>Fetch('blocks/comments/comment.html')));
-			}
-			else
-			{
-				assign('comment',$new_com);
+			} else {
 				echo json_encode(array("li_data"=>Fetch('blocks/comments/comment.html')));
 			}
-
-		}
-		break;
-
-
+			break;
 
 		/**
 		 * Function used to add item in playlist

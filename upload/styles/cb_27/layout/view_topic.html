@@ -11,26 +11,8 @@
         </div>
 <div class="col-md-7 nopadding ">
 
-	<div class="well well-sm margin-bottom-10"><a class="theme_color" href="#">{$group.group_name|htmlspecialchars_decode}</a></div>
-   <!--  <div class="btn-group">   
-       <a class="btn btn-primary" {if $mode == "" || $mode == "main"}class="btn btn-primary selected"{/if} href="{group_link details=$group}" onClick="groupsAjax(event,this);" id="gpViewInfo">
-           {lang code="info"}
-       </a>
-       <a class="btn btn-primary" {if $mode == "view_topics"}class="btn btn-primary selected"{/if} href="{group_link details=$group type=view_topics}" onClick="groupsAjax(event,this);" id="gpViewTopics">
-           {lang code="grp_topics_title"}
-       </a>
-       <a class="btn btn-primary" {if $mode == "view_members"}class="btn btn-primary selected"{/if} href="{group_link details=$group type='view_members'}" id="gpAllMembers" onClick="groupsAjax(event,this);">
-           {lang code="members"}
-       </a>
-       <a class="btn btn-primary" {if $mode == "view_videos"}class="btn btn-primary selected"{/if} href="{group_link details=$group type='view_videos'}" id="gpAllVideos" onClick="groupsAjax(event,this);">
-           {lang code="videos"}
-       </a>
-       <a class="btn btn-primary" {if $mode == "view_report_form"}class="btn btn-primary selected"{/if} href="{group_link details=$group}{if config('seo')=='yes'}?{else}&{/if}mode=view_report_form" onClick="groupsAjax(event,this);" id="gpAllReport">
-           {lang code='report'}
-       </a>
-   </div> -->
-    <div id="ajaxGroupResultContainer">   
-        <!-- <div class="groupSep"><span class="SepText"><a href="{group_link details=$group type='view_topics'}" >Back To Topics</a></span></div> -->
+	<div class="well well-sm margin-bottom-10"><a class="theme_color" href="#">{display_clean($group.group_name)}</a></div>
+    <div id="ajaxGroupResultContainer">
 
         <a href="{group_link details=$group type='view_topics'}" class="btn btn-primary">Back To Topics</a>
 
@@ -44,7 +26,7 @@
             <div class="moveR topic_content" style="width:88%">
             	{$topic.topic_post|description}
                 <div style="height:5px"></div>
-                <div style="font:normal 10px Tahoma; color:#787878">{lang code="Added"}: {$topic.date_added|niceTime} &ndash; Added By: <a href="{$userquery->profile_link($user)}">{display_clean($user.username)}</a></div>
+                <div style="font:normal 10px Tahoma;color:#787878;">{lang code="Added"}: {$topic.date_added|niceTime} &ndash; Added By: <a href="{$userquery->profile_link($user)}">{display_clean($user.username)}</a></div>
             </div>    
         </div>
 
@@ -55,8 +37,8 @@
           <div class="pad-bottom">
               <div class="addComment clearfix">
                   <div class="com_count" id="com_count">
-                    <span>{lang('Comments')}: </span> 
-                    {$topic.total_replies}
+					<span>{lang('Comments')}: </span>
+					{$topic.total_replies}
                   </div>
                   {include file="$style_dir/blocks/comments/add_comment.html" id=$topic.topic_id type=t}
               </div>
@@ -71,7 +53,6 @@
                 <ul class="list-unstyled" id="userCommentsList"></ul>
               </div>
 
-              
           </div>
         </div> 
  

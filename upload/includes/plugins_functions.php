@@ -18,7 +18,7 @@
 	function comment($comment)
 	{
 		global $Cbucket;
-		$comment = nl2br($comment);
+		$comment = nl2br(stripcslashes(display_clean($comment)));
 		//Getting List of comment functions
 		$func_list = $Cbucket->getFunctionList('comment');
 		//Applying Function

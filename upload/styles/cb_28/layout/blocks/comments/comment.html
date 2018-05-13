@@ -17,6 +17,7 @@
 				<img src="{avatar details=$user}" alt="" class="reply_pic">
 			</div>
 			<div class="comment-info">
+				<strong class="commenter">
 			{if isSectionEnabled('channels')}
 				<a href="{$userquery->profile_link($video)}">
 				{if $comment.anonym_name != ''}
@@ -25,17 +26,22 @@
 					{display_clean(name($user))}
 				{/if}
 				</a>
+				<span>{$comment.date_added|niceTime}</span>
 			{else}
 				{if $comment.anonym_name != ''}
 					{display_clean($comment.anonym_name)} ({lang code='guest'})
 				{else}
 					{display_clean(name($user))}
 				{/if}
+				<span>{$comment.date_added|niceTime}</span>
 			{/if}
-				<p>{display_clean($comment.comment|comment)}</p>
+				</strong>
+				<div class="clearfix commented-txt">
+					<p>{$comment.comment|comment}</p>
+				</div>
 			{if userid()}
 				<div class="com-info-actions clearfix">
-					<span>{$comment.date_added|niceTime}</span>
+
 					<div class="reply">
 						{if !$comment.userid==userid() || has_access('admin_access',true)}
 						<a href="javascript:void(0);" onclick="spam_comment('{$comment.comment_id}','{$type}','{$type_id}')">{lang code='spam'}</a>
@@ -70,6 +76,7 @@
 				<strong class="commenter">
 					{if $comment.anonym_name != ''}
 						{display_clean($comment.anonym_name)} ({lang code='guest'})
+					<span>{$comment.date_added|niceTime}</span>
 					<div id="says_{$comment.comment_id}" speaker="{display_clean($comment.anonym_name)}"></div>
 					{else}
 						{if isSectionEnabled('channels')}
@@ -77,12 +84,12 @@
 						{else}
 							{display_clean(name($user))}
 						{/if}
+					<span>{$comment.date_added|niceTime}</span>
 					<div id="says_{$comment.comment_id}" speaker="{display_clean(name($user))}"></div>
 					{/if}
-					<span>{$comment.date_added|niceTime}</span>
 				</strong>
 				<div class="clearfix commented-txt">
-					<p>{display_clean($comment.comment|comment)}</p>
+					<p>{$comment.comment|comment}</p>
 				</div>
 				{if userid()}
 				<div class="com-info-actions clearfix">
@@ -131,7 +138,7 @@
 							<span>{$reply.date_added|niceTime}</span>
 						</strong>
 						<div class="clearfix commented-txt">
-							<p>{display_clean($reply.comment|comment)}</p>
+							<p>{$reply.comment|comment}</p>
 						</div>
 						{if userid()}
 						<div class="com-info-actions clearfix">
@@ -172,7 +179,7 @@
 								<span>{$reply.date_added|niceTime}</span>
 							</strong>
 							<div class="clearfix commented-txt">
-								<p>{display_clean($reply.comment|comment)}</p>
+								<p>{$reply.comment|comment}</p>
 							</div>
 							{if userid()}
 							<div class="com-info-actions clearfix">

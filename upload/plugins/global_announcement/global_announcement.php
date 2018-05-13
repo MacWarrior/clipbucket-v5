@@ -14,9 +14,9 @@
 		{
 			global $db;
 			$results = $db->select(tbl('global_announcement'),'*');
-			$ann = htmlspecialchars_decode($results[0]['announcement']);
+			$ann = $results[0]['announcement'];
 			if (!$ann ==''){
-				echo '<div class="alert alert-info margin-bottom-10 ">'.$ann.'</div>';
+				echo '<div class="alert alert-info margin-bottom-10 ">'.display_clean($ann).'</div>';
 			}
 		}
 

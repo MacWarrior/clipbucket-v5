@@ -346,23 +346,6 @@
    	}
 
 	/**
-	* Decode html special characters
-	* @param : { string } { $text } { text to decode }
-	* @return : { string } { $text } { decoded string }
-	*/
-	if(!function_exists('htmlspecialchars_decode'))
-	{
-		function htmlspecialchars_decode($text, $ent_quotes = "") {
-			$text = str_replace("&quot;", "\"", $text);
-			$text = str_replace("&#039;", "'", $text);
-			$text = str_replace("&lt;", "<", $text);
-			$text = str_replace("&gt;", ">", $text);
-			$text = str_replace("&amp;", "&", $text);
-			return $text;
-		}
-	}
-
-	/**
 	 * Get Directory Size - get_video_file($vdata,$no_video,false);
 	 *
 	 * @param : { string } { $path } { path to directory to determine size of }
@@ -541,21 +524,21 @@
         if($limit) {
             $query .= " LIMIT ".$limit;
         }
-        // pr($query,true);
+
 		if(!$params['count_only']) {
             $result = db_select($query);
         }
-        // pr($result,true);
+
 		if($params['count_only']) {
 			$cond = tbl("comments.type")."= '". $params['type'] ."'";
 			$result = $db->count(tbl("comments"),"*",$cond);
 		}
-		// pr($result,true);
+
 		if($result)
 		{
 			foreach ($result as $key=>$val) 
 			{
-			  $result[$key]['comment'] = html_entity_decode(stripslashes($result[$key]['comment']));
+				$result[$key]['comment'] = $result[$key]['comment'];
 			}
 			return $result;
 		}
@@ -1257,7 +1240,6 @@
 	}
 
 	/**
-	 * Function in case htmlspecialchars_decode does not exist
 	 *
 	 * @param : { string } { $string } { string to decode }
 	 *
@@ -1917,7 +1899,7 @@
 	 * @return string
 	 */
 	function ad($in) {
-		return stripslashes(htmlspecialchars_decode($in));
+		return stripslashes($in);
 	}
 
 
