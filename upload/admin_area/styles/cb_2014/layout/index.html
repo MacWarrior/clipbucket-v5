@@ -127,12 +127,11 @@
                                         <div class="widget-main no-padding">
                                             <div class="slimScrollDiv">
                                                 {foreach from=$comments item=comment}
+													{$userdetails = $userquery->get_user_details($comment.userid)}
                                                 <div class="itemdiv dialogdiv">
-                                                    {foreach from=$users item=u}
                                                     <div class="user">
-                                                        <img alt="Alexa's Avatar" src="{$userquery->getUserThumb($u,'small')}">
+                                                        <img alt="{display_clean($userdetails.username)}" title="{display_clean($userdetails.username)}" src="{$userquery->getUserThumb($userdetails,'small')}">
                                                     </div>
-                                                    {/foreach}
                                                     <div class="body">
                                                         <div class="time">
                                                             <i class="icon-time"></i>
@@ -141,7 +140,7 @@
                                                         <div class="name">
                                                             <a href="#">{display_clean($comment.anonym_name)}</a>
                                                         </div>
-                                                        <div class="text">{display_clean($comment.comment)}</div>
+                                                        <div class="text">{$comment.comment|comment}</div>
                                                         <div class="tools">
                                                             <a href="{getCommentAdminLink($comment.type, $comment.type_id)}" class="btn btn-minier btn-info">
                                                                 <i class="icon-only icon-share-alt"></i>
