@@ -154,9 +154,11 @@
 								{else}
 								
 								<!-- Shown to small devices only Start  @todo : Add condition for logged in user -->
+								{if config('allow_registeration')}
 								<li class="navbar-sm-login-links">
 									<a class="btn btn-default btn-newacc" href="{link name='signup'}"><span class="big">{lang code='create_new_account'}</span><span class="little" style="display:none;">{lang code='signup'}</span></a>
 								</li>
+								{/if}
 								<li class="navbar-sm-login-links">
 									<a class="btn btn-default btn-login" href="{link name='signup'}?mode=login">{lang code='login'}</a>
 								</li>
