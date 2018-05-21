@@ -1226,8 +1226,10 @@ class FFMpeg
 		}
 
 		// Prevent start_time to be negative
-		//$opt_av .= ' -avoid_negative_ts make_zero';
 		$opt_av .= ' -start_at_zero';
+
+		// Fix for ChromeCast
+		$opt_av .= ' -ac 2';
 
 		# video rate
 		if($p['use_video_rate'])
