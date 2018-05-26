@@ -40,7 +40,7 @@ $myquery->Set_Website_Details('baseurl',$baseurl);
 <form name="installation" method="post" id="installation">
     <input type="hidden" name="mode" value="finish" />
 	<?php
-		button('Skip & Finish',' onclick="$(\'#installation\').submit()" ',true);
+		button('Skip & Finish',' onclick="$(\'#installation\').submit()" ');
     	button('Register & Finish',' onclick="register(\''.$adminemail.'\',\''.urlencode(BASEURL).'\')" ');
     ?>
     <span id="loadingReg"></span>

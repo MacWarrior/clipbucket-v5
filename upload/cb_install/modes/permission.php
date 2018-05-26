@@ -28,7 +28,7 @@
 <form name="installation" method="post" id="installation">
     <div style="padding:10px 0px" align="right">
 <?php
-	button_green('Recheck',' onclick="$(\'#mode\').val(\'permission\'); $(\'#installation\').submit()" ',true);
+	button_green('Recheck',' onclick="$(\'#mode\').val(\'permission\'); $(\'#installation\').submit()" ');
 	button('Continue To Next Step',' onclick="$(\'#installation\').submit()" ');
 ?>
 	</div>

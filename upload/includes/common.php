@@ -50,7 +50,7 @@
 			'total_memory_used'=>"0",
 			'expensive_query'=>'',
 			'cheapest_query'=>''
-			);
+		);
 	} else {
 		define("DEVELOPMENT_MODE",false);
 	}
@@ -101,7 +101,6 @@
 	require_once('classes/pages.class.php');
 	require_once('classes/helper.class.php');
 
-
     $cb_columns = new cb_columns();
 	$myquery = new myquery();
 	$row = $myquery->Get_Website_Details();
@@ -114,26 +113,17 @@
 
 	switch(DEBUG_LEVEL) {
 		case 0:
-		{
 			error_reporting(0);
 			ini_set('display_errors', '0');
-		}
-		break;
+			break;
 		case 1:
-		{
 			error_reporting(E_ALL ^ E_NOTICE);
 			ini_set('display_errors', 'on');
-		}
-		break;
-		
+			break;
 		case 2:
 		default:
-		{
-			
 			error_reporting(E_ALL & ~(E_NOTICE | E_DEPRECATED | E_STRICT | E_WARNING));
 			ini_set('display_errors', 'on');
-			
-		}
 	}
 
 	$pages = new pages();	

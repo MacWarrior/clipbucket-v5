@@ -5,8 +5,8 @@
 	if(!defined('PARENT_PAGE'))
 		define("PARENT_PAGE","home");
 
-	include('common.php');
-	include('plugins.php');
+	require_once 'common.php';
+	require_once 'plugins.php';
 
 	define('TEMPLATEDIR',BASEDIR.'/'.TEMPLATEFOLDER.'/'.$Cbucket->template);
 	define('TEMPLATEURL','/'.TEMPLATEFOLDER.'/'.$Cbucket->template);

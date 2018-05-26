@@ -18,11 +18,8 @@
 # @ file : language.class.php
 #
 
-
-
 class language
 {
-	
 	var $lang = 'en';
 	var $lang_iso = 'en';
 	var $lang_name = 'English';
@@ -40,7 +37,7 @@ class language
 	 */
 	function init()
 	{
-		$lang = mysql_clean(getArrayValue($_COOKIE, 'cb_lang'));
+		$lang = getArrayValue($_COOKIE, 'cb_lang');
 		
 		//Setting Language
 		if(isset($_GET['set_site_lang']))
@@ -49,31 +46,31 @@ class language
 			if($this->lang_exists($lang))
 				setcookie('cb_lang',$lang,time()+3600,'/');
 		}
-	
 
-        if ( isset( $lang ) and !empty( $lang ) ) {
+        if ( isset($lang) and !empty($lang) ) {
 		    $lang_details = $this->lang_exists($lang);
         }
 
 		if(isset($lang) && isset($lang_details))
 		{
-			$default = $lang_details ;
-		}else
-		{
+			$default = $lang_details;
+		} else {
 			$default = $this->get_default_language();
 		}
 	
 		if($default['language_code'])
 		{
-
 			$this->lang = $this->lang_iso = $default['language_code'];
 			$this->lang_name = $this->lang_iso = $default['language_name'];
 		}
 	}
-	 
-	 
+
 	/**
 	 * Function used add new phrase
+	 *
+	 * @param        $name
+	 * @param        $text
+	 * @param string $lang_code
 	 */
 	function add_phrase($name,$text,$lang_code='en')
 	{
@@ -93,17 +90,20 @@ class language
 			e(sprintf(lang("name_already_exists"),$name),'m');
 		}
 	}
-	 
+
 	/**
 	 * Function used to get language phrase
+	 *
 	 * @param STRING name
 	 * @param STRING lang_code
+	 *
+	 * @return bool
 	 */
 	function get_phrase($name,$lang_code=NULL)
 	{
 		global $db;
-		
-		
+
+		$lang_query = '';
 		if($lang_code!='')
 		{
 			$lang_query = "AND lang_iso = '".mysql_clean($lang_code)."'";
@@ -112,13 +112,16 @@ class language
 		$results = $db->select(tbl("phrases"),'*'," id = '".mysql_clean($name)."' OR varname = '".mysql_clean($name)."' $lang_query ");
 		if($db->num_rows > 0 )
 			return $results[0];
-		else
-			return false;
+		return false;
 	}
-	
-	
+
+
 	/**
 	 * Function used to modify phrase
+	 *
+	 * @param        $id
+	 * @param        $text
+	 * @param string $lang_code
 	 */
 	function update_phrase($id,$text,$lang_code='en')
 	{
@@ -126,11 +129,18 @@ class language
 
 		//First checking if phrase already exists or not
 		if($this->get_phrase($id,$lang_code))
-			$db->update(tbl("phrases"),array('text'),array(mysql_escape_string($text))," id = '".mysql_escape_string($id)."' ");
+			$db->update(tbl("phrases"),array('text'),array(mysql_clean($text))," id = '".mysql_clean($id)."' ");
 	}
-	
+
 	/**
 	 * Function used to get all phrases of particular language
+	 *
+	 * @param null   $lang
+	 * @param string $fields
+	 * @param null   $limit
+	 * @param null   $extra_param
+	 *
+	 * @return array
 	 */
 	function get_phrases($lang=NULL,$fields="varname,text",$limit=NULL,$extra_param=NULL)
 	{
@@ -140,12 +150,15 @@ class language
 		if(empty($lang_code))
 			$lang_code = $this->lang;
 		return $db->select(tbl("phrases"),$fields," lang_iso = '".$lang_code."' $extra_param",$limit," id ");
-		
 	}
-	
-	
+
 	/**
 	 * Function used to count phrases
+	 *
+	 * @param null $lang
+	 * @param null $extra_param
+	 *
+	 * @return int
 	 */
 	function count_phrases($lang=NULL,$extra_param=NULL)
 	{
@@ -159,16 +172,19 @@ class language
 		//print_r($results);
 		if($db->num_rows>0)
 			return $results[0]['total'];
-		else
-			return 0;
-		
+		return 0;
 	}
-	
+
 	/**
 	 * Function used to assign phrases as an array
+	 *
+	 * @param string $code
+	 *
+	 * @return mixed
 	 */
 	function lang_phrases($code='db')
 	{
+		$lang = array();
 		if($code == 'db')
 		{
 			$phrases = $this->get_phrases();
@@ -176,16 +192,19 @@ class language
 			{
 				$lang[$phrase['varname']] = $phrase['text'];
 			}
-		}else
-		{
+		} else {
 			$lang = $this->getPhrasesFromPack();
 		}
 		return $lang;
 	}
-	
-	
+
+
 	/**
 	 * Function used to get list of languages installed
+	 *
+	 * @param bool $active
+	 *
+	 * @return array
 	 */
 	function get_langs($active=false)
 	{
@@ -197,7 +216,7 @@ class language
 		return $results;
 	}
 
-		function get_langs_latest($active=false)
+	function get_langs_latest($active=false)
 	{
 		global $db;
 		$cond = NULL;
@@ -206,28 +225,31 @@ class language
 		$results = $db->select(tbl("languages"),"*",$cond);
 		return $results;
 	}
-	
-	
-	
-	
+
 	/**
-	 * Function used to check 
+	 * Function used to check
 	 * weather language existsor not
 	 * using iso_code or its lang_id
+	 *
+	 * @param $id
+	 *
+	 * @return bool
 	 */
 	function lang_exists($id)
 	{
 		global $db;
+
+		$id = mysql_clean($id);
 		$results = $db->select(tbl("languages"),"*"," language_code ='$id' OR language_id = '$id'");
 		if($db->num_rows>0)
 			return $results[0];
-		else
-			return false;
+		return false;
 	}
-	
 
 	/**
 	 * Make Language Default
+	 *
+	 * @param $lid
 	 */
 	function make_default($lid)
 	{
@@ -253,23 +275,26 @@ class language
 		$result = $result[0];
 		return $result;
 	}
-	
+
 	/**
-	 * Function used to get language detilas
+	 * Function used to get language details
+	 *
+	 * @param $id
+	 *
+	 * @return bool
 	 */
 	function get_lang($id)
 	{
 		return $this->lang_exists($id);
 	}
-	
-	
-	
+
 	/**
 	 * Function used to export language
+	 *
+	 * @param $id
 	 */
 	function export_lang($id)
 	{
-		
 		//first get language details
 		$lang_details = $this->get_lang($id);
 		if($lang_details)
@@ -280,50 +305,45 @@ class language
 			header("Cache-Control: private",false); // required for certain browsers 
 			header("Content-type: application/force-download");
 			header("Content-Disposition: attachment; filename=\"cb_lang_".$lang_details['language_code'].".xml\""); 
-			echo '<?xml version="1.0" encoding="UTF-8"?>';
-			?>
-			<clipbucket_language>
-				<name><?php echo $lang_details['language_name']; ?></name>
-				<iso_code><?php echo $lang_details['language_code']; ?></iso_code>
-				<phrases>
-					<?php echo array2xml(array('lang'=>$this->lang_phrases())); ?>
-				</phrases>
-			</clipbucket_language>
-<?php
-			exit();
-		}else
+			echo '<?xml version="1.0" encoding="UTF-8"
+					<clipbucket_language>
+						<name>'.$lang_details['language_name'].'</name>
+						<iso_code>'.$lang_details['language_code'].'</iso_code>
+						<phrases>'.array2xml(array('lang'=>$this->lang_phrases())).'</phrases>
+					</clipbucket_language>';
+			die();
+		} else
 			e(lang("lang_doesnt_exist"));
 	}
-	
 
-/**
-	* Function use for downloading .lang file 
-	* @param : { integer } { $id } { Language id of a file to be downloaded }
-	* 
-	* @return : { file } { save file }
-	* @since : 17 may, 2016 ClipBucket 2.8.1
-	* @author : Sikander Ali 
-	*/
-	function export_lang_Json($id){
+	/**
+	 * Function use for downloading .lang file
+	 *
+	 * @param : { integer } { $id } { Language id of a file to be downloaded }
+	 *
+	 * @return void : { file } { save file } { save file }
+	 * @since : 17 may, 2016 ClipBucket 2.8.1
+	 * @author : Sikander Ali
+	 */
+	function export_lang_Json($id)
+	{
 		$lang_details = $this->get_lang($id);
 		$file = "/includes/langs/".$lang_details['language_code']."."."lang";
 		if($lang_details)
 		{
-	header('Content-Description: File Transfer');
-    header('Content-Type: application/octet-stream');
-    header('Content-Disposition: attachment; filename="'.basename($file).'"');
-    header('Expires: 0');
-    header('Cache-Control: must-revalidate');
-    header('Pragma: public');
-    header('Content-Length: ' . filesize($file));
-    readfile($file);
-    exit;
-		}else{
+			header('Content-Description: File Transfer');
+			header('Content-Type: application/octet-stream');
+			header('Content-Disposition: attachment; filename="'.basename($file).'"');
+			header('Expires: 0');
+			header('Cache-Control: must-revalidate');
+			header('Pragma: public');
+			header('Content-Length: ' . filesize($file));
+			readfile($file);
+			die();
+		} else {
 			e(lang("lang_doesnt_exist"));
 		}
 	}
-
-
 
 	/**
 	 * Function used to import language
@@ -359,29 +379,31 @@ class language
 					e(lang("language_already_exists"));
 				else
 				{
-					$db->insert(tbl("languages"),array("language_code","language_name","language_regex","language_default"),
-												  array($data['iso_code'],$data['name'],"/^".$data['iso_code']."/i","no"));
-					$sql = '';
+					$db->insert(tbl("languages"),
+						array("language_code","language_name","language_regex","language_default"),
+						array($data['iso_code'],$data['name'],"/^".$data['iso_code']."/i","no"));
+					
+
+					$query = "INSERT INTO ".tbl("phrases")." (lang_iso,varname,text) VALUES ";
+
+					$values = '';
 					foreach($phrases as $code => $phrase)
 					{
-						if(!empty($sql))
-							$sql .=",\n";
-						$sql .= "('".$data['iso_code']."','$code','".htmlspecialchars($phrase,ENT_QUOTES, "UTF-8")."')";
+						if(!empty($values))
+							$values .=',';
+						$values .= "('".$data['iso_code']."','$code','".htmlspecialchars($phrase,ENT_QUOTES, "UTF-8")."')";
 					}
-					$sql .= ";";
-					$query = "INSERT INTO ".tbl("phrases")." (lang_iso,varname,text) VALUES \n";
-					$query .= $sql;
+
+					$query .= $values.';';
 					$db->execute($query);
 				
-					// checking dublicate value..
-
+					// checking duplicate value..
 					$count = $this->count_phrases();
 					$other = count($phrases);
 		
 					if($count > $other){
 						e(lang("Lanuage Pack is not complete."),"w");
-					}
-					elseif($count == $other){
+					} elseif($count == $other) {
 						e(lang("Full Language Pack is added.","m"));
 					}
 					
@@ -389,26 +411,24 @@ class language
 					e(lang("lange_upload_after"),"m");;
 				}
 			}
-			
-		}else
+		} else
 			e(lang("error_while_upload_file"));
 			
 		if(file_exists($file_name))
 			unlink($file_name);
-	} 
-	
+	}
 
-
-
-/** 
-	* Function use for adding language & saving phrases into db
-	* @param : { string } { $iso_code } { contains language code e.g 'en' }
-	* 		 : { array } {$transLang } {translated phrases}
-	*		 : {string} {$lang_name} { Language name e.g 'english'}
-	* @since : 17 may, 2016 ClipBucket 2.8.1
-	* @author : Sikander Ali 
-	*/
-  function import_packlang($iso_code,$transLang,$lang_name)
+	/**
+	 * Function use for adding language & saving phrases into db
+	 *
+	 * @param $iso_code
+	 * @param $transLang
+	 * @param $lang_name
+	 *
+	 * @since : 17 may, 2016 ClipBucket 2.8.1
+	 * @author : Sikander Ali
+	 */
+	function import_packlang($iso_code,$transLang,$lang_name)
 	{
 		global $db;
 		$phrases = $transLang;
@@ -426,32 +446,24 @@ class language
 		$query .= $sql;
 		$db->execute($query);
 	
-		// checking dublicate value..
-
+		// checking duplicate value..
 		$count = $this->count_phrases();
 		$other = count($phrases);
 
 		if($count > $other){
 			e(lang("Lanuage Pack is not complete."),"w");
-		}
-		elseif($count == $other){
+		} elseif($count == $other) {
 			e(lang("Full Language Pack is added.","m"));
 		}
 		
 		e(lang("lang_added"),"m");
 		e(lang("lange_upload_after"),"m");
-	
 	}
-
-
-
-
-
-
-
 
 	/**
 	 * Function used to delete language pack
+	 *
+	 * @param $i
 	 */
 	function delete_lang($i)
 	{
@@ -468,9 +480,11 @@ class language
 			e(lang("lang_deleted"),"m");
 		}
 	}
-	
+
 	/**
 	 * Function used to update language
+	 *
+	 * @param $array
 	 */
 	function update_lang($array)
 	{
@@ -494,38 +508,40 @@ class language
 			$db->update(tbl("phrases"),array("lang_iso"),array($array['code'])," lang_iso='".$lang['language_code']."'");
 			e(lang("lang_updated"),"m");
 		}
-			
 	}
-	
-	
+
 	/**
 	 * Function used to create new language pack
 	 * that can be used by clipbucket
-	 * 
-	 **/
+	 *
+	 * @param bool $lang
+	 *
+	 * @return bool
+	 */
 	function createPack($lang=false)
 	{
 		if(!$lang)
 			$lang = $this->lang;
 		$phrases = $this->get_phrases($lang);
 		
-		if(count($phrases)==0) return false;
+		if(count($phrases)==0)
+			return false;
 		$new_array = array();
 		foreach($phrases as $phrase)
 		{	
 			$new_array[$phrase['varname']] =html_entity_decode(html_entity_decode($phrase['text']));
-			//$new_array[$phrase['varname']] = unhtmlentities($phrase['text']);
-			//pr($new_array,true);
 		}
 		$fo = fopen(BASEDIR.'/includes/langs/'.$lang.'.lang','w+');
 		fwrite($fo,json_encode($new_array));
 		fclose($fo);
 		return true;
 	}
-	
-	
+
 	/**
-	 * function used to activate or deactive language
+	 * function used to activate or deactivate language
+	 *
+	 * @param $action
+	 * @param $id
 	 */
 	function action_lang($action,$id)
 	{
@@ -542,25 +558,25 @@ class language
 			{
 				case "active":
 				case "activate":
-				{
 					$db->update(tbl('languages'),array("language_active"),array("yes")," language_id='$id' ");
 					e(lang("lang_has_been_activated"),"m");
-				}
-				break;
+					break;
 				case "deactive":
 				case "deactivate":
-				{
 					$db->update(tbl('languages'),array("language_active"),array("no")," language_id='$id' ");
 					e(lang("lang_has_been_deactivated"),"m");
-				}
-				break;
+					break;
 			}
 		}
 		
 	}
-	
-	/** 
+
+	/**
 	 * Function used to get phrases from language packs
+	 *
+	 * @param bool $lang
+	 *
+	 * @return mixed
 	 */
 	function getPhrasesFromPack($lang=false)
 	{
@@ -574,7 +590,6 @@ class language
 		return $phrases;	
 	}
 
-
 	function set_lang($ClientId,$secertId)
 	{
 		global $db;
@@ -584,12 +599,13 @@ class language
 		$db->update(tbl('config'),array("value"),array($sc)," name='secretId' ");
 	}
 
-	
-	/** 
+	/**
 	 * Function used to import language from lang file
 	 * this function fill first remove all phrases from database
-	 * then update the language so that when we release update we just update the 
+	 * then update the language so that when we release update we just update the
 	 * file and then call this function to refresh all the language phrases.
+	 *
+	 * @param null $lang
 	 */
 	function updateFromPack($lang=NULL)
 	{
@@ -619,10 +635,7 @@ class language
 			$query .= ";";
 			
 			$db->Execute($query);
-		
 		}
 	}
-		
-}
 
-?>
+}

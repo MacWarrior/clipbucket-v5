@@ -16,7 +16,7 @@ if(userid() || $old_version < 2.3 ):
 <div id="sub_container" >
 <form name="installation" method="post" id="installation">
 	<input type="hidden" name="mode" value="permission"/>
-    <div style="padding:10px 0px" align="right"><?php button('Continue to upgrade!',' onclick="$(\'#installation\').submit()" '); ?></div>
+    <div style="padding:10px 0;" align="right"><?php button('Continue to upgrade!',' onclick="$(\'#installation\').submit()" '); ?></div>
 </form>
 <?php
 else:

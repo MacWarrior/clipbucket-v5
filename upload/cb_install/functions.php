@@ -1,65 +1,43 @@
 <?php
-	
-	
 	define("BASEDIR",dirname(dirname(__FILE__)));
 	
 	if(!file_exists(BASEDIR.'/files/temp/install.me'))
 		$mode = "lock";
-	
-	//major functions goes here
-
 
 	function get_cbla()
 	{
-		//$license	= @file_get_contents('http://clip-bucket.com/get_contents.php?mode=cbla');
-		if(!@$license)
-		{
-			$license	= file_get_contents('LICENSE');
-			$license	= str_replace("\n",'<BR>',$license);
-			$license	= str_replace("{this_year}",date("Y",time()),$license);
-		}
+		$license	= file_get_contents('LICENSE');
+		$license	= str_replace("\n",'<BR>',$license);
+		$license	= str_replace("{this_year}",date("Y",time()),$license);
 		return $license;
 	}
 
 	function button($text,$params=NULL,$alt=false)
 	{
 		echo '<span '.$params.'>&nbsp;</span>';
-		
-	    echo '<span class="btn btn-primary" '.$params.'>'.$text.'</span>'; 
-		if(!$alt)
-			echo '<span '.$params.'>&nbsp;</span>';
-		else
-			echo '<span '.$params.'>&nbsp;</span>';
+	    echo '<span class="btn btn-primary" '.$params.'>'.$text.'</span>';
+	    echo '<span '.$params.'>&nbsp;</span>';
 	}
 
-	function button_green($text,$params=NULL,$alt=false)
+	function button_green($text,$params=NULL)
 	{
 		echo '<span '.$params.'>&nbsp;</span>';
-		
-	    echo '<span class="btn btn-success" '.$params.'>'.$text.'</span>'; 
-		if(!$alt)
-			echo '<span '.$params.'>&nbsp;</span>';
-		else
-			echo '<span '.$params.'>&nbsp;</span>';
+	    echo '<span class="btn btn-success" '.$params.'>'.$text.'</span>';
+	    echo '<span '.$params.'>&nbsp;</span>';
 	}
 
-	function button_danger($text,$params=NULL,$alt=false)
+	function button_danger($text,$params=NULL)
 	{
 		echo '<span '.$params.'>&nbsp;</span>';
-		
-	    echo '<span class="btn btn-danger" '.$params.'>'.$text.'</span>'; 
-		if(!$alt)
-			echo '<span '.$params.'>&nbsp;</span>';
-		else
-			echo '<span '.$params.'>&nbsp;</span>';
+	    echo '<span class="btn btn-danger" '.$params.'>'.$text.'</span>';
+	    echo '<span '.$params.'>&nbsp;</span>';
 	}
 
    function msg_arr($arr)
 	{
 		if(@$arr['msg'])
 			return emsg($arr['msg'],'ok');
-		else
-			return emsg($arr['err'],'alert_cross');
+		return emsg($arr['err'],'alert_cross');
 	}
 	
 	if(!function_exists('emsg'))
@@ -76,19 +54,15 @@
 		switch($type)
 		{
 			case "php":
-			{
-				
 				$v = phpversion();
 				$req = '5.2.1';
 				if($v<$req)
 					$return['err'] = sprintf(_("Found PHP %s but required is PHP %s "),$v,$req);
 				else
 					$return['msg'] = sprintf(_("Found PHP %s "),$v);
-			}
-			break;
+				break;
 			
 			case "ffmpeg":
-			{
 				$ffmpeg_path = exec("which ffmpeg");
 				$ffmpeg_version = shell_output("$ffmpeg_path -version");
 				
@@ -104,11 +78,9 @@
 					$return['err'] = _("Unable to find ffmpeg");
 				else
 					$return['msg'] = sprintf(_("Found FFMPEG %s : %s"),$version,$ffmpeg_path);
-			}
-			break;
+				break;
 			
 			case "flvtool2":
-			{
 				$flvtool2_path = exec("which flvtool2");
 				$flvtool2_version = shell_output("$flvtool2_path -version");
 				$version = false;
@@ -119,12 +91,9 @@
 					$return['err'] = _("Unable to find flvtool2");
 				else
 					$return['msg'] = sprintf(_("Found flvtool2 %s : %s"),$version,$flvtool2_path);
-
-			}
-			break;
+				break;
 			
 			case "mp4box":
-			{
 				$mp4boxpath = exec("which MP4Box");
 				$mp4box_version = shell_output("$mp4boxpath -version");
 				$version = false;
@@ -135,11 +104,9 @@
 					$return['err'] = _("Unable to find MP4Box");
 				else
 					$return['msg'] = sprintf(_("Found MP4Box %s : %s"),$version,$mp4boxpath);
-			}
-			break;
+				break;
 			
 			case "curl":
-			{
 				$version = false;
 				if(function_exists('curl_version'))
 				$version = @curl_version();
@@ -148,30 +115,22 @@
 					$return['err'] = _("curl library is not neabled");
 				else
 					$return['msg'] = sprintf(_("curl %s found"),$version['version']);
-
-			}
-			break;
+				break;
 			
 			case "phpshield":
-			{
 				if(!function_exists('phpshield_load'))
 					$return['err'] = _("PHPShield loaders are not installed (optional)");
 				else
 					$return['msg'] = _("PHPShield loaders are working (optional)");
-			}
-			break;
+				break;
 
 			case "imagick":
-			{
 				if(!extension_loaded('imagick'))
 					$return['err'] = _("Imagick extension is not enabled");
 				else
 					$return['msg'] = _("Imagick extension is enabled");
-			}
-			break;
-
+				break;
 		}
-		
 		return $return;
 	}
 	
@@ -182,8 +141,7 @@
 			return $in;
 		}
 	}
-	
-	
+
 	if(!function_exists('shell_output'))
 	{
 		function shell_output($cmd)
@@ -197,8 +155,7 @@
 			return $data;
 		}
 	}
-	
-	
+
 	/**
 	 * Short form of print_r as pr
 	 */
@@ -216,15 +173,13 @@
 			}
 		}
 	}
-	
-	
+
 	/**
 	 * Function used to check folder permissions
 	 */
 	function checkPermissions()
 	{
-		$files = array
-		(
+		$files = array(
 			'cache',
 			'cache/comments',
 			'cache/userfeeds',
@@ -252,15 +207,13 @@
 		foreach($files as $file)
 		{
 			if(is_writeable(BASEDIR.'/'.$file))
-			{
 				$permsArray[] = array('path'=>$file,'msg'=>'writeable');
-			}else
+			else
 				$permsArray[] = array('path'=>$file,'err'=>'please chmod this file/directory to 777');				
 		}
 		return $permsArray;
 	}
-	
-	
+
 	/**
 	 * FUNCTION USED TO CLEAN VALUES THAT CAN BE USED IN FORMS
 	 */
@@ -276,9 +229,7 @@
 		}
 		function form_val($string){return cleanForm($string); }
 	}
-	
-	
-	
+
 	function selected($selected)
 	{
 		global $mode;
@@ -293,11 +244,9 @@
 	function getUpgradeFiles()
 	{
 		global $versions,$upgrade;
-		$version = VERSION;
 		$oldVer = $upgrade;
 		if($oldVer)
 		{
-			$total = count($versions);
 			$files = array();
 			
 			$found = false;
@@ -310,27 +259,20 @@
 			}
 			return $files;
 		}
-		
 		return false;
 	}
 
 	function installer_path()
-  {
-    $pageURL = 'http';
-    if (@$_SERVER["HTTPS"] == "on") {
-    $pageURL .= "s";
-    }
-    $pageURL .= "://";
-    $pageURL .= $_SERVER['SERVER_NAME'];
-    $pageURL .= $_SERVER['REQUEST_URI'];
-    $query_string = $_SERVER['QUERY_STRING'];
-    if(!empty($query_string)){
-    $pageURL .= '?'.$query_string;
-    }
-    return $pageURL;
-  }
-		
+	{
+		$pageURL = 'http';
+		if (@$_SERVER["HTTPS"] == "on") {
+			$pageURL .= "s";
+		}
+		$pageURL .= '://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
 
-		
-
-?>
+		$query_string = $_SERVER['QUERY_STRING'];
+		if(!empty($query_string)){
+			$pageURL .= '?'.$query_string;
+		}
+		return $pageURL;
+	}
