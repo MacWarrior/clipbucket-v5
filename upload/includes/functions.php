@@ -1651,6 +1651,9 @@
 	 */
 	function lang($var,$sprintf=false)
 	{
+		if( $var == '' )
+			return '';
+
 		global $LANG;
 		$array_str = array( '{title}');
 		$array_replace = array( "Title" );
