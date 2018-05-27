@@ -89,8 +89,6 @@
                   {$signup_fields.cat.class='form-control'}
                   {$formObj->createField($signup_fields.cat)}
                   {ANCHOR place=$signup_fields.cat.anchor_after}
-
-
                 </div>
                 <div class="form-group">
                   <label for="dob">{lang code='user_date_of_birth'}</label>
@@ -115,7 +113,7 @@
                 {/if}
 
                 <div class="form-group">
-                  <button name="update_profile" id="button" value="submit" class="btn btn-primary">  {lang code='update'}</button>
+                  <button name="update_profile" id="button" value="submit" class="btn btn-primary"> {lang code='update'}</button>
                 </div>
               </div>
               
@@ -198,7 +196,6 @@
       <div class="tabbable">
         <ul class="nav nav-tabs" id="myTab2">
 
-
           <li class="{if $mode =='block_users'}active {/if}">
             <a href="/edit_account.php?mode=block_users">
               <h5>{lang code='block_users'}</h5>
@@ -247,7 +244,6 @@
             <input class="form-control" name="old_pass" type="password" id="old_pass">
           </div>
 
-
           <div class="form-group">
             <label for="new_pass">{lang code='user_new_pass'}</label>
             <input class="form-control" name="new_pass" type="password" id="new_pass" />
@@ -271,7 +267,6 @@
             <label for="curemail">{lang code='current_email'}</label>
             <input class="form-control" type="text" disabled value="{$user.email}" id="curemail">
           </div>
-
 
           <div class="form-group">
             <label for="new_email">{lang code='user_new_email'}</label>
@@ -332,9 +327,7 @@
   </div>
 </div>
 </div>
-
 {/if}
-
 
 <script>
   (function(window){
@@ -348,9 +341,7 @@
         changeYear: true
       });
 
-
       var extensions = "{$extensions}";
-      var baseurl = '/';
       extensions = (extensions.substring(0, extensions.length - 1)) + ",png,jpeg";
       $.get("{$theme}/js/plupload/js/plupload.full.min.js", function(e){
         var uploader = new plupload.Uploader({
@@ -359,27 +350,21 @@
           url : "/edit_account.php?mode=avatar_bg",
           file_data_name : "coverPhoto",
           filters: {
-            mime_types : [
-            { title : "Image files", extensions : extensions },
-            ],
+            mime_types : [ { title : "Image files", extensions : extensions }, ],
             max_file_size: "2mb",
-            prevent_duplicates: true,
+            prevent_duplicates: true
           }
         });
         window.uploader = uploader;
         uploader.init();
         uploader.bind("FilesAdded", function(up, uploadedFiles){
           $("#coverPhoto").attr("src", "/images/loading.png");
-          console.log("/images/loading.png");
           up.start();
         });
-        uploader.bind('UploadComplete', function(plupload, files, response){
-
-        });
+        uploader.bind('UploadComplete', function(plupload, files, response){});
 
         uploader.bind("FileUploaded", function(plupload, files, response){
           var response = $.parseJSON(response.response);
-          console.log(response);
           if(response.status == true){
             $("#coverPhoto").attr("src", response.url);
           }else{
@@ -408,21 +393,5 @@
     {/if}
     {rdelim}
     );
-  </script>
+</script>
 
-
-
-      <!--  <script>
-            jQuery(function() {                                              // <== Doc ready
-
-                jQuery(".the-buttons").hide();                  // Initially hide all buttons
-
-                jQuery('.show-image').hover(function() {
-                    jQuery(this).find('#avatar_file').fadeIn(1500);
-                    jQuery(this).find('#background_file').fadeIn(1500);// use .find() !
-                }, function() {
-                    jQuery(this).find('#avatar_file').fadeOut(1500);
-                    jQuery(this).find('#background_file').fadeOut(1500);// use .find() !
-                });
-            });
-          </script>-->

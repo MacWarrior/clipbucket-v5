@@ -17,7 +17,7 @@ if(isset($_POST['update_profile']))
 {
 	$array = $_POST;
 	$array['userid'] = userid();
-	/*Checks prfile fields data*/
+	/*Checks profile fields data*/
 	profile_fileds_check($array);
 	if ($post_clean == true)
 	{
@@ -115,63 +115,46 @@ assign('mode',$mode);
 switch($mode)
 {
 	case 'account':
-	{
 		assign('on','account');
 		assign('mode','account_settings');
-	}
-	break;
+		break;
+
 	case 'profile':
-	{
 		assign('on','profile');
 		assign('mode','profile_settings');
-	}
-	break;
+		break;
 	
 	case 'avatar_bg':
-	{
 		Assign('extensions', $Cbucket->get_extensions());
 		assign("coverPhoto", $userquery->getCover(userid()));
 		assign('mode','avatar_bg');
-	}
-	break;
+		break;
 
 	case 'channel_bg':
-	{
 		Assign('extensions', $Cbucket->get_extensions());
 		assign("coverPhoto", $userquery->getCover(userid()));
 		assign('mode','channel_bg');
-	}
-	break;
+		break;
 
 	case 'change_cover':
-	{
-
 		Assign('extensions', $Cbucket->get_extensions());
 		assign("coverPhoto", $userquery->getCover(userid()));
 		assign('mode','change_cover');
-	}
-	break;
+		break;
 	
 	case 'change_email':
-	{
 		assign('mode','change_email');
-	}
-	break;
+		break;
 	
 	case 'change_password':
-	{
 		assign('mode','change_password');
-	}
-	break;
+		break;
 	
 	case 'block_users':
-	{
 		assign('mode','block_users');
-	}
-	break;
+		break;
 	
 	case 'subscriptions':
-	{
 		//Removing subscription
 		if(isset($_GET['delete_subs']))
 		{
@@ -180,24 +163,20 @@ switch($mode)
 		}
 		assign('mode','subs');
 		assign('subs',$userquery->get_user_subscriptions(userid()));
-	}
-	break;
+		break;
 	
 	default:
-	{
 		assign('on','account');
 		assign('mode','profile_settings');
-	}
 }
 
 
 $udetails = $userquery->get_user_details(userid());
 $profile = $userquery->get_user_profile($udetails['userid']);
 $user_profile = array_merge($udetails,$profile);
-//pr($Cbucket->header_files);
+
 assign('user',$udetails);
 assign('p',$user_profile);
 subtitle(lang("user_manage_my_account"));
 template_files('edit_account.html');
 display_it();
-?>
