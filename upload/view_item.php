@@ -93,7 +93,7 @@ if($cbcollection->is_viewable($cid))
 								assign('user',$userquery->get_user_details($photo['userid']));
 								assign('c',$collect);
 								
-								subtitle($photo['photo_title'].' &laquo; '.$collect['collection_name']);
+								subtitle(display_clean($photo['photo_title']).' &laquo; '.display_clean($collect['collection_name']));
 							} else {
 								e(lang("item_not_exist"));
 								$Cbucket->show_page = false;	
@@ -113,7 +113,6 @@ if($cbcollection->is_viewable($cid))
 	}
 } else 
 	$Cbucket->show_page = false;
-
 
 
 //Getting Collection Lists
@@ -152,9 +151,8 @@ else
     $carray['order'] = "DESC";
 
 $collections = $cbcollection->get_collections($carray);
-assign('co',$collections);     //previously assign('c',$collections);
+assign('co',$collections);
 ////////////////////////////////
 
 template_files('view_item.html');
 display_it();
-?>

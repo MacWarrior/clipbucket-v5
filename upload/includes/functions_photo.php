@@ -50,7 +50,7 @@ function get_photo($params)
     return get_image_file( $params );
 }
 
-//Photo Upload BUtton
+//Photo Upload Button
 function upload_photo_button($params)
 {
     global $cbphoto;

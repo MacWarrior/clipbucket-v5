@@ -121,7 +121,7 @@ class CBvideo extends CBCategory
             }
         }
 
-        # Do make array unqiue, otherwise we might get duplicate
+        # Do make array unique, otherwise we might get duplicate
         # fields
         $fields = array_unique( $fields );
 

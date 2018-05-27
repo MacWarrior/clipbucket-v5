@@ -216,8 +216,7 @@ class cbfeeds
 						{
 							$this->deleteFeed($uid,$feed['file']);
 							$remove_feed = true;
-						}else
-						{
+						} else {
 							$objectArr['details'] 	= $photo;
 							$objectArr['size']		= 't';
 							$objectArr['output']	= 'non_html';
@@ -227,8 +226,7 @@ class cbfeeds
 							
 							//Content Title
 							$farr['title'] = $photo['photo_title'];
-							$farr['action_title'] 
-							= sprintf(lang('user_has_uploaded_new_photo'),$userlink);
+							$farr['action_title'] = sprintf(lang('user_has_uploaded_new_photo'),$userlink);
 							
 							$farr['links'][] = array('link'=>($cbphoto->photo_links($photo,'view_item')),'text'=>lang('view_photo'));
 							

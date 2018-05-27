@@ -130,7 +130,7 @@ class Collections extends CBCategory
 	}
 		
 	/**
-	 * Initiatting Search
+	 * Initiating Search
 	 */
 	function init_search()
 	{

@@ -695,7 +695,7 @@ class Smarty_Template_Source
      * @param string          $resource        full template_resource
      * @param string          $type            type of resource
      * @param string          $name            resource name
-     * @param string          $unique_resource unqiue resource name
+     * @param string          $unique_resource unique resource name
      */
     public function __construct(Smarty_Resource $handler, Smarty $smarty, $resource, $type, $name, $unique_resource)
     {
