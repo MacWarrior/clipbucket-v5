@@ -340,7 +340,7 @@
 								{$counter = 1}
 								{foreach from=$Cbucket->search_types item=t key=stypes}
 								{if $counter == 3}
-								<li value="{$stypes}" {if $smarty.get.type==$stypes || $smarty.get.type==''} class="active"  {/if}>
+								<li value="{$stypes}" {if $smarty.get.type==$stypes || $smarty.get.type==''} class="active" {/if}>
 									<a class="s-types" href="#">{$stypes|ucfirst}</a>
 								</li>
 								{else}
@@ -358,13 +358,13 @@
 			</div>
 			{if userid()}
 			<li class="dropdown hvr myaccount-dd">
-				<span class="dropdown-toggle theme_color col-md-12" data-toggle="dropdown"><img class="img-circle" src="{$usr_head_thumb}" style="width: 40px; height: 40px;"/><b class="caret"></b></span>
+				<span class="dropdown-toggle theme_color col-md-12" data-toggle="dropdown"><img class="img-circle" src="{$usr_head_thumb}" style="width:40px;height:40px;"/><b class="caret"></b></span>
 				<ul class="dropdown-menu">
 					<li>
 						<div class="adminthumb">
 							<a href="{$userquery->profile_link($logged_in_user)}">
 							<img class="img-circle" src="{$usr_head_thumb}"/>
-							<h4>{$userquery->username}</h4>     
+							<h4>{display_clean($userquery->username)}</h4>
 							</a>
 		
 						</div>
@@ -375,9 +375,9 @@
 					<li><a href="{link name='my_account' }{userid}">{lang code="my_account"}</a></li>
 					{ANCHOR place='premium_button_link'}
 					<li><a href="{link name='my_videos'}">{lang code="Manage Videos"}</a></li>
-					<li><a href="{link name='channels'}">{lang code="View Channels"}</a></li>
+					<li><a href="{link name='channels'}">{lang code="view_channels"}</a></li>
 					<li class="divider"></li>
-					<li><a href="{link name='logout'}">{lang code="Logout"}</a></li>
+					<li><a href="{link name='logout'}">{lang code="logout"}</a></li>
 				</ul>
 			</li>
 			{else}
@@ -399,13 +399,13 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					<h4 class="modal-title">{lang code="Login"}</h4>
+					<h4 class="modal-title">{lang code="login"}</h4>
 				</div>
 				<div class="modal-body">
 
 					<div class="form-group">
 						<label for="login_username">{lang code="Username"}</label>
-						<input type="text" class="form-control" id="login_username"  name="username"  placeholder="Enter username">
+						<input type="text" class="form-control" id="login_username" name="username" placeholder="Enter username">
 					</div>
 
 					<div class="form-group">
@@ -422,8 +422,8 @@
 					<div align="center"><a href="/forgot.php">{lang code='user_forgot_password'}</a> | <a href="/forgot.php?mode=recover_username">{lang code='user_forgot_username'}</a></div>
 				</div>
 				<div class="modal-footer">
-					<a href="{link name='signup'}" class="btn btn-primary btn-success btn-sm pull-left">{lang code="Create Account"}</a>
-					<button type="button" class="btn btn-default" data-dismiss="modal">{lang code="Cancel"}</button>
+					<a href="{link name='signup'}" class="btn btn-primary btn-success btn-sm pull-left">{lang code="get_your_account"}</a>
+					<button type="button" class="btn btn-default" data-dismiss="modal">{lang code="cancel"}</button>
 					<input type="submit" class="btn btn-primary" value="{lang code='Login'}" name="login">
 				</div>
 			</div><!-- /.modal-content -->

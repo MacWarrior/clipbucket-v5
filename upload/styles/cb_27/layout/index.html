@@ -301,25 +301,25 @@
 				{$feature_users=get_users(['featured'=>'yes','limit'=>5])}
 				{if $feature_users}
 	     		<div class="col-md-4 side_user_home">
-					<h2 class="myHeading theme_color">{lang code="Featured Users"}</h2>
+					<h2 class="myHeading theme_color">{lang code="featured_users"}</h2>
 	               
 	               {foreach $feature_users as $user}
 					
 	                <div class="col-md-12 nopadding clearfix user-view-home">
 						<div class="col-md-3 nopadding">
-							<img src="{$userquery->getuserthumb($user,'small')}" width="56" height="56" class="img-circle" />
+							<img src="{$userquery->getuserthumb($user,'small')}" width="56" height="56" class="img-circle"/>
 						</div>
 						<div class="col-md-9 nopadding">
-							<h4 class="nopadding "><a href="{$userquery->profile_link($user)}">{display_clean($user.username)}</a></h4>
+							<h4 class="nopadding"><a href="{$userquery->profile_link($user)}">{display_clean($user.username)}</a></h4>
 
 							<div class=" nopadding col-md-6 min-height-20">
 								<div class="pull-left small"><span class="bg-eye"></span>&nbsp;<span>{$user.profile_hits|number_format} {lang code='views'}</span></div>
-								<div class="pull-right small" style="margin-right: -50px;"><span class="bg-videocam"></span>&nbsp;<span>{$user.total_videos|number_format} {lang code='Videos'}</span></div>
+								<div class="pull-right small" style="margin-right: -50px;"><span class="bg-videocam"></span>&nbsp;<span>{$user.total_videos|number_format} {lang code='videos'}</span></div>
 							</div>
 		                    <br>
 		                    <div class="row pull-left" style="margin-left: 0px; width: 99%;">
 			                    <div class="progres">
-			                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+			                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%;">
 			                            <span class="sr-only">40% Complete (success)</span>
 			                        </div>
 			                    </div>
@@ -402,18 +402,18 @@
 							{$items = get_playlist_items($playlist.playlist_id)}
 								{foreach $items as $item}
 								    <div class="collection-item">
-										    {$videoid = $item.videoid}
-										    {if $videoid}
+										{$videoid = $item.videoid}
+										{if $videoid}
 		                                    {$videos = get_videos(['videoid'=>$videoid,'limit'=>'4'])}
-											    {foreach $videos as $video}
-				                                    <a href="{videoLink($video)}">
-														{$thumb = get_thumb($video)}
-				                                        <img src="{$thumb}" />
-						                            </a>
-												{/foreach}
-											{else}
+											{foreach $videos as $video}
+												<a href="{videoLink($video)}">
+													{$thumb = get_thumb($video)}
+													<img src="{$thumb}"/>
+												</a>
+											{/foreach}
+										{else}
 											<span class="label label-default">{lang code='no_items'}</span>
-											{/if}
+										{/if}
                                     </div>
 								{/foreach}
 							</div>
@@ -520,8 +520,6 @@
 		}
 	}
 
-
-
 	$('#home_load_more').on("click",function(){
 		var loadLink = '/ajax/home.php',
 		main_object = $(this),
@@ -572,17 +570,3 @@
 		console.log(title);
 	});
 </script>
-
-<!--<style>
-
-.ad{
-    background: none repeat scroll 0 0 #F3F3F3;
-    border: 1px solid #CCCCCC;
-    font-size: 15px;
-    height: 90px;
-    margin: 0 auto 25px;
-    padding: 0;
-    text-align: center;
-    width: 728px;
-}
-</style>-->
