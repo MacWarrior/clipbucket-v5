@@ -378,7 +378,7 @@
 	
 	# PHOTOS DETAILS	
 	define('PHOTOS_DIR',FILES_DIR."/photos");
-	define('PHOTOS_URL',"/photos");
+	define('PHOTOS_URL',"/files/photos");
 	
 	# ADVANCE CACHING
 	define('CACHE_DIR',BASEDIR.'/cache');
