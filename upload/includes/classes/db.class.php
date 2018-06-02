@@ -97,17 +97,16 @@ class Clipbucket_db
         } else {
             $result = $this->mysqli->query($query);
         }
-        $this->num_rows = $result->num_rows ;
-        $data = array();
+        $this->num_rows = $result->num_rows;
 
-        for ($row_no = 0; $row_no < $this->num_rows; $row_no++)
-        {
-            $result->data_seek($row_no);
-            $data[] = $result->fetch_assoc();
-        }
+		$data = array();
+		if( $result )
+		{
+			while( $row = $result->fetch_assoc() )
+				$data[] = $row;
 
-        if($result)
-            $result->close();
+			$result->close();
+		}
 
         return $data;
     }

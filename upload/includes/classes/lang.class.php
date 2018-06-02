@@ -169,7 +169,7 @@ class language
 			$lang_code = $this->lang;
 		
 		$results = $db->select(tbl("phrases"),"COUNT(id) as total"," lang_iso = '".$lang_code."' $extra_param");
-		//print_r($results);
+
 		if($db->num_rows>0)
 			return $results[0]['total'];
 		return 0;
@@ -241,6 +241,7 @@ class language
 
 		$id = mysql_clean($id);
 		$results = $db->select(tbl("languages"),"*"," language_code ='$id' OR language_id = '$id'");
+
 		if($db->num_rows>0)
 			return $results[0];
 		return false;

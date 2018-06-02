@@ -6,7 +6,6 @@
 	 | @ Software 	: ClipBucket , © PHPBucket.com
 	 ***************************************************************
 	*/
-
 	require_once '../includes/admin_config.php';
 	$userquery->admin_login_check();
 	$userquery->login_check('web_config_access');
@@ -28,6 +27,7 @@
 		$id = mysql_clean($_POST['make_default']);
 		$lang_obj->make_default($id);
 	}
+
 	//Making Language Default
 	if(isset($_GET['make_default']))
 	{
@@ -83,7 +83,6 @@
 			$lang_obj->set_lang($ClientId,$secertId);
 			e("keys set","m");
 		}
-
 	}
 
 	//Get List Of Languages
@@ -96,7 +95,6 @@
 		assign('lang_details',$lang_obj->lang_exists(mysql_clean($_GET['edit_language'])));
 		$edit_id = mysql_clean($_GET['edit_language']);
 		$limit = RESULTS;
-
 
 		$current_page = $_GET['page'] ;
 		$current_page = is_numeric($current_page) && $current_page>0 ? $current_page : 1 ;

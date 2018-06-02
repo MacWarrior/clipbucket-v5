@@ -18,7 +18,7 @@
                 <input type="checkbox" name="make_default" id="radio" value="{$language_list[l_list].language_id}" {if $language_list[l_list].language_default =='yes'}checked{/if} onclick="document.default_lang.submit()"/></label>
             </td>
             <td>{$language_list[l_list].language_id}</td>
-            <td>{$language_list[l_list].language_name}({$language_list[l_list].language_code}){if $language_list[l_list].language_default=='yes'} <span style="color: #cccccc"> as <i>Default Language</i></span>{/if}</td>
+            <td>{$language_list[l_list].language_name}({$language_list[l_list].language_code}){if $language_list[l_list].language_default=='yes'} <span style="color:#cccccc;"> as <i>Default Language</i></span>{/if}</td>
             <td>
                 <div class="dropdown clearfix alignRight">
                     <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
@@ -60,24 +60,6 @@
         {/section}
     </table>
 </form>
-<!-- <div class="heading">
-    <h2> Add New Language </h2>
-    </div> -->
-<!-- <div class="form-group">
-    <form action="?import" method="post" enctype="multipart/form-data" name="import_language" id="import_language">
-    <h4>Upload file</h4>
-      <table>
-        <tr><td>
-            Browse ClipBucket Language File ( must be .xml format ) 
-          <input type="file" name="lang_file" id="lang_file" class="marginBottomLarge" />
-        </td></tr>
-        <tr>
-          <td>
-          <input type="submit" name="add_language" id="add_language" value="Add Language" class="btn btn-primary" /></td>
-        </tr>
-        </table>
-        </form>
-    </div> -->
 {else}
 <span class="lead">Editing {$lang_details.language_name}</span>
 <div class="form-group">
@@ -138,13 +120,13 @@
         </td>
     </tr>
     {section name=p_list loop=$lang_phrases}
-    <tr>
+	<tr>
         <td>{$lang_phrases[p_list].varname}</td>
-        <td ><span class="xedit" id="{$lang_phrases[p_list].id}"  >{$lang_phrases[p_list].text}</span> 
-            <span class="btn btn-success btn-xs edit_phrase " title="edit" id="edit-{$lang_phrases[p_list].id}" data-id="{$lang_phrases[p_list].id}"><i class="glyphicon glyphicon-edit"></i></span>
-            <span class="glyphicon glyphicon-ok-circle add_phrase" id="ok-{$lang_phrases[p_list].id}" data-id="{$lang_phrases[p_list].id}" style="display:none;color:#87b87f;font-size:1.5em;cursor:pointer"></span>&nbsp;&nbsp;&nbsp;
-            <span class="glyphicon glyphicon-remove-circle remove_phrase" id="remove-{$lang_phrases[p_list].id}" data-id="{$lang_phrases[p_list].id}" style="display:none;color:#d15b47;font-size:1.5em;cursor:pointer"></span>
-            <input type="text" class="form-control" id="input-{$lang_phrases[p_list].id}" name="pk" value="{$lang_phrases[p_list].text}" 
+        <td ><span class="xedit" id="{$lang_phrases[p_list].id}">{display_clean($lang_phrases[p_list].text)}</span>
+            <span class="btn btn-success btn-xs edit_phrase" title="edit" id="edit-{$lang_phrases[p_list].id}" data-id="{$lang_phrases[p_list].id}"><i class="glyphicon glyphicon-edit"></i></span>
+            <span class="glyphicon glyphicon-ok-circle add_phrase" id="ok-{$lang_phrases[p_list].id}" data-id="{$lang_phrases[p_list].id}" style="display:none;color:#87b87f;font-size:1.5em;cursor:pointer;"></span>&nbsp;&nbsp;&nbsp;
+            <span class="glyphicon glyphicon-remove-circle remove_phrase" id="remove-{$lang_phrases[p_list].id}" data-id="{$lang_phrases[p_list].id}" style="display:none;color:#d15b47;font-size:1.5em;cursor:pointer;"></span>
+            <input type="text" class="form-control" id="input-{$lang_phrases[p_list].id}" name="pk" value="{display_clean($lang_phrases[p_list].text)}"
                 style="display:none;"> 
         </td>
     </tr>
@@ -280,7 +262,6 @@
         $('.edit_phrase').on("click",function(){
             var _this = $(this);
             var id = _this.data('id');
-            console.log('yes');
             $('#input-'+id).show();
             $('#ok-'+id).show();
             $('#remove-'+id).show();
@@ -303,8 +284,6 @@
             var id = _this.data('id');
             var value = $('#input-'+id).val();
             var pk = id;
-            console.log('value==>'+value);
-            console.log('id==>'+id);
             $.ajax({
                 url: "/actions/update_phrase.php",
                 type: "post",
