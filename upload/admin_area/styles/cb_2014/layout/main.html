@@ -723,6 +723,18 @@
 					</label>
 				</div>
 			</div>
+
+			<div class="col-md-2 marginTopLarge">
+				<div class="form-group1">
+					<label class="checkbox">
+						<input name="chromecast_fix" type="checkbox" id="chromecast_fix" value="1" {if $row.chromecast_fix==1}checked{/if}/>
+						Convert audio for ChromeCast compatibility
+						<a href="javascript:void(0);" target="_blank">
+							<img src="{$imageurl}/help.png" alt="info" border="0" class="tipsy_tip" title="Force audio conversion to Stereo"/>
+						</a>
+					</label>
+				</div>
+			</div>
 		</div>
 
 
@@ -790,13 +802,7 @@
 							<input class="form-control" name="num_thumbs" id="num_thumbs" value="{$row.num_thumbs}" size="45"/>
 						</div>
 					</div>
-					<br/>
-					<span class="alert alert-info">
-						Other fields has been diabled temporarily, you will be using upgraded
-						settings panel in upcoming releases.
-					</span>
 				</div>
-
 
 				<div id="videoconversion" class="tab-pane">
 					<h3>Change only if you have good knowledge of video conversion

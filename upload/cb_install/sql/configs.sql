@@ -315,3 +315,8 @@ INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 	('chromecast', 'no'),
 	('vid_cat_width', '120'),
 	('vid_cat_height', '120');
+
+-- Addition for 5.1
+INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
+	('chromecast_fix', '1');
+

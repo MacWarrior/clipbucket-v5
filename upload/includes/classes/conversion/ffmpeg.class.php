@@ -1251,7 +1251,8 @@ class FFMpeg
 		}
 
 		// Fix for ChromeCast : Forcing stereo mode
-		$opt_av .= ' -ac 2';
+		if( config('chromecast_fix') )
+			$opt_av .= ' -ac 2';
 		
 		# audio bitrate
 		if($p['use_audio_bit_rate'])

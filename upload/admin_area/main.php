@@ -46,6 +46,7 @@
 			'audio_codec',
 			'activation',
 			'photo_activation',
+			'chromecast_fix',
 
 			'background_color',
 			'background_upload',
