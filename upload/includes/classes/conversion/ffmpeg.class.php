@@ -19,23 +19,14 @@
 
 class FFMpeg
 {
+	// Start public variables declaration
 	public $defaultOptions = array();
 	public $videoDetails = array();
 	public $num = thumbs_number;
 	public $reconvert = false;
-	private $options = array();
-	private $outputFile = false;
-	private $inputFile = false;
 	public $ffMpegPath = FFMPEG_BINARY;
-	private $mp4BoxPath = MP4Box_BINARY;
-	private $flvTool2 = FLVTool2_BINARY;
-	private $videosDirPath = VIDEOS_DIR;
-	private $logDir = "";
 	public $log = "";
 	public $logs = "";
-	private $logFile = "";
-	private $sdFile = false;
-	private $hdFile = false;
 	public $file_name = "";
 	public $ratio = "";
 	public $log_file = "";
@@ -48,47 +39,40 @@ class FFMpeg
 	public $res_configurations = "";
 	public $sprite_count = 0;
 	public $thumbs_res_settings = array(
-		"original" => "original",
-		'105' => array('168','105'),
-		'260' => array('416','260'),
-		'320' => array('632','395'),
-		'480' => array('768','432')
+			"original" => "original",
+			'105' => array('168','105'),
+			'260' => array('416','260'),
+			'320' => array('632','395'),
+			'480' => array('768','432')
 		);
 	public $res169 = array(
-		'240' => array('428','240'),
-		'360' => array('640','360'),
-		'480' => array('854','480'),
-		'720' => array('1280','720'),
-		'1080' => array('1920','1080'),
+			'240' => array('428','240'),
+			'360' => array('640','360'),
+			'480' => array('854','480'),
+			'720' => array('1280','720'),
+			'1080' => array('1920','1080'),
 		);
-	// this is test comment
+	// End public variables declaration
 
+	// Start private variables declaration
+	private $options = array();
+	private $outputFile = false;
+	private $inputFile = false;
+	private $mp4BoxPath = MP4Box_BINARY;
+	private $flvTool2 = FLVTool2_BINARY;
+	private $videosDirPath = VIDEOS_DIR;
+	private $logDir = "";
+	private $logFile = "";
+	private $sdFile = false;
+	private $hdFile = false;
 	private $resolution4_3 = array(
-		'240' => array('428','240'),
-		'360' => array('640','360'),
-		'480' => array('854','480'),
-		'720' => array('1280','720'),
-		'1080' => array('1920','1080'),
+			'240' => array('428','240'),
+			'360' => array('640','360'),
+			'480' => array('854','480'),
+			'720' => array('1280','720'),
+			'1080' => array('1920','1080'),
 		);
-
-	/*
-	Coversion command example
-	/usr/local/bin/ffmpeg 
-	-i /var/www/clipbucket/files/conversion_queue/13928857226cc42.mp4  
-	-f mp4  
-	-vcodec libx264 
-	-vpre normal 
-	-r 30 
-	-b:v 300000 
-	-s 426x240 
-	-aspect 1.7777777777778 
-	-vf pad=0:0:0:0:black 
-	-acodec aac 
-	-ab 128000 
-	-ar 22050  
-	/var/www/clipbucket/files/videos/13928857226cc42-sd.mp4  
-	2> /var/www/clipbucket/files/temp/139288572277710.tmp
-	*/
+	// End private variables declaration
 
 	public function __construct($options = false, $log = false)
 	{
@@ -102,7 +86,6 @@ class FFMpeg
 		if($log)
 			$this->log = $log;
 		$str = "/".date("Y")."/".date("m")."/".date("d")."/";
-		//$this->logs->writeLine("in class", "ffmpeg");
 		$this->logDir = BASEDIR . "/files/logs/".$str;
 	}
 
@@ -119,13 +102,7 @@ class FFMpeg
 	function parse_format_info( $output )
 	{
 		$info = $this->raw_info;
-		# search the output for specific patterns and extract info
-		# check final encoding message
-		if($args = self::pregMatch( 'Unknown format', $output) ) {
-			$Unkown = "Unkown";
-		} else {
-			$Unkown = "";
-		}
+
 		if( $args = self::pregMatch( 'video:([0-9]+)kB audio:([0-9]+)kB global headers:[0-9]+kB muxing overhead', $output) ) {
 			$video_size = (float)$args[1];
 			$audio_size = (float)$args[2];
@@ -133,7 +110,7 @@ class FFMpeg
 			return false;
 		}
 
-		# check for last enconding update message
+		# check for last encoding update message
 		if($args = self::pregMatch( '(frame=([^=]*) fps=[^=]* q=[^=]* L)?size=[^=]*kB time=([^=]*) bitrate=[^=]*kbits\/s[^=]*$', $output) ) {
 			$frame_count = $args[2] ? (float)ltrim($args[2]) : 0;
 			$duration    = (float)$args[3];
@@ -205,9 +182,6 @@ class FFMpeg
 		$this->raw_info = $info;
 		# check if file contains a video stream
 		return $video_size > 0;
-
-		#TODO allow files with no video (only audio)?
-		#return true;
 	}
 
 	/**
@@ -365,7 +339,6 @@ class FFMpeg
 	{
 		if($videoDetails)
 		{
-			//logData(json_encode($videoDetails));
 			$this->hdFile = "{$this->outputFile}-hd.{$this->options['format']}";
 			$out= shell_exec($this->ffMpegPath ." -i {$this->inputFile} -acodec copy -vcodec copy -y -f null /dev/null 2>&1");
 			$len = strlen($out);
@@ -380,124 +353,122 @@ class FFMpeg
 			$dura = explode(',',$rest);
 			$dura[1] = $dura[1].'x';
 			$dura = explode('x',$dura[1]);
+
+			$TemplogData = '';
 			if($dura[1] >= "720" || $videoDetails['video_height'] >= "720")
 			{
-				$this->log->TemplogData .="\r\n\r\n=======Low Resolution Conversion=======\r\n\r\n";
-				$this->log->TemplogData .= "\r\n Sarting : Generating Low resolution video @ ".date("Y-m-d H:i:s")." \r\n";
-				$this->log->TemplogData .= "\r\n Converting Video SD File  \r\n";
+				$TemplogData .="\r\n\r\n=======Low Resolution Conversion=======\r\n\r\n";
+				$TemplogData .= "\r\n Sarting : Generating Low resolution video @ ".date("Y-m-d H:i:s")." \r\n";
+				$TemplogData .= "\r\n Converting Video SD File  \r\n";
 				$this->sdFile = "{$this->outputFile}-sd.{$this->options['format']}";
 				$fullCommand = $this->ffMpegPath . " -i {$this->inputFile}" . $this->generateCommand($videoDetails, false) . " {$this->sdFile}";
 
-				$this->log->TemplogData .= "\r\n Command : ".$fullCommand." \r\n";
+				$TemplogData .= "\r\n Command : ".$fullCommand." \r\n";
 
 				$conversionOutput = $this->executeCommand($fullCommand);
-				$this->log->TemplogData .= "\r\n ffmpeg output : ".$conversionOutput." \r\n";
+				$TemplogData .= "\r\n ffmpeg output : ".$conversionOutput." \r\n";
 
-				$this->log->TemplogData .= "\r\n outputFile : ".$this->sdFile." \r\n";
+				$TemplogData .= "\r\n outputFile : ".$this->sdFile." \r\n";
 				
 				//$this->logs->writeLine("MP4Box Conversion for SD", "Starting");
-				$this->log->TemplogData .= "\r\n Sarting : MP4Box Conversion for SD \r\n";
+				$TemplogData .= "\r\n Sarting : MP4Box Conversion for SD \r\n";
 				$fullCommand = $this->mp4BoxPath . " -inter 0.5 {$this->sdFile}  -tmp ".TEMP_DIR;
 				if (PHP_OS == "WINNT")
 				{
 					$fullCommand = str_replace("/","\\",$fullCommand);	
 				}
-				$this->log->TemplogData .= "\r\n MP4Box Command : ".$fullCommand." \r\n";
+				$TemplogData .= "\r\n MP4Box Command : ".$fullCommand." \r\n";
 				$output = $this->executeCommand($fullCommand);
-				$this->log->TemplogData .= "\r\n output : ".$output." \r\n";
+				$TemplogData .= "\r\n output : ".$output." \r\n";
 				
 				if (file_exists($this->sdFile))
 				{
 					$this->video_files[] = 'sd';
 					$this->sdFile1 = "{$this->outputFile}.{$this->options['format']}";
 					$status = "Successful";
-					$this->log->TemplogData .= "\r\n Conversion Status : ".$status." @ ".date("Y-m-d H:i:s")." \r\n";
-					$this->log->writeLine("Conversion Ouput",$this->log->TemplogData, true);
+					$TemplogData .= "\r\n Conversion Status : ".$status." @ ".date("Y-m-d H:i:s")." \r\n";
+					$this->log->writeLine("Conversion Ouput", $TemplogData, true);
 					
 					$this->output_file = $this->sdFile;
 					$this->output_details = $this->get_file_info($this->output_file);
 					$this->log_ouput_file_info();
 				}
-				$this->log->TemplogData .="\r\n\r\n=======High Resolution Conversion=======\r\n\r\n";
-				$this->log->TemplogData .= "\r\n Sarting : Generating high resolution video @ ".date("Y-m-d H:i:s")."\r\n";
+				$TemplogData .="\r\n\r\n=======High Resolution Conversion=======\r\n\r\n";
+				$TemplogData .= "\r\n Sarting : Generating high resolution video @ ".date("Y-m-d H:i:s")."\r\n";
 
-				$this->log->TemplogData .= "\r\n Converting Video HD File   \r\n";
+				$TemplogData .= "\r\n Converting Video HD File   \r\n";
 				
 				$this->hdFile = "{$this->outputFile}-hd.{$this->options['format']}";
 				$log_file_tmp = TEMP_DIR."/".$this->file_name.".tmp";
 				$fullCommand = $this->ffMpegPath . " -i {$this->inputFile}" . $this->generateCommand($videoDetails, true) . " {$this->hdFile} > {$log_file_tmp}";
-			
-				$this->log->TemplogData .= "\r\n Command : ".$fullCommand." \r\n";
-				//logData(json_encode($fullCommand));
+
+				$TemplogData .= "\r\n Command : ".$fullCommand." \r\n";
+
 				$conversionOutput = $this->executeCommand($fullCommand);
 				if(file_exists($log_file_tmp))
 				{
 					$data = file_get_contents($log_file_tmp);
 					unlink($log_file_tmp);
 				}
-				$this->log->TemplogData .= "\r\n ffmpeg output : ".$data." \r\n";
+				$TemplogData .= "\r\n ffmpeg output : ".$data." \r\n";
 
-				$this->log->TemplogData .= "\r\n Sarting : MP4Box Conversion for HD \r\n";
+				$TemplogData .= "\r\n Sarting : MP4Box Conversion for HD \r\n";
 				$fullCommand = $this->mp4BoxPath . " -inter 0.5 {$this->hdFile}  -tmp ".TEMP_DIR;
 				//logData(json_encode($fullCommand));
 				if (PHP_OS == "WINNT")
 				{
 					$fullCommand = str_replace("/","\\",$fullCommand);	
 				}
-				$this->log->TemplogData .= "\r\n MP4Box Command : ".$fullCommand." \r\n";
+				$TemplogData .= "\r\n MP4Box Command : ".$fullCommand." \r\n";
 				$output = $this->executeCommand($fullCommand);
-				$this->log->TemplogData .= "\r\n output : ".$output." \r\n";
+				$TemplogData .= "\r\n output : ".$output." \r\n";
 				if (file_exists($this->hdFile))
 				{
 					$this->video_files[] = 'hd';
 					$this->sdFile1 = "{$this->outputFile}.{$this->options['format']}";
 					$status = "Successful";
-					$this->log->TemplogData .= "\r\n Conversion Status : ".$status." @ ".date("Y-m-d H:i:s")."\r\n";
-					$this->log->writeLine("Conversion Ouput",$this->log->TemplogData, true);
+					$TemplogData .= "\r\n Conversion Status : ".$status." @ ".date("Y-m-d H:i:s")."\r\n";
+					$this->log->writeLine("Conversion Ouput", $TemplogData, true);
 
 					$this->output_file = $this->hdFile;
 					$this->output_details = $this->get_file_info($this->output_file);
 					$this->log_ouput_file_info();
 				}
 			} else {
-				$this->log->TemplogData .="\r\n\r\n=======Low Resolution Conversion=======\r\n\r\n";
-				$this->log->TemplogData .= "\r\n Sarting : Generating Low resolution video @ ".date("Y-m-d H:i:s")." \r\n";
-				$this->log->TemplogData .= "\r\n Converting Video SD File  \r\n";
+				$TemplogData .="\r\n\r\n=======Low Resolution Conversion=======\r\n\r\n";
+				$TemplogData .= "\r\n Sarting : Generating Low resolution video @ ".date("Y-m-d H:i:s")." \r\n";
+				$TemplogData .= "\r\n Converting Video SD File  \r\n";
 				$this->sdFile = "{$this->outputFile}-sd.{$this->options['format']}";
 				$fullCommand = $this->ffMpegPath . " -i {$this->inputFile}" . $this->generateCommand($videoDetails, false) . " {$this->sdFile}";
 				logData(json_encode($fullCommand),"sd_vidoes");
-				$this->log->TemplogData .= "\r\n Command : ".$fullCommand." \r\n";
+				$TemplogData .= "\r\n Command : ".$fullCommand." \r\n";
 
 				$conversionOutput = $this->executeCommand($fullCommand);
-				//logData(json_encode($fullCommand));
 
-				$this->log->TemplogData .= "\r\n ffmpeg output : ".$conversionOutput." \r\n";
-				
-				$this->log->TemplogData .= "\r\n Sarting : MP4Box Conversion for SD \r\n";
+				$TemplogData .= "\r\n ffmpeg output : ".$conversionOutput." \r\n";
+				$TemplogData .= "\r\n Sarting : MP4Box Conversion for SD \r\n";
 				$fullCommand = $this->mp4BoxPath . " -inter 0.5 {$this->sdFile}  -tmp ".TEMP_DIR;
-				//logData(json_encode($fullCommand));
+
 				if (PHP_OS == "WINNT")
 				{
 					$fullCommand = str_replace("/","\\",$fullCommand);	
 				}
-				$this->log->TemplogData .= "\r\n MP4Box Command : ".$fullCommand." \r\n";
+				$TemplogData .= "\r\n MP4Box Command : ".$fullCommand." \r\n";
 				$output = $this->executeCommand($fullCommand);
-				$this->log->TemplogData .= "\r\n output : ".$output." \r\n";
+				$TemplogData .= "\r\n output : ".$output." \r\n";
 				if (file_exists($this->sdFile))
 				{
 					$this->video_files[] = 'sd';
 					$this->sdFile1 = "{$this->outputFile}.{$this->options['format']}";
 					$status = "Successful";
-					$this->log->TemplogData .= "\r\n Conversion Status : ".$status." @ ".date("Y-m-d H:i:s")." \r\n";
-					$this->log->writeLine("Conversion Ouput",$this->log->TemplogData, true);
+					$TemplogData .= "\r\n Conversion Status : ".$status." @ ".date("Y-m-d H:i:s")." \r\n";
+					$this->log->writeLine("Conversion Ouput", $TemplogData, true);
 
 					$this->output_file = $this->sdFile;
 					$this->output_details = $this->get_file_info($this->output_file);
 					$this->log_ouput_file_info();
 				}
-				
 			}
-			$this->log->TemplogData = "";
 		}
 	}
 
@@ -554,9 +525,9 @@ class FFMpeg
 				$commandSwitches .= " -vcodec " .$this->options['video_codec'];
 			}
 			if(isset($this->options['audio_codec'])){
-				$codecs = get_ffmpeg_codecs();
-				if( !isset($codecs[$this->options['audio_codec']]) || $codecs[$this->options['audio_codec']]['installed'] == 'no' )
-					$this->options['audio_codec'] = 'aac';
+				$codecs = get_ffmpeg_codecs('audio');
+				if( !in_array($this->options['audioCodec'], $codecs) )
+					$this->options['audio_codec'] = $codecs[0];
 				$commandSwitches .= " -acodec " .$this->options['audio_codec'];
 			}
 
@@ -671,7 +642,7 @@ class FFMpeg
 			$configLog = "Unknown file details - Unable to get video details using FFMPEG \n";
 		}
 
-		$this->log->writeLine('OutPut Deatils',$configLog,true);
+		$this->log->writeLine('OutPut Deatils', $configLog, true);
 	}
 
 	function time_check()
@@ -994,20 +965,13 @@ class FFMpeg
 
 	private function setDefaults()
 	{
-		if(PHP_OS == "Linux")
-		{
-			$ffmpeg_codecs = get_ffmpeg_codecs();
-			if( isset($ffmpeg_codecs['libfaac']) && $ffmpeg_codecs['libfaac']['installed'] == 'yes' )
-				$ac = 'libfaac';
-			else
-				$ac = 'aac';
-		} elseif(PHP_OS == "WINNT") {
-			$ac = 'libvo_aacenc';
-		}
+		$audio_codecs = get_ffmpeg_codecs('audio');
+		$video_codecs = get_ffmpeg_codecs('video');
+
 		$this->defaultOptions = array(
 			'format' => 'mp4',
-			'video_codec'=> 'libx264',
-			'audio_codec'=> $ac,
+			'video_codec'=> $video_codecs[0],
+			'audio_codec'=> $audio_codecs[0],
 			'audio_rate'=> '22050',
 			'audio_bitrate'=> '128000',
 			'video_rate'=> '25',
@@ -1216,9 +1180,10 @@ class FFMpeg
 				$opt_av .= " -vcodec ".$p['video_codec'];
 			elseif(isset($i['video_codec']))
 				$opt_av .= " -vcodec ".$i['video_codec'];
+
 			if($p['video_codec'] == 'libx264')
 			{
-				if($p['normal_quality']!='hq')
+				if($p['normal_quality'] != 'hq')
 					$opt_av .= " -preset medium";
 				else
 					$opt_av .= " -preset slow -crf 26";
@@ -1227,9 +1192,6 @@ class FFMpeg
 
 		// Prevent start_time to be negative
 		$opt_av .= ' -start_at_zero';
-
-		// Fix for ChromeCast
-		$opt_av .= ' -ac 2';
 
 		# video rate
 		if($p['use_video_rate'])
@@ -1266,7 +1228,7 @@ class FFMpeg
 		#create all possible resolutions of selected video
 		if($more_res!=NULL)
 		{
-			$p['resize']='fit';
+			$p['resize'] = 'fit';
 			$i['video_width']  = $more_res['video_width'];
 			$i['video_height'] = $more_res['video_height'];
 
@@ -1281,12 +1243,15 @@ class FFMpeg
 		{
 			if(!empty($p['audio_codec']) && $p['audio_codec'] != 'None')
 			{
-				$codecs = get_ffmpeg_codecs();
-				if( !isset($codecs[$p['audio_codec']]) || $codecs[$p['audio_codec']]['installed'] == 'no' )
-					$p['audio_codec'] = 'aac';
+				$codecs = get_ffmpeg_codecs('audio');
+				if( !in_array($p['audio_codec'], $codecs) )
+					$p['audio_codec'] = $codecs[0];
 				$opt_av .= " -acodec {$p['audio_codec']}";
 			}
 		}
+
+		// Fix for ChromeCast : Forcing stereo mode
+		$opt_av .= ' -ac 2';
 		
 		# audio bitrate
 		if($p['use_audio_bit_rate'])
@@ -1791,19 +1756,15 @@ class FFMpeg
 				if( isset($track['title']) )
 					$title = $track['title'];
 
+				$lang = $language;
 				if( !empty($title) )
-				{
-					$lang = $language.' : '.$title;
-				} else {
-					$lang = $language;
-				}
+					$lang .= ' : '.$title;
 
 				$langs[$map_id] = $lang;
 			}
 			return $langs;
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	public static function get_video_stream_id($filepath)

@@ -682,9 +682,9 @@
 					$commandSwitches .= " -vcodec " .$this->options['videoCodec'];
 				}
 				if(isset($this->options['audioCodec'])){
-					$codecs = get_ffmpeg_codecs();
-					if( !isset($codecs[$this->options['audioCodec']]) || $codecs[$this->options['audioCodec']]['installed'] == 'no' )
-						$this->options['audioCodec'] = 'aac';
+					$codecs = get_ffmpeg_codecs('audio');
+					if( !in_array($this->options['audioCodec'], $codecs) )
+						$this->options['audioCodec'] = $codecs[0];
 					$commandSwitches .= " -acodec " .$this->options['audioCodec'];
 				}
 				/*

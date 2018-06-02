@@ -3391,33 +3391,38 @@
 		return false;
 	}
 
-	/**
-	 * Checks if FFMPEG has all required modules installed on server
-	 *
-	 * @return array : { array } { $codecs } { an array with all required modules }
-	 * @internal param $ : { string } { $data } { false by default, version of ffmpeg } { $data } { false by default, version of ffmpeg }
-	 */
-	function get_ffmpeg_codecs() {
-		if (PHP_OS == "Linux") {
-			$a = 'libfaac';
-		} elseif (PHP_OS == "WINNT") {
-			$a = 'libvo_aacenc';
+	function get_ffmpeg_codecs($type)
+	{
+		switch($type)
+		{
+			case 'audio':
+				$codecs = array(
+					'ac3',
+					'eac3',
+					'libxvid',
+					'libmp3lame',
+					'libfaac',
+					'libvo_aacenc',
+					'aac',
+					'aac_latm'
+				);
+				break;
+
+			case 'video':
+			default:
+				$codecs = array(
+					'libx264',
+					'libtheora'
+				);
+				break;
 		}
-		$req_codecs = array(
-			'libxvid'	=> 'Required for DIVX AVI files',
-			'libmp3lame'=> 'Required for proper Mp3 Encoding',
-			$a 			=> 'Required for AAC Audio Conversion',
-			'aac'		=> 'Default codec for AAC Audio Conversion',
-			'libx264'	=> 'Required for x264 video compression and conversion',
-			'libtheora' => 'Theora is an open video codec being developed by the Xiph.org',
-			'libvorbis' => 'Ogg Vorbis is a new audio compression format',
-		);
 
 		$codec_installed = array();
-		foreach($req_codecs as $codec => $description)
+		foreach($codecs as $codec)
 		{
-			$codecs = shell_output(  get_binaries('ffmpeg').' -codecs 2>/dev/null | grep "'.$codec.'"');
-			$codec_installed[$codec]['installed'] = $codecs ? 'yes' : 'no';
+			$get_codec = shell_output(  get_binaries('ffmpeg').' -codecs 2>/dev/null | grep "'.$codec.'"');
+			if( $get_codec )
+				$codec_installed[] = $codec;
 		}
 
 		return $codec_installed;
