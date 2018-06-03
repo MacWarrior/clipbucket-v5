@@ -1724,8 +1724,8 @@ class Collections extends CBCategory
 			elseif($type == "vc" || $type == "view_collection" ||$type == "view")
 			{
 				if(SEO == 'yes')
-					return "/collection/".$cdetails['collection_id']."/".$cdetails['type']."/".SEO(($cdetails['collection_name']))."";
-				return "/view_collection.php?cid=".$cdetails['collection_id']."&amp;type=".$cdetails['type'];
+					return BASEURL."/collection/".$cdetails['collection_id']."/".$cdetails['type']."/".SEO(($cdetails['collection_name']))."";
+				return BASEURL."/view_collection.php?cid=".$cdetails['collection_id']."&amp;type=".$cdetails['type'];
 			} elseif($type == "vi" || $type == "view_item" ||$type == "item") {
 
 				if($cdetails['videoid'])
@@ -1737,22 +1737,22 @@ class Collections extends CBCategory
 					case "videos":
 					case "v":
 						if(SEO == "yes")
-							return "/item/".$item_type."/".$details['collection_id']."/".$details['videokey']."/".SEO(clean(str_replace(' ','-',$details['title'])));
-						return "/view_item.php?item=".$details['videokey']."&amp;type=".$item_type."&amp;collection=".$details['collection_id'];
+							return BASEURL."/item/".$item_type."/".$details['collection_id']."/".$details['videokey']."/".SEO(clean(str_replace(' ','-',$details['title'])));
+						return BASEURL."/view_item.php?item=".$details['videokey']."&amp;type=".$item_type."&amp;collection=".$details['collection_id'];
 
 					case "photos":
 					case "p":
 						if(SEO == "yes")
-							return "/item/".$item_type."/".$details['collection_id']."/".$details['photo_key']."/".SEO(clean(str_replace(' ','-',$details['photo_title'])));
-						return "/view_item.php?item=".$details['photo_key']."&amp;type=".$item_type."&amp;collection=".$details['collection_id'];
+							return BASEURL."/item/".$item_type."/".$details['collection_id']."/".$details['photo_key']."/".SEO(clean(str_replace(' ','-',$details['photo_title'])));
+						return BASEURL."/view_item.php?item=".$details['photo_key']."&amp;type=".$item_type."&amp;collection=".$details['collection_id'];
 				}
 			} elseif($type == 'load_more' || $type == 'more_items' || $type='moreItems') {
 				if(empty($cdetails['page_no']))
 					$cdetails['page_no'] = 2;
 					
 				if(SEO == 'yes')
-					return "?cid=".$cdetails['collection_id']."&amp;type=".$cdetails['type']."&amp;page=".$cdetails['page_no'];
-				return 	"?cid=".$cdetails['collection_id']."&amp;type=".$cdetails['type']."&amp;page=".$cdetails['page_no'];
+					return BASEURL."?cid=".$cdetails['collection_id']."&amp;type=".$cdetails['type']."&amp;page=".$cdetails['page_no'];
+				return 	BASEURL."?cid=".$cdetails['collection_id']."&amp;type=".$cdetails['type']."&amp;page=".$cdetails['page_no'];
 			}
 		} else {
 			return BASEURL;	
