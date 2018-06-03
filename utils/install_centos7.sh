@@ -3,7 +3,7 @@
 ## THIS SCRIPT MUST BE LAUNCHED AS ROOT
 
 echo ""
-echo -ne "Updating Debian system..."
+echo -ne "Updating Cent OS system..."
 yum update -y -q
 echo -ne " OK"
 
