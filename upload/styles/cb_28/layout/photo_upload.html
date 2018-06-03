@@ -33,7 +33,7 @@
 				<div class="tab-content uploadFormDiv">
 					<div class="tab-pane fade in active clearfix" id="file-upload">
 						<div class="instructions alert alert-block alert-info">
-							{lang code='upload_right_guide_photo'}
+							{sprintf(lang(upload_right_guide_photo),$cbpage->get_page_link(3))}
 						</div>
 						<div class="clearfix" id="uploaderContainer">
 							{if $c}

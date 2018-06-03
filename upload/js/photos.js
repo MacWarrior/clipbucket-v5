@@ -70,7 +70,6 @@ $(document).on("click", "#mainNextBtn,#mainPrevBtn", function () {
 		},
 		success:function(xhr) {	
 			var getUrl = "/" + buildPhotoUrl(xhr);
-			console.log(getUrl);
 			$.get( getUrl, function( data ) {
 			  	$('#main').html(data);
 			  	$('.view-photo').prop("disabled",false);

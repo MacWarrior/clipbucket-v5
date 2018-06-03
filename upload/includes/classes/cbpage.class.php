@@ -57,8 +57,7 @@ class cbpage
 		$result = $db->select(tbl($this->page_tbl),"*"," page_id ='$id' ");
 		if($db->num_rows>0)
 			return $result[0];
-		else
-			return false;
+		return false;
 	}
 	
 	/**
@@ -105,8 +104,7 @@ class cbpage
 		$result = $db->select(tbl($this->page_tbl),"*",$cond,$limit,$order);
 		if($db->num_rows>0)
 			return $result;
-		else
-			return false;
+		return false;
 	}
 	
 	

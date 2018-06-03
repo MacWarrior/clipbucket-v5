@@ -48,19 +48,15 @@ class pages{
 		
 	function GetBaseUrl($more=false)
 	{
-		
 		$serverURL      = $this->GetServerUrl();
 		$scriptPath     = NULL;
-		
-		
+
 		if ( isset($_SERVER['SCRIPT_NAME']) ) {
 			$scriptPath = $_SERVER['SCRIPT_NAME'];
 			$scriptPath = ( $scriptPath == '/' ) ? '' : dirname($scriptPath);
 		}
 		  
 		$base = basename(dirname($_SERVER['SCRIPT_NAME']));
-		
-		
 		$sus_dirs = array('admin_area','includes','plugins','files','actions','cb_install');
 
 		$remove_arr = array();
@@ -92,8 +88,8 @@ class pages{
 		global $in_bg_cron;
 		if(!$in_bg_cron)
 		{
-			$serverURL      = $this->GetServerUrl();
-			$requestURL     = $_SERVER['REQUEST_URI'];
+			$serverURL	= $this->GetServerUrl();
+			$requestURL	= $_SERVER['REQUEST_URI'];
 		  
 			return $serverURL . $requestURL;
 		}
