@@ -29,8 +29,7 @@ switch($mode)
 		$desc = $name;
 		$tags = $name;
 		$collection = $_POST['collection'];
-		$photoArray = array
-		(
+		$photoArray = array(
 			"photo_title" => $name,
 			"photo_description" => $name,
 			"photo_tags" => $name,
@@ -47,7 +46,6 @@ switch($mode)
 		$_POST['photo_title'] = genTags(str_replace(array('_','-'),' ',$_POST['photo_title']));
 		$_POST['photo_description'] = genTags(str_replace(array('_','-'),' ',$_POST['photo_description']));
 		$_POST['photo_tags'] = genTags(str_replace(array(' ','_','-'),', ',$_POST['photo_tags']));
-		$_POST['collection_id'] = $_POST['collection_id'];
 		$_POST['server_url'] = mysql_clean($_POST['server_url']);
 		$_POST['active'] = $Cbucket->configs['photo_activation'];
 		$_POST['folder'] = str_replace('..','',mysql_clean($_POST['folder']));
@@ -61,18 +59,13 @@ switch($mode)
 		{
 			$response['success'] = msg('single');
 			$response['photoID'] = $insert_id;
-			
 			$details = $cbphoto->get_photo($insert_id);
 			$details["filename"] = $_POST["file_name"];
-			$details["ext"] = getExt($_POST["title"]);
 			$cbphoto->generate_photos($details);
-			//var_dump($details);
 			$params = array("details"=>$details,"size"=>"m",'static'=>true);
-			//var_dump($params);
 			$response['photoPreview'] = get_image_file($params);
 		}
-		//var_dump($response);
-		
+
 		echo json_encode($response);
 	}
 	break;
@@ -129,20 +122,6 @@ switch($mode)
 			upload_error("File name is empty");
 			exit(0);	
 		}
-		
-		// Time to check if Filesize is according to demands
-		//$filesize = filesize($_FILES[$form]['tmp_name']);
-		//if(!$filesize || $filesize > $max_size)
-		//{
-		//	upload_error("File exceeds the maximum allowed size");
-		//	exit(0);
-		//}
-		//
-		//if($filesize < 0)
-		//{
-		//	upload_error("File size outside allowed lower bound");
-		//	exit(0);
-		//}
 		
 		//Checking Extension of File
 		$info = pathinfo($_FILES[$form]['name']);
@@ -339,12 +318,8 @@ switch($mode)
    break;
 }
 
-
-
-
 //function used to display error
 function upload_error($error)
 {
 	echo json_encode(array("error"=>$error));
 } 
-?> 

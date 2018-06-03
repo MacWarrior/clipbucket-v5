@@ -1635,8 +1635,6 @@ if(!empty($mode))
 
         case 'photo_ajax':{
         	try{
-
-
 				if(isset($_POST['photo_pre']) ) {
 					$photo = $_POST['photo_pre'];
 					$user = $_POST['user'];

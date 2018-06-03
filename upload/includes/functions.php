@@ -292,7 +292,8 @@
 	 *
 	 */
 	function GetExt($file) {
-		return strtolower(substr($file, strrpos($file,'.') + 1));
+		$extension = strtolower(end(explode('.', $file)));
+		return $extension;
 	}
 
 	/**

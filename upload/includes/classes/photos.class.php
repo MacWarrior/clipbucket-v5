@@ -1052,14 +1052,19 @@ class CBPhotos
 			}
 		}
 	}
-	
+
 	/**
 	 * Creating resized photo
+	 *
+	 * @param      $from
+	 * @param      $to
+	 * @param      $ext
+	 * @param null $d_width
+	 * @param null $d_height
+	 * @param bool $force_copy
 	 */
 	function createThumb($from,$to,$ext,$d_width=NULL,$d_height=NULL,$force_copy=false)
 	{
-
-
 		if( class_exists("Imagick") )
 		{
     		$file = $from;
@@ -1125,8 +1130,6 @@ class CBPhotos
 					}
 			}
 
-
-
 		}else{
 			$file = $from;
 			$info = getimagesize($file);
@@ -1191,9 +1194,7 @@ class CBPhotos
 						copy($from,$to);
 					}
 			}
-
-		} //end of else 
-		
+		} //end of else
 	}
 	
 	/**
@@ -1208,16 +1209,20 @@ class CBPhotos
 
 	/**
 	* Fetches watermark default position from database
-	* @return : { position of watermakr }
+	* @return : { position of watermark }
 	*/
-
 	function get_watermark_position() {
 		global $Cbucket;
 		return $Cbucket->configs['watermark_placement'];
 	}
-	
+
 	/**
 	 * Used to set watermark position
+	 *
+	 * @param $file
+	 * @param $watermark
+	 *
+	 * @return array
 	 */
 	function position_watermark($file,$watermark)
 	{
@@ -1269,60 +1274,59 @@ class CBPhotos
 		$values = array($finalxPadding,$finalyPadding);
 		return $values;			
 	}
-		
+
 	/**
 	 * Used to watermark image
+	 *
+	 * @param $input
+	 * @param $output
+	 *
+	 * @return bool
 	 */
 	function watermark_image($input,$output)
 	{
-		 $watermark_file = $this->watermark_file();
+		$watermark_file = $this->watermark_file();
 		if(!$watermark_file)
 			return false;
-		else
+
+		list($Swidth, $Sheight, $Stype) = getimagesize($input);
+		$wImage = imagecreatefrompng($watermark_file);
+		$ww = imagesx($wImage);
+		$wh = imagesy($wImage);
+		$paddings = $this->position_watermark($input,$watermark_file);
+
+		switch($Stype)
 		{
-			list($Swidth, $Sheight, $Stype) = getimagesize($input);
-			$wImage = imagecreatefrompng($watermark_file);
-			$ww = imagesx($wImage);
-			$wh = imagesy($wImage);
-			$paddings = $this->position_watermark($input,$watermark_file);
-			
-			switch($Stype)
-			{
-				case 1: //GIF
-				{
-					$sImage = imagecreatefromgif($input);
+			case 1: //GIF
+				$sImage = imagecreatefromgif($input);
+				imagecopy($sImage,$wImage,$paddings[0],$paddings[1],0,0,$ww,$wh);
+				imagejpeg($sImage,$output,90);
+				break;
+
+			case 2: //JPEG
+				$sImage = imagecreatefromjpeg($input);
+				imagecopy($sImage,$wImage,$paddings[0],$paddings[1],0,0,$ww,$wh);
+				imagejpeg($sImage,$output,90);
+				break;
+
+			case 3: //PNG
+				if( class_exists("Imagick") ){
+					$this->image_magick_watermark($input,$watermark_file,$wImage,$wImage);
+				} else {
+					$sImage = imagecreatefrompng($input);
 					imagecopy($sImage,$wImage,$paddings[0],$paddings[1],0,0,$ww,$wh);
-					imagejpeg($sImage,$output,90);
+					imagepng($sImage,$input,9);
 				}
 				break;
-				
-				case 2: //JPEG
-				{
-					$sImage = imagecreatefromjpeg($input);
-					imagecopy($sImage,$wImage,$paddings[0],$paddings[1],0,0,$ww,$wh);
-					imagejpeg($sImage,$output,90);	
-				}
-				break;
-				
-				case 3: //PNG
-				{
-				  if( class_exists("Imagick") ){
-				  	 $this->image_magick_watermark($input,$watermark_file,$wImage,$wImage);
-				  	}else{
-				  		$sImage = imagecreatefrompng($input);
-						imagecopy($sImage,$wImage,$paddings[0],$paddings[1],0,0,$ww,$wh);
-						imagepng($sImage,$input,9);
-				  	}
-					
-							
-				}
-				break;
-			}
 		}
 	}
-	
+
 	/**
 	 * Load Upload Form
+	 *
+	 * @param $params
+	 *
+	 * @return string
 	 */
 	function loadUploadForm($params)
 	{
@@ -1370,13 +1374,16 @@ class CBPhotos
 		
 		return $output;							
 	}
-	
+
 	/**
 	 * Load Required Form
+	 *
+	 * @param null $array
+	 *
+	 * @return array
 	 */
 	function load_required_forms($array=NULL)
 	{
-		
 		if($array == NULL)
 			$array = $_POST;
 			
@@ -1394,52 +1401,49 @@ class CBPhotos
 		$cl_array = $this->parse_array($collections);
 		$collection = $array['collection_id'];
 		$this->unique = rand(0,9999);
-		$fields = 
-		array
-		(
+		$fields = array(
 			'name' => array(
-							'title' => lang('photo_title'),
-							'id' => 'photo_title',
-							'name' => 'photo_title',
-							'type' => 'textfield',
-							'value' => cleanForm($title),
-							'db_field' => 'photo_title',
-							'required' => 'yes',
-							'invalid_err' => lang('photo_title_err')
-							),
-							
+				'title' => lang('photo_title'),
+				'id' => 'photo_title',
+				'name' => 'photo_title',
+				'type' => 'textfield',
+				'value' => display_clean($title),
+				'db_field' => 'photo_title',
+				'required' => 'yes',
+				'invalid_err' => lang('photo_title_err')
+			),
 			'desc' => array(
-							'title' => lang('photo_caption'),
-							'id' => 'photo_description',
-							'name' => 'photo_description',
-							'type' => 'textarea',
-							'value' =>cleanForm( $description),
-							'db_field' => 'photo_description',
-							'anchor_before' => 'before_desc_compose_box',
-							'required' => 'yes',
-							'invalid_err' => lang('photo_caption_err')
-							),
+				'title' => lang('photo_caption'),
+				'id' => 'photo_description',
+				'name' => 'photo_description',
+				'type' => 'textarea',
+				'value' => display_clean($description),
+				'db_field' => 'photo_description',
+				'anchor_before' => 'before_desc_compose_box',
+				'required' => 'yes',
+				'invalid_err' => lang('photo_caption_err')
+			),
 			'tags' => array(
-							'title' => lang('photo_tags'),
-							'id' => 'photo_tags',
-							'name' => 'photo_tags',
-							'type' => 'textfield',
-							'value' => genTags($tags),
-							'db_field' => 'photo_tags',
-							'required' => 'yes',
-							'invalid_err' => lang('photo_tags_err')
-							),
+				'title' => lang('photo_tags'),
+				'id' => 'photo_tags',
+				'name' => 'photo_tags',
+				'type' => 'textfield',
+				'value' => genTags($tags),
+				'db_field' => 'photo_tags',
+				'required' => 'yes',
+				'invalid_err' => lang('photo_tags_err')
+			),
 			'collection' => array(
-								  'title' => lang('collection'),
-								  'id' => 'collection_id',
-								  'name' => 'collection_id',
-								  'type' => 'dropdown',
-								  'value' => $cl_array,
-								  'db_field' => 'collection_id',
-								  'required' => '',
-								  'checked' => $collection,
-								  'invalid_err' => lang('photo_collection_err')
-								  )												  
+				'title' => lang('collection'),
+				'id' => 'collection_id',
+				'name' => 'collection_id',
+				'type' => 'dropdown',
+				'value' => $cl_array,
+				'db_field' => 'collection_id',
+				'required' => '',
+				'checked' => $collection,
+				'invalid_err' => lang('photo_collection_err')
+			)
 		);
 		
 		return $fields;	
@@ -1456,7 +1460,7 @@ class CBPhotos
 			
 		$this->validate_form_fields($array);
 		if(!error())
-		{	
+		{
 			$forms = $this->load_required_forms($array);
 			$oForms = $this->load_other_forms($array);
 			$FullForms = array_merge($forms,$oForms);
@@ -1465,8 +1469,6 @@ class CBPhotos
 			}
 			foreach($FullForms as $field)
 			{
-				
-				
 				$name = formObj::rmBrackets($field['name']);
 				if($field['name']=='allow_comments'){
 					
@@ -1502,14 +1504,15 @@ class CBPhotos
 			
 			$query_field[] = "userid";
 			if(!$array['userid'])
-			{ $userid = userid(); $query_val[] = $userid;  }
-			else	
-			{	$query_val[] = $array['userid']; $userid = $array['userid']; }
+			{
+				$userid = userid();
+				$query_val[] = $userid;
+			} else {
+				$query_val[] = $array['userid']; $userid = $array['userid'];
+			}
 			
 			$query_field[] = "date_added";
 			$query_val[] = NOW();
-
-			#pr($query_val,true);
 
 			$query_field[] = "owner_ip";
 			$query_val[] = $_SERVER['REMOTE_ADDR'];
@@ -1518,7 +1521,6 @@ class CBPhotos
 			$query_val[] = $array['ext'];
 			
 			$query_field[] = "photo_key";
-			//$query_val[] = $array['photo_key'];
 			$query_val[] = $this->photo_key();
 			
 			$query_field[] = "filename";
@@ -1546,23 +1548,21 @@ class CBPhotos
 			
 			if(!$array['server_url'] || $array['server_url']=='undefined')
 				$this->generate_photos($photo);
-				
-				
+
 			$eh->flush();
 			e(sprintf(lang("photo_is_saved_now"),display_clean($photo['photo_title'])),"m");
 			$db->update(tbl("users"),array("total_photos"),array("|f|total_photos+1")," userid='".$userid."'");
 			
 			//Adding Photo Feed
 			addFeed(array('action' => 'upload_photo','object_id' => $insert_id,'object'=>'photo'));
-
-			//var_dump($insert_id);
-			
 			return $insert_id;
 		}
 	}
-	
+
 	/**
 	 * Update watermark file
+	 *
+	 * @param $file
 	 */
 	function update_watermark($file)
 	{
@@ -1577,9 +1577,7 @@ class CBPhotos
 			$info = getimagesize($file['tmp_name']);
 			$width = $info[0];
 			$type = $info[2];
-			
-			//pr($info,TRUE);
-			
+
 			if($type == 3)
 			{
 				if(move_uploaded_file($file['tmp_name'],BASEDIR."/images/photo_watermark.png"))
@@ -1592,13 +1590,15 @@ class CBPhotos
 			} else {
 				e(lang("upload_png_watermark"));	
 			}
-				
-				
 		}
 	}
-	
+
 	/**
 	 * Load Other Form
+	 *
+	 * @param null $array
+	 *
+	 * @return array
 	 */
 	function load_other_forms($array=NULL)
 	{
@@ -1606,88 +1606,62 @@ class CBPhotos
 			$array = $_POST;
 		
 		$comments = $array['allow_comments'];
-		$broadcast = $array['broadcast'];
-		$tagging = $array['allow_tagging'];
 		$embedding = $array['allow_embedding'];
 		$rating = $array['allow_rating'];
-		$rand = $array['photo_key'];
 			
-		$Otherfields = array
-		(
+		$Otherfields = array(
 			'comments' => array(
-								'title' => lang('comments'),
-								'name' => 'allow_comments',
-								'id' => 'allow_comments',
-								'db_field' => 'allow_comments',
-								'type' => 'radiobutton',
-								'value' => array('yes' => lang('vdo_allow_comm'),'no' => lang('vdo_dallow_comm')),
-								'required' => 'no',
-								'checked' => $comments,
-								'validate_function'=>'yes_or_no',
-								'display_function' => 'display_sharing_opt',
-								'default_value'=>'yes'
-								),
-			/*'broadcast' => array(
-								 'title' => lang("vdo_br_opt"),
-								 'type' => 'radiobutton',
-								 'name' => 'broadcast',
-								 'id' => 'broadcast',
-								 'value' => array("public"=>lang("collect_borad_pub"),"private"=>lang("collect_broad_pri")),
-								 'checked' => $broadcast,
-								 'db_field' => 'broadcast',
-								 'required' => 'no',
-								 'display_function' => 'display_sharing_opt',
-								 'default_value'=>'public'
-								 ),*/
-			/*'tagging' => array(
-							  'title' => lang('tagging'),
-							  'type' => 'radiobutton',
-							  'id' => 'allow_tagging',
-							  'name' => 'allow_tagging',
-							  'db_field' => 'allow_tagging',
-							  'type' => 'radiobutton',
-							  'value' => array('yes' => lang('pic_allow_tagging'),'no' => lang('pic_dallow_tagging')),
-							  'checked' => $tagging,
-							  'validate_function'=>'yes_or_no',
-							  'display_function' => 'display_sharing_opt',
-							  'default_value'=>'yes'
-							  ),*/
+				'title' => lang('comments'),
+				'name' => 'allow_comments',
+				'id' => 'allow_comments',
+				'db_field' => 'allow_comments',
+				'type' => 'radiobutton',
+				'value' => array('yes' => lang('vdo_allow_comm'),'no' => lang('vdo_dallow_comm')),
+				'required' => 'no',
+				'checked' => $comments,
+				'validate_function'=>'yes_or_no',
+				'display_function' => 'display_sharing_opt',
+				'default_value'=>'yes'
+			),
 			'embedding' => array(
-								 'title' => lang('vdo_embedding'),
-								 'type' => 'radiobutton',
-								 'name' => 'allow_embedding',
-								 'id' => 'allow_embedding',
-								 'db_field' => 'allow_embedding',
-								 'value' => array('yes' => lang('pic_allow_embed'),'no' => lang('pic_dallow_embed')),
-								 'checked' => $embedding,
-							  	 'validate_function'=>'yes_or_no',
-							 	 'display_function' => 'display_sharing_opt',
-							 	 'default_value'=>'yes'
-								 ),
+				'title' => lang('vdo_embedding'),
+				'type' => 'radiobutton',
+				'name' => 'allow_embedding',
+				'id' => 'allow_embedding',
+				'db_field' => 'allow_embedding',
+				'value' => array('yes' => lang('pic_allow_embed'),'no' => lang('pic_dallow_embed')),
+				'checked' => $embedding,
+				'validate_function'=>'yes_or_no',
+				'display_function' => 'display_sharing_opt',
+				'default_value'=>'yes'
+			),
 			'rating' => array(
-							  'title' => lang('rating'),
-							  'id' => 'allow_rating',
-							  'name' => 'allow_rating',
-							  'type' => 'radiobutton',
-							  'db_field' => 'allow_rating',
-							  'value' => array('yes' => lang('pic_allow_rating'),'no' => lang('pic_dallow_rating')),
-							  'checked' => $rating,
-							  'validate_function'=>'yes_or_no',
-							  'display_function' => 'display_sharing_opt',
-							  'default_value'=>'yes'
-							  )								 				  							  					 					
+				'title' => lang('rating'),
+				'id' => 'allow_rating',
+				'name' => 'allow_rating',
+				'type' => 'radiobutton',
+				'db_field' => 'allow_rating',
+				'value' => array('yes' => lang('pic_allow_rating'),'no' => lang('pic_dallow_rating')),
+				'checked' => $rating,
+				'validate_function'=>'yes_or_no',
+				'display_function' => 'display_sharing_opt',
+				'default_value'=>'yes'
+			)
 		);
 
-		//pr($Otherfields,TRUE);
 		return $Otherfields;	
 	}
-	
-	
+
+
 	/**
 	 * This will return a formatted array
 	 * return @Array
 	 * Array Format: Multidemsional
 	 * Array ( [photo_id] => array( ['field_name'] => 'value' ) )
+	 *
+	 * @param $arr
+	 *
+	 * @return mixed
 	 */
 	function return_formatted_post($arr)
 	{
@@ -1717,12 +1691,14 @@ class CBPhotos
 		
 		return $PhotosArray;	
 	}
-	
+
 	/**
 	 * This will be used to mutliple photos
 	 * at once.
 	 * Single update will be different.
-	 */	
+	 *
+	 * @param $arr
+	 */
 	function update_multiple_photos($arr)
 	{
 		global $db,$cbcollection,$eh;
@@ -2408,7 +2384,7 @@ class CBPhotos
 			$path = TEMPLATEURL."/images/thumbs/no-photo".$size.".png";
 		else
 			$path = PHOTOS_URL."/no-photo".$size.".png";
-			
+
 		if(!empty($output) && $output == "html")
 			echo "<img src='".$path."' />";
 		else
