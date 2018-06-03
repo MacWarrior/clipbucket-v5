@@ -77,8 +77,7 @@ class ClipBucket
         //Get Base Directory
         $this->BASEDIR = $this->getBasedir();
         //Listing Common JS File
-        $this->addJS(array
-            (
+        $this->addJS(array(
             'jquery_plugs/cookie.js' => 'global',
             'functions.js' => 'global',
         ));

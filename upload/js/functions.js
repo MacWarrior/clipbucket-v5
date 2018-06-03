@@ -1823,14 +1823,14 @@ function reply_box(cid,type,type_id)
     html += '<input type="hidden" name="obj_id" id="obj_id" value="'+type_id+'">';
     html += '<input type="hidden" name="type" value="'+type+'" />';
     html += '<div class="textarea-comment clearfix">';
-    html += '<textarea name="comment" id="reply_box_'+cid+'" class="form-control" placeholder="Répondre à '+replying_to_user+'..."></textarea>';
+    html += '<textarea name="comment" id="reply_box_'+cid+'" class="form-control" placeholder="'+ lang_reply_to + ' ' + replying_to_user + '..."></textarea>';
     html += '<i class="remove-'+cid+' remove-icon" onclick="remove_reply_box('+cid+')">';
     html += '<span style="color:#006dcc;cursor:pointer">';
     html += '<strong class="icon-close" ></strong>';
     html += '</span>';
     html += '</i>';
     html += '</div>';
-    html += '<input type="button" name="add_reply" id="add_reply_button_'+cid+'" class="btn btn-primary pull-right add-reply" onclick="add_comment_js(\'reply_form_'+cid+'\',\''+type+'\')" value="Répondre">';
+    html += '<input type="button" name="add_reply" id="add_reply_button_'+cid+'" class="btn btn-primary pull-right add-reply" onclick="add_comment_js(\'reply_form_'+cid+'\',\''+type+'\')" value="'+lang_reply+'">';
     html += '</form>';
     $('.reply-box-' + cid).html(html).slideDown("slow");
     $('#reply_box_' + cid).focus();
