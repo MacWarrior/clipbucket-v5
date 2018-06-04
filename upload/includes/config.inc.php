@@ -60,4 +60,11 @@ isSectionEnabled(PARENT_PAGE,true);
 assign('total_quicklist',$cbvid->total_quicklist());
 
 cb_call_functions( 'clipbucket_init_completed' );
+
+if (!$in_bg_cron){
+	if($Cbucket->configs['access_to_logged_in']=='yes'){
+		$userquery->logincheck();
+	}
+}
+
 ?>
