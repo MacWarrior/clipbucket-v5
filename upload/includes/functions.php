@@ -3398,14 +3398,12 @@
 		{
 			case 'audio':
 				$codecs = array(
-					'ac3',
-					'eac3',
-					'libxvid',
-					'libmp3lame',
+					'aac',
+					'aac_latm',
 					'libfaac',
 					'libvo_aacenc',
-					'aac',
-					'aac_latm'
+					'libxvid',
+					'libmp3lame'
 				);
 				break;
 
