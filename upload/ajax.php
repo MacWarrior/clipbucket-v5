@@ -8,7 +8,7 @@
 */
 
 define("THIS_PAGE",'ajax');
-
+$in_bg_cron = true;
 $mode = $_POST['mode'];
 require 'includes/config.inc.php';
 
