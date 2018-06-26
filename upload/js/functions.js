@@ -17,15 +17,12 @@ function Confirm_Uninstall(delUrl) {
     }
 }
 
-
 function confirm_it(msg)
 {
     var action = confirm(msg);
     if(action)
-    {
         return true;
-    }else
-        return false;
+    return false;
 }
 
 function reloadImage(captcha_src,imgid){img = document.getElementById(imgid);img.src = captcha_src+'?'+Math.random();}
@@ -44,7 +41,6 @@ function validate_category_form(thisform)
         {
             description.focus();return false;
         }
-
     }
 }
 
@@ -71,7 +67,6 @@ function validate_ad_form(thisform)
     }
 }
 
-
 function load_more(limit,mode,inner_mode,append_id,attrb,cat_id,total)
 {
     $.ajax({
@@ -84,14 +79,12 @@ function load_more(limit,mode,inner_mode,append_id,attrb,cat_id,total)
         dataType: 'json',
         success: function(response)
         {
-
             if(response)
             {
                 $('#' + append_id).append(response.template);
                 $(attrb).attr({
                     "limit":(parseInt(response.count) + parseInt(response.total))
                 });
-
             }
             if(response['limit_exceeds']==true)
             {
@@ -103,11 +96,7 @@ function load_more(limit,mode,inner_mode,append_id,attrb,cat_id,total)
             }
 
             $('#'+inner_mode).html('Laod More...');
-        },
-        /*    complete:function (argument) {
-                $('#'+inner_mode).button().button('reset');
-            }
-*/
+        }
     });
 };
 
@@ -135,7 +124,6 @@ var result_page = '/actions/file_results.php';
 var download_page = '/actions/file_downloader.php';
 var count = 0;
 
-
 var force_stop = false;
 var remoteObjID = randomString();
 
@@ -153,61 +141,56 @@ function check_remote_url()
         $('#remoteUploadBttnStop').attr("disabled","disabled").hide();
         return false;
     }
+    var file_name = getName(file);
     var ajaxCall = $.ajax({
-            url: download_page,
-            type: "POST",
-            data: ({file:file,file_name:file_name}),
-            dataType : 'json',
-            beforeSend : function()
+        url: download_page,
+        type: "POST",
+        data: ({file:file,file_name:file_name}),
+        dataType : 'json',
+        beforeSend : function()
+        {
+            status_update();
+            $("#loading").html('<div style="float:left;display:inline-block;"><img src="'+imageurl+'/ajax-loader.gif"></div><div style="float:left;line-height:16px;padding-left:5px;">'+lang.remoteUploadFile+'</div><div class="clear"></div>');
+            $('#remoteFileName').replaceWith('"'+file_name+'"');
+        },
+        success: function(data)
+        {
+            if(data.error)
             {
-
-                status_update();
-                var remoteFileName = getName(file);
-                $("#loading").html('<div style="float: left; display: inline-block;"><img src="'+imageurl+'/ajax-loader.gif"></div><div style="float: left; line-height: 16px; padding-left:5px">'+lang.remoteUploadFile+'</div><div class="clear"></div>');
-                $('#remoteFileName').replaceWith('"'+remoteFileName+'"');
-            },
-            success: function(data)
-            {
-
-                if(data.error)
-                {
-                    force_stop = true;
-                    $('#remoteUploadBttn').attr('disabled','');
-                    $('#ytUploadBttn').attr("disabled","");
-                    alert(data.error);
-                }
-                $("#loading").html('');
-
-                var vid = data.vid;
-
-                $.post('/actions/file_uploader.php',
-                    {"getForm":"get_form","title":$("#remote_file_url").val(),"objId":remoteObjID,"vid":vid},
-                    function(data)
-                    {
-                        $('#remoteUploadBttnStop').hide();
-                        $('#ytUploadBttn').hide();
-                        $('#remoteForm').append(data);
-                        $('#cbSubmitUpload'+remoteObjID)
-                            .before('<span id="updateVideoDataLoading" style="margin-right:5px"></span>')
-                            .attr("disabled","")
-                            .attr("value",lang.saveData)
-                            .attr("onClick","doUpdateVideo('#uploadForm"+remoteObjID+"','"+remoteObjID+"')")
-                            .after('<input type="hidden" name="videoid" value="'+vid+'" id="videoid" />')
-                            .after('<input type="hidden" name="updateVideo" value="yes" id="updateVideo" />');
-                    },'text');
+                force_stop = true;
+                $('#remoteUploadBttn').attr('disabled','');
+                $('#ytUploadBttn').attr("disabled","");
+                alert(data.error);
             }
+            $("#loading").html('');
+
+            var vid = data.vid;
+
+            $.post('/actions/file_uploader.php',
+                {"getForm":"get_form","title":$("#remote_file_url").val(),"objId":remoteObjID,"vid":vid},
+                function(data)
+                {
+                    $('#remoteUploadBttnStop').hide();
+                    $('#ytUploadBttn').hide();
+                    $('#remoteForm').append(data);
+                    $('#cbSubmitUpload'+remoteObjID)
+                        .before('<span id="updateVideoDataLoading" style="margin-right:5px"></span>')
+                        .attr("disabled","")
+                        .attr("value",lang.saveData)
+                        .attr("onClick","doUpdateVideo('#uploadForm"+remoteObjID+"','"+remoteObjID+"')")
+                        .after('<input type="hidden" name="videoid" value="'+vid+'" id="videoid" />')
+                        .after('<input type="hidden" name="updateVideo" value="yes" id="updateVideo" />');
+                },'text');
         }
-    );
+    });
 
     $('#remoteUploadBttnStop').click(function() {
-        ajaxCall.abort(); force_stop=true; $("#loading").html('');$('#remoteDownloadStatus').hide(); $(this).hide();$('#remoteUploadBttn').attr('disabled','').show(); });
-
-
+        ajaxCall.abort(); force_stop=true; $("#loading").html('');$('#remoteDownloadStatus').hide(); $(this).hide();$('#remoteUploadBttn').attr('disabled','').show();
+    });
 }
 
 function youtube_upload()
 {
-
     $('#remoteUploadBttn').attr('disabled','disabled');
     //$('#ytUploadBttn').attr("disabled","disabled");
     $('#ytUploadBttn').attr('disabled','disabled');
@@ -220,8 +203,8 @@ function youtube_upload()
         $('#ytUploadBttn').button('reset');
         force_stop = true;
         return false;
-
     }
+    var file_name = getName(file);
     var ajaxCall = $.ajax({
             url: download_page,
             type: "POST",
@@ -229,8 +212,7 @@ function youtube_upload()
             dataType : 'json',
             beforeSend : function()
             {
-                //$('#remoteUploadBttnStop').show();
-                $("#loading").html('<div style="float: left; display: inline-block;"><img src="'+imageurl+'/ajax-loader.gif"></div><div style="float: left; line-height: 16px; padding-left:5px">Uploading video from youtube, please wait...</div><div class="clear"></div>');
+                $("#loading").html('<div style="float:left; display:inline-block;"><img src="'+imageurl+'/ajax-loader.gif"></div><div style="float:left;line-height:16px;padding-left:5px;">Uploading video from youtube, please wait...</div><div class="clear"></div>');
             },
             success: function(data)
             {
@@ -245,8 +227,7 @@ function youtube_upload()
                     $('#remoteUploadBttn').button('reset');
                     $('#ytUploadBttn').button('reset');
                     alert(data.error);
-                }else if(data.vid)
-                {
+                } else if(data.vid) {
                     vid = data.vid;
                     $('#remoteUploadBttn').hide();
                     $('#ytUploadBttn').hide();
@@ -276,34 +257,11 @@ function youtube_upload()
                     $(oneUploadForm).on('submit',function(e){
                         e.preventDefault();
                     });
-                    /*vid = data.vid;
-                    $('#remoteUploadBttn').attr("disabled","disabled").hide();
-                    $('#ytUploadBttn').attr("disabled","disabled").hide();
-                    $.post('/actions/file_uploader.php',
-
-                    {"getForm":"get_form",
-                    "title":data.title,
-                    "desc":data.desc,
-                    "tags":data.tags,"objId":remoteObjID},
-                    function(data)
-                    {
-                          $('#remoteForm').append(data);
-                          $('#cbSubmitUpload'+remoteObjID)
-                          .before('<span id="updateVideoDataLoading" style="margin-right:5px"></span>')
-                          .attr("disabled","")
-                          .attr("value",lang.saveData)
-                          .attr("onClick","doUpdateVideo('#uploadForm"+remoteObjID+"','"+remoteObjID+"')")
-                          .after('<input type="hidden" name="videoid" value="'+vid+'" id="videoid" />')
-                          .after('<input type="hidden" name="updateVideo" value="yes" id="updateVideo" />');
-
-                    },'text');*/
-
                 }
 
                 $(document).find('.__theClassHere').find('#saveVideoDetails').attr('id','youtube_update');
                 $(document).find('.__theClassHere').find('#youtube_update').text('Update Grabbed Video');
                 $("#loading").html('');
-
             }
         }
     );
@@ -317,14 +275,15 @@ var perc_download = 0;
 
 function status_update()
 {
-
+    var file = $("#remote_file_url").val();
+    var file_name = getName(file);
     var ajaxCall = $.ajax({
             url: result_page,
             type: "POST",
             data:({file_name:file_name}),
             dataType: "json",
-            success: function(data){
-
+            success: function(data)
+            {
                 if(data)
                 {
                     var total = data.total_size;
@@ -346,7 +305,6 @@ function status_update()
                     perc_download = Math.round(download/total*100);
 
                     $('#remoteDownloadStatus').show();
-                    //$('#prog_bar').width(perc_download+'%');
                     $('#prog_bar').animate({width:perc_download+'%'},1000);
                     $('#prog_bar').html(perc_download+'%');
                     $('#dspeed').html(theSpeed);
@@ -359,15 +317,12 @@ function status_update()
                     setTimeout(function(){status_update()},intval);
                 else if(perc_download==100 && total>1)
                 {
-
                     $('#time_took').html('Time Took : '+time_took_fm);
                 }
             }
         }
     );
-
 }
-
 
 function upload_file(Val,file_name)
 {

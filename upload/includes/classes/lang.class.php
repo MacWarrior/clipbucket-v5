@@ -367,7 +367,7 @@ class language
 			} else {
 				//Converting data from xml to array
 				$data = xml2array($content,1,'tag',false);
-				//now checkinf if array has lang code, phrases and name etc or not
+				//now checking if array has lang code, phrases and name etc or not
 				$data = $data['clipbucket_language'];
 				$phrases = $data['phrases'];
 				if(empty($data['name']))

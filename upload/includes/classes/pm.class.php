@@ -223,7 +223,7 @@ class cb_pm
 			//Now Exploding Input and converting it to and array
 			$usernames = explode(',',$input);
 			
-			//Now Checkinf for valid usernames
+			//Now Checking for valid usernames
 			$valid_users = array();
 			foreach($usernames as $username)
 			{

@@ -115,8 +115,6 @@ if(isset($_POST['youtube']))
 	
 	$vid_array['thumbs'] = $max_quality_thumb;
 
-	#pex($vid_array['thumbs'],true);
-
 	$vid_array['embed_code'] = '<iframe width="560" height="315"';
 	$vid_array['embed_code'] .= ' src="//www.youtube.com/embed/'.$YouTubeId.'" ';
 	$vid_array['embed_code'] .= 'frameborder="0" allowfullscreen></iframe>';
@@ -128,12 +126,7 @@ if(isset($_POST['youtube']))
 	
 	$duration = $vid_array['duration'];
 	$vid = $Upload->submit_upload($vid_array);
-	
-	if(error())
-	{
-		//exit(json_encode(array('error'=>error('single'))));
-	}
-	
+
 	if(!function_exists('get_refer_url_from_embed_code'))
 	{
 		exit(json_encode(array('error'=>"Clipbucket embed module is not installed")));
@@ -173,61 +166,33 @@ this transfer, and the fifth is the number of bytes uploaded so far.
 */
 
 function callback($resource, $download_size, $downloaded, $upload_size, $uploaded){
-	global $curl,$log_file,$file_name,$ext, $logDetails;
+	global $log_file,$logDetails;
 	
 	$fo = fopen($log_file,'w+');
-	
-	$info = curl_getinfo($resource);
-
-	/*$download_bytes = $download_size - $downloaded;
-	$cur_speed = $info['speed_download'];
-	if($cur_speed > 0)
-		$time_eta = $download_bytes/$cur_speed;
-	else
-		$time_eta = 0;
-	//$download_size = (int) $download_size;
-	$time_took = $info['total_time'];*/
 
 	if(is_object($resource)){
 		$curl_info = array(
-		'total_size' => $download_size,
-		'downloaded' => $downloaded,
-		//'speed_download' => $info['speed_download'],
-		//'time_eta' => $time_eta,
-		//'time_took'=> $time_took,
-		//'file_name' => ($file_name.'.'.$ext),
+			'total_size' => $download_size,
+			'downloaded' => $downloaded
 		);
-	}else{
+	} else {
 		// for some curl extensions
 		$curl_info = array(
-		'total_size' => $resource,
-		'downloaded' => $download_size,
-		//'speed_download' => $info['speed_download'],
-		//'time_eta' => $time_eta,
-		//'time_took'=> $time_took,
-		//'file_name' => ($file_name.'.'.$ext),
+			'total_size' => $resource,
+			'downloaded' => $download_size
 		);
 	}
 	fwrite($fo,json_encode($curl_info));
 	$logDetails = $curl_info;
-	//echo $log_file;
 	fclose($fo);
-	//file_put_contents($log_file, json_encode($curl_info));
 }
 
-
-
-
 $file = $_POST['file'];
-//$file_name = mysql_clean($_POST['file_name']);
-// $file = "http://clipbucket.dev/abc.mp4";
-// $file_name = "abc";
 
 $log_file = TEMP_DIR.'/'.$file_name.'_curl_log.cblog';
 
 //For PHP < 5.3.0
 $dummy_file = TEMP_DIR.'/'.$file_name.'_curl_dummy.cblog';
-
 
 $ext = getExt($file);
 $svfile = TEMP_DIR.'/'.$file_name.'.'.$ext;
@@ -240,7 +205,7 @@ if(empty($file))
 	echo json_encode($array);
 	exit();
 }
-//Checkinf if extension is wrong
+//Checking if extension is wrong
 $types = strtolower($Cbucket->configs['allowed_types']);
 $types_array = preg_replace('/,/',' ',$types);
 $types_array = explode(' ',$types_array);
@@ -248,7 +213,7 @@ $types_array = explode(' ',$types_array);
 $extension_whitelist = $types_array;
 if(!in_array($ext,$extension_whitelist))
 {
-	$array['error'] = "This file type is not allowed";
+	$array['error'] = "This file type is not allowed : ".$ext." (".$file.")";
 	echo json_encode($array);
 	exit();
 }
