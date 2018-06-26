@@ -243,9 +243,7 @@ function youtube_upload()
                     $('.__theClassHere').find('#updateVideoInfoForm').remove();
                     wrapperDiv.id = "tab"+i;
                     oneUploadForm.className = "";
-                    console.log('.__theClassHere');
 
-                    //$('#youtube_form').find('#updateVideoInfoForm').attr('id','the_new_one_here');
                     $(oneUploadForm).find("input[name='title']").val(data.title);
                     $(oneUploadForm).find("textarea#desc").val(data.desc);
                     $(oneUploadForm).find("input[name='category[]']:first").attr('checked', 'checked');
@@ -1327,32 +1325,14 @@ function showAdvanceSearch(simple,advance,expandClass,collapseClass)
 function toggleCategory(object,perPage)
 {
     var obj = $(object),
-        childTarget = obj.attr('alt'),
-        child = $("#"+childTarget),
-        childparts = childTarget.split("_"),
-        childID = childparts[0],
-        browser = (navigator.appName == 'Microsoft Internet Explorer');
+        child = obj.next();
 
-    var browserVersion = -1;
-    var user_agent = navigator.userAgent;
-    var reg = new RegExp("MSIE ([0-9]{1,}[\.0-9]{0,})");
-    if (reg.exec(user_agent) != null)
-        browserVersion = parseFloat( RegExp.$1 );
-
-    if(child.css('display') == "none")
+    if(child.is(":visible"))
     {
-        child.slideDown(350);
-        if(browser && browserVersion == "7.0")
-            child.addClass('internetExplorer7CategoryToggleFix');
-        $.cookie(childID,'expanded',{ expires: 1, path: '/' });
-        obj.removeClass('none').addClass('block');
+        child.slideUp(350);
         obj.removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
     } else {
-        child.slideUp(350);
-        if(browser && browserVersion == "7.0")
-            child.removeClass('internetExplorer7CategoryToggleFix');
-        $.cookie(childID,'collapsed',{ expires: 1, path: '/' });
-        obj.removeClass('block').addClass('none');
+        child.slideDown(350);
         obj.removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
     }
 }
