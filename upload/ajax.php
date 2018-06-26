@@ -8,7 +8,7 @@
 */
 
 define("THIS_PAGE",'ajax');
-
+$is_ajax = true;
 $mode = $_POST['mode'];
 require 'includes/config.inc.php';
 

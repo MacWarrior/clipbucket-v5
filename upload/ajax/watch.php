@@ -6,7 +6,7 @@
 	* @author: Saqib Razzaq
 	* @modified: 8th April, 2016
 	*/
-
+	$is_ajax = true;
 	require '../includes/config.inc.php';
 	if (isset($_POST['mode']))
 	{

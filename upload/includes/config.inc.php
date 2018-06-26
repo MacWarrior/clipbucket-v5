@@ -51,3 +51,9 @@
 	assign('total_quicklist', $cbvid->total_quicklist());
 
 	cb_call_functions( 'clipbucket_init_completed' );
+
+	if (!$in_bg_cron && !in_array(THIS_PAGE, $ClipBucket->public_pages)){
+		if($Cbucket->configs['access_to_logged_in']=='yes'){
+			$userquery->logincheck();
+		}
+	}
