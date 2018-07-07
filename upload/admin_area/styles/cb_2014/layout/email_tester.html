@@ -1,5 +1,4 @@
 <style>
-
 	.cb-box .mid-roll-row {
 		font-weight: 300;
 		font-size: 14px;
@@ -45,32 +44,32 @@
 
 	<h4>Configurations</h4>
 	<div class="btn-group">
-	<a href="javascript:void(0);" class="btn btn-default">{lang('Mail type')}: <span class="badge">{config('mail_type')}</span></a>
-	<a href="javascript:void(0);" class="btn btn-default">{lang('Host')}: <span class="badge">{config('smtp_host')}</span></a>
-	<a href="javascript:void(0);" class="btn btn-default">{lang('Port')}: <span class="badge">{config('smtp_port')}</span></a>
-	<a href="javascript:void(0);" class="btn btn-default">{lang('User')}: <span class="badge">{config('smtp_user')}</span></a>
-	<a href="javascript:void(0);" class="btn btn-default">{lang('Password')}: <span class="badge">{config('smtp_pass')}</span></a>
-	<a href="javascript:void(0);" class="btn btn-default">{lang('Auth')}: <span class="badge">{config('smtp_auth')}</span></a>
+	<a href="javascript:void(0);" class="btn btn-default">{lang('mail_type')}: <span class="badge">{config('mail_type')}</span></a>
+	<a href="javascript:void(0);" class="btn btn-default">{lang('host')}: <span class="badge">{config('smtp_host')}</span></a>
+	<a href="javascript:void(0);" class="btn btn-default">{lang('port')}: <span class="badge">{config('smtp_port')}</span></a>
+	<a href="javascript:void(0);" class="btn btn-default">{lang('user')}: <span class="badge">{config('smtp_user')}</span></a>
+	<a href="javascript:void(0);" class="btn btn-default">{lang('password')}: <span class="badge">{config('smtp_pass')}</span></a>
+	<a href="javascript:void(0);" class="btn btn-default">{lang('auth')}: <span class="badge">{config('smtp_auth')}</span></a>
 	</div>
 	<hr />
 	<form action="{queryString()}" method="post" id="test_email">
 		<div class="form-group">
-			<label for="to_name">To( Name )</label>
+			<label for="to_name">{lang('to')} ( {lang('name')} )</label>
 			<input type="text" name="to_name" id="to_name" class="form-control" />
 		</div>
 
 		<div class="form-group">
-			<label for="to_email">To( Email Address )</label>
+			<label for="to_email">{lang('to')} ( {lang('user_email_address')} )</label>
 			<input type="text" name="to_email" id="to_email" class="form-control" />
 		</div>
 
 		<div class="form-group">
-			<label for="from_name">From( Name )</label>
+			<label for="from_name">{lang('from')} ( {lang('name')} )</label>
 			<input type="text" name="from_name" id="from_name" class="form-control" placeholder="Default: Tune.pk" />
 		</div>
 
 		<div class="form-group">
-			<label for="from_email">From( Email Address )</label>
+			<label for="from_email">{lang('user')} ( {lang('user_email_address')} )</label>
 			<input type="text" name="from_email" id="from_email" class="form-control" placeholder="Default: {$smarty.const.SUPPORT_EMAIL}" />
 		</div>
 
@@ -96,7 +95,7 @@
 			<textarea name="body" id="body" class="form-control" cols="30" rows="10"></textarea>
 		</div>
 
-		<div class="form-group" id="dynamic-values" style="display: none">
+		<div class="form-group" id="dynamic-values" style="display:none;">
 			<h4>Dynamic Values</h4>
 		</div>
 
@@ -106,102 +105,9 @@
 	</form>
 </div>
 
-<div class="form-group clearfix" id="emaildv" style="display: none !important;">
-	<input type="text" name="dvn[]" class="form-control pull-left" style="width: 49%" placeholder="macro" />
+<div class="form-group clearfix" id="emaildv" style="display:none !important;">
+	<input type="text" name="dvn[]" class="form-control pull-left" style="width: 49%;" placeholder="macro" />
 	<textarea name="dvv[]" rows="2" class="form-control pull-right" style="width: 49%;" placeholder="value"></textarea>
 </div>
 
 <!-- include chosen -->
-
-
-<script type="text/javascript">
-
-	/*var __macros = {json_encode($macros)},
-		__templates = {json_encode($_templates)},
-		arrayUnique = function(a) {
-		    return a.reduce(function(p, c) {
-		        if (p.indexOf(c) < 0) p.push(c);
-		        return p;
-		    }, []);
-		};*/
-	/*$( document ).ready(function(){
-		$( '.chosen' ).chosen();
-
-		var onChange = function onChange( event ) {
-			var _this = $( this ),
-				subject = '',
-				body = '';
-
-			{
-				if( typeof __templates[ this.value ] !== 'undefined' ) {
-					subject = __templates[ this.value ][ 'subject' ];
-					body = __templates[ this.value ][ 'body' ];
-				}
-			}
-
-			//extract macros from body
-			{literal}
-			var expression = /\{([a-zA-Z0-9\_\-]*)\}/ig,
-			{/literal}
-				bodyMacros = body.match( expression );
-				subjectMacros = subject.match( expression );
-
-
-			if ( bodyMacros === null ) {
-				bodyMacros = [];
-			}
-
-			if ( subjectMacros === null ) {
-				subjectMacros = [];
-			}
-
-			dynamicMacros = bodyMacros.concat( subjectMacros );
-
-			console.info( subjectMacros );
-
-			if( dynamicMacros.length === 0 ) {
-				$( '#dynamic-values' ).hide().find( '.form-group' ).remove();
-			}
-
-			if ( dynamicMacros.length > 0 ) {
-
-				dynamicMacros = arrayUnique( dynamicMacros );
-
-				var container = $( '#dynamic-values' ),
-					i;
-
-				container.find( '.form-group' ).remove();
-
-				for( i = 0; i < dynamicMacros.length; i++ ) {
-					var clone = $( '#emaildv' ).clone(),
-						_value = '';
-
-					container.append( clone );
-
-					var _dom = container.find( '#emaildv' );
-
-					_dom.attr( 'id', dynamicMacros[ i ] );
-					_dom.attr( 'data-index', i );
-					_dom.find( 'input[name*=dvn]' ).val( dynamicMacros[ i ] ).attr({
-						 'name':'dv['+i+'][name]',
-						 'readonly':'readonly'
-					});
-
-					if ( typeof __macros[ dynamicMacros[ i ] ] !== 'undefined' )  {
-						_value = __macros[ dynamicMacros[ i ] ];
-					}
-
-					_dom.find( 'textarea[name*=dvv]' ).val( _value ).attr( 'name', 'dv['+i+'][value]' );
-					_dom.show();
-				}
-
-				$( '#dynamic-values' ).show()
-			}
-
-			$( '#subject' ).val( subject );
-			$( '#body' ).val( body );
-		}
-
-		$( document ).on( 'change', '#email_template', onChange );
-	});*/
-</script>

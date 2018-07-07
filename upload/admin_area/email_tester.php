@@ -99,9 +99,9 @@
 			$test = cbmail( $mail );
 
 			if ( $test == false ) {
-				e( lang( sprintf( 'Unable to send email <strong>%s</strong>', $to_email ) ) );
+				e( lang( sprintf( 'mail_not_send', $to_email ) ) );
 			} else {
-				e( lang( sprintf( 'Email successfully send to <strong>%s</strong>', $to_email ) ), 'm' );
+				e( lang( sprintf( 'mail_send', $to_email ) ), 'm' );
 			}
 
 		} catch( Exception $e ) {
