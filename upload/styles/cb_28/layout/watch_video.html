@@ -47,9 +47,16 @@
 						</div>
 						<div class="clearfix subscribe-col col-lg-6 col-md-6 col-sm-6 col-xs-12">
 							{if $video.userid != userid()}
-							<a id="subscribeUser" class="btn btn-subscribe btn-primary" href="javascript:void(0)">
-								<span>{lang code='subscribe'}</span>
-							</a>
+								{if $userquery->is_subscribed($video.userid,userid())}
+									<button id="{$video.userid}" onclick="_cb.unsubscribeToChannel({$video.userid},'unsubscribe_user');" class="btn btn-subscribe btn-primary subs_{$video.userid} unsubs_{$video.userid}"><i class="icon-rss2"></i>
+										{lang code="unsubscribe"}
+									</button>
+										
+								{else}
+									<button id="subs_{$video.userid}" onclick="_cb.subscribeToChannelNew({$video.userid},'subscribe_user');" class="btn btn-subscribe btn-primary subs_{$video.userid} unsubs_{$video.userid}"><i class="icon-rss2"></i>
+										{lang code="subscribe"}
+									</button>
+								{/if}
 							{/if}
 							{if $Cbucket->configs.video_download==1 && $cbvid->downloadable($vdo)}
 							<div class="dropdown">
