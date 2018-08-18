@@ -33,7 +33,7 @@
 			case 'get_video':{
 				$response = array();
 				try{
-					$videoid = $_POST['videoid'];
+					$videoid = (int)$_POST['videoid'];
 				    $videoDetails = $cbvid->get_video($videoid);
 				    if ( $videoDetails && video_playable($videoDetails) ){
 				    	assign('video',$videoDetails);
