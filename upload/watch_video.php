@@ -23,7 +23,7 @@
 	if(video_playable($vdo))
 	{
 		//Checking for playlist
-		$pid = $_GET['play_list'];
+		$pid = (int)$_GET['play_list'];
 		if(!empty($pid)) {
 			$plist = get_playlist( $pid );
 			if ( $plist ) {
