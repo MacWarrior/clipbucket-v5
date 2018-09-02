@@ -119,7 +119,7 @@ switch($mode)
 						$cbvideo->collection->remove_item($_POST['check_item'][$i],$cid);
 					}
 					$eh->flush();
-					e(sprintf("selected_items_removed","videos"),"m");
+					e(sprintf(lang("selected_items_removed"),"videos"),"m");
 				}
 				 
 				$get_limit = create_query_limit($page,COLLIP);
@@ -146,7 +146,7 @@ switch($mode)
 						$cbphoto->make_photo_orphan($cid,$_POST['check_item'][$i]);
 					}
 					$eh->flush();
-					e(sprintf("selected_items_removed","photos"),"m");
+					e(sprintf(lang("selected_items_removed"),"photos"),"m");
 				}
 				$get_limit = create_query_limit($page,COLLIP);
 				$objs = $cbphoto->collection->get_collection_items_with_details($cid,$order,$get_limit);
