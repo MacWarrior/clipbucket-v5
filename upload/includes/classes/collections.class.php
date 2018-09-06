@@ -1805,11 +1805,11 @@ class Collections extends CBCategory
 			$_GET['sort'] = 'most_recent';	
 		
 		$array = array(
-			'most_recent' 	=> lang('recent'),
-			'most_viewed'	=> lang('viewed'),
+			'most_recent' 	=> lang('most_recent'),
+			'most_viewed'	=> lang('mostly_viewed'),
 			'featured'		=> lang('featured'),
 			'most_items'	=> lang('Most Items'),
-			'most_commented'	=> lang('commented'),
+			'most_commented'	=> lang('most_comments'),
 		 );
 		return $array;	 	
 	}

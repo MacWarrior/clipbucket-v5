@@ -324,16 +324,16 @@
 							<div class="col-md-4">
 								<label for="videosSection">Enable video selection</label>
 								<select name="videosSection" id="videosSection" class="form-control">
-									<option value="yes" {if $row.videosSection!='no' } selected {/if}>Yes</option>
-									<option value="no" {if $row.videosSection=='no'} selected {/if}>No</option>
+									<option value="yes" {if $row.videosSection!='no' }selected{/if}>{lang code='yes'}</option>
+									<option value="no" {if $row.videosSection=='no'}selected{/if}>{lang code='no'}</option>
 								</select>
 							</div>
 
 							<div class="col-md-4">
 								<label for="facebook_embed">Enable facebook embed</label>
 								<select name="facebook_embed" id="facebook_embed" class="form-control">
-									<option value="yes" {if $row.facebook_embed!='no' } selected {/if}>Yes</option>
-									<option value="no" {if $row.facebook_embed=='no'} selected {/if}>No</option>
+									<option value="yes" {if $row.facebook_embed!='no' } selected {/if}>{lang code='yes'}</option>
+									<option value="no" {if $row.facebook_embed=='no'} selected {/if}>{lang code='no'}</option>
 								</select>
 							</div>
 							<div class="col-md-4">
@@ -357,8 +357,8 @@
 							<div class="col-md-4">
 								<label for="video_round_views">Enable round views on watch video page</label>
 								<select name="video_round_views" id="video_round_views" class="form-control">
-									<option value="yes" {if $row.video_round_views!='no'} selected {/if}>Yes</option>
-									<option value="no" {if $row.video_round_views=='no'} selected {/if}>No</option>
+									<option value="yes" {if $row.video_round_views!='no'}selected{/if}>{lang code='yes'}</option>
+									<option value="no" {if $row.video_round_views=='no'}selected{/if}>{lang code='no'}</option>
 								</select>
 							</div>
 							<!-- changes made -->
@@ -416,8 +416,8 @@
 								<div class="form-group1">
 									<label for="channelsSection">Enable Channels</label>
 									<select class="form-control" name="channelsSection" id="channelsSection">
-										<option value="yes" {if $row.channelsSection!='no'}selected{/if}>Yes</option>
-										<option value="no" {if $row.channelsSection=='no'}selected{/if}>No</option>
+										<option value="yes" {if $row.channelsSection!='no'}selected{/if}>{lang code='yes'}</option>
+										<option value="no" {if $row.channelsSection=='no'}selected{/if}>{lang code='no'}</option>
 									</select>
 								</div>
 							</div>
@@ -426,8 +426,8 @@
 								<div class="form-group1">
 									<label for="photosSection">Enable photos</label>
 									<select class="form-control" name="photosSection" id="photosSection">
-										<option value="yes" {if $row.photosSection!='no'}selected{/if}>Yes</option>
-										<option value="no" {if $row.photosSection=='no'}selected{/if}>No</option>
+										<option value="yes" {if $row.photosSection!='no'}selected{/if}>{lang code='yes'}</option>
+										<option value="no" {if $row.photosSection=='no'}selected{/if}>{lang code='no'}</option>
 									</select>
 								</div>
 							</div>
@@ -440,16 +440,16 @@
 							<div class="col-md-6">
 								<label for="collectionsSection">Enable Collections</label>
 								<select class="form-control" name="collectionsSection" id="collectionsSection">
-									<option value="yes" {if $row.collectionsSection!='no'}selected{/if}>Yes</option>
-									<option value="no" {if $row.collectionsSection=='no'}selected{/if}>No</option>
+									<option value="yes" {if $row.collectionsSection!='no'}selected{/if}>{lang code='yes'}</option>
+									<option value="no" {if $row.collectionsSection=='no'}selected{/if}>{lang code='no'}</option>
 								</select>
 							</div>
 
 							<div class="col-md-6">
 								<label for="feedsSection">Enable feeds</label>
 								<select class="form-control" name="feedsSection" id="feedsSection">
-									<option value="yes" {if $row.feedsSection!='no'}selected{/if}>Yes</option>
-									<option value="no" {if $row.feedsSection=='no'}selected{/if}>No</option>
+									<option value="yes" {if $row.feedsSection!='no'}selected{/if}>{lang code='yes'}</option>
+									<option value="no" {if $row.feedsSection=='no'}selected{/if}>{lang code='no'}</option>
 								</select>
 							</div>
 
@@ -522,17 +522,6 @@
 						</a>
 					</div>
 				</div>
-
-				<!-- <div class="col-md-4">
-					<h5>Use Crons</h5>
-					<label class="radio-inline">
-						<input type="radio" name="use_crons" value="yes" id="use_crons_0" {if $row.use_crons=='yes'}checked{/if}/>Yes
-					</label>
-
-					<label class="radio-inline">
-						<input type="radio" name="use_crons" value="no" id="use_crons_1" {if $row.use_crons=='no'}checked{/if}/>No
-					</label>
-				</div> -->
 
 				<div class="col-md-4">
 					<label for="ffmpegpath">FFMPEG Path</label>
@@ -996,8 +985,8 @@
 						<div class="col-md-4">
 							<label>Home Page Popup Video</label>
 							<select class="form-control" name="popup_video">
-								<option value="no" {if $row.popup_video=="no"}selected{/if}>No</option>
-								<option value="yes" {if $row.popup_video=="yes"}selected{/if}>Yes</option>
+								<option value="no" {if $row.popup_video=="no"}selected{/if}>{lang code='no'}</option>
+								<option value="yes" {if $row.popup_video=="yes"}selected{/if}>{lang code='yes'}</option>
 							</select>
 						</div>
 					</div>
@@ -1185,11 +1174,11 @@
 			<div class="col-md-4">
 				<h5>Store guest Session</h5>
 				<label class="radio-inline">
-					<input type="radio" name="store_guest_session" value="yes" id="store_guest_session_0" {if $row.store_guest_session=='yes'}checked{/if}/>Yes
+					<input type="radio" name="store_guest_session" value="yes" id="store_guest_session_0" {if $row.store_guest_session=='yes'}checked{/if}/>{lang code='yes'}
 				</label>
 
 				<label class="radio-inline">
-					<input type="radio" name="store_guest_session" value="no" id="store_guest_session_1" {if $row.store_guest_session=='no'}checked{/if}/>No
+					<input type="radio" name="store_guest_session" value="no" id="store_guest_session_1" {if $row.store_guest_session=='no'}checked{/if}/>{lang code='no'}
 				</label>
 			</div>
 
@@ -1201,15 +1190,6 @@
 					<input name="email_verification" type="checkbox" id="email_verification" value="1" {if $row.email_verification=='1'}checked{/if}/>Email verification
 				</label>
 			</div>
-
-			<!-- <div class="col-md-4">
-				<label for="varification_captcha">Image verification (captcha)</label>
-				<select class="form-control" id="varification_captcha" name="captcha_type">
-					<option value="0" {if $row.captcha_type==0}selected{/if}>No</option>
-					<option value="1" {if $row.captcha_type==1}selected{/if}>Simple</option>
-					<option value="2" {if $row.captcha_type==2}selected{/if}>Secured</option>
-				</select>
-			</div> -->
 		</div>
 		<div class="row">
 

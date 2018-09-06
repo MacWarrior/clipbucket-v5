@@ -147,20 +147,17 @@ class cbactions
 					}
 
 					//Logging Favorite
-					$log_array = array
-					(
-					 'success'=>'yes',
-					 'details'=> "added ".$this->name." to favorites",
-					 'action_obj_id' => $id,
-					 'action_done_id' => $db->insert_id(),
+					$log_array = array(
+						'success'=>'yes',
+						'details'=> "added ".$this->name." to favorites",
+						'action_obj_id' => $id,
+						'action_done_id' => $db->insert_id()
 					);
 					insert_log($this->name.'_favorite',$log_array);
-					
-					//e(sprintf(lang('add_fav_message'),$this->name),'m');
-					 e('<div class="alert alert-success">This '.$the_type.' has been added to your favorites</div>', "m" );
+
+					e('<div class="alert alert-success">'.sprintf(lang('add_fav_message'), lang($this->name)).'</div>', "m" );
 				}else{
-					 
-					e(sprintf(lang('already_fav_message'),$this->name));
+					e(sprintf(lang('already_fav_message'), lang($this->name)));
 				}
 			}else{
 				e(lang("you_not_logged_in"));
@@ -374,10 +371,13 @@ class cbactions
 		global $db;
 		return $db->count(tbl($this->fav_tbl),"favorite_id"," type='".$this->type."'");
 	}
-	
-	
+
+
 	/**
 	 * Function used remove video from favorites
+	 *
+	 * @param      $fav_id
+	 * @param null $uid
 	 */
 	function remove_favorite($fav_id,$uid=NULL)
 	{
@@ -386,17 +386,19 @@ class cbactions
 			$uid=userid();
 		if($this->fav_check($fav_id,$uid))
 		{
-			$fav_id = mysql_clean($fav_id);
-			$uid = mysql_clean($uid);
 			$db->delete(tbl($this->fav_tbl),array('userid','type','id'),array($uid,$this->type,$fav_id));
-			e(sprintf(lang('fav_remove_msg'),$this->name),'m');
+			e(sprintf(lang('fav_remove_msg'), lang($this->name)),'m');
 		}else
-			e(sprintf(lang('unknown_favorite'),$this->name));
+			e(sprintf(lang('unknown_favorite'), lang($this->name)));
 	}
-	
-	
+
+
 	/**
 	 * Function used to get object flags
+	 *
+	 * @param null $limit
+	 *
+	 * @return array|bool
 	 */
 	function get_flagged_objects($limit=NULL)
 	{
@@ -409,9 +411,13 @@ class cbactions
 			return $results;
 		return false;
 	}
-	
+
 	/**
 	 * Function used to get all flags of an object
+	 *
+	 * @param $id
+	 *
+	 * @return array|bool
 	 */
 	function get_flags($id)
 	{

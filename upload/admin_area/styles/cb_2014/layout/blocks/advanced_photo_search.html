@@ -44,8 +44,8 @@
           <label for="featured">Featured</label>
           <select class="form-control" name="featured" id="featured">
             <option value="" ></option>
-            <option value="yes" {if $smarty.get.featured=='yes'} selected{/if}>Yes</option>
-            <option value="no" {if $smarty.get.featured=='no'} selected{/if}>No</option>
+            <option value="yes" {if $smarty.get.featured=='yes'}selected{/if}>{lang code='yes'}</option>
+            <option value="no" {if $smarty.get.featured=='no'}selected{/if}>{lang code='no'}</option>
           </select>
         </div>
       </div>

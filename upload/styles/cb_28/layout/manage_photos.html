@@ -36,7 +36,7 @@
 					<table class="table table-bordered table-striped">
 						<tr>
 							<td width="25">
-								<input type="checkbox" name="checkall" onclick="checkUncheckAll(this);">
+								<input type="checkbox" name="checkall" onclick="checkUncheckAll(this);"/>
 							</td>
 							<td>{lang code='title_ph'}</td>
 							<td width="100">{lang code='date_added'}</td>
@@ -49,7 +49,7 @@
 						{sectionelse}
 						<tr>
 						<td colspan="6">
-							<div align="center" style="padding:5px">
+							<div align="center" style="padding:5px;">
 								<strong><em>{lang code='you_dont_have_photos'}</em></strong>
 							</div>
 						</td>
@@ -82,8 +82,6 @@
 			</div>
 			</div>    
 
-		   
-
 			<form name="photos_manager" method="post">
 				<div>
 					<img src="{$imageurl}/dot.gif" class="arrow_pointing" />
@@ -108,7 +106,7 @@
 				{sectionelse}
 					<tr>
 						<td colspan="6">
-						<div align="center" style="padding:5px"><strong><em>{lang code='you_dont_have_photos'}</em></strong></div>
+						<div align="center" style="padding:5px"><strong><em>{lang code='you_dont_have_fav_photos'}</em></strong></div>
 						</td>
 						</tr>
 				{/section}  

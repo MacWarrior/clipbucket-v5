@@ -30,8 +30,8 @@
         <div class="col-md-4">
             <label>Make Default Category</label>
             <select class="form-control" name="default">
-				<option class="form-control" id="default_0" value="yes">Yes</option>
-				<option class="form-control" id="default_1" value="no" selected>No</option>
+				<option class="form-control" id="default_0" value="yes">{lang code='yes'}</option>
+				<option class="form-control" id="default_1" value="no" selected>{lang code='no'}</option>
 			</select>
         </div>
         </div>
@@ -79,8 +79,8 @@
             <div class="col-md-4">
                 <label>Make Default Category</label>
                 <select class="form-control" name="default_categ">
-                    <option class="form-control" name="default" id="default_0" {if $cat_details.isdefault=='yes'} selected{/if} >Yes</option>
-                    <option class="form-control" name="default" id="default_1" {if $cat_details.isdefault=='no' || $cat_details.isdefault==''} selected{/if}>No</option>
+                    <option class="form-control" name="default" id="default_0" {if $cat_details.isdefault=='yes'}selected{/if} >{lang code='yes'}</option>
+                    <option class="form-control" name="default" id="default_1" {if $cat_details.isdefault=='no' || $cat_details.isdefault==''}selected{/if}>{lang code='no'}</option>
                 </select>
             </div>
             </div>

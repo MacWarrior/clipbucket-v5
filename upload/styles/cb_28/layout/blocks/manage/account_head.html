@@ -56,7 +56,7 @@
 										<span class="label {if $video.status=='Successful'}label-success{else}label-warning{/if}">
 											{if $video.status=='Successful'}{lang code="successful"}{else}{lang code="processing"}{/if}</span>
 										<span class="label label-info">
-										   Viewed {$video.last_viewed|niceTime}</span>
+										   {lang code='viewed'} {$video.last_viewed|niceTime}</span>
 								</div>
 							</div>
 						</div>

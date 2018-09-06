@@ -4830,11 +4830,11 @@
 
 		$array = array(
 			'view_all'		=> lang('all'),
-			'most_recent' 	=> lang('recent'),
-		 	'most_viewed'	=> lang('viewed'),
+			'most_recent' 	=> lang('most_recent'),
+		 	'most_viewed'	=> lang('mostly_viewed'),
 		 	'featured'		=> lang('featured'),
 		 	'top_rated'		=> lang('top_rated'),
-		 	'most_commented'=> lang('commented')
+		 	'most_commented'=> lang('most_comments')
 		);
 		return $array;
 	}

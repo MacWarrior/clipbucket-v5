@@ -48,8 +48,8 @@
         </div>
 
         {if $pakplayer=='yes'}
-        <div>Autoplay video : <label><input type="radio" name="autoplay" value="yes" onclick="{$updateEmbedCode}(embedPlayerWidth,embedPlayerHeight,'yes')" {if $Cbucket->configs.autoplay_embed=='yes'} checked{/if} />Yes</label>
-            <label><input type="radio" name="autoplay" value="no" onclick="{$updateEmbedCode}(embedPlayerWidth,embedPlayerHeight,'no')" {if $Cbucket->configs.autoplay_embed!='yes'} checked{/if}/>No</label></div>
+        <div>Autoplay video : <label><input type="radio" name="autoplay" value="yes" onclick="{$updateEmbedCode}(embedPlayerWidth,embedPlayerHeight,'yes')" {if $Cbucket->configs.autoplay_embed=='yes'} checked{/if} />{lang code='yes'}</label>
+            <label><input type="radio" name="autoplay" value="no" onclick="{$updateEmbedCode}(embedPlayerWidth,embedPlayerHeight,'no')" {if $Cbucket->configs.autoplay_embed!='yes'} checked{/if}/>{lang code='no'}</label></div>
         {/if}
 
         <div class="form-group">

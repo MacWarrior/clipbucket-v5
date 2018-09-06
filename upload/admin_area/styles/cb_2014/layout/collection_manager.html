@@ -36,7 +36,7 @@
 						<a href="/admin_area/edit_collection.php?collection={$c[list].collection_id}">{display_clean($c[list].collection_name)}</a> ({$c[list].total_objects} {$c[list].type})
 
 						<div class="labels">
-							{if $c[list].featured=='yes'}<span class="label label-primary">Featured</span>{/if}
+							{if $c[list].featured=='yes'}<span class="label label-primary">{lang code='featured'}</span>{/if}
 							<span class="label {if $c[list].active=='yes'}label-success{else}label-warning{/if}">{if $c[list].active=='yes'}{lang code='active'}{else}{lang code='inactive'}{/if}</span>
 							<span class="label label-info">{lang code='type'} : <strong>{lang code=$c[list].type}</strong></span>
 							<span class="label label-info"><strong>{$c[list].date_added|niceTime}</strong></span>

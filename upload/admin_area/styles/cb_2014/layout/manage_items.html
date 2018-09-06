@@ -57,7 +57,7 @@
                                     <span class="label {if $obj[list].active=='yes'}label-success{else}label-warning{/if}">
                                     {if $obj[list].active=='yes'}{lang code='active'}{else}{lang code='inactive'}{/if} </span>
                                     <span class="label label-info">
-                                    Viewed {$obj[list].last_viewed|niceTime}</span>
+                                    {lang code='viewed'} {$obj[list].last_viewed|niceTime}</span>
                                 </div>
                             </div>
                         </div>
@@ -94,7 +94,7 @@
                                     <span class="label {if $obj[list].active=='yes'}label-success{else}label-warning{/if}">
                                     {if $obj[list].active=='yes'}{lang code='active'}{else}{lang code='inactive'}{/if} </span>
                                     <span class="label label-info">
-                                    Viewed {$obj[list].last_viewed|niceTime}</span>
+                                    {lang code='viewed'} {$obj[list].last_viewed|niceTime}</span>
                                 </div>
                             </div>
                         </div>

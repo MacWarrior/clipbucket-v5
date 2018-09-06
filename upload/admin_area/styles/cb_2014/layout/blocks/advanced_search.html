@@ -36,11 +36,11 @@
         <div class="row">
             <div class="col-md-2">
                 <div class="form-group">
-                    <label for="featured">Featured</label>
+                    <label for="featured">{lang code='featured'}</label>
                     <select class="form-control" name="featured" id="featured">
                             <option value=""> </option>
-                            <option value="no" {if $smarty.get.featured=='no'} selected{/if}>No</option>
-                            <option value="yes" {if $smarty.get.featured=='yes'} selected{/if}>Yes</option>
+                            <option value="no" {if $smarty.get.featured=='no'}selected{/if}>{lang code='no'}</option>
+                            <option value="yes" {if $smarty.get.featured=='yes'}selected{/if}>{lang code='yes'}</option>
                            
                     </select>
                 </div>
@@ -51,8 +51,8 @@
                     <label for="active">Active</label>
                     <select class="form-control" name="active" id="active">
                     <option value=""> </option>
-                        <option value="yes" {if $smarty.get.active=='yes'} selected{/if}>Yes</option>
-                        <option value="no" {if $smarty.get.active=='no'} selected{/if}>No</option>
+                        <option value="yes" {if $smarty.get.active=='yes'}selected{/if}>{lang code='yes'}</option>
+                        <option value="no" {if $smarty.get.active=='no'}selected{/if}>{lang code='no'}</option>
                     </select>
                 </div>
             </div>

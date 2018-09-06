@@ -45,7 +45,7 @@
                                     <span class="label {if $photos[list].active=='yes'}label-success{else}label-warning{/if}">
                                         {if $photos[list].active=='yes'}{lang code='active'}{else}{lang code='inactive'}{/if} </span>
                                     <span class="label label-info">
-                                       Viewed {$photos[list].last_viewed|niceTime}</span>
+                                       {lang code='viewed'} {$photos[list].last_viewed|niceTime}</span>
                         </div>
                     </div>
                 </div>

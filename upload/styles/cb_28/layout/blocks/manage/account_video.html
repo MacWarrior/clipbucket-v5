@@ -8,28 +8,28 @@
 <tr>
 	<td>
 		<div class="col-md-3">
-			<a class="manageVid_thumb" href="edit_video.php?video={$video.videoid}">
-				<img src="{getThumb vdetails=$video}" class="img-responsive" width="130" height="80" id="thumbs_{$video.videoid}" class="vthumb" title=""/>
-				<span class="duration">({if
-					$video.duration>1}{$video.duration|SetTime}{else}00:00{/if})</span>
-				</a>
+			<a class="manageVid_thumb" href="/watch_video.php?v={$video.videokey}">
+				<img src="{getThumb vdetails=$video size=168x105}" class="img-responsive vthumb" width="130" height="80" id="thumbs_{$video.videoid}"/>
+				<span class="duration">({if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if})</span>
+			</a>
+		</div>
+		<div class="col-md-9">
+			<a href="/watch_video.php?v={$video.videokey}">{display_clean($video.title)|truncate:80}</a>
+			<br/>
+			<span class="maccountlabels">
+				<strong>{$video.date_added|niceTime}</strong>
+				{lang code='views'} : <strong>{$video.views|number_format}</strong>
+			</span>
+			<div class="labels">
+				{if $video.featured=='yes'}
+				<span class="label label-primary">{lang code='featured'}</span>
+				{/if}
+				<span class="label {if $video.active=='yes'}label-success{else}label-warning{/if} mlabel">{if $video.active=='yes'}{lang code='active'}{else}{lang code='inactive'}{/if}</span>
+				<span class="label {if $video.status=='Successful'}label-success{else}label-warning{/if}">{if $video.status=='Successful'}{lang code='successful'}{else}{lang code='processing'}{/if}</span>
+				<span class="label label-info">{lang code='viewed'} {$video.last_viewed|niceTime}</span>
 			</div>
-			<div class="col-md-9">
-				<a href="edit_video.php?vid={$video.videoid}">{display_clean($video.title)|truncate:80}</a>
-				<br>
-				<span class="maccountlabels">
-					<strong>{$video.date_added|niceTime}</strong>
-					{lang code='views'} : <strong>{$video.views|number_format}</strong>
-				</span>
-				<div class="labels">
-					{if $video.featured=='yes'}
-					<span class="label label-primary">Featured</span>{/if}
-					<span class="label {if $video.active=='yes'}label-success{else}label-warning{/if} mlabel">{if $video.active=='yes'}{lang code='active'}{else}{lang code='inactive'}{/if}</span>
-					<span class="label {if $video.status=='Successful'}label-success{else}label-warning{/if}">{if $video.status=='Successful'}{lang code='successful'}{else}{lang code='processing'}{/if}</span>
-					<span class="label label-info">{lang code='viewed'} {$video.last_viewed|niceTime}</span>
-				</div>
-			</div>
-		</td>
+		</div>
+	</td>
 
 		{*<td>
 		<div class="clearfix">
@@ -47,14 +47,17 @@
 			<button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
 				{lang code='vdo_actions'} <i class="caret"></i></button>
 				<ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
+					<li><a role="menuitem" tabindex="-1" href="/watch_video.php?v={$video.videokey}" target="_blank">{lang code='view_video'}</a></li>
+					<li><a role="menuitem" tabindex="-1" href="/manage_videos.php?mode=favorites&vid_delete={$video.videoid}'">{lang code='remove'}</a></li>
+
 					{if $cbvid->is_video_owner($video.videoid,$user.userid) || has_access('admin_access')}
-					<li><a role="menuitem" tabindex="-1" href="/edit_video.php?vid={$video.videoid}">{lang code='edit_video'}</a></li>
-					<li><a role="menuitem" tabindex="-1" href="javascript:_cb.Confirm_Delete('?vid_delete={$video.videoid}')">{lang code='del_video'}</a></li>
+					<li class="divider"></li>
+					<li><a role="menuitem" tabindex="-1" href="/edit_video.php?vid={$video.videoid}">{lang code='edit'}</a></li>
+					<li><a role="menuitem" tabindex="-1" href="javascript:_cb.Confirm_Delete('?vid_delete={$video.videoid}')">{lang code='delete'}</a></li>
 					{/if}
-					<li><a role="menuitem" tabindex="-1" href="/watch_video.php?v={$video.videokey}" target="_blank">{lang code='watch'}</a></li>
 
 					{foreach from=$cbvid->video_manager_links item=links}
-					{$cbvid->video_manager_link($links,$video)}
+						{$cbvid->video_manager_link($links,$video)}
 					{/foreach}
 				</ul>
 			</div>
@@ -113,7 +116,7 @@
 	{/if}
 <!-- changes made -->
 	{if $control=='onWatch'}
-	<div class="featured-video clearfix" {if $ajax_load == "yes"} style="display: none" {/if} id="{$video.videoid}">
+	<div class="featured-video clearfix" {if $ajax_load=="yes"}style="display:none;"{/if} id="{$video.videoid}">
 		<a href="{videoLink($video)}">
 			<div class="video_thumb">
 				<img src="{getThumb vdetails=$video size=128x80}" {ANCHOR place="video_thumb" data=$video} class="img-responsive">

@@ -42,21 +42,21 @@
     <div class="row">
         <div class="col-md-3">
             <div class="form-group">
-            <label for="banned">Banned</label>
+            <label for="ban">Banned</label>
                 <select name="ban" id="ban" class="form-control">
-                   <option value="" >----</option>
-                    <option value="no" {if $smarty.get.ban=='no'} selected{/if}>No</option>
-                     <option value="yes" {if $smarty.get.ban=='yes'} selected{/if}>Yes</option>
+                   <option value="">----</option>
+                    <option value="no" {if $smarty.get.ban=='no'}selected{/if}>{lang code='no'}</option>
+                     <option value="yes" {if $smarty.get.ban=='yes'}selected{/if}>{lang code='yes'}</option>
                 </select>
             </div>
         </div>
         <div class="col-md-3">
             <div class="form-group">
-                <label for="featured">Featured</label>
+                <label for="featured">{lang code='featured'}</label>
                 <select name="featured" id="featured" class="form-control">
                    <option value="" >----</option>
-                    <option value="No" {if $smarty.get.featured=='No'} selected{/if}>No</option>
-                     <option value="Yes" {if $smarty.get.featured=='Yes'} selected{/if}>Yes</option>
+                    <option value="No" {if $smarty.get.featured=='No'}selected{/if}>{lang code='no'}</option>
+                     <option value="Yes" {if $smarty.get.featured=='Yes'}selected{/if}>{lang code='yes'}</option>
                 </select>
             </div>
         </div>
