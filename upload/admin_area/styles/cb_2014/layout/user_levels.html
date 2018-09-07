@@ -297,7 +297,7 @@
     <td>
       <label class="radio">
         {assign var=perm_plugin_code value=$perm.plugin_code}
-        <input type="radio" name="plugin_perm[{$perm.plugin_code}]" value="yes" id="{$plugin_perms.plugin_code}_yes" {if $plugin_perms.$perm_plugin_code!=='no'}checked{/if}/>{lang code='yes'}
+        <input type="radio" name="plugin_perm[{$perm.plugin_code}]" value="yes" id="{$plugin_perms.plugin_code}_yes" {if $plugin_perms.$perm_plugin_code!='no'}checked{/if}/>{lang code='yes'}
       </label>
       <label class="radio">
         <input type="radio" name="plugin_perm[{$perm.plugin_code}]" value="no" id="{$plugin_perms.plugin_code}_no" {if $plugin_perms.$perm_plugin_code==no}checked{/if}/>{lang code='no'}

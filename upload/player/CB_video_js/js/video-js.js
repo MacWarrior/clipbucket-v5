@@ -129,7 +129,7 @@ var BigPlayButton = function (_Button) {
  */
 
 
-BigPlayButton.prototype.controlText_ = 'Play Video';
+BigPlayButton.prototype.controlText_ = play_video_txt;
 
 _component2['default'].registerComponent('BigPlayButton', BigPlayButton);
 exports['default'] = BigPlayButton;

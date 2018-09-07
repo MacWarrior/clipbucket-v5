@@ -324,7 +324,7 @@
 							<div class="col-md-4">
 								<label for="videosSection">Enable video selection</label>
 								<select name="videosSection" id="videosSection" class="form-control">
-									<option value="yes" {if $row.videosSection!='no' }selected{/if}>{lang code='yes'}</option>
+									<option value="yes" {if $row.videosSection!='no'}selected{/if}>{lang code='yes'}</option>
 									<option value="no" {if $row.videosSection=='no'}selected{/if}>{lang code='no'}</option>
 								</select>
 							</div>
@@ -332,14 +332,15 @@
 							<div class="col-md-4">
 								<label for="facebook_embed">Enable facebook embed</label>
 								<select name="facebook_embed" id="facebook_embed" class="form-control">
-									<option value="yes" {if $row.facebook_embed!='no' } selected {/if}>{lang code='yes'}</option>
-									<option value="no" {if $row.facebook_embed=='no'} selected {/if}>{lang code='no'}</option>
+									<option value="yes" {if $row.facebook_embed!='no'} selected {/if}>{lang code='yes'}</option>
+									<option value="no" {if $row.facebook_embed=='no'}selected{/if}>{lang code='no'}</option>
 								</select>
 							</div>
 							<div class="col-md-4">
 								<div class="checkbox">
 									<label for="video_embed">
-										<input name="video_embed" type="checkbox" id="video_embed" value="1" {if $row.video_embed=='1'}checked{/if}/>Allow video embedding</label>
+										<input name="video_embed" type="checkbox" id="video_embed" value="1" {if $row.video_embed=='1'}checked{/if}/>Allow video embedding
+									</label>
 								</div>
 
 								<div class="checkbox">
