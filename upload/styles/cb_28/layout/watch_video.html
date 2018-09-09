@@ -186,34 +186,41 @@
 				</div>
 			</section>
 
-			<div class="clearfix comments-block" id="comments-block">
-				<div id="test1"></div>
-				<div id="reply" class="clearfix"> 
-					<div class="addComment clearfix">
-						<h2 class="com_count" id="com_count">
-							{$vdo.comments_count} <span>{lang code='comments'} </span>
-						</h2>
-						{if $myquery->is_commentable($vdo,'v')}
-							{include file="$style_dir/blocks/comments/add_comment.html" id=$vdo.videoid type=v}
+			<div class="clearfix comments-block">
+				{if $myquery->is_commentable($vdo,'v')}
+
+				<div class="collectionComments addComment">
+					<h2>{$vdo.comments_count}
+						{if $vdo.comments_count <= 1 }
+							{lang code='comment'}
 						{else}
-						<div class="alert alert-warning">
-							{lang code='comm_disabled_for_vid'}
+							{{lang code='comments'} }
+						{/if}
+					</h2>
+					<span id="show-comments" class="icon-down-arrow" title="{lang code='show_comments'}"></span>
+					<span id="hide-comments" class="icon-up-arrow" title="{lang code='hide_comments'}" style="display:none;"></span>
+
+					<div id="bloc-comment" style="display:none;">
+						{include file="$style_dir/blocks/comments/add_comment.html" id=$vdo.videoid type=v}
+
+						<div class="userComments">
+							<ul id="userCommentsList" style="margin-left:-40px;">
+							</ul>
+						</div>
+
+						{if $vdo.comments_count > 10}
+						<div class="clearfix text-center">
+							<button class="btn btn-loadmore" id="load-more-comments" page="2">{lang code='load_more'}</button>
 						</div>
 						{/if}
 					</div>
-
-					<div id="userCommentsList">
-						<div class="comments clearfix">
-							<ul id="comments-ul">
-							</ul>
-						</div>
-					</div>
-					{if $vdo.comments_count > 10}
-					<div class="clearfix text-center">
-						<button class="btn btn-loadmore" id="load-more-comments" page="2">{lang code='load_more'}</button>
-					</div>
-					{/if}
 				</div>
+
+				{else}
+				<div align="center" class="moveL no_comments">
+					{lang code='comm_disabled_for_vid'}
+				</div>
+				{/if}
 			</div>
 		</section>
 		<aside id="sidebar">
@@ -346,7 +353,7 @@
 				"playlist": playlist
 			},
 			beforeSend: function() {
-				$(__this).text("loading");
+				$(__this).text(lang_loading);
 			},
 
 			success: function(data) {
@@ -354,7 +361,7 @@
 				if (playlist_total <= loaded) {
 					$(__this).remove();
 				} else {
-					$(__this).text("Load More");
+					$(__this).text(lang_load_more);
 				}
 				if (data == 'none') {
 					$('#playlist-pull').remove();
@@ -408,7 +415,7 @@
 		var page = $(this).attr('page');
 		page = parseInt(page);
 		nextPage = page + 1;
-		$(this).text("Loading comments..")
+		$(this).text(lang_loading)
 		_cb.getCommentsNew(
 			'{$type}',
 			'{$vdo.videoid}',
@@ -417,8 +424,8 @@
 			'{$object_type}'
 			);
 		$(this).attr('page', nextPage);
-		$(this).text("Load More")
-	})
+		$(this).text(lang_load_more)
+	});
 
 	var resizePlayer = _cb.debounce(function() {
 		$cb_player.height( $cb_player.width() / aspect_ratio );

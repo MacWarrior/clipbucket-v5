@@ -49,7 +49,8 @@ class CBPhotos
 
         $basic_fields = array(
             'photo_id', 'photo_key', 'userid', 'photo_title', 'photo_description', 'photo_tags', 'collection_id',
-            'photo_details', 'date_added', 'filename', 'ext', 'active', 'broadcast', 'file_directory','views'
+            'photo_details', 'date_added', 'filename', 'ext', 'active', 'broadcast', 'file_directory','views',
+			'last_commented', 'total_comments'
         );
 
         $cb_columns->object( 'photos' )->register_columns( $basic_fields );
@@ -69,8 +70,9 @@ class CBPhotos
     function basic_fields_setup() {
         # Set basic video fields
         $basic_fields = array(
-            'photo_id', 'photo_key', 'userid', 'photo_title', 'photo_description', 'photo_tags', 'collection_id',
-            'photo_details', 'date_added', 'filename', 'ext', 'active', 'broadcast', 'file_directory'
+			'photo_id', 'photo_key', 'userid', 'photo_title', 'photo_description', 'photo_tags', 'collection_id',
+			'photo_details', 'date_added', 'filename', 'ext', 'active', 'broadcast', 'file_directory','views',
+			'last_commented', 'total_comments'
         );
 
         return $this->set_basic_fields( $basic_fields );

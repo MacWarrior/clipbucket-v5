@@ -174,32 +174,37 @@
 			</div>
 		</div>
 	</section>
-	<div class="clearfix comments-block" id="comments-block">
-		<div id="test1"></div>
-		<div id="reply" class="clearfix"> 
-			<div class="pad-bottom">
-				<div class="addComment clearfix">
-					<div class="com_count" id="com_count">
-						<h2><span>{$photo.total_comments} 
-							{if $photo.total_comments <= 1 }
-							{lang code='comment'} 
-							{else}
-							{{lang code='comments'} }
-							{/if}
-						</span></h2>
-					</div>
 
-					{if $myquery->is_commentable($photo,'p')}
-					{include file="$style_dir/blocks/comments/add_comment.html" id=$photo.photo_id type=p}
-					{else}
-					<div class="alert alert-warning">{lang code='Comments disabled for this photo'}</div>
-					{/if}
-				</div>
-				<div id="comments"></div>
-				<div id="userCommentsList">
+
+	<div class="clearfix comments-block">
+		{if $myquery->is_commentable($photo,'p')}
+
+		<div class="collectionComments addComment">
+			<h2>{$photo.total_comments}
+				{if $photo.total_comments <= 1 }
+					{lang code='comment'}
+				{else}
+					{{lang code='comments'} }
+				{/if}
+			</h2>
+			<span id="show-comments" class="icon-down-arrow" title="{lang code='show_comments'}"></span>
+			<span id="hide-comments" class="icon-up-arrow" title="{lang code='hide_comments'}" style="display:none;"></span>
+
+			<div id="bloc-comment" style="display:none;">
+				{include file="$style_dir/blocks/comments/add_comment.html" id=$photo.photo_id type='p'}
+
+				<div class="userComments">
+					<ul id="userCommentsList" style="margin-left:-40px;">
+					</ul>
 				</div>
 			</div>
 		</div>
+
+		{else}
+		<div align="center" class="moveL no_comments">
+			{lang code='Comments disabled for this photo'}
+		</div>
+		{/if}
 	</div>
 </section>
 
@@ -252,7 +257,6 @@
 {/section*}
 </div>
 
-
 <script type="text/javascript">
 	var seoUrls = "{$Cbucket->configs.seo}";
 	var srcFirst = "{$srcfirst}";
@@ -282,8 +286,7 @@ $(document).ready(function()
 		}
 	});
 
-	comments_voting = 'no';
-	getComments('p','{$photo.photo_id}','{$photo.last_commented}',1,'{$photo.total_comments}','{$object_type}')
+    getAllComments('p','{$object.photo_id}','{$object.last_commented}',1,'{$object.total_comments}','{$object_type}');
 	{rdelim}
 	);
 </script>

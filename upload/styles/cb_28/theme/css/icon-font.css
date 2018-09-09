@@ -29,8 +29,12 @@
 .icon-close:before {
     content: "\e90b";
 }
-.icon-down-arrow:before {
+.icon-down-arrow:before,
+.icon-up-arrow:before{
     content: "\e90c";
+}
+.icon-up-arrow{
+	transform: rotate(180deg);
 }
 .icon-facebook:before {
     content: "\e90d";

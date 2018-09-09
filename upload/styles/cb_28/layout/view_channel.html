@@ -444,7 +444,7 @@
 				if (data.length > 1) {
 					$(data).appendTo('#usr-photos').fadeIn('slow');
 					if (loadMore == true) {
-						$('<div class="clearfix text-center"><button id="more-channel-photos" class="btn btn-loadmore" dataLimit="'+loadLimit+'" dataHit="'+nextHit+'">Load More</button></div>').appendTo('.user_photos').fadeIn('slow');
+						$('<div class="clearfix text-center"><button id="more-channel-photos" class="btn btn-loadmore" dataLimit="'+loadLimit+'" dataHit="'+nextHit+'">{lang code='load_more'}</button></div>').appendTo('.user_photos').fadeIn('slow');
 					}
 
 					var moveTo = $( ".photoAppending" ).last().offset().top,

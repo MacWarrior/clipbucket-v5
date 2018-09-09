@@ -1444,6 +1444,27 @@ function getComments(type,type_id,last_update,pageNum,total,object_type,admin)
     });
 }
 
+function getAllComments(type,type_id,last_update,pageNum,total,object_type,admin){
+    $('#userCommentsList').html("<div style='padding:5px 0px;'>"+loading+"</div>");
+    $.ajax({
+        type: 'POST',
+        url: page,
+        data:  {
+            mode:'getComments',
+            page:pageNum,type:type,
+            type_id:type_id,
+            object_type : object_type,
+            last_update : last_update,
+            total_comments : total,
+            comments_voting : comments_voting,admin : admin
+        },
+        success: function(comments){
+            $("#userCommentsList").html(comments);
+        },
+        dataType: 'text'
+    });
+}
+
 function checkUncheckAll(theElement) {
     var theForm = theElement.form, z = 0;
 

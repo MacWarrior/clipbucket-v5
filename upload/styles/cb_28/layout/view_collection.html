@@ -69,16 +69,25 @@
 				{if $myquery->is_commentable($c,'collection')}
 
 				<div class="collectionComments addComment">
-					<h2>{lang code="comments"} ({$c.total_comments})</h2>
+					<h2>
+						{if $c.total_comments <= 1 }
+							{lang code='comment'}
+						{else}
+							{{lang code='comments'} }
+						{/if}
+						({$c.total_comments})
+					</h2>
+					<span id="show-comments" class="icon-down-arrow" title="{lang code='show_comments'}"></span>
+					<span id="hide-comments" class="icon-up-arrow" title="{lang code='hide_comments'}" style="display:none;"></span>
 
-					{if $myquery->is_commentable($c,'collection')}
-					{include file="$style_dir/blocks/comments/add_comment.html" id=$c.collection_id type='cl'}
-					{/if}
-				</div>
+					<div id="bloc-comment" style="display:none;">
+						{include file="$style_dir/blocks/comments/add_comment.html" id=$c.collection_id type='cl'}
 
-				<div class="userComments">
-					<ul id="userCommentsList" style="margin-left:-40px;">
-					</ul>
+						<div class="userComments">
+							<ul id="userCommentsList" style="margin-left:-40px;">
+							</ul>
+						</div>
+					</div>
 				</div>
 
 				{else}
@@ -128,27 +137,6 @@
 	</div>
 	<script>
 		$(document).ready(function(){
-			function getAllComments(type,type_id,last_update,pageNum,total,object_type,admin){
-				$('#userCommentsList').html("<div style='padding:5px 0px;'>"+loading+"</div>");
-				$.ajax({
-					type: 'POST',
-					url: page,
-					data:  {
-						mode:'getComments',
-						page:pageNum,type:type,
-						type_id:type_id,
-						object_type : object_type,
-						last_update : last_update,
-						total_comments : total,
-						comments_voting : comments_voting,admin : admin
-					},
-					success: function(comments){
-						$("#userCommentsList").html(comments);
-					},
-					dataType: 'text'
-				});
-			}
-			comments_voting = 'no';
 			getAllComments('cl','{$c.collection_id}','{$c.last_commented}',1,'{$c.total_comments}','{$object_type}');
 			//
 			var adHtml = $('.ad-holder').html();

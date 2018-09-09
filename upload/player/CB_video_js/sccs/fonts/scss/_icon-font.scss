@@ -80,8 +80,11 @@
 .icon-views:before {
 	content: "\e919";
 }
-/**/
-.icon-down-arrow:before {
+.icon-up-arrow{
+  transform: rotate(180deg);
+}
+.icon-down-arrow:before,
+.icon-up-arrow:before {
 	content: "\e901";
 }
 .icon-facebook:before {

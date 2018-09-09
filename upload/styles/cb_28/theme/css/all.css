@@ -1931,12 +1931,23 @@ h1 {
   background: #fff;
   padding: 16px; }
 
+.comments-block span.icon-down-arrow,
+.comments-block span.icon-up-arrow{
+	position: absolute;
+	top: 0;
+	right: 0;
+	font-size: 30px;
+	cursor: pointer;
+}
+
 .comments-box {
 	padding-top: 10px;
 }
 
 .addComment {
-  color: #2d2d2d; }
+	position: relative;
+	color: #2d2d2d;
+}
   .addComment h2 {
     font-size: 25px;
     line-height: 25px;

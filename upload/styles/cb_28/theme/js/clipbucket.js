@@ -18,10 +18,8 @@
 
 		this.hasLoaded = false;
 		this.perc_download = 0;
-		
-		
+
 		this.force_stop = false;
-		// this.remoteObjID = this.randomString();
 		this.remoteObjID = "";
 
 		this.current_menu = "";
@@ -34,7 +32,6 @@
 		this.collectionID = false;
 
 		this.keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-
 
 		this.ua = navigator.userAgent.toLowerCase();
 
@@ -878,14 +875,13 @@
 				
 				case 'new':
 				{
-
 					$.post(page, 
 					{ 	
 						mode : 'add_new_playlist',
 						id : vid,
 						objtype : objtype,
 						plname : $("#playlist_name").val()
-			},
+			        },
 					function(data)
 					{
 						if(!data)
@@ -1024,8 +1020,7 @@
 			if(!$.cookie("quick_list_box"))
 				$.cookie("quick_list_box","show")
 		};
-		
-		
+
 		this.get_group_info = function(Div,li){
 			var self = this;
 			if( $(Div).css("display")=="none") {
@@ -1036,7 +1031,6 @@
 			}
 		};
 
-	
 		this.show_menu = function(menu,load_from_hash){
 			var self = this;
 			if(window.location.hash && load_from_hash)
@@ -1062,8 +1056,7 @@
 				return true;
 			}
 		};
-		
-		
+
 		this.to_reply = function(cid){
 			var self = this;
 			$("#reply_to").val(cid);
@@ -1098,7 +1091,6 @@
 			},'json');
 			var self = this;
 		};
-
 
 		this.hq_toggle = function(nplayer_div,hq_div){
 			var self = this;
@@ -1203,9 +1195,7 @@
 									alert("No Data Returned");
 									$(result_con+"_"+objID).hide();
 									$("#"+form).show();
-								}
-								else
-								{
+								} else {
 									if(data.err)
 									{
 										alert(data.err);
@@ -1233,8 +1223,6 @@
 			var self = this;
 			document.locati= url;
 		};
-
-
 
 		this.get_item = function(obj,ci_id,cid,type,direction){
 			var self = this;
@@ -1501,7 +1489,6 @@
 			}
 		};
 
-
 		this.channelObjects = function(object,div,type,user,assign){
 			var self = this;
 			var obj = $(object), curRel = obj.attr('rel'),
@@ -1568,13 +1555,13 @@
 
 		this.checkUncheckAll = function(theElement) {
 		     var theForm = theElemeform, z = 0;
-			 
-				for(z=0; z<theForm.length;z++){
-					if(theForm[z].type == 'checkbox' && theForm[z].name != 'checkall'){
-					  theForm[z].checked = theElement.checked;
-					}
-				}
-				var self = this;
+
+            for(z=0; z<theForm.length;z++){
+                if(theForm[z].type == 'checkbox' && theForm[z].name != 'checkall'){
+                  theForm[z].checked = theElement.checked;
+                }
+            }
+            var self = this;
 		};
 			
 		/**
@@ -1659,9 +1646,9 @@
 				}
 				jqueryObj.html(this.loading_img);
 				$("#"+divSelector).load(ajaxPage+" #"+divSelector+"",function(response, status, xhr){
-						jqueryObj.html(PreserveHTML);
-						if(document.getElementById('flag_item'))
-							$('#flag_item').show();	
+                    jqueryObj.html(PreserveHTML);
+                    if(document.getElementById('flag_item'))
+                        $('#flag_item').show();
 				});
 			}
 		};
@@ -1727,30 +1714,6 @@
 
 			return output.toString();
 		};
-
-		this.getAllComments = function(type,type_id,last_update,pageNum,total,object_type,admin){
-			 var self = this;
-          $('#userCommentsList').html("<div style='padding:5px 0px;'>"+loading+"</div>");
-          $.ajax({
-            type: 'POST',
-            url: page,
-            data: {
-					mode:'getComments',
-					page:pageNum,
-					type:type,
-					type_id:type_id,
-					object_type : object_type,
-					last_update : last_update,
-					total_comments : total,
-					comments_voting : comments_voting,
-					admin : admin
-            },
-            success: function(comments){
-              $("#userCommentsList").html(comments);
-            },
-            dataType: 'text'
-          });
-      };
 
 		this.addToFav = function(type,id){
 			 var self = this;

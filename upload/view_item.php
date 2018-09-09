@@ -86,7 +86,7 @@ if($cbcollection->is_viewable($cid))
 							$info = $cbphoto->collection->get_collection_item_fields($cid,$photo['photo_id'],'ci_id');
 							if($info)
 							{
-								$photo = array_merge($photo,$info[0]);							
+								$photo = array_merge($photo,$info[0]);
 								increment_views($photo['photo_id'],'photo');
 								
 								assign('object',$photo);
@@ -135,7 +135,7 @@ if(isset($photo['photo_id']))
 {
 	$clist['exclude'] = $photo['photo_id']; 	
 }
-$photos = get_photos($clist);
+$photos = get_photos($photo['photo_id']);
 
 Assign('photos', $photos);
 

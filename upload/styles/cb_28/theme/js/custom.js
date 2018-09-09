@@ -179,8 +179,7 @@ $(document).ready(function()
     {
         $(".user_menu").addClass('logged-in');
         $(".user_menu").removeClass('logged-out');
-    }
-    else{
+    } else{
         $(".user_menu").removeClass('logged-in');
         $(".user_menu").addClass('logged-out');
     }
@@ -200,6 +199,21 @@ $(document).ready(function()
         $(".navbar-header").toggleClass('show-search');
     });
     loginHeight();
+
+    if( $("#show-comments") && $("#hide-comments") )
+    {
+        $("#show-comments").click(function(){
+            $("#show-comments").hide();
+            $("#hide-comments").show();
+            $('#bloc-comment').slideDown();
+        });
+
+        $("#hide-comments").click(function(){
+            $("#hide-comments").hide();
+            $("#show-comments").show();
+            $('#bloc-comment').slideUp();
+        });
+    }
 });
 
 function homePageVideos(qlist_items)
