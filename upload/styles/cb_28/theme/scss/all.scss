@@ -188,7 +188,7 @@ h1{
 	color: $grey-txt;
 	padding: 14px 0;
 	border-bottom: $default-border;
-	&:first-child{
+	&:first-child:not(.playlist){
 		padding: 10px 0 14px;
 	}
 	&:last-child{

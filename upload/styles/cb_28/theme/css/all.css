@@ -455,7 +455,7 @@ h1 {
   color: #757575;
   padding: 14px 0;
   border-bottom: 1px solid #d9d9d9; }
-  .featured-video:first-child {
+  .featured-video:first-child:not(.playlist) {
     padding: 10px 0 14px; }
   .featured-video:last-child {
     border: none; }
@@ -4567,7 +4567,7 @@ textarea#comment_box {
   .sidebar-items .featured-video {
     font-size: 14px;
     line-height: 14px; }
-    .sidebar-items .featured-video:first-child {
+    .sidebar-items .featured-video:first-child:not(.playlist) {
       padding: 0 0 14px; }
     .sidebar-items .featured-video .title {
       font-size: 15px;

@@ -14,7 +14,9 @@
 			</a>
 		</div>
 		<div class="col-md-9">
-			<a href="/watch_video.php?v={$video.videokey}">{display_clean($video.title)|truncate:80}</a>
+			<a href="/watch_video.php?v={$video.videokey}">
+				{display_clean($video.title)|truncate:80}
+			</a>
 			<br/>
 			<span class="maccountlabels">
 				<strong>{$video.date_added|niceTime}</strong>
@@ -24,22 +26,38 @@
 				{if $video.featured=='yes'}
 				<span class="label label-primary">{lang code='featured'}</span>
 				{/if}
-				<span class="label {if $video.active=='yes'}label-success{else}label-warning{/if} mlabel">{if $video.active=='yes'}{lang code='active'}{else}{lang code='inactive'}{/if}</span>
-				<span class="label {if $video.status=='Successful'}label-success{else}label-warning{/if}">{if $video.status=='Successful'}{lang code='successful'}{else}{lang code='processing'}{/if}</span>
-				<span class="label label-info">{lang code='viewed'} {$video.last_viewed|niceTime}</span>
+				<span class="label {if $video.active=='yes'}label-success{else}label-warning{/if} mlabel">
+				{if $video.active=='yes'}
+					{lang code='active'}
+				{else}
+					{lang code='inactive'}
+				{/if}
+				</span>
+				<span class="label {if $video.status=='Successful'}label-success{else}label-warning{/if}">
+				{if $video.status=='Successful'}
+					{lang code='successful'}
+				{else}
+					{lang code='processing'}
+				{/if}
+				</span>
+				<span class="label label-info">
+					{lang code='viewed'} {$video.last_viewed|niceTime}
+				</span>
 			</div>
 		</div>
 	</td>
 
 		{*<td>
 		<div class="clearfix">
-			{if $video.broadcast=='public'}
+		{if $video.broadcast=='public'}
 			<div class="col-md-1"><i class="icon-globe"></i></div>
-			{elseif $video.broadcast!='public'}
+		{elseif $video.broadcast!='public'}
 			<div class="col-md-1"><i class="icon-lock"></i></div>
-			{/if}
+		{/if}
 		</div>
-		<a href="view_user.php?uid={$video.userid}">{display_clean($video.username)}</a>
+		<a href="view_user.php?uid={$video.userid}">
+			{display_clean($video.username)}
+		</a>
 	</td>*}
 
 	<td>
@@ -72,16 +90,20 @@
 		</td>
 		<td>
 			<div>
-				<img class="edit-img-thumbnail" src="{getThumb vdetails=$video}">
+				<img class="edit-img-thumbnail" src="{getThumb vdetails=$video size=168x105}">
 				<p class="marginTop">{display_clean($video.title)|truncate:100}</p>
 				<div class="btn-group show">
-					<a class="btn btn-primary btn-sm" href="{videoLink vdetails=$video}">{lang code='view_video'}</a>
+					<a class="btn btn-primary btn-sm" href="{videoLink vdetails=$video}">
+						{lang code='view_video'}
+					</a>
 					<a class="btn btn-primary btn-sm" href="javascript:void(0);" onmousedown="delete_video('delete_icon_a','{$video.playlist_item_id}','{lang code="remove_playlist_item_confirm"}','?mode=edit_playlist&pid={$pid}&amp;delete_item={$video.playlist_item_id}')" id="delete_icon_a-{$video.playlist_item_id}">
 						{lang code="delete"}
 					</a>
 				</div>
 			</div>
-			<a href="javascript:void(0);" onmousedown="delete_video('delete_icon','{$video.playlist_item_id}','{lang code="remove_playlist_item_confirm"}','?mode=edit_playlist&pid={$pid}&amp;delete_item={$video.playlist_item_id}')" id="delete_icon-{$video.playlist_item_id}"><img src="{$imageurl}/dot.gif" border="0" class="delete_icon" /></a>
+			<a href="javascript:void(0);" onmousedown="delete_video('delete_icon','{$video.playlist_item_id}','{lang code="remove_playlist_item_confirm"}','?mode=edit_playlist&pid={$pid}&amp;delete_item={$video.playlist_item_id}')" id="delete_icon-{$video.playlist_item_id}">
+				<img src="{$imageurl}/dot.gif" border="0" class="delete_icon" />
+			</a>
 		</td>
 		<td width="100">
 			{$video.date_added|date_format}
@@ -95,48 +117,39 @@
 	</tr>
 	{/if}
 
-
 	{if $control=='basic'}
-
 	<div class="clearfix">
 		<input type="checkbox" name="check_vid[]" id="check_vid-{$video.videoid}" value="{$video.videoid}" />
 	</div>
-
 	<div class="clearfix">
 		<a href="{videoLink vdetails=$video}">
-			<img  src="{getThumb vdetails=$video}" width="130" height="80" id="thumbs_{$video.videoid}" class="vthumb" />
+			<img  src="{getThumb vdetails=$video}" width="130" height="80" id="thumbs_{$video.videoid}" class="vthumb"/>
 			<p class="marginTop">{display_clean($video.title)|truncate:100}</p>
 		</a>
 	</div>
-
 	<div class="clearfix">{$video.date_added|date_format}</div>
 	<div class="clearfix">{$video.views|number_format}</div>
 	<div class="clearfix">{$video.comments_count|number_format}</div>
-
 	{/if}
-<!-- changes made -->
+
 	{if $control=='onWatch'}
-	<div class="featured-video clearfix" {if $ajax_load=="yes"}style="display:none;"{/if} id="{$video.videoid}">
+	<div class="playlist featured-video clearfix" style="{if $ajax_load=="yes"}display:none;{/if}{if $video.videoid==$vdo.videoid}background: rgb(241, 236, 236);{/if}" id="{$video.videoid}"  >
 		<a href="{videoLink($video)}">
 			<div class="video_thumb">
-				<img src="{getThumb vdetails=$video size=128x80}" {ANCHOR place="video_thumb" data=$video} class="img-responsive">
-				<img src="{$theme}/images/thumb-ratio.png" alt="" class="thumb-ratio">
+				<img src="{getThumb vdetails=$video size=168x105}" {ANCHOR place="video_thumb" data=$video} class="img-responsive"/>
+				<img src="{$theme}/images/thumb-ratio.png" alt="" class="thumb-ratio"/>
 				<time datetime="2016-15-03" class="duration">
 					{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}
 				</time>
-			</div> <!--VIDEO_THUMB END-->
+			</div>
 		</a>
 		<div class="details_block">
-			<strong class="title"><a href="{videoLink($video)}">{display_clean($video.title)|truncate:50}</a></strong>
+			<strong class="title">
+				<a href="{videoLink($video)}">{display_clean($video.title)|truncate:50}</a>
+			</strong>
 			<div class="views-date">
 				<span>{$video.views}&nbsp;{lang code='views'}</span>
 			</div>
 		</div>
 	</div>
-<script>
-	if('{$video.videoid}'=='{$vdo.videoid}'){
-		$("#{$video.videoid}").css("background", "#f1ecec");
-	}
-</script>
-{/if}	
-<!-- changes made -->
+	{/if}
