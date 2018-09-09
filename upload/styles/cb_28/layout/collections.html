@@ -86,7 +86,9 @@
 			</div><!-- Pagination-->
 		</section>
 		<aside id="sidebar">
+			{if config("enable_advertisement")}
 			<div class="box-ad ad">{AD place='ad_300x250'}</div>
+			{/if}
 			{$row = $myquery->Get_Website_Details()}
 			{if $row.collectionsSection == 'yes'}
 			{$collections = $cbcollection->get_collections(['limit'=>5, 'active'=>'yes'])}

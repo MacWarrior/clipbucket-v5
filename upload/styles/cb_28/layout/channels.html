@@ -73,7 +73,9 @@
 			{include file="$style_dir/blocks/pagination.html"}
 		</section>
 		<aside id="sidebar">
+			{if config("enable_advertisement")}
 			<div class="box-ad ad">{AD place='ad_300x250'}</div>
+			{/if}
 			{$feature_users=get_users(['featured'=>'yes','limit'=>6])}
 			{if $feature_users}
 			<h2>{lang code="featured_users"}</h2>

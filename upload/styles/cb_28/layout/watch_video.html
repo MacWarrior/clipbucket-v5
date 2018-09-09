@@ -217,7 +217,9 @@
 			</div>
 		</section>
 		<aside id="sidebar">
+			{if config("enable_advertisement")}
 			<div class="box-ad ad">{AD place='ad_300x250'}</div>
+			{/if}
 
 			<h2>{if $smarty.get.play_list}{lang code='playlist_videos'}{elseif $relMode != 'ono'}{lang code='related_videos'}{else}{lang code='popular_videos'}{/if}</h2>
 			<div class="clearfix sidebar-items">
@@ -245,8 +247,12 @@
 					{/if}
 
 				<div class="clearfix" style="padding-bottom:10px;">
-					<a href="{$prev_videoLink}" class="btn btn-primary btn-xs" {if $prev_videoLink=='#'}onclick="_cb.throwHeadMsg('warning','{lang code=empty_next}', 3000, true)"{/if}><span class="glyphicon glyphicon-step-backward"></span> {lang code='previous'} </a>
-					<a href="{$next_videoLink}" class="btn btn-primary btn-xs" {if $next_videoLink=='#'}onclick="_cb.throwHeadMsg('warning','{lang code=empty_next}', 3000, true)"{/if}> {lang code='next'} <span class="glyphicon glyphicon-step-forward"></span></a>
+					<a href="{$prev_videoLink}" class="btn btn-primary btn-xs" {if $prev_videoLink=='#'}onclick="_cb.throwHeadMsg('warning','{lang code=empty_next}', 3000, true)"{/if}>
+						<span class="glyphicon glyphicon-step-backward"></span> {lang code='previous'}
+					</a>
+					<a href="{$next_videoLink}" class="btn btn-primary btn-xs" {if $next_videoLink=='#'}onclick="_cb.throwHeadMsg('warning','{lang code=empty_next}', 3000, true)"{/if}> {lang code='next'}
+						<span class="glyphicon glyphicon-step-forward"></span>
+					</a>
 				</div>
 
 				<div id="playlist_items">
