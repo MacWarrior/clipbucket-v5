@@ -10,29 +10,19 @@
 				{lang code='collection' assign='object_type'}
 				{uploadButton details=$c output='link' target="_blank" class='btn btn-success pull-right'}
 			</h1>
-			{if $c.type == 'photos'}
-				{$type = 'p'}
-			{else}
-				{$type = 'v'}
-			{/if}
 
-			{if $type == 'p'} 
-			<div id="photos" class="clearfix row">
+			{if $c.type == 'photos'}
+			<div class="photos clearfix">
 				{section name=list loop=$objects}
 				<div class="item-photo col-lg-4 col-md-4 col-sm-6 col-xs-12">
 				{include file="$style_dir/blocks/collection.html" object=$objects[list] display_type=view_collection type=$c.type}
 				</div>
 				{sectionelse}
-				<div class="item-photo col-xs-12">
-					<div class="well well-info">
-						{display_clean($c.collection_name)} has 0 items.
-					</div>
-				<div class="item-photo col-lg-4 col-md-4 col-sm-6 col-xs-6">
+				<div class="well well-info">{lang code='no_photos_found'}</div>
 				{/section}
 			</div>
 			{else}
 			<div class="videos clearfix">
-				<div class="clearfix row">
 				{if $objects}
 					{foreach $objects as $video}
 						<div class="item-video col-lg-3 col-md-4 col-sm-4 col-xs-12">
@@ -40,9 +30,8 @@
 						</div>
 					{/foreach}
 				{else}
-					<div class="well well-info">No Videos Found !</div>
+					<div class="well well-info">{lang code='no_videos_found'}</div>
 				{/if}
-				</div>
 			</div>
 			{/if}
 			<div align="center" class="clearfix">

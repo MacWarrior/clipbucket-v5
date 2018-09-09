@@ -8,8 +8,8 @@
 		{if $last_link !=''}<li> <a {$last_link}><i class="fa fa-angle-double-right"></i></a></li>{/if}
 	</ul>
 </div>
-{elseif $commentPagination}
-<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mtl">
+{elseif $pagination && $commentPagination}
+<div class="clearfix pagination-holder text-center">
   <ul align="center" class="pagination pagination-center">
 
         {if $first_link !=''}
