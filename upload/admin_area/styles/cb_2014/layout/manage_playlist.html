@@ -51,11 +51,9 @@
 									{display_clean($playlists[plist].playlist_name)|truncate:100}
 								</td>
 									<td valign="middle">
-									<span class="label label-primary"> <strong>{lang code='playlist_owner'} : 
-										<!-- changes made -->
+									<span class="label label-primary"> <strong>{lang code='playlist_owner'} :
 										{assign var=obj value=$userquery->get_user_details($playlists[plist].userid)}
 										{display_clean($obj['username'])}
-										<!-- changes made -->
 									</strong></span>
 									<span class="label label-primary"> <strong>{lang code='playlist_privacy'} : {$playlists[plist].privacy}</strong></span>
 									</td>

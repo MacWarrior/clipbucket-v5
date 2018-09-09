@@ -57,12 +57,10 @@
 
 
 {else}
-	<!-- changes made -->
 	<script>
-	var assigningClassToId = document.getElementById("comment_{$comment.comment_id}");
-	assigningClassToId.className += " heighlightacomment";
+		var assigningClassToId = document.getElementById("comment_{$comment.comment_id}");
+		assigningClassToId.className += " heighlightacomment";
 	</script>
-	<!-- changes made -->
 
 	<li id="comment_{$comment.comment_id}" class="clearfix"  {$comment_attr} style="padding:10px;">
 		<hr>
