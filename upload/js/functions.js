@@ -945,7 +945,6 @@ function to_reply(cid)
 
 function spam_comment(cid,type,typeid)
 {
-
     $.post(page,
         {
             mode : 'spam_comment',

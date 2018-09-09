@@ -2520,13 +2520,10 @@
 		}
 		$difference = round($difference);
 	   
-		if($difference != 1) {
+		if($difference > 1) {
 			// *** Dont apply plural if terms ending by a "s". Typically, french word for "month" is "mois".
 			if(substr($periods[$j], -1) != "s") {
-				$periods[$j]= $periods[$j];
-				if($lang_obj->lang=='en'){
-					$periods[$j].= 's';
-				}
+				$periods[$j] .= 's';
 			}
 		}
 		return sprintf(lang($tense),$difference,$periods[$j]);

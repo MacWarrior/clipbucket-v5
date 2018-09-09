@@ -62,7 +62,7 @@
 		assigningClassToId.className += " heighlightacomment";
 	</script>
 
-	<li id="comment_{$comment.comment_id}" class="clearfix"  {$comment_attr} style="padding:10px;">
+	<li id="comment_{$comment.comment_id}" class="clearfix" {$comment_attr}>
 		<hr>
 		<div class="comments-box clearfix">
 			{$user_id=$comment.userid}
@@ -106,13 +106,11 @@
 		</div>
 		<div class="reply-box-{$comment.comment_id} clearfix" style="display:none;"></div>
 	<ul class="comments-reply-{$comment.comment_id}">
-
 		{if $comment.children}
 			{$child_comment = $comment.children}
 			{foreach from=$child_comment item=replies}
 				{foreach from=$replies|@array_reverse item=reply}
 					{if $reply@iteration < 4}
-
 		<li id="reply-{$comment.comment_id}" class="commentBox clearfix reply-{$reply.comment_id}">
 			<div class="reply-holder">
 				<div class="comments-box clearfix">

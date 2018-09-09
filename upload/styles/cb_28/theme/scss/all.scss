@@ -1939,7 +1939,6 @@ textarea#comment_box{
 		@include list-style();
 		
 		> li {
-			padding:0 0 10px;
 			position: relative;
 			&:last-child{
 				padding: 0;
