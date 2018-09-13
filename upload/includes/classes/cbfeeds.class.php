@@ -125,8 +125,7 @@ class cbfeeds
 		
 		if(!in_array($object,$objects))
 			return false;
-		else
-			return $object;
+		return $object;
 	}
 
 
@@ -281,8 +280,7 @@ class cbfeeds
 						}
 					}
 					break;
-					
-					
+
 					case "create_group":
 					case "join_group":
 					{
@@ -346,8 +344,7 @@ class cbfeeds
 						}
 					}
 					break;
-					
-					
+
 					case "add_collection":
 					{		
 						$collection = $cbcollection->get_collection($object_id);			
@@ -381,7 +378,7 @@ class cbfeeds
 						{
 							$this->deleteFeed($uid,$feed['file']);
 							$remove_feed = true;
-						}else{
+						} else {
 							
 							//Content Title
 							$farr['title'] = $comment['title'];

@@ -160,8 +160,8 @@
 				}
 			}
 		}
-		$content = display_clean($array['content']);
-		$subject = display_clean($array['subject']);
+		$content = $array['content'];
+		$subject = $array['subject'];
 		$to		 = $array['to'];
 		$from	 = $array['from'];
 		$to_name = $array['to_name'];

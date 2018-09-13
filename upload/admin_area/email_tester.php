@@ -14,59 +14,39 @@
 		try
 		{
 			$to_email = $_POST['to_email'];
-
 			if( empty($to_email) ) {
 				throw new Exception('Please provide a recipient email');
 			}
 
 			$to_email = filter_var($to_email, FILTER_SANITIZE_EMAIL);
 			$to_email = filter_var($to_email, FILTER_VALIDATE_EMAIL);
-
 			if( $to_email === false ) {
 				throw new Exception('Please provide a valid recipient email address');
 			}
 
 			$to_name = $_POST['to_name'];
-
 			if( empty($to_name) || !is_string($to_name) ) {
 				$to_name = $to_email;
 			}
 
 			$from_email = $_POST['from_email'];
-
 			if( empty( $from_email ) ) {
 				$from_email = SUPPORT_EMAIL;
 			}
 
 			$from_email = filter_var( $from_email, FILTER_SANITIZE_EMAIL );
 			$from_email = filter_var( $from_email, FILTER_VALIDATE_EMAIL );
-
 			if( $from_email === false ) {
 				throw new Exception('Please provide a valid sender email address');
 			}
 
 			$from_name = $_POST['from_name'];
-
-			if( empty($from_name) || !is_string($from_name) ) {
-				$from_name = 'Tune.pk';
-			}
-
-			$subject = $_POST['subject'];
-			$subject = trim($subject);
-
-			if( empty($subject) ) {
-				throw new Excpetion('Please provide test email subject');
-			}
-
-			$body = $_POST['body'];
-			$body = trim($body);
-
-			if( empty($body) ) {
-				throw new Excpetion('Please provide test email body');
+			if( empty($from_name) || !is_string($from_name) )
+			{
+				$from_name = $Cbucket->configs['site_title'];
 			}
 
 			$code = $_POST['email_template'];
-
 			if( $code != -1 )
 			{
 				$template = $cbemail->get_template($code);
@@ -85,6 +65,16 @@
 					$subject = $cbemail->replace($template['email_template_subject'], $variables);
 					$body = $cbemail->replace($template['email_template'], $variables);
 				}
+			} else {
+				$subject = trim($_POST['subject']);
+				if( empty($subject) || $subject == '' ) {
+					throw new Exception('Please provide test email subject');
+				}
+
+				$body = trim($_POST['body']);
+				if( empty($body) || $body == '' ) {
+					throw new Exception('Please provide test email body');
+				}
 			}
 
 			$mail = array(
@@ -99,13 +89,13 @@
 			$test = cbmail( $mail );
 
 			if ( $test == false ) {
-				e( lang( sprintf( 'mail_not_send', $to_email ) ) );
+				e( sprintf( lang('mail_not_send'), $to_email ) );
 			} else {
-				e( lang( sprintf( 'mail_send', $to_email ) ), 'm' );
+				e( sprintf( lang('mail_send'), $to_email ), 'm' );
 			}
 
 		} catch( Exception $e ) {
-			e( lang($e->getMessage()) );
+			e( $e->getMessage() );
 		}
 	}
 
