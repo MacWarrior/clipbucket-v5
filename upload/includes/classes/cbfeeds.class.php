@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is used
  * to create user feeds
@@ -8,7 +7,6 @@
  
 class cbfeeds
 {
-	
 	/**
 	 * Function used to create a user feed
 	 * @param array
@@ -28,10 +26,11 @@ class cbfeeds
 			$user = $userquery->get_user_details($uid);
 		}
 	}
-	
-	
+
+
 	/**
 	 * Function used to add feed in user feed file
+	 *
 	 * @param array
 	 * action => upload,joined,comment,created
 	 * object => video, photo, group
@@ -39,14 +38,16 @@ class cbfeeds
 	 * object_details => details of object
 	 * uid => user id
 	 * udetails => user details array
+	 *
+	 * @return bool
 	 */
 	function addFeed($feed)
 	{
 		if(!isSectionEnabled('feeds'))
 			return false;
-		global $userquery;
+
 		$uid = $feed['uid'];
-		
+
 		if(!$uid)
 			return false;
 
@@ -55,8 +56,7 @@ class cbfeeds
 		//Verifying feed action and object
 		$action = $this->action($feed['action']);
 		$object = $this->getObject($feed['object']);
-		
-		
+
 		if(!$action || !$object)
 			return false;
 
@@ -85,15 +85,16 @@ class cbfeeds
 		$file = fopen($feedFile,'a+');
 		fwrite($file,$feed);
 		fclose($file);
-		
-		//Tada <{^-^}>
-		
 	}
-	
-	
+
+
 	/**
 	 * Function used to get action of feed
-	 * it will verify weather actio is valid or not
+	 * it will verify weather action is valid or not
+	 *
+	 * @param $action
+	 *
+	 * @return bool
 	 */
 	function action($action)
 	{
@@ -104,14 +105,17 @@ class cbfeeds
 		
 		if(!in_array($action,$objects))
 			return false;
-		else
-			return $action;
+		return $action;
 	}
-	
-	
+
+
 	/**
 	 * Function used to get object of feed
 	 * it will verify weather actio is valid or not
+	 *
+	 * @param $object
+	 *
+	 * @return bool
 	 */
 	function getObject($object)
 	{
@@ -124,10 +128,14 @@ class cbfeeds
 		else
 			return $object;
 	}
-	
-	
+
+
 	/**
 	 * Function used to get feed file
+	 *
+	 * @param $uid
+	 *
+	 * @return string
 	 */
 	function getFeedFile($uid)
 	{
@@ -139,9 +147,13 @@ class cbfeeds
 		$file = $ufeedDir.'/'.$time.'.feed';	
 		return $file;
 	}
-	
+
 	/**
 	 * Function used to get user feed files
+	 *
+	 * @param null $uid
+	 *
+	 * @return array|bool
 	 */
 	function getUserFeedsFiles($uid=NULL)
 	{
@@ -153,7 +165,7 @@ class cbfeeds
 		if(file_exists($ufeedDir))
 		{
 			$time = time();
-			$time = substr($timem,0,strlen($time)-3);
+			$time = substr($time,0,strlen($time)-3);
 			
 			$files = glob($ufeedDir.'/'.$time.'*.feed');
 			rsort($files);
@@ -168,10 +180,13 @@ class cbfeeds
 		}
 		return false;
 	}
-	
-	
+
 	/**
 	 * Function used to get user feed
+	 *
+	 * @param $user
+	 *
+	 * @return array|bool
 	 */
 	function getUserFeeds($user)
 	{
@@ -183,7 +198,7 @@ class cbfeeds
 		if(!$feeds)
 			return false;				
 		$newFeeds = array();
-		$coutn = 0;
+		$count = 0;
 		foreach($feeds as $feed)
 		{
 			$count++;
@@ -191,7 +206,7 @@ class cbfeeds
 			if($count>$allowed_feeds)
 				break;
 			$feedArray = json_decode($feed['content'],true);
-			if($feed && count($feedArray>0))
+			if($feed && count($feedArray)>0)
 			{
 				$remove_feed = false;
 				$farr = $feedArray;
@@ -199,11 +214,11 @@ class cbfeeds
 				$action = $farr['action'];
 				$object = $farr['object'];
 				$object_id = $farr['object_id'];
-				$farr['user'] = $user;
-				$farr['file']			= getName($feed['file']);
+				$farr['user'] 	  = $user;
+				$farr['file']	  = getName($feed['file']);
 				$farr['datetime'] = nicetime($farr['time'],true);
 				
-				$userlink = '<a href="'.$userquery->profile_link($user).'">'.$user['username'].'</a>';
+				$userlink = '<a href="'.$userquery->profile_link($user).'">'.display_clean($user['username']).'</a>';
 				//Creating Links
 				switch($action)
 				{
@@ -232,8 +247,6 @@ class cbfeeds
 							
 							$farr['icon'] = 'images.png';
 						}
-						
-						
 					}
 					break;
 					
@@ -246,17 +259,15 @@ class cbfeeds
 						{
 							$this->deleteFeed($uid,$feed['file']);
 							$remove_feed = true;
-						}elseif(!video_playable($video))
-						{
+						} elseif(!video_playable($video)) {
 							$remove_feed = true;
-						}else{
-							
+						} else {
 							//Content Title
 							$farr['title'] = $video['title'];
 							if($action=='upload_video')
-								$farr['action_title'] = sprintf(lang('user_has_uploaded_new_video'),$userlink);
+								$farr['action_title'] = sprintf(lang('user_has_uploaded_new_video'), $userlink);
 							if($action=='add_favorite')
-								$farr['action_title'] = sprintf(lang('user_has_favorited_video'),$userlink);
+								$farr['action_title'] = sprintf(lang('user_has_favorited_video'), $userlink);
 							$farr['link'] 			= videoLink($video);
 							$farr['object_content'] = $video['description'];
 							$farr['thumb'] 			= get_thumb($video);
@@ -265,7 +276,7 @@ class cbfeeds
 							
 							$farr['icon'] = 'video.png';
 							
-							if($action=='add_favorite')
+							if($action == 'add_favorite')
 								$farr['icon'] = 'heart.png';
 						}
 					}
@@ -281,11 +292,9 @@ class cbfeeds
 						{
 							$this->deleteFeed($uid,$feed['file']);
 							$remove_feed = true;
-						}elseif(!$cbgroup->is_viewable($group))
-						{
+						} elseif(!$cbgroup->is_viewable($group)) {
 							$remove_feed = true;
-						}else{
-							
+						} else {
 							//Content Title
 							$farr['title'] = $group['group_name'];
 							
@@ -307,10 +316,7 @@ class cbfeeds
 							$joinlink = $cbgroup->group_opt_link($group,'join');
 							if($joinlink)
 							{
-								if(SEO=="yes")
-									$joinlink = group_link(array('details'=>$group)).'?join=yes"';
-								else
-									$joinlink = group_link(array('details'=>$group)).'&join=yes"';
+								$joinlink = group_link(array('details'=>$group)).'&join=yes"';
 								$farr['links'][] = array('link'=>$joinlink,'text'=>lang('join'));
 							}
 						}
@@ -332,10 +338,8 @@ class cbfeeds
 						{
 							$this->deleteFeed($uid,$feed['file']);
 							$remove_feed = true;
-						}else
-						{
-							
-							$friendlink = '<a href="'.$userquery->profile_link($friend).'">'.$friend['username'].'</a>';
+						} else {
+							$friendlink = '<a href="'.$userquery->profile_link($friend).'">'.display_clean($friend['username']).'</a>';
 							$farr['action_title']  = sprintf(lang("user_is_now_friend_with_other")
 							,$userlink,$friendlink);
 							$farr['icon'] = 'user_add.png';
@@ -351,8 +355,7 @@ class cbfeeds
 						{
 							$this->deleteFeed($uid,$feed['file']);
 							$remove_feed = true;
-						}else
-						{
+						} else {
 							$farr['action_title'] = sprintf(lang('user_has_created_new_collection'),$userlink);
 							$farr['thumb'] = $cbcollection->get_thumb($collection,'small');
 							$farr['title'] = $collection['collection_name'];
@@ -407,10 +410,13 @@ class cbfeeds
 		}
 		return $newFeeds;
 	}
-	
-	
+
+
 	/**
 	 * Function used to delete feed
+	 *
+	 * @param $uid
+	 * @param $feedid
 	 */
 	function deleteFeed($uid,$feedid)
 	{

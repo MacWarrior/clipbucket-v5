@@ -50,7 +50,7 @@
  	    <td width="100">{$collection.views|number_format}</td>
  	    <td width="100">
         <a onclick="collection_actions('collectionItem','remove_collection_item','{$collection.videoid}','#removeItemContainer','{$type}','{$c.collection_id}')" id="collectionItem{$collection.videoid}" href="javascript:void(0);"><img src="{$imageurl}/cancel.png" width="16" height="16" /></a>
-        <div id="removeItemContainer_{$collection.videoid}" style="display:none"></div>
+        <div id="removeItemContainer_{$collection.videoid}" style="display:none;"></div>
         </td>
  	    </tr>
  	  </table>
@@ -74,7 +74,7 @@
  	    <td width="100">{$collection.views|number_format}</td>
  	    <td width="100">
         <a onclick="collection_actions('collectionItem','remove_collection_item','{$collection.photo_id}','#removeItemContainer','{$type}','{$c.collection_id}')" id="collectionItem{$collection.photo_id}" href="javascript:void(0);"><img src="{$imageurl}/cancel.png" width="16" height="16" /></a>
-        <div id="removeItemContainer_{$collection.photo_id}" style="display:none"></div>
+        <div id="removeItemContainer_{$collection.photo_id}" style="display:none;"></div>
         </td>
  	    </tr>
  	  </table>

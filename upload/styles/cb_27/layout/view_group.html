@@ -137,7 +137,7 @@
                                 <a class="btn btn-primary" href="#" onclick="$('#groupAddNewTopic').toggle();return false;">{lang code="grp_add_new_topic"}</a>
                             </span>
                         </div>
-                        <div id="groupAddNewTopic" {if $smarty.post.add_topic && error()}{else}style="display:none"{/if}>
+                        <div id="groupAddNewTopic" {if $smarty.post.add_topic && error()}{else}style="display:none;"{/if}>
                             {include file="$style_dir/blocks/group/add_topic.html"}
                         </div>
                         {include file="$style_dir/blocks/group/group_topics.html" group=$group}

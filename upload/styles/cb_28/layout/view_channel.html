@@ -17,7 +17,7 @@
 	<div class="clearfix">
 		{include file="$style_dir/blocks/view_channel/channel_header.html"}
 	</div>
-	<div class="clearfix report-block" id="report-user-form" style="display:none">
+	<div class="clearfix report-block" id="report-user-form" style="display:none;">
 		{show_flag_form id=$user.userid type=user}	
 	</div>
 	<div class="clearfix">
@@ -32,19 +32,19 @@
 				<img src="{$theme}/images/player-ratio.png" class="playerRatio">
 			</div>
 			{/if}
-			<div id="messageFav" class="alert alert-info marginTop" style="display:none"></div>
+			<div id="messageFav" class="alert alert-info marginTop" style="display:none;"></div>
 			<div class="channel-tabs flat-tabs clearfix">
 				<ul class="clearfix nav nav-tabs">
 					<li>
 						<a href="#user-info" data-toggle="tab">{lang code='info'}</a>
 					</li>
-					{if isSectionEnabled('videos') && $u_control.show_my_videos != 'no'}
+					{if isSectionEnabled('videos') && $u_control.show_my_videos!='no'}
 					<li class="active">
 						<a href="#user-videos" data-toggle="tab">{lang code='videos'}</a>
 					</li>
 					{/if}
 					{if isSectionEnabled('photos') && $u_control.show_my_photos != 'no'}
-					<li {if $u_control.show_my_videos == 'no' || !isSectionEnabled('videos')}class="active"{/if}>
+					<li {if $u_control.show_my_videos=='no' || !isSectionEnabled('videos')}class="active"{/if}>
 						<a href="#user-photos" data-toggle="tab">{lang code='photos'}</a>
 					</li>
 					<li>
@@ -60,12 +60,12 @@
 							<ul class="clearfix desc-list">
 								{if $p.profile_title}
 								<li>
-									<strong>{lang code='Title'}</strong>:{$p.profile_title}
+									<strong>{lang code='title'}</strong>:{display_clean($p.profile_title)}
 								</li>
 								{/if}
 								{if $p.profile_desc}
 								<li>
-									<strong>{lang code='Description'}</strong>:{$p.profile_desc}
+									<strong>{lang code='description'}</strong>:{display_clean($p.profile_desc)}
 								</li>
 								{/if}
 								<li>
@@ -77,20 +77,20 @@
 								<li>
 									<strong>{lang code='online_status'}</strong>:&nbsp;
 									{if $userquery->isOnline($u.last_active,$p.online_status)}
-										<span style="color:#060">{lang code='online'}</span>
+										<span style="color:#060;">{lang code='online'}</span>
 									{else}
-										<span style="color:#ed0000">{lang code='offline'}</span>
+										<span style="color:#ed0000;">{lang code='offline'}</span>
 									{/if}
 								</li>
 							</ul>
 							{assign var='channel_profile_fields' value=$userquery->load_user_fields($p,'profile')}
 							{foreach from=$channel_profile_fields item=field_group name=profile_groups}
 							{if $smarty.foreach.profile_groups.iteration==2}
-							<div id="moreDetailsDIV" style="display:none">
+							<div id="moreDetailsDIV" style="display:none;">
 							{/if}
 							{if $field_group.channel_view !='no'}     
 								<div class="clearfix">
-									<h2>{$field_group.group_name}</h2>
+									<h2>{display_clean($field_group.group_name)}</h2>
 									<ul class="clearfix desc-list">
 										{if $field_group.group_id=='profile_location'}
 										<li>
@@ -103,23 +103,23 @@
 										<li>
 										{if $field.type !='textarea' && $field.type !='text' && $field.type !='textfield'}
 											<strong>{$field.title}</strong>:&nbsp;{input_value input=$field}
-											{elseif $field.type =='textarea'}
+										{elseif $field.type =='textarea'}
 											<strong>{$field.title}</strong>:&nbsp;{$field.value|nl2br}
-											{else}
+										{else}
 											<strong>{$field.title}</strong>:&nbsp;{input_value input=$field}
 										{/if}
 										</li>
 										{/if}
 										{if $field_group.group_id=='profile_basic_info' 
 											  && $field.name=='relation_status'
-												  && $p.show_dob!='no'}
+											  && $p.show_dob!='no'}
 										<li>
 											<strong>{lang code='user_date_of_birth'}</strong>:&nbsp;{$u.dob}
 										</li>
 										{/if}
 										{/foreach}
 										{$usercat = $userquery->get_category_name($user.category)}
-										<li><strong>{lang code='category'}: </strong>{$usercat.category_name}</li>
+										<li><strong>{lang code='category'}: </strong>{display_clean($usercat.category_name)}</li>
 									</ul>
 								</div>
 							{/if}

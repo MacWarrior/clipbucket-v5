@@ -2,10 +2,10 @@
     <a href="#" class="btn btn-primary btn-sm pull-right current after" onclick="$('#searchdiv').toggle();return false;" style="margin-bottom: 0px;position: relative; top: 15px;">
         Advanced Search
         <i class="glyphicon glyphicon-chevron-down down"></i>
-         <i class="glyphicon glyphicon-chevron-up up" style="display:none"></i>
+         <i class="glyphicon glyphicon-chevron-up up" style="display:none;"></i>
     </a>
 </div>
-<div class="search_box well" id="searchdiv" {if $smarty.cookies.show_searchdiv_search!='show'} style="display:none"{/if}>
+<div class="search_box well" id="searchdiv" {if $smarty.cookies.show_searchdiv_search!='show'} style="display:none;"{/if}>
   <form action="photo_manager.php" method="get" name="search_photos">
     <div class="row">
       <div class="col-md-4">

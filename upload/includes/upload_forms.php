@@ -47,7 +47,7 @@
             <input type="button" name="remoteUploadBttn" id="remoteUploadBttn" value="'.lang('upload').'" 
 			onClick="_cb.'.get_remote_url_function().'" class="cbSubmitUpload">
             <input type="button" name="remoteUploadBttnStop" id="remoteUploadBttnStop" value="'.lang('cancel').'"   
-			class="cbSubmitUpload" style="display:none"/>
+			class="cbSubmitUpload" style="display:none;"/>
         </div>
    	 	</div>
    	 	<div id="remoteForm"></div> ';

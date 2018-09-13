@@ -778,7 +778,7 @@ class userquery extends CBCategory{
 	 */
 	function send_activation_code($email)
 	{
-		global $db,$cbemail;
+		global $cbemail;
 		$udetails = $this->get_user_details($email);
 		
 		if(!$udetails || !$email)
@@ -810,9 +810,12 @@ class userquery extends CBCategory{
 	{
 		return $this->send_activation_code($email);
 	}
-	
+
 	/**
 	 * Function used to send welcome email
+	 *
+	 * @param      $user
+	 * @param bool $update_email_status
 	 */
 	function send_welcome_email($user,$update_email_status=FALSE)
 	{
@@ -881,9 +884,12 @@ class userquery extends CBCategory{
 
 	function change_user_pass($array){ return $this->ChangeUserPassword($array); }
 	function change_password($array){ return $this->ChangeUserPassword($array); }
-	
+
 	/**
 	 * Function used to add contact
+	 *
+	 * @param $uid
+	 * @param $fid
 	 */
 	function add_contact($uid,$fid)
 	{
@@ -911,14 +917,12 @@ class userquery extends CBCategory{
 			
 			//Sending friendship request email
 			$tpl = $cbemail->get_template('friend_request_email');
-			
-			
-			$more_var = array
-			(
-			 '{reciever}'	=> $friend['username'],
-			 '{sender}'		=> $sender['username'],
-			 '{sender_link}'=> $this->profile_link($sender),
-			 '{request_link}'=> '/manage_contacts.php?mode=request&confirm='.$uid
+
+			$more_var = array(
+				'{reciever}'	=> $friend['username'],
+				'{sender}'		=> $sender['username'],
+				'{sender_link}'=> $this->profile_link($sender),
+				'{request_link}'=> '/manage_contacts.php?mode=request&confirm='.$uid
 			);
 			if(!is_array($var))
 				$var = array();
@@ -931,9 +935,14 @@ class userquery extends CBCategory{
 		}
 		
 	}
-	
+
 	/**
 	 * Function used to check weather users are confirmed friends or not
+	 *
+	 * @param $uid
+	 * @param $fid
+	 *
+	 * @return bool
 	 */
 	function is_confirmed_friend($uid,$fid)
 	{
@@ -942,12 +951,16 @@ class userquery extends CBCategory{
 					" (userid='$uid' AND contact_userid='$fid') OR (userid='$fid' AND contact_userid='$uid') AND confirmed='yes'" );
 		if($count[0]>0)
 			return true;
-		else
-			return false;
+		return false;
 	}
-	
+
 	/**
 	 * function used to check weather users are firends or not
+	 *
+	 * @param $uid
+	 * @param $fid
+	 *
+	 * @return bool
 	 */
 	function is_friend($uid,$fid)
 	{
@@ -956,12 +969,18 @@ class userquery extends CBCategory{
 					" (userid='$uid' AND contact_userid='$fid') OR (userid='$fid' AND contact_userid='$uid')" );
 		if($count[0]>0)
 			return true;
-		else
-			return false;
+		return false;
 	}
-	
+
 	/**
 	 * Function used to check weather user has already requested friendship or not
+	 *
+	 * @param        $uid
+	 * @param        $fid
+	 * @param string $type
+	 * @param null   $confirm
+	 *
+	 * @return bool
 	 */
 	function is_requested_friend($uid,$fid,$type='out',$confirm=NULL)
 	{
@@ -973,18 +992,20 @@ class userquery extends CBCategory{
 			
 		if($type=='out')
 			$count = $db->count(tbl($this->dbtbl['contacts']),"contact_id"," userid='$uid' AND contact_userid='$fid' $query" );
-			
 		else
 			$count = $db->count(tbl($this->dbtbl['contacts']),"contact_id"," userid='$fid' AND contact_userid='$uid' $query" );
 
 		if($count[0]>0)
 			return true;
-		else
-			return false;
+		return false;
 	}
-	
+
 	/**
 	 * Function used to confirm friend
+	 *
+	 * @param      $uid
+	 * @param      $rid
+	 * @param bool $msg
 	 */
 	function confirm_friend($uid,$rid,$msg=TRUE)
 	{
@@ -993,8 +1014,7 @@ class userquery extends CBCategory{
 		{
 			if($msg)
 			e(lang("friend_confirm_error"));
-		}else
-		{
+		} else {
 			addFeed(array('action' => 'add_friend','object_id' => $rid,'object'=>'friend','uid'=>$uid));
 			addFeed(array('action' => 'add_friend','object_id' => $uid,'object'=>'friend','uid'=>$rid));
 			
@@ -1009,11 +1029,10 @@ class userquery extends CBCategory{
 			$friend = $this->get_user_details($rid);
 			$sender = $this->get_user_details($uid);
 			
-			$more_var = array
-			(
-			 '{reciever}'	=> $friend['username'],
-			 '{sender}'		=> $sender['username'],
-			 '{sender_link}'=> $this->profile_link($sender),
+			$more_var = array(
+				'{reciever}'	=> $friend['username'],
+				'{sender}'		=> $sender['username'],
+				'{sender_link}'=> $this->profile_link($sender),
 			);
 			if(!is_array($var))
 				$var = array();
@@ -1028,24 +1047,22 @@ class userquery extends CBCategory{
 			
 			//Logging Friendship
 			
-			$log_array = array
-			(
-			 'success'=>'yes',
-			 'action_obj_id' => $friend['userid'],
-			 'details'=>"friend with ".$friend['username']
+			$log_array = array(
+				'success'=>'yes',
+				'action_obj_id' => $friend['userid'],
+				'details'=>"friend with ".$friend['username']
 			 );
 			
 			insert_log('add_friend',$log_array);
 			
-			$log_array = array
-			(
-			 'success'=>'yes',
-			 'username' => $friend['username'],
-			 'userid' => $friend['userid'],
-			 'userlevel' => $friend['level'],
-			 'useremail' => $friend['email'],
-			 'action_obj_id' => $insert_id,
-			 'details'=> "friend with ".userid()
+			$log_array = array(
+				'success'=>'yes',
+				'username' => $friend['username'],
+				'userid' => $friend['userid'],
+				'userlevel' => $friend['level'],
+				'useremail' => $friend['email'],
+				'action_obj_id' => $insert_id,
+				'details'=> "friend with ".userid()
 			);
 			
 			//Login Upload

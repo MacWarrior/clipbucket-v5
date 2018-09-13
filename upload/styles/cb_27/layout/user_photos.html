@@ -6,8 +6,8 @@
         <div class="row">
             <span style="margin-left: 24px">
             {assign var=category value=$userquery->get_category($u.category)}
-            {$u.username|capitalize}</a> ({$category.category_name})
-            <div class="btn-group pull-right" style="margin-right: 10px">
+            {display_clean($u.username|capitalize)}</a> ({display_clean($category.category_name)})
+            <div class="btn-group pull-right" style="margin-right:10px;">
                 {if !$isSubscribed && $p.allow_subscription!='no'}
                 <button class="btn btn-primary btn-sm" onclick="subscriber('{$u.userid}','subscribe_user','result_cont')">{lang code='subscribe'}</button>
                 {elseif $isSubscribed}
@@ -21,14 +21,10 @@
             </div>
                 </span>
              <div class="action_box" id="result_cont" style="display:none; margin:15px 0 0 15px; "></div>
-            <hr style="margin-bottom: 6px; margin-top: 8px">
+            <hr style="margin-bottom:6px; margin-top:8px;">
          <div class="col-md-3">
              {include file="$style_dir/blocks/view_channel/channel_right.html"}
          </div>
-       
-       
-      
-    
             <div class="col-md-9">
                 <h3>User Photos</h3>
                {foreach $photos as $photo}

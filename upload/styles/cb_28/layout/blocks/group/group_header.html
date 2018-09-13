@@ -96,7 +96,7 @@
                     
                     <div class="info_cont">
                     	<div class="info_title"><span onclick="$('#more_details').slideToggle()">{lang code='more_details'}</span></div>
-                        <div id="more_details" style="display:none">
+                        <div id="more_details" style="display:none;">
                     	<span><span>{lang code='vdo_desc'} </span> <span>{$group.group_description}</span></span>
                         <div class="clear"></div>
                         
@@ -111,7 +111,7 @@
             <!-- Group Information-->
                         
             <!-- Group members-->
-            	<div id="members" class="grp_info" style="display:none">
+            	<div id="members" class="grp_info" style="display:none;">
                 	{assign var=users_items_group_page value=func->config(users_items_group_page)}
                 	{assign var=members value=$cbgroup->get_members($group.group_id,"yes",$users_items_group_page)}
                     {if $members}
@@ -125,7 +125,7 @@
             <!-- Group members-->
             
              <!-- Group videos-->
-            	<div id="gpvideos" class="grp_info" style="display:none">
+            	<div id="gpvideos" class="grp_info" style="display:none;">
                 	{assign var=gpvidlimit value=func->config(videos_items_grp_page)}
                 	{assign var=gpvids value=$cbgroup->get_group_videos($group.group_id,'yes',$gpvidlimit)}
                     {if $gpvids}
@@ -139,7 +139,7 @@
             <!-- Group videos-->
             
             <!-- Report This Group -->
-            <div id="flag_group" class="grp_info" style="display:none">
+            <div id="flag_group" class="grp_info" style="display:none;">
              {show_flag_form id=$group.group_id type=Group}
             </div> 
             <!-- Report This Group -->

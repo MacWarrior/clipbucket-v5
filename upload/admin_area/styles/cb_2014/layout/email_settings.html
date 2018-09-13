@@ -72,7 +72,7 @@
 
 
           <div id="template-{$template.email_template_id}" 
-              {if $smarty.foreach.etemp.iteration!='1'} style="display:none" {else}class="tempselected"{/if}>  
+              {if $smarty.foreach.etemp.iteration!='1'} style="display:none;" {else}class="tempselected"{/if}>
               <label for="subject{$template.email_template_id}">Email Subject</label>
               <div class="templateCodeCont" style="padding:3px">
                 <input data-type="text" name="subject{$template.email_template_id}" id="subject{$template.email_template_id}"

@@ -61,7 +61,7 @@ $(document).ready(function(){
 });
 {/literal}
 </script>
-<div id="CBadminBar" class="CBadminBar clearfix"{if $smarty.cookies.CBadminBar == 'hidden'} style="display:none"{/if}>
+<div id="CBadminBar" class="CBadminBar clearfix"{if $smarty.cookies.CBadminBar == 'hidden'} style="display:none;"{/if}>
 	<ul class="CBadminBarWrapper">
     {assign var=adminLinks value=$Cbucket->AdminMenu}
     {foreach from=$adminLinks item=menu key=name}

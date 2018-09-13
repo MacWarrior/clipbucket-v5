@@ -560,7 +560,7 @@ jQuery(function() {
 					<div class="tree-folder-name"></div>\
 				</div>\
 				<div class="tree-folder-content"></div>\
-				<div class="tree-loader" style="display:none"></div>\
+				<div class="tree-loader" style="display:none;"></div>\
 			</div>\
 			<div class="tree-item" style="display:none;">\
 				'+($options['unselected-icon'] == null ? '' : '<i class="'+$options['unselected-icon']+'"></i>')+'\

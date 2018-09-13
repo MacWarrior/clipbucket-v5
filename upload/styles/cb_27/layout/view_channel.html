@@ -54,7 +54,7 @@
 						{assign var='channel_profile_fields' value=$userquery->load_user_fields($p,'profile')}
 						{foreach from=$channel_profile_fields item=field_group name=profile_groups}
 					        {if $smarty.foreach.profile_groups.iteration==2}
-							<div id="moreDetailsDIV" style="display:none">
+							<div id="moreDetailsDIV" style="display:none;">
 							{/if}
 							{if $field_group.channel_view !='no'}              
 								<div class="channelFieldset clearfix">

@@ -4363,96 +4363,48 @@
 	* @param : { array } { $array } { array with all details of feed e.g userid, action etc }
 	* @action : inserts feed into database 
 	*/
-	function addFeed($array) {
-		global $cbfeeds,$cbphoto,$userquery;
+	function addFeed($array)
+	{
+		global $cbfeeds;
 		$action = $array['action'];
 		if($array['uid']) {
 			$userid = $array['uid'];
 		} else {
 			$userid = userid();
 		}
-			
-		switch($action) {
+
+		switch($action)
+		{
+			default:
+				return;
 			case "upload_photo":
-			{
-
-				$feed['action'] = 'upload_photo';
 				$feed['object'] = 'photo';
-				$feed['object_id'] = $array['object_id'];		
-				$feed['uid'] = $userid;
-				
-				$cbfeeds->addFeed($feed);
-			}
-			break;
+				break;
 			case "add_comment":
-			{
-
-				$feed['action'] = 'add_comment';
 				$feed['object'] = $array['object'];
-				$feed['object_id'] = $array['object_id'];		
-				$feed['uid'] = $userid;
-				
-				$cbfeeds->addFeed($feed);
-			}
-			break;
+				break;
 			case "upload_video":
 			case "add_favorite":
-			{
-
-				$feed['action'] = $action;
 				$feed['object'] = 'video';
-				$feed['object_id'] = $array['object_id'];		
-				$feed['uid'] = $userid;
-				
-				$cbfeeds->addFeed($feed);
-			}
-			break;
-			
+				break;
 			case "signup":
-			{
-
-				$feed['action'] = 'signup';
 				$feed['object'] = 'signup';
-				$feed['object_id'] = $array['object_id'];		
-				$feed['uid'] = $userid;
-				
-				$cbfeeds->addFeed($feed);
-			}
-			break;
-			
+				break;
 			case "create_group":
 			case "join_group":
-			{
-				$feed['action'] = $action;
 				$feed['object'] = 'group';
-				$feed['object_id'] = $array['object_id'];		
-				$feed['uid'] = $userid;
-				
-				$cbfeeds->addFeed($feed);
-			}
-			break;
-			
+				break;
 			case "add_friend":
-			{
-				$feed['action'] = 'add_friend';
 				$feed['object'] = 'friend';
-				$feed['object_id'] = $array['object_id'];		
-				$feed['uid'] = $userid;
-				
-				$cbfeeds->addFeed($feed);
-			}
-			break;
-			
+				break;
 			case "add_collection":
-			{
-				$feed['action'] = 'add_collection';
 				$feed['object'] = 'collection';
-				$feed['object_id'] = $array['object_id'];		
-				$feed['uid'] = $userid;
-				
-				$cbfeeds->addFeed($feed);
-			}
+				break;
 		}
+		$feed['uid'] = $userid;
+		$feed['object_id'] = $array['object_id'];
+		$feed['action'] = $action;
+		$cbfeeds->addFeed($feed);
 	}
 
 	/**

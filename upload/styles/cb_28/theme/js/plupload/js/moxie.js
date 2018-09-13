@@ -10453,7 +10453,7 @@ define("moxie/runtime/html4/xhr/XMLHttpRequest", [
 					;
 
 					// IE 6 won't be able to set the name using setAttribute or iframe.name
-					temp.innerHTML = '<iframe id="' + uid + '_iframe" name="' + uid + '_iframe" src="javascript:&quot;&quot;" style="display:none"></iframe>';
+					temp.innerHTML = '<iframe id="' + uid + '_iframe" name="' + uid + '_iframe" src="javascript:&quot;&quot;" style="display:none;"></iframe>';
 					_iframe = temp.firstChild;
 					container.appendChild(_iframe);
 

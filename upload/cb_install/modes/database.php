@@ -15,7 +15,7 @@
 
 <div id="sub_container" class="br5px">
 
-<div class="errorDiv br5px" id="dbresult" style="display:none"></div>
+<div class="errorDiv br5px" id="dbresult" style="display:none;"></div>
 <div class="db_image"><img src="<?php echo installer_path(); ?>images/db_img.png" style="margin-top: 28px;margin-left: 485px;"  width="392" height="392"/></div>
 
 <div class="db_fields" style="margin-top:-430px;">
