@@ -190,12 +190,13 @@
 				{if $myquery->is_commentable($vdo,'v')}
 
 				<div class="collectionComments addComment">
-					<h2>{$vdo.comments_count}
+					<h2>
 						{if $vdo.comments_count <= 1 }
 							{lang code='comment'}
 						{else}
 							{{lang code='comments'} }
 						{/if}
+						({$vdo.comments_count})
 					</h2>
 					<span id="show-comments" class="icon-down-arrow" title="{lang code='show_comments'}"></span>
 					<span id="hide-comments" class="icon-up-arrow" title="{lang code='hide_comments'}" style="display:none;"></span>
@@ -207,12 +208,6 @@
 							<ul id="userCommentsList" style="margin-left:-40px;">
 							</ul>
 						</div>
-
-						{if $vdo.comments_count > 10}
-						<div class="clearfix text-center">
-							<button class="btn btn-loadmore" id="load-more-comments" page="2">{lang code='load_more'}</button>
-						</div>
-						{/if}
 					</div>
 				</div>
 
@@ -376,21 +371,15 @@
 	var aspect_ratio = 1.77778
 	var $cb_player = $("#cb_player");
 
-	$(document).ready(function(){
+	$(document).ready(function()
+	{
+        getAllComments('v','{$vdo.videoid}','{$vdo.last_commented}',1,'{$vdo.comments_count}','{$object_type}');
+
 		$cb_player.height( $cb_player.width() / aspect_ratio );
 
 		var videoInfo = $("#videoDescription").text();
 		var newInfo = videoInfo.replace(/(((https?:\/\/)|([\s\t]))(www.)?([a-z0-9]+)\.[a-z]+)/g, '<a href="$1">$1</a>');
 		$("#videoDescription").html(newInfo);
-
-		comments_voting = '{$vdo.comment_voting}';
-		_cb.getCommentsNew(
-			'{$type}',
-			'{$vdo.videoid}',
-			'{$vdo.last_commented}',1,
-			'{$vdo.comments_count}',
-			'{$object_type}'
-			);
 
 		$("#reportVideo").on({
 			click : function(e){
@@ -409,22 +398,6 @@
 		if(adHtml<1){
 			$('.ad-holder').remove();
 		}
-	});
-
-	$(document).on('click','#load-more-comments',function(){
-		var page = $(this).attr('page');
-		page = parseInt(page);
-		nextPage = page + 1;
-		$(this).text(lang_loading)
-		_cb.getCommentsNew(
-			'{$type}',
-			'{$vdo.videoid}',
-			'{$vdo.last_commented}',page,
-			'{$vdo.comments_count}',
-			'{$object_type}'
-			);
-		$(this).attr('page', nextPage);
-		$(this).text(lang_load_more)
 	});
 
 	var resizePlayer = _cb.debounce(function() {
