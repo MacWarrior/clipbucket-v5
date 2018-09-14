@@ -2434,10 +2434,8 @@ class userquery extends CBCategory{
 			
 			$userfields = array_merge($userfields,$custom_fields_from_group_fields);
 		}
-			
-			
+
 		validate_cb_form($custom_signup_fields,$array);
-		
 		validate_cb_form($userfields,$array);
 
 		foreach($userfields as $field)
@@ -2572,7 +2570,6 @@ class userquery extends CBCategory{
 				$uquery_field[] = 'doj';
 				$uquery_val[] = $array['doj'];
 			}
-			
 		}
 		
 		//Changing Gender
@@ -2593,9 +2590,9 @@ class userquery extends CBCategory{
 		if(isset($array['dob']))
 		{
 			$uquery_field[] = 'dob';
-			$uquery_val[] = $array['dob'];
+			$uquery_val[] = date('Y-m-d',strtotime($array['dob']));
 		}
-		
+
 		//Changing category
 		if(isset($array['category']))
 		{
@@ -2724,19 +2721,19 @@ class userquery extends CBCategory{
 			e(lang("usr_pof_upd_msg"),'m');
 		}
 	}
-	
-	
+
 	/**
 	 * Function used to update user avatar and background only
+	 *
+	 * @param $array
 	 */
 	function update_user_avatar_bg($array)
 	{
-		global $db,$signup,$Upload;
+		global $db,$Upload;
 		//Updating User Avatar
 		$uquery_field[] = 'avatar_url';
 		$uquery_val[] = mysql_clean($array['avatar_url']);
-	
-		
+
 		//Deleting User Avatar
 		if($array['delete_avatar']=='yes')
 		{
@@ -2763,8 +2760,7 @@ class userquery extends CBCategory{
 				$uquery_val[] = $file;
 			}
 		}
-		
-		
+
 		//Updating User Background
 		$uquery_field[] = 'background_url';
 		$uquery_val[] = mysql_clean($array['background_url']);
@@ -2778,14 +2774,13 @@ class userquery extends CBCategory{
 			$uquery_val[] = mysql_clean($array['background_repeat']);
 		}
 		
-		//Background ATtachement
+		//Background Attachement
 		$uquery_field[] = 'background_attachement';
 		$uquery_val[] = mysql_clean($array['background_attachement']);
 		
 		
 		if(isset($_FILES['background_file']['name']))
 		{
-			
 			$file = $Upload->upload_user_file('b',$_FILES['background_file'],$array['userid']);
 			if($file)
 			{
@@ -2798,21 +2793,21 @@ class userquery extends CBCategory{
 		    $value = trim($value);
 		    if (empty($value)){
 		        $validate_empty_array=0;
-		    }else{
+		    } else {
 		    	$validate_empty_array=1;
 		    	break;
 		    }
 		}
 		
-		if($validate_empty_array){
-			$log_array = array
-				(
-				 'success'=>'yes',
-				 'details'=> "updated profile"
-				);
+		if($validate_empty_array)
+		{
+			$log_array = array(
+				'success'=>'yes',
+				'details'=> "updated profile"
+			);
 
-				//Login Upload
-				insert_log('profile_update',$log_array);
+			//Login Upload
+			insert_log('profile_update',$log_array);
 				
 			$db->update(tbl($this->dbtbl['users']),$uquery_field,$uquery_val," userid='".mysql_clean($array['userid'])."'");
 			e(lang("usr_avatar_bg_update"),'m');
@@ -2820,16 +2815,18 @@ class userquery extends CBCategory{
 
 	}
 
-	/* Written by Sajjad Ashraf */
-
-	public function updateCover($array = array()){
-		if(!empty($array)){
-			if(isset($array["coverPhoto"])){
+	public function updateCover($array = array())
+	{
+		if(!empty($array))
+		{
+			if(isset($array["coverPhoto"]))
+			{
 				$coverPhoto = $array["coverPhoto"];
 				$photoType = $coverPhoto["type"];
 				$photoSize = (int) $coverPhoto["size"]; // in kbs
 				$maxPhotoSize = 2048; // in kbs
-				if($photoType){
+				if($photoType)
+				{
 					$name = $array["userid"];
 					$coverPhoto = $array["coverPhoto"]["tmp_name"];
 					$ext = $this->getImageExt($array["coverPhoto"]["name"]);
@@ -2839,23 +2836,23 @@ class userquery extends CBCategory{
 					list($width, $height, $type, $attr) = getimagesize($coverPhoto);
 					$width = (int) $width;
 					$height = (int) $height;
-					if(($width > 1) && ($height > 2)){
+					if(($width > 1) && ($height > 2))
+					{
 						$files = glob(COVERS_DIR . "/{$name}/{$name}.*"); // get all file names
 						foreach($files as $file){ // iterate files
 						  if(is_file($file))
 						    unlink($file); // delete file
 						}
 						move_uploaded_file($coverPhoto, COVERS_DIR . "/{$name}/{$name}.{$ext}");
-						//$this->resizeImage(COVERS_DIR . "/{$name}/{$name}.{$ext}", COVERS_DIR . "/{$name}/{$name}.{$ext}");
 						return array(
 							"status" => true,
 							"msg" => "Succesfully Uploaded",
-							);
+						);
 					}else{
 						return array(
 							"status" => false,
 							"msg" => "Only 1150 x 220 images are allowed {$width} x {$height} provided",
-							);
+						);
 					}
 				}
 			}
@@ -2866,7 +2863,8 @@ class userquery extends CBCategory{
 			);
 	}
 
-	public function getCover($userId = false){
+	public function getCover($userId = false)
+	{
 		if(!$userId){
 			$userId = userid();
 		}
@@ -2881,7 +2879,8 @@ class userquery extends CBCategory{
 		}
 	}
 
-	public function getImageExt($imageName = false){
+	public function getImageExt($imageName = false)
+	{
 		if($imageName){
 			$nameParts = explode(".", $imageName);
 			$ext = array_pop($nameParts);
@@ -2889,7 +2888,8 @@ class userquery extends CBCategory{
 		}
 	}
 
-	public function resizeImage($source_image_path, $thumbnail_image_path){
+	public function resizeImage($source_image_path, $thumbnail_image_path)
+	{
 		define('THUMBNAIL_IMAGE_MAX_WIDTH', 1150);
 		define('THUMBNAIL_IMAGE_MAX_HEIGHT', 220);
 	    list($source_image_width, $source_image_height, $source_image_type) = getimagesize($source_image_path);
@@ -2926,20 +2926,26 @@ class userquery extends CBCategory{
 	    imagedestroy($thumbnail_gd_image);
 	    return true;
 	}
-	
-	
+
 	/**
 	 * Function used to check weather username exists or not
+	 *
+	 * @param $i
+	 *
+	 * @return bool
 	 */
 	function username_exists($i)
 	{
 		global $db;
-		//echo test;
 		return $db->count(tbl($this->dbtbl['users']),"username"," username='$i'");
 	}
-	
+
 	/**
 	 * function used to check weather email exists or not
+	 *
+	 * @param $i
+	 *
+	 * @return bool
 	 */
 	 function email_exists($i)
 	{
@@ -2947,11 +2953,9 @@ class userquery extends CBCategory{
 		$db->select(tbl($this->dbtbl['users']),"email"," email='$i'");
 		if($db->num_rows>0)
 			return true;
-		else
-			return false;
+		return false;
 	}
-	
-	
+
 	/**
 	 * Function used to get user access log
 	 */
@@ -2961,12 +2965,16 @@ class userquery extends CBCategory{
 		$result = $db->select(tbl($this->dbtbl['action_log']),"*"," action_userid='$uid'",$limit," date_added DESC");
 		if($db->num_rows>0)
 			return $result;
-		else
-			return false;
+		return false;
 	}
-	
+
 	/**
 	 * Load Custom Profile Field
+	 *
+	 * @param      $data
+	 * @param bool $group_based
+	 *
+	 * @return array
 	 */
 	function load_custom_profile_fields($data,$group_based=false)
 	{
@@ -2975,23 +2983,23 @@ class userquery extends CBCategory{
 			$array = $this->custom_profile_fields;
 			foreach($array as $key => $fields)
 			{
-					if($data[$fields['db_field']])
-						$value = $data[$fields['db_field']];
-					elseif($data[$fields['name']])
-						$value = $data[$fields['name']];
-						
-						
-					if($fields['type']=='radiobutton' || 
-					   $fields['type']=='checkbox' ||
-					   $fields['type']=='dropdown')
+				if($data[$fields['db_field']])
+					$value = $data[$fields['db_field']];
+				elseif($data[$fields['name']])
+					$value = $data[$fields['name']];
+
+
+				if($fields['type']=='radiobutton' ||
+				   $fields['type']=='checkbox' ||
+				   $fields['type']=='dropdown')
 					$fields['checked'] = $value;
-					else
-					$fields['value'] = $value;						
-					$new_array[$key] = $fields;
+				else
+					$fields['value'] = $value;
+
+				$new_array[$key] = $fields;
 			}
 			return $new_array;
-		}else
-		{
+		} else {
 			$groups = $this->custom_profile_fields_groups;
 			
 			$new_grp = array();
@@ -3005,25 +3013,29 @@ class userquery extends CBCategory{
 						$value = $data[$fields['db_field']];
 					elseif($data[$fields['name']])
 						$value = $data[$fields['name']];
-						
-						
+
 					if($fields['type']=='radiobutton' || 
 					   $fields['type']=='checkbox' ||
 					   $fields['type']=='dropdown')
-					$fields['checked'] = $value;
+						$fields['checked'] = $value;
 					else
-					$fields['value'] = $value;		
+						$fields['value'] = $value;
 				}
 				$grp['fields'][$key] = $fields;
 				$new_grp[] = $grp;
 			}
 		}
-		
 		return $new_grp;
 	}
-	
+
 	/**
 	 * Load Custom Signup Field
+	 *
+	 * @param      $data
+	 * @param bool $ck_display_admin
+	 * @param bool $ck_display_user
+	 *
+	 * @return mixed
 	 */
 	function load_custom_signup_fields($data,$ck_display_admin=FALSE,$ck_display_user=FALSE)
 	{
@@ -3053,11 +3065,14 @@ class userquery extends CBCategory{
 		
 		return $new_array;
 	}
-	
-	
+
 	/**
 	 * Function used to get channel links
 	 * ie Playlist, favorites etc etc
+	 *
+	 * @param $u
+	 *
+	 * @return array
 	 */
 	function get_inner_channel_top_links($u)
 	{
@@ -3080,10 +3095,12 @@ class userquery extends CBCategory{
 	 */
 	function get_channel_action_links($u)
 	{
-			return array(lang('send_message')=>array('link'=>cblink(array('name'=>'compose_new','extra_params'=>'to='.$u['username']))),
-                     lang('add_as_friend')=>array('link'=>'javascript:void(0)','onclick'=>"add_friend('".$u['userid']."','result_cont')"),
-                     lang('block_user')=>array('link'=>'javascript:void(0)','onclick'=>"block_user('".$u['username']."','result_cont')")
-                     );	}
+		return array(
+			lang('send_message')=>array('link'=>cblink(array('name'=>'compose_new','extra_params'=>'to='.$u['username']))),
+			lang('add_as_friend')=>array('link'=>'javascript:void(0)','onclick'=>"add_friend('".$u['userid']."','result_cont')"),
+			lang('block_user')=>array('link'=>'javascript:void(0)','onclick'=>"block_user('".$u['username']."','result_cont')")
+		 );
+	}
 	
 	/**
 	 * Function used to get user videos link
@@ -3091,15 +3108,18 @@ class userquery extends CBCategory{
 	function get_user_videos_link($u)
 	{
 		return cblink(array('name'=>'user_videos')).$u['username'];
-	}	
-	
-	
+	}
+
 	/**
 	 * Function used to get user channel video
+	 *
+	 * @param $u
+	 *
+	 * @return bool|mixed|STRING
 	 */
 	function get_user_profile_video($u)
 	{
-		global $db,$cbvid;
+		global $cbvid;
 		if(empty($u['profile_video'])&&!$cbvid->video_exists($u))
 		{
 			$u = $this->get_user_profile($u);
@@ -3114,7 +3134,6 @@ class userquery extends CBCategory{
 	/*
 	* Get number of all unread messages of a user using his userid
 	*/
-
 	function get_unread_msgs( $userid, $label = false )
 	{
 		global $db;
@@ -3133,7 +3152,6 @@ class userquery extends CBCategory{
 	/*
 	* Get number of all read messages of a user using his userid
 	*/
-
 	function get_read_msgs( $userid, $label = false )
 	{
 		global $db;
@@ -3212,17 +3230,18 @@ class userquery extends CBCategory{
                 {
                     foreach($acc as $title => $link)
                         $array[$key][$title] = $link;
-                }else
+                } else
                     $array[$key] = $acc;
             }
         }
-     
         return $array;
     }
-	
-	
+
+
 	/**
 	 * Function used to change email
+	 *
+	 * @param $array
 	 */
 	function change_email($array)
 	{
@@ -3242,11 +3261,20 @@ class userquery extends CBCategory{
 			e(lang("email_change_msg"),"m");
 		}
 	}
-	
+
 	/**
 	 * Function used to ban users
+	 *
+	 * @param      $users
+	 * @param null $uid
+	 *
+	 * @return void
 	 */
-	function block_users($users,$uid=NULL){ return $this->ban_users($users,$uid); }
+	function block_users($users,$uid=NULL)
+	{
+		return $this->ban_users($users,$uid);
+	}
+
 	function ban_users($users,$uid=NULL)
 	{
 		global $db;
@@ -3267,14 +3295,16 @@ class userquery extends CBCategory{
 			$banned_users = implode(',',$new_users);
 			$db->update(tbl($this->dbtbl['users']),array('banned_users'),array($banned_users)," userid='$uid'");
 			e(lang("user_ban_msg"),"m");
-		}elseif (!$users){
+		} elseif (!$users) {
 			$db->update(tbl($this->dbtbl['users']),array('banned_users'),array($users)," userid='$uid'");
 			e(lang("no_user_ban_msg"),"m");
 		}
 	}
-	
+
 	/**
 	 * Function used to ban single user
+	 *
+	 * @param $user
 	 */
 	function ban_user($user)
 	{
@@ -3297,16 +3327,20 @@ class userquery extends CBCategory{
 				e(lang("user_blocked"),"m");
 			}else
 				e(lang("user_already_blocked"));
-		}else
-		{
+		}else {
 			e(lang("you_cant_del_user"));
 		}
 	}
-	
-	
-	
+
+
 	/**
 	 * Function used to check weather user is banned or not
+	 *
+	 * @param      $ban
+	 * @param null $user
+	 * @param null $banned_users
+	 *
+	 * @return bool
 	 */
 	function is_user_banned($ban,$user=NULL,$banned_users=NULL)
 	{
@@ -3324,17 +3358,17 @@ class userquery extends CBCategory{
 		}
 		
 		$ban_user = explode(',',$banned_users);
-		if(in_array($ban,$ban_user)) {
+		if(in_array($ban,$ban_user))
 			return true;
-		} else {
-			return false;
-		}
-		
 		return false;
 	}
-	
+
 	/**
 	 * function used to get user details with profile
+	 *
+	 * @param null $uid
+	 *
+	 * @return
 	 */
 	function get_user_details_with_profile($uid=NULL)
 	{
@@ -5495,7 +5529,6 @@ function getSubscriptionsUploadsWeek($uid,$limit=20,$uploadsType="both",$uploads
 	function update_user_voted($array,$userid=NULL)
 	{
 		global $db;
-		//$voted = array();
 		if(!$userid)
 			$userid = userid();
 		if(phpversion < '5.2.0')
