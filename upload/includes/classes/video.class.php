@@ -1249,10 +1249,10 @@ class CBvideo extends CBCategory
 				{
 					$code = '';
 					$code .= '<object width="'.EMBED_VDO_WIDTH.'" height="'.EMBED_VDO_HEIGHT.'">';
-					$code .= '<param name="movie" value="'.PLAYER_URL.'/embed_player.php?vid='.$vdetails['videoid'].'"></param>';
+					$code .= '<param name="movie" value="'.BASEURL.'/embed_player.php?vid='.$vdetails['videoid'].'"></param>';
 					$code .= '<param name="allowFullScreen" value="true"></param>';
 					$code .= '<param name="allowscriptaccess" value="always"></param>';
-					$code .= '<embed src="'.PLAYER_URL.'/embed_player.php?vid='.$vdetails['videoid'].'"';
+					$code .= '<embed src="'.BASEURL.'/embed_player.php?vid='.$vdetails['videoid'].'"';
 					$code .= 'type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="300" height="250"></embed>';
 					return $code .= '</object>';
 				}
