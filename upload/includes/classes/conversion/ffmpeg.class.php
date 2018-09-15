@@ -328,9 +328,7 @@ class FFMpeg
 			$this->output = new stdClass();
 			$this->output->videoDetails = $videoDetails;
 
-			/*
-				Conversion Starts here
-			*/
+			// Conversion Starts here
 			$this->convertToLowResolutionVideo($videoDetails);
 		}
 	}
@@ -366,7 +364,8 @@ class FFMpeg
 				$TemplogData .= "\r\n Command : ".$fullCommand." \r\n";
 
 				$conversionOutput = $this->executeCommand($fullCommand);
-				$TemplogData .= "\r\n ffmpeg output : ".$conversionOutput." \r\n";
+				if( DEVELOPMENT_MODE )
+					$TemplogData .= "\r\n ffmpeg output : ".$conversionOutput." \r\n";
 
 				$TemplogData .= "\r\n outputFile : ".$this->sdFile." \r\n";
 				
@@ -379,7 +378,8 @@ class FFMpeg
 				}
 				$TemplogData .= "\r\n MP4Box Command : ".$fullCommand." \r\n";
 				$output = $this->executeCommand($fullCommand);
-				$TemplogData .= "\r\n output : ".$output." \r\n";
+				if( DEVELOPMENT_MODE )
+					$TemplogData .= "\r\n output : ".$output." \r\n";
 				
 				if (file_exists($this->sdFile))
 				{
@@ -410,7 +410,8 @@ class FFMpeg
 					$data = file_get_contents($log_file_tmp);
 					unlink($log_file_tmp);
 				}
-				$TemplogData .= "\r\n ffmpeg output : ".$data." \r\n";
+				if( DEVELOPMENT_MODE )
+					$TemplogData .= "\r\n ffmpeg output : ".$data." \r\n";
 
 				$TemplogData .= "\r\n Sarting : MP4Box Conversion for HD \r\n";
 				$fullCommand = $this->mp4BoxPath . " -inter 0.5 {$this->hdFile}  -tmp ".TEMP_DIR;
@@ -421,7 +422,8 @@ class FFMpeg
 				}
 				$TemplogData .= "\r\n MP4Box Command : ".$fullCommand." \r\n";
 				$output = $this->executeCommand($fullCommand);
-				$TemplogData .= "\r\n output : ".$output." \r\n";
+				if( DEVELOPMENT_MODE )
+					$TemplogData .= "\r\n output : ".$output." \r\n";
 				if (file_exists($this->hdFile))
 				{
 					$this->video_files[] = 'hd';
@@ -445,7 +447,9 @@ class FFMpeg
 
 				$conversionOutput = $this->executeCommand($fullCommand);
 
-				$TemplogData .= "\r\n ffmpeg output : ".$conversionOutput." \r\n";
+				if( DEVELOPMENT_MODE )
+					$TemplogData .= "\r\n ffmpeg output : ".$conversionOutput." \r\n";
+
 				$TemplogData .= "\r\n Sarting : MP4Box Conversion for SD \r\n";
 				$fullCommand = $this->mp4BoxPath . " -inter 0.5 {$this->sdFile}  -tmp ".TEMP_DIR;
 
@@ -455,7 +459,8 @@ class FFMpeg
 				}
 				$TemplogData .= "\r\n MP4Box Command : ".$fullCommand." \r\n";
 				$output = $this->executeCommand($fullCommand);
-				$TemplogData .= "\r\n output : ".$output." \r\n";
+				if( DEVELOPMENT_MODE )
+					$TemplogData .= "\r\n output : ".$output." \r\n";
 				if (file_exists($this->sdFile))
 				{
 					$this->video_files[] = 'sd';
@@ -469,13 +474,6 @@ class FFMpeg
 					$this->log_ouput_file_info();
 				}
 			}
-		}
-	}
-
-	private function getPadding($padding = array())
-	{
-		if(!empty($padding)){
-			return " pad={$padding['top']}:{$padding['right']}:{$padding['bottom']}:{$padding['left']}:{$padding['color']} ";
 		}
 	}
 
@@ -535,9 +533,7 @@ class FFMpeg
 			if( config('chromecast_fix') )
 				$commandSwitches .= ' -ac 2';
 
-			/*
-				Setting Size Of output video
-			*/
+			// Setting Size Of output video
 			if($isHd)
 			{
 				$height_tmp = min($videoDetails['video_height'],1080);
@@ -550,20 +546,10 @@ class FFMpeg
 
 			if ($version == "0.9")
 			{
-				if($isHd)
-				{
-					$vpre = "hq";
-				} else {
-					$vpre = "normal";
-				}
+				$vpre = $isHd ? 'hq' : 'normal';
 				$commandSwitches .= " -s {$size} -vpre {$vpre}";
 			} else {
-				if($isHd)
-				{
-					$vpre = "slow";
-				} else {
-					$vpre = "medium";
-				}
+				$vpre = $isHd ? 'slow' : 'medium';
 				$commandSwitches .= " -s {$size} -preset {$vpre}";
 			}
 
@@ -721,7 +707,6 @@ class FFMpeg
 		}
 		foreach ($resolutions as $key => $value) 
 		{
-			//$video_width=(int)$value[0];
 			$video_height=(int)$value[1];	
 			if($input_video_height != $video_height && $this->options['gen_'.$video_height] == 'yes'){
 				$final_res[$video_height] = $value;	
@@ -836,7 +821,6 @@ class FFMpeg
 				$log .= "\r\n ====== End : Thumbs Generation ======= \r\n";
 				$this->log->writeLine("Thumbs Files", $log, true );
 
-
 				$hr = $this->options['high_res'];
 				$this->options['video_width'] = $res[$nr][0];
 				$this->options['format'] = 'mp4';
@@ -899,14 +883,12 @@ class FFMpeg
 					$log .= "conversion_status : failed ";
 				
 				$this->log->writeLine("Conversion Completed", $log, true );
-
 				break;
 			}
 
 			// Prevent video_convert action to use 100% cpu while waiting for queued videos to end conversion
 			sleep(5);
 		}
-		
 	}
 	
 	public function generate_thumbs($input_file,$duration, $dim='120x90', $num=3, $prefix=NULL, $rand=NULL, $gen_thumb=FALSE, $output_file_path=false, $specific_dura=false)
@@ -1142,7 +1124,11 @@ class FFMpeg
 	}
 
 	/**
-	 * Function used to convert video 
+	 * Function used to convert video
+	 *
+	 * @param null $file
+	 * @param bool $for_iphone
+	 * @param null $more_res
 	 */
 	function convert($file=NULL,$for_iphone=false,$more_res=NULL)
 	{
@@ -1385,8 +1371,11 @@ class FFMpeg
 			if($more_res!=NULL){
 				$TemplogData .= "\n\n==  Mp4Box Command ==\n\n";
 				$TemplogData .= $command;
-				$TemplogData .= "\n\n==  MP4Box OutPut ==\n\n";
-				$TemplogData .= $output;
+				if( DEVELOPMENT_MODE )
+				{
+					$TemplogData .= "\n\n==  MP4Box OutPut ==\n\n";
+					$TemplogData .= $output;
+				}
 			}
 		}
 

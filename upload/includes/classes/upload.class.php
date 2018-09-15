@@ -1174,7 +1174,7 @@ class Upload
 		//Adding Custom Fields With Groups
 		$custom_fields_with_group = $this->load_custom_form_fields($input,true);
 		
-		//Finaling putting them together in their main array called $fields
+		//Finally putting them together in their main array called $fields
 		if($custom_fields_with_group)
 		{
 			$custFieldGroups = $custom_fields_with_group;

@@ -318,7 +318,7 @@ class userquery extends CBCategory{
 
 					$this->init();
 
-					//Logging Actiong
+					//Logging Action
 					$log_array = array(
 						'username'=>$username,
 						'userid'=>$udetails['userid'],
@@ -790,14 +790,12 @@ class userquery extends CBCategory{
 		else
 		{
 			$tpl = $cbemail->get_template('avcode_request_template');
-			$more_var = array
-			('{username}'	=> $udetails['username'],
-			 '{email}'		=> $udetails['email'],
-			 '{avcode}'		=> $udetails['avcode']
+			$var = array(
+				'{username}'	=> $udetails['username'],
+				'{email}'		=> $udetails['email'],
+				'{avcode}'		=> $udetails['avcode']
 			);
-			if(!is_array($var))
-				$var = array();
-			$var = array_merge($more_var,$var);
+
 			$subj = $cbemail->replace($tpl['email_template_subject'],$var);
 			$msg = nl2br($cbemail->replace($tpl['email_template'],$var));
 			
@@ -831,13 +829,10 @@ class userquery extends CBCategory{
 		else
 		{
 			$tpl = $cbemail->get_template('welcome_message_template');
-			$more_var = array
-			('{username}'	=> $udetails['username'],
-			 '{email}'		=> $udetails['email'],
+			$var = array(
+				'{username}'	=> $udetails['username'],
+				'{email}'		=> $udetails['email'],
 			);
-			if(!is_array($var))
-				$var = array();
-			$var = array_merge($more_var,$var);
 			$subj = $cbemail->replace($tpl['email_template_subject'],$var);
 			$msg = nl2br($cbemail->replace($tpl['email_template'],$var));
 			
@@ -918,15 +913,13 @@ class userquery extends CBCategory{
 			//Sending friendship request email
 			$tpl = $cbemail->get_template('friend_request_email');
 
-			$more_var = array(
+			$var = array(
 				'{reciever}'	=> $friend['username'],
 				'{sender}'		=> $sender['username'],
 				'{sender_link}'=> $this->profile_link($sender),
 				'{request_link}'=> '/manage_contacts.php?mode=request&confirm='.$uid
 			);
-			if(!is_array($var))
-				$var = array();
-			$var = array_merge($more_var,$var);
+
 			$subj = $cbemail->replace($tpl['email_template_subject'],$var);
 			$msg = nl2br($cbemail->replace($tpl['email_template'],$var));
 			
@@ -1032,19 +1025,17 @@ class userquery extends CBCategory{
 			$more_var = array(
 				'{reciever}'	=> $friend['username'],
 				'{sender}'		=> $sender['username'],
-				'{sender_link}'=> $this->profile_link($sender),
+				'{sender_link}' => $this->profile_link($sender),
 			);
-			if(!is_array($var))
+			if(!isset($var))
 				$var = array();
 			$var = array_merge($more_var,$var);
 			$subj = $cbemail->replace($tpl['email_template_subject'],$var);
 			$msg = nl2br($cbemail->replace($tpl['email_template'],$var));
-			
-			
+
 			//Now Finally Sending Email
 			cbmail(array('to'=>$friend['email'],'from'=>WEBSITE_EMAIL,'subject'=>$subj,'content'=>$msg));	
-			
-			
+
 			//Logging Friendship
 			
 			$log_array = array(
@@ -3989,11 +3980,7 @@ class userquery extends CBCategory{
         }
 
 		if(!empty($params['count_only'])){
-
-            //$cond= substr($cond,8);
 			$result = $db->count(tbl('users')." AS users ",'userid',$cond);
-            //echo $cond;
-            //return $result;
 		}
 		if(isset($params['assign']) && $params['assign'] != '')
 			assign($params['assign'],$result);
@@ -4027,63 +4014,49 @@ class userquery extends CBCategory{
 			case 'activate':
 			case 'av':
 			case 'a':
-			{
 				$avcode = RandomString(10);
 				$db->update($tbl,array('usr_status','avcode'),array('Ok',$avcode)," userid='$uid' ");
 				e(lang("User has been activated"),'m');
-			}
-			break;
+				break;
 			
 			//Deactivating a user
 			case "deactivate":
 			case "dav":
 			case "d":
-			{
 				$avcode = RandomString(10);
 				$db->update($tbl,array('usr_status','avcode'),array('ToActivate',$avcode)," userid='$uid' ");
 				e(lang("User has been deactivated"),'m');
-			}
-			break;
+				break;
 			
 			//Featuring user
 			case "feature":
 			case "featured":
 			case "f":
-			{
 				$db->update($tbl,array('featured','featured_date'),array('yes',now())," userid='$uid' ");
 				e(lang("User has been set as featured"),'m');
-			}
-			break;
-			
-			
+				break;
+
 			//Unfeatured user
 			case "unfeature":
 			case "unfeatured":
 			case "uf":
-			{
 				$db->update($tbl,array('featured'),array('no')," userid='$uid' ");
 				e(lang("User has been removed from featured users"),'m');
-			}
-			break;
+				break;
 			
 			//Ban User
 			case "ban":
 			case "banned":
-			{
 				$db->update($tbl,array('ban_status'),array('yes')," userid='$uid' ");
 				e(lang("User has been banned"),'m');
-			}
-			break;
-			
-			
+				break;
+
 			//Ban User
 			case "unban":
 			case "unbanned":
-			{
 				$db->update($tbl,array('ban_status'),array('no')," userid='$uid' ");
 				e(lang("User has been unbanned"),'m');
-			}
-			break;
+				break;
 		}
 	}
 	
@@ -4094,9 +4067,7 @@ class userquery extends CBCategory{
 	 function is_registration_allowed()
 	 {
 		if(ALLOW_REG == 1)
-        {
 		    return true;
-        }
 		return false;
 	 }
 	 
@@ -4120,9 +4091,7 @@ class userquery extends CBCategory{
 				array('field'=>'usr_status','type'=>'=','var'=>'Ok','op'=>'AND','value'=>'static'),
 				array('field'=>'ban_status','type'=>'=','var'=>'no','op'=>'AND','value'=>'static'),
 			);
-		}
-		else
-		{
+		} else {
 			$this->search->columns =array(
 				array('field'=>'username','type'=>'LIKE','var'=>'%{KEY}%'),
 			);
@@ -4140,23 +4109,23 @@ class userquery extends CBCategory{
 		 * Setting up the sorting thing
 		 */
 		
-		$sorting	= 	array(
-						'doj'	=> lang("date_added"),
-						'profile_hits'		=> lang("views"),
-						'total_comments'  => lang("comments"),
-						'total_videos' 	=> lang("videos"),
-						);
+		$sorting = array(
+			'doj'	=> lang("date_added"),
+			'profile_hits'		=> lang("views"),
+			'total_comments'  => lang("comments"),
+			'total_videos' 	=> lang("videos"),
+		);
 		
-		$this->search->sorting	= array(
-						'doj'=> " doj DESC",
-						'profile_hits'		=> " profile_hits DESC",
-						'total_comments'  => " total_comments DESC ",
-						'total_videos' 	=> " total_videos DESC",
-						);
+		$this->search->sorting = array(
+			'doj'=> " doj DESC",
+			'profile_hits'		=> " profile_hits DESC",
+			'total_comments'  => " total_comments DESC ",
+			'total_videos' 	=> " total_videos DESC",
+		);
+
 		/**
 		 * Setting Up The Search Fields
 		 */
-		 
 		$default = $_GET;
 		if(is_array($default['category']))
 			$cat_array = array($default['category']);		
@@ -4166,46 +4135,49 @@ class userquery extends CBCategory{
 		$this->search->search_type['channels'] = array('title'=>lang('users'));
 		
 		$fields = array(
-		'query'	=> array(
-						'title'=> lang('keywords'),
-						'type'=> 'textfield',
-						'name'=> 'query',
-						'id'=> 'query',
-						'value'=>cleanForm($default['query'])
-						),
-		'category'	=>  array(
-						'title'		=> lang('category'),
-						'type'		=> 'checkbox',
-						'name'		=> 'category[]',
-						'id'		=> 'category',
-						'value'		=> array('category',$cat_array),
-						'category_type'=>'user',
-						),
-		'date_margin'	=>  array(
-						'title'		=> lang('joined'),
-						'type'		=> 'dropdown',
-						'name'		=> 'datemargin',
-						'id'		=> 'datemargin',
-						'value'		=> $this->search->date_margins(),
-						'checked'	=> $uploaded,
-						),
-		'sort'		=> array(
-						'title'		=> lang('sort_by'),
-						'type'		=> 'dropdown',
-						'name'		=> 'sort',
-						'value'		=> $sorting,
-						'checked'	=> $sort
-							)
+			'query'	=> array(
+				'title'=> lang('keywords'),
+				'type'=> 'textfield',
+				'name'=> 'query',
+				'id'=> 'query',
+				'value'=>cleanForm($default['query'])
+			),
+			'category'	=>  array(
+				'title'		=> lang('category'),
+				'type'		=> 'checkbox',
+				'name'		=> 'category[]',
+				'id'		=> 'category',
+				'value'		=> array('category',$cat_array),
+				'category_type'=>'user',
+			),
+			'date_margin'	=>  array(
+				'title'		=> lang('joined'),
+				'type'		=> 'dropdown',
+				'name'		=> 'datemargin',
+				'id'		=> 'datemargin',
+				'value'		=> $this->search->date_margins(),
+				'checked'	=> $uploaded,
+			),
+			'sort'		=> array(
+				'title'		=> lang('sort_by'),
+				'type'		=> 'dropdown',
+				'name'		=> 'sort',
+				'value'		=> $sorting,
+				'checked'	=> $sort
+			)
 		);
 
 		$this->search->search_type['users']['fields'] = $fields;
 	}
-	
-	
-	
+
 	/**
-	  * Function used to get number of users online
-	  */
+	 * Function used to get number of users online
+	 *
+	 * @param bool $group
+	 * @param bool $count
+	 *
+	 * @return array|bool
+	 */
 	function get_online_users($group=true,$count=false)
 	{
 		 global $db;
@@ -4233,12 +4205,14 @@ class userquery extends CBCategory{
 
 	 	 return $results;
 	}
-	 
-	 
-	 
-	 
+
 	/**
 	 * Function will let admin to login as user
+	 *
+	 * @param      $id
+	 * @param bool $realtime
+	 *
+	 * @return bool
 	 */
 	function login_as_user($id,$realtime=false)
 	{
@@ -4281,14 +4255,8 @@ class userquery extends CBCategory{
 					$log_array['useremail'] = $udetails['email'];
 					$log_array['success'] = 1;
 					
-					$log_array['level'] = $level  = $udetails['level'];
-		
-					//Adding Sessing In Database 
-					//$sess->add_session($userid,'logged_in');
-					
-					//$sess->set('username',$username);
-					//$sess->set('userid',$userid);
-					
+					$log_array['level'] = $level = $udetails['level'];
+
 					//Setting Timeout
 					if($remember)
 						$sess->timeout = 86400*REMBER_DAYS;
@@ -4302,13 +4270,7 @@ class userquery extends CBCategory{
 					
 					$db->delete(tbl("sessions"),array("session","session_string"),array($sess->id,"guest"));
 					$sess->add_session($userid,'smart_sess',$smart_sess);
-					
-					//$sess->set('user_sess',$smart_sess);
-					
-					//$sess->set('user_session_key',$udetails['user_session_key']);
-					//$sess->set('user_session_code',$udetails['user_session_code']);
-					
-					
+
 					//Setting Vars
 					$this->userid = $udetails['userid'];
 					$this->username = $udetails['username'];
@@ -4322,7 +4284,7 @@ class userquery extends CBCategory{
                     );
 
 					$this->init();
-					//Logging Actiong
+					//Logging Action
 					$cblog->insert('login',$log_array);
 					
 					return true;
@@ -4339,7 +4301,7 @@ class userquery extends CBCategory{
 			}
 						
 			return true;
-		}else
+		} else
 			e(lang("usr_exist_err"));
 	}
 	
@@ -4351,23 +4313,21 @@ class userquery extends CBCategory{
 		global $sess,$db;
 		if($this->is_admin_logged_as_user())
 		{
-				
-				$userid = $sess->get('dummy_userid');
-				$session_salt = $sess->get('dummy_sess_salt');
-				$user_session_key = $sess->get('dummy_user_session_key');
-				$smart_sess = md5($user_session_key.$session_salt);
-				
-				$sess->set('sess_salt',$session_salt);
-				$sess->set('PHPSESSID',$sess->get('dummy_PHPSESSID'));
-					
-				$db->delete(tbl("sessions"),array("session"),array($sess->get('dummy_PHPSESSID')));
-				$sess->add_session($userid,'smart_sess',$smart_sess);
+			$userid = $sess->get('dummy_userid');
+			$session_salt = $sess->get('dummy_sess_salt');
+			$user_session_key = $sess->get('dummy_user_session_key');
+			$smart_sess = md5($user_session_key.$session_salt);
 
-				$sess->set('dummy_sess_salt','');
-				$sess->set('dummy_PHPSESSID','');
-				$sess->set('dummy_userid','');
-				$sess->set('dummy_user_session_key','');
+			$sess->set('sess_salt',$session_salt);
+			$sess->set('PHPSESSID',$sess->get('dummy_PHPSESSID'));
 
+			$db->delete(tbl("sessions"),array("session"),array($sess->get('dummy_PHPSESSID')));
+			$sess->add_session($userid,'smart_sess',$smart_sess);
+
+			$sess->set('dummy_sess_salt','');
+			$sess->set('dummy_PHPSESSID','');
+			$sess->set('dummy_userid','');
+			$sess->set('dummy_user_session_key','');
 		}
 	}
 	
@@ -4378,13 +4338,10 @@ class userquery extends CBCategory{
 	{
 		 global $sess;
 		 if($sess->get("dummy_sess_salt")!="")
-		 {
 			 return true;
-		 }
 		return false;
 	}
-	
-	
+
 	/**
 	 * Function used to get anonymous user
 	 */
@@ -4435,10 +4392,11 @@ class userquery extends CBCategory{
 			}
 		}
 	}
-	
-	
+
 	/**
 	 * Function used to delete user videos
+	 *
+	 * @param $uid
 	 */
 	function delete_user_vids($uid)
 	{
@@ -4450,29 +4408,32 @@ class userquery extends CBCategory{
 		$eh->flush_msg();
 		e(lang("user_vids_hv_deleted"),"m");	
 	}
-	
+
 	/**
 	 * Function used to remove user contacts
+	 *
+	 * @param $uid
 	 */
 	function remove_contacts($uid)
 	{
 		global $eh;
 		$contacts = $this->get_contacts($uid);
 		if(is_array($contacts))
-		foreach($contacts as $contact)
-		{
-			$this->remove_contact($contact['userid'],$contact['contact_userid']);
-		}
+			foreach($contacts as $contact)
+				$this->remove_contact($contact['userid'],$contact['contact_userid']);
 		$eh->flush_msg();
 		e(lang("user_contacts_hv_removed"),"m");
 	}
-	
+
 	/**
 	 * Function used to remove user private messages
+	 *
+	 * @param        $uid
+	 * @param string $box
 	 */
 	function remove_user_pms($uid,$box='both')
 	{
-		global $db,$cbpm,$eh;
+		global $cbpm,$eh;
 		
 		if($box=="inbox" || $box=="both")
 		{
@@ -4503,115 +4464,129 @@ class userquery extends CBCategory{
 	 * This will get user subscriptions
 	 * uploaded videos and photos
 	 * This is a test function
-	 */	
-function getSubscriptionsUploadsWeek($uid,$limit=20,$uploadsType="both",$uploadsTimeSpan="this_week")
-{
-	$usr_cond = "";
-	$users = $this->get_user_subscriptions($uid);
-	if($users)
+	 *
+	 * @param        $uid
+	 * @param int    $limit
+	 * @param string $uploadsType
+	 * @param string $uploadsTimeSpan
+	 *
+	 * @return bool
+	 */
+	function getSubscriptionsUploadsWeek($uid,$limit=20,$uploadsType="both",$uploadsTimeSpan="this_week")
 	{
-		foreach($users as $user)
+		$user_cond = "";
+		$users = $this->get_user_subscriptions($uid);
+		if($users)
 		{
-			if($user_cond)
-				$user_cond .= " OR ";
-			$user_cond .= 	tbl("users.userid")."='".$user[0]."' ";	
-		}
-		$user_cond = " (".$user_cond.") ";
-		global $cbphoto,$cbvideo;
-		$photoCount = 1;
-		$videoCount = 1;	
-		switch($uploadsType)
-		{
-			case "both":
-			default:
+			foreach($users as $user)
 			{
-				$photos = $cbphoto->get_photos(array("limit"=>$limit,"extra_cond"=>$user_cond,"order"=>" date_added DESC","date_span"=>$uploadsTimeSpan));
-				$videos = $cbvideo->get_videos(array("limit"=>$limit,"cond"=>" AND".$user_cond,"order"=>" date_added DESC","date_span"=>$uploadsTimeSpan));					
-				if(!empty($photos) && !empty($videos))
-					$finalResult = array_merge($videos,$photos);
-				elseif(empty($photos) && !empty($videos))
-					$finalResult = array_merge($videos,array());
-				elseif(!empty($photos) && empty($videos))
-					$finalResult = array_merge($photos,array());
-				
-				if(!empty($finalResult))
+				if($user_cond)
+					$user_cond .= " OR ";
+				$user_cond .= 	tbl("users.userid")."='".$user[0]."' ";
+			}
+			$user_cond = " (".$user_cond.") ";
+			global $cbphoto,$cbvideo;
+			$photoCount = 1;
+			$videoCount = 1;
+			switch($uploadsType)
+			{
+				case "both":
+				default:
 				{
-					foreach($finalResult as $result)
+					$photos = $cbphoto->get_photos(array("limit"=>$limit,"extra_cond"=>$user_cond,"order"=>" date_added DESC","date_span"=>$uploadsTimeSpan));
+					$videos = $cbvideo->get_videos(array("limit"=>$limit,"cond"=>" AND".$user_cond,"order"=>" date_added DESC","date_span"=>$uploadsTimeSpan));
+					if(!empty($photos) && !empty($videos))
+						$finalResult = array_merge($videos,$photos);
+					elseif(empty($photos) && !empty($videos))
+						$finalResult = array_merge($videos,array());
+					elseif(!empty($photos) && empty($videos))
+						$finalResult = array_merge($photos,array());
+
+					if(!empty($finalResult))
 					{
-						if($result['videoid'])
+						foreach($finalResult as $result)
 						{
-							$videoArr[] = $result;
+							if($result['videoid'])
+							{
+								$videoArr[] = $result;
+								$return['videos'] = array(
+									"title" => lang("videos"),
+									"total" => $videoCount++,
+									"items" => $videoArr
+								);
+							}
+
+							if($result['photo_id'])
+							{
+								$photosArr[] = $result;
+								$return['photos'] = array(
+									"title" => lang("photos"),
+									"total" => $photoCount++,
+									"items" => $photosArr
+								);
+							}
+
+						}
+						//pr($return,true)	;
+						return $return;
+					} else
+						return false;
+				}
+				break;
+
+				case "photos":
+				case "photo" :
+				case "p":
+				{
+					$photos = $cbphoto->get_photos(array("limit"=>$limit,"extra_cond"=>$user_cond,"order"=>" date_added DESC","date_span"=>$uploadsTimeSpan));
+					if($photos)
+					{
+						foreach($photos as $photo)
+						{
+							$photosArr[] = $photo;
+							$return['photos'] = array(
+								"title" => lang("photos"),
+								"total" => $photoCount++,
+								"items" => $photosArr
+							);
+						}
+					} else
+						return false;
+				}
+				break;
+
+				case "videos":
+				case "video":
+				case "v":
+				{
+					$videos = $cbvideo->get_videos(array("limit"=>$limit,"cond"=>" AND".$user_cond,"order"=>" date_added DESC","date_span"=>$uploadsTimeSpan));
+					if($videos)
+					{
+						foreach($videos as $video)
+						{
+							$videoArr[] = $video;
 							$return['videos'] = array(
 								"title" => lang("videos"),
 								"total" => $videoCount++,
 								"items" => $videoArr
 							);
 						}
-						
-						if($result['photo_id'])
-						{
-							$photosArr[] = $result;
-							$return['photos'] = array(
-								"title" => lang("photos"),
-								"total" => $photoCount++,
-								"items" => $photosArr
-							);	
-						}
-									
-					}
-					//pr($return,true)	;	
-					return $return;
-				} else
-					return false;
-			}
-			break;
-			
-			case "photos": case "photo" : case "p":
-			{
-				$photos = $cbphoto->get_photos(array("limit"=>$limit,"extra_cond"=>$user_cond,"order"=>" date_added DESC","date_span"=>$uploadsTimeSpan));
-				if($photos)
-				{
-					foreach($photos as $photo)
-					{
-						$photosArr[] = $photo;
-						$return['photos'] = array(
-							"title" => lang("photos"),
-							"total" => $photoCount++,
-							"items" => $photosArr
-						);								
-					}
+					} else
+						return false;
 				}
-				else
-					return false;		
+				break;
 			}
-			break;
-			
-			case "videos": case "video": case "v":
-			{
-				$videos = $cbvideo->get_videos(array("limit"=>$limit,"cond"=>" AND".$user_cond,"order"=>" date_added DESC","date_span"=>$uploadsTimeSpan));
-				if($videos)
-				{
-					foreach($videos as $video)
-					{
-						$videoArr[] = $video;
-						$return['videos'] = array(
-							"title" => lang("videos"),
-							"total" => $videoCount++,
-							"items" => $videoArr
-						);							
-					}
-				}
-				else
-					return false;	
-			}
-			break;
+			return $return;
 		}
-		return $return;			
 	}
-}
-	
+
 	/**
 	 * Get subscred videos
+	 *
+	 * @param     $uid
+	 * @param int $limit
+	 *
+	 * @return bool|STRING
 	 */
 	function get_subscribed_videos($uid,$limit=20)
 	{
@@ -4621,24 +4596,27 @@ function getSubscriptionsUploadsWeek($uid,$limit=20,$uploadsType="both",$uploads
 		{
 			foreach($users as $user)
 			{
-				//pr($user);
 				//Creating Query
 				if($user_cond)
 					$user_cond .= " OR ";
 				$user_cond .= tbl("users.userid")."='".$user[0]."' ";
 			}
 			$user_cond = " AND (".$user_cond.") ";
-			global $cbvid,$db;
+			global $cbvid;
 			$vids = $cbvid->get_videos(array('limit'=>$limit,'cond'=>$user_cond,"order"=>" date_added DESC ","date_span"=>"this_week"));
-			// echo $db->db_query;
 			return $vids;
 		}
 		return false;
 	}
-	
-	
+
 	/**
 	 * Function used to set item as profile item
+	 *
+	 * @param        $id
+	 * @param string $type
+	 * @param null   $uid
+	 *
+	 * @return bool
 	 */
 	function setProfileItem($id,$type='v',$uid=NULL)
 	{
@@ -4683,9 +4661,13 @@ function getSubscriptionsUploadsWeek($uid,$limit=20,$uploadsType="both",$uploads
 			break;
 		}
 	}
-	
+
 	/**
 	 * Remove Profile item
+	 *
+	 * @param null $uid
+	 *
+	 * @return bool
 	 */
 	function removeProfileItem($uid=NULL)
 	{
@@ -4703,9 +4685,14 @@ function getSubscriptionsUploadsWeek($uid,$limit=20,$uploadsType="both",$uploads
 		
 		e(lang("profile_item_removed"),"m");
 	}
-	
+
 	/**
 	 * function used to get profile item
+	 *
+	 * @param null $uid
+	 * @param bool $withDetails
+	 *
+	 * @return bool|mixed|STRING
 	 */
 	function getProfileItem($uid=NULL,$withDetails = false)
 	{
@@ -4750,10 +4737,16 @@ function getSubscriptionsUploadsWeek($uid,$limit=20,$uploadsType="both",$uploads
 		}
 		return $this->profileItem = $profileItem;
 	}
-	
+
 	/**
 	 * Function used to check weather input given item
 	 * is profile item or not
+	 *
+	 * @param        $id
+	 * @param string $type
+	 * @param null   $uid
+	 *
+	 * @return bool
 	 */
 	function isProfileItem($id,$type='v',$uid=NULL)
 	{
@@ -4764,432 +4757,429 @@ function getSubscriptionsUploadsWeek($uid,$limit=20,$uploadsType="both",$uploads
 		else
 			return false;
 	}
-	
-	
-	
-	
+
 	/**
 	 * FUnction loading personal details
+	 *
+	 * @param $default
+	 *
+	 * @return array
 	 */
 	function load_personal_details($default)
 	{
-		
 		if(!$default)
 			$default = $_POST;
-		$profile_fields = array
-		(
-		'first_name' => array(
-						  'title'=> lang("user_fname"),
-						  'type'=> "textfield",
-						  'name'=> "first_name",
-						  'id'=> "first_name",
-						  'value'=> $default['first_name'],
-						  'db_field'=>'first_name',
-						  'required'=>'no',
-						  'syntax_type'=> 'name',
-						  'auto_view'=>'yes'
-						  ),
-		'last_name' => array(
-						  'title'=> lang("user_lname"),
-						  'type'=> "textfield",
-						  'name'=> "last_name",
-						  'id'=> "last_name",
-						  'value'=> $default['last_name'],
-						  'db_field'=>'last_name',
-						  'syntax_type'=> 'name',
-						  'auto_view'=>'yes'
-						  ),
-		
-		
-		'relation_status' => array(
-						  'title'=>  lang("user_relat_status"),
-						  'type'=> "dropdown",
-						  'name'=> "relation_status",
-						  'id'=> "last_name",
-						  'value'=> array(
-										  lang('usr_arr_no_ans'),
-										  lang('usr_arr_single'),
-										  lang('usr_arr_married'),
-										  lang('usr_arr_comitted'),
-										  lang('usr_arr_open_relate')
-										  ),
-						  'checked'=> $default['relation_status'],
-						  'db_field'=>'relation_status',
-						  'auto_view'=>'yes',
-						  
-		
-						  ),
-		'show_dob' => array(
-						  'title'=>  lang("show_dob"),
-						  'type'=> "radiobutton",
-						  'name'=> "show_dob",
-						  'id'=> "show_dob",
-						  'value' => array('yes'=>lang('yes'),'no'=>lang('no')),
-						  'checked'	=> $default['show_dob'],
-						  'db_field'=>'show_dob',
-						  'syntax_type'=> 'name',
-						  'auto_view'=>'no',
-						  'sep'=>'&nbsp;'
-						  ),
-		'about_me' => array(
-						  'title'=>  lang("user_about_me"),
-						  'type'=> "textarea",
-						  'name'=> "about_me",
-						  'id'=> "about_me",
-						  'value'=> cleanForm($default['about_me']),
-						  'db_field'=>'about_me',
-						  'auto_view'=>'no',
-						  'clean_func' => 'Replacer',
-						  ),
-		'profile_tags' => array(
-						  'title'=>  lang("profile_tags"),
-						  'type'=> "textfield",
-						  'name'=> "profile_tags",
-						  'id'=> "profile_tags",
-						  'value'=> $default['profile_tags'],
-						  'db_field'=>'profile_tags',
-						  'auto_view'=>'no'
-						  ),
-		'web_url' => array(
-						  'title'=>  lang("website"),
-						  'type'=> "textfield",
-						  'name'=> "web_url",
-						  'id'=> "web_url",
-						  'value'=> $default['web_url'],
-						  'db_field'=>'web_url',
-						  'auto_view'=>'yes',
-						  'display_function'=>'outgoing_link'
-						  ),
-
-		
+		$profile_fields = array(
+			'first_name' => array(
+				'title'=> lang("user_fname"),
+				'type'=> "textfield",
+				'name'=> "first_name",
+				'id'=> "first_name",
+				'value'=> $default['first_name'],
+				'db_field'=>'first_name',
+				'required'=>'no',
+				'syntax_type'=> 'name',
+				'auto_view'=>'yes'
+			),
+			'last_name' => array(
+				'title'=> lang("user_lname"),
+				'type'=> "textfield",
+				'name'=> "last_name",
+				'id'=> "last_name",
+				'value'=> $default['last_name'],
+				'db_field'=>'last_name',
+				'syntax_type'=> 'name',
+				'auto_view'=>'yes'
+			),
+			'relation_status' => array(
+				'title'=>  lang("user_relat_status"),
+				'type'=> "dropdown",
+				'name'=> "relation_status",
+				'id'=> "last_name",
+				'value'=> array(
+					lang('usr_arr_no_ans'),
+					lang('usr_arr_single'),
+					lang('usr_arr_married'),
+					lang('usr_arr_comitted'),
+					lang('usr_arr_open_relate')
+				),
+				'checked'=> $default['relation_status'],
+				'db_field'=>'relation_status',
+				'auto_view'=>'yes',
+			),
+			'show_dob' => array(
+				'title'=>  lang("show_dob"),
+				'type'=> "radiobutton",
+				'name'=> "show_dob",
+				'id'=> "show_dob",
+				'value' => array('yes'=>lang('yes'),'no'=>lang('no')),
+				'checked'	=> $default['show_dob'],
+				'db_field'=>'show_dob',
+				'syntax_type'=> 'name',
+				'auto_view'=>'no',
+				'sep'=>'&nbsp;'
+			),
+			'about_me' => array(
+				'title'=>  lang("user_about_me"),
+				'type'=> "textarea",
+				'name'=> "about_me",
+				'id'=> "about_me",
+				'value'=> cleanForm($default['about_me']),
+				'db_field'=>'about_me',
+				'auto_view'=>'no',
+				'clean_func' => 'Replacer',
+			),
+			'profile_tags' => array(
+				'title'=>  lang("profile_tags"),
+				'type'=> "textfield",
+				'name'=> "profile_tags",
+				'id'=> "profile_tags",
+				'value'=> $default['profile_tags'],
+				'db_field'=>'profile_tags',
+				'auto_view'=>'no'
+			),
+			'web_url' => array(
+				'title'=>  lang("website"),
+				'type'=> "textfield",
+				'name'=> "web_url",
+				'id'=> "web_url",
+				'value'=> $default['web_url'],
+				'db_field'=>'web_url',
+				'auto_view'=>'yes',
+				'display_function'=>'outgoing_link'
+			)
 		);
 		
 		return $profile_fields;
 	}
-	
-	
+
 	/**
 	 * function used to load location fields
+	 *
+	 * @param $default
+	 *
+	 * @return array
 	 */
 	function load_location_fields($default)
 	{
 		if(!$default)
 			$default = $_POST;
-		$other_details = array
-		(
-		'postal_code' => array(
-						  'title'=>  lang("postal_code"),
-						  'type'=> "textfield",
-						  'name'=> "postal_code",
-						  'id'=> "postal_code",
-						  'value'=> $default['postal_code'],
-						  'db_field'=>'postal_code',
-						  'auto_view' => 'yes'
-						  ),
-		'hometown' => array(
-						  'title'=>  lang("hometown"),
-						  'type'=> "textfield",
-						  'name'=> "hometown",
-						  'id'=> "hometown",
-						  'value'=> $default['hometown'],
-						  'db_field'=>'hometown',
-						  'auto_view' => 'yes'
-						  ),
-		'city' => array(
-						  'title'=>  lang("city"),
-						  'type'=> "textfield",
-						  'name'=> "city",
-						  'id'=> "city",
-						  'value'=> $default['city'],
-						  'db_field'=>'city',
-						  'auto_view' => 'yes'
-						  ),
+		$other_details = array(
+			'postal_code' => array(
+				'title'=>  lang("postal_code"),
+				'type'=> "textfield",
+				'name'=> "postal_code",
+				'id'=> "postal_code",
+				'value'=> $default['postal_code'],
+				'db_field'=>'postal_code',
+				'auto_view' => 'yes'
+			),
+			'hometown' => array(
+				'title'=>  lang("hometown"),
+				'type'=> "textfield",
+				'name'=> "hometown",
+				'id'=> "hometown",
+				'value'=> $default['hometown'],
+				'db_field'=>'hometown',
+				'auto_view' => 'yes'
+			),
+			'city' => array(
+				'title'=>  lang("city"),
+				'type'=> "textfield",
+				'name'=> "city",
+				'id'=> "city",
+				'value'=> $default['city'],
+				'db_field'=>'city',
+				'auto_view' => 'yes'
+			)
 		);
 		return $other_details;
 	}
-	
-	
+
 	/**
 	 * Function used to load experice fields
+	 *
+	 * @param $default
+	 *
+	 * @return array
 	 */
 	function load_education_interests($default)
 	{
 		if(!$default)
 			$default = $_POST;
-		$more_details = array
-		(
-		'education' => array(
-						  'title'=>  lang("education"),
-						  'type'=> "dropdown",
-						  'name'=> "education",
-						  'id'=> "education",
-						  'value'=> array(lang('usr_arr_no_ans'),
-										  lang('usr_arr_elementary'),
-										  lang('usr_arr_hi_school'),
-										  lang('usr_arr_some_colg'),
-										  lang('usr_arr_assoc_deg'),
-										  lang('usr_arr_bach_deg'),
-										  lang('usr_arr_mast_deg'),
-										  lang('usr_arr_phd'),
-										  lang('usr_arr_post_doc'),
-										  ),
-						  'checked'=>$default['education'],
-						  'db_field'=>'education',
-						  'auto_view'=>'yes',
-						  ),
-		'schools' => array(
-						  'title'=>  lang("schools"),
-						  'type'=> "textarea",
-						  'name'=> "schools",
-						  'id'=> "schools",
-						  'value'=> cleanForm($default['schools']),
-						  'db_field'=>'schools',
-						  'clean_func' => 'Replacer',
-						  'auto_view'=>'yes',
-						  ),
-		'occupation' => array(
-						  'title'=>  lang("occupation"),
-						  'type'=> "textarea",
-						  'name'=> "occupation",
-						  'id'=> "occupation",
-						  'value'=> cleanForm($default['occupation']),
-						  'db_field'=>'occupation',
-						  'clean_func' => 'Replacer',
-						  'auto_view'=>'yes',
-						  ),
-		'companies' => array(
-						  'title'=>  lang("companies"),
-						  'type'=> "textarea",
-						  'name'=> "companies",
-						  'id'=> "companies",
-						  'value'=> cleanForm($default['companies']),
-						  'db_field'=>'companies',
-						  'clean_func' => 'Replacer',
-						  'auto_view'=>'yes',
-						  ),
-		'hobbies' => array(
-						  'title'=>  lang("hobbies"),
-						  'type'=> "textarea",
-						  'name'=> "hobbies",
-						  'id'=> "hobbies",
-						  'value'=> cleanForm($default['hobbies']),
-						  'db_field'=>'hobbies',
-						  'clean_func' => 'Replacer',
-						  'auto_view'=>'yes',
-						  ),
-		'fav_movies' => array(
-						  'title'=>  lang("user_fav_movs_shows"),
-						  'type'=> "textarea",
-						  'name'=> "fav_movies",
-						  'id'=> "fav_movies",
-						  'value'=> cleanForm($default['fav_movies']),
-						  'db_field'=>'fav_movies',
-						  'clean_func' => 'Replacer',
-						  'auto_view'=>'yes',
-						  ),
-		'fav_music' => array(
-						  'title'=>  lang("user_fav_music"),
-						  'type'=> "textarea",
-						  'name'=> "fav_music",
-						  'id'=> "fav_music",
-						  'value'=> cleanForm($default['fav_music']),
-						  'db_field'=>'fav_music',
-						  'clean_func' => 'Replacer',
-						  'auto_view'=>'yes',
-						  ),
-		'fav_books' => array(
-						  'title'=>  lang("user_fav_books"),
-						  'type'=> "textarea",
-						  'name'=> "fav_books",
-						  'id'=> "fav_books",
-						  'value'=> cleanForm($default['fav_books']),
-						  'db_field'=>'fav_books',
-						  'clean_func' => 'Replacer',
-						  'auto_view'=>'yes',
-						  ),
-		
+		$more_details = array(
+			'education' => array(
+				'title'=>  lang("education"),
+				'type'=> "dropdown",
+				'name'=> "education",
+				'id'=> "education",
+				'value'=> array(
+					lang('usr_arr_no_ans'),
+					lang('usr_arr_elementary'),
+					lang('usr_arr_hi_school'),
+					lang('usr_arr_some_colg'),
+					lang('usr_arr_assoc_deg'),
+					lang('usr_arr_bach_deg'),
+					lang('usr_arr_mast_deg'),
+					lang('usr_arr_phd'),
+					lang('usr_arr_post_doc'),
+				),
+				'checked'=>$default['education'],
+				'db_field'=>'education',
+				'auto_view'=>'yes'
+			),
+			'schools' => array(
+				'title'=>  lang("schools"),
+				'type'=> "textarea",
+				'name'=> "schools",
+				'id'=> "schools",
+				'value'=> cleanForm($default['schools']),
+				'db_field'=>'schools',
+				'clean_func' => 'Replacer',
+				'auto_view'=>'yes'
+			),
+			'occupation' => array(
+				'title'=>  lang("occupation"),
+				'type'=> "textarea",
+				'name'=> "occupation",
+				'id'=> "occupation",
+				'value'=> cleanForm($default['occupation']),
+				'db_field'=>'occupation',
+				'clean_func' => 'Replacer',
+				'auto_view'=>'yes'
+			),
+			'companies' => array(
+				'title'=>  lang("companies"),
+				'type'=> "textarea",
+				'name'=> "companies",
+				'id'=> "companies",
+				'value'=> cleanForm($default['companies']),
+				'db_field'=>'companies',
+				'clean_func' => 'Replacer',
+				'auto_view'=>'yes'
+			),
+			'hobbies' => array(
+				'title'=>  lang("hobbies"),
+				'type'=> "textarea",
+				'name'=> "hobbies",
+				'id'=> "hobbies",
+				'value'=> cleanForm($default['hobbies']),
+				'db_field'=>'hobbies',
+				'clean_func' => 'Replacer',
+				'auto_view'=>'yes'
+			),
+			'fav_movies' => array(
+				'title'=>  lang("user_fav_movs_shows"),
+				'type'=> "textarea",
+				'name'=> "fav_movies",
+				'id'=> "fav_movies",
+				'value'=> cleanForm($default['fav_movies']),
+				'db_field'=>'fav_movies',
+				'clean_func' => 'Replacer',
+				'auto_view'=>'yes'
+			),
+			'fav_music' => array(
+				'title'=>  lang("user_fav_music"),
+				'type'=> "textarea",
+				'name'=> "fav_music",
+				'id'=> "fav_music",
+				'value'=> cleanForm($default['fav_music']),
+				'db_field'=>'fav_music',
+				'clean_func' => 'Replacer',
+				'auto_view'=>'yes'
+			),
+			'fav_books' => array(
+				'title'=>  lang("user_fav_books"),
+				'type'=> "textarea",
+				'name'=> "fav_books",
+				'id'=> "fav_books",
+				'value'=> cleanForm($default['fav_books']),
+				'db_field'=>'fav_books',
+				'clean_func' => 'Replacer',
+				'auto_view'=>'yes'
+			)
 		);
 		return $more_details;
 	}
-	
-	
+
+
 	/**
 	 * Function used to load privacy fields
+	 *
+	 * @param $default
+	 *
+	 * @return array
 	 */
 	function load_privacy_field($default)
 	{
 		if(!$default)
 			$default = $_POST;
 			
-		$privacy = array
-		(
-		'online_status' => array(
-						  'title'=>  lang("online_status"),
-						  'type'=> "dropdown",
-						  'name'=> "privacy",
-						  'id'=> "privacy",
-						  'value'=> array('online'=>lang('online'),'offline'=>lang('offline'),'custom'=>lang('custom')),
-						  'checked'=>$default['online_status'],
-						  'db_field'=>'online_status',
-						  ),
-		'show_profile' => array(
-						  'title'=>  lang("show_profile"),
-						  'type'=> "dropdown",
-						  'name'=> "show_profile",
-						  'id'=> "show_profile",
-						  'value'=> array('all'=>lang('all'),'members'=>lang('members'),'friends'=>lang('friends')),
-						  'checked'=>$default['show_profile'],
-						  'db_field'=>'show_profile',
-						  'sep' => '&nbsp;'
-						  ),
-		'allow_comments'=>array(
-						  'title'=>  lang("vdo_allow_comm"),
-						  'type'=> "radiobutton",
-						  'name'=> "allow_comments",
-						  'id'=> "allow_comments",
-						  'value' => array('yes'=>lang('yes'),'no'=>lang('no')),
-						  'checked' => strtolower($default['allow_comments']),
-						  'db_field'=>'allow_comments',
-						  'sep' => '&nbsp;'
-						  ),
-		'allow_ratings'=>array(
-						  'title'=>  lang("allow_ratings"),
-						  'type'=> "radiobutton",
-						  'name'=> "allow_ratings",
-						  'id'=> "allow_ratings",
-						  'value' => array('yes'=>lang('yes'),'no'=>lang('no')),
-						  'checked' => strtolower($default['allow_ratings']),
-						  'db_field'=>'allow_ratings',
-						  'sep' => '&nbsp;'
-						  ),
-		'allow_subscription'=>array(
-						  'title'=>  lang("allow_subscription"),
-						  'type'=> "radiobutton",
-						  'name'=> "allow_subscription",
-						  'id'=> "allow_subscription",
-						  'hint_1' => lang('allow_subscription_hint'),
-						  'value' => array('yes'=>lang('yes'),'no'=>lang('no')),
-						  'checked' => strtolower($default['allow_subscription']),
-						  'db_field'=>'allow_subscription',
-						  'sep' => '&nbsp;'
-						  ),
+		$privacy = array(
+			'online_status' => array(
+				'title'=>  lang("online_status"),
+				'type'=> "dropdown",
+				'name'=> "privacy",
+				'id'=> "privacy",
+				'value'=> array('online'=>lang('online'),'offline'=>lang('offline'),'custom'=>lang('custom')),
+				'checked'=>$default['online_status'],
+				'db_field'=>'online_status'
+			),
+			'show_profile' => array(
+				'title'=>  lang("show_profile"),
+				'type'=> "dropdown",
+				'name'=> "show_profile",
+				'id'=> "show_profile",
+				'value'=> array('all'=>lang('all'),'members'=>lang('members'),'friends'=>lang('friends')),
+				'checked'=>$default['show_profile'],
+				'db_field'=>'show_profile',
+				'sep' => '&nbsp;'
+			),
+			'allow_comments'=>array(
+				'title'=>  lang("vdo_allow_comm"),
+				'type'=> "radiobutton",
+				'name'=> "allow_comments",
+				'id'=> "allow_comments",
+				'value' => array('yes'=>lang('yes'),'no'=>lang('no')),
+				'checked' => strtolower($default['allow_comments']),
+				'db_field'=>'allow_comments',
+				'sep' => '&nbsp;'
+			),
+			'allow_ratings'=>array(
+				'title'=>  lang("allow_ratings"),
+				'type'=> "radiobutton",
+				'name'=> "allow_ratings",
+				'id'=> "allow_ratings",
+				'value' => array('yes'=>lang('yes'),'no'=>lang('no')),
+				'checked' => strtolower($default['allow_ratings']),
+				'db_field'=>'allow_ratings',
+				'sep' => '&nbsp;'
+			),
+			'allow_subscription'=>array(
+				'title'=>  lang("allow_subscription"),
+				'type'=> "radiobutton",
+				'name'=> "allow_subscription",
+				'id'=> "allow_subscription",
+				'hint_1' => lang('allow_subscription_hint'),
+				'value' => array('yes'=>lang('yes'),'no'=>lang('no')),
+				'checked' => strtolower($default['allow_subscription']),
+				'db_field'=>'allow_subscription',
+				'sep' => '&nbsp;'
+			)
 		);
 		
 		return $privacy;
 	}
-	
+
 	/**
 	 * load_channel_settings
 	 *
-	 * @param $input defaults value for channel settings
-	 * @return arra of channel info fields
+	 * @param $default array values for channel settings
+	 * @return array of channel info fields
 	 */
 	function load_channel_settings($default)
 	{
 		if(!$default)
 			$default = $_POST;
 			
-		$channel_settings = array
-		(
-		'profile_title' => array(
-						  'title'=>  lang("channel_title"),
-						  'type'=> "textfield",
-						  'name'=> "profile_title",
-						  'id'=> "profile_title",
-						  'value'=> $default['profile_title'],
-						  'db_field'=>'profile_title',
-						  'auto_view'=>'no'
-		
-						  ),
-		'profile_desc' => array(
-						  'title'=>  lang("channel_desc"),
-						  'type'=> "textarea",
-						  'name'=> "profile_desc",
-						  'id'=> "profile_desc",
-						  'value'=> $default['profile_desc'],
-						  'db_field'=>'profile_desc',
-						  'auto_view'=>'yes',
-						  'clean_func' => 'Replacer',
-						  ),
-		'show_my_friends'=>array(
-						  'title'=>  lang("show_my_friends"),
-						  'type'=> "radiobutton",
-						  'name'=> "show_my_friends",
-						  'id'=> "show_my_friends",
-						  'value' => array('yes'=>lang('yes'),'no'=>lang('no')),
-						  'checked' => strtolower($default['show_my_friends']),
-						  'db_field'=>'show_my_friends',
-						  'sep' => '&nbsp;'
-						  ),
-		'show_my_videos'=>array(
-						  'title'=>  lang("show_my_videos"),
-						  'type'=> "radiobutton",
-						  'name'=> "show_my_videos",
-						  'id'=> "show_my_videos",
-						  'value' => array('yes'=>lang('yes'),'no'=>lang('no')),
-						  'checked' => strtolower($default['show_my_videos']),
-						  'db_field'=>'show_my_videos',
-						  'sep' => '&nbsp;'
-						  ),
-		'show_my_photos'=>array(
-						  'title'=>  lang("show_my_photos"),
-						  'type'=> "radiobutton",
-						  'name'=> "show_my_photos",
-						  'id'=> "show_my_photos",
-						  'value' => array('yes'=>lang('yes'),'no'=>lang('no')),
-						  'checked' => strtolower($default['show_my_photos']),
-						  'db_field'=>'show_my_photos',
-						  'sep' => '&nbsp;'
-						  ),
-		'show_my_subscriptions'=>array(
-						  'title'=>  lang("show_my_subscriptions"),
-						  'type'=> "radiobutton",
-						  'name'=> "show_my_subscriptions",
-						  'id'=> "show_my_subscriptions",
-						  'value' => array('yes'=>lang('yes'),'no'=>lang('no')),
-						  'checked' => strtolower($default['show_my_subscriptions']),
-						  'db_field'=>'show_my_subscriptions',
-						  'sep' => '&nbsp;'
-						  ),
-		'show_my_subscribers'=>array(
-						  'title'=>  lang("show_my_subscribers"),
-						  'type'=> "radiobutton",
-						  'name'=> "show_my_subscribers",
-						  'id'=> "show_my_subscribers",
-						  'value' => array('yes'=>lang('yes'),'no'=>lang('no')),
-						  'checked' => strtolower($default['show_my_subscribers']),
-						  'db_field'=>'show_my_subscribers',
-						  'sep' => '&nbsp;'
-						  ),
-		'show_my_collections'=>array(
-						  'title'=>  lang("show_my_collections"),
-						  'type'=> "radiobutton",
-						  'name'=> "show_my_collections",
-						  'id'=> "show_my_collections",
-						  'value' => array('yes'=>lang('yes'),'no'=>lang('no')),
-						  'checked' => strtolower($default['show_my_collections']),
-						  'db_field'=>'show_my_collections',
-						  'sep' => '&nbsp;'
-						  ),
-		
+		$channel_settings = array(
+			'profile_title' => array(
+				'title'=>  lang("channel_title"),
+				'type'=> "textfield",
+				'name'=> "profile_title",
+				'id'=> "profile_title",
+				'value'=> $default['profile_title'],
+				'db_field'=>'profile_title',
+				'auto_view'=>'no'
+			),
+			'profile_desc' => array(
+				'title'=>  lang("channel_desc"),
+				'type'=> "textarea",
+				'name'=> "profile_desc",
+				'id'=> "profile_desc",
+				'value'=> $default['profile_desc'],
+				'db_field'=>'profile_desc',
+				'auto_view'=>'yes',
+				'clean_func' => 'Replacer'
+			),
+			'show_my_friends'=>array(
+				'title'=>  lang("show_my_friends"),
+				'type'=> "radiobutton",
+				'name'=> "show_my_friends",
+				'id'=> "show_my_friends",
+				'value' => array('yes'=>lang('yes'),'no'=>lang('no')),
+				'checked' => strtolower($default['show_my_friends']),
+				'db_field'=>'show_my_friends',
+				'sep' => '&nbsp;'
+			),
+			'show_my_videos'=>array(
+				'title'=>  lang("show_my_videos"),
+				'type'=> "radiobutton",
+				'name'=> "show_my_videos",
+				'id'=> "show_my_videos",
+				'value' => array('yes'=>lang('yes'),'no'=>lang('no')),
+				'checked' => strtolower($default['show_my_videos']),
+				'db_field'=>'show_my_videos',
+				'sep' => '&nbsp;'
+			),
+			'show_my_photos'=>array(
+				'title'=>  lang("show_my_photos"),
+				'type'=> "radiobutton",
+				'name'=> "show_my_photos",
+				'id'=> "show_my_photos",
+				'value' => array('yes'=>lang('yes'),'no'=>lang('no')),
+				'checked' => strtolower($default['show_my_photos']),
+				'db_field'=>'show_my_photos',
+				'sep' => '&nbsp;'
+			),
+			'show_my_subscriptions'=>array(
+				'title'=>  lang("show_my_subscriptions"),
+				'type'=> "radiobutton",
+				'name'=> "show_my_subscriptions",
+				'id'=> "show_my_subscriptions",
+				'value' => array('yes'=>lang('yes'),'no'=>lang('no')),
+				'checked' => strtolower($default['show_my_subscriptions']),
+				'db_field'=>'show_my_subscriptions',
+				'sep' => '&nbsp;'
+			),
+			'show_my_subscribers'=>array(
+				'title'=>  lang("show_my_subscribers"),
+				'type'=> "radiobutton",
+				'name'=> "show_my_subscribers",
+				'id'=> "show_my_subscribers",
+				'value' => array('yes'=>lang('yes'),'no'=>lang('no')),
+				'checked' => strtolower($default['show_my_subscribers']),
+				'db_field'=>'show_my_subscribers',
+				'sep' => '&nbsp;'
+			),
+			'show_my_collections'=>array(
+				'title'=>  lang("show_my_collections"),
+				'type'=> "radiobutton",
+				'name'=> "show_my_collections",
+				'id'=> "show_my_collections",
+				'value' => array('yes'=>lang('yes'),'no'=>lang('no')),
+				'checked' => strtolower($default['show_my_collections']),
+				'db_field'=>'show_my_collections',
+				'sep' => '&nbsp;'
+			)
 		);
 		
 		return $channel_settings;
 	}
-	
-	
+
 	/**
 	 * load_user_fields
-	 * 
-	 * @param $input default values for user profile fields
+	 *
+	 * @param        $default array values for user profile fields
+	 * @param string $type
+	 *
 	 * @return array of user fields
 	 *
 	 * Function used to load Video fields
-	 * in clipbucket v2.1 , video fields are loaded in form of groups arrays
-	 * each group has it name and fields wrapped in array 
+	 * in Clipbucket v2.1 , video fields are loaded in form of groups arrays
+	 * each group has it name and fields wrapped in array
 	 * and that array will be part of video fields
 	 */
-	
 	function load_user_fields($default,$type='all')
 	{
 		$getChannelSettings = false;
@@ -5199,78 +5189,58 @@ function getSubscriptionsUploadsWeek($uid,$limit=20,$uploadsType="both",$uploads
 		switch($type)
 		{
 			case "all":
-			{
 				$getChannelSettings = true;
 				$getProfileSettings = true;
-			}
-			break;
+				break;
 			
 			case "channel":
 			case "channels":
-			{
 				$getChannelSettings = true;
-			}
-			break;
+				break;
 			
 			case "profile":
 			case "profile_settings":
-			{
 				$getProfileSettings = true;
-			}
-			break;
-			
+				break;
 		}
-		
-		
+
 		if($getChannelSettings)
 		{
-			$channel_settings = array
-			(
-				array
-				(
+			$channel_settings = array(
+				array(
 					'group_name' => lang('channel_settings'),
-					'group_id'	=> 'channel_settings',
-					'fields'	=> array_merge($this->load_channel_settings($default)
+					'group_id'	 => 'channel_settings',
+					'fields'	 => array_merge($this->load_channel_settings($default)
 									,$this->load_privacy_field($default)),
-				),
+				)
 			);
 		}
 		
 		if($getProfileSettings)
 		{
-			$profile_settings = array
-			(
-				array
-				(
+			$profile_settings = array(
+				array(
 					'group_name' => lang('profile_basic_info'),
 					'group_id'	=> 'profile_basic_info',
 					'fields'	=> $this->load_personal_details($default),
 				),
-				
-				array
-				(
+				array(
 					'group_name' => lang('location'),
 					'group_id'=> 'profile_location',
 					'fields' => $this->load_location_fields($default)
 				),
-				
-				array
-				(
+				array(
 					'group_name' => lang('profile_education_interests'),
 					'group_id' => 'profile_education_interests',
 					'fields' => $this->load_education_interests($default)
 				)
 			);
-			
-			
+
 			//Adding Custom Fields
 			$custom_fields = $this->load_custom_profile_fields($default,false);
-			
 			if($custom_fields)
 			{
-				$more_fields_group = 
-				array
-				(
+				$more_fields_group = array(
 					'group_name' => lang('more_fields'),
 					'group_id'	=> 'custom_fields',
 					'fields'	=> $custom_fields,
@@ -5280,57 +5250,45 @@ function getSubscriptionsUploadsWeek($uid,$limit=20,$uploadsType="both",$uploads
 			//Loading Custom Profile Forms
 			$custom_fields_with_group = $this->load_custom_profile_fields($default,true);
 			
-			//Finaling putting them together in their main array called $fields
+			//Finally putting them together in their main array called $fields
 			if($custom_fields_with_group)
 			{
 				$custFieldGroups = $custom_fields_with_group;
 			
 				foreach($custFieldGroups as $gKey => $fieldGroup)
 				{
-					
 					$group_id = $fieldGroup['group_id'];
 					
 					foreach($profile_settings as $key => $field)
-					{ 
-						
+					{
 						if($field['group_id'] == $group_id)
 						{
 							$inputFields = $field['fields'];
 							//Setting field values
 							$newFields = $fieldGroup['fields'];
-							
-							
-							
 							$mergeField = array_merge($inputFields,$newFields);
-							
-							
+
 							//Finally Updating array
-							$newGroupArray =
-							array
-							(
+							$newGroupArray =array(
 								'group_name' => $field['group_name'],
 								'group_id' => $field['group_id'],
 								'fields' => $mergeField,
 							);
 							
 							$fields[$key] = $newGroupArray;
-							
 							$matched = true;
 							break;
-						}else
+						} else {
 							$matched = false;
-							
+						}
 					}
-					
 					if(!$matched)
-						$profile_settings[] = $fieldGroup;			
-					
+						$profile_settings[] = $fieldGroup;
 				}
 			}
 			
 		}
-				
-		
+
 		if($channel_settings)
 			$fields = array_merge($fields,$channel_settings);
 		if($profile_settings)
@@ -5339,9 +5297,14 @@ function getSubscriptionsUploadsWeek($uid,$limit=20,$uploadsType="both",$uploads
 			$fields[] = $more_fields_group;	
 		return $fields;
 	}
-	
+
 	/**
 	 * Used to rate photo
+	 *
+	 * @param $id
+	 * @param $rating
+	 *
+	 * @return array
 	 */
 	function rate_user($id,$rating)
 	{
@@ -5404,10 +5367,13 @@ function getSubscriptionsUploadsWeek($uid,$limit=20,$uploadsType="both",$uploads
 		$return = array("rating"=>$new_rate,"rated_by"=>$rated_by,'total'=>10,"id"=>$id,"type"=>"user","disable"=>"disabled");
 		return $return;	
 	}
-	
-	
+
 	/**
 	 * Used to get current rating
+	 *
+	 * @param $id
+	 *
+	 * @return bool
 	 */
 	function current_rating($id)
 	{
@@ -5415,13 +5381,16 @@ function getSubscriptionsUploadsWeek($uid,$limit=20,$uploadsType="both",$uploads
 		$result = $db->select(tbl('user_profile'),'userid,allow_ratings,rating,rated_by,voters'," userid = ".$id."");
 		if($result)
 			return $result[0];
-		else
-			return false;				
+		return false;
 	}
-	
-	
+
 	/**
 	 * function used to check weather user is  online or not
+	 *
+	 * @param      $last_active
+	 * @param null $status
+	 *
+	 * @return bool
 	 */
 	function isOnline($last_active,$status=NULL)
 	{
@@ -5429,14 +5398,17 @@ function getSubscriptionsUploadsWeek($uid,$limit=20,$uploadsType="both",$uploads
 		$timeDiff = time() - $time;
 		if($timeDiff>60 || $status=='offline')
 			return false;
-		else
-			return true;
+		return true;
 	}
-	
-	
+
 	/**
 	 * Function used to get list of subscribed users and then
 	 * send subscription email
+	 *
+	 * @param      $vidDetails
+	 * @param bool $updateStatus
+	 *
+	 * @return bool
 	 */
 	function sendSubscriptionEmail($vidDetails,$updateStatus=true)
 	{
@@ -5467,13 +5439,13 @@ function getSubscriptionsUploadsWeek($uid,$limit=20,$uploadsType="both",$uploads
 		{
 			$var = $this->custom_subscription_email_vars;
 			
-			$more_var = array
-			('{username}'	=> $subscriber['username'],
-			 '{uploader}'		=> $uploader['username'],
-			 '{video_title}' => $v['title'],
-			 '{video_description}' => $v['description'],
-			 '{video_link}' => video_link($v),
-			 '{video_thumb}' => get_thumb($v),
+			$more_var = array(
+				'{username}'	=> $subscriber['username'],
+				'{uploader}'		=> $uploader['username'],
+				'{video_title}' => $v['title'],
+				'{video_description}' => $v['description'],
+				'{video_link}' => video_link($v),
+				'{video_thumb}' => get_thumb($v)
 			);
 			if(!is_array($var))
 				$var = array();
@@ -5482,9 +5454,7 @@ function getSubscriptionsUploadsWeek($uid,$limit=20,$uploadsType="both",$uploads
 			$msg = nl2br($cbemail->replace($tpl['email_template'],$var));
 			
 			//Now Finally Sending Email
-			
 			cbmail(array('to'=>$subscriber['email'],'from'=>WELCOME_EMAIL,'subject'=>$subj,'content'=>$msg));
-			
 		}
 		
 		if($total_subscribers)
@@ -5492,9 +5462,9 @@ function getSubscriptionsUploadsWeek($uid,$limit=20,$uploadsType="both",$uploads
 			//Updating video subscription email status to sent
 			if($updateStatus)
 			$db->update(tbl('video'),array('subscription_email'),array('sent')," videoid='".$v['videoid']."'");
-			$s = "";
+			$s = '';
 			if($total_subscribers>1)
-				$s = "s";
+				$s = 's';
 			e(sprintf(lang('subs_email_sent_to_users'),$total_subscribers,$s),"m");
 			return true;
 		}
@@ -5531,22 +5501,23 @@ function getSubscriptionsUploadsWeek($uid,$limit=20,$uploadsType="both",$uploads
 		global $db;
 		if(!$userid)
 			$userid = userid();
-		if(phpversion < '5.2.0')
+		if(check_php_cli("php") < '5.2.0')
 		{
 			global $json;
 			$js = $json;	
 		}
 		if(is_array($array))
 		{
+			$voted = '';
 			$votedDetails = $db->select(tbl("users"),"voted"," userid = '$userid'");
 			if(!empty($votedDetails))
+			{
 				if(!empty($js))
 					$voted = $js->json_decode($votedDetails[0]['voted'],TRUE);
 				else
 					$voted = json_decode($votedDetails[0]['voted'],TRUE);
-				
-			
-			
+			}
+
 			if(!empty($js))
 				$votedEncode = $js->json_encode($voted);
 			else
@@ -5559,78 +5530,85 @@ function getSubscriptionsUploadsWeek($uid,$limit=20,$uploadsType="both",$uploads
 
 	/**
 	 * Function used to display user manger link
+	 *
+	 * @param $link
+	 * @param $vid
+	 *
+	 * @return string
 	 */
 	function user_manager_link($link,$vid)
 	{
 		if(function_exists($link) && !is_array($link))
 		{
 			return $link($vid);
-		}else
+		}
+
+		if(!empty($link['title']) && !empty($link['link']))
 		{
-			if(!empty($link['title']) && !empty($link['link']))
-			{
-				return '<a href="'.$link['link'].'">'.$link['title'].'</a>';
-			}
+			return '<a href="'.$link['link'].'">'.display_clean($link['title']).'</a>';
 		}
 	}
 
 	/**
-	* Fetches all friend requests sent by given user
-	* @param : { integer } { $user } { id of user to fetch requests against }
-	*
-	* @return : { array } { $data } { array with all sent requests details }
-	* @since : 15th April, 2016, ClipBucket 2.8.1
-	* @author : Saqib Razzaq
-	*/
-
-	function sent_contact_requests($user) {
+	 * Fetches all friend requests sent by given user
+	 *
+	 * @param : { integer } { $user } { id of user to fetch requests against }
+	 *
+	 * @return array : { array } { $data } { array with all sent requests details }
+	 * @since : 15th April, 2016, ClipBucket 2.8.1
+	 * @author : Saqib Razzaq
+	 */
+	function sent_contact_requests($user)
+	{
 		global $db;
 		$data = $db->select(tbl('contacts'),"*","userid = $user AND confirmed = 'no'");
 		return $data;
 	}
 
-
 	/**
-	* Fetches all friend requests recieved by given user
-	* @param : { integer } { $user } { id of user to fetch requests against }
-	*
-	* @return : { array } { $data } { array with all recieved requests details }
-	* @since : 15th April, 2016, ClipBucket 2.8.1
-	* @author : Saqib Razzaq
-	*/
-
-	function recieved_contact_requests($user) {
+	 * Fetches all friend requests recieved by given user
+	 *
+	 * @param : { integer } { $user } { id of user to fetch requests against }
+	 *
+	 * @return array : { array } { $data } { array with all recieved requests details }
+	 * @since : 15th April, 2016, ClipBucket 2.8.1
+	 * @author : Saqib Razzaq
+	 */
+	function recieved_contact_requests($user)
+	{
 		global $db;
 		$data = $db->select(tbl('contacts'),"*","contact_userid = $user AND confirmed = 'no'");
 		return $data;
 	}
 
 	/**
-	* Fetches all friends of given user
-	* @param : { integer } { $user } { id of user to fetch friends against }
-	*
-	* @return : { array } { $data } { array with all friends details }
-	* @since : 15th April, 2016, ClipBucket 2.8.1
-	* @author : Saqib Razzaq
-	*/
-
-	function added_contacts($user) {
+	 * Fetches all friends of given user
+	 *
+	 * @param : { integer } { $user } { id of user to fetch friends against }
+	 *
+	 * @return array : { array } { $data } { array with all friends details }
+	 * @since : 15th April, 2016, ClipBucket 2.8.1
+	 * @author : Saqib Razzaq
+	 */
+	function added_contacts($user)
+	{
 		global $db;
 		$data = $db->select(tbl('contacts'),"*","(contact_userid = $user OR userid = $user) AND confirmed = 'yes'");
 		return $data;
 	}
 
 	/**
-	* Fetches friendship status of two users
-	* @param : { integer } { $logged_in_user } { id of logged in user }
-	* @param : { integer } { $channel_user } { id of channel being viewed }
-	*
-	* @return : { string } { s = sent, r = recieved, f = friends }
-	* @since : 15th April, 2016, ClipBucket 2.8.1
-	* @author : Saqib Razzaq
-	*/
-
-	function friendship_status($logged_in_user, $channel_user) {
+	 * Fetches friendship status of two users
+	 *
+	 * @param $logged_in_user
+	 * @param $channel_user
+	 *
+	 * @return string : { string } { s = sent, r = recieved, f = friends }
+	 * @since : 15th April, 2016, ClipBucket 2.8.1
+	 * @author : Saqib Razzaq
+	 */
+	function friendship_status($logged_in_user, $channel_user)
+	{
 		$sent = $this->sent_contact_requests($logged_in_user);
 		$pending = $this->recieved_contact_requests($logged_in_user);
 		$friends = $this->added_contacts($logged_in_user);
@@ -5655,4 +5633,3 @@ function getSubscriptionsUploadsWeek($uid,$limit=20,$uploadsType="both",$uploads
 	}
 
 }
-?>
