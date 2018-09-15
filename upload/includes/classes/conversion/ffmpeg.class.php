@@ -531,6 +531,10 @@ class FFMpeg
 				$commandSwitches .= " -acodec " .$this->options['audio_codec'];
 			}
 
+			// Fix for ChromeCast : Forcing stereo mode
+			if( config('chromecast_fix') )
+				$commandSwitches .= ' -ac 2';
+
 			/*
 				Setting Size Of output video
 			*/

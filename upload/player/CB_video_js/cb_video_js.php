@@ -79,7 +79,8 @@ if (!function_exists('cb_video_js'))
 	* This Function is written to set default resolution for cb_vjs_player
 	*/
 	function get_cbvjs_quality_type($video_files){
-		if ($video_files){
+		if ($video_files)
+		{
 			if (!empty($video_files[240])){
 				$video_file = $video_files[240];
 			}else{
@@ -88,7 +89,7 @@ if (!function_exists('cb_video_js'))
 			$one_file = get_cbvjs_quality($video_file);
 			if (is_numeric($one_file)){
 				$cb_combo_res = True;
-			}else{
+			} else {
 				$cb_combo_res = False;
 			}
 
@@ -99,27 +100,27 @@ if (!function_exists('cb_video_js'))
 				$all_res = $res;
 				if (in_array('360', $all_res)){
 					$quality = '360';
-				}else{
+				} else {
 					$quality = 'low';
 				}
-			}else{
+			} else {
 				$quality = "low";
 			}
 			return $quality;	
-		}else{
-			return False;
 		}
-		
+		return False;
 	}
 
 	/**
-	* Used to return functions of custom/premium plugins
-	* @param   : { Array } { function } { videoid }
-	* @example : get_my_function($params) { will check the required function name and return the case }
-	* @return  : { functions/Boolean } 
-	* @since   : 01st August, 2016 ClipBucket 2.8.1
-	* @author  : Fahad Abbas
-	*/
+	 * Used to return functions of custom/premium plugins
+	 *
+	 * @param   : { Array } { function } { videoid }
+	 *
+	 * @return bool : { functions/Boolean }
+	 * @example : get_my_function($params) { will check the required function name and return the case }
+	 * @since   : 01st August, 2016 ClipBucket 2.8.1
+	 * @author  : Fahad Abbas
+	 */
 	function get_my_function($params){
 
 		$function = $params['function'];
@@ -140,13 +141,10 @@ if (!function_exists('cb_video_js'))
 					
 					if ( !empty($current_ad) ){
 						return $current_ad;
-					}else{
-						return false;
 					}
-				}else{
 					return false;
 				}
-
+				return false;
 			}
 			break;
 
@@ -155,12 +153,10 @@ if (!function_exists('cb_video_js'))
 					$timecomments = get_timeComments($videoid);
 					if (!empty($timecomments)){
 						return json_encode($timecomments);
-					}else{
-						return false;	
 					}
-				}else{	
 					return false;
 				}
+				return false;
 			}
 			break;
 
@@ -168,17 +164,15 @@ if (!function_exists('cb_video_js'))
 				if ( IA_ADS_INSTALLED == 'installed' ){
 					$video_editor_enabled = video_editor_enabled();
 					return $video_editor_enabled;
-				}else{
-					return false;
 				}
+				return false;
 			}
 			case 'get_svg_manager':{
 				if ( IA_ADS_INSTALLED == 'installed' ){
 					$svg_manager = svg_manager();
 					return $svg_manager;
-				}else{
-					return false;
 				}
+				return false;
 			}
 			case 'get_slot':{
 				if ( IA_ADS_INSTALLED == 'installed' ){
@@ -195,9 +189,8 @@ if (!function_exists('cb_video_js'))
 						$instances = $ia_ads->get_instance(array("slot_id"=>$slot_id,'order'=>'starttime ASC'));	
 					}
 					return $instances;
-				}else{
-					return false;
 				}
+				return false;
 			}
 			
 			default:
@@ -208,5 +201,3 @@ if (!function_exists('cb_video_js'))
 
 	register_actions_play_video('cb_video_js');
 }
-
-?>
