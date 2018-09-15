@@ -322,7 +322,7 @@ class FFMpeg
 				$this->setOptions($options);
 			}
 			$this->inputFile = $inputFile;
-			$this->outputFile = $this->videosDirPath . '/'. $this->options['outputPath'] . '/' . $this->getInputFileName($inputFile);
+			$this->outputFile = $this->videosDirPath . '/'. $this->options['outputPath'] . $this->getInputFileName($inputFile);
 			$videoDetails = $this->getVideoDetails($inputFile);
 			$this->videoDetails = $videoDetails;
 			$this->output = new stdClass();
@@ -372,7 +372,7 @@ class FFMpeg
 				
 				//$this->logs->writeLine("MP4Box Conversion for SD", "Starting");
 				$TemplogData .= "\r\n Sarting : MP4Box Conversion for SD \r\n";
-				$fullCommand = $this->mp4BoxPath . " -inter 0.5 {$this->sdFile}  -tmp ".TEMP_DIR;
+				$fullCommand = $this->mp4BoxPath . " -inter 0.5 {$this->sdFile} -tmp ".TEMP_DIR;
 				if (PHP_OS == "WINNT")
 				{
 					$fullCommand = str_replace("/","\\",$fullCommand);	
