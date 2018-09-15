@@ -92,7 +92,6 @@ INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES
 	('videos_items_search_page', '30'),
 	('videos_item_channel_page', '25'),
 	('users_items_subscriptions', '5'),
-	('users_items_subscibers', '5'),
 	('users_items_contacts_channel', '5'),
 	('users_items_search_page', '12'),
 	('users_items_group_page', '15'),

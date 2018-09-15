@@ -199,7 +199,6 @@
 			'user_comment_own',
 			'user_rate_opt1'	,
 			'users_items_subscriptions',
-			'users_items_subscibers',
 			'users_items_contacts_channel',
 			'users_items_search_page',
 			'users_items_group_page',
@@ -269,7 +268,6 @@
 			'search_list_per_page',
 
 			'users_items_subscriptions',
-			'users_items_subscibers',
 			'users_items_contacts_channel',
 			'users_items_search_page',
 			'users_items_group_page',
