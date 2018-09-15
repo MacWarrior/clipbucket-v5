@@ -478,7 +478,7 @@ class ClipBucket
      */
     function list_extensions()
     {
-        $exts = $this->configs['allowed_types'];
+        $exts = $this->configs['allowed_video_types'];
         $exts = preg_replace('/ /', '', $exts);
         $exts = explode(',', $exts);
         $new_form = '';
@@ -493,7 +493,7 @@ class ClipBucket
 
     function get_extensions()
     {
-        $exts = $this->configs['allowed_types'];
+        $exts = $this->configs['allowed_video_types'];
         $exts = preg_replace('/ /', '', $exts);
         $exts = explode(',', $exts);
         $new_form = '';

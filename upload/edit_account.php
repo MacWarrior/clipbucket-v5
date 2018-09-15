@@ -38,7 +38,7 @@ if(isset($_FILES["coverPhoto"])){
 		$array = $_FILES;
 
 		$extension = getExt( $_FILES['coverPhoto']['name']);
-	   	$types = strtolower(config('allowed_types'));
+	   	$types = strtolower(config('allowed_photo_types'));
 	    $supported_extensions = explode(',', $types);
 
 	    if (!in_array($extension, $supported_extensions)) {

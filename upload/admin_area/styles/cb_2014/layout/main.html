@@ -649,26 +649,13 @@
 			</div>
 		</div>
 		<div class="row">
-
-			<!-- <div class="col-md-4">
-				<h5>Quick Conversion</h5>
-				<label class="checkbox" for="quick_conv">
-					<input type="checkbox" name="quick_conv" id="quick_conv" value="yes" {if $row.quick_conv=='yes'}checked{/if}/>
-					Turn on Quick Conversion
-					<a href="javascript:void(0);" target="_blank">
-						<img src="{$imageurl}/help.png" alt="info" border="0" class="tipsy_tip" title="If you check this option, videos will be converted as soon as uploading is complete, make sure your php path is correct before enabling this option otherwise may cause your website inaccessible"/>
-					</a>
-				</label>
-			</div> -->
-
-		</div>
-		<div class="row">
 			<div class="col-md-4">
-				<label for="allowed_types">Allowed extensions</label>
-				<textarea class="form-control" name="allowed_types" id="allowed_types" cols="45" rows="5">{$row.allowed_types}</textarea>
-				Sperate by comma [case insensitive]
+				<label for="allowed_video_types">Allowed Video extensions <i>(Sperate by comma [case insensitive])</i></label>
+				<textarea class="form-control" name="allowed_video_types" id="allowed_video_types" cols="45" rows="3">{$row.allowed_video_types}</textarea>
+				<br/>
+				<label for="allowed_photo_types">Allowed Photo extensions <i>(Sperate by comma [case insensitive])</i></label>
+				<textarea class="form-control" name="allowed_photo_types" id="allowed_photo_types" cols="45" rows="3">{$row.allowed_photo_types}</textarea>
 			</div>
-
 
 			<div class="col-md-4">
 				<label for="max_upload_size">Max upload file size</label>
@@ -678,53 +665,38 @@
 				Default PHP Max Upload size is
 				<strong>{$upload_max_size}</strong> and Post max size is
 				<strong>{$post_max_size}</strong>, if you set max upload file size larger than this, it will be override by default, however, if set lower than default, it will work fine.
-			</div>
-
-			<div class="col-md-4">
+				<br/><br/>
 				<label for="max_video_duration">Max upload durations</label>
 				<input class="form-control" name="max_video_duration" id="max_video_duration" value="{$row.max_video_duration}" size="15" maxlength="5"/>
 				in minutes
 			</div>
 
-		</div>
-		<div class="row">
+			<div class="col-md-4">
+				<label class="checkbox">
+					<input name="activation" type="checkbox" id="activation" value="1" {if $row.activation==1}checked{/if}/>
+					Video Activation
+					<a href="javascript:void(0);" target="_blank">
+						<img src="{$imageurl}/help.png" alt="info" border="0" class="tipsy_tip" title="If left unchecked, all vidoes will be published directly. If checked, admin will have to approve videos before they appear on website."/>
+					</a>
+				</label>
 
-			<div class="col-md-2 marginTopLarge">
-				<div class="form-group1">
-					<label class="checkbox">
-						<input name="activation" type="checkbox" id="activation" value="1" {if $row.activation==1}checked{/if}/>
-						Video Activation
-						<a href="javascript:void(0);" target="_blank">
-							<img src="{$imageurl}/help.png" alt="info" border="0" class="tipsy_tip" title="If left unchecked, all vidoes will be published directly. If checked, admin will have to approve videos before they appear on website."/>
-						</a>
-					</label>
-				</div>
-			</div>
-			<div class="col-md-2 marginTopLarge">
-				<div class="form-group1">
-					<label class="checkbox">
-						<input name="photo_activation" type="checkbox" id="photo_activation" value="1" {if $row.photo_activation==1}checked{/if}/>
-						Show All Photos
-						<a href="javascript:void(0);" target="_blank">
-							<img src="{$imageurl}/help.png" alt="info" border="0" class="tipsy_tip" title="If checked, all photos will be published directly. If left unchecked, admin will have to approve photos before they appear on website."/>
-						</a>
-					</label>
-				</div>
-			</div>
+				<label class="checkbox">
+					<input name="chromecast_fix" type="checkbox" id="chromecast_fix" value="1" {if $row.chromecast_fix==1}checked{/if}/>
+					Convert audio for ChromeCast compatibility
+					<a href="javascript:void(0);" target="_blank">
+						<img src="{$imageurl}/help.png" alt="info" border="0" class="tipsy_tip" title="Force audio conversion to Stereo"/>
+					</a>
+				</label>
 
-			<div class="col-md-2 marginTopLarge">
-				<div class="form-group1">
-					<label class="checkbox">
-						<input name="chromecast_fix" type="checkbox" id="chromecast_fix" value="1" {if $row.chromecast_fix==1}checked{/if}/>
-						Convert audio for ChromeCast compatibility
-						<a href="javascript:void(0);" target="_blank">
-							<img src="{$imageurl}/help.png" alt="info" border="0" class="tipsy_tip" title="Force audio conversion to Stereo"/>
-						</a>
-					</label>
-				</div>
+				<label class="checkbox">
+					<input name="photo_activation" type="checkbox" id="photo_activation" value="1" {if $row.photo_activation==1}checked{/if}/>
+					Show All Photos
+					<a href="javascript:void(0);" target="_blank">
+						<img src="{$imageurl}/help.png" alt="info" border="0" class="tipsy_tip" title="If checked, all photos will be published directly. If left unchecked, admin will have to approve photos before they appear on website."/>
+					</a>
+				</label>
 			</div>
 		</div>
-
 
 		<hr>
 		<div class="tabbable">

@@ -91,7 +91,7 @@
 				exit();
 			}
 
-			$types = strtolower(config('allowed_types'));
+			$types = strtolower(config('allowed_video_types'));
 			$supported_extensions = explode(',', $types);
 
 			if (!in_array($extension, $supported_extensions)) {
@@ -140,7 +140,6 @@
 			logData('Checking Server configurations to start for filename : '.$file_name.'','checkpoints');
 
 			$max_file_size_in_bytes = config('max_upload_size')*1024*1024;
-			$types = strtolower(config('allowed_types'));
 
 			//Checking filesize
 			$POST_MAX_SIZE = ini_get('post_max_size');

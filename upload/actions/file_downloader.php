@@ -12,27 +12,24 @@
  * @last_modified: 18th December, 2015 (YouTube Thumbs Qulaity Improved) 
  */
 
-
 include("../includes/config.inc.php");
 include("../includes/classes/curl/class.curl.php");
-//error_reporting(E_ALL ^E_NOTICE);/**/
 ini_set('max_execution_time', 3000);
 if(isset($_POST['check_url']))
 {
 	$url = $_POST['check_url'];
 	
-	$types_array = preg_replace('/,/',' ',strtolower(config('allowed_types')));
+	$types_array = preg_replace('/,/',' ',strtolower(config('allowed_video_types')));
 	$types_array = explode(' ',$types_array);
 	$file_ext = strtolower(getExt(strtolower($url)));
 		
 	if(checkRemoteFile($url) && in_array($file_ext,$types_array) )
 	{
 		echo json_encode(array('ok'=>'yes'));
-	}else
+	} else
 		echo json_encode(array('err'=>'Invalid remote url'));
 	exit();
 }
-//error_reporting(E_ALL); /**/
 
 /**
  * Call back function of cURL handlers
@@ -68,7 +65,6 @@ if(isset($_POST['youtube']))
 	{
 		exit(json_encode(array("error"=>"Invalid youtube url")));
 	}
-	
 
 	########################################
 	# YouTube Api 3 Starts 				   #
@@ -93,7 +89,6 @@ if(isset($_POST['youtube']))
 	$youtube_content = curl_exec($ch);
 	curl_close($ch);
 
-
 	$content = json_decode($youtube_content,true);
 	$thumb_contents = maxres_youtube($content);
 	$max_quality_thumb = $thumb_contents['thumb'];
@@ -106,23 +101,20 @@ if(isset($_POST['youtube']))
 	/**
 	* Converting YouTube Time in seconds
 	*/
-
 	$total = yt_time_convert($time);
 	$vid_array['title'] 		= $data['title'];
 	$vid_array['description'] 	= $data['description'];
 	$vid_array['tags'] 			= $data['title'];
 	$vid_array['duration'] 		= $total;
-	
-	$vid_array['thumbs'] = $max_quality_thumb;
-
-	$vid_array['embed_code'] = '<iframe width="560" height="315"';
-	$vid_array['embed_code'] .= ' src="//www.youtube.com/embed/'.$YouTubeId.'" ';
-	$vid_array['embed_code'] .= 'frameborder="0" allowfullscreen></iframe>';
-	$file_directory = createDataFolders();
+	$vid_array['thumbs'] 		= $max_quality_thumb;
+	$vid_array['embed_code'] 	= '<iframe width="560" height="315"';
+	$vid_array['embed_code'] 	.= ' src="//www.youtube.com/embed/'.$YouTubeId.'" ';
+	$vid_array['embed_code'] 	.= 'frameborder="0" allowfullscreen></iframe>';
+	$file_directory 			= createDataFolders();
 	$vid_array['file_directory'] = $file_directory;
-	$vid_array['category'] = array($cbvid->get_default_cid());
-	$vid_array['file_name'] = $file_name;
-	$vid_array['userid'] = userid();
+	$vid_array['category'] 		= array($cbvid->get_default_cid());
+	$vid_array['file_name'] 	= $file_name;
+	$vid_array['userid'] 		= userid();
 	
 	$duration = $vid_array['duration'];
 	$vid = $Upload->submit_upload($vid_array);
@@ -206,7 +198,7 @@ if(empty($file))
 	exit();
 }
 //Checking if extension is wrong
-$types = strtolower($Cbucket->configs['allowed_types']);
+$types = strtolower($Cbucket->configs['allowed_video_types']);
 $types_array = preg_replace('/,/',' ',$types);
 $types_array = explode(' ',$types_array);
 	
@@ -236,10 +228,10 @@ if(phpversion() < '5.3.0')
 	//Here we will get file size and write it in a file
 	//called dummy_log
 	$darray = array(
-	'file_size' => $curl->file_size,
-	'file_name' => $file_name.'.'.$ext,
-	'time_started'=>time(),
-	'byte_size' => 0
+		'file_size' => $curl->file_size,
+		'file_name' => $file_name.'.'.$ext,
+		'time_started'=>time(),
+		'byte_size' => 0
 	);
 	$do = fopen($dummy_file,'w+');
 	fwrite($do,json_encode($darray));

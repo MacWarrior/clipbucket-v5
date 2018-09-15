@@ -52,8 +52,8 @@ INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES
 	('user_rate_opt1', ''),
 	('captcha_type', '0'),
 	('allow_upload', ''),
-	('allowed_types', 'wmv,avi,divx,3gp,mov,mpeg,mpg,xvid,flv,asf,rm,dat,mp4,png,jpg'),
-	('version', '2.0.1'),
+	('allowed_video_types', 'wmv,avi,divx,3gp,mov,mpeg,mpg,xvid,flv,asf,rm,dat,mp4'),
+	('version', '5.1'),
 	('version_type', 'Alpha'),
 	('allow_template_change', '1'),
 	('allow_language_change', '1'),
@@ -319,4 +319,5 @@ INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 -- Addition for 5.1
 INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 	('chromecast_fix', '1');
-
+INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
+	 ('allowed_photo_types', 'jpg,jpeg,png');

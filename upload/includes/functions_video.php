@@ -1169,7 +1169,7 @@
      */
     function get_vid_extensions()
     {
-        $exts = config('allowed_types');
+        $exts = config('allowed_video_types');
         $exts = preg_replace("/ /","",$exts);
         $exts = explode(",",$exts);
         return $exts;

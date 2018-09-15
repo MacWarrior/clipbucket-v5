@@ -32,7 +32,8 @@
 		$configs = $Cbucket->configs;
 
 		$rows = array(
-			'allowed_types',
+			'allowed_video_types',
+			'allowed_photo_types',
 			'allow_language_change',
 			'allow_unicode_usernames',
 			'allow_username_spaces',

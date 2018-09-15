@@ -60,7 +60,7 @@ switch($mode)
         }
 
         $extension = getExt( $_FILES['file']['name']);
-        $types = strtolower(config('allowed_types'));
+        $types = strtolower(config('allowed_photo_types'));
         $supported_extensions = explode(',', $types);
 
         if (!in_array($extension, $supported_extensions)) {
