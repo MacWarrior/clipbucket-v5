@@ -5500,13 +5500,22 @@
        return $arr[0];
 	}
 
-    include( 'functions_db.php' );
-    include( 'functions_filter.php' );
-    include( 'functions_player.php' );
-    include( 'functions_template.php' );
-    include( 'functions_helper.php' );
-    include( 'functions_video.php' );
-    include( 'functions_user.php' );
-    include( 'functions_photo.php' );
+	function get_date_js()
+	{
+		$date_format_php = config('date_format');
+		$search = array('Y', 'm', 'd');
+		$replace = array('yy', 'mm', 'dd');
+
+		return str_replace($search, $replace, $date_format_php);
+	}
+
+    include('functions_db.php');
+    include('functions_filter.php');
+    include('functions_player.php');
+    include('functions_template.php');
+    include('functions_helper.php');
+    include('functions_video.php');
+    include('functions_user.php');
+    include('functions_photo.php');
     include('functions_actions.php');
     include('functions_playlist.php');

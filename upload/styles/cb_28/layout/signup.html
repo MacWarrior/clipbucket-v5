@@ -126,14 +126,12 @@
 							<div align="center">
 								{load_captcha captcha=$captcha load=function}
 							</div>
-						
 						{/if}
 
 						<div class="form-group checkbox">
 							<label>
 								<input name="agree" type="checkbox" id="agree" value="yes" checked>
 								{sprintf(lang(user_i_agree_to_the),$cbpage->get_page_link(3),$cbpage->get_page_link(2))}
-
 							</label>
 						</div>
 						{ANCHOR place="the_form"}
@@ -170,12 +168,12 @@
 			showOtherMonths: true,
 			selectOtherMonths: false,
 			changeMonth: true,
-			dateFormat:"yy-mm-dd",
+			dateFormat:"{get_date_js()}",
 			changeYear: true,
 			yearRange: "-56:+0"
 		});
 		$('.simple_container').addClass('alert-success alert container');
-		var currentDate = new Date("1988,04,07");
+		var currentDate = new Date();
 		$("#dob").datepicker("setDate", currentDate);
 	 });
 	
