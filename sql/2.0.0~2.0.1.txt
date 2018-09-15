@@ -1,2 +1,0 @@
-- Added New Language Phrases
-- Added New Config Options

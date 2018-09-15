@@ -1,1 +1,0 @@
-ALTER TABLE  `cb_photos` ADD  `photo_details` TEXT NOT NULL AFTER  `photo_tags`
