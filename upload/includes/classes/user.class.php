@@ -2449,10 +2449,8 @@ class userquery extends CBCategory{
 				}
 				$val = $new_val;
 			}
-			if(!$field['clean_func'] || (!function_exists($field['clean_func']) && !is_array($field['clean_func'])))
-				$val = mysql_clean($val);
-			else
-				$val = apply_func($field['clean_func'], mysql_clean($val));
+			if($field['clean_func'] && (function_exists($field['clean_func']) || is_array($field['clean_func'])))
+				$val = apply_func($field['clean_func'], $val);
 
 			if(!empty($field['db_field']))
 				$query_val[] = $val;
@@ -2480,10 +2478,8 @@ class userquery extends CBCategory{
 				}
 				$val = $new_val;
 			}
-			if(!$field['clean_func'] || (!function_exists($field['clean_func']) && !is_array($field['clean_func'])))
-				$val = mysql_clean($val);
-			else
-				$val = apply_func($field['clean_func'], mysql_clean($val));
+			if($field['clean_func'] && (function_exists($field['clean_func']) || is_array($field['clean_func'])))
+				$val = apply_func($field['clean_func'], $val);
 			
 			if(!empty($field['db_field']))
 				$uquery_val[] = $val;
@@ -2495,8 +2491,6 @@ class userquery extends CBCategory{
 			//Checking Username
 			if(empty($array['username']))
 				e(lang('usr_uname_err'));
-			//elseif($array['dusername'] != $array['username'] && $this->username_exists($array['username']))
-				//e(lang('usr_uname_err2'));
 			elseif(!username_check($array['username']))
 				e(lang('usr_uname_err3'));
 			else
@@ -2567,21 +2561,21 @@ class userquery extends CBCategory{
 		if($array['sex'])
 		{
 			$uquery_field[] = 'sex';
-			$uquery_val[] = mysql_clean($array['sex']);
+			$uquery_val[] = $array['sex'];
 		}
 		
 		//Changing Country
 		if($array['country'])
 		{
 			$uquery_field[] = 'country';
-			$uquery_val[] = mysql_clean($array['country']);
+			$uquery_val[] = $array['country'];
 		}
 		
 		//Changing Date of birth
 		if(isset($array['dob']))
 		{
 			$uquery_field[] = 'dob';
-			$uquery_val[] = date('Y-m-d',strtotime($array['dob']));
+			$uquery_val[] = date('Y-m-d', strtotime($array['dob']));
 		}
 
 		//Changing category
@@ -2614,10 +2608,9 @@ class userquery extends CBCategory{
 		//Deleting User Bg
 		if($array['delete_bg']=='yes')
 		{
-			
 			$file = USER_BG_DIR.'/'.$array['bg_file_name'];
 			if(file_exists($file) && $array['bg_file_name'])
-			unlink($file);
+				unlink($file);
 		}
 
 		if(isset($_FILES['avatar_file']['name']))
@@ -2682,10 +2675,8 @@ class userquery extends CBCategory{
 					}
 					$val = $new_val;
 				}
-				if(!$field['clean_func'] || (!function_exists($field['clean_func']) && !is_array($field['clean_func'])))
-					$val = mysql_clean($val);
-				else
-					$val = apply_func($field['clean_func'], mysql_clean($val));
+				if($field['clean_func'] && (function_exists($field['clean_func']) || is_array($field['clean_func'])))
+					$val = apply_func($field['clean_func'], $val);
 
 				if(!empty($field['db_field']))
 					$uquery_val[] = $val;
@@ -2694,7 +2685,7 @@ class userquery extends CBCategory{
 		
 		if(!error() && is_array($uquery_field))
 		{
-			$db->update(tbl($this->dbtbl['users']),$uquery_field,$uquery_val," userid='".mysql_clean($array['userid'])."'");
+			$db->update(tbl($this->dbtbl['users']), $uquery_field, $uquery_val," userid='".mysql_clean($array['userid'])."'");
 			e(lang("usr_upd_succ_msg"),'m');
 		}
 
@@ -3954,7 +3945,7 @@ class userquery extends CBCategory{
 			$cond .= " ".$params['cond']." ";
 		}
 
-		if(!isset($params['count_only']) || (isset($params['count_only']) && !$params['count_only']) )
+		if(!isset($params['count_only']) || (isset($params['count_only']) && empty($params['count_only'])) )
         {
             $fields = array(
                 'users' => get_user_fields(),
@@ -3977,13 +3968,12 @@ class userquery extends CBCategory{
                 $query .= " LIMIT  ".$limit;
 
             $result = select( $query );
-        }
-
-		if(!empty($params['count_only'])){
+        } else {
 			$result = $db->count(tbl('users')." AS users ",'userid',$cond);
 		}
+
 		if(isset($params['assign']) && $params['assign'] != '')
-			assign($params['assign'],$result);
+			assign($params['assign'], $result);
 		else
 			return isset($result) ? $result : false;
 	}

@@ -180,8 +180,6 @@ if (!function_exists('validate_embed_code'))
     function clean_embed_code($input)
     {
         $input = htmlspecialchars($input);
-        //if(!get_magic_quotes_gpc())
-        //	$input = addslashes($input);
         return $input;
     }
 

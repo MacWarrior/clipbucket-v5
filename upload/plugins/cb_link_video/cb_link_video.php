@@ -164,8 +164,6 @@
 	function clean_remote_code($input)
 	{
 		$input = htmlspecialchars($input);
-		//if(!get_magic_quotes_gpc())
-		//	$input = addslashes($input);
 		return $input;
 	}
 	

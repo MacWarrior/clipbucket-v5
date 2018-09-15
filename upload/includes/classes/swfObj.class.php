@@ -99,4 +99,3 @@ var $playerVar = 'player';
 	}
 	
 }
-?>
