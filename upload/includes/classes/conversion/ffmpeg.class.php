@@ -415,7 +415,7 @@ class FFMpeg
 
 				$TemplogData .= "\r\n Sarting : MP4Box Conversion for HD \r\n";
 				$fullCommand = $this->mp4BoxPath . " -inter 0.5 {$this->hdFile}  -tmp ".TEMP_DIR;
-				//logData(json_encode($fullCommand));
+
 				if (PHP_OS == "WINNT")
 				{
 					$fullCommand = str_replace("/","\\",$fullCommand);	
@@ -1338,8 +1338,12 @@ class FFMpeg
 			{
 				$TemplogData .= "\r\n\r\n== Conversion Command == \r\n\r\n";
 				$TemplogData .= $command;
-				$TemplogData .= "\r\n\r\n== Conversion OutPut == \r\n\r\n";
-				$TemplogData .= $output;
+				
+				if( DEVELOPMENT_MODE )
+				{
+					$TemplogData .= "\r\n\r\n== Conversion OutPut == \r\n\r\n";
+					$TemplogData .= $output;
+				}
 			}
 
 			#FFMPEG GENERATES Damaged File (MP4Box)

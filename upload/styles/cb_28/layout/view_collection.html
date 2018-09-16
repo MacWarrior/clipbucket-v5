@@ -6,7 +6,7 @@
 			{/if}
 			<h1>
 				{display_clean($c.collection_name)}&nbsp;
-				({$c.total_objects}&nbsp;{$c.type|capitalize})
+				({$c.total_objects}&nbsp;{lang code="{$c.type}"})
 				{lang code='collection' assign='object_type'}
 				{uploadButton details=$c output='link' target="_blank" class='btn btn-success pull-right'}
 			</h1>
