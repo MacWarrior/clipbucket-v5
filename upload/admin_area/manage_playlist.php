@@ -125,25 +125,23 @@
 
 			if(isset($_POST['edit_playlist']))
 			{
-				$_POST[ 'list_id' ] = $pid;
+				$_POST['list_id'] = $pid;
 				$cbvid->action->edit_playlist();
 			}
 
-			if ( isset( $_POST[ 'upload_playlist_cover' ] ) )
+			if ( isset( $_POST['upload_playlist_cover'] ) )
 			{
-				$cover = $_FILES[ 'playlist_cover' ];
-				$cover[ 'playlist_id' ] = $pid;
+				$cover = $_FILES['playlist_cover'];
+				$cover['playlist_id'] = $pid;
 
 				if ( playlist_upload_cover( $cover ) ) {
 					e( lang( 'Playlist cover has been uploaded' ), 'm' );
 				}
 
-				if ( file_exists( $cover[ 'tmp_name' ] ) ) {
-					unlink( $cover[ 'tmp_name' ] );
+				if ( file_exists( $cover['tmp_name'] ) ) {
+					unlink( $cover['tmp_name'] );
 				}
 			}
-
-			$playlist = $cbvid->action->get_playlist($pid);
 
 			//Deleting Item
 			if(!empty($_GET['delete_item']))
@@ -152,13 +150,13 @@
 				$cbvid->action->delete_playlist_item($delid);
 			}
 
+			$playlist = $cbvid->action->get_playlist($pid);
 			if($playlist)
 			{
 				assign('playlist',$playlist);
 				//Getting Playlist Item
-				$items = $cbvid->get_playlist_items( $pid, 'playlist_items.date_added DESC' );
+				$items = $cbvid->get_playlist_items($pid, 'playlist_items.date_added DESC', 0);
 				assign('items',$items);
-
 			} else
 				e(lang('playlist_not_exist'));
 			break;

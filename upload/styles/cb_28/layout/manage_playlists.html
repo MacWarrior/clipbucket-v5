@@ -15,7 +15,7 @@
 					<form method="post" name="edit_profile">
 						<h3>{lang code='add_new_playlist'}</h3>
 						<div class="form-group">
-							<label for="old_pass">{lang code='playlist_name'}</label>
+							<label for="name">{lang code='playlist_name'}</label>
 							<input class="form-control" name="name" type="text" id="name">
 						</div>
 						<button name="add_playlist" id="button" value="submit" class="btn btn-primary">{lang code='add_new_playlist'}</button>
@@ -89,13 +89,13 @@
 						{assign var='playlist_fields' value=$cbvid->action->load_playlist_fields($playlist)}
 
 						{foreach from=$playlist_fields item=group}
-						{foreach from=$group.fields item=field}
+							{foreach from=$group.fields item=field}
 						<div class="form-group">
 							<label class="label-heading" for="{$field.id}">{$field.title}</label>
 							{$field.class='form-control'}
 							{$formObj->createField($field)}
 						</div>
-						{/foreach}
+							{/foreach}
 						{/foreach}
 						<div>
 							<button name="edit_playlist" id="button1" value="submit" class="btn btn-primary">{lang code='edit_playlist'}</button></div><br>
@@ -103,7 +103,7 @@
 					</div>
 
 					{if $items}
-					<a href="{videoLink vdetails=$items[0]}" ><button class="btn btn-success" style="float:right">{lang code='play_now'}</button></a>
+					<a href="{videoLink vdetails=$items[0]}" ><button class="btn btn-success" style="float:right;">{lang code='play_now'}</button></a>
 					{/if}
 					<form name="edit_playlist" method="post">
 						<input type="submit" class="btn btn-primary" value="{lang code='delete_selected'}" name="delete_playlist_item"/>
@@ -119,7 +119,7 @@
 									<td width="100">{lang code='comments'}</td>
 								</tr>
 								{section name=plist loop=$items}
-								{include file="$style_dir/blocks/manage/account_video.html" video=$items[plist] bg=$bg control="playlist" pid=$playlist.playlist_id}
+									{include file="$style_dir/blocks/manage/account_video.html" video=$items[plist] bg=$bg control="playlist" pid=$playlist.playlist_id}
 								{sectionelse}
 								<div align="center" style="padding:5px"><strong><em>{lang code='no_video_in_playlist'}</em></strong></div>
 								{/section}

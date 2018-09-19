@@ -9,7 +9,7 @@
 	<td>
 		<div class="col-md-3">
 			<a class="manageVid_thumb" href="edit_video.php?video={$video.videoid}">
-				<img src="{getThumb vdetails=$video}" class="img-responsive" width="130" height="80" id="thumbs_{$video.videoid}" class="vthumb"/>
+				<img src="{getThumb vdetails=$video size=168x105}" class="img-responsive" id="thumbs_{$video.videoid}" class="vthumb"/>
 				<span class="duration">({if
 				$video.duration>1}{$video.duration|SetTime}{else}00:00{/if})</span>
 			</a>
@@ -23,7 +23,8 @@
 			</span>
 			<div class="labels">
 				{if $video.featured=='yes'}
-				<span class="label label-primary">{lang code='featured'}</span>{/if}
+				<span class="label label-primary">{lang code='featured'}</span>
+				{/if}
 				<span class="label {if $video.active=='yes'}label-success{else}label-warning{/if} mlabel">{if $video.active=='yes'}{lang code='active'}{else}{lang code='inactive'}{/if}</span>
 				<span class="label {if $video.status=='Successful'}label-success{else}label-warning{/if}">{if $video.status=='Successful'}Successful{else}Processing{/if}</span>
 				<span class="label label-info">{lang code='viewed'} {$video.last_viewed|niceTime}</span>
@@ -45,7 +46,8 @@
 	<td>
 		<div class="dropdown text-center">
 			<button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
-				Actions <i class="caret"></i></button>
+				Actions <i class="caret"></i>
+			</button>
 			<ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
 			{if $cbvid->is_video_owner($video.videoid,$user.userid) || has_access('admin_access')}
 				<li><a role="menuitem" tabindex="-1" href="/edit_video.php?vid={$video.videoid}">{lang code='edit'}</a></li>
@@ -53,9 +55,9 @@
 			{/if}
 				<li><a role="menuitem" tabindex="-1" href="/watch_video.php?v={$video.videokey}" target="_blank">{lang code='watch'}</a></li>
 
-				{foreach from=$cbvid->video_manager_links item=links}
+			{foreach from=$cbvid->video_manager_links item=links}
 				{$cbvid->video_manager_link($links,$video)}
-				{/foreach}
+			{/foreach}
 			</ul>
 		</div>
 	</td>
@@ -69,7 +71,7 @@
 	</td>
 	<td>
 		<div>
-			<img class="edit-img-thumbnail" src="{getThumb vdetails=$video}"/>
+			<img class="edit-img-thumbnail" src="{getThumb vdetails=$video size=168x105}"/>
 			<p class="marginTop">{display_clean($video.title)|truncate:100}</p>
 			<div class="btn-group show">
 				<a class="btn btn-primary btn-sm" href="{videoLink vdetails=$video}">{lang code='views'}</a>
@@ -94,14 +96,13 @@
 
 
 {if $control=='basic'}
-
 	<div class="clearfix">
 	  <input type="checkbox" name="check_vid[]" id="check_vid-{$video.videoid}" value="{$video.videoid}"/>
 	</div>
 
 	<div class="clearfix">
 		<a href="{videoLink vdetails=$video}">
-		  <img src="{getThumb vdetails=$video}" width="130" height="80" id="thumbs_{$video.videoid}" class="vthumb"/>
+		  <img src="{getThumb vdetails=$video size=168x105}" id="thumbs_{$video.videoid}" class="vthumb"/>
 		  <p class="marginTop">{display_clean($video.title)|truncate:100}</p>
 		</a>
 	</div>
@@ -109,14 +110,13 @@
 	<div class="clearfix">{$video.date_added|date_format}</div>
 	<div class="clearfix">{$video.views|number_format}</div>
 	<div class="clearfix">{$video.comments_count|number_format}</div>
-
 {/if}
 
 {if $control=='onWatch'}
-<div class="featured-video clearfix" {if $ajax_load == "yes"} style="display: none" {/if}>
+<div class="featured-video clearfix" {if $ajax_load=="yes"}style="display:none;"{/if}>
 	<a href="{videoLink($video)}">
 		<div class="video_thumb">
-			<img src="{getThumb vdetails=$video size=128x80}" {ANCHOR place="video_thumb" data=$video} class="img-responsive">
+			<img src="{getThumb vdetails=$video size=168x105}" {ANCHOR place="video_thumb" data=$video} class="img-responsive">
 			<img src="{$theme}/images/thumb-ratio.png" alt="" class="thumb-ratio">
 			<time datetime="2016-15-03" class="duration">
 			{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</time>
