@@ -774,37 +774,23 @@
     function update_processed_video($file_array,$status='Successful',$ingore_file_status=false,$failed_status='')
     {
         global $db;
-        $file = $file_array['cqueue_name'];
-        $array = explode('-',$file);
+        $file_name = $file_array['cqueue_name'];
 
-        if(!empty($array[0]))
-            $file_name = $array[0];
-        $file_name = $file;
+		$result = db_select("SELECT * FROM ".tbl("video")." WHERE file_name = '$file_name'");
+		if($result)
+		{
+			$duration = 0;
+			foreach($result as $result1)
+			{
+				$str = '/'.$result1['file_directory'].'/';
+				$duration = parse_duration(LOGS_DIR.$str.$file_array['cqueue_name'].'.log');
+				if( $duration != 0 )
+					break;
+			}
 
-        $file_path = VIDEOS_DIR.'/'.$file_array['cqueue_name'].'.flv';
-        $file_size = @filesize($file_path);
-
-        if(file_exists($file_path) && $file_size>0 && !$ingore_file_status)
-        {
-            $duration = parse_duration(LOGS_DIR.'/'.$file_array['cqueue_name'].'.log');
-
-            $db->update(tbl("video"),array("status","duration","failed_reason"),
-                array($status,$duration,$failed_status)," file_name='".$file_name."'");
-        } else {
-
-            $result = db_select("SELECT * FROM ".tbl("video")." WHERE file_name = '$file_name'");
-            if($result)
-            {
-                foreach($result as $result1)
-                {
-                    $str = '/'.$result1['file_directory'].'/';
-                    $duration = parse_duration(LOGS_DIR.$str.$file_array['cqueue_name'].'.log');
-                }
-            }
-
-            $db->update(tbl("video"),array("status","duration","failed_reason"),
-                array($status,$duration,$failed_status)," file_name='".$file_name."'");
-        }
+			$db->update(tbl("video"),array("status","duration","failed_reason"),
+				array($status, $duration, $failed_status)," file_name='".$file_name."'");
+		}
     }
 
 	/**
@@ -881,32 +867,33 @@
         $duration = false;
 
         if(isset($log['output_duration']))
-        $duration = $log['output_duration'];
+        	$duration = $log['output_duration'];
 
         if((!$duration || !is_numeric($duration)) && isset($log['duration']))
             $duration = $log['duration'];
 
-        if(!$duration || !is_numeric($duration))
+        if( (!$duration || !is_numeric($duration)) && file_exists($log))
         {
-            if(file_exists($log))
-                $log_content = file_get_contents($log);
-
-            //Parse duration..
+        	$log_content = file_get_contents($log);
+			
             preg_match_all('/Duration: ([0-9]{1,2}):([0-9]{1,2}):([0-9.]{1,5})/i',$log_content,$matches);
+            if( isset($matches[1][0]) && isset($matches[2][0]) && isset($matches[3][0]) )
+			{
+				//Now we will multiple hours, minutes accordingly and then add up with seconds to
+				//make a single variable of duration
+				$hours = $matches[1][0];
+				$minutes = $matches[2][0];
+				$seconds = $matches[3][0];
 
-            unset($log_content);
+				$hours = $hours * 60 * 60;
+				$minutes = $minutes * 60;
+				$duration = $hours+$minutes+$seconds;
+			} else {
+				preg_match_all('/<strong>duration<\/strong> : ([0-9.]*)/i',$log_content,$matches);
+				if( isset($matches[1][0]) )
+					$duration = $matches[1][0];
+			}
 
-            //Now we will multiple hours, minutes accordingly and then add up with seconds to
-            //make a single variable of duration
-            $hours = $matches[1][0];
-            $minutes = $matches[2][0];
-            $seconds = $matches[3][0];
-
-            $hours = $hours * 60 * 60;
-            $minutes = $minutes * 60;
-            $duration = $hours+$minutes+$seconds;
-
-            $duration;
         }
         return $duration;
     }
