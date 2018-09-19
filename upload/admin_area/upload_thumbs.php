@@ -32,7 +32,8 @@
 		# Setting Default thumb
 		if(isset($_POST['update_default_thumb']))
 		{
-			$myquery->set_default_thumb($video,$_POST['default_thumb']);
+			$myquery->set_default_thumb($video, $_POST['default_thumb']);
+			$data = get_video_details($video);
 		}
 
 		$vid_file = VIDEOS_DIR.'/'.$data['file_directory'].'/'.get_video_file($data,false,false);
@@ -42,7 +43,7 @@
 		{
 			if($data['files_thumbs_path']!='')
 			{
-				$files_thumbs_path= $data['files_thumbs_path'];
+				$files_thumbs_path = $data['files_thumbs_path'];
 				$serverApi = str_replace('/files/thumbs', '', $files_thumbs_path);
 				$serverApi = $serverApi.'/actions/custom_thumb_upload.php';
 
@@ -79,7 +80,6 @@
 				$Upload->upload_thumbs($data['file_name'],$_FILES['vid_thumb'],$data['file_directory'],$data['thumbs_version']);
 			}
 		}
-
 
 		# Delete Thumb
 		if(isset($_GET['delete']))
