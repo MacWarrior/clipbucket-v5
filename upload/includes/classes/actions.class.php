@@ -201,16 +201,16 @@ class cbactions
 		$func = $this->check_func;
 		return $obj->{$func}($id);
 	}
-	
-	
+
+
 	/**
 	 * Function used to report a content
+	 *
+	 * @param $id
 	 */
-	 
 	function report_it($id)
 	{
 		global $db;
-		$id = mysql_clean($id);
 		//First checking weather object exists or not
 		if($this->exists($id))
 		{
@@ -218,17 +218,20 @@ class cbactions
 			{
 				if(!$this->report_check($id))
 				{
-					$db->insert(tbl($this->flag_tbl),array('type','id','userid','flag_type','date_added'),
-												array($this->type,$id,userid(),mysql_clean(post('flag_type')),NOW()));
-					e(sprintf(lang('obj_report_msg'),$this->name),'m');
+					$db->insert(
+						tbl($this->flag_tbl),
+						array('type','id','userid','flag_type','date_added'),
+						array($this->type,$id,userid(),post('flag_type'),NOW())
+					);
+					e(sprintf(lang('obj_report_msg'), lang($this->name)),'m');
 				}else{
-					e(sprintf(lang('obj_report_err'),$this->name));
+					e(sprintf(lang('obj_report_err'), lang($this->name)));
 				}
 			}else{
 				e(lang("you_not_logged_in"));
 			}
 		}else{
-			e(sprintf(lang("obj_not_exists"),$this->name));
+			e(sprintf(lang("obj_not_exists"), lang($this->name)));
 		}
 	}
 	function flag_it($id){ return $this->report_id($id); }
