@@ -146,14 +146,12 @@
 	if(count($matches)>0) {
 		$baseurl = preg_replace('/:\/\/www\./','://',$baseurl);		
 	}			
-			
-	//define('BASEURL',baseurl(BACK_END));
+
 	$clean_base = false;
 	if(defined("CLEAN_BASEURL")) {
 		$clean_base = CLEAN_BASEURL;
 	}
-	
-	//define('BASEURL',$pages->GetBaseUrl($clean_base));
+
 	define('BASEURL',$baseurl);
 	$userquery 	= new userquery();
 	$lang_obj	= new language;
@@ -243,8 +241,6 @@
    	define('CB_VERSION', $row['version']);
    	define('TITLE',$row['site_title']);
 	if(!defined('SLOGAN')) define('SLOGAN',$row['site_slogan']);
-	
-	
 
  	# Seo URLS
  	define('SEO',$row['seo']); //Set yes / no
@@ -257,7 +253,7 @@
 	define('WELCOME_EMAIL',$row['welcome_email']);
 	@define('VIDEO_REQUIRE_LOGIN',$row['video_require_login']);
 	define('ACTIVATION',$row['activation']);
-	define('DATE_FORMAT',"d-m-Y");
+	define('DATE_FORMAT', config('date_format'));
 	
 	# Listing Of Videos , Channels
  	define('VLISTPP',$row['videos_list_per_page']);				//Video List Per page

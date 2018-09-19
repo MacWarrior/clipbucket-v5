@@ -348,15 +348,15 @@
 
             <table class="table table-striped table-bordered">
                 <tr>
-                    <td class="first"><label for="dob">Date of birth</label></td>
+                    <td class="first"><label for="dob">{lang code='user_date_of_birth'}</label></td>
        				<td>
-						<input name="dob" type="text" id="dob" value="{$u.dob}" class="form-control" />
+						<input name="dob" type="text" id="dob" value="{cbdate(NULL, $u.dob)}" class="form-control" />
         			</td>
                 </tr>
 
                 <tr>
                     <td class="first">Joined - Date/IP</td>
-                    <td>{$u.doj} - {$u.signup_ip}</td>
+                    <td>{cbdate(NULL, $u.doj)} - {$u.signup_ip}</td>
                 </tr>
                 <tr>
                     <td class="first">Last-Login Date/IP</td>
@@ -364,8 +364,7 @@
                 </tr>
                 <tr>
                     <td class="first">Last-Active Online</td>
-                    <td> {$u.last_active} - {$u.last_active|is_online}
-                    </td>
+                    <td>{$u.last_active} - {$u.last_active|is_online}</td>
                 </tr>
                 <tr>
                     <td class="first"><label for="profile_hits">Profile Views</label></td>

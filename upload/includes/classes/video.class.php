@@ -1295,14 +1295,14 @@ class CBvideo extends CBCategory
 	 */
 	function set_share_email($details)
 	{
-		$this->email_template_vars = array
-		('{video_title}' => $details['title'],
-		 '{video_description}' => $details['description'],
-		 '{video_tags}' => $details['tags'],
-		 '{video_date}' => cbdate(DATE_FORMAT,strtotime($details['date_added'])),
-		 '{video_link}' => video_link($details),
-		 '{video_thumb}'=> GetThumb($details)
-		 );
+		$this->email_template_vars = array(
+			'{video_title}' => $details['title'],
+			'{video_description}' => $details['description'],
+			'{video_tags}' => $details['tags'],
+			'{video_date}' => cbdate(DATE_FORMAT, $details['date_added']),
+			'{video_link}' => video_link($details),
+			'{video_thumb}'=> GetThumb($details)
+		);
 		
 		$this->action->share_template_name = 'share_video_template';
 		$this->action->val_array = $this->email_template_vars;

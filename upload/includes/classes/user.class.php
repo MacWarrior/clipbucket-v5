@@ -3401,9 +3401,9 @@ class userquery extends CBCategory{
 		$email = (isset($default['email'])) ? $default['email'] : "";
 
 		$dob = (isset($default['dob'])) ? $default['dob'] : "";
-		$dob = $dob ? date(config("date_format"),strtotime($dob)) : date(config("date_format"),strtotime('14-10-1989'));
+		$dob = cbdate(NULL, $dob);
 
-		$countries = $Cbucket->get_countries(iso2);
+		$countries = $Cbucket->get_countries('iso2');
 		$user_ip = $_SERVER['REMOTE_ADDR']; // getting user's ip
 		$user_country = ip_info($user_ip, 'country'); // get country using IP
 		foreach ($countries as $code => $name)

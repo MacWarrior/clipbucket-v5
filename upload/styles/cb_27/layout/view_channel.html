@@ -87,7 +87,7 @@
 							                      && $p.show_dob!='no'}
 											<tr>
 												<td>{lang code='user_date_of_birth'}</td>
-												<td>{$u.dob}</td>
+												<td>{cbdate(NULL, $u.dob)}</td>
 											</tr>
 											{/if}
 										{/foreach}

@@ -114,7 +114,7 @@
 											  && $field.name=='relation_status'
 											  && $p.show_dob!='no'}
 										<li>
-											<strong>{lang code='user_date_of_birth'}</strong>:&nbsp;{$u.dob}
+											<strong>{lang code='user_date_of_birth'}</strong>:&nbsp;{cbdate(NULL, $u.dob)}
 										</li>
 										{/if}
 										{/foreach}

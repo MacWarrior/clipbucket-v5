@@ -38,7 +38,7 @@ else { echo $vrating.'.0'; }
 ?></video:rating>
 <video:view_count><?php echo $video['views']; ?></video:view_count>
 <video:publication_date><?php
-echo cbdate("Y-m-d\TH:i:s",strtotime($video['date_added'])).'+00:00';
+echo cbdate("Y-m-d\TH:i:s",$video['date_added']).'+00:00';
 ?></video:publication_date>
 <?php
 $vtags = strip_tags(tags($video['tags'],'video'));
