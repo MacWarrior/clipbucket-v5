@@ -875,7 +875,7 @@
         if( (!$duration || !is_numeric($duration)) && file_exists($log))
         {
         	$log_content = file_get_contents($log);
-			
+
             preg_match_all('/Duration: ([0-9]{1,2}):([0-9]{1,2}):([0-9.]{1,5})/i',$log_content,$matches);
             if( isset($matches[1][0]) && isset($matches[2][0]) && isset($matches[3][0]) )
 			{

@@ -1919,21 +1919,33 @@ class CBPhotos
 			}
 		}
 	}
-		
+
 	/**
 	 * Used to get image file
+	 *
+	 * @param        $pid
+	 * @param string $size
+	 * @param bool   $multi
+	 * @param null   $assign
+	 * @param bool   $with_path
+	 * @param bool   $with_orig
+	 *
+	 * @return string
 	 */
 	function get_image_file($pid,$size='t',$multi=false,$assign=NULL,$with_path=true,$with_orig=false)
 	{
-
 		$params = array("details"=>$pid,"size"=>$size,"multi"=>$multi,"assign"=>$assign,"with_path"=>$with_path,"with_orig"=>$with_orig);
 		return get_image_file($params);
 	}
-	
+
 	/**
 	 * This will become a Smarty function.
 	 * I am writting this to eliminate the possiblitles
 	 * of distort pictures
+	 *
+	 * @param $p
+	 *
+	 * @return string
 	 */
 	function getFileSmarty($p)
 	{
@@ -1943,7 +1955,7 @@ class CBPhotos
 		if(empty($details))
 		{
 			return $this->default_thumb($size,$output);	
-		} else {		
+		} else {
 			//Calling Custom Functions
 			if(count($Cbucket->custom_get_photo_funcs) > 0)
 			{
@@ -1980,7 +1992,7 @@ class CBPhotos
 					$files = glob(PHOTOS_DIR."/".$photo['filename']."*.".$photo['ext']);
 					if(!empty($files) && is_array($files))
 					{
-						
+						$thumbs = array();
 						foreach($files as $file)
 						{
 							$file_parts = explode("/",$file);
@@ -2013,8 +2025,7 @@ class CBPhotos
 							} else {
 								
 								$size = "_".$p['size'];
-								
-								$return_thumb = array_find($photo['filename'].$size,$thumbs);
+								$return_thumb = array_find($photo['filename'].$size, $thumbs);
 								
 								if(empty($return_thumb))
 								{
@@ -2030,14 +2041,11 @@ class CBPhotos
 						
 						if($p['output'] == 'html')
 						{
-							
 							$size = "_".$p['size'];
 								
 							$src = array_find($photo['filename'].$size,$thumbs);
 							if(empty($src))
 								$src = $this->default_thumb($size);
-							else
-								$src = $src;
 								
 							if(phpversion < '5.2.0')
 								global $json; $js = $json;
@@ -2618,7 +2626,7 @@ class CBPhotos
 			case "html":
 				if($p['with_url'])
 					$code .= "&lt;a href='".$this->collection->collection_links($photo,'view_item')."' target='_blank'&gt;";
-				$code .= "&lt;img src='".$this->get_image_file($photo,$size)."' title='".display_clean($photo['photo_title'])."' alt='".display_clean($photo['photo_title'])."&nbsp;".TITLE."' /&gt;";
+				$code .= "&lt;img src='".BASEURL.$this->get_image_file($photo)[0]."' title='".display_clean($photo['photo_title'])."' alt='".display_clean($photo['photo_title'])."&nbsp;".TITLE."' /&gt;";
 				if($p['with_url'])
 					$code .= "&lt;/a&gt;";
 				break;
@@ -2626,7 +2634,7 @@ class CBPhotos
 			case "forum":
 				if($p['with_url'])
 					$code .= "&#91;URL=".$this->collection->collection_links($photo,'view_item')."&#93;";
-				$code .= "&#91;IMG&#93;".$this->get_image_file($photo,$size)."&#91;/IMG&#93;";
+				$code .= "&#91;IMG&#93;".BASEURL.$this->get_image_file($photo)[0]."&#91;/IMG&#93;";
 				if($p['with_url'])
 					$code .= "&#91;/URL&#93;";
 				break;
@@ -2636,7 +2644,7 @@ class CBPhotos
 				break;
 			
 			case "direct":
-				$code .= $this->get_image_file($photo,"o");
+				$code .= BASEURL.$this->get_image_file($photo)[0];
 				break;
 			
 			default:

@@ -156,33 +156,33 @@
 		global $cbphoto, $Cbucket;
 		$details = $params['details'];
 		$output = isset($params['output']) ? $params['output'] : false;
-		$size = $params['size'];
 		$static = isset($params['static']) ? $params['static'] : false;
+
 		$default = array( 't', 'm', 'l', 'o' );
-		$thumbs = array();
+		$size = $params['size'];
+		$size = ( !in_array( $size, $default ) or !$size ) ? 't' : $size;
 
 		if( !$details ) {
-			return get_photo_default_thumb( $size, $output );
+			return get_photo_default_thumb($size, $output);
 		} else if ($static) {
 			return '/files/photos/'.$details['file_directory'].'/'.$details['filename'].'_'.$size.'.'.$details['ext'];
 		}
 
 		if ( !is_array( $details ) ) {
-			$photo = $cbphoto->get_photo( $details, true );
+			$photo = $cbphoto->get_photo($details, true);
 		} else {
 			$photo = $details;
 		}
 
-		if ( empty( $photo[ 'photo_id' ] ) or empty( $photo[ 'photo_key' ] ) ) {
-			return get_photo_default_thumb( $size, $output );
+		if ( empty( $photo['photo_id'] ) or empty($photo['photo_key']) ) {
+			return get_photo_default_thumb($size, $output);
 		}
 
-		if( empty( $photo[ 'filename' ] ) or empty( $photo[ 'ext' ] ) ) {
-			//var_dump("get default 3");
-			return get_photo_default_thumb( $size, $output );
+		if( empty( $photo['filename'] ) or empty($photo['ext']) ) {
+			return get_photo_default_thumb($size, $output);
 		}
 
-		$params[ 'photo' ] = $photo;
+		$params['photo'] = $photo;
 
 		if( isset($Cbucket->custom_get_photo_funcs) && count( $Cbucket->custom_get_photo_funcs ) > 0 ) {
 			$functions = $Cbucket->custom_get_photo_funcs;
@@ -196,27 +196,26 @@
 			}
 		}
 
-		$directory = get_photo_date_folder( $photo );
+		$directory = get_photo_date_folder($photo);
 		$with_path = $params['with_path'] = ( $params['with_path'] === false ) ? false : true;
-		$with_original = isset($params[ 'with_orig' ]) ? $params[ 'with_orig' ] : false;
-
-		$size = ( !in_array( $size, $default ) or !$size ) ? 't' : $size;
+		$with_original = isset($params['with_orig']) ? $params['with_orig'] : false;
 
 		if( $directory ) {
 			$directory .= '/';
 		}
 
 		$path = PHOTOS_DIR.'/'.$directory;
-		$filename = $photo[ 'filename' ].'%s.'.$photo[ 'ext' ];
+		$filename = $photo['filename'].'%s.'.$photo['ext'];
 
-		$files = glob( $path.sprintf( $filename, '*' ) );
+		$files = glob( $path.sprintf($filename, '*') );
 		if ( !empty( $files ) )
 		{
-			foreach( $files as $file )
+			$thumbs = array();
+			foreach($files as $file)
 			{
-				$splitted   = explode( "/", $file );
+				$splitted   = explode("/", $file);
 				$thumb_name = end( $splitted );
-				$thumb_type = $cbphoto->get_image_type( $thumb_name );
+				$thumb_type = $cbphoto->get_image_type($thumb_name);
 
 				if( $with_original ) {
 					$thumbs[] = ( ( $with_path ) ? PHOTOS_URL.'/' : '' ) . $directory . $thumb_name;
@@ -227,22 +226,22 @@
 
 			if ( empty( $output ) or $output == 'non_html' )
 			{
-				if ( isset($params[ 'assign' ]) && isset($params[ 'multi' ]) ) {
-					assign( $params[ 'assign' ], $thumbs );
-				} else if( ( isset($params[ 'multi' ]) ) ) {
+				if ( isset($params['assign']) && isset($params['multi']) ) {
+					assign( $params['assign'], $thumbs );
+				} else if( ( isset($params['multi']) ) ) {
 					return $thumbs;
 				} else {
-					$search_name = sprintf( $filename, "_".$size );
-					$return_thumb = array_find( $search_name, $thumbs );
+					$search_name = sprintf($filename, "_".$size);
+					$return_thumb = array_find($search_name, $thumbs);
 
 					if( empty( $return_thumb ) ) {
-						return get_photo_default_thumb( $size, $output );
+						return get_photo_default_thumb($size, $output);
+					}
+
+					if( isset($params['assign']) ) {
+						assign($params['assign'], $return_thumb);
 					} else {
-						if( isset($params[ 'assign' ]) ) {
-							assign( $params[ 'assign' ], $return_thumb );
-						} else {
-							return $return_thumb;
-						}
+						return $return_thumb;
 					}
 				}
 			}
@@ -255,60 +254,26 @@
 				$src = ( empty( $src ) ) ? get_photo_default_thumb( $size ) : $src;
 				$attrs = array( 'src' => $src );
 
-				if( phpversion < '5.2.0' ) {
-					global $json;
-				}
+				$attrs[ 'id' ] = ( ( $params[ 'id' ] ) ? $params[ 'id' ].'_' : 'photo_' ).$photo['photo_id'];
 
-				if ( $json ) {
-					$image_details = $json->json_decode( $photo['photo_details'],true );
-				} else {
-					$image_details = json_decode( $photo[ 'photo_details' ], true );
-				}
-
-				if ( empty( $image_details ) or empty( $image_details[ $size ] ) ) {
-					$dem = getimagesize( str_replace( PHOTOS_URL, PHOTOS_DIR, $src ) );
-					$width = $dem[0];
-					$height = $dem[1];
-					/* UPDATING IMAGE DETAILS */
-					#$cbphoto->update_image_details( $photo );
-				} else {
-					$width = $image_details[ $size ][ 'width' ];
-					$height = $image_details[ $size ][ 'height' ];
-				}
-
-				if ( ( $params['width'] and is_numeric( $params['width'] ) ) and ( $params['height'] and is_numeric( $height  ) ) ) {
-					$width = $params['width'];
-					$height = $params['height'];
-				} else if ( ( $params['width'] and is_numeric( $params['width'] ) ) ) {
-					$height = round( $params['width'] / $width * $height );
-					$width = $params['width'];
-				} else if ( ( $params['height'] and is_numeric( $height  ) ) ) {
-					$width = round( $params['height'] * $width / $height );
-					$height = $params['height'];
-				}
-
-				//$attrs[ 'width' ] = $width;
-				//$attrs[ 'height' ] = $height;
-				$attrs[ 'id' ] = ( ( $params[ 'id' ] ) ? $params[ 'id' ].'_' : 'photo_' ).$photo[ 'photo_id' ];
-
-				if( $params[ 'class' ] ) {
-					$attrs[ 'class' ] = mysql_clean( $params[ 'class' ] );
+				if( $params['class'] ) {
+					$attrs['class'] = mysql_clean($params['class']);
 				}
 
 				if ( $params['align'] ) {
 					$attrs['align'] = mysql_clean( $params['align'] );
 				}
 
-				$attrs[ 'title' ] = $photo[ 'photo_title' ];
+				$attrs['title'] = $photo['photo_title'];
 
-				if ( isset( $params[ 'title' ] ) and $params[ 'title' ] == '' ) {
-					unset( $attrs[ 'title' ] );
+				if ( isset($params['title']) and $params['title'] == '' ) {
+					unset($attrs['title']);
 				}
 
-				$attrs[ 'alt' ] = TITLE.' - '.$photo[ 'photo_title' ];
+				$attrs[ 'alt' ] = TITLE.' - '.$photo['photo_title'];
 
 				$anchor_p = array( "place" => 'photo_thumb', "data" => $photo );
-				$params['extra'] = ANCHOR( $anchor_p );
+				$params['extra'] = ANCHOR($anchor_p);
 
 				if ( $params['style'] ) {
 					$attrs['style'] = ( $params['style'] );
@@ -320,8 +285,8 @@
 
 				$image = cb_create_html_tag( 'img', true, $attrs );
 
-				if ( $params[ 'assign' ] ) {
-					assign( $params[ 'assign' ], $image );
+				if ( $params['assign'] ) {
+					assign( $params['assign'], $image );
 				} else {
 					return $image;
 				}
