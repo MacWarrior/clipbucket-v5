@@ -307,6 +307,9 @@
 
 	var playlist_total = "{$total_items}";
 	$('#ShareUsers').on("keyup",function(){
+	    if( $('#ShareUsers').val() === "" )
+	        return;
+
 		var typed = $(this).val();
 		$.ajax({
 			url: '/ajax.php',

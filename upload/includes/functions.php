@@ -1,15 +1,14 @@
 <?php
-
-/**
-* File: Functions
-* Description: Various kind of functions to do ClipBucket jobs
-* @license: Attribution Assurance License
-* @since: ClipBucket 1.0
-* @author[s]: Arslan Hassan, Fawaz Tahir, Fahad Abbass, Awais Tariq, Saqib Razzaq
-* @copyright: (c) 2008 - 2017 ClipBucket / PHPBucket
-* @notice: Please maintain this section
-* @modified: { January 10th, 2017 } { Saqib Razzaq } { Updated copyright date }
-*/
+	/**
+	* File: Functions
+	* Description: Various kind of functions to do ClipBucket jobs
+	* @license: Attribution Assurance License
+	* @since: ClipBucket 1.0
+	* @author[s]: Arslan Hassan, Fawaz Tahir, Fahad Abbass, Awais Tariq, Saqib Razzaq
+	* @copyright: (c) 2008 - 2017 ClipBucket / PHPBucket
+	* @notice: Please maintain this section
+	* @modified: { January 10th, 2017 } { Saqib Razzaq } { Updated copyright date }
+	*/
 
 	define("SHOW_COUNTRY_FLAG",TRUE);
 	require 'define_php_links.php';
@@ -23,7 +22,8 @@
 	 *
 	 * @throws Exception
 	 */
-    function throw_error($message,$pointer="") {
+    function throw_error($message,$pointer="")
+	{
         global $Cbucket;
         if($pointer)
         $Cbucket->error_pointer[$pointer] = $message;
@@ -34,7 +34,8 @@
 	 * This Funtion is use to get CURRENT PAGE DIRECT URL
 	 * @return string : { string } { $pageURL } { url of current page }
 	 */
-	function curPageURL() {
+	function curPageURL()
+	{
  		$pageURL = 'http';
 		if (@$_SERVER["HTTPS"] == "on") {
 			$pageURL .= "s";
@@ -56,7 +57,8 @@
 	 *
 	 * @return mixed : { string } { $string } { cleaned string }
 	 */
-	function Replacer($string) {
+	function Replacer($string)
+	{
 		//Wp-Magic Quotes
 		$string = preg_replace("/'s/", '&#8217;s', $string);
 		$string = preg_replace("/'(\d\d(?:&#8217;|')?s)/", "&#8217;$1", $string);
@@ -80,7 +82,6 @@
 			 $string = strip_tags($string);
 			 $string = Replacer($string);
 		 }
-
 		 return $string;
 	}
 
@@ -95,7 +96,8 @@
 	 *
 	 * @return string
 	 */
-	function pass_code_unsecure($string) {
+	function pass_code_unsecure($string)
+	{
  	 	$password = md5(md5(sha1(sha1(md5($string)))));
  	 	return $password;
 	}
@@ -146,12 +148,16 @@
 	 * you can extend or replace this function easily
 	 *
 	 * @param : { array } { $array } { array with all details of email }
+	 *
+	 * @return bool
+	 * @throws phpmailerException
+	 *
 	 * @param_list : { content, subject, to, from, to_name, from_name }
 	 *
 	 * @author : Arslan Hassan
-	 * @return bool
 	 */
-	function cbmail($array) {
+	function cbmail($array)
+	{
 		$func_array = get_functions('email_functions');
 		if(is_array($func_array)) {
 			foreach($func_array as $func) {
@@ -246,7 +252,8 @@
 	 *
 	 * @return bool|string
 	 */
-	function GetName($file) {
+	function GetName($file)
+	{
 		if(!is_string($file)) {
 			return false;
 		}
@@ -358,22 +365,26 @@
 		$totalsize = 0;
 		$totalcount = 0;
 		$dircount = 0;
-		if ($handle = opendir ($path)) {
-		while (false !== ($file = readdir($handle))) {
-		  	$nextpath = $path . '/' . $file;
-		  	if ($file != '.' && $file != '..' && !is_link ($nextpath))  {
-				if (is_dir ($nextpath)) {
-				  $dircount++;
-				  $result = get_directory_size($nextpath);
-				  $totalsize += $result['size'];
-				  $totalcount += $result['count'];
-				  $dircount += $result['dircount'];
-				} elseif (is_file ($nextpath)) {
-				  $totalsize += filesize ($nextpath);
-				  $totalcount++;
+		if ($handle = opendir ($path))
+		{
+			while (false !== ($file = readdir($handle)))
+			{
+				$nextpath = $path . '/' . $file;
+				if ($file != '.' && $file != '..' && !is_link ($nextpath))
+				{
+					if (is_dir ($nextpath))
+					{
+					  $dircount++;
+					  $result = get_directory_size($nextpath);
+					  $totalsize += $result['size'];
+					  $totalcount += $result['count'];
+					  $dircount += $result['dircount'];
+					} elseif (is_file ($nextpath)) {
+					  $totalsize += filesize ($nextpath);
+					  $totalcount++;
+					}
 				}
-		  	}
-		}
+			}
 		}
 		closedir ($handle);
 		$total['size'] = $totalsize;
@@ -395,12 +406,10 @@
         if( $data < 1024 ) {
             return $data . " bytes";
         }
-
         // kilobytes
        	if( $data < 1024000 ) {
 			return round( ( $data / 1024 ), 1 ) . "KB";
         }
-
         // megabytes
         if($data < 1024000000){
             return round( ( $data / 1024000 ), 1 ) . " MB";
@@ -470,12 +479,7 @@
 
 	function getCommentAdminLink($type, $id)
 	{
-		switch($type)
-		{
-			default:
-			case 'v':
-				return "/admin_area/edit_video.php?video=".$id;
-		}
+		return "/admin_area/edit_video.php?video=".$id;
 	}
 
 	/**
@@ -521,11 +525,9 @@
         if($order) {
             $query .= " ORDER BY ".$order;
         }
-
         if($limit) {
             $query .= " LIMIT ".$limit;
         }
-
 		if(!$params['count_only']) {
             $result = db_select($query);
         }
@@ -550,7 +552,8 @@
 	* Fetches comments using params, built for smarty
 	* @uses : { class : $myquery } { function : getComments }
 	*/
-	function getSmartyComments($params) {
+	function getSmartyComments($params)
+	{
 		global $myquery;
 		$comments = $myquery->getComments($params);
 		if($params['assign']) {
@@ -638,11 +641,11 @@
 		$tags = preg_replace(array('/ ,/','/, /'),',',$tags);
 		$tags = preg_replace( "`[,]+`" , ",", $tags);
 		$tag_array = explode($sep,$tags);
-		foreach($tag_array as $tag) {
+		foreach($tag_array as $tag)
+		{
 			if(isValidtag($tag)) {
 				$newTags[] = $tag;
 			}
-			
 		}
 		//Creating new tag string
 		if(is_array($newTags)) {
@@ -684,46 +687,42 @@
 		global $cats;
 		$cats = "";
 		$type = $params['type'];
-		switch($type) {
+		switch($type)
+		{
 			default:
-			{
 				 cb_call_functions('categoryListing',$params);
-			}
-			break;
+				break;
 			
-			case "video":case "videos":
-			case "v": 
-			{
+			case "video":
+			case "videos":
+			case "v":
 				global $cbvid;
 				$cats = $cbvid->cbCategories($params);
-			}
-			break;
+				break;
 				
-			case "users":case "user":
-			case "u": case "channels": case "channels":
-			{
+			case "users":
+			case "user":
+			case "u":
+			case "channels":
+			case "channels":
 				global $userquery;
 				$cats = $userquery->cbCategories($params);
-			}
-			break;
+				break;
 			
-			case "group":case "groups":
+			case "group":
+			case "groups":
 			case "g":
-			{
 				global $cbgroup;
 				$cats = $cbgroup->cbCategories($params);
-			}
-			break;
+				break;
 			
-			case "collection":case "collections":
+			case "collection":
+			case "collections":
 			case "cl":
-			{
 				global $cbcollection;
 				$cats = $cbcollection->cbCategories($params);
-			}
-			break;		
+				break;
 		}
-		
 		return $cats;
 	}
 
@@ -735,7 +734,8 @@
 	 *
 	 * @return array|bool|string
 	 */
-	function getSmartyCategoryList($params) {
+	function getSmartyCategoryList($params)
+	{
 		return getCategoryList($params);
 	}
 
@@ -748,7 +748,8 @@
 	 * @param      $vls
 	 * @param null $ep
 	 */
-	function dbInsert($tbl,$flds,$vls,$ep=NULL) {
+	function dbInsert($tbl,$flds,$vls,$ep=NULL)
+	{
 		global $db ;
 		$db->insert($tbl,$flds,$vls,$ep);
 	}
@@ -763,12 +764,14 @@
 	 * @param      $cond
 	 * @param null $ep
 	 */
-	function dbUpdate($tbl,$flds,$vls,$cond,$ep=NULL) {
+	function dbUpdate($tbl,$flds,$vls,$cond,$ep=NULL)
+	{
 		global $db ;
 		return $db->update($tbl,$flds,$vls,$cond,$ep);		
 	}
 
-	function cbRocks() {
+	function cbRocks()
+	{
 		if (!defined('isCBSecured')) {
 			define("isCBSecured",TRUE);
 		}
@@ -781,7 +784,8 @@
 	 *
 	 * @return
 	 */
-	 function get_id($code) {
+	 function get_id($code)
+	 {
 		 global $Cbucket;
 		 $id = $Cbucket->ids[$code];
 		 if(empty($id))
@@ -797,7 +801,8 @@
 	 *
 	 * @return mixed
 	 */
-	function set_id($code,$id) {
+	function set_id($code,$id)
+	{
 		global $Cbucket;
 		return $Cbucket->ids[$code]=$id;
 	}
@@ -815,11 +820,11 @@
 	 *
 	 * @return
 	 */
-	function dbselect($tbl,$fields='*',$cond=false,$limit=false,$order=false,$p=false) {
+	function dbselect($tbl,$fields='*',$cond=false,$limit=false,$order=false,$p=false)
+	{
 		global $db;
 		return $db->dbselect($tbl,$fields,$cond,$limit,$order,$p);
 	}
-
 
 	/**
 	 * An easy function for errors and messages (e is basically short form of exception)
@@ -835,7 +840,8 @@
 	 * @internal param $ { integer } { $id } { Any Predefined Message ID }
 	 *
 	 */
-	function e($msg=NULL,$type='e',$id=NULL) {
+	function e($msg=NULL,$type='e',$id=NULL)
+	{
 		global $eh;
 		if(!empty($msg)) {
 			return $eh->e($msg,$type,$id);
@@ -848,7 +854,8 @@
 	 * @param { string } { $error } { error to display }
 	 * @param string $state
 	 */
-	function deverr($erorr, $state = 'l') {
+	function deverr($erorr, $state = 'l')
+	{
 		global $eh;
 		if (!empty($erorr)) {
 			return $eh->deverr($erorr, $state);
@@ -860,7 +867,6 @@
 	* @uses : { function : lang }
 	*/
 	function get_subscription_template() {
-		//global $LANG;
 		return lang('user_subscribe_message');
 	}
 
@@ -870,7 +876,8 @@
 	 * @param : { string / array } { $text } { Element to be printed }
 	 * @param bool $pretty
 	 */
-	function pr($text,$pretty=false) {
+	function pr($text,$pretty=false)
+	{
 		if(!$pretty) {
 			print_r($text);
 		} else {
@@ -886,7 +893,8 @@
 	 * @param : { string / array } { $text } { Element to be printed }
 	 * @param string $msg { pex by default, message to exit with }
 	 */
-	function pex($text,$msg="PeX") {
+	function pex($text,$msg="PeX")
+	{
 		pr($text,true);
 		exit($msg);
 	}
@@ -897,8 +905,8 @@
 	 *
 	 * @param $params
 	 */
-	function FUNC($params) {
-		//global $Cbucket;
+	function FUNC($params)
+	{
 		$func=$params['name'];
 		if(function_exists($func))
 			$func();
@@ -909,7 +917,8 @@
 	* if there is no user_id it will return false
 	* @uses : { class : $userquery } { var : userid }
 	*/
-	function user_id() {
+	function user_id()
+	{
 		global $userquery;
 		if($userquery->userid !='' && $userquery->is_login)
 			return $userquery->userid;
@@ -929,7 +938,8 @@
 	* if there is no usern_name it will return false
 	* @uses : { class : $userquery } { var : $username }
 	*/
-	function user_name() {
+	function user_name()
+	{
 		global $userquery;
 		if($userquery->user_name) {
 			return $userquery->user_name;
@@ -947,7 +957,8 @@
 	 *
 	 * @return bool
 	 */
-	function has_access($access,$check_only=TRUE,$verify_logged_user=true) {
+	function has_access($access,$check_only=TRUE,$verify_logged_user=true)
+	{
 		global $userquery;
 		return $userquery->login_check($access,$check_only,$verify_logged_user);
 	}
@@ -968,7 +979,8 @@
 	 *
 	 * @return bool
 	 */
-	function get_re($code) {
+	function get_re($code)
+	{
 		global $db;
 		$results = $db->select(tbl("validation_re"),"*"," re_code='$code'");
 		if($db->num_rows>0) {
@@ -986,7 +998,8 @@
 	 *
 	 * @return bool
 	 */
-	function check_re($syntax,$text) {
+	function check_re($syntax,$text)
+	{
 		preg_match('/'.$syntax.'/i',$text,$matches);
 		if(!empty($matches[0])) {
 			return true;
@@ -1016,7 +1029,8 @@
 	 *
 	 * @return bool
 	 */
-	function validate_field($code,$text) {
+	function validate_field($code,$text)
+	{
 		$syntax = get_re($code);
 		if(empty($syntax)) {
 			return true;
@@ -1033,7 +1047,8 @@
 	 *
 	 * @return bool
 	 */
-	function is_valid_syntax($code,$text) {
+	function is_valid_syntax($code,$text)
+	{
 		if(DEV_INGNORE_SYNTAX) {
 			return true;
 		}
@@ -1048,15 +1063,14 @@
 	 *
 	 * @return bool
 	 */
-	function is_valid_value($func,$val) {
+	function is_valid_value($func,$val)
+	{
 		if(!function_exists($func)) {
 			return true;
 		}
-
 		if(!$func($val)) {
 			return false;
 		}
-
 		return true;
 	}
 
@@ -1068,12 +1082,15 @@
 	 *
 	 * @return mixed
 	 */
-	function apply_func($func,$val) {
+	function apply_func($func,$val)
+	{
 		if(is_array($func)) {
 			foreach($func as $f)
+			{
 				if(function_exists($f)) {
 					$val = $f($val);
 				}
+			}
 		} else {
 			$val = $func($val);
 		}
@@ -1089,9 +1106,10 @@
 	 *
 	 * @return string
 	 */
-	function yes_or_no($input,$return=yes) {
+	function yes_or_no($input, $return = 'yes')
+	{
 		$input = strtolower($input);
-		if($input!=yes && $input !=no) {
+		if($input != 'yes' && $input != 'no') {
 			return $return;
 		}
 		return $input;
@@ -1106,7 +1124,8 @@
 	 *
 	 * @return bool
 	 */
-	function validate_group_category($array=NULL) {
+	function validate_group_category($array=NULL)
+	{
 		global $cbgroup;
 		return $cbgroup->validate_group_category($array);
 	}
@@ -1119,7 +1138,8 @@
 	 *
 	 * @return bool
 	 */
-	function validate_collection_category($array=NULL)  {
+	function validate_collection_category($array=NULL)
+	{
 		global $cbcollection;
 		return $cbcollection->validate_collection_category($array);
 	}
@@ -1133,7 +1153,8 @@
 	 * @uses : { class : $userquery } { function : avatar }
 	 * @return string
 	 */
-	function avatar($param) {
+	function avatar($param)
+	{
 		global $userquery;
 		$udetails = $param['details'];
 		$size = $param['size'];
@@ -1148,7 +1169,8 @@
 	 *
 	 * @return mixed
 	 */
-	function load_form($param) {
+	function load_form($param)
+	{
 		$func = $param['name'];
 		if(function_exists($func)) {
 			return $func($param);
@@ -1158,7 +1180,8 @@
 	/**
 	* Function used to get PHP Path
 	*/
-	function php_path() {
+	function php_path()
+	{
 		if(PHP_PATH !='') {
 			return PHP_PATH;
 		}
@@ -1246,7 +1269,8 @@
 	 *
 	 * @return string
 	 */
-	function unhtmlentities($string) {
+	function unhtmlentities($string)
+	{
 		$trans_tbl =get_html_translation_table (HTML_ENTITIES );
 		$trans_tbl =array_flip ($trans_tbl );
 		return strtr ($string ,$trans_tbl );
@@ -1264,7 +1288,8 @@
 	 * @internal param $ : { string / int } { $needle } { element to find } { $needle } { element to find }
 	 * @internal param $ : { array / string }  { $haystack } { element to do search in }  { $haystack } { element to do search in }
 	 */
-	function array_find($needle, $haystack) {
+	function array_find($needle, $haystack)
+	{
 	   foreach ($haystack as $item) {
 		  if (strpos($item, $needle) !== FALSE) {
 			 return $item;
@@ -1281,7 +1306,8 @@
 	 * @return mixed : { string } { string value depending on input type }
 	 * { string value depending on input type }
 	 */
-	function input_value($params) {
+	function input_value($params)
+	{
 		$input = $params['input'];
 		$value = $input['value'];
 		if($input['value_field'] == 'checked') {
@@ -1310,12 +1336,18 @@
 	* Function used to convert input to categories
 	* @param { string / array } { $input } { categories to be converted e.g #12# }
 	*/
-	function convert_to_categories($input) {
-		if(is_array($input)) {
-			foreach($input as $in) {		
-				if(is_array($in)) {
-					foreach($in as $i) {
-						if(is_array($i)) {
+	function convert_to_categories($input)
+	{
+		if(is_array($input))
+		{
+			foreach($input as $in)
+			{
+				if(is_array($in))
+				{
+					foreach($in as $i)
+					{
+						if(is_array($i))
+						{
 							foreach($i as $info) {
 								$cat_details = get_category($info);
 								$cat_array[] = array($cat_details['categoryid'],$cat_details['category_name']);
@@ -1339,11 +1371,12 @@
 			}
 		}
 		$count = 1;
-		if(is_array($cat_array)) {
+		if(is_array($cat_array))
+		{
 			foreach($cat_array as $cat) {
 				echo '<a href="'.$cat[0].'">'.$cat[1].'</a>';
 				if($count!=count($cat_array))
-				echo ', ';
+					echo ', ';
 				$count++;
 			}
 		}
@@ -1357,7 +1390,8 @@
 	 *
 	 * @return
 	 */
-	function get_category($id) {
+	function get_category($id)
+	{
 		global $myquery;
 		return $myquery->get_category($id);
 	}
@@ -1369,10 +1403,10 @@
 	 *
 	 * @return int|string
 	 */
-	function display_sharing_opt($input) {
+	function display_sharing_opt($input)
+	{
 		foreach($input as $key => $i) {
 			return $key;
-			break;
 		}
 	}
 
@@ -1386,7 +1420,8 @@
 	 *
 	 * @return array|bool|int
 	 */
-	function get_user_vids($uid,$cond=NULL,$count_only=false) {
+	function get_user_vids($uid,$cond=NULL,$count_only=false)
+	{
 		global $userquery;
 		return $userquery->get_user_vids($uid,$cond,$count_only);
 	}
@@ -1395,7 +1430,8 @@
 	* Function used to get error_list
 	* @uses : { class : $eh } { function : $error_list }
 	*/
-	function error_list() {
+	function error_list()
+	{
 		global $eh;
 		return $eh->error_list();
 	}
@@ -1404,7 +1440,8 @@
 	* Function used to get msg_list
 	* @uses : { class : $eh } { function : $message_list }
 	*/
-	function msg_list() {
+	function msg_list()
+	{
 		global $eh;
 		return $eh->message_list;
 	}
@@ -1416,7 +1453,8 @@
 	 * @param bool $folder
 	 * @param bool $follow_show_page
 	 */
-	function template_files($file,$folder=false,$follow_show_page=true) {
+	function template_files($file,$folder=false,$follow_show_page=true)
+	{
 		global $ClipBucket;
 		if(!$folder) {
 			$ClipBucket->template_files[] = array('file' => $file,'follow_show_page'=>$follow_show_page);
@@ -1433,7 +1471,8 @@
 	 *
 	 * @action : { displays template }
 	 */
-	function include_template_file($params) {
+	function include_template_file($params)
+	{
 		$file = $params['file'];
 		if(file_exists(LAYOUT.'/'.$file)) {
 			Template($file);
@@ -1449,7 +1488,8 @@
 	 *
 	 * @return bool : { boolean } { true or false depending on situation }
 	 */
-	function username_check($username) {
+	function username_check($username)
+	{
 		global $Cbucket;
 		$banned_words = $Cbucket->configs['disallowed_usernames'];
 		$banned_words = explode(',',$banned_words);
@@ -1482,7 +1522,8 @@
 	 *
 	 * @return bool
 	 */
-	function user_exists($user) {
+	function user_exists($user)
+	{
 		global $userquery;
 		return $userquery->username_exists($user);
 	}
@@ -1495,7 +1536,8 @@
 	 * @uses : { class : $userquery } { function : duplicate_email }
 	 * @return bool
 	 */
-	function email_exists($user) {
+	function email_exists($user)
+	{
 		global $userquery;
 		return $userquery->duplicate_email($user);
 	}
@@ -1509,7 +1551,8 @@
 	 *
 	 * @return bool
 	 */
-	function group_url_exists($url) {
+	function group_url_exists($url)
+	{
 		global $cbgroup;
 		return $cbgroup->group_url_exists($url);
 	}
@@ -1521,7 +1564,8 @@
 	 *
 	 * @return array|bool
 	 */
-	function error($param='array') {
+	function error($param='array')
+	{
 		if (count(error_list())>0) {
 			if($param!='array') {
 				if($param=='single') {
@@ -1542,7 +1586,8 @@
 	 *
 	 * @return array|bool
 	 */
-	function msg($param='array') {
+	function msg($param='array')
+	{
 		if(count(msg_list())>0)
 		{
 			if($param!='array')
@@ -1560,7 +1605,8 @@
 	/**
 	* Function used to load plugin
 	*/
-	function load_plugin() {
+	function load_plugin()
+	{
 		global $cbplugin;
 	}
 
@@ -1593,7 +1639,8 @@
 	 *
 	 * @return bool|string
 	 */
-	function get_form_val($val,$filter=false) {
+	function get_form_val($val,$filter=false)
+	{
 		if($filter) {
 			return isset($_GET[$val]) ? form_val($_GET[$val]) : false;
 		}
@@ -1620,7 +1667,8 @@
 	 *
 	 * @return string
 	 */
-	function post_form_val($val,$filter=false) {
+	function post_form_val($val,$filter=false)
+	{
 		if($filter) {
 			return form_val($_POST[$val]);
 		}
@@ -1635,7 +1683,8 @@
 	 *
 	 * @return string
 	 */
-	function request_form_val($val,$filter=false) {
+	function request_form_val($val,$filter=false)
+	{
 		if($filter) {
 			return form_val($_REQUEST[$val]);
 		}
@@ -1693,7 +1742,8 @@
 	 * @uses : { function lang() }
 	 * @return mixed|string
 	 */
-	function smarty_lang($param) {
+	function smarty_lang($param)
+	{
 		if(getArrayValue($param, 'assign')=='') {
 			return lang($param['code'],getArrayValue($param, 'sprintf'));
 		} else {
@@ -1711,7 +1761,8 @@
 	 * @internal param $ : { array } { $array } { array to check for element } { $array } { array to check for element }
 	 * @internal param $ : { string / integeger } { $key } { element name or key } { $key } { element name or key }
 	 */
-	function getArrayValue($array = array(), $key = false){
+	function getArrayValue($array = array(), $key = false)
+	{
 		if(!empty($array) && $key){
 			if(isset($array[$key])){
 				return $array[$key];
@@ -1730,7 +1781,8 @@
 	 * @internal param $ : { string } { $constantName } { false by default, name of constant } { $constantName } { false by default, name of constant }
 	 * @ref: { http://php.net/manual/en/function.constant.php }
 	 */
-	function getConstant($constantName = false){
+	function getConstant($constantName = false)
+	{
 		if($constantName && defined($constantName))  {
 			return constant($constantName);
 		}
@@ -1744,10 +1796,10 @@
 	 *
 	 * @return string : { string } { buils link }
 	 */
-	function cblink($params) {
+	function cblink($params)
+	{
 		global $ClipBucket;
 		$name = getArrayValue($params, 'name');
-		$ref = getArrayValue($params, 'ref');
 		if($name=='category') {
 			return category_link($params['data'],$params['type']);
 		}
@@ -1764,7 +1816,8 @@
 			return '/search_result.php?category[]='.$params['category'].'&type='.$params['type'];
 		}
 		
-		if (defined('SEO') && SEO !='yes') {
+		if (defined('SEO') && SEO !='yes')
+		{
 			preg_match('/http:\/\//',$ClipBucket->links[$name][0],$matches);
 			if($matches) {
 				$link = $ClipBucket->links[$name][0];
@@ -1772,7 +1825,8 @@
 				$link = '/'.$ClipBucket->links[$name][0];
 			}
 		} else {
-			if (isset($ClipBucket->links[$name])) {
+			if (isset($ClipBucket->links[$name]))
+			{
 				preg_match('/http:\/\//',$ClipBucket->links[$name][1],$matches);
 				if($matches) {
 					$link = $ClipBucket->links[$name][1];
@@ -1785,7 +1839,8 @@
 		}
 		
 		$param_link = "";
-		if(!empty($params['extra_params'])) {
+		if(!empty($params['extra_params']))
+		{
 			preg_match('/\?/',$link,$matches);
 			if(!empty($matches[0])) {
 				$param_link = '&'.$params['extra_params'];
@@ -1808,7 +1863,8 @@
 	 *
 	 * @return string
 	 */
-	function show_rating($params) {
+	function show_rating($params)
+	{
 		$class 	= $params['class'] ? $params['class'] : 'rating_stars';
 		$rating 	= $params['rating'];
 		$ratings 	= $params['ratings'];
@@ -1828,10 +1884,12 @@
 		}	
 		$perc = $perc.'%';
 		$disperc = $disperc."%";		
-		switch($style) {
-			case "percentage": case "percent":
-			case "perc": default:
-			{
+		switch($style)
+		{
+			case "percentage":
+			case "percent":
+			case "perc":
+			default:
 				$likeClass = "UserLiked";
 				if(str_replace('%','',$perc) < '50') {
 					$likeClass = 'UserDisliked';	
@@ -1842,25 +1900,22 @@
 				if($ratings > 0) {
 					$ratingTemplate .= ' <span class="'.$likeClass.'">&nbsp;</span>';										
 				}
-				$ratingTemplate .='</div>
-								</div>';	
-			}
-			break;
+				$ratingTemplate .='</div></div>';
+				break;
 			
-			case "bars": case "Bars": case "bar":
-			{
+			case "bars":
+			case "Bars":
+			case "bar":
 				$ratingTemplate = '<div class="'.$class.'">
 					<div class="ratingContainer">
 						<div class="LikeBar" style="width:'.$perc.'"></div>
 						<div class="DislikeBar" style="width:'.$disperc.'"></div>
 					</div>
 				</div>';
-			}
-			break;
+				break;
 			
 			case "numerical": case "numbers":
 			case "number": case "num":
-			{
 				$likes = round($ratings*$perc/100);
 				$dislikes = $ratings - $likes;
 				$ratingTemplate = '<div class="'.$class.'">
@@ -1871,11 +1926,10 @@
 						</div>
 					</div>
 				</div>';
-			}
-			break;
+				break;
 			
-			case "custom": case "own_style":
-			{
+			case "custom":
+			case "own_style":
 				$file = LAYOUT."/".$params['file'];
 				if(!empty($params['file']) && file_exists($file)) {
 					// File exists, lets start assign things
@@ -1889,8 +1943,7 @@
 					$params['style'] = "percent";
 					return show_rating($params);	
 				}
-			}
-			break;
+				break;
 		}
 		return $ratingTemplate;
 	}
@@ -1902,10 +1955,10 @@
 	 *
 	 * @return string
 	 */
-	function ad($in) {
+	function ad($in)
+	{
 		return stripslashes($in);
 	}
-
 
 	/**
 	 * Function used to get available function list
@@ -1915,7 +1968,8 @@
 	 *
 	 * @return bool
 	 */
-	function get_functions($name) {
+	function get_functions($name)
+	{
 		global $Cbucket;
 		if(isset($Cbucket->$name)){
 			$funcs = $Cbucket->$name;
@@ -1932,7 +1986,8 @@
 	 *
 	 * @param $files
 	 */
-	function add_js($files) {
+	function add_js($files)
+	{
 		global $Cbucket;
 		return $Cbucket->addJS($files);
 	}
@@ -1948,7 +2003,8 @@
 	 *
 	 * @param $files
 	 */
-	function add_header($files) {
+	function add_header($files)
+	{
 		global $Cbucket;
 		return $Cbucket->add_header($files);
 	}
@@ -1959,7 +2015,8 @@
 	 *
 	 * @param $files
 	 */
-	function add_admin_header($files) {
+	function add_admin_header($files)
+	{
 		global $Cbucket;
 		return $Cbucket->add_admin_header($files);
 	}
@@ -1968,7 +2025,8 @@
 	* Functions used to call functions when users views a channel
 	* @param : { array } { $u } { array with details of user }
 	*/
-	function call_view_channel_functions($u) {
+	function call_view_channel_functions($u)
+	{
 		$funcs = get_functions('view_channel_functions');
 		if(is_array($funcs) && count($funcs)>0) {
 			foreach($funcs as $func) {
@@ -1985,7 +2043,8 @@
 	* @param : { array } { $tdetails } { array with details of group topic }
 	* @deprecated : { function has been deprecated and will be removed in next version }
 	*/
-	function call_view_topic_functions($tdetails) {
+	function call_view_topic_functions($tdetails)
+	{
 		$funcs = get_functions('view_topic_functions');
 		if(is_array($funcs) && count($funcs)>0) {
 			foreach($funcs as $func) {
@@ -2002,7 +2061,8 @@
 	* @param : { array } { $gdetails } { array with details of group }
 	* @deprecated : { function has been deprecated and will be removed in next version }
 	*/
-	function call_view_group_functions($gdetails) {
+	function call_view_group_functions($gdetails)
+	{
 		$funcs = get_functions('view_group_functions');
 		if(is_array($funcs) && count($funcs)>0) {
 			foreach($funcs as $func) {
@@ -2018,7 +2078,8 @@
 	* Functions used to call functions when users views a collection
 	* @param : { array } { $cdetails } { array with details of collection }
 	*/
-	function call_view_collection_functions($cdetails) {
+	function call_view_collection_functions($cdetails)
+	{
 		$funcs = get_functions('view_collection_functions');
 		if(is_array($funcs) && count($funcs)>0) {
 			foreach($funcs as $func) {
@@ -2040,14 +2101,16 @@
 	 * @internal param $ : { string } { $type } { type of object e.g video, user } { $type } { type of object e.g video, user }
 	 * @action : database updating
 	 */
-	function increment_views($id,$type=NULL) {
+	function increment_views($id,$type=NULL)
+	{
 		global $db;
-		switch($type) {
+		switch($type)
+		{
 			case 'v':
 			case 'video':
 			default:
-			{
-				if(!isset($_COOKIE['video_'.$id])) {
+				if(!isset($_COOKIE['video_'.$id]))
+				{
 					$currentTime = time();
 					$views = (int)$videoViewsRecord["video_views"] + 1;
 					$db->update(tbl("video_views"),array("video_views","last_updated"),array($views,$currentTime)," video_id='$id' OR videokey='$id'");
@@ -2055,58 +2118,50 @@
 					$result = $db->Execute($query);
 					setcookie('video_'.$id,'watched',time()+3600);
 				}
-			}
-			break;
+				break;
+
 			case 'u':
 			case 'user':
 			case 'channel':
-			{
 				if(!isset($_COOKIE['user_'.$id])) {
 					$db->update(tbl("users"),array("profile_hits"),array("|f|profile_hits+1")," userid='$id'");
 					setcookie('user_'.$id,'watched',time()+3600);
 				}
-			}
-			break;
+				break;
+
 			case 't':
 			case 'topic':
-			{
 				if(!isset($_COOKIE['topic_'.$id])) {
 					$db->update(tbl("group_topics"),array("total_views"),array("|f|total_views+1")," topic_id='$id'");
 					setcookie('topic_'.$id,'watched',time()+3600);
 				}
-			}
-			break;
-			break;
+				break;
+
 			case 'g':
 			case 'group':
-
-			{
 				if(!isset($_COOKIE['group_'.$id])) {
 					$db->update(tbl("groups"),array("total_views"),array("|f|total_views+1")," group_id='$id'");
 					setcookie('group_'.$id,'watched',time()+3600);
 				}
-			}
-			break;
+				break;
+
 			case "c":
 			case "collect":
 			case "collection":
-			{
 				if(!isset($_COOKIE['collection_'.$id])) {
 					$db->update(tbl("collections"),array("views"),array("|f|views+1")," collection_id = '$id'");
 					setcookie('collection_'.$id,'viewed',time()+3600);
 				}
-			}
-			break;
+				break;
 			
 			case "photos":
 			case "photo":
 			case "p":
-			{
 				if(!isset($_COOKIE['photo_'.$id])) {
 					$db->update(tbl('photos'),array("views","last_viewed"),array("|f|views+1",NOW())," photo_id = '$id'");
 					setcookie('photo_'.$id,'viewed',time()+3600);
 				}
-			}
+				break;
 		}
 		
 	}
@@ -2121,14 +2176,16 @@
 	 * @internal param $ : { string } { $type } { type of object e.g video, user } { $type } { type of object e.g video, user }
 	 * @action : database updating
 	 */
-	function increment_views_new($id,$type=NULL) {
+	function increment_views_new($id,$type=NULL)
+	{
 		global $db;
-		switch($type) {
+		switch($type)
+		{
 			case 'v':
 			case 'video':
 			default:
-			{	
-				if(!isset($_COOKIE['video_'.$id])) {
+				if(!isset($_COOKIE['video_'.$id]))
+				{
 					$currentTime = time();
 					$vdetails = get_video_details($id);
 					// Cookie life time at least 1 hour else if video duration is bigger set at video time.
@@ -2136,57 +2193,50 @@
 					$db->update(tbl("video"),array("views", "last_viewed"),array("|f|views+1",$currentTime)," videoid='$id' OR videokey='$id'");
 					setcookie('video_'.$id,'watched',time()+$cookieTime);
 				}
-			}
-			break;
+				break;
+
 			case 'u':
 			case 'user':
 			case 'channel':
-			{
 				if(!isset($_COOKIE['user_'.$id])) {
 					$db->update(tbl("users"),array("profile_hits"),array("|f|profile_hits+1")," userid='$id'");
 					setcookie('user_'.$id,'watched',time()+3600);
 				}
-			}
-			break;
+				break;
+
 			case 't':
 			case 'topic':
-			{
 				if(!isset($_COOKIE['topic_'.$id])) {
 					$db->update(tbl("group_topics"),array("total_views"),array("|f|total_views+1")," topic_id='$id'");
 					setcookie('topic_'.$id,'watched',time()+3600);
 				}
-			}
-			break;
-			break;
+				break;
+
 			case 'g':
 			case 'group':
-			{
 				if(!isset($_COOKIE['group_'.$id])) {
 					$db->update(tbl("groups"),array("total_views"),array("|f|total_views+1")," group_id='$id'");
 					setcookie('group_'.$id,'watched',time()+3600);
 				}
-			}
-			break;
+				break;
+
 			case "c":
 			case "collect":
 			case "collection":
-			{
 				if(!isset($_COOKIE['collection_'.$id])) {
 					$db->update(tbl("collections"),array("views"),array("|f|views+1")," collection_id = '$id'");
 					setcookie('collection_'.$id,'viewed',time()+3600);
 				}
-			}
-			break;
+				break;
 			
 			case "photos":
 			case "photo":
 			case "p":
-			{
 				if(!isset($_COOKIE['photo_'.$id])) {
 					$db->update(tbl('photos'),array("views","last_viewed"),array("|f|views+1",NOW())," photo_id = '$id'");
 					setcookie('photo_'.$id,'viewed',time()+3600);
 				}
-			}
+				break;
 		}
 		
 	}
@@ -2206,22 +2256,25 @@
 	* Function used to show flag form
 	* @param : { array } { $array } { array of parameters }
 	*/
-	function show_share_form($array) {
+	function show_share_form($array)
+	{
 		assign('params',$array);
-        if(SMARTY_VERSION>2) {
-            Template('blocks/common/share.html');
-        } else {
-            Template('blocks/share_form.html');
-        }
+
+		global $userquery;
+		$contacts = $userquery->get_contacts(userid(),0);
+		assign('contacts', $contacts);
+		Template('blocks/common/share.html');
 	}
 	
 	/**
 	* Function used to show flag form
 	* @param : { array } { $array } { array of parameters }
 	*/
-	function show_flag_form($array) {
+	function show_flag_form($array)
+	{
 		assign('params',$array);
-        if(SMARTY_VERSION>2) {
+        if(SMARTY_VERSION>2)
+        {
             Template('blocks/common/report.html');
         } else {
             Template('blocks/flag_form.html');
