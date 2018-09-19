@@ -79,8 +79,8 @@
 		* @param : { string } { $ffmpegParams : outputDirectory } { Directory name where converted video is to be saved }
 		* @param : { string } { $ffmpegParams : logFile } { file path to log file for dumping conversion logs }
 		*/
-
-		function __construct( $ffmpegParams ) {
+		function __construct( $ffmpegParams )
+		{
 			global $log;
 
 			$this->ffmpegPath = get_binaries( 'ffmpeg' );
@@ -112,8 +112,8 @@
 				'360' => array('640','360'),
 				'480' => array('854','480'),
 				'720' => array('1280','720'),
-				'1080' => array('1920','1080'),
-				);
+				'1080' => array('1920','1080')
+			);
 
 			# Set 4:3 ratio conversion settings
 			$this->resolution4_3 = array(
@@ -121,8 +121,8 @@
 				'360' => array('640','360'),
 				'480' => array('854','480'),
 				'720' => array('1280','720'),
-				'1080' => array('1920','1080'),
-				);
+				'1080' => array('1920','1080')
+			);
 
 			# Set basic ffmpeg configurations
 			$this->ffmpegConfigs = array(
@@ -150,7 +150,7 @@
 				'gen360' => config( 'gen_360' ),
 				'gen480' => config( 'gen_480' ),
 				'gen720' => config( 'gen_720' ),
-				'gen1080' => config( 'gen_1080' )
+				'gen1080' => config( 'gen_1080')
 			);
 		}
 
@@ -163,7 +163,6 @@
 		*
 		* @return : { mixed } { output of command ran }
 		*/
-
 		private function executeCommand( $command ) {
 			return shell_exec( $command );
 		}
@@ -183,9 +182,8 @@
 		*
 		* @return : { array } { $responseData } { an array with response according to params }
 		*/
-
-		private function extractVideoDetails( $filePath = false, $durationOnly = false ) {
-			
+		private function extractVideoDetails( $filePath = false, $durationOnly = false )
+		{
 			if ( $filePath ) {
 				$fileFullPath = $filePath;
 			} else {
@@ -334,7 +332,6 @@
 		* Check if conversion is locked or not
 		* @param : { integer } { $defaultLockLimit } { Limit of number of max process }
 		*/
-
 		private final function isLocked( $defaultLockLimit = 1 ) {
 			for ( $i=0; $i<$defaultLockLimit; $i++ )	{
 				$convLockFile = $this->ffmpegLockPath.$i.'.loc';
@@ -352,7 +349,6 @@
 		* Creates a conversion loc file
 		* @param : { string } { $file } { file to be created }
 		*/
-
 		private static final function createLock( $file ) {
 			file_put_contents($file,"converting..");
 		}
@@ -367,7 +363,6 @@
 		/**
 		* Function used to end timing
 		*/
-		
 		function endTimeCheck() {
 			$this->endTime = $this->timeCheck();
 		}
@@ -376,7 +371,6 @@
 		* Function used to check total time elapsed in video conversion process
 		* @action : saves time into $this->totalTime
 		*/
-		
 		function totalTime() {
 			$this->totalTime = round( ( $this->endTime - $this->startTime ), 4 );
 		}
@@ -386,7 +380,6 @@
 		* process to add required details. Conversion logs are available
 		* in admin area for users to view what went wrong with their video
 		*/
-
 		private function startLog() {
 			$this->TemplogData  = "Started on ".NOW()." - ".date("Y M d")."\n\n";
 			$this->TemplogData  .= "Checking File...\n";
@@ -395,12 +388,15 @@
 		}
 
 		/**
-		* Function used to convert seconds into proper time format
-		* @param : INT duration
-		* @parma : rand
-		*/
-
-		private function ChangeTime( $duration, $rand = "" ) {
+		 * Function used to convert seconds into proper time format
+		 *
+		 * @param : INT duration
+		 *
+		 * @parma : rand
+		 * @return false|string
+		 */
+		private function ChangeTime( $duration, $rand = "" )
+		{
 			if( $rand != "" ) {
 				if( $duration / 3600 > 1 ) {
 					$time = date( "H:i:s", $duration - rand( 0,$duration ) );
@@ -422,16 +418,15 @@
 			}
 		}
 
-
 		/**
 		* Function used to log video info
 		*/
-
 		private function logFileInfo() {
 			$details = $this->inputDetails;
+			$configLog = "";
 			if ( is_array( $details ) ) {
 				foreach( $details as $name => $value ) {
-					$configLog .= "<strong>{$name}</strong> : {$value}\n";
+					$configLog = "<strong>{$name}</strong> : {$value}\n";
 				}
 			} else {
 				$configLog = "Unknown file details - Unable to get video details using FFMPEG \n";
@@ -444,10 +439,8 @@
 		* Prepare file to be converted this will first get info of the file
 		* @param : { string } { $file } { false by default, file to prepare }
 		*/
-
-		private function prepare( $file = false ) {
-			global $db;
-			
+		private function prepare( $file = false )
+		{
 			if( $file ) {
 				$this->inputFile = $file;
 			}
@@ -488,8 +481,8 @@
 		* @param : { string } { $array : dim } { dimensions of thumbs }
 		* @author : Arslan Hassan or Awais Tariq or Fawaz Tahir or is it me? [ Saqib Razzaq ] (wondering)
 		*/
-
-		private function generateThumbs( $array ) {
+		private function generateThumbs( $array )
+		{
 			$inputFile = $array['videoFile'];
 			$duration = $array['duration'];
 			$dimension = $array['dim'];

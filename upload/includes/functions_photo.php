@@ -210,7 +210,6 @@
 		$filename = $photo[ 'filename' ].'%s.'.$photo[ 'ext' ];
 
 		$files = glob( $path.sprintf( $filename, '*' ) );
-
 		if ( !empty( $files ) )
 		{
 			foreach( $files as $file )

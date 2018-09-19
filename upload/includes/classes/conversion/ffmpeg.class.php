@@ -632,7 +632,7 @@ class FFMpeg
 			$configLog = "Unknown file details - Unable to get video details using FFMPEG \n";
 		}
 
-		$this->log->writeLine('OutPut Deatils', $configLog, true);
+		$this->log->writeLine('OutPut Details', $configLog, true);
 	}
 
 	function time_check()
@@ -1338,7 +1338,7 @@ class FFMpeg
 			{
 				$TemplogData .= "\r\n\r\n== Conversion Command == \r\n\r\n";
 				$TemplogData .= $command;
-				
+
 				if( DEVELOPMENT_MODE )
 				{
 					$TemplogData .= "\r\n\r\n== Conversion OutPut == \r\n\r\n";

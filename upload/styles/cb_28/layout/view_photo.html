@@ -88,7 +88,7 @@
 						<a href="#cb-item-info" data-toggle="tab"><span class="icon-info"></span>{lang code='info'}</a>
 					</li>
 					<li>
-						<a href="#cb-item-share" data-toggle="tab"><span class="icon-share"></span>{lang code='Share / Embed'}</a>
+						<a href="#cb-item-share" data-toggle="tab"><span class="icon-share"></span>{lang code='share_embed'}</a>
 					</li>
 					<li>
 						<a href="#cb-item-addto" data-toggle="tab"><span class="icon-plusrounded"></span>{lang('add_to')}</a>
@@ -141,7 +141,7 @@
 					</ul>
 					<!-- Embeding code to own forum -->
 					<div class="clearfix form-horizontal row">
-						{$codes=$cbphoto->photo_embed_codes(['type'=>'all','with_url'=>true, 'details'=>$photo])}
+						{$codes=$cbphoto->photo_embed_codes(['type'=>'all','with_url'=>true,'details'=>$photo])}
 						{foreach from=$codes item=item}
 
 						<div class="photo-share-tab col-lg-6 col-md-6 col-sm-6 col-xs-12 form-group">
