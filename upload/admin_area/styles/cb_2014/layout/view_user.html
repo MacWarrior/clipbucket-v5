@@ -360,11 +360,11 @@
                 </tr>
                 <tr>
                     <td class="first">Last-Login Date/IP</td>
-                    <td>{$u.last_logged} - {$u.ip}</td>
+                    <td>{cbdatetime(NULL, $u.last_logged)} - {$u.ip}</td>
                 </tr>
                 <tr>
                     <td class="first">Last-Active Online</td>
-                    <td>{$u.last_active} - {$u.last_active|is_online}</td>
+                    <td>{cbdatetime(NULL, $u.last_active)} - {$u.last_active|is_online}</td>
                 </tr>
                 <tr>
                     <td class="first"><label for="profile_hits">Profile Views</label></td>
@@ -451,13 +451,11 @@
           <td>{$logs[log].action_id}</td>
           <td>{$logs[log].action_userid}</td>
           <td width="100">{$logs[log].action_username}</td>
-          <td width="100">{$logs[log].date_added}</td>
+          <td width="100">{cbdatetime(NULL, $logs[log].date_added)}</td>
           <td>
             Type : {$logs[log].action_type} &#8211;{if $logs[log].action_details!=''}{$logs[log].action_details} &#8211;{/if} Success : {$logs[log].action_success} &#8211 {$logs[log].action_ip}
           </td>
         </tr>
-        {sectionelse}
-        <!--<tr><td><em>No user action log found</em></td></tr>-->
         {/section}
       </table>
     </div>

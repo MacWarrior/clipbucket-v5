@@ -2341,7 +2341,7 @@
 	function cbdate($format=NULL,$timestamp=NULL)
 	{
 		if(!$format)
-			$format = config('date_format');
+			$format = DATE_FORMAT;
 
 		if( is_string($timestamp) )
 			$timestamp = strtotime($timestamp);
@@ -2350,6 +2350,14 @@
 			return date($format);
 
 		return date($format,$timestamp);
+	}
+
+	function cbdatetime($format=NULL,$timestamp=NULL)
+	{
+		if(!$format)
+			$format = DATE_FORMAT.' h:m:s';
+
+		return cbdate($format,$timestamp);
 	}
 
 	/**
