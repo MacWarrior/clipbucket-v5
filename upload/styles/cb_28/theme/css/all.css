@@ -969,11 +969,14 @@ h1 {
       font-family: "source_sans_prosemibold", sans-serif;
       margin: 0 0 6px; }
 .collections-grid .title {
-  display: block;
-  background: #fff;
-  padding: 10px 0 0;
-  overflow: hidden;
-  height: 28px; }
+	display: block;
+	background: #fff;
+	padding: 10px 0 0;
+	overflow: hidden;
+	height: 28px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
 
 .collections {
   padding: 16px 0;
