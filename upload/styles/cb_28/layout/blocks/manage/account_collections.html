@@ -96,18 +96,18 @@
 		</td>
 		<td width="50%">
 			<label for="check_col-{$collection.collection_id}">
-				<img src="{$cbcollection->get_thumb($collection,'small',TRUE)}" border="0" class="acc_usr_video_thumb img-responsive"/>
+				<img src="{$cbcollection->coll_first_thumb($collection,'l')}" border="0" class="acc_usr_video_thumb img-responsive"/>
 			</label>
 			{display_clean($collection.collection_name)}
 			<div class="btn-group show">
-				<a class="btn btn-primary btn-sm" href="{$cbcollection->collection_links($collection,'view')}">{lang code="view"}</a>
+				<a class="btn btn-primary btn-sm" href="{$cbcollection->collection_links($collection,'view')}">{lang code="view_collection"}</a>
 				<a class="btn btn-primary btn-sm" href="javascript:void(0);" onmousedown="delete_item('delete_coll','{$collection.collection_id}','{lang code="Are you sure you want to remove this collection from favorites?"}','?mode={$mode}&amp;remove_fav_collection={$collection.collection_id}');" id="delete_coll-{$collection.collection_id}">
 					{lang code="remove"}
 				</a>
 			</div>
 		</td>
 		<td width="15%">{$collection.date_added|date_format}</td>
-		<td width="25%">{$collection.type}</td>
+		<td width="25%">{lang code="{$collection.type}"}</td>
 		<td width="7%" class="last_td">{$collection.views|number_format}</td>
 	</tr>
 {/if}

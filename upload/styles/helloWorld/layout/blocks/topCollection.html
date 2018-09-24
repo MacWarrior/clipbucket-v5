@@ -5,7 +5,7 @@
 	</div>
 	<a href="/view_collection.php?cid={$collection.collection_id}&type={$collection.type}" title="{display_clean($collection.collection_name)}">
 		<div class="details">
-			<span>{display_clean($collection.collection_name)|truncate:30}<br>{$collection.total_objects} {$collection.type}</span>
+			<span>{display_clean($collection.collection_name)|truncate:30}<br>{$collection.total_objects} {lang code="{$collection.type}"}</span>
 		</div>
 	</a>
 </div>
