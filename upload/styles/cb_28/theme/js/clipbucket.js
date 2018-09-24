@@ -103,41 +103,6 @@
 			img.src = captcha_src+'?'+Math.random();
 		};
 
-		this.validate_category_form = function(thisform){
-			var self = this;
-			with(thisform){
-				if (validate_required(title,"Title must be filled out!")==false){
-			 		title.focus();
-			 		return false;
-				}
-				if (validate_required(description,"Description must be filled out!")==false){
-			 		description.focus();
-			 		return false;
-				}
-			}
-		};
-
-		this.validate_ad_form = function(thisform){
-			var self = this;
-			with (thisform){
-				if (validate_required(name,"Name must be filled out!")==false){
-			 		name.focus();
-			 		return false;
-				}
-				if (validate_required(type,"Type must be filled out!")==false){
-			 		type.focus();
-			 		return false;
-				}
-				if (validate_required(syntax,"Syntax Must Be Filled Out")==false){
-			 		syntax.focus();
-			 		return false;
-				}
-				if (validate_required(code,"Code Must Be Filled Out")==false){
-			 		code.focus();return false;
-				}
-			}
-		};
-
 		this.randomString = function(){
 			var self = this;
 			var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";

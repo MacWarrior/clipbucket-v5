@@ -3511,7 +3511,8 @@ class userquery extends CBCategory{
 				'db_field' => 'sex',
 				'required' => 'yes'
 			),
-			'cat' => array('title'=> lang('category'),
+			'cat' => array(
+				'title'=> lang('category'),
 				'type' => 'dropdown',
 				'name' => 'category',
 				'id' => 'category',

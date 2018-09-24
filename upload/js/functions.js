@@ -27,46 +27,6 @@ function confirm_it(msg)
 
 function reloadImage(captcha_src,imgid){img = document.getElementById(imgid);img.src = captcha_src+'?'+Math.random();}
 
-
-//Validate the Add Category Form
-function validate_category_form(thisform)
-{
-    with (thisform)
-    {
-        if (validate_required(title,"Title must be filled out!")==false)
-        {
-            title.focus();return false;
-        }
-        if (validate_required(description,"Description must be filled out!")==false)
-        {
-            description.focus();return false;
-        }
-    }
-}
-
-function validate_ad_form(thisform)
-{
-    with (thisform)
-    {
-        if (validate_required(name,"Name must be filled out!")==false)
-        {
-            name.focus();return false;
-        }
-        if (validate_required(type,"Type must be filled out!")==false)
-        {
-            type.focus();return false;
-        }
-        if (validate_required(syntax,"Syntax Must Be Filled Out")==false)
-        {
-            syntax.focus();return false;
-        }
-        if (validate_required(code,"Code Must Be Filled Out")==false)
-        {
-            code.focus();return false;
-        }
-    }
-}
-
 function load_more(limit,mode,inner_mode,append_id,attrb,cat_id,total)
 {
     $.ajax({
