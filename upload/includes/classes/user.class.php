@@ -2575,7 +2575,9 @@ class userquery extends CBCategory{
 		if(isset($array['dob']))
 		{
 			$uquery_field[] = 'dob';
-			$uquery_val[] = date('Y-m-d', strtotime($array['dob']));
+
+			// Converting date from custom format to MySQL
+			$uquery_val[] = DateTime::createFromFormat(DATE_FORMAT, $array['dob'])->format('Y-m-d');
 		}
 
 		//Changing category
