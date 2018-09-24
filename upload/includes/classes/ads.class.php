@@ -38,8 +38,7 @@ class AdsManager
 			
 			if($count>0){
 			e(lang('ad_exists_error2'));
-			}else
-			{
+			} else {
 				$db->insert(tbl("ads_data"),array("ad_category","ad_name","ad_placement","ad_code","ad_status","date_added"),
 											array($category,$name,$placement,/*"|no_mc|".*/$code,$status,now()));		
 				$msg = e(lang('ad_add_msg'),'m');
@@ -72,7 +71,7 @@ class AdsManager
 			else
 				$show_status = lang('ad_active');
 			e(lang('ad_msg').$show_status,"m");
-		}else
+		} else
 			e(lang("ad_exists_error1"));
 	}
 	
