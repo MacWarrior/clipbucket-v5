@@ -593,8 +593,11 @@ abstract class CBCategory
 		$default = $array['default_categ'];
 		$pcat = $array['parent_cat'];
 
-		$flds = array("category_name","category_desc","isdefault","parent_id");
-		$values = array(mysql_clean($name), mysql_clean($desc), mysql_clean($default), mysql_clean($pcat));
+		$flds = array('category_name','category_desc','isdefault');
+		if( $this->cat_tbl != 'user_categories' )
+			$flds[] = 'parent_id';
+
+		$values = array($name, $desc, $default, $pcat);
 		$cur_name = $array['cur_name'];
 		$cid = $array['cid'];
 
@@ -605,10 +608,8 @@ abstract class CBCategory
 		} elseif ($pcat == $cid){
 			e(lang("You can not make category parent of itself"));
 		} else {
-			$cid = mysql_clean($cid);
-
-			$db->update(tbl($this->cat_tbl), $flds, $values," category_id='$cid' ");
-			if($default==lang('yes'))
+			$db->update(tbl($this->cat_tbl), $flds, $values," category_id='".mysql_clean($cid)."' ");
+			if($default == lang('yes'))
 				$this->make_default_category($cid);
 			e(lang("cat_update_msg"),'m');
 
