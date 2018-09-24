@@ -1583,7 +1583,7 @@ if(!empty($mode))
 								echo "<td>";
 						echo '<div class="news_title" style="margin-bottom:5px;">
 						<span class="title" style="font-weight:bold;"><a href="'.$n['link'].'">'.$n['title'].'</a></span>
-						<span class="date">'.date("m-d-Y",strtotime($n['pubDate'])).'</span></div>
+						<span class="date">'.cbdate(NULL, $n['pubDate']).'</span></div>
 						<span class="clearfix"></span>';
 						echo '<div style="margin-bottom:15px;">';
 						echo $n['description'];
