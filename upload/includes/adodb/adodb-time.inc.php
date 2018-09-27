@@ -961,8 +961,7 @@ global $_month_table_normal,$_month_table_leaf;
 		'ndays' => $ndays
 		);
 	}
-	
-	
+
 	$dow = adodb_dow($year,$month,$day);
 
 	return array(
@@ -979,12 +978,7 @@ global $_month_table_normal,$_month_table_leaf;
 		0 => $origd
 	);
 }
-/*
-		if ($isphp5)
-				$dates .= sprintf('%s%04d',($gmt<=0)?'+':'-',abs($gmt)/36); 
-			else
-				$dates .= sprintf('%s%04d',($gmt<0)?'+':'-',abs($gmt)/36); 
-			break;*/
+
 function adodb_tz_offset($gmt,$isphp5)
 {
 	$zhrs = abs($gmt)/3600;
@@ -992,8 +986,7 @@ function adodb_tz_offset($gmt,$isphp5)
 	if ($isphp5) 
 		return sprintf('%s%02d%02d',($gmt<=0)?'+':'-',floor($zhrs),($zhrs-$hrs)*60); 
 	else
-		return sprintf('%s%02d%02d',($gmt<0)?'+':'-',floor($zhrs),($zhrs-$hrs)*60); 
-	break;
+		return sprintf('%s%02d%02d',($gmt<0)?'+':'-',floor($zhrs),($zhrs-$hrs)*60);
 }
 
 
@@ -1013,8 +1006,10 @@ function adodb_date2($fmt, $d=false, $is_gmt=false)
 		if ($rr[1] <= 100 && $rr[2]<= 1) return adodb_date($fmt,false,$is_gmt);
 	
 		// h-m-s-MM-DD-YY
-		if (!isset($rr[5])) $d = adodb_mktime(0,0,0,$rr[2],$rr[3],$rr[1],false,$is_gmt);
-		else $d = @adodb_mktime($rr[5],$rr[6],$rr[7],$rr[2],$rr[3],$rr[1],false,$is_gmt);
+		if (!isset($rr[5]))
+			$d = adodb_mktime(0,0,0,$rr[2],$rr[3],$rr[1],false,$is_gmt);
+		else
+			$d = @adodb_mktime($rr[5],$rr[6],$rr[7],$rr[2],$rr[3],$rr[1],false,$is_gmt);
 	}
 	
 	return adodb_date($fmt,$d,$is_gmt);
