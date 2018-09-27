@@ -1,5 +1,5 @@
 {$required_fields=$userquery->load_signup_fields()|@array_filter}
-{$cutom_fields=$userquery->custom_signup_fields}
+{$custom_fields=$userquery->custom_signup_fields}
 {if $mode == 'signup_success'}
 	<div class="simple_container">
 		{if $udetails.usr_status != 'Ok'}
@@ -90,17 +90,17 @@
 							</div>
 						{/foreach}
 						<!-- Loading Custom Fields -->
-						{foreach from=$custom_field item=field}
+						{foreach from=$custom_fields item=field}
 							<div class="form-group clearfix">
 								{*<label for="{$field.id}">{$field.title}</label>*}
 								{if $field.type=='radiobutton'}
-								{$field.label_class="radio-inline"}
-								{$field.sep=" "}
+									{$field.label_class="radio-inline"}
+									{$field.sep=" "}
 								{/if}
 
 								{if $field.type=='checkbox'}
-								{$field.label_class="checkbox-inline"}
-								{$field.sep=" "}
+									{$field.label_class="checkbox-inline"}
+									{$field.sep=" "}
 								{/if}
 
 
