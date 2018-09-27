@@ -4,6 +4,7 @@
 
 echo ""
 echo -ne "Updating Ubuntu system..."
+add-apt-repository ppa:ondrej/php -y > /dev/null
 add-apt-repository universe > /dev/null
 apt update > /dev/null
 apt upgrade -y > /dev/null
@@ -11,7 +12,7 @@ echo -ne " OK"
 
 echo ""
 echo -ne "Installing requiered elements..."
-apt-get install php7.2 apache2 mariadb-server php-curl php-imagick ffmpeg gpac ruby php7.2-mysql php7.2-xml php7.2-mbstring sendmail mediainfo --yes > /dev/null
+apt-get install php7.0 apache2 mariadb-server imagemagick php-curl php-imagick ffmpeg gpac ruby php7.0-curl php7.0-mysql php7.0-xml php7.0-mbstring sendmail mediainfo --yes > /dev/null
 /etc/init.d/mysql start > /dev/null
 gem install flvtool2 > /dev/null
 echo -ne " OK"
