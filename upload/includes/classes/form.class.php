@@ -401,32 +401,31 @@ class formObj
 		$string = preg_replace('/\[\]/','',$string);
 		return $string;
 	}
-	
-	
+
+
 	/**
-	* FUNCTION USED TO CREATEA DROPDOWN MENU
-	* @param name
-	* @param id
-	* @param value = array('value'=>'name')
-	* @param class
-	* @param extra_tags
-	* @param label
-	*/
-	
+	 * FUNCTION USED TO CREATE DROPDOWN MENU
+	 *
+	 * @param name
+	 * @param id
+	 * @param value = array('value'=>'name')
+	 * @param class
+	 * @param extra_tags
+	 * @param label
+	 *
+	 * @return array|bool|string
+	 */
 	function getCats($type){
 		return $catArray = getCategoryList(array("type" => $type));
 	}
 
 	function createDropDown($field,$multi=FALSE, $skipall = false)
 	{
-		global $LANG;
 		//First Checking if value is CATEGORY
 		if($field['value'][0]=='category')
 		{
-			$values_array = $field['value'][1][0];
-			$field['value'] = '';
+			$field['value'] = array();
 			//Generate Category list
-			$type = $field['type'] ? $field['type'] : 'video';
 			$catArray = getCategoryList(array("type"=>$field['category_type'],"with_all"=>true));
 
 			foreach ($catArray as $cat)
@@ -440,7 +439,7 @@ class formObj
 				$field['value'][$cat['category_id']] = $cat['category_name'];
 			}
 		}
-		
+
 		if(!$multi)
 			$field_name = $field['name'];
 		else
@@ -457,11 +456,9 @@ class formObj
 			if(!empty($_POST[$arrayName]) || !empty($field['checked']))
 			{
 				if ($_POST[$arrayName] == $key || $field['checked']== $key)
-				{
 					$checked = ' selected ';
-				}else{
+				else
 					$checked = '  ';
-				}
 			}else{
 				if($count==0)
 					$checked = ' selected ';
