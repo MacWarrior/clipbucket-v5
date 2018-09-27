@@ -37,7 +37,7 @@
                          <span class="labels1"> <strong>{$photos[list].date_added|niceTime}</strong>
                             {lang code='views'} : <strong>{$photos[list].views|number_format}</strong></span>
                             <div class="labels">
-                                {if $photos[list].featured=='yes'}<span class="label label-primary">Featured</span>{/if}
+                                {if $photos[list].featured=='yes'}<span class="label label-primary">{lang code='featured'}</span>{/if}
                                     <span class="label {if $photos[list].active=='yes'}label-success{else}label-warning{/if}">
                                         {if $photos[list].active=='yes'}{lang code='active'}{else}{lang code='inactive'}{/if} </span>
                                     <span class="label label-info">

@@ -50,7 +50,7 @@ class CBPhotos
         $basic_fields = array(
             'photo_id', 'photo_key', 'userid', 'photo_title', 'photo_description', 'photo_tags', 'collection_id',
             'photo_details', 'date_added', 'filename', 'ext', 'active', 'broadcast', 'file_directory','views',
-			'last_commented', 'total_comments'
+			'last_commented', 'total_comments', 'last_viewed', 'featured as photo_featured'
         );
 
         $cb_columns->object( 'photos' )->register_columns( $basic_fields );

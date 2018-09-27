@@ -90,7 +90,7 @@
 			$cbphoto->photo_actions('feature_photo',$_POST['check_photo'][$i]);
 		}
 		$eh->flush();
-		e($total." photos has been marked as <strong>Featured</strong>","m");
+		e($total." photos has been marked as <strong>".lang('featured')."</strong>","m");
 	}
 
 	//Multi-unfeatured
@@ -126,22 +126,21 @@
 		}
 	}
 
+	$parr = array();
 	if(isset($_GET['search']))
 	{
-		$array = array(
-			'title' => $_GET['title'],
-			'pid' => $_GET['photoid'],
-			'key' => $_GET['photokey'],
-			'tags' => $_GET['tags'],
-			'featured' => $_GET['featured'],
-			'active' => $_GET['active'],
-			'user' => $_GET['userid'],
-			'extension' => $_GET['extension'],
-			'order' => $_GET['order']
+		$parr = array(
+			'title' 	=> mysql_clean($_GET['title']),
+			'pid' 		=> mysql_clean($_GET['photoid']),
+			'key' 		=> mysql_clean($_GET['photokey']),
+			'tags' 		=> mysql_clean($_GET['tags']),
+			'featured' 	=> mysql_clean($_GET['featured']),
+			'active' 	=> mysql_clean($_GET['active']),
+			'user' 		=> mysql_clean($_GET['userid']),
+			'extension' => mysql_clean($_GET['extension']),
+			'order' 	=> mysql_clean($_GET['order'])
 		);
 	}
-
-	$parr = $array;
 
 	// Creating Limit
 	$page = mysql_clean($_GET['page']);
@@ -155,6 +154,7 @@
 
 	$collections = $cbcollection->get_collections(array("type"=>"photos"));
 	$photos = $cbphoto->get_photos($parr);
+
 	Assign('photos', $photos);
 	assign('c',$collections);
 

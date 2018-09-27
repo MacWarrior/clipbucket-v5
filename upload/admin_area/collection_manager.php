@@ -78,7 +78,7 @@
 			$cbcollection->collection_actions('mcf',$_POST['check_collection'][$i]);
 		}
 		$eh->flush();
-		e($total." collections has been marked as <strong>Featured</strong>","m");
+		e($total." collections has been marked as <strong>".lang('featured')."</strong>","m");
 	}
 
 	if(isset($_POST['make_unfeatured_selected']))

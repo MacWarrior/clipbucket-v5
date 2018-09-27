@@ -45,7 +45,7 @@
                          <span class="labels1"> <strong>{$video.date_added|niceTime}</strong>
                             {lang code='views'} : <strong>{$video.views|number_format}</strong></span>
                                 <div class="labels">
-                            {if $video.featured=='yes'}<span class="label label-primary">Featured</span>{else}<span class="label label-primary">Unfeatured</span>{/if}
+                            {if $video.featured=='yes'}<span class="label label-primary">{lang code='featured'}</span>{else}<span class="label label-primary">Unfeatured</span>{/if}
 
                              <span class="label label-info">
                                            {$video.featured}</span>

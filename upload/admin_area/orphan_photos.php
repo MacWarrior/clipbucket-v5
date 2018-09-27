@@ -43,7 +43,7 @@
 			$cbphoto->photo_actions('feature_photo',$_POST['check_photo'][$i]);
 		}
 		$eh->flush();
-		e($total." photos has been marked as <strong>Featured</strong>","m");
+		e($total." photos has been marked as <strong>".lang('featured')."</strong>","m");
 	}
 
 	//Multi-unfeatured
