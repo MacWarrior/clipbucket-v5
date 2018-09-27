@@ -75,7 +75,6 @@
     # Setting up database and exception
     require_once('classes/exceptions/db_exception.php');
     require_once('classes/db.class.php');
-   
     # file with most frequently used functions
     require_once('functions.php');
     check_install('before');
@@ -173,7 +172,6 @@
 	require_once('classes/log.class.php');
 	require_once('classes/swfObj.class.php');
 	require_once('classes/image.class.php');
-	require_once('classes/groups.class.php');
 	require_once('classes/video.class.php');
 	require_once('classes/player.class.php');
 	require_once('classes/cbemail.class.php');
@@ -186,10 +184,6 @@
 	require_once('classes/cbfeeds.class.php');
    	require_once('classes/resizer.class.php');
    	require_once('classes/translation.class.php');
-	
-	//$Clientid = 'F4Aq2ZCowTnSw7NrV6JABtBSHUoz8sLbLuqXAMrU8r8';
-	//$secretId = 'IRPc3vj9pEir3PwLj9OJMsa4+OK0fls6AyQJ9ZLpgOY=';
-
 
 	//Adding Gravatar
 	require_once('classes/gravatar.class.php');
@@ -201,7 +195,6 @@
 	$calcdate	= new CalcDate();
 	$signup 	= new signup();	
 	$Upload 	= new Upload();
-	$cbgroup 	= new CBGroups();
 	$adsObj		= new AdsManager();
 	$formObj	= new formObj();
 	
@@ -260,7 +253,6 @@
 	define('VLISTPT',$row['videos_list_per_tab']);				//Video List Per tab
 	define('CLISTPP',$row['channels_list_per_page']);			//Channels List Per page
 	define('CLISTPT',$row['channels_list_per_tab']);			//Channels List Per tab
-	define('GLISTPP',$row['groups_list_per_page']);				//Groups List Per page
 	define('SLISTPP',$row['search_list_per_page']);				//Search Results List Per page
 	define('RVLIST',$row['recently_viewed_limit']);				//Search Results List Per page
 
@@ -359,11 +351,7 @@
 	# Defining Category Thumbs directory
 	define('CAT_THUMB_DIR',BASEDIR.'/images/category_thumbs');
 	define('CAT_THUMB_URL','/images/category_thumbs');
-	
-	# Defining Group Thumbs directory
-	define('GP_THUMB_DIR',BASEDIR.'/images/groups_thumbs');
-	define('GP_THUMB_URL','/images/groups_thumbs');
-	
+
 	# TOPIC ICON DIR
 	define('TOPIC_ICON_DIR',BASEDIR.'/images/icons/topic_icons');
 	define('TOPIC_ICON_URL','/images/icons/topic_icons');
@@ -421,9 +409,6 @@
 	$cbphoto->init_photos();
     $thisurl = curPageURL();
 
-	# Setting Up Group Class
-	$cbgroup->gp_thumb_width = config('grp_thumb_width');
-	$cbgroup->gp_thumb_height = config('grp_thumb_height');
     $Cbucket->set_the_template();
 
 
@@ -469,7 +454,6 @@
 	# Assign('ads',$ads);
 
 	Assign('email_verification',EMAIL_VERIFICATION);
-	Assign('group_thumb','/images/groups_thumbs');
 	Assign('bg_dir','/images/backgrounds');
 	Assign('captcha_type',$row['captcha_type']);
 	Assign('languages',(isset($languages)) ? $languages : false);
@@ -534,7 +518,6 @@
 	$Smarty->assign_by_ref('userquery', $userquery);
 	$Smarty->assign_by_ref('signup', $signup);
 	$Smarty->assign_by_ref('Upload', $Upload);
-	$Smarty->assign_by_ref('cbgroup', $cbgroup);
 	$Smarty->assign_by_ref('db', $db);
 	$Smarty->assign_by_ref('adsObj', $adsObj);
 	$Smarty->assign_by_ref('formObj', $formObj);
@@ -561,7 +544,6 @@
 	$Smarty->register_function('get_thumb','getSmartyThumb');
 	$Smarty->register_function('getThumb','getSmartyThumb');
 	$Smarty->register_function('videoLink','videoSmartyLink');
-	$Smarty->register_function('group_link','group_link');
 	$Smarty->register_function('show_rating','show_rating');
 	$Smarty->register_function('ANCHOR','ANCHOR');
 	$Smarty->register_function('FUNC','FUNC');
@@ -581,7 +563,6 @@
 	$Smarty->register_function('lang','smarty_lang');
 	$Smarty->register_function('get_videos','get_videos');
 	$Smarty->register_function('get_users','get_users');
-	$Smarty->register_function('get_groups','get_groups');
 	$Smarty->register_function('get_photos','get_photos');
 	$Smarty->register_function('get_collections','get_collections');
 	$Smarty->register_function('private_message','private_message');
@@ -608,10 +589,6 @@
 	$Smarty->register_function('fb_embed_video','fb_embed_video');
 	$Smarty->register_function('cbMenu','cbMenu');
 
-	$Smarty->register_function('makeGroupAdmin','makeGroupAdmin');
-	$Smarty->register_function('removeGroupAdmin','removeGroupAdmin');
-	$Smarty->register_function('isGroupAdmin','isGroupAdmin');
-
 	$Smarty->register_modifier('SetTime','SetTime');
 	$Smarty->register_modifier('getname','getname');
 	$Smarty->register_modifier('getext','getext');
@@ -627,15 +604,12 @@
 	$Smarty->register_modifier('outgoing_link','outgoing_link');
 	$Smarty->register_modifier('nicetime','nicetime');
 	$Smarty->register_modifier('country','get_country');
-	//$Smarty->register_modifier('cbsearch',new cbsearch());
 	$Smarty->register_modifier('flag_type','flag_type');
 	$Smarty->register_modifier('get_username','get_username');
 	$Smarty->register_modifier('formatfilesize','formatfilesize');
 	$Smarty->register_modifier('getWidth','getWidth');
 	$Smarty->register_modifier('getHeight','getHeight');
-	//$Smarty->register_modifier('get_collection_name','get_collection_name');
 	$Smarty->register_modifier('json_decode','jd');
-	$Smarty->register_modifier('getGroupPrivacy','getGroupPrivacy');
 
 	assign('updateEmbedCode','updateEmbed');
 	# Registering Video Remove Functions

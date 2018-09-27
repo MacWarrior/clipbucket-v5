@@ -33,7 +33,7 @@ switch($mode)
         $userDetails = array();
         foreach($uDetails as $ud)
         {
-                $userDetails[$ud] = $userquery->udetails[$ud];
+        	$userDetails[$ud] = $userquery->udetails[$ud];
         }
 
         $userDetails['sess_id'] = $_COOKIE['PHPSESSID'];

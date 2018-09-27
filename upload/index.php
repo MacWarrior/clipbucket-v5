@@ -10,6 +10,9 @@
 	* @modified : { January 10th, 2017 } { Saqib Razzaq } { Updated copyright date }
 	*/
 
+	error_reporting(-1);
+	ini_set('display_errors', 1);
+
 	define('THIS_PAGE','index');
 	require 'includes/config.inc.php';
 	$pages->page_redir();

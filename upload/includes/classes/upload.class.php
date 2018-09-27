@@ -29,7 +29,6 @@ class Upload
 		//First Load All Fields in an array
 		$required_fields = $this->loadRequiredFields($array);
 		$location_fields = $this->loadLocationFields($array);
-		//$date_fields = $this->loadDateForm('','/',TRUE);
 		$option_fields = $this->loadOptionFields($array);
 		
 		if($array==NULL)

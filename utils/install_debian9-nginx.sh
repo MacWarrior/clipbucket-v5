@@ -125,24 +125,6 @@ server {
 			rewrite ^/categories/?$ /categories.php last;
 		}
 
-		location /group/ {
-			rewrite ^/group/([a-zA-Z0-9].+) /view_group.php?url=$1&$query_string last;
-		}
-
-		location /view_topic/ {
-			rewrite ^/view_topic/([a-zA-Z0-9].+)_tid_([0-9]+) /view_topic.php?tid=$2&$query_string last;
-		}
-
-		location /groups/ {
-			rewrite ^/groups/(.*)/(.*)/(.*)/(.*)/(.*) /groups.php?cat=$1&sort=$3&time=$4&page=$5&seo_cat_name=$2 last;
-			rewrite ^/groups/([0-9]+) /groups.php?page=$1 last;
-			rewrite ^/groups/?$ /groups.php last;
-		}
-
-		location /create_group {
-			rewrite ^/create_group /create_group.php last;
-		}
-
 		location /collections/ {
 			rewrite ^/collections/(.*)/(.*)/(.*)/(.*)/(.*) /collections.php?cat=$1&sort=$3&time=$4&page=$5&seo_cat_name=$2 last;
 			rewrite ^/collections/([0-9]+) /collections.php?page=$1 last;

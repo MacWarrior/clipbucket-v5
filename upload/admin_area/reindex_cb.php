@@ -115,44 +115,6 @@
 		assign('mode','index_usrs');
 	}
 
-	//Reindex Grous
-	if(isset($_GET['index_gps']))
-	{
-		$groups = get_groups(array("active"=>"yes"));
-		$total_groups = get_groups(array("count_only"=>true,"active"=>"yes"));
-		$percent = $cbindex->percent(50,$total_groups);
-		$i = 0;
-
-		assign('total',$total_groups);
-		assign('from',$start_index+1);
-		$to = $start_index+$loop_size;
-		if($to>$total_groups)
-		{
-			$to = $total_groups;
-			e($total_groups." groups have been reindexed successfully.","m");
-			assign("stop_loop","yes");
-		}
-		assign('to',$to);
-
-		while ($i < $total_groups)
-		{
-			if($groups[$i]['group_id'])
-			{
-				$params = array("group_id"=>$groups[$i]['group_id'],"group_videos"=>true,"group_topics"=>true,"group_members"=>true);
-				$indexes = $cbindex->count_index("group",$params);
-				$fields = $cbindex->extract_fields("group",$params);
-				$msg[] = $groups[$i]['group_id'].": Updating <strong><em>".$groups[$i]['group_name']."</em></strong>";
-				$cbindex->update_index("group",array("fields"=>$fields,"values"=>$indexes,"group_id"=>$groups[$i]['group_id']));
-			}
-			$i++;
-		}
-
-		e($start_index+1 ." - ".$to."  groups have been reindexed successfully.","m");
-		assign("index_msgs",$msg);
-		assign("indexing","yes");
-		assign('mode','index_gps');
-	}
-
 	if(isset($_GET['index_photos']))
 	{
 		$photos = get_photos(array("active"=>"yes","limit"=>$start_index.",".$loop_size));

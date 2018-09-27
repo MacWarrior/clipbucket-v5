@@ -38,16 +38,13 @@ class CBreindex
 			case "user":
 			case "u":
 			{
-				
-				
 				if($params['video_count'])
 				{
 					$video_count = $db->count(tbl($this->vtbl),
 											  tbl($this->vtbl).".videoid",
 											  tbl($this->vtbl).".userid = ".$params['user']." AND 
 											  ".tbl($this->vtbl).".active = 'yes' AND ".tbl($this->vtbl).".status = 'Successful'");
-					//echo $db->db_query;										  
-					$arr[] = $video_count;						  
+					$arr[] = $video_count;
 				}
 										  
 				if($params['comment_added'])
@@ -68,22 +65,7 @@ class CBreindex
 												".$ctbl.".type = 'c'");	
 					$arr[] = $comment_received;							
 				}
-				
-//				if($params['contacts'])
-//				{
-//					global $userquery;
-//					$contacts = $userquery->get_contacts($params['user'],0,"yes",true);
-//					$arr[] = $contacts;	
-//				}
-//				
-				if($params['groups_count'])
-				{
-					global $cbgroup;
-					$details = array("user"=>$params['user'],"active"=>"yes","count_only"=>true);
-					$groups_count = $cbgroup->get_groups($details);
-					$arr[] = $groups_count;	
-				}
-				
+
 				// Counting user subscribers
 				if($params['subscribers_count'])
 				{
@@ -161,45 +143,7 @@ class CBreindex
 				return $arr;
 			}
 			break;
-			
-			case "group":
-			case "gp":
-			case "g":
-			{
-				//$arr[] = $params['group_id'];
-				
-				if($params['group_videos'])
-				{
-					$gvtbl = tbl('group_videos');
-					$group_videos = $db->count($gvtbl,
-											   $gvtbl.".group_video_id",
-											   $gvtbl.".group_id = ".$params['group_id']." AND ".$gvtbl.".approved = 'yes'");
-					$arr[] = $group_videos;
-				}
-				
-				if($params['group_topics'])
-				{
-					$gttbl = tbl('group_topics');
-					$group_topics = $db->count($gttbl,
-											   $gttbl.".topic_id",
-											   $gttbl.".group_id = ".$params['group_id']." AND ".$gttbl.".approved = 'yes'");
-					$arr[] = $group_topics;						   
-				}
-				
-				if($params['group_members'])
-				{
-					$gmtbl = tbl('group_members');
-					$group_members = $db->count($gmtbl,
-												$gmtbl.".group_mid",
-												$gmtbl.".group_id = ".$params['group_id']." AND ".$gmtbl.".active = 'yes'");
-												
-					$arr[] = $group_members;							
-				}
-				
-				return $arr;
-			}
-			break;
-			
+
 			case "photos":
 			case "p":
 			case "photo":
@@ -273,15 +217,7 @@ class CBreindex
 				//echo $db->db_query."<br /><br />";	
 			}
 			break;
-			
-			case "group":
-			case "gp":
-			case "g":
-			{
-					$db->update(tbl($this->gtbl),$params['fields'],$params['values'], tbl($this->gtbl).".group_id = ".$params['group_id']."");
-			}
-			break;
-			
+
 			case "photos": case "photo":
 			case "p": case "foto": case "piture":
 			{
@@ -304,7 +240,6 @@ class CBreindex
 	 */	
 	 function extract_fields($type,$arr)
 	 {
-		 global $db;
 		 $fields = array();
 		 
 		 switch($type)
@@ -322,10 +257,7 @@ class CBreindex
 						
 					if(array_key_exists('comment_received',$arr))
 						$fields[] = 'comments_count';
-					
-					if(array_key_exists('groups_count',$arr))
-						$fields[] = 'total_groups';
-						
+
 					if(array_key_exists('subscribers_count',$arr))
 						$fields[] = 'subscribers';
 						
@@ -369,31 +301,7 @@ class CBreindex
 				return $result;
 			}
 			break;
-			
-			case "group":
-			case "gp":
-			case "g":
-			{
-				if(is_array($arr))
-				{
-					if(array_key_exists('group_videos',$arr))
-						$fields[] = "total_videos";
-						
-					if(array_key_exists('group_topics',$arr))
-						$fields[] = "total_topics";
 
-					if(array_key_exists('group_members',$arr))
-						$fields[] = "total_members";
-
-					$result = $fields;
-					
-				} else {
-					$result = $arr;
-				}
-				
-				return $result;
-			}
-			
 			case "photos": case "photo":
 			case "p": case "piture":
 			{
@@ -439,5 +347,3 @@ class CBreindex
 		 }
 	 }
 }
-
-?>

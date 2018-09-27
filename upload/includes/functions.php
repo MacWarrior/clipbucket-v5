@@ -436,47 +436,6 @@
 		return $data;
 	}
 
-	/**
-	 * Group Link
-	 * @deprecated : { function has been deprecated and will be removed in next version }
-	 *
-	 * @param $params
-	 *
-	 * @return string
-	 */
-	function group_link($params)
-	{
-		$grp = $params['details'];
-		$url = $grp['group_url'];
-		if($params['type']=='' || $params['type']=='group') {
-			if(SEO=='yes') {
-				return '/group/'.$url;
-			}
-			return '/view_group.php?url='.$url;
-		}
-		
-		if($params['type']=='view_members') {
-			return '/view_group_members.php?url='.$url;
-		}
-		
-		if($params['type']=='view_videos') {
-			return '/view_group_videos.php?url='.$url;
-		}
-		
-		if($params['type'] == 'view_topics') {
-			if(SEO == "yes") {
-				return "/group/".$url."?mode=view_topics";
-			}
-			return "/view_group.php?url=".$url."&mode=view_topics";
-		}
-		if($params['type'] == 'view_report_form') {
-			if(SEO == "yes") {
-				return "/group/".$url."?mode=view_report_form";
-			}
-			return "/view_group.php?url=".$url."&mode=view_report_form";
-		}
-	}
-
 	function getCommentAdminLink($type, $id)
 	{
 		return "/admin_area/edit_video.php?video=".$id;
@@ -708,14 +667,7 @@
 				global $userquery;
 				$cats = $userquery->cbCategories($params);
 				break;
-			
-			case "group":
-			case "groups":
-			case "g":
-				global $cbgroup;
-				$cats = $cbgroup->cbCategories($params);
-				break;
-			
+
 			case "collection":
 			case "collections":
 			case "cl":
@@ -1113,21 +1065,6 @@
 			return $return;
 		}
 		return $input;
-	}
-
-	/**
-	 * Function used to validate group category
-	 * @uses : { class : $cbcollection } { function : validate_collection_category }
-	 * @deprecated : { function has been deprecated and will be removed in next version }
-	 *
-	 * @param null $array
-	 *
-	 * @return bool
-	 */
-	function validate_group_category($array=NULL)
-	{
-		global $cbgroup;
-		return $cbgroup->validate_group_category($array);
 	}
 
 	/**
@@ -1540,21 +1477,6 @@
 	{
 		global $userquery;
 		return $userquery->duplicate_email($user);
-	}
-
-	/**
-	 * function used to check weather group URL exists or not
-	 * @uses : { class : cbgroup } { function : group_url_exists }
-	 * @deprecated : { function has been deprecated and will be removed in next version }
-	 *
-	 * @param $url
-	 *
-	 * @return bool
-	 */
-	function group_url_exists($url)
-	{
-		global $cbgroup;
-		return $cbgroup->group_url_exists($url);
 	}
 
 	/**
@@ -2037,43 +1959,7 @@
 		}
 		increment_views($u['userid'],"channel");
 	}
-	
-	/**
-	* Functions used to call functions when users views a group topic
-	* @param : { array } { $tdetails } { array with details of group topic }
-	* @deprecated : { function has been deprecated and will be removed in next version }
-	*/
-	function call_view_topic_functions($tdetails)
-	{
-		$funcs = get_functions('view_topic_functions');
-		if(is_array($funcs) && count($funcs)>0) {
-			foreach($funcs as $func) {
-				if(function_exists($func)) {
-					$func($tdetails);
-				}
-			}
-		}
-		increment_views($tdetails['topic_id'],"topic");
-	}
 
-	/**
-	* Functions used to call functions when users views a group
-	* @param : { array } { $gdetails } { array with details of group }
-	* @deprecated : { function has been deprecated and will be removed in next version }
-	*/
-	function call_view_group_functions($gdetails)
-	{
-		$funcs = get_functions('view_group_functions');
-		if(is_array($funcs) && count($funcs)>0) {
-			foreach($funcs as $func) {
-				if(function_exists($func)) {
-					$func($gdetails);
-				}
-			}
-		}
-		increment_views($gdetails['group_id'],"group");
-	}
-	
 	/**
 	* Functions used to call functions when users views a collection
 	* @param : { array } { $cdetails } { array with details of collection }
@@ -2126,22 +2012,6 @@
 				if(!isset($_COOKIE['user_'.$id])) {
 					$db->update(tbl("users"),array("profile_hits"),array("|f|profile_hits+1")," userid='$id'");
 					setcookie('user_'.$id,'watched',time()+3600);
-				}
-				break;
-
-			case 't':
-			case 'topic':
-				if(!isset($_COOKIE['topic_'.$id])) {
-					$db->update(tbl("group_topics"),array("total_views"),array("|f|total_views+1")," topic_id='$id'");
-					setcookie('topic_'.$id,'watched',time()+3600);
-				}
-				break;
-
-			case 'g':
-			case 'group':
-				if(!isset($_COOKIE['group_'.$id])) {
-					$db->update(tbl("groups"),array("total_views"),array("|f|total_views+1")," group_id='$id'");
-					setcookie('group_'.$id,'watched',time()+3600);
 				}
 				break;
 
@@ -2201,22 +2071,6 @@
 				if(!isset($_COOKIE['user_'.$id])) {
 					$db->update(tbl("users"),array("profile_hits"),array("|f|profile_hits+1")," userid='$id'");
 					setcookie('user_'.$id,'watched',time()+3600);
-				}
-				break;
-
-			case 't':
-			case 'topic':
-				if(!isset($_COOKIE['topic_'.$id])) {
-					$db->update(tbl("group_topics"),array("total_views"),array("|f|total_views+1")," topic_id='$id'");
-					setcookie('topic_'.$id,'watched',time()+3600);
-				}
-				break;
-
-			case 'g':
-			case 'group':
-				if(!isset($_COOKIE['group_'.$id])) {
-					$db->update(tbl("groups"),array("total_views"),array("|f|total_views+1")," group_id='$id'");
-					setcookie('group_'.$id,'watched',time()+3600);
 				}
 				break;
 
@@ -2423,15 +2277,6 @@
 	function validate_cb_form($input,$array)
 	{
 		//Check the Collpase Category Checkboxes 
-		if($input['cat']['title']=='Video Category') {
-			$query = "SELECT * FROM ".tbl("config")." WHERE name=234"; // On fresh install, id 234 = max_topic_length, this must be wrong
-			$row = db_select($query);
-			$row[0]['value'].$input['cat']['title']; // Something must be wrong here
-			if($row[0]['value']=='0') {
-				unset($input['cat']);	
-			}
-		}
-		
 		if(is_array($input))
 		{
 			foreach($input as $field)
@@ -2658,21 +2503,6 @@
 	{
 		global $userquery;
 		return $userquery->get_users($param);
-	}
-
-	/**
-	 * function used to get groups
-	 * @uses : { class : $cbgroup } { function : get_groups }
-	 * @deprecated : { function is deprecated and will be removed in next version }
-	 *
-	 * @param $param
-	 *
-	 * @return array|bool
-	 */
-	function get_groups($param)
-	{
-		global $cbgroup;
-		return $cbgroup->get_groups($param);
 	}
 
 	/**
@@ -4420,44 +4250,10 @@
 				case "pictures":
 					$db->update(tbl("photos"),array('last_commented'),array(now()),"photo_id='$id'");
 					break;
-				
-				case "t":
-				case "topic":
-				case "topics":
-					$db->update(tbl("group_topics"),array('last_post_time'),array(now()),"topic_id='$id'");
-					break;
 			}
 		}
 	}
 
-	/**
-	 * Function used display privacy in text
-	 * according to provided number
-	 * 0 - Public
-	 * 1 - Protected
-	 * 2 - Private
-	 * @note : groups have been deprecated and will be removed soon
-	 *
-	 * @param $privacyID
-	 *
-	 * @return mixed|string
-	 */
-	 function getGroupPrivacy($privacyID)
-	 {
-		switch($privacyID)
-		{
-			case "0":
-			default:
-				return lang("group_is_public");
-			
-			case "1":
-				return lang("group_is_protected");
-			
-			case "2":
-				return lang("group_is_private");
-		}
-	 }	
-	
 	/**
 	* Inserts new feed against given user
 	*
@@ -4494,11 +4290,6 @@
 
 			case "signup":
 				$feed['object'] = 'signup';
-				break;
-
-			case "create_group":
-			case "join_group":
-				$feed['object'] = 'group';
 				break;
 
 			case "add_friend":

@@ -53,26 +53,6 @@ $users['comments'] = $user_comments[0]['total_comments'];
  *echo json_encode($users); 
  * PASSED
  */
- 
- 
-//Groups
-$groups['created'] = $cbgroup->get_groups(array("count_only"=>true,"date_span"=>"today"));
-$groups['active'] = $cbgroup->get_groups(array("count_only"=>true,"date_span"=>"today","active"=>"yes"));
-//Total Views
-$group_views = $db->select(tbl("groups"),"SUM(total_views) as the_views"," date_added LIKE '%$date%'");
-$groups['views'] = $group_views[0]['the_views'];
-//Total Discussion
-$group_topics = $db->select(tbl("groups"),"SUM(total_topics) as the_topics"," date_added LIKE '%$date%'");
-$groups['total_topics'] = $group_topics[0]['the_topics'];
-//TOtal Comments
-$group_discussions = $db->select(tbl("group_topics"),"SUM(total_replies) as the_discussions"," date_added LIKE '%$date%'");
-$groups['total_discussions'] = $group_discussions[0]['the_discussions'];
-
-/**
- * TESTING GROUPS
- * echo json_encode($groups);
- * PASSED 
- */
 
 $video="[";
 foreach ($videos as $key => $value) {
@@ -86,17 +66,10 @@ foreach ($users as $key => $value) {
 }
 $user .="]";
 
-$group="[";
-foreach ($groups as $key => $value) {
-	$group .= '["'.$key .'","'. $value.'"],';
-}
-$group .="]";
-
 
 $fields = array('video_stats','user_stats','group_stats');
 
-$values = array('|no_mc|'.json_encode($videos),'|no_mc|'.json_encode($users),'|no_mc|'.json_encode($groups));
-//$values = array('|no_mc|'.$video,'|no_mc|'.$user,'|no_mc|'.$group);
+$values = array('|no_mc|'.json_encode($videos),'|no_mc|'.json_encode($users));
 
 pr($values,true);
 //Checking If there is already a row of the same date, then update it otherwise insert data
@@ -105,11 +78,9 @@ if($db->num_rows>0)
 {
 	$result = $result[0];
 	$db->update(tbl("stats"),$fields,$values," stat_id='".$result['stat_id']."'");
-	//eccho $db->quiry();
-}else
-{
+
+} else {
 	$fields[] = 'date_added';
 	$values[] = $date;
 	$db->insert(tbl("stats"),$fields,$values);
 }
-?>

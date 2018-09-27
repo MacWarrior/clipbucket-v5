@@ -39,7 +39,7 @@ if(!function_exists('bb_to_html'))
 }
 
 //Registering Action that will be applied while displaying comment and or description
-register_action(array('bb_to_html'=>array('comment','description','pm_compose_box','before_topic_post_box','private_message')));
+register_action(array('bb_to_html'=>array('comment','description','pm_compose_box','private_message')));
 
 $hints = "<div style='font-family:tahoma; margin:0px 0x 5px 0px'><strong>*Following bbcodes can be used</strong><br />
 <div style='padding-left:5px'>[b]for bold letters[/b]<br />
@@ -52,7 +52,3 @@ register_anchor($hints,'after_compose_box');
 register_anchor($hints,'after_reply_compose_box');
 register_anchor($hints,'after_desc_compose_box');
 register_anchor($hints,'after_pm_compose_box');
-register_anchor($hints,'after_topic_post_box');
-
-
-?>

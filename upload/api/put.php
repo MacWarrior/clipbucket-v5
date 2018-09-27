@@ -50,17 +50,6 @@
 					$cid = $userquery->add_comment($comment, $id, $reply_to);
 					break;
 
-				case 't':
-				case 'topic':
-					$id = mysql_clean($request['obj_id']);
-					$comment = $request['comment'];
-					if ($comment == 'undefined')
-						$comment = '';
-					$reply_to = $request['reply_to'];
-
-					$cid = $cbgroup->add_comment($comment, $id, $reply_to);
-					break;
-
 				case 'cl':
 				case 'collection':
 					$id = mysql_clean($request['obj_id']);
@@ -320,11 +309,6 @@
 				case 'video':
 				default:
 					$reported = $cbvideo->action->report_it($id);
-					break;
-
-				case 'g':
-				case 'group':
-					$cbgroup->action->report_it($id);
 					break;
 
 				case 'u':

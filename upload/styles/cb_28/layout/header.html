@@ -78,7 +78,7 @@
 						</div>
 						{$types_list = array()}
 						{foreach from=$Cbucket->search_types item=t key=stypes}
-							{if $stypes|lower == 'groups' || !$userquery->perm_check('view_'|cat:$stypes|lower, false, false, true)}
+							{if !$userquery->perm_check('view_'|cat:$stypes|lower, false, false, true)}
 								{continue}
 							{/if}
 							{$types_list[] = $stypes|lower}

@@ -53,15 +53,6 @@ switch($mode)
 				$userquery->update_comments_count($type_id);
 			}
 			break;
-			case 't':
-			case 'topic':
-			{
-				$cid = mysql_clean($_POST['cid']);
-				$type_id = $myquery->delete_comment($cid);
-				$cbgroup->update_comments_count($type_id);
-			}
-			break;
-
 		}
 		if(msg())
 		{

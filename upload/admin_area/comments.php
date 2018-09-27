@@ -55,12 +55,6 @@
 			$comment_cond['sectionTable'] = "users";
 			break;
 
-		case "t":
-			$comment_cond['type'] = "t";
-			$comment_cond['type_id'] = "topic_id";
-			$comment_cond['sectionTable'] = "group_topics";
-			break;
-
 		case "cl":
 			$comment_cond['type'] = "cl";
 			$comment_cond['type_id'] = "collection_id";

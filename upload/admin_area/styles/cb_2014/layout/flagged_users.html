@@ -47,7 +47,7 @@
                                         {if $u.usr_status=='Ok'}{lang code='active'}{else}{lang code='inactive'}{/if} </span>
                                 <span class="label label-info"><span>{$u.level|get_user_level}</span></span>
                                 <span class="label"><span>Last Active  </span>{$u.last_active|niceTime}</span>
-                               <a href="?mode=view_flags&uid={$u.userid}"><span class="label label-info"><span>Flags</span>:<span>{$u.flag_type}</span></span>
+                               <a href="?mode=view_flags&uid={$u.userid}"><span class="label label-info"><span>Flags</span> : <span>{$u.flag_type}</span></span>
                                 </a>
                             </div>
                         </div>

@@ -35,7 +35,6 @@ INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES
 	('comment_rating', '1'),
 	('video_download', '1'),
 	('video_embed', '1'),
-	('groups_list_per_page', '25'),
 	('seo', 'no'),
 	('admin_pages', '100'),
 	('search_list_per_page', '25'),
@@ -84,7 +83,6 @@ INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES
 	('default_country_iso2', 'PK'),
 	('channel_player_width', '600'),
 	('channel_player_height', '281'),
-	('videos_items_grp_page', '24'),
 	('videos_items_hme_page', '25'),
 	('videos_items_columns', '12'),
 	('videos_items_ufav_page', '25'),
@@ -94,7 +92,6 @@ INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES
 	('users_items_subscriptions', '5'),
 	('users_items_contacts_channel', '5'),
 	('users_items_search_page', '12'),
-	('users_items_group_page', '15'),
 	('cbhash', 'PGRpdiBhbGlnbj0iY2VudGVyIj48IS0tIERvIG5vdCByZW1vdmUgdGhpcyBjb3B5cmlnaHQgbm90aWNlIC0tPg0KUG93ZXJlZCBieSA8YSBocmVmPSJodHRwOi8vY2xpcC1idWNrZXQuY29tLyI+Q2xpcEJ1Y2tldDwvYT4gJXMgfCA8YSBocmVmPSJodHRwOi8vY2xpcC1idWNrZXQuY29tL2Fyc2xhbi1oYXNzYW4iPkFyc2xhbiBIYXNzYW48L2E+DQo8IS0tIERvIG5vdCByZW1vdmUgdGhpcyBjb3B5cmlnaHQgbm90aWNlIC0tPjwvZGl2Pg=='),
 	('min_video_title', '4'),
 	('max_video_title', '80'),
@@ -133,7 +130,6 @@ INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES
 	('keep_mp4_as_is', 'yes'),
 	('hq_output', 'yes'),
 	('grp_categories', '3'),
-	('grps_items_search_page', '25'),
 	('grp_thumb_height', '140'),
 	('grp_thumb_width', '140'),
 	('grp_max_title', '20'),
@@ -240,8 +236,7 @@ INSERT INTO `{tbl_prefix}config` (`name` ,`value`)VALUES
 INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES
 	('feedsSection', 'yes'),
 	('enlarge_button', 'no'),
-	('max_topic_length', '1500'),
-	('max_topic_title', '300');
+	('max_topic_length', '1500');
 
 -- Addition for 2.6
 INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES

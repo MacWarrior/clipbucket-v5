@@ -1940,17 +1940,7 @@ class CBvideo extends CBCategory
 				}
 				$cond .= " $comtbl.type_id = $sectbl.videoid";
 				break;
-			
-			case 't':
-				$sectbl = tbl('group_topics');
-				$sectblName = 'group_topics';
-				$secfields = $sectbl.".topic_title,".$sectbl.".topic_id,".$sectbl.".topic_title";
-				if($cond) {
-					$cond .= " AND";
-				}
-				$cond .= " $comtbl.type_id = $sectbl.topic_id";
-				break;
-			
+
 			case 'c':
 				$sectbl = tbl('users');
 				$sectblName = 'users';

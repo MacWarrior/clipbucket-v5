@@ -144,12 +144,6 @@
 </div>
 {/if}
 
-{if $block_type == "topic_view"}
-<div class="topicStarterAvatar moveL">
-	<i class="topicStarterAvatarBG" style="background:url({avatar details=$user }) center no-repeat; width:56px; height:56px;"><a href="{$userquery->profile_link($user)}">{display_clean($user.username)}</a></i>
-</div>
-{/if}
-
 <script>
 	$(document).ready(function (){
 		var id = '{$user.userid}';

@@ -527,10 +527,8 @@ class ClipBucket
         $this->head_menu[] = array('name' => lang("photos"), 'icon' => '<i class="fa fa-camera"></i>','link' => cblink(array('name' => 'photos')), "this" => "photos");
         $this->head_menu[] = array('name' => lang("channels"),'icon' => '<i class="fa fa-desktop"></i>', 'link' => cblink(array('name' => 'channels')), "this" => "channels", "section" => "channels");
         $this->head_menu[] = array('name' => lang("collections"), 'icon' => '<i class="fa fa-bars"></i>', 'link' => cblink(array('name' => 'collections')), "this" => "collections", "section" => "collections");
-        $this->head_menu[] = array('name' => lang("groups"), 'icon' => '<i class="fa fa-users"></i>', 'link' => cblink(array('name' => 'groups')), "this" => "groups", "section" => "groups");
 
         /* Calling custom functions for headMenu. This can be used to add new tabs */
-        //cb_call_functions('headMenu');
         if ($params['assign'])
             assign($params['assign'], $this->head_menu);
         else

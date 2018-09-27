@@ -646,12 +646,6 @@ class myquery
 				$type='s';
 				break;
 			
-			case "topic":
-			case "t":
-			case "topics":
-				$type='t';
-				break;
-			
 			case "channel":
 			case "c":
 			case "channels":

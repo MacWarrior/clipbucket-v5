@@ -10,7 +10,6 @@ Website: http://clip-bucket.com/
 Plugin Type: global
 */
 
-
 add_js(array('jquery_plugs/counter.min.js'=>'global'));		
 
 function character_counter($type)
@@ -26,20 +25,9 @@ function character_counter($type)
 			echo '</script>';
 		}
 		break;
-		case "topic":
-
-		{
-			echo '<script  type="text/javascript">';
-			echo '$("#topic_post").counter({goal: '.config('max_topic_length').'});';
-			echo '</script>';
-		}
-		break;
 	}
 }
 
 function character_counter_comment(){ return character_counter('comment'); }
-function character_counter_topic(){ return character_counter('topic'); }
 
 register_anchor_function('character_counter_comment','after_compose_box');
-register_anchor_function('character_counter_topic','after_topic_post_box');
-?>

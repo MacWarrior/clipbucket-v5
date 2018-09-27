@@ -134,13 +134,6 @@
 			//default:
 			$obj = $cbvideo;
 			break;
-			case 'group':
-			case 'groups':
-			{
-				global $cbgroup;
-				$obj = $cbgroup;
-			}
-			break;
 			case 'user':
 			case 'users':
 			{

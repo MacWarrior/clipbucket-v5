@@ -99,21 +99,6 @@ class API extends REST
                $this->response($this->json($data));    
              } 
          }
-         elseif($type=="g" || $type=="group" || $type=="groups" )
-         {
-             global $cbgroup;
-             $categories = $cbgroup->getCbCategories(arraY('indexes_only' => true));
-             if(!empty($categories))
-             {
-                $data = array('code' => "200", 'status' => "success", "msg" => "Success", "data" => $categories);
-                $this->response($this->json($data));
-             }
-             else
-             {
-               $data = array('code' => "204", 'status' => "success", "msg" => "No Record Found", "data" => "");
-               $this->response($this->json($data));    
-             } 
-         }
          elseif($type=="p" || $type=="photo" || $type=="photos" )
          {
              global $cbcollection;
@@ -283,17 +268,14 @@ class API extends REST
           $new_fields = array();
           foreach ($group['fields'] as $field) 
           {
-            // foreach($fields as $field)
             if ($field)
-            $new_fields[] = $field;
+            	$new_fields[] = $field;
           }
 
           $group['fields'] = $new_fields;
           $new_groups[] = $group;
         }
 
-        //pr($new_groups,true);
-        //echo json_encode($new_groups);
         if(!empty($new_groups))
         {
           $data = array('code' => "200", 'status' => "success", "msg" => "Success", "data" => $new_groups);
@@ -736,63 +718,6 @@ class API extends REST
         }
     }
 
-    // Get Groups
-    private function getGroups()
-    {
-        $request = $_REQUEST;
-        
-        $page = $request['page'];
-        if (!$page || !is_numeric($page) || $page < 1)
-        $page = 1;
-
-        $get_limit = create_query_limit($page, $this->content_limit);
-
-        $request['limit'] = $get_limit;
-        global $cbgroup;
-        $groups = $cbgroup->get_groups($request);
-        
-        if(!empty($groups))
-        {
-          $data = array('code' => "200", 'status' => "success", "msg" => "Success", "data" => $groups);
-          $this->response($this->json($data));
-        }
-        else
-        {
-          $data = array('code' => "204", 'status' => "success", "msg" => "No Record Found", "data" => "");
-          $this->response($this->json($data));    
-        }
-    }
-
-    // Get Topics
-    private function getTopics()
-    {
-        $request = $_REQUEST;
-        
-        $page = $request['page'];
-        if (!$page || !is_numeric($page) || $page < 1)
-        $page = 1;
-
-        $gid  = mysql_clean($request['group_id']);
-        $page = mysql_clean($page);
-
-        $topics_limit = 20;
-        $get_limit = create_query_limit($page, $topics_limit);
-
-        $params = array('group' => $gid,'limit' => $get_limit);
-        $topics = $cbgroup->get_group_topics($params);
-        
-        if(!empty($topics))
-        {
-          $data = array('code' => "200", 'status' => "success", "msg" => "Success", "data" => $topics);
-          $this->response($this->json($data));
-        }
-        else
-        {
-          $data = array('code' => "204", 'status' => "success", "msg" => "No Record Found", "data" => "");
-          $this->response($this->json($data));    
-        }
-    }
-
     // Get Feeds
     private function getFeeds()
     {
@@ -803,12 +728,9 @@ class API extends REST
         if (!$page || !is_numeric($page) || $page < 1)
         $page = 1;
 
-
-          
         $id = mysql_clean($request['id']);
         $page = mysql_clean($page);
         $type = mysql_clean($request['type']);
-         
 
         $limit = 20;
         $get_limit = create_query_limit($page, $limit);

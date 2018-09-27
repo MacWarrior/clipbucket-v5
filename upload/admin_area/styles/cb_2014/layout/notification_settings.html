@@ -5,7 +5,6 @@
         <tr>
             <td>Videos</td>
             <td>Users</td>
-            <td>Groups</td>
             <td>Total</td>
         </tr>
     
@@ -18,15 +17,15 @@
         <td class="item"><a href="members.php?search=yes&amp;status=ToActivate">Approve Members ({get_users status='ToActivate' count_only=true})</a>
         	<br/><a href="flagged_users.php">Flagged Users ({$userquery->action->count_flagged_objects()})</a>
         </td>
-        <td class="item"><a href="photo_manager.php?active=no&amp;search=yes">Approve Photos ({get_groups active='no' count_only=true})</a>
+        <td class="item"><a href="photo_manager.php?active=no&amp;search=yes">Approve Photos ({get_photos active='no' count_only=true})</a>
         <br/><a href="flagged_photos.php">Flagged Photos ({$cbphoto->action->count_flagged_objects()})
 
          </a>
         </td>
         <td>
-            Approve {math equation="x + y + z" x={get_videos active='no' count_only=true} y={get_groups active='no' count_only=true} z={get_users status='ToActivate' count_only=true}}
+            Approve {math equation="x + z" x={get_videos active='no' count_only=true} z={get_users status='ToActivate' count_only=true}}
             <br/>
-            Flagged {math equation="x + y + z" x=$cbgroup->action->count_flagged_objects() y=$cbvid->action->count_flagged_objects() z=$userquery->action->count_flagged_objects()}</td>
+            Flagged {math equation="y + z" y=$cbvid->action->count_flagged_objects() z=$userquery->action->count_flagged_objects()}</td>
     </tr>
     <!-- Admin Todo List -->
     </table>

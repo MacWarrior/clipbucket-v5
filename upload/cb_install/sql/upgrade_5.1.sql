@@ -9,3 +9,11 @@ DELETE FROM `{tbl_prefix}config` WHERE name = 'users_items_subscibers';
 
 UPDATE `{tbl_prefix}config` SET value = CONCAT(value, ',mkv') WHERE name = 'allowed_video_types' AND value NOT LIKE '%mkv%';
 UPDATE `{tbl_prefix}config` SET value = CONCAT(value, ',webm') WHERE name = 'allowed_video_types' AND value NOT LIKE '%webm%';
+
+DELETE FROM `{tbl_prefix}config` WHERE name IN(
+	'max_topic_title',
+	'max_topic_length',
+	'groups_list_per_page',
+	'grps_items_search_page',
+	'users_items_group_page',
+	'videos_items_grp_page');

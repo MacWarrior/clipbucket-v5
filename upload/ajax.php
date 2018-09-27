@@ -395,11 +395,6 @@
 						$cbvideo->action->report_it($id);
 						break;
 
-					case 'g':
-					case 'group':
-						$cbgroup->action->report_it($id);
-						break;
-
 					case 'u':
 					case 'user':
 						$userquery->action->report_it($id);
@@ -584,11 +579,6 @@
 						$cid = $userquery->add_comment($comment,$id,$reply_to);
 						break;
 
-					case 't':
-					case 'topic':
-						$cid = $cbgroup->add_comment($comment,$id,$reply_to);
-						break;
-
 					case 'cl':
 					case 'collection':
 						$cid = $cbcollection->add_comment($comment,$id,$reply_to);
@@ -748,11 +738,6 @@
 					case 'photo':
 					case 'p':
 						$cbphoto->update_total_comments($type_id);
-						break;
-
-					case 't':
-					case 'topic':
-						$cbgroup->update_comments_count($type_id);
 						break;
 
 					case 'cl':
@@ -1067,21 +1052,6 @@
 							$content['html'] .= '</div>';
 						} else {
 							$content['html'] = '<div align="center"><em>'.lang("User doesn't have any photos").'</em></div>';
-						}
-						break;
-
-					case "groups":
-						$groups = get_groups(array("user"=>$u['userid'],"order"=>" date_added DESC","limit"=>config('photo_channel_page')));
-						if($groups)
-						{
-							foreach($groups as $group)
-							{
-								assign('group',$group);
-								assign('channelGroup',true);
-								$content['html'] .= Fetch("/blocks/group.html");
-							}
-						} else {
-							$content['html'] = '<div align="center"><em>'.lang("User doesn't have any groups").'</em></div>';
 						}
 						break;
 

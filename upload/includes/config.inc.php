@@ -2,6 +2,8 @@
 	define("FRONT_END",TRUE);
 	define("BACK_END",FALSE);
 
+
+
 	if(!defined('PARENT_PAGE'))
 		define("PARENT_PAGE","home");
 

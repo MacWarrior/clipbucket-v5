@@ -99,8 +99,8 @@ class cbfeeds
 	function action($action)
 	{
 		$objects = array
-		('signup','upload_video','upload_photo','create_group',
-		'join_group','add_friend','add_collection','add_playlist',
+		('signup','upload_video','upload_photo',
+		'add_friend','add_collection','add_playlist',
 		'add_comment','add_favorite');
 		
 		if(!in_array($action,$objects))
@@ -189,7 +189,7 @@ class cbfeeds
 	 */
 	function getUserFeeds($user)
 	{
-		global $cbphoto,$userquery,$cbvid,$cbgroup,$cbcollection;
+		global $cbphoto,$userquery,$cbvid,$cbcollection;
 		$allowed_feeds = USER_ACTIVITY_FEEDS_LIMIT;
 		$uid = $user['userid'];
 		$feeds = $this->getUserFeedsFiles($uid);
@@ -281,46 +281,6 @@ class cbfeeds
 					}
 					break;
 
-					case "create_group":
-					case "join_group":
-					{
-						$group = $cbgroup->get_group($object_id);		
-						//If photo does not exists, simply remove the feed
-						if(!$group)
-						{
-							$this->deleteFeed($uid,$feed['file']);
-							$remove_feed = true;
-						} elseif(!$cbgroup->is_viewable($group)) {
-							$remove_feed = true;
-						} else {
-							//Content Title
-							$farr['title'] = $group['group_name'];
-							
-							if($action=='create_group')
-							$farr['action_title'] = sprintf(lang('user_has_created_new_group'),$userlink);
-							if($action=='join_group')
-							$farr['action_title'] = sprintf(lang('user_has_joined_group'),$userlink);
-							
-							$farr['link'] 			= group_link(array('details'=>$group));
-							$farr['object_content'] = 
-							$group['group_description']."<br>".
-							lang('total_members')." : ".$group['total_members']."<br>".
-							lang('total_videos')." : ".$group['total_videos']."<br>".
-							lang('total_topics')." : ".$group['total_topics']."<br>";
-							
-							$farr['thumb'] 			= $cbgroup->get_group_thumb($group);
-							$farr['icon'] = 'group.png';
-							
-							$joinlink = $cbgroup->group_opt_link($group,'join');
-							if($joinlink)
-							{
-								$joinlink = group_link(array('details'=>$group)).'&join=yes"';
-								$farr['links'][] = array('link'=>$joinlink,'text'=>lang('join'));
-							}
-						}
-					}
-					break;
-					
 					case "signup":
 					{
 						$farr['action_title']  = sprintf(lang("user_joined_us"),$userlink,TITLE,$userlink);
