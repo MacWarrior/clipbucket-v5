@@ -2181,7 +2181,7 @@
 	           		var els = document.getElementsByClassName("unsubs_"+user);
 					if(els.length>0){
 						Array.prototype.forEach.call(els, function(el) {
-						    el.innerHTML="Subscribe";
+						    el.innerHTML=lang_subscribe;
 						    el.setAttribute("onclick","_cb.subscribeToChannelNew("+user+",'subscribe_user');");
 							el.id = "subs_"+user;
 							el.disabled = false;
@@ -2217,7 +2217,7 @@
 		                var els = document.getElementsByClassName("subs_"+user);
 						if(els.length>0){
 							Array.prototype.forEach.call(els, function(el) {
-								el.innerHTML="Unsubscribe";
+								el.innerHTML=lang_unsubscribe;
 							    el.setAttribute("onclick","_cb.unsubscribeToChannel("+user+",'unsubscribe_user');");
 								el.id = "unsubs_"+user;
 								el.disabled = false;
