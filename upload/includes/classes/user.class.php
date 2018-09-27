@@ -1085,10 +1085,17 @@ class userquery extends CBCategory{
 			$this->confirm_friend($uid,$result['userid']);
 		}
 	}
-		
-	
+
 	/**
 	 * Function used to get user contacts
+	 *
+	 * @param      $uid
+	 * @param int  $group
+	 * @param null $confirmed
+	 * @param bool $count_only
+	 * @param null $type
+	 *
+	 * @return array|bool
 	 */
 	function get_contacts($uid,$group=0,$confirmed=NULL,$count_only=false,$type=NULL)
 	{
@@ -1108,19 +1115,24 @@ class userquery extends CBCategory{
 			
 			if($db->num_rows>0)
 				return $result;
-			else
-				return false;
-		}else{
-			$count = $db->count(tbl("contacts"),
-			tbl("contacts.contact_userid"),
-			tbl("contacts.userid")."='$uid' 
-			$query AND ".tbl("contacts").".contact_group_id='$group' ");
-			return $count;
+			return false;
 		}
+
+		$count = $db->count(tbl("contacts"),
+		tbl("contacts.contact_userid"),
+		tbl("contacts.userid")."='$uid' 
+		$query AND ".tbl("contacts").".contact_group_id='$group' ");
+		return $count;
 	}
-	
+
 	/**
 	 * Function used to get pending contacts
+	 *
+	 * @param      $uid
+	 * @param int  $group
+	 * @param bool $count_only
+	 *
+	 * @return array|bool
 	 */
 	function get_pending_contacts($uid,$group=0,$count_only=false)
 	{
@@ -1134,15 +1146,13 @@ class userquery extends CBCategory{
 			AND ".tbl("contacts.confirmed")."='no' AND ".tbl("contacts").".contact_group_id='$group' ");
 			if($db->num_rows>0)
 				return $result;
-			else
-				return false;
-		}else
-		{
-			$count = $db->count(tbl("contacts"),
-			tbl("contacts.contact_userid"),
-			tbl("contacts.contact_userid")."='$uid' AND ".tbl("contacts.confirmed")."='no' AND ".tbl("contacts").".contact_group_id='$group' ");
-			return $count;
+			return false;
 		}
+
+		$count = $db->count(tbl("contacts"),
+		tbl("contacts.contact_userid"),
+		tbl("contacts.contact_userid")."='$uid' AND ".tbl("contacts.confirmed")."='no' AND ".tbl("contacts").".contact_group_id='$group' ");
+		return $count;
 	}
 	
 	/**
@@ -1154,8 +1164,7 @@ class userquery extends CBCategory{
 		$result = $db->select(tbl($this->dbtbl['contacts']),"*"," contact_userid='$uid' AND confirmed='no' AND contact_group_id='$group' ");
 		if($db->num_rows>0)
 			return $result;
-		else
-			return false;
+		return false;
 	}
 	
 	
@@ -3169,26 +3178,28 @@ class userquery extends CBCategory{
     function my_account_links()
     {
         $array[lang('account')]	= array(
-			lang('my_account')	=> 'myaccount.php',
-			lang('block_users')	=> 'edit_account.php?mode=block_users',
-			lang('user_change_pass')	=>'edit_account.php?mode=change_password',
-			lang('user_change_email') 	=>'edit_account.php?mode=change_email',
-			lang('com_manage_subs')	=> 'edit_account.php?mode=subscriptions',
-			lang('contacts_manager')	=> 'manage_contacts.php'
+			lang('my_account')				=> 'myaccount.php',
+			lang('block_users')				=> 'edit_account.php?mode=block_users',
+			lang('user_change_pass')		=> 'edit_account.php?mode=change_password',
+			lang('user_change_email') 		=> 'edit_account.php?mode=change_email',
+			lang('com_manage_subs')			=> 'edit_account.php?mode=subscriptions',
+			lang('change_avatar') 			=> 'edit_account.php?mode=avatar_bg',
+			lang('account_settings') 	=> 'edit_account.php?mode=account'
 		);
 
-
-        $array[lang('user_channel_profiles')] = array(
-            lang('account_settings') =>'edit_account.php?mode=account',
-            lang('user_profile_settings') =>'edit_account.php?mode=profile',
-            lang('change_avatar') 	=> 'edit_account.php?mode=avatar_bg',
-        );
+		if(isSectionEnabled('channels'))
+		{
+			$array[lang('user_channel_profiles')] = array(
+				lang('user_profile_settings') 	=> 'edit_account.php?mode=profile',
+				lang('contacts_manager')		=> 'manage_contacts.php'
+			);
+		}
 
         if(isSectionEnabled('videos'))
 		{
             $array[lang('videos')] = array(
-                lang('uploaded_videos')=>'manage_videos.php',
-                lang('user_fav_videos')=>'manage_videos.php?mode=favorites',
+                lang('uploaded_videos')	=> 'manage_videos.php',
+                lang('user_fav_videos')	=> 'manage_videos.php?mode=favorites',
             );
 		}
 
