@@ -32,35 +32,6 @@
 	</div>
 {/if}
 
-{if $block_type=='groups_show'}
-	<div class="clearfix" id="user-{$user.userid}">
-		<div class="cb-user-thumb clearfix">
-			<div class="chanel-cover clearfix" style="background: url({$coverPhoto}) center #000000 no-repeat;"></div>
-			<a class="avatar" href="{$userquery->profile_link($user)}">
-				<img src="{$userquery->getuserthumb($user)}">
-			</a>
-		</div>
-		<div class="user-detail-block">
-			<div class="clearfix">
-				<h4>
-					<a class="show" href="{$userquery->profile_link($user)}">{display_clean($user.username)}</a>
-				</h4>
-				<div class="clearfix row info-box">
-					<div class="col-sm-6 col-xs-12">
-						<span class="bg-videocam"></span>&nbsp;<span>{$user.total_videos|number_format} {lang code='videos'}</span>
-					</div>
-					<div class="col-sm-6 col-xs-12">
-						<span>{$user.subscribers|number_format} {lang code="subscribers"}</span>
-					</div>
-				</div>
-				<div class="clearfix">
-					<a href="javascript:void(0);" class="btn btn-default btn-subscribe" id="subuser-{$user.userid}">Subscribe</a>
-				</div>
-			</div>
-		</div>
-	</div>
-{/if}
-
 {if $block_type =='small'}
 	<div class="col-md-2" id="user-{$user.userid}" align="center">
 		<a href="{$userquery->profile_link($user)}">{display_clean($user.username)}</a>

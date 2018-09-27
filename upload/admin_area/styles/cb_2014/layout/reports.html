@@ -2,13 +2,12 @@
     <h2>Reports &amp; Stats</h2>
 </div>
 
-<div id="videos_stats">
+<div>
 	<div>
 		<h3 class="pull-left inline">{lang code="today"}</h3>
 		<h3 class="pull-left inline">
-		<input type="checkbox" class="ace ace-switch ace-switch-5" id="enableTooltipDaily">
-		<!--  <span class="lbl"></span>
-		<small class="muted">Enable Tooltip</small>--></h3>
+			<input type="checkbox" class="ace ace-switch ace-switch-5" id="enableTooltipDaily"/>
+		</h3>
 	</div>
 	<div class="clearfix"></div>
 	<div id="daily_chart_id" class="flot_chart">
@@ -16,13 +15,12 @@
 	</div>
 </div>
 
-<div id="user_stats">
+<div>
 	<div>
 		<h3 class="pull-left inline">{lang code="thisweek"}</h3>
 		<h3 class="pull-left inline">
-		<input type="checkbox" class="ace ace-switch ace-switch-5" id="enableTooltipWeekly">
-		<!--  <span class="lbl"></span>
-		<small class="muted">Enable Tooltip</small>--></h3>
+			<input type="checkbox" class="ace ace-switch ace-switch-5" id="enableTooltipWeekly"/>
+		</h3>
 	</div>
 	<div class="clearfix"></div>
 	<div id="weekly_chart_id" class="flot_chart">
@@ -30,13 +28,12 @@
 	</div>
 </div>
 
-<div id="group_stats">
+<div>
 	<div>
 		<h3 class="pull-left inline">{lang code="thismonth"}</h3>
 		<h3 class="pull-left inline">
-		<input type="checkbox" class="ace ace-switch ace-switch-5" id="enableTooltipMonthly">
-		<!--  <span class="lbl"></span>
-		<small class="muted">Enable Tooltip</small>--></h3>
+			<input type="checkbox" class="ace ace-switch ace-switch-5" id="enableTooltipMonthly"/>
+		</h3>
 	</div>
 	<div class="clearfix"></div>
 	<div id="monthly_chart_id" class="flot_chart">
@@ -48,12 +45,12 @@
 	<span><legend>Video Reports</legend></span>
 	<table class="table table-striped table-bordered">
 		<thead>
-			<th>All Time</th>
+			<th>{lang code='alltime'}</th>
 			<th>Today's Videos</th>
-			<th>This Week</th>
-			<th>Last Week</th>
-			<th>This Month</th>
-			<th>Last Month</th>
+			<th>{lang code='thisweek'}</th>
+			<th>{lang code='lastweek'}</th>
+			<th>{lang code='thismonth'}</th>
+			<th>{lang code='lastmonth'}</th>
 		</thead>
 		<tbody class="reports">
 			<tr>
@@ -90,12 +87,12 @@
 	<span><legend>User Reports</legend></span>
 	<table class="table table-striped table-bordered">
 		<thead>
-			<th>All Time</th>
+		<th>{lang code='alltime'}</th>
 			<th>Today's Users</th>
-			<th>This Week</th>
-			<th>Last Week</th>
-			<th>This Month</th>
-			<th>Last Month</th>
+			<th>{lang code='thisweek'}</th>
+			<th>{lang code='lastweek'}</th>
+			<th>{lang code='thismonth'}</th>
+			<th>{lang code='lastmonth'}</th>
 		</thead>
 		<tbody class="reports">
 			<tr>
@@ -135,72 +132,22 @@
 </div>
 
 <div class="table-responsive">
-	<span><legend>Group Reports</legend></span>
-	<table class="table table-striped table-bordered">
-		<thead>
-			<th>All Time</th>
-			<th>Today's Groups</th>
-			<th>This Week</th>
-			<th>Last Week</th>
-			<th>This Month</th>
-			<th>Last Month</th>
-		</thead>
-		<tbody class="reports">
-			<tr>
-				<td>
-					<span class="show">Total: <strong>{get_groups count_only=yes}</strong></span>
-					<span class="show">Active: <strong>{get_groups count_only=yes active='yes'}</strong></span>
-					<span class="show">Processing: <strong>{get_groups count_only=yes active='no'}</strong></span>
-				</td>
-				<td>
-					<span class="show">Total: <strong>{get_groups count_only=yes date_span='today'}</strong></span>
-					<span class="show">Active: <strong>{get_groups count_only=yes active='yes' date_span=today}</strong></span>
-					<span class="show">Processing: <strong>{get_groups count_only=yes active='yes' date_span=today}</strong></span>
-				</td>
-				<td>
-					<span class="show">Total: <strong>{get_groups count_only=yes date_span='this_week'}</strong></span>
-					<span class="show">Active: <strong>{get_users count_only=yes active='yes' date_span=this_week}</strong></span>
-					<span class="show">Processing: <strong>{get_users count_only=yes active='no' date_span=this_week}</strong></span>
-				</td>
-				<td>
-					<span class="show">Total: <strong>{get_groups count_only=yes date_span='last_week'}</strong></span>
-					<span class="show">Active: <strong>{get_users count_only=yes active='yes' date_span=last_week}</strong></span>
-					<span class="show">Processing: <strong>{get_users count_only=yes active='no' date_span=last_week}</strong></span>
-				</td>
-				<td>
-					<span class="show">Total: <strong>{get_groups count_only=yes date_span=this_month}</strong></span>
-					<span class="show">Active: <strong>{get_users count_only=yes active='yes' date_span=this_month}</strong></span>
-					<span class="show">Processing: <strong>{get_users count_only=yes active='no' date_span=this_month}</strong></span>
-				</td>
-				<td>
-					<span class="show">Total: <strong>{get_groups count_only=yes date_span=last_month}</strong></span>
-					<span class="show">Active: <strong>{get_users count_only=yes active='yes' date_span=last_month}</strong></span>
-					<span class="show">Processing: <strong>{get_users count_only=yes active='no' date_span=last_month}</strong></span>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-</div>
-
-<div class="table-responsive">
 	<span><legend>Other Reports</legend></span>
 	<table class="table table-striped table-bordered">
 		<thead>
-			<th>Comments</th>
+			<th>{lang code='comments'}</th>
 			<th>Flags</th>
-			<th>Playlists</th>
-			<th>Favorites</th>
+			<th>{lang code='playlists'}</th>
+			<th>{lang code='favourites'}</th>
 		</thead>
 		<tbody class="reports">
 			<tr>
 				<td>
 					<span class="show">Video Comments: <strong>{$myquery->get_comments('wildcard',v,TRUE)}</strong></span>
-					<span class="show">Groups Discussion: <strong>{$myquery->get_comments('wildcard',t,TRUE)}</strong></span>
 					<span class="show">Profile Comments: <strong>{$myquery->get_comments('wildcard',c,TRUE)}</strong></span>
 				</td>
 				<td>
 					<span class="show">Videos Reported: <strong>{$cbvid->action->count_flagged_objects()}</strong></span>
-					<span class="show">Groups Reported: <strong>{$userquery->action->count_flagged_objects()}</strong></span>
 					<span class="show">Profiles Reported: <strong>{$myquery->get_comments('wildcard',c,TRUE)}</strong></span>
 				</td>
 				<td>
@@ -230,7 +177,6 @@
 					<span class="show">Original Video Files: <strong>{$orig_dir.count|number_format}</strong></span>
 					<span class="show">User Thumbs Files: <strong>{$user_thumbs.count|number_format}</strong></span>
 					<span class="show">User Background Files: <strong>{$user_bg.count|number_format}</strong></span>
-					<span class="show">Groups Thumb Files: <strong>{$grp_thumbs.count|number_format}</strong></span>
 					<span class="show">Category Thumb Files: <strong>{$cat_thumbs.count|number_format}</strong></span>
 					<span class="show">DataBase Size: <strong>{$db_size}</strong></span>
 				</td>
@@ -240,7 +186,6 @@
 					<span class="show">Folder Size: <strong>{$orig_dir.size|formatfilesize}</strong></span>
 					<span class="show">Folder Size: <strong>{$user_thumbs.size|formatfilesize}</strong></span>
 					<span class="show">Folder Size: <strong>{$user_bg.size|formatfilesize}</strong></span>
-					<span class="show">Folder Size: <strong>{$grp_thumbs.size|formatfilesize}</strong></span>
 					<span class="show">Folder Size: <strong>{$cat_thumbs.size|formatfilesize}</strong></span>
 					<span class="show">Folder Size: <strong>{$db_size}</strong></span>
 				</td>
@@ -258,11 +203,8 @@
 </style>
 
 <script type="text/javascript">
-
 $(function() {
-
     var options = {
-
         series: {
             bars: {
                 show: true,
@@ -281,19 +223,14 @@ $(function() {
 
     };
 
-    // $.plot("#placeholder", data, options);
-
     var iteration = 0;
 
-    function fetchData() {
-
-        //++iteration;
-
+    function fetchData()
+	{
         // Daily Data //
         function onDataReceveDaily(series_daily){
 
             data = series_daily;
-            //$.plot("#placeholder", data, options);
             $.plot("#daily_chart_id", data, options);
             tooltip("#daily_chart_id","#enableTooltipDaily");
         }
@@ -304,10 +241,7 @@ $(function() {
             data:"videos=videos",
             dataType: "json",
             success: onDataReceveDaily ,
-            error: function() {
-                //$("#daily_chart_id").html("error");
-               // alert('error');
-            },
+            error: function() {},
             complete: function(){
                 $('#daily_chart_id .loading-image').hide();
             }
@@ -329,10 +263,7 @@ $(function() {
             data:"videos=videos",
             dataType: "json",
             success: onDataReceivedWeekly ,
-            error: function() {
-                //$("#weekly_chart_id").html("error");
-                //alert('error');
-            },
+            error: function() {},
             complete: function(){
                 $('#weekly_chart_id .loading-image').hide();
             }
@@ -353,10 +284,7 @@ $(function() {
             data:"videos=videos",
             dataType: "json",
             success: onDataReceveMonthly ,
-            error: function() {
-                //$("#monthly_chart_id").html("error");
-                //alert('error');
-            },
+            error: function() {},
             complete: function(){
                 $('#monthly_chart_id .loading-image').hide();
             }

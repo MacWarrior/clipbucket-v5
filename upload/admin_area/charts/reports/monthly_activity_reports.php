@@ -1,76 +1,39 @@
 <?php
-error_reporting(E_ALL);
-require_once('../../../includes/admin_config.php');
+	require_once('../../../includes/admin_config.php');
 
-$days = 10;
-$last_week = time()-86400*$days + 86400;
-$the_last_week = date('M d', $last_week);
+	$days = 10;
+	$last_week = time()-86400*$days + 86400;
+	$the_last_week = date('M d', $last_week);
+	$vid_stats = $data['video_stats'];
+	$vid_stats = json_decode($vid_stats);
 
-$vid_stats = $data['video_stats'];
-$vid_stats = json_decode($vid_stats);
-
-$year = array();
-
-//Getting This Weeks Data
-for($i=0;$i<$days;$i++)
-{
-	if($i<$days)
+	//Getting This Weeks Data
+	$year = array();
+	for($i=0;$i<$days;$i++)
 	{
-		$date_pattern = date("Y-m-d",$last_week+($i*86400));
-		$data = $db->select(tbl("stats"),"*"," date_added LIKE '%$date_pattern%' ",1);
-		$data = $data[0];
-		$datas[] = $data;
+		if($i<$days)
+		{
+			$date_pattern = date("Y-m-d",$last_week+($i*86400));
+			$data = $db->select(tbl("stats"),"*"," date_added LIKE '%$date_pattern%' ",1);
+			$data = $data[0];
+			$datas[] = $data;
+		}
+
+		$year[] = date("M d",$last_week+($i*86400));
 	}
-	
-	$year[] = date("M d",$last_week+($i*86400));
-}
- //Videos
-echo $_post['videos'];
 
-$videos['uploads'] = $cbvid->get_videos(array("count_only"=>true,"date_span"=>"this_month"),TRUE);
-$videos['processing'] = $cbvid->get_videos(array("count_only"=>true,"status"=>"Processing","date_span"=>"this_month"),TRUE);
-$videos['active'] = $cbvid->get_videos(array("count_only"=>true,"active"=>"yes","date_span"=>"this_month"),TRUE);
-$V = array(array('uploads',$videos['uploads']),array('processing',$videos['processing']),array('active',$videos['active'])); 
+	//Videos
+	$videos['uploads'] = $cbvid->get_videos(array("count_only"=>true,"date_span"=>"this_month"),TRUE);
+	$videos['processing'] = $cbvid->get_videos(array("count_only"=>true,"status"=>"Processing","date_span"=>"this_month"),TRUE);
+	$videos['active'] = $cbvid->get_videos(array("count_only"=>true,"active"=>"yes","date_span"=>"this_month"),TRUE);
+	$V = array(array(lang('uploaded'),$videos['uploads']),array(lang('processing'),$videos['processing']),array(lang('active'),$videos['active']));
+	$array_video = array('label' => lang('videos'),'data'=>$V);
 
-//Users
-$users['signups'] = $userquery->get_users(array("count_only"=>true,"date_span"=>"this_month"));
-$users['inactive'] = $userquery->get_users(array("count_only"=>true,"date_span"=>"this_month","status"=>'ToActivate'));
-$users['active'] = $userquery->get_users(array("count_only"=>true,"date_span"=>"this_month","status"=>'Ok'));
-//Views
-$user_views = $db->select(tbl("users"),"SUM(profile_hits) as total_views"," doj LIKE '%$date_pattern%'");
-//$users['views'] = $user_views[0]['total_views'];
-//Total Comments
-$user_comments = $db->select(tbl("users"),"SUM(comments_count) as total_comments"," doj LIKE '%$date_pattern%'");
-//$users['comments'] = $user_comments[0]['total_comments'];
+	//Users
+	$users['signups'] = $userquery->get_users(array("count_only"=>true,"date_span"=>"this_month"));
+	$users['inactive'] = $userquery->get_users(array("count_only"=>true,"date_span"=>"this_month","status"=>'ToActivate'));
+	$users['active'] = $userquery->get_users(array("count_only"=>true,"date_span"=>"this_month","status"=>'Ok'));
+	$U = array(array(lang('signups'),$users['signups']),array(lang('inactive'),$users['inactive']),array(lang('active_users'),$users['active']));
+	$array_user = array('label' => lang('users'),'data'=>$U);
 
-$U = array(array('signups',$users['signups']),array('inactive',$users['inactive']),array('Active User',$users['active']),array('views User',$users['views']),array('comments User',$users['comments'])); 
-
-//Make arrays for json
-$array_video = array('label' => 'Videos','data'=>$V);
-
-$array_user = array('label' => 'Users','data'=>$U);
-
-
-echo json_encode(array($array_user,$array_video,$array_group));
-
-for($i=0;$i<$days;$i++)
-{
-	$day[$i]['video'] = json_decode($datas[$i]['video_stats']);
-	$day[$i]['users'] = json_decode($datas[$i]['user_stats']);
-}
-
-$max = 1;
-for($i=0;$i<$days;$i++)
-{	
-	if($i==$days)
-	{
-		$vid_uploads[] = $cbvid->get_videos(array("count_only"=>true,"date_span"=>"today"))+0;
-		$user_signups[] = $userquery->get_users(array("count_only"=>true,"date_span"=>"today"))+0;
-	}else{
-		$vid_uploads[] =$day[$i]['video']->uploads+0;
-		$user_signups[] =$day[$i]['users']->signups+0;
-	}
-	$max = max($max,$vid_uploads[$i],$user_signups[$i]);
-}
-
-$steps = round($max/5,0.49);
+	echo json_encode(array($array_user,$array_video));

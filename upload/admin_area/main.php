@@ -114,7 +114,7 @@
 			'grp_thumb_width',
 			'grp_max_title',
 			'grp_max_desc',
-			'groupsSection',
+
 
 			'high_resolution',
 			'hq_output',

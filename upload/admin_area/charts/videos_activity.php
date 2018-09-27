@@ -1,6 +1,5 @@
 <?php
 include '../../includes/admin_config.php';
-//include 'ofc-library/open-flash-chart.php';
 
 $days = 7;
 $last_week = time()-86400*$days + 86400;
@@ -32,8 +31,6 @@ for($i=0;$i<$days;$i++)
 {
 	$day[$i]['video'] = json_decode($datas[$i]['video_stats'],true);
 	$day[$i]['users'] = json_decode($datas[$i]['user_stats'],true);
-	$day[$i]['groups'] = json_decode($datas[$i]['group_stats'],true);
-	
 }
 $max = 1;
 for($i=0;$i<$days;$i++)
@@ -50,18 +47,3 @@ for($i=0;$i<$days;$i++)
 	}
 	$max = max($max,$uploads[$i],$active[$i],$processing[$i]);
 }
-
-
-
-//pr($uploads,true);
-
-//pr($active,true);
-
-//pr($processing,true);
-
-
-//$max = $max+(round($max/2,0.49));
-//$steps = round($max/5,0.49);
-
-
-?>

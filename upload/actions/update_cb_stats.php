@@ -67,7 +67,7 @@ foreach ($users as $key => $value) {
 $user .="]";
 
 
-$fields = array('video_stats','user_stats','group_stats');
+$fields = array('video_stats','user_stats');
 
 $values = array('|no_mc|'.json_encode($videos),'|no_mc|'.json_encode($users));
 
