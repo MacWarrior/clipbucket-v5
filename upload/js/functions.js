@@ -1655,7 +1655,7 @@ function get_ep_video(vid)
 function add_comment_js(form_id,type)
 {
     $("#add_comment_result").css("display","block");
-    $("#add_comment_button").val('Ajout en cours...');
+    $("#add_comment_button").val(lang_loading);
     $("#add_comment_button").attr("disabled",true);
     $(".add-reply").attr("disabled",true);
 
@@ -1771,7 +1771,7 @@ function comment_transition(div_id,id)
 
 function clear_comment_form()
 {
-    $("#add_comment_button").val('Add Comment');
+    $("#add_comment_button").val(lang_add_comment);
     $("#add_comment_button").attr("disabled",false);
     $(".add-reply").attr("disabled",false);
 }

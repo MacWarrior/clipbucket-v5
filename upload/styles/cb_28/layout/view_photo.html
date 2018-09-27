@@ -33,16 +33,16 @@
 					<button type="button" class="img-close" id="btn-close" data-dismiss="modal" data-check="">&times;</button>
 					<!-- Next and Previous Button inside overlay -->
 					<div class="btn-holder clearfix">
-						<button class="btn view-photo-nxt icon-right-arrow next en-large" data-check="next" ><i>next</i></button>
-						<button class="btn view-photo-pre icon-left-arrow prev en-large" data-check="prev"><i>prev</i></button>
+						<button class="btn view-photo-nxt icon-right-arrow next en-large" data-check="next" ><i>{lang code='next'}</i></button>
+						<button class="btn view-photo-pre icon-left-arrow prev en-large" data-check="prev"><i>{lang code='previous'}</i></button>
 					</div>
 				</div>
 			</div>
 			<!-- Next and Previous button  -->
 			<div class="btn-holder clearfix">
-				<button id="mainNextBtn" class="btn view-photo-nxt icon-right-arrow next view-photo" data-check="next" ><i>next</i></button>
+				<button id="mainNextBtn" class="btn view-photo-nxt icon-right-arrow next view-photo" data-check="next" ><i>{lang code='next'}</i></button>
 
-				<button id="mainPrevBtn" class="btn view-photo-pre icon-left-arrow prev view-photo" data-check="prev"><i>prev</i></button>
+				<button id="mainPrevBtn" class="btn view-photo-pre icon-left-arrow prev view-photo" data-check="prev"><i>{lang code='previous'}</i></button>
 			</div>
 		</div>
 
@@ -75,7 +75,7 @@
 					<div class="clearfix subscribe-col col-lg-6 col-md-6 col-sm-6 col-xs-12">
 						{if $photo.userid != userid()}
 						<a id="subscribeUser" class="btn btn-subscribe btn-primary" href="javascript:void(0);" onclick="_cb.subscribeToChannelNew('{$user.userid}','subscribe_user')">
-							<span>{lang code='subscribe_btn'}</span>
+							<span>{lang code='subscribe'}</span>
 						</a>
 						{/if}
 					</div>

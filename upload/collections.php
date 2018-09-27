@@ -50,8 +50,6 @@
 			break;
 	}
 
-	//$cond['has_items'] = true;
-
 	//Getting Collection List
 	$page = $_GET['page'];
 	$get_limit = create_query_limit($page,COLLPP);

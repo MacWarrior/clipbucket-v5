@@ -1,5 +1,5 @@
 #!/bin/bash
-# Clipbucket install on Debian 9.0 - 9.4
+# Clipbucket install on Debian 9.0 - 9.5
 ## THIS SCRIPT MUST BE LAUNCHED AS ROOT
 
 echo ""

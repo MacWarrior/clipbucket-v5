@@ -75,7 +75,7 @@ session_start();
  	define('VLISTPP',$row['videos_list_per_page']);				//Video List Per page
 	define('VLISTPT',$row['videos_list_per_tab']);				//Video List Per tab
 	define('CLISTPP',$row['channels_list_per_page']);			//Channels List Per page
-	define('CLISTPT',$row['channels_list_per_tab']);			//Chaneels List Per tab
+	define('CLISTPT',$row['channels_list_per_tab']);			//Channels List Per tab
 	define('GLISTPP',$row['groups_list_per_page']);				//Groups List Per page
 	
  //Video Options

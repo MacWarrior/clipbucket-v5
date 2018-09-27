@@ -37,7 +37,7 @@
 	$tag='<li><a #params#>#page#</a><li>';
 	$pages->paginate($total_pages,$page,$link,$extra_params,$tag);
 	if (!$subtitle) {
-		$subtitle = 'Photos';
+		$subtitle = 'photos';
 	}
 	subtitle(lang($subtitle));
 	//Displaying The Template
