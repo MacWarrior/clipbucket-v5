@@ -363,6 +363,10 @@
 	# PHOTOS DETAILS	
 	define('PHOTOS_DIR',FILES_DIR."/photos");
 	define('PHOTOS_URL',"/files/photos");
+
+	# AVATARS DIR
+	define('AVATARS_DIR',FILES_DIR."/avatars");
+	define('AVATARS_URL',"/files/avatars");
 	
 	# ADVANCE CACHING
 	define('CACHE_DIR',BASEDIR.'/cache');
@@ -451,7 +455,6 @@
 	Assign('category_thumbs',CAT_THUMB_URL);
 	Assign('gp_thumbs_url',GP_THUMB_URL);
 	Assign('video_thumbs',THUMBS_URL);
-	# Assign('ads',$ads);
 
 	Assign('email_verification',EMAIL_VERIFICATION);
 	Assign('bg_dir','/images/backgrounds');
@@ -549,7 +552,6 @@
 	$Smarty->register_function('FUNC','FUNC');
 	$Smarty->register_function('avatar','avatar');
 	$Smarty->register_function('load_form','load_form');
-	//getConstant('get_all_video_files_smarty')
 	$Smarty->register_function('get_all_video_files', 'get_all_video_files_smarty');
 	$Smarty->register_function('input_value','input_value');
 	$Smarty->register_function('userid','userid');

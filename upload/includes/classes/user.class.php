@@ -1541,11 +1541,16 @@ class userquery extends CBCategory{
 		$db->Execute($sql);
 	}
 
-	
+
 	/**
 	 * FUNCTION USED TO GE USER THUMBNAIL
-	 * @param : thumb file
-	 * @param : size (NULL,small)
+	 *
+	 * @param        $udetails
+	 * @param string $size
+	 * @param null   $uid
+	 * @param bool   $just_file
+	 *
+	 * @return string
 	 */
 	function getUserThumb($udetails,$size='',$uid=NULL,$just_file=false)
 	{
@@ -1564,16 +1569,15 @@ class userquery extends CBCategory{
 			$udetails = $this->get_user_details($uid);
 
 		$thumbnail = $udetails['avatar'];
-		$thumb_file = USER_THUMBS_DIR.'/'.$thumbnail;
+		$thumb_file = AVATARS_DIR.'/'.$thumbnail;
 
 		if(file_exists($thumb_file) && $thumbnail)
-			$thumb = USER_THUMBS_URL.'/'.$thumbnail;
+			$thumb = AVATARS_URL.'/'.$thumbnail;
 		elseif(!empty($udetails['avatar_url']))
 		{
 			$thumb = $udetails['avatar_url'];
 			$remote  = true;
-		}else
-		{	
+		} else {
 			if(!USE_GAVATAR)
 				$thumb_file = $this->get_default_thumb();
 			else
@@ -1581,16 +1585,14 @@ class userquery extends CBCategory{
 				switch($size)
 				{
 					case "small":
-					{
 						$thesize = AVATAR_SMALL_SIZE;
 						$default = $this->get_default_thumb('small');
-					}
-					break;
+						break;
+
 					default:
-					{
 						$thesize = AVATAR_SIZE;
 						$default = $this->get_default_thumb();
-					}
+						break;
 				}
 				
 				$email = $udetails['email'];
@@ -1611,21 +1613,18 @@ class userquery extends CBCategory{
 		{
 			if(!empty($size) && !$thumb)
 			{
-				$thumb = USER_THUMBS_URL.'/'.$file.'-'.$size.'.'.$ext;
+				$thumb = AVATARS_URL.'/'.$file.'-'.$size.'.'.$ext;
 				$thumb_path = $file.'.'.$ext;
 			}
 			elseif(!isset($thumb) || !$thumb)
 			{
-				$thumb = USER_THUMBS_URL.'/'.$file.'.'.$ext;
+				$thumb = AVATARS_URL.'/'.$file.'.'.$ext;
 				$thumb_path = "";
 			}
 		}
 
-
 		$thumb_name = $file.'.'.$ext;
 
-
-		
 		if($just_file)
 			return $file.'.'.$ext;
 		
@@ -1639,9 +1638,8 @@ class userquery extends CBCategory{
 				'is_remote' => $remote,
 			);
 
-			//pr($Cbucket->custom_user_thumb,true);
-			if( count( $Cbucket->custom_user_thumb ) > 0 ) {
-				
+			if( count( $Cbucket->custom_user_thumb ) > 0 )
+			{
 		        $functions = $Cbucket->custom_user_thumb;
 
 		        if (in_array("social_app_avatar", $functions)) {
@@ -1662,9 +1660,7 @@ class userquery extends CBCategory{
 		        }
 		    }
 
-			return $thumb = USER_THUMBS_URL.'/'.$file.'.'.$ext;
-			//return $this->resizer($size,$thumb);
-			
+			return $thumb = AVATARS_URL.'/'.$file.'.'.$ext;
 		}
 		return $thumb;
 	}
@@ -1691,37 +1687,44 @@ class userquery extends CBCategory{
 	{
 		return $this->getUserThumb($udetails,$size,$uid);
 	}
-	
+
 	/**
 	 * Function used to get default user thumb
+	 *
+	 * @param null $size
+	 *
+	 * @return string
 	 */
 	function get_default_thumb($size=NULL)
 	{
 		if($size=="small" && file_exists(TEMPLATEDIR.'/images/thumbs/no_avatar-small.png'))
 		{
 			return TEMPLATEURL.'/images/thumbs/no_avatar-small.png';
-		}elseif(file_exists(TEMPLATEDIR.'/images/thumbs/no_avatar.png') && !$size)
-		{
-			return TEMPLATEURL.'/images/thumbs/no_avatar.png';
-		}else
-		{
-			if($size=='small')
-				return USER_THUMBS_URL.'/'.getName(NO_AVATAR).'-small.'.getExt(NO_AVATAR);
-			else
-				return USER_THUMBS_URL.'/'.NO_AVATAR;
 		}
+
+		if(file_exists(TEMPLATEDIR.'/images/thumbs/no_avatar.png') && !$size) {
+			return TEMPLATEURL.'/images/thumbs/no_avatar.png';
+		}
+
+		if($size=='small')
+			return USER_THUMBS_URL.'/'.getName(NO_AVATAR).'-small.'.getExt(NO_AVATAR);
+		return USER_THUMBS_URL.'/'.NO_AVATAR;
 	}
-	
+
 	/**
 	 * Function used to get user Background
+	 *
 	 * @param : bg file
+	 * @param bool $check
+	 *
+	 * @return bool|string
 	 */
 	function getUserBg($udetails,$check=false)
 	{
 		$remote = false;
 		if(empty($udetails['userid']))
 			$udetails = $this->get_user_details($uid);
-		//$thumbnail = $udetails['avatar'] ? $udetails['avatar'] : 'no_avatar.jpg';
+
 		$file = $udetails['background'];
 		$bgfile = USER_BG_DIR.'/'.$file;
 		if(file_exists($bgfile) && $file)

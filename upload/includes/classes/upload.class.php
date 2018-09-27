@@ -1037,9 +1037,7 @@ class Upload
 	 */
 	function upload_user_file($type='a',$file,$uid)
 	{
-		global $db,$userquery,$cbphoto,$imgObj;
-		$avatar_dir = BASEDIR.'/images/avatars/';
-		$bg_dir		= BASEDIR.'/images/backgrounds/';
+		global $userquery,$cbphoto,$imgObj;
 		$av_details = getimagesize($file['tmp_name']);
 		
 		if($userquery->user_exists($uid))
@@ -1062,7 +1060,7 @@ class Upload
 					{
 						$ext = getext($file['name']);
 						$file_name = $uid.'.'.$ext;
-						$file_path = $avatar_dir.$file_name;
+						$file_path = AVATARS_DIR.DIRECTORY_SEPARATOR.$file_name;
 						if(move_uploaded_file($file['tmp_name'],$file_path))
 						{
 							if(!$imgObj->ValidateImage($file_path,$ext))
@@ -1070,7 +1068,7 @@ class Upload
 								e(lang("Invalid file type"));
 								@unlink($file_path);
 							} else {
-								$small_size = $avatar_dir.$uid.'-small.'.$ext;
+								$small_size = AVATARS_DIR.DIRECTORY_SEPARATOR.$uid.'-small.'.$ext;
 								$cbphoto->CreateThumb($file_path,$file_path,$ext,AVATAR_SIZE,AVATAR_SIZE);
 								$cbphoto->CreateThumb($file_path,$small_size,$ext,AVATAR_SMALL_SIZE,AVATAR_SMALL_SIZE);
 							}
