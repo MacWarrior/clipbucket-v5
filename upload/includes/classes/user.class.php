@@ -1615,9 +1615,7 @@ class userquery extends CBCategory{
 			{
 				$thumb = AVATARS_URL.'/'.$file.'-'.$size.'.'.$ext;
 				$thumb_path = $file.'.'.$ext;
-			}
-			elseif(!isset($thumb) || !$thumb)
-			{
+			} elseif(!isset($thumb) || !$thumb) {
 				$thumb = AVATARS_URL.'/'.$file.'.'.$ext;
 				$thumb_path = "";
 			}
@@ -1628,14 +1626,14 @@ class userquery extends CBCategory{
 		if($just_file)
 			return $file.'.'.$ext;
 		
-		if($size){
-
+		if($size)
+		{
 			$params = array(
-				'size'=> $size,
-				'thumb_path'=>"images/avatars/",
-				'thumb_name' => $thumb_name,
-				'just_file' => $just_file,
-				'is_remote' => $remote,
+				'size'			=> $size,
+				'thumb_path'	=> "images/avatars/",
+				'thumb_name' 	=> $thumb_name,
+				'just_file' 	=> $just_file,
+				'is_remote' 	=> $remote,
 			);
 
 			if( count( $Cbucket->custom_user_thumb ) > 0 )
