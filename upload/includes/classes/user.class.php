@@ -144,9 +144,7 @@ class userquery extends CBCategory{
 		define('AVATAR_SMALL_SIZE',40);
 		define('BG_SIZE',config('max_bg_width'));
 		define('BACKGROUND_URL',config('background_url'));
-		//define("USE_GAVATAR",config('gravatars') ? config('gravatars') : false); //Use Gavatar
 		define('BACKGROUND_COLOR',config('background_color'));
-		define('USE_GAVATAR', false);
 		if(isSectionEnabled('channels'))
 			$Cbucket->search_types['channels'] = "userquery";
 		
@@ -1545,122 +1543,45 @@ class userquery extends CBCategory{
 	/**
 	 * FUNCTION USED TO GE USER THUMBNAIL
 	 *
-	 * @param        $udetails
+	 * @param array  $udetails
 	 * @param string $size
 	 * @param null   $uid
-	 * @param bool   $just_file
 	 *
 	 * @return string
 	 */
-	function getUserThumb($udetails,$size='',$uid=NULL,$just_file=false)
+	function getUserThumb($udetails,$size='',$uid=NULL)
 	{
-		global $Cbucket;
-		$remote = false;
-		if (function_exists('check_adv_social_con_license')) {
-			global $db;
-			$user = $udetails['userid'];
-			$template = $Cbucket->configs['template_dir'];
-			$url = $db->select(tbl('users'),'*',"userid = $user");
-			if ($url[0]['soclid'] != '' && $template == 'cb_28') {
-				return $url[0]['avatar_url'];
-			}
-		}
 		if(empty($udetails['userid']) && $uid)
 			$udetails = $this->get_user_details($uid);
 
-		$thumbnail = $udetails['avatar'];
-		$thumb_file = AVATARS_DIR.'/'.$thumbnail;
+		$avatar = $udetails['avatar'];
+		$avatar_path = AVATARS_DIR.'/'.$avatar;
+		if( !empty($avatar) && file_exists($avatar_path) )
+			return AVATARS_URL.'/'.$avatar;
 
-		if(file_exists($thumb_file) && $thumbnail)
-			$thumb = AVATARS_URL.'/'.$thumbnail;
-		elseif(!empty($udetails['avatar_url']))
+		if( !empty($udetails['avatar_url']) )
+			return display_clean($udetails['avatar_url']);
+
+		$thesize = AVATAR_SIZE;
+		$default = $this->get_default_thumb();
+		if($size == 'small')
 		{
-			$thumb = $udetails['avatar_url'];
-			$remote  = true;
-		} else {
-			if(!USE_GAVATAR)
-				$thumb_file = $this->get_default_thumb();
-			else
-			{
-				switch($size)
-				{
-					case "small":
-						$thesize = AVATAR_SMALL_SIZE;
-						$default = $this->get_default_thumb('small');
-						break;
-
-					default:
-						$thesize = AVATAR_SIZE;
-						$default = $this->get_default_thumb();
-						break;
-				}
-				
-				$email = $udetails['email'];
-				$email = $email ? $email : $udetails['anonym_email'];
-				$gravatar = new Gravatar($email, $default);
-				$gravatar->size = $thesize;
-				$gravatar->rating = "G";
-				$gravatar->border = "FF0000";
-				
-				$thumb = $gravatar->getSrc();
-			}
+			$thesize = AVATAR_SMALL_SIZE;
+			$default = $this->get_default_thumb('small');
 		}
 
-		$ext = GetExt($thumb_file);
-		$file = getName($thumb_file);
-
-		if(!$remote)
+		if(config('gravatars') == 'yes' && (!empty($udetails['email']) || !empty($udetails['anonym_email'])) )
 		{
-			if(!empty($size) && !$thumb)
-			{
-				$thumb = AVATARS_URL.'/'.$file.'-'.$size.'.'.$ext;
-				$thumb_path = $file.'.'.$ext;
-			} elseif(!isset($thumb) || !$thumb) {
-				$thumb = AVATARS_URL.'/'.$file.'.'.$ext;
-				$thumb_path = "";
-			}
+			$email = $udetails['email'] ? $udetails['email'] : $udetails['anonym_email'];
+			$gravatar = new Gravatar($email, BASEURL.$default);
+			$gravatar->size = $thesize;
+			$gravatar->rating = "G";
+			$gravatar->border = "FF0000";
+
+			return $gravatar->getSrc();
 		}
 
-		$thumb_name = $file.'.'.$ext;
-
-		if($just_file)
-			return $file.'.'.$ext;
-		
-		if($size)
-		{
-			$params = array(
-				'size'			=> $size,
-				'thumb_path'	=> "images/avatars/",
-				'thumb_name' 	=> $thumb_name,
-				'just_file' 	=> $just_file,
-				'is_remote' 	=> $remote,
-			);
-
-			if( count( $Cbucket->custom_user_thumb ) > 0 )
-			{
-		        $functions = $Cbucket->custom_user_thumb;
-
-		        if (in_array("social_app_avatar", $functions)) {
-				    $params["thumb_name"] = $udetails["avatar"];
-				    if ( empty($params["thumb_name"]) ){
-				    	$params["thumb_name"] = "no_avatar.png";
-				    }else{
-				    	$params["thumb_path"] = $params["thumb_path"].$udetails['userid']."/"; 
-				    }
-				}
-		        foreach( $functions as $func ) {
-		            if( function_exists( $func ) ) {
-		                $func_data = $func( $params );
-		                if( $func_data ) {
-		                    return $func_data;
-		                }
-		            }
-		        }
-		    }
-
-			return $thumb = AVATARS_URL.'/'.$file.'.'.$ext;
-		}
-		return $thumb;
+		return $default;
 	}
 
 	/**

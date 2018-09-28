@@ -1178,44 +1178,38 @@
 		<h2>Profile Pictures &amp; Background</h2>
 		<div class="row">
 			<div class="col-md-4">
-				<label for="gravatars">User Avatars</label>
+				<label for="gravatars">Use Gravatars</label>
 				<label class="pull-right inline">
-					{$row.gravatars}
 					<input value="yes" name="gravatars" id="gravatars" {if $row.gravatars=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 					<span class="lbl"></span>
 				</label>
 				<hr>
 				<label for="select4">Allow picture URL</label>
 				<label class="pull-right inline">
-					{$row.picture_url}
 					<input value="yes" name="picture_url" id="select4" {if $row.picture_url=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 					<span class="lbl"></span>
 				</label>
 				<hr>
 				<label for="select5">Allow picture upload</label>
 				<label class="pull-right inline">
-					{$row.picture_upload}
 					<input value="yes" name="picture_upload" id="select5" {if $row.picture_upload=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 					<span class="lbl"></span>
 				</label>
 				<hr>
 				<label for="select6">Allow Background URL</label>
 				<label class="pull-right inline">
-					{$row.background_url}
 					<input value="yes" name="background_url" id="select6" {if $row.background_url=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 					<span class="lbl"></span>
 				</label>
 				<hr>
 				<label for="select7">Allow background upload</label>
 				<label class="pull-right inline">
-					{$row.background_upload}
 					<input value="yes" name="background_upload" id="select7" {if $row.background_upload=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 					<span class="lbl"></span>
 				</label>
 				<hr>
 				<label for="background_color">Allow background color</label>
 				<label class="pull-right inline">
-					{$row.background_color}
 					<input value="yes" name="background_color" id="background_color" {if $row.background_color=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 					<span class="lbl"></span>
 				</label>

@@ -25,9 +25,7 @@
         {if $log.action_username}
           <a href="view_user?uid={$log.action_userid}"><label class="label label-{if $log.action_userlevel == '1'}success{elseif $log.action_userlevel == ''}danger{else}primary{/if}">{$log.action_username}</label></a>
           <br>
-          <a href="view_user.php?uid={$log.action_userid}">
-             <!-- <img src="{$userquery->getUserThumb($log.action_userid,'small')}" class="img-thumbnail oneUserImage" /> -->
-          </a>
+          <a href="view_user.php?uid={$log.action_userid}"></a>
           {else}
             <label class="label label-danger">No username found</label>
         {/if}

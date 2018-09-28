@@ -443,12 +443,8 @@ if(!function_exists('user_thumb'))
 {
     function user_thumb($params)
     {
-        if($params['just_file'])
-            return false;
-
         if($params['is_remote'])
             return false;
-        
 
         $size = $params[ 'size' ];
         $default = array( 't', 'm', 'l', 'o','small' );
@@ -461,14 +457,10 @@ if(!function_exists('user_thumb'))
         {
           $w = 320;
           $h = 250;
-        }
-        else if($size=='m')
-        {
+        } else if($size=='m') {
           $w = 80;
           $h = 80;  
-        }
-        else if($size=='t' || $size=='small' )
-        {
+        } else if($size=='t' || $size=='small' ) {
           $w = 40;
           $h = 40;  
         }
@@ -483,15 +475,9 @@ if(!function_exists('user_thumb'))
         $timthumb_path = CB_SERVER_THUMB_URL.'/timthumb.php?src=';
 
         if(isset($params['thumb_name']) && isset($params['thumb_path']))
-        return $timthumb_path.$params['thumb_name'].'&directory='.$params['thumb_path'].$tim_postfix;
-        else
-        return false;    
-
-        //http://dev.cbnew/plugins/cb_server_thumb/timthumb.php?src=test2-1.jpg&directory=thumbs/2014/09/08/&type=photos&h=120&w=160&zc=1
-
+        	return $timthumb_path.$params['thumb_name'].'&directory='.$params['thumb_path'].$tim_postfix;
+        return false;
     }
 }
 
 $Cbucket->custom_user_thumb[] = 'user_thumb';
-
-?>

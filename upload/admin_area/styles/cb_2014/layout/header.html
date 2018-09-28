@@ -1,5 +1,5 @@
-<div id="navbar" class="navbar navbar-default">
-	<div id="navbar" class="navbar-container container">
+<div class="navbar navbar-default">
+	<div class="navbar-container container">
 		<div class="navbar-header pull-left">
             <div class="logoContainer clearfix">
                <a class="navbar-brand" href="/admin_area">
@@ -86,7 +86,7 @@
                         <i class="icon-info-sign"></i>
                         <form id="display_opts" name="display_opts" method="post">
                             Results Per Page :
-                            <input name="admin_pages" type="text" style="width:50px" value="{$Cbucket->configs.admin_pages}"/>
+                            <input name="admin_pages" type="text" style="width:50px;" value="{$Cbucket->configs.admin_pages}"/>
                             <input type="submit" name="update_dp_options" id="button" value="{lang code='update'}" class="btn btn-primary btn-xs"/>
                         </form>
                     </li>
@@ -101,41 +101,40 @@
 
                 <li class="blue">
                     <a data-toggle="dropdown" href="#" class="dropdown-toggle">
-                        <img src="{$userquery->getUserThumb($u)}" class="img-circle" width="25" height="25"/>
+                        <img src="{$userquery->getUserThumb('', '',userid())}" class="img-circle" width="25" height="25"/>
                         <span class="user-info">
-                         {$userquery->username}<br>
+                         {display_clean($userquery->username)}<br>
                          {assign var=levels value=$userquery->get_levels()}
                          {section name=l loop=$levels}
-                         {$levels[l].user_level_name}
+                         	{$levels[l].user_level_name}
                          {/section}
-                     </span>
-                     <i class="icon-caret-down"></i>
-                 </a>
-                 <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
-                    <li>
-                        <a href="main.php">
-                            <i class="icon-cog"></i>
-                            Settings
-                        </a>
-                    </li>
+                     	</span>
+                     	<i class="icon-caret-down"></i>
+                 	</a>
+					<ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+						<li>
+							<a href="main.php">
+								<i class="icon-cog"></i> Settings
+							</a>
+						</li>
 
-                    <li>
-                        <a href="/admin_area/view_user.php?uid={userid()}"><i class="icon-user"></i> Profile</a>
-                    </li>
+						<li>
+							<a href="/admin_area/view_user.php?uid={userid()}">
+								<i class="icon-user"></i> Profile
+							</a>
+						</li>
 
-                    <li class="divider"></li>
+						<li class="divider"></li>
 
-                    <li>
-                        <a href="logout.php">
-                            <i class="icon-off"></i>
-                            Logout
-                        </a>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-    </div>
+						<li>
+							<a href="logout.php">
+								<i class="icon-off"></i> Logout
+							</a>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</div>
 </div>
-</div>
-<!-- /.navbar-header -->
-<!-- /.container -->
+
