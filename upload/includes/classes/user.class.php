@@ -2533,9 +2533,24 @@ class userquery extends CBCategory{
 		//Deleting User Avatar
 		if($array['delete_avatar']=='yes')
 		{
-			$file = USER_THUMBS_DIR.'/'.$array['avatar_file_name'];
-			if(file_exists($file) && $array['avatar_file_name'] !='')
+			$udetails = $this->get_user_details($array['userid']);
+
+			$file = AVATARS_DIR.'/'.$udetails['avatar'];
+			if(file_exists($file) && $udetails['avatar'] !='')
 				unlink($file);
+
+			$uquery_field[] = 'avatar';
+			$uquery_val[] = '';
+		} else {
+			if(isset($_FILES['avatar_file']['name']))
+			{
+				$file = $Upload->upload_user_file('a', $_FILES['avatar_file'], $array['userid']);
+				if($file)
+				{
+					$uquery_field[] = 'avatar';
+					$uquery_val[] = $file;
+				}
+			}
 		}
 		
 		//Deleting User Bg
@@ -2544,16 +2559,6 @@ class userquery extends CBCategory{
 			$file = USER_BG_DIR.'/'.$array['bg_file_name'];
 			if(file_exists($file) && $array['bg_file_name'])
 				unlink($file);
-		}
-
-		if(isset($_FILES['avatar_file']['name']))
-		{
-			$file = $Upload->upload_user_file('a', $_FILES['avatar_file'], $array['userid']);
-			if($file)
-			{
-				$uquery_field[] = 'avatar';
-				$uquery_val[] = $file;
-			}
 		}
 
 		//Updating User Background
@@ -2645,18 +2650,37 @@ class userquery extends CBCategory{
 	function update_user_avatar_bg($array)
 	{
 		global $db,$Upload;
-		//Updating User Avatar
-		$uquery_field[] = 'avatar_url';
-		$uquery_val[] = mysql_clean($array['avatar_url']);
 
 		//Deleting User Avatar
 		if($array['delete_avatar']=='yes')
 		{
-			$file = USER_THUMBS_DIR.'/'.$array['avatar_file_name'];
-			if(file_exists($file) && $array['avatar_file_name'] !='')
+			$udetails = $this->get_user_details(userid());
+
+			$file = AVATARS_DIR.'/'.$udetails['avatar_url'];
+			if(file_exists($file) && $udetails['avatar_url'] !='')
 				unlink($file);
+
+			$uquery_field[] = 'avatar';
+			$uquery_val[] = '';
+
+			$uquery_field[] = 'avatar_url';
+			$uquery_val[] = '';
+		} else {
+			//Updating User Avatar
+			$uquery_field[] = 'avatar_url';
+			$uquery_val[] = $array['avatar_url'];
+
+			if(isset($_FILES['avatar_file']['name']))
+			{
+				$file = $Upload->upload_user_file('a',$_FILES['avatar_file'],userid());
+				if($file)
+				{
+					$uquery_field[] = 'avatar';
+					$uquery_val[] = $file;
+				}
+			}
 		}
-		
+
 		//Deleting User Bg
 		if($array['delete_bg']=='yes')
 		{
@@ -2664,70 +2688,45 @@ class userquery extends CBCategory{
 			if(file_exists($file) && $array['bg_file_name'] !='')
 				unlink($file);
 		}
-		
-		
-		if(isset($_FILES['avatar_file']['name']))
-		{
-			$file = $Upload->upload_user_file('a',$_FILES['avatar_file'],$array['userid']);
-			if($file)
-			{
-				$uquery_field[] = 'avatar';
-				$uquery_val[] = $file;
-			}
-		}
 
 		//Updating User Background
 		$uquery_field[] = 'background_url';
-		$uquery_val[] = mysql_clean($array['background_url']);
+		$uquery_val[] = $array['background_url'];
 		
 		$uquery_field[] = 'background_color';
-		$uquery_val[] = mysql_clean($array['background_color']);
+		$uquery_val[] = $array['background_color'];
 		
 		if($array['background_repeat'])
 		{
 			$uquery_field[] = 'background_repeat';
-			$uquery_val[] = mysql_clean($array['background_repeat']);
+			$uquery_val[] = $array['background_repeat'];
 		}
 		
 		//Background Attachement
 		$uquery_field[] = 'background_attachement';
-		$uquery_val[] = mysql_clean($array['background_attachement']);
+		$uquery_val[] = $array['background_attachement'];
 		
 		
 		if(isset($_FILES['background_file']['name']))
 		{
-			$file = $Upload->upload_user_file('b',$_FILES['background_file'],$array['userid']);
+			$file = $Upload->upload_user_file('b',$_FILES['background_file'], userid());
 			if($file)
 			{
 				$uquery_field[] = 'background';
-				$uquery_val[] = mysql_clean($file);
+				$uquery_val[] = $file;
 			}
 		}
 
-		foreach ($uquery_val as $key => $value) {
-		    $value = trim($value);
-		    if (empty($value)){
-		        $validate_empty_array=0;
-		    } else {
-		    	$validate_empty_array=1;
-		    	break;
-		    }
-		}
-		
-		if($validate_empty_array)
-		{
-			$log_array = array(
-				'success'=>'yes',
-				'details'=> "updated profile"
-			);
+		$log_array = array(
+			'success'=>'yes',
+			'details'=> "updated profile"
+		);
 
-			//Login Upload
-			insert_log('profile_update',$log_array);
-				
-			$db->update(tbl($this->dbtbl['users']),$uquery_field,$uquery_val," userid='".mysql_clean($array['userid'])."'");
-			e(lang("usr_avatar_bg_update"),'m');
-		}
+		//Login Upload
+		insert_log('profile_update',$log_array);
 
+		$db->update(tbl($this->dbtbl['users']),$uquery_field,$uquery_val," userid='".userid()."'");
+		e(lang("usr_avatar_bg_update"),'m');
 	}
 
 	public function updateCover($array = array())
@@ -3105,9 +3104,14 @@ class userquery extends CBCategory{
 			lang('user_change_pass')		=> 'edit_account.php?mode=change_password',
 			lang('user_change_email') 		=> 'edit_account.php?mode=change_email',
 			lang('com_manage_subs')			=> 'edit_account.php?mode=subscriptions',
-			lang('change_avatar') 			=> 'edit_account.php?mode=avatar_bg',
-			lang('account_settings') 	=> 'edit_account.php?mode=account'
+			lang('account_settings') 		=> 'edit_account.php?mode=account'
 		);
+
+		$udetails = $this->get_user_details(userid());
+		if( config('picture_upload')=='yes' || config('picture_url')=='yes' || !empty($udetails['avatar_url']) || !empty($udetails['avatar']) )
+		{
+			$array[lang('account')][lang('change_avatar')] = 'edit_account.php?mode=avatar_bg';
+		}
 
 		if(isSectionEnabled('channels'))
 		{

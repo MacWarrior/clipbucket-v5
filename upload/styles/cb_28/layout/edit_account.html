@@ -157,6 +157,7 @@
             <img src="{$userquery->getUserThumb($user)}?{uniqid()}" class="edit-img-thumbnail img-responsive" />
 
           </div>
+			{if config('picture_upload')=='yes'}
           <div class="form-group">
             <label for="avatar_file">
               <h4>{lang code='user_user_avatar'}</h4>
@@ -164,23 +165,35 @@
             </label>
             <input type="file" name="avatar_file" id="avatar_file" class="the-buttons btn" />
           </div>
+			{/if}
+
+			{if config('picture_upload')=='yes' && config('picture_url')=='yes'}
           <h3>{lang code='or'}</h3>
+			{/if}
+
+			{if config('picture_url')=='yes'}
           <div class="form-group">
             <label for="avatar_url">{lang code='pelase_enter_image_url'}</label>
             <input class="form-control" name="avatar_url" type="text" id="avatar_url" value="{$user.avatar_url}" />
           </div>
+			{/if}
+
+			{if !empty($user.avatar) || !empty($user.avatar_url)}
           <div class="form-group">
             <label class="radio">
               <input name="delete_avatar" type="checkbox" id="delete_avatar" value="yes" />
               {lang code='delete_this_img'} - (if user has uploaded profile pic)
             </label>
-            <input type="hidden" name="avatar_file_name" value="{$user.avatar}" />
           </div>
-          <div class="form-group">
+			{/if}
+
+			{if config('picture_upload')=='yes' || config('picture_url')=='yes' || !empty($user.avatar) || !empty($user.avatar_url)}
+			<div class="form-group">
             <button name="update_avatar_bg" id="button1" value="submit" class="btn btn-primary">
               {lang code='update'}
             </button>
           </div>
+			{/if}
         </form>
       </div>
 
