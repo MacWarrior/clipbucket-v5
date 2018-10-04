@@ -2,5 +2,6 @@
     "name": "ClipBucket",
     "description": "Open Source Video Sjaring Script",
     "version": "4.1",
-    "license": "Attribution Assurance License"
+    "license": "Attribution Assurance License",
+    "license_abbrevation": "AAL"
 }
