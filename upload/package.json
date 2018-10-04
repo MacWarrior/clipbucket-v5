@@ -1,7 +1,5 @@
 {
-    "name": "laravel/laravel",
-    "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
-    "license": "MIT",
-    "type": "project",
+    "name": "ClipBucket",
+    "description": "Open Source Video Sjaring Script",
+    "version": "4.1"
 }
