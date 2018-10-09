@@ -231,6 +231,13 @@
 					{/foreach}
           </select>
         </div>
+        <div class="col-md-4">
+          <label for="pick_geo_country">Pick signup country geologically(if yes default country won't work)</label>
+          <select name="pick_geo_country" id="pick_geo_country" class="form-control">
+            <option value="yes" {if $row.pick_geo_country!='no'} selected="selected"{/if}>Yes</option>
+            <option value="no" {if $row.pick_geo_country=='no'} selected="selected"{/if}>No</option>
+          </select>
+        </div>
 
         </div>
       <hr>

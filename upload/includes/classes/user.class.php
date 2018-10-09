@@ -3412,16 +3412,22 @@ class userquery extends CBCategory{
 			 $dob =  $dob ? date(config("date_format"),strtotime($dob)) : date(config("date_format"),strtotime('14-10-1989'));
 			
 			$countries = $Cbucket->get_countries(iso2);
-			$user_ip = $_SERVER['REMOTE_ADDR']; // getting user's ip
-			$user_country = ip_info($user_ip, 'country'); // get country using IP
-			foreach ($countries as $code => $name) {
-				$name = strtolower($name);
-				$user_country = strtolower($user_country);
-				if ($name == $user_country) {
-					$selected_cont = $code;
+			
+			$pick_geo_country = config('pick_geo_country');
+			if($pick_geo_country=='yes'){
+				$user_ip = $_SERVER['REMOTE_ADDR']; // getting user's ip
+				$user_country = ip_info($user_ip, 'country'); // get country using IP
+				foreach ($countries as $code => $name) {
+					$name = strtolower($name);
+					$user_country = strtolower($user_country);
+					if ($name == $user_country) {
+						$selected_cont = $code;
+					}
 				}
+			}else{
+				$selected_cont = config('default_country_iso2'); 
 			}
-
+			
 			if (strlen($selected_cont) != 2) {
 				$selected_cont = "PK";
 			}
