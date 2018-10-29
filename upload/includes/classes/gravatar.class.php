@@ -32,7 +32,7 @@ class Gravatar
     /**
      *    Gravatar's url
      */
-    const GRAVATAR_URL = "http://www.gravatar.com/avatar.php";
+    const GRAVATAR_URL = "https://www.gravatar.com/avatar.php";
 
     /**
      *    Ratings available
