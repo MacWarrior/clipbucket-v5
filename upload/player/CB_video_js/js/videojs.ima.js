@@ -1188,5 +1188,5 @@
     });
   };
 
-  videojs.plugin('ima', imaPlugin);
+  videojs.registerPlugin('ima', imaPlugin);
 }(window.videojs));

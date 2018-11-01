@@ -1,12 +1,13 @@
 <?php
 /*
-	Player Name: cb video js 1.0 STABLE
-	Description: New Official cb video js player 
-	Author: Fahad Abbas
-	ClipBucket Version: 2.8.1
+	Player Name: CB5.X VideoJS
+	Description: Official CB 5.X VideoJS 7.2.4 Player
+	Author: Arslan Hassan, MacWarrior
+	ClipBucket Version: 5.2
+	Website: https://github.com/MacWarrior/clipbucket
 
  
- * @Author : Arslan Hassan
+ * @Author : Arslan Hassan, MacWarrior
  * @Script : ClipBucket v2
  * @License : Attribution Assurance License -- http://www.opensource.org/licenses/attribution.php
  * @Since : September 15 2009

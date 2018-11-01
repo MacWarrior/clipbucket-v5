@@ -99,6 +99,6 @@ function cb_vjs_elements(settings){
 	CbVjsVolume = new cbvjsvolume(this);
 }
 
-videojs.plugin('cb_vjs_elements', cb_vjs_elements);
+videojs.registerPlugin('cb_vjs_elements', cb_vjs_elements);
 
     

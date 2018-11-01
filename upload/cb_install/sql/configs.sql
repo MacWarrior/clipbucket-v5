@@ -1,7 +1,7 @@
 -- Configurations
 
 INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES
-	('site_title', 'ClipBucket v5.1'),
+	('site_title', 'ClipBucket v5.2'),
 	('site_slogan', 'A way to broadcast yourself'),
 	('baseurl', ''),
 	('basedir', ''),
@@ -52,7 +52,7 @@ INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES
 	('captcha_type', '0'),
 	('allow_upload', ''),
 	('allowed_video_types', 'wmv,avi,divx,3gp,mov,mpeg,mpg,xvid,flv,asf,rm,dat,mp4,mkv,webm'),
-	('version', '5.1'),
+	('version', '5.2'),
 	('version_type', 'Alpha'),
 	('allow_template_change', '1'),
 	('allow_language_change', '1'),

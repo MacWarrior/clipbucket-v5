@@ -86,4 +86,4 @@ var cb_ultimate_ads = function(settings){
 	
     var ultimate_ads = new Ads(this,settings);
 }
-videojs.plugin('cb_ultimate_ads',cb_ultimate_ads);
+videojs.registerPlugin('cb_ultimate_ads',cb_ultimate_ads);

@@ -473,7 +473,7 @@ var Chromecast = (function (_Tech) {
     _createClass(Chromecast, [{
         key: 'createEl',
         value: function createEl() {
-            var el = _videoJs2['default'].createEl('div', {
+            var el = _videoJs2['default'].dom.createEl('div', {
                 id: this.options_.techId,
                 className: 'vjs-tech vjs-tech-chromecast'
             });
@@ -520,7 +520,6 @@ var Chromecast = (function (_Tech) {
                     this.paused_ = true;
                     break;
                 case chrome.cast.media.PlayerState.PLAYING:
-                    this.trigger('playing');
                     this.trigger('play');
                     this.paused_ = false;
                     break;

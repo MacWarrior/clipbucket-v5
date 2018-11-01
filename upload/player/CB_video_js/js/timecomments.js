@@ -558,4 +558,4 @@ var timecomments = function(settings){
 	myTimeComments = new TimeComments(this,settings);
 	
 }
-videojs.plugin('timecomments',timecomments);
+videojs.registerPlugin('timecomments',timecomments);
