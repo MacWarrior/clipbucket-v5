@@ -120,7 +120,6 @@ class userquery extends CBCategory{
 				}
 			}
 
-
 			if($sess->get("dummy_username")=="") {
 				$this->UpdateLastActive(userid());
 			}
@@ -128,9 +127,7 @@ class userquery extends CBCategory{
 			
 			$this->permission = $this->get_user_level(4,TRUE);
 		}
-			
-		
-		
+
 		//Adding Actions such Report, share,fav etc
 		$this->action = new cbactions();
 		$this->action->type = 'u';
@@ -418,14 +415,19 @@ class userquery extends CBCategory{
 		}
 		return true;
 	}
-	
-	/**
-	 * This function was used to check
-	 * user is logged in or not -- for v1.7.x and old
-	 * it has been replaced by login_check in v2
-	 * this function is sitll in use so
-	 * we are just replace the lil code of it
-	 */
+
+    /**
+     * This function was used to check
+     * user is logged in or not -- for v1.7.x and old
+     * it has been replaced by login_check in v2
+     * this function is sitll in use so
+     * we are just replace the lil code of it
+     *
+     * @param null $access
+     * @param bool $redirect
+     *
+     * @return bool
+     */
 	function logincheck($access=NULL,$redirect=TRUE)
 	{
 		
@@ -437,32 +439,18 @@ class userquery extends CBCategory{
 		}
 		return true;
 	}
-	
-	/** 
-	 * Function used to authenticate user session
-	 * @deprecated
-	 */
+
+    /**
+     * Function used to authenticate user session
+     * @deprecated
+     *
+     * @param $uid
+     *
+     * @return bool
+     */
 	function session_auth($uid)
 	{
-		global $sess;
-		
 		return true;
-
-		if($this->user_sessions['key']=='')
-		{
-			$ufields = $this->get_user_fields($uid,'user_session_key,user_session_code');
-			//echo test;
-			$this->user_sessions['key'] = $ufields['user_session_key'];
-			$this->user_sessions['code'] = $ufields['user_session_code'];
-		}
-		
-		if($this->user_sessions['key']==$sess->get('user_session_key')
-			&& $this->user_sessions['code']==$sess->get('user_session_code')
-			  ||( has_access("admin_access") && $sess->get("dummy_username")!=""))
-		
-			return true;
-		else
-			return false;
 	}
 
 	/**
@@ -553,9 +541,11 @@ class userquery extends CBCategory{
 		$sess->destroy();
 	}
 
-	/**
-	 * Function used to delete user
-	 */
+    /**
+     * Function used to delete user
+     *
+     * @param $uid
+     */
 	function delete_user($uid)
 	{
 		global $db;
@@ -607,10 +597,12 @@ class userquery extends CBCategory{
 			e(lang("user_doesnt_exist"));
 		}
 	}
-	
-	/**
-	 * Remove all user subscriptions
-	 */
+
+    /**
+     * Remove all user subscriptions
+     *
+     * @param $uid
+     */
 	function remove_user_subscriptions($uid)
 	{
 		global $db;
@@ -624,10 +616,12 @@ class userquery extends CBCategory{
 			e(lang("user_subs_hv_been_removed"),"m");
 		}
 	}
-	
-	/**
-	 * Remove all user subscribers
-	 */
+
+    /**
+     * Remove all user subscribers
+     *
+     * @param $uid
+     */
 	function remove_user_subscribers($uid)
 	{
 		global $db;
@@ -641,17 +635,14 @@ class userquery extends CBCategory{
 			e(lang("user_subsers_hv_removed"),"m");
 		}
 	}
-	
-	
+
 	//Delete User
 	function DeleteUser($id){
 		return $this->delete_user($id);
 	}
 
 	//Count Inactive users
-	function CountUsers(){
-		
-	} 
+	function CountUsers(){}
 		
 	//Check User Exists or Not
 	function Check_User_Exists($id,$global=false){
@@ -767,13 +758,15 @@ class userquery extends CBCategory{
 				$this->send_welcome_email($data,TRUE);
 		}
 	}
-	
-	
-	/**
-	 * Function used to send activation code
-	 * to user
-	 * @param : $usenrma,$email or $userid
-	 */
+
+    /**
+     * Function used to send activation code
+     * to user
+     *
+     * @param : $usenrma,$email or $userid
+     *
+     * @throws phpmailerException
+     */
 	function send_activation_code($email)
 	{
 		global $cbemail;
@@ -807,12 +800,14 @@ class userquery extends CBCategory{
 		return $this->send_activation_code($email);
 	}
 
-	/**
-	 * Function used to send welcome email
-	 *
-	 * @param      $user
-	 * @param bool $update_email_status
-	 */
+    /**
+     * Function used to send welcome email
+     *
+     * @param      $user
+     * @param bool $update_email_status
+     *
+     * @throws phpmailerException
+     */
 	function send_welcome_email($user,$update_email_status=FALSE)
 	{
 		global $db,$cbemail;
@@ -878,12 +873,14 @@ class userquery extends CBCategory{
 	function change_user_pass($array){ return $this->ChangeUserPassword($array); }
 	function change_password($array){ return $this->ChangeUserPassword($array); }
 
-	/**
-	 * Function used to add contact
-	 *
-	 * @param $uid
-	 * @param $fid
-	 */
+    /**
+     * Function used to add contact
+     *
+     * @param $uid
+     * @param $fid
+     *
+     * @throws phpmailerException
+     */
 	function add_contact($uid,$fid)
 	{
 		global $cbemail,$db;
@@ -991,13 +988,15 @@ class userquery extends CBCategory{
 		return false;
 	}
 
-	/**
-	 * Function used to confirm friend
-	 *
-	 * @param      $uid
-	 * @param      $rid
-	 * @param bool $msg
-	 */
+    /**
+     * Function used to confirm friend
+     *
+     * @param      $uid
+     * @param      $rid
+     * @param bool $msg
+     *
+     * @throws phpmailerException
+     */
 	function confirm_friend($uid,$rid,$msg=TRUE)
 	{
 		global $cbemail,$db;
@@ -1058,10 +1057,13 @@ class userquery extends CBCategory{
 			insert_log('add_friend',$log_array);
 		}	
 	}
-		
-	/**
-	 * Function used to confirm request
-	 */
+
+    /**
+     * Function used to confirm request
+     *
+     * @param      $rid
+     * @param null $uid
+     */
 	function confirm_request($rid,$uid=NULL)
 	{
 		global $db;
@@ -1152,10 +1154,15 @@ class userquery extends CBCategory{
 		tbl("contacts.contact_userid")."='$uid' AND ".tbl("contacts.confirmed")."='no' AND ".tbl("contacts").".contact_group_id='$group' ");
 		return $count;
 	}
-	
-	/**
-	 * Function used to get pending contacts
-	 */
+
+    /**
+     * Function used to get pending contacts
+     *
+     * @param     $uid
+     * @param int $group
+     *
+     * @return array|bool
+     */
 	function get_requested_contacts($uid,$group=0)
 	{
 		global $db;
@@ -1168,8 +1175,8 @@ class userquery extends CBCategory{
 	
 	/**
 	 * Function used to remove user from contact list
-	 * @param fid {id of friend that user wants to remove}
-	 * @param uid {id of user who is removing other from friendlist}
+	 * @param $fid {id of friend that user wants to remove}
+	 * @param $uid {id of user who is removing other from friendlist}
 	 */
 	function remove_contact($fid,$uid=NULL)
 	{
@@ -1185,10 +1192,12 @@ class userquery extends CBCategory{
 			e(lang("user_removed_from_contact_list"),"m");
 		}
 	}
-		
-	/**
-	 * Function used to increas user total_watched field
-	 */
+
+    /**
+     * Function used to increas user total_watched field
+     *
+     * @param $userid
+     */
 	function increment_watched_vides($userid)
 	{
 		global $db;
@@ -1216,7 +1225,7 @@ class userquery extends CBCategory{
 		if(!user_id())
 		{
 			$eh->e(lang('you_not_logged_in'));
-		}else{
+		} else {
 			switch($box)
 			{
 				case 'inbox':
@@ -1241,26 +1250,26 @@ class userquery extends CBCategory{
 			{
 				if($count)
 					return $db->num_rows;
-				else
-					return $results;
-			} else {
-				return false;
+				return $results;
 			}
+			return false;
 		}
 	}
+
 	function GetNewMsgs($user)
 	{
 		$msgs = $this->get_pm_msgs($user,'inbox',TRUE);
 		if($msgs)
 			return $msgs;
-		else
-			return 0;
+		return 0;
 	}
-		
-		
-	/**
-	 * Function used to subscribe user
-	 */
+
+    /**
+     * Function used to subscribe user
+     *
+     * @param      $to
+     * @param null $user
+     */
 	function subscribe_user($to,$user=NULL)
 	{
 		if(!$user)
@@ -1286,12 +1295,11 @@ class userquery extends CBCategory{
 			$db->update(tbl($this->dbtbl['users']),array('total_subscriptions'),
 											   array($this->get_user_subscriptions($user,'count'))," userid='$user' ");
 			//Logging Comment
-			$log_array = array
-			(
-			 'success'=>'yes',
-			 'details'=> "subsribed to ".$to_user['username'],
-			 'action_obj_id' => $to_user['userid'],
-			 'action_done_id' => $db->insert_id(),
+			$log_array = array(
+                 'success'=>'yes',
+                 'details'=> "subsribed to ".$to_user['username'],
+                 'action_obj_id' => $to_user['userid'],
+                 'action_done_id' => $db->insert_id(),
 			);
 			insert_log('subscribe',$log_array);
 			
@@ -1299,10 +1307,15 @@ class userquery extends CBCategory{
 		}			
 	}
 	function SubscribeUser($sub_user,$sub_to){return $this->subscribe_user($sub_to,$sub_user);}
-		
-	/**
-	 * Function used to check weather user is already subscribed or not
-	 */
+
+    /**
+     * Function used to check weather user is already subscribed or not
+     *
+     * @param      $to
+     * @param null $user
+     *
+     * @return array|bool
+     */
 	function is_subscribed($to,$user=NULL)
 	{
 		if(!$user)
@@ -1314,13 +1327,17 @@ class userquery extends CBCategory{
 		$result = $db->select(tbl($this->dbtbl['subtbl']),"*"," subscribed_to='$to' AND userid='$user'");
 		if($db->num_rows>0)
 			return $result;
-		else
-			return false;			
+		return false;
 	}
-	
-	/**
-	 * Function used to remove user subscription
-	 */
+
+    /**
+     * Function used to remove user subscription
+     *
+     * @param      $subid
+     * @param null $uid
+     *
+     * @return bool
+     */
 	function remove_subscription($subid,$uid=NULL)
 	{
 		global $db;
@@ -1378,10 +1395,15 @@ class userquery extends CBCategory{
 		else
 			return false;
 	}
-	
-	/**
-	 * Function used to get user subscriptions
-	 */
+
+    /**
+     * Function used to get user subscriptions
+     *
+     * @param      $id
+     * @param null $limit
+     *
+     * @return array|bool
+     */
 	function get_user_subscriptions($id,$limit=NULL)
 	{	
 		global $db;
@@ -1398,19 +1420,19 @@ class userquery extends CBCategory{
 		}
 	}
 
-
-	/**
-	 * Function used to reset user password
-	 * it has two steps
-	 * 1 to send confirmation
-	 * 2 to reset the password
-	 *
-	 * @param      $step
-	 * @param      $input
-	 * @param null $code
-	 *
-	 * @return bool
-	 */
+    /**
+     * Function used to reset user password
+     * it has two steps
+     * 1 to send confirmation
+     * 2 to reset the password
+     *
+     * @param      $step
+     * @param      $input
+     * @param null $code
+     *
+     * @return bool
+     * @throws phpmailerException
+     */
 	 
 	function reset_password($step,$input,$code=NULL)
 	{
