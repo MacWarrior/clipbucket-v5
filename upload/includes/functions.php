@@ -2878,10 +2878,10 @@
 		}
 		//Getting Subtitle
 		if(!$cbsubtitle) {
-			echo display_clean(TITLE." - ".SLOGAN);
+			echo TITLE.' - '.SLOGAN;
 		} else {
-			echo display_clean($cbsubtitle.' '.$sub_sep.' ');
-			echo display_clean(TITLE);
+			echo $cbsubtitle.' '.$sub_sep.' ';
+			echo TITLE;
 		}
 	}
 	

@@ -232,8 +232,10 @@
 
 	# Website Details
    	define('CB_VERSION', $row['version']);
-   	define('TITLE',$row['site_title']);
-	if(!defined('SLOGAN')) define('SLOGAN',$row['site_slogan']);
+   	define('TITLE', $row['site_title']);
+	if(!defined('SLOGAN')){
+        define('SLOGAN',$row['site_slogan']);
+    }
 
  	# Seo URLS
  	define('SEO',$row['seo']); //Set yes / no

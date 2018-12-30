@@ -85,7 +85,7 @@
 	assign('display_template',$search->display_template);
 
 	if(empty($search->key)) {
-		assign('search_type_title',display_clean($search->search_type[$type]['title']));
+		assign('search_type_title',$search->search_type[$type]['title']);
 	} else {
 		assign('search_type_title',sprintf(lang('searching_keyword_in_obj'), display_clean(get('query')), lang($type)));
 	}
