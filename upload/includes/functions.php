@@ -831,10 +831,12 @@
 	function pr($text,$pretty=false)
 	{
 		if(!$pretty) {
-			print_r($text);
+			$dump = print_r($text, true);
+            display_clean($dump);
 		} else {
 			echo "<pre>";
-			print_r($text);
+			$dump = print_r($text, true);
+            display_clean($dump);
 			echo "</pre>";
 		}
 	}
@@ -2876,10 +2878,10 @@
 		}
 		//Getting Subtitle
 		if(!$cbsubtitle) {
-			echo TITLE." - ".SLOGAN;
+			echo display_clean(TITLE." - ".SLOGAN);
 		} else {
-			echo $cbsubtitle." $sub_sep ";
-			echo TITLE;	
+			echo display_clean($cbsubtitle.' '.$sub_sep.' ');
+			echo display_clean(TITLE);
 		}
 	}
 	

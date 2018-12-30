@@ -99,7 +99,7 @@ subtitle($title);
     ?>
     <item>
         <author><?php echo $video['username']; ?></author>
-        <title><?php echo substr($video['title'],0,500); ?></title>
+        <title><?php echo display_clean(substr($video['title'],0,500)); ?></title>
         <link><?php echo video_link($video); ?></link>
         <description>
         <![CDATA[   

@@ -163,12 +163,13 @@
 	{
 		function pr($text,$wrap_pre=false)
 		{
-			if(!$wrap_pre)
-			print_r($text);
-			else
-			{
+			if(!$wrap_pre) {
+			    $dump = print_r($text, true);
+			    display_clean($dump);
+            } else {
 				echo "<pre>";
-				print_r($text);
+				$dump = print_r($text, true);
+                display_clean($dump);
 				echo "</pre>";
 			}
 		}
