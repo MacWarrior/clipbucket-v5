@@ -4084,9 +4084,6 @@ textarea#comment_box {
           border-radius: 0; }
           .newuser-links > li > a.btn-default .icon-upload {
             margin: 0; }
-          .newuser-links > li > a.btn-default b,
-          .newuser-links > li > a.btn-default span {
-            display: none !important; }
           .newuser-links > li > a.btn-default:active, .newuser-links > li > a.btn-default:focus, .newuser-links > li > a.btn-default:hover {
             background: #fff;
             color: #000;
