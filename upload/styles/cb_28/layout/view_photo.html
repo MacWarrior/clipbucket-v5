@@ -65,18 +65,22 @@
 				</div>
 				<div class="user-likes-sub clearfix">
 					<div class="clearfix like-rating col-lg-6 col-md-6 col-sm-6 col-xs-12" id="rating_container">
-
 						{if $photo.allow_rating != 'no'}
 							{show_video_rating  rating=$photo.rating ratings=$photo.rated_by total='10' id=$photo.photo_id type=photo}
 						{/if}
-
-						<!-- <div id="rate"></div> -->
 					</div>
 					<div class="clearfix subscribe-col col-lg-6 col-md-6 col-sm-6 col-xs-12">
 						{if $photo.userid != userid()}
-						<a id="subscribeUser" class="btn btn-subscribe btn-primary" href="javascript:void(0);" onclick="_cb.subscribeToChannelNew('{$user.userid}','subscribe_user')">
-							<span>{lang code='subscribe'}</span>
-						</a>
+							{if $userquery->is_subscribed($photo.userid,userid())}
+						<button onclick="_cb.unsubscribeToChannel('{$photo.userid}','unsubscribe_user');" class="btn btn-subscribe btn-primary subs_{$photo.userid}">
+							{lang code="unsubscribe"}
+						</button>
+
+							{else}
+						<button onclick="_cb.subscribeToChannelNew('{$photo.userid}','subscribe_user');" class="btn btn-subscribe btn-primary subs_{$photo.userid}">
+							{lang code="subscribe"}
+						</button>
+							{/if}
 						{/if}
 					</div>
 				</div>

@@ -2158,14 +2158,13 @@
 			var player = $(document).find(".cb_video_js_"+videoId+"-dimensions");
 			if (player){
 				return player[0];
-			}else{
-				return false;
 			}
+			return false;
 		}
 
 		this.unsubscribeToChannel = function(user,type){
 		   	curObj = this;
-		   	var elems = document.getElementsByClassName("unsubs_"+user);
+		   	var elems = document.getElementsByClassName("subs_"+user);
 			if(elems.length>0){
 				Array.prototype.forEach.call(elems, function(el) {
 					el.disabled = true;
@@ -2174,20 +2173,28 @@
 	       	$.post(page, {mode : type,subscribe_to : user},function(data){
 	           if(!data){
 	               alert("No data");
-	           }
-	           else{
-	           		curObj.showMeTheMsg(data);
-					// for view channels
-	           		var els = document.getElementsByClassName("unsubs_"+user);
-					if(els.length>0){
-						Array.prototype.forEach.call(els, function(el) {
-						    el.innerHTML=lang_subscribe;
-						    el.setAttribute("onclick","_cb.subscribeToChannelNew("+user+",'subscribe_user');");
-							el.id = "subs_"+user;
-							el.disabled = false;
-							curObj.updateSubscribersCount(user);
-						});
-					}
+	           } else {
+                   data = JSON.parse(data);
+                   if(data.typ === 'err')
+                       curObj.showMeTheMsg('<div class="error">'+data.msg+'</div>');
+                   else
+                       curObj.showMeTheMsg('<div class="msg">'+data.msg+'</div>');
+
+                   if(data.severity<2){
+                       // for channels page
+                       if(elems.length>0){
+                           Array.prototype.forEach.call(elems, function(el) {
+                               el.innerHTML=lang_subscribe;
+                               el.setAttribute("onclick","_cb.subscribeToChannelNew("+user+",'subscribe_user');");
+                               el.disabled = false;
+                               curObj.updateSubscribersCount(user);
+                           });
+                       }
+                   } else {
+                       Array.prototype.forEach.call(elems, function(el) {
+                           el.disabled = false;
+                       });
+                   }
 	           }
 	       	},'text');
 	   	};
@@ -2204,29 +2211,25 @@
 			$.post(page, { mode : type,subscribe_to : user },function(data){
 	           	if(!data){
 	               alert("No data");
-	           	}
-	           	else{
-	           	   data = JSON.parse(data);
-	           	   if(data.typ == 'err')
-	               	curObj.showMeTheMsg('<div class="error">'+data.msg+'</div>');
-	               else
-	               	curObj.showMeTheMsg('<div class="msg">'+data.msg+'</div>');
-	               	
+	           	} else {
+	           	    data = JSON.parse(data);
+                    if(data.typ === 'err')
+                        curObj.showMeTheMsg('<div class="error">'+data.msg+'</div>');
+	                else
+	               	    curObj.showMeTheMsg('<div class="msg">'+data.msg+'</div>');
+
 	               	if(data.severity<2){
 		                // for channels page
-		                var els = document.getElementsByClassName("subs_"+user);
-						if(els.length>0){
-							Array.prototype.forEach.call(els, function(el) {
+						if(elems.length>0){
+							Array.prototype.forEach.call(elems, function(el) {
 								el.innerHTML=lang_unsubscribe;
 							    el.setAttribute("onclick","_cb.unsubscribeToChannel("+user+",'unsubscribe_user');");
-								el.id = "unsubs_"+user;
 								el.disabled = false;
 								curObj.updateSubscribersCount(user);
 							});
 						}
 					}else{
-						var els = document.getElementsByClassName("subs_"+user);
-						Array.prototype.forEach.call(els, function(el) {
+						Array.prototype.forEach.call(elems, function(el) {
 							el.disabled = false;
 						});
 					}

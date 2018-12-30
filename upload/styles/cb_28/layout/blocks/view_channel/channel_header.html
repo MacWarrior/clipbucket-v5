@@ -71,11 +71,11 @@
 					{lang code="user_send_message"}
 				</a>
 				{if $userquery->is_subscribed($user.userid,userid())}
-					<button class="btn btn-default subs_{$user.userid} unsubs_{$user.userid}" onclick="_cb.unsubscribeToChannel({$user.userid},'unsubscribe_user');">
+					<button class="btn btn-default subs_{$user.userid}" onclick="_cb.unsubscribeToChannel('{$user.userid}','unsubscribe_user');">
 						{lang code="unsubscribe"}
 					</button>
 				{else}
-					<button class="btn btn-default subs_{$user.userid} unsubs_{$user.userid}" onclick="_cb.subscribeToChannelNew({$user.userid},'subscribe_user');">
+					<button class="btn btn-default subs_{$user.userid}" onclick="_cb.subscribeToChannelNew('{$user.userid}','subscribe_user');">
 						{lang code="subscribe"}
 					</button>
 				{/if}

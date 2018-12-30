@@ -435,13 +435,15 @@
 
 				    if( $error ){
 				        $msg['msg'] = $error[0];
+                        $msg['typ'] = 'err';
                     } else if( $warning ) {
                         $msg['msg'] = $warning[0];
+                        $msg['typ'] = 'err';
                     } else if( $message ) {
                         $msg['msg'] = $message[0];
+                        $msg['typ'] = 'msg';
                     }
 
-					$msg['typ'] = 'msg';
 					$msg['severity'] = userid() ? 1 : 2;
 					$msg = json_encode($msg);
 				}
@@ -452,14 +454,26 @@
 				$subscribe_to = mysql_clean($_POST['subscribe_to']);
 				$userquery->unsubscribe_user($subscribe_to);
 
-				if(error())
-				{
-					$msg = error_list();
-					$msg = '<div class="error">'.$msg[0].'</div>';
-				} else if(msg()) {
-					$msg = msg_list();
-					$msg = '<div class="msg">'.$msg[0].'</div>';
-				}
+                if( !empty(error_list()) )
+                {
+                    $error = $eh->get_error();
+                    $warning = $eh->get_warning();
+                    $message = $eh->get_message();
+
+                    if( $error ){
+                        $msg['msg'] = $error[0];
+                        $msg['typ'] = 'err';
+                    } else if( $warning ) {
+                        $msg['msg'] = $warning[0];
+                        $msg['typ'] = 'err';
+                    } else if( $message ) {
+                        $msg['msg'] = $message[0];
+                        $msg['typ'] = 'msg';
+                    }
+
+                    $msg['severity'] = userid() ? 1 : 2;
+                    $msg = json_encode($msg);
+                }
 
 				echo $msg;
 				break;
