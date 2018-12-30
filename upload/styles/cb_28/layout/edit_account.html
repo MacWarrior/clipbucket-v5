@@ -356,7 +356,6 @@
 		});
 
 		var extensions = "{$extensions}";
-		extensions = (extensions.substring(0, extensions.length - 1)) + ",png,jpeg";
 		$.get("{$theme}/js/plupload/js/plupload.full.min.js", function(e){
 			var uploader = new plupload.Uploader({
 				browse_button: 'selectCover',

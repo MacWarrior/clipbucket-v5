@@ -500,9 +500,18 @@ class ClipBucket
         return $new_form;
     }
 
-    function get_extensions()
+    function get_extensions($type = 'video')
     {
-        $exts = $this->configs['allowed_video_types'];
+        switch($type){
+            default:
+            case 'video':
+                $exts = $this->configs['allowed_video_types'];
+                break;
+            case 'photo':
+                $exts = $this->configs['allowed_photo_types'];
+                break;
+        }
+
         $exts = preg_replace('/ /', '', $exts);
         $exts = explode(',', $exts);
         $new_form = '';

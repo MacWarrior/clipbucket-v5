@@ -125,19 +125,19 @@ switch($mode)
 		break;
 	
 	case 'avatar_bg':
-		Assign('extensions', $Cbucket->get_extensions());
+		Assign('extensions', $Cbucket->get_extensions('photo'));
 		assign("coverPhoto", $userquery->getCover(userid()));
 		assign('mode','avatar_bg');
 		break;
 
 	case 'channel_bg':
-		Assign('extensions', $Cbucket->get_extensions());
+		Assign('extensions', $Cbucket->get_extensions('photo'));
 		assign("coverPhoto", $userquery->getCover(userid()));
 		assign('mode','channel_bg');
 		break;
 
 	case 'change_cover':
-		Assign('extensions', $Cbucket->get_extensions());
+		Assign('extensions', $Cbucket->get_extensions('photo'));
 		assign("coverPhoto", $userquery->getCover(userid()));
 		assign('mode','change_cover');
 		break;

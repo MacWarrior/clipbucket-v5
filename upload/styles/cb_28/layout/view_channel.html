@@ -241,7 +241,6 @@
 	var extensions = "{$extensions}";
 	var baseurl = '/';
 	var channelId = "{$user['userid']}";
-	extensions = (extensions.substring(0, extensions.length - 1)) + ",png,jpeg";
 	$.get("{$theme}/js/plupload/js/plupload.full.min.js", function(e){
 	  var uploader = new plupload.Uploader({
 		  browse_button: 'changeCover',

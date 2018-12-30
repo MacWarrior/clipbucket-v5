@@ -37,7 +37,7 @@
 		$p = $userquery->get_user_profile($udetails['userid']);
 		assign('p',$p);
 		assign('coverPhoto', $userquery->getCover($udetails["userid"]));
-		Assign('extensions', $Cbucket->get_extensions());
+		Assign('extensions', $Cbucket->get_extensions('photo'));
 
 		//Getting users channel List
 		$result_array['limit'] = $get_limit;
