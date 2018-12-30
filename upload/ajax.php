@@ -427,15 +427,20 @@
 				$mailId = $userquery->get_user_details($subscribe_to,false,true);
 				$userquery->subscribe_user($subscribe_to);
 
-				if( msg() || error() )
+				if( !empty(error_list()) )
 				{
-					if( error() )
-						$msg = error_list();
-					else
-						$msg = msg_list();
+				    $error = $eh->get_error();
+				    $warning = $eh->get_warning();
+				    $message = $eh->get_message();
 
-					$msg['msg'] = $msg[0];
-					unset($msg[0]);
+				    if( $error ){
+				        $msg['msg'] = $error[0];
+                    } else if( $warning ) {
+                        $msg['msg'] = $warning[0];
+                    } else if( $message ) {
+                        $msg['msg'] = $message[0];
+                    }
+
 					$msg['typ'] = 'msg';
 					$msg['severity'] = userid() ? 1 : 2;
 					$msg = json_encode($msg);
