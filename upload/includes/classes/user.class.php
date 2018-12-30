@@ -1352,20 +1352,22 @@ class userquery extends CBCategory{
 											   array($this->get_user_subscribers($subid,true))," userid='$subid' ");
 			$db->update(tbl($this->dbtbl['users']),array('total_subscriptions'),
 											   array($this->get_user_subscriptions($uid,'count'))," userid='$uid' ");
-			
-			
+
 			return true;
 		}else
 			e(lang("you_not_subscribed"));
 		
 		return false;
 	}function unsubscribe_user($subid,$uid=NULL){ return $this->remove_subscription($subid,$uid); }
-	
-	
-	/**
-	 * Function used to get user subscibers
-	 * @param userid
-	 */
+
+    /**
+     * Function used to get user subscribers
+     *
+     * @param userid
+     * @param bool $count
+     *
+     * @return array|bool
+     */
 	function get_user_subscribers($id,$count=false)
 	{
 		global $db;
@@ -1382,18 +1384,22 @@ class userquery extends CBCategory{
 			return $db->count(tbl($this->dbtbl['subtbl']),"subscription_id"," subscribed_to='$id' ");
 		}
 	}
-	
-	/**
-	 * function used to get user subscribers with details
-	 */
+
+    /**
+     * function used to get user subscribers with details
+     *
+     * @param      $id
+     * @param null $limit
+     *
+     * @return array|bool
+     */
 	function get_user_subscribers_detail($id,$limit=NULL)
 	{
 		global $db;
 		$result = $db->select(tbl("users,".$this->dbtbl['subtbl']),"*"," ".tbl("subscriptions.subscribed_to")." = '$id' AND ".tbl("subscriptions.userid")."=".tbl("users.userid"),$limit);
 		if($db->num_rows>0)
 			return $result;
-		else
-			return false;
+		return false;
 	}
 
     /**
