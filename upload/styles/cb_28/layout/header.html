@@ -1,22 +1,34 @@
 {$currentPage = $smarty.const.THIS_PAGE|lower}
-{$pageType = lang($smarty.get.type)|lower}
 {$searchPage = $smarty.get.query}
 
 {if $currentPage == 'view_channel' || $currentPage == 'channels'}
 	{$currentPage = lang('channels')|lower}
+	{$pageType = lang('channels')}
 	{$toSearch = 'channels'}
 {elseif $currentPage == 'view_item' || $currentPage == 'photos'}
 	{$currentPage = lang('photos')|lower}
+	{$pageType = lang('photos')}
 	{$toSearch = 'photos'}
 {elseif $currentPage == 'collections' || $currentPage == 'view_collection'}
 	{$currentPage = lang('collections')|lower}
-	{$pageType = lang('collections')|lower}
+	{$pageType = lang('collections')}
 	{$toSearch = 'collections'}
 {elseif $currentPage == 'watch_video' || $currentPage == 'videos'}
 	{$currentPage = lang('videos')|lower}
+	{$pageType = lang('videos')}
 	{$toSearch = 'videos'}
 {elseif $currentPage == 'list'}
 	{$currentPage = 'audios'}
+	{$pageType = lang('audios')}
+	{$toSearch = 'audios'}
+{else}
+	{if in_array($smarty.get.type|lower, array('videos','photos','collections','channels'))}
+		{$pageType = lang($smarty.get.type)}
+		{$toSearch = $smarty.get.type}
+	{else}
+		{$pageType = lang('videos')}
+		{$toSearch = 'videos'}
+	{/if}
 {/if}
 
 {$vidMode = lang('videos')|lower}
@@ -26,7 +38,6 @@
 <div id="quick_container">
 	<div id="quicklist_box"></div>
 </div> 
-
 
 <header id="header" class="clearfix">
 	<nav class="navbar navbar-default">
@@ -87,7 +98,7 @@
 									<div class="cbsearchtype">
 										<div class="search-drop">
 											<button id="searchTypes" tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle search-drop-btn" type="button">
-												<span class="search-type">{if $pageType}{$pageType|ucfirst}{elseif $currentPage == 'videos' || $currentPage == 'channels' || $currentPage == 'photos' || $currentPage == 'collections'}{$currentPage|ucfirst}{else}{lang code="videos"}{/if}</span>
+												<span class="search-type">{$pageType}</span>
 												<span class="icon-down-arrow"></span>
 											</button>
 											<ul class="dropdown-menu">
@@ -100,7 +111,7 @@
 											</ul>
 										</div>
 										<input type="text" class="form-control" name="query" placeholder="{lang code='search_keyword_feed'}" value="{'query'|get_form_val:true}" id="query">
-										<input type="hidden" name="type" class="type" value="{if isset($smarty.get.type)}{$smarty.get.type}{elseif $toSearch}{$toSearch}{else}videos{/if}" id="type">
+										<input type="hidden" name="type" class="type" value="{$toSearch}" id="type">
 										<button tabindex="-1" type="submit" name="cbsearch" id="cbsearch" class="btn btn-default btn-search icon-search"></button>
 									</div>
 								</form><!-- form Ends -->
@@ -173,18 +184,6 @@
 
 <script>
 	$(document).ready(function(){
-		var vidMode = "{$vidMode}",
-		photoMode = "{$photoMode}",
-		channelsMode = "{$channelsMode}",
-		currentDisplay = $('span.search-type').text();
-		if (currentDisplay == 'Videos') {
-			$('span.search-type').text(vidMode);
-		} else if (currentDisplay == 'Channels') {
-			$('span.search-type').text(channelsMode);
-		} else if (currentDisplay == 'Photos') {
-			$('span.search-type').text(photoMode);
-		}
-
 		$(".cbsearchtype a").on({
 			click: function(e){
 				e.preventDefault();

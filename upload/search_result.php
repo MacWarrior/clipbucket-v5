@@ -14,10 +14,12 @@
 							
 	$page = $_GET['page'];
 	$type = strtolower($_GET['type']);
-	$type = $type ? $type : 'videos';
+	if( !$type || !in_array($type, array('videos','photos','collections','channels') ) ){
+	    $type = 'videos';
+    }
 	$chkType = $type;
 	//Checking if search for specific section is allowed or not
-	if($type=='users')
+	if($type == 'users')
 		$chkType = 'channels';
 	isSectionEnabled($chkType,true);
 
