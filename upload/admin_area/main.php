@@ -223,18 +223,24 @@
 			'video_categories',
 			'video_codec',
 			'vrate',
-			'vbrate',
 			'video_require_login',
 			'feedsSection',
 			'youtube_api_key',
 			'website_email',
 			'welcome_email',
-			'vbrate_hd',
 			'store_guest_session',
 			'delete_mass_upload',
 			'stay_mp4',
 			'popup_video',
-			'video_round_views'
+			'video_round_views',
+
+            'vbrate',
+            'vbrate_hd',
+            'vbrate_240',
+            'vbrate_360',
+            'vbrate_480',
+            'vbrate_720',
+            'vbrate_1080'
 		);
 
 		foreach($opt_list as $optl)
@@ -293,7 +299,6 @@
 			'collection_user_favorites',
 			'collection_channel_page'
 		);
-
 
 		if (isset($_POST['seo']) != "yes") {
 			$_POST['seo']= "no";
