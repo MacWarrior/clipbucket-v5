@@ -43,14 +43,14 @@ if(!$vdetails)
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title><?php echo $vdetails['title']; ?></title>
+<title><?php echo display_clean($vdetails['title']); ?></title>
 <script type="text/javascript" src="/styles/cb_28/theme/js/jquery-1.11.3.min.js"></script>
 <?php
 Template(STYLES_DIR.'/global/head.html',false);
 ?>
 </head>
 
-<body style="margin:0px; padding:0px">
+<body style="margin:0px;padding:0px">
 <?php
 flashPlayer(array('vdetails'=>$vdetails,'width'=>$width,'height'=>$height,'autoplay'=>$autoplay));
 ?>

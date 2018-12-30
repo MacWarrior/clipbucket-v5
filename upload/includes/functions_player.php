@@ -68,7 +68,7 @@ function flashPlayer($param) {
 
 
 /**
- * FUnctiuon used to plya HQ videos
+ * Function used to play HQ videos
  */
 function HQflashPlayer($param)
 {
