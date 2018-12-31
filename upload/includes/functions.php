@@ -6033,6 +6033,18 @@
 	}
 
 
+	/**
+	* This function is used to clean a string removing all special chars
+	* @author Mohammad Shoaib
+	* @param string
+	* @return cleaned string
+	*/ 
+	function cleanString($string) {
+		$string = str_replace("â€™", "'", $string);
+	    return preg_replace('/[^A-Za-z0-9 !@#$%^&*()_?<>|{}\[\].,+-;\/:"\'\-]/', "'", $string);
+	}
+
+
     include( 'functions_db.php' );
     include( 'functions_filter.php' );
     include( 'functions_player.php' );
