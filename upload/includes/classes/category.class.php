@@ -873,6 +873,29 @@ abstract class CBCategory
 		else
 			return false;
 	}
+
+	/**
+     * Function used to get multiple category names
+     */
+    function get_category_names($cid_array)
+    {
+        global $db;
+       
+        $cat_name = array();
+        $cid = explode(' ', $cid_array);
+        $cid = array_slice($cid,0,-1);
+        $test = '';
+        foreach ($cid as $key => $value) 
+        {      
+            $cat_id = str_replace('#','', $value);
+            $results = $this->get_category($cat_id);
+            
+                $cat_name[]= $results;
+        
+        }
+        return $cat_name;
+
+    }
 	
 	
 	
