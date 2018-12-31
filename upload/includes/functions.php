@@ -5907,7 +5907,130 @@
        $arr=explode(" ",$date_time);
        return $arr[0];
 	}
+
+
+	function isset_check($input_arr=array(),$key_name,$mysql_clean=false)
+	{
+
+	    if(isset($input_arr[$key_name])&&!empty($input_arr[$key_name]))
+	    {
+	        
+	        if(!is_array($input_arr[$key_name])&&!is_numeric($input_arr[$key_name])&&$mysql_clean)
+	            $input_arr[$key_name] = mysql_clean($input_arr[$key_name]);
+	        
+	        return $input_arr[$key_name]; 
+	    }
+	    else
+	        return false;
+
+	}
 	
+
+	/**
+	* [generic_curl use to send curl with post method]
+	* @author Awais Tariq
+	* @param [string] $call_bk [url where curl will be sent]
+	* @param [array] $array [date to be send ]
+	* @param [string] $follow_redirect [ redirect follow option for 301 status ]
+	* @param [array] $header_arr [ header's parameters are sent through this array ]
+	* @param [bool] $read_response_headers [ parse/fetch the response headers ]
+	* @return [array] [return code and result of curl]
+	*/
+	function generic_curl($input_arr = array())
+	{
+		$call_bk = isset_check($input_arr,'url');
+		
+		$array = isset_check($input_arr,'post_arr'); 
+		$file = isset_check($input_arr,'file');
+		$follow_redirect = isset_check($input_arr,'redirect');
+		$full_return_info = isset_check($input_arr,'full_return_info');
+		$header_arr = isset_check($input_arr,'headers');
+		$curl_timeout = isset_check($input_arr,'curl_timeout');
+		$methods = strtoupper(isset_check($input_arr,'method'));
+		$curl_connect_timeout = isset_check($input_arr,'curl_connect_timeout');
+		$curl_connect_timeout = (int)trim($curl_connect_timeout);
+		$curl_timeout = (int)trim($curl_timeout);
+		$read_response_headers = isset_check($input_arr,'response_headers');
+		$return_arr = array();
+		if(!empty($call_bk))
+		{
+			$ch = curl_init($call_bk);
+
+			if(!empty($file))
+			{
+				foreach ($file as $key => $value) 
+				{
+					if(file_exists($value))
+						$array[$key] = curl_file_create( $value, mime_content_type($value), basename($value));
+				}
+			}
+
+			if($methods)
+				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "{$methods}");
+
+			if(!empty($array))
+			{
+
+				curl_setopt($ch,CURLOPT_POST,true);
+				curl_setopt($ch,CURLOPT_POSTFIELDS,$array);
+			}
+
+			if($read_response_headers===true)
+			{
+				curl_setopt($ch, CURLOPT_VERBOSE, 1);
+				curl_setopt($ch, CURLOPT_HEADER, 1);
+			}
+
+			if(empty($header_arr))
+				$header_arr = array("Expect:");
+
+			if(empty($curl_timeout)||$curl_timeout==0)
+				$curl_timeout = 3;
+			
+			if($curl_timeout>0)
+				curl_setopt($ch, CURLOPT_TIMEOUT, $curl_timeout);
+			
+			if(empty($curl_connect_timeout)||$curl_connect_timeout==0)
+				$curl_connect_timeout = 2;
+
+			if($curl_connect_timeout>0)
+				curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, $curl_connect_timeout);
+
+			curl_setopt($ch,CURLOPT_HTTPHEADER,$header_arr);
+
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+			if($follow_redirect)
+				curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+
+			
+			$result = curl_exec($ch); 
+			$error_msg = curl_error($ch); 
+			$returnCode = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+			if($full_return_info)
+				$return_arr['full_info'] = curl_getinfo($ch);
+
+			$return_arr['code'] = $returnCode;
+			$errorNO = curl_errno($ch);
+			if($errorNO)
+			{
+				$return_arr['curl_error_no'] = $errorNO;
+			}
+			if(!empty($error_msg))
+			{
+				$return_arr['error_curl'] = $error_msg;
+			}
+			$return_arr['result'] = $result;
+			curl_close($ch);
+		}
+		else{
+			$return_arr['error'] = "False no callback url present! {$call_bk}";
+		}
+
+		return $return_arr;
+
+	}
 
 
     include( 'functions_db.php' );
