@@ -104,13 +104,16 @@ class myquery
 		return $userquery->email_exists($email);
 	}
 
-	/**
-	 * Function used to delete comments
-	 *
-	 * @param CID
-	 *
-	 * @return bool|mixed
-	 */
+    /**
+     * Function used to delete comments
+     *
+     * @param CID
+     * @param string $type
+     * @param bool   $is_reply
+     * @param bool   $forceDelete
+     *
+     * @return bool|mixed
+     */
 	function delete_comment($cid,$type='v',$is_reply=FALSE,$forceDelete=false)
 	{
 		global $db;
@@ -212,9 +215,15 @@ class myquery
 		}
 	 }
 
-	/**
-	 * Function used to delete all comments of particlar object
-	 */
+    /**
+     * Function used to delete all comments of particlar object
+     *
+     * @param        $objid
+     * @param string $type
+     * @param bool   $forceDelete
+     *
+     * @return bool
+     */
 	function delete_comments($objid,$type='v',$forceDelete=false)
 	{
 		global $db,$userquery;
@@ -232,10 +241,16 @@ class myquery
 			return false;
 		}
 	}
-	
-	/***
-	 * Function used to rate comment
-	 ***/
+
+    /***
+     * Function used to rate comment
+     **
+     *
+     * @param $rate
+     * @param $cid
+     *
+     * @return bool|mixed
+     */
 	function rate_comment($rate,$cid)
 	{
 		global $db;
@@ -376,11 +391,22 @@ class myquery
 		$this->SendMessage($to,$from,$subj,$msg,$video,0,0);
 	}
 
-	/**
-	 * Function used to add comment
-	 * This is more advance function , 
-	 * in this function functions can be applied on comments
-	 */
+    /**
+     * Function used to add comment
+     * This is more advance function ,
+     * in this function functions can be applied on comments
+     *
+     * @param        $comment
+     * @param        $obj_id
+     * @param null   $reply_to
+     * @param string $type
+     * @param null   $obj_owner
+     * @param null   $obj_link
+     * @param bool   $force_name_email
+     *
+     * @return bool|mixed
+     * @throws phpmailerException
+     */
 	function add_comment($comment,$obj_id,$reply_to=NULL,$type='v',$obj_owner=NULL,$obj_link=NULL,$force_name_email=false)
 	{
 		global $userquery,$eh,$db,$Cbucket;
