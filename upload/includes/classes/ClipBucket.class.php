@@ -238,7 +238,7 @@ class ClipBucket
                 'Add New Phrases' => 'add_phrase.php',
                 'Manage Pages' => 'manage_pages.php',
                 'Manage Comments' => 'comments.php',
-                'Update Logo'=>'upload_logo.php'
+                'Update Logos'=>'upload_logo.php'
             ),
             //Video
             'Videos' => array(
@@ -305,7 +305,7 @@ class ClipBucket
                 'Add New Phrases' => 'add_phrase.php',
                 'Manage Pages' => 'manage_pages.php',
                 'Manage Comments' => 'comments.php',
-                'Update Logo'=>'upload_logo.php'
+                'Update Logos'=>'upload_logo.php'
             );
 		}
         if ($per['video_moderation'] == "yes")

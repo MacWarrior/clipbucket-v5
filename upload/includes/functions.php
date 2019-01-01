@@ -5323,40 +5323,54 @@
         return TEMPLATEURL.'/theme'.'/images/logo.png';
     }
 
-	/**
-	* Allows admin to upload logo via admin area
-	*/
-	function upload_logo()
-	{
-	    global $Cbucket;
+    function get_website_favicon_path()
+    {
+        $favicon_name = config('favicon_name');
+        if( $favicon_name && $favicon_name != '' ){
+            return LOGOS_URL.DIRECTORY_SEPARATOR.$favicon_name;
+        }
+        if( defined('TEMPLATEURLFO') ){
+            return TEMPLATEURLFO.'/theme'.'/images/favicon.png';
+        }
+        return TEMPLATEURL.'/theme'.'/images/favicon.png';
+    }
 
-		$filename = $_FILES["fileToUpload"]["name"];
-		$file_ext = pathinfo($filename, PATHINFO_EXTENSION);
-		$filesize = $_FILES["fileToUpload"]["size"];
-		$allowed_file_types = explode(',', $Cbucket->configs['allowed_photo_types']);
-		
-		if (in_array($file_ext,$allowed_file_types) && ($filesize < 4000000))
-		{
-			// Rename file
-			$logo_path = LOGOS_DIR.DIRECTORY_SEPARATOR.$filename;
-			unlink($logo_path);
-			move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $logo_path);
+    function upload_image($type = 'logo')
+    {
+        if( !in_array($type, array('logo','favicon')) ){
+            e(lang("Wrong logo type !"));
+            return;
+        }
+        global $Cbucket;
+
+        $filename = $_FILES["fileToUpload"]["name"];
+        $file_ext = pathinfo($filename, PATHINFO_EXTENSION);
+        $file_basename = pathinfo($filename, PATHINFO_FILENAME);
+        $filesize = $_FILES["fileToUpload"]["size"];
+        $allowed_file_types = explode(',', $Cbucket->configs['allowed_photo_types']);
+
+        if (in_array($file_ext,$allowed_file_types) && ($filesize < 4000000))
+        {
+            // Rename file
+            $logo_path = LOGOS_DIR.DIRECTORY_SEPARATOR.$file_basename.'-'.$type.'.'.$file_ext;
+            unlink($logo_path);
+            move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $logo_path);
 
             $myquery = new myquery();
-            $myquery->Set_Website_Details('logo_name',$filename);
+            $myquery->Set_Website_Details($type.'_name',$file_basename.'-'.$type.'.'.$file_ext);
 
-			e(lang("File uploaded successfully."),"m");
-		} elseif (empty($filename)) {
-			// file selection error
-			e(lang("Please select a file to upload."));
-		} elseif ($filesize > 4000000) {
-			// file size error
-			e(lang("The file you are trying to upload is too large."),"e");
-		} else {
-			e(lang("Only these file types are allowed for upload: ".implode(', ',$allowed_file_types)),"e");
-			unlink($_FILES["fileToUpload"]["tmp_name"]);
-		}
-	}
+            e(lang("File uploaded successfully."),"m");
+        } elseif (empty($filename)) {
+            // file selection error
+            e(lang("Please select a file to upload."));
+        } elseif ($filesize > 4000000) {
+            // file size error
+            e(lang("The file you are trying to upload is too large."),"e");
+        } else {
+            e(lang("Only these file types are allowed for upload: ".implode(', ',$allowed_file_types)),"e");
+            unlink($_FILES["fileToUpload"]["tmp_name"]);
+        }
+    }
 
 	function AutoLinkUrls($str,$popup = FALSE)
 	{

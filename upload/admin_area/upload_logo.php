@@ -10,17 +10,17 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'General Configurations', 'url' => '');
-	$breadcrumb[1] = array('title' => 'Update Logo', 'url' => '/admin_area/upload_logo.php');
-
-	$source = get_website_logo_path();
+	$breadcrumb[1] = array('title' => 'Update Logos', 'url' => '/admin_area/upload_logo.php');
 
 	// Upload and Rename File
-	if (isset($_POST['submit'])) {
+	if (isset($_POST['submit_logo'])) {
 		// function used to upload site logo.
-		upload_logo();
+        upload_image('logo');
+	} else if (isset($_POST['submit_favicon'])) {
+		// function used to upload site logo.
+        upload_image('favicon');
 	}
 
-	assign('source',$source);
-	subtitle("Update Logo");
+	subtitle("Update Logos");
 	template_files('upload_logo.html');
 	display_it();
