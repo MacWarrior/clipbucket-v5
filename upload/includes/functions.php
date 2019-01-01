@@ -5311,6 +5311,18 @@
 		}
 	}
 
+    function get_website_logo_path()
+    {
+        $logo_path = config('logo_path');
+        if( $logo_path && file_exists($logo_path) ){
+            return $logo_path;
+        }
+        if( defined('TEMPLATEURLFO') ){
+            return TEMPLATEURLFO.'/theme'.'/images/logo.png';
+        }
+        return TEMPLATEURL.'/theme'.'/images/logo.png';
+    }
+
 	/**
 	* Allows admin to upload logo via admin area
 	*/

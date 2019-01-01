@@ -12,12 +12,12 @@
 	$breadcrumb[0] = array('title' => 'General Configurations', 'url' => '');
 	$breadcrumb[1] = array('title' => 'Update Logo', 'url' => '/admin_area/upload_logo.php');
 
-	$source = '/styles/cb_28/theme/images/logo.png';
+	$source = get_website_logo_path();
 
 	// Upload and Rename File
 	if (isset($_POST['submit'])) {
 		// function used to upload site logo.
-		upload_logo() ;
+		upload_logo();
 	}
 
 	assign('source',$source);

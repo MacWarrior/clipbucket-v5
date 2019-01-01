@@ -650,7 +650,6 @@
 	<user_mem_login>會員登入</user_mem_login>
 	<user_already_have>請先登入</user_already_have>
 	<user_forgot_username>忘記會員名稱</user_forgot_username>
-	<user_forgot_password>忘記密碼</user_forgot_password>
 	<user_create_your>建立您的 </user_create_your>
 	<user_all_fields_req>全部欄位都需要填寫</user_all_fields_req>
 	<user_valid_email_addr>有效的電子郵箱</user_valid_email_addr>

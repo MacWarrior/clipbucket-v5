@@ -42,6 +42,7 @@
 	define('TEMPLATEDIR',BASEDIR.'/'.ADMINDIR.'/'.TEMPLATEFOLDER.'/'.ADMIN_TEMPLATE);
 	define('SITETEMPLATEDIR',BASEDIR.'/'.TEMPLATEFOLDER.'/'.$row['template_dir']);
 	define('TEMPLATEURL','/'.ADMINDIR.'/'.TEMPLATEFOLDER.'/'.ADMIN_TEMPLATE);
+    define('TEMPLATEURLFO','/'.TEMPLATEFOLDER.'/'.$Cbucket->template);
 	define('LAYOUT',TEMPLATEDIR.'/layout');
 	define('TEMPLATE',$row['template_dir']);
 

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * ClipBucket Login
  */
@@ -30,21 +29,19 @@ if(!empty($_REQUEST['returnto']))
 }
 
 if(isset($_POST['login'])){
-	$username = $_POST['username'];
-	$username = mysql_clean(clean($username));
-	$password = mysql_clean(clean($_POST['password']));
+	$username = mysql_clean($_POST['username']);
+	$password = mysql_clean($_POST['password']);
 	
 	//Logging User
-	if($userquery->login_user($username,$password))
-			redirect_to('index.php');
-
+	if($userquery->login_user($username,$password)){
+        redirect_to('index.php');
+    }
 }
 
-
-if(userid() && !has_access('admin_access',true))
+if(userid() && !has_access('admin_access',true)){
 	e(lang("you_dont_hv_perms"));
+}
 	
 subtitle('Admin Login');
 Template('global_header.html');
 Template('login.html');
-?>

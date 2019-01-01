@@ -650,7 +650,6 @@
 	<user_mem_login>الأعضاء المتواجدون</user_mem_login>
 	<user_already_have>الرجاء تسجيل الدخول، اذا كان لديك حساب </user_already_have>
 	<user_forgot_username>نسيت اسم المستخدم</user_forgot_username>
-	<user_forgot_password>نسيت كلمة المرور</user_forgot_password>
 	<user_create_your>أنشأت </user_create_your>
 	<user_all_fields_req>جميع الحقول مطلوبة</user_all_fields_req>
 	<user_valid_email_addr>عنوان بريد إلكتروني صالح</user_valid_email_addr>

@@ -539,11 +539,6 @@ ul.mainTabs{
 
 
 /* usman css start */
-.login-logo, .login-profile{
-    background-image: url(../../images/cb-admin-sprite.png);
-    background-repeat: no-repeat;
-}
-
 .mrgnt10{
     margin-top: 10px !important;
 }
@@ -576,21 +571,6 @@ ul.mainTabs{
     box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.33);
     border-radius: 4px;
     padding: 20px;
-}
-.login-profile {
-    border-radius: 50%;
-    display: block;
-    height: 96px;
-    margin: 0 auto 20px;
-    width: 96px;
-    background-position: 0px -44px;
-}
-
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 100dpi) {
-.login-logo, .login-profile{
-        background-image:url(../../images/cb-admin-sprite@2x.png) !important;
-        background-size: 227px 139px !important;
-    }
 }
 
 .message-container {
