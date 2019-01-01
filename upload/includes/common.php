@@ -369,6 +369,10 @@
 	# AVATARS DIR
 	define('AVATARS_DIR',FILES_DIR."/avatars");
 	define('AVATARS_URL',"/files/avatars");
+
+    # LOGOS DIR
+    define('LOGOS_DIR',FILES_DIR."/logos");
+    define('LOGOS_URL',"/files/logos");
 	
 	# ADVANCE CACHING
 	define('CACHE_DIR',BASEDIR.'/cache');

@@ -315,3 +315,7 @@ INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 	('chromecast_fix', '1');
 INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 	 ('allowed_photo_types', 'jpg,jpeg,png');
+
+-- Addition for 5.3
+INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
+('logo_name', '');

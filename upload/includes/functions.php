@@ -5313,9 +5313,9 @@
 
     function get_website_logo_path()
     {
-        $logo_path = config('logo_path');
-        if( $logo_path && file_exists($logo_path) ){
-            return $logo_path;
+        $logo_name = config('logo_name');
+        if( $logo_name && $logo_name != '' ){
+            return LOGOS_URL.DIRECTORY_SEPARATOR.$logo_name;
         }
         if( defined('TEMPLATEURLFO') ){
             return TEMPLATEURLFO.'/theme'.'/images/logo.png';
@@ -5328,30 +5328,32 @@
 	*/
 	function upload_logo()
 	{
-		global $Cbucket;
-		$active_template = $Cbucket->configs['template_dir'];
-		$target_dir = STYLES_DIR.'/'.$active_template.'/theme/images/';	
-		$filename = $_FILES["fileToUpload"]["name"]; 
-		$file_basename = basename($filename,".png"); 
+	    global $Cbucket;
+
+		$filename = $_FILES["fileToUpload"]["name"];
 		$file_ext = pathinfo($filename, PATHINFO_EXTENSION);
 		$filesize = $_FILES["fileToUpload"]["size"];
-		$allowed_file_types = array('png');	
+		$allowed_file_types = explode(',', $Cbucket->configs['allowed_photo_types']);
 		
 		if (in_array($file_ext,$allowed_file_types) && ($filesize < 4000000))
 		{
 			// Rename file
-			$newfilename = 'logo.' . $file_ext;
-			unlink($target_dir."logo.png");
-			move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_dir . $newfilename);	
-				e(lang("File uploaded successfully."),"m");
-		} elseif (empty($file_basename)) {
+			$logo_path = LOGOS_DIR.DIRECTORY_SEPARATOR.$filename;
+			unlink($logo_path);
+			move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $logo_path);
+
+            $myquery = new myquery();
+            $myquery->Set_Website_Details('logo_name',$filename);
+
+			e(lang("File uploaded successfully."),"m");
+		} elseif (empty($filename)) {
 			// file selection error
 			e(lang("Please select a file to upload."));
 		} elseif ($filesize > 4000000) {
 			// file size error
 			e(lang("The file you are trying to upload is too large."),"e");
 		} else {
-			e(lang("Only these file typs are allowed for upload: ".implode(', ',$allowed_file_types)),"e");
+			e(lang("Only these file types are allowed for upload: ".implode(', ',$allowed_file_types)),"e");
 			unlink($_FILES["fileToUpload"]["tmp_name"]);
 		}
 	}
