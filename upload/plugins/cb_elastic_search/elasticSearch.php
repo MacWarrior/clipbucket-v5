@@ -268,8 +268,7 @@ class ElasticSearch
 	function __construct($index=false)
 	{
 		
-		$this->apiUrl = $_SERVER["REQUEST_SCHEME"]."://".config('elastic_server_ip').":9200";
-	
+		$this->apiUrl = config('elastic_server_ip');
 		$this->index = $index;
 	}
 
