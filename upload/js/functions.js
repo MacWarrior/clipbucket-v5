@@ -1669,7 +1669,7 @@ function add_comment_js(form_id,type)
                 alert("No data");
             } else {
                 $("#add_comment_result").css("display","block");
-                if(data.err!='')
+                if(data.err != '' && data.err != null)
                 {
                     $("#comment_err_output").fadeIn();
                     $("#comment_err_output").html(data.err);
