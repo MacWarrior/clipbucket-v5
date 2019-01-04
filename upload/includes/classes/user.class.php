@@ -3366,9 +3366,8 @@ class userquery extends CBCategory{
 
 		$username = (isset($default['username'])) ? $default['username'] : "";
 		$email = (isset($default['email'])) ? $default['email'] : "";
-
 		$dob = (isset($default['dob'])) ? $default['dob'] : "";
-		$dob = cbdate(NULL, $dob);
+		$dob = DateTime::createFromFormat('Y-m-d', $dob)->format(DATE_FORMAT);
 
 		$countries = $Cbucket->get_countries('iso2');
 		$user_ip = $_SERVER['REMOTE_ADDR']; // getting user's ip
