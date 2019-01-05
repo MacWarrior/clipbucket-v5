@@ -79,14 +79,15 @@
 				'{date_year}'		=> cbdate("Y"),
 				'{date_month}'		=> cbdate("m"),
 				'{date_day}'		=> cbdate("d"),
-				'{signup_link}'		=> cblink(array('name'=>'signup')),
-				'{login_link}'		=> cblink(array('name'=>'login')),
+				'{signup_link}'		=> cblink(array('name'=>'signup'), true),
+				'{login_link}'		=> cblink(array('name'=>'login'), true)
 			);
 
-			if(is_array($array) && count($array)>0)
+			if(is_array($array) && count($array)>0){
 				$array = array_merge($com_array,$array);
-			else
+            } else {
 				$array = $com_array;
+            }
 			foreach($array as $key => $val)
 			{
 				$var_array[] = '/'.$key.'/';

@@ -1723,7 +1723,7 @@
 	 *
 	 * @return string : { string } { buils link }
 	 */
-	function cblink($params)
+	function cblink($params, $fullurl = false)
 	{
 		global $ClipBucket;
 		$name = getArrayValue($params, 'name');
@@ -1742,28 +1742,28 @@
 		if($name=='category_search') {
 			return '/search_result.php?category[]='.$params['category'].'&type='.$params['type'];
 		}
-		
-		if (defined('SEO') && SEO !='yes')
-		{
-			preg_match('/http:\/\//',$ClipBucket->links[$name][0],$matches);
-			if($matches) {
-				$link = $ClipBucket->links[$name][0];
-			} else {
-				$link = '/'.$ClipBucket->links[$name][0];
-			}
-		} else {
-			if (isset($ClipBucket->links[$name]))
-			{
-				preg_match('/http:\/\//',$ClipBucket->links[$name][1],$matches);
-				if($matches) {
-					$link = $ClipBucket->links[$name][1];
-				} else {
-					$link = '/'.$ClipBucket->links[$name][1];
-				}
-			} else {
-				$link = false;
-			}
+
+		$val = 1;
+		if (defined('SEO') && SEO !='yes') {
+			$val = 0;
 		}
+
+		if( $fullurl ){
+		    $link = BASEURL;
+        } else {
+		    $link = '';
+        }
+
+        if (isset($ClipBucket->links[$name]))
+        {
+            if( strpos(get_server_protocol(),$ClipBucket->links[$name][$val]) !== false ) {
+                $link .= $ClipBucket->links[$name][$val];
+            } else {
+                $link .= '/'.$ClipBucket->links[$name][$val];
+            }
+        } else {
+            $link = false;
+        }
 		
 		$param_link = "";
 		if(!empty($params['extra_params']))
