@@ -59,6 +59,7 @@
             e("Don't fake it! Postal Code can't be words!");
             $post_clean = false;
         }
+        return $post_clean;
     }
 
     /**

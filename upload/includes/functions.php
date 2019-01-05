@@ -1488,17 +1488,19 @@
 	 *
 	 * @return array|bool
 	 */
-	function error($param='array')
+	function error($param = 'array')
 	{
-		if (count(error_list())>0) {
+        global $eh;
+        $error = $eh->get_error();
+		if( count($error) > 0 )
+		{
 			if($param!='array') {
 				if($param=='single') {
 					$param = 0;
 				}
-				$msg = error_list();
-				return $msg[$param];
+				return $error[$param];
 			}
-			return error_list();
+			return $error;
 		}
 		return false;
 	}
@@ -1512,18 +1514,19 @@
 	 */
 	function msg($param='array')
 	{
-		if(count(msg_list())>0)
-		{
-			if($param!='array')
-			{
-				if($param=='single')
-					$param = 0;
-				$msg = msg_list();
-				return $msg[$param];
-			}
-			return msg_list();
-		}
-		return false;
+        global $eh;
+        $message = $eh->get_message();
+        if( count($message) > 0 )
+        {
+            if($param!='array') {
+                if($param=='single') {
+                    $param = 0;
+                }
+                return $message[$param];
+            }
+            return $message;
+        }
+        return false;
 	}
 	
 	/**
@@ -2196,14 +2199,17 @@
 	 */
 	function cbdate($format=NULL,$timestamp=NULL)
 	{
-		if(!$format)
+		if(!$format){
 			$format = DATE_FORMAT;
+        }
 
-		if( is_string($timestamp) )
+		if( is_string($timestamp) ){
 			$timestamp = strtotime($timestamp);
+        }
 
-		if(!$timestamp)
+		if(!$timestamp){
 			return date($format);
+        }
 
 		return date($format,$timestamp);
 	}

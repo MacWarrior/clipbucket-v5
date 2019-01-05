@@ -18,12 +18,10 @@ if(isset($_POST['update_profile']))
 	$array = $_POST;
 	$array['userid'] = userid();
 	/*Checks profile fields data*/
-	profile_fileds_check($array);
-	if ($post_clean == true)
-	{
+    $post_clean = profile_fileds_check($array);
+	if ($post_clean == true) {
 		$userquery->update_user($array);
 	}
-	$userquery->update_user($array);
 }
 
 //Updating Avatar
