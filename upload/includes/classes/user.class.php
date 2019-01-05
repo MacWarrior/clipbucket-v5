@@ -2362,15 +2362,17 @@ class userquery extends CBCategory{
 		if($array==NULL)
 			$array = $_POST;
 		
-		if(is_array($_FILES))
+		if(is_array($_FILES)){
 			$array = array_merge($array,$_FILES);
+        }
 
 		$userfields = $this->load_profile_fields($array);
 		$custom_signup_fields = $this->load_custom_signup_fields($array);
-		
+
 		//Adding Custom Form Fields
-		if(count($this->custom_profile_fields)>0)
+		if(count($this->custom_profile_fields)>0){
 			$userfields = array_merge($userfields,$this->custom_profile_fields);
+        }
 		
 		//Adding custom fields from group
 		if(count($this->custom_profile_fields_groups)>0)
@@ -2393,11 +2395,13 @@ class userquery extends CBCategory{
 			$name = formObj::rmBrackets($field['name']);
 			$val = $array[$name];
 			
-			if($field['use_func_val'])
+			if($field['use_func_val']){
 				$val = $field['validate_function']($val);
+            }
 
-			if(!empty($field['db_field']))
+			if(!empty($field['db_field'])){
 				$query_field[] = $field['db_field'];
+            }
 			
 			if(is_array($val))
 			{
@@ -2408,13 +2412,15 @@ class userquery extends CBCategory{
 				}
 				$val = $new_val;
 			}
-			if($field['clean_func'] && (function_exists($field['clean_func']) || is_array($field['clean_func'])))
+			if($field['clean_func'] && (function_exists($field['clean_func']) || is_array($field['clean_func']))){
 				$val = apply_func($field['clean_func'], $val);
+            }
 
-			if(!empty($field['db_field']))
+			if(!empty($field['db_field'])){
 				$query_val[] = $val;
+            }
 		}
-		
+
 		//Category
 		if($cat_field)
 		{
@@ -2422,11 +2428,13 @@ class userquery extends CBCategory{
 			$name = formObj::rmBrackets($field['name']);
 			$val = $array[$name];
 			
-			if($field['use_func_val'])
+			if($field['use_func_val']){
 				$val = $field['validate_function']($val);
+            }
 
-			if(!empty($field['db_field']))
+			if(!empty($field['db_field'])){
 				$uquery_field[] = $field['db_field'];
+            }
 			
 			if(is_array($val))
 			{
@@ -2437,11 +2445,13 @@ class userquery extends CBCategory{
 				}
 				$val = $new_val;
 			}
-			if($field['clean_func'] && (function_exists($field['clean_func']) || is_array($field['clean_func'])))
+			if($field['clean_func'] && (function_exists($field['clean_func']) || is_array($field['clean_func']))){
 				$val = apply_func($field['clean_func'], $val);
+            }
 			
-			if(!empty($field['db_field']))
+			if(!empty($field['db_field'])){
 				$uquery_val[] = $val;
+            }
 		}
 
 		//updating user detail
@@ -2531,7 +2541,7 @@ class userquery extends CBCategory{
 		}
 		
 		//Changing Date of birth
-		if(isset($array['dob']))
+		if(isset($array['dob']) && $array['dob'] != '0000-00-00')
 		{
 			$uquery_field[] = 'dob';
 
@@ -3367,7 +3377,9 @@ class userquery extends CBCategory{
 		$username = (isset($default['username'])) ? $default['username'] : "";
 		$email = (isset($default['email'])) ? $default['email'] : "";
 		$dob = (isset($default['dob'])) ? $default['dob'] : "";
-		$dob = DateTime::createFromFormat('Y-m-d', $dob)->format(DATE_FORMAT);
+		if( $dob != '' && $dob != '0000-00-00' ){
+		    $dob = DateTime::createFromFormat('Y-m-d', $dob)->format(DATE_FORMAT);
+        }
 
 		$countries = $Cbucket->get_countries('iso2');
 		$user_ip = $_SERVER['REMOTE_ADDR']; // getting user's ip
