@@ -82,6 +82,8 @@
 										<span style="color:#ed0000;">{lang code='offline'}</span>
 									{/if}
 								</li>
+								{$usercat = $userquery->get_category_name($user.category)}
+								<li><strong>{lang code='category'}: </strong>{display_clean($usercat.category_name)}</li>
 							</ul>
 							{assign var='channel_profile_fields' value=$userquery->load_user_fields($p,'profile')}
 							{foreach from=$channel_profile_fields item=field_group name=profile_groups}
@@ -118,8 +120,6 @@
 										</li>
 										{/if}
 										{/foreach}
-										{$usercat = $userquery->get_category_name($user.category)}
-										<li><strong>{lang code='category'}: </strong>{display_clean($usercat.category_name)}</li>
 									</ul>
 								</div>
 							{/if}
