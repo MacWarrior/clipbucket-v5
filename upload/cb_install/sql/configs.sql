@@ -310,3 +310,6 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES ('', 'cb_l
 
 -- Addition for Cooporate cb allowing collection and playlist page
 INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES ('', 'playlistsSection', 'yes');
+
+-- Addition for Cooporate pick default sign up country geologically
+INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES ('', 'pick_geo_country', 'yes');

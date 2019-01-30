@@ -86,6 +86,7 @@ if(isset($_POST['update'])){
 					'debug_level',
 					'default_country_iso2',
 					'default_time_zone',
+					'pick_geo_country',
 					'disallowed_usernames',
 					'use_subs',
 					

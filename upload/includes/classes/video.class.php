@@ -1119,7 +1119,7 @@ class CBvideo extends CBCategory
 				$cond = $superCond." AND ";
 			
 			$cond .= "MATCH(".("video.title,video.tags").")
-			AGAINST ('".$params['title']."' IN BOOLEAN MODE) ";
+			AGAINST ('".$params['title']."' IN NATURAL LANGUAGE MODE) ";
 
 			if($params['exclude'])
 			{
@@ -1151,7 +1151,7 @@ class CBvideo extends CBCategory
 					$cond = $superCond." AND ";
 				//Try Finding videos via tags
 				$cond .= "MATCH(".("video.title,video.tags").")
-				AGAINST ('".($params['tags'])."' IN BOOLEAN MODE) ";
+				AGAINST ('".($params['tags'])."' IN NATURAL LANGUAGE MODE) ";
 				if($params['exclude'])
 				{
 					if($cond!='')

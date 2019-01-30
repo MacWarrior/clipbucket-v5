@@ -43,7 +43,7 @@
     <div class="" style="display:none">
         {foreach from=$requiredFields item=field}
         {$field.class='form-control'}
-        {if $field.title=='Title'}
+        {if $field.id=='title'}
         <div class="row">
             <div class="col-md-6">
                 <label for="{$field.id}"><b style="color: #000000">{$field.name}</b></label>
@@ -53,7 +53,7 @@
             {/foreach}
             {foreach from=$requiredFields item=field}
             {$field.class='form-control'}
-            {if $field.title=='Description'}
+            {if $field.id=='desc'}
                 <div class="col-md-6">
                     <label for="{$field.id}"><b style="color: #000000">{$field.name}</b></label>
                     {$formObj->createField($field, true)}
@@ -64,7 +64,7 @@
         <div class="row">
             {foreach from=$requiredFields item=field}
             {$field.class='form-control'}
-            {if $field.title=='Video Category'}
+            {if $field.id=='category'}
             <div class="col-md-6">
                 <label for="{$field.id}"><b style="color: #000000">{$field.name}</b></label>
                 <div class="scroll categories">
@@ -75,7 +75,7 @@
             {/foreach}
             {foreach from=$requiredFields item=field}
             {$field.class='form-control'}
-            {if $field.title=='Tags'}
+            {if $field.id=='tags'}
             <div class="col-md-6">
                 <label for="{$field.id}"><b style="color: #000000">{$field.name}</b></label>
                 {$formObj->createField($field, true)}

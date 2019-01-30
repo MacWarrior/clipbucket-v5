@@ -585,7 +585,7 @@ class CBPhotos
             $query = $main_query;
 
 			$cond = "MATCH(".('photos.photo_title,photos.photo_tags').")";
-			$cond .= " AGAINST ('".$cbsearch->set_the_key($p['title'])."' IN BOOLEAN MODE)";
+			$cond .= " AGAINST ('".$cbsearch->set_the_key($p['title'])."' IN NATURAL LANGUAGE MODE)";
 			if($p['exclude'])
 			{
 				if($cond != "")
@@ -624,7 +624,7 @@ class CBPhotos
 				$tags = str_replace('+','',$tags);
 
 				$cond = "MATCH(".('photos.photo_title,photos.photo_tags').")";
-				$cond .= " AGAINST ('".$tags."' IN BOOLEAN MODE)";
+				$cond .= " AGAINST ('".$tags."' IN NATURAL LANGUAGE MODE)";
 				
 				if($p['exclude'])
 				{
