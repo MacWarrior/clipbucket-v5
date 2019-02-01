@@ -915,10 +915,35 @@ abstract class CBCategory
 	{
 		global $db;
 		$result = $db->select(tbl($this->cat_tbl),"$field"," category_id = $cid");
-		//echo $db->db_query;
+
 		if($result)
 			return $result[0][$field];
 		return false;
 	}
+
+    /**
+     * Function used to get multiple category names
+     *
+     * @param $cid_array
+     *
+     * @return array
+     */
+    function get_category_names($cid_array)
+    {
+        $cat_name = array();
+        $cid = explode(' ', $cid_array);
+        $cid = array_slice($cid,0,-1);
+        $test = '';
+        foreach ($cid as $key => $value) 
+        {      
+            $cat_id = str_replace('#','', $value);
+            $results = $this->get_category($cat_id);
+            
+                $cat_name[]= $results;
+        
+        }
+        return $cat_name;
+
+    }
 
 }

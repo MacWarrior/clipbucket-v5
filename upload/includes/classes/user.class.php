@@ -3381,17 +3381,23 @@ class userquery extends CBCategory{
 		    $dob = DateTime::createFromFormat('Y-m-d', $dob)->format(DATE_FORMAT);
         }
 
-		$countries = $Cbucket->get_countries('iso2');
-		$user_ip = $_SERVER['REMOTE_ADDR']; // getting user's ip
-		$user_country = ip_info($user_ip, 'country'); // get country using IP
-		foreach ($countries as $code => $name)
-		{
-			$name = strtolower($name);
-			$user_country = strtolower($user_country);
-			if ($name == $user_country) {
-				$selected_cont = $code;
-			}
-		}
+        $countries = $Cbucket->get_countries();
+        $selected_cont = null;
+        $pick_geo_country = config('pick_geo_country');
+        if($pick_geo_country=='yes'){
+            $user_ip = $_SERVER['REMOTE_ADDR']; // getting user's ip
+            $user_country = ip_info($user_ip, 'country'); // get country using IP
+            foreach ($countries as $code => $name) {
+                $name = strtolower($name);
+                $user_country = strtolower($user_country);
+                if ($name == $user_country) {
+                    $selected_cont = $code;
+                    break;
+                }
+            }
+        } else {
+            $selected_cont = config('default_country_iso2');
+        }
 
 		if (strlen($selected_cont) != 2) {
 			$selected_cont = "PK";

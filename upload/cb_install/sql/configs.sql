@@ -299,7 +299,9 @@ INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES
 	('cb_license', 'CBCORP-XXXXXXXXXXX'),
 	('cb_license_local', ''),
 -- Addition for Cooporate cb allowing collection and playlist page
-	('playlistsSection', 'yes');
+	('playlistsSection', 'yes'),
+-- Addition for Cooporate pick default sign up country geologically
+	('pick_geo_country', 'yes');
 	
 -- Addition for 5.0
 INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES

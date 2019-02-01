@@ -207,6 +207,12 @@
 						<input value="1" name="enable_advertisement" id="enable_advertisement" {if $row.enable_advertisement==1}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 						<span class="lbl"></span>
 					</label>
+					<hr>
+					<label for="pick_geo_country">Pick signup country geologically(if yes default country won't work)</label>
+					<select name="pick_geo_country" id="pick_geo_country" class="form-control">
+						<option value="yes" {if $row.pick_geo_country!='no'}selected="selected"{/if}>{lang code='yes'}</option>
+						<option value="no" {if $row.pick_geo_country=='no'}selected="selected"{/if}>{lang code='no'}</option>
+					</select>
 				</div>
 			</div>
 			<hr>

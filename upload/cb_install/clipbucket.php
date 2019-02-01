@@ -14,4 +14,3 @@
 	define("REV","5319");
 	define("RELEASED","01-11-2018");
 	define("AUTHORS","ARSLAN HASSAN, FAHAD ABBAS, MACWARRIOR");
-

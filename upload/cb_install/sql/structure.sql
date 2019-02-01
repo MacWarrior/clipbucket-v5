@@ -1221,6 +1221,8 @@ ALTER TABLE `{tbl_prefix}video` ADD `conv_progress` TEXT NOT NULL;
 ALTER TABLE `{tbl_prefix}video` ADD `file_type` INT( 10 ) NOT NULL DEFAULT '0' AFTER  `file_name`;
 ALTER TABLE `{tbl_prefix}video` ADD `blocked_countries` TEXT( 255 ) NOT NULL AFTER `country`;
 ALTER TABLE `{tbl_prefix}video` ADD `sprite_count` INT(11) NOT NULL DEFAULT '0' AFTER `blocked_countries`;
+ALTER TABLE `{tbl_prefix}video` ADD FULLTEXT INDEX (`title`,`tags`);
+ALTER TABLE `{tbl_prefix}photos` ADD FULLTEXT INDEX (`photo_title`,`photo_tags`);
 /*Cb_user_profile_info*/
 ALTER TABLE `{tbl_prefix}user_profile` ADD `fb_url` VARCHAR(200) NOT NULL AFTER `web_url`, ADD `twitter_url` VARCHAR(200) NOT NULL AFTER `fb_url`, ADD `insta_url` VARCHAR(200) NOT NULL AFTER `twitter_url`;
 

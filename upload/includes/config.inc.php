@@ -25,7 +25,7 @@
 	Assign('style_dir',LAYOUT);
 	Assign('covers_dir', COVERS_DIR);
 
-	assign('admin_baseurl','/'.ADMINDIR);
+	assign('admin_baseurl','/'.ADMINDIR.'/');
 
 	//Assigning JS Files
 	Assign('jsArray',$Cbucket->JSArray);
