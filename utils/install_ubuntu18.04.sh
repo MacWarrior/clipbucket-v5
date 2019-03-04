@@ -10,7 +10,7 @@ apt upgrade -y > /dev/null 2>&1
 echo -ne " OK"
 
 echo ""
-echo -ne "Installing requiered elements..."
+echo -ne "Installing required elements..."
 apt-get install php7.2 apache2 mariadb-server php-curl php-imagick ffmpeg gpac ruby php7.2-mysql php7.2-xml php7.2-mbstring sendmail mediainfo --yes > /dev/null 2>&1
 /etc/init.d/mysql start > /dev/null
 gem install flvtool2 > /dev/null
