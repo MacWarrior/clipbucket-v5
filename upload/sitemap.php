@@ -51,9 +51,7 @@ for($i=0;$i<sizeof($vtableau);$i++)
 <video:category><?=strip_tags(categories($video['category'],'video'))?></video:category>
 <video:family_friendly>yes</video:family_friendly>
 <video:duration><?php
-$defaultime = $video['duration'];
-$dotfixed = explode (".",$defaultime);
-echo $dotfixed[0].$dotfixed[1];
+echo round($video['duration']);
 ?></video:duration>
 </video:video>
 </url>
