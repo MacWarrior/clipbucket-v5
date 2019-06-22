@@ -52,10 +52,10 @@
                 this.on('touchstart', this.onClick);
 
                 if (options.initialySelected) {
-                this.showAsLabel();
-                this.selected(true);
+                    this.showAsLabel();
+                    this.selected(true);
 
-                this.addClass('vjs-selected');
+                    this.addClass('vjs-selected');
                 }
             },
             showAsLabel: function() {
@@ -93,6 +93,11 @@
                     }
                     this.player_.handleTechSeeked_();
                     this.player_.trigger('resolutionchange');
+
+                    // TEMP fix
+                    if( $('.vjs-menu-item.vjs-selected .vjs-menu-item-text').closest('.vjs-menu.vjs-hidden').first().length === 1 ) {
+                        $('.vjs-menu-item.vjs-selected .vjs-menu-item-text').closest('.vjs-menu.vjs-hidden').first().removeClass('vjs-hidden');
+                    }
                 });
             }
         });
