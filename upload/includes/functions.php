@@ -4578,14 +4578,20 @@
     }
 
     /**
-	* Dumps data in pretty format [ latest CB prefers pr() instead ]
-	* @param : { array } { $data } { data to be dumped }
-    */
-    function dump($data)
+     * Dumps data in pretty format [ latest CB prefers pr() instead ]
+     *
+     * @param array $data
+     * @param bool  $die
+     */
+    function dump($data = [], $die = false)
 	{
     	echo "<pre>";
     	var_dump($data);
     	echo "</pre>";
+
+    	if( $die ){
+    	    die();
+        }
     }
 
 	/**

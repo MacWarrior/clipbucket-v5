@@ -3555,6 +3555,7 @@ class userquery extends CBCategory{
 	 * @param bool $send_signup_email
 	 *
 	 * @return bool|mixed
+	 * @throws phpmailerException
 	 */
 	function signup_user($array=NULL,$send_signup_email=true)
 	{
@@ -3735,8 +3736,8 @@ class userquery extends CBCategory{
 					'{email}'		=> post('email'),
 				 	'{avcode}'		=> $avcode,
 				);
-				if(!is_array($var))
-					$var = array();
+
+				$var = array();
 				$var = array_merge($more_var, $var);
 				$subj = $cbemail->replace($tpl['email_template_subject'], $var);
 				$msg = nl2br($cbemail->replace($tpl['email_template'], $var));

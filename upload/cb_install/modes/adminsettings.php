@@ -77,4 +77,4 @@ echo '<br><span class="glyphicon glyphicon-ok"  style="color:#fff"></span><span 
      
    <?php button('Save and Continue',' onclick="$(\'#installation\').submit()" '); ?>
 </form>
-</p>
+</div>

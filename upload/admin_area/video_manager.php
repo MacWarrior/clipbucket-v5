@@ -161,10 +161,9 @@
 	$pages->paginate($total_pages,$page);
 
 	//Category Array
-	if(is_array($_GET['category']))
-		$cats_array = array($_GET['category']);		
-	else
-	{
+	if(is_array($_GET['category'])) {
+		$cats_array = array($_GET['category']);
+    } else {
 		preg_match_all('/#([0-9]+)#/',$_GET['category'],$m);
 		$cats_array = array($m[1]);
 	}
