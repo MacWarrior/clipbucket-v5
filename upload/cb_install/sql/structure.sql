@@ -1080,7 +1080,7 @@ ALTER TABLE `{tbl_prefix}user_levels_permissions` ADD `photos_moderation` ENUM( 
 ADD `collection_moderation` ENUM( 'yes', 'no' ) NOT NULL DEFAULT 'no' AFTER `photos_moderation` ,
 ADD `plugins_moderation` ENUM( 'yes', 'no' ) NOT NULL DEFAULT 'no' AFTER `collection_moderation` ,
 ADD `tool_box` ENUM( 'yes', 'no' ) NOT NULL DEFAULT 'no' AFTER `plugins_moderation` ,
-ADD `plugins_perms` text NOT NULL AFTER `tool_box` ;
+ADD `plugins_perms` text NOT NULL DEFAULT '' AFTER `tool_box`;
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}mass_emails` (
   `id` int(255) NOT NULL AUTO_INCREMENT,
@@ -1109,7 +1109,7 @@ ALTER TABLE `{tbl_prefix}photos` ADD `{tbl_prefix}photo_details` TEXT NOT NULL A
 
 -- Adding new user level permission
 -- Author Arslan
-ALTER TABLE  `{tbl_prefix}user_levels_permissions` ADD  `allow_manage_user_level` ENUM(  'yes',  'no' ) NOT NULL DEFAULT  'no' AFTER  `plugins_perms`;
+ALTER TABLE  `{tbl_prefix}user_levels_permissions` ADD  `allow_manage_user_level` ENUM(  'yes',  'no' ) NOT NULL DEFAULT  'no' AFTER `plugins_perms`;
 UPDATE  `{tbl_prefix}user_levels_permissions` SET  `allow_manage_user_level` =  'yes' WHERE  `cb_user_levels_permissions`.`user_level_permission_id` =1;
 INSERT INTO `{tbl_prefix}user_permissions` (`permission_id`, `permission_type`, `permission_name`, `permission_code`, `permission_desc`, `permission_default`) VALUES (NULL, '3', 'Allow manage user levels', 'allow_manage_user_level', 'Allow user to edit user levels', 'no');
 
