@@ -160,7 +160,7 @@
 <script>
 
 	$(document).ready(function(){
-		var pageMode = "{$smarty.get.mode}";
+		var pageMode = "{display_clean($smarty.get.mode)}";
 		if (pageMode == 'login') {
 			document.title = 'Login - {$Cbucket->configs.site_title}';
 		}
