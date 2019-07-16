@@ -74,7 +74,7 @@ class errorhandler extends ClipBucket
 	* Function used to flush errors
 	*/
 	public function flush_error() {
-		$this->error_list = '';
+		$this->error_list = array();
 	}
 
     /**
@@ -106,14 +106,14 @@ class errorhandler extends ClipBucket
 	* Function used to flush message
 	*/
 	public function flush_msg() {
-		$this->message_list = '';
+		$this->message_list = array();
 	}
 	
 	/**
 	* Function used to flush warning
 	*/
 	public function flush_warning() {
-		$this->warning_list = '';
+		$this->warning_list = array();
 	}
 	
 	/**
