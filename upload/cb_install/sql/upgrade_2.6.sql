@@ -22,7 +22,7 @@ ALTER TABLE `{tbl_prefix}user_levels_permissions` ADD `photos_moderation` ENUM( 
 ADD `collection_moderation` ENUM( 'yes', 'no' ) NOT NULL DEFAULT 'no' AFTER `photos_moderation` ,
 ADD `plugins_moderation` ENUM( 'yes', 'no' ) NOT NULL DEFAULT 'no' AFTER `collection_moderation` ,
 ADD `tool_box` ENUM( 'yes', 'no' ) NOT NULL DEFAULT 'no' AFTER `plugins_moderation` ,
-ADD `plugins_perms` TEXT NOT NULL DEFAULT '' AFTER `tool_box` ;
+ADD `plugins_perms` TEXT NOT NULL AFTER `tool_box` ;
 
 INSERT INTO `{tbl_prefix}user_permissions` (
 `permission_id` ,
