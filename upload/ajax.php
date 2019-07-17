@@ -670,12 +670,12 @@
 					if(msg())
 					{
 						$msg = msg_list();
-						$msg = '<div class="msg">'.$msg[0].'</div>';;
+						$msg = '<div class="msg">'.$msg[0].'</div>';
 					}
 					if(error())
 					{
 						$err = error_list();
-						$err = '<div class="error">'.$err[0].'</div>';;
+						$err = '<div class="error">'.$err[0].'</div>';
 					}
 
 					$ajax['msg'] = $msg ? $msg : '';
@@ -702,12 +702,12 @@
 					if(msg())
 					{
 						$msg = msg_list();
-						$msg = '<div class="msg">'.$msg[0].'</div>';;
+						$msg = '<div class="msg">'.$msg[0].'</div>';
 					}
 					if(error())
 					{
 						$err = error_list();
-						$err = '<div class="error">'.$err[0].'</div>';;
+						$err = '<div class="error">'.$err[0].'</div>';
 					}
 					$ajax['msg'] = $msg ? $msg : '';
 					$ajax['err'] = $err ? $err : '';
