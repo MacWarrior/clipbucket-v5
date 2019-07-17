@@ -31,12 +31,10 @@ class reCaptchav2
 			$sitekey = mysql_clean($sitekey);
 			$secretkey = mysql_clean($secretkey);
 
-
 			$db->update(tbl('config'),array('value'),array($sitekey)," name='recaptcha_v2_site_key'");
 			$db->update(tbl('config'),array('value'),array($secretkey)," name='recaptcha_v2_secret_key'");
 
 			$response="reCaptchav2 configurations Updated!";
-
 		}
 
 		return $response;

@@ -736,7 +736,7 @@
 					{
 						alert(data.msg);
 						$("#comment_"+cid).fadeOut("slow");
-						$("#spam_comment_"+cid).fadeOut("slow");;
+						$("#spam_comment_"+cid).fadeOut("slow");
 						
 					}
 					if(data.err)

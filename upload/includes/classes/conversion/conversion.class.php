@@ -258,9 +258,9 @@
 					$responseData['videoCodec'] = $video->codec_name;
 					$responseData['videoRate'] = $video->r_frame_rate;
 					$responseData['size'] = filesize($fileFullPath);
-					$responseData['audioCodec'] = $audio->codec_name;;
-					$responseData['audioBitrate'] = (int) $audio->bit_rate;;
-					$responseData['audioRate'] = (int) $audio->sample_rate;;
+					$responseData['audioCodec'] = $audio->codec_name;
+					$responseData['audioBitrate'] = (int) $audio->bit_rate;
+					$responseData['audioRate'] = (int) $audio->sample_rate;
 					$responseData['audioChannels'] = (float) $audio->channels;
 					$responseData['rotation'] = (float) $video->tags->rotate;
 

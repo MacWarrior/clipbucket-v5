@@ -409,7 +409,7 @@ class language
 					}
 					
 					e(lang("lang_added"),"m");
-					e(lang("lange_upload_after"),"m");;
+					e(lang("lange_upload_after"),"m");
 				}
 			}
 		} else
