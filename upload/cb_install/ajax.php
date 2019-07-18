@@ -11,7 +11,6 @@ include('clipbucket.php');
  include("functions.php");
  include("upgradeable.php");
  
- 
  if($mode=='dataimport')
  {
 	 $result = array();
@@ -134,14 +133,27 @@ include('clipbucket.php');
 		 $return = array();
 		 $return['msg'] = '<div class="ok green">'.$files[$current].' has been imported successfully</div>';
 		 
-		 if(@$files[$next])
-		 $return['status'] = 'importing '.$files[$next];
-		 else
-		 $return['status'] = $next_msg;
+		 if(@$files[$next]) {
+		 	$return['status'] = 'importing '.$files[$next];
+		 } else {
+		 	$return['status'] = $next_msg;
+		 }
 		 
 		 $return['step'] = $next;
-	 }else
-	 {
+
+		 if( $step == 'configs' ) {
+			$sql = 'UPDATE '.$dbprefix.'config SET value = "'.$cnnct->real_escape_string(exec("which php")).'" WHERE name = "php_path"';
+			mysqli_query($cnnct, $sql);
+			$sql = 'UPDATE '.$dbprefix.'config SET value = "'.$cnnct->real_escape_string(exec("which ffmpeg")).'" WHERE name = "ffmpegpath"';
+			mysqli_query($cnnct, $sql);
+			$sql = 'UPDATE '.$dbprefix.'config SET value = "'.$cnnct->real_escape_string(exec("which ffprobe")).'" WHERE name = "ffprobe_path"';
+			mysqli_query($cnnct, $sql);
+			$sql = 'UPDATE '.$dbprefix.'config SET value = "'.$cnnct->real_escape_string(exec("which flvtool2")).'" WHERE name = "flvtool2path"';
+			mysqli_query($cnnct, $sql);
+			$sql = 'UPDATE '.$dbprefix.'config SET value = "'.$cnnct->real_escape_string(exec("which MP4Box")).'" WHERE name = "mp4boxpath"';
+			mysqli_query($cnnct, $sql);
+		 }
+	 } else {
 		 switch($step)
 		 {
 			 case 'add_categories':
@@ -168,8 +180,6 @@ include('clipbucket.php');
 			 
 			 case "add_admin":
 			 {
-				
-				 
 				$lines = file(BASEDIR."/cb_install/sql/add_admin.sql");
 				foreach ($lines as $line_num => $line)
 				{

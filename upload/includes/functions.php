@@ -1155,9 +1155,6 @@
 				case "media_info":
 					return config("media_info");
 
-				case "i_magick":
-					return config("i_magick");
-
 				case "ffprobe_path":
 					return config("ffprobe_path");
 				

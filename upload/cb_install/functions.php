@@ -54,12 +54,13 @@
 		switch($type)
 		{
 			case "php":
-				$v = phpversion();
+				$php_version = phpversion();
+				$php_path = exec("which php");
 				$req = '5.2.1';
-				if($v<$req)
-					$return['err'] = sprintf(_("Found PHP %s but required is PHP %s "),$v,$req);
+				if($php_version<$req)
+					$return['err'] = sprintf(_("Found PHP %s but required is PHP %s : %s"),$php_version,$req,$php_path);
 				else
-					$return['msg'] = sprintf(_("Found PHP %s "),$v);
+					$return['msg'] = sprintf(_("Found PHP %s : %s"),$php_version,$php_path);
 				break;
 			
 			case "ffmpeg":
@@ -75,9 +76,27 @@
 					$version = $matches[1];
 				
 				if(!$version)
-					$return['err'] = _("Unable to find ffmpeg");
+					$return['err'] = _("Unable to find FFMPEG");
 				else
 					$return['msg'] = sprintf(_("Found FFMPEG %s : %s"),$version,$ffmpeg_path);
+				break;
+
+			case "ffprobe":
+				$ffprobe_path = exec("which ffprobe");
+				$ffprobe_version = shell_output("$ffprobe_path -version");
+
+				$version = false;
+				preg_match("/SVN-r([0-9]+)/i",$ffprobe_version,$matches);
+				if(@$matches[1])
+					$version = 'r'.$matches[1];
+				preg_match("/version ([0-9.]+)/i",$ffprobe_version,$matches);
+				if(@$matches[1])
+					$version = $matches[1];
+
+				if(!$version)
+					$return['err'] = _("Unable to find FFPROBE");
+				else
+					$return['msg'] = sprintf(_("Found FFPROBE %s : %s"),$version,$ffprobe_path);
 				break;
 			
 			case "flvtool2":
@@ -88,9 +107,9 @@
 				if(@$matches[1])
 					$version = $matches[1];
 				if(!$version)
-					$return['err'] = _("Unable to find flvtool2");
+					$return['err'] = _("Unable to find FLVTOOL2");
 				else
-					$return['msg'] = sprintf(_("Found flvtool2 %s : %s"),$version,$flvtool2_path);
+					$return['msg'] = sprintf(_("Found FLVTOOL2 %s : %s"),$version,$flvtool2_path);
 				break;
 			
 			case "mp4box":
@@ -108,20 +127,14 @@
 			
 			case "curl":
 				$version = false;
-				if(function_exists('curl_version'))
-				$version = @curl_version();
+				if(function_exists('curl_version')){
+					$version = @curl_version();
+				}
 
 				if(!$version)
-					$return['err'] = _("curl library is not neabled");
+					$return['err'] = _("cURL extension is not enabled");
 				else
-					$return['msg'] = sprintf(_("curl %s found"),$version['version']);
-				break;
-			
-			case "phpshield":
-				if(!function_exists('phpshield_load'))
-					$return['err'] = _("PHPShield loaders are not installed (optional)");
-				else
-					$return['msg'] = _("PHPShield loaders are working (optional)");
+					$return['msg'] = sprintf(_("cURL %s extension is enabled"),$version['version']);
 				break;
 
 			case "imagick":

@@ -20,3 +20,5 @@ ALTER TABLE `{tbl_prefix}users`
 	MODIFY COLUMN `total_groups` BIGINT(20) NOT NULL DEFAULT '0',
 	MODIFY COLUMN `banned_users` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
 	MODIFY COLUMN `total_downloads` BIGINT(255) NOT NULL DEFAULT '0';
+
+DELETE FROM `{tbl_prefix}config` WHERE name = 'i_magick';
