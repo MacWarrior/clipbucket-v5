@@ -2,7 +2,7 @@
 {assign var=err value=$eh->get_error()}
 {assign var=war value=$eh->get_warning()}
 
-{if $err.0 neq '' || $err.1 neq ''}
+{if count($err) > 0}
 <div class="alert alert-danger alert-dismissable">
 <button aria-hidden="true" data-dismiss="alert" class="close" type="button">x</button>
     <ul class="list-unstyled">
@@ -13,7 +13,7 @@
 </div>
 {/if}
 
-{if $msg.0 neq ''}
+{if count($msg) > 0}
 <div class="alert alert-success alert-dismissable">
     <button aria-hidden="true" data-dismiss="alert" class="close" type="button">x</button>
 	<ul class="list-unstyled">
@@ -24,7 +24,7 @@
 </div>
 {/if}
 
-{if $war.0 neq ''}
+{if count($war) > 0}
 <div class="alert alert-warning alert-dismissable">
     <button aria-hidden="true" data-dismiss="alert" class="close" type="button">x</button>
 	<ul class="list-unstyled">
