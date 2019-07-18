@@ -3744,9 +3744,7 @@ class userquery extends CBCategory{
 
 				//Now Finally Sending Email
 				cbmail(array('to'=>post('email'), 'from'=>WEBSITE_EMAIL, 'subject'=>$subj, 'content'=>$msg));
-			}
-			elseif(!has_access('admin_access',true) && $send_signup_email)
-			{
+			} elseif(!has_access('admin_access',true) && $send_signup_email) {
 				$this->send_welcome_email($insert_id);
 			}
 
@@ -3767,7 +3765,6 @@ class userquery extends CBCategory{
 
 			return $insert_id;
 		}
-
 		return false;
 	}
 
