@@ -254,7 +254,6 @@ INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES
 	('cb_combo_res', 'no'),
 	('ffprobe_path', '/usr/bin/ffprobe'),
 	('media_info', '/usr/bin/mediainfo'),
-	('i_magick', '/usr/bin/convert'),
 	('gen_240', 'yes'),
 	('gen_360', 'yes'),
 	('gen_480', 'yes'),
@@ -288,7 +287,7 @@ INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 	('vbrate_240','240000');
 UPDATE `{tbl_prefix}config` SET `value` = '4096000' WHERE `name` = 'vbrate_hd';
 
-INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES 
+INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 -- Addition for Cooporate cb use video watermark or not
 	('use_watermark', 'no'),
 -- Addition for Cooporate cb stream via hls or dash
@@ -298,8 +297,6 @@ INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES
 -- Addition for clipbucket license --
 	('cb_license', 'CBCORP-XXXXXXXXXXX'),
 	('cb_license_local', ''),
--- Addition for Cooporate cb allowing collection and playlist page
-	('playlistsSection', 'yes'),
 -- Addition for Cooporate pick default sign up country geologically
 	('pick_geo_country', 'yes');
 	
