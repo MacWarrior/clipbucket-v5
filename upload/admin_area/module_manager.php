@@ -14,4 +14,3 @@ $pages->page_redir();
 
 template_files('under_development.html');
 display_it();
-?>

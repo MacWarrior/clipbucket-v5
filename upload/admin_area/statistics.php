@@ -14,4 +14,3 @@ $userquery->login_check('web_config_access');
 
 template_files('under_development.html');
 display_it();
-?>
