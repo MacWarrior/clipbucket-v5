@@ -225,10 +225,18 @@ class Clipbucket_db
                 $end = microtime(true);
                 $timetook = $end - $start;
                 devWitch($query, 'execute', $timetook);
-                return $data;
             } else {
-                return $this->mysqli->query($query);
+                $data = $this->mysqli->query($query);
             }
+            if( !$data ){
+				if( in_dev() ){
+					e($this->mysqli->error);
+				} else {
+					e(lang('technical_error'));
+				}
+			}
+
+			return $data;
         } catch(DB_Exception $e) {
             $e->getError();
         }
