@@ -230,7 +230,7 @@ class Clipbucket_db
             }
             if( !$data ){
 				if( in_dev() ){
-					e($this->mysqli->error);
+					e('SQL : '.$query.'<br/>ERROR : '.$this->mysqli->error);
 				} else {
 					e(lang('technical_error'));
 				}
