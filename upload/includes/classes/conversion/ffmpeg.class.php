@@ -59,7 +59,6 @@ class FFMpeg
 	private $outputFile = false;
 	private $inputFile = false;
 	private $mp4BoxPath = MP4Box_BINARY;
-	private $flvTool2 = FLVTool2_BINARY;
 	private $videosDirPath = VIDEOS_DIR;
 	private $logDir = "";
 	private $logFile = "";
@@ -987,13 +986,8 @@ class FFMpeg
 
 	function ffmpeg($file)
 	{
-		global $Cbucket;
-
 		$this->ffmpeg = FFMPEG_BINARY;
 		$this->mp4box = MP4Box_BINARY;
-		$this->flvtool2 = FLVTool2_BINARY;
-		$this->flvtoolpp = $Cbucket->configs['flvtoolpp'];
-		$this->mplayerpath = $Cbucket->configs['mplayerpath'];
 		$this->input_file = $file;
 	}
 
@@ -1157,11 +1151,18 @@ class FFMpeg
 			$opt_av .= " -f {$p['format']} ";
 
 		# Selecting audio track
+        $video_track_id = self::get_media_stream_id('video', $this->input_file);
 		if( $this->audio_track && is_numeric($this->audio_track) )
 		{
-			$video_track_id = self::get_video_stream_id($this->input_file);
 			$opt_av .= ' -map 0:'.$video_track_id.' -map 0:'.($this->audio_track);
-		}
+		} else {
+            $opt_av .= ' -map 0:'.$video_track_id;
+
+            $audio_tracks = self::get_media_stream_id('audio', $this->input_file);
+            foreach($audio_tracks as $track_id){
+                $opt_av .= ' -map 0:'.$track_id;
+            }
+        }
 
 		if($p['use_video_codec'])
 		{
@@ -1765,23 +1766,29 @@ class FFMpeg
 		return false;
 	}
 
-	public static function get_video_stream_id($filepath)
+	public static function get_media_stream_id($type, $filepath)
 	{
 		$stats = stat($filepath);
 		if($stats && is_array($stats))
 		{
 			$json = shell_exec(FFPROBE . ' -i "'.$filepath.'" -loglevel panic -print_format json -show_entries stream 2>&1');
 			$tracks_json = json_decode($json, true)['streams'];
+			$streams_ids = array();
 			foreach($tracks_json as $track)
 			{
-				if( $track['codec_type'] != 'video' )
+				if( $track['codec_type'] != $type )
 					continue;
 
 				if( !isset($track['index']) )
 					continue;
 
-				return $track['index'];
+				if( $type == 'video' ){
+				    return $track['index'];
+                } else {
+                    $streams_ids[] = $track['index'];
+                }
 			}
+			return $streams_ids;
 		} else {
 			return false;
 		}
