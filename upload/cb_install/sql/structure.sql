@@ -699,7 +699,7 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}users` (
   `featured_date` DATETIME NULL DEFAULT NULL,
   `profile_hits` bigint(20) DEFAULT '0',
   `total_watched` bigint(20) NOT NULL DEFAULT '0',
-  `total_videos` DATETIME NULL DEFAULT NULL,
+  `total_videos` BIGINT(20) NOT NULL DEFAULT '0',
   `total_comments` BIGINT(20) NOT NULL DEFAULT '0',
   `total_photos` BIGINT(255) NOT NULL DEFAULT '0',
   `total_collections` BIGINT(255) NOT NULL DEFAULT '0',
