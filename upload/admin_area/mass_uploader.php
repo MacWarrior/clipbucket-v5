@@ -163,7 +163,7 @@
 				$fields['file_directory']=$str1;
 				$fname=explode('.', $file_name);
 				$cond='file_name='.'\''.$fname[0].'\'';
-				$result=db_update($tbl, $fields, $cond);
+				$result=$db->db_update($tbl, $fields, $cond);
 				$result=exec(php_path()." -q ".BASEDIR."/actions/video_convert.php {$file_name} {$file_key} {$file_directory} {$logFile} {$file_track} > /dev/null &");
 				if(file_exists(CON_DIR.'/'.$file_name))
 				{
