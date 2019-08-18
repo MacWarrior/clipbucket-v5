@@ -143,11 +143,11 @@
 				$log = new SLog($logFile);
 
 				$log->newSection("Pre-Check Configurations");
-				$log->writeLine("File to be converted", 'Initializing File <strong>'.$file_name.'.mp4</strong> and pre checking configurations...', true);
+				$log->writeLine("File to be converted", 'Initializing File <strong>'.$file_name.'</strong> and pre checking configurations...', true);
 
 				if( DEVELOPMENT_MODE )
 				{
-					$hardware = shell_exec( 'lshw -short' );
+					$hardware = shell_exec( 'lshw -short 2>&1' );
 					if( $hardware ) {
 						$log->writeLine( "System hardware Information", $hardware, true );
 					} else {
