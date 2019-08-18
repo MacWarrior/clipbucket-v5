@@ -46,7 +46,7 @@ abstract class CBCategory
 
 		global $db;
 		$results = $db->select(tbl($this->cat_tbl),"*"," category_id='$cid'");
-		if($db->num_rows>0)
+		if(count($results)>0)
 			return $results[0];
 		return false;
 	}
