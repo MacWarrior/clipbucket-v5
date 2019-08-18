@@ -72,8 +72,6 @@
 	}
 
     //Required Files
-    # Setting up database and exception
-    require_once('classes/exceptions/db_exception.php');
     require_once('classes/db.class.php');
     # file with most frequently used functions
     require_once('functions.php');
@@ -155,9 +153,6 @@
 	$userquery 	= new userquery();
 	$lang_obj	= new language;
 
-    # Setting up rest of exceptions
-
-    require_once('classes/exceptions/cb_exception.php');
     //Setting Time Zone date_default_timezone_set
     require_once('classes/search.class.php');
 	require_once('classes/calcdate.class.php');
@@ -289,7 +284,6 @@
 
     define('ALLOW_LANG_SELECT',$row['allow_language_change']);
     define('ALLOW_STYLE_SELECT',$row['allow_template_change']);
-	define('FLVPLAYER',$row['player_file']);
     define('SUBTITLE',$row['code_dev']);
 	//Javascript Directory Name
 	define('ADMINDIR','admin_area');
@@ -447,15 +441,12 @@
 	
  	# Assigning Smarty Tags & Values
     Assign('CB_VERSION',CB_VERSION);
-    Assign('FFMPEG_FLVTOOLS_BINARY',getConstant('FFMPEG_FLVTOOLS_BINARY'));
-    Assign('FFMPEG_MPLAYER_BINARY',getConstant('FFMPEG_MPLAYER_BINARY'));
     Assign('PHP_PATH',PHP_PATH);
     Assign('FFMPEG_BINARY',getConstant('FFMPEG_BINARY'));
     Assign('FFMPEG_MENCODER_BINARY',getConstant('FFMPEG_MENCODER_BINARY'));
     Assign('js',JS_URL);
 	Assign('title',TITLE);
-	Assign('slogan',SLOGAN);	
-	Assign('flvplayer',FLVPLAYER);
+	Assign('slogan',SLOGAN);
 	Assign('avatardir','/images/avatars');
 	Assign('whatis',getArrayValue($row, 'whatis'));
 	Assign('category_thumbs',CAT_THUMB_URL);

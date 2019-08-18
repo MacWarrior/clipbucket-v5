@@ -1,5 +1,4 @@
 <?php
-
 /**
  * File: Database Class
  * Description: All mysql function being called from one place. Simplifies things for developers 
@@ -12,15 +11,16 @@
 
 class Clipbucket_db
 {
-    var $db_link = "";
+	/** @var mysqli $mysqli */
+	var $mysqli = "";
+
     var $db_name = "";
     var $db_uname = "";
     var $db_pwd = "";
     var $db_host = "";
 
-    var $mysqli = "";
-
-    var $num_rows = 0;
+    var $total_queries_sql = array();
+    var $total_queries = 0;
 
 	/**
 	 * Connect to mysqli Database
@@ -64,14 +64,10 @@ class Clipbucket_db
             $this->mysqli = new mysqli($host,$uname, $pwd, $name);
             if($this->mysqli->connect_errno)
             	return false;
-            $this->db_host = $host;
-            $this->db_name = $name;
-            $this->uname = $uname;
-            $this->pwd = $pwd;
 
             $this->execute('SET NAMES "utf8"');
-        } catch(DB_Exception $e) {
-            $e->getError();
+        } catch(Exception $e) {
+			error_log($e->getError());
         }
     }
 
@@ -86,8 +82,7 @@ class Clipbucket_db
 	{
 		$this->ping();
 
-        global $__devmsgs;
-        if (is_array($__devmsgs))
+        if ( in_dev() )
         {
             $start = microtime(true);
             $result = $this->mysqli->query($query);
@@ -97,13 +92,13 @@ class Clipbucket_db
         } else {
             $result = $this->mysqli->query($query);
         }
-        $this->num_rows = $result->num_rows;
 
 		$data = array();
 		if( $result )
 		{
-			while( $row = $result->fetch_assoc() )
+			while( $row = $result->fetch_assoc() ) {
 				$data[] = $row;
+			}
 
 			$result->close();
 		}
@@ -125,28 +120,18 @@ class Clipbucket_db
 	 */
     function select($tbl,$fields='*', $cond=false, $limit=false, $order=false, $ep=false)
 	{
-        global $__devmsgs;
-        
         $query_params = '';
-        //Making Condition possible
-        if($cond)
-            $where = " WHERE ";
-        else
-            $where = false;
 
-        $query_params .= $where;
-        if($where) {
-            $query_params .= $cond;
-        }
-
+		if($cond)
+			$query_params .= ' WHERE '.$cond;
         if($order)
-            $query_params .= " ORDER BY $order ";
+            $query_params .= ' ORDER BY '.$order;
         if($limit)
-            $query_params .= " LIMIT $limit ";
+            $query_params .= ' LIMIT '.$limit;
 
-       $query = " SELECT $fields FROM $tbl $query_params $ep ";
+       $query = 'SELECT '.$fields.' FROM '.$tbl.$query_params.' '.$ep;
     
-        if (is_array($__devmsgs)) {
+        if ( in_dev() ) {
             $start = microtime();
             $data = $this->_select($query);
             $end = microtime();
@@ -168,11 +153,11 @@ class Clipbucket_db
 	 */
     function count($tbl, $fields='*', $cond=false)
 	{
-        global $__devmsgs;
+		$condition = '';
         if ($cond)
             $condition = " WHERE $cond ";
-        $query = "SELECT COUNT($fields) FROM $tbl $condition";
-        if (is_array($__devmsgs)) {
+        $query = 'SELECT COUNT('.$fields.') FROM '.$tbl.$condition;
+        if ( in_dev() ) {
             $start = microtime();
             $result = $this->_select($query);
             $end = microtime();
@@ -217,9 +202,8 @@ class Clipbucket_db
     {
 		$this->ping();
 
-        global $__devmsgs;
         try {
-            if (is_array($__devmsgs)) {
+            if( in_dev() ) {
                 $start = microtime(true);
                 $data = $this->mysqli->query($query);
                 $end = microtime(true);
@@ -228,18 +212,10 @@ class Clipbucket_db
             } else {
                 $data = $this->mysqli->query($query);
             }
-            if( !$data ){
-				if( in_dev() ){
-					e('SQL : '.$query.'<br/>ERROR : '.$this->mysqli->error);
-					error_log('SQL : '.$query.'<br/>ERROR : '.$this->mysqli->error);
-				} else {
-					e(lang('technical_error'));
-				}
-			}
-
+			$this->handleError($query);
 			return $data;
-        } catch(DB_Exception $e) {
-            $e->getError();
+        } catch(Exception $e) {
+			$this->handleError($query);
         }
     }
 
@@ -261,8 +237,6 @@ class Clipbucket_db
     function update($tbl,$flds,$vls,$cond,$ep=NULL)
 	{
 		$this->ping();
-
-        global $__devmsgs;
 
         $total_fields = count($flds);
         $count = 0;
@@ -288,13 +262,13 @@ class Clipbucket_db
                 $fields_query .= ',';
         }
         //Complete Query
-        $query = "UPDATE $tbl SET $fields_query WHERE $cond $ep";
+        $query = 'UPDATE '.$tbl.' SET '.$fields_query.' WHERE '.$cond.' '.$ep;
 
         if(isset($this->total_queries)) $this->total_queries++;
         $this->total_queries_sql[] = $query;
 
         try {
-            if (is_array($__devmsgs)) {
+            if( in_dev() ) {
                 $start = microtime();
                 $this->mysqli->query($query);
                 $end = microtime();
@@ -303,17 +277,19 @@ class Clipbucket_db
             } else {
                 $this->mysqli->query($query);
             }
-        } catch(DB_Exception $e) {
-            $e->getError();
+			$this->handleError($query);
+        } catch(Exception $e) {
+			$this->handleError($query);
         }
     }
 
 	/**
 	 * Update database fields { table, associative array style }
 	 *
-	 * @param $tbl
-	 * @param $fields
-	 * @param $cond
+	 * @param      $tbl
+	 * @param      $fields
+	 * @param      $cond
+	 * @param null $ep
 	 *
 	 * @return bool : { boolean }
 	 *
@@ -321,7 +297,7 @@ class Clipbucket_db
 	 * @internal param $ : { array } { $fields } { associative array with fields and values }
 	 * @internal param $ : { string } { $cond } { mysql condition for query }
 	 */
-    function db_update($tbl, $fields, $cond)
+    function db_update($tbl, $fields, $cond, $ep=null)
 	{
 		$this->ping();
 
@@ -333,22 +309,22 @@ class Clipbucket_db
                 $fields_query .= ',';
             $needle = substr($val, 0, 2);
             if ($needle != '{{') {
-                $value = "'" . filter_sql($val) . "'";
+                $value = "'" . mysql_clean($val) . "'";
             } else {
                 $val = substr($val, 2, strlen($val) - 4);
-                $value = filter_sql($val);
+                $value = mysql_clean($val);
             }
 
             $fields_query .= $field . "=$value ";
             $count += $count;
         }
         //Complete Query
-        $query = "UPDATE $tbl SET $fields_query WHERE $cond $ep";
+        $query = 'UPDATE '.$tbl.' SET '.$fields_query.' WHERE '.$cond.' '.$ep;
         try {
-        	global $db;
-            $db->mysqli->query($query);
-        } catch(DB_Exception $e) {
-            $e->getError();
+            $this->mysqli->query($query);
+			$this->handleError($query);
+        } catch(Exception $e) {
+			$this->handleError($query);
         }
         return true;
     }
@@ -370,7 +346,6 @@ class Clipbucket_db
 	{
 		$this->ping();
 
-        global $__devmsgs;
         $total_fields = count($flds);
         $fields_query = "";
         $count = 0;
@@ -389,11 +364,11 @@ class Clipbucket_db
             }
         }
         //Complete Query
-        $query = "DELETE FROM $tbl WHERE $fields_query $ep";
+        $query = 'DELETE FROM '.$tbl.' WHERE '.$fields_query.' '.$ep;
         if(isset($this->total_queries)) $this->total_queries++;
         $this->total_queries_sql[] = $query;
         try {
-            if (is_array($__devmsgs)) {
+            if( in_dev() ) {
                 $start = microtime();
                 $this->mysqli->query($query);
                 $end = microtime();
@@ -402,8 +377,9 @@ class Clipbucket_db
             } else {
                 $this->mysqli->query($query);
             }
-        } catch(DB_Exception $e) {
-            $e->getError();
+			$this->handleError($query);
+        } catch(Exception $e) {
+			$this->handleError($query);
         }
     }
 
@@ -415,7 +391,7 @@ class Clipbucket_db
 	 * @param      $vls
 	 * @param null $ep
 	 *
-	 * @return mixed : { integer } { $insert_id } { id of inserted element }
+	 * @return mixed|void : { integer } { $insert_id } { id of inserted element }
 	 *
 	 * @internal param $ : { string } { $tbl } { table to insert values in }
 	 * @internal param $ : { array } { $flds } { array of fields to update }
@@ -455,7 +431,6 @@ class Clipbucket_db
                 $values_query .= "'".$val."'";
             }
 
-            $val ;
             if($total_values!=$count) {
                 $values_query .= ',';
             }
@@ -467,9 +442,10 @@ class Clipbucket_db
 
         try {
             $this->mysqli->query($query);
+			$this->handleError($query);
             return $this->insert_id();
-        } catch(DB_Exception $e) {
-            echo $e->getError();
+        } catch(Exception $e) {
+			$this->handleError($query);
         }
 
     }
@@ -497,10 +473,10 @@ class Clipbucket_db
             $query_fields[] = $field;
             $needle = substr($val, 0, 2);
             if ($needle != '{{') {
-                $query_values[] = "'" . filter_sql($val) . "'";
+                $query_values[] = "'" . mysql_clean($val) . "'";
             } else {
                 $val = substr($val, 2, strlen($val) - 4);
-                $query_values[] = filter_sql($val);
+                $query_values[] = mysql_clean($val);
             }
 
             $count += $count;
@@ -514,11 +490,12 @@ class Clipbucket_db
 		$this->total_queries_sql[] = $query;
         try {
 			$this->mysqli->query($query);
-        } catch(DB_Exception $e) {
-			$this->getError();
-        }
 
-        return $this->insert_id();
+			$this->handleError($query);
+			return $this->insert_id();
+        } catch(Exception $e) {
+			$this->handleError($query);
+        }
     }
 
     /**
@@ -546,13 +523,17 @@ class Clipbucket_db
         return $this->mysqli->real_escape_string($var);
     }
 
-    function get_error()
+    private function handleError($query)
 	{
-		if( mysqli_connect_errno() )
-			return "Failed to connect to MySQL: ".mysqli_connect_error();
-		if( $this->mysqli->error )
-			return "Error : ".$this->mysqli->error;
-		return "";
+		if( $this->mysqli->error != '' ) {
+			if( in_dev() ) {
+				e( 'SQL : ' . $query . '<br/>ERROR : ' . $this->mysqli->error );
+				error_log('SQL : ' . $query);
+				error_log('ERROR : ' . $this->mysqli->error );
+			} else {
+				e( lang( 'technical_error' ) );
+			}
+		}
 	}
 
 	private function ping()
