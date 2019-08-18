@@ -497,25 +497,28 @@
     function validate_vid_category($array=NULL)
     {
         global $cbvid;
-        if($array==NULL)
+        if($array==NULL){
             $array = $_POST['category'];
+		}
+
         if(count($array)==0)
             return false;
-        else
-        {
 
-            foreach($array as $arr)
-            {
-                if($cbvid->category_exists($arr))
-                    $new_array[] = $arr;
-            }
-        }
+		$new_array = array();
+		foreach($array as $arr)
+		{
+			if($cbvid->category_exists($arr)){
+				$new_array[] = $arr;
+			}
+		}
+
         if(count($new_array)==0)
         {
             e(lang('vdo_cat_err3'));
             return false;
-        }elseif(count($new_array)>ALLOWED_VDO_CATS)
-        {
+        }
+
+        if(count($new_array)>ALLOWED_VDO_CATS) {
             e(sprintf(lang('vdo_cat_err2'),ALLOWED_VDO_CATS));
             return false;
         }
@@ -771,7 +774,7 @@
 	 * @param bool   $ingore_file_status
 	 * @param string $failed_status
 	 */
-    function update_processed_video($file_array,$status='Successful',$ingore_file_status=false,$failed_status='')
+    function update_processed_video($file_array,$status='Successful',$ingore_file_status=false,$failed_status='none')
     {
         global $db;
         $file_name = $file_array['cqueue_name'];
