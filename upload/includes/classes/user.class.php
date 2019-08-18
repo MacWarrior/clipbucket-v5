@@ -2910,6 +2910,11 @@ class userquery extends CBCategory{
 
 	/**
 	 * Function used to get user access log
+	 *
+	 * @param      $uid
+	 * @param null $limit
+	 *
+	 * @return array|bool
 	 */
 	function get_user_action_log($uid,$limit=NULL)
 	{

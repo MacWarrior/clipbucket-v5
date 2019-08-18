@@ -37,6 +37,9 @@ class CBLogs
 		if( !$userid ){
 			$userid = $userquery->udetails['userid'];
 		}
+		if( !is_numeric($userid) ){
+			$userid = 0;
+		}
 
 		$username = getArrayValue($details_array, 'username');
 		if( !$username ){
@@ -52,12 +55,20 @@ class CBLogs
 		if( !$userlevel ){
 			$userlevel = getArrayValue($userquery->udetails, 'level');
 		}
+		if( !is_numeric($userlevel) ){
+			$userlevel = 0;
+		}
 
 		$action_obj_id = getArrayValue($details_array, 'action_obj_id');
+		if( !is_numeric($action_obj_id) ){
+			$action_obj_id = 0;
+		}
+
 		$action_done_id = getArrayValue($details_array, 'action_done_id');
 		if( !is_numeric($action_done_id) ){
 			$action_done_id = 0;
 		}
+
 		$success = getArrayValue($details_array, 'success');
 		$details = getArrayValue($details_array, 'details');
 
