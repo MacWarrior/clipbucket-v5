@@ -110,7 +110,7 @@ class language
 		}
 		
 		$results = $db->select(tbl("phrases"),'*'," id = '".mysql_clean($name)."' OR varname = '".mysql_clean($name)."' $lang_query ");
-		if($db->num_rows > 0 )
+		if(count($results) > 0 )
 			return $results[0];
 		return false;
 	}
@@ -170,7 +170,7 @@ class language
 		
 		$results = $db->select(tbl("phrases"),"COUNT(id) as total"," lang_iso = '".$lang_code."' $extra_param");
 
-		if($db->num_rows>0)
+		if(count($results)>0)
 			return $results[0]['total'];
 		return 0;
 	}
@@ -242,7 +242,7 @@ class language
 		$id = mysql_clean($id);
 		$results = $db->select(tbl("languages"),"*"," language_code ='$id' OR language_id = '$id'");
 
-		if($db->num_rows>0)
+		if(count($results)>0)
 			return $results[0];
 		return false;
 	}

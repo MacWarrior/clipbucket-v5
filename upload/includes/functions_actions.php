@@ -1,16 +1,4 @@
 <?php
-
-/**
- * User: Arslan Hassan @arslancb
- * Date: 11/10/13
- * Time: 12:36 PM
- *
- * @Since : 2.7
- *
- * Add ClipBucket actions to apply custom functions on ClipBucket core functions.
- *
- */
-
 /**
  * Register a clipbucket function
  *
@@ -19,7 +7,6 @@
  * @param Array $extra_params
  * @param Array $scope
  */
-
 function cb_register_action($func_name,$place,$extra_params=Array(),$scope=array('global'))
 {
     global $Cbucket;
@@ -31,20 +18,19 @@ function cb_register_action($func_name,$place,$extra_params=Array(),$scope=array
             'scope' => $scope
         );
 
-
         $Cbucket->actions_list = $actions_list;
     }
 }
-
 
 /**
  * Call a register function and returns output if available.
  *
  * @param String $place
- * @param Array $params
- * @param Array $scope
+ * @param Array  $params
+ * @param Array  $scope
+ *
+ * @return mixed
  */
-
 function cb_do_action($place,$params=array(),$scope=array('global'))
 {
 
@@ -61,23 +47,19 @@ function cb_do_action($place,$params=array(),$scope=array('global'))
                 if($params && $action['params'])
                 {
                     $params = array_merge($params,$action['params']);
-                }elseif($action['params'])
-                {
+                }elseif($action['params']) {
                     $params = $action['params'];
                 }
 
                 if($params)
                 {
                     $output = $action['action']($params);
-                }else
-                {
+                }else {
                     $output = $action['action']();
                 }
-
-
             }
-
-            if(isset($output) && $output) return $output;
+            if(isset($output) && $output)
+            	return $output;
         }
     }
 
@@ -87,7 +69,9 @@ function cb_do_action($place,$params=array(),$scope=array('global'))
  * get list of functions available for specific place under defined scope (default:global)
  *
  * @param String $place
- * @param Array $scope
+ * @param Array  $scope
+ *
+ * @return
  */
 function cb_get_actions($place,$scope=array('global'))
 {
@@ -98,20 +82,3 @@ function cb_get_actions($place,$scope=array('global'))
         return $Cbucket->actions_list[$place];
     }
 }
-
-/**
-     * Function used to count total notifications
-     */
-    function count_total_notification($item=false)
-    {
-        global $db;
-        $type = $this->type;
-        $results = $db->count(tbl('notifications'),"*");
-        echo  $db->query;                  
-        if($db->num_rows>0)
-            return $results;
-        else
-            return false;
-    }
-
-?>

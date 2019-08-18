@@ -937,7 +937,7 @@
 	{
 		global $db;
 		$results = $db->select(tbl("validation_re"),"*"," re_code='$code'");
-		if($db->num_rows>0) {
+		if(count($results)>0) {
 			return $results[0]['re_syntax'];
 		}
 		return false;
@@ -2462,7 +2462,7 @@
 	{
 		global $db;
 		$result = $db->select(tbl("countries"),"name_en,iso2"," iso2='$code' OR iso3='$code'");
-		if($db->num_rows>0) {
+		if(count($result)>0) {
 			$flag = '';
 			$result = $result[0];
 			if(SHOW_COUNTRY_FLAG) {
@@ -4475,7 +4475,7 @@
 		$query_md5 = md5($je_query);
 		$select = $db->select(tbl('counters'),"*","section='$section' AND query_md5='$query_md5' 
 		AND '$validTime' < date_added");
-		if($db->num_rows>0) {
+		if(count($select)>0) {
 			return $select[0]['counts'];
 		}
 		return false;

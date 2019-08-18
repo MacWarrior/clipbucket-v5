@@ -59,7 +59,7 @@
 		{
 			global $db;
 			$result = $db->select(tbl($this->page_tbl),"*"," page_id ='$id' ");
-			if($db->num_rows>0)
+			if(count($result)>0)
 				return $result[0];
 			return false;
 		}
@@ -109,7 +109,7 @@
 			}
 
 			$result = $db->select(tbl($this->page_tbl),"*",$cond,$limit,$order);
-			if($db->num_rows>0)
+			if(count($result)>0)
 				return $result;
 			return false;
 		}

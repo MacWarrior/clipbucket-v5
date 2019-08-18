@@ -584,7 +584,7 @@ class myquery
 	{
 		global $db,$userquery;
 		$result = $db->select(tbl("comments"),"*"," comment_id='$id'");
-		if($db->num_rows>0)
+		if(count($result)>0)
 		{
 			$result = $result[0];
 			if($result['userid'])
@@ -981,7 +981,7 @@ class myquery
 	{
 		global $db;
 		$result = $db->select(tbl("conversion_queue"),"*",$cond,$limit,$order);
-		if($db->num_rows>0)
+		if(count($result)>0)
 			return $result;
 		return false;
 	}

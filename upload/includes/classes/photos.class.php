@@ -373,7 +373,7 @@ class CBPhotos
 		else
 			$result = $db->select(tbl($this->p_tbl),"*"," photo_key = '$pid'");
 
-		if($db->num_rows > 0)
+		if(count($result) > 0)
 			return $result[0];
 		return false;
 	}
@@ -601,7 +601,7 @@ class CBPhotos
             $result = select( $query );
 									  
 			// We found nothing from TITLE of Photos, let's try TAGS
-			if($db->num_rows == 0)
+			if(count($result) == 0)
 			{
                 $query = $main_query;
 
@@ -726,8 +726,8 @@ class CBPhotos
 	function pkey_exists($key)
 	{
 		global $db;
-		$db->select(tbl("photos"),"photo_key"," photo_key = '$key'");
-		if($db->num_rows > 0)
+		$result = $db->select(tbl("photos"),"photo_key"," photo_key = '$key'");
+		if(count($result) > 0)
 			return true;
 		return false;
 	}

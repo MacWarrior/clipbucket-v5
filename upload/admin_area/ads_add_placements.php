@@ -34,7 +34,7 @@
 	//Getting List Of Placement
 	$sql = "SELECT * FROM ".tbl("ads_placements");
 	$ads_placements = db_select($sql);
-	$total_placements = $db->num_rows;
+	$total_placements = count($ads_placements);
 	//Getting total Ads in each placement
 	for($id=0;$id<=$total_placements;$id++)
 	{

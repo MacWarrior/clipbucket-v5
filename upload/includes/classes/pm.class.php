@@ -290,42 +290,51 @@ class cb_pm
 		}	
 		return $attachments;
 	}
-	
+
 	/**
 	 * function used to check weather message is reply or not
+	 *
+	 * @param $id
+	 * @param $uid
+	 *
+	 * @return bool
 	 */
 	function is_reply($id,$uid)
 	{
 		global $db;
 		$results = $db->select(tbl($this->tbl),'message_to'," message_id = '$id' AND message_to LIKE '%#$uid#%'");
-		if($db->num_rows>0)
+		if(count($results)>0)
 			return true;
-		else
-			return false;
+		return false;
 	}
-	
+
 	/**
 	 * Function used to get message from inbox, set the template
 	 * and display it
+	 *
+	 * @param $id
+	 *
+	 * @return bool
 	 */
 	function get_message($id)
 	{
 		global $db;
 		$result = $db->select(tbl($this->tbl),'*'," message_id='$id'");
-		$result = $result[0];
-		if($db->num_rows>0)
+		if(count($result)>0)
 		{
 			return $result[0];
-		}else{
-			e(lang('no_pm_exist'));
-			return false;
-		}	
+		}
+		e(lang('no_pm_exist'));
+		return false;
 	}
-	
+
 	/**
 	 * Function used to get user INBOX Message
+	 *
 	 * @param MESSAGE ID
 	 * @param USER ID
+	 *
+	 * @return bool
 	 */
 	function get_inbox_message($mid,$uid=NULL)
 	{
@@ -334,19 +343,21 @@ class cb_pm
 			$uid = userid();
 		$result = $db->select(tbl($this->tbl.',users'),tbl($this->tbl.'.*,users.userid,users.username')," message_id='$mid' AND message_to LIKE '%#$uid#%' AND userid=".tbl($this->tbl).".message_from",NULL," date_added DESC ");
 		
-		if($db->num_rows>0)
+		if(count($result)>0)
 		{
 			return $result[0];
-		}else{
-			e(lang('no_pm_exist'));
-			return false;
-		}		
+		}
+		e(lang('no_pm_exist'));
+		return false;
 	}
-	
+
 	/**
 	 * Function used to get user OUTBOX Message
+	 *
 	 * @param MESSAGE ID
 	 * @param USER ID
+	 *
+	 * @return bool
 	 */
 	function get_outbox_message($mid,$uid=NULL)
 	{
@@ -355,13 +366,12 @@ class cb_pm
 			$uid = userid();
 		$result = $db->select(tbl($this->tbl.',users'),tbl($this->tbl.'.*,users.userid,users.username')," message_id='$mid' AND message_from='$uid' AND userid=".tbl($this->tbl.".message_from"));
 		
-		if($db->num_rows>0)
+		if(count($result)>0)
 		{
 			return $result[0];
-		}else{
-			e(lang('no_pm_exist'));
-			return false;
-		}		
+		}
+		e(lang('no_pm_exist'));
+		return false;
 	}
 	
 	

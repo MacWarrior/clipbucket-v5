@@ -171,9 +171,14 @@ class cbactions
 	function add_to_favorites($id){ return $this->add_to_fav($id); }
 	function add_favorites($id){ return $this->add_to_fav($id); }
 	function add_fav($id){ return $this->add_to_fav($id); }
-	 
+
 	/**
 	 * Function used to check weather object already added to favorites or not
+	 *
+	 * @param      $id
+	 * @param null $uid
+	 *
+	 * @return bool
 	 */
 	function fav_check($id,$uid=NULL)
 	{
@@ -184,13 +189,17 @@ class cbactions
 		if(!$uid)
 			$uid =userid();
 		$results = $db->select(tbl($this->fav_tbl),"favorite_id"," id='".$id."' AND userid='".$uid."' AND type='".$this->type."'");
-		if($db->num_rows>0)
+		if(count($results)>0)
 			return true;
 		return false;
 	}
-	 
+
 	/**
 	 * Function used to check weather object exists or not
+	 *
+	 * @param $id
+	 *
+	 * @return mixed
 	 */
 	function exists($id)
 	{
@@ -235,10 +244,12 @@ class cbactions
 		}
 	}
 	function flag_it($id){ return $this->report_id($id); }
-	
-	
+
+
 	/**
 	 * Function used to delete flags
+	 *
+	 * @param $id
 	 */
 	function delete_flags($id)
 	{
@@ -247,25 +258,31 @@ class cbactions
 		$db->delete(tbl($this->flag_tbl),array("id","type"),array($id,$this->type));
 		e(sprintf(lang("type_flags_removed"),$this->name),"m");
 	}
-	
-	
+
+
 	/**
 	 * Function used to check weather user has already reported the object or not
+	 *
+	 * @param $id
+	 *
+	 * @return bool
 	 */
 	function report_check($id)
 	{
 		global $db;
 		$id = mysql_clean($id);
 		$results = $db->select(tbl($this->flag_tbl),"flag_id"," id='".$id."' AND type='".$this->type."' AND userid='".userid()."'");
-		if($db->num_rows>0)
+		if(count($results)>0)
 			return true;
 		return false;
 	}
-	
-	
-	
+
 	/**
 	 * Function used to content
+	 *
+	 * @param $id
+	 *
+	 * @throws phpmailerException
 	 */
 	function share_content($id)
 	{
@@ -329,10 +346,13 @@ class cbactions
 			e(sprintf(lang("obj_not_exists"),$this->name));
 		}
 	}
-	
-	
+
 	/**
 	 * Get Used Favorites
+	 *
+	 * @param $params
+	 *
+	 * @return array|bool
 	 */
 	function get_favorites($params)
 	{
@@ -347,21 +367,19 @@ class cbactions
 			$uid=userid();
 		if($cond)
 			$cond = " AND ".$cond;
-		
-		if(!$params['count_only'])
-		{
-			$results = $db->select(tbl($this->fav_tbl.",".$this->type_tbl),"*"," ".tbl($this->fav_tbl).".type='".$this->type."' 
-							   AND ".tbl($this->fav_tbl).".userid='".$uid."' 
-							   AND ".tbl($this->type_tbl).".".$this->type_id_field." = ".tbl($this->fav_tbl).".id".$cond,$limit,$order);
-		}
+
 		if($params['count_only'])
 		{
 			return $results = $db->count(tbl($this->fav_tbl.",".$this->type_tbl),"*"," ".tbl($this->fav_tbl).".type='".$this->type."' 
 							   AND ".tbl($this->fav_tbl).".userid='".$uid."' 
 							   AND ".tbl($this->type_tbl).".".$this->type_id_field." = ".tbl($this->fav_tbl).".id".$cond);
 		}
+
+		$results = $db->select(tbl($this->fav_tbl.",".$this->type_tbl),"*"," ".tbl($this->fav_tbl).".type='".$this->type."' 
+						   AND ".tbl($this->fav_tbl).".userid='".$uid."' 
+						   AND ".tbl($this->type_tbl).".".$this->type_id_field." = ".tbl($this->fav_tbl).".id".$cond,$limit,$order);
 		
-		if($db->num_rows>0)
+		if(count($results)>0)
 			return $results;
 		return false;
 	}
@@ -410,7 +428,7 @@ class cbactions
     	$results = $db->select(tbl($this->flag_tbl.",".$this->type_tbl),"*,
 							   count(*) AS total_flags",tbl($this->flag_tbl).".id = ".tbl($this->type_tbl).".".$this->type_id_field." 
 							   AND ".tbl($this->flag_tbl).".type='".$this->type."' GROUP BY ".tbl($this->flag_tbl).".id ,".tbl($this->flag_tbl).".type ",$limit);				   
-		if($db->num_rows>0)
+		if(count($results)>0)
 			return $results;
 		return false;
 	}
@@ -426,7 +444,7 @@ class cbactions
 	{
 		global $db;
 		$results = $db->select(tbl($this->flag_tbl),"*","id = '$id' AND type='".$this->type."'");
-		if($db->num_rows>0)
+		if(count($results)>0)
 			return $results;
 		return false;
 	}
@@ -440,9 +458,7 @@ class cbactions
 		global $db;
 		$results = $db->select(tbl($this->flag_tbl.",".$this->type_tbl),"id",tbl($this->flag_tbl).".id = ".tbl($this->type_tbl).".".$this->type_id_field." 
 							   AND type='".$this->type."' GROUP BY ".tbl($this->flag_tbl).".id ,".tbl($this->flag_tbl).".type ");
-		if($db->num_rows>0)
-			return count($results);
-		return 0;
+		return count($results);
 	}
 
     function load_basic_fields( $array = null )
@@ -849,9 +865,14 @@ class cbactions
         }
 		return false;
 	}
-	
+
 	/**
 	 * Function used to check weather playlist item exists or not
+	 *
+	 * @param      $id
+	 * @param null $pid
+	 *
+	 * @return bool
 	 */
 	function playlist_item_with_obj($id,$pid=NULL)
 	{
@@ -860,13 +881,15 @@ class cbactions
 		if($pid)
 			$pid_cond = " AND playlist_id='$pid'";
 		$result = $db->select(tbl($this->playlist_items_tbl),"*"," object_id='$id' $pid_cond");
-		if($db->num_rows>0)
+		if(count($result)>0)
 			return $result[0];
 		return false;
 	}
-	
+
 	/**
 	 * Function used to update playlist details
+	 *
+	 * @param null $array
 	 */
 	function edit_playlist( $array = null )
 	{
@@ -1119,26 +1142,25 @@ class cbactions
      /**
      * this method has been deprecated 
       */
-	
      function get_playlists_no_more_cb26()
 	{
-
 		global $db;
 		$result = $db->select(tbl($this->playlist_tbl),"*"," playlist_type='".$this->type."' AND userid='".userid()."'");
 		
-		if($db->num_rows>0)
+		if(count($result)>0)
 			return $result;
 		return false;
 	}
 
 	/**
-     * Get playlist thumb
-     * 
-     * return a group of playlist thumbs
-     * 
-     * @param PID playlistid
-     * @return THUMBS Array 
-     */
+	 * Get playlist thumb
+	 *
+	 * return a group of playlist thumbs
+	 *
+	 * @param PID playlistid
+	 *
+	 * @return array Array
+	 */
     function getPlaylistThumb($pid)
     {
         $pid = (int) $pid;
@@ -1160,9 +1182,15 @@ class cbactions
 
         return $array;
     }
-	
+
 	/**
 	 * Function used to get playlist items
+	 *
+	 * @param      $playlist_id
+	 * @param null $order
+	 * @param int  $limit
+	 *
+	 * @return array|bool
 	 */
 	function get_playlist_items( $playlist_id, $order = null, $limit = -1 )
 	{
@@ -1175,23 +1203,31 @@ class cbactions
         );
 
 		$result = $db->select(tbl($this->playlist_items_tbl),"*","playlist_id='$pid'");
-		if($db->num_rows>0)
+		if(count($result)>0)
 			return $result;
 		return false;
 	}
-	
+
 	/**
 	 * Function used to count playlist item
-	 */	
+	 *
+	 * @param $id
+	 *
+	 * @return bool
+	 */
 	function count_playlist_items($id)
 	{
 		global $db;
 		return $db->count(tbl($this->playlist_items_tbl),"playlist_item_id","playlist_id='$id'");
 	}
-	
-	
+
+
 	/**
 	 * Function used to count total playlist or items
+	 *
+	 * @param bool $item
+	 *
+	 * @return bool
 	 */
 	function count_total_playlist($item=false)
 	{

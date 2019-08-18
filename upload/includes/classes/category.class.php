@@ -64,7 +64,7 @@ abstract class CBCategory
 
 		global $db;
 		$results = $db->select(tbl($this->cat_tbl),"category_name"," category_id='$cid'");
-		if($db->num_rows>0)
+		if(count($results)>0)
 			return $results[0];
 
 		return false;
@@ -83,7 +83,7 @@ abstract class CBCategory
 
 		global $db;
 		$results = $db->select(tbl($this->cat_tbl),"*"," category_name='$name' ");
-		if($db->num_rows>0)
+		if(count($results)>0)
 			return $results[0];
 
 		return false;
@@ -542,7 +542,7 @@ abstract class CBCategory
 	{
 		global $db;
 		$results = $db->select(tbl($this->cat_tbl),"*"," isdefault='yes' ");
-		if($db->num_rows>0)
+		if(count($results)>0)
 			return $results[0];
 		return false;
 	}
@@ -755,7 +755,7 @@ abstract class CBCategory
 
 		global $db;
 		$result = $db->select(tbl($this->cat_tbl),"*"," category_id = $pid");
-		if($db->num_rows>0)
+		if(count($result)>0)
 			return $result;
 		return false;
 	}

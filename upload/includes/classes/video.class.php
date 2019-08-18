@@ -1065,8 +1065,7 @@ class CBvideo extends CBCategory
             $query .= $limit ? " LIMIT ".$limit : false;
 
             $result = select( $query );
-
-			if($db->num_rows == 0)
+			if(count($result) == 0)
 			{
 				$cond = "";
 				if($superCond)
@@ -1427,13 +1426,13 @@ class CBvideo extends CBCategory
 		if($idonly)
 		{
 			$results = $db->select(tbl("video"),"userid"," videoid='$vid' ",1);
-			if($db->num_rows>0)
+			if(count($results)>0)
 				return $results[0]['userid'];
 			return false;
 		}
 
 		$results = $db->select(tbl("video"),"*"," videoid='$vid' ",1);
-		if($db->num_rows>0)
+		if(count($results)>0)
 			return $results[0];
 		return false;
 	}
@@ -1534,7 +1533,7 @@ class CBvideo extends CBCategory
 		else
 			$results = $db->select(tbl("video"),"userid,allow_rating,rating,rated_by,voter_ids"," videokey='$id'");
 
-		if($db->num_rows>0)
+		if(count($results)>0)
 			return $results[0];
 		return false;
 	}

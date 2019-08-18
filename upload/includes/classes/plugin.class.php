@@ -194,11 +194,16 @@ class CBPlugin extends ClipBucket
 
 		return isset($plug_array) ? $plug_array : false;
 	}
-	
+
 	/**
-	* Function used to check weather plugin is instlled or not
-	* @param : $plugin_code STRING
-	*/
+	 * Function used to check weather plugin is instlled or not
+	 *
+	 * @param      $file
+	 * @param null $v
+	 * @param null $folder
+	 *
+	 * @return bool
+	 */
 	function is_installed($file,$v=NULL,$folder=NULL)
 	{
 		global $db;
@@ -211,17 +216,20 @@ class CBPlugin extends ClipBucket
 		$query = "SELECT plugin_file FROM plugins WHERE plugin_file='".$file."' $version_check $folder_check";
 		
 		$details = $db->select(tbl("plugins"),"plugin_file","plugin_file='".$file."' $version_check $folder_check");
-		if($db->num_rows>0)
+		if(count($details)>0)
 			return true;
-		else
-			return false;
+		return false;
 	}
-	
-	
+
+
 	/**
-	* get plugin details
-	* @param : $file STRING
-	*/
+	 * get plugin details
+	 *
+	 * @param      $plug_file
+	 * @param null $sub_dir
+	 *
+	 * @return bool
+	 */
 	function get_plugin_details($plug_file,$sub_dir=NULL)
 	{
 		if($sub_dir!='')

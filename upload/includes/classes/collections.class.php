@@ -987,7 +987,7 @@ class Collections extends CBCategory
 		$cid = mysql_clean($cid);
 		$user_tbl = tbl("users");
 		$result = $db->select(tbl($this->section_tbl.",users"),tbl($this->section_tbl).".*,$user_tbl.userid,$user_tbl.username"," collection_id = $cid AND ".tbl($this->section_tbl).".userid = $user_tbl.userid");
-		if($db->num_rows > 0)
+		if(count($result) > 0)
 			return $result[0]['userid'];
 		return false;
 	}
@@ -1881,12 +1881,9 @@ class Collections extends CBCategory
 		.tbl("collection_items.type='".$type."'")." AND ".tbl("collections.userid='".$userid."'")." AND "
 		.tbl("collections.active='yes'")." AND ".tbl("collection_items.object_id='".$objId."'"));
 		
-		if($db->num_rows>0)
-			$assign = $results;
-		else
-			$assign = false;
-			
-		return $assign;
+		if(count($results)>0)
+			return $results;
+		return false;
 	}
 	
 	/**

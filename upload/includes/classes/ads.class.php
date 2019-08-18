@@ -104,7 +104,7 @@ class AdsManager
 	}
 	
 	/**
-	 * Function used to delete advertisments
+	 * Function used to delete advertisements
 	 * @param Ad Id
 	 */	
 	function DeleteAd($id)
@@ -214,77 +214,88 @@ class AdsManager
 	
 	
 	/** 
-	 * Function usd to get all placemetns
+	 * Function usd to get all placements
 	 */
 	function get_placements()
 	{
 		global $db;
 		
 		$result = $db->select(tbl("ads_placements"));
-		if($db->num_rows>0)
+		if(count($result)>0)
 			return $result;
-		else
-			return false;
+		return false;
 	}
 	
 	/**
-	 * Function used to get all advertisments
+	 * Function used to get all advertisements
 	 */
 	function get_advertisements()
 	{
 		global $db;
 		
 		$result = $db->select(tbl("ads_data"));
-		if($db->num_rows>0)
+		if(count($result)>0)
 			return $result;
-		else
-			return false;
-
+		return false;
 	}
-	
+
 	/**
 	 * Function used to get placement
+	 *
+	 * @param $place
+	 *
+	 * @return bool
 	 */
 	function get_placement($place)
 	{
 		global $db;
 		$result = $db->select(tbl("ads_placements"),"*"," placement='$place' OR placement_id='$place' ");
-		if($db->num_rows>0)
+		if(count($result)>0)
 			return $result[0];
-		else
-			return false;
+		return false;
 	}
-	
+
 	/**
 	 * Function used to create placement name
+	 *
+	 * @param $place
+	 *
+	 * @return bool
 	 */
 	function get_placement_name($place)
 	{
 		$details = $this->get_placement($place);
 		if($details)
 			return $details['placement_name'];
-		else
-			return false;
+		return false;
 	}
-	
+
 	/**
-	 * Function used to get advertismetn
+	 * Function used to get advertisement
+	 *
+	 * @param $id
+	 *
+	 * @return array|bool
 	 */
 	function get_ad_details($id)
 	{
 		global $db;
 		$result = $db->select(tbl("ads_data"),"*"," 	ad_placement='$id' OR ad_id='$id'");
-		if($db->num_rows>0)
+		if(count($result)>0)
 		{
 			$result = $result[0];
 			$result['ad_code'] = stripslashes($result['ad_code']);
 			return $result;
-		}else
-			return false;
+		}
+		return false;
 	}
-	
+
 	/**
 	 * Function used to check weather advertisment exists or not
+	 *
+	 * @param $id
+	 *
+	 * @return bool
 	 */
 	function ad_exists($id)
 	{
@@ -292,8 +303,7 @@ class AdsManager
 		$count = $db->count(tbl("ads_data"),"ad_id"," ad_id='$id' ");
 		if($count>0)
 			return true;
-		else
-			return false;
+		return false;
 	}
 	
 	

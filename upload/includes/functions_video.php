@@ -537,8 +537,8 @@
     function vkey_exists($key)
     {
         global $db;
-        $db->select(tbl("video"),"videokey"," videokey='$key'");
-        if($db->num_rows>0)
+        $results = $db->select(tbl("video"),"videokey"," videokey='$key'");
+        if(count($results)>0)
             return true;
 		return false;
     }
@@ -556,7 +556,7 @@
         global $db;
         $results = $db->select(tbl("video"),"videoid,file_name"," file_name='$name'");
 
-        if($db->num_rows > 0)
+        if(count($results) > 0)
             return $results[0]['videoid'];
 		return false;
     }

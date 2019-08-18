@@ -24,11 +24,17 @@ class Session
 		$this->id = session_id() ;
 		$this->timeout  = COOKIE_TIMEOUT;
 	}
-	
+
 	/**
 	 * Function used to add session
-     * @todo: Find a proper solution to avoid database crashing because of sessions insertion and updation
-     */
+	 *
+	 * @param      $user
+	 * @param      $name
+	 * @param bool $value
+	 * @param bool $reg
+	 *
+	 * @todo: Find a proper solution to avoid database crashing because of sessions insertion and updation
+	 */
 
 	function add_session($user,$name,$value=false,$reg=false)
 	{
@@ -36,9 +42,9 @@ class Session
 		if(!$value)
 			$value = $this->id;
 		
-		$this->get_user_session($user,$name,true);
+		$sessions = $this->get_user_session($user,$name,true);
 		
-		if($db->num_rows>0)
+		if(count($sessions)>0)
 		{
 			$db->delete(tbl($this->tbl),array('session_string','session'),array($name,$this->id));
 		}
@@ -62,11 +68,16 @@ class Session
 			$this->session_val($name,$value);
 		}
 	}
-	
-	
-	
+
+
 	/**
 	 * Function is used to get session
+	 *
+	 * @param      $user
+	 * @param bool $session_name
+	 * @param bool $phpsess
+	 *
+	 * @return array
 	 */
 	function get_user_session($user,$session_name=false,$phpsess=false)
 	{

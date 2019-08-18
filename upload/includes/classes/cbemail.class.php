@@ -29,7 +29,7 @@
 		{
 			global $db;
 			$result = $db->select(tbl($this->db_tpl),"*"," email_template_code='".$code."' OR email_template_id='$code' ");
-			if($db->num_rows>0)
+			if(count($result)>0)
 			{
 				$result[0]['email_template'] = stripslashes($result[0]['email_template']);
 				$result[0]['email_template_subject'] = stripslashes($result[0]['email_template_subject']);
@@ -103,7 +103,7 @@
 		{
 			global $db;
 			$results = $db->select(tbl($this->db_tpl),"*",NULL,NULL," email_template_name DESC");
-			if($db->num_rows>0)
+			if(count($results)>0)
 				return $results;
 			return false;
 		}
@@ -194,7 +194,7 @@
 			global $db;
 			$results = $db->select(tbl("mass_emails"),"*");
 
-			if($db->num_rows>0)
+			if(count($results)>0)
 			{
 				return $results;
 			}
@@ -244,7 +244,7 @@
 		{
 			global $db;
 			$result = $db->select(tbl("mass_emails"),"*","id='$id'");
-			if($db->num_rows>0)
+			if(count($result)>0)
 			{
 				return $result[0];
 			}

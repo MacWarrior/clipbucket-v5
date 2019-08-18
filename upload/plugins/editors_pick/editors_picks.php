@@ -158,14 +158,14 @@ if(!function_exists('editors_pick'))
 	{
 		global $db;
 		$result = $db->select(tbl("editors_picks"),"*"," pick_id='$id'");
-		if($db->num_rows>0)
+		if(count($result)>0)
 		{
 			$result = $result[0];
 			$sort = $result['sort'];
 			if($sort>get_lowest_sort_number())
 			{
 				$less_result = $db->select(tbl("editors_picks"),"*"," sort<$sort",1);
-				if($db->num_rows>0)
+				if(count($less_result)>0)
 				{
 					$less_result = $less_result[0];
 					$new_sort = $less_result['sort'];
@@ -185,14 +185,14 @@ if(!function_exists('editors_pick'))
 	{
 		global $db;
 		$result = $db->select(tbl("editors_picks"),"*"," pick_id='$id'");
-		if($db->num_rows>0)
+		if(count($result)>0)
 		{
 			$result = $result[0];
 			$sort = $result['sort'];
 			if($sort<get_highest_sort_number())
 			{
 				$less_result = $db->select(tbl("editors_picks"),"*"," sort>$sort",1);
-				if($db->num_rows>0)
+				if(count($less_result)>0)
 				{
 					$less_result = $less_result[0];
 					$new_sort = $less_result['sort'];

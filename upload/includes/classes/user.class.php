@@ -467,7 +467,7 @@ class userquery extends CBCategory{
 		$results = $db->select(tbl("users"),
 							   "userid,email,level,usr_status,user_session_key,user_session_code",
 							   "(username='$username' OR userid='$username') AND password='$pass'");
-		if($db->num_rows > 0)
+		if(count($results) > 0)
 			return $results[0];
 		return false;
 	}
@@ -476,7 +476,7 @@ class userquery extends CBCategory{
 	{
 		global $db;
 		$results = $db->select(tbl("users"), "userid", "(username='$username' OR userid='$username')");
-		if($db->num_rows > 0)
+		if(count($results) > 0)
 			return $results[0];
 		return false;
 	}
@@ -1058,12 +1058,14 @@ class userquery extends CBCategory{
 		}	
 	}
 
-    /**
-     * Function used to confirm request
-     *
-     * @param      $rid
-     * @param null $uid
-     */
+	/**
+	 * Function used to confirm request
+	 *
+	 * @param      $rid
+	 * @param null $uid
+	 *
+	 * @throws phpmailerException
+	 */
 	function confirm_request($rid,$uid=NULL)
 	{
 		global $db;
@@ -1072,17 +1074,16 @@ class userquery extends CBCategory{
 			$uid = userid();
 			
 		$result = $db->select(tbl($this->dbtbl['contacts']),"*"," userid='$rid' AND contact_userid='$uid' ");
-		$result = $result[0];
 		
-		if($db->num_rows==0)
+		if(count($result)==0)
 			e(lang("friend_request_not_found"));
-		elseif($uid!=$result['contact_userid'])
+		elseif($uid!=$result[0]['contact_userid'])
 			e(lang("you_cant_confirm_this_request"));
-		elseif($result['confirmed']=='yes')
+		elseif($result[0]['confirmed']=='yes')
 			e(lang("friend_request_already_confirmed"));
 		else
 		{
-			$this->confirm_friend($uid,$result['userid']);
+			$this->confirm_friend($uid,$result[0]['userid']);
 		}
 	}
 
@@ -1113,7 +1114,7 @@ class userquery extends CBCategory{
 			tbl("contacts.userid")."='$uid' AND ".tbl("users.userid")."=".tbl("contacts.contact_userid")."
 			$query AND ".tbl("contacts").".contact_group_id='$group' ");
 			
-			if($db->num_rows>0)
+			if(count($result)>0)
 				return $result;
 			return false;
 		}
@@ -1144,7 +1145,7 @@ class userquery extends CBCategory{
 			tbl("contacts.userid,contacts.confirmed,contacts.request_type ,users.*"),
 			tbl("contacts.contact_userid")."='$uid' AND ".tbl("users.userid")."=".tbl("contacts.userid")."
 			AND ".tbl("contacts.confirmed")."='no' AND ".tbl("contacts").".contact_group_id='$group' ");
-			if($db->num_rows>0)
+			if(count($result)>0)
 				return $result;
 			return false;
 		}
@@ -1167,7 +1168,7 @@ class userquery extends CBCategory{
 	{
 		global $db;
 		$result = $db->select(tbl($this->dbtbl['contacts']),"*"," contact_userid='$uid' AND confirmed='no' AND contact_group_id='$group' ");
-		if($db->num_rows>0)
+		if(count($result)>0)
 			return $result;
 		return false;
 	}
@@ -1246,10 +1247,10 @@ class userquery extends CBCategory{
 						" message_id ",
 						"(".$boxtype."_user = '$user' OR ".$boxtype."_user_id = '$user') $status_query");
 
-			if($db->num_rows > 0)
+			if(count($results) > 0)
 			{
 				if($count)
-					return $db->num_rows;
+					return count($results);
 				return $results;
 			}
 			return false;
@@ -1324,8 +1325,9 @@ class userquery extends CBCategory{
 		
 		if(!$user)
 			return false;
+
 		$result = $db->select(tbl($this->dbtbl['subtbl']),"*"," subscribed_to='$to' AND userid='$user'");
-		if($db->num_rows>0)
+		if(count($result)>0)
 			return $result;
 		return false;
 	}
@@ -1375,14 +1377,11 @@ class userquery extends CBCategory{
 		{
 			$result = $db->select(tbl('subscriptions'),"*",
 			" subscribed_to='$id' ");
-			if($db->num_rows>0)
+			if(count($result)>0)
 				return $result;
-			else
-				return false;	
-		}else
-		{
-			return $db->count(tbl($this->dbtbl['subtbl']),"subscription_id"," subscribed_to='$id' ");
+			return false;
 		}
+		return $db->count(tbl($this->dbtbl['subtbl']),"subscription_id"," subscribed_to='$id' ");
 	}
 
     /**
@@ -1397,7 +1396,7 @@ class userquery extends CBCategory{
 	{
 		global $db;
 		$result = $db->select(tbl("users,".$this->dbtbl['subtbl']),"*"," ".tbl("subscriptions.subscribed_to")." = '$id' AND ".tbl("subscriptions.userid")."=".tbl("users.userid"),$limit);
-		if($db->num_rows>0)
+		if(count($result)>0)
 			return $result;
 		return false;
 	}
@@ -1417,13 +1416,13 @@ class userquery extends CBCategory{
 		{
 			$result = $db->select(tbl("users,".$this->dbtbl['subtbl']),"*"," ".tbl("subscriptions.userid")." = '$id' AND ".tbl("subscriptions.subscribed_to")."=".tbl("users.userid"),$limit);
 			
-			if($db->num_rows>0)
+			if(count($result)>0)
 				return $result;
 			return false;
-		} else {
-			$result = $db->count(tbl($this->dbtbl['subtbl']),"subscription_id"," userid = '$id'");
-			return $result;
 		}
+
+		$result = $db->count(tbl($this->dbtbl['subtbl']),"subscription_id"," userid = '$id'");
+		return $result;
 	}
 
     /**
@@ -1687,13 +1686,14 @@ class userquery extends CBCategory{
 			return false;
 
 		return $thumb_file;
-	}	
-	
-	
+	}
 
 	/**
 	 * Function used to get user subscriber's list
+	 *
 	 * @param VARCHAR//INT username or userid , both works fine
+	 *
+	 * @return bool
 	 */
 	function get_user_subscriber($username)
 	{
@@ -1701,16 +1701,18 @@ class userquery extends CBCategory{
 		$results = $db->Execute("SELECT * FROM ".tbl("subscriptions")." WHERE subsctibe_to='$username'");
 		if($results->recordcount() > 0)
 			return $results->getrows();
-		else
-			return false;
+		return false;
 	}
-	
-	
-	
+
 	/**
 	 * Function used to get user field
-	 * @ param INT userid 
+	 * @ param INT userid
 	 * @ param FIELD name
+	 *
+	 * @param $uid
+	 * @param $field
+	 *
+	 * @return bool
 	 */
 	function get_user_field($uid,$field)
 	{
@@ -1721,12 +1723,11 @@ class userquery extends CBCategory{
 		else
 			$results = $db->select(tbl('users'),$field,"username='$uid'");
 
-		if($db->num_rows>0)
+		if(count($results)>0)
 		{
 			return $results[0];
-		}else{
-			return false;
 		}
+		return false;
 	}function get_user_fields($uid,$field){return $this->get_user_field($uid,$field);}
 	
 	
@@ -1771,7 +1772,7 @@ class userquery extends CBCategory{
 		/*		
 		pr($result);
 		$results = $db->select(tbl('user_levels'),'*'," user_level_id='".$level['level']."'");
-		if($db->num_rows == 0)
+		if(count($results) == 0)
 		 //incase user level is not valid, it will consider it as registered user
 			$u_level['user_level_id'] = 3;
 		else
@@ -1787,36 +1788,40 @@ class userquery extends CBCategory{
 		//pr($user_level);
 		return $user_level;
 	}
-	
-	
+
+
 	/**
 	 * Function used to get all levels
+	 *
 	 * @param : filter
+	 *
+	 * @return array|bool
 	 */
 	function get_levels($filter=NULL)
 	{
 		global $db;
 		$results = $db->select(tbl("user_levels"),"*",NULL,NULL," user_level_id ASC" );
 
-
-        if($db->num_rows > 0)
+        if(count($results) > 0)
 		{
 			return $results;
-		}else{
-			return false;
 		}
+        return false;
 	}
-	
-	
+
+
 	/**
 	 * Function used to get level details
+	 *
 	 * @param : level_id INT
+	 *
+	 * @return bool|int
 	 */
 	function get_level_details($lid)
 	{
 		global $db;
 		$results = $db->select(tbl("user_levels"),"*"," user_level_id='$lid' ");
-		if($db->num_rows > 0 )
+		if(count($results) > 0 )
 		{
 			return $results[0];
 		}else{
@@ -1824,11 +1829,15 @@ class userquery extends CBCategory{
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Function used to get users of particular level
+	 *
 	 * @param : level_id
-	 * @param : count BOOLEAN (if TRUE it will return NUMBERS)
+	 * @param bool   $count
+	 * @param string $fields
+	 *
+	 * @return array|int
 	 */
 	function get_level_users($id,$count=FALSE,$fields="level")
 	{
@@ -1837,10 +1846,10 @@ class userquery extends CBCategory{
 			$fields = "*";
 			
 		$results = $db->select(tbl("users"),$fields," level='$id'");
-		if($db->num_rows>0)
+		if(count($results)>0)
 		{
 			if($count)
-				return $db->num_rows;
+				return count($results);
 			else
 				return $results;
 		}else{
@@ -1876,18 +1885,21 @@ class userquery extends CBCategory{
 			return true;
 		}
 	}
-	
+
 	/**
 	 * Function usewd to get level permissions
+	 *
+	 * @param $id
+	 *
+	 * @return bool
 	 */
 	function get_level_permissions($id)
 	{
 		global $db;
 		$results = $db->select(tbl("user_levels_permissions"),"*"," user_level_id = '$id'");		
-		if($db->num_rows>0)
+		if(count($results)>0)
 			return $results[0];
-		else
-			return false;
+		return false;
 	}
 	
 	/**
@@ -2093,35 +2105,39 @@ class userquery extends CBCategory{
 
 	/**
 	 * Function used to get number of videos uploaded by user
-	 * @param INT userid
-	 * @param Conditions
+	 *
+	 * @param      $uid
+	 * @param null $cond
+	 * @param bool $count_only
+	 * @param bool $myacc
+	 *
+	 * @return array|bool|int
 	 */
 	function get_user_vids($uid,$cond=NULL,$count_only=false, $myacc = false)
 	{
 		global $db;
 		if($cond!=NULL)
 			$cond = " AND $cond ";
-		
+
+		$limit = '';
+		$order = '';
 		if ($myacc) {
-			$limit .= " 0,15 ";
+			$limit = " 0,15 ";
 			$order = " videoid DESC";
 		}
 
-
 		$results = $db->select(tbl("video"),"*"," userid = '$uid' $cond","$limit","$order");
-		if($db->num_rows > 0) {
+		if(count($results) > 0) {
 			if ($myacc) {
 				return $results;
 			}
 
 			if($count_only) {
-				return $db->num_rows;
-			} else {
-				return $results[0];
+				return count($results);
 			}
-		} else {
-			return false;
+			return $results[0];
 		}
+		return false;
 	}
 	
 	
@@ -2173,22 +2189,28 @@ class userquery extends CBCategory{
 		global $db;
 		return $db->select(tbl($this->dbtbl['user_permission_type']),"*");
 	}
-	
+
 	/**
 	 * Function used to check weather level type exists or not
+	 *
+	 * @param $id
+	 *
+	 * @return bool
 	 */
 	function level_type_exists($id)
 	{
 		global $db;
 		$result = $db->select(tbl($this->dbtbl['user_permission_type']),"*"," user_permission_type_id='".$id."' OR user_permission_type_name='$id'");
-		if($db->num_rows>0)
+		if(count($result)>0)
 			return $result[0];
 		else
 			return false;
 	}
-	
+
 	/**
 	 * Function used to add new permission
+	 *
+	 * @param $array
 	 */
 	function add_new_permission($array)
 	{
@@ -2217,31 +2239,40 @@ class userquery extends CBCategory{
 			e(lang("perm_added"),"m");
 		}
 	}
-	
+
 	/**
 	 * Function used to check permission exists or not
 	 * @Param permission code
+	 *
+	 * @param $code
+	 *
+	 * @return bool
 	 */
 	function permission_exists($code)
 	{
 		global $db;
 		$result = $db->select(tbl($this->dbtbl['user_permissions']),"*"," permission_code='".$code."' OR permission_id='".$code."'");
-		if($db->num_rows>0)
+		if(count($result)>0)
 			return $result[0];
 		else
 			return false;
 	}
-	
+
 	/**
 	 * Function used to get permissions
+	 *
+	 * @param null $type
+	 *
+	 * @return array|bool
 	 */
 	function get_permissions($type=NULL)
 	{
 		global $db;
+		$cond = '';
 		if($type)
 			$cond = " permission_type ='$type'";
 		$result = $db->select(tbl($this->dbtbl['user_permissions']),"*",$cond);
-		if($db->num_rows>0)
+		if(count($result)>0)
 		{
 			return $result;
 		}else
@@ -2326,7 +2357,7 @@ class userquery extends CBCategory{
 	{
 		global $db;
 		$result = $db->select(tbl($this->dbtbl['user_profile']),"*"," userid='$uid'");
-		if($db->num_rows>0)
+		if(count($result)>0)
 			return $result[0];
 		return false;
 	}
@@ -2902,8 +2933,8 @@ class userquery extends CBCategory{
 	 function email_exists($i)
 	{
 		global $db;
-		$db->select(tbl($this->dbtbl['users']),"email"," email='$i'");
-		if($db->num_rows>0)
+		$result = $db->select(tbl($this->dbtbl['users']),"email"," email='$i'");
+		if(count($result)>0)
 			return true;
 		return false;
 	}
@@ -2920,7 +2951,7 @@ class userquery extends CBCategory{
 	{
 		global $db;
 		$result = $db->select(tbl($this->dbtbl['action_log']),"*"," action_userid='$uid'",$limit," date_added DESC");
-		if($db->num_rows>0)
+		if(count($result)>0)
 			return $result;
 		return false;
 	}
@@ -4232,12 +4263,7 @@ class userquery extends CBCategory{
 					$log_array['userid'] = $userid  = $udetails['userid'];
 					$log_array['useremail'] = $udetails['email'];
 					$log_array['success'] = 1;
-					
 					$log_array['level'] = $level = $udetails['level'];
-
-					//Setting Timeout
-					if($remember)
-						$sess->timeout = 86400*REMBER_DAYS;
 						
 					//Starting special sessions for security
 					$session_salt = RandomString(5);
