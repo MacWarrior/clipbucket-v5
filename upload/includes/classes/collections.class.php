@@ -1967,7 +1967,9 @@ class Collections extends CBCategory
 			'date_added'    => now(),
 		);
 
-		$insert_id = db_insert(tbl('collection_contributors'),$query);
+		global $db;
+		$insert_id = $db->db_insert(tbl('collection_contributors'),$query);
+		
 		if($insert_id)
 			return $insert_id;
 		return false;
