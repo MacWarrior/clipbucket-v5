@@ -99,19 +99,6 @@
 					$return['msg'] = sprintf(_("Found FFPROBE %s : %s"),$version,$ffprobe_path);
 				break;
 			
-			case "flvtool2":
-				$flvtool2_path = exec("which flvtool2");
-				$flvtool2_version = shell_output("$flvtool2_path -version");
-				$version = false;
-				preg_match("/flvtool2 ([0-9.]+)/i",$flvtool2_version,$matches);
-				if(@$matches[1])
-					$version = $matches[1];
-				if(!$version)
-					$return['err'] = _("Unable to find FLVTOOL2");
-				else
-					$return['msg'] = sprintf(_("Found FLVTOOL2 %s : %s"),$version,$flvtool2_path);
-				break;
-			
 			case "mp4box":
 				$mp4boxpath = exec("which MP4Box");
 				$mp4box_version = shell_output("$mp4boxpath -version");

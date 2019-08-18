@@ -14,10 +14,9 @@ yum install -y -q yum-utils epel-release http://li.nux.ro/download/nux/dextop/el
 
 yum-config-manager --enable remi-php70 > /dev/null
 
-yum install -y -q php php-mysqlnd php-curl php-xml php-mbstring php-pear php-devel httpd git mariadb-server mariadb ruby rubygems gcc ImageMagick ImageMagick-devel gpac mediainfo sendmail ffmpeg ffmpeg-devel lshw > /dev/null 2>&1
+yum install -y -q php php-mysqlnd php-curl php-xml php-mbstring php-pear php-devel httpd git mariadb-server mariadb gcc ImageMagick ImageMagick-devel gpac mediainfo sendmail ffmpeg ffmpeg-devel lshw > /dev/null 2>&1
 # http://mir01.syntis.net/epel/7/x86_64/repodata/3e3bf72827ce3cbe2381f1cac087f6ff23b8bb8c2bdab06598f18057209e423e-updateinfo.xml.bz2: [Errno 14] HTTP Error 404 - Not Found
 # I don't know how to fix this for now, but it works anyway :)
-gem install flvtool2 > /dev/null
 
 printf "\n" | pecl install imagick > /dev/null
 echo "extension=imagick.so" > /etc/php.d/imagick.ini

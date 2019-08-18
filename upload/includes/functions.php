@@ -1158,9 +1158,6 @@
 				case "ffprobe_path":
 					return config("ffprobe_path");
 				
-				case "flvtool2":
-					return config("flvtool2path");
-				
 				case "ffmpeg":
 					return config("ffmpegpath");
 			}
@@ -1181,13 +1178,6 @@
 						return $return_path;
 					}
 					return "Unable to find mp4box path";
-				
-				case "flvtool2":
-					$return_path = shell_output("which flvtool2");
-					if($return_path) {
-						return $return_path;
-					}
-					return "Unable to find flvtool2 path";
 				
 				case "ffmpeg":
 					$return_path = shell_output("which ffmpeg");
@@ -3566,13 +3556,6 @@
 
 			case 'php':
 				return phpversion(); 
-
-			case 'flvtool2':
-				preg_match("/flvtool2 ([0-9\.]+)/i",$result,$matches);
-				if(is_numeric(floatval($matches[1]))){
-					return $matches[1];
-				}
-				return false;
 
 			case 'mp4box':
 				preg_match("/version (.*) \(/Ui",$result,$matches);

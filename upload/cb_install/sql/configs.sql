@@ -12,17 +12,14 @@ INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES
 	('description', 'Clip Bucket is an ultimate Video Sharing script'),
 	('keywords', 'clip bucket video sharing website script'),
 	('ffmpegpath', '/usr/local/bin/ffmpeg'),
-	('flvtool2path', '/usr/local/bin/flvtool2'),
 	('mp4boxpath', '/usr/local/bin/MP4Box'),
 	('vbrate', '300000'),
 	('srate', '22050'),
 	('r_height', ''),
 	('r_width', ''),
 	('resize', ''),
-	('mencoderpath', ''),
 	('keep_original', '1'),
 	('activation', ''),
-	('mplayerpath', ''),
 	('email_verification', '1'),
 	('allow_registeration', '1'),
 	('php_path', '/usr/bin/php'),
@@ -186,7 +183,6 @@ INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES
 	('uploadSection', 'yes'),
 	('collectionsSection', 'yes'),
 	('channelsSection', 'yes'),
-	('flvtoolpp', ''),
 	('normal_resolution', '480'),
 	('high_resolution', '720'),
 	('max_video_duration', '320'),
@@ -318,4 +314,5 @@ INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 -- Addition for 5.3
 INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 ('logo_name', ''),
-('favicon_name', '');
+('favicon_name', ''),
+('comment_per_page', '10');

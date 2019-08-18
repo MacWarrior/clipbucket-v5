@@ -53,11 +53,11 @@ session_start();
  	define('SEO',$row['seo']); //Set yes / no
 	
  //Required Modules and Their Paths (Editable In Admin Panel)
- 
- 	define('FFMPEG_BINARY', $row['ffmpegpath']);
-	define('FFMPEG_FLVTOOLS_BINARY', $row['flvpath']);
-	define('FFMPEG_MENCODER_BINARY', $row['mencoderpath']);
-	define('FFMPEG_MPLAYER_BINARY', $row['mplayerpath']);
+	if(FFMPEG_TYPE == 's'){
+		define('FFMPEG_BINARY', MODULEDIR.'/encoders/ffmpeg');
+	}else{
+		define('FFMPEG_BINARY', $row['ffmpegpath']);
+	}
 	define('PHP_PATH', $row['php_path']);
 
  //Registration & Email Settings
@@ -98,15 +98,6 @@ session_start();
 	define('THUMB_HEIGHT', $row['thumb_height']);
 	define('THUMB_WIDTH', $row['thumb_width']);
 	define('FFMPEG_TYPE', $row['ffmpeg_type']);
-	if(FFMPEG_TYPE == 's'){
-		define('FFMPEG_BINARY', MODULEDIR.'/encoders/ffmpeg');
-	}else{
- 		define('FFMPEG_BINARY', $row['ffmpegpath']);
-	}
-	define('FFMPEG_FLVTOOLS_BINARY', $row['flvpath']);
-	define('PHP_PATH', $row['php_path']);
-	define('FFMPEG_MENCODER_BINARY', $row['mencoderpath']);
-	define('FFMPEG_MPLAYER_BINARY', $row['mplayerpath']);
 	
  //Required Paths Relative and Direct (Editable In Admin Panel)
  
@@ -119,7 +110,6 @@ session_start();
 	
 	define('TEMPLATEFOLDER','styles');							//Template Folder Name, usually STYLES
 	define('TEMPLATE',$row['template_dir']);					//Select Any Template Name, usually 'clipbucketblue'
-	define('FLVPLAYER',$row['player_file']);					//Select FLV Player For Your Script
 	define('JSDIR','js');										//Javascript Directory Name
 	define('ADMINDIR','admin_area');							//Admin Accessible Folder
 	define('MODULEDIR',BASEDIR.'/modules');						//Modules Directory

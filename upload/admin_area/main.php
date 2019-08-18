@@ -93,8 +93,6 @@
 			'enable_groups',
 
 			'ffmpegpath'	,
-			'flvtool2path',
-			'flvtoolpp',
 			'ffmpeg_type',
 			'facebook_embed',
 
@@ -141,14 +139,12 @@
 			'min_video_tags',
 			'min_video_desc',
 			'mp4boxpath',
-			'mplayerpath',
 			'min_age_reg',
 			'min_username',
 			'max_comment_chr',
 			'max_time_wait',
 			'max_upload_size',
 			'max_video_duration',
-			'mplayerpath',
 
 			'normal_resolution',
 			'num_thumbs',
