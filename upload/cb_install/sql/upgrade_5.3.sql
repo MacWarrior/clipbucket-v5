@@ -1,6 +1,7 @@
 INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 	('logo_name', ''),
-	('favicon_name', '');
+	('favicon_name', ''),
+	('comment_per_page', '10');
 
 ALTER TABLE `{tbl_prefix}user_levels_permissions` MODIFY COLUMN `plugins_perms` text NOT NULL DEFAULT '';
 ALTER TABLE `{tbl_prefix}users`
@@ -22,3 +23,28 @@ ALTER TABLE `{tbl_prefix}users`
 	MODIFY COLUMN `total_downloads` BIGINT(255) NOT NULL DEFAULT '0';
 
 DELETE FROM `{tbl_prefix}config` WHERE name = 'i_magick';
+
+ALTER TABLE `{tbl_prefix}video`
+	MODIFY COLUMN `username` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+	MODIFY COLUMN `flv` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+	MODIFY COLUMN `category_parents` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+	MODIFY COLUMN `blocked_countries` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+	MODIFY COLUMN `voter_ids` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+	MODIFY COLUMN `last_commented` DATETIME NULL DEFAULT NULL,
+	MODIFY COLUMN `featured_date` DATETIME NULL DEFAULT NULL,
+	MODIFY COLUMN `featured_description` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+	MODIFY COLUMN `aspect_ratio` VARCHAR(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+	MODIFY COLUMN `embed_code` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+	MODIFY COLUMN `refer_url` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+	MODIFY COLUMN `downloads` BIGINT(255) NOT NULL DEFAULT '0',
+	MODIFY COLUMN `unique_embed_code` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+	MODIFY COLUMN `remote_play_url` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+	MODIFY COLUMN `video_files` TINYTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+	MODIFY COLUMN `server_ip` VARCHAR(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+	MODIFY COLUMN `file_server_path` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+	MODIFY COLUMN `files_thumbs_path` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+	MODIFY COLUMN `file_thumbs_count` VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+	MODIFY COLUMN `filegrp_size` VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+	MODIFY COLUMN `extras` VARCHAR(225) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+	MODIFY COLUMN `re_conv_status` TINYTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+	MODIFY COLUMN `conv_progress` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';

@@ -898,10 +898,10 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}validation_re` (
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}video` (
   `videoid` bigint(20) NOT NULL AUTO_INCREMENT,
   `videokey` mediumtext NOT NULL,
-  `username` text NOT NULL,
+  `username` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
   `userid` int(11) NOT NULL,
   `title` text,
-  `flv` mediumtext NOT NULL,
+  `flv` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
   `file_name` varchar(32) NOT NULL,
   `description` text,
   `tags` mediumtext NOT NULL,
@@ -913,14 +913,14 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}video` (
   `allow_embedding` char(3) NOT NULL DEFAULT '',
   `rating` int(15) NOT NULL DEFAULT '0',
   `rated_by` varchar(20) NOT NULL DEFAULT '0',
-  `voter_ids` mediumtext NOT NULL,
+  `voter_ids` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
   `allow_comments` char(3) NOT NULL DEFAULT '',
   `comment_voting` char(3) NOT NULL DEFAULT '',
   `comments_count` int(15) NOT NULL DEFAULT '0',
-  `last_commented` datetime NOT NULL,
+  `last_commented` DATETIME NULL DEFAULT NULL,
   `featured` char(3) NOT NULL DEFAULT 'no',
-  `featured_date` datetime NOT NULL,
-  `featured_description` mediumtext NOT NULL,
+  `featured_date` DATETIME NULL DEFAULT NULL,
+  `featured_description` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
   `allow_rating` char(3) NOT NULL DEFAULT '',
   `active` char(3) NOT NULL DEFAULT '0',
   `favourite_count` varchar(15) NOT NULL DEFAULT '0',
@@ -934,27 +934,27 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}video` (
   `failed_reason` enum('none','max_duration','max_file','invalid_format','invalid_upload') NOT NULL DEFAULT 'none',
   `flv_file_url` text,
   `default_thumb` int(3) NOT NULL DEFAULT '1',
-  `aspect_ratio` varchar(10) NOT NULL,
-  `embed_code` text NOT NULL,
-  `refer_url` text NOT NULL,
-  `downloads` bigint(255) NOT NULL,
+  `aspect_ratio` VARCHAR(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+  `embed_code` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+  `refer_url` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+  `downloads` BIGINT(255) NOT NULL DEFAULT '0',
   `uploader_ip` varchar(20) NOT NULL,
   `mass_embed_status` enum('no','pending','approved') NOT NULL DEFAULT 'no',
   `is_hd` enum('yes','no') NOT NULL DEFAULT 'no',
-  `unique_embed_code` varchar(50) NOT NULL,
-  `remote_play_url` text NOT NULL,
-  `video_files` text(33) NOT NULL,
-  `server_ip` varchar(20) NOT NULL,
-  `file_server_path` text NOT NULL,
-  `files_thumbs_path` text NOT NULL,
-  `file_thumbs_count` varchar(30) NOT NULL,
+  `unique_embed_code` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+  `remote_play_url` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+  `video_files` TINYTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+  `server_ip` VARCHAR(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+  `file_server_path` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+  `files_thumbs_path` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+  `file_thumbs_count` VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
   `has_hq` enum('yes','no') NOT NULL DEFAULT 'no',
   `has_mobile` enum('yes','no') NOT NULL DEFAULT 'no',
-  `filegrp_size` varchar(30) NOT NULL,
+  `filegrp_size` VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
   `process_status` bigint(30) NOT NULL DEFAULT '0',
   `has_hd` enum('yes','no') NOT NULL DEFAULT 'no',
   `video_version` varchar(30) NOT NULL DEFAULT '2.6',
-  `extras` varchar(225) NOT NULL,
+  `extras` VARCHAR(225) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`videoid`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=960 ;
 
@@ -1046,7 +1046,7 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_files` (
 
 ALTER TABLE `{tbl_prefix}video` ADD `video_password` VARCHAR( 255 ) NOT NULL AFTER `videokey` ;
 ALTER TABLE `{tbl_prefix}video` ADD `video_users` TEXT NOT NULL AFTER `video_password`;
-ALTER TABLE `{tbl_prefix}video` ADD `category_parents` TEXT NOT NULL AFTER `category` ;
+ALTER TABLE `{tbl_prefix}video` ADD `category_parents` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' AFTER `category` ;
 
 ALTER TABLE `{tbl_prefix}video` ADD `subscription_email` ENUM( "pending", "sent" ) NOT NULL DEFAULT 'pending' AFTER `last_commented` ;
 
@@ -1215,11 +1215,11 @@ ALTER TABLE `{tbl_prefix}video` ADD INDEX(`last_viewed`);
 ALTER TABLE `{tbl_prefix}video` ADD INDEX(`rating`);
 ALTER TABLE `{tbl_prefix}video` ADD INDEX(`comments_count`);
 ALTER TABLE `{tbl_prefix}video` ADD INDEX(`last_viewed`);
-ALTER TABLE `{tbl_prefix}video` ADD `re_conv_status` text(33) NOT NULL;
-ALTER TABLE `{tbl_prefix}video` ADD `conv_progress` TEXT NOT NULL;
+ALTER TABLE `{tbl_prefix}video` ADD `re_conv_status` TINYTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
+ALTER TABLE `{tbl_prefix}video` ADD `conv_progress` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
 -- Alterations for 4.0
 ALTER TABLE `{tbl_prefix}video` ADD `file_type` INT( 10 ) NOT NULL DEFAULT '0' AFTER  `file_name`;
-ALTER TABLE `{tbl_prefix}video` ADD `blocked_countries` TEXT( 255 ) NOT NULL AFTER `country`;
+ALTER TABLE `{tbl_prefix}video` ADD `blocked_countries` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' AFTER `country`;
 ALTER TABLE `{tbl_prefix}video` ADD `sprite_count` INT(11) NOT NULL DEFAULT '0' AFTER `blocked_countries`;
 ALTER TABLE `{tbl_prefix}video` ADD FULLTEXT INDEX (`title`,`tags`);
 ALTER TABLE `{tbl_prefix}photos` ADD FULLTEXT INDEX (`photo_title`,`photo_tags`);
