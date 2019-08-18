@@ -1153,6 +1153,7 @@ class CBvideo extends CBCategory
 	 * @param bool $force_name_email
 	 *
 	 * @return bool|mixed
+	 * @throws phpmailerException
 	 */
 	function add_comment($comment,$obj_id,$reply_to=NULL,$force_name_email=false)
 	{
