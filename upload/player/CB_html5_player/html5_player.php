@@ -89,7 +89,7 @@ if(!function_exists('html5_player'))
 		    	assign('enlarge_small','false');
 
             assign('about',BASEURL);
-            $jquery = BASEDIR.'/js/jquery.js';
+            $jquery = '/js/jquery-2.0.3.min.js';
             assign('jquery',$jquery);
 
             // logo placement
