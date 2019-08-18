@@ -1,5 +1,4 @@
-<?php 
-
+<?php
 	/**
 	* File : Conversion Class
 	* Description : ClipBucket conversion system fully depends on this class. All conversion related
@@ -329,9 +328,12 @@
 		}
 
 		/**
-		* Check if conversion is locked or not
-		* @param : { integer } { $defaultLockLimit } { Limit of number of max process }
-		*/
+		 * Check if conversion is locked or not
+		 *
+		 * @param : { integer } { $defaultLockLimit } { Limit of number of max process }
+		 *
+		 * @return bool
+		 */
 		private final function isLocked( $defaultLockLimit = 1 ) {
 			for ( $i=0; $i<$defaultLockLimit; $i++ )	{
 				$convLockFile = $this->ffmpegLockPath.$i.'.loc';
@@ -392,7 +394,8 @@
 		 *
 		 * @param : INT duration
 		 *
-		 * @parma : rand
+		 * @param string $rand
+		 *
 		 * @return false|string
 		 */
 		private function ChangeTime( $duration, $rand = "" )
