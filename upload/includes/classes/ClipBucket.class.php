@@ -396,13 +396,9 @@ class ClipBucket
     {
         global $db;
         $results = $db->select(tbl("countries"), "*");
+        $carray = array();
         switch ($type)
         {
-            case 'id':
-                foreach ($results as $result) {
-                    $carray[$result['country_id']] = $result['name_en'];
-                }
-                break;
             case 'iso2':
                 foreach ($results as $result) {
                     $carray[$result['iso2']] = $result['name_en'];
@@ -413,6 +409,7 @@ class ClipBucket
                     $carray[$result['iso3']] = $result['name_en'];
                 }
                 break;
+			case 'id':
             default:
                 foreach ($results as $result) {
                     $carray[$result['country_id']] = $result['name_en'];
