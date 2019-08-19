@@ -253,7 +253,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'password_salt', ''),
 	(NULL, 'show_collapsed_checkboxes', '0'),
 	(NULL, 'enable_advertisement', '0'),
-	(NULL, 'chromecast', 'no'),
+	(NULL, 'chromecast', 'yes'),
 	(NULL, 'vid_cat_width', '120'),
 	(NULL, 'vid_cat_height', '120'),
 	(NULL, 'chromecast_fix', '1'),
