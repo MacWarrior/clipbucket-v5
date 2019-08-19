@@ -493,7 +493,7 @@ uploader.bind("BeforeUpload", function(){
 								data: formData,
 							}).success(function(msg){
 								msg = $.parseJSON(msg);
-								if(msg.err === null){
+								if(msg.err === null || msg.err === undefined){
 									var newCollectionElement = document.createElement('option');
 									newCollectionElement.value = parseInt(msg.id);
 									newCollectionElement.innerHTML = collectionName;
