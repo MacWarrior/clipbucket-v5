@@ -111,14 +111,15 @@ switch($mode)
 			upload_error("No upload found in \$_FILES for " . $form);
 			exit(0);
 		}
-		elseif(isset($_FILES[$form]['error']) && $_FILES[$form]['error'] != 0) {
+		if(isset($_FILES[$form]['error']) && $_FILES[$form]['error'] != 0) {
 			upload_error($upErrors[$_FILES[$form]['error']]);
 			exit(0);
 		}
-		elseif(!isset($_FILES[$form]["tmp_name"]) || !@is_uploaded_file($_FILES[$form]["tmp_name"])) {
+		if(!isset($_FILES[$form]["tmp_name"]) || !@is_uploaded_file($_FILES[$form]["tmp_name"])) {
 			upload_error("Upload failed is_uploaded_file test.");
 			exit(0);
-		} elseif(empty($_FILES[$form]['name'])) {
+		}
+		if(empty($_FILES[$form]['name'])) {
 			upload_error("File name is empty");
 			exit(0);	
 		}
