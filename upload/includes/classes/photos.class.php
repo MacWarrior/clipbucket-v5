@@ -1467,22 +1467,22 @@ class CBPhotos
 			$oForms = $this->load_other_forms($array);
 			$FullForms = array_merge($forms,$oForms);
 			if(!isset($array['allow_comments'])){
-			 $array['allow_comments'] = 'yes';
+				$array['allow_comments'] = 'yes';
+			}
+			if(!isset($array['allow_embedding'])){
+				$array['allow_embedding'] = 'yes';
+			}
+			if(!isset($array['allow_rating'])){
+				$array['allow_rating'] = 'yes';
 			}
 			foreach($FullForms as $field)
 			{
 				$name = formObj::rmBrackets($field['name']);
-				if($field['name']=='allow_comments'){
-					
-					if(!isset($array['allow_comments'])){
-						 $array['allow_comments'] = 'yes';
-					}	
-				}
 				$val = $array[$name];
-				
+
 				if($field['use_func_val'])
 					$val = $field['validate_function']($val);
-				
+
 				if(!empty($field['db_field']))
 					$query_field[] = $field['db_field'];
 				
@@ -1495,11 +1495,12 @@ class CBPhotos
 					}
 					$val = $new_val;
 				}
+
 				if(!$field['clean_func'] || (!function_exists($field['clean_func']) && !is_array($field['clean_func'])))
 					$val = ($val);
 				else
 					$val = apply_func($field['clean_func'], mysql_clean('|no_mc|'.$val));
-				
+
 				if(!empty($field['db_field']))
 					$query_val[] = $val;	
 			}
@@ -1791,7 +1792,7 @@ class CBPhotos
 
 		validate_cb_form($photo_fields,$array);	
 	}
-	
+
 	/**
 	 * Update Photo
 	 */
