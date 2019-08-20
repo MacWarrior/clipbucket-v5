@@ -98,7 +98,23 @@
 				else
 					$return['msg'] = sprintf(_("Found FFPROBE %s : %s"),$version,$ffprobe_path);
 				break;
-			
+
+			case "media_info":
+				$mediainfo_path = exec("which mediainfo");
+				$mediainfo_result = shell_output("$mediainfo_path --version");
+
+				$media_info_version  = explode('v', $mediainfo_result);
+				$version = false;
+				if( isset($media_info_version[1]) ){
+					$version = $media_info_version[1];
+				}
+
+				if(!$version)
+					$return['err'] = _("Unable to find Media Info");
+				else
+					$return['msg'] = sprintf(_("Found Media Info %s : %s"),$version,$mediainfo_path);
+				break;
+
 			case "mp4box":
 				$mp4boxpath = exec("which MP4Box");
 				$mp4box_version = shell_output("$mp4boxpath -version");

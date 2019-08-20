@@ -1136,56 +1136,76 @@
 	 */
 	function get_binaries($path)
 	{
+		$type = '';
 		if(is_array($path)) {
 			 $type = $path['type'];
 			 $path = $path['path'];
-		 }
+		}
 
+		$path = strtolower($path);
 		if($type=='' || $type=='user')
 		{
-			$path = strtolower($path);
 			switch($path)
 			{
 				case "php":
-					return php_path();
-				
+					$software_path = php_path();
+					break;
 				case "mp4box":
-					return config("mp4boxpath");
-
+					$software_path = config("mp4boxpath");
+					break;
 				case "media_info":
-					return config("media_info");
-
+					$software_path = config("media_info");
+					break;
 				case "ffprobe_path":
-					return config("ffprobe_path");
-				
+					$software_path = config("ffprobe_path");
+					break;
 				case "ffmpeg":
-					return config("ffmpegpath");
+					$software_path = config("ffmpegpath");
+					break;
+				default:
+					$software_path = '';
+					break;
 			}
-		} else {
-			$path = strtolower($path);
-			switch($path)
-			{
-				case "php":
-					$return_path = shell_output("which php");
-					if($return_path) {
-						return $return_path;
-					}
-					return "Unable to find PHP path";
-				
-				case "mp4box":
-					$return_path = shell_output("which MP4Box");
-					if($return_path) {
-						return $return_path;
-					}
-					return "Unable to find mp4box path";
-				
-				case "ffmpeg":
-					$return_path = shell_output("which ffmpeg");
-					if($return_path) {
-						return $return_path;
-					}
-					return "Unable to find ffmpeg path";
+
+			if( $software_path != '' ){
+				return $software_path;
 			}
+		}
+
+		switch($path)
+		{
+			case "php":
+				$return_path = shell_output("which php");
+				if($return_path) {
+					return $return_path;
+				}
+				return "Unable to find PHP path";
+			case "mp4box":
+				$return_path = shell_output("which MP4Box");
+				if($return_path) {
+					return $return_path;
+				}
+				return "Unable to find mp4box path";
+			case "media_info":
+				$return_path = shell_output("which mediainfo");
+				if($return_path) {
+					return $return_path;
+				}
+				return "Unable to find media_info path";
+			case "ffprobe_path":
+				$return_path = shell_output("which ffprobe");
+				if($return_path) {
+					return $return_path;
+				}
+				return "Unable to find ffprobe path";
+			case "ffmpeg":
+				$return_path = shell_output("which ffmpeg");
+				if($return_path) {
+					return $return_path;
+				}
+				return "Unable to find ffmpeg path";
+			default:
+				return 'Unknown path : '.$path;
 		}
 	}
 

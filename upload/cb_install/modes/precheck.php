@@ -47,6 +47,10 @@
 	<dt class="grey-text">ImageMagick</dt>
 	<?php $imagick = check_module('imagick'); ?>
 	<dd  style="background-color:#fff;"><span style="margin-left:60px;" class="grey-text"><?php echo msg_arr($imagick); ?></span></dd>
+
+	<dt class="grey-text">Media Info</dt>
+	<?php $media_info = check_module('media_info'); ?>
+	<dd  style="background-color:#fff;"><span style="margin-left:60px;" class="grey-text"><?php echo msg_arr($media_info); ?></span></dd>
 </dl>
 
 <form name="installation" method="post" id="installation">
