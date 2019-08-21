@@ -615,12 +615,11 @@
 
     function get_video_details( $vid = null, $basic = false )
 	{
-        global $cbvid;
-
         if( $vid === null ) {
             return false;
         }
 
+		global $cbvid;
         return $cbvid->get_video( $vid, false, $basic );
     }
 
@@ -1937,19 +1936,48 @@
     }
 
 
-    /**
-    * Checks current reconversion status of any given video : default is empty
-    * @param : { integer } { $vid } { id of video that we need to check status for }
-    * @return : { string } { reconversion status of video }
-    */
-    function checkReConvStatus($vid)
+	/**
+	 * Checks current reconversion status of any given video : default is empty
+	 * @param : { integer } { $vid } { id of video that we need to check status for }
+	 * @return string|void : { reconversion status of video }
+	 */
+	function checkReConvStatus($vid)
 	{
-        global $db;
-        $data = $db->select(tbl('video'),'re_conv_status','videoid='.$vid);
-        if (isset($data[0]['re_conv_status'])) {
-            return $data[0]['re_conv_status'];
-        }
-    }
+		global $db;
+		$data = $db->select(tbl('video'),'re_conv_status','videoid='.$vid);
+		if (isset($data[0]['re_conv_status'])) {
+			return $data[0]['re_conv_status'];
+		}
+	}
+
+	function is_castable($vid)
+	{
+		global $db;
+		$data = $db->select(tbl('video'),'is_castable','videoid='.$vid);
+
+		if (isset($data[0]['is_castable'])) {
+			return $data[0]['is_castable'];
+		}
+		return false;
+	}
+
+	function check_castable_status($vdetails){
+		if( is_null($vdetails) || $vdetails['is_castable'] == 1 ){
+			return;
+		}
+
+		global $db;
+		$filepath = VIDEOS_DIR.'/'.$vdetails['file_directory'].'/' . $vdetails['file_name'].'-'.json_decode($vdetails['video_files'])[0].'.mp4';
+		$cmd = get_binaries('ffprobe_path').' -show_entries stream=channels -of compact=p=0:nk=1 -v 0 '.$filepath.' | grep .';
+		$data = shell_exec( $cmd );
+
+		if( $data <= 2 ){
+			$db->update(tbl('video'),array('is_castable'),array(true)," videoid='".$vdetails['videoid']."'");
+			e(sprintf( lang('castable_status_fixed'), $vdetails['title']),'m');
+		} else {
+			e(sprintf( lang('castable_status_failed'), $vdetails['title'], $data),'w');
+		}
+	}
 
 	/**
 	 * Checks if given video is reconvertable or not
@@ -1971,6 +1999,7 @@
                 $fileName = $vdetails['file_name'];
                 $fileDirectory = $vdetails['file_directory'];
 
+				$is_convertable = false;
                 if(empty($vdetails['file_server_path']))
                 {
                     if(!empty($fileDirectory) ){
@@ -2004,7 +2033,7 @@
     * @since : October 28th, 2016
     * @author : { Saqib Razzaq }
     */
-    function reConvertVideos($data)
+    function reConvertVideos($data = '')
 	{
         global $cbvid,$Upload;
         $toConvert = 0;

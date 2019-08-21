@@ -4,7 +4,6 @@
 	include(dirname(__FILE__)."/../includes/config.inc.php");
 	require_once(dirname(dirname(__FILE__))."/includes/classes/sLog.php");
 	define("MP4Box_BINARY",get_binaries('MP4Box'));
-	define("FLVTool2_BINARY",get_binaries('flvtool2'));
 	define('FFMPEG_BINARY', get_binaries('ffmpeg'));
 
 	/*
@@ -101,31 +100,32 @@
 		logData('Preparing configuration to parse in ffmpeg class','checkpoints');
 
 		$configs = array(
-			'use_video_rate' => true,
+			'use_video_rate' 	 => true,
 			'use_video_bit_rate' => true,
-			'use_audio_rate' => true,
+			'use_audio_rate' 	 => true,
 			'use_audio_bit_rate' => true,
-			'use_audio_codec' => true,
-			'use_video_codec' => true,
-			'format' => 'mp4',
-			'video_codec'=> config('video_codec'),
-			'audio_codec'=> config('audio_codec'),
-			'audio_rate'=> config("srate"),
-			'audio_bitrate'=> config("sbrate"),
-			'video_rate'=> config("vrate"),
-			'video_bitrate'=> config("vbrate"),
-			'video_bitrate_hd'=> config("vbrate_hd"),
-			'normal_res' => config('normal_resolution'),
-			'high_res' => config('high_resolution'),
+			'use_audio_codec'    => true,
+			'use_video_codec' 	 => true,
+			'format' 			 => 'mp4',
+			'video_codec'		 => config('video_codec'),
+			'audio_codec'		 => config('audio_codec'),
+			'audio_rate'		 => config("srate"),
+			'audio_bitrate'		 => config("sbrate"),
+			'video_rate'		 => config("vrate"),
+			'video_bitrate'		 => config("vbrate"),
+			'video_bitrate_hd'	 => config("vbrate_hd"),
+			'normal_res' 		 => config('normal_resolution'),
+			'high_res' 			 => config('high_resolution'),
 			'max_video_duration' => config('max_video_duration'),
-			'resize'=>'max',
-			'outputPath' => $fileDir,
-			'cb_combo_res' => config('cb_combo_res'),
-			'gen_240' => config('gen_240'),
-			'gen_360' => config('gen_360'),
-			'gen_480' => config('gen_480'),
-			'gen_720' => config('gen_720'),
-			'gen_1080' => config('gen_1080')
+			'resize'			 => 'max',
+			'outputPath' 		 => $fileDir,
+			'cb_combo_res' 		 => config('cb_combo_res'),
+			'gen_240' 			 => config('gen_240'),
+			'gen_360' 			 => config('gen_360'),
+			'gen_480' 			 => config('gen_480'),
+			'gen_720' 			 => config('gen_720'),
+			'gen_1080' 			 => config('gen_1080'),
+			'chromecast_fix' 	 => config('chromecast_fix')
 		);
 
 		foreach ($configs as $key => $value){
@@ -142,11 +142,13 @@
 		$ffmpeg->file_name = $tmp_file;
 		$ffmpeg->raw_path = VIDEOS_DIR.'/'.$file_directory.$_filename;
 
-		if( $audio_track && is_numeric($audio_track) )
+		if( $audio_track && is_numeric($audio_track) ){
 			$ffmpeg->audio_track = $audio_track;
+		}
 
-		if( $reconvert )
+		if( $reconvert ){
 			$ffmpeg->reconvert = true;
+		}
 
 		$ffmpeg->ClipBucket();
 		if ($ffmpeg->lock_file && file_exists($ffmpeg->lock_file)){
@@ -157,18 +159,24 @@
 		$video_files = json_encode($ffmpeg->video_files);
 		$db->update(tbl('video'), array("video_files"), array($video_files), " file_name = '{$outputFileName}'");
 
-		if( $reconvert )
-			setVideoStatus($outputFileName, 'completed',true, true);
+		if( config('chromecast_fix') ){
+			$db->update(tbl('video'), array("is_castable"), array(true), " file_name = '{$outputFileName}'");
+		}
+
+		if( $reconvert ) {
+			setVideoStatus( $outputFileName, 'completed', true, true );
+		}
 
 		if (stristr(PHP_OS, 'WIN'))
 		{
-			exec(php_path()." -q ".BASEDIR."/actions/verify_converted_videos.php $orig_file $dosleep");
+			exec(php_path()." -q ".BASEDIR."/actions/verify_converted_videos.php $orig_file");
 		} elseif(stristr(PHP_OS, 'darwin')) {
-			exec(php_path()." -q ".BASEDIR."/actions/verify_converted_videos.php $orig_file $dosleep </dev/null >/dev/null &");
+			exec(php_path()." -q ".BASEDIR."/actions/verify_converted_videos.php $orig_file </dev/null >/dev/null &");
 		} else {
-			exec(php_path()." -q ".BASEDIR."/actions/verify_converted_videos.php $orig_file $dosleep &> /dev/null &");
+			exec(php_path()." -q ".BASEDIR."/actions/verify_converted_videos.php $orig_file &> /dev/null &");
 		}
 
-		if(!isset($_GET['test']))
+		if(!isset($_GET['test'])){
 			unlink($orig_file);
+		}
 	}

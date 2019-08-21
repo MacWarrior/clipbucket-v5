@@ -13,9 +13,12 @@
         {/if}
         <input class="btn btn-primary btn-xs button" type="submit" name="make_featured_selected" value="Make Featured"/>
         <input class="btn btn-primary btn-xs button" type="submit" name="make_unfeatured_selected" value="Make Unfeatured"/>
+		<input class="btn btn-primary btn-xs button" type="submit" name="reconvert_selected" value="Reconvert"/>
+		{if config('chromecast')=='yes'}
+		<input class="btn btn-primary btn-xs button" type="submit" name="check_castable_selected" value="{lang code='castable_status_check'}"/>
+		{/if}
         <input class="btn btn-primary btn-xs button" type="submit" name="delete_selected" value="{lang code='delete'}"
                onclick="return _cb.confirm_it('Are you sure you want to delete selected video(s)')"/>
-        <input class="btn btn-primary btn-xs button" type="submit" name="reconvert_selected" value="Reconvert"/>
     </div>
     <table class="table table-bordered table-striped manageUsersTable marginTop">
         <tr>
@@ -64,6 +67,14 @@
 									<span class="label label-warning">Non-Convertable</span>
 									{else}
 									<span class="label label-info">Re-Convertable</span>
+									{/if}
+
+									{if config('chromecast')=='yes'}
+										{if is_castable($video.videoid)}
+									<span class="label label-success">{lang code='castable'}</span>
+										{else}
+									<span class="label label-warning">{lang code='non_castable'}</span>
+										{/if}
 									{/if}
 
 									{$quals = resString($video.video_files)}
@@ -124,11 +135,14 @@
 							</a>
 						</li>
 						<li><a role="menuitem" tabindex="-1" href="?reconvert_video={$video.videoid}">Re Convert</a></li>
+						{if config('chromecast')=='yes' && !is_castable($video.videoid)}
+						<li><a href="?check_castable={$video.videoid}">{lang code='castable_status_check'}</a></li>
+						{/if}
                         <li class="divider"></li>
                         <li><a role="menuitem" tabindex="-1" href="?delete_video={$video.videoid}">{lang code='delete'}</a>
                         </li>
                         {foreach from=$cbvid->video_manager_link item=links}
-                        {$cbvid->video_manager_link($links,$video)}
+                        	{$cbvid->video_manager_link($links,$video)}
                         {/foreach}
                     </ul>
                 </div>
@@ -144,9 +158,12 @@
         <input class="btn btn-primary btn-xs button" type="submit" name="deactivate_selected" value="{lang code='deactivate'}"/>
         <input class="btn btn-primary btn-xs button" type="submit" name="make_featured_selected" value="Make Featured"/>
         <input class="btn btn-primary btn-xs button" type="submit" name="make_unfeatured_selected" value="Make Unfeatured"/>
+		<input class="btn btn-primary btn-xs button" type="submit" name="reconvert_selected" value="Reconvert"/>
+		{if config('chromecast')=='yes'}
+		<input class="btn btn-primary btn-xs button" type="submit" name="check_castable_selected" value="{lang code='castable_status_check'}"/>
+		{/if}
         <input class="btn btn-primary btn-xs button" type="submit" name="delete_selected" value="{lang code='delete'}"
                onclick="return _cb.confirm_it('Are you sure you want to delete selected video(s)')"/>
-        <input class="btn btn-primary btn-xs button" type="submit" name="reconvert_selected" value="Reconvert"/>
     </div>
 </form>
 

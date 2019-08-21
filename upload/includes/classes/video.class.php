@@ -6,7 +6,7 @@
  *
  *
  * Class : Video
- * Used to perform function swith videos
+ * Used to perform functions with videos
  * -- history
  * all function that were in my_query
  * has been transfered here
@@ -19,7 +19,6 @@ define("QUICK_LIST_SESS","quick_list");
 class CBvideo extends CBCategory
 {
 	var $embed_func_list = array(); //Function list that are applied while asking for video embed code
-	var $embed_src_func_list = array(); //Function list that are applied while asking for video embed src
 	var $action = ''; // variable used to call action class
 	var $collection = '';
 	var $email_template_vars = array();
@@ -46,9 +45,9 @@ class CBvideo extends CBCategory
 		$this->init_actions();
 		$this->init_collections();
 		
-		if(config('vid_cat_height'));
+		if(config('vid_cat_height'))
 			$this->cat_thumb_height = config('vid_cat_height');
-		if(config('vid_cat_width'));
+		if(config('vid_cat_width'))
 			$this->cat_thumb_width = config('vid_cat_width');
 		
 		if(isSectionEnabled('videos'))
@@ -95,10 +94,6 @@ class CBvideo extends CBCategory
         return $this->extra_fields;
     }
 
-    function set_extra_fields( $fields = array() ) {
-        return $this->extra_fields = $fields;
-    }
-
     function get_video_fields( $extra_fields = array() )
 	{
         $fields = $this->get_basic_fields();
@@ -127,19 +122,6 @@ class CBvideo extends CBCategory
         return $fields;
     }
 
-    function add_video_field( $field )
-	{
-        $extra_fields = $this->get_extra_fields();
-
-        if ( is_array( $field ) ) {
-            $extra_fields = array_merge( $extra_fields, $field );
-        } else {
-            $extra_fields[] = $field;
-        }
-
-        return $this->set_extra_fields( $extra_fields );
-    }
-
 	/**
 	 * Initiating Collections
 	 */
@@ -157,7 +139,7 @@ class CBvideo extends CBCategory
 	/**
 	 * Function used to check weather video exists or not
 	 *
-	 * @param VID or VKEY
+	 * @param int|string VID or VKEY
 	 *
 	 * @return bool
 	 */
@@ -171,7 +153,6 @@ class CBvideo extends CBCategory
 			return $db->count(tbl("video"),"videoid"," videokey='$vid' ");
 	}
 	function exists($vid){return $this->video_exists($vid);}
-	function videoexists($vid){return $this->video_exists($vid);}
 
 	/**
 	 * Function used to get video data
@@ -235,11 +216,7 @@ class CBvideo extends CBCategory
 	}
 
 	function getvideo($vid){return $this->get_video($vid);}
-	function get_video_data($vid){return $this->get_video($vid);}
-	function getvideodata($vid){return $this->get_video($vid);}
 	function get_video_details($vid){return $this->get_video($vid);}
-	function getvideodetails($vid){return $this->get_video($vid);}
-	function get_basic_video_details( $vid ){ return $this->get_video( $vid, false, true ); }
 
 	/**
 	 * Function used to perform several actions with a video
@@ -248,6 +225,7 @@ class CBvideo extends CBCategory
 	 * @param $vid
 	 *
 	 * @return bool|string
+	 * @throws phpmailerException
 	 */
 	function action($case,$vid)
 	{
@@ -257,7 +235,7 @@ class CBvideo extends CBCategory
 		 
 		if(!$video)
 			return false;
-		//Lets just check weathter video exists or not
+		//Lets just check weather video exists or not
 		switch($case)
 		{
 			//Activating a video
@@ -266,28 +244,25 @@ class CBvideo extends CBCategory
 			case 'a':
 				$db->update(tbl("video"),array('active'),array('yes')," videoid='$vid' OR videokey = '$vid' ");
 				e(lang("class_vdo_act_msg"),'m');
-				
+
 				if(SEND_VID_APPROVE_EMAIL=='yes')
 				{
 					//Sending Email
-					global $cbemail,$userquery;
+					global $cbemail;
 					$tpl = $cbemail->get_template('video_activation_email');
-					#$user_fields = $userquery->get_user_field($video['userid'],"username,email");
-					$more_var = array
-					('{username}'	=> $video['username'],
-					 '{video_link}' => videoLink($video)
+					$var = array(
+						'{username}'	=> $video['username'],
+					 	'{video_link}' => videoLink($video)
 					);
-					if(!is_array($var))
-						$var = array();
-					$var = array_merge($more_var,$var);
 					$subj = $cbemail->replace($tpl['email_template_subject'],$var);
 					$msg = nl2br($cbemail->replace($tpl['email_template'],$var));
-					
-					//Now Finally Sending Email
-					cbmail(array('to'=>$video['email'],'from'=>WEBSITE_EMAIL,'subject'=>$subj,'content'=>$msg));
+
+					if($video['email'] != 'admin@thiswebsite.com'){
+						//Now Finally Sending Email
+						cbmail(array('to'=>$video['email'],'from'=>WEBSITE_EMAIL,'subject'=>$subj,'content'=>$msg));
+					}
 				}
-				
-				
+
 				if(($video['broadcast']=='public' || $video['broadcast'] =="logged")
 					&& $video['subscription_email']=='pending')
 				{
@@ -323,6 +298,10 @@ class CBvideo extends CBCategory
 			case "uf":
 				$db->update(tbl("video"),array('featured'),array('no')," videoid='$vid' OR videokey = '$vid' ");
 				e(lang("class_fr_msg1"),'m');
+				break;
+
+			case 'check_castable':
+				check_castable_status($video);
 				break;
 		}
 	}

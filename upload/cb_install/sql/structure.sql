@@ -994,6 +994,7 @@ CREATE TABLE `{tbl_prefix}video` (
   `thumbs_version` varchar(5) NOT NULL DEFAULT '2.6',
   `re_conv_status` tinytext NOT NULL DEFAULT '',
   `conv_progress` text NOT NULL DEFAULT '',
+  `is_castable` boolean NOT NULL DEFAULT FALSE,
   PRIMARY KEY (`videoid`),
   KEY `userid` (`userid`),
   KEY `featured` (`featured`),

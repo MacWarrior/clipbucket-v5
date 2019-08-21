@@ -42,10 +42,23 @@
 		$cbvid->action('unfeature',$video);
 	}
 
+	if(isset($_GET['check_castable'])){
+		$videoid = mysql_clean($_GET['check_castable']);
+		$vdetails = get_video_details($videoid);
+		check_castable_status($vdetails);
+	}
+	if(isset($_POST['check_castable_selected']))
+	{
+		for($id=0;$id<count($_POST['check_video']);$id++){
+			$vdetails = get_video_details($_POST['check_video'][$id]);
+			check_castable_status($vdetails);
+		}
+	}
+
 	//Using Multiple Action
 	if(isset($_POST['make_featured_selected']))
 	{
-		for($id=0;$id<=count($_POST['check_video']);$id++){
+		for($id=0;$id<count($_POST['check_video']);$id++){
 			$cbvid->action('feature',$_POST['check_video'][$id]);
 		}
 		$eh->flush();
@@ -53,7 +66,7 @@
 	}
 	if(isset($_POST['make_unfeatured_selected']))
 	{
-		for($id=0;$id<=count($_POST['check_video']);$id++){
+		for($id=0;$id<count($_POST['check_video']);$id++){
 			$cbvid->action('unfeature',$_POST['check_video'][$id]);
 		}
 		$eh->flush();
@@ -73,7 +86,7 @@
 	//Using Multiple Action
 	if(isset($_POST['activate_selected']))
 	{
-		for($id=0;$id<=count($_POST['check_video']);$id++){
+		for($id=0;$id<count($_POST['check_video']);$id++){
 			$cbvid->action('activate',$_POST['check_video'][$id]);
 		}
 		$eh->flush();
@@ -81,7 +94,7 @@
 	}
 	if(isset($_POST['deactivate_selected']))
 	{
-		for($id=0;$id<=count($_POST['check_video']);$id++){
+		for($id=0;$id<count($_POST['check_video']);$id++){
 			$cbvid->action('deactivate',$_POST['check_video'][$id]);
 		}
 		$eh->flush();
@@ -97,7 +110,7 @@
 	//Deleting Multiple Videos
 	if(isset($_POST['delete_selected']))
 	{
-		for($id=0;$id<=count($_POST['check_video']);$id++)
+		for($id=0;$id<count($_POST['check_video']);$id++)
 		{
 			$cbvideo->delete_video($_POST['check_video'][$id]);
 		}

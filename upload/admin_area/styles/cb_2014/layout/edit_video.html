@@ -22,6 +22,9 @@
 					{else}
 					<li><a href="edit_video.php?video={$data.videoid}&amp;mode=unfeature">Make Unfeatured</a></li>
 					{/if}
+					{if config('chromecast')=='yes' && !is_castable($data.videoid)}
+					<li><a href="edit_video.php?video={$data.videoid}&amp;mode=check_castable">{lang code='castable_status_check'}</a></li>
+					{/if}
 					<li><a href="javascript:void(0);" onClick="javascript:Confirm_Delete('video_manager.php?delete_video={$data.videoid}')">{lang code='delete'}</a></li>
 				</ul>
 			</div>

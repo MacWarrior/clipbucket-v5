@@ -49,6 +49,9 @@ ALTER TABLE `{tbl_prefix}video`
 	MODIFY COLUMN `re_conv_status` TINYTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
 	MODIFY COLUMN `conv_progress` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
 
+ALTER TABLE `{tbl_prefix}video`
+    ADD `is_castable` BOOLEAN NOT NULL DEFAULT FALSE;
+
 ALTER TABLE `{tbl_prefix}user_profile`
 	MODIFY COLUMN `fb_url` VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
 	MODIFY COLUMN `twitter_url` VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
