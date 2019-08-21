@@ -14,8 +14,8 @@ require 'includes/config.inc.php';
 $userquery->logincheck();
 $pages->page_redir();
 
-
-$udetails = $userquery->get_user_details(userid());
+$userid = userid();
+$udetails = $userquery->get_user_details($userid);
 assign('user',$udetails);
 assign('p',$userquery->get_user_profile($udetails['userid']));
 
@@ -23,7 +23,7 @@ $vid = mysql_clean($_GET['vid']);
 //get video details
 $vdetails = $cbvid->get_video_details($vid);
 
-if($vdetails['userid'] != userid())
+if($vdetails['userid'] != $userid)
 {
 	e(lang('no_edit_video'));
 	$Cbucket->show_page = false;

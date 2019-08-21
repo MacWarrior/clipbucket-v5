@@ -67,8 +67,7 @@ function table_fields( $fields, $table = false ) {
                         $the_fields .=", ";
                     $the_fields .= $key . '.' . $field;
                 }
-            }else
-            {
+            } else {
                 $field = $_fields;
 
                 if ($the_fields)

@@ -166,6 +166,7 @@
 				}
 			}
 		}
+
 		$content = $array['content'];
 		$subject = $array['subject'];
 		$to		 = $array['to'];
@@ -175,7 +176,7 @@
 		if($array['nl2br']) {
 			$content = nl2br($content);
 		}
-		
+
 		# Checking Content
 		if(preg_match('/<html>/',$content,$matches)) {
 			if(empty($matches[1])) {
@@ -183,7 +184,7 @@
 			}
 		}
 		$message = $content;
-		
+
 		//ClipBucket uses PHPMailer for sending emails
 		include_once("classes/phpmailer/class.phpmailer.php");
 		include_once("classes/phpmailer/class.smtp.php");
@@ -209,7 +210,8 @@
 			$mail->AddAddress(strtolower($to), $to_name);
 		}
 		$mail->Subject = $subject;
-		$mail->MsgHTML($message);		
+		$mail->MsgHTML($message);
+
 		if(!$mail->Send()) {
 			if(has_access('admin_access',TRUE) ) {
 		  		e("Mailer Error: " . $mail->ErrorInfo);
@@ -3015,7 +3017,7 @@
 	 * @param string $priority
 	 * @param bool   $is_url
 	 *
-	 * @return array : { string } { $xml } { array converted into XML }
+	 * @return array|bool : { string } { $xml } { array converted into XML }
 	 */
 	function xml2array($url, $get_attributes = 1, $priority = 'tag',$is_url=true)
 	{
