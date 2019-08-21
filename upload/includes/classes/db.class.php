@@ -423,13 +423,17 @@ class Clipbucket_db
             } else {
                 $val = $this->clean_var($value);
             }
-            $needle = substr($val,0,3);
-            if($needle != '|f|') {
-                $values_query .= "'".$val."'";
-            } else {
-                $val = substr($val,3,strlen($val));
-                $values_query .= "'".$val."'";
-            }
+            if( $val == 'NULL' ){
+				$values_query .= 'NULL';
+			} else {
+				$needle = substr($val,0,3);
+				if($needle != '|f|') {
+					$values_query .= "'".$val."'";
+				} else {
+					$val = substr($val,3,strlen($val));
+					$values_query .= "'".$val."'";
+				}
+			}
 
             if($total_values!=$count) {
                 $values_query .= ',';
