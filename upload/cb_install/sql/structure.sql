@@ -507,7 +507,6 @@ CREATE TABLE `{tbl_prefix}pages` (
 
 CREATE TABLE `{tbl_prefix}photos` (
   `photo_id` bigint(255) NOT NULL AUTO_INCREMENT,
-  `cb_photo_details` text NOT NULL DEFAULT '',
   `photo_key` mediumtext NOT NULL,
   `photo_title` mediumtext NOT NULL,
   `photo_description` mediumtext NOT NULL,

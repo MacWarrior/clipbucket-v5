@@ -59,7 +59,6 @@ ALTER TABLE `{tbl_prefix}user_profile`
 
 ALTER TABLE `{tbl_prefix}photos`
 	MODIFY COLUMN `views` BIGINT(255) NOT NULL DEFAULT '0',
-    MODIFY COLUMN `cb_photo_details` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
     MODIFY COLUMN `total_comments` INT(255) NOT NULL DEFAULT '0',
     MODIFY COLUMN `last_commented` DATETIME NULL DEFAULT NULL,
     MODIFY COLUMN `total_favorites` INT(255) NOT NULL DEFAULT '0',
