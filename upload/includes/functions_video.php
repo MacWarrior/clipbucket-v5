@@ -1028,8 +1028,10 @@
 
         increment_views_new($vdo['videokey'],'video');
 
-        if(userid())
-            $userquery->increment_watched_vides(userid());
+        $userid = userid();
+        if($userid){
+            $userquery->increment_watched_vides($userid);
+		}
     }
 
 	/**
