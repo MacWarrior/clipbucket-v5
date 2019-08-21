@@ -35,16 +35,19 @@
         }
     }
 
-    /**
-    * Translates a given phrase and stores translation to file immediately
-    * @param : { string } { $phrase } { Phrase to be translated }
-    * @param : { string } { $phrase_code } { lang code of phrase to be translated }
-    * @param : { string } { $to } { iso code of language that phrase is to be translated to }
-    *
-    * @return : { string  } { $translation } { translated string }
-    * @since : 8th October, 2016 ClipBucket 2.8.1
-    * @author : Saqib Razzaq
-    */
+	/**
+	 * Translates a given phrase and stores translation to file immediately
+	 *
+	 * @param $phrase
+	 * @param $phrase_code
+	 * @param $to
+	 * @param $total
+	 * @param $current
+	 *
+	 * @return bool|string : { string  } { $translation } { translated string } { $translation } { translated string }
+	 * @since : 8th October, 2016 ClipBucket 2.8.1
+	 * @author : Saqib Razzaq
+	 */
 
     function translate_phrase($phrase, $phrase_code, $to, $total, $current) {
         global $GoogleTranslator;

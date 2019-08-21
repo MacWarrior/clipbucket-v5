@@ -58,5 +58,3 @@ class GoogleTranslator
         return false;
     }
 }
-
-?>

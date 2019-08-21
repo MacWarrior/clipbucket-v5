@@ -378,14 +378,14 @@
         $('#lang_option, #submit_lang1').attr("disabled",true);
 
         data = {
-             'selectFieldValue': $('#lang_option').val(),
-             'langDetect': $('#lang_option option:selected').attr('data-check'),
-             'phrase_code' : phrase_code,
-             'phrase' : phrase,
-             'totalPhrases' : totalPhrases,
-             'phraseNum' : phraseNum
-            }
+			'selectFieldValue': $('#lang_option').val(),
+			'langDetect': $('#lang_option option:selected').attr('data-check'),
+			'phrase_code' : phrase_code,
+			'phrase' : phrase,
+			'totalPhrases' : totalPhrases,
+			'phraseNum' : phraseNum
+		};
 
-            sendAjax(data);
+		sendAjax(data);
   });
 </script>

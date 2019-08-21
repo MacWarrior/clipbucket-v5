@@ -452,7 +452,7 @@ class language
 		$other = count($phrases);
 
 		if($count > $other){
-			e(lang("Lanuage Pack is not complete."),"w");
+			e(lang("Language Pack is not complete."),"w");
 		} elseif($count == $other) {
 			e(lang("Full Language Pack is added.","m"));
 		}
