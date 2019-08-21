@@ -130,7 +130,7 @@
 			{
 				e('Unable to upload "'.$file_arr['title'].'"', 'e');
 			}else{
-				e('"'.$file_arr['title'].'" Has been uploaded successfully','m');
+				e('"'.$file_arr['title'].'" has been uploaded successfully','m');
 			}
 
 			if($vid)
