@@ -1724,6 +1724,8 @@ video::-webkit-media-text-track-display {
 	text-align: right
 }
 
+/* CUSTOMIZATION */
+
 .vjs-has-started .vjs-cb-header-caption {
 	display: flex;
 	visibility: visible;
@@ -1750,4 +1752,8 @@ video::-webkit-media-text-track-display {
 
 .vjs-has-started.vjs-no-flex .vjs-cb-header-caption {
 	display: table;
+}
+
+.video-js .vjs-big-play-button {
+	border-radius: initial !important;
 }
