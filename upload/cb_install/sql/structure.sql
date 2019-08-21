@@ -11,7 +11,7 @@ CREATE TABLE `{tbl_prefix}action_log` (
   `action_userlevel` int(11) NOT NULL,
   `action_ip` varchar(15) NOT NULL,
   `date_added` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `action_success` enum('yes','no') NOT NULL,
+  `action_success` enum('yes','no') NULL DEFAULT NULL,
   `action_details` text NOT NULL,
   `action_obj_id` int(255) NOT NULL,
   `action_done_id` int(255) NOT NULL,

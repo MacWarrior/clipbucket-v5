@@ -429,37 +429,43 @@
             </li>
             <li>
                 <a data-toggle="tab" href="#avatar">
-                    User Avatar
+                    {lang code='user_user_avatar'}
                 </a>
             </li>
             </ul>
         <div class="tab-content">
             <div id="recent" class="tab-pane active">
-    <div class="recentActivityLog">
-      <h3>Recent Activity Log</h3>
-      <table class="table table-bordered table-striped">
-        <tr>
-          <td>ID</td>
-          <td>UID</td>
-          <td>Username</td>
-          <td>Date</td>
-          <td>Detail</td>
-        </tr>
-        {assign var="logs" value=$userquery->get_user_action_log($u.userid,10)}
-        {section loop=$logs name=log}
-        <tr>
-          <td>{$logs[log].action_id}</td>
-          <td>{$logs[log].action_userid}</td>
-          <td width="100">{$logs[log].action_username}</td>
-          <td width="100">{cbdatetime(NULL, $logs[log].date_added)}</td>
-          <td>
-            Type : {$logs[log].action_type} &#8211;{if $logs[log].action_details!=''}{$logs[log].action_details} &#8211;{/if} Success : {$logs[log].action_success} &#8211 {$logs[log].action_ip}
-          </td>
-        </tr>
-        {/section}
-      </table>
-    </div>
-                </div>
+				<div class="recentActivityLog">
+					<h3>Recent Activity Log</h3>
+					<table class="table table-bordered table-striped">
+						<tr>
+							<td>User ID</td>
+							<td>{lang code='username'}</td>
+							<td>{lang code='date'}</td>
+							<td>IP</td>
+							<td>{lang code='details'}</td>
+						</tr>
+						{assign var="logs" value=$userquery->get_user_action_log($u.userid,10)}
+						{section loop=$logs name=log}
+						<tr>
+							<td>{$logs[log].action_userid}</td>
+							<td width="100">{$logs[log].action_username}</td>
+							<td width="100">{cbdatetime(NULL, $logs[log].date_added)}</td>
+							<td>{$logs[log].action_ip}</td>
+							<td>
+								{$logs[log].action_type}
+								{if $logs[log].action_details!=''}
+									- {$logs[log].action_details}
+								{/if}
+								{if $logs[log].action_success!=null}
+									- Success : {$logs[log].action_success}
+								{/if}
+							</td>
+						</tr>
+						{/section}
+					</table>
+				</div>
+			</div>
 
             <div id="avatar" class="tab-pane">
     <div class="useAvatar">

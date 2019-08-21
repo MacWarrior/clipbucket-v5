@@ -224,21 +224,21 @@ class Upload
 				{
 					$db->Execute($query);
 					$insert_id = $db->insert_id();
-					
+
 					//logging Upload
 					$log_array = array(
 						'success'=>'yes',
 						'action_obj_id' => $insert_id,
 						'userid' => $userid,
-						'details'=> "uploaded a video"
+						'details' => $array['title']
 					);
-					insert_log('upload_video',$log_array);
-					
+					insert_log('Uploaded a video',$log_array);
+
 					$db->update(tbl("users"),array("total_videos"),array("|f|total_videos+1")," userid='".$userid."'");
 				}
 			}
 		}
-		
+
 		//Adding Video Feed
 		addFeed(array('action' => 'upload_video','object_id' => $insert_id,'object'=>'video'));
 		return $insert_id;

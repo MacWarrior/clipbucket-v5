@@ -2074,8 +2074,19 @@
 					$vdetails = get_video_details($id);
 					// Cookie life time at least 1 hour else if video duration is bigger set at video time.
 					$cookieTime = ($vdetails['duration'] > 3600) ? $vdetails['duration'] : $cookieTime = 3600;
-					$db->update(tbl("video"),array("views", "last_viewed"),array("|f|views+1",'NOW()')," videoid='$id' OR videokey='$id'");
+					$db->update(tbl("video"),array("views", "last_viewed"),array("|f|views+1",'NOW()')," videoid='$id'");
 					setcookie('video_'.$id,'watched',time()+$cookieTime);
+
+					$userid = userid();
+					if( $userid ){
+						$log_array = array(
+							'success'=> 'NULL',
+							'action_obj_id' => $id,
+							'userid' => $userid,
+							'details'=> $vdetails['title']
+						);
+						insert_log('Watch a video',$log_array);
+					}
 				}
 				break;
 
@@ -3653,12 +3664,13 @@
 	
 	/**
 	* Function used to get database size
-	* @return : { array } { $dbsize } { array with data size }
+	* @return int : { $dbsize }
 	*/
 	function get_db_size()
 	{
 		global $db;
 		$results = $db->_select("SHOW TABLE STATUS");
+		$dbsize = 0;
 		foreach($results as $row) {
 			$dbsize += $row[ "Data_length" ] + $row[ "Index_length" ];
 		}

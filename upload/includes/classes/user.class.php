@@ -251,7 +251,7 @@ class userquery extends CBCategory{
 	 */
 	function login_user($username,$password,$remember=false)
 	{
-		global $sess, $cblog, $db;
+		global $sess, $db;
 
 		//First we will check weather user is already logged in or not
 		if($this->login_check(NULL,true))
@@ -318,11 +318,10 @@ class userquery extends CBCategory{
 						'username'=>$username,
 						'userid'=>$udetails['userid'],
 						'useremail'=>$udetails['email'],
-						'success'=>1,
+						'success'=>'yes',
 						'level'=>$udetails['level']
 					);
-					$cblog->insert('login',$log_array);
-
+					insert_log('Try to login',$log_array);
 					return true;
 				}
 			}
@@ -332,9 +331,9 @@ class userquery extends CBCategory{
 		if(!empty($msg))
 		{
 			//Logging Action
-			$log_array['success'] = no;
+			$log_array['success'] = 'no';
 			$log_array['details'] = $msg[0];
-			$cblog->insert('login',$log_array);
+			insert_log('Try to login',$log_array);
 		}
 	}
 
@@ -4225,7 +4224,7 @@ class userquery extends CBCategory{
 	 */
 	function login_as_user($id,$realtime=false)
 	{
-		global $sess,$db,$cblog;
+		global $sess,$db;
 		$udetails = $this->get_user_details($id);
 		if($udetails)
 		{
@@ -4245,7 +4244,6 @@ class userquery extends CBCategory{
 				
 				$db->delete(tbl("sessions"),array("session"),array($sess->id));
 				$sess->add_session($userid,'smart_sess',$smart_sess);
-			
 			} else {
 				if($this->login_check(NULL,true))
 					$msg[] = e(lang('you_already_logged'));
@@ -4262,7 +4260,7 @@ class userquery extends CBCategory{
 					$userid = $udetails['userid'];
 					$log_array['userid'] = $userid  = $udetails['userid'];
 					$log_array['useremail'] = $udetails['email'];
-					$log_array['success'] = 1;
+					$log_array['success'] = 'yes';
 					$log_array['level'] = $level = $udetails['level'];
 						
 					//Starting special sessions for security
@@ -4289,8 +4287,7 @@ class userquery extends CBCategory{
 
 					$this->init();
 					//Logging Action
-					$cblog->insert('login',$log_array);
-					
+					insert_log('Try to login',$log_array);
 					return true;
 				}
 				
@@ -4298,9 +4295,9 @@ class userquery extends CBCategory{
 				if(!empty($msg))
 				{
 					//Logging Action
-					$log_array['success'] = no;
+					$log_array['success'] = 'no';
 					$log_array['details'] = $msg[0];
-					$cblog->insert('login',$log_array);
+					insert_log('Try to login',$log_array);
 				}
 			}
 						

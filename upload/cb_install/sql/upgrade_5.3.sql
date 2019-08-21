@@ -78,3 +78,6 @@ ALTER TABLE `{tbl_prefix}collections`
     MODIFY COLUMN `rating` BIGINT(20) NOT NULL DEFAULT '0',
     MODIFY COLUMN `rated_by` BIGINT(20) NOT NULL DEFAULT '0',
     MODIFY COLUMN `voters` LONGTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+
+ALTER TABLE `{tbl_prefix}action_log`
+    MODIFY COLUMN `action_success` ENUM('yes','no') CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
