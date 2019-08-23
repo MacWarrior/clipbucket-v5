@@ -134,7 +134,9 @@
 								File conversion details
 							</a>
 						</li>
+						{if isReconvertAble($video)}
 						<li><a role="menuitem" tabindex="-1" href="?reconvert_video={$video.videoid}">Re Convert</a></li>
+						{/if}
 						{if config('chromecast')=='yes' && !is_castable($video.videoid)}
 						<li><a href="?check_castable={$video.videoid}">{lang code='castable_status_check'}</a></li>
 						{/if}
