@@ -25,8 +25,8 @@ class CBLogs
 {
 	/**
 	 * Function used to insert log
-	 * @param VARCHAR $type, type of action
-	 * @param ARRAY $details_array , action details array
+	 * @param string $type, type of action
+	 * @param array $details_array , action details array
 	 */
 	function insert($type,$details_array)
 	{

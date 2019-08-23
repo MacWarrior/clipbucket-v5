@@ -15,8 +15,7 @@
 	
 	$cbmass 	= new mass_upload();
 	$ads_query 	= new AdsManager();
-	
-	
+
 	$admin_pages = $row['admin_pages'];
 	
 	if(isset($_POST['update_dp_options']))
