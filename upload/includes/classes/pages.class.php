@@ -2,7 +2,7 @@
 
 /**
  **************************************************************************************************
- Don Not Edit These Classes , It May cause your script not to run properly
+ Do Not Edit These Classes , It May cause your script not to run properly
  This source file is subject to the ClipBucket End-User License Agreement, available online at:
  http://www.opensource.org/licenses/attribution.php
  By using this software, you acknowledge having read this Agreement and agree to be bound thereby.
@@ -12,8 +12,7 @@
  **/
 
 class pages{
- 	
-	var $max_pages = 4; //Used for pagination, after crossing this limit, pagination will start
+
 	var $url_page_var = 'page';
 	var $pre_link = '';
 	var $next_link = '';
@@ -45,43 +44,6 @@ class pages{
 		
 		return $serverProtocol. '://' .$serverName.$serverPort;
 	}
-		
-	function GetBaseUrl($more=false)
-	{
-		$serverURL      = $this->GetServerUrl();
-		$scriptPath     = NULL;
-
-		if ( isset($_SERVER['SCRIPT_NAME']) ) {
-			$scriptPath = $_SERVER['SCRIPT_NAME'];
-			$scriptPath = ( $scriptPath == '/' ) ? '' : dirname($scriptPath);
-		}
-		  
-		$base = basename(dirname($_SERVER['SCRIPT_NAME']));
-		$sus_dirs = array('admin_area','includes','plugins','files','actions','cb_install');
-
-		$remove_arr = array();
-		$remove_arr[] = '/:\/\/www\./';
-		
-		if($more)
-		$remove_arr[] = $more;
-		if(in_array($base,$sus_dirs))
-			$remove_arr[] = '/\/'.$base.'/';
-		
-		//Clearing Plugin  and Player baseurl
-		if(strstr($scriptPath,'/plugins/'))
-			$scriptPath = preg_replace('/(.*)\/plugins(.*)/i',"$1",$scriptPath);
-		if(strstr($scriptPath,'/player/'))
-			$scriptPath = preg_replace('/(.*)\/plugins(.*)/i',"$1",$scriptPath);
-
-		$baseURL = $serverURL . $scriptPath;
-		
-		$baseURL = preg_replace($remove_arr,'',$baseURL);
-		
-		if(substr($baseURL,strlen($baseURL)-1,1)=='/')
-			$baseURL = substr($baseURL,0,strlen($baseURL)-1);
-			
-		return $baseURL;
-	}
 	
 	function GetCurrentUrl()
 	{
@@ -93,6 +55,7 @@ class pages{
 		  
 			return $serverURL . $requestURL;
 		}
+		return '';
 	}
 
  	//This Function Set The PageDirect
@@ -101,22 +64,6 @@ class pages{
 		Assign('pageredir',@$_COOKIE['pageredir']);
 	}
 	
-	//This Function is use to Show Admin Panels Pages
-	function show_admin_page($page)
-	{
-		$pages = array(
-			'main' 				=> 'main.php',
-			'server_check'		=> 'verifier.php',
-			'members_showall'	=> 'members.php?view=showall',
-			'members_inactive'	=> 'members.php?view=inactive',
-			'members_active'	=> 'members.php?view=active',
-			'members_addmember'	=> 'members.php?view=addmember',
-			'members_search'	=> 'members.php?view=search'
-		);
-		return @$pages[$page];
-	}
-	
-	
 	//Redirects page to without www.
 	function redirectOrig()
 	{
@@ -124,30 +71,6 @@ class pages{
 		$newPage = preg_replace('/:\/\/www\./','://',$curpage);
 		if($curpage !=$newPage)
 			header("location:$newPage");
-	}
-	
-	function create_url($params_array,$url=NULL,$remove_param=false,$urlencode=false)
-	{
-		if($url==NULL or $url == 'auto')
-		{
-			if($_SERVER['QUERY_STRING'])
-				$url = '?'.$_SERVER['QUERY_STRING'];
-		}
-		
-		$new_link = '';
-		$new_link .= $url;
-		if(is_array($params_array))
-		{
-			foreach($params_array as $name => $value)
-			{
-				if($url)
-					$new_link .='&'.$name.'='.$value;
-				else
-					$new_link .='?'.$name.'='.$value;
-			}
-		}
-		
-		return $new_link;
 	}
 	
 	//This Function is used to Redirect to respective URL
@@ -159,6 +82,14 @@ class pages{
 
 	/**
 	 * Function used to create link
+	 *
+	 * @param        $page
+	 * @param null   $link
+	 * @param null   $extra_params
+	 * @param string $tag
+	 * @param bool   $return_param
+	 *
+	 * @return string|string[]|null
 	 */
 	function create_link($page,$link=NULL,$extra_params=NULL,$tag=' <a #params#>#page#</a> ',$return_param=false)
 	{
@@ -185,6 +116,8 @@ class pages{
 		
 		//Now checking if url is using & and ? then do not apply PAGE using slash instead use & or ?
 		$current_url = $_SERVER['REQUEST_URI'];
+
+		$has_amp = $has_php = $has_q = false;
 		preg_match('/\?/',$current_url,$cur_matches);
 		if(count($cur_matches))
 			$has_q = true;
@@ -204,12 +137,9 @@ class pages{
 		else
 			$use_seo = true;
 
-		if(SEO=='yes' && THIS_PAGE !='search_result' && !BACK_END && $use_seo)
+		if(SEO=='yes' && THIS_PAGE !='search_result' && !BACK_END && $use_seo && count($_GET) != 0 && (count($_GET) != 3 || !isset($_GET['page'])))
 		{
-			if(count($_GET)==0 || (count($_GET)==3 && isset($_GET['page'])))
-				$params = $params;	 
-			else
-				$params ='href="./'.$page.'"';
+			$params ='href="./'.$page.'"';
 		}
 
 		$final_link = preg_replace(array("/$page_pattern/i","/$param_pattern/i"),array($page,$params),$tag);
