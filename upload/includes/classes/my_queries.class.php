@@ -373,24 +373,6 @@ class myquery
 			return $sql;
 	}
 
-	/**
-	 * Function used to send subscription message
-	 */
-	function send_subscription($subscriber,$from,$video)
-	{
-		//First checking weather $subscriber exists or not
-		$array = array('%subscriber%','%user%','%website_title%');
-		$replace = array($subscriber,$from,TITLE);
-		
-		$to = $subscriber;
-		$subj = str_replace($array,$replace,lang('user_subscribe_subject'));
-		
-		//Get Subscription Message Template
-		$msg = get_subscription_template();
-		$msg = str_replace($array,$replace,$msg);
-		$this->SendMessage($to,$from,$subj,$msg,$video,0,0);
-	}
-
     /**
      * Function used to add comment
      * This is more advance function ,
@@ -485,16 +467,14 @@ class myquery
 				
 				$tpl = $cbemail->get_template('user_comment_email');
 				
-				$more_var = array(
+				$var = array(
 					'{username}'	=> $username,
 					'{fullname}' => $fullname,
 					 '{obj_link}' => $obj_link.'#comment_'.$cid,
 					 '{comment}' => $comment,
 					 '{obj}'	=> get_obj_type($type)
 				);
-				if(!is_array($var))
-					$var = array();
-				$var = array_merge($more_var,$var);
+
 				$subj = $cbemail->replace($tpl['email_template_subject'],$var);
 				$msg = nl2br($cbemail->replace($tpl['email_template'],$var));
 				
@@ -502,7 +482,6 @@ class myquery
 				cbmail(array('to'=>$own_details,'from'=>WEBSITE_EMAIL,'subject'=>$subj,'content'=>$msg));
 
 				if($reply_to!=0){
-
 					$tpl = $cbemail->get_template('user_reply_email');
 					
 					$more_var = array

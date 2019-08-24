@@ -585,6 +585,7 @@
 				$id = mysql_clean($_POST['obj_id']);
 				if($comment == 'undefined')
 					$comment = '';
+
 				switch($type)
 				{
 					case 'v':
