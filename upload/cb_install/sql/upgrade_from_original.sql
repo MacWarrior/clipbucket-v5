@@ -400,3 +400,9 @@ ALTER TABLE `{tbl_prefix}collections`
 
 ALTER TABLE `{tbl_prefix}action_log`
     MODIFY COLUMN `action_success` ENUM('yes','no') CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+
+ALTER TABLE `{tbl_prefix}comments`
+	MODIFY `vote` VARCHAR(225) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+	MODIFY `voters` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+	MODIFY `spam_votes` BIGINT(20) NOT NULL DEFAULT '0',
+	MODIFY `spam_voters` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
