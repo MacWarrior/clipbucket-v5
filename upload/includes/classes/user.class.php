@@ -274,7 +274,7 @@ class userquery extends CBCategory{
 
 					if( $udetails ) // This account still use old password method, let's update it
 					{
-						$db->update(tbl($this->dbtbl['users']),array('password'),array($pass)," userid='".$uid."'");
+						$db->update(tbl('users'),array('password'),array($pass)," userid='".$uid."'");
 					}
 				}
 
