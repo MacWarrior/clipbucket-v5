@@ -4,8 +4,8 @@
 
 echo ""
 echo -ne "Updating Debian system..."
-apt update > /dev/null
-apt dist-upgrade -f > /dev/null
+apt update > /dev/null 2>&1
+apt dist-upgrade -f > /dev/null 2>&1
 echo -ne " OK"
 
 echo ""
