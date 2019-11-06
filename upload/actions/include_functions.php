@@ -1,7 +1,7 @@
 <?php
 	function RandomString($length)
 	{
-		// Generate random 32 charecter string
+		// Generate random 32 character string
 		$string = md5(microtime());
 
 		// Position Limiting
@@ -14,27 +14,20 @@
 		return $randomString;
 	}
 
-	function formatfilesize( $data )
+	function formatfilesize($bytes, $decimals = 2)
 	{
-        // bytes
-        if( $data < 1024 ) {
-            return $data . " bytes";
-        }
-        // kilobytes
-        else if( $data < 1024000 ) {
-				return round( ( $data / 1024 ), 1 ) . "KB";
-        }
-        // megabytes
-        else if($data < 1024000000){
-            return round( ( $data / 1024000 ), 1 ) . " MB";
-        }else{
-			 return round( ( $data / 1024000000 ), 1 ) . " GB";
-		}
+        $units = array('B','kB','MB','GB','TB','PB','EB','ZB','YB');
+        $factor = (int)floor((strlen($bytes) - 1) / 3);
+        return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . $units[$factor];
     }
 
-	/**
-	 * Function used to get file name
-	 */
+    /**
+     * Function used to get file name
+     *
+     * @param $file
+     *
+     * @return bool|false|string
+     */
 	function GetName($file)
 	{
 		if(!is_string($file))
