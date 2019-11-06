@@ -29,7 +29,7 @@
 	if(isset($_POST['update']))
 	{
 		$Upload->validate_video_upload_form();
-		if(empty($eh->error_list))
+		if(empty($eh->get_error()))
 		{
 			$myquery->update_video();
 			$myquery->set_default_thumb($video,$_POST['default_thumb']);

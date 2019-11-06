@@ -317,7 +317,7 @@ class CBvideo extends CBCategory
 			 
 		$Upload->validate_video_upload_form(NULL,TRUE);
 		
-		if(empty($eh->error_list))
+		if( empty($eh->get_error()) )
 		{
 			$required_fields = $Upload->loadRequiredFields($array);
 			$location_fields = $Upload->loadLocationFields($array);
