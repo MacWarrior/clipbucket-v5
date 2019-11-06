@@ -264,9 +264,6 @@ class Clipbucket_db
         //Complete Query
         $query = 'UPDATE '.$tbl.' SET '.$fields_query.' WHERE '.$cond.' '.$ep;
 
-        if(isset($this->total_queries)) $this->total_queries++;
-        $this->total_queries_sql[] = $query;
-
         try {
             if( in_dev() ) {
                 $start = microtime();
@@ -274,6 +271,9 @@ class Clipbucket_db
                 $end = microtime();
                 $timetook = $end - $start;
                 devWitch($query, 'update', $timetook);
+
+                $this->total_queries++;
+                $this->total_queries_sql[] = $query;
             } else {
                 $this->mysqli->query($query);
             }
