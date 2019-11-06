@@ -6,12 +6,11 @@
 A brief view of PHP server configuration Info  
 </p>
 
-
 <h3>configurations and values</h3>
 
 <div class="well">
   	<h4>POST MAX SIZE </h4>
-    {if $post_max_size > 50}
+    {if getBytesFromFileSize($post_max_size) > getBytesFromFileSize('50M') }
    	<img style="float:left;" src="{$imageurl}/button_ok.png"/>
     <div ><strong> &nbsp;&nbsp;{$post_max_size}</strong></div>
     {else}
@@ -22,7 +21,7 @@ A brief view of PHP server configuration Info
 
 <div class="well">
   	<h4>UPLOAD MAX FILESIZE</h4>
-    {if $upload_max_filesize > 50}
+    {if getBytesFromFileSize($upload_max_filesize) > getBytesFromFileSize('50M') }
     <img style="float:left;" src="{$imageurl}/button_ok.png"/>
     <div ><strong> &nbsp;&nbsp;{$upload_max_filesize}</strong></div>
     {else}
@@ -33,7 +32,7 @@ A brief view of PHP server configuration Info
 
 <div class="well">
   	<h4>MEMORY LIMIT</h4>
-    {if $memory_limit >= 128}
+    {if getBytesFromFileSize($memory_limit) >= getBytesFromFileSize('128M') }
     <img style="float:left;" src="{$imageurl}/button_ok.png"/>
     <div ><strong> &nbsp;&nbsp;{$memory_limit}</strong></div>
     {else}

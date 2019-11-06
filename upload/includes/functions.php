@@ -129,6 +129,27 @@
         return htmlentities($var);
 	}
 
+    function getBytesFromFileSize($size){
+        $units = array(
+            'B' => 1,
+            'kB' => 1024,
+            'MB' => pow(1024,2),
+            'M' => pow(1024,2),
+            'GB' => pow(1024,3),
+            'G' => pow(1024,3),
+            'TB' => pow(1024,4),
+            'T' => pow(1024,4),
+            'PB' => pow(1024,5),
+            'EB' => pow(1024,6),
+            'ZB' => pow(1024,7),
+            'YB' => pow(1024,8)
+        );
+
+        $unit = preg_replace("/[0-9]/", "", $size );
+        $size = preg_replace("/[^0-9]/", "", $size );
+        return $size*$units[$unit];
+    }
+
 	/**
 	 * Generate random string of given length
 	 *
@@ -4856,9 +4877,9 @@
 	    define('UPLOAD_MAX_FILESIZE', ini_get('upload_max_filesize'));
 	    define('MAX_EXECUTION_TIME', ini_get('max_execution_time'));
 
-		if ( POST_MAX_SIZE >= 50 && MEMORY_LIMIT >= 128 && UPLOAD_MAX_FILESIZE >= 50 && MAX_EXECUTION_TIME >= 7200 ) {
+		if ( getBytesFromFileSize(POST_MAX_SIZE) >= getBytesFromFileSize('50M') && getBytesFromFileSize(MEMORY_LIMIT) >= getBytesFromFileSize('128M') && getBytesFromFileSize(UPLOAD_MAX_FILESIZE) >= getBytesFromFileSize('50M') && MAX_EXECUTION_TIME >= 7200 ) {
 			define("SERVER_CONFS", true);
-		} elseif ( POST_MAX_SIZE < 50 || MEMORY_LIMIT < 128 || UPLOAD_MAX_FILESIZE < 50 && MAX_EXECUTION_TIME < 7200 ) {
+		} elseif ( getBytesFromFileSize(POST_MAX_SIZE) < getBytesFromFileSize('50M') || getBytesFromFileSize(MEMORY_LIMIT) < getBytesFromFileSize('128M') || getBytesFromFileSize(UPLOAD_MAX_FILESIZE) < getBytesFromFileSize('50M') && MAX_EXECUTION_TIME < 7200 ) {
 			e('You must update <strong>"Server Configurations"</strong>. Click here <a href=/admin_area/cb_server_conf_info.php>for details</a>','w');
 			define("SERVER_CONFS", false);
 		} else {
