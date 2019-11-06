@@ -521,15 +521,18 @@ class myquery
 		return get_file_details($file_name);
 	}
 
-	/**
-	 * Function used to update video and set a thumb as default
-	 * @param VID
-	 * @param THUMB NUM
-	 */
-	function set_default_thumb($vid,$thumb,$version)
+    /**
+     * Function used to update video and set a thumb as default
+     *
+     * @param $vid
+     * @param $thumb
+     *
+     * @return void
+     */
+	function set_default_thumb($vid,$thumb)
 	{
 		global $cbvid;
-		return $cbvid->set_default_thumb($vid,$thumb,$version);
+		return $cbvid->set_default_thumb($vid,$thumb);
 	}
 
 	/**
@@ -541,9 +544,13 @@ class myquery
 		return $cbvid->update_video();
 	}
 
-	/**
-	 * Function used to get categorie details
-	 */
+    /**
+     * Function used to get categorie details
+     *
+     * @param $id
+     *
+     * @return array
+     */
 	function get_category($id)
 	{
 		global $db;
