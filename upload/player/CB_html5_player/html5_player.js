@@ -796,7 +796,7 @@ $('#web').css({
 		loadmetadata = false;
     });*/
 
-  // On press space vidoe play/pasue
+  // On press space video play/pasue
 	/*var play = false;
 	$(window).keypress(function(e) {
 		e.preventDefault();

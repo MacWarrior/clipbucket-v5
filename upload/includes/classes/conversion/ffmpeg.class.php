@@ -441,7 +441,7 @@ class FFMpeg
 				$TemplogData .= "\r\n Converting Video SD File  \r\n";
 				$this->sdFile = "{$this->outputFile}-sd.{$this->options['format']}";
 				$fullCommand = $this->ffMpegPath . " -i {$this->inputFile}" . $this->generateCommand($videoDetails, false) . " {$this->sdFile}";
-				logData(json_encode($fullCommand),"sd_vidoes");
+				logData(json_encode($fullCommand),"sd_videos");
 				$TemplogData .= "\r\n Command : ".$fullCommand." \r\n";
 
 				$conversionOutput = $this->executeCommand($fullCommand);
