@@ -583,7 +583,7 @@ class CBvideo extends CBCategory
 		global $db;
 		$src = $vdetails['videoid'];
 		$file = LOGS_DIR.'/'.$vdetails['file_name'].'.log';
-		$db->execute("DELETE FROM ".tbl("video_file")." WHERE src_name = '$src'");
+		$db->execute("DELETE FROM ".tbl("video_files")." WHERE src_name = '$src'");
 		if(file_exists($file))
 			unlink($file);
 		$fn = $vdetails['file_name'];
