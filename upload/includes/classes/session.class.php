@@ -88,7 +88,7 @@ class Session
 				$session_cond .= " AND ";
 			$session_cond .= " session ='".$this->id."' ";
 		}
-		return $db->select(tbl($this->tbl),'*',$session_cond);;
+		return $db->select(tbl($this->tbl),'*',$session_cond);
 	}
 	
 	/**
