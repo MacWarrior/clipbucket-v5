@@ -135,8 +135,7 @@ class img_validator extends files
     * @param string $word
     */
     function records_word($word)
-    {        
-		session_register('word_validator');
+    {
         $_SESSION["word_validator"] = base64_encode($this->encrypts_word($word));
 		if(empty($_SESSION['word_validator'])){
 			setcookie('word_validator', base64_encode($this->encrypts_word($word)));
