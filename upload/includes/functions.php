@@ -2095,7 +2095,7 @@
 					$vdetails = get_video_details($id);
 					// Cookie life time at least 1 hour else if video duration is bigger set at video time.
 					$cookieTime = ($vdetails['duration'] > 3600) ? $vdetails['duration'] : $cookieTime = 3600;
-					$db->update(tbl("video"),array("views", "last_viewed"),array("|f|views+1","NOW()")," videoid='$id' OR videokey='$id'");
+					$db->update(tbl('video'),array('views', 'last_viewed'),array('|f|views+1','|f|NOW()')," videoid='$id' OR videokey='$id'");
 					setcookie('video_'.$id,'watched',time()+$cookieTime);
 
 					$userid = userid();
