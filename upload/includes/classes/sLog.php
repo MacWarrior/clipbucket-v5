@@ -1,22 +1,24 @@
 <?php 
-/**
-* SLog - For simple logging
-* Created by : Sajjad Ashraf
-*/
 class SLog{
-
 	private $logFile = false;
 	private $fileHandle = false;
 	private $logData = "";
-	
+
 	public function __construct($logFile = false){
 		if($logFile){
 			$this->logFile = $logFile;
+
+            $dirname = dirname($logFile);
+            if (!is_dir($dirname)) {
+                mkdir($dirname, 0755, true);
+            }
 		}
 	}
 
 	public function newSection($sectionName = false){
-		if(!$sectionName) $sectionName = "New Section";
+		if(!$sectionName){
+		    $sectionName = "New Section";
+        }
 		$this->logData .= "\n\r==========================================\n\r";
 		$this->logData .= "\t" . $sectionName;
 		$this->logData .= "\n\r==========================================\n\r";
@@ -33,16 +35,21 @@ class SLog{
 			$underline .= "\n";
 			$this->logData .= "\n{$title}\n{$underline}\t\t{$description}\n";
 			if (!$append){
-				if($writeNow) $this->writeLog();	
-			}else{
-				if($writeNow) $this->appendLog();
+				if($writeNow){
+				    $this->writeLog();
+                }
+			} else {
+				if($writeNow){
+				    $this->appendLog();
+                }
 			}
-			
 		}
 	}
 
 	public function writeLog(){
-		if(!$this->logFile) return;
+		if(!$this->logFile){
+		    return;
+        }
 		$this->fileHandle = fopen($this->logFile, "w+") or die("Unable to open file!");
 		fwrite($this->fileHandle, $this->logData);
 		fclose($this->fileHandle);
@@ -50,7 +57,9 @@ class SLog{
 	}
 
 	public function appendLog(){
-		if(!$this->logFile) return;
+		if(!$this->logFile){
+		    return;
+        }
 		$TempData = file_get_contents($this->logFile);
 		$this->logData = "\n{$TempData}\n{$this->logData}";
 		file_put_contents($this->logFile, $this->logData);
@@ -58,7 +67,9 @@ class SLog{
 	}
 
 	public function setLogFile($logFile = false){
-		if($logFile) $this->logFile = $logFile;
+		if($logFile){
+		    $this->logFile = $logFile;
+        }
 	}
 
 	public function clean(){
