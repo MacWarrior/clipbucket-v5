@@ -1744,22 +1744,23 @@ class FFMpeg
 				$map_id = $track['index'];
 				$track = $track['tags'];
 
-				if( !isset($track['language']) && !isset($track['LANGUAGE']) )
+				if( !isset($track['language']) && !isset($track['LANGUAGE']) && !isset($track['title']) )
 					continue;
-				if( isset($track['language']) )
-					$language = $track['language'];
-				else
-					$language = $track['LANGUAGE'];
 
 				$title = '';
-				if( isset($track['title']) )
-					$title = $track['title'];
+				if( isset($track['language']) )
+					$title .= $track['language'];
+				else if( isset($track['LANGUAGE']) )
+					$title .= $track['LANGUAGE'];
 
-				$lang = $language;
-				if( !empty($title) )
-					$lang .= ' : '.$title;
+				if( isset($track['title']) ){
+				    if( !empty($title) ){
+				        $title .= ' : ';
+                    }
+					$title .= $track['title'];
+                }
 
-				$langs[$map_id] = $lang;
+				$langs[$map_id] = $title;
 			}
 			return $langs;
 		}
