@@ -28,6 +28,7 @@
 		$logFile = LOGS_DIR.'/'.$file_directory.$_filename.'.log';
 	}
 
+	// TODO : Support multi audio tracks ; $audio_track =  false;
 	$audio_track = (isset($argv[5])) ? $argv[5] : false;
 	$reconvert = (isset($argv[6])) ? $argv[6] : false;
 
