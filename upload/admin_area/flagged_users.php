@@ -13,7 +13,7 @@
 
 	/* Generating breadcrumb */
 	global $breadcrumb;
-	$breadcrumb[0] = array('title' => 'Users', 'url' => '');
+	$breadcrumb[0] = array('title' => lang('users'), 'url' => '');
 	$breadcrumb[1] = array('title' => 'Reported Users', 'url' => '/admin_area/flagged_users.php');
 
 	$mode = $_GET['mode'];

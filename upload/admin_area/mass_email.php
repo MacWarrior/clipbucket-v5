@@ -14,7 +14,7 @@
 
 	/* Generating breadcrumb */
 	global $breadcrumb;
-	$breadcrumb[0] = array('title' => 'Users', 'url' => '');
+	$breadcrumb[0] = array('title' => lang('users'), 'url' => '');
 	$breadcrumb[1] = array('title' => 'Mass Email', 'url' => '/admin_area/mass_email.php');
 
 	if(!empty($_GET['email'])){

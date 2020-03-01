@@ -1,12 +1,4 @@
 <?php
-	/*
- ****************************************************************************************************
- | Copyright (c) 2007-2010 Clip-Bucket.com. All rights reserved.											|
- | @ Author 	: ArslanHassan																		|
- | @ Software 	: ClipBucket , © PHPBucket.com														|
- ****************************************************************************************************
-*/
-
 	require_once '../includes/admin_config.php';
 	$userquery->admin_login_check();
 	$userquery->login_check('video_moderation');
@@ -17,8 +9,8 @@
 
 	/* Generating breadcrumb */
 	global $breadcrumb;
-	$breadcrumb[0] = array('title' => 'Videos', 'url' => '');
-	$breadcrumb[1] = array('title' => 'Videos Manager', 'url' => '/admin_area/video_manager.php');
+	$breadcrumb[0] = array('title' => lang('videos'), 'url' => '');
+	$breadcrumb[1] = array('title' => lang('videos_manager'), 'url' => '/admin_area/video_manager.php');
 	$breadcrumb[2] = array('title' => 'Editing : '.display_clean($data['title']), 'url' => '/admin_area/edit_video.php?video='.display_clean($video));
 
 	if(@$_GET['msg']){

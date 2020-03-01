@@ -17,7 +17,7 @@
 
 	/* Generating breadcrumb */
 	global $breadcrumb;
-	$breadcrumb[0] = array('title' => 'Videos', 'url' => '');
+	$breadcrumb[0] = array('title' => lang('videos'), 'url' => '');
 	$breadcrumb[1] = array('title' => 'Mass Upload Videos', 'url' => '/admin_area/mass_uploader.php');
 
 	global $cbvid;
@@ -55,8 +55,9 @@
 			$file_categories = $_POST[$hash.'_cat'];
 
 			$file_track = '';
-			if( isset($_POST[$hash.'_track']) )
+			if( isset($_POST[$hash.'_track']) ){
 				$file_track = $_POST[$hash.'_track'];
+            }
 
 			$code = $i+1;
 			//Inserting Video Data...

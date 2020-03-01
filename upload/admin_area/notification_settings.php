@@ -13,7 +13,7 @@
 
 	/* Generating breadcrumb */
 	global $breadcrumb;
-	$breadcrumb[0] = array('title' => 'Videos', 'url' => '');
+	$breadcrumb[0] = array('title' => lang('videos'), 'url' => '');
 	$breadcrumb[1] = array('title' => 'Notification settings', 'url' => '/admin_area/notification_settings.php');
 
 	$mode = $_GET['mode'];

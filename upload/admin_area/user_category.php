@@ -14,7 +14,7 @@
 
 	/* Generating breadcrumb */
 	global $breadcrumb;
-	$breadcrumb[0] = array('title' => 'Users', 'url' => '');
+	$breadcrumb[0] = array('title' => lang('users'), 'url' => '');
 	$breadcrumb[1] = array('title' => 'Manage categories', 'url' => '/admin_area/user_category.php');
 
 	//Form Processing

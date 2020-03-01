@@ -14,7 +14,7 @@
 	// TODO : Complete URL
 	/* Generating breadcrumb */
 	global $breadcrumb;
-	$breadcrumb[0] = array('title' => 'Videos', 'url' => '');
+	$breadcrumb[0] = array('title' => lang('videos'), 'url' => '');
 	$breadcrumb[1] = array('title' => 'Editor\'s Pick', 'url' => '');
 
 	$vid = $_GET['vid'];

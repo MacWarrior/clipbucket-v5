@@ -1,12 +1,4 @@
 <?php
-	/*
-	 **************************************************************
-	 | Copyright (c) 2007-2010 Clip-Bucket.com. All rights reserved.
-	 | @ Author : ArslanHassan
-	 | @ Software : ClipBucket , © PHPBucket.com
-	 ***************************************************************
-	*/
-
 	require_once '../includes/admin_config.php';
 	require_once '../api/push.php';
 	global $cbvid;
@@ -16,19 +8,19 @@
 
 	/* Generating breadcrumb */
 	global $breadcrumb;
-	$breadcrumb[0] = array('title' => 'Videos', 'url' => '');
-	if($_GET['active'] == 'no')
+	$breadcrumb[0] = array('title' => lang('videos'), 'url' => '');
+	if($_GET['active'] == 'no'){
 		$breadcrumb[1] = array('title' => 'List Inactive Videos', 'url' => '/admin_area/video_manager.php');
-	else
-		$breadcrumb[1] = array('title' => 'Videos Manager', 'url' => '/admin_area/video_manager.php');
+	} else {
+		$breadcrumb[1] = array('title' => lang('videos_manager'), 'url' => '/admin_area/video_manager.php');
+	}
 
 	if (isset($_POST['reconvert_selected']) || isset($_GET['reconvert_video'])) {
 		reConvertVideos();
 	}
 
 	//Feature / UnFeature Video
-	if(isset($_GET['make_feature']))
-	{
+	if(isset($_GET['make_feature'])) {
 		$video = mysql_clean($_GET['make_feature']);
 		$cbvid->action('feature',$video);
 		$row = $myquery->Get_Website_Details();
@@ -47,8 +39,7 @@
 		$vdetails = get_video_details($videoid);
 		check_castable_status($vdetails);
 	}
-	if(isset($_POST['check_castable_selected']))
-	{
+	if(isset($_POST['check_castable_selected'])) {
 		for($id=0;$id<count($_POST['check_video']);$id++){
 			$vdetails = get_video_details($_POST['check_video'][$id]);
 			check_castable_status($vdetails);
@@ -56,16 +47,14 @@
 	}
 
 	//Using Multiple Action
-	if(isset($_POST['make_featured_selected']))
-	{
+	if(isset($_POST['make_featured_selected'])) {
 		for($id=0;$id<count($_POST['check_video']);$id++){
 			$cbvid->action('feature',$_POST['check_video'][$id]);
 		}
 		$eh->flush();
 		e("Selected videos have been set as featured","m");
 	}
-	if(isset($_POST['make_unfeatured_selected']))
-	{
+	if(isset($_POST['make_unfeatured_selected'])) {
 		for($id=0;$id<count($_POST['check_video']);$id++){
 			$cbvid->action('unfeature',$_POST['check_video'][$id]);
 		}
@@ -84,16 +73,14 @@
 	}
 
 	//Using Multiple Action
-	if(isset($_POST['activate_selected']))
-	{
+	if(isset($_POST['activate_selected'])) {
 		for($id=0;$id<count($_POST['check_video']);$id++){
 			$cbvid->action('activate',$_POST['check_video'][$id]);
 		}
 		$eh->flush();
 		e("Selected Videos Have Been Activated","m");
 	}
-	if(isset($_POST['deactivate_selected']))
-	{
+	if(isset($_POST['deactivate_selected'])) {
 		for($id=0;$id<count($_POST['check_video']);$id++){
 			$cbvid->action('deactivate',$_POST['check_video'][$id]);
 		}
@@ -108,10 +95,8 @@
 	}
 
 	//Deleting Multiple Videos
-	if(isset($_POST['delete_selected']))
-	{
-		for($id=0;$id<count($_POST['check_video']);$id++)
-		{
+	if(isset($_POST['delete_selected'])) {
+		for($id=0;$id<count($_POST['check_video']);$id++) {
 			$cbvideo->delete_video($_POST['check_video'][$id]);
 		}
 		$eh->flush();
@@ -159,8 +144,9 @@
 	$result_array = $array;
 	//Getting Video List
 	$result_array['limit'] = $get_limit;
-	if(!$array['order'])
+	if(!$array['order']){
 		$result_array['order'] = " videoid DESC ";
+	}
 
 	$videos = get_videos($result_array);
 

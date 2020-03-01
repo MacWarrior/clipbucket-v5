@@ -64,7 +64,7 @@ class formObj
 	/**
 	 * FUNCTION USED TO CREATE TEXT FIELD
 	 *
-	 * @param      name
+	 * @param      $field
 	 * @param bool $multi
 	 *
 	 * @return string

@@ -717,11 +717,11 @@ class CBvideo extends CBCategory
 				
 			$cond .= " (";
 			
-			if(!is_array($params['category']))
-			{
+			if(!is_array($params['category'])) {
 				$cats = explode(',',$params['category']);
-			}else
+			} else {
 				$cats = $params['category'];
+            }
 				
 			$count = 0;
 			
@@ -1270,7 +1270,7 @@ class CBvideo extends CBCategory
 
 	/**
 	 * Function used to create value array for email templates
-	 * @param video_details ARRAY
+	 * @param array video_details ARRAY
 	 */
 	function set_share_email($details)
 	{

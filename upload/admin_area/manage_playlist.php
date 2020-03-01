@@ -12,7 +12,7 @@
 
 	/* Generating breadcrumb */
 	global $breadcrumb;
-	$breadcrumb[0] = array('title' => 'Videos', 'url' => '');
+	$breadcrumb[0] = array('title' => lang('videos'), 'url' => '');
 	$breadcrumb[1] = array('title' => 'Manage Playlists', 'url' => '/admin_area/manage_playlist.php');
 
 	$mode = $_GET['mode'];

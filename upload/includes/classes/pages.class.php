@@ -1,16 +1,4 @@
 <?php
-
-/**
- **************************************************************************************************
- Do Not Edit These Classes , It May cause your script not to run properly
- This source file is subject to the ClipBucket End-User License Agreement, available online at:
- http://www.opensource.org/licenses/attribution.php
- By using this software, you acknowledge having read this Agreement and agree to be bound thereby.
- **************************************************************************************************
- Copyright (c) 2007-2008 Clip-Bucket.com. All rights reserved.
- **************************************************************************************************
- **/
-
 class pages{
 
 	var $url_page_var = 'page';
@@ -93,10 +81,8 @@ class pages{
 	 */
 	function create_link($page,$link=NULL,$extra_params=NULL,$tag=' <a #params#>#page#</a> ',$return_param=false)
 	{
-		if($link==NULL or $link == 'auto')
-		{
-			if($_SERVER['QUERY_STRING'])
-				$link = '?'.$_SERVER['QUERY_STRING'];
+		if( ($link==NULL || $link == 'auto') && $_SERVER['QUERY_STRING']) {
+			$link = '?'.$_SERVER['QUERY_STRING'];
 		}
 
 		$page_pattern = '#page#';
@@ -107,10 +93,9 @@ class pages{
 		
 		preg_match('/\?/',$link,$matches);
 
-		if(!empty($matches[0]))
-		{
+		if(!empty($matches[0])) {
 			$page_link = '&'.$page_link_pattern;
-		}else{
+		} else {
 			$page_link = '?'.$page_link_pattern;
 		}
 		
@@ -119,34 +104,38 @@ class pages{
 
 		$has_amp = $has_php = $has_q = false;
 		preg_match('/\?/',$current_url,$cur_matches);
-		if(count($cur_matches))
+		if(count($cur_matches)){
 			$has_q = true;
+		}
 		preg_match('/\.php/',$current_url,$cur_matches);
-		if(count($cur_matches))
+		if(count($cur_matches)){
 			$has_php = true;
+		}
 		preg_match('/&/',$current_url,$cur_matches);
-		if(count($cur_matches))
+		if(count($cur_matches)){
 			$has_amp = true;
+		}
 		
 		$link = $link.$page_link;
 		$params = 'href="'.$link.'"';
 		$params .= ' '.$extra_params;
 		
-		if($has_php && ($has_amp || $has_q))
+		if($has_php && ($has_amp || $has_q)){
 			$use_seo = false;
-		else
+		} else {
 			$use_seo = true;
+		}
 
-		if(SEO=='yes' && THIS_PAGE !='search_result' && !BACK_END && $use_seo && count($_GET) != 0 && (count($_GET) != 3 || !isset($_GET['page'])))
-		{
+		if(SEO=='yes' && THIS_PAGE !='search_result' && !BACK_END && $use_seo && count($_GET) != 0 && (count($_GET) != 3 || !isset($_GET['page']))) {
 			$params ='href="./'.$page.'"';
 		}
 
 		$final_link = preg_replace(array("/$page_pattern/i","/$param_pattern/i"),array($page,$params),$tag);
 		$final_link = preg_replace(array("/$page_pattern/i","/$param_pattern/i"),array($page,$params),$final_link);
 		
-		if($return_param)
+		if($return_param){
 			return preg_replace("/$page_pattern/i",$page,$params);
+		}
 		
 		return ' '.$final_link.' ';
 	}
@@ -164,10 +153,13 @@ class pages{
 	 */
 	function pagination($total,$page,$link=NULL,$extra_params=NULL,$tag='<a #params#>#page#</a>')
 	{
-		if($total==0)
+		if($total==0){
 			return false;
-		if($page<=0||$page==''||!is_numeric($page))
+		}
+
+		if($page<=0||$page==''||!is_numeric($page)){
 			$page = 1;
+		}
 		$total_pages = $total;
 		$pagination_start = 14;
 		$display_page = 7;
@@ -188,14 +180,10 @@ class pages{
 		
 		$differ = round(($display_page/2)+.49,0)-1;
 		
-		if($pagination_start < $total_pages)
-		{
-			
+		if($pagination_start < $total_pages) {
 			//Starting First
-			for($i=1;$i<=$display_page;$i++)
-			{
-				if($selected == $i)
-				{
+			for($i=1;$i<=$display_page;$i++) {
+				if($selected == $i) {
 					$start .= ' <li class="active"><a href="#">'.$i.'</a></li> ';
 				} else {
 					$start .= $this->create_link($i,$link,$extra_params,$tag);
@@ -206,11 +194,11 @@ class pages{
 			//Starting Last
 			for($i=$total_pages-$display_page;$i<=$total_pages;$i++)
 			{
-				if($end_first == '')
+				if($end_first == ''){
 					$end_first = $i;
+				}
 				
-				if($selected == $i)
-				{
+				if($selected == $i) {
 					$end .= ' <li class="active"><a href="#">'.$i.'</a></li> ';
 				} else {
 					$end .= $this->create_link($i,$link,$extra_params,$tag);
@@ -218,15 +206,13 @@ class pages{
 			}
 			
 			//Starting mid
-			for($i=$selected-$differ;$i<=$selected+$differ;$i++)
-			{
-				if($mid_first == '')
+			for($i=$selected-$differ;$i<=$selected+$differ;$i++) {
+				if($mid_first == ''){
 					$mid_first = $i;
+				}
 					
-				if($i>$start_last && $i<$end_first)
-				{
-					if($selected == $i)
-					{
+				if($i>$start_last && $i<$end_first) {
+					if($selected == $i) {
 						$mid .= ' <li class="active"><a href="#">'.$i.'</a></li> ';
 					} else {
 						$mid .= $this->create_link($i,$link,$extra_params,$tag);
@@ -243,41 +229,49 @@ class pages{
 				$second_hellip = $hellip;
 			
 			//Previous Page
-			if($selected-1 > 1)
+			if($selected-1 > 1){
 				$this->pre_link = $this->create_link($selected-1,$link,$extra_params,$tag,true);
+			}
 			//Next Page
-			if($selected+1 < $total)
+			if($selected+1 < $total){
 				$this->next_link = $this->create_link($selected+1,$link,$extra_params,$tag,true);
+			}
 			//First Page
-			if($selected!=1)
+			if($selected!=1){
 				$this->first_link = $this->create_link(1,$link,$extra_params,$tag,true);
+			}
 			//First Page
-			if($selected!=$total)
+			if($selected!=$total){
 				$this->last_link = $this->create_link($total,$link,$extra_params,$tag,true);
+			}
 
 			return $start.$first_hellip.$mid.$second_hellip.$end;
-		}else{
+		} else {
 			$pagination_smart = '';
-			for($i=1;$i<=$total_pages;$i++)
-			{
-				if($i == $selected)
+			for($i=1;$i<=$total_pages;$i++) {
+				if($i == $selected){
 					$pagination_smart .= '<li class="active"><a href="#">'.$i.'</a></li>';
-				else
+				} else {
 					$pagination_smart .= $this->create_link($i,$link,$extra_params,$tag);
+				}
 			}
 			
 			//Previous Page
-			if($selected-1 > 1)
+			if($selected-1 > 1){
 				$this->pre_link = $this->create_link($selected-1,$link,$extra_params,$tag,true);
+			}
 			//Next Page
-			if($selected+1 < $total)
+			if($selected+1 < $total){
 				$this->next_link = $this->create_link($selected+1,$link,$extra_params,$tag,true);
+			}
 			//First Page
-			if($selected!=1)
+			if($selected!=1){
 				$this->first_link = $this->create_link(1,$link,$extra_params,$tag,true);
+			}
 			//First Page
-			if($selected!=$total)
+			if($selected!=$total){
 				$this->last_link = $this->create_link($total,$link,$extra_params,$tag,true);
+			}
 
 			return $pagination_smart;
 		}
@@ -295,8 +289,8 @@ class pages{
 	 */
 	function paginate($total,$page,$link=NULL,$extra_params=NULL,$tag='<li><a #params#>#page#</a></li>')
 	{
-		if( $total > 1) // One page pagination is useless
-		{
+		// One page pagination is useless
+		if( $total > 1) {
 			$this->pagination = $this->pagination($total,$page,$link,$extra_params,$tag);
 
 			//Assigning Variable that can be used in templates

@@ -403,7 +403,7 @@
 	 *
 	 * @param $place
 	 *
-	 * @return bool
+	 * @return bool | array
 	 */
 	function cb_get_functions($place)
 	{

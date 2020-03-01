@@ -1583,5 +1583,6 @@
 	"castable_status_failed":"%s ne peut être casté correctement car il dispose de %s canaux audio, veuillez re-convertir la vidéo avec l'option de correction Chromecast activée",
 	"castable_status_check":"Vérifier le statut de cast",
 	"castable":"Castable",
-	"non_castable":"Non-Castable"
+	"non_castable":"Non-Castable",
+	"videos_manager":"Gestionnaire de Vidéos"
 }

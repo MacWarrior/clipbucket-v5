@@ -16,7 +16,7 @@
 
 	/* Generating breadcrumb */
 	global $breadcrumb;
-	$breadcrumb[0] = array('title' => 'Users', 'url' => '');
+	$breadcrumb[0] = array('title' => lang('users'), 'url' => '');
 	if($_GET['view'] == 'search')
 		$breadcrumb[1] = array('title' => 'Search Members', 'url' => '/admin_area/members.php?search=Search');
 	elseif($_GET['search'] == 'yes' && $_GET['status'] == 'ToActivate')
