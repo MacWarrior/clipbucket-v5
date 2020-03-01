@@ -1,16 +1,8 @@
 <?php
-
-/**
- * @Software : ClipBucket
- * @Author : Arslan Hassan
- * @Since : Jan 5 2009
- * @Function : Add Member
- * @License : Attribution Assurance License -- http://www.opensource.org/licenses/attribution.php
- */
- 
 //setting timeout so that server just dont stuck, right for just 25 seconds
-if(!ini_get('safe_mode'))
-	set_time_limit(25); 
+if(!ini_get('safe_mode')) {
+    set_time_limit( 25 );
+}
 
 require'../../includes/admin_config.php';
 require_once(BASEDIR.'/includes/classes/conversion/ffmpeg.class.php');
@@ -39,35 +31,30 @@ if(isset($_POST['experiment']))
 			$err = array();
 			$msg = array();
 			
-			if(!function_exists("exec"))
-			{
+			if(!function_exists("exec")){
 				 $err[] = "<br>C'mon man! there shuld be some 'exec' functions :(";
 				 $err[] = "<div class=\"expErr\">Exec function does not exist</div>";
 				 theEnd();
-			}else
-			$msg[] = "<div class=\"expOK\">Exec function exists</div>";
+			} else {
+			    $msg[] = "<div class=\"expOK\">Exec function exists</div>";
+            }
 			
 			//testing php compatiblity
 			$phpTest = shell_output(php_path()." -q ".ADMINBASEDIR.'/lab_resources/echo.php');
-			if(!$phpTest)
-			{
+			if(!$phpTest){
 				$err[] = "<br>OMG! Your host is so chipless that it doesn't even allow you to use PHP CLI , very bad!";
 				$err[] = "<div class=\"expErr\">PHP CLI is not enabled</div>";
 				theEnd();
-			}else
-			$msg[] = "<div class=\"expOK\">PHP CLI is enabled</div>";
+			} else {
+			    $msg[] = "<div class=\"expOK\">PHP CLI is enabled</div>";
+            }
 			
 			//now get ffmpeg details
 			$ffmpegDetails = shell_output($Cbucket->configs['ffmpegpath']." -version ");
-			if(preg_match("/ffmpeg/i", $ffmpegDetails))
-			{
+			if(preg_match("/ffmpeg/i", $ffmpegDetails)){
 				//$msg[] = "<br>".nl2br($ffmpegDetails);
 				$msg[] = "<div class=\"expOK\">FFMPEG Exists</div>";
-
-				
-			}
-			else
-			{
+			} else {
 				$err[] = '<br>How can human work without brain? same situation is with video conversion, no ffmpeg, no conversion.';
 				$err[] = "<div class=\"expErr\">FFMPEG does not exist</div>";
 				theEnd();
@@ -78,8 +65,24 @@ if(isset($_POST['experiment']))
 			//getting video details..
 			$ffmpegObj = new ffmpeg_experiments($victimFile);
 			$vidDetails = $ffmpegObj->get_file_info();
-			if($vidDetails)
-			{
+			if($vidDetails){
+				//echo "here";
+				$t=time();
+				if ($preset == "" || $height == "" || $width == "" || $v_bitrate == "" || $a_bitrate == ""){
+					$preset = 'medium';
+					$height = '640';
+					$width = '1280';
+					$v_bitrate = '720k';
+					$a_bitrate = '96k';
+				}
+				$msg[] = "<br>".nl2br($preset);
+				$msg[] = "<br>".nl2br($height);
+				$msg[] = "<br>".nl2br($width);
+				$msg[] = "<br>".nl2br($v_bitrate);
+				$msg[] = "<br>".nl2br($a_bitrate);
+				$msg[] = "<br>".nl2br(shell_output($Cbucket->configs['ffmpegpath'].' -i '.$victimFile." -vcodec libx264 -acodec ".config('audio_codec')." -s ".$width."x".$height." -preset ".$preset." -f mp4 -b:v ".$v_bitrate." -b:a ".$a_bitrate." -r 25 -ar 22050 ".TEMP_DIR."/".$t."121.mp4"));
+				$msg[] = "<div class=\"expOK\">Video file is convertable..</div>";
+			} elseif (!$vidDetails) {
 				//echo "here";
 				$t=time();
 				if ($preset == "" || $height == "" || $width == "" || $v_bitrate == "" || $a_bitrate == "")
@@ -97,57 +100,33 @@ if(isset($_POST['experiment']))
 				$msg[] = "<br>".nl2br($a_bitrate);
 				$msg[] = "<br>".nl2br(shell_output($Cbucket->configs['ffmpegpath'].' -i '.$victimFile." -vcodec libx264 -acodec ".config('audio_codec')." -s ".$width."x".$height." -preset ".$preset." -f mp4 -b:v ".$v_bitrate." -b:a ".$a_bitrate." -r 25 -ar 22050 ".TEMP_DIR."/".$t."121.mp4"));
 				$msg[] = "<div class=\"expOK\">Video file is convertable..</div>";
-				
-			}
-			elseif (!$vidDetails) 
-			{
-				//echo "here";
-				$t=time();
-				if ($preset == "" || $height == "" || $width == "" || $v_bitrate == "" || $a_bitrate == "")
-				{
-					$preset = 'medium';
-					$height = '640';
-					$width = '1280';
-					$v_bitrate = '720k';
-					$a_bitrate = '96k';
-				}
-				$msg[] = "<br>".nl2br($preset);
-				$msg[] = "<br>".nl2br($height);
-				$msg[] = "<br>".nl2br($width);
-				$msg[] = "<br>".nl2br($v_bitrate);
-				$msg[] = "<br>".nl2br($a_bitrate);
-				$msg[] = "<br>".nl2br(shell_output($Cbucket->configs['ffmpegpath'].' -i '.$victimFile." -vcodec libx264 -acodec ".config('audio_codec')." -s ".$width."x".$height." -preset ".$preset." -f mp4 -b:v ".$v_bitrate." -b:a ".$a_bitrate." -r 25 -ar 22050 ".TEMP_DIR."/".$t."121.mp4"));
-				$msg[] = "<div class=\"expOK\">Video file is convertable..</div>";
-			}
-			else
-			{
+			} else {
 				
 				$err[] = "<br>".nl2br(shell_output($Cbucket->configs['ffmpegpath'].' -i '.$victimFile.'  211.mp4'));
-				if(!file_exists($victimFile) && $victim)
-				$err[] = "<div class=\"expErr\">File does not exist</div>";
-				else
-				$err[] = "<div class=\"expErr\">What the...post the above ffmpeg log and let scientist do their job</div>";
+				if(!file_exists($victimFile) && $victim){
+				    $err[] = "<div class=\"expErr\">File does not exist</div>";
+                } else {
+				    $err[] = "<div class=\"expErr\">What the...post the above ffmpeg log and let scientist do their job</div>";
+                }
 				theEnd();
 			}
-			
-			
+
 			theEnd('convertVideo1');
 		}
 		break;
 		
 		case "convertVideo1":
 		{
-			
-				
 			$victimFile = $testVidsDir.'/'.$victim;
 			$victimOutput = $testVidsDir.'/output.flv';
 			$victimOutputHQ = $testVidsDir.'/output.mp4';
 			
-			if(file_exists($victimOutput))
+			if(file_exists($victimOutput)){
 				unlink($victimOutput);
-			if(file_exists($testVidsDir.'/output.log'))
+            }
+			if(file_exists($testVidsDir.'/output.log')){
 				unlink($testVidsDir.'/output.log');
-
+            }
 
 			$res169 = array();
 			$res169['240'] = array('427','240');
@@ -184,9 +163,7 @@ if(isset($_POST['experiment']))
 				'res43' => $res43,
 				'resize'=>'max'
 			);
-			
-			
-			
+
 			$ffmpeg = new ffmpeg_experiments($victimFile);
 			$ffmpeg->configs = $configs;
 			$ffmpeg->gen_thumbs = false;
@@ -205,7 +182,6 @@ if(isset($_POST['experiment']))
 			$ffmpeg->set_conv_lock = false;
 			$ffmpeg->showpre=true;
 			$ffmpeg->ClipBucket();
-			
 
 			$ffmpegpath = $Cbucket->configs['ffmpegpath'];
 			$ffmpegCommand = $ffmpeg->raw_command;
@@ -218,39 +194,40 @@ if(isset($_POST['experiment']))
 			$vidDetails = $ffmpeg->output_details;
 			if(!$vidDetails)
 			{
-				
-				if($victimDetails['audio_codec']=='aac' || $victimDetails['audio_codec']=='ac3')
-				$err[] = "<div class=\"expErr\">A possible reason is beacuse videos with 
-				AAC Audio does not encode without 'libfaac', set audio codec as libfaac and then try again</div>";
-				if(!file_exists($victimFile) && $victim)
-				$err[] = "<div class=\"expErr\">No output file...your ffmpeg is not compatible</div>";
-				else
-				$err[] = "<div class=\"expErr\">No output file...hmm post the log to dev team</div>";
-				if(@filesize($victimOutput)>0 && file_exists($victimFile))
-				$err[] = "<br>".nl2br(shell_output($Cbucket->configs['ffmpegpath'].' -i '.$victimOutput));
-				theEnd();
-			}else
-			{
+				if($victimDetails['audio_codec']=='aac' || $victimDetails['audio_codec']=='ac3'){
+                    $err[] = "<div class=\"expErr\">A possible reason is beacuse videos with 
+                    AAC Audio does not encode without 'libfaac', set audio codec as libfaac and then try again</div>";
+                }
+				if(!file_exists($victimFile) && $victim){
+				    $err[] = "<div class=\"expErr\">No output file...your ffmpeg is not compatible</div>";
+                } else {
+				    $err[] = "<div class=\"expErr\">No output file...hmm post the log to dev team</div>";
+                }
+				if(@filesize($victimOutput)>0 && file_exists($victimFile)){
+				    $err[] = "<br>".nl2br(shell_output($Cbucket->configs['ffmpegpath'].' -i '.$victimOutput));
+                }
+			} else {
 				$msg[] = "<br>".nl2br(shell_output($Cbucket->configs['ffmpegpath'].' -i '.$victimOutput));
 				$msg[] = "<div class=\"expOK\">Video file is converted =D..</div>";
 			}
-			
+
 			theEnd();
 		}
 	}
 }
 
-
-
 function theEnd($status=false)
 {
 	global $msg, $err;
-	if($err)
-	$errors = implode('',$err);
-	if($msg)
-	$messgs = implode('',$msg);
+	$errors = array();
+	if($err){
+	    $errors = implode('',$err);
+    }
+    $messgs = array();
+	if($msg){
+	    $messgs = implode('',$msg);
+    }
 	
 	echo json_encode(array('err'=>$errors,'msg'=>$messgs,'status'=>$status));
-	 exit(); 
+	exit();
 }
-?>
