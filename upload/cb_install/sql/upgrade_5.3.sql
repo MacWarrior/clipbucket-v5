@@ -2,7 +2,8 @@ INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 	('logo_name', ''),
 	('favicon_name', ''),
 	('comment_per_page', '10'),
-	('stay_mp4', 'no');
+	('stay_mp4', 'no'),
+	('allow_conversion_1_percent', 'no');
 
 ALTER TABLE `{tbl_prefix}user_levels_permissions` MODIFY COLUMN `plugins_perms` text NOT NULL DEFAULT '';
 ALTER TABLE `{tbl_prefix}users`

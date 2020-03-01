@@ -595,10 +595,11 @@
 					<label for="combo_res">Generate All</label>
 					<input type="radio" name="cb_combo_res" class="cb_combo_res_sdhd" id="normal_res" {if $row.cb_combo_res=='no'}checked{/if} value="no"/>
 					<label for="normal_res">Generate SD HD</label>
+					<br/>
 				</div>
 				<div class="col-md-8 res_options" {if $row.cb_combo_res=='no'} style="display:none;"{/if}>
+				<strong>Set Video Resolution Generation</strong>
 				<table class="table table-bordered table-striped manageUsersTable">
-					<strong>Set Video Resolution Generation</strong>
 					<tr>
 						<td>
 							<input type="checkbox" name="gen_240" id="res_240" {if $row.gen_240=='yes'}checked{/if} value="yes"/>
@@ -625,6 +626,9 @@
 						</td>
 					</tr>
 				</table>
+				<label for="allow_conversion_1_percent">Allow 1% resolution difference for resolution check</label>
+				<input type="checkbox" name="allow_conversion_1_percent" id="allow_conversion_1_percent" {if $row['allow_conversion_1_percent'] =='yes'}checked{/if} value="yes"/>
+				<img src="{$imageurl}/help.png" alt="VF information" class="tipsy_tip" title="Allow a 1% lower difference between expected video height/width and current video height/width"/>
 			</div>
 		</div>
 		<div class="row">

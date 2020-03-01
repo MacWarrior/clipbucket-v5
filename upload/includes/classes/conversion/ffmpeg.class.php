@@ -842,8 +842,18 @@ class FFMpeg
 							$video_width  = (int)$value[0];
 							$video_height = (int)$value[1];
 
+							// This option allow video with a 1% lower resolution to be included in the superior resolution
+                            // For example : 1900x800 will be allowed in 1080p resolution
+							if( config('allow_conversion_1_percent') == 'yes' ){
+							    $video_height_test = floor($video_height*0.99);
+                                $video_width_test = floor($video_width*0.99);
+                            } else {
+                                $video_height_test = $video_height;
+                                $video_width_test = $video_width;
+                            }
+
 							// Here we must check width and height to be able to import other formats than 16/9 (For example : 1920x800, 1800x1080, ...)
-							if( $this->input_details['video_width'] >= $video_width || $this->input_details['video_height'] >= $video_height )
+							if( $this->input_details['video_width'] >= $video_width_test || $this->input_details['video_height'] >= $video_height_test )
 							{
 								$more_res['video_width']  = $video_width;
 								$more_res['video_height'] = $video_height;

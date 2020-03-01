@@ -237,7 +237,8 @@
             'vbrate_360',
             'vbrate_480',
             'vbrate_720',
-            'vbrate_1080'
+            'vbrate_1080',
+            'allow_conversion_1_percent'
 		);
 
 		foreach($opt_list as $optl)

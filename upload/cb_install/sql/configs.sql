@@ -261,7 +261,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'logo_name', ''),
 	(NULL, 'favicon_name', ''),
 	(NULL, 'comment_per_page', '10'),
-	(NULL, 'stay_mp4', 'no');
+	(NULL, 'stay_mp4', 'no'),
+	(NULL, 'allow_conversion_1_percent', 'no');
 
 INSERT INTO `{tbl_prefix}languages` (`language_id`, `language_code`, `language_name`, `language_regex`, `language_active`, `language_default`) VALUES
 	(1, 'en', 'English', '/^en/i', 'yes', 'yes'),
