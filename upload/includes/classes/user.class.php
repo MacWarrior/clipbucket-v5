@@ -3412,6 +3412,7 @@ class userquery extends CBCategory{
 		$username = (isset($default['username'])) ? $default['username'] : "";
 		$email = (isset($default['email'])) ? $default['email'] : "";
 		$dob = (isset($default['dob'])) ? $default['dob'] : "";
+
 		if( $dob != '' && $dob != '0000-00-00' ){
 		    $dob = DateTime::createFromFormat('Y-m-d', $dob)->format(DATE_FORMAT);
         }
@@ -3504,7 +3505,7 @@ class userquery extends CBCategory{
 				'validate_function' => 'verify_age',
 				'db_field' => 'dob',
 				'required' => 'yes',
-				'invalid_err' => lang("register_min_age_request",config('min_age_reg'))
+				'invalid_err' => sprintf( lang('register_min_age_request'), config('min_age_reg') )
 			),
 			'country' => array(
 				'title' => lang('country'),
@@ -4343,9 +4344,10 @@ class userquery extends CBCategory{
 		return false;
 	}
 
-	/**
-	 * Function used to get anonymous user
-	 */
+    /**
+     * Function used to get anonymous user
+     * @throws phpmailerException
+     */
 	function get_anonymous_user()
 	{
 		global $db;
