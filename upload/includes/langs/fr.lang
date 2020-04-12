@@ -1584,5 +1584,10 @@
 	"castable_status_check":"Vérifier le statut de cast",
 	"castable":"Castable",
 	"non_castable":"Non-Castable",
-	"videos_manager":"Gestionnaire de Vidéos"
+	"videos_manager":"Gestionnaire de Vidéos",
+	"fullscreen":"Afficher en plein écran",
+	"non_fullscreen":"Quitter le plein écran",
+	"pause_video":"Pause",
+	"mute_video":"Couper le son",
+	"unmute_video":"Réactiver le son"
 }

@@ -14283,7 +14283,7 @@
    */
 
 
-  BigPlayButton.prototype.controlText_ = 'Play Video';
+  BigPlayButton.prototype.controlText_ = play_video_txt;
   Component.registerComponent('BigPlayButton', BigPlayButton);
 
   /**
@@ -14501,7 +14501,7 @@
       this.removeClass('vjs-paused');
       this.addClass('vjs-playing'); // change the button text to "Pause"
 
-      this.controlText('Pause');
+      this.controlText(pause_video_txt);
     }
     /**
      * Add the vjs-paused class to the element so it can change appearance.
@@ -14517,7 +14517,7 @@
       this.removeClass('vjs-playing');
       this.addClass('vjs-paused'); // change the button text to "Play"
 
-      this.controlText('Play');
+      this.controlText(play_video_txt);
     }
     /**
      * Add the vjs-ended class to the element so it can change appearance
@@ -16997,9 +16997,9 @@
 
     _proto.handleFullscreenChange = function handleFullscreenChange(event) {
       if (this.player_.isFullscreen()) {
-        this.controlText('Non-Fullscreen');
+        this.controlText(non_fullscreen_txt);
       } else {
-        this.controlText('Fullscreen');
+        this.controlText(fullscreen_txt);
       }
     }
     /**
@@ -17033,7 +17033,7 @@
    */
 
 
-  FullscreenToggle.prototype.controlText_ = 'Fullscreen';
+  FullscreenToggle.prototype.controlText_ = fullscreen_txt;
   Component.registerComponent('FullscreenToggle', FullscreenToggle);
 
   /**
@@ -17610,7 +17610,7 @@
 
     _proto.updateControlText_ = function updateControlText_() {
       var soundOff = this.player_.muted() || this.player_.volume() === 0;
-      var text = soundOff ? 'Unmute' : 'Mute';
+      var text = soundOff ? unmute_video_txt : mute_video_txt;
 
       if (this.controlText() !== text) {
         this.controlText(text);
@@ -17627,7 +17627,7 @@
    */
 
 
-  MuteToggle.prototype.controlText_ = 'Mute';
+  MuteToggle.prototype.controlText_ = mute_video_txt;
   Component.registerComponent('MuteToggle', MuteToggle);
 
   /**
