@@ -156,13 +156,13 @@ class cbactions
 					insert_log($this->name.'_favorite',$log_array);
 
 					e('<div class="alert alert-success">'.sprintf(lang('add_fav_message'), lang($this->name)).'</div>', "m" );
-				}else{
+				} else {
 					e(sprintf(lang('already_fav_message'), lang($this->name)));
 				}
-			}else{
+			} else {
 				e(lang("you_not_logged_in"));
 			}
-		 }else{
+		 } else {
 			 e(sprintf(lang("obj_not_exists"),$this->name));
 		 }
 	 }
@@ -233,13 +233,13 @@ class cbactions
 						array($this->type,$id,userid(),post('flag_type'),NOW())
 					);
 					e(sprintf(lang('obj_report_msg'), lang($this->name)),'m');
-				}else{
+				} else {
 					e(sprintf(lang('obj_report_err'), lang($this->name)));
 				}
-			}else{
+			} else {
 				e(lang("you_not_logged_in"));
 			}
-		}else{
+		} else {
 			e(sprintf(lang("obj_not_exists"), lang($this->name)));
 		}
 	}
@@ -335,14 +335,14 @@ class cbactions
 						cbmail(array('to'=>$emails_array,'from'=>$from,'from_name'=>user_name(),'subject'=>$subj,'content'=>$msg,'use_boundary'=>true));
 						e(sprintf(lang("thnx_sharing_msg"),$this->name),'m');
 					}
-				}else{
+				} else {
 					e(sprintf(lang("share_video_no_user_err"),$this->name));
 				}
 					
-			}else{
+			} else {
 				e(lang("you_not_logged_in"));
 			}
-		}else{
+		} else {
 			e(sprintf(lang("obj_not_exists"),$this->name));
 		}
 	}

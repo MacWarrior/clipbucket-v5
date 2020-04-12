@@ -30,6 +30,9 @@ class errorhandler extends ClipBucket
         $this->error_list['all_errors']['user_error']['critical_priority'][] = $message;
 	}
 
+    /**
+     * @return array
+     */
 	public function get_error()
     {
         return $this->error_list['all_errors']['user_error']['critical_priority'];

@@ -84,7 +84,7 @@ if (!function_exists('cb_video_js'))
 		{
 			if (!empty($video_files[240])){
 				$video_file = $video_files[240];
-			}else{
+			} else {
 				$video_file = $video_files[0];
 			}
 			$one_file = get_cbvjs_quality($video_file);
@@ -182,7 +182,7 @@ if (!function_exists('cb_video_js'))
 					
 					if ( !empty($_GET['slot_id']) ){
 						$slot_paramas['slot_id'] = $_GET['slot_id'];
-					}else{
+					} else {
 						$slot_paramas['state'] = '1';
 					}
 					$slot_id = $ia_ads->get_slot($slot_paramas)[0]['slot_id'];

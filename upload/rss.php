@@ -1,25 +1,15 @@
 <?php
-/* 
- *****************************************************************
- | Copyright (c) 2007-2010 Clip-Bucket.com. All rights reserved.	
- | @ Author : ArslanHassan											
- | @ Software : ClipBucket , © PHPBucket.com						
- ******************************************************************
-*/
-
-
 define("THIS_PAGE",'rss');
 require 'includes/config.inc.php';
 header ("Content-type: text/xml; charset=utf-8");
 
-
 $limit = 20;
 $page = $_GET['page'];
-if($page<1 || !is_numeric )
+if($page<1 || !is_numeric($page) ){
 	$page = 1;
+}
 
-if($page)
-{
+if($page) {
 	$from = ($page-1)*$limit;
 	$limit = "$from,$limit";
 }
@@ -29,35 +19,26 @@ switch($mode)
 {
 	case 'recent':
 	default:
-	{
 		 $videos = get_videos(array('limit'=>$limit,'broadcast'=>'public','order'=>'date_added DESC'));
 		 $title  = "Recently Added Videos";
-	}
-	break;
+		break;
 	
 	case 'views':
-	{
-		
 		 $videos = get_videos(array('limit'=>$limit,'broadcast'=>'public','order'=>'views DESC'));
 		 $title = "Most Viewed Videos";
-	}
-	break;
+		break;
 	
 	case 'rating':
-	{
 		 $videos = get_videos(array('limit'=>$limit,'broadcast'=>'public','order'=>'rating DESC'));
 		 $title = "Top Rated Videos";
-	}
-	break;
+		break;
 	
 	case 'watching':
-	{
 		 $videos = get_videos(array('limit'=>$limit,'broadcast'=>'public','order'=>'last_viewed DESC'));
 		 $title = "Videos Being Watched";
-	}
-	break;
+		break;
+
 	case 'user':
-	{
 		 $user = mysql_clean($_GET['username']);
 		 //Get userid from username
 		 $uid = $userquery->get_user_field_only($user,'userid');
@@ -66,9 +47,7 @@ switch($mode)
 		 //Count Total Videos of this user
 		 $total_vids = get_videos(array('count_only'=>true,'user'=>$uid));
 		 $title = "Videos uploaded by ".$user;
-	}
-	
-	break;
+		break;
 }
 
 subtitle($title);
@@ -84,19 +63,15 @@ subtitle($title);
         <title><?php echo cbtitle(); ?></title>
     </image>
     <description><?php echo $Cbucket->configs['description']; ?></description>
-    <?php
-	if($total_vids)
-	{
-	?>
+<?php
+	if($total_vids) {
+?>
     <total_videos><?php echo $total_vids; ?></total_videos>
-    <?php
+<?php
 	}
-	?>
-    <?php
-   
-    foreach($videos as $video)
-    {
-    ?>
+
+    foreach($videos as $video) {
+?>
     <item>
         <author><?php echo $video['username']; ?></author>
         <title><?php echo substr($video['title'],0,500); ?></title>
@@ -131,9 +106,8 @@ subtitle($title);
         <enclosure url="<?php echo video_link($video); ?>" type="application/x-shockwave-flash" />
 
     </item>
-    <?php
+<?php
     }
-    ?>
-
+?>
 </channel>
 </rss>

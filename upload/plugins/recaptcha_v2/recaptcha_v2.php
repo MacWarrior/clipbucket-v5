@@ -13,7 +13,6 @@ Plugin Type: global
 
 // Get a key from https://www.google.com/recaptcha/admin
 
-
 define("_RECAPTCHA_V2_",basename(dirname(__FILE__)));
 define("RECAPTCHA_V2_DIR",PLUG_DIR.'/'._RECAPTCHA_V2_);
 define("RECAPTCHA_V2_URL",PLUG_URL.'/'._RECAPTCHA_V2_);
@@ -33,15 +32,10 @@ $resp = null;
 # the error code from reCAPTCHA v2, if any
 $error = null;
 
-
-
-function cbrecaptcha_v2(){ 
-    
+function cbrecaptcha_v2(){
 	global $sitekey, $privatekey, $error; 
 	return "<div class='g-recaptcha' data-sitekey='".$sitekey."'></div>";
 }
-
-
 
 function validrecaptcha_v2()
 {
@@ -54,23 +48,16 @@ function validrecaptcha_v2()
     ));
 
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    
     $resp = curl_exec($ch);
-    
     curl_close($ch);
 
     if (($answer = json_decode($resp)) !== null) {
         return $answer->success;
     }
-
     return false;
 }
-
-
 
 register_cb_captcha('cbrecaptcha_v2','validrecaptcha_v2',false);
 register_anchor('; Recaptcha.reload ();','onClickAddComment');
 add_admin_menu("reCaptcha v2","Configurations",'recaptcha_v2_configs.php',_RECAPTCHA_V2_.'/admin');
 add_admin_menu("reCaptcha v2","ReCaptcha v2 docs",'recaptchav2_doc.php',_RECAPTCHA_V2_.'/admin');
-
-?>

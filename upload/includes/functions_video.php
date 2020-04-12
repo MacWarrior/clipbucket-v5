@@ -149,7 +149,7 @@
                     }
                 }
             }
-        }else{
+        } else {
             if(is_numeric($vdetails)){
                 $vid = $vdetails;
 			} else {
@@ -1581,7 +1581,7 @@
             $pre_check_file = $video_files[0];
             if (is_int($pre_check_file)){
                 $max_file_res = max($video_files);
-            }else{
+            } else {
                 if (in_array("hd", $video_files)) {
                     $max_file_res = "hd";
                 } else {

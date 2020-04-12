@@ -10,4 +10,3 @@
 
 define('PAKPLAYER_PLUG_DIR',PLUG_DIR.'/pakplayer');
 add_admin_menu('Templates And Players','Pakplayer','pakplayer.php','pakplayer/admin');
-?>

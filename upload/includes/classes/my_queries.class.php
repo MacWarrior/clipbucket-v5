@@ -426,7 +426,7 @@ class myquery
 			$email = mysql_clean($_POST['email']);
 		}
 		//pr(error_list(),true);
-		if(empty($eh->error_list))
+		if(empty($eh->get_error()))
 		{
 			$db->insert(
 				tbl("comments"),

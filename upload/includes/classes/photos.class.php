@@ -1132,7 +1132,7 @@ class CBPhotos
 					}
 			}
 
-		}else{
+		} else {
 			$file = $from;
 			$info = getimagesize($file);
 			$org_width = $info[0];

@@ -6,6 +6,6 @@ if(isset($_POST["vid"])){
 	$vid = $_POST["vid"];
 	$video = $cbvid->getVideo($vid);
 	echo json_encode($video);
-}else{
+} else {
 	echo json_encode(array("video" => false));
 }

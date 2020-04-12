@@ -13,8 +13,8 @@ if(!$related_videos)
 <rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/">
 <channel>
 <?php
-	if($related_videos)
-		foreach($related_videos as $video):
+	if($related_videos){
+		foreach($related_videos as $video){
 ?>
     <item>
         <title><?php echo display_clean($video['title']); ?></title>
@@ -22,7 +22,8 @@ if(!$related_videos)
         <media:thumbnail url="<?php echo get_thumb($video); ?>" height="90" width="120" time="<?php echo setTime($video['duration']); ?>"/>
     </item>
 <?php
-		endforeach;
+        }
+    }
 ?>
 </channel>
 </rss>

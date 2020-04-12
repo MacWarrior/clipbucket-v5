@@ -1422,7 +1422,7 @@ class FFMpeg
 		if(!file_exists($this->input_file))
 		{
 			$this->log->writeLine('File Exists','No',true);
-		}else{
+		} else {
 			$this->log->writeLine('File Exists','Yes',true);
 		}
 		
@@ -1618,7 +1618,7 @@ class FFMpeg
 		if (!empty($file_directory) && !empty($filename))
 		{
 			$thumbs_outputPath = $file_directory.'/';
-		}else{
+		} else {
 			$thumbs_outputPath = $this->options['outputPath'];
 		}
 
@@ -1636,7 +1636,7 @@ class FFMpeg
 			{
 				if (empty($filename)){
 					$file_name = getName($input_file)."-{$size_tag}{$count}.jpg";	
-				}else{
+				} else {
 					$file_name = $filename."-{$size_tag}{$count}.jpg";	
 				}
 				
@@ -1664,7 +1664,7 @@ class FFMpeg
 					$this->TemplogData .= "\r\n\r\n OutPut : $output ";	
 					if (file_exists($file_path)){
 						$output_thumb_file = $file_path;
-					}else{
+					} else {
 						$output_thumb_file = "Oops ! Not Found.. See log";						
 					}
 					$this->TemplogData .= "\r\n\r\n Response : $output_thumb_file ";	

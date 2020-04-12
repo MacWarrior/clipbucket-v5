@@ -62,7 +62,7 @@
 			if(!empty($data['module_name'])){
 				mysqli_query("DELETE FROM modules WHERE module_name = '".mysql_clean($module)."'");
 				$msg = "Module Has Been Deleted";
-			}else{
+			} else {
 				$msg = "Sorry File Doesnt Exist";
 			}
 			return $msg;

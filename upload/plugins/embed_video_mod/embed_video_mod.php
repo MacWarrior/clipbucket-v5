@@ -1,49 +1,25 @@
 <?php
-
-/*
-  Plugin Name: Embed Video Upload
-  Description: This will let you upload videos using Embed Code
-  Author: Arslan Hassan
-  ClipBucket Version: 2
-  Plugin Version: 1.0
-  Website: http://clip-bucket.com/
- */
-
-
-$Cbucket->upload_opt_list['embed_code_div'] =
-        array(
-            'title' => 'Embed Code',
-            'load_func' => 'load_embed_form',
+$Cbucket->upload_opt_list['embed_code_div'] = array(
+    'title' => 'Embed Code',
+    'load_func' => 'load_embed_form',
 );
-//dump($_POST);
-/*if (post('embed_code'))
-{
-    $embed_code = post('embed_code');
-    if ($embed_code)
-        $_POST ['embed_code'] = base64_decode($embed_code);
-}*/
-//dump($_POST);die();
 
 if (!function_exists('validate_embed_code'))
 {
-
     /**
      * Function used create duration from input
-     * @param DURATION
+     * @param int DURATION
      */
     if (!function_exists('validate_duration'))
     {
-
         function validate_duration($time)
         {
-
-            global $LANG;
-            if (empty($time))
+            if (empty($time)){
                 return true;
+            }
             $time = explode(':', $time);
             if (count($time) > 0 && is_array($time))
             {
-                $sec = 0;
                 $total = count($time);
 
                 if ($total == 3)
@@ -51,31 +27,27 @@ if (!function_exists('validate_embed_code'))
                     $hrs = $time[0] * 60 * 60;
                     $mins = $time[1] * 60;
                     $secs = $time[2];
-                } elseif ($total == 2)
-                {
+                } elseif ($total == 2) {
                     $hrs = 0;
                     $mins = $time[0] * 60;
                     $secs = $time[1];
-                } else
-                {
+                } else {
                     $hrs = 0;
                     $mins = 0;
                     $secs = $time[0];
                 }
                 $sec = $hrs + $mins + $secs;
-                if (!empty($sec))
+                if (!empty($sec)){
                     return $sec;
-                else
-                    e(lang('invalid_duration'));
-            }else
-            {
-                if (is_numeric($time))
+                }
+                e(lang('invalid_duration'));
+            } else {
+                if (is_numeric($time)){
                     return $time;
-                else
-                    e(lang('invalid_duration'));
+                }
+                e(lang('invalid_duration'));
             }
         }
-
     }
 
     /**
@@ -84,46 +56,10 @@ if (!function_exists('validate_embed_code'))
     function validate_embed_code($val)
     {
         // This is the culprit
-        //dump($val);
         if (empty($val) || $val == 'none'){
             return 'none';
-        } else {
-            return $val;
-            //$val = base64_decode($val);
-            //Striping Slasshes as they are not required
-            $val = stripslashes($val);
-            //Removing spaces and non required code
-            $val = preg_replace(array("/\r+/", "/\n+/", "/\t+/"), "", $val);
-            //Removing Links
-            $val = preg_replace('/<a href=(.*)>(.*)<\/a>/i', '', $val);
-            //Removing JS Codes
-            $val = preg_replace('/<script[^>]*?>.*?<\/script>/si', '', $val);
-            //Removing Iframes
-            //$val = preg_replace('/<iframe(.*)><\/iframe>/i','',$val);
-            //Removing Img Tags
-            $val = preg_replace('/<img (.*) \/>/i', '', $val);
-            //Removing DIV Tags
-            //$val = preg_replace('/<div(.*)><\/div>/i','',$val);
-            //Just Get Data wrapped inside embed 
-            //$val = preg_match('/<embed(.*)>(.*)<\/embed>/',$val,$matches);
-            //$val = $matches[0];
-
-            if (!stristr($val, '<embed') && !stristr($val, '<object') && !stristr($val, '<iframe'))
-                e(lang('embed_code_invalid_err'));
-
-            //Replacing Widht and Height 
-            $pattern = array
-                ("/width=\"([0-9]+)\"/Ui", "/width='([0-9]+)'/Ui", "/height=\"([0-9]+)\"/Ui", "/height='([0-9]+)'/Ui",
-                "/width:([0-9]+)px/Ui", "/height:([0-9]+)px/Ui");
-            $replace = array
-                ('width="{Width}"', 'width="{Width}"', 'height="{Height}"', 'height="{Height}"',
-                'width:{Width}px', 'height:{Height}px');
-
-            //    dump($val);
-            $val = preg_replace($pattern, $replace, $val);
-            //dump($val);die();
-            return $val;
         }
+        return $val;
     }
 
     /**
@@ -132,15 +68,15 @@ if (!function_exists('validate_embed_code'))
     function load_embed_form($params)
     {
         global $file_name;
-        if ($params['class'])
+        if ($params['class']){
             $class = ' ' . $params['class'];
+        }
         assign('objId', RandomString(5));
         assign('class', $class);
         Template(PLUG_DIR . '/embed_video_mod/form.html', false);
     }
 
-    $embed_field_array['embed_code'] = array
-        (
+    $embed_field_array['embed_code'] = array(
         'title' => 'Embed Code',
         'name' => 'embed_code',
         'db_field' => 'embed_code',
@@ -155,8 +91,7 @@ if (!function_exists('validate_embed_code'))
         'rows' => 5
     );
 
-    $embed_field_array['duration'] = array
-        (
+    $embed_field_array['duration'] = array(
         'title' => 'Video duration',
         'name' => 'duration',
         'db_field' => 'duration',
@@ -167,8 +102,7 @@ if (!function_exists('validate_embed_code'))
         'use_if_value' => true,
     );
 
-    $embed_field_array['thumb_file_field'] = array
-        (
+    $embed_field_array['thumb_file_field'] = array(
         'title' => 'Thumb File',
         'type' => 'fileField',
         'name' => 'thumb_file',
@@ -183,24 +117,22 @@ if (!function_exists('validate_embed_code'))
         return $input;
     }
 
-    
-
     /**
      * Function used to check embed video
      * if video is embeded , it will check its code 
      * if everthing goes ok , it will change its status to successfull
-     * @param VID
+     * @param array VID
      */
     function embed_video_check($vid)
     {
         global $myquery, $db;
-        if (is_array($vid))
+        if (is_array($vid)){
             $vdetails = $vid;
-        else
+        } else {
             $vdetails = $myquery->get_video_details($vid);
+        }
 
-        if (!empty($vdetails['embed_code']) && $vdetails['embed_code'] != ' ' && $vdetails['embed_code'] != 'none')
-        {
+        if (!empty($vdetails['embed_code']) && $vdetails['embed_code'] != ' ' && $vdetails['embed_code'] != 'none') {
             //Parsing Emebd Codek, Getting Referal URL if possible and add AUTPLAY on of option 
             $ref_url = get_refer_url_from_embed_code(unhtmlentities(stripslashes($vdetails['embed_code'])));
             $ref_url = $ref_url['url'];
@@ -210,103 +142,29 @@ if (!function_exists('validate_embed_code'))
 
     /**
      * Function used to play embed code
-     * @param Video details
+     *
+     * @param array Video details
+     *
+     * @return bool|string
      */
     function play_embed_video($data)
     {
-
         global $swfobj;
         $vdetails = $data['vdetails'];
         $file = get_video_file($vdetails, false, false);
-        if (!$file || $file == 'no_video.flv')
-        {
-            if (!empty($vdetails['embed_code']) && $vdetails['embed_code'] != 'none')
-            {
-                $embed_code = $vdetails['embed_code'];
-                //Replacing Height And Width
-                $h_w_p = array("{Width}", "{Height}");
-                $h_w_r = array($data['width'], $data['height']);
-                
-                $preg_match = array(
-                    '/<b>(.*<\/b>)?/','/width\: ?([0-9]+)px/','/height: ?([0-9]+)px/',
-                    '/width=([0-9]+)/','/height=([0-9]+)/'
-                );
-
-
-                $width_px_replace = $data['width'].'px';
-                $height_px_replace = $data['height'].'px';
-                $width_replace = $data['width'];
-                $height_replace = $data['height'];
-
-                if(strstr($data['width'],'%'))
-                    $width_px_replace = $data['width'];
-
-                if(strstr($data['height'],'%'))
-                    $height_px_replace = $data['height'];
-
-                $preg_repalce = array(
-                    '',
-                   // 'width:'.$width_px_replace,
-                    //'height:'.$height_px_replace,
-                    'width='.$width_replace,
-                    'height='.$height_replace
-                );
-
-                
-
-                /*$embed_code = str_replace($h_w_p, $h_w_r, $embed_code);   
-                $embed_code = preg_replace($preg_match, $preg_repalce, $embed_code); */
+        if (!$file || $file == 'no_video.flv') {
+            if (!empty($vdetails['embed_code']) && $vdetails['embed_code'] != 'none') {
                 $iframe = $vdetails['embed_code'];
                 $iframe = str_replace('height=', 'height="'.$data['height'].'"', $iframe);
                 $iframe = str_replace('width=', 'width="'.$data['width'].'"', $iframe);
                 $embed_code = $iframe;
-            
-                 
-               # $embed_code = str_replace('href=', 'style="display:none;"', $embed_code);
-               # $embed_code = str_replace('by', '', $embed_code);
                 $embed_code = unhtmlentities($embed_code);
-                
-
-            /*
-
-                //Checking for REF CODE , if its youtube, add AUTOPLAY accordingly)
-                $ref = get_refer_url_from_embed_code($embed_code);
-                if (!empty($ref) && $ref['website'] == "youtube")
-                {
-                    //Add AutoPlay
-                    if (config("autoplay_video") == "yes")
-                        $autoplay = 1;
-                    else
-                        $autoplay = 0;
-                    $embed_code = preg_replace("/src=\"(.*)\"/Ui", "src=\"$1&autoplay=" . $autoplay . "\"", $embed_code);
-                }
-
-                preg_match('/http:\/\/www\.youtube\.com\/v\/([a-zA-Z0-9_-]+)/', $embed_code, $ytmatches);
-
-                $ytCode = $ytmatches[1];
-
-                if (!$ytCode)
-                {
-                    preg_match('/http:\/\/www\.youtube\.com\/embed\/([a-zA-Z0-9_-]+)/', $embed_code, $ytmatches);
-                    $ytCode = $ytmatches[1];
-                }
-
-                if (YOUTUBE_ENABLED == 'yes' && $ytCode)
-                {
-                    assign('youtube', $ytCode);
-                    assign('ytcode', $ytCode);
-                    return false;
-                }
-                */
 
                 $swfobj->EmbedCode($embed_code,$data['player_div']);
-                //return $embed_code;
                 return $swfobj->code;
             }
-        } else
-        {
-            return false;
         }
+        return false;
     }
 
     /**
@@ -321,13 +179,11 @@ if (!function_exists('validate_embed_code'))
         preg_match("/youtube\.com/", $src, $ytcom);
         preg_match("/youtube-nocookie\.com/", $src, $ytnccom);
 
-        if (!empty($ytcom[0]) || !empty($ytnccom[0]))
-        {
+        if (!empty($ytcom[0]) || !empty($ytnccom[0])) {
             preg_match("/\/v\/([a-zA-Z0-9_-]+)/", $src, $srcs);
             $srcs = explode("&", $srcs[1]);
             $ytcode = $srcs[0];
-            if (!$ytcode)
-            {
+            if (!$ytcode) {
                 preg_match("/\/embed\/(.*)/", $src, $srcs);
                 $srcs = explode("&", $srcs[1]);
                 $ytcode = $srcs[0];
@@ -339,8 +195,7 @@ if (!function_exists('validate_embed_code'))
             $results['website'] = 'youtube';
             return $results;
         }
-        else
-            return false;
+        return false;
     }
 
     //If Youtube
@@ -355,4 +210,3 @@ if (!function_exists('validate_embed_code'))
     $Cbucket->add_header(PLUG_DIR . '/embed_video_mod/header.html');
     register_actions_play_video('play_embed_video');
 }
-?>

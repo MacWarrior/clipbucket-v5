@@ -1,171 +1,145 @@
 <?php
-//ini_set('display_errors', true);
-//error_reporting(E_ALL + E_NOTICE);
-/*
+define("CB_CUSTOM_FIELDS_DIR_NAME",basename(dirname(__FILE__)));
+define('CB_CUSTOM_FIELDS_PLUG_DIR',PLUG_DIR."/".CB_CUSTOM_FIELDS_DIR_NAME);
+define("SITE_MODE",'/admin_area');
+define("CB_CUSTOM_FIELDS_EditPAGE_URL",SITE_MODE."/plugin.php?folder=".CB_CUSTOM_FIELDS_DIR_NAME."/admin&file=edit_field.php");
 
+assign("cb_custom_fields_edit_page",CB_CUSTOM_FIELDS_EditPAGE_URL);
+
+/**
+* This function is used to add Custom field
+*/
+function add_custom_file($field_name,$field_title,$field_type,$db_field,$default_value,$type_page,$date){
+    global $db;
+    $result=$db->insert(tbl('custom_fields'),array("custom_field_name","fcustom_field_title","custom_field_type","custom_db_field","default_value","customfields_flag","date_added"),array($field_name,$field_title,$field_type,$db_field,$default_value,$type_page,$date));
+}
+/**
+*This function is used to list custom fields on custom field plugin page for editing and deleting
+*/
+function list_custom_field()
+{
+    global $db;
+    $results = $db->select(tbl('custom_field'),'*',$limit,$order);
+    foreach($results as $value) {
+        $list[]=$value;
+    }
+    return $list;
+}
+
+/**
+*This function is used to list specific custom field for editing purpose
 */
 
-  define("CB_CUSTOM_FIELDS_DIR_NAME",basename(dirname(__FILE__)));
-  define('CB_CUSTOM_FIELDS_PLUG_DIR',PLUG_DIR."/".CB_CUSTOM_FIELDS_DIR_NAME);
-  define("SITE_MODE",'/admin_area');
-
-  define("CB_CUSTOM_FIELDS_EditPAGE_URL",SITE_MODE."/plugin.php?folder=".CB_CUSTOM_FIELDS_DIR_NAME."/admin&file=edit_field.php");
-
-  assign("cb_custom_fields_edit_page",CB_CUSTOM_FIELDS_EditPAGE_URL);
-if(!function_exists("customfield"))
-{
-}   
-    /**
-	 * This function is used to add Custom field
-	 */
-   function add_custom_file($field_name,$field_title,$field_type,$db_field,$default_value,$type_page,$date){
+function view_customfield_detail($field_id){
     global $db;
-   $result=$db->insert(tbl('custom_fields'),array("custom_field_name","fcustom_field_title","custom_field_type","custom_db_field","default_value","customfields_flag","date_added"),array($field_name,$field_title,$field_type,$db_field,$default_value,$type_page,$date));
-  }
-      /**
-      *This function is used to list custom fields on custom field plugin page for editing and deleting
-      */
-  function list_custom_field()
-  {
-  		global $db;
-        //$exec = $db->Execute('SELECT * FROM '.tbl("custom_field"));
-		$results = $db->select(tbl('custom_field'),'*',$limit,$order);
-		foreach($results as $value)
-		{
-			$list[]=$value;
-		}
-	   return $list;
-  }
-
-  /**
-  *This function is used to list specific custom field for editing purpose
-  */
-
-  function view_customfield_detail($field_id){
-  	global $db;
-		$result = $db->select(tbl('custom_field'),"*","custom_field_list_id='$field_id'");
-		foreach($result as $value)
-		{
-			$listdetail[]=$value;
-
-		}
-	   return $listdetail;
- 
+    $result = $db->select(tbl('custom_field'),"*","custom_field_list_id='$field_id'");
+    foreach($result as $value) {
+        $listdetail[]=$value;
     }
-    /**
-    *This function is used edit custom fields
-    */
-	function edit_field($field_name,$field_title,$field_type,$db_field,$default_value,$edit_id)
-    {   
-        global $db;
-        $sql = "UPDATE ".tbl("custom_field")." SET field_name= '".$field_name."',field_type='$field_type',field_title='$field_title',default_value='$default_value',db_field='$db_field' WHERE custom_field_list_id='".$edit_id."'";
-        $db->Execute($sql);
-    }
-    
-    /**
-    *Function for loading custom fields on video page
-    */
-	function load_custom_fields($data,$ck_display_admin=FALSE,$ck_display_user=FALSE){
-		global $db;
-		$results = $db->select(tbl("custom_field"),"*","customfields_flag='video'");
-		foreach($results as $result)
-			{
-            $name = $result['field_name'];
-            $type = $result['field_type'];
-            $title = $result['field_title'];
-            $value = $result['default_value'];
-            $db_field = $result['db_field'];
-        if($type=='dropdown'){
-        $defaultselectvalue=explode(",",$value);
-        
-    $selectbuttonvalues=array();
-    foreach ($defaultselectvalue as $key => $value) {
-    $selectbuttonvalues[$value]=$value;
-    } 
-    $array= array($name=>array('title'=>$title,'type'=>$type,'value'=>$selectbuttonvalues,'name'=> $name,'id'=> $name,'db_field'=>$db_field,));
-
-    }else if($type=='radiobutton' || $type=='checkbox'){
-    $defaultradio=explode(",",$value);
-    $radiobuttonvalues=array();
-    foreach ($defaultradio as $key => $value) {
-    $radiobuttonvalues[$value]=$value;
-    }
-        $array=array($name => array(
-                          'title'=>  $title,
-                          'type'=> $type,
-                          'name'=> $name,
-                          'id'=> $name,
-                          'value' => $radiobuttonvalues,
-                          'checked' => $defaultradio[0],
-                          'db_field'=>$db_field,
-                          'auto_view'=>'no',
-                          'sep'=>'&nbsp;'
-                          ));
-
-        }else{
-        $array= array($name=>array('title'=>$title,'type'=>$type,'name'=> $name,'id'=> $name,
-        'db_field'=>$db_field,));
-        }
-foreach($array as $key => $fields) {
-		$new_array[$key] = $fields;
-		  }
-	   }
-     return $new_array;
+    return $listdetail;
 }
- /**
-    *Function for loading custom fields for signup page
-    */
- //$data,$ck_display_admin=FALSE,$ck_display_user=FALSE
+/**
+*This function is used edit custom fields
+*/
+function edit_field($field_name,$field_title,$field_type,$db_field,$default_value,$edit_id)
+{
+    global $db;
+    $sql = "UPDATE ".tbl("custom_field")." SET field_name= '".$field_name."',field_type='$field_type',field_title='$field_title',default_value='$default_value',db_field='$db_field' WHERE custom_field_list_id='".$edit_id."'";
+    $db->Execute($sql);
+}
+
+/**
+*Function for loading custom fields on video page
+*/
+function load_custom_fields($data,$ck_display_admin=FALSE,$ck_display_user=FALSE){
+    global $db;
+    $results = $db->select(tbl("custom_field"),"*","customfields_flag='video'");
+    foreach($results as $result)
+    {
+        $name = $result['field_name'];
+        $type = $result['field_type'];
+        $title = $result['field_title'];
+        $value = $result['default_value'];
+        $db_field = $result['db_field'];
+        if($type=='dropdown'){
+            $defaultselectvalue=explode(",",$value);
+
+            $selectbuttonvalues=array();
+            foreach ($defaultselectvalue as $key => $value) {
+                $selectbuttonvalues[$value]=$value;
+            }
+            $array= array($name=>array('title'=>$title,'type'=>$type,'value'=>$selectbuttonvalues,'name'=> $name,'id'=> $name,'db_field'=>$db_field,));
+        } else if($type=='radiobutton' || $type=='checkbox') {
+            $defaultradio=explode(",",$value);
+            $radiobuttonvalues=array();
+            foreach ($defaultradio as $key => $value) {
+                $radiobuttonvalues[$value]=$value;
+            }
+            $array=array($name => array(
+                'title'=>  $title,
+                'type'=> $type,
+                'name'=> $name,
+                'id'=> $name,
+                'value' => $radiobuttonvalues,
+                'checked' => $defaultradio[0],
+                'db_field'=>$db_field,
+                'auto_view'=>'no',
+                'sep'=>'&nbsp;'
+            ));
+        } else {
+            $array= array($name=>array('title'=>$title,'type'=>$type,'name'=> $name,'id'=> $name, 'db_field'=>$db_field,));
+        }
+        foreach($array as $key => $fields) {
+            $new_array[$key] = $fields;
+        }
+    }
+    return $new_array;
+}
+/**
+*Function for loading custom fields for signup page
+*/
+//$data,$ck_display_admin=FALSE,$ck_display_user=FALSE
 function load_custom_fields_signup(){
     global $db;
     $results = $db->select(tbl("custom_field"),"*","customfields_flag='signup'");
     foreach($results as $result)
-      {
-            $name = $result['field_name'];
-            $type = $result['field_type'];
-            $title = $result['field_title'];
-            $value = $result['default_value'];
-            $db_field = $result['db_field'];
+    {
+        $name = $result['field_name'];
+        $type = $result['field_type'];
+        $title = $result['field_title'];
+        $value = $result['default_value'];
+        $db_field = $result['db_field'];
         if($type=='dropdown'){
-        $defaultselectvalue=explode(",",$value);
-        
-    $selectbuttonvalues=array();
-    foreach ($defaultselectvalue as $key => $value) {
-    $selectbuttonvalues[$value]=$value;
-    } 
-    $array= array($name=>array('title'=>$title,'type'=>$type,'value'=>$selectbuttonvalues,'name'=> $name,'id'=> $name,'db_field'=>$db_field,));
+            $defaultselectvalue=explode(",",$value);
 
-    }else if($type=='radiobutton' || $type=='checkbox'){
-    $defaultradio=explode(",",$value);
-    $radiobuttonvalues=array();
-    foreach ($defaultradio as $key => $value) {
-    $radiobuttonvalues[$value]=$value;
-    }
-        $array=array($name => array(
-                          'title'=>  $title,
-                          'type'=> $type,
-                          'name'=> $name,
-                          'id'=> $name,
-                          'value' => $radiobuttonvalues,
-                          'checked' => $defaultradio[0],
-                          'db_field'=>$db_field,
-                          'auto_view'=>'no',
-                          'sep'=>'&nbsp;'
-                          ));
-
-        }else{
-        $array= array($name=>array('title'=>$title,'type'=>$type,'name'=> $name,'id'=> $name,
-        'db_field'=>$db_field,));
+            $selectbuttonvalues=array();
+            foreach ($defaultselectvalue as $key => $value) {
+                $selectbuttonvalues[$value]=$value;
+            }
+            $array= array($name=>array('title'=>$title,'type'=>$type,'value'=>$selectbuttonvalues,'name'=> $name,'id'=> $name,'db_field'=>$db_field,));
+        } else if($type=='radiobutton' || $type=='checkbox') {
+            $defaultradio=explode(",",$value);
+            $radiobuttonvalues=array();
+            foreach ($defaultradio as $key => $value) {
+                $radiobuttonvalues[$value]=$value;
+            }
+            $array=array($name => array(
+                'title'=>  $title,
+                'type'=> $type,
+                'name'=> $name,
+                'id'=> $name,
+                'value' => $radiobuttonvalues,
+                'checked' => $defaultradio[0],
+                'db_field'=>$db_field,
+                'auto_view'=>'no',
+                'sep'=>'&nbsp;'
+            ));
+        } else {
+            $array= array($name=>array('title'=>$title,'type'=>$type,'name'=> $name,'id'=> $name, 'db_field'=>$db_field,));
         }
-foreach($array as $key => $fields) {
-    $new_array[$key] = $fields;
-      }
-     }
-     return $new_array;
+        foreach($array as $key => $fields) {
+            $new_array[$key] = $fields;
+        }
+    }
+    return $new_array;
 }
-/*register_signup_field(load_custom_fields_signup($data,true));
-register_custom_upload_field(load_custom_fields($data,true));
-
-add_admin_menu('Custom Field','Custom Field','add_custom_field.php',CB_CUSTOM_FIELDS_DIR_NAME.'/admin');*/
-
-?>

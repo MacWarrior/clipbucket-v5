@@ -1,28 +1,20 @@
 <?php
-/**
- Name : Advertisment Class
- **************************************************************************************************
- Don Not Edit These Classes , It May cause your script not to run properly
- This source file is subject to the ClipBucket End-User License Agreement, available online at:
- http://www.opensource.org/licenses/attribution.php
- By using this software, you acknowledge having read this Agreement and agree to be bound thereby.
- **************************************************************************************************
- Copyright (c) 2007-2010 Clip-Bucket.com. All rights reserved.
- **************************************************************************************************
-**/
-
 class AdsManager
 {
 
-	/**
-	 * Function used to add new advertisment in ClipBucket
-	 * @param : Array
-	 */
+    /**
+     * Function used to add new advertisment in ClipBucket
+     *
+     * @param : Array
+     *
+     * @return null
+     */
 	function AddAd($array=NULL)
 	{
-		global $LANG,$db;
-		if(!$array)
+		global $db;
+		if(!$array){
 			$array = $_POST;
+        }
 		 
 		$name		= $array['name'];
 		$code		= $array['code'];
@@ -30,14 +22,13 @@ class AdsManager
 		$category  	= $array['category'];
 		$status		= $array['status'];
 
-		if(empty($name))
-		{
+		if(empty($name)) {
 			$msg = e(lang('ad_name_error'));
-		}else{
+		} else {
 			$count = $db->count(tbl("ads_data"),"ad_id"," ad_name='$name'");
 			
 			if($count>0){
-			e(lang('ad_exists_error2'));
+			    e(lang('ad_exists_error2'));
 			} else {
 				$db->insert(tbl("ads_data"),array("ad_category","ad_name","ad_placement","ad_code","ad_status","date_added"),
 											array($category,$name,$placement,/*"|no_mc|".*/$code,$status,now()));		
@@ -46,44 +37,51 @@ class AdsManager
 			return $msg;
 		}		
 	}
-	
-	
-	/**
-	 * Function used to set advertisment status
-	 * 1, to set as activate
-	 * 0, to set as deactivate
-	 */
-	
+
+    /**
+     * Function used to set advertisment status
+     * 1, to set as activate
+     * 0, to set as deactivate
+     *
+     * @param $status
+     * @param $id
+     */
 	function ChangeAdStatus($status,$id)
 	{
 		global $db;
 		
-		if($status >1)
+		if($status > 1){
 			$status = 1;
-		if($status<0)
+        }
+		if($status < 0){
 			$status = 0;
+        }
 		
-		if($this->ad_exists($id))
-		{
+		if($this->ad_exists($id)) {
 			$db->update(tbl("ads_data"),array("ad_status"),array($status)," ad_id='".mysql_clean($id)."'");
-			if($status == '0')
+			if($status == '0'){
 				$show_status = lang('ad_deactive');
-			else
+            } else {
 				$show_status = lang('ad_active');
+            }
 			e(lang('ad_msg').$show_status,"m");
-		} else
+		} else {
 			e(lang("ad_exists_error1"));
+        }
 	}
-	
-	/**
-	 * Function used to edit advertisment
-	 * @params Array
-	 */
+
+    /**
+     * Function used to edit advertisment
+     *
+     * @params Array
+     * @param null $array
+     */
 	function EditAd($array=NULL)
 	{
 		global $db;
-		if(!$array)
+		if(!$array){
 			$array = $_POST;
+        }
 			
 		$placement 	= mysql_clean($array['placement']);
 		$name	= mysql_clean($array['name']);
@@ -91,12 +89,11 @@ class AdsManager
 		$category = mysql_clean(@$array['category']);
 		$id = $array['ad_id'];
 		
-		if(!$this->ad_exists($id))
+		if(!$this->ad_exists($id)){
 			e(lang("ad_exists_error1"));
-		elseif(empty($name))
+        } elseif(empty($name)) {
 			e(lang('ad_name_error'));
-		else
-		{
+        } else {
 			$db->update(tbl("ads_data"),array("ad_placement","ad_name","ad_category","ad_code","ad_status"),
 						array($placement,$name,$category,"|no_mc|".$code,$array['status'],$id)," ad_id='$id' ");
 			e(lang('ad_update_msg'),"m");
@@ -105,40 +102,39 @@ class AdsManager
 	
 	/**
 	 * Function used to delete advertisements
-	 * @param Ad Id
+	 * @param integer Id
 	 */	
 	function DeleteAd($id)
 	{
 		global $db;
-		if(!$this->ad_exists($id))
+		if(!$this->ad_exists($id)){
 			e(lang("ad_exists_error1"));
-		else
-		{
+        } else {
 			$db->Execute("DELETE FROM ".tbl("ads_data")." WHERE ad_id='".$id."'");
 			$msg = e(lang('ad_del_msg'),"m");
 		}
 	}
-	
-	/**
-	 * Function used to remove advertismetn placement
-	 */
+
+    /**
+     * Function used to remove advertismetn placement
+     *
+     * @param $placement
+     */
 	function RemovePlacement($placement)
 	{
 		global $db;
-		if(!$this->get_placement($placement))
+		if(!$this->get_placement($placement)){
 			e(lang("ad_placement_err4"));
-		else
-		{
+        } else {
 			$db->execute("Delete from ".tbl("ads_data")." WHERE ad_placement='".$placement."'");
 			$db->execute("Delete from ".tbl("ads_placements")." WHERE placement='".$placement."'");
 			e(lang('ad_placment_delete_msg'),"m");
 		}
 	}
-	
-	
+
 	/**
 	 * Function used to add new palcement
-	 * @param Array
+	 * @param array
 	 * Array [0] => placement name
 	 * Array [1] => placement code
 	 */
@@ -147,37 +143,37 @@ class AdsManager
 		global $db;
 		if(empty($array[0])){
 			$msg = e(lang('ad_placement_err2'));
-		}elseif(empty($array[1])){
+		} elseif(empty($array[1])) {
 			$msg = e(lang('ad_placement_err3'));
 		}
-		if(empty($msg))
-		{
-			if($this->get_placement($array[1]))
+
+		if(empty($msg)) {
+			if($this->get_placement($array[1])){
 				e(lang('ad_placement_err1'));
-			else
-			{
+            } else {
 				$db->insert(tbl("ads_placements"),array("placement_name","placement"),array($array[0],$array[1]));
 				e(lang('ad_placement_msg'),"m");
 			}
 		}
 	}
-	
-	/**
-	* FUNCTION USED TO GET ADVERTISMENT FROM DATABSE WITH LOWEST IMPRESSION
-	* @param : placement_code
-	* @param : num_of_ads
-	* return advertisment
-	*/
+
+    /**
+     * FUNCTION USED TO GET ADVERTISMENT FROM DATABSE WITH LOWEST IMPRESSION
+     *
+     * @param : string placement_code
+     * @param int $limit
+     *
+     * @return string
+     */
 	function getAd($placement_code,$limit=1)
 	{	
 		global $db,$ads_array;
-		if($limit==1)
-		{
+		if($limit==1) {
 			//Creating Query, Not to select duplicate Ads
-			foreach($ads_array  as $ad_id)
-			{
-				if(is_numeric($ad_id))
+			foreach($ads_array  as $ad_id) {
+				if(is_numeric($ad_id)){
 					$query_param .= " AND ad_id <> '".$ad_id."' ";
+                }
 			}
 			$limit_query = ' LIMIT 1';
 			$order = ' ORDER BY ad_impressions ASC ';
@@ -199,11 +195,10 @@ class AdsManager
 			return stripslashes($code_array['ad_code']);
 		}
 	}
-	
-	
+
 	/**
 	* FUNCTION USED TO INCREASE AD IMPRESSIONGS
-	* @param ad_id
+	* @param integer
 	*/
 	function incrementImpression($ad_id)
 	{
@@ -211,8 +206,7 @@ class AdsManager
 		$query = "UPDATE ".tbl("ads_data")." SET ad_impressions = ad_impressions+1 WHERE ad_id='".$ad_id."'";
 		$db->Execute($query);
 	}
-	
-	
+
 	/** 
 	 * Function usd to get all placements
 	 */
@@ -221,8 +215,9 @@ class AdsManager
 		global $db;
 		
 		$result = $db->select(tbl("ads_placements"));
-		if(count($result)>0)
+		if(count($result)>0){
 			return $result;
+        }
 		return false;
 	}
 	
@@ -234,8 +229,9 @@ class AdsManager
 		global $db;
 		
 		$result = $db->select(tbl("ads_data"));
-		if(count($result)>0)
+		if(count($result)>0){
 			return $result;
+        }
 		return false;
 	}
 
@@ -250,8 +246,9 @@ class AdsManager
 	{
 		global $db;
 		$result = $db->select(tbl("ads_placements"),"*"," placement='$place' OR placement_id='$place' ");
-		if(count($result)>0)
+		if(count($result)>0){
 			return $result[0];
+        }
 		return false;
 	}
 
@@ -265,8 +262,9 @@ class AdsManager
 	function get_placement_name($place)
 	{
 		$details = $this->get_placement($place);
-		if($details)
+		if($details){
 			return $details['placement_name'];
+        }
 		return false;
 	}
 
@@ -281,8 +279,7 @@ class AdsManager
 	{
 		global $db;
 		$result = $db->select(tbl("ads_data"),"*"," 	ad_placement='$id' OR ad_id='$id'");
-		if(count($result)>0)
-		{
+		if(count($result)>0) {
 			$result = $result[0];
 			$result['ad_code'] = stripslashes($result['ad_code']);
 			return $result;
@@ -301,33 +298,34 @@ class AdsManager
 	{
 		global $db;
 		$count = $db->count(tbl("ads_data"),"ad_id"," ad_id='$id' ");
-		if($count>0)
+		if($count>0){
 			return true;
+        }
 		return false;
 	}
-	
-	
-	/**
-	 * Count ads in a placement
-	 */
+
+    /**
+     * Count ads in a placement
+     *
+     * @param $place
+     *
+     * @return bool
+     */
 	function count_ads_in_placement($place)
 	{
 		global $db;
 		return $db->count(tbl("ads_data"),"ad_id"," ad_placement='$place'");
 	}
 
-
-	/**
-	*@author : Fahad Abbas
-	*@date   : 24-Feb-2016
-	*@param  : { Null }
-	*return  : { Array } { Array of ads_placement.xml  }
-	*@reason : { this method used to convert ads_placement.xml content to php array} 
-	*/
+    /**
+     * @reason : { this method used to convert ads_placement.xml content to php array}
+     * @return mixed
+     * @author : Fahad Abbas
+     * @date   : 24-Feb-2016
+     */
 	function get_placement_xml()
 	{
-		if (file_exists(STYLES_DIR.'/'.TEMPLATE.'/ads_placement.xml'))
-		{
+		if (file_exists(STYLES_DIR.'/'.TEMPLATE.'/ads_placement.xml')) {
 			$xml_file = STYLES_DIR.'/'.TEMPLATE.'/ads_placement.xml';
 			$xml_content = file_get_contents($xml_file);
 			$xmlSimpleElement = simplexml_load_string($xml_content) or die("Error: Cannot create object");
@@ -335,11 +333,8 @@ class AdsManager
 			$results = json_decode($jsonArray,true);
 
 			return $results;
-		}
-		else
-		{
+		} else {
 			e(lang("no_ads_xml_found"),"e");
 		}
 	}
 }
-?>

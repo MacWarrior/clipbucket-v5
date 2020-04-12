@@ -1,5 +1,4 @@
 <?php
-
 /**
 *  Class Gravatar
 *
@@ -43,11 +42,11 @@ class Gravatar
      *    Query string. key/value
      */
     protected $properties = array(
-        "gravatar_id"    => NULL,
-        "default"        => NULL,
-        "size"            => 80,        // The default value
-        "rating"        => NULL,
-        "border"        => NULL,
+        "gravatar_id" => NULL,
+        "default"     => NULL,
+        "size"        => 80, // The default value
+        "rating"      => NULL,
+        "border"      => NULL,
     );
 
     /**
@@ -60,17 +59,11 @@ class Gravatar
      */
     protected $extra = "";
 
-    /**
-     *    
-     */
     public function __construct($email=NULL, $default=NULL) {
         $this->setEmail($email);
         $this->setDefault($default);
     }
 
-    /**
-     *    
-     */
     public function setEmail($email) {
         if ($this->isValidEmail($email)) {
             $this->email = $email;
@@ -80,16 +73,10 @@ class Gravatar
         return false;
     }
 
-    /**
-     *    
-     */
     public function setDefault($default) {
         $this->properties['default'] = $default;
     }
 
-    /**
-     *    
-     */
     public function setRating($rating) {
         if (in_array($rating, $this->GRAVATAR_RATING)) {
             $this->properties['rating'] = $rating;
@@ -98,9 +85,6 @@ class Gravatar
         return false;
     }
 
-    /**
-     *    
-     */
     public function setSize($size) {
         $size = (int) $size;
         if ($size <= 0)
@@ -108,56 +92,66 @@ class Gravatar
         $this->properties['size'] = $size;
     }
 
-    /**
-     *    
-     */
     public function setExtra($extra) {
         $this->extra = $extra;
     }
 
-    /**
-     *    
-     */
     public function isValidEmail($email) {
-		//global $userquery;
 		return is_valid_syntax('email',$email);
-        // Source: http://www.zend.com/zend/spotlight/ev12apr.php
-       //return eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $email);
     }
 
     /**
      *    Object property overloading
+     *
+     * @param $var
+     *
+     * @return mixed
      */
     public function __get($var) { return @$this->properties[$var]; }
 
     /**
      *    Object property overloading
+     *
+     * @param $var
+     * @param $value
+     *
+     * @return bool|void
      */
     public function __set($var, $value) {
         switch($var) {
-            case "email":    return $this->setEmail($value);
-            case "rating":    return $this->setRating($value);
-            case "default":    return $this->setDefault($value);
-            case "size":    return $this->setSize($value);
+            case "email":
+                return $this->setEmail($value);
+            case "rating":
+                return $this->setRating($value);
+            case "default":
+                return $this->setDefault($value);
+            case "size":
+                return $this->setSize($value);
             // Cannot set gravatar_id
-            case "gravatar_id": return;
+            case "gravatar_id":
+                return;
         }
         return @$this->properties[$var] = $value;
     }
 
     /**
      *    Object property overloading
+     *
+     * @param $var
+     *
+     * @return bool
      */
     public function __isset($var) { return isset($this->properties[$var]); }
 
     /**
      *    Object property overloading
+     *
+     * @param $var
+     *
+     * @return bool
      */
     public function __unset($var) { return @$this->properties[$var] == NULL; }
 
-    /**
-     *    Get source
-     */
     public function getSrc() {
         $url = self::GRAVATAR_URL ."?";
         $first = true;
@@ -172,20 +166,12 @@ class Gravatar
         return $url;    
     }
 
-    /**
-     *    toHTML
-     */
     public function toHTML() {
-        return     '<img src="'. $this->getSrc() .'"'
+        return '<img src="'. $this->getSrc() .'"'
                 .(!isset($this->size) ? "" : ' width="'.$this->size.'" height="'.$this->size.'"')
                 .$this->extra
                 .' />';    
     }
 
-    /**
-     *    toString
-     */
     public function __toString() { return $this->toHTML(); }
 }
-
-?>

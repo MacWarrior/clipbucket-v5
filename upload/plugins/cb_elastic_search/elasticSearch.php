@@ -1,86 +1,84 @@
 <?php
 /**
- * 
  * @link      http://
  * @copyright Copyright (c) 2007 - 2018 by Fahad Abbas
  * @link   https://bitbucket.org/clip-bucket/aditube/src/master/includes/classes/elasticSearch
 */
 class ElasticSearch 
 {
-		
 	/**
      * This variable is to define 
      *
-     * @var Variable
+     * @var string Variable
     */
     protected $apiUrl = '';
 
     /**
      * This variable is to define 
      *
-     * @var Variable
+     * @var string Variable
     */
     public $sort = "relevance";
 
      /**
      * This variable is to define 
      *
-     * @var Variable
+     * @var int Variable
     */
     public $from = 0;
 
      /**
      * This variable is to define to fetch results count
      *
-     * @var Variable
+     * @var int Variable
     */
     public $size = 10;
 
     /**
      * This variable is to define 
      *
-     * @var Variable
+     * @var array Variable
     */
     protected $EsQuery = array();
 
     /**
      * This variable is to define 
      *
-     * @var Variable
+     * @var string Variable
     */
     public $publicQuery = "";
 
     /**
      * This variable is to define 
      *
-     * @var Variable
+     * @var string Variable
     */
     public $index = "";
 
     /**
      * This variable is to define 
      *
-     * @var Variable
+     * @var string Variable
     */
     public $results = "";
 
     /**
      * This variable is to define 
      *
-     * @var Variable
+     * @var array Variable
     */
     public $resultsHits = array();
 
     /**
      * This variable is to define to fetch results count
      *
-     * @var Variable
+     * @var array Variable
     */
     public $filters = array(
-                    "category"=>"",
-                    "author"=>"",
-                    "object_id"=>"",
-                );
+        "category"=>"",
+        "author"=>"",
+        "object_id"=>"",
+    );
 
     /**
      * This variable is to define mapping of videos Object
@@ -88,50 +86,49 @@ class ElasticSearch
      * @object Variable
     */
     public $videoMappingData = array(
-			"mappings"=> array(
-			    "_doc"=> array( 
-				    "properties"=> array( 
-				    	"videoid"          =>  array( "type"=> "long" ), 
-				        "title"            =>  array( "type"=> "text" ), 
-                        "userid"           =>  array( 
-                                                    "type"=> "long", 
-                                                ), 
-                        "username"         =>  array( "type"=> "text" ),
-                        "first_name"       =>  array( "type"=> "text" ),
-                        "last_name"        =>  array( "type"=> "text" ),
-				        "description"      =>  array( "type"=> "text" ), 
-				        "category"         =>  array( 
-                                                "type" => "object",
-                                                "properties" => array(
-                                                    "id" => array(
-                                                        "type"=>"integer",
-                                                    ),
-                                                    "name"=> array(
-                                                        "type"=>"text",
-                                                        "fielddata"=>true,
-                                                    )
-                                                )  
-                                            ),
-				        "tags"             =>  array( "type"=> "text" ),
-				        "videokey"         =>  array( "type"=> "text" ),
-				        "file_name"        =>  array( "type"=> "text" ),
-				        "file_server_path" =>  array( "type"=> "text" ),
-				        "files_thumbs_path"=>  array( "type"=> "text" ),
-				        "file_directory"   =>  array( "type"=> "text" ),
-				        "rating"           =>  array( "type"=> "text" ),
-				        "comments_count"   =>  array( "type"=> "integer" ),
-				        "default_thumb"    =>  array( "type"=> "integer" ),
-                        "status"           =>  array( "type"=> "text" ),
-                        "broadcast"        =>  array( "type"=> "text" ),
-				        "views"            =>  array( "type"=> "integer" ),
-				        "date_added" =>  array(
-					        "type"   =>  "date"
-					    )
-				    )
-			    )
-		  	)
-		);
-
+        "mappings"=> array(
+            "_doc"=> array(
+                "properties"=> array(
+                    "videoid"          =>  array( "type"=> "long" ),
+                    "title"            =>  array( "type"=> "text" ),
+                    "userid"           =>  array(
+                        "type"=> "long",
+                    ),
+                    "username"         =>  array( "type"=> "text" ),
+                    "first_name"       =>  array( "type"=> "text" ),
+                    "last_name"        =>  array( "type"=> "text" ),
+                    "description"      =>  array( "type"=> "text" ),
+                    "category"         =>  array(
+                        "type" => "object",
+                        "properties" => array(
+                            "id" => array(
+                                "type"=>"integer",
+                            ),
+                            "name"=> array(
+                                "type"=>"text",
+                                "fielddata"=>true,
+                            )
+                        )
+                    ),
+                    "tags"             =>  array( "type"=> "text" ),
+                    "videokey"         =>  array( "type"=> "text" ),
+                    "file_name"        =>  array( "type"=> "text" ),
+                    "file_server_path" =>  array( "type"=> "text" ),
+                    "files_thumbs_path"=>  array( "type"=> "text" ),
+                    "file_directory"   =>  array( "type"=> "text" ),
+                    "rating"           =>  array( "type"=> "text" ),
+                    "comments_count"   =>  array( "type"=> "integer" ),
+                    "default_thumb"    =>  array( "type"=> "integer" ),
+                    "status"           =>  array( "type"=> "text" ),
+                    "broadcast"        =>  array( "type"=> "text" ),
+                    "views"            =>  array( "type"=> "integer" ),
+                    "date_added" =>  array(
+                        "type"   =>  "date"
+                    )
+                )
+            )
+        )
+    );
 
     /**
      * This variable is to define mapping of videos Object
@@ -139,36 +136,36 @@ class ElasticSearch
      * @object Variable
     */
     public $photoMappingData = array(
-            "mappings"=> array(
-                "_doc"=> array( 
-                    "properties"=> array( 
-                        "photo_id"         =>  array( "type"=> "long" ), 
-                        "title"      =>  array( "type"=> "text" ), 
-                        "username"         =>  array( "type"=> "text" ),
-                        "first_name"       =>  array( "type"=> "text" ),
-                        "last_name"        =>  array( "type"=> "text" ),
-                        "description"      =>  array( "type"=> "text" ), 
-                        "tags"             =>  array( "type"=> "text" ),
-                        "userid"           =>  array( 
-                                                    "type"=> "long", 
-                                                ), 
-                        "collection_id"    =>  array( 
-                                                    "type"=> "long", 
-                                                ), 
-                        "photo_key"        =>  array( "type"=> "text" ),
-                        "file_name"        =>  array( "type"=> "text" ),
-                        "file_directory"   =>  array( "type"=> "text" ),
-                        "rating"           =>  array( "type"=> "text" ),
-                        "photo_details"    =>  array( "type"=> "text" ),
-                        "active"           =>  array( "type"=> "text" ),
-                        "views"            =>  array( "type"=> "integer" ),
-                        "date_added" =>  array(
-                            "type"   =>  "date"
-                        )
+        "mappings"=> array(
+            "_doc"=> array(
+                "properties"=> array(
+                    "photo_id"         =>  array( "type"=> "long" ),
+                    "title"      =>  array( "type"=> "text" ),
+                    "username"         =>  array( "type"=> "text" ),
+                    "first_name"       =>  array( "type"=> "text" ),
+                    "last_name"        =>  array( "type"=> "text" ),
+                    "description"      =>  array( "type"=> "text" ),
+                    "tags"             =>  array( "type"=> "text" ),
+                    "userid"           =>  array(
+                        "type"=> "long",
+                    ),
+                    "collection_id"    =>  array(
+                        "type"=> "long",
+                    ),
+                    "photo_key"        =>  array( "type"=> "text" ),
+                    "file_name"        =>  array( "type"=> "text" ),
+                    "file_directory"   =>  array( "type"=> "text" ),
+                    "rating"           =>  array( "type"=> "text" ),
+                    "photo_details"    =>  array( "type"=> "text" ),
+                    "active"           =>  array( "type"=> "text" ),
+                    "views"            =>  array( "type"=> "integer" ),
+                    "date_added" =>  array(
+                        "type"   =>  "date"
                     )
                 )
             )
-        );
+        )
+    );
 
     /**
      * This variable is to define mapping of videos Object
@@ -176,40 +173,38 @@ class ElasticSearch
      * @object Variable
     */
     public $userMappingData = array(
-			"mappings"=> array(
-			    "_doc"=> array( 
-				    "properties"=> array( 
-				    	"userid"      =>  array( 
-                                            "type"=> "long", 
-                                        ), 
-				        "username"    =>  array( "type"=> "text" ), 
-				        "first_name"  =>  array( "type"=> "text" ), 
-				        "last_name"   =>  array( "type"=> "text" ),
-				        "email"       =>  array( "type"=> "text" ),
-                        "category"    =>  array( 
-                                                "type" => "object",
-                                                "properties" => array(
-                                                    "id" => array(
-                                                        "type"=>"integer",
-                                                    ),
-                                                    "name"=> array(
-                                                        "type"=>"text",
-                                                        "fielddata"=>true,
-                                                    )
-                                                )  
-                                            ),
-                        "usr_status"  =>  array( "type"=> "text" ),
-				        "views"       =>  array( "type"=> "integer" ),
-                        "total_videos" =>  array( "type"=> "integer" ),
-				        "date_added"  =>  array(
-					        "type"    =>  "date"
-					    )
-				    )
-			    )
-		  	)
-		);
-
-    
+        "mappings"=> array(
+            "_doc"=> array(
+                "properties"=> array(
+                    "userid"      =>  array(
+                        "type"=> "long",
+                    ),
+                    "username"    =>  array( "type"=> "text" ),
+                    "first_name"  =>  array( "type"=> "text" ),
+                    "last_name"   =>  array( "type"=> "text" ),
+                    "email"       =>  array( "type"=> "text" ),
+                    "category"    =>  array(
+                        "type" => "object",
+                        "properties" => array(
+                            "id" => array(
+                                "type"=>"integer",
+                            ),
+                            "name"=> array(
+                                "type"=>"text",
+                                "fielddata"=>true,
+                            )
+                        )
+                    ),
+                    "usr_status"  =>  array( "type"=> "text" ),
+                    "views"       =>  array( "type"=> "integer" ),
+                    "total_videos" =>  array( "type"=> "integer" ),
+                    "date_added"  =>  array(
+                        "type"    =>  "date"
+                    )
+                )
+            )
+        )
+    );
 
     /**
      * This variable is to define mapping of videos Object
@@ -217,78 +212,73 @@ class ElasticSearch
      * @object Variable
     */
     public $collectionMappingData = array(
-            "mappings"=> array(
-                "_doc"=> array( 
-                    "properties"=> array( 
-                        "group_id"      =>  array( "type"=> "integer" ), 
-                        "group_name"    =>  array( "type"=> "text" ), 
-                        "userid"        =>  array( 
-                                            "type"=> "long", 
-                                        ), 
-                        "username"         =>  array( 
-                                            "type"=> "text",
-                                            "fielddata"=> true 
-                                        ), 
-                        "first_name"       =>  array( "type"=> "text" ),
-                        "last_name"        =>  array( "type"=> "text" ),
-                        "group_description"   =>  array( "type"=> "text" ),
-                        "group_tags"    =>  array( "type"=> "text" ),
-                        "group_url"     =>  array( "type"=> "text" ),
-                        "category"      =>  array( 
-                                                "type" => "object",
-                                                "properties" => array(
-                                                    "id" => array(
-                                                        "type"=>"integer",
-                                                    ),
-                                                    "name"=> array(
-                                                        "type"=>"text",
-                                                        "fielddata"=>true,
-                                                    )
-                                                )  
-                                            ),
-                        "active"        =>  array( "type"=> "text" ),
-                        "views"         =>  array( "type"=> "integer" ),
-                        "total_videos"  =>  array( "type"=> "integer" ),
-                        "total_members" =>  array( "type"=> "integer" ),
-                        "total_topics"  =>  array( "type"=> "integer" ),
-                        "date_added"    =>  array(
-                            "type"    =>  "date"
+        "mappings"=> array(
+            "_doc"=> array(
+                "properties"=> array(
+                    "group_id"      =>  array( "type"=> "integer" ),
+                    "group_name"    =>  array( "type"=> "text" ),
+                    "userid"        =>  array(
+                        "type"=> "long",
+                    ),
+                    "username"         =>  array(
+                        "type"=> "text",
+                        "fielddata"=> true
+                    ),
+                    "first_name"       =>  array( "type"=> "text" ),
+                    "last_name"        =>  array( "type"=> "text" ),
+                    "group_description"   =>  array( "type"=> "text" ),
+                    "group_tags"    =>  array( "type"=> "text" ),
+                    "group_url"     =>  array( "type"=> "text" ),
+                    "category"      =>  array(
+                        "type" => "object",
+                        "properties" => array(
+                            "id" => array(
+                                "type"=>"integer",
+                            ),
+                            "name"=> array(
+                                "type"=>"text",
+                                "fielddata"=>true,
+                            )
                         )
+                    ),
+                    "active"        =>  array( "type"=> "text" ),
+                    "views"         =>  array( "type"=> "integer" ),
+                    "total_videos"  =>  array( "type"=> "integer" ),
+                    "total_members" =>  array( "type"=> "integer" ),
+                    "total_topics"  =>  array( "type"=> "integer" ),
+                    "date_added"    =>  array(
+                        "type"    =>  "date"
                     )
                 )
             )
-        );
-
+        )
+    );
 
 	/**
-     * The Constrcutor of Controller Class
+     * The Constructor of Controller Class
      *
      * @constructor Function
     */
 	function __construct($index=false)
 	{
-		
 		$this->apiUrl = config('elastic_server_ip');
 		$this->index = $index;
 	}
 
-
 	/**
      * @todo    : This method is used to map Mysql Database tables with ES
-     * @param   : { $index,$postData } { tablename and mapping Data }  
-     * @since   : { 5th June 2018 } 
+     * @param   : { $index,$postData } { tablename and mapping Data }
+     * @since   : { 5th June 2018 }
      * @return  : { Array } {Video Array}
      * @author  : <fahad.dev@iu.com.pk> <Fahad Abbas>
-     * @example : { MapIndex($request,$response, $args) } 
-     * 
+     * @example : { MapIndex($request,$response, $args) }
+     *
      * This method is used to map Mysql Database tables with E
-     *  
+     *
      * @throws Exception if any of the Error come
      *
     */
 	public function EsMap($mapData,$extras=false){
-
-
 		$request = array();
 		
 		$request["post_arr"] = json_encode($mapData);
@@ -302,12 +292,9 @@ class ElasticSearch
 		
 		$response = generic_curl($request);
 		return $response;
-
 	}
 
-
 	public function EsIndex($IndexData,$extras=false){
-
 		$request = array();
 		
 		$request["post_arr"] = $IndexData;
@@ -320,7 +307,6 @@ class ElasticSearch
 		}
 		$response = generic_curl($request);
 		return $response;
-
 	}
 
 	/**
@@ -337,8 +323,7 @@ class ElasticSearch
      *
     */
 	public function FormatVideo($video){
-
-		global $db,$cbvid,$cbgroup,$userquery;
+		global $cbvid,$userquery;
 		
 		$newVideo = (object)array();
 
@@ -358,7 +343,6 @@ class ElasticSearch
             }
         }
 
-        
         $user_details = $userquery->get_user_details($video["userid"]);
         if ($user_details){
             $newVideo->username = $user_details['username'];
@@ -380,11 +364,8 @@ class ElasticSearch
         $newVideo->views = $video['views'];
         $date = new DateTime($video["date_added"]);
 		$newVideo->date_added = $date->format('Y-m-d');
-        #pre($newVideo,1);
 		return json_encode($newVideo);
-
 	}
-
 
     /**
      * @todo    : This method is used to format video for ES sever request
@@ -400,8 +381,7 @@ class ElasticSearch
      *
     */
     public function FormatPhoto($photo){
-
-        global $db,$cbphoto,$userquery;
+        global $userquery;
         
         $newPhoto = (object)array();
 
@@ -412,15 +392,13 @@ class ElasticSearch
         $newPhoto->photo_description = htmlspecialchars($photo["photo_description"]);
         $newPhoto->photo_tags = $photo['photo_tags'];
 
-        
         $user_details = $userquery->get_user_details($photo["userid"]);
         if ($user_details){
             $newPhoto->username = $user_details['username'];
             $newPhoto->first_name = $user_details['first_name'];
             $newPhoto->last_name = $user_details['last_name'];
         }              
-        
-       
+
         $newPhoto->photo_key = $photo['photo_key'];
         $newPhoto->filename = $photo['filename'];
         $newPhoto->file_directory = $photo['file_directory'];
@@ -430,11 +408,8 @@ class ElasticSearch
         $newPhoto->ext = $photo['ext'];
         $date = new DateTime($photo["date_added"]);
         $newPhoto->date_added = $date->format('Y-m-d');
-        #pre($newPhoto,1);
         return json_encode($newPhoto);
-
     }
-
 
 	/**
      * @todo    : This method is used to format video for ES sever request
@@ -450,8 +425,7 @@ class ElasticSearch
      *
     */
 	public function FormatUser($user){
-
-		global $db,$userquery;
+		global $userquery;
 		
 		$newUser = (object)array();
 
@@ -486,9 +460,7 @@ class ElasticSearch
 		$newUser->date_added = $date->format('Y-m-d');
 
 		return json_encode($newUser);
-
 	}
-
 
     /**
      * @todo    : This method is used to format video for ES sever request
@@ -504,8 +476,7 @@ class ElasticSearch
      *
     */
     public function FormatGroupCollection($group){
-
-        global $db,$cbgroup,$userquery;
+        global $cbgroup,$userquery;
         
         $NewGroup = (object)array();
 
@@ -539,9 +510,7 @@ class ElasticSearch
         $NewGroup->active = $group["active"];
         $date = new DateTime($group["date_added"]);
         $NewGroup->date_added = $date->format('Y-m-d');
-        #pre($NewGroup,1);
         return json_encode($NewGroup);
-
     }
 
     /**
@@ -563,17 +532,14 @@ class ElasticSearch
 		$request["post_arr"] = $this->EsQuery;
 		if ($this->index){
 			$request["url"] = $this->apiUrl.'/'.$this->index.'/_search/';
-		}else{
+		} else {
 			$request["url"] = $this->apiUrl.'/_search/';
 		}
 		$request["method"] = "GET";
 		$request["headers"] = array('Content-Type: application/json');
-			
 
-		#pre($request,1);
         $response = generic_curl($request);
 		$this->results = $response;
-        #pre(json_decode($this->results["result"],true),1);
 		return $response;
 	}
 
@@ -591,43 +557,38 @@ class ElasticSearch
      *
     */
 	public function getVideoQueryBool(){
-
 		$bool = array();
 
         $bool_must["should"][] = array(
-                "wildcard"=>array(
-                    "title"=>$this->publicQuery
-                ));
+        "wildcard"=>array(
+            "title"=>$this->publicQuery
+        ));
         $bool_must["should"][] = array("match"=>array(
-                    "description"=>$this->publicQuery
-                ));
+            "description"=>$this->publicQuery
+        ));
         $bool_must["should"][] = array("match"=>array(
-                    "category.name"=>$this->publicQuery
-                ));
+            "category.name"=>$this->publicQuery
+        ));
         $bool_must["should"][] = array("match"=>array(
-                    "tags"=>$this->publicQuery
-                ));
+            "tags"=>$this->publicQuery
+        ));
         $bool_must["should"][] = array(
-                "prefix"=>array(
-                    "username"=>$this->publicQuery
-                ));
+        "prefix"=>array(
+            "username"=>$this->publicQuery
+        ));
         $bool_must["should"][] = array("prefix"=>array(
-                    "first_name"=>$this->publicQuery
-                ));
+            "first_name"=>$this->publicQuery
+        ));
         $bool_must["should"][] = array("prefix"=>array(
-                    "email"=>$this->publicQuery
-                ));
+            "email"=>$this->publicQuery
+        ));
         $bool_must["should"][] = array("prefix"=>array(
-                    "last_name"=>$this->publicQuery
-                ));
-
-             
-            
+            "last_name"=>$this->publicQuery
+        ));
         $bool["must"][] = array(
-                "bool"=>$bool_must
-            );
+            "bool"=>$bool_must
+        );
 
-	
         if (!has_access("admin_access")){
             $bool["filter"][] = array(
                 "match"=>array(
@@ -653,28 +614,25 @@ class ElasticSearch
      *
     */
 	public function getUserQueryBool(){
-
 		$bool = array();
 		
 		$bool_must["should"][] = array(
-	            "prefix"=>array(
-	                "username"=>$this->publicQuery
-	            ));
+        "prefix"=>array(
+            "username"=>$this->publicQuery
+        ));
         $bool_must["should"][] = array("prefix"=>array(
-                    "first_name"=>$this->publicQuery
-                ));
+            "first_name"=>$this->publicQuery
+        ));
         $bool_must["should"][] = array("prefix"=>array(
-                    "email"=>$this->publicQuery
-                ));
+            "email"=>$this->publicQuery
+        ));
         $bool_must["should"][] = array("prefix"=>array(
-                    "last_name"=>$this->publicQuery
-                ));
-             
-        	
-        $bool["must"][] = array(
-                "bool"=>$bool_must
-        	);
+            "last_name"=>$this->publicQuery
+        ));
 
+        $bool["must"][] = array(
+            "bool"=>$bool_must
+        );
 
         if (!has_access("admin_access",true)){
             $bool["filter"][] = array(
@@ -701,41 +659,39 @@ class ElasticSearch
      *
     */
     public function getGCQueryBool(){
-
         $bool = array();
         
         $bool_must["should"][] = array(
-                "match"=>array(
-                    "group_name"=>$this->publicQuery
-                ));
+        "match"=>array(
+            "group_name"=>$this->publicQuery
+        ));
         $bool_must["should"][] = array("match"=>array(
-                    "group_description"=>$this->publicQuery
-                ));
+            "group_description"=>$this->publicQuery
+        ));
         $bool_must["should"][] = array("match"=>array(
-                    "group_tags"=>$this->publicQuery
-                ));
+            "group_tags"=>$this->publicQuery
+        ));
         $bool_must["should"][] = array("match"=>array(
-                    "category.name"=>$this->publicQuery
-                ));
+            "category.name"=>$this->publicQuery
+        ));
         $bool_must["should"][] = array(
-                "prefix"=>array(
-                    "username"=>$this->publicQuery
-                ));
+        "prefix"=>array(
+            "username"=>$this->publicQuery
+        ));
         $bool_must["should"][] = array("prefix"=>array(
-                    "first_name"=>$this->publicQuery
-                ));
-         $bool_must["should"][] = array("prefix"=>array(
-                    "email"=>$this->publicQuery
-                ));
-          $bool_must["should"][] = array("prefix"=>array(
-                    "last_name"=>$this->publicQuery
-                ));
+            "first_name"=>$this->publicQuery
+        ));
+        $bool_must["should"][] = array("prefix"=>array(
+            "email"=>$this->publicQuery
+        ));
+        $bool_must["should"][] = array("prefix"=>array(
+            "last_name"=>$this->publicQuery
+        ));
              
             
         $bool["must"][] = array(
-                "bool"=>$bool_must
-            );
-
+            "bool"=>$bool_must
+        );
 
         if (!has_access("admin_access")){
             $bool["filter"][] = array(
@@ -746,10 +702,7 @@ class ElasticSearch
         }
 
         return $bool;
-        
-       
     }
-
 
      /**
      * @todo    : This method is used to format video for ES sever request
@@ -765,65 +718,57 @@ class ElasticSearch
      *
     */
     public function getAllQueryBool(){
-
         $bool = array();
 
         //videos
         $bool_must["should"][] = array(
-                "match"=>array(
-                    "title"=>$this->publicQuery
-                ));
+        "match"=>array(
+            "title"=>$this->publicQuery
+        ));
         $bool_must["should"][] = array("match"=>array(
-                    "description"=>$this->publicQuery
-                ));
+            "description"=>$this->publicQuery
+        ));
         $bool_must["should"][] = array("match"=>array(
-                    "tags"=>$this->publicQuery
-                ));
+            "tags"=>$this->publicQuery
+        ));
         //users
         $bool_must["should"][] = array(
-                "prefix"=>array(
-                    "username"=>$this->publicQuery
-                ));
+        "prefix"=>array(
+            "username"=>$this->publicQuery
+        ));
         $bool_must["should"][] = array("prefix"=>array(
-                    "first_name"=>$this->publicQuery
-                ));
-         $bool_must["should"][] = array("prefix"=>array(
-                    "email"=>$this->publicQuery
-                ));
-          $bool_must["should"][] = array("prefix"=>array(
-                    "last_name"=>$this->publicQuery
-                ));
+            "first_name"=>$this->publicQuery
+        ));
+        $bool_must["should"][] = array("prefix"=>array(
+            "email"=>$this->publicQuery
+        ));
+        $bool_must["should"][] = array("prefix"=>array(
+            "last_name"=>$this->publicQuery
+        ));
         //groups && collections
         $bool_must["should"][] = array(
-                "match"=>array(
-                    "group_name"=>$this->publicQuery
-                ));
+        "match"=>array(
+            "group_name"=>$this->publicQuery
+        ));
         $bool_must["should"][] = array("match"=>array(
-                    "group_description"=>$this->publicQuery
-                ));
+            "group_description"=>$this->publicQuery
+        ));
         $bool_must["should"][] = array(
             "match"=>array(
-                    "group_tags"=>$this->publicQuery
+                "group_tags"=>$this->publicQuery
             )
         );
-
 
         //all in all
         $bool_must["should"][] = array(
             "match"=>array(
-                    "category.name"=>$this->publicQuery
+                "category.name"=>$this->publicQuery
             )
         );
-             
-            
+
         $bool["must"][] = array(
-                "bool"=>$bool_must
-            );
-
-
-       
-
-
+            "bool"=>$bool_must
+        );
         if (!has_access("admin_access",true)){
             $bool["filter"][] = array(
                 "match"=>array(
@@ -841,14 +786,8 @@ class ElasticSearch
                 )
             );
         }
-
-       
-
         return $bool;
-        
-       
     }
-
 
     /**
      * @todo    : This method is used to format video for ES sever request
@@ -873,7 +812,7 @@ class ElasticSearch
             $queryBool = $this->getUserQueryBool();
         }elseif ($this->index == 'groups' || $this->index == 'collections') {
             $queryBool = $this->getGCQueryBool();
-        }else{
+        } else {
             $queryBool = $this->getAllQueryBool();
         }
 
@@ -905,109 +844,97 @@ class ElasticSearch
             );
         }
 
-        //pr($this->index,1);
         $this->EsQuery["query"] = array("bool"=>$queryBool);
-        #pre($this->EsQuery["query"],1);
 
         if ($this->sort == 'date'){
             $sort["date_added"] = array("order"=>"desc");
         }else if ($this->sort == 'views'){
             $sort["views"] = array("order"=>"desc");
-        }else{
+        } else {
             $sort["_score"]  = array("order"=>"desc");
         }
 
-
        $this->EsQuery["aggs"]["object"] = array(
-                            "terms" => array(
-                                "field" => "_index"
-                            ),
-                        );
+            "terms" => array(
+                "field" => "_index"
+            ),
+        );
 
-        $this->EsQuery["aggs"]["byindex"] = array(
+       $this->EsQuery["aggs"]["byindex"] = array(
+            "terms" => array(
+                "field" => "_index"
+            ),
+
+            "aggs" => array(
+                "author" =>  array(
                     "terms" => array(
-                        "field" => "_index"
+                        "field" => "userid"
                     ),
-                    
-                    "aggs" => array(
-                        "author" =>  array(
-                            "terms" => array(
-                                "field" => "userid"
-                            ),
-                            "aggs"=> array(
-                                "platform"=> array(
-                                    "top_hits"=> array(
-                                        "size"=> 1, 
-                                        "_source"=> 
-                                        array("include"=> array(
-                                            'userid',
-                                            'username',
-                                            'first_name',
-                                            'last_name',
-                                            )
-                                        )
+                    "aggs"=> array(
+                        "platform"=> array(
+                            "top_hits"=> array(
+                                "size"=> 1,
+                                "_source"=>
+                                array("include"=> array(
+                                    'userid',
+                                    'username',
+                                    'first_name',
+                                    'last_name',
                                     )
                                 )
                             )
-                        ), 
-                        "category" =>  array(
-                            "terms" => array(
-                                "field" => "category.id",
-                            ),
-                            "aggs"=> array(
-                                "platform"=> array(
-                                    "top_hits"=> array(
-                                        "size"=> 1, 
-                                        "_source"=> 
-                                        array("include"=> array('category'))
-                                    )
-                                )
-                            )
-                        ),
-                        "collections" =>  array(
-                            "terms" => array(
-                                "field" => "collections.id",
-                            ),
-                            "aggs"=> array(
-                                "platform"=> array(
-                                    "top_hits"=> array(
-                                        "size"=> 1, 
-                                        "_source"=> 
-                                        array("include"=> array('collections'))
-                                    )
-                                )
-                            )
-                        ), 
-                        "groups" =>  array(
-                            "terms" => array(
-                                "field" => "groups.id",
-                            ),
-                            "aggs"=> array(
-                                "platform"=> array(
-                                    "top_hits"=> array(
-                                        "size"=> 1, 
-                                        "_source"=> 
-                                        array("include"=> array('groups'))
-                                    )
-                                )
-                            )
-                        ),  
+                        )
                     )
-                    
-                );
-        
-
-
-        
+                ),
+                "category" =>  array(
+                    "terms" => array(
+                        "field" => "category.id",
+                    ),
+                    "aggs"=> array(
+                        "platform"=> array(
+                            "top_hits"=> array(
+                                "size"=> 1,
+                                "_source"=>
+                                array("include"=> array('category'))
+                            )
+                        )
+                    )
+                ),
+                "collections" =>  array(
+                    "terms" => array(
+                        "field" => "collections.id",
+                    ),
+                    "aggs"=> array(
+                        "platform"=> array(
+                            "top_hits"=> array(
+                                "size"=> 1,
+                                "_source"=>
+                                array("include"=> array('collections'))
+                            )
+                        )
+                    )
+                ),
+                "groups" =>  array(
+                    "terms" => array(
+                        "field" => "groups.id",
+                    ),
+                    "aggs"=> array(
+                        "platform"=> array(
+                            "top_hits"=> array(
+                                "size"=> 1,
+                                "_source"=>
+                                array("include"=> array('groups'))
+                            )
+                        )
+                    )
+                )
+            )
+        );
         $this->EsQuery["sort"] = $sort;
-
-
         $this->EsQuery["from"] = $this->from;
         $this->EsQuery["size"] = $this->size;
-        #pre($this->EsQuery,1);
         $this->EsQuery = json_encode($this->EsQuery);
     }
-
 
     public function makeFilters(){
         global $userquery;
@@ -1029,7 +956,6 @@ class ElasticSearch
                 $videos_aggregations = $aggs;
             }
         }
-        #pre($videos_aggregations,1);
 
         $authors_bucket = $videos_aggregations["author"]["buckets"];
         if (is_array($authors_bucket)){
@@ -1094,7 +1020,6 @@ class ElasticSearch
             }
         }
 
-
         $groups_bucket = $videos_aggregations["groups"]["buckets"];
         if (is_array($groups_bucket) && !empty($groups_bucket)){
             foreach ($groups_bucket as $key => $group) {
@@ -1117,13 +1042,7 @@ class ElasticSearch
                 $filters["GROUP"][] = $groups_temp;
             }
         }
-           
-        #pre($filters,1);
         return $filters;
-
     }
 
 }
-
-
-?>

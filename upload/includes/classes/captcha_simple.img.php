@@ -61,7 +61,6 @@ class CaptchaSecurityImages {
 		}
 		/* generate random lines in background */
 		for( $i=0; $i<($width*$height)/150; $i++ ) {
-		
 			imagedashedline($image, mt_rand(0,$width), mt_rand(0,$height), mt_rand(0,$width), mt_rand(0,$height), $noise_color);
 		}
 		/* create textbox and add text */
@@ -83,4 +82,3 @@ $height = isset($_GET['height']) ? $_GET['height'] : '40';
 $characters = isset($_GET['characters']) && $_GET['characters'] > 1 ? $_GET['characters'] : '6';
 
 $captcha = new CaptchaSecurityImages($width,$height,$characters);
-?>

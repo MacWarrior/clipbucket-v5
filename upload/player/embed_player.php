@@ -1,41 +1,36 @@
 <?php
-
-/**
- * License : CBLA
- * Author : Arslan
- */
-
 /**
  * iFrame based embed player ClipBucket
  * reason to use iFrame instead of embed code
  * is to control player with full support of javascript
  */
- 
- 
- define("THIS_PAGE","watch_video");
 
+define("THIS_PAGE","watch_video");
 include("../includes/config.inc.php"); 
 
 $vkey = $_GET['vid'];
-//gettin video details by key
+//getting video details by key
 $vdetails = $cbvid->get_video($vkey);
 increment_views_new($vkey, 'video');
 $width = @$_GET['width'];
 $height = @$_GET['height'];
 $autoplay = @$_GET['autoplay'];
 
-
-if(!$width)
+if(!$width){
 	$width = '320';
+}
 	
-if(!$height)
+if(!$height){
 	$height = '240';
+}
 
-if(!$autoplay)
+if(!$autoplay){
 	$autoplay = 'no';
+}
 
-if(!$vdetails)
+if(!$vdetails){
 	exit(json_encode(array("err"=>"no video details found")));
+}
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -49,7 +44,7 @@ Template(STYLES_DIR.'/global/head.html',false);
 ?>
 </head>
 
-<body style="margin:0px;padding:0px">
+<body style="margin:0;padding:0;">
 <?php
 flashPlayer(array('vdetails'=>$vdetails,'width'=>$width,'height'=>$height,'autoplay'=>$autoplay));
 ?>

@@ -24,7 +24,7 @@
 		{
 			$num = '20';
 			$msg = "Please Type Number from 1 to Maximum";
-		}else{
+		} else {
 			$num = $_POST['admin_pages'];
 			$admin_pages = $num;
 		}
@@ -67,8 +67,6 @@
 	
 	//Including Plugins
 	include('plugins.php');
-	//Including Flv Players
-	include('flv_player.php');
 
 	$Smarty->assign_by_ref( 'cbmass',$cbmass );
 

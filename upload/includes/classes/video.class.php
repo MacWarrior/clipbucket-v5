@@ -531,7 +531,7 @@ class CBvideo extends CBCategory
 
 					if (!empty($vdetails['file_directory'])){
 						$file = THUMBS_DIR.'/'.$vdetails['file_directory'].'/'.$thumb;
-					}else{
+					} else {
 						$file = THUMBS_DIR.'/'.$thumb;
 					}
 					

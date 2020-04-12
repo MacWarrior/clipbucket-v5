@@ -59,7 +59,7 @@ var $playerVar = 'player';
 		if($remove_quotes == false){
 		$this->code .= "
 		".$this->playerVar.".addParam('$name', '$value');";
-		}else{
+		} else {
 		$this->code .= "
 		".$this->playerVar.".addParam('$name', $value);";
 		}
@@ -70,7 +70,7 @@ var $playerVar = 'player';
 		if($remove_quotes == false){
 		$this->code .= "
 		".$this->playerVar.".addVariable('$name', '$value');";
-		}else{
+		} else {
 		$this->code .= "
 		".$this->playerVar.".addVariable('$name', $value);";
 		}
@@ -87,7 +87,7 @@ var $playerVar = 'player';
 	function ClearTabs($text,$str=false){
 		if($str==false){
 			return preg_replace('/\t/','',$text);
-		}else{
+		} else {
 			return str_replace('/\t/','',$text);
 		}
 	}

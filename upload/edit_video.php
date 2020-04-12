@@ -27,12 +27,12 @@ if($vdetails['userid'] != $userid)
 {
 	e(lang('no_edit_video'));
 	$Cbucket->show_page = false;
-}else{
+} else {
 	
 	//Updating Video Details
 	if(isset($_POST['update_video'])){
 		$Upload->validate_video_upload_form();
-		if(empty($eh->error_list))
+		if(empty($eh->get_error()))
 		{
 			$_POST['videoid'] = $vid;
 			$cbvid->update_video();

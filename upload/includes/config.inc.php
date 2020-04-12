@@ -38,7 +38,7 @@
 			template("global_header.html");
 			template("message.html");
 			exit();
-		}else{
+		} else {
 			e(lang("website_offline"),"w");
 		}
 	}

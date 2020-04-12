@@ -5,57 +5,40 @@
     <h4 style="color:#fff">Creating Database Tables and Importing data</h4>
     <p style="color:#fff; font-size:13px;"></p>
 
-
-
-</div><!--cb_container-->
-</div><!--nav_des-->
-<!--<div style="margin-left:52%;" class="db_png"></div>-->
-
+</div>
+</div>
 
 <div id="sub_container" class="br5px">
 
-
 <div id="resultsDiv" style="margin-top:20px">
 	<img src="images/loading.gif" id="loading" />
-    <?php if(!$upgrade): ?>
+<?php if(!$upgrade){ ?>
     <span id="current">creating database structure...</span>
-    <?php
-    else:
-    ?>
+<?php } else { ?>
     <span id="current">upgrading clipbucket...</span>
-    <?php
-    endif;
-    ?>
+<?php } ?>
 </div>
 
 <form name="installation" method="post" id="installation">
-	<input type="hidden" name="dbhost" value="<?php echo @$_POST['dbhost']; ?>" 	/>
-    <input type="hidden" name="dbpass" value="<?php echo @$_POST['dbpass']; ?>" 	/>
-    <input type="hidden" name="dbname" value="<?php echo @$_POST['dbname']; ?>" 	/>
-    <input type="hidden" name="dbuser" value="<?php echo @$_POST['dbuser']; ?>" 	/>
+	<input type="hidden" name="dbhost" value="<?php echo @$_POST['dbhost']; ?>" />
+    <input type="hidden" name="dbpass" value="<?php echo @$_POST['dbpass']; ?>" />
+    <input type="hidden" name="dbname" value="<?php echo @$_POST['dbname']; ?>" />
+    <input type="hidden" name="dbuser" value="<?php echo @$_POST['dbuser']; ?>" />
     <input type="hidden" name="dbprefix" value="<?php echo $_POST['dbprefix']; ?>" />
-    <?php if($upgrade): ?>
+<?php if($upgrade){ ?>
     <input type="hidden" name="mode" value="finish_upgrade" />
-    <?php
-    else:
-    ?>
+<?php } else { ?>
     <input type="hidden" name="mode" value="adminsettings" />
-    <?php
-    endif;
-    ?>
+<?php } ?>
 </form>
 
 <script>
 	$(document).ready()
 	{
-		<?php if($upgrade): ?>
+	<?php if($upgrade){ ?>
 		dodatabase('upgrade');
-		<?php
-		else:
-		?>
+	<?php } else { ?>
 		dodatabase('structure');
-		<?php
-		endif;
-		?>
+	<?php } ?>
 	}
 </script>

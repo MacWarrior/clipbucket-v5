@@ -164,7 +164,7 @@
 		{
 			if (stristr(PHP_OS, 'WIN')) { 
 				$cmd = $cmd;
-			}else{
+			} else {
 				$cmd = "PATH=\$PATH:/bin:/usr/bin:/usr/local/bin bash -c \"$cmd\"  2>&1";
 			}
 			$data = shell_exec( $cmd );

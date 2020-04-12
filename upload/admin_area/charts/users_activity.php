@@ -39,7 +39,7 @@ for($i=0;$i<$days;$i++)
 		$signups[] = $userquery->get_users(array("count_only"=>true,"date_span"=>"today"))+0;
 		$active[] = $userquery->get_users(array("count_only"=>true,"date_span"=>"today","status"=>'Ok'))+0;
 		$inactive[] = $userquery->get_users(array("count_only"=>true,"date_span"=>"today","status"=>'ToActivate'))+0;
-	}else{
+	} else {
 		$signups[] =$day[$i]['users']->signups+0;
 		$active[] =$day[$i]['users']->active+0;
 		$inactive[] =$day[$i]['users']->inactive+0;

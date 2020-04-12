@@ -69,7 +69,7 @@ for($i=0;$i<$days;$i++)
 	{
 		$vid_uploads[] = $cbvid->get_videos(array("count_only"=>true,"date_span"=>"today"))+0;
 		$user_signups[] = $userquery->get_users(array("count_only"=>true,"date_span"=>"today"))+0;
-	}else{
+	} else {
 		$vid_uploads[] = $day[$i]['video']->uploads+0;
 		$user_signups[] =$day[$i]['users']->signups+0;
 	}

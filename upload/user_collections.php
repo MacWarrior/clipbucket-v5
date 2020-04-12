@@ -1,12 +1,4 @@
 <?php
-/* 
- ****************************************************************
- | Copyright (c) 2007-2010 Clip-Bucket.com. All rights reserved.
- | @ Author : ArslanHassan										
- | @ Software : ClipBucket , © PHPBucket.com					
- ****************************************************************
-*/
-
 define("THIS_PAGE",'user_collections');
 define("PARENT_PAGE",'collections');
 
@@ -35,19 +27,16 @@ if($user)
 		case "collections":
 		case "uploaded":
 		default:
-		{
 			$limit = create_query_limit($page,config('collection_user_collections'));
 			assign("the_title",$user['username']." ".lang('collections'));
 			$collections = get_collections(array("limit"=>$limit,"user"=>$user['userid']));
 			$total_rows = get_collections(array("count_only"=>true,"user"=>$user['userid']));
 			$total_pages = count_pages($total_rows,config('collection_user_collections'));
-		}
-		break;
+		    break;
 		
 		case "favorites":
 		case "fav_collections":
 		case "favorite":
-		{
 			$limit = create_query_limit($page,config('collection_user_favorites'));
 			assign("the_title",$user['username']." ".lang('favorite')." ".lang('collections'));
 			$favC = array("user"=>$user['userid'],"limit",$limit);
@@ -55,8 +44,7 @@ if($user)
 			$favC['count_only'] = true;
 			$total_rows = $cbcollection->action->get_favorites($favC);
 			$total_pages = count_pages($total_rows,config('collection_user_favorites'));
-		}
-		break;
+		    break;
 	}
 	
 	assign('collections',$collections);
@@ -67,8 +55,8 @@ if($user)
 	$Cbucket->show_page = false;
 }
 
-if($Cbucket->show_page)
-Template('user_collections.html');
-else
-display_it();
-?>
+if($Cbucket->show_page){
+    Template('user_collections.html');
+} else {
+    display_it();
+}

@@ -53,7 +53,7 @@ function is_es_server_running(){
 
 /*if (is_es_server_running()){
 	exit("YES");
-}else{
+} else {
 	exit("NO");
 }*/
 

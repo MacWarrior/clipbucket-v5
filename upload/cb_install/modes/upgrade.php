@@ -1,5 +1,5 @@
 <?php
-if(userid() || $old_version < 2.3 ):
+if(userid() || $old_version < 2.3 ){
 ?>
 
 </div>
@@ -19,10 +19,10 @@ if(userid() || $old_version < 2.3 ):
     <div style="padding:10px 0;" align="right"><?php button('Continue to upgrade!',' onclick="$(\'#installation\').submit()" '); ?></div>
 </form>
 <?php
-else:
+} else {
 ?>
 <div class="errorDiv br5px" id="dbresult">
 <?php
 	echo msg_arr(array('err'=>'Please first login as Website adminstrator by going to admin_area and then try upgrading your website')); ?></div><?php
-endif;
+}
 ?>

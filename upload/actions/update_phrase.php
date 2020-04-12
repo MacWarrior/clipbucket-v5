@@ -1,13 +1,4 @@
 <?php
-
-/**
- * This file is used to update
- * language phrases
- * Author : Arslan Hassan
- * Since : 10 Aug, 2009
- */
- 
- 
 require_once '../includes/admin_config.php';
 $userquery->admin_login_check();
 
@@ -17,6 +8,3 @@ $value = $_POST['value'];
 $lang_obj->update_phrase($phrase_id,$value);
 
 echo ($value);
-
-
-?>

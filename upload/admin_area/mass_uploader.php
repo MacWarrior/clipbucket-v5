@@ -130,7 +130,7 @@
 			if( error() )
 			{
 				e('Unable to upload "'.$file_arr['title'].'"', 'e');
-			}else{
+			} else {
 				e('"'.$file_arr['title'].'" has been uploaded successfully','m');
 			}
 

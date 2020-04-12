@@ -1,11 +1,4 @@
 <?php
-/*******************************************************************************
- *  [ system information ]                                                     *
- *                                                                             *
- *  pedram@redhive.com                                                         *
- *                                                                             *
- *  set of functions that gather and parse system information/statistics.      *
- *******************************************************************************/
 
 /*******************************************************************************
  *  function list                                                              *
@@ -49,34 +42,13 @@
 
  ******************************************************************************/
 
-
-/*******************************************************************************
- *  configuration                                                              *
- *******************************************************************************/
-
 global $num_devices;    // number of devices on your system including loopback (lo)
 $num_devices = 3;
 
-
-
-/*******************************************************************************
- *  main functions                                                             *
- *******************************************************************************/
-
-
-///////////////////////////////////////////////////////////////////////////////
-//   sys_current_users
-//
-
 function sys_current_users ()    {
-    $command = `who | wc -l`;
+    $command = 'who | wc -l';
     return trim($command);
 }
-
-
-///////////////////////////////////////////////////////////////////////////////
-//   sys_net_devices
-//
 
 function sys_net_devices ()    {
     global $num_devices;
@@ -105,6 +77,7 @@ function sys_net_devices ()    {
     $sb = 9;    // sent bytes index
     $sp = 10;   // sent packets index
 
+    $total_bytes = 0;
     // store byte/packet count
     for ($i = 0; $i < $num_devices; $i++)   {
         $net_devices[$i]["rx_bytes"]   = convert_bytes($device[$i][$rb]);
@@ -117,8 +90,9 @@ function sys_net_devices ()    {
 
 	// store interface rx/tx percentage of total
 	for ($i = 0; $i < $num_devices; $i++)   {
-		if ($total_bytes == 0)
+		if ($total_bytes == 0){
 		    $total_bytes = 1;
+        }
 		$net_devices[$i]["rx_per_total"] = round($device[$i][$rb] / $total_bytes * 100, 2);
 		$net_devices[$i]["tx_per_total"] = round($device[$i][$sb] / $total_bytes * 100, 2);
 	}
@@ -130,22 +104,17 @@ function sys_net_devices ()    {
     return $net_devices;
 }
 
-
-///////////////////////////////////////////////////////////////////////////////
-//   sys_memory
-//
-
 function sys_memory () {
     $proc_meminfo = file("/proc/meminfo");
 
     // gather system memory information
     for ($i = 0; $proc_meminfo[$i] != NULL; $i++)   {
         if (preg_match("Mem:", $proc_meminfo[$i]))    {
-            $clean = preg_replace (' +', ' ', $proc_meminfo[$i]);   // compact whitespace
+            $clean = preg_replace (' +', ' ', $proc_meminfo[$i]);
             $mem   = explode (" ", $clean);
         }
         if (preg_match("Swap:", $proc_meminfo[$i]))   {
-            $clean = preg_replace (' +', ' ', $proc_meminfo[$i]);   // compact whitespace
+            $clean = preg_replace (' +', ' ', $proc_meminfo[$i]);
             $swap  = explode (" ", $clean);
         }
     }
@@ -167,32 +136,22 @@ function sys_memory () {
     return $memory;
 }
 
-
-///////////////////////////////////////////////////////////////////////////////
-//   sys_uptime
-//
-
 function sys_uptime ()   {
-    $dirty = file("/proc/uptime");          // grab the line
-    $ticks = trim(strtok($dirty[0], " "));  // sanitize it (pull out the ticks)
+    $dirty = file("/proc/uptime");
+    $ticks = trim(strtok($dirty[0], " "));
 
-    $mins  = $ticks / 60;                   // total mins
-    $hours = $mins  / 60;                   // total hours
-    $days  = floor($hours / 24);            // total days
-    $hours = floor($hours - ($days * 24));  // hours left
-    $mins  = floor($mins  - ($days * 60 * 24) - ($hours * 60)); // mins left
+    $mins  = $ticks / 60;
+    $hours = $mins  / 60;
+    $days  = floor($hours / 24);
+    $hours = floor($hours - ($days * 24));
+    $mins  = floor($mins  - ($days * 60 * 24) - ($hours * 60));
 
-    $uptime .= "$days days, ";              // construct the string
+    $uptime = "$days days, ";
     $uptime .= "$hours hours, ";
     $uptime .= "$mins mins";
 
-    return $uptime;                         // return the string
+    return $uptime;
 }
-
-
-///////////////////////////////////////////////////////////////////////////////
-//   sys_login_stats
-//
 
 function sys_login_stats ()  {
     // determine wtmp start date and store in RFC 822 format
@@ -245,28 +204,16 @@ function sys_login_stats ()  {
     return $login_stats;
 }
 
-
-
-/*******************************************************************************
- *  helper functions                                                           *
- *******************************************************************************/
-
-
-///////////////////////////////////////////////////////////////////////////////
-//   convert_bytes
-//
-
 function convert_bytes ($bytes) {
     $kbytes = $bytes / 1024;
 
-    if ($kbytes > 1048576)
+    if ($kbytes > 1048576){
         $converted  = sprintf("%.2f GB", $kbytes / 1048576);
-    else if ($kbytes > 1024)
+    } else if ($kbytes > 1024) {
         $converted  = sprintf("%.2f MB", $kbytes / 1024);
-    else
+    } else {
         $converted  = sprintf("%.2f KB", $kbytes);
+    }
 
     return $converted;
 }
-
-?>

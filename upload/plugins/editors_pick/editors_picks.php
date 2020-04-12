@@ -65,7 +65,7 @@ if(!function_exists('editors_pick'))
 				$db->insert(tbl("editors_picks"),array("videoid","sort","date_added"),array($vid,$sort,now()));
 				 $db->update(tbl("video"), array("in_editor_pick"), array("yes")," videoid = '".$vid."'");
 				e(lang("Video has been added to editor's pick"),"m");
-			}else{
+			} else {
 				e(lang("Video is already in editor's pick"),"e");
 			}
 		}else

@@ -1,7 +1,5 @@
 <?php
-
 //Lets just save admin settings so we can move forward
-
 $uid = 1;
 $pass = pass_code(post('password'), $uid);
 
@@ -11,7 +9,6 @@ $db->update(tbl("users"),array
 
 //Login user
 $userquery->login_user(post('username'),post('password'))
-
 ?>
 
 </div>

@@ -400,7 +400,7 @@ class cb_pm
 				if($count_only)
 				{
 					$result = $db->count(tbl($this->tbl),'message_id'," message_to LIKE '%#$uid#%' AND message_type='pm' ");
-				}else{
+				} else {
 					$result = $db->select(tbl($this->tbl.',users'),tbl($this->tbl.'.*,users.username AS message_from_user '),
 										  tbl($this->tbl).".message_to LIKE '%#$uid#%' AND ".tbl("users").".userid = ".tbl($this->tbl).".message_from 
 										   AND message_type='pm'",NULL," date_added DESC");
@@ -413,7 +413,7 @@ class cb_pm
 				if($count_only)
 				{
 					$result = $db->count(tbl($this->tbl),'message_id'," message_to LIKE '%#$uid#%' AND message_box ='in' AND message_type='pm' ");
-				}else{
+				} else {
 					$result = $db->select(tbl($this->tbl.',users'),tbl($this->tbl.'.*,users.username AS message_from_user '),
 										  tbl($this->tbl).".message_to LIKE '%#$uid#%' AND ".tbl("users").".userid = ".tbl($this->tbl).".message_from 
 										  AND ".tbl($this->tbl).".message_box ='in' AND message_type='pm'",NULL," date_added DESC");
@@ -428,7 +428,7 @@ class cb_pm
 				if($count_only)
 				{
 					$result = $db->count(tbl($this->tbl),'message_id'," message_from = '$uid' AND message_box ='out' ");
-				}else{
+				} else {
 					$result = $db->select(tbl($this->tbl.',users'),tbl($this->tbl.'.*,users.username AS message_from_user '),
 										  tbl($this->tbl).".message_from = '$uid' AND ".tbl("users").".userid = ".tbl($this->tbl).".message_from 
 										  AND ".tbl($this->tbl).".message_box ='out'",NULL," date_added DESC");
@@ -479,7 +479,7 @@ class cb_pm
 				if($count_only)
 				{
 					$result = $db->count(tbl($this->tbl),'message_id'," message_to LIKE '%#$uid#%' AND message_box ='in' AND message_type='pm' ");
-				}else{
+				} else {
 					$result = $db->select(tbl($this->tbl.',users'),tbl($this->tbl.'.*,users.username AS message_from_user '),
 										  tbl($this->tbl).".message_to LIKE '%#$uid#' AND ".tbl("users.userid")." = ".tbl($this->tbl).".message_from 
 										  AND ".tbl($this->tbl).".message_box ='in' AND message_type='notification'",NULL," date_added DESC");
@@ -661,7 +661,7 @@ class cb_pm
 					$db->update(tbl($this->tbl),array("message_to"),array($inbox_user)," message_id='".$inbox['message_id']."'  ");
 				e(lang('msg_delete_inbox'),'m');
 			}
-		}else{
+		} else {
 			$outbox = $this->get_outbox_message($mid,$uid);
 			if($outbox)
 			{

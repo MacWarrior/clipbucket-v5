@@ -1,12 +1,4 @@
 <?php
-/* 
- ****************************************************************
- | Copyright (c) 2007-2010 Clip-Bucket.com. All rights reserved.
- | @ Author : ArslanHassan										
- | @ Software : ClipBucket , © PHPBucket.com					
- ****************************************************************
-*/
-
 define("THIS_PAGE",'user_photos');
 define("PARENT_PAGE",'photos');
 
@@ -35,19 +27,16 @@ if($user)
 		case "photos":
 		case "uploaded":
 		default:
-		{
 			$limit = create_query_limit($page,config('photo_user_photos'));
 			assign("the_title",$user['username']." ".lang('photos'));
 			$photos = get_photos(array("limit"=>$limit,"user"=>$user['userid']));
 			$total_rows = get_photos(array("count_only"=>true,"user"=>$user['userid']));
 			$total_pages = count_pages($total_rows,config('photo_user_photos'));
-		}
-		break;
+		    break;
 		
 		case "favorites":
 		case "fav_photos":
 		case "favorite":
-		{
 			$limit = create_query_limit($page,config('photo_user_favorites'));
 			assign("the_title",$user['username']." ".lang('Favorite')." ".lang('photos'));
 			$favP = array("user"=>$user['userid'],"limit",$limit);
@@ -55,8 +44,7 @@ if($user)
 			$favP['count_only'] = true;
 			$total_rows = $cbphoto->action->get_favorites($favP);
 			$total_pages = count_pages($total_rows,config('photo_user_favorites'));
-		}
-		break;
+		    break;
 	}
 	
 	assign('photos',$photos);
@@ -67,8 +55,8 @@ if($user)
 	$Cbucket->show_page = false;
 }
 
-if($Cbucket->show_page)
-Template('user_photos.html');
-else
-display_it();
-?>
+if($Cbucket->show_page) {
+    Template('user_photos.html');
+} else {
+    display_it();
+}

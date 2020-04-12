@@ -1,23 +1,14 @@
 <?php
-/* 
- *****************************************************************
- | Copyright (c) 2007-2010 Clip-Bucket.com. All rights reserved.	
- | @ Author : tangi											
- | @ Software : ClipBucket , &#169; PHPBucket.com						
- ******************************************************************
-*/
 require 'includes/config.inc.php';
 header("Content-Type: text/xml charset=utf-8");
 
 $limit = 100;
 $videos = get_videos(array('limit'=>$limit,'active'=>'yes','order'=>'date_added DESC'));
-
 ?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
 <!-- by fjulio ( tangi @ clipbucket dev. ) -->
 <?php
-    foreach($videos as $video)
-	{
+    foreach($videos as $video) {
 ?>
 <url>
 <loc><?php echo video_link($video); ?></loc>
@@ -43,10 +34,9 @@ echo cbdate("Y-m-d\TH:i:s",$video['date_added']).'+00:00';
 <?php
 $vtags = strip_tags(tags($video['tags'],'video'));
 $vtableau = explode (",",$vtags);
-for($i=0;$i<sizeof($vtableau);$i++)
-    {
+for($i=0;$i<sizeof($vtableau);$i++) {
     echo '<video:tag><![CDATA['.trim($vtableau[$i]).']]></video:tag>';
-    }
+}
 ?>
 <video:category><?php echo strip_tags(categories($video['category'],'video')); ?></video:category>
 <video:family_friendly>yes</video:family_friendly>

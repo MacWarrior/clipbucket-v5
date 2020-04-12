@@ -13,9 +13,7 @@
 <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-    
-
-     <div class="top clearfix">
+	<div class="top clearfix">
     <div class="top_tabs">
         <ul>
             <li><a href="https://clipbucket.com/clipbucket-overview" target="blank">V<?php echo VERSION; ?> Overview</a><span>|</span></li>
@@ -27,8 +25,7 @@
    <p></p> <span id="logo"><span style="color:#09c;">ClipBucket</span> Installer v<?php echo VERSION.' '.STATE; ?></span><p></p>
 </div><!--top-->
 
-
-<?php if(!$upgrade):?>
+<?php if(!$upgrade){ ?>
 <div  class="top_nav clearfix br5px" style="height:35px;">
   <div class="cb_container">
     <div class="cb_navbar">
@@ -48,7 +45,7 @@
 </div><!--top_nav-->
 
 
-   <?php else: ?>
+<?php } else { ?>
 <div class="top_nav clearfix ">
   <div class="cb_container">
     <div class="cb_navbar">
@@ -63,9 +60,7 @@
 </div><!--cb_container-->
 </div><!--top_nav-->
 
-
-
-<?php endif; ?>
+<?php } ?>
 
     <div id="container" class="br5px">
         <?php include(__DIR__."/".$mode.'.php'); /* Not secure, TODO : Fix it */ ?>

@@ -168,7 +168,7 @@ class Upload
 			//Setting Activation Option
 			if($activation == 0){
 				$active = 'yes';
-			}else{
+			} else {
 				$active = 'no';
 			}
 			$query_field[] = "active";
@@ -312,7 +312,7 @@ class Upload
 						$width_setting = $thumbs_size[0];
 						if ( $key != 'original' ){
 							$dimensions = implode('x',$thumbs_size);
-						}else{
+						} else {
 							$dimensions = 'original';
 							$width_setting  = $imageDetails[0];
 							$height_setting = $imageDetails[1];
@@ -360,7 +360,7 @@ class Upload
 				$this->upload_thumb($file_name,$file_array,$i,$files_dir,$thumbs_ver);
 			}
 			e(lang('upload_vid_thumbs_msg'),'m');
-		}else{
+		} else {
 			$file = $file_array;
 			$this->upload_thumb($file_name,$file,$key=0,$files_dir,$thumbs_ver);
 		}

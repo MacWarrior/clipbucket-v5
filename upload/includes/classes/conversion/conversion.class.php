@@ -712,7 +712,7 @@
 						$defaultVideoHeight = $this->options['highRes'];
 						$size = "{$width_tmp}x{$height_tmp}";
 						$vpre = "slow";
-					}else{
+					} else {
 						$defaultVideoHeight = $this->options['normalRes'];
 						$height_tmp = max($videoDetails['videoHeigt'],360);
 						$width_tmp = max($videoDetails['videoWidth'],360);

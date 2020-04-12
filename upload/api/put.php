@@ -236,7 +236,7 @@
 
 			$Upload->validate_video_upload_form();
 
-			if (empty($eh->error_list)) {
+			if (empty($eh->get_error())) {
 				$cbvid->update_video();
 			}
 
@@ -400,7 +400,7 @@
 		case "editVideo":
 			$vid = mysql_clean($request['videoid']);
 			$Upload->validate_video_upload_form();
-			if(empty($eh->error_list))
+			if(empty($eh->get_error()))
 			{
 				$_POST = $request;
 				$cbvid->update_video();

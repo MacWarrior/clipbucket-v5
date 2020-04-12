@@ -1,49 +1,43 @@
 <?php
 
 class CBTemplate {
-
 	/**
 	 * Function used to set Smarty Functions
 	 */
-   function init() {
+    function init() {
         global $Smarty;
         if (!isset($Smarty)) {
-
            $this->load_smarty();
         }
     }
 
-
     function load_smarty()
     {
-
         global $Smarty;
-        if($this->smarty_version < 3)
+        if($this->smarty_version < 3){
             $Smarty = new Smarty;
-        else
+        } else {
             $Smarty = new SmartyBC;
-
+        }
 
         $Smarty->compile_check = true;
         $Smarty->debugging = false;
         $Smarty->template_dir = BASEDIR."/styles";
         $Smarty->compile_dir  = BASEDIR."/cache/views";
-
     }
 
-    function create() {
+    function create()
+    {
         global $Smarty;
 
         if (!isset($Smarty)) {
             $this->load_smarty();
         }
-
-
-
         return true;
     }
     
-    function setCompileDir($dir_name) {
+    function setCompileDir($dir_name)
+    {
         global $Smarty;
         if (!isset($Smarty)) {
             $this->create();
@@ -51,7 +45,8 @@ class CBTemplate {
         $Smarty->compile_dir = $dir_name;
     }
 
-    function setType($type) {
+    function setType($type)
+    {
         global $Smarty;
         if (!isset($Smarty)) {
             $this->create();
@@ -59,7 +54,8 @@ class CBTemplate {
         $Smarty->type = $type;
     }
 
-    function assign($var, $value) {
+    function assign($var, $value)
+    {
         global $Smarty;
         if (!isset($Smarty)) {
             $this->create();
@@ -67,7 +63,8 @@ class CBTemplate {
         $Smarty->assign($var, $value);
     }
 
-    function setTplDir($dir_name = null) {
+    function setTplDir($dir_name = null)
+    {
         global $Smarty;
         if (!isset($Smarty)) {
             $this->create();
@@ -79,7 +76,8 @@ class CBTemplate {
         }
     }
 
-    function setModule($module) {
+    function setModule($module)
+    {
         global $Smarty;
         if (!isset($Smarty)) {
             $this->create();
@@ -88,7 +86,8 @@ class CBTemplate {
         $Smarty->type  = "module";
     }
 
-    function setTheme($theme) {
+    function setTheme($theme)
+    {
         global $Smarty;
         if (!isset($Smarty)) {
             $this->create();
@@ -99,7 +98,8 @@ class CBTemplate {
         $Smarty->type         = "theme";
     }
 
-    function getTplDir() {
+    function getTplDir()
+    {
         global $Smarty;
         if (!isset($Smarty)) {
             $this->create();
@@ -107,7 +107,8 @@ class CBTemplate {
         return $Smarty->template_dir;
     }
 
-     function display($filename) {
+     function display($filename)
+     {
         global $Smarty;
         if (!isset($Smarty)) {
             $this->create();
@@ -115,7 +116,8 @@ class CBTemplate {
         $Smarty->display($filename);
     }
 
-    function fetch($filename) {
+    function fetch($filename)
+    {
         global $Smarty;
         if (!isset($Smarty)) {
             $this->create();
@@ -123,7 +125,8 @@ class CBTemplate {
         return $Smarty->fetch($filename);
     }
     
-    function getVars() {
+    function getVars()
+    {
         global $Smarty;
         if (!isset($Smarty)) {
             $this->create();
@@ -139,23 +142,24 @@ class CBTemplate {
 		$dir = STYLES_DIR;
 		//Scaning Dir
 		$dirs = scandir($dir);
-		foreach($dirs as $tpl)
-		{
-			if(substr($tpl,0,1)!='.')
+		foreach($dirs as $tpl) {
+			if(substr($tpl,0,1)!='.'){
 				$tpl_dirs[] = $tpl;
+            }
 		}
 		//Now Checking for template template.xml
 		$tpls = array();
-		foreach($tpl_dirs as $tpl_dir)
-		{
+		foreach($tpl_dirs as $tpl_dir) {
 			$tpl_details = CBTemplate::get_template_details($tpl_dir);
 			
-			if($tpl_details && $tpl_details['name']!='')
+			if($tpl_details && $tpl_details['name']!=''){
 				$tpls[$tpl_details['name']] = $tpl_details;
+            }
 		}
 		
 		return $tpls;
 	}
+
 	function gettemplates()
 	{
 		return $this->get_templates();
@@ -178,7 +182,6 @@ class CBTemplate {
             preg_match('/<min_version>(.*)<\/min_version>/',$content,$min_version);
             preg_match('/<smarty_version>(.*)<\/smarty_version>/',$content,$smarty_version);
 
-
             $name = isset($name[1]) ? $name[1] : false;
 			$author = isset($author[1]) ? $author[1] : false;
 			$version = isset($version[1]) ? $version[1] : false;
@@ -190,37 +193,39 @@ class CBTemplate {
 			$website = array('title'=>$website_arr[1],'link'=>$website_arr[2]);
 			
 			//Now Create array
-			$template_details = array
-			('name'=>$name,
-			 'author'=>$author,
-			 'version'=>$version,
-			 'released'=>$released,
-			 'description'=>$description,
-			 'website'=>$website,
-			 'dir'=>$temp,
-			 'min_version'=>$min_version,
-			 'smarty_version'=>$smarty_version,
-			 'path'=>TEMPLATEFOLDER.'/'.$temp
-			 );
+			$template_details = array(
+			    'name'=>$name,
+                'author'=>$author,
+                'version'=>$version,
+                'released'=>$released,
+                'description'=>$description,
+                'website'=>$website,
+                'dir'=>$temp,
+                'min_version'=>$min_version,
+                'smarty_version'=>$smarty_version,
+                'path'=>TEMPLATEFOLDER.'/'.$temp
+            );
 			
 			return $template_details;
-		}else
-			return false;
+		}
+		return false;
 	}
-	
-	/**
-	 * Function used to get template thumb
-	 */
+
+    /**
+     * Function used to get template thumb
+     *
+     * @param $template
+     *
+     * @return string
+     */
 	function get_preview_thumb($template)
 	{
 		$path = TEMPLATEFOLDER.'/'.$template.'/images/preview.';
 		$exts = array('png','jpg','gif');
 		$thumb_path = '/images/icons/no_thumb_template.png';
-		foreach($exts as $ext)
-		{
+		foreach($exts as $ext) {
 			$file = BASEDIR.'/'.$path.$ext;
-			if(file_exists($file))
-			{
+			if(file_exists($file)) {
 				$thumb_path = '/'.$path.$ext;
 				break;
 			}
@@ -235,38 +240,43 @@ class CBTemplate {
 	function get_any_template()
 	{
 		$templates = $this->get_templates();
-		if(is_array($templates))
-		{
-			foreach($templates as $template)
-			{
-				if(!empty($template['name']))
+		if(is_array($templates)) {
+			foreach($templates as $template) {
+				if(!empty($template['name'])){
 					return $template['dir'];
+                }
 			}
-			return false;
-		}else
-			return false;
+		}
+        return false;
 	}
-	
-	/**
-	 * Function used to check weather given template is ClipBucket Template or not
-	 * It will read Template XML file
-	 */
+
+    /**
+     * Function used to check weather given template is ClipBucket Template or not
+     * It will read Template XML file
+     *
+     * @param $folder
+     *
+     * @return array|bool
+     */
 	function is_template($folder)
 	{
 		return $this->get_template_details($folder);
 	}
-	
-	
-	/**
-	 * Function used to get list of template file frrom its layout and styles folder
-	 */
+
+    /**
+     * Function used to get list of template file frrom its layout and styles folder
+     *
+     * @param      $template
+     * @param null $type
+     *
+     * @return array
+     */
 	function get_template_files($template,$type=NULL)
 	{
 		switch($type)
 		{
 			case "layout":
 			default:
-			{
 				$style_dir = STYLES_DIR."/$template/layout/";
 				$files_patt = $style_dir."*.html";
 				$files = glob($files_patt);
@@ -274,8 +284,7 @@ class CBTemplate {
 				 * All Files IN Layout Folder
 				 */
 				$new_files = array();
-				foreach($files as $file)
-				{
+				foreach($files as $file) {
 					$new_files[] = str_replace($style_dir,'',$file);
 				}
 				
@@ -285,54 +294,28 @@ class CBTemplate {
 				$blocks = $style_dir.'blocks/';
 				$file_patt = $blocks.'*.html';
 				$files = glob($file_patt);
-				foreach($files as $file)
-				{
+				foreach($files as $file) {
 					$new_files['blocks'][] = str_replace($blocks,'',$file);
 				}
-				
-				/**
-				 * Reading Folders Under Blocks
-				 */
-				//$blocks_dirs = glob($blocks.'*',GLOB_ONLYDIR);
-//				foreach($blocks_dirs as $dir)
-//				{
-//					$dir_name = str_replace($blocks,'',$dir);
-//					
-//					/**
-//					 * Now Reading Files under them and saving in array
-//					 */
-//					$sub_dir = $blocks.$dir_name.'/';
-//					$file_patt = $sub_dir.'*.html';
-//					$files = glob($file_patt);
-//					foreach($files as $file)
-//					{
-//						$new_files['blocks'][$dir_name][] = str_replace($sub_dir,'',$file);
-//					}
-//				}
 				return $new_files;
-			}
-			break;
+
 			case "theme":
-			{	
-				if ($template == 'cb_27')
+				if ($template == 'cb_27'){
 					$style_dir = STYLES_DIR."/$template/theme/css/";
-				else 
+                } else {
 					$style_dir = STYLES_DIR."/$template/theme/";
+                }
 				$files_patt = $style_dir."*.css";
 				$files = glob($files_patt);
 				/**
 				 * All Files IN CSS Folder
 				 */
 				$new_files = array();
-				foreach($files as $file)
-				{
+				foreach($files as $file) {
 					$new_files[] = str_replace($style_dir,'',$file);
 				}
-				
+
 				return $new_files;
-			}
 		}
 	}
 }
-
-?>

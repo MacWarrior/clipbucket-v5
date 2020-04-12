@@ -59,7 +59,7 @@ if(isset($_FILES["coverPhoto"])){
 			);
 		echo json_encode($response);
 		die();
-	}else{
+	} else {
 		$response = array(
 			"status" => false,
 			"msg" => "Invalid Image provided",

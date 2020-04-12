@@ -589,10 +589,10 @@ class userquery extends CBCategory{
 				$db->execute("DELETE FROM ".tbl("user_profile")." WHERE userid='$uid'");
 				
 				e(lang("usr_del_msg"),"m");
-			}else{
+			} else {
 				e(lang("you_cant_delete_this_user"));
 			}
-		}else{
+		} else {
 			e(lang("user_doesnt_exist"));
 		}
 	}
@@ -1823,7 +1823,7 @@ class userquery extends CBCategory{
 		if(count($results) > 0 )
 		{
 			return $results[0];
-		}else{
+		} else {
 			e(lang("cant_find_level"));
 			return false;
 		}
@@ -1851,7 +1851,7 @@ class userquery extends CBCategory{
 				return count($results);
 			else
 				return $results;
-		}else{
+		} else {
 			return 0;
 		}
 	}
@@ -1980,7 +1980,7 @@ class userquery extends CBCategory{
 			
 			e(lang("level_updated"),'m');
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
@@ -2007,7 +2007,7 @@ class userquery extends CBCategory{
 				$db->update(tbl("users"),array("level"),array(3)," level='$id'");
 				return true;
 				
-			}else{
+			} else {
 				e(lang("level_not_deleteable"));
 				return false;
 			}
@@ -2830,7 +2830,7 @@ class userquery extends CBCategory{
 							"status" => true,
 							"msg" => "Succesfully Uploaded",
 						);
-					}else{
+					} else {
 						return array(
 							"status" => false,
 							"msg" => "Only 1150 x 220 images are allowed {$width} x {$height} provided",

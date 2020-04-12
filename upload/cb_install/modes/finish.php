@@ -1,6 +1,7 @@
 <?php
-if(file_exists(FILES_DIR.'/temp/install.me'))
+if(file_exists(FILES_DIR.'/temp/install.me')){
 	unlink(FILES_DIR.'/temp/install.me');
+}
 ?>
 
 </div>
@@ -15,17 +16,15 @@ if(file_exists(FILES_DIR.'/temp/install.me'))
 
 <div class="nav_des clearfix">
     <div class="cb_container">
-    <h4 style="color:#fff">ClipBucket has been installed successfully</h4>
-    <p style="color:#fff; font-size:13px;">now you have succesfully installed clipbucket, you may be insterested in following plugins to <strong>enhance your website</strong></p>
-
-</div><!--cb_container-->
-</div><!--nav_des-->
+		<h4 style="color:#fff">ClipBucket has been installed successfully</h4>
+		<p style="color:#fff; font-size:13px;">now you have succesfully installed clipbucket, you may be insterested in following plugins to <strong>enhance your website</strong></p>
+	</div>
+</div>
 
 <div id="sub_container" class="br5px">
 
 <div class="errorDiv br5px" id="dbresult">
 <?php echo msg_arr(array('err'=>'<span style="color:#A32727;">Please delete cb_install directory</span>')); ?></div>
-
 
 <div class="fb_finish"><div class="fb-like-box" data-href="https://www.facebook.com/ClipBucket" data-width="348" data-height="500" 
     data-colorscheme="light" data-show-faces="true" data-header="false" data-stream="true" data-show-border="true"></div></div>

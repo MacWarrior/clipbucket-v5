@@ -40,7 +40,7 @@ for($i=0;$i<$days;$i++)
 		$uploads[] = $cbvid->get_videos(array("count_only"=>true,"date_span"=>"today"))+0;
 		$active[] = $cbvid->get_videos(array("count_only"=>true,"date_span"=>"today","active"=>'yes',"status"=>'Successful'))+0;
 		$processing[] = $cbvid->get_videos(array("count_only"=>true,"date_span"=>"today","status"=>'Processing'))+0;
-	}else{
+	} else {
 		$uploads[] =$day[$i]['video']->uploads+0;
 		$active[] =$day[$i]['video']->active+0;
 		$processing[] =$day[$i]['video']->processing+0;

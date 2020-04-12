@@ -55,7 +55,7 @@ session_start();
  //Required Modules and Their Paths (Editable In Admin Panel)
 	if(FFMPEG_TYPE == 's'){
 		define('FFMPEG_BINARY', MODULEDIR.'/encoders/ffmpeg');
-	}else{
+	} else {
 		define('FFMPEG_BINARY', $row['ffmpegpath']);
 	}
 	define('PHP_PATH', $row['php_path']);
@@ -103,7 +103,7 @@ session_start();
  
 	if(is_dir($row['basedir'])){
 	define('BASEDIR',$row['basedir']);
-	}else{
+	} else {
 	define('BASEDIR',dirname(__FILE__).'/..');
 	}
 	define('BASEURL',$row['baseurl']);							//Direct Path To Script ie http://yourwebsite.com/subdir
@@ -151,9 +151,9 @@ session_start();
 	{
 		if($row['con_modules_type'] == 0){
 			require_once(BASEDIR.'/includes/classes/conversion/ffmpeg.class.php');
-		}else{
+		} else {
 			require_once(BASEDIR.'/includes/classes/conversion/multi.class.php');
 		}
-	}else{
+	} else {
 		require_once(BASEDIR.'/includes/classes/conversion/ffmpeg.win32.php');
 	}

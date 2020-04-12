@@ -86,7 +86,7 @@ class language
 		{
 			e(sprintf(lang("name_has_been_added"),$name),'m');
 			$db->insert(tbl("phrases"),array('lang_iso','varname','text'),array($lang_code,$name,'|no_mc|'.$text));
-		}else{
+		} else {
 			e(sprintf(lang("name_already_exists"),$name),'m');
 		}
 	}

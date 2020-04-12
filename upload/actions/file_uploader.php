@@ -279,7 +279,7 @@
 			$_POST['description'] = mysql_clean($_POST['description']);
 			$_POST['duration'] = mysql_clean($_POST['duration']);
 
-			if(empty($eh->error_list))
+			if(empty($eh->get_error()))
 			{
 				$cbvid->update_video();
 			}

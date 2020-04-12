@@ -1,5 +1,5 @@
 <?php
-	$php_ver = check_module('php');
+$php_ver = check_module('php');
 ?>
 
 </div>

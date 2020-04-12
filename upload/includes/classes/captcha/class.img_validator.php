@@ -1,7 +1,6 @@
 <?php
 
-if(!class_exists("files"))
-{
+if(!class_exists("files")) {
     require_once "class.files.php";
 }
 
@@ -88,20 +87,20 @@ class img_validator extends files
     var $_height = 50;
 
     /**
-    * Checks if the system has GD support
-    *
-    */
+     * Checks if the system has GD support
+     *
+     * @param bool $folder
+     * @param bool $img_folder
+     */
     function __construct($folder = false, $img_folder = false)
     {
         // If doesn't given, uses the default fonts folder
-        if(!$folder)
-        {
+        if(!$folder) {
             $folder = "./img/fonts/";
         }
 
         // If doesn't given, uses the default background images folder
-        if(!$img_folder)
-        {
+        if(!$img_folder) {
             $img_folder = "./img/";
         }
         
@@ -110,20 +109,20 @@ class img_validator extends files
         $this->img_folder = $img_folder;
 
         // Checks if the system has GD loaded on PHP
-        if(!function_exists("ImageCreateTrueColor")) // gd 2.*
-        {
-            if(!function_exists("ImageCreate")) // gd 1.*
-            {
+        if(!function_exists("ImageCreateTrueColor")) { // gd 2.*
+            if(!function_exists("ImageCreate")) { // gd 1.*
                 $this->_error("You can't run this script because your PHP doesn't have GD library (1.* or 2.*) loaded.", E_USER_ERROR);
             }
         }
     }
-    
+
     /**
-    * Encrypts a word to record the data
-    *
-    * @param string $word
-    */
+     * Encrypts a word to record the data
+     *
+     * @param string $word
+     *
+     * @return false|string
+     */
     function encrypts_word($word)
     {
         return substr(md5($word), 1, 10);
@@ -143,27 +142,26 @@ class img_validator extends files
     }
 
     /**
-    * Checks the recorded word with the given on
-    *
-    * @param string $wordc
-    */
+     * Checks the recorded word with the given on
+     *
+     * @param $word
+     *
+     * @return bool
+     */
     function checks_word($word)
     {
 		if(isset($_SESSION["word_validator"])){
-        $recorded = base64_decode($_SESSION["word_validator"]);
-		}else{
-		$recorded = base64_decode($_COOKIE["word_validator"]);
+            $recorded = base64_decode($_SESSION["word_validator"]);
+		} else {
+		    $recorded = base64_decode($_COOKIE["word_validator"]);
 		}
-		$given    = $this->encrypts_word($word);
-        if(preg_match($given, $recorded))
-        {
+		$given = $this->encrypts_word($word);
+        if(preg_match($given, $recorded)) {
             $msg = true;
+        } else {
+            $msg = false;
         }
-        else
-        {
-             $msg = false;
-        }
-	return $msg;
+	    return $msg;
     }
 
     /**
@@ -180,28 +178,24 @@ class img_validator extends files
     }
 
     /**
-    * Generates the validation imagem with a given word.
-    * If the word isn't provide generate a random word.
-    * 
-    * @param string $word
-    * @param boolean $use_done_images
-    * @param string $align
-    */
+     * Generates the validation imagem with a given word.
+     * If the word isn't provide generate a random word.
+     *
+     * @param bool    $word
+     * @param boolean $use_done_images
+     * @param string  $align
+     */
     function generates_image($word = false, $use_done_images = false, $align = "center")
     {
         /**
         * Didn't give a word, generates a random text
         */
-        if(!$word)
-        {
+        if(!$word) {
             $word = $this->generates_text();
-        }
-        else
-        {
+        } else {
             $word_size = strlen($word);
 
-            if($word_size > $this->letters_limit)
-            {
+            if($word_size > $this->letters_limit) {
                 $word = $this->generates_text();
             }
         }
@@ -220,8 +214,7 @@ class img_validator extends files
         /**
         * Sets the X values according to the chosen alignment
         */
-        if($align == "center")
-        {
+        if($align == "center") {
             /**
             * X position value for only 1 letter of the size 14 text
             */
@@ -246,8 +239,7 @@ class img_validator extends files
         /**
         * Left
         */
-        else 
-        {
+        else {
             $x_small = 2;
             $x_big = 2;
         }
@@ -257,8 +249,7 @@ class img_validator extends files
         /**
         * The background is already done, so, create the image handle from done BG
         */
-        if($use_done_images)
-        {
+        if($use_done_images) {
             // Chooses randomly a theme
             $theme = rand(1, count($this->themes_bg_images));
             // Start image handle from file
@@ -271,8 +262,7 @@ class img_validator extends files
         /**
         * GD Creates the background rectangle
         */
-        else
-        {
+        else {
             // Chooses randomly a theme
             $theme = rand(1, count($this->themes));
             // Start image handle
@@ -307,13 +297,10 @@ class img_validator extends files
         /**
         * Prints header and the image
         */
-        if($this->image_type == "jpeg")
-        {
+        if($this->image_type == "jpeg") {
             header("Content-type: image/jpeg");
             imagejpeg($background_image, false, 100);
-        }
-        else
-        {
+        } else {
             header("Content-type: image/png");
             imagepng($background_image);
         }
@@ -321,4 +308,3 @@ class img_validator extends files
         imagedestroy($background_image);
     }
 }
-?>

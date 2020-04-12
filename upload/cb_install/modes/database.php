@@ -1,5 +1,3 @@
-
-
 </div>
 <div class="clearfix"></div>
 
@@ -54,12 +52,10 @@
     <p class="grey-text font-size" style="margin-top:0px;">If you want to run multiple Clipbucket installations in a single database,<br> 
 change this.</p>
     </div>
-    
-   
+
     <input type="hidden" name="mode" value="dataimport" />
     
     </form>
 <div style="padding:10px 0px" align="left"><?php button('Check Connection',' onclick="dbconnect()" '); ?> <span id="loading"></span></div>
-
 
 </div>

@@ -1,10 +1,6 @@
 <?php
 require_once('../includes/common.php');
 
-/**
- * This file is used to install Embed Video Mod
- */
-
 function uninstall_embed_video_mode()
 {
 	global $db;
@@ -12,4 +8,3 @@ function uninstall_embed_video_mode()
 	$db->Execute("DROP TABLE `".tbl('custom_fields')."`");
 }
 uninstall_embed_video_mode();
-?>

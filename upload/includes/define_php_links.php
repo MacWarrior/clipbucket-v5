@@ -44,7 +44,7 @@
 	@define(user_account_link,'/manage/account');
 	@define(search_result,'/search/result');
     @define(admin_link,'/admin_area/');
-	}else{
+	} else {
 	@define(compose_msg_link,'/compose.php');
 	@define(login_success,'/login_success.php');
 	@define(logout_success,'/logout_success.php');

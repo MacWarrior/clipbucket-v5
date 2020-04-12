@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Clipbucet Global Resizer
  * ----------------------------------------------------------------------------
@@ -47,33 +46,31 @@ class CB_Resizer {
     protected $fonts_dir = 'fonts/';
 
     function __construct( $filepath = '' ) {
-		
         // Increasing memory limit for this proccess
         // JPG usually takes alot of memory
 		ini_set('memory_limit', '256M');
 		
         $this->quality = 90;
-
         $this->png_quality = 9;
-
         $this->cropping = 5;
-
         $this->preserve_aspect = $this->auto_resource = true;
-
         $this->exact_dimensions = false;
-
         $this->source = $filepath;
-
         $this->target = '';
-        
         $this->number_of_colors = 25;
-
         $this->_setup_filters();
     }
 
     /**
      * resizing method
-     */    
+     *
+     * @param int  $width
+     * @param int  $height
+     * @param null $background
+     * @param null $resource
+     *
+     * @return bool|false|resource
+     */
     function _resize( $width = 0, $height = 0, $background = null, $resource = null ) {
         if ( $this->_check_resource( $resource ) ) {
             if ( $width == 0 || $height == 0 ) {
@@ -147,72 +144,76 @@ class CB_Resizer {
                 if ( $this->cropping != -1 && $width > 0 && $height > 0 && $this->cropping < 10 ) {
                     switch ( $this->cropping ) {
                         // TOP LEFT
-                        case 1: {
-                                $start_x = 0;
-                                $start_y = 0;
-                                $end_x = $width;
-                                $end_y = $height;
-                            }break;
+                        case 1:
+                            $start_x = 0;
+                            $start_y = 0;
+                            $end_x = $width;
+                            $end_y = $height;
+                            break;
+
                         // TOP CENTER
-                        case 2: {
-                                $start_x = ( $target_width - $width ) / 2;
-                                $start_y = 0;
-                                $end_x = ( ( $target_width - $width ) / 2 ) + $width;
-                                $end_y = $height;
-                            }break;
+                        case 2:
+                            $start_x = ( $target_width - $width ) / 2;
+                            $start_y = 0;
+                            $end_x = ( ( $target_width - $width ) / 2 ) + $width;
+                            $end_y = $height;
+                            break;
+
                         // TOP RIGHT
-                        case 3 : {
-                                $start_x = $target_width - $width;
-                                $start_y = 0;
-                                $end_x = $target_width;
-                                $end_y = $height;
-                            }break;
+                        case 3 :
+                            $start_x = $target_width - $width;
+                            $start_y = 0;
+                            $end_x = $target_width;
+                            $end_y = $height;
+                            break;
+
                         // LEFT
-                        case 4 : {
-                                $start_x = 0;
-                                $start_y = ( $target_height - $height ) / 2;
-                                $end_x = $width;
-                                $end_y = ( ( $target_height - $height ) / 2 ) + $height;
-                            }break;
+                        case 4 :
+                            $start_x = 0;
+                            $start_y = ( $target_height - $height ) / 2;
+                            $end_x = $width;
+                            $end_y = ( ( $target_height - $height ) / 2 ) + $height;
+                            break;
+
                         // CENTER
-                        case 5 : default : {
-                                $start_x = ( $target_width - $width ) / 2;
-                                $start_y = ( $target_height - $height ) / 2;
-                                $end_x = ( ( $target_width - $width ) / 2 ) + $width;
-                                $end_y = ( ( $target_height - $height ) / 2 ) + $height;
-                            }
+                        case 5 :
+                        default :
+                            $start_x = ( $target_width - $width ) / 2;
+                            $start_y = ( $target_height - $height ) / 2;
+                            $end_x = ( ( $target_width - $width ) / 2 ) + $width;
+                            $end_y = ( ( $target_height - $height ) / 2 ) + $height;
                             break;
+
                         // RIGHT
-                        case 6 : {
-                                $start_x = $target_width - $width;
-                                $start_y = ( $target_height - $height ) / 2;
-                                $end_x = $target_width;
-                                $end_y = ( ( $target_height - $height ) / 2 ) + $height;
-                            }
+                        case 6 :
+                            $start_x = $target_width - $width;
+                            $start_y = ( $target_height - $height ) / 2;
+                            $end_x = $target_width;
+                            $end_y = ( ( $target_height - $height ) / 2 ) + $height;
                             break;
+
                         // BOTTOM LEFT
-                        case 7 : {
-                                $start_x = 0;
-                                $start_y = $target_height - $height;
-                                $end_x = $width;
-                                $end_y = $target_height;
-                            }
+                        case 7 :
+                            $start_x = 0;
+                            $start_y = $target_height - $height;
+                            $end_x = $width;
+                            $end_y = $target_height;
                             break;
+
                         // BOTTOM CENTER
-                        case 8 : {
-                                $start_x = ( $target_width - $width ) / 2;
-                                $start_y = $target_height - $height;
-                                $end_x = ( ( $target_width - $width ) / 2 ) + $width;
-                                $end_y = $target_height;
-                            }
+                        case 8 :
+                            $start_x = ( $target_width - $width ) / 2;
+                            $start_y = $target_height - $height;
+                            $end_x = ( ( $target_width - $width ) / 2 ) + $width;
+                            $end_y = $target_height;
                             break;
+
                         // BOTTOM RIGHT
-                        case 9: {
-                                $start_x = $target_width - $width;
-                                $start_y = $target_height - $height;
-                                $end_x = $target_width;
-                                $end_y = $target_height;
-                            }
+                        case 9:
+                            $start_x = $target_width - $width;
+                            $start_y = $target_height - $height;
+                            $end_x = $target_width;
+                            $end_y = $target_height;
                             break;
                     }
 
@@ -220,8 +221,7 @@ class CB_Resizer {
                 }
             } else {
                 $canvas = $this->_create_canvas( ( $width > 0 && $height > 0 ? $width : $target_width ), ( $width > 0 && $height > 0 ? $height : $target_height ), $background );
-                imagecopyresampled(
-                        $canvas, $this->resource, ( $width > 0 && $height > 0 ? ( $width - $target_width ) / 2 : 0 ), ( $width > 0 && $height > 0 ? ( $height - $target_height ) / 2 : 0 ), 0, 0, $target_width, $target_height, $this->source_width, $this->source_height );
+                imagecopyresampled($canvas, $this->resource, ( $width > 0 && $height > 0 ? ( $width - $target_width ) / 2 : 0 ), ( $width > 0 && $height > 0 ? ( $height - $target_height ) / 2 : 0 ), 0, 0, $target_width, $target_height, $this->source_width, $this->source_height );
             }
 
             return $this->final_image = $canvas;
@@ -241,53 +241,56 @@ class CB_Resizer {
         if ( !function_exists( 'gd_info' ) ) {
             echo 'no function';
             return false;
-        } else if ( !is_file( $this->source ) ) {
+        }
+        if ( !is_file( $this->source ) ) {
             echo 'no source file';
             return false;
-        } else if ( !is_readable( $this->source ) ) {
+        }
+        if ( !is_readable( $this->source ) ) {
             echo 'no source readble';
             return false;
-        } /*else if ( !is_writable( FOLDER ) ) {
-            echo 'no target writeable';
-            return false;
-        }*/ else {
-            list ( $this->source_width, $this->source_height, $this->source_type ) = getimagesize( $this->source );
-            $this->target_extension = $this->get_extension( $this->target );
-
-            switch ( $this->source_type ) {
-                // GIF
-                case 1: case IMAGETYPE_GIF: {
-                        $resource = imagecreatefromgif( $this->source );
-                        $this->gif_transparent_index = imagecolortransparent( $resource );
-                        if ( $this->gif_transparent_index >= 0 ) {
-                            $this->gif_transparent_color = imagecolorsforindex( $resource, $this->gif_transparent_index );
-                        }
-                    }
-                    break;
-
-                // JPG
-                case 2: case IMAGETYPE_JPEG: {
-                        $resource = imagecreatefromjpeg( $this->source );
-                    }
-                    break;
-
-                //PNG
-                case 3: case IMAGETYPE_PNG: {
-                        $resource = imagecreatefrompng( $this->source );
-                        imagealphablending( $resource, false );
-                    }
-                    break;
-            }
-
-            $this->resource = $resource;
-            return true;
         }
 
-        return false;
+        list ( $this->source_width, $this->source_height, $this->source_type ) = getimagesize( $this->source );
+        $this->target_extension = $this->get_extension( $this->target );
+
+        switch ( $this->source_type ) {
+            // GIF
+            case 1:
+            case IMAGETYPE_GIF:
+                $resource = imagecreatefromgif( $this->source );
+                $this->gif_transparent_index = imagecolortransparent( $resource );
+                if ( $this->gif_transparent_index >= 0 ) {
+                    $this->gif_transparent_color = imagecolorsforindex( $resource, $this->gif_transparent_index );
+                }
+                break;
+
+            // JPG
+            case 2:
+            case IMAGETYPE_JPEG:
+                $resource = imagecreatefromjpeg( $this->source );
+                break;
+
+            //PNG
+            case 3:
+            case IMAGETYPE_PNG:
+                $resource = imagecreatefrompng( $this->source );
+                imagealphablending( $resource, false );
+                break;
+        }
+
+        $this->resource = $resource;
+        return true;
     }
 
     /**
      * Create a blank canvas with provided width and height
+     *
+     * @param      $width
+     * @param      $height
+     * @param null $background
+     *
+     * @return false|resource
      */
     function _create_canvas( $width, $height, $background = null ) {
         $canvas = imagecreatetruecolor( ($width <= 0 ? (int) 1 : (int) $width ), ( $height <= 0 ? (int) 1 : (int) $height ) );
@@ -318,6 +321,10 @@ class CB_Resizer {
 
     /**
      * get extension of provided source or from global source
+     *
+     * @param null $source
+     *
+     * @return mixed
      */
     function get_extension( $source = null ) {
         if ( is_null( $source ) ) {
@@ -329,6 +336,10 @@ class CB_Resizer {
 
     /**
      * Convert HEX ( #FFF|#FFFFFF ) to rgb( red, green, blue )
+     *
+     * @param $color
+     *
+     * @return array
      */
     function _hex2rgb( $color ) {
         if ( $color == -1 ) {
@@ -351,14 +362,21 @@ class CB_Resizer {
 
     /**
      * crop method
+     *
+     * @param      $x_start
+     * @param      $y_start
+     * @param      $x_end
+     * @param      $y_end
+     * @param null $resource
+     *
+     * @return false|resource
      */
     function _crop( $x_start, $y_start, $x_end, $y_end, $resource = null ) {
 
         if ( $this->_check_resource( $resource ) ) {
             // Difference of end and start point is area that needs to be cropped
             $canvas = $this->_create_canvas( $x_end - $x_start, $y_end - $y_start );
-            imagecopyresampled(
-                    $canvas, $this->resource, 0, 0, $x_start, $y_start, $x_end - $x_start, $y_end - $y_start, $x_end - $x_start, $y_end - $y_start );
+            imagecopyresampled($canvas, $this->resource, 0, 0, $x_start, $y_start, $x_end - $x_start, $y_end - $y_start, $x_end - $x_start, $y_end - $y_start );
 
             return $this->final_image = $canvas;
         }
@@ -367,6 +385,11 @@ class CB_Resizer {
     /**
      * find sharpness method
      * function from Ryan Rud (http://adryrun.com)
+     *
+     * @param $orig
+     * @param $final
+     *
+     * @return mixed
      */
     function findSharp( $orig, $final ) { 
         $final = $final * (750.0 / $orig);
@@ -385,28 +408,27 @@ class CB_Resizer {
         $image = @$this->final_image;
         if ( !is_resource( $image ) ) {
             $image = $this->_check_resource();
-        } 
+        }
 
-        {
-            switch ( $this->target_extension ? $this->target_extension : $this->get_extension($this->source) ) {
-                case "gif": {
-                        header( 'Content-Type: image/gif' );
-                        imagegif( $image );
-                        $this->_destroy();
-                    }break;
+        switch ( $this->target_extension ? $this->target_extension : $this->get_extension($this->source) ) {
+            case "gif":
+                header( 'Content-Type: image/gif' );
+                imagegif( $image );
+                $this->_destroy();
+                break;
 
-                case "jpg": case "jpeg": {
-                        header( 'Content-Type: image/jpeg' );
-                        imagejpeg( $image, null, $this->quality );
-                        $this->_destroy();
-                    }break;
+            case "jpg":
+            case "jpeg":
+                header( 'Content-Type: image/jpeg' );
+                imagejpeg( $image, null, $this->quality );
+                $this->_destroy();
+                break;
 
-                case "png" : {
-                        header( 'Content-Type: image/png' );
-                        imagepng( $image, null, $this->png_quality );
-                        $this->_destroy();
-                    }break;
-            }
+            case "png" :
+                header( 'Content-Type: image/png' );
+                imagepng( $image, null, $this->png_quality );
+                $this->_destroy();
+                break;
         }
     }
 
@@ -420,45 +442,38 @@ class CB_Resizer {
         }
 
         if ( is_resource( $image ) ) {
-
             if ( (IMAGETYPE_PNG == $this->source_type || IMAGETYPE_GIF == $this->source_type ) && function_exists('imageistruecolor') && !imageistruecolor( $image ) && imagecolortransparent( $image ) > 0 ) {
                 imagetruecolortopalette( $image, false, imagecolorstotal( $image ) );
             }
 
             switch ( $this->target_extension ) {
-
-                case "gif": {
-                        if ( !imagegif( $image, $this->target ) ) {
-                            echo 'GIF Error';
-                            return false;
-                        } else {
-                            $this->_destroy();
-                        }
+                case "gif":
+                    if ( !imagegif( $image, $this->target ) ) {
+                        echo 'GIF Error';
+                        return false;
                     }
+                    $this->_destroy();
                     break;
 
-                case "jpg": case "jpeg": {
-                        if ( !imagejpeg( $image, $this->target, $this->quality ) ) {
-                            echo 'JPG Error';
-                            return false;
-                        } else {
-                            $this->_destroy();
-                        }
+                case "jpg":
+                case "jpeg":
+                    if ( !imagejpeg( $image, $this->target, $this->quality ) ) {
+                        echo 'JPG Error';
+                        return false;
                     }
+                    $this->_destroy();
                     break;
 
-                case "png": {
-                        if ( !imageistruecolor($image) && function_exists('imageistruecolor') ) {
-                            imagetruecolortopalette( $image, false, imagecolorstotal($image) );
-                        }
-
-                        if ( !imagepng( $image, $this->target, $this->png_quality ) ) {
-                            echo 'PNG Error';
-                            return false;
-                        } else {
-                            $this->_destroy();
-                        }
+                case "png":
+                    if ( !imageistruecolor($image) && function_exists('imageistruecolor') ) {
+                        imagetruecolortopalette( $image, false, imagecolorstotal($image) );
                     }
+
+                    if ( !imagepng( $image, $this->target, $this->png_quality ) ) {
+                        echo 'PNG Error';
+                        return false;
+                    }
+                    $this->_destroy();
                     break;
             }
         } else {
@@ -466,30 +481,31 @@ class CB_Resizer {
             return false;
         }
     }
-    
+
     /**
      * flipping the image
+     *
+     * @param      $side
+     * @param null $resource
+     *
+     * @return bool|false|resource
      */
     function _flip( $side, $resource = null ) {
         if ( $this->_check_resource( $resource ) ) {
             $canvas = $this->_create_canvas( $this->source_width, $this->source_height . -1 );
 
             switch ( $side ) {
-                case "vertical": {
-                        imagecopyresampled(
-                                $canvas, $this->resource, 0, 0, 0, ( $this->source_height - 1 ), $this->source_width, $this->source_height, $this->source_width, -$this->source_height );
-                    }break;
-                case "horizontal": {
-                        imagecopyresampled(
-                                $canvas, $this->resource, 0, 0, ( $this->source_width - 1 ), 0, $this->source_width, $this->source_height, -$this->source_width, $this->source_height );
-                    }break;
-                case "both": {
-                        imagecopyresampled(
-                                $canvas, $this->resource, 0, 0, ( $this->source_width - 1 ), ( $this->source_height - 1 ), $this->source_width, $this->source_height, -$this->source_width, -$this->source_height );
-                    }break;
-                default: {
-                        return false;
-                    }break;
+                case "vertical":
+                    imagecopyresampled($canvas, $this->resource, 0, 0, 0, ( $this->source_height - 1 ), $this->source_width, $this->source_height, $this->source_width, -$this->source_height );
+                    break;
+                case "horizontal":
+                    imagecopyresampled($canvas, $this->resource, 0, 0, ( $this->source_width - 1 ), 0, $this->source_width, $this->source_height, -$this->source_width, $this->source_height );
+                    break;
+                case "both":
+                    imagecopyresampled($canvas, $this->resource, 0, 0, ( $this->source_width - 1 ), ( $this->source_height - 1 ), $this->source_width, $this->source_height, -$this->source_width, -$this->source_height );
+                    break;
+                default:
+                    return false;
             }
 
             $this->final_image = $canvas;
@@ -500,6 +516,12 @@ class CB_Resizer {
 
     /**
      * rotating the image
+     *
+     * @param      $angle
+     * @param null $background
+     * @param null $resource
+     *
+     * @return bool|false|resource
      */
     function _rotate( $angle, $background = null, $resource = null) {
         if ( is_null( $background ) ) {
@@ -540,6 +562,10 @@ class CB_Resizer {
 
     /**
      * used to apply sharpness on image
+     *
+     * @param null $resource
+     *
+     * @return bool
      */
     function _sharpit( $resource = null ) {
         
@@ -565,6 +591,11 @@ class CB_Resizer {
 
     /**
      * Rotate left using _rotate method
+     *
+     * @param null $background
+     * @param null $resource
+     *
+     * @return bool|false|resource
      */
     function rotate_left( $background = null, $resource = null ) {
         return $this->_rotate( -90, $background, $resource );
@@ -572,6 +603,11 @@ class CB_Resizer {
 
     /**
      * Rotate right using _rotate method
+     *
+     * @param null $background
+     * @param null $resource
+     *
+     * @return bool|false|resource
      */
     function rotate_right( $background = null, $resource = null ) {
         return $this->_rotate( 90, $background, $resource );
@@ -579,6 +615,10 @@ class CB_Resizer {
 
     /**
      * Flip the image vertically and horizontally
+     *
+     * @param null $resource
+     *
+     * @return bool|false|resource
      */
     function flip( $resource = null) {
         return $this->_flip( "both" , $resource);
@@ -586,13 +626,21 @@ class CB_Resizer {
 
     /**
      * Flip the image vertically
+     *
+     * @param null $resource
+     *
+     * @return bool|false|resource
      */
     function flip_vertical( $resource = null ) {
         return $this->_flip( "vertical" , $resource );
     }
 
-/**
+    /**
      * Flip the image horizontally
+     *
+     * @param null $resource
+     *
+     * @return bool|false|resource
      */
     function flip_horizontal( $resource = null ) {
         return $this->_flip( "horizontal" , $resource );
@@ -603,7 +651,11 @@ class CB_Resizer {
      * 1 - If resource provided to function, used that else call _create_resource()
      * 2 - If already has a resource and final_image, means we are working on some image
      *       apply all other methods to that resource
-    * 3 - _create_resource() from Source provided
+     * 3 - _create_resource() from Source provided
+     *
+     * @param null $resource
+     *
+     * @return bool|resource
      */
     function _check_resource( $resource = null ) {
         if ( !is_null( $resource) && is_resource($resource) ) {
@@ -622,9 +674,8 @@ class CB_Resizer {
         
         if ( is_resource( $this->resource ) ) {
             return $this->resource;
-        } else {
-            return false;
         }
+        return false;
     }
     
     /**
@@ -636,9 +687,9 @@ class CB_Resizer {
             is_resource( $this->resource ) ? imagedestroy($this->resource) : false;
         }
         
-       if ( isset($this->final_image) ) {
+        if ( isset($this->final_image) ) {
            is_resource($this->final_image) ? imagedestroy($this->final_image) : false;
-       }
+        }
 
         unset( $this->final_image );
         unset( $this->resource );
@@ -692,59 +743,66 @@ class CB_Resizer {
             return $this->filters;
         }
     }
-    
+
     /**
      * Apply filter to image resource
+     *
+     * @param      $filters
+     * @param null $resource
+     *
+     * @return
      */
-    function apply_filter ( $filters, $resource = null ) {
-        if ( isset( $this->filters) ) {
+    function apply_filter ( $filters, $resource = null )
+    {
+        if ( isset( $this->filters ) ) {
             if ( $this->_check_resource( $resource ) ) {
                 // explode filters
                 $usr_filters = explode( ":", $filters );
                 if ( $usr_filters ) {
-                    foreach ( $usr_filters as $filter ) {
-                        $fs = explode(",",$filter);
-                        
+                    foreach( $usr_filters as $filter ) {
+                        $fs = explode( ",", $filter );
+
                         if ( !is_numeric( $fs[0] ) ) {
-                            if ( isset( $this->filters_alias[ $fs[0] ]) ) {
+                            if ( isset( $this->filters_alias[ $fs[0] ] ) ) {
                                 $fs[0] = $this->filters_alias[ $fs[0] ];
                             } else {
                                 continue;
                             }
                         }
-                        
-                         if ( isset( $this->filters[$fs[0]] ) ) {
-                             for( $i=1; $i <= 4; $i++ ) {
-                                 if ( isset( $fs[$i] ) ) {
-                                     $fs[$i] = (int)$fs[$i];
-                                 } else {
-                                     $fs[$i] = null;
-                                 }
-                             }
-                             // make number of args the switch
-                             
-                             switch( $this->filters[$fs[0]][1] ) {
-                                 case 0: {
-                                    imagefilter( $this->resource, $this->filters[$fs[0]][0] );
-                                 }break;
-                             
-                                 case 1: {
-                                    imagefilter( $this->resource, $this->filters[$fs[0]][0], $fs[1] ); 
-                                 }break;
-                             
-                                 case 2: {
-                                     imagefilter( $this->resource, $this->filters[$fs[0]][0], $fs[1], $fs[2] );
-                                 }break;
-                             
-                                 case 3: {
-                                     imagefilter( $this->resource, $this->filters[$fs[0]][0], $fs[1], $fs[2], $fs[3] );
-                                 }break;
-                             
-                                 case 4: {
-                                     imagefilter( $this->resource, $this->filters[$fs[0]][0], $fs[1], $fs[2], $fs[3], $fs[4] );
-                                 }break;
-                             }
-                         }
+
+                        if ( isset( $this->filters[ $fs[0] ] ) ) {
+                            for( $i = 1 ; $i <= 4 ; $i++ ) {
+                                if ( isset( $fs[ $i ] ) ) {
+                                    $fs[ $i ] = (int)$fs[ $i ];
+                                } else {
+                                    $fs[ $i ] = null;
+                                }
+                            }
+                            // make number of args the switch
+
+                            switch( $this->filters[ $fs[0] ][1] ) {
+                                case 0:
+                                    imagefilter( $this->resource, $this->filters[ $fs[0] ][0] );
+                                    break;
+
+                                case 1:
+                                    imagefilter( $this->resource, $this->filters[ $fs[0] ][0], $fs[1] );
+                                    break;
+
+                                case 2:
+                                    imagefilter( $this->resource, $this->filters[ $fs[0] ][0], $fs[1], $fs[2] );
+                                    break;
+
+                                case 3:
+                                    imagefilter( $this->resource, $this->filters[ $fs[0] ][0], $fs[1], $fs[2], $fs[3] );
+                                    break;
+
+                                case
+                                    4:
+                                    imagefilter( $this->resource, $this->filters[ $fs[0] ][0], $fs[1], $fs[2], $fs[3], $fs[4] );
+                                    break;
+                            }
+                        }
                     }
                     $this->final_image = $this->resource;
                     return $this->final_image;
@@ -755,8 +813,13 @@ class CB_Resizer {
 
     /**
      * Extract color palette from image
+     *
+     * @param null $resource
+     *
+     * @return mixed
      */
-    function color_palette( $resource = null ) {
+    function color_palette( $resource = null )
+    {
         if ( $this->_check_resource( $resource ) ) {
 
             if ( $this->source_width > 600 ) {
@@ -783,9 +846,7 @@ class CB_Resizer {
                      if(array_key_exists($thisRGB, $colors)) 
                      { 
                         $colors[$thisRGB]++; 
-                     } 
-                     else 
-                     { 
+                     } else {
                         $colors[$thisRGB] = 1; 
                      } 
                 }
@@ -808,7 +869,8 @@ class CB_Resizer {
         }
     }
 
-    function watermark( $watermark = null, $resource = null ) {
+    function watermark( $watermark = null, $resource = null )
+    {
         if ( $this->_check_resource( $resource ) ) {
             if ( !is_null($watermark) && file_exists( $watermark ) && is_file( $watermark ) && strtolower(end(explode(".",$watermark))) == 'png' ) {
                 $resource = $this->resource;
@@ -824,9 +886,6 @@ class CB_Resizer {
                 imagecopy( $cut, $resource, 0, 0, $destX, $destY, $wrx, $wry );
                 imagecopy( $cut, $wresource, 0, 0, 0, 0, $wrx, $wry );
                 imagecopymerge( $resource, $cut, $destX, $destY, 0, 0, $wrx, $wry, 100 );
-            } else {
-                /* Above contained failed, we will now use a string watermark */
-                //$this->string_watermark( $this->resource );
             }
             
             $this->final_image = $resource;
@@ -835,7 +894,8 @@ class CB_Resizer {
     }
 
     /* Thanks to fodybrabec: http://www.php.net/manual/en/function.imagettfbbox.php#105593 */
-    function calculate_font_box( $text ) {
+    function calculate_font_box( $text )
+    {
         $font = $this->fonts_dir.$this->font;
         $rect = imageftbbox($this->font_size, 0, $font, $text );
 
@@ -845,30 +905,32 @@ class CB_Resizer {
         $maxY = max(array($rect[1],$rect[3],$rect[5],$rect[7])); 
 
         return array( 
-         "left"   => abs($minX) - 1, 
-         "top"    => abs($minY) - 1, 
-         "width"  => $maxX - $minX, 
-         "height" => $maxY - $minY, 
-         "box"    => $rect 
-        ); 
+            "left"   => abs($minX) - 1,
+            "top"    => abs($minY) - 1,
+            "width"  => $maxX - $minX,
+            "height" => $maxY - $minY,
+            "box"    => $rect
+        );
     }
 
-    function string_watermark ( $resource = null ) {
+    function string_watermark ( $resource = null )
+    {
         if ( $this->_check_resource ( $resource ) ) {
-                $font_file = $this->fonts_dir.$this->font;
-                $this->font_size = round( ( ( $this->source_width + $this->source_height ) / 96 ) * 0.75 +14 );
-                $text = strtoupper( TITLE );
-                $color = imagecolorallocate($this->resource, 235, 235, 235 );
-                $shadow = imagecolorallocate($this->resource, 0, 0, 0 );
-                $return = $this->calculate_font_box( $text );
-                list ( $x, $y ) = $this->watermark_placement( $return );
+            $font_file = $this->fonts_dir.$this->font;
+            $this->font_size = round( ( ( $this->source_width + $this->source_height ) / 96 ) * 0.75 +14 );
+            $text = strtoupper( TITLE );
+            $color = imagecolorallocate($this->resource, 235, 235, 235 );
+            $shadow = imagecolorallocate($this->resource, 0, 0, 0 );
+            $return = $this->calculate_font_box( $text );
+            list ( $x, $y ) = $this->watermark_placement( $return );
 
-                imagefttext( $this->resource, $this->font_size, 0, $x, $y - 1, $shadow, $font_file, $text );
-                imagefttext( $this->resource, $this->font_size, 0, $x, $y, $color, $font_file, $text );
+            imagefttext( $this->resource, $this->font_size, 0, $x, $y - 1, $shadow, $font_file, $text );
+            imagefttext( $this->resource, $this->font_size, 0, $x, $y, $color, $font_file, $text );
         }
     }
 
-    function watermark_placement( $string = false ) {
+    function watermark_placement( $string = false )
+    {
         if ( !$this->watermark_placement ) {
             $this->watermark_placement = "left:top";
         }
@@ -878,80 +940,65 @@ class CB_Resizer {
         if ( $string == false && !is_array( $string )) {
             switch ( $x ) {
                 case "left":
-                default: {
+                default:
                     $x = $this->watermark_padding;
-                }
-                break;
+                    break;
 
-                case "center": {
+                case "center":
                     $x = ( $this->source_width - $this->watermark_width ) / 2;
-                }
-                break;
+                    break;
 
-                case "right": {
+                case "right":
                     $x = ( $this->source_width - $this->watermark_width ) - $watermark_padding;
-                }
-                break;
+                    break;
             }
 
             switch ( $y ) {
                 case "top":
-                default: {
+                default:
                     $y = $this->watermark_padding;
-                }
-                break;
+                    break;
 
-                case "center": {
+                case "center":
                     $y = ( $this->source_height - $this->watermark_height ) / 2;
-                }
-                break;
+                    break;
 
-                case "bottom" : {
+                case "bottom" :
                     $y = ( $this->source_height - $this->watermark_height ) - $this->watermark_padding;
-                }
-                break;
+                    break;
             }
         } else {
             switch( $x ) {
                 case "left":
-                default: {
+                default:
                     $x = $string['left'] + $this->watermark_padding;
-                }
-                break;
+                    break;
 
-                case "center": {
+                case "center":
                     $x = ( $this->source_width - $string['width'] ) / 2;
-                }
-                break;
+                    break;
 
-                case "right": {
+                case "right":
                     $x = ( $this->source_width - $string['width'] ) - $this->watermark_padding;
-                }
-                break;
-
+                    break;
             }
 
             switch( $y ) {
                 case "top":
-                default: {
+                default:
                     $y = $string['top'] + $this->watermark_padding;
-                }
-                break;
+                    break;
 
-                case "center": {
+                case "center":
                     $y = ( $this->source_height + $string['height'] ) / 2;
-                }
-                break;
+                    break;
 
-                case "bottom": {
+                case "bottom":
                     $y = ( $this->source_height - $string['height'] ) + $this->watermark_padding;
-                }
-                break;
+                    break;
             }
         }
 
         return array( round( $x ), round( $y ) );
     }
 }
-
-?>

@@ -1,37 +1,22 @@
 <?php
-
-
-if(!defined('IN_CLIPBUCKET'))
+if(!defined('IN_CLIPBUCKET')){
 	exit('Invalid access');
-
+}
 
 $section = get('s');
 $file = get('p');
 
-
-if(defined('IN_MODULE') && $section=='elastic')
-{
-	
-	
+if(defined('IN_MODULE') && $section=='elastic') {
 	//Elastic Search Page
-	if($file=='search')
-	{
-			
-
+	if($file=='search') {
 		$search_mode = mysql_clean($_GET['type']) ?  mysql_clean($_GET['type']) : 'all';
 		$page = mysql_clean($_GET['page']);
 		$sort = mysql_clean($_GET['search_by']);
 		$search = mysql_clean($_GET['query']);
 		$page = $_GET['page'] ? $_GET['page'] : 1;
 
-		#pex($search_mode,1);
-
-		//pre($sort,1);
-
-
 		switch ($search_mode) {
-		    case 'videos':{
-
+		    case 'videos':
 		        $query = array();
 		        $es = new ElasticSearch($search_mode);
 		        if (isset($_GET['category']) && !empty($_GET['category'])){
@@ -51,20 +36,15 @@ if(defined('IN_MODULE') && $section=='elastic')
 		        $es->buildQuery();
 		        $es->ElasticSearch();
 		        $results = json_decode($es->results['result'],1);
-		        #pre($results,1);
 		        if ($results["hits"]["hits"]){
 		            $es->resultsHits = $results["hits"]["hits"];
 		            foreach ($es->resultsHits as $key => $video) {
 		                $newVideos[] = $video["_source"];
 		            }
 		        }
-		            
-		    }
-		    break;
+		        break;
 
-
-		    case 'photos':{
-
+		    case 'photos':
 		        $query = array();
 		        $es = new ElasticSearch($search_mode);
 		        if (isset($_GET['category']) && !empty($_GET['category'])){
@@ -84,20 +64,15 @@ if(defined('IN_MODULE') && $section=='elastic')
 		        $es->buildQuery();
 		        $es->ElasticSearch();
 		        $results = json_decode($es->results['result'],1);
-		        #pex($results,1);
 		        if ($results["hits"]["hits"]){
 		            $es->resultsHits = $results["hits"]["hits"];
 		            foreach ($es->resultsHits as $key => $photo) {
 		                $newPhotos[] = $photo["_source"];
 		            }
 		        }
-		            
-		    }
-		    break;
+		        break;
 
-
-		    case 'channels':{
-
+		    case 'channels':
 		        $query = array();
 		        $es = new ElasticSearch('users');
 		        if (isset($_GET['category']) && !empty($_GET['category'])){
@@ -124,15 +99,10 @@ if(defined('IN_MODULE') && $section=='elastic')
 		                $newUsers[] = $user["_source"];
 		            }
 		        }
-		    
-		    }
-		    break;
-
-
+		        break;
 
 		    case 'all':
-		    default:{
-
+		    default:
 		        $query = array();
 		        $es = new ElasticSearch(false);
 		        if (isset($_GET['category']) && !empty($_GET['category'])){
@@ -152,7 +122,6 @@ if(defined('IN_MODULE') && $section=='elastic')
 		        $es->buildQuery();
 		        $es->ElasticSearch();
 		        $results = json_decode($es->results['result'],1);
-		        #pex($results,1);
 		        if ($results["hits"]["hits"]){
 		            $es->resultsHits = $results["hits"]["hits"];
 		            foreach ($es->resultsHits as $key => $item) {
@@ -167,42 +136,28 @@ if(defined('IN_MODULE') && $section=='elastic')
 		                }
 		            }
 		        }
-		        
-		    
-		    }   
-		    break;
+		        break;
 		}
-
-
 
 		$filters = $es->makeFilters();
 		assign("filter_results",$filters);
-
-		#pre($results,1);
-
 
 		$get_limit = create_query_limit($page,10);
 		$total_rows  = $results["hits"]['total'];
 		$total_pages = count_pages($total_rows,10);
 		$pages->paginate($total_pages,$page);
 
+		if (DEVELOPMENT_MODE){
+		    assign("time_took",$results["took"] / 1000);
+        }
 
-
-
-		if (DEVELOPMENT_MODE)
-		assign("time_took",$results["took"] / 1000);
-		#pre($es->results['result'],1);
 		assign("mode",$search_mode);
 		assign("videos",$newVideos);
 		assign("users",$newUsers);
 		assign("photos",$newPhotos);
-					
 
 		template_files('search.html',CB_ES_DIR.'/');
 		display_it();
 		exit();
-		
 	}
 }
-
-?>

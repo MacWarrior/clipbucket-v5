@@ -1,7 +1,6 @@
 
 </div>
 
-
 <div class="nav_des clearfix">
     <div class="cb_container">
 <h4 style="color:#fff">Admin Settings</h4>
@@ -14,12 +13,11 @@ we now update installation details and insert language phrases.</p>
 function GetServerProtocol()
 {
 	if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on'){
-	return 'https://';}else
-	{
-		$protocol = preg_replace('/^([a-z]+)\/.*$/', '\\1', strtolower($_SERVER['SERVER_PROTOCOL']));
-		$protocol .= '://';
-		return $protocol;
+		return 'https://';
 	}
+	$protocol = preg_replace('/^([a-z]+)\/.*$/', '\\1', strtolower($_SERVER['SERVER_PROTOCOL']));
+	$protocol .= '://';
+	return $protocol;
 }
 
 function GetServerURL()
@@ -41,11 +39,9 @@ $db->update(tbl("config"),array("value"),array(now())," name='date_installed'");
 $db->update(tbl("config"),array("value"),array($released['version'])," name='version'");
 $db->update(tbl("config"),array("value"),array($released['state'])," name='type'");
 
-
 echo '<span class="glyphicon glyphicon-ok"  style="color:#fff"></span><span style="color:#fff"> Installation details have been updated</span>';
 
 $lang_obj->updateFromPack('en');
-
 
 echo '<br><span class="glyphicon glyphicon-ok"  style="color:#fff"></span><span style="color:#fff"> Language phrases have been imported</span>';
 ?>

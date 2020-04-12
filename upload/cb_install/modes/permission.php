@@ -14,14 +14,11 @@
 <dl>
 <?php $permissions = checkPermissions(); ?>
 <?php
-    foreach($permissions as $permission)
-    {
+    foreach($permissions as $permission) {
 ?>
         <dt style="width:300px;" class="grey-text"><?php echo $permission['path']; ?></dt>
         <dd class="grey-text"><?php echo msg_arr($permission); ?></dd>
-<?php
-    }
-?>
+<?php } ?>
     
 </dl>
 
@@ -33,11 +30,11 @@
 ?>
 	</div>
     
-    <?php if(!$upgrade): ?>
+    <?php if(!$upgrade){ ?>
     <input type="hidden" name="mode" value="database"  id="mode"/>
-    <?php else: ?>
+    <?php } else { ?>
     <input type="hidden" name="mode" value="dataimport"  id="mode"/>
-    <?php endif; ?>
+    <?php } ?>
 </form>
 
 

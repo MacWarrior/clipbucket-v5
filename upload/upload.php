@@ -22,7 +22,7 @@
 		$step = 1;
 		if(isset($_POST['submit_data'])) {
 			$Upload->validate_video_upload_form();
-			if(empty($eh->error_list)) {
+			if(empty($eh->get_error())) {
 				$step=2;
 			}
 		}
