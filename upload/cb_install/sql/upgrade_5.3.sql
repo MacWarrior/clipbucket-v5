@@ -57,6 +57,23 @@ ALTER TABLE `{tbl_prefix}video`
 ALTER TABLE `{tbl_prefix}user_profile`
 	MODIFY COLUMN `fb_url` VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
 	MODIFY COLUMN `twitter_url` VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
+	MODIFY COLUMN `profile_title` mediumtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
+	MODIFY COLUMN `profile_desc` mediumtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
+	MODIFY COLUMN `featured_video` mediumtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
+	MODIFY COLUMN `about_me` mediumtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
+	MODIFY COLUMN `schools` mediumtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
+	MODIFY COLUMN `occupation` mediumtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
+	MODIFY COLUMN `companies` mediumtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
+	MODIFY COLUMN `hobbies` mediumtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
+	MODIFY COLUMN `fav_movies` mediumtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
+	MODIFY COLUMN `fav_music` mediumtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
+	MODIFY COLUMN `fav_books` mediumtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
+	MODIFY COLUMN `background` mediumtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
+	MODIFY COLUMN `profile_video` INT(255) NULL DEFAULT NULL,
+	MODIFY COLUMN `profile_item` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
+	MODIFY COLUMN `rating` TINYINT(2) NULL DEFAULT NULL,
+	MODIFY COLUMN `voters` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
+	MODIFY COLUMN `rated_by` INT(150) NULL DEFAULT NULL,
 	MODIFY COLUMN `insta_url` VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '';
 
 ALTER TABLE `{tbl_prefix}photos`
