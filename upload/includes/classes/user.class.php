@@ -1,17 +1,4 @@
 <?php
-/* 
-**************************
-* @ Author : Arslan Hassan
-* @ Software : ClipBucket
-* @ Since : 2007
-* @ Modified : 06-08-2009
-* $Id: user.class.php 1071 2013-07-06 08:35:50Z hassanbaryar $
-* @ License : Attribution Assurance License -- http://www.opensource.org/licenses/attribution.php
-**************************
-
-Notice : Maintain this section
-*/
- 
 define('NO_AVATAR','no_avatar.png'); //if there is no avatar or profile pic, this file will be used
 
 class userquery extends CBCategory{
@@ -37,18 +24,18 @@ class userquery extends CBCategory{
 	var $sessions = '';
 	var $user_sess = ''; //variable which holds current user session
 	var $is_login = false;
-	
+
 	var $dbtbl = array(
-					   'user_permission_type'	=> 'user_permission_types',
-					   'user_permissions'		=> 'user_permissions',
-					   'user_level_permission'	=> 'user_levels_permissions',
-					   'user_profile'			=> 'user_profile',
-					   'users'					=> 'users',
-					   'action_log'				=> 'action_log',
-					   'subtbl'					=> 'subscriptions',
-					   'contacts'				=> 'contacts',
-					   );
-	
+       'user_permission_type'	=> 'user_permission_types',
+       'user_permissions'		=> 'user_permissions',
+       'user_level_permission'	=> 'user_levels_permissions',
+       'user_profile'			=> 'user_profile',
+       'users'					=> 'users',
+       'action_log'				=> 'action_log',
+       'subtbl'					=> 'subscriptions',
+       'contacts'				=> 'contacts',
+    );
+
 	var $udetails = array();
 
     private $basic_fields = array();
@@ -69,19 +56,16 @@ class userquery extends CBCategory{
 
         $cb_columns->object( 'users' )->register_columns( $basic_fields );
 	}
-	
-	
+
 	function init()
 	{
 		global $sess,$Cbucket;
 
-		
 //		$this->user_sess = $sess->get('user_sess');
     	$this->sess_salt = $sess->get('sess_salt');
 		$this->sessions = $this->get_sessions();
 		
-		if($this->sessions['smart_sess'])
-		{
+		if($this->sessions['smart_sess']) {
 			$this->userid = $this->sessions['smart_sess']['session_user'];
 		}
 
@@ -95,12 +79,7 @@ class userquery extends CBCategory{
 			}
 		}
 
-
-
-
-		if($udetails)
-		{			
-			
+		if($udetails) {
 			$this->udetails = $udetails;
 			$this->username = $udetails['username'];
 			$this->level = $this->udetails['level'];
@@ -123,8 +102,7 @@ class userquery extends CBCategory{
 			if($sess->get("dummy_username")=="") {
 				$this->UpdateLastActive(userid());
 			}
-		}else {
-			
+		} else {
 			$this->permission = $this->get_user_level(4,TRUE);
 		}
 
@@ -142,9 +120,9 @@ class userquery extends CBCategory{
 		define('BG_SIZE',config('max_bg_width'));
 		define('BACKGROUND_URL',config('background_url'));
 		define('BACKGROUND_COLOR',config('background_color'));
-		if(isSectionEnabled('channels'))
+		if(isSectionEnabled('channels')){
 			$Cbucket->search_types['channels'] = "userquery";
-		
+        }
 	}
 	
 	/**
@@ -170,16 +148,18 @@ class userquery extends CBCategory{
     /**
      * @return array
      */
-    function get_basic_fields() {
+    function get_basic_fields()
+    {
         return $this->basic_fields;
     }
 
-    function set_basic_fields( $fields = array() ) {
+    function set_basic_fields( $fields = array() )
+    {
         return $this->basic_fields = $fields;
     }
 
-    function basic_fields_setup() {
-
+    function basic_fields_setup()
+    {
         # Set basic video fields
         $basic_fields = array(
             'userid', 'username', 'email', 'avatar', 'sex', 'avatar_url',
@@ -189,15 +169,18 @@ class userquery extends CBCategory{
         return $this->set_basic_fields( $basic_fields );
     }
 
-    function get_extra_fields() {
+    function get_extra_fields()
+    {
         return $this->extra_fields;
     }
 
-    function set_extra_fields( $fields = array() ) {
+    function set_extra_fields( $fields = array() )
+    {
         return $this->extra_fields = $fields;
     }
 
-    function get_user_db_fields( $extra_fields = array() ) {
+    function get_user_db_fields( $extra_fields = array() )
+    {
         $fields = $this->get_basic_fields();
         $extra = $this->get_extra_fields();
 
@@ -224,7 +207,8 @@ class userquery extends CBCategory{
         return $fields;
     }
 
-    function add_user_field( $field ) {
+    function add_user_field( $field )
+    {
         $extra_fields = $this->get_extra_fields();
 
         if ( is_array( $field ) ) {
@@ -232,7 +216,6 @@ class userquery extends CBCategory{
         } else {
             $extra_fields[] = $field;
         }
-
 
         return $this->set_extra_fields( $extra_fields );
     }
@@ -254,12 +237,11 @@ class userquery extends CBCategory{
 		global $sess, $db;
 
 		//First we will check weather user is already logged in or not
-		if($this->login_check(NULL,true))
+		if($this->login_check(NULL,true)){
 			$msg[] = e(lang('you_already_logged'));
-		else {
+        } else {
 			$user = $this->get_user_id($username);
-			if( !$user )
-			{
+			if( !$user ) {
 				$msg[] = e(lang('usr_login_err'));
 			} else {
 				$uid = $user['userid'];
@@ -278,16 +260,16 @@ class userquery extends CBCategory{
 					}
 				}
 
-				if(!$udetails)
+				if(!$udetails){
 					$msg[] = e(lang('usr_login_err'));
-				elseif(strtolower($udetails['usr_status']) != 'ok')
+                } elseif(strtolower($udetails['usr_status']) != 'ok') {
 					$msg[] = e(lang('user_inactive_msg'));
-				elseif($udetails['ban_status'] == 'yes')
+                } elseif($udetails['ban_status'] == 'yes') {
 					$msg[] = e(lang('usr_ban_err'));
-				else
-				{
-					if($remember)
+                } else {
+					if($remember){
 						$sess->timeout = 86400*REMBER_DAYS;
+                    }
 
 					//Starting special sessions for security
 					$session_salt = RandomString(5);
@@ -357,8 +339,9 @@ class userquery extends CBCategory{
 			//First check weather userid is here or not
 			if(!userid())
 			{
-				if(!$check_only)
+				if(!$check_only){
 					e(lang('you_not_logged_in'));
+                }
 				return false;
 			}
 
@@ -466,8 +449,9 @@ class userquery extends CBCategory{
 		$results = $db->select(tbl("users"),
 							   "userid,email,level,usr_status,user_session_key,user_session_code",
 							   "(username='$username' OR userid='$username') AND password='$pass'");
-		if(count($results) > 0)
+		if(count($results) > 0){
 			return $results[0];
+        }
 		return false;
 	}
 
@@ -475,8 +459,9 @@ class userquery extends CBCategory{
 	{
 		global $db;
 		$results = $db->select(tbl("users"), "userid", "(username='$username' OR userid='$username')");
-		if(count($results) > 0)
+		if(count($results) > 0){
 			return $results[0];
+        }
 		return false;
 	}
 
@@ -811,15 +796,15 @@ class userquery extends CBCategory{
 	{
 		global $db,$cbemail;
 		
-		if(!is_array($user))
+		if(!is_array($user)){
 			$udetails = $this->get_user_details($user);
-		else
+        } else {
 			$udetails = $user;
+        }
 		
-		if(!$udetails)
+		if(!$udetails){
 			e(lang("usr_exist_err"));
-		else
-		{
+        } else {
 			$tpl = $cbemail->get_template('welcome_message_template');
 			$var = array(
 				'{username}'	=> $udetails['username'],
@@ -831,8 +816,9 @@ class userquery extends CBCategory{
 			//Now Finally Sending Email
 			cbmail(array('to'=>$udetails['email'],'from'=>WELCOME_EMAIL,'subject'=>$subj,'content'=>$msg));
 			
-			if($update_email_status)
+			if($update_email_status){
 				$db->update(tbl($this->dbtbl['users']),array('welcome_email_sent'),array("yes")," userid='".$udetails['userid']."' ");
+            }
 		}
 	}
 
@@ -1766,22 +1752,7 @@ class userquery extends CBCategory{
 		$result = $db->select(tbl('user_levels,user_levels_permissions'),'*',
 							  tbl("user_levels_permissions.user_level_id")."='".$level."' 
 							  AND ".tbl("user_levels_permissions.user_level_id")." = ".tbl("user_levels.user_level_id"));
-							  
-		
-		/*		
-		pr($result);
-		$results = $db->select(tbl('user_levels'),'*'," user_level_id='".$level['level']."'");
-		if(count($results) == 0)
-		 //incase user level is not valid, it will consider it as registered user
-			$u_level['user_level_id'] = 3;
-		else
-			$u_level = $results[0];
-			
-		//Now Getting Access Details
-		$access_results = $db->select("user_levels_permissions","*",
-									  "user_level_id = '".$u_level['user_level_id']."'");
-		$a_results = $access_results[0];*/
-		
+
 		//Now Merging the two arrays
 		$user_level = isset($result[0]) ? $result[0] : false;
 		//pr($user_level);
@@ -2405,12 +2376,10 @@ class userquery extends CBCategory{
         }
 		
 		//Adding custom fields from group
-		if(count($this->custom_profile_fields_groups)>0)
-		{
+		if(count($this->custom_profile_fields_groups)>0) {
 			$custom_fields_from_group_fields = array();
 			$custom_fields_from_group = $this->custom_profile_fields_groups;
-			foreach($custom_fields_from_group as $cffg)
-			{
+			foreach($custom_fields_from_group as $cffg) {
 				$custom_fields_from_group_fields = array_merge($custom_fields_from_group_fields,$cffg['fields']);
 			}						
 			
@@ -2433,11 +2402,9 @@ class userquery extends CBCategory{
 				$query_field[] = $field['db_field'];
             }
 			
-			if(is_array($val))
-			{
+			if(is_array($val)) {
 				$new_val = '';
-				foreach($val as $v)
-				{
+				foreach($val as $v) {
 					$new_val .= "#".$v."# ";
 				}
 				$val = $new_val;
@@ -2452,8 +2419,7 @@ class userquery extends CBCategory{
 		}
 
 		//Category
-		if($cat_field)
-		{
+		if($cat_field) {
 			$field = $cat_field;
 			$name = formObj::rmBrackets($field['name']);
 			$val = $array[$name];
@@ -2466,11 +2432,9 @@ class userquery extends CBCategory{
 				$uquery_field[] = $field['db_field'];
             }
 			
-			if(is_array($val))
-			{
+			if(is_array($val)) {
 				$new_val = '';
-				foreach($val as $v)
-				{
+				foreach($val as $v) {
 					$new_val .= "#".$v."# ";
 				}
 				$val = $new_val;
@@ -2496,14 +2460,15 @@ class userquery extends CBCategory{
 				$username = $array['username'];
 			
 			//Checking Email
-			if(empty($array['email']))
+			if(empty($array['email'])){
 				e(lang('usr_email_err1'));
-			elseif(!is_valid_syntax('email',$array['email']))
+            } elseif(!is_valid_syntax('email',$array['email'])) {
 				e(lang('usr_email_err2'));
-			elseif(email_exists($array['email']) && $array['email'] != $array['demail'])
+            } elseif(email_exists($array['email']) && $array['email'] != $array['demail']) {
 				e(lang('usr_email_err3'));
-			else
+            } else {
 				$email = $array['email'];
+            }
 				
 			$uquery_field[] = 'username';
 			$uquery_val[]	= $username;
@@ -2512,12 +2477,12 @@ class userquery extends CBCategory{
 			$uquery_val[]	= $email;
 			
 			//Changning Password
-			if(!empty($array['pass']))
-			{
-				if($array['pass']!=$array['cpass'])
+			if(!empty($array['pass'])) {
+				if($array['pass']!=$array['cpass']){
 					e(lang("pass_mismatched"));
-				else
+                } else {
 					$pass = pass_code($array['pass'], $array['userid']);
+                }
 				$uquery_field[] = 'password';
 				$uquery_val[]	= $pass;
 			}
@@ -2542,79 +2507,77 @@ class userquery extends CBCategory{
 			$query_field[] = 'rating';
 			
 			$rating = $array['rating'];
-			if($rating<1 || $rating>10)
+			if($rating<1 || $rating>10){
 				$rating = 1;
+            }
 			$query_val[] = $rating ;
 			$query_field[] = 'rated_by';
 			$query_val[] = $array['rated_by'];
 			
 			//Changing Joined Date
-			if(isset($array['doj']))
-			{
+			if(isset($array['doj'])) {
 				$uquery_field[] = 'doj';
 				$uquery_val[] = $array['doj'];
 			}
 		}
 		
 		//Changing Gender
-		if($array['sex'])
-		{
+		if($array['sex']) {
 			$uquery_field[] = 'sex';
 			$uquery_val[] = $array['sex'];
 		}
 		
 		//Changing Country
-		if($array['country'])
-		{
+		if($array['country']) {
 			$uquery_field[] = 'country';
 			$uquery_val[] = $array['country'];
 		}
 		
 		//Changing Date of birth
-		if(isset($array['dob']) && $array['dob'] != '0000-00-00')
-		{
+		if(isset($array['dob']) && $array['dob'] != '0000-00-00') {
 			$uquery_field[] = 'dob';
 
-			// Converting date from custom format to MySQL
-			$uquery_val[] = DateTime::createFromFormat(DATE_FORMAT, $array['dob'])->format('Y-m-d');
+            // Converting date from custom format to MySQL
+			$dob_datetime = DateTime::createFromFormat(DATE_FORMAT, $array['dob']);
+			if( $dob_datetime ){
+                $uquery_val[] = $dob_datetime->format('Y-m-d');
+            } else {
+                $uquery_val[] = $array['dob'];
+            }
 		}
 
 		//Changing category
-		if(isset($array['category']))
-		{
+		if(isset($array['category'])) {
 			$uquery_field[] = 'category';
 			$uquery_val[] = $array['category'];
 		}
 
 		//Updating User Avatar
-		if($array['avatar_url'])
-		{
+		if($array['avatar_url']) {
 			$uquery_field[] = 'avatar_url';
 			$uquery_val[] = $array['avatar_url'];
 		}
-		if($array['remove_avatar_url']=='yes')
-		{
+
+		if($array['remove_avatar_url']=='yes') {
 			$uquery_field[] = 'avatar_url';
 			$uquery_val[] = '';
 		}
 		
 		//Deleting User Avatar
-		if($array['delete_avatar']=='yes')
-		{
+		if($array['delete_avatar']=='yes') {
 			$udetails = $this->get_user_details($array['userid']);
 
 			$file = AVATARS_DIR.'/'.$udetails['avatar'];
-			if(file_exists($file) && $udetails['avatar'] !='')
+			if(file_exists($file) && $udetails['avatar'] !=''){
 				unlink($file);
+            }
 
 			$uquery_field[] = 'avatar';
 			$uquery_val[] = '';
 		} else {
-			if(isset($_FILES['avatar_file']['name']))
-			{
+			if(isset($_FILES['avatar_file']['name'])) {
 				$file = $Upload->upload_user_file('a', $_FILES['avatar_file'], $array['userid']);
-				if($file)
-				{
+				if($file) {
 					$uquery_field[] = 'avatar';
 					$uquery_val[] = $file;
 				}
@@ -2622,82 +2585,75 @@ class userquery extends CBCategory{
 		}
 		
 		//Deleting User Bg
-		if($array['delete_bg']=='yes')
-		{
+		if($array['delete_bg']=='yes') {
 			$file = USER_BG_DIR.'/'.$array['bg_file_name'];
-			if(file_exists($file) && $array['bg_file_name'])
+			if(file_exists($file) && $array['bg_file_name']){
 				unlink($file);
+            }
 		}
 
 		//Updating User Background
-		if($array['background_url'])
-		{
+		if($array['background_url']) {
 			$uquery_field[] = 'background_url';
 			$uquery_val[] = $array['background_url'];
 		}
 		
-		if($array['background_color'])
-		{
+		if($array['background_color']) {
 			$uquery_field[] = 'background_color';
 			$uquery_val[] = $array['background_color'];
 		}
 		
-		if($array['background_repeat'])
-		{
+		if($array['background_repeat']) {
 			$uquery_field[] = 'background_repeat';
 			$uquery_val[] = $array['background_repeat'];
 		}
 
-		if(isset($_FILES['background_file']['name']))
-		{
+		if(isset($_FILES['background_file']['name'])) {
 			$file = $Upload->upload_user_file('b',$_FILES['background_file'],$array['userid']);
-			if($file)
-			{
+			if($file) {
 				$uquery_field[] = 'background';
 				$uquery_val[] = $file;
 			}
 		}
 
 		//Adding Custom Field
-		if(is_array($custom_signup_fields))
-		{
-			foreach($custom_signup_fields as $field)
-			{
+		if(is_array($custom_signup_fields)) {
+			foreach($custom_signup_fields as $field) {
 				$name = formObj::rmBrackets($field['name']);
 				$val = $array[$name];
 				
-				if($field['use_func_val'])
+				if($field['use_func_val']){
 					$val = $field['validate_function']($val);
+                }
 
-				if(!empty($field['db_field']))
+				if(!empty($field['db_field'])){
 					$uquery_field[] = $field['db_field'];
+                }
 				
-				if(is_array($val))
-				{
+				if(is_array($val)) {
 					$new_val = '';
-					foreach($val as $v)
-					{
+					foreach($val as $v) {
 						$new_val .= "#".$v."# ";
 					}
 					$val = $new_val;
 				}
-				if($field['clean_func'] && (function_exists($field['clean_func']) || is_array($field['clean_func'])))
+				if($field['clean_func'] && (function_exists($field['clean_func']) || is_array($field['clean_func']))){
 					$val = apply_func($field['clean_func'], $val);
+                }
 
-				if(!empty($field['db_field']))
+				if(!empty($field['db_field'])){
 					$uquery_val[] = $val;
+                }
 			}
 		}
 		
-		if(!error() && is_array($uquery_field))
-		{
+		if(!error() && is_array($uquery_field)) {
 			$db->update(tbl($this->dbtbl['users']), $uquery_field, $uquery_val," userid='".mysql_clean($array['userid'])."'");
 			e(lang("usr_upd_succ_msg"),'m');
 		}
 
 		//updating user profile
-		if(!error())
-		{
+		if(!error()) {
 			$log_array = array(
 				'success'=>'yes',
 				'details'=> "updated profile"
@@ -2720,8 +2676,7 @@ class userquery extends CBCategory{
 		global $db,$Upload;
 
 		//Deleting User Avatar
-		if($array['delete_avatar']=='yes')
-		{
+		if($array['delete_avatar']=='yes') {
 			$udetails = $this->get_user_details(userid());
 
 			$file = AVATARS_DIR.'/'.$udetails['avatar_url'];
@@ -2738,11 +2693,9 @@ class userquery extends CBCategory{
 			$uquery_field[] = 'avatar_url';
 			$uquery_val[] = $array['avatar_url'];
 
-			if(isset($_FILES['avatar_file']['name']))
-			{
+			if(isset($_FILES['avatar_file']['name'])) {
 				$file = $Upload->upload_user_file('a',$_FILES['avatar_file'],userid());
-				if($file)
-				{
+				if($file) {
 					$uquery_field[] = 'avatar';
 					$uquery_val[] = $file;
 				}
@@ -2750,11 +2703,11 @@ class userquery extends CBCategory{
 		}
 
 		//Deleting User Bg
-		if($array['delete_bg']=='yes')
-		{
+		if($array['delete_bg']=='yes') {
 			$file = USER_BG_DIR.'/'.$array['bg_file_name'];
-			if(file_exists($file) && $array['bg_file_name'] !='')
+			if(file_exists($file) && $array['bg_file_name'] !=''){
 				unlink($file);
+            }
 		}
 
 		//Updating User Background
@@ -2764,8 +2717,7 @@ class userquery extends CBCategory{
 		$uquery_field[] = 'background_color';
 		$uquery_val[] = $array['background_color'];
 		
-		if($array['background_repeat'])
-		{
+		if($array['background_repeat']) {
 			$uquery_field[] = 'background_repeat';
 			$uquery_val[] = $array['background_repeat'];
 		}
@@ -2773,13 +2725,10 @@ class userquery extends CBCategory{
 		//Background Attachement
 		$uquery_field[] = 'background_attachement';
 		$uquery_val[] = $array['background_attachement'];
-		
-		
-		if(isset($_FILES['background_file']['name']))
-		{
+
+		if(isset($_FILES['background_file']['name'])) {
 			$file = $Upload->upload_user_file('b',$_FILES['background_file'], userid());
-			if($file)
-			{
+			if($file) {
 				$uquery_field[] = 'background';
 				$uquery_val[] = $file;
 			}
@@ -2799,16 +2748,13 @@ class userquery extends CBCategory{
 
 	public function updateCover($array = array())
 	{
-		if(!empty($array))
-		{
-			if(isset($array["coverPhoto"]))
-			{
+		if(!empty($array)) {
+			if(isset($array["coverPhoto"])) {
 				$coverPhoto = $array["coverPhoto"];
 				$photoType = $coverPhoto["type"];
 				$photoSize = (int) $coverPhoto["size"]; // in kbs
 				$maxPhotoSize = 2048; // in kbs
-				if($photoType)
-				{
+				if($photoType) {
 					$name = $array["userid"];
 					$coverPhoto = $array["coverPhoto"]["tmp_name"];
 					$ext = $this->getImageExt($array["coverPhoto"]["name"]);
@@ -2818,31 +2764,30 @@ class userquery extends CBCategory{
 					list($width, $height, $type, $attr) = getimagesize($coverPhoto);
 					$width = (int) $width;
 					$height = (int) $height;
-					if(($width > 1) && ($height > 2))
-					{
+					if(($width > 1) && ($height > 2)) {
 						$files = glob(COVERS_DIR . "/{$name}/{$name}.*"); // get all file names
 						foreach($files as $file){ // iterate files
-						  if(is_file($file))
-						    unlink($file); // delete file
+						    if(is_file($file)){
+						        unlink($file); // delete file
+                            }
 						}
 						move_uploaded_file($coverPhoto, COVERS_DIR . "/{$name}/{$name}.{$ext}");
 						return array(
 							"status" => true,
 							"msg" => "Succesfully Uploaded",
 						);
-					} else {
-						return array(
-							"status" => false,
-							"msg" => "Only 1150 x 220 images are allowed {$width} x {$height} provided",
-						);
 					}
+                    return array(
+                        "status" => false,
+                        "msg" => "Only 1150 x 220 images are allowed {$width} x {$height} provided",
+                    );
 				}
 			}
 		}
 		return array(
 			"status" => false,
 			"msg" => "no data was sent",
-			);
+        );
 	}
 
 	public function getCover($userId = false)
@@ -2852,8 +2797,7 @@ class userquery extends CBCategory{
 		}
 		$coverPath = COVERS_DIR . "/{$userId}";
 		
-		if (file_exists($coverPath)) 
-		{
+		if (file_exists($coverPath)) {
 			$files = scandir($coverPath);
 			array_shift($files); array_shift($files);
 			$coverPhoto = array_shift($files);
@@ -2929,12 +2873,13 @@ class userquery extends CBCategory{
 	 *
 	 * @return bool
 	 */
-	 function email_exists($i)
-	{
+    function email_exists($i)
+    {
 		global $db;
 		$result = $db->select(tbl($this->dbtbl['users']),"email"," email='$i'");
-		if(count($result)>0)
+		if(count($result)>0){
 			return true;
+        }
 		return false;
 	}
 
@@ -2950,8 +2895,9 @@ class userquery extends CBCategory{
 	{
 		global $db;
 		$result = $db->select(tbl($this->dbtbl['action_log']),"*"," action_userid='$uid'",$limit," date_added DESC");
-		if(count($result)>0)
+		if(count($result)>0){
 			return $result;
+        }
 		return false;
 	}
 
@@ -2965,23 +2911,22 @@ class userquery extends CBCategory{
 	 */
 	function load_custom_profile_fields($data,$group_based=false)
 	{
-		if(!$group_based)
-		{
+		if(!$group_based) {
 			$array = $this->custom_profile_fields;
-			foreach($array as $key => $fields)
-			{
-				if($data[$fields['db_field']])
+			foreach($array as $key => $fields) {
+				if($data[$fields['db_field']]){
 					$value = $data[$fields['db_field']];
-				elseif($data[$fields['name']])
+                } else if($data[$fields['name']]) {
 					$value = $data[$fields['name']];
-
+                }
 
 				if($fields['type']=='radiobutton' ||
 				   $fields['type']=='checkbox' ||
-				   $fields['type']=='dropdown')
+				   $fields['type']=='dropdown'){
 					$fields['checked'] = $value;
-				else
+                } else {
 					$fields['value'] = $value;
+                }
 
 				$new_array[$key] = $fields;
 			}
@@ -2990,27 +2935,30 @@ class userquery extends CBCategory{
 			$groups = $this->custom_profile_fields_groups;
 			
 			$new_grp = array();
-			if($groups)
-			foreach($groups as $grp)
-			{
-				$fields = array();
-				foreach($grp['fields'] as $key => $fields)
-				{
-					if($data[$fields['db_field']])
-						$value = $data[$fields['db_field']];
-					elseif($data[$fields['name']])
-						$value = $data[$fields['name']];
+			if($groups){
+                foreach($groups as $grp)
+                {
+                    $fields = array();
+                    foreach($grp['fields'] as $key => $fields)
+                    {
+                        if($data[$fields['db_field']]){
+                            $value = $data[$fields['db_field']];
+                        } elseif($data[$fields['name']]) {
+                            $value = $data[$fields['name']];
+                        }
 
-					if($fields['type']=='radiobutton' || 
-					   $fields['type']=='checkbox' ||
-					   $fields['type']=='dropdown')
-						$fields['checked'] = $value;
-					else
-						$fields['value'] = $value;
-				}
-				$grp['fields'][$key] = $fields;
-				$new_grp[] = $grp;
-			}
+                        if($fields['type']=='radiobutton' ||
+                           $fields['type']=='checkbox' ||
+                           $fields['type']=='dropdown'){
+                            $fields['checked'] = $value;
+                        } else {
+                            $fields['value'] = $value;
+                        }
+                    }
+                    $grp['fields'][$key] = $fields;
+                    $new_grp[] = $grp;
+                }
+            }
 		}
 		return $new_grp;
 	}
@@ -3027,25 +2975,24 @@ class userquery extends CBCategory{
 	function load_custom_signup_fields($data,$ck_display_admin=FALSE,$ck_display_user=FALSE)
 	{
 		$array = $this->custom_signup_fields;
-		foreach($array as $key => $fields)
-		{
+		foreach($array as $key => $fields) {
 			$ok = 'yes';
-			if($ck_display_admin)
-			{
-				if($fields['display_admin'] == 'no_display')
+			if($ck_display_admin) {
+				if($fields['display_admin'] == 'no_display'){
 					$ok = 'no';
+                }
 			}
 			
-			if($ck_display_user)
-			{
-				if($fields['display_user'] == 'no_display')
+			if($ck_display_user) {
+				if($fields['display_user'] == 'no_display'){
 					$ok = 'no';
+                }
 			}
 			
-			if($ok=='yes')
-			{
-				if(!$fields['value'])
+			if($ok=='yes') {
+				if(!$fields['value']){
 					$fields['value'] = $data[$fields['db_field']];
+                }
 				$new_array[$key] = $fields;
 			}
 		}
@@ -3065,13 +3012,13 @@ class userquery extends CBCategory{
 	{
 		$channel_links = array();
 		
-		if(isSectionEnabled('videos'))
-		{
+		if(isSectionEnabled('videos')) {
 			$channel_links[lang('upload')] = array('link'=>$this->get_user_videos_link($u));
 			$channel_links[lang('favorites')] = array('link'=>cblink(array('name'=>'user_favorites')).$u['username']);
 		}
-		if(isSectionEnabled('channels'))
+		if(isSectionEnabled('channels')){
 			$channel_links[lang('contacts')] = array('link'=>cblink(array('name'=>'user_contacts')).$u['username']);
+        }
 		
 		return $channel_links;
 	}
@@ -3086,7 +3033,7 @@ class userquery extends CBCategory{
 			lang('send_message')=>array('link'=>cblink(array('name'=>'compose_new','extra_params'=>'to='.$u['username']))),
 			lang('add_as_friend')=>array('link'=>'javascript:void(0)','onclick'=>"add_friend('".$u['userid']."','result_cont')"),
 			lang('block_user')=>array('link'=>'javascript:void(0)','onclick'=>"block_user('".$u['username']."','result_cont')")
-		 );
+        );
 	}
 	
 	/**
@@ -3107,15 +3054,14 @@ class userquery extends CBCategory{
 	function get_user_profile_video($u)
 	{
 		global $cbvid;
-		if(empty($u['profile_video'])&&!$cbvid->video_exists($u))
-		{
+		if(empty($u['profile_video'])&&!$cbvid->video_exists($u)) {
 			$u = $this->get_user_profile($u);
 		}
 		
-		if($cbvid->video_exists($u['profile_video']))
+		if($cbvid->video_exists($u['profile_video'])){
 			return $cbvid->get_video_details($u['profile_video']);
-		else
-			return false;
+        }
+		return false;
 	}
 
 	/*
@@ -3128,8 +3074,7 @@ class userquery extends CBCategory{
 		$results = $db->select(tbl("messages"),"*", "message_to='$userid' AND message_status='unread'");
 		$count = count($results);
 
-		if ( $label )
-		{
+		if ( $label ) {
 			echo '<span class="label label-default">'.$count.'</span></h3>';
 		}
 
@@ -3145,8 +3090,7 @@ class userquery extends CBCategory{
 		$results = $db->select(tbl("messages"),"*", "message_to='$userid' AND message_status='read'");
 		$count = count($results);
 
-		if ( $label )
-		{
+		if ( $label ) {
 			echo '<span class="label label-danger">'.$count.'</span></h3>';
 		}
 
@@ -3171,39 +3115,35 @@ class userquery extends CBCategory{
 	 */
     function my_account_links()
     {
-        $array[lang('account')]	= array(
-			lang('my_account')				=> 'myaccount.php',
-			lang('block_users')				=> 'edit_account.php?mode=block_users',
-			lang('user_change_pass')		=> 'edit_account.php?mode=change_password',
-			lang('user_change_email') 		=> 'edit_account.php?mode=change_email',
-			lang('com_manage_subs')			=> 'edit_account.php?mode=subscriptions',
-			lang('account_settings') 		=> 'edit_account.php?mode=account'
+        $array[lang('account')] = array(
+			lang('my_account')        => 'myaccount.php',
+			lang('block_users')       => 'edit_account.php?mode=block_users',
+			lang('user_change_pass')  => 'edit_account.php?mode=change_password',
+			lang('user_change_email') => 'edit_account.php?mode=change_email',
+			lang('com_manage_subs')   => 'edit_account.php?mode=subscriptions',
+			lang('account_settings')  => 'edit_account.php?mode=account'
 		);
 
 		$udetails = $this->get_user_details(userid());
-		if( config('picture_upload')=='yes' || config('picture_url')=='yes' || !empty($udetails['avatar_url']) || !empty($udetails['avatar']) )
-		{
+		if( config('picture_upload')=='yes' || config('picture_url')=='yes' || !empty($udetails['avatar_url']) || !empty($udetails['avatar']) ) {
 			$array[lang('account')][lang('change_avatar')] = 'edit_account.php?mode=avatar_bg';
 		}
 
-		if(isSectionEnabled('channels'))
-		{
+		if(isSectionEnabled('channels')) {
 			$array[lang('user_channel_profiles')] = array(
 				lang('user_profile_settings') 	=> 'edit_account.php?mode=profile',
 				lang('contacts_manager')		=> 'manage_contacts.php'
 			);
 		}
 
-        if(isSectionEnabled('videos'))
-		{
+        if(isSectionEnabled('videos')) {
             $array[lang('videos')] = array(
                 lang('uploaded_videos')	=> 'manage_videos.php',
                 lang('user_fav_videos')	=> 'manage_videos.php?mode=favorites',
             );
 		}
 
-        if(isSectionEnabled('playlists'))
-		{
+        if(isSectionEnabled('playlists')) {
             $array[lang('playlists')] = array(
                 lang('manage_playlists') =>'manage_playlists.php',
             );
@@ -3216,16 +3156,14 @@ class userquery extends CBCategory{
             lang('title_crt_new_msg')=> cblink(array('name'=>'compose_new')),
         );
 
-        if(count($this->user_account)>0)
-        {
-            foreach($this->user_account as $key => $acc)
-            {
-                if(array_key_exists($key,$array))
-                {
+        if(count($this->user_account)>0) {
+            foreach($this->user_account as $key => $acc) {
+                if(array_key_exists($key,$array)) {
                     foreach($acc as $title => $link)
                         $array[$key][$title] = $link;
-                } else
+                } else {
                     $array[$key] = $acc;
+                }
             }
         }
         return $array;
@@ -3241,16 +3179,15 @@ class userquery extends CBCategory{
 	{
 		global $db;
 		//function used to change user email
-		if(!isValidEmail($array['new_email']) || $array['new_email']=='')
+		if(!isValidEmail($array['new_email']) || $array['new_email']==''){
 			e(lang("usr_email_err2"));
-		elseif($array['new_email']!=$array['cnew_email'])
+        } elseif($array['new_email']!=$array['cnew_email']) {
 			e(lang('user_email_confirm_email_err'));
-		elseif(!$this->user_exists($array['userid']))	
+        } elseif(!$this->user_exists($array['userid']))	{
 			e(lang('usr_exist_err'));
-		elseif($this->email_exists($array['new_email']))
-			e(lang('usr_email_err3'));	
-		else
-		{
+        } elseif($this->email_exists($array['new_email'])) {
+			e(lang('usr_email_err3'));
+        } else {
 			$db->update(tbl($this->dbtbl['users']),array('email'),array($array['new_email'])," userid='".$array['userid']."'");
 			e(lang("email_change_msg"),"m");
 		}
@@ -3272,24 +3209,22 @@ class userquery extends CBCategory{
 	function ban_users($users,$uid=NULL)
 	{
 		global $db;
-		if(!$uid)
+		if(!$uid){
 			$uid  = userid();
+        }
 		$users_array = explode(',',$users);
 		$new_users = array();
-		foreach($users_array as $user)
-		{
-			if($user!=user_name() && !is_numeric($user) && $this->user_exists($user))
-			{
+		foreach($users_array as $user) {
+			if($user!=user_name() && !is_numeric($user) && $this->user_exists($user)) {
 				$new_users[] = $user;
 			}
 		}	
-		if(count($new_users)>0)
-		{
+		if(count($new_users)>0) {
 			$new_users = array_unique($new_users);
 			$banned_users = implode(',',$new_users);
 			$db->update(tbl($this->dbtbl['users']),array('banned_users'),array($banned_users)," userid='$uid'");
 			e(lang("user_ban_msg"),"m");
-		} elseif (!$users) {
+		} else if (!$users) {
 			$db->update(tbl($this->dbtbl['users']),array('banned_users'),array($users)," userid='$uid'");
 			e(lang("no_user_ban_msg"),"m");
 		}
@@ -3305,27 +3240,26 @@ class userquery extends CBCategory{
 		global $db;
 		$uid  = userid();
 		
-		if(!$uid)
+		if(!$uid){
 			e(lang('you_not_logged_in'));
-		elseif($user!=user_name() && !is_numeric($user) && $this->user_exists($user))
-		{
+        } else if($user!=user_name() && !is_numeric($user) && $this->user_exists($user)) {
 			$banned_users = $this->udetails['banned_users'];
-			if($banned_users)
+			if($banned_users){
 				$banned_users .= ",$user";
-			else
+            } else {
 				$banned_users = "$user";
+            }
 			
-			if(!$this->is_user_banned($user))
-			{
+			if(!$this->is_user_banned($user)) {
 				$db->update(tbl($this->dbtbl['users']),array('banned_users'),array($banned_users)," userid='$uid'");
 				e(lang("user_blocked"),"m");
-			}else
+			} else {
 				e(lang("user_already_blocked"));
-		}else {
+            }
+		} else {
 			e(lang("you_cant_del_user"));
 		}
 	}
-
 
 	/**
 	 * Function used to check weather user is banned or not
@@ -3339,21 +3273,23 @@ class userquery extends CBCategory{
 	function is_user_banned($ban,$user=NULL,$banned_users=NULL)
 	{
 		global $db;
-		if(!$user)
+		if(!$user){
 			$user = userid();
+        }
 		
-		if(!$banned_users)
-		{
-			if(is_numeric($user))
+		if(!$banned_users) {
+			if(is_numeric($user)){
 				$result = $db->select(tbl($this->dbtbl['users']),"banned_users"," userid='$user' ");
-			else
+            } else {
 				$result = $db->select(tbl($this->dbtbl['users']),"banned_users"," username='$user' ");
+            }
 			$banned_users = $result[0]['banned_users'];
 		}
-		
+
 		$ban_user = explode(',',$banned_users);
-		if(in_array($ban,$ban_user))
+		if(in_array($ban,$ban_user)){
 			return true;
+        }
 		return false;
 	}
 
@@ -3367,8 +3303,9 @@ class userquery extends CBCategory{
 	function get_user_details_with_profile($uid=NULL)
 	{
 		global $db;
-		if(!$uid)
+		if(!$uid){
 			$uid = userid();
+        }
 		$result = $db->select(tbl($this->dbtbl['users'].",".$this->dbtbl['user_profile']),"*",tbl($this->dbtbl['users']).".userid ='$uid' AND ".tbl($this->dbtbl['users']).".userid = ".tbl($this->dbtbl['user_profile']).".userid");
 		return $result[0];
 	}
@@ -3403,18 +3340,23 @@ class userquery extends CBCategory{
 		 *      )
 		 */
 
-		if(empty($default))
+		if(empty($default)){
 			$default = $_POST;
+        }
 
-		if(empty($default))
+		if(empty($default)){
 			$default = $_POST;
+        }
 
 		$username = (isset($default['username'])) ? $default['username'] : "";
 		$email = (isset($default['email'])) ? $default['email'] : "";
 		$dob = (isset($default['dob'])) ? $default['dob'] : "";
 
 		if( $dob != '' && $dob != '0000-00-00' ){
-		    $dob = DateTime::createFromFormat('Y-m-d', $dob)->format(DATE_FORMAT);
+		    $dob_datetime = DateTime::createFromFormat(DATE_FORMAT, $dob);
+		    if( $dob_datetime ){
+		        $dob = $dob_datetime->format('Y-m-d');
+            }
         }
 
         $countries = $Cbucket->get_countries();
@@ -3548,11 +3490,13 @@ class userquery extends CBCategory{
 		 foreach($user_signup_fields as $id => $fields)
 		 {
 			 $the_array = $fields;
-			 if(isset($the_array['hint_1']))
+			 if(isset($the_array['hint_1'])){
 				 $the_array['hint_before'] = $the_array['hint_1'];
+             }
 
-			 if(isset($the_array['hint_2']))
+			 if(isset($the_array['hint_2'])){
 				 $the_array['hint_after'] = $the_array['hint_2'];
+             }
 
 			 $new_array[$id] = $the_array;
 		 }
@@ -3572,11 +3516,13 @@ class userquery extends CBCategory{
 	{
 		$fields = $this->load_signup_fields($array);
 
-		if($array==NULL)
+		if($array==NULL){
 			$array = $_POST;
+        }
 		
-		if(is_array($_FILES))
+		if(is_array($_FILES)){
 			$array = array_merge($array,$_FILES);
+        }
 
 		//Merging Array
 		$signup_fields = array_merge($fields,$this->custom_signup_fields);
@@ -3601,8 +3547,9 @@ class userquery extends CBCategory{
 		if (isset($array['social_account_id'])) {
 			$isSocial = true;
 		}
-		if($array==NULL)
+		if($array==NULL){
 			$array = $_POST;
+        }
 
 		if(is_array($_FILES))
 			$array = array_merge($array,$_FILES);
@@ -3613,8 +3560,7 @@ class userquery extends CBCategory{
 
 		// first checking if captcha plugin is enabled
 		// do not trust the form cb_captcha_enabled value
-		if(get_captcha() && !$userquery->admin_login_check(true) && !$isSocial)
-		{
+		if(get_captcha() && !$userquery->admin_login_check(true) && !$isSocial) {
 			// now checking if the user posted captcha value is not empty and cb_captcha_enabled == yes
 			if(!isset($array['cb_captcha_enabled']) || $array['cb_captcha_enabled'] == 'no'){
 				e(lang('recap_verify_failed'));
@@ -3623,41 +3569,50 @@ class userquery extends CBCategory{
 				e(lang('recap_verify_failed'));
 			}
 		}
-		if(!error())
-		{
+		if(!error()) {
 			$signup_fields = $this->load_signup_fields($array);
 
 			//Adding Custom Signup Fields
-			if(count($this->custom_signup_fields)>0)
+			if(count($this->custom_signup_fields)>0){
 				$signup_fields = array_merge($signup_fields,$this->custom_signup_fields);
+            }
 
 			foreach($signup_fields as $field)
 			{
 				$name = formObj::rmBrackets($field['name']);
 				$val = $array[$name];
 
-				if($field['use_func_val'])
+				if( $name == 'dob' ){
+                    $dob_datetime = DateTime::createFromFormat(DATE_FORMAT, $val);
+                    if( $dob_datetime ){
+                        $val = $dob_datetime->format('Y-m-d');
+                    }
+                }
+
+				if($field['use_func_val']){
 					$val = $field['validate_function']($val);
+                }
 
-				if(!empty($field['db_field']))
+				if(!empty($field['db_field'])){
 					$query_field[] = $field['db_field'];
+                }
 
-				if(is_array($val))
-				{
+				if(is_array($val)) {
 					$new_val = '';
-					foreach($val as $v)
-					{
+					foreach($val as $v) {
 						$new_val .= "#".$v."# ";
 					}
 					$val = $new_val;
 				}
-				if(!$field['clean_func'] || (!function_exists($field['clean_func']) && !is_array($field['clean_func'])))
+				if(!$field['clean_func'] || (!function_exists($field['clean_func']) && !is_array($field['clean_func']))){
 					$val = mysql_clean($val);
-				else
+                } else {
 					$val = apply_func($field['clean_func'], mysql_clean('|no_mc|'.$val));
+                }
 
-				if(!empty($field['db_field']))
+				if(!empty($field['db_field'])){
 					$query_val[] = $val;
+                }
 			}
 
 			// Setting Verification type
@@ -3669,10 +3624,8 @@ class userquery extends CBCategory{
 				$welcome_email = 'yes';
 			}
 
-			if(has_access('admin_access',true))
-			{
-				if($array['active']=='Ok')
-				{
+			if(has_access('admin_access',true)) {
+				if($array['active']=='Ok') {
 					$usr_status = 'Ok';
 					$welcome_email = 'yes';
 				} else {
@@ -3734,12 +3687,12 @@ class userquery extends CBCategory{
 
 			//Adding Fields to query
 			$i = 0;
-			foreach($query_field as $qfield)
-			{
+			foreach($query_field as $qfield) {
 				$i++;
 				$query .= $qfield;
-				if($i<$total_fields)
+				if($i<$total_fields){
 					$query .= ',';
+                }
 			}
 
 			$query .= ") VALUES (";
@@ -3750,8 +3703,9 @@ class userquery extends CBCategory{
 			{
 				$i++;
 				$query .= "'$qval'";
-				if($i<$total_fields)
-				$query .= ',';
+				if($i<$total_fields){
+				    $query .= ',';
+                }
 			}
 
 			//Finalizing Query
@@ -3762,8 +3716,7 @@ class userquery extends CBCategory{
 			$db->update(tbl($this->dbtbl['users']),array('password'),array(pass_code($array['password'], $insert_id))," userid='".$insert_id."'");
 			$db->insert(tbl($userquery->dbtbl['user_profile']), array("userid"), array($insert_id));
 
-			if(!has_access('admin_access',true) && EMAIL_VERIFICATION && $send_signup_email)
-			{
+			if(!has_access('admin_access',true) && EMAIL_VERIFICATION && $send_signup_email) {
 				global $cbemail;
 				$tpl = $cbemail->get_template('email_verify_template');
 				$more_var = array(
