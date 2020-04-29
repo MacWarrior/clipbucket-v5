@@ -1589,5 +1589,8 @@
 	"non_fullscreen":"Quitter le plein écran",
 	"pause_video":"Pause",
 	"mute_video":"Couper le son",
-	"unmute_video":"Réactiver le son"
+	"unmute_video":"Réactiver le son",
+	"update_bits_color":"Mettre à jour les bits couleurs",
+	"bits_color":"bits couleurs",
+	"bits_color_compatibility":"Le format de la vidéo la rend incompatible avec certains navigateurs tels que Firefox, Safari, ..."
 }

@@ -126,7 +126,8 @@
 			'gen_480' 			 => config('gen_480'),
 			'gen_720' 			 => config('gen_720'),
 			'gen_1080' 			 => config('gen_1080'),
-			'chromecast_fix' 	 => config('chromecast_fix')
+			'chromecast_fix' 	 => config('chromecast_fix'),
+			'force_8bits' 	     => config('force_8bits')
 		);
 
 		foreach ($configs as $key => $value){
@@ -163,6 +164,13 @@
 		if( config('chromecast_fix') ){
 			$db->update(tbl('video'), array("is_castable"), array(true), " file_name = '{$outputFileName}'");
 		}
+
+        $vidDetails = $ffmpeg->get_file_info();
+		if( !config('force_8bits') || $vidDetails['bits_per_raw_sample'] <= 8 ){
+            $db->update(tbl('video'), array("bits_color"), array($vidDetails['bits_per_raw_sample']), " file_name = '{$outputFileName}'");
+        } else if( config('force_8bits') && $vidDetails['bits_per_raw_sample'] > 8 ){
+            $db->update(tbl('video'), array("bits_color"), array(8), " file_name = '{$outputFileName}'");
+        }
 
 		if( $reconvert ) {
 			setVideoStatus( $outputFileName, 'completed', true, true );

@@ -321,7 +321,9 @@ DELETE FROM `{tbl_prefix}config` WHERE name IN(
 INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 	('logo_name', ''),
 	('favicon_name', ''),
-	('comment_per_page', '10');
+	('comment_per_page', '10'),
+	('force_8bits', '1'),
+	('bits_color_warning', '10');
 
 ALTER TABLE `{tbl_prefix}user_levels_permissions` MODIFY COLUMN `plugins_perms` text NOT NULL DEFAULT '';
 ALTER TABLE `{tbl_prefix}users`
@@ -370,7 +372,8 @@ ALTER TABLE `{tbl_prefix}video`
 	MODIFY COLUMN `conv_progress` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
 
 ALTER TABLE `{tbl_prefix}video`
-    ADD `is_castable` BOOLEAN NOT NULL DEFAULT FALSE;
+	ADD `is_castable` BOOLEAN NOT NULL DEFAULT FALSE,
+	ADD `bits_color` tinyint(4) DEFAULT NULL;
 
 ALTER TABLE `{tbl_prefix}user_profile`
 	MODIFY COLUMN `fb_url` VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',

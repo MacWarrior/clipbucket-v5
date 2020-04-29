@@ -39,19 +39,19 @@ class FFMpeg
 	public $res_configurations = "";
 	public $sprite_count = 0;
 	public $thumbs_res_settings = array(
-			"original" => "original",
-			'105' => array('168','105'),
-			'260' => array('416','260'),
-			'320' => array('632','395'),
-			'480' => array('768','432')
-		);
+        "original" => "original",
+        '105' => array('168','105'),
+        '260' => array('416','260'),
+        '320' => array('632','395'),
+        '480' => array('768','432')
+    );
 	public $res169 = array(
-			'240' => array('428','240'),
-			'360' => array('640','360'),
-			'480' => array('854','480'),
-			'720' => array('1280','720'),
-			'1080' => array('1920','1080'),
-		);
+        '240' => array('428','240'),
+        '360' => array('640','360'),
+        '480' => array('854','480'),
+        '720' => array('1280','720'),
+        '1080' => array('1920','1080'),
+    );
 	// End public variables declaration
 
 	// Start private variables declaration
@@ -183,33 +183,34 @@ class FFMpeg
 		return $video_size > 0;
 	}
 
-	/**
-	 * Function used to get file information using FFPROBE
-	 *
-	 * @param FILE_PATH
-	 *
-	 * @return mixed
-	 */
+    /**
+     * Function used to get file information using FFPROBE
+     *
+     * @param null|string $file_path
+     *
+     * @return mixed
+     */
 	function get_file_info($file_path=NULL)
 	{
 		if(!$file_path)
 			$file_path = $this->input_file;
 
-		$info['format']         = 'N/A';
-		$info['duration']       = 'N/A';
-		$info['size']           = 'N/A';
-		$info['bitrate']        = 'N/A';
-		$info['video_width']    = 'N/A';
-		$info['video_height']   = 'N/A';
-		$info['video_wh_ratio'] = 'N/A';
-		$info['video_codec']    = 'N/A';
-		$info['video_rate']     = 'N/A';
-		$info['video_bitrate']  = 'N/A';
-		$info['video_color']    = 'N/A';
-		$info['audio_codec']    = 'N/A';
-		$info['audio_bitrate']  = 'N/A';
-		$info['audio_rate']     = 'N/A';
-		$info['audio_channels'] = 'N/A';
+		$info['format']              = 'N/A';
+		$info['duration']            = 'N/A';
+		$info['size']                = 'N/A';
+		$info['bitrate']             = 'N/A';
+		$info['video_width']         = 'N/A';
+		$info['video_height']        = 'N/A';
+		$info['video_wh_ratio']      = 'N/A';
+		$info['video_codec']         = 'N/A';
+		$info['video_rate']          = 'N/A';
+		$info['video_bitrate']       = 'N/A';
+		$info['video_color']         = 'N/A';
+		$info['audio_codec']         = 'N/A';
+		$info['audio_bitrate']       = 'N/A';
+		$info['audio_rate']          = 'N/A';
+		$info['audio_channels']      = 'N/A';
+		$info['bits_per_raw_sample'] = 'N/A';
 		$info['path']           = $file_path;
 
 		$cmd = FFPROBE. " -v quiet -print_format json -show_format -show_streams '".$file_path."' ";
@@ -222,22 +223,20 @@ class FFMpeg
 
 		$video = NULL;
 		$audio = NULL;
-		foreach($data['streams'] as $stream)
-		{
-			if( $stream['codec_type'] == 'video' && empty($video) )
-			{
+		foreach($data['streams'] as $stream) {
+			if( $stream['codec_type'] == 'video' && empty($video) ) {
 				$video = $stream;
 				continue;
 			}
 
-			if( $stream['codec_type'] == 'audio' && empty($audio) )
-			{
+			if( $stream['codec_type'] == 'audio' && empty($audio) ) {
 				$audio = $stream;
 				continue;
 			}
 
-			if( !empty($video) && !empty($audio) )
+			if( !empty($video) && !empty($audio) ){
 				break;
+            }
 		}
 
 		$info['format']         = $data['format']['format_name'];
@@ -247,9 +246,11 @@ class FFMpeg
 		$info['video_bitrate']  = (int) $video['bit_rate'];
 		$info['video_width']    = (int) $video['width'];
 		$info['video_height']   = (int) $video['height'];
+		$info['bits_per_raw_sample'] = (int) $video['bits_per_raw_sample'];
 
-		if($video['height'])
+		if($video['height']){
 			$info['video_wh_ratio'] = (int) $video['width'] / (int) $video['height'];
+        }
 		$info['video_codec']    = $video['codec_name'];
 		$info['video_rate']     = $video['r_frame_rate'];
 		$info['size']           = filesize($file_path);
@@ -529,8 +530,14 @@ class FFMpeg
 			}
 
 			// Fix for ChromeCast : Forcing stereo mode
-			if( config('chromecast_fix') )
-				$commandSwitches .= ' -ac 2';
+			if( config('chromecast_fix') ){
+                $commandSwitches .= ' -ac 2';
+            }
+
+			// Fix for browsers compatibility : yuv420p10le seems to be working only on Chrome like browsers
+            if( config('force_8bits') ){
+                $commandSwitches .= ' -pix_fmt yuv420p';
+            }
 
 			// Setting Size Of output video
 			if($isHd)
@@ -1252,9 +1259,15 @@ class FFMpeg
 		}
 
 		// Fix for ChromeCast : Forcing stereo mode
-		if( config('chromecast_fix') )
+		if( config('chromecast_fix') ){
 			$opt_av .= ' -ac 2';
-		
+        }
+
+        // Fix for browsers compatibility : yuv420p10le seems to be working only on Chrome like browsers
+        if( config('force_8bits') ){
+            $opt_av .= ' -pix_fmt yuv420p';
+        }
+
 		# audio bitrate
 		if($p['use_audio_bit_rate'])
 		{

@@ -259,6 +259,7 @@ define('VIDEO_COMMENT',$row['video_comments']);
 define('VIDEO_RATING',$row['video_rating']);
 define('COMMENT_RATING',$row['comment_rating']);
 define('VIDEO_DOWNLOAD',$row['video_download']);
+define('BITS_COLOR_WARNING',$row['bits_color_warning']);
 define('VIDEO_EMBED',$row['video_embed']);
 define('TEMPLATEFOLDER','styles');							//Template Folder Name, usually STYLES
 define('STYLES_DIR',BASEDIR.'/'.TEMPLATEFOLDER);
@@ -453,6 +454,7 @@ Assign('video_comment',$row['video_comments']);
 Assign('video_rating',$row['video_rating']);
 Assign('comment_rating',$row['comment_rating']);
 Assign('video_download',$row['video_download']);
+Assign('bits_color_warning',$row['bits_color_warning']);
 Assign('video_embed',$row['video_embed']);
 assign('icons_url',ICONS_URL);
 define( 'PLAYLIST_COVERS_DIR', IMAGES_DIR.'/playlist_covers' );

@@ -46,6 +46,18 @@
 		}
 	}
 
+	if(isset($_GET['update_bits_color'])){
+		$videoid = mysql_clean($_GET['update_bits_color']);
+		$vdetails = get_video_details($videoid);
+        update_bits_color($vdetails);
+	}
+	if(isset($_POST['update_bits_color_selected'])) {
+		for($id=0;$id<count($_POST['check_video']);$id++){
+			$vdetails = get_video_details($_POST['check_video'][$id]);
+            update_bits_color($vdetails);
+		}
+	}
+
 	//Using Multiple Action
 	if(isset($_POST['make_featured_selected'])) {
 		for($id=0;$id<count($_POST['check_video']);$id++){

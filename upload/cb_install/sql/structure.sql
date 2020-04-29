@@ -994,6 +994,7 @@ CREATE TABLE `{tbl_prefix}video` (
   `re_conv_status` tinytext NOT NULL DEFAULT '',
   `conv_progress` text NOT NULL DEFAULT '',
   `is_castable` boolean NOT NULL DEFAULT FALSE,
+  `bits_color` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`videoid`),
   KEY `userid` (`userid`),
   KEY `featured` (`featured`),

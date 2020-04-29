@@ -303,6 +303,10 @@ class CBvideo extends CBCategory
 			case 'check_castable':
 				check_castable_status($video);
 				break;
+
+			case 'update_bits_color':
+                update_bits_color($video);
+				break;
 		}
 	}
 

@@ -1956,6 +1956,30 @@
 		}
 	}
 
+    function get_bits_color($vid)
+    {
+        global $db;
+        $data = $db->select(tbl('video'),'bits_color','videoid='.$vid);
+
+        if (isset($data[0]['bits_color'])) {
+            return $data[0]['bits_color'];
+        }
+        return false;
+    }
+
+    function update_bits_color($vdetails){
+        if( is_null($vdetails) ){
+            return;
+        }
+
+        global $db;
+        $filepath = VIDEOS_DIR.'/'.$vdetails['file_directory'].'/' . $vdetails['file_name'].'-'.json_decode($vdetails['video_files'])[0].'.mp4';
+        $cmd = get_binaries('ffprobe_path').' -show_streams '.$filepath.' 2>/dev/null | grep "bits_per_raw_sample" | grep -v "N/A" | awk -v FS="=" \'{print $2}\'';
+        $data = shell_exec( $cmd );
+
+        $db->update(tbl('video'),array('bits_color'),array((int)$data)," videoid='".$vdetails['videoid']."'");
+    }
+
 	/**
 	 * Checks if given video is reconvertable or not
 	 *

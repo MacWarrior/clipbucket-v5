@@ -48,6 +48,7 @@
 			'activation',
 			'photo_activation',
 			'chromecast_fix',
+			'force_8bits',
 
 			'background_color',
 			'background_upload',
@@ -212,7 +213,8 @@
 			'index_featured',
 			'index_recent',
 			'videos_list_per_tab',
-			'video_download'	,
+			'video_download',
+			'bits_color_warning',
 			'video_embed',
 			'video_comments',
 			'video_rating',

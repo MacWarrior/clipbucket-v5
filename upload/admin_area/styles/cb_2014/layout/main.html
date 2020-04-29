@@ -354,6 +354,12 @@
 										<input name="video_download" type="checkbox" id="video_download" value="1" {if $row.video_download=='1'}checked{/if}/>Allow video download
 									</label>
 								</div>
+
+								<div class="checkbox">
+									<label for="bits_color_warning">
+										<input name="bits_color_warning" type="checkbox" id="bits_color_warning" value="1" {if $row.bits_color_warning=='1'}checked{/if}/>Enable video disclaimer if video if not compatible with all browsers (If bits color > 8)
+									</label>
+								</div>
 							</div>
 							<div class="col-md-4">
 								<label for="php_path8">Max categories for each video</label>
@@ -665,6 +671,12 @@
 					<input name="chromecast_fix" type="checkbox" id="chromecast_fix" value="1" {if $row.chromecast_fix==1}checked{/if}/>
 					Convert audio for ChromeCast compatibility
 					<img src="{$imageurl}/help.png" alt="info" border="0" class="tipsy_tip" title="Force audio conversion to Stereo"/>
+				</label>
+
+				<label class="checkbox">
+					<input name="force_8bits" type="checkbox" id="force_8bits" value="1" {if $row.force_8bits==1}checked{/if}/>
+					Force a maximum of 8bits colors to increase browsers compatibility
+					<img src="{$imageurl}/help.png" alt="info" border="0" class="tipsy_tip" title="Force video to 8bits colors maximum"/>
 				</label>
 
 				<label class="checkbox">
