@@ -86,29 +86,32 @@ class ClipBucket
         ));
 
         //This is used to create Admin Menu
-        //$this->AdminMenu = $this->get_admin_menu();
         //Updating Upload Options		
         $this->temp_exts = array('ahz', 'jhz', 'abc', 'xyz', 'cb2', 'tmp', 'olo', 'oar', 'ozz');
         $this->template = $this->configs['template_dir'];
 
-        if (!defined("IS_CAPTCHA_LOADING"))
+        if (!defined("IS_CAPTCHA_LOADING")){
             $_SESSION['total_captchas_loaded'] = 0;
+        }
 
         $this->clean_requests();
 
         $sort_array = sorting_links();
 
-        if (!isset($_GET['sort'])  || !isset($sort_array[$_GET['sort']]) )
+        if (!isset($_GET['sort'])  || !isset($sort_array[$_GET['sort']]) ){
             $_GET['sort'] = 'most_recent';
+        }
 
         $time_array = time_links();
 
-        if (!isset($_GET['time']) || !isset($time_array[$_GET['time']]))
+        if (!isset($_GET['time']) || !isset($time_array[$_GET['time']])){
             $_GET['time'] = 'all_time';
+        }
 
 
-        if (!isset($_GET['page']) || !is_numeric($_GET['page']))
+        if (!isset($_GET['page']) || !is_numeric($_GET['page'])){
             $_GET['page'] = 1;
+        }
     }
 
     function getBasedir()
@@ -121,10 +124,10 @@ class ClipBucket
 
     function addJS($files)
     {
-        if (is_array($files))
-        {
-            foreach ($files as $key => $file)
+        if (is_array($files)) {
+            foreach ($files as $key => $file){
                 $this->JSArray[][$key] = $file;
+            }
         } else {
             $this->JSArray[$files] = 'global';
         }
@@ -137,10 +140,10 @@ class ClipBucket
 
     function addAdminJS($files)
     {
-        if (is_array($files))
-        {
-            foreach ($files as $key => $file)
+        if (is_array($files)) {
+            foreach ($files as $key => $file){
                 $this->AdminJSArray[$key] = $file;
+            }
         } else {
             $this->AdminJSArray[$files] = 'global';
         }
@@ -156,8 +159,7 @@ class ClipBucket
 	 */
     function add_header($file, $place = 'global')
     {
-        if (!is_array($place))
-        {
+        if (!is_array($place)) {
             $place = array($place);
         }
         $this->header_files[$file] = $place;
@@ -173,8 +175,7 @@ class ClipBucket
 	 */
     function add_admin_header($file, $place = 'global')
     {
-        if (!is_array($place))
-        {
+        if (!is_array($place)) {
             $place = array($place);
         }
         $this->admin_header_files[$file] = $place;
@@ -203,8 +204,7 @@ class ClipBucket
     {
         //Getting list of codes available for $place
         if(isset($this->anchorList[$place])){
-            $list = $this->anchorList[$place];
-            return $list;
+            return $this->anchorList[$place];
         }
         return false;
     }
@@ -219,83 +219,14 @@ class ClipBucket
     function get_anchor_function_list($place)
     {
         //Getting list of functions
-        $list = isset($this->anchor_function_list[$place]) ? $this->anchor_function_list[$place] : false;
-        return $list;
-    }
-
-    /**
-     * Function used to create admin menu
-     */
-    function get_admin_menu()
-    {
-        $menu_array = array(
-            //Statistics
-            'Stats And Configurations' => array(
-                'Reports &amp; Stats' => 'reports.php',
-                'Website Configurations' => 'main.php',
-                'Email Settings' => 'email_settings.php',
-                'Language Settings' => 'language_settings.php',
-                'Add New Phrases' => 'add_phrase.php',
-                'Manage Pages' => 'manage_pages.php',
-                'Manage Comments' => 'comments.php',
-                'Update Logos'=>'upload_logo.php'
-            ),
-            //Video
-            'Videos' => array(
-                'Videos Manager' => 'video_manager.php',
-                'Manage Categories' => 'category.php',
-                'List Flagged Videos' => 'flagged_videos.php',
-                'Upload Videos' => 'mass_uploader.php',
-                'List Inactive Videos' => 'video_manager.php?search=search&active=no'
-            ),
-            //Users
-            'Users' => array(
-                'Manage Members' => 'members.php',
-                'Add Member' => 'add_member.php',
-                'Manage categories' => 'user_category.php',
-                'User Levels' => 'user_levels.php',
-                'Inactive Only' => 'members.php?search=yes&status=ToActivate',
-                'Active Only' => 'members.php?search=yes&status=Ok',
-                'Reported Users' => 'flagged_users.php',
-                'Mass Email' => 'mass_email.php'
-            ),
-            //Advertisments
-            'Advertisement' => array(
-                'Manage Advertisments' => 'ads_manager.php',
-                'Manage Placements' => 'ads_add_placements.php'
-            ),
-            //Template Manager
-            'Templates And Players' => array(
-                'Templates Manager' => 'templates.php',
-                'Templates Editor' => 'template_editor.php',
-                'Players Manager' => 'manage_players.php',
-                'Player Settings' => 'manage_players.php?mode=show_settings'
-            ),
-            //Plugin Manager
-            'Plugin Manager' => array(
-                'Plugin Manager' => 'plugin_manager.php'
-            ),
-            //Tool Box
-            'Tool Box' => array(
-                'PHP Info' => 'phpinfo.php',
-                'Server Modules Info' => 'cb_mod_check.php',
-                'Conversion Queue Manager' => 'cb_conversion_queue.php',
-                'ReIndexer' => 'reindex_cb.php',
-                'Conversion Lab &alpha;' => 'conversion_lab.php',
-                'Repair video duration' => 'repair_vid_duration.php',
-                'Maintenance' => 'maintenance.php'
-            )
-        );
-
-        return $menu_array;
+        return isset($this->anchor_function_list[$place]) ? $this->anchor_function_list[$place] : false;
     }
 
     function LatestAdminMenu()
     {
         global $userquery;
         $per = $userquery->get_user_level(userid());
-        if ($per['web_config_access'] == "yes")
-		{
+        if ($per['web_config_access'] == "yes") {
             $NewMenu['General Configurations'] = array(
                 'Reports &amp; Stats' => 'reports.php',
                 'Website Configurations' => 'main.php',
@@ -308,8 +239,7 @@ class ClipBucket
                 'Update Logos'=>'upload_logo.php'
             );
 		}
-        if ($per['video_moderation'] == "yes")
-		{
+        if ($per['video_moderation'] == "yes") {
             $NewMenu['Videos'] = array(
                 'Videos Manager' => 'video_manager.php',
                 'Manage Playlists' => 'manage_playlist.php',
@@ -320,8 +250,7 @@ class ClipBucket
                 'Notification settings' => 'notification_settings.php'
             );
 		}
-        if ($per['member_moderation'] == "yes")
-        {
+        if ($per['member_moderation'] == "yes") {
             $NewMenu['Users'] = array(
                 'Manage Members' => 'members.php',
                 'Add Member' => 'add_member.php',
@@ -336,15 +265,13 @@ class ClipBucket
             	$NewMenu['Users']['User Levels'] = 'user_levels.php';
         }
 
-        if ($per['ad_manager_access'] == "yes")
-		{
+        if ($per['ad_manager_access'] == "yes") {
             $NewMenu['Advertisement'] = array(
                 'Manage Advertisments' => 'ads_manager.php',
                 'Manage Placements' => 'ads_add_placements.php'
             );
 		}
-        if ($per['manage_template_access'] == "yes")
-		{
+        if ($per['manage_template_access'] == "yes") {
             $NewMenu['Templates And Players'] = array(
             	'Templates Manager' => 'templates.php',
                 'Templates Editor' => 'template_editor.php',
@@ -352,11 +279,11 @@ class ClipBucket
                 'Player Settings' => 'manage_players.php?mode=show_settings'
 			);
 		}
-        if ($per['plugins_moderation'] == "yes")
+        if ($per['plugins_moderation'] == "yes"){
             $NewMenu['Plugin Manager'] = array('Plugin Manager' => 'plugin_manager.php');
+        }
 
-        if ($per['tool_box'] == "yes")
-		{
+        if ($per['tool_box'] == "yes") {
             $NewMenu['Tool Box'] = array(
             	'PHP Info' => 'phpinfo.php',
                 'Development Mode' => 'dev_mode.php',
@@ -370,8 +297,9 @@ class ClipBucket
                 'Repair video duration' => 'repair_vid_duration.php'
 			);
 		}
-        if ($per['web_config_access'] == "yes")
+        if ($per['web_config_access'] == "yes"){
             $NewMenu['Tool Box']['Maintenance'] = 'maintenance.php';
+        }
 
         return (isset($NewMenu)) ? $NewMenu : false;
     }
