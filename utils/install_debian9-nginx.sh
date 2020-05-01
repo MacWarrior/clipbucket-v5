@@ -120,7 +120,7 @@ server {
         rewrite ^/search/result/?$ /search_result.php last;
     }
 
-    location /upload/ {
+    location /upload {
         rewrite ^/upload/?$ /upload.php last;
     }
 
@@ -152,7 +152,7 @@ server {
         rewrite ^/item/(.*)/(.*)/(.*)/(.*) /view_item.php?item=$3&type=$1&collection=$2 last;
     }
 
-    location /photo_upload/ {
+    location /photo_upload {
         rewrite ^/photo_upload/(.*) /photo_upload.php?collection=$1 last;
         rewrite ^/photo_upload/?$ /photo_upload.php last;
     }
