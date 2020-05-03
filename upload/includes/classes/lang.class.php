@@ -44,7 +44,7 @@ class language
 		{
 			$lang = $_GET['set_site_lang'];
 			if($this->lang_exists($lang))
-				setcookie('cb_lang',$lang,time()+3600,'/');
+                set_cookie_secure('cb_lang',$lang);
 		}
 
         if ( isset($lang) and !empty($lang) ) {
@@ -258,7 +258,7 @@ class language
 		$lang = $this->lang_exists($lid);
 		if($lang)
 		{
-			setcookie('cb_lang',$lid,time()+3600,'/');
+            set_cookie_secure('cb_lang',$lid);
 			$db->update(tbl("languages"),array("language_default"),array("no")," language_default='yes'");
 			$db->update(tbl("languages"),array("language_default"),array("yes")," language_id='$lid'");
 			e($lang['language_name']." has been set as default language","m");

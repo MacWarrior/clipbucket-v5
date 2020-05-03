@@ -580,8 +580,8 @@ class Collections extends CBCategory
 	{
 		if(isset($_COOKIE['current_item']))
 			unset($_COOKIE['current_item']);
-		
-		setcookie('current_item',$value,time()+240);	
+
+        set_cookie_secure('current_item',$value,time()+240);
 	}
 
 	/**

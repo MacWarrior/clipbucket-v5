@@ -137,7 +137,7 @@ class img_validator extends files
     {
         $_SESSION["word_validator"] = base64_encode($this->encrypts_word($word));
 		if(empty($_SESSION['word_validator'])){
-			setcookie('word_validator', base64_encode($this->encrypts_word($word)));
+            set_cookie_secure('word_validator', base64_encode($this->encrypts_word($word)));
 		}
     }
 

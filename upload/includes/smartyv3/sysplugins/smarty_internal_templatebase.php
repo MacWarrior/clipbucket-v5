@@ -94,11 +94,11 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data
             if (false !== strpos($_query_string, $this->smarty->smarty_debug_id)) {
                 if (false !== strpos($_query_string, $this->smarty->smarty_debug_id . '=on')) {
                     // enable debugging for this browser session
-                    setcookie('SMARTY_DEBUG', true);
+                    set_cookie_secure('SMARTY_DEBUG', true);
                     $this->smarty->debugging = true;
                 } elseif (false !== strpos($_query_string, $this->smarty->smarty_debug_id . '=off')) {
                     // disable debugging for this browser session
-                    setcookie('SMARTY_DEBUG', false);
+                    set_cookie_secure('SMARTY_DEBUG', false);
                     $this->smarty->debugging = false;
                 } else {
                     // enable debugging for this page

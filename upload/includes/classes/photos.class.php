@@ -2725,7 +2725,7 @@ class CBPhotos
 		if(!isset($_COOKIE[$Array['photo_id']."_downloaded"]))
 		{
 			$db->update(tbl('photos'),array('downloaded'),array('|f|downloaded+1'),' photo_id = "'.$Array['photo_id'].'"');
-			setcookie($Array['photo_id']."_downloaded",NOW(),time()+1800);	
+            set_cookie_secure($Array['photo_id']."_downloaded",NOW(),time()+1800);
 		}
 	}
 	

@@ -1,5 +1,5 @@
 <?php
 require_once 'includes/config.inc.php';
 $userquery->logout();
-setcookie('is_logout','yes',time()+3600,'/');
+set_cookie_secure('is_logout','yes');
 redirect_to(BASEURL);

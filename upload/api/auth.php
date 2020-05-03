@@ -92,7 +92,9 @@ switch($mode)
     
     case "logout":
         $userquery->logout();
-        if(cb_get_functions('logout')) cb_call_functions('logout'); 
-        setcookie('is_logout','yes',time()+3600,'/');
+        if(cb_get_functions('logout')){
+            cb_call_functions('logout');
+        }
+        set_cookie_secure('is_logout','yes');
         break;
 }

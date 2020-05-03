@@ -129,6 +129,21 @@
         return htmlentities($var);
 	}
 
+	function set_cookie_secure($name,$val,$time = null)
+    {
+        if( is_null($time) ){
+            $time = time() + 3600;
+        }
+
+        setcookie($name,$val,[
+            'expires' => $time,
+            'path' => '/',
+            'secure' => true,
+            'httponly' => true,
+            'samesite' => 'Strict'
+        ]);
+    }
+
     function getBytesFromFileSize($size){
         $units = array(
             'B' => 1,
@@ -2031,15 +2046,14 @@
 			case 'v':
 			case 'video':
 			default:
-				if(!isset($_COOKIE['video_'.$id]))
-				{
-					$currentTime = time();
-					$views = (int)$videoViewsRecord["video_views"] + 1;
-					$db->update(tbl("video_views"),array("video_views","last_updated"),array($views,$currentTime)," video_id='$id' OR videokey='$id'");
-					$query = "UPDATE " . tbl("video_views") . " SET video_views = video_views + 1 WHERE video_id = {$id}";
-					$result = $db->Execute($query);
-					setcookie('video_'.$id,'watched',time()+3600);
-				}
+				if(!isset($_COOKIE['video_'.$id])) {
+                    $currentTime = time();
+                    $views = (int)$videoViewsRecord["video_views"] + 1;
+                    $db->update( tbl( "video_views" ), array( "video_views", "last_updated" ), array( $views, $currentTime ), " video_id='$id' OR videokey='$id'" );
+                    $query = "UPDATE " . tbl( "video_views" ) . " SET video_views = video_views + 1 WHERE video_id = {$id}";
+                    $db->Execute( $query );
+                    set_cookie_secure( 'video_' . $id, 'watched' );
+                }
 				break;
 
 			case 'u':
@@ -2047,7 +2061,7 @@
 			case 'channel':
 				if(!isset($_COOKIE['user_'.$id])) {
 					$db->update(tbl("users"),array("profile_hits"),array("|f|profile_hits+1")," userid='$id'");
-					setcookie('user_'.$id,'watched',time()+3600);
+                    set_cookie_secure('user_'.$id,'watched');
 				}
 				break;
 
@@ -2056,7 +2070,7 @@
 			case "collection":
 				if(!isset($_COOKIE['collection_'.$id])) {
 					$db->update(tbl("collections"),array("views"),array("|f|views+1")," collection_id = '$id'");
-					setcookie('collection_'.$id,'viewed',time()+3600);
+                    set_cookie_secure('collection_'.$id,'viewed');
 				}
 				break;
 			
@@ -2065,7 +2079,7 @@
 			case "p":
 				if(!isset($_COOKIE['photo_'.$id])) {
 					$db->update(tbl('photos'),array("views","last_viewed"),array("|f|views+1",NOW())," photo_id = '$id'");
-					setcookie('photo_'.$id,'viewed',time()+3600);
+                    set_cookie_secure('photo_'.$id,'viewed');
 				}
 				break;
 		}
@@ -2096,7 +2110,7 @@
 					// Cookie life time at least 1 hour else if video duration is bigger set at video time.
 					$cookieTime = ($vdetails['duration'] > 3600) ? $vdetails['duration'] : $cookieTime = 3600;
 					$db->update(tbl('video'),array('views', 'last_viewed'),array('|f|views+1','|f|NOW()')," videoid='$id' OR videokey='$id'");
-					setcookie('video_'.$id,'watched',time()+$cookieTime);
+                    set_cookie_secure('video_'.$id,'watched');
 
 					$userid = userid();
 					if( $userid ){
@@ -2116,7 +2130,7 @@
 			case 'channel':
 				if(!isset($_COOKIE['user_'.$id])) {
 					$db->update(tbl("users"),array("profile_hits"),array("|f|profile_hits+1")," userid='$id'");
-					setcookie('user_'.$id,'watched',time()+3600);
+                    set_cookie_secure('user_'.$id,'watched');
 				}
 				break;
 
@@ -2125,7 +2139,7 @@
 			case "collection":
 				if(!isset($_COOKIE['collection_'.$id])) {
 					$db->update(tbl("collections"),array("views"),array("|f|views+1")," collection_id = '$id'");
-					setcookie('collection_'.$id,'viewed',time()+3600);
+                    set_cookie_secure('collection_'.$id,'viewed');
 				}
 				break;
 			
@@ -2134,7 +2148,7 @@
 			case "p":
 				if(!isset($_COOKIE['photo_'.$id])) {
 					$db->update(tbl('photos'),array("views","last_viewed"),array("|f|views+1",NOW())," photo_id = '$id'");
-					setcookie('photo_'.$id,'viewed',time()+3600);
+                    set_cookie_secure('photo_'.$id,'viewed');
 				}
 				break;
 		}

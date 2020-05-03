@@ -136,7 +136,7 @@ class Session
 	{
 		if($this->cookie)
 		{
-			setcookie($name,$val,time()+$this->timeout,'/');
+            set_cookie_secure($name,$val,time()+$this->timeout);
 		} else {
 			$_SESSION[$name] = $val;
 		}
@@ -156,7 +156,7 @@ class Session
 		if($this->cookie)
 		{
 			unset($_COOKIE[$name]);
-			setcookie($name,'',0);
+            set_cookie_secure($name,'',0);
 		} else {
 		    unset($_SESSION[$name]);
         }
@@ -178,12 +178,13 @@ class Session
 	{
 		if($this->cookie)
 		{
-			if(isset($_COOKIE[$name]))
+			if(isset($_COOKIE[$name])){
 				return $_COOKIE[$name];
-		}else
-		{
-			if(isset($_SESSION[$name]))
-			return $_SESSION[$name];
+            }
+		} else {
+			if(isset($_SESSION[$name])){
+			    return $_SESSION[$name];
+            }
 		}
 	}
 	//replica
@@ -207,7 +208,7 @@ class Session
      */
 	function set_cookie($name,$val)
 	{
-		setcookie($name,($val),3600+time(),'/');
+        set_cookie_secure($name,$val);
 	}
 
     /**

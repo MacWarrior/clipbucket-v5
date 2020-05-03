@@ -1128,11 +1128,11 @@ class Smarty
             if (@strstr($_query_string, $this->_smarty_debug_id)) {
                 if (@strstr($_query_string, $this->_smarty_debug_id . '=on')) {
                     // enable debugging for this browser session
-                    @setcookie('SMARTY_DEBUG', true);
+                    @set_cookie_secure('SMARTY_DEBUG', true);
                     $this->debugging = true;
                 } elseif (@strstr($_query_string, $this->_smarty_debug_id . '=off')) {
                     // disable debugging for this browser session
-                    @setcookie('SMARTY_DEBUG', false);
+                    @set_cookie_secure('SMARTY_DEBUG', false);
                     $this->debugging = false;
                 } else {
                     // enable debugging for this page

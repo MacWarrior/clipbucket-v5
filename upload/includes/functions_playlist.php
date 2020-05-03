@@ -216,7 +216,7 @@ function increment_playlist_played( $args = array() ) {
         if ( !isset( $_COOKIE[ $cookie ] ) ) {
 
             $db->update( tbl( 'playlists' ), array( 'played' ), array( '|f|played+1' ), " playlist_id = '".$args[ 'playlist' ][ 'playlist_id' ]."' " );
-            setcookie( $cookie, true, time()+3600 );
+            set_cookie_secure( $cookie, true);
 
         }
 
