@@ -692,7 +692,7 @@ function add_quicklist(obj,vid)
 
     $(obj).attr('src',imageurl+"/ajax-loader.gif");
     $(obj).css('background-position',"-200px 200px");
-    $.cookie("btn-q-"+vid, "yes", { expires : 10 });
+    set_cookie_secure("btn-q-"+vid, "yes");
 
     $.post(page,
         {
@@ -723,7 +723,7 @@ function add_quicklist(obj,vid)
 function remove_quicklist(obj,vid)
 {
 
-    $.cookie("btn-q-"+vid, null);
+    set_cookie_secure("btn-q-"+vid, null);
     $.post(page,
         {
             mode : 'quicklist',
@@ -818,7 +818,7 @@ function clear_quicklist(ids)
         {
             load_quicklist_box();
             $.each(ids, function() {
-                $.cookie("btn-q-"+this, null);
+                set_cookie_secure("btn-q-"+this, null);
                 $('.cb-btn-quick-'+this).addClass('add_icon');
                 $('.cb-btn-quick-'+this).removeClass('check_icon');
             });
@@ -831,12 +831,12 @@ function quick_show_hide_toggle(obj)
 
     if($.cookie("quick_list_box")=="show")
     {
-        $.cookie("quick_list_box","hide");
+        set_cookie_secure("quick_list_box","hide");
         $('.ql_show-hide').html("show");
     }
     else
     {
-        $.cookie("quick_list_box","show")
+        set_cookie_secure("quick_list_box","show")
         $('.ql_show-hide').html("hide");
     }
 }
@@ -847,7 +847,7 @@ function quick_show_hide_toggle(obj)
 function ini_cookies()
 {
     if(!$.cookie("quick_list_box"))
-        $.cookie("quick_list_box","show")
+        set_cookie_secure("quick_list_box","show")
 }
 
 
@@ -1005,11 +1005,11 @@ function swap_auto_play()
 {
     if($.cookie("auto_play_playlist")=="true")
     {
-        $.cookie("auto_play_playlist","false",{path:"/"});
+        set_cookie_secure("auto_play_playlist","false");
         window.location = document.location;
         $('#ap_status').html("off");
     } else {
-        $.cookie("auto_play_playlist","true",{path:"/"});
+        set_cookie_secure("auto_play_playlist","true");
         window.location = document.location;
         $('#ap_status').html("on");
     }
@@ -1781,4 +1781,8 @@ function isValidEmail(email) {
         return email;
     }
     return false;
+}
+
+function set_cookie_secure(name, value){
+    document.cookie=name + "=" + value +";secure;path=/;samesite=strict;";
 }

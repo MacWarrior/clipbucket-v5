@@ -301,11 +301,11 @@
 	}
 	$('#comment_box').on('keyup', function() {
 		var comment_data = $('#comment_box').val();
-		$.cookie(cookieToSave, comment_data, { expires : 10, path : "/" });
+        set_cookie_secure(cookieToSave, comment_data);
 	});
 
 	$('#add_comment_button').on("click",function(){
-		$.cookie(cookieToSave, null, { path : "/" });
+        set_cookie_secure(cookieToSave, null);
 	});
 	/*Cookie based comments backup end*/
 

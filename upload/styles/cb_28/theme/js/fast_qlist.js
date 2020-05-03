@@ -8,7 +8,7 @@
 	var notInList = false;
 	function pushToQlist(obj, id) {
 		id = parseInt(id);
-		$.cookie("btn-q-"+id, "yes", { expires : 10 });
+        set_cookie_secure("btn-q-"+id, "yes");
 		currentList = $.cookie("fast_qlist");
 		cleanList = currentList;
 		//console.log(cleanList);
@@ -28,7 +28,7 @@
 			newCookie = "[" + id + "]";
 		}
 
-		$.cookie("fast_qlist", newCookie, { expires : 10 });
+        set_cookie_secure("fast_qlist", newCookie);
 		var vtitle = $(obj).attr("vtitle"),
 		//vtitle = vtitle.split(0,10);
 		thevid = $(obj).attr("v-id"),
@@ -43,7 +43,7 @@
             $('#my_quicklist div:last-child').fadeIn('slow');
 		}
 
-		$.cookie("quick_list_box", "show", { expires : 10 });
+        set_cookie_secure("quick_list_box", "show");
 		$('#qlist_main').show();
 		$('.quicklist_cont').css("display","block");
 	}
@@ -72,13 +72,13 @@
 		$(".cb_quickie[v-id="+vid+"]").removeClass('icon-tick');
 		currentList = $.cookie("fast_qlist");
 		cleaned = currentList.replace(vid, '');
-		$.cookie("fast_qlist", cleaned, { expires : 10 });
+        set_cookie_secure("fast_qlist", cleaned);
 		$(this).closest('.qlist_item').fadeOut('slow');
 	});
 
 	$(document).on("click",".ql_rem",function(e){
 		e.preventDefault();
-		$.cookie("fast_qlist", null, { expires : 10 });
+        set_cookie_secure("fast_qlist", null);
 		$('.qlist_item').fadeOut('slow');
 		$('#qlist_main').fadeOut('slow');
 		$('.cb_quickie').removeClass('icon-tick');

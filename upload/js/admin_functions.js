@@ -43,9 +43,9 @@ function toggle_search(id)
 {
 	$('#'+id).slideToggle();
 	if($.cookie("show_"+id+"_search")=="show")
-		$.cookie("show_"+id+"_search","hide")	
+        set_cookie_secure("show_"+id+"_search","hide")
 	else
-		$.cookie("show_"+id+"_search","show")
+        set_cookie_secure("show_"+id+"_search","show")
 }
 
 
@@ -60,8 +60,8 @@ function toggle_menu()
 		$('#contentcolumn').animate({ 
         marginLeft: "25px",
     	}, 200 ).removeClass('contentcolumn').addClass('contentcolumn0');
-		
-		$.cookie("admin_menu","hide");	
+
+        set_cookie_secure("admin_menu","hide");
 	}else
 	{
 		$('#left_column').animate({ 
@@ -70,9 +70,9 @@ function toggle_menu()
 		
 		$('#contentcolumn').animate({ 
         marginLeft: "248px",
-    	}, 200 ).removeClass('contentcolumn0').addClass('contentcolumn');		
-		
-		$.cookie("admin_menu","show");
+    	}, 200 ).removeClass('contentcolumn0').addClass('contentcolumn');
+
+        set_cookie_secure("admin_menu","show");
 	}
 }
 

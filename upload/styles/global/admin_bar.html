@@ -35,7 +35,7 @@ function showCBadminBarButton(height)
 		   'border' : '1px solid #000',
 		   'font' : 'bold 11px Tahoma',
 		   'color':'#FFF'}).html("Show Menu").insertAfter('#CBadminBar').animate({ 'top':'0px','opacity': 1 },500);
-	$.cookie('CBadminBar','hidden',{expires:1,path:'/'});	   	
+    set_cookie_secure('CBadminBar','hidden');
 }
 
 function showCBadminBar(obj,height)
@@ -45,8 +45,8 @@ function showCBadminBar(obj,height)
 		$('#CBadminBar').slideDown(350);
 		$(obj).remove();
 		var Divoffset = $('#CBadminBar').offset().top;
-		$('html,body').animate({ scrollTop : Divoffset },500);	
-		$.cookie('CBadminBar','shown',{expires:1,path:'/'});	
+		$('html,body').animate({ scrollTop : Divoffset },500);
+        set_cookie_secure('CBadminBar','shown');
 	});
 }
 
