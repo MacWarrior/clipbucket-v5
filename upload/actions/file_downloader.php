@@ -9,7 +9,7 @@
  * @author : Arslan Hassan, Saqib Razzaq
  * @license : Attribution Assurance License -- http://www.opensource.org/licenses/attribution.php
  * @since : 01 July 2009
- * @last_modified: 18th December, 2015 (YouTube Thumbs Qulaity Improved) 
+ * @last_modified: 18th December, 2015 (YouTube Thumbs Quality Improved)
  */
 
 include("../includes/config.inc.php");
