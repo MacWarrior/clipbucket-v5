@@ -58,7 +58,6 @@
 </div>
 
 <br>
-
     <div class="row">
         {$field = $required_fields.gender}
         {$field.class = 'form-control'}
@@ -109,15 +108,18 @@
     </div>
 </form>
 
-
-
-<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<script type="text/javascript "src="/js/jquery-ui-1.10.4.min.js"></script>
 <script>
     $(document).ready(function(){
-        $( "#datecreated" ).datepicker({
+        jQuery('#datecreated').datepicker({
             showOtherMonths: true,
             selectOtherMonths: false,
-            dateFormat:"yy-mm-dd"
+            changeMonth: true,
+            dateFormat:"{get_date_js()}",
+            changeYear: true,
+            yearRange: "-56:+0"
         });
+        var currentDate = new Date();
+        $("#dob").datepicker("setDate", currentDate);
     });
 </script>
