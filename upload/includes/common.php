@@ -331,10 +331,6 @@ define('USER_COMMENT_OWN',$Cbucket->configs['user_comment_own']);
 define('CAT_THUMB_DIR',BASEDIR.'/images/category_thumbs');
 define('CAT_THUMB_URL','/images/category_thumbs');
 
-# TOPIC ICON DIR
-define('TOPIC_ICON_DIR',BASEDIR.'/images/icons/topic_icons');
-define('TOPIC_ICON_URL','/images/icons/topic_icons');
-
 # COLLECTIONS ICON DIR
 define('COLLECT_THUMBS_DIR',BASEDIR.'/images/collection_thumbs');
 define('COLLECT_THUMBS_URL','/images/collection_thumbs');
@@ -372,7 +368,6 @@ $cbphoto->cropping = $row['photo_crop'];
 $cbphoto->position = $row['watermark_placement'];
 
 # Enable youtube videos
-define("YOUTUBE_ENABLED",$row['youtube_enabled']);
 define("EMBED_VDO_WIDTH",$row['embed_player_width']);
 define("EMBED_VDO_HEIGHT",$row['embed_player_height']);
 
@@ -568,7 +563,6 @@ $Smarty->register_function('loadPhotoUploadForm','loadPhotoUploadForm');
 $Smarty->register_function('cbCategories','getSmartyCategoryList');
 $Smarty->register_function('getCbCategories','getSmartyCategoryList');
 $Smarty->register_function('getComments','getSmartyComments');
-$Smarty->register_function('fb_embed_video','fb_embed_video');
 $Smarty->register_function('cbMenu','cbMenu');
 
 $Smarty->register_modifier('SetTime','SetTime');

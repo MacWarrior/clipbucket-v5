@@ -26,8 +26,6 @@ function flashPlayer($param) {
     $width      = $param['width'] ? $param['width'] : config('player_width');
     $param['height'] = $height;
     $param['width'] = $width ;
-    $param['enlarge_button'] = config('enlarge_button');
-    $param['player_logo_url'] = config('player_logo_url');
     //dump($code);
     if(!$param['autoplay']) {
         $param['autoplay'] = config('autoplay_video');
