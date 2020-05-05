@@ -16,9 +16,9 @@
 
     (function(window, videojs) {
         var defaults = {},
-        videoJsResolutionSwitcher,
-        currentResolution = {}, // stores current resolution
-        menuItemsHolder = {}; // stores menuItems
+            videoJsResolutionSwitcher,
+            currentResolution = {}, // stores current resolution
+            menuItemsHolder = {}; // stores menuItems
 
         function setSourcesSanitized(player, sources, label, customSourcePicker) {
             currentResolution = {
@@ -113,7 +113,7 @@
                 this.label.innerHTML = options.initialySelectedLabel;
                 // Sets this.player_, this.options_ and initializes the component
                 MenuButton.call(this, player, options, settings);
-                this.controlText('Quality');
+                this.controlText(lang_quality);
 
                 if(settings.dynamicLabel){
                     this.el().appendChild(label);
@@ -136,15 +136,15 @@
                 for (var key in labels) {
                     if (labels.hasOwnProperty(key)) {
                         menuItems.push(new ResolutionMenuItem(
-                        this.player_,
-                        {
-                            label: key,
-                            src: labels[key],
-                            initialySelected: key === this.options_.initialySelectedLabel,
-                            customSourcePicker: this.options_.customSourcePicker
-                        },
-                        onClickUnselectOthers,
-                        this.label));
+                            this.player_,
+                            {
+                                label: key,
+                                src: labels[key],
+                                initialySelected: key === this.options_.initialySelectedLabel,
+                                customSourcePicker: this.options_.customSourcePicker
+                            },
+                            onClickUnselectOthers,
+                            this.label));
                         // Store menu item for API calls
                         menuItemsHolder[key] = menuItems[menuItems.length - 1];
                     }
@@ -154,22 +154,22 @@
         });
 
         /**
-        * Initialize the plugin.
-        * @param {object} [options] configuration for the plugin
-        */
+         * Initialize the plugin.
+         * @param {object} [options] configuration for the plugin
+         */
         videoJsResolutionSwitcher = function(options) {
             var settings = videojs.mergeOptions(defaults, options),
-            player = this,
-            label = document.createElement('span'),
-            groupedSrc = {};
+                player = this,
+                label = document.createElement('span'),
+                groupedSrc = {};
 
             videojs.dom.addClass(label, 'vjs-resolution-button-label');
 
             /**
-            * Updates player sources or returns current source URL
-            * @param   {Array}  [src] array of sources [{src: '', type: '', label: '', res: ''}]
-            * @returns {Object|String|Array} videojs player object if used as setter or current source URL, object, or array of sources
-            */
+             * Updates player sources or returns current source URL
+             * @param   {Array}  [src] array of sources [{src: '', type: '', label: '', res: ''}]
+             * @returns {Object|String|Array} videojs player object if used as setter or current source URL, object, or array of sources
+             */
             player.updateSrc = function(src){
                 //Return current src if src is not given
                 if(!src){
@@ -194,11 +194,11 @@
             };
 
             /**
-            * Returns current resolution or sets one when label is specified
-            * @param {String}   [label]         label name
-            * @param {Function} [customSourcePicker] custom function to choose source. Takes 3 arguments: player, sources, label. Must return player object.
-            * @returns {Object}   current resolution object {label: '', sources: []} if used as getter or player object if used as setter
-            */
+             * Returns current resolution or sets one when label is specified
+             * @param {String}   [label]         label name
+             * @param {Function} [customSourcePicker] custom function to choose source. Takes 3 arguments: player, sources, label. Must return player object.
+             * @returns {Object}   current resolution object {label: '', sources: []} if used as getter or player object if used as setter
+             */
             player.currentResolution = function(label, customSourcePicker){
                 if(label == null) {
                     return currentResolution;
@@ -210,19 +210,19 @@
             };
 
             /**
-            * Returns grouped sources by label, resolution and type
-            * @returns {Object} grouped sources: { label: { key: [] }, res: { key: [] }, type: { key: [] } }
-            */
+             * Returns grouped sources by label, resolution and type
+             * @returns {Object} grouped sources: { label: { key: [] }, res: { key: [] }, type: { key: [] } }
+             */
             player.getGroupedSrc = function(){
                 return groupedSrc;
             };
 
             /**
-            * Method used for sorting list of sources
-            * @param   {Object} a - source object with res property
-            * @param   {Object} b - source object with res property
-            * @returns {Number} result of comparation
-            */
+             * Method used for sorting list of sources
+             * @param   {Object} a - source object with res property
+             * @param   {Object} b - source object with res property
+             * @returns {Number} result of comparation
+             */
             function compareResolutions(a, b){
                 if(!a.res || !b.res){
                     return 0;
@@ -231,10 +231,10 @@
             }
 
             /**
-            * Group sources by label, resolution and type
-            * @param   {Array}  src Array of sources
-            * @returns {Object} grouped sources: { label: { key: [] }, res: { key: [] }, type: { key: [] } }
-            */
+             * Group sources by label, resolution and type
+             * @param   {Array}  src Array of sources
+             * @returns {Object} grouped sources: { label: { key: [] }, res: { key: [] }, type: { key: [] } }
+             */
             function bucketSources(src){
                 var resolutions = {
                     label: {},
@@ -264,11 +264,11 @@
             }
 
             /**
-            * Choose src if option.default is specified
-            * @param   {Object} groupedSrc {res: { key: [] }}
-            * @param   {Array}  src Array of sources sorted by resolution used to find high and low res
-            * @returns {Object} {res: string, sources: []}
-            */
+             * Choose src if option.default is specified
+             * @param   {Object} groupedSrc {res: { key: [] }}
+             * @param   {Array}  src Array of sources sorted by resolution used to find high and low res
+             * @returns {Object} {res: string, sources: []}
+             */
             function chooseSrc(groupedSrc, src){
                 var selectedRes = settings['default']; // use array access as default is a reserved keyword
                 var selectedLabel = '';

@@ -1,12 +1,15 @@
-.vjs-resolution-button {
-  color: #ccc;
-  font-family: VideoJS;
-}
-
-.vjs-resolution-button:before {
+.vjs-resolution-button .vjs-icon-placeholder:before {
 	content: '\f110';
+	font-family: VideoJS;
+	font-weight: normal;
+	font-style: normal;
 	font-size: 1.8em;
 	line-height: 1.67em;
+}
+
+.vjs-resolution-button .vjs-resolution-button-label {
+	font-size: 1em;
+	line-height: 3em;
 	position: absolute;
 	top: 0;
 	left: 0;

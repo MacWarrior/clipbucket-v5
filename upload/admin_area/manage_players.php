@@ -1,12 +1,4 @@
 <?php
-	/**
-	 * CLipBucket v2 Player Manage
-	 * Author : Arslan
-	 *
-	 * Licensed Under CBLA
-	 * ClipBucket 2007-2009
-	 */
-
 	require_once '../includes/admin_config.php';
 	$userquery->admin_login_check();
 	$pages->page_redir();
@@ -15,56 +7,66 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'Templates And Players', 'url' => '');
-	if($_GET['mode'] == 'show_settings')
-		$breadcrumb[1] = array('title' => 'Player Settings', 'url' => '/admin_area/manage_players.php?mode=show_settings');
-	else
+	if($_GET['mode'] == 'show_settings'){
+		$breadcrumb[1] = array('title' => lang('player_settings'), 'url' => '/admin_area/manage_players.php?mode=show_settings');
+    } else {
 		$breadcrumb[1] = array('title' => 'Players Manager', 'url' => '/admin_area/manage_players.php');
+    }
 
 	//Set Mode
 	assign('mode',$_GET['mode']);
 
-	if(isset($_POST['update']))
-	{
-		$configs = $Cbucket->configs;
-
+	if(isset($_POST['update'])) {
 		$rows = array(
 			'autoplay_video',
 			'buffer_time',
-			'logo_placement',
-			'use_playlist',
-			'youtube_enabled',
-			'enlarge_button',
 			'embed_player_height',
 			'embed_player_width',
 			'autoplay_embed',
-			'pseudostreaming',
-			'pak_license',
 			'pakplayer_contextmsg',
-			'chromecast'
+			'chromecast',
+			'control_bar_logo',
+			'contextual_menu_disabled',
+			'control_bar_logo_url',
+			'player_logo_url',
+            'player_thumbnails'
 		);
 
 		//Checking for logo
-		if(isset($_FILES['logo_file']['name']))
-		{
+		if(isset($_FILES['logo_file']['name'])) {
 			$logo_file = $Upload->upload_website_logo($_FILES['logo_file']);
-			if($logo_file)
+			if($logo_file){
 				$myquery->Set_Website_Details('player_logo_file',$logo_file);
+            }
 		}
 
-		if($_POST['pak_license'] && !file_exists(BASEDIR.'/player/pak_player/pakplayer.unlimited.swf'))
-			$_POST['pak_license'] = "";
+		foreach($rows as $field) {
+		    if($field == 'control_bar_logo_url' ){
+		        if( is_null($_FILES[$field]) || empty($_FILES[$field]['tmp_name']) ){
+                    continue;
+                }
+                if( file_exists(LOGOS_DIR.'/player-logo.png') ){
+                    unlink(LOGOS_DIR.'/player-logo.png');
+                }
+                $_POST['control_bar_logo_url'] = LOGOS_URL.'/player-logo.png';
+                move_uploaded_file($_FILES[$field]['tmp_name'], LOGOS_DIR.'/player-logo.png');
+            }
 
-		foreach($rows as $field)
-		{
 			$value = mysql_clean($_POST[$field]);
 			$myquery->Set_Website_Details($field,$value);
 		}
-		e("Player Settings Have Been Updated",'m');
-
+		e(lang('player_settings_updated'),'m');
 	}
 
-	if($_GET['set'])
-	{
+    if(isset( $_POST['reset_control_bar_logo_url']) ){
+        if( file_exists(LOGOS_DIR.'/player-logo.png') ){
+            unlink(LOGOS_DIR.'/player-logo.png');
+        }
+        $myquery->Set_Website_Details('control_bar_logo_url','/images/icons/player-logo.png');
+        e(lang('player_logo_reset'),'m');
+    }
+
+	if($_GET['set']) {
 		$cbplayer->set_player($_GET);
 	}
 

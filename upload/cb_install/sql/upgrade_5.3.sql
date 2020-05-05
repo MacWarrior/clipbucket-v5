@@ -5,7 +5,11 @@ INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 	('stay_mp4', 'no'),
 	('allow_conversion_1_percent', 'no'),
 	('force_8bits', '1'),
-	('bits_color_warning', '1');
+	('bits_color_warning', '1'),
+	('control_bar_logo', 'yes'),
+	('contextual_menu_disabled', ''),
+	('control_bar_logo_url', '/images/icons/player-logo.png'),
+	('player_thumbnails', 'yes');
 
 ALTER TABLE `{tbl_prefix}user_levels_permissions` MODIFY COLUMN `plugins_perms` text NOT NULL DEFAULT '';
 ALTER TABLE `{tbl_prefix}users`

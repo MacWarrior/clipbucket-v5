@@ -1,17 +1,11 @@
 <?php
 /*
-	Player Name: CB5.X VideoJS
-	Description: Official CB 5.X VideoJS 7.2.4 Player
-	Author: Arslan Hassan, MacWarrior
-	ClipBucket Version: 5.2
+	Player Name: CB5.3 VideoJS
+	Description: Non-Official CB5.3 VideoJS 7.8.1 Player
+	Author: MacWarrior
+	ClipBucket Version: 5.3
 	Website: https://github.com/MacWarrior/clipbucket
-
- 
- * @Author : Arslan Hassan, MacWarrior
- * @Script : ClipBucket v2
- * @License : Attribution Assurance License -- http://www.opensource.org/licenses/attribution.php
- * @Since : September 15 2009
- 
+    Released: 2020-05-05
  */
 
 $cb_video_js = false;
@@ -46,7 +40,6 @@ if (!function_exists('cb_video_js'))
         assign('width',$in['width']);
 		assign('player_config',$in);
 		assign('vdata',$vdetails);
-		assign('cb_logo',cb_logo());
 		#assign('video_files',$video_play);
 		
 		Template(CB_VJS_PLAYER_DIR.'/cb_video_js.html',false);
@@ -54,17 +47,7 @@ if (!function_exists('cb_video_js'))
 	}
 
 	/*
-	* This Function is written to base64 encode file fo cb logo
-	*/
-	function cb_logo()
-	{
-		$l_details = BASEDIR.'/images/icons/country/hp-cb.png';
-		$l_convert = base64_encode(file_get_contents($l_details));
-		return $l_convert;
-	}
-
-	/*
-	* This Function is written to get qulaity of current file
+	* This Function is written to get quality of current file
 	*/
 	function get_cbvjs_quality($src){
 		

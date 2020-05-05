@@ -149,7 +149,9 @@
       // `left` applies to the mouse position relative to the player so we need
       // to remove the progress control's left offset to know the mouse position
       // relative to the progress control
-      mouseTime = Math.floor((left - progressControl.el().offsetLeft) / progressControl.width() * duration);
+      var el = progressControl.el();
+      var boxX = el.getBoundingClientRect().left + (window.pageXOffset || document.body.scrollLeft) - (document.documentElement.clientLeft || document.body.clientLeft || 0);
+      mouseTime = Math.floor(Math.max(0, Math.min(1, (pageX - boxX) / el.offsetWidth)) * duration);
       for (time in settings) {
         if (mouseTime > time) {
           active = Math.max(active, time);

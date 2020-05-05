@@ -121,7 +121,6 @@
 	 */
     function get_thumb($vdetails,$num='default',$multi=false,$count=false,$return_full_path=true,$return_big=true,$size=false)
 	{
-        global $Cbucket;
         $num = $num ? $num : 'default';
         #checking what kind of input we have
         if(is_array($vdetails))
@@ -134,19 +133,18 @@
                         return $dthumb[0] = default_thumb();
 					}
                     return default_thumb();
+                }
+                if(!empty($vdetails['videoid'])) {
+                    $vid = $vdetails['videoid'];
+                } else if(!empty($vdetails['vid'])) {
+                    $vid = $vdetails['vid'];
+                } else if(!empty($vdetails['videokey'])) {
+                    $vid = $vdetails['videokey'];
                 } else {
-                    if(!empty($vdetails['videoid'])) {
-                        $vid = $vdetails['videoid'];
-					} else if(!empty($vdetails['vid'])) {
-                        $vid = $vdetails['vid'];
-					} else if(!empty($vdetails['videokey'])) {
-                        $vid = $vdetails['videokey'];
-					} else {
-                        if($multi){
-                            return $dthumb[0] = default_thumb();
-						}
-                        return default_thumb();
+                    if($multi){
+                        return $dthumb[0] = default_thumb();
                     }
+                    return default_thumb();
                 }
             }
         } else {
@@ -164,40 +162,6 @@
         if(!empty($vid)){
             $vdetails = get_video_details($vid);
 		}
-
-        if(empty($vdetails['title'])) {
-            if($multi){
-                return default_thumb();
-			}
-            return default_thumb();
-        }
-
-        #Checking if there is any custom function for
-        if(count($Cbucket->custom_get_thumb_funcs) > 0) {
-            foreach($Cbucket->custom_get_thumb_funcs as $funcs) {
-                //Merging inputs
-                $in_array = array(
-                    'num' => $num,
-                    'multi' => $multi,
-                    'count' => $count,
-                    'return_full_path' => $return_full_path,
-                    'return_big' => $return_big,
-                    'size' => $size
-                );
-
-                if(!empty($vdetails['files_thumbs_path']) && $funcs=='server_thumb') {
-                    $funcs = "ms_server_thumb";
-                }
-                
-                if(function_exists($funcs)) {
-                    $func_returned = $funcs($vdetails,$in_array);
-                    
-                    if($func_returned){
-                        return $func_returned;
-					}
-                }
-            }
-        }
 
         #get all possible thumbs of video
         $thumbDir = (isset($vdetails['file_directory']) && $vdetails['file_directory']) ? $vdetails['file_directory'] : "";
@@ -219,7 +183,12 @@
 			return THUMBS_URL.$filepath;
 		}
 
-        $vid_thumbs = glob(THUMBS_DIR."/" .$file_dir.$vdetails['file_name']."*");
+        $glob = THUMBS_DIR."/" .$file_dir.$vdetails['file_name'].'*';
+        if( $size ){
+            $glob .= $size.'*';
+        }
+
+        $vid_thumbs = glob($glob);
         #replace Dir with URL
         if(is_array($vid_thumbs)) {
             foreach($vid_thumbs as $thumb){
@@ -310,6 +279,28 @@
 			}
 			return $thumbs[0];
 		}
+    }
+
+    function get_player_thumbs_json($data){
+        $thumbs = get_thumb($data,1,TRUE,FALSE,TRUE,FALSE,'168x105');
+        $duration = $data['duration'];
+        $nb_thumbs = count($thumbs);
+        $division = $duration / $nb_thumbs;
+        $json = '';
+        $count = 0;
+        foreach($thumbs as $url){
+            $time = (int)($count*$division);
+            if( $json != '' ){
+                $json .= ',';
+            }
+            $json .= $time.': {
+                src: \''.$url.'\'
+            }';
+
+            $count++;
+        }
+
+        echo '{'.$json.'}';
     }
 
 	/**

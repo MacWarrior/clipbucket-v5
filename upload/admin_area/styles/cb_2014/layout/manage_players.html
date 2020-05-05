@@ -1,181 +1,166 @@
 {if $mode =='show_settings'}
 	<div class="heading">
-	  <h2>ClipBucket Website Player Settings</h2>
+	  <h2>{lang code='player_settings'}</h2>
 	</div>
 
 	<form action="manage_players.php?mode=show_settings" method="post" enctype="multipart/form-data" name="player_settings">
-		<div class="row">
-			<div class="col-md-4">
-				<label for="autoplay_video">
-					Autoplay<br>
-					<small>if yes, all videos will be played automatically</small>
-				</label>
-				<select class="form-control" name="autoplay_video" id="autoplay_video">
-					<option value="yes" {if $row.autoplay_video=='yes'}selected{/if}>{lang code='yes'}</option>
-					<option value="no" {if $row.autoplay_video=='no'}selected{/if}>{lang code='no'}</option>
-				</select>
-			</div>
-			<div class="col-md-4">
-				<label for="use_playlist">
-					Use Playlist<br>
-					<small>By turning this on, player will turn on playlists feature in player (if available)</small>
-				</label>
-				<select class="form-control" name="use_playlist" id="use_playlist">
-					<option value="yes" {if $row.autoplay_video=='yes'}selected{/if}>{lang code='yes'}</option>
-					<option value="no" {if $row.use_playlist=='no'}selected{/if}}>{lang code='no'}</option>
-				</select>
-			</div>
-			<div class="col-md-4">
-				<label for="embed_player_width">
-					Embed Player Width<br>
-					<small>Enter embedable player width in pixels</small>
-				</label>
-				<input class="form-control" name="embed_player_width" type="text" id="embed_player_width" value="{$row.embed_player_width}" />
-			</div>
-		</div>
-		<br>
 
 		<div class="row">
+			{if config('video_embed') }
 			<div class="col-md-4">
-				<label for="buffer_time">Buffer time</label>
-				<input class="form-control" type="text" name="buffer_time" id="buffer_time" value="{$row.buffer_time}" />
+				<fieldset>
+					<legend>Embed player</legend>
+					<div class="row">
+						<div class="col-md-8">
+							<label for="embed_player_width">
+								Embed Player default Width<br>
+								<small>Embedable player default width in pixels</small>
+							</label>
+						</div>
+						<div class="col-md-4">
+							<input class="form-control" name="embed_player_width" type="text" id="embed_player_width" value="{$row.embed_player_width}" />
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-8">
+							<label for="embed_player_height">
+								Embed Player default Height<br>
+								<small>Embedable player default height in pixels</small>
+							</label>
+						</div>
+						<div class="col-md-4">
+							<input class="form-control" name="embed_player_height" type="text" id="embed_player_height" value="{$row.embed_player_height}"/>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-8">
+							<label for="autoplay_embed">
+								Autoplay Embed<br>
+								<small>Autoplay embeded video by default</small>
+							</label>
+						</div>
+						<div class="col-md-4">
+							<input value="yes" name="autoplay_embed" id="autoplay_embed" {if $row.autoplay_embed=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+							<span class="lbl"></span>
+						</div>
+					</div>
+				</fieldset>
 			</div>
+			{/if}
+
 			<div class="col-md-4">
-				<label for="logo_placement">
-					Logo Placement<br>
-					<small>Placement of logo, top, left, right or bottom</small>
-				</label>
-				<select class="form-control" name="logo_placement" id="logo_placement">
-					  <option value="tl" {if $row.logo_placement=='tl'}selected{/if}>Top Left</option>
-					  <option value="tr" {if $row.logo_placement=='tr'}selected{/if}>Top Right</option>
-					  <option value="br" {if $row.logo_placement=='br'}selected{/if}>Bottom Right</option>
-					  <option value="bl" {if $row.logo_placement=='bl'}selected{/if}>Bottom Left</option>
-				</select>
+				<fieldset>
+					<legend>Controls bar logo</legend>
+					<div class="row">
+						<div class="col-md-4">
+							<label for="control_bar_logo">
+								Enable Controls bar logo<br>
+								<small>Add a logo in the controls bar</small>
+							</label>
+						</div>
+						<div class="col-md-8">
+							<input value="yes" name="control_bar_logo" id="control_bar_logo" {if $row.control_bar_logo=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+							<span class="lbl"></span>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-4">
+							<label for="control_bar_logo_url">
+								Controls bar logo<br>
+								<small>Maximum 40x30pxl</small>
+							</label>
+						</div>
+						<div class="col-md-8">
+							<input type="file" accept='image/*' name="control_bar_logo_url" id="control_bar_logo_url" style="display:inline-block;" {if $row.control_bar_logo!='yes'}disabled{/if}/>
+							<div style="display:inline-block;width:40px;height:30px;background-color:rgba(43, 51, 63, 0.7);background-image:url({$row.control_bar_logo_url});background-repeat:no-repeat;background-position:center;vertical-align:middle;">
+							</div>
+							<input type="submit" name="reset_control_bar_logo_url" value="Reset" {if $row.control_bar_logo!='yes'}disabled{/if}/>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-4">
+							<label for="player_logo_url">
+								Controls bar logo URL<br>
+								<small>Will be opened in a new tab</small>
+							</label>
+						</div>
+						<div class="col-md-8">
+							<input class="form-control" name="player_logo_url" type="text" id="player_logo_url" value="{$row.player_logo_url}" {if $row.control_bar_logo!='yes'}disabled{/if}/>
+						</div>
+					</div>
+				</fieldset>
 			</div>
+
 			<div class="col-md-4">
-				<label for="logo_padding">
-					Logo padding<br>
-					<small>Padding logo,top,left,right or bottom</small>
-				</label>
-				<input class="form-control" type="text" id="logo_padding" name="logo_padding" value="{$row.logo_padding}"/>
+				<fieldset>
+					<legend>Other options</legend>
+					<div class="row">
+						<div class="col-md-8">
+							<label for="autoplay_video">
+								Autoplay<br>
+								<small>if yes, all videos will be played automatically</small>
+							</label>
+						</div>
+						<div class="col-md-4">
+							<input value="yes" name="autoplay_video" id="autoplay_video" {if $row.autoplay_video=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+							<span class="lbl"></span>
+						</div>
+					</div>
+
+					<hr/>
+					<div class="row">
+						<div class="col-md-8">
+							<label for="chromecast">
+								Enable Chromecast support<br>
+								<small>Allow users to stream videos on Chromecast</small>
+							</label>
+						</div>
+						<div class="col-md-4">
+							<input value="yes" name="chromecast" id="chromecast" {if $row.chromecast=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+							<span class="lbl"></span>
+						</div>
+					</div>
+
+					<hr/>
+					<div class="row">
+						<div class="col-md-8">
+							<label for="contextual_menu_disabled">
+								Disable contextual menu<br>
+								<small>Disable right click on video</small>
+							</label>
+						</div>
+						<div class="col-md-4">
+							<input value="yes" name="contextual_menu_disabled" id="contextual_menu_disabled" {if $row.contextual_menu_disabled=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+							<span class="lbl"></span>
+						</div>
+					</div>
+
+					<hr/>
+					<div class="row">
+						<div class="col-md-8">
+							<label for="player_thumbnails">
+								Thumbnails<br>
+								<small>Enable player thumbnails</small>
+							</label>
+						</div>
+						<div class="col-md-4">
+							<input value="yes" name="player_thumbnails" id="player_thumbnails" {if $row.player_thumbnails=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+							<span class="lbl"></span>
+						</div>
+					</div>
+				</fieldset>
 			</div>
 		</div>
-		<br>
 
-		<div class="row">
-			<div class="col-md-4">
-				<label for="textfield">
-					Embed Player Height<br>
-					<small>Enter embedable player width in pixels</small>
-				</label>
-				<input class="form-control" name="embed_player_height" type="text" id="textfield" value="{$row.embed_player_height}"/>
-			</div>
-			<div class="col-md-4">
-				<label for="autoplay_embed">
-					Autoplay Embed<br>
-					<small>Autoplay embeded video by default</small>
-				</label>
-				<select class="form-control" name="autoplay_embed" id="autoplay_embed">
-					<option value="yes" {if $row.autoplay_embed=='yes'}selected{/if}>{lang code='yes'}</option>
-					<option value="no" {if $row.autoplay_embed=='no'}selected{/if}>{lang code='no'}</option>
-				</select>
-			</div>
-			<div class="col-md-4">
-				<label for="enlarge_button">
-					Enlarge/small Button<br>
-					<small>this will let you enable enlarge/small button for CB_html5_player</small>
-				</label>
-				<select class="form-control" name="enlarge_button" id="enlarge_button">
-					<option value="yes" {if $row.enlarge_button=='yes'}selected{/if}>{lang code='yes'}</option>
-					<option value="no" {if $row.enlarge_button=='no'}selected{/if}>{lang code='no'}</option>
-				</select>
-			</div>
-		</div>
-		<br>
-
-		<div class="row">
-			<div class="col-md-4">
-				<label for="pseudostreaming">
-					Use PseudoStreaming<br>
-					<small>Let users to play video from anywhere, requires h264 streaming module from webserver</small>
-				</label>
-				<select class="form-control" name="pseudostreaming" id="pseudostreaming">
-					<option value="yes" {if $row.pseudostreaming=='yes'}selected{/if}>{lang code='yes'}</option>
-					<option value="no" {if $row.pseudostreaming=='no'}selected{/if}>{lang code='no'}</option>
-				</select>
-			</div>
-			<div class="col-md-4">
-				<label for="chromecast">
-					Enable Chromecast support<br>
-					<small>Allow users to stream videos on Chromecast</small>
-				</label>
-				<select class="form-control" name="chromecast" id="chromecast">
-					<option value="yes" {if $row.chromecast=='yes'}selected{/if}>{lang code='yes'}</option>
-					<option value="no" {if $row.chromecast=='no'}selected{/if}>{lang code='no'}</option>
-				</select>
-			</div>
-		</div>
-		<br>
-
+		<br/>
 		<div class="button">
-			<input type="submit" class="btn btn-primary" value="Update Player Settings"  name="update" id="update_player_settings">
+			<input type="submit" class="btn btn-primary" value="Update Player Settings" name="update" style="display:block;margin:auto;">
 		</div>
 	</form>
-	<br>
-
-	{literal}
-	<script type="text/javascript">
-		function update_player_size(width,height,normal_player,channel_player)
-		{
-			var page = '/actions/update_configs.php';
-			$.post(page,
-			{
-				width : width,
-				height : height,
-				update_player_size : normal_player,
-				update_channel_player_size:channel_player
-			},
-			function(data)
-			{
-				if(!data)
-					alert("No data");
-				else
-					$("#msg_box").html('<div style="width:300px; padding:5px; text-align:center; background-color:#0099cc; border-radius:5px; -moz-border-radius:5px; color:#fff">'+data+'</div>');
-			},'text');
-		}
-
-		$(function(){
-			$("#resizable").resizable({
-				maxHeight: 800,
-				maxWidth: 800,
-				minHeight: 100,
-				minWidth: 100,
-				grid: 10,
-				resize:function(event,ui){$("#width").val(ui.size.width);$("#height").val(ui.size.height);},
-				stop:function(event,ui){update_player_size(ui.size.width,ui.size.height,'yes','')}
-			});
-
-			$("#width").change(function () {$('#resizable').css("width",this.value+'px') ; update_player_size(this.value,$("#height").val(),'yes','') });
-			$("#height").change(function () {$('#resizable').css("height",this.value+'px');  update_player_size($("#width").val(),this.value,'yes','')  });
-		});
-
-
-		$(function(){
-			$("#resizable-channel").resizable({
-				maxHeight: 800,
-				maxWidth: 800,
-				minHeight: 100,
-				minWidth: 100,
-				grid: 10,
-				resize:function(event,ui){$("#channel_width").val(ui.size.width);$("#channel_height").val(ui.size.height);},
-				stop:function(event,ui){update_player_size(ui.size.width,ui.size.height,'','yes')}
-			});
-
-			$("#channel_width").change(function () {$('#resizable-channel').css("width",this.value+'px') ; update_player_size(this.value,$("#channel_height").val(),'','yes') });
-			$("#channel_height").change(function () {$('#resizable-channel').css("height",this.value+'px');  update_player_size($("#channel_width").val(),this.value,'','yes')  });
-		});
-	</script>
-	{/literal}
 
 {else}
 	<div class="heading">

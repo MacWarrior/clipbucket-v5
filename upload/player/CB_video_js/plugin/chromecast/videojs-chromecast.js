@@ -400,18 +400,18 @@ var Chromecast = (function (_Tech) {
     function Chromecast(options, ready) {
         var _this = this;
 
-        _classCallCheck(this, Chromecast);
+        _classCallCheck(_this, Chromecast);
 
-        _get(Object.getPrototypeOf(Chromecast.prototype), 'constructor', this).call(this, options, ready);
-        this.apiMedia = this.options_.source.apiMedia;
-        this.apiSession = this.options_.source.apiSession;
-        this.receiver = this.apiSession.receiver.friendlyName;
+        _get(Object.getPrototypeOf(Chromecast.prototype), 'constructor', _this).call(_this, options, ready);
+        _this.apiMedia = _this.options_.source.apiMedia;
+        _this.apiSession = _this.options_.source.apiSession;
+        _this.receiver = _this.apiSession.receiver.friendlyName;
 
-        var mediaStatusUpdateHandler = this.onMediaStatusUpdate.bind(this);
-        var sessionUpdateHanlder = this.onSessionUpdate.bind(this);
+        var mediaStatusUpdateHandler = _this.onMediaStatusUpdate.bind(_this);
+        var sessionUpdateHanlder = _this.onSessionUpdate.bind(_this);
 
-        this.apiMedia.addUpdateListener(mediaStatusUpdateHandler);
-        this.apiSession.addUpdateListener(sessionUpdateHanlder);
+        _this.apiMedia.addUpdateListener(mediaStatusUpdateHandler);
+        _this.apiSession.addUpdateListener(sessionUpdateHanlder);
 
         this.on('dispose', function () {
             _this.apiMedia.removeUpdateListener(mediaStatusUpdateHandler);
@@ -420,7 +420,7 @@ var Chromecast = (function (_Tech) {
             _this.onSessionUpdate(false);
         });
 
-        var tracks = this.textTracks();
+        var tracks = _this.textTracks();
         if (tracks) {
             (function () {
                 var changeHandler = _this.handleTextTracksChange.bind(_this);
@@ -435,7 +435,7 @@ var Chromecast = (function (_Tech) {
         }
 
         try {
-            tracks = this.audioTracks();
+            tracks = _this.audioTracks();
             if (tracks) {
                 (function () {
                     var changeHandler = _this.handleAudioTracksChange.bind(_this);
@@ -451,7 +451,7 @@ var Chromecast = (function (_Tech) {
         }
 
         try {
-            tracks = this.videoTracks();
+            tracks = _this.videoTracks();
             if (tracks) {
                 (function () {
                     var changeHandler = _this.handleVideoTracksChange.bind(_this);
@@ -466,8 +466,8 @@ var Chromecast = (function (_Tech) {
             _videoJs2['default'].log('get player videoTracks fail' + e);
         }
 
-        this.update();
-        this.triggerReady();
+        _this.update();
+        _this.triggerReady();
     }
 
     _createClass(Chromecast, [{

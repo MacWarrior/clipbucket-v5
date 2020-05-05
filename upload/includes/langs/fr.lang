@@ -1556,7 +1556,6 @@
 	"mail_not_send" : "Email non envoyé à <strong>%s</strong>",
 	"mail_send" : "Email envoyé à <strong>%s</strong>",
 	"title" : "Titre",
-	"play_video" : "Lancer la vidéo",
 	"show_comments": "Afficher les commentaires",
 	"hide_comments": "Masquer les commentaires",
 	"description": "Description",
@@ -1585,12 +1584,11 @@
 	"castable":"Castable",
 	"non_castable":"Non-Castable",
 	"videos_manager":"Gestionnaire de Vidéos",
-	"fullscreen":"Afficher en plein écran",
-	"non_fullscreen":"Quitter le plein écran",
-	"pause_video":"Pause",
-	"mute_video":"Couper le son",
-	"unmute_video":"Réactiver le son",
 	"update_bits_color":"Mettre à jour les bits couleurs",
 	"bits_color":"bits couleurs",
-	"bits_color_compatibility":"Le format de la vidéo la rend incompatible avec certains navigateurs tels que Firefox, Safari, ..."
+	"bits_color_compatibility":"Le format de la vidéo la rend incompatible avec certains navigateurs tels que Firefox, Safari, ...",
+	"player_logo_reset":"Le logo du lecteur a été réinitialisé",
+	"player_settings_updated":"Les paramètres du lecteur ont été mis à jours",
+	"player_settings":"Paramètres du lecteur",
+	"quality":"Qualité"
 }

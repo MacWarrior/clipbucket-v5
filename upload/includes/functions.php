@@ -1706,6 +1706,11 @@
 		return $phrase;
 	}
 
+	function get_current_language(){
+        global $lang_obj;
+	    return $lang_obj->get_default_language()['language_code'];
+    }
+
 	/**
 	 * Fetch lang value from smarty using lang code
 	 *
@@ -3980,7 +3985,7 @@
 	 *
 	 * @action : database updation
 	 */
-	function updateObjectStats($type='favorite',$object='video',$id,$op='+')
+	function updateObjectStats($type,$object,$id,$op='+')
 	{
 		global $db;
 		switch($type) {

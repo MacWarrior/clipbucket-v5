@@ -664,7 +664,7 @@ body.vjs-full-window {
   max-height: 25em;
 }
 
-.vjs-workinghover .vjs-menu-button-popup:hover .vjs-menu,
+.vjs-workinghover .vjs-menu-button-popup.vjs-hover .vjs-menu,
 .vjs-menu-button-popup .vjs-menu.vjs-lock-showing {
   display: block;
 }
@@ -996,21 +996,23 @@ body.vjs-full-window {
 .video-js .vjs-volume-panel {
   transition: width 1s;
 }
-.video-js .vjs-volume-panel:hover .vjs-volume-control, .video-js .vjs-volume-panel:active .vjs-volume-control, .video-js .vjs-volume-panel:focus .vjs-volume-control, .video-js .vjs-volume-panel .vjs-volume-control:hover, .video-js .vjs-volume-panel .vjs-volume-control:active, .video-js .vjs-volume-panel .vjs-mute-control:hover ~ .vjs-volume-control, .video-js .vjs-volume-panel .vjs-volume-control.vjs-slider-active {
+.video-js .vjs-volume-panel.vjs-hover .vjs-volume-control, .video-js .vjs-volume-panel:active .vjs-volume-control, .video-js .vjs-volume-panel:focus .vjs-volume-control, .video-js .vjs-volume-panel .vjs-volume-control:active, .video-js .vjs-volume-panel.vjs-hover .vjs-mute-control ~ .vjs-volume-control, .video-js .vjs-volume-panel .vjs-volume-control.vjs-slider-active {
   visibility: visible;
   opacity: 1;
   position: relative;
   transition: visibility 0.1s, opacity 0.1s, height 0.1s, width 0.1s, left 0s, top 0s;
 }
-.video-js .vjs-volume-panel:hover .vjs-volume-control.vjs-volume-horizontal, .video-js .vjs-volume-panel:active .vjs-volume-control.vjs-volume-horizontal, .video-js .vjs-volume-panel:focus .vjs-volume-control.vjs-volume-horizontal, .video-js .vjs-volume-panel .vjs-volume-control:hover.vjs-volume-horizontal, .video-js .vjs-volume-panel .vjs-volume-control:active.vjs-volume-horizontal, .video-js .vjs-volume-panel .vjs-mute-control:hover ~ .vjs-volume-control.vjs-volume-horizontal, .video-js .vjs-volume-panel .vjs-volume-control.vjs-slider-active.vjs-volume-horizontal {
+.video-js .vjs-volume-panel.vjs-hover .vjs-volume-control.vjs-volume-horizontal, .video-js .vjs-volume-panel:active .vjs-volume-control.vjs-volume-horizontal, .video-js .vjs-volume-panel:focus .vjs-volume-control.vjs-volume-horizontal, .video-js .vjs-volume-panel .vjs-volume-control:active.vjs-volume-horizontal, .video-js .vjs-volume-panel.vjs-hover .vjs-mute-control ~ .vjs-volume-control.vjs-volume-horizontal, .video-js .vjs-volume-panel .vjs-volume-control.vjs-slider-active.vjs-volume-horizontal {
   width: 5em;
   height: 3em;
+  margin-right: 0;
 }
-.video-js .vjs-volume-panel:hover .vjs-volume-control.vjs-volume-vertical, .video-js .vjs-volume-panel:active .vjs-volume-control.vjs-volume-vertical, .video-js .vjs-volume-panel:focus .vjs-volume-control.vjs-volume-vertical, .video-js .vjs-volume-panel .vjs-volume-control:hover.vjs-volume-vertical, .video-js .vjs-volume-panel .vjs-volume-control:active.vjs-volume-vertical, .video-js .vjs-volume-panel .vjs-mute-control:hover ~ .vjs-volume-control.vjs-volume-vertical, .video-js .vjs-volume-panel .vjs-volume-control.vjs-slider-active.vjs-volume-vertical {
+.video-js .vjs-volume-panel.vjs-hover .vjs-volume-control.vjs-volume-vertical, .video-js .vjs-volume-panel:active .vjs-volume-control.vjs-volume-vertical, .video-js .vjs-volume-panel:focus .vjs-volume-control.vjs-volume-vertical, .video-js .vjs-volume-panel .vjs-volume-control:active.vjs-volume-vertical, .video-js .vjs-volume-panel.vjs-hover .vjs-mute-control ~ .vjs-volume-control.vjs-volume-vertical, .video-js .vjs-volume-panel .vjs-volume-control.vjs-slider-active.vjs-volume-vertical {
   left: -3.5em;
+  transition: left 0s;
 }
-.video-js .vjs-volume-panel.vjs-volume-panel-horizontal:hover, .video-js .vjs-volume-panel.vjs-volume-panel-horizontal:active, .video-js .vjs-volume-panel.vjs-volume-panel-horizontal.vjs-slider-active {
-  width: 9em;
+.video-js .vjs-volume-panel.vjs-volume-panel-horizontal.vjs-hover, .video-js .vjs-volume-panel.vjs-volume-panel-horizontal:active, .video-js .vjs-volume-panel.vjs-volume-panel-horizontal.vjs-slider-active {
+  width: 10em;
   transition: width 0.1s;
 }
 .video-js .vjs-volume-panel.vjs-volume-panel-horizontal.vjs-mute-toggle-only {
@@ -1658,102 +1660,4 @@ video::-webkit-media-text-track-display {
 .video-js .vjs-menu *:focus:not(:focus-visible) {
   outline: none;
   background: none;
-}
-
-/* CUSTOM CSS */
-.video-js .vjs-big-play-button .vjs-icon-placeholder{
-	width: 3em;
-	height: 1.5em;
-	position: absolute;
-	border-radius: 0.3em;
-	border: 0.06666em solid rgb(255, 255, 255);
-	left: calc(50% - 1.5em);
-	top: calc(50% - 0.75em);
-}
-
-.video-js .vjs-big-play-button {
-	top: 0 !important;
-	left: 0 !important;
-	height: 100% !important;
-	width: 100% !important;
-	border: none !important;
-}
-
-.vjs-cb-header-caption {
-	position: absolute;
-	display: none;
-	top: 0;
-	left: 0;
-	z-index: 2;
-	width: 100%;
-	background-color: rgba(0, 0, 0, 0.5);
-	color: #fff;
-	padding: 8px 10px
-}
-
-.vjs-cb-header-caption .captionBlock {
-	display: table;
-	width: 100%;
-	table-layout: fixed
-}
-
-.vjs-cb-header-caption .captionBlock .col {
-	display: table-cell;
-	vertical-align: middle
-}
-
-.vjs-cb-header-caption .captionBlock .vidTitle {
-	width: 70%
-}
-
-.vjs-cb-header-caption .captionBlock a {
-	font-size: 1.4em;
-	margin: 0;
-	line-height: normal;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	color: #fff;
-	text-decoration: none
-}
-
-.vjs-cb-header-caption .captionBlock .uploaderName {
-	float: right;
-	font-size: 1.4em;
-	font-weight: 400;
-	text-align: right
-}
-
-/* CUSTOMIZATION */
-
-.vjs-has-started .vjs-cb-header-caption {
-	display: flex;
-	visibility: visible;
-	opacity: 1;
-	transition: visibility 0.1s, opacity 0.1s;
-}
-
-.vjs-has-started.vjs-user-inactive.vjs-playing .vjs-cb-header-caption {
-	visibility: visible;
-	opacity: 0;
-	transition: visibility 1s, opacity 1s;
-}
-
-.vjs-controls-disabled .vjs-cb-header-caption,
-.vjs-using-native-controls .vjs-cb-header-caption,
-.vjs-error .vjs-cb-header-caption {
-	display: none !important;
-}
-
-.vjs-audio.vjs-has-started.vjs-user-inactive.vjs-playing .vjs-cb-header-caption {
-	opacity: 1;
-	visibility: visible;
-}
-
-.vjs-has-started.vjs-no-flex .vjs-cb-header-caption {
-	display: table;
-}
-
-.video-js .vjs-big-play-button {
-	border-radius: initial !important;
 }
