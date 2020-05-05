@@ -93,9 +93,8 @@
 			'email_verification',
 			'enable_groups',
 
-			'ffmpegpath'	,
+			'ffmpegpath',
 			'ffmpeg_type',
-			'facebook_embed',
 
 			'ffprobe_path',
 			'media_info',

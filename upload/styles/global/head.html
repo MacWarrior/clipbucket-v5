@@ -9,7 +9,6 @@
 	var autoPlayEmbed 		=	'{$Cbucket->configs.autoplay_embed}';
 	var embed_type 			=	'{$Cbucket->configs.embed_type}';
 
-	{literal}
 	function updateEmbed(width,height,autoplay)
 	{
 		$('#embed_code').val( $('#embed_code').val().replace(/width=\"([0-9]+)\"/g,'width="'+width+'"') );
@@ -20,19 +19,15 @@
 
 	function switchEmbedCode(type)
 	{
-		if(embed_type==type)
+		if(embed_type==type){
 			return false;
-		else
-		{
-			embed_type = type;
+        }
+		embed_type = type;
 
-			var alt_embed =$('#alternate_embed_code').val();
-			$('#alternate_embed_code').val($('#embed_code').val());
-			$('#embed_code').val(alt_embed);
-
-		}
+		var alt_embed =$('#alternate_embed_code').val();
+		$('#alternate_embed_code').val($('#embed_code').val());
+		$('#embed_code').val(alt_embed);
 	}
-	{/literal}
 </script>
 
 <!-- Including JS Files-->
@@ -81,20 +76,21 @@ var uploadScriptPath = '{$uploaderDetails.uploadScriptPath}';
 
 var time_stamp = {time()};
 
-{literal}
-
-  function show_error(msg,ID,fade)
-  { $('#file_uploads'+ID+' .percentage')
-  	.after('<div class=\"uploadErrorDiv\"><div class=\"uploadErrorMsg\">'+msg+'<\/div><\/div>'); 
-	if(fade){$('.uploadSuccessDiv').delay(3000).fadeOut('slow');}
-  }
+function show_error(msg,ID,fade)
+{
+      $('#file_uploads'+ID+' .percentage').after('<div class=\"uploadErrorDiv\"><div class=\"uploadErrorMsg\">'+msg+'<\/div><\/div>');
+		if(fade){
+		    $('.uploadSuccessDiv').delay(3000).fadeOut('slow');
+		}
+}
   
-  function show_message(msg,ID,fade)
-  { $('#uploadForm'+ID)
-  	.prepend('<div class=\"uploadSuccessDiv\"><div class=\"uploadSuccessMsg\">'+msg+'<\/div><\/div>');
-  if(fade){$('.uploadSuccessDiv').delay(3000).fadeOut('slow');}
-  }
-
+function show_message(msg,ID,fade)
+{
+	$('#uploadForm'+ID).prepend('<div class=\"uploadSuccessDiv\"><div class=\"uploadSuccessMsg\">'+msg+'<\/div><\/div>');
+	if(fade){
+	    $('.uploadSuccessDiv').delay(3000).fadeOut('slow');
+	}
+}
 
 function doUpdateVideo(formId,ID)
 {
@@ -107,9 +103,7 @@ function doUpdateVideo(formId,ID)
 	.attr("value",lang.savingData)
 	.attr("onClick","return false;");
 	
-	$.post(
-	'/actions/file_uploader.php',formObjectData,function(data)
-	{
+	$.post('/actions/file_uploader.php',formObjectData,function(data) {
 		if(data.msg)
 		show_message(data.msg,ID,true);
 		if(data.error)
@@ -119,12 +113,9 @@ function doUpdateVideo(formId,ID)
 		.removeAttr("disabled")
 		.attr("value",lang.saveData)
 		.attr("onClick","doUpdateVideo('#uploadForm"+ID+"','"+ID+"')")
-	},"json"
-	)
+	},"json");
 }
-{/literal}
 </script>
-
 
 {else}
 <script type="text/javascript">
@@ -163,8 +154,6 @@ lang['upPhoto'] = "{lang code='update_photo'}";
 var uploadSwfPath = '{$photoUploaderDetails.uploadSwfPath}';
 var uploadScriptPath = '{$photoUploaderDetails.uploadScriptPath}';
 
-{literal}
-
 function photoMessage(message,ID,fade)
 {
 	if(document.getElementById(ID+"Message"))
@@ -180,24 +169,23 @@ function photoMessage(message,ID,fade)
 
 function photoError(message,ID,fade)
 {
-	if(document.getElementById(ID+"Error"))
+	if(document.getElementById(ID+"Error")){
 		$("#"+ID+"Error").children(":first-child").html(message).end().fadeIn('slow');
-	else
-	{
-		$("#Form"+ID)
-		.before('<div id=\"'+ID+'Error\" class=\"uploadErrorDiv\"><div class=\"uploadErrorMsg\">'+message+'<\/div><\/div>');
+	} else {
+		$("#Form"+ID).before('<div id=\"'+ID+'Error\" class=\"uploadErrorDiv\"><div class=\"uploadErrorMsg\">'+message+'<\/div><\/div>');
 	}
 	
-	if(fade)
+	if(fade){
 		$("#"+ID+"Error").delay(3000).fadeOut('slow');
+    }
 }
 
 function QueueLimitError(message,fade)
 {
-	$("#photoUploadQueue")
-	.before('<div id=\"QueueError\" style=\"margin-top:6px;\" class=\"uploadErrorDiv\"><div class=\"uploadErrorMsg\">'+message+'<\/div><\/div>');
-	if(fade)
-		$("#QueueError").delay(5000).fadeOut('slow');	
+	$("#photoUploadQueue").before('<div id=\"QueueError\" style=\"margin-top:6px;\" class=\"uploadErrorDiv\"><div class=\"uploadErrorMsg\">'+message+'<\/div><\/div>');
+	if(fade){
+		$("#QueueError").delay(5000).fadeOut('slow');
+    }
 }
 
 function insertAjaxPhoto(ID,filename,extension,server_url,folder)
@@ -256,22 +244,17 @@ function updateAjaxPhoto(ID)
 		},
 		success : function(data)
 		{
-			if(data.error)
-			{
+			if(data.error) {
 				photoError(data.error,ID,true);
 				$("#cbSubmitUpload"+ID).removeAttr('disabled').html(lang.upPhoto);	
 			}
 			
-			if(data.success)
-			{
+			if(data.success) {
 				photoMessage(data.success,ID,true);
 				$("#Form"+ID).hide();
 				$("#cbSubmitUpload"+ID).removeAttr('disabled').html(lang.upPhoto);
-				if(!document.getElementById("toggle"+ID))
-				{	
-					$("<a></a>")
-					.addClass('reUpdateButton')
-					.attr({
+				if(!document.getElementById("toggle"+ID)) {
+					$("<a></a>").addClass('reUpdateButton').attr({
 						"id" : "toggle"+ID,
 						"href" : "#reUpdate",
 						"onClick" : "$('#Form"+ID+"').toggle(); return false;",
@@ -291,16 +274,15 @@ function showPhotoPreview(ID,preview)
 	$(FinalPreview).load(function()
 	{
 		object.hide();
-		$("<img />")
-		.addClass(object.attr('class'))
-		.attr({ "id" : "FinalPreview"+ID, "src" : preview }).appendTo(parentObj).fadeIn('normal');	
+		$("<img />").addClass(object.attr('class')).attr({ "id" : "FinalPreview"+ID, "src" : preview }).appendTo(parentObj).fadeIn('normal');
 	});
 }
 
 function update_collection_selection(obj)
 {
-	if($("#CollectionResult").css('display') == 'block')
+	if($("#CollectionResult").css('display') == 'block'){
 		$("#CollectionResult").slideUp('fast');
+    }
 		
 	var This = $(obj), thisObj = obj;
 	This.attr('disabled','disabled');
@@ -315,7 +297,6 @@ function update_collection_selection(obj)
 }
 	
 $(document).ready(function() {
-	
 	function photoUploadify(object)
 	{
 		$(object).uploadify(
@@ -330,11 +311,11 @@ $(document).ready(function() {
 			'displayData' : 'both',
 			'fileExt'     : fileExt,
 			'multi'		  : true,
-			'queueSizeLimit': {/literal} '{$Cbucket->configs.photo_multi_upload}', {literal}
+			'queueSizeLimit': '{$Cbucket->configs.photo_multi_upload}',
 			'fileDesc'    : 'Photo Files',
 			'buttonText' : lang.browsePhrase,
 			'queueID' : 'photoUploadQueue',
-			'sizeLimit' : {/literal}'{$cbphoto->max_file_size}',{literal}
+			'sizeLimit' : '{$cbphoto->max_file_size}',
 			'onSelect' : function(event,ID,fileObj)
 			{
 				uploadError = false;
@@ -374,8 +355,7 @@ $(document).ready(function() {
 	}
 		 
 	photoUploadify('#photo_uploads'); 
-});	
-{/literal}
+});
 </script>
 {/if}
 
@@ -394,16 +374,8 @@ $(document).ready(function() {
     <meta property="og:image:width" content="768" />
 	<meta property="og:image:height" content="432" />
 	<meta property="og:image:type" content="image/jpeg" />
-    {if $Cbucket->configs.facebook_embed=='yes'}
-        <meta property="og:type" content="video">
-        <meta property="og:video" content='{fb_embed_video video=$vdo}'>
-        <meta property="og:video:height" content="259" />
-        <meta property="og:video:width" content="398" />
-        <meta property="og:video:type" content="application/x-shockwave-flash">
-    {/if}
-        <meta property='og:url' content='{videoLink vdetails=$vdo}'/>
-        <meta property='og:site_name' content='{$website_title}'/>
-    
+	<meta property='og:url' content='{videoLink vdetails=$vdo}'/>
+	<meta property='og:site_name' content='{$website_title}'/>
 {/if}
 
 {if $object.photo_id}
@@ -416,13 +388,11 @@ $(document).ready(function() {
 
 {if $smarty.const.THIS_PAGE=='view_channel'}
 	<meta property="og:title" content="{display_clean($user.username)}" />
-
 {/if}
 
 
 {if $smarty.const.THIS_PAGE=='videos'}
 	<meta property="og:description" content="this is a videos page of ClipBucket"/>
-
 {/if}
 
 {ANCHOR place='cb_head'}

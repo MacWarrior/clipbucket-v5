@@ -276,7 +276,7 @@ class ClipBucket
             	'Templates Manager' => 'templates.php',
                 'Templates Editor' => 'template_editor.php',
                 'Players Manager' => 'manage_players.php',
-                'Player Settings' => 'manage_players.php?mode=show_settings'
+                lang('player_settings') => 'manage_players.php?mode=show_settings'
 			);
 		}
         if ($per['plugins_moderation'] == "yes"){
