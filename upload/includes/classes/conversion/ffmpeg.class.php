@@ -1595,8 +1595,13 @@ class FFMpeg
 		$duration = $array['duration'];
 		$dim = $array['dim'];
 		$num = $array['num'];
+
+		if( $num > $duration ){
+		    $num = $duration;
+        }
+
 		if (!empty($array['size_tag'])){
-			$size_tag= $array['size_tag'];
+			$size_tag = $array['size_tag'];
 		}
 		if (!empty($array['file_directory'])){
 			$regenerateThumbs = true;
@@ -1604,9 +1609,6 @@ class FFMpeg
 		}
 		if (!empty($array['file_name'])){
 			$filename = $array['file_name'];
-		}
-		if (!empty($array['rand'])){
-				$rand = $array['rand'];		
 		}
 		$tmpDir = TEMP_DIR.'/'.getName($input_file);
 
@@ -1623,54 +1625,47 @@ class FFMpeg
 
 		$dimension = '';
 		
-		if(!empty($size_tag))
-		{
+		if(!empty($size_tag)) {
 			$size_tag = $size_tag.'-';
 		}
 
-		if (!empty($file_directory) && !empty($filename))
-		{
+		if (!empty($file_directory) && !empty($filename)) {
 			$thumbs_outputPath = $file_directory.'/';
 		} else {
 			$thumbs_outputPath = $this->options['outputPath'];
 		}
 
 		if($dim!='original'){
-			$dimension = " -s $dim  ";
+			$dimension = ' -s '.$dim.' ';
 		}
 
-		if($num > 1 && $duration > 14)
-		{
-			$duration = $duration - 5;
+		if($num > 1) {
 			$division = $duration / $num;
-			$count=1;
+			$num_length = strlen($num);
 
-			for($id=3;$id<=$duration;$id++)
+			for($count=0;$count<=$num;$count++)
 			{
+			    $thumb_file_number = str_pad((string)$count, $num_length, '0', STR_PAD_LEFT);
 				if (empty($filename)){
-					$file_name = getName($input_file)."-{$size_tag}{$count}.jpg";	
+					$file_name = getName($input_file).'-'.$size_tag.$thumb_file_number.'.jpg';
 				} else {
-					$file_name = $filename."-{$size_tag}{$count}.jpg";	
+					$file_name = $filename.'-'.$size_tag.$thumb_file_number.'.jpg';
 				}
 				
 				$file_path = THUMBS_DIR.'/' . $thumbs_outputPath . $file_name;
-				$id	= $id + $division - 1;
 
-				if($rand != "") {
-					$time = $this->ChangeTime($id,1);
-				} elseif($rand == "") {
-					$time = $this->ChangeTime($id);
-				}
+				$time_sec = (int)($division*$count);
+
+				$time = $this->ChangeTime($time_sec);
 				
 				$command = $this->ffMpegPath." -ss {$time} -i $input_file -an -r 1 $dimension -y -f image2 -vframes 1 $file_path ";
 				$output = $this->executeCommand($command);	
 
 				//checking if file exists in temp dir
-				if(file_exists($tmpDir.'/00000001.jpg'))
-				{
+				if(file_exists($tmpDir.'/00000001.jpg')) {
 					rename($tmpDir.'/00000001.jpg',THUMBS_DIR.'/'.$file_name);
 				}
-				$count = $count+1;
+
 				if (!$regenerateThumbs)
 				{
 					$this->TemplogData .= "\r\n\r\n Command : $command ";
@@ -1713,27 +1708,19 @@ class FFMpeg
 	 * @edit_reason : date() function was used which was not a good approach
 	 * @return bool|string
 	 */
-	private function ChangeTime($duration, $rand = "")
+	private function ChangeTime($duration)
 	{
 		try{
 			/*Formatting up the duration in seconds for datetime object*/
 			/* desired format ( 00:00:00 ) */
 			if (!empty($duration))
 			{
-				if($rand != "") {
-					$init = $duration - rand(0,$duration);
-				} else {
-					$init = $duration;
-				}
-
-				$hours = floor($init / 3600);
-				$minutes = floor(($init / 60) % 60);
-				$seconds = $init % 60;
+				$hours = floor($duration / 3600);
+				$minutes = floor(($duration / 60) % 60);
+				$seconds = $duration % 60;
 				$d_formatted = "$hours:$minutes:$seconds";
 				$d = new DateTime($d_formatted);
-				$time = $d->format("H:i:s");
-
-				return $time;
+				return $d->format("H:i:s");
 			}
 			return false;
 		} catch (Exception $e){
