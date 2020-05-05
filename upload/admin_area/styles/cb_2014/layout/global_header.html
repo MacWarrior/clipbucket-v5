@@ -81,7 +81,7 @@
 <script src="{$theme_url}/js/jquery.serial.js" type="text/javascript"></script>
 <script src="{$theme_url}/js/jquery.bootstrap.newsbox.js" type="text/javascript"></script>
 <script src="{$theme_url}/js/jquery.bootstrap.newsbox.min.js" type="text/javascript"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
+<script src="{$theme_url}/js/chart-1.0.2.min.js" type="text/javascript"></script>
 
 <!-- for bootstrap wysiwyg -->
 
@@ -170,6 +170,12 @@
         });
     });
 </script>
+
+<style type="text/css">
+	input[type=checkbox].ace.ace-switch.ace-switch-5+.lbl::before{
+		content:"{lang code='yes'}\a0\a0\a0\a0\a0\a0\a0\a0\a0{lang code='no'}" !important;
+	}
+</style>
 
 {if $Cbucket->AdminJSArray}
 <!-- Including JS Files-->
