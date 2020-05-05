@@ -2892,38 +2892,6 @@
 	}
 
 	/**
-	* Function used to ingore errors
-	* that are created when there is wrong action done
-	* on clipbucket ie inavalid username etc
-	* 
-	* @deprecated : { function is not used anymore and will be removed in next version }
-	*/
-	function ignore_errors()
-	{
-		global $ignore_cb_errors;
-		$ignore_cb_errors = TRUE;
-	}
-
-	/**
-	* Function used to call sub_menu_easily
-	*/
-	function sub_menu()
-	{
-		# Submenu function used to used to display submenu links
-		# after navbar
-		$funcs = get_functions('sub_menu');
-		if(is_array($funcs) && count($funcs)>0)
-		{
-			foreach($funcs as $func)
-			{
-				if(function_exists($func)) {
-					return $func($u);
-				}
-			}
-		}
-	}
-
-	/**
 	 * Adds title for ClipBucket powered website
 	 *
 	 * @param bool $params
@@ -2939,10 +2907,9 @@
 		}
 		//Getting Subtitle
 		if(!$cbsubtitle) {
-			echo TITLE.' - '.SLOGAN;
+			echo display_clean(TITLE.' - '.SLOGAN);
 		} else {
-			echo $cbsubtitle.' '.$sub_sep.' ';
-			echo TITLE;
+			echo display_clean($cbsubtitle.' '.$sub_sep.' '.TITLE);
 		}
 	}
 	
