@@ -277,18 +277,6 @@ var b = $('<i class="glyphicon glyphicon-refresh animate-spin pic-glyp" style="p
 
 $(document).ready(function()
 	{ldelim}
-	$(".clip_read").click(function() {
-		$(this).toggleClass('clip_hide');
-		if(!$(this).hasClass('clip_hide')){
-			$('.not_show').show();
-			$('.will_show').hide();
-			$(".clip_read").text("Show Less");
-		} else {
-			$('.not_show').hide();
-			$('.will_show').show();
-			$(".clip_read").text("Show More");
-		}
-	});
 
     getAllComments('p','{$object.photo_id}','{$object.last_commented}',1,'{$object.total_comments}','{$object_type}');
 	{rdelim}

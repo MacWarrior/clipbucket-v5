@@ -33,139 +33,139 @@
     </div>
 <hr>
 <div class="row">
-   <div class="col-md-6">
-     <div class="tabbable tabs-left" >
-         <div class=" col-md-6 todotab" >
-          <ul class="nav nav-tabs" id="myTab" > 
-            <li class="active">
-                <a data-toggle="tab" href="#todolist">
-                    <h5><i class="glyphicon glyphicon-list-alt"></i> ToDo List</h5>
-                </a>
-            </li>
-            <li>
-                <a data-toggle="tab" href="#pnotes">
-                    <h5><i class="glyphicon glyphicon-pencil"></i> Personal Notes</h5>
-                </a>
-            </li>
-            <li>
-                <a data-toggle="tab" href="#rcomments">
-                    <h5><i class="glyphicon glyphicon-comment"></i> Recent Comments</h5>
-                </a>
-            </li>
-        </ul>
-        <div class="tab-content">
-            <div id="todolist" class="tab-pane active">
-                <div class="widgetBox">
-                    <div class="addTodo paddingRightSmall paddingLeftLarge marginBottomLarge">
-                        <div class="row">
-                            <div class="from-group relative">
-                                <div class="from-group">
-                                    <input type="text" name="addTodo" class="form-control addTodoText">
-                                    <button id="addTodo" class="btn btn-primary btn-sm">{lang code='add'}</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {assign var=todos value=$myquery->get_todos()}
-                    <ul class="row todosList" id="note-{$the_note.note_id}" >
-                        {foreach from=$todos item=note}
-                            <li class="col-md-12">
-                                <div class="col-md-12">
-                                    <p class="oneTodo paddingLeftSmall col-md-10" id="{$note.todo_id}">
-                                        {display_clean($note.todo)}
-                                    </p>
-                                    <a href="#" class="btn btn-danger btn-xs delete col-md-2">{lang code='delete'}</a>
-                                </div>
-                            </li>
-                        {/foreach}
-                    </ul>
-               </div>
-            </div>
-            <div id="pnotes" class="tab-pane">
-                    <div class="widgetBox">
-                        <div class="addNote form-group paddingRightSmall">
-                            <textarea class="form-control" name="ntoe" id="note"></textarea>
-                            <div class="alignRight marginTopSmall">
-                                <a href="#" id="add_new_note" class="btn btn-primary btn-xs">Add a note</a>
-                            </div>
-                        </div>
-                        {assign var=notes value=$myquery->get_notes()}
-                        <ul class="notesList row paddingRightSmall" id="note-{$the_note.note_id}" >
-                            {foreach from=$notes item=note}
-                                <li class="col-md-4">
-                                    <div>
-                                        <p class="oneNote" id="{$note.note_id}">
-                                        {display_clean($note.note)}
-                                        <a href="#" class="delete">×</a>
-                                    </p>
-                                    </div>
-                                </li>
-                            {/foreach}
-                        </ul>
-                    </div>
-            </div>
-            <div id="rcomments" class="tab-pane">
-				{if $comments}
-                <div class="widget-box">
-                    <div class="widget-header header-color-blue">
-                        <h5>Recent Comments</h5>
-                        <div class="widget-toolbar">
-                            <a href="#" data-action="collapse">
-                                <i class="icon-chevron-down"></i>
-                            </a>
-                            <a href="#" data-action="close">
-                                <i class="icon-remove"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="widget-body">
-                        <div class="widget-main">
-                            <div class="widget-box transparent">
-                                <div class="widget-header widget-header-small"></div>
-                                <div class="widget-body">
-                                    <div class="widget-body">
-                                        <div class="widget-main no-padding">
-                                            <div class="slimScrollDiv">
-                                                {foreach from=$comments item=comment}
-													{$userdetails = $userquery->get_user_details($comment.userid)}
-                                                <div class="itemdiv dialogdiv">
-                                                    <div class="user">
-                                                        <img alt="{display_clean($userdetails.username)}" title="{display_clean($userdetails.username)}" src="{$userquery->getUserThumb($userdetails,'small')}">
-                                                    </div>
-                                                    <div class="body">
-                                                        <div class="time">
-                                                            <i class="icon-time"></i>
-                                                            <span class="green">{$comment.date_added|date_format}</span>
-                                                        </div>
-                                                        <div class="name">
-                                                            <a href="#">{display_clean($comment.anonym_name)}</a>
-                                                        </div>
-                                                        <div class="text">{$comment.comment|comment}</div>
-                                                        <div class="tools">
-                                                            <a href="{getCommentAdminLink($comment.type, $comment.type_id)}" class="btn btn-minier btn-info">
-                                                                <i class="icon-only icon-share-alt"></i>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                {/foreach}
+	<div class="col-md-6">
+		<div class="tabbable tabs-left" >
+			<div class=" col-md-6 todotab" >
+          		<ul class="nav nav-tabs" id="myTab">
+            		<li class="active">
+						<a data-toggle="tab" href="#todolist">
+							<h5><i class="glyphicon glyphicon-list-alt"></i> ToDo List</h5>
+						</a>
+					</li>
+					<li>
+						<a data-toggle="tab" href="#pnotes">
+							<h5><i class="glyphicon glyphicon-pencil"></i> Personal Notes</h5>
+						</a>
+					</li>
+					<li>
+						<a data-toggle="tab" href="#rcomments">
+							<h5><i class="glyphicon glyphicon-comment"></i> Recent Comments</h5>
+						</a>
+					</li>
+        		</ul>
+				<div class="tab-content">
+					<div id="todolist" class="tab-pane active">
+						<div class="widgetBox">
+							<div class="addTodo paddingRightSmall paddingLeftLarge marginBottomLarge">
+								<div class="row">
+									<div class="from-group relative">
+										<div class="from-group">
+											<input type="text" name="addTodo" class="form-control addTodoText">
+											<button id="addTodo" class="btn btn-primary btn-sm">{lang code='add'}</button>
+										</div>
+									</div>
+								</div>
+							</div>
+							{assign var=todos value=$myquery->get_todos()}
+							<ul class="row todosList" id="note-{$the_note.note_id}" >
+								{foreach from=$todos item=note}
+									<li class="col-md-12">
+										<div class="col-md-12">
+											<p class="oneTodo paddingLeftSmall col-md-10" id="{$note.todo_id}">
+												{display_clean($note.todo)}
+											</p>
+											<a href="#" class="btn btn-danger btn-xs delete col-md-2">{lang code='delete'}</a>
+										</div>
+									</li>
+								{/foreach}
+							</ul>
+					   </div>
+					</div>
+					<div id="pnotes" class="tab-pane">
+							<div class="widgetBox">
+								<div class="addNote form-group paddingRightSmall">
+									<textarea class="form-control" name="ntoe" id="note"></textarea>
+									<div class="alignRight marginTopSmall">
+										<a href="#" id="add_new_note" class="btn btn-primary btn-xs">Add a note</a>
+									</div>
+								</div>
+								{assign var=notes value=$myquery->get_notes()}
+								<ul class="notesList row paddingRightSmall" id="note-{$the_note.note_id}" >
+									{foreach from=$notes item=note}
+										<li class="col-md-4">
+											<div>
+												<p class="oneNote" id="{$note.note_id}">
+												{display_clean($note.note)}
+												<a href="#" class="delete">×</a>
+											</p>
+											</div>
+										</li>
+									{/foreach}
+								</ul>
+							</div>
+					</div>
+					<div id="rcomments" class="tab-pane">
+						{if $comments}
+						<div class="widget-box">
+							<div class="widget-header header-color-blue">
+								<h5>Recent Comments</h5>
+								<div class="widget-toolbar">
+									<a href="#" data-action="collapse">
+										<i class="icon-chevron-down"></i>
+									</a>
+									<a href="#" data-action="close">
+										<i class="icon-remove"></i>
+									</a>
+								</div>
+							</div>
+							<div class="widget-body">
+								<div class="widget-main">
+									<div class="widget-box transparent">
+										<div class="widget-header widget-header-small"></div>
+										<div class="widget-body">
+											<div class="widget-body">
+												<div class="widget-main no-padding">
+													<div class="slimScrollDiv">
+														{foreach from=$comments item=comment}
+															{$userdetails = $userquery->get_user_details($comment.userid)}
+														<div class="itemdiv dialogdiv">
+															<div class="user">
+																<img alt="{display_clean($userdetails.username)}" title="{display_clean($userdetails.username)}" src="{$userquery->getUserThumb($userdetails,'small')}">
+															</div>
+															<div class="body">
+																<div class="time">
+																	<i class="icon-time"></i>
+																	<span class="green">{$comment.date_added|date_format}</span>
+																</div>
+																<div class="name">
+																	<a href="#">{display_clean($comment.anonym_name)}</a>
+																</div>
+																<div class="text">{$comment.comment|comment}</div>
+																<div class="tools">
+																	<a href="{getCommentAdminLink($comment.type, $comment.type_id)}" class="btn btn-minier btn-info">
+																		<i class="icon-only icon-share-alt"></i>
+																	</a>
+																</div>
+															</div>
+														</div>
+														{/foreach}
 
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-				{/if}
-            </div>
-        </div>
-    </div>
-</div>
-</div>
-    <div class="col-md-6">
-        <div class="panel panel-danger">
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						{/if}
+					</div>
+				</div>
+    		</div>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div class="panel panel-danger">
 			<div class="panel-heading ">
 				<span class="glyphicon glyphicon-list-alt"></span>
 				<b>&nbsp CLIPBUCKET NEWS</b>
@@ -191,332 +191,263 @@
 	</div>
 </div>
 
-<div class="well" style="margin-top: 14px;border:1px solid rgba(128, 213, 255, 1);" >
-	<h3>5.3.0 Changelogs <small><i>(Non-official version)</i></small></h3>
-	<ul>
-		<li><b>PHP 7.3 compatibility</b></li>
-		<li><b>Refactor data storage<small>*</small></b></li>
-		<i>Data are not transformed before storage anymore (<b>"</b>Greeting: "Hello, World!"<b>"</b> was stored as <b>"</b>Greeting: &amp;quot;Hello, World!&amp;quot;<b>"</b>)</i>
-		<li><b>Implement MySQL reconnect</b></li>
-		<i>When PHP lost the MySQL connection, it is now able to reconnect without generating a fatal error</i>
-		<li><b>Refactor back office mass upload</b></li>
-		<i>It now supports reccurcive directory, huge files import, language selection, display usefull informations, is faster, safer</i>
-		<li><b>Refactor back office breadcrumb</b></li>
-		<i>Items are now clickable, more precise and subpages are now supported</i>
-		<li><b>Refactor the front office video "add to" tab</b></li>
-		<i>New way to display elements : more mobile friendly, fix bugs, ...</i>
-		<li><b>Refactor error handling</b></li>
-		<i>Update the way error messages are managed</i>
-		<li><b>Upgrade video convertion</b></li>
-		<i>Better tasklist support (no more full cpu charge when waiting for lock), support for audio track selection, fix audio negative start time, better 16:9 resolution and codecs detection</i>
-		<li><b>Implement Chromecast Support with back office option</b></li>
-		<i>This option enable the Chromecast support on the default video player</i>
-		<li><b>Upgrade users passwords security</b></li>
-		<i>Replace the MD5 implementation with salted SHA512</i>
-		<li><b>Implement search for collections</b></li>
-		<i>Search for collection like you do it for videos</i>
-		<li><b>Implement new option to totally disable ads</b></li>
-		<i>This option disable back office menu, JS and CSS front office integration, specific HTML elements for ads</i>
-		<li><b>Implement new option to differentiate video and photo allowed extensions</b></li>
-		<i>There's now two distincts lists of allowed extensions</i>
-		<li><b>Implement new users permissions</b></li>
-		<i>New permissions to limit the access to photos, collections, apply existing permissions on missing spots (like search)</i>
-		<li><b>Easy installation scripts</b></li>
-		<i>Don't search anymore for Debian 9 & 10, Ubuntu 17.10 & 16.04, CentOS 7 installation, there's a script for that now</i>
-		<li><b>Update VideoJS Player</b></li>
-		<i>VideoJS Player has been updated to 7.8.1</i>
-		<li><b>Fixs</b></li>
-		<i>Fix HTML/CSS/JS error/warnings/notices, many broken configurations, installation process, infinite loops, email tester, back office and front office pagination, many thumbs display, ...</i>
-		<li><b>Others</b></li>
-		<i>Fix typos, cleanup installation SQL, cleanup code, use translation instead of hardcoded texts, remove unused code and files (including a full back office unused theme), document PHP functions, use relative URLs, don't allow to play a video while it is converting, ...</i>
-	</ul>
-	<p>
-		<small><b>*</b> The way it used to be, data were ""secured"" before saving on DB ; now data are stored without transformation and it now requiere to secure the displaying of these data to prevent XSS injection.<br/>
-		In all case, this is the right way to work with data.</small>
-	</p>
+<div class="col-md-12">
+	<div class="well changelog">
+		<h3>5.3.1 Changelog</h3>
 
-	<div class="to_display">
-		<hr/>
-		<h3>WHO WE ARE</h3>
-		<p style="text-align:left;"><strong><a href="https://clipbucket.com/" target="self">ClipBucket</a></strong> would not been possible without its team hardwork and determination for the betterment of the products quality and its services. We are proud that over _____ users are using worlds most popular open source video,audio and photo sharing script named
-		<strong>ClipBucket</strong>. We are team who is  determined to deliver the best  features to the open source community.
-		</p>
-		<p style="text-align:left;margin-top:20px; "><strong>Clipbucket</strong> was made in the year 2006 with the idea to bring a better platform for organizations and companies interested in launching their own video,audio or photo sharing website. In every version our mission and goal is to simplify the technology by adopting new technological methods and techniques to cut down several frontend and backend issues faced. The idea is to give the user a chance to explore more with the flexibility of our product.
+		<b>Admin area</b>
+		<ul>
+			<li>Update changelog display</li>
+		</ul>
+	</div>
 
-		 We never compromise on our product interactivity. We always try to create a simple yet interactive and elegant design so that the user can have the best experience of the functions. With the improved social networking options like channels and groups. With ClipBucket’s unmatched quantifiability, users will stretch their applications from family videos to photo-albums. We started off as a paid product and later realized there is more power in going open-source and here we stand today <strong>#1</strong> video sharing and media management script in the industry.</p>
-		<hr/>
-
-		<h3>OUR TEAM</h3>
-		<p style="text-align:left;padding-bottom:20px;">However the team behind ClipBucket always kept their heads and nerves, though they faced many difficulties and problems in meeting the requirements. But team’s coordination and their creative techniques of solving issues and overcoming them with the best possible solution helped us in presenting  Pakistan on international platform in the field of technology by bringing “Clip Bucket” A complete open source multimedia management script.
-		</p>
-
-        <p>Founders <strong><a href="http://www.linkedin.com/profile/view?id=273050157" target="blank">Jahanzeb Hassan</a></strong> and <strong><a href="http://www.linkedin.com/profile/view?id=37419812" target="blank">Arslan Hassan</a></strong></p>
-		<strong><a href="http://www.linkedin.com/profile/view?id=324544384" target="self">Fawaz Tahir</a></strong> - Web Application Team Lead<br>
-		<strong><a href="http://www.linkedin.com/profile/view?id=78646794" target="self">Ruman Malik</a></strong> - Project Manager<br>
-		<strong><a href="http://www.linkedin.com/profile/view?id=325944697" target="self">Muneeb</a></strong> - Mobile Application Team Lead<br>
-		<strong><a href="http://www.linkedin.com/profile/view?id=324542682" target="self">Zomail</a></strong> - Sales and Support<br>
-		<strong><a href="http://www.linkedin.com/profile/view?id=324542554" target="self">Shahzaib</a></strong> - Network Engineer<br>
-		<strong><a href="http://www.linkedin.com/profile/view?id=324542025" target="self">Zunair</a></strong> - SEO and Publishing Manager<br>
-		<br>
-
-        <h5><strong>Kick-ass development team of <strong>ClipBucket</strong></strong></h5>
-        <strong><a href="https://github.com/fahad-cb" target="self">Fahad Abbas</a></strong> - Project Head (Developer)<br>
-		<strong><a href="https://github.com/imranhassan009" target="self">Imran Hassan</a></strong> - Web Developer<br>
-		<strong><a href="https://github.com/shoaib-dev" target="self">Muhammad Shoaib</a></strong> - Web Services provider (Developer)<br>
-		<strong><a href="https://github.com/awaistariq123" target="self">Awais Tariq</a></strong> - Video Converison Handler<br>
-		<strong><a href="https://pk.linkedin.com/in/saqirzzq" target="self">Saaqib Razzaq</a></strong> - Web Developer<br>
-		<strong><a href="https://github.com/jamilrehman" target="self">Jamil Rehman</a></strong> - Front end  Developer (Head)<br>
-		<strong><a href="https://github.com/rameez-anees" target="self">Rameez Anees</a></strong> - Front end  Developer<br>
-		<strong><a href="https://github.com/usman-des" target="self">Usman Afzal</a></strong> - Front end  Developer<br>
-		<strong><a href="https://github.com/epicPenguin" target="self">Muhammad Rizwan</a></strong> - Quality Assurance department<br><br><br>
-
-		<h5><strong>We are from Pakistan with high heads and soft hearts</strong></h5>
-
-		<p style="padding-bottom:20px;">Pakistan is always been in the news for the bad reasons and has been criticized by the rest of the world,even then the people of Pakistan are patriotic and stand united for the goodwill of their country.no matter how worst the situation gets the youth is eager enough to bring out the best in all the fields like media,communication, IT and science. IT industry is fast growing with a large potential and is regarded as a successful sector even in country’s worst financial crisis. as the IT industry in Pakistan is growing like wise the demand for the softwares and programmes has taken up a rapid growth. ClipBucket is one of the fastest and the most used media sharing script with all the latest features and enhancements in the social media. We as Pakistani feel proud on creating this product which will lead our country to the highest levels in the international market.</p>
-    </div>
-
-    <p><button id="addTodo" class="btn btn-primary btn-sm clip_read clip_hide" style="float:right;margin-right:10px;margin-top:-30px;">Read More</button></p>
+	<div class="well changelog">
+		<h3>5.0.0 - 5.3.0 Changelog <b class="arrow icon-angle-down"></b></h3>
+		<ul style="display:none;">
+			<li><b>PHP 7.3 compatibility</b></li>
+			<li><b>Refactor data storage</b></li>
+			<i>Data are not transformed before storage anymore (<b>"</b>Greeting: "Hello, World!"<b>"</b> was stored as <b>"</b>Greeting: &amp;quot;Hello, World!&amp;quot;<b>"</b>)</i>
+			<li><b>Implement MySQL reconnect</b></li>
+			<i>When PHP lost the MySQL connection, it is now able to reconnect without generating a fatal error</i>
+			<li><b>Refactor back office mass upload</b></li>
+			<i>It now supports reccurcive directory, huge files import, language selection, display usefull informations, is faster, safer</i>
+			<li><b>Refactor back office breadcrumb</b></li>
+			<i>Items are now clickable, more precise and subpages are now supported</i>
+			<li><b>Refactor the front office video "add to" tab</b></li>
+			<i>New way to display elements : more mobile friendly, fix bugs, ...</i>
+			<li><b>Refactor error handling</b></li>
+			<i>Update the way error messages are managed</i>
+			<li><b>Upgrade video convertion</b></li>
+			<i>Better tasklist support (no more full cpu charge when waiting for lock), support for audio track selection, fix audio negative start time, better 16:9 resolution and codecs detection</i>
+			<li><b>Implement Chromecast Support with back office option</b></li>
+			<i>This option enable the Chromecast support on the default video player</i>
+			<li><b>Upgrade users passwords security</b></li>
+			<i>Replace the MD5 implementation with salted SHA512</i>
+			<li><b>Implement search for collections</b></li>
+			<i>Search for collection like you do it for videos</i>
+			<li><b>Implement new option to totally disable ads</b></li>
+			<i>This option disable back office menu, JS and CSS front office integration, specific HTML elements for ads</i>
+			<li><b>Implement new option to differentiate video and photo allowed extensions</b></li>
+			<i>There's now two distincts lists of allowed extensions</i>
+			<li><b>Implement new users permissions</b></li>
+			<i>New permissions to limit the access to photos, collections, apply existing permissions on missing spots (like search)</i>
+			<li><b>Easy installation scripts</b></li>
+			<i>Don't search anymore for Debian 9 & 10, Ubuntu 17.10 & 16.04, CentOS 7 installation, there's a script for that now</i>
+			<li><b>Update VideoJS Player</b></li>
+			<i>VideoJS Player has been updated to 7.8.1</i>
+			<li><b>Fixs</b></li>
+			<i>Fix HTML/CSS/JS error/warnings/notices, many broken configurations, installation process, infinite loops, email tester, back office and front office pagination, many thumbs display, ...</i>
+			<li><b>Others</b></li>
+			<i>Fix typos, cleanup installation SQL, cleanup code, use translation instead of hardcoded texts, remove unused code and files (including a full back office unused theme), document PHP functions, use relative URLs, don't allow to play a video while it is converting, ...</i>
+		</ul>
+	</div>
 </div>
 
-<style type="text/css">
-
-.to_display{
-
-   display: none;
-}
-    .flot_chart1{
-        height: 200px;
-        width: 400px;
-    }
-    .vids{
-        height: 250px;
-        overflow-y: scroll;
-        overflow-x: hidden;
-        padding: 5px;
-    }
-</style>
-
 <script type="text/javascript">
-            AmCharts.makeChart("piechart",
-                {
-                    "type": "pie",
-                    "adjustPrecision": true,
-                    "angle": 12,
-                    "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[value]]</b> ([[percents]]%)</span>",
-                    "depth3D": 15,
-                    "maxLabelWidth": 150,
-                    "titleField": "category",
-                    "valueField": "column-1",
-                    "processTimeout": 5,
-                    "theme": "light",
-                    "allLabels": [],
-                    "balloon": {},
-                    "legend": {
-                        "enabled": true,
-                        "align": "left",
-                        "markerType": "circle"
-                    },
-                    "titles": [
-                        {
-                            "bold": false,
-                            "id": "Title-1",
-                            "size": 15,
-                            "text": "Overall Statistics"
-                        }
-                    ],
-                    "dataProvider": [
-                        {
-                            "category": "Users",
-                            "column-1": '{get_users count_only=yes}'
-                        },
-                        {
-                            "category": "Photos",
-                            "column-1": '{get_photos count_only=yes}'
-                        },
-                        {
-                            "category": "Videos",
-                            "column-1": '{get_videos count_only=yes}'
-                        },
-                        {
-                            "category": "Collections",
-                            "column-1": '{get_collections count_only=yes}'
-                        },
+	AmCharts.makeChart("piechart", {
+		"type": "pie",
+		"adjustPrecision": true,
+		"angle": 12,
+		"balloonText": "[[title]]<br><span style='font-size:14px'><b>[[value]]</b> ([[percents]]%)</span>",
+		"depth3D": 15,
+		"maxLabelWidth": 150,
+		"titleField": "category",
+		"valueField": "column-1",
+		"processTimeout": 5,
+		"theme": "light",
+		"allLabels": [],
+		"balloon": {},
+		"legend": {
+			"enabled": true,
+			"align": "left",
+			"markerType": "circle"
+		},
+		"titles": [
+			{
+				"bold": false,
+				"id": "Title-1",
+				"size": 15,
+				"text": "Overall Statistics"
+			}
+		],
+		"dataProvider": [
+			{
+				"category": "Users",
+				"column-1": '{get_users count_only=yes}'
+			},
+			{
+				"category": "Photos",
+				"column-1": '{get_photos count_only=yes}'
+			},
+			{
+				"category": "Videos",
+				"column-1": '{get_videos count_only=yes}'
+			},
+			{
+				"category": "Collections",
+				"column-1": '{get_collections count_only=yes}'
+			},
 
-                    ]
-                }
-            );
-</script>
+		]
+	});
 
-<script type="text/javascript">
-            AmCharts.makeChart("donutchart",
-                {
-                    "type": "pie",
-                    "angle": 12,
-                    "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[value]]</b> ([[percents]]%)</span>",
-                    "depth3D": 15,
-                    "innerRadius": "30%",
-                    "titleField": "category",
-                    "valueField": "column-1",
-                    "processTimeout": 5,
-                    "theme": "light",
-                    "allLabels": [],
-                    "balloon": {},
-                    "legend": {
-                        "enabled": true,
-                        "align": "center",
-                        "markerType": "circle"
-                    },
-                    "titles": [
-                        {
-                            "bold": false,
-                            "id": "Title-1",
-                            "size": 15,
-                            "text": "Flagged Objects"
-                        }
-                    ],
-                    "dataProvider": [
+	AmCharts.makeChart("donutchart", {
+		"type": "pie",
+		"angle": 12,
+		"balloonText": "[[title]]<br><span style='font-size:14px'><b>[[value]]</b> ([[percents]]%)</span>",
+		"depth3D": 15,
+		"innerRadius": "30%",
+		"titleField": "category",
+		"valueField": "column-1",
+		"processTimeout": 5,
+		"theme": "light",
+		"allLabels": [],
+		"balloon": {},
+		"legend": {
+			"enabled": true,
+			"align": "center",
+			"markerType": "circle"
+		},
+		"titles": [
+			{
+				"bold": false,
+				"id": "Title-1",
+				"size": 15,
+				"text": "Flagged Objects"
+			}
+		],
+		"dataProvider": [
 
-                        {
-                            "category": "Photos",
-                            "column-1": '{$cbphoto->action->count_flagged_objects()}'
-                        },
-                        {
-                            "category": "Videos",
-                            "column-1": '{$cbvid->action->count_flagged_objects()}'
-                        }
-                    ]
-                }
-            );
-</script>
+			{
+				"category": "Photos",
+				"column-1": '{$cbphoto->action->count_flagged_objects()}'
+			},
+			{
+				"category": "Videos",
+				"column-1": '{$cbvid->action->count_flagged_objects()}'
+			}
+		]
+	});
 
-<script type="text/javascript">
-            AmCharts.makeChart("ubarchart",
-                {
-                    "type": "serial",
-                    "pathToImages": "https://www.amcharts.com/lib/3/images/",
-                    "categoryField": "category",
-                    "startDuration": 1,
-                    "mouseWheelZoomEnabled": true,
-                    "startEffect": "easeOutSine",
-                    "autoDisplay": true,
-                    "theme": "light",
-                    "categoryAxis": {
-                        "gridPosition": "start"
-                    },
-                    "trendLines": [],
-                    "graphs": [
-                        {
-                            "colorField": "color",
-                            "fillAlphas": 1,
-                            "id": "AmGraph-1",
-                            "lineColorField": "color",
-                            "title": "graph 1",
-                            "type": "column",
-                            "valueField": "column-1"
-                        }
-                    ],
-                    "guides": [],
-                    "valueAxes": [
-                        {
-                            "id": "ValueAxis-1",
-                            "title": "Users"
-                        }
-                    ],
-                    "allLabels": [],
-                    "balloon": {},
-                    "titles": [
-                        {
-                            "bold": false,
-                            "id": "Title-1",
-                            "size": 15,
-                            "text": "Users Statistics"
-                        }
-                    ],
-                    "dataProvider": [
-                        {
-                            "category": "Total",
-                            "column-1": '{get_users count_only=yes}'
-                        },
-                        {
-                            "category": "Active",
-                            "column-1": '{get_users count_only=yes status='Ok'}'
-                        },
-                        {
-                            "category": "Inactive",
-                            "column-1": '{get_users count_only=yes status='ToActivate'}'
-                        }
-                    ]
-                }
-            );
-</script>
+	AmCharts.makeChart("ubarchart", {
+		"type": "serial",
+		"pathToImages": "https://www.amcharts.com/lib/3/images/",
+		"categoryField": "category",
+		"startDuration": 1,
+		"mouseWheelZoomEnabled": true,
+		"startEffect": "easeOutSine",
+		"autoDisplay": true,
+		"theme": "light",
+		"categoryAxis": {
+			"gridPosition": "start"
+		},
+		"trendLines": [],
+		"graphs": [
+			{
+				"colorField": "color",
+				"fillAlphas": 1,
+				"id": "AmGraph-1",
+				"lineColorField": "color",
+				"title": "graph 1",
+				"type": "column",
+				"valueField": "column-1"
+			}
+		],
+		"guides": [],
+		"valueAxes": [
+			{
+				"id": "ValueAxis-1",
+				"title": "Users"
+			}
+		],
+		"allLabels": [],
+		"balloon": {},
+		"titles": [
+			{
+				"bold": false,
+				"id": "Title-1",
+				"size": 15,
+				"text": "Users Statistics"
+			}
+		],
+		"dataProvider": [
+			{
+				"category": "Total",
+				"column-1": '{get_users count_only=yes}'
+			},
+			{
+				"category": "Active",
+				"column-1": '{get_users count_only=yes status='Ok'}'
+			},
+			{
+				"category": "Inactive",
+				"column-1": '{get_users count_only=yes status='ToActivate'}'
+			}
+		]
+	});
 
-<script type="text/javascript">
-            AmCharts.makeChart("vbarchart",
-                {
-                    "type": "serial",
-                    "pathToImages": "https://www.amcharts.com/lib/3/images/",
-                    "categoryField": "category",
-                    "startDuration": 1,
-                    "mouseWheelZoomEnabled": true,
-                    "startEffect": "easeOutSine",
-                    "autoDisplay": true,
-                    "theme": "light",
-                    "categoryAxis": {
-                        "gridPosition": "start"
-                    },
-                    "trendLines": [],
-                    "graphs": [
-                        {
-                            "colorField": "color",
-                            "fillAlphas": 1,
-                            "id": "AmGraph-1",
-                            "lineColorField": "color",
-                            "title": "graph 1",
-                            "type": "column",
-                            "valueField": "column-1"
-                        }
-                    ],
-                    "guides": [],
-                    "valueAxes": [
-                        {
-                            "id": "ValueAxis-1",
-                            "title": "Videos"
-                        }
-                    ],
-                    "allLabels": [],
-                    "balloon": {},
-                    "titles": [
-                        {
-                            "bold": false,
-                            "id": "Title-1",
-                            "size": 15,
-                            "text": "Video Statistics"
-                        }
-                    ],
-                    "dataProvider": [
-                        {
-                            "category": "Total",
-                            "column-1": '{get_videos count_only=yes}'
-                        },
-                        {
-                            "category": "Active",
-                            "column-1": '{get_videos count_only=yes active="yes"}'
-                        },
-                        {
-                            "category": "Deactive",
-                            "column-1": '{get_videos count_only=yes active='no'}'
-                        },
-                        {
-                            "category": "Reported",
-                            "column-1": '{$cbvid->action->count_flagged_objects()}'
-                        }
-                    ]
-                }
-            );
- </script>
+	AmCharts.makeChart("vbarchart", {
+		"type": "serial",
+		"pathToImages": "https://www.amcharts.com/lib/3/images/",
+		"categoryField": "category",
+		"startDuration": 1,
+		"mouseWheelZoomEnabled": true,
+		"startEffect": "easeOutSine",
+		"autoDisplay": true,
+		"theme": "light",
+		"categoryAxis": {
+			"gridPosition": "start"
+		},
+		"trendLines": [],
+		"graphs": [
+			{
+				"colorField": "color",
+				"fillAlphas": 1,
+				"id": "AmGraph-1",
+				"lineColorField": "color",
+				"title": "graph 1",
+				"type": "column",
+				"valueField": "column-1"
+			}
+		],
+		"guides": [],
+		"valueAxes": [
+			{
+				"id": "ValueAxis-1",
+				"title": "Videos"
+			}
+		],
+		"allLabels": [],
+		"balloon": {},
+		"titles": [
+			{
+				"bold": false,
+				"id": "Title-1",
+				"size": 15,
+				"text": "Video Statistics"
+			}
+		],
+		"dataProvider": [
+			{
+				"category": "Total",
+				"column-1": '{get_videos count_only=yes}'
+			},
+			{
+				"category": "Active",
+				"column-1": '{get_videos count_only=yes active="yes"}'
+			},
+			{
+				"category": "Deactive",
+				"column-1": '{get_videos count_only=yes active='no'}'
+			},
+			{
+				"category": "Reported",
+				"column-1": '{$cbvid->action->count_flagged_objects()}'
+			}
+		]
+	});
 
- <script type="text/javascript">
-   $(function () {
+	$(function () {
          $(".newsbox").bootstrapNews({
 			 newsPerPage: 4,
 			 autoplay: true,
@@ -526,76 +457,25 @@
 			 onToDo: function () { }
         });
     });
-</script>
 
-<script type="text/javascript">
-$( document ).ready(function() {
+	$( document ).ready(function() {
+		var baseurl="/";
 
-    $(".clip_read").click(function() {
+		$.ajax({
+		   url: '/ajax.php',
+			type: "POST",
+			dataType : 'text',
+			data: { mode: "get_news"},
+			success : function(news){
+				$('#clipbucket_news').html(news);
+			},
+			timeout : 5000,
+			error  :  function(err) { $('#clipbucket_news').html(' <div align="center"><em><strong>Connect with Internet to get News</strong></em></div>')},
+		});
+	});
 
-        $(this).toggleClass('clip_hide');
-
-
-        if(!$(this).hasClass('clip_hide'))
-
-           {
-            $('.to_display').show();
-            $(".clip_read").text("Hide");
-           }
-
-        else
-           {
-            $('.to_display').hide();
-            $(".clip_read").text("Read More");
-           }
-    });
-
-var baseurl="/";
-
-$.ajax({
-   url: '/ajax.php',
-    type: "POST",
-    dataType : 'text',
-    data: { mode: "get_news"},
-    success : function(news){
-        $('#clipbucket_news').html(news);
-    },
-    timeout : 5000,
-    error  :  function(err) { $('#clipbucket_news').html(' <div align="center"><em><strong>Connect with Internet to get News</strong></em></div>')},
-    });
-});
- $(function() {
-
-        var options = {
-
-            series: {
-                bars: {
-                    show: true,
-                    steps: true,
-                    barWidth: 0.5,
-                    align: "center",
-                },
-                points: { show: true },
-                lines: { show: true }
-            },
-            xaxis: {
-                mode: "categories",
-                tickLength: 0
-            },
-            yaxis: {
-                alignTicksWithAxis: false
-            },
-            grid: {
-                hoverable: true,
-                clickable: true,
-                labelMargin: 30,
-                borderWidth: 0
-            }
-        };
-
-        // $.plot("#placeholder", data, options);
-
-        var page = '/admin_area/index.php';
+ 	$(function() {
+		var page = '/admin_area/index.php';
 
         $(".oneNote .delete").on({
             click: function(e){
@@ -721,5 +601,4 @@ $.ajax({
 
         });
     });
-
 </script>
