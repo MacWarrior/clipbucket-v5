@@ -837,7 +837,7 @@ CREATE TABLE `{tbl_prefix}user_profile` (
   `show_my_photos` enum('yes','no') NOT NULL DEFAULT 'yes',
   `show_my_subscriptions` enum('yes','no') NOT NULL DEFAULT 'yes',
   `show_my_subscribers` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `show_my_friends` enum('yes','no') NOT NULL DEFAULT 'yes'
+  `show_my_friends` enum('yes','no') NOT NULL DEFAULT 'yes',
   PRIMARY KEY (`user_profile_id`),
   KEY `ind_status_id` (`userid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
