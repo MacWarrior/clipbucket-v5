@@ -679,14 +679,6 @@ ul.mainTabs{
     }
 }
 
-.newsbox{
-	list-style:none;
-}
-
-#clipbucket_news{
-	height: 130px;
-}
-
 /* CB 5.X */
 .changelog .arrow{
 	cursor: pointer;

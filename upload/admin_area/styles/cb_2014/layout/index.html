@@ -2,254 +2,217 @@
     <h2>ClipBucket V{$VERSION} {$STATE} Dashboard</h2>
 </div>
 <div class="row">
-    <div class="col-md-12">
-        <div class="tabbable">
-                <div class="row">
-                <div id="roundchart">
-                <div class="col-md-6">
-                    <div id="piechart" style="width: 90%; height: 430px; background-color: #FFFFFF;" ></div>
-                </div>
-
-                <div class="col-md-6">
-                    <div id="donutchart" style="width: 80%; height: 430px; background-color: #FFFFFF;" ></div>
-                </div>
-                </div>
-                <hr>
-                <div>
-                <div class="col-md-6">
-                <hr>
-                     <div id="ubarchart" style="width: 90%; height: 400px; background-color: #FFFFFF;" ></div>
-                </div>
-
-                <div class="col-md-6">
-                <hr>
-                    <div id="vbarchart" style="width: 90%; height: 400px; padding: left; background-color: #FFFFFF;" ></div>
-                </div>
-                </div>
-                <hr>
-              </div>
-             <hr>
-        </div>
-    </div>
+	<div class="col-md-6">
+		<div id="piechart" style="height:430px;" ></div>
+	</div>
+	<div class="col-md-6">
+		<div id="donutchart" style="height:430px;" ></div>
+	</div>
+</div>
 <hr>
 <div class="row">
 	<div class="col-md-6">
-		<div class="tabbable tabs-left" >
-			<div class=" col-md-6 todotab" >
-          		<ul class="nav nav-tabs" id="myTab">
-            		<li class="active">
-						<a data-toggle="tab" href="#todolist">
-							<h5><i class="glyphicon glyphicon-list-alt"></i> ToDo List</h5>
-						</a>
-					</li>
-					<li>
-						<a data-toggle="tab" href="#pnotes">
-							<h5><i class="glyphicon glyphicon-pencil"></i> Personal Notes</h5>
-						</a>
-					</li>
-					<li>
-						<a data-toggle="tab" href="#rcomments">
-							<h5><i class="glyphicon glyphicon-comment"></i> Recent Comments</h5>
-						</a>
-					</li>
-        		</ul>
-				<div class="tab-content">
-					<div id="todolist" class="tab-pane active">
-						<div class="widgetBox">
-							<div class="addTodo paddingRightSmall paddingLeftLarge marginBottomLarge">
-								<div class="row">
-									<div class="from-group relative">
-										<div class="from-group">
-											<input type="text" name="addTodo" class="form-control addTodoText">
-											<button id="addTodo" class="btn btn-primary btn-sm">{lang code='add'}</button>
-										</div>
-									</div>
-								</div>
-							</div>
-							{assign var=todos value=$myquery->get_todos()}
-							<ul class="row todosList" id="note-{$the_note.note_id}" >
-								{foreach from=$todos item=note}
-									<li class="col-md-12">
-										<div class="col-md-12">
-											<p class="oneTodo paddingLeftSmall col-md-10" id="{$note.todo_id}">
-												{display_clean($note.todo)}
-											</p>
-											<a href="#" class="btn btn-danger btn-xs delete col-md-2">{lang code='delete'}</a>
-										</div>
-									</li>
-								{/foreach}
-							</ul>
-					   </div>
-					</div>
-					<div id="pnotes" class="tab-pane">
-							<div class="widgetBox">
-								<div class="addNote form-group paddingRightSmall">
-									<textarea class="form-control" name="ntoe" id="note"></textarea>
-									<div class="alignRight marginTopSmall">
-										<a href="#" id="add_new_note" class="btn btn-primary btn-xs">Add a note</a>
-									</div>
-								</div>
-								{assign var=notes value=$myquery->get_notes()}
-								<ul class="notesList row paddingRightSmall" id="note-{$the_note.note_id}" >
-									{foreach from=$notes item=note}
-										<li class="col-md-4">
-											<div>
-												<p class="oneNote" id="{$note.note_id}">
-												{display_clean($note.note)}
-												<a href="#" class="delete">×</a>
-											</p>
-											</div>
-										</li>
-									{/foreach}
-								</ul>
-							</div>
-					</div>
-					<div id="rcomments" class="tab-pane">
-						{if $comments}
-						<div class="widget-box">
-							<div class="widget-header header-color-blue">
-								<h5>Recent Comments</h5>
-								<div class="widget-toolbar">
-									<a href="#" data-action="collapse">
-										<i class="icon-chevron-down"></i>
-									</a>
-									<a href="#" data-action="close">
-										<i class="icon-remove"></i>
-									</a>
-								</div>
-							</div>
-							<div class="widget-body">
-								<div class="widget-main">
-									<div class="widget-box transparent">
-										<div class="widget-header widget-header-small"></div>
-										<div class="widget-body">
-											<div class="widget-body">
-												<div class="widget-main no-padding">
-													<div class="slimScrollDiv">
-														{foreach from=$comments item=comment}
-															{$userdetails = $userquery->get_user_details($comment.userid)}
-														<div class="itemdiv dialogdiv">
-															<div class="user">
-																<img alt="{display_clean($userdetails.username)}" title="{display_clean($userdetails.username)}" src="{$userquery->getUserThumb($userdetails,'small')}">
-															</div>
-															<div class="body">
-																<div class="time">
-																	<i class="icon-time"></i>
-																	<span class="green">{$comment.date_added|date_format}</span>
-																</div>
-																<div class="name">
-																	<a href="#">{display_clean($comment.anonym_name)}</a>
-																</div>
-																<div class="text">{$comment.comment|comment}</div>
-																<div class="tools">
-																	<a href="{getCommentAdminLink($comment.type, $comment.type_id)}" class="btn btn-minier btn-info">
-																		<i class="icon-only icon-share-alt"></i>
-																	</a>
-																</div>
-															</div>
-														</div>
-														{/foreach}
+		 <div id="ubarchart" style="height:400px;" ></div>
+	</div>
 
+	<div class="col-md-6">
+		<div id="vbarchart" style="height:400px;" ></div>
+	</div>
+</div>
+<hr>
+<div class="row">
+	<div class="col-md-6">
+		<ul class="nav nav-tabs" id="myTab">
+			<li class="active">
+				<a data-toggle="tab" href="#todolist">
+					<h5><i class="glyphicon glyphicon-list-alt"></i> ToDo List</h5>
+				</a>
+			</li>
+			<li>
+				<a data-toggle="tab" href="#pnotes">
+					<h5><i class="glyphicon glyphicon-pencil"></i> Personal Notes</h5>
+				</a>
+			</li>
+			<li>
+				<a data-toggle="tab" href="#rcomments">
+					<h5><i class="glyphicon glyphicon-comment"></i> Recent Comments</h5>
+				</a>
+			</li>
+		</ul>
+		<div class="tab-content">
+			<div id="todolist" class="tab-pane active">
+				<div class="widgetBox">
+					<div class="addTodo paddingRightSmall paddingLeftLarge marginBottomLarge">
+						<div class="row">
+							<div class="from-group relative">
+								<div class="from-group">
+									<input type="text" name="addTodo" class="form-control addTodoText"/>
+									<button id="addTodo" class="btn btn-primary btn-sm">{lang code='add'}</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					{assign var=todos value=$myquery->get_todos()}
+					<ul class="row todosList" id="note-{$the_note.note_id}" >
+						{foreach from=$todos item=note}
+						<li class="col-md-12">
+							<div class="col-md-12">
+								<p class="oneTodo paddingLeftSmall col-md-10" id="{$note.todo_id}">
+									{display_clean($note.todo)}
+								</p>
+								<a href="#" class="btn btn-danger btn-xs delete col-md-2">{lang code='delete'}</a>
+							</div>
+						</li>
+						{/foreach}
+					</ul>
+				</div>
+			</div>
+			<div id="pnotes" class="tab-pane">
+				<div class="widgetBox">
+					<div class="addNote form-group paddingRightSmall">
+						<textarea class="form-control" name="ntoe" id="note"></textarea>
+						<div class="alignRight marginTopSmall">
+							<a href="#" id="add_new_note" class="btn btn-primary btn-xs">Add a note</a>
+						</div>
+					</div>
+					{assign var=notes value=$myquery->get_notes()}
+					<ul class="notesList row paddingRightSmall" id="note-{$the_note.note_id}" >
+						{foreach from=$notes item=note}
+						<li class="col-md-4">
+							<div>
+								<p class="oneNote" id="{$note.note_id}">
+									{display_clean($note.note)}
+									<a href="#" class="delete">×</a>
+								</p>
+							</div>
+						</li>
+						{/foreach}
+					</ul>
+				</div>
+			</div>
+			<div id="rcomments" class="tab-pane">
+				{if $comments}
+				<div class="widget-box">
+					<div class="widget-header header-color-blue">
+						<h5>Recent Comments</h5>
+						<div class="widget-toolbar">
+							<a href="#" data-action="collapse">
+								<i class="icon-chevron-down"></i>
+							</a>
+							<a href="#" data-action="close">
+								<i class="icon-remove"></i>
+							</a>
+						</div>
+					</div>
+					<div class="widget-body">
+						<div class="widget-main">
+							<div class="widget-box transparent">
+								<div class="widget-header widget-header-small"></div>
+								<div class="widget-body">
+									<div class="widget-body">
+										<div class="widget-main no-padding">
+											<div class="slimScrollDiv">
+												{foreach from=$comments item=comment}
+												{$userdetails = $userquery->get_user_details($comment.userid)}
+												<div class="itemdiv dialogdiv">
+													<div class="user">
+														<img alt="{display_clean($userdetails.username)}" title="{display_clean($userdetails.username)}" src="{$userquery->getUserThumb($userdetails,'small')}">
+													</div>
+													<div class="body">
+														<div class="time">
+															<i class="icon-time"></i>
+															<span class="green">{$comment.date_added|date_format}</span>
+														</div>
+														<div class="name">
+															<a href="#">{display_clean($comment.anonym_name)}</a>
+														</div>
+														<div class="text">{$comment.comment|comment}</div>
+														<div class="tools">
+															<a href="{getCommentAdminLink($comment.type, $comment.type_id)}" class="btn btn-minier btn-info">
+																<i class="icon-only icon-share-alt"></i>
+															</a>
+														</div>
 													</div>
 												</div>
+												{/foreach}
+
 											</div>
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-						{/if}
 					</div>
 				</div>
-    		</div>
-		</div>
-	</div>
-	<div class="col-md-6">
-		<div class="panel panel-danger">
-			<div class="panel-heading ">
-				<span class="glyphicon glyphicon-list-alt"></span>
-				<b>&nbsp CLIPBUCKET NEWS</b>
-			</div>
-			<div class="panel-body">
-				<div class="row">
-					<div class="col-md-12">
-						<ul class="newsbox">
-							<li class="news-item">
-								<table cellpadding="8">
-									<tr>
-										<td>
-											<div id="clipbucket_news" class="widget-main"></div>
-										</td>
-									</tr>
-								</table>
-							</li>
-						</ul>
-					</div>
-				</div>
+				{/if}
 			</div>
 		</div>
 	</div>
 </div>
+<hr>
+<div class="row">
+	<div class="col-md-12">
+		<div class="well changelog">
+			<h3>5.3.1 Changelog</h3>
 
-<div class="col-md-12">
-	<div class="well changelog">
-		<h3>5.3.1 Changelog</h3>
+			<b>Admin area</b>
+			<ul>
+				<li>Update changelog display</li>
+				<li>Update lib amCharts to 3.21.15</li>
+				<li>Remove Clipbucket news </li>
+			</ul>
+			<b>Video conversion</b>
+			<ul>
+				<li>Fix rare conversion fail</li>
+			</ul>
+			<b>Miscellaneous</b>
+			<ul>
+				<li>Remove unused files</li>
+				<li>Cleanup code</li>
+				<li>Fix installation <i>#120</i></li>
+			</ul>
+		</div>
 
-		<b>Admin area</b>
-		<ul>
-			<li>Update changelog display</li>
-		</ul>
-		<b>Video conversion</b>
-		<ul>
-			<li>Fix rare conversion fail</li>
-		</ul>
-		<b>Miscellaneous</b>
-		<ul>
-			<li>Remove unused files</li>
-			<li>Cleanup code</li>
-			<li>Fix installation <i>#120</i></li>
-		</ul>
-	</div>
-
-	<div class="well changelog">
-		<h3>5.0.0 - 5.3.0 Changelog <b class="arrow icon-angle-down"></b></h3>
-		<ul style="display:none;">
-			<li><b>PHP 7.3 compatibility</b></li>
-			<li><b>Refactor data storage</b></li>
-			<i>Data are not transformed before storage anymore (<b>"</b>Greeting: "Hello, World!"<b>"</b> was stored as <b>"</b>Greeting: &amp;quot;Hello, World!&amp;quot;<b>"</b>)</i>
-			<li><b>Implement MySQL reconnect</b></li>
-			<i>When PHP lost the MySQL connection, it is now able to reconnect without generating a fatal error</i>
-			<li><b>Refactor back office mass upload</b></li>
-			<i>It now supports reccurcive directory, huge files import, language selection, display usefull informations, is faster, safer</i>
-			<li><b>Refactor back office breadcrumb</b></li>
-			<i>Items are now clickable, more precise and subpages are now supported</i>
-			<li><b>Refactor the front office video "add to" tab</b></li>
-			<i>New way to display elements : more mobile friendly, fix bugs, ...</i>
-			<li><b>Refactor error handling</b></li>
-			<i>Update the way error messages are managed</i>
-			<li><b>Upgrade video convertion</b></li>
-			<i>Better tasklist support (no more full cpu charge when waiting for lock), support for audio track selection, fix audio negative start time, better 16:9 resolution and codecs detection</i>
-			<li><b>Implement Chromecast Support with back office option</b></li>
-			<i>This option enable the Chromecast support on the default video player</i>
-			<li><b>Upgrade users passwords security</b></li>
-			<i>Replace the MD5 implementation with salted SHA512</i>
-			<li><b>Implement search for collections</b></li>
-			<i>Search for collection like you do it for videos</i>
-			<li><b>Implement new option to totally disable ads</b></li>
-			<i>This option disable back office menu, JS and CSS front office integration, specific HTML elements for ads</i>
-			<li><b>Implement new option to differentiate video and photo allowed extensions</b></li>
-			<i>There's now two distincts lists of allowed extensions</i>
-			<li><b>Implement new users permissions</b></li>
-			<i>New permissions to limit the access to photos, collections, apply existing permissions on missing spots (like search)</i>
-			<li><b>Easy installation scripts</b></li>
-			<i>Don't search anymore for Debian 9 & 10, Ubuntu 17.10 & 16.04, CentOS 7 installation, there's a script for that now</i>
-			<li><b>Update VideoJS Player</b></li>
-			<i>VideoJS Player has been updated to 7.8.1</i>
-			<li><b>Fixs</b></li>
-			<i>Fix HTML/CSS/JS error/warnings/notices, many broken configurations, installation process, infinite loops, email tester, back office and front office pagination, many thumbs display, ...</i>
-			<li><b>Others</b></li>
-			<i>Fix typos, cleanup installation SQL, cleanup code, use translation instead of hardcoded texts, remove unused code and files (including a full back office unused theme), document PHP functions, use relative URLs, don't allow to play a video while it is converting, ...</i>
-		</ul>
+		<div class="well changelog">
+			<h3>5.0.0 - 5.3.0 Changelog <b class="arrow icon-angle-down"></b></h3>
+			<ul style="display:none;">
+				<li><b>PHP 7.3 compatibility</b></li>
+				<li><b>Refactor data storage</b></li>
+				<i>Data are not transformed before storage anymore (<b>"</b>Greeting: "Hello, World!"<b>"</b> was stored as <b>"</b>Greeting: &amp;quot;Hello, World!&amp;quot;<b>"</b>)</i>
+				<li><b>Implement MySQL reconnect</b></li>
+				<i>When PHP lost the MySQL connection, it is now able to reconnect without generating a fatal error</i>
+				<li><b>Refactor back office mass upload</b></li>
+				<i>It now supports reccurcive directory, huge files import, language selection, display usefull informations, is faster, safer</i>
+				<li><b>Refactor back office breadcrumb</b></li>
+				<i>Items are now clickable, more precise and subpages are now supported</i>
+				<li><b>Refactor the front office video "add to" tab</b></li>
+				<i>New way to display elements : more mobile friendly, fix bugs, ...</i>
+				<li><b>Refactor error handling</b></li>
+				<i>Update the way error messages are managed</i>
+				<li><b>Upgrade video convertion</b></li>
+				<i>Better tasklist support (no more full cpu charge when waiting for lock), support for audio track selection, fix audio negative start time, better 16:9 resolution and codecs detection</i>
+				<li><b>Implement Chromecast Support with back office option</b></li>
+				<i>This option enable the Chromecast support on the default video player</i>
+				<li><b>Upgrade users passwords security</b></li>
+				<i>Replace the MD5 implementation with salted SHA512</i>
+				<li><b>Implement search for collections</b></li>
+				<i>Search for collection like you do it for videos</i>
+				<li><b>Implement new option to totally disable ads</b></li>
+				<i>This option disable back office menu, JS and CSS front office integration, specific HTML elements for ads</i>
+				<li><b>Implement new option to differentiate video and photo allowed extensions</b></li>
+				<i>There's now two distincts lists of allowed extensions</i>
+				<li><b>Implement new users permissions</b></li>
+				<i>New permissions to limit the access to photos, collections, apply existing permissions on missing spots (like search)</i>
+				<li><b>Easy installation scripts</b></li>
+				<i>Don't search anymore for Debian 9 & 10, Ubuntu 17.10 & 16.04, CentOS 7 installation, there's a script for that now</i>
+				<li><b>Update VideoJS Player</b></li>
+				<i>VideoJS Player has been updated to 7.8.1</i>
+				<li><b>Fixs</b></li>
+				<i>Fix HTML/CSS/JS error/warnings/notices, many broken configurations, installation process, infinite loops, email tester, back office and front office pagination, many thumbs display, ...</i>
+				<li><b>Others</b></li>
+				<i>Fix typos, cleanup installation SQL, cleanup code, use translation instead of hardcoded texts, remove unused code and files (including a full back office unused theme), document PHP functions, use relative URLs, don't allow to play a video while it is converting, ...</i>
+			</ul>
+		</div>
 	</div>
 </div>
 
@@ -455,33 +418,6 @@
 				"column-1": '{$cbvid->action->count_flagged_objects()}'
 			}
 		]
-	});
-
-	$(function () {
-         $(".newsbox").bootstrapNews({
-			 newsPerPage: 4,
-			 autoplay: true,
-			 pauseOnHover:true,
-			 direction: 'down',
-			 newsTickerInterval: 7000,
-			 onToDo: function () { }
-        });
-    });
-
-	$( document ).ready(function() {
-		var baseurl="/";
-
-		$.ajax({
-		   url: '/ajax.php',
-			type: "POST",
-			dataType : 'text',
-			data: { mode: "get_news"},
-			success : function(news){
-				$('#clipbucket_news').html(news);
-			},
-			timeout : 5000,
-			error  :  function(err) { $('#clipbucket_news').html(' <div align="center"><em><strong>Connect with Internet to get News</strong></em></div>')},
-		});
 	});
 
  	$(function() {

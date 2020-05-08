@@ -594,29 +594,6 @@ class ClipBucket
     }
 
     /**
-     * Function used to get News From ClipBucket Blog
-     */
-    function get_cb_news()
-    {
-        $feeds = 5;
-
-        //if($_SERVER['HTTP_HOST']!='localhost')
-        $url = 'http://blog.clip-bucket.com/feed/';
-
-        $news = xml2array($url);
-        if (!$news)
-            return false;
-
-		$items = array();
-		$item = $news['rss']['channel']['item'];
-
-		for ($i = 0; $i < $feeds; $i++)
-			$items[] = $item[$i];
-
-		return $items;
-    }
-
-    /**
      * Function used to clean requests
      */
     function clean_requests()
