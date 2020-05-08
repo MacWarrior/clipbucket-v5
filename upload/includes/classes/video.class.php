@@ -472,22 +472,17 @@ class CBvideo extends CBCategory
 	{
 		global $db;
 		
-		if($this->video_exists($vid))
-		{
+		if($this->video_exists($vid)) {
 			$vdetails = $this->get_video($vid);
 
-			if($this->is_video_owner($vid,userid()) || has_access('admin_access',TRUE))
-			{
+			if($this->is_video_owner($vid,userid()) || has_access('admin_access',TRUE)) {
 				#THIS SHOULD NOT BE REMOVED :O
 				//list of functions to perform while deleting a video
 				$del_vid_funcs = $this->video_delete_functions;
 
-				if(is_array($del_vid_funcs))
-				{
-					foreach($del_vid_funcs as $func)
-					{
-						if(function_exists($func))
-						{
+				if(is_array($del_vid_funcs)) {
+					foreach($del_vid_funcs as $func) {
+						if(function_exists($func)) {
 							$func($vdetails);
 						}
 					}

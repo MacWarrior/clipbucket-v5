@@ -43,8 +43,7 @@ switch($mode)
 		//Deleting Videos
 		if(isset($_POST['delete_videos']))
 		{
-			for($id=0;$id<=VLISTPP;$id++)
-			{
+			for($id=0;$id<=VLISTPP;$id++) {
 				$cbvideo->delete_video($_POST['check_vid'][$id]);
 			}
 			$eh->flush();
