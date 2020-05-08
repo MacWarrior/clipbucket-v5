@@ -26,10 +26,16 @@
   <link rel="stylesheet" href="{$theme_url}/assets/css/font-awesome-ie7.min.css" />
 <![endif]-->
 
-<!-- page specific plugin styles -->
+<!--[if lte IE 8]>
+<link rel="stylesheet" href="{$theme_url}/assets/css/ace-ie.min.css" />
+<![endif]-->
+
+<!--[if lt IE 9]>
+<script src="{$theme_url}/assets/js/html5shiv.js"></script>
+<script src="{$theme_url}/assets/js/respond.min.js"></script>
+<![endif]-->
 
 <!-- fonts -->
-
 <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:400,300" />
 
 <!-- ace styles -->
@@ -39,38 +45,22 @@
 <link rel="stylesheet" href="{$theme_url}/assets/css/ace-skins.min.css" />
 {/if}
 
-<!--[if lte IE 8]>
-  <link rel="stylesheet" href="{$theme_url}/assets/css/ace-ie.min.css" />
-<![endif]-->
-
-<!-- inline styles related to this page -->
-
 <script type="text/javascript">
     var baseurl = "/";
     var imageurl = "{$imageurl}";
-</script>
 
-
-<!-- ace settings handler -->
-<script src="{$theme_url}/assets/js/ace-extra.min.js"></script>
-<script src="/js/clipbucket.js"></script>
-
-<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-
-<!--[if lt IE 9]>
-<script src="{$theme_url}/assets/js/html5shiv.js"></script>
-<script src="{$theme_url}/assets/js/respond.min.js"></script>
-<![endif]-->
-<script type="text/javascript">
     var lang_reply_to = "{lang code='reply_to'}";
     var lang_reply = "{lang code='reply'}";
 </script>
+
+<script src="{$theme_url}/assets/js/ace-extra.min.js"></script>
+<script src="/js/clipbucket.js"></script>
+
 <script type="text/javascript" src="/js/functions.js"></script>
 <script type="text/javascript" src="/js/admin_functions.js"></script>
 <script type="text/javascript "src="/js/jquery-2.0.3.min.js"></script>
 <script type="text/javascript" src="/js/jquery_plugs/jquery.cookie.js"></script>
 
-<!-- for bootstrap wysiwyg -->
 <link rel="stylesheet" href="{$theme_url}/css/summernote.css" />
 <script src="{$theme_url}/js/editor.js"></script>
 <script src="{$theme_url}/js/main.js"></script>
@@ -81,24 +71,15 @@
 <script src="{$theme_url}/js/jquery.serial.js" type="text/javascript"></script>
 <script src="{$theme_url}/js/chart-1.0.2.min.js" type="text/javascript"></script>
 
-<!-- for bootstrap wysiwyg -->
-
-<!-- for popovers -->
-<script>
-    $(document).ready(function(){
-        if( $(".popoverButton").length > 0 ){
-            $(".popoverButton").popover();
-        }     
-    });
-</script>
-
-<!-- bootstrap x-editable -->
 <link rel="stylesheet" href="{$theme_url}/bootstrap-editable/css/bootstrap-editable.css" />
 <script src="{$theme_url}/bootstrap-editable/js/bootstrap-editable.min.js"></script>
 
-
 <script type="text/javascript">
     $(document).ready(function(){
+        if( $(".popoverButton").length > 0 ){
+            $(".popoverButton").popover();
+        }
+
         $(".drop").on({
             click: function(e){
                 var ele = $(this).parent().nextAll("#content").get(0);
@@ -110,62 +91,6 @@
     $(document).ready(function() {
         $('#desc').summernote();
         $('.desc').summernote();
-    });
-
-    $(function()
-    {
-        $(".saveTodo").click(function(e){
-            var self = this;
-             var newVal = $(this).parent().parent().find("input[name='todo']").val();
-             if(newVal.length){
-                var ajaxCall = $.ajax({
-                    url: "/admin_area/index.php",
-                    type: "post",
-                    data: {
-                        val: newVal,
-                        mode: "add_todo",
-                    },
-                });
-                ajaxCall.success(function(data){
-                    data = $.parseJSON(data);
-                    var p = document.createElement("p");
-                    p.className = "xedit editable editable-click";
-                    var input = document.createElement("input");
-                    input.type = "hidden";
-                    input.name = "todoid";
-                    input.value = data.id;
-                    var b = document.createElement("b");
-                    b.innerHTML = data.todo;
-                    p.appendChild(input);
-                    p.appendChild(b);
-                    console.log(p);
-                    $(self).parents("form").after(p);
-                });
-             }else{
-                alert("Please enter a valid value");
-             }
-        });
-
-        $("#todolist").on("click", ".editable-clear-x", function(e){
-            e.preventDefault();
-                var self = this;
-                var id = $(this).parents(".editable-container").prev().attr("id");
-                id = id.match(/([0-9]+)$/g);
-                id = id.pop();
-                var ajaxCall = $.ajax({
-                    url: "/admin_area/index.php",
-                    type: "post",
-                    data: {
-                        id: id,
-                        mode: "delete_todo",
-                    },
-                });
-                ajaxCall.success(function(data){
-                    $(self).parents("p").remove();
-                    $(self).parents(".editable-container").remove();
-                });
-                e.stopPropagation();
-        });
     });
 </script>
 
