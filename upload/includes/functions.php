@@ -5657,8 +5657,7 @@
 			}
 			$return_arr['result'] = $result;
 			curl_close($ch);
-		}
-		else{
+		} else{
 			$return_arr['error'] = "False no callback url present! {$call_bk}";
 		}
 
@@ -5666,17 +5665,39 @@
 
 	}
 
-
 	/**
 	* This function is used to clean a string removing all special chars
 	* @author Mohammad Shoaib
 	* @param string
-	* @return cleaned string
+	* @return string
 	*/ 
 	function cleanString($string) {
 		$string = str_replace("â€™", "'", $string);
 	    return preg_replace('/[^A-Za-z0-9 !@#$%^&*()_?<>|{}\[\].,+-;\/:"\'\-]/', "'", $string);
 	}
+
+	function display_changelog($version){
+	    $filepath = __DIR__.'/../changelog/'.$version.'.json';
+	    if( file_exists($filepath) ){
+	        $content_json = json_decode(file_get_contents($filepath), true);
+	        echo '<div class="well">';
+	        echo '<h3>'.$content_json['version'].' Changelog - '.ucfirst($content_json['status']).'</h3>';
+	        foreach($content_json['detail'] as $detail){
+	            echo '<b>'.$detail['title'].'</b>';
+	            if( !isset($detail['description']) ){
+	                continue;
+                }
+	            echo '<ul>';
+	            foreach($detail['description'] as $description){
+	                echo '<li>'.$description.'</li>';
+                }
+	            echo '</ul>';
+            }
+	        echo '</div>';
+        } else {
+	        echo 'Oops... Something wrong happend...';
+        }
+    }
 
     include('functions_db.php');
     include('functions_filter.php');

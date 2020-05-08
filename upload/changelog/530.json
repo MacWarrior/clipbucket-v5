@@ -1,0 +1,112 @@
+{
+  "version":"5.3.0",
+  "status":"stable",
+  "detail":[
+    {
+      "title":"PHP 7.3 compatibility",
+      "description":[]
+    }
+  ,{
+      "title":"Refactor data storage",
+      "description":[
+        "Data are not transformed before storage anymore (\"Greeting: \"Hello, World!\"\" was stored as \"Greeting: &quot;Hello, World!&quot;\")"
+      ]
+    }
+  ,{
+      "title": "Implement MySQL reconnect",
+      "description": [
+        "When PHP lost the MySQL connection, it is now able to reconnect without generating a fatal error"
+      ]
+    }
+  ,{
+      "title": "Refactor back office mass upload",
+      "description": [
+        "It now supports reccurcive directory, huge files import, language selection, display usefull informations, is faster, safer"
+      ]
+    }
+  ,{
+      "title": "Refactor back office breadcrumb",
+      "description": [
+        "Items are now clickable, more precise and subpages are now supported"
+      ]
+    }
+  ,{
+      "title": "Refactor the front office video \"add to\" tab",
+      "description": [
+        "New way to display elements : more mobile friendly, fix bugs, ..."
+      ]
+    }
+  ,{
+      "title": "Refactor error handling",
+      "description": [
+        "Update the way error messages are managed"
+      ]
+    }
+  ,{
+      "title": "Upgrade video convertion",
+      "description": [
+        "Better tasklist support (no more full cpu charge when waiting for lock), support for audio track selection, fix audio negative start time, better 16:9 resolution and codecs detection"
+      ]
+    }
+  ,{
+      "title": "Implement Chromecast Support with back office option",
+      "description": [
+        "This option enable the Chromecast support on the default video player"
+      ]
+    }
+  ,{
+      "title": "Upgrade users passwords security",
+      "description": [
+        "Replace the MD5 implementation with salted SHA512"
+      ]
+    }
+  ,{
+      "title": "Implement search for collections",
+      "description": [
+        "Search for collection like you do it for videos"
+      ]
+    }
+  ,{
+      "title": "Implement new option to totally disable ads",
+      "description": [
+        "This option disable back office menu, JS and CSS front office integration, specific HTML elements for ads"
+      ]
+    }
+  ,{
+      "title": "Implement new option to differentiate video and photo allowed extensions",
+      "description": [
+        "There's now two distincts lists of allowed extensions"
+      ]
+    }
+  ,{
+      "title": "Implement new users permissions",
+      "description": [
+        "New permissions to limit the access to photos, collections, apply existing permissions on missing spots (like search)"
+      ]
+    }
+  ,{
+      "title": "Easy installation scripts",
+      "description": [
+        "Don't search anymore for Debian 9 & 10, Ubuntu 17.10 & 16.04, CentOS 7 installation, there's a script for that now"
+      ]
+    }
+  ,{
+      "title": "Update VideoJS Player",
+      "description": [
+        "VideoJS Player has been updated to 7.8.1"
+      ]
+    }
+  ,{
+      "title": "Fixs",
+      "description": [
+        "Fix HTML/CSS/JS error/warnings/notices, many broken configurations, installation process, infinite loops, email tester, back office and front office pagination, many thumbs display, ..."
+      ]
+    }
+  ,{
+      "title": "Others",
+      "description": [
+        "Fix typos, cleanup installation SQL, cleanup code, use translation instead of hardcoded texts, remove unused code and files (including a full back office unused theme), document PHP functions, use relative URLs, don't allow to play a video while it is converting, ..."
+      ]
+    }
+  ]
+}

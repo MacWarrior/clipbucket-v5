@@ -1,0 +1,28 @@
+{
+  "version":"5.3.1",
+  "status":"dev",
+  "detail":[
+    {
+      "title":"Admin area",
+      "description":[
+        "Update changelog display"
+        ,"Update lib amCharts to 3.21.15"
+        ,"Remove Clipbucket news"
+      ]
+    }
+    ,{
+      "title":"Video conversion",
+      "description":[
+        "Fix rare conversion fail"
+      ]
+    }
+    ,{
+      "title": "Miscellaneous",
+      "description": [
+        "Cleanup code",
+        "Cleanup code",
+        "Fix installation <i>#120<\/i>"
+      ]
+    }
+  ]
+}
