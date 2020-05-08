@@ -539,6 +539,9 @@ class FFMpeg
                 $commandSwitches .= ' -pix_fmt yuv420p';
             }
 
+            // Fix rare video conversion fail
+            $commandSwitches .= ' -max_muxing_queue_size 1024';
+
 			// Setting Size Of output video
 			if($isHd)
 			{
@@ -1267,6 +1270,9 @@ class FFMpeg
         if( config('force_8bits') ){
             $opt_av .= ' -pix_fmt yuv420p';
         }
+
+        // Fix rare video conversion fail
+        $opt_av .= ' -max_muxing_queue_size 1024';
 
 		# audio bitrate
 		if($p['use_audio_bit_rate'])
