@@ -86,6 +86,7 @@
 			'default_country_iso2',
 			'default_time_zone',
             'pick_geo_country',
+            'enable_update_checker',
 			'disallowed_usernames',
 			'use_subs',
 

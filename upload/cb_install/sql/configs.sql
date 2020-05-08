@@ -52,7 +52,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'captcha_type', '0'),
 	(NULL, 'allow_upload', ''),
 	(NULL, 'allowed_video_types', 'wmv,avi,divx,3gp,mov,mpeg,mpg,xvid,flv,asf,rm,dat,mp4,mkv,webm'),
-	(NULL, 'version', '5.3.0'),
+	(NULL, 'version', '5.3.1'),
 	(NULL, 'version_type', 'Alpha'),
 	(NULL, 'allow_template_change', '1'),
 	(NULL, 'allow_language_change', '1'),
@@ -261,7 +261,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'control_bar_logo', 'yes'),
 	(NULL, 'contextual_menu_disabled', ''),
 	(NULL, 'control_bar_logo_url', '/images/icons/player-logo.png'),
-	(NULL, 'player_thumbnails', 'yes');
+	(NULL, 'player_thumbnails', 'yes'),
+	(NULL, 'enable_update_checker', '1');
 
 INSERT INTO `{tbl_prefix}languages` (`language_id`, `language_code`, `language_name`, `language_regex`, `language_active`, `language_default`) VALUES
 	(1, 'en', 'English', '/^en/i', 'yes', 'yes'),

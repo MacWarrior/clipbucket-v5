@@ -684,3 +684,28 @@ ul.mainTabs{
 	padding:9px 15px;
 	margin-right:10px;
 }
+
+.nav-tabs li.right{
+	float:right;
+}
+
+.nav-tabs li span.status-red,
+.nav-tabs li span.status-orange,
+.nav-tabs li span.status-green{
+	width: 10px;
+	display: inline-block;
+	height: 10px;
+	border-radius: 10px;
+}
+
+.nav-tabs li span.status-red{
+	background-color: #ff3e3e;
+}
+
+.nav-tabs li span.status-orange{
+	background-color: #ef903f;
+}
+
+.nav-tabs li span.status-green{
+	background-color: #3bb71c;
+}

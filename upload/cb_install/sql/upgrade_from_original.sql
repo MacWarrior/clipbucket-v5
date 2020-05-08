@@ -327,7 +327,8 @@ INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 	('control_bar_logo', 'yes'),
 	('contextual_menu_disabled', ''),
 	('control_bar_logo_url', '/images/icons/player-logo.png'),
-	('player_thumbnails', 'yes');
+	('player_thumbnails', 'yes'),
+	('enable_update_checker', '1');
 
 ALTER TABLE `{tbl_prefix}user_levels_permissions` MODIFY COLUMN `plugins_perms` text NOT NULL DEFAULT '';
 ALTER TABLE `{tbl_prefix}users`

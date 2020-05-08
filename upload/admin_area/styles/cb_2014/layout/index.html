@@ -162,6 +162,13 @@
 					<h5>5.3.0 - 5.0.0</h5>
 				</a>
 			</li>
+			{if config('enable_update_checker')=='1'}
+			<li class="right">
+				<a data-toggle="tab" href="#update">
+					<h5>Update status <span class="status-{get_update_status(true)}"></span></h5>
+				</a>
+			</li>
+			{/if}
 		</ul>
 		<div class="tab-content">
 			<div id="531" class="tab-pane active">
@@ -174,6 +181,13 @@
 					{display_changelog('530')}
 				</div>
 			</div>
+			{if config('enable_update_checker')=='1'}
+			<div id="update" class="tab-pane">
+				<div class="widgetBox">
+					{get_update_status()}
+				</div>
+			</div>
+			{/if}
 		</div>
 	</div>
 </div>

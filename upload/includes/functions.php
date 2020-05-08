@@ -5676,26 +5676,91 @@
 	    return preg_replace('/[^A-Za-z0-9 !@#$%^&*()_?<>|{}\[\].,+-;\/:"\'\-]/', "'", $string);
 	}
 
-	function display_changelog($version){
+	function display_changelog($version)
+    {
 	    $filepath = __DIR__.'/../changelog/'.$version.'.json';
-	    if( file_exists($filepath) ){
-	        $content_json = json_decode(file_get_contents($filepath), true);
-	        echo '<div class="well">';
-	        echo '<h3>'.$content_json['version'].' Changelog - '.ucfirst($content_json['status']).'</h3>';
-	        foreach($content_json['detail'] as $detail){
-	            echo '<b>'.$detail['title'].'</b>';
-	            if( !isset($detail['description']) ){
-	                continue;
-                }
-	            echo '<ul>';
-	            foreach($detail['description'] as $description){
-	                echo '<li>'.$description.'</li>';
-                }
-	            echo '</ul>';
+	    if( !file_exists($filepath) ) {
+            echo 'Oops... Something wrong happend...<br/>';
+            echo 'File don\' exists :'.$filepath;
+            return;
+        }
+        $content_json = json_decode(file_get_contents($filepath), true);
+        echo '<div class="well">';
+        echo '<h3>'.$content_json['version'].' Changelog - '.ucfirst($content_json['status']).'</h3>';
+        foreach($content_json['detail'] as $detail){
+            echo '<b>'.$detail['title'].'</b>';
+            if( !isset($detail['description']) ){
+                continue;
             }
-	        echo '</div>';
+            echo '<ul>';
+            foreach($detail['description'] as $description){
+                echo '<li>'.$description.'</li>';
+            }
+            echo '</ul>';
+        }
+        echo '</div>';
+    }
+
+    /**
+     * @param bool
+     * @return string|void
+     */
+    function get_update_status($only_flag = false)
+    {
+        if( config('enable_update_checker') != 1 ){
+            return '';
+        }
+
+        $base_url = 'https://raw.githubusercontent.com/MacWarrior/clipbucket-v5/master/upload/changelog';
+        $current_version = VERSION;
+        $current_status = strtolower(STATE);
+
+        $versions_url = $base_url.'/latest.json';
+        $versions = json_decode(file_get_contents($versions_url), true);
+        if( !isset($versions[$current_status]) ){
+            if( $only_flag ){
+                return 'red';
+            }
+            echo 'Oops... Something wrong happend...<br/>';
+            echo 'Can\'t get file : '.$versions_url;
+            return;
+        }
+
+        $changelog_url = $base_url.'/'.$versions[$current_status].'.json';
+        $changelog = json_decode(file_get_contents($changelog_url), true);
+        if( !isset($changelog['version']) ){
+            if( $only_flag ){
+                return 'red';
+            }
+            echo 'Oops... Something wrong happend...<br/>';
+            echo 'Can\'t get file : '.$changelog_url;
+            return;
+        }
+
+        if( !$only_flag ) {
+            echo '<h5>Current version : <b>' . $current_version . '</b> - <i>' . ucfirst( $current_status ) . '</i><br/>';
+            echo 'Latest <i>' . ucfirst( $current_status ) . '</i> version : <b>' . $changelog['version'] . '</b></h5>';
+        }
+
+        if( $current_version == $changelog['version'] ){
+            if( $only_flag ){
+                return 'green';
+            }
+            echo '<h3 style="text-align:center;">Your Clipbucket seems up-to-date !</h3>';
+
+            if( $current_status == 'dev' ){
+                echo '<h5>Please note that in dev version, you can have the latest version number but not the latest sources.<br/>
+                          Please refer to <a href="https://github.com/MacWarrior/clipbucket-v5/commits/master" target="_blank">GitHub repository</a></h5>';
+            }
         } else {
-	        echo 'Oops... Something wrong happend...';
+            if( $only_flag ){
+                return 'orange';
+            }
+            echo '<h3 style="text-align:center;">Update <b>'.$changelog['version'].'</b> is available !</h3>';
+        }
+
+        if( $current_status == 'dev' ){
+            echo '<h5>Thank you for using the developpement version of Clipbucket !<br/>Please create an <a href="https://github.com/MacWarrior/clipbucket-v5/issues" target="_blank">issue</a> if you encounter any bug.</h5>';
         }
     }
 
