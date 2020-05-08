@@ -22,7 +22,7 @@
 <hr>
 <div class="row">
 	<div class="col-md-6">
-		<ul class="nav nav-tabs" id="myTab">
+		<ul class="nav nav-tabs">
 			<li class="active">
 				<a data-toggle="tab" href="#todolist">
 					<h5><i class="glyphicon glyphicon-list-alt"></i> ToDo List</h5>
@@ -92,7 +92,7 @@
 			</div>
 			<div id="rcomments" class="tab-pane">
 				<div class="widget-box">
-				{if $comments}
+					{if $comments}
 					<div class="widget-header header-color-blue">
 						<h5>Recent Comments</h5>
 						<div class="widget-toolbar">
@@ -142,75 +142,96 @@
 							</div>
 						</div>
 					</div>
-				{/if}
+					{/if}
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
-<hr>
-<div class="row">
-	<div class="col-md-12">
-		<div class="well changelog">
-			<h3>5.3.1 Changelog</h3>
+	<div class="col-md-6">
+		<ul class="nav nav-tabs">
+			<li class="title">
+				<h5><i class="glyphicon glyphicon-list-alt"></i> Changelogs</h5>
+			</li>
+			<li class="active">
+				<a data-toggle="tab" href="#531">
+					<h5>5.3.1</h5>
+				</a>
+			</li>
+			<li>
+				<a data-toggle="tab" href="#530-500">
+					<h5>5.3.0 - 5.0.0</h5>
+				</a>
+			</li>
+		</ul>
+		<div class="tab-content">
+			<div id="531" class="tab-pane active">
+				<div class="widgetBox">
+					<div class="well">
+						<h3>5.3.1 Changelog</h3>
 
-			<b>Admin area</b>
-			<ul>
-				<li>Update changelog display</li>
-				<li>Update lib amCharts to 3.21.15</li>
-				<li>Remove Clipbucket news </li>
-			</ul>
-			<b>Video conversion</b>
-			<ul>
-				<li>Fix rare conversion fail</li>
-			</ul>
-			<b>Miscellaneous</b>
-			<ul>
-				<li>Remove unused files</li>
-				<li>Cleanup code</li>
-				<li>Fix installation <i>#120</i></li>
-			</ul>
-		</div>
-
-		<div class="well changelog">
-			<h3>5.0.0 - 5.3.0 Changelog <b class="arrow icon-angle-down"></b></h3>
-			<ul style="display:none;">
-				<li><b>PHP 7.3 compatibility</b></li>
-				<li><b>Refactor data storage</b></li>
-				<i>Data are not transformed before storage anymore (<b>"</b>Greeting: "Hello, World!"<b>"</b> was stored as <b>"</b>Greeting: &amp;quot;Hello, World!&amp;quot;<b>"</b>)</i>
-				<li><b>Implement MySQL reconnect</b></li>
-				<i>When PHP lost the MySQL connection, it is now able to reconnect without generating a fatal error</i>
-				<li><b>Refactor back office mass upload</b></li>
-				<i>It now supports reccurcive directory, huge files import, language selection, display usefull informations, is faster, safer</i>
-				<li><b>Refactor back office breadcrumb</b></li>
-				<i>Items are now clickable, more precise and subpages are now supported</i>
-				<li><b>Refactor the front office video "add to" tab</b></li>
-				<i>New way to display elements : more mobile friendly, fix bugs, ...</i>
-				<li><b>Refactor error handling</b></li>
-				<i>Update the way error messages are managed</i>
-				<li><b>Upgrade video convertion</b></li>
-				<i>Better tasklist support (no more full cpu charge when waiting for lock), support for audio track selection, fix audio negative start time, better 16:9 resolution and codecs detection</i>
-				<li><b>Implement Chromecast Support with back office option</b></li>
-				<i>This option enable the Chromecast support on the default video player</i>
-				<li><b>Upgrade users passwords security</b></li>
-				<i>Replace the MD5 implementation with salted SHA512</i>
-				<li><b>Implement search for collections</b></li>
-				<i>Search for collection like you do it for videos</i>
-				<li><b>Implement new option to totally disable ads</b></li>
-				<i>This option disable back office menu, JS and CSS front office integration, specific HTML elements for ads</i>
-				<li><b>Implement new option to differentiate video and photo allowed extensions</b></li>
-				<i>There's now two distincts lists of allowed extensions</i>
-				<li><b>Implement new users permissions</b></li>
-				<i>New permissions to limit the access to photos, collections, apply existing permissions on missing spots (like search)</i>
-				<li><b>Easy installation scripts</b></li>
-				<i>Don't search anymore for Debian 9 & 10, Ubuntu 17.10 & 16.04, CentOS 7 installation, there's a script for that now</i>
-				<li><b>Update VideoJS Player</b></li>
-				<i>VideoJS Player has been updated to 7.8.1</i>
-				<li><b>Fixs</b></li>
-				<i>Fix HTML/CSS/JS error/warnings/notices, many broken configurations, installation process, infinite loops, email tester, back office and front office pagination, many thumbs display, ...</i>
-				<li><b>Others</b></li>
-				<i>Fix typos, cleanup installation SQL, cleanup code, use translation instead of hardcoded texts, remove unused code and files (including a full back office unused theme), document PHP functions, use relative URLs, don't allow to play a video while it is converting, ...</i>
-			</ul>
+						<b>Admin area</b>
+						<ul>
+							<li>Update changelog display</li>
+							<li>Update lib amCharts to 3.21.15</li>
+							<li>Remove Clipbucket news </li>
+						</ul>
+						<b>Video conversion</b>
+						<ul>
+							<li>Fix rare conversion fail</li>
+						</ul>
+						<b>Miscellaneous</b>
+						<ul>
+							<li>Remove unused files</li>
+							<li>Cleanup code</li>
+							<li>Fix installation <i>#120</i></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div id="530-500" class="tab-pane">
+				<div class="widgetBox">
+					<div class="well">
+						<h3>5.3.0 - 5.0.0 Changelog</h3>
+						<ul>
+							<li><b>PHP 7.3 compatibility</b></li>
+							<li><b>Refactor data storage</b></li>
+							<i>Data are not transformed before storage anymore (<b>"</b>Greeting: "Hello, World!"<b>"</b> was stored as <b>"</b>Greeting: &amp;quot;Hello, World!&amp;quot;<b>"</b>)</i>
+							<li><b>Implement MySQL reconnect</b></li>
+							<i>When PHP lost the MySQL connection, it is now able to reconnect without generating a fatal error</i>
+							<li><b>Refactor back office mass upload</b></li>
+							<i>It now supports reccurcive directory, huge files import, language selection, display usefull informations, is faster, safer</i>
+							<li><b>Refactor back office breadcrumb</b></li>
+							<i>Items are now clickable, more precise and subpages are now supported</i>
+							<li><b>Refactor the front office video "add to" tab</b></li>
+							<i>New way to display elements : more mobile friendly, fix bugs, ...</i>
+							<li><b>Refactor error handling</b></li>
+							<i>Update the way error messages are managed</i>
+							<li><b>Upgrade video convertion</b></li>
+							<i>Better tasklist support (no more full cpu charge when waiting for lock), support for audio track selection, fix audio negative start time, better 16:9 resolution and codecs detection</i>
+							<li><b>Implement Chromecast Support with back office option</b></li>
+							<i>This option enable the Chromecast support on the default video player</i>
+							<li><b>Upgrade users passwords security</b></li>
+							<i>Replace the MD5 implementation with salted SHA512</i>
+							<li><b>Implement search for collections</b></li>
+							<i>Search for collection like you do it for videos</i>
+							<li><b>Implement new option to totally disable ads</b></li>
+							<i>This option disable back office menu, JS and CSS front office integration, specific HTML elements for ads</i>
+							<li><b>Implement new option to differentiate video and photo allowed extensions</b></li>
+							<i>There's now two distincts lists of allowed extensions</i>
+							<li><b>Implement new users permissions</b></li>
+							<i>New permissions to limit the access to photos, collections, apply existing permissions on missing spots (like search)</i>
+							<li><b>Easy installation scripts</b></li>
+							<i>Don't search anymore for Debian 9 & 10, Ubuntu 17.10 & 16.04, CentOS 7 installation, there's a script for that now</i>
+							<li><b>Update VideoJS Player</b></li>
+							<i>VideoJS Player has been updated to 7.8.1</i>
+							<li><b>Fixs</b></li>
+							<i>Fix HTML/CSS/JS error/warnings/notices, many broken configurations, installation process, infinite loops, email tester, back office and front office pagination, many thumbs display, ...</i>
+							<li><b>Others</b></li>
+							<i>Fix typos, cleanup installation SQL, cleanup code, use translation instead of hardcoded texts, remove unused code and files (including a full back office unused theme), document PHP functions, use relative URLs, don't allow to play a video while it is converting, ...</i>
+						</ul>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

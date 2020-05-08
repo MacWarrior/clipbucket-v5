@@ -680,6 +680,7 @@ ul.mainTabs{
 }
 
 /* CB 5.X */
-.changelog .arrow{
-	cursor: pointer;
+.nav-tabs li.title{
+	padding:9px 15px;
+	margin-right:10px;
 }

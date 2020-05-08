@@ -10,16 +10,6 @@ function init(){
         }
     }
 
-    $('.changelog .arrow').click(function(){
-        if( $(this).parent().next().is(':visible') ){
-            $(this).parent().next().css('display','none');
-            $(this).removeClass('icon-angle-up').addClass('icon-angle-down');
-        } else {
-            $(this).parent().next().css('display','block');
-            $(this).removeClass('icon-angle-down').addClass('icon-angle-up');
-        }
-    });
-
 }
 
 //this function will insert the sticky notes to the DOM
