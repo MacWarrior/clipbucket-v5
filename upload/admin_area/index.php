@@ -14,10 +14,6 @@
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'Dashboard', 'url' => '');
 
-	$Cbucket->cbinfo['latest'] = $latest;
-	if($Cbucket->cbinfo['version'] < $Cbucket->cbinfo['latest']['version'])
-		$Cbucket->cbinfo['new_available'] = true;
-
 	$result_array = $array;
 	//Getting Video List
 	$result_array['limit'] = $get_limit;

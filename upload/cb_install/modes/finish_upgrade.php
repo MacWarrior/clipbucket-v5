@@ -1,10 +1,4 @@
 <?php
-$cbfile = BASEDIR.'/includes/clipbucket.php';
-if(file_exists($cbfile)){
-	unlink($cbfile);
-}
-copy(BASEDIR.'/cb_install/clipbucket.php',$cbfile);
-
 $db->update(tbl("config"),array("value"),array(now())," name='date_updated' ");
 
 ?>

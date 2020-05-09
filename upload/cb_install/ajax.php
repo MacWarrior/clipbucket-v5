@@ -1,6 +1,6 @@
 <?php
 define("THIS_PAGE","cb_install");
-include('clipbucket.php');
+include('../includes/clipbucket.php');
 
 /**
 * ClipBucket v2.1 Installation Ajax
@@ -227,9 +227,7 @@ if($mode=='adminsettings')
 				fwrite($fp, $dbconnect);
 				fclose($fp);
 
-				copy(BASEDIR."/cb_install/clipbucket.php",BASEDIR."/includes/clipbucket.php");
-
-				$return['msg'] = '<div class="ok green">DBconnect and Clipbucket files have been created</div>';
+				$return['msg'] = '<div class="ok green">DBconnect file have been created</div>';
 				$return['status'] = 'forwarding you to admin settings..';
 				$return['step'] = 'forward';
 				break;

@@ -1,6 +1,6 @@
 <?php
 	define("THIS_PAGE","cb_install");
-	include('clipbucket.php');
+	include('../includes/clipbucket.php');
 	include("upgradeable.php");
  
 	$modes = array(

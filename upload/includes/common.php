@@ -199,7 +199,7 @@ $GoogleTranslator = new GoogleTranslator();
 
 check_install('after');
 @include($Cbucket->BASEDIR.'/includes/clipbucket.php');
-$Cbucket->cbinfo = array("version"=>VERSION,"state"=>STATE,"rev"=>REV,"release_date"=>RELEASED);
+$Cbucket->cbinfo = array("version"=>VERSION,"state"=>STATE,"rev"=>REV);
 
 # Holds Advertisment IDS that are being Viewed
 $ads_array = array();

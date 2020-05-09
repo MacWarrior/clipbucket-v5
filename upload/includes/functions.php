@@ -3795,7 +3795,7 @@
 		switch($type)
 		{
 			case "before":
-				if(file_exists('files/temp/install.me') && !file_exists('includes/clipbucket.php'))
+				if(file_exists('files/temp/install.me') )
 				{
 					header('Location: '.get_server_url().'/cb_install');
 					die();
@@ -5675,17 +5675,25 @@
 	    return preg_replace('/[^A-Za-z0-9 !@#$%^&*()_?<>|{}\[\].,+-;\/:"\'\-]/', "'", $string);
 	}
 
-	function display_changelog($version)
+	function display_changelog($version, $title = null)
     {
-	    $filepath = __DIR__.'/../changelog/'.$version.'.json';
-	    if( !file_exists($filepath) ) {
-            echo lang('error_occured').'<br/>';
-            echo 'File don\' exists :'.$filepath;
-            return;
+        if( !is_array($version) ){
+            $filepath = __DIR__.'/../changelog/'.$version.'.json';
+            if( !file_exists($filepath) ) {
+                echo lang('error_occured').'<br/>';
+                echo 'File don\' exists :'.$filepath;
+                return;
+            }
+            $content_json = json_decode(file_get_contents($filepath), true);
+        } else {
+            $content_json = $version;
         }
-        $content_json = json_decode(file_get_contents($filepath), true);
         echo '<div class="well">';
-        echo '<h3>'.$content_json['version'].' Changelog - '.ucfirst($content_json['status']).'</h3>';
+        if( is_null($title) ){
+            echo '<h3>'.$content_json['version'].' Changelog - '.ucfirst($content_json['status']).'</h3>';
+        } else {
+            echo '<h3>'.$title.'</h3>';
+        }
         foreach($content_json['detail'] as $detail){
             echo '<b>'.$detail['title'].'</b>';
             if( !isset($detail['description']) ){
@@ -5698,6 +5706,68 @@
             echo '</ul>';
         }
         echo '</div>';
+    }
+
+    function display_changelog_diff($current, $new)
+    {
+        $detail_current = $current['detail'];
+        $detail_new = $new['detail'];
+        $diff = [
+            'version' => $new['version']
+            ,'revision' => $new['revision']
+            ,'status' => $new['status']
+            ,'detail' => []
+        ];
+
+        foreach($detail_new as $categ){
+            $categ_exists = false;
+            foreach($detail_current as $categ_current){
+                if( $categ['title'] != $categ_current['title']){
+                    continue;
+                }
+
+                foreach($categ['description'] as $element){
+                    $element_exists = false;
+                    foreach($categ_current['description'] as $element_current){
+                        if( $element == $element_current ){
+                            $element_exists = true;
+                            break;
+                        }
+                    }
+
+                    if( !$element_exists ){
+                        $element_diff_exists = false;
+                        foreach($diff['detail'] as &$element_diff){
+                            if( $element_diff['title'] == $categ_current['title'] ){
+                                $element_diff['description'][] = $element;
+                                $element_diff_exists = true;
+                                break;
+                            }
+                        }
+
+                        if( !$element_diff_exists ){
+                            $diff['detail'][] = [
+                                'title' => $categ_current['title']
+                                ,'description' => [$element]
+                            ];
+                        }
+                    }
+
+                }
+
+                $categ_exists = true;
+            }
+
+            if( !$categ_exists ){
+                $diff['detail'][] = $categ;
+            }
+        }
+
+        if( empty($diff['detail']) ){
+            echo 'The new revision has the same changelog';
+        } else {
+            display_changelog($diff, 'Additions from your current version');
+        }
     }
 
     /**
@@ -5713,6 +5783,7 @@
         $base_url = 'https://raw.githubusercontent.com/MacWarrior/clipbucket-v5/master/upload/changelog';
         $current_version = VERSION;
         $current_status = strtolower(STATE);
+        $current_revision = REV;
 
         $versions_url = $base_url.'/latest.json';
         $versions = json_decode(file_get_contents($versions_url), true);
@@ -5737,26 +5808,27 @@
         }
 
         if( !$only_flag ) {
-            echo '<h5>Current version : <b>' . $current_version . '</b> - <i>' . ucfirst( $current_status ) . '</i><br/>';
-            echo lang('latest').' <i>' . ucfirst( $current_status ) . '</i> version : <b>' . $changelog['version'] . '</b></h5>';
+            echo '<h5>Current version : <b>' . $current_version . '</b> - Revision <b>'.$current_revision.'</b> <i>('.ucfirst( $current_status ).')</i><br/>';
+            echo 'Latest version <i>('.ucfirst( $current_status).')</i> : <b>'.$changelog['version'].'</b> - Revision <b>'.$changelog['revision'].'</b></h5>';
         }
 
-        if( $current_version == $changelog['version'] ){
+        if( $current_version == $changelog['version'] && $current_revision == $changelog['revision'] ){
             if( $only_flag ){
                 return 'green';
             }
             echo '<h3 style="text-align:center;">Your Clipbucket seems up-to-date !</h3>';
-
-            if( $current_status == 'dev' ){
-                echo '<h5>Please note that in dev version, you can have the latest version number but not the latest sources.<br/>
-                          Please refer to <a href="https://github.com/MacWarrior/clipbucket-v5/commits/master" target="_blank">GitHub repository</a></h5>';
-            }
         } else {
             if( $only_flag ){
                 return 'orange';
             }
-            echo '<h3 style="text-align:center;">Update <b>'.$changelog['version'].'</b> is available !</h3>';
-            display_changelog($versions[$current_status]);
+            echo '<h3 style="text-align:center;">Update <b>'.$changelog['version'].'</b> - Revision <b>'.$changelog['revision'].'</b> is available !</h3>';
+
+            if( $current_version != $changelog['version'] ){
+                display_changelog($changelog);
+            } else {
+                $current_changelog = json_decode(file_get_contents(realpath(__DIR__.'/../changelog').'/'.CHANGELOG.'.json'), true);
+                display_changelog_diff($current_changelog, $changelog);
+            }
         }
 
         if( $current_status == 'dev' ){
