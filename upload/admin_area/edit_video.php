@@ -62,7 +62,8 @@
 	//Deleting comment 
 	if(isset($_POST['del_cmt'])){
 		$cid = mysql_clean($_POST['cmt_id']);
-		$myquery->delete_comment($cid);
+        $type_id = $myquery->delete_comment($cid);
+        $cbvid->update_comments_count($type_id);
 	}
 
 	if(!$array['order'])

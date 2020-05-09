@@ -9,6 +9,7 @@
         ,"Update lib amCharts to 3.21.15"
         ,"Remove Clipbucket news"
         ,"Add new update statut checker"
+        ,"Update video comment count when deleting comment"
       ]
     }
     ,{
@@ -20,7 +21,7 @@
     ,{
       "title": "Miscellaneous",
       "description": [
-        "Cleanup code",
+        "Remove unused files",
         "Cleanup code",
         "Fix installation <i>#120<\/i>"
       ]
