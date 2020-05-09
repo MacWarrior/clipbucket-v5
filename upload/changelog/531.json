@@ -12,6 +12,8 @@
         ,"Update video comment count when deleting comment"
         ,"Replace outdated footer links"
         ,"Fix possibles XSS injections"
+        ,"Update dashboard comments display"
+        ,"Fix video edit user's avatar display on comments"
       ]
     }
     ,{

@@ -24,6 +24,11 @@
 	<div class="col-md-6">
 		<ul class="nav nav-tabs">
 			<li class="active">
+				<a data-toggle="tab" href="#rcomments">
+					<h5><i class="glyphicon glyphicon-comment"></i> Recent Comments</h5>
+				</a>
+			</li>
+			<li>
 				<a data-toggle="tab" href="#todolist">
 					<h5><i class="glyphicon glyphicon-list-alt"></i> ToDo List</h5>
 				</a>
@@ -33,14 +38,38 @@
 					<h5><i class="glyphicon glyphicon-pencil"></i> Personal Notes</h5>
 				</a>
 			</li>
-			<li>
-				<a data-toggle="tab" href="#rcomments">
-					<h5><i class="glyphicon glyphicon-comment"></i> Recent Comments</h5>
-				</a>
-			</li>
 		</ul>
 		<div class="tab-content">
-			<div id="todolist" class="tab-pane active">
+			<div id="rcomments" class="tab-pane active">
+				<div class="widgetBox">
+					{if $comments}
+						{foreach from=$comments item=comment}
+							{$userdetails = $userquery->get_user_details($comment.userid)}
+							<div class="itemdiv dialogdiv">
+								<div class="user">
+									<img alt="{display_clean($userdetails.username)}" title="{display_clean($userdetails.username)}" src="{$userquery->getUserThumb($userdetails,'small')}">
+								</div>
+								<div class="body">
+									<div class="time">
+										<i class="icon-time"></i>
+										<span class="green">{$comment.date_added|date_format}</span>
+									</div>
+									<div class="name">
+										<a href="#">{display_clean($comment.anonym_name)}</a>
+									</div>
+									<div class="text">{display_clean($comment.comment|comment)}</div>
+									<div class="tools">
+										<a href="{getCommentAdminLink($comment.type, $comment.type_id)}" class="btn btn-minier btn-info">
+											<i class="icon-only icon-share-alt"></i>
+										</a>
+									</div>
+								</div>
+							</div>
+						{/foreach}
+					{/if}
+				</div>
+			</div>
+			<div id="todolist" class="tab-pane">
 				<div class="widgetBox">
 					<div class="addTodo paddingRightSmall paddingLeftLarge marginBottomLarge">
 						<div class="row">
@@ -88,61 +117,6 @@
 						</li>
 						{/foreach}
 					</ul>
-				</div>
-			</div>
-			<div id="rcomments" class="tab-pane">
-				<div class="widgetBox">
-					{if $comments}
-					<div class="widget-header header-color-blue">
-						<h5>Recent Comments</h5>
-						<div class="widget-toolbar">
-							<a href="#" data-action="collapse">
-								<i class="icon-chevron-down"></i>
-							</a>
-							<a href="#" data-action="close">
-								<i class="icon-remove"></i>
-							</a>
-						</div>
-					</div>
-					<div class="widget-body">
-						<div class="widget-main">
-							<div class="widget-box transparent">
-								<div class="widget-header widget-header-small"></div>
-								<div class="widget-body">
-									<div class="widget-body">
-										<div class="widget-main no-padding">
-											<div class="slimScrollDiv">
-												{foreach from=$comments item=comment}
-												{$userdetails = $userquery->get_user_details($comment.userid)}
-												<div class="itemdiv dialogdiv">
-													<div class="user">
-														<img alt="{display_clean($userdetails.username)}" title="{display_clean($userdetails.username)}" src="{$userquery->getUserThumb($userdetails,'small')}">
-													</div>
-													<div class="body">
-														<div class="time">
-															<i class="icon-time"></i>
-															<span class="green">{$comment.date_added|date_format}</span>
-														</div>
-														<div class="name">
-															<a href="#">{display_clean($comment.anonym_name)}</a>
-														</div>
-														<div class="text">{display_clean($comment.comment|comment)}</div>
-														<div class="tools">
-															<a href="{getCommentAdminLink($comment.type, $comment.type_id)}" class="btn btn-minier btn-info">
-																<i class="icon-only icon-share-alt"></i>
-															</a>
-														</div>
-													</div>
-												</div>
-												{/foreach}
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					{/if}
 				</div>
 			</div>
 		</div>

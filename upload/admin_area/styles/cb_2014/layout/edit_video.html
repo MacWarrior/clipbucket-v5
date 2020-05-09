@@ -433,7 +433,7 @@
 		<div class="widget-box" style="margin-top: 30px">
 			<div class="widget-header header-color-blue2 fontawesome-icons">
 
-				<h5>{display_clean($data.title)|truncate:80}- <b>Comments</b></h5>
+				<h5>Comments</h5>
 
 				<div class="widget-toolbar">
 					<a href="#" data-action="reload">
@@ -442,10 +442,6 @@
 
 					<a href="#" data-action="collapse">
 						<i class="icon-chevron-up"></i>
-					</a>
-
-					<a href="#" data-action="close">
-						<i class="icon-remove"></i>
 					</a>
 				</div>
 			</div>
@@ -460,8 +456,9 @@
 						{if $comment != ''}
 						<div class="itemdiv dialogdiv">
 							{foreach from=$users item=u}
+							{$userdetails = $userquery->get_user_details($comment.userid)}
 							<div class="user">
-								<img alt="Avatar" src="{$userquery->getUserThumb($u,'small')}">
+								<img alt="{display_clean($userdetails.username)}" title="{display_clean($userdetails.username)}" src="{$userquery->getUserThumb($userdetails,'small')}">
 							</div>
 							{/foreach}
 							<div class="body clearfix">
