@@ -580,9 +580,9 @@
 
 			case 'add_comment';
 				$type = $_POST['type'];
-				$comment = mysql_clean($_POST['comment']);
+				$comment = $_POST['comment'];
 				$reply_to = $_POST['reply_to'];
-				$id = mysql_clean($_POST['obj_id']);
+				$id = $_POST['obj_id'];
 				if($comment == 'undefined')
 					$comment = '';
 

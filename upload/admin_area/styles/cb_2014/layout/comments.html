@@ -47,7 +47,7 @@
                   <td>{$comment.comment_id}</td>
                   <td onmouseover="$('#comm_opt-{$comment.comment_id}').show()" onmouseout="$('#comm_opt-{$comment.comment_id}').hide()" >
                     <span id="{$comment.comment_id}" class="edit_comment">
-                     <strong style="margin-left:-10px;">{$comment.comment|comment}</strong>
+                     <strong style="margin-left:-10px;">{display_clean($comment.comment|comment)}</strong>
                    </span><br>
                    {if $type == '' || $type == 'v'}
                    {if is_array($comment_owner)} 
@@ -56,7 +56,7 @@
                    </a> 
                    {else} 
                    <span id="{$comment.comment_id}" class="edit_comment">
-                     <strong style="margin-left:-10px;">{$comment.comment|comment}</strong>
+                     <strong style="margin-left:-10px;">{display_clean($comment.comment|comment)}</strong>
                    </span>
                    <div class="videoTitle row">
                     <div class="col-md-10">
@@ -86,7 +86,7 @@
                   <span class="vdo_sets">
                    {if is_array($comment_owner)} <a href="{$userquery->profile_link($comment_owner)}"><strong>{display_clean($comment_owner.username)}</strong></a> {else} <strong>{display_clean($comment_owner)}</strong> {/if} commented on <strong>{$comment.date_added|date_format}</strong> on a topic named <span style="text-transform:none;"><a href="{$cbgroup->topic_link($comment)}" title="{display_clean($comment.topic_title)}">{display_clean($comment.topic_title)|truncate:40}</a></span>
                  </span>
-                 <span style="font-size:11px;" class="edit_comment">{$comment.comment|comment}</span>
+                 <span style="font-size:11px;" class="edit_comment">{display_clean($comment.comment|comment)}</span>
 
                  <div id="comm_opt-{$comment.comment_id}" class="vid_opts" style="display:none;">
 
@@ -101,7 +101,7 @@
 
                 {if $type == 'c'}
                 <span class="vdo_sets">
-                  <span style="font-size:11px;" class="edit_comment"><strong>{$comment.comment|comment}</strong></span><br>
+                  <span style="font-size:11px;" class="edit_comment"><strong>{display_clean($comment.comment|comment)}</strong></span><br>
                   {if is_array($comment_owner)} <a href="{$userquery->profile_link($comment_owner)}"><strong>{display_clean($comment_owner.username)}</strong></a> {else} <strong><a href="{$userquery->profile_link($comment_owner)}">{display_clean($comment_owner)}</a></strong> {/if} commented on <strong>{$comment.date_added|date_format}</strong> on a channel named <span style="text-transform:none;"><a href="{$userquery->profile_link($comment)}" title="{display_clean($comment.username)}">{display_clean($comment.username)|truncate:40}</a></span>
                 </span>
 

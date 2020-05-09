@@ -28,7 +28,6 @@ if($vdetails['userid'] != $userid)
 	e(lang('no_edit_video'));
 	$Cbucket->show_page = false;
 } else {
-	
 	//Updating Video Details
 	if(isset($_POST['update_video'])){
 		$Upload->validate_video_upload_form();

@@ -470,8 +470,7 @@
 		} else {
 			$cmd = "PATH=\$PATH:/bin:/usr/bin:/usr/local/bin bash -c \"$cmd\"  2>&1";
 		}
-		$data = shell_exec( $cmd );
-		return $data;
+		return shell_exec( $cmd );
 	}
 
 	function getCommentAdminLink($type, $id)
@@ -509,8 +508,9 @@
 		}
 				
 		if($params['cond']) {
-			if($cond != "")
+			if($cond != ""){
 				$cond .= " AND ";
+            }
 			$cond .= $params['cond'];
 		}
 
@@ -534,22 +534,21 @@
 			$result = $db->count(tbl("comments"),"*",$cond);
 		}
 
-		if($result)
-		{
-			foreach ($result as $key=>$val) 
-			{
-				$result[$key]['comment'] = $result[$key]['comment'];
-			}
+		if($result) {
 			return $result;
 		}
 		return false;
 	}
-	
-	/**
-	* Fetches comments using params, built for smarty
-	* @uses : { class : $myquery } { function : getComments }
-	*/
-	function getSmartyComments($params)
+
+    /**
+     * Fetches comments using params, built for smarty
+     *
+     * @param $params
+     *
+     * @return bool|mixed
+     * @uses : { class : $myquery } { function : getComments }
+     */
+    function getSmartyComments($params)
 	{
 		global $myquery;
 		$comments = $myquery->getComments($params);

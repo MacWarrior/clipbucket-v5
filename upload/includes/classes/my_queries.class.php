@@ -597,13 +597,12 @@ class myquery
 	 */
 	function get_comments($type_id='*',$type='v',$count_only=FALSE,$get_type='all',$parent_id=NULL)
 	{
-		
 		$params = array(
-		'type_id' 		=> $type_id,
-		'type' 			=> $type,
-		'count_only' 	=> $count_only,
-		'get_type' 		=> $get_type,
-		'parent_id' 	=> $parent_id,
+            'type_id' 		=> $type_id,
+            'type' 			=> $type,
+            'count_only' 	=> $count_only,
+            'get_type' 		=> $get_type,
+            'parent_id' 	=> $parent_id,
 		);
 		
 		return $this->getComments($params);

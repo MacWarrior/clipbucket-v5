@@ -11,6 +11,14 @@
         ,"Add new update statut checker"
         ,"Update video comment count when deleting comment"
         ,"Replace outdated footer links"
+        ,"Fix possibles XSS injections"
+      ]
+    }
+    ,{
+      "title":"Front office",
+      "description":[
+        "Fix possibles XSS injections"
+        ,"Fix comment saving"
       ]
     }
     ,{

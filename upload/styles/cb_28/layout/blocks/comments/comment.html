@@ -37,7 +37,7 @@
 			{/if}
 				</strong>
 				<div class="clearfix commented-txt">
-					<p>{$comment.comment|comment}</p>
+					<p>{display_clean($comment.comment|comment)}</p>
 				</div>
 			{if userid()}
 				<div class="com-info-actions clearfix">
@@ -87,7 +87,7 @@
 					{/if}
 				</strong>
 				<div class="clearfix commented-txt">
-					<p>{$comment.comment|comment}</p>
+					<p>{display_clean($comment.comment|comment)}</p>
 				</div>
 				{if userid()}
 				<div class="com-info-actions clearfix">

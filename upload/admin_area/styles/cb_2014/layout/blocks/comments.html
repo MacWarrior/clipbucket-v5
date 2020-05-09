@@ -23,8 +23,8 @@
                 </td>
                 <td>{$comment.comment_id}</td>
                 <td>{$comment.userid}</td>
-                <td>{if $comment.anonym_email}{$comment.anonym_email}{else}{$comment.email}{/if}</td>
-                <td>{if $comment.comment}{$comment.comment}{else}{$comment.username}{/if}</td>
+                <td>{if $comment.anonym_email}{display_clean($comment.anonym_email)}{else}{display_clean($comment.email)}{/if}</td>
+                <td>{if $comment.comment}{display_clean($comment.comment)}{else}{display_clean($comment.username)}{/if}</td>
                 <td>{$comment.date_added|date_format}</td>
                 <td>{$comment.vote}</td>
                 <td><a href="?{$link}&amp;delete_comment={$comment.comment_id}">{lang code='delete'}</a></td>
