@@ -350,7 +350,7 @@
     "joined": "Inscription",
     "join": "Join",
     "keywords": "Keywords",
-    "latest": "Latest",
+    "latest": "Dernière",
     "leave": "Leave",
     "location": "Localisation",
     "login": "Connexion",
@@ -1590,5 +1590,10 @@
 	"player_logo_reset":"Le logo du lecteur a été réinitialisé",
 	"player_settings_updated":"Les paramètres du lecteur ont été mis à jours",
 	"player_settings":"Paramètres du lecteur",
-	"quality":"Qualité"
+	"quality":"Qualité",
+	"error_occured":"Oops... Quelque chose s'est mal passé...",
+	"error_file_download":"Impossible de récupérer le fichier",
+
+	"dashboard_update_status":"Statut de mise à jour",
+	"dashboard_changelogs":"Nouveautés"
 }

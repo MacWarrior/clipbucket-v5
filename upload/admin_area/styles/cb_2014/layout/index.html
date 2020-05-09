@@ -124,7 +124,7 @@
 	<div class="col-md-6">
 		<ul class="nav nav-tabs">
 			<li class="title">
-				<h5><i class="glyphicon glyphicon-list-alt"></i> Changelogs</h5>
+				<h5><i class="glyphicon glyphicon-list-alt"></i> {lang code='dashboard_changelogs'}</h5>
 			</li>
 			<li class="active">
 				<a data-toggle="tab" href="#531">
@@ -139,7 +139,7 @@
 			{if config('enable_update_checker')=='1'}
 			<li class="right">
 				<a data-toggle="tab" href="#update">
-					<h5>Update status <span class="status-{get_update_status(true)}"></span></h5>
+					<h5>{lang code='dashboard_update_status'} <span class="status-{get_update_status(true)}"></span></h5>
 				</a>
 			</li>
 			{/if}

@@ -5679,7 +5679,7 @@
     {
 	    $filepath = __DIR__.'/../changelog/'.$version.'.json';
 	    if( !file_exists($filepath) ) {
-            echo 'Oops... Something wrong happend...<br/>';
+            echo lang('error_occured').'<br/>';
             echo 'File don\' exists :'.$filepath;
             return;
         }
@@ -5720,8 +5720,8 @@
             if( $only_flag ){
                 return 'red';
             }
-            echo 'Oops... Something wrong happend...<br/>';
-            echo 'Can\'t get file : '.$versions_url;
+            echo lang('error_occured').'<br/>';
+            echo lang('error_file_download').' : '.$versions_url;
             return;
         }
 
@@ -5731,14 +5731,14 @@
             if( $only_flag ){
                 return 'red';
             }
-            echo 'Oops... Something wrong happend...<br/>';
-            echo 'Can\'t get file : '.$changelog_url;
+            echo lang('error_occured').'<br/>';
+            echo lang('error_file_download').' : '.$changelog_url;
             return;
         }
 
         if( !$only_flag ) {
             echo '<h5>Current version : <b>' . $current_version . '</b> - <i>' . ucfirst( $current_status ) . '</i><br/>';
-            echo 'Latest <i>' . ucfirst( $current_status ) . '</i> version : <b>' . $changelog['version'] . '</b></h5>';
+            echo lang('latest').' <i>' . ucfirst( $current_status ) . '</i> version : <b>' . $changelog['version'] . '</b></h5>';
         }
 
         if( $current_version == $changelog['version'] ){
@@ -5756,6 +5756,7 @@
                 return 'orange';
             }
             echo '<h3 style="text-align:center;">Update <b>'.$changelog['version'].'</b> is available !</h3>';
+            display_changelog($versions[$current_status]);
         }
 
         if( $current_status == 'dev' ){
