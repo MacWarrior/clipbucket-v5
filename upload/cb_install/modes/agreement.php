@@ -7,7 +7,7 @@
 	</div><!--cb_container-->
 </div><!--nav_des-->
 
-<div id="sub_container" class="br5px">
+<div id="sub_container">
 	<h4 class="grey-text">License</h4>
 	<div class="cb-instal-licenc-holder">
 		<div class="cb-instal-licenc-sec">

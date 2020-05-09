@@ -15,41 +15,43 @@ $userquery->login_user(post('username'),post('password'))
 
 <div class="nav_des clearfix">
     <div class="cb_container">
-    <h4 style="color:#fff">Website basic configurations</h4>
-    <p style="color:#fff; font-size:13px;">here you can set basic configuration of your website, you can change them later by going to Admin area &gt; Website Configurations
-    </p>
-
-    </div><!--cb_container-->
-    </div><!--nav_des-->
-
-<div id="sub_container" class="br5px">
-
- <div class="db_image"><img src="<?php echo installer_path(); ?>images/site_setting.png" style="margin-top: 28px;margin-left: 545px;"  width="280" height="280"/></div>
-<div class="site_fields"  style="margin-top:-290px;">
-<form name="installation" method="post" id="installation">
-    
-    <div class="field" >
-    <label for="title">Website title</label>
-    <input name="title" type="text" id="title" class="form-control" value="ClipBucket v<?php echo VERSION.' '.STATE; ?>">
-     <p class="grey-text font-size" style="margin-top:0px;">Its your website title and you can change it from admin area.</p>
+		<h4 style="color:#fff;">Website basic configurations</h4>
+		<p style="color:#fff; font-size:13px;">
+			here you can set basic configuration of your website, you can change them later by going to Admin area &gt; Website Configurations
+		</p>
     </div>
-    
-    <div class="field">
-    <label for="slogan">Website Slogan</label>
-    <input name="slogan" type="text" id="slogan" class="form-control"value="A way to broadcast yourself">
-     <p class="grey-text font-size" style="margin-top:0px;">Its a slogan of your website and you can change it from admin area.</p>
-    </div>
-    
-    <div class="field">
-    <label for="baseurl">Website URL</label>
-    <input name="baseurl" type="text" id="baseurl" class="form-control" value="<?php echo BASEURL; ?>">
-	  <p class="grey-text font-size" style="margin-top:0px;">without trailing slash '/'</p>
-    </div>
-
-  <input type="hidden" name="mode" value="register" />
-     <p><br>
-    
-   <?php button('Save and Continue',' onclick="$(\'#installation\').submit()" '); ?>
-</form>
-
 </div>
+
+<div id="sub_container">
+	<div class="site_fields">
+		<form name="installation" method="post" id="installation" style="background-image:url(<?php echo installer_path(); ?>images/site_setting.png);background-repeat:no-repeat;background-position:right;">
+			<br/>
+			<div class="field">
+				<label for="title">Website title</label>
+				<input name="title" type="text" id="title" class="form-control" value="ClipBucket v<?php echo VERSION.' '.STATE; ?>">
+				<p class="grey-text font-size" style="margin-top:0;">
+					Its your website title and you can change it from admin area
+				</p>
+			</div>
+
+			<div class="field">
+				<label for="slogan">Website Slogan</label>
+				<input name="slogan" type="text" id="slogan" class="form-control" value="A way to broadcast yourself">
+				<p class="grey-text font-size" style="margin-top:0;">
+					Its a slogan of your website and you can change it from admin area
+				</p>
+			</div>
+
+			<div class="field">
+				<label for="baseurl">Website URL</label>
+				<input name="baseurl" type="text" id="baseurl" class="form-control" value="<?php echo BASEURL; ?>">
+				<p class="grey-text font-size" style="margin-top:0;">
+					without trailing slash '/'
+				</p>
+			</div>
+
+			<br/>
+		  	<input type="hidden" name="mode" value="register" />
+			<?php button('Save and Continue',' onclick="$(\'#installation\').submit()" '); ?>
+		</form>
+	</div>

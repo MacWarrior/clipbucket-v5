@@ -8,7 +8,7 @@
 </div>
 </div>
 
-<div id="sub_container" class="br5px">
+<div id="sub_container">
 
 <div id="resultsDiv" style="margin-top:20px">
 	<img src="images/loading.gif" id="loading" />

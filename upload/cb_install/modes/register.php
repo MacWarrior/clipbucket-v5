@@ -21,7 +21,7 @@ $myquery->Set_Website_Details('baseurl',$baseurl);
 </div><!--cb_container-->
 </div><!--nav_des-->
 
-<div id="sub_container" class="br5px">
+<div id="sub_container">
 <h3>Why we suggest registeration?</h3>
 <div class="register">
   <div class="db_image"><img src="<?php echo installer_path(); ?>images/reg_thumb.png" style="margin-top: 15px;margin-left: 740px;" width="130" height="120"/></div>

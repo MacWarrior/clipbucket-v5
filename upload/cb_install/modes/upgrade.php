@@ -21,7 +21,7 @@ if(userid() || $old_version < 2.3 ){
 <?php
 } else {
 ?>
-<div class="errorDiv br5px" id="dbresult">
+<div class="errorDiv" id="dbresult">
 <?php
 	echo msg_arr(array('err'=>'Please first login as Website adminstrator by going to admin_area and then try upgrading your website')); ?></div><?php
 }

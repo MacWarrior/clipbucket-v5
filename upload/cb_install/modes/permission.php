@@ -10,7 +10,7 @@
 </div><!--cb_container-->
 </div><!--nav_des-->
 
-<div id="sub_container" class="br5px">
+<div id="sub_container">
 <dl>
 <?php $permissions = checkPermissions(); ?>
 <?php

@@ -26,9 +26,9 @@ if(file_exists(FILES_DIR.'/temp/install.me')){
 </div><!--cb_container-->
 </div><!--nav_des-->
 
-<div id="sub_container" class="br5px">
+<div id="sub_container">
 
-<div class="errorDiv br5px" id="dbresult">
+<div class="errorDiv" id="dbresult">
 <?php echo msg_arr(array('err'=>'<span style="color:#A32727;">Please delete cb_install directory</span>')); ?></div>
 
 
@@ -44,14 +44,14 @@ if(file_exists(FILES_DIR.'/temp/install.me')){
     <div class="line"></div>
 </div>
    
-<div class="product br5px">
+<div class="product">
     <div class="title">
     <a href="http://clip-bucket.com/product/Facebook-Connect/93">Facebook Connect</a></div>
     <div class="desc">Facebook Connect allows your users to login to your website using Facebook account, They will first register and than login. Facebook connect is running on many websites, it can turn your user signup process alot quick and easier. </div>
  <div class="line"></div>
 </div>
 
-<div class="product br5px">
+<div class="product">
     <div class="title">
     <a href="http://clip-bucket.com/product/ClipBucket-Branding-Removals/85">
     ClipBucket Rebranding</a></div>
@@ -59,14 +59,14 @@ if(file_exists(FILES_DIR.'/temp/install.me')){
      <div class="line"></div>
 </div>
 
-<div class="product br5px">
+<div class="product">
     <div class="title">
     <a href="http://clip-bucket.com/product/ClipBucket-FLV-Player-Rebranding/76">Pakplayer rebranding</a></div>
     <div class="desc">Removes "Powered by ClipBucket" message and Pakplayer name from your flv player and Let you set your own logo and message on Pakplayer</div>
  <div class="line"></div>
 </div>
     
-<div class="product br5px">
+<div class="product">
     <div class="title">
     <a href="http://clip-bucket.com/product/Multiserver/94">Multiserver</a></div>
     <div class="desc">ClipBucket Multi-server gives your website a new edge with more powerful video conversion option and data delivery.With Clipbucket Multi-server, you will have following options
@@ -74,7 +74,7 @@ if(file_exists(FILES_DIR.'/temp/install.me')){
  <div class="line"></div>
 </div>
 
-<div class="product br5px">
+<div class="product">
     <div class="title">
     <a href="http://clip-bucket.com/product/Paid-Subscription-Module-Billing-System/95">    
 Paid Subscription Module </a></div>
