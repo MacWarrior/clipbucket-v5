@@ -19,8 +19,9 @@
     }
 	$chkType = $type;
 	//Checking if search for specific section is allowed or not
-	if($type == 'users')
+	if($type == 'users'){
 		$chkType = 'channels';
+    }
 	isSectionEnabled($chkType,true);
 
 	$userquery->perm_check('view_'.$type);
@@ -98,7 +99,7 @@
 		if ($squery == 'clipbucket') {
 			subtitle("Awesomeness...!!");
 		} else {
-			subtitle($search->search_type[$type]['title'].' &raquo; '.display_clean(get('query')));
+			subtitle($search->search_type[$type]['title'].' : '.display_clean(get('query')));
 		}
 	}
 

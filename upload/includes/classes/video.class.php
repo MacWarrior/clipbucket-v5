@@ -990,7 +990,7 @@ class CBvideo extends CBCategory
 
         $fields = tbl_fields( $fields );
 		
-		if(!$params['count_only'] &&  !$params['show_related'])
+		if(!$params['count_only'] && !$params['show_related'])
 		{
             $query = "SELECT $fields FROM ".cb_sql_table( 'video' );
             $query .= " LEFT JOIN ".cb_sql_table( 'users' )." ON video.userid = users.userid";
@@ -1075,13 +1075,12 @@ class CBvideo extends CBCategory
 			assign($params['assign'],$result);
 		}
 		
-		if($params['pr'])
+		if($params['pr']){
 			pr($result,true);
+        }
 
-		if($params['count_only'])
-		{
-			if (!empty($superCond))
-			{
+		if($params['count_only']) {
+			if (!empty($superCond)) {
 				if (!empty($cond)){
 					$cond .= " AND ";
 				}
@@ -1089,10 +1088,11 @@ class CBvideo extends CBCategory
 			}
 			return $result = $db->count( cb_sql_table('video') , 'videoid' ,$cond );
 		}
-		if($params['assign'])
+		if($params['assign']){
 			assign($params['assign'], apply_filters($result, 'get_video') );
-		else
+        } else {
 			return apply_filters($result, 'get_video');
+        }
 	}
 
 	/**
