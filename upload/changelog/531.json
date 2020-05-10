@@ -1,6 +1,6 @@
 {
   "version":"5.3.1",
-  "revision": "3",
+  "revision": "4",
   "status":"dev",
   "detail":[
     {
@@ -15,6 +15,7 @@
         ,"Fix possibles XSS injections"
         ,"Update dashboard comments display"
         ,"Fix video edit user's avatar display on comments"
+        ,"Update dashboard stats display"
       ]
     }
     ,{
@@ -33,7 +34,7 @@
     ,{
       "title": "Miscellaneous",
       "description": [
-        "Remove unused files",
+        "Remove unused or outdated files",
         "Cleanup code",
         "Fix installation <i>#120<\/i>",
         "Make Clipbucket.php fully dynamic",

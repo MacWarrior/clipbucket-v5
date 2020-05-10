@@ -689,6 +689,10 @@ ul.mainTabs{
 	float:right;
 }
 
+.nav-tabs li.right a{
+	margin-right:0 !important;
+}
+
 .nav-tabs li span.status-red,
 .nav-tabs li span.status-orange,
 .nav-tabs li span.status-green{

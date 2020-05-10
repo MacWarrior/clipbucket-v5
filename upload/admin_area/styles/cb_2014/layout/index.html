@@ -3,25 +3,6 @@
 </div>
 <div class="row">
 	<div class="col-md-6">
-		<div id="piechart" style="height:430px;" ></div>
-	</div>
-	<div class="col-md-6">
-		<div id="donutchart" style="height:430px;" ></div>
-	</div>
-</div>
-<hr>
-<div class="row">
-	<div class="col-md-6">
-		 <div id="ubarchart" style="height:400px;" ></div>
-	</div>
-
-	<div class="col-md-6">
-		<div id="vbarchart" style="height:400px;" ></div>
-	</div>
-</div>
-<hr>
-<div class="row">
-	<div class="col-md-6">
 		<ul class="nav nav-tabs">
 			<li class="active">
 				<a data-toggle="tab" href="#rcomments">
@@ -162,6 +143,47 @@
 				</div>
 			</div>
 			{/if}
+		</div>
+	</div>
+</div>
+<br/>
+<div class="row">
+	<div class="col-md-6">
+		<ul class="nav nav-tabs">
+			<li class="active">
+				<a data-toggle="tab" href="#overall_statistics">
+					<h5>Overall Statistics</h5>
+				</a>
+			</li>
+			<li>
+				<a data-toggle="tab" href="#flagged_objects">
+					<h5>Flagged Objects</h5>
+				</a>
+			</li>
+			<li>
+				<a data-toggle="tab" href="#users_statistics">
+					<h5>Users Statistics</h5>
+				</a>
+			</li>
+			<li>
+				<a data-toggle="tab" href="#video_statistics">
+					<h5>Video Statistics</h5>
+				</a>
+			</li>
+		</ul>
+		<div class="tab-content">
+			<div id="overall_statistics" class="tab-pane active">
+				<div id="piechart" style="height:400px;"></div>
+			</div>
+			<div id="flagged_objects" class="tab-pane">
+				<div id="donutchart" style="height:400px;"></div>
+			</div>
+			<div id="users_statistics" class="tab-pane">
+				<div id="ubarchart" style="height:400px;"></div>
+			</div>
+			<div id="video_statistics" class="tab-pane">
+				<div id="vbarchart" style="height:400px;"></div>
+			</div>
 		</div>
 	</div>
 </div>
