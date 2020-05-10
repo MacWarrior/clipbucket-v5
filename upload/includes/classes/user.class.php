@@ -4256,8 +4256,9 @@ class userquery extends CBCategory{
 			}
 						
 			return true;
-		} else
+		} else {
 			e(lang("usr_exist_err"));
+        }
 	}
 	
 	/**
@@ -4266,8 +4267,7 @@ class userquery extends CBCategory{
 	function revert_from_user()
 	{
 		global $sess,$db;
-		if($this->is_admin_logged_as_user())
-		{
+		if($this->is_admin_logged_as_user()) {
 			$userid = $sess->get('dummy_userid');
 			$session_salt = $sess->get('dummy_sess_salt');
 			$user_session_key = $sess->get('dummy_user_session_key');
@@ -4292,8 +4292,9 @@ class userquery extends CBCategory{
 	function is_admin_logged_as_user()
 	{
 		 global $sess;
-		 if($sess->get("dummy_sess_salt")!="")
+		 if($sess->get("dummy_sess_salt")!=""){
 			 return true;
+         }
 		return false;
 	}
 
@@ -4307,46 +4308,43 @@ class userquery extends CBCategory{
 		$uid = config('anonymous_id');
 		/*Added to resolve bug 222*/    
 		$result = $db->select(tbl("users"),"userid"," username='anonymous%' AND email='anonymous%'","1");
-        if($result[0]['userid'])
-			return $result[0]['userid'];/*End **/
-		else
-		{
-			$result = $db->select(tbl("users"),"userid"," level='6' AND usr_status='ToActivate' ","1");
-			if($result[0]['userid'])
-				return $result[0]['userid'];
-			else
-			{
-				$pass = RandomString(10);
-				
-				if($_SERVER['HTTP_HOST']!='localhost' && $_SERVER['HTTP_HOST']!='127.0.0.1')
-					$email = 'anonymous'.RandomString(5).'@'.$_SERVER['HTTP_HOST'];
-				else
-					$email = 'anonymous'.RandomString(5).'@'.$_SERVER['HTTP_HOST'].'.tld';
-				
-				//Create Anonymous user
-				$uid = $this->signup_user(
-					array(
-						'username' => 'anonymous'.RandomString(5),
-						'email'	=> $email,
-						'password' => $pass,
-						'cpassword' => $pass,
-						'country' => get_country(config('default_country_iso2')),
-						'gender' => 'Male',
-						'dob'	=> '2000-10-10',
-						'category' => '1',
-						'level' => '6',
-						'active' => 'yes',
-						'agree' => 'yes',
-					),false);
+        if($result[0]['userid']){
+			return $result[0]['userid'];
+        }
 
-			   /*Added to resolve bug 222*/    
-			   global $myquery;
-			   $myquery->Set_Website_Details('anonymous_id',$uid);
-			   /*End*/
-							   
-				return $uid;
-			}
-		}
+        $result = $db->select(tbl("users"),"userid"," level='6' AND usr_status='ToActivate' ","1");
+        if($result[0]['userid']){
+            return $result[0]['userid'];
+        }
+
+        $pass = RandomString(10);
+
+        if($_SERVER['HTTP_HOST']!='localhost' && $_SERVER['HTTP_HOST']!='127.0.0.1'){
+            $email = 'anonymous'.RandomString(5).'@'.$_SERVER['HTTP_HOST'];
+        } else {
+            $email = 'anonymous'.RandomString(5).'@'.$_SERVER['HTTP_HOST'].'.tld';
+        }
+
+        //Create Anonymous user
+        $uid = $this->signup_user(
+            array(
+                'username' => 'anonymous'.RandomString(5),
+                'email'	=> $email,
+                'password' => $pass,
+                'cpassword' => $pass,
+                'country' => config('default_country_iso2'),
+                'gender' => 'Male',
+                'dob'	=> '2000-10-10',
+                'category' => '1',
+                'level' => '6',
+                'active' => 'yes',
+                'agree' => 'yes',
+            ),false);
+
+        global $myquery;
+        $myquery->Set_Website_Details('anonymous_id',$uid);
+
+        return $uid;
 	}
 
 	/**
@@ -4359,8 +4357,9 @@ class userquery extends CBCategory{
 		global $cbvid,$eh;
 		$vids = get_videos(array('user'=>$uid));
 		if(is_array($vids))
-		foreach($vids as $vid)
+		foreach($vids as $vid){
 			$cbvid->delete_video($vid['videoid']);
+        }
 		$eh->flush_msg();
 		e(lang("user_vids_hv_deleted"),"m");	
 	}
@@ -4374,9 +4373,11 @@ class userquery extends CBCategory{
 	{
 		global $eh;
 		$contacts = $this->get_contacts($uid);
-		if(is_array($contacts))
-			foreach($contacts as $contact)
+		if(is_array($contacts)){
+			foreach($contacts as $contact){
 				$this->remove_contact($contact['userid'],$contact['contact_userid']);
+            }
+        }
 		$eh->flush_msg();
 		e(lang("user_contacts_hv_removed"),"m");
 	}
@@ -4391,28 +4392,25 @@ class userquery extends CBCategory{
 	{
 		global $cbpm,$eh;
 		
-		if($box=="inbox" || $box=="both")
-		{
+		if($box=="inbox" || $box=="both") {
 			$inboxs = $cbpm->get_user_inbox_messages($uid);
 			if(is_array($inboxs))
-			foreach($inboxs as $inbox)
-			{
+			foreach($inboxs as $inbox) {
 				$cbpm->delete_msg($inbox['message_id'],$uid);
 			}
 			$eh->flush_msg();
 			e(lang("all_user_inbox_deleted"),"m");
 		}
-		if($box=="sent" || $box=="both")
-		{
+
+		if($box=="sent" || $box=="both") {
 			$outs = $cbpm->get_user_outbox_messages($uid);
-			if(is_array($outs))
-			foreach($outs as $out)
-			{
-				$cbpm->delete_msg($out['message_id'],$uid,'out');
-			}
+			if(is_array($outs)){
+                foreach($outs as $out) {
+                    $cbpm->delete_msg($out['message_id'],$uid,'out');
+                }
+            }
 			$eh->flush_msg();
 			e(lang("all_user_sent_messages_deleted"),"m");
-
 		}		
 	}
 
@@ -4432,12 +4430,11 @@ class userquery extends CBCategory{
 	{
 		$user_cond = "";
 		$users = $this->get_user_subscriptions($uid);
-		if($users)
-		{
-			foreach($users as $user)
-			{
-				if($user_cond)
+		if($users) {
+		    foreach($users as $user) {
+				if($user_cond){
 					$user_cond .= " OR ";
+                }
 				$user_cond .= 	tbl("users.userid")."='".$user[0]."' ";
 			}
 			$user_cond = " (".$user_cond.") ";
@@ -4458,12 +4455,9 @@ class userquery extends CBCategory{
 					elseif(!empty($photos) && empty($videos))
 						$finalResult = array_merge($photos,array());
 
-					if(!empty($finalResult))
-					{
-						foreach($finalResult as $result)
-						{
-							if($result['videoid'])
-							{
+					if(!empty($finalResult)) {
+						foreach($finalResult as $result) {
+							if($result['videoid']) {
 								$videoArr[] = $result;
 								$return['videos'] = array(
 									"title" => lang("videos"),
@@ -4472,8 +4466,7 @@ class userquery extends CBCategory{
 								);
 							}
 
-							if($result['photo_id'])
-							{
+							if($result['photo_id']) {
 								$photosArr[] = $result;
 								$return['photos'] = array(
 									"title" => lang("photos"),
@@ -4483,10 +4476,10 @@ class userquery extends CBCategory{
 							}
 
 						}
-						//pr($return,true)	;
+
 						return $return;
-					} else
-						return false;
+					}
+					return false;
 				}
 				break;
 

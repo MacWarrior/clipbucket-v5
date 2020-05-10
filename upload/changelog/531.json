@@ -1,6 +1,6 @@
 {
   "version":"5.3.1",
-  "revision": "5",
+  "revision": "7",
   "status":"dev",
   "detail":[
     {
@@ -39,7 +39,8 @@
         "Fix installation <i>#120<\/i>",
         "Make Clipbucket.php fully dynamic",
         "Fix installation HTML",
-        "Fix user creation <i>#121<\/i>"
+        "Fix user creation <i>#121<\/i>",
+        "Fix user delete"
       ]
     }
   ]

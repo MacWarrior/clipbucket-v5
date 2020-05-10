@@ -531,11 +531,12 @@ class Clipbucket_db
 	{
 		if( $this->mysqli->error != '' ) {
 			if( in_dev() ) {
-				e( 'SQL : ' . $query . '<br/>ERROR : ' . $this->mysqli->error );
-				error_log('SQL : ' . $query);
-				error_log('ERROR : ' . $this->mysqli->error );
+				e( 'SQL : '.$query);
+				e( 'ERROR : '.$this->mysqli->error );
+				error_log('SQL : '.$query);
+				error_log('ERROR : '.$this->mysqli->error );
 			} else {
-				e( lang( 'technical_error' ) );
+				e( lang('technical_error') );
 			}
 		}
 	}
