@@ -381,6 +381,7 @@ ALTER TABLE `{tbl_prefix}video`
 	ADD `bits_color` tinyint(4) DEFAULT NULL;
 
 ALTER TABLE `{tbl_prefix}user_profile`
+	MODIFY COLUMN `user_profile_id` INT(11) NOT NULL AUTO_INCREMENT,
 	MODIFY COLUMN `fb_url` VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
 	MODIFY COLUMN `twitter_url` VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
 	MODIFY COLUMN `insta_url` VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '';

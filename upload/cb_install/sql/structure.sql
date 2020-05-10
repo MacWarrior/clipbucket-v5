@@ -790,7 +790,7 @@ CREATE TABLE `{tbl_prefix}user_permissions` (
 --
 
 CREATE TABLE `{tbl_prefix}user_profile` (
-  `user_profile_id` int(11) NOT NULL,
+  `user_profile_id` INT(11) NOT NULL AUTO_INCREMENT,
   `show_my_collections` enum('yes','no') NOT NULL DEFAULT 'yes',
   `userid` bigint(20) NOT NULL,
   `profile_title` mediumtext DEFAULT '',
