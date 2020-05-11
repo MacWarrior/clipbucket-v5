@@ -243,7 +243,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'cb_license', 'CBCORP-XXXXXXXXXXX'),
 	(NULL, 'cb_license_local', ''),
 	(NULL, 'pick_geo_country', 'yes'),
-	(NULL, 'password_salt', ''),
+	(NULL, 'password_salt', SUBSTRING(HEX(SHA2(CONCAT(NOW(), RAND(), UUID()), 512)),1, 32)),
 	(NULL, 'show_collapsed_checkboxes', '0'),
 	(NULL, 'enable_advertisement', '0'),
 	(NULL, 'chromecast', 'yes'),
