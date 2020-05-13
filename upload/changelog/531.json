@@ -1,6 +1,6 @@
 {
   "version":"5.3.1",
-  "revision": "8",
+  "revision": "9",
   "status":"dev",
   "detail":[
     {
@@ -41,7 +41,8 @@
         "Fix installation HTML",
         "Fix user creation <i>#121<\/i>",
         "Fix user delete",
-        "Fix installation SQL"
+        "Fix installation SQL",
+        "Fix DB structure"
       ]
     }
   ]

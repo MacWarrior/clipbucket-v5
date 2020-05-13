@@ -415,3 +415,6 @@ ALTER TABLE `{tbl_prefix}comments`
 	MODIFY `voters` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
 	MODIFY `spam_votes` BIGINT(20) NOT NULL DEFAULT '0',
 	MODIFY `spam_voters` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
+
+ALTER TABLE `{tbl_prefix}plugins`
+	MODIFY COLUMN `plugin_version` FLOAT NOT NULL DEFAULT '0';
