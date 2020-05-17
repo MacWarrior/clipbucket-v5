@@ -470,19 +470,6 @@ CREATE TABLE `{tbl_prefix}messages` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 --
--- Table structure for table `modules`
---
-
-CREATE TABLE `{tbl_prefix}modules` (
-  `module_id` int(25) NOT NULL AUTO_INCREMENT,
-  `module_name` varchar(25) NOT NULL,
-  `module_file` varchar(60) NOT NULL,
-  `active` varchar(5) NOT NULL,
-  `module_include_file` text NOT NULL,
-  PRIMARY KEY (`module_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
 -- Table structure for table `pages`
 --
 

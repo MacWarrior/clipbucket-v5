@@ -1,6 +1,6 @@
 {
   "version":"5.4.0",
-  "revision": "1",
+  "revision": "2",
   "status":"dev",
   "detail":[
     {
@@ -8,7 +8,8 @@
       "description": [
         "Remove unused or outdated files",
         "Cleanup code",
-        "Remove unused configs"
+        "Remove unused configs",
+        "Remove unused table"
       ]
     }
     ,{

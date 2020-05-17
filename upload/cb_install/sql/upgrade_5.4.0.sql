@@ -24,3 +24,5 @@ DELETE FROM `{tbl_prefix}config` WHERE `name` IN (
 		,'date_updated'
 		,'max_topic_length'
 	);
+
+DROP TABLE `{tbl_prefix}modules`;
