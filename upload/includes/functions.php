@@ -5263,8 +5263,7 @@
 	*/
 	function array_val_assign($vals)
 	{
-		if (is_array($vals))
-		{
+		if (is_array($vals)) {
 			foreach ($vals as $name => $value) {
 				assign($name, $value);
 			}
@@ -5285,10 +5284,6 @@
 				case "most_viewed":
 					$vid_cond['order'] = "views DESC ";
 					$vid_cond['date_span_column'] = 'last_viewed';
-					break;
-
-				case "most_viewed":
-					$vid_cond['order'] = " views DESC ";
 					break;
 
 				case "featured":
@@ -5319,20 +5314,15 @@
 					break;
 
 				case "most_viewed":
-					$vid_cond['order'] = " photos.views DESC ";
+					$vid_cond['order'] = " views DESC ";
 					$vid_cond['date_span_column'] = 'last_viewed';
 					break;
-
-				case "most_viewed":
-					$vid_cond['order'] = " views DESC ";
-					break;
-
 				case "featured":
 					$vid_cond['featured'] = "yes";
 					break;
 
 				case "top_rated":
-					$vid_cond['order'] = " photos.rating DESC";
+					$vid_cond['order'] = " rating DESC";
 					break;
 
 				case "most_commented":
