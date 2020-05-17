@@ -67,7 +67,6 @@
 			'collectionsSection',
 			'comments_per_page',
 			//'captcha_type',
-			'con_modules_type',
 			'comments_captcha',
 			'comment_rating',
 			'collection_per_page',
@@ -82,7 +81,6 @@
 
 			'date_format',
 			'description',
-			'debug_level',
 			'default_country_iso2',
 			'default_time_zone',
             'pick_geo_country',
@@ -95,11 +93,9 @@
 			'enable_groups',
 
 			'ffmpegpath',
-			'ffmpeg_type',
 
 			'ffprobe_path',
 			'media_info',
-			'i_magick',
 
 			'cb_combo_res',
 			'gen_240',
@@ -114,7 +110,6 @@
 			'grp_thumb_width',
 			'grp_max_title',
 			'grp_max_desc',
-
 
 			'high_resolution',
 			'hq_output',
@@ -181,14 +176,12 @@
 			'seo',
 			'seo_vido_url',
 			'search_list_per_page',
-			'server_friendly_conversion',
 			'support_email',
 			'show_collapsed_checkboxes',
 
 			'thumb_width',
 			'thumb_height',
 
-			'use_ffmpeg_vf',
 			//'use_crons',
 			'user_comment_own',
 			'user_rate_opt1'	,

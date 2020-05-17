@@ -24,9 +24,6 @@
 	$MP4BoxVersion = check_mp4box("MP4Box");
 	assign("MP4BoxVersion", $MP4BoxVersion);
 
-	$imagick_version = check_imagick("i_magick");
-	assign("imagick_version",$imagick_version);
-
 	$media_info = check_media_info('media_info');
 	assign("media_info", $media_info);
 

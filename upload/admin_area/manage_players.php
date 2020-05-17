@@ -19,7 +19,6 @@
 	if(isset($_POST['update'])) {
 		$rows = array(
 			'autoplay_video',
-			'buffer_time',
 			'embed_player_height',
 			'embed_player_width',
 			'autoplay_embed',

@@ -29,15 +29,13 @@ session_start();
 	require_once('classes/signup.class.php');
 	require_once('classes/image.class.php');
 	require_once('classes/upload.class.php');
-	require_once('classes/stats.class.php');
-			
+
 	$pages 		= new pages();	
 	$myquery 	= new myquery();
 	$userquery 	= new userquery();
 	$calcdate	= new CalcDate();
 	$signup 	= new signup();	
 	$Upload 	= new Upload();
-	$stats 		= new stats();
 
 	$row = $myquery->Get_Website_Details();
 	$email_data = $myquery->Get_Email_Settings();
@@ -51,13 +49,7 @@ session_start();
  //Seo URLS
  
  	define('SEO',$row['seo']); //Set yes / no
-	
- //Required Modules and Their Paths (Editable In Admin Panel)
-	if(FFMPEG_TYPE == 's'){
-		define('FFMPEG_BINARY', MODULEDIR.'/encoders/ffmpeg');
-	} else {
-		define('FFMPEG_BINARY', $row['ffmpegpath']);
-	}
+    define('FFMPEG_BINARY', $row['ffmpegpath']);
 	define('PHP_PATH', $row['php_path']);
 
  //Registration & Email Settings
@@ -113,7 +105,6 @@ session_start();
 	define('TEMPLATE',$row['template_dir']);					//Select Any Template Name, usually 'clipbucketblue'
 	define('JSDIR','js');										//Javascript Directory Name
 	define('ADMINDIR','admin_area');							//Admin Accessible Folder
-	define('MODULEDIR',BASEDIR.'/modules');						//Modules Directory
 	
  //DIRECT PATHS OF VIDEO FILES
  	define('FILES_DIR',BASEDIR.'/files');
@@ -144,17 +135,5 @@ session_start();
 	require BASEDIR.'/includes/classes/TError.php';
 	require BASEDIR.'/includes/active.php';
 	require BASEDIR.'/includes/defined_links.php';
-	
-	$SYSTEM_OS = $row['sys_os'] ? $row['sys_os'] : 'linux';
-	
-	//Including FFMPEG CLASS
-	if($SYSTEM_OS=='linux')
-	{
-		if($row['con_modules_type'] == 0){
-			require_once(BASEDIR.'/includes/classes/conversion/ffmpeg.class.php');
-		} else {
-			require_once(BASEDIR.'/includes/classes/conversion/multi.class.php');
-		}
-	} else {
-		require_once(BASEDIR.'/includes/classes/conversion/ffmpeg.win32.php');
-	}
+
+    require_once(BASEDIR.'/includes/classes/conversion/ffmpeg.class.php');

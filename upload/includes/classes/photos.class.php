@@ -9,8 +9,6 @@
  * @ New Things Needed: 
  * 	 - Photo Sharing Email Template
  */
- 
-//define('MAX_PHOTO_UPLOAD',5);
 
 class CBPhotos
 {
@@ -201,16 +199,17 @@ class CBPhotos
 		$am = $Cbucket->AdminMenu;
 		$per = $userquery->get_user_level(userid());
 
-		if($per['photos_moderation'] == "yes")
-		$am['Photos'] = array(
-			'Photo Manager' => 'photo_manager.php',
-			'Inactive Photos' => 'photo_manager.php?search=search&active=no',
-			'Flagged Photos' => 'flagged_photos.php',
-			'Orphan Photos' => 'orphan_photos.php',
-			'Photo Settings' => 'photo_settings.php',
-			'Watermark Settings' => 'photo_settings.php?mode=watermark_settings',
-			'Recreate Thumbs' => 'recreate_thumbs.php?mode=mass'
-		);
+		if($per['photos_moderation'] == "yes"){
+            $am['Photos'] = array(
+                'Photo Manager' => 'photo_manager.php',
+                'Inactive Photos' => 'photo_manager.php?search=search&active=no',
+                'Flagged Photos' => 'flagged_photos.php',
+                'Orphan Photos' => 'orphan_photos.php',
+                'Photo Settings' => 'photo_settings.php',
+                'Watermark Settings' => 'photo_settings.php?mode=watermark_settings',
+                'Recreate Thumbs' => 'recreate_thumbs.php?mode=mass'
+            );
+        }
 		$Cbucket->AdminMenu = $am;					  	
 	}
 
@@ -221,16 +220,18 @@ class CBPhotos
 	{
 		global $userquery,$Cbucket;
 		// Search type
-		if(isSectionEnabled('photos'))
-		$Cbucket->search_types['photos'] = "cbphoto";
+		if(isSectionEnabled('photos')){
+		    $Cbucket->search_types['photos'] = "cbphoto";
+        }
 		
 		// My account links
 		$accountLinks = array(
 			lang('manage_photos') => "manage_photos.php",
 			lang('manage_favorite_photos') => "manage_photos.php?mode=favorite",
 		);
-		if(isSectionEnabled('photos'))
+		if(isSectionEnabled('photos')){
 			$userquery->user_account[lang('photos')] = $accountLinks;
+        }
 											
 		//Setting Cbucket links
 		$Cbucket->links['photos'] = array('photos.php','photos/');
@@ -320,10 +321,11 @@ class CBPhotos
 	{
 		global $Cbucket;
 		$adminSize = $Cbucket->configs['max_photo_size'];
-		if(!$adminSize)
+		if(!$adminSize){
 			$this->max_file_size = 2*1024*1024;
-		else
-			$this->max_file_size = $adminSize*1024*1024;		
+        } else {
+			$this->max_file_size = $adminSize*1024*1024;
+        }
 	}
 
 	/**
@@ -336,13 +338,15 @@ class CBPhotos
 	function photo_exists($id)
 	{
 		global $db;
-		if(is_numeric($id))
+		if(is_numeric($id)){
 			$result = $db->select(tbl($this->p_tbl),"photo_id"," photo_id = '$id'");
-		else
+        } else {
 			$result = $db->select(tbl($this->p_tbl),"photo_id"," photo_key = '$id'");
+        }
 		
-		if($result)
+		if($result){
 			return true;
+        }
 		return false;
 	}
 
@@ -368,13 +372,15 @@ class CBPhotos
 	{
 		global $db;
 
-		if(is_numeric($pid))
+		if(is_numeric($pid)){
 			$result = $db->select(tbl($this->p_tbl),"*"," photo_id = '$pid'");
-		else
+        } else {
 			$result = $db->select(tbl($this->p_tbl),"*"," photo_key = '$pid'");
+        }
 
-		if(count($result) > 0)
+		if(count($result) > 0){
 			return $result[0];
+        }
 		return false;
 	}
 
@@ -393,147 +399,142 @@ class CBPhotos
 		$limit = $p['limit'];
 		$cond = "";
 		
-		if(!has_access('admin_access',TRUE))
-		{
+		if(!has_access('admin_access',TRUE)) {
 			$cond = " ".('photos.broadcast')." = 'public' AND ".('photos.active')." = 'yes'";
 		} else {
-			if($p['active'])
+			if($p['active']){
 				$cond .= " ".('photos.active')." = '".$p['active']."'";
+            }
 				
-			if($p['broadcast'])
-			{
-				if($cond != "")
+			if($p['broadcast']) {
+				if($cond != ""){
 					$cond .= " AND ";
+                }
 				$cond .= " ".('photos.broadcast')." = '".$p['broadcast']."'";
 			}
 		}
 		
-		if($p['pid'])
-		{
-			if($cond != "")
+		if($p['pid']) {
+			if($cond != ""){
 				$cond .= " AND ";
+            }
 			$cond .= $this->constructMultipleQuery(array("ids"=>$p['pid'],"sign"=>"=","operator"=>"OR"));		
 		}
 		
-		if($p['key'])
-		{
-			if($cond != "")
+		if($p['key']) {
+			if($cond != ""){
 				$cond .= " AND ";
+            }
 			$cond .= " ".('photos.photo_key')." = '".$p['key']."'";
 		}
 		
-		if($p['filename'])
-		{
-			if($cond != "")
+		if($p['filename']) {
+			if($cond != ""){
 				$cond .= " AND ";
+            }
 			$cond .= " ".('photos.filename')." = '".$p['filename']."'";
 		}
 		
-		if($p['extension'])
-		{
-			foreach($this->exts as $ext)
-			{
-				if(in_array($ext,$this->exts))
-				{
-					if($cond != "")
+		if($p['extension']) {
+			foreach($this->exts as $ext) {
+				if(in_array($ext,$this->exts)) {
+					if($cond != ""){
 						$cond .= " AND ";
+                    }
 					$cond .= " ".('photos.ext')." = '".$p['extension']."'";
 				}
 			}
 		}
 		
-		if($p['date_span'])
-		{
-			if($cond != "")
+		if($p['date_span']) {
+			if($cond != ""){
 				$cond .= " AND ";
+            }
 			$cond .= " ".cbsearch::date_margin("photos.date_added",$p['date_span']);
 		}
 		
-		if($p['featured'])
-		{
-			if($cond != "")
+		if($p['featured']) {
+			if($cond != ""){
 				$cond .= " AND ";
+            }
 			$cond .= " ".('photos.featured')." = '".$p['featured']."'";
 		}
 		
-		if($p['user'])
-		{
-			if($cond != "")
+		if($p['user']) {
+			if($cond != ""){
 				$cond .= " AND ";
+            }
 			$cond .= $this->constructMultipleQuery(array("ids"=>$p['user'],"sign"=>"=","operator"=>"AND","column"=>"userid"));		
 		}
 		
-		if($p['exclude'])
-		{			
-			if($cond != "")
-				$cond .= " AND ";			
+		if($p['exclude']) {
+			if($cond != ""){
+				$cond .= " AND ";
+            }
 			$cond .= $this->constructMultipleQuery(array("ids"=>$p['exclude'],"sign"=>"<>"));
 		}
 		
 		$title_tag = '';
 		
-		if($p['title'])
-		{
+		if($p['title']) {
 			$title_tag = " ".('photos.photo_title')." LIKE '%".$p['title']."%'";
 		}
 		
-		if($p['tags'])
-		{
+		if($p['tags']) {
 			$tags = explode(",",$p['tags']);
-			if(count($tags)>0)
-			{
-				if($title_tag != '')
+			if(count($tags)>0) {
+				if($title_tag != ''){
 					$title_tag .= " OR ";
+                }
 				$total = count($tags);
 				$loop = 1;
-				foreach($tags as $tag)
-				{
+				foreach($tags as $tag) {
 					$title_tag .= " ".('photos.photo_tags')." LIKE '%$tag%'";
-					if($loop<$total)
+					if($loop<$total){
 						$title_tag .= " OR ";
+                    }
 					$loop++;		
 				}
 			} else {
-				if($title_tag != '')
+				if($title_tag != ''){
 					$title_tag .= " OR ";
+                }
 				$title_tag .= " ".('photos.photo_tags')." LIKE '%".$p['tags']."%'";
 			}
 		}
 		
-		if($title_tag != "")
-		{
-			if($cond != '')
+		if($title_tag != "") {
+			if($cond != ''){
 				$cond .= " AND ";
+            }
 			$cond .= " ($title_tag) ";		
 		}
 		
-		if($p['ex_user'])
-		{
-			if($cond != "")
+		if($p['ex_user']) {
+			if($cond != ""){
 				$cond .= " AND ";
+            }
 			$cond .= $this->constructMultipleQuery(array("ids"=>$p['ex_user'],"sign"=>"<>","operator"=>"AND","column"=>"userid"));		
 		}
 		
-		if($p['extra_cond'])
-		{
-			if($cond != "")
+		if($p['extra_cond']) {
+			if($cond != ""){
 				$cond .= " AND ";
+            }
 			$cond .= $p['extra_cond'];		
 		}
 		
-		if($p['get_orphans'])
-		{
+		if($p['get_orphans']) {
 			$p['collection'] = (string)"0";
 		}
-			
+
+        if($cond != ""){
+            $cond .= " AND ";
+        }
 		if($p['collection'] || $p['get_orphans'])
 		{
-			if($cond != "")
-				$cond .= " AND ";
 			$cond .= $this->constructMultipleQuery(array("ids"=>$p['collection'],"sign"=>"=","operator"=>"OR","column"=>"collection_id"));		
 		} else {
-			if($cond != "")
-				$cond .= " AND ";
 			$cond .= " ".('photos.collection_id')." <> '0'";
 		}
 
@@ -552,8 +553,7 @@ class CBPhotos
         $order = $order ? " ORDER BY ".$order : false;
         $limit = $limit ? " LIMIT ".$limit : false;
 
-		if(!$p['count_only'] && !$p['show_related'])
-		{
+		if(!$p['count_only'] && !$p['show_related']) {
             $query = $main_query;
             if ( $cond ) {
                 $query .= " WHERE ".$cond;
@@ -565,30 +565,29 @@ class CBPhotos
             $result = select( $query );
 		}
 		
-		if($p['show_related'])
-		{
+		if($p['show_related']) {
             $query = $main_query;
 
 			$cond = "MATCH(".('photos.photo_title,photos.photo_tags').")";
 			$cond .= " AGAINST ('".$cbsearch->set_the_key($p['title'])."' IN NATURAL LANGUAGE MODE)";
-			if($p['exclude'])
-			{
-				if($cond != "")
+			if($p['exclude']) {
+				if($cond != ""){
 					$cond .= " AND ";
+                }
 				$cond .= $this->constructMultipleQuery(array("ids"=>$p['exclude'],"sign"=>"<>"));		
 			}
 			
-			if($p['collection'])
-			{
-				if($cond != "")
+			if($p['collection']) {
+				if($cond != ""){
 					$cond .= " AND ";
+                }
 				$cond .= $this->constructMultipleQuery(array("ids"=>$p['collection'],"sign"=>"<>","column"=>"collection_id"));		
 			}
 			
-			if($p['extra_cond'])
-			{
-				if($cond != "")
+			if($p['extra_cond']) {
+				if($cond != ""){
 					$cond .= " AND ";
+                }
 				$cond .= $p['extra_cond'];		
 			}
 
@@ -601,8 +600,7 @@ class CBPhotos
             $result = select( $query );
 									  
 			// We found nothing from TITLE of Photos, let's try TAGS
-			if(count($result) == 0)
-			{
+			if(count($result) == 0) {
                 $query = $main_query;
 
 				$tags = $cbsearch->set_the_key($p['tags']);
@@ -611,24 +609,24 @@ class CBPhotos
 				$cond = "MATCH(".('photos.photo_title,photos.photo_tags').")";
 				$cond .= " AGAINST ('".$tags."' IN NATURAL LANGUAGE MODE)";
 				
-				if($p['exclude'])
-				{
-					if($cond != "")
+				if($p['exclude']) {
+					if($cond != ""){
 						$cond .= " AND ";
+                    }
 					$cond .= $this->constructMultipleQuery(array("ids"=>$p['exclude'],"sign"=>"<>"));		
 				}
 				
-				if($p['collection'])
-				{
-					if($cond != "")
+				if($p['collection']) {
+					if($cond != ""){
 						$cond .= " AND ";
+                    }
 					$cond .= $this->constructMultipleQuery(array("ids"=>$p['collection'],"sign"=>"<>","column"=>"collection_id"));		
 				}
 				
-				if($p['extra_cond'])
-				{
-					if($cond != "")
+				if($p['extra_cond']) {
+					if($cond != ""){
 						$cond .= " AND ";
+                    }
 					$cond .= $p['extra_cond'];		
 				}
 
@@ -641,22 +639,22 @@ class CBPhotos
 			}
 		}
 		
-		if($p['count_only'])
-		{
-			if($p['extra_cond'])
-			{
-				if($cond != "")
+		if($p['count_only']) {
+			if($p['extra_cond']) {
+				if($cond != ""){
 					$cond .= " AND ";
+                }
 				$cond .= $p['extra_cond'];		
 			}
 
 			$result = $db->count(table("photos"),"photo_id",$cond);	
 		}
 
-		if($p['assign'])
+		if($p['assign']){
 			assign($p['assign'],$result);
-		else
-			return $result;	
+        } else {
+			return $result;
+        }
 	}
 
 	/**
@@ -671,18 +669,18 @@ class CBPhotos
 	{
 		$cond = "";
 		$IDs = $params['ids'];
-		if(!is_array($IDs))
+		if(!is_array($IDs)){
 			$IDs = explode(",",$IDs);
+        }
 			
 		$count = 0;
 		$cond .= "( ";
-		foreach($IDs as $id)
-		{	
+		foreach($IDs as $id) {
 			$id = str_replace(" ","",$id);	
-			if(is_numeric($id) || $params['column'] == 'collection_id')
-			{
-				if($count>0)
+			if(is_numeric($id) || $params['column'] == 'collection_id') {
+				if($count>0){
 					$cond .= " ".($params['operator']?$params['operator']:'AND')." ";
+                }
 				$cond .= "".('photos.'.($params['column']?$params['column']:'photo_id'))." ".($params['sign']?$params['sign']:'=')." '".$id."'";
 				$count++;	
 			}
@@ -700,17 +698,17 @@ class CBPhotos
 	{	
 		$char_list = "ABDGHKMNORSUXWY";
 		$char_list .= "123456789";
-		while(1)
-		{
+		// Todo : remove possible infinite loop
+		while(1) {
 			$photo_key = '';
 			srand((double)microtime()*1000000);
-			for($i = 0; $i < 12; $i++)
-			{
+			for($i = 0; $i < 12; $i++) {
 				$photo_key .= substr($char_list,(rand()%(strlen($char_list))), 1);
 			}
 			
-			if(!$this->pkey_exists($photo_key))
+			if(!$this->pkey_exists($photo_key)){
 				break;
+            }
 		}
 		
 		return $photo_key;		
@@ -727,8 +725,9 @@ class CBPhotos
 	{
 		global $db;
 		$result = $db->select(tbl("photos"),"photo_key"," photo_key = '$key'");
-		if(count($result) > 0)
+		if(count($result) > 0){
 			return true;
+        }
 		return false;
 	}
 
@@ -741,25 +740,21 @@ class CBPhotos
 	function delete_photo($id,$orphan=FALSE)
 	{
 		global $db;
-		if($this->photo_exists($id))
-		{
+		if($this->photo_exists($id)) {
 			$photo = $this->get_photo($id);
 			
 			$del_photo_funcs = cb_get_functions('delete_photo');
-			if(is_array($del_photo_funcs))
-			{
-				
-				foreach($del_photo_funcs as $func)
-				{
-					if(function_exists($func['func']))
-					{
+			if(is_array($del_photo_funcs)) {
+				foreach($del_photo_funcs as $func) {
+					if(function_exists($func['func'])) {
 						$func['func']($photo);
 					}
 				}
 			}
 			
-			if($orphan == FALSE)//removing from collection
+			if($orphan == FALSE) {//removing from collection
 				$this->collection->remove_item($photo['photo_id'],$photo['collection_id']);
+            }
 				
 			//now removing photo files
 			$this->delete_photo_files($photo);
@@ -774,10 +769,10 @@ class CBPhotos
 			$db->delete(tbl("comments"),array("type","type_id"),array("p",$photo['photo_id']));
 			
 			//Removing Photo From Favorites
-			$db->delete(tbl("favorites"),array("type","id"),array("p",$photo['photo_id']));			
-			
-		} else 
+			$db->delete(tbl("favorites"),array("type","id"),array("p",$photo['photo_id']));
+		} else {
 			e(lang("photo_not_exists"));
+        }
 	}
 
 	/**
@@ -787,133 +782,94 @@ class CBPhotos
 	 */
 	function delete_photo_files($id)
 	{
-		if(!is_array($id))
+		if(!is_array($id)){
 			$photo = $this->get_photo($id);
-		else
+        } else {
 			$photo = $id;
+        }
 			
         $files = get_image_file( array( 'details' => $photo, 'size' => 't', 'multi' => true, 'with_orig' => true, 'with_path' => false ) );
-		if(!empty($files))
-		{
-			foreach($files as $file)
-			{
+		if(!empty($files)) {
+			foreach($files as $file) {
 				$file_dir = PHOTOS_DIR.'/'.$file;
-				if(file_exists($file_dir))
-					unlink($file_dir);	
+				if(file_exists($file_dir)){
+					unlink($file_dir);
+                }
 			}
 			
 			e(sprintf(lang("success_delete_file"),display_clean($photo['photo_title'])),"m");
 		}
 	}
-	
-	/**
-	 * Used to delete photo from database
-	 */
+
+    /**
+     * Used to delete photo from database
+     *
+     * @param $id
+     */
 	function delete_from_db($id)
 	{
 		global $db;
-		if(is_array($id))
+		if(is_array($id)){
 			$delete_id = $id['photo_id'];
-		else
+        } else {
 			$delete_id = $id;
+        }
 				
 		$db->execute("DELETE FROM ".tbl('photos')." WHERE photo_id = $delete_id");
 		e(lang("photo_success_deleted"),"m");	
 	}
-	  
-	
-	/**
-	 * Used to get photo owner
-	 */
+
+    /**
+     * Used to get photo owner
+     *
+     * @param $id
+     *
+     * @return bool|mixed
+     */
 	function get_photo_owner($id)
 	{
 		return $this->get_photo_field($id,'userid');		
 	}
-	
-	/**
-	 * Used to get photo any field
-	 */
+
+    /**
+     * Used to get photo any field
+     *
+     * @param $id
+     * @param $field
+     *
+     * @return bool|mixed
+     */
 	function get_photo_field($id,$field)
 	{
 		global $db;
-		if(!$field)
+		if(!$field){
 			return false;
-		else
-		{
-			if(!is_numeric($id))
-				$result = $db->select(tbl($this->p_tbl),$field,' photo_key = '.$id.'');
-			else
-				$result = $db->select(tbl($this->p_tbl),$field,' photo_id = '.$id.'');
-			
-			if($result)
-				return $result[0][$field];
-			else
-				return false;	
-		}
-	}
-	
-	/**
-	 * Used filter array
-	 */
-	function remove_empty_indexes($array)
-	{
-		$newArr = array();
-		if(is_array($array))
-		{
-			foreach($array as $key=>$arr)
-			{
-				if(is_array($arr))
-				{
-					foreach($arr as $a)
-					{
-						if(!empty($a))
-						{
-							$newArr[$key][] = $a;
-						}
-					}
-				}
-			}
-			
-			return $newArr;
-		} else {
-			echo "No Array Provided";	
-		}
+        }
+
+        if(!is_numeric($id)){
+            $result = $db->select(tbl($this->p_tbl),$field,' photo_key = '.$id.'');
+        } else {
+            $result = $db->select(tbl($this->p_tbl),$field,' photo_id = '.$id.'');
+        }
+
+        if($result){
+            return $result[0][$field];
+        }
+        return false;
 	}
 
-	/**
-	 * Used to crop the image using imagemagic class
-	 * Image will be crop to dead-center
-	 */
-	function image_magic($image,$file,$width,$height){
-		
-		if(!file_exists($image) || !$image)
-			return;
-		
-		$thumb = new Imagick();
-		$thumb->readImage($image);    
-		$can = $thumb->resizeImage($width,$height,Imagick::FILTER_LANCZOS,1);
-		$can = $thumb->writeImage($file);
-	}
-
-	/**
-	 * Used to crop the image using imagemagic class
-	 * Image will be crop to dead-center
-	 */
-	function image_magick_watermark($input,$watermark_file,$ww,$wh){
-		$image = new Imagick();
-		$image->readImage($input);
-		$watermark = new Imagick();
-		$watermark->readImage($watermark_file);
-		$image->compositeImage($watermark, imagick::COMPOSITE_OVER, 0, 0);
-		$image->resizeImage($ww,$wh,Imagick::FILTER_LANCZOS,1);
-		$image->writeImage($input);
-	 }
-
-	/**
-	 * Used to crop the image
-	 * Image will be crop to dead-center
-	 */
-
+    /**
+     * Used to crop the image
+     * Image will be crop to dead-center
+     *
+     * @param $input
+     * @param $output
+     * @param $ext
+     * @param $width
+     * @param $height
+     *
+     * @return bool
+     */
 	function crop_image($input,$output,$ext,$width,$height)
 	{
 		$info = getimagesize($input);
@@ -930,55 +886,45 @@ class CBPhotos
 			case "jpg":
 			case "JPG":
 			case "JPEG":
-			{
 				$image = imagecreatefromjpeg($input);
 				imagecopy($canvas, $image, 0, 0, $left_padding, $top_padding, $width, $height);
 				imagejpeg($canvas,$output,90);
-			}
-			break;
+			    break;
 			
 			case "png":
 			case "PNG":
-			{
 				$image = imagecreatefrompng($input);
 				imagecopy($canvas, $image, 0, 0, $left_padding, $top_padding, $width, $height);
 				imagepng($canvas,$output,9);
-
-				
-			}
-			break;
+			    break;
 			
 			case "gif":
 			case "GIF":
-			{
 				$image = imagecreatefromgif($input);
 				imagecopy($canvas, $image, 0, 0, $left_padding, $top_padding, $width, $height);
-				imagejpeg($canvas,$output,90);	
-			}
-			break;
+				imagejpeg($canvas,$output,90);
+			    break;
 			
 			default:
-			{
-				return false;	
-			}
-			break;
+				return false;
 		}
 		imagedestroy($canvas);
 	}
-	
-	/**
-	 * Used to resize and watermark image
-	 **/
+
+    /**
+     * Used to resize and watermark image
+     *
+     * @param $array
+     */
 	function generate_photos($array)
 	{
-		global $db;
 		$path = PHOTOS_DIR."/";
 
-		if(!is_array($array))
+		if(!is_array($array)){
 			$p = $this->get_photo($array);
-		else
+        } else {
 			$p = $array;
-
+        }
 
         $path .= get_photo_date_folder( $p ).'/';
 
@@ -991,8 +937,7 @@ class CBPhotos
 		
 		$should_watermark = config('watermark_photo');
 		
-		if(!empty($should_watermark) && $should_watermark == 1)
-		{
+		if(!empty($should_watermark) && $should_watermark == 1) {
 			$this->watermark_image($path.$filename."_l.".$extension,$path.$filename."_l.".$extension);
 			$this->watermark_image($path.$filename."_o.".$extension,$path.$filename."_o.".$extension);
 		}
@@ -1000,33 +945,31 @@ class CBPhotos
 		/* GETTING DETAILS OF IMAGES AND STORING THEM IN DB */
 		$this->update_image_details($p);
 	}
-	
-	/**
-	 * This function is used to get photo files and extract
-	 * dimensions and file size of each file, put them in array
-	 * then encode in json and finally update photo details column
-	 */ 
+
+    /**
+     * This function is used to get photo files and extract
+     * dimensions and file size of each file, put them in array
+     * then encode in json and finally update photo details column
+     *
+     * @param $photo
+     */
 	function update_image_details($photo)
 	{
 		global $db, $json;
-		if(is_array($photo) && !empty($photo['photo_id']))
+		if(is_array($photo) && !empty($photo['photo_id'])){
 			$p = $photo;
-		else
+        } else {
 			$p = $this->get_photo($photo);
+        }
 			
-		if(!empty($photo))
-		{
+		if(!empty($photo)) {
 			$images = get_image_file( array( 'details' => $photo, 'size' => 't', 'multi' => true, 'with_path' => false ) );
 
-			if($images)
-			{
-
-				foreach($images as $image)
-				{
+			if($images) {
+				foreach($images as $image) {
 					$imageFile = PHOTOS_DIR."/".$image;
 
-					if(file_exists($imageFile))
-					{
+					if(file_exists($imageFile)) {
 						$imageDetails = getimagesize($imageFile); $imageSize = filesize($imageFile);
 						$data[$this->get_image_type($image)] = array(
 							"width"	=>	$imageDetails[0],
@@ -1041,12 +984,12 @@ class CBPhotos
 					}						
 				}
 
-				if(is_array($data) && !empty($data))
-				{
-					if(phpversion() < "5.2.0")
+				if(is_array($data) && !empty($data)) {
+					if(phpversion() < "5.2.0"){
 						$encodedData = stripslashes($json->json_encode($data));
-					else
+                    } else {
 						$encodedData = stripslashes(json_encode($data));
+                    }
 						
 					$db->update(tbl('photos'),array("photo_details"),array("|no_mc|$encodedData")," photo_id = '".$p['photo_id']."' ");
 
@@ -1055,148 +998,75 @@ class CBPhotos
 		}
 	}
 
-	/**
-	 * Creating resized photo
-	 *
-	 * @param      $from
-	 * @param      $to
-	 * @param      $ext
-	 * @param null $d_width
-	 * @param null $d_height
-	 * @param bool $force_copy
-	 */
+    /**
+     * Creating resized photo
+     *
+     * @param      $from
+     * @param      $to
+     * @param      $ext
+     * @param null $d_width
+     * @param null $d_height
+     * @param bool $force_copy
+     */
 	function createThumb($from,$to,$ext,$d_width=NULL,$d_height=NULL,$force_copy=false)
 	{
-		if( class_exists("Imagick") )
-		{
-    		$file = $from;
-			$info = getimagesize($file);
-			$org_width = $info[0];
-			$org_height = $info[1];
-			if($width > $d_width && !empty($d_width))
-			{
-				$ratio = $org_width / $d_width; // We will resize it according to Width
-				
-				$width = $org_width / $ratio;
-				$height = $org_height / $ratio;
+        $file = $from;
+        $info = getimagesize($file);
+        $org_width = $info[0];
+        $org_height = $info[1];
 
-				$image_r = imagecreatetruecolor($width, $height);
-				if(!empty($d_height) && $height > $d_height && $this->cropping == 1)
-				{
-					$crop_image = TRUE;
-				}
-				$image = $file;
-				switch($ext)
-				{
-					case "jpeg":
-					case "jpg":
-					case "JPG":
-					case "JPEG":
-					{
-						// $image = imagecreatefromjpeg($file);
-						// imagecopyresampled($image_r, $image, 0, 0, 0, 0, $width, $height, $org_width, $org_height);
-						// imagejpeg($image_r, $to, 90);
-							
-						$this->image_magic($image,$file,$width,$height);
+        if($org_width > $d_width && !empty($d_width)) {
+            $ratio = $org_width / $d_width; // We will resize it according to Width
 
-					}
-					break;
-					
-					case "png":
-					case "PNG":
-					{
-						$image = ($file);
-						$this->image_magic($image,$file,$width,$height);
-						
-						 
+            $width = $org_width / $ratio;
+            $height = $org_height / $ratio;
 
-					}
-					break;
-					
-					case "gif":
-					case "GIF":
-					{
-						$image = imagecreatefromgif($file);
-						imagecopyresampled($image_r, $image, 0, 0, 0, 0, $width, $height, $org_width, $org_height);
-						imagegif($image_r,$to,90);
-						$this->image_magic($image,$file,$width,$height);
-						
-					}
-					break;
-				}
-				imagedestroy($image_r);
-			} else {
-				if(!file_exists($to) || $force_copy === true)
-					if(!is_dir($from)){
-						copy($from,$to);
-					}
-			}
+            $image_r = imagecreatetruecolor($width, $height);
+            if(!empty($d_height) && $height > $d_height && $this->cropping == 1) {
+                $crop_image = TRUE;
+            }
 
-		} else {
-			$file = $from;
-			$info = getimagesize($file);
-			$org_width = $info[0];
-			$org_height = $info[1];
-			
-			if($org_width > $d_width && !empty($d_width))
-			{
-				$ratio = $org_width / $d_width; // We will resize it according to Width
-				
-				$width = $org_width / $ratio;
-				$height = $org_height / $ratio;
-				
-				$image_r = imagecreatetruecolor($width, $height);
-				if(!empty($d_height) && $height > $d_height && $this->cropping == 1)
-				{
-					$crop_image = TRUE;
-				}
-				
-				switch($ext)
-				{
-					case "jpeg":
-					case "jpg":
-					case "JPG":
-					case "JPEG":
-					{
-						$image = imagecreatefromjpeg($file);
-						imagecopyresampled($image_r, $image, 0, 0, 0, 0, $width, $height, $org_width, $org_height);
-						imagejpeg($image_r, $to, 90);
-						
-						if(!empty($crop_image))
-							$this->crop_image($to,$to,$ext,$width,$d_height);	
-					}
-					break;
-					
-					case "png":
-					case "PNG":
-					{
-						$image = imagecreatefrompng($file);
-						imagecopyresampled($image_r, $image, 0, 0, 0, 0, $width, $height, $org_width, $org_height);
-						imagepng($image_r,$to,9);
-						if(!empty($crop_image))
-							$this->crop_image($to,$to,$ext,$width,$d_height);	
-					}
-					break;
-					
-					case "gif":
-					case "GIF":
-					{
-						$image = imagecreatefromgif($file);
-						imagecopyresampled($image_r, $image, 0, 0, 0, 0, $width, $height, $org_width, $org_height);
-						imagegif($image_r,$to,90);
-						if(!empty($crop_image))
-							$this->crop_image($to,$to,$ext,$width,$d_height);
-					}
-					break;
-				}
-				imagedestroy($image_r);
-			} else {
-				if(!file_exists($to) || $force_copy === true)
-					if(!is_dir($from)){
-						copy($from,$to);
-					}
-			}
-		} //end of else
+            switch($ext)
+            {
+                case "jpeg":
+                case "jpg":
+                case "JPG":
+                case "JPEG":
+                    $image = imagecreatefromjpeg($file);
+                    imagecopyresampled($image_r, $image, 0, 0, 0, 0, $width, $height, $org_width, $org_height);
+                    imagejpeg($image_r, $to, 90);
+                    if(!empty($crop_image)){
+                        $this->crop_image($to,$to,$ext,$width,$d_height);
+                    }
+                    break;
+
+                case "png":
+                case "PNG":
+                    $image = imagecreatefrompng($file);
+                    imagecopyresampled($image_r, $image, 0, 0, 0, 0, $width, $height, $org_width, $org_height);
+                    imagepng($image_r,$to,9);
+                    if(!empty($crop_image)){
+                        $this->crop_image($to,$to,$ext,$width,$d_height);
+                    }
+                    break;
+
+                case "gif":
+                case "GIF":
+                    $image = imagecreatefromgif($file);
+                    imagecopyresampled($image_r, $image, 0, 0, 0, 0, $width, $height, $org_width, $org_height);
+                    imagegif($image_r,$to,90);
+                    if(!empty($crop_image)){
+                        $this->crop_image($to,$to,$ext,$width,$d_height);
+                    }
+                    break;
+            }
+            imagedestroy($image_r);
+        } else {
+            if(!file_exists($to) || $force_copy === true)
+                if(!is_dir($from)){
+                    copy($from,$to);
+                }
+        }
 	}
 	
 	/**
@@ -1204,8 +1074,9 @@ class CBPhotos
 	 */
 	function watermark_file()
 	{
-		if(file_exists(BASEDIR."/images/photo_watermark.png"))
+		if(file_exists(BASEDIR."/images/photo_watermark.png")){
 			return "/images/photo_watermark.png";
+        }
 		return false;
 	}
 
@@ -1288,8 +1159,9 @@ class CBPhotos
 	function watermark_image($input,$output)
 	{
 		$watermark_file = $this->watermark_file();
-		if(!$watermark_file)
+		if(!$watermark_file){
 			return false;
+        }
 
 		list($Swidth, $Sheight, $Stype) = getimagesize($input);
 		$wImage = imagecreatefrompng($watermark_file);
@@ -1312,13 +1184,9 @@ class CBPhotos
 				break;
 
 			case 3: //PNG
-				if( class_exists("Imagick") ){
-					$this->image_magick_watermark($input,$watermark_file,$wImage,$wImage);
-				} else {
-					$sImage = imagecreatefrompng($input);
-					imagecopy($sImage,$wImage,$paddings[0],$paddings[1],0,0,$ww,$wh);
-					imagepng($sImage,$input,9);
-				}
+                $sImage = imagecreatefrompng($input);
+                imagecopy($sImage,$wImage,$paddings[0],$paddings[1],0,0,$ww,$wh);
+                imagepng($sImage,$input,9);
 				break;
 		}
 	}
@@ -1342,39 +1210,6 @@ class CBPhotos
         $output .= Fetch( "blocks/upload/photo_upload.html" );
 
         return $output;
-
-		$should_include = $p['includeHeader'] ? $p['includeHeader'] : TRUE;
-		$output = '<form method="post"';
-		if($p['formName'])
-			$output .= " name = '".$p['formName']."'";
-		else
-			$output .= " name = 'photo_form'";
-		if($p['formID'])
-			$output .= " id = '".$p['formID']."'";
-		else
-			$output .= " id = 'photo_form'";
-		if($p['formClass'])
-			$formClass = $p['formClass'];
-		$output .= " class = 'clearfix ".$formClass."'";		
-		$output .= ">";
-			if($p['class'])
-				$class = $p['class'];
-			if($should_include == TRUE)	
-				$output .= Fetch("/blocks/upload_head.html");
-			$output .= "<div ";
-			$output .= "class = 'PhotoUploaderWrapper ".$class."'";
-			if($p['WrapperID'])
-				$output .= "id = '".$p['WrapperID']."'";
-			if($p['WrapperExtraAttr'])
-				$output .= $p['WrapperExtraAttr'];		
-			$output .= ">";						
-				$output .= '<input type="file" name="photo_uploads" id="photo_uploads" />';
-			$output .= "</div>";
-			$output .= '<div style="clear:both;"></div>';
-			$output .= '<div id="photoUploadQueue"></div>';
-		$output .= "</form>";
-		
-		return $output;							
 	}
 
 	/**
@@ -1386,17 +1221,19 @@ class CBPhotos
 	 */
 	function load_required_forms($array=NULL)
 	{
-		if($array == NULL)
+		if($array == NULL){
 			$array = $_POST;
+        }
 			
 		$title = $array['photo_title'];
 		$description = $array['photo_description'];
 		$tags = $array['photo_tags'];
 		
-		if($array['user'])
+		if($array['user']){
 			$p['user'] = $array['user'];
-		else
+        } else {
 			$p['user'] = userid();
+        }
 			
 		$p['type'] = "photos";	
 		$collections = $this->collection->get_collections($p);
@@ -1454,15 +1291,16 @@ class CBPhotos
 	function insert_photo($array=NULL)
 	{
 		global $db,$eh;
-		if($array == NULL)
+		if($array == NULL){
 			$array = $_POST;
+        }
 		
-		if(is_array($_FILES))
+		if(is_array($_FILES)){
 			$array = array_merge($array,$_FILES);
+        }
 			
 		$this->validate_form_fields($array);
-		if(!error())
-		{
+		if(!error()) {
 			$forms = $this->load_required_forms($array);
 			$oForms = $this->load_other_forms($array);
 			$FullForms = array_merge($forms,$oForms);
@@ -1475,39 +1313,40 @@ class CBPhotos
 			if(!isset($array['allow_rating'])){
 				$array['allow_rating'] = 'yes';
 			}
-			foreach($FullForms as $field)
-			{
+
+			foreach($FullForms as $field) {
 				$name = formObj::rmBrackets($field['name']);
 				$val = $array[$name];
 
-				if($field['use_func_val'])
+				if($field['use_func_val']){
 					$val = $field['validate_function']($val);
+                }
 
-				if(!empty($field['db_field']))
+				if(!empty($field['db_field'])){
 					$query_field[] = $field['db_field'];
+                }
 				
-				if(is_array($val))
-				{
+				if(is_array($val)) {
 					$new_val = '';
-					foreach($val as $v)
-					{
+					foreach($val as $v) {
 						$new_val .= "#".$v."# ";
 					}
 					$val = $new_val;
 				}
 
-				if(!$field['clean_func'] || (!function_exists($field['clean_func']) && !is_array($field['clean_func'])))
+				if(!$field['clean_func'] || (!function_exists($field['clean_func']) && !is_array($field['clean_func']))){
 					$val = ($val);
-				else
+                } else {
 					$val = apply_func($field['clean_func'], mysql_clean('|no_mc|'.$val));
+                }
 
-				if(!empty($field['db_field']))
-					$query_val[] = $val;	
+				if(!empty($field['db_field'])){
+					$query_val[] = $val;
+                }
 			}
 			
 			$query_field[] = "userid";
-			if(!$array['userid'])
-			{
+			if(!$array['userid']) {
 				$userid = userid();
 				$query_val[] = $userid;
 			} else {
@@ -1532,14 +1371,12 @@ class CBPhotos
 			$query_field[] = "active";
 			$query_val[] = $array['active'];
 
-			if($array['server_url'] && $array['server_url'] != "undefined")
-			{
+			if($array['server_url'] && $array['server_url'] != "undefined") {
 				$query_field[] = "server_url";
 				$query_val[] = $array['server_url'];
 			}
 			
-			if($array['folder'] && $array['folder'] != "undefined")
-			{
+			if($array['folder'] && $array['folder'] != "undefined") {
 				$query_field[] = "file_directory";
 				$query_val[] = $array['folder'];
 			}
@@ -1549,8 +1386,9 @@ class CBPhotos
 			$photo = $this->get_photo($insert_id);
 			$this->collection->add_collection_item($insert_id,$photo['collection_id']);
 			
-			if(!$array['server_url'] || $array['server_url']=='undefined')
+			if(!$array['server_url'] || $array['server_url']=='undefined'){
 				$this->generate_photos($photo);
+            }
 
 			$eh->flush();
 			e(sprintf(lang("photo_is_saved_now"),display_clean($photo['photo_title'])),"m");
@@ -1569,10 +1407,9 @@ class CBPhotos
 	 */
 	function update_watermark($file)
 	{
-		if(empty($file))
+		if(empty($file)){
 			e(lang("no_watermark_found"));
-		else
-		{
+        } else {
 			$oldW = BASEDIR."/images/photo_watermark.png";
 			if(file_exists($oldW))
 				unset($oldW);
@@ -1581,13 +1418,12 @@ class CBPhotos
 			$width = $info[0];
 			$type = $info[2];
 
-			if($type == 3)
-			{
-				if(move_uploaded_file($file['tmp_name'],BASEDIR."/images/photo_watermark.png"))
-				{
+			if($type == 3) {
+				if(move_uploaded_file($file['tmp_name'],BASEDIR."/images/photo_watermark.png")) {
 					$wFile = BASEDIR."/images/photo_watermark.png";
-					if($width > $this->max_watermark_width)	
+					if($width > $this->max_watermark_width)	{
 						$this->createThumb($wFile,$wFile,'png',$this->max_watermark_width);
+                    }
 				}
 				e(lang("watermark_updated"),"m");
 			} else {
@@ -1605,8 +1441,9 @@ class CBPhotos
 	 */
 	function load_other_forms($array=NULL)
 	{
-		if($array==NULL)
+		if($array==NULL){
 			$array = $_POST;
+        }
 		
 		$comments = $array['allow_comments'];
 		$embedding = $array['allow_embedding'];
@@ -1655,7 +1492,6 @@ class CBPhotos
 		return $Otherfields;	
 	}
 
-
 	/**
 	 * This will return a formatted array
 	 * return @Array
@@ -1669,8 +1505,7 @@ class CBPhotos
 	function return_formatted_post($arr)
 	{
 		$photoID = '';
-		foreach($_POST as $key => $value)
-		{	
+		foreach($_POST as $key => $value) {
 			$parts = explode('_',$key);
 			$total = count($parts);
 			$id = $parts[$total-1];
@@ -1682,10 +1517,8 @@ class CBPhotos
 				$photoID = $id;
 			}
 			
-			if(is_numeric($id))
-			{
-				if (strpos($key, $id) !== FALSE)
-				{				
+			if(is_numeric($id)) {
+				if (strpos($key, $id) !== FALSE) {
 					$values[$name] = $value;
 					$PhotosArray[$id] = $values;
 				}
@@ -1696,7 +1529,7 @@ class CBPhotos
 	}
 
 	/**
-	 * This will be used to mutliple photos
+	 * This will be used to multiple photos
 	 * at once.
 	 * Single update will be different.
 	 *
@@ -1706,46 +1539,43 @@ class CBPhotos
 	{
 		global $db,$cbcollection,$eh;
 		
-		foreach($arr as $id => $details)
-		{
-			if(is_array($details))
-			{
+		foreach($arr as $id => $details) {
+			if(is_array($details)) {
 				$i = 0;
 				$query = "UPDATE ".tbl('photos')." SET ";
-				foreach($details as $key => $value)
-				{
+				foreach($details as $key => $value) {
 					$i++;
 					$query .= "$key = '$value'";
-					if($i<count($details))
+					if($i<count($details)){
 						$query .= " , ";
-										
+                    }
 				}
 				
 				$query .= " WHERE ".tbl('photos.photo_id')." = '$id'";
 
 				$db->Execute($query);
 				$cbcollection->add_collection_item($id,$details['collection_id']);
-				
 			}			
 		}		
 		$eh->flush();
 	}
-	
-	/**
-	 * Used to parse collections dropdown
-	 */
+
+    /**
+     * Used to parse collections dropdown
+     *
+     * @param $array
+     *
+     * @return bool|array
+     */
 	function parse_array($array)
 	{
-		if(is_array($array))
-		{
-			foreach($array as $key=>$v)
-			{
+		if(is_array($array)) {
+			foreach($array as $key=>$v) {
 				$cl_arr[$v['collection_id']] = $v['collection_name'];
 			}			
 			return $cl_arr;
-		} else {
-			return false;	
 		}
+        return false;
 	}
 	
 	/**
@@ -1753,8 +1583,7 @@ class CBPhotos
 	 */
 	function create_filename()
 	{
-		$filename = time().RandomString(6);
-		return $filename;	
+		return time().RandomString(6);
 	}	 
 	
 	/**
@@ -1764,130 +1593,124 @@ class CBPhotos
 	{
 		$exts = $this->exts;
 		$list = '';
-		foreach($exts as $ext)
-		{
+		foreach($exts as $ext) {
 			$list .= "*.".$ext.";";	
 		}
 		return $list;
 			
 	}
-	
-	/**
-	 * Function used to validate form fields
-	 */
+
+    /**
+     * Function used to validate form fields
+     *
+     * @param null $array
+     */
 	function validate_form_fields($array=NULL)
 	{
 		$reqFileds = $this->load_required_forms($array);
 		
-		if($array==NULL)
+		if($array==NULL){
 			$array = $_POST;
+        }
 			
-		if(is_array($_FILES))
+		if(is_array($_FILES)){
 			$array = array_merge($array,$_FILES);
-				
-		
-		$otherFields = $this->load_other_forms($array);
-		
-		$photo_fields = array_merge($reqFileds,$otherFields);
+        }
 
+		$otherFields = $this->load_other_forms($array);
+		$photo_fields = array_merge($reqFileds,$otherFields);
 		validate_cb_form($photo_fields,$array);	
 	}
 
-	/**
-	 * Update Photo
-	 */
+    /**
+     * Update Photo
+     *
+     * @param null $array
+     */
 	function update_photo($array=NULL)
 	{
 		global $db;
 		
-		if($array == NULL)
+		if($array == NULL){
 			$array = $_POST;
+        }
 		$this->validate_form_fields($array);
 		$pid = $array['photo_id'];
 		$cid = $this->get_photo_field($pid,'collection_id');
 
-		if(!error())
-		{	
+		if(!error()) {
 			$reqFields = $this->load_required_forms($array);
 			$otherFields = $this->load_other_forms($array);
 			
 			$fields = array_merge($reqFields,$otherFields);
-			
-			foreach($fields as $field)
-			{
+			foreach($fields as $field) {
 				$name = formObj::rmBrackets($field['name']);
 				$val = $array[$name];
 				
-				if($field['use_func_val'])
+				if($field['use_func_val']){
 					$val = $field['validate_function']($val);
+                }
 				
 				
-				if(!empty($field['db_field']))
-				$query_field[] = $field['db_field'];
+				if(!empty($field['db_field'])){
+				    $query_field[] = $field['db_field'];
+                }
 				
-				if(is_array($val))
-				{
+				if(is_array($val)) {
 					$new_val = '';
-					foreach($val as $v)
-					{
+					foreach($val as $v) {
 						$new_val .= "#".$v."# ";
 					}
 					$val = $new_val;
 				}
-				if(!$field['clean_func'] || (!function_exists($field['clean_func']) && !is_array($field['clean_func'])))
+
+				if(!$field['clean_func'] || (!function_exists($field['clean_func']) && !is_array($field['clean_func']))){
 					$val = ($val);
-				else
+                } else {
 					$val = apply_func($field['clean_func'], mysql_clean('|no_mc|'.$val));
+                }
 				
-				if(!empty($field['db_field']))
-				$query_val[] = $val;	
+				if(!empty($field['db_field'])){
+				    $query_val[] = $val;
+                }
 			}
 			
-			if(has_access('admin_access',TRUE))
-			{
-				if(isset($array['views']))
-				{
+			if(has_access('admin_access',TRUE)) {
+				if(isset($array['views'])) {
 					$query_field[] = 'views';
 					$query_val[] = $array['views'];	
 				}
 				
-				if(isset($array['total_comments']))
-				{
+				if(isset($array['total_comments'])) {
 					$query_field[] = "total_comments";
 					$query_val[] = $array['total_comments'];	
 				}
 				
-				if(isset($array['total_favorites']))
-				{
+				if(isset($array['total_favorites'])) {
 					$query_field[] = "total_favorites";
 					$query_val[] = $array['total_favorites'];	
 				}
 				
-				if(isset($array['downloaded']))
-				{
+				if(isset($array['downloaded'])) {
 					$query_field[] = "downloaded";
 					$query_val[] = $array['downloaded'];	
 				}
 				
-				if(isset($array['voters']))
-				{
-					$query_field[] = "voters";
+				if(isset($array['voters'])) {
+				    $query_field[] = "voters";
 					$query_val[] = $array['voters'];	
 				}
 			}
 
-			if(!error())
-			{
-				if(!userid())
+			if(!error()) {
+				if(!userid()){
 					e(lang("you_not_logged_in"));
-				elseif(!$this->photo_exists($pid))
+                } else if(!$this->photo_exists($pid)) {
 					e(lang("photo_not_exists"));
-				elseif($this->get_photo_owner($pid) != userid() && !has_access('admin_access',TRUE))
+                } else if($this->get_photo_owner($pid) != userid() && !has_access('admin_access',TRUE)) {
 					e(lang("cant_edit_photo"));
-				else
-				{
-					if($cid != $array['collection_id'])
-					{
+                } else {
+					if($cid != $array['collection_id']) {
 						$this->collection->change_collection($array['collection_id'],$pid,$cid);
 					}
 					
@@ -1896,29 +1719,30 @@ class CBPhotos
 				}
 			}
 		}
-		
-			
 	}
-	
-	/**
-	 * Used to get image type
-	 * t = Thumb 
-	 * m = Medium 
-	 * l = Large 
-	 */
+
+    /**
+     * Used to get image type
+     * t = Thumb
+     * m = Medium
+     * l = Large
+     *
+     * @param $name
+     *
+     * @return bool|false|string
+     */
 	function get_image_type($name)
 	{
-		if(empty($name))
+		if(empty($name)){
 			return false;
-		else
-		{
-			$parts = explode("_",$name);
-			if(is_array($parts))
-			{
-				if(!empty($parts[1]))
-					return substr($parts[1],0,1);	
-			}
-		}
+        }
+
+        $parts = explode("_",$name);
+        if(is_array($parts)) {
+            if(!empty($parts[1])){
+                return substr($parts[1],0,1);
+            }
+        }
 	}
 
 	/**
@@ -1953,228 +1777,233 @@ class CBPhotos
 		global $Cbucket;
 		$details = $p['details'];
 		$output = $p['output'];
-		if(empty($details))
-		{
+		if(empty($details)) {
 			return $this->default_thumb($size,$output);	
 		} else {
 			//Calling Custom Functions
-			if(count($Cbucket->custom_get_photo_funcs) > 0)
-			{
-				
-				foreach($Cbucket->custom_get_photo_funcs as $funcs)
-				{
-					if(function_exists($funcs))
-					{
+			if(count($Cbucket->custom_get_photo_funcs) > 0) {
+				foreach($Cbucket->custom_get_photo_funcs as $funcs) {
+					if(function_exists($funcs)) {
 						$func_returned = $funcs($p);
-						if($func_returned)
-						return $func_returned;
+						if($func_returned){
+						    return $func_returned;
+                        }
 					}
 				}
 			}
 		
-			if(($p['size'] != 't' && $p['size'] != 'm' && $p['size'] != 'l' && $p['size'] != 'o') || empty($p['size']))
-				$p['size'] = 't';   
+			if(($p['size'] != 't' && $p['size'] != 'm' && $p['size'] != 'l' && $p['size'] != 'o') || empty($p['size'])){
+				$p['size'] = 't';
+            }
 			
-			if($p['with_path'] === FALSE) $p['with_path'] = FALSE; else $p['with_path'] = TRUE;
+			if($p['with_path'] === FALSE) {
+			    $p['with_path'] = FALSE;
+            } else {
+                $p['with_path'] = TRUE;
+            }
 			$with_path = $p['with_path'];
 			$with_orig = $p['with_orig'] ? $p['with_orig'] : FALSE;
 			
-			if(!is_array($details))
+			if(!is_array($details)){
 				$photo = $this->get_photo($details);
-			else
+            } else {
 				$photo = $details;
+            }
 				
-			if(empty($photo['photo_id']) || empty($photo['photo_key']))		
+			if(empty($photo['photo_id']) || empty($photo['photo_key'])){
 				return $this->default_thumb($size,$output);
-			else
-			{
-				if(!empty($photo['filename']) && !empty($photo['ext']))
-				{
-					$files = glob(PHOTOS_DIR."/".$photo['filename']."*.".$photo['ext']);
-					if(!empty($files) && is_array($files))
-					{
-						$thumbs = array();
-						foreach($files as $file)
-						{
-							$file_parts = explode("/",$file);
-							$thumb_name = $file_parts[count($file_parts)-1];
-							
-							$type = $this->get_image_type($thumb_name);
-							if($with_orig)
-							{
-								if($with_path)
-									$thumbs[] = PHOTOS_URL."/".$thumb_name;
-								else
-									$thumbs[] = $thumb_name;
-							}
-							elseif(!empty($type))
-							{
-								if($with_path)
-									$thumbs[] = PHOTOS_URL."/".$thumb_name;
-								else
-									$thumbs[] = $thumb_name;	
-							}
-						}
-						
-						if(empty($p['output']) || $p['output'] == 'non_html')
-						{
-							if($p['assign'] && $p['multi'])
-							{
-								assign($p['assign'],$thumbs);
-							} elseif(!$p['assign'] && $p['multi']) {
-								return $thumbs;	
-							} else {
-								
-								$size = "_".$p['size'];
-								$return_thumb = array_find($photo['filename'].$size, $thumbs);
-								
-								if(empty($return_thumb))
-								{
-									$this->default_thumb($size,$output);
-								} else {
-									if($p['assign'] != NULL)
-										assign($p['assign'],$return_thumb);
-									else
-										return $return_thumb;
-								}
-							}
-						}
-						
-						if($p['output'] == 'html')
-						{
-							$size = "_".$p['size'];
-								
-							$src = array_find($photo['filename'].$size,$thumbs);
-							if(empty($src))
-								$src = $this->default_thumb($size);
-								
-							if(phpversion < '5.2.0')
-								global $json; $js = $json;
-							
-							if(!empty($js))
-								$imgDetails = $js->json_decode($photo['photo_details'],true);
-							else
-								$imgDetails = json_decode($photo['photo_details'],true);
-								
-							if(empty($imgDetails) || empty($imgDetails[$p['size']]))	
-							{
-								$dem = getimagesize(str_replace(PHOTOS_URL,PHOTOS_DIR,$src));
-								$width = $dem[0];
-								$height = $dem[1];
-								/* UPDATING IMAGE DETAILS */
-								$this->update_image_details($details);	
-							} else {
-								$width = $imgDetails[$p['size']]['width'];
-								$height = $imgDetails[$p['size']]['height'];	
-							}
-							
-							$img = "<img ";
-							$img .= "src = '".$src."'";
-							
-							if($p['id'])
-								$img .= " id = '".mysql_clean($p['id'])."_".$photo['photo_id']."'";
-								
-							if($p['class'])
-								$img .= " class = '".mysql_clean($p['class'])."'";
-								
-							if($p['align'])
-								$img .= " align = '".$p['align']."'";
-							if(($p['width'] && is_numeric($p['width'])) && ($p['height'] && is_numeric($p['height'])))
-							{
-								$height = $p['height'];
-								$width  = $p['width'];	
-							}
-							elseif($p['width'] && is_numeric($p['width']))
-							{
-								$height = round($p['width'] / $width * $height);
-								$width = $p['width'];
-							}
-							elseif($p['height'] && is_numeric($p['height']))
-							{
-								$width = round($p['height'] * $width  /  $height);
-								$height = $p['height']; 	
-							}
-							
-							$img .= " width = '".$width."'";
-							$img .= " height = '".$height."'";
-							
-							if($p['title'])
-								$img .= " title = '".mysql_clean($p['title'])."'";
-							else
-								$img .= " title = '".display_clean($photo['photo_title'])."'";
-									
-							if($p['alt'])
-								$img .= " alt = '".mysql_clean($p['alt'])."'";
-							else
-								$img .= " alt = '".display_clean($photo['photo_title'])."'";
-									
-							if($p['anchor'])
-							{
-								$anchor_p = array("place"=>$p['anchor'],"data"=>$photo);
-								ANCHOR($anchor_p);	
-							}
-							
-							if($p['style'])
-								$img .= " style = '".$p['style']."'";
-							
-							if($p['extra'])
-								$img .= ($p['extra']);
-								
-							$img .= " />";
-							
-							if($p['assign'])
-								assign($p['assign'],$img);
-							else	
-								return $img;
-						}
-					} else {
-						return $this->default_thumb($size,$output);	
-					}
-				}
-			}
+            }
+
+            if(!empty($photo['filename']) && !empty($photo['ext'])) {
+                $files = glob(PHOTOS_DIR."/".$photo['filename']."*.".$photo['ext']);
+                if(!empty($files) && is_array($files)) {
+                    $thumbs = array();
+                    foreach($files as $file) {
+                        $file_parts = explode("/",$file);
+                        $thumb_name = $file_parts[count($file_parts)-1];
+
+                        $type = $this->get_image_type($thumb_name);
+                        if($with_orig) {
+                            if($with_path){
+                                $thumbs[] = PHOTOS_URL."/".$thumb_name;
+                            } else {
+                                $thumbs[] = $thumb_name;
+                            }
+                        } elseif(!empty($type)) {
+                            if($with_path){
+                                $thumbs[] = PHOTOS_URL."/".$thumb_name;
+                            } else {
+                                $thumbs[] = $thumb_name;
+                            }
+                        }
+                    }
+
+                    if(empty($p['output']) || $p['output'] == 'non_html') {
+                        if($p['assign'] && $p['multi'])
+                        {
+                            assign($p['assign'],$thumbs);
+                        } else if(!$p['assign'] && $p['multi']) {
+                            return $thumbs;
+                        } else {
+                            $size = "_".$p['size'];
+                            $return_thumb = array_find($photo['filename'].$size, $thumbs);
+
+                            if(empty($return_thumb)) {
+                                $this->default_thumb($size,$output);
+                            } else {
+                                if($p['assign'] != NULL){
+                                    assign($p['assign'],$return_thumb);
+                                } else {
+                                    return $return_thumb;
+                                }
+                            }
+                        }
+                    }
+
+                    if($p['output'] == 'html') {
+                        $size = "_".$p['size'];
+
+                        $src = array_find($photo['filename'].$size,$thumbs);
+                        if(empty($src)){
+                            $src = $this->default_thumb($size);
+                        }
+
+                        if(phpversion < '5.2.0'){
+                            global $json;
+                            $js = $json;
+                        }
+
+                        if(!empty($js)){
+                            $imgDetails = $js->json_decode($photo['photo_details'],true);
+                        } else {
+                            $imgDetails = json_decode($photo['photo_details'],true);
+                        }
+
+                        if(empty($imgDetails) || empty($imgDetails[$p['size']])) {
+                            $dem = getimagesize(str_replace(PHOTOS_URL,PHOTOS_DIR,$src));
+                            $width = $dem[0];
+                            $height = $dem[1];
+                            /* UPDATING IMAGE DETAILS */
+                            $this->update_image_details($details);
+                        } else {
+                            $width = $imgDetails[$p['size']]['width'];
+                            $height = $imgDetails[$p['size']]['height'];
+                        }
+
+                        $img = "<img ";
+                        $img .= "src = '".$src."'";
+
+                        if($p['id']){
+                            $img .= " id = '".mysql_clean($p['id'])."_".$photo['photo_id']."'";
+                        }
+
+                        if($p['class']){
+                            $img .= " class = '".mysql_clean($p['class'])."'";
+                        }
+
+                        if($p['align']){
+                            $img .= " align = '".$p['align']."'";
+                        }
+                        if(($p['width'] && is_numeric($p['width'])) && ($p['height'] && is_numeric($p['height']))) {
+                            $height = $p['height'];
+                            $width  = $p['width'];
+                        } elseif($p['width'] && is_numeric($p['width'])) {
+                            $height = round($p['width'] / $width * $height);
+                            $width = $p['width'];
+                        } elseif($p['height'] && is_numeric($p['height'])) {
+                            $width = round($p['height'] * $width  /  $height);
+                            $height = $p['height'];
+                        }
+
+                        $img .= " width = '".$width."'";
+                        $img .= " height = '".$height."'";
+
+                        if($p['title']){
+                            $img .= " title = '".mysql_clean($p['title'])."'";
+                        } else {
+                            $img .= " title = '".display_clean($photo['photo_title'])."'";
+                        }
+
+                        if($p['alt']){
+                            $img .= " alt = '".mysql_clean($p['alt'])."'";
+                        } else {
+                            $img .= " alt = '".display_clean($photo['photo_title'])."'";
+                        }
+
+                        if($p['anchor']) {
+                            $anchor_p = array("place"=>$p['anchor'],"data"=>$photo);
+                            ANCHOR($anchor_p);
+                        }
+
+                        if($p['style']){
+                            $img .= " style = '".$p['style']."'";
+                        }
+
+                        if($p['extra']){
+                            $img .= ($p['extra']);
+                        }
+
+                        $img .= " />";
+
+                        if($p['assign']){
+                            assign($p['assign'],$img);
+                        } else {
+                            return $img;
+                        }
+                    }
+                } else {
+                    return $this->default_thumb($size,$output);
+                }
+            }
 		}
 	}
-	
-	/**
-	 * Will be called when collection is being deleted
-	 * This will make photos in the collection orphan
-	 * User will be able to access them in orphan photos
-	 */
+
+    /**
+     * Will be called when collection is being deleted
+     * This will make photos in the collection orphan
+     * User will be able to access them in orphan photos
+     *
+     * @param      $details
+     * @param null $pid
+     */
 	function make_photo_orphan($details,$pid=NULL)
 	{
 		global $db;
-		if(!is_array($details) && is_numeric($details))
-		{
+		if(!is_array($details) && is_numeric($details)) {
 			$c = $this->collection->get_collection($details);
 			$cid = $c['collection_id'];
-		} else
+		} else {
 			$cid = $details['collection_id'];
-		if(!empty($pid))
+        }
+		if(!empty($pid)){
 			$cond = " AND photo_id = $pid";
+        }
 			
 		$db->update(tbl('photos'),array('collection_id'),array('0')," collection_id = $cid $cond");
 	}
-	
-	/**
-	 * This will create download button for
-	 * photo
-	 */
+
+    /**
+     * This will create download button for
+     * photo
+     *
+     * @param $params
+     *
+     * @return mixed|string|string[]|void|null
+     */
 	function download_button($params)
 	{
 		$output = '';
-		if(!is_array($params['details']))
+		if(!is_array($params['details'])){
 			$p = $this->get_photo($params['details']);
-		else
-			$p = $params['details'];
+        } else {
+            $p = $params['details'];
+        }
 			
 		$text = lang('download_photo');
-		if(config('photo_download') == 1 && !empty($p))
-		{	
-			if($params['return_url'])
-			{
+		if(config('photo_download') == 1 && !empty($p)) {
+			if($params['return_url']) {
 				$output = $this->photo_links($p,'download_photo');
-				if($params['assign'])
-				{
+				if($params['assign']) {
 					assign($params['assign'],$output);
 					return;
 				}
@@ -2182,44 +2011,53 @@ class CBPhotos
 				return $output;
 			}
 			
-			if($params['output'] == '' || $params['output'] == 'link')
-			{
+			if($params['output'] == '' || $params['output'] == 'link') {
 				$output .= "<a href='".$this->photo_links($p,'download_photo')."'";
-				if($params['id'])
+				if($params['id']){
 					$output .= " id = '".$params['id']."'";
-				if($params['class'])
+                }
+				if($params['class']){
 					$output .= " class = '".$params['class']."'";
-				if($params['target'])
+                }
+				if($params['target']){
 					$output .= " target = '".$params['target']."'";
-				if($params['style'])
+                }
+				if($params['style']){
 					$output .= " style = '".$params['style']."'";
-				if($params['title'])
+                }
+				if($params['title']){
 					$output .= " title = '".$params['title']."'";
-				if($params['relation'])
-					$output .= " rel = '".$params['relation']."'";									
+                }
+				if($params['relation']){
+					$output .= " rel = '".$params['relation']."'";
+                }
 				$output .= ">".$text."</a>";	
 			}
 			
-			if($params['output'] == "div")
-			{
+			if($params['output'] == "div") {
 				$link = "'".$this->photo_links($p,'download')."'";
 				$new_window = $params['new_window'] ? "'new'" : "'same'";
 				$output .= '<div onClick = "openURL('.$link.','.$new_window.')"';
-				if($params['id'])
+				if($params['id']){
 					$output .= " id = '".$params['id']."'";
-				if($params['class'])
+                }
+				if($params['class']){
 					$output .= " class = '".$params['class']."'";
-				if($params['style'])
+                }
+				if($params['style']){
 					$output .= " style = '".$params['style']."'";
-				if($params['align'])
-					$output .= " align = '".$params['align']."'";	
+                }
+				if($params['align']){
+					$output .= " align = '".$params['align']."'";
+                }
 				$output .= '>'.$text.'</div>';	
 			}
 			
-			if($params['assign'])
+			if($params['assign']){
 				assign($params['assign'],$output);
-			else
+            } else {
 				return $output;
+            }
 		}
 	}
 
@@ -2230,110 +2068,126 @@ class CBPhotos
 	 *
 	 * @param $arr
 	 *
-	 * @return bool|mixed|null|string|string[]
+	 * @return bool|mixed|null|string|string[]|void
 	 */
 	function upload_photo_button($arr)
 	{
 		$cid = $arr['details'];
 		$text = lang("add_more");
 		$result = '';			
-		if(!is_array($cid))
+		if(!is_array($cid)){
 			$details = $this->collection->get_collection($cid);
-		else
+        } else {
 			$details = $cid;
+        }
 			
-		if($details['type'] == 'photos' && $details['userid'] == user_id())
-		{
+		if($details['type'] == 'photos' && $details['userid'] == user_id()) {
 			$output = $arr['output'];
-			if($arr['return_url'])
-			{
+			if($arr['return_url']) {
 				$result = $this->photo_links($details,'upload_more');
-				if($arr['assign'])
-				{
+				if($arr['assign']) {
 					assign($arr['assign'],$result);
 					return;
 				}
 				return $result;
 			}
 			
-			if(empty($output) || $output == "button")
-			{
+			if(empty($output) || $output == "button") {
 				$result .= '<button type="button"';
 				$link = "'".$this->photo_links($details,'upload_more')."'";
-				if($arr['new_window'] || $arr['target'] == "_blank")
+				if($arr['new_window'] || $arr['target'] == "_blank"){
 					$new_window = "'new'";
-				else
+                } else {
 					$new_window = "'same'";
+                }
 						
 				$result .= 'onClick = "openURL('.$link.','.$new_window.')"';
-				if($arr['id'])
+				if($arr['id']){
 					$result .= ' id = "'.$arr['id'].'"';
-				if($arr['class'])
+                }
+				if($arr['class']){
 					$result .= ' class = "'.$arr['class'].'"';
-				if($arr['title'])
+                }
+				if($arr['title']){
 					$result .= ' title = "'.$arr['title'].'"';
-				if($arr['style'])
+                }
+				if($arr['style']){
 					$result .= ' style = "'.$arr['style'].'"';
-				if($arr['extra'])
+                }
+				if($arr['extra']){
 					$result .=	$arr['extra'];
+                }
 					 	
 				$result .= ">".$text."</button>";
 			}
 			
-			if($output == "div")
-			{
+			if($output == "div") {
 				$result .= '<div ';
 				$link = "'".$this->photo_links($details,'upload_more')."'";
-				if($arr['new_window'] || $arr['target'] == "_blank")
+				if($arr['new_window'] || $arr['target'] == "_blank"){
 					$new_window = "'new'";
-				else
+                } else {
 					$new_window = "'same'";
+                }
 				$result .= 'onClick = "openURL('.$link.','.$new_window.')"';
-				if($arr['id'])
+				if($arr['id']){
 					$result .= ' id = "'.$arr['id'].'"';
-				if($arr['align'])
+                }
+				if($arr['align']){
 					$result .= ' align = "'.$arr['align'].'"';
-				if($arr['class'])
+                }
+				if($arr['class']){
 					$result .= ' class = "'.$arr['class'].'"';
-				if($arr['title'])
+                }
+				if($arr['title']){
 					$result .= ' title = "'.$arr['title'].'"';
-				if($arr['style'])
+                }
+				if($arr['style']){
 					$result .= ' style = "'.$arr['style'].'"';
-				if($arr['extra'])
+                }
+				if($arr['extra']){
 					$result .=	$arr['extra'];
+                }
 					 	
 				$result .= ">".$text."</div>";
 			}
 			
-			if($output == "link")
-			{
+			if($output == "link") {
 				$result .= '<a href="'.$this->photo_links($details,'upload_more').'"';
 				
-				if($arr['new_window'])
+				if($arr['new_window']){
 					$result .= ' target = "_blank"';
-				elseif($arr['target'])
+                } else if($arr['target']) {
 					$result .= ' target = "'.$arr['target'].'"';
+                }
 					
-				if($arr['id'])
+				if($arr['id']){
 					$result .= ' id = "'.$arr['id'].'"';
-				if($arr['align'])
-					$result .= ' align = "'.$arr['align'].'"';	
-				if($arr['class'])
+                }
+				if($arr['align']){
+					$result .= ' align = "'.$arr['align'].'"';
+                }
+				if($arr['class']){
 					$result .= ' class = "'.$arr['class'].'"';
-				if($arr['title'])
+                }
+				if($arr['title']){
 					$result .= ' title = "'.$arr['title'].'"';
-				if($arr['style'])
+                }
+				if($arr['style']){
 					$result .= ' style = "'.$arr['style'].'"';
-				if($arr['extra'])
+                }
+				if($arr['extra']){
 					$result .=	$arr['extra'];
+                }
 					 	
 				$result .= ">".$text."</a>";
 			}
 			
-			if($arr['assign'])
+			if($arr['assign']){
 				assign($arr['assign'],$result);
-			else
-				return $result;	
+            } else {
+				return $result;
+            }
 		}
 		return FALSE;
 	}
@@ -2348,22 +2202,25 @@ class CBPhotos
 	 */
 	function photo_links($details,$type)
 	{
-		if(empty($type))
+		if(empty($type)){
 			return BASEURL;
+        }
 
 		switch($type)
 		{
 			case 'upload':
-				if(SEO == 'yes')
+				if(SEO == 'yes'){
 					return '/photo_upload';
-				else
+                } else {
 					return '/photo_upload.php';
+                }
 
 			case 'upload_more':
-				if(SEO == 'yes')
+				if(SEO == 'yes'){
 					return '/photo_upload/'.$this->encode_key($details['collection_id']);
-				else
+                } else {
 					return '/photo_upload.php?collection='.$this->encode_key($details['collection_id']);
+                }
 
 			case 'download_photo':
 			case 'download':
@@ -2388,43 +2245,45 @@ class CBPhotos
 	 */
 	function default_thumb($size=NULL,$output=NULL)
 	{
-		if($size != "_t" && $size != "_m")
+		if($size != "_t" && $size != "_m"){
 			$size = "_m";
+        }
 			
-		if(file_exists(TEMPLATEDIR."/images/thumbs/no-photo".$size.".png"))
+		if(file_exists(TEMPLATEDIR."/images/thumbs/no-photo".$size.".png")){
 			$path = TEMPLATEURL."/images/thumbs/no-photo".$size.".png";
-		else
+        } else {
 			$path = PHOTOS_URL."/no-photo".$size.".png";
+        }
 
-		if(!empty($output) && $output == "html")
+		if(!empty($output) && $output == "html"){
 			echo "<img src='".$path."' />";
-		else
-			return $path;					
+        } else {
+			return $path;
+        }
 	}
 
-	/**
-	 * Used to add comment
-	 *
-	 * @param      $comment
-	 * @param      $obj_id
-	 * @param null $reply_to
-	 * @param bool $force_name_email
-	 *
-	 * @return bool|mixed
-	 */
+    /**
+     * Used to add comment
+     *
+     * @param      $comment
+     * @param      $obj_id
+     * @param null $reply_to
+     * @param bool $force_name_email
+     *
+     * @return bool|mixed
+     * @throws phpmailerException
+     */
 	function add_comment($comment,$obj_id,$reply_to=NULL,$force_name_email=false)
 	{
 		global $myquery;
 		$photo = $this->get_photo($obj_id);
-		if(empty($photo))
+		if(empty($photo)){
 			e("photo_not_exist");
-		else
-		{
+        } else {
 			$ownerID = $photo['userid'];
 			$photoLink = $this->photo_links($photo,'view_item');
 			$comment = $myquery->add_comment($comment,$obj_id,$reply_to,'p',$ownerID,$photoLink,$force_name_email);
-			if($comment)
-			{
+			if($comment) {
 				//Updating Number of comments of photo if comment is not a reply
 				if ($reply_to < 1)
 				$this->update_total_comments($obj_id);	
@@ -2455,18 +2314,22 @@ class CBPhotos
 	 */
 	function is_addable($cid)
 	{
-		if(!is_array($cid))
+		if(!is_array($cid)){
 			$details = $this->collection->get_collection($cid);
-		else
+        } else {
 			$details = $cid;
+        }
 				
-		if(empty($details))
+		if(empty($details)){
 			return false;
+        }
 
-		if(($details['active'] == 'yes' || $details['broadcast'] == 'public') && $details['userid'] == userid())
+		if(($details['active'] == 'yes' || $details['broadcast'] == 'public') && $details['userid'] == userid()){
 			return true;
-		if($details['userid'] == userid())
+        }
+		if($details['userid'] == userid()){
 			return true;
+        }
 		return false;
 	}
 
@@ -2484,22 +2347,21 @@ class CBPhotos
 	{
 		global $json;
 		$p = $this->get_photo($id);
-		if((!empty($p) && $p['userid'] == userid()) || $show_all === TRUE)
-		{
+		if((!empty($p) && $p['userid'] == userid()) || $show_all === TRUE) {
 			global $userquery;
 			$voters = $p['voters'];
-			if(phpversion() < "5.2.0")
+			if(phpversion() < "5.2.0"){
 				$voters = $json->json_decode($voters,TRUE);
-			else
+            } else {
 				$voters = json_decode($voters,TRUE);
+            }
 
-			if(!empty($voters))	
-			{
-				if($return_array)
+			if(!empty($voters)) {
+				if($return_array){
 					return $voters;
+                }
 
-				foreach($voters as $id=>$details)
-				{
+				foreach($voters as $id=>$details) {
 					$username = get_username($id);
 					$output = "<li id='user".$id.$p['photo_id']."' class='PhotoRatingStats'>";
 					$output .= "<a href='".$userquery->profile_link($id)."'>".display_clean($username)."</a>";
@@ -2509,8 +2371,9 @@ class CBPhotos
 					echo $output;
 				}
 			}
-		} else
+		} else {
 			return false;
+        }
 	}
 
 	/**
@@ -2524,13 +2387,15 @@ class CBPhotos
 	{
 		global $db;
 
-		if(!is_numeric($id))
+		if(!is_numeric($id)){
 			$result = $db->select(tbl('photos'),'userid,allow_rating,rating,rated_by,voters'," photo_key = ".$id."");
-		else
+        } else {
 			$result = $db->select(tbl('photos'),'userid,allow_rating,rating,rated_by,voters'," photo_id = ".$id."");
+        }
 
-		if($result)
+		if($result){
 			return $result[0];
+        }
 		return false;
 	}
 
@@ -2546,10 +2411,12 @@ class CBPhotos
 	{
 		global $db,$json;
 		
-		if(!is_numeric($rating) || $rating <= 9)
+		if(!is_numeric($rating) || $rating <= 9){
 			$rating = 0;
-		if($rating >= 10)
+        }
+		if($rating >= 10){
 			$rating = 10;
+        }
 			
 		$c_rating = $this->current_rating($id);
 		$voters   = $c_rating['voters'];
@@ -2557,29 +2424,31 @@ class CBPhotos
 		$new_rate = $c_rating['rating'];
 		$rated_by = $c_rating['rated_by'];
 		
-		if(phpversion < '5.2.0')
+		if(phpversion < '5.2.0'){
 			$voters = $json->json_decode($voters,TRUE);
-		else
+        } else {
 			$voters = json_decode($voters,TRUE);
+        }
 
-		if(!empty($voters))
+		if(!empty($voters)){
 			$already_voted = array_key_exists(userid(),$voters);
+        }
 			
-		if(!userid())
+		if(!userid()){
 			e(lang("please_login_to_rate"));
-		elseif(userid()==$c_rating['userid'] && !config('own_photo_rating'))
+        } elseif(userid()==$c_rating['userid'] && !config('own_photo_rating')) {
 			e(lang("you_cannot_rate_own_photo"));
-		elseif(!empty($already_voted))
+        } elseif(!empty($already_voted)) {
 			e(lang("you_hv_already_rated_photo"));
-		elseif($c_rating['allow_rating'] == 'no' || !config('photo_rating'))
+        } elseif($c_rating['allow_rating'] == 'no' || !config('photo_rating')) {
 			e(lang("photo_rate_disabled"));
-		else
-		{
+        } else {
 			$voters[userid()] = array('rate'=>$rating,'time'=>NOW());
-			if(phpversion < '5.2.0')
+			if(phpversion < '5.2.0'){
 				$voters = $json->json_encode($voters);
-			else
+            } else {
 				$voters = json_encode($voters);
+            }
 					
 			$t = $c_rating['rated_by'] * $c_rating['rating'];
 			$rated_by = $c_rating['rated_by'] + 1;
@@ -2616,28 +2485,33 @@ class CBPhotos
 		$type		= $p['type'];
 		$size		= $p['size'] ? $p['size'] : 'm';
 		
-		if(is_array($details))
+		if(is_array($details)){
 			$photo = $details;
-		else
+        } else {
 			$photo = $this->get_photo($details);
+        }
 
 		$code = '';
 		switch($type)
 		{
 			case "html":
-				if($p['with_url'])
+				if($p['with_url']){
 					$code .= "&lt;a href='".$this->collection->collection_links($photo,'view_item')."' target='_blank'&gt;";
+                }
 				$code .= "&lt;img src='".BASEURL.$this->get_image_file($photo)[0]."' title='".display_clean($photo['photo_title'])."' alt='".display_clean($photo['photo_title'])."&nbsp;".TITLE."' /&gt;";
-				if($p['with_url'])
+				if($p['with_url']){
 					$code .= "&lt;/a&gt;";
+                }
 				break;
 			
 			case "forum":
-				if($p['with_url'])
+				if($p['with_url']){
 					$code .= "&#91;URL=".$this->collection->collection_links($photo,'view_item')."&#93;";
+                }
 				$code .= "&#91;IMG&#93;".BASEURL.$this->get_image_file($photo)[0]."&#91;/IMG&#93;";
-				if($p['with_url'])
+				if($p['with_url']){
 					$code .= "&#91;/URL&#93;";
+                }
 				break;
 			
 			case "email":
@@ -2664,22 +2538,21 @@ class CBPhotos
 	 */
 	function photo_embed_codes($newArr)
 	{
-		if(empty($newArr['details']))
-		{
+		if(empty($newArr['details'])) {
 			echo "<div class='error'>".e(lang("need_photo_details"))."</div>";
 		} elseif($newArr['details']['allow_embedding'] == 'no') {
 			echo "<div class='error'>".e(lang("embedding_is_disabled"))."</div>";
 		} else {
 			$t = $newArr['type'];
-			if(is_array($t))
+			if(is_array($t)){
 				$types = $t;
-			elseif($t == 'all')
+            } else if($t == 'all') {
 				$types = $this->embed_types;
-			else	
+            } else {
 				$types = explode(',',$t);
+            }
 				
-			foreach($types as $type)
-			{
+			foreach($types as $type) {
 				$type = strtolower($type);
 				if(in_array($type,$this->embed_types)) {
 					$type = str_replace(' ','',$type);
@@ -2688,10 +2561,11 @@ class CBPhotos
 				}
 			}
 
-			if($newArr['assign'])
+			if($newArr['assign']){
 				assign($newArr['assign'],$codes);
-			else
+            } else {
 				return $codes;
+            }
 		}
 	}
 
@@ -2722,8 +2596,7 @@ class CBPhotos
 	function incrementDownload($Array)
 	{
 		global $db;
-		if(!isset($_COOKIE[$Array['photo_id']."_downloaded"]))
-		{
+		if(!isset($_COOKIE[$Array['photo_id']."_downloaded"])) {
 			$db->update(tbl('photos'),array('downloaded'),array('|f|downloaded+1'),' photo_id = "'.$Array['photo_id'].'"');
             set_cookie_secure($Array['photo_id']."_downloaded",NOW(),time()+1800);
 		}
@@ -2733,10 +2606,8 @@ class CBPhotos
 	{
 		$file = $this->ready_photo_file($key);
 		
-		if($file)
-		{
-			if($file['details']['server_url'])
-			{
+		if($file) {
+			if($file['details']['server_url']) {
 				$url = dirname(dirname($file['details']['server_url']));
 				header('location:'.$url.'/download_photo.php?file='.$file['details']['filename']
 				.'.'.$file['details']['ext'].'&folder='.$file['details']['file_directory']
@@ -2755,10 +2626,8 @@ class CBPhotos
 			
 			if(array_key_exists($p['ext'],$mime_types)){
 				$mime = $mime_types[$p['ext']];
-				if(file_exists($file['file_dir']))
-				{
-					if(is_readable($file['file_dir']))
-					{
+				if(file_exists($file['file_dir'])) {
+					if(is_readable($file['file_dir'])) {
 						$size = filesize($file['file_dir']);
 						if($fp=@fopen($file['file_url'],'r')) {
 							$this->incrementDownload($p);
@@ -2782,8 +2651,9 @@ class CBPhotos
 			} else {
 				e(lang("wrong_mime_type"));	
 			}
-		} else
+		} else {
 			return false;
+        }
 	}
 
 	/**
@@ -2796,12 +2666,12 @@ class CBPhotos
 	function ready_photo_file($pid)
 	{
 		$photo = $this->get_photo($pid);
-		if(empty($photo))
+		if(empty($photo)){
 			e(lang("photo_not_exist"));
-		else
-		{
-			if(!$this->collection->is_viewable($photo['collection_id']))
+        } else {
+			if(!$this->collection->is_viewable($photo['collection_id'])){
 				return false;
+            }
 
 			$filename = $this->get_image_file($photo['photo_id'],'o',FALSE,FALSE,FALSE);
 			$returnArray = array(

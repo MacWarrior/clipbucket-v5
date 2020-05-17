@@ -21,11 +21,6 @@ if(substr($baseurl,strlen($baseurl)-1,1)=='/'){
 
 $db->update(tbl("config"),array("value"),array($baseurl)," name='baseurl'");
 $db->update(tbl("config"),array("value"),array(BASEDIR)," name='basedir'");
-$db->update(tbl("config"),array("value"),array($released['release_date'])," name='date_released'");
-$db->update(tbl("config"),array("value"),array(now())," name='date_updated'");
-$db->update(tbl("config"),array("value"),array(now())," name='date_installed'");
-$db->update(tbl("config"),array("value"),array($released['version'])," name='version'");
-$db->update(tbl("config"),array("value"),array($released['state'])," name='type'");
 
 echo '<span class="glyphicon glyphicon-ok" style="color:#fff"></span><span style="color:#fff"> Installation details have been updated</span>';
 

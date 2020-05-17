@@ -189,7 +189,7 @@
 
 	Assign('baseurl', BASEURL);
 	Assign('VERSION', VERSION);
-	Assign('STATE', $Cbucket->cbinfo['state']);
+	Assign('STATE', STATE);
 
 	template_files('index.html');
 	display_it();

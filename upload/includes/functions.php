@@ -3499,21 +3499,6 @@
 	}
 
 	/**
-	* Check if ImageMagick is installed by extracting its version
-	*
-	* @param : { string } { $path } { path to ImageMagick }
-	* @return : { string } { version if found, else false }
-	*/
-	function check_imagick($path)
-	{
-		$version = Imagick::getVersion();
-		preg_match('/ImageMagick ([0-9]+\.[0-9]+\.[0-9]+)/', $version['versionString'], $matches);
-		if( isset($matches[1]) )
-			return $matches[1];
-		return false;
-	}
-
-	/**
 	 * Check if FFPROBE is installed by extracting its version
 	 *
 	 * @param : { string } { $path } { path to FFPROBE }
@@ -4544,22 +4529,6 @@
 		} else {
 			$db->insert(tbl('counters'),array('section','query','query_md5','counts','date_added'),
 			array($section,'|no_mc|'.$je_query,$query_md5,$counter,strtotime(now())));
-		}
-	}
-	
-	/**
-	* Loads all module files (mostly used with plugins)
-	* @param : { none } { all things handled inside function }
-	*/
-	function load_modules()	{
-		global $Cbucket;
-		foreach($Cbucket->modules_list as $cbmod)
-		{
-			foreach($cbmod as $modfile)
-			{
-				if(file_exists($modfile))
-					include_once($modfile);
-			}
 		}
 	}
 

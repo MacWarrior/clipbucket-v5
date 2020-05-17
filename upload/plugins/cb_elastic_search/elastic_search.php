@@ -35,9 +35,6 @@ define('CB_ES_INSTALLED', 'yes' );
 assign('cb_es_installed',CB_ES_INSTALLED);
 
 
-
-$Cbucket->links['search_result'] = array('module.php','module.php');
-
 //fields required for search form
 function elastic_mode_search() {
 	echo '<input type="hidden" name="s" value="elastic">';

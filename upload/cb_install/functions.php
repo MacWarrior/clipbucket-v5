@@ -139,13 +139,6 @@ function check_module($type)
             else
                 $return['msg'] = sprintf(_("cURL %s extension is enabled"),$version['version']);
             break;
-
-        case "imagick":
-            if(!extension_loaded('imagick'))
-                $return['err'] = _("Imagick extension is not enabled");
-            else
-                $return['msg'] = _("Imagick extension is enabled");
-            break;
     }
     return $return;
 }

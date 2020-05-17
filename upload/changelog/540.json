@@ -1,8 +1,21 @@
 {
   "version":"5.4.0",
-  "revision": "0",
+  "revision": "1",
   "status":"dev",
   "detail":[
-
+    {
+      "title": "Miscellaneous",
+      "description": [
+        "Remove unused or outdated files",
+        "Cleanup code",
+        "Remove unused configs"
+      ]
+    }
+    ,{
+      "title": "Server",
+      "description": [
+        "Remove i-magick dependancy"
+      ]
+    }
   ]
 }

@@ -437,52 +437,6 @@ function register_embed_function($name)
     $cbvid->embed_func_list [] = $name;
 }
 
-function create_module_link($params)
-{
-    $Modlink = $module = "module.php";
-    $section = $params['section'];
-    $page = $params['page'];
-    $extra = $params['extra'];
-
-    if(empty($section) || empty($page)){
-        $Modlink = BASEURL;
-    } else {
-        $Modlink .= "?s=".$section;
-        $Modlink .= "&p=".$page;
-        if(($extra)) {
-            if(is_array($extra)) {
-                foreach($extra as $var=>$value) {
-                    if(is_numeric($var)){
-                        $woIndex[] = $value;
-                    } else {
-                        $Modlink .= "&";
-                        $Modlink .= $var."=".$value;
-                    }
-                }
-                if(isset($woIndex)){
-                    if(count($woIndex) > 1) {
-                        foreach($woIndex as $var) {
-                            $Modlink .= "&".$var."=";
-                        }
-                    } else {
-                        $Modlink .= "&".$woIndex[0]."=";
-                    }
-                }
-            } else {
-                $Modlink .= "&".$extra;
-            }
-        }
-    }
-
-    return $Modlink;
-}
-
-function create_ModLink($section,$page,$extra=NULL)
-{
-    $params = array("section"=>$section,"page"=>$page,"extra"=>$extra);
-    return create_module_link($params);
-}
-
 /**
  * function used to get remote url function
  */

@@ -273,7 +273,6 @@ define('SUBTITLE',$row['code_dev']);
 define('ADMINDIR','admin_area');
 define('ADMINBASEDIR',BASEDIR.'/admin_area');				//Admin Accessible Folder
 define('ADMIN_BASEURL','/'.ADMINDIR);
-define('MODULEDIR',BASEDIR.'/modules');						//Modules Directory
 
 # DIRECT PATHS OF VIDEO FILES
 define('FILES_DIR',BASEDIR.'/files');
@@ -435,8 +434,6 @@ Assign('bg_dir','/images/backgrounds');
 Assign('captcha_type',$row['captcha_type']);
 Assign('languages',(isset($languages)) ? $languages : false);
 
-Assign('module_dir',MODULEDIR);
-
 Assign('VIDEOS_URL',VIDEOS_URL);
 Assign('THUMBS_URL',THUMBS_URL);
 Assign('PLUG_URL','/plugins');
@@ -486,9 +483,6 @@ Assign('player_div_id',$row['player_div_id']);
 
 # Asigning Page
 Assign('page',getConstant('PAGE'));
-
-# Add Modules
-require('modules.php');
 
 # REGISTER OBJECTS FOR SMARTY
 $Smarty->assign_by_ref('pages', $pages);

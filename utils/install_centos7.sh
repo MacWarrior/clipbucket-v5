@@ -18,9 +18,6 @@ yum install -y -q php php-mysqlnd php-curl php-xml php-mbstring php-pear php-dev
 # http://mir01.syntis.net/epel/7/x86_64/repodata/3e3bf72827ce3cbe2381f1cac087f6ff23b8bb8c2bdab06598f18057209e423e-updateinfo.xml.bz2: [Errno 14] HTTP Error 404 - Not Found
 # I don't know how to fix this for now, but it works anyway :)
 
-printf "\n" | pecl install imagick > /dev/null
-echo "extension=imagick.so" > /etc/php.d/imagick.ini
-
 systemctl enable httpd mariadb > /dev/null 2>&1
 systemctl start httpd mariadb
 echo -ne " OK"

@@ -538,17 +538,6 @@
 			</div>
 			<div class="row">
 				<div class="col-md-4">
-					<h5>Turn on VF</h5>
-					<label class="radio-inline">
-						<input type="radio" name="use_ffmpeg_vf" value="yes" id="use_ffmpeg_vf_0" {if $row.use_ffmpeg_vf=='yes'}checked{/if}/> Yes
-					</label>
-					<label class="radio-inline">
-						<input type="radio" name="use_ffmpeg_vf" value="no" id="use_ffmpeg_vf_1" {if $row.use_ffmpeg_vf=='no'}checked{/if}/> No
-					</label>
-					<img src="{$imageurl}/help.png" alt="VF information" border="0" class="tipsy_tip" title="In latest releases of FFMPEG (greator than 20000) Pad flag has been changed from pad* to vf , if your ffmpeg is greator than r20000 please check YES"/>
-				</div>
-
-				<div class="col-md-4">
 					<label for="php_path">PHP Path
 						<a href="http://docs.clip-bucket.com/clipbucket-docs/php" target="_blank">
 							<img src="{$imageurl}/help.png" alt="PHP Path info" border="0" class="tipsy_tip" title="PHP Binary Paths - Click For More Details"/>
