@@ -1,6 +1,6 @@
 {
   "version":"5.4.0",
-  "revision": "2",
+  "revision": "3",
   "status":"dev",
   "detail":[
     {
@@ -9,7 +9,8 @@
         "Remove unused or outdated files",
         "Cleanup code",
         "Remove unused configs",
-        "Remove unused table"
+        "Remove unused table",
+        "Update Smarty to version 3.1.36"
       ]
     }
     ,{

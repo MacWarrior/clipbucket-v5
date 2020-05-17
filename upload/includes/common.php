@@ -392,17 +392,7 @@ $thisurl = curPageURL();
 
 $Cbucket->set_the_template();
 
-# For back end, force smartyv3
-if ( BACK_END ) {
-    $cbtpl->smarty_version = 3;
-    require BASEDIR.'/includes/smartyv3/SmartyBC.class.php';
-} else {
-    if( $cbtpl->smarty_version < 3 ) {
-        require BASEDIR.'/includes/templatelib/Template.class.php';
-    } else {
-        require BASEDIR.'/includes/smartyv3/SmartyBC.class.php';
-    }
-}
+require_once BASEDIR.'/includes/smartyv3/bootstrap.php';
 
 $cbtpl->init();
 require BASEDIR.'/includes/active.php';
