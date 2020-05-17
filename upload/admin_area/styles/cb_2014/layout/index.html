@@ -108,6 +108,11 @@
 				<h5><i class="glyphicon glyphicon-list-alt"></i> {lang code='dashboard_changelogs'}</h5>
 			</li>
 			<li class="active">
+				<a data-toggle="tab" href="#540">
+					<h5>5.4.0</h5>
+				</a>
+			</li>
+			<li>
 				<a data-toggle="tab" href="#531">
 					<h5>5.3.1</h5>
 				</a>
@@ -126,7 +131,12 @@
 			{/if}
 		</ul>
 		<div class="tab-content">
-			<div id="531" class="tab-pane active">
+			<div id="540" class="tab-pane active">
+				<div class="widgetBox">
+					{display_changelog('540')}
+				</div>
+			</div>
+			<div id="531" class="tab-pane">
 				<div class="widgetBox">
 					{display_changelog('531')}
 				</div>
