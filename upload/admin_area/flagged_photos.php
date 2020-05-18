@@ -14,7 +14,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'Photos', 'url' => '');
-	$breadcrumb[1] = array('title' => 'Flagged Photos', 'url' => '/admin_area/flagged_photos.php');
+	$breadcrumb[1] = array('title' => 'Flagged Photos', 'url' => ADMIN_BASEURL.'/flagged_photos.php');
 
 	$mode = $_GET['mode'];
 

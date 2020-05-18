@@ -103,9 +103,9 @@ class Collections extends CBCategory
 		// Adding Collection links in Admin Area
 		if($per['collection_moderation'] == "yes")
 		$Cbucket->AdminMenu['Collections'] = array(
-			lang('manage_collections')	=>'collection_manager.php',
-			lang('manage_categories')	=>'collection_category.php',
-			lang('flagged_collections')	=>'flagged_collections.php'
+			lang('manage_collections')	=>ADMIN_BASEURL.'/collection_manager.php',
+			lang('manage_categories')	=>ADMIN_BASEURL.'/collection_category.php',
+			lang('flagged_collections')	=>ADMIN_BASEURL.'/flagged_collections.php'
 		);
 
 		// Adding Collection links in Cbucket Class

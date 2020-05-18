@@ -1,12 +1,4 @@
 <?php
-	/*
-	 **************************************************************
-	 | Copyright (c) 2007-2010 Clip-Bucket.com. All rights reserved.
-	 | @ Author : ArslanHassan
-	 | @ Software : ClipBucket , © PHPBucket.com
-	 ***************************************************************
-	*/
-
 	require_once '../includes/admin_config.php';
 	$userquery->admin_login_check();
 	$userquery->login_check('video_moderation');
@@ -16,9 +8,9 @@
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'Photos', 'url' => '');
 	if( isset($_GET['search']) && isset($_GET['active']) && $_GET['active'] == 'no')
-		$breadcrumb[1] = array('title' => 'Inactive Photos', 'url' => '/admin_area/photo_manager.php?search=search&active=no');
+		$breadcrumb[1] = array('title' => 'Inactive Photos', 'url' => ADMIN_BASEURL.'/photo_manager.php?search=search&active=no');
 	else
-		$breadcrumb[1] = array('title' => 'Photo Manager', 'url' => '/admin_area/photo_manager.php');
+		$breadcrumb[1] = array('title' => 'Photo Manager', 'url' => ADMIN_BASEURL.'/photo_manager.php');
 
 	//Photo Actions are following
 

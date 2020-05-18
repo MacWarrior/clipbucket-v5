@@ -16,7 +16,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => lang('users'), 'url' => '');
-	$breadcrumb[1] = array('title' => 'User Levels', 'url' => '/admin_area/user_levels.php');
+	$breadcrumb[1] = array('title' => 'User Levels', 'url' => ADMIN_BASEURL.'/user_levels.php');
 
 
 

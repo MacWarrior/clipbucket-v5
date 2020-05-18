@@ -14,7 +14,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'Plugin Manager', 'url' => '');
-	$breadcrumb[1] = array('title' => 'Plugin Manager', 'url' => '/admin_area/plugin_manager.php');
+	$breadcrumb[1] = array('title' => 'Plugin Manager', 'url' => ADMIN_BASEURL.'/plugin_manager.php');
 
 	//uninstalling Plugin
 	if(isset($_GET['uninstall']))

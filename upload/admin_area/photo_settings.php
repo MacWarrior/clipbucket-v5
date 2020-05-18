@@ -16,9 +16,9 @@
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'Photos', 'url' => '');
 	if($_GET['mode'] == 'watermark_settings')
-		$breadcrumb[1] = array('title' => 'Watermark Settings', 'url' => '/admin_area/photo_settings.php?mode=watermark_settings');
+		$breadcrumb[1] = array('title' => 'Watermark Settings', 'url' => ADMIN_BASEURL.'/photo_settings.php?mode=watermark_settings');
 	else
-		$breadcrumb[1] = array('title' => 'Photo Settings', 'url' => '/admin_area/photo_settings.php');
+		$breadcrumb[1] = array('title' => 'Photo Settings', 'url' => ADMIN_BASEURL.'/photo_settings.php');
 
 	$mode = $_GET['mode'];
 	assign('mode',$mode);

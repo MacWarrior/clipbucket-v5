@@ -15,7 +15,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'Advertisement', 'url' => '');
-	$breadcrumb[1] = array('title' => 'Manage Placements', 'url' => '/admin_area/ads_add_placements.php');
+	$breadcrumb[1] = array('title' => 'Manage Placements', 'url' => ADMIN_BASEURL.'/ads_add_placements.php');
 
 	//Removing Placement
 	if(isset($_GET['remove'])){

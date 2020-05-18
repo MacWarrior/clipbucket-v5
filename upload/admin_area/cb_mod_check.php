@@ -13,7 +13,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'Tool Box', 'url' => '');
-	$breadcrumb[1] = array('title' => 'Server Modules Info', 'url' => '/admin_area/cb_mod_check.php');
+	$breadcrumb[1] = array('title' => 'Server Modules Info', 'url' => ADMIN_BASEURL.'/cb_mod_check.php');
 
 	$ffmpegVersion = check_ffmpeg("ffmpeg");
 	assign("ffmpegVersion", $ffmpegVersion);

@@ -15,7 +15,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'Photos', 'url' => '');
-	$breadcrumb[1] = array('title' => 'Recreate Thumbs', 'url' => '/admin_area/recreate_thumbs.php?mode=mass');
+	$breadcrumb[1] = array('title' => 'Recreate Thumbs', 'url' => ADMIN_BASEURL.'/recreate_thumbs.php?mode=mass');
 
 	$mode = $_GET['mode'];
 	$photo = mysql_clean($_GET['photo']);

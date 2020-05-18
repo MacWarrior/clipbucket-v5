@@ -18,8 +18,8 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'Collections', 'url' => '');
-	$breadcrumb[1] = array('title' => 'Manage Collections', 'url' => '/admin_area/collection_manager.php');
-	$breadcrumb[2] = array('title' => 'Editing : '.display_clean($c['collection_name']), 'url' => '/admin_area/edit_collection.php?collection='.display_clean($id));
+	$breadcrumb[1] = array('title' => 'Manage Collections', 'url' => ADMIN_BASEURL.'/collection_manager.php');
+	$breadcrumb[2] = array('title' => 'Editing : '.display_clean($c['collection_name']), 'url' => ADMIN_BASEURL.'/edit_collection.php?collection='.display_clean($id));
 
 	if(isset($_POST['update_collection']))
 	{

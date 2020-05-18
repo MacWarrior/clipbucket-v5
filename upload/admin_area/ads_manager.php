@@ -15,7 +15,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'Advertisement', 'url' => '');
-	$breadcrumb[1] = array('title' => 'Manage Advertisments', 'url' => '/admin_area/ads_manager.php');
+	$breadcrumb[1] = array('title' => 'Manage Advertisments', 'url' => ADMIN_BASEURL.'/ads_manager.php');
 
 	//Adding
 	if(isset($_POST['add']))

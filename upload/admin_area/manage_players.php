@@ -8,9 +8,9 @@
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'Templates And Players', 'url' => '');
 	if($_GET['mode'] == 'show_settings'){
-		$breadcrumb[1] = array('title' => lang('player_settings'), 'url' => '/admin_area/manage_players.php?mode=show_settings');
+		$breadcrumb[1] = array('title' => lang('player_settings'), 'url' => ADMIN_BASEURL.'/manage_players.php?mode=show_settings');
     } else {
-		$breadcrumb[1] = array('title' => 'Players Manager', 'url' => '/admin_area/manage_players.php');
+		$breadcrumb[1] = array('title' => 'Players Manager', 'url' => ADMIN_BASEURL.'/manage_players.php');
     }
 
 	//Set Mode

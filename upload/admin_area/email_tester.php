@@ -7,7 +7,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'General Configurations', 'url' => '');
-	$breadcrumb[1] = array('title' => 'Email Tester', 'url' => '/admin_area/email_tester.php');
+	$breadcrumb[1] = array('title' => 'Email Tester', 'url' => ADMIN_BASEURL.'/email_tester.php');
 
 	if( isset( $_POST[ 'start_test' ] ) )
 	{

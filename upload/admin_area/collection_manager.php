@@ -1,12 +1,4 @@
 <?php
-		/*
-	**************************************************************
-	| Copyright (c) 2007-2010 Clip-Bucket.com. All rights reserved.
-	| @ Author : ArslanHassan
-	| @ Software : ClipBucket , © PHPBucket.com
-	***************************************************************
-	*/
-
 	require_once '../includes/admin_config.php';
 	$userquery->admin_login_check();
 	$userquery->login_check('video_moderation');
@@ -15,7 +7,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'Collections', 'url' => '');
-	$breadcrumb[1] = array('title' => 'Manage Collections', 'url' => '/admin_area/flagged_collections.php');
+	$breadcrumb[1] = array('title' => 'Manage Collections', 'url' => ADMIN_BASEURL.'/flagged_collections.php');
 
 	if(isset($_GET['make_feature']))
 	{

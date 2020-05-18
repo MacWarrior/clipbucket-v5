@@ -7,7 +7,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => lang('users'), 'url' => '');
-	$breadcrumb[1] = array('title' => 'Add Member', 'url' => '/admin_area/add_member.php');
+	$breadcrumb[1] = array('title' => 'Add Member', 'url' => ADMIN_BASEURL.'/add_member.php');
 
 	if(isset($_POST['add_member'])) {
 		if($userquery->signup_user($_POST)) {

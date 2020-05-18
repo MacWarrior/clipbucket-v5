@@ -16,7 +16,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'Collections', 'url' => '');
-	$breadcrumb[1] = array('title' => 'Flagged Collections', 'url' => '/admin_area/flagged_collections.php');
+	$breadcrumb[1] = array('title' => 'Flagged Collections', 'url' => ADMIN_BASEURL.'/flagged_collections.php');
 
 	//Delete Photo
 	if(isset($_GET['delete_collect'])){

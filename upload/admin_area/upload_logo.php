@@ -10,7 +10,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'General Configurations', 'url' => '');
-	$breadcrumb[1] = array('title' => 'Update Logos', 'url' => '/admin_area/upload_logo.php');
+	$breadcrumb[1] = array('title' => 'Update Logos', 'url' => ADMIN_BASEURL.'/upload_logo.php');
 
 	// Upload and Rename File
 	if (isset($_POST['submit_logo'])) {

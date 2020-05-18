@@ -18,7 +18,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => lang('videos'), 'url' => '');
-	$breadcrumb[1] = array('title' => 'Mass Upload Videos', 'url' => '/admin_area/mass_uploader.php');
+	$breadcrumb[1] = array('title' => 'Mass Upload Videos', 'url' => ADMIN_BASEURL.'/mass_uploader.php');
 
 	global $cbvid;
 	$cats = $cbvid->get_categories();

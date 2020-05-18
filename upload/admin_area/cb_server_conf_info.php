@@ -14,7 +14,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'Tool Box', 'url' => '');
-	$breadcrumb[1] = array('title' => 'Server Configuration Info', 'url' => '/admin_area/cb_server_conf_info.php');
+	$breadcrumb[1] = array('title' => 'Server Configuration Info', 'url' => ADMIN_BASEURL.'/cb_server_conf_info.php');
 
 	$post_max_size = ini_get('post_max_size');
 	$memory_limit = ini_get('memory_limit');

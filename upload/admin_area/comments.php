@@ -6,7 +6,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'General Configurations', 'url' => '');
-	$breadcrumb[1] = array('title' => 'Manage Comments', 'url' => '/admin_area/comments.php');
+	$breadcrumb[1] = array('title' => 'Manage Comments', 'url' => ADMIN_BASEURL.'/comments.php');
 
 	/* Delete comments */
 	if(isset($_POST['delete_selected']))

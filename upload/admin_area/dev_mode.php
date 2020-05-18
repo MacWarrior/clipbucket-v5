@@ -14,7 +14,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'Tool Box', 'url' => '');
-	$breadcrumb[1] = array('title' => 'Development Mode', 'url' => '/admin_area/dev_mode.php');
+	$breadcrumb[1] = array('title' => 'Development Mode', 'url' => ADMIN_BASEURL.'/dev_mode.php');
 
 	define('DEVFILE', BASEDIR.'/includes/development.dev');
 	if (isset($_GET))

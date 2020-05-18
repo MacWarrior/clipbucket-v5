@@ -201,13 +201,13 @@ class CBPhotos
 
 		if($per['photos_moderation'] == "yes"){
             $am['Photos'] = array(
-                'Photo Manager' => 'photo_manager.php',
-                'Inactive Photos' => 'photo_manager.php?search=search&active=no',
-                'Flagged Photos' => 'flagged_photos.php',
-                'Orphan Photos' => 'orphan_photos.php',
-                'Photo Settings' => 'photo_settings.php',
-                'Watermark Settings' => 'photo_settings.php?mode=watermark_settings',
-                'Recreate Thumbs' => 'recreate_thumbs.php?mode=mass'
+                'Photo Manager' => ADMIN_BASEURL.'/photo_manager.php',
+                'Inactive Photos' => ADMIN_BASEURL.'/photo_manager.php?search=search&active=no',
+                'Flagged Photos' => ADMIN_BASEURL.'/flagged_photos.php',
+                'Orphan Photos' => ADMIN_BASEURL.'/orphan_photos.php',
+                'Photo Settings' => ADMIN_BASEURL.'/photo_settings.php',
+                'Watermark Settings' => ADMIN_BASEURL.'/photo_settings.php?mode=watermark_settings',
+                'Recreate Thumbs' => ADMIN_BASEURL.'/recreate_thumbs.php?mode=mass'
             );
         }
 		$Cbucket->AdminMenu = $am;					  	

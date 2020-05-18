@@ -15,7 +15,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'General Configurations', 'url' => '');
-	$breadcrumb[1] = array('title' => 'Add New Phrases', 'url' => '/admin_area/add_phrases.php');
+	$breadcrumb[1] = array('title' => 'Add New Phrases', 'url' => ADMIN_BASEURL.'/add_phrases.php');
 
 	if(isset($_POST['add_phrase']))
 	{

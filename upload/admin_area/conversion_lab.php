@@ -9,7 +9,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'Tool Box', 'url' => '');
-	$breadcrumb[1] = array('title' => 'Conversion Lab &alpha;', 'url' => '/admin_area/conversion_lab.php');
+	$breadcrumb[1] = array('title' => 'Conversion Lab &alpha;', 'url' => ADMIN_BASEURL.'/conversion_lab.php');
 
 	//Getting list of available testing videos
 	$testVidsDir = ADMINBASEDIR.'/lab_resources/testing_videos';

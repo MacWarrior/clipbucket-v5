@@ -14,7 +14,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'General Configurations', 'url' => '');
-	$breadcrumb[1] = array('title' => 'Reports &amp; Stats', 'url' => '/admin_area/reports.php');
+	$breadcrumb[1] = array('title' => 'Reports &amp; Stats', 'url' => ADMIN_BASEURL.'/reports.php');
 
 	$vid_dir = get_directory_size(VIDEOS_DIR);
 	$thumb_dir = get_directory_size(THUMBS_DIR);

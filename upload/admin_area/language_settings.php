@@ -14,7 +14,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'General Configurations', 'url' => '');
-	$breadcrumb[1] = array('title' => 'Language Settings', 'url' => '/admin_area/language_settings.php');
+	$breadcrumb[1] = array('title' => 'Language Settings', 'url' => ADMIN_BASEURL.'/language_settings.php');
 
 	global $lang_obj;
 	$langData = $lang_obj->getPhrasesFromPack('en');

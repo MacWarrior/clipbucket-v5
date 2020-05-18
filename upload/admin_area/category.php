@@ -15,7 +15,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => lang('videos'), 'url' => '');
-	$breadcrumb[1] = array('title' => 'Manage Categories', 'url' => '/admin_area/category.php');
+	$breadcrumb[1] = array('title' => 'Manage Categories', 'url' => ADMIN_BASEURL.'/category.php');
 
 	//Form Processing
 	if(isset($_POST['add_category']))
@@ -43,7 +43,7 @@
 		}
 
 		$cat_details = $cbvid->get_category($id_category);
-		$breadcrumb[2] = array('title' => 'Editing : '.display_clean($cat_details['category_name']), 'url' => '/admin_area/category.php?category='.display_clean($id_category));
+		$breadcrumb[2] = array('title' => 'Editing : '.display_clean($cat_details['category_name']), 'url' => ADMIN_BASEURL.'/category.php?category='.display_clean($id_category));
 		assign('cat_details', $cat_details);
 
 		$pid = $cbvid->get_category_field($_GET['category'],'parent_id');

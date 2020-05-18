@@ -14,7 +14,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => lang('users'), 'url' => '');
-	$breadcrumb[1] = array('title' => 'Reported Users', 'url' => '/admin_area/flagged_users.php');
+	$breadcrumb[1] = array('title' => 'Reported Users', 'url' => ADMIN_BASEURL.'/flagged_users.php');
 
 	$mode = $_GET['mode'];
 

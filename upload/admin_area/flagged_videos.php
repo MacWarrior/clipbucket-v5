@@ -14,7 +14,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => lang('videos'), 'url' => '');
-	$breadcrumb[1] = array('title' => 'List Flagged Videos', 'url' => '/admin_area/flagged_videos.php');
+	$breadcrumb[1] = array('title' => 'List Flagged Videos', 'url' => ADMIN_BASEURL.'/flagged_videos.php');
 
 	$mode = $_GET['mode'];
 

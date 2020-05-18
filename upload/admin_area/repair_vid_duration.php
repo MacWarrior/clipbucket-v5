@@ -13,7 +13,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'Tool Box', 'url' => '');
-	$breadcrumb[1] = array('title' => 'Repair video duration', 'url' => '/admin_area/repair_vid_duration.php');
+	$breadcrumb[1] = array('title' => 'Repair video duration', 'url' => ADMIN_BASEURL.'/repair_vid_duration.php');
 
 	$params = array('duration'=>'1','duration_op'=>'<=','status'=>'Successful');
 	$videos = get_videos($params);

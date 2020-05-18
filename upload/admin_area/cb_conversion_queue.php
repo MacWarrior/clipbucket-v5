@@ -13,7 +13,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'Tool Box', 'url' => '');
-	$breadcrumb[1] = array('title' => 'Conversion Queue Manager', 'url' => '/admin_area/cb_conversion_queue.php');
+	$breadcrumb[1] = array('title' => 'Conversion Queue Manager', 'url' => ADMIN_BASEURL.'/cb_conversion_queue.php');
 
 	if($_GET['delete_lock'])
 	{

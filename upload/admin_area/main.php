@@ -15,7 +15,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'General Configurations', 'url' => '');
-	$breadcrumb[1] = array('title' => 'Website Configurations', 'url' => '/admin_area/main.php');
+	$breadcrumb[1] = array('title' => 'Website Configurations', 'url' => ADMIN_BASEURL.'/main.php');
 
 	if(@$_GET['msg']){
 		$msg = mysql_clean($_GET['msg']);

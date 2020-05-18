@@ -16,7 +16,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'General Configurations', 'url' => '');
-	$breadcrumb[1] = array('title' => 'Email Settings', 'url' => '/admin_area/email_settings.php');
+	$breadcrumb[1] = array('title' => 'Email Settings', 'url' => ADMIN_BASEURL.'/email_settings.php');
 
 	//Updating email templates
 	if(isset($_POST['update']))

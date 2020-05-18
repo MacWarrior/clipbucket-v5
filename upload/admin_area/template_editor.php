@@ -13,7 +13,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'Templates And Players', 'url' => '');
-	$breadcrumb[1] = array('title' => 'Templates Editor', 'url' => '/admin_area/template_editor.php');
+	$breadcrumb[1] = array('title' => 'Templates Editor', 'url' => ADMIN_BASEURL.'/template_editor.php');
 
 	/**
 	 * Getting List Of Templates

@@ -15,7 +15,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'Collections', 'url' => '');
-	$breadcrumb[1] = array('title' => 'Manage Categories', 'url' => '/admin_area/collection_category.php');
+	$breadcrumb[1] = array('title' => 'Manage Categories', 'url' => ADMIN_BASEURL.'/collection_category.php');
 
 	//Form Processing
 	if(isset($_POST['add_category'])){
@@ -43,7 +43,7 @@
 
 		assign('cat_details', $cat_details);
 
-		$breadcrumb[2] = array('title' => 'Editing : '.display_clean($cat_details['category_name']), 'url' => '/admin_area/collection_category.php?category='.display_clean($_GET['category']));
+		$breadcrumb[2] = array('title' => 'Editing : '.display_clean($cat_details['category_name']), 'url' => ADMIN_BASEURL.'/collection_category.php?category='.display_clean($_GET['category']));
 	}
 
 	//Delete Category

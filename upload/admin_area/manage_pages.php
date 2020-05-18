@@ -15,7 +15,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'General Configurations', 'url' => '');
-	$breadcrumb[1] = array('title' => 'Manage Pages', 'url' => '/admin_area/manage_pages.php');
+	$breadcrumb[1] = array('title' => 'Manage Pages', 'url' => ADMIN_BASEURL.'/manage_pages.php');
 
 	//Activating Page
 	if(isset($_GET['activate']))

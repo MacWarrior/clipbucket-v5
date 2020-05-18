@@ -14,7 +14,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'Tool Box', 'url' => '');
-	$breadcrumb[1] = array('title' => 'Action Logs', 'url' => '/admin_area/action_logs.php?type=login');
+	$breadcrumb[1] = array('title' => 'Action Logs', 'url' => ADMIN_BASEURL.'/action_logs.php?type=login');
 
 	//Getting User List
 	if (isset($_GET['clean'])) {

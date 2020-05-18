@@ -19,5 +19,11 @@
         "Remove i-magick dependancy"
       ]
     }
+    ,{
+      "title":"Admin area",
+      "description":[
+        "Update admin URLs"
+      ]
+    }
   ]
 }

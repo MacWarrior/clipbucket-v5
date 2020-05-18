@@ -14,7 +14,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => lang('videos'), 'url' => '');
-	$breadcrumb[1] = array('title' => 'Notification settings', 'url' => '/admin_area/notification_settings.php');
+	$breadcrumb[1] = array('title' => 'Notification settings', 'url' => ADMIN_BASEURL.'/notification_settings.php');
 
 	$mode = $_GET['mode'];
 

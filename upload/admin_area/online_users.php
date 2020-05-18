@@ -14,7 +14,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'Tool Box', 'url' => '');
-	$breadcrumb[1] = array('title' => 'View online users', 'url' => '/admin_area/online_users.php');
+	$breadcrumb[1] = array('title' => 'View online users', 'url' => ADMIN_BASEURL.'/online_users.php');
 
 	if($_GET['kick'])
 	{

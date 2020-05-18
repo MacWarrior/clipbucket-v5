@@ -15,8 +15,8 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => lang('users'), 'url' => '');
-	$breadcrumb[0] = array('title' => 'Manage Members', 'url' => '/admin_area/members.php');
-	$breadcrumb[1] = array('title' => 'Editing : '.display_clean($udetails['username']), 'url' => '/admin_area/view_user.php?uid='.display_clean($uid));
+	$breadcrumb[0] = array('title' => 'Manage Members', 'url' => ADMIN_BASEURL.'/members.php');
+	$breadcrumb[1] = array('title' => 'Editing : '.display_clean($udetails['username']), 'url' => ADMIN_BASEURL.'/view_user.php?uid='.display_clean($uid));
 
 	if($udetails)
 	{

@@ -15,7 +15,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'Tool Box', 'url' => '');
-	$breadcrumb[1] = array('title' => 'Maintenance', 'url' => '/admin_area/maintenance.php');
+	$breadcrumb[1] = array('title' => 'Maintenance', 'url' => ADMIN_BASEURL.'/maintenance.php');
 
 	/**
 	 * Removing Inactive Sessions

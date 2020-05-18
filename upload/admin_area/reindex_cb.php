@@ -18,7 +18,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'Tool Box', 'url' => '');
-	$breadcrumb[1] = array('title' => 'ReIndexer', 'url' => '/admin_area/reindex_cb.php');
+	$breadcrumb[1] = array('title' => 'ReIndexer', 'url' => ADMIN_BASEURL.'/reindex_cb.php');
 
 	$vtbl = tbl("video");
 	$utbl = tbl("users");

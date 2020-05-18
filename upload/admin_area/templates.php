@@ -15,7 +15,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'Templates And Players', 'url' => '');
-	$breadcrumb[1] = array('title' => 'Templates Manager', 'url' => '/admin_area/templates.php');
+	$breadcrumb[1] = array('title' => 'Templates Manager', 'url' => ADMIN_BASEURL.'/templates.php');
 
 	if($_GET['change'])
 	{

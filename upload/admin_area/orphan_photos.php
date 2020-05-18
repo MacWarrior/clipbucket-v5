@@ -14,7 +14,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'Photos', 'url' => '');
-	$breadcrumb[1] = array('title' => 'Orphan Photos', 'url' => '/admin_area/orphan_photos.php');
+	$breadcrumb[1] = array('title' => 'Orphan Photos', 'url' => ADMIN_BASEURL.'/orphan_photos.php');
 
 	if(isset($_GET['delete_photo']))
 	{

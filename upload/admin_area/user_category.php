@@ -15,7 +15,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => lang('users'), 'url' => '');
-	$breadcrumb[1] = array('title' => 'Manage categories', 'url' => '/admin_area/user_category.php');
+	$breadcrumb[1] = array('title' => 'Manage categories', 'url' => ADMIN_BASEURL.'/user_category.php');
 
 	//Form Processing
 	if(isset($_POST['add_category']))
@@ -43,7 +43,7 @@
 		}
 
 		$cat_details = $userquery->get_category($id_category);
-		$breadcrumb[2] = array('title' => 'Editing : '.display_clean($cat_details['category_name']), 'url' => '/admin_area/user_category.php?category='.display_clean($id_category));
+		$breadcrumb[2] = array('title' => 'Editing : '.display_clean($cat_details['category_name']), 'url' => ADMIN_BASEURL.'/user_category.php?category='.display_clean($id_category));
 		assign('cat_details',$cat_details);
 	}
 

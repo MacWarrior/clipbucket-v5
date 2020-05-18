@@ -26,7 +26,6 @@ class ClipBucket
     var $temp_exts = array(); //Temp extensions
     var $actions_play_video = array();
     var $template_files = array();
-    var $cur_template = 'cb_27';
     var $links = array();
     var $captchas = array();
     var $clipbucket_footer = array('cb_bottom','smarty_catch_error');
@@ -34,18 +33,15 @@ class ClipBucket
     var $head_menu = array();
     var $foot_menu = array();
     var $template = "";
-    var $in_footer = false;
     var $cbinfo = array();
     var $search_types = array();
     var $theUploaderDetails = array();
-  #  var $version = VERSION;
 
     /**
      * All Functions that are called
      * before after converting a video
      * are saved in these arrays
      */
-    var $before_convert_functions = array();
     var $after_convert_functions = array();
 
     /**
@@ -107,7 +103,6 @@ class ClipBucket
         if (!isset($_GET['time']) || !isset($time_array[$_GET['time']])){
             $_GET['time'] = 'all_time';
         }
-
 
         if (!isset($_GET['page']) || !is_numeric($_GET['page'])){
             $_GET['page'] = 1;
@@ -228,77 +223,78 @@ class ClipBucket
         $per = $userquery->get_user_level(userid());
         if ($per['web_config_access'] == "yes") {
             $NewMenu['General Configurations'] = array(
-                'Reports &amp; Stats' => 'reports.php',
-                'Website Configurations' => 'main.php',
-                'Email Settings' => 'email_settings.php',
-                'Email Tester' => 'email_tester.php',
-                'Language Settings' => 'language_settings.php',
-                'Add New Phrases' => 'add_phrase.php',
-                'Manage Pages' => 'manage_pages.php',
-                'Manage Comments' => 'comments.php',
-                'Update Logos'=>'upload_logo.php'
+                'Reports &amp; Stats' => ADMIN_BASEURL.'/reports.php',
+                'Website Configurations' => ADMIN_BASEURL.'/main.php',
+                'Email Settings' => ADMIN_BASEURL.'/email_settings.php',
+                'Email Tester' => ADMIN_BASEURL.'/email_tester.php',
+                'Language Settings' => ADMIN_BASEURL.'/language_settings.php',
+                'Add New Phrases' => ADMIN_BASEURL.'/add_phrase.php',
+                'Manage Pages' => ADMIN_BASEURL.'/manage_pages.php',
+                'Manage Comments' => ADMIN_BASEURL.'/comments.php',
+                'Update Logos'=> ADMIN_BASEURL.'/upload_logo.php'
             );
 		}
         if ($per['video_moderation'] == "yes") {
             $NewMenu['Videos'] = array(
-                'Videos Manager' => 'video_manager.php',
-                'Manage Playlists' => 'manage_playlist.php',
-                'Manage Categories' => 'category.php',
-                'List Flagged Videos' => 'flagged_videos.php',
-                'Mass Upload Videos' => 'mass_uploader.php',
-                'List Inactive Videos' => 'video_manager.php?search=search&active=no',
-                'Notification settings' => 'notification_settings.php'
+                'Videos Manager' => ADMIN_BASEURL.'/video_manager.php',
+                'Manage Playlists' => ADMIN_BASEURL.'/manage_playlist.php',
+                'Manage Categories' => ADMIN_BASEURL.'/category.php',
+                'List Flagged Videos' => ADMIN_BASEURL.'/flagged_videos.php',
+                'Mass Upload Videos' => ADMIN_BASEURL.'/mass_uploader.php',
+                'List Inactive Videos' => ADMIN_BASEURL.'/video_manager.php?search=search&active=no',
+                'Notification settings' => ADMIN_BASEURL.'/notification_settings.php'
             );
 		}
         if ($per['member_moderation'] == "yes") {
             $NewMenu['Users'] = array(
-                'Manage Members' => 'members.php',
-                'Add Member' => 'add_member.php',
-                'Manage categories' => 'user_category.php',
-                'Inactive Only' => 'members.php?search=yes&status=ToActivate',
-                'Active Only' => 'members.php?search=yes&status=Ok',
-                'Reported Users' => 'flagged_users.php',
-                'Mass Email' => 'mass_email.php'
+                'Manage Members' => ADMIN_BASEURL.'/members.php',
+                'Add Member' => ADMIN_BASEURL.'/add_member.php',
+                'Manage categories' => ADMIN_BASEURL.'/user_category.php',
+                'Inactive Only' => ADMIN_BASEURL.'/members.php?search=yes&status=ToActivate',
+                'Active Only' => ADMIN_BASEURL.'/members.php?search=yes&status=Ok',
+                'Reported Users' => ADMIN_BASEURL.'/flagged_users.php',
+                'Mass Email' => ADMIN_BASEURL.'/mass_email.php'
             );
             
-            if($per['allow_manage_user_level']=='yes' || $userquery->level == 1)
-            	$NewMenu['Users']['User Levels'] = 'user_levels.php';
+            if($per['allow_manage_user_level']=='yes' || $userquery->level == 1){
+            	$NewMenu['Users']['User Levels'] = ADMIN_BASEURL.'/user_levels.php';
+            }
         }
 
         if ($per['ad_manager_access'] == "yes") {
             $NewMenu['Advertisement'] = array(
-                'Manage Advertisments' => 'ads_manager.php',
-                'Manage Placements' => 'ads_add_placements.php'
+                'Manage Advertisments' => ADMIN_BASEURL.'/ads_manager.php',
+                'Manage Placements' => ADMIN_BASEURL.'/ads_add_placements.php'
             );
 		}
         if ($per['manage_template_access'] == "yes") {
             $NewMenu['Templates And Players'] = array(
-            	'Templates Manager' => 'templates.php',
-                'Templates Editor' => 'template_editor.php',
-                'Players Manager' => 'manage_players.php',
-                lang('player_settings') => 'manage_players.php?mode=show_settings'
+            	'Templates Manager' => ADMIN_BASEURL.'/templates.php',
+                'Templates Editor' => ADMIN_BASEURL.'/template_editor.php',
+                'Players Manager' => ADMIN_BASEURL.'/manage_players.php',
+                lang('player_settings') => ADMIN_BASEURL.'/manage_players.php?mode=show_settings'
 			);
 		}
         if ($per['plugins_moderation'] == "yes"){
-            $NewMenu['Plugin Manager'] = array('Plugin Manager' => 'plugin_manager.php');
+            $NewMenu['Plugin Manager'] = array('Plugin Manager' => ADMIN_BASEURL.'/plugin_manager.php');
         }
 
         if ($per['tool_box'] == "yes") {
             $NewMenu['Tool Box'] = array(
-            	'PHP Info' => 'phpinfo.php',
-                'Development Mode' => 'dev_mode.php',
-                'View online users' => 'online_users.php',
-                'Action Logs' => 'action_logs.php?type=login',
-                'Server Modules Info' => 'cb_mod_check.php',
-                'Server Configuration Info' => 'cb_server_conf_info.php',
-                'Conversion Queue Manager' => 'cb_conversion_queue.php',
-                'ReIndexer' => 'reindex_cb.php',
-                'Conversion Lab &alpha;' => 'conversion_lab.php',
-                'Repair video duration' => 'repair_vid_duration.php'
+            	'PHP Info' => ADMIN_BASEURL.'/phpinfo.php',
+                'Development Mode' => ADMIN_BASEURL.'/dev_mode.php',
+                'View online users' => ADMIN_BASEURL.'/online_users.php',
+                'Action Logs' => ADMIN_BASEURL.'/action_logs.php?type=login',
+                'Server Modules Info' => ADMIN_BASEURL.'/cb_mod_check.php',
+                'Server Configuration Info' => ADMIN_BASEURL.'/cb_server_conf_info.php',
+                'Conversion Queue Manager' => ADMIN_BASEURL.'/cb_conversion_queue.php',
+                'ReIndexer' => ADMIN_BASEURL.'/reindex_cb.php',
+                'Conversion Lab &alpha;' => ADMIN_BASEURL.'/conversion_lab.php',
+                'Repair video duration' => ADMIN_BASEURL.'/repair_vid_duration.php'
 			);
 		}
         if ($per['web_config_access'] == "yes"){
-            $NewMenu['Tool Box']['Maintenance'] = 'maintenance.php';
+            $NewMenu['Tool Box']['Maintenance'] = ADMIN_BASEURL.'/maintenance.php';
         }
 
         return (isset($NewMenu)) ? $NewMenu : false;

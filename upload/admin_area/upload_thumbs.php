@@ -18,9 +18,9 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => lang('videos'), 'url' => '');
-	$breadcrumb[1] = array('title' => lang('videos_manager'), 'url' => '/admin_area/video_manager.php');
-	$breadcrumb[2] = array('title' => 'Editing : '.display_clean($data['title']), 'url' => '/admin_area/edit_video.php?video='.display_clean($video));
-	$breadcrumb[3] = array('title' => 'Manage Video Thumbs', 'url' => '/admin_area/upload_thumbs.php?video='.display_clean($video));
+	$breadcrumb[1] = array('title' => lang('videos_manager'), 'url' => ADMIN_BASEURL.'/video_manager.php');
+	$breadcrumb[2] = array('title' => 'Editing : '.display_clean($data['title']), 'url' => ADMIN_BASEURL.'/edit_video.php?video='.display_clean($video));
+	$breadcrumb[3] = array('title' => 'Manage Video Thumbs', 'url' => ADMIN_BASEURL.'/upload_thumbs.php?video='.display_clean($video));
 
 	if(@$_GET['msg']){
 		$msg[] = clean($_GET['msg']);

@@ -18,9 +18,9 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => lang('videos'), 'url' => '');
-	$breadcrumb[1] = array('title' => lang('videos_manager'), 'url' => '/admin_area/video_manager.php');
-	$breadcrumb[2] = array('title' => 'Editing : '.display_clean($data['title']), 'url' => '/admin_area/edit_video.php?video='.display_clean($data['videoid']));
-	$breadcrumb[3] = array('title' => 'Conversion logs', 'url' => '/admin_area/view_conversion_log.php?file_name='.display_clean($file_name));
+	$breadcrumb[1] = array('title' => lang('videos_manager'), 'url' => ADMIN_BASEURL.'/video_manager.php');
+	$breadcrumb[2] = array('title' => 'Editing : '.display_clean($data['title']), 'url' => ADMIN_BASEURL.'/edit_video.php?video='.display_clean($data['videoid']));
+	$breadcrumb[3] = array('title' => 'Conversion logs', 'url' => ADMIN_BASEURL.'/view_conversion_log.php?file_name='.display_clean($file_name));
 
 	$file_details = $myquery->file_details($file_name);
 	if($file_details)
