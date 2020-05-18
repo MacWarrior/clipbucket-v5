@@ -140,7 +140,7 @@ function register_anchor_function($name,$type=NULL)
  * @param bool   $plug_folder
  * @param bool   $is_player_file
  */
-function add_admin_menu($header='Tool Box',$name,$link,$plug_folder=false,$is_player_file=false)
+function add_admin_menu($header,$name,$link,$plug_folder=false,$is_player_file=false)
 {
     global $Cbucket;
     //Get Menu

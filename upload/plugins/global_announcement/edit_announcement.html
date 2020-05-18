@@ -1,0 +1,18 @@
+<h2>Edit Announcement</h2>
+<table style="width:100%;">
+	<tr>
+		<td>
+			<form id="form1" name="form1" method="post">
+				<textarea name="text" id="page_content" cols="75" rows="6">{$announcement}</textarea>
+				<br/>
+				<input type="submit" class="btn btn-primary btn-xs" name="update" value="{lang code='update'}"/>
+			</form>
+		</td>
+	</tr>
+</table>
+
+<script>
+    $(document).ready(function() {
+        $('#page_content').summernote();
+    });
+</script>

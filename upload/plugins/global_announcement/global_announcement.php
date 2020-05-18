@@ -10,13 +10,13 @@
 
 if(!function_exists('global_announcement'))
 {
-    function announcement_2014()
+    function global_announcement()
     {
         global $db;
         $results = $db->select(tbl('global_announcement'),'*');
         $ann = $results[0]['announcement'];
         if (!$ann ==''){
-            echo '<div class="alert alert-info margin-bottom-10 ">'.display_clean($ann).'</div>';
+            echo '<div class="alert alert-info margin-bottom-10 ">'.$ann.'</div>';
         }
     }
 
@@ -40,9 +40,8 @@ if(!function_exists('global_announcement'))
     }
 }
 
-//Function used to get annoucment for smarty
+global $Smarty;
 $Smarty->register_function('get_announcement','get_announcement');
 
-//getting announcement for display in smarty//
-register_anchor_function('announcement_2014','global');
-add_admin_menu('Global Announcement','Edit Announcement','edit_announcement.php');
+register_anchor_function('global_announcement','global');
+add_admin_menu('Plugin Manager','Announcement',PLUG_URL.'/global_announcement/edit_announcement.php');

@@ -1,7 +1,4 @@
 <?php
-require_once('../includes/common.php');
-
-//Creating Table for announcement if not exists
 function install_global_announcement()
 {
 	global $db;

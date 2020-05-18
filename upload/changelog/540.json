@@ -1,6 +1,6 @@
 {
   "version":"5.4.0",
-  "revision": "4",
+  "revision": "5",
   "status":"dev",
   "detail":[
     {
@@ -23,6 +23,12 @@
       "title":"Admin area",
       "description":[
         "Update admin URLs"
+      ]
+    }
+  ,{
+      "title":"Plugin",
+      "description":[
+        "Refactor global announcement"
       ]
     }
   ]
