@@ -2,10 +2,9 @@
 /*
     Plugin Name: Global announcement
     Description: This will let you post a global announcement on your website
-    Author: Arslan Hassan
-    ClipBucket Version: 1.8
-    Plugin Version: 1.0
-    Website: http://labguru.com/
+    Author: Arslan Hassan & MacWarrior
+    ClipBucket Version: CB5.4
+    Website: https://github.com/MacWarrior/clipbucket-v5/
 */
 
 if(!function_exists('global_announcement'))
