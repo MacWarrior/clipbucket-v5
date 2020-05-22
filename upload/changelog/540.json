@@ -1,6 +1,6 @@
 {
   "version":"5.4.0",
-  "revision": "9",
+  "revision": "10",
   "status":"dev",
   "detail":[
     {
@@ -20,6 +20,7 @@
       "title": "Server",
       "description": [
         "Remove i-magick dependancy"
+        ,"Update Nginx Vhost"
       ]
     }
     ,{

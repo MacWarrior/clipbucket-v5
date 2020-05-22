@@ -75,6 +75,14 @@ server {
 		rewrite ^/([a-zA-Z0-9-]+)/?$ /view_channel.php?uid=$1&seo_diret=yes last;
     }
 
+	location /includes/ {
+        return 302 /404;
+    }
+
+    location /changelog/ {
+        return 302 /404;
+    }
+
     location /video/ {
         rewrite ^/video/(.*)/(.*) /watch_video.php?v=$1&$query_string last;
         rewrite ^/video/([0-9]+)_(.*) /watch_video.php?v=$1&$query_string last;
