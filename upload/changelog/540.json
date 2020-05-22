@@ -1,6 +1,6 @@
 {
   "version":"5.4.0",
-  "revision": "6",
+  "revision": "7",
   "status":"dev",
   "detail":[
     {
@@ -10,7 +10,9 @@
         "Cleanup code",
         "Remove unused configs",
         "Remove unused table",
-        "Update Smarty to version 3.1.36"
+        "Update Smarty to version 3.1.36",
+        "Disable outdated upgrade system",
+        "Update GIT url in installation scripts"
       ]
     }
     ,{
@@ -25,7 +27,7 @@
         "Update admin URLs"
       ]
     }
-  ,{
+    ,{
       "title":"Plugin",
       "description":[
         "Refactor global announcement"

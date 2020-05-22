@@ -25,7 +25,7 @@ echo -ne " OK"
 echo ""
 echo -ne "Installing Clipbucket sources..."
 mkdir -p /home/http/clipbucket/ && cd "$_"
-git clone https://github.com/MacWarrior/clipbucket-5.0.git ./ > /dev/null 2>&1
+git clone https://github.com/MacWarrior/clipbucket-v5.git ./ > /dev/null 2>&1
 echo -ne " OK"
 
 echo ""

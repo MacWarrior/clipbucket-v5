@@ -7,8 +7,9 @@ include('../includes/clipbucket.php');
 */
 $mode = $_POST['mode'];
 
-if($mode!='finish_upgrade')
-include("functions.php");
+if($mode!='finish_upgrade'){
+    include("functions.php");
+}
 include("upgradeable.php");
 
 if($mode=='dataimport')

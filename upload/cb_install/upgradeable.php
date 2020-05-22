@@ -10,7 +10,7 @@ $versions = array('1','2.0.4','2.0.5','2.0.6'
  */
 function is_upgradeable()
 {
-    global $versions;
+    /*global $versions;
     //checking for Installed ClipBucket file
     if(file_exists("../includes/clipbucket.php")) {
         $contents = file_get_contents("../includes/clipbucket.php");
@@ -22,7 +22,7 @@ function is_upgradeable()
 
     if(in_array(@$version,$versions) && $version < VERSION){
         return $version;
-    }
+    }*/
     return false;
 }
 
