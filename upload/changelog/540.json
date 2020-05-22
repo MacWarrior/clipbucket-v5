@@ -1,6 +1,6 @@
 {
   "version":"5.4.0",
-  "revision": "7",
+  "revision": "8",
   "status":"dev",
   "detail":[
     {
@@ -12,7 +12,8 @@
         "Remove unused table",
         "Update Smarty to version 3.1.36",
         "Disable outdated upgrade system",
-        "Update GIT url in installation scripts"
+        "Update GIT url in installation scripts",
+        "Fix installation <i>#122<\/i>"
       ]
     }
     ,{

@@ -12,8 +12,6 @@
 	<p>
 <?php
 
-$released = $Cbucket->cbinfo;
-
 $baseurl = dirname(GetServerURL());
 if(substr($baseurl,strlen($baseurl)-1,1)=='/'){
 	$baseurl = substr($baseurl,0,strlen($baseurl)-1);

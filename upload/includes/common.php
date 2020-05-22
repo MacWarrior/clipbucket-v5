@@ -59,16 +59,7 @@ require_once('classes/db.class.php');
 require_once('functions.php');
 check_install('before');
 
-# file with details to connect to database
-if (isset($_GET['cdemo'])) {
-    $file = "dbconnect_".$_GET['cdemo'].".php";
-} else {
-    $file = 'dbconnect.php';
-}
-
-if( file_exists(realpath(dirname(__FILE__)).DIRECTORY_SEPARATOR.$file) ){
-    require_once ($file);
-}
+require_once ('dbconnect.php');
 
 # class for storing common ClipBucket functions
 require_once('classes/ClipBucket.class.php');

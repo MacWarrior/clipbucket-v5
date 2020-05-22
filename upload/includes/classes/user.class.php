@@ -1725,11 +1725,15 @@ class userquery extends CBCategory{
 		$fields = $this->get_user_field($uid,$field);
 		return $fields[$field];
 	}
-	
-	/**
-	 * Function used to get user level and its details
-	 * @param INT userid
-	 */
+
+    /**
+     * Function used to get user level and its details
+     *
+     * @param INT userid
+     * @param bool $is_level
+     *
+     * @return bool|mixed
+     */
 	function get_user_level($uid,$is_level=false)
 	{
 		global $db;
