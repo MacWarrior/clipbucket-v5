@@ -260,11 +260,9 @@ if ($theError = $curl->hasError())
 
 //Finish Writing File
 fclose($temp_fo);
-//var_dump($curlOpt);
 
 sleep(2);
 $details = $logDetails;//file_get_contents($log_file);
-//$details = json_decode($details,true);
 $targetFileName = $file_name . '.' . $ext;
 $Upload->add_conversion_queue($targetFileName);
 

@@ -93,7 +93,6 @@
             $subj = $cbemail->replace($tpl['email_template_subject'],$var);
             $msg = nl2br($cbemail->replace($tpl['email_template'],$var));
             //Now Finally Sending Email
-           // pex($email,true);
             cbmail(array('to'=>$email,'from'=>WEBSITE_EMAIL,'subject'=>$subj,'content'=>$msg));
             return $uname;
         } else {

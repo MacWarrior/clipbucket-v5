@@ -24,7 +24,6 @@ function Fetch($name,$inside=FALSE)
         $file = $cbtpl->fetch($name);
     }
     else{
-        //var_dump($name);die();
         $file = $cbtpl->fetch(LAYOUT.'/'.$name);
     }
 

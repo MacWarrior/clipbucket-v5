@@ -41,15 +41,6 @@ if(!@$in_bg_cron) {
     //Setting Session Max Life
     ini_set('session.gc_maxlifetime', GARBAGE_TIMEOUT);
     session_set_cookie_params(COOKIE_TIMEOUT,'/');
-
-    //IGNORE CB ERRORS
-    $ignore_cb_errors = FALSE;
-    $developer_errors = false;
-
-    if (defined('DEVELOPMENT_MODE') && DEVELOPMENT_MODE) {
-        $developer_errors = true;
-    }
-
     session_start();
 }
 

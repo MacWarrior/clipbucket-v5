@@ -92,7 +92,6 @@ if(defined('IN_MODULE') && $section=='elastic') {
 		        $es->buildQuery();
 		        $es->ElasticSearch();
 		        $results = json_decode($es->results['result'],1);
-		        #pex($results,1);
 		        if ($results["hits"]["hits"]){
 		            $es->resultsHits = $results["hits"]["hits"];
 		            foreach ($es->resultsHits as $key => $user) {

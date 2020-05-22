@@ -64,14 +64,6 @@ if(file_exists($dummy_file)) {
 if(file_exists($log_file))
 {
 	$details = file_get_contents($log_file);
-	//echo json_encode(json_decode($details));die();
-	//var_dump(json_decode($details));die();
 	$details = json_decode($details,true);
-	// $details['total_size_fm'] = formatfilesize($details['total_size']);
-	// $details['downloaded_fm'] = formatfilesize($details['downloaded']);
-	// $details['total_size'];
-	// $details['downloaded'];
-	//$details['time_eta_fm'] = SetTime($details['time_eta']);
-	//$details['time_took_fm'] = SetTime($details['time_took']);
 	echo json_encode($details);
 }

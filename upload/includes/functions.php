@@ -1,34 +1,7 @@
 <?php
-	/**
-	* File: Functions
-	* Description: Various kind of functions to do ClipBucket jobs
-	* @license: Attribution Assurance License
-	* @since: ClipBucket 1.0
-	* @author[s]: Arslan Hassan, Fawaz Tahir, Fahad Abbass, Awais Tariq, Saqib Razzaq
-	* @copyright: (c) 2008 - 2017 ClipBucket / PHPBucket
-	* @notice: Please maintain this section
-	* @modified: { January 10th, 2017 } { Saqib Razzaq } { Updated copyright date }
-	*/
-
 	define("SHOW_COUNTRY_FLAG",TRUE);
 	require 'define_php_links.php';
 	include_once 'upload_forms.php';
-
-	/**
-	 * Function used to throw error
-	 *
-	 * @param { string } { $message } { message to show }
-	 * @param string $pointer
-	 *
-	 * @throws Exception
-	 */
-    function throw_error($message,$pointer="")
-	{
-        global $Cbucket;
-        if($pointer)
-        $Cbucket->error_pointer[$pointer] = $message;
-		throw new Exception($message);
-    }
 
 	/**
 	 * This Funtion is use to get CURRENT PAGE DIRECT URL
@@ -98,8 +71,7 @@
 	 */
 	function pass_code_unsecure($string)
 	{
- 	 	$password = md5(md5(sha1(sha1(md5($string)))));
- 	 	return $password;
+ 	 	return md5(md5(sha1(sha1(md5($string)))));
 	}
 
 	function pass_code($string, $userid)
@@ -124,8 +96,9 @@
 
 	function display_clean($var, $clean_quote = true)
 	{
-	    if($clean_quote)
+	    if($clean_quote){
 		    return htmlentities($var, ENT_QUOTES);
+        }
         return htmlentities($var);
 	}
 
@@ -175,8 +148,7 @@
 	function RandomString($length) {
 		$string = md5(microtime());
 		$highest_startpoint = 32-$length;
-		$randomString = substr($string,rand(0,$highest_startpoint),$length);
-		return $randomString;
+		return substr($string,rand(0,$highest_startpoint),$length);
 	}
 
 	/**
@@ -700,7 +672,6 @@
 			case "user":
 			case "u":
 			case "channels":
-			case "channels":
 				global $userquery;
 				$cats = $userquery->cbCategories($params);
 				break;
@@ -744,84 +715,11 @@
 	}
 
 	/**
-	 * Function used to Update data in database
-	 * @uses : { class : $db } { function : dbUpdate }
-	 *
-	 * @param      $tbl
-	 * @param      $flds
-	 * @param      $vls
-	 * @param      $cond
-	 * @param null $ep
-	 */
-	function dbUpdate($tbl,$flds,$vls,$cond,$ep=NULL)
-	{
-		global $db ;
-		return $db->update($tbl,$flds,$vls,$cond,$ep);		
-	}
-
-	function cbRocks()
-	{
-		if (!defined('isCBSecured')) {
-			define("isCBSecured",TRUE);
-		}
-	}
-
-	/**
-	 * Insert Id
-	 *
-	 * @param $code
-	 *
-	 * @return
-	 */
-	 function get_id($code)
-	 {
-		 global $Cbucket;
-		 $id = $Cbucket->ids[$code];
-		 if(empty($id))
-		 	$id = $code;
-		 return $id;
-	 }
-
-	/**
-	 * Set Id
-	 *
-	 * @param $code
-	 * @param $id
-	 *
-	 * @return mixed
-	 */
-	function set_id($code,$id)
-	{
-		global $Cbucket;
-		return $Cbucket->ids[$code]=$id;
-	}
-
-	/**
-	 * Function used to select data from database
-	 * @uses : { class : $db } { function dbselect }
-	 *
-	 * @param        $tbl
-	 * @param string $fields
-	 * @param bool   $cond
-	 * @param bool   $limit
-	 * @param bool   $order
-	 * @param bool   $p
-	 *
-	 * @return
-	 */
-	function dbselect($tbl,$fields='*',$cond=false,$limit=false,$order=false,$p=false)
-	{
-		global $db;
-		return $db->dbselect($tbl,$fields,$cond,$limit,$order,$p);
-	}
-
-	/**
 	 * An easy function for errors and messages (e is basically short form of exception)
 	 * I don't want to use the whole Trigger and Exception code, so e pretty works for me :D
 	 *
 	 * @param null   $msg
 	 * @param string $type
-	 * @param null   $id
 	 *
 	 * @return null
 	 * @internal param $ { string } { $msg } { message to display }
@@ -829,34 +727,12 @@
 	 * @internal param $ { integer } { $id } { Any Predefined Message ID }
 	 *
 	 */
-	function e($msg=NULL,$type='e',$id=NULL)
+	function e($msg=NULL,$type='e')
 	{
 		global $eh;
 		if(!empty($msg)) {
-			return $eh->e($msg,$type,$id);
+			return $eh->e($msg,$type);
 		}
-	}
-
-	/**
-	 * An easy function for developer errors and messages
-	 *
-	 * @param { string } { $error } { error to display }
-	 * @param string $state
-	 */
-	function deverr($erorr, $state = 'l')
-	{
-		global $eh;
-		if (!empty($erorr)) {
-			return $eh->deverr($erorr, $state);
-		}
-	}
-	
-	/**
-	* Function used to get subscription template
-	* @uses : { function : lang }
-	*/
-	function get_subscription_template() {
-		return lang('user_subscribe_message');
 	}
 
 	/**
@@ -876,18 +752,6 @@
             display_clean($dump);
 			echo "</pre>";
 		}
-	}
-
-	/**
-	 * Print an array in pretty way and exit right after
-	 *
-	 * @param : { string / array } { $text } { Element to be printed }
-	 * @param string $msg { pex by default, message to exit with }
-	 */
-	function pex($text,$msg="PeX")
-	{
-		pr($text,true);
-		exit($msg);
 	}
 
 	/**
@@ -1408,25 +1272,24 @@
 		global $userquery;
 		return $userquery->get_user_vids($uid,$cond,$count_only);
 	}
-	
-	/**
-	* Function used to get error_list
-	* @uses : { class : $eh } { function : $error_list }
-	*/
+
 	function error_list()
 	{
 		global $eh;
-		return $eh->error_list;
+		return $eh->get_error();
 	}
 
-	/**
-	* Function used to get msg_list
-	* @uses : { class : $eh } { function : $message_list }
-	*/
-	function msg_list()
+    function warning_list()
+    {
+        global $eh;
+        return $eh->get_warning();
+    }
+
+
+    function msg_list()
 	{
 		global $eh;
-		return $eh->message_list;
+		return $eh->get_message();
 	}
 
 	/**
@@ -3251,23 +3114,6 @@
 	}
 
 	/**
-	* FUnction used to display widget
- 	* @deprecated : { function is not used anymore and will be removed }	 
-	*/
-	function widget($params)
-	{
-		return
-		'<div class="widget-box">
-			<div class="widget-head">
-				'.$params['name'].'
-			</div>
-			<div class="widget-cont">
-			  '.$params['content'].'
-			</div>
-		</div>';
-	}
-
-	/**
 	 * This function used to include headers in <head> tag
 	 * it will check weather to include the file or not
 	 * it will take file and its type as an array
@@ -3420,13 +3266,12 @@
 				return $array;
 			}
 			return $result;
-		} else {
-			if($params['assign']) {
-				assign($params['assign']['error'],"error");
-			} else {
-				return false;
-			}
-		}	
+		}
+        if($params['assign']) {
+            assign($params['assign']['error'],"error");
+        } else {
+            return false;
+        }
 	}
 
 	/**
@@ -3742,28 +3587,6 @@
 		if( $type == 'v' )
 			return "video";
 	}
-	
-	function check_cbvideo(){}
-
-	/**
-	 * Determines conversion status using provided string
-	 *
-	 * @param : {  string } { $in } { string with conversion value }
-	 *
-	 * @return string : { string } { determined conversion status }
-	 */
-	function conv_status($in)
-	{
-		switch($in)
-		{
-			case "p":
-				return "Processing";
-			case "no":
-				return "Pending";
-			case "yes":
-				return "Done";
-		}
-	}
 
 	/**
 	 * Check installation of ClipBucket
@@ -3901,44 +3724,6 @@
 	}
 
 	/**
-	 * SRC (WordPress)
-	 * Appends a trailing slash.
-	 *
-	 * Will remove trailing slash if it exists already before adding a trailing
-	 * slash. This prevents double slashing a string or path.
-	 *
-	 * The primary use of this is for paths and thus should be used for paths. It is
-	 * not restricted to paths and offers no specific path support.
-	 *
-	 * @since 1.2.0
-	 * @uses untrailingslashit() Unslashes string if it was slashed already.
-	 *
-	 * @param { string } { $string } { What to add the trailing slash to }
-	 *
-	 * @return string { string } { $string } { String with trailing slash added}
-	 */
-	function trailingslashit($string) {
-		return untrailingslashit($string) . '/';
-	}
-
-	/**
-	 * SRC (WordPress)
-	 * Removes trailing slash if it exists.
-	 *
-	 * The primary use of this is for paths and thus should be used for paths. It is
-	 * not restricted to paths and offers no specific path support.
-	 *
-	 * @since 2.2.0
-	 *
-	 * @param { string } { $string } { What to remove the trailing slash from }
-	 *
-	 * @return string { string } { $string } { String without the trailing slash }
-	 */
-	function untrailingslashit($string) {
-		return rtrim($string, '/');
-	}
-
-	/**
 	 * Check if website is using SSL or not
 	 * @return bool { boolean } { true if SSL, else false }
 	 * @internal param $ { none }
@@ -3953,9 +3738,11 @@
 			if ('1' == $_SERVER['HTTPS']) {
 				return true;
 			}
-		} elseif ( isset($_SERVER['SERVER_PORT']) && ( '443' == $_SERVER['SERVER_PORT'] ) ) {
+		}
+		if ( isset($_SERVER['SERVER_PORT']) && ( '443' == $_SERVER['SERVER_PORT'] ) ) {
 			return true;
-		} elseif(isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
+		}
+		if(isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
 			return true;
 		}
 		return false;
@@ -4171,55 +3958,19 @@
 	{
 		global $Cbucket;
 		$section = $Cbucket->configs[$input.'Section'];
-		if(!$restrict)
+		if(!$restrict){
 			return $section == 'yes';
+        }
 
 		if($section =='yes' || THIS_PAGE=='cb_install') {
 			return true;
-		} else {
-			template_files('blocked.html');
-			display_it();
-			exit();
 		}
+
+        template_files('blocked.html');
+        display_it();
+        exit();
 	}
 
-	/**
-	 * Get depth of an array ( nested elements )
-	 *
-	 * @param : { array } { $array } { array to find depth for }
-	 *
-	 * @return int : { integer } { $ini_depth } { depth of array }
-	 */
-	function array_depth($array)
-	{
-		$ini_depth = 0;
-		foreach($array as $arr)
-		{
-			if(is_array($arr))
-			{
-				$depth = array_depth($arr) + 1;	
-				if($depth > $ini_depth) {
-					$ini_depth = $depth;
-				}
-			}
-		}
-		return $ini_depth;
-	}
-
-	/**
-	 * JSON_ENCODE short
-	 */
-    if( !function_exists( 'je' ) ) {
-        function je($in){ return json_encode($in); }
-    }
-
-	/**
-	 * JSON_DECODE short
-	 */
-    if ( !function_exists( 'jd' ) ) {
-        function jd($in,$returnClass=false){ if(!$returnClass) return  json_decode($in,true); else return  json_decode($in); }
-    }
-	
 	/**
 	* Updates last commented data - helps cache refresh
 	* @param : { string } { $type } { type of comment e.g video, channel }
@@ -4833,13 +4584,8 @@
 	    define('UPLOAD_MAX_FILESIZE', ini_get('upload_max_filesize'));
 	    define('MAX_EXECUTION_TIME', ini_get('max_execution_time'));
 
-		if ( getBytesFromFileSize(POST_MAX_SIZE) >= getBytesFromFileSize('50M') && getBytesFromFileSize(MEMORY_LIMIT) >= getBytesFromFileSize('128M') && getBytesFromFileSize(UPLOAD_MAX_FILESIZE) >= getBytesFromFileSize('50M') && MAX_EXECUTION_TIME >= 7200 ) {
-			define("SERVER_CONFS", true);
-		} elseif ( getBytesFromFileSize(POST_MAX_SIZE) < getBytesFromFileSize('50M') || getBytesFromFileSize(MEMORY_LIMIT) < getBytesFromFileSize('128M') || getBytesFromFileSize(UPLOAD_MAX_FILESIZE) < getBytesFromFileSize('50M') && MAX_EXECUTION_TIME < 7200 ) {
+		if ( getBytesFromFileSize(POST_MAX_SIZE) < getBytesFromFileSize('50M') || getBytesFromFileSize(MEMORY_LIMIT) < getBytesFromFileSize('128M') || getBytesFromFileSize(UPLOAD_MAX_FILESIZE) < getBytesFromFileSize('50M') && MAX_EXECUTION_TIME < 7200 ) {
 			e('You must update <strong>"Server Configurations"</strong>. Click here <a href=/admin_area/cb_server_conf_info.php>for details</a>','w');
-			define("SERVER_CONFS", false);
-		} else {
-			define("SERVER_CONFS", false);
 		}
 	}
 

@@ -1368,7 +1368,6 @@ class Collections extends CBCategory
 				e(lang("collection_updated"),"m");
 				
 				if(!empty($array['collection_thumb']['tmp_name']))
-					//pex($array,true);
 					$this->upload_thumb($cid,$array['collection_thumb']);	
 			}
 		}

@@ -169,12 +169,9 @@ if(!function_exists('server_thumb'))
             global $baseurl;
             $timthumb_path = CB_SERVER_THUMB_URL.'/timthumb.php?src=';
 
-
-            //var_dump($params);
             $details = $params[ 'details' ];
             $output = $params[ 'output' ];
             $size = $params[ 'size' ];
-            //pr(THIS_PAGE,true);
 
             //on view photo page image with original size needed so this is simple patch 
             if( THIS_PAGE=='view_item' && isset($details['photo_key']) && isset($_GET['item']) && $_GET['item']==$details['photo_key'] )
@@ -239,7 +236,6 @@ if(!function_exists('server_thumb'))
             $default = array( 't', 'm', 'l', 'o' );
             $thumbs = array();
             if( !$details ) {
-                //var_dump("get default 1");
                 return get_photo_default_thumb( $size, $output );
             }
 
