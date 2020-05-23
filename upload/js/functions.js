@@ -1784,5 +1784,9 @@ function isValidEmail(email) {
 }
 
 function set_cookie_secure(name, value){
-    document.cookie=name + "=" + value +";secure;path=/;samesite=strict;";
+    if (location.protocol !== 'https:') {
+        document.cookie=name + "=" + value +";path=/;samesite=strict;";
+    } else {
+        document.cookie=name + "=" + value +";secure;path=/;samesite=strict;";
+    }
 }

@@ -1,20 +1,21 @@
 {
   "version":"5.4.0",
-  "revision": "14",
+  "revision": "15",
   "status":"dev",
   "detail":[
     {
       "title": "Miscellaneous",
       "description": [
-        "Remove unused or outdated files",
-        "Cleanup code",
-        "Remove unused configs",
-        "Remove unused table",
-        "Update Smarty to version 3.1.36",
-        "Disable outdated upgrade system",
-        "Update GIT url in installation scripts",
-        "Fix installation <i>#122<\/i>",
-        "Cleanup installation process"
+        "Remove unused or outdated files"
+        ,"Cleanup code"
+        ,"Remove unused configs"
+        ,"Remove unused table"
+        ,"Update Smarty to version 3.1.36"
+        ,"Disable outdated upgrade system"
+        ,"Update GIT url in installation scripts"
+        ,"Fix installation <i>#122<\/i>"
+        ,"Cleanup installation process"
+        ,"Fix cookies on HTTP"
       ]
     }
     ,{

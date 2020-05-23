@@ -344,27 +344,22 @@ class userquery extends CBCategory{
                 }
 				return false;
 			}
-
-			if(!$this->session_auth(userid()))
-			{
-				if(!$check_only)
-				e(lang('usr_invalid_session_err'));
-				return false;
-			}
 			
 			//Now Check if logged in user exists or not
 			if(!$this->user_exists(userid(),TRUE))
 			{
-				if(!$check_only)
-				e(lang('invalid_user'));
+				if(!$check_only){
+				    e(lang('invalid_user'));
+                }
 				return false;
 			}
 
 			//Now Check logged in user is banned or not
 			if($this->is_banned(userid())=='yes')
 			{
-				if(!$check_only)
+				if(!$check_only){
 				    e(lang('usr_ban_err'));
+                }
 				return false;
 			}
 		}
@@ -376,24 +371,26 @@ class userquery extends CBCategory{
 
 			if(is_numeric($access))
 			{
-				if($access_details['level_id'] == $access)
+				if($access_details['level_id'] == $access){
 					return true;
+                }
 					
-				if(!$check_only)
+				if(!$check_only){
 					e(lang('insufficient_privileges'));
+                }
 				$Cbucket->show_page(false);
 				return false;
-			} else {
-				if($access_details[$access] == 'yes')
-					return true;
-
-				if(!$check_only)
-				{
-					e(lang('insufficient_privileges'));
-					$Cbucket->show_page(false);
-				}
-				return false;
 			}
+
+            if($access_details[$access] == 'yes'){
+                return true;
+            }
+
+            if(!$check_only) {
+                e(lang('insufficient_privileges'));
+                $Cbucket->show_page(false);
+            }
+            return false;
 		}
 		return true;
 	}
@@ -413,25 +410,12 @@ class userquery extends CBCategory{
 	function logincheck($access=NULL,$redirect=TRUE)
 	{
 		
-		if(!$this->login_check($access))
-		{
-			if($redirect==TRUE)
+		if(!$this->login_check($access)) {
+			if($redirect==TRUE){
 				redirect_to(signup_link);
+            }
 			return false;
 		}
-		return true;
-	}
-
-    /**
-     * Function used to authenticate user session
-     * @deprecated
-     *
-     * @param $uid
-     *
-     * @return bool
-     */
-	function session_auth($uid)
-	{
 		return true;
 	}
 
@@ -475,8 +459,9 @@ class userquery extends CBCategory{
 	 */
 	function is_banned($uid)
 	{
-		if(empty($this->udetails['ban_status']) && userid())
+		if(empty($this->udetails['ban_status']) && userid()){
 			$this->udetails['ban_status'] = $this->get_user_field($uid,'ban_status');
+        }
 		return $this->udetails['ban_status'];
 	}
 	
@@ -494,10 +479,10 @@ class userquery extends CBCategory{
 	 */
 	function admin_login_check($check_only=false)
 	{
-		if(!has_access('admin_access',true))
-		{
-			if($check_only==FALSE)
+		if(!has_access('admin_access',true)) {
+			if($check_only==FALSE){
 				redirect_to('login.php');
+            }
 			return false;
 		}
 		return true;
@@ -510,12 +495,9 @@ class userquery extends CBCategory{
 		
 		//Calling Logout Functions
 		$funcs = $this->logout_functions;
-		if(is_array($funcs) && count($funcs)>0)
-		{
-			foreach($funcs as $func)
-			{
-				if(function_exists($func))
-				{
+		if(is_array($funcs) && count($funcs)>0) {
+			foreach($funcs as $func) {
+				if(function_exists($func)) {
 					$func();
 				}
 			}
@@ -529,6 +511,8 @@ class userquery extends CBCategory{
      * Function used to delete user
      *
      * @param $uid
+     *
+     * @throws phpmailerException
      */
 	function delete_user($uid)
 	{

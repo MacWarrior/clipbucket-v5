@@ -7,14 +7,12 @@ define('THIS_PAGE', 'ADMIN_LOGIN');
 require '../includes/admin_config.php';
 Assign('THIS_PAGE', THIS_PAGE);
 
-if($userquery->is_admin_logged_as_user())
-{
+if($userquery->is_admin_logged_as_user()) {
 	$userquery->revert_from_user();
 	redirect_to('/admin_area');
 }
 
-if($userquery->admin_login_check(TRUE))
-{
+if($userquery->admin_login_check(TRUE)) {
 	redirect_to("/".ADMINDIR."/index.php");
 }
 $eh->flush();

@@ -111,7 +111,7 @@
         setcookie($name,$val,[
             'expires' => $time,
             'path' => '/',
-            'secure' => true,
+            'secure' => (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on'),
             'httponly' => true,
             'samesite' => 'Strict'
         ]);
