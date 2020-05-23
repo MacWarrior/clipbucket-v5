@@ -1,6 +1,6 @@
 {
   "version":"5.4.0",
-  "revision": "15",
+  "revision": "16",
   "status":"dev",
   "detail":[
     {
@@ -16,6 +16,7 @@
         ,"Fix installation <i>#122<\/i>"
         ,"Cleanup installation process"
         ,"Fix cookies on HTTP"
+        ,"Fix cookies with PHP < 7.3.0"
       ]
     }
     ,{

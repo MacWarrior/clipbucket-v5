@@ -108,13 +108,21 @@
             $time = time() + 3600;
         }
 
-        setcookie($name,$val,[
-            'expires' => $time,
-            'path' => '/',
-            'secure' => (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on'),
-            'httponly' => true,
-            'samesite' => 'Strict'
-        ]);
+        $path = '/';
+        $flag_secure = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on');
+        $flag_httponly = true;
+
+        if (version_compare(phpversion(), '7.3.0', '>=')) {
+            setcookie($name,$val,[
+                'expires' => $time,
+                'path' => $path,
+                'secure' => $flag_secure,
+                'httponly' => $flag_httponly,
+                'samesite' => 'Strict'
+            ]);
+        } else {
+            setcookie($name,$val,$time,$path,'',$flag_secure,$flag_httponly);
+        }
     }
 
     function getBytesFromFileSize($size){

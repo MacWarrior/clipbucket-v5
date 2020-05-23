@@ -64,13 +64,13 @@
 
 	//Login User
 	if(isset($_POST['login'])){
-		$username = $_POST['username'];
-		$username = mysql_clean(clean($username));
-		$password = mysql_clean(clean($_POST['password']));
+		$username = mysql_clean($_POST['username']);
+		$password = mysql_clean($_POST['password']);
 		
 		$remember = false;
-		if($_POST['rememberme'])
+		if($_POST['rememberme']){
 			$remember = true;
+        }
 			
 		if($userquery->login_user($username,$password,$remember)) {
 			if($_COOKIE['pageredir']) {
