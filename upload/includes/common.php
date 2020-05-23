@@ -551,7 +551,6 @@ $Smarty->register_modifier('get_username','get_username');
 $Smarty->register_modifier('formatfilesize','formatfilesize');
 $Smarty->register_modifier('getWidth','getWidth');
 $Smarty->register_modifier('getHeight','getHeight');
-$Smarty->register_modifier('json_decode','jd');
 
 assign('updateEmbedCode','updateEmbed');
 # Registering Video Remove Functions
