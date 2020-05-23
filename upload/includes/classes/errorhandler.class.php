@@ -7,9 +7,10 @@ class errorhandler extends ClipBucket
 
     /**
      * @param null $message
+     * @param bool $secure
      */
-	private function add_error($message=NULL) {
-	    $this->error_list[] = $message;
+	private function add_error($message=NULL,$secure=true) {
+	    $this->error_list[] = array('val' => $message, 'secure' => $secure);
 	}
 
     /**
@@ -26,9 +27,10 @@ class errorhandler extends ClipBucket
 
     /**
      * @param null $message
+     * @param bool $secure
      */
-	private function add_warning($message=NULL) {
-		$this->warning_list[] = $message;
+	private function add_warning($message=NULL,$secure=true) {
+		$this->warning_list[] = array('val' => $message, 'secure' => $secure);
 	}
 
     public function get_warning()
@@ -42,10 +44,12 @@ class errorhandler extends ClipBucket
 
     /**
      * Function used to add message_list
+     *
      * @param null $message
+     * @param bool $secure
      */
-	public function add_message($message=NULL) {
-	    $this->message_list[] = $message;
+	public function add_message($message=NULL,$secure=true) {
+	    $this->message_list[] = array('val' => $message, 'secure' => $secure);
 	}
 
     public function get_message()
@@ -65,26 +69,27 @@ class errorhandler extends ClipBucket
 
     /**
      * Function for throwing errors that users can see
-     * @param : { string } { $message } { error message to throw }
-     * @param string $type
-     * @return array : { array } { $this->error_list } { an array of all currently logged errors }
-     * @author : Arslan Hassan
      *
+     * @param  : { string } { $message } { error message to throw }
+     * @param string $type
+     * @param bool   $secure
+     *
+     * @return array : { array } { $this->error_list } { an array of all currently logged errors }
      */
-	function e($message = NULL, $type ='e') {
+	function e($message = NULL, $type ='e', $secure = true) {
 		switch($type)
         {
 			case 'm':
 			case 1:
 			case 'msg':
 			case 'message':
-                $this->add_message($message);
+                $this->add_message($message, $secure);
                 break;
 
 			case 'e':
 			case 'err':
 			case 'error':
-				$this->add_error($message);
+				$this->add_error($message, $secure);
 			    break;
 
 			case 'w':
@@ -92,7 +97,7 @@ class errorhandler extends ClipBucket
 			case 'war':
 			case 'warning':
 			default:
-				$this->add_warning($message);
+				$this->add_warning($message, $secure);
 			    break;
 		}
 		return $this->error_list;

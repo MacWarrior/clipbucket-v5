@@ -1,6 +1,6 @@
 {
   "version":"5.4.0",
-  "revision": "16",
+  "revision": "18",
   "status":"dev",
   "detail":[
     {
@@ -17,6 +17,7 @@
         ,"Cleanup installation process"
         ,"Fix cookies on HTTP"
         ,"Fix cookies with PHP < 7.3.0"
+        ,"Update error handling to allow HTML messages"
       ]
     }
     ,{
