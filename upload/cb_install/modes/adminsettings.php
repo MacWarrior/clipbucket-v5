@@ -1,20 +1,8 @@
-
-</div>
-
-<div class="nav_des clearfix">
-    <div class="cb_container">
-	<h4 style="color:#fff;">Admin Settings</h4>
-	<p style="color:#fff; font-size:13px;">
-		All major steps are done, now enter username and password for your admin,
-		by default its username : <strong>admin</strong> | pass : <strong>admin</strong><br/>
-		we now update installation details and insert language phrases.
-	</p>
-	<p>
 <?php
 
 $baseurl = dirname(GetServerURL());
 if(substr($baseurl,strlen($baseurl)-1,1)=='/'){
-	$baseurl = substr($baseurl,0,strlen($baseurl)-1);
+    $baseurl = substr($baseurl,0,strlen($baseurl)-1);
 }
 
 $db->update(tbl("config"),array("value"),array($baseurl)," name='baseurl'");
@@ -26,11 +14,26 @@ $lang_obj->updateFromPack('en');
 
 echo '<br><span class="glyphicon glyphicon-ok" style="color:#fff"></span><span style="color:#fff"> Language phrases have been imported</span>';
 ?>
+
+
+<div class="nav_des clearfix">
+    <div class="cb_container">
+		<h4 style="color:#fff;">Admin Settings</h4>
+		<p style="color:#fff;font-size:13px;">
+			All major steps are done, now enter username and password for your admin,
+			by default its username : <strong>admin</strong> | pass : <strong>admin</strong><br/>
+			we now update installation details and insert language phrases.
+		</p>
+		<p>
+			<span class="glyphicon glyphicon-ok" style="color:#fff"></span><span style="color:#fff"> Installation details have been updated</span>
+			<br/>
+			<span class="glyphicon glyphicon-ok" style="color:#fff"></span><span style="color:#fff"> Language phrases have been imported</span>
 		</p>
 	</div>
 </div>
+
 <div id="sub_container">
-	<form name="installation" method="post" id="installation" style="background-image:url(<?php echo installer_path(); ?>images/user_thumb.png);background-repeat:no-repeat;background-position:right;">
+	<form method="post" id="installation" style="background-image:url(images/user_thumb.png);background-repeat:no-repeat;background-position:right;">
 		<div class="field">
 			<label class="grey-text" for="username">Admin username</label>
 			<input name="username" type="text" id="username" class="form-control" value="admin">
@@ -53,7 +56,7 @@ echo '<br><span class="glyphicon glyphicon-ok" style="color:#fff"></span><span s
 			</p>
 		</div>
 
-		<input type="hidden" name="mode" value="sitesettings" /><br>
+		<input type="hidden" name="mode" value="sitesettings"/>
 		<?php button('Save and Continue',' onclick="$(\'#installation\').submit()" '); ?>
 	</form>
 </div>

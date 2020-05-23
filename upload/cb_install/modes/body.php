@@ -32,7 +32,6 @@
 						<li <?php echo selected('dataimport'); ?>>Data import<span></span></li>
 						<li <?php echo selected('adminsettings'); ?>>Admin Settings<span></span></li>
 						<li <?php echo selected('sitesettings'); ?>>Site Settings<span></span></li>
-						<li <?php echo selected('register'); ?>>Register<span></span></li>
 						<li <?php echo selected('finish'); ?>>Finish<span></span></li>
 					<?php } else { ?>
 						<li <?php echo selected('upgrade'); ?>>Upgrade</li>
@@ -45,25 +44,22 @@
 			</div>
 		</div>
 
-		<div id="container">
-			<?php
-			switch($mode){
-				case 'agreement':
-				case 'precheck':
-				case 'permission':
-				case 'database':
-				case 'dataimport':
-				case 'adminsettings':
-				case 'sitesettings':
-				case 'register':
-				case 'finish':
-				case 'lock':
-                	include_once(__DIR__.'/'.$mode.'.php');
-                    break;
-				default:
-					var_dump($mode);
-			}
-			?>
-		</div>
+		<?php
+		switch($mode){
+			case 'agreement':
+			case 'precheck':
+			case 'permission':
+			case 'database':
+			case 'dataimport':
+			case 'adminsettings':
+			case 'sitesettings':
+			case 'finish':
+			case 'lock':
+				include_once(__DIR__.'/'.$mode.'.php');
+				break;
+			default:
+				var_dump($mode);
+		}
+		?>
 	</body>
 </html>

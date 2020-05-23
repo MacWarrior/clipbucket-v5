@@ -33,23 +33,6 @@ if($mode=='dataimport')
 	echo json_encode($result);
 }
 
-
-if($mode=='register')
-{
-	$version = @curl_version();
-	if($version)
-	{
-		$website = $_POST['website'];
-		$email = $_POST['email'];
-		$ch = curl_init('http://clip-bucket.com/register.php');
-		curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
-		curl_setopt($ch,CURLOPT_POST,true);
-		curl_setopt($ch,CURLOPT_POSTFIELDS,array('website'=>$website,'email'=>$email));
-		$data = curl_exec($ch);
-		echo $data;
-	}
-}
-
 if($mode=='adminsettings')
 {
 	$dbhost = $_POST['dbhost'];

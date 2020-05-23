@@ -11,7 +11,6 @@
 		'dataimport',
 		'adminsettings',
 		'sitesettings',
-		'register',
 		'finish',
 		'upgrade',
 		'finish_upgrade'
@@ -34,7 +33,7 @@
 	* modes which requires clipbucket core files so installer
 	* function file does not create a conflict
 	*/
-	$cbarray = array('adminsettings','sitesettings','register','finish');
+	$cbarray = array('adminsettings','sitesettings','finish');
 	$baseDir = dirname(dirname(__FILE__));
 	if($version = is_upgradeable())
 	{

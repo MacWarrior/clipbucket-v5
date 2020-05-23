@@ -1,4 +1,3 @@
-</div>
 <div class="clearfix"></div>
 
 <div class="nav_des clearfix">
@@ -14,8 +13,8 @@
 
 <div id="sub_container">
 	<div class="errorDiv" id="dbresult" style="display:none;"></div>
-	<div class="db_fields" style="background-image:url(<?php echo installer_path(); ?>images/db_img.png);background-repeat:no-repeat;background-position:right;">
-		<form name="installation" method="post" id="installation">
+	<div class="db_fields" style="background-image:url(images/db_img.png);background-repeat:no-repeat;background-position:right;">
+		<form method="post" id="installation">
 			<div class="field">
 				<label class="grey-text" for="host">Host</label>
 				<input name="dbhost" type="text" id="host" class="form-control" value="localhost" >
@@ -60,5 +59,6 @@
 
 			<input type="hidden" name="mode" value="dataimport"/>
 		</form>
-		<div style="padding:10px 0;" align="left"><?php button('Check Connection',' onclick="dbconnect()" '); ?> <span id="loading"></span></div>
+		<div style="padding:10px 0;"><?php button('Check Connection',' onclick="dbconnect()" '); ?> <span id="loading"></span></div>
 	</div>
+</div>

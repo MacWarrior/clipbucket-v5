@@ -11,8 +11,6 @@ $db->update(tbl("users"),array
 $userquery->login_user(post('username'),post('password'))
 ?>
 
-</div>
-
 <div class="nav_des clearfix">
     <div class="cb_container">
 		<h4 style="color:#fff;">Website basic configurations</h4>
@@ -24,7 +22,7 @@ $userquery->login_user(post('username'),post('password'))
 
 <div id="sub_container">
 	<div class="site_fields">
-		<form name="installation" method="post" id="installation" style="background-image:url(<?php echo installer_path(); ?>images/site_setting.png);background-repeat:no-repeat;background-position:right;">
+		<form name="installation" method="post" id="installation" style="background-image:url(images/site_setting.png);background-repeat:no-repeat;background-position:right;">
 			<br/>
 			<div class="field">
 				<label for="title">Website title</label>
@@ -51,7 +49,8 @@ $userquery->login_user(post('username'),post('password'))
 			</div>
 
 			<br/>
-		  	<input type="hidden" name="mode" value="register" />
+		  	<input type="hidden" name="mode" value="finish"/>
 			<?php button('Save and Continue',' onclick="$(\'#installation\').submit()" '); ?>
 		</form>
 	</div>
+</div>

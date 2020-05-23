@@ -70,16 +70,3 @@ function newpassword()
     $('#genPass').html(pass);
     $('#password').val(pass);
 }
-
-function register(email,website)
-{
-	$('#loadingReg').html(img);
-	$.ajax({
-		url  : p,
-		type : 'POST',
-		data : ({mode:'register',website:website,email:email}),
-		dataType: "html",
-		success:function(data){$('#installation').submit()}
-		
-	})
-}
