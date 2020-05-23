@@ -722,24 +722,24 @@
 		$db->insert($tbl,$flds,$vls,$ep);
 	}
 
-	/**
-	 * An easy function for errors and messages (e is basically short form of exception)
-	 * I don't want to use the whole Trigger and Exception code, so e pretty works for me :D
-	 *
-	 * @param null   $msg
-	 * @param string $type
-	 *
-	 * @return null
-	 * @internal param $ { string } { $msg } { message to display }
-	 * @internal param $ { string } { $type } { e for error and m for message }
-	 * @internal param $ { integer } { $id } { Any Predefined Message ID }
-	 *
-	 */
-	function e($msg=NULL,$type='e')
+    /**
+     * An easy function for errors and messages (e is basically short form of exception)
+     * I don't want to use the whole Trigger and Exception code, so e pretty works for me :D
+     *
+     * @param null   $msg
+     * @param string $type
+     * @param bool   $secure
+     *
+     * @return null
+     * @internal param $ { string } { $msg } { message to display }
+     * @internal param $ { string } { $type } { e for error and m for message }
+     * @internal param $ { integer } { $id } { Any Predefined Message ID }
+     */
+	function e($msg=NULL,$type='e',$secure=true)
 	{
 		global $eh;
 		if(!empty($msg)) {
-			return $eh->e($msg,$type);
+			return $eh->e($msg,$type,$secure);
 		}
 	}
 
