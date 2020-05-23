@@ -217,87 +217,258 @@ class ClipBucket
         return isset($this->anchor_function_list[$place]) ? $this->anchor_function_list[$place] : false;
     }
 
-    function LatestAdminMenu()
-    {
-        global $userquery;
-        $per = $userquery->get_user_level(userid());
-        if ($per['web_config_access'] == "yes") {
-            $NewMenu['General Configurations'] = array(
-                'Reports &amp; Stats' => ADMIN_BASEURL.'/reports.php',
-                'Website Configurations' => ADMIN_BASEURL.'/main.php',
-                'Email Settings' => ADMIN_BASEURL.'/email_settings.php',
-                'Email Tester' => ADMIN_BASEURL.'/email_tester.php',
-                'Language Settings' => ADMIN_BASEURL.'/language_settings.php',
-                'Add New Phrases' => ADMIN_BASEURL.'/add_phrase.php',
-                'Manage Pages' => ADMIN_BASEURL.'/manage_pages.php',
-                'Manage Comments' => ADMIN_BASEURL.'/comments.php',
-                'Update Logos'=> ADMIN_BASEURL.'/upload_logo.php'
-            );
-		}
-        if ($per['video_moderation'] == "yes") {
-            $NewMenu['Videos'] = array(
-                'Videos Manager' => ADMIN_BASEURL.'/video_manager.php',
-                'Manage Playlists' => ADMIN_BASEURL.'/manage_playlist.php',
-                'Manage Categories' => ADMIN_BASEURL.'/category.php',
-                'List Flagged Videos' => ADMIN_BASEURL.'/flagged_videos.php',
-                'Mass Upload Videos' => ADMIN_BASEURL.'/mass_uploader.php',
-                'List Inactive Videos' => ADMIN_BASEURL.'/video_manager.php?search=search&active=no',
-                'Notification settings' => ADMIN_BASEURL.'/notification_settings.php'
-            );
-		}
-        if ($per['member_moderation'] == "yes") {
-            $NewMenu['Users'] = array(
-                'Manage Members' => ADMIN_BASEURL.'/members.php',
-                'Add Member' => ADMIN_BASEURL.'/add_member.php',
-                'Manage categories' => ADMIN_BASEURL.'/user_category.php',
-                'Inactive Only' => ADMIN_BASEURL.'/members.php?search=yes&status=ToActivate',
-                'Active Only' => ADMIN_BASEURL.'/members.php?search=yes&status=Ok',
-                'Reported Users' => ADMIN_BASEURL.'/flagged_users.php',
-                'Mass Email' => ADMIN_BASEURL.'/mass_email.php'
-            );
-            
-            if($per['allow_manage_user_level']=='yes' || $userquery->level == 1){
-            	$NewMenu['Users']['User Levels'] = ADMIN_BASEURL.'/user_levels.php';
+    function addMenuAdmin($menu_params, $order = null){
+        global $Cbucket;
+        $already_exists = false;
+
+        if( is_null($order) ){
+            $order = max(array_keys($Cbucket->AdminMenu))+1;
+        } else {
+            if( array_key_exists($Cbucket->AdminMenu, $order) ){
+                do{
+                    $order++;
+                } while( array_key_exists($Cbucket->AdminMenu, $order) );
             }
         }
 
-        if ($per['ad_manager_access'] == "yes") {
-            $NewMenu['Advertisement'] = array(
-                'Manage Advertisments' => ADMIN_BASEURL.'/ads_manager.php',
-                'Manage Placements' => ADMIN_BASEURL.'/ads_add_placements.php'
+        foreach($Cbucket->AdminMenu as &$menu){
+            if( $menu['title'] == $menu_params['title'] ){
+                foreach($menu_params['sub'] as $subMenu){
+                    $menu['sub'][] = $subMenu;
+                }
+                $already_exists = true;
+            }
+        }
+        if( !$already_exists ){
+            $Cbucket->AdminMenu[$order] = $menu_params;
+        }
+        ksort($Cbucket->AdminMenu);
+    }
+
+    function initAdminMenu()
+    {
+        global $userquery;
+        $per = $userquery->get_user_level(userid());
+
+        $menu_dashboard = array(
+            'title' => 'Dashboard'
+            ,'class' => 'icon-dashboard'
+            ,'url' => ADMIN_BASEURL.'/index.php'
+        );
+        $this->addMenuAdmin($menu_dashboard, 1);
+
+        if ($per['web_config_access'] == "yes") {
+            $menu_general = array(
+                'title' => 'General Configurations'
+                ,'class' => 'glyphicon glyphicon-stats'
+                ,'sub' => array(
+                    array(
+                        'title' => 'Reports &amp; Stats'
+                        ,'url' => ADMIN_BASEURL.'/reports.php'
+                    )
+                    ,array(
+                        'title' => 'Website Configurations'
+                        ,'url' => ADMIN_BASEURL.'/main.php'
+                    )
+                    ,array(
+                        'title' => 'Email Settings'
+                        ,'url' => ADMIN_BASEURL.'/email_settings.php'
+                    )
+                    ,array(
+                        'title' => 'Email Tester'
+                        ,'url' => ADMIN_BASEURL.'/email_tester.php'
+                    )
+                    ,array(
+                        'title' => 'Language Settings'
+                        ,'url' => ADMIN_BASEURL.'/language_settings.php'
+                    )
+                    ,array(
+                        'title' => 'Add New Phrases'
+                        ,'url' => ADMIN_BASEURL.'/add_phrase.php'
+                    )
+                    ,array(
+                        'title' => 'Manage Pages'
+                        ,'url' => ADMIN_BASEURL.'/manage_pages.php'
+                    )
+                    ,array(
+                        'title' => 'Manage Comments'
+                        ,'url' => ADMIN_BASEURL.'/comments.php'
+                    )
+                    ,array(
+                        'title' => 'Update Logos'
+                        ,'url' => ADMIN_BASEURL.'/upload_logo.php'
+                    )
+                )
             );
+
+            $this->addMenuAdmin($menu_general, 10);
 		}
+
+        if ($per['member_moderation'] == "yes") {
+            $menu_users = array(
+                'title' => 'Users'
+                ,'class' => 'glyphicon glyphicon-user'
+                ,'sub' => array(
+                    array(
+                        'title' => 'Manage Members'
+                        ,'url' => ADMIN_BASEURL.'/members.php'
+                    )
+                    ,array(
+                        'title' => 'Add Member'
+                        ,'url' => ADMIN_BASEURL.'/add_member.php'
+                    )
+                    ,array(
+                        'title' => 'Manage categories'
+                        ,'url' => ADMIN_BASEURL.'/user_category.php'
+                    )
+                    ,array(
+                        'title' => 'Inactive Only'
+                        ,'url' => ADMIN_BASEURL.'/members.php?search=yes&status=ToActivate'
+                    )
+                    ,array(
+                        'title' => 'Active Only'
+                        ,'url' => ADMIN_BASEURL.'/members.php?search=yes&status=Ok'
+                    )
+                    ,array(
+                        'title' => 'Reported Users'
+                        ,'url' => ADMIN_BASEURL.'/flagged_users.php'
+                    )
+                    ,array(
+                        'title' => 'Mass Email'
+                        ,'url' => ADMIN_BASEURL.'/mass_email.php'
+                    )
+                )
+            );
+
+            if($per['allow_manage_user_level']=='yes' || $userquery->level == 1){
+                $menu_users['sub'][] = array(
+                    'title' => 'User Levels'
+                    ,'url' => ADMIN_BASEURL.'/user_levels.php'
+                );
+            }
+
+            $this->addMenuAdmin($menu_users, 20);
+        }
+
+        if ($per['ad_manager_access'] == "yes" && config("enable_advertisement")) {
+            $menu_ad = array(
+                'title' => 'Advertisement'
+                ,'class' => 'glyphicon glyphicon-bullhorn'
+                ,'sub' => array(
+                    array(
+                        'title' => 'Manage Advertisments'
+                        ,'url' => ADMIN_BASEURL.'/ads_manager.php'
+                    )
+                    ,array(
+                        'title' => 'Manage Placements'
+                        ,'url' => ADMIN_BASEURL.'/ads_add_placements.php'
+                    )
+                )
+            );
+
+            $this->addMenuAdmin($menu_ad, 30);
+        }
+
         if ($per['manage_template_access'] == "yes") {
-            $NewMenu['Templates And Players'] = array(
-            	'Templates Manager' => ADMIN_BASEURL.'/templates.php',
-                'Templates Editor' => ADMIN_BASEURL.'/template_editor.php',
-                'Players Manager' => ADMIN_BASEURL.'/manage_players.php',
-                lang('player_settings') => ADMIN_BASEURL.'/manage_players.php?mode=show_settings'
-			);
-		}
+            $menu_template = array(
+                'title' => 'Templates And Players'
+                ,'class' => 'glyphicon glyphicon-play-circle'
+                ,'sub' => array(
+                    array(
+                        'title' => 'Templates Manager'
+                        ,'url' => ADMIN_BASEURL.'/templates.php'
+                    )
+                    ,array(
+                        'title' => 'Templates Editor'
+                        ,'url' => ADMIN_BASEURL.'/template_editor.php'
+                    )
+                    ,array(
+                        'title' => 'Players Manager'
+                        ,'url' => ADMIN_BASEURL.'/manage_players.php'
+                    )
+                    ,array(
+                        'title' => lang('player_settings')
+                        ,'url' => ADMIN_BASEURL.'/manage_players.php?mode=show_settings'
+                    )
+                )
+            );
+
+            $this->addMenuAdmin($menu_template, 40);
+        }
+
         if ($per['plugins_moderation'] == "yes"){
-            $NewMenu['Plugin Manager'] = array('Plugin Manager' => ADMIN_BASEURL.'/plugin_manager.php');
+            $menu_plugin = array(
+                'title' => 'Plugin Manager'
+                ,'class' => 'glyphicon glyphicon-tasks'
+                ,'sub' => array(
+                    array(
+                        'title' => 'Plugin Manager'
+                        ,'url' => ADMIN_BASEURL.'/plugin_manager.php'
+                    )
+                )
+            );
+
+            $this->addMenuAdmin($menu_plugin, 50);
         }
 
         if ($per['tool_box'] == "yes") {
-            $NewMenu['Tool Box'] = array(
-            	'PHP Info' => ADMIN_BASEURL.'/phpinfo.php',
-                'Development Mode' => ADMIN_BASEURL.'/dev_mode.php',
-                'View online users' => ADMIN_BASEURL.'/online_users.php',
-                'Action Logs' => ADMIN_BASEURL.'/action_logs.php?type=login',
-                'Server Modules Info' => ADMIN_BASEURL.'/cb_mod_check.php',
-                'Server Configuration Info' => ADMIN_BASEURL.'/cb_server_conf_info.php',
-                'Conversion Queue Manager' => ADMIN_BASEURL.'/cb_conversion_queue.php',
-                'ReIndexer' => ADMIN_BASEURL.'/reindex_cb.php',
-                'Conversion Lab &alpha;' => ADMIN_BASEURL.'/conversion_lab.php',
-                'Repair video duration' => ADMIN_BASEURL.'/repair_vid_duration.php'
-			);
-		}
-        if ($per['web_config_access'] == "yes"){
-            $NewMenu['Tool Box']['Maintenance'] = ADMIN_BASEURL.'/maintenance.php';
-        }
+            $menu_tool = array(
+                'title' => 'Tool Box'
+                ,'class' => 'glyphicon glyphicon-wrench'
+                ,'sub' => array(
+                    array(
+                        'title' => 'PHP Info'
+                        ,'url' => ADMIN_BASEURL.'/phpinfo.php'
+                    )
+                    ,array(
+                        'title' => 'Development Mode'
+                        ,'url' => ADMIN_BASEURL.'/dev_mode.php'
+                    )
+                    ,array(
+                        'title' => 'View online users'
+                        ,'url' => ADMIN_BASEURL.'/online_users.php'
+                    )
+                    ,array(
+                        'title' => 'Action Logs'
+                        ,'url' => ADMIN_BASEURL.'/action_logs.php?type=login'
+                    )
+                    ,array(
+                        'title' => 'Server Modules Info'
+                        ,'url' => ADMIN_BASEURL.'/cb_mod_check.php'
+                    )
+                    ,array(
+                        'title' => 'Server Configuration Info'
+                        ,'url' => ADMIN_BASEURL.'/cb_server_conf_info.php'
+                    )
+                    ,array(
+                        'title' => 'Conversion Queue Manager'
+                        ,'url' => ADMIN_BASEURL.'/cb_conversion_queue.php'
+                    )
+                    ,array(
+                        'title' => 'ReIndexer'
+                        ,'url' => ADMIN_BASEURL.'/reindex_cb.php'
+                    )
+                    ,array(
+                        'title' => 'Conversion Lab &alpha;'
+                        ,'url' => ADMIN_BASEURL.'/conversion_lab.php'
+                    )
+                    ,array(
+                        'title' => 'Repair video duration'
+                        ,'url' => ADMIN_BASEURL.'/repair_vid_duration.php'
+                    )
+                )
+            );
 
-        return (isset($NewMenu)) ? $NewMenu : false;
+
+            if ($per['web_config_access'] == "yes"){
+                $menu_tool['sub'][] = array(
+                    'title' => 'Maintenance'
+                    ,'url' => ADMIN_BASEURL.'/maintenance.php'
+                );
+            }
+
+            $this->addMenuAdmin($menu_tool, 60);
+        }
     }
 
     /**

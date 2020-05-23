@@ -98,35 +98,50 @@ class Collections extends CBCategory
 				lang('manage_collections') => cblink(array('name'=>'manage_collections')),
 				lang('manage_favorite_collections') => cblink(array('name'=>'manage_collections','extra_params'=>'mode=favorite'))
 			);
-		}
-		
-		// Adding Collection links in Admin Area
-		if($per['collection_moderation'] == "yes")
-		$Cbucket->AdminMenu['Collections'] = array(
-			lang('manage_collections')	=>ADMIN_BASEURL.'/collection_manager.php',
-			lang('manage_categories')	=>ADMIN_BASEURL.'/collection_category.php',
-			lang('flagged_collections')	=>ADMIN_BASEURL.'/flagged_collections.php'
-		);
 
-		// Adding Collection links in Cbucket Class
-		$Cbucket->links['collections'] 			= array('collections.php','collections/');
-		$Cbucket->links['manage_collections'] 	= array('manage_collections.php','manage_collections.php');
-		$Cbucket->links['edit_collection'] 		= array(
-			'manage_collections.php?mode=edit_collection&amp;cid=',
-			'manage_collections.php?mode=edit_collection&amp;cid='
-		);
-		$Cbucket->links['manage_items'] 		= array(
-			'manage_collections.php?mode=manage_items&amp;cid=%s&amp;type=%s',
-			'manage_collections.php?mode=manage_items&amp;cid=%s&amp;type=%s'
-		);
-		$Cbucket->links['user_collections'] 	= array(
-			'user_collections.php?mode=uploaded&user=',
-			'user_collections.php?mode=uploaded&user='
-		);
-		$Cbucket->links['user_fav_collections'] = array(
-			'user_collections.php?mode=favorite&user=',
-			'user_collections.php?mode=favorite&user='
-		);
+            // Adding Collection links in Admin Area
+            if($per['collection_moderation'] == "yes"){
+                $menu_collection = array(
+                    'title' => 'Collections'
+                    ,'class' => 'glyphicon glyphicon-folder-close'
+                    ,'sub' => array(
+                        array(
+                            'title' => lang('manage_collections')
+                            ,'url' => ADMIN_BASEURL.'/collection_manager.php'
+                        )
+                        ,array(
+                            'title' => lang('manage_categories')
+                            ,'url' => ADMIN_BASEURL.'/collection_category.php'
+                        )
+                        ,array(
+                            'title' => lang('flagged_collections')
+                            ,'url' => ADMIN_BASEURL.'/flagged_collections.php'
+                        )
+                    )
+                );
+                $Cbucket->addMenuAdmin($menu_collection, 80);
+            }
+
+            // Adding Collection links in Cbucket Class
+            $Cbucket->links['collections'] 			= array('collections.php','collections/');
+            $Cbucket->links['manage_collections'] 	= array('manage_collections.php','manage_collections.php');
+            $Cbucket->links['edit_collection'] 		= array(
+                'manage_collections.php?mode=edit_collection&amp;cid=',
+                'manage_collections.php?mode=edit_collection&amp;cid='
+            );
+            $Cbucket->links['manage_items'] 		= array(
+                'manage_collections.php?mode=manage_items&amp;cid=%s&amp;type=%s',
+                'manage_collections.php?mode=manage_items&amp;cid=%s&amp;type=%s'
+            );
+            $Cbucket->links['user_collections'] 	= array(
+                'user_collections.php?mode=uploaded&user=',
+                'user_collections.php?mode=uploaded&user='
+            );
+            $Cbucket->links['user_fav_collections'] = array(
+                'user_collections.php?mode=favorite&user=',
+                'user_collections.php?mode=favorite&user='
+            );
+		}
 	}
 		
 	/**

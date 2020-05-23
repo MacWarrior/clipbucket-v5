@@ -43,4 +43,5 @@ global $Smarty;
 $Smarty->register_function('get_announcement','get_announcement');
 
 register_anchor_function('global_announcement','global');
+
 add_admin_menu('Plugin Manager','Announcement',PLUG_URL.'/global_announcement/edit_announcement.php');

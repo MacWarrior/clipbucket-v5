@@ -44,6 +44,7 @@ class CBvideo extends CBCategory
 		$this->use_sub_cats = TRUE;
 		$this->init_actions();
 		$this->init_collections();
+        $this->init_admin_menu();
 		
 		if(config('vid_cat_height'))
 			$this->cat_thumb_height = config('vid_cat_height');
@@ -65,6 +66,51 @@ class CBvideo extends CBCategory
 
         $cb_columns->object( 'videos' )->register_columns( $basic_fields );
 	}
+
+    function init_admin_menu()
+    {
+        global $Cbucket,$userquery;
+        $per = $userquery->get_user_level(userid());
+
+        if($per['video_moderation'] == "yes" && isSectionEnabled('videos') ) {
+            $menu_video = array(
+                'title' => 'Videos'
+                ,'class' => 'glyphicon glyphicon-facetime-video'
+                ,'sub' => array(
+                    array(
+                        'title' => 'Videos Manager'
+                        ,'url' => ADMIN_BASEURL.'/video_manager.php'
+                    )
+                    ,array(
+                        'title' => 'Manage Playlists'
+                        ,'url' => ADMIN_BASEURL.'/manage_playlist.php'
+                    )
+                    ,array(
+                        'title' => 'Manage Categories'
+                        ,'url' => ADMIN_BASEURL.'/category.php'
+                    )
+                    ,array(
+                        'title' => 'List Flagged Videos'
+                        ,'url' => ADMIN_BASEURL.'/flagged_videos.php'
+                    )
+                    ,array(
+                        'title' => 'Mass Upload Videos'
+                        ,'url' => ADMIN_BASEURL.'/mass_uploader.php'
+                    )
+                    ,array(
+                        'title' => 'List Inactive Videos'
+                        ,'url' => ADMIN_BASEURL.'/video_manager.php?search=search&active=no'
+                    )
+                    ,array(
+                        'title' => 'Notification settings'
+                        ,'url' => ADMIN_BASEURL.'/notification_settings.php'
+                    )
+                )
+            );
+
+            $Cbucket->addMenuAdmin($menu_video, 70);
+        }
+    }
 
     /**
      * @return array

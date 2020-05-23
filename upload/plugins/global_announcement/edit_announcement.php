@@ -1,7 +1,7 @@
 <?php
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'Plugin Manager', 'url' => '');
-	$breadcrumb[1] = array('title' => 'Edit Announcement', 'url' => PLUG_URL.'/global_announcement/edit_announcement.php');
+	$breadcrumb[1] = array('title' => 'Announcement', 'url' => PLUG_URL.'/global_announcement/edit_announcement.php');
 
 	require_once '../../includes/admin_config.php';
 	$userquery->admin_login_check();

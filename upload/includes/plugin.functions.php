@@ -143,8 +143,6 @@ function register_anchor_function($name,$type=NULL)
 function add_admin_menu($header,$name,$link,$plug_folder=false,$is_player_file=false)
 {
     global $Cbucket;
-    //Get Menu
-    $menu = $Cbucket->AdminMenu;
 
     if($plug_folder){
         $link = 'plugin.php?folder='.$plug_folder.'&file='.$link;
@@ -153,9 +151,18 @@ function add_admin_menu($header,$name,$link,$plug_folder=false,$is_player_file=f
         $link .= '&player=true';
     }
 
-    //Add New Menu
-    $menu[$header][$name] = $link;
-    $Cbucket->AdminMenu = $menu;
+    $menu_plugin = array(
+        'title' => $header
+        ,'class' => ''
+        ,'sub' => array(
+            array(
+                'title' => $name
+                ,'url' => $link
+            )
+        )
+    );
+
+    $Cbucket->addMenuAdmin($menu_plugin);
 }
 
 /**

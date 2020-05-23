@@ -1,75 +1,32 @@
-{$adminMenu = $Cbucket->AdminMenu}
-
 <ul class="nav nav-list" id="sidebar">
-    <li {if $breadcrumb[0]['title'] == 'Dashboard'}class="active open"{/if}>
-        <a href="{ADMIN_BASEURL}/index.php">
-            <i class="icon-dashboard"></i>
-            <span class="menu-text"> Dashboard </span>
-        </a>
-    </li>
-    {foreach from=$adminMenu key=name item=oneMenuItem}
-		{if $name=='Advertisement' && !config("enable_advertisement")}
-			{continue}
-		{/if}
-
-		{$class='glyphicon glyphicon-stats'}
-		{if $name=='General Configurations'}
-			{$class='glyphicon glyphicon-stats'}
-		{elseif $name=='Videos'}
-			{$class='glyphicon glyphicon-facetime-video'}
-		{/if}
-		{if $name=='Users'}
-			{$class='glyphicon glyphicon-user'}
-		{elseif $name=='Groups'}
-			{$class='glyphicon glyphicon-th-large'}
-		{/if}
-		{if $name=='Advertisement'}
-			{$class='glyphicon glyphicon-bullhorn'}
-		{elseif $name=='Templates And Players'}
-			{$class='glyphicon glyphicon-play-circle'}
-		{/if}
-		{if $name=='Plugin Manager'}
-			{$class='glyphicon glyphicon-tasks'}
-		{elseif $name=='Tool Box'}
-			{$class='glyphicon glyphicon-wrench'}
-		{/if}
-		{if $name=='Collections'}
-			{$class='glyphicon glyphicon-folder-close'}
-		{elseif $name=='Photos'}
-			{$class='glyphicon glyphicon-picture'}
-		{/if}
-		{if $name=='Global Announcement'}
-			{$class='glyphicon glyphicon-globe'}
-		{elseif $name=='ClipBucket Helper'}
-			{$class='glyphicon glyphicon-header'}
-		{/if}
-		{if $name=='Audio'}
-			{$class='glyphicon glyphicon-music'}
-		{/if}
-		{if $name=='CB Issues Manager'}
-			{$class='glyphicon glyphicon-list-alt'}
-		{/if}
-
-	<li {if $breadcrumb[0]['title'] == $name}class="active open"{/if}>
+	{foreach from=$Cbucket->AdminMenu item=menu}
+	<li {if $breadcrumb[0]['title'] == $menu['title']}class="active open"{/if}>
+		{if isset($menu['url'])}
+			<a href="{$menu['url']}">
+				<i class="{$menu['class']}"></i>
+				<span class="menu-text">{$menu['title']}</span>
+			</a>
+		{else}
 		<a href="#" class="dropdown-toggle">
-			<i class="{$class}"></i>
-			<span class="menu-text"> {$name} </span>
+			<i class="{$menu['class']}"></i>
+			<span class="menu-text"> {$menu['title']} </span>
 			<b class="arrow icon-angle-down"></b>
 		</a>
 
-		<ul class="submenu" {if $breadcrumb[0]["title"] == $name}style="display:block;"{/if}>
+		<ul class="submenu" {if $breadcrumb[0]["title"] == $menu['title']}style="display:block;"{/if}>
 
-		{foreach from=$oneMenuItem key=name item=oneSubMenuItem}
-			<li {if $breadcrumb[1]['title'] == $name}class="active"{/if}>
-				<a href="{$oneSubMenuItem}">
-					<i class="glyphicon glyphicon-hand-right"></i>
-					{$name}
-				</a>
+			{foreach from=$menu['sub'] item=subMenu}
+			<li {if $breadcrumb[1]['title'] == $subMenu['title']}class="active"{/if}>
+			<a href="{$subMenu['url']}">
+				<i class="glyphicon glyphicon-hand-right"></i>
+				{$subMenu['title']}
+			</a>
 			</li>
-		{/foreach}
+			{/foreach}
 		</ul>
+		{/if}
+	</li>
 	{/foreach}
-    </li>
 </ul>
 <div id="sidebar-collapse" class="sidebar-collapse">
     <i data-icon2="icon-double-angle-right" data-icon1="icon-double-angle-left" class="icon-double-angle-left"></i>

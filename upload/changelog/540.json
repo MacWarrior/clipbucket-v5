@@ -1,6 +1,6 @@
 {
   "version":"5.4.0",
-  "revision": "12",
+  "revision": "13",
   "status":"dev",
   "detail":[
     {
@@ -28,6 +28,7 @@
       "description":[
         "Update admin URLs"
         ,"Fix url"
+        ,"Refactor and reorder menus"
       ]
     }
     ,{

@@ -383,9 +383,7 @@ define("ALLOWED_GROUP_CATEGORIES",$row['grp_categories']);
 define('ALLOWED_VDO_CATS',$row['video_categories']);
 define('ALLOWED_CATEGORIES',3);
 
-if($Cbucket->LatestAdminMenu()){
-    $Cbucket->AdminMenu = array_merge($Cbucket->LatestAdminMenu(),$Cbucket->AdminMenu);
-}
+$ClipBucket->initAdminMenu();
 
 # Assigning Smarty Tags & Values
 Assign('CB_VERSION',CB_VERSION);
@@ -446,17 +444,18 @@ Assign('LANG',$LANG);
 Assign('langf',getConstant('LANG'));
 Assign('lang_count',(isset($languages)) ? count($languages) : false);
 
-# Configration of time formate
+# Configuration of time format
 $config['date'] = '%I:%M %p';
 $config['time'] = '%H:%M';
 assign('config', $config);
 # Assign Player Div Id
 Assign('player_div_id',$row['player_div_id']);
 
-# Asigning Page
+# Assigning Page
 Assign('page',getConstant('PAGE'));
 
 # REGISTER OBJECTS FOR SMARTY
+global $Smarty;
 $Smarty->assign_by_ref('pages', $pages);
 $Smarty->assign_by_ref('myquery', $myquery);
 $Smarty->assign_by_ref('userquery', $userquery);
@@ -481,7 +480,7 @@ $Smarty->assign_by_ref('cbcollection',$cbcollection);
 $Smarty->assign_by_ref('cbphoto',$cbphoto);
 $Smarty->assign_by_ref('cbfeeds',$cbfeeds);
 
-# REGISERTING FUNCTION FOR SMARTY TEMPLATES
+# REGISTERING FUNCTION FOR SMARTY TEMPLATES
 function show_video_rating($params){ global $cbvid; return $cbvid->show_video_rating($params); }
 
 $Smarty->register_function('AD','getAd');
@@ -535,7 +534,6 @@ $Smarty->register_modifier('SetTime','SetTime');
 $Smarty->register_modifier('getname','getname');
 $Smarty->register_modifier('getext','getext');
 $Smarty->register_modifier('form_val','form_val');
-//$Smarty->register_modifier('get_from_val','get_from_val');
 $Smarty->register_modifier('post_form_val','post_form_val');
 $Smarty->register_modifier('request_form_val','request_form_val');
 $Smarty->register_modifier('get_thumb_num','get_thumb_num');

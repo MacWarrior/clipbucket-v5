@@ -196,21 +196,45 @@ class CBPhotos
 	function photos_admin_menu()
 	{
 		global $Cbucket,$userquery;
-		$am = $Cbucket->AdminMenu;
 		$per = $userquery->get_user_level(userid());
 
-		if($per['photos_moderation'] == "yes"){
-            $am['Photos'] = array(
-                'Photo Manager' => ADMIN_BASEURL.'/photo_manager.php',
-                'Inactive Photos' => ADMIN_BASEURL.'/photo_manager.php?search=search&active=no',
-                'Flagged Photos' => ADMIN_BASEURL.'/flagged_photos.php',
-                'Orphan Photos' => ADMIN_BASEURL.'/orphan_photos.php',
-                'Photo Settings' => ADMIN_BASEURL.'/photo_settings.php',
-                'Watermark Settings' => ADMIN_BASEURL.'/photo_settings.php?mode=watermark_settings',
-                'Recreate Thumbs' => ADMIN_BASEURL.'/recreate_thumbs.php?mode=mass'
+		if($per['photos_moderation'] == "yes" && isSectionEnabled('photos')){
+            $menu_photo = array(
+                'title' => 'Photos'
+                ,'class' => 'glyphicon glyphicon-picture'
+                ,'sub' => array(
+                    array(
+                        'title' => 'Photo Manager'
+                        ,'url' => ADMIN_BASEURL.'/photo_manager.php'
+                    )
+                    ,array(
+                        'title' => 'Inactive Photos'
+                        ,'url' => ADMIN_BASEURL.'/photo_manager.php?search=search&active=no'
+                    )
+                    ,array(
+                        'title' => 'Flagged Photos'
+                        ,'url' => ADMIN_BASEURL.'/flagged_photos.php'
+                    )
+                    ,array(
+                        'title' => 'Orphan Photos'
+                        ,'url' => ADMIN_BASEURL.'/orphan_photos.php'
+                    )
+                    ,array(
+                        'title' => 'Photo Settings'
+                        ,'url' => ADMIN_BASEURL.'/photo_settings.php'
+                    )
+                    ,array(
+                        'title' => 'Watermark Settings'
+                        ,'url' => ADMIN_BASEURL.'/photo_settings.php?mode=watermark_settings'
+                    )
+                    ,array(
+                        'title' => 'Recreate Thumbs'
+                        ,'url' => ADMIN_BASEURL.'/recreate_thumbs.php?mode=mass'
+                    )
+                )
             );
+            $Cbucket->addMenuAdmin($menu_photo, 90);
         }
-		$Cbucket->AdminMenu = $am;					  	
 	}
 
 	/**
