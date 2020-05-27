@@ -9,8 +9,6 @@
 			</div>
 			{/if}
 			
-			<h1>Videos List</h1>
-			
 			{$categories = pullCategories()}
 			
 			{assign var=sorting_links value=sorting_links()}
@@ -34,7 +32,7 @@
 						<ul class="dropdown-menu">
 							{foreach from=$sorting_links item=name key=sort}
 							<li>
-								<a href="{link name=sort sort=$sort type=videos}&sorting=sort" {if $smarty.get.sort==$sort} class="selected" {/if}>{if $smarty.get.sort==$sort}<i class="icon-tick"></i>{/if}{$name}</a>
+								<a href="{link name=sort sort=$sort type=videos}&sorting=sort" {if $smarty.get.sort==$sort} class="selected" {/if}>{if $smarty.get.sort==$sort}<i class="icon-tick"></i>{/if}{$name}{if $smarty.get.sort==$sort}{$selectedname=$name}{/if}</a>
 							</li>
 							{/foreach}
 						</ul>
@@ -64,6 +62,19 @@
 				</div>
 			</div>
 
+			{$category = $smarty.get.cat}
+			{if $category != 'All' && is_numeric($category)} 
+				{if $smarty.const.THIS_PAGE == 'videos'}
+					{$catname = $cbvid->get_category_name($category)}
+					{$nowdo = "videos"}
+				{/if}
+				{$catname = $catname.category_name}
+			{else}
+				{$catname = 'All'}
+			{/if}
+
+			<h1>{$catname} {$selectedname} Videos</h1>
+			
 			<div class="clearfix row">
 			{if $videos}
 				{foreach $videos as $video}
