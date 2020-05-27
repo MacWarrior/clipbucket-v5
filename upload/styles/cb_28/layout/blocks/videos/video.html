@@ -1,15 +1,15 @@
 {if $display_type=='popVideos_sidebar'}
 <div class="featured-video clearfix">
 	<div class="video_thumb">
-		<a href="{videoLink($pop_video)}">
-			<img src="{getThumb vdetails=$pop_video size=168x105}" {ANCHOR place="video_thumb" data=$pop_video} class="img-responsive">
+		<a href="{videoLink($pop_video)}" title="{$video.title|title}">
+			<img src="{getThumb vdetails=$pop_video size=168x105}" alt="{$video.title|title}" {ANCHOR place="video_thumb" data=$pop_video} class="img-responsive">
 			<time datetime="2016-15-03" class="duration">{if $pop_video.duration>1}{$pop_video.duration|SetTime}{else}00:00{/if}</time>
 		</a>
 		<img src="{$theme}/images/thumb-ratio.png" class="thumb-ratio" alt="">
 	</div> <!--VIDEO_THUMB END-->
 	
 	<div class="details_block">
-		<strong class="title"><a href="{videoLink($pop_video)}">{display_clean($pop_video.title|truncate:50)}</a></strong>
+		<strong class="title"><a href="{videoLink($pop_video)}" title="{$video.title|title}">{display_clean($pop_video.title|truncate:50)}</a></strong>
 
 		<span class="author">{lang code="by"}
 		{if isSectionEnabled('channels')}
@@ -29,7 +29,7 @@
 {if $display_type=='homeVideos'}
 	<div class="clearfix thumb-holder userAppending">
 		<a class="video-link" href="{videoLink($video)}" title="{display_clean($video.title)|title}">
-			<img class="img-responsive" src="{getThumb vdetails=$video size=416x260 }">
+			<img class="img-responsive" src="{getThumb vdetails=$video size=416x260 }" alt="{$video.title|title}">
 		</a>
 		<img src="{$theme}/images/thumb-ratio.png" class="thumb-ratio" alt="{$video.broadcast}">
 
@@ -41,7 +41,7 @@
 		
 	</div>
 	<div class="clearfix video-info">
-		<h2 class="title"><a href="{videoLink($video)}">{display_clean($video.title|truncate:50)}</a></h2>
+		<h2 class="title"><a href="{videoLink($video)}" title="{$video.title|title}">{display_clean($video.title|truncate:50)}</a></h2>
 
 		<span class="author">{lang code="by"}
 			{if isSectionEnabled('channels')}
@@ -171,7 +171,7 @@
 		
 	</div>
 	<div class="clearfix video-info">
-		<h2 class="title"><a href="{videoLink($video)}">{display_clean($video.title|truncate:50)}</a></h2>
+		<h2 class="title"><a href="{videoLink($video)}" title="{$video.title|title}">{display_clean($video.title|truncate:50)}</a></h2>
 		<span class="author">{lang code="by"}
 			{if isSectionEnabled('channels')}
 				<a href="{$userquery->profile_link($video)}">{display_clean($video.username)}</a>
