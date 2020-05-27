@@ -34,10 +34,11 @@
             {ANCHOR place='seo_ninja'}
         {else}
         	<meta name="keywords" content="{$Cbucket->configs.keywords}">
-			<meta name="description" content="{$Cbucket->configs.description}">
-			<meta name="distribution" content="global">
-
-			<title>{cbtitle}</title>
+		<meta name="description" content="{$Cbucket->configs.description}">
+		<meta name="distribution" content="global">
+		{if $this_page == 'view_channel'}<meta name="description" content="{if !$p.profile_desc}The {$user_s_channel}is my personal space here. Visit me!{else}{$p.profile_desc}{/if}">{/if}
+		
+		<title>{cbtitle}</title>
         {/if}
 
 		<link rel="stylesheet" href="{$theme}/css/bootstrap.min.css?cache={$cache_buster}">
