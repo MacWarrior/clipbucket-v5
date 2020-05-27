@@ -148,7 +148,7 @@
 {if $display_type=='user-videos'}
 <div class="clearfix thumb-holder userAppending">
 	<a class="video-link" href="{videoLink($video)}" title="{display_clean($video.title)|title}">
-		<img class="img-responsive" src="{getThumb vdetails=$video size=416x260 }">
+		<img class="img-responsive" src="{getThumb vdetails=$video size=416x260 }" alt="{$video.title|title}">
 	</a>
 	<img src="{$theme}/images/thumb-ratio.png" class="thumb-ratio" alt="{$video.broadcast}">
 
@@ -160,11 +160,11 @@ class="icon-plus2 cb_quickie cb-btn-quick-{$video.videoid} {if in_array($video.v
 	
 </div>
 <div class="clearfix video-info">
-	<h2 class="title"><a href="{videoLink($video)}">{display_clean($video.title|truncate:50)}</a></h2>
+	<h2 class="title"><a href="{videoLink($video)}" title="{$video.title|title}">{display_clean($video.title|truncate:50)}</a></h2>
 
 	<span class="author">{lang code="by"}
 	{if isSectionEnabled('channels')}
-		<a href="{$userquery->profile_link($video)}">{display_clean($video.username)}</a>
+		<a href="{$userquery->profile_link($video)}" title="{$video.username}">{display_clean($video.username)}</a>
 	{else}
 		{display_clean($video.username)}
 	{/if}
