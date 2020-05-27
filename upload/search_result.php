@@ -102,7 +102,7 @@
 		if ($squery == 'clipbucket') {
 			subtitle("Awesomeness...!!");
 		} else {
-			subtitle($search->search_type[$type]['title'].' &raquo; '.$squery);
+			subtitle($search->search_type[$type]['title'].' : '.$squery);
 		}
 	}
 
