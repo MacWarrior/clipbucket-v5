@@ -30,7 +30,7 @@
 						<ul class="dropdown-menu">
 							{foreach from=$sorting_links item=name key=sort}
 							<li>
-								<a href="{link name=sort sort=$sort type=channels}&sorting=sort" {if $smarty.get.sort==$sort} class="selected" {/if}>{if $smarty.get.sort==$sort}<i class="icon-tick"></i>{/if}{$name}</a>
+								<a href="{link name=sort sort=$sort type=channels}&sorting=sort" {if $smarty.get.sort==$sort} class="selected" {/if}>{if $smarty.get.sort==$sort}<i class="icon-tick"></i>{/if}{$name}{if $smarty.get.sort==$sort}{$selectedview=$name}{/if}</a>
 							</li>
 							{/foreach}
 						</ul>
@@ -52,13 +52,16 @@
 						  <ul class="dropdown-menu">
 							{foreach from=$time_links item=name key=sort name=times}
 								<li>
-									<a href="{link name=time sort=$sort type=channels}&timing=time" {if $smarty.get.time==$sort} class="selected"{/if}>{if $smarty.get.time==$sort}<i class="icon-tick"></i>{/if}{$name}</a>
+									<a href="{link name=time sort=$sort type=channels}&timing=time" {if $smarty.get.time==$sort} class="selected"{/if}>{if $smarty.get.time==$sort}<i class="icon-tick"></i>{/if}{$name}{if $smarty.get.time==$sort}{$selectedtime=$name}{/if}</a>  
 								</li>
 							{/foreach}
 						  </ul>
 					</div>
 				</div>
 			</div>
+			
+			<h1>{$catname} | {$selectedview} | {$selectedtime} | Channels</h1>
+			
 			<div class="clearfix row">
 				{if $users}
 				{foreach $users as $user}
