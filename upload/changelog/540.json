@@ -1,6 +1,6 @@
 {
   "version":"5.4.0",
-  "revision": "19",
+  "revision": "20",
   "status":"dev",
   "detail":[
     {
@@ -33,6 +33,7 @@
         "Update admin URLs"
         ,"Fix url"
         ,"Refactor and reorder menus"
+        ,"Fix mass upload template"
       ]
     }
     ,{
