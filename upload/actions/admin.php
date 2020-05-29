@@ -38,14 +38,18 @@ switch($mode)
 				$userquery->update_comments_count($type_id);
 			    break;
 		}
-		if(msg()) {
-			$msg = msg_list();
-			$msg = $msg[0];
-		}
-		if(error()) {
-			$err = error_list();
-			$err = $err[0];
-		}
+        $error = $eh->get_error();
+        $warning = $eh->get_warning();
+        $message = $eh->get_message();
+
+        if( $error ){
+            $err = $error[0]['val'];
+        } else if( $warning ) {
+            $err = $warning[0]['val'];
+        }
+        if( $message ) {
+            $msg = $message[0]['val'];
+        }
 
 		$ajax['msg'] = $msg;
 		$ajax['err'] = $err;
@@ -57,14 +61,18 @@ switch($mode)
 		$cid = mysql_clean($_POST['cid']);
 
 		$rating = $myquery->spam_comment($cid);
-		if(msg()) {
-			$msg = msg_list();
-			$msg = $msg[0];
-		}
-		if(error()) {
-			$err = error_list();
-			$err = $err[0];
-		}
+        $error = $eh->get_error();
+        $warning = $eh->get_warning();
+        $message = $eh->get_message();
+
+        if( $error ){
+            $err = $error[0]['val'];
+        } else if( $warning ) {
+            $err = $warning[0]['val'];
+        }
+        if( $message ) {
+            $msg = $message[0]['val'];
+        }
 
 		$ajax['msg'] = $msg;
 		$ajax['err'] = $err;
@@ -76,14 +84,18 @@ switch($mode)
 		$cid = mysql_clean($_POST['cid']);
 
 		$rating = $myquery->remove_spam($cid);
-		if(msg()) {
-			$msg = msg_list();
-			$msg = $msg[0];
-		}
-		if(error()) {
-			$err = error_list();
-			$err = $err[0];
-		}
+        $error = $eh->get_error();
+        $warning = $eh->get_warning();
+        $message = $eh->get_message();
+
+        if( $error ){
+            $err = $error[0]['val'];
+        } else if( $warning ) {
+            $err = $warning[0]['val'];
+        }
+        if( $message ) {
+            $msg = $message[0]['val'];
+        }
 
 		$ajax['msg'] = $msg;
 		$ajax['err'] = $err;

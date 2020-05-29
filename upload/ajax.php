@@ -170,10 +170,8 @@
 						$cbvid->show_video_rating($result);
 
 						$funcs = cb_get_functions('rate_video');
-						if($funcs)
-						{
-							foreach($funcs as $func)
-							{
+						if($funcs) {
+							foreach($funcs as $func) {
 								$func['func']($id);
 							}
 						}
@@ -187,10 +185,8 @@
 						$cbvid->show_video_rating($result);
 
 						$funcs = cb_get_functions('rate_photo');
-						if($funcs)
-						{
-							foreach($funcs as $func)
-							{
+						if($funcs) {
+							foreach($funcs as $func) {
 								$func['func']($id);
 							}
 						}
@@ -204,10 +200,8 @@
 						$cbvid->show_video_rating($result);
 
 						$funcs = cb_get_functions('rate_collection');
-						if($funcs)
-						{
-							foreach($funcs as $func)
-							{
+						if($funcs) {
+							foreach($funcs as $func) {
 								$func['func']($id);
 							}
 						}
@@ -221,10 +215,8 @@
 						$cbvid->show_video_rating($result);
 
 						$funcs = cb_get_functions('rate_user');
-						if($funcs)
-						{
-							foreach($funcs as $func)
-							{
+						if($funcs) {
+							foreach($funcs as $func) {
 								$func['func']($id);
 							}
 						}
@@ -243,18 +235,6 @@
 						$vdo = $cbvid->get_video($id);
 						$cbvid->set_share_email($vdo);
 						$cbvid->action->share_content($vdo['videoid']);
-						if(msg())
-						{
-							$msg = msg_list();
-							$msg = '<div class="msg">'.$msg[0].'</div>';
-						}
-						if(error())
-						{
-							$msg = error_list();
-							$msg = '<div class="error">'.$msg[0].'</div>';
-						}
-
-						echo $msg;
 						break;
 
 					case "p":
@@ -262,18 +242,6 @@
 						$ph = $cbphoto->get_photo($_POST['id']);
 						$cbphoto->set_share_email($ph);
 						$cbphoto->action->share_content($ph['photo_id']);
-						if(msg())
-						{
-							$msg = msg_list();
-							$msg = '<div class="msg">'.$msg[0].'</div>';
-						}
-						if(error())
-						{
-							$msg = error_list();
-							$msg = '<div class="error">'.$msg[0].'</div>';
-						}
-
-						echo $msg;
 						break;
 
 					case "cl":
@@ -281,107 +249,66 @@
 						$cl = $cbcollection->get_collection($_POST['id']);
 						$cbcollection->set_share_mail($cl);
 						$cbcollection->action->share_content($cl['collection_id']);
-						if(msg())
-						{
-							$msg = msg_list();
-							$msg = '<div class="msg">'.$msg[0].'</div>';
-						}
-						if(error())
-						{
-							$msg = error_list();
-							$msg = '<div class="error">'.$msg[0].'</div>';
-						}
-
-						echo $msg;
 						break;
 				}
-				break;
 
+                $error = $eh->get_error();
+                $warning = $eh->get_warning();
+                $message = $eh->get_message();
+
+                if( $error ){
+                    echo '<div class="error">'.$error[0]['val'].'</div>';
+                } else if( $warning ) {
+                    echo '<div class="warning">'.$warning[0]['val'].'</div>';
+                } else if( $message ) {
+                    echo '<div class="msg">'.$message[0]['val'].'</div>';
+                }
+				break;
 
 			case 'add_to_fav':
 				$type = strtolower($_POST['type']);
+                $id = $_POST['id'];
 				switch($type)
 				{
 					case 'v':
 					case 'video':
 					default:
-						$id = $_POST['id'];
 						$cbvideo->action->add_to_fav($id);
 						updateObjectStats('fav','video',$id); // Increment in total favs
-
-						if(error())
-						{
-							$msg = error_list();
-							$msg = '<div class="error">'.$msg[0].'</div>';
-						} else if(msg()) {
-							$msg = msg_list();
-							$msg = '<div class="msg">'.$msg[0].'</div>';
-						}
-
 						$funcs = cb_get_functions('favorite_video');
-						if($funcs)
-						{
-							foreach($funcs as $func)
-							{
-								$func['func']($id);
-							}
-						}
-						echo $msg;
 						break;
 
 					case 'p':
 					case 'photo':
-						$id = $_POST['id'];
 						$cbphoto->action->add_to_fav($id);
 						updateObjectStats('fav','photo',$id); // Increment in total favs
-
-						if(error())
-						{
-							$msg = error_list();
-							$msg = '<div class="error">'.$msg[0].'</div>';
-						} else if(msg()) {
-							$msg = msg_list();
-							$msg = '<div class="msg">'.$msg[0].'</div>';
-						}
-
 						$funcs = cb_get_functions('favorite_photo');
-						if($funcs)
-						{
-							foreach($funcs as $func)
-							{
-								$func['func']($id);
-							}
-						}
-
-						echo $msg;
 						break;
 
 					case "cl":
 					case "collection":
-						$id = $_POST['id'];
 						$cbcollection->action->add_to_fav($id);
-
-						if(error())
-						{
-							$msg = error_list();
-							$msg = '<div class="error">'.$msg[0].'</div>';
-						} else if(msg()) {
-							$msg = msg_list();
-							$msg = '<div class="msg">'.$msg[0].'</div>';
-						}
-
 						$funcs = cb_get_functions('favorite_collection');
-						if($funcs)
-						{
-							foreach($funcs as $func)
-							{
-								$func['func']($id);
-							}
-						}
-
-						echo $msg;
 						break;
 				}
+
+                if($funcs) {
+                    foreach($funcs as $func) {
+                        $func['func']($id);
+                    }
+                }
+
+                $error = $eh->get_error();
+                $warning = $eh->get_warning();
+                $message = $eh->get_message();
+
+                if( $error ){
+                    echo '<div class="error">'.$error[0]['val'].'</div>';
+                } else if( $warning ) {
+                    echo '<div class="warning">'.$warning[0]['val'].'</div>';
+                } else if( $message ) {
+                    echo '<div class="msg">'.$message[0]['val'].'</div>';
+                }
 				break;
 
 			case 'flag_object':
@@ -411,15 +338,17 @@
 						break;
 				}
 
-				if(error())
-				{
-					$msg = error_list();
-					$msg = '<div class="error">'.$msg[0].'</div>';
-				} else if(msg()) {
-					$msg = msg_list();
-					$msg = '<div class="msg">'.$msg[0].'</div>';
-				}
-				echo $msg;
+                $error = $eh->get_error();
+                $warning = $eh->get_warning();
+                $message = $eh->get_message();
+
+                if( $error ){
+                    echo '<div class="error">'.$error[0]['val'].'</div>';
+                } else if( $warning ) {
+                    echo '<div class="warning">'.$warning[0]['val'].'</div>';
+                } else if( $message ) {
+                    echo '<div class="msg">'.$message[0]['val'].'</div>';
+                }
 				break;
 
 			case 'subscribe_user':
@@ -427,26 +356,23 @@
 				$mailId = $userquery->get_user_details($subscribe_to,false,true);
 				$userquery->subscribe_user($subscribe_to);
 
-				if( !empty(error_list()) )
-				{
-				    $error = $eh->get_error();
-				    $warning = $eh->get_warning();
-				    $message = $eh->get_message();
+                $error = $eh->get_error();
+                $warning = $eh->get_warning();
+                $message = $eh->get_message();
 
-				    if( $error ){
-				        $msg['msg'] = $error[0];
-                        $msg['typ'] = 'err';
-                    } else if( $warning ) {
-                        $msg['msg'] = $warning[0];
-                        $msg['typ'] = 'err';
-                    } else if( $message ) {
-                        $msg['msg'] = $message[0];
-                        $msg['typ'] = 'msg';
-                    }
+                if( $error ){
+                    $msg['msg'] = $error[0]['val'];
+                    $msg['typ'] = 'err';
+                } else if( $warning ) {
+                    $msg['msg'] = $warning[0]['val'];
+                    $msg['typ'] = 'err';
+                } else if( $message ) {
+                    $msg['msg'] = $message[0]['val'];
+                    $msg['typ'] = 'msg';
+                }
 
-					$msg['severity'] = userid() ? 1 : 2;
-					$msg = json_encode($msg);
-				}
+                $msg['severity'] = userid() ? 1 : 2;
+                $msg = json_encode($msg);
 				echo $msg;
 				break;
 
@@ -454,26 +380,23 @@
 				$subscribe_to = mysql_clean($_POST['subscribe_to']);
 				$userquery->unsubscribe_user($subscribe_to);
 
-                if( !empty(error_list()) )
-                {
-                    $error = $eh->get_error();
-                    $warning = $eh->get_warning();
-                    $message = $eh->get_message();
+                $error = $eh->get_error();
+                $warning = $eh->get_warning();
+                $message = $eh->get_message();
 
-                    if( $error ){
-                        $msg['msg'] = $error[0];
-                        $msg['typ'] = 'err';
-                    } else if( $warning ) {
-                        $msg['msg'] = $warning[0];
-                        $msg['typ'] = 'err';
-                    } else if( $message ) {
-                        $msg['msg'] = $message[0];
-                        $msg['typ'] = 'msg';
-                    }
-
-                    $msg['severity'] = userid() ? 1 : 2;
-                    $msg = json_encode($msg);
+                if( $error ){
+                    $msg['msg'] = $error[0]['val'];
+                    $msg['typ'] = 'err';
+                } else if( $warning ) {
+                    $msg['msg'] = $warning[0]['val'];
+                    $msg['typ'] = 'err';
+                } else if( $message ) {
+                    $msg['msg'] = $message[0]['val'];
+                    $msg['typ'] = 'msg';
                 }
+
+                $msg['severity'] = userid() ? 1 : 2;
+                $msg = json_encode($msg);
 
 				echo $msg;
 				break;
@@ -496,18 +419,19 @@
 				$mailId = $userquery->get_user_details($friend,false,true);
 				$cbemail->friend_request_email($mailId['email'],$username);
 
-				if($userid)
-				{
+				if($userid) {
 					$userquery->add_contact($userid,$friend);
-					if(error())
-					{
-						$msg = error_list();
-						$msg = '<div class="error">'.$msg[0].'</div>';
-					} else if(msg()) {
-						$msg = msg_list();
-						$msg = '<div class="msg">'.$msg[0].'</div>';
-					}
-					echo $msg;
+                    $error = $eh->get_error();
+                    $warning = $eh->get_warning();
+                    $message = $eh->get_message();
+
+                    if( $error ){
+                        echo '<div class="error">'.$error[0]['val'].'</div>';
+                    } else if( $warning ) {
+                        echo '<div class="warning">'.$warning[0]['val'].'</div>';
+                    } else if( $message ) {
+                        echo '<div class="msg">'.$message[0]['val'].'</div>';
+                    }
 				} else {
 					echo '<div class="error">'.e(lang('you_not_logged_in')).'</div>';
 				}
@@ -516,14 +440,17 @@
 			case 'ban_user':
 				$user = $_POST['user'];
 				$userquery->ban_user($user);
-				if(error())
-				{
-					$msg = error_list();
-					$msg = '<div class="error">'.$msg[0].'</div>';
-				} else if(msg()) {
-					$msg = msg_list();
-					$msg = '<div class="msg">'.$msg[0].'</div>';
-				}
+                $error = $eh->get_error();
+                $warning = $eh->get_warning();
+                $message = $eh->get_message();
+
+                if( $error ){
+                    echo '<div class="error">'.$error[0]['val'].'</div>';
+                } else if( $warning ) {
+                    echo '<div class="warning">'.$warning[0]['val'].'</div>';
+                } else if( $message ) {
+                    echo '<div class="msg">'.$message[0]['val'].'</div>';
+                }
 				echo $msg;
 				break;
 
@@ -533,14 +460,17 @@
 				$rate = ($thumb == 'down') ? -1 : 1;
 				$rating = $myquery->rate_comment($rate,$cid);
 
-				if(error())
-				{
-					$msg = error_list();
-					$msg = $msg[0];
-				} else if(msg()) {
-					$msg = msg_list();
-					$msg = $msg[0];
-				}
+                $error = $eh->get_error();
+                $warning = $eh->get_warning();
+                $message = $eh->get_message();
+
+                if( $error ){
+                    echo '<div class="error">'.$error[0]['val'].'</div>';
+                } else if( $warning ) {
+                    echo '<div class="warning">'.$warning[0]['val'].'</div>';
+                } else if( $message ) {
+                    echo '<div class="msg">'.$message[0]['val'].'</div>';
+                }
 				$ajax['msg'] = $msg;
 				$ajax['rate'] = comment_rating($rating);
 
@@ -556,15 +486,16 @@
 				$cid = mysql_clean($_POST['cid']);
 
 				$rating = $myquery->spam_comment($cid);
+
 				if(msg())
 				{
 					$msg = msg_list();
-					$msg = $msg[0];
+					$msg = $msg[0]['val'];
 				}
 				if(error())
 				{
 					$err = error_list();
-					$err = $err[0];
+					$err = $err[0]['val'];
 				}
 				$ajax['msg'] = $msg;
 				$ajax['err'] = $err;
@@ -613,7 +544,7 @@
 				if(msg())
 				{
 					$msg = msg_list();
-					$msg = $msg[0];
+					$msg = $msg[0]['val'];
 					$ajax['msg'] = $msg ? $msg : '';
 					$ajax['err'] = "";
 					$is_msg = true;
@@ -621,7 +552,7 @@
 				if(error())
 				{
 					$err = error_list();
-					$err = $err[0];
+					$err = $err[0]['val'];
 					$ajax['err'] = $err;
 				}
 
@@ -668,16 +599,18 @@
 					$cbvid->action->add_playlist_item($pid,$id );
 					updateObjectStats('plist','video',$id);
 
-					if(msg())
-					{
-						$msg = msg_list();
-						$msg = '<div class="msg">'.$msg[0].'</div>';
-					}
-					if(error())
-					{
-						$err = error_list();
-						$err = '<div class="error">'.$err[0].'</div>';
-					}
+                    $error = $eh->get_error();
+                    $warning = $eh->get_warning();
+                    $message = $eh->get_message();
+
+                    if( $error ){
+                        $err = '<div class="error">'.$error[0]['val'].'</div>';
+                    } else if( $warning ) {
+                        $err = '<div class="warning">'.$warning[0]['val'].'</div>';
+                    }
+                    if( $message ) {
+                        $msg = '<div class="msg">'.$message[0]['val'].'</div>';
+                    }
 
 					$ajax['msg'] = $msg ? $msg : '';
 					$ajax['err'] = $err ? $err : '';
@@ -700,16 +633,18 @@
 						$cbvid->action->add_playlist_item($pid,$vid);
 					}
 
-					if(msg())
-					{
-						$msg = msg_list();
-						$msg = '<div class="msg">'.$msg[0].'</div>';
-					}
-					if(error())
-					{
-						$err = error_list();
-						$err = '<div class="error">'.$err[0].'</div>';
-					}
+                    $error = $eh->get_error();
+                    $warning = $eh->get_warning();
+                    $message = $eh->get_message();
+
+                    if( $error ){
+                        $err = '<div class="error">'.$error[0]['val'].'</div>';
+                    } else if( $warning ) {
+                        $err = '<div class="warning">'.$warning[0]['val'].'</div>';
+                    }
+                    if( $message ) {
+                        $msg = '<div class="msg">'.$message[0]['val'].'</div>';
+                    }
 					$ajax['msg'] = $msg ? $msg : '';
 					$ajax['err'] = $err ? $err : '';
 
@@ -765,16 +700,18 @@
 						$cbcollection->update_total_comments($type_id);
 						break;
 				}
-				if(msg())
-				{
-					$msg = msg_list();
-					$msg = $msg[0];
-				}
-				if(error())
-				{
-					$err = error_list();
-					$err = $err[0];
-				}
+                $error = $eh->get_error();
+                $warning = $eh->get_warning();
+                $message = $eh->get_message();
+
+                if( $error ){
+                    $err = $error[0]['val'];
+                } else if( $warning ) {
+                    $err = $warning[0]['val'];
+                }
+                if( $message ) {
+                    $msg = $message[0]['val'];
+                }
 				$ajax['msg'] = $msg;
 				$ajax['err'] = $err;
 
@@ -801,16 +738,18 @@
 						break;
 				}
 
-				if(msg())
-				{
-					$msg = msg_list();
-					$msg = '<div class="msg">'.$msg[0].'</div>';
-				}
-				if(error())
-				{
-					$err = error_list();
-					$err = '<div class="error">'.$err[0].'</div>';
-				}
+                $error = $eh->get_error();
+                $warning = $eh->get_warning();
+                $message = $eh->get_message();
+
+                if( $error ){
+                    $err = '<div class="error">'.$error[0]['val'].'</div>';
+                } else if( $warning ) {
+                    $err = '<div class="warning">'.$warning[0]['val'].'</div>';
+                }
+                if( $message ) {
+                    $msg = '<div class="msg">'.$message[0]['val'].'</div>';
+                }
 				$ajax['msg'] = $msg;
 				$ajax['err'] = $err;
 
@@ -828,16 +767,18 @@
 					$cbphoto->make_photo_orphan($cid,$obj_id);
 				}
 
-				if(msg())
-				{
-					$msg = msg_list();
-					$msg = '<div class="msg">'.$msg[0].'</div>';
-				}
-				if(error())
-				{
-					$err = error_list();
-					$err = '<div class="error">'.$err[0].'</div>';
-				}
+                $error = $eh->get_error();
+                $warning = $eh->get_warning();
+                $message = $eh->get_message();
+
+                if( $error ){
+                    $err = '<div class="error">'.$error[0]['val'].'</div>';
+                } else if( $warning ) {
+                    $err = '<div class="warning">'.$warning[0]['val'].'</div>';
+                }
+                if( $message ) {
+                    $msg = '<div class="msg">'.$message[0]['val'].'</div>';
+                }
 				$ajax['msg'] = $msg;
 				$ajax['err'] = $err;
 
@@ -943,13 +884,13 @@
 				if(msg())
 				{
 					$msg = msg_list();
-					$msg = $msg[0];
+					$msg = $msg[0]['val'];
 					$ajax['msg'] = $msg;
 				}
 				if(error())
 				{
 					$err = error_list();
-					$err = $err[0];
+					$err = $err[0]['val'];
 					$ajax['err'] = $err;
 				}
 
@@ -965,13 +906,13 @@
 				if(msg())
 				{
 					$msg = msg_list();
-					$msg = '<div id="photoUploadingMessages" class="ajaxMessages msg">'.$msg[0].'</div>';
+					$msg = '<div id="photoUploadingMessages" class="ajaxMessages msg">'.$msg[0]['val'].'</div>';
 					$ajax['msg'] = $msg;
 				}
 				if(error())
 				{
 					$err = error_list();
-					$err = '<div id="photoUploadingMessages" class="ajaxMessages err">'.$err[0].'</div>';
+					$err = '<div id="photoUploadingMessages" class="ajaxMessages err">'.$err[0]['val'].'</div>';
 					$ajax['err'] = $err;
 				}
 

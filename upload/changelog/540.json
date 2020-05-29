@@ -1,6 +1,6 @@
 {
   "version":"5.4.0",
-  "revision": "20",
+  "revision": "21",
   "status":"dev",
   "detail":[
     {
@@ -18,6 +18,8 @@
         ,"Fix cookies on HTTP"
         ,"Fix cookies with PHP < 7.3.0"
         ,"Update error handling to allow HTML messages"
+        ,"Fix error display"
+        ,"Fix subscribe/unsubscribe from channel <i>#126</i>"
       ]
     }
     ,{

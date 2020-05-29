@@ -57,7 +57,7 @@ if (isset($_POST['mode'])) {
                     if (!$msg){
                         $msg = "Oops ! Something went worng in Playing this video!";
                     } else {
-                        $msg = $msg[0];
+                        $msg = $msg[0]['val'];
                     }
                     $response['failure'] = true;
                     $response['message'] = $msg;

@@ -314,7 +314,7 @@ class userquery extends CBCategory{
 		{
 			//Logging Action
 			$log_array['success'] = 'no';
-			$log_array['details'] = $msg[0];
+			$log_array['details'] = $msg[0]['val'];
 			insert_log('Try to login',$log_array);
 		}
 	}
@@ -1242,8 +1242,9 @@ class userquery extends CBCategory{
      */
 	function subscribe_user($to,$user=NULL)
 	{
-		if(!$user)
+		if(!$user){
 			$user = userid();
+        }
 		global $db;
 		
 		$to_user = $this->get_user_details($to);
@@ -4238,7 +4239,7 @@ class userquery extends CBCategory{
 				{
 					//Logging Action
 					$log_array['success'] = 'no';
-					$log_array['details'] = $msg[0];
+					$log_array['details'] = $msg[0]['val'];
 					insert_log('Try to login',$log_array);
 				}
 			}

@@ -327,16 +327,24 @@
 					break;
 			}
 
-			if(msg())
-			{
-				$msg = msg_list();
-				echo json_encode(array('success'=>'yes','msg'=>$msg[0]));
-			}
-			if(error())
-			{
-				$msg = error_list();
-				echo json_encode(array('err'=>$msg[0]));
-			}
+            $error = $eh->get_error();
+            $warning = $eh->get_warning();
+            $message = $eh->get_message();
+
+            $msg = array();
+            if( $error ){
+                $msg['msg'] = $error[0]['val'];
+                $msg['typ'] = 'err';
+            } else if( $warning ) {
+                $msg['msg'] = $warning[0]['val'];
+                $msg['typ'] = 'err';
+            } else if( $message ) {
+                $msg['msg'] = $message[0]['val'];
+                $msg['typ'] = 'msg';
+                $msg['success'] = 'yes';
+            }
+
+            echo json_encode($msg);
 			break;
 
 
@@ -348,16 +356,24 @@
 			$vid = mysql_clean($vid);
 			$cbvideo->delete_video($vid);
 
-			if(error())
-			{
-				$error = error_list();
-				$the_error = $error[0];
-				echo json_encode(array('err'=>$the_error));
-			} else {
-				$msg = msg_list();
-				$the_msg = $msg[0];
-				echo json_encode(array('msg'=>$the_msg,'success'=>'yes'));
-			}
+            $error = $eh->get_error();
+            $warning = $eh->get_warning();
+            $message = $eh->get_message();
+
+            $msg = array();
+            if( $error ){
+                $msg['msg'] = $error[0]['val'];
+                $msg['typ'] = 'err';
+            } else if( $warning ) {
+                $msg['msg'] = $warning[0]['val'];
+                $msg['typ'] = 'err';
+            } else if( $message ) {
+                $msg['msg'] = $message[0]['val'];
+                $msg['typ'] = 'msg';
+                $msg['success'] = 'yes';
+            }
+
+            echo json_encode($msg);
 			break;
 
 		case "subscribe":
@@ -366,16 +382,20 @@
 			$subscribe_to = $to;
 			$userquery->subscribe_user($subscribe_to);
 
-			if(msg())
-			{
-				$msg = msg_list();
-				echo json_encode(array('msg' =>  $msg[0],'success'=>'yes'));
-			}
-			if(error())
-			{
-				$msg = error_list();
-				echo json_encode(array('err' => $msg[0]));
-			}
+            $msg = array();
+            if( $error ){
+                $msg['msg'] = $error[0]['val'];
+                $msg['typ'] = 'err';
+            } else if( $warning ) {
+                $msg['msg'] = $warning[0]['val'];
+                $msg['typ'] = 'err';
+            } else if( $message ) {
+                $msg['msg'] = $message[0]['val'];
+                $msg['typ'] = 'msg';
+                $msg['success'] = 'yes';
+            }
+
+            echo json_encode($msg);
 			break;
 
 		case "unsubscribe":
@@ -384,16 +404,20 @@
 			$subscribe_to = $to;
 			$userquery->unsubscribe_user($subscribe_to);
 
-			if(msg())
-			{
-				$msg = msg_list();
-				echo json_encode(array('msg' =>  $msg[0],'success'=>'yes'));
-			}
-			if(error())
-			{
-				$msg = error_list();
-				echo json_encode(array('err' => $msg[0]));
-			}
+            $msg = array();
+            if( $error ){
+                $msg['msg'] = $error[0]['val'];
+                $msg['typ'] = 'err';
+            } else if( $warning ) {
+                $msg['msg'] = $warning[0]['val'];
+                $msg['typ'] = 'err';
+            } else if( $message ) {
+                $msg['msg'] = $message[0]['val'];
+                $msg['typ'] = 'msg';
+                $msg['success'] = 'yes';
+            }
+
+            echo json_encode($msg);
 			break;
 
 		case "edit_video":

@@ -425,7 +425,7 @@ class myquery
 			$name = mysql_clean($_POST['name']);
 			$email = mysql_clean($_POST['email']);
 		}
-		//pr(error_list(),true);
+
 		if(empty($eh->get_error()))
 		{
 			$db->insert(
