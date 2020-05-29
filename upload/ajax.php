@@ -11,9 +11,9 @@
 	define("THIS_PAGE",'ajax');
 	$is_ajax = true;
 
-	if( isset($_POST['mode']) )
+	if( isset($_POST['mode']) ){
 		$mode = $_POST['mode'];
-	else {
+    } else {
 		header('location:'.BASEURL);
 		die();
 	}
@@ -23,14 +23,13 @@
 		switch($mode)
 		{
 			case 'recent_viewed_vids':
-				if(!isSectionEnabled('videos') || !$userquery->perm_check('view_videos',false,true) )
+				if(!isSectionEnabled('videos') || !$userquery->perm_check('view_videos',false,true) ){
 					exit();
+                }
 
 				$videos = get_videos(array('limit'=>config('videos_items_hme_page'),'order'=>'last_viewed DESC'));
-				if($videos)
-				{
-					foreach($videos as $video)
-					{
+				if($videos) {
+					foreach($videos as $video) {
 						assign('video',$video);
 						Template('blocks/video.html');
 					}
@@ -38,14 +37,13 @@
 				break;
 
 			case 'most_viewed':
-				if(!isSectionEnabled('videos') || !$userquery->perm_check('view_videos',false,true) )
+				if(!isSectionEnabled('videos') || !$userquery->perm_check('view_videos',false,true) ){
 					exit();
+                }
 
 				$videos = get_videos(array('limit'=>config('videos_items_hme_page'),'order'=>'views DESC'));
-				if($videos)
-				{
-					foreach($videos as $video)
-					{
+				if($videos) {
+					foreach($videos as $video) {
 						assign('video',$video);
 						Template('blocks/video.html');
 					}
@@ -53,14 +51,13 @@
 				break;
 
 			case 'recently_added':
-				if(!isSectionEnabled('videos') || !$userquery->perm_check('view_videos',false,true) )
+				if(!isSectionEnabled('videos') || !$userquery->perm_check('view_videos',false,true) ){
 					exit();
+                }
 
 				$videos = get_videos(array('limit'=>config('videos_items_hme_page'),'order'=>'date_added DESC'));
-				if($videos)
-				{
-					foreach($videos as $video)
-					{
+				if($videos) {
+					foreach($videos as $video) {
 						assign('video',$video);
 						Template('blocks/video.html');
 					}
@@ -68,8 +65,9 @@
 				break;
 
 			case 'featured_videos':
-				if(!isSectionEnabled('videos') || !$userquery->perm_check('view_videos',false,true) )
+				if(!isSectionEnabled('videos') || !$userquery->perm_check('view_videos',false,true) ){
 					exit();
+                }
 
 				$videos = get_videos(array('limit'=>config('videos_items_hme_page'),'featured'=>'yes','order'=>'featured_date DESC'));
 				if($videos)
@@ -95,8 +93,7 @@
 						$next_limit = $limit + $limit;
 						$videos_arr_next = array('order' =>"date_added DESC" , "limit" =>''.$next_limit.','.$next_limit.'');
 						$videos_next = get_videos($videos_arr_next);
-						if($total == $next_limit||$total < $next_limit)
-						{
+						if($total == $next_limit||$total < $next_limit) {
 							$count_next = 0;
 						} else {
 							$count_next = count($videos_next);
@@ -111,8 +108,7 @@
 						$next_limit = $limit + $limit;
 						$users_arr_next = array( "limit" =>''.$next_limit.','.$next_limit.'');
 						$users_next = get_videos($users_arr_next);
-						if($total == $next_limit||$total < $next_limit)
-						{
+						if($total == $next_limit||$total < $next_limit) {
 							$count_next = 0;
 						} else {
 							$count_next = count($users_next);
@@ -130,8 +126,7 @@
 						$next_limit = $limit + $limit;
 						$play_arr_next = array( "user" => $userid ,"order"=>"date_added DESC","limit" =>''.$next_limit.','.$next_limit.'');
 						$playlist_next = $cbvid->action->get_playlists($play_arr_next);
-						if($total == $next_limit||$total < $next_limit)
-						{
+						if($total == $next_limit||$total < $next_limit) {
 							$count_next = 0;
 						} else {
 							$count_next = count($playlist_next);
@@ -145,16 +140,16 @@
 				}
 				$arr = template_assign($results,$limit,$total_results,$template_path,$assigned_variable_smarty);
 
-				if ($count_next > 0)
-				{
+				if ($count_next > 0) {
 					$arr['limit_exceeds']=false;
 					echo json_encode($arr);
-				} elseif($count_next == 0) {
+				} else if($count_next == 0) {
 					$arr['limit_exceeds']=true;
 					echo json_encode($arr);
 				} else {
-					if(isset($arr['limit_exceeds']))
+					if(isset($arr['limit_exceeds'])){
 						$arr['limit_exceeds']=true;
+                    }
 					echo json_encode($arr);
 				}
 				break;
@@ -465,11 +460,11 @@
                 $message = $eh->get_message();
 
                 if( $error ){
-                    echo '<div class="error">'.$error[0]['val'].'</div>';
+                    $msg = $error[0]['val'];
                 } else if( $warning ) {
-                    echo '<div class="warning">'.$warning[0]['val'].'</div>';
+                    $msg = $warning[0]['val'];
                 } else if( $message ) {
-                    echo '<div class="msg">'.$message[0]['val'].'</div>';
+                    $msg = $message[0]['val'];
                 }
 				$ajax['msg'] = $msg;
 				$ajax['rate'] = comment_rating($rating);

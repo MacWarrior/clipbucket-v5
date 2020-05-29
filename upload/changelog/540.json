@@ -20,6 +20,7 @@
         ,"Update error handling to allow HTML messages"
         ,"Fix error display"
         ,"Fix subscribe/unsubscribe from channel <i>#126</i>"
+        ,"Fix video rating <i>#126</i>"
       ]
     }
     ,{

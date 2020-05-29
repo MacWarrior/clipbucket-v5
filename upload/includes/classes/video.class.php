@@ -1594,8 +1594,9 @@ class CBvideo extends CBCategory
 		$perc = $rating*100/$total;
 		$perc = round($perc);
 		$disperc = 100 - $perc;
-		if($ratings <= 0 && $disperc == 100)
+		if($ratings <= 0 && $disperc == 100){
 			$disperc = 0;
+        }
 				
 		$perc = $perc.'%';
 		$disperc = $disperc.'%';
@@ -1606,29 +1607,26 @@ class CBvideo extends CBCategory
 			if(error())
 			{
 				$rating_msg = error();
-				$rating_msg = '<span class="error">'.$rating_msg[0].'</span>';
+				$rating_msg = '<span class="error">'.$rating_msg[0]['val'].'</span>';
 			}
 			if(msg())
 			{
 				$rating_msg = msg();
-				$rating_msg = '<span class="msg">'.$rating_msg[0].'</span>';
+				$rating_msg = '<span class="msg">'.$rating_msg[0]['val'].'</span>';
 			}
 		}
 			
-		if($data_only)
-		{
-			$data = array(
+		if($data_only) {
+			return array(
 				'perc'=>$perc,
 				'disperc'=>$disperc,
 				'id'=>$id,
 				'type'=>$type,
-				'id'=>$id,
 				'rating_msg'=>$rating_msg,
 				'likes'=>$likes,
 				'dislikes'=>($ratings-$likes),
 				'disable'=>$params['disable']
 			);
-			return $data;
 		}
 		assign('perc',$perc);
 		assign('disperc',$disperc);
@@ -1640,10 +1638,7 @@ class CBvideo extends CBCategory
 		assign("dislikes",($ratings-$likes));
 		assign('disable',$params['disable']);
 
-        if(SMARTY_VERSION>2)
-            Template('blocks/common/rating.html');
-        else
-		    Template('blocks/rating.html');
+        Template('blocks/common/rating.html');
 	}
 	
 	/** 

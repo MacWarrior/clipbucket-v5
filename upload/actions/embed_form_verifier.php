@@ -17,7 +17,7 @@ switch($mode)
 		if(empty($thumb_file) || ( $ext != 'jpg' && $ext != 'png' && $ext !='gif'))
 			e(lang("pelase_select_img_file_for_vdo"));
 		if(count($eh->get_error()) > 0){
-			$array['err'] = $eh->get_error()[0];
+			$array['err'] = $eh->get_error()[0]['val'];
         }
 		
 		echo json_encode($array);
@@ -37,7 +37,7 @@ switch($mode)
 			e(lang("pelase_select_img_file_for_vdo"));
         }
 		if(count($eh->get_error()) > 0){
-			$array['err'] = $eh->get_error()[0];
+			$array['err'] = $eh->get_error()[0]['val'];
         }
 		
 		echo json_encode($array);
