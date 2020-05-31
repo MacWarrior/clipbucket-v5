@@ -2062,12 +2062,7 @@
 	function show_flag_form($array)
 	{
 		assign('params',$array);
-        if(SMARTY_VERSION>2)
-        {
-            Template('blocks/common/report.html');
-        } else {
-            Template('blocks/flag_form.html');
-        }
+        Template('blocks/common/report.html');
 	}
 	
 	/**
@@ -2083,12 +2078,11 @@
 		// depending on the parameters passed to it
 		if (!empty($array['user'])) {
 			$playlists = $cbvid->action->get_playlists($array);
-		} elseif (userid()) {
+		} else if (userid()) {
 			$playlists = $cbvid->action->get_playlists();
 		}
 		assign('playlists',$playlists);
         Template('blocks/common/playlist.html');
-       
 	}
 
 	/**

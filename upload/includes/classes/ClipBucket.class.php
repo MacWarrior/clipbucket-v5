@@ -219,7 +219,7 @@ class ClipBucket
 
     function addMenuAdmin($menu_params, $order = null){
         global $Cbucket;
-        $already_exists = false;
+        $menu_already_exists = false;
 
         if( is_null($order) ){
             $order = max(array_keys($Cbucket->AdminMenu))+1;
@@ -234,12 +234,23 @@ class ClipBucket
         foreach($Cbucket->AdminMenu as &$menu){
             if( $menu['title'] == $menu_params['title'] ){
                 foreach($menu_params['sub'] as $subMenu){
-                    $menu['sub'][] = $subMenu;
+                    $submenu_already_exists = false;
+
+                    foreach( $menu['sub'] as $tmp_submenu ){
+                        if( $tmp_submenu['title'] == $subMenu['title'] && $tmp_submenu['url'] == $subMenu['url'] ){
+                            $submenu_already_exists = true;
+                            break;
+                        }
+                    }
+
+                    if( !$submenu_already_exists ){
+                        $menu['sub'][] = $subMenu;
+                    }
                 }
-                $already_exists = true;
+                $menu_already_exists = true;
             }
         }
-        if( !$already_exists ){
+        if( !$menu_already_exists ){
             $Cbucket->AdminMenu[$order] = $menu_params;
         }
         ksort($Cbucket->AdminMenu);

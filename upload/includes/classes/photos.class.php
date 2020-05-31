@@ -180,7 +180,7 @@ class CBPhotos
 	 */
 	function init_collections()
 	{
-		$this->collection = new Collections;
+		$this->collection = new Collections();
 		$this->collection->objType = "p";
 		$this->collection->objClass = "cbphoto";
 		$this->collection->objTable = "photos";

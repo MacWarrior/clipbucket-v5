@@ -1,6 +1,6 @@
 {
   "version":"5.4.0",
-  "revision": "21",
+  "revision": "22",
   "status":"dev",
   "detail":[
     {
@@ -37,6 +37,7 @@
         ,"Fix url"
         ,"Refactor and reorder menus"
         ,"Fix mass upload template"
+        ,"Add security to prevent duplicated sub-menus <i>#127</i>"
       ]
     }
     ,{

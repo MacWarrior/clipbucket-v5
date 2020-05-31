@@ -33,8 +33,7 @@ class Collections extends CBCategory
 	var $objClass = 'cbphoto';
 	var $objFunction = 'photo_exists';
 	var $objFieldID = 'photo_id';
-	
-	
+
 	/**
 	 * Constructor function to set values of tables
 	 */
