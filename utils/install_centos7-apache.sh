@@ -1,5 +1,8 @@
 #!/bin/bash
-# Clipbucket install on Cent OS 7
+# Clipbucket install on Cent OS 7.8
+# PHP : 7.3.X
+# MariaDB : 10.3
+# FFMPEG : 3.4
 ## THIS SCRIPT MUST BE LAUNCHED AS ROOT
 
 echo ""
@@ -9,14 +12,22 @@ echo -ne " OK"
 
 echo ""
 echo -ne "Installing requiered elements..."
-rpm --quiet --import http://li.nux.ro/download/nux/RPM-GPG-KEY-nux.ro https://archive.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7Server https://rpms.remirepo.net/RPM-GPG-KEY-remi
-yum install -y -q yum-utils epel-release http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm
+yum install -y -q yum-utils epel-release http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+yum localinstall --nogpgcheck -y https://download1.rpmfusion.org/free/el/rpmfusion-free-release-7.noarch.rpm > /dev/null
 
-yum-config-manager --enable remi-php70 > /dev/null
+cat > /etc/yum.repos.d/mariadb.10.3.repo << EOF
+[mariadb]
+name = MariaDB
+baseurl = http://yum.mariadb.org/10.3/centos7-amd64
+gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+gpgcheck=1
+EOF
+yum update -y -q > /dev/null 2>&1
+
+yum-config-manager --disable remi-php54 > /dev/null
+yum-config-manager --enable remi-php73 > /dev/null
 
 yum install -y -q php php-mysqlnd php-curl php-xml php-mbstring php-pear php-devel httpd git mariadb-server mariadb gcc ImageMagick ImageMagick-devel gpac mediainfo sendmail ffmpeg ffmpeg-devel lshw > /dev/null 2>&1
-# http://mir01.syntis.net/epel/7/x86_64/repodata/3e3bf72827ce3cbe2381f1cac087f6ff23b8bb8c2bdab06598f18057209e423e-updateinfo.xml.bz2: [Errno 14] HTTP Error 404 - Not Found
-# I don't know how to fix this for now, but it works anyway :)
 
 systemctl enable httpd mariadb > /dev/null 2>&1
 systemctl start httpd mariadb

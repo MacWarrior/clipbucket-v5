@@ -28,6 +28,7 @@
       "description": [
         "Remove i-magick dependancy"
         ,"Update Nginx Vhost"
+        ,"Update CentOS 7 installation script"
       ]
     }
     ,{
