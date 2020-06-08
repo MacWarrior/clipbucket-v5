@@ -425,3 +425,33 @@ ALTER TABLE `{tbl_prefix}user_profile`
 
 ALTER TABLE `{tbl_prefix}plugins`
 	MODIFY COLUMN `plugin_version` FLOAT NOT NULL DEFAULT '0';
+
+-- upgrade_5.4.0.sql
+DELETE FROM `{tbl_prefix}config` WHERE `name` IN (
+		'cb_license'
+		,'cb_license_local'
+		,'use_ffmpeg_vf'
+		,'buffer_time'
+		,'server_friendly_conversion'
+		,'cbhash'
+		,'enable_troubleshooter'
+		,'debug_level'
+		,'sys_os'
+		,'con_modules_type'
+		,'version_type'
+		,'version'
+		,'user_comment_opt1'
+		,'user_comment_opt2'
+		,'user_comment_opt3'
+		,'user_comment_opt4'
+		,'ffmpeg_type'
+		,'date_released'
+		,'stream_via'
+		,'use_watermark'
+		,'hq_output'
+		,'date_installed'
+		,'date_updated'
+		,'max_topic_length'
+	);
+
+DROP TABLE `{tbl_prefix}modules`;
