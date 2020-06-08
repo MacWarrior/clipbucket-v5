@@ -416,5 +416,12 @@ ALTER TABLE `{tbl_prefix}comments`
 	MODIFY `spam_votes` BIGINT(20) NOT NULL DEFAULT '0',
 	MODIFY `spam_voters` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
 
+-- upgrade_5.3.1.sql
+INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
+	('enable_update_checker', '1');
+
+ALTER TABLE `{tbl_prefix}user_profile`
+	MODIFY COLUMN `user_profile_id` INT(11) NOT NULL AUTO_INCREMENT;
+
 ALTER TABLE `{tbl_prefix}plugins`
 	MODIFY COLUMN `plugin_version` FLOAT NOT NULL DEFAULT '0';
