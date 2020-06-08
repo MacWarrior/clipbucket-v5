@@ -1313,8 +1313,7 @@
 		if(!$folder) {
 			$ClipBucket->template_files[] = array('file' => $file,'follow_show_page'=>$follow_show_page);
 		} else {
-			$ClipBucket->template_files[] = array('file'=>$file,
-			'folder'=>$folder,'follow_show_page'=>$follow_show_page);
+			$ClipBucket->template_files[] = array('file'=>$file,'folder'=>$folder,'follow_show_page'=>$follow_show_page);
 		}
 	}
 

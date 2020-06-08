@@ -7,36 +7,32 @@
     Website: https://github.com/MacWarrior/clipbucket-v5/
 */
 
-if(!function_exists('global_announcement'))
+function global_announcement()
 {
-    function global_announcement()
-    {
-        global $db;
-        $results = $db->select(tbl('global_announcement'),'*');
-        $ann = $results[0]['announcement'];
-        if (!$ann ==''){
-            echo '<div class="alert alert-info margin-bottom-10 ">'.$ann.'</div>';
-        }
+    global $db;
+    $results = $db->select(tbl('global_announcement'),'*');
+    $ann = $results[0]['announcement'];
+    if (!$ann ==''){
+        echo '<div class="alert alert-info margin-bottom-10 ">'.$ann.'</div>';
     }
+}
 
-    function get_announcement()
-    {
-        global $db;
-        $exec = $db->Execute('SELECT * FROM '.tbl("global_announcement"));
-        $ann = $exec->getrows();
-        return $ann[0][0];
-    }
+function get_announcement()
+{
+    global $db;
+    $exec = $db->Execute('SELECT * FROM '.tbl("global_announcement"));
+    $ann = $exec->getrows();
+    return $ann[0][0];
+}
 
-    //Function used to update announcement
-    function update_announcement($text)
-    {
-        global $db;
-        $textCheck = str_replace(array('<p>','</p>','<br>'), '', $text);
-        if (strlen($textCheck) < 1) {
-            $text = '';
-        }
-        $db->Execute("UPDATE ".tbl("global_announcement")." SET announcement='$text'");
+function update_announcement($text)
+{
+    global $db;
+    $textCheck = str_replace(array('<p>','</p>','<br>'), '', $text);
+    if (strlen($textCheck) < 1) {
+        $text = '';
     }
+    $db->Execute("UPDATE ".tbl("global_announcement")." SET announcement='$text'");
 }
 
 global $Smarty;
