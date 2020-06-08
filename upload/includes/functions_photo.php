@@ -93,7 +93,7 @@
 	 * structured folders. If file is found at structured folder, function
 	 * will the dates folder structure.
 	 *
-	 * @param INT|ARRAY $photo_id
+	 * @param INT|array $photo_id
 	 * @return bool|string $directory
 	 */
 	function get_photo_date_folder( $photo_id )
@@ -164,12 +164,13 @@
 
 		if( !$details ) {
 			return get_photo_default_thumb($size, $output);
-		} else if ($static) {
+		}
+		if ($static) {
 			return '/files/photos/'.$details['file_directory'].'/'.$details['filename'].'_'.$size.'.'.$details['ext'];
 		}
 
 		if ( !is_array( $details ) ) {
-			$photo = $cbphoto->get_photo($details, true);
+			$photo = $cbphoto->get_photo($details);
 		} else {
 			$photo = $details;
 		}

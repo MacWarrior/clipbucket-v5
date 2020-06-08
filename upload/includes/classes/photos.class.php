@@ -390,7 +390,7 @@ class CBPhotos
 	 *
 	 * @param $pid
 	 *
-	 * @return bool
+	 * @return bool|array
 	 */
 	function get_photo($pid)
 	{
@@ -2507,7 +2507,6 @@ class CBPhotos
 	{
 		$details	= $p['details'];
 		$type		= $p['type'];
-		$size		= $p['size'] ? $p['size'] : 'm';
 		
 		if(is_array($details)){
 			$photo = $details;
@@ -2516,13 +2515,17 @@ class CBPhotos
         }
 
 		$code = '';
+        $image_file = $this->get_image_file($photo);
+        if( is_array($image_file) ){
+            $image_file = $image_file[0];
+        }
 		switch($type)
 		{
 			case "html":
 				if($p['with_url']){
 					$code .= "&lt;a href='".$this->collection->collection_links($photo,'view_item')."' target='_blank'&gt;";
                 }
-				$code .= "&lt;img src='".BASEURL.$this->get_image_file($photo)[0]."' title='".display_clean($photo['photo_title'])."' alt='".display_clean($photo['photo_title'])."&nbsp;".TITLE."' /&gt;";
+				$code .= "&lt;img src='".BASEURL.$image_file."' title='".display_clean($photo['photo_title'])."' alt='".display_clean($photo['photo_title'])."&nbsp;".TITLE."' /&gt;";
 				if($p['with_url']){
 					$code .= "&lt;/a&gt;";
                 }
@@ -2532,7 +2535,7 @@ class CBPhotos
 				if($p['with_url']){
 					$code .= "&#91;URL=".$this->collection->collection_links($photo,'view_item')."&#93;";
                 }
-				$code .= "&#91;IMG&#93;".BASEURL.$this->get_image_file($photo)[0]."&#91;/IMG&#93;";
+				$code .= "&#91;IMG&#93;".BASEURL.$image_file."&#91;/IMG&#93;";
 				if($p['with_url']){
 					$code .= "&#91;/URL&#93;";
                 }
@@ -2543,7 +2546,7 @@ class CBPhotos
 				break;
 			
 			case "direct":
-				$code .= BASEURL.$this->get_image_file($photo)[0];
+                $code .= BASEURL.$image_file;
 				break;
 			
 			default:
@@ -2564,7 +2567,7 @@ class CBPhotos
 	{
 		if(empty($newArr['details'])) {
 			echo "<div class='error'>".e(lang("need_photo_details"))."</div>";
-		} elseif($newArr['details']['allow_embedding'] == 'no') {
+		} else if($newArr['details']['allow_embedding'] == 'no') {
 			echo "<div class='error'>".e(lang("embedding_is_disabled"))."</div>";
 		} else {
 			$t = $newArr['type'];

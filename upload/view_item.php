@@ -1,12 +1,4 @@
 <?php
-/* 
- ******************************************************************
- | Copyright (c) 2007-2009 Clip-Bucket.com. All rights reserved.	
- | @ Author : ArslanHassan											
- | @ Software : ClipBucket , © PHPBucket.com						
- *******************************************************************
-*/
-
 define("THIS_PAGE",'view_item');
 define("PARENT_PAGE",'collections');
 
@@ -17,16 +9,13 @@ $type = (string) mysql_clean($_GET['type']);
 $cid  = (int) mysql_clean($_GET['collection']);
 $order = tbl("collection_items").".ci_id DESC";
 
-if($cbcollection->is_viewable($cid))
-{
-	if(empty($item))
+if($cbcollection->is_viewable($cid)) {
+	if(empty($item)){
 		header('location:'.BASEURL);
-	else
-	{
-		if(empty($type))
+    } else {
+		if(empty($type)){
 			header('location:'.BASEURL);
-		else
-		{
+        } else {
 			assign('type',$type);
 			$param = array("type"=>$type,"cid"=>$cid);
 			$cdetails = $cbcollection->get_collections($param);
@@ -35,12 +24,10 @@ if($cbcollection->is_viewable($cid))
 			{
 				case "videos":
 				case "v":
-				{
 					global $cbvideo;
 					$video = $cbvideo->get_video($item);
 					
-					if(video_playable($video))
-					{
+					if(video_playable($video)) {
 						//Getting list of collection items
 						$page = mysql_clean($_GET['page']);
 						$get_limit = create_query_limit($page,20);
@@ -51,8 +38,7 @@ if($cbcollection->is_viewable($cid))
 						
 						assign('open_collection','yes');
 						$info = $cbvideo->collection->get_collection_item_fields($cid,$video['videoid'],'ci_id,collection_id');
-						if($info)
-						{
+						if($info) {
 							$video = array_merge($video,$info[0]);						
 							increment_views($video['videoid'],'video');
 							
@@ -61,7 +47,6 @@ if($cbcollection->is_viewable($cid))
 							assign('c',$collect);						
 							
 							subtitle($video['title']);
-							
 						} else {
 							e(lang("item_not_exist"));
 							$Cbucket->show_page = false;
@@ -70,22 +55,16 @@ if($cbcollection->is_viewable($cid))
 						e(lang("item_not_exist"));
 						$Cbucket->show_page = false;	
 					}
-					
-					
-				}
-				break;
+				    break;
 				
 				case "photos":
 				case "p":
-				{
 					global $cbphoto;
 					if (isSectionEnabled('photos')) {
 						$photo = $cbphoto->get_photo($item);
-						if($photo)
-						{
+						if($photo) {
 							$info = $cbphoto->collection->get_collection_item_fields($cid,$photo['photo_id'],'ci_id');
-							if($info)
-							{
+							if($info) {
 								$photo = array_merge($photo,$info[0]);
 								increment_views($photo['photo_id'],'photo');
 								
@@ -93,7 +72,7 @@ if($cbcollection->is_viewable($cid))
 								assign('user',$userquery->get_user_details($photo['userid']));
 								assign('c',$collect);
 								
-								subtitle(display_clean($photo['photo_title']).' &laquo; '.display_clean($collect['collection_name']));
+								subtitle(display_clean($collect['collection_name']).' > '.display_clean($photo['photo_title']));
 							} else {
 								e(lang("item_not_exist"));
 								$Cbucket->show_page = false;	
@@ -105,15 +84,13 @@ if($cbcollection->is_viewable($cid))
 					} else {
 						$Cbucket->show_page = false;
 					}
-				}
-				break;
+				    break;
 			}
-	
 		}		
 	}
-} else 
+} else {
 	$Cbucket->show_page = false;
-
+}
 
 //Getting Collection Lists
 $page = mysql_clean($_GET['page']);
@@ -131,8 +108,7 @@ $get_limit = create_query_limit($page,MAINPLIST);
 $clist = $cond;
 $clist['limit'] = $get_limit;
 $clist ['order'] = " last_viewed DESC";
-if(isset($photo['photo_id']))
-{
+if(isset($photo['photo_id'])) {
 	$clist['exclude'] = $photo['photo_id']; 	
 }
 $photos = get_photos($photo['photo_id']);
@@ -145,10 +121,11 @@ $page = mysql_clean($_GET['page']);
 $get_limit = create_query_limit($page,RESULTS);
 
 $carray['limit'] = $get_limit;
-if(!empty($carray['order']))
+if(!empty($carray['order'])){
     $carray['order'] = $carray['order']." DESC";
-else
+} else {
     $carray['order'] = "DESC";
+}
 
 $collections = $cbcollection->get_collections($carray);
 assign('co',$collections);
