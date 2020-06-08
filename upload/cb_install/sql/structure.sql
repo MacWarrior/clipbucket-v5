@@ -190,7 +190,7 @@ CREATE TABLE `{tbl_prefix}contacts` (
   `userid` int(225) NOT NULL,
   `contact_userid` int(225) NOT NULL,
   `confirmed` enum('yes','no') NOT NULL DEFAULT 'no',
-  `contact_group_id` int(225) NOT NULL,
+  `contact_group_id` int(225) NOT NULL DEFAULT 0,
   `request_type` enum('in','out') NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`contact_id`)

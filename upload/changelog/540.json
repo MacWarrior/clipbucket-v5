@@ -1,6 +1,6 @@
 {
   "version":"5.4.0",
-  "revision": "27",
+  "revision": "28",
   "status":"dev",
   "detail":[
     {
@@ -22,6 +22,7 @@
         ,"Fix subscribe/unsubscribe from channel <i>#126</i>"
         ,"Fix video rating <i>#126</i>"
         ,"Update logo and favicon"
+        ,"Fix SQL structure"
       ]
     }
     ,{

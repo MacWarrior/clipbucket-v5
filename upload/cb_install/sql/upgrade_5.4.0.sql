@@ -26,3 +26,5 @@ DELETE FROM `{tbl_prefix}config` WHERE `name` IN (
 	);
 
 DROP TABLE `{tbl_prefix}modules`;
+
+ALTER TABLE `{tbl_prefix}contacts` MODIFY COLUMN `contact_group_id` INT(255) NOT NULL DEFAULT '0';
