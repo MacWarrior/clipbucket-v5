@@ -13,6 +13,16 @@ You can start a fully dedicated video sharing website or photo sharing websites 
 ClipBucket official repository has been slowly dying since the release 4.1 (May 2018)<br/>
 I <i>(<a href="https://github.com/MacWarrior">MacWarrior</a>)</i> have been working on <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> since 2016 and haven't stop using and upgrading it since
 
+# Why <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a>
+- PHP 7.1 - 7.3+ compatibility
+- SQL strict mode compatibility
+- Updated libraries <i>(VideoJS, Smarty, amCharts, ...)</i>
+- Chromecast support
+- Easy installation scripts
+- New configuration options
+- Security, performance, stability and codestyle improvements
+<br/><br/>And even more  !
+
 # Installation
 ### Beginners
 Greetings young adventurer ! Don't worry, we've thought about you and created some easy installation scripts !<br/>
