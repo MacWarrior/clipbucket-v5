@@ -30,7 +30,7 @@ and you request some help ? Or found a bug ? Or have a brilliant idea ?<br/>
 Take a step back, breath slowly, and create an <a href="https://github.com/MacWarrior/clipbucket-v5/issues">issue</a> !<br/>
 Be the more precise you can, add screenshots, give examples... I'm sure we will find a solution !
 
-#More
+# More
 | <a href="https://discord.gg/HDm5CjM">!['Discord'](./upload/images/discord.png "Join us on Discord")</a> | <a href="https://paypal.me/JullienLadoire">!['Paypal'](./upload/images/paypal.png "Donate with paypal") |
 | --- | --- |
 | You speak french or you're simply not <br/>affraid by my english ? Welcome ! | You want to support me with a donation ?<br/>From all my heart, thank YOU ! |
