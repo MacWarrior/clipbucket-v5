@@ -1,7 +1,6 @@
 <?php
 class AdsManager
 {
-
     /**
      * Function used to add new advertisment in ClipBucket
      *
@@ -16,26 +15,22 @@ class AdsManager
 			$array = $_POST;
         }
 		 
-		$name		= $array['name'];
-		$code		= $array['code'];
+		$name		= mysql_clean($array['name']);
+		$code		= mysql_clean($array['code']);
 		$placement 	= mysql_clean($array['placement']);
-		$category  	= $array['category'];
-		$status		= $array['status'];
+		$status		= mysql_clean($array['status']);
 
 		if(empty($name)) {
-			$msg = e(lang('ad_name_error'));
-		} else {
-			$count = $db->count(tbl("ads_data"),"ad_id"," ad_name='$name'");
-			
-			if($count>0){
-			    e(lang('ad_exists_error2'));
-			} else {
-				$db->insert(tbl("ads_data"),array("ad_category","ad_name","ad_placement","ad_code","ad_status","date_added"),
-											array($category,$name,$placement,/*"|no_mc|".*/$code,$status,now()));		
-				$msg = e(lang('ad_add_msg'),'m');
-			}
-			return $msg;
-		}		
+			return e(lang('ad_name_error'));
+		}
+
+        $count = $db->count(tbl("ads_data"),"ad_id"," ad_name='$name'");
+
+        if($count>0){
+            return e(lang('ad_exists_error2'));
+        }
+        $db->insert(tbl("ads_data"),array("ad_name","ad_placement","ad_code","ad_status","date_added"),array($name,$placement,/*"|no_mc|".*/$code,$status,now()));
+        return e(lang('ad_add_msg'),'m');
 	}
 
     /**
@@ -84,18 +79,17 @@ class AdsManager
         }
 			
 		$placement 	= mysql_clean($array['placement']);
-		$name	= mysql_clean($array['name']);
-		$code = $array['code'];
-		$category = mysql_clean(@$array['category']);
-		$id = $array['ad_id'];
+		$name	    = mysql_clean($array['name']);
+		$code       = mysql_clean($array['code']);
+		$id         = mysql_clean($array['ad_id']);
+        $status		= mysql_clean($array['status']);
 		
 		if(!$this->ad_exists($id)){
 			e(lang("ad_exists_error1"));
         } elseif(empty($name)) {
 			e(lang('ad_name_error'));
         } else {
-			$db->update(tbl("ads_data"),array("ad_placement","ad_name","ad_category","ad_code","ad_status"),
-						array($placement,$name,$category,"|no_mc|".$code,$array['status'],$id)," ad_id='$id' ");
+			$db->update(tbl("ads_data"),array("ad_placement","ad_name","ad_code","ad_status"), array($placement,$name,"|no_mc|".$code,$status,$id)," ad_id='$id' ");
 			e(lang('ad_update_msg'),"m");
 		}
 	}

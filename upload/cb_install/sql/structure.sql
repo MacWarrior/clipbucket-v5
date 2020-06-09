@@ -52,7 +52,6 @@ CREATE TABLE `{tbl_prefix}ads_data` (
   `ad_name` mediumtext NOT NULL,
   `ad_code` mediumtext NOT NULL,
   `ad_placement` varchar(50) NOT NULL DEFAULT '',
-  `ad_category` int(11) NOT NULL DEFAULT 0,
   `ad_status` enum('0','1') NOT NULL DEFAULT '0',
   `ad_impressions` bigint(255) NOT NULL DEFAULT 0,
   `last_viewed` datetime NOT NULL,
