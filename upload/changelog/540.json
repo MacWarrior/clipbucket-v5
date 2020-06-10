@@ -1,6 +1,6 @@
 {
   "version":"5.4.0",
-  "revision": "34",
+  "revision": "35",
   "status":"dev",
   "detail":[
     {
@@ -56,6 +56,7 @@
       "title":"Front office",
       "description":[
         "Fix images sharing URLs <i>#83</i>"
+        ,"Fix Add as friend error display <i>#138</i>"
       ]
     }
   ]

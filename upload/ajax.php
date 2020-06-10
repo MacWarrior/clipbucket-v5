@@ -428,7 +428,7 @@
                         echo '<div class="msg">'.$message[0]['val'].'</div>';
                     }
 				} else {
-					echo '<div class="error">'.e(lang('you_not_logged_in')).'</div>';
+					echo '<div class="error">'.lang('you_not_logged_in').'</div>';
 				}
 				break;
 
