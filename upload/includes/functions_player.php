@@ -13,15 +13,9 @@
 */
 
 function flashPlayer($param) {
-    global $Cbucket,$swfobj;
+    global $Cbucket;
     global $pak_player;
     $param['player_div'] = $param['player_div'] ? $param['player_div'] : 'videoPlayer';
-    $key        = $param['key'];
-    $flv        = $param['flv'].'.flv';
-    $code       = $param['code'];
-    $flv_url    = $file;
-    $embed      = $param['embed'];
-    $code       = $param['code'];
     $height     = $param['height'] ? $param['height'] : config('player_height');
     $width      = $param['width'] ? $param['width'] : config('player_width');
     $param['height'] = $height;
@@ -54,24 +48,12 @@ function flashPlayer($param) {
             assign("player_js_code",$player_code);
             Template(PLAYER_DIR.'/player.html',false);
             return false;
-        } else {
-
-            return false;
         }
+        return false;
     }
 
     return blank_screen($param);
 }
-
-
-/**
- * Function used to play HQ videos
- */
-function HQflashPlayer($param)
-{
-    return flashPlayer($param);
-}
-
 
 /**
  * Function used to get player from website settings

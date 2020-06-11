@@ -45,7 +45,6 @@
 
 <script type="text/javascript">
     var lang_by = "{lang code='by'}";
-
     var lang_quality = "{lang code='quality'}";
 </script>
 
@@ -186,22 +185,18 @@
         this.videoJsResolutionSwitcher(res_options);
 
 
-        if( "{config('contextual_menu_disabled')}" === 'yes' ) {
-            $(".video-js").on("contextmenu",function() {
-                return false;
-            });
-        }
 
-        if( "{config('player_thumbnails')}" === 'yes' ) {
-            this.thumbnails({get_player_thumbs_json($vdata)});
-        }
+        {if config('contextual_menu_disabled')=='yes'}
+		$(".video-js").on("contextmenu",function() {
+			return false;
+		});
+		{/if}
 
+		{if config('player_thumbnails')=='yes'}
+		this.thumbnails({get_player_thumbs_json($vdata)});
+		{/if}
 
-
-
-
-
-{if config("enable_advertisement")}
+		{if config("enable_advertisement")}
 		//Calling Ima Ads plugin
 		if ("{$play_ad}"){
 			var ad_options = {
@@ -222,8 +217,7 @@
             };
             this.interactiveAds(i_instances_settings);
         }
-{/if}
-
+		{/if}
 
 		//Calling TimeComments switcher plugin
         var cb_timecomments_plugin = "{$cb_timecomments_plugin}";
@@ -248,7 +242,6 @@
 			}
 		}
 
-
         //Calling instance manager plugin for backend
         var video_editor_enabled = "{$video_editor_enabled}";
 		if ( video_editor_enabled && typeof video_editor_enabled != 'undefined'){
@@ -258,12 +251,10 @@
 			this.instanceManager(instance_manager_settings);
 		}
 
-
-
 		new_player_height(vid_id);
-	};
+	}
 	//Initializing
-	var cb_player = new videojs('cb_video_js_'+vid_id, cb_player_setup , cb_vjs_callback);
+	var cb_player = new videojs('cb_video_js_'+vid_id, cb_player_setup, cb_vjs_callback);
 
 
     // TODO : Support multi audio tracks ; $audio_track =  false;
@@ -284,12 +275,6 @@
     //cb_player.audioTracks().addTrack(track);
     //cb_player.audioTracks().addTrack(track2);
     //console.log('test2');
-
-	/*$(document).ready(function() {
-		$(".video-js").on("contextmenu",function() {
-	       return false;
-	    });
-	});*/
 	
 	$(window).resize(function(event) {
 		new_player_height(vid_id);

@@ -103,9 +103,7 @@
 {if $Cbucket->AdminJSArray}
 <!-- Including JS Files-->
 {foreach from=$Cbucket->AdminJSArray key=file item=type}
-    {if $curActive == $type ||  $type=='global' }
-        {include_js type=$type file=$file}
-    {/if}
+	{include_js type=$type file=$file}
 {/foreach}
 <!-- Including JS Files-->
 {/if}

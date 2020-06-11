@@ -1,14 +1,4 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: Fawaz
- * Date: 8/28/13
- * Time: 12:20 PM
- * To change this template use File | Settings | File Templates.
- */
-
-//Redirect Using JAVASCRIPT
-
 function redirect_to($url){
     echo '<script type="text/javascript">
 		window.location = "'.$url.'"
@@ -22,8 +12,7 @@ function Fetch($name,$inside=FALSE)
     global $cbtpl;
     if($inside){
         $file = $cbtpl->fetch($name);
-    }
-    else{
+    } else {
         $file = $cbtpl->fetch(LAYOUT.'/'.$name);
     }
 
@@ -31,13 +20,13 @@ function Fetch($name,$inside=FALSE)
 }
 
 //Simple Template Displaying Function
-
 function Template($template,$layout=true){
     global $admin_area,$cbtpl;
-    if($layout)
+    if($layout) {
         $cbtpl->display(LAYOUT.'/'.$template);
-    else
+    } else {
         $cbtpl->display($template);
+    }
 
     if($template == 'footer.html' && $admin_area !=TRUE){
         $cbtpl->display(BASEDIR.'/includes/templatelib/'.$template);
@@ -53,42 +42,37 @@ function Assign($name,$value)
     $cbtpl->assign($name,$value);
 }
 
-
 /**
  * Return Head menu of CLipBucket front-end
  *
- * @param Array $params
- * @return Array
+ * @param array $params
+ * @return array
  */
 function cb_menu($params=NULL){ global $Cbucket; return $Cbucket->cbMenu($params); }
-
 
 /**
  * Function used to call display
  */
 function display_it()
 {
-    try
-    {
+    try {
         global $ClipBucket,$__devmsgs,$breadcrumb;
         if (is_array($__devmsgs)) {
             assign("thebase", BASEDIR);
             assign("__devmsgs",$__devmsgs);
         }
-        foreach($ClipBucket->template_files as $file)
-        {
-            if(file_exists(LAYOUT.'/'.$file['file']) || is_array($file))
-            {
-                if($ClipBucket->show_page || !$file['follow_show_page'])
-                {
-                    if(!is_array($file))
+        $new_list = array();
+        foreach($ClipBucket->template_files as $file) {
+            if(file_exists(LAYOUT.'/'.$file['file']) || is_array($file)) {
+                if($ClipBucket->show_page || !$file['follow_show_page']) {
+                    if(!is_array($file)){
                         $new_list[] = $file;
-                    else
-                    {
-                        if(isset($file['folder']) && file_exists($file['folder'].'/'.$file['file']))
+                    } else {
+                        if(isset($file['folder']) && file_exists($file['folder'].'/'.$file['file'])){
                             $new_list[] = $file['folder'].'/'.$file['file'];
-                        else
+                        } else {
                             $new_list[] = $file['file'];
+                        }
                     }
                 }
             }
@@ -100,8 +84,8 @@ function display_it()
         Template('body.html');
 
         footer();
-    }catch(SmartyException $e)
-    {
+    }
+    catch(SmartyException $e) {
         show_cb_error($e);
     }
 }

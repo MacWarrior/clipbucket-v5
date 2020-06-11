@@ -18,11 +18,9 @@
 	}
 
 	//Updating Video Details
-	if(isset($_POST['update']))
-	{
+	if(isset($_POST['update'])) {
 		$Upload->validate_video_upload_form();
-		if(empty($eh->get_error()))
-		{
+		if(empty($eh->get_error())) {
 			$myquery->update_video();
 			$myquery->set_default_thumb($video,$_POST['default_thumb']);
 
@@ -37,12 +35,10 @@
 	}
 	
 	//Check Video Exists or Not
-	if($myquery->VideoExists($video))
-	{
+	if($myquery->VideoExists($video)) {
 		//Deleting Comment
 		$cid = mysql_clean($_GET['delete_comment']);
-		if(!empty($cid))
-		{
+		if(!empty($cid)) {
 			$myquery->delete_comment($cid);
 		}
 
@@ -66,20 +62,21 @@
         $cbvid->update_comments_count($type_id);
 	}
 
-	if(!$array['order'])
+	if(!$array['order']){
 		$result_array['order'] = " doj DESC LIMIT 1 ";
+    }
 
 	$users = get_users($result_array);
 
 	Assign('users', $users);
 
-	if(!$array['order'])
+	if(!$array['order']){
 		$result_array['order'] = " views DESC LIMIT 8 ";
+    }
 	$videos = get_videos($result_array);
 
 	Assign('videos', $videos);
 
-	$numbers = array(100,1000,15141,3421);
 	function format_number($number)
 	{
 		if($number >= 1000) {
@@ -87,24 +84,6 @@
 		}
 		return $number;
 	}
-
-	if(function_exists("get_ep_videos"))
-	{
-		$ep_videos = get_ep_videos();
-		if(isset($_POST['update_order']))
-		{
-			if(is_array($ep_videos))
-			{
-				foreach($ep_videos as $epvid)
-				{
-					$order = $_POST['ep_order_'.$epvid['pick_id']];
-					move_epick($epvid['videoid'],$order);
-				}
-			}
-			$ep_videos = get_ep_videos();
-		}
-	}
-
 
 	$get_limit = create_query_limit($page,5);
 	$videos = $cbvid->action->get_flagged_objects($get_limit);

@@ -7,7 +7,7 @@
 		<div class="msg-alert alert alert-success"></div>
 	</div>
 	<div class="response-msg clearfix" >
-		<a href="/admin_area/plugin.php?folder=editors_pick/admin&file=editor_pick.php" ><div class="btn btn-danger brn-sm"><i class="glyphicon glyphicon-arrow-left"></i>Back to EP manager</div></a>
+		<a href="/plugins/editors_pick/admin/editor_pick.php" ><div class="btn btn-danger brn-sm"><i class="glyphicon glyphicon-arrow-left"></i>Back to EP manager</div></a>
 	</div>
 	<br>
 	<form id="special-thumb" class="clearfix" method="post" enctype="multipart/form-data">
@@ -53,22 +53,18 @@
 	            cache:false,
             	contentType: false,
             	processData: false, 
-            	beforeSend : function(data)
-            	{
+            	beforeSend : function(data) {
             		$("#submit_thumb").attr("disabled",true);
             		$('#submit_thumb').val("Uploading..");
             	},
-	            success : function(data) 
-	            {
-	            	
+	            success : function(data) {
 	            	$("#submit_thumb").attr("disabled",false);
 	            	$('#submit_thumb').val("Upload Special Thumb");
 	            	$('.response-msg').slideDown("slow");
 	            	$('.msg-alert').html(data.msg);
 	            	$('#special-thumb').slideUp("slow");
 	            },
-	            error : function(data) 
-	            {
+	            error : function(data) {
 		            
 		        }
 	        });

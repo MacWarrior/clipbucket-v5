@@ -1,7 +1,3 @@
-{lang code='no_featured_videos_found' assign='no_found_fe'}
-{$vae = {lang code="no_featured_videos_found"}}
-{$no_recent = {lang code="no_recent_videos_found"}}
-{$loadMoreLang ={lang code="load_more"}}
 {ANCHOR place="display_head_sec"}
 {ANCHOR place="video_head_player"}
 <div id="main" class="clearfix container">
@@ -14,39 +10,7 @@
 				<div class="ad">{AD place='ad_728x90'}</div>
 			</div>
 			{/if}
-			{$row = $myquery->Get_Website_Details()}
-			{if is_installed('editorspick')}
-				{if $editor_picks}
-				<div class="clearfix editorpick">
-					<div class="editorpick-holder">
-						<!-- Editor Pick Video Main Container START //-->
-						<div class="absolute-div">
-							<div id="ep_video_container">
-								{if is_installed('editorspick')}
-									{section name=e_list loop=$editor_picks max=1}
-										{include file="$style_dir/blocks/editor_pick/video_block.html" video=$editor_picks[e_list]}
-									{sectionelse}
-										There is no video in editor's pick, Please Add Videos In Editor's Pick<br />Videos Manager > Add to editor's pick
-									{/section}
-								{/if}
-							</div>
-						</div>
-						<!-- Editor Pick Video Main Container END //-->
-						<img src="{$theme}/images/player-ratio.png" class="playerRatio">
-					</div>
 
-					<!-- Editor Pick Videos Slider Container START //-->
-					<div class="editorpick-videos custom-elements">
-						<div class="scrollable-area vscrollable">
-							{section name=e_list loop=$editor_picks}
-								{include file="$style_dir/blocks/editor_pick/index_featured_video.html" video=$editor_picks[e_list]}
-							{/section}
-						</div>
-					</div>
-					<!-- Editor Pick Videos Slider Container END //-->
-				</div>
-				{/if}
-			{/if}
 			<!-- ******************************************* -->
 			<!-- ************ EDITORS BLOCK END ************ -->
 			<!-- ******************************************* -->
@@ -99,7 +63,7 @@
 			<!-- ******************************************* -->
 			<!-- ************* USER BLOCK END ************** -->
 			<!-- ******************************************* -->
-
+			{$row = $myquery->Get_Website_Details()}
 			{if $row.collectionsSection == 'yes'}
 				{$collections = $cbcollection->get_collections(['limit'=>4, 'active'=>'yes', 'order'=>'total_objects DESC'])}
 				{$collections = $cbcollection->activeCollections($collections)}
@@ -168,37 +132,9 @@
 <script type="text/javascript">
 	// handles initial and load more
 	// for home page videos
-	var langCo = "{$vae}";
-	var noRecent = "{$no_recent}";
-	var loadMoreLang = "{$loadMoreLang}";
+	var langCo = "{lang code='no_featured_videos_found'}";
+	var noRecent = "{lang code='no_recent_videos_found'}";
+	var loadMoreLang = "{lang code='load_more'}";
 
-	//console.log(langCo);
 	homePageVideos("{$got_qlitems}");
-	//
-	/* player height and editerpick videos height */
-	var WinWidHome = "";
-	function editpickVideos(){
-		WinWidHome = $(window).width();
-		if(WinWidHome > 991)
-		{
-			//console.log("height "+WinWidHome);
-			var bannerHeight = $(".editorpick-holder").height();
-			bannerHeight = bannerHeight - 12;
-			//console.log("height "+bannerHeight);
-			$(".editorpick-videos .scrollable-area").css({
-				"height" : bannerHeight+"px",
-			});
-		} else {
-			console.log("height "+WinWidHome);
-
-			$(".editorpick-videos .scrollable-area").css("height","auto");
-		}
-	}
-
-	$('.playerRatio').load(function(){
-		editpickVideos();
-	});
-	$(window).resize(function() {
-		editpickVideos();
-	});
 </script>

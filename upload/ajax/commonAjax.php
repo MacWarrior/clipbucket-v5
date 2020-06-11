@@ -40,7 +40,7 @@ if (isset($_POST['mode'])) {
                     }
                     $related_videos = $related_videos_temp;
                     assign('related_videos',$related_videos);
-                    $data = Fetch("blocks/editor_pick/video_block.html");
+                    $data = Fetch("blocks/videos/video_block.html");
                     $response['video'] = $data;
 
                     $response['video_link'] = video_link($videoDetails);

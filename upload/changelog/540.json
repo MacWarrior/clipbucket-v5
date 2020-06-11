@@ -1,6 +1,6 @@
 {
   "version":"5.4.0",
-  "revision": "35",
+  "revision": "36",
   "status":"dev",
   "detail":[
     {
@@ -50,6 +50,7 @@
       "title":"Plugin",
       "description":[
         "Refactor global announcement"
+        ,"Refactor editors pick"
       ]
     }
     ,{

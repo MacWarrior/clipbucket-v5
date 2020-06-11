@@ -455,8 +455,6 @@ h1 {
   color: #757575;
   padding: 14px 0;
   border-bottom: 1px solid #d9d9d9; }
-  .featured-video:first-child:not(.playlist) {
-    padding: 10px 0 14px; }
   .featured-video:last-child {
     border: none; }
   .featured-video .video_thumb {

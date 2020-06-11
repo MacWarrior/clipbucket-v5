@@ -64,7 +64,6 @@
 {/if}
 <div style="display:none;" class="item-video col-lg-4 col-md-4 col-sm-4 col-xs-12 recentAppending">
 	<div class="clearfix thumb-holder">
-		<!-- <a class="video-link cd-popup-trigger" href="{videoLink($video)}" onclick="_cb.getModalVideo({$video.videoid})" title="{$video.title|title}"> -->
 		<a {if config('popup_video') == 'yes'}
 			class="video-link cd-popup-trigger" onclick="_cb.getModalVideo({$video.videoid})" 
 		{else}
@@ -104,15 +103,15 @@
 {/if}
 
 {if $display_type=='featuredVideos_sidebar'}
-	<div class="featured-video clearfix">
+	<div class="featured-video clearfix" data-id-video="{$video.videoid}">
 		<div class="video_thumb">
 			<a href="{videoLink($video)}">
-				<img src="{getThumb vdetails=$video size=168x105}" {ANCHOR place="video_thumb" data=$video} class="img-responsive">
+				<img src="{getThumb vdetails=$video size=168x105}" {ANCHOR place="video_thumb" data=$video} class="img-responsive"/>
 				<time datetime="2016-15-03" class="duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</time>
 			</a>
-			<img src="{$theme}/images/thumb-ratio.png" class="thumb-ratio" alt="">
+			<img src="{$theme}/images/thumb-ratio.png" class="thumb-ratio" alt=""/>
 		</div> <!--VIDEO_THUMB END-->
-		
+
 		<div class="details_block">
 			<strong class="title"><a href="{videoLink($video)}">{display_clean($video.title|truncate:50)}</a></strong>
 			<span class="author">{lang code="by"}

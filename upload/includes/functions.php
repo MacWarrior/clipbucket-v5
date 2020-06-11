@@ -1836,7 +1836,7 @@
 	function add_js($files)
 	{
 		global $Cbucket;
-		return $Cbucket->addJS($files);
+		$Cbucket->addJS($files);
 	}
 
 	/**
@@ -2471,24 +2471,6 @@
 			}
 					
 		}
-	}
-
-	/**
-	 * In each plugin we will define a CONST such as plguin_installed
-	 * that will be used weather plugin is installed or not
-	 * ie define("editorspick_install","installed");
-	 * is_installed('editorspic');
-	 *
-	 * @param : { string } { $plugin } { name of the plguin to check }
-	 *
-	 * @return bool : { boolean } { true if plugin installed, else false }
-	 */
-	function is_installed($plugin)
-	{
-		if(defined($plugin."_install")) {
-			return true;
-		}
-		return false;
 	}
 
 	/**
@@ -3175,7 +3157,7 @@
 	* but the only difference is , it is used to include
 	* JS files only
 	*
-	* @param : { arary } { $params } { array with parameters e.g  file, type}
+	* @param : { array } { $params } { array with parameters e.g  file, type}
 	* @return : { string } { javascript tag with file in src }
 	*/
 	$the_js_files = array();
@@ -3187,14 +3169,17 @@
 		if(!in_array($file,$the_js_files))
 		{
 			$the_js_files[] = $file;
-			if($type == 'global')
-			{
+			if($type == 'global') {
 				return '<script src="'.JS_URL.'/'.$file.'" type="text/javascript"></script>';
-			} elseif(is_array($type)) {
-				foreach($type as $t)
-				{
-					if($t == THIS_PAGE)
+			}
+			if($type == 'plugin') {
+                return '<script src="'.PLUG_URL.'/'.$file.'" type="text/javascript"></script>';
+            }
+			if(is_array($type)) {
+				foreach($type as $t) {
+					if($t == THIS_PAGE){
 						return '<script src="'.JS_URL.'/'.$file.'" type="text/javascript"></script>';
+                    }
 				}
 			} elseif($type == THIS_PAGE) {
 				return '<script src="'.JS_URL.'/'.$file.'" type="text/javascript"></script>';

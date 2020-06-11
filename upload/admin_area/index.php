@@ -186,14 +186,6 @@
 	$photos = $cbphoto->action->get_flagged_objects($get_limit);
 	Assign('flaggedPhotos', $photos);
 
-	$numbers = array(100,1000,15141,3421);
-	function format_number($number)
-	{
-		if($number >= 1000)
-			return $number/1000 . "k";   // NB: you will want to round this
-		return $number;
-	}
-
 	Assign('baseurl', BASEURL);
 	Assign('VERSION', VERSION);
 	Assign('STATE', STATE);

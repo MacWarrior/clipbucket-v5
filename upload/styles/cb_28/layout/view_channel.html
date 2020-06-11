@@ -317,16 +317,11 @@
   });
 })(window);
 
-/* player height and editerpick activities height */
-	var WinWidHome = "";
-	function editpickVideos(){
-		WinWidHome = $(window).width();
-		if(WinWidHome > 991)
-		{
+	function userActivities(){
+		if($(window).width() > 991) {
 			var bannerHeight = $(".player-items").height();
-			bannerHeight = bannerHeight - 43;
 			$(".user-activities").css({
-				"max-height" : bannerHeight+"px",
+				"max-height" : (bannerHeight-43)+"px",
 				"overflow-y" : "auto"
 			});
 		} else {
@@ -335,7 +330,7 @@
 	}
 
 	$(document).ready(function (){
-		editpickVideos();
+        userActivities();
 		var id ='{$user.userid}';
 		$('#subscribe_channel').on({
 			click: function(e){
@@ -406,8 +401,6 @@
 				} else {
 					$('<div class="clearfix text-center"><button id="more-view-channel" class="btn btn-loadmore" disabled="disabled">Unable to fetch more</button></div>').appendTo('.user_vids').fadeIn('slow');
 				}
-
-				
 			}
 		});
 	});
@@ -457,18 +450,14 @@
 				} else {
 					$('<div class="clearfix text-center"><button id="more-view-channel" class="btn btn-loadmore" disabled="disabled">Unable to fetch more</button></div>').appendTo('.user_vids').fadeIn('slow');
 				}
-
-				
 			}
 		});
 	});
-	/**/
-	
-	
+
 	$('.playerRatio').load(function(){
-		editpickVideos();
+        userActivities();
 	});
 	$(window).resize(function() {
-		editpickVideos();
+        userActivities();
 	});
 </script>

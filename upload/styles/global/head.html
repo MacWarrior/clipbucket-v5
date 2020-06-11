@@ -359,6 +359,12 @@ $(document).ready(function() {
 </script>
 {/if}
 
+{if $Cbucket->JSArray}
+	{foreach from=$Cbucket->JSArray key=file item=type}
+		{include_js type=$type file=$file}
+	{/foreach}
+{/if}
+
 {if $smarty.const.THIS_PAGE == 'view_item'}
 <script type="text/javascript">
 	var Seo = '{$Cbucket->configs.seo}';

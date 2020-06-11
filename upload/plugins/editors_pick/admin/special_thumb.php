@@ -1,23 +1,16 @@
 <?php
-	/*
-	 ***************************************************************
-	 | Copyright (c) 2007-2010 Clip-Bucket.com. All rights reserved.
-	 | @ Author : ArslanHassan
-	 | @ Software : ClipBucket , © PHPBucket.com
-	 ****************************************************************
-	*/
+require_once '../../../includes/admin_config.php';
+$userquery->admin_login_check();
+$pages->page_redir();
 
-	require_once '../includes/admin_config.php';
-	$userquery->admin_login_check();
-	$pages->page_redir();
+/* Generating breadcrumb */
+$breadcrumb[0] = array('title' => 'Plugin Manager', 'url' => '');
+$breadcrumb[1] = array('title' => 'Editor\'s Pick', 'url' => PLUG_URL.'/editors_pick/admin/special_thumb.php');
 
-	// TODO : Complete URL
-	/* Generating breadcrumb */
-	global $breadcrumb;
-	$breadcrumb[0] = array('title' => lang('videos'), 'url' => '');
-	$breadcrumb[1] = array('title' => 'Editor\'s Pick', 'url' => '');
+$vid = $_GET['vid'];
 
-	$vid = $_GET['vid'];
+assign("ep_ajax_url",PLUG_URL.'/editors_pick/admin/ajax.php');
 
-	subtitle("Editor's Pick");
-	template_files(CB_EP_BASEDIR.'/admin/styles/special_thumb.html');
+subtitle("Editor's Pick");
+template_files('../templates/admin/special_thumb.html');
+display_it();

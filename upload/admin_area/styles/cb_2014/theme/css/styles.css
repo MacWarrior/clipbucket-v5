@@ -713,3 +713,12 @@ ul.mainTabs{
 .nav-tabs li span.status-green{
 	background-color: #3bb71c;
 }
+
+.videoResolution-holder {
+	margin-top: 15px;
+	border-radius: 5px;
+}
+
+.row-size {
+	height: 34px;
+}
