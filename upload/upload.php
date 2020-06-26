@@ -44,10 +44,10 @@
 		assign('upload_form_name','UploadForm');
 
 		//Adding Uploading JS Files
-		$Cbucket->add_js(array('swfupload/swfupload.js'=>'uploadactive'));
-		$Cbucket->add_js(array('swfupload/plugins/swfupload.queue.js'=>'uploadactive'));
-		$Cbucket->add_js(array('swfupload/plugins/handlers.js'=>'uploadactive'));
-		$Cbucket->add_js(array('swfupload/plugins/fileprogress.js'=>'uploadactive'));
+		add_js(array('swfupload/swfupload.js'=>'uploadactive'));
+		add_js(array('swfupload/plugins/swfupload.queue.js'=>'uploadactive'));
+		add_js(array('swfupload/plugins/handlers.js'=>'uploadactive'));
+		add_js(array('swfupload/plugins/fileprogress.js'=>'uploadactive'));
 	} else {
 		$userquery->logincheck('allow_video_upload',true);
 	}

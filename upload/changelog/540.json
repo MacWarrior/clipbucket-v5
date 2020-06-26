@@ -1,6 +1,6 @@
 {
   "version":"5.4.0",
-  "revision": "36",
+  "revision": "37",
   "status":"dev",
   "detail":[
     {
@@ -58,6 +58,7 @@
       "description":[
         "Fix images sharing URLs <i>#83</i>"
         ,"Fix Add as friend error display <i>#138</i>"
+        ,"Fix error 500 <i>142</i>"
       ]
     }
   ]
