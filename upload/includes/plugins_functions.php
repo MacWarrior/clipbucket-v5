@@ -127,7 +127,7 @@ function tags($input,$type,$sep=', ',$class="")
  *
  * @return string
  */
-function categories($input,$type,$sep=',',$object_name=null)
+function categories($input,$type,$sep=', ',$object_name=null)
 {
     global $cbvideo;
     switch($type)
