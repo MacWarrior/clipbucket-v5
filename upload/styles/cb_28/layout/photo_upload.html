@@ -449,9 +449,12 @@ uploader.bind("BeforeUpload", function(){
 					        		scrollTop: $("body").offset().top},
 					        		'medium');
 					        							   			
-					   			setTimeout(function(){
-					   				$("#uploadMessage").addClass("hidden");
-					   			}, 5000);
+					   			// After click save details button it redirects to manage_photos.php
+					        
+					        	setTimeout(function(){
+									$("#uploadMessage").addClass("hidden");
+									window.location = "/manage_photos.php";
+								}, 3000);
 					   		}).fail(function(err){
 					   			console.log(err);
 					   		});
