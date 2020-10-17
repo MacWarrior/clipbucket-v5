@@ -509,14 +509,14 @@ uploader.bind("BeforeUpload", function(){
 									$(".h4").show();
 									$(".instructions").show();
 									$("#SelectionDIV").show();
-									setTimeout(function(){
-										$("#uploadMessage").addClass("hidden");
-									}, 5000);
+									$("#uploadMessage").addClass("hidden");
+									window.location = "/photo_upload.php";
+								}, 1000);
 								}else{
 									$("#uploadMessage").html(msg.err).attr("class", "alert alert-danger").removeClass("hidden");
 									setTimeout(function(){
 										$("#uploadMessage").addClass("hidden");
-									}, 5000);
+									}, 3000);
 								}
 							});
 						}
