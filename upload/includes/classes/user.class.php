@@ -3545,7 +3545,7 @@ class userquery extends CBCategory{
 		$this->validate_form_fields($array);
 		
 		//checking spambot
-		if($array['spambot']!='clipbucket')
+		if($array['spambot']!='clipbucket' && !has_access('admin_access',true))
 			e(lang('usr_spambot_err'));
 		
 		//checking terms and policy agreement
