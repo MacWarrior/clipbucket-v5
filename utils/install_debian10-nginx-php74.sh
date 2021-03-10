@@ -1,22 +1,32 @@
 #!/bin/bash
-# Clipbucket install on Debian 9.0 - 9.4
+# Clipbucket install on Debian 10.8
 ## THIS SCRIPT MUST BE LAUNCHED AS ROOT
 
 echo ""
+echo -ne "Installing dependancies for PHP 7.4..."
+apt install lsb-release apt-transport-https ca-certificates --yes > /dev/null 2>&1
+echo -ne " OK"
+echo ""
+echo -ne "Installing repository for PHP 7.4..."
+wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg > /dev/null 2>&1
+echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list > /dev/null 2>&1
+echo -ne " OK"
+
+echo ""
 echo -ne "Updating Debian system..."
-apt-get update > /dev/null
-apt-get dist-upgrade -f > /dev/null
+apt update > /dev/null 2>&1
+apt dist-upgrade -y > /dev/null 2>&1
 echo -ne " OK"
 
 echo ""
 echo -ne "Installing requiered elements..."
-apt-get install php7.0-fpm nginx-full mariadb-server git php-curl ffmpeg gpac php7.0-mysqli php7.0-xml php7.0-mbstring sendmail mediainfo --yes > /dev/null 2>&1
-service php7.0-fpm restart
+apt install php7.4-fpm nginx-full mariadb-server git php7.4-curl ffmpeg gpac php7.4-mysqli php7.4-xml php7.4-mbstring sendmail mediainfo --yes > /dev/null 2>&1
+systemctl restart php7.4-fpm
 echo -ne " OK"
 
 echo ""
 echo -ne "Installing Clipbucket sources..."
-mkdir -p /home/http/clipbucket/ && cd "$_"
+mkdir -p /srv/http/clipbucket/ && cd "$_"
 git clone https://github.com/MacWarrior/clipbucket-v5.git ./ > /dev/null 2>&1
 echo -ne " OK"
 
@@ -49,7 +59,7 @@ server {
     listen 80;
     server_name clipbucket.local;
 
-    root /home/http/clipbucket/upload/;
+    root /srv/http/clipbucket/upload/;
     index index.php;
 
     # set expiration of assets to MAX for caching
@@ -59,7 +69,7 @@ server {
     }
 
     location ~* \.php$ {
-        fastcgi_pass unix:/var/run/php/php7.0-fpm.sock;
+        fastcgi_pass unix:/var/run/php/php7.4-fpm.sock;
         fastcgi_index index.php;
         fastcgi_split_path_info ^(.+\.php)(.*)$;
         include fastcgi_params;
@@ -71,7 +81,7 @@ server {
             rewrite ^/([^.]*)/?$ /index.php last;
         }
         rewrite ^/(.*)_v([0-9]+) /watch_video.php?v=$2&$query_string last;
-    rewrite ^/([a-zA-Z0-9-]+)/?$ /view_channel.php?uid=$1&seo_diret=yes last;
+        rewrite ^/([a-zA-Z0-9-]+)/?$ /view_channel.php?uid=$1&seo_diret=yes last;
     }
 
     location /includes/ {

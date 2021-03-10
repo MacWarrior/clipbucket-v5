@@ -1,6 +1,6 @@
 {
   "version":"5.4.0",
-  "revision": "39",
+  "revision": "40",
   "status":"dev",
   "detail":[
     {
@@ -33,6 +33,7 @@
         "Remove i-magick dependancy"
         ,"Update Nginx Vhost"
         ,"Update CentOS 7 installation script"
+        ,"Add Debian 10 + Nginx + PHP 7.4 installation script"
       ]
     }
     ,{
