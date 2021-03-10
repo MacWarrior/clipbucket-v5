@@ -1,13 +1,6 @@
 <?php
-	/*
-	 ***************************************************************
-	 | Copyright (c) 2007-2010 Clip-Bucket.com. All rights reserved.
-	 | @ Author : ArslanHassan
-	 | @ Software : ClipBucket , © PHPBucket.com
-	 ****************************************************************
-	*/
-
 	require_once '../includes/admin_config.php';
+	global $userquery,$pages,$cbemail,$eh,$Cbucket,$myquery;
 	$userquery->admin_login_check();
 	$userquery->login_check('web_config_access');
 
@@ -16,7 +9,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => 'General Configurations', 'url' => '');
-	$breadcrumb[1] = array('title' => 'Email Settings', 'url' => ADMIN_BASEURL.'/email_settings.php');
+	$breadcrumb[1] = array('title' => 'Email Templates', 'url' => ADMIN_BASEURL.'/email_settings.php');
 
 	//Updating email templates
 	if(isset($_POST['update']))
@@ -31,28 +24,6 @@
 			$eh->flush();
 			e("Email templates have been updated","m");
 		}
-	}
-
-	if(isset($_POST['update_settings']))
-	{
-		$configs = $Cbucket->configs;
-
-		$rows = array(
-			'mail_type',
-			'smtp_host',
-			'smtp_user',
-			'smtp_pass',
-			'smtp_auth',
-			'smtp_port'
-		);
-
-		foreach($rows as $field)
-		{
-			$value = ($_POST[$field]);
-			$myquery->Set_Website_Details($field,$value);
-		}
-		e("Email Settings Have Been Updated",'m');
-
 	}
 
 	$row = $myquery->Get_Website_Details();

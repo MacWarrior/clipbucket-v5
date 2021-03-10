@@ -1,6 +1,6 @@
 {
   "version":"5.4.0",
-  "revision": "37",
+  "revision": "38",
   "status":"dev",
   "detail":[
     {
@@ -44,6 +44,7 @@
         ,"Fix mass upload template"
         ,"Add security to prevent duplicated sub-menus <i>#127</i>"
         ,"Fix possible SQL injection"
+        ,"Refactor website configurations"
       ]
     }
     ,{
@@ -58,7 +59,7 @@
       "description":[
         "Fix images sharing URLs <i>#83</i>"
         ,"Fix Add as friend error display <i>#138</i>"
-        ,"Fix error 500 <i>142</i>"
+        ,"Fix error 500 <i>#142</i>"
       ]
     }
   ]

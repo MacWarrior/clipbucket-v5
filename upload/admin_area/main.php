@@ -1,13 +1,6 @@
 <?php
-	/*
-	 ***************************************************************
-	 | Copyright (c) 2007-2010 Clip-Bucket.com. All rights reserved.
-	 | @ Author : ArslanHassan
-	 | @ Software : ClipBucket , © PHPBucket.com
-	 ***************************************************************
-	*/
-
 	require_once '../includes/admin_config.php';
+	global $userquery,$pages,$Upload,$myquery;
 	$userquery->admin_login_check();
 	$userquery->login_check('web_config_access');
 	$pages->page_redir();
@@ -29,7 +22,26 @@
 
 	if(isset($_POST['update']))
 	{
-		$configs = $Cbucket->configs;
+	    $configs = array(
+	        // General
+	        'site_title'
+            ,'site_slogan'
+            ,'keywords'
+            ,'description'
+            ,'closed'
+            ,'enable_update_checker'
+            ,'seo'
+            ,'store_guest_session'
+            ,'date_format'
+            ,'closed_msg'
+            ,'videosSection'
+            ,'photosSection'
+            ,'collectionsSection'
+            ,'channelsSection'
+            ,'allow_registeration'
+
+            // Users
+        );
 
 		$rows = array(
 			'allowed_video_types',
@@ -66,7 +78,6 @@
 			'collection_rating',
 			'collectionsSection',
 			'comments_per_page',
-			//'captcha_type',
 			'comments_captcha',
 			'comment_rating',
 			'collection_per_page',
@@ -82,7 +93,6 @@
 			'date_format',
 			'description',
 			'default_country_iso2',
-			'default_time_zone',
             'pick_geo_country',
             'enable_update_checker',
 			'disallowed_usernames',
@@ -138,7 +148,6 @@
 			'min_age_reg',
 			'min_username',
 			'max_comment_chr',
-			'max_time_wait',
 			'max_upload_size',
 			'max_video_duration',
 
@@ -184,11 +193,9 @@
 
 			//'use_crons',
 			'user_comment_own',
-			'user_rate_opt1'	,
 			'users_items_subscriptions',
 			'users_items_contacts_channel',
 			'users_items_search_page',
-			'user_max_chr',
 			'use_cached_pagin',
 			'cached_pagin_time',
 
@@ -197,14 +204,11 @@
 			'vid_cat_width',
 			'videosSection',
 			'videos_items_hme_page',
-			'videos_items_columns',
 			'videos_items_ufav_page',
 			'videos_items_uvid_page',
 			'videos_items_search_page',
 			'videos_item_channel_page',
 			'videos_list_per_page',
-			'index_featured',
-			'index_recent',
 			'videos_list_per_tab',
 			'video_download',
 			'bits_color_warning',
@@ -233,11 +237,17 @@
             'vbrate_480',
             'vbrate_720',
             'vbrate_1080',
-            'allow_conversion_1_percent'
+            'allow_conversion_1_percent',
+
+            'mail_type',
+			'smtp_host',
+			'smtp_user',
+			'smtp_pass',
+			'smtp_auth',
+			'smtp_port'
 		);
 
-		foreach($opt_list as $optl)
-		{
+		foreach($opt_list as $optl) {
 			$rows[] = $optl['load_func'];
 		}
 
@@ -265,13 +275,10 @@
 			'users_items_search_page',
 
 			'videos_items_hme_page',
-			'videos_items_columns',
 			'videos_items_ufav_page',
 			'videos_items_uvid_page',
 			'videos_items_search_page',
 			'videos_item_channel_page',
-			'index_featured',
-			'index_recent',
 			'videos_list_per_page',
 			'videos_list_per_tab',
 			'video_categories',
@@ -293,61 +300,14 @@
 			'collection_channel_page'
 		);
 
-		if (isset($_POST['seo']) != "yes") {
-			$_POST['seo']= "no";
-		}
-		if(isset($_POST['delete_mass_upload']) != "yes"){
-			$_POST['delete_mass_upload'] = "no";
-		}
-
-		 if(isset($_POST['stay_mp4']) != "yes"){
-			$_POST['stay_mp4'] = "no";
-		}
-
-		if (isset($_POST['send_comment_notification']) != "yes") {
-			$_POST['send_comment_notification']= "no";
-
-		}
-		if (isset($_POST['approve_video_notification']) != "yes") {
-			$_POST['approve_video_notification']= "no";
-
-		}
-		if (isset($_POST['use_cached_pagin']) != "yes") {
-			$_POST['use_cached_pagin']= "no";
-
-		}
-		if (isset($_POST['gravatars']) != "yes") {
-			$_POST['gravatars']= "no";
-
-		}
-		if (isset($_POST['select5']) != "yes") {
-			$_POST['select5']= "no";
-
-		}
-		if (isset($_POST['select6']) != "yes") {
-			$_POST['select5']= "no";
-
-		}
-		if (isset($_POST['select4']) != "yes") {
-			$_POST['select5']= "no";
-
-		}
-		if (isset($_POST['background_color']) != "yes") {
-			$_POST['background_color']= "no";
-
-		}
-		if (isset($_POST['select7']) != "yes") {
-			$_POST['select7']= "no";
-
-		}
-
 		foreach($rows as $field)
 		{
 			$value = ($_POST[$field]);
 			if(in_array($field,$num_array))
 			{
-				if($value <= 0 || !is_numeric($value))
+				if($value <= 0 || !is_numeric($value)){
 					$value = 1;
+                }
 			}
 			$myquery->Set_Website_Details($field,$value);
 		}

@@ -722,3 +722,35 @@ ul.mainTabs{
 .row-size {
 	height: 34px;
 }
+
+.no_padding {
+	padding: 0 !important;
+}
+
+.nowrap{
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden !important;
+}
+
+label.nowrap{
+	width: 100%;
+}
+
+label,
+span.lbl{
+	margin-top: 5px !important;
+}
+
+.tab-content{
+	padding: 10px 0 !important;
+}
+
+.row{
+	margin-right: 0 !important;
+	margin-left: 0 !important;
+}
+
+textarea.form-control{
+	height: 99px;
+}
