@@ -743,7 +743,11 @@ span.lbl{
 }
 
 .tab-content{
-	padding: 10px 0 !important;
+	padding: 10px 0;
+}
+
+.tab-content.nopadding{
+	padding: 0;
 }
 
 .row{
@@ -753,4 +757,11 @@ span.lbl{
 
 textarea.form-control{
 	height: 99px;
+}
+
+.well.changelog{
+	background-color:inherit;
+	border:none;
+	margin-bottom:0;
+	box-shadow: none;
 }

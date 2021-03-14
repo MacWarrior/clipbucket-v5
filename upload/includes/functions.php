@@ -5381,7 +5381,7 @@
         } else {
             $content_json = $version;
         }
-        echo '<div class="well">';
+        echo '<div class="well changelog">';
         if( is_null($title) ){
             echo '<h3>'.$content_json['version'].' Changelog - '.ucfirst($content_json['status']).'</h3>';
         } else {
@@ -5501,8 +5501,8 @@
         }
 
         if( !$only_flag ) {
-            echo '<h5>Current version : <b>' . $current_version . '</b> - Revision <b>'.$current_revision.'</b> <i>('.ucfirst( $current_status ).')</i><br/>';
-            echo 'Latest version <i>('.ucfirst( $current_status).')</i> : <b>'.$changelog['version'].'</b> - Revision <b>'.$changelog['revision'].'</b></h5>';
+            echo '<div class="well changelog"><h5>Current version : <b>' . $current_version . '</b> - Revision <b>'.$current_revision.'</b> <i>('.ucfirst( $current_status ).')</i><br/>';
+            echo 'Latest version <i>('.ucfirst( $current_status).')</i> : <b>'.$changelog['version'].'</b> - Revision <b>'.$changelog['revision'].'</b></h5></div>';
         }
 
         if( $current_version == $changelog['version'] && $current_revision == $changelog['revision'] ){
@@ -5525,7 +5525,7 @@
         }
 
         if( $current_status == 'dev' ){
-            echo '<h5>Thank you for using the developpement version of Clipbucket !<br/>Please create an <a href="https://github.com/MacWarrior/clipbucket-v5/issues" target="_blank">issue</a> if you encounter any bug.</h5>';
+            echo '<div class="well changelog"><h5>Thank you for using the developpement version of Clipbucket !<br/>Please create an <a href="https://github.com/MacWarrior/clipbucket-v5/issues" target="_blank">issue</a> if you encounter any bug.</h5></div>';
         }
     }
 
