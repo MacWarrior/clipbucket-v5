@@ -1,12 +1,13 @@
 {
   "version":"5.4.1",
-  "revision": "0",
+  "revision": "2",
   "status":"dev",
   "detail":[
     {
       "title": "Miscellaneous",
       "description": [
         "Update VideoJS to version 7.11.7"
+        ,"Update Smarty to version 3.1.39"
       ]
     }
   ]
