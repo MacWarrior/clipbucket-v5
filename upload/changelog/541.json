@@ -3,6 +3,11 @@
   "revision": "0",
   "status":"dev",
   "detail":[
-
+    {
+      "title": "Miscellaneous",
+      "description": [
+        "Update VideoJS to version 7.11.7"
+      ]
+    }
   ]
 }

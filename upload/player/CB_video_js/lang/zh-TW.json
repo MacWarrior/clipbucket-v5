@@ -1,4 +1,4 @@
-videojs.addLanguage('zh-TW', {
+{
   "Play": "播放",
   "Pause": "暫停",
   "Current Time": "目前時間",
@@ -84,4 +84,4 @@ videojs.addLanguage('zh-TW', {
   "Seek to live, currently playing live": "試圖直播，目前即時播放",
   "progress bar timing: currentTime={1} duration={2}": "{1}/{2}",
   "{1} is loading.": "{1} 正在載入。"
-});
+}

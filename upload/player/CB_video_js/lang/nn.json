@@ -1,4 +1,4 @@
-videojs.addLanguage('nn', {
+{
   "Audio Player": "Lydspelar",
   "Video Player": "Videospelar",
   "Play": "Spel",
@@ -84,4 +84,4 @@ videojs.addLanguage('nn', {
   "Beginning of dialog window. Escape will cancel and close the window.": "Byrjing på dialogvindauge. Trykk Escape for å avbryte og lukke vindauget.",
   "End of dialog window.": "Avslutning på dialogvindauge.",
   "{1} is loading.": "{1} lastar."
-});
+}

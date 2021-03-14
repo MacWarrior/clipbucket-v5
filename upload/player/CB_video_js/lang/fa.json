@@ -1,4 +1,4 @@
-videojs.addLanguage('fa', {
+{
   "Audio Player": "پخش کننده صوت",
   "Video Player": "پخش کننده ویدیو",
   "Play": "پخش",
@@ -86,4 +86,4 @@ videojs.addLanguage('fa', {
   "{1} is loading.": "{1} در حال بارگیری است.",
   "Exit Picture-in-Picture": "خروج از حالت تصویر در تصویر",
   "Picture-in-Picture": "تصویر در تصویر"
-});
+}

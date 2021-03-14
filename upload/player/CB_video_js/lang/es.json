@@ -1,4 +1,4 @@
-videojs.addLanguage('es', {
+{
   "Play": "Reproducir",
   "Play Video": "Reproducir Vídeo",
   "Pause": "Pausa",
@@ -84,4 +84,4 @@ videojs.addLanguage('es', {
   "Beginning of dialog window. Escape will cancel and close the window.": "Comienzo de la ventana de diálogo. La tecla Escape cancelará la operación y cerrará la ventana.",
   "End of dialog window.": "Final de la ventana de diálogo.",
   "{1} is loading.": "{1} se está cargando."
-});
+}

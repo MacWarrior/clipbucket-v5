@@ -422,7 +422,7 @@ body.vjs-full-window {
   right: 0;
 }
 
-.video-js.vjs-fullscreen {
+.video-js.vjs-fullscreen:not(.vjs-ios-native-fs) {
   width: 100% !important;
   height: 100% !important;
   padding-top: 0 !important;
@@ -614,6 +614,11 @@ body.vjs-full-window {
   color: #2B333F;
 }
 
+.video-js .vjs-menu *:focus:not(:focus-visible),
+.js-focus-visible .vjs-menu *:focus:not(.focus-visible) {
+  background: none;
+}
+
 .vjs-menu li.vjs-menu-title {
   text-align: center;
   text-transform: uppercase;
@@ -777,6 +782,10 @@ body.vjs-full-window {
 .vjs-button > .vjs-icon-placeholder:before {
   font-size: 1.8em;
   line-height: 1.67;
+}
+
+.vjs-button > .vjs-icon-placeholder {
+  display: block;
 }
 
 .video-js .vjs-control:focus:before,
@@ -1166,6 +1175,7 @@ body.vjs-full-window {
 }
 
 .video-js .vjs-seek-to-live-control {
+  align-items: center;
   cursor: pointer;
   flex: none;
   display: inline-flex;
@@ -1653,11 +1663,8 @@ video::-webkit-media-text-track-display {
 
 .js-focus-visible .video-js *:focus:not(.focus-visible) {
   outline: none;
-  background: none;
 }
 
-.video-js *:focus:not(:focus-visible),
-.video-js .vjs-menu *:focus:not(:focus-visible) {
+.video-js *:focus:not(:focus-visible) {
   outline: none;
-  background: none;
 }

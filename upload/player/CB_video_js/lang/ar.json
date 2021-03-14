@@ -1,4 +1,4 @@
-videojs.addLanguage('ar', {
+{
   "Play": "تشغيل",
   "Pause": "إيقاف",
   "Current Time": "الوقت الحالي",
@@ -83,4 +83,4 @@ videojs.addLanguage('ar', {
   "Beginning of dialog window. Escape will cancel and close the window.": "بداية نافذة مربع حوار. الضغط على زر \"Escape\" سيؤدي إلى الإلغاء وإغلاق النافذة.",
   "End of dialog window.": "نهاية نافذة مربع حوار.",
   "{1} is loading.": "{1} قيد التحميل."
-});
+}

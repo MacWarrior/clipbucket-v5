@@ -1,4 +1,4 @@
-videojs.addLanguage('en', {
+{
   "Audio Player": "Audio Player",
   "Video Player": "Video Player",
   "Play": "Play",
@@ -86,4 +86,4 @@ videojs.addLanguage('en', {
   "{1} is loading.": "{1} is loading.",
   "Exit Picture-in-Picture": "Exit Picture-in-Picture",
   "Picture-in-Picture": "Picture-in-Picture"
-});
+}
