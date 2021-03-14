@@ -1,7 +1,7 @@
 {
   "version":"5.4.0",
   "revision": "40",
-  "status":"dev",
+  "status":"stable",
   "detail":[
     {
       "title": "Miscellaneous",
