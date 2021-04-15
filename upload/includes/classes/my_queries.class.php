@@ -46,32 +46,24 @@ class myquery
 		$query = ("SELECT * FROM ".tbl("config"));
 		$data = db_select($query);
 
-		if($data)
+		if($data){
+		    global $config_overwrite;
 			foreach($data as $row)
 			{
 				$name = $row['name'];
-				$data[$name] = $row['value'];
+                if( isset($config_overwrite, $config_overwrite[$name]) ){
+                    $data[$name] = $config_overwrite[$name];
+                } else {
+				    $data[$name] = $row['value'];
+                }
 			}
+        }
 		return $data;
 	}
 
 	//Function Used to Check Weather Video Exists or not
 	function VideoExists($videoid){global $cbvid;return $cbvid->exists($videoid);}
 	function video_exists($videoid){return $this->VideoExists($videoid);}
-	function CheckVideoExists($videokey){return $this->VideoExists($videokey);}
-	
-	//Function used to Delete Video
-	
-	function DeleteVideo($videoid){
-		global $cbvid;
-		return $cbvid->delete_video($videoid);
-	}
-
-	//Video Actions - All Moved to video.class.php	
-	function MakeFeaturedVideo($videoid){global $cbvid;return $cbvid->action('feature',$videoid);}
-	function MakeUnFeaturedVideo($videoid){global $cbvid;return $cbvid->action('unfeature',$videoid);}
-	function ActivateVideo($videoid){global $cbvid;return $cbvid->action('activate',$videoid);}
-	function DeActivateVideo($videoid){global $cbvid;return $cbvid->action('deactivate',$videoid);}
 
 	/**
 	 * Function used to get video details
@@ -81,12 +73,7 @@ class myquery
 	 *
 	 * @return bool|mixed|STRING
 	 */
-	function get_video_details($vid){global $cbvid;return $cbvid->get_video($vid);}	
-	function GetVideoDetails($video){return $this->get_video_details($video);}
-	function GetVideDetails($video){return $this->get_video_details($video);}
-
-	//Function Used To Update Videos Views
-	function UpdateVideoViews($vkey){increment_views($vkey,'video');}
+	function get_video_details($vid){global $cbvid;return $cbvid->get_video($vid);}
 	
 	/**
 	 * Function used to check weather username exists not
@@ -107,7 +94,7 @@ class myquery
     /**
      * Function used to delete comments
      *
-     * @param CID
+     * @param $cid
      * @param string $type
      * @param bool   $is_reply
      * @param bool   $forceDelete
@@ -145,7 +132,6 @@ class myquery
 			return false;
 		}
 	}
-	function DeleteComment($id,$videoid){return $this->delete_comment($videoid);}
 	
 	/**
 	 * Function used to set comment as spam
@@ -215,32 +201,6 @@ class myquery
 		}
 	 }
 
-    /**
-     * Function used to delete all comments of particlar object
-     *
-     * @param        $objid
-     * @param string $type
-     * @param bool   $forceDelete
-     *
-     * @return bool
-     */
-	function delete_comments($objid,$type='v',$forceDelete=false)
-	{
-		global $db,$userquery;
-
-		$uid = user_id();
-		
-		if($userquery->permission['admin_del_access'] == 'yes'  || $forceDelete)
-		{
-			$db->Execute("DELETE FROM ".tbl("comments")." WHERE type_id='$objid' AND type='$type' ");
-			
-			e(lang('usr_cmt_del_msg'),'m');
-			return true;
-		} else {
-			e(lang('no_comment_del_perm'));
-			return false;
-		}
-	}
 
     /***
      * Function used to rate comment
@@ -286,91 +246,6 @@ class myquery
 		}
 		
 		return false;
-	}
-
-	/**
-	 * FUNCTION USED TO GET VIDEOS FROM DATABASE
-	 *
-	 * @param array  $param
-	 * @param bool   $global_cond
-	 * @param string $result
-	 *
-	 * @return mixed|string
-	 * @internal param $ : array of query parameters array()
-	 * featured => '' (yes,no)
-	 * username => '' (TEXT)
-	 * title => '' (TEXT)
-	 * tags => '' (TEXT)
-	 * category => '' (INT)
-	 * limit => '' (OFFSET,LIMIT)
-	 * order=>'' (BY SORT) -- (date_added DESC)
-	 * extra_param=>'' ANYTHING FOR MYSQL QUERY
-	 * @internal param $ : boolean
-	 * @internal param $ : results type (results,query)
-	 *
-	 */
-	function getVideoList($param=array(),$global_cond=true,$result='results')
-	{
-		global $db;
-		
-		$sql = "SELECT * FROM video";
-
-		$cond = '';
-		//Global Condition For Videos
-		if($global_cond==true)
-			$cond = "broadcast='public' AND active='yes' AND status='Successful'";
-		//Checking Condition
-		if(!empty($param['featured']))
-		{
-			$param['featured'] = 'yes' ? 'yes' : 'no';
-			$cond .=" AND featured= '".$param['featured']."' ";
-		}
-		if(!empty($param['username']))
-		{
-			$username = mysql_clean($param['username']);
-			$cond .=" AND featured= '".$username."' ";
-		}
-		if(!empty($param['category']))
-		{
-			$category = intval($param['category']);
-			$cond .=" AND (category01= '".$category."' OR category02= '".$category."' OR category03= '".$category."') ";
-		}
-		if(!empty($param['tags']))
-		{
-			$tags = mysql_clean($param['tags']);
-			$cond .=" AND tags LIKE '%".$tags."%' ";
-		}
-		if(!empty($param['title']))
-		{
-			$tags = mysql_clean($param['tags']);
-			$cond .=" AND title LIKE '%".$param['title']."%' ";
-		}
-		
-		//Adding Condition in Query
-		if(!empty($cond))
-			$sql .= " WHERE $cond ";
-		
-		//SORTING VIDEOS
-		if(!empty($param['order']))
-			$sort = 'ORDER BY '.$param['order'];
-		
-		//Adding Sorting In Query
-			$sql .= $sort;
-			
-		//LIMITING VIDEO LIST
-		if(empty($param['limit']))
-			$limit = " LIMIT ". VLISTPP;
-		elseif($param['limit']=='nolimit')
-			$limit = '';
-		else
-			$limit = " LIMIT ".$param['limit'];
-				
-		$sql .= $limit;
-		//Final Executing of Query and Returning Results
-		if($result=='results')
-			return $db->Execute($sql);
-		else
-			return $sql;
 	}
 
     /**
@@ -776,21 +651,7 @@ class myquery
 
 		return $db->count(tbl("comments"),"*"," type='$type' $typeid_query $cond");
 	}
-	
-	function get_replies($p_id,$type='v')
-	{
-		global $db;
-		$result = $db->select(tbl("comments,users"),"*"," type='$type' AND parent_id = '$p_id' AND ".tbl("comments.userid")." = ".tbl("users.userid")."");
-		$ayn_result = $db->select(tbl("comments,users"),"*"," type='$type' AND parent_id = '$p_id' AND ".tbl("comments.userid")." = '0'");
-		
-		if($result && $ayn_result)
-			$result = array_merge($result,$ayn_result);
-		elseif(!$result && $ayn_result)
-			$result = $ayn_result;
-			
-		return $result;	
-	}
-	
+
 	/**
 	 * Function used to get video owner
 	 */

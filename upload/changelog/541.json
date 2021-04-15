@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision": "4",
+  "revision": "5",
   "status":"dev",
   "detail":[
     {
@@ -10,6 +10,7 @@
         ,"Update Smarty to version 3.1.39"
         ,"Rename dbconnect.php to config.php"
         ,"Cleanup code"
+        ,"Add config option to overwrite DB config values"
       ]
     }
     ,{
