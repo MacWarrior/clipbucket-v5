@@ -50,7 +50,11 @@ require_once('classes/db.class.php');
 require_once('functions.php');
 check_install('before');
 
-require_once ('dbconnect.php');
+if( file_exists(__DIR__.'/config.php') ){
+    require_once 'config.php'; // New config file
+} else {
+    require_once 'dbconnect.php'; // Old config file
+}
 
 # class for storing common ClipBucket functions
 require_once('classes/ClipBucket.class.php');

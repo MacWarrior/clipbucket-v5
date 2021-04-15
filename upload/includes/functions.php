@@ -3591,20 +3591,18 @@
 		switch($type)
 		{
 			case "before":
-				if(file_exists('files/temp/install.me') && !file_exists('includes/dbconnect.php') )
-				{
+				if(file_exists('files/temp/install.me') && !file_exists('includes/dbconnect.php') && !file_exists('includes/config.php') ) {
 					header('Location: '.get_server_url().'/cb_install');
 					die();
 				}
 				break;
 			
 			case "after":
-				if(file_exists('files/temp/install.me'))
-				{
+				if(file_exists('files/temp/install.me')) {
 					$Cbucket->configs['closed'] = 1;
 				}
 				break;
-		}       
+		}
     }
 
 	/**
@@ -3619,8 +3617,7 @@
             $DirName = str_replace('/admin_area','',$DirName);
         }
 
-		if(preg_match('/cb_install/i', $DirName))
-        {
+		if(preg_match('/cb_install/i', $DirName)) {
             $DirName = str_replace('/cb_install','',$DirName);
         }
         return get_server_protocol().$_SERVER['HTTP_HOST'].$DirName;
