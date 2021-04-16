@@ -229,6 +229,8 @@
 			'stay_mp4',
 			'popup_video',
 			'video_round_views',
+            'load_upload_form',
+            'load_remote_upload_form',
 
             'vbrate',
             'vbrate_hd',

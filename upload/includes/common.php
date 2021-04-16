@@ -432,18 +432,24 @@ if (!file_exists( PLAYLIST_COVERS_DIR)) {
     mkdir(PLAYLIST_COVERS_DIR, 0777);
 }
 
-$ClipBucket->upload_opt_list = array(
-    'file_upload_div'	=>	array(
-        'title'		=>	lang('upload_file'),
-        'func_class'	=> 	'Upload',
-        'load_func'	=>	'load_upload_form',
-    ),
-    'remote_upload_div' => array(
-        'title'	=> lang('remote_upload'),
+$ClipBucket->upload_opt_list = array();
+
+if( config('load_upload_form') == 'yes' ){
+    $ClipBucket->upload_opt_list['file_upload_div'] = array(
+        'title'      => lang('upload_file'),
         'func_class' => 'Upload',
-        'load_func' => 'load_remote_upload_form',
-    )
-);
+        'load_func'  => 'load_upload_form',
+    );
+}
+
+if( config('load_remote_upload_form') == 'yes' ){
+    $ClipBucket->upload_opt_list['remote_upload_div'] = array(
+        'title'      => lang('remote_upload'),
+        'func_class' => 'Upload',
+        'load_func'  => 'load_remote_upload_form',
+    );
+}
+
 Assign('LANG',$LANG);
 Assign('langf',getConstant('LANG'));
 Assign('lang_count',(isset($languages)) ? count($languages) : false);

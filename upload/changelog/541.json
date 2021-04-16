@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision": "7",
+  "revision": "8",
   "status":"dev",
   "detail":[
     {
@@ -18,12 +18,14 @@
       "description":[
         "Update changelogs display"
         ,"Fix video bits colors update"
+        ,"Fix file upload and remove upload config saving"
       ]
     }
   ,{
       "title":"Front office",
       "description":[
         "Hide upload video menu and global upload menu if no option is available"
+        ,"Fix remote upload tab display when file upload is disabled"
       ]
     }
   ]
