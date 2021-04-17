@@ -2,38 +2,31 @@
 	<h2>Website Configurations</h2>
 </div>
 <script>
-    var current_tab = '';
-    var current_div = '';
-
-    function display_tab(Li, divid)
-	{
-        if (current_tab != ''){
-            $(current_tab).attr("class", "");
-        }
-        if (current_div != ''){
-            $('#' + current_div).hide();
-        }
-
-        $(Li).attr("class", "active");
-        $('#' + divid).show();
-
-        window.location.hash = 'current_' + divid.substr(4, 3);
-        $("#main_form").attr("action", window.location.hash);
-
-        current_tab = Li;
-        current_div = divid;
-        return false;
+    function display_tab(divId)
+    {
+        $('ul.nav-tabs li').removeClass('active');
+        $('ul.nav-tabs li > a[href=\''+divId+'\'').parent().addClass('active');
+        $('div.tab-content div').removeClass('active');
+        $(divId).addClass('active');
+        setHash(divId);
     }
+
+	function setHash(hash){
+        window.location.hash = hash;
+        $("#main_form").attr("action", hash);
+	}
 
     $(document).ready(function ()
 	{
-        var thehash = window.location.hash.substr(9, 3);
-        $("#tabbed_div > div").hide();
-        if (thehash == '') {
-            display_tab('#tab_1', 'div_1');
-        } else {
-            display_tab('#tab_' + thehash, 'div_' + thehash);
-        }
+	    if( window.location.hash === '' ){
+            setHash($('ul.nav-tabs li:first a').attr('href'));
+		} else {
+            display_tab(window.location.hash);
+		}
+
+        $('ul.nav-tabs li a').click(function(){
+        	setHash($(this).attr('href'));
+		});
 
         $('#convProfile').change(function() {
             var value = $("#convProfile option:selected").val();

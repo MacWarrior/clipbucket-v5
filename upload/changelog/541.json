@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision": "9",
+  "revision": "10",
   "status":"dev",
   "detail":[
     {
@@ -11,6 +11,7 @@
         ,"Rename dbconnect.php to config.php"
         ,"Cleanup code"
         ,"Add config option to overwrite DB config values"
+        ,"Remove unused file"
       ]
     }
     ,{
@@ -20,6 +21,7 @@
         ,"Fix video bits colors update"
         ,"Fix file upload and remove upload config saving"
         ,"Add option to restrict email domains during registration"
+        ,"Fix website configuration tabs display"
       ]
     }
   ,{
