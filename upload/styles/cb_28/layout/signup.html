@@ -176,26 +176,27 @@
 		var currentDate = new Date();
 		$("#dob").datepicker("setDate", currentDate);
 	 });
-	
+
 	var errors = {
-		"empty_name" : "{lang code='usr_uname_err'}", 
-		"name_length" : "{lang code='user_name_invalid_len'}", 
+		"empty_name"         : "{lang code='usr_uname_err'}",
+		"name_length"        : "{lang code='user_name_invalid_len'}",
 		"name_invalid_chars" : "{lang code='usr_uname_err3'}",
-		"pass_mismatch" : "{lang code='usr_pass_err3'}", 
-		"empty_pass" : "{lang code='usr_pass_err2'}", 
-		"empty_email" : "{lang code='usr_email_err1'}" , 
-		"invalid_email":"{lang code='usr_email_err2'}",
-		"user_exists":"{lang code='usr_uname_err2'}",
-		"email_exists":"{lang code='usr_email_err3'}",
-		"weak_pass":"{lang code='weak_pass'}",
-		"username_spaces":"{lang code='username_spaces'}",
+		"pass_mismatch"      : "{lang code='usr_pass_err3'}",
+		"empty_pass"         : "{lang code='usr_pass_err2'}",
+		"empty_email"        : "{lang code='usr_email_err1'}" ,
+		"invalid_email"      : "{lang code='usr_email_err2'}",
+		"user_exists"        : "{lang code='usr_uname_err2'}",
+		"email_exists"       : "{lang code='usr_email_err3'}",
+		"email_unauthorized" : "{lang code='signup_error_email_unauthorized'}",
+		"weak_pass"          : "{lang code='weak_pass'}",
+		"username_spaces"    : "{lang code='username_spaces'}",
 	};
 	function removeErrClass(obj, passSec = false) {
 		$(obj).closest('.form-group').removeClass('invalid-error');
 		$(obj).closest('.form-group').removeClass('warning-ind');
 		$(obj).closest('.form-group').addClass('success-ind');
 		$(obj).next('span').remove();
-		if (passSec == true) {
+		if (passSec === true) {
 			theVal = 'password';
 		} else {
 			theVal = $(obj).val();
@@ -205,18 +206,18 @@
 
 	function addErrClass(obj, msg, override = false, scroll = true, tclass = false) {
 		$(obj).closest('.form-group').removeClass('success-ind');
-		if (tclass != false) {
+		if (tclass !== false) {
 			$(obj).closest('.form-group').removeClass('invalid-error');
 			$(obj).closest('.form-group').addClass(tclass);
 		} else {
 			$(obj).closest('.form-group').removeClass('warning-ind');
 			$(obj).closest('.form-group').addClass('invalid-error');
 		}
-		if (override == true) {
+		if (override === true) {
 			$(obj).next('span').remove();
 		}
 		$('<span class="help-block">'+msg+"</span>").insertAfter(obj);
-		if (scroll == true) {
+		if (scroll === true) {
 			$("html, body").animate({ scrollTop: 0 }, "slow");
 		}
 	}
@@ -225,7 +226,7 @@
 	     var userSect = $('#username'),
 	     usernameVal = userSect.val(),
 	     usernameLen = usernameVal.length;
-	     if (usernameVal == '') {
+	     if (usernameVal === '') {
 	     	addErrClass(userSect, errors["empty_name"], true, false);
 	     } else if (usernameLen <= 2 || usernameLen >= 50) {
 	     	addErrClass(userSect, errors["name_length"], true, false);
@@ -249,7 +250,7 @@
 
 					success: function(data) {
 						data = $.trim(data);
-						if (data == 'NO') {
+						if (data === 'NO') {
 							removeErrClass(userSect);	
 						} else {
 							addErrClass(userSect, errors['user_exists'], true, false)
@@ -264,31 +265,30 @@
 	     var emailSec = $('#email'),
 	     email = emailSec.val(),
 	     emailLen = email.length;
-	     if (emailLen == 0 || email == '') {
+
+	     if (emailLen === 0 || email === '') {
 	     	addErrClass(emailSec, errors["empty_email"], true, false);
 	     } else if (!isValidEmail(email)) {
 	     	addErrClass(emailSec, errors["invalid_email"], true, false);
-	     } else if (isValidEmail(email)) {
-	     	removeErrClass(emailSec);	
 	     } else {
 	     	$.ajax({
 				url: "/ajax/commonAjax.php",
 				type: "post",
 				dataType: "html",
 				data: {
-					"mode":'emailExists',
+					"mode":'check_email',
 					"email":email,
 				},
-				beforeSend: function() {
-					$(document).find('#more-view-channel').text('Loading videos..')
-				},
-
 				success: function(data) {
 					data = $.trim(data);
-					if (data == 'NO') {
+					if (data === 'OK') {
 						removeErrClass(emailSec);	
-					} else {
+					} else if( data === 'emailExists' ) {
 						addErrClass(emailSec, errors['email_exists'], true, false)
+					} else if( data === 'unauthorized' ) {
+                        addErrClass(emailSec, errors['email_unauthorized'], true, false)
+					} else {
+                        addErrClass(emailSec, data, true, false)
 					}
 				}
 			});

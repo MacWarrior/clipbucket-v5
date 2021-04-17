@@ -528,8 +528,13 @@
 							<hr/>
 
 							<div class="row">
-								<div class="col-md-12">
-									<div style="height:34px;">&nbsp;</div> <!-- Space for futur users config -->
+								<div class="row">
+									<div class="col-md-6">
+										<label class="nowrap" for="email_domain_restriction" title="Email domain restriction"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="List of authorized domains, separated by commas"> Email domain restriction</label>
+									</div>
+									<div class="col-md-6">
+										<input class="form-control" name="email_domain_restriction" id="email_domain_restriction" value="{$row.email_domain_restriction}"/>
+									</div>
 								</div>
 							</div>
 							<hr/>

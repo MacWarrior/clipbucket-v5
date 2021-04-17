@@ -5,14 +5,21 @@ if (isset($_POST['mode'])) {
     $mode = $_POST['mode'];
     global $db;
     switch ($mode) {
-        case 'emailExists':
+        case 'check_email':
             $email = mysql_clean($_POST['email']);
-            $check = $db->select(tbl('users'),"email"," email='$email'",false,false,false,true);
-            if (!$check) {
-                echo "NO";
-            } else {
-                echo "Fuck";
+            $check = $db->select(tbl('users'),"email"," email='$email'");
+            if( $check ){
+                echo 'emailExists';
+                break;
             }
+
+            global $userquery;
+            if( !$userquery->check_email_domain($_POST['email']) ){
+                echo 'unauthorized';
+                break;
+            }
+
+            echo 'OK';
             break;
 
         case 'userExists':
@@ -22,9 +29,11 @@ if (isset($_POST['mode'])) {
                 echo "NO";
             }
             break;
+
         case 'get_video':{
             $response = array();
             try{
+                global $cbvid;
                 $videoid = (int)$_POST['videoid'];
                 $videoDetails = $cbvid->get_video($videoid);
                 if ( $videoDetails && video_playable($videoDetails) ){

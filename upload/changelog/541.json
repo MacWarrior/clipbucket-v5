@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision": "8",
+  "revision": "9",
   "status":"dev",
   "detail":[
     {
@@ -19,6 +19,7 @@
         "Update changelogs display"
         ,"Fix video bits colors update"
         ,"Fix file upload and remove upload config saving"
+        ,"Add option to restrict email domains during registration"
       ]
     }
   ,{
@@ -26,6 +27,7 @@
       "description":[
         "Hide upload video menu and global upload menu if no option is available"
         ,"Fix remote upload tab display when file upload is disabled"
+        ,"Fix email verification in signup form"
       ]
     }
   ]

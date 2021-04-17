@@ -1395,6 +1395,12 @@
 		return $userquery->duplicate_email($user);
 	}
 
+	function check_email_domain($email)
+	{
+		global $userquery;
+		return $userquery->check_email_domain($email);
+	}
+
 	/**
 	 * Function used to check weather error exists or not
 	 *
@@ -2276,6 +2282,11 @@
 							}
 						}	
 					}
+                    if(isset($field['constraint_func']) && function_exists($field['constraint_func'])) {
+                        if( !$field['constraint_func']($val) ){
+                            e($field['constraint_err']);
+                        }
+                    }
 					if($field['relative_type']!='')
 					{
 						switch($field['relative_type'])

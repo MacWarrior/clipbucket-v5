@@ -244,8 +244,7 @@
 		{
 			global $db;
 			$result = $db->select(tbl("mass_emails"),"*","id='$id'");
-			if(count($result)>0)
-			{
+			if(count($result)>0) {
 				return $result[0];
 			}
 			return false;

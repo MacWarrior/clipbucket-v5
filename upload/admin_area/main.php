@@ -67,6 +67,7 @@
 			'background_url',
 			'big_thumb_width',
 			'big_thumb_height',
+			'email_domain_restriction',
 
 			'closed',
 			'closed_msg',
@@ -124,7 +125,7 @@
 			'high_resolution',
 			'hq_output',
 
-			'keywords'	,
+			'keywords',
 			'keep_original',
 			'keep_mp4_as_is',
 
