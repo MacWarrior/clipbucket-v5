@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision": "10",
+  "revision": "11",
   "status":"dev",
   "detail":[
     {
@@ -11,7 +11,7 @@
         ,"Rename dbconnect.php to config.php"
         ,"Cleanup code"
         ,"Add config option to overwrite DB config values"
-        ,"Remove unused file"
+        ,"Remove unused files"
       ]
     }
     ,{
