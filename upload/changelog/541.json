@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision": "11",
+  "revision": "12",
   "status":"dev",
   "detail":[
     {
@@ -30,6 +30,7 @@
         "Hide upload video menu and global upload menu if no option is available"
         ,"Fix remote upload tab display when file upload is disabled"
         ,"Fix email verification in signup form"
+        ,"Video upload : Correctly handle pre-save errors, fix cancel update message"
       ]
     }
   ]

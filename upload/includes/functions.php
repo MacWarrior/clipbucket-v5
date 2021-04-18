@@ -2225,17 +2225,17 @@
 				$invalid_err = $field['invalid_err'];
 				$function_error_msg = $field['function_error_msg'];
 				if(is_string($val)) {
-					if(!isUTF8($val))
+					if(!isUTF8($val)){
 						$val = utf8_decode($val);
+                    }
 					$length = strlen($val);
 				}
-				$min_len = $field['min_length'];
-				$min_len = $min_len ? $min_len : 0;
+				$min_len = $field['min_length'] ?? 0;
 				$max_len = $field['max_length'] ;
 				$rel_val = $array[$field['relative_to']];
 				
 				if(empty($invalid_err)) {
-					$invalid_err = sprintf("Invalid '%s'",$title);
+					$invalid_err = sprintf("Invalid %s : '%s'",$title,$val);
 				}
 				if(is_array($array[$field['name']])) {
 					$invalid_err = '';
