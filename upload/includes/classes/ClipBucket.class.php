@@ -277,7 +277,7 @@ class ClipBucket
                         ,'url' => ADMIN_BASEURL.'/main.php'
                     )
                     ,array(
-                        'title' => 'Email Settings'
+                        'title' => 'Email Templates'
                         ,'url' => ADMIN_BASEURL.'/email_settings.php'
                     )
                     ,array(

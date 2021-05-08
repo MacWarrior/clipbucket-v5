@@ -298,16 +298,16 @@
 					// this the unique ID assigned to each file upload
 					var pluploadFileId = file.id,
 					filePercentage = file.percent;
-					// update progress bar widht
+					// update progress bar width
 					$('.progress-bar_'+pluploadFileId).css("width",filePercentage+"%");
-					//updawte progress bar text to show percentage
+					//update progress bar text to show percentage
 					$('.realProgText_'+pluploadFileId).text(filePercentage+"% Completed");
 					// $("#progressNumber").text(file.percent + "%");
 					// meaning file has completely uploaded
 					if (filePercentage == 100) {
 						// remove cancel button
 						$(".cancel_button[to_cancel='" + pluploadFileId + "']").fadeOut('slow');
-						// tunr progress bar into green to show success
+						// turn progress bar into green to show success
 						$('.progress-bar_'+pluploadFileId).addClass('progress-bar-success');
 					}
 				});

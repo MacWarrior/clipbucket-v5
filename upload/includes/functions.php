@@ -1395,6 +1395,12 @@
 		return $userquery->duplicate_email($user);
 	}
 
+	function check_email_domain($email)
+	{
+		global $userquery;
+		return $userquery->check_email_domain($email);
+	}
+
 	/**
 	 * Function used to check weather error exists or not
 	 *
@@ -2219,17 +2225,17 @@
 				$invalid_err = $field['invalid_err'];
 				$function_error_msg = $field['function_error_msg'];
 				if(is_string($val)) {
-					if(!isUTF8($val))
+					if(!isUTF8($val)){
 						$val = utf8_decode($val);
+                    }
 					$length = strlen($val);
 				}
-				$min_len = $field['min_length'];
-				$min_len = $min_len ? $min_len : 0;
+				$min_len = $field['min_length'] ?? 0;
 				$max_len = $field['max_length'] ;
 				$rel_val = $array[$field['relative_to']];
 				
 				if(empty($invalid_err)) {
-					$invalid_err = sprintf("Invalid '%s'",$title);
+					$invalid_err = sprintf("Invalid %s : '%s'",$title,$val);
 				}
 				if(is_array($array[$field['name']])) {
 					$invalid_err = '';
@@ -2276,6 +2282,11 @@
 							}
 						}	
 					}
+                    if(isset($field['constraint_func']) && function_exists($field['constraint_func'])) {
+                        if( !$field['constraint_func']($val) ){
+                            e($field['constraint_err']);
+                        }
+                    }
 					if($field['relative_type']!='')
 					{
 						switch($field['relative_type'])
@@ -3591,20 +3602,18 @@
 		switch($type)
 		{
 			case "before":
-				if(file_exists('files/temp/install.me') && !file_exists('includes/dbconnect.php') )
-				{
+				if(file_exists('files/temp/install.me') && !file_exists('includes/dbconnect.php') && !file_exists('includes/config.php') ) {
 					header('Location: '.get_server_url().'/cb_install');
 					die();
 				}
 				break;
 			
 			case "after":
-				if(file_exists('files/temp/install.me'))
-				{
+				if(file_exists('files/temp/install.me')) {
 					$Cbucket->configs['closed'] = 1;
 				}
 				break;
-		}       
+		}
     }
 
 	/**
@@ -3619,8 +3628,7 @@
             $DirName = str_replace('/admin_area','',$DirName);
         }
 
-		if(preg_match('/cb_install/i', $DirName))
-        {
+		if(preg_match('/cb_install/i', $DirName)) {
             $DirName = str_replace('/cb_install','',$DirName);
         }
         return get_server_protocol().$_SERVER['HTTP_HOST'].$DirName;
@@ -5381,7 +5389,7 @@
         } else {
             $content_json = $version;
         }
-        echo '<div class="well">';
+        echo '<div class="well changelog">';
         if( is_null($title) ){
             echo '<h3>'.$content_json['version'].' Changelog - '.ucfirst($content_json['status']).'</h3>';
         } else {
@@ -5501,8 +5509,8 @@
         }
 
         if( !$only_flag ) {
-            echo '<h5>Current version : <b>' . $current_version . '</b> - Revision <b>'.$current_revision.'</b> <i>('.ucfirst( $current_status ).')</i><br/>';
-            echo 'Latest version <i>('.ucfirst( $current_status).')</i> : <b>'.$changelog['version'].'</b> - Revision <b>'.$changelog['revision'].'</b></h5>';
+            echo '<div class="well changelog"><h5>Current version : <b>' . $current_version . '</b> - Revision <b>'.$current_revision.'</b> <i>('.ucfirst( $current_status ).')</i><br/>';
+            echo 'Latest version <i>('.ucfirst( $current_status).')</i> : <b>'.$changelog['version'].'</b> - Revision <b>'.$changelog['revision'].'</b></h5></div>';
         }
 
         if( $current_version == $changelog['version'] && $current_revision == $changelog['revision'] ){
@@ -5525,7 +5533,7 @@
         }
 
         if( $current_status == 'dev' ){
-            echo '<h5>Thank you for using the developpement version of Clipbucket !<br/>Please create an <a href="https://github.com/MacWarrior/clipbucket-v5/issues" target="_blank">issue</a> if you encounter any bug.</h5>';
+            echo '<div class="well changelog"><h5>Thank you for using the developpement version of Clipbucket !<br/>Please create an <a href="https://github.com/MacWarrior/clipbucket-v5/issues" target="_blank">issue</a> if you encounter any bug.</h5></div>';
         }
     }
 

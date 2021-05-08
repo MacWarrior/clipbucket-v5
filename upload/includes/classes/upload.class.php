@@ -49,13 +49,17 @@ class Upload
 
 		validate_cb_form($upload_fields,$array);
 	}
-	
-	function submit_upload($array=NULL)
+
+    /**
+     * @throws phpmailerException
+     */
+    function submit_upload($array=NULL)
 	{
 		global $eh,$Cbucket,$db,$userquery;
 		
-		if(!$array)
+		if(!$array){
 			$array = $_POST;
+        }
 
 		$this->validate_video_upload_form($array,TRUE);
 
@@ -68,54 +72,63 @@ class Upload
 			
 			$upload_fields = array_merge($required_fields,$location_fields,$option_fields);
 			//Adding Custom Upload Fields
-			if(count($this->custom_upload_fields)>0)
+			if(count($this->custom_upload_fields)>0){
 				$upload_fields = array_merge($upload_fields,$this->custom_upload_fields);
+            }
 			//Adding Custom Form Fields
-			if(count($this->custom_form_fields)>0)
+			if(count($this->custom_form_fields)>0){
 				$upload_fields = array_merge($upload_fields,$this->custom_form_fields);
+            }
 			
 			$userid = userid();
+			if( !$userid ){
+			    if( has_access('allow_video_upload',true,false) ){
+                    $userid = $userquery->get_anonymous_user();
+                } else {
+			        return false;
+                }
+            } else if( !has_access('allow_video_upload',true,true) ) {
+			    return false;
+            }
 			
-			if(!userid() && has_access('allow_video_upload',true,false))
-			{
-				$userid = $userquery->get_anonymous_user();
-			} elseif(userid() && !has_access('allow_video_upload',true,true))
-				return false;
-			
-			if(is_array($_FILES))
+			if(is_array($_FILES)){
 				$array = array_merge($array,$_FILES);
+            }
 		
 			foreach($upload_fields as $field)
 			{
 				$name = formObj::rmBrackets($field['name']);
 				$val = $array[$name];
 				
-				if($field['use_func_val'])
+				if($field['use_func_val']){
 					$val = $field['validate_function']($val);
+                }
 
-				if(!empty($field['db_field']))
+				if(!empty($field['db_field'])){
 					$query_field[] = $field['db_field'];
+                }
 				
-				if(is_array($val))
-				{
+				if(is_array($val)) {
 					$new_val = '';
-					foreach($val as $v)
-					{
+					foreach($val as $v) {
 						$new_val .= "#".$v."# ";
 					}
 					$val = $new_val;
 				}
 				
-				if(!$field['clean_func'] || (!apply_func($field['clean_func'],$val) && !is_array($field['clean_func'])))
+				if(!$field['clean_func'] || (!apply_func($field['clean_func'],$val) && !is_array($field['clean_func']))){
 					$val = mysql_clean($val);
-				else
+                } else {
 					$val = apply_func($field['clean_func'], mysql_clean($val));
+                }
 				
-				if(empty($val) && !empty($field['default_value']))
+				if(empty($val) && !empty($field['default_value'])){
 					$val = $field['default_value'];
+                }
 					
-				if(!empty($field['db_field']))
+				if(!empty($field['db_field'])){
 					$query_val[] = $val;
+                }
 			}
 			
 			//Adding Video Code
@@ -132,7 +145,7 @@ class Upload
 				$query_field[] = "file_directory";
 				$file_directory = create_dated_folder(NULL,$array['time_stamp']);
 				$query_val[] = $file_directory;
-			} elseif(isset($array['file_directory'])) {
+			} else if(isset($array['file_directory'])) {
 				$query_field[] = "file_directory";
 				$file_directory = mysql_clean($array['file_directory']);
 				$query_val[] = $file_directory;
@@ -141,10 +154,11 @@ class Upload
 			//Userid
 			$query_field[] = "userid";
 			
-			if(!$array['userid'])
+			if(!$array['userid']){
 				$query_val[] = $userid;
-			else
+            } else {
 				$query_val[] = $array['userid'];
+            }
 
 			if (isset($array['serverUrl'])) {
 				$query_field[] = 'file_thumbs_path';
@@ -385,10 +399,9 @@ class Upload
 		$title = $default['title'];
 		$desc = $default['description'];
 
-		if(is_array($default['category']))
-			$cat_array = array($default['category']);		
-		else
-		{
+		if(is_array($default['category'])) {
+			$cat_array = array($default['category']);
+        } else {
 			preg_match_all('/#([0-9]+)#/',$default['category'],$m);
 			$cat_array = array($m[1]);
 		}

@@ -67,14 +67,11 @@
 	var grabbed_json = 'nothing';
 	(function(window){
 		$(document).ready(function(){
-			 setTimeout(function(){
-					  
-						$(".embed_video").remove();
-				   
-					}, 10000);
+			setTimeout(function(){
+				$(".embed_video").remove();
+			}, 10000);
 
 			var totalFiles = 0;
-			var baseurl = '/';
 			var config_for_mp4 = '{$config_for_mp4}';
 			var defaultCategory = "{$cbvid->get_default_cid()}";
 			if('{$uploaderDetails.uploadScriptPath}'!=''){
@@ -82,16 +79,11 @@
 			}else{
 			var uploadurl = '/actions/file_uploader.php';
 			}
-			//alert(uploadurl);
 			
 			var extensions = "{$extensions}";
 			extensions = extensions.substring(0, extensions.length-1);
-			/* files uploading */
-		
+
 			$.get("{$theme}/js/plupload/js/plupload.full.min.js", function(e){
-				var files = [];
-				var filesIndex = 0;
-				var oneFileFormDiv = $("#uploadFormContainer0").clone();
 				var uploader = new plupload.Uploader({
 					browse_button: 'selectFiles',
 					dragdrop: true,
@@ -106,52 +98,58 @@
 					  ]
 					}
 				});
+
+                function reFreshTabs(up)
+                {
+                    // creating the selected files list
+                    var ul = document.createElement('ul');
+                    ul.id = "selectedFilesList";
+                    ul.className = "nav nav-tabs";
+                    var li = false;
+                    var index = 0;
+                    plupload.each(up.files, function(file) {
+                        li = document.createElement('li');
+                        if(index === 0){
+                            li.className = "active";
+                        }else{
+                            li.className = "";
+                        }
+                        var link = document.createElement("a");
+                        link.href = "#tab"+index;
+                        link.setAttribute("data-toggle", "tab");
+                        if(up.files.length < 8){
+                            link.innerHTML = "(" + (index + 1) + ") " + file.name.substring(0, 10);
+                        }else{
+                            link.innerHTML = "(" + (index + 1) + ") ";
+                        }
+                        li.id = index++;
+                        li.appendChild(link);
+                        ul.appendChild(li);
+                    });
+
+                    $("#files").html("");
+                    $("#files").append(ul);
+                }
+
 				uploader.init();
+
+                uploader.bind('FilesRemoved', function(up, uploadedFiles) {
+                    reFreshTabs(up)
+                });
+
 				uploader.bind('FilesAdded', function(up, uploadedFiles) {
-					for(var i = 0; i < uploadedFiles.length; i++){
-						files.push(uploadedFiles[i]);
-					}
 					$("#uploadMore").addClass("hidden");
-					// creating the selected files list
-					var ul = document.createElement('ul');
-					ul.id = "selectedFilesList";
-					ul.className = "nav nav-tabs";
-					var li = false;
-					var index = 0;
-					plupload.each(files, function(file) {
-						li = document.createElement('li');
-						if(index === 0){
-							li.className = "active";
-						}else{
-							li.className = "";
-						}
-						var link = document.createElement("a");
-						link.href = "#tab"+index;
-						link.setAttribute("data-toggle", "tab");
-						// link.innerHTML = file.name + " (" + plupload.formatSize(file.size) + ")";
-						if(files.length < 8){
-						  link.innerHTML = "(" + (index + 1) + ") " + file.name.substring(0, 10);
-						}else{
-						  link.innerHTML = "(" + (index + 1) + ") ";
-						}
-						li.id = index++;
-						li.appendChild(link);
-						ul.appendChild(li);
-					});
 
-					$("#files").html("");
-					$("#files").append(ul);
+                    reFreshTabs(up);
 
-					totalFiles = files.length;
-					
-					var oneFile = false;
+					totalFiles = up.files.length;
 
 					var uploadForm = $("#updateVideoInfoForm").clone();
 					var uploadForms = [];
 					for (var i = 0; i < totalFiles; i++ ){
 						var oneUploadForm = $(uploadForm).clone().get(0);
 						var wrapperDiv = document.createElement("div");
-						if(i == 0){
+						if(i === 0){
 							wrapperDiv.className = "tab-pane active uploadFormContainer";
 						}else{
 							wrapperDiv.className = "tab-pane uploadFormContainer";
@@ -159,23 +157,23 @@
 						wrapperDiv.id = "tab"+i;
 						oneUploadForm.className = "";
 						$(oneUploadForm).find(".cancel_button").attr('to_cancel',i);
-						$(oneUploadForm).find("input[name='title']").val(files[i].name.slice(0, -4));
+						$(oneUploadForm).find("input[name='title']").val(up.files[i].name.slice(0, -4));
 
-						$(oneUploadForm).find("textarea#desc").val(files[i].name.slice(0, -4));
+						$(oneUploadForm).find("textarea#desc").val(up.files[i].name.slice(0, -4));
 						var categories = $(oneUploadForm).find("input[name='category[]']");
-						$.each(categories,function(i,v){ 
-							if ($(this).val() == defaultCategory ){ 
+						$.each(categories,function(i,v){
+							if ($(this).val() === defaultCategory ){
 								$(this).attr('checked', 'checked');
-							}; 
+							};
 						});
-						wrapperDiv.appendChild(oneUploadForm);   
+						wrapperDiv.appendChild(oneUploadForm);
 						uploadForms.push(wrapperDiv);
 					}
 
 					//function for real progress bar
 					$.each( uploadedFiles, function( key, fileNow ) {
 					  	var currentTitle = fileNow.name,
-					  	plFileId = fileNow.id;					   	
+					  	plFileId = fileNow.id;
 					  	//<button class="clearfix cancel_button btn btn-danger" style="float:right; margin-top: -20px">Cancel Uploading</button>
 
 					  	// appends progress bar along with title
@@ -183,15 +181,13 @@
 					  	// via fileprogress event of pluploader
 
 					    $(".realProgressBars").append('<h5 class="realProgTitle_'+plFileId+'">'+currentTitle+'</h5><button class="clearfix cancel_button btn btn-danger" to_cancel="'+plFileId+'" style="float:right; margin-top: -8px; margin-left:10px;">Cancel Uploading</button><div class="progress"><div class="progress-bar progress-bar_'+plFileId+'" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:0%;"><span class="sr-only">70% Complete</span><span class="realProgText_'+plFileId+'">50% completed</span></div></div>');
-
-					    
 					});
 					//end function
 
 					$("#allUploadForms").html("");
 					$("#allUploadForms").append(uploadForms);
-					
-					//Disabling saveDetails button for Current form 
+
+					//Disabling saveDetails button for Current form
 					var div_wrap_numb = totalFiles - 1;
 					var upload_form_Div = $('#tab'+div_wrap_numb);
 					upload_form_Div.find('#saveVideoDetails').attr("disabled",true);
@@ -209,13 +205,11 @@
 						}
 					});
 
-
 					/*
 					* Trigger element when "Cancel Uploading" button is clicked
 					* stops uploading
 					* hides uploading div
 					*/
-
 					(function() {
 				        $(".cancel_button").on("click",function(e) {
 					      	e.preventDefault();
@@ -231,6 +225,11 @@
 							        $(".realProgText_"+toCancel).text("Canceled");
 							        $('li#'+thecount).fadeOut('slow');
 							        totalFiles = totalFiles - 1;
+                                    $("#uploadMessage").removeClass("hidden");
+                                    $("#uploadMessage").html('Upload has been canceled').attr("class", "alert alert-danger container");
+                                    setTimeout(function(){
+                                        $("#uploadMessage").addClass("hidden");
+                                    }, 5000);
 							    }
 							  	thecount++;
 							});
@@ -248,22 +247,16 @@
 				});
 
 				uploader.bind("BeforeUpload", function(){
-				
 					$("#fileUploadProgress").removeClass("hidden");
-					
 					$(".progress-container").removeClass("hidden");
-					
 				});
 
-
-				var totalUploaded = 0;
 				/*
 				This is the event handler for UploadProgress,
 				It fires regularly after a certain amount of time when the the files are being uploaded
 				*/
 
 				var filesUploaded = 0;
-				var totalPercentage = 0;
 
 				/*
 				This is the event handler for FileUploaded,
@@ -283,18 +276,13 @@
 						$("#duration").removeClass("hidden");
 					}
 					var uploadForm = $("#tab"+currentFileIndex+" form");
-					totalUploaded++;
 
 					//enabling savedetails button for Current form 
 					var _upload_form_Div_ = $('#tab'+currentFileIndex);
 					_upload_form_Div_.find('.cancel_button').fadeOut('slow');
 					_upload_form_Div_.find("#saveVideoDetails").attr("disabled",false);
 					_upload_form_Div_.find("#saveVideoDetails").attr("id","uploadCompleted");
-					/*
-					Insert the video in the database and get the video db id from the
-					database which will be sent with the final form
-					*/
-					var fileId = false;
+
 					$.ajax({
 						url : "/actions/file_uploader.php",
 						type : "post",
@@ -305,7 +293,21 @@
 						}
 					}).success(function(msg){
 						res = $.parseJSON(msg);
-						fileId = res.videoid;
+
+                        if(res.error){
+                            $('.realProgText_'+fileDetails.id).text('Pre-save error : '+res.error.val);
+                            $('.progress-bar_'+fileDetails.id).removeClass('progress-bar-success').addClass('progress-bar-danger');
+                            plupload.removeFile(fileDetails.id);
+                            $("#uploadMessage").removeClass("hidden");
+                            $("#uploadMessage").html('An error occured during pre-saving').attr("class", "alert alert-danger container");
+                            setTimeout(function(){
+                                $("#uploadMessage").addClass("hidden");
+                            }, 5000);
+                            return;
+                        }
+
+						/*console.log(res);
+						var fileId = res.videoid;
 						theVideoId = fileId;
 						// creating the hidden form fields
 						var hiddenVideoIdField = document.createElement('input');
@@ -320,41 +322,33 @@
 
 						uploadForm.append(hiddenVideoIdField);
 						uploadForm.append(hiddenUploadVideoFlagField);
-						uploadForm.find("#cbSubmitUpload").removeAttr('disabled').val('Upload').addClass('btn-success');
+						uploadForm.find("#cbSubmitUpload").removeAttr('disabled').val('Upload').addClass('btn-success');*/
+					}).complete(function(){
+                        currentFileIndex++;
 					});
 
 					/* 
 					Submit the form with all the video details and options 
 					to update the video information in the system
 					*/
-				
 					$(uploadForm).on({
 						submit: function(e){
 							e.preventDefault();
-							//window.location.href = "/?moreMsg="+theVideoId;
-							var self = this;
-							
-							//var data = new FormData();
-							//var fd = new FormData(document.getElementById( "updateVideoInfoForm" ));
-							
-							data = $(this).serialize();
-							var theid = $(this).videoid;
 
 							$.ajax({
 								url : "/actions/file_uploader.php",
 								type : "post",
-       							data : data
+       							data : $(this).serialize()
 							}).success(function(msg){
 								var lang = $('#subtitle_lang').val();
-								console.log(msg);
 								_cb.uploadSubtitle(theVideoId, lang, "{$honey_ajax}");
-								//msg = $.parseJSON(msg);
+								msg = $.parseJSON(msg);
 								$("#uploadMessage").removeClass("hidden");
 								if(msg.error){
 									$("#uploadMessage").html(msg.error).attr("class", "alert alert-danger");
 								}else{
 									//Update message on submit changes
-									$("#uploadMessage").html("Video details have been updated Successfully").attr("class", "alert alert-success container"); 
+									$("#uploadMessage").html("Video details have been updated successfully").attr("class", "alert alert-success container");
 									
 									$("#uploadMessage").html(msg.msg).attr("class", "alert alert-success");
 									
@@ -372,27 +366,24 @@
 							});
 						}
 					});
-
-					currentFileIndex++;
-
 				});
 
-				// runs on progress of file uplaoder
+				// runs on progress of file uploader
 
 				uploader.bind('UploadProgress', function(up, file) {
 					// this the unique ID assigned to each file upload
 					var pluploadFileId = file.id,
 					filePercentage = file.percent;
-					// update progress bar widht
+					// update progress bar width
 					$('.progress-bar_'+pluploadFileId).css("width",filePercentage+"%");
-					//updawte progress bar text to show percentage
+					//update progress bar text to show percentage
 					$('.realProgText_'+pluploadFileId).text(filePercentage+"% Completed");
 					// $("#progressNumber").text(file.percent + "%");
 					// meaning file has completely uploaded
-					if (filePercentage == 100) {
+					if (filePercentage === 100) {
 						// remove cancel button
 						$(".cancel_button[to_cancel='" + pluploadFileId + "']").fadeOut('slow');
-						// tunr progress bar into green to show success
+						// turn progress bar into green to show success
 						$('.progress-bar_'+pluploadFileId).addClass('progress-bar-success');
 					}
 				});
@@ -403,7 +394,7 @@
 					$("#uploadMore").removeClass("hidden");
 					$(".uploadingProgressContainer").hide();
 					uploader.refresh();
-					$("#uploadMessage").html("All Files are uploaded Successfully").attr("class", "alert alert-success container");            
+					$("#uploadMessage").html("File uploaded successfully").attr("class", "alert alert-success container");
 					setTimeout(function(){
 						$("#uploadMessage").addClass("hidden");
 					}, 5000);
@@ -429,15 +420,10 @@
 						e.preventDefault();
 						$("#uploaderContainer").removeClass("hidden");
 						$("#uploadDataContainer").addClass("hidden");
-						//$(this).addClass("hidden");
 					}
 				});
 
 			});
-		
-			// end of get,,
-		
-
 		});
 	})(window);
 

@@ -109,7 +109,6 @@ $(document).ready(function(){
         }
     });
 
-
     //update form
     $("#saveVideoDetailsNew").on({
         click: function(e){
@@ -122,9 +121,7 @@ $(document).ready(function(){
                 dataType : 'json',
                 success: function(msg)
                 {
-               
-                    //msg = $.parseJSON(msg);
-                    console.log(msg);
+                    msg = $.parseJSON(msg);
                     $("#uploadMessage").removeClass("hidden");
                     if(msg.error){
                         $("#uploadMessage").html(msg.error).attr("class", "alert alert-danger");

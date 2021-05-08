@@ -2,11 +2,14 @@
 	define("FRONT_END",TRUE);
 	define("BACK_END",FALSE);
 
-	if(!defined('PARENT_PAGE'))
+	if(!defined('PARENT_PAGE')){
 		define("PARENT_PAGE","home");
+    }
 
 	require_once 'common.php';
 	require_once 'plugins.php';
+
+    global $Cbucket,$cbvid,$ClipBucket,$userquery;
 
 	define('TEMPLATEDIR',BASEDIR.'/'.TEMPLATEFOLDER.'/'.$Cbucket->template);
 	define('TEMPLATEURL','/'.TEMPLATEFOLDER.'/'.$Cbucket->template);

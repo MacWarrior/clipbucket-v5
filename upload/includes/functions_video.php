@@ -1966,7 +1966,7 @@
         $cmd = get_binaries('ffprobe_path').' -show_streams '.$filepath.' 2>/dev/null | grep "bits_per_raw_sample" | grep -v "N/A" | awk -v FS="=" \'{print $2}\'';
         $data = shell_exec( $cmd );
 
-        $db->update(tbl('video'),array('bits_color'),array((int)$data)," videoid='".$vdetails['videoid']."'");
+        $db->update(tbl('video'),array('bits_color'),array((int)$data)," videoid=".$vdetails['videoid']);
     }
 
 	/**

@@ -40,7 +40,6 @@ echo "- Database address : localhost"
 echo "- Database name : clipbucket"
 echo "- Database user : clipbucket"
 echo "- Database password : ${DB_PASS}"
-#Y2ZmN2UyYzZmZTIx
 
 echo ""
 echo -ne "Configuring Nginx Vhost..."
@@ -67,15 +66,15 @@ server {
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
     }
 
-	location / {
-		if ($query_string ~ "mosConfig_[a-zA-Z_]{1,21}(=|\%3D)"){
-			rewrite ^/([^.]*)/?$ /index.php last;
-		}
-		rewrite ^/(.*)_v([0-9]+) /watch_video.php?v=$2&$query_string last;
-		rewrite ^/([a-zA-Z0-9-]+)/?$ /view_channel.php?uid=$1&seo_diret=yes last;
+    location / {
+        if ($query_string ~ "mosConfig_[a-zA-Z_]{1,21}(=|\%3D)"){
+            rewrite ^/([^.]*)/?$ /index.php last;
+        }
+        rewrite ^/(.*)_v([0-9]+) /watch_video.php?v=$2&$query_string last;
+    rewrite ^/([a-zA-Z0-9-]+)/?$ /view_channel.php?uid=$1&seo_diret=yes last;
     }
 
-	location /includes/ {
+    location /includes/ {
         return 302 /404;
     }
 

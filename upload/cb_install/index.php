@@ -50,13 +50,13 @@
             $pass = (array_pop($matches));
             preg_match("/define\('TABLE_PREFIX','(.*)'\);/", $originalDbFile, $matches);
             $prefix = (array_pop($matches));
-            $dbconnect = file_get_contents($baseDir.'/cb_install/dbconnect.php');
+            $dbconnect = file_get_contents($baseDir.'/cb_install/config.php');
             $dbconnect = str_replace('_DB_HOST_', $host, $dbconnect);
             $dbconnect = str_replace('_DB_NAME_', $name, $dbconnect);
             $dbconnect = str_replace('_DB_USER_', $user, $dbconnect);
             $dbconnect = str_replace('_DB_PASS_', $pass, $dbconnect);
             $dbconnect = str_replace('_TABLE_PREFIX_', $prefix, $dbconnect);
-            $fp = fopen($baseDir.'/includes/dbconnect.php', 'w');
+            $fp = fopen($baseDir.'/includes/config.php', 'w');
             fwrite($fp, $dbconnect);
             fclose($fp);
         }

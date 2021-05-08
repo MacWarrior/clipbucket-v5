@@ -11,6 +11,7 @@
 	define("THIS_PAGE","upload");
 	define("PARENT_PAGE","upload");
 	require 'includes/config.inc.php';
+    global $pages, $Upload, $eh, $userquery, $Cbucket;
 	$pages->page_redir();
 	subtitle('upload');
 

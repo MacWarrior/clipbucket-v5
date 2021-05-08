@@ -1,0 +1,37 @@
+{
+  "version":"5.4.1",
+  "revision": "12",
+  "status":"dev",
+  "detail":[
+    {
+      "title": "Miscellaneous",
+      "description": [
+        "Update VideoJS to version 7.11.7"
+        ,"Update Smarty to version 3.1.39"
+        ,"Rename dbconnect.php to config.php"
+        ,"Cleanup code"
+        ,"Add config option to overwrite DB config values"
+        ,"Remove unused files"
+      ]
+    }
+    ,{
+      "title":"Admin area",
+      "description":[
+        "Update changelogs display"
+        ,"Fix video bits colors update"
+        ,"Fix file upload and remove upload config saving"
+        ,"Add option to restrict email domains during registration"
+        ,"Fix website configuration tabs display"
+      ]
+    }
+  ,{
+      "title":"Front office",
+      "description":[
+        "Hide upload video menu and global upload menu if no option is available"
+        ,"Fix remote upload tab display when file upload is disabled"
+        ,"Fix email verification in signup form"
+        ,"Video upload : Correctly handle pre-save errors, fix cancel update message"
+      ]
+    }
+  ]
+}

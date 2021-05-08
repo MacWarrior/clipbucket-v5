@@ -1,29 +1,4 @@
 <?php
-    /**
-    * File: Functions Helper
-    * Description: Functions written for making things simpler for developers
-    * @author: Fawaz Tahir
-    * @since: August 28th, 2013
-    */
-
-	/**
-	 * Pulls website configurations from the database
-	 * @return array { array } { $data } { array with all configurations }
-	 * @internal param $ : { none } { handled inside function }
-	 */
-    function get_website_configurations()
-	{
-        $query = "SELECT name, value FROM ".tbl('config');
-        $results = select($query);
-        $data = array();
-        if ($results) {
-            foreach($results as $config) {
-                $data[$config[ 'name' ]] = $config['value'];
-            }
-        }
-        return $data;
-    }
-
 	/**
 	 * Function used to get config value of ClipBucket
 	 * @uses: { class : Cbucket } { var : configs }

@@ -1,7 +1,7 @@
 {
   "version":"5.4.0",
-  "revision": "37",
-  "status":"dev",
+  "revision": "40",
+  "status":"stable",
   "detail":[
     {
       "title": "Miscellaneous",
@@ -22,7 +22,7 @@
         ,"Fix subscribe/unsubscribe from channel <i>#126</i>"
         ,"Fix video rating <i>#126</i>"
         ,"Update logo and favicon"
-        ,"Fix SQL structure <i>#138</i>"
+        ,"Fix SQL structure <i>#138</i>, <i>#161</i>"
         ,"Update ReadMe"
         ,"Fix Advertisement SQL structure"
       ]
@@ -33,6 +33,7 @@
         "Remove i-magick dependancy"
         ,"Update Nginx Vhost"
         ,"Update CentOS 7 installation script"
+        ,"Add Debian 10 + Nginx + PHP 7.4 installation script"
       ]
     }
     ,{
@@ -44,6 +45,7 @@
         ,"Fix mass upload template"
         ,"Add security to prevent duplicated sub-menus <i>#127</i>"
         ,"Fix possible SQL injection"
+        ,"Refactor website configurations"
       ]
     }
     ,{
@@ -58,7 +60,7 @@
       "description":[
         "Fix images sharing URLs <i>#83</i>"
         ,"Fix Add as friend error display <i>#138</i>"
-        ,"Fix error 500 <i>142</i>"
+        ,"Fix error 500 <i>#142</i>"
       ]
     }
   ]

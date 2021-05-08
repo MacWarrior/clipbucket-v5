@@ -2872,6 +2872,21 @@ class userquery extends CBCategory{
 		return false;
 	}
 
+    public function check_email_domain($email): bool
+    {
+        $email_domain_restriction = config('email_domain_restriction');
+        if( $email_domain_restriction != '' ){
+            $list_domains = explode(',',$email_domain_restriction);
+            foreach($list_domains as $domain){
+                if( strpos($email, '@'.$domain) !== false ){
+                    return true;
+                }
+            }
+            return false;
+        }
+        return true;
+    }
+
 	/**
 	 * Function used to get user access log
 	 *
@@ -3400,9 +3415,11 @@ class userquery extends CBCategory{
 				'required'=>'yes',
 				'syntax_type'=> 'email',
 				'db_value_check_func'=> 'email_exists',
-				'validate_function'=> 'isValidEmail',
 				'db_value_exists'=>false,
-				'db_value_err'=>lang('usr_email_err3')
+				'db_value_err'=>lang('usr_email_err3'),
+                'validate_function'=> 'isValidEmail',
+                'constraint_func'=>'check_email_domain',
+                'constraint_err'=>lang('signup_error_email_unauthorized')
 			),
 			'password' => array(
 				'title' => lang('password'),
@@ -3540,12 +3557,14 @@ class userquery extends CBCategory{
 			$array = $_POST;
         }
 
-		if(is_array($_FILES))
+		if(is_array($_FILES)){
 			$array = array_merge($array,$_FILES);
+        }
 		$this->validate_form_fields($array);
 		//checking terms and policy agreement
-		if($array['agree']!='yes' && !has_access('admin_access',true))
+		if($array['agree']!='yes' && !has_access('admin_access',true)){
 			e(lang('usr_ament_err'));
+        }
 
 		// first checking if captcha plugin is enabled
 		// do not trust the form cb_captcha_enabled value
@@ -3746,26 +3765,12 @@ class userquery extends CBCategory{
 		return false;
 	}
 
-	//Duplicate User Check
-	function duplicate_user($name)
-	{
-		global $myquery;
-		if($myquery->check_user($name))
-			return true;
-		return false;
-	}
-
 	function duplicate_email($name)
 	{
 		$myquery = new myquery();
 		if($myquery->check_email($name))
 			return true;
 		return false;
-	}
-
-	//Validate Email
-	function isValidEmail($email){
-      return isValidEmail($email);
 	}
 
 	/**

@@ -1595,5 +1595,6 @@
 	"error_file_download":"Impossible de récupérer le fichier",
 
 	"dashboard_update_status":"Statut de mise à jour",
-	"dashboard_changelogs":"Nouveautés"
+	"dashboard_changelogs":"Nouveautés",
+	"signup_error_email_unauthorized":"Email non autorisé"
 }
