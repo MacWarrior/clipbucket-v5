@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision": "14",
+  "revision": "15",
   "status":"dev",
   "detail":[
     {
@@ -13,6 +13,7 @@
         ,"Add config option to overwrite DB config values"
         ,"Remove unused files"
         ,"Update FR translations"
+        ,"Fix SQL structure"
       ]
     }
     ,{
