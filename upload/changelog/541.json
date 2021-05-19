@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision": "12",
+  "revision": "13",
   "status":"dev",
   "detail":[
     {
@@ -12,6 +12,7 @@
         ,"Cleanup code"
         ,"Add config option to overwrite DB config values"
         ,"Remove unused files"
+        ,"Update FR translations"
       ]
     }
     ,{
