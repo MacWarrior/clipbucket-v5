@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision": "15",
+  "revision": "16",
   "status":"dev",
   "detail":[
     {
@@ -25,6 +25,7 @@
         ,"Add option to restrict email domains during registration"
         ,"Fix website configuration tabs display"
         ,"Fix members deletion"
+        ,"Update Video edit interface"
       ]
     }
   ,{

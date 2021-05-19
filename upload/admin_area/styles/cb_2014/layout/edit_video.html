@@ -80,21 +80,19 @@
 			<ul class="nav nav-tabs" id="myTab">
 				<li class="active">
 					<a data-toggle="tab" href="#videodetail">
-						Video Details
-						<span class="glyphicon glyphicon-facetime-video"></span>
+						<i class="glyphicon glyphicon-facetime-video"></i> Video Details
 					</a>
 				</li>
 				<li>
 					<a data-toggle="tab" href="#uinformation1">
-						<i class="glyphicon glyphicon-user"></i>
-						Uploader Information
+						<i class="glyphicon glyphicon-user"></i> Uploader Information
 					</a>
 				</li>
 			</ul>
 			<div class="tab-content">
 				<div id="videodetail" class="tab-pane active">
 					<div class="table table-responsive">
-						<table class="myTable" width="100%">
+						<table class="myTable" style="width:100%;">
 							<tr>
 								<td class="first"><label>Video Id</label></td>
 								<td class="last">
@@ -150,47 +148,50 @@
 					</div>
 				</div>
 				<div id="uinformation1" class="tab-pane">
-					<img src="{$userquery->getUserThumb($u)}" class="img-thumbnail marginBottomLarge"/>
-					<div class="table-responsive">
-						<table class="myTable" width="600">
-							<tr>
-								<td class="first"><label>User Id</label></td>
-								<td class="last">
-									<p><span>{$data.userid}</span></p>
-								</td>
-							</tr>
-							<tr>
-								<td class="first"><label>{lang code='username'}</label></td>
-								<td class="last">
-									<p><span>{display_clean($data.userid|get_username)}</span></p>
-								</td>
-							</tr>
-							<tr>
-								<td class="first"><label>DOB</label></td>
-								<td class="last">
-									<p><span>{$data.dob}</span></p>
-								</td>
-							</tr>
-							<tr>
-								<td class="first"><label>Email</label></td>
-								<td class="last">
-								<p><span>{$data.email}</span></p>
-								</td>
-							</tr>
-							<tr>
-								<td class="first"><label>{lang code='gender'}</label></td>
-								<td class="last">
-									<p><span>{lang code="{$data.sex}"}</span></p>
-								</td>
-							</tr>
-							<tr>
-								<td class="first"><label>{lang code='rating'}</label></td>
-								<td class="last">
-									<p><span>{$data.rating}</span></p>
-								</td>
-							</tr>
-						</table>
-
+					<div class="row">
+						<div class="col-md-10">
+							<table class="myTable" style="width:100%;">
+								<tr>
+									<td class="first"><label>User Id</label></td>
+									<td class="last">
+										<p><span>{$data.userid}</span></p>
+									</td>
+								</tr>
+								<tr>
+									<td class="first"><label>{lang code='username'}</label></td>
+									<td class="last">
+										<p><span>{display_clean($data.userid|get_username)}</span></p>
+									</td>
+								</tr>
+								<tr>
+									<td class="first"><label>DOB</label></td>
+									<td class="last">
+										<p><span>{$data.dob}</span></p>
+									</td>
+								</tr>
+								<tr>
+									<td class="first"><label>Email</label></td>
+									<td class="last">
+										<p><span>{$data.email}</span></p>
+									</td>
+								</tr>
+								<tr>
+									<td class="first"><label>{lang code='gender'}</label></td>
+									<td class="last">
+										<p><span>{lang code="{$data.sex}"}</span></p>
+									</td>
+								</tr>
+								<tr>
+									<td class="first"><label>{lang code='rating'}</label></td>
+									<td class="last">
+										<p><span>{$data.rating}</span></p>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div class="col-md-2">
+							<img src="{$userquery->getUserThumb($u)}" alt="User avatar" class="img-thumbnail marginBottomLarge"/>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -212,10 +213,10 @@
 					{assign var=vidthumbs value=get_thumb($data,1,TRUE,FALSE,TRUE,FALSE,'original')}
 					<ul class="ace-thumbnails">
 					{foreach from=$vidthumbs item=vid_thumb}
-						<li style="display: inline">
+						<li style="display:inline;">
 							<img src="{$vid_thumb}" width="100" height="100">
 							<div class="tools">
-								<input type="radio" value="{GetName($vid_thumb)}.{GetExt($vid_thumb)}" id="{$vid_thumb|getname}" name="default_thumb" {if $data.default_thumb==$vid_thumb|get_thumb_num} checked{/if} />
+								<input type="radio" value="{GetName($vid_thumb)}.{GetExt($vid_thumb)}" id="{$vid_thumb|getname}" name="default_thumb" {if $data.default_thumb==$vid_thumb|get_thumb_num}checked{/if}/>
 								{if $vid_thumb|getname!='processing'}
 								<a href="?video={$data.videoid}&delete={$vid_thumb|getname}.{$vid_thumb|getext}">
 									<i class="icon-remove red"></i></a>
@@ -254,20 +255,20 @@
 			<legend>Video Stats</legend>
 			<div class="table-responsive">
 				<div class="row">
-					<div class="col-md-1">
+					<div class="col-md-2">
 						<label for="views">{lang code='views'} :</label>
 					</div>
 					<div class="col-md-2">
 						<input class="form-control" name="views" type="text" id="views" value="{$data.views|number_format}" size="45"/>
 					</div>
-					<div class="col-md-1">
+					<div class="col-md-2">
 						<label for="rating">{lang code='rating'} :</label>
 					</div>
 					<div class="col-md-2">
 						<input class="form-control" name="rating" type="text" id="rating" value="{$data.rating|number_format}" size="5"/>
 					</div>
 					<div class="col-md-2">
-						<label for="rated_by">RatedBy:</label>
+						<label for="rated_by">RatedBy :</label>
 					</div>
 					<div class="col-md-2">
 						<input class="form-control" name="rated_by" type="text" id="rated_by" value="{$data.rated_by|number_format}" size="45"/>
@@ -424,81 +425,74 @@
     </div>
 </div>
 
-</div>
-
-
 </form>
 {/if}
 
-		<div class="widget-box" style="margin-top: 30px">
-			<div class="widget-header header-color-blue2 fontawesome-icons">
+<div class="widget-box" style="margin-top:30px;">
+	<div class="widget-header header-color-blue2 fontawesome-icons">
+		<h5>Comments</h5>
+		<div class="widget-toolbar">
+			<a href="#" data-action="reload">
+				<i class="icon-refresh"></i>
+			</a>
 
-				<h5>Comments</h5>
-
-				<div class="widget-toolbar">
-					<a href="#" data-action="reload">
-						<i class="icon-refresh"></i>
-					</a>
-
-					<a href="#" data-action="collapse">
-						<i class="icon-chevron-up"></i>
-					</a>
-				</div>
-			</div>
-			<!-- Add Artist's anchor here -->
-			 {ANCHOR place="after_video_edit" data=$data.videoid}
-
-			<div class="widget-body">
-				<div class="widget-main">
-					<div class="slimScrollDiv fontawesome-icons">
-						{foreach from=$comments item=comment}
-						<form method="post" name="delete_Comment" id="edit_video">
-						{if $comment != ''}
-						<div class="itemdiv dialogdiv">
-							{foreach from=$users item=u}
-							{$userdetails = $userquery->get_user_details($comment.userid)}
-							<div class="user">
-								<img alt="{display_clean($userdetails.username)}" title="{display_clean($userdetails.username)}" src="{$userquery->getUserThumb($userdetails,'small')}">
-							</div>
-							{/foreach}
-							<div class="body clearfix">
-							<div class="col-md-3" style="float:right;">
-									<input type="hidden" name="cmt_id" value="{$comment.comment_id}" />
-									<input class="btn btn-primary" type="submit" name="del_cmt" value="{lang code='delete'}" />
-								</div>
-								<div class="time col-md-3">
-									<i class="icon-time"></i>
-									<span class="green">{$comment.date_added|date_format}</span>
-								</div>
-								<div class="name col-md-3">
-									<a href="#">{display_clean($comment.anonym_name)}</a>
-								</div>
-								<div class="text col-md-3">
-									{display_clean($comment.comment)}
-								</div>
-							</div>
-						</div>
-						{else}
-						<div class="body">
-							<p>No comments found !</p>
-						</div>
-						{/if}
-						</form>
-						{/foreach}
-					</div>
-
-				</div><!-- /widget-main -->
-				<script type="text/javascript" src="/js/jquery-ui-1.10.4.min.js"></script>
-				<script>
-					$(document).ready(function(){
-						$( "#datecreated" ).datepicker({
-							showOtherMonths: true,
-							selectOtherMonths: false,
-							dateFormat:"yy-mm-dd"
-						});
-					});
-				</script>
-			</div>
+			<a href="#" data-action="collapse">
+				<i class="icon-chevron-up"></i>
+			</a>
 		</div>
+	</div>
+	<!-- Add Artist's anchor here -->
+	 {ANCHOR place="after_video_edit" data=$data.videoid}
+
+	<div class="widget-body">
+		<div class="widget-main">
+			<div class="slimScrollDiv fontawesome-icons">
+				{foreach from=$comments item=comment}
+				<form method="post" name="delete_Comment" id="edit_video">
+				{if $comment != ''}
+				<div class="itemdiv dialogdiv">
+					{foreach from=$users item=u}
+					{$userdetails = $userquery->get_user_details($comment.userid)}
+					<div class="user">
+						<img alt="{display_clean($userdetails.username)}" title="{display_clean($userdetails.username)}" src="{$userquery->getUserThumb($userdetails,'small')}">
+					</div>
+					{/foreach}
+					<div class="body clearfix">
+					<div class="col-md-3" style="float:right;">
+							<input type="hidden" name="cmt_id" value="{$comment.comment_id}" />
+							<input class="btn btn-primary" type="submit" name="del_cmt" value="{lang code='delete'}" />
+						</div>
+						<div class="time col-md-3">
+							<i class="icon-time"></i>
+							<span class="green">{$comment.date_added|date_format}</span>
+						</div>
+						<div class="name col-md-3">
+							<a href="#">{display_clean($comment.anonym_name)}</a>
+						</div>
+						<div class="text col-md-3">
+							{display_clean($comment.comment)}
+						</div>
+					</div>
+				</div>
+				{else}
+				<div class="body">
+					<p>No comments found !</p>
+				</div>
+				{/if}
+				</form>
+				{/foreach}
+			</div>
+
+		</div><!-- /widget-main -->
+		<script type="text/javascript" src="/js/jquery-ui-1.10.4.min.js"></script>
+		<script>
+			$(document).ready(function(){
+				$( "#datecreated" ).datepicker({
+					showOtherMonths: true,
+					selectOtherMonths: false,
+					dateFormat:"yy-mm-dd"
+				});
+			});
+		</script>
 	</div>
 </div>
