@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision": "13",
+  "revision": "14",
   "status":"dev",
   "detail":[
     {
@@ -23,6 +23,7 @@
         ,"Fix file upload and remove upload config saving"
         ,"Add option to restrict email domains during registration"
         ,"Fix website configuration tabs display"
+        ,"Fix members deletion"
       ]
     }
   ,{
