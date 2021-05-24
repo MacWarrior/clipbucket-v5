@@ -104,8 +104,7 @@ abstract class CBCategory
 		$flds = array("category_name","category_desc","date_added");
 		$values = array($name,$desc,now());
 		
-		if(!empty($this->use_sub_cats))
-		{
+		if(!empty($this->use_sub_cats)) {
 			$parent_id = mysql_clean($array['parent_cat']);
 			$flds[] = "parent_id";
 			$values[] = $parent_id;	
@@ -114,20 +113,24 @@ abstract class CBCategory
 		if($this->get_cat_by_name($name))
 		{
 			e(lang("add_cat_erro"));
-			
-		} elseif(empty($name)) {
+		} else if(empty($name)) {
 			e(lang("add_cat_no_name_err"));
 		} else {
 			$cid = $db->insert(tbl($this->cat_tbl),$flds,$values);
 
 			//$cid = $db->insert_id();
-			if($default=='yes' || !$this->get_default_category())
+			if($default=='yes' || !$this->get_default_category()){
 				$this->make_default_category($cid);
-			e(lang("cat_add_msg"),'m');
-			
+            }
+
+            if( !error() ) {
+			    e(lang("cat_add_msg"),'m');
+            }
+
 			//Uploading thumb
-			if(!empty($_FILES['cat_thumb']['tmp_name']))
+			if(!empty($_FILES['cat_thumb']['tmp_name'])){
 				$this->add_category_thumb($cid,$_FILES['cat_thumb']);
+            }
 		}
 		
 	}
@@ -142,13 +145,13 @@ abstract class CBCategory
 		$cid = mysql_clean($cid);
 
 		global $db;
-		if($this->category_exists($cid))
-		{
+		if($this->category_exists($cid)) {
 			$db->update(tbl($this->cat_tbl),array("isdefault"),array("no")," isdefault='yes' ");
 			$db->update(tbl($this->cat_tbl),array("isdefault"),array("yes")," category_id='$cid' ");
 			e(lang("cat_set_default_ok"),'m');
-		}else
+		} else {
 			e(lang("cat_exist_error"));
+        }
 	}
 
 	/**
