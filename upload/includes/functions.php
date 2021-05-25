@@ -284,7 +284,7 @@
         if (!empty($server_thumb_name)) {
         	return $server_thumb_name;
         }
-        /*srever thumb files END */ 
+        /*server thumb files END */
 		$path = explode('/',$file);
 		if(is_array($path)) {
 			$file = $path[count($path)-1];
@@ -598,7 +598,8 @@
 	 *
 	 * @return string
 	 */
-	function form_val($string){
+	function form_val($string): string
+    {
 		return cleanForm($string);
 	}
 
@@ -611,25 +612,23 @@
 	 *
 	 * @return string : { string } { $tagString } { text formatted }
 	 */
-	function genTags($tags,$sep=',')
-	{
+	function genTags($tags,$sep=','): string
+    {
 		//Remove fazool spaces
 		$tags = preg_replace(array('/ ,/','/, /'),',',$tags);
-		$tags = preg_replace( "`[,]+`" , ",", $tags);
+		$tags = preg_replace( '`[,]+`' , ',', $tags);
 		$tag_array = explode($sep,$tags);
-		foreach($tag_array as $tag)
-		{
+        $newTags = [];
+		foreach($tag_array as $tag) {
 			if(isValidtag($tag)) {
 				$newTags[] = $tag;
 			}
 		}
 		//Creating new tag string
 		if(is_array($newTags)) {
-			$tagString = implode(',',$newTags);
-		} else {
-			$tagString = 'no-tag';
+			return implode(',',$newTags);
 		}
-		return $tagString;
+        return 'no-tag';
 	}
 
 	/**
@@ -640,8 +639,8 @@
 	 *
 	 * @return bool : { boolean } { true or false }
 	 */
-	function isValidtag($tag)
-	{
+	function isValidtag($tag): bool
+    {
 		$disallow_array = array
 		('of','is','no','on','off','a','the','why','how','what','in');
 		if(!in_array($tag,$disallow_array) && strlen($tag)>2) {
@@ -653,12 +652,12 @@
 	/**
 	 * FUNCTION USED TO GET CATEGORY LIST
 	 *
-	 * @param bool $params
+	 * @param array $params
 	 *
 	 * @return array|bool|string : { array } { $cats } { array of categories }
 	 * @internal param $ : { array } { $params } { array of parameters e.g type } { $params } { array of parameters e.g type }
 	 */
-	function getCategoryList($params=false)
+	function getCategoryList($params=[])
 	{
 		global $cats;
 		$cats = "";
@@ -666,7 +665,7 @@
 		switch($type)
 		{
 			default:
-				 cb_call_functions('categoryListing',$params);
+			    cb_call_functions('categoryListing',$params);
 				break;
 			
 			case "video":
@@ -753,11 +752,11 @@
 	{
 		if(!$pretty) {
 			$dump = print_r($text, true);
-            display_clean($dump);
+            echo display_clean($dump);
 		} else {
 			echo "<pre>";
 			$dump = print_r($text, true);
-            display_clean($dump);
+            echo display_clean($dump);
 			echo "</pre>";
 		}
 	}
@@ -771,8 +770,9 @@
 	function FUNC($params)
 	{
 		$func=$params['name'];
-		if(function_exists($func))
+		if(function_exists($func)){
 			$func();
+        }
 	}
 	
 	/**
@@ -783,8 +783,9 @@
 	function user_id()
 	{
 		global $userquery;
-		if($userquery->userid !='' && $userquery->is_login)
+		if($userquery->userid !='' && $userquery->is_login){
 			return $userquery->userid;
+        }
 		return false;
 	}
 	
@@ -948,8 +949,7 @@
 	function apply_func($func,$val)
 	{
 		if(is_array($func)) {
-			foreach($func as $f)
-			{
+			foreach($func as $f) {
 				if(function_exists($f)) {
 					$val = $f($val);
 				}
@@ -1148,7 +1148,6 @@
 	   foreach ($haystack as $item) {
 		  if (strpos($item, $needle) !== FALSE) {
 			 return $item;
-			 break;
 		  }
 	   }
 	}
@@ -1458,7 +1457,7 @@
 	}
 
 	/**
-	 * Function used to create limit functoin from current page & results
+	 * Function used to create limit function from current page & results
 	 *
 	 * @param $page
 	 * @param $result
@@ -1548,8 +1547,9 @@
 	 */
 	function lang($var,$sprintf=false)
 	{
-		if( $var == '' )
+		if( $var == '' ){
 			return '';
+        }
 
 		global $LANG;
 		$array_str = array( '{title}');
@@ -1574,8 +1574,9 @@
 		if($LANG != null && !isset($LANG[$var]))
 		{
 			error_log('[LANG] Missing translation for "'.$var.'"');
-			if( in_dev() )
+			if( in_dev() ){
 				error_log(print_r(debug_backtrace(), TRUE));
+            }
 		}
 
 		return $phrase;
@@ -1598,9 +1599,8 @@
 	{
 		if(getArrayValue($param, 'assign')=='') {
 			return lang($param['code'],getArrayValue($param, 'sprintf'));
-		} else {
-			assign($param['assign'],lang($param['code'],isset($param['sprintf']) ? $param['sprintf'] : false));
 		}
+		assign($param['assign'],lang($param['code'],$param['sprintf'] ?? false));
 	}
 
 	/**
@@ -1819,7 +1819,7 @@
 	 *
 	 * @param $name
 	 *
-	 * @return bool
+	 * @return bool|array
 	 */
 	function get_functions($name)
 	{
@@ -1859,7 +1859,7 @@
 	function add_header($files)
 	{
 		global $Cbucket;
-		return $Cbucket->add_header($files);
+		$Cbucket->add_header($files);
 	}
 
 	/**
@@ -1871,7 +1871,7 @@
 	function add_admin_header($files)
 	{
 		global $Cbucket;
-		return $Cbucket->add_admin_header($files);
+		$Cbucket->add_admin_header($files);
 	}
 
 	/**
@@ -2502,17 +2502,22 @@
 
 		if(SEO=='yes')
 		{
-			if(isset($_GET['sort']) && $_GET['sort'] != '')
+			if(isset($_GET['sort']) && $_GET['sort'] != ''){
 				$sort = '/'.$_GET['sort'];
-			if( isset($_GET['time']) && $_GET['time'] != '')
+            }
+			if( isset($_GET['time']) && $_GET['time'] != ''){
 				$time = '/'.$_GET['time'];
+            }
 		} else {
-			if(isset($_GET['sort']) && $_GET['sort'] != '')
+			if(isset($_GET['sort']) && $_GET['sort'] != ''){
 				$sort = '&sort='.$_GET['sort'];
-			if( isset($_GET['time']) && $_GET['time'] != '')
+            }
+			if( isset($_GET['time']) && $_GET['time'] != ''){
 				$time = '&time='.$_GET['time'];
-			if( isset($_GET['seo_cat_name']) && $_GET['seo_cat_name'] != '')
+            }
+			if( isset($_GET['seo_cat_name']) && $_GET['seo_cat_name'] != ''){
 				$time = '&seo_cat_name='.$_GET['seo_cat_name'];
+            }
 		}
 
 		switch($type)
@@ -2576,16 +2581,21 @@
 			case 'video':
 			case 'videos':
 			case 'v':
-				if(!isset($_GET['cat']))
+				if(!isset($_GET['cat'])){
 					$_GET['cat'] = 'all';
-				if(!isset($_GET['time']))
+                }
+				if(!isset($_GET['time'])){
 					$_GET['time'] = 'all_time';
-				if(!isset($_GET['sort']))
+                }
+				if(!isset($_GET['sort'])){
 					$_GET['sort'] = 'most_recent';
-				if(!isset($_GET['page']))
+                }
+				if(!isset($_GET['page'])){
 					$_GET['page'] = 1;
-				if(!isset($_GET['seo_cat_name']))
+                }
+				if(!isset($_GET['seo_cat_name'])){
 					$_GET['seo_cat_name'] = 'All';
+                }
 				
 				$_GET['page'] = 1;
 				if($mode == 'sort') {
@@ -2606,16 +2616,21 @@
 			
 			case 'channels':
 			case 'channel':
-				if(!isset($_GET['cat']))
+				if(!isset($_GET['cat'])){
 					$_GET['cat'] = 'all';
-				if(!isset($_GET['time']))
+                }
+				if(!isset($_GET['time'])){
 					$_GET['time'] = 'all_time';
-				if(!isset($_GET['sort']))
+                }
+				if(!isset($_GET['sort'])){
 					$_GET['sort'] = 'most_recent';
-				if(!isset($_GET['page']))
+                }
+				if(!isset($_GET['page'])){
 					$_GET['page'] = 1;
-				if(!isset($_GET['seo_cat_name']))
+                }
+				if(!isset($_GET['seo_cat_name'])){
 					$_GET['seo_cat_name'] = 'All';
+                }
 				
 				if($mode == 'sort') {
 					$sorting = $sort;
@@ -2635,16 +2650,21 @@
 
 
 			default:
-				if(!isset($_GET['cat']))
+				if(!isset($_GET['cat'])){
 					$_GET['cat'] = 'all';
-				if(!isset($_GET['time']))
+                }
+				if(!isset($_GET['time'])){
 					$_GET['time'] = 'all_time';
-				if(!isset($_GET['sort']))
+                }
+				if(!isset($_GET['sort'])){
 					$_GET['sort'] = 'most_recent';
-				if(!isset($_GET['page']))
+                }
+				if(!isset($_GET['page'])){
 					$_GET['page'] = 1;
-				if(!isset($_GET['seo_cat_name']))
+                }
+				if(!isset($_GET['seo_cat_name'])){
 					$_GET['seo_cat_name'] = 'All';
+                }
 				
 				if($mode == 'sort') {
 					$sorting = $sort;
@@ -2722,10 +2742,11 @@
 		global $total_captchas_loaded;
 		switch($params['load']) {
 			case 'function':
-				if($total_captchas_loaded!=0)
+				if($total_captchas_loaded!=0){
 					$total_captchas_loaded = $total_captchas_loaded+1;
-				else
+                } else {
 					$total_captchas_loaded = 1;
+                }
 				$_SESSION['total_captchas_loaded'] = $total_captchas_loaded;
 				if(function_exists($params['captcha']['load_function'])) {
 					return $params['captcha']['load_function']().'<input name="cb_captcha_enabled" type="hidden" id="cb_captcha_enabled" value="yes" />';
@@ -2795,7 +2816,7 @@
 	function get_username($uid)
 	{
 		global $userquery;
-		return $userquery->get_username($uid,'username');
+		return $userquery->get_username($uid);
 	}
 
 	/**
@@ -3192,7 +3213,7 @@
 						return '<script src="'.JS_URL.'/'.$file.'" type="text/javascript"></script>';
                     }
 				}
-			} elseif($type == THIS_PAGE) {
+			} else if($type == THIS_PAGE) {
 				return '<script src="'.JS_URL.'/'.$file.'" type="text/javascript"></script>';
 			}
 		}
@@ -3227,8 +3248,9 @@
 		foreach($codecs as $codec)
 		{
 			$get_codec = shell_output(  get_binaries('ffmpeg').' -codecs 2>/dev/null | grep "'.$codec.'"');
-			if( $get_codec )
+			if( $get_codec ){
 				$codec_installed[] = $codec;
+            }
 		}
 
 		return $codec_installed;
@@ -3285,18 +3307,17 @@
 		$result = shell_output($path." -version");
 		if($result)
 		{
-			if (preg_match("/git/i", $result))
-			{
+			if (preg_match("/git/i", $result)) {
 				preg_match('@^(?:ffmpeg version)?([^C]+)@i',$result, $matches);
 				$host = $matches[1];
 				return $host;
-			} else {
-				preg_match("/(?:ffmpeg\\s)(?:version\\s)?(\\d\\.\\d\\.(?:\\d|[\\w]+))/i", strtolower($result), $matches);
-				if(count($matches) > 0) {
-					$version = array_pop($matches);
-					return $version;
-				}
 			}
+
+            preg_match("/(?:ffmpeg\\s)(?:version\\s)?(\\d\\.\\d\\.(?:\\d|[\\w]+))/i", strtolower($result), $matches);
+            if(count($matches) > 0) {
+                $version = array_pop($matches);
+                return $version;
+            }
 			return false;
 		}
 		return false;
@@ -3533,46 +3554,6 @@
 	}
 
 	/**
-	* function used to get all time zones
-	*/
-	function get_time_zones()
-	{
-		$timezoneTable = array(
-			"-12" => "(GMT -12:00) Eniwetok, Kwajalein",
-			"-11" => "(GMT -11:00) Midway Island, Samoa",
-			"-10" => "(GMT -10:00) Hawaii",
-			"-9" => "(GMT -9:00) Alaska",
-			"-8" => "(GMT -8:00) Pacific Time (US &amp; Canada)",
-			"-7" => "(GMT -7:00) Mountain Time (US &amp; Canada)",
-			"-6" => "(GMT -6:00) Central Time (US &amp; Canada), Mexico City",
-			"-5" => "(GMT -5:00) Eastern Time (US &amp; Canada), Bogota, Lima",
-			"-4" => "(GMT -4:00) Atlantic Time (Canada), Caracas, La Paz",
-			"-3.5" => "(GMT -3:30) Newfoundland",
-			"-3" => "(GMT -3:00) Brazil, Buenos Aires, Georgetown",
-			"-2" => "(GMT -2:00) Mid-Atlantic",
-			"-1" => "(GMT -1:00 hour) Azores, Cape Verde Islands",
-			"0" => "(GMT) Western Europe Time, London, Lisbon, Casablanca",
-			"1" => "(GMT +1:00 hour) Brussels, Copenhagen, Madrid, Paris",
-			"2" => "(GMT +2:00) Kaliningrad, South Africa",
-			"3" => "(GMT +3:00) Baghdad, Riyadh, Moscow, St. Petersburg",
-			"3.5" => "(GMT +3:30) Tehran",
-			"4" => "(GMT +4:00) Abu Dhabi, Muscat, Baku, Tbilisi",
-			"4.5" => "(GMT +4:30) Kabul",
-			"5" => "(GMT +5:00) Ekaterinburg, Islamabad, Karachi, Tashkent",
-			"5.5" => "(GMT +5:30) Bombay, Calcutta, Madras, New Delhi",
-			"6" => "(GMT +6:00) Almaty, Dhaka, Colombo",
-			"7" => "(GMT +7:00) Bangkok, Hanoi, Jakarta",
-			"8" => "(GMT +8:00) Beijing, Perth, Singapore, Hong Kong",
-			"9" => "(GMT +9:00) Tokyo, Seoul, Osaka, Sapporo, Yakutsk",
-			"9.5" => "(GMT +9:30) Adelaide, Darwin",
-			"10" => "(GMT +10:00) Eastern Australia, Guam, Vladivostok",
-			"11" => "(GMT +11:00) Magadan, Solomon Islands, New Caledonia",
-			"12" => "(GMT +12:00) Auckland, Wellington, Fiji, Kamchatka"
-		);
-		return $timezoneTable;
-	}
-
-	/**
 	 * Function used to get object type from its code
 	 *
 	 * @param : { string } { $type } { shortcode of type ie v=>video }
@@ -3581,8 +3562,9 @@
 	 */
 	function get_obj_type($type)
 	{
-		if( $type == 'v' )
+		if( $type == 'v' ){
 			return "video";
+        }
 	}
 
 	/**
@@ -3892,11 +3874,15 @@
 			        curl_close($ch); // to match curl_init() 
 			        return "FAIL: curl_setopt(CURLOPT_URL)"; 
 			    } 
-			    if( !curl_setopt($ch, CURLOPT_FILE, $fp) )
+			    if( !curl_setopt($ch, CURLOPT_FILE, $fp) ){
 			    	return "FAIL: curl_setopt(CURLOPT_FILE)";
-			    if( !curl_setopt($ch, CURLOPT_HEADER, 0) )
+                }
+			    if( !curl_setopt($ch, CURLOPT_HEADER, 0) ){
 			    	return "FAIL: curl_setopt(CURLOPT_HEADER)";
-			    if( !curl_exec($ch) ) return "FAIL: curl_exec()"; 
+                }
+			    if( !curl_exec($ch) ){
+			        return "FAIL: curl_exec()";
+                }
 			    curl_close($ch); 
 			   	fclose($fp); 
 			    return "SUCCESS: $file [$url]"; 
@@ -4075,8 +4061,9 @@
 	 */
 	function this_plugin($pluginFile=NULL)
 	{
-		if(!$pluginFile)
+		if(!$pluginFile){
 			global $pluginFile;
+        }
 		return basename(dirname($pluginFile));
 	}
 
@@ -4176,10 +4163,11 @@
 			'pattern'   => $pattern
 		);
 		
-		if($assign)
+		if($assign){
 			assign($assign,$array);
-		else
+        } else {
 			return $array;
+        }
 	}
 
 	function update_user_voted($array,$userid=NULL)
@@ -4289,13 +4277,15 @@
     function verify_age($dob)
 	{
         $allowed_age = config('min_age_reg');
-        if($allowed_age < 1)
+        if($allowed_age < 1){
         	return true;
+        }
         $age_time = strtotime($dob);
         $diff = time() - $age_time;
         $diff = $diff / 60 / 60 / 24 / 364;
-        if($diff >= $allowed_age )
+        if($diff >= $allowed_age ){
         	return true;
+        }
         return false;
     }
 
@@ -4425,8 +4415,9 @@
 	        $page = PARENT_PAGE;
 	        if($name)
 	        {
-	            if($page==$name)
+	            if($page==$name){
 	                return true;
+                }
 				return false;
 	        }
 	        return $page;
@@ -4442,12 +4433,14 @@
 	 */
 	function sorting_links()
 	{
-		if(!isset($_GET['sort']))
+		if(!isset($_GET['sort'])){
 			$_GET['sort'] = 'most_recent';
-		if(!isset($_GET['time']))
+        }
+		if(!isset($_GET['time'])){
 			$_GET['time'] = 'all_time';
+        }
 
-		$array = array(
+		return array(
 			'view_all'		=> lang('all'),
 			'most_recent' 	=> lang('most_recent'),
 		 	'most_viewed'	=> lang('mostly_viewed'),
@@ -4455,7 +4448,6 @@
 		 	'top_rated'		=> lang('top_rated'),
 		 	'most_commented'=> lang('most_comments')
 		);
-		return $array;
 	}
 
 	/**
@@ -4466,18 +4458,17 @@
 	 */
 	function time_links()
 	{
-		$array = array
-		('all_time' 	=> lang('alltime'),
-		 'today'		=> lang('today'),
-		 'yesterday'	=> lang('yesterday'),
-		 'this_week'	=> lang('thisweek'),
-		 'last_week'	=> lang('lastweek'),
-		 'this_month'	=> lang('thismonth'),
-		 'last_month'	=> lang('lastmonth'),
-		 'this_year'	=> lang('thisyear'),
-		 'last_year'	=> lang('lastyear'),
+		return array(
+		    'all_time' 	 => lang('alltime'),
+            'today'		 => lang('today'),
+            'yesterday'	 => lang('yesterday'),
+            'this_week'	 => lang('thisweek'),
+            'last_week'	 => lang('lastweek'),
+            'this_month' => lang('thismonth'),
+            'last_month' => lang('lastmonth'),
+            'this_year'	 => lang('thisyear'),
+            'last_year'	 => lang('lastyear')
 		 );
-		return $array;
 	}
 
 	/**
@@ -4497,9 +4488,7 @@
 	function get_videos_of_collection($id,$order,$limit,$count_only=false)
 	{
 		global $cbvideo;
-		$items = array();
-		$items  = $cbvideo->collection->get_collection_items_with_details($id,$order,$limit,$count_only);
-		return $items;
+		return $cbvideo->collection->get_collection_items_with_details($id,$order,$limit,$count_only);
 	}
 
 	/**
@@ -4560,8 +4549,7 @@
 				return false;
 			}
 			$results = substr($results, 0,$end);
-			$return_arr = explode(':', $results);
-			return $return_arr;
+			return explode(':', $results);
 		}
 		return false;
 	}
@@ -5212,10 +5200,10 @@
 		* @return : { string/boolean } { type or false }
 		* @example : N/A
     */
-	function get_mime_type($file)
+	function get_mime_type($file, $offset = 0)
 	{
 		$raw_content_type = mime_content_type($file);
-        $cont_type = substr($raw_content_type, 0,strpos($raw_content_type, '/'));
+        $cont_type = substr($raw_content_type, $offset,strpos($raw_content_type, '/'));
         if ($cont_type){
         	return $cont_type;
         }
