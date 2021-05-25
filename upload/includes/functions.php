@@ -5459,6 +5459,28 @@
         }
     }
 
+    function get_proxy_settings(string $format = '')
+    {
+	    switch($format){
+            default:
+            case 'file_get_contents':
+                $context = null;
+                if( config('proxy_enable') == 'yes' ){
+                    $context = [
+                        'http' => [
+                            'proxy'           => 'tcp://'.config('proxy_url').':'.config('proxy_port'),
+                            'request_fulluri' => true
+                        ]
+                    ];
+
+                    if( config('proxy_auth') == 'yes' ){
+                        $context['http']['header'] = 'Proxy-Authorization: Basic '.base64_encode(config('proxy_username').':'.config('proxy_password'));
+                    }
+                }
+                return $context;
+        }
+    }
+
     /**
      * @param bool
      * @return string|void
@@ -5474,8 +5496,10 @@
         $current_status = strtolower(STATE);
         $current_revision = REV;
 
+        $context = get_proxy_settings('file_get_contents');
+
         $versions_url = $base_url.'/latest.json';
-        $versions = json_decode(file_get_contents($versions_url), true);
+        $versions = json_decode(file_get_contents($versions_url, false, $context), true);
         if( !isset($versions[$current_status]) ){
             if( $only_flag ){
                 return 'red';
@@ -5486,7 +5510,7 @@
         }
 
         $changelog_url = $base_url.'/'.$versions[$current_status].'.json';
-        $changelog = json_decode(file_get_contents($changelog_url), true);
+        $changelog = json_decode(file_get_contents($changelog_url, false, $context), true);
         if( !isset($changelog['version']) ){
             if( $only_flag ){
                 return 'red';
@@ -5501,11 +5525,20 @@
             echo 'Latest version <i>('.ucfirst( $current_status).')</i> : <b>'.$changelog['version'].'</b> - Revision <b>'.$changelog['revision'].'</b></h5></div>';
         }
 
-        if( $current_version == $changelog['version'] && $current_revision == $changelog['revision'] ){
-            if( $only_flag ){
+        $is_new_version = $current_version > $changelog['version'];
+        $is_new_revision = $is_new_version || $current_revision > $changelog['revision'];
+
+        if( $current_version == $changelog['version'] && $current_revision == $changelog['revision'] ) {
+            if ( $only_flag ) {
                 return 'green';
             }
             echo '<h3 style="text-align:center;">Your Clipbucket seems up-to-date !</h3>';
+        } else if( $is_new_version || $is_new_revision ) {
+            if ( $only_flag ) {
+                return 'green';
+            }
+
+            echo '<h3 style="text-align:center;">Keep working on this new version ! :)</h3>';
         } else {
             if( $only_flag ){
                 return 'orange';

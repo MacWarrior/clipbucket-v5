@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision": "19",
+  "revision": "20",
   "status":"dev",
   "detail":[
     {
@@ -15,6 +15,7 @@
         ,"Update FR translations"
         ,"Fix SQL structure <i>#167</i>"
         ,"Update readme"
+        ,"Implement proxy settings"
       ]
     }
     ,{
@@ -28,6 +29,7 @@
         ,"Fix members deletion"
         ,"Update Video edit interface"
         ,"Fix valid message displayed even if errors occured <i>#167#</i>"
+        ,"Update update checker"
       ]
     }
   ,{

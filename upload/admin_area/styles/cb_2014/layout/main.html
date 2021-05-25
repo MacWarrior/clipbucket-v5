@@ -167,6 +167,11 @@
 						<h8>Listings</h8>
 					</a>
 				</li>
+				<li>
+					<a data-toggle="tab" href="#config_proxy">
+						<h8>Proxy</h8>
+					</a>
+				</li>
 			</ul>
 			<div class="tab-content">
 				<div id="config_general" class="tab-pane active">
@@ -1666,6 +1671,78 @@
 								</div>
 								<div class="col-md-4 row-size">
 									<input class="form-control" name="users_items_contacts_channel" id="users_items_contacts_channel" value="{$row.users_items_contacts_channel}"/>
+								</div>
+							</div>
+							<hr/>
+
+						</div>
+
+					</div>
+				</div>
+
+				<div id="config_proxy" class="tab-pane">
+					<div class="row">
+						<div class="col-md-3">
+							<div class="row">
+								<div class="col-md-8">
+									<label class="nowrap" for="proxy_enable" title="Enable proxy">Enable proxy</label>
+								</div>
+								<div class="col-md-4 row-size">
+									<input value="yes" name="proxy_enable" id="proxy_enable" {if $row.proxy_enable=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+
+							<div class="row">
+								<div class="col-md-8">
+									<label class="nowrap" for="proxy_auth" title="Enable proxy authentification">Enable proxy authentification</label>
+								</div>
+								<div class="col-md-4 row-size">
+									<input value="yes" name="proxy_auth" id="proxy_auth" {if $row.proxy_auth=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+
+						</div>
+						<div class="col-md-3">
+							<div class="row">
+								<div class="col-md-4">
+									<label class="nowrap" for="proxy_url" title="URL">URL</label>
+								</div>
+								<div class="col-md-8 row-size">
+									<input class="form-control" name="proxy_url" id="proxy_url" value="{$row.proxy_url}"/>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-4">
+									<label class="nowrap" for="proxy_username" title="Username">Username</label>
+								</div>
+								<div class="col-md-8 row-size">
+									<input class="form-control" name="proxy_username" id="proxy_username" value="{$row.proxy_username}"/>
+								</div>
+							</div>
+							<hr/>
+
+						</div>
+						<div class="col-md-3">
+							<div class="row">
+								<div class="col-md-4">
+									<label class="nowrap" for="proxy_port" title="Port">Port</label>
+								</div>
+								<div class="col-md-8 row-size">
+									<input class="form-control" name="proxy_port" id="proxy_port" value="{$row.proxy_port}"/>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-4">
+									<label class="nowrap" for="proxy_password" title="Password">Password</label>
+								</div>
+								<div class="col-md-8 row-size">
+									<input class="form-control" name="proxy_password" id="proxy_password" value="{$row.proxy_password}"/>
 								</div>
 							</div>
 							<hr/>

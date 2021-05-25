@@ -1,5 +1,11 @@
 INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
-	('email_domain_restriction', '');
+	('email_domain_restriction', ''),
+	('proxy_enable', 'no'),
+	('proxy_auth', 'no'),
+	('proxy_url', ''),
+	('proxy_port', ''),
+	('proxy_username', ''),
+	('proxy_password', '');
 
 ALTER TABLE `{tbl_prefix}video`
 	MODIFY COLUMN `videokey` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
