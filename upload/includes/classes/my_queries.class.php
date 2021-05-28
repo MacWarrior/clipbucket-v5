@@ -302,8 +302,8 @@ class myquery
 				e(lang("please_enter_your_email"));
             }
 			
-			$name = mysql_clean($_POST['name']);
-			$email = mysql_clean($_POST['email']);
+			$name = $_POST['name'];
+			$email = $_POST['email'];
 		}
 
 		if(empty($eh->get_error()))
@@ -349,7 +349,6 @@ class myquery
 			if(SEND_COMMENT_NOTIFICATION=='yes' && $own_details )
 			{
 				global $cbemail;
-				
 				$tpl = $cbemail->get_template('user_comment_email');
 				
 				$var = [
@@ -364,7 +363,7 @@ class myquery
 				$msg = nl2br($cbemail->replace($tpl['email_template'],$var));
 				
 				//Now Finally Sending Email
-				cbmail(array('to'=>$own_details,'from'=>WEBSITE_EMAIL,'subject'=>$subj,'content'=>$msg));
+				cbmail(['to'=>$own_details,'from'=>WEBSITE_EMAIL,'subject'=>$subj,'content'=>$msg]);
 
 				if($reply_to!=0){
 					$tpl = $cbemail->get_template('user_reply_email');

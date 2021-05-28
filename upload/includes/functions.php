@@ -478,40 +478,41 @@
 			$cond .= ' AND ';
 		}
 		if(empty($type)) {
-			$type = "v";
+			$type = 'v';
 		}
-		$cond .= tbl("comments.type")." = '".$type."'";
+		$cond .= tbl('comments.type')." = '".$type."'";
 		if($params['type_id'] && $params['sectionTable']) {
-			if($cond != "")
+			if($cond != ""){
 				$cond .= " AND ";
-			$cond .= tbl("comments.type_id")." = ".tbl($params['sectionTable'].".".$params['type_id']);
+            }
+			$cond .= tbl('comments.type_id').' = '.tbl($params['sectionTable'].'.'.$params['type_id']);
 		}
 				
 		if($params['cond']) {
-			if($cond != ""){
-				$cond .= " AND ";
+			if($cond != ''){
+				$cond .= ' AND ';
             }
 			$cond .= $params['cond'];
 		}
 
-        $query = "SELECT *".", ".tbl("comments.userid")." AS "."c_userid"." FROM ".tbl("comments".($params['sectionTable']?",".$params['sectionTable']:NULL));
+        $query = 'SELECT * , '.tbl('comments.userid').' AS c_userid FROM '.tbl('comments'.($params['sectionTable']?','.$params['sectionTable']:NULL));
 
         if($cond) {
-            $query .= " WHERE ".$cond;
+            $query .= ' WHERE '.$cond;
         }
         if($order) {
-            $query .= " ORDER BY ".$order;
+            $query .= ' ORDER BY '.$order;
         }
         if($limit) {
-            $query .= " LIMIT ".$limit;
+            $query .= ' LIMIT '.$limit;
         }
 		if(!$params['count_only']) {
             $result = db_select($query);
         }
 
 		if($params['count_only']) {
-			$cond = tbl("comments.type")."= '". $params['type'] ."'";
-			$result = $db->count(tbl("comments"),"*",$cond);
+			$cond = tbl('comments.type')."= '". $params['type'] ."'";
+			$result = $db->count(tbl('comments'),'*',$cond);
 		}
 
 		if($result) {
