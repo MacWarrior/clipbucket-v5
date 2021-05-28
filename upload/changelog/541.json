@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision": "23",
+  "revision": "24",
   "status":"dev",
   "detail":[
     {
@@ -17,7 +17,6 @@
         ,"Update readme"
         ,"Implement proxy settings"
         ,"Fix boolean configurations saving"
-        ,"Remove MP4Box // GPAC dependency"
       ]
     }
     ,{
@@ -41,6 +40,13 @@
         ,"Fix remote upload tab display when file upload is disabled"
         ,"Fix email verification in signup form"
         ,"Video upload : Correctly handle pre-save errors, fix cancel update message"
+      ]
+    }
+  ,{
+      "title": "Server",
+      "description": [
+        "Remove MP4Box // GPAC dependency"
+        ,"Add Ubuntu 21.04 installation script"
       ]
     }
   ]
