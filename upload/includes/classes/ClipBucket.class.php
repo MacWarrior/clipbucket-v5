@@ -356,7 +356,7 @@ class ClipBucket
             $this->addMenuAdmin($menu_users, 20);
         }
 
-        if ($per['ad_manager_access'] == "yes" && config("enable_advertisement")) {
+        if ($per['ad_manager_access'] == "yes" && config("enable_advertisement") == "yes") {
             $menu_ad = array(
                 'title' => 'Advertisement'
                 ,'class' => 'glyphicon glyphicon-bullhorn'

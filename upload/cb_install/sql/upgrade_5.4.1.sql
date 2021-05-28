@@ -9,6 +9,8 @@ INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 
 DELETE FROM `{tbl_prefix}config` WHERE name = 'mp4boxpath';
 
+UPDATE `{tbl_prefix}config` SET value = 'no' WHERE name = 'enable_advertisement' AND value = '0';
+
 ALTER TABLE `{tbl_prefix}video`
 	MODIFY COLUMN `videokey` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
 	MODIFY COLUMN `video_password` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',

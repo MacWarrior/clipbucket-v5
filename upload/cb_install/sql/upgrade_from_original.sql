@@ -282,7 +282,7 @@ UPDATE `{tbl_prefix}video_views` SET video_id = convert(cast(convert(video_id us
 INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 ('password_salt', SUBSTRING(HEX(SHA2(CONCAT(NOW(), RAND(), UUID()), 512)),1, 32) ),
 ('show_collapsed_checkboxes', '0'),
-('enable_advertisement', '0'),
+('enable_advertisement', 'no'),
 ('chromecast', 'no'),
 ('vid_cat_width', '120'),
 ('vid_cat_height', '120');
@@ -511,6 +511,8 @@ INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 	('proxy_password', '');
 
 DELETE FROM `{tbl_prefix}config` WHERE name = 'mp4boxpath';
+
+UPDATE `{tbl_prefix}config` SET value = 'no' WHERE name = 'enable_advertisement' AND value = '0';
 
 ALTER TABLE `{tbl_prefix}video`
 	MODIFY COLUMN `videokey` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',

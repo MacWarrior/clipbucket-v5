@@ -280,7 +280,7 @@ UPDATE `{tbl_prefix}video_views` SET video_id = convert(cast(convert(video_id us
 INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 	('password_salt', SUBSTRING(HEX(SHA2(CONCAT(NOW(), RAND(), UUID()), 512)),1, 32) ),
 	('show_collapsed_checkboxes', '0'),
-	('enable_advertisement', '0'),
+	('enable_advertisement', 'no'),
 	('chromecast', 'no'),
 	('vid_cat_width', '120'),
 	('vid_cat_height', '120');

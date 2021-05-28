@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"28",
+  "revision":"29",
   "status":"dev",
   "detail":[
     {
@@ -19,6 +19,7 @@
         ,"Fix boolean configurations saving"
         ,"Disable some conversion logs when not in DEV mode"
         ,"Save comments without editing content"
+        ,"Fix ads configuration"
       ]
     }
     ,{

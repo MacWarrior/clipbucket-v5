@@ -101,7 +101,7 @@
 
 
 
-{if config("enable_advertisement")}
+{if config("enable_advertisement") == "yes"}
 <link rel="stylesheet" href="{$cb_vjs_player_url}/css/videojs.ads.css">
 <script type="text/javascript" src="{$cb_vjs_player_url}/js/videojs.ads.js"></script>
 <script type="text/javascript" src="{$cb_vjs_player_url}/js/cb_ultimate_ads.js"></script>
@@ -196,7 +196,7 @@
 		this.thumbnails({get_player_thumbs_json($vdata)});
 		{/if}
 
-		{if config("enable_advertisement")}
+		{if config("enable_advertisement") == "yes"}
 		//Calling Ima Ads plugin
 		if ("{$play_ad}"){
 			var ad_options = {
