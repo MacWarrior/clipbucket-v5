@@ -145,7 +145,7 @@ if(!function_exists('shell_output'))
         if (stristr(PHP_OS, 'WIN')) {
             $cmd = $cmd;
         } else {
-            $cmd = "PATH=\$PATH:/bin:/usr/bin:/usr/local/bin bash -c \"$cmd\" 2>&1 >> /srv/www/log.txt";
+            $cmd = "PATH=\$PATH:/bin:/usr/bin:/usr/local/bin bash -c \"$cmd\" 2>&1";
         }
         $data = shell_exec( $cmd );
         return $data;
