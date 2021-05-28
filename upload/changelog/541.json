@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"25",
+  "revision":"26",
   "status":"dev",
   "detail":[
     {
@@ -41,6 +41,7 @@
         ,"Fix remote upload tab display when file upload is disabled"
         ,"Fix email verification in signup form"
         ,"Video upload : Correctly handle pre-save errors, fix cancel update message"
+        ,"Fix guest's comments"
       ]
     }
   ,{

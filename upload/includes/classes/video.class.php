@@ -376,19 +376,20 @@ class CBvideo extends CBCategory
 			$upload_fields = array_merge($required_fields,$location_fields,$option_fields);
 			
 			//Adding Custom Upload Fields
-			if (function_exists('custom_fields_list'))
-			{
+			if (function_exists('custom_fields_list')) {
 				$custom_flds = $Upload->load_custom_form_fields($array,true);
 				$upload_fields = array_merge($upload_fields,$custom_flds);
 			}
 
-			if(!$array)
+			if(!$array){
 				$array = $_POST;
+            }
 
 			$vid = $array['videoid'];
 
-			if(is_array($_FILES))
-			$array = array_merge($array,$_FILES);
+			if(is_array($_FILES)){
+			    $array = array_merge($array,$_FILES);
+            }
 
 			foreach($upload_fields as $field)
 			{
@@ -397,10 +398,10 @@ class CBvideo extends CBCategory
 				
 				if(!empty($val) || !$field['use_if_value'])
 				{
-					if($field['use_func_val'])
+					if($field['use_func_val']){
 						$val = $field['validate_function']($val);
-					
-					
+                    }
+
 					if(!empty($field['db_field']))
 					$query_field[] = $field['db_field'];
 					
@@ -413,13 +414,15 @@ class CBvideo extends CBCategory
 						}
 						$val = $new_val;
 					}
-					if(!$field['clean_func'] || (!apply_func($field['clean_func'],$val) && !is_array($field['clean_func'])))
+					if(!$field['clean_func'] || (!apply_func($field['clean_func'],$val) && !is_array($field['clean_func']))){
 						$val = ($val);
-					else
+                    } else {
 						$val = apply_func($field['clean_func'], mysql_clean('|no_mc|'.$val));
+                    }
 					
-					if(!empty($field['db_field']))
+					if(!empty($field['db_field'])){
 						$query_val[] = $val;
+                    }
 				}
 			}
 			
@@ -500,8 +503,7 @@ class CBvideo extends CBCategory
 				e(lang("class_vdo_update_msg"),'m');
 
 				// condition for Clip press plugin
-				if( function_exists('post_to_wp_upload_culr') )
-				{
+				if( function_exists('post_to_wp_upload_culr') ) {
 					post_to_wp_upload_culr( $vid );
 				}
 			}

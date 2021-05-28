@@ -355,7 +355,7 @@ class Smarty
 
     /**
      * This tells whether hidden sections [.foobar] are readable from the
-     * tempalates or not. Normally you would never allow this since that is
+     * templates or not. Normally you would never allow this since that is
      * the point behind hidden sections: the application can access them, but
      * the templates cannot.
      */

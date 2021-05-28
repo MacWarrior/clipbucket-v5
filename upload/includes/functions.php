@@ -448,7 +448,7 @@
 		if (stristr(PHP_OS, 'WIN')) { 
 			$cmd = $cmd;
 		} else {
-			$cmd = "PATH=\$PATH:/bin:/usr/bin:/usr/local/bin bash -c \"$cmd\"  2>&1";
+			$cmd = "PATH=\$PATH:/bin:/usr/bin:/usr/local/bin bash -c \"$cmd\" 2>&1";
 		}
 		return shell_exec( $cmd );
 	}
@@ -4287,9 +4287,12 @@
 		if($force!=false&&!empty($path))
 		{
 			$file =$path;
-			if(is_array($data)) $data = json_encode($data);
-			if(file_exists($file))
+			if(is_array($data)){
+			    $data = json_encode($data);
+            }
+			if(file_exists($file)){
 				$text = file_get_contents($file);
+            }
 			$text .= " \n {$data}";
 			file_put_contents($file, $text);
 		} else {
@@ -4298,7 +4301,9 @@
 			} else {
 				$logFilePath = BASEDIR. "/files/ffmpegLog.txt";
 			}
-			if(is_array($data)) $data = json_encode($data);
+			if(is_array($data)){
+			    $data = json_encode($data);
+            }
 			if(file_exists($logFilePath)) {
 				$text = file_get_contents($logFilePath);
 			}
@@ -4335,11 +4340,9 @@
 	 */
 	function this_page($name="")
 	{
-	    if(defined('THIS_PAGE'))
-	    {
+	    if(defined('THIS_PAGE')) {
 	        $page = THIS_PAGE;
-	        if($name)
-	        {
+	        if($name) {
 	            if($page==$name) {
 	                return true; 
 	            }

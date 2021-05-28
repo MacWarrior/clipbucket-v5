@@ -278,24 +278,29 @@ class myquery
 				e("Comment is too short. It should be at least 5 characters");
 			}
 		}
-		if(!verify_captcha())
+		if(!verify_captcha()){
 			e(lang('recap_verify_failed'));
-		if(empty($comment))
+        }
+		if(empty($comment)){
 			e(lang("pelase_enter_something_for_comment"));
+        }
 		
 		$params = array('comment'=>$comment,'obj_id'=>$obj_id,'reply_to'=>$reply_to,'type'=>$type);
 		$this->validate_comment_functions($params);
 
-		if(!userid() && $Cbucket->configs['anonym_comments']!='yes')
+		if(!userid() && $Cbucket->configs['anonym_comments']!='yes'){
 			e(lang("you_not_logged_in"));
+        }
 		
 		if((!userid() && $Cbucket->configs['anonym_comments']=='yes') || $force_name_email)
 		{
 			//Checking for input name and email
-			if(empty($_POST['name']))
+			if(empty($_POST['name'])){
 				e(lang("please_enter_your_name"));
-			if(empty($_POST['email']))
+            }
+			if(empty($_POST['email'])){
 				e(lang("please_enter_your_email"));
+            }
 			
 			$name = mysql_clean($_POST['name']);
 			$email = mysql_clean($_POST['email']);
@@ -303,13 +308,17 @@ class myquery
 
 		if(empty($eh->get_error()))
 		{
+		    $userid = userid() ? userid() : 'NULL';
 			$db->insert(
 				tbl("comments"),
 				array('type,comment,type_id,userid,date_added,parent_id,anonym_name,anonym_email','comment_ip','type_owner_id'),
-				array($type,$comment,$obj_id,userid(),NOW(),$reply_to,$name,$email,$_SERVER['REMOTE_ADDR'],$obj_owner)
+				array($type,$comment,$obj_id,$userid,NOW(),$reply_to,($name ?? ''),($email ?? ''),$_SERVER['REMOTE_ADDR'],$obj_owner)
 			);
 			$cid = $db->insert_id();
-			$db->update(tbl("users"),array("total_comments"),array("|f|total_comments+1")," userid='".userid()."'");
+
+			if( userid() ){
+			    $db->update(tbl("users"),array("total_comments"),array("|f|total_comments+1")," userid='".userid()."'");
+            }
 			
 			e(lang("grp_comment_msg"),"m");
 
@@ -317,22 +326,23 @@ class myquery
 
 			$username = user_name();
 			$username = $username ? $username : post('name');	
-			$useremail = $email;
+			$useremail = $email ?? '';
 
 			$fullname = $username;
 
-			if($userquery->udetails['fullname'])
+			if($userquery->udetails['fullname']){
 				$fullname = $userquery->udetails['fullname'];
+            }
 			
 			//Adding Comment Log
-			$log_array = array(
+			$log_array = [
 				'success'=>'yes',
 				'action_obj_id' => $cid,
 				'action_done_id' => $obj_id,
 				'details'=> "made a comment",
 				'username'=>$username,
 				'useremail'=>$useremail
-			 );
+            ];
 			insert_log($type.'_comment',$log_array);
 			
 			//sending email
@@ -342,13 +352,13 @@ class myquery
 				
 				$tpl = $cbemail->get_template('user_comment_email');
 				
-				$var = array(
-					'{username}'	=> $username,
+				$var = [
+					'{username}' => $username,
 					'{fullname}' => $fullname,
-					 '{obj_link}' => $obj_link.'#comment_'.$cid,
-					 '{comment}' => $comment,
-					 '{obj}'	=> get_obj_type($type)
-				);
+                    '{obj_link}' => $obj_link.'#comment_'.$cid,
+					'{comment}'  => $comment,
+                    '{obj}'	     => get_obj_type($type)
+                ];
 
 				$subj = $cbemail->replace($tpl['email_template_subject'],$var);
 				$msg = nl2br($cbemail->replace($tpl['email_template'],$var));
@@ -359,25 +369,24 @@ class myquery
 				if($reply_to!=0){
 					$tpl = $cbemail->get_template('user_reply_email');
 					
-					$more_var = array
-					('{username}'	=> $username,
-	                                 '{fullname}' => $fullname,
-					 '{obj_link}' => $obj_link.'#comment_'.$cid,
-					 '{comment}' => $comment,
-					 '{obj}'	=> get_obj_type($type)
-					);
-					if(!is_array($var))
+					$more_var = [
+					    '{username}' => $username,
+                        '{fullname}' => $fullname,
+                        '{obj_link}' => $obj_link.'#comment_'.$cid,
+                        '{comment}'  => $comment,
+                        '{obj}'	     => get_obj_type($type)
+					];
+					if(!is_array($var)){
 						$var = array();
+                    }
 					$var = array_merge($more_var,$var);
 					$subj = $cbemail->replace($tpl['email_template_subject'],$var);
 					$msg = nl2br($cbemail->replace($tpl['email_template'],$var));
-
 
 					$cd = $this->get_comment($reply_to);
 					$replying_to_email = $cd['email'];
 					cbmail(array('to'=>$replying_to_email,'from'=>WEBSITE_EMAIL,'subject'=>$subj,'content'=>$msg));
 				}
-				
 			}
 			
 			//Adding Video Feed
@@ -407,7 +416,7 @@ class myquery
 	function set_default_thumb($vid,$thumb)
 	{
 		global $cbvid;
-		return $cbvid->set_default_thumb($vid,$thumb);
+		$cbvid->set_default_thumb($vid,$thumb);
 	}
 
 	/**

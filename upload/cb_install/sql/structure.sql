@@ -101,7 +101,7 @@ CREATE TABLE `{tbl_prefix}comments` (
   `comment_id` int(60) NOT NULL,
   `type` varchar(3) NOT NULL,
   `comment` text NOT NULL,
-  `userid` int(60) NOT NULL,
+  `userid` int(60) NULL DEFAULT NULL,
   `anonym_name` varchar(255) NOT NULL,
   `anonym_email` varchar(255) NOT NULL,
   `parent_id` int(60) NOT NULL,

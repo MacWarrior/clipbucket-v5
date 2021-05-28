@@ -19,11 +19,11 @@
 		}
 
 		/**
-		 * Function used to get email tempalate from database
+		 * Function used to get email template from database
 		 *
 		 * @param $code
 		 *
-		 * @return bool
+		 * @return bool|array
 		 */
 		function get_email_template($code)
 		{

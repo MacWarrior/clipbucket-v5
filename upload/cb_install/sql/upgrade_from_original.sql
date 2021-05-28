@@ -524,3 +524,6 @@ ALTER TABLE `{tbl_prefix}video`
 
 ALTER TABLE `{tbl_prefix}video_categories`
 	MODIFY COLUMN `category_thumb` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
+
+ALTER TABLE `{tbl_prefix}comments`
+	MODIFY COLUMN `userid` int(60) NULL DEFAULT NULL;
