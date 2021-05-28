@@ -1307,7 +1307,7 @@ class FFMpeg
 
 		if(!$for_iphone)
 		{
-			$TemplogData .= "\r\nConverting Video file ".$more_res['name']." @ ".date("Y-m-d H:i:s")." \r\n";
+			$TemplogData .= "\r\nConverting Video file ".$more_res['name'].' @ '.date('Y-m-d H:i:s')." \r\n";
 			if($more_res==NULL){
 				echo 'here';
 			} else {
@@ -1318,16 +1318,17 @@ class FFMpeg
 					$more_res['name'] == '720' && $p['gen_720'] == 'yes' ||
 					$more_res['name'] == '1080' && $p['gen_1080'] == 'yes')
 				{
-					$command  = $this->ffmpeg." -i ".$this->input_file." $opt_av ".$this->raw_path."-".$more_res['name'].".mp4  2> ".TEMP_DIR."/".$tmp_file;
+					$command  = $this->ffmpeg.' -i '.$this->input_file." $opt_av ".$this->raw_path."-".$more_res['name'].'.mp4 2> '.TEMP_DIR.'/'.$tmp_file;
 				} else {
 					$command = '';
-					$resolution_error_log = array('err'=>'empty command');
-					logData(json_encode($resolution_error_log),'resolution command');
+                    if( DEVELOPMENT_MODE ) {
+                        $resolution_error_log = array( 'err' => 'empty command' );
+                        logData( json_encode( $resolution_error_log ), 'resolution command' );
+                    }
 				}
+                $output = $this->exec($command);
 			}
-			if($more_res!=NULL){
-				$output = $this->exec($command);
-			}
+
 			if(file_exists(TEMP_DIR.'/'.$tmp_file)){
 				$output = $output ? $output : join("", file(TEMP_DIR.'/'.$tmp_file));
 				unlink(TEMP_DIR.'/'.$tmp_file);
@@ -1339,7 +1340,7 @@ class FFMpeg
 				$this->video_files[] = $more_res['name'];
 				$TemplogData .="\r\nFiles resolution : ".$more_res['name']." \r\n";
 			} else {
-				$TemplogData .="\r\n\r\nFile doesn't exist. Path: ".$this->raw_path."-".$more_res['name'].".mp4 \r\n\r\n";
+				$TemplogData .="\r\n\r\nFile doesn't exist. Path: ".$this->raw_path.'-'.$more_res['name'].".mp4 \r\n\r\n";
 			}
 
 			$this->output_file = $this->raw_path."-".$more_res['name'].".mp4";

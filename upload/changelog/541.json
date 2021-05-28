@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision": "24",
+  "revision":"25",
   "status":"dev",
   "detail":[
     {
@@ -17,6 +17,7 @@
         ,"Update readme"
         ,"Implement proxy settings"
         ,"Fix boolean configurations saving"
+        ,"Disable some conversion logs when not in DEV mode"
       ]
     }
     ,{
