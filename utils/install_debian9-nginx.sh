@@ -10,7 +10,7 @@ echo -ne " OK"
 
 echo ""
 echo -ne "Installing requiered elements..."
-apt-get install php7.0-fpm nginx-full mariadb-server git php-curl ffmpeg gpac php7.0-mysqli php7.0-xml php7.0-mbstring sendmail mediainfo --yes > /dev/null 2>&1
+apt-get install php7.0-fpm nginx-full mariadb-server git php-curl ffmpeg php7.0-mysqli php7.0-xml php7.0-mbstring sendmail mediainfo --yes > /dev/null 2>&1
 service php7.0-fpm restart
 echo -ne " OK"
 

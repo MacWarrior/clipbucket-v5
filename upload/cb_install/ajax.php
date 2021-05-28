@@ -134,8 +134,6 @@ if($mode=='adminsettings')
 			mysqli_query($cnnct, $sql);
 			$sql = 'UPDATE '.$dbprefix.'config SET value = "'.$cnnct->real_escape_string(exec("which ffprobe")).'" WHERE name = "ffprobe_path"';
 			mysqli_query($cnnct, $sql);
-			$sql = 'UPDATE '.$dbprefix.'config SET value = "'.$cnnct->real_escape_string(exec("which MP4Box")).'" WHERE name = "mp4boxpath"';
-			mysqli_query($cnnct, $sql);
 			$sql = 'UPDATE '.$dbprefix.'config SET value = "'.$cnnct->real_escape_string(exec("which mediainfo")).'" WHERE name = "media_info"';
 			mysqli_query($cnnct, $sql);
 		}

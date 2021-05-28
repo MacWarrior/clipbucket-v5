@@ -13,7 +13,6 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'description', 'Clip Bucket is an ultimate Video Sharing script'),
 	(NULL, 'keywords', 'clip bucket video sharing website script'),
 	(NULL, 'ffmpegpath', ''),
-	(NULL, 'mp4boxpath', ''),
 	(NULL, 'vbrate', '300000'),
 	(NULL, 'srate', '22050'),
 	(NULL, 'r_height', ''),

@@ -11,7 +11,7 @@ echo -ne " OK"
 
 echo ""
 echo -ne "Installing required elements..."
-apt-get install php7.2 apache2 mariadb-server php-curl ffmpeg gpac php7.2-mysql php7.2-xml php7.2-mbstring sendmail mediainfo --yes > /dev/null 2>&1
+apt-get install php7.2 apache2 mariadb-server php-curl ffmpeg php7.2-mysql php7.2-xml php7.2-mbstring sendmail mediainfo --yes > /dev/null 2>&1
 /etc/init.d/mysql start > /dev/null
 echo -ne " OK"
 
@@ -31,7 +31,6 @@ echo -ne " OK"
 echo ""
 echo -ne "Adding Softlinks..."
 ln -s /usr/bin/ffmpeg /usr/local/bin/ffmpeg
-ln -s /usr/bin/MP4Box /usr/local/bin/MP4Box
 echo -ne " OK"
 
 echo ""

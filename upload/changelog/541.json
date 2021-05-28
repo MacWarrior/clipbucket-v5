@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision": "21",
+  "revision": "22",
   "status":"dev",
   "detail":[
     {
@@ -17,6 +17,7 @@
         ,"Update readme"
         ,"Implement proxy settings"
         ,"Fix boolean configurations saving"
+        ,"Remove MP4Box // GPAC dependency"
       ]
     }
     ,{

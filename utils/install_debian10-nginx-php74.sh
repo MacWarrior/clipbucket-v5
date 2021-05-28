@@ -20,7 +20,7 @@ echo -ne " OK"
 
 echo ""
 echo -ne "Installing requiered elements..."
-apt install php7.4-fpm nginx-full mariadb-server git php7.4-curl ffmpeg gpac php7.4-mysqli php7.4-xml php7.4-mbstring sendmail mediainfo --yes > /dev/null 2>&1
+apt install php7.4-fpm nginx-full mariadb-server git php7.4-curl ffmpeg php7.4-mysqli php7.4-xml php7.4-mbstring sendmail mediainfo --yes > /dev/null 2>&1
 systemctl restart php7.4-fpm
 echo -ne " OK"
 

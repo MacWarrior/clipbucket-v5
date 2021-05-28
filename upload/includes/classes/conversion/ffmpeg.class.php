@@ -10,7 +10,6 @@
 	*/
 
 	define('FFMPEG_BINARY', get_binaries('ffmpeg'));
-	define('MP4Box_BINARY', get_binaries('mp4box'));
 	define('MEDIAINFO_BINARY', get_binaries('media_info'));
 	define('FFPROBE', get_binaries('ffprobe_path'));
 
@@ -58,7 +57,6 @@ class FFMpeg
 	private $options = array();
 	private $outputFile = false;
 	private $inputFile = false;
-	private $mp4BoxPath = MP4Box_BINARY;
 	private $videosDirPath = VIDEOS_DIR;
 	private $logDir = "";
 	private $logFile = "";
@@ -364,22 +362,11 @@ class FFMpeg
 				$TemplogData .= "\r\n Command : ".$fullCommand." \r\n";
 
 				$conversionOutput = $this->executeCommand($fullCommand);
-				if( DEVELOPMENT_MODE )
+				if( DEVELOPMENT_MODE ){
 					$TemplogData .= "\r\n ffmpeg output : ".$conversionOutput." \r\n";
+                }
 
 				$TemplogData .= "\r\n outputFile : ".$this->sdFile." \r\n";
-				
-				//$this->logs->writeLine("MP4Box Conversion for SD", "Starting");
-				$TemplogData .= "\r\n Sarting : MP4Box Conversion for SD \r\n";
-				$fullCommand = $this->mp4BoxPath . " -inter 0.5 {$this->sdFile} -tmp ".TEMP_DIR;
-				if (PHP_OS == "WINNT")
-				{
-					$fullCommand = str_replace("/","\\",$fullCommand);	
-				}
-				$TemplogData .= "\r\n MP4Box Command : ".$fullCommand." \r\n";
-				$output = $this->executeCommand($fullCommand);
-				if( DEVELOPMENT_MODE )
-					$TemplogData .= "\r\n output : ".$output." \r\n";
 				
 				if (file_exists($this->sdFile))
 				{
@@ -404,26 +391,19 @@ class FFMpeg
 
 				$TemplogData .= "\r\n Command : ".$fullCommand." \r\n";
 
-				$conversionOutput = $this->executeCommand($fullCommand);
-				if(file_exists($log_file_tmp))
-				{
+                $output = $this->executeCommand($fullCommand);
+                if( DEVELOPMENT_MODE ){
+                    $TemplogData .= "\r\n output : ".$output." \r\n";
+                }
+
+				if(file_exists($log_file_tmp)) {
 					$data = file_get_contents($log_file_tmp);
 					unlink($log_file_tmp);
 				}
-				if( DEVELOPMENT_MODE )
+				if( DEVELOPMENT_MODE ){
 					$TemplogData .= "\r\n ffmpeg output : ".$data." \r\n";
+                }
 
-				$TemplogData .= "\r\n Sarting : MP4Box Conversion for HD \r\n";
-				$fullCommand = $this->mp4BoxPath . " -inter 0.5 {$this->hdFile}  -tmp ".TEMP_DIR;
-
-				if (PHP_OS == "WINNT")
-				{
-					$fullCommand = str_replace("/","\\",$fullCommand);	
-				}
-				$TemplogData .= "\r\n MP4Box Command : ".$fullCommand." \r\n";
-				$output = $this->executeCommand($fullCommand);
-				if( DEVELOPMENT_MODE )
-					$TemplogData .= "\r\n output : ".$output." \r\n";
 				if (file_exists($this->hdFile))
 				{
 					$this->video_files[] = 'hd';
@@ -447,20 +427,10 @@ class FFMpeg
 
 				$conversionOutput = $this->executeCommand($fullCommand);
 
-				if( DEVELOPMENT_MODE )
+				if( DEVELOPMENT_MODE ){
 					$TemplogData .= "\r\n ffmpeg output : ".$conversionOutput." \r\n";
+                }
 
-				$TemplogData .= "\r\n Sarting : MP4Box Conversion for SD \r\n";
-				$fullCommand = $this->mp4BoxPath . " -inter 0.5 {$this->sdFile}  -tmp ".TEMP_DIR;
-
-				if (PHP_OS == "WINNT")
-				{
-					$fullCommand = str_replace("/","\\",$fullCommand);	
-				}
-				$TemplogData .= "\r\n MP4Box Command : ".$fullCommand." \r\n";
-				$output = $this->executeCommand($fullCommand);
-				if( DEVELOPMENT_MODE )
-					$TemplogData .= "\r\n output : ".$output." \r\n";
 				if (file_exists($this->sdFile))
 				{
 					$this->video_files[] = 'sd';
@@ -1007,7 +977,6 @@ class FFMpeg
 	function ffmpeg($file)
 	{
 		$this->ffmpeg = FFMPEG_BINARY;
-		$this->mp4box = MP4Box_BINARY;
 		$this->input_file = $file;
 	}
 
@@ -1151,8 +1120,9 @@ class FFMpeg
 		$TemplogData = "";
 		
 		$ratio = $this->ratio;
-		if($file)
+		if($file){
 			$this->input_file = $file;
+        }
 
 		$p = $this->options;
 		$i = $this->input_details;
@@ -1160,15 +1130,20 @@ class FFMpeg
 		$opt_av = '';
 		logData($p,'checkpoints');
 		# Prepare the ffmpeg command to execute
-		if(isset($p['extra_options']))
-			$opt_av .= " -y {$p['extra_options']} ";
+		if( isset($p['extra_options']) ){
+			$opt_av .= " -y {$p['extra_options']}";
+        }
 
-		if( $this->reconvert )
+		if( $this->reconvert ){
 			$opt_av .= ' -y';
+        }
 
 		# file format
-		if(isset($p['format']))
-			$opt_av .= " -f {$p['format']} ";
+		if( isset($p['format']) ){
+			$opt_av .= " -f {$p['format']}";
+        }
+
+		$opt_av .= ' -movflags faststart';
 
 		# Selecting audio track
         $video_track_id = self::get_media_stream_id('video', $this->input_file);
@@ -1184,20 +1159,22 @@ class FFMpeg
             }
         }
 
-		if($p['use_video_codec'])
+		if( $p['use_video_codec'] )
 		{
 			# video codec
-			if(isset($p['video_codec']))
+			if( isset($p['video_codec']) ){
 				$opt_av .= " -vcodec ".$p['video_codec'];
-			elseif(isset($i['video_codec']))
+            } else if( isset($i['video_codec']) ){
 				$opt_av .= " -vcodec ".$i['video_codec'];
+            }
 
-			if($p['video_codec'] == 'libx264')
+			if( $p['video_codec'] == 'libx264' )
 			{
-				if($p['normal_quality'] != 'hq')
-					$opt_av .= " -preset medium";
-				else
-					$opt_av .= " -preset slow -crf 26";
+				if( $p['normal_quality'] != 'hq' ){
+					$opt_av .= ' -preset medium';
+                } else {
+					$opt_av .= ' -preset slow -crf 26';
+                }
 			}
 		}
 
@@ -1207,16 +1184,19 @@ class FFMpeg
 		# video rate
 		if($p['use_video_rate'])
 		{
-			if(isset($p['video_rate']))
+			if(isset($p['video_rate'])){
 				$vrate = $p['video_rate'];
-			elseif(isset($i['video_rate']))
+            } else if(isset($i['video_rate'])) {
 				$vrate = $i['video_rate'];
+            }
 
-			if(isset($p['video_max_rate']) && !empty($vrate))
+			if(isset($p['video_max_rate']) && !empty($vrate)) {
 				$vrate = min($p['video_max_rate'], $vrate);
+            }
 
-			if(!empty($vrate))
+			if(!empty($vrate)) {
 				$opt_av .= " -r $vrate ";
+            }
 		}
 
 		# video bitrate
@@ -1369,45 +1349,8 @@ class FFMpeg
 				$TemplogData .= "\r\n\r\n== Conversion Command == \r\n\r\n";
 				$TemplogData .= $command;
 
-				if( DEVELOPMENT_MODE )
-				{
+				if( DEVELOPMENT_MODE ) {
 					$TemplogData .= "\r\n\r\n== Conversion OutPut == \r\n\r\n";
-					$TemplogData .= $output;
-				}
-			}
-
-			#FFMPEG GENERATES Damaged File (MP4Box)
-			#Injecting MetaData using Mp4Box - you must have update version of Mp4Box ie 1.0.6 Final or greater
-
-			if($more_res==NULL){
-				echo 'here';
-			} else {
-				$resolution_log_data = array('file'=>$this->file_name,'more_res'=>$more_res,'command'=>'mp4box');
-				logData(json_encode($resolution_log_data),'resolution command');
-				#create all possible resolutions of selected video
-				if( $more_res['name'] == '240' && $p['gen_240'] == 'yes' ||
-					$more_res['name'] == '360' && $p['gen_360'] == 'yes' ||
-					$more_res['name'] == '480' && $p['gen_480'] == 'yes' ||
-				 	$more_res['name'] == '720' && $p['gen_720'] == 'yes' ||
-					$more_res['name'] == '1080' && $p['gen_1080'] == 'yes')
-				{
-					$command = $this->mp4box." -inter 0.5 ".$this->raw_path."-".$more_res['name'].".mp4 -tmp ".$this->tmp_dir." 2> ".TEMP_DIR."/".$this->file_name."_mp4_output.tmp";
-				} else {
-					$command = '';
-					$resolution_error_log = array('err'=>'empty command');
-					logData(json_encode($resolution_error_log),'resolution command');
-				}
-			}
-
-			if(file_exists(TEMP_DIR."/".$this->file_name."_mp4_output.tmp")){
-				unlink(TEMP_DIR."/".$this->file_name."_mp4_output.tmp");
-			}
-			if($more_res!=NULL){
-				$TemplogData .= "\n\n==  Mp4Box Command ==\n\n";
-				$TemplogData .= $command;
-				if( DEVELOPMENT_MODE )
-				{
-					$TemplogData .= "\n\n==  MP4Box OutPut ==\n\n";
 					$TemplogData .= $output;
 				}
 			}

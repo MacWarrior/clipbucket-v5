@@ -7,6 +7,8 @@ INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 	('proxy_username', ''),
 	('proxy_password', '');
 
+DELETE FROM `{tbl_prefix}config` WHERE name = 'mp4boxpath';
+
 ALTER TABLE `{tbl_prefix}video`
 	MODIFY COLUMN `videokey` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
 	MODIFY COLUMN `video_password` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',

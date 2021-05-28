@@ -1059,9 +1059,6 @@
 				case "php":
 					$software_path = php_path();
 					break;
-				case "mp4box":
-					$software_path = config("mp4boxpath");
-					break;
 				case "media_info":
 					$software_path = config("media_info");
 					break;
@@ -1089,12 +1086,6 @@
 					return $return_path;
 				}
 				return "Unable to find PHP path";
-			case "mp4box":
-				$return_path = shell_output("which MP4Box");
-				if($return_path) {
-					return $return_path;
-				}
-				return "Unable to find mp4box path";
 			case "media_info":
 				$return_path = shell_output("which mediainfo");
 				if($return_path) {
@@ -3378,39 +3369,6 @@
 	}
 
 	/**
-	 * Check if MP4Box is installed by extracting its version
-	 *
-	 * @param : { string } { $path } { path to MP4Box }
-	 *
-	 * @return bool|mixed|string : { string / false } { version if found, else false }
-	 */
-	function check_mp4box($path)
-	{
-		$path = get_binaries($path);
-		$matches = array();
-		$result = shell_output($path." -version");
-		if($result) {
-			preg_match("/(?:version\\s)(\\d\\.\\d\\.(?:\\d|[\\w]+))/i", strtolower($result), $matches);
-			if(count($matches) > 0) {
-				$version = array_pop($matches);
-				return $version;
-			}
-			return false;
-		}
-		if (preg_match("/GPAC version/i", $result))
-		{
-			preg_match('@^(?:GPAC version)?([^-]+)@i',$result, $matches);
-			$host = $matches[1];
-			// get last two segments of host name
-			preg_match('/[^.]+\.[^.]+$/', $host, $matches);
-			//echo "{$matches[0]}\n";
-			$version = "{$matches[0]}";
-			return $version;
-		}
-		return false;
-	}
-
-	/**
 	 * Function used to parse versions from info
 	 *
 	 * @param : { string } { $path } { tool to check }
@@ -3442,14 +3400,6 @@
 
 			case 'php':
 				return phpversion(); 
-
-			case 'mp4box':
-				preg_match("/version (.*) \(/Ui",$result,$matches);
-				//pr($matches);
-				if(is_numeric(floatval($matches[1]))){
-					return $matches[1];
-				}
-				return false;
 		}
 	}
 

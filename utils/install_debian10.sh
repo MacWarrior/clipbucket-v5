@@ -10,7 +10,7 @@ echo -ne " OK"
 
 echo ""
 echo -ne "Installing requiered elements..."
-apt install php7.3 apache2 mariadb-server git php-curl ffmpeg gpac php7.3-mysql php7.3-xml php7.3-mbstring sendmail mediainfo lshw --yes > /dev/null 2>&1
+apt install php7.3 apache2 mariadb-server git php-curl ffmpeg php7.3-mysql php7.3-xml php7.3-mbstring sendmail mediainfo lshw --yes > /dev/null 2>&1
 echo -ne " OK"
 
 echo ""

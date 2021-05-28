@@ -19,10 +19,6 @@
 		<?php $ffprobe_ver = check_module('ffprobe'); ?>
 		<dd><span style="margin-left:60px;" class="grey-text"><?php echo msg_arr($ffprobe_ver); ?></span></dd>
 
-		<dt class="grey-text">MP4Box</dt>
-		<?php $mp4boxver = check_module('mp4box'); ?>
-		<dd style="background-color:#fff;"><span style="margin-left:60px;" class="grey-text"><?php echo msg_arr($mp4boxver); ?></span></dd>
-
 		<dt class="grey-text">cURL</dt>
 		<?php $curlver = check_module('curl'); ?>
 		<dd><span style="margin-left:60px;" class="grey-text"><?php echo msg_arr($curlver); ?></span></dd>

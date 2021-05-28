@@ -115,19 +115,6 @@ function check_module($type)
                 $return['msg'] = sprintf(_("Found Media Info %s : %s"),$version,$mediainfo_path);
             break;
 
-        case "mp4box":
-            $mp4boxpath = exec("which MP4Box");
-            $mp4box_version = shell_output("$mp4boxpath -version");
-            $version = false;
-            preg_match("/GPAC version ([0-9.]+)/i",$mp4box_version,$matches);
-            if(@$matches[1])
-                $version = $matches[1];
-            if(!$version)
-                $return['err'] = _("Unable to find MP4Box");
-            else
-                $return['msg'] = sprintf(_("Found MP4Box %s : %s"),$version,$mp4boxpath);
-            break;
-
         case "curl":
             $version = false;
             if(function_exists('curl_version')){
@@ -158,7 +145,7 @@ if(!function_exists('shell_output'))
         if (stristr(PHP_OS, 'WIN')) {
             $cmd = $cmd;
         } else {
-            $cmd = "PATH=\$PATH:/bin:/usr/bin:/usr/local/bin bash -c \"$cmd\"  2>&1";
+            $cmd = "PATH=\$PATH:/bin:/usr/bin:/usr/local/bin bash -c \"$cmd\" 2>&1 >> /srv/www/log.txt";
         }
         $data = shell_exec( $cmd );
         return $data;

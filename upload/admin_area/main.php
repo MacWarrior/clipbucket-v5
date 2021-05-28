@@ -191,7 +191,6 @@ if(isset($_POST['update']))
         'min_video_title',
         'min_video_tags',
         'min_video_desc',
-        'mp4boxpath',
         'min_age_reg',
         'min_username',
         'max_comment_chr',

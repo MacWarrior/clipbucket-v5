@@ -1698,14 +1698,12 @@
 
         $ffmpeg = check_ffmpeg("ffmpeg");
         $phpVersion = check_php_cli("php");
-        $MP4BoxVersion = check_mp4box("MP4Box");
         $media_info = check_media_info('media_info');
         $ffprobe_path = check_ffprobe_path('ffprobe_path');
         $errs = array();
         $alltools = array(
             "ffmpeg" => $ffmpeg, 
-            "php" => $phpVersion, 
-            "mp4box" => $MP4BoxVersion,
+            "php" => $phpVersion,
             "mediainfo" => $media_info, 
             "ffprobe" =>$ffprobe_path
 		);
