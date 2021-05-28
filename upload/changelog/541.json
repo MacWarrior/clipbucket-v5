@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"26",
+  "revision":"27",
   "status":"dev",
   "detail":[
     {
@@ -42,6 +42,7 @@
         ,"Fix email verification in signup form"
         ,"Video upload : Correctly handle pre-save errors, fix cancel update message"
         ,"Fix guest's comments"
+        ,"Fix search page double HTML encoding"
       ]
     }
   ,{
