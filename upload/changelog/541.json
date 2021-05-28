@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision": "20",
+  "revision": "21",
   "status":"dev",
   "detail":[
     {
@@ -16,6 +16,7 @@
         ,"Fix SQL structure <i>#167</i>"
         ,"Update readme"
         ,"Implement proxy settings"
+        ,"Fix boolean configurations saving"
       ]
     }
     ,{

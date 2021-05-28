@@ -22,24 +22,72 @@ assign('upload_max_size',ini_get('upload_max_filesize'));
 
 if(isset($_POST['update']))
 {
-    $configs = array(
-        // General
-        'site_title'
-        ,'site_slogan'
-        ,'keywords'
-        ,'description'
-        ,'closed'
-        ,'enable_update_checker'
-        ,'seo'
+    $config_booleans = [
+        'seo'
         ,'store_guest_session'
-        ,'date_format'
-        ,'closed_msg'
         ,'videosSection'
         ,'photosSection'
         ,'collectionsSection'
         ,'channelsSection'
+        ,'enable_advertisement'
         ,'allow_registeration'
-    );
+        ,'use_cached_pagin'
+        ,'gravatars'
+        ,'picture_url'
+        ,'picture_upload'
+        ,'background_url'
+        ,'background_upload'
+        ,'background_color'
+        ,'allow_unicode_usernames'
+        ,'allow_username_spaces'
+        ,'feedsSection'
+        ,'stay_mp4'
+        ,'delete_mass_upload'
+        ,'load_upload_form'
+        ,'load_remote_upload_form'
+        ,'gen_240'
+        ,'gen_360'
+        ,'gen_480'
+        ,'gen_720'
+        ,'gen_1080'
+        ,'cb_combo_res'
+        ,'send_comment_notification'
+        ,'approve_video_notification'
+        ,'smtp_auth'
+        ,'video_round_views'
+        ,'anonym_comments'
+        ,'popup_video'
+        ,'proxy_enable'
+        ,'proxy_auth'
+    ];
+
+    $config_booleans_to_refactor = [
+        'closed'
+        ,'enable_update_checker'
+        ,'allow_language_change'
+        ,'allow_template_change'
+        ,'pick_geo_country'
+        ,'email_verification'
+        ,'show_collapsed_checkboxes'
+        ,'use_subs'
+        ,'activation'
+        ,'chromecast_fix'
+        ,'photo_activation'
+        ,'force_8bits'
+        ,'video_embed'
+        ,'video_download'
+        ,'bits_color_warning'
+        ,'video_comments'
+        ,'channel_comments'
+        ,'video_rating'
+        ,'own_video_rating'
+        ,'comment_rating'
+        ,'collection_rating'
+        ,'own_collection_rating'
+        ,'channel_rating'
+        ,'own_channel_rating'
+
+    ];
 
     $rows = array(
         'allowed_video_types',
@@ -313,6 +361,16 @@ if(isset($_POST['update']))
         if(in_array($field,$num_array)) {
             if($value <= 0 || !is_numeric($value)){
                 $value = 1;
+            }
+        }
+        if( in_array($field, $config_booleans) ){
+            if( $value != 'yes' ){
+                $value = 'no';
+            }
+        }
+        if( in_array($field, $config_booleans_to_refactor) ){
+            if( $value != '1' ){
+                $value = '0';
             }
         }
         $myquery->Set_Website_Details($field,$value);
