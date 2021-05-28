@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"29",
+  "revision":"30",
   "status":"dev",
   "detail":[
     {
@@ -20,6 +20,7 @@
         ,"Disable some conversion logs when not in DEV mode"
         ,"Save comments without editing content"
         ,"Fix ads configuration"
+        ,"Cleanup HTML"
       ]
     }
     ,{
