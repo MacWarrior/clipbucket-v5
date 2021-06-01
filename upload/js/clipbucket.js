@@ -1954,7 +1954,6 @@
 							// Making Videos paused if any other video playing in Dom 
 							var domVideos = $(document).find('video');
 							if (domVideos.length > 0){
-
 								for (var i = 0 ; i < domVideos.length ; i++) {
 									var id = $(domVideos[i]).attr('id');
 									var video_id = id.split('_');
@@ -1963,12 +1962,12 @@
 										$(domVideos[i])[0].pause();
 									}
 								}
-
 							}
 
 							if (isPlaying){
 								clearInterval(modalPlayerInterval);
 							}
+                            new_player_height(vid_id);
 						}, 300);
 					}else if(data.failure){
 						$('.my-modal-content').html('<div class="alert alert-warning">'+data.message+'</div>');

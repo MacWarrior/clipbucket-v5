@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"32",
+  "revision":"33",
   "status":"dev",
   "detail":[
     {
@@ -46,6 +46,7 @@
         ,"Video upload : Correctly handle pre-save errors, fix cancel update message"
         ,"Fix guest's comments"
         ,"Fix search page double HTML encoding"
+        ,"Fix home page popup video height"
       ]
     }
   ,{
