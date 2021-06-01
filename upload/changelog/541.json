@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"30",
+  "revision":"31",
   "status":"dev",
   "detail":[
     {
@@ -53,6 +53,7 @@
       "description": [
         "Remove MP4Box // GPAC dependency"
         ,"Add Ubuntu 21.04 installation script"
+        ,"Fix signup nginx vhost with SEO URLs"
       ]
     }
   ]

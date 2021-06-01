@@ -178,7 +178,7 @@ server {
         rewrite ^(.*)$ /sitemap.php last;
     }
 
-    location /signup/ {
+    location /signup {
         rewrite ^/signup/?$ /signup.php last;
     }
 
