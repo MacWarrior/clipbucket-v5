@@ -3,10 +3,10 @@
 		var self = this;
 		// bootstrapping
 		this.baseurl = baseurl;
-		this.imageurl = "";
+		this.imageurl = '';
 		this.page = '/ajax.php';
-		this.loading_img = "<img allign='center' style='vertical-align:middle' src='" + imageurl + "/ajax-loader-big.gif'>";
-		this.loading = this.loading_img+" Loading...";
+		this.loading_img = "<img alt='loading' style='vertical-align:middle' src='" + imageurl + "/ajax-loader-big.gif'/>";
+		this.loading = this.loading_img+' Loading...';
 		this.download = 0;
 		this.total_size = 0;
 		this.cur_speed = 0;
@@ -21,10 +21,9 @@
 		
 		
 		this.force_stop = false;
-		// this.remoteObjID = this.randomString();
-		this.remoteObjID = "";
+		this.remoteObjID = '';
 
-		this.current_menu = "";
+		this.current_menu = '';
 
 		this.normal_player_html = '';
 		this.hq_player_html = '';
@@ -33,14 +32,13 @@
 
 		this.collectionID = false;
 
-		this.keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-
+		this.keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
 
 		this.ua = navigator.userAgent.toLowerCase();
 
-		if (this.ua.indexOf(" chrome/") >= 0 || this.ua.indexOf(" firefox/") >= 0 || this.ua.indexOf(' gecko/') >= 0) {
+		if (this.ua.indexOf(' chrome/') >= 0 || this.ua.indexOf(' firefox/') >= 0 || this.ua.indexOf(' gecko/') >= 0) {
 			var StringMaker = function () {
-				this.str = "";
+				this.str = '';
 				this.length = 0;
 				this.append = function (s) {
 					this.str += s;
@@ -77,36 +75,32 @@
 		};
 
 		this.Confirm_Delete = function(delUrl){
-			var self = this;
-			if (confirm("Are you sure you want to delete")) {
+			if (confirm('Are you sure you want to delete')) {
 				document.location = delUrl;
 			}
 		};
 
 		this.Confirm_Uninstall = function(delUrl) {
-			var self = this;
-			  if (confirm("Are you sure you want to uninstall this plugin ?")) {
+            if (confirm('Are you sure you want to uninstall this plugin ?')) {
 				document.location = delUrl;
-		  }
+		    }
 		};
 
 		this.confirm_it = function(msg){
-			var self = this;
 			var action = confirm(msg);
-			if(action)
+			if(action){
 				return true;
+            }
 			return false;
 		};
 
 		this.reloadImage = function(captcha_src,imgid){
-			var self = this;
 			img = document.getElementById(imgid);
 			img.src = captcha_src+'?'+Math.random();
 		};
 
 		this.randomString = function(){
-			var self = this;
-			var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+			var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
 			var string_length = 8;
 			var randomstring = '';
 			for (var i=0; i<string_length; i++) {
@@ -118,14 +112,13 @@
 
 		this.check_remote_url = function(){
 			var self = this;
-			var file = $("#remote_file_url").val();
+			var file = $('#remote_file_url').val();
 			var $youtubeButton = $('#ytUploadBttn'); // youtube upload button
 			var $uploadButton = $('#remoteUploadBttn'); // upload button
 			var $cancelButton = $('#remoteUploadBttnStop'); // cancel upload button
 			this.force_stop = false;
-			if(file.match(/^e.g/) || typeof file === "undefined" || file.length === 0){
+			if(file.match(/^e.g/) || typeof file === 'undefined' || file.length === 0){
 				// given url is not valid
-				//alert("Please enter file url");
 				$('#error_msgs').html('<div class="alert alert-danger" role="alert">Given URL is invalid!</div>');
 				return false;
 			}
@@ -133,28 +126,28 @@
 			// these functions will only be used in remote upload
 			// they manage the UI changes
 			var remoteUploadStart = function(youtube){
-				if(typeof youtube !== "undefined"){
-					$uploadButton.attr("disabled","disabled");
-					$youtubeButton.attr("disabled","disabled");
+				if(typeof youtube !== 'undefined'){
+					$uploadButton.attr('disabled','disabled');
+					$youtubeButton.attr('disabled','disabled');
 					//$cancelButton.show();
-				}else{
-					$(".downloadStatusContainer").removeClass("hidden");
-					$uploadButton.attr("disabled","disabled").hide();
-					$youtubeButton.attr("disabled","disabled");
+				} else {
+					$('.downloadStatusContainer').removeClass('hidden');
+					$uploadButton.attr('disabled','disabled').hide();
+					$youtubeButton.attr('disabled','disabled');
 					$cancelButton.show();
 				}
 			};
 
 			var remoteUploadStop = function(youtube){
-				if(typeof youtube !== "undefined"){
-					$cancelButton.removeAttr("disabled").hide();
-					$youtubeButton.removeAttr("disabled");
-					$uploadButton.removeAttr("disabled").show();
-				}else{
-					$(".downloadStatusContainer").addClass("hidden");
-					$cancelButton.removeAttr("disabled").hide();
-					$youtubeButton.removeAttr("disabled");
-					$uploadButton.removeAttr("disabled").show();
+				if(typeof youtube !== 'undefined'){
+					$cancelButton.removeAttr('disabled').hide();
+					$youtubeButton.removeAttr('disabled');
+					$uploadButton.removeAttr('disabled').show();
+				} else {
+					$('.downloadStatusContainer').addClass('hidden');
+					$cancelButton.removeAttr('disabled').hide();
+					$youtubeButton.removeAttr('disabled');
+					$uploadButton.removeAttr('disabled').show();
 				}
 			};
 
@@ -162,136 +155,131 @@
 
 			var ajaxCall = $.ajax({
 				url: self.download_page,
-				type: "POST",
+				type: 'post',
 				data: ({file:file,file_name:file_name}),
 				dataType : 'JSON',
 				beforeSend : function(){
 					self.remoteUploadStatusUpdate();
 					var remoteFileName = self.getName(file);
-					$("#loading").html("Downloading");
+					$('#loading').html('Downloading');
 					$('#remoteFileName').replaceWith('"'+remoteFileName+'"');
 				},
 				success: function(data){
 					self.force_stop = true;
 					if(data.error){
-						self.force_stop = true;
 						remoteUploadStop();
 						$('#error_msgs').html('<div class="alert alert-danger" role="alert"> File Type Not Allowed!</div>');
 						return false;
 					}
 					remoteUploadStop();  
-					$("#loading").html('');
+					$('#loading').html('');
 					var vid = data.vid;
 					$.post('/actions/getVideoDetails.php', {
-						"file_name":file_name,
-						"vid" : vid,
-						},function(data){
-							var oneFileForm = $("#updateVideoInfoForm").clone();
-							$(oneFileForm).find("input[name=title]").val(data.title);
-							$(oneFileForm).find("textarea#desc").val(data.description);
-							$(oneFileForm).find("input[name='category[]']:first").attr('checked', 'checked');
+						'file_name':file_name,
+						'vid' : vid,
+                    },function(data){
+                        var oneFileForm = $('#updateVideoInfoForm').clone();
+                        $(oneFileForm).find('input[name=title]').val(data.title);
+                        $(oneFileForm).find('textarea#desc').val(data.description);
+                        $(oneFileForm).find("input[name='category[]']:first").attr('checked', 'checked');
 
+                        // creating the hidden form fields
+                        var hiddenVideoIdField = document.createElement('input');
+                        hiddenVideoIdField.name = 'videoid';
+                        hiddenVideoIdField.type = 'hidden';
+                        hiddenVideoIdField.value = vid;
 
-							// creating the hidden form fields
-							var hiddenVideoIdField = document.createElement('input');
-							hiddenVideoIdField.name = 'videoid';
-							hiddenVideoIdField.type = 'hidden';
-							hiddenVideoIdField.value = vid;
+                        $(oneFileForm).append(hiddenVideoIdField);
 
-							$(oneFileForm).append(hiddenVideoIdField);
+                        $('#remoteForm').html('');
+                        $(oneFileForm).removeClass('hidden')
+                        .attr('id', 'uploadFormContainer_remote')
+                        .appendTo('#remoteForm');
+                        $(oneFileForm).find('form').on({
+                            submit: function(e){
+                                e.preventDefault();
 
-							$("#remoteForm").html("");
-							$(oneFileForm).removeClass("hidden")
-							.attr("id", "uploadFormContainer_remote")
-							.appendTo("#remoteForm");
-							$(oneFileForm).find("form").on({
-								submit: function(e){
-									e.preventDefault();
-									
-									var form = $(this);
+                                var form = $(this);
 
-									var formData = $(form).serialize();
-									formData += "&updateVideo=yes";
+                                var formData = $(form).serialize();
+                                formData += '&updateVideo=yes';
 
-									$.ajax({
-										url : "/actions/file_uploader.php",
-										type : "post",
-										data : formData,
-									}).success(function(data){
-										msg = $.parseJSON(data);
-										$("#uploadMessage").removeClass("hidden");
-										if(msg.error){
-											$("#uploadMessage").html(msg.error).attr("class", "alert alert-danger");
-										}else{
-											$("#uploadMessage").html(msg.msg).attr("class", "alert alert-success");
-										}
-										setTimeout(function(){
-											$("#uploadMessage").addClass("hidden");
-										}, 5000);
-									});
-								}
-							});
-							 $(".formSection h4").on({
-                        click: function(e){
-                            e.preventDefault();
-                            if($(this).find("i").hasClass("glyphicon-chevron-down")){
-                                $(this).find("i").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-up");
-                                $(this).next().toggleClass("hidden");
-                            }else{
-                                $(this).find("i").removeClass("glyphicon-chevron-up").addClass("glyphicon-chevron-down");
-                                $(this).next().toggleClass("hidden");
+                                $.ajax({
+                                    url : '/actions/file_uploader.php',
+                                    type : 'post',
+                                    data : formData,
+                                }).success(function(data){
+                                    msg = $.parseJSON(data);
+                                    $('#uploadMessage').removeClass('hidden');
+                                    if(msg.error){
+                                        $('#uploadMessage').html(msg.error).attr('class', 'alert alert-danger');
+                                    }else{
+                                        $('#uploadMessage').html(msg.msg).attr('class', 'alert alert-success');
+                                    }
+                                    setTimeout(function(){
+                                        $('#uploadMessage').addClass('hidden');
+                                    }, 5000);
+                                });
                             }
-                        }
-                    });
-							$(oneFileForm).on({
-                        submit: function(e){
-                            e.preventDefault();
-                            var self = this;
-                            var data = $(this).serialize();
-                            data += "&updateVideo=yes";
-                            $.ajax({
-                                url : "/actions/file_uploader.php",
-                                type : "post",
-                                data : data,
-                                dataType: "JSON",
-                            }).success(function(msg){
-                                
-                                	$("#uploadMessage").removeClass("hidden");
-	                                if(msg.error){
-	                                    $("#uploadMessage").html(msg.error).attr("class", "alert alert-danger");
-	                                }else{
-	                                    $("#uploadMessage").html(msg.msg).attr("class", "alert alert-success");
-	                                }
-	                                setTimeout(function(){
-	                                    $("#uploadMessage").addClass("hidden");
-	                                }, 5000);
-                                
-                            }).fail(function(err){
-                                console.log(err);
-                            });
-                        }
-                    });
-						},'json');
-					}
-				});
-			
-				$('#remoteUploadBttnStop').click(function() {
-					ajaxCall.abort(); 
-					this.force_stop=true; 
-					$("#loading").html('');
-					$('#remoteDownloadStatus').hide(); 
-					$(this).hide();
-					$('#remoteUploadBttn').attr('disabled','').show(); 
-				});
+                        });
+                        $('.formSection h4').on({
+                            click: function(e){
+                                e.preventDefault();
+                                if($(this).find('i').hasClass('glyphicon-chevron-down')){
+                                    $(this).find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+                                    $(this).next().toggleClass('hidden');
+                                }else{
+                                    $(this).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+                                    $(this).next().toggleClass('hidden');
+                                }
+                            }
+                        });
+                        $(oneFileForm).on({
+                            submit: function(e){
+                                e.preventDefault();
+                                var data = $(this).serialize();
+                                data += '&updateVideo=yes';
+                                $.ajax({
+                                    url : '/actions/file_uploader.php',
+                                    type : 'post',
+                                    data : data,
+                                    dataType: 'json',
+                                }).success(function(msg){
+                                    $('#uploadMessage').removeClass('hidden');
+                                    if(msg.error){
+                                        $('#uploadMessage').html(msg.error).attr('class', "alert alert-danger");
+                                    } else {
+                                        $('#uploadMessage').html(msg.msg).attr('class', "alert alert-success");
+                                    }
+                                    setTimeout(function(){
+                                        $('#uploadMessage').addClass('hidden');
+                                    }, 5000);
+                                }).fail(function(err){
+                                    console.log(err);
+                                });
+                            }
+                        });
+                    },'json');
+                }
+            });
+
+            $('#remoteUploadBttnStop').click(function() {
+                ajaxCall.abort(); 
+                this.force_stop=true; 
+                $('#loading').html('');
+                $('#remoteDownloadStatus').hide(); 
+                $(this).hide();
+                $('#remoteUploadBttn').attr('disabled','').show(); 
+            });
 		};
 
 		this.remoteUploadStatusUpdate = function(){
 			var self = this;
 			var ajaxCall = $.ajax({
 				url: self.result_page,
-				type: "POST",
+				type: 'post',
 				data:({file_name:file_name}),
-				dataType: "JSON",
+				dataType: 'json',
 			});
 			ajaxCall.success(function(serverResponse){
 				//console.log(serverResponse);
@@ -305,23 +293,22 @@
 		};
 
 		this.updateProgress = function(serverResponse){
-			if(typeof serverResponse !== "undefined" && serverResponse !== null){
+			if(typeof serverResponse !== 'undefined' && serverResponse !== null){
 				var downloaded = (serverResponse.downloaded/1048576).toFixed(2);
 				var total = (serverResponse.total_size/1048576).toFixed(2);
 				var progress = (serverResponse.downloaded/serverResponse.total_size) * 100;
-				$("#downloadStatus").find("#downloaded").text(downloaded+" Mb");
-				$("#downloadStatus").find("#totalSize").text(total+" Mb");
-				$("#prog_bar").css("width", progress+"%");
+				$('#downloadStatus').find('#downloaded').text(downloaded+' Mb');
+				$('#downloadStatus').find('#totalSize').text(total+' Mb');
+				$('#prog_bar').css('width', progress+'%');
 			}
 		};
 		this.youtube_check_url = function(){
-			var self = this;
-			var file = $("#remote_file_url").val();
+			var file = $('#remote_file_url').val();
 			var $youtubeButton = $('#ytUploadBttn'); // youtube upload button
 			var $uploadButton = $('#remoteUploadBttn'); // upload button
 			var $cancelButton = $('#remoteUploadBttnStop'); // cancel upload button
 			this.force_stop = false;
-			if(file.match(/^e.g/) || typeof file === "undefined" || file.length === 0){
+			if(file.match(/^e.g/) || typeof file === 'undefined' || file.length === 0){
 				// given url is not valid
 				$('#error_msgs').html('<div class="alert alert-danger" role="alert"> Please enter valid URL !</div>');
 				return false;
@@ -335,62 +322,61 @@
 				return false;
 			}
 
-			$('#remoteUploadBttn').attr("disabled","disabled");
-			$('#ytUploadBttn').attr("disabled","disabled");
+			$('#remoteUploadBttn').attr('disabled','disabled');
+			$('#ytUploadBttn').attr('disabled','disabled');
 
-			var file = $("#remote_file_url").val();
+			var file = $('#remote_file_url').val();
 			force_stop = false;		
-			if(!file || file=='undefined')
-			{
-				alert("Please enter file url");
+			if(!file || file == 'undefined') {
+				alert('Please enter file url');
 				$('#remoteUploadBttn').attr('disabled','');
-				$('#ytUploadBttn').attr("disabled",'');
+				$('#ytUploadBttn').attr('disabled','');
 				return false;
 			}
 
 			var ajaxCall = $.ajax({
-			  url: download_page,
-			  type: "POST",
-			  data: ({file:file,file_name:file_name,"youtube":"yes"}),
-			  dataType : 'json',
-			  beforeSend : function()
-			  {
-				$("#loading").html('<div style="float: left; display: inline-block;"><img src="'+imageurl+'/ajax-loader.gif"></div><div style="float: left; line-height: 16px; padding-left:5px">Uploading video from youtube, please wait...</div><div class="clear"></div>');
-			  },
-			  success: function(data)
-			  {
-				  if(data.error)
-				  {		  
-					force_stop = true;
-					$('#remoteUploadBttn').attr('disabled','');
-					$('#ytUploadBttn').attr("disabled","");
-					alert(data.error);
-				  }else if(data.vid)
-				  {
-				  	alert('this is checked success');
-					  vid = data.vid;
-					  $('#remoteUploadBttn').attr("disabled","disabled").hide();
-					  $('#ytUploadBttn').attr("disabled","disabled").hide();
+                url: download_page,
+                type: 'POST',
+                data: ({file:file,file_name:file_name,'youtube':'yes'}),
+                dataType : 'json',
+                beforeSend : function()
+                {
+                    $('#loading').html('<div style="float: left; display: inline-block;"><img alt="loading" src="'+imageurl+'/ajax-loader.gif"/></div><div style="float: left; line-height: 16px; padding-left:5px">Uploading video from youtube, please wait...</div><div class="clear"></div>');
+                },
+                success: function(data)
+                {
+                    if(data.error)
+                    {
+                        force_stop = true;
+                        $('#remoteUploadBttn').attr('disabled','');
+                        $('#ytUploadBttn').attr('disabled','');
+                        alert(data.error);
+                    } else if(data.vid) {
+				  	    alert('this is checked success');
+                        vid = data.vid;
+                        $('#remoteUploadBttn').attr('disabled','disabled').hide();
+                        $('#ytUploadBttn').attr('disabled','disabled').hide();
 						
-					  $.post('/actions/file_uploader.php',
-					  {"getForm":"get_form",
-					  "title":data.title,
-					  "desc":data.desc,
-					  "tags":data.tags,"objId":remoteObjID},
-					  function(data)
-					  {
-							$('#remoteForm').append(data);
-							$('#cbSubmitUpload'+remoteObjID)
-							.before('<span id="updateVideoDataLoading" style="margin-right:5px"></span>')
-							.attr("disabled","")
-							.attr("value",lang.saveData)
-							.attr("onClick","doUpdateVideo('#uploadForm"+remoteObjID+"','"+remoteObjID+"')")
-							.after('<input type="hidden" name="videoid" value="'+vid+'" id="videoid" />')
-							.after('<input type="hidden" name="updateVideo" value="yes" id="updateVideo" />');
-					
-					  },'text');  
-				  }
-				  $("#loading").html('');
+                        $.post('/actions/file_uploader.php', {
+                            'getForm':'get_form',
+                            'title':data.title,
+                            'desc':data.desc,
+                            'tags':data.tags,
+                            'objId':remoteObjID
+                        },
+                        function(data)
+                        {
+                            $('#remoteForm').append(data);
+                            $('#cbSubmitUpload'+remoteObjID)
+                                .before('<span id="updateVideoDataLoading" style="margin-right:5px"></span>')
+                                .attr('disabled','')
+                                .attr('value',lang.saveData)
+                                .attr('onClick',"doUpdateVideo('#uploadForm"+remoteObjID+"','"+remoteObjID+"')")
+                                .after('<input type="hidden" name="videoid" value="'+vid+'" id="videoid"/>')
+                                .after('<input type="hidden" name="updateVideo" value="yes" id="updateVideo"/>');
+                        },'text');
+                    }
+                    $('#loading').html('');
 			  }
 		    });
 		};
@@ -399,9 +385,9 @@
 			var self = this;
 			var ajaxCall = $.ajax({
 				url: self.result_page,
-				type: "POST",
+				type: 'post',
 				data:({file_name:file_name}),
-				dataType: "json",
+				dataType: 'json',
 				success: function(data){
 					if(data){
 						var total = parseFloat(data.total_size);
@@ -413,10 +399,11 @@
 						var eta_fm = parseFloat(data.time_eta_fm);
 						var time_took = parseFloat(data.time_took);
 						var time_took_fm = parseFloat(data.time_took_fm);
+                        var theSpeed;
 						if(speed/1024/1024 > 1){
-							var theSpeed = Math.round(speed / 1024/1024) + " Mbps";
-						}else{
-							var theSpeed = Math.round(speed/ 1024 ) + " Kbps";
+							theSpeed = Math.round(speed / 1024/1024) + ' Mbps';
+						} else {
+							theSpeed = Math.round(speed/ 1024 ) + ' Kbps';
 						}
 						self.perc_download = Math.round(download/total*100);
 						if(isNaN(download_fm)){
@@ -425,11 +412,10 @@
 							$('#dspeed').html('Loading');
 							$('#eta').html('Loading');
 							$('#status').html('Loading');
-						}else{
+						} else {
 							$('#remoteDownloadStatus').show();
 							//$('#prog_bar').width(this.perc_download+'%');
-							$('#prog_bar').animate({width:self.perc_download+'%'},1000);
-							$('#prog_bar').html(self.perc_download+'%');
+							$('#prog_bar').html(self.perc_download+'%').animate({width:self.perc_download+'%'},1000);
 							$('#dspeed').html(theSpeed);
 							$('#eta').html(eta_fm);
 							$('#status').html(download_fm+' of '+total_fm);
@@ -443,8 +429,7 @@
 						setTimeout(function(){
 							self.status_update()
 						},intval);
-					}
-					else if(self.perc_download==100 && total>1){
+					} else if(self.perc_download==100 && total>1){
 						$('#time_took').html('Time Took : '+ time_took_fm);
 					}
 				}
@@ -452,17 +437,17 @@
 		};
 
 		this.upload_file = function(Val,file_name){
-			var self = this;
 			var page ='/actions/file_downloader.php';
 			$.post(page, { 	
 				file_url : Val,
 				file_name : file_name
 			},
 			function(data){
-				if(!data)
-					alert("No data");
-				else
+				if(!data){
+					alert('No data');
+                } else {
 					submit_upload_form();
+                }
 			},'text');
 		};
 
@@ -470,16 +455,14 @@
 		 * Function used to delete any item with confirm message
 		 */
 		this.delete_item = function(obj,id,msg,url){
-			$("#"+obj+'-'+id).click(function () {
+			$('#'+obj+'-'+id).click(function () {
 				if (confirm(msg)) {
 					document.location = url;
 				}				
 			});
-			var self = this;
 		};
 
-		this.delete_video = function(obj,id,msg,url){ 
-			var self = this;
+		this.delete_video = function(obj,id,msg,url){
 			return delete_item(obj,id,msg,url); 
 		};
 
@@ -487,8 +470,7 @@
 		 * Function used to load editor's pic video
 		 */
 		this.get_video = function(type,div){
-			var self = this;
-			$(div).css("display","block");
+			$(div).css('display','block');
 			$(div).html(this.loading);
 			$(div).html(this.loading);
 			$.post(page, { 	
@@ -504,7 +486,7 @@
 		 */
 		this.getAjaxPhoto = function(type,div){
 			var self = this;
-			$(div).css("display","block");
+			$(div).css('display','block');
 			var preservedHTML = $(div).html();
 			$.ajax({
 				url : self.page,
@@ -513,18 +495,15 @@
 				data : ({ mode : 'loadAjaxPhotos', 'photosType' : type }),
 				beforeSend : function ()
 				{
-					$(div).html(this.loading);	
+					$(div).html(this.loading);
 				},
 				success : function (data)
 				{
-					if(data['failed'])
-					{
-						//alert("No Photos Returned");
+					if(data['failed']) {
 						$(div).html(preservedHTML);
 					}
 						
-					if(data['completed'])
-					{	
+					if(data['completed']) {
 						$(div).html(data['photoBlocks']);
 					}
 				}
@@ -533,76 +512,64 @@
 
 
 		this.rating_over = function(msg,disable){
-			if(disable!='disabled')
-				$("#rating_result_container").html(msg);
-			var self = this;
+			if(disable !== 'disabled'){
+				$('#rating_result_container').html(msg);
+            }
 		};
 
 		this.rating_out = function(msg,disable){
-			if(disable!='disabled')
-			$("#rating_result_container").html(msg);
-		var self = this;
+			if(disable !== 'disabled'){
+			    $('#rating_result_container').html(msg);
+            }
 		};
-		
-		
+
 		this.submit_share_form = function(form_id,type){
-			var self = this;
-			$("#share_form_results").css("display","block");
-			$("#share_form_results").html(this.loading);
+			$('#share_form_results').css('display','block').html(this.loading);
 			$.post(page, 
-			{ 	
+			{
 				mode : 'share_object',
 				type : type,
-				users : $("#ShareUsers").val(),
-				message : $("#message").val(),
-				id : $("#objectid").val()
+				users : $('#ShareUsers').val(),
+				message : $('#message').val(),
+				id : $('#objectid').val()
 			},
 			function(data)
 			{
-				if(!data)
-					alert("No data");
-				else
-				{
-					$("#share_form_results").html(data);
+				if(!data){
+					alert('No data');
+                } else {
+					$('#share_form_results').html(data);
 				}
 			},'text');
 		};
-		
-		
-		
+
 		this.flag_object = function(form_id,id,type){
-			var self = this;
-			$("#flag_form_result").css("display","block");
-			$("#flag_form_result").html(this.loading);
+			$('#flag_form_result').css('display','block').html(this.loading);
 			$.post(page, 
 			{ 	
 				mode : 'flag_object',
 				type : type,
-				flag_type : $("#"+form_id+" select option:selected").val(),
+				flag_type : $('#'+form_id+' select option:selected').val(),
 				id : id
 			},
 			function(data)
 			{
-				if(!data)
-					alert("No data");
-				else
-				{
-					$("#flag_form_result").css("display","block");
-					$("#flag_form_result").html(data);
+				if(!data){
+					alert('No data');
+                } else {
+					$('#flag_form_result').css('display','block').html(data);
 				}
 			},'text');
 		};
 		
 		this.slide_up_watch_video = function(nodiv){
-			if($('.video_action_result_boxes '+nodiv).css("display")!="block")
+			if($('.video_action_result_boxes '+nodiv).css('display') !== 'block'){
 				$('.video_action_result_boxes > *').slideUp();
-			var self = this;
+            }
 		}
 		
 		this.add_to_fav = function(type,id){
-			var self = this;
-			$("#video_action_result_cont").css("display","block");
-			$("#video_action_result_cont").html(this.loading);
+			$('#video_action_result_cont').css('display','block').html(this.loading);
 			
 			$.post(page, 
 			{ 	
@@ -612,21 +579,16 @@
 			},
 			function(data)
 			{
-				if(!data)
-					alert("No data");
-				else
-				{
-					$("#video_action_result_cont").css("display","block");
-					$("#video_action_result_cont").html(data);
+				if(!data){
+					alert('No data');
+                } else {
+					$('#video_action_result_cont').css('display','block').html(data);
 				}
 			},'text');
 		};
-		
-		
+
 		this.subscriber = function(user,type,result_cont){
-			var self = this;
-			$("#"+result_cont).css("display","block");
-			$("#"+result_cont).html(this.loading);
+			$('#'+result_cont).css('display','block').html(this.loading);
 			
 			$.post(page, 
 			{ 	
@@ -635,21 +597,16 @@
 			},
 			function(data)
 			{
-				if(!data)
-					alert("No data");
-				else
-				{
-					$("#"+result_cont).css("display","block");
-					$("#"+result_cont).html(data);
+				if(!data){
+					alert('No data');
+                } else {
+					$('#'+result_cont).css('display','block').html(data);
 				}
 			},'text');
 		};
 
-
-
 		this.add_friend = function (uid,result_cont){
-			$("#"+result_cont).css("display","block");
-			$("#"+result_cont).html(this.loading);
+			$('#'+result_cont).css('display','block').html(this.loading);
 			
 			$.post(page, 
 			{ 	
@@ -658,20 +615,16 @@
 			},
 			function(data)
 			{
-				if(!data)
-					alert("No data");
-				else
-				{
-					$("#"+result_cont).css("display","block");
-					$("#"+result_cont).html(data);
+				if(!data){
+					alert('No data');
+                } else {
+					$('#'+result_cont).css('display','block').html(data);
 				}
 			},'text');
 		};
-		
-		
+
 		this.block_user = function (user,result_cont){
-			$("#"+result_cont).css("display","block");
-			$("#"+result_cont).html(this.loading);
+			$('#'+result_cont).css('display','block').html(this.loading);
 			
 			$.post(page, 
 			{ 	
@@ -680,19 +633,15 @@
 			},
 			function(data)
 			{
-				if(!data)
-					alert("No data");
-				else
-				{
-					$("#"+result_cont).css("display","block");
-					$("#"+result_cont).html(data);
+				if(!data){
+					alert('No data');
+                } else {
+					$('#'+result_cont).css('display','block').html(data);
 				}
 			},'text');
 		};
-		
-		
-		this.rate_comment = function (cid,thumb,type,typeid){
 
+		this.rate_comment = function (cid,thumb,type,typeid){
 			$.post(page, 
 			{ 	
 				mode : 'rate_comment',
@@ -703,22 +652,20 @@
 			},
 			function(data)
 			{
-				if(!data)
-					alert("No data");
-				else
-				{
-
-					if(data.msg!='')
-						alert(data.msg)
-					if(data.rate!='')
-						$("#comment_rating_"+cid).html(data.rate);
+				if(!data){
+					alert('No data');
+                } else {
+					if(data.msg !== ''){
+						alert(data.msg);
+                    }
+					if(data.rate !== '') {
+                        $('#comment_rating_' + cid).html(data.rate);
+                    }
 				}
 			},'json');
 		}
-		
-		
-		this.delete_comment = function (cid,type){
 
+		this.delete_comment = function (cid,type){
 			$.post(page, 
 			{ 	
 				mode : 'delete_comment',
@@ -727,28 +674,25 @@
 			},
 			function(data)
 			{
-				if(!data)
-					alert("No data");
-				else
-				{
-
+				if(!data){
+					alert('No data');
+                } else {
 					if(data.msg)
 					{
 						alert(data.msg);
-						$("#comment_"+cid).fadeOut("slow");
-						$("#spam_comment_"+cid).fadeOut("slow");
-						
+						$('#comment_'+cid).fadeOut('slow');
+						$('#spam_comment_'+cid).fadeOut('slow');
 					}
-					if(data.err)
+					if(data.err){
 						alert(data.err);
+                    }
 				}
 			},'json');
 		};
 
 		this.add_comment_js = function (form_id,type){
-			$("#add_comment_result").css("display","block");
-			$("#add_comment_result").html(this.loading);
-			$("#add_comment_button").attr("disabled","disabled");
+			$('#add_comment_result').css('display','block').html(this.loading);
+			$('#add_comment_button').attr('disabled','disabled');
 
 			//First we will get all values of form_id and then serialize them
 			//so we can forward details to ajax.php
@@ -758,25 +702,20 @@
 			$.post(page,formObjectData,
 			function(data)
 			{
-				if(!data)
-					alert("No data");
-				else
-				{
-					
-					$("#add_comment_button").attr("disabled","");
-					
-					$("#add_comment_result").css("display","block");
-					if(data.err!='')
-					{
-						$("#add_comment_result").html(data.err);
+				if(!data){
+					alert('No data');
+                } else {
+					$('#add_comment_button').attr('disabled','').css('display','block');
+
+					if(data.err !== '') {
+						$('#add_comment_result').html(data.err);
 					}
-					if(data.msg!='')
-						$("#add_comment_result").html(data.msg);
+					if(data.msg !== ''){
+						$('#add_comment_result').html(data.msg);
+                    }
 					
-					if(data.cid)
-					{
-						get_the_comment(data.cid,"#latest_comment_container");
-						//$("#"+form_id).slideUp();
+					if(data.cid) {
+						get_the_comment(data.cid,'#latest_comment_container');
 					}
 				}
 			},'json');
@@ -792,99 +731,79 @@
 			},
 			function(data)
 			{
-				if(!data)
-					alert("No data");
-				else
-				{		
-					$(div).css("display","none");
-					$(div).html(data).fadeIn("slow");
+				if(!data){
+					alert('No data');
+                } else {
+					$(div).css('display','none');
+					$(div).html(data).fadeIn('slow');
 				}
 			},'text');
 		};
 		
 		this.add_playlist = function (mode,vid,form_id,objtype){
-			$("#playlist_form_result").css("display","block");
-			$("#playlist_form_result").html(this.loading);
+			$('#playlist_form_result').css('display','block').html(this.loading);
 			switch(mode)
 			{
 				case 'add':
-				{
 					$.post(page, 
 					{ 	
 						mode : 'add_playlist',
 						id : vid,
 						objtype : objtype,
-						pid : $("#playlist_id option:selected").val()
-			},
+						pid : $('#playlist_id option:selected').val()
+			        },
 					function(data)
 					{
-						if(!data)
-							alert("No data");
-						else
-						{	
-							if(data.err != '')
-							{
-								$("#playlist_form_result").css("display","block");
-								$("#playlist_form_result").html(data.err);
+						if(!data){
+							alert('No data');
+                        } else {
+							if(data.err !== '') {
+								$('#playlist_form_result').css('display','block').html(data.err);
 							}
 							
-							if(data.msg!='')
-							{
-								$("#playlist_form_result").css("display","block");
-								$("#playlist_form_result").html(data.msg);
-								$("#"+form_id).css("display","none");
-							}	
-							
+							if(data.msg !== '') {
+								$('#playlist_form_result').css('display','block').html(data.msg);
+								$('#'+form_id).css('display','none');
+							}
 						}
 					},'json');
-				}
-				break;
-				
-				case 'new':
-				{
+				    break;
 
-					$.post(page, 
+				case 'new':
+					$.post(page,
 					{ 	
 						mode : 'add_new_playlist',
 						id : vid,
 						objtype : objtype,
-						plname : $("#playlist_name").val()
-			},
+						plname : $('#playlist_name').val()
+			        },
 					function(data)
 					{
-						if(!data)
-							alert("No data");
-						else
-						{	
-							if(data.err )
-							{
-								$("#playlist_form_result").css("display","block");
-								$("#playlist_form_result").html(data.err);
+						if(!data){
+							alert('No data');
+                        } else  {
+							if(data.err ) {
+								$('#playlist_form_result').css('display','block').html(data.err);
 							}
-							
-							if(data.msg)
-							{
-								$("#playlist_form_result").css("display","block");
-								$("#playlist_form_result").html(data.msg);
-								$("#"+form_id).css("display","none");
-							}	
-							
+
+							if(data.msg) {
+								$('#playlist_form_result').css('display','block').html(data.msg);
+								$('#'+form_id).css('display','none');
+							}
 						}
 					},'json');
-				}
-				break;
+				    break;
 			}
 		};
-		
-		
+
 		/**
 		 * Function used to add and remove video from quicklist
 		 * THIS FEATURE IS SPECIALLY ADDED ON REQUEST BY JAHANZEB HASSAN
 		 */
 		this.add_quicklist = function (obj,vid){
-			
-			$(obj).attr('src',this.imageurl+"/ajax-loader.gif");
-			$(obj).css('background-position',"-200px 200px");
+			var self = this;
+			$(obj).attr('src',self.imageurl+'/ajax-loader.gif');
+			$(obj).css('background-position','-200px 200px');
 			
 			$.post(page, 
 			{ 	
@@ -894,12 +813,11 @@
 			},
 			function(data)
 			{
-				if(!data)
-					alert("No data");
-				else
-				{
-					$(obj).attr('src',this.imageurl+"/dot.gif");
-					$(obj).css('background-position',"-0px -0px");
+				if(!data){
+					alert('No data');
+                } else {
+					$(obj).attr('src',self.imageurl+'/dot.gif');
+					$(obj).css('background-position','-0px -0px');
 					$(obj).removeClass('add_icon');
 					$(obj).addClass('check_icon');
 					$(obj).removeAttr('onClick');
@@ -908,10 +826,7 @@
 			},'text');
 		};
 
-
 		this.remove_quicklist = function(obj,vid){
-			var self = this;
-			
 			$.post(page, 
 			{ 	
 				mode : 'quicklist',
@@ -920,10 +835,9 @@
 			},
 			function(data)
 			{
-				if(!data)
-					alert("No data");
-				else
-				{
+				if(!data){
+					alert('No data');
+                } else {
 					$(obj).slideUp();
 					$(obj).hide();
 				}
@@ -934,8 +848,6 @@
 		 * Function used to load quicklist
 		 */
 		this.load_quicklist_box = function(){
-			var self = this;
-			
 			$.post(page, 
 			{ 	
 				mode : 'getquicklistbox'
@@ -943,23 +855,19 @@
 			function(data)
 			{
 				data = $.trim(data);
-				if(!data)
-					$("#quicklist_box").css("display","none");
-				else
-				{			
-						$("#quicklist_box").css("display","block");
-						$("#quicklist_box").html(data);
+				if(!data){
+					$('#quicklist_box').css('display','none');
+                } else {
+                    $('#quicklist_box').css('display','block').html(data);
 						
-					if($.cookie("quick_list_box")!="hide")
-					{
-						$("#quicklist_cont").css("display","block");
+					if($.cookie('quick_list_box') !== 'hide') {
+						$('#quicklist_cont').css('display','block');
 					}
 				}
 			},'text');
 		};
 		
 		this.clear_quicklist = function(){
-			var self = this;
 			$.post(page, 
 			{ 	
 				mode : 'clear_quicklist'
@@ -971,37 +879,33 @@
 		};
 		
 		this.quick_show_hide_toggle = function(obj){
-			var self = this;
 			$(obj).slideToggle()
-			if($.cookie("quick_list_box")=="show")
-                set_cookie_secure("quick_list_box","hide")
-			else
-                set_cookie_secure("quick_list_box","show")
+			if($.cookie('quick_list_box') === 'show'){
+                set_cookie_secure('quick_list_box','hide')
+            } else {
+                set_cookie_secure('quick_list_box','show')
+            }
 		};
 		
 		/**
 		 * Function used to set cookies
 		 */
 		this.ini_cookies = function(){
-			var self = this;
-			if(!$.cookie("quick_list_box"))
-                set_cookie_secure("quick_list_box","show")
+			if(!$.cookie('quick_list_box')){
+                set_cookie_secure('quick_list_box','show')
+            }
 		};
-		
-		
+
 		this.get_group_info = function(Div,li){
-			var self = this;
-			if( $(Div).css("display")=="none") {
-				$("#group_info_cont > div").slideUp();
-				$("#group_info_cont "+Div).slideDown();
-				$(".group_detail_tabs .selected").removeClass("selected");
-				$(li).addClass("selected");
+			if( $(Div).css('display') === 'none') {
+				$('#group_info_cont > div').slideUp();
+				$('#group_info_cont '+Div).slideDown();
+				$('.group_detail_tabs .selected').removeClass('selected');
+				$(li).addClass('selected');
 			}
 		};
 
-	
 		this.show_menu = function(menu,load_from_hash){
-			var self = this;
 			if(window.location.hash && load_from_hash)
 			{
 				var thehash = window.location.hash;
@@ -1009,32 +913,29 @@
 				return false;
 			}
 			window.location.hash = 'current_'+menu;
-			if(this.current_menu!=menu)
+			if(this.current_menu !== menu){
 				hide_menu()
-			$("#"+menu).show()
+            }
+			$('#'+menu).show()
 			this.current_menu = menu;	
-			$("."+menu).addClass("selected");
+			$('.'+menu).addClass('selected');
 		};
 
 		this.hide_menu = function(){
-			var self = this;
-			if(this.current_menu!='')
+			if(this.current_menu !== '')
 			{
-				$("#"+this.current_menu).hide(); 
-				$("."+this.current_menu).removeClass("selected");
+				$('#'+this.current_menu).hide(); 
+				$('.'+this.current_menu).removeClass('selected');
 				return true;
 			}
 		};
-		
-		
+
 		this.to_reply = function(cid){
-			var self = this;
-			$("#reply_to").val(cid);
-			window.location = "#add_comment";
+			$('#reply_to').val(cid);
+			window.location = '#add_comment';
 		};
 
 		this.spam_comment = function(cid,type,typeid){
-
 			$.post(page, 
 			{ 	
 				mode : 'spam_comment',
@@ -1044,27 +945,22 @@
 			},
 			function(data)
 			{
-				if(!data)
-					alert("No data");
-				else
-				{
-					if(data.msg)
-					{
-						$("#comment_"+cid).hide();
-						$("#spam_comment_"+cid).fadeIn("slow");
+				if(!data){
+					alert('No data');
+                } else {
+					if(data.msg) {
+						$('#comment_'+cid).hide();
+						$('#spam_comment_'+cid).fadeIn('slow');
 					}
-					if(data.err)
-					{
-						alert(data.err)
+
+					if(data.err) {
+						alert(data.err);
 					}
 				}
 			},'json');
-			var self = this;
 		};
 
-
 		this.hq_toggle = function(nplayer_div,hq_div){
-			var self = this;
 			if(this.has_hq_function)
 			{
 				var nplayer_div = nplayer_div;
@@ -1072,163 +968,144 @@
 				hq_function();
 				return false;
 			}
-			if($(nplayer_div).css("display")=='block')
-			{
-				if(this.normal_player_html=='')
-				this.normal_player_html = $(nplayer_div).html();
-				$(nplayer_div).html("");
-			}else
-			{
-				if(this.normal_player_html!='')
-				$(nplayer_div).html(this.normal_player_html);
+
+			if($(nplayer_div).css('display') === 'block') {
+				if(this.normal_player_html === ''){
+				    this.normal_player_html = $(nplayer_div).html();
+                }
+				$(nplayer_div).html('');
+			} else {
+				if(this.normal_player_html !== ''){
+				    $(nplayer_div).html(this.normal_player_html);
+                }
 			}
-			if($(hq_div).css("display")=='block')
-			{
-				if(this.hq_player_html=='')
+
+			if($(hq_div).css('display') === 'block') {
+				if(this.hq_player_html === '')
 				this.hq_player_html = $(hq_div).html();
-				$(hq_div).html("");
-			}else
-			{
-				if(this.hq_player_html!='')
-				$(hq_div).html(this.hq_player_html);
+				$(hq_div).html('');
+			} else {
+				if(this.hq_player_html !== ''){
+				    $(hq_div).html(this.hq_player_html);
+                }
 			}
-			$(nplayer_div+","+hq_div).toggle()
+			$(nplayer_div+','+hq_div).toggle()
 		};
 
 		/** 
 		 * Function autplay playlist
 		 */
 		this.swap_auto_play = function(){
-			if($.cookie("auto_play_playlist")=="true")
+			if($.cookie('auto_play_playlist') === 'true')
 			{
-                set_cookie_secure("auto_play_playlist","false");
+                set_cookie_secure('auto_play_playlist','false');
 				window.location = document.location;
-				$('#ap_status').html("off");
-				
-			}else
-			{
-				$.cookie("auto_play_playlist","true",{path:"/"});
+				$('#ap_status').html('off');
+			} else {
+				$.cookie('auto_play_playlist','true',{path:'/'});
 				window.location = document.location;
-				$('#ap_status').html("on");
+				$('#ap_status').html('on');
 			}
-			var self = this;
 		};
 
 		this.collection_actions = function(form,mode,objID,result_con,type,cid)
         {
-			var self = this;
-			$(result_con).css("display","block");
+			$(result_con).css('display','block');
 			$(result_con).html(this.loading);
 			
 			switch(mode)
 			{
 				case 'add_new_item':
-				{
-					
 					$.post(page,
-						   {
-							   mode: mode,
-							   cid: $("#"+form+' #collection').val(),
-						   	   obj_id: objID,
-							   type: type
-						   },
-						   function(data)
-						   {
-								if(!data)
-									alert("No Data returned");
-								else
-								{
-									
-									if(data.msg)
-										$(result_con).html(data.msg);
-										
-									if(data.err)
-										$(result_con).html(data.err);		
-								}
-						   },'json')
-				}
-				break;
+                        {
+                           mode: mode,
+                           cid: $('#'+form+' #collection').val(),
+                           obj_id: objID,
+                           type: type
+                        },
+                       function(data)
+                       {
+                            if(!data){
+                                alert('No Data returned');
+                            } else {
+                                if(data.msg){
+                                    $(result_con).html(data.msg);
+                                }
+
+                                if(data.err){
+                                    $(result_con).html(data.err);
+                                }
+                            }
+                       },'json')
+				    break;
 				
-				case "remove_collection_item":
-				{
-					$("#"+form).hide();
+				case 'remove_collection_item':
+					$('#'+form).hide();
 					$.post(page,
-						   {
-								mode: mode,
-								obj_id: objID,
-								type: type,
-								cid: cid   
-						   },
-						   function(data)
-						   {
-								if(!data)
-								{
-									alert("No Data Returned");
-									$(result_con+"_"+objID).hide();
-									$("#"+form).show();
-								}
-								else
-								{
-									if(data.err)
-									{
-										alert(data.err);
-										$(result_con+"_"+objID).hide();
-										$("#"+form+objID).show();
-									}
-									
-									if(data.msg)
-									{
-										$(result_con).html(data.msg);
-										$("#"+form+"_"+objID).slideUp(350);	
-									}
-											
-								}
-						   },'json')	
-					
-				}
+                        {
+                            mode: mode,
+                            obj_id: objID,
+                            type: type,
+                            cid: cid
+                        },
+                        function(data)
+                        {
+                            if(!data) {
+                                alert('No Data Returned');
+                                $(result_con+'_'+objID).hide();
+                                $('#'+form).show();
+                            } else {
+                                if(data.err) {
+                                    alert(data.err);
+                                    $(result_con+'_'+objID).hide();
+                                    $('#'+form+objID).show();
+                                }
+
+                                if(data.msg){
+                                    $(result_con).html(data.msg);
+                                    $('#'+form+'_'+objID).slideUp(350);
+                                }
+
+                            }
+                       },'json')
 			}
-			
 			return false;
 		};
 
 		// Simple function to open url with javascript
 		this.openURL = function(url) {
-			var self = this;
 			document.locati= url;
 		};
 
-
-
 		this.get_item = function(obj,ci_id,cid,type,direction){
-			var self = this;
 			var btn_text = $(obj).html();
 			$(obj).html(this.loading);
 				
 			$.post(page,
-				   {
-					   mode : 'get_item',
-					   ci_id: ci_id,
-					   cid : cid,
-					   type: type,
-					   direction: direction
-				   },
-				   function(data)
-				   {
-						if(!data)
-						{
-							alert('No '+type+' returned');
-							$(obj).text(btn_text);
-						} else {
-							var jsArray = new Array(type,data['cid'],data['key']);
-							construct_url(jsArray);
-							$("#collectionItemView").html(data['content']);
-						}
-				   },'json')
+                {
+                   mode : 'get_item',
+                   ci_id: ci_id,
+                   cid : cid,
+                   type: type,
+                   direction: direction
+                },
+                function(data)
+                {
+                    if(!data)
+                    {
+                        alert('No '+type+' returned');
+                        $(obj).text(btn_text);
+                    } else {
+                        var jsArray = new Array(type,data['cid'],data['key']);
+                        construct_url(jsArray);
+                        $('#collectionItemView').html(data['content']);
+                    }
+                },'json')
 		};
 
 		this.construct_url = function(jsArr){
 			var url;
-			if(Seo == 'yes')
+			if(Seo === 'yes')
 			{
 				url = '#!/item/'+jsArr[0]+'/'+jsArr[1]+'/'+jsArr[2];
 				window.location.hash = url
@@ -1236,68 +1113,69 @@
 				url	= '#!?item='+jsArr[2]+'&type='+jsArr[0]+'&collection='+jsArr[1];
 				window.location.hash = url
 			}
-			var self = this;
 		};
 
 		this.onReload_item = function(){
-			var comURL,
-				regEX;		
+			var comURL, regEX;
 			if(window.location.hash)
 			{
 				comURL = window.location.href;
-				if(Seo == 'yes')
+				if(Seo === 'yes')
 				{	
 					regEX = RegExp('\/item.+#!');
-					if(regEX.test(comURL))
-					{
+					if(regEX.test(comURL)) {
 						comURL = comURL.replace(regEX,'');
 						window.location.href = comURL;
 					}
 				} else {
 					regEX = RegExp('\\\?item.+#!');
-					if(regEX.test(comURL))
-					{	comURL = comURL.replace(regEX,'')		
+					if(regEX.test(comURL)) {
+					    comURL = comURL.replace(regEX,'')
 						window.location.href = comURL;
 					}
 				}
 			}
-			var self = this;
 		};
 
 		this.pagination = function(object,cid,type,pageNumber){
 			var self = this;
-			var obj = $(object), objID = obj.id, 
-				paginationParent = obj.parent(), paginationParentID, paginationInnerHTML = obj.html();
+			var obj = $(object)
+                , objID = obj.id
+                , paginationParent = obj.parent()
+                , paginationParentID
+                , paginationInnerHTML = obj.html();
 			
-			if(paginationParent.attr('id'))
+			if(paginationParent.attr('id')){
 				paginationParentID = parent.attr('id')
-			else
-			{	paginationParent.attr('id','loadMoreParent'); paginationParentID = paginationParent.attr('id'); }
+            } else {
+			    paginationParent.attr('id','loadMoreParent');
+			    paginationParentID = paginationParent.attr('id');
+			}
 					
-			newCall = 
-			$.ajax({
+			var newCall = $.ajax({
 				url: self.page,
-				type: "post",
-				dataType: "json",
+				type: 'post',
+				dataType: 'json',
 				data: { 
-					mode: "moreItems", 
+					mode: 'moreItems', 
 					page : pageNumber, 
 					cid: cid, 
 					type: type 
 				},
 				beforeSend: function() { obj.removeAttr('onClick'); obj.html(self.loading) },
 				success : function(data) { 
-								if(data['error'])
-								{
-									if(object.tagName == "BUTTON")
-										obj.attr('disabled','disabled');
-									obj.removeAttr('onClick'); obj.html('No more '+type);	
-								} else {
-									$('#collectionItemsList').append(data['content']); 
-									$('#NewPagination').html(data['pagination']);
-									obj.html(paginationInnerHTML);
-								}
-							}		
+                    if(data['error'])
+                    {
+                        if(object.tagName === 'BUTTON'){
+                            obj.attr('disabled','disabled');
+                        }
+                        obj.removeAttr('onClick'); obj.html('No more '+type);
+                    } else {
+                        $('#collectionItemsList').append(data['content']);
+                        $('#NewPagination').html(data['pagination']);
+                        obj.html(paginationInnerHTML);
+                    }
+                }
 			});
 		};
 
@@ -1306,27 +1184,28 @@
 			var formID = obj.form.id, Form = $('#'+formID),
 				This = $(obj), AjaxCall, ButtonHTML = This.html(),
 				Result = $('#CollectionResult');	
-			AjaxCall = 
-			$.ajax
-			({
+			AjaxCall = $.ajax({
 				url: self.page,
-				type: "post",
-				dataType: "json",
-				data: "mode=add_collection&"+Form.serialize(),
-				beforeSend: function() { if(Result.css('display') == 'block') Result.slideUp('fast'); This.attr('disabled','disabled'); This.html(this.loading) },
+				type: 'post',
+				dataType: 'json',
+				data: 'mode=add_collection&'+Form.serialize(),
+				beforeSend: function() {
+				    if(Result.css('display') === 'block'){
+				        Result.slideUp('fast');
+                    }
+				    This.attr('disabled','disabled');
+				    This.html(this.loading);
+                },
 				success: function(data) {
-							if(data.msg)
-							{
-								$('#CollectionDIV').slideUp('fast');
-								Result.html(data['msg']).slideDown('fast');
-								this.collectionID = data['id'];
-							}
-							else
-							{
-								Result.html(data['err']).slideDown('fast');
-								This.removeAttr('disabled'); This.html(ButtonHTML);
-							}
-						 }
+                    if(data.msg) {
+                        $('#CollectionDIV').slideUp('fast');
+                        Result.html(data['msg']).slideDown('fast');
+                        this.collectionID = data['id'];
+                    } else {
+                        Result.html(data['err']).slideDown('fast');
+                        This.removeAttr('disabled'); This.html(ButtonHTML);
+                    }
+                }
 			});	
 		};
 
@@ -1334,89 +1213,80 @@
 			var forms = getInputs(obj), ParamArray = new Array(forms.length);
 				
 			$.each(forms,function(index,form) {
-					query = $("#"+form.id+" *").serialize();
-					query += "&mode=ajaxPhotos";
+					query = $('#'+form.id+' *').serialize();
+					query += '&mode=ajaxPhotos';
 					ParamArray[index] = query;
 			})
 				
 			return ParamArray;
-			var self = this;
 		};
 
 		this.getName = function(File){
-			var self = this;
-			var url = File;
-			var filename = url.substring(url.lastIndexOf('/')+1);
-			return filename;
+			return File.substring(File.lastIndexOf('/')+1);
 		};
 
 		this.viewRatings = function(object,pid){
-			var self = this;
 			var obj = $(object), innerHTML = obj.html();
-			if(document.getElementById('RatingStatContainer'))
-					$("#RatingStatContainer").toggle();
-			else
-			{       
-					loadAjax = 
-					$.ajax
-					({
-							url:page,
-							type: "post",
-							dataType: "text",
-							data: { mode:"viewPhotoRating", photoid:pid },
-							beforeSend: function() { obj.html(this.loading); },
-							success:function(data) {
-									obj.html(innerHTML); 
-									if(data)
-									{
-											$("<div />").attr('id','RatingStatContainer')
-											.addClass('clearfix')
-											.css({
-													"padding" : "8px",
-													"font" : "normal 11px Tahoma",
-													"border" : "1px solid #ccc",
-													"backgroundColor" : "#FFF"     
-											}).html(data).fadeIn(350).insertAfter(obj);
-									} else {
-											obj.removeAttr('onclick');
-											alert("Photo has not recieved any rating yet.");        
-									}
-							}       
-					});
+			if(document.getElementById('RatingStatContainer')){
+                $('#RatingStatContainer').toggle();
+            } else {
+                loadAjax = $.ajax({
+                    url:page,
+                    type: 'post',
+                    dataType: 'text',
+                    data: { mode:'viewPhotoRating', photoid:pid },
+                    beforeSend: function() { obj.html(this.loading); },
+                    success:function(data) {
+                        obj.html(innerHTML);
+                        if(data) {
+                            $('<div/>').attr('id','RatingStatContainer')
+                            .addClass('clearfix')
+                            .css({
+                                'padding' : '8px',
+                                'font' : 'normal 11px Tahoma',
+                                'border' : '1px solid #ccc',
+                                'backgroundColor' : '#FFF'
+                                }).html(data).fadeIn(350).insertAfter(obj);
+                        } else {
+                            obj.removeAttr('onclick');
+                            alert('Photo has not recieved any rating yet.');
+                        }
+                    }
+                });
 			}
 		};
 
 		this.showAdvanceSearch = function(simple,advance,expandClass,collapseClass){
-			var simpleObj = $("#"+simple); var advanceObj = $("#"+advance);
+			var simpleObj = $('#'+simple); var advanceObj = $('#'+advance);
 			var	value = $('#SearchType').val();
-			//simpleObj.toggle();
 			advanceObj.toggle();
-			if(advanceObj.css('display') == 'block')	
+			if(advanceObj.css('display') === 'block'){
 				advanceObj.children().hide().filter('#'+value).show();
+            }
 			$('.'+expandClass).toggleClass(collapseClass);
-			var self = this;
 		};
 
 		this.toggleCategory = function(object,perPage){
-			var obj = $(object), childTarget = obj.attr('alt'), child = $("#"+childTarget),
-				childparts = childTarget.split("_"), childID = childparts[0];
+			var obj = $(object), childTarget = obj.attr('alt'), child = $('#'+childTarget),
+				childparts = childTarget.split('_'), childID = childparts[0];
 			var browser = $.browser.msie; var browserVersion = $.browser.version;
 			
-			if(child.css('display') == "none")
+			if(child.css('display') === 'none')
 			{
 				child.slideDown(350);
-				if(browser && browserVersion == "7.0")
+				if(browser && browserVersion === '7.0'){
 					child.addClass('internetExplorer7CategoryToggleFix');
+                }
                 set_cookie_secure(childID,'expanded');
 				obj.removeClass('none').addClass('block');	
 			} else {
 				child.slideUp(350);
-				if(browser && browserVersion == "7.0")
+				if(browser && browserVersion === '7.0'){
 					child.removeClass('internetExplorer7CategoryToggleFix');
+                }
                 set_cookie_secure(childID,'collapsed');
 				obj.removeClass('block').addClass('none');		
 			}
-			var self = this;
 		};
 
 		this.loadObject = function(currentDOM,type,objID,container){
@@ -1435,35 +1305,30 @@
 					type : 'POST',
 					dataType : 'json',
 					data  : ({ mode : 'channelFeatured',
-							   contentType : object['type'],
-							   objID : object['objID']
-							}),
+                       contentType : object['type'],
+                       objID : object['objID']
+                    }),
 					beforeSend : function()
 					{
 						obj.find('img').animate({ opacity : .5 });
-						$("#"+object['container']).animate({ opacity : .5 });
+						$('#'+object['container']).animate({ opacity : .5 });
 					},
 					success : function(data)
 					{
-						if(data['error'])
-						{
+						if(data['error']) {
 							obj.find('img').animate({ opacity : 1 });
-							$("#"+object['container']).animate({ opacity : 1 });
+							$('#'+object['container']).animate({ opacity : 1 });
 							alert(data['error']);
-						}
-						else
-						{
+						} else {
 							obj.parent().children('.selected').removeClass('selected');
 							obj.addClass('selected');						
 							obj.find('img').animate({ opacity : 1 });				
-							$("#"+object['container']).html(data['data']);					
-							$("#"+object['container']).animate({ opacity : 1 });
+							$('#'+object['container']).html(data['data']).animate({ opacity : 1 });
 						}
 					}
 				})	
 			}
 		};
-
 
 		this.channelObjects = function(object,div,type,user,assign){
 			var self = this;
@@ -1472,34 +1337,33 @@
 			
 			if(curRel)
 			{
-				if($("#"+curRel).css('display') == 'block')
+				if($('#'+curRel).css('display') === 'block'){
 					return false;
-				else
-				{
+                } else {
 					obj.parents('ul').find('a.selected').removeClass('selected');
 					obj.addClass('selected');
 					
-					$("#"+oldRel).hide();
-					$("#"+curRel).show();		
+					$('#'+oldRel).hide();
+					$('#'+curRel).show();		
 				}
 			} else {
-				var newRel = type+"DIV";
+				var newRel = type+'DIV';
 				obj.attr('rel',newRel);
 				$.ajax({
-				 url : self.page,
-				 type : "POST",
-				 dataType : "json",
-				 data : ({ mode : "channelObjects", content : type, user : user, assign : assign}),
-				 beforeSend : function() { obj.append(this.loading_img) },
-				 success : function(data)
-				 {
-					obj.find('img').remove();
-					obj.parents('ul').find('a.selected').removeClass('selected');
-					obj.addClass('selected');		
-				
-					$("#"+oldRel).hide();
-					$("<div></div>").attr('id',newRel).addClass($("#"+oldRel).attr('class')).html(data.html).appendTo(DIV); 
-				 }
+                    url : self.page,
+                    type : 'post',
+                    dataType : 'json',
+                    data : ({ mode : 'channelObjects', content : type, user : user, assign : assign}),
+                    beforeSend : function() { obj.append(this.loading_img) },
+                    success : function(data)
+                    {
+                        obj.find('img').remove();
+                        obj.parents('ul').find('a.selected').removeClass('selected');
+                        obj.addClass('selected');
+
+                        $('#'+oldRel).hide();
+                        $('<div></div>').attr('id',newRel).addClass($('#'+oldRel).attr('class')).html(data.html).appendTo(DIV);
+                    }
 				})	
 			}
 		};
@@ -1507,44 +1371,39 @@
 		var comments_voting = 'no';
 		this.getComments = function(type,type_id,last_update,pageNum,total,object_type,admin){
 			var self = this;
-			$('#comments').html("<div style='padding:5px 0px;'>"+this.loading+"</div>");
+			$('#comments').html("<div style='padding:5px 0;'>"+this.loading+'</div>');
 			$.ajax({
-			  type: 'POST',
-			  url: self.page,
-			  data:  {mode:'getComments',
-			  page:pageNum,type:type,
-			  type_id:type_id,
-			  object_type : object_type,
-			  last_update : last_update,
-			  total_comments : total,
-			  comments_voting : comments_voting,admin : admin},
-			  success: function(data)
-			  {
-				$('#comments').hide();
-				$('#comments').html(data);
-				$('#comments').fadeIn('slow');
-			  },
-			  dataType: 'text'
+                type: 'POST',
+                url: self.page,
+                data:  {mode:'getComments',
+                page:pageNum,type:type,
+                type_id:type_id,
+                object_type : object_type,
+                last_update : last_update,
+                total_comments : total,
+                comments_voting : comments_voting,admin : admin},
+                success: function(data)
+                {
+                    $('#comments').hide().html(data).fadeIn('slow');
+                },
+                dataType: 'text'
 			});
 		};
 
 		this.checkUncheckAll = function(theElement) {
-		     var theForm = theElement.form, z = 0;
+            var theForm = theElement.form, z = 0;
 			 
-				for(z=0; z<theForm.length;z++){
-					if(theForm[z].type == 'checkbox' && theForm[z].name != 'checkall'){
-					  theForm[z].checked = theElement.checked;
-					}
-				}
-				var self = this;
+            for(z=0; z<theForm.length;z++){
+                if(theForm[z].type === 'checkbox' && theForm[z].name !== 'checkall'){
+                    theForm[z].checked = theElement.checked;
+                }
+            }
 		};
 			
 		/**
 		 * Function used to rate object
 		 */
 		this.rate = function(id,rating,type){
-			alert("BIEATCh");
-			var self = this;
 			var page = '/ajax.php';
 			$.post(page, 
 			{ 	
@@ -1555,26 +1414,24 @@
 			},
 			function(data)
 			{
-				if(!data)
-					alert("No data");
-				else
-					$("#rating_container").html(data);
+				if(!data){
+					alert('No data');
+                } else {
+					$('#rating_container').html(data);
+                }
 			},'text');
 		};
 
 		this.setPageHash = function(Page){
-			var self = this;
 			// Removing this.baseurl
-			var hashPart = Page.replace(this.baseurl,"");
-			var prevHash = window.location.hash.replace("#!",'');
-			//alert(hashPart+"       "+prevHash);
+			var hashPart = Page.replace(this.baseurl,'');
+			var prevHash = window.location.hash.replace('#!','');
 		    {
-				window.location.hash = "#!"+hashPart;
+				window.location.hash = '#!'+hashPart;
 			}
 		};
 
 		this.callURLParser = function(){
-			var self = this;
 			var expression = /(\#![/a-zA-Z0-9=\.\&\-\_\?]*)/g,
 				   location = window.location.href,
 				   returned = location.match(expression),
@@ -1582,17 +1439,19 @@
 			if(returned)
 			{
 				lastVisited = returned[returned.length - 1];	   
-				if(lastVisited)
-					window.location.href = this.lastVisited.replace("#!",'');
+				if(lastVisited){
+					window.location.href = this.lastVisited.replace('#!','');
+                }
 			}
 		};
 
 		this.groupsAjax = function(event,selector,divSelector){
-			var self = this;
 			event.preventDefault(); // prevent from redirecting to URL
 			var ajaxPage, onLink = false, PreserveHTML, ParentTag, DIV;
-			if(divSelector == undefined)
-				divSelector = "ajaxGroupResultContainer";
+			if(divSelector === undefined){
+				divSelector = 'ajaxGroupResultContainer';
+            }
+			var jqueryObj, javaObj;
 			if(selector.href) // Means function is on link
 			{
 				ajaxPage = selector.href;
@@ -1604,33 +1463,32 @@
 				jqueryObj = $(selector.childNodes[0]);
 				javaObj = selector.childNodes[0];	
 			}
-			if(ajaxPage == "undefined") {
-				alert("URL not found"); 
+			if(ajaxPage === 'undefined') {
+				alert('URL not found');
 				return false;
-			} else {
-				PreserveHTML = jqueryObj.html();
-				setPageHash(ajaxPage);
-				//return false;
-				if(onLink == true) {
-					ParentTag = jqueryObj.parent().parent();
-					ParentTag.children().filter('.selected').removeClass('selected');
-					jqueryObj.parent().addClass('selected');
-				} else {
-					ParentTag = jqueryObj.parent();
-					ParentTag.children().filter('.selected').removeClass('selected');
-					jqueryObj.addClass('selected');
-				}
-				jqueryObj.html(this.loading_img);
-				$("#"+divSelector).load(ajaxPage+" #"+divSelector+"",function(response, status, xhr){
-						jqueryObj.html(PreserveHTML);
-						if(document.getElementById('flag_item'))
-							$('#flag_item').show();	
-				});
 			}
+
+            PreserveHTML = jqueryObj.html();
+            setPageHash(ajaxPage);
+            if(onLink === true) {
+                ParentTag = jqueryObj.parent().parent();
+                ParentTag.children().filter('.selected').removeClass('selected');
+                jqueryObj.parent().addClass('selected');
+            } else {
+                ParentTag = jqueryObj.parent();
+                ParentTag.children().filter('.selected').removeClass('selected');
+                jqueryObj.addClass('selected');
+            }
+            jqueryObj.html(this.loading_img);
+            $('#'+divSelector).load(ajaxPage+' #'+divSelector+'',function(response, status, xhr){
+                jqueryObj.html(PreserveHTML);
+                if(document.getElementById('flag_item')){
+                    $('#flag_item').show();
+                }
+            });
 		};
 
 		this.encode64 = function(input) {
-			var self = this;
 			var output = nStringMaker();
 			var chr1, chr2, chr3;
 			var enc1, enc2, enc3, enc4;
@@ -1659,14 +1517,13 @@
 		};
 
 		this.decode64 = function(input) {
-			var self = this;
 			var output = nStringMaker();
 			var chr1, chr2, chr3;
 			var enc1, enc2, enc3, enc4;
 			var i = 0;
 
 			// remove all characters that are not A-Z, a-z, 0-9, +, /, or =
-			input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+			input = input.replace(/[^A-Za-z0-9\+\/\=]/g, '');
 
 			while (i < input.length) {
 				enc1 = this.keyStr.indexOf(input.charAt(i++));
@@ -1692,65 +1549,59 @@
 		};
 
 		this.getAllComments = function(type,type_id,last_update,pageNum,total,object_type,admin){
-			 var self = this;
-          $('#userCommentsList').html("<div style='padding:5px 0px;'>"+loading+"</div>");
-          $.ajax({
-            type: 'POST',
-            url: page,
-            data: {
-					mode:'getComments',
-					page:pageNum,
-					type:type,
-					type_id:type_id,
-					object_type : object_type,
-					last_update : last_update,
-					total_comments : total,
-					comments_voting : comments_voting,
-					admin : admin
-            },
-            success: function(comments){
-              $("#userCommentsList").html(comments);
-            },
-            dataType: 'text'
-          });
-      };
+            $('#userCommentsList').html("<div style='padding:5px 0;'>"+loading+'</div>');
+            $.ajax({
+                type: 'POST',
+                url: page,
+                data: {
+                    mode:'getComments',
+                    page:pageNum,
+                    type:type,
+                    type_id:type_id,
+                    object_type : object_type,
+                    last_update : last_update,
+                    total_comments : total,
+                    comments_voting : comments_voting,
+                    admin : admin
+                },
+                success: function(comments){
+                    $('#userCommentsList').html(comments);
+                },
+                dataType: 'text'
+            });
+        };
 
-      this.getCommentsNew = function(type,type_id,last_update,pageNum,total,object_type,admin){
-			 var self = this;
-          $.ajax({
-            type: 'POST',
-            url: page,
-            data: {
-					mode:'getCommentsNew',
-					page:pageNum,
-					type:type,
-					type_id:type_id,
-					object_type : object_type,
-					last_update : last_update,
-					total_comments : total,
-					comments_voting : comments_voting,
-					admin : admin
-            },
-
-            beforeSend: function() {
-            	$(document).find('#load-more-comments').text(lang_loading);
-            },
-
-            success: function(comments){
-              if (comments == 'none') {
-              	  $('#load-more-comments').text('End of comments list');
-              	  $('#load-more-comments').attr('disabled','disabled');
-              } else {
-	              $("#userCommentsList").append(comments);
-	              $(document).find('#load-more-comments').text(lang_load_more);
-              }
-            },
-            dataType: 'text'
-          });
-      };
+        this.getCommentsNew = function(type,type_id,last_update,pageNum,total,object_type,admin){
+            $.ajax({
+                type: 'POST',
+                url: page,
+                data: {
+                    mode:'getCommentsNew',
+                    page:pageNum,
+                    type:type,
+                    type_id:type_id,
+                    object_type : object_type,
+                    last_update : last_update,
+                    total_comments : total,
+                    comments_voting : comments_voting,
+                    admin : admin
+                },
+                beforeSend: function() {
+                    $(document).find('#load-more-comments').text(lang_loading);
+                },
+                success: function(comments){
+                    if (comments === 'none') {
+                        $('#load-more-comments').text('End of comments list').attr('disabled','disabled');
+                    } else {
+                        $('#userCommentsList').append(comments);
+                        $(document).find('#load-more-comments').text(lang_load_more);
+                    }
+                },
+                dataType: 'text'
+            });
+        };
 
 		this.addToFav = function(type,id){
-			 var self = this;
 			$('#messageFav').show();
 			$.post(page, {   
 				mode : 'add_to_fav',
@@ -1759,9 +1610,9 @@
 			},
 			function(data){
 			   if(!data){
-			        alert("No data");
-			   }else{
-					$("#messageFav").html(data);
+			        alert('No data');
+			   } else {
+					$('#messageFav').html(data);
 					setTimeout(function(){
 						$('#messageFav').hide();
 					}, 5000);
@@ -1770,7 +1621,6 @@
 		};
 
 		this.subscribeToChannel = function(user,type,result_cont){
-			 var self = this;
 	       $('#messageFav').show();
 	       $.post(page, {  
 	           mode : type,
@@ -1778,34 +1628,36 @@
 	       },
 	       function(data){
 	           if(!data){
-	               alert("No data");
-	           }
-	           else{
-	               $("#messageFav").html(data);
+	               alert('No data');
+	           } else {
+	               $('#messageFav').html(data);
 	               setTimeout(function(){
 	                   $('#messageFav').hide();
 	               }, 5000);
 	           }
 	       },'text');
-	   };
+        };
 
-	   this.debounce = function(func, wait, immediate){
-	   	var timeout;
+        this.debounce = function(func, wait, immediate){
+            var timeout;
 			return function() {
 				var context = this, args = arguments;
 				var later = function() {
 					timeout = null;
-					if (!immediate) func.apply(context, args);
+					if (!immediate){
+					    func.apply(context, args);
+                    }
 				};
 				var callNow = immediate && !timeout;
 				clearTimeout(timeout);
 				timeout = setTimeout(later, wait);
-				if (callNow) func.apply(context, args);
+				if (callNow){
+                    func.apply(context, args); 
+                } 
 			};
-	   }
+        }
 
-	   this.throwHeadMsg = function(tclass, msg, hideAfter,scroll) {
-	   		var self = this;
+        this.throwHeadMsg = function(tclass, msg, hideAfter,scroll) {
 			$(document).find('#headErr').remove();
 			hideAfter = parseInt(hideAfter);
 
@@ -1818,7 +1670,6 @@
 			}
 
 			$('<div id="headErr" class="alert_messages_holder" style="display:none;"><div class="alert alert-'+tclass+' alert-messages alert-ajax" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+msg+'</div></div>').insertAfter('#header').fadeIn('slow').delay(hideAfter).fadeOut();
-
 		};
 		
 		/**
@@ -1827,7 +1678,7 @@
 		* @author: Saqib Razzaq
 		*/
 
-		this.rateNew = function (id,rating,type) {
+        this.rateNew = function (id,rating,type) {
 			curObj = this;
 			var page = '/ajax.php';
 			$.post(page, { 	
@@ -1839,7 +1690,7 @@
 			function(data)
 			{
 				if(!data) {
-					alert("No data");
+					alert('No data');
 				} else {
 					likesSect = $('.likes').find('span:nth-child(2)').html();
 					dislikesSect = $('.dislikes').find('span:nth-child(2)').html();
@@ -1856,15 +1707,13 @@
 						if (isOk.length > 2) {
 							if (rating == 5) {
 								newRating = currLikes + 1;
-								$('.likes').addClass('rated');
-								$('.likes').find('span:nth-child(2)').html(newRating);
+								$('.likes').addClass('rated').find('span:nth-child(2)').html(newRating);
 							} else {
 								newRating = currDislikes + 1;
 								if (newRating < 0) {
 									newRating = 0;
 								}
-								$('.dislikes').addClass('rated');
-								$('.dislikes').find('span:nth-child(2)').html(newRating);
+								$('.dislikes').addClass('rated').find('span:nth-child(2)').html(newRating);
 							}
 							curObj.throwHeadMsg('success',isOk, 5000, true);
 						}
@@ -1873,7 +1722,7 @@
 			},'text');
 		}
 
-		this.showMeTheMsg = function(data, alertDiv) {
+        this.showMeTheMsg = function(data, alertDiv) {
 			curObj = this;
 			if (alertDiv == true) {
 				isOk = $(data).filter('div.msg').find('div.alert').html();
@@ -1893,7 +1742,7 @@
 			}
 		}
 
-		this.subscribeToChannelNew = function(user,type){
+        this.subscribeToChannelNew = function(user,type){
 		   curObj = this;
 	       $.post(page, {  
 	           mode : type,
@@ -1901,57 +1750,54 @@
 	       },
 	       function(data){
 	           if(!data){
-	               alert("No data");
-	           }
-	           else{
+	               alert('No data');
+	           } else {
 	           		curObj.showMeTheMsg(data);
 	           }
 	       },'text');
 	   };
 
-	   this.add_friendNew = function (uid,result_cont){
+        this.add_friendNew = function (uid,result_cont){
 	   		curObj = this;
-			$("#"+result_cont).css("display","block");
-			$("#"+result_cont).html(this.loading);
+			$('#'+result_cont).css('display','block').html(this.loading);
 			
 			$.post(page, 
-			{ 	
-				mode : 'add_friend',
-				uid : uid
-			},
-			function(data)
-			{
-				if(!data)
-					alert("No data");
-				else
-				{
-					$("#"+result_cont).css("display","none");
-					curObj.showMeTheMsg(data);
-				}
-			},'text');
+                { 	
+                    mode : 'add_friend',
+                    uid : uid
+                }
+                ,function(data)
+                {
+                    if(!data){
+                        alert('No data');
+                    } else {
+                        $('#'+result_cont).css('display','none');
+                        curObj.showMeTheMsg(data);
+                    }
+                }
+			    ,'text'
+            );
 		};
 
-		this.subscribeToChannelNew = function(user,type){
+        this.subscribeToChannelNew = function(user,type){
 			var curObj = this;
 
 	        $.post(page, {  
 	           mode : type,
 	           subscribe_to : user
-	       },
-	       function(data){
+	        },
+	        function(data){
 	           if(!data){
-	               alert("No data");
-	           }
-	           else{
+	               alert('No data');
+	           } else {
 	               curObj.showMeTheMsg(data);
 	           }
-	       },'text');
-	   };
+	        },'text');
+        };
 
-	   this.add_to_favNew = function(type,id){
+        this.add_to_favNew = function(type,id){
 			var curObj = this;
-			$("#video_action_result_cont").css("display","block");
-			$("#video_action_result_cont").html(curObj.loading);
+			$('#video_action_result_cont').css('display','block').html(curObj.loading);
 			
 			$.post(page, 
 			{ 	
@@ -1961,11 +1807,10 @@
 			},
 			function(data)
 			{
-				if(!data)
-					alert("No data");
-				else
-				{
-					$("#video_action_result_cont").hide();
+				if(!data){
+					alert('No data');
+                } else {
+					$('#video_action_result_cont').hide();
 					curObj.showMeTheMsg(data, true);
 				}
 			},'text');
@@ -1973,22 +1818,20 @@
 
 		this.flag_objectNew = function(form_id,id,type){
 			var curObj = this;
-			$("#flag_form_result").css("display","block");
-			$("#flag_form_result").html(this.loading);
+			$('#flag_form_result').css('display','block').html(this.loading);
 			$.post(page, 
 			{ 	
 				mode : 'flag_object',
 				type : type,
-				flag_type : $("#"+form_id+" select option:selected").val(),
+				flag_type : $('#'+form_id+' select option:selected').val(),
 				id : id
 			},
 			function(data)
 			{
-				if(!data)
-					alert("No data");
-				else
-				{
-					$("#flag_form_result").hide();
+				if(!data){
+					alert('No data');
+                } else {
+					$('#flag_form_result').hide();
 					curObj.showMeTheMsg(data);
 				}
 			},'text');
@@ -2001,8 +1844,7 @@
 
 			//return true;
 			var file_data = $('#captions').prop('files')[0];   
-		    var form_data = new FormData();                  
-		    var themode = 'yes';
+		    var form_data = new FormData();
 		    form_data.append('subtitle_lang',lang);
 		    form_data.append('file', file_data);
 		    form_data.append('videoid', videoid);
@@ -2014,127 +1856,110 @@
 				url: honeyAjax,
 				data: form_data,
 
-				beforeSend: function() {
-
-				},
-
-				success: function(data) {
-
-				}
+				beforeSend: function() {},
+				success: function(data) {}
 			});
 		}
 
-		this.add_playlistNew = function (mode,vid,form_id,objtype){
+        this.add_playlistNew = function (mode,vid,form_id,objtype){
 			curObj = this;
-			$("#playlist_form_result").css("display","block");
-			$("#playlist_form_result").html("loading");
+			$('#playlist_form_result').css('display','block').html('loading');
 			switch(mode)
 			{
 				case 'add':
 					$.post(page, 
-					{
-						mode : 'add_playlist',
-						id : vid,
-						objtype : objtype,
-						pid : $("#playlist_id option:selected").val()
-			        },
-					function(data)
-					{
-						$("#playlist_form_result").html("");
-						if(!data)
-							alert("No data");
-						else
-						{	
-							if(data.err.length > 2)
-							{
-								cleanedHtml = $.parseHTML(data.err);
-								var msg = $(cleanedHtml).html();
-								curObj.throwHeadMsg('danger',msg, 5000, true);
-							}
-							
-							if(data.msg.length > 2)
-							{
-								cleanedHtml = $.parseHTML(data.msg);
-								var msg = $(cleanedHtml).find('div.alert').html();
-								curObj.throwHeadMsg('success',msg, 5000, true);
-								$("#"+form_id).css("display","none");
-							}	
-							
-						}
-					},'json');
+                        {
+                            mode : 'add_playlist',
+                            id : vid,
+                            objtype : objtype,
+                            pid : $('#playlist_id option:selected').val()
+                        },
+                        function(data)
+                        {
+                            $('#playlist_form_result').html('');
+                            if(!data){
+                                alert('No data');
+                            } else {	
+                                if(data.err.length > 2) {
+                                    cleanedHtml = $.parseHTML(data.err);
+                                    var msg = $(cleanedHtml).html();
+                                    curObj.throwHeadMsg('danger',msg, 5000, true);
+                                }
+                                
+                                if(data.msg.length > 2) {
+                                    cleanedHtml = $.parseHTML(data.msg);
+                                    var msg = $(cleanedHtml).find('div.alert').html();
+                                    curObj.throwHeadMsg('success',msg, 5000, true);
+                                    $('#'+form_id).css('display','none');
+                                }	
+                                
+                            }
+                        },'json');
 				    break;
 				
 				case 'new':
 					$.post(page, 
-					{ 	
-						mode : 'add_new_playlist',
-						id : vid,
-						objtype : objtype,
-						plname : $("#playlist_name").val()
-			        },
-					function(data)
-					{
-						if(!data)
-							alert("No data");
-						else
-						{
-							if(data.err )
-							{
-								$("#playlist_form_result").css("display","block");
-								$("#playlist_form_result").html(data.err);
-							}
-							
-							if(data.msg)
-							{
-								$("#playlist_form_result").css("display","block");
-								$("#playlist_form_result").html(data.msg);
-								$("#"+form_id).css("display","none");
-							}
-						}
-					},'json');
+                        { 	
+                            mode : 'add_new_playlist',
+                            id : vid,
+                            objtype : objtype,
+                            plname : $('#playlist_name').val()
+                        },
+                        function(data)
+                        {
+                            if(!data){
+                                alert('No data');
+                            } else {
+                                if(data.err ) {
+                                    $('#playlist_form_result').css('display','block').html(data.err);
+                                }
+                                
+                                if(data.msg) {
+                                    $('#playlist_form_result').css('display','block').html(data.msg);
+                                    $('#'+form_id).css('display','none');
+                                }
+                            }
+                        },'json');
 				    break;
 			}
 		};
 
-		this.getModalVideo = function(video_id){
-			var _thisLoading = this.loading_img;
+        this.getModalVideo = function(video_id){
+		    console.log(video_id);
 			$.ajax({
 				type: 'post',
-				url: "/ajax/commonAjax.php",
-				data: { videoid : video_id , mode : "get_video"},
+				url: '/ajax/commonAjax.php',
+				data: { videoid : video_id , mode : 'get_video'},
 				dataType: 'json',
 				beforeSend: function (data) {
-					$(".my-modal-content").html('<div align="center" style="color:#fff;font-size:25px;padding:10px 10px 10px 10px;">'+loadingImg+'</div>');
-					$(".my-modal-content").attr("id","");
+					$('.my-modal-content').html('<div style="color:#fff;font-size:25px;padding:10px 10px 10px 10px;">'+loadingImg+'</div>');
 		    	},
 				success: function (data) {
-					if (data.success){
+					if( data.success ){
 						var videoLink = data.video_link;
 						var vData = data.video_details;
-						$(".my-modal-content").attr("id",vData.videoid);
-						$(".my-modal-content").html(data.video);
+						$('.my-modal-content').attr('id',vData.videoid).html(data.video);
 						
-						var cbModalPlayer = $(document).find("#cb_video_js_"+vData.videoid+"_html5_api"); 
-						var cbModalPlayer = cbModalPlayer[0];
+						var cbModalPlayer = $(document).find('#cb_video_js_'+vData.videoid+'_html5_api');
+						cbModalPlayer = cbModalPlayer[0];
 
-						var modalPlayerInterval = setInterval(function(){ 
-							
+						var modalPlayerInterval = setInterval(function(){
 							if (!navigator.userAgent.match(/Android/i)){
 								cbModalPlayer.play();
-							    $(cbModalPlayerCont).find(".uploaderName").append('<a href="'+videoLink+'" title="Watch Video Page" style="margin:-2px 5px 0 0;"><i class="glyphicon glyphicon-log-in pull-right" style="font-size:20px;color:#fff;"></i></a>'); 
+							    $(cbModalPlayerCont).find('.uploaderName').append('<a href="'+videoLink+'" title="Watch Video Page" style="margin:-2px 5px 0 0;"><i class="glyphicon glyphicon-log-in pull-right" style="font-size:20px;color:#fff;"></i></a>');
 							}
 							var isPlaying = !cbModalPlayer.paused;
-							var cbModalPlayerCont = $(document).find("#cb_video_js_"+vData.videoid); 
+							var cbModalPlayerCont = $(document).find('#cb_video_js_'+vData.videoid);
 							
 							// Making Videos paused if any other video playing in Dom 
-							var domVideos = $(document).find("video");
+							var domVideos = $(document).find('video');
 							if (domVideos.length > 0){
 
 								for (var i = 0 ; i < domVideos.length ; i++) {
-									var id = $(domVideos[i]).attr("id");
-									var video_id = id.split("_");
+									var id = $(domVideos[i]).attr('id');
+									var video_id = id.split('_');
 									video_id = video_id[3];
-									if (vData.videoid != video_id){
+									if (vData.videoid !== video_id){
 										$(domVideos[i])[0].pause();
 									}
 								}
@@ -2146,15 +1971,14 @@
 							}
 						}, 300);
 					}else if(data.failure){
-						$(".my-modal-content").html('<div class="alert alert-warning">'+data.message+'</div>');
+						$('.my-modal-content').html('<div class="alert alert-warning">'+data.message+'</div>');
 					}
 		    	}
 			});
 		}
 
 		this.getPlayerEl = function(videoid){
-			var videoId = videoid;
-			var player = $(document).find(".cb_video_js_"+videoId+"-dimensions");
+			var player = $(document).find('.cb_video_js_'+videoid+'-dimensions');
 			if (player){
 				return player[0];
 			}
@@ -2163,7 +1987,7 @@
 
 		this.unsubscribeToChannel = function(user,type){
 		   	curObj = this;
-		   	var elems = document.getElementsByClassName("subs_"+user);
+		   	var elems = document.getElementsByClassName('subs_'+user);
 			if(elems.length>0){
 				Array.prototype.forEach.call(elems, function(el) {
 					el.disabled = true;
@@ -2171,7 +1995,7 @@
 			}
 	       	$.post(page, {mode : type,subscribe_to : user},function(data){
 	           if(!data){
-	               alert("No data");
+	               alert('No data');
 	           } else {
                    data = JSON.parse(data);
                    if(data.typ === 'err')
@@ -2184,7 +2008,7 @@
                        if(elems.length>0){
                            Array.prototype.forEach.call(elems, function(el) {
                                el.innerHTML=lang_subscribe;
-                               el.setAttribute("onclick","_cb.subscribeToChannelNew("+user+",'subscribe_user');");
+                               el.setAttribute('onclick','_cb.subscribeToChannelNew('+user+",'subscribe_user');");
                                el.disabled = false;
                                curObj.updateSubscribersCount(user);
                            });
@@ -2201,7 +2025,7 @@
 	   	this.subscribeToChannelNew = function(user,type){
 			var curObj = this;
 			
-			var elems = document.getElementsByClassName("subs_"+user);
+			var elems = document.getElementsByClassName('subs_'+user);
 			if(elems.length>0){
 				Array.prototype.forEach.call(elems, function(el) {
 					el.disabled = true;
@@ -2209,20 +2033,21 @@
 			}
 			$.post(page, { mode : type,subscribe_to : user },function(data){
 	           	if(!data){
-	               alert("No data");
+	               alert('No data');
 	           	} else {
 	           	    data = JSON.parse(data);
-                    if(data.typ === 'err')
+                    if(data.typ === 'err'){
                         curObj.showMeTheMsg('<div class="error">'+data.msg+'</div>');
-	                else
+                    } else {
 	               	    curObj.showMeTheMsg('<div class="msg">'+data.msg+'</div>');
+                    }
 
 	               	if(data.severity<2){
 		                // for channels page
 						if(elems.length>0){
 							Array.prototype.forEach.call(elems, function(el) {
 								el.innerHTML=lang_unsubscribe;
-							    el.setAttribute("onclick","_cb.unsubscribeToChannel("+user+",'unsubscribe_user');");
+							    el.setAttribute('onclick','_cb.unsubscribeToChannel('+user+",'unsubscribe_user');");
 								el.disabled = false;
 								curObj.updateSubscribersCount(user);
 							});
@@ -2237,7 +2062,6 @@
 	   	};
 
 	   	this.updateSubscribersCount = function(userid){
-			var curObj = this;
 			$.post(page, 
 			{ 	
 				mode : 'get_subscribers_count',
@@ -2245,12 +2069,11 @@
 			},
 			function(data)
 			{
-				if(!data)
-					alert("No data");
-				else
-				{
+				if(!data){
+					alert('No data');
+                } else {
 					subsObj = JSON.parse(data);
-					$("#user_subscribers_"+userid).html(subsObj.subscriber_count);
+					$('#user_subscribers_'+userid).html(subsObj.subscriber_count);
 				}
 			},'text');
 		};
