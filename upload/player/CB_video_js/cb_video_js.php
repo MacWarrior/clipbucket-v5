@@ -1,15 +1,5 @@
 <?php
-/*
-	Player Name: CB5.3 VideoJS
-	Description: Non-Official CB5.3 VideoJS 7.8.1 Player
-	Author: MacWarrior
-	ClipBucket Version: 5.3
-	Website: https://github.com/MacWarrior/clipbucket
-    Released: 2020-05-05
- */
-
 $cb_video_js = false;
-
 
 if (!function_exists('cb_video_js'))
 {
@@ -30,11 +20,12 @@ if (!function_exists('cb_video_js'))
 	
 		vids_assign($video_play);
 
-		if(!strstr($in['width'],"%"))
+		if(!strstr($in['width'],"%")){
 			$in['width'] = $in['width'].'px';
-		if(!strstr($in['height'],"%"))
+        }
+		if(!strstr($in['height'],"%")){
 			$in['height'] = $in['height'].'px';
-
+        }
 
 		assign('height',$in['height']);
         assign('width',$in['width']);

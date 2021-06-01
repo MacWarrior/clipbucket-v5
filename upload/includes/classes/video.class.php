@@ -718,7 +718,7 @@ class CBvideo extends CBCategory
 	 *
 	 * @param $params
 	 *
-	 * @return bool|STRING
+	 * @return bool|String
 	 */
 	function get_videos($params)
 	{
@@ -727,42 +727,47 @@ class CBvideo extends CBCategory
 		$limit = $params['limit'];
 		$order = $params['order'];
 		
-		$cond = "";
-		$superCond = "";
+		$cond = '';
+		$superCond = '';
 		if( !has_access('admin_access',TRUE) )
 		{
-			$superCond = " ".("video.status")."='Successful' AND
-			".("video.active")."='yes' AND ".("video.broadcast")." !='unlisted' ";
+			$superCond = ' '.('video.status')."='Successful' AND
+			".('video.active')."='yes' AND ".('video.broadcast')." !='unlisted' ";
 		} else {
-			if($params['active'])
-				$cond .= " ".("video.active")."='".$params['active']."'";
+			if($params['active']){
+				$cond .= ' '.('video.active')."='".$params['active']."'";
+            }
 
-			if($params['status'])
-			{
-				if($cond!='')
-					$cond .=" AND ";
-				$cond .= " ".("video.status")."='".$params['status']."'";
+			if($params['status']) {
+				if($cond!=''){
+					$cond .=' AND ';
+                }
+				$cond .= ' '.('video.status')."='".$params['status']."'";
 			}
-			if($params['broadcast'])
-			{
-				if($cond!='')
-					$cond .=" AND ";
-				$cond .= " ".("video.broadcast")."='".$params['broadcast']."'";
+
+			if($params['broadcast']) {
+				if($cond!=''){
+					$cond .=' AND ';
+                }
+				$cond .= ' '.('video.broadcast')."='".$params['broadcast']."'";
 			}
 		}
 		
 		//Setting Category Condition
 		$all = false;
-		if(!is_array($params['category']))
-			if(strtolower($params['category'])=='all')
+		if(!is_array($params['category'])){
+			if(strtolower($params['category'])=='all'){
 				$all = true;
+            }
+        }
 				
 		if($params['category'] && !$all)
 		{
-			if($cond!='')
+			if($cond != ''){
 				$cond .= ' AND ';
+            }
 				
-			$cond .= " (";
+			$cond .= ' (';
 			
 			if(!is_array($params['category'])) {
 				$cats = explode(',',$params['category']);
@@ -775,9 +780,10 @@ class CBvideo extends CBCategory
 			foreach($cats as $cat_params)
 			{
 				$count ++;
-				if($count>1)
-				$cond .=" OR ";
-				$cond .= " ".("video.category")." LIKE '%#$cat_params#%' ";
+				if($count>1){
+				    $cond .= ' OR ';
+                }
+				$cond .= ' '.('video.category')." LIKE '%#$cat_params#%' ";
 			}
 			
 			$cond .= ")";
@@ -786,35 +792,39 @@ class CBvideo extends CBCategory
 		//date span
 		if($params['date_span'])
 		{
-			if($cond!='')
+			if($cond != ''){
 				$cond .= ' AND ';
+            }
 			
-			if($params['date_span_column'])
+			if($params['date_span_column']){
 				$column = $params['date_span_column'];
-			else
+            } else {
 				$column = 'date_added';
+            }
 
-			$cond .= " ".cbsearch::date_margin($column,$params['date_span']);
+			$cond .= ' '.cbsearch::date_margin($column,$params['date_span']);
 		}
 		
 		//uid 
 		if($params['user'])
 		{
-			if(!is_array($params['user']))
-			{
-				if($cond!='')
+			if(!is_array($params['user'])) {
+				if($cond!=''){
 					$cond .= ' AND ';
-				$cond .= " ".("video.userid")."='".$params['user']."'";
+                }
+				$cond .= ' '.('video.userid')."='".$params['user']."'";
 			} else {
-				if($cond!='')
-						$cond .= ' AND (';
+				if($cond!=''){
+                    $cond .= ' AND (';
+                }
 				
 				$uQu = 0;		
 				foreach($params['user'] as $user)
 				{
-					if($uQu>0)
+					if($uQu>0){
 						$cond .= ' OR ';
-					$cond .= " ".("video.userid")."='".$user."'";
+                    }
+					$cond .= ' '.('video.userid')."='".$user."'";
 					$uQu++;
 				}
 				
@@ -823,26 +833,26 @@ class CBvideo extends CBCategory
 		}
 
 		//non-uid to exclude user videos from related
-		if($params['nonuser'])
-		{
-			if($cond != '')
+		if($params['nonuser']) {
+			if($cond != ''){
 				$cond .= ' AND ';
-			$cond .= " ".("video.userid")." <> '".$params['nonuser']."' ";
+            }
+			$cond .= ' '.('video.userid')." <> '".$params['nonuser']."' ";
 		}	
 
-		if($params['editor_pick'])
-		{
-			if($cond != '')
+		if($params['editor_pick']) {
+			if($cond != ''){
 				$cond .= ' AND ';
-			$cond .= " ".("in_editor_pick")." = '".$params['editor_pick']."' ";
+            }
+			$cond .= ' '.('in_editor_pick')." = '".$params['editor_pick']."' ";
 		}	
 
-		//padding videos in mass_embed pllugin
-		if($params['mass_embed_status'])
-		{
-			if($cond != '')
+		//padding videos in mass_embed plugin
+		if($params['mass_embed_status']) {
+			if($cond != ''){
 				$cond .= ' AND ';
-			$cond .= " ".("video.mass_embed_status")." = '".$params['mass_embed_status']."' ";
+            }
+			$cond .= ' '.('video.mass_embed_status')." = '".$params['mass_embed_status']."' ";
 		}	
 					
 		$tag_n_title = '';
@@ -853,52 +863,55 @@ class CBvideo extends CBCategory
 			$tags = explode(",",$params['tags']);
 			if(count($tags)>0)
 			{
-				if($tag_n_title!='')
+				if($tag_n_title!=''){
 					$tag_n_title .= ' OR ';
+                }
 				$total = count($tags);
 				$loop = 1;
 				foreach($tags as $tag)
 				{
-					$tag_n_title .= " ".('video.tags')." LIKE '%".$tag."%'";
-					if($loop<$total)
-					$tag_n_title .= " OR ";
+					$tag_n_title .= ' '.('video.tags')." LIKE '%".$tag."%'";
+					if($loop<$total){
+					    $tag_n_title .= ' OR ';
+                    }
 					$loop++;
 				}
 			} else {
-				if($tag_n_title!='')
+				if($tag_n_title!=''){
 					$tag_n_title .= ' OR ';
-				$tag_n_title .= " ".('video.tags')." LIKE '%".$params['tags']."%'";
+                }
+				$tag_n_title .= ' '.('video.tags')." LIKE '%".$params['tags']."%'";
 			}
 		}
 		//TITLE
-		if($params['title'])
-		{
-			if($tag_n_title!='')
+		if($params['title']) {
+			if($tag_n_title!=''){
 				$tag_n_title .= ' OR ';
-			$tag_n_title .= " ".('video.title')." LIKE '%".$params['title']."%'";
+            }
+			$tag_n_title .= ' '.('video.title')." LIKE '%".$params['title']."%'";
 		}
 		
-		if($tag_n_title)
-		{
-			if($cond!='')
+		if($tag_n_title) {
+			if($cond!=''){
 				$cond .= ' AND ';
-			$cond .= " ($tag_n_title) ";
+            }
+			$cond .= ' ('.$tag_n_title.') ';
 		}
 		
 		//FEATURED
-		if($params['featured'])
-		{
-			if($cond!='')
+		if($params['featured']) {
+			if($cond!=''){
 				$cond .= ' AND ';
-			$cond .= " ".("video.featured")." = '".$params['featured']."' ";
+            }
+			$cond .= ' '.('video.featured')." = '".$params['featured']."' ";
 		}
 		
 		//VIDEO ID
-		if($params['videoid'])
-		{
-			if($cond!='')
+		if($params['videoid']) {
+			if($cond!=''){
 				$cond .= ' AND ';
-			$cond .= " ".("video.videoid")." = '".$params['videoid']."' ";
+            }
+			$cond .= ' '.('video.videoid')." = '".$params['videoid']."' ";
 		}
 		
 		//VIDEO ID
@@ -906,17 +919,18 @@ class CBvideo extends CBCategory
 		{
 			if(is_array($params['videoids']))
 			{
-				if($cond!='')
-				$cond .= ' AND ';
+				if($cond!=''){
+				    $cond .= ' AND ';
+                }
 				$cond .= ' ( ';
 				$curVid = 0;
 				foreach($params['videoids'] as $vid)
 				{
-					if(is_numeric($vid))
-					{
-						if($curVid>0)
-							$cond .= " OR ";
-						$cond .= " ".("video.videoid")." = '".$vid."' ";
+					if(is_numeric($vid)) {
+						if($curVid>0){
+							$cond .= ' OR ';
+                        }
+						$cond .= ' '.('video.videoid')." = '".$vid."' ";
 					}
 					$curVid++;
 				}
@@ -929,41 +943,44 @@ class CBvideo extends CBCategory
 		{
 			if(!is_array($params['videokey']))
 			{
-				if($cond!='')
+				if($cond!=''){
 					$cond .= ' AND ';
-				$cond .= " ".tbl("video.videokey")." = '".$params['videokey']."' ";
+                }
+				$cond .= ' '.tbl('video.videokey')." = '".$params['videokey']."' ";
 			} else {
-				if($cond!='')
-						$cond .= ' AND (';
+				if($cond!=''){
+                    $cond .= ' AND (';
+                }
 				
 				$vkeyQue = 0;		
 				foreach($params['videokey'] as $videokey)
 				{
-					if($vkeyQue>0)
+					if($vkeyQue>0){
 						$cond .= ' OR ';
-					$cond .= " ".tbl("video.videokey")." = '".$videokey."' ";
+                    }
+					$cond .= ' '.tbl('video.videokey')." = '".$videokey."' ";
 					$vkeyQue++;
 				}
 				
-				$cond .=" ) ";
+				$cond .=' ) ';
 			}
 		}		
 
 		//Exclude Vids
 		if($params['exclude'])
 		{
-			if(!is_array($params['exclude']))
-			{
-				if($cond!='')
+			if(!is_array($params['exclude'])) {
+				if($cond!=''){
 					$cond .= ' AND ';
-				$cond .= " ".('video.videoid')." <> '".$params['exclude']."' ";
-			}else
-			{
+                }
+				$cond .= ' '.('video.videoid')." <> '".$params['exclude']."' ";
+			} else {
 				foreach($params['exclude'] as $exclude)
 				{
-					if($cond!='')
+					if($cond!=''){
 						$cond .= ' AND ';
-					$cond .= " ".('video.videoid')." <> '".$exclude."' ";
+                    }
+					$cond .= ' '.('video.videoid')." <> '".$exclude."' ";
 				}
 			}
 		}
@@ -972,11 +989,14 @@ class CBvideo extends CBCategory
 		if($params['duration'])
 		{
 			$duration_op = $params['duration_op'];
-			if(!$duration_op) $duration_op = "=";
+			if(!$duration_op){
+			    $duration_op = "=";
+            }
 			
-			if($cond!='')
+			if($cond!=''){
 				$cond .= ' AND ';
-			$cond .= " ".('video.duration')." ".$duration_op." '".$params['duration']."' ";
+            }
+			$cond .= ' '.('video.duration').' '.$duration_op." '".$params['duration']."' ";
 		}
 		
 		//Filename
@@ -984,32 +1004,37 @@ class CBvideo extends CBCategory
 		{
 			if(!is_array($params['filename']))
 			{
-				if($cond!='')
+				if($cond!=''){
 					$cond .= ' AND ';
-				$cond .= " ".('video.file_name')." <> '".$params['filename']."' ";
+                }
+				$cond .= ' '.('video.file_name')." <> '".$params['filename']."' ";
 			} else {
-				if($cond!='')
-						$cond .= ' AND (';
+				if($cond!=''){
+                    $cond .= ' AND (';
+                }
 				
 				$fileNameQue = 0;		
 				foreach($params['filename'] as $filename)
 				{
-					if($fileNameQue>0)
+					if($fileNameQue>0){
 						$cond .= ' OR ';
-					$cond .= " ".("video.file_name")." = '".$filename."' ";
+                    }
+					$cond .= ' '.('video.file_name')." = '".$filename."' ";
 					$fileNameQue++;
 				}
 				
-				$cond .=" ) ";
+				$cond .= ' ) ';
 			}
 		}
 		
 		if($params['cond'])
 		{
-			if($params['cond_and'])
-				if($cond!='')
+			if($params['cond_and']){
+				if($cond!=''){
 					$cond .= ' AND ';
-			$cond .= " ".$params['cond'];
+                }
+            }
+			$cond .= ' '.$params['cond'];
 		}
 
 		$functions = cb_get_functions('get_videos');
@@ -1021,8 +1046,9 @@ class CBvideo extends CBCategory
 				if(function_exists($func['func']))
 				{
 					$returned = $func['func']($array);
-					if($returned)
+					if($returned){
 						$cond = $returned;
+                    }
 				}
 			}
 		}
@@ -1040,82 +1066,84 @@ class CBvideo extends CBCategory
 		
 		if(!$params['count_only'] && !$params['show_related'])
 		{
-            $query = "SELECT $fields FROM ".cb_sql_table( 'video' );
-            $query .= " LEFT JOIN ".cb_sql_table( 'users' )." ON video.userid = users.userid";
+            $query = 'SELECT '.$fields.' FROM '.cb_sql_table('video');
+            $query .= ' LEFT JOIN '.cb_sql_table('users').' ON video.userid = users.userid';
             
-            if(!empty($superCond))
-            {
-				if ($cond !=="")
-            	{
-            		$cond .= " AND ".$superCond;
+            if(!empty($superCond)) {
+				if ($cond !== '') {
+            		$cond .= ' AND '.$superCond;
             	} else {
             		$cond .= $superCond;
             	}	
             }
            
 			if( $cond ) {
-                $query .= " WHERE ".$cond;
+                $query .= ' WHERE '.$cond;
             }
 
-            $query .= $order ? " ORDER BY ".$order : false;
-            $query .= $limit ? " LIMIT ".$limit : false;
+            $query .= $order ? ' ORDER BY '.$order : false;
+            $query .= $limit ? ' LIMIT '.$limit : false;
 
-            $result = select( $query );
+            $result = select($query);
 		}
 
 		if($params['show_related'])
 		{
-			$cond = "";
-			if($superCond)
-				$cond = $superCond." AND ";
+			$cond = '';
+			if($superCond){
+				$cond = $superCond.' AND ';
+            }
 			
-			$cond .= "MATCH(".("video.title,video.tags").")
+			$cond .= 'MATCH('.('video.title,video.tags').")
 			AGAINST ('".$params['title']."' IN NATURAL LANGUAGE MODE) ";
 
 			if($params['exclude'])
 			{
-				if($cond!='')
+				if($cond!=''){
 					$cond .= ' AND ';
-				$cond .= " ".('video.videoid')." <> '".$params['exclude']."' ";
+                }
+				$cond .= ' '.('video.videoid')." <> '".$params['exclude']."' ";
 			}
 
-            $query = " SELECT ".$fields." FROM ".cb_sql_table('video');
-            $query .= " LEFT JOIN ".cb_sql_table('users');
-            $query .= " ON video.userid = users.userid ";
+            $query = ' SELECT '.$fields.' FROM '.cb_sql_table('video');
+            $query .= ' LEFT JOIN '.cb_sql_table('users');
+            $query .= ' ON video.userid = users.userid ';
 
             if( $cond ) {
-                $query .= " WHERE ".$cond;
+                $query .= ' WHERE '.$cond;
             }
 
-            $query .= $order ? " ORDER BY ".$order : false;
-            $query .= $limit ? " LIMIT ".$limit : false;
+            $query .= $order ? ' ORDER BY '.$order : false;
+            $query .= $limit ? ' LIMIT '.$limit : false;
 
-            $result = select( $query );
+            $result = select($query);
 			if(count($result) == 0)
 			{
 				$cond = "";
-				if($superCond)
-					$cond = $superCond." AND ";
+				if($superCond){
+					$cond = $superCond.' AND ';
+                }
 				//Try Finding videos via tags
-				$cond .= "MATCH(".("video.title,video.tags").")
+				$cond .= 'MATCH('.('video.title,video.tags').")
 				AGAINST ('".($params['tags'])."' IN NATURAL LANGUAGE MODE) ";
 				if($params['exclude'])
 				{
-					if($cond!='')
+					if($cond!=''){
 						$cond .= ' AND ';
-					$cond .= " ".('video.videoid')." <> '".$params['exclude']."' ";
+                    }
+					$cond .= ' '.('video.videoid')." <> '".$params['exclude']."' ";
 				}
 
-                $query = " SELECT ".$fields." FROM ".cb_sql_table('video');
-                $query .= " LEFT JOIN ".cb_sql_table('users');
-                $query .= " ON video.userid = users.userid ";
+                $query = ' SELECT '.$fields.' FROM '.cb_sql_table('video');
+                $query .= ' LEFT JOIN '.cb_sql_table('users');
+                $query .= ' ON video.userid = users.userid ';
                 
                 if( $cond ) {
-                	$query .= " WHERE ".$cond;
+                	$query .= ' WHERE '.$cond;
 				}
 
-                $query .= $order ? " ORDER BY ".$order : false;
-                $query .= $limit ? " LIMIT ".$limit : false;
+                $query .= $order ? ' ORDER BY '.$order : false;
+                $query .= $limit ? ' LIMIT '.$limit : false;
 
                 $result = select( $query );
 			}
@@ -1130,11 +1158,11 @@ class CBvideo extends CBCategory
 		if($params['count_only']) {
 			if (!empty($superCond)) {
 				if (!empty($cond)){
-					$cond .= " AND ";
+					$cond .= ' AND ';
 				}
 				$cond .= $superCond;
 			}
-			return $result = $db->count( cb_sql_table('video') , 'videoid' ,$cond );
+			return $db->count( cb_sql_table('video') , 'videoid' ,$cond );
 		}
 		if($params['assign']){
 			assign($params['assign'], apply_filters($result, 'get_video') );

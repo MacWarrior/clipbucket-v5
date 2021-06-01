@@ -164,18 +164,18 @@
 		}
 
         #get all possible thumbs of video
-        $thumbDir = (isset($vdetails['file_directory']) && $vdetails['file_directory']) ? $vdetails['file_directory'] : "";
+        $thumbDir = (isset($vdetails['file_directory']) && $vdetails['file_directory']) ? $vdetails['file_directory'] : '';
         if(!isset($vdetails['file_directory'])){
-            $justDate = explode(" ", $vdetails['date_added']);
-            $thumbDir = implode("/", explode("-", array_shift($justDate)));
+            $justDate = explode(' ', $vdetails['date_added']);
+            $thumbDir = implode('/', explode('-', array_shift($justDate)));
         }
-        if(substr($thumbDir, (strlen($thumbDir) - 1)) !== "/"){
-            $thumbDir .= "/";
+        if(substr($thumbDir, (strlen($thumbDir) - 1)) !== '/'){
+            $thumbDir .= '/';
         }
 
-        $file_dir ="";
+        $file_dir = '';
         if(isset($vdetails['file_name']) && $thumbDir) {
-           $file_dir = "/" . $thumbDir;
+           $file_dir = '/' . $thumbDir;
         }
         
         $filepath = $file_dir.$vdetails['file_name'].'-'.$size.'-'.$vdetails['default_thumb'].'.jpg';
@@ -183,7 +183,7 @@
 			return THUMBS_URL.$filepath;
 		}
 
-        $glob = THUMBS_DIR."/" .$file_dir.$vdetails['file_name'].'*';
+        $glob = THUMBS_DIR.'/' .$file_dir.$vdetails['file_name'].'*';
         if( $size ){
             $glob .= $size.'*';
         }
@@ -1073,7 +1073,7 @@
 	 *
 	 * @param $param
 	 *
-	 * @return bool|STRING
+	 * @return array
 	 */
     function get_videos($param)
     {

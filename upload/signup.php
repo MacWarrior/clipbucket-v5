@@ -20,7 +20,6 @@ if(cb_get_functions('signup_page')){
  */
 if(!config('allow_registeration')){
     assign('allow_registeration',lang('usr_reg_err'));
-    //
 }
 
 if(isset($_POST['signup'])){
