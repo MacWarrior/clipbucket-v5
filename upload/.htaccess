@@ -87,7 +87,7 @@ RewriteRule ^photo_upload/(.*) 							photo_upload.php?collection=$1 [L]
 RewriteRule ^photo_upload/?$								photo_upload.php [L]
 #
 RewriteRule ^sitemap.xml$ sitemap.php
-RewriteRule ^signup/?$ signup.php
+RewriteRule ^signup?$ signup.php
 
 #Error Pages
 ErrorDocument 404 /404.php
