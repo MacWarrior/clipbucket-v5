@@ -2,22 +2,22 @@
 	<div class="row cb-box">
 		<ul class="nav nav-tabs">
 			<li class="{if $mode == 'all'}active{/if}">
-				<a href="?type=all&query={$smarty.get.query|form_val}&category={$smarty.get.category|form_val}&author={$smarty.get.author|form_val}&search_by={$smarty.get.search_by|form_val}&s=elastic&p=search" >
+				<a href="?type=all&query={display_clean($smarty.get.query)}&category={display_clean($smarty.get.category)}&author={display_clean($smarty.get.author)}&search_by={display_clean($smarty.get.search_by)}&s=elastic&p=search" >
 					All 
 				</a>
 			</li>
 			<li class="{if $mode == 'videos'}active{/if}" >
-				<a href="?type=videos&query={$smarty.get.query|form_val}&category={$smarty.get.category|form_val}&author={$smarty.get.author|form_val}&search_by={$smarty.get.search_by|form_val}&s=elastic&p=search" >
+				<a href="?type=videos&query={display_clean($smarty.get.query)}&category={display_clean($smarty.get.category)}&author={display_clean($smarty.get.author)}&search_by={display_clean($smarty.get.search_by)}&s=elastic&p=search" >
 					Videos
 				</a>
 			</li>
 			<li class="{if $mode == 'photos'}active{/if}" >
-				<a href="?type=photos&query={$smarty.get.query|form_val}&category={$smarty.get.category|form_val}&author={$smarty.get.author|form_val}&search_by={$smarty.get.search_by|form_val}&s=elastic&p=search">
+				<a href="?type=photos&query={display_clean($smarty.get.query)}&category={display_clean($smarty.get.category)}&author={display_clean($smarty.get.author)}&search_by={display_clean($smarty.get.search_by)}&s=elastic&p=search">
 				Photos
 			</a>
 			</li>
 			<li class="{if $mode == 'channels'}active{/if}" >
-				<a href="?type=channels&query={$smarty.get.query|form_val}&category={$smarty.get.category|form_val}&author={$smarty.get.author|form_val}&search_by={$smarty.get.search_by|form_val}&s=elastic&p=search" >
+				<a href="?type=channels&query={display_clean($smarty.get.query)}&category={display_clean($smarty.get.category)}&author={display_clean($smarty.get.author)}&search_by={display_clean($smarty.get.search_by)}&s=elastic&p=search" >
 				Channels</a>
 			</li>
 		</ul>
@@ -176,13 +176,13 @@
 						</button>
 						<ul aria-labelledby="dropdownMenu1" role="menu" class="dropdown-menu">
 							<li role="presentation">
-								<a href="?type={$smarty.get.type|form_val}&query={$smarty.get.query|form_val}&category={$category}&author={$smarty.get.author|form_val}&search_by=rel&s=elastic&p=search">Relevance</a>
+								<a href="?type={display_clean($smarty.get.type)}&query={display_clean($smarty.get.query)}&category={$category}&author={display_clean($smarty.get.author)}&search_by=rel&s=elastic&p=search">Relevance</a>
 							</li>
 							<li role="presentation">
-								<a href="?type={$smarty.get.type|form_val}&query={$smarty.get.query|form_val}&category={$category}&author={$smarty.get.author|form_val}&search_by=date&s=elastic&p=search">Date</a>
+								<a href="?type={display_clean($smarty.get.type)}&query={display_clean($smarty.get.query)}&category={$category}&author={display_clean($smarty.get.author)}&search_by=date&s=elastic&p=search">Date</a>
 							</li>
 							<li role="presentation">
-								<a href="?type={$smarty.get.type|form_val}&query={$smarty.get.query|form_val}&category={$category}&author={$smarty.get.author|form_val}&search_by=views&s=elastic&p=search">Popularity</a>
+								<a href="?type={display_clean($smarty.get.type)}&query={display_clean($smarty.get.query)}&category={$category}&author={display_clean($smarty.get.author)}&search_by=views&s=elastic&p=search">Popularity</a>
 							</li>
 						</ul>
 					</div>
@@ -201,27 +201,27 @@
 							<li class="display">
 								{if $key == 'CATEGORY' }
 								{$category = $final}
-								<a href="?type=videos&query={$smarty.get.query|form_val}&category={$category.id}&author={$smarty.get.author|form_val}&s=elastic&p=search">
+								<a href="?type=videos&query={display_clean($smarty.get.query)}&category={$category.id}&author={display_clean($smarty.get.author)}&s=elastic&p=search">
 
 								{cleanString($final.source)} ( {$final.counts} )
 								</a>
 								{elseif $key == 'AUTHOR'}
 								{$author =  $final}
-								<a href="?type=videos&query={$smarty.get.query|form_val}&category={$smarty.get.category|form_val}&author={$author.id}&s=elastic&p=search">{cleanString(name($final.source))} ( {$final.counts} )</a>
+								<a href="?type=videos&query={display_clean($smarty.get.query)}&category={display_clean($smarty.get.category)}&author={$author.id}&s=elastic&p=search">{cleanString(name($final.source))} ( {$final.counts} )</a>
 								{elseif $key == 'VIDEO' }
 								{$video_name = $final}
-								<a href="?type=videos&query={$smarty.get.query|form_val}&object={$video_name}&object_type=video&s=elastic&p=search">{cleanString($final)}</a>
+								<a href="?type=videos&query={display_clean($smarty.get.query)}&object={$video_name}&object_type=video&s=elastic&p=search">{cleanString($final)}</a>
 								{elseif $key == 'GROUP' }
 								{$group_name = $final}
-								<a href="?type=groups&query={$smarty.get.query|form_val}&object={$group_name.id}&object_type=group&s=elastic&p=search">{cleanString($group_name.source)}</a>
+								<a href="?type=groups&query={display_clean($smarty.get.query)}&object={$group_name.id}&object_type=group&s=elastic&p=search">{cleanString($group_name.source)}</a>
 								{elseif $key =='COLLECTION' }
 								{$collection_name = $final}
-								<a href="?type=collections&query={$smarty.get.query|form_val}&object={$collection_name.id}&object_type=collection&s=elastic&p=search">{cleanString($collection_name.source)}</a>
+								<a href="?type=collections&query={display_clean($smarty.get.query)}&object={$collection_name.id}&object_type=collection&s=elastic&p=search">{cleanString($collection_name.source)}</a>
 								{elseif $key == 'USER' }
 								{$user_name = $final}
-								<a href="?type=channels&query={$smarty.get.query|form_val}&object={$user_name}&object_type=user&s=elastic&p=search">{cleanString($final)}</a>
+								<a href="?type=channels&query={display_clean($smarty.get.query)}&object={$user_name}&object_type=user&s=elastic&p=search">{cleanString($final)}</a>
 								{elseif $key == 'SOURCE' }
-								<a href="?type={$final.key}&query={$smarty.get.query|form_val}&category={$smarty.get.category|form_val}&author={$smarty.get.author|form_val}&s=elastic&p=search">{cleanString($final.key)} ( {$final.doc_count} )</a>
+								<a href="?type={$final.key}&query={display_clean($smarty.get.query)}&category={display_clean($smarty.get.category)}&author={display_clean($smarty.get.author)}&s=elastic&p=search">{cleanString($final.key)} ( {$final.doc_count} )</a>
 								{else}
 								<a href="javascript:void(0)">{cleanString($final)}</a>
 								{/if}
@@ -232,27 +232,27 @@
 							<li class="no-display hide" >
 								{if $key == 'CATEGORY' }
 								{$category = $final}
-								<a href="?type=videos&query={$smarty.get.query|form_val}&category={$category.id}&author={$smarty.get.author|form_val}&s=elastic&p=search">{cleanString($final.source)} ( {$final.counts} )
+								<a href="?type=videos&query={display_clean($smarty.get.query)}&category={$category.id}&author={display_clean($smarty.get.author)}&s=elastic&p=search">{cleanString($final.source)} ( {$final.counts} )
 								{elseif $key == 'AUTHOR'}
 								{$author =  $final}
-								<a href="?type=videos&query={$smarty.get.query|form_val}&category={$smarty.get.category|form_val}&author={$author}&s=elastic&p=search">{cleanString($final)}</a>
+								<a href="?type=videos&query={display_clean($smarty.get.query)}&category={display_clean($smarty.get.category)}&author={$author}&s=elastic&p=search">{cleanString($final)}</a>
 								{elseif $key == 'VIDEO' }
 								{$video_name = $final}
-								<a href="?type=videos&query={$smarty.get.query|form_val}&object={$video_name}&object_type=video&s=elastic&p=search">{cleanString($final)}</a>
+								<a href="?type=videos&query={display_clean($smarty.get.query)}&object={$video_name}&object_type=video&s=elastic&p=search">{cleanString($final)}</a>
 								{elseif $key == 'GROUP' }
 								{$group_name = $final}
-								<a href="?type=groups&query={$smarty.get.query|form_val}&object={$group_name.id}&object_type=group&s=elastic&p=search">{cleanString($final.source)} ( {$final.counts} )</a>
+								<a href="?type=groups&query={display_clean($smarty.get.query)}&object={$group_name.id}&object_type=group&s=elastic&p=search">{cleanString($final.source)} ( {$final.counts} )</a>
 								{elseif $key =='COLLECTION' }
 								{$collection_name = $final}
-								<a href="?type=collections&query={$smarty.get.query|form_val}&object={$collection_name.id}&object_type=collection&s=elastic&p=search">{cleanString($final.source)} ( {$final.counts} )</a>
+								<a href="?type=collections&query={display_clean($smarty.get.query)}&object={$collection_name.id}&object_type=collection&s=elastic&p=search">{cleanString($final.source)} ( {$final.counts} )</a>
 								{elseif $key == 'USER' }
 								{$user_name = $final}
-								<a href="?type=channels&query={$smarty.get.query|form_val}&object={$user_name}&object_type=user&s=elastic&p=search">{cleanString($final)}</a>
+								<a href="?type=channels&query={display_clean($smarty.get.query)}&object={$user_name}&object_type=user&s=elastic&p=search">{cleanString($final)}</a>
 								{elseif $key == 'SOURCE' }
 								{$source = explode(' ',$final)}
 								{$source = $source.1}
 								
-								<a href="?type={$source}&query={$smarty.get.query|form_val}&category={$smarty.get.author|form_val}&author={$smarty.get.author|form_val}&s=elastic&p=search">{cleanString($final)}</a>
+								<a href="?type={$source}&query={display_clean($smarty.get.query)}&category={display_clean($smarty.get.author)}&author={display_clean($smarty.get.author)}&s=elastic&p=search">{cleanString($final)}</a>
 								{else}
 								<a href="javascript:void(0)">{cleanString($final)}</a>
 								{/if}

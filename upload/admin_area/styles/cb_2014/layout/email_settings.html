@@ -31,12 +31,12 @@
               <label for="subject{$template.email_template_id}">Email Subject</label>
               <div class="templateCodeCont" style="padding:3px">
                 <input data-type="text" name="subject{$template.email_template_id}" id="subject{$template.email_template_id}"
-                value="{$template.email_template_subject|form_val}" style="border:0px; background:none; width:100%" />
+                value="{display_clean($template.email_template_subject)}" style="border:0px; background:none; width:100%" />
                  </div>
               <br />    
               <label for="message{$template.email_template_id}">Email message</label>
               <div class="templateCodeCont">
-                <textarea class="form-control" name="message{$template.email_template_id}" cols="60" rows="8" id="message{$template.email_template_id}" class="templateCode">{$template.email_template|form_val}</textarea>
+                <textarea class="form-control" name="message{$template.email_template_id}" cols="60" rows="8" id="message{$template.email_template_id}" class="templateCode">{display_clean($template.email_template)}</textarea>
               </div>
           </div>
         {/foreach}

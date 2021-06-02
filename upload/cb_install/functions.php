@@ -211,27 +211,12 @@ function checkPermissions()
     return $permsArray;
 }
 
-/**
- * FUNCTION USED TO CLEAN VALUES THAT CAN BE USED IN FORMS
- */
-if(!function_exists('cleanForm'))
-{
-    function cleanForm($string)
-    {
-        if(is_string($string))
-            $string = htmlspecialchars($string);
-        if(get_magic_quotes_gpc())
-            $string = stripslashes($string);
-        return $string;
-    }
-    function form_val($string){return cleanForm($string); }
-}
-
 function selected($selected)
 {
     global $mode;
-    if($mode==$selected)
+    if($mode==$selected){
         return "class='selected'";
+    }
 }
 
 /**

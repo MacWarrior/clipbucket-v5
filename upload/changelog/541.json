@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"34",
+  "revision":"35",
   "status":"dev",
   "detail":[
     {
@@ -47,6 +47,7 @@
         ,"Fix guest's comments"
         ,"Fix search page double HTML encoding"
         ,"Fix home page popup video height"
+        ,"Fix video manager"
       ]
     }
   ,{

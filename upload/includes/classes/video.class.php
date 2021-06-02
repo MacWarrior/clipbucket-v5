@@ -1429,7 +1429,7 @@ class CBvideo extends CBCategory
 				'type'=> 'textfield',
 				'name'=> 'query',
 				'id'=> 'query',
-				'value'=>cleanForm($default['query'])
+				'value'=>mysql_clean($default['query'])
 			),
 			'category'	=>  array(
 				'title'		=> lang('vdo_cat'),

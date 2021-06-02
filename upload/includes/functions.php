@@ -572,39 +572,6 @@
 	}
 
 	/**
-	 * FUNCTION USED TO CLEAN VALUES THAT CAN BE USED IN FORMS
-	 *
-	 * @param : { string } { $string } { string to be cleaned }
-	 *
-	 * @return string : { string } { $string } { cleaned string }
-	 */
-	function cleanForm($string)
-	{
-		if(is_string($string)) {
-			$string = htmlspecialchars($string);
-		}
-		if(get_magic_quotes_gpc()) {
-			if(!is_array($string)) {
-				$string = stripslashes($string);			
-			}
-		}
-		return $string;
-	}
-
-	/**
-	 * Cleans form values
-	 * @uses : { function : cleanForm }
-	 *
-	 * @param $string
-	 *
-	 * @return string
-	 */
-	function form_val($string): string
-    {
-		return cleanForm($string);
-	}
-
-	/**
 	 * FUNCTION USED TO MAKE TAGS MORE PERFECT
 	 * @author : Arslan Hassan <arslan@clip-bucket.com,arslan@labguru.com>
 	 *
@@ -1477,7 +1444,7 @@
 	 *
 	 * @return bool|string
 	 */
-	function get_form_val($val,$filter=false)
+	function get_form_val( $val, bool $filter=false)
 	{
 		if($filter) {
 			return isset($_GET[$val]) ? form_val($_GET[$val]) : false;
@@ -1508,25 +1475,9 @@
 	function post_form_val($val,$filter=false)
 	{
 		if($filter) {
-			return form_val($_POST[$val]);
+			return display_clean($_POST[$val]);
 		}
 		return $_POST[$val];
-	}
-
-	/**
-	 * Function used to get value from $_REQUEST
-	 *
-	 * @param : { string } { $val } { value to fetch from $_REQUEST }
-	 * @param bool $filter
-	 *
-	 * @return string
-	 */
-	function request_form_val($val,$filter=false)
-	{
-		if($filter) {
-			return form_val($_REQUEST[$val]);
-		}
-		return $_REQUEST[$val];
 	}
 
 	/**

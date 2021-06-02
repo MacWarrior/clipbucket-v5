@@ -18,7 +18,7 @@
 			<div class="col-md-8">
 				<div class="form-group">
 					<label for="embed_code">Embed Code</label>
-					<textarea name="embed_code" id="embed_code" class="form-control">{"embed_code"|post|form_val}</textarea>
+					<textarea name="embed_code" id="embed_code" class="form-control">{display_clean("embed_code"|post)}</textarea>
 					<small class="hint">supports embed, object and iframes</small>
 				</div>
 				<div class="form-group">
@@ -29,7 +29,7 @@
 			<div class="col-md-4 right-col">
 				<div class="form-group">
 					<label for="duration">Video duration</label>
-					<input type="text" name="duration" id="duration" class="form-control" value="{"duration"|post|form_val}"/>
+					<input type="text" name="duration" id="duration" class="form-control" value="{display_clean("duration"|post)}"/>
 					<small class="hint">duration format is hours:minutes:seconds</small>
 				</div>
 			</div>

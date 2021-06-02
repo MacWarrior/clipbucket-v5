@@ -8,26 +8,26 @@
 				<div class="search-nav-holder groups-nav clearfix">
 					<ul class="search-nav nav nav-tabs" role="tablist">
 						<li class="{if $mode == 'all'}active{/if}">
-							<a href="?search_mode=all&query={$smarty.get.query|form_val}&category={$smarty.get.category|form_val}&author={$smarty.get.author|form_val}&search_by={$smarty.get.search_by|form_val}" >
+							<a href="?search_mode=all&query={display_clean($smarty.get.query)}&category={display_clean($smarty.get.category)}&author={display_clean($smarty.get.author)}&search_by={display_clean($smarty.get.search_by)}" >
 								All 
 							</a>
 						</li>
 						<li class="{if $mode == 'videos'}active{/if}" >
-							<a href="?search_mode=videos&query={$smarty.get.query|form_val}&category={$smarty.get.category|form_val}&author={$smarty.get.author|form_val}&search_by={$smarty.get.search_by|form_val}" >
+							<a href="?search_mode=videos&query={display_clean($smarty.get.query)}&category={display_clean($smarty.get.category)}&author={display_clean($smarty.get.author)}&search_by={display_clean($smarty.get.search_by)}" >
 								Videos
 							</a>
 						</li>
 						<li class="{if $mode == 'groups'}active{/if}" >
-							<a href="?search_mode=groups&query={$smarty.get.query|form_val}&category={$smarty.get.category|form_val}&author={$smarty.get.author|form_val}&search_by={$smarty.get.search_by|form_val}">
+							<a href="?search_mode=groups&query={display_clean($smarty.get.query)}&category={display_clean($smarty.get.category)}&author={display_clean($smarty.get.author)}&search_by={display_clean($smarty.get.search_by)}">
 							Groups
 						</a>
 						</li>
 						<li class="{if $mode == 'collections'}active{/if}" >
-							<a href="?search_mode=collections&query={$smarty.get.query|form_val}&category={$smarty.get.category|form_val}&author={$smarty.get.author|form_val}&search_by={$smarty.get.search_by|form_val}" >
+							<a href="?search_mode=collections&query={display_clean($smarty.get.query)}&category={display_clean($smarty.get.category)}&author={display_clean($smarty.get.author)}&search_by={display_clean($smarty.get.search_by)}" >
 							Collections</a>
 						</li>
 						<li class="{if $mode == 'users'}active{/if}" >
-							<a href="?search_mode=users&query={$smarty.get.query|form_val}&category={$smarty.get.category|form_val}&author={$smarty.get.author|form_val}&search_by={$smarty.get.search_by|form_val}" >
+							<a href="?search_mode=users&query={display_clean($smarty.get.query)}&category={display_clean($smarty.get.category)}&author={display_clean($smarty.get.author)}&search_by={display_clean($smarty.get.search_by)}" >
 							Users</a>
 						</li>
 					</ul>
@@ -343,13 +343,13 @@
 									</button>
 									<ul aria-labelledby="dropdownMenu1" role="menu" class="dropdown-menu">
 										<li role="presentation">
-											<a href="?search_mode={$smarty.get.search_mode|form_val}&query={$smarty.get.query|form_val}&category={$category}&author={$smarty.get.author|form_val}&search_by=rel">Relevance</a>
+											<a href="?search_mode={display_clean($smarty.get.search_mode)}&query={display_clean($smarty.get.query)}&category={$category}&author={display_clean($smarty.get.author)}&search_by=rel">Relevance</a>
 										</li>
 										<li role="presentation">
-											<a href="?search_mode={$smarty.get.search_mode|form_val}&query={$smarty.get.query|form_val}&category={$category}&author={$smarty.get.author|form_val}&search_by=date">Date</a>
+											<a href="?search_mode={display_clean($smarty.get.search_mode)}&query={display_clean($smarty.get.query)}&category={$category}&author={display_clean($smarty.get.author)}&search_by=date">Date</a>
 										</li>
 										<li role="presentation">
-											<a href="?search_mode={$smarty.get.search_mode|form_val}&query={$smarty.get.query|form_val}&category={$category}&author={$smarty.get.author|form_val}&search_by=views">Popularity</a>
+											<a href="?search_mode={display_clean($smarty.get.search_mode)}&query={display_clean($smarty.get.query)}&category={$category}&author={display_clean($smarty.get.author)}&search_by=views">Popularity</a>
 										</li>
 									</ul>
 								</div>
@@ -368,27 +368,27 @@
 										<li class="display">
 											{if $key == 'CATEGORY' }
 											{$category = $final}
-											<a href="?search_mode=videos&query={$smarty.get.query|form_val}&category={$category.id}&author={$smarty.get.author|form_val}">
+											<a href="?search_mode=videos&query={display_clean($smarty.get.query)}&category={$category.id}&author={display_clean($smarty.get.author)}">
 
 											{cleanString($final.source)} ( {$final.counts} )
 											</a>
 											{elseif $key == 'AUTHOR'}
 											{$author =  $final}
-											<a href="?search_mode=videos&query={$smarty.get.query|form_val}&category={$smarty.get.category|form_val}&author={$author.id}">{cleanString(name($final.source))} ( {$final.counts} )</a>
+											<a href="?search_mode=videos&query={display_clean($smarty.get.query)}&category={display_clean($smarty.get.category)}&author={$author.id}">{cleanString(name($final.source))} ( {$final.counts} )</a>
 											{elseif $key == 'VIDEO' }
 											{$video_name = $final}
-											<a href="?search_mode=videos&query={$smarty.get.query|form_val}&object={$video_name}&object_type=video">{cleanString($final)}</a>
+											<a href="?search_mode=videos&query={display_clean($smarty.get.query)}&object={$video_name}&object_type=video">{cleanString($final)}</a>
 											{elseif $key == 'GROUP' }
 											{$group_name = $final}
-											<a href="?search_mode=groups&query={$smarty.get.query|form_val}&object={$group_name.id}&object_type=group">{cleanString($group_name.source)}</a>
+											<a href="?search_mode=groups&query={display_clean($smarty.get.query)}&object={$group_name.id}&object_type=group">{cleanString($group_name.source)}</a>
 											{elseif $key =='COLLECTION' }
 											{$collection_name = $final}
-											<a href="?search_mode=collections&query={$smarty.get.query|form_val}&object={$collection_name.id}&object_type=collection">{cleanString($collection_name.source)}</a>
+											<a href="?search_mode=collections&query={display_clean($smarty.get.query)}&object={$collection_name.id}&object_type=collection">{cleanString($collection_name.source)}</a>
 											{elseif $key == 'USER' }
 											{$user_name = $final}
-											<a href="?search_mode=users&query={$smarty.get.query|form_val}&object={$user_name}&object_type=user">{cleanString($final)}</a>
+											<a href="?search_mode=users&query={display_clean($smarty.get.query)}&object={$user_name}&object_type=user">{cleanString($final)}</a>
 											{elseif $key == 'SOURCE' }
-											<a href="?search_mode={$final.key}&query={$smarty.get.query|form_val}&category={$smarty.get.category|form_val}&author={$smarty.get.author|form_val}">{cleanString($final.key)} ( {$final.doc_count} )</a>
+											<a href="?search_mode={$final.key}&query={display_clean($smarty.get.query)}&category={display_clean($smarty.get.category)}&author={display_clean($smarty.get.author)}">{cleanString($final.key)} ( {$final.doc_count} )</a>
 											{else}
 											<a href="javascript:void(0)">{cleanString($final)}</a>
 											{/if}
@@ -399,27 +399,27 @@
 										<li class="no-display hide" >
 											{if $key == 'CATEGORY' }
 											{$category = $final}
-											<a href="?search_mode=videos&query={$smarty.get.query|form_val}&category={$category.id}&author={$smarty.get.author|form_val}">{cleanString($final.source)} ( {$final.counts} )
+											<a href="?search_mode=videos&query={display_clean($smarty.get.query)}&category={$category.id}&author={display_clean($smarty.get.author)}">{cleanString($final.source)} ( {$final.counts} )
 											{elseif $key == 'AUTHOR'}
 											{$author =  $final}
-											<a href="?search_mode=videos&query={$smarty.get.query|form_val}&category={$smarty.get.category|form_val}&author={$author}">{cleanString($final)}</a>
+											<a href="?search_mode=videos&query={display_clean($smarty.get.query)}&category={display_clean($smarty.get.category)}&author={$author}">{cleanString($final)}</a>
 											{elseif $key == 'VIDEO' }
 											{$video_name = $final}
-											<a href="?search_mode=videos&query={$smarty.get.query|form_val}&object={$video_name}&object_type=video">{cleanString($final)}</a>
+											<a href="?search_mode=videos&query={display_clean($smarty.get.query)}&object={$video_name}&object_type=video">{cleanString($final)}</a>
 											{elseif $key == 'GROUP' }
 											{$group_name = $final}
-											<a href="?search_mode=groups&query={$smarty.get.query|form_val}&object={$group_name.id}&object_type=group">{cleanString($final.source)} ( {$final.counts} )</a>
+											<a href="?search_mode=groups&query={display_clean($smarty.get.query)}&object={$group_name.id}&object_type=group">{cleanString($final.source)} ( {$final.counts} )</a>
 											{elseif $key =='COLLECTION' }
 											{$collection_name = $final}
-											<a href="?search_mode=collections&query={$smarty.get.query|form_val}&object={$collection_name.id}&object_type=collection">{cleanString($final.source)} ( {$final.counts} )</a>
+											<a href="?search_mode=collections&query={display_clean($smarty.get.query)}&object={$collection_name.id}&object_type=collection">{cleanString($final.source)} ( {$final.counts} )</a>
 											{elseif $key == 'USER' }
 											{$user_name = $final}
-											<a href="?search_mode=users&query={$smarty.get.query|form_val}&object={$user_name}&object_type=user">{cleanString($final)}</a>
+											<a href="?search_mode=users&query={display_clean($smarty.get.query)}&object={$user_name}&object_type=user">{cleanString($final)}</a>
 											{elseif $key == 'SOURCE' }
 											{$source = explode(' ',$final)}
 											{$source = $source.1}
 											
-											<a href="?search_mode={$source}&query={$smarty.get.query|form_val}&category={$smarty.get.author|form_val}&author={$smarty.get.author|form_val}">{cleanString($final)}</a>
+											<a href="?search_mode={$source}&query={display_clean($smarty.get.query)}&category={display_clean($smarty.get.author)}&author={display_clean($smarty.get.author)}">{cleanString($final)}</a>
 											{else}
 											<a href="javascript:void(0)">{cleanString($final)}</a>
 											{/if}

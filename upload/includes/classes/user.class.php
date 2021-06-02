@@ -4096,7 +4096,7 @@ class userquery extends CBCategory{
 				'type'=> 'textfield',
 				'name'=> 'query',
 				'id'=> 'query',
-				'value'=>cleanForm($default['query'])
+				'value'=>mysql_clean($default['query'])
 			),
 			'category'	=>  array(
 				'title'		=> lang('category'),
@@ -4767,7 +4767,7 @@ class userquery extends CBCategory{
 				'type'=> "textarea",
 				'name'=> "about_me",
 				'id'=> "about_me",
-				'value'=> cleanForm($default['about_me']),
+				'value'=> mysql_clean($default['about_me']),
 				'db_field'=>'about_me',
 				'auto_view'=>'no',
 				'clean_func' => 'Replacer',
@@ -4876,7 +4876,7 @@ class userquery extends CBCategory{
 				'type'=> "textarea",
 				'name'=> "schools",
 				'id'=> "schools",
-				'value'=> cleanForm($default['schools']),
+				'value'=> mysql_clean($default['schools']),
 				'db_field'=>'schools',
 				'clean_func' => 'Replacer',
 				'auto_view'=>'yes'
@@ -4886,7 +4886,7 @@ class userquery extends CBCategory{
 				'type'=> "textarea",
 				'name'=> "occupation",
 				'id'=> "occupation",
-				'value'=> cleanForm($default['occupation']),
+				'value'=> mysql_clean($default['occupation']),
 				'db_field'=>'occupation',
 				'clean_func' => 'Replacer',
 				'auto_view'=>'yes'
@@ -4896,7 +4896,7 @@ class userquery extends CBCategory{
 				'type'=> "textarea",
 				'name'=> "companies",
 				'id'=> "companies",
-				'value'=> cleanForm($default['companies']),
+				'value'=> mysql_clean($default['companies']),
 				'db_field'=>'companies',
 				'clean_func' => 'Replacer',
 				'auto_view'=>'yes'
@@ -4906,7 +4906,7 @@ class userquery extends CBCategory{
 				'type'=> "textarea",
 				'name'=> "hobbies",
 				'id'=> "hobbies",
-				'value'=> cleanForm($default['hobbies']),
+				'value'=> mysql_clean($default['hobbies']),
 				'db_field'=>'hobbies',
 				'clean_func' => 'Replacer',
 				'auto_view'=>'yes'
@@ -4916,7 +4916,7 @@ class userquery extends CBCategory{
 				'type'=> "textarea",
 				'name'=> "fav_movies",
 				'id'=> "fav_movies",
-				'value'=> cleanForm($default['fav_movies']),
+				'value'=> mysql_clean($default['fav_movies']),
 				'db_field'=>'fav_movies',
 				'clean_func' => 'Replacer',
 				'auto_view'=>'yes'
@@ -4926,7 +4926,7 @@ class userquery extends CBCategory{
 				'type'=> "textarea",
 				'name'=> "fav_music",
 				'id'=> "fav_music",
-				'value'=> cleanForm($default['fav_music']),
+				'value'=> mysql_clean($default['fav_music']),
 				'db_field'=>'fav_music',
 				'clean_func' => 'Replacer',
 				'auto_view'=>'yes'
@@ -4936,7 +4936,7 @@ class userquery extends CBCategory{
 				'type'=> "textarea",
 				'name'=> "fav_books",
 				'id'=> "fav_books",
-				'value'=> cleanForm($default['fav_books']),
+				'value'=> mysql_clean($default['fav_books']),
 				'db_field'=>'fav_books',
 				'clean_func' => 'Replacer',
 				'auto_view'=>'yes'

@@ -13,12 +13,12 @@
       <h3>Remote video details</h3>
      	  <div class="form-group">
           <label for="remote_play_url">Video URL</label>
-          <input type="text" name="remote_play_url" id="remote_play_url" size="15"  class="form-control" value="{"remote_play_url"|post|form_val}"/>
+          <input type="text" name="remote_play_url" id="remote_play_url" size="15"  class="form-control" value="{display_clean("remote_play_url"|post)}"/>
           <div>can be flv, mp4, m4v, ogg</div>
         </div> 
      	  <div class="form-group">
           <label>Video duration</label>
-          <input type="text" name="duration" id="duration" class="form-control" value="{"duration"|post|form_val}"/>
+          <input type="text" name="duration" id="duration" class="form-control" value="{display_clean("duration"|post)}"/>
           <div>duration format is hours:minutes:seconds</div>
         </div>
          

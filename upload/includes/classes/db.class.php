@@ -168,10 +168,10 @@ class Clipbucket_db
         }
         $fields = $result[0];
 
-        if ($fields)
-        {
-            foreach ($fields as $field)
+        if ($fields) {
+            foreach ($fields as $field){
                 return $field;
+            }
         }
 
         return false;

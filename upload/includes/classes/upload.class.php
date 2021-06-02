@@ -531,21 +531,22 @@ class Upload
 		$embedding = $default['allow_embedding'] ? $default['allow_embedding'] : 'yes';
 		
 		//Checking weather to enabled or disable password field
-		$video_pass_disable = 'disabled="disabled"  ';
-		$video_user_disable = 'disabled="disabled"  ';
+		$video_pass_disable = 'disabled="disabled" ';
+		$video_user_disable = 'disabled="disabled" ';
 		
-		if($broadcast=='unlisted')
-			$video_pass_disable = "";
-		elseif($broadcast=='private')
+		if($broadcast=='unlisted'){
+			$video_pass_disable = '';
+        } else if($broadcast=='private') {
 			$video_user_disable = '';
+        }
 			
-		$uploadFormOptionFieldsArray = array(
+		return array(
 			'broadcast'=> array(
 				'title'=>lang('vdo_br_opt'),
 				'type'=>'radiobutton',
 				'name'=>'broadcast',
 				'value'=>array('public'=>lang('vdo_br_opt1'),'private'=>lang('vdo_br_opt2'),
-				'unlisted'=>lang('vdo_broadcast_unlisted'),'logged'=>lang("logged_users_only")),
+				'unlisted'=>lang('vdo_broadcast_unlisted'),'logged'=>lang('logged_users_only')),
 				'checked'=>$broadcast,
 				'db_field'=>'broadcast',
 				'required'=>'no',
@@ -553,12 +554,14 @@ class Upload
 				'display_function'=>'display_sharing_opt',
 				'default_value'=>'public',
 				'extra_tags' => ' onClick="
-					$(\'#video_password\').attr(\'disabled\',\'disabled\');
-					$(\'#video_users\').attr(\'disabled\',\'disabled\');
-					if($(this).val()==\'unlisted\') 
-					$(\'#video_password\').attr(\'disabled\',false)
-					else if($(this).val()==\'private\') 
-					$(\'#video_users\').attr(\'disabled\',false)" '
+				    $(this).closest(\'form\').find(\'#video_password\').attr(\'disabled\',\'disabled\');
+                    $(this).closest(\'form\').find(\'#video_users\').attr(\'disabled\',\'disabled\');
+					if($(this).val()==\'unlisted\'){
+					    $(this).closest(\'form\').find(\'#video_password\').attr(\'disabled\',false);
+					} else if($(this).val()==\'private\') {
+					    $(this).closest(\'form\').find(\'#video_users\').attr(\'disabled\',false);
+                    }"
+                '
 			),
 		 
 		 	'video_password'=> array(
@@ -639,7 +642,6 @@ class Upload
 				'default_value'=>'yes',
 			)
 		 );
-		return $uploadFormOptionFieldsArray;
 	}
 
 	/**
@@ -981,7 +983,7 @@ class Upload
 	/**
 	 * load_video_fields
 	 * 
-	 * @param $input default values for all videos
+	 * @param array $input default values for all videos
 	 * @return array of video fields
 	 *
 	 * Function used to load Video fields

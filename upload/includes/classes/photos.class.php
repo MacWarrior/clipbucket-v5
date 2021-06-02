@@ -317,7 +317,7 @@ class CBPhotos
 				'type'=> 'textfield',
 				'name'=> 'query',
 				'id'=> 'query',
-				'value'=>cleanForm($array['query'])
+				'value'=>mysql_clean($array['query'])
 			),
 			'date_margin'	=>  array(
 				'title'		=> lang('uploaded'),

@@ -32,11 +32,11 @@
 {elseif $view=='edit'}
 
 <form method="post">
-	<h3>Edit {$level_details.user_level_name|form_val} Level Permissions</h3>
+	<h3>Edit {display_clean($level_details.user_level_name)} Level Permissions</h3>
 
 	<div class="form-group">
 		<label for="level_name2">Level Name</label>
-		<input class="form-control" name="level_name" type="text" id="level_name2" value="{$level_details.user_level_name|form_val}" />
+		<input class="form-control" name="level_name" type="text" id="level_name2" value="{display_clean($level_details.user_level_name)}" />
 	</div>
 	<div class="tabbable">
 		<ul class="nav nav-tabs" id="myTab">
@@ -228,7 +228,7 @@
 	<h3>User Level Details</h3>
 	<div class="form-group">
 		<label for="level_name2">Level name</label>
-		<input class="form-control" name="level_name" type="text" id="level_name2" value="{$smarty.post.level_name|form_val}" />
+		<input class="form-control" name="level_name" type="text" id="level_name2" value="{display_clean($smarty.post.level_name)}" />
 	</div>
 	{assign var='types' value=$userquery->get_level_types()}
 	{section name=t loop=$types}
