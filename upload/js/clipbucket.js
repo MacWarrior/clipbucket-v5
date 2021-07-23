@@ -1925,7 +1925,6 @@
 		};
 
         this.getModalVideo = function(video_id){
-		    console.log(video_id);
 			$.ajax({
 				type: 'post',
 				url: '/ajax/commonAjax.php',
@@ -1939,7 +1938,7 @@
 						var videoLink = data.video_link;
 						var vData = data.video_details;
 						$('.my-modal-content').attr('id',vData.videoid).html(data.video);
-						
+
 						var cbModalPlayer = $(document).find('#cb_video_js_'+vData.videoid+'_html5_api');
 						cbModalPlayer = cbModalPlayer[0];
 
