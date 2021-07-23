@@ -1,12 +1,12 @@
 {
   "version":"5.4.1",
-  "revision":"38",
+  "revision":"39",
   "status":"dev",
   "detail":[
     {
       "title": "Miscellaneous",
       "description": [
-        "Update VideoJS to version 7.12.3"
+        "Update VideoJS to version 7.14.2"
         ,"Update Smarty to version 3.1.39"
         ,"Rename dbconnect.php to config.php"
         ,"Cleanup code"
