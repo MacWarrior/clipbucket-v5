@@ -102,12 +102,30 @@
 
 
 {if config("enable_advertisement") == "yes"}
-<link rel="stylesheet" href="{$cb_vjs_player_url}/css/videojs.ads.css">
-<script type="text/javascript" src="{$cb_vjs_player_url}/js/videojs.ads.js"></script>
-<script type="text/javascript" src="{$cb_vjs_player_url}/js/cb_ultimate_ads.js"></script>
+{if $development_mode}
+<link rel="stylesheet" href="{$cb_vjs_player_url}/plugin/ads/videojs.ads.css">
+
+<script type="text/javascript" src="{$cb_vjs_player_url}/plugin/ads/videojs-contrib-ads.js"></script>
+<script type="text/javascript" src="{$cb_vjs_player_url}/plugin/ads/videojs.ads.js"></script>
+
+{else}
+<link rel="stylesheet" href="{$cb_vjs_player_url}/plugin/ads/videojs.ads.min.css">
+
+<script type="text/javascript" src="{$cb_vjs_player_url}/plugin/ads/videojs-contrib-ads.min.js"></script>
+<script type="text/javascript" src="{$cb_vjs_player_url}/plugin/ads/videojs.ads.min.js"></script>
+{/if}
+
+<script type="text/javascript" src="{$cb_vjs_player_url}/plugin/ads/cb_ultimate_ads.js"></script>
+
+
+
+
+
+
 
 <link rel="stylesheet" href="{$cb_vjs_player_url}/css/videojs.ima.css">
 <script type="text/javascript" src="{$cb_vjs_player_url}/js/videojs.ima.js"></script>
+
 
 	{if $play_ad == true}
 <script type="text/javascript" src="//imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
@@ -185,18 +203,17 @@
         this.videoJsResolutionSwitcher(res_options);
 
 
-
-        {if config('contextual_menu_disabled')=='yes'}
+        {if config('contextual_menu_disabled') === 'yes'}
 		$(".video-js").on("contextmenu",function() {
 			return false;
 		});
 		{/if}
 
-		{if config('player_thumbnails')=='yes'}
+		{if config('player_thumbnails') === 'yes'}
 		this.thumbnails({get_player_thumbs_json($vdata)});
 		{/if}
 
-		{if config("enable_advertisement") == "yes"}
+		{if config("enable_advertisement") === 'yes'}
 		//Calling Ima Ads plugin
 		if ("{$play_ad}"){
 			var ad_options = {
