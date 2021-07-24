@@ -552,17 +552,17 @@ class userquery extends CBCategory{
 				//Deleting User PMS
 				$this->remove_user_pms($uid);
 				//Changing From Messages to Anonymous
-				$db->execute("UPDATE ".tbl("messages")." SET message_from='".$this->get_anonymous_user()."' WHERE message_from='".$uid."'");
+				$db->execute('UPDATE '.tbl('messages')." SET message_from='".$this->get_anonymous_user()."' WHERE message_from='".$uid."'");
 				//Finally Removing Database entry of user
-				$db->execute("DELETE FROM ".tbl("users")." WHERE userid='$uid'");
-				$db->execute("DELETE FROM ".tbl("user_profile")." WHERE userid='$uid'");
+				$db->execute("DELETE FROM ".tbl('users')." WHERE userid='$uid'");
+				$db->execute("DELETE FROM ".tbl('user_profile')." WHERE userid='$uid'");
 				
-				e(lang("usr_del_msg"),"m");
+				e(lang('usr_del_msg'),"m");
 			} else {
-				e(lang("you_cant_delete_this_user"));
+				e(lang('you_cant_delete_this_user'));
 			}
 		} else {
-			e(lang("user_doesnt_exist"));
+			e(lang('user_doesnt_exist'));
 		}
 	}
 
@@ -574,14 +574,13 @@ class userquery extends CBCategory{
 	function remove_user_subscriptions($uid)
 	{
 		global $db;
-		if(!$this->user_exists($uid))
-			e(lang("user_doesnt_exist"));
-		elseif(!has_access('admin_access'))
-			e(lang("you_dont_hv_perms"));
-		else
-		{
+		if(!$this->user_exists($uid)){
+			e(lang('user_doesnt_exist'));
+        } elseif(!has_access('admin_access')) {
+			e(lang('you_dont_hv_perms'));
+        } else {
 			$db->execute("DELETE FROM ".tbl($this->dbtbl['subtbl'])." WHERE userid='$uid'");
-			e(lang("user_subs_hv_been_removed"),"m");
+			e(lang('user_subs_hv_been_removed'),"m");
 		}
 	}
 
@@ -666,7 +665,7 @@ class userquery extends CBCategory{
 	{
 		global $sess;
 
-        $is_email = ( strpos( $id , '@' ) !== false ) ? true : false;
+        $is_email = strpos( $id , '@' ) !== false;
         $select_field = ( !$is_email and !is_numeric( $id ) ) ? 'username' : ( !is_numeric( $id ) ? 'email' : 'userid' );
         if($email == false){
         	$fields = tbl_fields( array( 'users' => array( '*' ) ) );
@@ -699,31 +698,27 @@ class userquery extends CBCategory{
         return false;
 	}
 
-	function GetUserData($id=NULL){
-		return $this->get_user_details($id);
-	}
-
 	//Function Used To Activate User
 	function activate_user_with_avcode($user, $avcode)
 	{
 		global $eh;
 		$data = $this->get_user_details($user);
-		if(!$data  || !$user)
+		if(!$data  || !$user){
 			e(lang("usr_exist_err"));
-		elseif($data['usr_status']=='Ok')
+        } elseif($data['usr_status']=='Ok') {
 			e(lang('usr_activation_err'));
-		elseif($data['ban_status']=='yes')
+        } elseif($data['ban_status']=='yes') {
 			e(lang('ban_status'));
-		elseif($data['avcode'] !=$avcode)
+        } elseif($data['avcode'] !=$avcode) {
 			e(lang('avcode_incorrect'));
-		else
-		{
+        } else {
 			$this->action('activate',$data['userid']);
 			$eh->flush();
 			e(lang("usr_activation_msg"),"m");
 			
-			if($data['welcome_email_sent']=='no')
+			if($data['welcome_email_sent']=='no'){
 				$this->send_welcome_email($data,TRUE);
+            }
 		}
 	}
 
@@ -740,19 +735,18 @@ class userquery extends CBCategory{
 		global $cbemail;
 		$udetails = $this->get_user_details($email);
 		
-		if(!$udetails || !$email)
+		if(!$udetails || !$email){
 			e(lang("usr_exist_err"));
-		elseif($udetails['usr_status']=='Ok')
+        } elseif($udetails['usr_status']=='Ok') {
 			e(lang('usr_activation_err'));
-		elseif($udetails['ban_status']=='yes')
+        } elseif($udetails['ban_status']=='yes') {
 			e(lang('ban_status'));
-		else
-		{
+        } else {
 			$tpl = $cbemail->get_template('avcode_request_template');
 			$var = array(
-				'{username}'	=> $udetails['username'],
-				'{email}'		=> $udetails['email'],
-				'{avcode}'		=> $udetails['avcode']
+				'{username}' => $udetails['username'],
+				'{email}'    => $udetails['email'],
+				'{avcode}'   => $udetails['avcode']
 			);
 
 			$subj = $cbemail->replace($tpl['email_template_subject'],$var);
@@ -762,10 +756,6 @@ class userquery extends CBCategory{
 			cbmail(array('to'=>$udetails['email'],'from'=>SUPPORT_EMAIL,'subject'=>$subj,'content'=>$msg));
 			e(lang('usr_activation_em_msg'),"m");
 		}
-	}
-	function SendActivation($email)
-	{
-		return $this->send_activation_code($email);
 	}
 
     /**
@@ -791,8 +781,8 @@ class userquery extends CBCategory{
         } else {
 			$tpl = $cbemail->get_template('welcome_message_template');
 			$var = array(
-				'{username}'	=> $udetails['username'],
-				'{email}'		=> $udetails['email'],
+				'{username}' => $udetails['username'],
+				'{email}'    => $udetails['email']
 			);
 			$subj = $cbemail->replace($tpl['email_template_subject'],$var);
 			$msg = nl2br($cbemail->replace($tpl['email_template'],$var));
@@ -824,14 +814,13 @@ class userquery extends CBCategory{
 		
 		$uid = $array['userid'];
 		
-		if(!$this->get_user_with_pass($uid, pass_code($old_pass, $uid)))
+		if(!$this->get_user_with_pass($uid, pass_code($old_pass, $uid))){
 			e(lang('usr_pass_err'));
-		elseif(empty($new_pass))
+        } elseif(empty($new_pass)) {
 			e(lang('usr_pass_err2'));
-		elseif($new_pass != $c_new_pass)
+        } elseif($new_pass != $c_new_pass) {
 			e(lang('usr_cpass_err1'));
-		else
-		{
+        } else {
 			$db->update(tbl($this->dbtbl['users']),array('password'),array(pass_code($array['new_pass'], $uid))," userid='".$uid."'");
 			e(lang("usr_pass_email_msg"),"m");
 		}
@@ -839,7 +828,6 @@ class userquery extends CBCategory{
 		return $msg;
 	}
 
-	function change_user_pass($array){ return $this->ChangeUserPassword($array); }
 	function change_password($array){ return $this->ChangeUserPassword($array); }
 
     /**
@@ -857,12 +845,11 @@ class userquery extends CBCategory{
 		$friend = $this->get_user_details($fid);
 		$sender = $this->get_user_details($uid);
 		
-		if(!$friend)
+		if(!$friend){
 			e(lang('usr_exist_err'));
-		elseif($this->is_requested_friend($uid,$fid))
+        } elseif($this->is_requested_friend($uid,$fid)) {
 			e(lang("you_already_sent_frend_request"));
-		elseif($this->is_requested_friend($uid,$fid,"in"))
-		{
+        } elseif($this->is_requested_friend($uid,$fid,"in")) {
 			$this->confirm_friend($fid,$uid);
 			e(lang("friend_added"));
 		} elseif($uid==$fid) {
@@ -901,13 +888,14 @@ class userquery extends CBCategory{
 	 *
 	 * @return bool
 	 */
-	function is_confirmed_friend($uid,$fid)
-	{
+	function is_confirmed_friend($uid,$fid): bool
+    {
 		global $db;
 		$count = $db->count(tbl($this->dbtbl['contacts']),"contact_id",
 					" (userid='$uid' AND contact_userid='$fid') OR (userid='$fid' AND contact_userid='$uid') AND confirmed='yes'" );
-		if($count[0]>0)
+		if($count[0]>0){
 			return true;
+        }
 		return false;
 	}
 
@@ -919,13 +907,14 @@ class userquery extends CBCategory{
 	 *
 	 * @return bool
 	 */
-	function is_friend($uid,$fid)
-	{
+	function is_friend($uid,$fid): bool
+    {
 		global $db;
 		$count = $db->count(tbl($this->dbtbl['contacts']),"contact_id",
 					" (userid='$uid' AND contact_userid='$fid') OR (userid='$fid' AND contact_userid='$uid')" );
-		if($count[0]>0)
+		if($count[0]>0){
 			return true;
+        }
 		return false;
 	}
 
@@ -939,21 +928,24 @@ class userquery extends CBCategory{
 	 *
 	 * @return bool
 	 */
-	function is_requested_friend($uid,$fid,$type='out',$confirm=NULL)
-	{
+	function is_requested_friend($uid,$fid,$type='out',$confirm=NULL): bool
+    {
 		global $db;
 		
-		$query = "";
-		if($confirm)
+		$query = '';
+		if($confirm){
 			$query = " AND confirmed='$confirm' ";
+        }
 			
-		if($type=='out')
-			$count = $db->count(tbl($this->dbtbl['contacts']),"contact_id"," userid='$uid' AND contact_userid='$fid' $query" );
-		else
-			$count = $db->count(tbl($this->dbtbl['contacts']),"contact_id"," userid='$fid' AND contact_userid='$uid' $query" );
+		if($type=='out'){
+			$count = $db->count(tbl($this->dbtbl['contacts']),'contact_id'," userid='$uid' AND contact_userid='$fid' $query" );
+        } else {
+			$count = $db->count(tbl($this->dbtbl['contacts']),'contact_id'," userid='$fid' AND contact_userid='$uid' $query" );
+        }
 
-		if($count[0]>0)
+		if($count[0]>0){
 			return true;
+        }
 		return false;
 	}
 
@@ -969,10 +961,9 @@ class userquery extends CBCategory{
 	function confirm_friend($uid,$rid,$msg=TRUE)
 	{
 		global $cbemail,$db;
-		if(!$this->is_requested_friend($rid,$uid,'out','no'))
-		{
+		if(!$this->is_requested_friend($rid,$uid,'out','no')) {
 			if($msg)
-			e(lang("friend_confirm_error"));
+			e(lang('friend_confirm_error'));
 		} else {
 			addFeed(array('action' => 'add_friend','object_id' => $rid,'object'=>'friend','uid'=>$uid));
 			addFeed(array('action' => 'add_friend','object_id' => $uid,'object'=>'friend','uid'=>$rid));
@@ -980,8 +971,9 @@ class userquery extends CBCategory{
 			$db->insert(tbl($this->dbtbl['contacts']),array('userid','contact_userid','date_added','request_type','confirmed'),
 												 array($uid,$rid,now(),'in','yes'));
 			$db->update(tbl($this->dbtbl['contacts']),array('confirmed'),array("yes")," userid='$rid' AND contact_userid='$uid' " );
-			if($msg)
-				e(lang("friend_confirmed"),"m");
+			if($msg){
+				e(lang('friend_confirmed'),'m');
+            }
 			//Sending friendship confirmation email
 			$tpl = $cbemail->get_template('friend_confirmation_email');
 			
@@ -991,10 +983,11 @@ class userquery extends CBCategory{
 			$more_var = array(
 				'{reciever}'	=> $friend['username'],
 				'{sender}'		=> $sender['username'],
-				'{sender_link}' => $this->profile_link($sender),
+				'{sender_link}' => $this->profile_link($sender)
 			);
-			if(!isset($var))
+			if(!isset($var)){
 				$var = array();
+            }
 			$var = array_merge($more_var,$var);
 			$subj = $cbemail->replace($tpl['email_template_subject'],$var);
 			$msg = nl2br($cbemail->replace($tpl['email_template'],$var));
@@ -1039,19 +1032,19 @@ class userquery extends CBCategory{
 	{
 		global $db;
 		
-		if(!$uid)
+		if(!$uid){
 			$uid = userid();
+        }
 			
-		$result = $db->select(tbl($this->dbtbl['contacts']),"*"," userid='$rid' AND contact_userid='$uid' ");
+		$result = $db->select(tbl($this->dbtbl['contacts']),'*'," userid='$rid' AND contact_userid='$uid' ");
 		
-		if(count($result)==0)
+		if(count($result)==0){
 			e(lang("friend_request_not_found"));
-		elseif($uid!=$result[0]['contact_userid'])
+        } elseif($uid!=$result[0]['contact_userid']) {
 			e(lang("you_cant_confirm_this_request"));
-		elseif($result[0]['confirmed']=='yes')
+        } elseif($result[0]['confirmed']=='yes') {
 			e(lang("friend_request_already_confirmed"));
-		else
-		{
+        } else {
 			$this->confirm_friend($uid,$result[0]['userid']);
 		}
 	}
@@ -1071,27 +1064,31 @@ class userquery extends CBCategory{
 	{
 		global $db;
 		
-		$query = "";
-		if($confirmed)
-			$query .= " AND ".tbl("contacts").".confirmed='$confirmed' ";
-		if($type)
-			$query .= " AND ".tbl("contacts").".request_type='$type' ";
-		if(!$count_only)
-		{
-			$result = $db->select(tbl("contacts,users"),
-			tbl("contacts.contact_userid,contacts.confirmed,contacts.request_type ,users.*"),
-			tbl("contacts.userid")."='$uid' AND ".tbl("users.userid")."=".tbl("contacts.contact_userid")."
-			$query AND ".tbl("contacts").".contact_group_id='$group' ");
+		$query = '';
+		if($confirmed){
+			$query .= ' AND '.tbl('contacts').".confirmed='$confirmed' ";
+        }
+
+		if($type){
+			$query .= ' AND '.tbl('contacts').".request_type='$type' ";
+        }
+
+		if(!$count_only) {
+			$result = $db->select(tbl('contacts,users'),
+			tbl('contacts.contact_userid,contacts.confirmed,contacts.request_type ,users.*'),
+			tbl('contacts.userid')."='$uid' AND ".tbl('users.userid').'='.tbl('contacts.contact_userid').'
+			$query AND '.tbl('contacts').".contact_group_id='$group' ");
 			
-			if(count($result)>0)
+			if(count($result)>0){
 				return $result;
+            }
 			return false;
 		}
 
-		$count = $db->count(tbl("contacts"),
-		tbl("contacts.contact_userid"),
-		tbl("contacts.userid")."='$uid' 
-		$query AND ".tbl("contacts").".contact_group_id='$group' ");
+		$count = $db->count(tbl('contacts'),
+		tbl('contacts.contact_userid'),
+		tbl('contacts.userid')."='$uid' 
+		$query AND ".tbl('contacts').".contact_group_id='$group' ");
 		return $count;
 	}
 
@@ -1108,40 +1105,22 @@ class userquery extends CBCategory{
 	{
 		global $db;
 		
-		if(!$count_only)
-		{
-			$result = $db->select(tbl("contacts,users"),
-			tbl("contacts.userid,contacts.confirmed,contacts.request_type ,users.*"),
-			tbl("contacts.contact_userid")."='$uid' AND ".tbl("users.userid")."=".tbl("contacts.userid")."
-			AND ".tbl("contacts.confirmed")."='no' AND ".tbl("contacts").".contact_group_id='$group' ");
-			if(count($result)>0)
+		if(!$count_only) {
+			$result = $db->select(tbl('contacts,users'),
+			tbl('contacts.userid,contacts.confirmed,contacts.request_type ,users.*'),
+			tbl('contacts.contact_userid')."='$uid' AND ".tbl('users.userid').'='.tbl('contacts.userid')."
+			AND ".tbl('contacts.confirmed')."='no' AND ".tbl('contacts').".contact_group_id='$group' ");
+			if(count($result)>0){
 				return $result;
+            }
 			return false;
 		}
 
-		$count = $db->count(tbl("contacts"),
-		tbl("contacts.contact_userid"),
-		tbl("contacts.contact_userid")."='$uid' AND ".tbl("contacts.confirmed")."='no' AND ".tbl("contacts").".contact_group_id='$group' ");
+		$count = $db->count(tbl('contacts'),
+		tbl('contacts.contact_userid'),
+		tbl('contacts.contact_userid')."='$uid' AND ".tbl('contacts.confirmed')."='no' AND ".tbl('contacts').".contact_group_id='$group' ");
 		return $count;
 	}
-
-    /**
-     * Function used to get pending contacts
-     *
-     * @param     $uid
-     * @param int $group
-     *
-     * @return array|bool
-     */
-	function get_requested_contacts($uid,$group=0)
-	{
-		global $db;
-		$result = $db->select(tbl($this->dbtbl['contacts']),"*"," contact_userid='$uid' AND confirmed='no' AND contact_group_id='$group' ");
-		if(count($result)>0)
-			return $result;
-		return false;
-	}
-	
 	
 	/**
 	 * Function used to remove user from contact list
@@ -1151,15 +1130,16 @@ class userquery extends CBCategory{
 	function remove_contact($fid,$uid=NULL)
 	{
 		global $db;
-		if(!$uid)
+		if(!$uid){
 			$uid = userid();
-		if(!$this->is_friend($fid,$uid))
-			e(lang("user_no_in_contact_list"));
-		else
-		{
-			$db->Execute("DELETE from ".tbl($this->dbtbl['contacts'])." WHERE 
+        }
+
+		if(!$this->is_friend($fid,$uid)){
+			e(lang('user_no_in_contact_list'));
+        } else {
+			$db->Execute('DELETE FROM '.tbl($this->dbtbl['contacts'])." WHERE 
 						(userid='$uid' AND contact_userid='$fid') OR (userid='$fid' AND contact_userid='$uid')" );
-			e(lang("user_removed_from_contact_list"),"m");
+			e(lang('user_removed_from_contact_list'),'m');
 		}
 	}
 
@@ -1175,7 +1155,6 @@ class userquery extends CBCategory{
 	}
 
 	/**
-	 * Old Function : GetNewMsgs
 	 * This function is used to get user messages
 	 *
 	 * @param        $user
@@ -1190,10 +1169,11 @@ class userquery extends CBCategory{
 	function get_pm_msgs($user,$box='inbox',$count=FALSE)
 	{
 		global $db,$eh;
-		if(!$user)
-			$user = user_id();	
-		if(!user_id())
-		{
+		if(!$user){
+			$user = user_id();
+        }
+
+		if(!user_id()) {
 			$eh->e(lang('you_not_logged_in'));
 		} else {
 			switch($box)
@@ -1212,26 +1192,18 @@ class userquery extends CBCategory{
 			if($count)
 				$status_query = " AND status = '0' ";
 				
-			$results = $db->select(tbl("messages"),
+			$results = $db->select(tbl('messages'),
 						" message_id ",
 						"(".$boxtype."_user = '$user' OR ".$boxtype."_user_id = '$user') $status_query");
 
-			if(count($results) > 0)
-			{
-				if($count)
+			if(count($results) > 0) {
+				if($count){
 					return count($results);
+                }
 				return $results;
 			}
 			return false;
 		}
-	}
-
-	function GetNewMsgs($user)
-	{
-		$msgs = $this->get_pm_msgs($user,'inbox',TRUE);
-		if($msgs)
-			return $msgs;
-		return 0;
 	}
 
     /**
@@ -1249,16 +1221,15 @@ class userquery extends CBCategory{
 		
 		$to_user = $this->get_user_details($to);
 		
-		if(!$this->user_exists($to))
+		if(!$this->user_exists($to)){
 			e(lang('usr_exist_err'));
-		elseif(!$user)
+        } elseif(!$user) {
 			e(sprintf(lang('please_login_subscribe'),$to_user['username']));
-		elseif($this->is_subscribed($to,$user))
-			e(sprintf(lang("usr_sub_err"),"<strong>".$to_user['username']."</strong>"));
-		elseif($to_user['userid'] == $user)
-			e(lang("you_cant_sub_yourself"));	
-		else
-		{
+        } elseif($this->is_subscribed($to,$user)) {
+			e(sprintf(lang('usr_sub_err'),'<strong>'.$to_user['username'].'</strong>'));
+        } elseif($to_user['userid'] == $user) {
+			e(lang('you_cant_sub_yourself'));
+        } else {
 			$db->insert(tbl($this->dbtbl['subtbl']),array('userid','subscribed_to','date_added'),
 											   array($user,$to,NOW()));
 			$db->update(tbl($this->dbtbl['users']),array('subscribers'),
@@ -1267,17 +1238,16 @@ class userquery extends CBCategory{
 											   array($this->get_user_subscriptions($user,'count'))," userid='$user' ");
 			//Logging Comment
 			$log_array = array(
-                 'success'=>'yes',
-                 'details'=> "subsribed to ".$to_user['username'],
-                 'action_obj_id' => $to_user['userid'],
-                 'action_done_id' => $db->insert_id(),
+                 'success'        => 'yes',
+                 'details'        => 'subsribed to '.$to_user['username'],
+                 'action_obj_id'  => $to_user['userid'],
+                 'action_done_id' => $db->insert_id()
 			);
 			insert_log('subscribe',$log_array);
 			
 			e(sprintf(lang('usr_sub_msg'),$to_user['username']),'m');
 		}			
 	}
-	function SubscribeUser($sub_user,$sub_to){return $this->subscribe_user($sub_to,$sub_user);}
 
     /**
      * Function used to check weather user is already subscribed or not
@@ -1289,16 +1259,19 @@ class userquery extends CBCategory{
      */
 	function is_subscribed($to,$user=NULL)
 	{
-		if(!$user)
+		if(!$user){
 			$user = userid();
+        }
 		global $db;
 		
-		if(!$user)
+		if(!$user){
 			return false;
+        }
 
-		$result = $db->select(tbl($this->dbtbl['subtbl']),"*"," subscribed_to='$to' AND userid='$user'");
-		if(count($result)>0)
+		$result = $db->select(tbl($this->dbtbl['subtbl']),'*'," subscribed_to='$to' AND userid='$user'");
+		if(count($result)>0){
 			return $result;
+        }
 		return false;
 	}
 
@@ -1310,32 +1283,34 @@ class userquery extends CBCategory{
      *
      * @return bool
      */
-	function remove_subscription($subid,$uid=NULL)
-	{
+	function remove_subscription($subid,$uid=NULL): bool
+    {
 		global $db;
-		if(!$uid)
+		if(!$uid){
 			$uid = userid();
-		if($this->is_subscribed($subid,$uid))
-		{
-			$db->execute("DELETE FROM ".tbl($this->dbtbl['subtbl'])." WHERE userid='$uid' AND subscribed_to='$subid'");
-			e(lang("class_unsub_msg"),"m");
+        }
+
+		if($this->is_subscribed($subid,$uid)) {
+			$db->execute('DELETE FROM '.tbl($this->dbtbl['subtbl'])." WHERE userid='$uid' AND subscribed_to='$subid'");
+			e(lang('class_unsub_msg'),'m');
 			
 			$db->update(tbl($this->dbtbl['users']),array('subscribers'),
 											   array($this->get_user_subscribers($subid,true))," userid='$subid' ");
 			$db->update(tbl($this->dbtbl['users']),array('total_subscriptions'),
 											   array($this->get_user_subscriptions($uid,'count'))," userid='$uid' ");
-
 			return true;
-		}else
-			e(lang("you_not_subscribed"));
-		
+		}
+
+		e(lang('you_not_subscribed'));
 		return false;
-	}function unsubscribe_user($subid,$uid=NULL){ return $this->remove_subscription($subid,$uid); }
+	}
+
+	function unsubscribe_user($subid,$uid=NULL){ return $this->remove_subscription($subid,$uid); }
 
     /**
      * Function used to get user subscribers
      *
-     * @param userid
+     * @param $id
      * @param bool $count
      *
      * @return array|bool
@@ -1343,15 +1318,15 @@ class userquery extends CBCategory{
 	function get_user_subscribers($id,$count=false)
 	{
 		global $db;
-		if(!$count)
-		{
-			$result = $db->select(tbl('subscriptions'),"*",
+		if(!$count) {
+			$result = $db->select(tbl('subscriptions'),'*',
 			" subscribed_to='$id' ");
-			if(count($result)>0)
+			if(count($result)>0){
 				return $result;
+            }
 			return false;
 		}
-		return $db->count(tbl($this->dbtbl['subtbl']),"subscription_id"," subscribed_to='$id' ");
+		return $db->count(tbl($this->dbtbl['subtbl']),'subscription_id'," subscribed_to='$id' ");
 	}
 
     /**
@@ -1365,9 +1340,10 @@ class userquery extends CBCategory{
 	function get_user_subscribers_detail($id,$limit=NULL)
 	{
 		global $db;
-		$result = $db->select(tbl("users,".$this->dbtbl['subtbl']),"*"," ".tbl("subscriptions.subscribed_to")." = '$id' AND ".tbl("subscriptions.userid")."=".tbl("users.userid"),$limit);
-		if(count($result)>0)
+		$result = $db->select(tbl('users,'.$this->dbtbl['subtbl']),'*',' '.tbl('subscriptions.subscribed_to')." = '$id' AND ".tbl('subscriptions.userid').'='.tbl("'users.userid"),$limit);
+		if(count($result)>0){
 			return $result;
+        }
 		return false;
 	}
 
@@ -1382,17 +1358,16 @@ class userquery extends CBCategory{
 	function get_user_subscriptions($id,$limit=NULL)
 	{	
 		global $db;
-		if($limit!='count')
-		{
-			$result = $db->select(tbl("users,".$this->dbtbl['subtbl']),"*"," ".tbl("subscriptions.userid")." = '$id' AND ".tbl("subscriptions.subscribed_to")."=".tbl("users.userid"),$limit);
+		if($limit!='count') {
+			$result = $db->select(tbl('users,'.$this->dbtbl['subtbl']),'*',' '.tbl('subscriptions.userid')." = '$id' AND ".tbl('subscriptions.subscribed_to').'='.tbl('users.userid'),$limit);
 			
-			if(count($result)>0)
+			if(count($result)>0){
 				return $result;
+            }
 			return false;
 		}
 
-		$result = $db->count(tbl($this->dbtbl['subtbl']),"subscription_id"," userid = '$id'");
-		return $result;
+		return $db->count(tbl($this->dbtbl['subtbl']),'subscription_id'," userid = '$id'");
 	}
 
     /**
@@ -1415,20 +1390,16 @@ class userquery extends CBCategory{
 		switch($step)
 		{
 			case 1:
-			{
 				$udetails = $this->get_user_details($input);
-				if(!$udetails)
+				if(!$udetails){
 					e(lang('usr_exist_err'));
-				 //verifying captcha...
-				elseif(!verify_captcha())
+                } elseif(!verify_captcha()) {
 					e(lang('recap_verify_failed'));
-				else
-				{
+                } else {
 					//Sending confirmation email
 					$tpl = $cbemail->get_template('password_reset_request');
 					$avcode = $udetails['avcode'];
-					if(!$udetails['avcode']) 
-					{
+					if(!$udetails['avcode']) {
 						$avcode = RandomString(10);
 						$db->update(tbl($this->dbtbl['users']),array('avcode'),array($avcode)," userid='".$udetails['userid']."'");			
 					}
@@ -1437,10 +1408,11 @@ class userquery extends CBCategory{
 						'{username}'	=> $udetails['username'],
 						'{email}'		=> $udetails['email'],
 						'{avcode}'		=> $avcode,
-						'{userid}'		=> $udetails['userid'],
+						'{userid}'		=> $udetails['userid']
 					);
-					if(!is_array($var))
+					if(!is_array($var)){
 						$var = array();
+                    }
 					$var = array_merge($more_var,$var);
 					$subj = $cbemail->replace($tpl['email_template_subject'],$var);
 					$msg = nl2br($cbemail->replace($tpl['email_template'],$var));
@@ -1448,21 +1420,18 @@ class userquery extends CBCategory{
 					//Now Finally Sending Email
 					cbmail(array('to'=>$udetails['email'],'from'=>WEBSITE_EMAIL,'subject'=>$subj,'content'=>$msg));
 				
-					e(lang('usr_rpass_email_msg'),"m");
+					e(lang('usr_rpass_email_msg'),'m');
 					return true;
 				}
-			}
-			break;
+			    break;
+
 			case 2:
-			{
 				$udetails = $this->get_user_details($input);
-				if(!$udetails)
+				if(!$udetails){
 					e(lang('usr_exist_err'));
-				 //verifying captcha...
-				elseif($udetails['avcode'] !=$code)
+                } elseif($udetails['avcode'] !=$code) {
 					e(lang('recap_verify_failed'));
-				else
-				{
+                } else {
 					$newpass = RandomString(6);
 					$pass 	 = pass_code($newpass, $udetails['userid']);
 					$avcode = RandomString(10);
@@ -1470,15 +1439,16 @@ class userquery extends CBCategory{
 					//sending new password email...
 					//Sending confirmation email
 					$tpl = $cbemail->get_template('password_reset_details');
-					$more_var = array
-					('{username}'	=> $udetails['username'],
-					 '{email}'		=> $udetails['email'],
-					 '{avcode}'		=> $udetails['avcode'],
-					 '{userid}'		=> $udetails['userid'],
-					 '{password}'	=> $newpass,
+					$more_var = array(
+					    '{username}' => $udetails['username'],
+                        '{email}'    => $udetails['email'],
+                        '{avcode}'   => $udetails['avcode'],
+                        '{userid}'   => $udetails['userid'],
+                        '{password}' => $newpass
 					);
-					if(!is_array($var))
+					if(!is_array($var)){
 						$var = array();
+                    }
 					$var = array_merge($more_var,$var);
 					$subj = $cbemail->replace($tpl['email_template_subject'],$var);
 					$msg = nl2br($cbemail->replace($tpl['email_template'],$var));
@@ -1488,31 +1458,29 @@ class userquery extends CBCategory{
 					e(lang('usr_pass_email_msg'),'m');
 					return true;
 				}
-			}
-			break;
+			    break;
 		}
 	}
 										
 	/**
 	 * Function used to recover username
 	 */
-	function recover_username($email)
-	{
+	function recover_username($email): string
+    {
 		global $cbemail;
 		$udetails = $this->get_user_details($email);
-		if(!$udetails)
+		if(!$udetails){
 			e(lang('no_user_associated_with_email'));
-		elseif(!verify_captcha())
+        } elseif(!verify_captcha()) {
 			e(lang('recap_verify_failed'));
-		else
-		{
+        } else {
 			$tpl = $cbemail->get_template('forgot_username_request');
-			$more_var = array
-			(
-			 '{username}'	=> $udetails['username'],
+			$more_var = array(
+                '{username}' => $udetails['username']
 			);
-			if(!is_array($var))
+			if(!is_array($var)){
 				$var = array();
+            }
 			$var = array_merge($more_var,$var);
 			$subj = $cbemail->replace($tpl['email_template_subject'],$var);
 			$msg = nl2br($cbemail->replace($tpl['email_template'],$var));
@@ -1521,9 +1489,7 @@ class userquery extends CBCategory{
 			cbmail(array('to'=>$udetails['email'],'from'=>SUPPORT_EMAIL,'subject'=>$subj,'content'=>$msg));
 			e(lang("usr_uname_email_msg"),'m');
 		}
-	return $msg;
-	
-	
+	    return $msg;
 	}
 	
 	//FUNCTION USED TO UPDATE LAST ACTIVE FOR OF USER
@@ -1532,10 +1498,9 @@ class userquery extends CBCategory{
 	{
 		global $db;
 		
-		$sql = "UPDATE ".tbl("users")." SET last_active = '".NOW()."' WHERE username='".$username."' OR userid='".$username."' ";
+		$sql = 'UPDATE '.tbl("users")." SET last_active = '".NOW()."' WHERE username='".$username."' OR userid='".$username."' ";
 		$db->Execute($sql);
 	}
-
 
 	/**
 	 * FUNCTION USED TO GE USER THUMBNAIL
@@ -1546,34 +1511,35 @@ class userquery extends CBCategory{
 	 *
 	 * @return string
 	 */
-	function getUserThumb($udetails,$size='',$uid=NULL)
-	{
-		if(empty($udetails['userid']) && $uid)
+	function getUserThumb($udetails,$size='',$uid=NULL): string
+    {
+		if(empty($udetails['userid']) && $uid){
 			$udetails = $this->get_user_details($uid);
+        }
 
 		$avatar = $udetails['avatar'];
 		$avatar_path = AVATARS_DIR.'/'.$avatar;
-		if( !empty($avatar) && file_exists($avatar_path) )
+		if( !empty($avatar) && file_exists($avatar_path) ){
 			return AVATARS_URL.'/'.$avatar;
+        }
 
-		if( !empty($udetails['avatar_url']) )
+		if( !empty($udetails['avatar_url']) ){
 			return display_clean($udetails['avatar_url']);
+        }
 
 		$thesize = AVATAR_SIZE;
 		$default = $this->get_default_thumb();
-		if($size == 'small')
-		{
+		if($size == 'small') {
 			$thesize = AVATAR_SMALL_SIZE;
 			$default = $this->get_default_thumb('small');
 		}
 
-		if(config('gravatars') == 'yes' && (!empty($udetails['email']) || !empty($udetails['anonym_email'])) )
-		{
+		if(config('gravatars') == 'yes' && (!empty($udetails['email']) || !empty($udetails['anonym_email'])) ) {
 			$email = $udetails['email'] ? $udetails['email'] : $udetails['anonym_email'];
 			$gravatar = new Gravatar($email, BASEURL.$default);
 			$gravatar->size = $thesize;
-			$gravatar->rating = "G";
-			$gravatar->border = "FF0000";
+			$gravatar->rating = 'G';
+			$gravatar->border = 'FF0000';
 
 			return $gravatar->getSrc();
 		}
@@ -1581,26 +1547,8 @@ class userquery extends CBCategory{
 		return $default;
 	}
 
-	/**
-	 * Function used to resize image of avatar using timthumb
-	 */
-	function resizer($size,$src)
-	{
-		if($size)
-		$size =	explode('x', $size);
-
-		$w=$size[0];
-		$h=$size[1];
-		
-		if(!$w) $w=120;
-	
-		if(!$h) $h=90;		
-
-		return "/includes/classes/timthumb/timthumb.php?src=$src&w=$w&h=$h";
-	}
-
-	function avatar($udetails,$size='',$uid=NULL)
-	{
+	function avatar($udetails,$size='',$uid=NULL): string
+    {
 		return $this->getUserThumb($udetails,$size,$uid);
 	}
 
@@ -1611,10 +1559,9 @@ class userquery extends CBCategory{
 	 *
 	 * @return string
 	 */
-	function get_default_thumb($size=NULL)
-	{
-		if($size=="small" && file_exists(TEMPLATEDIR.'/images/thumbs/no_avatar-small.png'))
-		{
+	function get_default_thumb($size=NULL): string
+    {
+		if($size=="small" && file_exists(TEMPLATEDIR.'/images/thumbs/no_avatar-small.png')) {
 			return TEMPLATEURL.'/images/thumbs/no_avatar-small.png';
 		}
 
@@ -1622,8 +1569,9 @@ class userquery extends CBCategory{
 			return TEMPLATEURL.'/images/thumbs/no_avatar.png';
 		}
 
-		if($size=='small')
+		if($size=='small'){
 			return USER_THUMBS_URL.'/'.getName(NO_AVATAR).'-small.'.getExt(NO_AVATAR);
+        }
 		return USER_THUMBS_URL.'/'.NO_AVATAR;
 	}
 
@@ -1637,41 +1585,23 @@ class userquery extends CBCategory{
 	 */
 	function getUserBg($udetails,$check=false)
 	{
-		$remote = false;
-		if(empty($udetails['userid']))
+		if(empty($udetails['userid'])){
 			$udetails = $this->get_user_details($uid);
+        }
 
 		$file = $udetails['background'];
 		$bgfile = USER_BG_DIR.'/'.$file;
-		if(file_exists($bgfile) && $file)
+		if(file_exists($bgfile) && $file){
 			$thumb_file = USER_BG_URL.'/'.$file;
-		elseif(!empty($udetails['background_url']) && BACKGROUND_URL=='yes')
-		{
+        } elseif(!empty($udetails['background_url']) && BACKGROUND_URL=='yes') {
 			$thumb_file = $udetails['background_url'];
-			$remote  = true;
-		}elseif(!empty($udetails['background_color']) && BACKGROUND_COLOR =='yes' && $check) 
-		{
+		} elseif(!empty($udetails['background_color']) && BACKGROUND_COLOR =='yes' && $check)  {
 			return true;
-		}else
+		} else {
 			return false;
+        }
 
 		return $thumb_file;
-	}
-
-	/**
-	 * Function used to get user subscriber's list
-	 *
-	 * @param VARCHAR//INT username or userid , both works fine
-	 *
-	 * @return bool
-	 */
-	function get_user_subscriber($username)
-	{
-		global $db;
-		$results = $db->Execute("SELECT * FROM ".tbl("subscriptions")." WHERE subsctibe_to='$username'");
-		if($results->recordcount() > 0)
-			return $results->getrows();
-		return false;
 	}
 
 	/**
@@ -1682,25 +1612,26 @@ class userquery extends CBCategory{
 	 * @param $uid
 	 * @param $field
 	 *
-	 * @return bool
+	 * @return bool|array
 	 */
 	function get_user_field($uid,$field)
 	{
 		global $db;
 		
-		if(is_numeric($uid))
+		if(is_numeric($uid)){
 			$results = $db->select(tbl('users'),$field,"userid='$uid'");
-		else
+        } else {
 			$results = $db->select(tbl('users'),$field,"username='$uid'");
+        }
 
-		if(count($results)>0)
-		{
+		if(count($results)>0) {
 			return $results[0];
 		}
 		return false;
-	}function get_user_fields($uid,$field){return $this->get_user_field($uid,$field);}
-	
-	
+	}
+
+	function get_user_fields($uid,$field){return $this->get_user_field($uid,$field);}
+
 	/**
 	 * This function will return
 	 * user field without array
@@ -1723,13 +1654,10 @@ class userquery extends CBCategory{
 	{
 		global $db;
 		
-		if($is_level) 
-		{
+		if($is_level) {
 			$level = $uid;
-		}
-		else
-		{
-			$level = isset($this->udetails['level']) ? $this->udetails['level'] : false;
+		} else {
+			$level = $this->udetails['level'] ?? false;
 		}
 
         if ( $level == userid() or $level == $this->udetails[ 'level' ] ) {
@@ -1739,15 +1667,12 @@ class userquery extends CBCategory{
         }
 
 		$result = $db->select(tbl('user_levels,user_levels_permissions'),'*',
-							  tbl("user_levels_permissions.user_level_id")."='".$level."' 
-							  AND ".tbl("user_levels_permissions.user_level_id")." = ".tbl("user_levels.user_level_id"));
+							  tbl('user_levels_permissions.user_level_id')."='".$level."' 
+							  AND ".tbl('user_levels_permissions.user_level_id').' = '.tbl('user_levels.user_level_id'));
 
 		//Now Merging the two arrays
-		$user_level = isset($result[0]) ? $result[0] : false;
-		//pr($user_level);
-		return $user_level;
+		return $result[0] ?? false;
 	}
-
 
 	/**
 	 * Function used to get all levels
@@ -1759,15 +1684,13 @@ class userquery extends CBCategory{
 	function get_levels($filter=NULL)
 	{
 		global $db;
-		$results = $db->select(tbl("user_levels"),"*",NULL,NULL," user_level_id ASC" );
+		$results = $db->select(tbl('user_levels'),'*',NULL,NULL,' user_level_id ASC' );
 
-        if(count($results) > 0)
-		{
+        if(count($results) > 0) {
 			return $results;
 		}
         return false;
 	}
-
 
 	/**
 	 * Function used to get level details
@@ -1779,14 +1702,13 @@ class userquery extends CBCategory{
 	function get_level_details($lid)
 	{
 		global $db;
-		$results = $db->select(tbl("user_levels"),"*"," user_level_id='$lid' ");
-		if(count($results) > 0 )
-		{
+		$results = $db->select(tbl('user_levels'),'*'," user_level_id='$lid' ");
+		if(count($results) > 0 ) {
 			return $results[0];
-		} else {
-			e(lang("cant_find_level"));
-			return false;
 		}
+
+        e(lang('cant_find_level'));
+        return false;
 	}
 
 	/**
@@ -1798,49 +1720,47 @@ class userquery extends CBCategory{
 	 *
 	 * @return array|int
 	 */
-	function get_level_users($id,$count=FALSE,$fields="level")
+	function get_level_users($id,$count=FALSE,$fields='level')
 	{
 		global $db;
-		if($fields == "all")
-			$fields = "*";
+		if($fields == 'all'){
+			$fields = '*';
+        }
 			
-		$results = $db->select(tbl("users"),$fields," level='$id'");
-		if(count($results)>0)
-		{
-			if($count)
+		$results = $db->select(tbl('users'),$fields," level='$id'");
+		if(count($results)>0) {
+			if($count){
 				return count($results);
-			else
-				return $results;
-		} else {
-			return 0;
+            }
+			return $results;
 		}
+
+		return 0;
 	}
-	
-	
+
 	/**
 	 * Function used to add user level
 	 */
 	function add_user_level($array)
 	{
 		global $db;
-		if(!is_array($array))
+		if(!is_array($array)){
 			$array = $_POST;
+        }
 		$level_name = mysql_clean($array['level_name']);
-		if(empty($level_name))
-			e(lang("please_enter_level_name"));
-		else
-		{
-			$db->insert(tbl("user_levels"),array('user_level_name'),array($level_name));
+		if(empty($level_name)){
+			e(lang('please_enter_level_name'));
+        } else {
+			$db->insert(tbl('user_levels'),array('user_level_name'),array($level_name));
 			$iid = $db->insert_id();
 			
 			$fields_array[] = 'user_level_id';
 			$value_array[] = $iid;
-			foreach($this->get_access_type_list() as $access => $name)
-			{
+			foreach($this->get_access_type_list() as $access => $name) {
 				$fields_array[] = $access;
 				$value_array[] = $array[$access] ? $array[$access] : 'no';
 			}
-			$db->insert(tbl("user_levels_permissions"),$fields_array,$value_array);		
+			$db->insert(tbl('user_levels_permissions'),$fields_array,$value_array);
 			return true;
 		}
 	}
@@ -1850,27 +1770,26 @@ class userquery extends CBCategory{
 	 *
 	 * @param $id
 	 *
-	 * @return bool
+	 * @return bool|array
 	 */
 	function get_level_permissions($id)
 	{
 		global $db;
-		$results = $db->select(tbl("user_levels_permissions"),"*"," user_level_id = '$id'");		
-		if(count($results)>0)
+		$results = $db->select(tbl('user_levels_permissions'),'*'," user_level_id = '$id'");
+		if(count($results)>0){
 			return $results[0];
+        }
 		return false;
 	}
 	
 	/**
 	 * Function used to get custom permissions
 	 */
-	function get_access_type_list()
-	{
-		if(!$this->access_type_list)
-		{
+	function get_access_type_list(): array
+    {
+		if(!$this->access_type_list) {
 			$perms = $this->get_permissions();
-			foreach($perms as $perm)
-			{
+			foreach($perms as $perm) {
 				$this->add_access_type($perm['permission_code'],$perm['permission_name']);
 			}
 		}
@@ -1882,130 +1801,88 @@ class userquery extends CBCategory{
 	 */
 	function add_access_type($access,$name)
 	{
-		if(!empty($access) && !empty($name))
+		if(!empty($access) && !empty($name)){
 			$this->access_type_list[$access] = $name;
+        }
 	}
-	
-	/**
-	 * Function get access
-	 */
-	function get_access($access)
-	{
-		return $this->access_type_list[$access];
-	}
-	
+
 	/**
 	 * Function used to update user level
 	 * @param INT level_id
 	 * @param ARRAY perm_level
 	 */
-	function update_user_level($id,$array)
-	{
+	function update_user_level($id,$array): bool
+    {
 		global $db;
-		if(!is_array($array))
+		if(!is_array($array)){
 			$array = $_POST;
+        }
 		
 		//First Checking Level
 		$level = $this->get_level_details($id);
-		
 
-		if($level)
-		{
-			foreach($this->get_access_type_list() as $access => $name)
-			{
+		if($level) {
+			foreach($this->get_access_type_list() as $access => $name) {
 				$fields_array[] = $access;
 				$value_array[] = $array[$access];
 			}
 
-
-			
 			//Checking level Name
-			if(!empty($array['level_name']))
-			{
+			if(!empty($array['level_name'])) {
 				$level_name = mysql_clean($array['level_name']);
-				//Upadting Now				
-				$db->update(tbl("user_levels"),array("user_level_name"),array($level_name)," user_level_id = '$id'");
+				//Updating Now
+				$db->update(tbl('user_levels'),array('user_level_name'),array($level_name)," user_level_id = '$id'");
 			}
-			
 
-			if(isset($_POST['plugin_perm']))
-			{
+			if(isset($_POST['plugin_perm'])) {
 				$fields_array[] = 'plugins_perms';
 				$value_array[] = '|no_mc|'.json_encode($_POST['plugin_perm']);
 			}
-			
-			
+
 			//Updating Permissions
-			$db->update(tbl("user_levels_permissions"),$fields_array,$value_array," user_level_id = '$id'");
+			$db->update(tbl('user_levels_permissions'),$fields_array,$value_array," user_level_id = '$id'");
 			
-			e(lang("level_updated"),'m');
+			e(lang('level_updated'),'m');
 			return true;
-		} else {
-			return false;
 		}
+
+		return false;
 	}
-	
-	
+
 	/**
 	 * Function used to delete user levels
 	 * @param INT level_id
 	 */
-	function delete_user_level($id)
-	{
+	function delete_user_level($id): bool
+    {
 		global $db;
 		$level_details = $this->get_level_details($id);
 		$de_level = $this->get_level_details(3);
-		if($level_details)
-		{
+		if($level_details) {
 			//CHeck if leve is deleteable or not
-			if($level_details['user_level_is_default']=='no')
-			{
-				$db->delete(tbl("user_levels"),array("user_level_id"),array($id));
-				$db->delete(tbl("user_levels_permissions"),array("user_level_id"),array($id));
-				e(sprintf(lang("level_del_sucess"),$de_level['user_level_name']));
+			if($level_details['user_level_is_default']=='no') {
+				$db->delete(tbl('user_levels'),array('user_level_id'),array($id));
+				$db->delete(tbl('user_levels_permissions'),array('user_level_id'),array($id));
+				e(sprintf(lang('level_del_sucess'),$de_level['user_level_name']));
 				
-				$db->update(tbl("users"),array("level"),array(3)," level='$id'");
+				$db->update(tbl('users'),array('level'),array(3)," level='$id'");
 				return true;
-				
-			} else {
-				e(lang("level_not_deleteable"));
-				return false;
 			}
+
+            e(lang("level_not_deleteable"));
+            return false;
 		}
 	}
-	
-	
+
 	/**
 	 * Function used to count total video comments
 	 */
 	function count_profile_comments($id)
 	{
 		global $db;
-		$total_comments = $db->count(tbl('comments'),"comment_id","type='c' AND type_id='$id' AND parent_id='0'");
-		return $total_comments;
+		return $db->count(tbl('comments'),"comment_id","type='c' AND type_id='$id' AND parent_id='0'");
 	}
-	function count_channel_comments($id){ return $this->count_profile_comments($id); }
-	
-	/**
-	 * Function used to count total comments made by users
-	 */
-	function count_comments_by_user($uid)
-	{
-		global $db;
-		$total_comments = $db->count(tbl('comments'),"comment_id","userid='$uid'");
-		return $total_comments;
-	}
-	
-	/**
-	 * Function used to update user comments
-	 */
-	function update_comments_by_user($uid)
-	{
-		global $db;
-		$total_comments = $this->count_comments_by_user($id);
-		$db->update(tbl("users"),array("total_comments","last_commented"),array($total_comments,now())," userid='$id'");
-	}
-	
+
 	/**
 	 * Function used to update user comments count
 	 */
@@ -2013,36 +1890,36 @@ class userquery extends CBCategory{
 	{
 		global $db;
 		$total_comments = $this->count_profile_comments($id);
-		$db->update(tbl("users"),array("comments_count","last_commented"),array($total_comments,now())," userid='$id'");
-	
+		$db->update(tbl('users'),array('comments_count','last_commented'),array($total_comments,now())," userid='$id'");
 	}
-	/**
-	 * Function used to add comment on users profile
-	 */
+
+    /**
+     * Function used to add comment on users profile
+     * @throws phpmailerException
+     */
 	function add_comment($comment,$obj_id,$reply_to=NULL,$type='c')
 	{
 		global $myquery;
-		if(!$this->user_exists($obj_id))
-			e(lang("usr_exist_err"));
-		else
-		{
+		if(!$this->user_exists($obj_id)){
+			e(lang('usr_exist_err'));
+        } else {
 			$add_comment = $myquery->add_comment($comment,$obj_id,$reply_to,$type,$obj_id);
 		}
-		if($add_comment)
-		{
+
+		if($add_comment) {
 			//Logging Comment
-			$log_array = array
-			(
-			 'success'=>'yes',
-			 'details'=> "comment on a profile",
-			 'action_obj_id' => $obj_id,
-			 'action_done_id' => $add_comment,
+			$log_array = array(
+                'success'=>'yes',
+                'details'=> 'comment on a profile',
+                'action_obj_id' => $obj_id,
+                'action_done_id' => $add_comment
 			);
 			insert_log('profile_comment',$log_array);
 			
 			//Updating Number of comments of user if comment is not a reply
-			if ($reply_to < 1)
-			$this->update_comments_count($obj_id);
+			if ($reply_to < 1){
+			    $this->update_comments_count($obj_id);
+            }
 		}
 		return $add_comment;
 	}
@@ -2054,8 +1931,7 @@ class userquery extends CBCategory{
 	{
 		global $myquery;
 		$remove_comment = $myquery->delete_comment($cid,'c',$is_reply);
-		if($remove_comment)
-		{
+		if($remove_comment) {
 			//Updating Number of comments of video
 			$this->update_comments_count($obj_id);
 		}
@@ -2075,17 +1951,18 @@ class userquery extends CBCategory{
 	function get_user_vids($uid,$cond=NULL,$count_only=false, $myacc = false)
 	{
 		global $db;
-		if($cond!=NULL)
+		if($cond!=NULL){
 			$cond = " AND $cond ";
+        }
 
 		$limit = '';
 		$order = '';
 		if ($myacc) {
-			$limit = " 0,15 ";
-			$order = " videoid DESC";
+			$limit = ' 0,15 ';
+			$order = ' videoid DESC';
 		}
 
-		$results = $db->select(tbl("video"),"*"," userid = '$uid' $cond","$limit","$order");
+		$results = $db->select(tbl('video'),'*'," userid = '$uid' $cond","$limit","$order");
 		if(count($results) > 0) {
 			if ($myacc) {
 				return $results;
@@ -2098,8 +1975,7 @@ class userquery extends CBCategory{
 		}
 		return false;
 	}
-	
-	
+
 	/**
 	 * Function used to get logged in username
 	 */
@@ -2123,30 +1999,27 @@ class userquery extends CBCategory{
 	 *
 	 * @return string
 	 */
-	function profile_link($udetails)
-	{
-		if(!is_array($udetails) && is_numeric($udetails))
+	function profile_link($udetails): string
+    {
+		if(!is_array($udetails) && is_numeric($udetails)){
 			$udetails = $this->get_user_details($udetails);
+        }
 
 		$username = display_clean($udetails['username']);
-		if(SEO!="yes")
+		if(SEO!='yes'){
 			return '/view_channel.php?user='.$username;
-		else
-			return '/user/'.$username;
-	}
+        }
 
-	function get_user_link($u)
-	{
-		return $this->profile_link($u);
+		return '/user/'.$username;
 	}
 
 	/**
 	 * Function used to get permission types
 	 */
-	function get_level_types()
-	{
+	function get_level_types(): array
+    {
 		global $db;
-		return $db->select(tbl($this->dbtbl['user_permission_type']),"*");
+		return $db->select(tbl($this->dbtbl['user_permission_type']),'*');
 	}
 
 	/**
@@ -2154,67 +2027,35 @@ class userquery extends CBCategory{
 	 *
 	 * @param $id
 	 *
-	 * @return bool
+	 * @return bool|array
 	 */
 	function level_type_exists($id)
 	{
 		global $db;
-		$result = $db->select(tbl($this->dbtbl['user_permission_type']),"*"," user_permission_type_id='".$id."' OR user_permission_type_name='$id'");
-		if(count($result)>0)
+		$result = $db->select(tbl($this->dbtbl['user_permission_type']),'*'," user_permission_type_id='".$id."' OR user_permission_type_name='$id'");
+		if(count($result)>0){
 			return $result[0];
-		else
-			return false;
+        }
+
+		return false;
 	}
 
-	/**
-	 * Function used to add new permission
-	 *
-	 * @param $array
-	 */
-	function add_new_permission($array)
-	{
-		global $db;
-		if(empty($array['code']))
-			e(lang("perm_code_empty"));
-		elseif(empty($array['name']))
-			e(lang("perm_name_empty"));
-		elseif($this->permission_exists($array['code']))
-			e(lang("perm_already_exist"));
-		elseif(!$this->level_type_exists($array['type']))
-			e(lang("perm_type_not_valid"));
-		else
-		{
-			$type = $this->level_type_exists($array['type']);
-			$typeid = $type['user_permission_type_id'];
-			$code = mysql_clean($array['code']);
-			$name = mysql_clean($array['name']);
-			$desc = mysql_clean($array['desc']);
-			$default = mysql_clean($array['default']);
-			$default = $default ? $default : "yes";
-			$db->insert(tbl($this->dbtbl['user_permissions']),
-						array('permission_type','permission_code','permission_name','permission_desc','permission_default'),
-						array($typeid,$code,$name,$desc,$default));
-			$db->execute("ALTER TABLE ".tbl($this->dbtbl['user_level_permission'])." ADD `".$code."` ENUM( 'yes', 'no' ) NOT NULL DEFAULT '".$default."'");
-			e(lang("perm_added"),"m");
-		}
-	}
-
-	/**
-	 * Function used to check permission exists or not
-	 * @Param permission code
-	 *
-	 * @param $code
-	 *
-	 * @return bool
-	 */
+    /**
+     * Function used to check permission exists or not
+     *
+     * @param $code
+     *
+     * @return bool|array
+     */
 	function permission_exists($code)
 	{
 		global $db;
-		$result = $db->select(tbl($this->dbtbl['user_permissions']),"*"," permission_code='".$code."' OR permission_id='".$code."'");
-		if(count($result)>0)
+		$result = $db->select(tbl($this->dbtbl['user_permissions']),'*'," permission_code='".$code."' OR permission_id='".$code."'");
+		if(count($result)>0){
 			return $result[0];
-		else
-			return false;
+        }
+
+		return false;
 	}
 
 	/**
@@ -2228,35 +2069,16 @@ class userquery extends CBCategory{
 	{
 		global $db;
 		$cond = '';
-		if($type)
+		if($type){
 			$cond = " permission_type ='$type'";
-		$result = $db->select(tbl($this->dbtbl['user_permissions']),"*",$cond);
-		if(count($result)>0)
-		{
+        }
+		$result = $db->select(tbl($this->dbtbl['user_permissions']),'*',$cond);
+		if(count($result)>0) {
 			return $result;
-		}else
-		{
-			return false;
 		}
-	}
-	
-	/**
-	 * Function used to remove Permission
-	 */
-	function remove_permission($id)
-	{
-		global $db;
-		$permission = $this->permission_exists($id);
-		if($permission)
-		{
-			$field = $permission['permission_code'];
-			$db->delete(tbl($this->dbtbl['user_permissions']),array("permission_id"),array($id));
-			$db->execute("ALTER TABLE `".tbl($this->dbtbl['user_level_permission'])."` DROP `".$field."` ");
-			e(lang("perm_deleted"),"m");
-		}else
-			e(lang("perm_doesnt_exist"));
-	}
 
+		return false;
+	}
 
 	/**
 	 * Function used to check weather current user has permission
@@ -2272,36 +2094,40 @@ class userquery extends CBCategory{
 	 *
 	 * @return bool
 	 */
-	function perm_check($access='',$check_login=FALSE,$control_page=true, $silent = false)
-	{
+	function perm_check($access='',$check_login=FALSE,$control_page=true, $silent = false): bool
+    {
 		global $Cbucket;
 		$access_details = $this->permission;
-		if(is_numeric($access))
-		{
-			if($access_details['level_id'] == $access)
+		if(is_numeric($access)) {
+			if($access_details['level_id'] == $access){
 				return true;
+            }
 
-			if(!$check_only && !$silent)
+			if(!$check_only && !$silent){
 				e(lang('insufficient_privileges'));
+            }
 
-			if($control_page)
+			if($control_page){
 				$Cbucket->show_page(false);
+            }
 			return false;
 		}
 
-		if($access_details[$access] == 'yes')
+		if($access_details[$access] == 'yes'){
 			return true;
+        }
 
-		if( !$silent)
-		{
-			if(!$check_login || userid())
+		if( !$silent) {
+			if(!$check_login || userid()){
 				e(lang('insufficient_privileges'));
-			else
+            } else {
 				e(sprintf(lang('insufficient_privileges_loggin'),cblink(array('name'=>'signup')),cblink(array('name'=>'signup'))));
+            }
 		}
 
-		if($control_page)
+		if($control_page){
 			$Cbucket->show_page(false);
+        }
 		return false;
 	}
 
@@ -2310,14 +2136,15 @@ class userquery extends CBCategory{
 	 *
 	 * @param $uid
 	 *
-	 * @return bool
+	 * @return bool|array
 	 */
 	function get_user_profile($uid)
 	{
 		global $db;
-		$result = $db->select(tbl($this->dbtbl['user_profile']),"*"," userid='$uid'");
-		if(count($result)>0)
+		$result = $db->select(tbl($this->dbtbl['user_profile']),'*'," userid='$uid'");
+		if(count($result)>0){
 			return $result[0];
+        }
 		return false;
 	}
 
@@ -2328,10 +2155,11 @@ class userquery extends CBCategory{
 	 *
 	 * @return array
 	 */
-	function load_profile_fields($default)
-	{
-		if(!$default)
+	function load_profile_fields($default): array
+    {
+		if(!$default){
 			$default = $_POST;
+        }
 		
 		$profile_fields = $this->load_personal_details($default);
 		$other_details = $this->load_location_fields($default);
@@ -2349,8 +2177,9 @@ class userquery extends CBCategory{
 	function update_user($array)
 	{
 		global $db,$Upload;
-		if($array==NULL)
+		if($array==NULL){
 			$array = $_POST;
+        }
 		
 		if(is_array($_FILES)){
 			$array = array_merge($array,$_FILES);
@@ -2394,7 +2223,7 @@ class userquery extends CBCategory{
 			if(is_array($val)) {
 				$new_val = '';
 				foreach($val as $v) {
-					$new_val .= "#".$v."# ";
+					$new_val .= '#'.$v.'# ';
 				}
 				$val = $new_val;
 			}
@@ -2424,7 +2253,7 @@ class userquery extends CBCategory{
 			if(is_array($val)) {
 				$new_val = '';
 				foreach($val as $v) {
-					$new_val .= "#".$v."# ";
+					$new_val .= '#'.$v.'# ';
 				}
 				$val = $new_val;
 			}
@@ -2441,12 +2270,13 @@ class userquery extends CBCategory{
 		if(has_access('admin_access',TRUE) && isset($array['admin_manager']))
 		{
 			//Checking Username
-			if(empty($array['username']))
+			if(empty($array['username'])){
 				e(lang('usr_uname_err'));
-			elseif(!username_check($array['username']))
+            } elseif(!username_check($array['username'])) {
 				e(lang('usr_uname_err3'));
-			else
+            } else {
 				$username = $array['username'];
+            }
 			
 			//Checking Email
 			if(empty($array['email'])){
@@ -2622,7 +2452,7 @@ class userquery extends CBCategory{
 				if(is_array($val)) {
 					$new_val = '';
 					foreach($val as $v) {
-						$new_val .= "#".$v."# ";
+						$new_val .= '#'.$v.'# ';
 					}
 					$val = $new_val;
 				}
@@ -2638,20 +2468,20 @@ class userquery extends CBCategory{
 		
 		if(!error() && is_array($uquery_field)) {
 			$db->update(tbl($this->dbtbl['users']), $uquery_field, $uquery_val," userid='".mysql_clean($array['userid'])."'");
-			e(lang("usr_upd_succ_msg"),'m');
+			e(lang('usr_upd_succ_msg'),'m');
 		}
 
 		//updating user profile
 		if(!error()) {
 			$log_array = array(
-				'success'=>'yes',
-				'details'=> "updated profile"
+				'success' => 'yes',
+				'details' => 'updated profile'
 			);
 			//Login Upload
 			insert_log('profile_update',$log_array);
 			
 			$db->update(tbl($this->dbtbl['user_profile']),$query_field,$query_val," userid='".mysql_clean($array['userid'])."'");
-			e(lang("usr_pof_upd_msg"),'m');
+			e(lang('usr_pof_upd_msg'),'m');
 		}
 	}
 
@@ -2711,7 +2541,7 @@ class userquery extends CBCategory{
 			$uquery_val[] = $array['background_repeat'];
 		}
 		
-		//Background Attachement
+		//Background Attachment
 		$uquery_field[] = 'background_attachement';
 		$uquery_val[] = $array['background_attachement'];
 
@@ -2724,29 +2554,29 @@ class userquery extends CBCategory{
 		}
 
 		$log_array = array(
-			'success'=>'yes',
-			'details'=> "updated profile"
+			'success' => 'yes',
+			'details' => 'updated profile'
 		);
 
 		//Login Upload
 		insert_log('profile_update',$log_array);
 
 		$db->update(tbl($this->dbtbl['users']),$uquery_field,$uquery_val," userid='".userid()."'");
-		e(lang("usr_avatar_bg_update"),'m');
+		e(lang('usr_avatar_bg_update'),'m');
 	}
 
-	public function updateCover($array = array())
-	{
+	public function updateCover($array = array()): array
+    {
 		if(!empty($array)) {
-			if(isset($array["coverPhoto"])) {
-				$coverPhoto = $array["coverPhoto"];
+			if(isset($array['coverPhoto'])) {
+				$coverPhoto = $array['coverPhoto'];
 				$photoType = $coverPhoto["type"];
-				$photoSize = (int) $coverPhoto["size"]; // in kbs
+				$photoSize = (int) $coverPhoto['size']; // in kbs
 				$maxPhotoSize = 2048; // in kbs
 				if($photoType) {
-					$name = $array["userid"];
-					$coverPhoto = $array["coverPhoto"]["tmp_name"];
-					$ext = $this->getImageExt($array["coverPhoto"]["name"]);
+					$name = $array['userid'];
+					$coverPhoto = $array['coverPhoto']['tmp_name'];
+					$ext = $this->getImageExt($array['coverPhoto']['name']);
 					if (!file_exists(COVERS_DIR . "/{$name}")) {
 					    mkdir(COVERS_DIR . "/{$name}", 0777, true);
 					}
@@ -2762,25 +2592,25 @@ class userquery extends CBCategory{
 						}
 						move_uploaded_file($coverPhoto, COVERS_DIR . "/{$name}/{$name}.{$ext}");
 						return array(
-							"status" => true,
-							"msg" => "Succesfully Uploaded",
+							'status' => true,
+							'msg' => 'Succesfully Uploaded'
 						);
 					}
                     return array(
-                        "status" => false,
-                        "msg" => "Only 1150 x 220 images are allowed {$width} x {$height} provided",
+                        'status' => false,
+                        'msg' => "Only 1150 x 220 images are allowed {$width} x {$height} provided"
                     );
 				}
 			}
 		}
 		return array(
-			"status" => false,
-			"msg" => "no data was sent",
+			'status' => false,
+			'msg' => 'no data was sent'
         );
 	}
 
-	public function getCover($userId = false)
-	{
+	public function getCover($userId = false): string
+    {
 		if(!$userId){
 			$userId = userid();
 		}
@@ -2797,14 +2627,14 @@ class userquery extends CBCategory{
 	public function getImageExt($imageName = false)
 	{
 		if($imageName){
-			$nameParts = explode(".", $imageName);
+			$nameParts = explode('.', $imageName);
 			$ext = array_pop($nameParts);
 			return $ext;
 		}
 	}
 
-	public function resizeImage($source_image_path, $thumbnail_image_path)
-	{
+	public function resizeImage($source_image_path, $thumbnail_image_path): bool
+    {
 		define('THUMBNAIL_IMAGE_MAX_WIDTH', 1150);
 		define('THUMBNAIL_IMAGE_MAX_HEIGHT', 220);
 	    list($source_image_width, $source_image_height, $source_image_type) = getimagesize($source_image_path);
@@ -2852,7 +2682,7 @@ class userquery extends CBCategory{
 	function username_exists($i)
 	{
 		global $db;
-		return $db->count(tbl($this->dbtbl['users']),"username"," username='$i'");
+		return $db->count(tbl($this->dbtbl['users']),'username'," username='$i'");
 	}
 
 	/**
@@ -2862,10 +2692,10 @@ class userquery extends CBCategory{
 	 *
 	 * @return bool
 	 */
-    function email_exists($i)
+    function email_exists($i): bool
     {
 		global $db;
-		$result = $db->select(tbl($this->dbtbl['users']),"email"," email='$i'");
+		$result = $db->select(tbl($this->dbtbl['users']),'email'," email='$i'");
 		if(count($result)>0){
 			return true;
         }
@@ -2898,7 +2728,7 @@ class userquery extends CBCategory{
 	function get_user_action_log($uid,$limit=NULL)
 	{
 		global $db;
-		$result = $db->select(tbl($this->dbtbl['action_log']),"*"," action_userid='$uid'",$limit," date_added DESC");
+		$result = $db->select(tbl($this->dbtbl['action_log']),'*'," action_userid='$uid'",$limit,' date_added DESC');
 		if(count($result)>0){
 			return $result;
         }
@@ -2913,8 +2743,8 @@ class userquery extends CBCategory{
 	 *
 	 * @return array
 	 */
-	function load_custom_profile_fields($data,$group_based=false)
-	{
+	function load_custom_profile_fields($data,$group_based=false): array
+    {
 		if(!$group_based) {
 			$array = $this->custom_profile_fields;
 			foreach($array as $key => $fields) {
@@ -3003,42 +2833,6 @@ class userquery extends CBCategory{
 		
 		return $new_array;
 	}
-
-	/**
-	 * Function used to get channel links
-	 * ie Playlist, favorites etc etc
-	 *
-	 * @param $u
-	 *
-	 * @return array
-	 */
-	function get_inner_channel_top_links($u)
-	{
-		$channel_links = array();
-		
-		if(isSectionEnabled('videos')) {
-			$channel_links[lang('upload')] = array('link'=>$this->get_user_videos_link($u));
-			$channel_links[lang('favorites')] = array('link'=>cblink(array('name'=>'user_favorites')).$u['username']);
-		}
-		if(isSectionEnabled('channels')){
-			$channel_links[lang('contacts')] = array('link'=>cblink(array('name'=>'user_contacts')).$u['username']);
-        }
-		
-		return $channel_links;
-	}
-	
-	/**
-	 * Function used to get user channel action links
-	 * ie Add to friends, send message etc etc
-	 */
-	function get_channel_action_links($u)
-	{
-		return array(
-			lang('send_message')=>array('link'=>cblink(array('name'=>'compose_new','extra_params'=>'to='.$u['username']))),
-			lang('add_as_friend')=>array('link'=>'javascript:void(0)','onclick'=>"add_friend('".$u['userid']."','result_cont')"),
-			lang('block_user')=>array('link'=>'javascript:void(0)','onclick'=>"block_user('".$u['username']."','result_cont')")
-        );
-	}
 	
 	/**
 	 * Function used to get user videos link
@@ -3048,26 +2842,6 @@ class userquery extends CBCategory{
 		return cblink(array('name'=>'user_videos')).$u['username'];
 	}
 
-	/**
-	 * Function used to get user channel video
-	 *
-	 * @param $u
-	 *
-	 * @return bool|mixed|STRING
-	 */
-	function get_user_profile_video($u)
-	{
-		global $cbvid;
-		if(empty($u['profile_video'])&&!$cbvid->video_exists($u)) {
-			$u = $this->get_user_profile($u);
-		}
-		
-		if($cbvid->video_exists($u['profile_video'])){
-			return $cbvid->get_video_details($u['profile_video']);
-        }
-		return false;
-	}
-
 	/*
 	* Get number of all unread messages of a user using his userid
 	*/
@@ -3075,7 +2849,7 @@ class userquery extends CBCategory{
 	{
 		global $db;
 		$userid = '#'.$userid.'#';
-		$results = $db->select(tbl("messages"),"*", "message_to='$userid' AND message_status='unread'");
+		$results = $db->select(tbl('messages'),'*', "message_to='$userid' AND message_status='unread'");
 		$count = count($results);
 
 		if ( $label ) {
@@ -3085,35 +2859,6 @@ class userquery extends CBCategory{
 		return $count;
 	}
 
-	/*
-	* Get number of all read messages of a user using his userid
-	*/
-	function get_read_msgs( $userid, $label = false )
-	{
-		global $db;
-		$results = $db->select(tbl("messages"),"*", "message_to='$userid' AND message_status='read'");
-		$count = count($results);
-
-		if ( $label ) {
-			echo '<span class="label label-danger">'.$count.'</span></h3>';
-		}
-
-		return $count;
-	}
-
-	function show_unread_alrt( $userid, $class ) {
-		$forbid = array('index','watch_video','view_item','videos','photos','channels','collections','view_page','search_result');
-		$page = THIS_PAGE;
-		if (!in_array($page, $forbid)) {
-			$unread_msgs = $this->get_unread_msgs( $userid );
-			if ($unread_msgs > 0) {
-				echo "<div class='".$class." alert alert-warning'>You have <a href=/private_message.php?mode=inbox><span style='color: black'><strong>".$unread_msgs."<strong> unread messages </a> in your inbox</div>";
-			} else {
-				return false;
-			}
-		}
-	}
-	
 	/**
 	 * My Account links Edited on 12 march 2014 for user account links
 	 */
@@ -3193,7 +2938,7 @@ class userquery extends CBCategory{
 			e(lang('usr_email_err3'));
         } else {
 			$db->update(tbl($this->dbtbl['users']),array('email'),array($array['new_email'])," userid='".$array['userid']."'");
-			e(lang("email_change_msg"),"m");
+			e(lang('email_change_msg'),'m');
 		}
 	}
 
@@ -3207,7 +2952,7 @@ class userquery extends CBCategory{
 	 */
 	function block_users($users,$uid=NULL)
 	{
-		return $this->ban_users($users,$uid);
+		$this->ban_users($users,$uid);
 	}
 
 	function ban_users($users,$uid=NULL)
@@ -3227,10 +2972,10 @@ class userquery extends CBCategory{
 			$new_users = array_unique($new_users);
 			$banned_users = implode(',',$new_users);
 			$db->update(tbl($this->dbtbl['users']),array('banned_users'),array($banned_users)," userid='$uid'");
-			e(lang("user_ban_msg"),"m");
+			e(lang('user_ban_msg'),'m');
 		} else if (!$users) {
 			$db->update(tbl($this->dbtbl['users']),array('banned_users'),array($users)," userid='$uid'");
-			e(lang("no_user_ban_msg"),"m");
+			e(lang('no_user_ban_msg'),'m');
 		}
 	}
 
@@ -3256,12 +3001,12 @@ class userquery extends CBCategory{
 			
 			if(!$this->is_user_banned($user)) {
 				$db->update(tbl($this->dbtbl['users']),array('banned_users'),array($banned_users)," userid='$uid'");
-				e(lang("user_blocked"),"m");
+				e(lang('user_blocked'),'m');
 			} else {
-				e(lang("user_already_blocked"));
+				e(lang('user_already_blocked'));
             }
 		} else {
-			e(lang("you_cant_del_user"));
+			e(lang('you_cant_del_user'));
 		}
 	}
 
@@ -3274,8 +3019,8 @@ class userquery extends CBCategory{
 	 *
 	 * @return bool
 	 */
-	function is_user_banned($ban,$user=NULL,$banned_users=NULL)
-	{
+	function is_user_banned($ban,$user=NULL,$banned_users=NULL): bool
+    {
 		global $db;
 		if(!$user){
 			$user = userid();
@@ -3283,9 +3028,9 @@ class userquery extends CBCategory{
 		
 		if(!$banned_users) {
 			if(is_numeric($user)){
-				$result = $db->select(tbl($this->dbtbl['users']),"banned_users"," userid='$user' ");
+				$result = $db->select(tbl($this->dbtbl['users']),'banned_users'," userid='$user' ");
             } else {
-				$result = $db->select(tbl($this->dbtbl['users']),"banned_users"," username='$user' ");
+				$result = $db->select(tbl($this->dbtbl['users']),'banned_users'," username='$user' ");
             }
 			$banned_users = $result[0]['banned_users'];
 		}
@@ -3310,13 +3055,13 @@ class userquery extends CBCategory{
 		if(!$uid){
 			$uid = userid();
         }
-		$result = $db->select(tbl($this->dbtbl['users'].",".$this->dbtbl['user_profile']),"*",tbl($this->dbtbl['users']).".userid ='$uid' AND ".tbl($this->dbtbl['users']).".userid = ".tbl($this->dbtbl['user_profile']).".userid");
+		$result = $db->select(tbl($this->dbtbl['users'].','.$this->dbtbl['user_profile']),'*',tbl($this->dbtbl['users']).".userid ='$uid' AND ".tbl($this->dbtbl['users']).'.userid = '.tbl($this->dbtbl['user_profile']).'.userid');
 		return $result[0];
 	}
 	
 	
-	function load_signup_fields($input=NULL)
-	{
+	function load_signup_fields($input=NULL): array
+    {
 		global $Cbucket;
 
 		$default = array();
@@ -3352,9 +3097,9 @@ class userquery extends CBCategory{
 			$default = $_POST;
         }
 
-		$username = (isset($default['username'])) ? $default['username'] : "";
-		$email = (isset($default['email'])) ? $default['email'] : "";
-		$dob = (isset($default['dob'])) ? $default['dob'] : "";
+		$username = $default['username'] ?? '';
+		$email = $default['email'] ?? '';
+		$dob = $default['dob'] ?? '';
 
 		if( $dob != '' && $dob != '0000-00-00' ){
 		    $dob_datetime = DateTime::createFromFormat(DATE_FORMAT, $dob);
@@ -3388,10 +3133,10 @@ class userquery extends CBCategory{
 		$user_signup_fields = array(
 			'username' => array(
 				'title' => lang('username'),
-				'type' => "textfield",
+				'type' => 'textfield',
 				'placehoder' => lang('username'),
-				'name' => "username",
-				'id' => "username",
+				'name' => 'username',
+				'id' => 'username',
 				'value' => $username,
 				'hint_2' => lang('user_allowed_format'),
 				'db_field' => 'username',
@@ -3406,10 +3151,10 @@ class userquery extends CBCategory{
 			),
 			'email' => array(
 				'title'=> lang('email'),
-				'type'=> "textfield",
-				'placehoder'=>"Email",
-				'name'=> "email",
-				'id'=> "email",
+				'type'=> 'textfield',
+				'placehoder'=>'Email',
+				'name'=> 'email',
+				'id'=> 'email',
 				'value'=> $email,
 				'db_field'=>'email',
 				'required'=>'yes',
@@ -3423,10 +3168,10 @@ class userquery extends CBCategory{
 			),
 			'password' => array(
 				'title' => lang('password'),
-				'type' => "password",
+				'type' => 'password',
 				'placehoder'=> lang('password'),
-				'name' => "password",
-				'id' => "password",
+				'name' => 'password',
+				'id' => 'password',
 				'required' =>'yes',
 				'invalid_err' => lang('usr_pass_err2'),
 				'relative_to' => 'cpassword',
@@ -3435,10 +3180,10 @@ class userquery extends CBCategory{
 			),
 			'cpassword' => array(
 				'title' => lang('user_confirm_pass'),
-				'type' => "password",
+				'type' => 'password',
 				'placehoder' => lang('user_confirm_pass'),
-				'name' => "cpassword",
-				'id' => "cpassword",
+				'name' => 'cpassword',
+				'id' => 'cpassword',
 				'required' => 'no',
 				'invalid_err' => lang('usr_cpass_err')
 			),
@@ -3486,7 +3231,7 @@ class userquery extends CBCategory{
 				'db_field' => 'category',
 				'checked' => $default['category'],
 				'required' =>'yes',
-				'invalid_err' => lang("select_category"),
+				'invalid_err' => lang('select_category'),
 				'display_function' => 'convert_to_categories',
 				'category_type' => 'user'
 			)
@@ -3608,7 +3353,7 @@ class userquery extends CBCategory{
 				if(is_array($val)) {
 					$new_val = '';
 					foreach($val as $v) {
-						$new_val .= "#".$v."# ";
+						$new_val .= '#'.$v.'# ';
 					}
 					$val = $new_val;
 				}
@@ -3641,7 +3386,7 @@ class userquery extends CBCategory{
 					$welcome_email = 'no';
 				}
 
-				$query_field[] = "level";
+				$query_field[] = 'level';
 				$query_val[] = $array['level'];
 			}
 			global $Upload;
@@ -3652,25 +3397,25 @@ class userquery extends CBCategory{
 				$query_val[] = $array[$db_field];
 			}
 
-			$query_field[] = "usr_status";
+			$query_field[] = 'usr_status';
 			$query_val[] = $usr_status;
 
-			$query_field[] = "welcome_email_sent";
+			$query_field[] = 'welcome_email_sent';
 			$query_val[] = $welcome_email;
 
 			//Creating AV Code
 			$avcode	= RandomString(10);
-			$query_field[] = "avcode";
+			$query_field[] = 'avcode';
 			$query_val[] = $avcode;
 
 			//Signup IP
 			$signup_ip = $_SERVER['REMOTE_ADDR'];
-			$query_field[] = "signup_ip";
+			$query_field[] = 'signup_ip';
 			$query_val[] = $signup_ip;
 
 			//Date Joined
 			$now = NOW();
-			$query_field[] = "doj";
+			$query_field[] = 'doj';
 			$query_val[] = $now;
 
 			/**
@@ -3684,13 +3429,13 @@ class userquery extends CBCategory{
 			$sess_key = $this->create_session_key($_COOKIE['PHPSESSID'], $array['password']);
 			$sess_code = $this->create_session_code();
 
-			$query_field[] = "user_session_key";
+			$query_field[] = 'user_session_key';
 			$query_val[] = $sess_key;
 
-			$query_field[] = "user_session_code";
+			$query_field[] = 'user_session_code';
 			$query_val[] = $sess_code;
 
-			$query = "INSERT INTO ".tbl("users")." (";
+			$query = 'INSERT INTO '.tbl('users').' (';
 			$total_fields = count($query_field);
 
 			//Adding Fields to query
@@ -3703,7 +3448,7 @@ class userquery extends CBCategory{
                 }
 			}
 
-			$query .= ") VALUES (";
+			$query .= ') VALUES (';
 
 			$i = 0;
 			//Adding Fields Values to query
@@ -3722,7 +3467,7 @@ class userquery extends CBCategory{
 			$insert_id = $db->insert_id();
 
 			$db->update(tbl($this->dbtbl['users']),array('password'),array(pass_code($array['password'], $insert_id))," userid='".$insert_id."'");
-			$db->insert(tbl($userquery->dbtbl['user_profile']), array("userid"), array($insert_id));
+			$db->insert(tbl($userquery->dbtbl['user_profile']), array('userid'), array($insert_id));
 
 			if(!has_access('admin_access',true) && EMAIL_VERIFICATION && $send_signup_email) {
 				global $cbemail;
@@ -3731,7 +3476,7 @@ class userquery extends CBCategory{
 					'{username}'	=> post('username'),
 					'{password}'	=> post('password'),
 					'{email}'		=> post('email'),
-				 	'{avcode}'		=> $avcode,
+				 	'{avcode}'		=> $avcode
 				);
 
 				$var = array();
@@ -3751,7 +3496,7 @@ class userquery extends CBCategory{
 				'userlevel'	=> $array['level'],
 				'useremail'	=> $array['email'],
 				'success'	=>'yes',
-				'details'	=> sprintf("%s signed up",$array['username'])
+				'details'	=> sprintf('%s signed up',$array['username'])
 			);
 
 			//Login Signup
@@ -3765,11 +3510,12 @@ class userquery extends CBCategory{
 		return false;
 	}
 
-	function duplicate_email($name)
-	{
+	function duplicate_email($name): bool
+    {
 		$myquery = new myquery();
-		if($myquery->check_email($name))
+		if($myquery->check_email($name)){
 			return true;
+        }
 		return false;
 	}
 
@@ -3788,45 +3534,45 @@ class userquery extends CBCategory{
 		$limit = $params['limit'];
 		$order = $params['order'];
 		
-		$cond = "";
-		if(!has_access('admin_access',TRUE) && !$force_admin)
+		$cond = '';
+		if(!has_access('admin_access',TRUE) && !$force_admin){
 			$cond .= " users.usr_status='Ok' AND users.ban_status ='no' ";
-		else
-		{
-			if(!empty($params['ban']))
+        } else {
+			if(!empty($params['ban'])){
 				$cond .= " users.ban_status ='".$params['ban']."'";
+            }
 
-			if(!empty($params['status']))
-			{
-				if( $cond != '' )
+			if(!empty($params['status'])) {
+				if( $cond != '' ){
 					$cond .= ' AND';
+                }
 				$cond .= " users.usr_status='".$params['status']."'";
 			}
 		}
 
 		//Setting Category Condition
-		if(!empty($params['category']) && !is_array($params['category']))
+		if(!empty($params['category']) && !is_array($params['category'])){
 			$is_all = strtolower($params['category']);
+        }
 
-		if(isset($params['category']) && $params['category'] != '' && $is_all != lang('all'))
-		{
-			if($cond!='')
+		if(isset($params['category']) && $params['category'] != '' && $is_all != lang('all')) {
+			if($cond!=''){
 				$cond .= ' AND';
+            }
 
-			$cond .= " (";
+			$cond .= ' (';
 
-			if(!empty($params['category']) && !is_array($params['category']))
-			{
+			if(!empty($params['category']) && !is_array($params['category'])) {
 				$cats = explode(',',$params['category']);
-			} else
+			} else {
 				$cats = $params['category'];
+            }
 
 			$count = 0;
-			foreach($cats as $cat_params)
-			{
+			foreach($cats as $cat_params) {
 				$count ++;
 				if($count>1)
-				$cond .=" OR ";
+				$cond .= ' OR ';
 				$cond .= " users.category LIKE '%$cat_params%' ";
 			}
 
@@ -3834,114 +3580,114 @@ class userquery extends CBCategory{
 		}
 
 		//date span
-		if(!empty($params['date_span']))
-		{
-			if($cond!='')
+		if(!empty($params['date_span'])) {
+			if($cond!=''){
 				$cond .= ' AND';
-			$cond .= ' '.cbsearch::date_margin("users.doj",$params['date_span']);
+            }
+			$cond .= ' '.cbsearch::date_margin('users.doj',$params['date_span']);
 		}
 
 		//FEATURED
-		if(!empty($params['featured']))
-		{
-			if($cond!='')
+		if(!empty($params['featured'])) {
+			if($cond!=''){
 				$cond .= ' AND';
+            }
 			$cond .= " users.featured = '".$params['featured']."' ";
 		}
 
-		if(!empty($params['search_username']))
-		{
-			if($cond!='')
+		if(!empty($params['search_username'])) {
+			if($cond!=''){
 				$cond .= ' AND ';
+            }
 			$cond .= " users.username LIKE '%".$params['search_username']."%'";
 		}
 
 		//Username
-		if(isset($params['username']) && $params['username'] != '')
-		{
-			if($cond!='')
+		if(isset($params['username']) && $params['username'] != '') {
+			if($cond!=''){
 				$cond .= ' AND';
+            }
 			$cond .= " users.username = '".$params['username']."' ";
 		}
 
 		//Email
-		if(isset($params['email']) && $params['email'] != '')
-		{
-			if($cond!='')
+		if(isset($params['email']) && $params['email'] != '') {
+			if($cond!=''){
 				$cond .= ' AND';
+            }
 			$cond .= " users.email = '".$params['email']."' ";
 		}
 
 		//Exclude Users
-		if(!empty($params['exclude']))
-		{
-			if($cond!='')
+		if(!empty($params['exclude'])) {
+			if($cond!=''){
 				$cond .= ' AND';
+            }
 			$cond .= " users.userid <> '".$params['exclude']."' ";
 		}
 
 		//Getting specific User
-		if(isset($params['userid']) && $params['userid'] != '')
-		{
-			if($cond!='')
+		if(isset($params['userid']) && $params['userid'] != '') {
+			if($cond!=''){
 				$cond .= ' AND';
+            }
 			$cond .= " users.userid = '".$params['userid']."' ";
 		}
 
 		//Sex
-		if(!empty($params['gender']))
-		{
-			if($cond!='')
+		if(!empty($params['gender'])) {
+			if($cond!=''){
 				$cond .= ' AND';
+            }
 			$cond .= " users.sex = '".$params['gender']."' ";
 		}
 
 		//Level
-		if(isset($params['level']) && $params['level'] != '')
-		{
-			if($cond!='')
+		if(isset($params['level']) && $params['level'] != '') {
+			if($cond!=''){
 				$cond .= ' AND';
+            }
 			$cond .= " users.level = '".$params['level']."' ";
 		}
 
-		if(!empty($params['cond']))
-		{
-			if($cond!='')
+		if(!empty($params['cond'])) {
+			if($cond!=''){
 				$cond .= ' AND';
-			$cond .= " ".$params['cond']." ";
+            }
+			$cond .= ' '.$params['cond'].' ';
 		}
 
-		if(!isset($params['count_only']) || (isset($params['count_only']) && empty($params['count_only'])) )
-        {
+		if(!isset($params['count_only']) || (isset($params['count_only']) && empty($params['count_only'])) ) {
             $fields = array(
                 'users' => get_user_fields(),
-                'profile' => array( 'rating', 'rated_by', 'voters', 'first_name', 'last_name', 'profile_title', 'profile_desc','city','hometown'),
+                'profile' => array( 'rating', 'rated_by', 'voters', 'first_name', 'last_name', 'profile_title', 'profile_desc','city','hometown')
             );
             $fields['users'][] = 'last_active';
             $fields['users'][] = 'total_collections';
             $fields['users'][] = 'total_groups';
-            $query = " SELECT ".tbl_fields( $fields )." FROM ".tbl( 'users' )." AS users ";
-            $query .= " LEFT JOIN ".table( 'user_profile', 'profile' )." ON users.userid = profile.userid ";
+            $query = ' SELECT '.tbl_fields( $fields )." FROM ".tbl( 'users' ).' AS users ';
+            $query .= ' LEFT JOIN '.table( 'user_profile', 'profile' ).' ON users.userid = profile.userid ';
 
             if ( $cond ) {
-                $query .= " WHERE ".$cond;
+                $query .= ' WHERE '.$cond;
             }
 
             if( $order )
-                $query .= " ORDER BY ".$order;
+                $query .= ' ORDER BY '.$order;
 
             if( $limit )
-                $query .= " LIMIT  ".$limit;
+                $query .= ' LIMIT  '.$limit;
 
             $result = select( $query );
         } else {
-			$result = $db->count(tbl('users')." AS users ",'userid',$cond);
+			$result = $db->count(tbl('users').' AS users ','userid',$cond);
 		}
 
-		if(isset($params['assign']) && $params['assign'] != '')
+		if(isset($params['assign']) && $params['assign'] != ''){
 			assign($params['assign'], $result);
-		else
-			return isset($result) ? $result : false;
+        } else {
+			return $result ?? false;
+        }
 	}
 	
 	/**
@@ -3955,13 +3701,14 @@ class userquery extends CBCategory{
 		if ($logged_user_level > 1) {
 			$data = $this->get_user_details($uid);
 			if ($data['level'] == 1) {
-				e("You do not have sufficient permissions to edit an Admininstrator");
+				e('You do not have sufficient permissions to edit an Admininstrator');
 				return false;
 			}
 		}
 
-		if(!$this->user_exists($uid))
+		if(!$this->user_exists($uid)){
 			return false;
+        }
 		//Lets just check weathter user exists or not
 		$tbl = tbl($this->dbtbl['users']);
 		switch($case)
@@ -3972,61 +3719,50 @@ class userquery extends CBCategory{
 			case 'a':
 				$avcode = RandomString(10);
 				$db->update($tbl,array('usr_status','avcode'),array('Ok',$avcode)," userid='$uid' ");
-				e(lang("User has been activated"),'m');
+				e(lang('User has been activated'),'m');
 				break;
 			
 			//Deactivating a user
-			case "deactivate":
-			case "dav":
-			case "d":
+			case 'deactivate':
+			case 'dav':
+			case 'd':
 				$avcode = RandomString(10);
 				$db->update($tbl,array('usr_status','avcode'),array('ToActivate',$avcode)," userid='$uid' ");
-				e(lang("User has been deactivated"),'m');
+				e(lang('User has been deactivated'),'m');
 				break;
 			
 			//Featuring user
-			case "feature":
-			case "featured":
-			case "f":
+			case 'feature':
+			case 'featured':
+			case 'f':
 				$db->update($tbl,array('featured','featured_date'),array('yes',now())," userid='$uid' ");
-				e(lang("User has been set as featured"),'m');
+				e(lang('User has been set as featured'),'m');
 				break;
 
 			//Unfeatured user
-			case "unfeature":
-			case "unfeatured":
-			case "uf":
+			case 'unfeature':
+			case 'unfeatured':
+			case 'uf':
 				$db->update($tbl,array('featured'),array('no')," userid='$uid' ");
-				e(lang("User has been removed from featured users"),'m');
+				e(lang('User has been removed from featured users'),'m');
 				break;
 			
 			//Ban User
-			case "ban":
-			case "banned":
+			case 'ban':
+			case 'banned':
 				$db->update($tbl,array('ban_status'),array('yes')," userid='$uid' ");
-				e(lang("User has been banned"),'m');
+				e(lang('User has been banned'),'m');
 				break;
 
 			//Ban User
-			case "unban":
-			case "unbanned":
+			case 'unban':
+			case 'unbanned':
 				$db->update($tbl,array('ban_status'),array('no')," userid='$uid' ");
-				e(lang("User has been unbanned"),'m');
+				e(lang('User has been unbanned'),'m');
 				break;
 		}
 	}
-	
-	
-	/**
-	 * Is registration allowed
-	 */
-	 function is_registration_allowed()
-	 {
-		if(ALLOW_REG == 1)
-		    return true;
-		return false;
-	 }
-	 
+
 	/**
 	 * Function used to use to initialize search object for video section
 	 * op=>operator (AND OR)
@@ -4034,22 +3770,21 @@ class userquery extends CBCategory{
 	function init_search()
 	{
 		$this->search = new cbsearch;
-		$this->search->db_tbl = "users";
+		$this->search->db_tbl = 'users';
 		// added more conditions usr_status='Ok' and ban_status='no'
 		/*
 		array('field'=>'usr_status','type'=>'=','var'=>'Ok','op'=>'AND','value'=>'static'),
 			array('field'=>'ban_status','type'=>'=','var'=>'no','op'=>'AND','value'=>'static'),
 		*/
-		if(!has_access('admin_access',TRUE))
-		{
-			$this->search->columns =array(
+		if(!has_access('admin_access',TRUE)) {
+			$this->search->columns = array(
 				array('field'=>'username','type'=>'LIKE','var'=>'%{KEY}%'),
 				array('field'=>'usr_status','type'=>'=','var'=>'Ok','op'=>'AND','value'=>'static'),
-				array('field'=>'ban_status','type'=>'=','var'=>'no','op'=>'AND','value'=>'static'),
+				array('field'=>'ban_status','type'=>'=','var'=>'no','op'=>'AND','value'=>'static')
 			);
 		} else {
-			$this->search->columns =array(
-				array('field'=>'username','type'=>'LIKE','var'=>'%{KEY}%'),
+			$this->search->columns = array(
+				array('field'=>'username','type'=>'LIKE','var'=>'%{KEY}%')
 			);
 		}	
 			
@@ -4066,25 +3801,26 @@ class userquery extends CBCategory{
 		 */
 		
 		$sorting = array(
-			'doj'	=> lang("date_added"),
-			'profile_hits'		=> lang("views"),
-			'total_comments'  => lang("comments"),
-			'total_videos' 	=> lang("videos"),
+			'doj'	         => lang('date_added'),
+			'profile_hits'   => lang('views'),
+			'total_comments' => lang('comments'),
+			'total_videos'   => lang('videos')
 		);
 		
 		$this->search->sorting = array(
-			'doj'=> " doj DESC",
-			'profile_hits'		=> " profile_hits DESC",
-			'total_comments'  => " total_comments DESC ",
-			'total_videos' 	=> " total_videos DESC",
+			'doj'            => ' doj DESC',
+			'profile_hits'   => ' profile_hits DESC',
+			'total_comments' => ' total_comments DESC ',
+			'total_videos'   => ' total_videos DESC'
 		);
 
 		/**
 		 * Setting Up The Search Fields
 		 */
 		$default = $_GET;
-		if(is_array($default['category']))
-			$cat_array = array($default['category']);		
+		if(is_array($default['category'])){
+			$cat_array = array($default['category']);
+        }
 		$uploaded = $default['datemargin'];
 		$sort = $default['sort'];
 		
@@ -4104,7 +3840,7 @@ class userquery extends CBCategory{
 				'name'		=> 'category[]',
 				'id'		=> 'category',
 				'value'		=> array('category',$cat_array),
-				'category_type'=>'user',
+				'category_type'=>'user'
 			),
 			'date_margin'	=>  array(
 				'title'		=> lang('joined'),
@@ -4112,7 +3848,7 @@ class userquery extends CBCategory{
 				'name'		=> 'datemargin',
 				'id'		=> 'datemargin',
 				'value'		=> $this->search->date_margins(),
-				'checked'	=> $uploaded,
+				'checked'	=> $uploaded
 			),
 			'sort'		=> array(
 				'title'		=> lang('sort_by'),
@@ -4138,24 +3874,22 @@ class userquery extends CBCategory{
 	{
 		 global $db;
 		
-		 if($group)
-		 {
-			 $results = $db->select(tbl("sessions")." LEFT JOIN (".tbl("users").") ON 
-			 (".tbl("sessions.session_user=").tbl("users").".userid)" ,
-			 tbl("sessions.*,users.username,users.userid,users.email").",count(".tbl("sessions.session_user").") AS logins"
-			 ," TIMESTAMPDIFF(MINUTE,".tbl("sessions.last_active").",'".NOW()."')  < 6 GROUP BY ".tbl("users.userid"));	
+		 if($group) {
+			 $results = $db->select(tbl('sessions').' LEFT JOIN ('.tbl('users').") ON 
+			 (".tbl('sessions.session_user=').tbl('users').'.userid)' ,
+			 tbl('sessions.*,users.username,users.userid,users.email').',count('.tbl('sessions.session_user').') AS logins'
+			 ,' TIMESTAMPDIFF(MINUTE,'.tbl('sessions.last_active').",'".NOW()."')  < 6 GROUP BY ".tbl('users.userid'));
 		 } else {
-			 if($count)
-			 {
-				  $results = $db->count(tbl("sessions")." LEFT JOIN (".tbl("users").") ON 
-				 (".tbl("sessions.session_user=").tbl("users").".userid)" ,
-				 tbl("sessions.session_id")
-				 ," TIMESTAMPDIFF(MINUTE,".tbl("sessions.last_active").",'".NOW()."')  < 6 ");
+			 if($count) {
+				  $results = $db->count(tbl('sessions').' LEFT JOIN ('.tbl('users').') ON 
+				 ('.tbl('sessions.session_user=').tbl('users').'.userid)' ,
+				 tbl('sessions.session_id')
+				 ,' TIMESTAMPDIFF(MINUTE,'.tbl('sessions.last_active').",'".NOW()."')  < 6 ");
 			 } else {
-				  $results = $db->select(tbl("sessions")." LEFT JOIN (".tbl("users").") ON 
-				 (".tbl("sessions.session_user=").tbl("users").".userid)" ,
-				 tbl("sessions.*,users.username,users.userid,users.email")
-				 ," TIMESTAMPDIFF(MINUTE,".tbl("sessions.last_active").",'".NOW()."')  < 6 ");
+				  $results = $db->select(tbl('sessions').' LEFT JOIN ('.tbl('users').') ON 
+				 ('.tbl('sessions.session_user=').tbl('users').'.userid)' ,
+				 tbl('sessions.*,users.username,users.userid,users.email')
+				 ,' TIMESTAMPDIFF(MINUTE,'.tbl('sessions.last_active').",'".NOW()."')  < 6 ");
 			 }
 		 }
 
@@ -4174,12 +3908,10 @@ class userquery extends CBCategory{
 	{
 		global $sess,$db;
 		$udetails = $this->get_user_details($id);
-		if($udetails)
-		{
-			if(!$realtime)
-			{
-				$sess->set('dummy_sess_salt',$sess->get("sess_salt"));
-				$sess->set('dummy_PHPSESSID',$sess->get("PHPSESSID"));
+		if($udetails) {
+			if(!$realtime) {
+				$sess->set('dummy_sess_salt',$sess->get('sess_salt'));
+				$sess->set('dummy_PHPSESSID',$sess->get('PHPSESSID'));
 				$sess->set('dummy_userid',userid());
 				$sess->set('dummy_user_session_key',$this->udetails['user_session_key']);
 				
@@ -4190,21 +3922,20 @@ class userquery extends CBCategory{
 				
 				$smart_sess = md5($udetails['user_session_key'].$session_salt);
 				
-				$db->delete(tbl("sessions"),array("session"),array($sess->id));
+				$db->delete(tbl('sessions'),array('session'),array($sess->id));
 				$sess->add_session($userid,'smart_sess',$smart_sess);
 			} else {
-				if($this->login_check(NULL,true))
+				if($this->login_check(NULL,true)){
 					$msg[] = e(lang('you_already_logged'));
-				elseif(!$this->user_exists($udetails['username']))
+                } elseif(!$this->user_exists($udetails['username'])) {
 					$msg[] = e(lang('user_doesnt_exist'));
-				elseif(!$udetails)
+                } elseif(!$udetails) {
 					$msg[] = e(lang('usr_login_err'));
-				elseif(strtolower($udetails['usr_status']) != 'ok')
+                } elseif(strtolower($udetails['usr_status']) != 'ok') {
 					$msg[] = e(lang('user_inactive_msg'));
-				elseif($udetails['ban_status'] == 'yes')
+                } elseif($udetails['ban_status'] == 'yes') {
 					$msg[] = e(lang('usr_ban_err'));
-				else
-				{
+                } else {
 					$userid = $udetails['userid'];
 					$log_array['userid'] = $userid  = $udetails['userid'];
 					$log_array['useremail'] = $udetails['email'];
@@ -4218,7 +3949,7 @@ class userquery extends CBCategory{
 					
 					$smart_sess = md5($udetails['user_session_key'].$session_salt);
 					
-					$db->delete(tbl("sessions"),array("session","session_string"),array($sess->id,"guest"));
+					$db->delete(tbl('sessions'),array('session','session_string'),array($sess->id,'guest'));
 					$sess->add_session($userid,'smart_sess',$smart_sess);
 
 					//Setting Vars
@@ -4226,7 +3957,7 @@ class userquery extends CBCategory{
 					$this->username = $udetails['username'];
 					$this->level = $udetails['level'];
 					
-					//Updating User last login , num of visist and ip
+					//Updating User last login , num of visits and ip
 					$db->update(tbl('users'),
                         array('num_visits','last_logged','ip'),
                         array('|f|num_visits+1',NOW(),$_SERVER['REMOTE_ADDR']),
@@ -4240,8 +3971,7 @@ class userquery extends CBCategory{
 				}
 				
 				//Error Logging
-				if(!empty($msg))
-				{
+				if(!empty($msg)) {
 					//Logging Action
 					$log_array['success'] = 'no';
 					$log_array['details'] = $msg[0]['val'];
@@ -4250,9 +3980,9 @@ class userquery extends CBCategory{
 			}
 						
 			return true;
-		} else {
-			e(lang("usr_exist_err"));
-        }
+		}
+
+		e(lang("usr_exist_err"));
 	}
 	
 	/**
@@ -4283,10 +4013,10 @@ class userquery extends CBCategory{
 	/**
 	 * Function used to check weather user is logged in as admin or not
 	 */
-	function is_admin_logged_as_user()
-	{
+	function is_admin_logged_as_user(): bool
+    {
 		 global $sess;
-		 if($sess->get("dummy_sess_salt")!=""){
+		 if($sess->get('dummy_sess_salt')!=''){
 			 return true;
          }
 		return false;
@@ -4301,12 +4031,12 @@ class userquery extends CBCategory{
 		global $db;
 		$uid = config('anonymous_id');
 		/*Added to resolve bug 222*/    
-		$result = $db->select(tbl("users"),"userid"," username='anonymous%' AND email='anonymous%'","1");
+		$result = $db->select(tbl('users'),'userid'," username='anonymous%' AND email='anonymous%'","1");
         if($result[0]['userid']){
 			return $result[0]['userid'];
         }
 
-        $result = $db->select(tbl("users"),"userid"," level='6' AND usr_status='ToActivate' ","1");
+        $result = $db->select(tbl('users'),'userid'," level='6' AND usr_status='ToActivate' ","1");
         if($result[0]['userid']){
             return $result[0]['userid'];
         }
@@ -4332,7 +4062,7 @@ class userquery extends CBCategory{
                 'category' => '1',
                 'level' => '6',
                 'active' => 'yes',
-                'agree' => 'yes',
+                'agree' => 'yes'
             ),false);
 
         global $myquery;
@@ -4355,7 +4085,7 @@ class userquery extends CBCategory{
 			$cbvid->delete_video($vid['videoid']);
         }
 		$eh->flush_msg();
-		e(lang("user_vids_hv_deleted"),"m");	
+		e(lang('user_vids_hv_deleted'),'m');
 	}
 
 	/**
@@ -4373,7 +4103,7 @@ class userquery extends CBCategory{
             }
         }
 		$eh->flush_msg();
-		e(lang("user_contacts_hv_removed"),"m");
+		e(lang('user_contacts_hv_removed'),'m');
 	}
 
 	/**
@@ -4386,17 +4116,18 @@ class userquery extends CBCategory{
 	{
 		global $cbpm,$eh;
 		
-		if($box=="inbox" || $box=="both") {
+		if($box=='inbox' || $box=='both') {
 			$inboxs = $cbpm->get_user_inbox_messages($uid);
-			if(is_array($inboxs))
-			foreach($inboxs as $inbox) {
-				$cbpm->delete_msg($inbox['message_id'],$uid);
-			}
+			if(is_array($inboxs)){
+                foreach($inboxs as $inbox) {
+                    $cbpm->delete_msg($inbox['message_id'],$uid);
+                }
+            }
 			$eh->flush_msg();
-			e(lang("all_user_inbox_deleted"),"m");
+			e(lang('all_user_inbox_deleted'),'m');
 		}
 
-		if($box=="sent" || $box=="both") {
+		if($box=='sent' || $box=='both') {
 			$outs = $cbpm->get_user_outbox_messages($uid);
 			if(is_array($outs)){
                 foreach($outs as $out) {
@@ -4404,7 +4135,7 @@ class userquery extends CBCategory{
                 }
             }
 			$eh->flush_msg();
-			e(lang("all_user_sent_messages_deleted"),"m");
+			e(lang('all_user_sent_messages_deleted'),'m');
 		}		
 	}
 
@@ -4418,138 +4149,100 @@ class userquery extends CBCategory{
 	 * @param string $uploadsType
 	 * @param string $uploadsTimeSpan
 	 *
-	 * @return bool
+	 * @return bool|array
 	 */
-	function getSubscriptionsUploadsWeek($uid,$limit=20,$uploadsType="both",$uploadsTimeSpan="this_week")
+	function getSubscriptionsUploadsWeek($uid,$limit=20,$uploadsType='both',$uploadsTimeSpan='this_week')
 	{
 		$user_cond = "";
 		$users = $this->get_user_subscriptions($uid);
 		if($users) {
 		    foreach($users as $user) {
 				if($user_cond){
-					$user_cond .= " OR ";
+					$user_cond .= ' OR ';
                 }
-				$user_cond .= 	tbl("users.userid")."='".$user[0]."' ";
+				$user_cond .= 	tbl('users.userid')."='".$user[0]."' ";
 			}
-			$user_cond = " (".$user_cond.") ";
+			$user_cond = ' ('.$user_cond.') ';
 			global $cbphoto,$cbvideo;
 			$photoCount = 1;
 			$videoCount = 1;
 			switch($uploadsType)
 			{
-				case "both":
+				case 'both':
 				default:
-				{
-					$photos = $cbphoto->get_photos(array("limit"=>$limit,"extra_cond"=>$user_cond,"order"=>" date_added DESC","date_span"=>$uploadsTimeSpan));
-					$videos = $cbvideo->get_videos(array("limit"=>$limit,"cond"=>" AND".$user_cond,"order"=>" date_added DESC","date_span"=>$uploadsTimeSpan));
-					if(!empty($photos) && !empty($videos))
+					$photos = $cbphoto->get_photos(array('limit'=>$limit,'extra_cond'=>$user_cond,'order'=>' date_added DESC','date_span'=>$uploadsTimeSpan));
+					$videos = $cbvideo->get_videos(array('limit'=>$limit,'cond'=>' AND'.$user_cond,'order'=>' date_added DESC','date_span'=>$uploadsTimeSpan));
+					if(!empty($photos) && !empty($videos)){
 						$finalResult = array_merge($videos,$photos);
-					elseif(empty($photos) && !empty($videos))
+                    } elseif(empty($photos) && !empty($videos)) {
 						$finalResult = array_merge($videos,array());
-					elseif(!empty($photos) && empty($videos))
+                    } elseif(!empty($photos) && empty($videos)) {
 						$finalResult = array_merge($photos,array());
+                    }
 
 					if(!empty($finalResult)) {
 						foreach($finalResult as $result) {
 							if($result['videoid']) {
 								$videoArr[] = $result;
 								$return['videos'] = array(
-									"title" => lang("videos"),
-									"total" => $videoCount++,
-									"items" => $videoArr
+									'title' => lang('videos'),
+									'total' => $videoCount++,
+									'items' => $videoArr
 								);
 							}
 
 							if($result['photo_id']) {
 								$photosArr[] = $result;
 								$return['photos'] = array(
-									"title" => lang("photos"),
-									"total" => $photoCount++,
-									"items" => $photosArr
+									'title' => lang('photos'),
+									'total' => $photoCount++,
+									'items' => $photosArr
 								);
 							}
-
 						}
-
 						return $return;
 					}
 					return false;
-				}
-				break;
 
-				case "photos":
-				case "photo" :
-				case "p":
-				{
-					$photos = $cbphoto->get_photos(array("limit"=>$limit,"extra_cond"=>$user_cond,"order"=>" date_added DESC","date_span"=>$uploadsTimeSpan));
-					if($photos)
-					{
-						foreach($photos as $photo)
-						{
+
+				case 'photos':
+				case 'photo' :
+				case 'p':
+					$photos = $cbphoto->get_photos(array('limit'=>$limit,'extra_cond'=>$user_cond,'order'=>' date_added DESC','date_span'=>$uploadsTimeSpan));
+					if($photos) {
+						foreach($photos as $photo) {
 							$photosArr[] = $photo;
 							$return['photos'] = array(
-								"title" => lang("photos"),
-								"total" => $photoCount++,
-								"items" => $photosArr
+								'title' => lang('photos'),
+								'total' => $photoCount++,
+								'items' => $photosArr
 							);
 						}
-					} else
+					} else {
 						return false;
-				}
-				break;
+                    }
+				    break;
 
-				case "videos":
-				case "video":
-				case "v":
-				{
-					$videos = $cbvideo->get_videos(array("limit"=>$limit,"cond"=>" AND".$user_cond,"order"=>" date_added DESC","date_span"=>$uploadsTimeSpan));
-					if($videos)
-					{
-						foreach($videos as $video)
-						{
+				case 'videos':
+				case 'video':
+				case 'v':
+					$videos = $cbvideo->get_videos(array('limit'=>$limit,'cond'=>' AND'.$user_cond,'order'=>' date_added DESC','date_span'=>$uploadsTimeSpan));
+					if($videos) {
+						foreach($videos as $video) {
 							$videoArr[] = $video;
 							$return['videos'] = array(
-								"title" => lang("videos"),
-								"total" => $videoCount++,
-								"items" => $videoArr
+								'title' => lang('videos'),
+								'total' => $videoCount++,
+								'items' => $videoArr
 							);
 						}
-					} else
+					} else{
 						return false;
-				}
-				break;
+                    }
+				    break;
 			}
 			return $return;
 		}
-	}
-
-	/**
-	 * Get subscred videos
-	 *
-	 * @param     $uid
-	 * @param int $limit
-	 *
-	 * @return bool|STRING
-	 */
-	function get_subscribed_videos($uid,$limit=20)
-	{
-		$user_cond = "";
-		$users = $this->get_user_subscriptions($uid);
-		if($users)
-		{
-			foreach($users as $user)
-			{
-				//Creating Query
-				if($user_cond)
-					$user_cond .= " OR ";
-				$user_cond .= tbl("users.userid")."='".$user[0]."' ";
-			}
-			$user_cond = " AND (".$user_cond.") ";
-			global $cbvid;
-			$vids = $cbvid->get_videos(array('limit'=>$limit,'cond'=>$user_cond,"order"=>" date_added DESC ","date_span"=>"this_week"));
-			return $vids;
-		}
-		return false;
 	}
 
 	/**
@@ -4564,44 +4257,43 @@ class userquery extends CBCategory{
 	function setProfileItem($id,$type='v',$uid=NULL)
 	{
 		global $cbvid,$db,$cbphoto;
-		if(!$uid)
+		if(!$uid){
 			$uid = userid();
-		if(!$uid)
-		{
-			e("user_doesnt_exist"); 
+        }
+
+		if(!$uid) {
+			e('user_doesnt_exist');
 			return false;
 		}
+
 		switch($type)
 		{
-			case "v":
-			{
-				if($cbvid->video_exists($id))
-				{
+			case 'v':
+				if($cbvid->video_exists($id)) {
 					$array['type'] = 'v';
 					$array['id'] = $id;
-					$db->update(tbl('user_profile'),array('profile_item'),array("|no_mc|".json_encode($array))
+					$db->update(tbl('user_profile'),array('profile_item'),array('|no_mc|'.json_encode($array))
 					," userid='$uid' ");
 					
-					e(sprintf(lang("this_has_set_profile_item"),lang("video")),"m");
-				}else
-					e("class_vdo_del_err");	
-			}
-			break;
+					e(sprintf(lang('this_has_set_profile_item'),lang('video')),'m');
+				} else {
+					e('class_vdo_del_err');
+                }
+			    break;
 			
-			case "p":
-			{
+			case 'p':
 				if($cbphoto->photo_exists($id))
 				{
 					$array['type'] = 'p';
 					$array['id'] = $id;
-					$db->update(tbl('user_profile'),array('profile_item'),array("|no_mc|".json_encode($array))
+					$db->update(tbl('user_profile'),array('profile_item'),array('|no_mc|'.json_encode($array))
 					," userid='$uid' ");
 					
-					e(sprintf(lang("this_has_set_profile_item"),lang("photo")),"m");
-				}else
-					e("photo_not_exists");	
-			}
-			break;
+					e(sprintf(lang('this_has_set_profile_item'),lang('photo')),'m');
+				} else {
+					e('photo_not_exists');
+                }
+			    break;
 		}
 	}
 
@@ -4615,18 +4307,19 @@ class userquery extends CBCategory{
 	function removeProfileItem($uid=NULL)
 	{
 		global $db;
-		if(!$uid)
+		if(!$uid){
 			$uid = userid();
-		if(!$uid)
-		{
-			e("user_doesnt_exist"); 
+        }
+
+		if(!$uid) {
+			e('user_doesnt_exist');
 			return false;
 		}
 		
 		$db->update(tbl('user_profile'),array('profile_item'),array("")
 		," userid='$uid' ");
 		
-		e(lang("profile_item_removed"),"m");
+		e(lang('profile_item_removed'),'m');
 	}
 
 	/**
@@ -4640,42 +4333,42 @@ class userquery extends CBCategory{
 	function getProfileItem($uid=NULL,$withDetails = false)
 	{
 		global $db,$cbvid,$cbphoto;
-		if(!$uid)
+		if(!$uid){
 			$uid = userid();
-		if(!$uid)
-		{
-			e("user_doesnt_exist"); 
+        }
+
+		if(!$uid) {
+			e('user_doesnt_exist');
 			return false;
 		}
 		
-		if($uid == userid() && $this->profileItem && !$withDetails)
+		if($uid == userid() && $this->profileItem && !$withDetails){
 			return $this->profileItem;
+        }
 		
-		$profileItem = $db->select(tbl("user_profile"),"profile_item"," userid='$uid'");
+		$profileItem = $db->select(tbl('user_profile'),'profile_item'," userid='$uid'");
 		$profileItem = $profileItem[0]['profile_item'];
 		
 		$profileItem = json_decode($profileItem,true);
 		
-		if($withDetails)
-		{
+		if($withDetails) {
 			switch($profileItem['type'])
 			{
-				case "p":
-				{
+				case 'p':
 					$photo = $cbphoto->get_photo($profileItem['id']);
 					$photo['type'] = 'p';
-					if($photo)
+					if($photo){
 						return $photo;
-				}
-				break;
-				case "v":
-				{
+                    }
+				    break;
+
+				case 'v':
 					$video = $cbvid->get_video($profileItem['id']);
 					$video['type'] = 'v';
-					if($video)
+					if($video){
 						return $video;
-				}
-				break;
+                    }
+				    break;
 			}
 		}
 		return $this->profileItem = $profileItem;
@@ -4691,14 +4384,14 @@ class userquery extends CBCategory{
 	 *
 	 * @return bool
 	 */
-	function isProfileItem($id,$type='v',$uid=NULL)
-	{
+	function isProfileItem($id,$type='v',$uid=NULL): bool
+    {
 		$profileItem = $this->getProfileItem($uid);
 		
-		if($profileItem['type'] == $type && $profileItem['id'] == $id)
+		if($profileItem['type'] == $type && $profileItem['id'] == $id){
 			return true;
-		else
-			return false;
+        }
+		return false;
 	}
 
 	/**
@@ -4708,92 +4401,92 @@ class userquery extends CBCategory{
 	 *
 	 * @return array
 	 */
-	function load_personal_details($default)
-	{
-		if(!$default)
+	function load_personal_details($default): array
+    {
+		if(!$default){
 			$default = $_POST;
-		$profile_fields = array(
+        }
+
+		return array(
 			'first_name' => array(
-				'title'=> lang("user_fname"),
-				'type'=> "textfield",
-				'name'=> "first_name",
-				'id'=> "first_name",
-				'value'=> $default['first_name'],
-				'db_field'=>'first_name',
-				'required'=>'no',
-				'syntax_type'=> 'name',
-				'auto_view'=>'yes'
+				'title'       => lang('user_fname'),
+				'type'        => 'textfield',
+				'name'        => 'first_name',
+				'id'          => 'first_name',
+				'value'       => $default['first_name'],
+				'db_field'    => 'first_name',
+				'required'    => 'no',
+				'syntax_type' => 'name',
+				'auto_view'   => 'yes'
 			),
 			'last_name' => array(
-				'title'=> lang("user_lname"),
-				'type'=> "textfield",
-				'name'=> "last_name",
-				'id'=> "last_name",
-				'value'=> $default['last_name'],
-				'db_field'=>'last_name',
-				'syntax_type'=> 'name',
-				'auto_view'=>'yes'
+				'title'       => lang('user_lname'),
+				'type'        => 'textfield',
+				'name'        => 'last_name',
+				'id'          => 'last_name',
+				'value'       => $default['last_name'],
+				'db_field'    => 'last_name',
+				'syntax_type' => 'name',
+				'auto_view'   => 'yes'
 			),
 			'relation_status' => array(
-				'title'=>  lang("user_relat_status"),
-				'type'=> "dropdown",
-				'name'=> "relation_status",
-				'id'=> "last_name",
-				'value'=> array(
+				'title'     => lang('user_relat_status'),
+				'type'      => 'dropdown',
+				'name'      => 'relation_status',
+				'id'        => 'last_name',
+				'value'     => array(
 					lang('usr_arr_no_ans'),
 					lang('usr_arr_single'),
 					lang('usr_arr_married'),
 					lang('usr_arr_comitted'),
 					lang('usr_arr_open_relate')
 				),
-				'checked'=> $default['relation_status'],
-				'db_field'=>'relation_status',
-				'auto_view'=>'yes',
+				'checked'   => $default['relation_status'],
+				'db_field'  => 'relation_status',
+				'auto_view' => 'yes'
 			),
 			'show_dob' => array(
-				'title'=>  lang("show_dob"),
-				'type'=> "radiobutton",
-				'name'=> "show_dob",
-				'id'=> "show_dob",
-				'value' => array('yes'=>lang('yes'),'no'=>lang('no')),
-				'checked'	=> $default['show_dob'],
-				'db_field'=>'show_dob',
-				'syntax_type'=> 'name',
-				'auto_view'=>'no',
-				'sep'=>'&nbsp;'
+				'title'       => lang('show_dob'),
+				'type'        => 'radiobutton',
+				'name'        => 'show_dob',
+				'id'          => 'show_dob',
+				'value'       => array('yes'=>lang('yes'),'no'=>lang('no')),
+				'checked'	  => $default['show_dob'],
+				'db_field'    => 'show_dob',
+				'syntax_type' => 'name',
+				'auto_view'   => 'no',
+				'sep'         => '&nbsp;'
 			),
 			'about_me' => array(
-				'title'=>  lang("user_about_me"),
-				'type'=> "textarea",
-				'name'=> "about_me",
-				'id'=> "about_me",
-				'value'=> mysql_clean($default['about_me']),
-				'db_field'=>'about_me',
-				'auto_view'=>'no',
-				'clean_func' => 'Replacer',
+				'title'      => lang('user_about_me'),
+				'type'       => 'textarea',
+				'name'       => 'about_me',
+				'id'         => 'about_me',
+				'value'      => mysql_clean($default['about_me']),
+				'db_field'   => 'about_me',
+				'auto_view'  => 'no',
+				'clean_func' => 'Replacer'
 			),
 			'profile_tags' => array(
-				'title'=>  lang("profile_tags"),
-				'type'=> "textfield",
-				'name'=> "profile_tags",
-				'id'=> "profile_tags",
-				'value'=> $default['profile_tags'],
-				'db_field'=>'profile_tags',
-				'auto_view'=>'no'
+				'title'     => lang('profile_tags'),
+				'type'      => 'textfield',
+				'name'      => 'profile_tags',
+				'id'        => 'profile_tags',
+				'value'     => $default['profile_tags'],
+				'db_field'  => 'profile_tags',
+				'auto_view' => 'no'
 			),
 			'web_url' => array(
-				'title'=>  lang("website"),
-				'type'=> "textfield",
-				'name'=> "web_url",
-				'id'=> "web_url",
-				'value'=> $default['web_url'],
-				'db_field'=>'web_url',
-				'auto_view'=>'yes',
-				'display_function'=>'outgoing_link'
+				'title'            => lang('website'),
+				'type'             => 'textfield',
+				'name'             => 'web_url',
+				'id'               => 'web_url',
+				'value'            => $default['web_url'],
+				'db_field'         => 'web_url',
+				'auto_view'        => 'yes',
+				'display_function' => 'outgoing_link'
 			)
 		);
-		
-		return $profile_fields;
 	}
 
 	/**
@@ -4803,40 +4496,39 @@ class userquery extends CBCategory{
 	 *
 	 * @return array
 	 */
-	function load_location_fields($default)
-	{
+	function load_location_fields($default): array
+    {
 		if(!$default)
 			$default = $_POST;
-		$other_details = array(
+		return array(
 			'postal_code' => array(
-				'title'=>  lang("postal_code"),
-				'type'=> "textfield",
-				'name'=> "postal_code",
-				'id'=> "postal_code",
-				'value'=> $default['postal_code'],
-				'db_field'=>'postal_code',
+				'title'     => lang('postal_code'),
+				'type'      => 'textfield',
+				'name'      => 'postal_code',
+				'id'        => 'postal_code',
+				'value'     => $default['postal_code'],
+				'db_field'  => 'postal_code',
 				'auto_view' => 'yes'
 			),
 			'hometown' => array(
-				'title'=>  lang("hometown"),
-				'type'=> "textfield",
-				'name'=> "hometown",
-				'id'=> "hometown",
-				'value'=> $default['hometown'],
-				'db_field'=>'hometown',
+				'title'     => lang('hometown'),
+				'type'      => 'textfield',
+				'name'      => 'hometown',
+				'id'        => 'hometown',
+				'value'     => $default['hometown'],
+				'db_field'  => 'hometown',
 				'auto_view' => 'yes'
 			),
 			'city' => array(
-				'title'=>  lang("city"),
-				'type'=> "textfield",
-				'name'=> "city",
-				'id'=> "city",
-				'value'=> $default['city'],
-				'db_field'=>'city',
+				'title'     => lang('city'),
+				'type'      => 'textfield',
+				'name'      => 'city',
+				'id'        => 'city',
+				'value'     => $default['city'],
+				'db_field'  => 'city',
 				'auto_view' => 'yes'
 			)
 		);
-		return $other_details;
 	}
 
 	/**
@@ -4846,17 +4538,19 @@ class userquery extends CBCategory{
 	 *
 	 * @return array
 	 */
-	function load_education_interests($default)
-	{
-		if(!$default)
+	function load_education_interests($default): array
+    {
+		if(!$default){
 			$default = $_POST;
-		$more_details = array(
+        }
+
+		return array(
 			'education' => array(
-				'title'=>  lang("education"),
-				'type'=> "dropdown",
-				'name'=> "education",
-				'id'=> "education",
-				'value'=> array(
+				'title'     => lang('education'),
+				'type'      => 'dropdown',
+				'name'      => 'education',
+				'id'        => 'education',
+				'value'     => array(
 					lang('usr_arr_no_ans'),
 					lang('usr_arr_elementary'),
 					lang('usr_arr_hi_school'),
@@ -4865,84 +4559,83 @@ class userquery extends CBCategory{
 					lang('usr_arr_bach_deg'),
 					lang('usr_arr_mast_deg'),
 					lang('usr_arr_phd'),
-					lang('usr_arr_post_doc'),
+					lang('usr_arr_post_doc')
 				),
-				'checked'=>$default['education'],
-				'db_field'=>'education',
-				'auto_view'=>'yes'
+				'checked'   => $default['education'],
+				'db_field'  => 'education',
+				'auto_view' => 'yes'
 			),
 			'schools' => array(
-				'title'=>  lang("schools"),
-				'type'=> "textarea",
-				'name'=> "schools",
-				'id'=> "schools",
-				'value'=> mysql_clean($default['schools']),
-				'db_field'=>'schools',
+				'title'      => lang('schools'),
+				'type'       => 'textarea',
+				'name'       => 'schools',
+				'id'         => 'schools',
+				'value'      => mysql_clean($default['schools']),
+				'db_field'   => 'schools',
 				'clean_func' => 'Replacer',
-				'auto_view'=>'yes'
+				'auto_view'  => 'yes'
 			),
 			'occupation' => array(
-				'title'=>  lang("occupation"),
-				'type'=> "textarea",
-				'name'=> "occupation",
-				'id'=> "occupation",
-				'value'=> mysql_clean($default['occupation']),
-				'db_field'=>'occupation',
+				'title'      => lang('occupation'),
+				'type'       => 'textarea',
+				'name'       => 'occupation',
+				'id'         => 'occupation',
+				'value'      => mysql_clean($default['occupation']),
+				'db_field'   => 'occupation',
 				'clean_func' => 'Replacer',
-				'auto_view'=>'yes'
+				'auto_view'  => 'yes'
 			),
 			'companies' => array(
-				'title'=>  lang("companies"),
-				'type'=> "textarea",
-				'name'=> "companies",
-				'id'=> "companies",
-				'value'=> mysql_clean($default['companies']),
-				'db_field'=>'companies',
+				'title'      => lang('companies'),
+				'type'       => 'textarea',
+				'name'       => 'companies',
+				'id'         => 'companies',
+				'value'      => mysql_clean($default['companies']),
+				'db_field'   => 'companies',
 				'clean_func' => 'Replacer',
-				'auto_view'=>'yes'
+				'auto_view'  => 'yes'
 			),
 			'hobbies' => array(
-				'title'=>  lang("hobbies"),
-				'type'=> "textarea",
-				'name'=> "hobbies",
-				'id'=> "hobbies",
-				'value'=> mysql_clean($default['hobbies']),
-				'db_field'=>'hobbies',
+				'title'      => lang('hobbies'),
+				'type'       => 'textarea',
+				'name'       => 'hobbies',
+				'id'         => 'hobbies',
+				'value'      => mysql_clean($default['hobbies']),
+				'db_field'   => 'hobbies',
 				'clean_func' => 'Replacer',
-				'auto_view'=>'yes'
+				'auto_view'  => 'yes'
 			),
 			'fav_movies' => array(
-				'title'=>  lang("user_fav_movs_shows"),
-				'type'=> "textarea",
-				'name'=> "fav_movies",
-				'id'=> "fav_movies",
-				'value'=> mysql_clean($default['fav_movies']),
-				'db_field'=>'fav_movies',
+				'title'      => lang('user_fav_movs_shows'),
+				'type'       => 'textarea',
+				'name'       => 'fav_movies',
+				'id'         => 'fav_movies',
+				'value'      => mysql_clean($default['fav_movies']),
+				'db_field'   => 'fav_movies',
 				'clean_func' => 'Replacer',
-				'auto_view'=>'yes'
+				'auto_view'  => 'yes'
 			),
 			'fav_music' => array(
-				'title'=>  lang("user_fav_music"),
-				'type'=> "textarea",
-				'name'=> "fav_music",
-				'id'=> "fav_music",
-				'value'=> mysql_clean($default['fav_music']),
-				'db_field'=>'fav_music',
+				'title'      => lang('user_fav_music'),
+				'type'       => 'textarea',
+				'name'       => 'fav_music',
+				'id'         => 'fav_music',
+				'value'      => mysql_clean($default['fav_music']),
+				'db_field'   => 'fav_music',
 				'clean_func' => 'Replacer',
-				'auto_view'=>'yes'
+				'auto_view'  => 'yes'
 			),
 			'fav_books' => array(
-				'title'=>  lang("user_fav_books"),
-				'type'=> "textarea",
-				'name'=> "fav_books",
-				'id'=> "fav_books",
-				'value'=> mysql_clean($default['fav_books']),
-				'db_field'=>'fav_books',
+				'title'      => lang('user_fav_books'),
+				'type'       => 'textarea',
+				'name'       => 'fav_books',
+				'id'         => 'fav_books',
+				'value'      => mysql_clean($default['fav_books']),
+				'db_field'   => 'fav_books',
 				'clean_func' => 'Replacer',
-				'auto_view'=>'yes'
+				'auto_view'  => 'yes'
 			)
 		);
-		return $more_details;
 	}
 
 
@@ -4953,65 +4646,64 @@ class userquery extends CBCategory{
 	 *
 	 * @return array
 	 */
-	function load_privacy_field($default)
-	{
-		if(!$default)
+	function load_privacy_field($default): array
+    {
+		if(!$default){
 			$default = $_POST;
+        }
 			
-		$privacy = array(
+		return array(
 			'online_status' => array(
-				'title'=>  lang("online_status"),
-				'type'=> "dropdown",
-				'name'=> "privacy",
-				'id'=> "privacy",
-				'value'=> array('online'=>lang('online'),'offline'=>lang('offline'),'custom'=>lang('custom')),
-				'checked'=>$default['online_status'],
-				'db_field'=>'online_status'
+				'title'    => lang('online_status'),
+				'type'     => 'dropdown',
+				'name'     => 'privacy',
+				'id'       => 'privacy',
+				'value'    => array('online'=>lang('online'),'offline'=>lang('offline'),'custom'=>lang('custom')),
+				'checked'  => $default['online_status'],
+				'db_field' => 'online_status'
 			),
 			'show_profile' => array(
-				'title'=>  lang("show_profile"),
-				'type'=> "dropdown",
-				'name'=> "show_profile",
-				'id'=> "show_profile",
-				'value'=> array('all'=>lang('all'),'members'=>lang('members'),'friends'=>lang('friends')),
-				'checked'=>$default['show_profile'],
-				'db_field'=>'show_profile',
-				'sep' => '&nbsp;'
+				'title'    => lang('show_profile'),
+				'type'     => 'dropdown',
+				'name'     => 'show_profile',
+				'id'       => 'show_profile',
+				'value'    => array('all'=>lang('all'),'members'=>lang('members'),'friends'=>lang('friends')),
+				'checked'  => $default['show_profile'],
+				'db_field' => 'show_profile',
+				'sep'      => '&nbsp;'
 			),
 			'allow_comments'=>array(
-				'title'=>  lang("vdo_allow_comm"),
-				'type'=> "radiobutton",
-				'name'=> "allow_comments",
-				'id'=> "allow_comments",
-				'value' => array('yes'=>lang('yes'),'no'=>lang('no')),
-				'checked' => strtolower($default['allow_comments']),
-				'db_field'=>'allow_comments',
-				'sep' => '&nbsp;'
+				'title'    => lang('vdo_allow_comm'),
+				'type'     => 'radiobutton',
+				'name'     => 'allow_comments',
+				'id'       => 'allow_comments',
+				'value'    => array('yes'=>lang('yes'),'no'=>lang('no')),
+				'checked'  => strtolower($default['allow_comments']),
+				'db_field' => 'allow_comments',
+				'sep'      => '&nbsp;'
 			),
 			'allow_ratings'=>array(
-				'title'=>  lang("allow_ratings"),
-				'type'=> "radiobutton",
-				'name'=> "allow_ratings",
-				'id'=> "allow_ratings",
-				'value' => array('yes'=>lang('yes'),'no'=>lang('no')),
-				'checked' => strtolower($default['allow_ratings']),
-				'db_field'=>'allow_ratings',
-				'sep' => '&nbsp;'
+				'title'    => lang('allow_ratings'),
+				'type'     => 'radiobutton',
+				'name'     => 'allow_ratings',
+				'id'       => 'allow_ratings',
+				'value'    => array('yes'=>lang('yes'),'no'=>lang('no')),
+				'checked'  => strtolower($default['allow_ratings']),
+				'db_field' => 'allow_ratings',
+				'sep'      => '&nbsp;'
 			),
 			'allow_subscription'=>array(
-				'title'=>  lang("allow_subscription"),
-				'type'=> "radiobutton",
-				'name'=> "allow_subscription",
-				'id'=> "allow_subscription",
-				'hint_1' => lang('allow_subscription_hint'),
-				'value' => array('yes'=>lang('yes'),'no'=>lang('no')),
-				'checked' => strtolower($default['allow_subscription']),
-				'db_field'=>'allow_subscription',
-				'sep' => '&nbsp;'
+				'title'    => lang('allow_subscription'),
+				'type'     => 'radiobutton',
+				'name'     => 'allow_subscription',
+				'id'       => 'allow_subscription',
+				'hint_1'   => lang('allow_subscription_hint'),
+				'value'    => array('yes'=>lang('yes'),'no'=>lang('no')),
+				'checked'  => strtolower($default['allow_subscription']),
+				'db_field' => 'allow_subscription',
+				'sep'      => '&nbsp;'
 			)
 		);
-		
-		return $privacy;
 	}
 
 	/**
@@ -5020,94 +4712,93 @@ class userquery extends CBCategory{
 	 * @param $default array values for channel settings
 	 * @return array of channel info fields
 	 */
-	function load_channel_settings($default)
-	{
-		if(!$default)
+	function load_channel_settings($default): array
+    {
+		if(!$default){
 			$default = $_POST;
+        }
 			
-		$channel_settings = array(
+		return array(
 			'profile_title' => array(
-				'title'=>  lang("channel_title"),
-				'type'=> "textfield",
-				'name'=> "profile_title",
-				'id'=> "profile_title",
-				'value'=> $default['profile_title'],
-				'db_field'=>'profile_title',
-				'auto_view'=>'no'
+				'title'     => lang('channel_title'),
+				'type'      => 'textfield',
+				'name'      => 'profile_title',
+				'id'        => 'profile_title',
+				'value'     => $default['profile_title'],
+				'db_field'  => 'profile_title',
+				'auto_view' => 'no'
 			),
 			'profile_desc' => array(
-				'title'=>  lang("channel_desc"),
-				'type'=> "textarea",
-				'name'=> "profile_desc",
-				'id'=> "profile_desc",
-				'value'=> $default['profile_desc'],
-				'db_field'=>'profile_desc',
-				'auto_view'=>'yes',
+				'title'      => lang('channel_desc'),
+				'type'       => 'textarea',
+				'name'       => 'profile_desc',
+				'id'         => 'profile_desc',
+				'value'      => $default['profile_desc'],
+				'db_field'   => 'profile_desc',
+				'auto_view'  => 'yes',
 				'clean_func' => 'Replacer'
 			),
 			'show_my_friends'=>array(
-				'title'=>  lang("show_my_friends"),
-				'type'=> "radiobutton",
-				'name'=> "show_my_friends",
-				'id'=> "show_my_friends",
-				'value' => array('yes'=>lang('yes'),'no'=>lang('no')),
-				'checked' => strtolower($default['show_my_friends']),
-				'db_field'=>'show_my_friends',
-				'sep' => '&nbsp;'
+				'title'    => lang('show_my_friends'),
+				'type'     => 'radiobutton',
+				'name'     => 'show_my_friends',
+				'id'       => 'show_my_friends',
+				'value'    => array('yes'=>lang('yes'),'no'=>lang('no')),
+				'checked'  => strtolower($default['show_my_friends']),
+				'db_field' => 'show_my_friends',
+				'sep'      => '&nbsp;'
 			),
 			'show_my_videos'=>array(
-				'title'=>  lang("show_my_videos"),
-				'type'=> "radiobutton",
-				'name'=> "show_my_videos",
-				'id'=> "show_my_videos",
-				'value' => array('yes'=>lang('yes'),'no'=>lang('no')),
-				'checked' => strtolower($default['show_my_videos']),
-				'db_field'=>'show_my_videos',
-				'sep' => '&nbsp;'
+				'title'    => lang('show_my_videos'),
+				'type'     => 'radiobutton',
+				'name'     => 'show_my_videos',
+				'id'       => 'show_my_videos',
+				'value'    => array('yes'=>lang('yes'),'no'=>lang('no')),
+				'checked'  => strtolower($default['show_my_videos']),
+				'db_field' => 'show_my_videos',
+				'sep'      => '&nbsp;'
 			),
 			'show_my_photos'=>array(
-				'title'=>  lang("show_my_photos"),
-				'type'=> "radiobutton",
-				'name'=> "show_my_photos",
-				'id'=> "show_my_photos",
-				'value' => array('yes'=>lang('yes'),'no'=>lang('no')),
-				'checked' => strtolower($default['show_my_photos']),
-				'db_field'=>'show_my_photos',
-				'sep' => '&nbsp;'
+				'title'    => lang('show_my_photos'),
+				'type'     => 'radiobutton',
+				'name'     => 'show_my_photos',
+				'id'       => 'show_my_photos',
+				'value'    => array('yes'=>lang('yes'),'no'=>lang('no')),
+				'checked'  => strtolower($default['show_my_photos']),
+				'db_field' => 'show_my_photos',
+				'sep'      => '&nbsp;'
 			),
 			'show_my_subscriptions'=>array(
-				'title'=>  lang("show_my_subscriptions"),
-				'type'=> "radiobutton",
-				'name'=> "show_my_subscriptions",
-				'id'=> "show_my_subscriptions",
-				'value' => array('yes'=>lang('yes'),'no'=>lang('no')),
-				'checked' => strtolower($default['show_my_subscriptions']),
-				'db_field'=>'show_my_subscriptions',
-				'sep' => '&nbsp;'
+				'title'    => lang('show_my_subscriptions'),
+				'type'     => 'radiobutton',
+				'name'     => 'show_my_subscriptions',
+				'id'       => 'show_my_subscriptions',
+				'value'    => array('yes'=>lang('yes'),'no'=>lang('no')),
+				'checked'  => strtolower($default['show_my_subscriptions']),
+				'db_field' => 'show_my_subscriptions',
+				'sep'      => '&nbsp;'
 			),
 			'show_my_subscribers'=>array(
-				'title'=>  lang("show_my_subscribers"),
-				'type'=> "radiobutton",
-				'name'=> "show_my_subscribers",
-				'id'=> "show_my_subscribers",
-				'value' => array('yes'=>lang('yes'),'no'=>lang('no')),
-				'checked' => strtolower($default['show_my_subscribers']),
-				'db_field'=>'show_my_subscribers',
-				'sep' => '&nbsp;'
+				'title'    => lang('show_my_subscribers'),
+				'type'     => 'radiobutton',
+				'name'     => 'show_my_subscribers',
+				'id'       => 'show_my_subscribers',
+				'value'    => array('yes'=>lang('yes'),'no'=>lang('no')),
+				'checked'  => strtolower($default['show_my_subscribers']),
+				'db_field' => 'show_my_subscribers',
+				'sep'      => '&nbsp;'
 			),
 			'show_my_collections'=>array(
-				'title'=>  lang("show_my_collections"),
-				'type'=> "radiobutton",
-				'name'=> "show_my_collections",
-				'id'=> "show_my_collections",
-				'value' => array('yes'=>lang('yes'),'no'=>lang('no')),
-				'checked' => strtolower($default['show_my_collections']),
-				'db_field'=>'show_my_collections',
-				'sep' => '&nbsp;'
+				'title'    => lang('show_my_collections'),
+				'type'     => 'radiobutton',
+				'name'     => 'show_my_collections',
+				'id'       => 'show_my_collections',
+				'value'    => array('yes'=>lang('yes'),'no'=>lang('no')),
+				'checked'  => strtolower($default['show_my_collections']),
+				'db_field' => 'show_my_collections',
+				'sep'      => '&nbsp;'
 			)
 		);
-		
-		return $channel_settings;
 	}
 
 	/**
@@ -5131,24 +4822,23 @@ class userquery extends CBCategory{
 		
 		switch($type)
 		{
-			case "all":
+			case 'all':
 				$getChannelSettings = true;
 				$getProfileSettings = true;
 				break;
 			
-			case "channel":
-			case "channels":
+			case 'channel':
+			case 'channels':
 				$getChannelSettings = true;
 				break;
 			
-			case "profile":
-			case "profile_settings":
+			case 'profile':
+			case 'profile_settings':
 				$getProfileSettings = true;
 				break;
 		}
 
-		if($getChannelSettings)
-		{
+		if($getChannelSettings)  {
 			$channel_settings = array(
 				array(
 					'group_name' => lang('channel_settings'),
@@ -5159,8 +4849,7 @@ class userquery extends CBCategory{
 			);
 		}
 		
-		if($getProfileSettings)
-		{
+		if($getProfileSettings) {
 			$profile_settings = array(
 				array(
 					'group_name' => lang('profile_basic_info'),
@@ -5181,12 +4870,11 @@ class userquery extends CBCategory{
 
 			//Adding Custom Fields
 			$custom_fields = $this->load_custom_profile_fields($default,false);
-			if($custom_fields)
-			{
+			if($custom_fields) {
 				$more_fields_group = array(
 					'group_name' => lang('more_fields'),
 					'group_id'	=> 'custom_fields',
-					'fields'	=> $custom_fields,
+					'fields'	=> $custom_fields
 				);
 			}
 		
@@ -5194,18 +4882,14 @@ class userquery extends CBCategory{
 			$custom_fields_with_group = $this->load_custom_profile_fields($default,true);
 			
 			//Finally putting them together in their main array called $fields
-			if($custom_fields_with_group)
-			{
+			if($custom_fields_with_group) {
 				$custFieldGroups = $custom_fields_with_group;
 			
-				foreach($custFieldGroups as $gKey => $fieldGroup)
-				{
+				foreach($custFieldGroups as $gKey => $fieldGroup) {
 					$group_id = $fieldGroup['group_id'];
 					
-					foreach($profile_settings as $key => $field)
-					{
-						if($field['group_id'] == $group_id)
-						{
+					foreach($profile_settings as $key => $field) {
+						if($field['group_id'] == $group_id) {
 							$inputFields = $field['fields'];
 							//Setting field values
 							$newFields = $fieldGroup['fields'];
@@ -5215,7 +4899,7 @@ class userquery extends CBCategory{
 							$newGroupArray =array(
 								'group_name' => $field['group_name'],
 								'group_id' => $field['group_id'],
-								'fields' => $mergeField,
+								'fields' => $mergeField
 							);
 							
 							$fields[$key] = $newGroupArray;
@@ -5225,19 +4909,23 @@ class userquery extends CBCategory{
 							$matched = false;
 						}
 					}
-					if(!$matched)
+					if(!$matched){
 						$profile_settings[] = $fieldGroup;
+                    }
 				}
 			}
 			
 		}
 
-		if($channel_settings)
+		if($channel_settings){
 			$fields = array_merge($fields,$channel_settings);
-		if($profile_settings)
+        }
+		if($profile_settings){
 			$fields = array_merge($fields,$profile_settings);
-		if($more_fields_group)
-			$fields[] = $more_fields_group;	
+        }
+		if($more_fields_group){
+			$fields[] = $more_fields_group;
+        }
 		return $fields;
 	}
 
@@ -5249,66 +4937,60 @@ class userquery extends CBCategory{
 	 *
 	 * @return array
 	 */
-	function rate_user($id,$rating)
-	{
+	function rate_user($id,$rating): array
+    {
 		global $db,$json;
 		
-		if(!is_numeric($rating) || $rating <= 9)
+		if(!is_numeric($rating) || $rating <= 9){
 			$rating = 0;
-		if($rating >= 10)
+        }
+		if($rating >= 10){
 			$rating = 10;
-			
+        }
+
 		$c_rating = $this->current_rating($id);
 		$voters   = $c_rating['voters'];
-		
 		$new_rate = $c_rating['rating'];
 		$rated_by = $c_rating['rated_by'];
-		
-		if(phpversion < '5.2.0')
-			$voters = $json->json_decode($voters,TRUE);
-		else
-			$voters = json_decode($voters,TRUE);
 
-		if(!empty($voters))
+		$voters = json_decode($voters,TRUE);
+
+		if(!empty($voters)){
 			$already_voted = array_key_exists(userid(),$voters);
+        }
 			
-		if(!userid())
-			e(lang("please_login_to_rate"));
-		elseif(userid()==$c_rating['userid'] && !config('own_channel_rating'))
-			e(lang("you_cant_rate_own_channel"));
-		elseif(!empty($already_voted))
-			e(lang("you_have_already_voted_channel"));
-		elseif($c_rating['allow_ratings'] == 'no' || !config('channel_rating'))
-			e(lang("channel_rating_disabled"));
-		else
-		{
+		if(!userid()){
+			e(lang('please_login_to_rate'));
+        } elseif(userid()==$c_rating['userid'] && !config('own_channel_rating')) {
+			e(lang('you_cant_rate_own_channel'));
+        } elseif(!empty($already_voted)) {
+			e(lang('you_have_already_voted_channel'));
+        } elseif($c_rating['allow_ratings'] == 'no' || !config('channel_rating')) {
+			e(lang('channel_rating_disabled'));
+        } else {
 			$voters[userid()] = array('rate'=>$rating,'time'=>NOW());
-			if(phpversion < '5.2.0')
-				$voters = $json->json_encode($voters);
-			else
-				$voters = json_encode($voters);
-					
+			$voters = json_encode($voters);
+
 			$t = $c_rating['rated_by'] * $c_rating['rating'];
 			$rated_by = $c_rating['rated_by'] + 1;
 			$new_rate = ($t + $rating) / $rated_by;
 			$db->update(tbl('user_profile'),array('rating','rated_by','voters'),
 			array("$new_rate","$rated_by","|no_mc|$voters"),
-			" userid = ".$id."");
+			' userid = '.$id.'');
 			$userDetails = array(
-				"object_id"	=>	$id,
-				"type"	=>	"user",
-				"time"	=>	now(),
-				"rating"	=>	$rating,
-				"userid"	=>	userid(),
-				"username"	=>	user_name()
+				'object_id' => $id,
+				'type'      => 'user',
+				'time'      => now(),
+				'rating'    => $rating,
+				'userid'    => userid(),
+				'username'  => user_name()
 			);	
 			/* Updating user details */		
 			update_user_voted($userDetails);			
-			e(lang("thnx_for_voting"),"m");			
+			e(lang('thnx_for_voting'),'m');			
 		}
 		
-		$return = array("rating"=>$new_rate,"rated_by"=>$rated_by,'total'=>10,"id"=>$id,"type"=>"user","disable"=>"disabled");
-		return $return;	
+		return array('rating'=>$new_rate,'rated_by'=>$rated_by,'total'=>10,'id'=>$id,'type'=>'user','disable'=>"disabled");
 	}
 
 	/**
@@ -5322,8 +5004,9 @@ class userquery extends CBCategory{
 	{
 		global $db;
 		$result = $db->select(tbl('user_profile'),'userid,allow_ratings,rating,rated_by,voters'," userid = ".$id."");
-		if($result)
+		if($result){
 			return $result[0];
+        }
 		return false;
 	}
 
@@ -5335,12 +5018,13 @@ class userquery extends CBCategory{
 	 *
 	 * @return bool
 	 */
-	function isOnline($last_active,$status=NULL)
-	{
+	function isOnline($last_active,$status=NULL): bool
+    {
 		$time = strtotime($last_active);
 		$timeDiff = time() - $time;
-		if($timeDiff>60 || $status=='offline')
+		if($timeDiff>60 || $status=='offline'){
 			return false;
+        }
 		return true;
 	}
 
@@ -5353,19 +5037,17 @@ class userquery extends CBCategory{
 	 *
 	 * @return bool
 	 */
-	function sendSubscriptionEmail($vidDetails,$updateStatus=true)
-	{
+	function sendSubscriptionEmail($vidDetails,$updateStatus=true): bool
+    {
 		global $cbemail,$db;
 		$v = $vidDetails;
-		if(!$v['videoid'])
-		{
-			e(lang("invalid_videoid"));
+		if(!$v['videoid']) {
+			e(lang('invalid_videoid'));
 			return false;
 		}
 		
-		if(!$v['userid'])
-		{
-			e(lang("invalid_userid"));
+		if(!$v['userid']) {
+			e(lang('invalid_userid'));
 			return false;
 		}
 		
@@ -5377,62 +5059,61 @@ class userquery extends CBCategory{
 		$tpl = $cbemail->get_template('video_subscription_email');
 		
 		$total_subscribers = count($subscribers);
-		if($subscribers)
-		foreach($subscribers as $subscriber)
-		{
-			$var = $this->custom_subscription_email_vars;
-			
-			$more_var = array(
-				'{username}'	=> $subscriber['username'],
-				'{uploader}'		=> $uploader['username'],
-				'{video_title}' => $v['title'],
-				'{video_description}' => $v['description'],
-				'{video_link}' => video_link($v),
-				'{video_thumb}' => get_thumb($v)
-			);
-			if(!is_array($var))
-				$var = array();
-			$var = array_merge($more_var,$var);
-			$subj = $cbemail->replace($tpl['email_template_subject'],$var);
-			$msg = nl2br($cbemail->replace($tpl['email_template'],$var));
-			
-			//Now Finally Sending Email
-			cbmail(array('to'=>$subscriber['email'],'from'=>WELCOME_EMAIL,'subject'=>$subj,'content'=>$msg));
-		}
+		if($subscribers){
+            foreach($subscribers as $subscriber) {
+                $var = $this->custom_subscription_email_vars;
+                
+                $more_var = array(
+                    '{username}'          => $subscriber['username'],
+                    '{uploader}'          => $uploader['username'],
+                    '{video_title}'       => $v['title'],
+                    '{video_description}' => $v['description'],
+                    '{video_link}'        => video_link($v),
+                    '{video_thumb}'       => get_thumb($v)
+                );
+                if(!is_array($var)){
+                    $var = array();
+                }
+                $var = array_merge($more_var,$var);
+                $subj = $cbemail->replace($tpl['email_template_subject'],$var);
+                $msg = nl2br($cbemail->replace($tpl['email_template'],$var));
+                
+                //Now Finally Sending Email
+                cbmail(array('to'=>$subscriber['email'],'from'=>WELCOME_EMAIL,'subject'=>$subj,'content'=>$msg));
+            }
+        }
 		
-		if($total_subscribers)
-		{
+		if($total_subscribers) {
 			//Updating video subscription email status to sent
-			if($updateStatus)
-			$db->update(tbl('video'),array('subscription_email'),array('sent')," videoid='".$v['videoid']."'");
+			if($updateStatus){
+			    $db->update(tbl('video'),array('subscription_email'),array('sent')," videoid='".$v['videoid']."'");
+            }
 			$s = '';
-			if($total_subscribers>1)
+			if($total_subscribers>1){
 				$s = 's';
-			e(sprintf(lang('subs_email_sent_to_users'),$total_subscribers,$s),"m");
+            }
+			e(sprintf(lang('subs_email_sent_to_users'),$total_subscribers,$s),'m');
 			return true;
 		}
 		
-		e(lang("no_user_subscribed_to_uploader"));
+		e(lang('no_user_subscribed_to_uploader'));
 		
 		return true;
 	}
 	
 	/**
-	 * function used to get user seesions
+	 * function used to get user sessions
 	 */
 	function get_sessions()
 	{
 		global $sess;
 		$sessions = $sess->get_sessions();
 		$new_sessions = array();
-		if($sessions)
-		{
-			foreach($sessions as $session)
-			{
+		if($sessions) {
+			foreach($sessions as $session) {
 				$new_sessions[$session['session_string']] = $session;
 			}
-		}else
-		{
+		} else {
 			$sess->add_session(0,'guest','guest');
 		}
 		
@@ -5442,32 +5123,31 @@ class userquery extends CBCategory{
 	function update_user_voted($array,$userid=NULL)
 	{
 		global $db;
-		if(!$userid)
+		if(!$userid){
 			$userid = userid();
-		if(check_php_cli("php") < '5.2.0')
-		{
-			global $json;
-			$js = $json;	
-		}
+        }
+
 		if(is_array($array))
 		{
 			$voted = '';
-			$votedDetails = $db->select(tbl("users"),"voted"," userid = '$userid'");
-			if(!empty($votedDetails))
-			{
-				if(!empty($js))
+			$votedDetails = $db->select(tbl('users'),'voted'," userid = '$userid'");
+			if(!empty($votedDetails)) {
+				if(!empty($js)){
 					$voted = $js->json_decode($votedDetails[0]['voted'],TRUE);
-				else
+                } else {
 					$voted = json_decode($votedDetails[0]['voted'],TRUE);
+                }
 			}
 
-			if(!empty($js))
+			if(!empty($js)){
 				$votedEncode = $js->json_encode($voted);
-			else
+            } else {
 				$votedEncode = json_encode($voted);
+            }
 				
-			if(!empty($votedEncode))
-				$db->update(tbl("users"),array("voted"),array("|no_mc|$votedEncode")," userid='$userid'");		
+			if(!empty($votedEncode)){
+				$db->update(tbl('users'),array('voted'),array("|no_mc|$votedEncode")," userid='$userid'");
+            }
 		}
 	}
 
@@ -5479,15 +5159,13 @@ class userquery extends CBCategory{
 	 *
 	 * @return string
 	 */
-	function user_manager_link($link,$vid)
-	{
-		if(function_exists($link) && !is_array($link))
-		{
+	function user_manager_link($link,$vid): string
+    {
+		if(function_exists($link) && !is_array($link)) {
 			return $link($vid);
 		}
 
-		if(!empty($link['title']) && !empty($link['link']))
-		{
+		if(!empty($link['title']) && !empty($link['link'])) {
 			return '<a href="'.$link['link'].'">'.display_clean($link['title']).'</a>';
 		}
 	}
@@ -5501,11 +5179,10 @@ class userquery extends CBCategory{
 	 * @since : 15th April, 2016, ClipBucket 2.8.1
 	 * @author : Saqib Razzaq
 	 */
-	function sent_contact_requests($user)
-	{
+	function sent_contact_requests($user): array
+    {
 		global $db;
-		$data = $db->select(tbl('contacts'),"*","userid = $user AND confirmed = 'no'");
-		return $data;
+		return $db->select(tbl('contacts'),'*',"userid = $user AND confirmed = 'no'");
 	}
 
 	/**
@@ -5517,11 +5194,10 @@ class userquery extends CBCategory{
 	 * @since : 15th April, 2016, ClipBucket 2.8.1
 	 * @author : Saqib Razzaq
 	 */
-	function recieved_contact_requests($user)
-	{
+	function recieved_contact_requests($user): array
+    {
 		global $db;
-		$data = $db->select(tbl('contacts'),"*","contact_userid = $user AND confirmed = 'no'");
-		return $data;
+		return $db->select(tbl('contacts'),'*',"contact_userid = $user AND confirmed = 'no'");
 	}
 
 	/**
@@ -5533,11 +5209,10 @@ class userquery extends CBCategory{
 	 * @since : 15th April, 2016, ClipBucket 2.8.1
 	 * @author : Saqib Razzaq
 	 */
-	function added_contacts($user)
-	{
+	function added_contacts($user): array
+    {
 		global $db;
-		$data = $db->select(tbl('contacts'),"*","(contact_userid = $user OR userid = $user) AND confirmed = 'yes'");
-		return $data;
+		return $db->select(tbl('contacts'),'*',"(contact_userid = $user OR userid = $user) AND confirmed = 'yes'");
 	}
 
 	/**
@@ -5550,8 +5225,8 @@ class userquery extends CBCategory{
 	 * @since : 15th April, 2016, ClipBucket 2.8.1
 	 * @author : Saqib Razzaq
 	 */
-	function friendship_status($logged_in_user, $channel_user)
-	{
+	function friendship_status($logged_in_user, $channel_user): string
+    {
 		$sent = $this->sent_contact_requests($logged_in_user);
 		$pending = $this->recieved_contact_requests($logged_in_user);
 		$friends = $this->added_contacts($logged_in_user);

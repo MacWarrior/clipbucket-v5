@@ -445,7 +445,7 @@ class myquery
 	/**
 	 * Function used to get comment from its ID
 	 *
-	 * @param ID
+	 * @param $id
 	 *
 	 * @return array|bool
 	 */
@@ -474,18 +474,18 @@ class myquery
 	 * @param string $type
 	 * @param bool   $count_only
 	 * @param string $get_type
-	 * @param        TYPE_ID
+	 * @param        $parent_id
 	 *
 	 * @return bool
 	 */
-	function get_comments($type_id='*',$type='v',$count_only=FALSE,$get_type='all',$parent_id=NULL)
-	{
+	function get_comments($type_id='*',$type='v',$count_only=FALSE,$get_type='all',$parent_id=NULL): bool
+    {
 		$params = array(
             'type_id' 		=> $type_id,
             'type' 			=> $type,
             'count_only' 	=> $count_only,
             'get_type' 		=> $get_type,
-            'parent_id' 	=> $parent_id,
+            'parent_id' 	=> $parent_id
 		);
 		
 		return $this->getComments($params);
@@ -495,18 +495,14 @@ class myquery
 	/**
 	 * Function used to get comments against parent_id from database
 	 *
-	 * @param TYPE_ID
-	 * @param TYPE
-	 * @param PARENT_ID
+	 * @param $parent_id
 	 *
 	 * @return array
 	 */
-	function get_child_comments($parent_id=NULL)
-	{
+	function get_child_comments($parent_id=NULL): array
+    {
    		global $db;
-		$results = $db->select(tbl("comments"),'*'," parent_id='".$parent_id."'");
-		
-		return $results;
+		return $db->select(tbl("comments"),'*'," parent_id='".$parent_id."'");
 	}
 	
 	/**
@@ -565,15 +561,16 @@ class myquery
 			$theFileDetails = explode('-',$theFile);
 			$timeDiff = time() - $theFileDetails[1];
 			
-			if(file_exists(COMM_CACHE_DIR.'/'.$file) && $timeDiff < COMM_CACHE_TIME)
+			if(file_exists(COMM_CACHE_DIR.'/'.$file) && $timeDiff < COMM_CACHE_TIME){
 				return json_decode(file_get_contents(COMM_CACHE_DIR.'/'.$file),true);
+            }
 		}
 		
-		if(!$order)
+		if(!$order){
 			$order = ' date_added DESC ';
+        }
 		#Checking if user wants to get replies of comment 
-		if($parent_id!=NULL && $get_reply_only)
-		{
+		if($parent_id!=NULL && $get_reply_only) {
 			$cond .= " AND parent_id='$parent_id'";
 		} else {
 			$cond .= " AND parent_id='0' ";
@@ -642,9 +639,11 @@ class myquery
 			 //Deleting any other previuos comment file
 			 $files = glob(COMM_CACHE_DIR.'/'.$type.$type_id.str_replace(',','_',$limit).'*');
 			 
-			 foreach($files as $delFile)
-			 	if(file_exists($delFile))
+			 foreach($files as $delFile){
+			 	if(file_exists($delFile)){
 					unlink($delFile);
+                }
+             }
 
 			 //Caching comment file
 			 if($file){
@@ -657,7 +656,7 @@ class myquery
 			return $comment;
 		}
 
-		return $db->count(tbl("comments"),"*"," type='$type' $typeid_query $cond");
+		return $db->count(tbl('comments'),'*'," type='$type' $typeid_query $cond");
 	}
 
 	/**
@@ -666,7 +665,7 @@ class myquery
 	function get_vid_owner($vid)
 	{
 		global $db;
-		$results = $db->select(tbl("video"),"userid"," videoid='$vid'");
+		$results = $db->select(tbl('video'),'userid'," videoid='$vid'");
 		return $results[0];
 	}
 	
@@ -676,13 +675,12 @@ class myquery
 	function set_template($template)
 	{
 		global $myquery;
-		if(is_dir(STYLES_DIR.'/'.$template) &&template)
-		{
+		if(is_dir(STYLES_DIR.'/'.$template) && template) {
 			$myquery->Set_Website_Details('template_dir',$template);
-			e(lang("template_activated"),'m');
-		}else
-			e(lang("error_occured_changing_template"));
-			
+			e(lang('template_activated'),'m');
+		} else {
+			e(lang('error_occured_changing_template'));
+        }
 	}
 
 	/**
@@ -691,8 +689,7 @@ class myquery
 	function update_comment($cid,$text)
 	{
 		global $db;
-		$db->Execute("UPDATE ".tbl("comments")." SET comment='$text' WHERE comment_id='$cid'");
-		//$db->update(tbl("comments"),array("comment"),array($text)," comment_id = $cid");
+		$db->Execute('UPDATE '.tbl('comments')." SET comment='$text' WHERE comment_id='$cid'");
 	}
         
 	/**
@@ -701,31 +698,31 @@ class myquery
 	function update_comment_vote($cid,$text)
 	{
 		global $db;
-		$db->Execute("UPDATE ".tbl("comments")." SET vote='$text' WHERE comment_id='$cid'");
+		$db->Execute('UPDATE '.tbl('comments')." SET vote='$text' WHERE comment_id='$cid'");
 	}
 	
 	function get_todos()
     {
         global $db;
-        return $db->select(tbl('admin_todo'),'*'," userid='".userid()."'",NULL," date_added DESC ");
+        return $db->select(tbl('admin_todo'),'*'," userid='".userid()."'",NULL,' date_added DESC ');
     }
 
     function insert_todo($text)
 	{
 		global $db;
-		$db->insert(tbl("admin_todo"),array('todo,date_added,userid'), array(mysql_clean($text),NOW(),userid()));
+		$db->insert(tbl('admin_todo'),array('todo,date_added,userid'), array(mysql_clean($text),NOW(),userid()));
 	}
 
 	function update_todo($id,$text)
 	{
 		global $db;
-		$db->Execute("UPDATE ".tbl("admin_todo")." SET todo='".mysql_clean($text)."' WHERE comment_id='$id'");
+		$db->Execute('UPDATE '.tbl('admin_todo')." SET todo='".mysql_clean($text)."' WHERE comment_id='$id'");
 	}
 
 	function delete_todo($id)
 	{
 		global $db;
-		$db->delete(tbl("admin_todo"),array("todo_id"),array($id));
+		$db->delete(tbl('admin_todo'),array('todo_id'),array($id));
 	}
 
 	/**
@@ -736,19 +733,16 @@ class myquery
 		$type = $params['type'];
 		$obj_id = $params['obj_id'];
 		
-		if($type=='video' || $type=='v')
-		{
-			if(!$this->video_exists($obj_id))
-				e(lang("class_vdo_del_err"));
+		if($type=='video' || $type=='v') {
+			if(!$this->video_exists($obj_id)){
+				e(lang('class_vdo_del_err'));
+            }
 		}
 		
 		$func_array = get_functions('validate_comment_functions');
-		if(is_array($func_array))
-		{
-			foreach($func_array as $func)
-			{
-				if(function_exists($func))
-				{
+		if(is_array($func_array)) {
+			foreach($func_array as $func) {
+				if(function_exists($func)) {
 					return $func($params);
 				}
 			}

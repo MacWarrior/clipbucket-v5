@@ -7,7 +7,7 @@
 * @param STRING $content or $object on which filters are applied
 * @param STRING $type    type of filter
 *
-* @return STRING
+* @return String|array
 */
 function apply_filters($content,$type)
 {
