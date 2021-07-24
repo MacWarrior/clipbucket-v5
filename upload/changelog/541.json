@@ -37,6 +37,8 @@
         ,"Update Video edit interface"
         ,"Fix valid message displayed even if errors occured <i>#167#</i>"
         ,"Update update checker"
+        ,"Update Bootstrap to version 3.3.7"
+        ,"Refactor assets directories"
       ]
     }
   ,{
