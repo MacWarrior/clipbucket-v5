@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"43",
+  "revision":"44",
   "status":"dev",
   "detail":[
     {
@@ -22,7 +22,7 @@
         ,"Fix ads configuration"
         ,"Cleanup HTML"
         ,"Update VideoJS ADS module (Not working yet but no more JS errors)"
-        ,"Update JQuery to version 3.6.0"
+        ,"Update JQuery to version 2.2.4"
       ]
     }
     ,{

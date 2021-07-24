@@ -2746,6 +2746,7 @@ class userquery extends CBCategory{
 	function load_custom_profile_fields($data,$group_based=false): array
     {
 		if(!$group_based) {
+            $new_array = array();
 			$array = $this->custom_profile_fields;
 			foreach($array as $key => $fields) {
 				if($data[$fields['db_field']]){
@@ -2765,35 +2766,35 @@ class userquery extends CBCategory{
 				$new_array[$key] = $fields;
 			}
 			return $new_array;
-		} else {
-			$groups = $this->custom_profile_fields_groups;
-			
-			$new_grp = array();
-			if($groups){
-                foreach($groups as $grp)
-                {
-                    $fields = array();
-                    foreach($grp['fields'] as $key => $fields)
-                    {
-                        if($data[$fields['db_field']]){
-                            $value = $data[$fields['db_field']];
-                        } elseif($data[$fields['name']]) {
-                            $value = $data[$fields['name']];
-                        }
-
-                        if($fields['type']=='radiobutton' ||
-                           $fields['type']=='checkbox' ||
-                           $fields['type']=='dropdown'){
-                            $fields['checked'] = $value;
-                        } else {
-                            $fields['value'] = $value;
-                        }
-                    }
-                    $grp['fields'][$key] = $fields;
-                    $new_grp[] = $grp;
-                }
-            }
 		}
+
+        $groups = $this->custom_profile_fields_groups;
+
+        $new_grp = array();
+        if($groups){
+            foreach($groups as $grp)
+            {
+                $fields = array();
+                foreach($grp['fields'] as $key => $fields)
+                {
+                    if($data[$fields['db_field']]){
+                        $value = $data[$fields['db_field']];
+                    } elseif($data[$fields['name']]) {
+                        $value = $data[$fields['name']];
+                    }
+
+                    if($fields['type']=='radiobutton' ||
+                       $fields['type']=='checkbox' ||
+                       $fields['type']=='dropdown'){
+                        $fields['checked'] = $value;
+                    } else {
+                        $fields['value'] = $value;
+                    }
+                }
+                $grp['fields'][$key] = $fields;
+                $new_grp[] = $grp;
+            }
+        }
 		return $new_grp;
 	}
 
