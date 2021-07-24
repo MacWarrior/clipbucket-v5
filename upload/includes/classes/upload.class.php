@@ -1,16 +1,4 @@
 <?php
-/**
- * @Software : ClipBucket
- * @Function : Handles all queries regarding ClipBucket Actions
- * @Author : Arslan Hassan
- * @Since : 15 December, 2007
- * @License : Attribution Assurance License -- http://www.opensource.org/licenses/attribution.php
- *
- * Name : Upload
- * This class can be edited for own purpose..
- * it handles all uploading that is done on ClipBucket or with ClipBucket
- */
-
 class Upload
 {
  	var $custom_form_fields = array();  //Step 1 of Uploading
@@ -31,11 +19,13 @@ class Upload
 		$location_fields = $this->loadLocationFields($array);
 		$option_fields = $this->loadOptionFields($array);
 		
-		if($array==NULL)
+		if($array==NULL){
 			$array = $_POST;
+        }
 		
-		if(is_array($_FILES))
+		if(is_array($_FILES)){
 			$array = array_merge($array,$_FILES);
+        }
 
 		//Merging Array
 		$upload_fields = array_merge($required_fields,$location_fields,$option_fields);
@@ -113,7 +103,7 @@ class Upload
 				if(is_array($val)) {
 					$new_val = '';
 					foreach($val as $v) {
-						$new_val .= "#".$v."# ";
+						$new_val .= '#'.$v.'# ';
 					}
 					$val = $new_val;
 				}
@@ -134,27 +124,27 @@ class Upload
 			}
 			
 			//Adding Video Code
-			$query_field[] = "file_name";
+			$query_field[] = 'file_name';
 			$file_name = mysql_clean($array['file_name']);
 			$query_val[] = $file_name;
 			
 			//Adding Video Key
-			$query_field[] = "videokey";
+			$query_field[] = 'videokey';
 			$query_val[] = $this->video_keygen();
 
 			if(!isset($array['file_directory']) && isset($array['time_stamp']))
 			{
-				$query_field[] = "file_directory";
+				$query_field[] = 'file_directory';
 				$file_directory = create_dated_folder(NULL,$array['time_stamp']);
 				$query_val[] = $file_directory;
 			} else if(isset($array['file_directory'])) {
-				$query_field[] = "file_directory";
+				$query_field[] = 'file_directory';
 				$file_directory = mysql_clean($array['file_directory']);
 				$query_val[] = $file_directory;
 			}
 
 			//Userid
-			$query_field[] = "userid";
+			$query_field[] = 'userid';
 			
 			if(!$array['userid']){
 				$query_val[] = $userid;
@@ -168,15 +158,15 @@ class Upload
 			}
 
 			//video_version
-            $query_field[] = "video_version";
+            $query_field[] = 'video_version';
             $query_val[] = '2.7';
 
 			//thumbs_version
-            $query_field[] = "thumbs_version";
+            $query_field[] = 'thumbs_version';
             $query_val[] = '2.8';
 
 			//Upload Ip
-			$query_field[] = "uploader_ip";
+			$query_field[] = 'uploader_ip';
 			$query_val[] = $_SERVER['REMOTE_ADDR'];
 			
 			$activation = ACTIVATION;
@@ -187,19 +177,19 @@ class Upload
 			} else {
 				$active = 'no';
 			}
-			$query_field[] = "active";
+			$query_field[] = 'active';
 			$query_val[] = $active;
 			
-			$query_field[] = "date_added";
+			$query_field[] = 'date_added';
 			$query_val[] = dateNow();
 			$config_for_mp4 = $Cbucket->configs['stay_mp4'];
 			
 			if ($config_for_mp4 == 'yes') {
-				$query_field[] = "status";
-				$query_val[] = "Successful";
+				$query_field[] = 'status';
+				$query_val[] = 'Successful';
 			}
 
-			$query = "INSERT INTO ".tbl("video")." (";
+			$query = 'INSERT INTO '.tbl('video').' (';
 			$total_fields = count($query_field);
 			
 			//Adding Fields to query
@@ -208,32 +198,32 @@ class Upload
 			{
 				$i++;
 				$query .= $qfield;
-				if($i<$total_fields)
+				if($i<$total_fields){
 					$query .= ',';
+                }
 			}
 			
-			$query .= ") VALUES (";
-			
-			
+			$query .= ') VALUES (';
+
 			$i = 0;
 			$query_val[0] = str_replace('&lt;!--', '', $query_val[0]);
 			$query_val[1] = str_replace('&lt;!--', '', $query_val[1]);
 			
 			//Adding Fields Values to query
-			foreach($query_val as $qval)
-			{
+			foreach($query_val as $qval) {
 				$i++;
 				$query .= "'$qval'";
-				if($i<$total_fields)
+				if($i<$total_fields){
 					$query .= ',';
+                }
 			}
 			
 			//Finalizing Query
-			$query .= ")";
+			$query .= ')';
 
 			if(!userid() && !has_access('allow_video_upload',false,false))
 			{
-				e(lang("you_not_logged_in"));
+				e(lang('you_not_logged_in'));
 			} else {
 				$insert_id = file_name_exists($file_name);
 				if(!$insert_id)
@@ -250,7 +240,7 @@ class Upload
 					);
 					insert_log('Uploaded a video',$log_array);
 
-					$db->update(tbl("users"),array("total_videos"),array("|f|total_videos+1")," userid='".$userid."'");
+					$db->update(tbl('users'),array('total_videos'),array('|f|total_videos+1')," userid='".$userid."'");
 				}
 			}
 		}
@@ -268,11 +258,12 @@ class Upload
 	 *
 	 * @return int
 	 */
-	function get_available_file_num($file_name,$big=false)
-	{
+	function get_available_file_num($file_name,$big=false): int
+    {
 		$code = 1;
-        if($big)
-			$big = "big-";
+        if($big){
+			$big = 'big-';
+        }
 
        	if(defined('dir'))
        	{
@@ -284,16 +275,18 @@ class Upload
               		$path = THUMBS_DIR.'/'.dir.'/'.$file_name.'-'.$big.$code.'.';
               	}
 
-		      	if(!file_exists($path.'jpg') && !file_exists($path.'png') && !file_exists($path.'gif'))
+		      	if(!file_exists($path.'jpg') && !file_exists($path.'png') && !file_exists($path.'gif')){
 		          	break;
+                }
 			  	$code = $code + 1;
 			}
 		} else {
             while(1)
 			{
 		        $path = THUMBS_DIR.'/'.$file_name.'-'.$big.$code.'.';
-			    if(!file_exists($path.'jpg') && !file_exists($path.'png') && !file_exists($path.'gif'))
+			    if(!file_exists($path.'jpg') && !file_exists($path.'png') && !file_exists($path.'gif')){
 			      	break;
+			    }
 				$code = $code + 1;
 			}
 	    }
@@ -312,8 +305,7 @@ class Upload
 			$ext = getExt($file['name'][$key]);
 			if($imgObj->ValidateImage($file['tmp_name'][$key],$ext))
 			{
-				//One more IF statement considering CB 2.8.1 thumbs strucure 
-				//Author : Fahad Abbas 
+				//One more IF statement considering CB 2.8.1 thumbs strucure
 				if (!empty($thumbs_ver) && $thumbs_ver == '2.8')
 				{
 					$thumbs_settings_28 = thumbs_res_settings_28();
@@ -369,10 +361,8 @@ class Upload
 	 */
 	function upload_thumbs($file_name,$file_array,$files_dir=NULL,$thumbs_ver=false)
 	{
-		if(count($file_array[name])>1)
-		{
-			for($i=0;$i<count($file_array['name']);$i++)
-			{
+		if(count($file_array[name])>1) {
+			for($i=0;$i<count($file_array['name']);$i++) {
 				$this->upload_thumb($file_name,$file_array,$i,$files_dir,$thumbs_ver);
 			}
 			e(lang('upload_vid_thumbs_msg'),'m');
@@ -393,10 +383,11 @@ class Upload
 	 *
 	 * @return array
 	 */
-	function loadRequiredFields($default=NULL)
-	{
-		if($default == NULL)
+	function loadRequiredFields($default=NULL): array
+    {
+		if($default == NULL){
 			$default = $_POST;
+        }
 
 		$title = $default['title'];
 		$desc = $default['description'];
@@ -433,62 +424,58 @@ class Upload
 			 */
 
 			'title'	=> array(
-				'title'=> lang('vdo_title'),
-				'type'=> 'textfield',
-				'name'=> 'title',
-				'id'=> 'title',
-				'value'=> $title,
-				'size'=> '45',
-				'db_field'=> 'title',
-				'required'=> 'yes',
-				'min_length'=> config("min_video_title"),
-				'max_length'=> config("max_video_title")
+				'title'      => lang('vdo_title'),
+				'type'       => 'textfield',
+				'name'       => 'title',
+				'id'         => 'title',
+				'value'      => $title,
+				'size'       => '45',
+				'db_field'   => 'title',
+				'required'   => 'yes',
+				'min_length' => config('min_video_title'),
+				'max_length' => config('max_video_title')
 			),
-
 			'desc' => array(
-				'title'=> lang('vdo_desc'),
-				'type'=> 'textarea',
-				'name'=> 'description',
-				'class'=> 'desc',
-				'value'=> $desc,
-				'size'=>'35',
-				'extra_params'=>' rows="4"',
-				'db_field'=>'description',
-				'required'=>'yes',
-				'anchor_after'=>'after_desc_compose_box',
+				'title'        => lang('vdo_desc'),
+				'type'         => 'textarea',
+				'name'         => 'description',
+				'class'        => 'desc',
+				'value'        => $desc,
+				'size'         => '35',
+				'extra_params' => ' rows="4"',
+				'db_field'     => 'description',
+				'required'     => 'yes',
+				'anchor_after' => 'after_desc_compose_box'
 			),
-
 			'cat' => array(
-				'title'=> lang('vdo_cat'),
-				'type'=> 'checkbox',
-				'name'=> 'category[]',
-				'id'=> 'category',
-				'value'=> array('category',$cat_array),
-				'hint_1'=> sprintf(lang('vdo_cat_msg'),ALLOWED_VDO_CATS),
-				'db_field'=>'category',
-				'required'=>'yes',
-				'validate_function'=>'validate_vid_category',
-				'invalid_err'=>lang('vdo_cat_err3'),
-				'display_function' => 'convert_to_categories'
+				'title'             => lang('vdo_cat'),
+				'type'              => 'checkbox',
+				'name'              => 'category[]',
+				'id'                => 'category',
+				'value'             => array('category',$cat_array),
+				'hint_1'            => sprintf(lang('vdo_cat_msg'),ALLOWED_VDO_CATS),
+				'db_field'          => 'category',
+				'required'          => 'yes',
+				'validate_function' => 'validate_vid_category',
+				'invalid_err'       => lang('vdo_cat_err3'),
+				'display_function'  => 'convert_to_categories'
 			),
-
 			'tags' => array(
-				'title'=> lang('tag_title'),
-				'type'=> 'textfield',
-				'name'=> 'tags',
-				'id'=> 'tags',
-				'value'=> genTags($tags),
-				'hint_1'=> '',
-				'hint_2'=> lang('vdo_tags_msg'),
-				'db_field'=>'tags',
-				'required'=>'yes',
-				'validate_function'=>'genTags'
+				'title'             => lang('tag_title'),
+				'type'              => 'textfield',
+				'name'              => 'tags',
+				'id'                => 'tags',
+				'value'             => genTags($tags),
+				'hint_1'            => '',
+				'hint_2'            => lang('vdo_tags_msg'),
+				'db_field'          => 'tags',
+				'required'          => 'yes',
+				'validate_function' => 'genTags'
 			)
 		);
 
 		$tracks = $default['tracks'];
-		if( !empty($tracks))
-		{
+		if( !empty($tracks)) {
 			$uploadFormRequiredFieldsArray['audio_track'] = array(
 				'title'=> lang('track_title'),
 				'type'=> 'dropdown',
@@ -518,19 +505,17 @@ class Upload
 	 *
 	 * @return array
 	 */
-	function loadOptionFields($default=NULL)
-	{
-		global $uploadFormOptionFieldsArray;
-		
-		
-		if($default == NULL)
+	function loadOptionFields($default=NULL): array
+    {
+		if($default == NULL){
 			$default = $_POST;
+        }
 			
-		$broadcast = $default['broadcast'] ? $default['broadcast'] : 'public';
-		$comments = $default['allow_comments'] ? $default['allow_comments'] : 'yes';
-		$comment_voting = $default['comment_voting'] ? $default['comment_voting'] : 'yes';
-		$rating = $default['allow_rating'] ? $default['allow_rating'] : 'yes';
-		$embedding = $default['allow_embedding'] ? $default['allow_embedding'] : 'yes';
+		$broadcast = $default['broadcast'] ?? 'public';
+		$comments = $default['allow_comments'] ?? 'yes';
+		$comment_voting = $default['comment_voting'] ?? 'yes';
+		$rating = $default['allow_rating'] ?? 'yes';
+		$embedding = $default['allow_embedding'] ?? 'yes';
 		
 		//Checking weather to enabled or disable password field
 		$video_pass_disable = 'disabled="disabled" ';
@@ -544,18 +529,18 @@ class Upload
 			
 		return array(
 			'broadcast'=> array(
-				'title'=>lang('vdo_br_opt'),
-				'type'=>'radiobutton',
-				'name'=>'broadcast',
-				'value'=>array('public'=>lang('vdo_br_opt1'),'private'=>lang('vdo_br_opt2'),
-				'unlisted'=>lang('vdo_broadcast_unlisted'),'logged'=>lang('logged_users_only')),
-				'checked'=>$broadcast,
-				'db_field'=>'broadcast',
-				'required'=>'no',
-				'validate_function'=>'yes_or_no',
-				'display_function'=>'display_sharing_opt',
-				'default_value'=>'public',
-				'extra_tags' => ' onClick="
+				'title'             => lang('vdo_br_opt'),
+				'type'              => 'radiobutton',
+				'name'              => 'broadcast',
+				'value'             => array('public'=>lang('vdo_br_opt1'),'private'=>lang('vdo_br_opt2'),
+				'unlisted'          => lang('vdo_broadcast_unlisted'),'logged'=>lang('logged_users_only')),
+				'checked'           => $broadcast,
+				'db_field'          => 'broadcast',
+				'required'          => 'no',
+				'validate_function' => 'yes_or_no',
+				'display_function'  => 'display_sharing_opt',
+				'default_value'     => 'public',
+				'extra_tags'        => ' onClick="
 				    $(this).closest(\'form\').find(\'#video_password\').attr(\'disabled\',\'disabled\');
                     $(this).closest(\'form\').find(\'#video_users\').attr(\'disabled\',\'disabled\');
 					if($(this).val()==\'unlisted\'){
@@ -565,83 +550,77 @@ class Upload
                     }"
                 '
 			),
-		 
 		 	'video_password'=> array(
-		 		'title'=>lang('video_password'),
-				 'type'=>'password',
-				 'name'=>'video_password',
-				 'id'=>'video_password',
-				 'value'=> $default['video_password'],
-				 'db_field'=>'video_password',
-				 'required'=>'no',
+		 		'title'       => lang('video_password'),
+				 'type'       => 'password',
+				 'name'       => 'video_password',
+				 'id'         => 'video_password',
+				 'value'      => $default['video_password'],
+				 'db_field'   => 'video_password',
+				 'required'   => 'no',
 				 'extra_tags' => " $video_pass_disable ",
-				 'hint_2'=> lang('set_video_password')
+				 'hint_2'     => lang('set_video_password')
 			),
-
 		 	'video_users' => array(
-		 		'title'=>lang('video_users'),
-				'type'=>'textarea',
-				'name'=>'video_users',
-				'id'=>'video_users',
-				'value'=> $default['video_users'],
-				'db_field'=>'video_users',
-				'required'=>'no',
-				'extra_tags' => " $video_user_disable ",
-				'hint_2'=> lang('specify_video_users'),
+		 		'title'             => lang('video_users'),
+				'type'              => 'textarea',
+				'name'              => 'video_users',
+				'id'                => 'video_users',
+				'value'             => $default['video_users'],
+				'db_field'          => 'video_users',
+				'required'          => 'no',
+				'extra_tags'        => " $video_user_disable ",
+				'hint_2'            => lang('specify_video_users'),
 				'validate_function' => 'video_users',
-				'use_func_val'=>true
+				'use_func_val'      => true
 			),
-
 			'comments'=> array(
-				'title'=>lang('comments'),
-				'type'=> 'radiobutton',
-				'name'=>'allow_comments',
-				'value'=> array('yes'=>lang('vdo_allow_comm'),'no'=>lang('vdo_dallow_comm')),
-				'checked'=> $comments,
-				'db_field'=>'allow_comments',
-				'required'=>'no',
-				'validate_function'=>'yes_or_no',
-				'display_function'=>'display_sharing_opt',
-				'default_value'=>'yes',
+				'title'             => lang('comments'),
+				'type'              => 'radiobutton',
+				'name'              => 'allow_comments',
+				'value'             => array('yes'=>lang('vdo_allow_comm'),'no'=>lang('vdo_dallow_comm')),
+				'checked'           => $comments,
+				'db_field'          => 'allow_comments',
+				'required'          => 'no',
+				'validate_function' => 'yes_or_no',
+				'display_function'  => 'display_sharing_opt',
+				'default_value'     => 'yes'
 			),
-
 		 	'commentsvote'=> array(
-		 		'title'=>lang('vdo_comm_vote'),
-				'type'=>'radiobutton',
-				'name'=>'comment_voting',
-				'value'=>array('yes'=>lang('vdo_allow_comm').' Voting','no'=>lang('vdo_dallow_comm').' Voting'),
-				'checked'=>$comment_voting,
-				'db_field'=>'comment_voting',
-				'required'=>'no',
-				'validate_function'=>'yes_or_no',
-				'display_function'=>'display_sharing_opt',
-				'default_value'=>'yes',
+		 		'title'             => lang('vdo_comm_vote'),
+				'type'              => 'radiobutton',
+				'name'              => 'comment_voting',
+				'value'             => array('yes'=>lang('vdo_allow_comm').' Voting','no'=>lang('vdo_dallow_comm').' Voting'),
+				'checked'           => $comment_voting,
+				'db_field'          => 'comment_voting',
+				'required'          => 'no',
+				'validate_function' => 'yes_or_no',
+				'display_function'  => 'display_sharing_opt',
+				'default_value'     => 'yes'
 			),
-
 		 	'rating'=> array(
-				'title'=>lang('ratings'),
-				'type'=>'radiobutton',
-				'name'=>'allow_rating',
-				'value'=> array('yes'=>lang('vdo_allow_rating'),'no'=>lang('vdo_dallow_ratig')),
-				'checked'=>$rating,
-				'db_field'=>'allow_rating',
-				'required'=>'no',
-				'validate_function'=>'yes_or_no',
-				'display_function'=>'display_sharing_opt',
-				'default_value'=>'yes',
+				'title'             => lang('ratings'),
+				'type'              => 'radiobutton',
+				'name'              => 'allow_rating',
+				'value'             => array('yes'=>lang('vdo_allow_rating'),'no'=>lang('vdo_dallow_ratig')),
+				'checked'           => $rating,
+				'db_field'          => 'allow_rating',
+				'required'          => 'no',
+				'validate_function' => 'yes_or_no',
+				'display_function'  => 'display_sharing_opt',
+				'default_value'     => 'yes'
 			),
-
 		 	'embedding'=> array(
-				'title'=>lang('vdo_embedding'),
-				'type'=> 'radiobutton',
-				'name'=> 'allow_embedding',
-				'value'=> array('yes'=>lang('vdo_embed_opt1'),'no'=>lang('vdo_embed_opt2')),
-				'checked'=> $embedding,
-				'db_field'=>'allow_embedding',
-				'required'=>'no',
-				'validate_function'=>'yes_or_no',
-				'display_function'=>'display_sharing_opt',
-				'default_value'=>'yes',
+				'title'             => lang('vdo_embedding'),
+				'type'              => 'radiobutton',
+				'name'              => 'allow_embedding',
+				'value'             => array('yes'=>lang('vdo_embed_opt1'),'no'=>lang('vdo_embed_opt2')),
+				'checked'           => $embedding,
+				'db_field'          => 'allow_embedding',
+				'required'          => 'no',
+				'validate_function' => 'yes_or_no',
+				'display_function'  => 'display_sharing_opt',
+				'default_value'     => 'yes'
 			)
 		 );
 	}
@@ -656,56 +635,56 @@ class Upload
 	 *
 	 * @return array
 	 */
-	function loadLocationFields($default=NULL)
-	{
+	function loadLocationFields($default=NULL): array
+    {
 		global $Cbucket;
 		
 		if($default == NULL){
 			$default = $_POST;
         }
 
-        $date_recorded = date(config("date_format"),time());
+        $date_recorded = date(config('date_format'),time());
 		if( isset($default['datecreated']) ){
             $date_recorded = $default['datecreated'];
         }
 		
 		return array(
-			'country'=> array(
-				'title'=>lang('country'),
-				'type'=> 'dropdown',
-				'name'=> 'country',
-				'id'=> 'country',
-				'value'=> $Cbucket->get_countries(),
-				'checked'=> $default['country'],
-				'db_field'=>'country',
-				'required'=>'no',
-				'default_value'=>''
+			'country' => array(
+				'title'         => lang('country'),
+				'type'          => 'dropdown',
+				'name'          => 'country',
+				'id'            => 'country',
+				'value'         => $Cbucket->get_countries(),
+				'checked'       => $default['country'],
+				'db_field'      => 'country',
+				'required'      => 'no',
+				'default_value' => ''
 			),
-			'location'=> array(
-				'title'=>lang('location'),
-				'type'=>'textfield',
-				'name'=> 'location',
-				'id'=> 'location',
-				'value'=> $default['location'],
-				'hint_2'=> lang('vdo_add_eg'),
-				'db_field'=>'location',
-				'required'=>'no',
-				'default_value'=>''
+			'location' => array(
+				'title'         => lang('location'),
+				'type'          =>'textfield',
+				'name'          => 'location',
+				'id'            => 'location',
+				'value'         => $default['location'],
+				'hint_2'        => lang('vdo_add_eg'),
+				'db_field'      => 'location',
+				'required'      => 'no',
+				'default_value' => ''
 			),
 		 	'date_recorded'	=> array(
-				 'title' => 'Date Recorded',
-				 'type' => 'textfield',
-				 'name' => 'datecreated',
-				 'id' => 'datecreated',
-				 'class'=>'date_field',
-				 'anchor_after' => 'date_picker',
-				 'value'=> $date_recorded,
-				 'db_field'=>'datecreated',
-				 'required'=>'no',
-				 'default_value'=>'',
-				 'use_func_val' => true,
+				 'title'             => 'Date Recorded',
+				 'type'              => 'textfield',
+				 'name'              => 'datecreated',
+				 'id'                => 'datecreated',
+				 'class'             => 'date_field',
+				 'anchor_after'      => 'date_picker',
+				 'value'             => $date_recorded,
+				 'db_field'          => 'datecreated',
+				 'required'          => 'no',
+				 'default_value'     => '',
+				 'use_func_val'      => true,
 				 'validate_function' => 'datecreated',
-				 'hint_2' => config('date_format')
+				 'hint_2'            => config('date_format')
 			)
 		);
 	}
@@ -716,7 +695,7 @@ class Upload
 	 *
 	 * @param $file
 	 *
-	 * @return bool
+	 * @return bool|int
 	 */
 	function add_conversion_queue($file)
 	{
@@ -728,8 +707,9 @@ class Upload
 		{
 			$ext = strtolower(getExt($file));
 			$name = getName($file);
-			if(!$name)
+			if(!$name){
 				return false;
+            }
 			//Get Temp Ext
 			$tmp_ext = $tmp_ext[rand(0,count($tmp_ext)-1)];
 			//Creating New File Name
@@ -738,7 +718,7 @@ class Upload
 
 			rename(TEMP_DIR.'/'.$file,TEMP_DIR.'/'.$new_file);
 			//Adding Details to database
-			$db->Execute("INSERT INTO ".tbl("conversion_queue")." (cqueue_name,cqueue_ext,cqueue_tmp_ext,date_added)
+			$db->Execute('INSERT INTO '.tbl('conversion_queue')." (cqueue_name,cqueue_ext,cqueue_tmp_ext,date_added)
 							VALUES ('".mysql_clean($name)."','".mysql_clean($ext)."','".mysql_clean($tmp_ext)."','".NOW()."') ");
 			return $db->insert_id();
 		}
@@ -749,21 +729,20 @@ class Upload
 	 * Video Key Gen
 	 * * it is use to generate video key
 	 */
-	function video_keygen()
-	{
-		$char_list = "ABDGHKMNORSUXWY";
-		$char_list .= "123456789";
-		while(1)
-		{
+	function video_keygen(): string
+    {
+		$char_list = 'ABDGHKMNORSUXWY';
+		$char_list .= '123456789';
+		while(1) {
 			$vkey = '';
 			srand((double)microtime()*1000000);
-			for($i = 0; $i < 12; $i++)
-			{
-			$vkey .= substr($char_list,(rand()%(strlen($char_list))), 1);
+			for($i = 0; $i < 12; $i++) {
+			    $vkey .= substr($char_list,(rand()%(strlen($char_list))), 1);
 			}
 			
-			if(!vkey_exists($vkey))
-			break;
+			if(!vkey_exists($vkey)){
+			    break;
+            }
 		}
 		
 		return $vkey;
@@ -777,8 +756,7 @@ class Upload
 		global $Cbucket,$Smarty;
 		$opt_list = $Cbucket->upload_opt_list;
 		
-		foreach($opt_list as $opt)
-		{
+		foreach($opt_list as $opt) {
 			$Smarty->register_function($opt['load_func'],$opt['load_func']);
 		}
 		
@@ -791,10 +769,10 @@ class Upload
 	 */
 	function do_after_video_upload($vid)
 	{
-		foreach($this->actions_after_video_upload as $funcs)
-		{
-			if(function_exists($funcs))
+		foreach($this->actions_after_video_upload as $funcs) {
+			if(function_exists($funcs)){
 				$funcs($vid);
+            }
 		}
 	}
 
@@ -805,24 +783,22 @@ class Upload
 	 * @param bool $ck_display_admin
 	 * @param bool $ck_display_user
 	 *
-	 * @return mixed
+	 * @return array
 	 */
 	function load_custom_upload_fields($data,$ck_display_admin=FALSE,$ck_display_user=FALSE)
-	{
+    {
 		$array = $this->custom_upload_fields;
 		foreach($array as $key => $fields)
 		{
 			$ok = 'yes';
-			if($ck_display_admin)
-			{
-				if($fields['display_admin'] == 'no_display')
+			if($ck_display_admin && $fields['display_admin'] == 'no_display') {
 					$ok = 'no';
 			}
 			
-			if($ok=='yes')
-			{
-				if(!$fields['value'])
+			if($ok=='yes') {
+				if(!$fields['value']){
 					$fields['value'] = $data[$fields['db_field']];
+                }
 				$new_array[$key] = $fields;
 			}
 		}
@@ -842,7 +818,8 @@ class Upload
 	 * @return array : { array } { $new_array } { an array with all custom fields }
 	 * { $new_array } { an array with all custom fields }
 	 */
-	function load_custom_form_fields($data, $insertion = false,$group_based=false, $user = false) {
+	function load_custom_form_fields($data, $insertion = false,$group_based=false, $user = false)
+    {
 		if(!$group_based) {
 			if (function_exists('pull_custom_fields')) {
 				if ($user) {
@@ -852,7 +829,7 @@ class Upload
 				}
 			}
 			$cleaned = array();
-			#pr($array,true);
+
 			if (!$insertion) {
 				foreach ($array as $key => $field) {
 					$cleaned[$key]['title'] = $field['custom_field_title'];
@@ -886,7 +863,7 @@ class Upload
 			}
 			return $new_array;
 		}
-		return $array = $this->custom_form_fields_groups;
+		return $this->custom_form_fields_groups;
 	}
 
 
@@ -899,8 +876,8 @@ class Upload
 	 *
 	 * @return string
 	 */
-	function upload_user_file($type='a',$file,$uid)
-	{
+	function upload_user_file($type='a',$file,$uid): string
+    {
 		global $userquery,$cbphoto,$imgObj;
 		$av_details = getimagesize($file['tmp_name']);
 		
@@ -910,26 +887,17 @@ class Upload
 			{
 				case 'a':
 				case 'avatar':
-				{
-					
 					if($file['size']/1024 > config('max_profile_pic_size')){
-
 						e(sprintf(lang('file_size_exceeds'),config('max_profile_pic_size')));
-					
-					}elseif($av_details[0] > config('max_profile_pic_width')){
-
-						e(lang('File width exeeds')." ".config('max_profile_pic_width').'px');
-					
-					}elseif(file_exists($file['tmp_name']))
-					{
+					} elseif($av_details[0] > config('max_profile_pic_width')) {
+						e(lang('File width exeeds').' '.config('max_profile_pic_width').'px');
+					} elseif(file_exists($file['tmp_name'])) {
 						$ext = getext($file['name']);
 						$file_name = $uid.'.'.$ext;
 						$file_path = AVATARS_DIR.DIRECTORY_SEPARATOR.$file_name;
-						if(move_uploaded_file($file['tmp_name'],$file_path))
-						{
-							if(!$imgObj->ValidateImage($file_path,$ext))
-							{
-								e(lang("Invalid file type"));
+						if(move_uploaded_file($file['tmp_name'],$file_path)) {
+							if(!$imgObj->ValidateImage($file_path,$ext)) {
+								e(lang('Invalid file type'));
 								@unlink($file_path);
 							} else {
 								$small_size = AVATARS_DIR.DIRECTORY_SEPARATOR.$uid.'-small.'.$ext;
@@ -937,15 +905,15 @@ class Upload
 								$cbphoto->CreateThumb($file_path,$small_size,$ext,AVATAR_SMALL_SIZE,AVATAR_SMALL_SIZE);
 							}
 						} else {
-							e(lang("class_error_occured"));
+							e(lang('class_error_occured'));
 						}
 					}
-				}
-				break;
+				    break;
 			}
 			return $file_name;
-		} else
+		} else {
 			e(lang('user_doesnt_exist'));
+        }
 	}
 	
 	
@@ -958,27 +926,25 @@ class Upload
 	{
 		global $imgObj;
 
-		if(!empty($file['name']))
-		{
-			//$file_num = $this->get_available_file_num($file_name);
+		if(!empty($file['name'])) {
 			$ext = getExt($file['name']);
 			$file_name = 'plaery-logo';
-			if($imgObj->ValidateImage($file['tmp_name'],$ext))
-			{
+			if($imgObj->ValidateImage($file['tmp_name'],$ext)) {
 				$file_path = BASEDIR.'/images/'.$file_name.'.'.$ext;
-				if(file_exists($file_path))
-					if(!unlink($file_path))
-					{
+				if(file_exists($file_path)){
+					if(!unlink($file_path)) {
 						e("Unable to remove '$file_path' , please chmod it to 0777");
 						return false;
 					}
-						
+                }
+
 				move_uploaded_file($file['tmp_name'],$file_path);
 				//$imgObj->CreateThumb($file_path,$file_path,200,$ext,200,false);
-				e("Logo has been uploaded",'m');
+				e('Logo has been uploaded','m');
 				return $file_name.'.'.$ext;
-			} else
-				e("Invalid Image file");
+			} else {
+				e('Invalid Image file');
+            }
 		}
 		return false;
 	}
@@ -994,36 +960,34 @@ class Upload
 	 * each group has it name and fields wrapped in array 
 	 * and that array will be part of video fields
 	 */
-	function load_video_fields($input)
-	{
+	function load_video_fields($input): array
+    {
 		$fields = array(
 			array(
 				'group_name' => lang('required_fields'),
-				'group_id'	=> 'required_fields',
-				'fields'	=> $this->loadRequiredFields($input),
+				'group_id'	 => 'required_fields',
+				'fields'	 => $this->loadRequiredFields($input)
 			),
 			array(
 				'group_name' => lang('vdo_share_opt'),
-				'group_id'	=> 'sharing_fields',
-				'fields'	=> $this->loadOptionFields($input),
+				'group_id'	 => 'sharing_fields',
+				'fields'	 => $this->loadOptionFields($input)
 			),
 			array(
 				'group_name' => lang('date_recorded_location'),
-				'group_id'	=> 'date_location_fields',
-				'fields'	=> $this->loadLocationFields($input),
+				'group_id'	 => 'date_location_fields',
+				'fields'	 => $this->loadLocationFields($input)
 			)
 		);
 		
 		//Adding Custom Fields
 		$custom_fields = $this->load_custom_form_fields($input,false);
 		
-		if($custom_fields)
-		{
-			$more_fields_group = 
-			array(
+		if($custom_fields) {
+			$more_fields_group = array(
 				'group_name' => lang('more_fields'),
-				'group_id'	=> 'custom_fields',
-				'fields'	=> $custom_fields,
+				'group_id'	 => 'custom_fields',
+				'fields'	 => $custom_fields
 			);
 		}
 		
@@ -1040,15 +1004,17 @@ class Upload
 				foreach($fieldGroup['fields'] as $mainKey => $nField)
 				{
 					$updatedNewFields[$mainKey] = $nField;
-					if($input[$nField['db_field']])
+					if($input[$nField['db_field']]){
 						$value = $input[$nField['db_field']];
-					elseif($input[$nField['name']])
+                    } elseif($input[$nField['name']]) {
 						$value = $input[$nField['name']];
+                    }
 						
-					if($nField['type']=='radiobutton' || $nField['type']=='checkbox' || $nField['type']=='dropdown')
+					if($nField['type']=='radiobutton' || $nField['type']=='checkbox' || $nField['type']=='dropdown'){
 						$updatedNewFields[$mainKey]['checked'] = $value;
-					else
+                    } else {
 						$updatedNewFields[$mainKey]['value'] = $value;
+                    }
 				}
 				
 				$fieldGroup['fields'] = $updatedNewFields;
@@ -1066,8 +1032,8 @@ class Upload
 						//Finally Updating array
 						$newGroupArray = array(
 							'group_name' => $field['group_name'],
-							'group_id' => $field['group_id'],
-							'fields' => $mergeField,
+							'group_id'   => $field['group_id'],
+							'fields'     => $mergeField
 						);
 						
 						$fields[$key] = $newGroupArray;
@@ -1083,25 +1049,27 @@ class Upload
 			}
 		}
 		
-		if($more_fields_group)
+		if($more_fields_group){
 			$fields[] = $more_fields_group;
+        }
 				
 		return $fields;
 	}
 	
 	function isTime($time)
 	{
-		preg_match("/(([0-9]?[0-9]{1}):)?([0-5]{1}[0-9]{1}):([0-5]{1}[0-9]{1})/",$time,$match);
-		if(!empty($match[0]))
+		preg_match('/(([0-9]?[0-9]{1}):)?([0-5]{1}[0-9]{1}):([0-5]{1}[0-9]{1})/',$time,$match);
+		if(!empty($match[0])){
 			return ($match[0]);
+        }
 		return false;
 	}	
 	
 	function time_to_sec($time)
 	{
-		if(!$this->isTime($time))
-			e(lang("Format of time is not right."));
-		else {
+		if(!$this->isTime($time)){
+			e(lang('Format of time is not right.'));
+        } else {
 			$hours = substr($time, 0, -6); 
 			$minutes = substr($time, -5, 2); 
 			$seconds = substr($time, -2); 
