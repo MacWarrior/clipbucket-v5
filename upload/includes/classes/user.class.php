@@ -2609,7 +2609,7 @@ class userquery extends CBCategory{
         );
 	}
 
-	public function getCover($userId = false): string
+	public function getCover($userId = false)
     {
 		if(!$userId){
 			$userId = userid();

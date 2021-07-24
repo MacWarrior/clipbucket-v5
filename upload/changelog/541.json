@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"44",
+  "revision":"45",
   "status":"dev",
   "detail":[
     {
@@ -53,6 +53,7 @@
         ,"Fix home page popup video height"
         ,"Fix video manager"
         ,"Video upload : Refactor video upload <i>#169</i>"
+        ,"Update Bootstrap to version 3.3.7"
       ]
     }
   ,{
