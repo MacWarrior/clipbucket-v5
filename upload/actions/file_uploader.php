@@ -6,51 +6,22 @@ global $Cbucket,$cbvid,$Upload,$db,$eh;
 if($_FILES['Filedata']){
     $mode = 'upload';
 }
-if($_POST['insertVideo']){
-    $mode = 'insert_video';
+if($_POST['updateVideo']){
+    $mode = 'update_video';
 }
 if($_POST['getForm']){
     $mode = 'get_form';
 }
-if($_POST['updateVideo']=='yes'){
-    $mode = 'update_video';
-}
 
 switch($mode)
 {
-    case 'insert_video':
-        $title = getName($_POST['title']);
-        if ($_POST['serverUrl'] && $_POST['serverUrl'] != "none") {
-            $file_directory = date('Y/m/d');
-        } else {
-            $file_directory = createDataFolders();
-        }
-
-        $vidDetails = array(
-            'title' => $title,
-            'description' => $title,
-            'tags' => genTags(str_replace(' ',', ',$title)),
-            'category' => array($cbvid->get_default_cid()),
-            'file_name' => $_POST['file_name'],
-            'file_directory' => $file_directory,
-            'userid' => userid(),
-            'video_version' => '2.7'
-        );
-
-        $vid = $Upload->submit_upload($vidDetails);
-        if(error()) {
-            echo json_encode(array('error' => error('single')));
-            exit();
-        }
-
-        // inserting into video views as well
-        $query = 'INSERT INTO '.tbl('video_views').' (video_id, video_views, last_updated) VALUES('.$vid.',0,'.time().')';
-        $db->Execute($query);
+    case 'update_video':
+        $cbvid->update_video();
 
         if(error()) {
-            echo json_encode(array('error' => error('single')));
+            echo json_encode(['error' => error('single')]);
         } else {
-            echo json_encode(array('videoid' => $vid));
+            echo json_encode(['valid' => lang('video_detail_saved')]);
         }
         exit();
 
@@ -113,14 +84,14 @@ switch($mode)
             $tempFile = $_FILES['Filedata']['tmp_name'];
             $file_directory = date('Y/m/d');
             @mkdir(VIDEOS_DIR . '/' . $file_directory, 0777, true);
-            $targetFileName = $file_name.'.'.getExt( $_FILES['Filedata']['name']);
-            $targetFile = TEMP_DIR."/".$targetFileName;
+            $targetFileName = $file_name.'.'.getExt($_FILES['Filedata']['name']);
+            $targetFile = TEMP_DIR.'/'.$targetFileName;
             $ta = VIDEOS_DIR.'/'.$file_directory;
             logData(VIDEOS_DIR.'/'.$file_directory.$file_name,'ta');
             $orginal_file = VIDEOS_DIR.'/'.$file_directory.'/'.$file_name.'.'.getExt($_FILES['Filedata']['name']);
 
             move_uploaded_file($tempFile,VIDEOS_DIR.'/'.$file_directory.'/'.$file_name.'.'.getExt( $_FILES['Filedata']['name']));
-            echo json_encode(array("success"=>"yes","file_name"=>$file_name, 'phpos' => PHP_OS , "extension"=>$extension));
+            echo json_encode(array("success"=>"yes","file_name"=>$file_name, "extension"=>$extension));
             exit();
         }
 
@@ -212,92 +183,47 @@ switch($mode)
         }
 
         $Upload->add_conversion_queue($targetFileName);
-        $quick_conv = config('quick_conv');
         $use_crons = config('use_crons');
 
-        if($quick_conv=='yes' || $use_crons=='no')
+        if($use_crons=='no')
         {
             if (stristr(PHP_OS, 'WIN')) {
-                exec(php_path()." -q ".BASEDIR."/actions/video_convert.php $targetFileName");
+                exec(php_path().' -q '.BASEDIR."/actions/video_convert.php $targetFileName");
             } elseif(stristr(PHP_OS, 'darwin')) {
-                exec(php_path()." -q ".BASEDIR."/actions/video_convert.php $targetFileName </dev/null >/dev/null &");
+                exec(php_path().' -q '.BASEDIR."/actions/video_convert.php $targetFileName </dev/null >/dev/null &");
             } else { // for ubuntu or linux
-                exec(php_path()." -q ".BASEDIR."/actions/video_convert.php {$targetFileName} {$file_name} {$file_directory} {$logFile} > /dev/null &");
+                exec(php_path().' -q '.BASEDIR."/actions/video_convert.php {$targetFileName} {$file_name} {$file_directory} {$logFile} > /dev/null &");
             }
         }
 
         $TempLogData = 'Video Converson File executed successfully with Target File > !'.$targetFileName;
         $log->writeLine('Video Conversion File Execution', $TempLogData, true);
 
-        echo json_encode(array("success"=>"yes","file_name"=>$file_name, 'phpos' => PHP_OS));
+        $vidDetails = array(
+            'title'           => $file_name
+            ,'file_name'      => $file_name
+            ,'file_directory' => $file_directory
+            ,'description'    => $file_name
+            ,'tags'           => $file_name
+            ,'category'       => [$cbvid->get_default_cid()]
+            ,'userid'         => userid()
+        );
+        $vid = $Upload->submit_upload($vidDetails);
+
+        // inserting into video views as well
+        $query = 'INSERT INTO '.tbl('video_views').' (video_id, video_views, last_updated) VALUES('.$vid.',0,'.time().')';
+        $db->Execute($query);
+
+        echo json_encode(array('success'=>"yes",'file_name'=>$file_name));
         exit();
 
-    case "update_video":
-        $config_for_mp4 = $Cbucket->configs['stay_mp4'];
-        $Upload->validate_video_upload_form();
-        $data = get_video_details($_POST['videoid']);
-        logData($_FILES,"MyFileMP4");
-        $vid_file = VIDEOS_DIR.'/'.$data['file_directory'].'/'.get_video_file($data,false,false);
-
-        if($config_for_mp4 == 'yes')
-        {
-            if($data['files_thumbs_path']!='')
-            {
-                $files_thumbs_path = $data['files_thumbs_path'];
-                $serverApi = str_replace('/files/thumbs', '', $files_thumbs_path);
-                $serverApi = $serverApi.'/actions/custom_thumb_upload.php';
-
-                $file_thumb = $_FILES['vid_thumb']['tmp_name'][0];
-                $postvars['mode'] = 'add';
-                $postvars['file_thumb'] = "@".$file_thumb;
-                $postvars['files_thumbs_path'] = $files_thumbs_path;
-                $postvars['file_directory'] = $data['file_directory'];
-                $postvars['file_name'] = $data['file_name'];
-
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL, $serverApi);
-                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $postvars);
-                /* Tell cURL to return the output */
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-                 /* Tell cURL NOT to return the headers */
-                curl_setopt($ch, CURLOPT_HEADER, false);
-                $response = curl_exec($ch);
-                /* Check HTTP Code */
-                $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                curl_close($ch);
-
-                if(!$response){
-                    e(lang($response),'w');
-                } else if((int)($response)) {
-                    e(lang(' remote upload successfully'),'m');
-                    $query = "UPDATE " . tbl("video") . " SET file_thumbs_count = ".(int)($response)." WHERE videoid = ".$data['videoid'];
-                    $db->Execute($query);
-                    $data['file_thumbs_count'] = (int)($response);
-                } else {
-                    e(lang($response),'e');
-                }
-            }
-        }
-
-        $_POST['videoid'] = trim($_POST['videoid']);
-        $_POST['title'] = mysql_clean($_POST['title']);
-        $_POST['description'] = mysql_clean($_POST['description']);
-        $_POST['duration'] = mysql_clean($_POST['duration']);
-
-        if(empty($eh->get_error())) {
-            $cbvid->update_video();
-        }
-        if(error()){
-            echo json_encode(array('error'=>error('single')));
-        } else {
-            echo json_encode(array('msg'=>msg('single')));
-        }
+    default:
+        upload_error('Unknown command');
         exit();
 }
 
 //function used to display error
 function upload_error($error)
 {
-    echo json_encode(array("error"=>$error));
+    echo json_encode(array('error'=>$error));
 }

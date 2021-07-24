@@ -3581,24 +3581,15 @@
 	 *
 	 * @param : { string } { date in string }
 	 *
-	 * @return false|string : { string } { proper date format }
+	 * @return string : { string } { proper date format }
 	 */
-	function datecreated($in)
-	{
-		$date_els = explode('-',$in);
-		//checking date format
-		$df = config("date_format");
-		$df_els  = explode('-',$df);
-		foreach($df_els as $key => $el) {
-			${strtolower($el).'id'} = $key;
-		}
-		$month = $date_els[$mid];
-		$day = $date_els[$did];
-		$year = $date_els[$yid];
-		if($in) {
-			return date("Y-m-d",strtotime($year.'-'.$month.'-'.$day));
-		}
-		return '0000-00-00';
+	function datecreated($in): string
+    {
+	    if( $in ){
+	        $datecreated = DateTime::createFromFormat(DATE_FORMAT, $in);
+            return $datecreated->format('Y-m-d');
+        }
+	    return '0000-00-00';
 	}
 
 	/**

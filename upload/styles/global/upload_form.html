@@ -33,7 +33,7 @@
     <div id="allUploadForms" class="tab-content allUploadForms"></div>
 </div>
 
-<form action="#" id="updateVideoInfoForm" class="hidden" enctype="multipart/form-data" method="post">
+<form action="#" id="updateVideoInfoForm" class="template hidden" enctype="multipart/form-data" method="post">
     <div class="row">
         <div class="col-md-8">
             <div id="updateVideoInfo">
@@ -59,9 +59,9 @@
                     {/foreach}
                   
                     
-                    <div id= "duration" class="form-group hidden">
+                    <div class="form-group hidden">
                         <label for="duration">Duration</label>
-                        <input type="text" placeholder="" name="duration" id="duration" class="form-control" cols="45">
+                        <input type="text" placeholder="" name="duration" id="duration" class="form-control" disabled>
 
                     </div>
 
@@ -139,7 +139,7 @@
                 </div>
 
                 <div class="pad-bottom-sm text-right">
-                    <button class="btn btn-primary btn-lg" id="saveVideoDetails">{lang code="submit_now"}</button>
+                    <button class="btn btn-primary btn-lg saveVideoDetails">{lang code="submit_now"}</button>
                 </div>  
             </div>
         </div>

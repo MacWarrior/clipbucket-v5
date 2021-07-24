@@ -55,6 +55,7 @@
 
 	assign('step',$step);
 	assign('extensions', $Cbucket->get_extensions('video'));
+	assign('stay_mp4', config('stay_mp4'));
 	subtitle(lang('upload'));
 	//Displaying The Template
 	if ( !userid() ) {

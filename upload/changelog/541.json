@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"39",
+  "revision":"40",
   "status":"dev",
   "detail":[
     {
@@ -49,6 +49,7 @@
         ,"Fix search page double HTML encoding"
         ,"Fix home page popup video height"
         ,"Fix video manager"
+        ,"Video upload : Refactor video upload <i>#169</i>"
       ]
     }
   ,{

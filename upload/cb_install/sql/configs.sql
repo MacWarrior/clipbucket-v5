@@ -110,7 +110,6 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'grp_thumb_width', '140'),
 	(NULL, 'grp_max_title', '20'),
 	(NULL, 'grp_max_desc', '500'),
-	(NULL, 'quick_conv', ''),
 	(NULL, 'max_conversion', '2'),
 	(NULL, 'allow_unicode_usernames', 'yes'),
 	(NULL, 'min_username', '3'),

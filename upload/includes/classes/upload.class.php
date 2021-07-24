@@ -41,11 +41,13 @@ class Upload
 		$upload_fields = array_merge($required_fields,$location_fields,$option_fields);
 		
 		//Adding Custom Upload Fields
-		if(count($this->custom_upload_fields )>0 && $is_upload)
+		if(count($this->custom_upload_fields )>0 && $is_upload){
 			$upload_fields = array_merge($upload_fields,$this->custom_upload_fields);
+        }
 		//Adding Custom Form Fields
-		if(count($this->custom_form_fields)>0)
+		if(count($this->custom_form_fields)>0){
 			$upload_fields = array_merge($upload_fields,$this->custom_form_fields);
+        }
 
 		validate_cb_form($upload_fields,$array);
 	}
@@ -656,16 +658,18 @@ class Upload
 	 */
 	function loadLocationFields($default=NULL)
 	{
-		global $LocationFieldsArray;
 		global $Cbucket;
 		
-		if($default == NULL)
+		if($default == NULL){
 			$default = $_POST;
+        }
 
-		$date_recorded = $default['datecreated'];
-		$date_recorded = $date_recorded ? date(config("date_format"),strtotime($date_recorded)) : date(config("date_format"),time());
+        $date_recorded = date(config("date_format"),time());
+		if( isset($default['datecreated']) ){
+            $date_recorded = $default['datecreated'];
+        }
 		
-		$LocationFieldsArray = array(
+		return array(
 			'country'=> array(
 				'title'=>lang('country'),
 				'type'=> 'dropdown',
@@ -701,10 +705,9 @@ class Upload
 				 'default_value'=>'',
 				 'use_func_val' => true,
 				 'validate_function' => 'datecreated',
-				 'hint_2' => config("date_format")
+				 'hint_2' => config('date_format')
 			)
 		);
-		return $LocationFieldsArray;
 	}
 
 

@@ -385,7 +385,20 @@ class CBvideo extends CBCategory
 				$array = $_POST;
             }
 
-			$vid = $array['videoid'];
+			if( isset($array['videoid']) ){
+                $vid = $array['videoid'];
+            } else if( isset($array['file_name']) ){
+			    $params = [
+			        'filename' => $array['file_name']
+                    ,'user' => userid()
+                ];
+			    $video = get_videos($params);
+			    if( isset($video[0]) ){
+			        $vid = $video[0]['videoid'];
+                } else {
+			        $vid = null;
+                }
+            }
 
 			if(is_array($_FILES)){
 			    $array = array_merge($array,$_FILES);
@@ -402,14 +415,14 @@ class CBvideo extends CBCategory
 						$val = $field['validate_function']($val);
                     }
 
-					if(!empty($field['db_field']))
-					$query_field[] = $field['db_field'];
+					if(!empty($field['db_field'])){
+					    $query_field[] = $field['db_field'];
+                    }
 					
 					if(is_array($val))
 					{
 						$new_val = '';
-						foreach($val as $v)
-						{
+						foreach($val as $v) {
 							$new_val .= "#".$v."# ";
 						}
 						$val = $new_val;
@@ -1007,7 +1020,7 @@ class CBvideo extends CBCategory
 				if($cond!=''){
 					$cond .= ' AND ';
                 }
-				$cond .= ' '.('video.file_name')." <> '".$params['filename']."' ";
+				$cond .= ' '.('video.file_name')." = '".$params['filename']."' ";
 			} else {
 				if($cond!=''){
                     $cond .= ' AND (';

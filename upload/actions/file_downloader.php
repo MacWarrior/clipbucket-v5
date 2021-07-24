@@ -270,9 +270,7 @@ if(file_exists($log_file))
 unlink($log_file);
 if(file_exists($dummy_file))
 	unlink($dummy_file);
-$quick_conv = config('quick_conv');
 $use_crons = config('use_crons');
-
 
 //Inserting data
 $title 	= urldecode(mysql_clean(getName($file)));
@@ -297,7 +295,7 @@ $vid = $Upload->submit_upload($vidDetails);
 echo json_encode(array('vid'=>$vid));
 $file_dir = $vidDetails['file_directory'];
 $logFile = LOGS_DIR.'/'.$file_dir.'/'.$file_name.".log";
-if($quick_conv=='yes' || $use_crons=='no')
+if($use_crons=='no')
 {
 	//exec(php_path()." -q ".BASEDIR."/actions/video_convert.php &> /dev/null &");
 	if (stristr(PHP_OS, 'WIN')) {

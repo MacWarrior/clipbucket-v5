@@ -216,8 +216,6 @@ if(isset($_POST['update']))
         'photo_user_favorites',
         'photo_other_limit',
 
-        //'quick_conv',
-
         'resize',
         'remoteUpload',
         'recently_viewed_limit',

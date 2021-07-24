@@ -7,7 +7,7 @@ INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 	('proxy_username', ''),
 	('proxy_password', '');
 
-DELETE FROM `{tbl_prefix}config` WHERE name = 'mp4boxpath';
+DELETE FROM `{tbl_prefix}config` WHERE name IN('mp4boxpath','quick_conv');
 
 UPDATE `{tbl_prefix}config` SET value = 'no' WHERE name = 'enable_advertisement' AND value = '0';
 
