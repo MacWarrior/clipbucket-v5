@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"46",
+  "revision":"47",
   "status":"dev",
   "detail":[
     {
@@ -39,6 +39,8 @@
         ,"Update update checker"
         ,"Update Bootstrap to version 3.3.7"
         ,"Refactor assets directories"
+        ,"Fix current menu display"
+        ,"Use more translations"
       ]
     }
   ,{

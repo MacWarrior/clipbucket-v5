@@ -13,7 +13,7 @@
 	/* Generating breadcrumb */
 	global $breadcrumb;
 	$breadcrumb[0] = array('title' => lang('videos'), 'url' => '');
-	$breadcrumb[1] = array('title' => 'Manage Playlists', 'url' => ADMIN_BASEURL.'/manage_playlist.php');
+	$breadcrumb[1] = array('title' => lang('manage_playlists'), 'url' => ADMIN_BASEURL.'/manage_playlist.php');
 
 	$mode = $_GET['mode'];
 

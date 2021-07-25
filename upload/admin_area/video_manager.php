@@ -189,6 +189,6 @@
 	);
 
 	assign('cat_array',$cat_array);
-	subtitle("Video Manager");
+	subtitle(lang('videos_manager'));
 	template_files('video_manager.html');
 	display_it();
