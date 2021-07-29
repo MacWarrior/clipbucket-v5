@@ -13,10 +13,6 @@ function new_player_height (videoid) {
 	native_player.css("height",native_player_height+"px");
 }
 
-$(window).load(function(){
-	new_player_height();
-});
-
 $(document).ready(function() {
 	new_player_height();
 

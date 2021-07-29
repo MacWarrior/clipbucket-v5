@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"47",
+  "revision":"48",
   "status":"dev",
   "detail":[
     {
@@ -41,6 +41,7 @@
         ,"Refactor assets directories"
         ,"Fix current menu display"
         ,"Use more translations"
+        ,"Fix jQuery 3.6.0 compatibility"
       ]
     }
   ,{
