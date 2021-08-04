@@ -83,15 +83,13 @@
 		{/if} 
 		<script src="{$theme}/js/uslider_js/jquery.mousewheel.js"></script>
 
-		<script async src='https://www.google.com/recaptcha/api.js'></script>
-
 		<!-- Script For Home Page Videos Slider //-->
 
 		<!-- Getting quicklist videos and assigning -->
 		{assign var=qlist_videos value=get_fast_qlist()}
 		{assign var=litems_count value=$qlist_videos|@count}
 		{if $litems_count >= 1} 
-			{assign var=got_qlitems value="yes"}	
+			{assign var=got_qlitems value="yes"}
 		{else}
 			{assign var=got_qlitems value="false"}	
 		{/if}

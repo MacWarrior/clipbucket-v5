@@ -1,6 +1,8 @@
 <?php
 require_once '../../includes/admin_config.php';
 
+global $userquery, $pages, $db;
+
 $breadcrumb[0] = array('title' => 'Plugin Manager', 'url' => '');
 $breadcrumb[1] = array('title' => 'Announcement', 'url' => PLUG_URL.'/global_announcement/edit_announcement.php');
 
@@ -11,10 +13,10 @@ $pages->page_redir();
 if(isset($_POST['update'])) {
     $text = mysql_clean($_POST['text']);
     update_announcement($text);
-    $msg = e("Announcement has been updated",'m');
+    $msg = e('Announcement has been updated','m');
 }
 
-$ann_array = $db->_select('SELECT * FROM '.tbl("global_announcement"));
+$ann_array = $db->_select('SELECT * FROM '.tbl('global_announcement'));
 
 if(is_array($ann_array)){
     assign('announcement', $ann_array[0]['announcement']);
@@ -22,6 +24,6 @@ if(is_array($ann_array)){
     assign('announcement', '');
 }
 
-subtitle("Announcement Manager");
+subtitle('Announcement Manager');
 template_files('edit_announcement.html');
 display_it();

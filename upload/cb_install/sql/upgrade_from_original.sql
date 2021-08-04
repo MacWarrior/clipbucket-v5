@@ -529,3 +529,6 @@ ALTER TABLE `{tbl_prefix}video_categories`
 
 ALTER TABLE `{tbl_prefix}comments`
 	MODIFY COLUMN `userid` int(60) NULL DEFAULT NULL;
+
+ALTER TABLE `{tbl_prefix}plugins`
+	MODIFY COLUMN `plugin_version` VARCHAR(32) NOT NULL;

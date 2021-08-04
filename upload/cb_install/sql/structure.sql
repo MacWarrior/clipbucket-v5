@@ -402,7 +402,7 @@ CREATE TABLE `{tbl_prefix}plugins` (
   `plugin_id` int(255) NOT NULL,
   `plugin_file` text NOT NULL,
   `plugin_folder` text NOT NULL,
-  `plugin_version` float NOT NULL,
+  `plugin_version` varchar(32) NOT NULL,
   `plugin_license_type` varchar(10) NOT NULL DEFAULT 'GPL',
   `plugin_license_key` varchar(5) NOT NULL,
   `plugin_license_code` text NOT NULL,

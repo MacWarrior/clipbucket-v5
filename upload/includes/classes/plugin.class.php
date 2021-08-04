@@ -99,7 +99,7 @@ class CBPlugin extends ClipBucket
         } else {
 			$active_query = NULL;
         }
-		$results = $db->select(tbl("plugins"),"*",$active_query);
+		$results = $db->select(tbl('plugins'),'*',$active_query);
 		
 		if(is_array($results)){
             foreach($results as $result) {
@@ -114,7 +114,7 @@ class CBPlugin extends ClipBucket
             }
         }
 
-		return isset($plug_array) ? $plug_array : false;
+		return $plug_array ?? false;
 	}
 
 	/**
@@ -148,15 +148,16 @@ class CBPlugin extends ClipBucket
 	 * @param      $plug_file
 	 * @param null $sub_dir
 	 *
-	 * @return bool
+	 * @return array|bool
 	 */
 	function get_plugin_details($plug_file,$sub_dir=NULL)
 	{
 		if($sub_dir!=''){
-			$sub_dir = $sub_dir.'/';
+			$sub_dir = $sub_dir.DIRECTORY_SEPARATOR;
         }
 			
 		$file = PLUG_DIR.'/'.$sub_dir.$plug_file;
+
 		if(file_exists($file) && is_file($file)) {
 			// We don't need to write to the file, so just open for reading.
 			$fp = fopen($file, 'r');
@@ -170,7 +171,7 @@ class CBPlugin extends ClipBucket
 			preg_match( '/Description:(.*)$/mi', $plugin_data, $description );
 			preg_match( '/Author:(.*)$/mi', $plugin_data, $author );
 			preg_match( '/Author Website:(.*)$/mi', $plugin_data, $author_page );
-			preg_match( '/ClpBucket Version:(.*)$/mi', $plugin_data, $cbversion );
+			preg_match( '/ClipBucket Version:(.*)$/mi', $plugin_data, $cbversion );
 			preg_match( '/Plugin Type:(.*)$/mi', $plugin_data, $type );
 			
 			$details_array = array(
@@ -231,24 +232,28 @@ class CBPlugin extends ClipBucket
      */
 	 function installPlugin($pluginFile,$folder=NULL)
 	 {
-		 $plug_details = $this->get_plugin_details($pluginFile,$folder);	
-		 if(!$plug_details)
+		 $plug_details = $this->get_plugin_details($pluginFile,$folder);
+
+		 if(!$plug_details){
 		 	$msg = e(lang('plugin_no_file_err'));
-		 if(empty($plug_details['name']))
+         }
+		 if(empty($plug_details['name'])){
 		 	$msg = e(lang('plugin_file_detail_err'));
-		 if($this->is_installed($pluginFile,$folder))
+         }
+		 if($this->is_installed($pluginFile,$folder)){
 		 	$msg = e(lang('plugin_installed_err'));
+         }
 		
         if(empty($msg))
         {
             $file_folder = $folder;
             if($folder!=''){
-                $folder  = $folder.'/';
+                $folder  = $folder.DIRECTORY_SEPARATOR;
             }
-            $plug_details = $this->getPluginDetails(PLUG_DIR.'/'.$folder.$pluginFile);
+            $plug_details = $this->getPluginDetails($folder.$pluginFile);
 
-            if(file_exists(PLUG_DIR.'/'.$folder.'install_'.$pluginFile)){
-                require_once(PLUG_DIR.'/'.$folder.'install_'.$pluginFile);
+            if(file_exists(PLUG_DIR.DIRECTORY_SEPARATOR.$folder.'install_'.$pluginFile)){
+                require_once(PLUG_DIR.DIRECTORY_SEPARATOR.$folder.'install_'.$pluginFile);
             }
 
             dbInsert
@@ -260,22 +265,24 @@ class CBPlugin extends ClipBucket
                     'plugin_license_key',
                     'plugin_license_code',
                     'plugin_active',
-                    'plugin_folder'
+                    'plugin_folder',
+                    'plugin_version'
                 ),
                 array(
                     $pluginFile,
-                    $plug_details['plugin_license_type'],
-                    $plug_details['plugin_license_key'],
-                    $plug_details['plugin_license_code'],
+                    $plug_details['license_type'],
+                    $plug_details['license_key'],
+                    $plug_details['license_code'],
                     'yes',
-                    $file_folder
+                    $file_folder,
+                    $plug_details['version']
                 )
             );
 			 
             //Checking For the installation SQL
             $msg = e(lang('plugin_install_msg'),'m');
             define('NEW_INSTALL',false);
-            return PLUG_DIR.'/'.$folder.$pluginFile;
+            return PLUG_DIR.DIRECTORY_SEPARATOR.$folder.$pluginFile;
         }
         return false;
 	 }

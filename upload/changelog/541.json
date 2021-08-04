@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"49",
+  "revision":"50",
   "status":"dev",
   "detail":[
     {
@@ -24,6 +24,7 @@
         ,"Update VideoJS ADS module (Not working yet but no more JS errors)"
         ,"Update JQuery to version 3.6.0"
         ,"Update PHP required version to 7.0"
+        ,"Remove unused Recaptcha lib"
       ]
     }
     ,{
@@ -43,6 +44,7 @@
         ,"Fix current menu display"
         ,"Use more translations"
         ,"Fix jQuery 3.6.0 compatibility"
+        ,"Fix plugin installation"
       ]
     }
   ,{
@@ -67,6 +69,12 @@
         ,"Add Ubuntu 21.04 installation script"
         ,"Fix signup nginx vhost with SEO URLs"
         ,"Fix signup apache htaccess with SEO URLs"
+      ]
+    }
+  ,{
+      "title":"Plugin",
+      "description":[
+        "Update Global Announcement to CB5.4.1"
       ]
     }
   ]

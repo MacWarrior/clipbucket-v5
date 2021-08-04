@@ -3,7 +3,7 @@
     Plugin Name: Global announcement
     Description: This will let you post a global announcement on your website
     Author: Arslan Hassan & MacWarrior
-    ClipBucket Version: CB5.4
+    Version: CB5.4.1
     Website: https://github.com/MacWarrior/clipbucket-v5/
 */
 
@@ -24,7 +24,7 @@ function update_announcement($text)
     if (strlen($textCheck) < 1) {
         $text = '';
     }
-    $db->Execute("UPDATE ".tbl("global_announcement")." SET announcement='$text'");
+    $db->Execute('UPDATE '.tbl('global_announcement')." SET announcement='$text'");
 }
 
 register_anchor_function('get_global_announcement','global');
