@@ -14,16 +14,12 @@ class CBTemplate {
     function load_smarty()
     {
         global $Smarty;
-        if($this->smarty_version < 3){
-            $Smarty = new Smarty;
-        } else {
-            $Smarty = new SmartyBC;
-        }
+        $Smarty = new SmartyBC;
 
-        $Smarty->compile_check = true;
-        $Smarty->debugging = false;
-        $Smarty->template_dir = BASEDIR."/styles";
-        $Smarty->compile_dir  = BASEDIR."/cache/views";
+        $Smarty->setCompileCheck(true);
+        $Smarty->setDebugging(false);
+        $Smarty->setTemplateDir(BASEDIR.'/styles');
+        $Smarty->setCompileDir(BASEDIR.'/cache/views');
     }
 
     function create()
@@ -34,15 +30,6 @@ class CBTemplate {
             $this->load_smarty();
         }
         return true;
-    }
-    
-    function setCompileDir($dir_name)
-    {
-        global $Smarty;
-        if (!isset($Smarty)) {
-            $this->create();
-        }
-        $Smarty->compile_dir = $dir_name;
     }
 
     function setType($type)
@@ -63,50 +50,6 @@ class CBTemplate {
         $Smarty->assign($var, $value);
     }
 
-    function setTplDir($dir_name = null)
-    {
-        global $Smarty;
-        if (!isset($Smarty)) {
-            $this->create();
-        }
-        if (!$dir_name) {
-            $Smarty->template_dir = BASEDIR."/styles/clipbucketblue";
-        } else {
-            $Smarty->template_dir = $dir_name;
-        }
-    }
-
-    function setModule($module)
-    {
-        global $Smarty;
-        if (!isset($Smarty)) {
-            $this->create();
-        }
-        $Smarty->theme = $module;
-        $Smarty->type  = "module";
-    }
-
-    function setTheme($theme)
-    {
-        global $Smarty;
-        if (!isset($Smarty)) {
-            $this->create();
-        }
-        $Smarty->template_dir = BASEDIR."/styles/" . $theme;
-        $Smarty->compile_dir  = BASEDIR."/styles/" . $theme;
-        $Smarty->theme        = $theme;
-        $Smarty->type         = "theme";
-    }
-
-    function getTplDir()
-    {
-        global $Smarty;
-        if (!isset($Smarty)) {
-            $this->create();
-        }
-        return $Smarty->template_dir;
-    }
-
      function display($filename)
      {
         global $Smarty;
@@ -124,21 +67,12 @@ class CBTemplate {
         }
         return $Smarty->fetch($filename);
     }
-    
-    function getVars()
-    {
-        global $Smarty;
-        if (!isset($Smarty)) {
-            $this->create();
-        }
-        return $Smarty->get_template_vars();
-    }
 	
 	/**
 	 * Function used to get available templates
 	 */
-	function get_templates()
-	{
+	function get_templates(): array
+    {
 		$dir = STYLES_DIR;
 		//Scaning Dir
 		$dirs = scandir($dir);
@@ -159,15 +93,10 @@ class CBTemplate {
 		
 		return $tpls;
 	}
-
-	function gettemplates()
-	{
-		return $this->get_templates();
-	}
 	
 	function get_template_details($temp,$file='template.xml')
 	{
-		$file = STYLES_DIR.'/'.$temp.'/template.xml';
+		$file = STYLES_DIR.DIRECTORY_SEPARATOR.$temp.'/template.xml';
 		if(file_exists($file))
 		{
 			$content = file_get_contents($file);
@@ -182,18 +111,17 @@ class CBTemplate {
             preg_match('/<min_version>(.*)<\/min_version>/',$content,$min_version);
             preg_match('/<smarty_version>(.*)<\/smarty_version>/',$content,$smarty_version);
 
-            $name = isset($name[1]) ? $name[1] : false;
-			$author = isset($author[1]) ? $author[1] : false;
-			$version = isset($version[1]) ? $version[1] : false;
-			$released = isset($released[1]) ? $released[1] : false;
-			$description = isset($description[1]) ? $description[1] : false;
-            $min_version = isset($min_version[1]) ? $min_version[1] : false;
-            $smarty_version = isset($smarty_version[1]) ? $smarty_version[1] : false;
+            $name = $name[1] ?? false;
+			$author = $author[1] ?? false;
+			$version = $version[1] ?? false;
+			$released = $released[1] ?? false;
+			$description = $description[1] ?? false;
+            $min_version = $min_version[1] ?? false;
+            $smarty_version = $smarty_version[1] ?? false;
 
 			$website = array('title'=>$website_arr[1],'link'=>$website_arr[2]);
-			
-			//Now Create array
-			$template_details = array(
+
+			return array(
 			    'name'=>$name,
                 'author'=>$author,
                 'version'=>$version,
@@ -203,10 +131,8 @@ class CBTemplate {
                 'dir'=>$temp,
                 'min_version'=>$min_version,
                 'smarty_version'=>$smarty_version,
-                'path'=>TEMPLATEFOLDER.'/'.$temp
+                'path'=>TEMPLATEFOLDER.DIRECTORY_SEPARATOR.$temp
             );
-			
-			return $template_details;
 		}
 		return false;
 	}
@@ -218,9 +144,9 @@ class CBTemplate {
      *
      * @return string
      */
-	function get_preview_thumb($template)
-	{
-		$path = TEMPLATEFOLDER.'/'.$template.'/images/preview.';
+	function get_preview_thumb($template): string
+    {
+		$path = TEMPLATEFOLDER.DIRECTORY_SEPARATOR.$template.'/images/preview.';
 		$exts = array('png','jpg','gif');
 		$thumb_path = '/images/icons/no_thumb_template.png';
 		foreach($exts as $ext) {
@@ -271,14 +197,14 @@ class CBTemplate {
      *
      * @return array
      */
-	function get_template_files($template,$type=NULL)
-	{
+	function get_template_files($template,$type=NULL): array
+    {
 		switch($type)
 		{
-			case "layout":
+			case 'layout':
 			default:
 				$style_dir = STYLES_DIR."/$template/layout/";
-				$files_patt = $style_dir."*.html";
+				$files_patt = $style_dir.'*.html';
 				$files = glob($files_patt);
 				/**
 				 * All Files IN Layout Folder
@@ -299,13 +225,9 @@ class CBTemplate {
 				}
 				return $new_files;
 
-			case "theme":
-				if ($template == 'cb_27'){
-					$style_dir = STYLES_DIR."/$template/theme/css/";
-                } else {
-					$style_dir = STYLES_DIR."/$template/theme/";
-                }
-				$files_patt = $style_dir."*.css";
+			case 'theme':
+                $style_dir = STYLES_DIR."/$template/theme/";
+				$files_patt = $style_dir.'*.css';
 				$files = glob($files_patt);
 				/**
 				 * All Files IN CSS Folder

@@ -1,14 +1,15 @@
 <?php
-define("BASEDIR",dirname(dirname(__FILE__)));
+define('BASEDIR',dirname(dirname(__FILE__)));
 
-if(!file_exists(BASEDIR.'/files/temp/install.me'))
-    $mode = "lock";
+if(!file_exists(BASEDIR.'/files/temp/install.me')){
+    $mode = 'lock';
+}
 
 function get_cbla()
 {
     $license	= file_get_contents('LICENSE');
     $license	= str_replace("\n",'<BR>',$license);
-    $license	= str_replace("{this_year}",date("Y",time()),$license);
+    $license	= str_replace('{this_year}',date('Y',time()),$license);
     return $license;
 }
 
@@ -35,8 +36,9 @@ function button_danger($text,$params=NULL)
 
 function msg_arr($arr)
 {
-    if(@$arr['msg'])
+    if(@$arr['msg']){
         return emsg($arr['msg'],'ok');
+    }
     return emsg($arr['err'],'alert_cross');
 }
 
@@ -53,54 +55,61 @@ function check_module($type)
     $return = array();
     switch($type)
     {
-        case "php":
+        case 'php':
             $php_version = phpversion();
-            $php_path = exec("which php");
-            $req = '5.2.1';
-            if($php_version<$req)
-                $return['err'] = sprintf(_("Found PHP %s but required is PHP %s : %s"),$php_version,$req,$php_path);
-            else
-                $return['msg'] = sprintf(_("Found PHP %s : %s"),$php_version,$php_path);
+            $php_path = exec('which php');
+            $req = '7.0.0';
+            if($php_version<$req){
+                $return['err'] = sprintf(_('Found PHP %s but required is PHP %s : %s'),$php_version,$req,$php_path);
+            } else {
+                $return['msg'] = sprintf(_('Found PHP %s : %s'),$php_version,$php_path);
+            }
             break;
 
-        case "ffmpeg":
-            $ffmpeg_path = exec("which ffmpeg");
+        case 'ffmpeg':
+            $ffmpeg_path = exec('which ffmpeg');
             $ffmpeg_version = shell_output("$ffmpeg_path -version");
 
             $version = false;
             preg_match("/SVN-r([0-9]+)/i",$ffmpeg_version,$matches);
-            if(@$matches[1])
+            if(@$matches[1]){
                 $version = 'r'.$matches[1];
+            }
             preg_match("/version ([0-9.]+)/i",$ffmpeg_version,$matches);
-            if(@$matches[1])
+            if(@$matches[1]){
                 $version = $matches[1];
+            }
 
-            if(!$version)
-                $return['err'] = _("Unable to find FFMPEG");
-            else
-                $return['msg'] = sprintf(_("Found FFMPEG %s : %s"),$version,$ffmpeg_path);
+            if(!$version){
+                $return['err'] = _('Unable to find FFMPEG');
+            } else {
+                $return['msg'] = sprintf(_('Found FFMPEG %s : %s'),$version,$ffmpeg_path);
+            }
             break;
 
-        case "ffprobe":
-            $ffprobe_path = exec("which ffprobe");
+        case 'ffprobe':
+            $ffprobe_path = exec('which ffprobe');
             $ffprobe_version = shell_output("$ffprobe_path -version");
 
             $version = false;
             preg_match("/SVN-r([0-9]+)/i",$ffprobe_version,$matches);
-            if(@$matches[1])
+            if(@$matches[1]){
                 $version = 'r'.$matches[1];
+            }
             preg_match("/version ([0-9.]+)/i",$ffprobe_version,$matches);
-            if(@$matches[1])
+            if(@$matches[1]){
                 $version = $matches[1];
+            }
 
-            if(!$version)
+            if(!$version){
                 $return['err'] = _("Unable to find FFPROBE");
-            else
+            } else {
                 $return['msg'] = sprintf(_("Found FFPROBE %s : %s"),$version,$ffprobe_path);
+            }
             break;
 
-        case "media_info":
-            $mediainfo_path = exec("which mediainfo");
+        case 'media_info':
+            $mediainfo_path = exec('which mediainfo');
             $mediainfo_result = shell_output("$mediainfo_path --version");
 
             $media_info_version  = explode('v', $mediainfo_result);
@@ -109,22 +118,24 @@ function check_module($type)
                 $version = $media_info_version[1];
             }
 
-            if(!$version)
-                $return['err'] = _("Unable to find Media Info");
-            else
+            if(!$version){
+                $return['err'] = _('Unable to find Media Info');
+            } else {
                 $return['msg'] = sprintf(_("Found Media Info %s : %s"),$version,$mediainfo_path);
+            }
             break;
 
-        case "curl":
+        case 'curl':
             $version = false;
             if(function_exists('curl_version')){
                 $version = @curl_version();
             }
 
-            if(!$version)
+            if(!$version){
                 $return['err'] = _("cURL extension is not enabled");
-            else
+            } else {
                 $return['msg'] = sprintf(_("cURL %s extension is enabled"),$version['version']);
+            }
             break;
     }
     return $return;
@@ -147,8 +158,7 @@ if(!function_exists('shell_output'))
         } else {
             $cmd = "PATH=\$PATH:/bin:/usr/bin:/usr/local/bin bash -c \"$cmd\" 2>&1";
         }
-        $data = shell_exec( $cmd );
-        return $data;
+        return shell_exec( $cmd );
     }
 }
 
@@ -161,12 +171,12 @@ if(!function_exists('pr'))
     {
         if(!$wrap_pre) {
             $dump = print_r($text, true);
-            display_clean($dump);
+            echo display_clean($dump);
         } else {
-            echo "<pre>";
+            echo '<pre>';
             $dump = print_r($text, true);
-            display_clean($dump);
-            echo "</pre>";
+            echo display_clean($dump);
+            echo '</pre>';
         }
     }
 }
@@ -203,10 +213,11 @@ function checkPermissions()
     $permsArray = array();
     foreach($files as $file)
     {
-        if(is_writeable(BASEDIR.'/'.$file))
+        if(is_writeable(BASEDIR.'/'.$file)){
             $permsArray[] = array('path'=>$file,'msg'=>'writeable');
-        else
+        } else {
             $permsArray[] = array('path'=>$file,'err'=>'please chmod this file/directory to 755');
+        }
     }
     return $permsArray;
 }
@@ -234,10 +245,12 @@ function getUpgradeFiles()
         $found = false;
         foreach($versions as $ver)
         {
-            if($found)
+            if($found){
                 $files[] = $ver;
-            if($ver==$oldVer)
+            }
+            if($ver==$oldVer){
                 $found = true;
+            }
         }
         return $files;
     }
@@ -247,8 +260,8 @@ function getUpgradeFiles()
 function installer_path()
 {
     $pageURL = 'http';
-    if (@$_SERVER["HTTPS"] == "on") {
-        $pageURL .= "s";
+    if (@$_SERVER['HTTPS'] == 'on') {
+        $pageURL .= 's';
     }
     $pageURL .= '://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
 
