@@ -1,6 +1,6 @@
 /**
  * @license
- * Video.js 7.14.2 <http://videojs.com/>
+ * Video.js 7.15.0 <http://videojs.com/>
  * Copyright Brightcove, Inc. <https://www.brightcove.com/>
  * Available under Apache License Version 2.0
  * <https://github.com/videojs/video.js/blob/main/LICENSE>
@@ -16,7 +16,7 @@
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.videojs = factory());
 }(this, (function () { 'use strict';
 
-  var version$5 = "7.14.2";
+  var version$5 = "7.15.0";
 
   var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -37,6 +37,96 @@
   }
 
   var window_1 = win;
+
+  /**
+   * An Object that contains lifecycle hooks as keys which point to an array
+   * of functions that are run when a lifecycle is triggered
+   *
+   * @private
+   */
+  var hooks_ = {};
+  /**
+   * Get a list of hooks for a specific lifecycle
+   *
+   * @param  {string} type
+   *         the lifecyle to get hooks from
+   *
+   * @param  {Function|Function[]} [fn]
+   *         Optionally add a hook (or hooks) to the lifecycle that your are getting.
+   *
+   * @return {Array}
+   *         an array of hooks, or an empty array if there are none.
+   */
+
+  var hooks = function hooks(type, fn) {
+    hooks_[type] = hooks_[type] || [];
+
+    if (fn) {
+      hooks_[type] = hooks_[type].concat(fn);
+    }
+
+    return hooks_[type];
+  };
+  /**
+   * Add a function hook to a specific videojs lifecycle.
+   *
+   * @param {string} type
+   *        the lifecycle to hook the function to.
+   *
+   * @param {Function|Function[]}
+   *        The function or array of functions to attach.
+   */
+
+
+  var hook = function hook(type, fn) {
+    hooks(type, fn);
+  };
+  /**
+   * Remove a hook from a specific videojs lifecycle.
+   *
+   * @param  {string} type
+   *         the lifecycle that the function hooked to
+   *
+   * @param  {Function} fn
+   *         The hooked function to remove
+   *
+   * @return {boolean}
+   *         The function that was removed or undef
+   */
+
+
+  var removeHook = function removeHook(type, fn) {
+    var index = hooks(type).indexOf(fn);
+
+    if (index <= -1) {
+      return false;
+    }
+
+    hooks_[type] = hooks_[type].slice();
+    hooks_[type].splice(index, 1);
+    return true;
+  };
+  /**
+   * Add a function hook that will only run once to a specific videojs lifecycle.
+   *
+   * @param {string} type
+   *        the lifecycle to hook the function to.
+   *
+   * @param {Function|Function[]}
+   *        The function or array of functions to attach.
+   */
+
+
+  var hookOnce = function hookOnce(type, fn) {
+    hooks(type, [].concat(fn).map(function (original) {
+      var wrapper = function wrapper() {
+        removeHook(type, wrapper);
+        return original.apply(void 0, arguments);
+      };
+
+      return wrapper;
+    }));
+  };
 
   var minDoc = {};
 
@@ -3389,6 +3479,11 @@
 
     target.on('dispose', function () {
       target.off();
+      [target, target.el_, target.eventBusEl_].forEach(function (val) {
+        if (val && DomData.has(val)) {
+          DomData["delete"](val);
+        }
+      });
       window_1.setTimeout(function () {
         target.eventBusEl_ = null;
       }, 0);
@@ -3840,10 +3935,6 @@
         // Remove element from DOM
         if (this.el_.parentNode) {
           this.el_.parentNode.removeChild(this.el_);
-        }
-
-        if (DomData.has(this.el_)) {
-          DomData["delete"](this.el_);
         }
 
         this.el_ = null;
@@ -5468,7 +5559,6 @@
    * @file time-ranges.js
    * @module time-ranges
    */
-
   /**
    * Returns the time for the specified index at the start or end
    * of a TimeRange object.
@@ -5517,6 +5607,7 @@
    *
    * @throws  {Error} if the timeRanges provided are over the maxIndex
    */
+
   function rangeCheck(fnName, index, maxIndex) {
     if (typeof index !== 'number' || index < 0 || index > maxIndex) {
       throw new Error("Failed to execute '" + fnName + "' on 'TimeRanges': The index provided (" + index + ") is non-numeric or out of bounds (0-" + maxIndex + ").");
@@ -5562,8 +5653,10 @@
 
 
   function createTimeRangesObj(ranges) {
+    var timeRangesObj;
+
     if (ranges === undefined || ranges.length === 0) {
-      return {
+      timeRangesObj = {
         length: 0,
         start: function start() {
           throw new Error('This TimeRanges object is empty');
@@ -5572,13 +5665,21 @@
           throw new Error('This TimeRanges object is empty');
         }
       };
+    } else {
+      timeRangesObj = {
+        length: ranges.length,
+        start: getRange.bind(null, 'start', 0, ranges),
+        end: getRange.bind(null, 'end', 1, ranges)
+      };
     }
 
-    return {
-      length: ranges.length,
-      start: getRange.bind(null, 'start', 0, ranges),
-      end: getRange.bind(null, 'end', 1, ranges)
-    };
+    if (window_1.Symbol && window_1.Symbol.iterator) {
+      timeRangesObj[window_1.Symbol.iterator] = function () {
+        return (ranges || []).values();
+      };
+    }
+
+    return timeRangesObj;
   }
   /**
    * Create a `TimeRange` object which mimics an
@@ -7633,33 +7734,19 @@
    */
 
   var parseUrl = function parseUrl(url) {
+    // This entire method can be replace with URL once we are able to drop IE11
     var props = ['protocol', 'hostname', 'port', 'pathname', 'search', 'hash', 'host']; // add the url to an anchor and let the browser parse the URL
 
     var a = document_1.createElement('a');
-    a.href = url; // IE8 (and 9?) Fix
-    // ie8 doesn't parse the URL correctly until the anchor is actually
-    // added to the body, and an innerHTML is needed to trigger the parsing
-
-    var addToBody = a.host === '' && a.protocol !== 'file:';
-    var div;
-
-    if (addToBody) {
-      div = document_1.createElement('div');
-      div.innerHTML = "<a href=\"" + url + "\"></a>";
-      a = div.firstChild; // prevent the div from affecting layout
-
-      div.setAttribute('style', 'display:none; position:absolute;');
-      document_1.body.appendChild(div);
-    } // Copy the specific URL properties to a new object
-    // This is also needed for IE8 because the anchor loses its
+    a.href = url; // Copy the specific URL properties to a new object
+    // This is also needed for IE because the anchor loses its
     // properties when it's removed from the dom
-
 
     var details = {};
 
     for (var i = 0; i < props.length; i++) {
       details[props[i]] = a[props[i]];
-    } // IE9 adds the port to the host property unlike everyone else. If
+    } // IE adds the port to the host property unlike everyone else. If
     // a port identifier is added for standard ports, strip it.
 
 
@@ -7674,9 +7761,11 @@
     if (!details.protocol) {
       details.protocol = window_1.location.protocol;
     }
+    /* istanbul ignore if */
 
-    if (addToBody) {
-      document_1.body.removeChild(div);
+
+    if (!details.host) {
+      details.host = window_1.location.host;
     }
 
     return details;
@@ -7698,9 +7787,10 @@
     // Check if absolute URL
     if (!url.match(/^https?:\/\//)) {
       // Convert to absolute URL. Flash hosted off-site needs an absolute URL.
-      var div = document_1.createElement('div');
-      div.innerHTML = "<a href=\"" + url + "\">x</a>";
-      url = div.firstChild.href;
+      // add the url to an anchor and let the browser parse the URL
+      var a = document_1.createElement('a');
+      a.href = url;
+      url = a.href;
     }
 
     return url;
@@ -7785,6 +7875,66 @@
     fn === window.setTimeout || fn === window.alert || fn === window.confirm || fn === window.prompt);
   }
 
+  var httpResponseHandler = function httpResponseHandler(callback, decodeResponseBody) {
+    if (decodeResponseBody === void 0) {
+      decodeResponseBody = false;
+    }
+
+    return function (err, response, responseBody) {
+      // if the XHR failed, return that error
+      if (err) {
+        callback(err);
+        return;
+      } // if the HTTP status code is 4xx or 5xx, the request also failed
+
+
+      if (response.statusCode >= 400 && response.statusCode <= 599) {
+        var cause = responseBody;
+
+        if (decodeResponseBody) {
+          if (window_1.TextDecoder) {
+            var charset = getCharset(response.headers && response.headers['content-type']);
+
+            try {
+              cause = new TextDecoder(charset).decode(responseBody);
+            } catch (e) {}
+          } else {
+            cause = String.fromCharCode.apply(null, new Uint8Array(responseBody));
+          }
+        }
+
+        callback({
+          cause: cause
+        });
+        return;
+      } // otherwise, request succeeded
+
+
+      callback(null, responseBody);
+    };
+  };
+
+  function getCharset(contentTypeHeader) {
+    if (contentTypeHeader === void 0) {
+      contentTypeHeader = '';
+    }
+
+    return contentTypeHeader.toLowerCase().split(';').reduce(function (charset, contentType) {
+      var _contentType$split = contentType.split('='),
+          type = _contentType$split[0],
+          value = _contentType$split[1];
+
+      if (type.trim() === 'charset') {
+        return value.trim();
+      }
+
+      return charset;
+    }, 'utf-8');
+  }
+
+  var httpHandler = httpResponseHandler;
+
+  createXHR.httpHandler = httpHandler;
   /**
    * @license
    * slighly modified parse-headers 2.0.2 <https://github.com/kesla/parse-headers/>
@@ -7792,7 +7942,6 @@
    * Available under the MIT license
    * <https://github.com/kesla/parse-headers/blob/master/LICENCE>
    */
-
 
   var parseHeaders = function parseHeaders(headers) {
     var result = {};
@@ -7817,7 +7966,7 @@
     return result;
   };
 
-  var xhr = createXHR; // Allow use of default import syntax in TypeScript
+  var lib = createXHR; // Allow use of default import syntax in TypeScript
 
   var default_1 = createXHR;
   createXHR.XMLHttpRequest = window_1.XMLHttpRequest || noop$1;
@@ -8073,7 +8222,7 @@
   }
 
   function noop$1() {}
-  xhr["default"] = default_1;
+  lib["default"] = default_1;
 
   /**
    * Takes a webvtt file contents and parses it into cues
@@ -8153,7 +8302,7 @@
       opts.withCredentials = withCredentials;
     }
 
-    xhr(opts, bind(this, function (err, response, responseBody) {
+    lib(opts, bind(this, function (err, response, responseBody) {
       if (err) {
         return log$1.error(err, response);
       }
@@ -12838,7 +12987,7 @@
 
     var _proto = ClickableComponent.prototype;
 
-    _proto.createEl = function createEl(tag, props, attributes) {
+    _proto.createEl = function createEl$1(tag, props, attributes) {
       if (tag === void 0) {
         tag = 'div';
       }
@@ -12852,7 +13001,6 @@
       }
 
       props = assign({
-        innerHTML: '<span aria-hidden="true" class="vjs-icon-placeholder"></span>',
         className: this.buildCSSClass(),
         tabIndex: 0
       }, props);
@@ -12866,9 +13014,12 @@
         role: 'button'
       }, attributes);
       this.tabIndex_ = props.tabIndex;
-
-      var el = _Component.prototype.createEl.call(this, tag, props, attributes);
-
+      var el = createEl(tag, props, attributes);
+      el.appendChild(createEl('span', {
+        className: 'vjs-icon-placeholder'
+      }, {
+        'aria-hidden': true
+      }));
       this.createControlTextEl(el);
       return el;
     };
@@ -13634,7 +13785,7 @@
       var playerType = this.localize(isAudio ? 'Audio Player' : 'Video Player');
       var controlText = createEl('span', {
         className: 'vjs-control-text',
-        innerHTML: this.localize('{1} is loading.', [playerType])
+        textContent: this.localize('{1} is loading.', [playerType])
       });
 
       var el = _Component.prototype.createEl.call(this, 'div', {
@@ -13682,7 +13833,7 @@
      * @return {Element}
      *         The element that gets created.
      */
-    _proto.createEl = function createEl(tag, props, attributes) {
+    _proto.createEl = function createEl$1(tag, props, attributes) {
       if (props === void 0) {
         props = {};
       }
@@ -13693,7 +13844,6 @@
 
       tag = 'button';
       props = assign({
-        innerHTML: '<span aria-hidden="true" class="vjs-icon-placeholder"></span>',
         className: this.buildCSSClass()
       }, props); // Add attributes for button element
 
@@ -13701,7 +13851,14 @@
         // Necessary since the default button type is "submit"
         type: 'button'
       }, attributes);
-      var el = Component$1.prototype.createEl.call(this, tag, props, attributes);
+
+      var el = createEl(tag, props, attributes);
+
+      el.appendChild(createEl('span', {
+        className: 'vjs-icon-placeholder'
+      }, {
+        'aria-hidden': true
+      }));
       this.createControlTextEl(el);
       return el;
     }
@@ -14300,10 +14457,16 @@
       var className = this.buildCSSClass();
 
       var el = _Component.prototype.createEl.call(this, 'div', {
-        className: className + " vjs-time-control vjs-control",
-        innerHTML: "<span class=\"vjs-control-text\" role=\"presentation\">" + this.localize(this.labelText_) + "\xA0</span>"
+        className: className + " vjs-time-control vjs-control"
       });
 
+      var span = createEl('span', {
+        className: 'vjs-control-text',
+        textContent: this.localize(this.labelText_) + "\xA0"
+      }, {
+        role: 'presentation'
+      });
+      el.appendChild(span);
       this.contentEl_ = createEl('span', {
         className: className + "-display"
       }, {
@@ -14600,15 +14763,24 @@
      *         The element that was created.
      */
     _proto.createEl = function createEl() {
-      return _Component.prototype.createEl.call(this, 'div', {
-        className: 'vjs-time-control vjs-time-divider',
-        innerHTML: '<div><span>/</span></div>'
+      var el = _Component.prototype.createEl.call(this, 'div', {
+        className: 'vjs-time-control vjs-time-divider'
       }, {
         // this element and its contents can be hidden from assistive techs since
         // it is made extraneous by the announcement of the control text
         // for the current time and duration displays
         'aria-hidden': true
       });
+
+      var div = _Component.prototype.createEl.call(this, 'div');
+
+      var span = _Component.prototype.createEl.call(this, 'span', {
+        textContent: '/'
+      });
+
+      div.appendChild(span);
+      el.appendChild(div);
+      return el;
     };
 
     return TimeDivider;
@@ -14774,11 +14946,15 @@
       });
 
       this.contentEl_ = createEl('div', {
-        className: 'vjs-live-display',
-        innerHTML: "<span class=\"vjs-control-text\">" + this.localize('Stream Type') + "\xA0</span>" + this.localize('LIVE')
+        className: 'vjs-live-display'
       }, {
         'aria-live': 'off'
       });
+      this.contentEl_.appendChild(createEl('span', {
+        className: 'vjs-control-text',
+        textContent: this.localize('Stream Type') + "\xA0"
+      }));
+      this.contentEl_.appendChild(document_1.createTextNode(this.localize('LIVE')));
       el.appendChild(this.contentEl_);
       return el;
     };
@@ -14864,7 +15040,7 @@
 
       this.textEl_ = createEl('span', {
         className: 'vjs-seek-to-live-text',
-        innerHTML: this.localize('LIVE')
+        textContent: this.localize('LIVE')
       }, {
         'aria-hidden': 'true'
       });
@@ -16840,10 +17016,14 @@
      *         The element that was created.
      */
     _proto.createEl = function createEl() {
-      return _Component.prototype.createEl.call(this, 'div', {
-        className: 'vjs-volume-level',
-        innerHTML: '<span class="vjs-control-text"></span>'
+      var el = _Component.prototype.createEl.call(this, 'div', {
+        className: 'vjs-volume-level'
       });
+
+      el.appendChild(_Component.prototype.createEl.call(this, 'span', {
+        className: 'vjs-control-text'
+      }));
+      return el;
     };
 
     return VolumeLevel;
@@ -18315,7 +18495,7 @@
       if (this.options_.title) {
         var titleEl = createEl('li', {
           className: 'vjs-menu-title',
-          innerHTML: toTitleCase$1(this.options_.title),
+          textContent: toTitleCase$1(this.options_.title),
           tabIndex: -1
         });
         var titleComponent = new Component$1(this.player_, {
@@ -18754,14 +18934,21 @@
 
     var _proto = MenuItem.prototype;
 
-    _proto.createEl = function createEl(type, props, attrs) {
+    _proto.createEl = function createEl$1(type, props, attrs) {
       // The control is textual, not just an icon
       this.nonIconControl = true;
-      return _ClickableComponent.prototype.createEl.call(this, 'li', assign({
+
+      var el = _ClickableComponent.prototype.createEl.call(this, 'li', assign({
         className: 'vjs-menu-item',
-        innerHTML: "<span class=\"vjs-menu-item-text\">" + this.localize(this.options_.label) + "</span>",
         tabIndex: -1
-      }, props), attrs);
+      }, props), attrs); // swap icon with menu item text.
+
+
+      el.replaceChild(createEl('span', {
+        className: 'vjs-menu-item-text',
+        textContent: this.localize(this.options_.label)
+      }), el.querySelector('.vjs-icon-placeholder'));
+      return el;
     }
     /**
      * Ignore keys which are used by the menu, but pass any other ones up. See
@@ -19824,18 +20011,24 @@
 
     var _proto = SubsCapsMenuItem.prototype;
 
-    _proto.createEl = function createEl(type, props, attrs) {
-      var innerHTML = "<span class=\"vjs-menu-item-text\">" + this.localize(this.options_.label);
+    _proto.createEl = function createEl$1(type, props, attrs) {
+      var el = _TextTrackMenuItem.prototype.createEl.call(this, type, props, attrs);
+
+      var parentSpan = el.querySelector('.vjs-menu-item-text');
 
       if (this.options_.track.kind === 'captions') {
-        innerHTML += "\n        <span aria-hidden=\"true\" class=\"vjs-icon-placeholder\"></span>\n        <span class=\"vjs-control-text\"> " + this.localize('Captions') + "</span>\n      ";
+        parentSpan.appendChild(createEl('span', {
+          className: 'vjs-icon-placeholder'
+        }, {
+          'aria-hidden': true
+        }));
+        parentSpan.appendChild(createEl('span', {
+          className: 'vjs-control-text',
+          // space added as the text will visually flow with the
+          // label
+          textContent: " " + this.localize('Captions')
+        }));
       }
-
-      innerHTML += '</span>';
-
-      var el = _TextTrackMenuItem.prototype.createEl.call(this, type, assign({
-        innerHTML: innerHTML
-      }, props), attrs);
 
       return el;
     };
@@ -19986,17 +20179,21 @@
     var _proto = AudioTrackMenuItem.prototype;
 
     _proto.createEl = function createEl(type, props, attrs) {
-      var innerHTML = "<span class=\"vjs-menu-item-text\">" + this.localize(this.options_.label);
+      var el = _MenuItem.prototype.createEl.call(this, type, props, attrs);
+
+      var parentSpan = el.querySelector('.vjs-menu-item-text');
 
       if (this.options_.track.kind === 'main-desc') {
-        innerHTML += "\n        <span aria-hidden=\"true\" class=\"vjs-icon-placeholder\"></span>\n        <span class=\"vjs-control-text\"> " + this.localize('Descriptions') + "</span>\n      ";
+        parentSpan.appendChild(_MenuItem.prototype.createEl.call(this, 'span', {
+          className: 'vjs-icon-placeholder'
+        }, {
+          'aria-hidden': true
+        }));
+        parentSpan.appendChild(_MenuItem.prototype.createEl.call(this, 'span', {
+          className: 'vjs-control-text',
+          textContent: this.localize('Descriptions')
+        }));
       }
-
-      innerHTML += '</span>';
-
-      var el = _MenuItem.prototype.createEl.call(this, type, assign({
-        innerHTML: innerHTML
-      }, props), attrs);
 
       return el;
     }
@@ -20274,7 +20471,7 @@
       this.labelEl_ = createEl('div', {
         className: 'vjs-playback-rate-value',
         id: this.labelElId_,
-        innerHTML: '1x'
+        textContent: '1x'
       });
       el.appendChild(this.labelEl_);
       return el;
@@ -20419,7 +20616,7 @@
 
     _proto.updateLabel = function updateLabel(event) {
       if (this.playbackRateSupported()) {
-        this.labelEl_.innerHTML = this.player().playbackRate() + 'x';
+        this.labelEl_.textContent = this.player().playbackRate() + 'x';
       }
     };
 
@@ -20469,10 +20666,24 @@
      */
     ;
 
-    _proto.createEl = function createEl() {
-      return _Component.prototype.createEl.call(this, 'div', {
-        className: this.buildCSSClass()
-      });
+    _proto.createEl = function createEl(tag, props, attributes) {
+      if (tag === void 0) {
+        tag = 'div';
+      }
+
+      if (props === void 0) {
+        props = {};
+      }
+
+      if (attributes === void 0) {
+        attributes = {};
+      }
+
+      if (!props.className) {
+        props.className = this.buildCSSClass();
+      }
+
+      return _Component.prototype.createEl.call(this, tag, props, attributes);
     };
 
     return Spacer;
@@ -20513,14 +20724,12 @@
     ;
 
     _proto.createEl = function createEl() {
-      var el = _Spacer.prototype.createEl.call(this, {
-        className: this.buildCSSClass()
-      }); // No-flex/table-cell mode requires there be some content
-      // in the cell to fill the remaining space of the table.
-
-
-      el.innerHTML = "\xA0";
-      return el;
+      return _Spacer.prototype.createEl.call(this, 'div', {
+        className: this.buildCSSClass(),
+        // No-flex/table-cell mode requires there be some content
+        // in the cell to fill the remaining space of the table.
+        textContent: "\xA0"
+      });
     };
 
     return CustomControlSpacer;
@@ -25421,13 +25630,8 @@
 
     _proto.addTechControlsListeners_ = function addTechControlsListeners_() {
       // Make sure to remove all the previous listeners in case we are called multiple times.
-      this.removeTechControlsListeners_(); // Some browsers (Chrome & IE) don't trigger a click on a flash swf, but do
-      // trigger mousedown/up.
-      // http://stackoverflow.com/questions/1444562/javascript-onclick-event-over-flash-object
-      // TODO: Is this needed for any techs other than Flash?
-      // Any touch events are set to block the mousedown event from happening
-
-      this.on(this.tech_, 'mouseup', this.boundHandleTechClick_);
+      this.removeTechControlsListeners_();
+      this.on(this.tech_, 'click', this.boundHandleTechClick_);
       this.on(this.tech_, 'dblclick', this.boundHandleTechDoubleClick_); // If the controls were hidden we don't want that to change without a tap event
       // so we'll check if the controls were already showing before reporting user
       // activity
@@ -25454,7 +25658,7 @@
       this.off(this.tech_, 'touchstart', this.boundHandleTechTouchStart_);
       this.off(this.tech_, 'touchmove', this.boundHandleTechTouchMove_);
       this.off(this.tech_, 'touchend', this.boundHandleTechTouchEnd_);
-      this.off(this.tech_, 'mouseup', this.boundHandleTechClick_);
+      this.off(this.tech_, 'click', this.boundHandleTechClick_);
       this.off(this.tech_, 'dblclick', this.boundHandleTechDoubleClick_);
     }
     /**
@@ -26077,18 +26281,14 @@
      * @param {EventTarget~Event} event
      *        the event that caused this function to trigger
      *
-     * @listens Tech#mouseup
+     * @listens Tech#click
      * @private
      */
     ;
 
     _proto.handleTechClick_ = function handleTechClick_(event) {
-      if (!isSingleLeftClick(event)) {
-        return;
-      } // When controls are disabled a click should not toggle playback because
+      // When controls are disabled a click should not toggle playback because
       // the click is considered a control
-
-
       if (!this.controls_) {
         return;
       }
@@ -28178,11 +28378,25 @@
     ;
 
     _proto.error = function error(err) {
+      var _this17 = this;
+
       if (err === undefined) {
         return this.error_ || null;
-      } // Suppress the first error message for no compatible source until
-      // user interaction
+      } // allow hooks to modify error object
 
+
+      hooks('beforeerror').forEach(function (hookFunction) {
+        var newErr = hookFunction(_this17, err);
+
+        if (!(isObject$1(newErr) && !Array.isArray(newErr) || typeof newErr === 'string' || typeof newErr === 'number' || newErr === null)) {
+          _this17.log.error('please return a value that MediaError expects in beforeerror hooks');
+
+          return;
+        }
+
+        err = newErr;
+      }); // Suppress the first error message for no compatible source until
+      // user interaction
 
       if (this.options_.suppressNotSupportedError && err && err.code === 4) {
         var triggerSuppressedError = function triggerSuppressedError() {
@@ -28220,7 +28434,11 @@
        * @type {EventTarget~Event}
        */
 
-      this.trigger('error');
+      this.trigger('error'); // notify hooks of the per player error
+
+      hooks('error').forEach(function (hookFunction) {
+        return hookFunction(_this17, _this17.error_);
+      });
       return;
     }
     /**
@@ -28692,14 +28910,14 @@
     ;
 
     _proto.createModal = function createModal(content, options) {
-      var _this17 = this;
+      var _this18 = this;
 
       options = options || {};
       options.content = content || '';
       var modal = new ModalDialog(this, options);
       this.addChild(modal);
       modal.on('dispose', function () {
-        _this17.removeChild(modal);
+        _this18.removeChild(modal);
       });
       modal.open();
       return modal;
@@ -28930,7 +29148,7 @@
     ;
 
     _proto.loadMedia = function loadMedia(media, ready) {
-      var _this18 = this;
+      var _this19 = this;
 
       if (!media || typeof media !== 'object') {
         return;
@@ -28962,7 +29180,7 @@
 
       if (Array.isArray(textTracks)) {
         textTracks.forEach(function (tt) {
-          return _this18.addRemoteTextTrack(tt, false);
+          return _this19.addRemoteTextTrack(tt, false);
         });
       }
 
@@ -30234,7 +30452,7 @@
     }
 
     options = options || {};
-    videojs.hooks('beforesetup').forEach(function (hookFunction) {
+    hooks('beforesetup').forEach(function (hookFunction) {
       var opts = hookFunction(el, mergeOptions$3(options));
 
       if (!isObject$1(opts) || Array.isArray(opts)) {
@@ -30248,103 +30466,17 @@
 
     var PlayerComponent = Component$1.getComponent('Player');
     player = new PlayerComponent(el, options, ready);
-    videojs.hooks('setup').forEach(function (hookFunction) {
+    hooks('setup').forEach(function (hookFunction) {
       return hookFunction(player);
     });
     return player;
   }
-  /**
-   * An Object that contains lifecycle hooks as keys which point to an array
-   * of functions that are run when a lifecycle is triggered
-   *
-   * @private
-   */
 
-
-  videojs.hooks_ = {};
-  /**
-   * Get a list of hooks for a specific lifecycle
-   *
-   * @param  {string} type
-   *         the lifecyle to get hooks from
-   *
-   * @param  {Function|Function[]} [fn]
-   *         Optionally add a hook (or hooks) to the lifecycle that your are getting.
-   *
-   * @return {Array}
-   *         an array of hooks, or an empty array if there are none.
-   */
-
-  videojs.hooks = function (type, fn) {
-    videojs.hooks_[type] = videojs.hooks_[type] || [];
-
-    if (fn) {
-      videojs.hooks_[type] = videojs.hooks_[type].concat(fn);
-    }
-
-    return videojs.hooks_[type];
-  };
-  /**
-   * Add a function hook to a specific videojs lifecycle.
-   *
-   * @param {string} type
-   *        the lifecycle to hook the function to.
-   *
-   * @param {Function|Function[]}
-   *        The function or array of functions to attach.
-   */
-
-
-  videojs.hook = function (type, fn) {
-    videojs.hooks(type, fn);
-  };
-  /**
-   * Add a function hook that will only run once to a specific videojs lifecycle.
-   *
-   * @param {string} type
-   *        the lifecycle to hook the function to.
-   *
-   * @param {Function|Function[]}
-   *        The function or array of functions to attach.
-   */
-
-
-  videojs.hookOnce = function (type, fn) {
-    videojs.hooks(type, [].concat(fn).map(function (original) {
-      var wrapper = function wrapper() {
-        videojs.removeHook(type, wrapper);
-        return original.apply(void 0, arguments);
-      };
-
-      return wrapper;
-    }));
-  };
-  /**
-   * Remove a hook from a specific videojs lifecycle.
-   *
-   * @param  {string} type
-   *         the lifecycle that the function hooked to
-   *
-   * @param  {Function} fn
-   *         The hooked function to remove
-   *
-   * @return {boolean}
-   *         The function that was removed or undef
-   */
-
-
-  videojs.removeHook = function (type, fn) {
-    var index = videojs.hooks(type).indexOf(fn);
-
-    if (index <= -1) {
-      return false;
-    }
-
-    videojs.hooks_[type] = videojs.hooks_[type].slice();
-    videojs.hooks_[type].splice(index, 1);
-    return true;
-  }; // Add default styles
-
+  videojs.hooks_ = hooks_;
+  videojs.hooks = hooks;
+  videojs.hook = hook;
+  videojs.hookOnce = hookOnce;
+  videojs.removeHook = removeHook; // Add default styles
 
   if (window_1.VIDEOJS_NO_DYNAMIC_STYLE !== true && isReal()) {
     var style = $('.vjs-styles-defaults');
@@ -30600,7 +30732,7 @@
    * @see      https://github.com/Raynos/xhr
    */
 
-  videojs.xhr = xhr;
+  videojs.xhr = lib;
   videojs.TextTrack = TextTrack;
   videojs.AudioTrack = AudioTrack;
   videojs.VideoTrack = VideoTrack;
@@ -30804,9 +30936,9 @@
     })();
   });
 
-  var DEFAULT_LOCATION = 'http://example.com';
+  var DEFAULT_LOCATION$1 = 'http://example.com';
 
-  var resolveUrl$1 = function resolveUrl(baseUrl, relativeUrl) {
+  var resolveUrl$2 = function resolveUrl(baseUrl, relativeUrl) {
     // return early if we don't need to resolve
     if (/^[a-z]+:/i.test(relativeUrl)) {
       return relativeUrl;
@@ -30826,7 +30958,7 @@
     var removeLocation = !window_1.location && !/\/\//i.test(baseUrl); // if the base URL is relative then combine with the current location
 
     if (nativeURL) {
-      baseUrl = new window_1.URL(baseUrl, window_1.location || DEFAULT_LOCATION);
+      baseUrl = new window_1.URL(baseUrl, window_1.location || DEFAULT_LOCATION$1);
     } else if (!/\/\//i.test(baseUrl)) {
       baseUrl = urlToolkit.buildAbsoluteURL(window_1.location && window_1.location.href || '', baseUrl);
     }
@@ -30837,7 +30969,7 @@
       // otherwise, return the url unmodified
 
       if (removeLocation) {
-        return newUrl.href.slice(DEFAULT_LOCATION.length);
+        return newUrl.href.slice(DEFAULT_LOCATION$1.length);
       } else if (protocolLess) {
         return newUrl.href.slice(newUrl.protocol.length);
       }
@@ -32756,6 +32888,50 @@
     }
 
     return null;
+  };
+
+  var DEFAULT_LOCATION = 'http://example.com';
+
+  var resolveUrl$1 = function resolveUrl(baseUrl, relativeUrl) {
+    // return early if we don't need to resolve
+    if (/^[a-z]+:/i.test(relativeUrl)) {
+      return relativeUrl;
+    } // if baseUrl is a data URI, ignore it and resolve everything relative to window.location
+
+
+    if (/^data:/.test(baseUrl)) {
+      baseUrl = window_1.location && window_1.location.href || '';
+    } // IE11 supports URL but not the URL constructor
+    // feature detect the behavior we want
+
+
+    var nativeURL = typeof window_1.URL === 'function';
+    var protocolLess = /^\/\//.test(baseUrl); // remove location if window.location isn't available (i.e. we're in node)
+    // and if baseUrl isn't an absolute url
+
+    var removeLocation = !window_1.location && !/\/\//i.test(baseUrl); // if the base URL is relative then combine with the current location
+
+    if (nativeURL) {
+      baseUrl = new window_1.URL(baseUrl, window_1.location || DEFAULT_LOCATION);
+    } else if (!/\/\//i.test(baseUrl)) {
+      baseUrl = urlToolkit.buildAbsoluteURL(window_1.location && window_1.location.href || '', baseUrl);
+    }
+
+    if (nativeURL) {
+      var newUrl = new URL(relativeUrl, baseUrl); // if we're a protocol-less url, remove the protocol
+      // and if we're location-less, remove the location
+      // otherwise, return the url unmodified
+
+      if (removeLocation) {
+        return newUrl.href.slice(DEFAULT_LOCATION.length);
+      } else if (protocolLess) {
+        return newUrl.href.slice(newUrl.protocol.length);
+      }
+
+      return newUrl.href;
+    }
+
+    return urlToolkit.buildAbsoluteURL(baseUrl, relativeUrl);
   };
 
   var entityMap = {
@@ -35544,7 +35720,7 @@
   var domParser_3 = domParser.DOMParser;
   domParser.__DOMHandler;
 
-  /*! @name mpd-parser @version 0.17.0 @license Apache-2.0 */
+  /*! @name mpd-parser @version 0.18.0 @license Apache-2.0 */
 
   var isObject = function isObject(obj) {
     return !!obj && typeof obj === 'object';
@@ -35732,11 +35908,28 @@
       var duration = attributes.duration,
           _attributes$timescale = attributes.timescale,
           timescale = _attributes$timescale === void 0 ? 1 : _attributes$timescale,
-          sourceDuration = attributes.sourceDuration;
+          sourceDuration = attributes.sourceDuration,
+          periodDuration = attributes.periodDuration;
       var endNumber = parseEndNumber(attributes.endNumber);
+      var segmentDuration = duration / timescale;
+
+      if (typeof endNumber === 'number') {
+        return {
+          start: 0,
+          end: endNumber
+        };
+      }
+
+      if (typeof periodDuration === 'number') {
+        return {
+          start: 0,
+          end: periodDuration / segmentDuration
+        };
+      }
+
       return {
         start: 0,
-        end: typeof endNumber === 'number' ? endNumber : Math.ceil(sourceDuration / (duration / timescale))
+        end: sourceDuration / segmentDuration
       };
     },
 
@@ -35828,11 +36021,11 @@
 
 
   var parseByDuration = function parseByDuration(attributes) {
-    var _attributes$type = attributes.type,
-        type = _attributes$type === void 0 ? 'static' : _attributes$type,
+    var type = attributes.type,
         duration = attributes.duration,
         _attributes$timescale4 = attributes.timescale,
         timescale = _attributes$timescale4 === void 0 ? 1 : _attributes$timescale4,
+        periodDuration = attributes.periodDuration,
         sourceDuration = attributes.sourceDuration;
 
     var _segmentRange$type = segmentRange[type](attributes),
@@ -35842,9 +36035,11 @@
     var segments = range(start, end).map(toSegments(attributes));
 
     if (type === 'static') {
-      var index = segments.length - 1; // final segment may be less than full segment duration
+      var index = segments.length - 1; // section is either a period or the full source
 
-      segments[index].duration = sourceDuration - duration / timescale * index;
+      var sectionDuration = typeof periodDuration === 'number' ? periodDuration : sourceDuration; // final segment may be less than full segment duration
+
+      segments[index].duration = sectionDuration - duration / timescale * index;
     }
 
     return segments;
@@ -35918,7 +36113,7 @@
 
   var addSidxSegmentsToPlaylist = function addSidxSegmentsToPlaylist(playlist, sidx, baseUrl) {
     // Retain init segment information
-    var initSegment = playlist.sidx.map ? playlist.sidx.map : null; // Retain source duration from initial master manifest parsing
+    var initSegment = playlist.sidx.map ? playlist.sidx.map : null; // Retain source duration from initial main manifest parsing
 
     var sourceDuration = playlist.sidx.duration; // Retain source timeline
 
@@ -35931,7 +36126,8 @@
     var mediaReferences = sidx.references.filter(function (r) {
       return r.referenceType !== 1;
     });
-    var segments = []; // firstOffset is the offset from the end of the sidx box
+    var segments = [];
+    var type = playlist.endList ? 'static' : 'dynamic'; // firstOffset is the offset from the end of the sidx box
 
     var startIndex = sidxEnd + sidx.firstOffset;
 
@@ -35953,7 +36149,8 @@
         periodIndex: timeline,
         duration: duration,
         sourceDuration: sourceDuration,
-        indexRange: indexRange
+        indexRange: indexRange,
+        type: type
       };
       var segment = segmentsFromBase(attributes)[0];
 
@@ -36048,7 +36245,7 @@
         CODECS: attributes.codecs
       }, _attributes['PROGRAM-ID'] = 1, _attributes),
       uri: '',
-      endList: (attributes.type || 'static') === 'static',
+      endList: attributes.type === 'static',
       timeline: attributes.periodIndex,
       resolvedUri: '',
       targetDuration: attributes.duration,
@@ -36103,7 +36300,7 @@
     return {
       attributes: m3u8Attributes,
       uri: '',
-      endList: (attributes.type || 'static') === 'static',
+      endList: attributes.type === 'static',
       timeline: attributes.periodIndex,
       resolvedUri: attributes.baseUrl || '',
       targetDuration: attributes.duration,
@@ -36235,7 +36432,7 @@
         BANDWIDTH: attributes.bandwidth
       }, _attributes2['PROGRAM-ID'] = 1, _attributes2),
       uri: '',
-      endList: (attributes.type || 'static') === 'static',
+      endList: attributes.type === 'static',
       timeline: attributes.periodIndex,
       resolvedUri: '',
       targetDuration: attributes.duration,
@@ -36278,13 +36475,12 @@
 
     if (!dashPlaylists.length) {
       return {};
-    } // grab all master attributes
+    } // grab all main manifest attributes
 
 
     var _dashPlaylists$0$attr = dashPlaylists[0].attributes,
         duration = _dashPlaylists$0$attr.sourceDuration,
-        _dashPlaylists$0$attr2 = _dashPlaylists$0$attr.type,
-        type = _dashPlaylists$0$attr2 === void 0 ? 'static' : _dashPlaylists$0$attr2,
+        type = _dashPlaylists$0$attr.type,
         suggestedPresentationDelay = _dashPlaylists$0$attr.suggestedPresentationDelay,
         minimumUpdatePeriod = _dashPlaylists$0$attr.minimumUpdatePeriod;
     var videoPlaylists = mergeDiscontiguousPlaylists(dashPlaylists.filter(videoOnly)).map(formatVideoPlaylist);
@@ -36293,7 +36489,7 @@
     var captions = dashPlaylists.map(function (playlist) {
       return playlist.attributes.captionServices;
     }).filter(Boolean);
-    var master = {
+    var manifest = {
       allowCache: true,
       discontinuityStarts: [],
       segments: [],
@@ -36308,32 +36504,32 @@
     };
 
     if (minimumUpdatePeriod >= 0) {
-      master.minimumUpdatePeriod = minimumUpdatePeriod * 1000;
+      manifest.minimumUpdatePeriod = minimumUpdatePeriod * 1000;
     }
 
     if (locations) {
-      master.locations = locations;
+      manifest.locations = locations;
     }
 
     if (type === 'dynamic') {
-      master.suggestedPresentationDelay = suggestedPresentationDelay;
+      manifest.suggestedPresentationDelay = suggestedPresentationDelay;
     }
 
-    var isAudioOnly = master.playlists.length === 0;
+    var isAudioOnly = manifest.playlists.length === 0;
 
     if (audioPlaylists.length) {
-      master.mediaGroups.AUDIO.audio = organizeAudioPlaylists(audioPlaylists, sidxMapping, isAudioOnly);
+      manifest.mediaGroups.AUDIO.audio = organizeAudioPlaylists(audioPlaylists, sidxMapping, isAudioOnly);
     }
 
     if (vttPlaylists.length) {
-      master.mediaGroups.SUBTITLES.subs = organizeVttPlaylists(vttPlaylists, sidxMapping);
+      manifest.mediaGroups.SUBTITLES.subs = organizeVttPlaylists(vttPlaylists, sidxMapping);
     }
 
     if (captions.length) {
-      master.mediaGroups['CLOSED-CAPTIONS'].cc = organizeCaptionServices(captions);
+      manifest.mediaGroups['CLOSED-CAPTIONS'].cc = organizeCaptionServices(captions);
     }
 
-    return master;
+    return manifest;
   };
   /**
    * Calculates the R (repetition) value for a live stream (for the final segment
@@ -36384,8 +36580,7 @@
 
 
   var parseByTimeline = function parseByTimeline(attributes, segmentTimeline) {
-    var _attributes$type = attributes.type,
-        type = _attributes$type === void 0 ? 'static' : _attributes$type,
+    var type = attributes.type,
         _attributes$minimumUp2 = attributes.minimumUpdatePeriod,
         minimumUpdatePeriod = _attributes$minimumUp2 === void 0 ? 0 : _attributes$minimumUp2,
         _attributes$media = attributes.media,
@@ -36630,14 +36825,24 @@
     return segments.map(function (segment) {
       templateValues.Number = segment.number;
       templateValues.Time = segment.time;
-      var uri = constructTemplateUrl(attributes.media || '', templateValues);
+      var uri = constructTemplateUrl(attributes.media || '', templateValues); // See DASH spec section 5.3.9.2.2
+      // - if timescale isn't present on any level, default to 1.
+
+      var timescale = attributes.timescale || 1; // - if presentationTimeOffset isn't present on any level, default to 0
+
+      var presentationTimeOffset = attributes.presentationTimeOffset || 0; // presentationTimeOffset has already been adjusted by the timescale
+
+      var presentationTime = // Even if the @t attribute is not specified for the segment, segment.time is
+      // calculated in mpd-parser prior to this, so it's assumed to be available.
+      attributes.periodStart + segment.time / timescale - presentationTimeOffset;
       var map = {
         uri: uri,
         timeline: segment.timeline,
         duration: segment.duration,
         resolvedUri: resolveUrl$1(attributes.baseUrl || '', uri),
         map: mapSegment,
-        number: segment.number
+        number: segment.number,
+        presentationTime: presentationTime
       };
 
       if (attributes.presentationTimeOffset) {
@@ -36761,7 +36966,7 @@
       return segmentsInfo;
     }
 
-    var segments = segmentsFn(segmentAttributes, segmentInfo.timeline); // The @duration attribute will be used to determin the playlist's targetDuration which
+    var segments = segmentsFn(segmentAttributes, segmentInfo.segmentTimeline); // The @duration attribute will be used to determin the playlist's targetDuration which
     // must be in seconds. Since we've generated the segment list, we no longer need
     // @duration to be in @timescale units, so we can convert it here.
 
@@ -37140,7 +37345,7 @@
    * @typedef {Object} SegmentInformation
    * @property {Object|undefined} template
    *           Contains the attributes for the SegmentTemplate node
-   * @property {Object[]|undefined} timeline
+   * @property {Object[]|undefined} segmentTimeline
    *           Contains a list of atrributes for each S node within the SegmentTimeline node
    * @property {Object|undefined} list
    *           Contains the attributes for the SegmentList node
@@ -37191,7 +37396,7 @@
 
     var segmentInfo = {
       template: template,
-      timeline: segmentTimeline && findChildren(segmentTimeline, 'S').map(function (s) {
+      segmentTimeline: segmentTimeline && findChildren(segmentTimeline, 'S').map(function (s) {
         return parseAttributes(s);
       }),
       list: segmentList && merge(parseAttributes(segmentList), {
@@ -37446,13 +37651,23 @@
     };
   };
   /**
-   * Maps an Period node to a list of Representation inforamtion objects for all
-   * AdaptationSet nodes contained within the Period
+   * Contains all period information for mapping nodes onto adaptation sets.
+   *
+   * @typedef {Object} PeriodInformation
+   * @property {Node} period.node
+   *           Period node from the mpd
+   * @property {Object} period.attributes
+   *           Parsed period attributes from node plus any added
+   */
+
+  /**
+   * Maps a PeriodInformation object to a list of Representation information objects for all
+   * AdaptationSet nodes contained within the Period.
    *
    * @name toAdaptationSetsCallback
    * @function
-   * @param {Node} period
-   *        Period node from the mpd
+   * @param {PeriodInformation} period
+   *        Period object containing necessary period information
    * @param {number} periodIndex
    *        Index of the Period within the mpd
    * @return {RepresentationInformation[]}
@@ -37474,18 +37689,80 @@
 
   var toAdaptationSets = function toAdaptationSets(mpdAttributes, mpdBaseUrls) {
     return function (period, index) {
-      var periodBaseUrls = buildBaseUrls(mpdBaseUrls, findChildren(period, 'BaseURL'));
-      var periodAtt = parseAttributes(period);
-      var parsedPeriodId = parseInt(periodAtt.id, 10); // fallback to mapping index if Period@id is not a number
+      var periodBaseUrls = buildBaseUrls(mpdBaseUrls, findChildren(period.node, 'BaseURL'));
+      var parsedPeriodId = parseInt(period.attributes.id, 10); // fallback to mapping index if Period@id is not a number
 
       var periodIndex = window_1.isNaN(parsedPeriodId) ? index : parsedPeriodId;
       var periodAttributes = merge(mpdAttributes, {
-        periodIndex: periodIndex
+        periodIndex: periodIndex,
+        periodStart: period.attributes.start
       });
-      var adaptationSets = findChildren(period, 'AdaptationSet');
-      var periodSegmentInfo = getSegmentInformation(period);
+
+      if (typeof period.attributes.duration === 'number') {
+        periodAttributes.periodDuration = period.attributes.duration;
+      }
+
+      var adaptationSets = findChildren(period.node, 'AdaptationSet');
+      var periodSegmentInfo = getSegmentInformation(period.node);
       return flatten(adaptationSets.map(toRepresentations(periodAttributes, periodBaseUrls, periodSegmentInfo)));
     };
+  };
+  /**
+   * Gets Period@start property for a given period.
+   *
+   * @param {Object} options
+   *        Options object
+   * @param {Object} options.attributes
+   *        Period attributes
+   * @param {Object} [options.priorPeriodAttributes]
+   *        Prior period attributes (if prior period is available)
+   * @param {string} options.mpdType
+   *        The MPD@type these periods came from
+   * @return {number|null}
+   *         The period start, or null if it's an early available period or error
+   */
+
+
+  var getPeriodStart = function getPeriodStart(_ref) {
+    var attributes = _ref.attributes,
+        priorPeriodAttributes = _ref.priorPeriodAttributes,
+        mpdType = _ref.mpdType; // Summary of period start time calculation from DASH spec section 5.3.2.1
+    //
+    // A period's start is the first period's start + time elapsed after playing all
+    // prior periods to this one. Periods continue one after the other in time (without
+    // gaps) until the end of the presentation.
+    //
+    // The value of Period@start should be:
+    // 1. if Period@start is present: value of Period@start
+    // 2. if previous period exists and it has @duration: previous Period@start +
+    //    previous Period@duration
+    // 3. if this is first period and MPD@type is 'static': 0
+    // 4. in all other cases, consider the period an "early available period" (note: not
+    //    currently supported)
+    // (1)
+
+    if (typeof attributes.start === 'number') {
+      return attributes.start;
+    } // (2)
+
+
+    if (priorPeriodAttributes && typeof priorPeriodAttributes.start === 'number' && typeof priorPeriodAttributes.duration === 'number') {
+      return priorPeriodAttributes.start + priorPeriodAttributes.duration;
+    } // (3)
+
+
+    if (!priorPeriodAttributes && mpdType === 'static') {
+      return 0;
+    } // (4)
+    // There is currently no logic for calculating the Period@start value if there is
+    // no Period@start or prior Period@start and Period@duration available. This is not made
+    // explicit by the DASH interop guidelines or the DASH spec, however, since there's
+    // nothing about any other resolution strategies, it's implied. Thus, this case should
+    // be considered an early available period, or error, and null should suffice for both
+    // of those cases.
+
+
+    return null;
   };
   /**
    * Traverses the mpd xml tree to generate a list of Representation information objects
@@ -37518,15 +37795,17 @@
         NOW = _options$NOW === void 0 ? Date.now() : _options$NOW,
         _options$clientOffset = _options.clientOffset,
         clientOffset = _options$clientOffset === void 0 ? 0 : _options$clientOffset;
-    var periods = findChildren(mpd, 'Period');
+    var periodNodes = findChildren(mpd, 'Period');
 
-    if (!periods.length) {
+    if (!periodNodes.length) {
       throw new Error(errors.INVALID_NUMBER_OF_PERIOD);
     }
 
     var locations = findChildren(mpd, 'Location');
     var mpdAttributes = parseAttributes(mpd);
-    var mpdBaseUrls = buildBaseUrls([manifestUri], findChildren(mpd, 'BaseURL'));
+    var mpdBaseUrls = buildBaseUrls([manifestUri], findChildren(mpd, 'BaseURL')); // See DASH spec section 5.3.1.2, Semantics of MPD element. Default type to 'static'.
+
+    mpdAttributes.type = mpdAttributes.type || 'static';
     mpdAttributes.sourceDuration = mpdAttributes.mediaPresentationDuration || 0;
     mpdAttributes.NOW = NOW;
     mpdAttributes.clientOffset = clientOffset;
@@ -37535,6 +37814,26 @@
       mpdAttributes.locations = locations.map(getContent);
     }
 
+    var periods = []; // Since toAdaptationSets acts on individual periods right now, the simplest approach to
+    // adding properties that require looking at prior periods is to parse attributes and add
+    // missing ones before toAdaptationSets is called. If more such properties are added, it
+    // may be better to refactor toAdaptationSets.
+
+    periodNodes.forEach(function (node, index) {
+      var attributes = parseAttributes(node); // Use the last modified prior period, as it may contain added information necessary
+      // for this period.
+
+      var priorPeriod = periods[index - 1];
+      attributes.start = getPeriodStart({
+        attributes: attributes,
+        priorPeriodAttributes: priorPeriod ? priorPeriod.attributes : null,
+        mpdType: mpdAttributes.type
+      });
+      periods.push({
+        node: node,
+        attributes: attributes
+      });
+    });
     return {
       locations: mpdAttributes.locations,
       representationInfo: flatten(periods.map(toAdaptationSets(mpdAttributes, mpdBaseUrls)))
@@ -38323,8 +38622,12 @@
     'mp4': toUint8([0x66, 0x74, 0x79, 0x70]),
     // "styp" string literal in hex
     'fmp4': toUint8([0x73, 0x74, 0x79, 0x70]),
-    // "ftyp" string literal in hex
-    'mov': toUint8([0x66, 0x74, 0x79, 0x70, 0x71, 0x74])
+    // "ftypqt" string literal in hex
+    'mov': toUint8([0x66, 0x74, 0x79, 0x70, 0x71, 0x74]),
+    // moov string literal in hex
+    'moov': toUint8([0x6D, 0x6F, 0x6F, 0x76]),
+    // moof string literal in hex
+    'moof': toUint8([0x6D, 0x6F, 0x6F, 0x66])
   };
   var _isLikely = {
     aac: function aac(bytes) {
@@ -38352,11 +38655,28 @@
       return bytesMatch(docType, CONSTANTS.matroska);
     },
     mp4: function mp4(bytes) {
-      return !_isLikely['3gp'](bytes) && !_isLikely.mov(bytes) && (bytesMatch(bytes, CONSTANTS.mp4, {
+      // if this file is another base media file format, it is not mp4
+      if (_isLikely['3gp'](bytes) || _isLikely.mov(bytes)) {
+        return false;
+      } // if this file starts with a ftyp or styp box its mp4
+
+
+      if (bytesMatch(bytes, CONSTANTS.mp4, {
         offset: 4
       }) || bytesMatch(bytes, CONSTANTS.fmp4, {
         offset: 4
-      }));
+      })) {
+        return true;
+      } // if this file starts with a moof/moov box its mp4
+
+
+      if (bytesMatch(bytes, CONSTANTS.moof, {
+        offset: 4
+      }) || bytesMatch(bytes, CONSTANTS.moov, {
+        offset: 4
+      })) {
+        return true;
+      }
     },
     mov: function mov(bytes) {
       return bytesMatch(bytes, CONSTANTS.mov, {
@@ -38518,12 +38838,12 @@
   };
   var clock_1 = clock.ONE_SECOND_IN_TS;
 
-  /*! @name @videojs/http-streaming @version 2.9.2 @license Apache-2.0 */
+  /*! @name @videojs/http-streaming @version 2.10.0 @license Apache-2.0 */
   /**
    * @file resolve-url.js - Handling how URLs are resolved and manipulated
    */
 
-  var resolveUrl = resolveUrl$1;
+  var resolveUrl = resolveUrl$2;
   /**
    * Checks whether xhr request was redirected and returns correct url depending
    * on `handleManifestRedirects` option
@@ -39254,7 +39574,8 @@
         currentTime = _ref4.currentTime,
         startingSegmentIndex = _ref4.startingSegmentIndex,
         startingPartIndex = _ref4.startingPartIndex,
-        startTime = _ref4.startTime;
+        startTime = _ref4.startTime,
+        experimentalExactManifestTimings = _ref4.experimentalExactManifestTimings;
     var time = currentTime - startTime;
     var partsAndSegments = getPartsAndSegments(playlist);
     var startIndex = 0;
@@ -39281,20 +39602,26 @@
       if (startIndex > 0) {
         for (var _i2 = startIndex - 1; _i2 >= 0; _i2--) {
           var _partAndSegment = partsAndSegments[_i2];
-          time += _partAndSegment.duration; // TODO: consider not using TIME_FUDGE_FACTOR at all here
+          time += _partAndSegment.duration;
 
-          if (time + TIME_FUDGE_FACTOR > 0) {
-            return {
-              partIndex: _partAndSegment.partIndex,
-              segmentIndex: _partAndSegment.segmentIndex,
-              startTime: startTime - sumDurations({
-                defaultDuration: playlist.targetDuration,
-                durationList: partsAndSegments,
-                startIndex: startIndex,
-                endIndex: _i2
-              })
-            };
+          if (experimentalExactManifestTimings) {
+            if (time < 0) {
+              continue;
+            }
+          } else if (time + TIME_FUDGE_FACTOR <= 0) {
+            continue;
           }
+
+          return {
+            partIndex: _partAndSegment.partIndex,
+            segmentIndex: _partAndSegment.segmentIndex,
+            startTime: startTime - sumDurations({
+              defaultDuration: playlist.targetDuration,
+              durationList: partsAndSegments,
+              startIndex: startIndex,
+              endIndex: _i2
+            })
+          };
         }
       } // We were unable to find a good segment within the playlist
       // so select the first segment
@@ -39330,20 +39657,26 @@
 
     for (var _i4 = startIndex; _i4 < partsAndSegments.length; _i4++) {
       var _partAndSegment2 = partsAndSegments[_i4];
-      time -= _partAndSegment2.duration; // TODO: consider not using TIME_FUDGE_FACTOR at all here
+      time -= _partAndSegment2.duration;
 
-      if (time - TIME_FUDGE_FACTOR < 0) {
-        return {
-          partIndex: _partAndSegment2.partIndex,
-          segmentIndex: _partAndSegment2.segmentIndex,
-          startTime: startTime + sumDurations({
-            defaultDuration: playlist.targetDuration,
-            durationList: partsAndSegments,
-            startIndex: startIndex,
-            endIndex: _i4
-          })
-        };
+      if (experimentalExactManifestTimings) {
+        if (time > 0) {
+          continue;
+        }
+      } else if (time - TIME_FUDGE_FACTOR >= 0) {
+        continue;
       }
+
+      return {
+        partIndex: _partAndSegment2.partIndex,
+        segmentIndex: _partAndSegment2.segmentIndex,
+        startTime: startTime + sumDurations({
+          defaultDuration: playlist.targetDuration,
+          durationList: partsAndSegments,
+          startIndex: startIndex,
+          endIndex: _i4
+        })
+      };
     } // We are out of possible candidates so load the last one...
 
 
@@ -39895,10 +40228,24 @@
       }
     }
 
+    var audioOnlyMaster = isAudioOnly(master);
     forEachMediaGroup(master, function (properties, mediaType, groupKey, labelKey) {
-      var groupId = "placeholder-uri-" + mediaType + "-" + groupKey + "-" + labelKey;
+      var groupId = "placeholder-uri-" + mediaType + "-" + groupKey + "-" + labelKey; // add a playlist array under properties
 
       if (!properties.playlists || !properties.playlists.length) {
+        // If the manifest is audio only and this media group does not have a uri, check
+        // if the media group is located in the main list of playlists. If it is, don't add
+        // placeholder properties as it shouldn't be considered an alternate audio track.
+        if (audioOnlyMaster && mediaType === 'AUDIO' && !properties.uri) {
+          for (var _i = 0; _i < master.playlists.length; _i++) {
+            var p = master.playlists[_i];
+
+            if (p.attributes && p.attributes.AUDIO && p.attributes.AUDIO === groupKey) {
+              return;
+            }
+          }
+        }
+
         properties.playlists = [_extends_1({}, properties)];
       }
 
@@ -52879,15 +53226,39 @@
       resolutionPlusOneRep = resolutionPlusOneSmallest.filter(function (rep) {
         return rep.bandwidth === highestRemainingBandwidthRep.bandwidth;
       })[0];
+    }
+
+    var leastPixelDiffRep; // If this selector proves to be better than others,
+    // resolutionPlusOneRep and resolutionBestRep and all
+    // the code involving them should be removed.
+
+    if (masterPlaylistController.experimentalLeastPixelDiffSelector) {
+      // find the variant that is closest to the player's pixel size
+      var leastPixelDiffList = haveResolution.map(function (rep) {
+        rep.pixelDiff = Math.abs(rep.width - playerWidth) + Math.abs(rep.height - playerHeight);
+        return rep;
+      }); // get the highest bandwidth, closest resolution playlist
+
+      stableSort(leastPixelDiffList, function (left, right) {
+        // sort by highest bandwidth if pixelDiff is the same
+        if (left.pixelDiff === right.pixelDiff) {
+          return right.bandwidth - left.bandwidth;
+        }
+
+        return left.pixelDiff - right.pixelDiff;
+      });
+      leastPixelDiffRep = leastPixelDiffList[0];
     } // fallback chain of variants
 
 
-    var chosenRep = resolutionPlusOneRep || resolutionBestRep || bandwidthBestRep || enabledPlaylistReps[0] || sortedPlaylistReps[0];
+    var chosenRep = leastPixelDiffRep || resolutionPlusOneRep || resolutionBestRep || bandwidthBestRep || enabledPlaylistReps[0] || sortedPlaylistReps[0];
 
     if (chosenRep && chosenRep.playlist) {
       var _type = 'sortedPlaylistReps';
 
-      if (resolutionPlusOneRep) {
+      if (leastPixelDiffRep) {
+        _type = 'leastPixelDiffRep';
+      } else if (resolutionPlusOneRep) {
         _type = 'resolutionPlusOneRep';
       } else if (resolutionBestRep) {
         _type = 'resolutionBestRep';
@@ -54059,7 +54430,8 @@
       _this.state_ = 'INIT';
       _this.timelineChangeController_ = settings.timelineChangeController;
       _this.shouldSaveSegmentTimingInfo_ = true;
-      _this.parse708captions_ = settings.parse708captions; // private instance variables
+      _this.parse708captions_ = settings.parse708captions;
+      _this.experimentalExactManifestTimings = settings.experimentalExactManifestTimings; // private instance variables
 
       _this.checkBufferTimeout_ = null;
       _this.error_ = void 0;
@@ -54958,6 +55330,7 @@
       } else {
         // Find the segment containing the end of the buffer or current time.
         var _Playlist$getMediaInf = Playlist.getMediaInfoForTime({
+          experimentalExactManifestTimings: this.experimentalExactManifestTimings,
           playlist: this.playlist_,
           currentTime: this.fetchAtBuffer_ ? bufferedEnd : this.currentTime_(),
           startingPartIndex: this.syncPoint_.partIndex,
@@ -60443,7 +60816,8 @@
           enableLowInitialPlaylist = options.enableLowInitialPlaylist,
           sourceType = options.sourceType,
           cacheEncryptionKeys = options.cacheEncryptionKeys,
-          experimentalBufferBasedABR = options.experimentalBufferBasedABR;
+          experimentalBufferBasedABR = options.experimentalBufferBasedABR,
+          experimentalLeastPixelDiffSelector = options.experimentalLeastPixelDiffSelector;
 
       if (!src) {
         throw new Error('A non-empty playlist URL or JSON manifest string is required');
@@ -60457,6 +60831,7 @@
 
       Vhs$1 = externVhs;
       _this.experimentalBufferBasedABR = Boolean(experimentalBufferBasedABR);
+      _this.experimentalLeastPixelDiffSelector = Boolean(experimentalLeastPixelDiffSelector);
       _this.withCredentials = withCredentials;
       _this.tech_ = tech;
       _this.vhs_ = tech.vhs;
@@ -60533,7 +60908,8 @@
         inbandTextTracks: _this.inbandTextTracks_,
         cacheEncryptionKeys: cacheEncryptionKeys,
         sourceUpdater: _this.sourceUpdater_,
-        timelineChangeController: _this.timelineChangeController_
+        timelineChangeController: _this.timelineChangeController_,
+        experimentalExactManifestTimings: options.experimentalExactManifestTimings
       }; // The source type check not only determines whether a special DASH playlist loader
       // should be used, but also covers the case where the provided src is a vhs-json
       // manifest object (instead of a URL). In the case of vhs-json, the default
@@ -60713,12 +61089,13 @@
     ;
 
     _proto.getAudioTrackPlaylists_ = function getAudioTrackPlaylists_() {
-      var master = this.master(); // if we don't have any audio groups then we can only
+      var master = this.master();
+      var defaultPlaylists = master && master.playlists || []; // if we don't have any audio groups then we can only
       // assume that the audio tracks are contained in masters
       // playlist array, use that or an empty array.
 
       if (!master || !master.mediaGroups || !master.mediaGroups.AUDIO) {
-        return master && master.playlists || [];
+        return defaultPlaylists;
       }
 
       var AUDIO = master.mediaGroups.AUDIO;
@@ -60743,7 +61120,7 @@
 
 
       if (!track) {
-        return [];
+        return defaultPlaylists;
       }
 
       var playlists = []; // get all of the playlists that are possible for the
@@ -60753,12 +61130,27 @@
         if (AUDIO[group][track.label]) {
           var properties = AUDIO[group][track.label];
 
-          if (properties.playlists) {
+          if (properties.playlists && properties.playlists.length) {
             playlists.push.apply(playlists, properties.playlists);
-          } else {
+          } else if (properties.uri) {
             playlists.push(properties);
+          } else if (master.playlists.length) {
+            // if an audio group does not have a uri
+            // see if we have main playlists that use it as a group.
+            // if we do then add those to the playlists list.
+            for (var i = 0; i < master.playlists.length; i++) {
+              var playlist = master.playlists[i];
+
+              if (playlist.attributes && playlist.attributes.AUDIO && playlist.attributes.AUDIO === group) {
+                playlists.push(playlist);
+              }
+            }
           }
         }
+      }
+
+      if (!playlists.length) {
+        return defaultPlaylists;
       }
 
       return playlists;
@@ -63213,9 +63605,9 @@
     initPlugin(this, options);
   };
 
-  var version$4 = "2.9.2";
+  var version$4 = "2.10.0";
   var version$3 = "5.12.2";
-  var version$2 = "0.17.0";
+  var version$2 = "0.18.0";
   var version$1 = "4.7.0";
   var version = "3.1.2";
   var Vhs = {
@@ -63828,7 +64220,7 @@
 
       this.options_.enableLowInitialPlaylist = this.options_.enableLowInitialPlaylist && this.options_.bandwidth === Config.INITIAL_BANDWIDTH; // grab options passed to player.src
 
-      ['withCredentials', 'useDevicePixelRatio', 'limitRenditionByPlayerDimensions', 'bandwidth', 'smoothQualityChange', 'customTagParsers', 'customTagMappers', 'handleManifestRedirects', 'cacheEncryptionKeys', 'playlistSelector', 'initialPlaylistSelector', 'experimentalBufferBasedABR', 'liveRangeSafeTimeDelta', 'experimentalLLHLS'].forEach(function (option) {
+      ['withCredentials', 'useDevicePixelRatio', 'limitRenditionByPlayerDimensions', 'bandwidth', 'smoothQualityChange', 'customTagParsers', 'customTagMappers', 'handleManifestRedirects', 'cacheEncryptionKeys', 'playlistSelector', 'initialPlaylistSelector', 'experimentalBufferBasedABR', 'liveRangeSafeTimeDelta', 'experimentalLLHLS', 'experimentalExactManifestTimings', 'experimentalLeastPixelDiffSelector'].forEach(function (option) {
         if (typeof _this2.source_[option] !== 'undefined') {
           _this2.options_[option] = _this2.source_[option];
         }
@@ -64173,6 +64565,15 @@
         sourceKeySystems: this.source_.keySystems,
         media: this.playlists.media(),
         audioMedia: audioPlaylistLoader && audioPlaylistLoader.media()
+      });
+      this.player_.tech_.on('keystatuschange', function (e) {
+        if (e.status === 'output-restricted') {
+          _this4.masterPlaylistController_.blacklistCurrentPlaylist({
+            playlist: _this4.masterPlaylistController_.media(),
+            message: "DRM keystatus changed to " + e.status + ". Playlist will fail to play. Check for HDCP content.",
+            blacklistDuration: Infinity
+          });
+        }
       }); // In IE11 this is too early to initialize media keys, and IE11 does not support
       // promises.
 
