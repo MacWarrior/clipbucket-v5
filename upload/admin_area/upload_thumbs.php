@@ -222,7 +222,7 @@
 					$ffmpeg->generateThumbs($thumbs_input);
 				}
 
-				e(lang('Video thumbs has been regenrated successfully'),'m');
+				e(lang('Video thumbs has been regenerated successfully'),'m');
 				$db->update(tbl('video'), array("thumbs_version"), array("2.8"), " file_name = '".$data['file_name']."' ");
 			}
 		}

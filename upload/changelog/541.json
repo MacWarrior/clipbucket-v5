@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"53",
+  "revision":"54",
   "status":"dev",
   "detail":[
     {
@@ -82,6 +82,7 @@
       "description":[
         "Update VideoJS to version 7.15"
         ,"Fix VideoJS player informations"
+        ,"Fix VideoJS player thumbnails sync"
       ]
     }
   ]
