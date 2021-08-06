@@ -1,13 +1,12 @@
 {
   "version":"5.4.1",
-  "revision":"51",
+  "revision":"52",
   "status":"dev",
   "detail":[
     {
       "title": "Miscellaneous",
       "description": [
-        "Update VideoJS to version 7.15"
-        ,"Update Smarty to version 3.1.39"
+        "Update Smarty to version 3.1.39"
         ,"Rename dbconnect.php to config.php"
         ,"Cleanup code"
         ,"Add config option to overwrite DB config values"
@@ -75,6 +74,13 @@
       "title":"Plugin",
       "description":[
         "Update Global Announcement to CB5.4.1"
+      ]
+    }
+  ,{
+      "title":"Player",
+      "description":[
+        "Update VideoJS to version 7.15"
+        ,"Fix VideoJS player informations"
       ]
     }
   ]

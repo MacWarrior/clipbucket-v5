@@ -1,4 +1,13 @@
 <?php
+/*
+	Player Name: VideoJS
+	Description: Official CBV5 player
+	Author: Arslan Hassan & MacWarrior
+	Version: CB5.4.1
+    Released: 2021-08-06
+    Website: https://github.com/MacWarrior/clipbucket-v5
+ */
+
 $cb_video_js = false;
 
 if (!function_exists('cb_video_js'))
