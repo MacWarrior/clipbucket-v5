@@ -707,7 +707,8 @@ CREATE TABLE `{tbl_prefix}video` (
   `conv_progress` text NOT NULL DEFAULT '',
   `is_castable` tinyint(1) NOT NULL DEFAULT 0,
   `bits_color` tinyint(4) DEFAULT NULL,
-  `in_editor_pick` varchar(255) DEFAULT 'no'
+  `in_editor_pick` varchar(255) DEFAULT 'no',
+  `subscription_email` VARCHAR(16) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `{tbl_prefix}video_categories` (
