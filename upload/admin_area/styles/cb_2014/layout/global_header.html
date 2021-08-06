@@ -36,7 +36,11 @@
 <![endif]-->
 
 <!-- fonts -->
-<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:400,300" />
+{if $development_mode}
+<link rel="stylesheet" href="{$theme_url}/css/open_sans.css"/>
+{else}
+<link rel="stylesheet" href="{$theme_url}/css/open_sans.min.css"/>
+{/if}
 
 <!-- ace styles -->
 {if !this_page('admin_login')} <!-- these css file not includes in admin area login.html -->

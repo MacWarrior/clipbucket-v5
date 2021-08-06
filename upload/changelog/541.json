@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"52",
+  "revision":"53",
   "status":"dev",
   "detail":[
     {
@@ -44,6 +44,7 @@
         ,"Use more translations"
         ,"Fix jQuery 3.6.0 compatibility"
         ,"Fix plugin installation"
+        ,"Include OpenSans font in sources"
       ]
     }
   ,{
