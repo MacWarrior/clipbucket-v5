@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"56",
+  "revision":"57",
   "status":"dev",
   "detail":[
     {
@@ -70,6 +70,8 @@
         ,"Fix signup nginx vhost with SEO URLs"
         ,"Fix signup apache htaccess with SEO URLs"
         ,"Remove logs files in /upload/files/"
+        ,"Remove residual files in /upload/conversion_queue/"
+        ,"Remove log file in /upload/temp/"
       ]
     }
   ,{

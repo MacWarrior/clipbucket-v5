@@ -86,13 +86,11 @@
 		function move_to_temp($file_arr,$file_key)
 		{
 			$file = $file_arr['file'];
-			$mass_file  = $file_arr['path'].'/'.$file;
-			$con_que=CON_DIR.'/'.$file_key.'.mp4';
-			$temp_file = TEMP_DIR.'/'.$file_key.'.'.getExt($file);
+			$mass_file  = $file_arr['path'].DIRECTORY_SEPARATOR.$file;
+			$temp_file = TEMP_DIR.DIRECTORY_SEPARATOR.$file_key.'.'.getExt($file);
 			if(file_exists($mass_file) && is_file($mass_file))
 			{
 				copy($mass_file,$temp_file);
-				copy($temp_file,$con_que);
 				return $file_key.'.'.getExt($file);
 			}
 			return false;

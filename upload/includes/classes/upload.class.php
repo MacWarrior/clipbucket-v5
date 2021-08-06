@@ -703,7 +703,7 @@ class Upload
 		$tmp_ext = $Cbucket->temp_exts;
 
 		//Checking file exists or not
-		if(file_exists(TEMP_DIR.'/'.$file))
+		if(file_exists(TEMP_DIR.DIRECTORY_SEPARATOR.$file))
 		{
 			$ext = strtolower(getExt($file));
 			$name = getName($file);
@@ -716,7 +716,7 @@ class Upload
 			$new_file = $name.'.'.$tmp_ext;
 			//Renaming File for security purpose
 
-			rename(TEMP_DIR.'/'.$file,TEMP_DIR.'/'.$new_file);
+			rename(TEMP_DIR.DIRECTORY_SEPARATOR.$file,TEMP_DIR.DIRECTORY_SEPARATOR.$new_file);
 			//Adding Details to database
 			$db->Execute('INSERT INTO '.tbl('conversion_queue')." (cqueue_name,cqueue_ext,cqueue_tmp_ext,date_added)
 							VALUES ('".mysql_clean($name)."','".mysql_clean($ext)."','".mysql_clean($tmp_ext)."','".NOW()."') ");

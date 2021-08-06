@@ -1,6 +1,6 @@
 <?php
 require_once '../includes/admin_config.php';
-require_once(dirname(dirname(__FILE__))."/includes/classes/sLog.php");
+require_once(dirname(dirname(__FILE__)).'/includes/classes/sLog.php');
 global $Cbucket,$userquery,$pages,$cbmass,$Upload,$db;
 $userquery->admin_login_check();
 $pages->page_redir();
@@ -21,9 +21,9 @@ for ($i=0; $i < $total_cats ; $i++) {
     $category_names[$category_values] = $cats[$i]['category_name'];
 }
 
-assign("cats", $cats);
-assign("cat_values", $category_values);
-assign("total_cats", $total_cats);
+assign('cats', $cats);
+assign('cat_values', $category_values);
+assign('total_cats', $total_cats);
 
 if(isset($_POST['mass_upload_video']))
 {
@@ -79,7 +79,7 @@ if(isset($_POST['mass_upload_video']))
             $file_name = $cbmass->move_to_temp($file_arr,$file_key);
 
             createDataFolders(LOGS_DIR);
-            $logFile = LOGS_DIR.'/'.$file_directory.'/'.$file_key.'.log';
+            $logFile = LOGS_DIR.DIRECTORY_SEPARATOR.$file_directory.DIRECTORY_SEPARATOR.$file_key.'.log';
             $log = new SLog($logFile);
 
             $log->newSection('Pre-Check Configurations');
@@ -96,8 +96,8 @@ if(isset($_POST['mass_upload_video']))
             }
 
             $results=$Upload->add_conversion_queue($file_name);
-            $str = "/".date('Y').'/'.date('m').'/'.date('d').'/';
-            $str1 = date('Y').'/'.date('m').'/'.date('d');
+            $str = DIRECTORY_SEPARATOR.date('Y').DIRECTORY_SEPARATOR.date('m').DIRECTORY_SEPARATOR.date('d').DIRECTORY_SEPARATOR;
+            $str1 = date('Y').DIRECTORY_SEPARATOR.date('m').DIRECTORY_SEPARATOR.date('d');
             mkdir(FILES_DIR.'/videos'.$str);
             $tbl=tbl('video');
             $fields['file_directory']=$str1;
@@ -105,24 +105,23 @@ if(isset($_POST['mass_upload_video']))
             $cond='file_name='.'\''.$fname[0].'\'';
             $result=$db->db_update($tbl, $fields, $cond);
             $result=exec(php_path().' -q '.BASEDIR."/actions/video_convert.php {$file_name} {$file_key} {$file_directory} {$logFile} {$file_track} > /dev/null &");
-            if(file_exists(CON_DIR.'/'.$file_name))
+            if(file_exists(CON_DIR.DIRECTORY_SEPARATOR.$file_name))
             {
-                unlink(CON_DIR.'/'.$file_name);
-                foreach ($vtitle as &$title)
-                {
+                unlink(CON_DIR.DIRECTORY_SEPARATOR.$file_name);
+                foreach ($vtitle as $title) {
                     $resul1 = glob(FILES_DIR.'/videos/'.$title.'.*');
                     unlink($resul1[0]);
                 }
             }
 
-            crapCleanStep:
             if ($delMassUpload != 'no')
             {
                 if( is_writable($file_path.$file_orgname) )
                 {
                     $unlink = unlink($file_path.$file_orgname);
-                    if( !$unlink )
+                    if( !$unlink ){
                         e('Can\'t delete file "'.$file_path.$file_orgname.'"', 'w');
+                    }
                 } else {
                     e('File "'.$file_path.$file_orgname.'" is not writable', 'w');
                 }

@@ -1,9 +1,8 @@
 <?php
 // This script runs only via command line
 sleep(5);
-include(dirname(__FILE__)."/../includes/config.inc.php");
-require_once(dirname(dirname(__FILE__))."/includes/classes/sLog.php");
-define('FFMPEG_BINARY', get_binaries('ffmpeg'));
+include(dirname(__FILE__).'/../includes/config.inc.php');
+require_once(dirname(dirname(__FILE__)).'/includes/classes/sLog.php');
 
 global $db;
 
@@ -15,29 +14,25 @@ if (config('use_crons') == 'yes') {
     $argv = convertWithCron();
 }
 
-$fileName = (isset($argv[1])) ? $argv[1] : false;
+$fileName = $argv[1] ?? false;
 //This is exact file name of a video e.g 132456789
-$_filename = (isset($argv[2])) ? $argv[2] : false;
+$_filename = $argv[2] ?? false;
 
-$file_directory_ = (isset($argv[3])) ? $argv[3] : false;
-$file_directory = $file_directory_.'/';
+$file_directory_ = $argv[3] ?? false;
+$file_directory = $file_directory_.DIRECTORY_SEPARATOR;
 
-$logFile = (isset($argv[4])) ? $argv[4] : false;
+$logFile = $argv[4] ?? false;
 if (empty($logFile)) {
     $logFile = LOGS_DIR.DIRECTORY_SEPARATOR.$file_directory.$_filename.'.log';
 }
 
 // TODO : Support multi audio tracks ; $audio_track =  false;
-$audio_track = (isset($argv[5])) ? $argv[5] : false;
-$reconvert = (isset($argv[6])) ? $argv[6] : false;
-
-$file = FILES_DIR.'/temp/args.txt';
-$text = "fileName [".$fileName.'] _filename ['.$_filename.'] file_directory ['.$file_directory.'] logfile ['.$logFile.']';
-file_put_contents($file, $text);
+$audio_track = $argv[5] ?? false;
+$reconvert = $argv[6] ?? false;
 
 $log = new SLog($logFile);
 
-$log->newSection("Starting Conversion Log");
+$log->newSection('Starting Conversion Log');
 $TempLogData = "Filename : {$fileName}\n";
 $TempLogData .= "File directory : {$file_directory_}\n";
 $TempLogData .= "Log file : {$logFile}\n";
@@ -47,23 +42,18 @@ $log->writeLine("Getting Arguments",$TempLogData, true, true);
     Getting the videos which are currently in our queue
     waiting for conversion
 */
+$queue_details = get_queued_video(true, $fileName);
 
-if(isset($_GET['test'])) {
-    $queue_details = get_queued_video(false, $fileName);
-} else {
-    $queue_details = get_queued_video(true, $fileName);
-}
-
-$log->writeLine("Conversion queue","Getting the file information from the queue for conversion", true);
+$log->writeLine('Conversion queue','Getting the file information from the queue for conversion', true);
 
 if(!$file_directory_){
-    $fileDir = $queue_details["date_added"];
+    $fileDir = $queue_details['date_added'];
 } else {
     $fileDir = $file_directory;
 }
-$dateAdded = explode(" ", $fileDir);
+$dateAdded = explode(' ', $fileDir);
 $dateAdded = array_shift($dateAdded);
-$file_directory = implode("/", explode("-", $dateAdded));
+$file_directory = implode(DIRECTORY_SEPARATOR, explode('-', $dateAdded));
 
 /*
     Getting the file information from the queue for conversion
@@ -74,24 +64,19 @@ $ext 	  = $queue_details['cqueue_ext'];
 $outputFileName = $tmp_file;
 if(!empty($tmp_file))
 {
-    $temp_file = TEMP_DIR.'/'.$tmp_file.'.'.$tmp_ext;
-    $orig_file = CON_DIR.'/'.$tmp_file.'.'.$ext;
+    $temp_file = TEMP_DIR.DIRECTORY_SEPARATOR.$tmp_file.'.'.$tmp_ext;
+    $orig_file = CON_DIR.DIRECTORY_SEPARATOR.$tmp_file.'.'.$ext;
 
     /*
         Delete the uploaded file from temp directory
         and move it into the conversion queue directory for conversion
     */
-
-    if(isset($_GET['test'])){
-        $renamed = copy( $temp_file, $orig_file );
-    } else {
-        $renamed = rename( $temp_file, $orig_file );
-    }
+    $renamed = rename( $temp_file, $orig_file );
 
     if ($renamed){
-        $log->writeLine("Conversion queue","File has been moved from temporary dir to Conversion Queue", true);
+        $log->writeLine('Conversion queue','File has been moved from temporary dir to Conversion Queue', true);
     } else {
-        $log->writeLine("Conversion queue","Something went wrong in moving the file to Conversion Queue", true);
+        $log->writeLine('Conversion queue','Something went wrong in moving the file to Conversion Queue', true);
     }
 
     /*
@@ -127,18 +112,19 @@ if(!empty($tmp_file))
         'force_8bits' 	     => config('force_8bits')
     );
 
+    $configLog = '';
     foreach ($configs as $key => $value){
         $configLog .= "<strong>{$key}</strong> : {$value}\n";
     }
 
-    $log->writeLine("Parsing FFmpeg Configurations",$configLog, true);
+    $log->writeLine('Parsing FFmpeg Configurations',$configLog, true);
 
     require_once(BASEDIR.'/includes/classes/conversion/ffmpeg.class.php');
 
     $ffmpeg = new FFMpeg($configs, $log);
     $ffmpeg->ffmpeg($orig_file);
     $ffmpeg->file_name = $tmp_file;
-    $ffmpeg->raw_path = VIDEOS_DIR.'/'.$file_directory.$_filename;
+    $ffmpeg->raw_path = VIDEOS_DIR.DIRECTORY_SEPARATOR.$file_directory.$_filename;
 
     if( $audio_track && is_numeric($audio_track) ){
         $ffmpeg->audio_track = $audio_track;
@@ -180,7 +166,5 @@ if(!empty($tmp_file))
         exec(php_path()." -q ".BASEDIR."/actions/verify_converted_videos.php $orig_file &> /dev/null &");
     }
 
-    if(!isset($_GET['test'])){
-        unlink($orig_file);
-    }
+    unlink($orig_file);
 }
