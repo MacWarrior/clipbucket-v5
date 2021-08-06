@@ -3,7 +3,7 @@
 define('FFMPEG_BINARY', get_binaries('ffmpeg'));
 define('MEDIAINFO_BINARY', get_binaries('media_info'));
 define('FFPROBE', get_binaries('ffprobe_path'));
-define("thumbs_number",config('num_thumbs'));
+define('thumbs_number',config('num_thumbs'));
 define('PROCESSESS_AT_ONCE',config('max_conversion'));
 
 class FFMpeg
@@ -22,7 +22,7 @@ class FFMpeg
 	public $audio_track = false;
 	public $file_directory = '';
 	public $thumbs_res_settings = array(
-        "original" => "original",
+        'original' => 'original',
         '105' => array('168','105'),
         '260' => array('416','260'),
         '320' => array('632','395'),
@@ -109,9 +109,7 @@ class FFMpeg
 		$info['path']           = $file_path;
 
 		$cmd = FFPROBE. " -v quiet -print_format json -show_format -show_streams '".$file_path."' ";
-		logData($cmd,'command');
 		$output = shell_output($cmd);
-		logData($cmd,'output');
 		$output = preg_replace('/([a-zA-Z 0-9\r\n]+){/', '{', $output, 1);
 
 		$data = json_decode($output,true);
@@ -157,8 +155,7 @@ class FFMpeg
 
 		if(!$info['duration'] || 1)
 		{
-			$CMD = MEDIAINFO_BINARY . "   '--Inform=General;%Duration%'  '". $file_path."' 2>&1 ";
-			logData($CMD,'command');
+			$CMD = MEDIAINFO_BINARY . " '--Inform=General;%Duration%'  '". $file_path."' 2>&1 ";
 			$info['duration'] = round(shell_output( $CMD )/1000,2);
 		}
 
@@ -168,7 +165,6 @@ class FFMpeg
 		$int_2_video_rate = (int)$video_rate[1];
 
 		$CMD = MEDIAINFO_BINARY . " '--Inform=Video;' ". $file_path;
-		logData($CMD,'command');
 
 		$results = shell_output($CMD);
 		$needle_start = 'Original height';
@@ -200,8 +196,6 @@ class FFMpeg
 		if($int_2_video_rate!=0) {
 			$info['video_rate'] = $int_1_video_rate/$int_2_video_rate;
 		}
-
-		logData(json_encode($info),$this->file_name.'_configs');
 		return $info;
 	}
 
@@ -214,7 +208,7 @@ class FFMpeg
 				$this->setOptions($options);
 			}
 			$this->inputFile = $inputFile;
-			$this->outputFile = $this->videosDirPath . '/'. $this->options['outputPath'] . $this->getInputFileName($inputFile);
+			$this->outputFile = $this->videosDirPath.DIRECTORY_SEPARATOR.$this->options['outputPath'].$this->getInputFileName($inputFile);
 			$videoDetails = $this->getVideoDetails($inputFile);
 			$this->videoDetails = $videoDetails;
 			$this->output = new stdClass();
@@ -315,7 +309,7 @@ class FFMpeg
 				$TemplogData .= "\r\n Converting Video SD File \r\n";
 				$this->sdFile = "{$this->outputFile}-sd.{$this->options['format']}";
 				$fullCommand = $this->ffMpegPath . " -i {$this->inputFile}" . $this->generateCommand($videoDetails, false) . " {$this->sdFile}";
-				logData(json_encode($fullCommand),'sd_videos');
+
 				$TemplogData .= "\r\n Command : ".$fullCommand." \r\n";
 
 				$conversionOutput = $this->executeCommand($fullCommand);
@@ -346,7 +340,7 @@ class FFMpeg
 		{
 			$path = explode('/', $filePath);
 			$name = array_pop($path);
-			$name = substr($name, 0, strrpos($name, "."));
+			$name = substr($name, 0, strrpos($name, '.'));
 			return $name;
 		}
 		return false;
@@ -371,13 +365,13 @@ class FFMpeg
 	{
 		if($videoDetails)
 		{
-			$result = shell_output("ffmpeg -version");
+			$result = shell_output('ffmpeg -version');
 			preg_match("/(?:ffmpeg\\s)(?:version\\s)?(\\d\\.\\d\\.(?:\\d|[\\w]+))/i", strtolower($result), $matches);
 			if(count($matches) > 0) {
 				$version = array_pop($matches);
 			}
 
-			$commandSwitches = "";
+			$commandSwitches = '';
 			if(isset($this->options['video_codec'])){
 				$commandSwitches .= ' -vcodec ' .$this->options['video_codec'];
 			}
@@ -412,7 +406,7 @@ class FFMpeg
 			}
 			$size = "{$width_tmp}x{$height_tmp}";
 
-			if ($version == "0.9") {
+			if ($version == '0.9') {
 				$vpre = $isHd ? 'hq' : 'normal';
 				$commandSwitches .= " -s {$size} -vpre {$vpre}";
 			} else {
@@ -430,7 +424,7 @@ class FFMpeg
 				if($isHd){
 					$videoBitrate = (int)$this->options['video_bitrate_hd'];
 				}
-				$commandSwitches .= " -vb ".$videoBitrate;
+				$commandSwitches .= ' -vb '.$videoBitrate;
 			}
 			if(isset($this->options['audio_bitrate'])){
 				$commandSwitches .= ' -ab ' .$this->options['audio_bitrate'];
@@ -551,7 +545,7 @@ class FFMpeg
 	 *
 	 * @param $resolutions
 	 *
-	 * @return bool
+	 * @return bool|array
 	 */
 	function reindex_required_resolutions($resolutions)
 	{
@@ -561,8 +555,6 @@ class FFMpeg
 		$valid_dimensions = array(240,360,480,720,1080);
 		$input_video_height = $this->getClosest($original_video_height, $valid_dimensions);
 
-		logData('input : video : '.$input_video_height,'checkpoints');
-		logData($this->options,'checkpoints');
 		//Setting condition to place resolution to first near to input video
 		if ($this->options['gen_'.$input_video_height]  == 'yes'){
 			$final_res[$input_video_height] = $resolutions[$input_video_height];
@@ -574,8 +566,6 @@ class FFMpeg
 				$final_res[$video_height] = $value;	
 			}
 		}
-		
-		logData('Final Res : '.$final_res,'checkpoints');
 
 		$revised_resolutions = $final_res;
 		if ( $revised_resolutions ){
@@ -584,8 +574,8 @@ class FFMpeg
 		return false;
 	}
 
-	function isLocked($num=1)
-	{
+	function isLocked($num=1): bool
+    {
 		for($i=0;$i<$num;$i++)
 		{
 			$conv_file = TEMP_DIR.'/conv_lock'.$i.'.loc';
@@ -606,7 +596,6 @@ class FFMpeg
 		$conv_file = TEMP_DIR.'/conv_lock.loc';
 
 		//We will now add a loop that will check weather
-		logData('Checking conversion locks','checkpoints');
 		while( true )
 		{
 			$use_crons = config('use_crons');
@@ -631,10 +620,10 @@ class FFMpeg
 				if( $this->input_details['duration'] > $max_duration )
 				{
 					$max_duration_seconds = $max_duration / 60; 
-					$log = "Video duration was ".$this->input_details['duration']." minutes and Max video duration is {$max_duration_seconds} minutes, Therefore Video cancelled\n";
+					$log = 'Video duration was '.$this->input_details['duration']." minutes and Max video duration is {$max_duration_seconds} minutes, Therefore Video cancelled\n";
 					$log .= "Conversion_status : failed\n";
 					$log .= "Failed Reason : Max Duration Configurations\n";
-					$this->log->writeLine("Max Duration configs", $log, true);
+					$this->log->writeLine('Max Duration configs', $log, true);
 					$this->failed_reason = 'max_duration';
 	
 					break;
@@ -646,8 +635,6 @@ class FFMpeg
 					$res = $this->options['res43'];
                 }
 
-				logData('Video is about to convert','checkpoints');
-				
 				$nr = $this->options['normal_res'];
 				 /*Added by Hassan Baryar bug#268 **/
 				if($nr=='320'){
@@ -659,7 +646,6 @@ class FFMpeg
 				$log = '';
 				try {
 					$thumbs_settings = $this->thumbs_res_settings;
-					logData($thumbs_settings,'checkpoints');
 					foreach( $thumbs_settings as $key => $thumbs_size )
 					{
 						$height_setting = $thumbs_size[1];
@@ -725,7 +711,6 @@ class FFMpeg
 								$more_res['video_width']  = $video_width;
 								$more_res['video_height'] = $video_height;
 								$more_res['name']		  = $video_height;
-								logData($more_res['video_height'], 'reindex');
 								$this->convert(NULL, false, $more_res);
 							}
 						}
@@ -754,10 +739,11 @@ class FFMpeg
 				$log .= "\r\n\r\nTime Took : ";
 				$log .= $this->total_time.' seconds'."\r\n\r\n";
 
-				if(file_exists($this->output_file) && filesize($this->output_file) > 0)
-					$log .= 'conversion_status : completed ';
-				else
-					$log .= 'conversion_status : failed ';
+				if(file_exists($this->output_file) && filesize($this->output_file) > 0) {
+                    $log .= 'conversion_status : completed ';
+                } else {
+                    $log .= 'conversion_status : failed ';
+                }
 				
 				$this->log->writeLine('Conversion Completed', $log, true );
 				break;
@@ -765,56 +751,6 @@ class FFMpeg
 
 			// Prevent video_convert action to use 100% cpu while waiting for queued videos to end conversion
 			sleep(5);
-		}
-	}
-	
-	public function generate_thumbs($input_file,$duration, $dim='120x90', $num=3, $prefix=NULL, $rand=NULL, $gen_thumb=FALSE, $output_file_path=false, $specific_dura=false)
-	{
-		if($specific_dura)
-		{
-			$durations_format = gmdate("H:i:s", $duration);
-			$command = $this->ffmpeg." -i $input_file -ss ".$durations_format." -r 1 $dim -y -f image2 -vframes 1 $output_file_path ";
-			shell_output($command);
-		} else {
-			$tmpDir = TEMP_DIR.'/'.getName($input_file);
-			if(!file_exists($tmpDir))
-				mkdir($tmpDir,0777,true);
-			$dimension = '';
-
-			$duration = (int)$duration + 7;
-			$half_vid_duration =(int) ($duration/2);
-			$one_third_duration =(int) ($duration/3);
-			$one_forth_duration =(int) ($duration/4);
-			$durations = array($half_vid_duration,$one_third_duration,$one_forth_duration);
-			logData('thumbs_command=> '.json_encode($durations),'thumbs');
-			foreach ($durations as $key => $duration) 
-			{
-				$key1 = $key+1;
-				$this->log .= "\r\n=====THUMBS LOG========";
-
-				$file_name = $this->file_name."-{$prefix}{$key1}.jpg";
-			
-				$file_path = THUMBS_DIR.'/'.$this->video_folder.$file_name;
-
-				$this->log .= "\r\n";
-
-				$durations_format = gmdate('H:i:s', $duration);
-
-				logData('thumbs_command=> '.$duration."\n".$durations_format,'thumbs');
-
-				$this->log .= $command = $this->ffmpeg."   -i $input_file  -ss ".$durations_format."   -r 1 $dimension -y -f image2 -vframes 1 $file_path ";
-
-				logData('thumbs_command=> '.$command,'thumbs');
-				$this->exec($command);
-
-				//checking if file exists in temp dir
-				if(file_exists($tmpDir.'/00000001.jpg'))
-				{
-					rename($tmpDir.'/00000001.jpg',THUMBS_DIR.'/'.$this->video_folder.$file_name);
-				}
-				if(file_exists($tmpDir))
-					rmdir($tmpDir);
-			}
 		}
 	}
 
@@ -996,7 +932,7 @@ class FFMpeg
 	{
 		global $width, $height;
 
-		$TemplogData = "";
+		$TemplogData = '';
 		
 		$ratio = $this->ratio;
 		if($file){
@@ -1007,7 +943,6 @@ class FFMpeg
 		$i = $this->input_details;
 
 		$opt_av = '';
-		logData($p,'checkpoints');
 		# Prepare the ffmpeg command to execute
 		if( isset($p['extra_options']) ){
 			$opt_av .= " -y {$p['extra_options']}";
@@ -1203,23 +1138,19 @@ class FFMpeg
 					$more_res['name'] == '720' && $p['gen_720'] == 'yes' ||
 					$more_res['name'] == '1080' && $p['gen_1080'] == 'yes')
 				{
-					$command  = $this->ffmpeg.' -i '.$this->input_file." $opt_av ".$this->raw_path."-".$more_res['name'].'.mp4 2> '.TEMP_DIR.'/'.$tmp_file;
+					$command  = $this->ffmpeg.' -i '.$this->input_file." $opt_av ".$this->raw_path.'-'.$more_res['name'].'.mp4 2> '.TEMP_DIR.DIRECTORY_SEPARATOR.$tmp_file;
 				} else {
 					$command = '';
-                    if( DEVELOPMENT_MODE ) {
-                        $resolution_error_log = array( 'err' => 'empty command' );
-                        logData( json_encode( $resolution_error_log ), 'resolution command' );
-                    }
 				}
                 $output = $this->exec($command);
 			}
 
-			if(file_exists(TEMP_DIR.'/'.$tmp_file)){
-				$output = $output ? $output : join("", file(TEMP_DIR.'/'.$tmp_file));
-				unlink(TEMP_DIR.'/'.$tmp_file);
+			if(file_exists(TEMP_DIR.DIRECTORY_SEPARATOR.$tmp_file)){
+				$output = $output ? $output : join('', file(TEMP_DIR.DIRECTORY_SEPARATOR.$tmp_file));
+				unlink(TEMP_DIR.DIRECTORY_SEPARATOR.$tmp_file);
 			}
 
-			if(file_exists($this->raw_path."-".$more_res['name'].'.mp4') && filesize($this->raw_path."-".$more_res['name'].'.mp4')>0)
+			if(file_exists($this->raw_path.'-'.$more_res['name'].'.mp4') && filesize($this->raw_path.'-'.$more_res['name'].'.mp4')>0)
 			{
 				$this->has_resolutions = 'yes';
 				$this->video_files[] = $more_res['name'];
@@ -1242,7 +1173,7 @@ class FFMpeg
 			}
 		}
 
-		$TemplogData .="\r\n\r\nEnd resolutions @ ".date("Y-m-d H:i:s")."\r\n\r\n";
+		$TemplogData .="\r\n\r\nEnd resolutions @ ".date('Y-m-d H:i:s')."\r\n\r\n";
 		$this->log->writeLine('Conversion Ouput', $TemplogData, true);
 
 		$this->output_details = $this->get_file_info($this->output_file);
@@ -1265,7 +1196,7 @@ class FFMpeg
 		if(file_exists($this->input_file)){
 			$this->input_file = $this->input_file;
         } else {
-			$this->input_file = TEMP_DIR.'/'.$this->input_file;
+			$this->input_file = TEMP_DIR.DIRECTORY_SEPARATOR.$this->input_file;
         }
 
 		//Checking File Exists
@@ -1329,7 +1260,7 @@ class FFMpeg
 		return false;
 	}
 
-	private function parseVideoInfo($output = "",$size=0)
+	private function parseVideoInfo($output = '',$size=0)
 	{
 		# search the output for specific patterns and extract info
 		# check final encoding message
@@ -1517,7 +1448,7 @@ class FFMpeg
 				$file_name = $filename."-{$size_tag}1.jpg";	
 			}
 			
-			$file_path = THUMBS_DIR.'/' . $thumbs_outputPath . $file_name;
+			$file_path = THUMBS_DIR.DIRECTORY_SEPARATOR.$thumbs_outputPath.$file_name;
 			$command = $this->ffMpegPath." -i $input_file -an $dimension -y -f image2 -vframes $num $file_path ";
 			$output = $this->executeCommand($command);
 			if (!$regenerateThumbs){

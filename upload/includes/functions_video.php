@@ -1766,37 +1766,8 @@
         if(file_exists($PlogFilePath)) {
             $text = file_get_contents($PlogFilePath);
         }
-		logData($PlogFilePath,'plogs_tester');
         $text .= " \n \n  <br><br> > {$data}";
         file_put_contents($PlogFilePath, $text);
-    }
-
-	/**
-	 * This Function is used to get video file procession log
-	 *
-	 * @param : { Array } { video Details }
-	 *
-	 * @return bool|string : { File }
-	 *
-	 * @since : 9th March, 2016 ClipBucket 2.8.1
-	 * @author : Fahad Abbas
-	 * @email: <fahad.dev@iu.com.pk>
-	 */
-    function get_file_procession_log($vdetails)
-	{
-        $file_dir = $vdetails['file_directory'];
-        $file_name = $vdetails['file_name'];
-        $multiserver_file = $vdetails['file_server_path'];
-        if (empty($multiserver_file)){
-            $plog_file = LOGS_DIR.'/'.$file_dir.'/'.$file_name.'.plog';
-        } else {
-            $plog_file = $multiserver_file.'/logs/'.$file_dir.'/'.$file_name.'.plog';
-        }
-
-        if (file_exists($plog_file)){
-            return file_get_contents($plog_file);
-        }
-		return false;
     }
 
 	/**

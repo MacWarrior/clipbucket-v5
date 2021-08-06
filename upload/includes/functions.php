@@ -4203,59 +4203,14 @@
      */
     function dump($data = [], $die = false)
 	{
-    	echo "<pre>";
+    	echo '<pre>';
     	var_dump($data);
-    	echo "</pre>";
+    	echo '</pre>';
 
     	if( $die ){
     	    die();
         }
     }
-
-	/**
-	 * Creates log files for video conversion
-	 *
-	 * @param      $data
-	 * @param null $file
-	 * @param bool $path
-	 * @param bool $force
-	 *
-	 * @internal param $ : { string } { $data } { data to be written in file }
-	 * @internal param $ : { string } { $file } { name of file to write data for }
-	 * @internal param $ : { string } { $path } { false by default, path to file }
-	 * @internal param $ : { boolean } { $force } { false by default, forces file creation }
-	 */
-	function logData($data,$file=NULL,$path=false,$force=false)
-	{
-		if($force!=false&&!empty($path))
-		{
-			$file =$path;
-			if(is_array($data)){
-			    $data = json_encode($data);
-            }
-			if(file_exists($file)){
-				$text = file_get_contents($file);
-            }
-			$text .= " \n {$data}";
-			file_put_contents($file, $text);
-		} else {
-			if(!empty($file)) {
-				$logFilePath = BASEDIR. "/files/".$file.".txt";
-			} else {
-				$logFilePath = BASEDIR. "/files/ffmpegLog.txt";
-			}
-			if(is_array($data)){
-			    $data = json_encode($data);
-            }
-			if(file_exists($logFilePath)) {
-				$text = file_get_contents($logFilePath);
-			}
-			$text .= " \n \n  {$data}";
-			if( in_dev() || $force ) {
-				file_put_contents($logFilePath, $text);
-			}
-		}
-	}
 
     /**
     * Displays a code error in developer friendly way [ used with PHP exceptions ]
@@ -4281,7 +4236,7 @@
 	 * @return bool|mixed|string : { string / boolean } { page name if found, else false }
 	 * @internal param $ { string } { $name } { name of page to check against } { $name } { name of page to check against }
 	 */
-	function this_page($name="")
+	function this_page($name='')
 	{
 	    if(defined('THIS_PAGE')) {
 	        $page = THIS_PAGE;
@@ -4304,7 +4259,7 @@
 	 * @return bool|mixed|string : { string / boolean } { page name if found, else false }
 	 * @internal param $ { string } { $name } { name of page to check against } { $name } { name of page to check against }
 	 */
-	function parent_page($name="")
+	function parent_page($name='')
 	{
 	    if(defined('PARENT_PAGE'))
 	    {
@@ -4327,8 +4282,8 @@
 	 * @return array : { array } { $array } { an array with all possible sort sorts }
 	 * @internal param $ : { none }
 	 */
-	function sorting_links()
-	{
+	function sorting_links(): array
+    {
 		if(!isset($_GET['sort'])){
 			$_GET['sort'] = 'most_recent';
         }
@@ -4352,8 +4307,8 @@
 	 * @return array : { array } { $array } { an array with all possible time sorts }
 	 * @internal param $ : { none }
 	 */
-	function time_links()
-	{
+	function time_links(): array
+    {
 		return array(
 		    'all_time' 	 => lang('alltime'),
             'today'		 => lang('today'),
@@ -4365,26 +4320,6 @@
             'this_year'	 => lang('thisyear'),
             'last_year'	 => lang('lastyear')
 		 );
-	}
-
-	/**
-	 * Fetch videos from video collections
-	 *
-	 * @param      $id
-	 * @param      $order
-	 * @param      $limit
-	 * @param bool $count_only
-	 *
-	 * @return array { array } { $items } { an array with videos data }
-	 * @internal param $ : { integer } { $id } { id of collection from which to fetch videos }
-	 * @internal param $ : { string } { $order } { sorting of videos }
-	 * @internal param $ : { integer } { $limit } { number of videos to fetch }
-	 * @internal param $ : { boolean } { $count_only } { false by default, if true, returns videos count only }
-	 */
-	function get_videos_of_collection($id,$order,$limit,$count_only=false)
-	{
-		global $cbvideo;
-		return $cbvideo->collection->get_collection_items_with_details($id,$order,$limit,$count_only);
 	}
 
 	/**
@@ -4468,28 +4403,6 @@
 	}
 
 	/**
-	 * Display an image or build image tag
-	 *
-	 * @param : { string } { $src } { link to image file }
-	 * @param bool $return
-	 *
-	 * @return string
-	 * @since : 2nd March, 2016 ClipBucket 2.8.1
-	 * @author : Saqib Razzaq
-	 */
-    function view_image($src, $return = false)
-	{
-		if (!empty($src))
-		{
-			if (!$return) {
-				echo '<img src='.$src.' >';
-			} else {
-				return '<img src='.$src.' >';
-			}
-		}
-	}
-
-	/**
 	 * Get part of a string between two characters
 	 *
 	 * @param $str
@@ -4504,8 +4417,8 @@
 	 * @since : 3rd March, 2016 ClipBucket 2.8.1
 	 * @author : Saqib Razzaq
 	 */
-	function getStringBetween($str,$from,$to)
-	{
+	function getStringBetween($str,$from,$to): string
+    {
 	    $sub = substr($str, strpos($str,$from)+strlen($from),strlen($str));
 	    return substr($sub,0,strpos($sub,$to));
 	}
@@ -4680,10 +4593,7 @@
 	                    break;
 
 	                case "state":
-	                    $output = @$ipdat->geoplugin_regionName;
-	                    break;
-
-	                case "region":
+                    case "region":
 	                    $output = @$ipdat->geoplugin_regionName;
 	                    break;
 
@@ -4871,26 +4781,26 @@
 		{
 			switch($sort)
 			{
-				case "most_recent":
+				case 'most_recent':
 				default:
-					$vid_cond['order'] = " date_added DESC ";
+					$vid_cond['order'] = ' date_added DESC ';
 					break;
 
-				case "most_viewed":
-					$vid_cond['order'] = "views DESC ";
+				case 'most_viewed':
+					$vid_cond['order'] = 'views DESC ';
 					$vid_cond['date_span_column'] = 'last_viewed';
 					break;
 
-				case "featured":
-					$vid_cond['featured'] = "yes";
+				case 'featured':
+					$vid_cond['featured'] = 'yes';
 					break;
 
-				case "top_rated":
-					$vid_cond['order'] = " rating DESC, rated_by DESC";
+				case 'top_rated':
+					$vid_cond['order'] = ' rating DESC, rated_by DESC';
 					break;
 
-				case "most_commented":
-					$vid_cond['order'] = " comments_count DESC";
+				case 'most_commented':
+					$vid_cond['order'] = ' comments_count DESC';
 					break;
 			}
 			return $vid_cond;
@@ -4903,25 +4813,26 @@
 		{
 			switch($sort)
 			{
-				case "most_recent":
+				case 'most_recent':
 				default:
-					$vid_cond['order'] = " date_added DESC ";
+					$vid_cond['order'] = ' date_added DESC ';
 					break;
 
-				case "most_viewed":
-					$vid_cond['order'] = " views DESC ";
+				case 'most_viewed':
+					$vid_cond['order'] = ' views DESC ';
 					$vid_cond['date_span_column'] = 'last_viewed';
 					break;
-				case "featured":
-					$vid_cond['featured'] = "yes";
+
+				case 'featured':
+					$vid_cond['featured'] = 'yes';
 					break;
 
-				case "top_rated":
-					$vid_cond['order'] = " rating DESC";
+				case 'top_rated':
+					$vid_cond['order'] = ' rating DESC';
 					break;
 
-				case "most_commented":
-					$vid_cond['order'] = " comments_count DESC";
+				case 'most_commented':
+					$vid_cond['order'] = ' comments_count DESC';
 					break;
 			}
 			return $vid_cond;
@@ -4955,15 +4866,15 @@
     function upload_image($type = 'logo')
     {
         if( !in_array($type, array('logo','favicon')) ){
-            e(lang("Wrong logo type !"));
+            e(lang('Wrong logo type !'));
             return;
         }
         global $Cbucket;
 
-        $filename = $_FILES["fileToUpload"]["name"];
+        $filename = $_FILES['fileToUpload']['name'];
         $file_ext = pathinfo($filename, PATHINFO_EXTENSION);
         $file_basename = pathinfo($filename, PATHINFO_FILENAME);
-        $filesize = $_FILES["fileToUpload"]["size"];
+        $filesize = $_FILES['fileToUpload']['size'];
         $allowed_file_types = explode(',', $Cbucket->configs['allowed_photo_types']);
 
         if (in_array($file_ext,$allowed_file_types) && ($filesize < 4000000))
@@ -4971,21 +4882,21 @@
             // Rename file
             $logo_path = LOGOS_DIR.DIRECTORY_SEPARATOR.$file_basename.'-'.$type.'.'.$file_ext;
             unlink($logo_path);
-            move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $logo_path);
+            move_uploaded_file($_FILES['fileToUpload']['tmp_name'], $logo_path);
 
             $myquery = new myquery();
             $myquery->Set_Website_Details($type.'_name',$file_basename.'-'.$type.'.'.$file_ext);
 
-            e(lang("File uploaded successfully."),"m");
+            e(lang('File uploaded successfully.'),'m');
         } elseif (empty($filename)) {
             // file selection error
-            e(lang("Please select a file to upload."));
+            e(lang('Please select a file to upload.'));
         } elseif ($filesize > 4000000) {
             // file size error
-            e(lang("The file you are trying to upload is too large."),"e");
+            e(lang('The file you are trying to upload is too large.'),"e");
         } else {
-            e(lang("Only these file types are allowed for upload: ".implode(', ',$allowed_file_types)),"e");
-            unlink($_FILES["fileToUpload"]["tmp_name"]);
+            e(lang('Only these file types are allowed for upload: '.implode(', ',$allowed_file_types)),"e");
+            unlink($_FILES['fileToUpload']['tmp_name']);
         }
     }
 
@@ -5015,58 +4926,6 @@
 	    return $str;
 	}
 
-	/**
-	 * Check if a plugin is installed, active and has main file
-	 *
-	 * @param : { string } { $mainFile } { File to run check against }
-	 *
-	 * @return bool : { boolean } { true or false matching pattern }
-	 * @author : Saqib Razzaq
-	 * @since : 4th November, 2016
-	 *
-	 */
-    function gotPlugin($mainFile)
-	{
-    	global $db;
-    	$installCheck = $db->select(tbl('plugins'),'plugin_folder,plugin_active',"plugin_file = '$mainFile'");
-    	$pluginFolder = $installCheck[0]['plugin_folder'];
-    	$pluginStatus = $installCheck[0]['plugin_active'];
-
-    	if (!empty($pluginFolder) && $pluginStatus != 'no') {
-    		return file_exists(PLUG_DIR.'/'.$pluginFolder.'/'.$mainFile);
-    	}
-    }
-
-    /**
-	* Check if a url exists using curl
-	* @param : { string } { $mainFile } { File to run check against }
-	* @author : Fahad Abbas
-	* @since : 14th November, 2016
-	*
-	* @return : { boolean } { true or false matching pattern }
-    */
-
-    function is_url_exist($url)
-	{
-    	try {
-    		$ch = curl_init($url);    
-		    curl_setopt($ch, CURLOPT_NOBODY, true);
-		    curl_exec($ch);
-		    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-		    if($code == 200) {
-		       $status = true;
-		    } else {
-		      $status = false;
-		    }
-
-		    curl_close($ch);
-		   	return $status;
-    	} catch(Exception $e) {
-    		echo 'Caught exception: ',  $e->getMessage(), "\n";
-    	}
-	}
-
 	function cb_curl($url)
 	{
 		$ch = curl_init();
@@ -5077,14 +4936,6 @@
 		$data = curl_exec($ch);
 		curl_close($ch);
 		return $data;
-	}
-
-	function execution_time($display=true)
-	{
-		if( $display )
-			dump(microtime(true) - $_SERVER["REQUEST_TIME_FLOAT"]);
-		else
-			return (microtime(true) - $_SERVER["REQUEST_TIME_FLOAT"]);
 	}
 
 	/**
@@ -5142,7 +4993,6 @@
 	    }
 	    return false;
 	}
-	
 
 	/**
 	* [generic_curl use to send curl with post method]
@@ -5355,7 +5205,7 @@
         }
     }
 
-    function get_proxy_settings(string $format = '')
+    function get_proxy_settings(string $format = ''): array
     {
 	    switch($format){
             default:

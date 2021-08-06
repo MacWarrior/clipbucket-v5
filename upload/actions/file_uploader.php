@@ -87,7 +87,6 @@ switch($mode)
             $targetFileName = $file_name.'.'.getExt($_FILES['Filedata']['name']);
             $targetFile = TEMP_DIR.'/'.$targetFileName;
             $ta = VIDEOS_DIR.'/'.$file_directory;
-            logData(VIDEOS_DIR.'/'.$file_directory.$file_name,'ta');
             $orginal_file = VIDEOS_DIR.'/'.$file_directory.'/'.$file_name.'.'.getExt($_FILES['Filedata']['name']);
 
             move_uploaded_file($tempFile,VIDEOS_DIR.'/'.$file_directory.'/'.$file_name.'.'.getExt( $_FILES['Filedata']['name']));
@@ -114,8 +113,6 @@ switch($mode)
                 $log->writeLine('System hardware Information', 'Unable log System hardware information, please install "lshw" ', true);
             }
         }
-
-        logData('Checking Server configurations to start for filename : '.$file_name.'','checkpoints');
 
         $max_file_size_in_bytes = config('max_upload_size')*1024*1024;
 
