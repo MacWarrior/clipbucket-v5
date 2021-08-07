@@ -5205,12 +5205,15 @@
         }
     }
 
-    function get_proxy_settings(string $format = ''): array
+    /**
+     * @return array|null
+     */
+    function get_proxy_settings(string $format = '')
     {
 	    switch($format){
             default:
             case 'file_get_contents':
-                $context = array();
+                $context = null;
                 if( config('proxy_enable') == 'yes' ){
                     $context = [
                         'http' => [
