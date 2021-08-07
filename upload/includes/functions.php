@@ -5210,7 +5210,7 @@
 	    switch($format){
             default:
             case 'file_get_contents':
-                $context = null;
+                $context = array();
                 if( config('proxy_enable') == 'yes' ){
                     $context = [
                         'http' => [
