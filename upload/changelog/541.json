@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"59",
+  "revision":"60",
   "status":"dev",
   "detail":[
     {
@@ -24,6 +24,7 @@
         ,"Update JQuery to version 3.6.0"
         ,"Update PHP required version to 7.0"
         ,"Remove unused Recaptcha lib"
+        ,"Add gitignore for photos"
       ]
     }
     ,{

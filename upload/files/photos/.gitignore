@@ -1,0 +1,5 @@
+/*
+# But not these files...
+!.gitignore
+!no-photo_m.png
+!no-photo_t.png
