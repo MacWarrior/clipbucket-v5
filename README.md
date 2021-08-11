@@ -33,6 +33,9 @@ Required : MySQL 5.6+ / MariaDB 10.3+ ; PHP 7.0+ (+ modules : mysqli, curl, xml,
 Optionnal : Git<br/>
 <i>Only stable versions have been tested, mainly on Debian</i>
 
+# Updating from ClipBucket 4.2
+Follow our [quick steps tutorial](https://github.com/MacWarrior/clipbucket-v5/wiki/Upgrade-from-Clipbucket-4.2)
+
 # Issues
 Still reading ? Good !<br/>
 Now your <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> is installed <i>(or maybe not yet)</i> 
