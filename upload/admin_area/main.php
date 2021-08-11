@@ -30,7 +30,6 @@ if(isset($_POST['update']))
         ,'collectionsSection'
         ,'channelsSection'
         ,'enable_advertisement'
-        ,'allow_registeration'
         ,'use_cached_pagin'
         ,'gravatars'
         ,'picture_url'
@@ -65,6 +64,7 @@ if(isset($_POST['update']))
         'closed'
         ,'enable_update_checker'
         ,'allow_language_change'
+        ,'allow_registeration'
         ,'allow_template_change'
         ,'pick_geo_country'
         ,'email_verification'
@@ -365,11 +365,15 @@ if(isset($_POST['update']))
                 $value = 'no';
             }
         }
+        if( $field == 'allow_language_change' ){
+            error_log($value);
+        }
         if( in_array($field, $config_booleans_to_refactor) ){
             if( $value != '1' ){
                 $value = '0';
             }
         }
+
         $myquery->Set_Website_Details($field,$value);
     }
     e("Website settings have been updated",'m');

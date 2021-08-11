@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"62",
+  "revision":"63",
   "status":"dev",
   "detail":[
     {
@@ -49,6 +49,7 @@
         ,"Fix plugin installation"
         ,"Include OpenSans font in sources"
         ,"Update video conversion logs"
+        ,"Fix configs save"
       ]
     }
   ,{
