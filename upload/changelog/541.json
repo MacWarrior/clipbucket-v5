@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"64",
+  "revision":"65",
   "status":"dev",
   "detail":[
     {
@@ -78,6 +78,7 @@
         ,"Remove residual files in /upload/conversion_queue/"
         ,"Remove log file in /upload/temp/"
         ,"Update apache vhosts in installation scripts to support properly SEO URLs <i>#160</i>"
+        ,"Add missing PHP module"
       ]
     }
   ,{

@@ -10,7 +10,7 @@ echo -ne " OK"
 
 echo ""
 echo -ne "Installing required elements..."
-apt-get install php7.4 apache2 mariadb-server php-curl ffmpeg php7.4-mysql php7.4-xml php7.4-mbstring sendmail mediainfo --yes > /dev/null 2>&1
+apt-get install php7.4 apache2 mariadb-server php-curl ffmpeg php7.4-mysql php7.4-xml php7.4-mbstring php7.4-gd sendmail mediainfo --yes > /dev/null 2>&1
 service mariadb start > /dev/null
 echo -ne " OK"
 
