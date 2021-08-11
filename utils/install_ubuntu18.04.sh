@@ -49,13 +49,21 @@ echo "- Database password : ${DB_PASS}"
 
 echo ""
 echo -ne "Configuring Apache Vhost..."
+a2enmod rewrite
 cat << 'EOF' > /etc/apache2/sites-available/001-clipbucket.conf
 <VirtualHost *:80>
-        #ServerName clipbucket.local
-        DocumentRoot /var/www/clipbucket/upload/
+    ServerName clipbucket.local
+    DocumentRoot /var/www/clipbucket/upload/
 
-        ErrorLog ${APACHE_LOG_DIR}/error.log
-        CustomLog ${APACHE_LOG_DIR}/access.log combined
+    <Directory /var/www/clipbucket/upload/>
+        Options Indexes FollowSymLinks
+        AllowOverride all
+        Order allow,deny
+        allow from all
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
 EOF
 
