@@ -353,10 +353,6 @@ if(!function_exists('server_thumb'))
                     $src = ( empty( $src ) ) ? get_photo_default_thumb( $size ) : $src;
                     $attrs = array( 'src' => $src );
 
-                    if( phpversion < '5.2.0' ) {
-                        global $json;
-                    }
-
                     if ( $json ) {
                         $image_details = $json->json_decode( $photo['photo_details'],true );
                     } else {

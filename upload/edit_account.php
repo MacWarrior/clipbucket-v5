@@ -1,13 +1,7 @@
 <?php
-/* 
- ***************************************************************
- | Copyright (c) 2007-2010 Clip-Bucket.com. All rights reserved.
- | @ Author	   : ArslanHassan									
- | @ Software  : ClipBucket , © PHPBucket.com					
- ****************************************************************
-*/
-
 define("THIS_PAGE","edit_account");
+
+global $userquery,$Cbucket;
 
 require 'includes/config.inc.php';
 $userquery->logincheck();
@@ -31,6 +25,7 @@ if(isset($_POST['update_avatar_bg']))
 	$array['userid'] = userid();
 	$userquery->update_user_avatar_bg($array);
 }
+
 if(isset($_FILES["coverPhoto"])){
 	if(isset($_FILES["coverPhoto"]) && get_mime_type($_FILES["coverPhoto"]['tmp_name']) == 'image'){
 		$array = $_FILES;
@@ -44,7 +39,7 @@ if(isset($_FILES["coverPhoto"])){
 				"status" => false,
 				"msg" => "Invalid extension provided",
 				"url" => false,
-				);
+            );
 			echo json_encode($response);
 			die();
 	    }
@@ -56,7 +51,7 @@ if(isset($_FILES["coverPhoto"])){
 			"status" => $coverUpload["status"],
 			"msg" => $coverUpload["msg"],
 			"url" => $userquery->getCover(userid()) . "?{$timeStamp}",
-			);
+        );
 		echo json_encode($response);
 		die();
 	} else {
@@ -64,7 +59,7 @@ if(isset($_FILES["coverPhoto"])){
 			"status" => false,
 			"msg" => "Invalid Image provided",
 			"url" => false,
-			);
+        );
 		echo json_encode($response);
 		die();
 	}
@@ -78,7 +73,7 @@ if(isset($_FILES["avatar_file"]) && $_GET['ajax'] == true){
 		"status" => $coverUpload["status"],
 		"msg" => $coverUpload["msg"],
 		"url" => $userquery->getUserThumb(false,false,userid()) . "?{$timeStamp}",
-		);
+    );
 	echo json_encode($response);
 	die();
 }

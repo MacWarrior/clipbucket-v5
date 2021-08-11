@@ -1485,10 +1485,7 @@ class Collections extends CBCategory
 		{
 			global $userquery;
 			$voters = $c['voters'];
-			if(phpversion() < "5.2.0")
-				$voters = $json->json_decode($voters,TRUE);
-			else
-				$voters = json_decode($voters,TRUE);
+			$voters = json_decode($voters,TRUE);
 				
 			if(!empty($voters))	
 			{
@@ -1549,11 +1546,8 @@ class Collections extends CBCategory
 		
 		$new_rate = $c_rating['rating'];
 		$rated_by = $c_rating['rated_by'];
-		
-		if(phpversion < '5.2.0')
-			$voters = $json->json_decode($voters,TRUE);
-		else
-			$voters = json_decode($voters,TRUE);
+
+		$voters = json_decode($voters,TRUE);
 
 		if(!empty($voters))
 			$already_voted = array_key_exists(userid(),$voters);
@@ -1569,10 +1563,7 @@ class Collections extends CBCategory
 		else
 		{
 			$voters[userid()] = array('rate'=>$rating,'time'=>NOW());
-			if(phpversion < '5.2.0')
-				$voters = $json->json_encode($voters);
-			else
-				$voters = json_encode($voters);
+			$voters = json_encode($voters);
 					
 			$t = $c_rating['rated_by'] * $c_rating['rating'];
 			$rated_by = $c_rating['rated_by'] + 1;

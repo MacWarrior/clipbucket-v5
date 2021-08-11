@@ -735,10 +735,6 @@ class CB_Resizer {
                 'mean_removal' => 10,
                 'smooth' => 11
             );
-            if ( phpversion() == '5.3.0' ) {
-                $this->filters[12] = array('IMG_FILTER_PIXELATE',2);
-                $this->filters_alias['pixelate'] = 12;
-            }
             
             return $this->filters;
         }

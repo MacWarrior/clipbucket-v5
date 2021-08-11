@@ -2523,7 +2523,7 @@ class userquery extends CBCategory{
 
 		//Deleting User Bg
 		if($array['delete_bg']=='yes') {
-			$file = USER_BG_DIR.'/'.$array['bg_file_name'];
+			$file = USER_BG_DIR.DIRECTORY_SEPARATOR.$array['bg_file_name'];
 			if(file_exists($file) && $array['bg_file_name'] !=''){
 				unlink($file);
             }
@@ -2540,10 +2540,6 @@ class userquery extends CBCategory{
 			$uquery_field[] = 'background_repeat';
 			$uquery_val[] = $array['background_repeat'];
 		}
-		
-		//Background Attachment
-		$uquery_field[] = 'background_attachement';
-		$uquery_val[] = $array['background_attachement'];
 
 		if(isset($_FILES['background_file']['name'])) {
 			$file = $Upload->upload_user_file('b',$_FILES['background_file'], userid());

@@ -874,9 +874,9 @@ class Upload
 	 * @param        $file
 	 * @param        $uid
 	 *
-	 * @return string
+	 * @return string|bool
 	 */
-	function upload_user_file($type='a',$file,$uid): string
+	function upload_user_file($type='a',$file,$uid)
     {
 		global $userquery,$cbphoto,$imgObj;
 		$av_details = getimagesize($file['tmp_name']);
@@ -914,6 +914,7 @@ class Upload
 		} else {
 			e(lang('user_doesnt_exist'));
         }
+		return false;
 	}
 	
 	

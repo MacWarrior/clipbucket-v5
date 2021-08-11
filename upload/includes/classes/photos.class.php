@@ -1009,14 +1009,8 @@ class CBPhotos
 				}
 
 				if(is_array($data) && !empty($data)) {
-					if(phpversion() < "5.2.0"){
-						$encodedData = stripslashes($json->json_encode($data));
-                    } else {
-						$encodedData = stripslashes(json_encode($data));
-                    }
-						
+				    $encodedData = stripslashes(json_encode($data));
 					$db->update(tbl('photos'),array("photo_details"),array("|no_mc|$encodedData")," photo_id = '".$p['photo_id']."' ");
-
 				}
 			}
 		}
@@ -1892,11 +1886,6 @@ class CBPhotos
                             $src = $this->default_thumb($size);
                         }
 
-                        if(phpversion < '5.2.0'){
-                            global $json;
-                            $js = $json;
-                        }
-
                         if(!empty($js)){
                             $imgDetails = $js->json_decode($photo['photo_details'],true);
                         } else {
@@ -2374,11 +2363,7 @@ class CBPhotos
 		if((!empty($p) && $p['userid'] == userid()) || $show_all === TRUE) {
 			global $userquery;
 			$voters = $p['voters'];
-			if(phpversion() < "5.2.0"){
-				$voters = $json->json_decode($voters,TRUE);
-            } else {
-				$voters = json_decode($voters,TRUE);
-            }
+			$voters = json_decode($voters,TRUE);
 
 			if(!empty($voters)) {
 				if($return_array){
@@ -2447,12 +2432,8 @@ class CBPhotos
 		
 		$new_rate = $c_rating['rating'];
 		$rated_by = $c_rating['rated_by'];
-		
-		if(phpversion < '5.2.0'){
-			$voters = $json->json_decode($voters,TRUE);
-        } else {
-			$voters = json_decode($voters,TRUE);
-        }
+
+		$voters = json_decode($voters,TRUE);
 
 		if(!empty($voters)){
 			$already_voted = array_key_exists(userid(),$voters);
@@ -2468,11 +2449,7 @@ class CBPhotos
 			e(lang("photo_rate_disabled"));
         } else {
 			$voters[userid()] = array('rate'=>$rating,'time'=>NOW());
-			if(phpversion < '5.2.0'){
-				$voters = $json->json_encode($voters);
-            } else {
-				$voters = json_encode($voters);
-            }
+			$voters = json_encode($voters);
 					
 			$t = $c_rating['rated_by'] * $c_rating['rating'];
 			$rated_by = $c_rating['rated_by'] + 1;

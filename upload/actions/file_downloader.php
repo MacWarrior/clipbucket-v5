@@ -222,34 +222,10 @@ if(!is_numeric($curl->file_size) || $curl->file_size == '')
 	exit();
 }
 
-if(phpversion() < '5.3.0')
-{
-	echo "in less than 5.3";
-	//Here we will get file size and write it in a file
-	//called dummy_log
-	$darray = array(
-		'file_size' => $curl->file_size,
-		'file_name' => $file_name.'.'.$ext,
-		'time_started'=>time(),
-		'byte_size' => 0
-	);
-	$do = fopen($dummy_file,'w+');
-	fwrite($do,json_encode($darray));
-	fclose($do);	
-}
-
 //Opening video file
 $temp_fo = fopen($svfile,'w+');
 $curlOpt = "";
 $curl->setopt(CURLOPT_FILE, $temp_fo);
-
-// Set up the callback
-if(phpversion() >= '5.3.0')
-{
-	$curl->setopt(CURLOPT_NOPROGRESS, false);
-	$curl->setopt(CURLOPT_PROGRESSFUNCTION, 'callback');
-}
-
 $curl->exec();
 
 if ($theError = $curl->hasError())

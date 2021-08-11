@@ -6,7 +6,7 @@
 		<section id="content" class="clearfix videos">
 			<div class="clearfix player-holder">
 				{if $video.status=='Successful'}
-					{if config('bits_color_warning') && $video.bits_color && $video.bits_color > 8}
+					{if config('bits_color_warning') == '1' && $video.bits_color && $video.bits_color > 8}
 						<span class="label label-warning" style="font-size:1em;">
 							{lang code="bits_color_compatibility"}
 						</span>

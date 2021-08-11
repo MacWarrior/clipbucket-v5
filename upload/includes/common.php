@@ -189,10 +189,6 @@ $Cbucket->cbinfo = array("version"=>VERSION,"state"=>STATE,"rev"=>REV);
 
 # Holds Advertisment IDS that are being Viewed
 $ads_array = array();
-if(phpversion() < '5.2.0') {
-    require_once($Cbucket->BASEDIR.'/includes/classes/Services_JSON.php');
-    $json = new Services_JSON();
-}
 
 # Website Details
 define('CB_VERSION', $row['version']);
@@ -245,10 +241,9 @@ define('VIDEO_COMMENT',$row['video_comments']);
 define('VIDEO_RATING',$row['video_rating']);
 define('COMMENT_RATING',$row['comment_rating']);
 define('VIDEO_DOWNLOAD',$row['video_download']);
-define('BITS_COLOR_WARNING',$row['bits_color_warning']);
 define('VIDEO_EMBED',$row['video_embed']);
 define('TEMPLATEFOLDER','styles');							//Template Folder Name, usually STYLES
-define('STYLES_DIR',BASEDIR.'/'.TEMPLATEFOLDER);
+define('STYLES_DIR',BASEDIR.DIRECTORY_SEPARATOR.TEMPLATEFOLDER);
 
 # Define Lang Select & Style Select
 
@@ -257,8 +252,8 @@ define('ALLOW_STYLE_SELECT',$row['allow_template_change']);
 define('SUBTITLE',$row['code_dev']);
 //Javascript Directory Name
 define('ADMINDIR','admin_area');
-define('ADMINBASEDIR',BASEDIR.'/admin_area');				//Admin Accessible Folder
-define('ADMIN_BASEURL','/'.ADMINDIR);
+define('ADMINBASEDIR',BASEDIR.DIRECTORY_SEPARATOR.'admin_area');				//Admin Accessible Folder
+define('ADMIN_BASEURL',DIRECTORY_SEPARATOR.ADMINDIR);
 
 # DIRECT PATHS OF VIDEO FILES
 define('FILES_DIR',BASEDIR.'/files');
@@ -271,8 +266,8 @@ define('TEMP_DIR',FILES_DIR.'/temp');
 define('CON_DIR',FILES_DIR.'/conversion_queue');
 define('MASS_UPLOAD_DIR',FILES_DIR.'/mass_uploads');
 define('LOGS_DIR',FILES_DIR.'/logs');
-define( 'IMAGES_DIR', BASEDIR.'/images' );
-define( 'IMAGES_URL', '/images' );
+define('IMAGES_DIR', BASEDIR.'/images' );
+define('IMAGES_URL', '/images' );
 define("USER_THUMBS_DIR",BASEDIR.'/images/avatars');
 define("USER_BG_DIR",BASEDIR.'/images/backgrounds');
 define("ICONS_URL",'/images/icons');
@@ -286,11 +281,11 @@ define('THUMBS_URL',FILES_URL.'/thumbs');
 define('SPRITES_URL',FILES_URL.'/sprites');
 define('ORIGINAL_URL',FILES_URL.'/original');
 define('TEMP_URL',FILES_URL.'/temp');
-define("PLAYER_DIR",BASEDIR.'/player');
-define("PLAYER_URL",'/player');
+define('PLAYER_DIR',BASEDIR.'/player');
+define('PLAYER_URL','/player');
 
-define("USER_THUMBS_URL",'/images/avatars');
-define("USER_BG_URL",'/images/backgrounds');
+define('USER_THUMBS_URL','/images/avatars');
+define('USER_BG_URL','/images/backgrounds');
 
 # Required Settings For Video Conversion
 define('VBRATE', $row['vbrate']);
@@ -421,7 +416,6 @@ Assign('video_comment',$row['video_comments']);
 Assign('video_rating',$row['video_rating']);
 Assign('comment_rating',$row['comment_rating']);
 Assign('video_download',$row['video_download']);
-Assign('bits_color_warning',$row['bits_color_warning']);
 Assign('video_embed',$row['video_embed']);
 assign('icons_url',ICONS_URL);
 define( 'PLAYLIST_COVERS_DIR', IMAGES_DIR.'/playlist_covers' );

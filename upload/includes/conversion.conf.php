@@ -62,7 +62,6 @@ define('VIDEO_COMMENT',$row['video_comments']);
 define('VIDEO_RATING',$row['video_rating']);
 define('COMMENT_RATING',$row['comment_rating']);
 define('VIDEO_DOWNLOAD',$row['video_download']);
-define('BITS_COLOR_WARNING',$row['bits_color_warning']);
 define('VIDEO_EMBED',$row['video_embed']);
 
 //Required Settings For Video Conversion
