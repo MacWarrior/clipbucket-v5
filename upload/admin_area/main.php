@@ -365,9 +365,6 @@ if(isset($_POST['update']))
                 $value = 'no';
             }
         }
-        if( $field == 'allow_language_change' ){
-            error_log($value);
-        }
         if( in_array($field, $config_booleans_to_refactor) ){
             if( $value != '1' ){
                 $value = '0';
