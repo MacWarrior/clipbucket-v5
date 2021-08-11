@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"67",
+  "revision":"68",
   "status":"dev",
   "detail":[
     {
@@ -80,6 +80,7 @@
         ,"Remove log file in /upload/temp/"
         ,"Update apache vhosts in installation scripts to support properly SEO URLs <i>#160</i>"
         ,"Add missing PHP module"
+        ,"Add Debian 11 installation script"
       ]
     }
   ,{
