@@ -813,14 +813,14 @@
     {
     	$file_name = mysql_clean($file_name);
         //Reading Log File
-        $result = db_select("SELECT * FROM ".tbl("video")." WHERE file_name = '".$file_name."'");
+        $result = db_select('SELECT * FROM '.tbl('video')." WHERE file_name = '".$file_name."'");
         
         if($result) {
             $video = $result[0];
             if ($video['file_server_path']){
                 $file = $video['file_server_path'].'/logs/'.$video['file_directory'].$file_name.'.log';
             } else {
-                $str = '/'.$video['file_directory'].'/';
+                $str = DIRECTORY_SEPARATOR.$video['file_directory'].DIRECTORY_SEPARATOR;
                 $file = LOGS_DIR.$str.$file_name.'.log';
             }
         }

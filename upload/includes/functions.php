@@ -3587,9 +3587,12 @@
     {
 	    if( $in ){
 	        $datecreated = DateTime::createFromFormat(DATE_FORMAT, $in);
+            if( $datecreated->format('Y-m-d') == '-0001-11-30' ){
+                return '2000-01-01';
+            }
             return $datecreated->format('Y-m-d');
         }
-	    return '0000-00-00';
+        return '2000-01-01';
 	}
 
 	/**

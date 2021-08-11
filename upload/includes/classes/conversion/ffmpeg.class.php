@@ -208,7 +208,12 @@ class FFMpeg
 				$this->setOptions($options);
 			}
 			$this->inputFile = $inputFile;
-			$this->outputFile = $this->videosDirPath.DIRECTORY_SEPARATOR.$this->options['outputPath'].$this->getInputFileName($inputFile);
+			$output_directory = $this->videosDirPath.DIRECTORY_SEPARATOR.$this->options['outputPath'];
+            if(!is_dir($output_directory)){
+                mkdir($output_directory,0755);
+            }
+
+			$this->outputFile = $output_directory.$this->getInputFileName($inputFile);
 			$videoDetails = $this->getVideoDetails($inputFile);
 			$this->videoDetails = $videoDetails;
 			$this->output = new stdClass();
@@ -223,7 +228,6 @@ class FFMpeg
 	{
 		if($videoDetails)
 		{
-			$this->hdFile = "{$this->outputFile}-hd.{$this->options['format']}";
 			$out= shell_exec($this->ffMpegPath ." -i {$this->inputFile} -acodec copy -vcodec copy -y -f null /dev/null 2>&1");
 			$len = strlen($out);
 			$findme = 'Video';
@@ -238,99 +242,62 @@ class FFMpeg
 			$dura[1] = $dura[1].'x';
 			$dura = explode('x',$dura[1]);
 
-			$TemplogData = '';
+			$TemplogData = "\r\n=======Low Resolution Conversion=======\r\n";
+            $TemplogData .= 'Sarting : Generating Low resolution video @ '.date("Y-m-d H:i:s")." \r\n";
+            $TemplogData .= "Converting Video SD File \r\n";
+
+            $this->sdFile = "{$this->outputFile}-sd.{$this->options['format']}";
+            $fullCommand = $this->ffMpegPath . " -i {$this->inputFile}" . $this->generateCommand($videoDetails, false) . " {$this->sdFile}";
+            $TemplogData .= 'Command : '.$fullCommand." \r\n";
+
+            $conversionOutput = $this->executeCommand($fullCommand);
+            if( DEVELOPMENT_MODE ){
+                $TemplogData .= "\r\n FFmpeg output : ".$conversionOutput." \r\n";
+            }
+            $TemplogData .= 'OutputFile : '.$this->sdFile." \r\n";
+
+            if (file_exists($this->sdFile))
+            {
+                $this->video_files[] = 'sd';
+                $this->sdFile1 = "{$this->outputFile}.{$this->options['format']}";
+                $status = 'Successful';
+                $TemplogData .= 'Conversion Status : '.$status.' @ '.date('Y-m-d H:i:s')." \r\n";
+
+                $this->output_file = $this->sdFile;
+                $this->output_details = $this->get_file_info($this->output_file);
+                $this->log_ouput_file_info();
+            }
+
 			if($dura[1] >= '720' || $videoDetails['video_height'] >= '720')
 			{
-				$TemplogData .="\r\n\r\n=======Low Resolution Conversion=======\r\n\r\n";
-				$TemplogData .= "\r\n Sarting : Generating Low resolution video @ ".date("Y-m-d H:i:s")." \r\n";
-				$TemplogData .= "\r\n Converting Video SD File  \r\n";
-				$this->sdFile = "{$this->outputFile}-sd.{$this->options['format']}";
-				$fullCommand = $this->ffMpegPath . " -i {$this->inputFile}" . $this->generateCommand($videoDetails, false) . " {$this->sdFile}";
-
-				$TemplogData .= "\r\n Command : ".$fullCommand." \r\n";
-
-				$conversionOutput = $this->executeCommand($fullCommand);
-				if( DEVELOPMENT_MODE ){
-					$TemplogData .= "\r\n ffmpeg output : ".$conversionOutput." \r\n";
-                }
-
-				$TemplogData .= "\r\n outputFile : ".$this->sdFile." \r\n";
-				
-				if (file_exists($this->sdFile))
-				{
-					$this->video_files[] = 'sd';
-					$this->sdFile1 = "{$this->outputFile}.{$this->options['format']}";
-					$status = 'Successful';
-					$TemplogData .= "\r\n Conversion Status : ".$status.' @ '.date('Y-m-d H:i:s')." \r\n";
-					$this->log->writeLine('Conversion Ouput', $TemplogData, true);
-					
-					$this->output_file = $this->sdFile;
-					$this->output_details = $this->get_file_info($this->output_file);
-					$this->log_ouput_file_info();
-				}
-				$TemplogData .="\r\n\r\n=======High Resolution Conversion=======\r\n\r\n";
-				$TemplogData .= "\r\n Sarting : Generating high resolution video @ ".date('Y-m-d H:i:s')."\r\n";
-
-				$TemplogData .= "\r\n Converting Video HD File   \r\n";
+				$TemplogData .="\r\n=======High Resolution Conversion=======\r\n";
+				$TemplogData .= 'Sarting : Generating high resolution video @ '.date('Y-m-d H:i:s')."\r\n";
+				$TemplogData .= "Converting Video HD File \r\n";
 				
 				$this->hdFile = "{$this->outputFile}-hd.{$this->options['format']}";
-				$log_file_tmp = TEMP_DIR.DIRECTORY_SEPARATOR.$this->file_name.'.tmp';
-				$fullCommand = $this->ffMpegPath . " -i {$this->inputFile}" . $this->generateCommand($videoDetails, true) . " {$this->hdFile} > {$log_file_tmp}";
+				$fullCommand = $this->ffMpegPath . " -i {$this->inputFile}" . $this->generateCommand($videoDetails, true) . " {$this->hdFile}";
 
-				$TemplogData .= "\r\n Command : ".$fullCommand." \r\n";
+				$TemplogData .= 'Command : '.$fullCommand." \r\n";
 
-                $output = $this->executeCommand($fullCommand);
+                $conversionOutput = $this->executeCommand($fullCommand);
                 if( DEVELOPMENT_MODE ){
-                    $TemplogData .= "\r\n output : ".$output." \r\n";
+                    $TemplogData .= "\r\n FFmpeg output : ".$conversionOutput." \r\n";
                 }
-
-				if(file_exists($log_file_tmp)) {
-					$data = file_get_contents($log_file_tmp);
-					unlink($log_file_tmp);
-				}
-				if( DEVELOPMENT_MODE ){
-					$TemplogData .= "\r\n ffmpeg output : ".$data." \r\n";
-                }
+                $TemplogData .= 'OutputFile : '.$this->sdFile." \r\n";
 
 				if (file_exists($this->hdFile)) {
 					$this->video_files[] = 'hd';
 					$this->sdFile1 = "{$this->outputFile}.{$this->options['format']}";
-					$status = "Successful";
-					$TemplogData .= "\r\n Conversion Status : ".$status.' @ '.date('Y-m-d H:i:s')."\r\n";
+					$status = 'Successful';
+					$TemplogData .= 'Conversion Status : '.$status.' @ '.date('Y-m-d H:i:s')."\r\n";
 					$this->log->writeLine('Conversion Ouput', $TemplogData, true);
 
 					$this->output_file = $this->hdFile;
 					$this->output_details = $this->get_file_info($this->output_file);
 					$this->log_ouput_file_info();
 				}
-			} else {
-				$TemplogData .="\r\n\r\n=======Low Resolution Conversion=======\r\n\r\n";
-				$TemplogData .= "\r\n Sarting : Generating Low resolution video @ ".date("Y-m-d H:i:s")." \r\n";
-				$TemplogData .= "\r\n Converting Video SD File \r\n";
-				$this->sdFile = "{$this->outputFile}-sd.{$this->options['format']}";
-				$fullCommand = $this->ffMpegPath . " -i {$this->inputFile}" . $this->generateCommand($videoDetails, false) . " {$this->sdFile}";
-
-				$TemplogData .= "\r\n Command : ".$fullCommand." \r\n";
-
-				$conversionOutput = $this->executeCommand($fullCommand);
-
-				if( DEVELOPMENT_MODE ){
-					$TemplogData .= "\r\n ffmpeg output : ".$conversionOutput." \r\n";
-                }
-
-				if (file_exists($this->sdFile))
-				{
-					$this->video_files[] = 'sd';
-					$this->sdFile1 = "{$this->outputFile}.{$this->options['format']}";
-					$status = "Successful";
-					$TemplogData .= "\r\n Conversion Status : ".$status.' @ '.date('Y-m-d H:i:s')." \r\n";
-					$this->log->writeLine('Conversion Ouput', $TemplogData, true);
-
-					$this->output_file = $this->sdFile;
-					$this->output_details = $this->get_file_info($this->output_file);
-					$this->log_ouput_file_info();
-				}
 			}
+            $this->log->writeLine('Conversion Ouput', $TemplogData, true);
 		}
 	}
 
@@ -642,7 +609,6 @@ class FFMpeg
                 }
 				/*End*/
 
-				$this->log->writeLine('Thumbs Generation', 'Starting');
 				$log = '';
 				try {
 					$thumbs_settings = $this->thumbs_res_settings;
@@ -671,7 +637,7 @@ class FFMpeg
 				}
 
 				$log .= "\r\n ====== End : Thumbs Generation ======= \r\n";
-				$this->log->writeLine('Thumbs Files', $log, true );
+				$this->log->writeLine('Thumbs Generation', $log, true);
 
 				$hr = $this->options['high_res'];
 				$this->options['video_width'] = $res[$nr][0];
@@ -724,28 +690,28 @@ class FFMpeg
 
 				$this->end_time_check();
 				$this->total_time();
-				
+
+				$log = '';
 				//Copying File To Original Folder
 				if( $this->keep_original == 'yes' )
 				{
-					$log .= "\r\nCopy File to original Folder";
+					$log .= "Copy File to original Folder\r\n";
 					if( copy($this->input_file, $this->original_output_path) ){
-						$log .= "\r\nFile Copied to original Folder...";
+						$log .= "File Copied to original Folder...\r\n";
                     } else {
-						$log .= "\r\nUnable to copy file to original folder...";
+						$log .= "Unable to copy file to original folder...\r\n";
                     }
 				}
 
-				$log .= "\r\n\r\nTime Took : ";
-				$log .= $this->total_time.' seconds'."\r\n\r\n";
+				$log .= 'Time Took : '.$this->total_time.' seconds'."\r\n";
 
 				if(file_exists($this->output_file) && filesize($this->output_file) > 0) {
-                    $log .= 'conversion_status : completed ';
+                    $log .= 'Conversion_status : completed';
                 } else {
-                    $log .= 'conversion_status : failed ';
+                    $log .= 'Conversion_status : failed';
                 }
 				
-				$this->log->writeLine('Conversion Completed', $log, true );
+				$this->log->writeLine('Conversion Completed', $log, true);
 				break;
 			}
 
@@ -780,7 +746,7 @@ class FFMpeg
 			'normal_res' => false,
 			'high_res' => false,
 			'max_video_duration' => false,
-			'resolution16_9' => $this->resolution16_9,
+			'resolution16_9' => $this->res169,
 			'resolution4_3' => $this->resolution4_3,
 			'resize'=>'max',
 			'outputPath' => false,
@@ -812,7 +778,7 @@ class FFMpeg
 
 		switch( $p['resize'] )
 		{
-			# dont resize, use same size as source, and aspect ratio
+			# don't resize, use same size as source, and aspect ratio
 			# WARNING: some codec will NOT preserve the aspect ratio
 			case 'no':
 				$width      = $i['video_width'];
@@ -887,10 +853,11 @@ class FFMpeg
 				$trt_height   = (float)$p['video_height'  ] / 2;
 
 				# make pixels square
-				if( $ratio > 1.0 )
+				if( $ratio > 1.0 ){
 					$width = $height * $ratio;
-				else
+                } else {
 					$height = $width / $ratio;
+                }
 				
 				# calculate size to fit
 				$ratio_w = $trt_width  / $width;
@@ -1193,9 +1160,7 @@ class FFMpeg
 			$this->input_file = $file;
         }
 
-		if(file_exists($this->input_file)){
-			$this->input_file = $this->input_file;
-        } else {
+		if(!file_exists($this->input_file)){
 			$this->input_file = TEMP_DIR.DIRECTORY_SEPARATOR.$this->input_file;
         }
 
@@ -1366,10 +1331,13 @@ class FFMpeg
 		if (!empty($array['size_tag'])){
 			$size_tag = $array['size_tag'];
 		}
+
+        $regenerateThumbs = false;
 		if (!empty($array['file_directory'])){
 			$regenerateThumbs = true;
 			$file_directory = $array['file_directory'];
 		}
+
 		if (!empty($array['file_name'])){
 			$filename = $array['file_name'];
 		}
@@ -1402,6 +1370,11 @@ class FFMpeg
 			$dimension = ' -s '.$dim.' ';
 		}
 
+        $thumb_dir = THUMBS_DIR.DIRECTORY_SEPARATOR.$thumbs_outputPath;
+        if(!is_dir($thumb_dir)){
+            mkdir($thumb_dir,0755);
+        }
+
 		if($num > 1) {
 			$division = $duration / $num;
 			$num_length = strlen($num);
@@ -1415,13 +1388,12 @@ class FFMpeg
 					$file_name = $filename.'-'.$size_tag.$thumb_file_number.'.jpg';
 				}
 				
-				$file_path = THUMBS_DIR.DIRECTORY_SEPARATOR.$thumbs_outputPath.$file_name;
+				$file_path = $thumb_dir.$file_name;
 
 				$time_sec = (int)($division*$count);
+				//$time = $this->ChangeTime($time_sec);
 
-				$time = $this->ChangeTime($time_sec);
-
-				$command = $this->ffMpegPath." -ss {$time} -i $input_file -an -r 1 $dimension -y -f image2 -vframes 1 $file_path ";
+				$command = $this->ffMpegPath." -ss $time_sec -i $input_file -pix_fmt yuvj422p -an -r 1 $dimension -y -f image2 -vframes 1 $file_path ";
 				$output = $this->executeCommand($command);	
 
 				//checking if file exists in temp dir
@@ -1429,16 +1401,11 @@ class FFMpeg
 					rename($tmpDir.'/00000001.jpg',THUMBS_DIR.DIRECTORY_SEPARATOR.$file_name);
 				}
 
-				if (!$regenerateThumbs)
+				if (!$regenerateThumbs && !file_exists($file_path))
 				{
-					$this->TemplogData .= "\r\n\r\n Command : $command ";
-					$this->TemplogData .= "\r\n\r\n OutPut : $output ";	
-					if (file_exists($file_path)){
-						$output_thumb_file = $file_path;
-					} else {
-						$output_thumb_file = 'Oops ! Not Found.. See log';
-					}
-					$this->TemplogData .= "\r\n\r\n Response : $output_thumb_file ";	
+                    $TempLogData = "\r\n\r\n Command : $command ";
+                    $TempLogData .= "\r\n\r\n OutPut : $output ";
+                    $this->log->writeLine($TempLogData, true);
 				}
 			}
 		} else {
@@ -1451,9 +1418,11 @@ class FFMpeg
 			$file_path = THUMBS_DIR.DIRECTORY_SEPARATOR.$thumbs_outputPath.$file_name;
 			$command = $this->ffMpegPath." -i $input_file -an $dimension -y -f image2 -vframes $num $file_path ";
 			$output = $this->executeCommand($command);
-			if (!$regenerateThumbs){
-				$this->TemplogData .= "\r\n Command : $command ";
-				$this->TemplogData .= "\r\n File : $file_path ";
+			if (!$regenerateThumbs && !file_exists($file_path)){
+                $TempLogData = "\r\n Command : $command ";
+                $TempLogData .= "\r\n File : $file_path ";
+                $TempLogData .= "\r\n Output : $output ";
+                $this->log->writeLine($TempLogData, true);
 			}
 		}
 		rmdir($tmpDir);
@@ -1476,15 +1445,12 @@ class FFMpeg
 		try{
 			/*Formatting up the duration in seconds for datetime object*/
 			/* desired format ( 00:00:00 ) */
-			if (!empty($duration)) {
-				$hours = floor($duration / 3600);
-				$minutes = floor(($duration / 60) % 60);
-				$seconds = $duration % 60;
-				$d_formatted = "$hours:$minutes:$seconds";
-				$d = new DateTime($d_formatted);
-				return $d->format('H:i:s');
-			}
-			return false;
+            $hours = floor($duration / 3600);
+            $minutes = floor(($duration / 60) % 60);
+            $seconds = $duration % 60;
+            $d_formatted = "$hours:$minutes:$seconds";
+            $d = new DateTime($d_formatted);
+            return $d->format('H:i:s');
 		} catch (Exception $e){
 			echo 'Caught exception: ',  $e->getMessage(), "\n";
 		}

@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"61",
+  "revision":"62",
   "status":"dev",
   "detail":[
     {
@@ -25,6 +25,8 @@
         ,"Update PHP required version to 7.0"
         ,"Remove unused Recaptcha lib"
         ,"Add gitignore for photos"
+        ,"Add missing translation"
+        ,"Fix thumb generation and SD/HD video conversion <i>#172#</i>"
       ]
     }
     ,{
@@ -46,6 +48,7 @@
         ,"Fix jQuery 3.6.0 compatibility"
         ,"Fix plugin installation"
         ,"Include OpenSans font in sources"
+        ,"Update video conversion logs"
       ]
     }
   ,{

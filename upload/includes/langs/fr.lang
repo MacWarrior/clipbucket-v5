@@ -1140,6 +1140,7 @@
     "friend_add_himself_error": "You cannot add yourself as a friend",
     "contact_us_msg": "Your comments are important to us and we will address them as quickly as possible. Provision of the information requested on this form is voluntary. The information is being collected to provide additional information requested by you and assists us in improving our services.",
     "Successful": "Successful",
+    "failed": "Echec",
     "required_fields": "Champs requis",
     "more_fields": "More fields",
     "remote_upload_file": "uploading file <span id=\"remoteFileName\"><\/span>, please wait...",
