@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"71",
+  "revision":"72",
   "status":"dev",
   "detail":[
     {
@@ -29,6 +29,7 @@
         ,"Fix thumb generation and SD/HD video conversion <i>#172#</i>"
         ,"Remove unused DB column"
         ,"Change default avatar file"
+        ,"Fix videos and thumbs directories creation"
       ]
     }
     ,{

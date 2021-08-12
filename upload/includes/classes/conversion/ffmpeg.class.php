@@ -1109,6 +1109,12 @@ class FFMpeg
 				} else {
 					$command = '';
 				}
+
+                $video_dir = VIDEOS_DIR.DIRECTORY_SEPARATOR.date('Y').DIRECTORY_SEPARATOR.date('m').DIRECTORY_SEPARATOR.date('d').DIRECTORY_SEPARATOR;
+                if(!is_dir($video_dir)){
+                    mkdir($video_dir,0755, true);
+                }
+
                 $output = $this->exec($command);
 			}
 
