@@ -33,3 +33,6 @@ ALTER TABLE `{tbl_prefix}plugins`
 ALTER TABLE `{tbl_prefix}video`
     ADD COLUMN `subscription_email` VARCHAR(16) NOT NULL DEFAULT '';
 
+ALTER TABLE `{tbl_prefix}users`
+	DROP `background_attachement`;
+

@@ -498,7 +498,6 @@ CREATE TABLE `{tbl_prefix}users` (
   `background_color` varchar(25) DEFAULT NULL,
   `background_url` text DEFAULT NULL,
   `background_repeat` enum('no-repeat','repeat','repeat-x','repeat-y') NOT NULL DEFAULT 'repeat',
-  `background_attachement` enum('yes','no') NOT NULL DEFAULT 'no',
   `total_groups` bigint(20) NOT NULL DEFAULT 0,
   `last_active` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `banned_users` text DEFAULT NULL,

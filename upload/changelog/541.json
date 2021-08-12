@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"68",
+  "revision":"69",
   "status":"dev",
   "detail":[
     {
@@ -27,6 +27,7 @@
         ,"Add gitignore for photos"
         ,"Add missing translation"
         ,"Fix thumb generation and SD/HD video conversion <i>#172#</i>"
+        ,"Remove unused DB column"
       ]
     }
     ,{
