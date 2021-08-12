@@ -1561,7 +1561,7 @@ class userquery extends CBCategory{
 	 */
 	function get_default_thumb($size=NULL): string
     {
-		if($size=="small" && file_exists(TEMPLATEDIR.'/images/thumbs/no_avatar-small.png')) {
+		if($size=='small' && file_exists(TEMPLATEDIR.'/images/thumbs/no_avatar-small.png')) {
 			return TEMPLATEURL.'/images/thumbs/no_avatar-small.png';
 		}
 
@@ -1572,7 +1572,7 @@ class userquery extends CBCategory{
 		if($size=='small'){
 			return USER_THUMBS_URL.'/'.getName(NO_AVATAR).'-small.'.getExt(NO_AVATAR);
         }
-		return USER_THUMBS_URL.'/'.NO_AVATAR;
+		return USER_THUMBS_URL.DIRECTORY_SEPARATOR.NO_AVATAR;
 	}
 
 	/**

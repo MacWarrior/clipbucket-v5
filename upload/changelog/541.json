@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"69",
+  "revision":"70",
   "status":"dev",
   "detail":[
     {
@@ -28,6 +28,7 @@
         ,"Add missing translation"
         ,"Fix thumb generation and SD/HD video conversion <i>#172#</i>"
         ,"Remove unused DB column"
+        ,"Change default avatar file"
       ]
     }
     ,{
