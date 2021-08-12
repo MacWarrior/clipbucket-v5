@@ -210,7 +210,7 @@ class FFMpeg
 			$this->inputFile = $inputFile;
 			$output_directory = $this->videosDirPath.DIRECTORY_SEPARATOR.$this->options['outputPath'];
             if(!is_dir($output_directory)){
-                mkdir($output_directory,0755);
+                mkdir($output_directory,0755, true);
             }
 
 			$this->outputFile = $output_directory.$this->getInputFileName($inputFile);
@@ -1372,7 +1372,7 @@ class FFMpeg
 
         $thumb_dir = THUMBS_DIR.DIRECTORY_SEPARATOR.$thumbs_outputPath;
         if(!is_dir($thumb_dir)){
-            mkdir($thumb_dir,0755);
+            mkdir($thumb_dir,0755, true);
         }
 
 		if($num > 1) {
