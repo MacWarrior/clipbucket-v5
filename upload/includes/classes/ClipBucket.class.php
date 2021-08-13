@@ -209,7 +209,7 @@ class ClipBucket
     function get_anchor_function_list($place)
     {
         //Getting list of functions
-        return isset($this->anchor_function_list[$place]) ? $this->anchor_function_list[$place] : false;
+        return $this->anchor_function_list[ $place ] ?? false;
     }
 
     function addMenuAdmin($menu_params, $order = null){
@@ -219,10 +219,10 @@ class ClipBucket
         if( is_null($order) ){
             $order = max(array_keys($Cbucket->AdminMenu))+1;
         } else {
-            if( array_key_exists($Cbucket->AdminMenu, $order) ){
+            if( array_key_exists($order, $Cbucket->AdminMenu) ){
                 do{
                     $order++;
-                } while( array_key_exists($Cbucket->AdminMenu, $order) );
+                } while( array_key_exists($order, $Cbucket->AdminMenu) );
             }
         }
 

@@ -116,8 +116,8 @@ if (!function_exists('cb_video_js'))
 
 		switch ($function) {
 
-			case 'get_ultimate_ads':{
-				if (CB_ULTIMATE_ADS == 'installed'){
+			case 'get_ultimate_ads':
+				if( defined('CB_ULTIMATE_ADS') && CB_ULTIMATE_ADS == 'installed'){
 
 					global $CbUads;
 					$ads_array = array("filter_ad"=>true,"status"=>"1","non_expiry"=>'true');
@@ -129,11 +129,9 @@ if (!function_exists('cb_video_js'))
 					return false;
 				}
 				return false;
-			}
-			break;
 
-			case 'get_timeCommnets':{
-				if (CB_TIMECOMMENTS_PLUGIN == 'installed'){
+			case 'get_timeCommnets':
+				if( defined('CB_TIMECOMMENTS_PLUGIN') && CB_TIMECOMMENTS_PLUGIN == 'installed'){
 					$timecomments = get_timeComments($videoid);
 					if (!empty($timecomments)){
 						return json_encode($timecomments);
@@ -141,25 +139,23 @@ if (!function_exists('cb_video_js'))
 					return false;
 				}
 				return false;
-			}
-			break;
 
-			case 'get_video_editor':{
-				if ( IA_ADS_INSTALLED == 'installed' ){
+			case 'get_video_editor':
+				if( defined('IA_ADS_INSTALLED') && IA_ADS_INSTALLED == 'installed' ){
 					$video_editor_enabled = video_editor_enabled();
 					return $video_editor_enabled;
 				}
 				return false;
-			}
-			case 'get_svg_manager':{
-				if ( IA_ADS_INSTALLED == 'installed' ){
+
+			case 'get_svg_manager':
+				if( defined('IA_ADS_INSTALLED') && IA_ADS_INSTALLED == 'installed' ){
 					$svg_manager = svg_manager();
 					return $svg_manager;
 				}
 				return false;
-			}
-			case 'get_slot':{
-				if ( IA_ADS_INSTALLED == 'installed' ){
+
+			case 'get_slot':
+				if( defined('IA_ADS_INSTALLED') && IA_ADS_INSTALLED == 'installed' ){
 					global $ia_ads;
 					$slot_paramas['videoid'] = $videoid;
 					
@@ -175,11 +171,9 @@ if (!function_exists('cb_video_js'))
 					return $instances;
 				}
 				return false;
-			}
-			
+
 			default:
-				# code...
-			break;
+			    break;
 		}
 	}
 

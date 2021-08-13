@@ -1903,7 +1903,11 @@ class CBvideo extends CBCategory
 
 		$total = $sess->get_cookie(QUICK_LIST_SESS);
 		$total = json_decode($total, true);
-		
+
+		if( is_null($total) ){
+		    return 0;
+        }
+
 		return count($total);
 	}
 	

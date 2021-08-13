@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"75",
+  "revision":"76",
   "status":"dev",
   "detail":[
     {
@@ -30,6 +30,7 @@
         ,"Remove unused DB column"
         ,"Change default avatar file"
         ,"Fix videos and thumbs directories creation"
+        ,"Update compatibility to PHP 8.0.X"
       ]
     }
     ,{

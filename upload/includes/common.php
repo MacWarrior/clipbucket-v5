@@ -395,7 +395,6 @@ Assign('slogan',SLOGAN);
 Assign('avatardir','/images/avatars');
 Assign('whatis',getArrayValue($row, 'whatis'));
 Assign('category_thumbs',CAT_THUMB_URL);
-Assign('gp_thumbs_url',GP_THUMB_URL);
 Assign('video_thumbs',THUMBS_URL);
 
 Assign('email_verification',EMAIL_VERIFICATION);

@@ -1,5 +1,5 @@
 <?php
-$is_ajax = true;
+define('THIS_PAGE','ajax');
 require '../includes/config.inc.php';
 if (isset($_POST['mode'])) {
     $mode = $_POST['mode'];

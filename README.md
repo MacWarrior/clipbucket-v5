@@ -14,7 +14,7 @@ ClipBucket official repository has been slowly dying since the release 4.1 (May 
 I <i>(<a href="https://github.com/MacWarrior">MacWarrior</a>)</i> have been working on <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> since 2016 and haven't stop using and upgrading it since
 
 # Why <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a>
-- PHP 7.1 - 7.4+ compatibility
+- PHP 7.0 - 8.0+ compatibility
 - SQL strict mode compatibility
 - Updated libraries <i>(VideoJS, Smarty, amCharts, ...)</i>
 - Chromecast support

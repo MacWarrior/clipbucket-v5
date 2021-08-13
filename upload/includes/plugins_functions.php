@@ -34,7 +34,7 @@ function description($description)
     //Getting List of comment functions
     $func_list = $Cbucket->getFunctionList('description');
     //Applying Function
-    if(count($func_list)>0) {
+    if( !is_null($func_list) && count($func_list) > 0 ) {
         foreach($func_list as $func) {
             $description = $func($description);
         }

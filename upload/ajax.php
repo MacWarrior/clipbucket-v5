@@ -6,10 +6,8 @@
 	 | @ Software : ClipBucket , © PHPBucket.com
 	 *******************************************************************
 	*/
+    define('THIS_PAGE','ajax');
 	require 'includes/config.inc.php';
-
-	define("THIS_PAGE",'ajax');
-	$is_ajax = true;
 
 	if( isset($_POST['mode']) ){
 		$mode = $_POST['mode'];
