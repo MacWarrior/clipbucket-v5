@@ -12,8 +12,8 @@ echo -ne " OK"
 echo ""
 echo -ne "Installing required elements..."
 apt-get install php7.2 apache2 mariadb-server php-curl ffmpeg php7.2-mysql php7.2-xml php7.2-mbstring php7.2-gd sendmail mediainfo lshw --yes > /dev/null 2>&1
-sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 50M/g" /etc/php/7.2/apache2/php.ini
-sed -i "s/post_max_size = 8M/post_max_size = 50M/g" /etc/php/7.2/apache2/php.ini
+sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 100M/g" /etc/php/7.2/apache2/php.ini
+sed -i "s/post_max_size = 8M/post_max_size = 100M/g" /etc/php/7.2/apache2/php.ini
 sed -i "s/max_execution_time = 30/max_execution_time = 7200/g" /etc/php/7.2/apache2/php.ini
 /etc/init.d/mysql start > /dev/null
 echo -ne " OK"
