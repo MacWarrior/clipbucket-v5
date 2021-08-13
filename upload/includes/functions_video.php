@@ -175,7 +175,7 @@
 
         $file_dir = '';
         if(isset($vdetails['file_name']) && $thumbDir) {
-           $file_dir = '/' . $thumbDir;
+           $file_dir = DIRECTORY_SEPARATOR.$thumbDir;
         }
         
         $filepath = $file_dir.$vdetails['file_name'].'-'.$size.'-'.$vdetails['default_thumb'].'.jpg';
@@ -183,7 +183,7 @@
 			return THUMBS_URL.$filepath;
 		}
 
-        $glob = THUMBS_DIR.'/' .$file_dir.$vdetails['file_name'].'*';
+        $glob = THUMBS_DIR.DIRECTORY_SEPARATOR.$file_dir.$vdetails['file_name'].'*';
         if( $size ){
             $glob .= $size.'*';
         }
@@ -199,7 +199,7 @@
                     //Saving All Thumbs
                     if(!is_big($thumb_file) || $return_big){
                         if($return_full_path){
-                            $thumbs[] = THUMBS_URL.'/'. $thumbDir . $thumb_file;
+                            $thumbs[] = THUMBS_URL.'/'.$thumbDir.$thumb_file;
 						} else {
                             $thumbs[] = $thumb_file;
 						}
@@ -207,7 +207,7 @@
                     //Saving Original Thumbs
                     if (is_original($thumb_file)){
                         if($return_full_path){
-                            $original_thumbs[] = THUMBS_URL.'/'. $thumbDir . $thumb_file;
+                            $original_thumbs[] = THUMBS_URL.'/'.$thumbDir.$thumb_file;
 						} else {
                             $original_thumbs[] = $thumb_file;
 						}
@@ -218,9 +218,9 @@
             }
 		}
 
-        if(count($thumbs)==0) {
+        if(!is_array($thumbs) || count($thumbs) == 0) {
             if($count){
-                return count($thumbs);
+                return 0;
 			}
             if($multi){
                 return $dthumb[0] = default_thumb();

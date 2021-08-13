@@ -3,9 +3,8 @@ if(!function_exists('escape_quotes'))
 {
 	function escape_quotes($text)
 	{
-		$text = str_replace("\"", "&quot;", $text);
-		$text = str_replace("'", "&#039;", $text);
-		return $text;
+		$text = str_replace('"', '&quot;', $text);
+		return str_replace('\'', '&#039;', $text);
 	}
 }
 
@@ -153,7 +152,7 @@ class formObj
 			//Generate Category list
 			$type = $field['category_type'] ? $field['category_type'] : 'video';
 			
-			$catArray = getCategoryList(array("type"=>$type));
+			$catArray = getCategoryList(array('type'=>$type));
 			
 			if(is_array($catArray)) {
 				$this->multi_cat_id = $this->multi_cat_id + 1;
@@ -165,7 +164,7 @@ class formObj
 				$this->listCategoryCheckBox($params,$multi);
 				return false;
 			}
-			return "There is no category to select";
+			return 'There is no category to select';
 		}
 		
 		if($multi) {
@@ -244,34 +243,33 @@ class formObj
 			$fieldName = $this->rmBrackets($fieldName);
 			$fieldName = $fieldName.$this->multi_cat_id.'[]';
 		}
-		$display = "none";
+		$display = 'none';
 		$values = $field['value'][1][0];
 		$Values = array();
 		if(!empty($values)){
 			foreach($values as $val){
-				$Values[] = "|".$val."|";
+				$Values[] = '|'.$val.'|';
 			}
         }
 	
 		if($cats) {
-			$output = "";
 			foreach($cats as $cat) {
-				$checked = "";
-				if(in_array("|".$cat['category_id']."|",$Values)){
+				$checked = '';
+				if(in_array('|'.$cat['category_id'].'|',$Values)){
 					$checked = 'checked';
                 }
 				echo "<div style='position:relative;'>";
 				echo $field['sep'];
 				echo '<label><input name="'.$fieldName.'" type="checkbox" value="'.$cat['category_id'].'" '.$field_id.' '.$checked.' '.$field['extra_tags'].'>'.display_clean($cat['category_name']).'</label>';
-				 if($cat['children']) {
+				if($cat['children']) {
 					echo "<span id='".$cat['category_id']."_toggler' alt='".$cat['category_id']."_".$rand."' class='CategoryToggler CheckBoxCategoryToggler glyphicon glyphicon-chevron-down' style='float:right;margin-left:20px;' onclick='toggleCategory(this);'></span>";
 					$childField = $field;
 					$childField['sep'] = $field['sep'].str_repeat('&nbsp;',5);
 					echo "<div id='".$cat['category_id']."_".$rand."' class='sub_categories sub_categories_checkbox' style='display:".$display."'>";
 					$this->listCategoryCheckBoxCollapsed(array('categories'=>$cat['children'],'field'=>$childField,'children_indent'=>true),$multi);
 					echo '</div>';
-				 }
-				 echo '</div>';
+				}
+				echo '</div>';
 			}
 		}
 	}
@@ -349,11 +347,11 @@ class formObj
 			$field['value'] = explode(",", $field['value']);
 		}
 		foreach($field['value'] as $key => $value) {
-			if(!empty($_POST[$arrayName]) || !empty($field['checked'])) {
-				if ($_POST[$arrayName] == $key || $field['checked'] == $key) {
+			if( (is_array($_POST) && !empty($_POST[$arrayName])) || !empty($field['checked'])) {
+				if( (is_array($_POST) && $_POST[$arrayName] == $key) || $field['checked'] == $key) {
 					$checked = ' checked ';
 				} else {
-					$checked = '  ';
+					$checked = '';
 				}
 			} else {
 				if($count==0){
@@ -377,7 +375,7 @@ class formObj
                 echo '<div class="'.$field['wrapper_class'].'">';
             }
 
-            $label_class = "";
+            $label_class = '';
             if($field['label_class']){
                 $label_class = 'class="'.$field['label_class'].'"';
             }
@@ -401,24 +399,7 @@ class formObj
      */
 	static function rmBrackets($string)
 	{
-		$string = preg_replace('/\[\]/','',$string);
-		return $string;
-	}
-
-	/**
-	 * FUNCTION USED TO CREATE DROPDOWN MENU
-	 *
-	 * @param name
-	 * @param id
-	 * @param value = array('value'=>'name')
-	 * @param class
-	 * @param extra_tags
-	 * @param label
-	 *
-	 * @return array|bool|string
-	 */
-	function getCats($type){
-		return $catArray = getCategoryList(array("type" => $type));
+		return preg_replace('/\[\]/','',$string);
 	}
 
 	function createDropDown($field,$multi=FALSE, $skipall = false)
@@ -450,43 +431,26 @@ class formObj
 		if (!is_array($field['value'])) {
 			$field['value'] = explode(",", $field['value']);
 		}
-		if(is_array($field['value']))
-		foreach($field['value'] as $key => $value) {
-			if(!empty($_POST[$arrayName]) || !empty($field['checked'])) {
-				if ($_POST[$arrayName] == $key || $field['checked']== $key){
-					$checked = ' selected ';
+		if(is_array($field['value'])){
+            foreach($field['value'] as $key => $value) {
+                if((is_array($_POST) && !empty($_POST[$arrayName])) || !empty($field['checked'])) {
+                    if( (is_array($_POST) && $_POST[$arrayName] == $key) || $field['checked']== $key){
+                        $checked = ' selected ';
+                    } else {
+                        $checked = '';
+                    }
                 } else {
-					$checked = '  ';
+                    if($count==0) {
+                        $checked = ' selected ';
+                    } else {
+                        $checked = '';
+                    }
+                    $count++;
                 }
-			} else {
-				if($count==0) {
-					$checked = ' selected ';
-                } else {
-					$checked = '';
-                }
-				$count++;
-			}
-			$fieldOpts .='<option value="'.$key.'" '.$checked.' '.$field['extra_tags'].'>'.$value.'</option>';
-		}
+                $fieldOpts .='<option value="'.$key.'" '.$checked.' '.$field['extra_tags'].'>'.$value.'</option>';
+            }
+        }
 		$ddFieldEnd = '</select>';
 		echo $ddFieldStart.$fieldOpts.$ddFieldEnd;
-	}
-
-    /**
-     * Form Validator
-     * This function used to valid form fields
-     *
-     * @param      $field
-     * @param      $method
-     * @param null $syntax
-     */
-	function validate_form($field,$method,$syntax=NULL)
-	{
-		switch($method)
-		{
-			case 'username':
-			    $syntax = get_re('username');
-			    break;
-		}
 	}
 }
