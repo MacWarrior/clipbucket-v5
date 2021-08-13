@@ -240,8 +240,9 @@ abstract class CBCategory
 			$html .= $spacer.display_clean($cat['category_name']);
 			$html .= '</option>';
 
-			if($cat['children'])
+			if($cat['children']){
 				$html .= $this->displayOptions($cat['children'],$params,$spacer.($params['spacer']?$params['spacer']:'- '));
+            }
 		}
 		
 		return $html;
@@ -253,17 +254,17 @@ abstract class CBCategory
 		if($params['name']){
 		    $name = $params['name'];
 		} else {
-		    $name = "cat";
+		    $name = 'cat';
         }
 		if($params['id']){
 		    $id = $params['id'];
         } else {
-		    $id = "cat";
+		    $id = 'cat';
         }
 		if($params['class']){
 		    $class = $params['class'];
         } else {
-		    $class = "cbSelectCat";
+		    $class = 'cbSelectCat';
         }
 		
 		$html .= "<select name='$name' id='$id' class='$class'>";
@@ -311,38 +312,6 @@ abstract class CBCategory
 		} else {
 			return false;
 		}
-	}
-
-	function cb_list_subs($cid,$type)
-	{
-		global $db;
-		$html = '';
-        $cid = mysql_clean($cid);
-		$query = mysqli_query($db,'SELECT * FROM '.tbl($this->cat_tbl).' WHERE parent_id = '.$cid);
-
-		if(!empty($query))
-		{
-			$html .= "<ul id='".$cid."_subs' class='sub_categories'>";
-			while($result = mysqli_fetch_array($query))
-			{	
-				if($_GET['cat'] == $result['category_id']){
-					$selected = 'selected';
-                } else {
-					$selected = '';
-                }
-
-				$html .= "<li class='".$selected."'>";
-				$html .= "<a href='".category_link($result,$type)."' title='".display_clean($result['category_name'])."'>".display_clean($result['category_name'])."</a>";
-				if($this->is_parent($result['category_id'])) {
-					$html .= $this->cb_list_subs($result['category_id'],$type);
-				}
-				$html .= '</li>';
-			}
-
-			$html .= '</ul>';
-		}
-
-		return $html;
 	}
 
 	/**
@@ -420,9 +389,8 @@ abstract class CBCategory
 	 * @param      $from
 	 * @param null $to
 	 * @param null $has_child
-	 * @param bool $check_multiple
 	 */
-	function change_category($from,$to=NULL,$has_child=NULL,$check_multiple=false)
+	function change_category($from,$to=NULL,$has_child=NULL)
 	{
 		global $db;
 
@@ -434,8 +402,10 @@ abstract class CBCategory
 			$db->update(tbl($this->cat_tbl),array('parent_id'),array($to),' parent_id = '.$from);
 		}
 
-		$db->execute('UPDATE '.tbl($this->section_tbl)." SET category = replace(category,'#".$from."#','#".$to."#') WHERE category LIKE '%#".$from."#%'");
-		$db->execute('UPDATE '.tbl($this->section_tbl)." SET category = replace(category,'#".$to."# #".$to."#','#".$to."#') WHERE category LIKE '%#".$to."#%'");
+		if( !empty($this->section_tbl) ){
+            $db->execute('UPDATE '.tbl($this->section_tbl)." SET category = replace(category,'#".$from."#','#".$to."#') WHERE category LIKE '%#".$from."#%'");
+            $db->execute('UPDATE '.tbl($this->section_tbl)." SET category = replace(category,'#".$to."# #".$to."#','#".$to."#') WHERE category LIKE '%#".$to."#%'");
+        }
 	}
 
 	/**
@@ -507,14 +477,14 @@ abstract class CBCategory
 			
 			if($ext=='jpg' || $ext =='png' || $ext=='gif')
 			{
-				$dir_path = CAT_THUMB_DIR.'/'.$dir;
+				$dir_path = CAT_THUMB_DIR.DIRECTORY_SEPARATOR.$dir;
 				if(!is_dir($dir_path)){
 					@mkdir($dir_path,0777);
                 }
 					
 				if(is_dir($dir_path))	
 				{
-					$path = $dir_path.'/'.$cid.'.'.$ext;
+					$path = $dir_path.DIRECTORY_SEPARATOR.$cid.'.'.$ext;
 					
 					//Removing File if already exists
 					if(file_exists($path)){
@@ -549,7 +519,7 @@ abstract class CBCategory
 	function get_cat_thumb($cat_details, $dir='')
 	{
 		$cid = $cat_details['category_id'];
-		$path = CAT_THUMB_DIR.'/'.$dir.'/'.$cid.'.';
+		$path = CAT_THUMB_DIR.DIRECTORY_SEPARATOR.$dir.DIRECTORY_SEPARATOR.$cid.'.';
 		$exts = array('jpg','png','gif');
 		
 		$file_exists = false;
@@ -799,8 +769,7 @@ abstract class CBCategory
         $cat_name = array();
         $cid = explode(' ', $cid_array);
         $cid = array_slice($cid,0,-1);
-        foreach ($cid as $key => $value) 
-        {      
+        foreach ($cid as $key => $value) {
             $cat_id = str_replace('#','', $value);
             $results = $this->get_category($cat_id);
             $cat_name[]= $results;

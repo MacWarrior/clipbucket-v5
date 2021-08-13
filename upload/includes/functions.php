@@ -1447,7 +1447,7 @@
 	function get_form_val( $val, bool $filter=false)
 	{
 		if($filter) {
-			return isset($_GET[$val]) ? form_val($_GET[$val]) : false;
+			return isset($_GET[$val]) ? display_clean($_GET[$val]) : false;
 		}
 		return $_GET[$val];
 	}

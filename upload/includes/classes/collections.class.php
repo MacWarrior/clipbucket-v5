@@ -818,20 +818,22 @@ class Collections extends CBCategory
 	 */
 	function validate_collection_category($array=NULL)
 	{
-		if($array==NULL)
+		if($array==NULL){
 			$array = $_POST['category'];
-		if(count($array)==0)
+        }
+
+		if( !is_array($array) || count($array)==0){
 			return false;
+        }
 
 		$new_array = array();
-		foreach($array as $arr)
-		{
-			if($this->category_exists($arr))
+		foreach($array as $arr) {
+			if($this->category_exists($arr)){
 				$new_array[] = $arr;
+            }
 		}
 
-		if(count($new_array)==0)
-		{
+		if(count($new_array)==0) {
 			e(lang('vdo_cat_err3'));
 			return false;
 		}
@@ -853,36 +855,40 @@ class Collections extends CBCategory
 		$collection_fields = array_merge($fields,$this->load_other_fields($array));
 
 
-		if(count($this->custom_collection_fields) > 0)
+		if(count($this->custom_collection_fields) > 0){
 			$collection_fields = array_merge($collection_fields,$this->custom_collection_fields);
+        }
 
 		foreach($collection_fields as $field)
 		{
 			$name = formObj::rmBrackets($field['name']);
 			$val = $array[$name];
 
-			if($field['use_func_val'])
+			if($field['use_func_val']){
 				$val = $field['validate_function']($val);
+            }
 
-			if(!empty($field['db_field']))
+			if(!empty($field['db_field'])){
 				$query_field[] = $field['db_field'];
+            }
 
 			if(is_array($val))
 			{
 				$new_val = '';
-				foreach($val as $v)
-				{
-					$new_val .= "#".$v."# ";
+				foreach($val as $v) {
+					$new_val .= '#'.$v.'# ';
 				}
 				$val = $new_val;
 			}
-			if(!$field['clean_func'] || (!function_exists($field['clean_func']) && !is_array($field['clean_func'])))
+			if(!$field['clean_func'] || (!function_exists($field['clean_func']) && !is_array($field['clean_func']))){
 				$val = ($val);
-			else
+            } else {
 				$val = apply_func($field['clean_func'], mysql_clean('|no_mc|'.$val));
+            }
 
-			if(!empty($field['db_field']))
+			if(!empty($field['db_field'])){
 				$query_val[] = $val;
+            }
 		}
 
 		// date_added
@@ -902,9 +908,9 @@ class Collections extends CBCategory
 		addFeed(array('action'=>'add_collection','object_id' => $insert_id,'object'=>'collection'));
 
 		//Incrementing usr collection
-		$db->update(tbl("users"),array("total_collections"),array("|f|total_collections+1")," userid='".$userid."'");
+		$db->update(tbl('users'),array('total_collections'),array('|f|total_collections+1')," userid='".$userid."'");
 
-		e(lang("collect_added_msg"),"m");
+		e(lang('collect_added_msg'),'m');
 		return $insert_id;
 	}
 

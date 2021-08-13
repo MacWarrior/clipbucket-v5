@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"81",
+  "revision":"82",
   "status":"dev",
   "detail":[
     {
@@ -56,6 +56,7 @@
         ,"Fix configs save"
         ,"Fix video's date recorded save and display"
         ,"Update user's date of birth, last login and last active display"
+        ,"Fix user's category deletion"
       ]
     }
   ,{

@@ -514,7 +514,7 @@ CREATE TABLE `{tbl_prefix}user_categories` (
   `category_order` int(5) NOT NULL DEFAULT 1,
   `category_desc` text NOT NULL,
   `date_added` mediumtext NOT NULL,
-  `category_thumb` mediumtext NOT NULL,
+  `category_thumb` mediumtext NOT NULL DEFAULT '',
   `isdefault` enum('yes','no') NOT NULL DEFAULT 'no'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
