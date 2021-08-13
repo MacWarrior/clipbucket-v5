@@ -6,14 +6,14 @@
  *
  * @return string
  */
-function comment($comment)
+function comment($comment): string
 {
     global $Cbucket;
     $comment = nl2br($comment);
     //Getting List of comment functions
     $func_list = $Cbucket->getFunctionList('comment');
     //Applying Function
-    if(count($func_list)>0) {
+    if( is_array($func_list) && count($func_list) > 0 ) {
         foreach($func_list as $func) {
             $comment = $func($comment);
         }
@@ -28,13 +28,13 @@ function comment($comment)
  *
  * @return string
  */
-function description($description)
+function description($description): string
 {
     global $Cbucket;
     //Getting List of comment functions
     $func_list = $Cbucket->getFunctionList('description');
     //Applying Function
-    if( !is_null($func_list) && count($func_list) > 0 ) {
+    if( is_array($func_list) && count($func_list) > 0 ) {
         foreach($func_list as $func) {
             $description = $func($description);
         }
@@ -56,7 +56,7 @@ function title($title)
     //Getting List of comment functions
     $func_list = $Cbucket->getFunctionList('title');
     //Applying Function
-    if(is_array($func_list)){
+    if( is_array($func_list) && count($func_list) > 0  ){
         foreach($func_list as $func) {
             $title = $func($title);
         }
@@ -77,7 +77,7 @@ function private_message($array)
     $func_list = $Cbucket->getFunctionList('private_message');
 
     //Applying Function
-    if(is_array($func_list)) {
+    if( is_array($func_list) && count($func_list) > 0 ) {
         foreach($func_list as $func) {
             if(function_exists($func)){
                 $message = $func($message);
@@ -164,8 +164,6 @@ function categories($input,$type,$sep=', ',$object_name=null)
     foreach($cat_array as $cat) {
         $cat_details = $obj->get_category($cat);
 
-        $params = array('name'=>'category_search','category'=>$cat_details['category_id'],'type'=>$type);
-
         $cats .= '<a href="'.category_link($cat_details,$type).'">'.display_clean($cat_details['category_name']).'</a>';
         if($count<$total){
             $cats .= $sep;
@@ -182,13 +180,13 @@ function categories($input,$type,$sep=', ',$object_name=null)
 *
 * @return string
 */
-function page($content)
+function page($content): string
 {
     global $Cbucket;
     //Getting List of comment functions
     $func_list = $Cbucket->getFunctionList('page');
     //Applying Function
-    if(is_array($func_list)){
+    if( is_array($func_list) && count($func_list) > 0 ){
         foreach($func_list as $func) {
             $content = $func($content);
         }
