@@ -5,7 +5,7 @@
 
 define('THIS_PAGE', 'ADMIN_LOGIN');
 require '../includes/admin_config.php';
-Assign('THIS_PAGE', THIS_PAGE);
+Assign('THIS_PAGE', 'login');
 
 if($userquery->is_admin_logged_as_user()) {
 	$userquery->revert_from_user();

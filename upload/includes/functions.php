@@ -2079,6 +2079,10 @@
 			$timestamp = strtotime($timestamp);
         }
 
+		if( $timestamp < 0 ){
+		    return 'N/A';
+        }
+
 		if(!$timestamp){
 			return date($format);
         }
@@ -2088,8 +2092,9 @@
 
 	function cbdatetime($format=NULL,$timestamp=NULL)
 	{
-		if(!$format)
+		if(!$format){
 			$format = DATE_FORMAT.' h:m:s';
+        }
 
 		return cbdate($format,$timestamp);
 	}
@@ -2138,9 +2143,9 @@
 		$curr = time();
 		$diff = $curr - $active;
 		if($diff > $margin) {
-			return 'offline';
+			return lang('offline');
 		}
-		return 'online';
+		return lang('online');
 	}
 
 	/**

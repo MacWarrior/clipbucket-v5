@@ -1,4 +1,5 @@
 <?php
+
 require_once '../includes/admin_config.php';
 global $userquery,$pages,$Upload,$myquery;
 $userquery->admin_login_check();

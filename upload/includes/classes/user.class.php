@@ -263,7 +263,7 @@ class userquery extends CBCategory{
 				if(!$udetails){
 					$msg[] = e(lang('usr_login_err'));
                 } elseif(strtolower($udetails['usr_status']) != 'ok') {
-					$msg[] = e(lang('user_inactive_msg'));
+					$msg[] = e(lang('user_inactive_msg'), 'e', false);
                 } elseif($udetails['ban_status'] == 'yes') {
 					$msg[] = e(lang('usr_ban_err'));
                 } else {
@@ -2142,7 +2142,8 @@ class userquery extends CBCategory{
 	{
 		global $db;
 		$result = $db->select(tbl($this->dbtbl['user_profile']),'*'," userid='$uid'");
-		if(count($result)>0){
+
+		if(count($result) > 0){
 			return $result[0];
         }
 		return false;
@@ -3099,9 +3100,9 @@ class userquery extends CBCategory{
 		$dob = $default['dob'] ?? '';
 
 		if( $dob != '' && $dob != '0000-00-00' ){
-		    $dob_datetime = DateTime::createFromFormat(DATE_FORMAT, $dob);
-		    if( $dob_datetime ){
-		        $dob = $dob_datetime->format('Y-m-d');
+            $dob_datetime = DateTime::createFromFormat('Y-m-d', $dob);
+            if( $dob_datetime ){
+                $dob = $dob_datetime->format(DATE_FORMAT);
             }
         }
 
@@ -3716,7 +3717,7 @@ class userquery extends CBCategory{
 			case 'a':
 				$avcode = RandomString(10);
 				$db->update($tbl,array('usr_status','avcode'),array('Ok',$avcode)," userid='$uid' ");
-				e(lang('User has been activated'),'m');
+				e(lang('usr_ac_msg'),'m');
 				break;
 			
 			//Deactivating a user
@@ -3725,7 +3726,7 @@ class userquery extends CBCategory{
 			case 'd':
 				$avcode = RandomString(10);
 				$db->update($tbl,array('usr_status','avcode'),array('ToActivate',$avcode)," userid='$uid' ");
-				e(lang('User has been deactivated'),'m');
+				e(lang('usr_dac_msg'),'m');
 				break;
 			
 			//Featuring user
@@ -3748,14 +3749,14 @@ class userquery extends CBCategory{
 			case 'ban':
 			case 'banned':
 				$db->update($tbl,array('ban_status'),array('yes')," userid='$uid' ");
-				e(lang('User has been banned'),'m');
+				e(lang('usr_uban_msg'),'m');
 				break;
 
 			//Ban User
 			case 'unban':
 			case 'unbanned':
 				$db->update($tbl,array('ban_status'),array('no')," userid='$uid' ");
-				e(lang('User has been unbanned'),'m');
+				e(lang('usr_uuban_msg'),'m');
 				break;
 		}
 	}
@@ -3929,7 +3930,7 @@ class userquery extends CBCategory{
                 } elseif(!$udetails) {
 					$msg[] = e(lang('usr_login_err'));
                 } elseif(strtolower($udetails['usr_status']) != 'ok') {
-					$msg[] = e(lang('user_inactive_msg'));
+					$msg[] = e(lang('user_inactive_msg'), 'e', false);
                 } elseif($udetails['ban_status'] == 'yes') {
 					$msg[] = e(lang('usr_ban_err'));
                 } else {

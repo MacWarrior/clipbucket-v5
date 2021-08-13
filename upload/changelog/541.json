@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"79",
+  "revision":"80",
   "status":"dev",
   "detail":[
     {
@@ -55,6 +55,7 @@
         ,"Update video conversion logs"
         ,"Fix configs save"
         ,"Fix video's date recorded save and display"
+        ,"Update user's date of birth, last login and last active display"
       ]
     }
   ,{

@@ -1,5 +1,5 @@
 <?php
-define("THIS_PAGE","edit_account");
+define('THIS_PAGE','edit_account');
 
 global $userquery,$Cbucket;
 
@@ -19,15 +19,14 @@ if(isset($_POST['update_profile']))
 }
 
 //Updating Avatar
-if(isset($_POST['update_avatar_bg']))
-{
+if(isset($_POST['update_avatar_bg'])) {
 	$array = $_POST;
 	$array['userid'] = userid();
 	$userquery->update_user_avatar_bg($array);
 }
 
-if(isset($_FILES["coverPhoto"])){
-	if(isset($_FILES["coverPhoto"]) && get_mime_type($_FILES["coverPhoto"]['tmp_name']) == 'image'){
+if(isset($_FILES['coverPhoto'])){
+	if(isset($_FILES['coverPhoto']) && get_mime_type($_FILES['coverPhoto']['tmp_name']) == 'image'){
 		$array = $_FILES;
 
 		$extension = getExt( $_FILES['coverPhoto']['name']);
@@ -36,9 +35,9 @@ if(isset($_FILES["coverPhoto"])){
 
 	    if (!in_array($extension, $supported_extensions)) {
 	        $response = array(
-				"status" => false,
-				"msg" => "Invalid extension provided",
-				"url" => false,
+				'status' => false,
+				'msg' => 'Invalid extension provided',
+				'url' => false
             );
 			echo json_encode($response);
 			die();
@@ -48,55 +47,52 @@ if(isset($_FILES["coverPhoto"])){
 		$coverUpload = $userquery->updateCover($array);
 		$timeStamp = time();
 		$response = array(
-			"status" => $coverUpload["status"],
-			"msg" => $coverUpload["msg"],
-			"url" => $userquery->getCover(userid()) . "?{$timeStamp}",
+			'status' => $coverUpload['status'],
+			'msg' => $coverUpload['msg'],
+			'url' => $userquery->getCover(userid()) . "?{$timeStamp}"
         );
 		echo json_encode($response);
 		die();
 	} else {
 		$response = array(
-			"status" => false,
-			"msg" => "Invalid Image provided",
-			"url" => false,
+			'status' => false,
+			'msg' => 'Invalid Image provided',
+			'url' => false
         );
 		echo json_encode($response);
 		die();
 	}
 }
-if(isset($_FILES["avatar_file"]) && $_GET['ajax'] == true){
+if(isset($_FILES['avatar_file']) && $_GET['ajax'] == true){
 	$array = $_FILES;
 	$array['userid'] = userid();
 	$userquery->update_user_avatar_bg($array);
 	$timeStamp = time();
 	$response = array(
-		"status" => $coverUpload["status"],
-		"msg" => $coverUpload["msg"],
-		"url" => $userquery->getUserThumb(false,false,userid()) . "?{$timeStamp}",
+		'status' => $coverUpload['status'],
+		'msg' => $coverUpload['msg'],
+		'url' => $userquery->getUserThumb(false,false,userid()) . "?{$timeStamp}"
     );
 	echo json_encode($response);
 	die();
 }
 
 //Changing Email
-if(isset($_POST['change_email']))
-{
+if(isset($_POST['change_email'])) {
 	$array = $_POST;
 	$array['userid'] = userid();
 	$userquery->change_email($array);
 }
 
 //Changing User Password
-if(isset($_POST['change_password']))
-{
+if(isset($_POST['change_password'])) {
 	$array = $_POST;
 	$array['userid'] = userid();
 	$userquery->change_password($array);
 }
 
 //Banning Users
-if(isset($_POST['block_users']))
-{
+if(isset($_POST['block_users'])) {
 	$userquery->block_users($_POST['users']);
 }
 
@@ -119,19 +115,19 @@ switch($mode)
 	
 	case 'avatar_bg':
 		Assign('extensions', $Cbucket->get_extensions('photo'));
-		assign("coverPhoto", $userquery->getCover(userid()));
+		assign('coverPhoto', $userquery->getCover(userid()));
 		assign('mode','avatar_bg');
 		break;
 
 	case 'channel_bg':
 		Assign('extensions', $Cbucket->get_extensions('photo'));
-		assign("coverPhoto", $userquery->getCover(userid()));
+		assign('coverPhoto', $userquery->getCover(userid()));
 		assign('mode','channel_bg');
 		break;
 
 	case 'change_cover':
 		Assign('extensions', $Cbucket->get_extensions('photo'));
-		assign("coverPhoto", $userquery->getCover(userid()));
+		assign('coverPhoto', $userquery->getCover(userid()));
 		assign('mode','change_cover');
 		break;
 	
@@ -149,8 +145,7 @@ switch($mode)
 	
 	case 'subscriptions':
 		//Removing subscription
-		if(isset($_GET['delete_subs']))
-		{
+		if(isset($_GET['delete_subs'])) {
 			$sid = mysql_clean($_GET['delete_subs']);
 			$userquery->unsubscribe_user($sid);
 		}
@@ -161,15 +156,19 @@ switch($mode)
 	default:
 		assign('on','account');
 		assign('mode','profile_settings');
+		break;
 }
-
 
 $udetails = $userquery->get_user_details(userid());
 $profile = $userquery->get_user_profile($udetails['userid']);
-$user_profile = array_merge($udetails,$profile);
+if( is_array($profile) ){
+    $user_profile = array_merge($udetails,$profile);
+} else {
+    $user_profile = $udetails;
+}
 
 assign('user',$udetails);
 assign('p',$user_profile);
-subtitle(lang("user_manage_my_account"));
+subtitle(lang('user_manage_my_account'));
 template_files('edit_account.html');
 display_it();

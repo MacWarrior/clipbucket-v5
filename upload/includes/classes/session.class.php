@@ -38,21 +38,20 @@ class Session
 	function add_session($user,$name,$value=false,$reg=false)
 	{
 		global $db,$pages;
-		if(!$value)
+		if(!$value){
 			$value = $this->id;
+        }
 		
 		$sessions = $this->get_user_session($user,$name,true);
 		
-		if(count($sessions)>0)
-		{
+		if(count($sessions)>0) {
 			$db->delete(tbl($this->tbl),array('session_string','session'),array($name,$this->id));
 		}
 		
 		$cur_url = $pages->GetCurrentUrl();
 		
-		if(THIS_PAGE!='cb_install')
-		{
-			if($name === "guest" && config("store_guest_session") !== "yes"){
+		if( THIS_PAGE != 'cb_install' ) {
+			if($name === 'guest' && config('store_guest_session') !== 'yes'){
 				// do nothing
 			} else {
 				$db->insert(tbl($this->tbl),array('session_user','session','session_string','ip','session_value','session_date',
@@ -60,8 +59,8 @@ class Session
 				array($user,$this->id,$name,$_SERVER['REMOTE_ADDR'],$value,now(),now(),getArrayValue($_SERVER, 'HTTP_REFERER'),$_SERVER['HTTP_USER_AGENT'],$cur_url));
 			}
 		}
-		if($reg)
-		{
+
+		if($reg) {
 			//Finally Registering session
 			$this->session_val($name,$value);
 		}
