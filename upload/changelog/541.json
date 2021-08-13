@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"73",
+  "revision":"74",
   "status":"dev",
   "detail":[
     {
@@ -85,6 +85,7 @@
         ,"Add missing PHP module"
         ,"Add Debian 11 installation script"
         ,"Update PHP configuration in installation scripts"
+        ,"Add missing lshw in installation scripts"
       ]
     }
   ,{

@@ -10,7 +10,7 @@ echo -ne " OK"
 
 echo ""
 echo -ne "Installing requiered elements..."
-apt install php7.4-fpm nginx-full mariadb-server git php7.4-curl ffmpeg php7.4-mysqli php7.4-xml php7.4-mbstring php7.4-gd sendmail mediainfo --yes > /dev/null 2>&1
+apt install php7.4-fpm nginx-full mariadb-server git php7.4-curl ffmpeg php7.4-mysqli php7.4-xml php7.4-mbstring php7.4-gd sendmail mediainfo lshw --yes > /dev/null 2>&1
 sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 50M/g" /etc/php/7.4/fpm/php.ini
 sed -i "s/post_max_size = 8M/post_max_size = 50M/g" /etc/php/7.4/fpm/php.ini
 sed -i "s/max_execution_time = 30/max_execution_time = 7200/g" /etc/php/7.4/fpm/php.ini
