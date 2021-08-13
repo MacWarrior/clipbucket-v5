@@ -312,11 +312,11 @@ class ClipBucket
 
         if ($per['member_moderation'] == "yes") {
             $menu_users = array(
-                'title' => 'Users'
+                'title' => lang('users')
                 ,'class' => 'glyphicon glyphicon-user'
                 ,'sub' => array(
                     array(
-                        'title' => 'Manage Members'
+                        'title' => lang('grp_manage_members_title')
                         ,'url' => ADMIN_BASEURL.'/members.php'
                     )
                     ,array(

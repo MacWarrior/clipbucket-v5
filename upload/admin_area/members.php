@@ -24,7 +24,7 @@
 	elseif($_GET['search'] == 'yes' && $_GET['status'] == 'Ok')
 		$breadcrumb[1] = array('title' => 'Active Only', 'url' => ADMIN_BASEURL.'/members.php?status=Ok&search=Search');
 	else
-		$breadcrumb[1] = array('title' => 'Manage Members', 'url' => ADMIN_BASEURL.'/members.php');
+		$breadcrumb[1] = array('title' => lang('grp_manage_members_title'), 'url' => ADMIN_BASEURL.'/members.php');
 
 	//Delete User
 	if(isset($_GET['deleteuser']))
@@ -223,6 +223,6 @@
 	);
 	assign('cat_array', $cat_array);
 
-	subtitle("Members Manager");
+	subtitle(lang('grp_manage_members_title'));
 	template_files('members.html');
 	display_it();

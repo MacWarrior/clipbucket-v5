@@ -3,7 +3,7 @@
     {if $smarty.get.private=='private'}
         Private Channels
     {else}
-        Member Manager
+        {lang code='grp_manage_members_title'}
     {/if}
     </h2>
     {include file="$layout_dir/blocks/advanced_member_search.html" }
@@ -55,7 +55,7 @@
                             {*if $smarty.get.private=='private'}
                             Private Channels
                             {else}
-                            Member Manager
+                            {lang code='grp_manage_members_title'}
                             {/if*}
 
                             {if function_exists('channels_control')}
