@@ -18,6 +18,11 @@ class Upload
 		$required_fields = $this->loadRequiredFields($array);
 		$location_fields = $this->loadLocationFields($array);
 		$option_fields = $this->loadOptionFields($array);
+
+		$date_recorded = DateTime::createFromFormat(DATE_FORMAT, $location_fields['date_recorded']['value']);
+		if( $date_recorded ){
+            $location_fields['date_recorded']['value'] = $date_recorded->format('Y-m-d');
+        }
 		
 		if($array==NULL){
 			$array = $_POST;
@@ -269,10 +274,10 @@ class Upload
        	{
             while(1){
 		  		//setting variable for CB 2.8 greater versions
-              	$path = THUMBS_DIR.'/'.dir.'/'.$file_name.'-original-'.$code.'.';
+              	$path = THUMBS_DIR.DIRECTORY_SEPARATOR.dir.DIRECTORY_SEPARATOR.$file_name.'-original-'.$code.'.';
               	if(!file_exists($path.'jpg') && !file_exists($path.'png') && !file_exists($path.'gif')){
               		//setting variable for CB 2.8 lower versions
-              		$path = THUMBS_DIR.'/'.dir.'/'.$file_name.'-'.$big.$code.'.';
+              		$path = THUMBS_DIR.DIRECTORY_SEPARATOR.dir.DIRECTORY_SEPARATOR.$file_name.'-'.$big.$code.'.';
               	}
 
 		      	if(!file_exists($path.'jpg') && !file_exists($path.'png') && !file_exists($path.'gif')){
@@ -283,7 +288,7 @@ class Upload
 		} else {
             while(1)
 			{
-		        $path = THUMBS_DIR.'/'.$file_name.'-'.$big.$code.'.';
+		        $path = THUMBS_DIR.DIRECTORY_SEPARATOR.$file_name.'-'.$big.$code.'.';
 			    if(!file_exists($path.'jpg') && !file_exists($path.'png') && !file_exists($path.'gif')){
 			      	break;
 			    }
@@ -325,18 +330,18 @@ class Upload
 							$width_setting  = $imageDetails[0];
 							$height_setting = $imageDetails[1];
 						}
-						$outputFilePath = THUMBS_DIR.'/'.$files_dir.'/'.$file_name.'-'.$dimensions.'-'.$file_num.'.'.$ext;	
+						$outputFilePath = THUMBS_DIR.DIRECTORY_SEPARATOR.$files_dir.DIRECTORY_SEPARATOR.$file_name.'-'.$dimensions.'-'.$file_num.'.'.$ext;
 						$imgObj->CreateThumb($temp_file_path,$outputFilePath,$width_setting,$ext,$height_setting,false);
 					}
 
 					unlink($temp_file_path);
 				} else {
 					if($files_dir!=NULL){
-						$file_path = THUMBS_DIR.'/'.$files_dir.'/'.$file_name.'-'.$file_num.'.'.$ext;
-						$big_file_path = THUMBS_DIR.'/'.$files_dir.'/'.$file_name.'-big-'.$file_num.'.'.$ext;	
+						$file_path = THUMBS_DIR.DIRECTORY_SEPARATOR.$files_dir.DIRECTORY_SEPARATOR.$file_name.'-'.$file_num.'.'.$ext;
+						$big_file_path = THUMBS_DIR.DIRECTORY_SEPARATOR.$files_dir.DIRECTORY_SEPARATOR.$file_name.'-big-'.$file_num.'.'.$ext;
 					} else {
-						$file_path = THUMBS_DIR.'/'.$file_name.'-'.$file_num.'.'.$ext;
-						$big_file_path = THUMBS_DIR.'/'.$file_name.'-big-'.$file_num.'.'.$ext;
+						$file_path = THUMBS_DIR.DIRECTORY_SEPARATOR.$file_name.'-'.$file_num.'.'.$ext;
+						$big_file_path = THUMBS_DIR.DIRECTORY_SEPARATOR.$file_name.'-big-'.$file_num.'.'.$ext;
 					}
 					move_uploaded_file($file['tmp_name'][$key],$file_path);
 					$imgObj->CreateThumb($file_path,$big_file_path,config('big_thumb_width'),$ext,config('big_thumb_height'),false);
@@ -361,7 +366,7 @@ class Upload
 	 */
 	function upload_thumbs($file_name,$file_array,$files_dir=NULL,$thumbs_ver=false)
 	{
-		if(count($file_array[name])>1) {
+		if(count($file_array['name'])>1) {
 			for($i=0;$i<count($file_array['name']);$i++) {
 				$this->upload_thumb($file_name,$file_array,$i,$files_dir,$thumbs_ver);
 			}
@@ -647,6 +652,11 @@ class Upload
 		if( isset($default['datecreated']) ){
             $date_recorded = $default['datecreated'];
         }
+
+        $datecreated = DateTime::createFromFormat('Y-m-d', $date_recorded);
+        if( $datecreated ){
+            $date_recorded = $datecreated->format(DATE_FORMAT);
+        }
 		
 		return array(
 			'country' => array(
@@ -751,8 +761,8 @@ class Upload
 	/**
 	 * Function used to load upload form
 	 */
-	function load_upload_options()
-	{
+	function load_upload_options(): array
+    {
 		global $Cbucket,$Smarty;
 		$opt_list = $Cbucket->upload_opt_list;
 		
@@ -765,7 +775,7 @@ class Upload
 
 	/**
 	 * Function used to perform some actions , after video is upload
-	 * @param Videoid
+	 * @param int Videoid
 	 */
 	function do_after_video_upload($vid)
 	{
@@ -848,18 +858,16 @@ class Upload
 				}
 			}
 			foreach($cleaned as $key => $fields) {
-					if($data[$fields['db_field']]) {
-						$value = $data[$fields['db_field']];
-					} elseif($data[$fields['name']]) {
-						$value = $data[$fields['name']];
-					}
-					if($fields['type']=='radiobutton' || $fields['type']=='checkbox' || $fields['type']=='dropdown') {
-						$fields['checked'] = $value;
-					} else {
-						$fields['value'] = $fields['value'];
-					}
-						
-					$new_array[$key] = $fields;
+                if($data[$fields['db_field']]) {
+                    $value = $data[$fields['db_field']];
+                } elseif($data[$fields['name']]) {
+                    $value = $data[$fields['name']];
+                }
+                if($fields['type']=='radiobutton' || $fields['type']=='checkbox' || $fields['type']=='dropdown') {
+                    $fields['checked'] = $value;
+                }
+
+                $new_array[$key] = $fields;
 			}
 			return $new_array;
 		}
@@ -876,7 +884,7 @@ class Upload
 	 *
 	 * @return string|bool
 	 */
-	function upload_user_file($type='a',$file,$uid)
+	function upload_user_file($type,$file,$uid)
     {
 		global $userquery,$cbphoto,$imgObj;
 		$av_details = getimagesize($file['tmp_name']);
@@ -921,7 +929,7 @@ class Upload
 	/** 
 	 * Function used to upload website logo
 	 * @param logo_file
-	 * @return $file_name.'.'.$ext;
+	 * @return string $file_name.'.'.$ext;
 	 */
 	function upload_website_logo($file)
 	{
@@ -940,7 +948,6 @@ class Upload
                 }
 
 				move_uploaded_file($file['tmp_name'],$file_path);
-				//$imgObj->CreateThumb($file_path,$file_path,200,$ext,200,false);
 				e('Logo has been uploaded','m');
 				return $file_name.'.'.$ext;
 			} else {
@@ -1045,8 +1052,9 @@ class Upload
 					$matched = false;
 				}
 
-				if(!$matched)
+				if(!$matched){
 					$fields[] = $fieldGroup;
+                }
 			}
 		}
 		
@@ -1064,17 +1072,5 @@ class Upload
 			return ($match[0]);
         }
 		return false;
-	}	
-	
-	function time_to_sec($time)
-	{
-		if(!$this->isTime($time)){
-			e(lang('Format of time is not right.'));
-        } else {
-			$hours = substr($time, 0, -6); 
-			$minutes = substr($time, -5, 2); 
-			$seconds = substr($time, -2); 
-			return $hours * 3600 + $minutes * 60 + $seconds; 
-		}
 	}
 }	

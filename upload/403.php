@@ -1,15 +1,16 @@
 <?php
-define("THIS_PAGE",'403');
+define('THIS_PAGE','403');
+global $cbvid;
 require 'includes/config.inc.php';
 
-if(file_exists(LAYOUT."/403.html")) {
+if(file_exists(LAYOUT.'/403.html')) {
     template_files('403.html');
-    $videos = $cbvid->get_videos(array("order"=>"date_added DESC","limit"=>4));
+    $videos = $cbvid->get_videos(array('order'=>'date_added DESC','limit'=>4));
     assign('videos',$videos);
 } else {
-    $data = "403_error";
+    $data = '403_error';
     if(has_access('admin_access')) {
-        e(sprintf(lang("err_warning"),"403","http://docs.clip-bucket.com/?p=154"),"w");
+        e(sprintf(lang('err_warning'),'403','http://docs.clip-bucket.com/?p=154'),'w');
     }
     e(lang($data));
 }

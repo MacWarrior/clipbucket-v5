@@ -232,7 +232,7 @@ class CBvideo extends CBCategory
         if ( $data ) {
             return $data;
         }
-        //pr($query,true);
+
         $result = select( $query );
 
         if ( $result )

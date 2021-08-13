@@ -123,7 +123,7 @@
 								<tr>
 									<td class="first"><label>Uploaded Date</label></td>
 									<td class="last">
-										<p><span>{$data.date_added|date_only}</span></p>
+										<p><span>{$data.date_added}</span></p>
 									</td>
 								</tr>
 								<tr>
@@ -493,7 +493,7 @@
 				$( "#datecreated" ).datepicker({
 					showOtherMonths: true,
 					selectOtherMonths: false,
-					dateFormat:"yy-mm-dd"
+                    dateFormat:"{get_date_js()}"
 				});
 			});
 		</script>

@@ -3585,12 +3585,12 @@
 	 */
 	function datecreated($in): string
     {
-	    if( $in ){
+	    if( !empty($in) ){
 	        $datecreated = DateTime::createFromFormat(DATE_FORMAT, $in);
-            if( $datecreated->format('Y-m-d') == '-0001-11-30' ){
-                return '2000-01-01';
+	        if( $datecreated ){
+                return $datecreated->format('Y-m-d');
             }
-            return $datecreated->format('Y-m-d');
+            return $in;
         }
         return '2000-01-01';
 	}
@@ -4958,21 +4958,6 @@
         	return $cont_type;
         }
         return false;
-	}
-
-	/**
-		* Trims the date added to date only
-		* @param : { $date_time }
-		* @author : Awais Fiaz
-		* @since : 5 March, 2018
-		* @todo : will trim the date and time to date only
-		* @return : { Date }
-		* @example : N/A
-    */
-	function date_only($date_time)
-	{
-       $arr = explode(" ",$date_time);
-       return $arr[0];
 	}
 
 	function get_date_js()
