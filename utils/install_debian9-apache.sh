@@ -1,22 +1,24 @@
 #!/bin/bash
-# Clipbucket install on Ubuntu 21.04
+# Clipbucket install on Debian 9.0 - 9.5
 ## THIS SCRIPT MUST BE LAUNCHED AS ROOT
 
 echo ""
-echo -ne "Updating Ubuntu system..."
-apt update > /dev/null 2>&1
-apt upgrade -y > /dev/null 2>&1
+echo -ne "Updating Debian system..."
+apt-get update > /dev/null
+apt-get dist-upgrade -f > /dev/null
 echo -ne " OK"
 
 echo ""
-echo -ne "Installing required elements..."
-apt-get install php7.4 apache2 mariadb-server php-curl ffmpeg php7.4-mysql php7.4-xml php7.4-mbstring php7.4-gd sendmail mediainfo --yes > /dev/null 2>&1
-service mariadb start > /dev/null
+echo -ne "Installing requiered elements..."
+apt-get install php7.0 apache2 mariadb-server git php-curl ffmpeg php7.0-mysqli php7.0-xml php7.0-mbstring php7.0-gd sendmail mediainfo --yes > /dev/null 2>&1
+sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 50M/g" /etc/php/7.0/apache2/php.ini
+sed -i "s/post_max_size = 8M/post_max_size = 50M/g" /etc/php/7.0/apache2/php.ini
+sed -i "s/max_execution_time = 30/max_execution_time = 7200/g" /etc/php/7.0/apache2/php.ini
 echo -ne " OK"
 
 echo ""
 echo -ne "Installing Clipbucket sources..."
-mkdir -p /srv/www/clipbucket/ && cd "$_"
+mkdir -p /home/http/clipbucket/ && cd "$_"
 git clone https://github.com/MacWarrior/clipbucket-v5.git ./ > /dev/null 2>&1
 echo -ne " OK"
 
@@ -43,12 +45,13 @@ echo "- Database password : ${DB_PASS}"
 
 echo ""
 echo -ne "Configuring Apache Vhost..."
+a2enmod rewrite
 cat << 'EOF' > /etc/apache2/sites-available/001-clipbucket.conf
 <VirtualHost *:80>
     ServerName clipbucket.local
-    DocumentRoot /srv/www/clipbucket/upload/
+    DocumentRoot /home/http/clipbucket/upload/
 
-    <Directory /srv/www/clipbucket/upload/>
+    <Directory /home/http/clipbucket/upload/>
         Options Indexes FollowSymLinks
         AllowOverride all
         Order allow,deny
@@ -61,13 +64,10 @@ cat << 'EOF' > /etc/apache2/sites-available/001-clipbucket.conf
 EOF
 
 a2ensite 001-clipbucket > /dev/null
-a2dissite 000-default > /dev/null
-a2enmod rewrite > /dev/null
-systemctl reload apache2
 
 cat << 'EOF' >> /etc/apache2/apache2.conf
 
-<Directory /srv/www/>
+<Directory /home/http/>
         Options Indexes FollowSymLinks
         AllowOverride None
         Require all granted

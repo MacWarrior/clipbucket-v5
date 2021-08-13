@@ -1,23 +1,25 @@
 #!/bin/bash
-# Clipbucket install on Ubuntu 18.04 - By Miasmaejuices
+# Clipbucket install on Ubuntu 21.04
 ## THIS SCRIPT MUST BE LAUNCHED AS ROOT
 
 echo ""
 echo -ne "Updating Ubuntu system..."
-add-apt-repository universe > /dev/null
 apt update > /dev/null 2>&1
 apt upgrade -y > /dev/null 2>&1
 echo -ne " OK"
 
 echo ""
 echo -ne "Installing required elements..."
-apt-get install php7.2 apache2 mariadb-server php-curl ffmpeg php7.2-mysql php7.2-xml php7.2-mbstring php7.2-gd sendmail mediainfo --yes > /dev/null 2>&1
-/etc/init.d/mysql start > /dev/null
+apt-get install php7.4 apache2 mariadb-server php-curl ffmpeg php7.4-mysql php7.4-xml php7.4-mbstring php7.4-gd sendmail mediainfo --yes > /dev/null 2>&1
+sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 50M/g" /etc/php/7.4/apache2/php.ini
+sed -i "s/post_max_size = 8M/post_max_size = 50M/g" /etc/php/7.4/apache2/php.ini
+sed -i "s/max_execution_time = 30/max_execution_time = 7200/g" /etc/php/7.4/apache2/php.ini
+service mariadb start > /dev/null
 echo -ne " OK"
 
 echo ""
 echo -ne "Installing Clipbucket sources..."
-mkdir -p /var/www/clipbucket/ && cd "$_"
+mkdir -p /srv/www/clipbucket/ && cd "$_"
 git clone https://github.com/MacWarrior/clipbucket-v5.git ./ > /dev/null 2>&1
 echo -ne " OK"
 
@@ -26,11 +28,6 @@ echo -ne "Updating sources access permissions..."
 chown www-data: -R ../clipbucket/
 chmod 755 -R ./upload/cache ./upload/files ./upload/images ./upload/includes/langs
 chmod 755 ./upload/includes
-echo -ne " OK"
-
-echo ""
-echo -ne "Adding Softlinks..."
-ln -s /usr/bin/ffmpeg /usr/local/bin/ffmpeg
 echo -ne " OK"
 
 echo ""
@@ -49,13 +46,12 @@ echo "- Database password : ${DB_PASS}"
 
 echo ""
 echo -ne "Configuring Apache Vhost..."
-a2enmod rewrite
 cat << 'EOF' > /etc/apache2/sites-available/001-clipbucket.conf
 <VirtualHost *:80>
     ServerName clipbucket.local
-    DocumentRoot /var/www/clipbucket/upload/
+    DocumentRoot /srv/www/clipbucket/upload/
 
-    <Directory /var/www/clipbucket/upload/>
+    <Directory /srv/www/clipbucket/upload/>
         Options Indexes FollowSymLinks
         AllowOverride all
         Order allow,deny
@@ -74,7 +70,7 @@ systemctl reload apache2
 
 cat << 'EOF' >> /etc/apache2/apache2.conf
 
-<Directory /home/http/>
+<Directory /srv/www/>
         Options Indexes FollowSymLinks
         AllowOverride None
         Require all granted

@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"72",
+  "revision":"73",
   "status":"dev",
   "detail":[
     {
@@ -84,6 +84,7 @@
         ,"Update apache vhosts in installation scripts to support properly SEO URLs <i>#160</i>"
         ,"Add missing PHP module"
         ,"Add Debian 11 installation script"
+        ,"Update PHP configuration in installation scripts"
       ]
     }
   ,{
