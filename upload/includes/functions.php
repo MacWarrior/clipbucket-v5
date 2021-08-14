@@ -2523,7 +2523,7 @@
 	 * @internal param $ : { string } { $mode } { element to sort e.g time } { $mode } { element to sort e.g time }
 	 * @internal param $ : { string } { $type } { type of element to sort e.g channels } { $type } { type of element to sort e.g channels }
 	 */
-	function sort_link($sort,$mode='sort',$type)
+	function sort_link($sort,$mode,$type)
 	{
 		switch($type) {
 			case 'video':
