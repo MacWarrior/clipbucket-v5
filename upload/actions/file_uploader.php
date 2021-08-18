@@ -62,7 +62,7 @@ switch($mode)
     case 'upload':
         $config_for_mp4 = $Cbucket->configs['stay_mp4'];
         $ffmpegpath = $Cbucket->configs['ffmpegpath'];
-        $extension = getExt( $_FILES['Filedata']['name']);
+        $extension = getExt($_FILES['Filedata']['name']);
 
         #checking for if the right file is uploaded
         $content_type = get_mime_type($_FILES['Filedata']['tmp_name']);
@@ -199,11 +199,11 @@ switch($mode)
         $log->writeLine('Video Conversion File Execution', $TempLogData, true);
 
         $vidDetails = array(
-            'title'           => $file_name
+            'title'           => $_FILES['Filedata']['name']
             ,'file_name'      => $file_name
             ,'file_directory' => $file_directory
-            ,'description'    => $file_name
-            ,'tags'           => $file_name
+            ,'description'    => $_FILES['Filedata']['name']
+            ,'tags'           => genTags(str_replace(array(' ','_','-'),', ',$_FILES['Filedata']['name']))
             ,'category'       => [$cbvid->get_default_cid()]
             ,'userid'         => userid()
         );

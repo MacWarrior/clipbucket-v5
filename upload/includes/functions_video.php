@@ -715,7 +715,7 @@
             }
 		}
 
-        if(count($files)==0 && !$multi && !$count_only) {
+        if((!is_array($files) || count($files)==0) && !$multi && !$count_only) {
             if($return_default) {
                 if($with_path) {
                     return VIDEOS_URL.'/no_video.flv';

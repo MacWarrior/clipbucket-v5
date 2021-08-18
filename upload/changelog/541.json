@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"85",
+  "revision":"86",
   "status":"dev",
   "detail":[
     {
@@ -74,6 +74,7 @@
         ,"Update Bootstrap to version 3.3.7"
         ,"Fix user avatar update"
         ,"Photo upload : Fix photo upload <i>#174</i>"
+        ,"Fix video temporary used on upload <i>#176</i>"
       ]
     }
   ,{
