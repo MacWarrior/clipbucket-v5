@@ -70,24 +70,24 @@
                             <div class="importantDetails">
                                 <h3>Important Details</h3>
                                 <div class="row">
-                                <div class="col-md-4">
-                                    <label for="photoid">Photo id</label>
-                                    <input class="form-control" disabled="disabled" name="photoid" type="text" id="photoid" value="{$data.photo_id}" size="45" />
-                                </div>
-
-                                <div class="col-md-4">
-                                    <label for="photokey">Photo Key</label>
-                                    <input class="form-control" disabled="disabled" name="photokey" type="text" id="photokey" value="{$data.photo_key}" size="45" />
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="filename">File name</label>
-                                    <input class="form-control" disabled="disabled" name="filename" type="text" id="filename" value="{$data.filename}" size="45" />
-                                </div>
+                                    <div class="col-md-4">
+                                        <label for="photoid">Photo id</label>
+                                        <input class="form-control" disabled="disabled" name="photoid" type="text" id="photoid" value="{$data.photo_id}" size="45" />
                                     </div>
-
-                                <div class="form-group">
-                                    <label for="extension">Extension</label>
-                                    <input class="form-control" disabled="disabled" name="extension" type="text" id="extension" value="{$data.ext}" size="45" />
+                                    <div class="col-md-4">
+                                        <label for="photokey">Photo Key</label>
+                                        <input class="form-control" disabled="disabled" name="photokey" type="text" id="photokey" value="{$data.photo_key}" size="45" />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="filename">File name</label>
+                                        <input class="form-control" disabled="disabled" name="filename" type="text" id="filename" value="{$data.filename}" size="45" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="extension">Extension</label>
+                                        <input class="form-control" disabled="disabled" name="extension" type="text" id="extension" value="{$data.ext}" size="45" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -170,9 +170,11 @@
                                         <input class="form-control" name="rated_by" id="rated_by" disabled="disabled" value="{$data.rated_by}" />
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="voters">Voters</label>
-                                    <textarea class="form-control" name="voters" id="voters" disabled="disabled">{$data.voters}</textarea>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="voters">Voters</label>
+                                        <textarea class="form-control" name="voters" id="voters" disabled="disabled">{$data.voters}</textarea>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -202,7 +204,7 @@
             <div class="tab-content">
                 <div id="comments" class="tab-pane active">
                     {foreach from=$otherFields item=field}
-                    {if $field.title=='Comments'}
+                    {if $field.title==lang('comments')}
                     <label><strong>{$field.title}</strong></label><br>
                     {$formObj->createField($field)}
                     {/if}
@@ -210,7 +212,7 @@
                 </div>
                 <div id="embedding" class="tab-pane">
                     {foreach from=$otherFields item=field}
-                    {if $field.title=='Embedding'}
+                    {if $field.title==lang('vdo_embedding')}
                     <label><strong>{$field.title}</strong></label><br>
                     {$formObj->createField($field)}
                     {/if}
@@ -218,7 +220,7 @@
                 </div>
                 <div id="rating2" class="tab-pane">
                     {foreach from=$otherFields item=field}
-                    {if $field.title=='Rating'}
+                    {if $field.title==lang('rating')}
                     <label><strong>{$field.title}</strong></label><br>
                     {$formObj->createField($field)}
                     {/if}

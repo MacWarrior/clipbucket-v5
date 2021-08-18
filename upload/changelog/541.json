@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"86",
+  "revision":"87",
   "status":"dev",
   "detail":[
     {
@@ -57,6 +57,7 @@
         ,"Fix video's date recorded save and display"
         ,"Update user's date of birth, last login and last active display"
         ,"Fix user's category deletion"
+        ,"Fix photo manager not showing informations when not using english translations"
       ]
     }
   ,{
