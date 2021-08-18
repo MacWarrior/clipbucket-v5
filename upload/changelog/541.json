@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"87",
+  "revision":"88",
   "status":"dev",
   "detail":[
     {
@@ -58,6 +58,7 @@
         ,"Update user's date of birth, last login and last active display"
         ,"Fix user's category deletion"
         ,"Fix photo manager not showing informations when not using english translations"
+        ,"Fix changelog when allow_url_fopen is not enabled <i>#139</i>"
       ]
     }
   ,{

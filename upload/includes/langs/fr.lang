@@ -1596,6 +1596,7 @@
 
 	"dashboard_update_status":"Statut de mise à jour",
 	"dashboard_changelogs":"Nouveautés",
+	"dashboard_php_config_allow_url_fopen":"Veuillez activer 'allow_url_fopen' pour pouvoir profiter du statut de mise à jour",
 	"signup_error_email_unauthorized":"Email non autorisé",
 	"video_detail_saved":"Les détails de la vidéo ont été sauvegardés"
 }

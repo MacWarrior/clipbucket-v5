@@ -5246,6 +5246,13 @@
             return '';
         }
 
+        if( !ini_get('allow_url_fopen') ) {
+            if( $only_flag ){
+                return 'red';
+            }
+            return '<div class="well changelog"><h5>'.lang('dashboard_php_config_allow_url_fopen').'</h5></div>';
+        }
+
         $base_url = 'https://raw.githubusercontent.com/MacWarrior/clipbucket-v5/master/upload/changelog';
         $current_version = VERSION;
         $current_status = strtolower(STATE);
