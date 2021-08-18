@@ -1010,6 +1010,7 @@ class CBPhotos
 
 				if(is_array($data) && !empty($data)) {
 				    $encodedData = stripslashes(json_encode($data));
+				    global $db;
 					$db->update(tbl('photos'),array('photo_details'),array("|no_mc|$encodedData")," photo_id = '".$p['photo_id']."' ");
 				}
 			}
