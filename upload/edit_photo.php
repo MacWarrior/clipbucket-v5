@@ -20,9 +20,9 @@ assign('p',$userquery->get_user_profile($udetails['userid']));
 $pid = mysql_clean($_GET['photo']);
 $photo = $cbphoto->get_photo($pid);
 
-if(empty($photo))
-    e(lang("photo_not_exists"));
-elseif($photo['userid'] != userid())
+if(empty($photo)) {
+    e( lang( "photo_not_exist" ) );
+} elseif($photo['userid'] != userid())
 {
     e(lang("You can not edit this photo."));
     $Cbucket->show_page = false;

@@ -54,32 +54,33 @@
 
         if ($custom_date)
         {
-            if(!is_numeric($custom_date))
+            if(!is_numeric($custom_date)){
                 $time = strtotime($custom_date);
-            else
+            } else {
                 $time = $custom_date;
+            }
         }
 
-        $folder = date("Y/m/d", $time);
+        $folder = date('Y/m/d', $time);
 
         $data = cb_call_functions('dated_folder');
-        if($data)
+        if($data){
             return $data;
+        }
 
         if(!$headFolder)
         {
-            @mkdir(VIDEOS_DIR . '/' . $folder, 0777, true);
-            @mkdir(THUMBS_DIR . '/' . $folder, 0777, true);
-            @mkdir(ORIGINAL_DIR . '/' . $folder, 0777, true);
-            @mkdir(PHOTOS_DIR . '/' . $folder, 0777, true);
-            @mkdir(LOGS_DIR . '/' . $folder, 0777, true);
-			@mkdir(AUDIOS_DIR . '/' . $folder, 0777, true);
-        } else if (!file_exists($headFolder . '/' . $folder)) {
-			@mkdir($headFolder . '/' . $folder, 0777, true);
+            @mkdir(VIDEOS_DIR . DIRECTORY_SEPARATOR . $folder, 0777, true);
+            @mkdir(THUMBS_DIR . DIRECTORY_SEPARATOR . $folder, 0777, true);
+            @mkdir(ORIGINAL_DIR . DIRECTORY_SEPARATOR . $folder, 0777, true);
+            @mkdir(PHOTOS_DIR . DIRECTORY_SEPARATOR . $folder, 0777, true);
+            @mkdir(LOGS_DIR . DIRECTORY_SEPARATOR . $folder, 0777, true);
+			@mkdir(AUDIOS_DIR . DIRECTORY_SEPARATOR . $folder, 0777, true);
+        } else if (!file_exists($headFolder . DIRECTORY_SEPARATOR . $folder)) {
+			@mkdir($headFolder . DIRECTORY_SEPARATOR . $folder, 0777, true);
 		}
 
-        $folder = apply_filters($folder, 'dated_folder');
-        return $folder;
+        return apply_filters($folder, 'dated_folder');
     }
 
     function create_dated_folder($headFolder = NULL, $custom_date = NULL)

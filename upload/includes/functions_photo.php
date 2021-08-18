@@ -124,12 +124,12 @@
 			 */
 			$random = substr( $photo['filename'], -6, 6 );
 			$time = str_replace( $random, '', $photo['filename'] );
-			$directory = date( ( defined( 'CB_FILES_SYSTEM_STRUCTURE' ) ? CB_FILES_SYSTEM_STRUCTURE : 'Y/m/d' ), $time );
+			$directory = date('Y/m/d', $time );
 
 			/**
 			 * Making sure file exists at path
 			 */
-			$path = PHOTOS_DIR.'/'.$directory.'/'.$photo[ 'filename' ].'.'.$photo[ 'ext' ];
+			$path = PHOTOS_DIR.DIRECTORY_SEPARATOR.$directory.DIRECTORY_SEPARATOR.$photo[ 'filename' ].'.'.$photo[ 'ext' ];
 			$photo[ 'file_path' ] = $path;
 			$photo = apply_filters( $photo, 'checking_photo_at_structured_path' );
 
@@ -155,8 +155,8 @@
 	{
 		global $cbphoto, $Cbucket;
 		$details = $params['details'];
-		$output = isset($params['output']) ? $params['output'] : false;
-		$static = isset($params['static']) ? $params['static'] : false;
+		$output = $params['output'] ?? false;
+		$static = $params['static'] ?? false;
 
 		$default = array( 't', 'm', 'l', 'o' );
 		$size = $params['size'];

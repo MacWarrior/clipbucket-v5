@@ -43,16 +43,16 @@ switch($mode)
 	    break;
 
 	case 'insert_photo':
-		$_POST['photo_title'] = genTags(str_replace(array('_','-'),' ',$_POST['photo_title']));
-		$_POST['photo_description'] = genTags(str_replace(array('_','-'),' ',$_POST['photo_description']));
+		$_POST['photo_title'] = mysql_clean($_POST['photo_title']);
+		$_POST['photo_description'] = mysql_clean($_POST['photo_description']);
 		$_POST['photo_tags'] = genTags(str_replace(array(' ','_','-'),', ',$_POST['photo_tags']));
-		$_POST['server_url'] = mysql_clean($_POST['server_url']);
-		$_POST['active'] = $Cbucket->configs['photo_activation'];
+		$_POST['server_url'] = 'undefined';
+		$_POST['active'] = !config('photo_activation');
 		$_POST['folder'] = str_replace('..','',mysql_clean($_POST['folder']));
 		$_POST['folder'] = createDataFolders(PHOTOS_DIR);
 		$_POST['filename'] = mysql_clean($_POST['file_name']);
 		$insert_id = $cbphoto->insert_photo();
-		
+
 		if(error()){
 			$response['error'] = error('single');
         }
@@ -71,8 +71,8 @@ switch($mode)
 	    break;
 
 	case 'update_photo':
-		$_POST['photo_title'] = genTags(str_replace(array('_','-'),' ',mysql_clean($_POST['photo_title'])));
-		$_POST['photo_description'] = genTags(str_replace(array('_','-'),' ',mysql_clean($_POST['photo_description'])));
+		$_POST['photo_title'] = mysql_clean($_POST['photo_title']);
+		$_POST['photo_description'] = mysql_clean($_POST['photo_description']);
 		$_POST['photo_tags'] = genTags(str_replace(array(' ','_','-'),', ',mysql_clean($_POST['photo_tags'])));
 				
 		$cbphoto->update_photo();

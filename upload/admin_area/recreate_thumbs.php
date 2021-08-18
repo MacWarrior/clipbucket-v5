@@ -38,7 +38,7 @@
 				assign('files',$files);
 				assign('p',$p);
 			} else
-				e("Photo does not exist");
+				e(lang('photo_not_exist'));
 			break;
 
 		case "mass":

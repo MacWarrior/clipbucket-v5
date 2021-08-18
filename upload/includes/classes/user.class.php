@@ -4289,7 +4289,7 @@ class userquery extends CBCategory{
 					
 					e(sprintf(lang('this_has_set_profile_item'),lang('photo')),'m');
 				} else {
-					e('photo_not_exists');
+					e('photo_not_exist');
                 }
 			    break;
 		}

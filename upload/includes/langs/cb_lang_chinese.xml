@@ -1191,7 +1191,6 @@ by <a href="%s">%s]]></last_post_time_by_user>
 	<upload_video_button>瀏覽影片</upload_video_button>
 	<upload_videos_can_be><![CDATA[<span style=\"font-weight: bold; font-size: 13px;\">Videos can be</span>     <ul>         <li>High Definition</li>         <li>Up to %s in size</li>         <li>Up to %s in length</li>         <li>A wide variety of formats</li>     </ul>]]></upload_videos_can_be>
 	<photo_not_exist>相片不存在</photo_not_exist>
-	<photo_not_exists>相片不存在</photo_not_exists>
 	<photo_success_deleted>相片已刪除</photo_success_deleted>
 	<cant_edit_photo>您沒有權限刪除相片</cant_edit_photo>
 	<you_hv_already_rated_photo>您已經為此相片評分</you_hv_already_rated_photo>

@@ -1154,7 +1154,6 @@
     "upload_video_button": "Browse videos",
     "upload_videos_can_be": "<span style=\"font-weight: bold; font-size: 13px;\">Videos can be<\/span>     <ul>         <li>High Definition<\/li>         <li>Up to %s in size<\/li>         <li>Up to %s in length<\/li>         <li>A wide variety of formats<\/li>     <\/ul>",
     "photo_not_exist": "Photo does not exist.",
-    "photo_not_exists": "Photo does not exist.",
     "photo_success_deleted": "Photo has been deleted successfully.",
     "cant_edit_photo": "You can not edit this photo.",
     "you_hv_already_rated_photo": "You have already rated this photo.",
