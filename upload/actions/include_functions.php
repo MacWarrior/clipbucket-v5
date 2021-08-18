@@ -59,10 +59,11 @@
 
 	function SetTime($sec, $padHours = true)
 	{
-		if($sec < 3600)
+		if($sec < 3600){
 			return old_set_time($sec);
+        }
 			
-		$hms = "";
+		$hms = '';
 	
 		// there are 3600 seconds in an hour, so if we
 		// divide total seconds by 3600 and throw away
@@ -71,7 +72,7 @@
 	
 		// add to $hms, with a leading 0 if asked for
 		$hms .= ($padHours)
-			  ? str_pad($hours, 2, "0", STR_PAD_LEFT). ':'
+			  ? str_pad($hours, 2, '0', STR_PAD_LEFT). ':'
 			  : $hours. ':';
 	
 		// dividing the total seconds by 60 will give us

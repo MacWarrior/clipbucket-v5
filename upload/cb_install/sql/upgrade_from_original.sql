@@ -545,3 +545,7 @@ ALTER TABLE `{tbl_prefix}user_profile`
 
 ALTER TABLE `{tbl_prefix}user_categories`
 	MODIFY COLUMN `category_thumb` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
+
+ALTER TABLE `{tbl_prefix}photos`
+	MODIFY COLUMN `server_url` text NOT NULL DEFAULT '',
+	MODIFY COLUMN `photo_details` text NOT NULL DEFAULT '';

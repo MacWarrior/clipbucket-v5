@@ -1363,7 +1363,7 @@ class CBPhotos
                 }
 			}
 			
-			$query_field[] = "userid";
+			$query_field[] = 'userid';
 			if(!$array['userid']) {
 				$userid = userid();
 				$query_val[] = $userid;
@@ -1371,31 +1371,31 @@ class CBPhotos
 				$query_val[] = $array['userid']; $userid = $array['userid'];
 			}
 			
-			$query_field[] = "date_added";
+			$query_field[] = 'date_added';
 			$query_val[] = NOW();
 
-			$query_field[] = "owner_ip";
+			$query_field[] = 'owner_ip';
 			$query_val[] = $_SERVER['REMOTE_ADDR'];
 			
-			$query_field[] = "ext";
+			$query_field[] = 'ext';
 			$query_val[] = $array['ext'];
 			
-			$query_field[] = "photo_key";
+			$query_field[] = 'photo_key';
 			$query_val[] = $this->photo_key();
 			
-			$query_field[] = "filename";
+			$query_field[] = 'filename';
 			$query_val[] = $array['filename'];
 
-			$query_field[] = "active";
+			$query_field[] = 'active';
 			$query_val[] = $array['active'];
 
-			if($array['server_url'] && $array['server_url'] != "undefined") {
-				$query_field[] = "server_url";
+			if($array['server_url'] && $array['server_url'] != 'undefined') {
+				$query_field[] = 'server_url';
 				$query_val[] = $array['server_url'];
 			}
 			
-			if($array['folder'] && $array['folder'] != "undefined") {
-				$query_field[] = "file_directory";
+			if($array['folder'] && $array['folder'] != 'undefined') {
+				$query_field[] = 'file_directory';
 				$query_val[] = $array['folder'];
 			}
 			$query_val['0'] = $array['title'];
@@ -1409,8 +1409,8 @@ class CBPhotos
             }
 
 			$eh->flush();
-			e(sprintf(lang("photo_is_saved_now"),display_clean($photo['photo_title'])),"m");
-			$db->update(tbl("users"),array("total_photos"),array("|f|total_photos+1")," userid='".$userid."'");
+			e(sprintf(lang('photo_is_saved_now'),display_clean($photo['photo_title'])),'m');
+			$db->update(tbl('users'),array("total_photos"),array("|f|total_photos+1")," userid='".$userid."'");
 			
 			//Adding Photo Feed
 			addFeed(array('action' => 'upload_photo','object_id' => $insert_id,'object'=>'photo'));

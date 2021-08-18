@@ -141,8 +141,8 @@
             'YB' => pow(1024,8)
         );
 
-        $unit = preg_replace("/[0-9]/", "", $size );
-        $size = preg_replace("/[^0-9]/", "", $size );
+        $unit = preg_replace('/[0-9]/', '', $size );
+        $size = preg_replace('/[^0-9]/', '', $size );
         return $size*$units[$unit];
     }
 
@@ -202,16 +202,17 @@
 		$message = $content;
 
 		//ClipBucket uses PHPMailer for sending emails
-		include_once("classes/phpmailer/class.phpmailer.php");
-		include_once("classes/phpmailer/class.smtp.php");
+		include_once('classes/phpmailer/class.phpmailer.php');
+		include_once('classes/phpmailer/class.smtp.php');
 		$mail  = new PHPMailer(); // defaults to using php "mail()"
 		$mail_type = config('mail_type');
 		//---Setting SMTP ---		
 		if($mail_type=='smtp') {
 			$mail->IsSMTP(); // telling the class to use SMTP
 			$mail->Host       = config('smtp_host'); // SMTP server
-			if(config('smtp_auth')=='yes')
+			if(config('smtp_auth')=='yes'){
 				$mail->SMTPAuth   = true;			 // enable SMTP authentication
+            }
 			$mail->Port       = config('smtp_port'); // set the SMTP port for the GMAIL server
 			$mail->Username   = config('smtp_user'); // SMTP account username
 			$mail->Password   = config('smtp_pass'); // SMTP account password
@@ -278,7 +279,7 @@
 		//for server thumb files
 		$parts = parse_url($file);
         $query = isset($query) ? parse_str($parts['query'], $query) : false;
-        $get_file_name = isset($query['src']) ? $query['src'] : false;
+        $get_file_name = $query['src'] ?? false;
         $path = explode('.',$get_file_name);
         $server_thumb_name = $path[0];
         if (!empty($server_thumb_name)) {
@@ -295,15 +296,15 @@
 
     function old_set_time($temps)
 	{
-		round($temps);
+		$temps = round($temps);
 		$heures = floor($temps / 3600);
 		$minutes = round(floor(($temps - ($heures * 3600)) / 60));
 		if ($minutes < 10) {
-			$minutes = "0" . round($minutes);
+			$minutes = '0' . round($minutes);
 		}
 		$secondes = round($temps - ($heures * 3600) - ($minutes * 60));
 		if ($secondes < 10) {
-			$secondes = "0" .  round($secondes);
+			$secondes = '0' .  round($secondes);
 		}
 		return $minutes . ':' . $secondes;
 	}
@@ -317,8 +318,7 @@
 	 *
 	 */
 	function GetExt($file) {
-		$extension = strtolower(end(explode('.', $file)));
-		return $extension;
+		return strtolower(end(explode('.', $file)));
 	}
 
 	/**
@@ -331,8 +331,7 @@
 	 */
 	function SetTime($sec, $padHours = true)
 	{
-		if($sec < 3600)
-		{
+		if($sec < 3600) {
 			return old_set_time($sec);
 		}
 		$hms = "";
@@ -422,18 +421,18 @@
 	{
         // bytes
         if( $data < 1024 ) {
-            return $data . " bytes";
+            return $data . ' bytes';
         }
         // kilobytes
        	if( $data < 1024000 ) {
-			return round( ( $data / 1024 ), 1 ) . "KB";
+			return round( ( $data / 1024 ), 1 ) . 'KB';
         }
         // megabytes
         if($data < 1024000000){
-            return round( ( $data / 1024000 ), 1 ) . " MB";
+            return round( ( $data / 1024000 ), 1 ) . ' MB';
         }
 
-		return round( ( $data / 1024000000 ), 1 ) . " GB";
+		return round( ( $data / 1024000000 ), 1 ) . ' GB';
     }
 
 	/**
@@ -445,9 +444,7 @@
 	 */
 	function shell_output($cmd)
 	{
-		if (stristr(PHP_OS, 'WIN')) { 
-			$cmd = $cmd;
-		} else {
+		if( !stristr(PHP_OS, 'WIN') ) {
 			$cmd = "PATH=\$PATH:/bin:/usr/bin:/usr/local/bin bash -c \"$cmd\" 2>&1";
 		}
 		return shell_exec( $cmd );
@@ -455,7 +452,7 @@
 
 	function getCommentAdminLink($type, $id)
 	{
-		return "/admin_area/edit_video.php?video=".$id;
+		return '/admin_area/edit_video.php?video='.$id;
 	}
 
 	/**
@@ -551,11 +548,13 @@
 	{
 		global $adsObj;
 		$data = '';
-		if(isset($params['style']) || isset($params['class']) || isset($params['align']))
+		if(isset($params['style']) || isset($params['class']) || isset($params['align'])){
 			$data .= '<div style="'.$params['style'].'" class="'.$params['class'].'" align="'.$params['align'].'">';
+        }
 		$data .= ad($adsObj->getAd($params['place']));
-		if(isset($params['style']) || isset($params['class']) || isset($params['align']))
+		if(isset($params['style']) || isset($params['class']) || isset($params['align'])){
 			$data .= '</div>';
+        }
 		return $data;
 	}
 
@@ -609,8 +608,7 @@
 	 */
 	function isValidtag($tag): bool
     {
-		$disallow_array = array
-		('of','is','no','on','off','a','the','why','how','what','in');
+		$disallow_array = array('of','is','no','on','off','a','the','why','how','what','in');
 		if(!in_array($tag,$disallow_array) && strlen($tag)>2) {
 			return true;
 		}
@@ -628,7 +626,7 @@
 	function getCategoryList($params=[])
 	{
 		global $cats;
-		$cats = "";
+		$cats = '';
 		$type = $params['type'];
 		switch($type)
 		{
@@ -636,24 +634,24 @@
 			    cb_call_functions('categoryListing',$params);
 				break;
 			
-			case "video":
-			case "videos":
-			case "v":
+			case 'video':
+			case 'videos':
+			case 'v':
 				global $cbvid;
 				$cats = $cbvid->cbCategories($params);
 				break;
 				
-			case "users":
-			case "user":
-			case "u":
-			case "channels":
+			case 'users':
+			case 'user':
+			case 'u':
+			case 'channels':
 				global $userquery;
 				$cats = $userquery->cbCategories($params);
 				break;
 
-			case "collection":
-			case "collections":
-			case "cl":
+			case 'collection':
+			case 'collections':
+			case 'cl':
 				global $cbcollection;
 				$cats = $cbcollection->cbCategories($params);
 				break;
@@ -722,10 +720,10 @@
 			$dump = print_r($text, true);
             echo display_clean($dump);
 		} else {
-			echo "<pre>";
+			echo '<pre>';
 			$dump = print_r($text, true);
             echo display_clean($dump);
-			echo "</pre>";
+			echo '</pre>';
 		}
 	}
 
@@ -814,7 +812,7 @@
 	function get_re($code)
 	{
 		global $db;
-		$results = $db->select(tbl("validation_re"),"*"," re_code='$code'");
+		$results = $db->select(tbl('validation_re'),'*'," re_code='$code'");
 		if(count($results)>0) {
 			return $results[0]['re_syntax'];
 		}
@@ -1024,18 +1022,22 @@
 		{
 			switch($path)
 			{
-				case "php":
+				case 'php':
 					$software_path = php_path();
 					break;
-				case "media_info":
-					$software_path = config("media_info");
+
+				case 'media_info':
+					$software_path = config('media_info');
 					break;
-				case "ffprobe_path":
-					$software_path = config("ffprobe_path");
+
+				case 'ffprobe_path':
+					$software_path = config('ffprobe_path');
 					break;
-				case "ffmpeg":
-					$software_path = config("ffmpegpath");
+
+				case 'ffmpeg':
+					$software_path = config('ffmpegpath');
 					break;
+
 				default:
 					$software_path = '';
 					break;
@@ -1048,30 +1050,34 @@
 
 		switch($path)
 		{
-			case "php":
-				$return_path = shell_output("which php");
+			case 'php':
+				$return_path = shell_output('which php');
 				if($return_path) {
 					return $return_path;
 				}
-				return "Unable to find PHP path";
-			case "media_info":
-				$return_path = shell_output("which mediainfo");
+				return 'Unable to find PHP path';
+
+			case 'media_info':
+				$return_path = shell_output('which mediainfo');
 				if($return_path) {
 					return $return_path;
 				}
-				return "Unable to find media_info path";
-			case "ffprobe_path":
-				$return_path = shell_output("which ffprobe");
+				return 'Unable to find media_info path';
+
+			case 'ffprobe_path':
+				$return_path = shell_output('which ffprobe');
 				if($return_path) {
 					return $return_path;
 				}
-				return "Unable to find ffprobe path";
-			case "ffmpeg":
-				$return_path = shell_output("which ffmpeg");
+				return 'Unable to find ffprobe path';
+
+			case 'ffmpeg':
+				$return_path = shell_output('which ffmpeg');
 				if($return_path) {
 					return $return_path;
 				}
-				return "Unable to find ffmpeg path";
+				return 'Unable to find ffmpeg path';
+
 			default:
 				return 'Unknown path : '.$path;
 		}
@@ -1285,7 +1291,7 @@
 	function include_template_file($params)
 	{
 		$file = $params['file'];
-		if(file_exists(LAYOUT.'/'.$file)) {
+		if(file_exists(LAYOUT.DIRECTORY_SEPARATOR.$file)) {
 			Template($file);
 		} elseif(file_exists($file)) {
 			Template($file,false);
@@ -1496,7 +1502,7 @@
 
 		global $LANG;
 		$array_str = array( '{title}');
-		$array_replace = array( "Title" );
+		$array_replace = array( 'Title' );
 		if(isset($LANG[$var])) {
 			$phrase = str_replace($array_str,$array_replace,$LANG[$var]);
 		} else {
@@ -1634,7 +1640,7 @@
             $link = false;
         }
 		
-		$param_link = "";
+		$param_link = '';
 		if(!empty($params['extra_params']))
 		{
 			preg_match('/\?/',$link,$matches);
@@ -1661,32 +1667,33 @@
 	 */
 	function show_rating($params)
 	{
-		$class 	= $params['class'] ? $params['class'] : 'rating_stars';
+		$class 	    = $params['class'] ? $params['class'] : 'rating_stars';
 		$rating 	= $params['rating'];
 		$ratings 	= $params['ratings'];
 		$total 		= $params['total'];
 		$style		= $params['style'];
-		if(empty($style))
+		if(empty($style)){
 			$style = config('rating_style');
-		
-		//Checking Percent
-		{
-			if($total<=10)
-				$total = 10;
-			$perc = $rating*100/$total;
-			$disperc = 100 - $perc;		
-			if($ratings <= 0 && $disperc == 100)
-				$disperc = 0;
-		}	
+        }
+
+        if($total<=10){
+            $total = 10;
+        }
+        $perc = $rating*100/$total;
+        $disperc = 100 - $perc;
+        if($ratings <= 0 && $disperc == 100){
+            $disperc = 0;
+        }
+
 		$perc = $perc.'%';
-		$disperc = $disperc."%";		
+		$disperc = $disperc.'%';
 		switch($style)
 		{
-			case "percentage":
-			case "percent":
-			case "perc":
+			case 'percentage':
+			case 'percent':
+			case 'perc':
 			default:
-				$likeClass = "UserLiked";
+				$likeClass = 'UserLiked';
 				if(str_replace('%','',$perc) < '50') {
 					$likeClass = 'UserDisliked';	
 				}
@@ -1699,9 +1706,9 @@
 				$ratingTemplate .='</div></div>';
 				break;
 			
-			case "bars":
-			case "Bars":
-			case "bar":
+			case 'bars':
+			case 'Bars':
+			case 'bar':
 				$ratingTemplate = '<div class="'.$class.'">
 					<div class="ratingContainer">
 						<div class="LikeBar" style="width:'.$perc.'"></div>
@@ -1710,8 +1717,10 @@
 				</div>';
 				break;
 			
-			case "numerical": case "numbers":
-			case "number": case "num":
+			case 'numerical':
+            case 'numbers':
+			case 'number':
+            case 'num':
 				$likes = round($ratings*$perc/100);
 				$dislikes = $ratings - $likes;
 				$ratingTemplate = '<div class="'.$class.'">
@@ -1724,19 +1733,19 @@
 				</div>';
 				break;
 			
-			case "custom":
-			case "own_style":
-				$file = LAYOUT."/".$params['file'];
+			case 'custom':
+			case 'own_style':
+				$file = LAYOUT.DIRECTORY_SEPARATOR.$params['file'];
 				if(!empty($params['file']) && file_exists($file)) {
 					// File exists, lets start assign things
-					assign("perc",$perc); assign("disperc",$disperc);
+					assign('perc',$perc); assign('disperc',$disperc);
 					// Likes and Dislikes
 					$likes = floor($ratings*$perc/100);
 					$dislikes = $ratings - $likes;
-					assign("likes",$likes);	assign("dislikes",$dislikes);
+					assign('likes',$likes);	assign('dislikes',$dislikes);
 					Template($file,FALSE);										
 				} else {
-					$params['style'] = "percent";
+					$params['style'] = 'percent';
 					return show_rating($params);	
 				}
 				break;
@@ -1831,7 +1840,7 @@
 				}
 			}
 		}
-		increment_views($u['userid'],"channel");
+		increment_views($u['userid'],'channel');
 	}
 
 	/**
@@ -1848,7 +1857,7 @@
 				}
 			}
 		};
-		increment_views($cdetails['collection_id'],"collection");
+		increment_views($cdetails['collection_id'],'collection');
 	}
 
 	/**
@@ -1871,8 +1880,8 @@
 			default:
 				if(!isset($_COOKIE['video_'.$id])) {
                     $currentTime = time();
-                    $views = (int)$videoViewsRecord["video_views"] + 1;
-                    $db->update( tbl( "video_views" ), array( "video_views", "last_updated" ), array( $views, $currentTime ), " video_id='$id' OR videokey='$id'" );
+                    $views = (int)$videoViewsRecord['video_views'] + 1;
+                    $db->update( tbl( 'video_views' ), array( 'video_views', 'last_updated' ), array( $views, $currentTime ), " video_id='$id' OR videokey='$id'" );
                     $query = "UPDATE " . tbl( "video_views" ) . " SET video_views = video_views + 1 WHERE video_id = {$id}";
                     $db->Execute( $query );
                     set_cookie_secure( 'video_' . $id, 'watched' );
@@ -1883,25 +1892,25 @@
 			case 'user':
 			case 'channel':
 				if(!isset($_COOKIE['user_'.$id])) {
-					$db->update(tbl("users"),array("profile_hits"),array("|f|profile_hits+1")," userid='$id'");
+					$db->update(tbl("users"),array('profile_hits'),array('|f|profile_hits+1')," userid='$id'");
                     set_cookie_secure('user_'.$id,'watched');
 				}
 				break;
 
-			case "c":
-			case "collect":
-			case "collection":
+			case 'c':
+			case 'collect':
+			case 'collection':
 				if(!isset($_COOKIE['collection_'.$id])) {
-					$db->update(tbl("collections"),array("views"),array("|f|views+1")," collection_id = '$id'");
+					$db->update(tbl('collections'),array('views'),array('|f|views+1')," collection_id = '$id'");
                     set_cookie_secure('collection_'.$id,'viewed');
 				}
 				break;
 			
-			case "photos":
-			case "photo":
-			case "p":
+			case 'photos':
+			case 'photo':
+			case 'p':
 				if(!isset($_COOKIE['photo_'.$id])) {
-					$db->update(tbl('photos'),array("views","last_viewed"),array("|f|views+1",NOW())," photo_id = '$id'");
+					$db->update(tbl('photos'),array('views','last_viewed'),array('|f|views+1',NOW())," photo_id = '$id'");
                     set_cookie_secure('photo_'.$id,'viewed');
 				}
 				break;
@@ -1952,25 +1961,25 @@
 			case 'user':
 			case 'channel':
 				if(!isset($_COOKIE['user_'.$id])) {
-					$db->update(tbl("users"),array("profile_hits"),array("|f|profile_hits+1")," userid='$id'");
+					$db->update(tbl('users'),array('profile_hits'),array('|f|profile_hits+1')," userid='$id'");
                     set_cookie_secure('user_'.$id,'watched');
 				}
 				break;
 
-			case "c":
-			case "collect":
-			case "collection":
+			case 'c':
+			case 'collect':
+			case 'collection':
 				if(!isset($_COOKIE['collection_'.$id])) {
-					$db->update(tbl("collections"),array("views"),array("|f|views+1")," collection_id = '$id'");
+					$db->update(tbl('collections'),array('views'),array('|f|views+1')," collection_id = '$id'");
                     set_cookie_secure('collection_'.$id,'viewed');
 				}
 				break;
 			
-			case "photos":
-			case "photo":
-			case "p":
+			case 'photos':
+			case 'photo':
+			case 'p':
 				if(!isset($_COOKIE['photo_'.$id])) {
-					$db->update(tbl('photos'),array("views","last_viewed"),array("|f|views+1",NOW())," photo_id = '$id'");
+					$db->update(tbl('photos'),array('views','last_viewed'),array('|f|views+1',NOW())," photo_id = '$id'");
                     set_cookie_secure('photo_'.$id,'viewed');
 				}
 				break;
@@ -2041,9 +2050,9 @@
 		global $db,$cbcollection;
 		$brace = 1;
 		if(!userid()) {
-			$loggedIn = "not";
+			$loggedIn = 'not';
 		} else {		
-			$collectArray = array("order"=>" collection_name ASC","type"=>"videos","user"=>userid(),"public_upload"=>'yes');
+			$collectArray = array('order'=>' collection_name ASC','type'=>'videos','user'=>userid(),'public_upload'=>'yes');
 			$collections = $cbcollection->get_collections($collectArray,$brace);           
             $contributions = $cbcollection->get_contributor_collections(userid());
             if($contributions) {
@@ -2053,10 +2062,10 @@
                     $collections = array_merge($collections,$contributions);
                 }
             }
-			assign("collections",$collections);
-			assign("contributions",$contributions);
+			assign('collections',$collections);
+			assign('contributions',$contributions);
 		}
-		Template("/blocks/collection_form.html");	
+		Template('/blocks/collection_form.html');
 	}
 
 	/**
@@ -2110,8 +2119,9 @@
 	 * @internal param $ { integer } { $count } { number of pages to be displayed }
 	 */
 	function count_pages($total,$count) {
-		if($count<1)
+		if($count<1){
 			$count = 1;
+        }
 		$records = $total/$count;
 		return (int)round($records+0.49,0);
 	}
@@ -2264,13 +2274,12 @@
 	 */
 	function get_age($input) { 
 		$time = strtotime($input);
-		$iMonth = date("m",$time);
-		$iDay = date("d",$time);
-		$iYear = date("Y",$time);
+		$iMonth = date('m',$time);
+		$iDay = date('d',$time);
+		$iYear = date('Y',$time);
 		$iTimeStamp = (mktime() - 86400) - mktime(0, 0, 0, $iMonth, $iDay, $iYear); 
 		$iDays = $iTimeStamp / 86400;  
-		$iYears = floor($iDays / 365 );  
-		return $iYears; 
+		return floor($iDays / 365 );
 	}
 
 	/**
@@ -2292,7 +2301,7 @@
 		if(empty($date)) {
 			return lang('no_date_provided');
 		}
-		$periods = array(lang("second"), lang("minute"), lang("hour"), lang("day"), lang("week"), lang("month"), lang("year"), lang("decade"));
+		$periods = array(lang('second'), lang('minute'), lang('hour'), lang('day'), lang('week'), lang('month'), lang('year'), lang('decade'));
 		$lengths = array(60,60,24,7,4.35,12,10);
 		$now = time();
 		if(!$istime) {
@@ -2302,18 +2311,18 @@
 		}
 		   // check validity of date
 		if(empty($unix_date)  || $unix_date<1) {   
-			return lang("bad_date");
+			return lang('bad_date');
 		}
 		// is it future date or past date
 		if($now > $unix_date) {   
 			//time_ago
 			$difference = $now - $unix_date;
-			$tense = "time_ago";
+			$tense = 'time_ago';
 		   
 		} else {
 			//from_now
 			$difference = $unix_date - $now;
-			$tense = "from_now";
+			$tense = 'from_now';
 		}
 		for($j = 0; $difference >= $lengths[$j] && $j < count($lengths)-1; $j++) {
 			$difference /= $lengths[$j];
@@ -2442,8 +2451,8 @@
 	 * @internal param $ : { array } { $data } { array with category details } { $data } { array with category details }
 	 * @internal param $ : { string } { $type } { type of category e.g videos } { $type } { type of category e.g videos }
 	 */
-	function category_link($data,$type)
-	{
+	function category_link($data,$type): string
+    {
 		$sort = '';
 		$time = '';
 		$seo_cat_name = '';
@@ -2496,7 +2505,7 @@
 					global $prefix_catlink;
 					$url = 'cat='.$data['category_id'].$sort.$time.'&page='.$_GET['page'].$seo_cat_name;
 					$url = $prefix_catlink.$url;
-					$rm_array = array("cat","sort","time","page","seo_cat_name");
+					$rm_array = array('cat','sort','time','page','seo_cat_name');
 					if($prefix_catlink) {
 						$rm_array[] = 'p';
 					}
@@ -2684,7 +2693,7 @@
 	* Function used to load captcha
 	* @param : { array } { $params } { an array of parametrs }
 	*/
-	define("GLOBAL_CB_CAPTCHA","cb_captcha");
+	define('GLOBAL_CB_CAPTCHA','cb_captcha');
 	function load_captcha($params)
 	{
 		global $total_captchas_loaded;
@@ -4974,7 +4983,7 @@
 		return str_replace($search, $replace, $date_format_php);
 	}
 
-	function isset_check($input_arr=array(),$key_name,$mysql_clean=false)
+	function isset_check($input_arr,$key_name,$mysql_clean=false)
 	{
 	    if(isset($input_arr[$key_name])&&!empty($input_arr[$key_name]))
 	    {
@@ -5021,67 +5030,71 @@
 			{
 				foreach ($file as $key => $value) 
 				{
-					if(file_exists($value))
+					if(file_exists($value)){
 						$array[$key] = curl_file_create( $value, mime_content_type($value), basename($value));
+                    }
 				}
 			}
 
-			if($methods)
+			if($methods){
 				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "{$methods}");
+            }
 
-			if(!empty($array))
-			{
-
+			if(!empty($array)) {
 				curl_setopt($ch,CURLOPT_POST,true);
 				curl_setopt($ch,CURLOPT_POSTFIELDS,$array);
 			}
 
-			if($read_response_headers===true)
-			{
+			if($read_response_headers===true) {
 				curl_setopt($ch, CURLOPT_VERBOSE, 1);
 				curl_setopt($ch, CURLOPT_HEADER, 1);
 			}
 
-			if(empty($header_arr))
-				$header_arr = array("Expect:");
+			if(empty($header_arr)){
+				$header_arr = array('Expect:');
+            }
 
-			if(empty($curl_timeout)||$curl_timeout==0)
+			if(empty($curl_timeout)||$curl_timeout==0){
 				$curl_timeout = 3;
+            }
 			
-			if($curl_timeout>0)
+			if($curl_timeout>0){
 				curl_setopt($ch, CURLOPT_TIMEOUT, $curl_timeout);
+            }
 			
-			if(empty($curl_connect_timeout)||$curl_connect_timeout==0)
+			if(empty($curl_connect_timeout)||$curl_connect_timeout==0){
 				$curl_connect_timeout = 2;
+            }
 
-			if($curl_connect_timeout>0)
+			if($curl_connect_timeout>0){
 				curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, $curl_connect_timeout);
+            }
 
 			curl_setopt($ch,CURLOPT_HTTPHEADER,$header_arr);
-
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
-			if($follow_redirect)
+			if($follow_redirect){
 				curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            }
 
-			
 			$result = curl_exec($ch); 
 			$error_msg = curl_error($ch); 
 			$returnCode = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-			if($full_return_info)
+			if($full_return_info){
 				$return_arr['full_info'] = curl_getinfo($ch);
+            }
 
 			$return_arr['code'] = $returnCode;
 			$errorNO = curl_errno($ch);
-			if($errorNO)
-			{
+			if($errorNO) {
 				$return_arr['curl_error_no'] = $errorNO;
 			}
-			if(!empty($error_msg))
-			{
+
+			if(!empty($error_msg)) {
 				$return_arr['error_curl'] = $error_msg;
 			}
+
 			$return_arr['result'] = $result;
 			curl_close($ch);
 		} else{

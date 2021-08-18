@@ -61,9 +61,9 @@ switch($mode)
 			$response['success'] = msg('single');
 			$response['photoID'] = $insert_id;
 			$details = $cbphoto->get_photo($insert_id);
-			$details["filename"] = $_POST["file_name"];
+			$details['filename'] = $_POST['file_name'];
 			$cbphoto->generate_photos($details);
-			$params = array("details"=>$details,"size"=>"m",'static'=>true);
+			$params = array('details'=>$details,'size'=>'m','static'=>true);
 			$response['photoPreview'] = get_image_file($params);
 		}
 
@@ -320,5 +320,5 @@ switch($mode)
 //function used to display error
 function upload_error($error)
 {
-	echo json_encode(array("error"=>$error));
+	echo json_encode(array('error'=>$error));
 } 

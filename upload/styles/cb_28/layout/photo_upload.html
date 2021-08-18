@@ -31,55 +31,52 @@
             </ul>
             <div class="tab-content uploadFormDiv">
                 <div class="tab-pane fade in active clearfix" id="file-upload">
-                    <div class="instructions alert alert-block alert-info">
-                        {sprintf(lang(upload_right_guide_photo),$cbpage->get_page_link(3))}
+                    <div class="form_header">
+                        <div class="instructions alert alert-block alert-info">
+                            {sprintf(lang(upload_right_guide_photo),$cbpage->get_page_link(3))}
+                        </div>
+                        <div class="clearfix" id="uploaderContainer">
+                        {if $selected_collection}
+                            <div class="alert alert-info" role="alert">
+                                Photo will be uploaded into <strong><i>{display_clean($c.collection_name)}</i></strong> Collection
+                            </div>
+                        {else}
+                            <div class="row">
+                                <div id="SelectionDIV" class="col-md-9">
+                            {if !$collections}
+                                    <p class="alert alert-danger">{lang code="no_collection_found_alert"}</p>
+                            {/if}
+                                    <div class="form-group clearfix" {if !$collections}style='display:none;'{/if} >
+                                        <label for="collectionSelection">{lang code="select_collection_upload"}</label>
+                                        <select class="form-control" id="collectionSelection" name="collectionSelection">
+                                        {foreach from=$collections item=item}
+                                            <option value="{$item.collection_id}">{display_clean($item.collection_name)}</option>
+                                        {/foreach}
+                                        </select>
+                                    </div>
+
+                                </div>
+                            {if (has_access('allow_create_collection',false,$verify_logged_user))}
+                                <div class="col-md-3 text-center">
+                                    <a href="#" class="btn btn-ghost btn-lg" id="createNewCollection">{lang code="create_new_collection_btn"}</a>
+                                </div>
+                            {else}
+                                <div class="col-md-3 text-center">
+                                    <div class="alert alert-danger">
+                                        <strong>{lang code="creating_collection_is_disabled"}</strong>
+                                    </div>
+                                </div>
+                            {/if}
+                            </div>
+                        {/if}
+                        </div>
                     </div>
-                    <div class="clearfix" id="uploaderContainer">
-                    {if $c}
-                        <div class="alert alert-info" role="alert">
-                            Photo will be uploaded into <strong><i>{display_clean($c.collection_name)}</i></strong> Collection
-                        </div>
-                    {else}
-                        <h4 class="h4">{lang code="select_collection_upload"}</h4>
-                        <div class="row">
-                            <div id="SelectionDIV" class="col-md-9">
-                        {if $collections}
-                                <div class="form-group clearfix">
-                                    <select class="form-control" id="collectionSelection" name="collectionSelection">
-                            {foreach from=$collections item=item}
-                                        <option value="{$item.collection_id}">{display_clean($item.collection_name)}</option>
-                            {/foreach}
-                                    </select>
-                                </div>
-                        {else}
-                                <p class="alert alert-danger">{lang code="no_collection_found_alert"}</p>
-                                <div class="form-group">
-                                    <label>{lang code="select_collection_upload"}</label>
-                                    <select class="form-control" id="collectionSelection" name="collectionSelection">
-                                        <option value="0">{lang code="no_collection_upload"}</option>
-                                    </select>
-                                </div>
-                        {/if}
-                            </div>
-                        {if (has_access('allow_create_collection',false,$verify_logged_user))}
-                            <div class="col-md-3 text-center">
-                                <a href="#" class="btn btn-ghost btn-lg" id="createNewCollection">{lang code="create_new_collection_btn"}</a>
-                            </div>
-                        {else}
-                            <div class="col-md-3 text-center">
-                                <div class="alert alert-danger">
-                                    <strong>{lang code="creating_collection_is_disabled"}</strong>
-                                </div>
-                            </div>
-                        {/if}
-                        </div>
-                    {/if}
                     <div class="row">
                         <div class="col-md-10 col-md-offset-1">
                             <div class="manageCollection">
                                 <div id="CollectionDIV" style="display:none;">
                                     <form action="#" type="post">
-                                        <h3>Create New Collection</h3>
+                                        <h3>{lang code='create_new_collection_btn'}</h3>
                     {assign var='reqFields' value=$cbcollection->load_required_fields()}
                     {foreach from=$reqFields item=field}
                         {if $field.id != 'type'}
@@ -97,8 +94,8 @@
                                         <div class="moveR" style="float:left;margin:0 5px 0 5px;">
                                             <button type="button" id="addNewCollection" class="btn btn-success">Add Collection</button>
                                         </div>
-                                        <div style="float:left; margin:0 5px 0 5px;">
-                                            <button type="button" id="cancelAddCollection" class="btn btn-success">Cancel</button>
+                                        <div style="float:left;margin:0 5px 0 5px;">
+                                            <button type="button" id="cancelAddCollection" class="btn btn-success">{lang code='cancel'}</button>
                                         </div>
                                     </form>
                                 </div>
@@ -106,21 +103,19 @@
                         </div>
                     </div>
 
-                    {if $collections}
-                    <div class="upload-area col-md-12 clearfix">
+                    <div class="upload-area col-md-12 clearfix" {if !$collections}style="display:none;"{/if}/>
                         <div class="fileUploaderForm">
                             <div class="dragDropContainer clearfix" id="dragDrop">
                                 <span class="upload-logo"></span>
                                 <strong class="block-title">{lang code="drag_drop"}</strong>
-                                <p>{lang code="photo_can_be"} {$Cbucket->configs[176].value} {lang code="photo_upload_txt"}</p>
+                                <p>{lang code="photo_can_be"} {config('max_upload_size')} {lang code="photo_upload_txt"}</p>
                             </div>
                             <div class="selectButtonContainer">
                                 <a id="selectFiles" href="javascript:;" class="btn btn-primary btn-lg selectFiles">{lang code="select_photos"}</a>
                             </div>
                         </div>
                     </div>
-                    {/if}
-                </div>
+
                 <div id="uploadDataContainer" class="uploadDataContainer clearfix marginTop">
                     <div class="uploadingProgressContainer clearfix hidden">
                         <div class="alert alert-block alert-info">
@@ -154,14 +149,13 @@
     {include file="$style_dir/blocks/upload/photo_form.html" }
 </div>
 
-    {if $c}
-<input type="hidden" name="cid" id="cid" class="cid" value="{$c.collection_id}">
+    {if $selected_collection}
+<input type="hidden" name="cid" id="cid" class="cid" value="{$selected_collection.collection_id}">
     {/if}
 
 <script type="text/javascript">
     (function(window){
         $(document).ready(function(){
-            var baseurl = '/';
             var photo_extensions = '{","|implode:$cbphoto->exts}';
 
             /* files uploading */
@@ -233,10 +227,10 @@
                     }
                     wrapperDiv.id = "tab"+i;
                     oneUploadForm.className = "";
-                    $(oneUploadForm).find("input[name='photo_title']").val(files[i].name.slice(0, -4));
-                    $(oneUploadForm).find("textarea#photo_description").val(files[i].name.slice(0, -4));
+                    console.log(files[i].name);
                     $(oneUploadForm).find("input[name='photo_title']").val(files[i].name);
                     $(oneUploadForm).find("textarea#photo_description").val(files[i].name);
+                    $(oneUploadForm).find("input[name='photo_tags']").val(files[i].name);
                     $(oneUploadForm).find("input[name='category[]']:first").attr('checked', 'checked');
                     if(typeof files[i]['photoThumb'] !== "undefined"){
                         $(oneUploadForm).find("img").attr("src", files[i]['photoThumb']);
@@ -342,7 +336,6 @@
             */
 
             var filesUploaded = 0;
-            var totalPercentage = 0;
             uploader.bind('UploadProgress', function(up, file) {
                 $("#progressNumber").text(file.percent + "%");
                 $("#videoNumber").text(file.name);
@@ -367,32 +360,32 @@
                 database which will be sent with the final form
                 */
                 var collectionId;
-                var collection_id = '{$c.collection_id}';
+                var collection_id = '{$selected_collection.collection_id}';
                 if (collection_id ) {
                     collectionId = collection_id;
                 } else {
                     collectionId = $("#SelectionDIV select").val();
                 }
-                var fileId = false;
                 fileDetails.name = fileDetails.name.slice(0, -4);
                 var stored_cid = collectionId;
                 $.ajax({
                     url : "/actions/photo_uploader.php",
                     type : "post",
                     data : {
-                        insertPhoto : "yes",
-                        title : fileDetails.name,
-                        file_name : fileName,
-                        collection_id: collectionId,
-                        ext: serverResponse.extension,
+                        insertPhoto : "yes"
+                        ,title : fileDetails.name
+                        ,file_name : fileName
+                        ,collection_id: collectionId
+                        ,ext: serverResponse.extension
+                        ,photo_title : fileDetails.name
+                        ,photo_description : fileDetails.name
+                        ,photo_tags : fileDetails.name
                     },
                     dataType: "JSON",
                 }).success(function(msg){
+                    console.log(msg);
+
                     //creating the hidden form fields
-                    var slicedTitle = $('#photo_title').val().slice(0, -4);
-                    var slicedDesc = $('#photo_description').val().slice(0, -4);
-                    $('#photo_title').val(slicedTitle);
-                    $('#photo_description').val(slicedDesc);
                     $(uploadForm).find("img").attr("src", msg.photoPreview);
                     $(uploadForm).find("img").css("max-width", "100%");
                     $(".submitPhoto").removeAttr("disabled");
@@ -416,12 +409,6 @@
                 $(uploadForm).find(".submitPhoto").on({
                     click: function(e){
                         e.preventDefault();
-                        var cid = $('.cid').val();
-                        var collectionId = $("#SelectionDIV select").val();
-
-                        if(cid !== '') {
-                            collectionId = cid;
-                        }
                         var self = $(this).parents("form");
                         var data = $(self).serialize();
                         data += "&collection_id="+stored_cid;
@@ -489,13 +476,14 @@
                             newCollectionElement.innerHTML = collectionName;
                             newCollectionElement.selected = true;
                             $("#collectionSelection").get(0).appendChild(newCollectionElement);
-                            $("#CollectionDIV").toggle("slow");
                             $("#uploadMessage").html(msg.msg).attr("class", "alert alert-success").removeClass("hidden");
+
+                            $("#CollectionDIV").toggle("fast");
+                            $('.form_header').show();
                             $(".upload-area").show();
-                            $("#createNewCollection").show();
-                            $(".h4").show();
-                            $(".instructions").show();
-                            $("#SelectionDIV").show();
+                            $('#collectionSelection').parent().show()
+                            $('#SelectionDIV').find('.alert-danger').hide();
+
                             setTimeout(function(){
                                 $("#uploadMessage").addClass("hidden");
                             }, 5000);
@@ -513,23 +501,17 @@
                 click: function(e){
                     e.preventDefault();
                     $("#CollectionDIV").toggle("fast");
-                    $("#createNewCollection").hide();
-                    $(".h4").hide();
-                    $("#SelectionDIV").hide();
+                    $('.form_header').hide();
                     $(".upload-area").hide();
-                    $(".instructions").hide();
                 }
             });
 
             $("#cancelAddCollection").on({
                 click: function(e){
                     e.preventDefault();
-                    $("#CollectionDIV").hide();
-                    $("#createNewCollection").show();
-                    $(".h4").show();
-                    $("#SelectionDIV").show();
+                    $("#CollectionDIV").toggle("fast");
+                    $('.form_header').show();
                     $(".upload-area").show();
-                    $(".instructions").show();
                 }
             });
 

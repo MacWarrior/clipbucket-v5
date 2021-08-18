@@ -353,9 +353,9 @@ CREATE TABLE `{tbl_prefix}photos` (
   `file_directory` varchar(25) NOT NULL,
   `ext` char(5) NOT NULL,
   `downloaded` bigint(255) NOT NULL DEFAULT 0,
-  `server_url` text NOT NULL,
+  `server_url` text NOT NULL DEFAULT '',
   `owner_ip` varchar(20) NOT NULL,
-  `photo_details` text NOT NULL
+  `photo_details` text NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `{tbl_prefix}phrases` (
