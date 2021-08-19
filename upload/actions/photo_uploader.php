@@ -47,7 +47,7 @@ switch($mode)
 		$_POST['photo_description'] = mysql_clean($_POST['photo_description']);
 		$_POST['photo_tags'] = genTags(str_replace(array(' ','_','-'),', ',$_POST['photo_tags']));
 		$_POST['server_url'] = 'undefined';
-		$_POST['active'] = !config('photo_activation');
+		$_POST['active'] = config('photo_activation') ? 'no' : 'yes';
 		$_POST['folder'] = str_replace('..','',mysql_clean($_POST['folder']));
 		$_POST['folder'] = createDataFolders(PHOTOS_DIR);
 		$_POST['filename'] = mysql_clean($_POST['file_name']);

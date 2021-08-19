@@ -5,17 +5,19 @@
 	 *
 	 * @param $input
 	 *
-	 * @return bool
+	 * @return bool|string
 	 */
     function config($input)
 	{
         global $Cbucket;
 
-        if( isset($Cbucket->configs[$input]) )
+        if( isset($Cbucket->configs[$input]) ){
         	return $Cbucket->configs[$input];
+        }
 
-		if( in_dev() )
+		if( in_dev() ){
 			error_log('Missing config : '.$input);
+        }
 		return false;
     }
 
@@ -27,7 +29,7 @@
     /**
      * Function used to get player logo
      */
-    function website_logo()
+    function website_logo(): string
     {
         $logo_file = config('player_logo_file');
         if($logo_file && file_exists(BASEDIR.'/images/'.$logo_file))
@@ -88,8 +90,8 @@
         return createDataFolders($headFolder, $custom_date);
     }
 
-    function cb_create_html_tag($tag = 'p', $self_closing = false, $attrs = array(), $content = null)
-	{
+    function cb_create_html_tag($tag = 'p', $self_closing = false, $attrs = array(), $content = null): string
+    {
         $open = '<'.$tag;
         $close = ( $self_closing === true ) ? '/>' : '>'.( !is_null( $content ) ? $content : '' ).'</'.$tag.'>';
 
@@ -112,24 +114,6 @@
     }
 
 	/**
-	 * Returns theme currently uploaded for your ClipBucket powered website
-	 * @return array : { array } { $conts } { an array with names of uploaded themes }
-	 * @internal param $ : { none }
-	 * @since : March 16th, 2016 ClipBucket 2.8.1
-	 * @author : Saqib Razzaq
-	 */
-    function installed_themes()
-	{
-        $dir = BASEDIR.'/styles';
-        $conts = scandir($dir);
-        for ($i=0; $i < 3; $i++) { 
-            unset($conts[$i]);
-        }
-        
-        return $conts;
-    }
-
-	/**
 	 * Pulls categories without needing any parameters
 	 * making it easy to use in smarty. Decides type using page
 	 *
@@ -146,25 +130,25 @@
         if (!$page) {
             $page = THIS_PAGE;
         }
-        switch ($page)
-		{
-            case 'videos':
-                $all_cats = $cbvid->cbCategories($params);
-                break;
+
+        switch ($page) {
             case 'photos':
                 $all_cats = $cbphoto->cbCategories($params);
                 break;
+
             case 'channels':
                 $all_cats = $userquery->cbCategories($params);
                 break;
-            
+
+            case 'videos':
             default:
                 $all_cats = $cbvid->cbCategories($params);
                 break;
         }
 
-        if (is_array($all_cats))
+        if (is_array($all_cats)){
             return $all_cats;
+        }
 		return false;
     }
 
@@ -198,8 +182,9 @@
             return $prettyNum;
         }
 
-        if (!empty($kviews))
+        if (!empty($kviews)){
             return $kviews;
+        }
 		return false;
     }
 

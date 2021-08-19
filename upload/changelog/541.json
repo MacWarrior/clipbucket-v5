@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"89",
+  "revision":"90",
   "status":"dev",
   "detail":[
     {
@@ -75,7 +75,7 @@
         ,"Video upload : Refactor video upload <i>#169</i>"
         ,"Update Bootstrap to version 3.3.7"
         ,"Fix user avatar update"
-        ,"Photo upload : Fix photo upload <i>#174</i>, <i>#177</i>"
+        ,"Photo upload : Fix photo upload <i>#174</i>, <i>#177</i>, <i>#178</i>"
         ,"Fix video temporary used on upload <i>#176</i>"
       ]
     }

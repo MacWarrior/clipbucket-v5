@@ -1395,6 +1395,7 @@ class CBPhotos
 			$query_val['0'] = $array['title'];
 			
 			$insert_id = $db->insert(tbl($this->p_tbl),$query_field,$query_val);
+
 			$photo = $this->get_photo($insert_id);
 			$this->collection->add_collection_item($insert_id,$photo['collection_id']);
 			
