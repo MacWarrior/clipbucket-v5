@@ -579,7 +579,7 @@ class CBvideo extends CBCategory
 				foreach($thumbs as $thumb)
 				{
 					if (strstr($thumb,'timthumb'))
-						$thumb = $this->convert_tim_thumb_url_to_file($thumb,$file_name=false);
+						$thumb = $this->convert_tim_thumb_url_to_file( $thumb, false );
 
 					if (!empty($vdetails['file_directory'])){
 						$file = THUMBS_DIR.'/'.$vdetails['file_directory'].'/'.$thumb;
@@ -593,7 +593,7 @@ class CBvideo extends CBCategory
 				}
 			} else {
 				if (strstr($thumbs,'timthumb'))
-					$thumbs_ = $this->convert_tim_thumb_url_to_file($thumbs,$file_name=false);
+					$thumbs_ = $this->convert_tim_thumb_url_to_file( $thumbs, false );
 				else
 					$thumbs_ = substr($thumbs, 0, -6);
 
@@ -603,7 +603,7 @@ class CBvideo extends CBCategory
 				
 
 				if (strstr($thumbs,'timthumb'))
-					$fn = $this->convert_tim_thumb_url_to_file($thumbs,$file_name=true);
+					$fn = $this->convert_tim_thumb_url_to_file( $thumbs, true );
 				else
 					$fn = substr($thumbs, 0, -6);
 
@@ -2028,12 +2028,12 @@ class CBvideo extends CBCategory
 	 * @param bool $file_name
 	 *
 	 * @date   : 6/2/2015
+	 * @return string
 	 * @author : Fahad Abbas
 	 * @reason : to delete the thumb from server forcefully
-	 * @return string
 	 */
-	function convert_tim_thumb_url_to_file($url,$file_name=false)
-	{
+	function convert_tim_thumb_url_to_file( $url,bool $file_name): string
+    {
 		$thumb = explode('src=',$url);
 		if ($file_name){
 			$thumb = explode('-', $thumb[1]);

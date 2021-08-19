@@ -284,20 +284,21 @@
     function get_player_thumbs_json($data){
         $thumbs = get_thumb($data,1,TRUE,FALSE,TRUE,FALSE,'168x105');
         $duration = $data['duration'];
-        $nb_thumbs = count($thumbs);
-        $division = $duration / $nb_thumbs;
         $json = '';
-        $count = 0;
-        foreach($thumbs as $url){
-            $time = (int)($count*$division);
-            if( $json != '' ){
-                $json .= ',';
+        if( is_array($thumbs) ){
+            $nb_thumbs = count($thumbs);
+            $division = $duration / $nb_thumbs;
+            $count = 0;
+            foreach($thumbs as $url){
+                $time = (int)($count*$division);
+                if( $json != '' ){
+                    $json .= ',';
+                }
+                $json .= $time.': {
+                    src: \''.$url.'\'
+                }';
+                $count++;
             }
-            $json .= $time.': {
-                src: \''.$url.'\'
-            }';
-
-            $count++;
         }
 
         echo '{'.$json.'}';
@@ -644,6 +645,9 @@
     {
         $details = get_video_file($vdetails,true,$with_path,true,$count_only);
         if($count_only){
+            if( !is_array($details) ){
+                return 0;
+            }
             return count($details);
 		}
         return $details;

@@ -3,6 +3,8 @@ global $ffmpeg, $db, $cbvideo, $userquery;
 
 $in_bg_cron = true;
 
+define('THIS_PAGE','verify_converted_videos');
+
 include(dirname(__FILE__)."/../includes/config.inc.php");
 
 cb_call_functions('verify_converted_videos_cron');

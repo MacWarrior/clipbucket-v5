@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"90",
+  "revision":"91",
   "status":"dev",
   "detail":[
     {
@@ -59,6 +59,7 @@
         ,"Fix user's category deletion"
         ,"Fix photo manager not showing informations when not using english translations"
         ,"Fix changelog when allow_url_fopen is not enabled <i>#139</i>"
+        ,"Refactor video editing interface"
       ]
     }
   ,{

@@ -68,6 +68,15 @@ if(isset($_POST['del_cmt'])){
     $cbvid->update_comments_count($type_id);
 }
 
+if(isset($_GET['delete_thumb'])) {
+    $file_name_num = explode('-', $_GET['delete_thumb']);
+    $num = get_thumb_num($_GET['delete_thumb']);
+
+    $file_name = $file_name_num[0];
+
+    delete_video_thumb($data['file_directory'],$file_name,$num);
+}
+
 if(!$array['order']){
     $result_array['order'] = ' doj DESC LIMIT 1 ';
 }

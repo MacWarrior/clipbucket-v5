@@ -791,18 +791,18 @@ class Upload
 	 *
 	 * @param      $data
 	 * @param bool $ck_display_admin
-	 * @param bool $ck_display_user
 	 *
 	 * @return array
 	 */
-	function load_custom_upload_fields($data,$ck_display_admin=FALSE,$ck_display_user=FALSE)
+	function load_custom_upload_fields( $data, bool $ck_display_admin ): array
     {
 		$array = $this->custom_upload_fields;
+        $new_array = [];
 		foreach($array as $key => $fields)
 		{
 			$ok = 'yes';
 			if($ck_display_admin && $fields['display_admin'] == 'no_display') {
-					$ok = 'no';
+                $ok = 'no';
 			}
 			
 			if($ok=='yes') {
@@ -812,7 +812,7 @@ class Upload
 				$new_array[$key] = $fields;
 			}
 		}
-		
+
 		return $new_array;
 	}
 

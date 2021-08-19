@@ -5056,7 +5056,7 @@ class userquery extends CBCategory{
 		//Loading subscription email template
 		$tpl = $cbemail->get_template('video_subscription_email');
 		
-		$total_subscribers = count($subscribers);
+
 		if($subscribers){
             foreach($subscribers as $subscriber) {
                 $var = $this->custom_subscription_email_vars;
@@ -5079,23 +5079,21 @@ class userquery extends CBCategory{
                 //Now Finally Sending Email
                 cbmail(array('to'=>$subscriber['email'],'from'=>WELCOME_EMAIL,'subject'=>$subj,'content'=>$msg));
             }
+
+            $total_subscribers = count($subscribers);
+            //Updating video subscription email status to sent
+            if($updateStatus){
+                $db->update(tbl('video'),array('subscription_email'),array('sent')," videoid='".$v['videoid']."'");
+            }
+            $s = '';
+            if($total_subscribers>1){
+                $s = 's';
+            }
+            e(sprintf(lang('subs_email_sent_to_users'),$total_subscribers,$s),'m');
+            return true;
         }
-		
-		if($total_subscribers) {
-			//Updating video subscription email status to sent
-			if($updateStatus){
-			    $db->update(tbl('video'),array('subscription_email'),array('sent')," videoid='".$v['videoid']."'");
-            }
-			$s = '';
-			if($total_subscribers>1){
-				$s = 's';
-            }
-			e(sprintf(lang('subs_email_sent_to_users'),$total_subscribers,$s),'m');
-			return true;
-		}
-		
+
 		e(lang('no_user_subscribed_to_uploader'));
-		
 		return true;
 	}
 	

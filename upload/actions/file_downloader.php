@@ -1,20 +1,12 @@
 <?php
+define('THIS_PAGE','file_downloader');
 
-/**
- * This file is used to download files
- * from one server to our server 
- * in prior version, this file was not so reliable
- * this time it has complete set of instruction 
- * and proper downloader
- * @author : Arslan Hassan, Saqib Razzaq
- * @license : Attribution Assurance License -- http://www.opensource.org/licenses/attribution.php
- * @since : 01 July 2009
- * @last_modified: 18th December, 2015 (YouTube Thumbs Quality Improved)
- */
+global $Cbucket,$cbvid,$Upload,$db;
 
 include("../includes/config.inc.php");
 include("../includes/classes/curl/class.curl.php");
 ini_set('max_execution_time', 3000);
+
 if(isset($_POST['check_url']))
 {
 	$url = $_POST['check_url'];
@@ -26,8 +18,9 @@ if(isset($_POST['check_url']))
 	if(checkRemoteFile($url) && in_array($file_ext,$types_array) )
 	{
 		echo json_encode(array('ok'=>'yes'));
-	} else
+	} else {
 		echo json_encode(array('err'=>'Invalid remote url'));
+    }
 	exit();
 }
 
@@ -42,14 +35,14 @@ if(isset($_POST['check_url']))
  * Writes the log in file
  */
 
-if(!isCurlInstalled())
-{
+if(!isCurlInstalled()) {
 	exit(json_encode(array("error"=>"Sorry, we do not support remote upload")));
 }
 
 //checking if user is logged in or not
-if(!userid())
+if(!userid()){
 	exit(json_encode(array('error'=>'You are not logged in')));
+}
 
 /*Setting up file name for the video to be converted*/
 $file_name = time().RandomString(5);	
@@ -59,10 +52,9 @@ if(isset($_POST['youtube']))
 	$youtube_url = $_POST['file'];
 	$ParseUrl = parse_url($youtube_url);
 	parse_str($ParseUrl['query'], $youtube_url_prop);
-	$YouTubeId = isset($youtube_url_prop['v']) ? $youtube_url_prop['v'] : '';
+	$YouTubeId = $youtube_url_prop['v'] ?? '';
 	
-	if(!$YouTubeId)
-	{
+	if(!$YouTubeId) {
 		exit(json_encode(array("error"=>"Invalid youtube url")));
 	}
 
@@ -119,8 +111,7 @@ if(isset($_POST['youtube']))
 	$duration = $vid_array['duration'];
 	$vid = $Upload->submit_upload($vid_array);
 
-	if(!function_exists('get_refer_url_from_embed_code'))
-	{
+	if(!function_exists('get_refer_url_from_embed_code')) {
 		exit(json_encode(array('error'=>"Clipbucket embed module is not installed")));
 	}
 	
@@ -147,7 +138,6 @@ if(isset($_POST['youtube']))
 }
 
 $logDetails = array();
-
 
 /*
 A callback accepting five parameters. The first is the cURL resource, 
@@ -228,8 +218,7 @@ $curlOpt = "";
 $curl->setopt(CURLOPT_FILE, $temp_fo);
 $curl->exec();
 
-if ($theError = $curl->hasError())
-{
+if ($theError = $curl->hasError()) {
 	$array['error'] = $theError ;
 	echo json_encode($array);
 }
@@ -238,7 +227,7 @@ if ($theError = $curl->hasError())
 fclose($temp_fo);
 
 sleep(2);
-$details = $logDetails;//file_get_contents($log_file);
+$details = $logDetails;
 $targetFileName = $file_name . '.' . $ext;
 $Upload->add_conversion_queue($targetFileName);
 
@@ -249,11 +238,10 @@ if(file_exists($dummy_file))
 $use_crons = config('use_crons');
 
 //Inserting data
-$title 	= urldecode(mysql_clean(getName($file)));
+$title = urldecode(mysql_clean(getName($file)));
 $title = $title ? $title : "Untitled";
 
-$vidDetails = array
-(
+$vidDetails = array(
 	'title' => $title,
 	'description' => $title,
 	'duration' => $total,
@@ -264,19 +252,16 @@ $vidDetails = array
 	'file_directory' => createDataFolders()
 );
 
-
-
 $vid = $Upload->submit_upload($vidDetails);
 
 echo json_encode(array('vid'=>$vid));
 $file_dir = $vidDetails['file_directory'];
-$logFile = LOGS_DIR.'/'.$file_dir.'/'.$file_name.".log";
+$logFile = LOGS_DIR.DIRECTORY_SEPARATOR.$file_dir.DIRECTORY_SEPARATOR.$file_name.".log";
 if($use_crons=='no')
 {
-	//exec(php_path()." -q ".BASEDIR."/actions/video_convert.php &> /dev/null &");
 	if (stristr(PHP_OS, 'WIN')) {
-			exec(php_path()." -q ".BASEDIR."/actions/video_convert.php $targetFileName sleep");
-		} else {
-			exec(php_path()." -q ".BASEDIR."/actions/video_convert.php $targetFileName $file_name $file_dir $logFile > /dev/null &");
+        exec(php_path()." -q ".BASEDIR."/actions/video_convert.php $targetFileName sleep");
+    } else {
+        exec(php_path()." -q ".BASEDIR."/actions/video_convert.php $targetFileName $file_name $file_dir $logFile > /dev/null &");
 	}
 }
