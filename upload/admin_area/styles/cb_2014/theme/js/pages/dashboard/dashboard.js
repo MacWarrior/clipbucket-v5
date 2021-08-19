@@ -1,4 +1,4 @@
-$(function() {
+$(document).ready(function(){
     var page = '/admin_area/index.php';
 
     $(".oneNote .delete").on({
@@ -17,8 +17,7 @@ $(function() {
             var note = $(this).parents(".widgetBox").find("textarea").val();
             if(!note){
                 alert("Please enter something");
-            }
-            else{
+            } else {
                 $(this).parents(".widgetBox").find("textarea").val("");
                 $.post(page, {
                     mode : 'add_note',
@@ -58,50 +57,49 @@ $(function() {
             if(newVal.length)
             {
                 $(this).parents(".addTodo").find("input").val("");
-                var ajaxCall = $.ajax({
+                $.ajax({
                     url: page,
                     type: "post",
                     data: {
                         val: newVal,
-                        mode: "add_todo",
+                        mode: "add_todo"
                     },
-                });
-                ajaxCall.success(function(data){
-                    data = $.parseJSON(data);
-                    var li = document.createElement("li");
-                    li.className = "col-md-12";
-                    var p = document.createElement("p");
-                    p.className = "oneTodo paddingLeftSmall col-md-10";
-                    p.id = data.id;
-                    p.innerHTML = data.todo;
-                    var a = document.createElement("a");
-                    a.href = "#";
-                    a.className = "col-md-2 btn btn-danger btn-xs delete";
-                    a.innerHTML = "{lang code='delete'}";
-                    $(a).on("click", function(e){
-                        e.preventDefault();
-                        var self = this;
-                        var id = $(this).prev().attr("id");
-                        var ajaxCall = $.ajax({
-                            url: page,
-                            type: "post",
-                            data: {
-                                id: id,
-                                mode: "delete_todo",
-                            },
+                    success: function (data) {
+                        data = $.parseJSON(data);
+                        var li = document.createElement("li");
+                        li.className = "col-md-12";
+                        var p = document.createElement("p");
+                        p.className = "oneTodo paddingLeftSmall col-md-10";
+                        p.id = data.id;
+                        p.innerHTML = data.todo;
+                        var a = document.createElement("a");
+                        a.href = "#";
+                        a.className = "col-md-2 btn btn-danger btn-xs delete";
+                        a.innerHTML = lang_delete;
+                        $(a).on("click", function(e){
+                            e.preventDefault();
+                            var self = this;
+                            var id = $(this).prev().attr("id");
+                            $.ajax({
+                                url: page,
+                                type: "post",
+                                data: {
+                                    id: id,
+                                    mode: "delete_todo"
+                                },
+                                success: function (data) {
+                                    $(self).parents("li").remove();
+                                }
+                            });
                         });
-                        ajaxCall.success(function(data){
-                            $(self).parents("li").remove();
-                        });
+                        var div = document.createElement("div");
+                        div.className = "col-md-12";
 
-                    });
-                    var div = document.createElement("div");
-                    div.className = "col-md-12";
-
-                    $(li).append(div).find("div").append(p).append(a);
-                    $(self).parents(".widgetBox").find("ul").prepend(li);
+                        $(li).append(div).find("div").append(p).append(a);
+                        $(self).parents(".widgetBox").find("ul").prepend(li);
+                    }
                 });
-            }else{
+            } else {
                 alert("Please enter a valid value");
             }
         }
@@ -111,16 +109,16 @@ $(function() {
         e.preventDefault();
         var self = this;
         var id = $(this).prev().attr("id");
-        var ajaxCall = $.ajax({
+        $.ajax({
             url: page,
             type: "post",
             data: {
                 id: id,
-                mode: "delete_todo",
+                mode: "delete_todo"
             },
-        });
-        ajaxCall.success(function(data){
-            $(self).parents("li").remove();
+            success: function (data) {
+                $(self).parents("li").remove();
+            }
         });
     });
 
@@ -128,30 +126,30 @@ $(function() {
         var self = this;
         var newVal = $(this).parent().parent().find("input[name='todo']").val();
         if(newVal.length){
-            var ajaxCall = $.ajax({
+            $.ajax({
                 url: "/admin_area/index.php",
                 type: "post",
                 data: {
                     val: newVal,
-                    mode: "add_todo",
+                    mode: "add_todo"
                 },
+                success: function (data) {
+                    data = $.parseJSON(data);
+                    var p = document.createElement("p");
+                    p.className = "xedit editable editable-click";
+                    var input = document.createElement("input");
+                    input.type = "hidden";
+                    input.name = "todoid";
+                    input.value = data.id;
+                    var b = document.createElement("b");
+                    b.innerHTML = data.todo;
+                    p.appendChild(input);
+                    p.appendChild(b);
+                    console.log(p);
+                    $(self).parents("form").after(p);
+                }
             });
-            ajaxCall.success(function(data){
-                data = $.parseJSON(data);
-                var p = document.createElement("p");
-                p.className = "xedit editable editable-click";
-                var input = document.createElement("input");
-                input.type = "hidden";
-                input.name = "todoid";
-                input.value = data.id;
-                var b = document.createElement("b");
-                b.innerHTML = data.todo;
-                p.appendChild(input);
-                p.appendChild(b);
-                console.log(p);
-                $(self).parents("form").after(p);
-            });
-        }else{
+        } else {
             alert("Please enter a valid value");
         }
     });
@@ -162,17 +160,17 @@ $(function() {
         var id = $(this).parents(".editable-container").prev().attr("id");
         id = id.match(/([0-9]+)$/g);
         id = id.pop();
-        var ajaxCall = $.ajax({
+        $.ajax({
             url: "/admin_area/index.php",
             type: "post",
             data: {
                 id: id,
-                mode: "delete_todo",
+                mode: "delete_todo"
             },
-        });
-        ajaxCall.success(function(data){
-            $(self).parents("p").remove();
-            $(self).parents(".editable-container").remove();
+            success: function (data) {
+                $(self).parents("p").remove();
+                $(self).parents(".editable-container").remove();
+            }
         });
         e.stopPropagation();
     });

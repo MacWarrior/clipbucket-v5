@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"92",
+  "revision":"93",
   "status":"dev",
   "detail":[
     {
@@ -60,6 +60,7 @@
         ,"Fix photo manager not showing informations when not using english translations"
         ,"Fix changelog when allow_url_fopen is not enabled <i>#139</i>"
         ,"Refactor video editing interface"
+        ,"Fix Dashboard todo list"
       ]
     }
   ,{
