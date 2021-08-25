@@ -1,40 +1,30 @@
 <?php
-	/*
-	 **************************************************************
-	 | Copyright (c) 2007-2010 Clip-Bucket.com. All rights reserved.
-	 | @ Author : ArslanHassan
-	 | @ Software : ClipBucket , © PHPBucket.com
-	 ***************************************************************
-	*/
+global $userquery,$myquery;
 
-	require_once '../includes/admin_config.php';
-	$userquery->admin_login_check();
-	$userquery->login_check('video_moderation');
+require_once '../includes/admin_config.php';
 
-	/* Generating breadcrumb */
-	global $breadcrumb;
-	$breadcrumb[0] = array('title' => lang('videos'), 'url' => '');
-	$breadcrumb[1] = array('title' => 'Notification settings', 'url' => ADMIN_BASEURL.'/notification_settings.php');
+$userquery->admin_login_check();
+$userquery->login_check('video_moderation');
 
-	$mode = $_GET['mode'];
+/* Generating breadcrumb */
+global $breadcrumb;
+$breadcrumb[0] = array('title' => lang('videos'), 'url' => '');
+$breadcrumb[1] = array('title' => 'Notification settings', 'url' => ADMIN_BASEURL.'/notification_settings.php');
 
-	if($_POST['update_notification'])
-	{
-		$rows = array('notification_option');
+$mode = $_GET['mode'];
 
-		foreach($rows as $field)
-		{
-			$value = $_POST[$field];
-			$myquery->Set_Website_Details($field,$value);
-		}
+if($_POST['update_notification']) {
+    $rows = array('notification_option');
 
-		e("Notification Settings Have Been Updated",'m');
+    foreach($rows as $field) {
+        $value = $_POST[$field];
+        $myquery->Set_Website_Details($field,$value);
+    }
 
-		subtitle("Notification Settings");
-	}
+    e('Notification Settings Have Been Updated','m');
+    subtitle('Notification Settings');
+}
 
-	$row = $myquery->Get_Website_Details();
-	assign('row',$row);
-	subtitle("Notification Settings");
-	template_files('notification_settings.html');
-	display_it();
+subtitle('Notification Settings');
+template_files('notification_settings.html');
+display_it();

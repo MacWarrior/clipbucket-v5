@@ -463,8 +463,7 @@ class FFMpeg
 	{
 		$time = microtime();
 		$time = explode(' ',$time);
-		$time = $time[1]+$time[0];
-		return $time;
+		return $time[1]+$time[0];
 	}
 	
 	/**
@@ -592,7 +591,6 @@ class FFMpeg
 					$log .= "Failed Reason : Max Duration Configurations\n";
 					$this->log->writeLine('Max Duration configs', $log, true);
 					$this->failed_reason = 'max_duration';
-	
 					break;
 				}
 				$ratio = (float)$ratio;
@@ -617,8 +615,7 @@ class FFMpeg
 						$height_setting = $thumbs_size[1];
 						$width_setting = $thumbs_size[0];
 						$dimension_setting = $width_setting.'x'.$height_setting;
-						if( $key == 'original' )
-						{
+						if( $key == 'original' ) {
 							$dimension_setting = $key;
 							$dim_identifier = $key;	
 						} else {
@@ -639,80 +636,93 @@ class FFMpeg
 				$log .= "\r\n ====== End : Thumbs Generation ======= \r\n";
 				$this->log->writeLine('Thumbs Generation', $log, true);
 
-				$hr = $this->options['high_res'];
-				$this->options['video_width'] = $res[$nr][0];
-				$this->options['format'] = 'mp4';
-				$this->options['video_height'] = $res[$nr][1];
-				$this->options['hq_video_width'] = $res[$hr][0];
-				$this->options['hq_video_height'] = $res[$hr][1];
-				$orig_file = $this->input_file;
-				
-				// setting type of conversion, fetching from configs
-				$this->resolutions = $this->options['cb_combo_res'];
+                $hr = $this->options['high_res'];
+                $this->options['video_width'] = $res[$nr][0];
+                $this->options['format'] = 'mp4';
+                $this->options['video_height'] = $res[$nr][1];
+                $this->options['hq_video_width'] = $res[$hr][0];
+                $this->options['hq_video_height'] = $res[$hr][1];
+                $orig_file = $this->input_file;
 
-				switch( $this->resolutions )
-				{
-					case 'yes':
-						$res169 = $this->reindex_required_resolutions($this->res169);
-						
-						$this->ratio = $ratio;
-						foreach( $res169 as $value )
-						{
-							$video_width  = (int)$value[0];
-							$video_height = (int)$value[1];
+                // setting type of conversion, fetching from configs
+                $this->resolutions = $this->options['cb_combo_res'];
 
-							// This option allow video with a 1% lower resolution to be included in the superior resolution
-                            // For example : 1900x800 will be allowed in 1080p resolution
-							if( config('allow_conversion_1_percent') == 'yes' ){
-							    $video_height_test = floor($video_height*0.99);
-                                $video_width_test = floor($video_width*0.99);
-                            } else {
-                                $video_height_test = $video_height;
-                                $video_width_test = $video_width;
-                            }
-
-							// Here we must check width and height to be able to import other formats than 16/9 (For example : 1920x800, 1800x1080, ...)
-							if( $this->input_details['video_width'] >= $video_width_test || $this->input_details['video_height'] >= $video_height_test )
-							{
-								$more_res['video_width']  = $video_width;
-								$more_res['video_height'] = $video_height;
-								$more_res['name']		  = $video_height;
-								$this->convert(NULL, false, $more_res);
-							}
-						}
-						break;
-
-					case 'no':
-					default :
-						$this->convertVideo($orig_file);
-						break;
-				}
-
-				$this->end_time_check();
-				$this->total_time();
-
-				$log = '';
-				//Copying File To Original Folder
-				if( $this->keep_original == 'yes' )
-				{
-					$log .= "Copy File to original Folder\r\n";
-					if( copy($this->input_file, $this->original_output_path) ){
-						$log .= "File Copied to original Folder...\r\n";
-                    } else {
-						$log .= "Unable to copy file to original folder...\r\n";
+                if( config('stay_mp4') == 'yes' ){
+                    $output_directory = $this->videosDirPath.DIRECTORY_SEPARATOR.$this->options['outputPath'];
+                    if(!is_dir($output_directory)){
+                        mkdir($output_directory,0755, true);
                     }
-				}
 
-				$log .= 'Time Took : '.$this->total_time.' seconds'."\r\n";
+                    $filepath_destination = $output_directory.$this->file_name.'.mp4';
+                    copy($orig_file,$filepath_destination);
 
-				if(file_exists($this->output_file) && filesize($this->output_file) > 0) {
+                    $this->output_file = $filepath_destination;
+                } else {
+                    switch( $this->resolutions )
+                    {
+                        case 'yes':
+                            $res169 = $this->reindex_required_resolutions($this->res169);
+
+                            $this->ratio = $ratio;
+                            foreach( $res169 as $value )
+                            {
+                                $video_width  = (int)$value[0];
+                                $video_height = (int)$value[1];
+
+                                // This option allow video with a 1% lower resolution to be included in the superior resolution
+                                // For example : 1900x800 will be allowed in 1080p resolution
+                                if( config('allow_conversion_1_percent') == 'yes' ){
+                                    $video_height_test = floor($video_height*0.99);
+                                    $video_width_test = floor($video_width*0.99);
+                                } else {
+                                    $video_height_test = $video_height;
+                                    $video_width_test = $video_width;
+                                }
+
+                                // Here we must check width and height to be able to import other formats than 16/9 (For example : 1920x800, 1800x1080, ...)
+                                if( $this->input_details['video_width'] >= $video_width_test || $this->input_details['video_height'] >= $video_height_test )
+                                {
+                                    $more_res['video_width']  = $video_width;
+                                    $more_res['video_height'] = $video_height;
+                                    $more_res['name']		  = $video_height;
+                                    $this->convert(NULL, false, $more_res);
+                                }
+                            }
+                            break;
+
+                        case 'no':
+                        default :
+                            $this->convertVideo($orig_file);
+                            break;
+                    }
+                }
+
+                $this->end_time_check();
+                $this->total_time();
+
+                $log = '';
+
+                //Copying File To Original Folder
+                if( $this->keep_original == 'yes' )
+                {
+                    $log .= "Copy File to original Folder\r\n";
+                    if( copy($this->input_file, $this->original_output_path) ){
+                        $log .= "File Copied to original Folder...\r\n";
+                    } else {
+                        $log .= "Unable to copy file to original folder...\r\n";
+                    }
+                }
+
+                $log .= 'Time Took : '.$this->total_time.' seconds'."\r\n";
+
+                if(file_exists($this->output_file) && filesize($this->output_file) > 0) {
                     $log .= 'Conversion_status : completed';
                 } else {
                     $log .= 'Conversion_status : failed';
                 }
-				
-				$this->log->writeLine('Conversion Completed', $log, true);
-				break;
+
+                $this->log->writeLine('Conversion Completed', $log, true);
+                break;
 			}
 
 			// Prevent video_convert action to use 100% cpu while waiting for queued videos to end conversion
@@ -1358,7 +1368,7 @@ class FFMpeg
 			$this->options['outputPath'] .= DIRECTORY_SEPARATOR;
 		}
 		
-		mkdir($tmpDir,0777);	
+		mkdir($tmpDir,0777, true);
 
 		$dimension = '';
 		
@@ -1375,6 +1385,7 @@ class FFMpeg
 		if($dim!='original'){
 			$dimension = ' -s '.$dim.' ';
 		}
+
 
         $thumb_dir = THUMBS_DIR.DIRECTORY_SEPARATOR.$thumbs_outputPath;
         if(!is_dir($thumb_dir)){

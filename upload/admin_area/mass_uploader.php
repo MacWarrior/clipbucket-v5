@@ -75,7 +75,7 @@ if(isset($_POST['mass_upload_video']))
 
         if($vid)
         {
-            //Moving file to temp dir and Inserting in conversion queue..
+            //Moving file to temp dir and Inserting in conversion queue...
             $file_name = $cbmass->move_to_temp($file_arr,$file_key);
 
             createDataFolders(LOGS_DIR);
@@ -99,11 +99,10 @@ if(isset($_POST['mass_upload_video']))
             $str1 = date('Y').DIRECTORY_SEPARATOR.date('m').DIRECTORY_SEPARATOR.date('d');
             $str = DIRECTORY_SEPARATOR.$str1.DIRECTORY_SEPARATOR;
             mkdir(VIDEOS_DIR.$str, 755, true);
-            $tbl=tbl('video');
             $fields['file_directory']=$str1;
             $fname=explode('.', $file_name);
             $cond='file_name='.'\''.$fname[0].'\'';
-            $result=$db->db_update($tbl, $fields, $cond);
+            $result=$db->db_update(tbl('video'), $fields, $cond);
             $result=exec(php_path().' -q '.BASEDIR."/actions/video_convert.php {$file_name} {$file_key} {$file_directory} {$logFile} {$file_track} > /dev/null &");
             if(file_exists(CON_DIR.DIRECTORY_SEPARATOR.$file_name))
             {
@@ -136,6 +135,6 @@ if(error()) {
     }
 }
 
-subtitle("Mass Uploader");
-template_files("mass_uploader.html");
+subtitle('Mass Uploader');
+template_files('mass_uploader.html');
 display_it();

@@ -60,7 +60,6 @@ switch($mode)
         break;
 
     case 'upload':
-        $config_for_mp4 = $Cbucket->configs['stay_mp4'];
         $ffmpegpath = $Cbucket->configs['ffmpegpath'];
         $extension = getExt($_FILES['Filedata']['name']);
 
@@ -80,26 +79,10 @@ switch($mode)
         }
 
         $file_name	= time().RandomString(5);
-
-        //Stay as it MP4 Module ..
-        if($config_for_mp4 == 'yes' && $extension == 'mp4' ) {
-            $tempFile = $_FILES['Filedata']['tmp_name'];
-            $file_directory = date('Y/m/d');
-            @mkdir(VIDEOS_DIR . DIRECTORY_SEPARATOR . $file_directory, 0777, true);
-            $targetFileName = $file_name.'.'.getExt($_FILES['Filedata']['name']);
-            $targetFile = TEMP_DIR.DIRECTORY_SEPARATOR.$targetFileName;
-            $ta = VIDEOS_DIR.DIRECTORY_SEPARATOR.$file_directory;
-            $orginal_file = VIDEOS_DIR.DIRECTORY_SEPARATOR.$file_directory.DIRECTORY_SEPARATOR.$file_name.'.'.getExt($_FILES['Filedata']['name']);
-
-            move_uploaded_file($tempFile,VIDEOS_DIR.DIRECTORY_SEPARATOR.$file_directory.DIRECTORY_SEPARATOR.$file_name.'.'.getExt( $_FILES['Filedata']['name']));
-            echo json_encode(array('success'=>'yes','file_name'=>$file_name, 'extension'=>$extension));
-            exit();
-        }
-
         $tempFile = $_FILES['Filedata']['tmp_name'];
         $file_directory = date('Y/m/d');
         $targetFileName = $file_name.'.'.getExt( $_FILES['Filedata']['name']);
-        $targetFile = TEMP_DIR.DIRECTORY_SEPARATOR.$targetFileName;
+
         createDataFolders(LOGS_DIR);
         $logFile = LOGS_DIR.DIRECTORY_SEPARATOR.$file_directory.DIRECTORY_SEPARATOR.$file_name.'.log';
 
@@ -145,7 +128,7 @@ switch($mode)
             exit(0);
         }
         if (isset($_FILES['Filedata']["error"]) && $_FILES['Filedata']["error"] != 0) {
-            upload_error($uploadErrors[$_FILES['Filedata']["error"]]);
+            upload_error($uploadErrors[$_FILES['Filedata']['error']]);
             exit(0);
         }
         if (!isset($_FILES['Filedata']['tmp_name']) || !@is_uploaded_file($_FILES['Filedata']['tmp_name'])) {
@@ -173,6 +156,7 @@ switch($mode)
             exit(0);
         }
 
+        $targetFile = TEMP_DIR.DIRECTORY_SEPARATOR.$targetFileName;
         $moved = move_uploaded_file($tempFile,$targetFile);
 
         if ($moved){
@@ -181,10 +165,20 @@ switch($mode)
             $log->writeLine('Temporary Uploading', 'Went something wrong in moving the file in Temp directory!', true);
         }
 
-        $Upload->add_conversion_queue($targetFileName);
-        $use_crons = config('use_crons');
+        $vidDetails = array(
+            'title'           => $_FILES['Filedata']['name']
+            ,'file_name'      => $file_name
+            ,'file_directory' => $file_directory
+            ,'description'    => $_FILES['Filedata']['name']
+            ,'tags'           => genTags(str_replace(array(' ','_','-'),', ',$_FILES['Filedata']['name']))
+            ,'category'       => [$cbvid->get_default_cid()]
+            ,'userid'         => userid()
+        );
+        $vid = $Upload->submit_upload($vidDetails);
 
-        if($use_crons=='no')
+        $Upload->add_conversion_queue($targetFileName);
+
+        if(config('use_crons') == 'no')
         {
             if (stristr(PHP_OS, 'WIN')) {
                 exec(php_path().' -q '.BASEDIR."/actions/video_convert.php $targetFileName");
@@ -197,17 +191,6 @@ switch($mode)
 
         $TempLogData = 'Video Converson File executed successfully with Target File > !'.$targetFileName;
         $log->writeLine('Video Conversion File Execution', $TempLogData, true);
-
-        $vidDetails = array(
-            'title'           => $_FILES['Filedata']['name']
-            ,'file_name'      => $file_name
-            ,'file_directory' => $file_directory
-            ,'description'    => $_FILES['Filedata']['name']
-            ,'tags'           => genTags(str_replace(array(' ','_','-'),', ',$_FILES['Filedata']['name']))
-            ,'category'       => [$cbvid->get_default_cid()]
-            ,'userid'         => userid()
-        );
-        $vid = $Upload->submit_upload($vidDetails);
 
         // inserting into video views as well
         $query = 'INSERT INTO '.tbl('video_views').' (video_id, video_views, last_updated) VALUES('.$vid.',0,'.time().')';

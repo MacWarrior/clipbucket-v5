@@ -128,8 +128,9 @@
 			if (!$type)
 				e(lang("Invalid playlist type"));
 
-			if(VERSION>2.7)
+			if(VERSION>2.7){
 					$rel = get_rel_list();
+            }
 
 			if (error()) {
 				$rel = array();

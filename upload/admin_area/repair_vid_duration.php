@@ -26,12 +26,11 @@
 
 			if($log && $_POST['fix_duration'])
 			{
-				$duration = parse_duration(LOGS_DIR.'/'.$video['file_name'].'.log');
+				$duration = parse_duration(LOGS_DIR.DIRECTORY_SEPARATOR.$video['file_name'].'.log');
 
-				if(!$duration)
+				if(!$duration){
 					e("Can't do anything about \"".$video['title'].'"');
-				else
-				{
+                } else {
 					$db->update(tbl('video'),array('duration'),array($duration),"videoid='".$video['videoid']."'");
 					$fixed_array[$video['file_name']] = 'yes';
 					e('Succesfully updated duration of "'.$video['title'].'" to '.SetTime($duration),'m');

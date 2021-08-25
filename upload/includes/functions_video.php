@@ -593,7 +593,7 @@
             $fileNameQuery = " AND cqueue_name ='$queueName' AND cqueue_ext ='$ext' ";
         }
 
-        $query = " SELECT * FROM ".tbl("conversion_queue");
+        $query = ' SELECT * FROM '.tbl('conversion_queue');
         $query .= " WHERE cqueue_conversion='p' ";
 
         if(isset($fileNameQuery)){
@@ -766,26 +766,25 @@
 	 *
 	 * @param        Files details
 	 * @param string $status
-	 * @param bool   $ingore_file_status
-	 * @param string $failed_status
 	 */
-    function update_processed_video($file_array,$status='Successful',$ingore_file_status=false,$failed_status='none')
+    function update_processed_video($file_array,$status='Successful')
     {
         global $db;
         $file_name = $file_array['cqueue_name'];
 
-		$result = db_select("SELECT * FROM ".tbl("video")." WHERE file_name = '$file_name'");
+		$result = db_select('SELECT * FROM '.tbl('video')." WHERE file_name = '$file_name'");
 		if($result) {
 			$duration = 0;
 			foreach($result as $result1) {
-				$str = '/'.$result1['file_directory'].'/';
+				$str = DIRECTORY_SEPARATOR.$result1['file_directory'].DIRECTORY_SEPARATOR;
 				$duration = parse_duration(LOGS_DIR.$str.$file_array['cqueue_name'].'.log');
-				if( $duration != 0 )
+				if( $duration != 0 ){
 					break;
+                }
 			}
 
-			$db->update(tbl("video"),array("status","duration","failed_reason"),
-				array($status, $duration, $failed_status)," file_name='".$file_name."'");
+			$db->update(tbl('video'),array('status','duration','failed_reason'),
+				array($status, $duration, 'none')," file_name='".$file_name."'");
 		}
     }
 
@@ -1289,7 +1288,7 @@
 
 		#Now there is no function so lets continue as
         if(isset($vdetails['file_name'])) {
-            if(VIDEO_VERSION == '2.7'){
+            if(VIDEO_VERSION >= '2.7'){
                 $vid_files = glob(VIDEOS_DIR."/".$fileDirectory . $vdetails['file_name']."*");
             } else {
                 $vid_files = glob(VIDEOS_DIR."/".$vdetails['file_name']."*");    
@@ -1304,7 +1303,7 @@
                 $video_file = $files_part[count($files_part)-1];
 
                 if($with_path){
-                    if(VIDEO_VERSION == '2.7'){
+                    if(VIDEO_VERSION >= '2.7'){
                         $files[] = VIDEOS_URL.'/' . $fileDirectory. $video_file;
 					} else if(VIDEO_VERSION == '2.6') {
                         $files[] = VIDEOS_URL.'/' . $video_file;
@@ -1315,7 +1314,7 @@
             }
 		}
 
-        if(count($files)==0 && !$multi && !$count_only){
+        if(!is_array($files) || (count($files) == 0 && !$multi && !$count_only) ){
             if($return_default){
                 if($with_path){
                     return VIDEOS_URL.'/no_video.mp4';
@@ -1364,8 +1363,7 @@
                         $height_setting = $imageDetails[1];
                     }
 
-                    $outputFilePath = THUMBS_DIR.'/'.$file_directory.'/'.$_POST['file_name'].'-'.$dimensions.'-'.$file_num.'.'.$ext;  
-                    //echo $outputFilePath.'<br>';
+                    $outputFilePath = THUMBS_DIR.'/'.$file_directory.'/'.$_POST['file_name'].'-'.$dimensions.'-'.$file_num.'.'.$ext;
                     $image->CreateThumb($temp_file,$outputFilePath,$width_setting,$ext,$height_setting,false);
                 }
                 unlink($temp_file);

@@ -1,34 +1,32 @@
 <?php
-	require_once '../includes/admin_config.php';
-	global $userquery,$pages,$cbemail,$eh,$Cbucket,$myquery;
-	$userquery->admin_login_check();
-	$userquery->login_check('web_config_access');
+require_once '../includes/admin_config.php';
 
-	$pages->page_redir();
+global $userquery,$pages,$cbemail,$eh,$Cbucket,$myquery;
+$userquery->admin_login_check();
+$userquery->login_check('web_config_access');
 
-	/* Generating breadcrumb */
-	global $breadcrumb;
-	$breadcrumb[0] = array('title' => 'General Configurations', 'url' => '');
-	$breadcrumb[1] = array('title' => 'Email Templates', 'url' => ADMIN_BASEURL.'/email_settings.php');
+$pages->page_redir();
 
-	//Updating email templates
-	if(isset($_POST['update']))
-	{
-		$templates = $cbemail->get_templates();
+/* Generating breadcrumb */
+global $breadcrumb;
+$breadcrumb[0] = array('title' => 'General Configurations', 'url' => '');
+$breadcrumb[1] = array('title' => 'Email Templates', 'url' => ADMIN_BASEURL.'/email_settings.php');
 
-		foreach($templates as $template)
-		{
-			$params = array('id'=>$template['email_template_id'],'subj'=>$_POST['subject'.$template['email_template_id']],
-							'msg'=>$_POST['message'.$template['email_template_id']]);
-			$cbemail->update_template($params);
-			$eh->flush();
-			e("Email templates have been updated","m");
-		}
-	}
+//Updating email templates
+if(isset($_POST['update']))
+{
+    $templates = $cbemail->get_templates();
 
-	$row = $myquery->Get_Website_Details();
-	Assign('row',$row);
+    foreach($templates as $template)
+    {
+        $params = array('id'=>$template['email_template_id'],'subj'=>$_POST['subject'.$template['email_template_id']],
+                        'msg'=>$_POST['message'.$template['email_template_id']]);
+        $cbemail->update_template($params);
+        $eh->flush();
+        e('Email templates have been updated','m');
+    }
+}
 
-	subtitle("Email Settings");
-	template_files('email_settings.html');
-	display_it();
+subtitle('Email Settings');
+template_files('email_settings.html');
+display_it();

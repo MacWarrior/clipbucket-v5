@@ -52,7 +52,7 @@ class Upload
      */
     function submit_upload($array=NULL)
 	{
-		global $eh,$Cbucket,$db,$userquery;
+		global $eh,$db,$userquery;
 		
 		if(!$array){
 			$array = $_POST;
@@ -164,11 +164,11 @@ class Upload
 
 			//video_version
             $query_field[] = 'video_version';
-            $query_val[] = '2.7';
+            $query_val[] = VERSION;
 
 			//thumbs_version
             $query_field[] = 'thumbs_version';
-            $query_val[] = '2.8';
+            $query_val[] = VERSION;
 
 			//Upload Ip
 			$query_field[] = 'uploader_ip';
@@ -187,9 +187,8 @@ class Upload
 			
 			$query_field[] = 'date_added';
 			$query_val[] = dateNow();
-			$config_for_mp4 = $Cbucket->configs['stay_mp4'];
-			
-			if ($config_for_mp4 == 'yes') {
+
+			if (config('stay_mp4') == 'yes') {
 				$query_field[] = 'status';
 				$query_val[] = 'Successful';
 			}
@@ -311,7 +310,7 @@ class Upload
 			if($imgObj->ValidateImage($file['tmp_name'][$key],$ext))
 			{
 				//One more IF statement considering CB 2.8.1 thumbs strucure
-				if (!empty($thumbs_ver) && $thumbs_ver == '2.8')
+				if (!empty($thumbs_ver) && $thumbs_ver >= '2.8')
 				{
 					$thumbs_settings_28 = thumbs_res_settings_28();
 					$temp_file_path = THUMBS_DIR.'/'.$files_dir.'/'.$file_name.'-'.$file_num.'.'.$ext;

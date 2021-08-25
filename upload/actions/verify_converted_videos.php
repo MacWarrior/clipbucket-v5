@@ -5,7 +5,7 @@ $in_bg_cron = true;
 
 define('THIS_PAGE','verify_converted_videos');
 
-include(dirname(__FILE__)."/../includes/config.inc.php");
+include(dirname(__FILE__).'/../includes/config.inc.php');
 
 cb_call_functions('verify_converted_videos_cron');
 
@@ -20,6 +20,7 @@ if(isset($_GET['filename'])){
 
 $files = get_video_being_processed($fileName);
 
+
 if(is_array($files)){
     foreach($files as $file)
     {
@@ -30,7 +31,7 @@ if(is_array($files)){
         {
             update_processed_video($file,'Failed',$ffmpeg->failed_reason);
 
-            $db->update(tbl("conversion_queue"),
+            $db->update(tbl('conversion_queue'),
             array('cqueue_conversion'),
             array('yes')," cqueue_id = '".$file['cqueue_id']."'");
 

@@ -438,7 +438,7 @@ class CBvideo extends CBCategory
 					$query_field[] = 'status';
 					$query_val[] = $array['status'];
 				}
-				
+
 				if(!empty($array['duration']) && is_numeric($array['duration']) && $array['duration']>0)
 				{
 					$query_field[] = 'duration';
@@ -490,13 +490,13 @@ class CBvideo extends CBCategory
 
 			if(!userid())
 			{
-				e(lang("you_dont_have_permission_to_update_this_video"));
+				e(lang('you_dont_have_permission_to_update_this_video'));
 			} elseif(!$this->video_exists($vid)) {
-				e(lang("class_vdo_del_err"));
+				e(lang('class_vdo_del_err'));
 			} elseif(!$this->is_video_owner($vid,userid()) && !has_access('admin_access',TRUE)) {
-				e(lang("no_edit_video"));
+				e(lang('no_edit_video'));
 			} elseif(strlen($array['title']) > 100) {
-				e(lang("Title exceeds max length of 100 characters")); // TODO : Translation
+				e(lang('Title exceeds max length of 100 characters')); // TODO : Translation
 			} else {
 				$db->update(tbl('video'),$query_field,$query_val," videoid='$vid'");
 
@@ -505,7 +505,7 @@ class CBvideo extends CBCategory
                     'results' => $array
                 ));
 
-				e(lang("class_vdo_update_msg"),'m');
+				e(lang('class_vdo_update_msg'),'m');
 
 				// condition for Clip press plugin
 				if( function_exists('post_to_wp_upload_culr') ) {
