@@ -1517,10 +1517,13 @@ class userquery extends CBCategory{
 			$udetails = $this->get_user_details($uid);
         }
 
-		$avatar = $udetails['avatar'];
-		$avatar_path = AVATARS_DIR.'/'.$avatar;
+        $avatar = $avatar_path = '';
+        if( !empty($udetails) ){
+            $avatar = $udetails['avatar'];
+            $avatar_path = AVATARS_DIR.DIRECTORY_SEPARATOR.$avatar;
+        }
 		if( !empty($avatar) && file_exists($avatar_path) ){
-			return AVATARS_URL.'/'.$avatar;
+			return AVATARS_URL.DIRECTORY_SEPARATOR.$avatar;
         }
 
 		if( !empty($udetails['avatar_url']) ){
