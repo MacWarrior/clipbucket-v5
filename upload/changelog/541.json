@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"98",
+  "revision":"99",
   "status":"dev",
   "detail":[
     {
@@ -45,7 +45,7 @@
         ,"Update Video edit interface"
         ,"Fix valid message displayed even if errors occured <i>#167#</i>"
         ,"Update update checker"
-        ,"Update Bootstrap to version 3.3.7"
+        ,"Update Bootstrap to version 3.4.1"
         ,"Refactor assets directories"
         ,"Fix current menu display"
         ,"Use more translations"
@@ -76,7 +76,7 @@
         ,"Fix home page popup video height"
         ,"Fix video manager"
         ,"Video upload : Refactor video upload <i>#169</i>"
-        ,"Update Bootstrap to version 3.3.7"
+        ,"Update Bootstrap to version 3.4.1"
         ,"Fix user avatar update"
         ,"Photo upload : Fix photo upload <i>#174</i>, <i>#177</i>, <i>#178</i>"
         ,"Fix video temporary used on upload <i>#176</i>"
