@@ -1,6 +1,6 @@
 /**
  * @license
- * Video.js 7.15.0 <http://videojs.com/>
+ * Video.js 7.15.4 <http://videojs.com/>
  * Copyright Brightcove, Inc. <https://www.brightcove.com/>
  * Available under Apache License Version 2.0
  * <https://github.com/videojs/video.js/blob/main/LICENSE>
@@ -16,7 +16,7 @@
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.videojs = factory());
 }(this, (function () { 'use strict';
 
-  var version$5 = "7.15.0";
+  var version$5 = "7.15.4";
 
   var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -28569,7 +28569,10 @@
 
       if (controlBar && !IS_IOS && !IS_ANDROID) {
         controlBar.on('mouseenter', function (event) {
-          this.player().cache_.inactivityTimeout = this.player().options_.inactivityTimeout;
+          if (this.player().options_.inactivityTimeout !== 0) {
+            this.player().cache_.inactivityTimeout = this.player().options_.inactivityTimeout;
+          }
+
           this.player().options_.inactivityTimeout = 0;
         });
         controlBar.on('mouseleave', function (event) {
@@ -30936,9 +30939,9 @@
     })();
   });
 
-  var DEFAULT_LOCATION$1 = 'http://example.com';
+  var DEFAULT_LOCATION = 'http://example.com';
 
-  var resolveUrl$2 = function resolveUrl(baseUrl, relativeUrl) {
+  var resolveUrl$1 = function resolveUrl(baseUrl, relativeUrl) {
     // return early if we don't need to resolve
     if (/^[a-z]+:/i.test(relativeUrl)) {
       return relativeUrl;
@@ -30958,7 +30961,7 @@
     var removeLocation = !window_1.location && !/\/\//i.test(baseUrl); // if the base URL is relative then combine with the current location
 
     if (nativeURL) {
-      baseUrl = new window_1.URL(baseUrl, window_1.location || DEFAULT_LOCATION$1);
+      baseUrl = new window_1.URL(baseUrl, window_1.location || DEFAULT_LOCATION);
     } else if (!/\/\//i.test(baseUrl)) {
       baseUrl = urlToolkit.buildAbsoluteURL(window_1.location && window_1.location.href || '', baseUrl);
     }
@@ -30969,7 +30972,7 @@
       // otherwise, return the url unmodified
 
       if (removeLocation) {
-        return newUrl.href.slice(DEFAULT_LOCATION$1.length);
+        return newUrl.href.slice(DEFAULT_LOCATION.length);
       } else if (protocolLess) {
         return newUrl.href.slice(newUrl.protocol.length);
       }
@@ -32890,300 +32893,445 @@
     return null;
   };
 
-  var DEFAULT_LOCATION = 'http://example.com';
+  /**
+   * "Shallow freezes" an object to render it immutable.
+   * Uses `Object.freeze` if available,
+   * otherwise the immutability is only in the type.
+   *
+   * Is used to create "enum like" objects.
+   *
+   * @template T
+   * @param {T} object the object to freeze
+   * @param {Pick<ObjectConstructor, 'freeze'> = Object} oc `Object` by default,
+   * 				allows to inject custom object constructor for tests
+   * @returns {Readonly<T>}
+   *
+   * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/freeze
+   */
 
-  var resolveUrl$1 = function resolveUrl(baseUrl, relativeUrl) {
-    // return early if we don't need to resolve
-    if (/^[a-z]+:/i.test(relativeUrl)) {
-      return relativeUrl;
-    } // if baseUrl is a data URI, ignore it and resolve everything relative to window.location
-
-
-    if (/^data:/.test(baseUrl)) {
-      baseUrl = window_1.location && window_1.location.href || '';
-    } // IE11 supports URL but not the URL constructor
-    // feature detect the behavior we want
-
-
-    var nativeURL = typeof window_1.URL === 'function';
-    var protocolLess = /^\/\//.test(baseUrl); // remove location if window.location isn't available (i.e. we're in node)
-    // and if baseUrl isn't an absolute url
-
-    var removeLocation = !window_1.location && !/\/\//i.test(baseUrl); // if the base URL is relative then combine with the current location
-
-    if (nativeURL) {
-      baseUrl = new window_1.URL(baseUrl, window_1.location || DEFAULT_LOCATION);
-    } else if (!/\/\//i.test(baseUrl)) {
-      baseUrl = urlToolkit.buildAbsoluteURL(window_1.location && window_1.location.href || '', baseUrl);
+  function freeze(object, oc) {
+    if (oc === undefined) {
+      oc = Object;
     }
 
-    if (nativeURL) {
-      var newUrl = new URL(relativeUrl, baseUrl); // if we're a protocol-less url, remove the protocol
-      // and if we're location-less, remove the location
-      // otherwise, return the url unmodified
+    return oc && typeof oc.freeze === 'function' ? oc.freeze(object) : object;
+  }
+  /**
+   * All mime types that are allowed as input to `DOMParser.parseFromString`
+   *
+   * @see https://developer.mozilla.org/en-US/docs/Web/API/DOMParser/parseFromString#Argument02 MDN
+   * @see https://html.spec.whatwg.org/multipage/dynamic-markup-insertion.html#domparsersupportedtype WHATWG HTML Spec
+   * @see DOMParser.prototype.parseFromString
+   */
 
-      if (removeLocation) {
-        return newUrl.href.slice(DEFAULT_LOCATION.length);
-      } else if (protocolLess) {
-        return newUrl.href.slice(newUrl.protocol.length);
-      }
 
-      return newUrl.href;
-    }
+  var MIME_TYPE = freeze({
+    /**
+     * `text/html`, the only mime type that triggers treating an XML document as HTML.
+     *
+     * @see DOMParser.SupportedType.isHTML
+     * @see https://www.iana.org/assignments/media-types/text/html IANA MimeType registration
+     * @see https://en.wikipedia.org/wiki/HTML Wikipedia
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/DOMParser/parseFromString MDN
+     * @see https://html.spec.whatwg.org/multipage/dynamic-markup-insertion.html#dom-domparser-parsefromstring WHATWG HTML Spec
+     */
+    HTML: 'text/html',
 
-    return urlToolkit.buildAbsoluteURL(baseUrl, relativeUrl);
+    /**
+     * Helper method to check a mime type if it indicates an HTML document
+     *
+     * @param {string} [value]
+     * @returns {boolean}
+     *
+     * @see https://www.iana.org/assignments/media-types/text/html IANA MimeType registration
+     * @see https://en.wikipedia.org/wiki/HTML Wikipedia
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/DOMParser/parseFromString MDN
+     * @see https://html.spec.whatwg.org/multipage/dynamic-markup-insertion.html#dom-domparser-parsefromstring 	 */
+    isHTML: function isHTML(value) {
+      return value === MIME_TYPE.HTML;
+    },
+
+    /**
+     * `application/xml`, the standard mime type for XML documents.
+     *
+     * @see https://www.iana.org/assignments/media-types/application/xml IANA MimeType registration
+     * @see https://tools.ietf.org/html/rfc7303#section-9.1 RFC 7303
+     * @see https://en.wikipedia.org/wiki/XML_and_MIME Wikipedia
+     */
+    XML_APPLICATION: 'application/xml',
+
+    /**
+     * `text/html`, an alias for `application/xml`.
+     *
+     * @see https://tools.ietf.org/html/rfc7303#section-9.2 RFC 7303
+     * @see https://www.iana.org/assignments/media-types/text/xml IANA MimeType registration
+     * @see https://en.wikipedia.org/wiki/XML_and_MIME Wikipedia
+     */
+    XML_TEXT: 'text/xml',
+
+    /**
+     * `application/xhtml+xml`, indicates an XML document that has the default HTML namespace,
+     * but is parsed as an XML document.
+     *
+     * @see https://www.iana.org/assignments/media-types/application/xhtml+xml IANA MimeType registration
+     * @see https://dom.spec.whatwg.org/#dom-domimplementation-createdocument WHATWG DOM Spec
+     * @see https://en.wikipedia.org/wiki/XHTML Wikipedia
+     */
+    XML_XHTML_APPLICATION: 'application/xhtml+xml',
+
+    /**
+     * `image/svg+xml`,
+     *
+     * @see https://www.iana.org/assignments/media-types/image/svg+xml IANA MimeType registration
+     * @see https://www.w3.org/TR/SVG11/ W3C SVG 1.1
+     * @see https://en.wikipedia.org/wiki/Scalable_Vector_Graphics Wikipedia
+     */
+    XML_SVG_IMAGE: 'image/svg+xml'
+  });
+  /**
+   * Namespaces that are used in this code base.
+   *
+   * @see http://www.w3.org/TR/REC-xml-names
+   */
+
+  var NAMESPACE$2 = freeze({
+    /**
+     * The XHTML namespace.
+     *
+     * @see http://www.w3.org/1999/xhtml
+     */
+    HTML: 'http://www.w3.org/1999/xhtml',
+
+    /**
+     * Checks if `uri` equals `NAMESPACE.HTML`.
+     *
+     * @param {string} [uri]
+     *
+     * @see NAMESPACE.HTML
+     */
+    isHTML: function isHTML(uri) {
+      return uri === NAMESPACE$2.HTML;
+    },
+
+    /**
+     * The SVG namespace.
+     *
+     * @see http://www.w3.org/2000/svg
+     */
+    SVG: 'http://www.w3.org/2000/svg',
+
+    /**
+     * The `xml:` namespace.
+     *
+     * @see http://www.w3.org/XML/1998/namespace
+     */
+    XML: 'http://www.w3.org/XML/1998/namespace',
+
+    /**
+     * The `xmlns:` namespace
+     *
+     * @see https://www.w3.org/2000/xmlns/
+     */
+    XMLNS: 'http://www.w3.org/2000/xmlns/'
+  });
+  var freeze_1 = freeze;
+  var MIME_TYPE_1 = MIME_TYPE;
+  var NAMESPACE_1 = NAMESPACE$2;
+  var conventions = {
+    freeze: freeze_1,
+    MIME_TYPE: MIME_TYPE_1,
+    NAMESPACE: NAMESPACE_1
   };
 
-  var entityMap = {
-    lt: '<',
-    gt: '>',
-    amp: '&',
-    quot: '"',
-    apos: "'",
-    Agrave: "À",
-    Aacute: "Á",
-    Acirc: "Â",
-    Atilde: "Ã",
-    Auml: "Ä",
-    Aring: "Å",
-    AElig: "Æ",
-    Ccedil: "Ç",
-    Egrave: "È",
-    Eacute: "É",
-    Ecirc: "Ê",
-    Euml: "Ë",
-    Igrave: "Ì",
-    Iacute: "Í",
-    Icirc: "Î",
-    Iuml: "Ï",
-    ETH: "Ð",
-    Ntilde: "Ñ",
-    Ograve: "Ò",
-    Oacute: "Ó",
-    Ocirc: "Ô",
-    Otilde: "Õ",
-    Ouml: "Ö",
-    Oslash: "Ø",
-    Ugrave: "Ù",
-    Uacute: "Ú",
-    Ucirc: "Û",
-    Uuml: "Ü",
-    Yacute: "Ý",
-    THORN: "Þ",
-    szlig: "ß",
-    agrave: "à",
-    aacute: "á",
-    acirc: "â",
-    atilde: "ã",
-    auml: "ä",
-    aring: "å",
-    aelig: "æ",
-    ccedil: "ç",
-    egrave: "è",
-    eacute: "é",
-    ecirc: "ê",
-    euml: "ë",
-    igrave: "ì",
-    iacute: "í",
-    icirc: "î",
-    iuml: "ï",
-    eth: "ð",
-    ntilde: "ñ",
-    ograve: "ò",
-    oacute: "ó",
-    ocirc: "ô",
-    otilde: "õ",
-    ouml: "ö",
-    oslash: "ø",
-    ugrave: "ù",
-    uacute: "ú",
-    ucirc: "û",
-    uuml: "ü",
-    yacute: "ý",
-    thorn: "þ",
-    yuml: "ÿ",
-    nbsp: "\xA0",
-    iexcl: "¡",
-    cent: "¢",
-    pound: "£",
-    curren: "¤",
-    yen: "¥",
-    brvbar: "¦",
-    sect: "§",
-    uml: "¨",
-    copy: "©",
-    ordf: "ª",
-    laquo: "«",
-    not: "¬",
-    shy: "­­",
-    reg: "®",
-    macr: "¯",
-    deg: "°",
-    plusmn: "±",
-    sup2: "²",
-    sup3: "³",
-    acute: "´",
-    micro: "µ",
-    para: "¶",
-    middot: "·",
-    cedil: "¸",
-    sup1: "¹",
-    ordm: "º",
-    raquo: "»",
-    frac14: "¼",
-    frac12: "½",
-    frac34: "¾",
-    iquest: "¿",
-    times: "×",
-    divide: "÷",
-    forall: "∀",
-    part: "∂",
-    exist: "∃",
-    empty: "∅",
-    nabla: "∇",
-    isin: "∈",
-    notin: "∉",
-    ni: "∋",
-    prod: "∏",
-    sum: "∑",
-    minus: "−",
-    lowast: "∗",
-    radic: "√",
-    prop: "∝",
-    infin: "∞",
-    ang: "∠",
-    and: "∧",
-    or: "∨",
-    cap: "∩",
-    cup: "∪",
-    'int': "∫",
-    there4: "∴",
-    sim: "∼",
-    cong: "≅",
-    asymp: "≈",
-    ne: "≠",
-    equiv: "≡",
-    le: "≤",
-    ge: "≥",
-    sub: "⊂",
-    sup: "⊃",
-    nsub: "⊄",
-    sube: "⊆",
-    supe: "⊇",
-    oplus: "⊕",
-    otimes: "⊗",
-    perp: "⊥",
-    sdot: "⋅",
-    Alpha: "Α",
-    Beta: "Β",
-    Gamma: "Γ",
-    Delta: "Δ",
-    Epsilon: "Ε",
-    Zeta: "Ζ",
-    Eta: "Η",
-    Theta: "Θ",
-    Iota: "Ι",
-    Kappa: "Κ",
-    Lambda: "Λ",
-    Mu: "Μ",
-    Nu: "Ν",
-    Xi: "Ξ",
-    Omicron: "Ο",
-    Pi: "Π",
-    Rho: "Ρ",
-    Sigma: "Σ",
-    Tau: "Τ",
-    Upsilon: "Υ",
-    Phi: "Φ",
-    Chi: "Χ",
-    Psi: "Ψ",
-    Omega: "Ω",
-    alpha: "α",
-    beta: "β",
-    gamma: "γ",
-    delta: "δ",
-    epsilon: "ε",
-    zeta: "ζ",
-    eta: "η",
-    theta: "θ",
-    iota: "ι",
-    kappa: "κ",
-    lambda: "λ",
-    mu: "μ",
-    nu: "ν",
-    xi: "ξ",
-    omicron: "ο",
-    pi: "π",
-    rho: "ρ",
-    sigmaf: "ς",
-    sigma: "σ",
-    tau: "τ",
-    upsilon: "υ",
-    phi: "φ",
-    chi: "χ",
-    psi: "ψ",
-    omega: "ω",
-    thetasym: "ϑ",
-    upsih: "ϒ",
-    piv: "ϖ",
-    OElig: "Œ",
-    oelig: "œ",
-    Scaron: "Š",
-    scaron: "š",
-    Yuml: "Ÿ",
-    fnof: "ƒ",
-    circ: "ˆ",
-    tilde: "˜",
-    ensp: " ",
-    emsp: " ",
-    thinsp: " ",
-    zwnj: "‌",
-    zwj: "‍",
-    lrm: "‎",
-    rlm: "‏",
-    ndash: "–",
-    mdash: "—",
-    lsquo: "‘",
-    rsquo: "’",
-    sbquo: "‚",
-    ldquo: "“",
-    rdquo: "”",
-    bdquo: "„",
-    dagger: "†",
-    Dagger: "‡",
-    bull: "•",
-    hellip: "…",
-    permil: "‰",
-    prime: "′",
-    Prime: "″",
-    lsaquo: "‹",
-    rsaquo: "›",
-    oline: "‾",
-    euro: "€",
-    trade: "™",
-    larr: "←",
-    uarr: "↑",
-    rarr: "→",
-    darr: "↓",
-    harr: "↔",
-    crarr: "↵",
-    lceil: "⌈",
-    rceil: "⌉",
-    lfloor: "⌊",
-    rfloor: "⌋",
-    loz: "◊",
-    spades: "♠",
-    clubs: "♣",
-    hearts: "♥",
-    diams: "♦"
-  };
-  var entities = {
-    entityMap: entityMap
-  };
+  var entities = createCommonjsModule(function (module, exports) {
+    var freeze = conventions.freeze;
+    /**
+     * The entities that are predefined in every XML document.
+     *
+     * @see https://www.w3.org/TR/2006/REC-xml11-20060816/#sec-predefined-ent W3C XML 1.1
+     * @see https://www.w3.org/TR/2008/REC-xml-20081126/#sec-predefined-ent W3C XML 1.0
+     * @see https://en.wikipedia.org/wiki/List_of_XML_and_HTML_character_entity_references#Predefined_entities_in_XML Wikipedia
+     */
 
-  //[4]   	NameStartChar	   ::=   	":" | [A-Z] | "_" | [a-z] | [#xC0-#xD6] | [#xD8-#xF6] | [#xF8-#x2FF] | [#x370-#x37D] | [#x37F-#x1FFF] | [#x200C-#x200D] | [#x2070-#x218F] | [#x2C00-#x2FEF] | [#x3001-#xD7FF] | [#xF900-#xFDCF] | [#xFDF0-#xFFFD] | [#x10000-#xEFFFF]
+    exports.XML_ENTITIES = freeze({
+      amp: '&',
+      apos: "'",
+      gt: '>',
+      lt: '<',
+      quot: '"'
+    });
+    /**
+     * A map of currently 241 entities that are detected in an HTML document.
+     * They contain all entries from `XML_ENTITIES`.
+     *
+     * @see XML_ENTITIES
+     * @see DOMParser.parseFromString
+     * @see DOMImplementation.prototype.createHTMLDocument
+     * @see https://html.spec.whatwg.org/#named-character-references WHATWG HTML(5) Spec
+     * @see https://www.w3.org/TR/xml-entity-names/ W3C XML Entity Names
+     * @see https://www.w3.org/TR/html4/sgml/entities.html W3C HTML4/SGML
+     * @see https://en.wikipedia.org/wiki/List_of_XML_and_HTML_character_entity_references#Character_entity_references_in_HTML Wikipedia (HTML)
+     * @see https://en.wikipedia.org/wiki/List_of_XML_and_HTML_character_entity_references#Entities_representing_special_characters_in_XHTML Wikpedia (XHTML)
+     */
+
+    exports.HTML_ENTITIES = freeze({
+      lt: '<',
+      gt: '>',
+      amp: '&',
+      quot: '"',
+      apos: "'",
+      Agrave: "À",
+      Aacute: "Á",
+      Acirc: "Â",
+      Atilde: "Ã",
+      Auml: "Ä",
+      Aring: "Å",
+      AElig: "Æ",
+      Ccedil: "Ç",
+      Egrave: "È",
+      Eacute: "É",
+      Ecirc: "Ê",
+      Euml: "Ë",
+      Igrave: "Ì",
+      Iacute: "Í",
+      Icirc: "Î",
+      Iuml: "Ï",
+      ETH: "Ð",
+      Ntilde: "Ñ",
+      Ograve: "Ò",
+      Oacute: "Ó",
+      Ocirc: "Ô",
+      Otilde: "Õ",
+      Ouml: "Ö",
+      Oslash: "Ø",
+      Ugrave: "Ù",
+      Uacute: "Ú",
+      Ucirc: "Û",
+      Uuml: "Ü",
+      Yacute: "Ý",
+      THORN: "Þ",
+      szlig: "ß",
+      agrave: "à",
+      aacute: "á",
+      acirc: "â",
+      atilde: "ã",
+      auml: "ä",
+      aring: "å",
+      aelig: "æ",
+      ccedil: "ç",
+      egrave: "è",
+      eacute: "é",
+      ecirc: "ê",
+      euml: "ë",
+      igrave: "ì",
+      iacute: "í",
+      icirc: "î",
+      iuml: "ï",
+      eth: "ð",
+      ntilde: "ñ",
+      ograve: "ò",
+      oacute: "ó",
+      ocirc: "ô",
+      otilde: "õ",
+      ouml: "ö",
+      oslash: "ø",
+      ugrave: "ù",
+      uacute: "ú",
+      ucirc: "û",
+      uuml: "ü",
+      yacute: "ý",
+      thorn: "þ",
+      yuml: "ÿ",
+      nbsp: "\xA0",
+      iexcl: "¡",
+      cent: "¢",
+      pound: "£",
+      curren: "¤",
+      yen: "¥",
+      brvbar: "¦",
+      sect: "§",
+      uml: "¨",
+      copy: "©",
+      ordf: "ª",
+      laquo: "«",
+      not: "¬",
+      shy: "­­",
+      reg: "®",
+      macr: "¯",
+      deg: "°",
+      plusmn: "±",
+      sup2: "²",
+      sup3: "³",
+      acute: "´",
+      micro: "µ",
+      para: "¶",
+      middot: "·",
+      cedil: "¸",
+      sup1: "¹",
+      ordm: "º",
+      raquo: "»",
+      frac14: "¼",
+      frac12: "½",
+      frac34: "¾",
+      iquest: "¿",
+      times: "×",
+      divide: "÷",
+      forall: "∀",
+      part: "∂",
+      exist: "∃",
+      empty: "∅",
+      nabla: "∇",
+      isin: "∈",
+      notin: "∉",
+      ni: "∋",
+      prod: "∏",
+      sum: "∑",
+      minus: "−",
+      lowast: "∗",
+      radic: "√",
+      prop: "∝",
+      infin: "∞",
+      ang: "∠",
+      and: "∧",
+      or: "∨",
+      cap: "∩",
+      cup: "∪",
+      'int': "∫",
+      there4: "∴",
+      sim: "∼",
+      cong: "≅",
+      asymp: "≈",
+      ne: "≠",
+      equiv: "≡",
+      le: "≤",
+      ge: "≥",
+      sub: "⊂",
+      sup: "⊃",
+      nsub: "⊄",
+      sube: "⊆",
+      supe: "⊇",
+      oplus: "⊕",
+      otimes: "⊗",
+      perp: "⊥",
+      sdot: "⋅",
+      Alpha: "Α",
+      Beta: "Β",
+      Gamma: "Γ",
+      Delta: "Δ",
+      Epsilon: "Ε",
+      Zeta: "Ζ",
+      Eta: "Η",
+      Theta: "Θ",
+      Iota: "Ι",
+      Kappa: "Κ",
+      Lambda: "Λ",
+      Mu: "Μ",
+      Nu: "Ν",
+      Xi: "Ξ",
+      Omicron: "Ο",
+      Pi: "Π",
+      Rho: "Ρ",
+      Sigma: "Σ",
+      Tau: "Τ",
+      Upsilon: "Υ",
+      Phi: "Φ",
+      Chi: "Χ",
+      Psi: "Ψ",
+      Omega: "Ω",
+      alpha: "α",
+      beta: "β",
+      gamma: "γ",
+      delta: "δ",
+      epsilon: "ε",
+      zeta: "ζ",
+      eta: "η",
+      theta: "θ",
+      iota: "ι",
+      kappa: "κ",
+      lambda: "λ",
+      mu: "μ",
+      nu: "ν",
+      xi: "ξ",
+      omicron: "ο",
+      pi: "π",
+      rho: "ρ",
+      sigmaf: "ς",
+      sigma: "σ",
+      tau: "τ",
+      upsilon: "υ",
+      phi: "φ",
+      chi: "χ",
+      psi: "ψ",
+      omega: "ω",
+      thetasym: "ϑ",
+      upsih: "ϒ",
+      piv: "ϖ",
+      OElig: "Œ",
+      oelig: "œ",
+      Scaron: "Š",
+      scaron: "š",
+      Yuml: "Ÿ",
+      fnof: "ƒ",
+      circ: "ˆ",
+      tilde: "˜",
+      ensp: " ",
+      emsp: " ",
+      thinsp: " ",
+      zwnj: "‌",
+      zwj: "‍",
+      lrm: "‎",
+      rlm: "‏",
+      ndash: "–",
+      mdash: "—",
+      lsquo: "‘",
+      rsquo: "’",
+      sbquo: "‚",
+      ldquo: "“",
+      rdquo: "”",
+      bdquo: "„",
+      dagger: "†",
+      Dagger: "‡",
+      bull: "•",
+      hellip: "…",
+      permil: "‰",
+      prime: "′",
+      Prime: "″",
+      lsaquo: "‹",
+      rsaquo: "›",
+      oline: "‾",
+      euro: "€",
+      trade: "™",
+      larr: "←",
+      uarr: "↑",
+      rarr: "→",
+      darr: "↓",
+      harr: "↔",
+      crarr: "↵",
+      lceil: "⌈",
+      rceil: "⌉",
+      lfloor: "⌊",
+      rfloor: "⌋",
+      loz: "◊",
+      spades: "♠",
+      clubs: "♣",
+      hearts: "♥",
+      diams: "♦"
+    });
+    /**
+     * @deprecated use `HTML_ENTITIES` instead
+     * @see HTML_ENTITIES
+     */
+
+    exports.entityMap = exports.HTML_ENTITIES;
+  });
+  entities.XML_ENTITIES;
+  entities.HTML_ENTITIES;
+  entities.entityMap;
+
+  var NAMESPACE$1 = conventions.NAMESPACE; //[4]   	NameStartChar	   ::=   	":" | [A-Z] | "_" | [a-z] | [#xC0-#xD6] | [#xD8-#xF6] | [#xF8-#x2FF] | [#x370-#x37D] | [#x37F-#x1FFF] | [#x200C-#x200D] | [#x2070-#x218F] | [#x2C00-#x2FEF] | [#x3001-#xD7FF] | [#xF900-#xFDCF] | [#xFDF0-#xFFFD] | [#x10000-#xEFFFF]
   //[4a]   	NameChar	   ::=   	NameStartChar | "-" | "." | [0-9] | #xB7 | [#x0300-#x036F] | [#x203F-#x2040]
   //[5]   	Name	   ::=   	NameStartChar (NameChar)*
+
   var nameStartChar = /[A-Z_a-z\xC0-\xD6\xD8-\xF6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD]/; //\u10000-\uEFFFF
 
   var nameChar = new RegExp("[\\-\\.0-9" + nameStartChar.source.slice(1, -1) + "\\u00B7\\u0300-\\u036F\\u203F-\\u2040]");
@@ -33319,21 +33467,18 @@
         switch (source.charAt(tagStart + 1)) {
           case '/':
             var end = source.indexOf('>', tagStart + 3);
-            var tagName = source.substring(tagStart + 2, end);
+            var tagName = source.substring(tagStart + 2, end).replace(/[ \t\n\r]+$/g, '');
             var config = parseStack.pop();
 
             if (end < 0) {
-              tagName = source.substring(tagStart + 2).replace(/[\s<].*/, ''); //console.error('#@@@@@@'+tagName)
-
+              tagName = source.substring(tagStart + 2).replace(/[\s<].*/, '');
               errorHandler.error("end tag name: " + tagName + ' is not complete:' + config.tagName);
               end = tagStart + 1 + tagName.length;
             } else if (tagName.match(/\s</)) {
               tagName = tagName.replace(/[\s<].*/, '');
               errorHandler.error("end tag name: " + tagName + ' maybe not complete');
               end = tagStart + 1 + tagName.length;
-            } //console.error(parseStack.length,parseStack)
-            //console.error(config);
-
+            }
 
             var localNSMap = config.localNSMap;
             var endMatch = config.tagName == tagName;
@@ -33394,8 +33539,7 @@
                 var a = el[i];
                 position(a.offset);
                 a.locator = copyLocator(locator, {});
-              } //}catch(e){console.error('@@@@@'+e)}
-
+              }
 
               domBuilder.locator = locator2;
 
@@ -33410,7 +33554,7 @@
               }
             }
 
-            if (el.uri === 'http://www.w3.org/1999/xhtml' && !el.closed) {
+            if (NAMESPACE$1.isHTML(el.uri) && !el.closed) {
               end = parseHtmlSpecialContent(source, end, el.tagName, entityReplacer, domBuilder);
             } else {
               end++;
@@ -33580,7 +33724,7 @@
                 errorHandler.warning('attribute "' + value + '" missed quot(")!');
                 addAttribute(attrName, value.replace(/&#?\w+;/g, entityReplacer), start);
               } else {
-                if (currentNSMap[''] !== 'http://www.w3.org/1999/xhtml' || !value.match(/^(?:disabled|checked|selected)$/i)) {
+                if (!NAMESPACE$1.isHTML(currentNSMap['']) || !value.match(/^(?:disabled|checked|selected)$/i)) {
                   errorHandler.warning('attribute "' + value + '" missed value!! "' + value + '" instead!!');
                 }
 
@@ -33642,7 +33786,7 @@
               case S_ATTR_SPACE:
                 el.tagName;
 
-                if (currentNSMap[''] !== 'http://www.w3.org/1999/xhtml' || !attrName.match(/^(?:disabled|checked|selected)$/i)) {
+                if (!NAMESPACE$1.isHTML(currentNSMap['']) || !attrName.match(/^(?:disabled|checked|selected)$/i)) {
                   errorHandler.warning('attribute "' + attrName + '" missed value!! "' + attrName + '" instead2!!');
                 }
 
@@ -33716,7 +33860,7 @@
         }
 
         currentNSMap[nsPrefix] = localNSMap[nsPrefix] = value;
-        a.uri = 'http://www.w3.org/2000/xmlns/';
+        a.uri = NAMESPACE$1.XMLNS;
         domBuilder.startPrefixMapping(nsPrefix, value);
       }
     }
@@ -33730,7 +33874,7 @@
       if (prefix) {
         //no prefix attribute has no namespace
         if (prefix === 'xml') {
-          a.uri = 'http://www.w3.org/XML/1998/namespace';
+          a.uri = NAMESPACE$1.XML;
         }
 
         if (prefix !== 'xmlns') {
@@ -33971,6 +34115,72 @@
     ParseError: ParseError_1
   };
 
+  var NAMESPACE = conventions.NAMESPACE;
+  /**
+   * A prerequisite for `[].filter`, to drop elements that are empty
+   * @param {string} input
+   * @returns {boolean}
+   */
+
+  function notEmptyString(input) {
+    return input !== '';
+  }
+  /**
+   * @see https://infra.spec.whatwg.org/#split-on-ascii-whitespace
+   * @see https://infra.spec.whatwg.org/#ascii-whitespace
+   *
+   * @param {string} input
+   * @returns {string[]} (can be empty)
+   */
+
+
+  function splitOnASCIIWhitespace(input) {
+    // U+0009 TAB, U+000A LF, U+000C FF, U+000D CR, U+0020 SPACE
+    return input ? input.split(/[\t\n\f\r ]+/).filter(notEmptyString) : [];
+  }
+  /**
+   * Adds element as a key to current if it is not already present.
+   *
+   * @param {Record<string, boolean | undefined>} current
+   * @param {string} element
+   * @returns {Record<string, boolean | undefined>}
+   */
+
+
+  function orderedSetReducer(current, element) {
+    if (!current.hasOwnProperty(element)) {
+      current[element] = true;
+    }
+
+    return current;
+  }
+  /**
+   * @see https://infra.spec.whatwg.org/#ordered-set
+   * @param {string} input
+   * @returns {string[]}
+   */
+
+
+  function toOrderedSet(input) {
+    if (!input) return [];
+    var list = splitOnASCIIWhitespace(input);
+    return Object.keys(list.reduce(orderedSetReducer, {}));
+  }
+  /**
+   * Uses `list.indexOf` to implement something like `Array.prototype.includes`,
+   * which we can not rely on being available.
+   *
+   * @param {any[]} list
+   * @returns {function(any): boolean}
+   */
+
+
+  function arrayIncludes(list) {
+    return function (element) {
+      return list && list.indexOf(element) !== -1;
+    };
+  }
+
   function copy(src, dest) {
     for (var p in src) {
       dest[p] = src[p];
@@ -34000,9 +34210,8 @@
 
       pt.constructor = Class;
     }
-  }
+  } // Node Types
 
-  var htmlns = 'http://www.w3.org/1999/xhtml'; // Node Types
 
   var NodeType = {};
   var ELEMENT_NODE = NodeType.ELEMENT_NODE = 1;
@@ -34122,8 +34331,13 @@
 
   _extends(LiveNodeList, NodeList);
   /**
-   * 
-   * Objects implementing the NamedNodeMap interface are used to represent collections of nodes that can be accessed by name. Note that NamedNodeMap does not inherit from NodeList; NamedNodeMaps are not maintained in any particular order. Objects contained in an object implementing NamedNodeMap may also be accessed by an ordinal index, but this is simply to allow convenient enumeration of the contents of a NamedNodeMap, and does not imply that the DOM specifies an order to these Nodes.
+   * Objects implementing the NamedNodeMap interface are used
+   * to represent collections of nodes that can be accessed by name.
+   * Note that NamedNodeMap does not inherit from NodeList;
+   * NamedNodeMaps are not maintained in any particular order.
+   * Objects contained in an object implementing NamedNodeMap may also be accessed by an ordinal index,
+   * but this is simply to allow convenient enumeration of the contents of a NamedNodeMap,
+   * and does not imply that the DOM specifies an order to these Nodes.
    * NamedNodeMap objects in the DOM are live.
    * used for attributes or DocumentType entities 
    */
@@ -34268,41 +34482,70 @@
     }
   };
   /**
-   * @see http://www.w3.org/TR/REC-DOM-Level-1/level-one-core.html#ID-102161490
+   * The DOMImplementation interface represents an object providing methods
+   * which are not dependent on any particular document.
+   * Such an object is returned by the `Document.implementation` property.
+   *
+   * __The individual methods describe the differences compared to the specs.__
+   *
+   * @constructor
+   *
+   * @see https://developer.mozilla.org/en-US/docs/Web/API/DOMImplementation MDN
+   * @see https://www.w3.org/TR/REC-DOM-Level-1/level-one-core.html#ID-102161490 DOM Level 1 Core (Initial)
+   * @see https://www.w3.org/TR/DOM-Level-2-Core/core.html#ID-102161490 DOM Level 2 Core
+   * @see https://www.w3.org/TR/DOM-Level-3-Core/core.html#ID-102161490 DOM Level 3 Core
+   * @see https://dom.spec.whatwg.org/#domimplementation DOM Living Standard
    */
 
-  function DOMImplementation(
-  /* Object */
-  features) {
-    this._features = {};
+  function DOMImplementation() {}
 
-    if (features) {
-      for (var feature in features) {
-        this._features = features[feature];
-      }
-    }
-  }
   DOMImplementation.prototype = {
-    hasFeature: function hasFeature(
-    /* string */
-    feature,
-    /* string */
-    version) {
-      var versions = this._features[feature.toLowerCase()];
-
-      if (versions && (!version || version in versions)) {
-        return true;
-      } else {
-        return false;
-      }
+    /**
+     * The DOMImplementation.hasFeature() method returns a Boolean flag indicating if a given feature is supported.
+     * The different implementations fairly diverged in what kind of features were reported.
+     * The latest version of the spec settled to force this method to always return true, where the functionality was accurate and in use.
+     *
+     * @deprecated It is deprecated and modern browsers return true in all cases.
+     *
+     * @param {string} feature
+     * @param {string} [version]
+     * @returns {boolean} always true
+     *
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/DOMImplementation/hasFeature MDN
+     * @see https://www.w3.org/TR/REC-DOM-Level-1/level-one-core.html#ID-5CED94D7 DOM Level 1 Core
+     * @see https://dom.spec.whatwg.org/#dom-domimplementation-hasfeature DOM Living Standard
+     */
+    hasFeature: function hasFeature(feature, version) {
+      return true;
     },
-    // Introduced in DOM Level 2:
+
+    /**
+     * Creates an XML Document object of the specified type with its document element.
+     *
+     * __It behaves slightly different from the description in the living standard__:
+     * - There is no interface/class `XMLDocument`, it returns a `Document` instance.
+     * - `contentType`, `encoding`, `mode`, `origin`, `url` fields are currently not declared.
+     * - this implementation is not validating names or qualified names
+     *   (when parsing XML strings, the SAX parser takes care of that)
+     *
+     * @param {string|null} namespaceURI
+     * @param {string} qualifiedName
+     * @param {DocumentType=null} doctype
+     * @returns {Document}
+     *
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/DOMImplementation/createDocument MDN
+     * @see https://www.w3.org/TR/DOM-Level-2-Core/core.html#Level-2-Core-DOM-createDocument DOM Level 2 Core (initial)
+     * @see https://dom.spec.whatwg.org/#dom-domimplementation-createdocument  DOM Level 2 Core
+     *
+     * @see https://dom.spec.whatwg.org/#validate-and-extract DOM: Validate and extract
+     * @see https://www.w3.org/TR/xml/#NT-NameStartChar XML Spec: Names
+     * @see https://www.w3.org/TR/xml-names/#ns-qualnames XML Namespaces: Qualified names
+     */
     createDocument: function createDocument(namespaceURI, qualifiedName, doctype) {
-      // raises:INVALID_CHARACTER_ERR,NAMESPACE_ERR,WRONG_DOCUMENT_ERR
       var doc = new Document();
       doc.implementation = this;
       doc.childNodes = new NodeList();
-      doc.doctype = doctype;
+      doc.doctype = doctype || null;
 
       if (doctype) {
         doc.appendChild(doctype);
@@ -34315,19 +34558,34 @@
 
       return doc;
     },
-    // Introduced in DOM Level 2:
+
+    /**
+     * Returns a doctype, with the given `qualifiedName`, `publicId`, and `systemId`.
+     *
+     * __This behavior is slightly different from the in the specs__:
+     * - this implementation is not validating names or qualified names
+     *   (when parsing XML strings, the SAX parser takes care of that)
+     *
+     * @param {string} qualifiedName
+     * @param {string} [publicId]
+     * @param {string} [systemId]
+     * @returns {DocumentType} which can either be used with `DOMImplementation.createDocument` upon document creation
+     * 				  or can be put into the document via methods like `Node.insertBefore()` or `Node.replaceChild()`
+     *
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/DOMImplementation/createDocumentType MDN
+     * @see https://www.w3.org/TR/DOM-Level-2-Core/core.html#Level-2-Core-DOM-createDocType DOM Level 2 Core
+     * @see https://dom.spec.whatwg.org/#dom-domimplementation-createdocumenttype DOM Living Standard
+     *
+     * @see https://dom.spec.whatwg.org/#validate-and-extract DOM: Validate and extract
+     * @see https://www.w3.org/TR/xml/#NT-NameStartChar XML Spec: Names
+     * @see https://www.w3.org/TR/xml-names/#ns-qualnames XML Namespaces: Qualified names
+     */
     createDocumentType: function createDocumentType(qualifiedName, publicId, systemId) {
-      // raises:INVALID_CHARACTER_ERR,NAMESPACE_ERR
       var node = new DocumentType();
       node.name = qualifiedName;
       node.nodeName = qualifiedName;
-      node.publicId = publicId;
-      node.systemId = systemId; // Introduced in DOM Level 2:
-      //readonly attribute DOMString        internalSubset;
-      //TODO:..
-      //  readonly attribute NamedNodeMap     entities;
-      //  readonly attribute NamedNodeMap     notations;
-
+      node.publicId = publicId || '';
+      node.systemId = systemId || '';
       return node;
     }
   };
@@ -34473,7 +34731,7 @@
     doc && doc._inc++;
     var ns = newAttr.namespaceURI;
 
-    if (ns == 'http://www.w3.org/2000/xmlns/') {
+    if (ns === NAMESPACE.XMLNS) {
       //update namespace
       el._nsMap[newAttr.prefix ? newAttr.localName : ''] = newAttr.value;
     }
@@ -34483,7 +34741,7 @@
     doc && doc._inc++;
     var ns = newAttr.namespaceURI;
 
-    if (ns == 'http://www.w3.org/2000/xmlns/') {
+    if (ns === NAMESPACE.XMLNS) {
       //update namespace
       delete el._nsMap[newAttr.prefix ? newAttr.localName : ''];
     }
@@ -34631,7 +34889,7 @@
     documentElement: null,
     _inc: 1,
     insertBefore: function insertBefore(newChild, refChild) {
-      //raises 
+      //raises
       if (newChild.nodeType == DOCUMENT_FRAGMENT_NODE) {
         var child = newChild.firstChild;
 
@@ -34676,18 +34934,50 @@
 
       return rtv;
     },
-    getElementsByClassName: function getElementsByClassName(className) {
-      var pattern = new RegExp("(^|\\s)" + className + "(\\s|$)");
+
+    /**
+     * The `getElementsByClassName` method of `Document` interface returns an array-like object
+     * of all child elements which have **all** of the given class name(s).
+     *
+     * Returns an empty list if `classeNames` is an empty string or only contains HTML white space characters.
+     *
+     *
+     * Warning: This is a live LiveNodeList.
+     * Changes in the DOM will reflect in the array as the changes occur.
+     * If an element selected by this array no longer qualifies for the selector,
+     * it will automatically be removed. Be aware of this for iteration purposes.
+     *
+     * @param {string} classNames is a string representing the class name(s) to match; multiple class names are separated by (ASCII-)whitespace
+     *
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementsByClassName
+     * @see https://dom.spec.whatwg.org/#concept-getelementsbyclassname
+     */
+    getElementsByClassName: function getElementsByClassName(classNames) {
+      var classNamesSet = toOrderedSet(classNames);
       return new LiveNodeList(this, function (base) {
         var ls = [];
 
-        _visitNode(base.documentElement, function (node) {
-          if (node !== base && node.nodeType == ELEMENT_NODE) {
-            if (pattern.test(node.getAttribute('class'))) {
-              ls.push(node);
+        if (classNamesSet.length > 0) {
+          _visitNode(base.documentElement, function (node) {
+            if (node !== base && node.nodeType === ELEMENT_NODE) {
+              var nodeClassNames = node.getAttribute('class'); // can be null if the attribute does not exist
+
+              if (nodeClassNames) {
+                // before splitting and iterating just compare them for the most common case
+                var matches = classNames === nodeClassNames;
+
+                if (!matches) {
+                  var nodeClassNamesSet = toOrderedSet(nodeClassNames);
+                  matches = classNamesSet.every(arrayIncludes(nodeClassNamesSet));
+                }
+
+                if (matches) {
+                  ls.push(node);
+                }
+              }
             }
-          }
-        });
+          });
+        }
 
         return ls;
       });
@@ -34698,6 +34988,7 @@
       node.ownerDocument = this;
       node.nodeName = tagName;
       node.tagName = tagName;
+      node.localName = tagName;
       node.childNodes = new NodeList();
       var attrs = node.attributes = new NamedNodeMap();
       attrs._ownerElement = node;
@@ -35030,37 +35321,51 @@
 
   function needNamespaceDefine(node, isHTML, visibleNamespaces) {
     var prefix = node.prefix || '';
-    var uri = node.namespaceURI;
+    var uri = node.namespaceURI; // According to [Namespaces in XML 1.0](https://www.w3.org/TR/REC-xml-names/#ns-using) ,
+    // and more specifically https://www.w3.org/TR/REC-xml-names/#nsc-NoPrefixUndecl :
+    // > In a namespace declaration for a prefix [...], the attribute value MUST NOT be empty.
+    // in a similar manner [Namespaces in XML 1.1](https://www.w3.org/TR/xml-names11/#ns-using)
+    // and more specifically https://www.w3.org/TR/xml-names11/#nsc-NSDeclared :
+    // > [...] Furthermore, the attribute value [...] must not be an empty string.
+    // so serializing empty namespace value like xmlns:ds="" would produce an invalid XML document.
 
-    if (!prefix && !uri) {
+    if (!uri) {
       return false;
     }
 
-    if (prefix === "xml" && uri === "http://www.w3.org/XML/1998/namespace" || uri == 'http://www.w3.org/2000/xmlns/') {
+    if (prefix === "xml" && uri === NAMESPACE.XML || uri === NAMESPACE.XMLNS) {
       return false;
     }
 
-    var i = visibleNamespaces.length; //console.log('@@@@',node.tagName,prefix,uri,visibleNamespaces)
+    var i = visibleNamespaces.length;
 
     while (i--) {
       var ns = visibleNamespaces[i]; // get namespace prefix
-      //console.log(node.nodeType,node.tagName,ns.prefix,prefix)
 
-      if (ns.prefix == prefix) {
-        return ns.namespace != uri;
+      if (ns.prefix === prefix) {
+        return ns.namespace !== uri;
       }
-    } //console.log(isHTML,uri,prefix=='')
-    //if(isHTML && prefix ==null && uri == 'http://www.w3.org/1999/xhtml'){
-    //	return false;
-    //}
-    //node.flag = '11111'
-    //console.error(3,true,node.flag,node.prefix,node.namespaceURI)
-
+    }
 
     return true;
   }
+  /**
+   * Well-formed constraint: No < in Attribute Values
+   * The replacement text of any entity referred to directly or indirectly in an attribute value must not contain a <.
+   * @see https://www.w3.org/TR/xml/#CleanAttrVals
+   * @see https://www.w3.org/TR/xml/#NT-AttValue
+   */
+
+
+  function addSerializedAttribute(buf, qualifiedName, value) {
+    buf.push(' ', qualifiedName, '="', value.replace(/[<&"]/g, _xmlEncoder), '"');
+  }
 
   function serializeToString(node, buf, isHTML, nodeFilter, visibleNamespaces) {
+    if (!visibleNamespaces) {
+      visibleNamespaces = [];
+    }
+
     if (nodeFilter) {
       node = nodeFilter(node);
 
@@ -35077,14 +35382,39 @@
 
     switch (node.nodeType) {
       case ELEMENT_NODE:
-        if (!visibleNamespaces) visibleNamespaces = [];
-        visibleNamespaces.length;
         var attrs = node.attributes;
         var len = attrs.length;
         var child = node.firstChild;
         var nodeName = node.tagName;
-        isHTML = htmlns === node.namespaceURI || isHTML;
-        buf.push('<', nodeName);
+        isHTML = NAMESPACE.isHTML(node.namespaceURI) || isHTML;
+        var prefixedNodeName = nodeName;
+
+        if (!isHTML && !node.prefix && node.namespaceURI) {
+          var defaultNS;
+
+          for (var ai = 0; ai < attrs.length; ai++) {
+            if (attrs.item(ai).name === 'xmlns') {
+              defaultNS = attrs.item(ai).value;
+              break;
+            }
+          }
+
+          if (defaultNS !== node.namespaceURI) {
+            for (var nsi = visibleNamespaces.length - 1; nsi >= 0; nsi--) {
+              var namespace = visibleNamespaces[nsi];
+
+              if (namespace.namespace === node.namespaceURI) {
+                if (namespace.prefix) {
+                  prefixedNodeName = namespace.prefix + ':' + nodeName;
+                }
+
+                break;
+              }
+            }
+          }
+        }
+
+        buf.push('<', prefixedNodeName);
 
         for (var i = 0; i < len; i++) {
           // add namespaces for attributes
@@ -35109,8 +35439,7 @@
           if (needNamespaceDefine(attr, isHTML, visibleNamespaces)) {
             var prefix = attr.prefix || '';
             var uri = attr.namespaceURI;
-            var ns = prefix ? ' xmlns:' + prefix : " xmlns";
-            buf.push(ns, '="', uri, '"');
+            addSerializedAttribute(buf, prefix ? 'xmlns:' + prefix : "xmlns", uri);
             visibleNamespaces.push({
               prefix: prefix,
               namespace: uri
@@ -35121,11 +35450,10 @@
         } // add namespace for current node		
 
 
-        if (needNamespaceDefine(node, isHTML, visibleNamespaces)) {
+        if (nodeName === prefixedNodeName && needNamespaceDefine(node, isHTML, visibleNamespaces)) {
           var prefix = node.prefix || '';
           var uri = node.namespaceURI;
-          var ns = prefix ? ' xmlns:' + prefix : " xmlns";
-          buf.push(ns, '="', uri, '"');
+          addSerializedAttribute(buf, prefix ? 'xmlns:' + prefix : "xmlns", uri);
           visibleNamespaces.push({
             prefix: prefix,
             namespace: uri
@@ -35140,19 +35468,19 @@
               if (child.data) {
                 buf.push(child.data);
               } else {
-                serializeToString(child, buf, isHTML, nodeFilter, visibleNamespaces);
+                serializeToString(child, buf, isHTML, nodeFilter, visibleNamespaces.slice());
               }
 
               child = child.nextSibling;
             }
           } else {
             while (child) {
-              serializeToString(child, buf, isHTML, nodeFilter, visibleNamespaces);
+              serializeToString(child, buf, isHTML, nodeFilter, visibleNamespaces.slice());
               child = child.nextSibling;
             }
           }
 
-          buf.push('</', nodeName, '>');
+          buf.push('</', prefixedNodeName, '>');
         } else {
           buf.push('/>');
         } // remove added visible namespaces
@@ -35166,14 +35494,14 @@
         var child = node.firstChild;
 
         while (child) {
-          serializeToString(child, buf, isHTML, nodeFilter, visibleNamespaces);
+          serializeToString(child, buf, isHTML, nodeFilter, visibleNamespaces.slice());
           child = child.nextSibling;
         }
 
         return;
 
       case ATTRIBUTE_NODE:
-        return buf.push(' ', node.name, '="', node.value.replace(/[&"]/g, _xmlEncoder), '"');
+        return addSerializedAttribute(buf, node.name, node.value);
 
       case TEXT_NODE:
         /**
@@ -35399,7 +35727,6 @@
               break;
 
             default:
-              //TODO:
               this.data = data;
               this.value = data;
               this.nodeValue = data;
@@ -35416,19 +35743,27 @@
   } //if(typeof require == 'function'){
 
 
-  var Node_1 = Node;
+  var DocumentType_1 = DocumentType;
   var DOMException_1 = DOMException;
   var DOMImplementation_1 = DOMImplementation;
+  var Element_1 = Element;
+  var Node_1 = Node;
+  var NodeList_1 = NodeList;
   var XMLSerializer_1 = XMLSerializer; //}
 
   var dom = {
-    Node: Node_1,
+    DocumentType: DocumentType_1,
     DOMException: DOMException_1,
     DOMImplementation: DOMImplementation_1,
+    Element: Element_1,
+    Node: Node_1,
+    NodeList: NodeList_1,
     XMLSerializer: XMLSerializer_1
   };
 
   var domParser = createCommonjsModule(function (module, exports) {
+    var NAMESPACE = conventions.NAMESPACE;
+
     function DOMParser(options) {
       this.options = options || {
         locator: {}
@@ -35445,13 +35780,7 @@
       var defaultNSMap = options.xmlns || {};
       var isHTML = /\/x?html?$/.test(mimeType); //mimeType.toLowerCase().indexOf('html') > -1;
 
-      var entityMap = isHTML ? entities.entityMap : {
-        'lt': '<',
-        'gt': '>',
-        'amp': '&',
-        'quot': '"',
-        'apos': "'"
-      };
+      var entityMap = isHTML ? entities.HTML_ENTITIES : entities.XML_ENTITIES;
 
       if (locator) {
         domBuilder.setDocumentLocator(locator);
@@ -35461,10 +35790,10 @@
       sax.domBuilder = options.domBuilder || domBuilder;
 
       if (isHTML) {
-        defaultNSMap[''] = 'http://www.w3.org/1999/xhtml';
+        defaultNSMap[''] = NAMESPACE.HTML;
       }
 
-      defaultNSMap.xml = defaultNSMap.xml || 'http://www.w3.org/XML/1998/namespace';
+      defaultNSMap.xml = defaultNSMap.xml || NAMESPACE.XML;
 
       if (source && typeof source === 'string') {
         sax.parse(source, defaultNSMap, entityMap);
@@ -35720,7 +36049,7 @@
   var domParser_3 = domParser.DOMParser;
   domParser.__DOMHandler;
 
-  /*! @name mpd-parser @version 0.18.0 @license Apache-2.0 */
+  /*! @name mpd-parser @version 0.19.0 @license Apache-2.0 */
 
   var isObject = function isObject(obj) {
     return !!obj && typeof obj === 'object';
@@ -36830,11 +37159,10 @@
 
       var timescale = attributes.timescale || 1; // - if presentationTimeOffset isn't present on any level, default to 0
 
-      var presentationTimeOffset = attributes.presentationTimeOffset || 0; // presentationTimeOffset has already been adjusted by the timescale
-
+      var presentationTimeOffset = attributes.presentationTimeOffset || 0;
       var presentationTime = // Even if the @t attribute is not specified for the segment, segment.time is
       // calculated in mpd-parser prior to this, so it's assumed to be available.
-      attributes.periodStart + segment.time / timescale - presentationTimeOffset;
+      attributes.periodStart + (segment.time - presentationTimeOffset) / timescale;
       var map = {
         uri: uri,
         timeline: segment.timeline,
@@ -36844,11 +37172,6 @@
         number: segment.number,
         presentationTime: presentationTime
       };
-
-      if (attributes.presentationTimeOffset) {
-        map.presentationTimeOffset = attributes.presentationTimeOffset;
-      }
-
       return map;
     });
   };
@@ -36900,7 +37223,8 @@
   var segmentsFromList = function segmentsFromList(attributes, segmentTimeline) {
     var duration = attributes.duration,
         _attributes$segmentUr = attributes.segmentUrls,
-        segmentUrls = _attributes$segmentUr === void 0 ? [] : _attributes$segmentUr; // Per spec (5.3.9.2.1) no way to determine segment duration OR
+        segmentUrls = _attributes$segmentUr === void 0 ? [] : _attributes$segmentUr,
+        periodStart = attributes.periodStart; // Per spec (5.3.9.2.1) no way to determine segment duration OR
     // if both SegmentTimeline and @duration are defined, it is outside of spec.
 
     if (!duration && !segmentTimeline || duration && segmentTimeline) {
@@ -36922,10 +37246,16 @@
 
     var segments = segmentTimeInfo.map(function (segmentTime, index) {
       if (segmentUrlMap[index]) {
-        var segment = segmentUrlMap[index];
+        var segment = segmentUrlMap[index]; // See DASH spec section 5.3.9.2.2
+        // - if timescale isn't present on any level, default to 1.
+
+        var timescale = attributes.timescale || 1; // - if presentationTimeOffset isn't present on any level, default to 0
+
+        var presentationTimeOffset = attributes.presentationTimeOffset || 0;
         segment.timeline = segmentTime.timeline;
         segment.duration = segmentTime.duration;
         segment.number = segmentTime.number;
+        segment.presentationTime = periodStart + (segmentTime.time - presentationTimeOffset) / timescale;
         return segment;
       } // Since we're mapping we should get rid of any blank segments (in case
       // the given SegmentTimeline is handling for more elements than we have
@@ -36946,10 +37276,6 @@
     if (segmentInfo.template) {
       segmentsFn = segmentsFromTemplate;
       segmentAttributes = merge(attributes, segmentInfo.template);
-
-      if (segmentInfo.template.presentationTimeOffset) {
-        segmentAttributes.presentationTimeOffset = segmentInfo.template.presentationTimeOffset / segmentInfo.template.timescale;
-      }
     } else if (segmentInfo.base) {
       segmentsFn = segmentsFromBase;
       segmentAttributes = merge(attributes, segmentInfo.base);
@@ -38838,12 +39164,12 @@
   };
   var clock_1 = clock.ONE_SECOND_IN_TS;
 
-  /*! @name @videojs/http-streaming @version 2.10.0 @license Apache-2.0 */
+  /*! @name @videojs/http-streaming @version 2.10.2 @license Apache-2.0 */
   /**
    * @file resolve-url.js - Handling how URLs are resolved and manipulated
    */
 
-  var resolveUrl = resolveUrl$2;
+  var resolveUrl = resolveUrl$1;
   /**
    * Checks whether xhr request was redirected and returns correct url depending
    * on `handleManifestRedirects` option
@@ -40757,8 +41083,6 @@
     ;
 
     _proto.haveMetadata = function haveMetadata(_ref4) {
-      var _this4 = this;
-
       var playlistString = _ref4.playlistString,
           playlistObject = _ref4.playlistObject,
           url = _ref4.url,
@@ -40785,16 +41109,9 @@
         this.media_ = this.master.playlists[id];
       } else {
         this.trigger('playlistunchanged');
-      } // refresh live playlists after a target duration passes
-
-
-      if (!this.media().endList) {
-        window_1.clearTimeout(this.mediaUpdateTimeout);
-        this.mediaUpdateTimeout = window_1.setTimeout(function () {
-          _this4.trigger('mediaupdatetimeout');
-        }, refreshDelay(this.media(), !!update));
       }
 
+      this.updateMediaUpdateTimeout_(refreshDelay(this.media(), !!update));
       this.trigger('loadedplaylist');
     }
     /**
@@ -40835,7 +41152,7 @@
     ;
 
     _proto.media = function media(playlist, shouldDelay) {
-      var _this5 = this; // getter
+      var _this4 = this; // getter
 
 
       if (!playlist) {
@@ -40898,8 +41215,14 @@
         }
 
         return;
-      } // switching to the active playlist is a no-op
+      } // We update/set the timeout here so that live playlists
+      // that are not a media change will "start" the loader as expected.
+      // We expect that this function will start the media update timeout
+      // cycle again. This also prevents a playlist switch failure from
+      // causing us to stall during live.
 
+
+      this.updateMediaUpdateTimeout_(refreshDelay(playlist, true)); // switching to the active playlist is a no-op
 
       if (!mediaChange) {
         return;
@@ -40929,18 +41252,18 @@
         withCredentials: this.withCredentials
       }, function (error, req) {
         // disposed
-        if (!_this5.request) {
+        if (!_this4.request) {
           return;
         }
 
         playlist.lastRequest = Date.now();
-        playlist.resolvedUri = resolveManifestRedirect(_this5.handleManifestRedirects, playlist.resolvedUri, req);
+        playlist.resolvedUri = resolveManifestRedirect(_this4.handleManifestRedirects, playlist.resolvedUri, req);
 
         if (error) {
-          return _this5.playlistRequestError(_this5.request, playlist, startingState);
+          return _this4.playlistRequestError(_this4.request, playlist, startingState);
         }
 
-        _this5.haveMetadata({
+        _this4.haveMetadata({
           playlistString: req.responseText,
           url: playlist.uri,
           id: playlist.id
@@ -40948,9 +41271,9 @@
 
 
         if (startingState === 'HAVE_MASTER') {
-          _this5.trigger('loadedmetadata');
+          _this4.trigger('loadedmetadata');
         } else {
-          _this5.trigger('mediachange');
+          _this4.trigger('mediachange');
         }
       });
     }
@@ -40960,8 +41283,12 @@
     ;
 
     _proto.pause = function pause() {
+      if (this.mediaUpdateTimeout) {
+        window_1.clearTimeout(this.mediaUpdateTimeout);
+        this.mediaUpdateTimeout = null;
+      }
+
       this.stopRequest();
-      window_1.clearTimeout(this.mediaUpdateTimeout);
 
       if (this.state === 'HAVE_NOTHING') {
         // If we pause the loader before any data has been retrieved, its as if we never
@@ -40989,15 +41316,21 @@
     ;
 
     _proto.load = function load(shouldDelay) {
-      var _this6 = this;
+      var _this5 = this;
 
-      window_1.clearTimeout(this.mediaUpdateTimeout);
+      if (this.mediaUpdateTimeout) {
+        window_1.clearTimeout(this.mediaUpdateTimeout);
+        this.mediaUpdateTimeout = null;
+      }
+
       var media = this.media();
 
       if (shouldDelay) {
         var delay = media ? (media.partTargetDuration || media.targetDuration) / 2 * 1000 : 5 * 1000;
         this.mediaUpdateTimeout = window_1.setTimeout(function () {
-          return _this6.load();
+          _this5.mediaUpdateTimeout = null;
+
+          _this5.load();
         }, delay);
         return;
       }
@@ -41012,6 +41345,28 @@
       } else {
         this.trigger('loadedplaylist');
       }
+    };
+
+    _proto.updateMediaUpdateTimeout_ = function updateMediaUpdateTimeout_(delay) {
+      var _this6 = this;
+
+      if (this.mediaUpdateTimeout) {
+        window_1.clearTimeout(this.mediaUpdateTimeout);
+        this.mediaUpdateTimeout = null;
+      } // we only have use mediaupdatetimeout for live playlists.
+
+
+      if (!this.media() || this.media().endList) {
+        return;
+      }
+
+      this.mediaUpdateTimeout = window_1.setTimeout(function () {
+        _this6.mediaUpdateTimeout = null;
+
+        _this6.trigger('mediaupdatetimeout');
+
+        _this6.updateMediaUpdateTimeout_(delay);
+      }, delay);
     }
     /**
      * start loading of the playlist
@@ -48259,11 +48614,12 @@
 
     _AudioSegmentStream = function AudioSegmentStream(track, options) {
       var adtsFrames = [],
-          sequenceNumber = 0,
+          sequenceNumber,
           earliestAllowedDts = 0,
           audioAppendStartTs = 0,
           videoBaseMediaDecodeTime = Infinity;
       options = options || {};
+      sequenceNumber = options.firstSequenceNumber || 0;
 
       _AudioSegmentStream.prototype.init.call(this);
 
@@ -48363,12 +48719,13 @@
      */
 
     _VideoSegmentStream = function VideoSegmentStream(track, options) {
-      var sequenceNumber = 0,
+      var sequenceNumber,
           nalUnits = [],
           gopsToAlignWith = [],
           config,
           pps;
       options = options || {};
+      sequenceNumber = options.firstSequenceNumber || 0;
 
       _VideoSegmentStream.prototype.init.call(this);
 
@@ -60733,19 +61090,25 @@
       return false;
     }
 
-    var sharedLogLine = "allowing switch " + (currentPlaylist && currentPlaylist.id || 'null') + " -> " + nextPlaylist.id; // If the playlist is live, then we want to not take low water line into account.
-    // This is because in LIVE, the player plays 3 segments from the end of the
-    // playlist, and if `BUFFER_LOW_WATER_LINE` is greater than the duration availble
-    // in those segments, a viewer will never experience a rendition upswitch.
+    var sharedLogLine = "allowing switch " + (currentPlaylist && currentPlaylist.id || 'null') + " -> " + nextPlaylist.id;
 
-    if (!currentPlaylist || !currentPlaylist.endList) {
-      log(sharedLogLine + " as current playlist " + (!currentPlaylist ? 'is not set' : 'is live'));
+    if (!currentPlaylist) {
+      log(sharedLogLine + " as current playlist is not set");
       return true;
-    } // no need to switch playlist is the same
+    } // no need to switch if playlist is the same
 
 
     if (nextPlaylist.id === currentPlaylist.id) {
       return false;
+    } // If the playlist is live, then we want to not take low water line into account.
+    // This is because in LIVE, the player plays 3 segments from the end of the
+    // playlist, and if `BUFFER_LOW_WATER_LINE` is greater than the duration availble
+    // in those segments, a viewer will never experience a rendition upswitch.
+
+
+    if (!currentPlaylist.endList) {
+      log(sharedLogLine + " as current playlist is live");
+      return true;
     }
 
     var maxBufferLowWaterLine = experimentalBufferBasedABR ? Config.EXPERIMENTAL_MAX_BUFFER_LOW_WATER_LINE : Config.MAX_BUFFER_LOW_WATER_LINE; // For the same reason as LIVE, we ignore the low water line when the VOD
@@ -61029,7 +61392,7 @@
     _proto.checkABR_ = function checkABR_() {
       var nextPlaylist = this.selectPlaylist();
 
-      if (this.shouldSwitchToMedia_(nextPlaylist)) {
+      if (nextPlaylist && this.shouldSwitchToMedia_(nextPlaylist)) {
         this.switchMedia_(nextPlaylist, 'abr');
       }
     };
@@ -63605,9 +63968,9 @@
     initPlugin(this, options);
   };
 
-  var version$4 = "2.10.0";
-  var version$3 = "5.12.2";
-  var version$2 = "0.18.0";
+  var version$4 = "2.10.2";
+  var version$3 = "5.13.0";
+  var version$2 = "0.19.0";
   var version$1 = "4.7.0";
   var version = "3.1.2";
   var Vhs = {

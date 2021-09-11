@@ -1,6 +1,6 @@
 /**
  * @license
- * Video.js 7.15.0 <http://videojs.com/>
+ * Video.js 7.15.4 <http://videojs.com/>
  * Copyright Brightcove, Inc. <https://www.brightcove.com/>
  * Available under Apache License Version 2.0
  * <https://github.com/videojs/video.js/blob/main/LICENSE>
@@ -32,7 +32,7 @@ import { detectContainerForBytes, isLikelyFmp4MediaSegment } from '@videojs/vhs-
 import { concatTypedArrays, stringToBytes, toUint8 } from '@videojs/vhs-utils/es/byte-helpers';
 import { ONE_SECOND_IN_TS } from 'mux.js/lib/utils/clock';
 
-var version$5 = "7.15.0";
+var version$5 = "7.15.4";
 
 /**
  * An Object that contains lifecycle hooks as keys which point to an array
@@ -26078,7 +26078,10 @@ var Player = /*#__PURE__*/function (_Component) {
 
     if (controlBar && !IS_IOS && !IS_ANDROID) {
       controlBar.on('mouseenter', function (event) {
-        this.player().cache_.inactivityTimeout = this.player().options_.inactivityTimeout;
+        if (this.player().options_.inactivityTimeout !== 0) {
+          this.player().cache_.inactivityTimeout = this.player().options_.inactivityTimeout;
+        }
+
         this.player().options_.inactivityTimeout = 0;
       });
       controlBar.on('mouseleave', function (event) {
@@ -28209,7 +28212,7 @@ videojs.addLanguage('en', {
   'Non-Fullscreen': 'Exit Fullscreen'
 });
 
-/*! @name @videojs/http-streaming @version 2.10.0 @license Apache-2.0 */
+/*! @name @videojs/http-streaming @version 2.10.2 @license Apache-2.0 */
 /**
  * @file resolve-url.js - Handling how URLs are resolved and manipulated
  */
@@ -30128,8 +30131,6 @@ var PlaylistLoader = /*#__PURE__*/function (_EventTarget) {
   ;
 
   _proto.haveMetadata = function haveMetadata(_ref4) {
-    var _this4 = this;
-
     var playlistString = _ref4.playlistString,
         playlistObject = _ref4.playlistObject,
         url = _ref4.url,
@@ -30156,16 +30157,9 @@ var PlaylistLoader = /*#__PURE__*/function (_EventTarget) {
       this.media_ = this.master.playlists[id];
     } else {
       this.trigger('playlistunchanged');
-    } // refresh live playlists after a target duration passes
-
-
-    if (!this.media().endList) {
-      window.clearTimeout(this.mediaUpdateTimeout);
-      this.mediaUpdateTimeout = window.setTimeout(function () {
-        _this4.trigger('mediaupdatetimeout');
-      }, refreshDelay(this.media(), !!update));
     }
 
+    this.updateMediaUpdateTimeout_(refreshDelay(this.media(), !!update));
     this.trigger('loadedplaylist');
   }
   /**
@@ -30206,7 +30200,7 @@ var PlaylistLoader = /*#__PURE__*/function (_EventTarget) {
   ;
 
   _proto.media = function media(playlist, shouldDelay) {
-    var _this5 = this; // getter
+    var _this4 = this; // getter
 
 
     if (!playlist) {
@@ -30269,8 +30263,14 @@ var PlaylistLoader = /*#__PURE__*/function (_EventTarget) {
       }
 
       return;
-    } // switching to the active playlist is a no-op
+    } // We update/set the timeout here so that live playlists
+    // that are not a media change will "start" the loader as expected.
+    // We expect that this function will start the media update timeout
+    // cycle again. This also prevents a playlist switch failure from
+    // causing us to stall during live.
 
+
+    this.updateMediaUpdateTimeout_(refreshDelay(playlist, true)); // switching to the active playlist is a no-op
 
     if (!mediaChange) {
       return;
@@ -30300,18 +30300,18 @@ var PlaylistLoader = /*#__PURE__*/function (_EventTarget) {
       withCredentials: this.withCredentials
     }, function (error, req) {
       // disposed
-      if (!_this5.request) {
+      if (!_this4.request) {
         return;
       }
 
       playlist.lastRequest = Date.now();
-      playlist.resolvedUri = resolveManifestRedirect(_this5.handleManifestRedirects, playlist.resolvedUri, req);
+      playlist.resolvedUri = resolveManifestRedirect(_this4.handleManifestRedirects, playlist.resolvedUri, req);
 
       if (error) {
-        return _this5.playlistRequestError(_this5.request, playlist, startingState);
+        return _this4.playlistRequestError(_this4.request, playlist, startingState);
       }
 
-      _this5.haveMetadata({
+      _this4.haveMetadata({
         playlistString: req.responseText,
         url: playlist.uri,
         id: playlist.id
@@ -30319,9 +30319,9 @@ var PlaylistLoader = /*#__PURE__*/function (_EventTarget) {
 
 
       if (startingState === 'HAVE_MASTER') {
-        _this5.trigger('loadedmetadata');
+        _this4.trigger('loadedmetadata');
       } else {
-        _this5.trigger('mediachange');
+        _this4.trigger('mediachange');
       }
     });
   }
@@ -30331,8 +30331,12 @@ var PlaylistLoader = /*#__PURE__*/function (_EventTarget) {
   ;
 
   _proto.pause = function pause() {
+    if (this.mediaUpdateTimeout) {
+      window.clearTimeout(this.mediaUpdateTimeout);
+      this.mediaUpdateTimeout = null;
+    }
+
     this.stopRequest();
-    window.clearTimeout(this.mediaUpdateTimeout);
 
     if (this.state === 'HAVE_NOTHING') {
       // If we pause the loader before any data has been retrieved, its as if we never
@@ -30360,15 +30364,21 @@ var PlaylistLoader = /*#__PURE__*/function (_EventTarget) {
   ;
 
   _proto.load = function load(shouldDelay) {
-    var _this6 = this;
+    var _this5 = this;
 
-    window.clearTimeout(this.mediaUpdateTimeout);
+    if (this.mediaUpdateTimeout) {
+      window.clearTimeout(this.mediaUpdateTimeout);
+      this.mediaUpdateTimeout = null;
+    }
+
     var media = this.media();
 
     if (shouldDelay) {
       var delay = media ? (media.partTargetDuration || media.targetDuration) / 2 * 1000 : 5 * 1000;
       this.mediaUpdateTimeout = window.setTimeout(function () {
-        return _this6.load();
+        _this5.mediaUpdateTimeout = null;
+
+        _this5.load();
       }, delay);
       return;
     }
@@ -30383,6 +30393,28 @@ var PlaylistLoader = /*#__PURE__*/function (_EventTarget) {
     } else {
       this.trigger('loadedplaylist');
     }
+  };
+
+  _proto.updateMediaUpdateTimeout_ = function updateMediaUpdateTimeout_(delay) {
+    var _this6 = this;
+
+    if (this.mediaUpdateTimeout) {
+      window.clearTimeout(this.mediaUpdateTimeout);
+      this.mediaUpdateTimeout = null;
+    } // we only have use mediaupdatetimeout for live playlists.
+
+
+    if (!this.media() || this.media().endList) {
+      return;
+    }
+
+    this.mediaUpdateTimeout = window.setTimeout(function () {
+      _this6.mediaUpdateTimeout = null;
+
+      _this6.trigger('mediaupdatetimeout');
+
+      _this6.updateMediaUpdateTimeout_(delay);
+    }, delay);
   }
   /**
    * start loading of the playlist
@@ -37630,11 +37662,12 @@ var workerCode$1 = transform(getWorkerString(function () {
 
   _AudioSegmentStream = function AudioSegmentStream(track, options) {
     var adtsFrames = [],
-        sequenceNumber = 0,
+        sequenceNumber,
         earliestAllowedDts = 0,
         audioAppendStartTs = 0,
         videoBaseMediaDecodeTime = Infinity;
     options = options || {};
+    sequenceNumber = options.firstSequenceNumber || 0;
 
     _AudioSegmentStream.prototype.init.call(this);
 
@@ -37734,12 +37767,13 @@ var workerCode$1 = transform(getWorkerString(function () {
    */
 
   _VideoSegmentStream = function VideoSegmentStream(track, options) {
-    var sequenceNumber = 0,
+    var sequenceNumber,
         nalUnits = [],
         gopsToAlignWith = [],
         config,
         pps;
     options = options || {};
+    sequenceNumber = options.firstSequenceNumber || 0;
 
     _VideoSegmentStream.prototype.init.call(this);
 
@@ -50104,19 +50138,25 @@ var shouldSwitchToMedia = function shouldSwitchToMedia(_ref) {
     return false;
   }
 
-  var sharedLogLine = "allowing switch " + (currentPlaylist && currentPlaylist.id || 'null') + " -> " + nextPlaylist.id; // If the playlist is live, then we want to not take low water line into account.
-  // This is because in LIVE, the player plays 3 segments from the end of the
-  // playlist, and if `BUFFER_LOW_WATER_LINE` is greater than the duration availble
-  // in those segments, a viewer will never experience a rendition upswitch.
+  var sharedLogLine = "allowing switch " + (currentPlaylist && currentPlaylist.id || 'null') + " -> " + nextPlaylist.id;
 
-  if (!currentPlaylist || !currentPlaylist.endList) {
-    log(sharedLogLine + " as current playlist " + (!currentPlaylist ? 'is not set' : 'is live'));
+  if (!currentPlaylist) {
+    log(sharedLogLine + " as current playlist is not set");
     return true;
-  } // no need to switch playlist is the same
+  } // no need to switch if playlist is the same
 
 
   if (nextPlaylist.id === currentPlaylist.id) {
     return false;
+  } // If the playlist is live, then we want to not take low water line into account.
+  // This is because in LIVE, the player plays 3 segments from the end of the
+  // playlist, and if `BUFFER_LOW_WATER_LINE` is greater than the duration availble
+  // in those segments, a viewer will never experience a rendition upswitch.
+
+
+  if (!currentPlaylist.endList) {
+    log(sharedLogLine + " as current playlist is live");
+    return true;
   }
 
   var maxBufferLowWaterLine = experimentalBufferBasedABR ? Config.EXPERIMENTAL_MAX_BUFFER_LOW_WATER_LINE : Config.MAX_BUFFER_LOW_WATER_LINE; // For the same reason as LIVE, we ignore the low water line when the VOD
@@ -50400,7 +50440,7 @@ var MasterPlaylistController = /*#__PURE__*/function (_videojs$EventTarget) {
   _proto.checkABR_ = function checkABR_() {
     var nextPlaylist = this.selectPlaylist();
 
-    if (this.shouldSwitchToMedia_(nextPlaylist)) {
+    if (nextPlaylist && this.shouldSwitchToMedia_(nextPlaylist)) {
       this.switchMedia_(nextPlaylist, 'abr');
     }
   };
@@ -52976,9 +53016,9 @@ var reloadSourceOnError = function reloadSourceOnError(options) {
   initPlugin(this, options);
 };
 
-var version$4 = "2.10.0";
-var version$3 = "5.12.2";
-var version$2 = "0.18.0";
+var version$4 = "2.10.2";
+var version$3 = "5.13.0";
+var version$2 = "0.19.0";
 var version$1 = "4.7.0";
 var version = "3.1.2";
 var Vhs = {

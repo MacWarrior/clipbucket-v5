@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"97",
+  "revision":"98",
   "status":"dev",
   "detail":[
     {
@@ -31,7 +31,6 @@
         ,"Change default avatar file"
         ,"Fix videos and thumbs directories creation"
         ,"Update compatibility to PHP 8.0.X"
-        ,"Update cast_sender lib"
       ]
     }
     ,{
@@ -110,9 +109,10 @@
   ,{
       "title":"Player",
       "description":[
-        "Update VideoJS to version 7.15"
+        "Update VideoJS to version 7.15.4"
         ,"Fix VideoJS player informations"
         ,"Fix VideoJS player thumbnails sync"
+        ,"Update cast_sender lib"
       ]
     }
   ]
