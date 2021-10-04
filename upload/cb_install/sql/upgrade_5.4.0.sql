@@ -43,14 +43,14 @@ ALTER TABLE `{tbl_prefix}ads_data`
 
 ALTER TABLE `{tbl_prefix}video_categories`
 	MODIFY COLUMN `category_desc` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
-	MODIFY COLUMN `date_added` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+	MODIFY COLUMN `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	MODIFY COLUMN `category_thumb` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
 
 ALTER TABLE `{tbl_prefix}collection_categories`
 	MODIFY COLUMN `category_name` VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
 	MODIFY COLUMN `category_order` INT(5) NOT NULL DEFAULT '0',
 	MODIFY COLUMN `category_desc` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
-	MODIFY COLUMN `date_added` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT NOW(),
+	MODIFY COLUMN `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	MODIFY COLUMN `category_thumb` MEDIUMINT(9) NOT NULL DEFAULT '0',
 	MODIFY COLUMN `isdefault` ENUM('yes','no') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'no';
 

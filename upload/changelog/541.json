@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"100",
+  "revision":"101",
   "status":"dev",
   "detail":[
     {
@@ -31,6 +31,7 @@
         ,"Change default avatar file"
         ,"Fix videos and thumbs directories creation"
         ,"Update compatibility to PHP 8.0.X"
+        ,"Update compatibility to MySQL 8.0.X"
       ]
     }
     ,{

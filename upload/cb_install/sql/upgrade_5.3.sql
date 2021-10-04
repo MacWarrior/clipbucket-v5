@@ -11,7 +11,7 @@ INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 	('control_bar_logo_url', '/images/icons/player-logo.png'),
 	('player_thumbnails', 'yes');
 
-ALTER TABLE `{tbl_prefix}user_levels_permissions` MODIFY COLUMN `plugins_perms` text NOT NULL DEFAULT '';
+ALTER TABLE `{tbl_prefix}user_levels_permissions` MODIFY COLUMN `plugins_perms` text NULL DEFAULT NULL;
 ALTER TABLE `{tbl_prefix}users`
     MODIFY COLUMN `featured_video` mediumtext DEFAULT '' NOT NULL,
     MODIFY COLUMN `avatar_url` text DEFAULT '' NOT NULL,
