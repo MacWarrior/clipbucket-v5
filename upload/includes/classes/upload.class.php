@@ -66,6 +66,10 @@ class Upload
 			$required_fields = $this->loadRequiredFields($array);
 			$location_fields = $this->loadLocationFields($array);
 			$option_fields = $this->loadOptionFields($array);
+            $empty_fields = [
+                'voter_ids'
+                ,'featured_description'
+            ];
 			
 			$upload_fields = array_merge($required_fields,$location_fields,$option_fields);
 			//Adding Custom Upload Fields
@@ -192,6 +196,11 @@ class Upload
 				$query_field[] = 'status';
 				$query_val[] = 'Successful';
 			}
+
+            foreach( $empty_fields AS $field ){
+                $query_field[] = $field;
+                $query_val[] = '';
+            }
 
 			$query = 'INSERT INTO '.tbl('video').' (';
 			$total_fields = count($query_field);
