@@ -14,13 +14,13 @@ echo ""
 echo -ne "Installing requiered elements..."
 yum install yum-utils -y > /dev/null
 
-yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm > /dev/null
-yum -y install https://rpms.remirepo.net/enterprise/remi-release-7.rpm > /dev/null
+yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm > /dev/null 2>&1
+yum -y install https://rpms.remirepo.net/enterprise/remi-release-7.rpm > /dev/null 2>&1
 yum-config-manager --enable remi-php74 > /dev/null
 
 yum localinstall --nogpgcheck -y https://download1.rpmfusion.org/free/el/rpmfusion-free-release-7.noarch.rpm > /dev/null 2>&1
 
-rpm -Uvh https://repo.mysql.com/mysql80-community-release-el7-3.noarch.rpm > /dev/null
+rpm -Uvh https://repo.mysql.com/mysql80-community-release-el7-3.noarch.rpm > /dev/null 2>&1
 sed -i 's/enabled=1/enabled=0/' /etc/yum.repos.d/mysql-community.repo
 
 yum --enablerepo=mysql80-community install -y -q mysql-community-server > /dev/null 2>&1

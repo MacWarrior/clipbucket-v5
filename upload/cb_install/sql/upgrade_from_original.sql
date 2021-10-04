@@ -596,7 +596,9 @@ ALTER TABLE `{tbl_prefix}playlists`
 	MODIFY COLUMN `last_update` text NULL DEFAULT NULL,
 	MODIFY COLUMN `first_item` text NULL DEFAULT NULL,
 	MODIFY COLUMN `cover` text NULL DEFAULT NULL,
-	MODIFY COLUMN `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+	MODIFY COLUMN `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	MODIFY COLUMN `description` mediumtext NOT NULL,
+    MODIFY COLUMN `tags` mediumtext NOT NULL;
 
 ALTER TABLE `{tbl_prefix}playlist_items`
 	MODIFY COLUMN `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
@@ -609,10 +611,12 @@ ALTER TABLE `{tbl_prefix}users`
 	MODIFY COLUMN `dob` date NOT NULL DEFAULT '1000-01-01',
 	MODIFY COLUMN `doj` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	MODIFY COLUMN `last_logged` datetime NOT NULL DEFAULT '1000-01-01 00:00:00',
-	MODIFY COLUMN `last_active` datetime NOT NULL DEFAULT 0;
+	MODIFY COLUMN `last_active` datetime NOT NULL DEFAULT 0,
+	MODIFY COLUMN `featured_video` mediumtext NOT NULL;
 
 ALTER TABLE `{tbl_prefix}user_categories`
-	MODIFY COLUMN `date_added` datetime NOT NULL;
+	MODIFY COLUMN `date_added` datetime NOT NULL,
+    MODIFY COLUMN `category_thumb` mediumtext NOT NULL;
 
 ALTER TABLE `{tbl_prefix}video`
 	MODIFY COLUMN `username` text NULL DEFAULT NULL,
@@ -629,11 +633,15 @@ ALTER TABLE `{tbl_prefix}video`
 	MODIFY COLUMN `video_version` varchar(30) NOT NULL DEFAULT '5.4.1',
 	MODIFY COLUMN `thumbs_version` varchar(5) NOT NULL DEFAULT '5.4.1',
 	MODIFY COLUMN `re_conv_status` tinytext NULL DEFAULT NULL,
-	MODIFY COLUMN `conv_progress` text NULL DEFAULT NULL;
+	MODIFY COLUMN `conv_progress` text NULL DEFAULT NULL,
+	MODIFY COLUMN `flv` mediumtext NOT NULL,
+	MODIFY COLUMN `voter_ids` mediumtext NOT NULL,
+	MODIFY COLUMN `featured_description` mediumtext NOT NULL;
 
 ALTER TABLE `{tbl_prefix}video_categories`
 	MODIFY COLUMN `category_desc` text NULL DEFAULT NULL,
-	MODIFY COLUMN `date_added` datetime NULL DEFAULT NULL;
+	MODIFY COLUMN `date_added` datetime NULL DEFAULT NULL,
+    MODIFY COLUMN `category_thumb` mediumtext NOT NULL;
 
 ALTER TABLE `{tbl_prefix}video_favourites`
 	MODIFY COLUMN `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP;

@@ -371,8 +371,8 @@ CREATE TABLE `{tbl_prefix}playlists` (
   `userid` int(11) NOT NULL DEFAULT 0,
   `playlist_type` varchar(10) NOT NULL DEFAULT '',
   `category` enum('normal','favorites','likes','history','quicklist','watch_later') NOT NULL DEFAULT 'normal',
-  `description` mediumtext NOT NULL DEFAULT '',
-  `tags` mediumtext NOT NULL DEFAULT '',
+  `description` mediumtext NOT NULL,
+  `tags` mediumtext NOT NULL,
   `privacy` enum('public','private','unlisted') NOT NULL DEFAULT 'public',
   `allow_comments` enum('yes','no') NOT NULL DEFAULT 'yes',
   `allow_rating` enum('yes','no') NOT NULL DEFAULT 'yes',
@@ -457,7 +457,7 @@ CREATE TABLE `{tbl_prefix}template` (
 CREATE TABLE `{tbl_prefix}users` (
   `userid` bigint(20) NOT NULL,
   `category` int(20) NOT NULL DEFAULT 0,
-  `featured_video` mediumtext NOT NULL DEFAULT '',
+  `featured_video` mediumtext NOT NULL,
   `username` text NOT NULL,
   `user_session_key` varchar(32) NOT NULL,
   `user_session_code` int(5) NOT NULL,
@@ -514,7 +514,7 @@ CREATE TABLE `{tbl_prefix}user_categories` (
   `category_order` int(5) NOT NULL DEFAULT 1,
   `category_desc` text NOT NULL,
   `date_added` datetime NOT NULL,
-  `category_thumb` mediumtext NOT NULL DEFAULT '',
+  `category_thumb` mediumtext NOT NULL,
   `isdefault` enum('yes','no') NOT NULL DEFAULT 'no'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -642,7 +642,7 @@ CREATE TABLE `{tbl_prefix}video` (
   `username` text NULL DEFAULT NULL,
   `userid` int(11) NOT NULL,
   `title` text DEFAULT NULL,
-  `flv` mediumtext NOT NULL DEFAULT '',
+  `flv` mediumtext NOT NULL,
   `file_name` varchar(32) NOT NULL,
   `file_type` int(10) NOT NULL DEFAULT 0,
   `file_directory` varchar(25) NOT NULL,
@@ -659,14 +659,14 @@ CREATE TABLE `{tbl_prefix}video` (
   `allow_embedding` char(3) NOT NULL DEFAULT '',
   `rating` int(15) NOT NULL DEFAULT 0,
   `rated_by` varchar(20) NOT NULL DEFAULT '0',
-  `voter_ids` mediumtext NOT NULL DEFAULT '',
+  `voter_ids` mediumtext NOT NULL,
   `allow_comments` char(3) NOT NULL DEFAULT '',
   `comment_voting` char(3) NOT NULL DEFAULT '',
   `comments_count` int(15) NOT NULL DEFAULT 0,
   `last_commented` datetime DEFAULT NULL,
   `featured` char(3) NOT NULL DEFAULT 'no',
   `featured_date` datetime DEFAULT NULL,
-  `featured_description` mediumtext NOT NULL DEFAULT '',
+  `featured_description` mediumtext NOT NULL,
   `allow_rating` char(3) NOT NULL DEFAULT '',
   `active` char(3) NOT NULL DEFAULT '0',
   `favourite_count` varchar(15) NOT NULL DEFAULT '0',
@@ -717,7 +717,7 @@ CREATE TABLE `{tbl_prefix}video_categories` (
   `category_order` int(5) NOT NULL DEFAULT 1,
   `category_desc` text NULL DEFAULT NULL,
   `date_added` datetime NULL DEFAULT NULL,
-  `category_thumb` mediumtext NOT NULL DEFAULT '',
+  `category_thumb` mediumtext NOT NULL,
   `isdefault` enum('yes','no') NOT NULL DEFAULT 'no'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
