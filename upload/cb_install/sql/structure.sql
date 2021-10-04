@@ -6,7 +6,7 @@ CREATE TABLE `{tbl_prefix}action_log` (
   `action_useremail` varchar(200) NOT NULL,
   `action_userlevel` int(11) NOT NULL,
   `action_ip` varchar(15) NOT NULL,
-  `date_added` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `action_success` enum('yes','no') DEFAULT NULL,
   `action_details` text NOT NULL,
   `action_obj_id` int(255) NOT NULL,
@@ -137,7 +137,7 @@ CREATE TABLE `{tbl_prefix}conversion_queue` (
   `cqueue_ext` varchar(5) NOT NULL,
   `cqueue_tmp_ext` varchar(3) NOT NULL,
   `cqueue_conversion` enum('yes','no','p') NOT NULL DEFAULT 'no',
-  `date_added` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `time_started` varchar(32) NOT NULL DEFAULT '0',
   `time_completed` varchar(32) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -164,7 +164,7 @@ CREATE TABLE `{tbl_prefix}editors_picks` (
   `pick_id` int(225) NOT NULL,
   `videoid` int(225) NOT NULL,
   `sort` bigint(5) NOT NULL DEFAULT 1,
-  `date_added` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `{tbl_prefix}email_templates` (
@@ -229,14 +229,14 @@ CREATE TABLE `{tbl_prefix}group_invitations` (
   `group_id` int(225) NOT NULL,
   `userid` int(255) NOT NULL,
   `invited` int(225) NOT NULL,
-  `date_added` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `{tbl_prefix}group_members` (
   `group_mid` int(225) NOT NULL,
   `group_id` int(225) NOT NULL,
   `userid` int(11) NOT NULL,
-  `date_added` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `active` enum('yes','no') NOT NULL DEFAULT 'yes'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -268,7 +268,7 @@ CREATE TABLE `{tbl_prefix}group_videos` (
   `videoid` int(255) NOT NULL,
   `group_id` int(225) NOT NULL,
   `userid` int(255) NOT NULL,
-  `date_added` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `approved` enum('yes','no') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -304,7 +304,7 @@ CREATE TABLE `{tbl_prefix}messages` (
   `message_content` mediumtext NOT NULL,
   `message_type` enum('pm','notification') NOT NULL DEFAULT 'pm',
   `message_attachments` mediumtext NOT NULL,
-  `date_added` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `message_subject` mediumtext NOT NULL,
   `message_status` enum('unread','read') NOT NULL DEFAULT 'unread',
   `reply_to` int(225) NOT NULL DEFAULT 0,
@@ -333,7 +333,7 @@ CREATE TABLE `{tbl_prefix}photos` (
   `userid` int(255) NOT NULL,
   `collection_id` int(255) NOT NULL,
   `date_added` datetime NOT NULL,
-  `last_viewed` timestamp NOT NULL DEFAULT 0 ON UPDATE CURRENT_TIMESTAMP,
+  `last_viewed` datetime NOT NULL DEFAULT '1000-01-01 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
   `views` bigint(255) NOT NULL DEFAULT 0,
   `allow_comments` enum('yes','no') NOT NULL DEFAULT 'yes',
   `allow_embedding` enum('yes','no') NOT NULL DEFAULT 'yes',
@@ -386,7 +386,7 @@ CREATE TABLE `{tbl_prefix}playlists` (
   `first_item` text NULL DEFAULT NULL,
   `cover` text NULL DEFAULT NULL,
   `played` int(255) NOT NULL DEFAULT 0,
-  `date_added` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `{tbl_prefix}playlist_items` (
@@ -395,7 +395,7 @@ CREATE TABLE `{tbl_prefix}playlist_items` (
   `playlist_id` int(225) NOT NULL,
   `playlist_item_type` varchar(10) NOT NULL,
   `userid` int(255) NOT NULL,
-  `date_added` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `{tbl_prefix}plugins` (
@@ -445,7 +445,7 @@ CREATE TABLE `{tbl_prefix}subscriptions` (
   `subscription_id` int(225) NOT NULL,
   `userid` int(11) NOT NULL,
   `subscribed_to` mediumtext NOT NULL,
-  `date_added` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `{tbl_prefix}template` (
@@ -472,7 +472,7 @@ CREATE TABLE `{tbl_prefix}users` (
   `country` varchar(20) NOT NULL DEFAULT 'PK',
   `level` int(6) NOT NULL DEFAULT 2,
   `avcode` mediumtext NOT NULL,
-  `doj` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `doj` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `last_logged` datetime NOT NULL DEFAULT '1000-01-01 00:00:00',
   `num_visits` bigint(20) NOT NULL DEFAULT 0,
   `session` varchar(32) NOT NULL DEFAULT '',
@@ -499,7 +499,7 @@ CREATE TABLE `{tbl_prefix}users` (
   `background_url` text DEFAULT NULL,
   `background_repeat` enum('no-repeat','repeat','repeat-x','repeat-y') NOT NULL DEFAULT 'repeat',
   `total_groups` bigint(20) NOT NULL DEFAULT 0,
-  `last_active` timestamp NOT NULL DEFAULT 0,
+  `last_active` datetime NOT NULL DEFAULT '1000-01-01 00:00:00',
   `banned_users` text DEFAULT NULL,
   `welcome_email_sent` enum('yes','no') NOT NULL DEFAULT 'no',
   `total_downloads` bigint(255) NOT NULL DEFAULT 0,
@@ -672,8 +672,8 @@ CREATE TABLE `{tbl_prefix}video` (
   `favourite_count` varchar(15) NOT NULL DEFAULT '0',
   `playlist_count` varchar(15) NOT NULL DEFAULT '0',
   `views` bigint(22) NOT NULL DEFAULT 0,
-  `last_viewed` timestamp NOT NULL DEFAULT 0 ON UPDATE CURRENT_TIMESTAMP,
-  `date_added` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `last_viewed` datetime NOT NULL DEFAULT '1000-01-01 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
+  `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `flagged` varchar(3) NOT NULL DEFAULT 'no',
   `duration` varchar(20) NOT NULL DEFAULT '00',
   `status` enum('Successful','Processing','Failed') NOT NULL DEFAULT 'Processing',
@@ -725,7 +725,7 @@ CREATE TABLE `{tbl_prefix}video_favourites` (
   `fav_id` int(11) NOT NULL,
   `videoid` int(11) NOT NULL,
   `userid` int(11) NOT NULL,
-  `date_added` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `{tbl_prefix}video_files` (
