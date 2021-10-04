@@ -1,5 +1,5 @@
 <?php
-define("THIS_PAGE","cb_install");
+define('THIS_PAGE','cb_install');
 include('../includes/clipbucket.php');
 
 /**
@@ -7,10 +7,7 @@ include('../includes/clipbucket.php');
 */
 $mode = $_POST['mode'];
 
-if($mode!='finish_upgrade'){
-    include("functions.php");
-}
-include("upgradeable.php");
+include('functions.php');
 
 if($mode=='dataimport')
 {
@@ -196,7 +193,7 @@ if($mode=='adminsettings')
 				$return['step'] = 'create_files';
 				break;
 
-			case "create_files":
+			case 'create_files':
 				mysqli_close($cnnct);
 				$dbconnect = file_get_contents(BASEDIR.'/cb_install/config.php');
 				$dbconnect = str_replace('_DB_HOST_', $dbhost, $dbconnect);
@@ -215,98 +212,5 @@ if($mode=='adminsettings')
 				break;
 		}
 	}
-	echo json_encode($return);
-}
-
-if($mode=='finish_upgrade')
-{
-	chdir("..");
-	require_once 'includes/config.inc.php';
-	chdir("cb_install");
-	include("functions.php");
-	$files = getUpgradeFiles();
-
-	if($files)
-	{
-		$step = $_POST['step'];
-		if($step=='upgrade')
-			$index = 0;
-		else
-			$index = $step;
-
-		$total = count($files);
-
-		if($index >= $total)
-		{
-			$return['msg'] = '<div class="ok green">Upgrade clipbucket</div>';
-			$return['status'] = 'finalizing upgrade...';
-			$return['step'] = 'forward';
-		}
-
-		if($index+1 >= $total)
-			$next = 'forward';
-		else
-			$next = $index+1;
-
-		if($next=='forward')
-			$status = 'finalizing upgrade...';
-		else
-			$status = 'Importing upgrade_'.$files[$next].'.sql';
-
-		$sqlfile = BASEDIR."/cb_install/sql/upgrade_".$files[$index].".sql";
-		if(file_exists($sqlfile))
-		{
-			$lines = file($sqlfile);
-			foreach ($lines as $line_num => $line)
-			{
-				if (substr($line, 0, 2) != '--' && $line != '')
-				{
-					@$templine .= $line;
-					if (substr(trim($line), -1, 1) == ';')
-					{
-						@$templine = preg_replace("/{tbl_prefix}/",TABLE_PREFIX,$templine);
-						$db->execute($templine);
-						$templine = '';
-					}
-				}
-			}
-		}
-
-		//There were problems with email templates with version lower than 2.4
-		//therefore we are dumping all existing email templates and re-import them
-		if($upgrade<'2.4.5')
-		{
-			mysqli_query($cnnct,'TRUNCATE '.TABLE_PREFIX.'email_templates');
-			//Dumping
-			$sqlfile = BASEDIR."/cb_install/sql/email_templates.sql";
-			if(file_exists($sqlfile))
-			{
-				$lines = file($sqlfile);
-				foreach ($lines as $line_num => $line)
-				{
-					if (substr($line, 0, 2) != '--' && $line != '')
-					{
-						@$templine .= $line;
-						if (substr(trim($line), -1, 1) == ';')
-						{
-							@$templine = preg_replace("/{tbl_prefix}/",TABLE_PREFIX,$templine);
-							$db->execute($templine);
-							$templine = '';
-						}
-					}
-				}
-			}
-		}
-		//Dumping finished
-
-		$return['msg'] = '<div class="ok green">upgrade_'.$files[$index].'.sql has been imported</div>';
-		$return['status'] = $status;
-		$return['step'] = $next;
-	} else {
-		$return['msg'] = '<div class="ok green">Upgrade clipbucket</div>';
-		$return['status'] = 'finalizing upgrade...';
-		$return['step'] = 'forward';
-	}
-
 	echo json_encode($return);
 }

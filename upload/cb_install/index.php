@@ -1,7 +1,6 @@
 <?php
-	define("THIS_PAGE","cb_install");
+	define('THIS_PAGE','cb_install');
 	include('../includes/clipbucket.php');
-	include("upgradeable.php");
  
 	$modes = array(
 		'agreement',
@@ -11,20 +10,13 @@
 		'dataimport',
 		'adminsettings',
 		'sitesettings',
-		'finish',
-		'upgrade',
-		'finish_upgrade'
+		'finish'
 	);
 
 	$mode = @$_POST['mode'];
 
-	if(!$mode || !in_array($mode,$modes))
-	{
-		if(!$upgrade){
-			$mode = 'agreement';
-        } else {
-			$mode = 'upgrade';
-        }
+	if(!$mode || !in_array($mode,$modes)) {
+        $mode = 'agreement';
 	}
 
 	$configIncluded = false;
@@ -35,40 +27,13 @@
 	*/
 	$cbarray = array('adminsettings','sitesettings','finish');
 	$baseDir = dirname(dirname(__FILE__));
-	if($version = is_upgradeable())
-	{
-        if((int)$version <= 2.6)
-        {
-            $originalDbFile = file_get_contents($baseDir.'/includes/dbconnect.php');
-            preg_match("/DBHOST = '(.*)';/", $originalDbFile, $matches);
-            $host = (array_pop($matches));
-            preg_match("/DBNAME = '(.*)';/", $originalDbFile, $matches);
-            $name = (array_pop($matches));
-            preg_match("/DBUSER = '(.*)';/", $originalDbFile, $matches);
-            $user = (array_pop($matches));
-            preg_match("/DBPASS = '(.*)';/", $originalDbFile, $matches);
-            $pass = (array_pop($matches));
-            preg_match("/define\('TABLE_PREFIX','(.*)'\);/", $originalDbFile, $matches);
-            $prefix = (array_pop($matches));
-            $dbconnect = file_get_contents($baseDir.'/cb_install/config.php');
-            $dbconnect = str_replace('_DB_HOST_', $host, $dbconnect);
-            $dbconnect = str_replace('_DB_NAME_', $name, $dbconnect);
-            $dbconnect = str_replace('_DB_USER_', $user, $dbconnect);
-            $dbconnect = str_replace('_DB_PASS_', $pass, $dbconnect);
-            $dbconnect = str_replace('_TABLE_PREFIX_', $prefix, $dbconnect);
-            $fp = fopen($baseDir.'/includes/config.php', 'w');
-            fwrite($fp, $dbconnect);
-            fclose($fp);
-        }
-	}
 
-	if(in_array($mode,$cbarray) || $upgrade)
-	{
-		chdir("..");
+	if( in_array($mode,$cbarray) ) {
+		chdir('..');
 		$configIncluded = true;
 		require_once 'includes/config.inc.php';
-		chdir("cb_install");
+		chdir('cb_install');
 	}
 
-	include("functions.php");
+	include('functions.php');
 	include('modes/body.php');

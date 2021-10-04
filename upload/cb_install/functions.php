@@ -230,49 +230,6 @@ function selected($selected)
     }
 }
 
-/**
- * Function used to create list of files
- * that have to be executed while upgrade
- */
-function getUpgradeFiles()
-{
-    global $versions,$upgrade;
-    $oldVer = $upgrade;
-    if($oldVer)
-    {
-        $files = array();
-
-        $found = false;
-        foreach($versions as $ver)
-        {
-            if($found){
-                $files[] = $ver;
-            }
-            if($ver==$oldVer){
-                $found = true;
-            }
-        }
-        return $files;
-    }
-    return false;
-}
-
-function installer_path()
-{
-    $pageURL = 'http';
-    if (@$_SERVER['HTTPS'] == 'on') {
-        $pageURL .= 's';
-    }
-    $pageURL .= '://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
-
-    $query_string = $_SERVER['QUERY_STRING'];
-    if(!empty($query_string)){
-        $pageURL .= '?'.$query_string;
-    }
-    return $pageURL;
-}
-
-
 function GetServerProtocol()
 {
     if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on'){

@@ -25,10 +25,6 @@
 	?>
 		</div>
 
-		<?php if(!$upgrade){ ?>
 		<input type="hidden" name="mode" value="database" id="mode"/>
-		<?php } else { ?>
-		<input type="hidden" name="mode" value="dataimport" id="mode"/>
-		<?php } ?>
 	</form>
 </div>

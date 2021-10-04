@@ -24,7 +24,6 @@
 			<div class="cb_container">
 				<div class="cb_navbar">
 					<ul class="headstatus">
-					<?php if(!$upgrade){ ?>
 						<li <?php echo selected('agreement'); ?>>Agreement</li>
 						<li <?php echo selected('precheck'); ?>>Pre Check<span></span></li>
 						<li <?php echo selected('permission'); ?>>Permissions<span></span></li>
@@ -33,12 +32,6 @@
 						<li <?php echo selected('adminsettings'); ?>>Admin Settings<span></span></li>
 						<li <?php echo selected('sitesettings'); ?>>Site Settings<span></span></li>
 						<li <?php echo selected('finish'); ?>>Finish<span></span></li>
-					<?php } else { ?>
-						<li <?php echo selected('upgrade'); ?>>Upgrade</li>
-						<li <?php echo selected('permission'); ?>>Permission<span></span></li>
-						<li <?php echo selected('dataimport'); ?>>Data import<span></span></li>
-						<li <?php echo selected('finish_upgrade'); ?>>Finish Upgrade<span></span></li>
-					<?php } ?>
 					</ul>
 				</div>
 			</div>
