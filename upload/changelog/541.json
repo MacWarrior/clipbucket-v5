@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"104",
+  "revision":"105",
   "status":"dev",
   "detail":[
     {
@@ -32,6 +32,7 @@
         ,"Fix videos and thumbs directories creation"
         ,"Update compatibility to PHP 8.0.X"
         ,"Update compatibility to MySQL 8.0.X"
+        ,"Remove unused DB fields"
       ]
     }
     ,{

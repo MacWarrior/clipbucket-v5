@@ -130,7 +130,8 @@ ALTER TABLE `{tbl_prefix}video`
 	MODIFY COLUMN `thumbs_version` varchar(5) NOT NULL DEFAULT '5.4.1',
 	MODIFY COLUMN `re_conv_status` tinytext NULL DEFAULT NULL,
 	MODIFY COLUMN `conv_progress` text NULL DEFAULT NULL,
-    MODIFY COLUMN `flv` mediumtext NOT NULL,
+    DROP COLUMN `flv`,
+    DROP COLUMN `flv_file_url`,
     MODIFY COLUMN `voter_ids` mediumtext NOT NULL,
     MODIFY COLUMN `featured_description` mediumtext NOT NULL;
 

@@ -198,7 +198,6 @@ UPDATE `{tbl_prefix}video` SET video_password = convert(cast(convert(video_passw
 UPDATE `{tbl_prefix}video` SET video_users = convert(cast(convert(video_users using  latin1) as binary) using utf8);
 UPDATE `{tbl_prefix}video` SET username = convert(cast(convert(username using  latin1) as binary) using utf8);
 UPDATE `{tbl_prefix}video` SET title = convert(cast(convert(title using  latin1) as binary) using utf8);
-UPDATE `{tbl_prefix}video` SET flv = convert(cast(convert(flv using  latin1) as binary) using utf8);
 UPDATE `{tbl_prefix}video` SET file_name = convert(cast(convert(file_name using  latin1) as binary) using utf8);
 UPDATE `{tbl_prefix}video` SET file_directory = convert(cast(convert(file_directory using  latin1) as binary) using utf8);
 UPDATE `{tbl_prefix}video` SET description = convert(cast(convert(description using  latin1) as binary) using utf8);
@@ -221,7 +220,6 @@ UPDATE `{tbl_prefix}video` SET favourite_count = convert(cast(convert(favourite_
 UPDATE `{tbl_prefix}video` SET playlist_count = convert(cast(convert(playlist_count using  latin1) as binary) using utf8);
 UPDATE `{tbl_prefix}video` SET flagged = convert(cast(convert(flagged using  latin1) as binary) using utf8);
 UPDATE `{tbl_prefix}video` SET duration = convert(cast(convert(duration using  latin1) as binary) using utf8);
-UPDATE `{tbl_prefix}video` SET flv_file_url = convert(cast(convert(flv_file_url using  latin1) as binary) using utf8);
 UPDATE `{tbl_prefix}video` SET aspect_ratio = convert(cast(convert(aspect_ratio using  latin1) as binary) using utf8);
 UPDATE `{tbl_prefix}video` SET embed_code = convert(cast(convert(embed_code using  latin1) as binary) using utf8);
 UPDATE `{tbl_prefix}video` SET refer_url = convert(cast(convert(refer_url using  latin1) as binary) using utf8);
@@ -353,7 +351,6 @@ DELETE FROM `{tbl_prefix}config` WHERE name = 'i_magick';
 
 ALTER TABLE `{tbl_prefix}video`
 	MODIFY COLUMN `username` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
-	MODIFY COLUMN `flv` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
 	MODIFY COLUMN `category_parents` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
 	MODIFY COLUMN `blocked_countries` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
 	MODIFY COLUMN `voter_ids` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
@@ -634,7 +631,8 @@ ALTER TABLE `{tbl_prefix}video`
 	MODIFY COLUMN `thumbs_version` varchar(5) NOT NULL DEFAULT '5.4.1',
 	MODIFY COLUMN `re_conv_status` tinytext NULL DEFAULT NULL,
 	MODIFY COLUMN `conv_progress` text NULL DEFAULT NULL,
-	MODIFY COLUMN `flv` mediumtext NOT NULL,
+	DROP COLUMN `flv`,
+	DROP COLUMN `flv_file_url`,
 	MODIFY COLUMN `voter_ids` mediumtext NOT NULL,
 	MODIFY COLUMN `featured_description` mediumtext NOT NULL;
 
