@@ -83,7 +83,7 @@ ALTER TABLE `{tbl_prefix}messages`
 	MODIFY COLUMN `date_added` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP;
 
 ALTER TABLE `{tbl_prefix}photos`
-	MODIFY COLUMN `last_viewed` timestamp NOT NULL DEFAULT '1000-01-01 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
+	MODIFY COLUMN `last_viewed` timestamp NOT NULL DEFAULT 0 ON UPDATE CURRENT_TIMESTAMP,
     MODIFY COLUMN `server_url` text NULL DEFAULT NULL,
     MODIFY COLUMN `photo_details` text NULL DEFAULT NULL;
 
@@ -105,7 +105,7 @@ ALTER TABLE `{tbl_prefix}users`
 	MODIFY COLUMN `dob` date NOT NULL DEFAULT '1000-01-01',
 	MODIFY COLUMN `doj` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	MODIFY COLUMN `last_logged` datetime NOT NULL DEFAULT '1000-01-01 00:00:00',
-	MODIFY COLUMN `last_active` timestamp NOT NULL DEFAULT '1000-01-01 00:00:00';
+	MODIFY COLUMN `last_active` timestamp NOT NULL DEFAULT 0;
 
 ALTER TABLE `{tbl_prefix}user_categories`
 	MODIFY COLUMN `date_added` datetime NOT NULL;
@@ -114,7 +114,7 @@ ALTER TABLE `{tbl_prefix}video`
 	MODIFY COLUMN `username` text NULL DEFAULT NULL,
 	MODIFY COLUMN `category_parents` text NULL DEFAULT NULL,
 	MODIFY COLUMN `blocked_countries` text NULL DEFAULT NULL,
-	MODIFY COLUMN `last_viewed` timestamp NOT NULL DEFAULT '1000-01-01 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
+	MODIFY COLUMN `last_viewed` timestamp NOT NULL DEFAULT 0 ON UPDATE CURRENT_TIMESTAMP,
 	MODIFY COLUMN `date_added` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	MODIFY COLUMN `embed_code` text NULL DEFAULT NULL,
 	MODIFY COLUMN `refer_url` text NULL DEFAULT NULL,
