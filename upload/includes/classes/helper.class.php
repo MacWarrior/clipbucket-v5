@@ -111,7 +111,7 @@ class clip_helper extends ClipBucket
         if(!$counter) {
             $vcount['count_only'] = true;
             $total_rows  = get_videos($vcount);
-            $counter = $total_rows;
+            $counter = $total_rows ? : 0;
             update_counter('video',$count_query,$counter);
         }
         $total_pages = count_pages($counter,VLISTPP);
@@ -212,7 +212,7 @@ class clip_helper extends ClipBucket
             $ucount = $u_cond;
             $ucount['count_only'] = true;
             $total_rows  = get_users($ucount);
-            $counter = $total_rows;
+            $counter = $total_rows ? : 0;
             update_counter('channel',$count_query,$counter);
         }
 

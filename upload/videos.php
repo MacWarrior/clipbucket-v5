@@ -49,7 +49,7 @@
 		$vcount['count_only'] = true;
 		$total_rows  = get_videos($vcount);
 		$total_pages = count_pages($total_rows,VLISTPP);
-		$counter = $total_rows;
+		$counter = $total_rows ? : 0;
 		update_counter('video',$count_query,$counter);
 	}
 	$total_pages = count_pages($counter,VLISTPP);

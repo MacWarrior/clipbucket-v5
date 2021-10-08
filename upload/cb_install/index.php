@@ -14,11 +14,8 @@ $modes = array(
 );
 
 $mode = $_POST['mode'] ?? false;
-error_log('mode : '.$mode);
-error_log('Request mode : '.$_REQUEST['mode']);
 
 if(!$mode || !in_array($mode,$modes)) {
-    error_log('redirection to agreement');
     $mode = 'agreement';
 }
 

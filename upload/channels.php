@@ -48,7 +48,7 @@
 		$ucount = $u_cond;
 		$ucount['count_only'] = true;
 		$total_rows = get_users($ucount);
-		$counter = $total_rows;
+        $counter = $total_rows ? : 0;
 		update_counter('channel',$count_query,$counter);
 	}
 
