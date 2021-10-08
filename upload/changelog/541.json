@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"107",
+  "revision":"108",
   "status":"dev",
   "detail":[
     {
@@ -33,6 +33,7 @@
         ,"Update compatibility to PHP 8.0.X"
         ,"Update compatibility to MySQL 8.0.X"
         ,"Remove unused DB fields"
+        ,"Fix installation process"
       ]
     }
     ,{
