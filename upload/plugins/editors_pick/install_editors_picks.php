@@ -7,7 +7,7 @@ function install_editors_pick()
         `pick_id` int(225) NOT NULL AUTO_INCREMENT,
         `videoid` int(225) NOT NULL,
         `sort` bigint(5) NOT NULL DEFAULT '1',
-        `date_added` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
         PRIMARY KEY (`pick_id`)
         ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1"
 	);

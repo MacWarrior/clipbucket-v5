@@ -160,13 +160,6 @@ CREATE TABLE `{tbl_prefix}countries` (
   `numcode` smallint(6) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `{tbl_prefix}editors_picks` (
-  `pick_id` int(225) NOT NULL,
-  `videoid` int(225) NOT NULL,
-  `sort` bigint(5) NOT NULL DEFAULT 1,
-  `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 CREATE TABLE `{tbl_prefix}email_templates` (
   `email_template_id` int(11) NOT NULL,
   `email_template_name` varchar(225) NOT NULL,
@@ -704,7 +697,6 @@ CREATE TABLE `{tbl_prefix}video` (
   `conv_progress` text NULL DEFAULT NULL,
   `is_castable` tinyint(1) NOT NULL DEFAULT 0,
   `bits_color` tinyint(4) DEFAULT NULL,
-  `in_editor_pick` varchar(255) DEFAULT 'no',
   `subscription_email` enum('pending','sent') NOT NULL DEFAULT 'pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -1048,9 +1040,6 @@ ALTER TABLE `{tbl_prefix}counters`
 
 ALTER TABLE `{tbl_prefix}countries`
   MODIFY `country_id` int(80) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `{tbl_prefix}editors_picks`
-  MODIFY `pick_id` int(225) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `{tbl_prefix}email_templates`
   MODIFY `email_template_id` int(11) NOT NULL AUTO_INCREMENT;
