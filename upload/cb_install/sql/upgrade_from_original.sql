@@ -565,9 +565,6 @@ ALTER TABLE `{tbl_prefix}comments`
 ALTER TABLE `{tbl_prefix}conversion_queue`
 	MODIFY COLUMN `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
 
-ALTER TABLE `{tbl_prefix}editors_picks`
-	MODIFY COLUMN `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP;
-
 ALTER TABLE `{tbl_prefix}group_categories`
 	MODIFY COLUMN `date_added` datetime NOT NULL;
 

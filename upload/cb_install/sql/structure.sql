@@ -823,11 +823,6 @@ ALTER TABLE `{tbl_prefix}counters`
 ALTER TABLE `{tbl_prefix}countries`
   ADD PRIMARY KEY (`country_id`);
 
-ALTER TABLE `{tbl_prefix}editors_picks`
-  ADD PRIMARY KEY (`pick_id`),
-  ADD KEY `videoid` (`videoid`),
-  ADD KEY `videoid_2` (`videoid`);
-
 ALTER TABLE `{tbl_prefix}email_templates`
   ADD PRIMARY KEY (`email_template_id`),
   ADD UNIQUE KEY `email_template_code` (`email_template_code`);
