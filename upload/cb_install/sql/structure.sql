@@ -705,7 +705,7 @@ CREATE TABLE `{tbl_prefix}video` (
   `is_castable` tinyint(1) NOT NULL DEFAULT 0,
   `bits_color` tinyint(4) DEFAULT NULL,
   `in_editor_pick` varchar(255) DEFAULT 'no',
-  `subscription_email` VARCHAR(16) NOT NULL DEFAULT ''
+  `subscription_email` enum('pending','sent') NOT NULL DEFAULT 'pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `{tbl_prefix}video_categories` (

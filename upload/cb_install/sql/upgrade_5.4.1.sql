@@ -30,9 +30,6 @@ ALTER TABLE `{tbl_prefix}comments`
 ALTER TABLE `{tbl_prefix}plugins`
 	MODIFY COLUMN `plugin_version` VARCHAR(32) NOT NULL;
 
-ALTER TABLE `{tbl_prefix}video`
-    ADD COLUMN `subscription_email` VARCHAR(16) NOT NULL DEFAULT '';
-
 ALTER TABLE `{tbl_prefix}users`
 	DROP `background_attachement`;
 
