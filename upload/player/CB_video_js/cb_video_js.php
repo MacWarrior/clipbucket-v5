@@ -40,7 +40,6 @@ if (!function_exists('cb_video_js'))
         assign('width',$in['width']);
 		assign('player_config',$in);
 		assign('vdata',$vdetails);
-		#assign('video_files',$video_play);
 		
 		Template(CB_VJS_PLAYER_DIR.'/cb_video_js.html',false);
 		return true;
@@ -69,15 +68,18 @@ if (!function_exists('cb_video_js'))
                 $res[] = get_cbvjs_quality($file);
             }
             $all_res = $res;
-            if (in_array('360', $all_res)){
-                $quality = '360';
+
+            $player_default_resolution = config('player_default_resolution');
+
+            if (in_array($player_default_resolution, $all_res)){
+                $quality = $player_default_resolution;
             } else {
                 $quality = 'low';
             }
 
 			return $quality;	
 		}
-		return False;
+		return false;
 	}
 
 	/**

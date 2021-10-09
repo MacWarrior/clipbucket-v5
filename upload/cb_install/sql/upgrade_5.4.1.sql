@@ -161,3 +161,6 @@ INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`
 	('2160p', '16/9', 0, 4096, 2160, 17472000);
 
 DELETE FROM `{tbl_prefix}config` WHERE name IN('gen_240','gen_360','gen_480','gen_720','gen_1080','cb_combo_res','vbrate','vbrate_hd','vbrate_240','vbrate_360','vbrate_480','vbrate_720','vbrate_1080');
+
+INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
+	('player_default_resolution', '360');

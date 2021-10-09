@@ -95,63 +95,77 @@
 				</fieldset>
 			</div>
 
-			<div class="col-md-4">
+			<div class="col-md-8">
 				<fieldset>
 					<legend>Other options</legend>
 					<div class="row">
-						<div class="col-md-8">
+						<div class="col-md-4">
 							<label for="autoplay_video">
 								Autoplay<br>
 								<small>if yes, all videos will be played automatically</small>
 							</label>
 						</div>
-						<div class="col-md-4">
+						<div class="col-md-2">
 							<input value="yes" name="autoplay_video" id="autoplay_video" {if $row.autoplay_video=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 							<span class="lbl"></span>
 						</div>
+                        <div class="col-md-4">
+                            <label for="contextual_menu_disabled">
+                                Disable contextual menu<br>
+                                <small>Disable right click on video</small>
+                            </label>
+                        </div>
+                        <div class="col-md-2">
+                            <input value="yes" name="contextual_menu_disabled" id="contextual_menu_disabled" {if $row.contextual_menu_disabled=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                            <span class="lbl"></span>
+                        </div>
 					</div>
 
 					<hr/>
 					<div class="row">
-						<div class="col-md-8">
+						<div class="col-md-4">
 							<label for="chromecast">
 								Enable Chromecast support<br>
 								<small>Allow users to stream videos on Chromecast</small>
 							</label>
 						</div>
-						<div class="col-md-4">
+						<div class="col-md-2">
 							<input value="yes" name="chromecast" id="chromecast" {if $row.chromecast=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 							<span class="lbl"></span>
 						</div>
+                        <div class="col-md-4">
+                            <label for="player_thumbnails">
+                                Thumbnails<br>
+                                <small>Enable player thumbnails</small>
+                            </label>
+                        </div>
+                        <div class="col-md-2">
+                            <input value="yes" name="player_thumbnails" id="player_thumbnails" {if $row.player_thumbnails=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                            <span class="lbl"></span>
+                        </div>
 					</div>
 
 					<hr/>
 					<div class="row">
-						<div class="col-md-8">
-							<label for="contextual_menu_disabled">
-								Disable contextual menu<br>
-								<small>Disable right click on video</small>
-							</label>
-						</div>
-						<div class="col-md-4">
-							<input value="yes" name="contextual_menu_disabled" id="contextual_menu_disabled" {if $row.contextual_menu_disabled=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-							<span class="lbl"></span>
-						</div>
+                        <div class="col-md-3">
+                            <label class="nowrap" for="player_default_resolution" title="Default video resolution">Default video resolution</label>
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-control" name="player_default_resolution" id="player_default_resolution">
+
+                                {foreach from=$myquery->getVideoResolutions() item=ratio}
+                                    {foreach from=$ratio item=resolution}
+                                <option {if $resolution.height==$row.player_default_resolution}selected{/if} value="{$resolution.height}">
+                                    {$resolution.title}
+                                </option>
+                                    {/foreach}
+                                {/foreach}
+
+                            </select>
+                        </div>
 					</div>
 
 					<hr/>
-					<div class="row">
-						<div class="col-md-8">
-							<label for="player_thumbnails">
-								Thumbnails<br>
-								<small>Enable player thumbnails</small>
-							</label>
-						</div>
-						<div class="col-md-4">
-							<input value="yes" name="player_thumbnails" id="player_thumbnails" {if $row.player_thumbnails=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-							<span class="lbl"></span>
-						</div>
-					</div>
 				</fieldset>
 			</div>
 		</div>

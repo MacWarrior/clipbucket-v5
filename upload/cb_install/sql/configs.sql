@@ -220,8 +220,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'proxy_url', ''),
 	(NULL, 'proxy_port', ''),
 	(NULL, 'proxy_username', ''),
-	(NULL, 'proxy_password', '');
-
+	(NULL, 'proxy_password', ''),
+	(NULL, 'player_default_resolution', '360');
 
 INSERT INTO `{tbl_prefix}languages` (`language_id`, `language_code`, `language_name`, `language_regex`, `language_active`, `language_default`) VALUES
 	(1, 'en', 'English', '/^en/i', 'yes', 'yes'),

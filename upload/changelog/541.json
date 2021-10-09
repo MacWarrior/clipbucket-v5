@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"114",
+  "revision":"115",
   "status":"dev",
   "detail":[
     {
@@ -119,6 +119,8 @@
         ,"Fix VideoJS player informations"
         ,"Fix VideoJS player thumbnails sync"
         ,"Update cast_sender lib"
+        ,"Add new option to choose default video resolution"
+        ,"Display resolution title instead of height"
       ]
     }
   ]

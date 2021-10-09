@@ -91,7 +91,7 @@ class myquery
         return $data;
     }
 
-    public function getVideoBitrateFromHeight($height): int
+    public function getVideoResolutionBitrateFromHeight($height): int
     {
         $sql_select = 'SELECT video_bitrate FROM '.tbl('video_resolution').' WHERE height = '.$height;
         $results = db_select($sql_select);
@@ -100,6 +100,18 @@ class myquery
             return 0;
         }
         return $results[0]['video_bitrate'];
+    }
+
+    public function getVideoResolutionTitleFromHeight($height): string
+    {
+        $sql_select = 'SELECT title FROM '.tbl('video_resolution').' WHERE height = '.$height;
+        $results = db_select($sql_select);
+
+        if( empty($results) ){
+            return 0;
+        }
+
+        return $results[0]['title'];
     }
 
 	//Function Used to Check Weather Video Exists or not

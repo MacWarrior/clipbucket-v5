@@ -745,7 +745,7 @@ class FFMpeg
 
 			if(!empty($vbrate)){
                 global $myquery;
-				$vbrate = min($myquery->getVideoBitrateFromHeight($more_res['height']), $vbrate);
+				$vbrate = min($myquery->getVideoResolutionBitrateFromHeight($more_res['height']), $vbrate);
             }
 
 			if(!empty($vbrate)){
