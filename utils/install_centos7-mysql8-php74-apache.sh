@@ -25,7 +25,7 @@ sed -i 's/enabled=1/enabled=0/' /etc/yum.repos.d/mysql-community.repo
 
 yum --enablerepo=mysql80-community install -y -q mysql-community-server > /dev/null 2>&1
 
-yum install -y -q php php-mysqlnd php-curl php-xml php-mbstring php-pear php-devel httpd git gcc ImageMagick ImageMagick-devel mediainfo sendmail ffmpeg ffmpeg-devel lshw > /dev/null 2>&1
+yum install -y -q php php-mysqlnd php-curl php-xml php-mbstring php-pear php-devel php-gd httpd git gcc ImageMagick ImageMagick-devel mediainfo sendmail ffmpeg ffmpeg-devel lshw > /dev/null 2>&1
 
 systemctl enable httpd mysqld > /dev/null 2>&1
 systemctl start httpd mysqld
