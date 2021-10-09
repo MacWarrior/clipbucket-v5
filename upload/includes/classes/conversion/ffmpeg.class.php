@@ -10,7 +10,6 @@ class FFMpeg
 {
 	// Start public variables declaration
 	public $defaultOptions = array();
-	public $videoDetails = array();
 	public $num = thumbs_number;
 	public $reconvert = false;
 	public $ffMpegPath = FFMPEG_BINARY;
@@ -28,29 +27,11 @@ class FFMpeg
         '320' => array('632','395'),
         '480' => array('768','432')
     );
-	public $res169 = array(
-        '240' => array('428','240'),
-        '360' => array('640','360'),
-        '480' => array('854','480'),
-        '720' => array('1280','720'),
-        '1080' => array('1920','1080'),
-    );
 	// End public variables declaration
 
 	// Start private variables declaration
 	private $options = array();
-	private $outputFile = false;
-	private $inputFile = false;
 	private $videosDirPath = VIDEOS_DIR;
-	private $sdFile = false;
-	private $hdFile = false;
-	private $resolution4_3 = array(
-			'240' => array('428','240'),
-			'360' => array('640','360'),
-			'480' => array('854','480'),
-			'720' => array('1280','720'),
-			'1080' => array('1920','1080'),
-		);
 	// End private variables declaration
 
 	public function __construct($options = false, $log = false)
@@ -153,8 +134,7 @@ class FFMpeg
 		$info['audio_channels'] = (float) $audio['channels'];
 		$info['rotation']       = (float) $video['tags']['rotate'];
 
-		if(!$info['duration'] || 1)
-		{
+		if(!$info['duration'] || 1) {
 			$CMD = MEDIAINFO_BINARY . " '--Inform=General;%Duration%'  '". $file_path."' 2>&1 ";
 			$info['duration'] = round(shell_output( $CMD )/1000,2);
 		}
@@ -199,120 +179,6 @@ class FFMpeg
 		return $info;
 	}
 
-	public function convertVideo($inputFile = false, $options = array(), $isHd = false)
-	{
-		$this->log->TemplogData = "\r\n======Converting Video=========\r\n";
-		if($inputFile)
-		{
-			if(!empty($options)){
-				$this->setOptions($options);
-			}
-			$this->inputFile = $inputFile;
-			$output_directory = $this->videosDirPath.DIRECTORY_SEPARATOR.$this->options['outputPath'];
-            if(!is_dir($output_directory)){
-                mkdir($output_directory,0755, true);
-            }
-
-			$this->outputFile = $output_directory.$this->getInputFileName($inputFile);
-			$videoDetails = $this->getVideoDetails($inputFile);
-			$this->videoDetails = $videoDetails;
-			$this->output = new stdClass();
-			$this->output->videoDetails = $videoDetails;
-
-			// Conversion Starts here
-			$this->convertToLowResolutionVideo($videoDetails);
-		}
-	}
-
-	private function convertToLowResolutionVideo($videoDetails = false)
-	{
-		if($videoDetails)
-		{
-			$out= shell_exec($this->ffMpegPath ." -i {$this->inputFile} -acodec copy -vcodec copy -y -f null /dev/null 2>&1");
-			$len = strlen($out);
-			$findme = 'Video';
-			$findme1 = 'fps';
-			$pos = strpos($out, $findme);
-			$pos = $pos + 48;
-			$pos1 = strpos($out, $findme1);
-			$bw = $len - ($pos1 - 5);
-			$rest = substr($out, $pos, -$bw);
-			$rest = ','.$rest;
-			$dura = explode(',',$rest);
-			$dura[1] = $dura[1].'x';
-			$dura = explode('x',$dura[1]);
-
-			$TemplogData = "\r\n=======Low Resolution Conversion=======\r\n";
-            $TemplogData .= 'Sarting : Generating Low resolution video @ '.date("Y-m-d H:i:s")." \r\n";
-            $TemplogData .= "Converting Video SD File \r\n";
-
-            $this->sdFile = "{$this->outputFile}-sd.{$this->options['format']}";
-            $fullCommand = $this->ffMpegPath . " -i {$this->inputFile}" . $this->generateCommand($videoDetails, false) . " {$this->sdFile}";
-            $TemplogData .= 'Command : '.$fullCommand." \r\n";
-
-            $conversionOutput = $this->executeCommand($fullCommand);
-            if( DEVELOPMENT_MODE ){
-                $TemplogData .= "\r\n FFmpeg output : ".$conversionOutput." \r\n";
-            }
-            $TemplogData .= 'OutputFile : '.$this->sdFile." \r\n";
-
-            if (file_exists($this->sdFile))
-            {
-                $this->video_files[] = 'sd';
-                $this->sdFile1 = "{$this->outputFile}.{$this->options['format']}";
-                $status = 'Successful';
-                $TemplogData .= 'Conversion Status : '.$status.' @ '.date('Y-m-d H:i:s')." \r\n";
-
-                $this->output_file = $this->sdFile;
-                $this->output_details = $this->get_file_info($this->output_file);
-                $this->log_ouput_file_info();
-            }
-
-			if($dura[1] >= '720' || $videoDetails['video_height'] >= '720')
-			{
-				$TemplogData .="\r\n=======High Resolution Conversion=======\r\n";
-				$TemplogData .= 'Sarting : Generating high resolution video @ '.date('Y-m-d H:i:s')."\r\n";
-				$TemplogData .= "Converting Video HD File \r\n";
-				
-				$this->hdFile = "{$this->outputFile}-hd.{$this->options['format']}";
-				$fullCommand = $this->ffMpegPath . " -i {$this->inputFile}" . $this->generateCommand($videoDetails, true) . " {$this->hdFile}";
-
-				$TemplogData .= 'Command : '.$fullCommand." \r\n";
-
-                $conversionOutput = $this->executeCommand($fullCommand);
-                if( DEVELOPMENT_MODE ){
-                    $TemplogData .= "\r\n FFmpeg output : ".$conversionOutput." \r\n";
-                }
-                $TemplogData .= 'OutputFile : '.$this->sdFile." \r\n";
-
-				if (file_exists($this->hdFile)) {
-					$this->video_files[] = 'hd';
-					$this->sdFile1 = "{$this->outputFile}.{$this->options['format']}";
-					$status = 'Successful';
-					$TemplogData .= 'Conversion Status : '.$status.' @ '.date('Y-m-d H:i:s')."\r\n";
-					$this->log->writeLine('Conversion Ouput', $TemplogData, true);
-
-					$this->output_file = $this->hdFile;
-					$this->output_details = $this->get_file_info($this->output_file);
-					$this->log_ouput_file_info();
-				}
-			}
-            $this->log->writeLine('Conversion Ouput', $TemplogData, true);
-		}
-	}
-
-	private function getInputFileName($filePath = false)
-	{
-		if($filePath)
-		{
-			$path = explode('/', $filePath);
-			$name = array_pop($path);
-			$name = substr($name, 0, strrpos($name, '.'));
-			return $name;
-		}
-		return false;
-	}
-
 	public function setOptions($options = array())
 	{
 		if(!empty($options)) {
@@ -326,85 +192,6 @@ class FFMpeg
 				$this->options[0] = $options;
 			}
 		}
-	}
-
-	private function generateCommand($videoDetails = false, $isHd = false)
-	{
-		if($videoDetails)
-		{
-			$result = shell_output('ffmpeg -version');
-			preg_match("/(?:ffmpeg\\s)(?:version\\s)?(\\d\\.\\d\\.(?:\\d|[\\w]+))/i", strtolower($result), $matches);
-			if(count($matches) > 0) {
-				$version = array_pop($matches);
-			}
-
-			$commandSwitches = '';
-			if(isset($this->options['video_codec'])){
-				$commandSwitches .= ' -vcodec ' .$this->options['video_codec'];
-			}
-			if(isset($this->options['audio_codec'])){
-				$codecs = get_ffmpeg_codecs('audio');
-				if( !in_array($this->options['audioCodec'], $codecs) )
-					$this->options['audio_codec'] = $codecs[0];
-				$commandSwitches .= ' -acodec ' .$this->options['audio_codec'];
-			}
-
-			// Fix for ChromeCast : Forcing stereo mode
-			if( config('chromecast_fix') ){
-                $commandSwitches .= ' -ac 2';
-            }
-
-			// Fix for browsers compatibility : yuv420p10le seems to be working only on Chrome like browsers
-            if( config('force_8bits') ){
-                $commandSwitches .= ' -pix_fmt yuv420p';
-            }
-
-            // Fix rare video conversion fail
-            $commandSwitches .= ' -max_muxing_queue_size 1024';
-
-			// Setting Size Of output video
-			if($isHd)
-			{
-				$height_tmp = min($videoDetails['video_height'],1080);
-				$width_tmp = min($videoDetails['video_width'],1920);
-			} else {
-				$height_tmp = max($videoDetails['video_height'],360);
-				$width_tmp = max($videoDetails['video_width'],360);
-			}
-			$size = "{$width_tmp}x{$height_tmp}";
-
-			if ($version == '0.9') {
-				$vpre = $isHd ? 'hq' : 'normal';
-				$commandSwitches .= " -s {$size} -vpre {$vpre}";
-			} else {
-				$vpre = $isHd ? 'slow' : 'medium';
-				$commandSwitches .= " -s {$size} -preset {$vpre}";
-			}
-
-			if(isset($this->options['format'])){
-				$commandSwitches .= ' -f ' .$this->options['format'];
-			}
-
-			if(isset($this->options['video_bitrate']))
-			{
-				$videoBitrate = (int)$this->options['video_bitrate'];
-				if($isHd){
-					$videoBitrate = (int)$this->options['video_bitrate_hd'];
-				}
-				$commandSwitches .= ' -vb '.$videoBitrate;
-			}
-			if(isset($this->options['audio_bitrate'])){
-				$commandSwitches .= ' -ab ' .$this->options['audio_bitrate'];
-			}
-			if(isset($this->options['video_rate'])){
-				$commandSwitches .= ' -r ' .$this->options['video_rate'];
-			}
-			if(isset($this->options['audio_rate'])){
-				$commandSwitches .= ' -ar ' .$this->options['audio_rate'];
-			}
-			return $commandSwitches;
-		}
-		return false;
 	}
 
 	function log($name,$value)
@@ -517,25 +304,20 @@ class FFMpeg
 	{
 		$original_video_height = $this->input_details['video_height'];
 
-		// Setting threshold for input video to convert
-		$valid_dimensions = array(240,360,480,720,1080);
-		$input_video_height = $this->getClosest($original_video_height, $valid_dimensions);
+		$input_video_height = $this->getClosest($original_video_height, array_keys($resolutions));
+        $final_res = [];
+        $final_res[$input_video_height] = $resolutions[$input_video_height];
 
-		//Setting condition to place resolution to first near to input video
-		if ($this->options['gen_'.$input_video_height]  == 'yes'){
-			$final_res[$input_video_height] = $resolutions[$input_video_height];
-		}
-		foreach ($resolutions as $key => $value) 
+		foreach ($resolutions as $key => $value)
 		{
-			$video_height=(int)$value[1];	
-			if($input_video_height != $video_height && $this->options['gen_'.$video_height] == 'yes'){
+			$video_height = (int)$key;
+			if($input_video_height != $video_height){
 				$final_res[$video_height] = $value;	
 			}
 		}
 
-		$revised_resolutions = $final_res;
-		if ( $revised_resolutions ){
-			return $revised_resolutions;
+		if ( !empty($final_res) ){
+			return $final_res;
         }
 		return false;
 	}
@@ -579,7 +361,7 @@ class FFMpeg
 				$this->start_log();
 				$this->prepare();
 				
-				$ratio = substr($this->input_details['video_wh_ratio'], 0, 7);
+				$ratio = (float)substr($this->input_details['video_wh_ratio'], 0, 7);
 				
 				$max_duration = config('max_video_duration') * 60;
 
@@ -593,19 +375,6 @@ class FFMpeg
 					$this->failed_reason = 'max_duration';
 					break;
 				}
-				$ratio = (float)$ratio;
-				if( $ratio >= 1.6 ){
-					$res = $this->options['res169'];
-                } else {
-					$res = $this->options['res43'];
-                }
-
-				$nr = $this->options['normal_res'];
-				 /*Added by Hassan Baryar bug#268 **/
-				if($nr=='320'){
-					$nr='360';
-                }
-				/*End*/
 
 				$log = '';
 				try {
@@ -636,16 +405,8 @@ class FFMpeg
 				$log .= "\r\n ====== End : Thumbs Generation ======= \r\n";
 				$this->log->writeLine('Thumbs Generation', $log, true);
 
-                $hr = $this->options['high_res'];
-                $this->options['video_width'] = $res[$nr][0];
                 $this->options['format'] = 'mp4';
-                $this->options['video_height'] = $res[$nr][1];
-                $this->options['hq_video_width'] = $res[$hr][0];
-                $this->options['hq_video_height'] = $res[$hr][1];
                 $orig_file = $this->input_file;
-
-                // setting type of conversion, fetching from configs
-                $this->resolutions = $this->options['cb_combo_res'];
 
                 if( config('stay_mp4') == 'yes' ){
                     $output_directory = $this->videosDirPath.DIRECTORY_SEPARATOR.$this->options['outputPath'];
@@ -658,42 +419,33 @@ class FFMpeg
 
                     $this->output_file = $filepath_destination;
                 } else {
-                    switch( $this->resolutions )
+                    global $myquery;
+                    $resolutions = $this->reindex_required_resolutions($myquery->getEnabledVideoResolutions());
+
+                    $this->ratio = $ratio;
+                    foreach( $resolutions as $key => $value )
                     {
-                        case 'yes':
-                            $res169 = $this->reindex_required_resolutions($this->res169);
+                        $video_height = (int)$key;
+                        $video_width  = (int)$value;
 
-                            $this->ratio = $ratio;
-                            foreach( $res169 as $value )
-                            {
-                                $video_width  = (int)$value[0];
-                                $video_height = (int)$value[1];
+                        // This option allow video with a 1% lower resolution to be included in the superior resolution
+                        // For example : 1900x800 will be allowed in 1080p resolution
+                        if( config('allow_conversion_1_percent') == 'yes' ){
+                            $video_height_test = floor($video_height*0.99);
+                            $video_width_test = floor($video_width*0.99);
+                        } else {
+                            $video_height_test = $video_height;
+                            $video_width_test = $video_width;
+                        }
 
-                                // This option allow video with a 1% lower resolution to be included in the superior resolution
-                                // For example : 1900x800 will be allowed in 1080p resolution
-                                if( config('allow_conversion_1_percent') == 'yes' ){
-                                    $video_height_test = floor($video_height*0.99);
-                                    $video_width_test = floor($video_width*0.99);
-                                } else {
-                                    $video_height_test = $video_height;
-                                    $video_width_test = $video_width;
-                                }
-
-                                // Here we must check width and height to be able to import other formats than 16/9 (For example : 1920x800, 1800x1080, ...)
-                                if( $this->input_details['video_width'] >= $video_width_test || $this->input_details['video_height'] >= $video_height_test )
-                                {
-                                    $more_res['video_width']  = $video_width;
-                                    $more_res['video_height'] = $video_height;
-                                    $more_res['name']		  = $video_height;
-                                    $this->convert(NULL, false, $more_res);
-                                }
-                            }
-                            break;
-
-                        case 'no':
-                        default :
-                            $this->convertVideo($orig_file);
-                            break;
+                        // Here we must check width and height to be able to import other formats than 16/9 (For example : 1920x800, 1800x1080, ...)
+                        if( $this->input_details['video_width'] >= $video_width_test || $this->input_details['video_height'] >= $video_height_test )
+                        {
+                            $more_res['video_width']  = $video_width;
+                            $more_res['video_height'] = $video_height;
+                            $more_res['height']		  = $video_height;
+                            $this->convert(NULL, false, $more_res);
+                        }
                     }
                 }
 
@@ -756,8 +508,6 @@ class FFMpeg
 			'normal_res' => false,
 			'high_res' => false,
 			'max_video_duration' => false,
-			'resolution16_9' => $this->res169,
-			'resolution4_3' => $this->resolution4_3,
 			'resize'=>'max',
 			'outputPath' => false,
 			'use_video_rate' => false,
@@ -766,12 +516,6 @@ class FFMpeg
 			'use_audio_bit_rate' => false,
 			'use_audio_codec' => false,
 			'use_video_codec' => false,
-			'cb_combo_res' => false,
-			'gen_240' => false,
-			'gen_360' => false,
-			'gen_480' => false,
-			'gen_720' => false,
-			'gen_1080' => false
 		);
 	}
 
@@ -1000,7 +744,8 @@ class FFMpeg
             }
 
 			if(!empty($vbrate)){
-				$vbrate = min(config('vbrate_'.$more_res['name']), $vbrate);
+                global $myquery;
+				$vbrate = min($myquery->getVideoBitrateFromHeight($more_res['height']), $vbrate);
             }
 
 			if(!empty($vbrate)){
@@ -1104,21 +849,11 @@ class FFMpeg
 
 		if(!$for_iphone)
 		{
-			$TemplogData .= "\r\nConverting Video file ".$more_res['name'].' @ '.date('Y-m-d H:i:s')." \r\n";
+			$TemplogData .= "\r\nConverting Video file ".$more_res['height'].' @ '.date('Y-m-d H:i:s')." \r\n";
 			if($more_res==NULL){
 				echo 'here';
 			} else {
-				#create all possible resolutions of selected video
-				if( $more_res['name'] == '240' && $p['gen_240'] == 'yes' ||
-					$more_res['name'] == '360' && $p['gen_360'] == 'yes' ||
-					$more_res['name'] == '480' && $p['gen_480'] == 'yes' ||
-					$more_res['name'] == '720' && $p['gen_720'] == 'yes' ||
-					$more_res['name'] == '1080' && $p['gen_1080'] == 'yes')
-				{
-					$command  = $this->ffmpeg.' -i '.$this->input_file." $opt_av ".$this->raw_path.'-'.$more_res['name'].'.mp4 2> '.TEMP_DIR.DIRECTORY_SEPARATOR.$tmp_file;
-				} else {
-					$command = '';
-				}
+                $command  = $this->ffmpeg.' -i '.$this->input_file." $opt_av ".$this->raw_path.'-'.$more_res['height'].'.mp4 2> '.TEMP_DIR.DIRECTORY_SEPARATOR.$tmp_file;
 
                 $video_dir = VIDEOS_DIR.DIRECTORY_SEPARATOR.date('Y').DIRECTORY_SEPARATOR.date('m').DIRECTORY_SEPARATOR.date('d').DIRECTORY_SEPARATOR;
                 if(!is_dir($video_dir)){
@@ -1133,16 +868,16 @@ class FFMpeg
 				unlink(TEMP_DIR.DIRECTORY_SEPARATOR.$tmp_file);
 			}
 
-			if(file_exists($this->raw_path.'-'.$more_res['name'].'.mp4') && filesize($this->raw_path.'-'.$more_res['name'].'.mp4')>0)
+			if(file_exists($this->raw_path.'-'.$more_res['height'].'.mp4') && filesize($this->raw_path.'-'.$more_res['height'].'.mp4')>0)
 			{
 				$this->has_resolutions = 'yes';
-				$this->video_files[] = $more_res['name'];
-				$TemplogData .="\r\nFiles resolution : ".$more_res['name']." \r\n";
+				$this->video_files[] = $more_res['height'];
+				$TemplogData .="\r\nFiles resolution : ".$more_res['height']." \r\n";
 			} else {
-				$TemplogData .="\r\n\r\nFile doesn't exist. Path: ".$this->raw_path.'-'.$more_res['name'].".mp4 \r\n\r\n";
+				$TemplogData .="\r\n\r\nFile doesn't exist. Path: ".$this->raw_path.'-'.$more_res['height'].".mp4 \r\n\r\n";
 			}
 
-			$this->output_file = $this->raw_path.'-'.$more_res['name'].'.mp4';
+			$this->output_file = $this->raw_path.'-'.$more_res['height'].'.mp4';
 			  
 			if($more_res!=NULL)
 			{
@@ -1201,44 +936,6 @@ class FFMpeg
 		if(strstr($version,'Git')) {
 			$this->vconfigs['map_meta_data'] = 'map_metadata';
 		}
-	}
-
-	private function getVideoDetails( $videoPath = false)
-	{
-		if($videoPath)
-		{
-			# init the info to N/A
-			$info['format']			= 'N/A';
-			$info['duration']		= 'N/A';
-			$info['size']			= 'N/A';
-			$info['bitrate']		= 'N/A';
-			$info['video_width']	= 'N/A';
-			$info['video_height']	= 'N/A';
-			$info['video_wh_ratio']	= 'N/A';
-			$info['video_codec']	= 'N/A';
-			$info['video_rate']		= 'N/A';
-			$info['video_bitrate']	= 'N/A';
-			$info['video_color']	= 'N/A';
-			$info['audio_codec']	= 'N/A';
-			$info['audio_bitrate']	= 'N/A';
-			$info['audio_rate']		= 'N/A';
-			$info['audio_channels']	= 'N/A';
-			$info['path'] = $videoPath;
-
-			/*
-				get the information about the file
-				returns array of stats
-			*/
-			$stats = stat($videoPath);
-			if($stats && is_array($stats))
-			{
-				$ffmpegOutput = $this->executeCommand( $this->ffMpegPath . " -i {$videoPath} -acodec copy -vcodec copy -y -f null /dev/null 2>&1" );
-				$info = $this->parseVideoInfo($ffmpegOutput,$stats['size']);
-				$info['size'] = (integer)$stats['size'];
-				return $info;
-			}
-		}
-		return false;
 	}
 
 	private function parseVideoInfo($output = '',$size=0)
@@ -1408,7 +1105,6 @@ class FFMpeg
 				$file_path = $thumb_dir.$file_name;
 
 				$time_sec = (int)($division*$count);
-				//$time = $this->ChangeTime($time_sec);
 
 				$command = $this->ffMpegPath." -ss $time_sec -i $input_file -pix_fmt yuvj422p -an -r 1 $dimension -y -f image2 -vframes 1 $file_path ";
 				$output = $this->executeCommand($command);	
@@ -1443,34 +1139,6 @@ class FFMpeg
 			}
 		}
 		rmdir($tmpDir);
-	}
-
-	/**
-	 * Function used to convert seconds into proper time format
-	 *
-	 * @param : INT duration
-	 * @param : rand
-	 * last edited : 23-12-2016
-	 * edited by : Fahad Abbas
-	 *
-	 * @author : Fahad Abbas
-	 * @edit_reason : date() function was used which was not a good approach
-	 * @return bool|string
-	 */
-	private function ChangeTime($duration)
-	{
-		try{
-			/*Formatting up the duration in seconds for datetime object*/
-			/* desired format ( 00:00:00 ) */
-            $hours = floor($duration / 3600);
-            $minutes = floor(($duration / 60) % 60);
-            $seconds = $duration % 60;
-            $d_formatted = "$hours:$minutes:$seconds";
-            $d = new DateTime($d_formatted);
-            return $d->format('H:i:s');
-		} catch (Exception $e){
-			echo 'Caught exception: ',  $e->getMessage(), "\n";
-		}
 	}
 
 	public static function get_video_tracks($filepath)
@@ -1547,8 +1215,8 @@ class FFMpeg
 		return false;
 	}
 
-	public static function get_video_basic_infos($filepath)
-	{
+	public static function get_video_basic_infos($filepath): array
+    {
 		$stats = stat($filepath);
 		if($stats && is_array($stats))
 		{

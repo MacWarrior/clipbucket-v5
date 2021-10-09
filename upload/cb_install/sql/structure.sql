@@ -630,14 +630,14 @@ CREATE TABLE `{tbl_prefix}validation_re` (
 CREATE TABLE `{tbl_prefix}video` (
   `videoid` bigint(20) NOT NULL,
   `videokey` mediumtext NOT NULL,
-  `video_password` varchar(255) NOT NULL,
+  `video_password` varchar(255) NOT NULL DEFAULT '',
   `video_users` text NOT NULL,
   `username` text NULL DEFAULT NULL,
-  `userid` int(11) NOT NULL,
+  `userid` int(11) NULL DEFAULT NULL,
   `title` text DEFAULT NULL,
-  `file_name` varchar(32) NOT NULL,
+  `file_name` varchar(32) NOT NULL DEFAULT '',
   `file_type` int(10) NOT NULL DEFAULT 0,
-  `file_directory` varchar(25) NOT NULL,
+  `file_directory` varchar(25) NOT NULL DEFAULT '',
   `description` text DEFAULT NULL,
   `tags` mediumtext NOT NULL,
   `category` varchar(200) NOT NULL DEFAULT '0',
@@ -675,7 +675,7 @@ CREATE TABLE `{tbl_prefix}video` (
   `embed_code` text NULL DEFAULT NULL,
   `refer_url` text NULL DEFAULT NULL,
   `downloads` bigint(255) NOT NULL DEFAULT 0,
-  `uploader_ip` varchar(20) NOT NULL,
+  `uploader_ip` varchar(20) NOT NULL DEFAULT '',
   `mass_embed_status` enum('no','pending','approved') NOT NULL DEFAULT 'no',
   `is_hd` enum('yes','no') NOT NULL DEFAULT 'no',
   `unique_embed_code` varchar(50) NOT NULL DEFAULT '',
@@ -1146,3 +1146,20 @@ ALTER TABLE `{tbl_prefix}video_files`
 
 ALTER TABLE `{tbl_prefix}video_views`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+CREATE TABLE `{tbl_prefix}video_resolution` (
+	`id_video_resolution` int(11) NOT NULL AUTO_INCREMENT,
+	`title` varchar(32) NOT NULL DEFAULT '',
+	`ratio` varchar(8) NOT NULL DEFAULT '',
+	`enabled` tinyint(1) NOT NULL DEFAULT 1,
+	`width` int(11) UNSIGNED NOT NULL DEFAULT 0,
+	`height` int(11) UNSIGNED NOT NULL DEFAULT 0,
+	`video_bitrate` int(10) UNSIGNED NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE `{tbl_prefix}video_resolution`
+	ADD PRIMARY KEY (`id_video_resolution`),
+	ADD UNIQUE KEY `title` (`title`);
+
+ALTER TABLE `{tbl_prefix}video_resolution`
+	MODIFY `id_video_resolution` int(11) NOT NULL AUTO_INCREMENT;

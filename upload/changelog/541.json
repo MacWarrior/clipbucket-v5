@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"113",
+  "revision":"114",
   "status":"dev",
   "detail":[
     {
@@ -65,6 +65,8 @@
         ,"Refactor video editing interface"
         ,"Fix Dashboard todo list"
         ,"Mass upload : fix video upload with Stay as mp4 option enabled"
+        ,"Refactor video resolutions settings"
+        ,"Add support for 1440p and 2160p (2K and 4K UHD resolutions)"
       ]
     }
   ,{

@@ -58,38 +58,23 @@ if (!function_exists('cb_video_js'))
 	    return $quality;
 	}
 
-
 	/*
 	* This Function is written to set default resolution for cb_vjs_player
 	*/
 	function get_cbvjs_quality_type($video_files){
 		if ($video_files)
 		{
-			if (!empty($video_files[240])){
-				$video_file = $video_files[240];
-			} else {
-				$video_file = $video_files[0];
-			}
-			$one_file = get_cbvjs_quality($video_file);
-			if (is_numeric($one_file)){
-				$cb_combo_res = True;
-			} else {
-				$cb_combo_res = False;
-			}
+            $res = [];
+            foreach ($video_files as $file) {
+                $res[] = get_cbvjs_quality($file);
+            }
+            $all_res = $res;
+            if (in_array('360', $all_res)){
+                $quality = '360';
+            } else {
+                $quality = 'low';
+            }
 
-			if ($cb_combo_res){
-				foreach ($video_files as $key => $file) {
-					$res[] = get_cbvjs_quality($file);
-				}
-				$all_res = $res;
-				if (in_array('360', $all_res)){
-					$quality = '360';
-				} else {
-					$quality = 'low';
-				}
-			} else {
-				$quality = "low";
-			}
 			return $quality;	
 		}
 		return False;

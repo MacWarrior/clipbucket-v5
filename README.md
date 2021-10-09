@@ -16,6 +16,8 @@ I <i>(<a href="https://github.com/MacWarrior">MacWarrior</a>)</i> have been work
 # Why <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a>
 - PHP 7.0 - 8.0+ compatibility
 - SQL strict mode compatibility
+- MySQL 8 compatibility
+- UHD video resolutions support
 - Updated libraries <i>(VideoJS, Smarty, amCharts, ...)</i>
 - Chromecast support
 - Easy installation scripts

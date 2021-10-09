@@ -45,12 +45,6 @@ if(isset($_POST['update']))
         ,'delete_mass_upload'
         ,'load_upload_form'
         ,'load_remote_upload_form'
-        ,'gen_240'
-        ,'gen_360'
-        ,'gen_480'
-        ,'gen_720'
-        ,'gen_1080'
-        ,'cb_combo_res'
         ,'send_comment_notification'
         ,'approve_video_notification'
         ,'smtp_auth'
@@ -154,13 +148,6 @@ if(isset($_POST['update']))
 
         'ffprobe_path',
         'media_info',
-
-        'cb_combo_res',
-        'gen_240',
-        'gen_360',
-        'gen_480',
-        'gen_720',
-        'gen_1080',
 
         'gravatars',
         'grp_categories',
@@ -277,13 +264,7 @@ if(isset($_POST['update']))
         'load_upload_form',
         'load_remote_upload_form',
 
-        'vbrate',
-        'vbrate_hd',
-        'vbrate_240',
-        'vbrate_360',
-        'vbrate_480',
-        'vbrate_720',
-        'vbrate_1080',
+
         'allow_conversion_1_percent',
 
         'mail_type',
@@ -374,11 +355,17 @@ if(isset($_POST['update']))
 
         $myquery->Set_Website_Details($field,$value);
     }
-    e("Website settings have been updated",'m');
+
+    $myquery->saveVideoResolutions($_POST);
+    e('Website settings have been updated','m');
 }
 
 $row = $myquery->Get_Website_Details();
 Assign('row',$row);
-subtitle("Website Configurations");
+
+$video_resolutions = $myquery->getVideoResolutions();
+Assign('video_resolutions',$video_resolutions);
+
+subtitle('Website Configurations');
 template_files('main.html');
 display_it();

@@ -21,19 +21,15 @@
 		return false;
     }
 
-    function get_config($input)
-	{
-		return config($input);
-	}
-
     /**
      * Function used to get player logo
      */
     function website_logo(): string
     {
         $logo_file = config('player_logo_file');
-        if($logo_file && file_exists(BASEDIR.'/images/'.$logo_file))
+        if($logo_file && file_exists(BASEDIR.'/images/'.$logo_file)){
             return '/images/'.$logo_file;
+        }
         return '/images/logo.png';
     }
 
@@ -186,62 +182,6 @@
             return $kviews;
         }
 		return false;
-    }
-
-	/**
-	 * Returns static URL for provided scheme
-	 *
-	 * @param        $sort
-	 * @param        $type
-	 * @param string $time
-	 *
-	 * @return string
-	 * @internal param $ : { string } { $sort } { type of sorting }
-	 * @internal param $ : { string } { $type } { type of sorting e.g photos, videos }
-	 *
-	 * $type parameter options are:
-	 *
-	 * videos
-	 * photos
-	 * channels
-	 * collections
-	 *
-	 * @internal param $ : { string } { $time } { this_month by default}
-	 *
-	 * $time parameter options are:
-	 *
-	 * today
-	 * yesterday
-	 * this_week
-	 * last_week
-	 * last_month
-	 * top_rated
-	 * last_year
-	 *
-	 * @since : 24th May, 2016 ClipBucket 2.8.1
-	 * @author : Saqib Razzaq
-	 */
-    function prettySort($sort, $type, $time = 'this_month')
-	{
-        global $Cbucket;
-        $seoMode = $Cbucket->configs['seo'];
-        switch ($sort)
-		{
-            case 'recent':
-                if ($seoMode == 'yes')
-                    return '/'.$type.'/all/All/most_recent/all_time/1&sorting=sort';
-				return '/'.$type.'.php?cat=all&sort=most_recent&time=all_time&page=1&seo_cat_name=All&sorting=sort';
-            case 'trending':
-                if ($seoMode == 'yes')
-                    return '/'.$type.'/all/All/most_viewed/all_time/1&sorting=sort';
-				return '/'.$type.'.php?cat=all&sort=most_viewed&time=all_time&page=1&seo_cat_name=All&sorting=sort';
-            case 'popular':
-                if ($seoMode == 'yes')
-                    return '/'.$type.'/all/All/top_rated/'.$time.'/1&timing=time';
-				return '/'.$type.'.php?cat=all&sort=top_rated&time='.$time.'&page=1&seo_cat_name=All&timing=time';
-            default:
-                return '/'.$type.'/all/All/most_recent/all_time/1&sorting=sort';
-        }
     }
 
     /**

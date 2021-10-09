@@ -1,7 +1,7 @@
 <?php
-define("BACK_END",TRUE);
-define("FRONT_END",FALSE);
-define("SLOGAN","Administration Panel");
+define('BACK_END',TRUE);
+define('FRONT_END',FALSE);
+define('SLOGAN','Administration Panel');
 
 //Admin Area
 $admin_area	= TRUE;
@@ -13,7 +13,7 @@ include('common.php');
 require_once('classes/mass_upload.class.php');
 require_once('classes/ads.class.php');
 
-global $db,$ClipBucket,$Cbucket,$Smarty;
+global $db,$ClipBucket,$Cbucket,$Smarty,$myquery;
 
 $cbmass 	= new mass_upload();
 $ads_query 	= new AdsManager();
@@ -25,14 +25,13 @@ if(isset($_POST['update_dp_options']))
     if(!is_numeric($_POST['admin_pages']) || $_POST['admin_pages']<1)
     {
         $num = '20';
-        $msg = "Please Type Number from 1 to Maximum";
+        $msg = 'Please Type Number from 1 to Maximum';
     } else {
         $num = $_POST['admin_pages'];
         $admin_pages = $num;
     }
 
-    $db->update(tbl("config"),array("value"),array($num)," name='admin_pages'");
-    $ClipBucket->configs = $Cbucket->configs = $Cbucket->get_configs();
+    $myquery->Set_Website_Details('admin_pages',$num);
 }
 
 define('RESULTS', $admin_pages);
@@ -40,11 +39,11 @@ Assign('admin_pages',$admin_pages);
 
 //Do No Edit Below This Line
 define('ADMIN_TEMPLATE', 'cb_2014');
-define('TEMPLATEDIR',BASEDIR.'/'.ADMINDIR.'/'.TEMPLATEFOLDER.'/'.ADMIN_TEMPLATE);
-define('SITETEMPLATEDIR',BASEDIR.'/'.TEMPLATEFOLDER.'/'.$row['template_dir']);
-define('TEMPLATEURL','/'.ADMINDIR.'/'.TEMPLATEFOLDER.'/'.ADMIN_TEMPLATE);
-define('TEMPLATEURLFO','/'.TEMPLATEFOLDER.'/'.$Cbucket->template);
-define('LAYOUT',TEMPLATEDIR.'/layout');
+define('TEMPLATEDIR',BASEDIR.DIRECTORY_SEPARATOR.ADMINDIR.DIRECTORY_SEPARATOR.TEMPLATEFOLDER.DIRECTORY_SEPARATOR.ADMIN_TEMPLATE);
+define('SITETEMPLATEDIR',BASEDIR.DIRECTORY_SEPARATOR.TEMPLATEFOLDER.DIRECTORY_SEPARATOR.$row['template_dir']);
+define('TEMPLATEURL',DIRECTORY_SEPARATOR.ADMINDIR.DIRECTORY_SEPARATOR.TEMPLATEFOLDER.DIRECTORY_SEPARATOR.ADMIN_TEMPLATE);
+define('TEMPLATEURLFO',DIRECTORY_SEPARATOR.TEMPLATEFOLDER.DIRECTORY_SEPARATOR.$Cbucket->template);
+define('LAYOUT',TEMPLATEDIR.DIRECTORY_SEPARATOR.'layout');
 define('TEMPLATE',$row['template_dir']);
 
 /*

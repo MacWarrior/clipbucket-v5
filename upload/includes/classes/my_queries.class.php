@@ -1,49 +1,25 @@
 <?php
-/**
-***************************************************************************************************
- * @Software    ClipBucket
- * @Authoer     ArslanHassan
- * @copyright	Copyright (c) 2007-2009 {@link http://www.clip-bucket.com}
- * @license		http://www.clip-bucket.com
- * @version		Lite
- * @since 		2007-10-15
- * @License		CBLA
- **************************************************************************************************
- This Source File Is Written For ClipBucket, Please Read its End User License First and Agree its
- Terms of use at http://www.opensource.org/licenses/attribution.php
- **************************************************************************************************
- Copyright (c) 2007-2008 Clip-Bucket.com. All rights reserved.
- **************************************************************************************************
-
- check_user
- check_email
- DeleteFlv
- DeleteOriginal
- DeleteThumbs
- DeleteVideoFiles
- UpdateVideo
- GetCategory
- RateVideo
- AddComment
- AddToFavourite
- FlagAsInappropriate
- DeleteFlag
- 
- **/
-
 define('STATIC_COMM',false);
 
 class myquery
 {
+    static $website_details = [];
+    static $video_resolutions = [];
+
 	function Set_Website_Details($name,$value){
 		global $db,$Cbucket;
-		$db->update(tbl("config"),array('value'),array($value)," name = '".$name."'");
-		$Cbucket->configs = $Cbucket->get_configs();
+		$db->update(tbl('config'),array('value'),array($value)," name = '".$name."'");
+        $Cbucket->configs[$name] = $value;
+        static::$website_details[$name] = $value;
 	}
 	
-	function Get_Website_Details()
-	{
-		$query = ("SELECT * FROM ".tbl("config"));
+	function Get_Website_Details(): array
+    {
+	    if( !empty(static::$website_details) ){
+	        return static::$website_details;
+        }
+
+		$query = 'SELECT * FROM '.tbl('config');
 		$data = db_select($query);
 
 		if($data){
@@ -58,8 +34,73 @@ class myquery
                 }
 			}
         }
+        static::$website_details = $data;
 		return $data;
 	}
+
+	public function getVideoResolutions(): array
+    {
+        if( !empty(static::$video_resolutions) ){
+            return static::$video_resolutions;
+        }
+
+        $sql_select = 'SELECT title, ratio, enabled, width, height, video_bitrate FROM '.tbl('video_resolution').' ORDER BY ratio, height DESC';
+        $results = db_select($sql_select);
+
+        static::$video_resolutions = [];
+        foreach( $results as $line ){
+            if( !isset(static::$video_resolutions[$line['ratio']]) ){
+                static::$video_resolutions[$line['ratio']] = [];
+            }
+            static::$video_resolutions[$line['ratio']][] = $line;
+        }
+
+        return static::$video_resolutions;
+    }
+
+    public function saveVideoResolutions($post)
+    {
+        global $db;
+
+        $video_resolutions = self::getVideoResolutions();
+        foreach($video_resolutions as $ratio){
+            foreach($ratio as $resolution){
+
+                if( isset($post['gen_'.$resolution['title']]) ){
+                    $post_value = $post['gen_'.$resolution['title']];
+                    $enabled = $post_value == 'yes' ? 1 : 0;
+                } else {
+                    $enabled = 0;
+                }
+
+                $db->update(tbl('video_resolution'),array('enabled'),array($enabled)," title = '".$resolution['title']."'");
+            }
+        }
+        static::$video_resolutions = [];
+    }
+
+    public function getEnabledVideoResolutions(): array
+    {
+        $sql_select = 'SELECT height, width FROM '.tbl('video_resolution').' WHERE enabled = 1';
+        $results = db_select($sql_select);
+
+        $data = [];
+        foreach( $results as $line ){
+            $data[$line['height']] = $line['width'];
+        }
+        return $data;
+    }
+
+    public function getVideoBitrateFromHeight($height): int
+    {
+        $sql_select = 'SELECT video_bitrate FROM '.tbl('video_resolution').' WHERE height = '.$height;
+        $results = db_select($sql_select);
+
+        if( empty($results) ){
+            return 0;
+        }
+        return $results[0]['video_bitrate'];
+    }
 
 	//Function Used to Check Weather Video Exists or not
 	function VideoExists($videoid){global $cbvid;return $cbvid->exists($videoid);}
@@ -123,14 +164,13 @@ class myquery
 				}
 			}
 
-			$db->Execute("DELETE FROM ".tbl("comments")." WHERE comment_id='$cid'");
+			$db->Execute('DELETE FROM '.tbl('comments')." WHERE comment_id='$cid'");
 
-			e(lang('usr_cmt_del_msg'),"m");
+			e(lang('usr_cmt_del_msg'),'m');
 			return $cdetails['type_id'];
-		} else {
-			e(lang('no_comment_del_perm'));
-			return false;
 		}
+        e(lang('no_comment_del_perm'));
+        return false;
 	}
 	
 	/**
@@ -139,32 +179,31 @@ class myquery
 	function spam_comment($cid)
 	{
 		global $db;
-		$comment = $this->get_comment($cid);	
-		$uid = user_id();
+		$comment = $this->get_comment($cid);
 		if($comment)
 		{
 			$voters = $comment['spam_voters'];
 		
-			$niddle = "|";
+			$niddle = '|';
 			$niddle .= userid();
-			$niddle .= "|";
+			$niddle .= '|';
 			$flag = strstr($voters, $niddle);
 			
-			if(!$comment)
+			if(!$comment){
 				e(lang('no_comment_exists'));
-			elseif(!userid())
+            } elseif(!userid()) {
 				e(lang('login_to_mark_as_spam'));
-			elseif( userid()==$comment['userid'] || (!userid() && $_SERVER['REMOTE_ADDR'] == $comment['comment_ip']))
+            } elseif( userid()==$comment['userid'] || (!userid() && $_SERVER['REMOTE_ADDR'] == $comment['comment_ip'])) {
 				e(lang('no_own_commen_spam'));
-			elseif(!empty($flag))
+            } elseif(!empty($flag)) {
 				e(lang('already_spammed_comment'));
-			else
-			{
-				if(empty($voters))
-					$voters .= "|";
+            }else {
+				if(empty($voters)){
+					$voters .= '|';
+                }
 				
 				$voters .= userid();
-				$voters.= "|";
+				$voters.= '|';
 				
 				$newscore = $comment['spam_votes']+1;
 				$db->update(tbl('comments'),array('spam_votes','spam_voters'),array($newscore,$voters)," comment_id='$cid'");
@@ -222,26 +261,26 @@ class myquery
 		$niddle .= "|";
 		$flag = strstr($voters, $niddle);
 		
-		if(!$comment)
+		if(!$comment){
 			e(lang('no_comment_exists'));
-		elseif(!userid())
+        } elseif(!userid()) {
 			e(lang('class_comment_err6'));
-		elseif(userid()==$comment['userid'] || (!userid() && $_SERVER['REMOTE_ADDR'] == $comment['comment_ip']))
+        } elseif(userid()==$comment['userid'] || (!userid() && $_SERVER['REMOTE_ADDR'] == $comment['comment_ip'])) {
 			e(lang('no_own_commen_rate'));
-		elseif(!empty($flag))
+        } elseif(!empty($flag)) {
 			e(lang('class_comment_err7'));
-		else
-		{
-			if(empty($voters))
-				$voters .= "|";
+        } else {
+			if(empty($voters)){
+				$voters .= '|';
+            }
 			
 			$voters .= userid();
-			$voters.= "|";
+			$voters.= '|';
 			
 			$newscore = $comment['vote']+$rate;
 			$db->update(tbl('comments'),array('vote','voters'),array($newscore,$voters)," comment_id='$cid'");
 						
-			e(lang('thanks_rating_comment'),"m");
+			e(lang('thanks_rating_comment'),'m');
 			return $newscore;			
 		}
 		
@@ -310,17 +349,17 @@ class myquery
 		{
 		    $userid = userid() ? userid() : 'NULL';
 			$db->insert(
-				tbl("comments"),
+				tbl('comments'),
 				array('type,comment,type_id,userid,date_added,parent_id,anonym_name,anonym_email','comment_ip','type_owner_id'),
 				array($type,$comment,$obj_id,$userid,NOW(),$reply_to,($name ?? ''),($email ?? ''),$_SERVER['REMOTE_ADDR'],$obj_owner)
 			);
 			$cid = $db->insert_id();
 
 			if( userid() ){
-			    $db->update(tbl("users"),array("total_comments"),array("|f|total_comments+1")," userid='".userid()."'");
+			    $db->update(tbl('users'),array('total_comments'),array('|f|total_comments+1')," userid='".userid()."'");
             }
 			
-			e(lang("grp_comment_msg"),"m");
+			e(lang('grp_comment_msg'),'m');
 
 			$own_details = $userquery->get_user_field_only($obj_owner,'email');
 
@@ -339,7 +378,7 @@ class myquery
 				'success'=>'yes',
 				'action_obj_id' => $cid,
 				'action_done_id' => $obj_id,
-				'details'=> "made a comment",
+				'details'=> 'made a comment',
 				'username'=>$username,
 				'useremail'=>$useremail
             ];

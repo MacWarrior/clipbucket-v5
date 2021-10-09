@@ -4,9 +4,9 @@
 <script>
     function display_tab(divId)
     {
-        $('ul.nav-tabs li').removeClass('active');
-        $('ul.nav-tabs li > a[href=\''+divId+'\'').parent().addClass('active');
-        $('div.tab-content div').removeClass('active');
+        $('ul.nav-tabs:not(.resolutions) li').removeClass('active');
+        $('ul.nav-tabs:not(.resolutions) li > a[href=\''+divId+'\'').parent().addClass('active');
+        $('div.tab-content div:not(.resolutions)').removeClass('active');
         $(divId).addClass('active');
         setHash(divId);
     }
@@ -19,85 +19,24 @@
     $(document).ready(function ()
 	{
 	    if( window.location.hash === '' ){
-            setHash($('ul.nav-tabs li:first a').attr('href'));
+            setHash($('ul.nav-tabs:not(.resolutions) li:first a').attr('href'));
 		} else {
             display_tab(window.location.hash);
 		}
 
-        $('ul.nav-tabs li a').click(function(){
+        $('ul.nav-tabs:not(.resolutions) li a').click(function(){
         	setHash($(this).attr('href'));
 		});
 
-        $('#convProfile').change(function() {
-            var value = $("#convProfile option:selected").val();
-            if (value > 0)
-                setVdoSettings(value);
-        });
 
-        function setVdoSettings(inType)
-		{
-            switch (inType)
-			{
-                default:
-                    var convConfigs = {
-                        'video_codec': 'libx264',
-                        'audio_codec': 'aac',
-                        'vrate': '25',
-                        'vbrate': '512000',
-                        'srate': '22050',
-                        'sbrate': '128000',
-                    };
-                    break;
-
-                case '2':
-                    var convConfigs = {
-                        'video_codec': 'flv',
-                        'audio_codec': 'libmp3lame',
-                        'vrate': '25',
-                        'vbrate': '512000',
-                        'srate': '22050',
-                        'sbrate': '128000',
-                    };
-                    break;
-
-                case '3':
-                    var convConfigs = {
-                        'video_codec': 'libx264',
-                        'audio_codec': 'aac',
-                        'vrate': '30',
-                        'vbrate': '640000',
-                        'srate': '44100',
-                        'sbrate': '320000',
-                    };
-                    break;
-
-                case '4':
-                    var convConfigs = {
-                        'video_codec': 'flv',
-                        'audio_codec': 'libmp3lame',
-                        'vrate': '25',
-                        'vbrate': '256000',
-                        'srate': '22050',
-                        'sbrate': '96000',
-                    };
-                    break;
+        // Hack : Bootstrap 3.X won't work with tabs in tabs
+        $('ul.nav-tabs.resolutions a').click(function(){
+            if( !$(this).parent().hasClass('active') ){
+                var href = $(this).attr('href');
+                $('#'+href).siblings().removeClass('active');
+                $('#'+href).addClass('active');
             }
-
-            $.each(convConfigs, function (index, value) {
-                $('#' + index).val(value);
-            });
-        }
-
-		$("#cb_combo_res_all").on("click", function () {
-			$(".res_options").show();
-			$(".vbrate_sdhd").hide();
-			$(".vbrate_all").show();
-		});
-		$("#cb_combo_res_sdhd").on("click", function () {
-			$(".res_options").hide();
-			$(".vbrate_all").hide();
-			$(".vbrate_sdhd").show();
-		});
+        });
 
         $("#mail_type").change(function() {
             if( $(this).val() == 'mail' ){
@@ -126,53 +65,53 @@
 	<input name="basedir" value="{$row.baseurl}" type="hidden"/>
 	<div class="row">
 		<div class="col-md-12">
-			<ul class="nav nav-tabs">
-				<li class="active">
-					<a data-toggle="tab" href="#config_general">
-						<h8>General</h8>
-					</a>
-				</li>
-				<li>
-					<a data-toggle="tab" href="#config_upload">
-						<h8>Upload & Conversion</h8>
-					</a>
-				</li>
-				<li>
-					<a data-toggle="tab" href="#config_users">
-						<h8>Users</h8>
-					</a>
-				</li>
-				<li>
-					<a data-toggle="tab" href="#config_emails">
-						<h8>Emails</h8>
-					</a>
-				</li>
-				<li>
-					<a data-toggle="tab" href="#config_videos">
-						<h8>Videos</h8>
-					</a>
-				</li>
-				<li>
-					<a data-toggle="tab" href="#config_comments">
-						<h8>Comments</h8>
-					</a>
-				</li>
-				<li>
-					<a data-toggle="tab" href="#config_ratings">
-						<h8>Ratings</h8>
-					</a>
-				</li>
-				<li>
-					<a data-toggle="tab" href="#config_listings">
-						<h8>Listings</h8>
-					</a>
-				</li>
-				<li>
-					<a data-toggle="tab" href="#config_proxy">
-						<h8>Proxy</h8>
-					</a>
-				</li>
-			</ul>
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a data-toggle="tab" href="#config_general">
+                        <h8>General</h8>
+                    </a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#config_upload">
+                        <h8>Upload & Conversion</h8>
+                    </a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#config_users">
+                        <h8>Users</h8>
+                    </a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#config_emails">
+                        <h8>Emails</h8>
+                    </a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#config_videos">
+                        <h8>Videos</h8>
+                    </a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#config_comments">
+                        <h8>Comments</h8>
+                    </a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#config_ratings">
+                        <h8>Ratings</h8>
+                    </a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#config_listings">
+                        <h8>Listings</h8>
+                    </a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#config_proxy">
+                        <h8>Proxy</h8>
+                    </a>
+                </li>
+            </ul>
 			<div class="tab-content">
 				<div id="config_general" class="tab-pane active">
 					<div class="row">
@@ -639,7 +578,6 @@
 								</div>
 							</div>
 							<hr/>
-
 							<div class="row">
 								<div class="col-md-4">
 									<label class="nowrap" title="Video title size">Video title size</label>
@@ -735,6 +673,7 @@
 							<hr/>
 
 						</div>
+
 						<div class="col-md-4">
 							<div class="row">
 								<div class="col-md-6">
@@ -851,203 +790,156 @@
 							<hr/>
 
 						</div>
+
 						<div class="col-md-4">
-							<div class="alert alert-info">
-								<div class="row">
-									<div class="col-md-4">
-										<label class="nowrap" title="Video resolutions">Video resolutions</label>
-									</div>
-									<div class="col-md-2">
-										<label class="nowrap" for="cb_combo_res_all">All</label>
-									</div>
-									<div class="col-md-2">
-										<input value="yes" name="cb_combo_res" id="cb_combo_res_all" {if $row.cb_combo_res=='yes'}checked{/if} type="radio" class="ace ace-switch ace-switch-5"/>
-										<span class="lbl"></span>
-									</div>
-									<div class="col-md-2">
-										<label class="nowrap" for="cb_combo_res_sdhd">SD HD</label>
-									</div>
-									<div class="col-md-2">
-										<input value="no" name="cb_combo_res" id="cb_combo_res_sdhd" {if $row.cb_combo_res=='no'}checked{/if} type="radio" class="ace ace-switch ace-switch-5"/>
-										<span class="lbl"></span>
-									</div>
-								</div>
-								<hr/>
-								<div class="row res_options" {if $row.cb_combo_res=='no'}style="display:none;"{/if}>
-									<div class="col-md-2">
-										<label class="nowrap" for="gen_240" title="240p">240p</label>
-									</div>
-									<div class="col-md-2">
-										<input value="yes" name="gen_240" id="gen_240" {if $row.gen_240=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-										<span class="lbl"></span>
-									</div>
-									<div class="col-md-2">
-										<label class="nowrap" for="gen_360" title="360p">360p</label>
-									</div>
-									<div class="col-md-2">
-										<input value="yes" name="gen_360" id="gen_360" {if $row.gen_360=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-										<span class="lbl"></span>
-									</div>
-									<div class="col-md-2">
-										<label class="nowrap" for="gen_480" title="480p">480p</label>
-									</div>
-									<div class="col-md-2">
-										<input value="yes" name="gen_480" id="gen_480" {if $row.gen_480=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-										<span class="lbl"></span>
-									</div>
-								</div>
-								<hr class="res_options" {if $row.cb_combo_res=='no'}style="display:none;"{/if}/>
-								<div class="row res_options" {if $row.cb_combo_res=='no'}style="display:none;"{/if}>
-									<div class="col-md-2">
-										<label class="nowrap" for="gen_720" title="720p">720p</label>
-									</div>
-									<div class="col-md-2">
-										<input value="yes" name="gen_720" id="gen_720" {if $row.gen_720=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-										<span class="lbl"></span>
-									</div>
-									<div class="col-md-2">
-										<label class="nowrap" for="gen_1080" title="1080p">1080p</label>
-									</div>
-									<div class="col-md-2">
-										<input value="yes" name="gen_1080" id="gen_1080" {if $row.gen_1080=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-										<span class="lbl"></span>
-									</div>
+                            <div class="alert alert-info">
+                                <div class="row">
+                                    <ul class="nav nav-tabs resolutions">
+                                        <li style=width:130px;">
+                                            Video Resolutions
+                                        </li>
+                                        {$first = true}
+                                        {foreach from=$video_resolutions key=key item=ratio}
+                                        <li class="{if $first}active{/if}">
+                                            <a data-toggle="tab" href="gen_{str_replace('/','_',$key)}">
+                                                <h8>{$key}</h8>
+                                            </a>
+                                        </li>
+                                            {$first = false}
+                                        {/foreach}
 
-								</div>
-								<hr class="res_options" {if $row.cb_combo_res=='no'}style="display:none;"{/if}/>
-								<div class="row res_options" {if $row.cb_combo_res=='no'}style="display:none;"{/if}>
-									<div class="col-md-6">
-										<label class="nowrap" for="allow_conversion_1_percent" title="Allow 1% difference"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Allow a 1% lower difference between expected video height/width and current video height/width"/> Allow 1% difference</label>
-									</div>
-									<div class="col-md-6 row-size">
-										<input value="yes" name="allow_conversion_1_percent" id="allow_conversion_1_percent" {if $row.allow_conversion_1_percent=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-										<span class="lbl"></span>
-									</div>
+                                    </ul>
+                                    <div class="tab-content">
+                                    {$first = true}
+                                    {foreach from=$video_resolutions key=key item=ratio}
+                                        <div id="gen_{str_replace('/','_',$key)}" class="tab-pane resolutions {if $first}active{/if}">
+                                            {$count = 0}
+                                            {foreach from=$ratio item=resolution}
+                                                {if $count == 0}
+                                            <div class="row">
+                                                {/if}
+                                                <div class="col-md-2">
+                                                    <label class="nowrap" for="gen_{$resolution.title}" title="{$resolution.title}">{$resolution.title}</label>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input value="yes" name="gen_{$resolution.title}" id="gen_{$resolution.title}" {if {$resolution.enabled}=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                    <span class="lbl"></span>
+                                                </div>
+                                                {$count = $count+1}
+                                                {if $count == 3}
+                                            </div>
+                                            <hr/>
+                                                    {$count = 0}
+                                                {/if}
+                                            {/foreach}
+                                            {if $count != 0}
+                                            </div>
+                                            {/if}
+                                        </div>
+                                    {$first = false}
+                                    {/foreach}
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <ul class="nav nav-tabs resolutions">
+                                        <li style=width:130px;">
+                                            Video Bitrates
+                                        </li>
+                                        {$first = true}
+                                        {foreach from=$video_resolutions key=key item=ratio}
+                                        <li class="{if $first}active{/if}">
+                                        <a data-toggle="tab" href="bitrates_{str_replace('/','_',$key)}">
+                                            <h8>{$key}</h8>
+                                        </a>
+                                        </li>
+                                        {$first = false}
+                                        {/foreach}
+                                    </ul>
 
-								</div>
-								<hr class="res_options" {if $row.cb_combo_res=='no'}style="display:none;"{/if}/>
+                                    <div class="tab-content">
+                                    {$first = true}
+                                    {foreach from=$video_resolutions key=key item=ratio}
+                                        <div id="bitrates_{str_replace('/','_',$key)}" class="tab-pane resolutions {if $first}active{/if}">
+                                            {$count = 0}
+                                            {foreach from=$ratio item=resolution}
+                                            {if $count == 0}
+                                            <div class="row">
+                                                {/if}
+                                                <div class="col-md-3">
+                                                    <label class="nowrap" for="vbrate_{$resolution.title}" title="{$resolution.title}">{$resolution.title}</label>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input class="form-control" name="vbrate_{$resolution.title}" id="vbrate_{$resolution.title}" value="{$resolution.video_bitrate}"/>
+                                                </div>
+                                                {$count = $count+1}
+                                                {if $count == 2}
+                                            </div>
+                                            <hr/>
+                                                    {$count = 0}
+                                                {/if}
+                                            {/foreach}
+                                            {if $count != 0}
+                                                </div>
+                                            {/if}
+                                        </div>
+                                    {$first = false}
+                                    {/foreach}
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label class="nowrap" for="video_codec" title="Video Codec">Video Codec</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input class="form-control" name="video_codec" id="video_codec" value="{$row.video_codec}"/>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="nowrap" for="audio_codec" title="Audio Codec">Audio Codec</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input class="form-control" name="audio_codec" id="audio_codec" value="{$row.audio_codec}"/>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label class="nowrap" for="srate" title="Audio Rate">Audio Rate</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input class="form-control" name="srate" id="srate" value="{$row.srate}"/>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="nowrap" for="sbrate" title="Audio Bitrate">Audio Bitrate</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input class="form-control" name="sbrate" id="sbrate" value="{$row.sbrate}"/>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label class="nowrap" for="vrate" title="Video Rate">Video Rate</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input class="form-control" name="vrate" id="vrate" value="{$row.vrate}"/>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="nowrap" for="allow_conversion_1_percent" title="Allow 1% difference"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Allow a 1% lower difference between expected video height/width and current video height/width"/> Allow 1% difference</label>
+                                    </div>
+                                    <div class="col-md-6 row-size">
+                                        <input value="yes" name="allow_conversion_1_percent" id="allow_conversion_1_percent" {if $row.allow_conversion_1_percent=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                        <span class="lbl"></span>
+                                    </div>
+                                </div>
 							</div>
-							<div class="alert alert-info">
-								<div class="row">
-									<div class="col-md-6">
-										<label class="nowrap" for="convProfile" title="Conversion profile"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Change only if you have good knowledge in video conversion"> Conversion profile</label>
-									</div>
-									<div class="col-md-6">
-										<select class="form-control" name="convProfile" id="convProfile">
-											<option value="0">Choose from list</option>
-											<option {if $smarty.post.convProfile=='1'}selected{/if} value="1">H.264, AAC - Youtube like</option>
-											<option {if $smarty.post.convProfile=='3'}selected{/if} value="3">High Configurations with H264</option>
-											<option {if $smarty.post.convProfile=='2'}selected{/if} value="2">Normal Configurations</option>
-											<option {if $smarty.post.convProfile=='4'}selected{/if} value="4">Low Configurations</option>
-										</select>
-									</div>
-								</div>
-								<hr/>
-								<div class="row">
-									<div class="col-md-3">
-										<label class="nowrap" for="video_codec" title="Video Codec">Video Codec</label>
-									</div>
-									<div class="col-md-3">
-										<input class="form-control" name="video_codec" id="video_codec" value="{$row.video_codec}"/>
-									</div>
-									<div class="col-md-3">
-										<label class="nowrap" for="audio_codec" title="Audio Codec">Audio Codec</label>
-									</div>
-									<div class="col-md-3">
-										<input class="form-control" name="audio_codec" id="audio_codec" value="{$row.audio_codec}"/>
-									</div>
-								</div>
-								<hr/>
-								<div class="row">
-									<div class="col-md-3">
-										<label class="nowrap" for="srate" title="Audio Rate">Audio Rate</label>
-									</div>
-									<div class="col-md-3">
-										<input class="form-control" name="srate" id="srate" value="{$row.srate}"/>
-									</div>
-									<div class="col-md-3">
-										<label class="nowrap" for="sbrate" title="Audio Bitrate">Audio Bitrate</label>
-									</div>
-									<div class="col-md-3">
-										<input class="form-control" name="sbrate" id="sbrate" value="{$row.sbrate}"/>
-									</div>
-								</div>
-								<hr/>
-								<div class="row">
-									<div class="col-md-4">
-										<label class="nowrap" for="vrate" title="Video Rate">Video Bitrates</label>
-									</div>
-									<div class="col-md-2">
-										<label><span class="glyphicon glyphicon-arrow-down"></span></label>
-									</div>
-									<div class="col-md-3">
-										<label class="nowrap" for="vrate" title="Video Rate">Video Rate</label>
-									</div>
-									<div class="col-md-3">
-										<input class="form-control" name="vrate" id="vrate" value="{$row.vrate}"/>
-									</div>
-								</div>
-								<hr/>
-								<div class="row vbrate_sdhd" {if $row.cb_combo_res=='yes'}style="display:none;"{/if}>
-									<div class="col-md-3">
-										<label class="nowrap" for="vbrate" title="SD">SD</label>
-									</div>
-									<div class="col-md-3">
-										<input class="form-control" name="vbrate" id="vbrate" value="{$row.vbrate}"/>
-									</div>
-									<div class="col-md-3">
-										<label class="nowrap" for="vbrate_hd" title="HD">HD</label>
-									</div>
-									<div class="col-md-3">
-										<input class="form-control" name="vbrate_hd" id="vbrate_hd" value="{$row.vbrate_hd}"/>
-									</div>
-								</div>
-
-								<div class="row vbrate_all" {if $row.cb_combo_res=='no'}style="display:none;"{/if}>
-									<div class="col-md-3">
-										<label class="nowrap" for="vbrate_240" title="240p">240p</label>
-									</div>
-									<div class="col-md-3">
-										<input class="form-control" name="vbrate_240" id="vbrate_240" value="{$row.vbrate_240}"/>
-									</div>
-									<div class="col-md-3">
-										<label class="nowrap" for="vbrate_360" title="360p">360p</label>
-									</div>
-									<div class="col-md-3">
-										<input class="form-control" name="vbrate_360" id="vbrate_360" value="{$row.vbrate_360}"/>
-									</div>
-								</div>
-								<hr class="vbrate_all" {if $row.cb_combo_res=='no'}style="display:none;"{/if}/>
-								<div class="row vbrate_all" {if $row.cb_combo_res=='no'}style="display:none;"{/if}>
-									<div class="col-md-3">
-										<label class="nowrap" for="vbrate_480" title="480p">480p</label>
-									</div>
-									<div class="col-md-3">
-										<input class="form-control" name="vbrate_480" id="vbrate_480" value="{$row.vbrate_480}"/>
-									</div>
-									<div class="col-md-3">
-										<label class="nowrap" for="vbrate_720" title="720p">720p</label>
-									</div>
-									<div class="col-md-3">
-										<input class="form-control" name="vbrate_720" id="vbrate_720" value="{$row.vbrate_720}"/>
-									</div>
-								</div>
-								<hr class="vbrate_all" {if $row.cb_combo_res=='no'}style="display:none;"{/if}/>
-								<div class="row vbrate_all" {if $row.cb_combo_res=='no'}style="display:none;"{/if}>
-									<div class="col-md-3">
-										<label class="nowrap" for="vbrate_1080" title="1080p">1080p</label>
-									</div>
-									<div class="col-md-3">
-										<input class="form-control" name="vbrate_1080" id="vbrate_1080" value="{$row.vbrate_1080}"/>
-									</div>
-								</div>
-
-								<hr/>
-							</div>
-
 						</div>
 					</div>
-				</div>
+                </div>
 				<div id="config_emails" class="tab-pane">
 					<div class="row">
 						<div class="col-md-4">
@@ -1670,7 +1562,6 @@
 
 					</div>
 				</div>
-
 				<div id="config_proxy" class="tab-pane">
 					<div class="row">
 						<div class="col-md-3">
