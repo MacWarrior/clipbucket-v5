@@ -1148,7 +1148,7 @@ ALTER TABLE `{tbl_prefix}video_views`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 CREATE TABLE `{tbl_prefix}video_resolution` (
-	`id_video_resolution` int(11) NOT NULL AUTO_INCREMENT,
+	`id_video_resolution` int(11) NOT NULL,
 	`title` varchar(32) NOT NULL DEFAULT '',
 	`ratio` varchar(8) NOT NULL DEFAULT '',
 	`enabled` tinyint(1) NOT NULL DEFAULT 1,

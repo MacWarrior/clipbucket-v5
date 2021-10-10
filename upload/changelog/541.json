@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"115",
+  "revision":"116",
   "status":"dev",
   "detail":[
     {
@@ -12,7 +12,7 @@
         ,"Add config option to overwrite DB config values"
         ,"Remove unused files"
         ,"Update FR translations"
-        ,"Fix SQL structure <i>#167</i>"
+        ,"Fix SQL structure <i>#167</i>, <i>#184</i>"
         ,"Update readme"
         ,"Implement proxy settings"
         ,"Fix boolean configurations saving"
