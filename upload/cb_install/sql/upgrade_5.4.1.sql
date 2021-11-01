@@ -164,3 +164,9 @@ DELETE FROM `{tbl_prefix}config` WHERE name IN('gen_240','gen_360','gen_480','ge
 
 INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 	('player_default_resolution', '360');
+
+ALTER TABLE `{tbl_prefix}user_profile`
+	MODIFY COLUMN `profile_video` int(255) NOT NULL DEFAULT 0,
+	MODIFY COLUMN `profile_item` varchar(25) NOT NULL DEFAULT '',
+	MODIFY COLUMN `rating` tinyint(2) NOT NULL DEFAULT 0,
+	MODIFY COLUMN `rated_by` int(150) NOT NULL DEFAULT 0;

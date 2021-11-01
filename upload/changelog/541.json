@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"117",
+  "revision":"118",
   "status":"dev",
   "detail":[
     {
@@ -86,6 +86,7 @@
         ,"Photo upload : Fix photo upload <i>#174</i>, <i>#177</i>, <i>#178</i>"
         ,"Fix video temporary used on upload <i>#176</i>"
         ,"Fix video upload with Stay as mp4 option enabled"
+        ,"Fix subscription"
       ]
     }
   ,{

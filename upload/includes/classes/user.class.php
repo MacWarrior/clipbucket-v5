@@ -3419,6 +3419,10 @@ class userquery extends CBCategory{
 			$query_field[] = 'doj';
 			$query_val[] = $now;
 
+            // Featured video
+            $query_field[] = 'featured_video';
+            $query_val[] = '';
+
 			/**
 			 * A VERY IMPORTANT PART OF
 			 * OUR SIGNUP SYSTEM IS
@@ -3463,12 +3467,48 @@ class userquery extends CBCategory{
 			}
 
 			//Finalizing Query
-			$query .= ")";
+			$query .= ')';
 			$db->Execute($query);
 			$insert_id = $db->insert_id();
 
 			$db->update(tbl($this->dbtbl['users']),array('password'),array(pass_code($array['password'], $insert_id))," userid='".$insert_id."'");
-			$db->insert(tbl($userquery->dbtbl['user_profile']), array('userid'), array($insert_id));
+
+
+            $fields_list = [];
+            $fields_data = [];
+
+            $fields_list[] = 'userid';
+            $fields_data[] = $insert_id;
+
+            // Specify default values for user_profile fields without one
+            $fields_list[] = 'profile_title';
+            $fields_data[] = '';
+            $fields_list[] = 'profile_desc';
+            $fields_data[] = '';
+            $fields_list[] = 'featured_video';
+            $fields_data[] = '';
+            $fields_list[] = 'about_me';
+            $fields_data[] = '';
+            $fields_list[] = 'schools';
+            $fields_data[] = '';
+            $fields_list[] = 'occupation';
+            $fields_data[] = '';
+            $fields_list[] = 'companies';
+            $fields_data[] = '';
+            $fields_list[] = 'hobbies';
+            $fields_data[] = '';
+            $fields_list[] = 'fav_movies';
+            $fields_data[] = '';
+            $fields_list[] = 'fav_music';
+            $fields_data[] = '';
+            $fields_list[] = 'fav_books';
+            $fields_data[] = '';
+            $fields_list[] = 'background';
+            $fields_data[] = '';
+            $fields_list[] = 'voters';
+            $fields_data[] = '';
+
+			$db->insert(tbl($userquery->dbtbl['user_profile']), $fields_list, $fields_data);
 
 			if(!has_access('admin_access',true) && EMAIL_VERIFICATION && $send_signup_email) {
 				global $cbemail;
