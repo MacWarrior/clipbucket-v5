@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"116",
+  "revision":"117",
   "status":"dev",
   "detail":[
     {
@@ -104,6 +104,7 @@
         ,"Update PHP configuration in installation scripts"
         ,"Add missing lshw in installation scripts"
         ,"Add CentOS 7 (PHP 7.4 + MySQL 8) installation script"
+        ,"Move development.dev file to temp directory"
       ]
     }
   ,{

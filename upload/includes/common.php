@@ -7,13 +7,13 @@ define('COOKIE_TIMEOUT',86400*1); // 1
 define('GARBAGE_TIMEOUT',COOKIE_TIMEOUT);
 define("REMBER_DAYS",7);
 
-define("DEV_INGNORE_SYNTAX",TRUE);
+define('DEV_INGNORE_SYNTAX',TRUE);
 
 //Create an empty development.dev file in includes folder
 //To Activate Development mode
 
-if(file_exists(dirname(__FILE__).'/development.dev')) {
-    define("DEVELOPMENT_MODE",true);
+if(file_exists(dirname(__FILE__).'/../files/temp/development.dev')) {
+    define('DEVELOPMENT_MODE',true);
     $__devmsgs = array(
         'insert_queries'=>array(),
         'select_queries'=>array(),
@@ -21,20 +21,20 @@ if(file_exists(dirname(__FILE__).'/development.dev')) {
         'delete_queries'=>array(),
         'count_queries'=>array(),
         'execute_queries'=>array(),
-        'insert'=>"0",
-        'select'=>"0",
-        'update'=>"0",
-        'delete'=>"0",
-        'count'=>"0",
-        'execute'=>"0",
-        'total_queries'=>"0",
-        'total_query_exec_time'=>"0",
-        'total_memory_used'=>"0",
+        'insert'=>'0',
+        'select'=>'0',
+        'update'=>'0',
+        'delete'=>'0',
+        'count'=>'0',
+        'execute'=>'0',
+        'total_queries'=>'0',
+        'total_query_exec_time'=>'0',
+        'total_memory_used'=>'0',
         'expensive_query'=>'',
         'cheapest_query'=>''
     );
 } else {
-    define("DEVELOPMENT_MODE",false);
+    define('DEVELOPMENT_MODE',false);
 }
 
 if(!@$in_bg_cron) {

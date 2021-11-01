@@ -1,6 +1,6 @@
 <?php
-define("THIS_PAGE","signup");
-define("PARENT_PAGE","signup");
+define('THIS_PAGE','signup');
+define('PARENT_PAGE','signup');
 
 require 'includes/config.inc.php';
 global $Cbucket,$userquery,$eh;
@@ -42,7 +42,7 @@ if(isset($_POST['signup'])){
             if (empty($Cbucket->configs['email_verification'])) {
                 // login user and redirect to home page
                 $userquery->login_as_user($udetails['userid']);
-                header("Location: ".BASEURL);
+                header('Location: '.BASEURL);
             } else {
                 assign('mode','signup_success');
             }
@@ -76,7 +76,7 @@ if(!isset($_POST['login']) && !isset($_POST['signup'])){
     }
 }
 
-subtitle(lang("signup"));
+subtitle(lang('signup'));
 //Displaying The Template
 template_files('signup.html');
 display_it();
