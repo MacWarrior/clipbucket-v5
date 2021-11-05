@@ -5261,8 +5261,6 @@ class userquery extends CBCategory{
 	 * @param $channel_user
 	 *
 	 * @return string : { string } { s = sent, r = recieved, f = friends }
-	 * @since : 15th April, 2016, ClipBucket 2.8.1
-	 * @author : Saqib Razzaq
 	 */
 	function friendship_status($logged_in_user, $channel_user): string
     {
@@ -5287,6 +5285,7 @@ class userquery extends CBCategory{
 				return 'f'; // friends
 			}
 		}
+        return '';
 	}
 
 }

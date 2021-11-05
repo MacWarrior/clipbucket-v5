@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"118",
+  "revision":"119",
   "status":"dev",
   "detail":[
     {
@@ -87,6 +87,7 @@
         ,"Fix video temporary used on upload <i>#176</i>"
         ,"Fix video upload with Stay as mp4 option enabled"
         ,"Fix subscription"
+        ,"Fix user channel display"
       ]
     }
   ,{

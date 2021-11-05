@@ -78,8 +78,8 @@ class Clipbucket_db
 	 *
 	 * @return array : { array } { $data } { array of selected data }
 	 */
-    function _select($query)
-	{
+    function _select($query): array
+    {
 		$this->ping();
 
         if ( in_dev() )
@@ -118,16 +118,19 @@ class Clipbucket_db
 	 *
 	 * @return array : { array } { $data } { array of selected data }
 	 */
-    function select($tbl,$fields='*', $cond=false, $limit=false, $order=false, $ep=false)
-	{
+    function select($tbl,$fields='*', $cond=false, $limit=false, $order=false, $ep=false): array
+    {
         $query_params = '';
 
-		if($cond)
+		if($cond){
 			$query_params .= ' WHERE '.$cond;
-        if($order)
+        }
+        if($order){
             $query_params .= ' ORDER BY '.$order;
-        if($limit)
+        }
+        if($limit){
             $query_params .= ' LIMIT '.$limit;
+        }
 
        $query = 'SELECT '.$fields.' FROM '.$tbl.$query_params.' '.$ep;
     
