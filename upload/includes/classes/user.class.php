@@ -310,8 +310,7 @@ class userquery extends CBCategory{
 		}
 		
 		//Error Logging
-		if(!empty($msg))
-		{
+		if(!empty($msg)) {
 			//Logging Action
 			$log_array['success'] = 'no';
 			$log_array['details'] = $msg[0]['val'];
@@ -412,7 +411,7 @@ class userquery extends CBCategory{
 		
 		if(!$this->login_check($access)) {
 			if($redirect==TRUE){
-				redirect_to(signup_link);
+				redirect_to(cblink(array('name'=>'signup'), true));
             }
 			return false;
 		}
@@ -430,8 +429,8 @@ class userquery extends CBCategory{
 	function get_user_with_pass($username, $pass)
 	{
 		global $db;
-		$results = $db->select(tbl("users"),
-							   "userid,email,level,usr_status,user_session_key,user_session_code",
+		$results = $db->select(tbl('users'),
+							   'userid,email,level,usr_status,user_session_key,user_session_code,ban_status',
 							   "(username='$username' OR userid='$username') AND password='$pass'");
 		if(count($results) > 0){
 			return $results[0];
@@ -442,7 +441,7 @@ class userquery extends CBCategory{
 	function get_user_id($username)
 	{
 		global $db;
-		$results = $db->select(tbl("users"), "userid", "(username='$username' OR userid='$username')");
+		$results = $db->select(tbl('users'), 'userid', "(username='$username' OR userid='$username')");
 		if(count($results) > 0){
 			return $results[0];
         }

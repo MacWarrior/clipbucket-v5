@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"122",
+  "revision":"123",
   "status":"dev",
   "detail":[
     {
@@ -90,6 +90,7 @@
         ,"Fix user channel display"
         ,"Fix friends listing"
         ,"Use more translations"
+        ,"Fix banned user login"
       ]
     }
   ,{

@@ -107,7 +107,7 @@
     "usr_dob_err": "Please Select Date Of Birth",
     "usr_ament_err": "Sorry, you need to agree to the terms of use and privacy policy to create an account",
     "usr_reg_err": "Sorry, Registrations Are Temporarily Not Allowed, Please Try Again Later",
-    "usr_ban_err": "User account is banned, please contact website administrator",
+    "usr_ban_err": "Votre compte est banni, veuillez contacter l'administrateur du site",
     "usr_login_err": "Username and Password Didn't Match",
     "usr_sadmin_msg": "Super Admin Has Been Updated",
     "usr_pass_msg": "Your Password Has Been Changed",
