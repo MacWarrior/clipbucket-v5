@@ -265,9 +265,7 @@
 		$(".cb-live-background").attr("src",'/images/loading.png');
 		up.start();
 	  });
-	  uploader.bind('UploadComplete', function(plupload, files, response){
-		
-	  });
+	  uploader.bind('UploadComplete', function(plupload, files, response){});
 
 	  uploader.bind("FileUploaded", function(plupload, files, response){
 		var response = $.parseJSON(response.response);
@@ -284,10 +282,8 @@
 	  });
 	});
 	$("#coverContainer").hover(function(e){
-		//$("#changeCover").removeClass("sr-only");
 		$("#changeCover").show();
 	}, function(e){
-	  // $("#changeCover").addClass("sr-only");
 		$("#changeCover").hide();
 	});
 	$("#channelVoteUp, #channelVoteDown").one({
