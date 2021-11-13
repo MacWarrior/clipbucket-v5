@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"124",
+  "revision":"125",
   "status":"dev",
   "detail":[
     {
@@ -67,6 +67,7 @@
         ,"Mass upload : fix video upload with Stay as mp4 option enabled"
         ,"Refactor video resolutions settings"
         ,"Add support for 1440p and 2160p (2K and 4K UHD resolutions)"
+        ,"Banned flag is now displayed on banned users"
       ]
     }
   ,{
