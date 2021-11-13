@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"126",
+  "revision":"127",
   "status":"dev",
   "detail":[
     {
@@ -93,6 +93,7 @@
         ,"Use more translations"
         ,"Fix banned user login"
         ,"Banned users channel page can only be viewed by admins"
+        ,"Fix default video thumb display"
       ]
     }
   ,{

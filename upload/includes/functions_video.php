@@ -170,15 +170,17 @@
             $thumbDir = implode('/', explode('-', array_shift($justDate)));
         }
         if(substr($thumbDir, (strlen($thumbDir) - 1)) !== '/'){
-            $thumbDir .= '/';
+            $thumbDir .= DIRECTORY_SEPARATOR;
         }
 
         $file_dir = '';
         if(isset($vdetails['file_name']) && $thumbDir) {
            $file_dir = DIRECTORY_SEPARATOR.$thumbDir;
         }
-        
-        $filepath = $file_dir.$vdetails['file_name'].'-'.$size.'-'.$vdetails['default_thumb'].'.jpg';
+
+        $thumb_file_number = str_pad($vdetails['default_thumb'], strlen(config('num_thumbs')), '0', STR_PAD_LEFT);
+
+        $filepath = $file_dir.$vdetails['file_name'].'-'.$size.'-'.$thumb_file_number.'.jpg';
         if( !$multi && !$count && $size && isset($vdetails['default_thumb']) && file_exists(THUMBS_DIR.$filepath) ){
 			return THUMBS_URL.$filepath;
 		}
