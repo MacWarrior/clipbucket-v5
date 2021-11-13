@@ -1,16 +1,11 @@
 <?php
-/* 
- ****************************************************************
- | Copyright (c) 2007-2010 Clip-Bucket.com. All rights reserved.
- | @ Author	   : ArslanHassan									
- | @ Software  : ClipBucket , © PHPBucket.com					
- ****************************************************************
-*/
-
-define("THIS_PAGE","edit_video");
-define("PARENT_PAGE",'videos');
+define('THIS_PAGE','edit_video');
+define('PARENT_PAGE','videos');
 
 require 'includes/config.inc.php';
+
+global $userquery,$pages,$cbvid,$Cbucket,$Upload,$eh;
+
 $userquery->logincheck();
 $pages->page_redir();
 
@@ -43,6 +38,6 @@ if($vdetails['userid'] != $userid)
 	assign('v',$vdetails);
 }
 
-subtitle(lang("vdo_edit_vdo"));
+subtitle(lang('vdo_edit_vdo'));
 template_files('edit_video.html');
 display_it();

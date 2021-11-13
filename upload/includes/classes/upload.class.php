@@ -663,7 +663,7 @@ class Upload
 
         $datecreated = DateTime::createFromFormat('Y-m-d', $date_recorded);
         if( $datecreated ){
-            $date_recorded = $datecreated->format(DATE_FORMAT);
+            $datecreated = $datecreated->format(DATE_FORMAT);
         }
 		
 		return array(
