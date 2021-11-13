@@ -1,35 +1,29 @@
 <?php
-	/*
-	 ******************************************************************
-	 | Copyright (c) 2007-2010 Clip-Bucket.com. All rights reserved.
-	 | @ Author 	: ArslanHassan
-	 | @ Software 	: ClipBucket , © PHPBucket.com
-	 ******************************************************************
-	*/
-	define("THIS_PAGE",'manage_channels');
-	define("PARENT_PAGE","channels");
+define('THIS_PAGE','manage_channels');
+define('PARENT_PAGE','channels');
 
-	require 'includes/config.inc.php';
-	$userquery->logincheck();
+require 'includes/config.inc.php';
 
-	$udetails = $userquery->get_user_details(userid());
-	assign('user',$udetails);
-	assign('p',$userquery->get_user_profile($udetails['userid']));
+global $userquery;
 
-	$mode = $_GET['mode'];
-	if($mode = "request" && isset($_GET['confirm']))
-	{
-		$confirm = mysql_clean($_GET['confirm']);
-		$userquery->confirm_request($confirm);
-	}
+$userquery->logincheck();
 
-	if($mode = "delete" && isset($_GET['userid']))
-	{
-		$userid = mysql_clean($_GET['userid']);
-		$userquery->remove_contact($userid);
-	}
+$udetails = $userquery->get_user_details(userid());
+assign('user',$udetails);
+assign('p',$userquery->get_user_profile($udetails['userid']));
 
-	assign("mode","manage");
-	subtitle(lang("user_manage_contacts"));
-	template_files('manage_contacts.html');
-	display_it();
+$mode = $_GET['mode'];
+if($mode = 'request' && isset($_GET['confirm'])) {
+    $confirm = mysql_clean($_GET['confirm']);
+    $userquery->confirm_request($confirm);
+}
+
+if($mode = 'delete' && isset($_GET['userid'])) {
+    $userid = mysql_clean($_GET['userid']);
+    $userquery->remove_contact($userid);
+}
+
+assign('mode','manage');
+subtitle(lang('user_manage_contacts'));
+template_files('manage_contacts.html');
+display_it();

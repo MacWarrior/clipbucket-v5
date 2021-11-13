@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"119",
+  "revision":"120",
   "status":"dev",
   "detail":[
     {
@@ -88,6 +88,7 @@
         ,"Fix video upload with Stay as mp4 option enabled"
         ,"Fix subscription"
         ,"Fix user channel display"
+        ,"Fix friends listing"
       ]
     }
   ,{

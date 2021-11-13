@@ -2007,7 +2007,7 @@
 		assign('params',$array);
 
 		global $userquery;
-		$contacts = $userquery->get_contacts(userid(),0);
+		$contacts = $userquery->get_contacts(userid());
 		assign('contacts', $contacts);
 		Template('blocks/common/share.html');
 	}
@@ -3499,15 +3499,15 @@
 		global $Cbucket;
 		switch($type)
 		{
-			case "before":
-				if(file_exists('files/temp/install.me') && !file_exists('includes/dbconnect.php') && !file_exists('includes/config.php') ) {
+			case 'before':
+				if(file_exists('files/temp/install.me') && !file_exists('files/temp/install.me.not') ) {
 					header('Location: '.get_server_url().'/cb_install');
 					die();
 				}
 				break;
 			
-			case "after":
-				if(file_exists('files/temp/install.me')) {
+			case 'after':
+				if(file_exists('files/temp/install.me') && !file_exists('files/temp/install.me.not') ) {
 					$Cbucket->configs['closed'] = 1;
 				}
 				break;

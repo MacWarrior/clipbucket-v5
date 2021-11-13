@@ -1,4 +1,4 @@
-{assign var=friends value=$userquery->get_contacts($user.userid,0)}
+{assign var=friends value=$userquery->get_contacts($user.userid)}
 {if $friends}
 	{foreach from=$friends item=friend}
    		{assign var=user_detail value=$friend}
@@ -37,10 +37,10 @@
             </div> 
 
         </td>
-   {/foreach}
-   {else}
-   <div class="alert alert-info" role="alert">{lang code="no_friends_in_list"}</div>
-{/if}
+        {/foreach}
+    {else}
+    <div class="alert alert-info" role="alert">{lang code="no_friends_in_list"}</div>
+    {/if}
 
 {assign var=friends value=$userquery->get_pending_contacts($user.userid,0)}
 {if $friends}

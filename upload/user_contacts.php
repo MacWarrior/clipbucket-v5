@@ -23,7 +23,6 @@ if($udetails) {
 	{
 		case "contacts":
 		default:
-			//assign("u",$udetails);
 			assign('p',$userquery->get_user_profile($udetails['userid']));
 			assign('mode',$mode);
 			assign('friends',$userquery->get_contacts($udetails['userid'],0,"yes"));

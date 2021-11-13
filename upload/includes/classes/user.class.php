@@ -1076,8 +1076,8 @@ class userquery extends CBCategory{
 		if(!$count_only) {
 			$result = $db->select(tbl('contacts,users'),
 			tbl('contacts.contact_userid,contacts.confirmed,contacts.request_type ,users.*'),
-			tbl('contacts.userid')."='$uid' AND ".tbl('users.userid').'='.tbl('contacts.contact_userid').'
-			$query AND '.tbl('contacts').".contact_group_id='$group' ");
+			tbl('contacts.userid')."='$uid' AND ".tbl('users.userid').'='.tbl('contacts.contact_userid').$query.'
+			 AND '.tbl('contacts').".contact_group_id='$group' ");
 			
 			if(count($result)>0){
 				return $result;
