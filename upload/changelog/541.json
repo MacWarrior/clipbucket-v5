@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"120",
+  "revision":"121",
   "status":"dev",
   "detail":[
     {
@@ -89,6 +89,7 @@
         ,"Fix subscription"
         ,"Fix user channel display"
         ,"Fix friends listing"
+        ,"Use more translations"
       ]
     }
   ,{
