@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"123",
+  "revision":"124",
   "status":"dev",
   "detail":[
     {
@@ -91,6 +91,7 @@
         ,"Fix friends listing"
         ,"Use more translations"
         ,"Fix banned user login"
+        ,"Banned users channel page can only be viewed by admins"
       ]
     }
   ,{
