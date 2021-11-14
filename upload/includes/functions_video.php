@@ -178,11 +178,18 @@
            $file_dir = DIRECTORY_SEPARATOR.$thumbDir;
         }
 
-        $thumb_file_number = str_pad($vdetails['default_thumb'], strlen(config('num_thumbs')), '0', STR_PAD_LEFT);
+        if( !$multi && !$count && $size && isset($vdetails['default_thumb']) ){
+            $thumb_file_number = str_pad($vdetails['default_thumb'], strlen(config('num_thumbs')), '0', STR_PAD_LEFT);
+            $filepath = $file_dir.$vdetails['file_name'].'-'.$size.'-'.$thumb_file_number.'.jpg';
 
-        $filepath = $file_dir.$vdetails['file_name'].'-'.$size.'-'.$thumb_file_number.'.jpg';
-        if( !$multi && !$count && $size && isset($vdetails['default_thumb']) && file_exists(THUMBS_DIR.$filepath) ){
-			return THUMBS_URL.$filepath;
+            if( file_exists(THUMBS_DIR.$filepath) ){
+                return THUMBS_URL.$filepath;
+            }
+
+            $filepath = $file_dir.$vdetails['file_name'].'-'.$size.'-'.$vdetails['default_thumb'].'.jpg';
+            if( file_exists(THUMBS_DIR.$filepath) ){
+			    return THUMBS_URL.$filepath;
+            }
 		}
 
         $glob = THUMBS_DIR.DIRECTORY_SEPARATOR.$file_dir.$vdetails['file_name'].'*';
