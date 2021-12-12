@@ -1,6 +1,6 @@
 {
   "version":"5.4.1",
-  "revision":"128",
+  "revision":"129",
   "status":"dev",
   "detail":[
     {
@@ -124,7 +124,7 @@
   ,{
       "title":"Player",
       "description":[
-        "Update VideoJS to version 7.15.4"
+        "Update VideoJS to version 7.17.3"
         ,"Fix VideoJS player informations"
         ,"Fix VideoJS player thumbnails sync"
         ,"Update cast_sender lib"
