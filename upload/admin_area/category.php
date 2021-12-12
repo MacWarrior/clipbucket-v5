@@ -1,5 +1,5 @@
 <?php
-global $userquery, $pages, $cbvid);
+global $userquery, $pages, $cbvid;
 require_once '../includes/admin_config.php';
 $userquery->admin_login_check();
 $userquery->login_check('video_moderation');
