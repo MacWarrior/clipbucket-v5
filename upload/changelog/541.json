@@ -1,7 +1,7 @@
 {
   "version":"5.4.1",
-  "revision":"131",
-  "status":"dev",
+  "revision":"132",
+  "status":"stable",
   "detail":[
     {
       "title": "Miscellaneous",
