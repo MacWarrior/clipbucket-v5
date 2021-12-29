@@ -85,25 +85,9 @@ if(!empty($tmp_file))
         Preparing the configurations for video conversion from database
     */
     $configs = array(
-        'use_video_rate' 	 => true,
-        'use_video_bit_rate' => true,
-        'use_audio_rate' 	 => true,
-        'use_audio_bit_rate' => true,
-        'use_audio_codec'    => true,
-        'use_video_codec' 	 => true,
         'format' 			 => 'mp4',
-        'video_codec'		 => config('video_codec'),
-        'audio_codec'		 => config('audio_codec'),
-        'audio_rate'		 => config('srate'),
-        'audio_bitrate'		 => config('sbrate'),
-        'video_rate'		 => config('vrate'),
-        'normal_res' 		 => config('normal_resolution'),
-        'high_res' 			 => config('high_resolution'),
-        'max_video_duration' => config('max_video_duration'),
         'resize'			 => 'max',
-        'outputPath' 		 => $fileDir,
-        'chromecast_fix' 	 => config('chromecast_fix'),
-        'force_8bits' 	     => config('force_8bits')
+        'outputPath' 		 => $fileDir
     );
 
     $configLog = '';
@@ -143,7 +127,7 @@ if(!empty($tmp_file))
     $vidDetails = $ffmpeg->get_file_info();
     if( !config('force_8bits') || $vidDetails['bits_per_raw_sample'] <= 8 ){
         $db->update(tbl('video'), array('bits_color'), array($vidDetails['bits_per_raw_sample']), " file_name = '{$outputFileName}'");
-    } else if( config('force_8bits') && $vidDetails['bits_per_raw_sample'] > 8 ){
+    } else if( config('force_8bits') ){
         $db->update(tbl('video'), array('bits_color'), array(8), " file_name = '{$outputFileName}'");
     }
 

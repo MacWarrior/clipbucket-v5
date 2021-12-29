@@ -134,8 +134,7 @@ class API extends REST
          $request['limit'] = $get_limit;
          if (VERSION < 3)
          $request['user'] = $request['userid'];
-         
-         //$request['order'] = tbl('video.'.$request['order']);
+
          $vids = $request['video_id'];
          if ($vids) 
          {

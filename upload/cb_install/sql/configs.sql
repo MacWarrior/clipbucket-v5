@@ -17,7 +17,6 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'r_height', ''),
 	(NULL, 'r_width', ''),
 	(NULL, 'resize', ''),
-	(NULL, 'keep_original', '1'),
 	(NULL, 'activation', ''),
 	(NULL, 'email_verification', '1'),
 	(NULL, 'allow_registeration', '1'),
@@ -221,7 +220,9 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'proxy_port', ''),
 	(NULL, 'proxy_username', ''),
 	(NULL, 'proxy_password', ''),
-	(NULL, 'player_default_resolution', '360');
+	(NULL, 'player_default_resolution', '360'),
+	(NULL, 'keep_audio_tracks', '1'),
+	(NULL, 'keep_subtitles', '1');
 
 INSERT INTO `{tbl_prefix}languages` (`language_id`, `language_code`, `language_name`, `language_regex`, `language_active`, `language_default`) VALUES
 	(1, 'en', 'English', '/^en/i', 'yes', 'yes'),

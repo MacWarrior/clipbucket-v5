@@ -674,3 +674,10 @@ ALTER TABLE `{tbl_prefix}user_profile`
 ALTER TABLE `{tbl_prefix}_video`
 	MODIFY COLUMN `datecreated` DATE NOT NULL DEFAULT CURRENT_TIMESTAMP;
 UPDATE `{tbl_prefix}_video` SET datecreated = '1000-01-01' WHERE datecreated = '0000-00-00';
+
+-- upgrade_5.5.0.sql
+DELETE FROM `{tbl_prefix}config` WHERE name IN('keep_original');
+
+INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
+	('keep_audio_tracks', '1'),
+	('keep_subtitles', '1');

@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"2",
+  "revision":"3",
   "status":"dev",
   "detail":[
     {
@@ -8,12 +8,16 @@
       "description":[
         "Remove Re-Convertable tag from video manager"
         ,"Fix video reconvert function"
+        ,"Update website configuration interface"
+        ,"Add option to keep audio tracks in video files"
+        ,"Add option to keep subtitles in video files"
       ]
     },
     {
       "title": "Miscellaneous",
       "description": [
         "Cleanup code"
+        ,"Remove unused config"
       ]
     }
   ]

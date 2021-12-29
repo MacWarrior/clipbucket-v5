@@ -72,7 +72,12 @@
                 </li>
                 <li>
                     <a data-toggle="tab" href="#config_upload">
-                        <h8>Upload & Conversion</h8>
+                        <h8>Upload</h8>
+                    </a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#config_conversion">
+                        <h8>Conversion</h8>
                     </a>
                 </li>
                 <li>
@@ -529,7 +534,177 @@
 						</div>
 					</div>
 				</div>
-				<div id="config_upload" class="tab-pane">
+                <div id="config_upload" class="tab-pane">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="max_video_duration" title="Max video duration"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="In minutes"> Max video duration</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input class="form-control" name="max_video_duration" id="max_video_duration" value="{$row.max_video_duration}"/>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="nowrap" title="Video title size">Video title size</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="nowrap" for="min_video_title" title="Min">Min</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input class="form-control" name="min_video_title" id="min_video_title" value="{$row.min_video_title}"/>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="nowrap" for="max_video_title" title="Max">Max</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input class="form-control" name="max_video_title" id="max_video_title" value="{$row.max_video_title}"/>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="nowrap" title="Video description size">Video description size</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="nowrap" for="min_video_desc" title="Min">Min</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input class="form-control" name="min_video_desc" id="min_video_desc" value="{$row.min_video_desc}"/>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="nowrap" for="max_video_desc" title="Max">Max</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input class="form-control" name="max_video_desc" id="max_video_desc" value="{$row.max_video_desc}"/>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="nowrap" title="Video tags size">Video tags size</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="nowrap" for="min_video_tags" title="Min">Min</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input class="form-control" name="min_video_tags" id="min_video_tags" value="{$row.min_video_tags}"/>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="nowrap" for="max_video_tags" title="Max">Max</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input class="form-control" name="max_video_tags" id="max_video_tags" value="{$row.max_video_tags}"/>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="youtube_api_key" title="YouTube API Key">YouTube API Key</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input class="form-control" name="youtube_api_key" id="youtube_api_key" value="{$row.youtube_api_key}"/>
+                                </div>
+                            </div>
+                            <hr/>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="activation" title="Video Activation"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="If left unchecked, all videos will be published directly. If checked, admin will have to approve videos before they appear on website"> Video Activation</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="1" name="activation" id="activation" {if $row.activation=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="photo_activation" title="Photo Activation"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="If left unchecked, all photos will be published directly. If checked, admin will have to approve videos before they appear on website"> Photo Activation</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="1" name="photo_activation" id="photo_activation" {if $row.photo_activation=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="load_upload_form" title="Enable file upload">Enable file upload</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="yes" name="load_upload_form" id="load_upload_form" {if $row.load_upload_form=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="load_remote_upload_form" title="Enable remote upload">Enable remote upload</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="yes" name="load_remote_upload_form" id="load_remote_upload_form" {if $row.load_remote_upload_form=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <label class="nowrap" for="feedsSection" title="Enable feeds">Enable feeds</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input value="yes" name="feedsSection" id="feedsSection" {if $row.feedsSection=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <label class="nowrap" for="show_collapsed_checkboxes" title="Collapse video categories">Collapse video categories</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input value="1" name="show_collapsed_checkboxes" id="show_collapsed_checkboxes" {if $row.show_collapsed_checkboxes=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <label class="nowrap" for="use_subs" title="Use Sub-Categories">Use Sub-Categories</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input value="1" name="use_subs" id="use_subs" {if $row.use_subs=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <label class="nowrap" for="delete_mass_upload" title="Delete Mass upload"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Delete original files once uploaded from mass upload"> Delete Mass upload</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="yes" name="delete_mass_upload" id="delete_mass_upload" {if $row.delete_mass_upload=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="nowrap" for="allowed_video_types" title="Allowed Video extensions"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Sperate by commas"> Allowed Video extensions</label>
+                                    <textarea class="form-control" name="allowed_video_types" id="allowed_video_types" cols="45" rows="5">{$row.allowed_video_types}</textarea>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="nowrap" for="allowed_photo_types" title="Allowed Photo extensions"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Sperate by commas"> Allowed Photo extensions</label>
+                                    <textarea class="form-control" name="allowed_photo_types" id="allowed_photo_types" cols="45" rows="5">{$row.allowed_photo_types}</textarea>
+                                </div>
+                            </div>
+                            <hr/>
+                        </div>
+                    </div>
+                </div>
+				<div id="config_conversion" class="tab-pane">
 					<div class="row">
 						<div class="col-md-4">
 							<div class="row">
@@ -550,6 +725,24 @@
 								</div>
 							</div>
 							<hr/>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="ffmpegpath" title="FFmpeg Path"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="FFmpeg Binary Path"> FFmpeg Path</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input class="form-control" name="ffmpegpath" id="ffmpegpath" value="{$row.ffmpegpath}"/>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="ffprobe_path" title="FFprobe Path"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="FFprobe Binary Path"> FFprobe Path</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input class="form-control" name="ffprobe_path" id="ffprobe_path" value="{$row.ffprobe_path}"/>
+                                </div>
+                            </div>
+                            <hr/>
 							<div class="row">
 								<div class="col-md-6">
 									<label class="nowrap" for="max_conversion" title="Max videos to convert at once"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Video conversion use lot of ressources, be aware of what's you're doing !"> Max videos to convert at once</label>
@@ -561,232 +754,113 @@
 							<hr/>
 							<div class="row">
 								<div class="col-md-6">
-									<label class="nowrap" for="max_video_duration" title="Max video duration"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="In minutes"> Max video duration</label>
-								</div>
-								<div class="col-md-6">
-									<input class="form-control" name="max_video_duration" id="max_video_duration" value="{$row.max_video_duration}"/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-6">
-									<label class="nowrap" for="num_thumbs" title="Max video duration">Number of video thumbs</label>
+									<label class="nowrap" for="num_thumbs" title="Number of video thumbs">Number of video thumbs</label>
 								</div>
 								<div class="col-md-6">
 									<input class="form-control" name="num_thumbs" id="num_thumbs" value="{$row.num_thumbs}"/>
 								</div>
 							</div>
 							<hr/>
-							<div class="row">
-								<div class="col-md-4">
-									<label class="nowrap" title="Video title size">Video title size</label>
-								</div>
-								<div class="col-md-2">
-									<label class="nowrap" for="min_video_title" title="Min">Min</label>
-								</div>
-								<div class="col-md-2">
-									<input class="form-control" name="min_video_title" id="min_video_title" value="{$row.min_video_title}"/>
-								</div>
-								<div class="col-md-2">
-									<label class="nowrap" for="max_video_title" title="Max">Max</label>
-								</div>
-								<div class="col-md-2">
-									<input class="form-control" name="max_video_title" id="max_video_title" value="{$row.max_video_title}"/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-4">
-									<label class="nowrap" title="Video description size">Video description size</label>
-								</div>
-								<div class="col-md-2">
-									<label class="nowrap" for="min_video_desc" title="Min">Min</label>
-								</div>
-								<div class="col-md-2">
-									<input class="form-control" name="min_video_desc" id="min_video_desc" value="{$row.min_video_desc}"/>
-								</div>
-								<div class="col-md-2">
-									<label class="nowrap" for="max_video_desc" title="Max">Max</label>
-								</div>
-								<div class="col-md-2">
-									<input class="form-control" name="max_video_desc" id="max_video_desc" value="{$row.max_video_desc}"/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-4">
-									<label class="nowrap" title="Video tags size">Video tags size</label>
-								</div>
-								<div class="col-md-2">
-									<label class="nowrap" for="min_video_tags" title="Min">Min</label>
-								</div>
-								<div class="col-md-2">
-									<input class="form-control" name="min_video_tags" id="min_video_tags" value="{$row.min_video_tags}"/>
-								</div>
-								<div class="col-md-2">
-									<label class="nowrap" for="max_video_tags" title="Max">Max</label>
-								</div>
-								<div class="col-md-2">
-									<input class="form-control" name="max_video_tags" id="max_video_tags" value="{$row.max_video_tags}"/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-6">
-									<label class="nowrap" for="youtube_api_key" title="YouTube API Key">YouTube API Key</label>
-								</div>
-								<div class="col-md-6">
-									<input class="form-control" name="youtube_api_key" id="youtube_api_key" value="{$row.youtube_api_key}"/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-6">
-									<label class="nowrap" for="feedsSection" title="Enable feeds">Enable feeds</label>
-								</div>
-								<div class="col-md-6">
-									<input value="yes" name="feedsSection" id="feedsSection" {if $row.feedsSection=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-6">
-									<label class="nowrap" for="show_collapsed_checkboxes" title="Collapse video categories">Collapse video categories</label>
-								</div>
-								<div class="col-md-6">
-									<input value="1" name="show_collapsed_checkboxes" id="show_collapsed_checkboxes" {if $row.show_collapsed_checkboxes=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-6">
-									<label class="nowrap" for="use_subs" title="Use Sub-Categories">Use Sub-Categories</label>
-								</div>
-								<div class="col-md-6">
-									<input value="1" name="use_subs" id="use_subs" {if $row.use_subs=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
-							</div>
-							<hr/>
-
-						</div>
-
-						<div class="col-md-4">
-							<div class="row">
-								<div class="col-md-6">
-									<label class="nowrap" for="ffmpegpath" title="FFmpeg Path"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="FFmpeg Binary Path"> FFmpeg Path</label>
-								</div>
-								<div class="col-md-6">
-									<input class="form-control" name="ffmpegpath" id="ffmpegpath" value="{$row.ffmpegpath}"/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-6">
-									<label class="nowrap" for="ffprobe_path" title="FFprobe Path"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="FFprobe Binary Path"> FFprobe Path</label>
-								</div>
-								<div class="col-md-6">
-									<input class="form-control" name="ffprobe_path" id="ffprobe_path" value="{$row.ffprobe_path}"/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-6">
-									<label class="nowrap" for="max_upload_size" title="Max upload file size">
-										<img src="{$imageurl}/help.png" alt="In Mb" class="tipsy_tip" title="
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="max_upload_size" title="Max upload file size">
+                                        <img src="{$imageurl}/help.png" alt="In Mb" class="tipsy_tip" title="
 										Default PHP Max Upload size is {$upload_max_size} and &#13;Post max size is {$post_max_size}. &#13;If you set max upload file size larger than this, it will be override by default, however, if set lower than default, it will work fine.">
-										 Max upload file size</label>
-								</div>
-								<div class="col-md-6">
-									<input class="form-control" name="max_upload_size" id="max_upload_size" value="{$row.max_upload_size}"/>
-								</div>
+                                        Max upload file size</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input class="form-control" name="max_upload_size" id="max_upload_size" value="{$row.max_upload_size}"/>
+                                </div>
+                            </div>
+                            <hr/>
+						</div>
+						<div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="nowrap" for="video_codec" title="Video Codec">Video Codec</label>
+                                </div>
+                                <div class="col-md-3">
+                                    <input class="form-control" name="video_codec" id="video_codec" value="{$row.video_codec}"/>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="nowrap" for="audio_codec" title="Audio Codec">Audio Codec</label>
+                                </div>
+                                <div class="col-md-3">
+                                    <input class="form-control" name="audio_codec" id="audio_codec" value="{$row.audio_codec}"/>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="nowrap" for="srate" title="Audio Rate">Audio Rate</label>
+                                </div>
+                                <div class="col-md-3">
+                                    <input class="form-control" name="srate" id="srate" value="{$row.srate}"/>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="nowrap" for="sbrate" title="Audio Bitrate">Audio Bitrate</label>
+                                </div>
+                                <div class="col-md-3">
+                                    <input class="form-control" name="sbrate" id="sbrate" value="{$row.sbrate}"/>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="nowrap" for="vrate" title="Video Rate">Video Rate</label>
+                                </div>
+                                <div class="col-md-3">
+                                    <input class="form-control" name="vrate" id="vrate" value="{$row.vrate}"/>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="stay_mp4" title="Stay MP4 as it is"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Only use this option if you only want MP4 file uplad : this option disable video conversion and keep mp4 files as they are uploaded"> Stay MP4 as it is</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="yes" name="stay_mp4" id="stay_mp4" {if $row.stay_mp4=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+							<div class="row">
+                                <div class="col-md-10">
+                                    <label class="nowrap" for="chromecast_fix" title="Chromecast compatibility" class="nowrap"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Force audio conversion to Stereo"> Chromecast compatibility</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="1" name="chromecast_fix" id="chromecast_fix" {if $row.chromecast_fix=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
 							</div>
 							<hr/>
 							<div class="row">
-								<div class="col-md-4">
-									<label class="nowrap" for="stay_mp4" title="Stay MP4 as it is"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Only use this option if you only want MP4 file uplad : this option disable video conversion and keep mp4 files as they are uploaded"> Stay MP4 as it is</label>
-								</div>
-								<div class="col-md-2 row-size">
-									<input value="yes" name="stay_mp4" id="stay_mp4" {if $row.stay_mp4=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
-								<div class="col-md-4">
-									<label class="nowrap" for="activation" title="Video Activation"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="If left unchecked, all videos will be published directly. If checked, admin will have to approve videos before they appear on website"> Video Activation</label>
-								</div>
-								<div class="col-md-2 row-size">
-									<input value="1" name="activation" id="activation" {if $row.activation=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-4">
-									<label class="nowrap" for="chromecast_fix" title="Chromecast compatibility" class="nowrap"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Force audio conversion to Stereo"> Chromecast compatibility</label>
-								</div>
-								<div class="col-md-2 row-size">
-									<input value="1" name="chromecast_fix" id="chromecast_fix" {if $row.chromecast_fix=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
-								<div class="col-md-4">
-									<label class="nowrap" for="photo_activation" title="Photo Activation"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="If left unchecked, all photos will be published directly. If checked, admin will have to approve videos before they appear on website"> Photo Activation</label>
-								</div>
-								<div class="col-md-2 row-size">
-									<input value="1" name="photo_activation" id="photo_activation" {if $row.photo_activation=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-4">
+								<div class="col-md-10">
 									<label class="nowrap" for="force_8bits" title="Improve compatibility"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Force video to 8bits colors maximum"> Improve compatibility</label>
 								</div>
 								<div class="col-md-2 row-size">
 									<input value="1" name="force_8bits" id="force_8bits" {if $row.force_8bits=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 									<span class="lbl"></span>
 								</div>
-								<div class="col-md-4">
-									<label class="nowrap" for="delete_mass_upload" title="Delete Mass upload"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Delete original files once uploaded from mass uploazd"> Delete Mass upload</label>
-								</div>
-								<div class="col-md-2 row-size">
-									<input value="yes" name="delete_mass_upload" id="delete_mass_upload" {if $row.delete_mass_upload=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
 							</div>
 							<hr/>
-
-							<div class="row">
-								<div class="col-md-4">
-									<label class="nowrap" for="load_upload_form" title="Enable file upload">Enable file upload</label>
-								</div>
-								<div class="col-md-2 row-size">
-									<input value="yes" name="load_upload_form" id="load_upload_form" {if $row.load_upload_form=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
-								<div class="col-md-4">
-									<label class="nowrap" for="load_remote_upload_form" title="Enable remote upload">Enable remote upload</label>
-								</div>
-								<div class="col-md-2 row-size">
-									<input value="yes" name="load_remote_upload_form" id="load_remote_upload_form" {if $row.load_remote_upload_form=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-12">
-									<label class="nowrap" for="allowed_video_types" title="Allowed Video extensions"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Sperate by commas"> Allowed Video extensions</label>
-									<textarea class="form-control" name="allowed_video_types" id="allowed_video_types" cols="45" rows="5">{$row.allowed_video_types}</textarea>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-12">
-									<label class="nowrap" for="allowed_photo_types" title="Allowed Photo extensions"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Sperate by commas"> Allowed Photo extensions</label>
-									<textarea class="form-control" name="allowed_photo_types" id="allowed_photo_types" cols="45" rows="5">{$row.allowed_photo_types}</textarea>
-								</div>
-							</div>
-							<hr/>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <label class="nowrap" for="keep_audio_tracks" title="Keep audio tracks"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Conserve all audio tracks in video files"> Keep audio tracks</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="1" name="keep_audio_tracks" id="keep_audio_tracks" {if $row.keep_audio_tracks=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <label class="nowrap" for="keep_subtitles" title="Keep subtitles"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Conserve subtitles in video files"> Keep subtitles</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="1" name="keep_subtitles" id="keep_subtitles" {if $row.keep_subtitles=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
 
 						</div>
 
@@ -888,49 +962,10 @@
                                 </div>
                                 <hr/>
                                 <div class="row">
-                                    <div class="col-md-3">
-                                        <label class="nowrap" for="video_codec" title="Video Codec">Video Codec</label>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <input class="form-control" name="video_codec" id="video_codec" value="{$row.video_codec}"/>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="nowrap" for="audio_codec" title="Audio Codec">Audio Codec</label>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <input class="form-control" name="audio_codec" id="audio_codec" value="{$row.audio_codec}"/>
-                                    </div>
-                                </div>
-                                <hr/>
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <label class="nowrap" for="srate" title="Audio Rate">Audio Rate</label>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <input class="form-control" name="srate" id="srate" value="{$row.srate}"/>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="nowrap" for="sbrate" title="Audio Bitrate">Audio Bitrate</label>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <input class="form-control" name="sbrate" id="sbrate" value="{$row.sbrate}"/>
-                                    </div>
-                                </div>
-                                <hr/>
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <label class="nowrap" for="vrate" title="Video Rate">Video Rate</label>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <input class="form-control" name="vrate" id="vrate" value="{$row.vrate}"/>
-                                    </div>
-                                </div>
-                                <hr/>
-                                <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-10">
                                         <label class="nowrap" for="allow_conversion_1_percent" title="Allow 1% difference"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Allow a 1% lower difference between expected video height/width and current video height/width"/> Allow 1% difference</label>
                                     </div>
-                                    <div class="col-md-6 row-size">
+                                    <div class="col-md-2 row-size">
                                         <input value="yes" name="allow_conversion_1_percent" id="allow_conversion_1_percent" {if $row.allow_conversion_1_percent=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                         <span class="lbl"></span>
                                     </div>

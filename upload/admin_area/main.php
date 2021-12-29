@@ -81,7 +81,8 @@ if(isset($_POST['update']))
         ,'own_collection_rating'
         ,'channel_rating'
         ,'own_channel_rating'
-
+        ,'keep_audio_tracks'
+        ,'keep_subtitles'
     ];
 
     $rows = array(
@@ -102,6 +103,8 @@ if(isset($_POST['update']))
         'photo_activation',
         'chromecast_fix',
         'force_8bits',
+        'keep_audio_tracks',
+        'keep_subtitles',
 
         'background_color',
         'background_upload',
@@ -160,7 +163,6 @@ if(isset($_POST['update']))
         'hq_output',
 
         'keywords',
-        'keep_original',
         'keep_mp4_as_is',
 
         'r_height',

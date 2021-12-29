@@ -9,7 +9,6 @@ define('PROCESSESS_AT_ONCE',config('max_conversion'));
 class FFMpeg
 {
 	// Start public variables declaration
-	public $defaultOptions = array();
 	public $num = thumbs_number;
 	public $reconvert = false;
 	public $ffMpegPath = FFMPEG_BINARY;
@@ -34,15 +33,10 @@ class FFMpeg
 	private $videosDirPath = VIDEOS_DIR;
 	// End private variables declaration
 
-	public function __construct($options = false, $log = false)
+	public function __construct($options, $log = false)
 	{
-		$this->setDefaults();
-		if($options && !empty($options))
-		{
-			$this->setOptions($options);
-		} else {
-			$this->setOptions($this->defaultOptions);
-		}
+        $this->setOptions($options);
+
 		if($log){
 			$this->log = $log;
         }
@@ -170,9 +164,7 @@ class FFMpeg
 		if(!empty($options)) {
 			if(is_array($options)) {
 				foreach ($options as $key => $value) {
-					if(isset($this->defaultOptions[$key]) && !empty($value)){
-						$this->options[$key] = $value;
-					}
+                    $this->options[$key] = $value;
 				}
 			} else {
 				$this->options[0] = $options;
@@ -430,7 +422,7 @@ class FFMpeg
                             $more_res['video_width']  = $video_width;
                             $more_res['video_height'] = $video_height;
                             $more_res['height']		  = $video_height;
-                            $this->convert(NULL, $more_res);
+                            $this->convert($more_res);
                         }
                     }
                 }
@@ -438,20 +430,7 @@ class FFMpeg
                 $this->end_time_check();
                 $this->total_time();
 
-                $log = '';
-
-                //Copying File To Original Folder
-                if( $this->keep_original == 'yes' )
-                {
-                    $log .= "Copy File to original Folder\r\n";
-                    if( copy($this->input_file, $this->original_output_path) ){
-                        $log .= "File Copied to original Folder...\r\n";
-                    } else {
-                        $log .= "Unable to copy file to original folder...\r\n";
-                    }
-                }
-
-                $log .= 'Time Took : '.$this->total_time.' seconds'."\r\n";
+                $log = 'Time Took : '.$this->total_time.' seconds'."\r\n";
 
                 if(file_exists($this->output_file) && filesize($this->output_file) > 0) {
                     $log .= 'Conversion_status : completed';
@@ -477,173 +456,22 @@ class FFMpeg
 		return false;
 	}
 
-	private function setDefaults()
-	{
-		$audio_codecs = get_ffmpeg_codecs('audio');
-		$video_codecs = get_ffmpeg_codecs('video');
-
-		$this->defaultOptions = array(
-			'format' => 'mp4',
-			'video_codec'=> $video_codecs[0],
-			'audio_codec'=> $audio_codecs[0],
-			'audio_rate'=> '22050',
-			'audio_bitrate'=> '128000',
-			'video_rate'=> '25',
-			'video_bitrate'=> '300000',
-			'video_bitrate_hd'=> '500000',
-			'normal_res' => false,
-			'high_res' => false,
-			'max_video_duration' => false,
-			'resize'=>'max',
-			'outputPath' => false,
-			'use_video_rate' => false,
-			'use_video_bit_rate' => false,
-			'use_audio_rate' => false,
-			'use_audio_bit_rate' => false,
-			'use_audio_codec' => false,
-			'use_video_codec' => false,
-		);
-	}
-
 	function ffmpeg($file)
 	{
 		$this->ffmpeg = FFMPEG_BINARY;
 		$this->input_file = $file;
 	}
 
-	function calculate_size_padding( $parameters, $source_info, & $width, & $height, & $ratio, & $pad_top, & $pad_bottom, & $pad_left, & $pad_right )	
-	{
-		$p = $parameters;
-		$i = $source_info;
-
-		switch( $p['resize'] )
-		{
-			# don't resize, use same size as source, and aspect ratio
-			# WARNING: some codec will NOT preserve the aspect ratio
-			case 'no':
-				$width      = $i['video_width'];
-				$height     = $i['video_height'];
-				$ratio      = $i['video_wh_ratio'];
-				$pad_top    = 0;
-				$pad_bottom = 0;
-				$pad_left   = 0;
-				$pad_right  = 0;
-				break;
-			# resize to parameters width X height, use same aspect ratio
-			# WARNING: some codec will NOT preserve the aspect ratio
-			case 'WxH':
-				$width  = $p['video_width'];
-				$height = $p['video_height'];
-				$ratio  = $i['video_wh_ratio'];
-				$pad_top    = 0;
-				$pad_bottom = 0;
-				$pad_left   = 0;
-				$pad_right  = 0;
-				break;
-			# make pixel square
-			# reduce video size if bigger than p[width] X p[height]
-			# and preserve aspect ratio
-			case 'max':
-				$width        = (float)$i['video_width'];
-				$height       = (float)$i['video_height'];
-				$ratio        = (float)$i['video_wh_ratio'];
-				$max_width    = (float)$p['video_width'];
-				$max_height   = (float)$p['video_height'];
-
-				# make pixels square
-				if( $ratio > 1.0 )
-					$width = $height * $ratio;
-				else
-					$height = @$width / $ratio;
-
-				# reduce width
-				if( $width > $max_width ) {
-					$r       = $max_width / $width;
-					$width  *= $r;
-					$height *= $r;
-				}
-
-				# reduce height
-				if( $height > $max_height ) {
-					$r       = $max_height / $height;
-					$width  *= $r;
-					$height *= $r;
-				}
-
-				# make size even (required by many codecs)
-				$width  = (integer)( ($width  + 1 ) / 2 ) * 2;
-				$height = (integer)( ($height + 1 ) / 2 ) * 2;
-				# no padding
-				$pad_top    = 0;
-				$pad_bottom = 0;
-				$pad_left   = 0;
-				$pad_right  = 0;
-				break;
-			# make pixel square
-			# resize video to fit inside p[width] X p[height]
-			# add padding and preserve aspect ratio
-			case 'fit':
-				# values need to be multiples of 2 in the end so
-				# divide width and height by 2 to do the calculation
-				# then multiply by 2 in the end
-				$ratio        = (float)$i['video_wh_ratio'];
-				$width        = (float)$i['video_width'   ] / 2;
-				$height       = (float)$i['video_height'  ] / 2;
-				$trt_width    = (float)$p['video_width'   ] / 2;
-				$trt_height   = (float)$p['video_height'  ] / 2;
-
-				# make pixels square
-				if( $ratio > 1.0 ){
-					$width = $height * $ratio;
-                } else {
-					$height = $width / $ratio;
-                }
-				
-				# calculate size to fit
-				$ratio_w = $trt_width  / $width;
-				$ratio_h = $trt_height / $height;
-
-				if( $ratio_h > $ratio_w ) {
-					$width  = (integer)$trt_width;
-					$height = (integer)($width / $ratio);
-				} else {
-					$height = (integer)$trt_height;
-					$width  = (integer)($height * $ratio);
-				}
-
-				# calculate padding
-				$pad_top    = (integer)(($trt_height - $height + 1) / 2);
-				$pad_left   = (integer)(($trt_width  - $width  + 1) / 2);
-				$pad_bottom = (integer)($trt_height  - $height - $pad_top );
-				$pad_right  = (integer)($trt_width   - $width  - $pad_left);
-
-				# multiply by 2 to undo division and get multiples of 2
-				$width      *= 2;
-				$height     *= 2;
-				$pad_top    *= 2;
-				$pad_left   *= 2;
-				$pad_bottom *= 2;
-				$pad_right  *= 2;
-				break;
-		}
-	}
-
 	/**
 	 * Function used to convert video
 	 *
-	 * @param null $file
-	 * @param null $more_res
+	 * @param array $more_res
 	 */
-	function convert($file=NULL, $more_res=NULL)
+	function convert(array $more_res)
 	{
-		global $width, $height;
-
 		$TemplogData = '';
 		
 		$ratio = $this->ratio;
-		if($file){
-			$this->input_file = $file;
-        }
 
 		$p = $this->options;
 		$i = $this->input_details;
@@ -665,161 +493,67 @@ class FFMpeg
 
 		$opt_av .= ' -movflags faststart';
 
-		# Selecting audio track
+		// Must keep video map
         $video_track_id = self::get_media_stream_id('video', $this->input_file);
-		if( $this->audio_track && is_numeric($this->audio_track) )
-		{
-			$opt_av .= ' -map 0:'.$video_track_id.' -map 0:'.($this->audio_track);
-		} else {
-            $opt_av .= ' -map 0:'.$video_track_id;
+        $opt_av .= ' -map 0:'.$video_track_id;
 
+        // Making selected audio track the primary one
+        if( $this->audio_track && is_numeric($this->audio_track) ){
+            $opt_av .= ' -map 0:'.$this->audio_track;
+        }
+        // Keeping audio tracks
+        if( config('keep_audio_tracks') ){
             $audio_tracks = self::get_media_stream_id('audio', $this->input_file);
             foreach($audio_tracks as $track_id){
-                $opt_av .= ' -map 0:'.$track_id;
+                if( $track_id != $this->audio_track ){
+                    $opt_av .= ' -map 0:'.$track_id;
+                }
             }
         }
 
-		if( $p['use_video_codec'] )
-		{
-			# video codec
-			if( isset($p['video_codec']) ){
-				$opt_av .= ' -vcodec '.$p['video_codec'];
-            } else if( isset($i['video_codec']) ){
-				$opt_av .= ' -vcodec '.$i['video_codec'];
+        // Keeping subtitles
+        if( config('keep_subtitles') ) {
+            $subtitles = self::get_media_stream_id( 'subtitle', $this->input_file );
+            foreach( $subtitles as $track_id ) {
+                $opt_av .= ' -map 0:' . $track_id;
             }
-
-			if( $p['video_codec'] == 'libx264' )
-			{
-				if( $p['normal_quality'] != 'hq' ){
-					$opt_av .= ' -preset medium';
-                } else {
-					$opt_av .= ' -preset slow -crf 26';
-                }
-			}
-		}
+            $opt_av .= ' -c:s mov_text';
+        }
 
 		// Prevent start_time to be negative
 		$opt_av .= ' -start_at_zero';
 
-		# video rate
-		if($p['use_video_rate'])
-		{
-			if(isset($p['video_rate'])){
-				$vrate = $p['video_rate'];
-            } else if(isset($i['video_rate'])) {
-				$vrate = $i['video_rate'];
-            }
-
-			if(isset($p['video_max_rate']) && !empty($vrate)) {
-				$vrate = min($p['video_max_rate'], $vrate);
-            }
-
-			if(!empty($vrate)) {
-				$opt_av .= " -r $vrate ";
-            }
-		}
-
-		# video bitrate
-		if($p['use_video_bit_rate'])
-		{
-			if(isset($p['video_bitrate'])){
-				$vbrate = $p['video_bitrate'];
-            } elseif(isset($i['video_bitrate'])) {
-				$vbrate = $i['video_bitrate'];
-            }
-
-			if(!empty($vbrate)){
-                global $myquery;
-				$vbrate = min($myquery->getVideoResolutionBitrateFromHeight($more_res['height']), $vbrate);
-            }
-
-			if(!empty($vbrate)){
-				$opt_av .= ' -vb '.$vbrate.' ';
-            }
-		}
-
-		# video size, aspect and padding
-		
-		#create all possible resolutions of selected video
-		if($more_res!=NULL)
-		{
-			$p['resize'] = 'fit';
-			$i['video_width']  = $more_res['video_width'];
-			$i['video_height'] = $more_res['video_height'];
-
-			$opt_av .= ' -s '.$more_res['video_width'].'x'.$more_res['video_height']." -aspect $ratio ";
-		} else {
-			$this->calculate_size_padding( $p, $i );
-			$opt_av .= " -s {$width}x{$height} -aspect $ratio ";
-		}
-
-		# audio codec, rate and bitrate
-		if($p['use_audio_codec'])
-		{
-			if(!empty($p['audio_codec']) && $p['audio_codec'] != 'None')
-			{
-				$codecs = get_ffmpeg_codecs('audio');
-				if( !in_array($p['audio_codec'], $codecs) ){
-					$p['audio_codec'] = $codecs[0];
-                }
-				$opt_av .= " -acodec {$p['audio_codec']}";
-			}
-		}
-
-		// Fix for ChromeCast : Forcing stereo mode
-		if( config('chromecast_fix') ){
-			$opt_av .= ' -ac 2';
+        // Video Codec
+        $opt_av .= ' -vcodec '.config('video_codec');
+        if( config('video_codec') == 'libx264' ) {
+            $opt_av .= ' -preset medium';
         }
-
+        // Video Rate
+        $opt_av .= ' -r '.config('vrate');
+        // Video Bitrate
+        global $myquery;
+        $opt_av .= ' -vb '.$myquery->getVideoResolutionBitrateFromHeight($more_res['height']);
+        // Resolution
+        $opt_av .= ' -s '.$more_res['video_width'].'x'.$more_res['video_height'];
+        // Ratio
+        $opt_av .= ' -aspect '.$ratio;
         // Fix for browsers compatibility : yuv420p10le seems to be working only on Chrome like browsers
         if( config('force_8bits') ){
             $opt_av .= ' -pix_fmt yuv420p';
         }
-
         // Fix rare video conversion fail
         $opt_av .= ' -max_muxing_queue_size 1024';
 
-		# audio bitrate
-		if($p['use_audio_bit_rate'])
-		{
-			if(isset($p['audio_bitrate'])){
-				$abrate = $p['audio_bitrate'];
-            } elseif(isset($i['audio_bitrate'])) {
-				$abrate = $i['audio_bitrate'];
-            }
-
-			if(!empty($abrate)) {
-				$abrate_cmd = ' -ab '.$abrate;
-				$opt_av .= $abrate_cmd;
-			}
-		}
-		
-		# audio bitrate
-		if($p['use_audio_rate'])
-		{
-			$option_ar = false;
-			if(isset($p['audio_rate'])){
-				$option_ar = $p['audio_rate'];
-            }
-
-			$file_ar = false;
-			if(isset($i['audio_rate']) && is_numeric($i['audio_rate'])){
-				$file_ar = $i['audio_rate'];
-            }
-
-			$arate = false;
-			if( $option_ar && $file_ar ) {
-				$arate = min($option_ar, $file_ar);
-			} else if( $option_ar ) {
-				$arate = $option_ar;
-			} else if( $file_ar ) {
-				$arate = $file_ar;
-			}
-
-			if( $arate ){
-				$opt_av .=" -ar $arate ";
-            }
-		}
+        // Audio Bitrate
+        $opt_av .= ' -ab '.config('sbrate');
+        // Audio Rate
+        $opt_av .= ' -ar '.config('srate');
+        // Audio Codec
+        $opt_av .= ' -acodec '.config('audio_codec');
+        // Fix for ChromeCast : Forcing stereo mode
+        if( config('chromecast_fix') ){
+            $opt_av .= ' -ac 2';
+        }
 
 		if ($i['rotation'] != 0 )
 		{
@@ -833,18 +567,14 @@ class FFMpeg
 		$tmp_file = time().RandomString(5).'.tmp';
 
         $TemplogData .= "\r\nConverting Video file ".$more_res['height'].' @ '.date('Y-m-d H:i:s')." \r\n";
-        if($more_res==NULL){
-            echo 'here';
-        } else {
-            $command  = $this->ffmpeg.' -i '.$this->input_file." $opt_av ".$this->raw_path.'-'.$more_res['height'].'.mp4 2> '.TEMP_DIR.DIRECTORY_SEPARATOR.$tmp_file;
+        $command  = $this->ffmpeg.' -i '.$this->input_file." $opt_av ".$this->raw_path.'-'.$more_res['height'].'.mp4 2> '.TEMP_DIR.DIRECTORY_SEPARATOR.$tmp_file;
 
-            $video_dir = VIDEOS_DIR.DIRECTORY_SEPARATOR.date('Y').DIRECTORY_SEPARATOR.date('m').DIRECTORY_SEPARATOR.date('d').DIRECTORY_SEPARATOR;
-            if(!is_dir($video_dir)){
-                mkdir($video_dir,0755, true);
-            }
-
-            $output = $this->exec($command);
+        $video_dir = VIDEOS_DIR.DIRECTORY_SEPARATOR.date('Y').DIRECTORY_SEPARATOR.date('m').DIRECTORY_SEPARATOR.date('d').DIRECTORY_SEPARATOR;
+        if(!is_dir($video_dir)){
+            mkdir($video_dir,0755, true);
         }
+
+        $output = $this->exec($command);
 
         if(file_exists(TEMP_DIR.DIRECTORY_SEPARATOR.$tmp_file)){
             $output = $output ? $output : join('', file(TEMP_DIR.DIRECTORY_SEPARATOR.$tmp_file));
@@ -862,15 +592,12 @@ class FFMpeg
 
         $this->output_file = $this->raw_path.'-'.$more_res['height'].'.mp4';
 
-        if($more_res!=NULL)
-        {
-            $TemplogData .= "\r\n\r\n== Conversion Command == \r\n\r\n";
-            $TemplogData .= $command;
+        $TemplogData .= "\r\n\r\n== Conversion Command == \r\n\r\n";
+        $TemplogData .= $command;
 
-            if( DEVELOPMENT_MODE ) {
-                $TemplogData .= "\r\n\r\n== Conversion OutPut == \r\n\r\n";
-                $TemplogData .= $output;
-            }
+        if( DEVELOPMENT_MODE ) {
+            $TemplogData .= "\r\n\r\n== Conversion OutPut == \r\n\r\n";
+            $TemplogData .= $output;
         }
 
 		$TemplogData .="\r\n\r\nEnd resolutions @ ".date('Y-m-d H:i:s')."\r\n\r\n";
@@ -918,98 +645,6 @@ class FFMpeg
 		if(strstr($version,'Git')) {
 			$this->vconfigs['map_meta_data'] = 'map_metadata';
 		}
-	}
-
-	private function parseVideoInfo($output = '',$size=0)
-	{
-		# search the output for specific patterns and extract info
-		# check final encoding message
-		$info['size'] = $size;
-		$audio_codec = false;
-
-		if( $args = self::pregMatch( 'video:([0-9]+)kB audio:([0-9]+)kB global headers:[0-9]+kB muxing overhead', $output) ) {
-			$video_size = (float)$args[1];
-			$audio_size = (float)$args[2];
-		}
-
-		# check for last encoding update message
-		if($args = self::pregMatch( '(frame=([^=]*) fps=[^=]* q=[^=]* L)?size=[^=]*kB time=([^=]*) bitrate=[^=]*kbits\/s[^=]*$', $output) ) {
-			$frame_count = $args[2] ? (float)ltrim($args[2]) : 0;
-		}
-
-		$len = strlen($output);
-		$findme = 'Duration';
-		$findme1 = 'start';
-		$pos = strpos($output, $findme);
-		$pos = $pos + 10;
-		$pos1 = strpos($output, $findme1);
-		$bw = $len - ($pos1 - 5);
-		$rest = substr($output, $pos, -$bw);
-
-		$duration = explode(':',$rest);
-		//Convert Duration to seconds
-		$hours = $duration[0];
-		$minutes = $duration[1];
-		$seconds = $duration[2];
-		
-		$hours = $hours * 60 * 60;
-		$minutes = $minutes * 60;
-
-		$duration = $hours+$minutes+$seconds;
-
-		$info['duration'] = $duration;
-		if($duration)
-		{
-			$info['bitrate' ] = (integer)($info['size'] * 8 / 1024 / $duration);
-			if( $frame_count > 0 ){
-				$info['video_rate']	= (float)$frame_count / (float)$duration;
-            }
-			if( $video_size > 0 ){
-				$info['video_bitrate']	= (integer)($video_size * 8 / $duration);
-            }
-			if( $audio_size > 0 ){
-				$info['audio_bitrate']	= (integer)($audio_size * 8 / $duration);
-            }
-			if($args = self::pregMatch( "Input #0, ([^ ]+), from", $output) ) {
-				$info['format'] = $args[1];
-			}
-		}
-
-		# get video information
-		if( $args = self::pregMatch( '([0-9]{2,4})x([0-9]{2,4})', $output ) ) {
-			$info['video_width']    = $args[1];
-			$info['video_height']   = $args[2];
-			$info['video_wh_ratio'] = (float) $info['video_width'] / (float)$info['video_height'];
-		}
-		
-		if($args = self::pregMatch('Video: ([^ ^,]+)',$output)) {
-			$info['video_codec'] = $args[1];
-		}
-
-		# get audio information
-		if($args = self::pregMatch( "Audio: ([^ ]+), ([0-9]+) Hz, ([^\n,]*)", $output) ) {
-			$audio_codec = $info['audio_codec'] = $args[1];
-			$audio_rate = $info['audio_rate'  ] = $args[2];
-			$info['audio_channels'] = $args[3];
-		}
-
-		if((isset($audio_codec) && !$audio_codec) || !$audio_rate) {
-			$args = self::pregMatch( "Audio: ([a-zA-Z0-9]+)(.*), ([0-9]+) Hz, ([^\n,]*)", $output);
-			$info['audio_codec']    = $args[1];
-			$info['audio_rate']     = $args[3];
-			$info['audio_channels'] = $args[4];
-		}
-
-		return $info;
-	}
-
-	private static function pregMatch($in = false, $str = false)
-	{
-		if($in && $str) {
-			preg_match("/$in/",$str,$args);
-			return $args;
-		}
-		return false;
 	}
 
 	public function generateThumbs($array)
@@ -1064,7 +699,6 @@ class FFMpeg
 		if($dim!='original'){
 			$dimension = ' -s '.$dim.' ';
 		}
-
 
         $thumb_dir = THUMBS_DIR.DIRECTORY_SEPARATOR.$thumbs_outputPath;
         if(!is_dir($thumb_dir)){

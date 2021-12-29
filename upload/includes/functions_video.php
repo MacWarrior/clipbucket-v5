@@ -1070,10 +1070,10 @@
         }
 
         //Updating Video Downloads
-        $db->update(tbl("video"),array("downloads"),array("|f|downloads+1"),"videoid = '".$vdo['videoid']."'");
+        $db->update(tbl('video'),array('downloads'),array('|f|downloads+1'),"videoid = '".$vdo['videoid']."'");
         //Updating User Download
         if(userid()){
-            $db->update(tbl("users"),array("total_downloads"),array("|f|total_downloads+1"),"userid = '".userid()."'");
+            $db->update(tbl('users'),array('total_downloads'),array('|f|total_downloads+1'),"userid = '".userid()."'");
 		}
     }
 
@@ -1129,7 +1129,7 @@
 	 *
 	 * @return bool
 	 */
-    function is_video_user($vdo,$user=NULL)
+    function is_video_user($vdo,$user=NULL): bool
     {
         if(!$user){
             $user = user_name();
@@ -1152,106 +1152,11 @@
     /**
      * function used to get allowed extension as in array
      */
-    function get_vid_extensions()
+    function get_vid_extensions(): array
     {
         $exts = config('allowed_video_types');
-        $exts = preg_replace("/ /","",$exts);
-        $exts = explode(",",$exts);
-        return $exts;
-    }
-
-    //this function is written for temporary purposes for html5 player 
-    function get_normal_vid($vdetails,$return_default=true,$with_path=true,$multi=false,$count_only=false,$hq=false)
-	{
-       global $Cbucket;
-        # checking if there is any other functions
-        # available
-        if(is_array($Cbucket->custom_video_file_funcs)) {
-            foreach($Cbucket->custom_video_file_funcs as $func) {
-                if(function_exists($func)) {
-                    $func_returned = $func($vdetails, $hq);
-                    if($func_returned){
-                        return $func_returned;
-					}
-                }
-			}
-		}
-
-		$fileDirectory = "";
-		if(isset($vdetails['file_directory']) && !empty($vdetails['file_directory'])){
-			$fileDirectory = "{$vdetails['file_directory']}/";
-		}
-
-        #Now there is no function so lets continue as
-        if(isset($vdetails['file_name'])){
-            $vid_files = glob(VIDEOS_DIR."/".$fileDirectory . $vdetails['file_name']."*");
-		}
-
-        #replace Dir with URL
-        if(is_array($vid_files)) {
-            foreach($vid_files as $file) {
-                if(filesize($file) < 100){
-                	continue;
-				}
-                $files_part = explode('/',$file);
-                $video_file = $files_part[count($files_part)-1];
-
-                if($with_path){
-                    $files[] = VIDEOS_URL.'/' . $fileDirectory. $vdetails['file_name'] ;
-				} else {
-                    $files[] = $video_file;
-				}
-            }
-		}
-
-		return $files[0];
-    }
-
-    //this function is written for temporary purposes for html5 player 
-    function get_hq_vid($vdetails,$return_default=true,$with_path=true,$multi=false,$count_only=false,$hq=false)
-	{
-       global $Cbucket;
-        # checking if there is any other functions
-        # available
-        if(is_array($Cbucket->custom_video_file_funcs)) {
-            foreach($Cbucket->custom_video_file_funcs as $func) {
-                if(function_exists($func)) {
-                    $func_returned = $func($vdetails, $hq);
-                    if($func_returned){
-                        return $func_returned;
-					}
-                }
-			}
-		}
-
-		$fileDirectory = "";
-		if(isset($vdetails['file_directory']) && !empty($vdetails['file_directory'])){
-			$fileDirectory = "{$vdetails['file_directory']}/";
-		}
-
-        #Now there is no function so lets continue as
-        if(isset($vdetails['file_name'])){
-            $vid_files = glob(VIDEOS_DIR."/".$fileDirectory . $vdetails['file_name']."*");
-		}
-
-        #replace Dir with URL
-        if(is_array($vid_files)) {
-            foreach($vid_files as $file){
-                if(filesize($file) < 100){
-                	continue;
-				}
-                $files_part = explode('/',$file);
-                $video_file = $files_part[count($files_part)-1];
-
-                if($with_path){
-                    $files[] = VIDEOS_URL.'/' . $fileDirectory. $vdetails['file_name'] ;
-				} else {
-                    $files[] = $video_file;
-				}
-            }
-		}
-
-		return $files[1];
+        $exts = preg_replace('/ /','',$exts);
+        return explode(',',$exts);
     }
 
 	/**
@@ -1295,9 +1200,9 @@
 		#Now there is no function so lets continue as
         if(isset($vdetails['file_name'])) {
             if(VIDEO_VERSION >= '2.7'){
-                $vid_files = glob(VIDEOS_DIR."/".$fileDirectory . $vdetails['file_name']."*");
+                $vid_files = glob(VIDEOS_DIR.DIRECTORY_SEPARATOR.$fileDirectory.$vdetails['file_name'].'*');
             } else {
-                $vid_files = glob(VIDEOS_DIR."/".$vdetails['file_name']."*");    
+                $vid_files = glob(VIDEOS_DIR.DIRECTORY_SEPARATOR.$vdetails['file_name'].'*');
             }
 		}
 
@@ -1347,7 +1252,6 @@
             if(isset($_REQUEST['time_stamp'])) {
                 $file_directory = create_dated_folder(NULL,$_REQUEST['time_stamp']);
                 $file_directory .='/';
-                //exit($file_directory);
             }
             if($image->ValidateImage($array['tmp_name'],$ext)) {
                 $imageDetails = getimagesize($array['tmp_name']);
@@ -1408,8 +1312,8 @@
 
                     $new_array = array();
                     $new_array[] = $value;
-                    assign("mobile_vid", "true");
-                    assign("video_files", $new_array);
+                    assign('mobile_vid', 'true');
+                    assign('video_files', $new_array);
                     break;
                 }
             } elseif ( is_extension($value, 'flv') && !is_phone_user($data) ) {
@@ -1419,15 +1323,15 @@
 
                 $new_array = array();
                 $new_array[] = $value;
-                assign("flv_vid", "true");
-                assign("video_files", $new_array);
+                assign('flv_vid', 'true');
+                assign('video_files', $new_array);
                 break;
             } else {
                 if ( $test_msg ){
                     echo 'Regular vids array';
 				}
 
-                assign("video_files", $array);
+                assign('video_files', $array);
                 break;
             }
         }
@@ -1499,7 +1403,7 @@
             }
         } else {
             if ( $err_msg ){
-                echo "Invalid URL given for checking";
+                echo 'Invalid URL given for checking';
 			}
             return false;
         }
@@ -1525,7 +1429,7 @@
             return $platform;
 		}
 
-		$data = explode(" ", $useragent);
+		$data = explode(' ', $useragent);
 
 		foreach ($data as $key)
 		{
@@ -1543,14 +1447,14 @@
 	 * @internal param $ : { Null }
 	 * @since : 02-03-2016
 	 */
-    function thumbs_res_settings_28()
-	{
+    function thumbs_res_settings_28(): array
+    {
         return array(
-            "original" => "original",
-            '105' => array('168','105'),
-            '260' => array('416','260'),
-            '320' => array('632','395'),
-            '480' => array('768','432')
+            'original' => 'original',
+            '105' => ['168','105'],
+            '260' => ['416','260'],
+            '320' => ['632','395'],
+            '480' => ['768','432']
 		);
     }
 
@@ -1581,10 +1485,10 @@
             if (is_int($pre_check_file)){
                 $max_file_res = max($video_files);
             } else {
-                if (in_array("hd", $video_files)) {
-                    $max_file_res = "hd";
+                if (in_array('hd', $video_files)) {
+                    $max_file_res = 'hd';
                 } else {
-                    $max_file_res = "sd";
+                    $max_file_res = 'sd';
                 }
             }
         } else {
@@ -1596,10 +1500,10 @@
             if (is_numeric($pre_check_file)){
                 $max_file_res = max($video_files);
             } else {
-                if (in_array("hd", $video_files)) {
-                    $max_file_res = "hd";
+                if (in_array('hd', $video_files)) {
+                    $max_file_res = 'hd';
                 } else {
-                    $max_file_res = "sd";
+                    $max_file_res = 'sd';
                 }
             }
 
@@ -1608,7 +1512,7 @@
 
         if ($dir){
             $Ext = GetExt($v_files[0]);
-            $max_res_file = VIDEOS_DIR.'/'.$vdetails['file_directory'].'/'.$vdetails['file_name'].'-'.$max_file_res.'.'.$Ext;
+            $max_res_file = VIDEOS_DIR.DIRECTORY_SEPARATOR.$vdetails['file_directory'].DIRECTORY_SEPARATOR.$vdetails['file_name'].'-'.$max_file_res.'.'.$Ext;
         } else {
             foreach ($v_files as $key => $file) {
                 $video_quality = get_video_file_quality($file);
@@ -1629,40 +1533,16 @@
 	 *
 	 * @param : { Var } { quality of input file }
 	 *
-	 * @return array|mixed : { Variable } { resolution of a file }
+	 * @return string : { Variable } { resolution of a file }
 	 *
 	 * @since : 03-03-2016
 	 */
-    function get_video_file_quality($file)
-	{
+    function get_video_file_quality($file): string
+    {
         $quality = explode('-',$file);
         $quality = end($quality);
         $quality = explode('.',$quality);
-        $quality = $quality[0];
-        return $quality;
-    }
-
-	/**
-	 * Checks ram of a Linux server e.g Ubutnu, CentOS
-	 * @return float : { integer } { $total_ram } { total RAM in GB's }
-	 *
-	 * @internal param $ : { none }
-	 * @since : 10th March, 2016 ClipBucket 2.8.1
-	 * @author : Saqib Razzaq
-	 */
-    function check_server_ram()
-	{
-        $fh = fopen('/proc/meminfo','r');
-        $mem = 0;
-        while ($line = fgets($fh)) {
-            $pieces = array();
-            if (preg_match('/^MemTotal:\s+(\d+)\skB$/', $line, $pieces)) {
-				$mem = $pieces[1];
-				break;
-            }
-        }
-        fclose($fh);
-        return $mem / 1024 / 1024;
+        return $quality[0];
     }
 
 	/**
@@ -1686,9 +1566,9 @@
         }
 
         $raw_cookies = $_COOKIE[ $cookie ] ?? false;
-        $clean_cookies = str_replace(array("[","]"), "", $raw_cookies);
-        $vids = explode(",", $clean_cookies);
-        assign("qlist_vids", $vids);
+        $clean_cookies = str_replace(array('[',']'), '', $raw_cookies);
+        $vids = explode(',', $clean_cookies);
+        assign('qlist_vids', $vids);
         $vid_dets = array();
         foreach ($vids as $key => $vid) {
             $vid_dets[] = $cbvid->get_video_details($vid);
@@ -1707,7 +1587,7 @@
     function convertWithCron()
 	{
         global $db;
-        $toConvert = $db->select(tbl("conversion_queue"),"*","cqueue_conversion ='no' ORDER BY cqueue_id ASC LIMIT 0,1");
+        $toConvert = $db->select(tbl('conversion_queue'),'*',"cqueue_conversion ='no' ORDER BY cqueue_id ASC LIMIT 0,1");
         $filedata = $toConvert[0];
         if (empty($filedata)) {
             return false;
@@ -1718,7 +1598,7 @@
         $returnData[1] = $filedata['cqueue_name'].'.'.$filedata['cqueue_ext'];
         $returnData[2] = $filedata['cqueue_name'];
         $returnData[3] = $dateDir;
-        $returnData[4] = FILES_DIR.'/logs/'.$dateDir.'/'.$filedata['cqueue_name'].'.log';
+        $returnData[4] = FILES_DIR.'/logs/'.$dateDir.DIRECTORY_SEPARATOR.$filedata['cqueue_name'].'.log';
         return $returnData;
     }
     

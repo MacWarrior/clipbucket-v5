@@ -1,5 +1,5 @@
 <?php
-define("QUICK_LIST_SESS","quick_list");
+define('QUICK_LIST_SESS','quick_list');
 
 class CBvideo extends CBCategory
 {
@@ -109,8 +109,8 @@ class CBvideo extends CBCategory
         return $this->basic_fields = $fields;
     }
 
-    function basic_fields_setup()
-	{
+    function basic_fields_setup(): array
+    {
         # Set basic video fields
         $basic_fields = array(
             'videoid', 'videokey', 'userid', 'title', 'description', 'tags', 'category',
@@ -149,9 +149,7 @@ class CBvideo extends CBCategory
 
         # Do make array unique, otherwise we might get duplicate
         # fields
-        $fields = array_unique( $fields );
-
-        return $fields;
+        return array_unique( $fields );
     }
 
 	/**
@@ -217,11 +215,11 @@ class CBvideo extends CBCategory
 
         $cond = ( ( $file ) ? 'video.file_name' : ( is_numeric( $vid ) ? 'video.videoid' : 'video.videokey' ) )." = '%s' ";
 
-        $query = "SELECT ".tbl_fields( $fields )." FROM ".cb_sql_table( 'video' );
-        $query .= " LEFT JOIN ".cb_sql_table( 'users' )." ON video.userid = users.userid";
+        $query = 'SELECT '.tbl_fields( $fields ).' FROM '.cb_sql_table( 'video' );
+        $query .= ' LEFT JOIN '.cb_sql_table( 'users' ).' ON video.userid = users.userid';
 
         if ( $cond ) {
-            $query .= " WHERE ".sprintf( $cond, $vid );
+            $query .= ' WHERE '.sprintf( $cond, $vid );
         }
 
         $query .= 'LIMIT 1';
@@ -273,7 +271,7 @@ class CBvideo extends CBCategory
 			return false;
         }
 
-		//Lets just check weather video exists or not
+		//Let's just check weather video exists or not
 		switch($case)
 		{
 			//Activating a video
@@ -289,7 +287,7 @@ class CBvideo extends CBCategory
 					global $cbemail;
 					$tpl = $cbemail->get_template('video_activation_email');
 					$var = array(
-						'{username}'	=> $video['username'],
+						'{username}'   => $video['username'],
 					 	'{video_link}' => videoLink($video)
 					);
 					$subj = $cbemail->replace($tpl['email_template_subject'],$var);
@@ -307,9 +305,9 @@ class CBvideo extends CBCategory
 					//Sending Subscription email in background
 					if (stristr(PHP_OS, 'WIN'))
 					{
-						exec(php_path()." -q ".BASEDIR."/actions/send_subscription_email.php $vid ");
+						exec(php_path().' -q '.BASEDIR."/actions/send_subscription_email.php $vid ");
 					} else {
-						exec(php_path()." -q ".BASEDIR."/actions/send_subscription_email.php $vid &> /dev/null &");
+						exec(php_path().' -q '.BASEDIR."/actions/send_subscription_email.php $vid &> /dev/null &");
 					}
 				}
 				break;
@@ -401,18 +399,16 @@ class CBvideo extends CBCategory
 				$name = formObj::rmBrackets($field['name']);
 				$val = $array[$name];
 				
-				if(!empty($val) || !$field['use_if_value'])
-				{
-					if($field['use_func_val']){
+				if(!empty($val) || !$field['use_if_value']) {
+					if($field['use_func_val']) {
 						$val = $field['validate_function']($val);
                     }
 
-					if(!empty($field['db_field'])){
+					if(!empty($field['db_field'])) {
 					    $query_field[] = $field['db_field'];
                     }
 					
-					if(is_array($val))
-					{
+					if(is_array($val)) {
 						$new_val = '';
 						foreach($val as $v) {
 							$new_val .= "#".$v."# ";
@@ -431,49 +427,42 @@ class CBvideo extends CBCategory
 				}
 			}
 			
-			if(has_access('admin_access',TRUE))
-			{
-				if(!empty($array['status']))
-				{
+			if(has_access('admin_access',TRUE)) {
+				if(!empty($array['status'])) {
 					$query_field[] = 'status';
 					$query_val[] = $array['status'];
 				}
 
-				if(!empty($array['duration']) && is_numeric($array['duration']) && $array['duration']>0)
-				{
+				if(!empty($array['duration']) && is_numeric($array['duration']) && $array['duration']>0) {
 					$query_field[] = 'duration';
 					$query_val[] = $array['duration'];
 				}
 				
-				if(!empty($array['views']))
-				{
+				if(!empty($array['views'])) {
 					$query_field[] = 'views';
 					$query_val[] = $array['views'];
 				}
 
-				if(!empty($array['video_users']))
-				{
+				if(!empty($array['video_users'])) {
 					$query_field[] = 'video_users';
 					$query_val[] = $array['video_users'];
 				}
 				
-				if(!empty($array['rating']))
-				{
+				if(!empty($array['rating'])) {
 					$query_field[] = 'rating';
 					$rating = $array['rating'];
-					if(!is_numeric($rating) || $rating<0 || $rating>10)
+					if(!is_numeric($rating) || $rating<0 || $rating>10){
 						$rating = 1;
+                    }
 					$query_val[] = $rating;
 				}
 				
-				if(!empty($array['rated_by']))
-				{
+				if(!empty($array['rated_by'])) {
 					$query_field[] = 'rated_by';
 					$query_val[] = $array['rated_by'];
 				}
 
-				if (!empty($array['embed_code'])) 
-				{
+				if (!empty($array['embed_code'])) {
 					$query_field[] = 'embed_code';
 					$query_val[] = $array['embed_code'];
 				}
@@ -578,13 +567,14 @@ class CBvideo extends CBCategory
 			{
 				foreach($thumbs as $thumb)
 				{
-					if (strstr($thumb,'timthumb'))
+					if (strstr($thumb,'timthumb')){
 						$thumb = $this->convert_tim_thumb_url_to_file( $thumb, false );
+                    }
 
 					if (!empty($vdetails['file_directory'])){
-						$file = THUMBS_DIR.'/'.$vdetails['file_directory'].'/'.$thumb;
+						$file = THUMBS_DIR.DIRECTORY_SEPARATOR.$vdetails['file_directory'].DIRECTORY_SEPARATOR.$thumb;
 					} else {
-						$file = THUMBS_DIR.'/'.$thumb;
+						$file = THUMBS_DIR.DIRECTORY_SEPARATOR.$thumb;
 					}
 					
 					if(file_exists($file) && is_file($file)){
@@ -592,30 +582,31 @@ class CBvideo extends CBCategory
 					}
 				}
 			} else {
-				if (strstr($thumbs,'timthumb'))
+				if (strstr($thumbs,'timthumb')){
 					$thumbs_ = $this->convert_tim_thumb_url_to_file( $thumbs, false );
-				else
+                } else {
 					$thumbs_ = substr($thumbs, 0, -6);
+                }
 
-				$file = THUMBS_DIR.'/'.$thumbs_;
-				if(file_exists($file) && is_file($file))
+				$file = THUMBS_DIR.DIRECTORY_SEPARATOR.$thumbs_;
+				if(file_exists($file) && is_file($file)){
 					unlink($file);
-				
+                }
 
-				if (strstr($thumbs,'timthumb'))
+				if (strstr($thumbs,'timthumb')){
 					$fn = $this->convert_tim_thumb_url_to_file( $thumbs, true );
-				else
+                } else {
 					$fn = substr($thumbs, 0, -6);
+                }
 
-				$result = db_select("SELECT * FROM ".tbl("video")." WHERE file_name = '$fn'");
+				$result = db_select('SELECT * FROM '.tbl('video')." WHERE file_name = '$fn'");
 				if($result)
 				{
 					foreach($result as $result1)
 					{
-						$str = '/'.$result1['file_directory'].'/';
+						$str = DIRECTORY_SEPARATOR.$result1['file_directory'].DIRECTORY_SEPARATOR;
 						$file1 = THUMBS_DIR.$str.$thumbs;
-						if(file_exists($file1) && is_file($file1))
-						{
+						if(file_exists($file1) && is_file($file1)) {
 							unlink($file1);
 						}
 					}
@@ -634,7 +625,7 @@ class CBvideo extends CBCategory
 	{
 		global $db;
 		$src = $vdetails['videoid'];
-		$file = LOGS_DIR.'/'.$vdetails['file_name'].'.log';
+		$file = LOGS_DIR.DIRECTORY_SEPARATOR.$vdetails['file_name'].'.log';
 		$db->execute('DELETE FROM '.tbl('video_files')." WHERE src_name = '$src'");
 		if(file_exists($file))
 			unlink($file);
@@ -644,10 +635,11 @@ class CBvideo extends CBCategory
 		{
 			foreach($result as $result1)
 			{
-				$str = '/'.$result1['file_directory'].'/';
+				$str = DIRECTORY_SEPARATOR.$result1['file_directory'].DIRECTORY_SEPARATOR;
 				$file1 = LOGS_DIR.$str.$vdetails['file_name'].'.log';
-				if(file_exists($file1) && is_file($file1))
+				if(file_exists($file1) && is_file($file1)){
 					unlink($file1);
+                }
 			}
 		}
 		e(lang('vid_log_delete_msg'),'m');
@@ -662,7 +654,7 @@ class CBvideo extends CBCategory
 	 */
 	function remove_files($vdetails)
 	{
-		//Return nothing incase there is no input
+		//Return nothing in case there is no input
 		if(!$vdetails) {
 			e('No input details specified');
 			return false;
@@ -683,14 +675,15 @@ class CBvideo extends CBCategory
 				$fn = explode('-', $file);
 				$fn = $fn[0];
 
-				$result = db_select("SELECT * FROM ".tbl("video")." WHERE file_name = '$fn'");
+				$result = db_select('SELECT * FROM '.tbl('video')." WHERE file_name = '$fn'");
 				if($result)
 				{
 					foreach($result as $result1)
 					{
-						$str = '/'.$result1['file_directory'].'/';
-						if(file_exists(VIDEOS_DIR.$str.$file) && is_file(VIDEOS_DIR.$str.$file))
-						unlink(VIDEOS_DIR.$str.$file);
+						$str = DIRECTORY_SEPARATOR.$result1['file_directory'].DIRECTORY_SEPARATOR;
+						if(file_exists(VIDEOS_DIR.$str.$file) && is_file(VIDEOS_DIR.$str.$file)){
+						    unlink(VIDEOS_DIR.$str.$file);
+                        }
 					}
 				}
 
@@ -700,12 +693,12 @@ class CBvideo extends CBCategory
                 unlink(VIDEOS_DIR.'/'.$files);
             }
 			$fn = substr($files, 0, -7);
-			$result = db_select("SELECT * FROM ".tbl("video")." WHERE file_name = '$fn'");
+			$result = db_select('SELECT * FROM '.tbl('video')." WHERE file_name = '$fn'");
 			if($result)
 			{
 				foreach($result as $result1)
 				{
-					$str = '/'.$result1['file_directory'].'/';
+					$str = DIRECTORY_SEPARATOR.$result1['file_directory'].DIRECTORY_SEPARATOR;
 					if(file_exists(VIDEOS_DIR.$str.$files) && is_file(VIDEOS_DIR.$str.$files)){
 						unlink(VIDEOS_DIR.$str.$files);
                     }

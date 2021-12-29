@@ -294,7 +294,6 @@ define('SBRATE', $row['sbrate']);
 define('R_HEIGHT', $row['r_height']);
 define('R_WIDTH', $row['r_width']);
 define('RESIZE', $row['resize']);
-define('KEEP_ORIGINAL', $row['keep_original']);
 define('MAX_UPLOAD_SIZE', $row['max_upload_size']);
 define('THUMB_HEIGHT', $row['thumb_height']);
 define('THUMB_WIDTH', $row['thumb_width']);
