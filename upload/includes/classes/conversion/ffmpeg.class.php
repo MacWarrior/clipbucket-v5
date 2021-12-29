@@ -71,23 +71,9 @@ class FFMpeg
 			$file_path = $this->input_file;
         }
 
-		$info['format']              = 'N/A';
-		$info['duration']            = 'N/A';
-		$info['size']                = 'N/A';
-		$info['bitrate']             = 'N/A';
-		$info['video_width']         = 'N/A';
-		$info['video_height']        = 'N/A';
 		$info['video_wh_ratio']      = 'N/A';
-		$info['video_codec']         = 'N/A';
-		$info['video_rate']          = 'N/A';
-		$info['video_bitrate']       = 'N/A';
 		$info['video_color']         = 'N/A';
-		$info['audio_codec']         = 'N/A';
-		$info['audio_bitrate']       = 'N/A';
-		$info['audio_rate']          = 'N/A';
-		$info['audio_channels']      = 'N/A';
-		$info['bits_per_raw_sample'] = 'N/A';
-		$info['path']           = $file_path;
+		$info['path']                = $file_path;
 
 		$cmd = FFPROBE. " -v quiet -print_format json -show_format -show_streams '".$file_path."' ";
 		$output = shell_output($cmd);
@@ -444,7 +430,7 @@ class FFMpeg
                             $more_res['video_width']  = $video_width;
                             $more_res['video_height'] = $video_height;
                             $more_res['height']		  = $video_height;
-                            $this->convert(NULL, false, $more_res);
+                            $this->convert(NULL, $more_res);
                         }
                     }
                 }
@@ -646,10 +632,9 @@ class FFMpeg
 	 * Function used to convert video
 	 *
 	 * @param null $file
-	 * @param bool $for_iphone
 	 * @param null $more_res
 	 */
-	function convert($file=NULL,$for_iphone=false,$more_res=NULL)
+	function convert($file=NULL, $more_res=NULL)
 	{
 		global $width, $height;
 
@@ -847,49 +832,46 @@ class FFMpeg
 
 		$tmp_file = time().RandomString(5).'.tmp';
 
-		if(!$for_iphone)
-		{
-			$TemplogData .= "\r\nConverting Video file ".$more_res['height'].' @ '.date('Y-m-d H:i:s')." \r\n";
-			if($more_res==NULL){
-				echo 'here';
-			} else {
-                $command  = $this->ffmpeg.' -i '.$this->input_file." $opt_av ".$this->raw_path.'-'.$more_res['height'].'.mp4 2> '.TEMP_DIR.DIRECTORY_SEPARATOR.$tmp_file;
+        $TemplogData .= "\r\nConverting Video file ".$more_res['height'].' @ '.date('Y-m-d H:i:s')." \r\n";
+        if($more_res==NULL){
+            echo 'here';
+        } else {
+            $command  = $this->ffmpeg.' -i '.$this->input_file." $opt_av ".$this->raw_path.'-'.$more_res['height'].'.mp4 2> '.TEMP_DIR.DIRECTORY_SEPARATOR.$tmp_file;
 
-                $video_dir = VIDEOS_DIR.DIRECTORY_SEPARATOR.date('Y').DIRECTORY_SEPARATOR.date('m').DIRECTORY_SEPARATOR.date('d').DIRECTORY_SEPARATOR;
-                if(!is_dir($video_dir)){
-                    mkdir($video_dir,0755, true);
-                }
+            $video_dir = VIDEOS_DIR.DIRECTORY_SEPARATOR.date('Y').DIRECTORY_SEPARATOR.date('m').DIRECTORY_SEPARATOR.date('d').DIRECTORY_SEPARATOR;
+            if(!is_dir($video_dir)){
+                mkdir($video_dir,0755, true);
+            }
 
-                $output = $this->exec($command);
-			}
+            $output = $this->exec($command);
+        }
 
-			if(file_exists(TEMP_DIR.DIRECTORY_SEPARATOR.$tmp_file)){
-				$output = $output ? $output : join('', file(TEMP_DIR.DIRECTORY_SEPARATOR.$tmp_file));
-				unlink(TEMP_DIR.DIRECTORY_SEPARATOR.$tmp_file);
-			}
+        if(file_exists(TEMP_DIR.DIRECTORY_SEPARATOR.$tmp_file)){
+            $output = $output ? $output : join('', file(TEMP_DIR.DIRECTORY_SEPARATOR.$tmp_file));
+            unlink(TEMP_DIR.DIRECTORY_SEPARATOR.$tmp_file);
+        }
 
-			if(file_exists($this->raw_path.'-'.$more_res['height'].'.mp4') && filesize($this->raw_path.'-'.$more_res['height'].'.mp4')>0)
-			{
-				$this->has_resolutions = 'yes';
-				$this->video_files[] = $more_res['height'];
-				$TemplogData .="\r\nFiles resolution : ".$more_res['height']." \r\n";
-			} else {
-				$TemplogData .="\r\n\r\nFile doesn't exist. Path: ".$this->raw_path.'-'.$more_res['height'].".mp4 \r\n\r\n";
-			}
+        if(file_exists($this->raw_path.'-'.$more_res['height'].'.mp4') && filesize($this->raw_path.'-'.$more_res['height'].'.mp4')>0)
+        {
+            $this->has_resolutions = 'yes';
+            $this->video_files[] = $more_res['height'];
+            $TemplogData .="\r\nFiles resolution : ".$more_res['height']." \r\n";
+        } else {
+            $TemplogData .="\r\n\r\nFile doesn't exist. Path: ".$this->raw_path.'-'.$more_res['height'].".mp4 \r\n\r\n";
+        }
 
-			$this->output_file = $this->raw_path.'-'.$more_res['height'].'.mp4';
-			  
-			if($more_res!=NULL)
-			{
-				$TemplogData .= "\r\n\r\n== Conversion Command == \r\n\r\n";
-				$TemplogData .= $command;
+        $this->output_file = $this->raw_path.'-'.$more_res['height'].'.mp4';
 
-				if( DEVELOPMENT_MODE ) {
-					$TemplogData .= "\r\n\r\n== Conversion OutPut == \r\n\r\n";
-					$TemplogData .= $output;
-				}
-			}
-		}
+        if($more_res!=NULL)
+        {
+            $TemplogData .= "\r\n\r\n== Conversion Command == \r\n\r\n";
+            $TemplogData .= $command;
+
+            if( DEVELOPMENT_MODE ) {
+                $TemplogData .= "\r\n\r\n== Conversion OutPut == \r\n\r\n";
+                $TemplogData .= $output;
+            }
+        }
 
 		$TemplogData .="\r\n\r\nEnd resolutions @ ".date('Y-m-d H:i:s')."\r\n\r\n";
 		$this->log->writeLine('Conversion Ouput', $TemplogData, true);

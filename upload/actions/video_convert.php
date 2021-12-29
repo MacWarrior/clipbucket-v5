@@ -153,11 +153,11 @@ if(!empty($tmp_file))
 
     if (stristr(PHP_OS, 'WIN'))
     {
-        exec(php_path()." -q ".BASEDIR."/actions/verify_converted_videos.php $orig_file");
+        exec(php_path().' -q '.BASEDIR."/actions/verify_converted_videos.php $orig_file");
     } elseif(stristr(PHP_OS, 'darwin')) {
-        exec(php_path()." -q ".BASEDIR."/actions/verify_converted_videos.php $orig_file </dev/null >/dev/null &");
+        exec(php_path().' -q '.BASEDIR."/actions/verify_converted_videos.php $orig_file </dev/null >/dev/null &");
     } else {
-        exec(php_path()." -q ".BASEDIR."/actions/verify_converted_videos.php $orig_file &> /dev/null &");
+        exec(php_path().' -q '.BASEDIR."/actions/verify_converted_videos.php $orig_file &> /dev/null &");
     }
 
     unlink($orig_file);
