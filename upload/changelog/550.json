@@ -1,10 +1,20 @@
 {
   "version":"5.5.0",
-  "revision":"0",
+  "revision":"1",
   "status":"dev",
   "detail":[
     {
-      
+      "title":"Admin area",
+      "description":[
+        "Remove Re-Convertable tag from video manager"
+        ,"Fix video reconvert function"
+      ]
+    },
+    {
+      "title": "Miscellaneous",
+      "description": [
+        "Cleanup code"
+      ]
     }
   ]
 }

@@ -79,9 +79,12 @@ class myquery
         static::$video_resolutions = [];
     }
 
-    public function getEnabledVideoResolutions(): array
+    public function getEnabledVideoResolutions(String $orderby = ''): array
     {
         $sql_select = 'SELECT height, width FROM '.tbl('video_resolution').' WHERE enabled = 1';
+        if( $orderby != '' ){
+            $sql_select .= ' ORDER BY '.$orderby;
+        }
         $results = db_select($sql_select);
 
         $data = [];

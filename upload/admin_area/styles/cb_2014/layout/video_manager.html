@@ -64,12 +64,6 @@
 										{$cbvid->video_manager_link_new($links,$video)}
 									{/foreach}
 
-									{if !isReconvertAble($video)}
-									<span class="label label-warning">Non-Convertable</span>
-									{else}
-									<span class="label label-info">Re-Convertable</span>
-									{/if}
-
 									{if config('chromecast')=='yes'}
 										{if is_castable($video.videoid)}
 									<span class="label label-success">{lang code='castable'}</span>
