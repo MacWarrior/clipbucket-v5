@@ -1,13 +1,13 @@
 <?php
 ob_start();
-define('IN_CLIPBUCKET',true);
+const IN_CLIPBUCKET = true;
 
 //Setting Cookie Timeout
-define('COOKIE_TIMEOUT',86400*1); // 1
-define('GARBAGE_TIMEOUT',COOKIE_TIMEOUT);
-define("REMBER_DAYS",7);
+const COOKIE_TIMEOUT = 86400 * 1; // 1
+const GARBAGE_TIMEOUT = COOKIE_TIMEOUT;
+const REMBER_DAYS = 7;
 
-define('DEV_INGNORE_SYNTAX',TRUE);
+const DEV_INGNORE_SYNTAX = true;
 
 //Create an empty development.dev file in includes folder
 //To Activate Development mode
@@ -97,15 +97,14 @@ switch(DEBUG_LEVEL) {
 $pages = new pages();
 $ClipBucket = $Cbucket = new ClipBucket();
 define('BASEDIR',$Cbucket->BASEDIR);
-if(!file_exists(BASEDIR.'/index.php'))
-die('Basedir is incorrect, please set the correct basedir value in \'config\' table');
+if(!file_exists(BASEDIR.'/index.php')){
+    die('Basedir is incorrect, please set the correct basedir value in \'config\' table');
+}
 $baseurl = $row['baseurl'];
 
 if (is_ssl()) {
-    define('CB_SSL', true);
     $baseurl = str_replace('http://', 'https://', $baseurl);
 } else {
-    define('CB_SSL', false);
     $baseurl = str_replace('https://', 'http://', $baseurl);
 }
 
@@ -180,14 +179,13 @@ $cbcollection = new Collections();
 $cbphoto    = new CBPhotos();
 
 $cbfeeds 	= new cbfeeds();
-//$GoogleTranslator = new MrsTranslator($Clientid, $secretId);
 $GoogleTranslator = new GoogleTranslator();
 
 check_install('after');
 @include($Cbucket->BASEDIR.'/includes/clipbucket.php');
 $Cbucket->cbinfo = array("version"=>VERSION,"state"=>STATE,"rev"=>REV);
 
-# Holds Advertisment IDS that are being Viewed
+# Holds Advertisement IDS that are being Viewed
 $ads_array = array();
 
 # Website Details
@@ -206,35 +204,19 @@ define('ALLOW_REG',getArrayValue($row, 'allow_registration'));
 define('WEBSITE_EMAIL',$row['website_email']);
 define('SUPPORT_EMAIL',$row['support_email']);
 define('WELCOME_EMAIL',$row['welcome_email']);
-@define('VIDEO_REQUIRE_LOGIN',$row['video_require_login']);
 define('ACTIVATION',$row['activation']);
 define('DATE_FORMAT', config('date_format'));
 
 # Listing Of Videos , Channels
 define('VLISTPP',$row['videos_list_per_page']);				//Video List Per page
-define('VLISTPT',$row['videos_list_per_tab']);				//Video List Per tab
 define('CLISTPP',$row['channels_list_per_page']);			//Channels List Per page
-define('CLISTPT',$row['channels_list_per_tab']);			//Channels List Per tab
-define('SLISTPP',$row['search_list_per_page']);				//Search Results List Per page
-define('RVLIST',$row['recently_viewed_limit']);				//Search Results List Per page
 
 # Defining Photo Limits
 define('MAINPLIST',$row['photo_main_list']);
-define('HOMEPLIST',$row['photo_home_tabs']);
-define('SEARCHPLIST',$row['photo_search_result']);
-define('CHANNELPLIST',$row['photo_channel_page']);
-define('USERPLIST',$row['photo_user_photos']);
-define('UFAVPLIST',$row['photo_user_favorites']);
-define('OTHERPLIST',$row['photo_other_limit']);
 
 # Defining Collection Limits
 define('COLLPP',$row['collection_per_page']);
-define('COLLHP',$row['collection_home_page']);
 define('COLLIP',$row['collection_items_page']);
-define('COLLSP',$row['collection_search_result']);
-define('COLLCP',$row['collection_channel_page']);
-define('COLLUCP',$row['collection_user_collections']);
-define('COLLUFP',$row['collection_user_favorites']);
 
 # Video Options
 define('VIDEO_COMMENT',$row['video_comments']);
@@ -242,8 +224,8 @@ define('VIDEO_RATING',$row['video_rating']);
 define('COMMENT_RATING',$row['comment_rating']);
 define('VIDEO_DOWNLOAD',$row['video_download']);
 define('VIDEO_EMBED',$row['video_embed']);
-define('TEMPLATEFOLDER','styles');							//Template Folder Name, usually STYLES
-define('STYLES_DIR',BASEDIR.DIRECTORY_SEPARATOR.TEMPLATEFOLDER);
+const TEMPLATEFOLDER = 'styles';                            //Template Folder Name, usually STYLES
+const STYLES_DIR = BASEDIR . DIRECTORY_SEPARATOR . TEMPLATEFOLDER;
 
 # Define Lang Select & Style Select
 
@@ -251,41 +233,39 @@ define('ALLOW_LANG_SELECT',$row['allow_language_change']);
 define('ALLOW_STYLE_SELECT',$row['allow_template_change']);
 define('SUBTITLE',$row['code_dev']);
 //Javascript Directory Name
-define('ADMINDIR','admin_area');
-define('ADMINBASEDIR',BASEDIR.DIRECTORY_SEPARATOR.'admin_area');				//Admin Accessible Folder
-define('ADMIN_BASEURL',DIRECTORY_SEPARATOR.ADMINDIR);
+const ADMINDIR = 'admin_area';
+const ADMINBASEDIR = BASEDIR . DIRECTORY_SEPARATOR . 'admin_area';                //Admin Accessible Folder
+const ADMIN_BASEURL = DIRECTORY_SEPARATOR . ADMINDIR;
 
 # DIRECT PATHS OF VIDEO FILES
-define('FILES_DIR',BASEDIR.'/files');
-define('VIDEOS_DIR',FILES_DIR.'/videos');
-define('THUMBS_DIR',FILES_DIR.'/thumbs');
-define('AUDIOS_DIR',FILES_DIR.'/audios');
-define('SPRITES_DIR',FILES_DIR.'/sprites');
-define('ORIGINAL_DIR',FILES_DIR.'/original');
-define('TEMP_DIR',FILES_DIR.'/temp');
-define('CON_DIR',FILES_DIR.'/conversion_queue');
-define('MASS_UPLOAD_DIR',FILES_DIR.'/mass_uploads');
-define('LOGS_DIR',FILES_DIR.'/logs');
-define('IMAGES_DIR', BASEDIR.'/images' );
-define('IMAGES_URL', '/images' );
-define("USER_THUMBS_DIR",BASEDIR.'/images/avatars');
-define("USER_BG_DIR",BASEDIR.'/images/backgrounds');
-define("ICONS_URL",'/images/icons');
-define('JS_DIR',BASEDIR.'/js');
-define('JS_URL','/js');
+const FILES_DIR = BASEDIR . '/files';
+const VIDEOS_DIR = FILES_DIR . '/videos';
+const SUBTITLES_DIR = FILES_DIR . '/subtitles';
+const THUMBS_DIR = FILES_DIR . '/thumbs';
+const AUDIOS_DIR = FILES_DIR . '/audios';
+const ORIGINAL_DIR = FILES_DIR . '/original';
+const TEMP_DIR = FILES_DIR . '/temp';
+const CON_DIR = FILES_DIR . '/conversion_queue';
+const MASS_UPLOAD_DIR = FILES_DIR . '/mass_uploads';
+const LOGS_DIR = FILES_DIR . '/logs';
+const IMAGES_DIR = BASEDIR . '/images';
+const IMAGES_URL = '/images';
+const USER_THUMBS_DIR = BASEDIR . '/images/avatars';
+const USER_BG_DIR = BASEDIR . '/images/backgrounds';
+const ICONS_URL = '/images/icons';
+const JS_DIR = BASEDIR . '/js';
+const JS_URL = '/js';
 
 #DIRECT URL OF VIDEO FILES
-define('FILES_URL',BASEURL.'/files');
-define('VIDEOS_URL',FILES_URL.'/videos');
-define('THUMBS_URL',FILES_URL.'/thumbs');
-define('SPRITES_URL',FILES_URL.'/sprites');
-define('ORIGINAL_URL',FILES_URL.'/original');
-define('TEMP_URL',FILES_URL.'/temp');
-define('PLAYER_DIR',BASEDIR.'/player');
-define('PLAYER_URL','/player');
+const FILES_URL = BASEURL . '/files';
+const VIDEOS_URL = FILES_URL . '/videos';
+const SUBTITLES_URL = FILES_URL . '/subtitles';
+const THUMBS_URL = FILES_URL . '/thumbs';
+const PLAYER_DIR = BASEDIR . '/player';
+const PLAYER_URL = '/player';
 
-define('USER_THUMBS_URL','/images/avatars');
-define('USER_BG_URL','/images/backgrounds');
+const USER_THUMBS_URL = '/images/avatars';
+const USER_BG_URL = '/images/backgrounds';
 
 # Required Settings For Video Conversion
 define('VBRATE', $row['vbrate']);
@@ -300,42 +280,42 @@ define('THUMB_WIDTH', $row['thumb_width']);
 define('PHP_PATH', $row['php_path']);
 
 # Defining Plugin Directory
-define('PLUG_DIR',BASEDIR.'/plugins');
-define('PLUG_URL','/plugins');
+const PLUG_DIR = BASEDIR . '/plugins';
+const PLUG_URL = '/plugins';
 
 define('MAX_COMMENT_CHR',$Cbucket->configs['max_comment_chr']);
 define('USER_COMMENT_OWN',$Cbucket->configs['user_comment_own']);
 
 # Defining Category Thumbs directory
-define('CAT_THUMB_DIR',BASEDIR.'/images/category_thumbs');
-define('CAT_THUMB_URL','/images/category_thumbs');
+const CAT_THUMB_DIR = BASEDIR . '/images/category_thumbs';
+const CAT_THUMB_URL = '/images/category_thumbs';
 
 # COLLECTIONS ICON DIR
-define('COLLECT_THUMBS_DIR',BASEDIR.'/images/collection_thumbs');
-define('COLLECT_THUMBS_URL','/images/collection_thumbs');
+const COLLECT_THUMBS_DIR = BASEDIR . '/images/collection_thumbs';
+const COLLECT_THUMBS_URL = '/images/collection_thumbs';
 
 # PHOTOS DETAILS
-define('PHOTOS_DIR',FILES_DIR."/photos");
-define('PHOTOS_URL',"/files/photos");
+const PHOTOS_DIR = FILES_DIR . '/photos';
+const PHOTOS_URL = '/files/photos';
 
 # AVATARS DIR
-define('AVATARS_DIR',FILES_DIR."/avatars");
-define('AVATARS_URL',"/files/avatars");
+const AVATARS_DIR = FILES_DIR . '/avatars';
+const AVATARS_URL = '/files/avatars';
 
 # LOGOS DIR
-define('LOGOS_DIR',FILES_DIR."/logos");
-define('LOGOS_URL',"/files/logos");
+const LOGOS_DIR = FILES_DIR . "/logos";
+const LOGOS_URL = "/files/logos";
 
 # ADVANCE CACHING
-define('CACHE_DIR',BASEDIR.'/cache');
-define('COMM_CACHE_DIR',CACHE_DIR.'/comments');
-define('COMM_CACHE_TIME',1000) ; //in seconds
+const CACHE_DIR = BASEDIR . '/cache';
+const COMM_CACHE_DIR = CACHE_DIR . '/comments';
+const COMM_CACHE_TIME = 1000; //in seconds
 
 # User Feeds
-define("USER_FEEDS_DIR",CACHE_DIR.'/userfeeds');
+const USER_FEEDS_DIR = CACHE_DIR . '/userfeeds';
 
 # Number of activity feeds to display on channel page
-define("USER_ACTIVITY_FEEDS_LIMIT",15);
+const USER_ACTIVITY_FEEDS_LIMIT = 15;
 
 # SETTING PHOTO SETTING
 $cbphoto->thumb_width = $row['photo_thumb_width'];
@@ -377,9 +357,9 @@ require_once BASEDIR.'/includes/smartyv3/bootstrap.php';
 $cbtpl->init();
 require BASEDIR.'/includes/active.php';
 Assign('THIS_URL', $thisurl);
-define("ALLOWED_GROUP_CATEGORIES",$row['grp_categories']);
+define('ALLOWED_GROUP_CATEGORIES',$row['grp_categories']);
 define('ALLOWED_VDO_CATS',$row['video_categories']);
-define('ALLOWED_CATEGORIES',3);
+const ALLOWED_CATEGORIES = 3;
 
 $ClipBucket->initAdminMenu();
 
@@ -416,8 +396,8 @@ Assign('comment_rating',$row['comment_rating']);
 Assign('video_download',$row['video_download']);
 Assign('video_embed',$row['video_embed']);
 assign('icons_url',ICONS_URL);
-define( 'PLAYLIST_COVERS_DIR', IMAGES_DIR.'/playlist_covers' );
-define( 'PLAYLIST_COVERS_URL', IMAGES_URL.'/playlist_covers' );
+const PLAYLIST_COVERS_DIR = IMAGES_DIR . '/playlist_covers';
+const PLAYLIST_COVERS_URL = IMAGES_URL . '/playlist_covers';
 assign('development_mode', DEVELOPMENT_MODE);
 
 if (!file_exists( PLAYLIST_COVERS_DIR)) {
@@ -443,8 +423,6 @@ if( config('load_remote_upload_form') == 'yes' ){
 }
 
 Assign('LANG',$LANG);
-Assign('langf',getConstant('LANG'));
-Assign('lang_count',(isset($languages)) ? count($languages) : false);
 
 # Configuration of time format
 $config['date'] = '%I:%M %p';
@@ -552,6 +530,7 @@ $Smarty->register_modifier('getHeight','getHeight');
 assign('updateEmbedCode','updateEmbed');
 # Registering Video Remove Functions
 register_action_remove_video('remove_video_thumbs');
+register_action_remove_video('remove_video_subtitles');
 register_action_remove_video('remove_video_log');
 register_action_remove_video('remove_video_files');
 register_anchor_function( 'add_photo_plupload_javascript_block', 'cb_head' );
@@ -561,5 +540,5 @@ cb_register_action( 'increment_playlist_played', 'view_playlist' );
 
 include('admin.functions.php');
 # Other settings
-define("SEND_COMMENT_NOTIFICATION",config("send_comment_notification"));
-define("SEND_VID_APPROVE_EMAIL",config("approve_video_notification"));
+define('SEND_COMMENT_NOTIFICATION',config('send_comment_notification'));
+define('SEND_VID_APPROVE_EMAIL',config('approve_video_notification'));

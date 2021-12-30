@@ -38,7 +38,7 @@ class CBvideo extends CBCategory
         }
 		
 		if(isSectionEnabled('videos')){
-			$Cbucket->search_types['videos'] = "cbvid";
+			$Cbucket->search_types['videos'] = 'cbvid';
         }
 
 		$this->video_delete_functions[] = 'delete_video_from_collection';
@@ -627,8 +627,9 @@ class CBvideo extends CBCategory
 		$src = $vdetails['videoid'];
 		$file = LOGS_DIR.DIRECTORY_SEPARATOR.$vdetails['file_name'].'.log';
 		$db->execute('DELETE FROM '.tbl('video_files')." WHERE src_name = '$src'");
-		if(file_exists($file))
+		if(file_exists($file)){
 			unlink($file);
+        }
 		$fn = $vdetails['file_name'];
 		$result = db_select('SELECT * FROM '.tbl('video')." WHERE file_name = '$fn'");
 		if($result)
@@ -644,6 +645,25 @@ class CBvideo extends CBCategory
 		}
 		e(lang('vid_log_delete_msg'),'m');
 	}
+
+    function remove_subtitles($vdetails)
+    {
+        global $db;
+        $directory = SUBTITLES_DIR.DIRECTORY_SEPARATOR.$vdetails['file_directory'].DIRECTORY_SEPARATOR;
+        $result = db_select('SELECT * FROM '.tbl('video_subtitle').' WHERE videoid = '.$vdetails['videoid']);
+        if($result) {
+            foreach($result as $row) {
+                $filepath = $directory.$vdetails['file_name'].'-'.$row['number'].'.srt';
+                if( file_exists($filepath) ){
+                    unlink($filepath);
+                }
+            }
+
+            $db->execute('DELETE FROM '.tbl('video_subtitle').' WHERE videoid = '.$vdetails['videoid']);
+        }
+
+        e(lang('video_subtitles_deleted'),'m');
+    }
 
 	/**
 	 * Function used to remove video files

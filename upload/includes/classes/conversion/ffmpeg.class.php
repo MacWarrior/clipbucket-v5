@@ -1,5 +1,4 @@
 <?php
-
 define('FFMPEG_BINARY', get_binaries('ffmpeg'));
 define('MEDIAINFO_BINARY', get_binaries('media_info'));
 define('FFPROBE', get_binaries('ffprobe_path'));
@@ -8,7 +7,6 @@ define('PROCESSESS_AT_ONCE',config('max_conversion'));
 
 class FFMpeg
 {
-	// Start public variables declaration
 	public $num = thumbs_number;
 	public $reconvert = false;
 	public $ffMpegPath = FFMPEG_BINARY;
@@ -19,19 +17,18 @@ class FFMpeg
 	public $raw_path = '';
 	public $audio_track = false;
 	public $file_directory = '';
-	public $thumbs_res_settings = array(
+	public        $thumbs_res_settings = array(
         'original' => 'original',
         '105' => array('168','105'),
         '260' => array('416','260'),
         '320' => array('632','395'),
         '480' => array('768','432')
     );
-	// End public variables declaration
+    public string $input_file = '';
 
-	// Start private variables declaration
 	private $options = array();
 	private $videosDirPath = VIDEOS_DIR;
-	// End private variables declaration
+
 
 	public function __construct($options, $log = false)
 	{
@@ -57,10 +54,9 @@ class FFMpeg
      *
      * @param null|string $file_path
      *
-     * @return mixed
      */
-	function get_file_info($file_path=NULL)
-	{
+	function get_file_info($file_path=NULL): array
+    {
 		if(!$file_path){
 			$file_path = $this->input_file;
         }
@@ -116,6 +112,7 @@ class FFMpeg
 
 		if(!$info['duration'] || 1) {
 			$CMD = MEDIAINFO_BINARY . " '--Inform=General;%Duration%'  '". $file_path."' 2>&1 ";
+            error_log(shell_output( $CMD ));
 			$info['duration'] = round(shell_output( $CMD )/1000,2);
 		}
 
@@ -141,7 +138,6 @@ class FFMpeg
 			}
 		}
 		$needle_start = 'Original width';
-		$needle_end = 'pixels';
 		$original_width = find_string($needle_start,$needle_end,$results);
 		$original_width[1] = str_replace(' ', '', $original_width[1]);
 		if(!empty($original_width) && $original_width!=false)
@@ -357,8 +353,7 @@ class FFMpeg
 				$log = '';
 				try {
 					$thumbs_settings = $this->thumbs_res_settings;
-					foreach( $thumbs_settings as $key => $thumbs_size )
-					{
+					foreach( $thumbs_settings as $key => $thumbs_size ) {
 						$height_setting = $thumbs_size[1];
 						$width_setting = $thumbs_size[0];
 						$dimension_setting = $width_setting.'x'.$height_setting;
@@ -375,13 +370,43 @@ class FFMpeg
 						$thumbs_settings['size_tag'] = $dim_identifier;
 						$this->generateThumbs($thumbs_settings);
 					}
-					
 				} catch(Exception $e) {
 					$log .= "\r\n Error Occured : ".$e->getMessage()."\r\n";
 				}
 
-				$log .= "\r\n ====== End : Thumbs Generation ======= \r\n";
-				$this->log->writeLine('Thumbs Generation', $log, true);
+                $log .= "\r\n ====== End : Thumbs Generation ======= \r\n";
+                $this->log->writeLine('Thumbs Generation', $log, true);
+
+                if( config('extract_subtitles') ){
+                    global $cbvideo, $db;
+
+                    $log = '';
+                    $subtitles = FFMpeg::get_track_title($this->input_file, 'subtitle');
+
+                    if( count($subtitles) > 0 ){
+                        $video = $cbvideo->get_video($this->file_name,true);
+                        $subtitle_dir = SUBTITLES_DIR.DIRECTORY_SEPARATOR.$video['file_directory'].DIRECTORY_SEPARATOR;
+                        if(!is_dir($subtitle_dir)){
+                            mkdir($subtitle_dir,0755, true);
+                        }
+
+                        $count = 0;
+                        foreach( $subtitles as $map_id => $title ) {
+                            $count++;
+                            $display_count = str_pad((string)$count, 2, '0', STR_PAD_LEFT);
+                            $command = config('ffmpegpath').' -i '.$this->input_file.' -map 0:'.$map_id.' '.$subtitle_dir.$this->file_name.'-'.$display_count.'.srt 2>&1';
+                            $log .= "\r\n".$command;
+                            $output = $this->exec($command);
+                            $db->insert(tbl('video_subtitle'),array('videoid','number','title'),array($video['videoid'], $display_count, $title));
+                            if( DEVELOPMENT_MODE ) {
+                                $log .= "\r\n".$output;
+                            }
+                        }
+                    }
+
+                    $log .= "\r\n ====== End : Subtitles extraction ======= \r\n";
+                    $this->log->writeLine('Subtitles extraction', $log, true);
+                }
 
                 $this->options['format'] = 'mp4';
                 $orig_file = $this->input_file;
@@ -757,7 +782,7 @@ class FFMpeg
 		rmdir($tmpDir);
 	}
 
-	public static function get_video_tracks($filepath)
+	public static function get_track_title(string $filepath, string $type)
 	{
 		$stats = stat($filepath);
 		if($stats && is_array($stats))
@@ -767,7 +792,7 @@ class FFMpeg
 			$langs = array();
 			foreach($tracks_json as $track)
 			{
-				if( $track['codec_type'] != 'audio' ){
+				if( $track['codec_type'] != $type ){
 					continue;
                 }
 

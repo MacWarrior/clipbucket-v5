@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"3",
+  "revision":"4",
   "status":"dev",
   "detail":[
     {
@@ -11,6 +11,7 @@
         ,"Update website configuration interface"
         ,"Add option to keep audio tracks in video files"
         ,"Add option to keep subtitles in video files"
+        ,"Add option to extract subtitles to dedicated files"
       ]
     },
     {

@@ -981,6 +981,12 @@
         return $cbvid->remove_files($vdetails);
     }
 
+    function remove_video_subtitles($vdetails)
+    {
+        global $cbvid;
+        return $cbvid->remove_subtitles($vdetails);
+    }
+
 	/**
 	 * Function used to check weather video has Mp4 file or not
 	 *

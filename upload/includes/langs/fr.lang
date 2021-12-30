@@ -767,10 +767,10 @@
     "pic_upload_vali_err": "Please upload valid JPG, GIF or PNG image",
     "cat_dir_make_err": "Unable to create the category thumb directory",
     "cat_set_default_ok": "La catégorie a été définie par défaut",
-    "vid_thumb_removed_msg": "Video thumbs have been removed",
-    "vid_files_removed_msg": "Video files have been removed",
-    "vid_log_delete_msg": "Video log has been deleted",
-    "vdo_multi_del_erro": "Videos has have been deleted",
+    "vid_thumb_removed_msg": "Les vignettes de la vidéo ont été supprimés",
+    "vid_files_removed_msg": "Les fichiers de la vidéo ont été supprimés",
+    "vid_log_delete_msg": "Les logs de la vidéo ont été supprimés",
+    "vdo_multi_del_erro": "Les vidéos ont été supprimées",
     "add_fav_message": "Cette %s a été ajoutée à vos favoris",
     "obj_not_exists": "%s n'existe pas",
     "already_fav_message": "Cette %s a déjà été ajoutée à vos favoris",
@@ -1598,5 +1598,7 @@
 	"dashboard_changelogs":"Nouveautés",
 	"dashboard_php_config_allow_url_fopen":"Veuillez activer 'allow_url_fopen' pour pouvoir profiter du statut de mise à jour",
 	"signup_error_email_unauthorized":"Email non autorisé",
-	"video_detail_saved":"Les détails de la vidéo ont été sauvegardés"
+	"video_detail_saved":"Les détails de la vidéo ont été sauvegardés",
+	"video_subtitles_deleted":"Les sous-titres de la vidéo ont été supprimés"
+
 }

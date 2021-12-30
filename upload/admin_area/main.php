@@ -83,6 +83,7 @@ if(isset($_POST['update']))
         ,'own_channel_rating'
         ,'keep_audio_tracks'
         ,'keep_subtitles'
+        ,'extract_subtitles'
     ];
 
     $rows = array(
@@ -105,6 +106,7 @@ if(isset($_POST['update']))
         'force_8bits',
         'keep_audio_tracks',
         'keep_subtitles',
+        'extract_subtitles',
 
         'background_color',
         'background_upload',
@@ -265,7 +267,6 @@ if(isset($_POST['update']))
         'video_round_views',
         'load_upload_form',
         'load_remote_upload_form',
-
 
         'allow_conversion_1_percent',
 

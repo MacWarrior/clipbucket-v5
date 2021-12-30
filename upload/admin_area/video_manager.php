@@ -112,7 +112,7 @@ if(isset($_POST['delete_selected'])) {
         $cbvideo->delete_video($_POST['check_video'][$id]);
     }
     $eh->flush();
-    e(lang("vdo_multi_del_erro"),"m");
+    e(lang('vdo_multi_del_erro'),'m');
 }
 
 //Calling Video Manager Functions
