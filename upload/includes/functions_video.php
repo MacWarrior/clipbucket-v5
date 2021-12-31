@@ -535,7 +535,7 @@
     function vkey_exists($key): bool
     {
         global $db;
-        $results = $db->select(tbl("video"),"videokey"," videokey='$key'");
+        $results = $db->select(tbl('video'),'videokey'," videokey='$key'");
         if(count($results)>0){
             return true;
 		}
@@ -789,8 +789,7 @@
                 }
 			}
 
-			$db->update(tbl('video'),array('status','duration','failed_reason'),
-				array($status, $duration, 'none')," file_name='".$file_name."'");
+			$db->update(tbl('video'),array('status','duration','failed_reason'), array($status, $duration, 'none')," file_name='".$file_name."'");
 		}
     }
 
@@ -909,9 +908,9 @@
 	 *
 	 * @param $name
 	 *
-	 * @return
+	 * @return string
 	 */
-    function get_thumb_num($name)
+    function get_thumb_num($name): string
     {
         $list = explode( '-', $name);
         $list = end( $list );
@@ -929,9 +928,9 @@
     function delete_video_thumb($file_dir,$file_name,$num)
     {
         if(!empty($file_dir)){
-            $files = glob(THUMBS_DIR.'/'.$file_dir.'/'.$file_name.'*'.$num.'.*');
+            $files = glob(THUMBS_DIR.DIRECTORY_SEPARATOR.$file_dir.DIRECTORY_SEPARATOR.$file_name.'*'.$num.'.*');
         } else {
-            $files = glob(THUMBS_DIR.'/'.$file_name.'*'.$num.'.*');
+            $files = glob(THUMBS_DIR.DIRECTORY_SEPARATOR.$file_name.'*'.$num.'.*');
         }
 
         if ($files) {
@@ -954,7 +953,7 @@
     function remove_video_thumbs($vdetails)
     {
         global $cbvid;
-        return $cbvid->remove_thumbs($vdetails);
+        $cbvid->remove_thumbs($vdetails);
     }
 
 	/**
@@ -965,7 +964,7 @@
     function remove_video_log($vdetails)
     {
         global $cbvid;
-        return $cbvid->remove_log($vdetails);
+        $cbvid->remove_log($vdetails);
     }
 
 	/**
@@ -984,7 +983,13 @@
     function remove_video_subtitles($vdetails)
     {
         global $cbvid;
-        return $cbvid->remove_subtitles($vdetails);
+        $cbvid->remove_subtitles($vdetails);
+    }
+
+    function remove_video_audio_tracks($vdetails)
+    {
+        global $cbvid;
+        $cbvid->remove_audio_tracks($vdetails);
     }
 
 	/**
@@ -1677,15 +1682,24 @@
 		return false;
 	}
 
-	function check_castable_status($vdetails){
+    function get_audio_channels($filepath): int
+    {
+        if( !file_exists($filepath) ){
+            return 0;
+        }
+        $cmd = get_binaries('ffprobe_path').' -show_entries stream=channels -of compact=p=0:nk=1 -v 0 '.$filepath.' | grep .';
+        return (int)shell_exec( $cmd );
+    }
+
+	function update_castable_status($vdetails)
+    {
 		if( is_null($vdetails) || $vdetails['is_castable'] == 1 ){
 			return;
 		}
 
 		global $db;
 		$filepath = VIDEOS_DIR.DIRECTORY_SEPARATOR.$vdetails['file_directory'].DIRECTORY_SEPARATOR. $vdetails['file_name'].'-'.json_decode($vdetails['video_files'])[0].'.mp4';
-		$cmd = get_binaries('ffprobe_path').' -show_entries stream=channels -of compact=p=0:nk=1 -v 0 '.$filepath.' | grep .';
-		$data = shell_exec( $cmd );
+		$data = get_audio_channels($filepath);
 
 		if( $data <= 2 ){
 			$db->update(tbl('video'),array('is_castable'),array(true)," videoid='".$vdetails['videoid']."'");

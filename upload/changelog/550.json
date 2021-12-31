@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"4",
+  "revision":"5",
   "status":"dev",
   "detail":[
     {
@@ -12,6 +12,7 @@
         ,"Add option to keep audio tracks in video files"
         ,"Add option to keep subtitles in video files"
         ,"Add option to extract subtitles to dedicated files"
+        ,"Add option to extract audio tracks to dedicated files"
       ]
     },
     {

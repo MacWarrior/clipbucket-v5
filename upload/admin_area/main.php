@@ -84,6 +84,7 @@ if(isset($_POST['update']))
         ,'keep_audio_tracks'
         ,'keep_subtitles'
         ,'extract_subtitles'
+        ,'extract_audio_tracks'
     ];
 
     $rows = array(
@@ -107,6 +108,7 @@ if(isset($_POST['update']))
         'keep_audio_tracks',
         'keep_subtitles',
         'extract_subtitles',
+        'extract_audio_tracks',
 
         'background_color',
         'background_upload',

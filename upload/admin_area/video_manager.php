@@ -37,12 +37,12 @@ if(isset($_GET['make_unfeature'])){
 if(isset($_GET['check_castable'])){
     $videoid = mysql_clean($_GET['check_castable']);
     $vdetails = get_video_details($videoid);
-    check_castable_status($vdetails);
+    update_castable_status($vdetails);
 }
 if(isset($_POST['check_castable_selected'])) {
     for($id=0;$id<count($_POST['check_video']);$id++){
         $vdetails = get_video_details($_POST['check_video'][$id]);
-        check_castable_status($vdetails);
+        update_castable_status($vdetails);
     }
 }
 

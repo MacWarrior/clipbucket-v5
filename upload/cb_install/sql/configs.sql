@@ -223,7 +223,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'player_default_resolution', '360'),
 	(NULL, 'keep_audio_tracks', '1'),
 	(NULL, 'keep_subtitles', '1'),
-	(NULL, 'extract_subtitles', '1');
+	(NULL, 'extract_subtitles', '1'),
+	(NULL, 'extract_audio_tracks', '1');
 
 INSERT INTO `{tbl_prefix}languages` (`language_id`, `language_code`, `language_name`, `language_regex`, `language_active`, `language_default`) VALUES
 	(1, 'en', 'English', '/^en/i', 'yes', 'yes'),

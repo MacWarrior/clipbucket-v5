@@ -74,6 +74,7 @@
             @mkdir(PHOTOS_DIR . DIRECTORY_SEPARATOR . $folder, 0777, true);
             @mkdir(LOGS_DIR . DIRECTORY_SEPARATOR . $folder, 0777, true);
 			@mkdir(AUDIOS_DIR . DIRECTORY_SEPARATOR . $folder, 0777, true);
+			@mkdir(SUBTITLES_DIR . DIRECTORY_SEPARATOR . $folder, 0777, true);
         } else if (!file_exists($headFolder . DIRECTORY_SEPARATOR . $folder)) {
 			@mkdir($headFolder . DIRECTORY_SEPARATOR . $folder, 0777, true);
 		}

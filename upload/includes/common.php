@@ -531,6 +531,7 @@ assign('updateEmbedCode','updateEmbed');
 # Registering Video Remove Functions
 register_action_remove_video('remove_video_thumbs');
 register_action_remove_video('remove_video_subtitles');
+register_action_remove_video('remove_video_audio_tracks');
 register_action_remove_video('remove_video_log');
 register_action_remove_video('remove_video_files');
 register_anchor_function( 'add_photo_plupload_javascript_block', 'cb_head' );
