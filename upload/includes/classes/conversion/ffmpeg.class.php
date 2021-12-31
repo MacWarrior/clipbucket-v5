@@ -112,7 +112,7 @@ class FFMpeg
 
 		if(!$info['duration']) {
 			$CMD = MEDIAINFO_BINARY." '--Inform=General;%Duration%' '". $file_path."' 2>&1";
-			$info['duration'] = round(shell_output( $CMD )/1000,2);
+			$info['duration'] = round((int)shell_output( $CMD )/1000,2);
 		}
 
 		$this->raw_info = $info;
@@ -393,7 +393,7 @@ class FFMpeg
                         foreach( $subtitles as $map_id => $title ) {
                             $count++;
                             $display_count = str_pad((string)$count, 2, '0', STR_PAD_LEFT);
-                            $command = config('ffmpegpath').' -i '.$this->input_file.' -map 0:'.$map_id.' '.$subtitle_dir.$this->file_name.'-'.$display_count.'.srt 2>&1';
+                            $command = config('ffmpegpath').' -i '.$this->input_file.' -map 0:'.$map_id.' -f '.config('subtitle_format').' '.$subtitle_dir.$this->file_name.'-'.$display_count.'.srt 2>&1';
                             $log .= "\r\n".$command;
                             $output = $this->exec($command);
                             $db->insert(tbl('video_subtitle'),array('videoid','number','title'),array($video['videoid'], $display_count, $title));

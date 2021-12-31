@@ -682,7 +682,9 @@ INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 	('keep_audio_tracks', '1'),
 	('keep_subtitles', '1'),
 	('extract_subtitles', '1'),
-	('extract_audio_tracks', '1');
+	('extract_audio_tracks', '1'),
+	('player_subtitles', '1'),
+	('subtitle_format', 'webvtt');
 
 CREATE TABLE `{tbl_prefix}video_subtitle` (
 	`videoid` bigint(20) NOT NULL,

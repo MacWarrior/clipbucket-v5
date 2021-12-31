@@ -311,6 +311,26 @@
         echo '{'.$json.'}';
     }
 
+    function get_video_subtitles($vdetails)
+    {
+        global $db;
+        $results = $db->select(tbl('video_subtitle'),'videoid,number,title',' videoid='.$vdetails['videoid']);
+
+        if( count($results) == 0 ){
+            return false;
+        }
+
+        $subtitles = [];
+        foreach($results as $line){
+            $subtitles[] = [
+                'url'=> SUBTITLES_URL.'/'.$vdetails['file_directory'].'/'.$vdetails['file_name'].'-'.$line['number'].'.srt'
+                ,'title' => $line['title']
+            ];
+        }
+
+        return $subtitles;
+    }
+
 	/**
 	 * Function used to check if given thumb is big or not
 	 *
@@ -318,7 +338,8 @@
 	 *
 	 * @return bool : { boolean } { true if thumb is big, false }
 	 */
-    function is_big($thumb_file) {
+    function is_big($thumb_file): bool
+    {
         if(strstr($thumb_file,'big')) {
             return true;
         }
@@ -332,8 +353,8 @@
 	 *
 	 * @return bool
 	 */
-    function is_original($thumb_file)
-	{
+    function is_original($thumb_file): bool
+    {
         if(strstr($thumb_file,'original')){
             return true;
 		}
@@ -379,7 +400,7 @@
 	 * @return string
 	 * @internal param video $ARRAY details
 	 */
-    function video_link($vdetails,$type=NULL)
+    function video_link($vdetails,$type=NULL): string
     {
         #checking what kind of input we have
         if(is_array($vdetails)){
@@ -419,14 +440,13 @@
                 if(function_exists($func['func'])) {
                     $returned = $func['func']($array);
                     if($returned) {
-                        $link = $returned;
-                        return $link;
+                        return $returned;
                     }
                 }
             }
         }
 
-        $plist = "";
+        $plist = '';
         if(SEO == 'yes') {
             if($vdetails['playlist_id']){
                 $plist = '?play_list='.$vdetails['playlist_id'];
@@ -464,7 +484,7 @@
     }
 
     //Function That will use in creating SEO urls
-    function VideoLink($vdetails,$type=NULL)
+    function VideoLink($vdetails,$type=NULL): string
     {
         return video_link($vdetails,$type);
     }
@@ -474,7 +494,7 @@
 	 *
 	 * @param : array(videoKey or ID, video TITLE)
 	 *
-	 * @return string
+	 * @return string|void
 	 */
     function videoSmartyLink($params)
     {
@@ -553,7 +573,7 @@
     function file_name_exists($name)
     {
         global $db;
-        $results = $db->select(tbl("video"),"videoid,file_name"," file_name='$name'");
+        $results = $db->select(tbl('video'),'videoid,file_name'," file_name='$name'");
 
         if(count($results) > 0){
             return $results[0]['videoid'];
@@ -569,7 +589,7 @@
 	 *
 	 * @return array
 	 */
-    function get_queued_video($update=TRUE,$fileName=NULL)
+    function get_queued_video($update=TRUE,$fileName=NULL): array
     {
         global $db;
 		if($fileName) {
@@ -592,7 +612,7 @@
 	 *
 	 * @return array
 	 */
-    function get_video_being_processed($fileName=NULL)
+    function get_video_being_processed($fileName=NULL): array
     {
         if($fileName) {
             $queueName = getName($fileName);
@@ -600,7 +620,7 @@
             $fileNameQuery = " AND cqueue_name ='$queueName' AND cqueue_ext ='$ext' ";
         }
 
-        $query = ' SELECT * FROM '.tbl('conversion_queue');
+        $query = 'SELECT * FROM '.tbl('conversion_queue');
         $query .= " WHERE cqueue_conversion='p' ";
 
         if(isset($fileNameQuery)){

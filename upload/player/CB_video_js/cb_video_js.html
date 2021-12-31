@@ -147,6 +147,14 @@
 			<source src='{$file}' type="video/mp4" label="{$myquery->getVideoResolutionTitleFromHeight($quality)}" res="{$quality}" />
 		{/if}
     {/foreach}
+	{if config('player_subtitles')}
+		{$subtitles = get_video_subtitles($vdata)}
+		{if $subtitles}
+			{foreach $subtitles as $file}
+				<track kind="captions" src="{$file['url']}" label="{display_clean($file['title'])}">
+			{/foreach}
+		{/if}
+	{/if}
     {ANCHOR place="play_def_sub" data=$vdata.videoid }
     <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
 </video>

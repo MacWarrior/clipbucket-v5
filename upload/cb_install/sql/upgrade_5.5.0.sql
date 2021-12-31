@@ -37,3 +37,8 @@ ALTER TABLE `{tbl_prefix}video_audio_tracks`
 
 ALTER TABLE `{tbl_prefix}video_audio_tracks`
 	ADD CONSTRAINT `{tbl_prefix}video_audio_tracks_ibfk_1` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- REV 6
+INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
+	('player_subtitles', '1'),
+	('subtitle_format', 'webvtt');

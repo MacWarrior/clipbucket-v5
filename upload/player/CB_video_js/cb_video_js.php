@@ -3,8 +3,8 @@
 	Player Name: VideoJS
 	Description: Official CBV5 player
 	Author: Arslan Hassan & MacWarrior
-	Version: CB5.4.1
-    Released: 2021-08-06
+	Version: CB5.5.0
+    Released: 2021-12-31
     Website: https://github.com/MacWarrior/clipbucket-v5
  */
 
@@ -13,13 +13,13 @@ $cb_video_js = false;
 if (!function_exists('cb_video_js'))
 {
 	define("CB_VJS_PLAYER",basename(dirname(__FILE__)));
-	define("CB_VJS_PLAYER_DIR",PLAYER_DIR."/".CB_VJS_PLAYER);
-	define("CB_VJS_PLAYER_URL",PLAYER_URL."/".CB_VJS_PLAYER);
+	define("CB_VJS_PLAYER_DIR",PLAYER_DIR.DIRECTORY_SEPARATOR.CB_VJS_PLAYER);
+	define("CB_VJS_PLAYER_URL",PLAYER_URL.'/'.CB_VJS_PLAYER);
 	assign('cb_vjs_player_dir',CB_VJS_PLAYER_DIR);
 	assign('cb_vjs_player_url',CB_VJS_PLAYER_URL);
 
-	function cb_video_js($in)
-	{
+	function cb_video_js($in): bool
+    {
 		global $cb_video_js;
 		$cb_video_js = true;
 		
@@ -41,20 +41,20 @@ if (!function_exists('cb_video_js'))
 		assign('player_config',$in);
 		assign('vdata',$vdetails);
 		
-		Template(CB_VJS_PLAYER_DIR.'/cb_video_js.html',false);
+		Template(CB_VJS_PLAYER_DIR.DIRECTORY_SEPARATOR.'cb_video_js.html',false);
 		return true;
 	}
 
 	/*
 	* This Function is written to get quality of current file
 	*/
-	function get_cbvjs_quality($src){
+	function get_cbvjs_quality($src): string
+    {
 		
 		$quality = explode('-', $src);
 	    $quality = end($quality);
 	    $quality = explode('.',$quality);
-	    $quality = $quality[0];
-	    return $quality;
+	    return $quality[0];
 	}
 
 	/*

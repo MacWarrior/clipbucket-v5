@@ -773,6 +773,16 @@
                                 </div>
                             </div>
                             <hr/>
+							<div class="row">
+								<div class="col-md-10">
+									<label class="nowrap" for="stay_mp4" title="Stay MP4 as it is"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Only use this option if you only want MP4 file uplad : this option disable video conversion and keep mp4 files as they are uploaded"> Stay MP4 as it is</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="stay_mp4" id="stay_mp4" {if $row.stay_mp4=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
 						</div>
 						<div class="col-md-4">
                             <div class="row">
@@ -812,13 +822,12 @@
                                 <div class="col-md-3">
                                     <input class="form-control" name="vrate" id="vrate" value="{$row.vrate}"/>
                                 </div>
-                                <div class="col-md-4">
-                                    <label class="nowrap" for="stay_mp4" title="Stay MP4 as it is"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Only use this option if you only want MP4 file uplad : this option disable video conversion and keep mp4 files as they are uploaded"> Stay MP4 as it is</label>
-                                </div>
-                                <div class="col-md-2 row-size">
-                                    <input value="yes" name="stay_mp4" id="stay_mp4" {if $row.stay_mp4=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                    <span class="lbl"></span>
-                                </div>
+								<div class="col-md-3">
+									<label class="nowrap" for="subtitle_format" title="Subtitle Format">Subtitle Format</label>
+								</div>
+								<div class="col-md-3">
+									<input class="form-control" name="subtitle_format" id="subtitle_format" value="{$row.subtitle_format}"/>
+								</div>
                             </div>
                             <hr/>
 							<div class="row">

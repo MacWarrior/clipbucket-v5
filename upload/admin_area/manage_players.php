@@ -31,7 +31,8 @@ if(isset($_POST['update'])) {
         'control_bar_logo_url',
         'player_logo_url',
         'player_thumbnails',
-        'player_default_resolution'
+        'player_default_resolution',
+        'player_subtitles'
     );
 
     //Checking for logo
