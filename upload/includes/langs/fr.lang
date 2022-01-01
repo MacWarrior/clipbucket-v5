@@ -1599,7 +1599,6 @@
 	"dashboard_php_config_allow_url_fopen":"Veuillez activer 'allow_url_fopen' pour pouvoir profiter du statut de mise à jour",
 	"signup_error_email_unauthorized":"Email non autorisé",
 	"video_detail_saved":"Les détails de la vidéo ont été sauvegardés",
-	"video_subtitles_deleted":"Les sous-titres de la vidéo ont été supprimés",
-	"video_audio_tracks_deleted":"Les pistes audio de la vidéo ont été supprimées"
+	"video_subtitles_deleted":"Les sous-titres de la vidéo ont été supprimés"
 
 }

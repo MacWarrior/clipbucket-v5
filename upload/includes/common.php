@@ -242,7 +242,6 @@ const FILES_DIR = BASEDIR . '/files';
 const VIDEOS_DIR = FILES_DIR . '/videos';
 const SUBTITLES_DIR = FILES_DIR . '/subtitles';
 const THUMBS_DIR = FILES_DIR . '/thumbs';
-const AUDIOS_DIR = FILES_DIR . '/audios';
 const ORIGINAL_DIR = FILES_DIR . '/original';
 const TEMP_DIR = FILES_DIR . '/temp';
 const CON_DIR = FILES_DIR . '/conversion_queue';
@@ -531,7 +530,6 @@ assign('updateEmbedCode','updateEmbed');
 # Registering Video Remove Functions
 register_action_remove_video('remove_video_thumbs');
 register_action_remove_video('remove_video_subtitles');
-register_action_remove_video('remove_video_audio_tracks');
 register_action_remove_video('remove_video_log');
 register_action_remove_video('remove_video_files');
 register_anchor_function( 'add_photo_plupload_javascript_block', 'cb_head' );

@@ -1006,12 +1006,6 @@
         $cbvid->remove_subtitles($vdetails);
     }
 
-    function remove_video_audio_tracks($vdetails)
-    {
-        global $cbvid;
-        $cbvid->remove_audio_tracks($vdetails);
-    }
-
 	/**
 	 * Function used to check weather video has Mp4 file or not
 	 *
@@ -1320,155 +1314,17 @@
 	 * Assigns videos array to video player's HTML in VideoJS and HTML5 Player
 	 *
 	 * @param : { array } { $array } { array of all sources for video }
-	 * @param bool $test_msg
 	 *
-	 * @return bool
 	 * @author : Saqib Razzaq
 	 */
-    function vids_assign( $array, $test_msg = false )
+    function vids_assign($array)
     {
         if (!is_array($array)){
             assign('video_files',array($array));
             return false;
         }
 
-        $data = get_browser_details();
-
-        foreach ($array as $key => $value) {
-            if ( is_mob_vid($value) ) {
-                if (is_phone_user($data)) {
-                    if ($test_msg){
-                        echo 'Mobile video on mobile ';
-					}
-
-                    $new_array = array();
-                    $new_array[] = $value;
-                    assign('mobile_vid', 'true');
-                    assign('video_files', $new_array);
-                    break;
-                }
-            } elseif ( is_extension($value, 'flv') && !is_phone_user($data) ) {
-                if ( $test_msg ){
-                    echo 'FLV video on PC';
-				}
-
-                $new_array = array();
-                $new_array[] = $value;
-                assign('flv_vid', 'true');
-                assign('video_files', $new_array);
-                break;
-            } else {
-                if ( $test_msg ){
-                    echo 'Regular vids array';
-				}
-
-                assign('video_files', $array);
-                break;
-            }
-        }
-    }
-
-	/**
-	 * Checks if a provided file matches provided extension
-	 *
-	 * @param      $filepath
-	 * @param      $ext
-	 * @param bool $err_msg
-	 *
-	 * @return bool : { boolean } { true or false }
-	 * { true or false }
-	 * @internal param $ : { string } { $filepath } { path or link to file }
-	 * @internal param $ : { string } { $ext } { file extension to match against }
-	 * @author : Saqib Razzaq
-	 */
-    function is_extension( $filepath, $ext, $err_msg = false ) 
-    {
-        # extract file extension
-        $file_format = pathinfo($filepath, PATHINFO_EXTENSION);
-        # check if extension is empty
-        if ( empty($filepath) ) {
-            if ( $err_msg ) {
-                echo "Invalid URL given for checking";
-            }
-
-            # extension is empty so return false
-            return false;
-          # check extension == extension given by user
-        } elseif ( strtolower($file_format) == strtolower($ext) ) {
-            # extensions match so return true
-            return $ext;
-        } else {
-            if ( $err_msg ) {
-                echo "Invalid extension ".$ext;
-            }
-
-            # extensions don't match or something else went wrong so return false
-            return false;
-        }
-    }
-
-	/**
-	 * Checks if video was converted using CB Mobile Mod (for 2.6 users)
-	 *
-	 * @param : { string } { $url } { url of the video to check }
-	 * @param bool $err_msg
-	 *
-	 * @return bool : { boolean } { true of false }
-	 *
-	 * @author : Saqib Razzaq
-	 */
-    function is_mob_vid( $url, $err_msg = false )
-    {
-        if (!empty($url)) {
-            if ( is_extension( $url, 'mp4' ) ) {
-                $check = substr($url, -6);
-
-                if ( $check == '-m.mp4' ){
-                    return true;
-				}
-
-				if ( $err_msg ){
-					echo 'Not a mobile mod video';
-				}
-				return false;
-            }
-        } else {
-            if ( $err_msg ){
-                echo 'Invalid URL given for checking';
-			}
-            return false;
-        }
-    }
-
-	/**
-	 * Checks if current website user is using mobile / smart phone
-	 *
-	 * @param : { array } { array of data ( useragent etc ) }
-	 *
-	 * @return string : { string } { platform of user }
-	 *
-	 * @author : Saqib Razzaq
-	 */
-    function is_phone_user($data)
-    {
-        $platform = $data['platform'];
-        $useragent = $data['userAgent'];
-
-        $mob_array = array('Unknown','iphone','ipad','ipod','android');
-
-        if( in_array($platform, $mob_array) ){
-            return $platform;
-		}
-
-		$data = explode(' ', $useragent);
-
-		foreach ($data as $key)
-		{
-			$key = strtolower($key);
-			if ( in_array($key, $mob_array) ){
-				return $key;
-			}
-		}
+        assign('video_files', $array);
     }
 
 	/**
@@ -1633,7 +1489,8 @@
         return $returnData;
     }
     
-    function dateNow() {
+    function dateNow(): string
+    {
         return date("Y-m-d H:i:s");
     }
 

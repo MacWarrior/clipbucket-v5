@@ -407,59 +407,6 @@ class FFMpeg
                     $this->log->writeLine('Subtitles extraction', $log, true);
                 }
 
-                if( config('extract_audio_tracks') ){
-                    global $cbvideo, $db;
-
-                    $log = '';
-                    $audio_tracks = FFMpeg::get_track_title($this->input_file, 'audio');
-
-                    if( count($audio_tracks) > 0 ){
-                        $video = $cbvideo->get_video($this->file_name,true);
-                        $audio_tracks_dir = AUDIOS_DIR.DIRECTORY_SEPARATOR.$video['file_directory'].DIRECTORY_SEPARATOR;
-                        if(!is_dir($audio_tracks_dir)){
-                            mkdir($audio_tracks_dir,0755, true);
-                        }
-
-                        $count = 0;
-                        foreach( $audio_tracks as $map_id => $title ) {
-                            $count++;
-                            $display_count = str_pad((string)$count, 2, '0', STR_PAD_LEFT);
-                            $channels_count = NULL;
-
-                            // Select audio track
-                            $options = ' -map 0:'.$map_id;
-                            // Audio Bitrate
-                            $options .= ' -ab '.config('sbrate');
-                            // Audio Rate
-                            $options .= ' -ar '.config('srate');
-                            // Audio Codec
-                            $options .= ' -acodec '.config('audio_codec');
-                            // Fix for ChromeCast : Forcing stereo mode
-                            if( config('chromecast_fix') ){
-                                $options .= ' -ac 2';
-                                $channels_count = 2;
-                            }
-
-                            $filepath = $audio_tracks_dir.$this->file_name.'-'.$display_count.'.mp4';
-                            $command = config('ffmpegpath').' -i '.$this->input_file.$options.' '.$filepath.' 2>&1';
-                            $log .= "\r\n".$command;
-                            $output = $this->exec($command);
-
-                            if( is_null($channels_count) ){
-                                $channels_count = get_audio_channels($filepath);
-                            }
-
-                            $db->insert(tbl('video_audio_tracks'),array('videoid','number','title','channels'),array($video['videoid'], $display_count, $title, $channels_count));
-                            if( DEVELOPMENT_MODE ) {
-                                $log .= "\r\n".$output;
-                            }
-                        }
-                    }
-
-                    $log .= "\r\n ====== End : Audio tracks extraction ======= \r\n";
-                    $this->log->writeLine('Audio tracks extraction', $log, true);
-                }
-
                 $this->options['format'] = 'mp4';
                 $orig_file = $this->input_file;
 

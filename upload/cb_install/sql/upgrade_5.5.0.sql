@@ -42,3 +42,7 @@ ALTER TABLE `{tbl_prefix}video_audio_tracks`
 INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 	('player_subtitles', '1'),
 	('subtitle_format', 'webvtt');
+
+-- REV 7
+DELETE FROM `{tbl_prefix}config` WHERE name = 'extract_audio_tracks';
+DROP TABLE `{tbl_prefix}video_audio_tracks`;

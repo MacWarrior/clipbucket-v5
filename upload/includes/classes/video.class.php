@@ -665,25 +665,6 @@ class CBvideo extends CBCategory
         e(lang('video_subtitles_deleted'),'m');
     }
 
-    function remove_audio_tracks($vdetails)
-    {
-        global $db;
-        $directory = AUDIOS_DIR.DIRECTORY_SEPARATOR.$vdetails['file_directory'].DIRECTORY_SEPARATOR;
-        $result = db_select('SELECT * FROM '.tbl('video_audio_tracks').' WHERE videoid = '.$vdetails['videoid']);
-        if($result) {
-            foreach($result as $row) {
-                $filepath = $directory.$vdetails['file_name'].'-'.$row['number'].'.mp4';
-                if( file_exists($filepath) ){
-                    unlink($filepath);
-                }
-            }
-
-            $db->execute('DELETE FROM '.tbl('video_audio_tracks').' WHERE videoid = '.$vdetails['videoid']);
-        }
-
-        e(lang('video_audio_tracks_deleted'),'m');
-    }
-
 	/**
 	 * Function used to remove video files
 	 *
