@@ -46,8 +46,8 @@ class CBvideo extends CBCategory
         $basic_fields = array(
             'videoid', 'videokey', 'userid', 'title','server_ip', 'description', 'tags', 'category','file_directory',
             'active', 'date_added', 'broadcast', 'rating', 'file_server_path', 'files_thumbs_path',
-            'file_thumbs_count', 'duration', 'has_hq', 'has_mobile', 'views', 'file_name', 'rated_by',
-            'default_thumb', 'comments_count', 'last_viewed', 'featured', 'featured_date', 'status','re_conv_status','conv_progress','embed_code'
+            'duration', 'views', 'file_name', 'rated_by', 'file_type', 'bits_color', 'is_castable',
+            'default_thumb', 'comments_count', 'last_viewed', 'featured', 'featured_date', 'status','re_conv_status','embed_code'
         );
 
         $cb_columns->object( 'videos' )->register_columns( $basic_fields );
@@ -115,7 +115,7 @@ class CBvideo extends CBCategory
         $basic_fields = array(
             'videoid', 'videokey', 'userid', 'title', 'description', 'tags', 'category',
             'active', 'date_added', 'broadcast', 'rating', 'file_server_path', 'files_thumbs_path',
-            'file_thumbs_count', 'duration', 'has_hq', 'has_mobile', 'views', 'file_name', 'rated_by',
+            'duration', 'views', 'file_name', 'rated_by',
             'default_thumb', 'comments_count', 'last_viewed'
         );
 
@@ -737,7 +737,7 @@ class CBvideo extends CBCategory
 	 *
 	 * @param $params
 	 *
-	 * @return bool|String
+	 * @return bool|array
 	 */
 	function get_videos($params)
 	{
@@ -864,15 +864,7 @@ class CBvideo extends CBCategory
 				$cond .= ' AND ';
             }
 			$cond .= ' '.('in_editor_pick')." = '".$params['editor_pick']."' ";
-		}	
-
-		//padding videos in mass_embed plugin
-		if($params['mass_embed_status']) {
-			if($cond != ''){
-				$cond .= ' AND ';
-            }
-			$cond .= ' '.('video.mass_embed_status')." = '".$params['mass_embed_status']."' ";
-		}	
+		}
 					
 		$tag_n_title = '';
 		//Tags

@@ -12,10 +12,10 @@ include('global.php');
 
 class API extends REST
 {
-    public $data = "";
+    public $data = '';
     const DB_SERVER = "localhost";
     const DB_USER = "root";
-    const DB_PASSWORD = "";
+    const DB_PASSWORD = '';
     const DB = "rest";
     
     private $db = NULL;
@@ -28,39 +28,26 @@ class API extends REST
     public function __construct()
     {
       parent::__construct();// Init parent contructor
-      //$this->dbConnect();// Initiate Database connection
-    
-    }
-    
-    //Database connection
-    private function dbConnect()
-    {
-		$this->db = mysqli_connect(self::DB_SERVER,self::DB_USER,self::DB_PASSWORD);
-		if($this->db)
-			mysqli_select_db($this->db,self::DB);
     }
     
     //Public method for access api.
     //This method dynamically call the method based on the query string
     public function processApi()
     {
-      $func = strtolower(trim(str_replace("/","",$_REQUEST['mode'])));
-      if((int)method_exists($this,$func) > 0)
-      $this->$func();
-      else
-      $this->response('',404);
-    // If the method not exist with in this class, response would be "Page not found".
+        $func = strtolower(trim(str_replace("/",'',$_REQUEST['mode'])));
+        if((int)method_exists($this,$func) > 0)
+        $this->$func();
+        else
+        $this->response('',404);
+        // If the method not exist with in this class, response would be "Page not found".
     }
-    
-    
-   
+
     //Encode array into JSON
     private function json($data)
     {
-       if(is_array($data))
-       {
-         return json_encode($data);
-       }
+        if(is_array($data)) {
+            return json_encode($data);
+        }
     }
 
     // Get Categories
@@ -69,136 +56,95 @@ class API extends REST
          $data = array();
          $type = $_REQUEST['type'];
 
-         if($type=="u" || $type=="user" || $type=="users")
-         {
-             global $userquery;
-             $categories = $userquery->getCbCategories(arraY('indexes_only' => true));
-             if(!empty($categories))
-             {
-                $data = array('code' => "200", 'status' => "success", "msg" => "Success", "data" => $categories);
+        if($type=='u' || $type=='user' || $type=='users')
+        {
+            global $userquery;
+            $categories = $userquery->getCbCategories(arraY('indexes_only' => true));
+            if(!empty($categories)) {
+                $data = array('code' => '200', 'status' => 'success', 'msg' => 'success', 'data' => $categories);
                 $this->response($this->json($data));
-             }
-             else
-             {
-               $data = array('code' => "204", 'status' => "success", "msg" => "No Record Found", "data" => "");
-               $this->response($this->json($data));    
-             } 
-         }
-         elseif($type=="v" || $type=="video" || $type=="videos")
-         {
-             global $cbvid;
-             $categories = $cbvid->getCbCategories(arraY('indexes_only' => true));
-             if(!empty($categories))
-             {
-                $data = array('code' => "200", 'status' => "success", "msg" => "Success", "data" => $categories);
+            } else {
+                $data = array('code' => '204', 'status' => 'success', 'msg' => 'No Record Found', 'data' => '');
+                $this->response($this->json($data));    
+            } 
+        } elseif($type=='v' || $type=='video' || $type=='videos') {
+            global $cbvid;
+            $categories = $cbvid->getCbCategories(arraY('indexes_only' => true));
+            if(!empty($categories)) {
+                $data = array('code' => '200', 'status' => 'success', 'msg' => 'success', 'data' => $categories);
                 $this->response($this->json($data));
-             }
-             else
-             {
-               $data = array('code' => "204", 'status' => "success", "msg" => "No Record Found", "data" => "");
-               $this->response($this->json($data));    
-             } 
-         }
-         elseif($type=="p" || $type=="photo" || $type=="photos" )
-         {
-             global $cbcollection;
-             $categories = $cbcollection->getCbCategories(arraY('indexes_only' => true));
-             if(!empty($categories))
-             {
-                $data = array('code' => "200", 'status' => "success", "msg" => "Success", "data" => $categories);
+            } else {
+                $data = array('code' => '204', 'status' => 'success', 'msg' => 'No Record Found', 'data' => '');
                 $this->response($this->json($data));
-             }
-             else
-             {
-               $data = array('code' => "204", 'status' => "success", "msg" => "No Record Found", "data" => "");
-               $this->response($this->json($data));    
-             } 
+            }
+        } elseif($type=="p" || $type=='photo' || $type=='photos' ) {
+            global $cbcollection;
+            $categories = $cbcollection->getCbCategories(arraY('indexes_only' => true));
+            if(!empty($categories)) {
+                $data = array('code' => '200', 'status' => 'success', 'msg' => 'success', 'data' => $categories);
+                $this->response($this->json($data));
+            } else {
+                $data = array('code' => '204', 'status' => 'success', 'msg' => 'No Record Found', 'data' => '');
+                $this->response($this->json($data));    
+            } 
          }
      }
      // Get Videos
 
-     private function getVideos()
-     {
-         $request = $_REQUEST;
+    private function getVideos()
+    {
+        $request = $_REQUEST;
          
-         $blacklist_fields = array(
-                'password', 'video_password', 'avcode', 'session'
-            );
-         if(isset($request['page'])) 
-         $page = (int)$request['page'];
-         else
-         $page = 1;
+        $blacklist_fields = array(
+            'password', 'video_password', 'avcode', 'session'
+        );
+        if(isset($request['page'])){
+            $page = (int)$request['page'];
+        } else {
+            $page = 1;
+        }
 
-         $get_limit = create_query_limit($page, $this->videos_limit);
-         
-         $request['limit'] = $get_limit;
-         if (VERSION < 3)
-         $request['user'] = $request['userid'];
+        $get_limit = create_query_limit($page, $this->videos_limit);
 
-         $vids = $request['video_id'];
-         if ($vids) 
-         {
+        $request['limit'] = $get_limit;
+
+        $vids = $request['video_id'];
+        if ($vids) {
             $vids = explode(',', $vids);
             $request['videoids'] = $vids;
-         }
-         if($is_mobile)
-         $request['has_mobile'] = 'yes';
+        }
 
-         global $cbvid;
-         $videos = $cbvid->get_videos($request);
-         
-         //header('Content-Type: text/html; charset=utf-8');
+        global $cbvid;
+        $videos = $cbvid->get_videos($request);
 
-         $new_videos = array();
-         global $userquery;
-         if ($videos) 
-         {
-            foreach ($videos as $video) 
-            {
-               $video['title'] = utf8_encode($video['title']);
-               $video['description'] = utf8_encode($video['description']);
-               $video['thumbs'] = array('default' => get_thumb($video), 'big' => get_thumb($video, 'big'));
+        $new_videos = array();
+        global $userquery;
+        if ($videos) {
+            foreach ($videos as $video) {
+                $video['title'] = utf8_encode($video['title']);
+                $video['description'] = utf8_encode($video['description']);
+                $video['thumbs'] = array('default' => get_thumb($video), 'big' => get_thumb($video, 'big'));
 
-               if (function_exists('get_mob_video')) 
-               {
-                  $video['videos'] = array('mobile' => get_mob_video(array('video' => $video)));
-                  if (has_hq($video)) 
-                  {
-                     $video['videos']['hq'] = get_hq_video_file($video);
-                  }
-              }
-                  $video['url'] = $video['video_link'] = $video['videoLink'] = videoLink($video);
-                  $video['avatar'] = $video['user_photo'] = $video['displayPic'] = $userquery->avatar($video);
+                $video['url'] = $video['video_link'] = $video['videoLink'] = videoLink($video);
+                $video['avatar'] = $video['user_photo'] = $video['displayPic'] = $userquery->avatar($video);
 
-                  /*
-                    if (!$video['fullname'])
-                    {
-                    $video['userDetail'] = $userquery->get_user_details($video['userid']);
-                    }
-                  */
+                foreach ($blacklist_fields as $field)
+                unset($video[$field]);
 
-              foreach ($blacklist_fields as $field)
-              unset($video[$field]);
-
-              $new_videos[] = $video;
+                $new_videos[] = $video;
             }
-          }
-          //echo $db->db_query;
-          //echo json_encode($new_videos);
-          if(!empty($new_videos))
-          {
-             $data = array('code' => "200", 'status' => "success", "msg" => "Success", "data" => $new_videos);
-             $this->response($this->json($data));
-          }
-          else
-          {
-             $data = array('code' => "204", 'status' => "success", "msg" => "No Record Found", "data" => "");
-             $this->response($this->json($data));    
-          }
-     }
+        }
+
+        if(!empty($new_videos)) {
+            $data = array('code' => '200', 'status' => 'success', 'msg' => 'success', 'data' => $new_videos);
+            $this->response($this->json($data));
+        } else {
+            $data = array('code' => '204', 'status' => 'success', 'msg' => 'No Record Found', 'data' => '');
+            $this->response($this->json($data));
+        }
+    }
 
     // Get Comments
-    
     private function getComments()
     {
          $request = $_REQUEST;
@@ -207,51 +153,45 @@ class API extends REST
          
          $page = $request['page'];
 
-         if (!$page || !is_numeric($page) || $page < 1)
-         $page = 1;
+         if (!$page || !is_numeric($page) || $page < 1){
+            $page = 1;
+         }
 
-         if (!$limit || !is_numeric($limit) || $limit < 1)
-         $limit = 20;
-
+         if (!$limit || !is_numeric($limit) || $limit < 1){
+            $limit = 20;
+         }
 
          $params['type'] = mysql_clean($request['type']);
          $params['type_id'] = mysql_clean($request['type_id']);
          $params['last_update'] = mysql_clean($request['last_update']);
          $params['limit'] = create_query_limit($page, $limit);
-         
 
          global $myquery;
          $comments = $myquery->getComments($params);
 
          $blacklist_fields = array(
-                'password', 'video_password', 'avcode', 'session'
+            'password', 'video_password', 'avcode', 'session'
          );
 
-        $the_comments = array();
+         $the_comments = array();
 
-        if ($comments)
-        foreach ($comments['comments'] as $comment) 
-        {
-          if ($comment) 
-          {
-            foreach ($blacklist_fields as $field) 
-            {
-              unset($comment[$field]);
+         if ($comments){
+            foreach ($comments['comments'] as $comment) {
+                if ($comment) {
+                    foreach ($blacklist_fields as $field) {
+                        unset($comment[$field]);
+                    }
+                    $the_comments[] = $comment;
+                }
             }
-            $the_comments[] = $comment;
-          }
-        }
-        
-        //echo json_encode($the_comments);
-        if(!empty($the_comments))
-        {
-          $data = array('code' => "200", 'status' => "success", "msg" => "Success", "data" => $the_comments);
-          $this->response($this->json($data));
-        }
-        else
-        {
-          $data = array('code' => "204", 'status' => "success", "msg" => "No Record Found", "data" => "");
-          $this->response($this->json($data));    
+         }
+
+        if(!empty($the_comments)) {
+            $data = array('code' => '200', 'status' => 'success', 'msg' => 'success', 'data' => $the_comments);
+            $this->response($this->json($data));
+        } else {
+            $data = array('code' => '204', 'status' => 'success', 'msg' => 'No Record Found', 'data' => '');
+            $this->response($this->json($data));    
         }
     }
     
@@ -264,26 +204,24 @@ class API extends REST
         $new_groups = array();
         foreach ($groups as $group) 
         {
-          $new_fields = array();
-          foreach ($group['fields'] as $field) 
-          {
-            if ($field)
-            	$new_fields[] = $field;
-          }
-
-          $group['fields'] = $new_fields;
-          $new_groups[] = $group;
+            $new_fields = array();
+            foreach ($group['fields'] as $field) {
+                if ($field){
+                    $new_fields[] = $field;
+                }
+            }
+            
+            $group['fields'] = $new_fields;
+            $new_groups[] = $group;
         }
 
         if(!empty($new_groups))
         {
-          $data = array('code' => "200", 'status' => "success", "msg" => "Success", "data" => $new_groups);
-          $this->response($this->json($data));
-        }
-        else
-        {
-          $data = array('code' => "204", 'status' => "success", "msg" => "No Record Found", "data" => "");
-          $this->response($this->json($data));    
+            $data = array('code' => '200', 'status' => 'success', 'msg' => 'success', 'data' => $new_groups);
+            $this->response($this->json($data));
+        } else {
+            $data = array('code' => '204', 'status' => 'success', 'msg' => 'No Record Found', 'data' => '');
+            $this->response($this->json($data));    
         }
     }
 
@@ -294,32 +232,14 @@ class API extends REST
         $uid = mysql_clean($request['userid']);
         global $cbvid;
         $playlists = $cbvid->action->get_playlists($uid);
-        
-        if (VERSION < 3) 
-        {
-           $new_playlists = array();
-           foreach ($playlists as $playlist) 
-           {
-              $playlist['total_items'] = $cbvid->action->count_playlist_items($playlist['playlist_id']);
-              $new_playlists[] = $playlist;
-           }
-           $playlists = $new_playlists;
-        }
-        
-        /*if ($playlists)
-        echo json_encode($playlists);
-        else
-        echo json_encode(array('err' => 'No playlist was found'));*/
-        
+
         if(!empty($playlists))
         {
-          $data = array('code' => "200", 'status' => "success", "msg" => "Success", "data" => $playlists);
-          $this->response($this->json($data));
-        }
-        else
-        {
-          $data = array('code' => "204", 'status' => "success", "msg" => "No Record Found", "data" => "");
-          $this->response($this->json($data));    
+            $data = array('code' => '200', 'status' => 'success', 'msg' => 'success', 'data' => $playlists);
+            $this->response($this->json($data));
+        } else {
+            $data = array('code' => '204', 'status' => 'success', 'msg' => 'No Record Found', 'data' => '');
+            $this->response($this->json($data));    
         }
     }
 
@@ -333,37 +253,35 @@ class API extends REST
         $items = $cbvid->get_playlist_items($pid);
 
         $blacklist_fields = array(
-                'password', 'video_password', 'avcode', 'session'
-            );
+            'password', 'video_password', 'avcode', 'session'
+        );
         
         global $userquery;
         if (!empty($items))
         {
-           $new_videos = array();
-           foreach ($items as $video) 
-           {
-              if (!$video['email']) 
-              {
-                $udetails = $userquery->get_user_details($video['userid']);
-              }
-              $video = array_merge($video, $udetails);
-
-              $video['thumbs'] = array('default' => get_thumb($video));
-              $video['videos'] = array('mobile' => get_mob_video(array('video' => $video)));
-              $video['url'] = $video['video_link'] = $video['videoLink'] = videoLink($video);
-              $video['avatar'] = $video['user_photo'] = $video['displayPic'] = $userquery->avatar($video);
-
-              foreach ($blacklist_fields as $field)
-              unset($video[$field]);
-
-              $new_videos[] = $video;
-           }
-           $data = array('code' => "200", 'status' => "success", "msg" => "Success", "data" => $new_videos);
-           $this->response($this->json($data));
+            $new_videos = array();
+            foreach ($items as $video) {
+                if (!$video['email']) {
+                    $udetails = $userquery->get_user_details($video['userid']);
+                }
+                $video = array_merge($video, $udetails);
+                
+                $video['thumbs'] = array('default' => get_thumb($video));
+                $video['url'] = $video['video_link'] = $video['videoLink'] = videoLink($video);
+                $video['avatar'] = $video['user_photo'] = $video['displayPic'] = $userquery->avatar($video);
+                
+                foreach ($blacklist_fields as $field){
+                    unset($video[$field]);
+                }
+                
+                $new_videos[] = $video;
+            }
+            $data = array('code' => '200', 'status' => 'success', 'msg' => 'success', 'data' => $new_videos);
+            $this->response($this->json($data));
         }
         else
         {
-           $data = array('code' => "204", 'status' => "success", "msg" => "No Record Found", "data" => "");
+           $data = array('code' => '204', 'status' => 'success', 'msg' => 'No Record Found', 'data' => '');
            $this->response($this->json($data)); 
         }
         
@@ -372,33 +290,23 @@ class API extends REST
     // Get Configs
     private function getConfigs()
     {
-        $upload_path = '';
-
-        if (function_exists('get_file_uploader_path'))
-        $upload_path = get_file_uploader_path();
-
         $array = array(
           'baseurl' => BASEURL,
           'title' => TITLE,
           'file_upload_url' => '/api/file_uploader.php',
           'session' => session_id()
         );
-        //echo json_encode($array);
-        $data = array('code' => "200", 'status' => "success", "msg" => "Success", "data" => $array);
+
+        $data = array('code' => '200', 'status' => 'success', 'msg' => 'success', 'data' => $array);
         $this->response($this->json($data));
     }
 
     // Video Flag Options
     private function videoFlagOptions()
     {
-        $request = $_REQUEST;
-        $type = $request['type'];
-        $type = $type ? $type : 'v';
+        $flags = get_flag_options();
 
-        $flags = get_flag_options($type);
-
-        //echo json_encode($flags);
-        $data = array('code' => "200", 'status' => "success", "msg" => "Success", "data" => $flags);
+        $data = array('code' => '200', 'status' => 'success', 'msg' => 'success', 'data' => $flags);
         $this->response($this->json($data));
     }
 
@@ -407,44 +315,40 @@ class API extends REST
     {
         $request = $_REQUEST;
         $uid = $request['userid'];
-        if (!$uid)
-        $uid = userid();
+        if (!$uid){
+            $uid = userid();
+        }
 
-        if (!$uid)
-        {
-           //exit(json_encode(array('err' => lang('Please login'))));
-           $data = array('code' => "418", 'status' => "failure", "msg" => "Please Login", "data" => "");
+        if (!$uid) {
+           $data = array('code' => '418', 'status' => 'failure', 'msg' => 'Please Login', 'data' => '');
            $this->response($this->json($data));
         }
-        
 
         global $userquery;
         $subscribers = $userquery->get_user_subscribers_detail($uid);
 
         if ($subscribers) 
         {
-          $the_subscribers = array();
-          foreach ($subscribers as $subscriber) 
-          {
-            foreach ($blacklist_fields as $field) 
-            {
-              unset($subscriber[$field]);
+            $blacklist_fields = array(
+                'password', 'video_password', 'avcode', 'session'
+            );
+            $the_subscribers = array();
+            foreach ($subscribers as $subscriber) {
+                foreach ($blacklist_fields as $field) {
+                    unset($subscriber[$field]);
+                }
+                $the_subscribers[] = $subscriber;
             }
-            $the_subscribers[] = $subscriber;
-          }
-
-          $subscribers = $the_subscribers;
+            
         }
 
         if(!empty($the_subscribers))
         {
-          $data = array('code' => "200", 'status' => "success", "msg" => "Success", "data" => $the_subscribers);
-          $this->response($this->json($data));
-        }
-        else
-        {
-          $data = array('code' => "204", 'status' => "success", "msg" => "No Record Found", "data" => "");
-          $this->response($this->json($data));    
+            $data = array('code' => '200', 'status' => 'success', 'msg' => 'success', 'data' => $the_subscribers);
+            $this->response($this->json($data));
+        } else {
+            $data = array('code' => '204', 'status' => 'success', 'msg' => 'No Record Found', 'data' => '');
+            $this->response($this->json($data));    
         }
     }
 
@@ -453,46 +357,42 @@ class API extends REST
     {
         $request = $_REQUEST;
         $uid = $request['userid'];
-        if (!$uid)
-        $uid = userid();
+        if (!$uid){
+            $uid = userid();
+        }
 
-        if (!$uid)
-        {
-          // exit(json_encode(array('err' => lang('Please login'))));
-          $data = array('code' => "418", 'status' => "failure", "msg" => "Please Login", "data" => "");
-          $this->response($this->json($data));
+        if (!$uid) {
+            $data = array('code' => '418', 'status' => 'failure', 'msg' => 'Please Login', 'data' => '');
+            $this->response($this->json($data));
         }
         
         global $userquery;
         $subscribers = $userquery->get_user_subscriptions($uid);
 
-        if ($subscribers) 
-        {
-          $the_subscribers = array();
-          foreach ($subscribers as $subscriber) 
-          {
-            foreach ($blacklist_fields as $field) 
+        if ($subscribers) {
+            $the_subscribers = array();
+            foreach ($subscribers as $subscriber) 
             {
-              unset($subscriber[$field]);
+                $blacklist_fields = array(
+                    'password', 'video_password', 'avcode', 'session'
+                );
+                foreach ($blacklist_fields as $field) {
+                    unset($subscriber[$field]);
+                }
+                $the_subscribers[] = $subscriber;
             }
-            $the_subscribers[] = $subscriber;
-          }
-          $subscribers = $the_subscribers;
         }
 
         if(!empty($the_subscribers))
         {
-          $data = array('code' => "200", 'status' => "success", "msg" => "Success", "data" => $the_subscribers);
-          $this->response($this->json($data));
-        }
-        else
-        {
-          $data = array('code' => "204", 'status' => "success", "msg" => "No Record Found", "data" => "");
-          $this->response($this->json($data));    
+            $data = array('code' => '200', 'status' => 'success', 'msg' => 'success', 'data' => $the_subscribers);
+            $this->response($this->json($data));
+        } else {
+            $data = array('code' => '204', 'status' => 'success', 'msg' => 'No Record Found', 'data' => '');
+            $this->response($this->json($data));    
         }
     }
-
-
+    
     // Get Favorite Videos
     private function getFavoriteVideos()
     {
@@ -500,67 +400,60 @@ class API extends REST
         $limit = 20;
 
         $page = $request['page'];
-        if (!$page || !is_numeric($page) || $page < 1)
-        $page = 1;
+        if (!$page || !is_numeric($page) || $page < 1){
+            $page = 1;
+        }
 
         $get_limit = create_query_limit($page, $limit);
         $uid = $request['userid'];
-        if (!$uid)
-        $uid = userid();
+        if (!$uid){
+            $uid = userid();
+        }
         
-        if (!$uid)
-        {
-          // exit(json_encode(array('err' => lang('Please login'))));
-          $data = array('code' => "418", 'status' => "failure", "msg" => "Please Login", "data" => "");
-          $this->response($this->json($data));
+        if (!$uid) {
+            $data = array('code' => '418', 'status' => 'failure', 'msg' => 'Please Login', 'data' => '');
+            $this->response($this->json($data));
         }
 
         $blacklist_fields = array(
-                'password', 'video_password', 'avcode', 'session'
-            );
-
+            'password', 'video_password', 'avcode', 'session'
+        );
         
         global $cbvid;
         $params = array('userid' => $uid, 'limit' => $get_limit);
         $videos = $cbvid->action->get_favorites($params);
-        $params['count_only'] = "yes";
+        $params['count_only'] = 'yes';
         $total_rows = $cbvid->action->get_favorites($params);
-        $total_pages = count_pages($total_rows, $get_limit);
         
         global $userquery;
         if ($total_rows > 0) 
         {
-          $new_videos = array();
-          foreach ($videos as $video) 
-          {
-            if (!$video['email']) 
+            $new_videos = array();
+            foreach ($videos as $video) 
             {
-              $udetails = $userquery->get_user_details($video['userid']);
+                if (!$video['email']) {
+                    $udetails = $userquery->get_user_details($video['userid']);
+                }
+                
+                $video = array_merge($video, $udetails);
+                
+                $video['thumbs'] = array('default' => get_thumb($video));
+                $video['url'] = $video['video_link'] = $video['videoLink'] = videoLink($video);
+                $video['avatar'] = $video['user_photo'] = $video['displayPic'] = $userquery->avatar($video);
+                
+                foreach ($blacklist_fields as $field){
+                    unset($video[$field]);
+                }
+                
+                $new_videos[] = $video;
             }
-
-            $video = array_merge($video, $udetails);
             
-            $video['thumbs'] = array('default' => get_thumb($video));
-            $video['videos'] = array('mobile' => get_mob_video(array('video' => $video)));
-            $video['url'] = $video['video_link'] = $video['videoLink'] = videoLink($video);
-            $video['avatar'] = $video['user_photo'] = $video['displayPic'] = $userquery->avatar($video);
-
-            foreach ($blacklist_fields as $field)
-            unset($video[$field]);
-            
-            $new_videos[] = $video;
-          }
-          //echo json_encode($new_videos);
-          $data = array('code' => "200", 'status' => "success", "msg" => "Success", "data" => $new_videos);
-          $this->response($this->json($data));
-        } 
-        else 
-        {
-          //echo json_encode(array('err' => lang('No favorite videos were found')));
-          $data = array('code' => "204", 'status' => "success", "msg" => "No Record Found", "data" => "");
-          $this->response($this->json($data));
+            $data = array('code' => '200', 'status' => 'success', 'msg' => 'success', 'data' => $new_videos);
+            $this->response($this->json($data));
+        } else {
+            $data = array('code' => '204', 'status' => 'success', 'msg' => 'No Record Found', 'data' => '');
+            $this->response($this->json($data));
         }
-
     }
 
     // Get Users
@@ -569,8 +462,9 @@ class API extends REST
         $request = $_REQUEST;
         
         $page = $request['page'];
-        if (!$page || !is_numeric($page) || $page < 1)
-        $page = 1;
+        if (!$page || !is_numeric($page) || $page < 1){
+            $page = 1;
+        }
 
         $get_limit = create_query_limit($page, $this->videos_limit);
 
@@ -580,48 +474,41 @@ class API extends REST
         
         global $userquery;
         $new_users = array();
-        if ($users) 
-        {
-          foreach ($users as $user) 
-          {
-            $user['avatar'] = $user['user_photo'] = $userquery->avatar($user);
-            $new_users[] = $user;
-          }
+        if ($users) {
+            foreach ($users as $user) {
+                $user['avatar'] = $user['user_photo'] = $userquery->avatar($user);
+                $new_users[] = $user;
+            }
         }
-
 
         $user_api_fields = array(
-                'username', 'first_name', 'last_name', 'fullname',
-                'avatar', 'avatar_url',
-                'userid', 'email',
-                'total_videos',
-                'total_photos', 'total_collections',
-                'total_groups');
-
+            'username', 'first_name', 'last_name', 'fullname',
+            'avatar', 'avatar_url',
+            'userid', 'email',
+            'total_videos',
+            'total_photos', 'total_collections',
+            'total_groups'
+        );
 
         $final_users = array();
-        if ($new_users)
-        foreach ($new_users as $user) 
-        {
-          $final_user = array();
-          foreach ($user_api_fields as $field)
-          $final_user[$field] = $user[$field];
-
-          $final_users[] = $final_user;
+        if ($new_users){
+            foreach ($new_users as $user)
+            {
+                $final_user = array();
+                foreach ($user_api_fields as $field){
+                    $final_user[$field] = $user[$field];
+                }
+                $final_users[] = $final_user;
+            }
         }
 
-        //echo $db->db_query;
-        //echo json_encode($final_users);
-        
         if(!empty($final_users))
         {
-          $data = array('code' => "200", 'status' => "success", "msg" => "Success", "data" => $final_users);
-          $this->response($this->json($data));
-        }
-        else
-        {
-          $data = array('code' => "204", 'status' => "success", "msg" => "No Record Found", "data" => "");
-          $this->response($this->json($data));    
+            $data = array('code' => '200', 'status' => 'success', 'msg' => 'success', 'data' => $final_users);
+            $this->response($this->json($data));
+        } else {
+            $data = array('code' => '204', 'status' => 'success', 'msg' => 'No Record Found', 'data' => '');
+            $this->response($this->json($data));
         }
     }
 
@@ -631,8 +518,9 @@ class API extends REST
         $request = $_REQUEST;
         
         $page = $request['page'];
-        if (!$page || !is_numeric($page) || $page < 1)
-        $page = 1;
+        if (!$page || !is_numeric($page) || $page < 1){
+            $page = 1;
+        }
 
         $get_limit = create_query_limit($page, $this->videos_limit);
 
@@ -677,12 +565,12 @@ class API extends REST
         
         if(!empty($new_photos))
         {
-          $data = array('code' => "200", 'status' => "success", "msg" => "Success", "data" => $new_photos);
+          $data = array('code' => '200', 'status' => 'success', 'msg' => 'success', 'data' => $new_photos);
           $this->response($this->json($data));
         }
         else
         {
-          $data = array('code' => "204", 'status' => "success", "msg" => "No Record Found", "data" => "");
+          $data = array('code' => '204', 'status' => 'success', 'msg' => 'No Record Found', 'data' => '');
           $this->response($this->json($data));    
         }
     }
@@ -698,7 +586,7 @@ class API extends REST
 
         if (!$uid)
         {
-          $data = array('code' => "418", 'status' => "failure", "msg" => "Please Login", "data" => "");
+          $data = array('code' => '418', 'status' => 'failure', 'msg' => 'Please Login', 'data' => '');
           $this->response($this->json($data));
         } 
         
@@ -707,12 +595,12 @@ class API extends REST
         
         if(!empty($friends))
         {
-          $data = array('code' => "200", 'status' => "success", "msg" => "Success", "data" => $friends);
+          $data = array('code' => '200', 'status' => 'success', 'msg' => 'success', 'data' => $friends);
           $this->response($this->json($data));
         }
         else
         {
-          $data = array('code' => "204", 'status' => "success", "msg" => "No Record Found", "data" => "");
+          $data = array('code' => '204', 'status' => 'success', 'msg' => 'No Record Found', 'data' => '');
           $this->response($this->json($data));    
         }
     }
@@ -751,13 +639,13 @@ class API extends REST
             $the_feeds[] = $feed;                
           }
           //echo json_encode($the_feeds);
-          $data = array('code' => "200", 'status' => "success", "msg" => "Success", "data" => $the_feeds);
+          $data = array('code' => '200', 'status' => 'success', 'msg' => 'success', 'data' => $the_feeds);
           $this->response($this->json($data));
         }
         else
         {
           //echo json_encode(array('err' => error()));
-          $data = array('code' => "204", 'status' => "success", "msg" => "No Record Found", "data" => "");
+          $data = array('code' => '204', 'status' => 'success', 'msg' => 'No Record Found', 'data' => '');
           $this->response($this->json($data));
         }  
     }
@@ -781,13 +669,13 @@ class API extends REST
           $user['avatars']['large']      = $userquery->avatar($user,'large');
           // $user['name'] = name($user);
           //echo json_encode($user);
-          $data = array('code' => "200", 'status' => "success", "msg" => "Success", "data" => $user);
+          $data = array('code' => '200', 'status' => 'success', 'msg' => 'success', 'data' => $user);
           $this->response($this->json($data));
         }
         else
         {
           //echo json_encode(array('err'=>'User does not exist'));
-          $data = array('code' => "204", 'status' => "success", "msg" => "No Record Found", "data" => "");
+          $data = array('code' => '204', 'status' => 'success', 'msg' => 'No Record Found', 'data' => '');
           $this->response($this->json($data));
         }  
     }
@@ -795,12 +683,10 @@ class API extends REST
     // Home Page
     private function home_page()
     {
-        $request = $_REQUEST;
-        
         define('API_HOME_PAGE','yes');
         
         global $cbvid;    
-        $videos = $cbvid->get_videos(array('featured' =>'yes', 'limit' =>10, 'order' =>'featured_date DESC','has_mobile'=>'yes'));
+        $videos = $cbvid->get_videos(array('featured' =>'yes', 'limit' =>10, 'order' =>'featured_date DESC'));
         
         global $userquery;   
         $new_videos = array();
@@ -812,16 +698,6 @@ class API extends REST
             $video['title'] = utf8_encode($video['title']);
             $video['description'] = utf8_encode($video['description']);
             $video['thumbs'] = array('default' => get_thumb($video), 'big' => get_thumb($video, 'big'),'640x480'=>get_thumb($video, '640x480'));
-
-            if (function_exists('get_mob_video')) 
-            {
-              $video['videos'] = array('mobile' => get_mob_video(array('video' => $video)));
-              if ($video['has_hd']=='yes') 
-              {
-                $video['videos']['hq'] = get_hq_video_file($video);
-              }
-            }
-            
             $video['url'] = $video['video_link'] = $video['videoLink'] = videoLink($video);
             $video['avatar'] = $video['user_photo'] = $video['displayPic'] = $userquery->avatar($video);
             $video['avatars']['medium']     = $userquery->avatar($video,'small');
@@ -860,14 +736,6 @@ class API extends REST
               $video['description'] = utf8_encode($video['description']);
               $video['thumbs'] = array('default' => get_thumb($video), 'big' => get_thumb($video, 'big'),'640x480'=>get_thumb($video, '640x480'));
 
-              if (function_exists('get_mob_video')) 
-              {
-                $video['videos'] = array('mobile' => get_mob_video(array('video' => $video)));
-                if ($video['has_hd']=='yes') 
-                {
-                  $video['videos']['hq'] = get_hq_video_file($video);
-                }
-              }
                 $video['url'] = $video['video_link'] = $video['videoLink'] = videoLink($video);
                 $video['avatar'] = $video['user_photo'] = $video['displayPic'] = $userquery->avatar($video);
                 $video['avatars']['medium']     = $userquery->avatar($video,'medium');
@@ -888,12 +756,12 @@ class API extends REST
       //echo json_encode($home);
       if(!empty($featured) || !empty($cat_videos))
       {
-        $data = array('code' => "200", 'status' => "success", "msg" => "Success", "data" => $home);
+        $data = array('code' => '200', 'status' => 'success', 'msg' => 'success', 'data' => $home);
         $this->response($this->json($data));
       }
       else
       {
-        $data = array('code' => "204", 'status' => "success", "msg" => "No Record Found", "data" => "");
+        $data = array('code' => '204', 'status' => 'success', 'msg' => 'No Record Found', 'data' => '');
         $this->response($this->json($data));
       }      
     }

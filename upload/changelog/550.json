@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"7",
+  "revision":"8",
   "status":"dev",
   "detail":[
     {
@@ -13,6 +13,8 @@
         ,"Add option to keep subtitles in video files"
         ,"Add option to extract subtitles to dedicated files"
         ,"Add option to specify subtitles format"
+        ,"Add video type tag to video manager"
+        ,"Beginning of HLS conversion"
       ]
     },
     {
@@ -20,6 +22,7 @@
       "description": [
         "Cleanup code"
         ,"Remove unused config"
+        ,"Remove unused DB columns"
       ]
     }
   ,

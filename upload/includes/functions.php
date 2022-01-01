@@ -1,5 +1,4 @@
 <?php
-	define("SHOW_COUNTRY_FLAG",TRUE);
 	require 'define_php_links.php';
 	include_once 'upload_forms.php';
 
@@ -7,13 +6,13 @@
 	 * This Funtion is use to get CURRENT PAGE DIRECT URL
 	 * @return string : { string } { $pageURL } { url of current page }
 	 */
-	function curPageURL()
-	{
+	function curPageURL(): string
+    {
  		$pageURL = 'http';
-		if (@$_SERVER["HTTPS"] == "on") {
-			$pageURL .= "s";
+		if (@$_SERVER["HTTPS"] == 'on') {
+			$pageURL .= 's';
 		}
-		$pageURL .= "://";
+		$pageURL .= '://';
  		$pageURL .= $_SERVER['SERVER_NAME'];
 		$pageURL .= $_SERVER['PHP_SELF'];
 		$query_string = $_SERVER['QUERY_STRING'];
@@ -28,10 +27,10 @@
 	 *
 	 * @param : { string } { string to be cleaned }
 	 *
-	 * @return mixed : { string } { $string } { cleaned string }
+	 * @return string : { string } { $string } { cleaned string }
 	 */
-	function Replacer($string)
-	{
+	function Replacer($string): string
+    {
 		//Wp-Magic Quotes
 		$string = preg_replace("/'s/", '&#8217;s', $string);
 		$string = preg_replace("/'(\d\d(?:&#8217;|')?s)/", "&#8217;$1", $string);
@@ -69,13 +68,13 @@
 	 *
 	 * @return string
 	 */
-	function pass_code_unsecure($string)
-	{
+	function pass_code_unsecure($string): string
+    {
  	 	return md5(md5(sha1(sha1(md5($string)))));
 	}
 
-	function pass_code($string, $userid)
-	{
+	function pass_code($string, $userid): string
+    {
 		$salt = config('password_salt');
 		return hash('sha512', $string.$userid.$salt);
 	}
@@ -88,14 +87,14 @@
 	 *
 	 * @return string
 	 */
-	function mysql_clean($var)
-	{
+	function mysql_clean($var): string
+    {
 		global $db;
 		return $db->clean_var($var);
 	}
 
-	function display_clean($var, $clean_quote = true)
-	{
+	function display_clean($var, $clean_quote = true): string
+    {
 	    if($clean_quote){
 		    return htmlentities($var, ENT_QUOTES);
         }
@@ -153,7 +152,8 @@
 	 *
 	 * @return string : { string } { $randomString  } { new generated random string }
 	 */
-	function RandomString($length) {
+	function RandomString($length): string
+    {
 		$string = md5(microtime());
 		$highest_startpoint = 32-$length;
 		return substr($string,rand(0,$highest_startpoint),$length);
@@ -260,7 +260,8 @@
 	 *
 	 * @return string
 	 */
-	function wrap_email_content($content) {
+	function wrap_email_content($content): string
+    {
 		return '<html><body>'.$content.'</body></html>';
 	}
 
@@ -290,8 +291,7 @@
 		if(is_array($path)) {
 			$file = $path[count($path)-1];
 		}
-		$new_name 	 = substr($file, 0, strrpos($file, '.'));
-		return $new_name;
+		return substr($file, 0, strrpos($file, '.'));
 	}
 
     function old_set_time($temps)
@@ -2368,9 +2368,7 @@
 		if(count($result)>0) {
 			$flag = '';
 			$result = $result[0];
-			if(SHOW_COUNTRY_FLAG) {
-				$flag = '<img src="/images/icons/country/'.strtolower($result['iso2']).'.png" alt="" border="0">&nbsp;';
-			}
+            $flag = '<img src="/images/icons/country/'.strtolower($result['iso2']).'.png" alt="" border="0">&nbsp;';
 			return $flag.$result['name_en'];
 		}
 		return false;

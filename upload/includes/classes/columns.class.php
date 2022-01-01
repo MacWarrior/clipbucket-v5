@@ -89,7 +89,7 @@ class cb_columns {
     /**
      * Get the columns for current object
      *
-     * @return array
+     * @return array|bool
      */
     function get_columns() {
         $columns = $this->columns[ $this->get_object() ];

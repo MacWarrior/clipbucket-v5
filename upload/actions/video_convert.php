@@ -131,6 +131,8 @@ if(!empty($tmp_file))
         $db->update(tbl('video'), array('bits_color'), array(8), " file_name = '{$outputFileName}'");
     }
 
+    $db->update(tbl('video'), array('file_type'), array(config('conversion_type')), " file_name = '{$outputFileName}'");
+
     if( $reconvert ) {
         setVideoStatus( $outputFileName, 'completed', true, true );
     }

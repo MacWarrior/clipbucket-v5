@@ -1007,28 +1007,6 @@
     }
 
 	/**
-	 * Function used to check weather video has Mp4 file or not
-	 *
-	 * @param      $vdetails
-	 * @param bool $is_file
-	 *
-	 * @return bool|int|mixed
-	 */
-    function has_hq($vdetails,$is_file=false)
-    {
-        if(!$is_file){
-            $file = get_hq_video_file($vdetails);
-		} else {
-            $file = $vdetails;
-		}
-
-        if(getext($file)=='mp4'){
-            return $file;
-		}
-		return false;
-    }
-
-	/**
 	 * Function used to call functions
 	 * when video is going to watched
 	 * ie in watch_video.php
@@ -1548,17 +1526,6 @@
 		}
 	}
 
-	function is_castable($vid)
-	{
-		global $db;
-		$data = $db->select(tbl('video'),'is_castable','videoid='.$vid);
-
-		if (isset($data[0]['is_castable'])) {
-			return $data[0]['is_castable'];
-		}
-		return false;
-	}
-
     function get_audio_channels($filepath): int
     {
         if( !file_exists($filepath) ){
@@ -1585,17 +1552,6 @@
 			e(sprintf( lang('castable_status_failed'), $vdetails['title'], $data),'w');
 		}
 	}
-
-    function get_bits_color($vid)
-    {
-        global $db;
-        $data = $db->select(tbl('video'),'bits_color','videoid='.$vid);
-
-        if (isset($data[0]['bits_color'])) {
-            return $data[0]['bits_color'];
-        }
-        return false;
-    }
 
     function update_bits_color($vdetails){
         if( is_null($vdetails) ){

@@ -947,10 +947,7 @@ function reply_box(cid)
             $('#reply_box_' + cid).focus();
         }
     });
-
-
 }
-
 
 function remove_reply_box(cid){
 
@@ -960,42 +957,6 @@ function remove_reply_box(cid){
 function show_replies(id){
 
     $('.more-comments-' + id).show();
-}
-
-var normal_player_html = '';
-var hq_player_html = '';
-
-var has_hq_function = false;
-function hq_toggle(nplayer_div,hq_div)
-{
-    if(has_hq_function)
-    {
-        var nplayer_div = nplayer_div;
-        var hq_div = hq_div;
-        hq_function();
-        return false;
-    }
-    if($(nplayer_div).css("display")=='block')
-    {
-        if(normal_player_html=='')
-            normal_player_html = $(nplayer_div).html();
-        $(nplayer_div).html("");
-    }else
-    {
-        if(normal_player_html!='')
-            $(nplayer_div).html(normal_player_html);
-    }
-    if($(hq_div).css("display")=='block')
-    {
-        if(hq_player_html=='')
-            hq_player_html = $(hq_div).html();
-        $(hq_div).html("");
-    }else
-    {
-        if(hq_player_html!='')
-            $(hq_div).html(hq_player_html);
-    }
-    $(nplayer_div+","+hq_div).toggle()
 }
 
 /**

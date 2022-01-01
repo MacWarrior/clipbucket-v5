@@ -25,11 +25,6 @@
 
 		this.current_menu = '';
 
-		this.normal_player_html = '';
-		this.hq_player_html = '';
-
-		this.has_hq_function = false;
-
 		this.collectionID = false;
 
 		this.keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
@@ -958,38 +953,6 @@
 					}
 				}
 			},'json');
-		};
-
-		this.hq_toggle = function(nplayer_div,hq_div){
-			if(this.has_hq_function)
-			{
-				var nplayer_div = nplayer_div;
-				var hq_div = hq_div;
-				hq_function();
-				return false;
-			}
-
-			if($(nplayer_div).css('display') === 'block') {
-				if(this.normal_player_html === ''){
-				    this.normal_player_html = $(nplayer_div).html();
-                }
-				$(nplayer_div).html('');
-			} else {
-				if(this.normal_player_html !== ''){
-				    $(nplayer_div).html(this.normal_player_html);
-                }
-			}
-
-			if($(hq_div).css('display') === 'block') {
-				if(this.hq_player_html === '')
-				this.hq_player_html = $(hq_div).html();
-				$(hq_div).html('');
-			} else {
-				if(this.hq_player_html !== ''){
-				    $(hq_div).html(this.hq_player_html);
-                }
-			}
-			$(nplayer_div+','+hq_div).toggle()
 		};
 
 		/** 

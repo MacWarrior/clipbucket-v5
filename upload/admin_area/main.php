@@ -107,6 +107,7 @@ if(isset($_POST['update']))
         'keep_audio_tracks',
         'keep_subtitles',
         'extract_subtitles',
+        'conversion_type',
 
         'background_color',
         'background_upload',
@@ -162,7 +163,6 @@ if(isset($_POST['update']))
         'grp_max_desc',
 
         'high_resolution',
-        'hq_output',
 
         'keywords',
         'keep_mp4_as_is',
