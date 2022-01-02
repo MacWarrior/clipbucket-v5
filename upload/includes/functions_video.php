@@ -1441,31 +1441,6 @@
 
         return array_filter($vid_dets);
     }
-
-	/**
-	 * Fetches the oldest video from still-waiting-to-convert list of videos when user by cron is active
-	 * @return array|bool : { array } { $returnData } { an array with required parameters for video convert }
-	 *
-	 * @internal param $ : { none }
-	 * @author : { Saqib Razzaq }
-	 */
-    function convertWithCron()
-	{
-        global $db;
-        $toConvert = $db->select(tbl('conversion_queue'),'*',"cqueue_conversion ='no' ORDER BY cqueue_id ASC LIMIT 0,1");
-        $filedata = $toConvert[0];
-        if (empty($filedata)) {
-            return false;
-        }
-        $dateDir = str_replace('-', '/', $filedata['date_added']);
-        $dateDir = substr($dateDir, 0, strpos($dateDir, ' '));
-        $returnData = array();
-        $returnData[1] = $filedata['cqueue_name'].'.'.$filedata['cqueue_ext'];
-        $returnData[2] = $filedata['cqueue_name'];
-        $returnData[3] = $dateDir;
-        $returnData[4] = FILES_DIR.'/logs/'.$dateDir.DIRECTORY_SEPARATOR.$filedata['cqueue_name'].'.log';
-        return $returnData;
-    }
     
     function dateNow(): string
     {

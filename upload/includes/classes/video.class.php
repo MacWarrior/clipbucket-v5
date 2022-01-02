@@ -43,12 +43,7 @@ class CBvideo extends CBCategory
 
 		$this->video_delete_functions[] = 'delete_video_from_collection';
 
-        $basic_fields = array(
-            'videoid', 'videokey', 'userid', 'title','server_ip', 'description', 'tags', 'category','file_directory',
-            'active', 'date_added', 'broadcast', 'rating', 'file_server_path', 'files_thumbs_path',
-            'duration', 'views', 'file_name', 'rated_by', 'file_type', 'bits_color', 'is_castable',
-            'default_thumb', 'comments_count', 'last_viewed', 'featured', 'featured_date', 'status','re_conv_status','embed_code'
-        );
+        $basic_fields = $this->basic_fields_setup();
 
         $cb_columns->object( 'videos' )->register_columns( $basic_fields );
 	}
@@ -113,10 +108,10 @@ class CBvideo extends CBCategory
     {
         # Set basic video fields
         $basic_fields = array(
-            'videoid', 'videokey', 'userid', 'title', 'description', 'tags', 'category',
+            'videoid', 'videokey', 'userid', 'title','server_ip', 'description', 'tags', 'category','file_directory',
             'active', 'date_added', 'broadcast', 'rating', 'file_server_path', 'files_thumbs_path',
-            'duration', 'views', 'file_name', 'rated_by',
-            'default_thumb', 'comments_count', 'last_viewed'
+            'duration', 'views', 'file_name', 'rated_by', 'file_type', 'bits_color', 'is_castable',
+            'default_thumb', 'comments_count', 'last_viewed', 'featured', 'featured_date', 'status','re_conv_status','embed_code'
         );
 
         return $this->set_basic_fields( $basic_fields );
@@ -1943,6 +1938,9 @@ class CBvideo extends CBCategory
 	 */
 	function downloadable($vdo): bool
     {
+        if( $vdo['file_type'] == 'hls' ){
+            return false;
+        }
 		$file = get_video_file($vdo,false);
 		if($file){
 			return true;

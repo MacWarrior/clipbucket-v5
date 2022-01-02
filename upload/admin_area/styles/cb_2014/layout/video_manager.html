@@ -1,11 +1,11 @@
 <div class="heading clearfix">
     <h2 class="pull-left">{lang code='videos_manager'}</h2>
-
-    {include file="$layout_dir/blocks/advanced_search.html" }
+    {include file="$layout_dir/blocks/advanced_search.html"}
 </div>
 
 <!-- Displaying Videos -->
 <form name="video_manage marginBottomLarge" method="post">
+{if $videos}
     <div class="btn-group">
         <input class="btn btn-primary btn-xs button" type="submit" name="activate_selected" value="{lang code='activate'}"/>
         {if $smarty.get.active!='no'}
@@ -13,11 +13,11 @@
         {/if}
         <input class="btn btn-primary btn-xs button" type="submit" name="make_featured_selected" value="Make Featured"/>
         <input class="btn btn-primary btn-xs button" type="submit" name="make_unfeatured_selected" value="Make Unfeatured"/>
-		<input class="btn btn-primary btn-xs button" type="submit" name="reconvert_selected" value="Reconvert"/>
-		{if config('chromecast')=='yes'}
-		<input class="btn btn-primary btn-xs button" type="submit" name="check_castable_selected" value="{lang code='castable_status_check'}"/>
-		{/if}
-		<input class="btn btn-primary btn-xs button" type="submit" name="update_bits_color_selected" value="{lang code='update_bits_color'}"/>
+        <input class="btn btn-primary btn-xs button" type="submit" name="reconvert_selected" value="Reconvert"/>
+        {if config('chromecast')=='yes'}
+        <input class="btn btn-primary btn-xs button" type="submit" name="check_castable_selected" value="{lang code='castable_status_check'}"/>
+        {/if}
+        <input class="btn btn-primary btn-xs button" type="submit" name="update_bits_color_selected" value="{lang code='update_bits_color'}"/>
         <input class="btn btn-primary btn-xs button" type="submit" name="delete_selected" value="{lang code='delete'}"
                onclick="return _cb.confirm_it('Are you sure you want to delete selected video(s)')"/>
     </div>
@@ -29,7 +29,6 @@
             <td>Videos Details</td>
             <td>&nbsp;</td>
         </tr>
-       {if $videos}
        {foreach from=$videos item=video}
         <tr>
             <td>
@@ -45,10 +44,11 @@
                             </div>
                             <div class="col-md-9">
                                 <a href="edit_video.php?video={$video.videoid}">
-									{display_clean($video.title|truncate:80)}
-								</a> ({if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if})<br>
-                         <span class="labels1"> <strong>{$video.date_added|niceTime}</strong> | 
-                            {lang code='views'} : <strong>{$video.views|number_format}</strong></span>
+                                    {display_clean($video.title|truncate:80)}
+                                </a> ({if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if})<br/>
+                                <span class="labels1">
+                                    <strong>{$video.date_added|niceTime}</strong> | {lang code='views'} : <strong>{$video.views|number_format}</strong>
+                                </span>
                                 <div class="labels mtl">
                                     <span class="label {if $video.active=='yes'}label-success{else}label-danger{/if}">
                                         {if $video.active=='yes'}{lang code='active'}{else}{lang code='inactive'}{/if}
@@ -56,53 +56,52 @@
                                     <span class="label {if $video.status=='Successful'}label-success{else}label-warning{/if}">
                                         {lang(strtolower($video.status))}
                                     </span>
-									{if $video.featured=='yes'}
-									<span class="label label-info">{lang code='featured'}</span>
-									{/if}
+                                    {if $video.featured=='yes'}
+                                    <span class="label label-info">{lang code='featured'}</span>
+                                    {/if}
 
-									{foreach from=$cbvid->video_manager_link_new item=links}
-										{$cbvid->video_manager_link_new($links,$video)}
-									{/foreach}
+                                    {foreach from=$cbvid->video_manager_link_new item=links}
+                                        {$cbvid->video_manager_link_new($links,$video)}
+                                    {/foreach}
 
-									{if config('chromecast')=='yes'}
-										{if $video.is_castable}
-									<span class="label label-success">{lang code='castable'}</span>
-										{else}
-									<span class="label label-warning">{lang code='non_castable'}</span>
-										{/if}
-									{/if}
+                                    {if config('chromecast')=='yes'}
+                                        {if $video.is_castable}
+                                    <span class="label label-success">{lang code='castable'}</span>
+                                        {else}
+                                    <span class="label label-warning">{lang code='non_castable'}</span>
+                                        {/if}
+                                    {/if}
 
-									{if $video.bits_color}
-										{if $video.bits_color > 8}
-									<span class="label label-warning">{$video.bits_color} {lang code='bits_color'}</span>
-										{else}
-									<span class="label label-success" title="This video might not be playable on other browsers than chrome-like">{$video.bits_color} {lang code='bits_color'}</span>
-										{/if}
-									{/if}
+                                    {if $video.bits_color}
+                                        {if $video.bits_color > 8}
+                                    <span class="label label-warning">{$video.bits_color} {lang code='bits_color'}</span>
+                                        {else}
+                                    <span class="label label-success" title="This video might not be playable on other browsers than chrome-like">{$video.bits_color} {lang code='bits_color'}</span>
+                                        {/if}
+                                    {/if}
 
-									<span class="label label-info">{strtoupper($video.file_type)}</span>
+                                    <span class="label label-info">{strtoupper($video.file_type)}</span>
 
-									{$quals = resString($video.video_files)}
-									{if $quals}
-										<span class="label label-primary">
-											{$quals}
-										</span>
-									{/if}
-									<div class="clearfix"></div>
-									{$catString = {$video.category|categories:video}}
-									{$catString = strip_tags($catString)}
-									{$toArray = explode(',',$catString)}
-									{if count($toArray) > 4}
-										{$moreText = ' + '|cat:{lang code='more'}}
-									{else}
-										{$moreText = ''}
-									{/if}
-									{$finalItems = array_slice($toArray, 0, 4)}
-									{$vcategories = implode(', ',$finalItems)}
-									<span>
-										<span class="label label-info">{lang code='categories'} : {$vcategories} {$moreText}</span>
-									</span>
-                                       
+                                    {$quals = resString($video.video_files)}
+                                    {if $quals}
+                                        <span class="label label-primary">
+                                            {$quals}
+                                        </span>
+                                    {/if}
+                                    <div class="clearfix"></div>
+                                    {$catString = {$video.category|categories:video}}
+                                    {$catString = strip_tags($catString)}
+                                    {$toArray = explode(',',$catString)}
+                                    {if count($toArray) > 4}
+                                        {$moreText = ' + '|cat:{lang code='more'}}
+                                    {else}
+                                        {$moreText = ''}
+                                    {/if}
+                                    {$finalItems = array_slice($toArray, 0, 4)}
+                                    {$vcategories = implode(', ',$finalItems)}
+                                    <span>
+                                        <span class="label label-info">{lang code='categories'} : {$vcategories} {$moreText}</span>
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -115,11 +114,11 @@
             <td>
                 <div class="dropdown">
                     <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
-                        Actions <i class="caret"></i></button>
+                        Actions <i class="caret"></i>
+                    </button>
                     <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
                         <li><a role="menuitem" tabindex="-1" href="edit_video.php?video={$video.videoid}">{lang code='edit'}</a></li>
-                        <li><a role="menuitem" tabindex="-1" href="/watch_video.php?v={$video.videokey}" target="_blank">{lang code='watch'}</a>
-                        </li>
+                        <li><a role="menuitem" tabindex="-1" href="/watch_video.php?v={$video.videokey}" target="_blank">{lang code='watch'}</a></li>
 
                         {if $video.featured == yes}
                         <li><a role="menuitem" tabindex="-1" href="?make_unfeature={$video.videoid}">Make Unfeatured</a></li>
@@ -128,29 +127,22 @@
                         <li><a role="menuitem" tabindex="-1" href="?make_feature={$video.videoid}">Make Featured</a></li>
                         {/if}
                         {if $video.active == yes}
-                        <li><a role="menuitem" tabindex="-1" href="?deactivate={$video.videoid}">{lang code='deactivate'}</a>
-                        </li>
+                        <li><a role="menuitem" tabindex="-1" href="?deactivate={$video.videoid}">{lang code='deactivate'}</a></li>
                         {else}
-                        <li><a role="menuitem" tabindex="-1" href="?activate={$video.videoid}">{lang code='activate'}</a>
-                        </li>
+                        <li><a role="menuitem" tabindex="-1" href="?activate={$video.videoid}">{lang code='activate'}</a></li>
                         {/if}
-                        <li>
-							<a role="menuitem" tabindex="-1" href="view_conversion_log.php?file_name={$video.file_name}">
-								File conversion details
-							</a>
-						</li>
-						{if isReconvertAble($video)}
-						<li><a role="menuitem" tabindex="-1" href="?reconvert_video={$video.videoid}">Reconvert</a></li>
-						{/if}
-						{if config('chromecast')=='yes' && !$video.is_castable}
-						<li><a href="?check_castable={$video.videoid}">{lang code='castable_status_check'}</a></li>
-						{/if}
-						<li><a href="?update_bits_color={$video.videoid}">{lang code='update_bits_color'}</a></li>
+                        <li><a role="menuitem" tabindex="-1" href="view_conversion_log.php?file_name={$video.file_name}">File conversion details</a></li>
+                        {if isReconvertAble($video)}
+                        <li><a role="menuitem" tabindex="-1" href="?reconvert_video={$video.videoid}">Reconvert</a></li>
+                        {/if}
+                        {if config('chromecast')=='yes' && !$video.is_castable}
+                        <li><a href="?check_castable={$video.videoid}">{lang code='castable_status_check'}</a></li>
+                        {/if}
+                        <li><a href="?update_bits_color={$video.videoid}">{lang code='update_bits_color'}</a></li>
                         <li class="divider"></li>
-                        <li><a role="menuitem" tabindex="-1" href="?delete_video={$video.videoid}">{lang code='delete'}</a>
-                        </li>
+                        <li><a role="menuitem" tabindex="-1" href="?delete_video={$video.videoid}">{lang code='delete'}</a></li>
                         {foreach from=$cbvid->video_manager_link item=links}
-                        	{$cbvid->video_manager_link($links,$video)}
+                            {$cbvid->video_manager_link($links,$video)}
                         {/foreach}
                     </ul>
                 </div>
@@ -158,22 +150,22 @@
         </tr>
         {/foreach}
     </table>
-    {else}
-    <div align="center"><strong><em>No Video Found</em></strong></div>
-    {/if}
     <div class="btn-group marginBotoomLarge marginTopLarge paddingBotoomLarge paddingTopLarge">
         <input class="btn btn-primary btn-xs button" type="submit" name="activate_selected" value="{lang code='activate'}"/>
         <input class="btn btn-primary btn-xs button" type="submit" name="deactivate_selected" value="{lang code='deactivate'}"/>
         <input class="btn btn-primary btn-xs button" type="submit" name="make_featured_selected" value="Make Featured"/>
         <input class="btn btn-primary btn-xs button" type="submit" name="make_unfeatured_selected" value="Make Unfeatured"/>
-		<input class="btn btn-primary btn-xs button" type="submit" name="reconvert_selected" value="Reconvert"/>
-		{if config('chromecast')=='yes'}
-		<input class="btn btn-primary btn-xs button" type="submit" name="check_castable_selected" value="{lang code='castable_status_check'}"/>
-		{/if}
-		<input class="btn btn-primary btn-xs button" type="submit" name="update_bits_color_selected" value="{lang code='update_bits_color'}"/>
+        <input class="btn btn-primary btn-xs button" type="submit" name="reconvert_selected" value="Reconvert"/>
+        {if config('chromecast')=='yes'}
+        <input class="btn btn-primary btn-xs button" type="submit" name="check_castable_selected" value="{lang code='castable_status_check'}"/>
+        {/if}
+        <input class="btn btn-primary btn-xs button" type="submit" name="update_bits_color_selected" value="{lang code='update_bits_color'}"/>
         <input class="btn btn-primary btn-xs button" type="submit" name="delete_selected" value="{lang code='delete'}"
                onclick="return _cb.confirm_it('Are you sure you want to delete selected video(s)')"/>
     </div>
+    {else}
+    <div align="center"><strong><em>No Video Found</em></strong></div>
+    {/if}
 </form>
 
 <!-- DIsplaying Videos Ends-->

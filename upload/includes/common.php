@@ -228,10 +228,6 @@ const TEMPLATEFOLDER = 'styles';                            //Template Folder Na
 const STYLES_DIR = BASEDIR . DIRECTORY_SEPARATOR . TEMPLATEFOLDER;
 
 # Define Lang Select & Style Select
-
-define('ALLOW_LANG_SELECT',$row['allow_language_change']);
-define('ALLOW_STYLE_SELECT',$row['allow_template_change']);
-define('SUBTITLE',$row['code_dev']);
 //Javascript Directory Name
 const ADMINDIR = 'admin_area';
 const ADMINBASEDIR = BASEDIR . DIRECTORY_SEPARATOR . 'admin_area';                //Admin Accessible Folder
@@ -356,7 +352,6 @@ require_once BASEDIR.'/includes/smartyv3/bootstrap.php';
 $cbtpl->init();
 require BASEDIR.'/includes/active.php';
 Assign('THIS_URL', $thisurl);
-define('ALLOWED_GROUP_CATEGORIES',$row['grp_categories']);
 define('ALLOWED_VDO_CATS',$row['video_categories']);
 const ALLOWED_CATEGORIES = 3;
 
@@ -427,8 +422,6 @@ Assign('LANG',$LANG);
 $config['date'] = '%I:%M %p';
 $config['time'] = '%H:%M';
 assign('config', $config);
-# Assign Player Div Id
-Assign('player_div_id',$row['player_div_id']);
 
 # Assigning Page
 Assign('page',getConstant('PAGE'));

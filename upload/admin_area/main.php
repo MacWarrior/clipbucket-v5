@@ -120,7 +120,6 @@ if(isset($_POST['update']))
         'closed_msg',
         'channel_comments',
         'channels_list_per_page',
-        'channels_list_per_tab',
         'channelsSection',
         'channel_rating',
         'collection_rating',
@@ -156,13 +155,6 @@ if(isset($_POST['update']))
         'media_info',
 
         'gravatars',
-        'grp_categories',
-        'grp_thumb_height',
-        'grp_thumb_width',
-        'grp_max_title',
-        'grp_max_desc',
-
-        'high_resolution',
 
         'keywords',
         'keep_mp4_as_is',
@@ -173,7 +165,6 @@ if(isset($_POST['update']))
         'max_bg_width',
         'max_bg_size',
         'max_conversion',
-        'max_profile_pic_height',
         'max_profile_pic_size',
         'max_profile_pic_width',
         'max_video_title',
@@ -189,7 +180,6 @@ if(isset($_POST['update']))
         'max_upload_size',
         'max_video_duration',
 
-        'normal_resolution',
         'num_thumbs',
 
         'own_channel_rating',
@@ -227,7 +217,6 @@ if(isset($_POST['update']))
         'thumb_width',
         'thumb_height',
 
-        //'use_crons',
         'user_comment_own',
         'users_items_subscriptions',
         'users_items_contacts_channel',
@@ -245,7 +234,6 @@ if(isset($_POST['update']))
         'videos_items_search_page',
         'videos_item_channel_page',
         'videos_list_per_page',
-        'videos_list_per_tab',
         'video_download',
         'bits_color_warning',
         'video_embed',
@@ -294,7 +282,6 @@ if(isset($_POST['update']))
         'anonymous_id',
 
         'channels_list_per_page',
-        'channels_list_per_tab',
 
         'max_upload_size',
         'max_video_title',
@@ -318,7 +305,6 @@ if(isset($_POST['update']))
         'videos_items_search_page',
         'videos_item_channel_page',
         'videos_list_per_page',
-        'videos_list_per_tab',
         'video_categories',
 
         'photo_main_list',

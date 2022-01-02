@@ -3,8 +3,8 @@ define('THIS_PAGE','file_downloader');
 
 global $Cbucket,$cbvid,$Upload,$db;
 
-include("../includes/config.inc.php");
-include("../includes/classes/curl/class.curl.php");
+include('../includes/config.inc.php');
+include('../includes/classes/curl/class.curl.php');
 ini_set('max_execution_time', 3000);
 
 if(isset($_POST['check_url']))
@@ -36,7 +36,7 @@ if(isset($_POST['check_url']))
  */
 
 if(!isCurlInstalled()) {
-	exit(json_encode(array("error"=>"Sorry, we do not support remote upload")));
+	exit(json_encode(array('error'=>'Sorry, we do not support remote upload')));
 }
 
 //checking if user is logged in or not
@@ -112,15 +112,15 @@ if(isset($_POST['youtube']))
 	$vid = $Upload->submit_upload($vid_array);
 
 	if(!function_exists('get_refer_url_from_embed_code')) {
-		exit(json_encode(array('error'=>"Clipbucket embed module is not installed")));
+		exit(json_encode(array('error'=>'Clipbucket embed module is not installed')));
 	}
 	
 	$ref_url = get_refer_url_from_embed_code(unhtmlentities(stripslashes($vdetails['embed_code'])));
 	$ref_url = $ref_url['url'];
-	$db->update(tbl("video"),array("status","refer_url","duration"),array('Successful',$ref_url,$duration)," videoid='$vid'");
+	$db->update(tbl('video'),array('status','refer_url','duration'),array('Successful',$ref_url,$duration)," videoid='$vid'");
 
 	//Downloading thumb
-	$downloaded_thumb = snatch_it(urlencode($max_quality_thumb),THUMBS_DIR.'/'.$file_directory,$file_name."-ytmax.jpg");
+	$downloaded_thumb = snatch_it(urlencode($max_quality_thumb),THUMBS_DIR.'/'.$file_directory,$file_name.'-ytmax.jpg');
 
 	$params = array();
 	$params['filepath'] = $downloaded_thumb;
@@ -182,8 +182,8 @@ $svfile = TEMP_DIR.'/'.$file_name.'.'.$ext;
 //Checking for the url
 if(empty($file))
 {
-	echo "error";
-	$array['error'] = "Please enter file url";
+	echo 'error';
+	$array['error'] = 'Please enter file url';
 	echo json_encode($array);
 	exit();
 }
@@ -195,7 +195,7 @@ $types_array = explode(' ',$types_array);
 $extension_whitelist = $types_array;
 if(!in_array($ext,$extension_whitelist))
 {
-	$array['error'] = "This file type is not allowed : ".$ext." (".$file.")";
+	$array['error'] = 'This file type is not allowed : '.$ext." (".$file.")";
 	echo json_encode($array);
 	exit();
 }
@@ -207,14 +207,14 @@ $curl->setopt(CURLOPT_FOLLOWLOCATION, true) ;
 //Checking if file size is not that goood
 if(!is_numeric($curl->file_size) || $curl->file_size == '')
 {
-	$array['error'] = "Unknown file size";
+	$array['error'] = 'Unknown file size';
 	echo json_encode($array);
 	exit();
 }
 
 //Opening video file
 $temp_fo = fopen($svfile,'w+');
-$curlOpt = "";
+$curlOpt = '';
 $curl->setopt(CURLOPT_FILE, $temp_fo);
 $curl->exec();
 
@@ -231,15 +231,16 @@ $details = $logDetails;
 $targetFileName = $file_name . '.' . $ext;
 $Upload->add_conversion_queue($targetFileName);
 
-if(file_exists($log_file))
-unlink($log_file);
-if(file_exists($dummy_file))
+if(file_exists($log_file)){
+    unlink($log_file);
+}
+if(file_exists($dummy_file)){
 	unlink($dummy_file);
-$use_crons = config('use_crons');
+}
 
 //Inserting data
 $title = urldecode(mysql_clean(getName($file)));
-$title = $title ? $title : "Untitled";
+$title = $title ? $title : 'Untitled';
 
 $vidDetails = array(
 	'title' => $title,
@@ -256,12 +257,10 @@ $vid = $Upload->submit_upload($vidDetails);
 
 echo json_encode(array('vid'=>$vid));
 $file_dir = $vidDetails['file_directory'];
-$logFile = LOGS_DIR.DIRECTORY_SEPARATOR.$file_dir.DIRECTORY_SEPARATOR.$file_name.".log";
-if($use_crons=='no')
-{
-	if (stristr(PHP_OS, 'WIN')) {
-        exec(php_path()." -q ".BASEDIR."/actions/video_convert.php $targetFileName sleep");
-    } else {
-        exec(php_path()." -q ".BASEDIR."/actions/video_convert.php $targetFileName $file_name $file_dir $logFile > /dev/null &");
-	}
+$logFile = LOGS_DIR.DIRECTORY_SEPARATOR.$file_dir.DIRECTORY_SEPARATOR.$file_name.'.log';
+
+if (stristr(PHP_OS, 'WIN')) {
+    exec(php_path().' -q '.BASEDIR."/actions/video_convert.php $targetFileName sleep");
+} else {
+    exec(php_path().' -q '.BASEDIR."/actions/video_convert.php $targetFileName $file_name $file_dir $logFile > /dev/null &");
 }

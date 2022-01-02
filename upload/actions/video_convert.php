@@ -12,9 +12,6 @@ global $db;
     getting the arguments
     $argv[1] => first argument, in our case its the path of the file
 */
-if (config('use_crons') == 'yes') {
-    $argv = convertWithCron();
-}
 
 $fileName = $argv[1] ?? false;
 //This is exact file name of a video e.g 132456789
@@ -28,7 +25,6 @@ if (empty($logFile)) {
     $logFile = LOGS_DIR.DIRECTORY_SEPARATOR.$file_directory.$_filename.'.log';
 }
 
-// TODO : Support multi audio tracks ; $audio_track =  false;
 $audio_track = $argv[5] ?? false;
 $reconvert = $argv[6] ?? false;
 

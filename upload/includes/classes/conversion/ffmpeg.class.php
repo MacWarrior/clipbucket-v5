@@ -319,16 +319,12 @@ class FFMpeg
 		//We will now add a loop that will check weather
 		while( true )
 		{
-			$use_crons = config('use_crons');
-			if( !$this->isLocked(PROCESSESS_AT_ONCE) || $use_crons == 'yes' )
+			if( !$this->isLocked(PROCESSESS_AT_ONCE) )
 			{
-				if( $use_crons == 'no' )
-				{
-					//Lets make a file
-					$file = fopen($conv_file,'w+');
-					fwrite($file,'converting..');
-					fclose($file);
-				}
+                //Lets make a file
+                $file = fopen($conv_file,'w+');
+                fwrite($file,'converting..');
+                fclose($file);
 
 				$this->start_time_check();
 				$this->start_log();

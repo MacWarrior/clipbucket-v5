@@ -39,7 +39,7 @@
                         <input type="hidden" name="type" value="{$stype}" />
                         {foreach from=$search.fields item=field}
                         <div class="form-group">
-                            <label>Advanced Search</label>
+                            <label>{lang code="com_advance_results"}</label>
                             <label class="show"><b>{$field.title}</b></label>
                             {$field.notShowSeprator = 'true'}
                             {$field.class = 'form-control'}
@@ -51,7 +51,7 @@
                         </div>
                         {/foreach}
                         <label for="cbsearch"></label>
-                        <input type="submit" name="cbsearch" id="cbsearch" value="Search" class="btn btn-primary btn-xs" />
+                        <input type="submit" name="cbsearch" id="cbsearch" value='{lang code="search"}' class="btn btn-primary btn-xs" />
                     </form>
                 </div>
             </div>
