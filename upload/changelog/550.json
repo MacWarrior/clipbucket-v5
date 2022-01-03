@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"9",
+  "revision":"10",
   "status":"dev",
   "detail":[
     {
@@ -14,7 +14,8 @@
         ,"Add option to extract subtitles to dedicated files"
         ,"Add option to specify subtitles format"
         ,"Add video type tag to video manager"
-        ,"Beginning of HLS conversion"
+        ,"Implement HLS conversion (WIP)"
+        ,"Refactor FFMPEG conversion (WIP)"
       ]
     },
     {
@@ -24,13 +25,18 @@
         ,"Remove unused config"
         ,"Remove unused DB columns"
       ]
-    }
-  ,
+    },
     {
       "title": "Player",
       "description": [
         "Implement subtitles"
         ,"Add option to enable subtitles"
+      ]
+    },
+    {
+      "title": "Server",
+      "description": [
+        "Remove LSHW dependency"
       ]
     }
   ]

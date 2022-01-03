@@ -10,7 +10,7 @@ echo -ne " OK"
 
 echo ""
 echo -ne "Installing requiered elements..."
-apt install php7.3 apache2 mariadb-server git php-curl ffmpeg php7.3-mysql php7.3-xml php7.3-mbstring php7.3-gd sendmail mediainfo lshw --yes > /dev/null 2>&1
+apt install php7.3 apache2 mariadb-server git php-curl ffmpeg php7.3-mysql php7.3-xml php7.3-mbstring php7.3-gd sendmail mediainfo --yes > /dev/null 2>&1
 sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 100M/g" /etc/php/7.3/apache2/php.ini
 sed -i "s/post_max_size = 8M/post_max_size = 100M/g" /etc/php/7.3/apache2/php.ini
 sed -i "s/max_execution_time = 30/max_execution_time = 7200/g" /etc/php/7.3/apache2/php.ini

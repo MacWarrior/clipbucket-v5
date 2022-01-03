@@ -1,52 +1,38 @@
 <?php
-define('FFMPEG_BINARY', get_binaries('ffmpeg'));
-define('MEDIAINFO_BINARY', get_binaries('media_info'));
-define('FFPROBE', get_binaries('ffprobe_path'));
-define('thumbs_number',config('num_thumbs'));
-define('PROCESSESS_AT_ONCE',config('max_conversion'));
 
 class FFMpeg
 {
-	public $num = thumbs_number;
-	public $reconvert = false;
-	public $ffMpegPath = FFMPEG_BINARY;
-	public $log = '';
-	public $logs = '';
-	public $file_name = '';
-	public $ratio = '';
-	public $raw_path = '';
-	public $audio_track = false;
-	public $file_directory = '';
-	public        $thumbs_res_settings = array(
+    public string $conversion_type = '';
+    public string $file_directory = '';
+    public string $file_name = '';
+    public string $outputPath = '';
+    public string $lock_file = '';
+    public string $input_file = '';
+    public int $audio_track = -1;
+    public array $input_details = [];
+	public SLog $log;
+
+
+
+
+
+
+
+
+	public string $output_dir      = '';
+	public string $output_file     = '';
+
+	public $thumbs_res_settings = array(
         'original' => 'original',
         '105' => array('168','105'),
         '260' => array('416','260'),
         '320' => array('632','395'),
         '480' => array('768','432')
     );
-    public string $input_file = '';
 
-	private $options = array();
-	private $videosDirPath = VIDEOS_DIR;
-
-
-	public function __construct($options, $log = false)
+	public function __construct(SLog $log)
 	{
-        $this->setOptions($options);
-
-		if($log){
-			$this->log = $log;
-        }
-	}
-
-	function exec( $cmd )
-	{
-		# use bash to execute the command
-		# add common locations for bash to the PATH
-		# this should work in virtually any *nix/BSD/Linux server on the planet
-		# assuming we have execute permission
-		//$cmd = "PATH=\$PATH:/bin:/usr/bin:/usr/local/bin bash -c \"$cmd\" ";
-		return shell_exec($cmd);
+        $this->log = $log;
 	}
 
     /**
@@ -65,7 +51,7 @@ class FFMpeg
 		$info['video_color']         = 'N/A';
 		$info['path']                = $file_path;
 
-		$cmd = FFPROBE. " -v quiet -print_format json -show_format -show_streams '".$file_path."' ";
+		$cmd = config('ffprobe_path'). " -v quiet -print_format json -show_format -show_streams '".$file_path."' ";
 		$output = shell_output($cmd);
 		$output = preg_replace('/([a-zA-Z 0-9\r\n]+){/', '{', $output, 1);
 
@@ -111,16 +97,15 @@ class FFMpeg
 		$info['rotation']       = (float) $video['tags']['rotate'];
 
 		if(!$info['duration']) {
-			$CMD = MEDIAINFO_BINARY." '--Inform=General;%Duration%' '". $file_path."' 2>&1";
+			$CMD = config('media_info')." '--Inform=General;%Duration%' '". $file_path."' 2>&1";
 			$info['duration'] = round((int)shell_output( $CMD )/1000,2);
 		}
 
-		$this->raw_info = $info;
 		$video_rate = explode('/',$info['video_rate']);
 		$int_1_video_rate = (int)$video_rate[0];
 		$int_2_video_rate = (int)$video_rate[1];
 
-		$CMD = MEDIAINFO_BINARY . " '--Inform=Video;' ". $file_path;
+		$CMD = config('media_info') . " '--Inform=Video;' ". $file_path;
 
 		$results = shell_output($CMD);
 		$needle_start = 'Original height';
@@ -154,19 +139,6 @@ class FFMpeg
 		return $info;
 	}
 
-	public function setOptions($options = array())
-	{
-		if(!empty($options)) {
-			if(is_array($options)) {
-				foreach ($options as $key => $value) {
-                    $this->options[$key] = $value;
-				}
-			} else {
-				$this->options[0] = $options;
-			}
-		}
-	}
-
 	function log($name,$value)
 	{
 		$this->log .= $name.' : '.$value."\r\n";
@@ -178,8 +150,8 @@ class FFMpeg
 	function start_log()
 	{
 		$TemplogData = 'Started on '.NOW().' - '.date('Y M d')."\n\n";
-		$TemplogData .= "Checking File...\n";
-		$TemplogData .= "File : {$this->input_file}";
+		$TemplogData .= 'Checking File...'."\n";
+		$TemplogData .= 'File : '.$this->input_file;
 		$this->log->writeLine('Starting Conversion', $TemplogData, true);
 	}
 	
@@ -190,13 +162,9 @@ class FFMpeg
 	{
 		$details = $this->input_details;
 		$configLog = '';
-		if(is_array($details)) {
-			foreach($details as $name => $value) {
-				$configLog .= "<strong>{$name}</strong> : {$value}\n";
-			}
-		} else {
-			$configLog = "Unknown file details - Unable to get video details using FFMPEG \n";
-		}
+        foreach($details as $name => $value) {
+            $configLog .= "<strong>{$name}</strong> : {$value}\n";
+        }
 
 		$this->log->writeLine('Preparing file...', $configLog, true);
 	}
@@ -249,51 +217,6 @@ class FFMpeg
 	{
 		$this->total_time = round(($this->end_time-$this->start_time),4);
 	}
-	
-	function getClosest($search, $arr) 
-	{
-		$closest = null;
-		foreach ($arr as $item) {
-			if($closest === null || abs($search - $closest) > abs($item - $search)) {
-				$closest = $item;
-			}
-		}
-		return $closest;
-	}
-
-	/**
-	 * @Reason : this function is used to rearrange required resolution for conversion
-	 *
-	 * @params : { resolutions (Array) }
-	 *
-	 * @date : 13-12-2016
-	 * return : refined resolution array
-	 *
-	 * @param $resolutions
-	 *
-	 * @return bool|array
-	 */
-	function reindex_required_resolutions($resolutions)
-	{
-		$original_video_height = $this->input_details['video_height'];
-
-		$input_video_height = $this->getClosest($original_video_height, array_keys($resolutions));
-        $final_res = [];
-        $final_res[$input_video_height] = $resolutions[$input_video_height];
-
-		foreach ($resolutions as $key => $value)
-		{
-			$video_height = (int)$key;
-			if($input_video_height != $video_height){
-				$final_res[$video_height] = $value;	
-			}
-		}
-
-		if ( !empty($final_res) ){
-			return $final_res;
-        }
-		return false;
-	}
 
 	function isLocked($num=1): bool
     {
@@ -312,305 +235,325 @@ class FFMpeg
 		return true;
 	}
 
+    function unLock()
+    {
+        if( file_exists($this->lock_file) ){
+            unlink($this->lock_file);
+        }
+    }
+
 	function ClipBucket()
 	{
-		$conv_file = TEMP_DIR.'/conv_lock.loc';
-
 		//We will now add a loop that will check weather
 		while( true )
 		{
-			if( !$this->isLocked(PROCESSESS_AT_ONCE) )
-			{
-                //Lets make a file
-                $file = fopen($conv_file,'w+');
-                fwrite($file,'converting..');
-                fclose($file);
+            if( $this->isLocked(config('max_conversion')) ){
+                // Prevent video_convert action to use 100% cpu while waiting for queued videos to end conversion
+                sleep(5);
+                continue;
+            }
 
-				$this->start_time_check();
-				$this->start_log();
-				$this->prepare();
-				
-				$ratio = (float)substr($this->input_details['video_wh_ratio'], 0, 7);
-				
-				$max_duration = config('max_video_duration') * 60;
+            $this->start_time_check();
+            $this->start_log();
+            $this->prepare();
 
-				if( $this->input_details['duration'] > $max_duration )
-				{
-					$max_duration_seconds = $max_duration / 60; 
-					$log = 'Video duration was '.$this->input_details['duration']." minutes and Max video duration is {$max_duration_seconds} minutes, Therefore Video cancelled\n";
-					$log .= "Conversion_status : failed\n";
-					$log .= "Failed Reason : Max Duration Configurations\n";
-					$this->log->writeLine('Max Duration configs', $log, true);
-					$this->failed_reason = 'max_duration';
-					break;
-				}
-
-				$log = '';
-				try {
-					$thumbs_settings = $this->thumbs_res_settings;
-					foreach( $thumbs_settings as $key => $thumbs_size ) {
-						$height_setting = $thumbs_size[1];
-						$width_setting = $thumbs_size[0];
-						$dimension_setting = $width_setting.'x'.$height_setting;
-						if( $key == 'original' ) {
-							$dimension_setting = $key;
-							$dim_identifier = $key;	
-						} else {
-							$dim_identifier = $width_setting.'x'.$height_setting;	
-						}
-						$thumbs_settings['vid_file'] = $this->input_file;
-						$thumbs_settings['duration'] = $this->input_details['duration'];
-						$thumbs_settings['num']      = thumbs_number;
-						$thumbs_settings['dim']      = $dimension_setting;
-						$thumbs_settings['size_tag'] = $dim_identifier;
-						$this->generateThumbs($thumbs_settings);
-					}
-				} catch(Exception $e) {
-					$log .= "\r\n Error Occured : ".$e->getMessage()."\r\n";
-				}
-
-                $log .= "\r\n ====== End : Thumbs Generation ======= \r\n";
-                $this->log->writeLine('Thumbs Generation', $log, true);
-
-                if( config('extract_subtitles') ){
-                    global $cbvideo, $db;
-
-                    $log = '';
-                    $subtitles = FFMpeg::get_track_title($this->input_file, 'subtitle');
-
-                    if( count($subtitles) > 0 ){
-                        $video = $cbvideo->get_video($this->file_name,true);
-                        $subtitle_dir = SUBTITLES_DIR.DIRECTORY_SEPARATOR.$video['file_directory'].DIRECTORY_SEPARATOR;
-                        if(!is_dir($subtitle_dir)){
-                            mkdir($subtitle_dir,0755, true);
-                        }
-
-                        $count = 0;
-                        foreach( $subtitles as $map_id => $title ) {
-                            $count++;
-                            $display_count = str_pad((string)$count, 2, '0', STR_PAD_LEFT);
-                            $command = config('ffmpegpath').' -i '.$this->input_file.' -map 0:'.$map_id.' -f '.config('subtitle_format').' '.$subtitle_dir.$this->file_name.'-'.$display_count.'.srt 2>&1';
-                            $log .= "\r\n".$command;
-                            $output = $this->exec($command);
-                            $db->insert(tbl('video_subtitle'),array('videoid','number','title'),array($video['videoid'], $display_count, $title));
-                            if( DEVELOPMENT_MODE ) {
-                                $log .= "\r\n".$output;
-                            }
-                        }
-                    }
-
-                    $log .= "\r\n ====== End : Subtitles extraction ======= \r\n";
-                    $this->log->writeLine('Subtitles extraction', $log, true);
-                }
-
-                $this->options['format'] = 'mp4';
-                $orig_file = $this->input_file;
-
-                if( config('stay_mp4') == 'yes' ){
-                    $output_directory = $this->videosDirPath.DIRECTORY_SEPARATOR.$this->options['outputPath'];
-                    if(!is_dir($output_directory)){
-                        mkdir($output_directory,0755, true);
-                    }
-
-                    $filepath_destination = $output_directory.$this->file_name.'.mp4';
-                    copy($orig_file,$filepath_destination);
-
-                    $this->output_file = $filepath_destination;
-                } else {
-                    global $myquery;
-                    $resolutions = $this->reindex_required_resolutions($myquery->getEnabledVideoResolutions());
-
-                    $this->ratio = $ratio;
-                    foreach( $resolutions as $key => $value )
-                    {
-                        $video_height = (int)$key;
-                        $video_width  = (int)$value;
-
-                        // This option allow video with a 1% lower resolution to be included in the superior resolution
-                        // For example : 1900x800 will be allowed in 1080p resolution
-                        if( config('allow_conversion_1_percent') == 'yes' ){
-                            $video_height_test = floor($video_height*0.99);
-                            $video_width_test = floor($video_width*0.99);
-                        } else {
-                            $video_height_test = $video_height;
-                            $video_width_test = $video_width;
-                        }
-
-                        // Here we must check width and height to be able to import other formats than 16/9 (For example : 1920x800, 1800x1080, ...)
-                        if( $this->input_details['video_width'] >= $video_width_test || $this->input_details['video_height'] >= $video_height_test )
-                        {
-                            $more_res['video_width']  = $video_width;
-                            $more_res['video_height'] = $video_height;
-                            $more_res['height']		  = $video_height;
-                            $this->convert($more_res);
-                        }
-                    }
-                }
-
-                $this->end_time_check();
-                $this->total_time();
-
-                $log = 'Time Took : '.$this->total_time.' seconds'."\r\n";
-
-                if(file_exists($this->output_file) && filesize($this->output_file) > 0) {
-                    $log .= 'Conversion_status : completed';
-                } else {
-                    $log .= 'Conversion_status : failed';
-                }
-
-                $this->log->writeLine('Conversion Completed', $log, true);
+            $max_duration = config('max_video_duration') * 60;
+            if( $this->input_details['duration'] > $max_duration ) {
+                $max_duration_seconds = $max_duration / 60;
+                $log = 'Video duration was '.$this->input_details['duration']." minutes and Max video duration is {$max_duration_seconds} minutes, Therefore Video cancelled\n";
+                $log .= "Conversion_status : failed\n";
+                $log .= "Failed Reason : Max Duration Configurations\n";
+                $this->log->writeLine('Max Duration configs', $log, true);
                 break;
-			}
+            }
 
-			// Prevent video_convert action to use 100% cpu while waiting for queued videos to end conversion
-			sleep(5);
+            $log = '';
+            try {
+                $thumbs_settings = $this->thumbs_res_settings;
+                foreach( $thumbs_settings as $key => $thumbs_size ) {
+                    $height_setting = $thumbs_size[1];
+                    $width_setting = $thumbs_size[0];
+                    $dimension_setting = $width_setting.'x'.$height_setting;
+                    if( $key == 'original' ) {
+                        $dimension_setting = $key;
+                        $dim_identifier = $key;
+                    } else {
+                        $dim_identifier = $width_setting.'x'.$height_setting;
+                    }
+                    $thumbs_settings['vid_file'] = $this->input_file;
+                    $thumbs_settings['duration'] = $this->input_details['duration'];
+                    $thumbs_settings['num']      = config('num_thumbs');
+                    $thumbs_settings['dim']      = $dimension_setting;
+                    $thumbs_settings['size_tag'] = $dim_identifier;
+                    $this->generateThumbs($thumbs_settings);
+                }
+            } catch(Exception $e) {
+                $log .= "\r\n Error Occured : ".$e->getMessage()."\r\n";
+            }
+
+            $log .= "\r\n ====== End : Thumbs Generation ======= \r\n";
+            $this->log->writeLine('Thumbs Generation', $log, true);
+
+            if( config('extract_subtitles') ){
+                $this->extract_subtitles();
+            }
+
+            $orig_file = $this->input_file;
+            $resolutions = $this->get_eligible_resolutions();
+
+            switch( $this->conversion_type ){
+                default:
+                case 'mp4':
+                    if( config('stay_mp4') == 'yes' ){
+                        $output_directory = VIDEOS_DIR.DIRECTORY_SEPARATOR.$this->outputPath;
+                        if(!is_dir($output_directory)){
+                            mkdir($output_directory,0755, true);
+                        }
+
+                        $filepath_destination = $output_directory.$this->file_name.'.'.$this->conversion_type;
+                        copy($orig_file,$filepath_destination);
+
+                        $this->output_file = $filepath_destination;
+                        break;
+                    }
+
+                    foreach($resolutions as $res){
+                        $this->convert_mp4($res);
+                    }
+                    break;
+
+                case 'hls':
+                    $this->convert_hls($resolutions);
+                    break;
+            }
+
+            $this->end_time_check();
+            $this->total_time();
+
+            $log = 'Time Took : '.$this->total_time.' seconds'."\r\n";
+
+            if(file_exists($this->output_file) && filesize($this->output_file) > 0) {
+                $log .= 'Conversion_status : completed';
+            } else {
+                $log .= 'Conversion_status : failed';
+            }
+
+            $this->log->writeLine('Conversion Completed', $log, true);
+            break;
 		}
+        $this->unLock();
 	}
 
-	private function executeCommand($command = false)
-	{
-		// the last 2>&1 is for forcing the shell_exec to return the output 
-		if($command){
-			return shell_exec($command . ' 2>&1');
+    private function extract_subtitles()
+    {
+        global $cbvideo, $db;
+
+        $log = '';
+        $subtitles = FFMpeg::get_track_title($this->input_file, 'subtitle');
+
+        if( count($subtitles) > 0 ){
+            $video = $cbvideo->get_video($this->file_name,true);
+            $subtitle_dir = SUBTITLES_DIR.DIRECTORY_SEPARATOR.$this->file_directory.DIRECTORY_SEPARATOR;
+            if(!is_dir($subtitle_dir)){
+                mkdir($subtitle_dir,0755, true);
+            }
+
+            $count = 0;
+            foreach( $subtitles as $map_id => $title ) {
+                $count++;
+                $display_count = str_pad((string)$count, 2, '0', STR_PAD_LEFT);
+                $command = config('ffmpegpath').' -i '.$this->input_file.' -map 0:'.$map_id.' -f '.config('subtitle_format').' '.$subtitle_dir.$this->file_name.'-'.$display_count.'.srt 2>&1';
+                $log .= "\r\n".$command;
+                $output = shell_exec($command);
+                $db->insert(tbl('video_subtitle'),array('videoid','number','title'),array($video['videoid'], $display_count, $title));
+                if( DEVELOPMENT_MODE ) {
+                    $log .= "\r\n".$output;
+                }
+            }
+
+            $log .= "\r\n ====== End : Subtitles extraction ======= \r\n";
+            $this->log->writeLine('Subtitles extraction', $log, true);
         }
-		return false;
-	}
+    }
 
-	function ffmpeg($file)
-	{
-		$this->ffmpeg = FFMPEG_BINARY;
-		$this->input_file = $file;
-	}
+    private function get_eligible_resolutions(): array
+    {
+        global $myquery;
+        $resolutions = $myquery->getEnabledVideoResolutions();
+        $eligible_resolutions = [];
+
+        foreach( $resolutions as $key => $value )
+        {
+            $video_height = (int)$key;
+            $video_width  = (int)$value;
+
+            // This option allow video with a 1% lower resolution to be included in the superior resolution
+            // For example : 1900x800 will be allowed in 1080p resolution
+            if( config('allow_conversion_1_percent') == 'yes' ){
+                $video_height_test = floor($video_height*0.99);
+                $video_width_test = floor($video_width*0.99);
+            } else {
+                $video_height_test = $video_height;
+                $video_width_test = $video_width;
+            }
+
+            $res = [];
+
+            // Here we must check width and height to be able to import other formats than 16/9 (For example : 1920x800, 1800x1080, ...)
+            if( $this->input_details['video_width'] >= $video_width_test || $this->input_details['video_height'] >= $video_height_test )
+            {
+                $res['video_width']  = $video_width;
+                $res['video_height'] = $video_height;
+                $res['height']		 = $video_height;
+
+                $eligible_resolutions[] = $res;
+            }
+        }
+
+        return $eligible_resolutions;
+    }
+
+    private function get_conversion_option($type, array $resolution = []): string
+    {
+        $cmd = '';
+        switch($type)
+        {
+            case 'video':
+                global $myquery;
+                // Video Codec
+                $cmd .= ' -vcodec '.config('video_codec');
+                if( config('video_codec') == 'libx264' ) {
+                    $cmd .= ' -preset medium';
+                }
+                // Video Rate
+                $cmd .= ' -r '.config('vrate');
+                // Fix for browsers compatibility : yuv420p10le seems to be working only on Chrome like browsers
+                if( config('force_8bits') ){
+                    $cmd .= ' -pix_fmt yuv420p';
+                }
+                $cmd .= ' -start_at_zero';
+                // Video Bitrate
+                $cmd .= ' -vb '.$myquery->getVideoResolutionBitrateFromHeight($resolution['height']);
+                // Resolution
+                $cmd .= ' -vf scale=w='.$resolution['video_width'].':h='.$resolution['video_height'].':force_original_aspect_ratio=decrease';
+                break;
+            case 'audio':
+                // Audio Bitrate
+                $cmd .= ' -b:a '.config('sbrate');
+                // Audio Rate
+                $cmd .= ' -ar '.config('srate');
+                // Audio Codec
+                $cmd .= ' -c:a '.config('audio_codec');
+                if( config('audio_codec') == 'aac' ){
+                    $cmd .= ' -profile:a aac_low';
+                }
+                // Fix for ChromeCast : Forcing stereo mode
+                if( config('chromecast_fix') ){
+                    $cmd .= ' -ac 2';
+                }
+                break;
+            case 'mp4':
+                $cmd .= ' -f '.$this->conversion_type;
+                $cmd .= ' -movflags faststart';
+                break;
+            case 'global':
+                $cmd .= ' -y';
+                $cmd .= ' -hide_banner';
+                // Fix rare video conversion fail
+                $cmd .= ' -max_muxing_queue_size 1024';
+                break;
+            case 'map':
+                // Keeping video map
+                $video_track_id = self::get_media_stream_id('video', $this->input_file);
+                $cmd .= ' -map 0:'.$video_track_id;
+                // Making selected audio track the primary one
+                if( $this->audio_track >= 0 ){
+                    $cmd .= ' -map 0:'.$this->audio_track;
+                }
+                // Keeping audio tracks
+                if( config('keep_audio_tracks') || $this->conversion_type == 'hls' ){
+                    $audio_tracks = self::get_media_stream_id('audio', $this->input_file);
+                    foreach($audio_tracks as $track_id){
+                        if( $track_id != $this->audio_track ){
+                            $cmd .= ' -map 0:'.$track_id;
+                        }
+                    }
+                }
+                // Keeping subtitles
+                if( config('keep_subtitles') ) {
+                    $subtitles = self::get_media_stream_id( 'subtitle', $this->input_file );
+                    foreach( $subtitles as $track_id ) {
+                        $cmd .= ' -map 0:' . $track_id;
+                    }
+                    $cmd .= ' -c:s mov_text';
+                }
+                break;
+            case 'hls':
+                $dir_path = $this->output_dir.DIRECTORY_SEPARATOR.$this->file_name.DIRECTORY_SEPARATOR;
+                $cmd .= ' -hls_time 4';
+                $cmd .= ' -hls_playlist_type vod';
+                $cmd .= ' -hls_segment_filename '.$dir_path.$resolution['height'].'_%03d.ts';
+                $cmd .= ' '.$dir_path.$resolution['height'].'.m3u8';
+                break;
+        }
+        return $cmd.' ';
+    }
+
+    private function convert_hls(array $resolutions)
+    {
+        $ffmpeg_path = config('ffmpegpath');
+        $input_filepath = $this->input_file;
+
+        $option_global = $this->get_conversion_option('global');
+        $option_autio = $this->get_conversion_option('audio');
+        $option_map = $this->get_conversion_option('map');
+
+        $cmd = $ffmpeg_path.$option_global.' -i '.$input_filepath;
+        foreach($resolutions as $res){
+            $cmd .= $this->get_conversion_option('video', $res);
+            $cmd .= $this->get_conversion_option('hls', $res);
+        }
+
+    }
 
 	/**
 	 * Function used to convert video
 	 *
 	 * @param array $more_res
 	 */
-	function convert(array $more_res)
+	function convert_mp4(array $more_res)
 	{
-		$TemplogData = '';
-		
-		$ratio = $this->ratio;
+        $opt_av = $this->get_conversion_option('global');
+        $opt_av .= $this->get_conversion_option('video', $more_res);
+        $opt_av .= $this->get_conversion_option('audio');
+        $opt_av .= $this->get_conversion_option('map');
+        $opt_av .= $this->get_conversion_option('mp4');
 
-		$p = $this->options;
-		$i = $this->input_details;
-
-		$opt_av = '';
-		# Prepare the ffmpeg command to execute
-		if( isset($p['extra_options']) ){
-			$opt_av .= " -y {$p['extra_options']}";
-        }
-
-		if( $this->reconvert ){
-			$opt_av .= ' -y';
-        }
-
-		# file format
-		if( isset($p['format']) ){
-			$opt_av .= " -f {$p['format']}";
-        }
-
-		$opt_av .= ' -movflags faststart';
-
-		// Must keep video map
-        $video_track_id = self::get_media_stream_id('video', $this->input_file);
-        $opt_av .= ' -map 0:'.$video_track_id;
-
-        // Making selected audio track the primary one
-        if( $this->audio_track && is_numeric($this->audio_track) ){
-            $opt_av .= ' -map 0:'.$this->audio_track;
-        }
-        // Keeping audio tracks
-        if( config('keep_audio_tracks') ){
-            $audio_tracks = self::get_media_stream_id('audio', $this->input_file);
-            foreach($audio_tracks as $track_id){
-                if( $track_id != $this->audio_track ){
-                    $opt_av .= ' -map 0:'.$track_id;
-                }
-            }
-        }
-
-        // Keeping subtitles
-        if( config('keep_subtitles') ) {
-            $subtitles = self::get_media_stream_id( 'subtitle', $this->input_file );
-            foreach( $subtitles as $track_id ) {
-                $opt_av .= ' -map 0:' . $track_id;
-            }
-            $opt_av .= ' -c:s mov_text';
-        }
-
-		// Prevent start_time to be negative
-		$opt_av .= ' -start_at_zero';
-
-        // Video Codec
-        $opt_av .= ' -vcodec '.config('video_codec');
-        if( config('video_codec') == 'libx264' ) {
-            $opt_av .= ' -preset medium';
-        }
-        // Video Rate
-        $opt_av .= ' -r '.config('vrate');
-        // Video Bitrate
-        global $myquery;
-        $opt_av .= ' -vb '.$myquery->getVideoResolutionBitrateFromHeight($more_res['height']);
-        // Resolution
-        $opt_av .= ' -s '.$more_res['video_width'].'x'.$more_res['video_height'];
-        // Ratio
-        $opt_av .= ' -aspect '.$ratio;
-        // Fix for browsers compatibility : yuv420p10le seems to be working only on Chrome like browsers
-        if( config('force_8bits') ){
-            $opt_av .= ' -pix_fmt yuv420p';
-        }
-        // Fix rare video conversion fail
-        $opt_av .= ' -max_muxing_queue_size 1024';
-
-        // Audio Bitrate
-        $opt_av .= ' -ab '.config('sbrate');
-        // Audio Rate
-        $opt_av .= ' -ar '.config('srate');
-        // Audio Codec
-        $opt_av .= ' -acodec '.config('audio_codec');
-        // Fix for ChromeCast : Forcing stereo mode
-        if( config('chromecast_fix') ){
-            $opt_av .= ' -ac 2';
-        }
-
-		if ($i['rotation'] != 0 )
-		{
-			if ($i['video_wh_ratio'] >= 1.6){
-				$opt_av .= " -vf pad='ih*16/9:ih:(ow-iw)/2:(oh-ih)/2' ";
-			} else {
-				$opt_av .= " -vf pad='ih*4/3:ih:(ow-iw)/2:(oh-ih)/2' ";
-			}
-		}
+        $this->output_file = $this->output_dir.DIRECTORY_SEPARATOR.$this->file_name.'-'.$more_res['height'].'.'.$this->conversion_type;
 
 		$tmp_file = time().RandomString(5).'.tmp';
 
-        $TemplogData .= "\r\nConverting Video file ".$more_res['height'].' @ '.date('Y-m-d H:i:s')." \r\n";
-        $command  = $this->ffmpeg.' -i '.$this->input_file." $opt_av ".$this->raw_path.'-'.$more_res['height'].'.mp4 2> '.TEMP_DIR.DIRECTORY_SEPARATOR.$tmp_file;
+        $TemplogData = "\r\nConverting Video file ".$more_res['height'].' @ '.date('Y-m-d H:i:s')." \r\n";
+        $command = config('ffmpegpath').' -i '.$this->input_file.$opt_av.$this->output_file.' 2> '.TEMP_DIR.DIRECTORY_SEPARATOR.$tmp_file;
 
-        $video_dir = VIDEOS_DIR.DIRECTORY_SEPARATOR.date('Y').DIRECTORY_SEPARATOR.date('m').DIRECTORY_SEPARATOR.date('d').DIRECTORY_SEPARATOR;
-        if(!is_dir($video_dir)){
-            mkdir($video_dir,0755, true);
+        if(!is_dir($this->output_dir)){
+            mkdir($this->output_dir,0755, true);
         }
 
-        $output = $this->exec($command);
+        $output = shell_exec($command);
 
         if(file_exists(TEMP_DIR.DIRECTORY_SEPARATOR.$tmp_file)){
             $output = $output ? $output : join('', file(TEMP_DIR.DIRECTORY_SEPARATOR.$tmp_file));
             unlink(TEMP_DIR.DIRECTORY_SEPARATOR.$tmp_file);
         }
 
-        if(file_exists($this->raw_path.'-'.$more_res['height'].'.mp4') && filesize($this->raw_path.'-'.$more_res['height'].'.mp4')>0)
+        if(file_exists($this->output_file) && filesize($this->output_file)>0)
         {
-            $this->has_resolutions = 'yes';
             $this->video_files[] = $more_res['height'];
             $TemplogData .="\r\nFiles resolution : ".$more_res['height']." \r\n";
         } else {
-            $TemplogData .="\r\n\r\nFile doesn't exist. Path: ".$this->raw_path.'-'.$more_res['height'].".mp4 \r\n\r\n";
+            $TemplogData .="\r\n\r\nFile doesn't exist. Path: ".$this->output_file."\r\n\r\n";
         }
-
-        $this->output_file = $this->raw_path.'-'.$more_res['height'].'.mp4';
 
         $TemplogData .= "\r\n\r\n== Conversion Command == \r\n\r\n";
         $TemplogData .= $command;
@@ -647,24 +590,12 @@ class FFMpeg
 		//Checking File Exists
 		if(!file_exists($this->input_file)) {
 			$this->log->writeLine('File Exists','No',true);
-		} else {
-			$this->log->writeLine('File Exists','Yes',true);
 		}
 		
 		//Get File info
 		$this->input_details = $this->get_file_info($this->input_file);
 		//Logging File Details
 		$this->log_file_info();
-
-		//Get FFMPEG version
-		$result = shell_output(FFMPEG_BINARY.' -version');
-		$version = parse_version('ffmpeg',$result);
-
-		$this->vconfigs['map_meta_data'] = 'map_meta_data';
-		
-		if(strstr($version,'Git')) {
-			$this->vconfigs['map_meta_data'] = 'map_metadata';
-		}
 	}
 
 	public function generateThumbs($array)
@@ -694,12 +625,12 @@ class FFMpeg
 		$tmpDir = TEMP_DIR.DIRECTORY_SEPARATOR.getName($input_file);
 
 		/*
-			The format of $this->options["outputPath"] should be like this
+			The format of $this->$this->outputPath should be like this
 			year/month/day/ 
 			the trailing slash is important in creating directories for thumbs
 		*/
-		if(substr($this->options['outputPath'], strlen($this->options['outputPath']) - 1) !== '/'){
-			$this->options['outputPath'] .= DIRECTORY_SEPARATOR;
+		if(substr($this->outputPath, strlen($this->outputPath) - 1) !== '/'){
+            $this->outputPath .= DIRECTORY_SEPARATOR;
 		}
 		
 		mkdir($tmpDir,0777, true);
@@ -713,7 +644,7 @@ class FFMpeg
 		if (!empty($file_directory) && !empty($filename)) {
 			$thumbs_outputPath = $file_directory.DIRECTORY_SEPARATOR;
 		} else {
-			$thumbs_outputPath = $this->options['outputPath'];
+			$thumbs_outputPath = $this->outputPath;
 		}
 
 		if($dim!='original'){
@@ -742,8 +673,8 @@ class FFMpeg
 
 				$time_sec = (int)($division*$count);
 
-				$command = $this->ffMpegPath." -ss $time_sec -i $input_file -pix_fmt yuvj422p -an -r 1 $dimension -y -f image2 -vframes 1 $file_path ";
-				$output = $this->executeCommand($command);	
+				$command = config('ffmpegpath')." -ss $time_sec -i $input_file -pix_fmt yuvj422p -an -r 1 $dimension -y -f image2 -vframes 1 $file_path 2>&1";
+				$output = shell_exec($command);
 
 				//checking if file exists in temp dir
 				if(file_exists($tmpDir.'/00000001.jpg')) {
@@ -765,8 +696,8 @@ class FFMpeg
 			}
 			
 			$file_path = THUMBS_DIR.DIRECTORY_SEPARATOR.$thumbs_outputPath.$file_name;
-			$command = $this->ffMpegPath." -i $input_file -an $dimension -y -f image2 -vframes $num $file_path ";
-			$output = $this->executeCommand($command);
+			$command = config('ffmpegpath')." -i $input_file -an $dimension -y -f image2 -vframes $num $file_path 2>&1";
+			$output = shell_exec($command);
 			if (!$regenerateThumbs && !file_exists($file_path)){
                 $TempLogData = "\r\n Command : $command ";
                 $TempLogData .= "\r\n File : $file_path ";
@@ -782,7 +713,7 @@ class FFMpeg
 		$stats = stat($filepath);
 		if($stats && is_array($stats))
 		{
-			$json = shell_exec(FFPROBE . ' -i "'.$filepath.'" -loglevel panic -print_format json -show_entries stream 2>&1');
+			$json = shell_exec(config('ffprobe_path') . ' -i "'.$filepath.'" -loglevel panic -print_format json -show_entries stream 2>&1');
 			$tracks_json = json_decode($json, true)['streams'];
 			$langs = array();
 			foreach($tracks_json as $track)
@@ -828,7 +759,7 @@ class FFMpeg
 		$stats = stat($filepath);
 		if($stats && is_array($stats))
 		{
-			$json = shell_exec(FFPROBE . ' -i "'.$filepath.'" -loglevel panic -print_format json -show_entries stream 2>&1');
+			$json = shell_exec(config('ffprobe_path') . ' -i "'.$filepath.'" -loglevel panic -print_format json -show_entries stream 2>&1');
 			$tracks_json = json_decode($json, true)['streams'];
 			$streams_ids = array();
 			foreach($tracks_json as $track)
@@ -856,7 +787,7 @@ class FFMpeg
 		$stats = stat($filepath);
 		if($stats && is_array($stats))
 		{
-			$json = shell_exec(FFPROBE. ' -v quiet -print_format json -show_format -show_streams "'.$filepath.'"');
+			$json = shell_exec(config('ffprobe_path'). ' -v quiet -print_format json -show_format -show_streams "'.$filepath.'"');
 			$data = json_decode($json,true);
 
 			$video = NULL;

@@ -90,15 +90,6 @@ switch($mode)
         $log->newSection('Pre-Check Configurations');
         $log->writeLine('File to be converted', 'Initializing File <strong>'.$file_name.'.mp4</strong> and pre checking configurations...', true);
 
-        if( DEVELOPMENT_MODE ) {
-            $hardware = shell_exec('lshw -short');
-            if ($hardware){
-                $log->writeLine('System hardware Information', $hardware, true);
-            } else {
-                $log->writeLine('System hardware Information', 'Unable log System hardware information, please install "lshw" ', true);
-            }
-        }
-
         $max_file_size_in_bytes = config('max_upload_size')*1024*1024;
 
         //Checking filesize

@@ -44,10 +44,9 @@ if($myquery->VideoExists($video))
 
         require_once(BASEDIR.'/includes/classes/sLog.php');
         $log = new SLog();
-        $configs = array();
 
         require_once(BASEDIR.'/includes/classes/conversion/ffmpeg.class.php');
-        $ffmpeg = new FFMpeg($configs, $log);
+        $ffmpeg = new FFMpeg($log);
         foreach ($thumbs_settings_28 as $key => $thumbs_size)
         {
             $height_setting = $thumbs_size[1];

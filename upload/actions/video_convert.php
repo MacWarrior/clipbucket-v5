@@ -4,7 +4,7 @@ sleep(5);
 define('THIS_PAGE','video_convert');
 
 include(dirname(__FILE__).'/../includes/config.inc.php');
-require_once(dirname(dirname(__FILE__)).'/includes/classes/sLog.php');
+require_once( dirname( __FILE__, 2 ) .'/includes/classes/sLog.php');
 
 global $db;
 
@@ -56,14 +56,12 @@ $file_directory = implode(DIRECTORY_SEPARATOR, explode('-', $dateAdded));
 /*
     Getting the file information from the queue for conversion
 */
-$tmp_file = $queue_details['cqueue_name'];
 $tmp_ext  = $queue_details['cqueue_tmp_ext'];
 $ext 	  = $queue_details['cqueue_ext'];
-$outputFileName = $tmp_file;
-if(!empty($tmp_file))
+if(!empty($_filename))
 {
-    $temp_file = TEMP_DIR.DIRECTORY_SEPARATOR.$tmp_file.'.'.$tmp_ext;
-    $orig_file = CON_DIR.DIRECTORY_SEPARATOR.$tmp_file.'.'.$ext;
+    $temp_file = TEMP_DIR.DIRECTORY_SEPARATOR.$_filename.'.'.$tmp_ext;
+    $orig_file = CON_DIR.DIRECTORY_SEPARATOR.$_filename.'.'.$ext;
 
     /*
         Delete the uploaded file from temp directory
@@ -77,60 +75,45 @@ if(!empty($tmp_file))
         $log->writeLine('Conversion queue','Something went wrong in moving the file to Conversion Queue', true);
     }
 
-    /*
-        Preparing the configurations for video conversion from database
-    */
-    $configs = array(
-        'format' 			 => 'mp4',
-        'resize'			 => 'max',
-        'outputPath' 		 => $fileDir
-    );
-
-    $configLog = '';
-    foreach ($configs as $key => $value){
-        $configLog .= "<strong>{$key}</strong> : {$value}\n";
-    }
-
-    $log->writeLine('Parsing FFmpeg Configurations',$configLog, true);
-
     require_once(BASEDIR.'/includes/classes/conversion/ffmpeg.class.php');
 
-    $ffmpeg = new FFMpeg($configs, $log);
-    $ffmpeg->ffmpeg($orig_file);
-    $ffmpeg->file_name = $tmp_file;
-    $ffmpeg->raw_path = VIDEOS_DIR.DIRECTORY_SEPARATOR.$file_directory.$_filename;
+    $ffmpeg = new FFMpeg($log);
+    $ffmpeg->conversion_type = config('conversion_type');
+    $ffmpeg->input_file = $orig_file;
+    $ffmpeg->file_directory = $file_directory;
+    $ffmpeg->file_name = $_filename;
+    $ffmpeg->outputPath = $fileDir;
 
     if( $audio_track && is_numeric($audio_track) ){
         $ffmpeg->audio_track = $audio_track;
     }
 
-    if( $reconvert ){
-        $ffmpeg->reconvert = true;
-    }
+
+
+    $ffmpeg->output_dir = VIDEOS_DIR.DIRECTORY_SEPARATOR.$file_directory;
+
+
 
     $ffmpeg->ClipBucket();
-    if ($ffmpeg->lock_file && file_exists($ffmpeg->lock_file)){
-        unlink($ffmpeg->lock_file);
-    }
 
     $video_files = json_encode($ffmpeg->video_files);
-    $db->update(tbl('video'), array('video_files'), array($video_files), " file_name = '{$outputFileName}'");
+    $db->update(tbl('video'), array('video_files'), array($video_files), " file_name = '{$_filename}'");
 
     if( config('chromecast_fix') ){
-        $db->update(tbl('video'), array('is_castable'), array(true), " file_name = '{$outputFileName}'");
+        $db->update(tbl('video'), array('is_castable'), array(true), " file_name = '{$_filename}'");
     }
 
     $vidDetails = $ffmpeg->get_file_info();
     if( !config('force_8bits') || $vidDetails['bits_per_raw_sample'] <= 8 ){
-        $db->update(tbl('video'), array('bits_color'), array($vidDetails['bits_per_raw_sample']), " file_name = '{$outputFileName}'");
+        $db->update(tbl('video'), array('bits_color'), array($vidDetails['bits_per_raw_sample']), " file_name = '{$_filename}'");
     } else if( config('force_8bits') ){
-        $db->update(tbl('video'), array('bits_color'), array(8), " file_name = '{$outputFileName}'");
+        $db->update(tbl('video'), array('bits_color'), array(8), " file_name = '{$_filename}'");
     }
 
-    $db->update(tbl('video'), array('file_type'), array(config('conversion_type')), " file_name = '{$outputFileName}'");
+    $db->update(tbl('video'), array('file_type'), array($ffmpeg->conversion_type), " file_name = '{$_filename}'");
 
     if( $reconvert ) {
-        setVideoStatus( $outputFileName, 'completed', true, true );
+        setVideoStatus( $_filename, 'completed', true, true );
     }
 
     if (stristr(PHP_OS, 'WIN'))

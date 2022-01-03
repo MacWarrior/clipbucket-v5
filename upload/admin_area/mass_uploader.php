@@ -85,16 +85,6 @@ if(isset($_POST['mass_upload_video']))
             $log->newSection('Pre-Check Configurations');
             $log->writeLine('File to be converted', 'Initializing File <strong>'.$file_name.'</strong> and pre checking configurations...', true);
 
-            if( DEVELOPMENT_MODE )
-            {
-                $hardware = shell_exec( 'lshw -short 2>&1' );
-                if( $hardware ) {
-                    $log->writeLine( 'System hardware Information', $hardware, true );
-                } else {
-                    $log->writeLine( 'System hardware Information', 'Unable log System hardware information, please install "lshw" ', true );
-                }
-            }
-
             $results=$Upload->add_conversion_queue($file_name);
             $str1 = date('Y').DIRECTORY_SEPARATOR.date('m').DIRECTORY_SEPARATOR.date('d');
             $str = DIRECTORY_SEPARATOR.$str1.DIRECTORY_SEPARATOR;

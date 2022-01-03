@@ -27,7 +27,7 @@ yum update -y -q > /dev/null 2>&1
 yum-config-manager --disable remi-php54 > /dev/null
 yum-config-manager --enable remi-php73 > /dev/null
 
-yum install -y -q php php-mysqlnd php-curl php-xml php-mbstring php-pear php-devel httpd git mariadb-server mariadb gcc ImageMagick ImageMagick-devel mediainfo sendmail ffmpeg ffmpeg-devel lshw > /dev/null 2>&1
+yum install -y -q php php-mysqlnd php-curl php-xml php-mbstring php-pear php-devel httpd git mariadb-server mariadb gcc ImageMagick ImageMagick-devel mediainfo sendmail ffmpeg ffmpeg-devel > /dev/null 2>&1
 
 systemctl enable httpd mariadb > /dev/null 2>&1
 systemctl start httpd mariadb
