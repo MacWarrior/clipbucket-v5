@@ -18,7 +18,7 @@
 		<input type="hidden" name="dbuser" value="<?php echo @$_POST['dbuser']; ?>"/>
 		<input type="hidden" name="dbprefix" value="<?php echo $_POST['dbprefix']; ?>"/>
 
-        <input type="hidden" name="mode" value="dataimport"/>
+        <input type="hidden" name="mode" value="adminsettings"/>
 	</form>
 </div>
 
