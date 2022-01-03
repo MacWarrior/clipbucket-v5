@@ -88,12 +88,6 @@ if(!empty($_filename))
         $ffmpeg->audio_track = $audio_track;
     }
 
-
-
-    $ffmpeg->output_dir = VIDEOS_DIR.DIRECTORY_SEPARATOR.$file_directory;
-
-
-
     $ffmpeg->ClipBucket();
 
     $video_files = json_encode($ffmpeg->video_files);

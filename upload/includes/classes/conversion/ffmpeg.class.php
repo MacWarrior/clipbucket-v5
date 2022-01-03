@@ -11,16 +11,8 @@ class FFMpeg
     public int $audio_track = -1;
     public array $input_details = [];
 	public SLog $log;
-
-
-
-
-
-
-
-
-	public string $output_dir      = '';
-	public string $output_file     = '';
+	public string $output_dir = '';
+	public string $output_file = '';
 
 	public $thumbs_res_settings = array(
         'original' => 'original',
@@ -261,7 +253,7 @@ class FFMpeg
             if( $this->input_details['duration'] > $max_duration ) {
                 $max_duration_seconds = $max_duration / 60;
                 $log = 'Video duration was '.$this->input_details['duration']." minutes and Max video duration is {$max_duration_seconds} minutes, Therefore Video cancelled\n";
-                $log .= "Conversion_status : failed\n";
+                $log .= "Conversion_status : Failed\n";
                 $log .= "Failed Reason : Max Duration Configurations\n";
                 $this->log->writeLine('Max Duration configs', $log, true);
                 break;
@@ -305,15 +297,8 @@ class FFMpeg
                 default:
                 case 'mp4':
                     if( config('stay_mp4') == 'yes' ){
-                        $output_directory = VIDEOS_DIR.DIRECTORY_SEPARATOR.$this->outputPath;
-                        if(!is_dir($output_directory)){
-                            mkdir($output_directory,0755, true);
-                        }
-
-                        $filepath_destination = $output_directory.$this->file_name.'.'.$this->conversion_type;
-                        copy($orig_file,$filepath_destination);
-
-                        $this->output_file = $filepath_destination;
+                        $this->output_file = $this->output_dir.$this->file_name.'.'.$this->conversion_type;
+                        copy($orig_file,$this->output_file);
                         break;
                     }
 
@@ -435,7 +420,16 @@ class FFMpeg
                 // Video Bitrate
                 $cmd .= ' -vb '.$myquery->getVideoResolutionBitrateFromHeight($resolution['height']);
                 // Resolution
-                $cmd .= ' -vf scale=w='.$resolution['video_width'].':h='.$resolution['video_height'].':force_original_aspect_ratio=decrease';
+                $cmd .= ' -s '.$resolution['video_width'].'x'.$resolution['video_height'];
+                // Ratio
+                if ($this->input_details['video_wh_ratio'] >= 2.3){
+                    $ratio = '21/9';
+                } else if ($this->input_details['video_wh_ratio'] >= 1.6){
+                    $ratio = '16/9';
+                } else {
+                    $ratio = '4/3';
+                }
+                $cmd .= ' -aspect '.$ratio;
                 break;
             case 'audio':
                 // Audio Bitrate
@@ -489,11 +483,10 @@ class FFMpeg
                 }
                 break;
             case 'hls':
-                $dir_path = $this->output_dir.DIRECTORY_SEPARATOR.$this->file_name.DIRECTORY_SEPARATOR;
                 $cmd .= ' -hls_time 4';
                 $cmd .= ' -hls_playlist_type vod';
-                $cmd .= ' -hls_segment_filename '.$dir_path.$resolution['height'].'_%03d.ts';
-                $cmd .= ' '.$dir_path.$resolution['height'].'.m3u8';
+                $cmd .= ' -hls_segment_filename '.$this->output_dir.$resolution['height'].'_%03d.ts';
+                $cmd .= ' '.$this->output_dir.$resolution['height'].'.m3u8';
                 break;
         }
         return $cmd.' ';
@@ -529,16 +522,12 @@ class FFMpeg
         $opt_av .= $this->get_conversion_option('map');
         $opt_av .= $this->get_conversion_option('mp4');
 
-        $this->output_file = $this->output_dir.DIRECTORY_SEPARATOR.$this->file_name.'-'.$more_res['height'].'.'.$this->conversion_type;
+        $this->output_file = $this->output_dir.$this->file_name.'-'.$more_res['height'].'.'.$this->conversion_type;
 
 		$tmp_file = time().RandomString(5).'.tmp';
 
-        $TemplogData = "\r\nConverting Video file ".$more_res['height'].' @ '.date('Y-m-d H:i:s')." \r\n";
-        $command = config('ffmpegpath').' -i '.$this->input_file.$opt_av.$this->output_file.' 2> '.TEMP_DIR.DIRECTORY_SEPARATOR.$tmp_file;
-
-        if(!is_dir($this->output_dir)){
-            mkdir($this->output_dir,0755, true);
-        }
+        $TemplogData = "Converting Video file ".$more_res['height'].' @ '.date('Y-m-d H:i:s')." \r\n";
+        $command = config('ffmpegpath').' -i '.$this->input_file.$opt_av.' '.$this->output_file.' 2> '.TEMP_DIR.DIRECTORY_SEPARATOR.$tmp_file;
 
         $output = shell_exec($command);
 
@@ -563,7 +552,7 @@ class FFMpeg
             $TemplogData .= $output;
         }
 
-		$TemplogData .="\r\n\r\nEnd resolutions @ ".date('Y-m-d H:i:s')."\r\n\r\n";
+		$TemplogData .="\r\nEnd resolutions @ ".date('Y-m-d H:i:s')."\r\n\r\n";
 		$this->log->writeLine('Conversion Ouput', $TemplogData, true);
 
 		$this->output_details = $this->get_file_info($this->output_file);
@@ -596,6 +585,21 @@ class FFMpeg
 		$this->input_details = $this->get_file_info($this->input_file);
 		//Logging File Details
 		$this->log_file_info();
+
+        switch($this->conversion_type)
+        {
+            default:
+            case 'mp4':
+                $this->output_dir = VIDEOS_DIR.DIRECTORY_SEPARATOR.$this->file_directory;
+                break;
+            case 'hls':
+                $this->output_dir = VIDEOS_DIR.DIRECTORY_SEPARATOR.$this->file_directory.DIRECTORY_SEPARATOR.$this->file_name;
+                break;
+        }
+
+        if(!is_dir($this->output_dir)){
+            mkdir($this->output_dir,0755, true);
+        }
 	}
 
 	public function generateThumbs($array)

@@ -27,7 +27,7 @@ if(is_array($files)){
         $file_details = get_file_details($file['cqueue_name'],true);
 
         //Thanks to pandusetiawan @ forums.clip-bucket.com
-        if($file_details['conversion_status']=='failed' or strpos($file_details['conversion_log'],'conversion_status : failed') >0)
+        if($file_details['conversion_status']=='failed' or strpos($file_details['conversion_log'],'Conversion_status : failed') >0)
         {
             update_processed_video($file,'Failed',$ffmpeg->failed_reason);
 

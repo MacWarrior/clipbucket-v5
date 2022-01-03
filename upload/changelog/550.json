@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"14",
+  "revision":"15",
   "status":"dev",
   "detail":[
     {
@@ -14,8 +14,7 @@
         ,"Add option to extract subtitles to dedicated files"
         ,"Add option to specify subtitles format"
         ,"Add video type tag to video manager"
-        ,"Implement HLS conversion (WIP)"
-        ,"Refactor FFMPEG conversion (WIP)"
+        ,"Fix failed conversion status display"
       ]
     },
     {
@@ -24,7 +23,7 @@
         "Cleanup code"
         ,"Remove unused config"
         ,"Remove unused DB columns"
-        ,"Fix installation process loop"
+        ,"Fix installation process"
       ]
     },
     {
@@ -38,6 +37,14 @@
       "title": "Server",
       "description": [
         "Remove LSHW dependency"
+      ]
+    },
+    {
+      "title": "Conversion",
+      "description": [
+        "Add conversion support for 21/9"
+        ,"Refactor FFMPEG conversion (WIP)"
+        ,"Implement HLS conversion (WIP)"
       ]
     }
   ]
