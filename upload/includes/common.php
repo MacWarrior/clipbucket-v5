@@ -4,7 +4,6 @@ const IN_CLIPBUCKET = true;
 
 //Setting Cookie Timeout
 const COOKIE_TIMEOUT = 86400 * 1; // 1
-const GARBAGE_TIMEOUT = COOKIE_TIMEOUT;
 const REMBER_DAYS = 7;
 
 const DEV_INGNORE_SYNTAX = true;
@@ -47,7 +46,7 @@ if(!@$in_bg_cron) {
 //Required Files
 require_once('classes/db.class.php');
 # file with most frequently used functions
-require_once('functions.php');
+require_once 'functions.php';
 check_install('before');
 
 if( file_exists(__DIR__.'/config.php') ){

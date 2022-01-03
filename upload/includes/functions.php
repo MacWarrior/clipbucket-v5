@@ -3498,7 +3498,7 @@
 		switch($type)
 		{
 			case 'before':
-				if(file_exists('files/temp/install.me') && !file_exists('files/temp/install.me.not') ) {
+				if(!file_exists('includes/config.php') && file_exists('files/temp/install.me') && !file_exists('files/temp/install.me.not') ) {
 					header('Location: '.get_server_url().'/cb_install');
 					die();
 				}

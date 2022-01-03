@@ -11,14 +11,14 @@
 		<span id="current">Creating database structure...</span>
 	</div>
 
-	<form name="installation" method="post" id="installation">
+    <form method="post" id="installation">
 		<input type="hidden" name="dbhost" value="<?php echo @$_POST['dbhost']; ?>"/>
 		<input type="hidden" name="dbpass" value="<?php echo @$_POST['dbpass']; ?>"/>
 		<input type="hidden" name="dbname" value="<?php echo @$_POST['dbname']; ?>"/>
 		<input type="hidden" name="dbuser" value="<?php echo @$_POST['dbuser']; ?>"/>
 		<input type="hidden" name="dbprefix" value="<?php echo $_POST['dbprefix']; ?>"/>
 
-		<input type="hidden" name="mode" value="adminsettings"/>
+        <input type="hidden" name="mode" value="dataimport"/>
 	</form>
 </div>
 

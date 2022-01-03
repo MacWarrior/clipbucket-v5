@@ -7,12 +7,10 @@ function dbconnect()
 	var formData = $('#installation').serialize();
 	$.post(p,formData,function(data)
 	{
-		if(data.err)
-		{
+		if(data.err) {
 			$('#dbresult').show().html(data.err)
 			$('#loading').html('');
-		}else
-		{
+		} else {
 			$('#installation').submit();
 		}
 	},"json");
@@ -25,20 +23,22 @@ function dodatabase(step)
 	formData += '&step='+step;
 	$.post(p,formData,function(data)
 	{
-		
-		if(data.msg)
+		if(data.msg){
 			$('#resultsDiv').before(data.msg);
-		if(data.err)
+        }
+		if(data.err){
 			$('#resultsDiv').before(data.err);
-		if(data.status)
+        }
+		if(data.status){
 			$('#current').html(data.status);
+        }
 					
-		if(data.step=='forward')
-		{
+		if(data.step=='forward') {
 			$('#installation').submit();
 		}		
-		if(data.step && data.step!='forward')
-			dodatabase(data.step)
+		if(data.step && data.step!='forward'){
+			dodatabase(data.step);
+        }
 	},"json");
 }
 

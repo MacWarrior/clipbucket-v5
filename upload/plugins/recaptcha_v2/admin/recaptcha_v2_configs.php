@@ -1,8 +1,8 @@
 <?php
 
-if(!defined('IN_CLIPBUCKET'))
-exit('Invalid access');
-
+if(!defined('IN_CLIPBUCKET')){
+    exit('Invalid access');
+}
 
 $userquery->admin_login_check();
 $pages->page_redir();

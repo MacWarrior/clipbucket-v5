@@ -19,7 +19,6 @@ if(!$mode || !in_array($mode,$modes)) {
     $mode = 'agreement';
 }
 
-$configIncluded = false;
 /**
 * Clipbucket modes
 * modes which requires clipbucket core files so installer
@@ -30,7 +29,6 @@ $baseDir = dirname(dirname(__FILE__));
 
 if( in_array($mode,$cbarray) ) {
     chdir('..');
-    $configIncluded = true;
     require_once 'includes/config.inc.php';
     chdir('cb_install');
 }

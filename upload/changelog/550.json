@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"10",
+  "revision":"11",
   "status":"dev",
   "detail":[
     {
@@ -24,6 +24,7 @@
         "Cleanup code"
         ,"Remove unused config"
         ,"Remove unused DB columns"
+        ,"Fix installation process loop"
       ]
     },
     {
