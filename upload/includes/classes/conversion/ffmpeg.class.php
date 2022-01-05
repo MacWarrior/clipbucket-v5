@@ -5,7 +5,6 @@ class FFMpeg
     public string $conversion_type = '';
     public string $file_directory = '';
     public string $file_name = '';
-    public string $outputPath = '';
     public string $lock_file = '';
     public string $input_file = '';
     public int $audio_track = -1;
@@ -13,14 +12,7 @@ class FFMpeg
 	public SLog $log;
 	public string $output_dir = '';
 	public string $output_file = '';
-
-	public $thumbs_res_settings = array(
-        'original' => 'original',
-        '105' => array('168','105'),
-        '260' => array('416','260'),
-        '320' => array('632','395'),
-        '480' => array('768','432')
-    );
+    public array $video_files = [];
 
 	public function __construct(SLog $log)
 	{
@@ -253,7 +245,7 @@ class FFMpeg
             if( $this->input_details['duration'] > $max_duration ) {
                 $max_duration_seconds = $max_duration / 60;
                 $log = 'Video duration was '.$this->input_details['duration']." minutes and Max video duration is {$max_duration_seconds} minutes, Therefore Video cancelled\n";
-                $log .= "Conversion_status : Failed\n";
+                $log .= "Conversion_status : failed\n";
                 $log .= "Failed Reason : Max Duration Configurations\n";
                 $this->log->writeLine('Max Duration configs', $log, true);
                 break;
@@ -261,24 +253,7 @@ class FFMpeg
 
             $log = '';
             try {
-                $thumbs_settings = $this->thumbs_res_settings;
-                foreach( $thumbs_settings as $key => $thumbs_size ) {
-                    $height_setting = $thumbs_size[1];
-                    $width_setting = $thumbs_size[0];
-                    $dimension_setting = $width_setting.'x'.$height_setting;
-                    if( $key == 'original' ) {
-                        $dimension_setting = $key;
-                        $dim_identifier = $key;
-                    } else {
-                        $dim_identifier = $width_setting.'x'.$height_setting;
-                    }
-                    $thumbs_settings['vid_file'] = $this->input_file;
-                    $thumbs_settings['duration'] = $this->input_details['duration'];
-                    $thumbs_settings['num']      = config('num_thumbs');
-                    $thumbs_settings['dim']      = $dimension_setting;
-                    $thumbs_settings['size_tag'] = $dim_identifier;
-                    $this->generateThumbs($thumbs_settings);
-                }
+                $this->generateAllThumbs();
             } catch(Exception $e) {
                 $log .= "\r\n Error Occured : ".$e->getMessage()."\r\n";
             }
@@ -338,7 +313,7 @@ class FFMpeg
 
         if( count($subtitles) > 0 ){
             $video = $cbvideo->get_video($this->file_name,true);
-            $subtitle_dir = SUBTITLES_DIR.DIRECTORY_SEPARATOR.$this->file_directory.DIRECTORY_SEPARATOR;
+            $subtitle_dir = SUBTITLES_DIR.DIRECTORY_SEPARATOR.$this->file_directory;
             if(!is_dir($subtitle_dir)){
                 mkdir($subtitle_dir,0755, true);
             }
@@ -416,6 +391,8 @@ class FFMpeg
                 if( config('force_8bits') ){
                     $cmd .= ' -pix_fmt yuv420p';
                 }
+                // Fix rare video conversion fail
+                $cmd .= ' -max_muxing_queue_size 1024';
                 $cmd .= ' -start_at_zero';
                 // Video Bitrate
                 $cmd .= ' -vb '.$myquery->getVideoResolutionBitrateFromHeight($resolution['height']);
@@ -453,8 +430,6 @@ class FFMpeg
             case 'global':
                 $cmd .= ' -y';
                 $cmd .= ' -hide_banner';
-                // Fix rare video conversion fail
-                $cmd .= ' -max_muxing_queue_size 1024';
                 break;
             case 'map':
                 // Keeping video map
@@ -487,6 +462,7 @@ class FFMpeg
                 $cmd .= ' -hls_playlist_type vod';
                 $cmd .= ' -hls_segment_filename '.$this->output_dir.$resolution['height'].'_%03d.ts';
                 $cmd .= ' '.$this->output_dir.$resolution['height'].'.m3u8';
+                $this->output_file = $this->output_dir.$resolution['height'].'.m3u8';
                 break;
         }
         return $cmd.' ';
@@ -505,8 +481,23 @@ class FFMpeg
         foreach($resolutions as $res){
             $cmd .= $this->get_conversion_option('video', $res);
             $cmd .= $this->get_conversion_option('hls', $res);
+            $cmd .= $option_autio;
+            $cmd .= $option_map;
+
+            $this->video_files[] = $res['height'];
+        }
+        $cmd .= ' 2>&1';
+
+        $log = "\r\n\r\n== Conversion Command == \r\n\r\n";
+        $log .= $cmd;
+
+        $output = shell_exec($cmd);
+        if( DEVELOPMENT_MODE ) {
+            $log .= "\r\n\r\n== Conversion Output == \r\n\r\n";
+            $log .= $output;
         }
 
+        $this->log->writeLine('Conversion Ouput', $log, true);
     }
 
 	/**
@@ -593,7 +584,8 @@ class FFMpeg
                 $this->output_dir = VIDEOS_DIR.DIRECTORY_SEPARATOR.$this->file_directory;
                 break;
             case 'hls':
-                $this->output_dir = VIDEOS_DIR.DIRECTORY_SEPARATOR.$this->file_directory.DIRECTORY_SEPARATOR.$this->file_name;
+                $this->output_dir = VIDEOS_DIR.DIRECTORY_SEPARATOR.$this->file_directory.$this->file_name.DIRECTORY_SEPARATOR;
+                error_log($this->output_dir);
                 break;
         }
 
@@ -601,6 +593,31 @@ class FFMpeg
             mkdir($this->output_dir,0755, true);
         }
 	}
+
+    public function generateAllThumbs()
+    {
+        $thumbs_res_settings = thumbs_res_settings_28();
+
+        $thumbs_settings = [];
+        $thumbs_settings['vid_file'] = $this->input_file;
+        $thumbs_settings['duration'] = $this->input_details['duration'];
+        $thumbs_settings['num']      = config('num_thumbs');
+
+        foreach( $thumbs_res_settings as $key => $thumbs_size ) {
+            $height_setting = $thumbs_size[1];
+            $width_setting = $thumbs_size[0];
+
+            if( $key == 'original' ) {
+                $thumbs_settings['dim'] = $key;
+                $thumbs_settings['size_tag'] = $key;
+            } else {
+                $thumbs_settings['dim'] = $width_setting.'x'.$height_setting;
+                $thumbs_settings['size_tag'] = $width_setting.'x'.$height_setting;
+            }
+
+            $this->generateThumbs($thumbs_settings);
+        }
+    }
 
 	public function generateThumbs($array)
 	{
@@ -627,15 +644,6 @@ class FFMpeg
 			$filename = $array['file_name'];
 		}
 		$tmpDir = TEMP_DIR.DIRECTORY_SEPARATOR.getName($input_file);
-
-		/*
-			The format of $this->$this->outputPath should be like this
-			year/month/day/ 
-			the trailing slash is important in creating directories for thumbs
-		*/
-		if(substr($this->outputPath, strlen($this->outputPath) - 1) !== '/'){
-            $this->outputPath .= DIRECTORY_SEPARATOR;
-		}
 		
 		mkdir($tmpDir,0777, true);
 
@@ -648,7 +656,7 @@ class FFMpeg
 		if (!empty($file_directory) && !empty($filename)) {
 			$thumbs_outputPath = $file_directory.DIRECTORY_SEPARATOR;
 		} else {
-			$thumbs_outputPath = $this->outputPath;
+			$thumbs_outputPath = $this->file_directory;
 		}
 
 		if($dim!='original'){

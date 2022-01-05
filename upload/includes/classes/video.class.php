@@ -683,8 +683,9 @@ class CBvideo extends CBCategory
 		{
 			foreach($files as $file)
 			{
-				if(file_exists(VIDEOS_DIR.'/'.$file) && is_file(VIDEOS_DIR.'/'.$file))
+				if(file_exists(VIDEOS_DIR.'/'.$file) && is_file(VIDEOS_DIR.'/'.$file)){
 					unlink(VIDEOS_DIR.'/'.$file);
+                }
 
 				//Extracting File Name for Video File 
 				$fn = explode('-', $file);

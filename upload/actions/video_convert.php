@@ -80,9 +80,8 @@ if(!empty($_filename))
     $ffmpeg = new FFMpeg($log);
     $ffmpeg->conversion_type = config('conversion_type');
     $ffmpeg->input_file = $orig_file;
-    $ffmpeg->file_directory = $file_directory;
+    $ffmpeg->file_directory = $file_directory.DIRECTORY_SEPARATOR;
     $ffmpeg->file_name = $_filename;
-    $ffmpeg->outputPath = $fileDir;
 
     if( $audio_track && is_numeric($audio_track) ){
         $ffmpeg->audio_track = $audio_track;

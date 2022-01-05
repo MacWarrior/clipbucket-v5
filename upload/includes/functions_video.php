@@ -1195,7 +1195,7 @@
 			}
 		}
 
-		$fileDirectory = "";
+		$fileDirectory = '';
 		if(isset($vdetails['file_directory']) && !empty($vdetails['file_directory'])){
 			$fileDirectory = "{$vdetails['file_directory']}/";
 		}
@@ -1239,7 +1239,6 @@
         }
 		return $files;
     }
-
 
     function upload_thumb($array)
     {
@@ -1305,13 +1304,6 @@
         assign('video_files', $array);
     }
 
-	/**
-	 * @author : Fahad Abbas
-	 * @return array : { Array } { Clipbucket version 2.8 thumbs default settings }
-	 *
-	 * @internal param $ : { Null }
-	 * @since : 02-03-2016
-	 */
     function thumbs_res_settings_28(): array
     {
         return array(
