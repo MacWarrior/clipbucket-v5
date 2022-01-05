@@ -1197,31 +1197,54 @@
 
 		$fileDirectory = '';
 		if(isset($vdetails['file_directory']) && !empty($vdetails['file_directory'])){
-			$fileDirectory = "{$vdetails['file_directory']}/";
+			$fileDirectory = $vdetails['file_directory'].DIRECTORY_SEPARATOR;
 		}
 
-		#Now there is no function so lets continue as
         if(isset($vdetails['file_name'])) {
-            if(VIDEO_VERSION >= '2.7'){
-                $vid_files = glob(VIDEOS_DIR.DIRECTORY_SEPARATOR.$fileDirectory.$vdetails['file_name'].'*');
-            } else {
-                $vid_files = glob(VIDEOS_DIR.DIRECTORY_SEPARATOR.$vdetails['file_name'].'*');
+            switch( $vdetails['file_type'] )
+            {
+                default:
+                case 'mp4':
+                    if(VIDEO_VERSION >= '2.7'){
+                        $vid_files = glob(VIDEOS_DIR.DIRECTORY_SEPARATOR.$fileDirectory.$vdetails['file_name'].'*.'.$vdetails['file_type']);
+                    } else {
+                        $vid_files = glob(VIDEOS_DIR.DIRECTORY_SEPARATOR.$vdetails['file_name'].'*.'.$vdetails['file_type']);
+                    }
+                    break;
+
+                case 'hls':
+                    $vid_files = glob(VIDEOS_DIR.DIRECTORY_SEPARATOR.$fileDirectory.$vdetails['file_name'].DIRECTORY_SEPARATOR.'*.m3u8');
+                    break;
             }
-		}
+        }
+
 
         #replace Dir with URL
         if(is_array($vid_files)) {
             foreach($vid_files as $file) {
-                if(filesize($file) < 100) continue;
+
+                if(filesize($file) < 100){
+                    continue;
+                }
                 $files_part = explode('/',$file);
                 $video_file = $files_part[count($files_part)-1];
 
                 if($with_path){
-                    if(VIDEO_VERSION >= '2.7'){
-                        $files[] = VIDEOS_URL.'/' . $fileDirectory. $video_file;
-					} else if(VIDEO_VERSION == '2.6') {
-                        $files[] = VIDEOS_URL.'/' . $video_file;
-					}
+                    switch( $vdetails['file_type'] )
+                    {
+                        default:
+                        case 'mp4':
+                            if(VIDEO_VERSION >= '2.7'){
+                                $files[] = VIDEOS_URL.'/'.$fileDirectory.$video_file;
+                            } else if(VIDEO_VERSION == '2.6') {
+                                $files[] = VIDEOS_URL.'/'.$video_file;
+                            }
+                            break;
+
+                        case 'hls':
+                            $files[] = VIDEOS_URL.'/'.$fileDirectory.$vdetails['file_name'].DIRECTORY_SEPARATOR.$video_file;
+                            break;
+                    }
                 } else {
                     $files[] = $video_file;
 				}
@@ -1275,7 +1298,7 @@
                         $height_setting = $imageDetails[1];
                     }
 
-                    $outputFilePath = THUMBS_DIR.'/'.$file_directory.'/'.$_POST['file_name'].'-'.$dimensions.'-'.$file_num.'.'.$ext;
+                    $outputFilePath = THUMBS_DIR.DIRECTORY_SEPARATOR.$file_directory.DIRECTORY_SEPARATOR.$_POST['file_name'].'-'.$dimensions.'-'.$file_num.'.'.$ext;
                     $image->CreateThumb($temp_file,$outputFilePath,$width_setting,$ext,$height_setting,false);
                 }
                 unlink($temp_file);

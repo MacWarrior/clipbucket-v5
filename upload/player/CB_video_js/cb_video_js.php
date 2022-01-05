@@ -48,24 +48,33 @@ if (!function_exists('cb_video_js'))
 	/*
 	* This Function is written to get quality of current file
 	*/
-	function get_cbvjs_quality($src): string
+	function get_cbvjs_quality($src, $file_type = 'mp4'): string
     {
-		
-		$quality = explode('-', $src);
-	    $quality = end($quality);
-	    $quality = explode('.',$quality);
-	    return $quality[0];
+		switch($file_type)
+        {
+            default:
+            case 'mp4':
+                $quality = explode('-', $src);
+                $quality = end($quality);
+                $quality = explode('.',$quality);
+                return $quality[0];
+            case 'hls':
+                $quality = explode('/',$src);
+                $quality = end($quality);
+                $quality = explode('.',$quality);
+                return $quality[0];
+        }
 	}
 
 	/*
 	* This Function is written to set default resolution for cb_vjs_player
 	*/
-	function get_cbvjs_quality_type($video_files){
+	function get_cbvjs_quality_type($video_files, $file_type){
 		if ($video_files)
 		{
             $res = [];
             foreach ($video_files as $file) {
-                $res[] = get_cbvjs_quality($file);
+                $res[] = get_cbvjs_quality($file, $file_type);
             }
             $all_res = $res;
 

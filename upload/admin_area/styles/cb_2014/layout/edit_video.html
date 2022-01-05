@@ -309,11 +309,11 @@
                             {$field.class='form-control'}
                             <label><strong>{$field.title|truncate:80}</strong></label><br>
                             {if $field.hint_1}
-                            {$field.hint_1}<br/>
+                                {$field.hint_1}<br/>
                             {/if}
                             {$formObj->createField($field)}
                             {if $field.hint_2}<br/>
-                            {$field.hint_2}
+                                {$field.hint_2}
                             {/if}
                         </div>
                         {/foreach}

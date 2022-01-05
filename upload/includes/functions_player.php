@@ -1,18 +1,12 @@
 <?php
 /**
- * All functions regarding ClipBucket video players are here
- * @author: Fawaz Tahir
- * @since: 28th August, 2013
- * To change this template use File | Settings | File Templates.
- */
-
-/**
 * Function used to display flash player for ClipBucket video
 * 
 * @param : { array } { $param } { an array of parameters }
 */
 
-function flashPlayer($param) {
+function flashPlayer($param)
+{
     global $Cbucket;
     global $pak_player;
     $param['player_div'] = $param['player_div'] ? $param['player_div'] : 'videoPlayer';
@@ -37,15 +31,9 @@ function flashPlayer($param) {
         }
     }
 
-    if(function_exists('cbplayer') && empty($player_code)) {
-        $player_code = cbplayer($param,true);
-    } elseif(function_exists('cbplayer')) {
-        return $player_code;
-    }
-
     if($player_code) {
         if(!$pak_player && $show_player && !is_bool($player_code)) {
-            assign("player_js_code",$player_code);
+            assign('player_js_code',$player_code);
             Template(PLAYER_DIR.'/player.html',false);
             return false;
         }
@@ -53,15 +41,6 @@ function flashPlayer($param) {
     }
 
     return blank_screen($param);
-}
-
-/**
- * Function used to get player from website settings
- */
-function get_player()
-{
-    global $Cbucket;
-    return $Cbucket->configs['player_file'];
 }
 
 /**
@@ -76,9 +55,4 @@ function blank_screen($data)
     $code = '<div class="blank_screen" align="center">No Player or Video File Found - Unable to Play Any Video</div>';
     $swfobj->EmbedCode(unhtmlentities($code),$data['player_div']);
     return $swfobj->code;
-}
-
-function get_current_player() {
-    global $cbplayer;
-    return $cbplayer->get_player_details( config( 'player_file' ), config( 'player_dir' ) );
 }

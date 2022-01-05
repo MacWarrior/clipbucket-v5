@@ -20,7 +20,7 @@
 {$svg_manager_params = ['function'=>'get_svg_manager']}
 {$svg_manager = get_my_function($svg_manager_params)}
 {if $svg_manager}
-{$svg_manager}	
+    {$svg_manager}
 {/if}
 
 <!-- This code is added for instance manager Interactive ads plugin intances-->
@@ -139,8 +139,12 @@
 
 <video playsinline id="cb_video_js_{$vdata.videoid}" class="video-js vjs-default-skin vjs-show-big-play-button-on-pause" height="{$height}" width="{$width}" poster="{getThumb vdetails=$vdata size=768x432}" >
 	{foreach $video_files as $file}
-		{$quality = get_cbvjs_quality($file)}
-		<source src='{$file}' type="video/mp4" label="{$myquery->getVideoResolutionTitleFromHeight($quality)}" res="{$quality}" />
+		{$quality = get_cbvjs_quality($file, $vdata['file_type'])}
+        {if $vdata['file_type'] == 'hls'}
+    <source src='{$file}' type="application/x-mpegURL" label="{$myquery->getVideoResolutionTitleFromHeight($quality)}" res="{$quality}" />
+        {else}
+    <source src='{$file}' type="video/mp4" label="{$myquery->getVideoResolutionTitleFromHeight($quality)}" res="{$quality}" />
+        {/if}
     {/foreach}
 	{if config('player_subtitles')}
 		{$subtitles = get_video_subtitles($vdata)}
@@ -194,7 +198,7 @@
 
         // PLUGIN : resolution
         var res_options = {
-            default : "{get_cbvjs_quality_type($video_files)}",
+            default : "{get_cbvjs_quality_type($video_files, $vdata['file_type'])}",
             dynamicLabel : false
         };
         this.videoJsResolutionSwitcher(res_options);

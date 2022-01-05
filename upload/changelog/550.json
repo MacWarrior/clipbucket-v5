@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"16",
+  "revision":"17",
   "status":"dev",
   "detail":[
     {
@@ -31,6 +31,7 @@
       "description": [
         "Implement subtitles"
         ,"Add option to enable subtitles"
+        ,"Add support for HLS video files (WIP)"
       ]
     },
     {
