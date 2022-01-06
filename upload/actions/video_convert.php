@@ -80,12 +80,14 @@ if(!empty($_filename))
     $ffmpeg = new FFMpeg($log);
     $ffmpeg->conversion_type = config('conversion_type');
     $ffmpeg->input_file = $orig_file;
-    $ffmpeg->file_directory = $file_directory.DIRECTORY_SEPARATOR;
+    $ffmpeg->file_directory = $file_directory;
     $ffmpeg->file_name = $_filename;
 
     if( $audio_track && is_numeric($audio_track) ){
         $ffmpeg->audio_track = $audio_track;
     }
+
+    $db->update(tbl('video'), array('file_type'), array($ffmpeg->conversion_type), " file_name = '{$_filename}'");
 
     $ffmpeg->ClipBucket();
 
@@ -102,8 +104,6 @@ if(!empty($_filename))
     } else if( config('force_8bits') ){
         $db->update(tbl('video'), array('bits_color'), array(8), " file_name = '{$_filename}'");
     }
-
-    $db->update(tbl('video'), array('file_type'), array($ffmpeg->conversion_type), " file_name = '{$_filename}'");
 
     if( $reconvert ) {
         setVideoStatus( $_filename, 'completed', true, true );

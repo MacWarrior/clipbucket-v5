@@ -716,12 +716,12 @@
 			}
 		}
 
-		$fileDirectory = "";
+		$fileDirectory = '';
 		if(isset($vdetails['file_directory']) && !empty($vdetails['file_directory'])){
-			$fileDirectory = "{$vdetails['file_directory']}/";
+			$fileDirectory = $vdetails['file_directory'].DIRECTORY_SEPARATOR;
 		}
 
-        #Now there is no function so lets continue as
+        #Now there is no function so let's continue as
         if(isset($vdetails['file_name'])  && !empty($vdetails['file_name'])) {
             $vid_files = glob(VIDEOS_DIR.DIRECTORY_SEPARATOR.$fileDirectory.$vdetails['file_name'].'*');
         } else {
@@ -738,7 +738,7 @@
                 $video_file = $files_part[count($files_part)-1];
 
                 if($with_path){
-                    $files[] = VIDEOS_URL . '/' . $fileDirectory . $video_file;
+                    $files[] = VIDEOS_URL.'/'.$fileDirectory.$video_file;
 				} else {
                     $files[] = $video_file;
 				}
@@ -748,9 +748,9 @@
         if((!is_array($files) || count($files)==0) && !$multi && !$count_only) {
             if($return_default) {
                 if($with_path) {
-                    return VIDEOS_URL.'/no_video.flv';
+                    return VIDEOS_URL.'/no_video.mp4';
 				}
-				return 'no_video.flv';
+				return 'no_video.mp4';
             }
 			return false;
         } else {

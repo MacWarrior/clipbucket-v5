@@ -585,7 +585,6 @@ class FFMpeg
                 break;
             case 'hls':
                 $this->output_dir = VIDEOS_DIR.DIRECTORY_SEPARATOR.$this->file_directory.$this->file_name.DIRECTORY_SEPARATOR;
-                error_log($this->output_dir);
                 break;
         }
 

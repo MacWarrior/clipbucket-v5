@@ -676,52 +676,38 @@ class CBvideo extends CBCategory
 		}
 		//Calling Video Delete Functions
 	    call_delete_video_function($vdetails);
-        
-		//Getting list of files
-		$files = get_video_file($vdetails,false,false,true);
-		if(is_array($files))
-		{
-			foreach($files as $file)
-			{
-				if(file_exists(VIDEOS_DIR.'/'.$file) && is_file(VIDEOS_DIR.'/'.$file)){
-					unlink(VIDEOS_DIR.'/'.$file);
-                }
 
-				//Extracting File Name for Video File 
-				$fn = explode('-', $file);
-				$fn = $fn[0];
+        $directory_path = VIDEOS_DIR.DIRECTORY_SEPARATOR.$vdetails['file_directory'].DIRECTORY_SEPARATOR;
+        switch( $vdetails['file_type'] )
+        {
+            default:
+            case 'mp4':
+                $files = json_decode($vdetails['video_files']);
+                foreach($files as $quality){
+                    $file = $vdetails['file_name'].'-'.$quality.'.mp4';
 
-				$result = db_select('SELECT * FROM '.tbl('video')." WHERE file_name = '$fn'");
-				if($result)
-				{
-					foreach($result as $result1)
-					{
-						$str = DIRECTORY_SEPARATOR.$result1['file_directory'].DIRECTORY_SEPARATOR;
-						if(file_exists(VIDEOS_DIR.$str.$file) && is_file(VIDEOS_DIR.$str.$file)){
-						    unlink(VIDEOS_DIR.$str.$file);
+                    if( $vdetails['video_version'] >= 2.7 ){
+                        if(file_exists($directory_path.$file) && is_file($directory_path.$file)){
+                            error_log('File_exists');
+                            unlink($directory_path.$file);
                         }
-					}
-				}
-
-			}
-		} else {
-			if(file_exists(VIDEOS_DIR.'/'.$files) && is_file(VIDEOS_DIR.'/'.$files)){
-                unlink(VIDEOS_DIR.'/'.$files);
-            }
-			$fn = substr($files, 0, -7);
-			$result = db_select('SELECT * FROM '.tbl('video')." WHERE file_name = '$fn'");
-			if($result)
-			{
-				foreach($result as $result1)
-				{
-					$str = DIRECTORY_SEPARATOR.$result1['file_directory'].DIRECTORY_SEPARATOR;
-					if(file_exists(VIDEOS_DIR.$str.$files) && is_file(VIDEOS_DIR.$str.$files)){
-						unlink(VIDEOS_DIR.$str.$files);
+                    } else {
+                        if(file_exists(DIRECTORY_SEPARATOR.$file) && is_file(DIRECTORY_SEPARATOR.$file)){
+                            unlink(DIRECTORY_SEPARATOR.$file);
+                        }
                     }
-				}
-			}
+                }
+                break;
+            case 'hls':
+                $directory_path .= $vdetails['file_name'].DIRECTORY_SEPARATOR;
+                $vid_files = glob($directory_path.'*');
+                foreach($vid_files as $file){
+                    unlink($file);
+                }
+                rmdir($directory_path);
+                break;
+        }
 
-		}
 		e(lang('vid_files_removed_msg'),'m');
 	}
 
