@@ -310,15 +310,17 @@
 	}
 
 	/**
-	 * Function Used TO Get Extensio Of File
+	 * Function Used TO Get Extension Of File
 	 *
 	 * @param : { string } { $file } { file to get extension of }
 	 *
 	 * @return string : { string } { extension of file }
 	 *
 	 */
-	function GetExt($file) {
-		return strtolower(end(explode('.', $file)));
+	function GetExt($file): string
+    {
+        $parts = explode('.', $file);
+		return strtolower(end($parts));
 	}
 
 	/**
@@ -3688,9 +3690,12 @@
 	 */
 	function conv_lock_exists()
 	{
-		if(file_exists(TEMP_DIR.'/conv_lock.loc')) {
-			return true;
-		}
+        for($i = 0 ; $i < config('max_conversion') ; $i++){
+            if(file_exists(TEMP_DIR.DIRECTORY_SEPARATOR.'conv_lock'.$i.'.loc')) {
+                return true;
+            }
+        }
+
 		return false;
 	}
 

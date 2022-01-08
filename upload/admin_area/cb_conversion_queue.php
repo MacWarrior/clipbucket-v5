@@ -14,7 +14,11 @@ $breadcrumb[1] = array('title' => 'Conversion Queue Manager', 'url' => ADMIN_BAS
 
 if($_GET['delete_lock']) {
     if(conv_lock_exists()) {
-        unlink(TEMP_DIR.'/conv_lock.loc');
+        for($i = 0 ; $i < config('max_conversion') ; $i++){
+            if(file_exists(TEMP_DIR.DIRECTORY_SEPARATOR.'conv_lock'.$i.'.loc')) {
+                unlink(TEMP_DIR.DIRECTORY_SEPARATOR.'conv_lock'.$i.'.loc');
+            }
+        }
         e('Conversion lock has been deleted','m');
     } else {
         e('There is no conversion lock');

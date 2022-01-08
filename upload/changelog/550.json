@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"18",
+  "revision":"19",
   "status":"dev",
   "detail":[
     {
@@ -15,6 +15,7 @@
         ,"Add option to specify subtitles format"
         ,"Add video type tag to video manager"
         ,"Fix failed conversion status display"
+        ,"Fix delete Conversion Lock"
       ]
     },
     {
