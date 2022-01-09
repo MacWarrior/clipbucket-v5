@@ -715,32 +715,47 @@ class Upload
 	 *
 	 * @return bool|int
 	 */
-	function add_conversion_queue($file)
+	function add_conversion_queue($file, $sub_directory = '', $cqueue_name = '')
 	{
-		global $Cbucket,$db;
-		$tmp_ext = $Cbucket->temp_exts;
+		global $db;
+
+        $ext = strtolower(getExt($file));
+        $name = getName($file);
+        if(!$name){
+            return false;
+        }
+
+        if( empty($cqueue_name) ){
+            $cqueue_name = $name;
+        }
 
 		//Checking file exists or not
-		if(file_exists(TEMP_DIR.DIRECTORY_SEPARATOR.$file))
-		{
-			$ext = strtolower(getExt($file));
-			$name = getName($file);
-			if(!$name){
-				return false;
-            }
-			//Get Temp Ext
-			$tmp_ext = $tmp_ext[rand(0,count($tmp_ext)-1)];
-			//Creating New File Name
-			$new_file = $name.'.'.$tmp_ext;
-			//Renaming File for security purpose
-
-			rename(TEMP_DIR.DIRECTORY_SEPARATOR.$file,TEMP_DIR.DIRECTORY_SEPARATOR.$new_file);
-			//Adding Details to database
-			$db->Execute('INSERT INTO '.tbl('conversion_queue')." (cqueue_name,cqueue_ext,cqueue_tmp_ext,date_added)
-							VALUES ('".mysql_clean($name)."','".mysql_clean($ext)."','".mysql_clean($tmp_ext)."','".NOW()."') ");
-			return $db->insert_id();
+		if(!file_exists(TEMP_DIR.DIRECTORY_SEPARATOR.$sub_directory.$file)) {
+            return false;
 		}
-		return false;
+
+        switch($ext)
+        {
+            default:
+            case 'mp4':
+                global $Cbucket;
+                //Get Temp Ext
+                $tmp_ext = $Cbucket->temp_exts;
+                $tmp_ext = $tmp_ext[rand(0,count($tmp_ext)-1)];
+                //Creating New File Name
+                $new_file = $name.'.'.$tmp_ext;
+                //Renaming File for security purpose
+                rename(TEMP_DIR.DIRECTORY_SEPARATOR.$sub_directory.$file,TEMP_DIR.DIRECTORY_SEPARATOR.$sub_directory.$new_file);
+                break;
+            case 'm3u8':
+                $tmp_ext = '';
+                break;
+        }
+
+        //Adding Details to database
+        $db->Execute('INSERT INTO '.tbl('conversion_queue')." (cqueue_name,cqueue_ext,cqueue_tmp_ext,date_added)
+							VALUES ('".mysql_clean($cqueue_name)."','".mysql_clean($ext)."','".mysql_clean($tmp_ext)."','".NOW()."') ");
+        return $db->insert_id();
 	}
 
 	/**

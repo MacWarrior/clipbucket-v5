@@ -584,48 +584,35 @@
 	/**
 	 * Function used to get video from conversion queue
 	 *
-	 * @param bool $update
-	 * @param null $fileName
+	 * @param string $fileName
 	 *
 	 * @return array
 	 */
-    function get_queued_video($update=TRUE,$fileName=NULL): array
+    function get_queued_video(string $fileName): array
     {
         global $db;
-		if($fileName) {
-			$queueName = getName($fileName);
-			$ext = getExt($fileName);
-			$fileNameQuery = " AND cqueue_name ='$queueName' AND cqueue_ext ='$ext' ";
-		}
-		$results = $db->select(tbl('conversion_queue'),'*',"cqueue_conversion='no' $fileNameQuery",1);
+
+        $queueName = getName($fileName);
+        $ext = getExt($fileName);
+
+		$results = $db->select(tbl('conversion_queue'),'*',"cqueue_conversion='no' AND cqueue_name ='$queueName' AND cqueue_ext ='$ext'",1);
+
 		$result = $results[0];
-		if($update){
-			$db->update(tbl('conversion_queue'),array('cqueue_conversion','time_started'),array('p',time())," cqueue_id = '".$result['cqueue_id']."'");
-		}
+        $db->update(tbl('conversion_queue'),array('cqueue_conversion','time_started'),array('p',time())," cqueue_id = '".$result['cqueue_id']."'");
 		return $result;
     }
 
 	/**
 	 * Function used to get video being processed
 	 *
-	 * @param null $fileName
+	 * @param null $queueName
 	 *
 	 * @return array
 	 */
-    function get_video_being_processed($fileName=NULL): array
+    function get_video_being_processed($queueName=NULL): array
     {
-        if($fileName) {
-            $queueName = getName($fileName);
-            $ext = getExt($fileName);
-            $fileNameQuery = " AND cqueue_name ='$queueName' AND cqueue_ext ='$ext' ";
-        }
-
         $query = 'SELECT * FROM '.tbl('conversion_queue');
-        $query .= " WHERE cqueue_conversion='p' ";
-
-        if(isset($fileNameQuery)){
-            $query .= $fileNameQuery;
-		}
+        $query .= " WHERE cqueue_conversion='p' AND cqueue_name = '".$queueName."'";
 
         $results = db_select($query);
 
@@ -835,7 +822,7 @@
 	 * @param string $file_name
 	 * @param bool $get_jsoned
 	 *
-	 * @return bool|string
+	 * @return bool|string|array
 	 */
     function get_file_details($file_name,$get_jsoned=false)
     {
@@ -852,15 +839,15 @@
                 $file = LOGS_DIR.$str.$file_name.'.log';
             }
         }
+
         //saving log in a variable 
         $data = file_get_contents($file);
 
         if(empty($data)){
             $file = $file_name;
+            $data = file_get_contents($file);
 		}
         if(!empty($data)) {
-            $data = file_get_contents($file);
-
             if(!$get_jsoned){
                 return $data;
 			}
@@ -1196,7 +1183,7 @@
 		}
 
 		$fileDirectory = '';
-		if(isset($vdetails['file_directory']) && !empty($vdetails['file_directory'])){
+		if(!empty($vdetails['file_directory'])){
 			$fileDirectory = $vdetails['file_directory'].DIRECTORY_SEPARATOR;
 		}
 
@@ -1217,7 +1204,6 @@
                     break;
             }
         }
-
 
         #replace Dir with URL
         if(is_array($vid_files)) {
@@ -1338,74 +1324,29 @@
 		);
     }
 
-	/**
-	 * @author : Fahad Abbas
-	 *
-	 * @param : { Array } { Video Details }
-	 * @param bool $dir
-	 *
-	 * @return bool|mixed|string : { Variable or boolean } { Max resolution file }
-	 *
-	 * @since : 03-03-2016
-	 */
-    function get_high_res_file($vdetails,$dir=false)
+    function get_high_res_file($vdetails): string
 	{
-        //Getting video Files array
-        $video_files = $vdetails['video_files'];
-        $video_files = json_decode($video_files,true);
-        //Getting video actual files source
-        $v_files = get_video_files($vdetails,true,true);
-
-        if (empty($v_files)){
-        	e(lang('Video file doesn\'t exists'),'e');
-        }
-        //Checking if video_files field is not empty (greater versions than CB 2.8)
-        if (!empty($video_files)){
-            $pre_check_file = $video_files[0];
-            if (is_int($pre_check_file)){
-                $max_file_res = max($video_files);
-            } else {
-                if (in_array('hd', $video_files)) {
-                    $max_file_res = 'hd';
-                } else {
-                    $max_file_res = 'sd';
-                }
-            }
+        $video_qualities = json_decode($vdetails['video_files']);
+        if (is_int($video_qualities[0])){
+            $max_quality = max($video_qualities);
         } else {
-            //Checking if video_files field is empty (lower versions than CB 2.8.1)
-            foreach ($v_files as $key => $file) {
-                $video_files[] = get_video_file_quality($file);
-            }
-            $pre_check_file = $video_files[0];
-            if (is_numeric($pre_check_file)){
-                $max_file_res = max($video_files);
+            if (in_array('hd', $video_qualities)) {
+                $max_quality = 'hd';
             } else {
-                if (in_array('hd', $video_files)) {
-                    $max_file_res = 'hd';
-                } else {
-                    $max_file_res = 'sd';
-                }
-            }
-
-        }
-        // now saving the max resolution file in a variable
-
-        if ($dir){
-            $Ext = GetExt($v_files[0]);
-            $max_res_file = VIDEOS_DIR.DIRECTORY_SEPARATOR.$vdetails['file_directory'].DIRECTORY_SEPARATOR.$vdetails['file_name'].'-'.$max_file_res.'.'.$Ext;
-        } else {
-            foreach ($v_files as $key => $file) {
-                $video_quality = get_video_file_quality($file);
-                if ($max_file_res == $video_quality){
-                    $max_res_file = $file;
-                }
+                $max_quality = 'sd';
             }
         }
-       
-        if (!empty($max_res_file)){
-            return $max_res_file;
-		}
-		return false;
+
+        $filepath = VIDEOS_DIR.DIRECTORY_SEPARATOR.$vdetails['file_directory'].DIRECTORY_SEPARATOR;
+        switch( $vdetails['file_type'] )
+        {
+            default:
+            case 'mp4':
+                return $filepath.$vdetails['file_name'].'-'.$max_quality.'.mp4';
+
+            case 'hls':
+                return $filepath.$vdetails['file_name'].DIRECTORY_SEPARATOR.$max_quality.'.m3u8';
+        }
     }
 
 	/**
@@ -1628,7 +1569,7 @@
         }
 
         // Loop through all video ids
-        foreach ($videos as $id => $daVideo)
+        foreach ($videos as $daVideo)
         {
             // get details of single video
             $vdetails = $cbvid->get_video($daVideo);
@@ -1676,62 +1617,43 @@
 				$toConvert++;
 				e('Started re-conversion process for id '.$vdetails['videoid'],'m');
 
-                // grab all video files against single video
-                $video_files = get_video_files($vdetails);
+                setVideoStatus($daVideo, 'Processing');
 
-                // possible array of video qualities
-                $video_resolutions = $myquery->getEnabledVideoResolutions('height DESC');
-
-                // loop though possible qualities, from high res to low
-                foreach ($video_resolutions as $height => $width) {
-                    // loop through all video files of current video 
-                    // and match theme with current possible quality
-                    foreach ($video_files as $key => $file) {
-                        // get quality of current url
-                        $currentQuality = get_video_file_quality($file);
-
-                        // get extension of file
-                        $currentExt = pathinfo($file, PATHINFO_EXTENSION);
-
-                        // if current video file matches with possible quality,
-                        // we have found best quality video
-
-                        if ($height == $currentQuality || $currentExt == 'flv') {
-                            // You got best quality here, perform action on video
-                            $subPath = str_replace(BASEURL, '', $video_files[$key]);
-                            $fullPath = BASEDIR.$subPath;
-
-                            // change video status to processing
-                            setVideoStatus($daVideo, 'Processing');
-
-                            $file_name = $vdetails['file_name']; // e.g : 147765247515e0e
-                            $targetFileName = $file_name.'.mp4'; // e.g : 147765247515e0e.mp4
-                            $file_directory = $vdetails['file_directory']; // e.g : 2016/10/28
-                            $logFile = LOGS_DIR.DIRECTORY_SEPARATOR.$file_directory.DIRECTORY_SEPARATOR.$file_name.'.log'; // e.g : /var/www/html/cb_root/files/logs/2016/10/28/147765247515e0e.log
-
-                            // remove old log file
-                            unlink($logFile);
-
-                            // path of file in temp dir
-                            $newDest = TEMP_DIR.DIRECTORY_SEPARATOR.$targetFileName;
-
-                            // move file from original source to temp
-                            copy($fullPath, $newDest);
-
-                            // add video in conversion queue
-                            $Upload->add_conversion_queue($targetFileName);
-
-                            // begin the process of bringing back from dead
-                            exec(php_path().' -q '.BASEDIR."/actions/video_convert.php {$targetFileName} {$file_name} {$file_directory} {$logFile} '' 'reconvert' > /dev/null &");
-
-                            // set reconversion status
-                            setVideoStatus($daVideo, 'started',true);
-                            break 2;
+                switch($vdetails['file_type'])
+                {
+                    default:
+                    case 'mp4':
+                        $max_quality_file = get_high_res_file($vdetails);
+                        $conversion_filepath = TEMP_DIR.DIRECTORY_SEPARATOR.$vdetails['file_name'].'.mp4';
+                        copy($max_quality_file,$conversion_filepath);
+                        $Upload->add_conversion_queue($vdetails['file_name'].'.mp4');
+                        break;
+                    case 'hls':
+                        $conversion_dir = TEMP_DIR.DIRECTORY_SEPARATOR.$vdetails['file_name'].DIRECTORY_SEPARATOR;
+                        mkdir($conversion_dir);
+                        $max_quality = max(json_decode($vdetails['video_files']));
+                        $conversion_filepath = $conversion_dir.$max_quality.'.m3u8';
+                        $original_files_path = VIDEOS_DIR.DIRECTORY_SEPARATOR.$vdetails['file_directory'].DIRECTORY_SEPARATOR.$vdetails['file_name'].DIRECTORY_SEPARATOR.$max_quality.'*';
+                        foreach(glob($original_files_path) as $file){
+                            $files_part = explode('/',$file);
+                            $video_file = $files_part[count($files_part)-1];
+                            if( $video_file == $max_quality.'.m3u8' ){
+                                $video_file = $vdetails['file_name'].'.m3u8';
+                            }
+                            copy($file, $conversion_dir.$video_file);
                         }
-                    }
+                        $Upload->add_conversion_queue($vdetails['file_name'].'.m3u8', $vdetails['file_name'].DIRECTORY_SEPARATOR, $vdetails['file_name']);
+                        break;
                 }
+
+                remove_video_files($vdetails);
+
+                $logFile = LOGS_DIR.DIRECTORY_SEPARATOR.$vdetails['file_directory'].DIRECTORY_SEPARATOR.$vdetails['file_name'].'.log';
+                exec(php_path().' -q '.BASEDIR."/actions/video_convert.php {$conversion_filepath} {$vdetails['file_name']} {$vdetails['file_directory']} {$logFile} '' 'reconvert' > /dev/null &");
+
+                setVideoStatus($daVideo, 'started',true);
             }
-           
+
         }
         if ($toConvert >= 1) {
             e("Reconversion is underway. Kindly don't run reconversion on videos that are already reconverting. Doing so may cause things to become lunatic fringes :P","w");

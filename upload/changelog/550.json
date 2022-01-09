@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"19",
+  "revision":"20",
   "status":"dev",
   "detail":[
     {
@@ -16,6 +16,7 @@
         ,"Add video type tag to video manager"
         ,"Fix failed conversion status display"
         ,"Fix delete Conversion Lock"
+        ,"Add option to select conversion type (WIP)"
       ]
     },
     {

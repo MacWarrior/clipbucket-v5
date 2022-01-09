@@ -688,7 +688,6 @@ class CBvideo extends CBCategory
 
                     if( $vdetails['video_version'] >= 2.7 ){
                         if(file_exists($directory_path.$file) && is_file($directory_path.$file)){
-                            error_log('File_exists');
                             unlink($directory_path.$file);
                         }
                     } else {

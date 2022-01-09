@@ -40,7 +40,18 @@ $log->writeLine("Getting Arguments",$TempLogData, true, true);
     Getting the videos which are currently in our queue
     waiting for conversion
 */
-$queue_details = get_queued_video(true, $fileName);
+$extension = GetExt($fileName);
+
+switch($extension)
+{
+    default:
+    case 'mp4':
+        $queue_details = get_queued_video($fileName);
+        break;
+    case 'm3u8':
+        $queue_details = get_queued_video($_filename.'.'.$extension);
+        break;
+}
 
 $log->writeLine('Conversion queue','Getting the file information from the queue for conversion', true);
 
@@ -58,16 +69,34 @@ $file_directory = implode(DIRECTORY_SEPARATOR, explode('-', $dateAdded));
 */
 $tmp_ext  = $queue_details['cqueue_tmp_ext'];
 $ext 	  = $queue_details['cqueue_ext'];
+if( empty($tmp_ext) ) {
+    $tmp_ext = $ext;
+}
 if(!empty($_filename))
 {
-    $temp_file = TEMP_DIR.DIRECTORY_SEPARATOR.$_filename.'.'.$tmp_ext;
-    $orig_file = CON_DIR.DIRECTORY_SEPARATOR.$_filename.'.'.$ext;
-
-    /*
-        Delete the uploaded file from temp directory
-        and move it into the conversion queue directory for conversion
-    */
-    $renamed = rename( $temp_file, $orig_file );
+    switch($ext){
+        default:
+        case 'mp4':
+            // Delete the uploaded file from temp directory
+            // and move it into the conversion queue directory for conversion
+            $temp_file = TEMP_DIR.DIRECTORY_SEPARATOR.$_filename.'.'.$tmp_ext;
+            $orig_file = CON_DIR.DIRECTORY_SEPARATOR.$_filename.'.'.$ext;
+            $renamed = rename( $temp_file, $orig_file );
+            break;
+        case 'm3u8':
+            $temp_dir = TEMP_DIR.DIRECTORY_SEPARATOR.$_filename.DIRECTORY_SEPARATOR;
+            $temp_files = $temp_dir.'*';
+            $conversion_path = CON_DIR.DIRECTORY_SEPARATOR.$_filename.DIRECTORY_SEPARATOR;
+            $orig_file = $conversion_path.$_filename.'.'.$ext;
+            mkdir($conversion_path);
+            foreach(glob($temp_files) as $file){
+                $files_part = explode('/',$file);
+                $video_file = $files_part[count($files_part)-1];
+                rename($file, $conversion_path.$video_file);
+            }
+            rmdir($temp_dir);
+            break;
+    }
 
     if ($renamed){
         $log->writeLine('Conversion queue','File has been moved from temporary dir to Conversion Queue', true);
@@ -106,17 +135,28 @@ if(!empty($_filename))
     }
 
     if( $reconvert ) {
-        setVideoStatus( $_filename, 'completed', true, true );
+        setVideoStatus($_filename, 'completed', true, true);
     }
 
     if (stristr(PHP_OS, 'WIN'))
     {
-        exec(php_path().' -q '.BASEDIR."/actions/verify_converted_videos.php $orig_file");
+        exec(php_path().' -q '.BASEDIR.'/actions/verify_converted_videos.php '.$queue_details['cqueue_name']);
     } elseif(stristr(PHP_OS, 'darwin')) {
-        exec(php_path().' -q '.BASEDIR."/actions/verify_converted_videos.php $orig_file </dev/null >/dev/null &");
+        exec(php_path().' -q '.BASEDIR."/actions/verify_converted_videos.php {$queue_details['cqueue_name']} </dev/null >/dev/null &");
     } else {
-        exec(php_path().' -q '.BASEDIR."/actions/verify_converted_videos.php $orig_file &> /dev/null &");
+        exec(php_path().' -q '.BASEDIR."/actions/verify_converted_videos.php {$queue_details['cqueue_name']} &> /dev/null &");
     }
 
-    unlink($orig_file);
+    switch($ext){
+        default:
+        case 'mp4':
+            unlink($orig_file);
+            break;
+        case 'm3u8':
+            foreach(glob($conversion_path.'*') as $file){
+                unlink($file);
+                rmdir($conversion_path);
+            }
+    }
+
 }

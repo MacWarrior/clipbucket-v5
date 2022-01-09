@@ -1,4 +1,6 @@
 <?php
+global $Cbucket;
+
 $Cbucket->upload_opt_list['embed_code_div'] = array(
     'title' => 'Embed Code',
     'load_func' => 'load_embed_form',
@@ -152,7 +154,7 @@ if (!function_exists('validate_embed_code'))
         global $swfobj;
         $vdetails = $data['vdetails'];
         $file = get_video_file($vdetails, false, false);
-        if (!$file || $file == 'no_video.flv') {
+        if (!$file || $file == 'no_video.mp4') {
             if (!empty($vdetails['embed_code']) && $vdetails['embed_code'] != 'none') {
                 $iframe = $vdetails['embed_code'];
                 $iframe = str_replace('height=', 'height="'.$data['height'].'"', $iframe);
