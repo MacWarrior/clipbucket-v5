@@ -31,7 +31,7 @@
         // Hack : Bootstrap 3.X won't work with tabs in tabs
         $('ul.nav-tabs.resolutions a').click(function(){
             if( !$(this).parent().hasClass('active') ){
-                var href = $(this).attr('href');
+                let href = $(this).attr('href');
                 $('#'+href).siblings().removeClass('active');
                 $('#'+href).addClass('active');
             }
@@ -56,6 +56,22 @@
                 $('.config_smtp_auth').hide();
             }
         });
+
+        $("input[name='conversion_type']").change(function() {
+            let inputs_mp4 = ['stay_mp4', 'keep_audio_tracks', 'keep_subtitles'];
+            if( this.value == 'mp4' ){
+                inputs_mp4.forEach(function(input){
+                    $('#'+input).prop('disabled', false);
+                    $('#'+input+'_hidden').prop('disabled', true);
+                });
+            } else {
+                inputs_mp4.forEach(function(input){
+                    $('#'+input).prop('disabled', true);
+                    $('#'+input+'_hidden').prop('disabled', false);
+                });
+            }
+        });
+
     });
 </script>
 
@@ -862,7 +878,7 @@
 									<label class="nowrap" for="convesion_type_mp4" title="MP4">MP4</label>
 								</div>
 								<div class="col-md-1">
-									<input value="hls" name="conversion_type" id="convesion_type_hls" {if $row.conversion_type=='hls'}checked{/if} disabled type="radio" class="ace ace-switch ace-switch-5"/>
+									<input value="hls" name="conversion_type" id="convesion_type_hls" {if $row.conversion_type=='hls'}checked{/if} type="radio" class="ace ace-switch ace-switch-5"/>
 									<span class="lbl"></span>
 								</div>
 								<div class="col-md-2">
@@ -875,8 +891,9 @@
 									<label class="nowrap" for="stay_mp4" title="Stay MP4 as it is"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Only use this option if you only want MP4 file uplad : this option disable video conversion and keep mp4 files as they are uploaded"> Stay MP4 as it is</label>
 								</div>
 								<div class="col-md-2 row-size">
-									<input value="yes" name="stay_mp4" id="stay_mp4" {if $row.stay_mp4=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<input value="yes" name="stay_mp4" id="stay_mp4" {if $row.stay_mp4=='yes'}checked{/if} type="checkbox" {if $row.conversion_type=='hls'}disabled{/if} class="ace ace-switch ace-switch-5"/>
 									<span class="lbl"></span>
+                                    <input value="{$row.stay_mp4}" name="stay_mp4" id="stay_mp4_hidden" type="hidden" {if $row.conversion_type!='hls'}disabled{/if}/>
 								</div>
 							</div>
 							<hr/>
@@ -885,8 +902,9 @@
                                     <label class="nowrap" for="keep_audio_tracks" title="Keep audio tracks"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Conserve all audio tracks in video files"> Keep audio tracks</label>
                                 </div>
                                 <div class="col-md-2 row-size">
-                                    <input value="1" name="keep_audio_tracks" id="keep_audio_tracks" {if $row.keep_audio_tracks=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <input value="1" name="keep_audio_tracks" id="keep_audio_tracks" {if $row.keep_audio_tracks=='1'}checked{/if} type="checkbox" {if $row.conversion_type=='hls'}disabled{/if} class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
+                                    <input value="{$row.keep_audio_tracks}" name="keep_audio_tracks" id="keep_audio_tracks_hidden" type="hidden" {if $row.conversion_type!='hls'}disabled{/if}/>
                                 </div>
                             </div>
                             <hr/>
@@ -895,8 +913,9 @@
                                     <label class="nowrap" for="keep_subtitles" title="Keep subtitles"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Conserve subtitles in video files"> Keep subtitles</label>
                                 </div>
                                 <div class="col-md-2 row-size">
-                                    <input value="1" name="keep_subtitles" id="keep_subtitles" {if $row.keep_subtitles=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <input value="1" name="keep_subtitles" id="keep_subtitles" {if $row.keep_subtitles=='1'}checked{/if} type="checkbox" {if $row.conversion_type=='hls'}disabled{/if} class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
+                                    <input value="{$row.keep_subtitles}" name="keep_subtitles" id="keep_subtitles_hidden" type="hidden" {if $row.conversion_type!='hls'}disabled{/if}/>
                                 </div>
                             </div>
                             <hr/>

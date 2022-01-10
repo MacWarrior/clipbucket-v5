@@ -449,12 +449,16 @@ class FFMpeg
                     }
                 }
                 // Keeping subtitles
-                if( config('keep_subtitles') ) {
+                if( config('keep_subtitles') || $this->conversion_type == 'hls' ) {
                     $subtitles = self::get_media_stream_id( 'subtitle', $this->input_file );
                     foreach( $subtitles as $track_id ) {
                         $cmd .= ' -map 0:' . $track_id;
                     }
-                    $cmd .= ' -c:s mov_text';
+                    if( $this->conversion_type == 'mp4' ){
+                        $cmd .= ' -c:s mov_text';
+                    } else {
+                        $cmd .= ' -c:s '.config('subtitle_format');
+                    }
                 }
                 break;
             case 'hls':
