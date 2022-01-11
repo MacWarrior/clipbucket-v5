@@ -1228,7 +1228,9 @@
                             break;
 
                         case 'hls':
-                            $files[] = VIDEOS_URL.'/'.$fileDirectory.$vdetails['file_name'].DIRECTORY_SEPARATOR.$video_file;
+                            if( strpos($video_file, '_vtt') === false ){
+                                $files[] = VIDEOS_URL.'/'.$fileDirectory.$vdetails['file_name'].DIRECTORY_SEPARATOR.$video_file;
+                            }
                             break;
                     }
                 } else {

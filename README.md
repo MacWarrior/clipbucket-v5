@@ -20,6 +20,7 @@ I <i>(<a href="https://github.com/MacWarrior">MacWarrior</a>)</i> have been work
 - UHD video resolutions support
 - Updated libraries <i>(VideoJS, Smarty, amCharts, ...)</i>
 - Chromecast support
+- Subtitles support
 - Easy installation scripts
 - New configuration options
 - Security, performance, stability and codestyle improvements
