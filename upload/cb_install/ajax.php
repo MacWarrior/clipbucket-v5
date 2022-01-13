@@ -101,7 +101,10 @@ if($mode=='adminsettings')
 						mysqli_query($cnnct, $templine);
 
 						if( $cnnct->error != '' ) {
-							$result['err'] = "<span class='alert'>An SQL error occures : ".$cnnct->error.'</span>';
+							$result['err'] = "<span class='alert'>An SQL error occured : ".$cnnct->error.'</span>';
+                            if( DEVELOPMENT_MODE ) {
+                                $result['err'] .= "<span class='alert'>SQL : ".$templine.'</span>';
+                            }
 							error_log('SQL : ' . $templine);
 							error_log('ERROR : ' . $cnnct->error );
 							exit(json_encode($result));
@@ -150,7 +153,10 @@ if($mode=='adminsettings')
 							mysqli_query($cnnct, $templine);
 
 							if( $cnnct->error != '' ) {
-								$result['err'] = "<span class='alert'>An SQL error occures : ".$cnnct->error.'</span>';
+								$result['err'] = "<span class='alert'>An SQL error occured : ".$cnnct->error.'</span>';
+                                if( DEVELOPMENT_MODE ) {
+                                    $result['err'] .= "<span class='alert'>SQL : ".$templine.'</span>';
+                                }
 								error_log('SQL : ' . $templine);
 								error_log('ERROR : ' . $cnnct->error );
 								exit(json_encode($result));
@@ -178,7 +184,10 @@ if($mode=='adminsettings')
 							mysqli_query($cnnct, $templine);
 
 							if( $cnnct->error != '' ) {
-								$result['err'] = "<span class='alert'>An SQL error occures : ".$cnnct->error.'</span>';
+								$result['err'] = "<span class='alert'>An SQL error occured : ".$cnnct->error.'</span>';
+                                if( DEVELOPMENT_MODE ) {
+                                    $result['err'] .= "<span class='alert'>SQL : ".$templine.'</span>';
+                                }
 								error_log('SQL : ' . $templine);
 								error_log('ERROR : ' . $cnnct->error );
 								exit(json_encode($result));

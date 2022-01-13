@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"22",
+  "revision":"23",
   "status":"dev",
   "detail":[
     {
@@ -17,6 +17,7 @@
         ,"Fix failed conversion status display"
         ,"Fix delete Conversion Lock"
         ,"Add option to select conversion type (WIP)"
+        ,"Add SQL request if an error occured during installation when in DEV mode"
       ]
     },
     {
