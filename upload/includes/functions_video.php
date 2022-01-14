@@ -520,6 +520,10 @@
             $array = $_POST['category'];
 		}
 
+        if( !is_array($array) ){
+            return false;
+        }
+
         if(count($array)==0){
             return false;
 		}

@@ -1,33 +1,7 @@
 <?php
-/**
- * This file is used
- * to create user feeds
- * probably, identicaly to, F*CBOOK :D
- */
- 
+
 class cbfeeds
 {
-	/**
-	 * Function used to create a user feed
-	 * @param array
-	 * uid => userid
-	 * udetails => array of user details
-	 * limit => timelimit of feeds (1 day, 2 days and so)
-	 */
-	function createFeed($array)
-	{
-		global $userquery;
-		$uid = $array['uid'];
-
-		if(!$uid)
-			e(lang("please_provide_valid_userid"));
-		elseif(!is_array($user))
-		{
-			$user = $userquery->get_user_details($uid);
-		}
-	}
-
-
 	/**
 	 * Function used to add feed in user feed file
 	 *
@@ -43,13 +17,15 @@ class cbfeeds
 	 */
 	function addFeed($feed)
 	{
-		if(!isSectionEnabled('feeds'))
+		if(!isSectionEnabled('feeds')){
 			return false;
+        }
 
 		$uid = $feed['uid'];
 
-		if(!$uid)
+		if(!$uid){
 			return false;
+        }
 
 		$ufeed = array();
 		
@@ -73,7 +49,7 @@ class cbfeeds
 		//Getting user feed file
 		$feedFile = $this->getFeedFile($uid);
 		
-		//Convering feed using json
+		//Converting feed using json
 		$feed = json_encode($ufeed);
 		//Creating unique md5 of feed
 		$feedmd5 = md5($feed);
@@ -94,40 +70,36 @@ class cbfeeds
 	 *
 	 * @param $action
 	 *
-	 * @return bool
+	 * @return bool|string
 	 */
 	function action($action)
 	{
-		$objects = array
-		('signup','upload_video','upload_photo',
-		'add_friend','add_collection','add_playlist',
-		'add_comment','add_favorite');
+		$objects = ['signup','upload_video','upload_photo', 'add_friend','add_collection','add_playlist', 'add_comment','add_favorite'];
 		
-		if(!in_array($action,$objects))
+		if(!in_array($action,$objects)){
 			return false;
+        }
 		return $action;
 	}
 
 
 	/**
 	 * Function used to get object of feed
-	 * it will verify weather actio is valid or not
+	 * it will verify weather action is valid or not
 	 *
 	 * @param $object
 	 *
-	 * @return bool
+	 * @return bool|string
 	 */
 	function getObject($object)
 	{
-		$objects = array
-		('signup','video','photo','group',
-		'user','friend','collection','post');
+		$objects = ['signup','video','photo','group', 'user','friend','collection','post'];
 		
-		if(!in_array($object,$objects))
+		if(!in_array($object,$objects)){
 			return false;
+        }
 		return $object;
 	}
-
 
 	/**
 	 * Function used to get feed file
@@ -139,12 +111,12 @@ class cbfeeds
 	function getFeedFile($uid)
 	{
 		$time = time();
-		$ufeedDir = USER_FEEDS_DIR.'/'.$uid;
+		$ufeedDir = USER_FEEDS_DIR.DIRECTORY_SEPARATOR.$uid;
 		//checking user feed folder exists or not
-		if(!file_exists($ufeedDir))
-			mkdir($ufeedDir);
-		$file = $ufeedDir.'/'.$time.'.feed';	
-		return $file;
+		if(!file_exists($ufeedDir)){
+			mkdir($ufeedDir, 755, true);
+        }
+		return $ufeedDir.DIRECTORY_SEPARATOR.$time.'.feed';
 	}
 
 	/**
@@ -156,20 +128,19 @@ class cbfeeds
 	 */
 	function getUserFeedsFiles($uid=NULL)
 	{
-		if(!$uid)
+		if(!$uid){
 			$uid = userid();
+        }
 		
 		$feeds = array();
-		$ufeedDir = USER_FEEDS_DIR.'/'.$uid;
-		if(file_exists($ufeedDir))
-		{
+		$ufeedDir = USER_FEEDS_DIR.DIRECTORY_SEPARATOR.$uid;
+		if(file_exists($ufeedDir)) {
 			$time = time();
 			$time = substr($time,0,strlen($time)-3);
 			
-			$files = glob($ufeedDir.'/'.$time.'*.feed');
+			$files = glob($ufeedDir.DIRECTORY_SEPARATOR.$time.'*.feed');
 			rsort($files);
-			foreach($files as $file)
-			{
+			foreach($files as $file) {
 				$feed['content'] = file_get_contents($file);
 				$feed['file'] = $file;			
 				$feeds[] = $feed;
@@ -194,19 +165,19 @@ class cbfeeds
 		$uid = $user['userid'];
 		$feeds = $this->getUserFeedsFiles($uid);
 		
-		if(!$feeds)
-			return false;				
+		if(!$feeds){
+			return false;
+        }
 		$newFeeds = array();
 		$count = 0;
-		foreach($feeds as $feed)
-		{
+		foreach($feeds as $feed) {
 			$count++;
 			
-			if($count>$allowed_feeds)
+			if($count>$allowed_feeds){
 				break;
+            }
 			$feedArray = json_decode($feed['content'],true);
-			if($feed && count($feedArray)>0)
-			{
+			if($feed && count($feedArray)>0) {
 				$remove_feed = false;
 				$farr = $feedArray;
 				
@@ -221,13 +192,11 @@ class cbfeeds
 				//Creating Links
 				switch($action)
 				{
-					case "upload_photo":
-					{		
+					case 'upload_photo':
 						$photo = $cbphoto->get_photo($object_id);	
 						
 						//If photo does not exists, simply remove the feed
-						if(!$photo)
-						{
+						if(!$photo) {
 							$this->deleteFeed($uid,$feed['file']);
 							$remove_feed = true;
 						} else {
@@ -246,16 +215,13 @@ class cbfeeds
 							
 							$farr['icon'] = 'images.png';
 						}
-					}
-					break;
+					    break;
 					
-					case "upload_video":
-					case "add_favorite":
-					{
+					case 'upload_video':
+					case 'add_favorite':
 						$video = $cbvid->get_video($object_id);		
 						//If photo does not exists, simply remove the feed
-						if(!$video)
-						{
+						if(!$video) {
 							$this->deleteFeed($uid,$feed['file']);
 							$remove_feed = true;
 						} elseif(!video_playable($video)) {
@@ -263,33 +229,30 @@ class cbfeeds
 						} else {
 							//Content Title
 							$farr['title'] = $video['title'];
-							if($action=='upload_video')
+							if($action=='upload_video'){
 								$farr['action_title'] = sprintf(lang('user_has_uploaded_new_video'), $userlink);
-							if($action=='add_favorite')
+                            }
+							if($action=='add_favorite'){
 								$farr['action_title'] = sprintf(lang('user_has_favorited_video'), $userlink);
+                            }
 							$farr['link'] 			= videoLink($video);
 							$farr['object_content'] = $video['description'];
 							$farr['thumb'] 			= get_thumb($video);
-							
 							$farr['links'][] = array('link'=>videoLink($video),'text'=>lang('watch_video'));
-							
 							$farr['icon'] = 'video.png';
 							
-							if($action == 'add_favorite')
+							if($action == 'add_favorite'){
 								$farr['icon'] = 'heart.png';
+                            }
 						}
-					}
-					break;
+					    break;
 
-					case "signup":
-					{
-						$farr['action_title']  = sprintf(lang("user_joined_us"),$userlink,TITLE,$userlink);
+					case 'signup':
+						$farr['action_title']  = sprintf(lang('user_joined_us'),$userlink,TITLE,$userlink);
 						$farr['icon'] = 'user.png';
-					}
-					
-					break;
-					case "add_friend":
-					{
+					    break;
+
+					case 'add_friend':
 						$friend = $userquery->get_user_details($object_id);
 						
 						if(!$friend)
@@ -298,18 +261,15 @@ class cbfeeds
 							$remove_feed = true;
 						} else {
 							$friendlink = '<a href="'.$userquery->profile_link($friend).'">'.display_clean($friend['username']).'</a>';
-							$farr['action_title']  = sprintf(lang("user_is_now_friend_with_other")
+							$farr['action_title']  = sprintf(lang('user_is_now_friend_with_other')
 							,$userlink,$friendlink);
 							$farr['icon'] = 'user_add.png';
 						}
-					}
-					break;
+					    break;
 
-					case "add_collection":
-					{		
+					case 'add_collection':
 						$collection = $cbcollection->get_collection($object_id);			
-						if(!$collection)
-						{
+						if(!$collection) {
 							$this->deleteFeed($uid,$feed['file']);
 							$remove_feed = true;
 						} else {
@@ -318,51 +278,41 @@ class cbfeeds
 							$farr['title'] = $collection['collection_name'];
 							$collection_link = $cbcollection->collection_links($collection,'view');
 							$farr['link'] = $collection_link;
-							
 							$farr['object_content'] = 
 							$collection['collection_description'].'<br>'.
-							$collection['total_objects']." ".$collection['type'];
+							$collection['total_objects'].' '.$collection['type'];
 							$farr['icon'] = 'photos.png';
-							
 							$farr['links'][] = array('link'=>$collection_link,'text'=>lang('view_collection'));
 						}
-					}
-					break;
-					case "add_comment":
-					{
+					    break;
+
+					case 'add_comment':
 						global $myquery;
 						$comment = $myquery->get_comment($object_id);		
 						
 						//If photo does not exists, simply remove the feed
-						if(!$comment)
-						{
+						if(!$comment) {
 							$this->deleteFeed($uid,$feed['file']);
 							$remove_feed = true;
 						} else {
-							
 							//Content Title
 							$farr['title'] = $comment['title'];
-							
-							$farr['action_title'] = $userlink." ".lang('commented on a post');
-						
+							$farr['action_title'] = $userlink.' '.lang('commented on a post');
 							$farr['link'] 			= videoLink($video);
 							$farr['object_content'] = $video['description'];
 							$farr['thumb'] 			= get_thumb($video);
-							
 							$farr['links'][] = array('link'=>videoLink($video),'text'=>lang('watch_video'));
-							
 							$farr['icon'] = 'video.png';
-							
-							if($action=='add_favorite')
+							if($action=='add_favorite'){
 								$farr['icon'] = 'heart.png';
+                            }
 						}
-					}
-					break;
-					
+					    break;
 				}
 				
-				if(!$remove_feed)
+				if(!$remove_feed){
 					$newFeeds[$feedArray['time']] = $farr;
+                }
 			}
 		}
 		return $newFeeds;
@@ -377,8 +327,9 @@ class cbfeeds
 	 */
 	function deleteFeed($uid,$feedid)
 	{
-		$ufeedDir = USER_FEEDS_DIR.'/'.$uid.'/'.getName($feedid).'.feed';
-		if(file_exists($ufeedDir))
+		$ufeedDir = USER_FEEDS_DIR.DIRECTORY_SEPARATOR.$uid.DIRECTORY_SEPARATOR.getName($feedid).'.feed';
+		if(file_exists($ufeedDir)){
 			unlink($ufeedDir);
+        }
 	}
 }

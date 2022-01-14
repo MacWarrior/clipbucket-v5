@@ -1,4 +1,6 @@
 <?php
+define('THIS_PAGE','video_manager');
+
 require_once '../includes/admin_config.php';
 require_once '../api/push.php';
 global $cbvid, $userquery, $pages, $myquery, $eh, $cbvideo;
@@ -157,7 +159,7 @@ $result_array = $array;
 //Getting Video List
 $result_array['limit'] = $get_limit;
 if(!$array['order']){
-    $result_array['order'] = " videoid DESC ";
+    $result_array['order'] = ' videoid DESC ';
 }
 
 $videos = get_videos($result_array);

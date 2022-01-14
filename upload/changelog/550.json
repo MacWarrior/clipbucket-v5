@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"23",
+  "revision":"24",
   "status":"dev",
   "detail":[
     {
@@ -28,6 +28,7 @@
         ,"Remove unused DB columns"
         ,"Fix installation process"
         ,"Update requierements doc"
+        ,"Update PHP 8+ compatibility"
       ]
     },
     {
