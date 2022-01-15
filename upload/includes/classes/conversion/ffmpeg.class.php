@@ -2,17 +2,17 @@
 
 class FFMpeg
 {
-    public string $conversion_type = '';
-    public string $file_directory = '';
-    public string $file_name = '';
-    public string $lock_file = '';
-    public string $input_file = '';
-    public int $audio_track = -1;
-    public array $input_details = [];
-	public SLog $log;
-	public string $output_dir = '';
-	public string $output_file = '';
-    public array $video_files = [];
+    public /*string*/ $conversion_type = '';
+    public /*string*/ $file_directory = '';
+    public /*string*/ $file_name = '';
+    public /*string*/ $lock_file = '';
+    public /*string*/ $input_file = '';
+    public /*int*/ $audio_track = -1;
+    public /*array*/ $input_details = [];
+	public /*SLog*/ $log;
+	public /*string*/ $output_dir = '';
+	public /*string*/ $output_file = '';
+    public /*array*/ $video_files = [];
 
 	public function __construct(SLog $log)
 	{
