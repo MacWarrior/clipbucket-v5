@@ -55,5 +55,11 @@
         ,"Implement HLS conversion (WIP)"
       ]
     }
+    ,{
+      "title":"Front office",
+      "description":[
+        "Fix SQL error due to quotes in video tags<i>#195</i>"
+      ]
+    }
   ]
 }
