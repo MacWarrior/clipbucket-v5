@@ -698,45 +698,42 @@ class cbactions
 
         $playlist = $this->get_playlist($pid);
         
-		if(!$this->exists($id))
-			e(sprintf(lang("obj_not_exists"),$this->name));
-		elseif( !$playlist )
-			e(lang("playlist_not_exist"));
-		elseif(!userid())
+		if(!$this->exists($id)){
+			e(sprintf(lang('obj_not_exists'),$this->name));
+        } elseif( !$playlist ) {
+			e(lang('playlist_not_exist'));
+        } elseif(!userid()) {
 			e(lang('you_not_logged_in'));
-		elseif($this->playlist_item_with_obj($id,$pid))
+        } elseif($this->playlist_item_with_obj($id,$pid)) {
 			e(sprintf(lang('this_already_exist_in_pl'),$this->name));
-		else
-		{
-
+        } else {
             $video = get_video_basic_details( $id, true );
 
-            cb_do_action( 'add_playlist_item', array( 'playlist' => $playlist, 'object' => $video, 'object_type' => $this->type ) );
+            cb_do_action( 'add_playlist_item', ['playlist' => $playlist, 'object' => $video, 'object_type' => $this->type] );
 
             if ( !error() ) {
-
-                $fields = array(
+                $fields = [
                     'object_id' => $id,
                     'playlist_id' => $pid,
                     'date_added' => now(),
                     'playlist_item_type' => $this->type,
                     'userid' => userid()
-                );
+                ];
 
                 /* insert item */
-                $db->insert( tbl( $this->playlist_items_tbl ), array_keys( $fields ), array_values( $fields ) );
+                $db->insert( tbl($this->playlist_items_tbl), array_keys($fields), array_values($fields) );
 
                 /* update playlist */
-                $fields = array(
+                $fields = [
                     'last_update' => now(),
-                    'runtime' => '|f|runtime+'.$video[ 'duration' ],
-                    'first_item' => '|no_mc|'.json_encode( $video ),
+                    'runtime' => '|f|runtime+'.$video['duration'],
+                    'first_item' => '|no_mc|'.mysql_clean(json_encode($video)),
                     'total_items' => '|f|total_items+1'
-                );
+                ];
 
-                $db->update( tbl( 'playlists' ), array_keys( $fields ), array_values( $fields ), " playlist_id = '".$pid."' " );
+                $db->update( tbl('playlists'), array_keys($fields), array_values($fields), " playlist_id = '".$pid."' " );
 
-                e('<div class="alert alert-success">'.lang( 'video_added_to_playlist' ).'</div>', "m" );
+                e('<div class="alert alert-success">'.lang('video_added_to_playlist' ).'</div>', "m" );
                 return $video;
             }
 		}

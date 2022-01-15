@@ -63,10 +63,8 @@ if(!empty($mode))
             }
 
             $videos = get_videos(array('limit'=>config('videos_items_hme_page'),'featured'=>'yes','order'=>'featured_date DESC'));
-            if($videos)
-            {
-                foreach($videos as $video)
-                {
+            if($videos) {
+                foreach($videos as $video) {
                     assign('video',$video);
                     Template('blocks/video.html');
                 }
@@ -81,10 +79,10 @@ if(!empty($mode))
             switch($inner_mode)
             {
                 case 'load_more_videos':
-                    $videos_arr = array('order' =>"date_added DESC" , "limit" =>''.$limit.','.$limit.'');
+                    $videos_arr = array('order'=>'date_added DESC','limit' =>''.$limit.','.$limit);
                     $results = get_videos($videos_arr);
                     $next_limit = $limit + $limit;
-                    $videos_arr_next = array('order' =>"date_added DESC" , "limit" =>''.$next_limit.','.$next_limit.'');
+                    $videos_arr_next = array('order'=>'date_added DESC','limit' =>''.$next_limit.','.$next_limit);
                     $videos_next = get_videos($videos_arr_next);
                     if($total == $next_limit||$total < $next_limit) {
                         $count_next = 0;
@@ -95,11 +93,12 @@ if(!empty($mode))
                     $template_path = 'blocks/videos/video.html';
                     $assigned_variable_smarty = 'video';
                     break;
+
                 case 'load_more_users':
-                    $users_arr = array( "limit" =>''.$limit.','.$limit.'');
+                    $users_arr = array( 'limit' =>''.$limit.','.$limit);
                     $results = get_users($users_arr);
                     $next_limit = $limit + $limit;
-                    $users_arr_next = array( "limit" =>''.$next_limit.','.$next_limit.'');
+                    $users_arr_next = array( 'limit' =>''.$next_limit.','.$next_limit);
                     $users_next = get_videos($users_arr_next);
                     if($total == $next_limit||$total < $next_limit) {
                         $count_next = 0;
@@ -114,17 +113,16 @@ if(!empty($mode))
 
                 case 'load_more_playlist':
                     $userid = $_POST['cat_id'];
-                    $play_arr = array( "user" => $userid ,"order"=>"date_added DESC","limit" =>''.$limit.','.$limit.'');
+                    $play_arr = array('user'=>$userid,'order'=>'date_added DESC','limit' =>''.$limit.','.$limit);
                     $results = $cbvid->action->get_playlists($play_arr);
                     $next_limit = $limit + $limit;
-                    $play_arr_next = array( "user" => $userid ,"order"=>"date_added DESC","limit" =>''.$next_limit.','.$next_limit.'');
+                    $play_arr_next = array('user'=>$userid,'order'=>'date_added DESC','limit' =>''.$next_limit.','.$next_limit);
                     $playlist_next = $cbvid->action->get_playlists($play_arr_next);
                     if($total == $next_limit||$total < $next_limit) {
                         $count_next = 0;
                     } else {
                         $count_next = count($playlist_next);
                     }
-
                     $count_next = (int)$count_next;
                     $total_results = $total;
                     $template_path = 'blocks/playlist/playlist.html';
@@ -150,7 +148,7 @@ if(!empty($mode))
         case 'rating':
             switch($_POST['type'])
             {
-                case "video":
+                case 'video':
                     $rating = mysql_clean($_POST['rating'])*2;
                     $id = mysql_clean($_POST['id']);
                     $result = $cbvid->rate_video($id,$rating);
@@ -165,7 +163,7 @@ if(!empty($mode))
                     }
                     break;
 
-                case "photo":
+                case 'photo':
                     $rating = mysql_clean($_POST['rating'])*2;
                     $id = mysql_clean($_POST['id']);
                     $result = $cbphoto->rate_photo($id,$rating);
@@ -180,7 +178,7 @@ if(!empty($mode))
                     }
                     break;
 
-                case "collection":
+                case 'collection':
                     $rating = mysql_clean($_POST['rating'])*2;
                     $id = mysql_clean($_POST['id']);
                     $result = $cbcollection->rate_collection($id,$rating);
@@ -195,7 +193,7 @@ if(!empty($mode))
                     }
                     break;
 
-                case "user":
+                case 'user':
                     $rating = mysql_clean($_POST['rating'])*2;
                     $id = mysql_clean($_POST['id']);
                     $result = $userquery->rate_user($id,$rating);
@@ -225,15 +223,15 @@ if(!empty($mode))
                     $cbvid->action->share_content($vdo['videoid']);
                     break;
 
-                case "p":
-                case "photo":
+                case 'p':
+                case 'photo':
                     $ph = $cbphoto->get_photo($_POST['id']);
                     $cbphoto->set_share_email($ph);
                     $cbphoto->action->share_content($ph['photo_id']);
                     break;
 
-                case "cl":
-                case "collection":
+                case 'cl':
+                case 'collection':
                     $cl = $cbcollection->get_collection($_POST['id']);
                     $cbcollection->set_share_mail($cl);
                     $cbcollection->action->share_content($cl['collection_id']);
@@ -273,8 +271,8 @@ if(!empty($mode))
                     $funcs = cb_get_functions('favorite_photo');
                     break;
 
-                case "cl":
-                case "collection":
+                case 'cl':
+                case 'collection':
                     $cbcollection->action->add_to_fav($id);
                     $funcs = cb_get_functions('favorite_collection');
                     break;
@@ -320,8 +318,8 @@ if(!empty($mode))
                     $cbphoto->action->report_it($id);
                     break;
 
-                case "cl":
-                case "collection":
+                case 'cl':
+                case 'collection':
                     $cbcollection->action->report_it($id);
                     break;
             }
@@ -393,9 +391,9 @@ if(!empty($mode))
             $userid = $_POST['userid'];
             if(isset($userid) ) {
                 $sub_count = $userquery->get_user_subscribers($userid,true);
-                echo json_encode(array("subscriber_count"=>$sub_count));
+                echo json_encode(array('subscriber_count'=>$sub_count));
             } else {
-                echo json_encode(array("msg"=>"Userid is empty"));
+                echo json_encode(array('msg'=>'Userid is empty'));
             }
             break;
 
@@ -523,8 +521,8 @@ if(!empty($mode))
                     $cid = $cbcollection->add_comment($comment,$id,$reply_to);
                     break;
 
-                case "p":
-                case "photo":
+                case 'p':
+                case 'photo':
                     $cid = $cbphoto->add_comment($comment,$id,$reply_to);
                     break;
             }
@@ -567,9 +565,9 @@ if(!empty($mode))
             if ($parent_id)
             {
                 assign('rep_mode',true);
-                echo json_encode(array("parent_id"=>$parent_id,"li_data"=>Fetch('blocks/comments/comment.html')));
+                echo json_encode(array('parent_id'=>$parent_id,'li_data'=>Fetch('blocks/comments/comment.html')));
             } else {
-                echo json_encode(array("li_data"=>Fetch('blocks/comments/comment.html')));
+                echo json_encode(array('li_data'=>Fetch('blocks/comments/comment.html')));
             }
             break;
 
@@ -966,7 +964,7 @@ if(!empty($mode))
             switch($contentType)
             {
                 case "videos" :
-                    $videos = get_videos(array("user"=>$u['userid'],"order"=>" date_added DESC","limit"=>config('videos_item_channel_page')));
+                    $videos = get_videos(array('user'=>$u['userid'],'order'=>" date_added DESC",'limit'=>config('videos_item_channel_page')));
 
                     if($videos)
                     {
@@ -987,7 +985,7 @@ if(!empty($mode))
                     break;
 
                 case "photos":
-                    $photos = get_photos(array("user"=>$u['userid'],"order"=>" date_added DESC","limit"=>config('photo_channel_page')));
+                    $photos = get_photos(array('user'=>$u['userid'],'order'=>" date_added DESC",'limit'=>config('photo_channel_page')));
                     if($photos)
                     {
                         foreach($photos as $photo)
@@ -1005,7 +1003,7 @@ if(!empty($mode))
                     break;
 
                 case "playlists":
-                    $playlists = get_playlists(array("user"=>$u['userid'],"order"=>" date_added DESC","limit"=>5));
+                    $playlists = get_playlists(array('user'=>$u['userid'],'order'=>" date_added DESC",'limit'=>5));
 
                     if($playlists)
                     {
@@ -1026,7 +1024,7 @@ if(!empty($mode))
                     break;
 
                 case "collections":
-                    $collections = get_collections(array("user"=>$u['userid'],"order"=>" date_added DESC","limit"=>config('collection_channel_page')));
+                    $collections = get_collections(array('user'=>$u['userid'],'order'=>" date_added DESC",'limit'=>config('collection_channel_page')));
                     if($collections)
                     {
                         foreach($collections as $collection)
@@ -1113,7 +1111,7 @@ if(!empty($mode))
 
         case "loadAjaxPhotos":
             $photosType = $_POST['photosType'];
-            $cond = array("limit"=>config("photo_home_tabs"));
+            $cond = array('limit'=>config("photo_home_tabs"));
             switch($photosType)
             {
                 case "last_viewed":

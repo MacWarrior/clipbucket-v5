@@ -60,7 +60,7 @@ switch($mode)
     case 'edit_playlist':
         if(isset($_POST['delete_playlist_item'])) {
             $items = post('check_playlist_items');
-            if(count($items)>0) {
+            if(is_array($items) && count($items)>0) {
                 foreach($items as $item) {
                     $item = mysql_clean($item);
                     $cbvid->action->delete_playlist_item($item);

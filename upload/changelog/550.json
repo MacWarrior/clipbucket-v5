@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"26",
+  "revision":"27",
   "status":"dev",
   "detail":[
     {
@@ -61,6 +61,7 @@
       "description":[
         "Fix SQL error due to quotes in video tags <i>#195</i>"
         ,"Fix playlist creation <i>#196</i>"
+        ,"Fix adding video to playlist <i>#197</i>"
       ]
     }
   ]
