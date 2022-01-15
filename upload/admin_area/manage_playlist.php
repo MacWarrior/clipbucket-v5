@@ -26,10 +26,8 @@
 		case 'manage_video_playlist':
 		default:
 			//Deleting Playlist
-			if(!empty($_GET['delete_pl']))
-			{
-				$plid = mysql_clean($_GET['delete_pl']);
-				$cbvid->action->delete_playlist($plid);
+			if(!empty($_GET['delete_pl'])) {
+				$cbvid->action->delete_playlist($_GET['delete_pl']);
 			}
 
 			if(isset($_POST['delete_playlists']))
@@ -38,9 +36,7 @@
 
 				if(count($playlists)>0)
 				{
-					foreach($playlists as $playlist)
-					{
-						$playlist = mysql_clean($playlist);
+					foreach($playlists as $playlist) {
 						$cbvid->action->delete_playlist($playlist);
 					}
 

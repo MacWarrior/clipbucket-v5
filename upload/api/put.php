@@ -145,8 +145,7 @@
 			break;
 
 		case "delete_playlist":
-			$pid = mysql_clean($request['playlist_id']);
-			$cbvid->action->delete_playlist($pid);
+			$cbvid->action->delete_playlist($request['playlist_id']);
 
 			if (error()) {
 				echo json_encode(array('err' => error()));

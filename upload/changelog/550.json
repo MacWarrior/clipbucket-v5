@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"25",
+  "revision":"26",
   "status":"dev",
   "detail":[
     {
@@ -31,6 +31,7 @@
         ,"Fix installation process"
         ,"Update requierements doc"
         ,"Update PHP 8+ compatibility"
+        ,"Update translations"
       ]
     },
     {
@@ -58,7 +59,8 @@
     ,{
       "title":"Front office",
       "description":[
-        "Fix SQL error due to quotes in video tags<i>#195</i>"
+        "Fix SQL error due to quotes in video tags <i>#195</i>"
+        ,"Fix playlist creation <i>#196</i>"
       ]
     }
   ]

@@ -1914,11 +1914,7 @@ class Collections extends CBCategory
 			$query .= ' LIMIT '.$limit;
         }
 
-		$results = db_select($query);
-
-		if($results){
-			return $results;
-        }
+		return db_select($query);
 	}
 
 	function coll_first_thumb($col_data, $size = false)

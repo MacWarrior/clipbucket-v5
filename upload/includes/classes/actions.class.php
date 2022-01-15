@@ -559,7 +559,7 @@ class cbactions
     }
 
 
-    function load_playlist_fields( $array = null )
+    function load_playlist_fields( $array = null ): array
 	{
         if ( is_null( $array ) ) {
             $array = $_POST;
@@ -568,9 +568,7 @@ class cbactions
         $basic = $this->load_basic_fields( $array );
         $other = $this->load_other_options( $array );
 
-        $fields = array_merge( $basic, $other );
-
-        $group = array(
+        return array(
             'basic' => array(
                 'group_id' => 'basic_fields',
                 'group_name' => 'Basic Details',
@@ -582,50 +580,49 @@ class cbactions
                 'fields' => $other
             )
         );
-
-        return $group;
     }
 
 	function create_playlist($params)
 	{
-		if(has_access('allow_create_playlist',false,$verify_logged_user)) {
-		global $db;
-		$name = mysql_clean($params['name']);
-		if(!userid())
-			e(lang("please_login_create_playlist"));
-		elseif(empty($name))
-			e(lang("please_enter_playlist_name"));
-		elseif($this->playlist_exists($name,userid(),$this->type))
-			e(sprintf(lang("play_list_with_this_name_arlready_exists"),$name));
-		else
-		{
-			$db->insert(tbl($this->playlist_tbl),array("playlist_name","userid","date_added","playlist_type"),
-									  array($name,userid(),now(),$this->type));
-		
-			//return true;
-			$pid = $db->insert_id();
-			e(lang("new_playlist_created"),"m");
+		if(has_access('allow_create_playlist',false)) {
+            global $db;
+            $name = mysql_clean($params['name']);
+            if(!userid()){
+                e(lang('please_login_create_playlist'));
+            } elseif(empty($name)) {
+                e(lang('please_enter_playlist_name'));
+            } elseif($this->playlist_exists($name,userid(),$this->type)) {
+                e(sprintf(lang('play_list_with_this_name_arlready_exists'),$name));
+            } else {
+                $fields = ['playlist_name','userid','date_added','playlist_type','description','tags'];
+                $values = [$name,userid(),now(),$this->type,'',''];
 
-			return $pid;
-		}
-		
-		return false;
-	}
+                $db->insert(tbl($this->playlist_tbl),$fields, $values);
 
+                //return true;
+                $pid = $db->insert_id();
+                e(lang('new_playlist_created'),'m');
+
+                return $pid;
+            }
+        }
+        return false;
 	}
 	
 	/**
 	 * Function used to check weather playlist already exists or not
 	 */
-	function playlist_exists($name,$user,$type=NULL)
-	{
+	function playlist_exists($name,$user,$type=NULL): bool
+    {
 		global $db;
-		if($type)
+		if($type){
 			$type = $this->type;
-		$count = $db->count(tbl($this->playlist_tbl),"playlist_id"," userid='$user' AND playlist_name='$name' AND playlist_type='".$type."' ");
+        }
+		$count = $db->count(tbl($this->playlist_tbl),'playlist_id'," userid='$user' AND playlist_name='$name' AND playlist_type='".$type."' ");
 
-		if($count)
+		if($count){
 			return true;
+        }
 		return false;
 	}
 	
@@ -642,16 +639,16 @@ class cbactions
 
         $fields[ 'users' ] = $cb_columns->object( 'users' )->temp_remove('usr_status,user_session_key')->get_columns();
 
-        $query = "SELECT ".table_fields( $fields )." FROM ".table( 'playlists' );
-        $query .= " LEFT JOIN ".table( 'users' )." ON playlists.userid = users.userid";
+        $query = 'SELECT '.table_fields( $fields ).' FROM '.table( 'playlists' );
+        $query .= ' LEFT JOIN '.table( 'users' ).' ON playlists.userid = users.userid';
 
-        $query .= " WHERE playlists.playlist_id = '$id'";
+        $query .= ' WHERE playlists.playlist_id = \''.mysql_clean($id).'\'';
 
         if ( !is_null( $user ) and is_numeric( $user ) ) {
             $query .= " AND playlists.userid = '$user' ";
         }
 
-        $query .= " LIMIT 1";
+        $query .= ' LIMIT 1';
 
         $query_id = cb_query_id( $query );
 
@@ -982,17 +979,15 @@ class cbactions
 	{
 		global $db;
 		$playlist = $this->get_playlist($id);
-		if(!$playlist)
-			e(lang("playlist_not_exist"));
-		elseif($playlist['userid']!=userid() && !has_access('admin_access',TRUE))
-			e(lang("you_dont_hv_permission_del_playlist"));
-		else
-		{
-			$db->delete(tbl($this->playlist_tbl),
-						array("playlist_id"),array($id));
-			$db->delete(tbl($this->playlist_items_tbl),
-						array("playlist_id"),array($id));
-			e(lang("playlist_delete_msg"),"m");
+		if(!$playlist) {
+			e(lang('playlist_not_exist'));
+        } elseif($playlist['userid']!=userid() && !has_access('admin_access',TRUE)) {
+			e(lang('you_dont_hv_permission_del_playlist'));
+        } else {
+            $id = mysql_clean($id);
+			$db->delete(tbl($this->playlist_tbl), ['playlist_id'],[$id]);
+			$db->delete(tbl($this->playlist_items_tbl), ['playlist_id'],[$id]);
+			e(lang('playlist_delete_msg'),'m');
 		}
 	}
 	
