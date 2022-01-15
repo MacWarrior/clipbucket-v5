@@ -6,7 +6,7 @@ define('THIS_PAGE','video_convert');
 include(dirname(__FILE__).'/../includes/config.inc.php');
 require_once( dirname( __FILE__, 2 ) .'/includes/classes/sLog.php');
 
-global $db;
+global $db,$cbvideo;
 
 /*
     getting the arguments
@@ -123,16 +123,9 @@ if(!empty($_filename))
     $video_files = json_encode($ffmpeg->video_files);
     $db->update(tbl('video'), array('video_files'), array($video_files), " file_name = '{$_filename}'");
 
-    if( config('chromecast_fix') ){
-        $db->update(tbl('video'), array('is_castable'), array(true), " file_name = '{$_filename}'");
-    }
-
-    $vidDetails = $ffmpeg->get_file_info();
-    if( !config('force_8bits') || $vidDetails['bits_per_raw_sample'] <= 8 ){
-        $db->update(tbl('video'), array('bits_color'), array($vidDetails['bits_per_raw_sample']), " file_name = '{$_filename}'");
-    } else if( config('force_8bits') ){
-        $db->update(tbl('video'), array('bits_color'), array(8), " file_name = '{$_filename}'");
-    }
+    $videoDetails = $cbvideo->get_video($queue_details['cqueue_name'],true);
+    update_bits_color($videoDetails);
+    update_castable_status($videoDetails);
 
     if( $reconvert ) {
         setVideoStatus($_filename, 'completed', true, true);

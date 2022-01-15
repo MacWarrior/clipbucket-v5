@@ -1474,29 +1474,30 @@
 
 	function update_castable_status($vdetails)
     {
-		if( is_null($vdetails) || $vdetails['is_castable'] == 1 ){
+		if( is_null($vdetails) ){
 			return;
 		}
 
 		global $db;
-		$filepath = VIDEOS_DIR.DIRECTORY_SEPARATOR.$vdetails['file_directory'].DIRECTORY_SEPARATOR. $vdetails['file_name'].'-'.json_decode($vdetails['video_files'])[0].'.mp4';
+        $filepath = get_high_res_file($vdetails);
 		$data = get_audio_channels($filepath);
 
-		if( $data <= 2 ){
-			$db->update(tbl('video'),array('is_castable'),array(true)," videoid='".$vdetails['videoid']."'");
-			e(sprintf( lang('castable_status_fixed'), $vdetails['title']),'m');
-		} else {
+		if( $data <= 2 && $vdetails['is_castable'] == 0 ) {
+            $db->update( tbl( 'video' ), array( 'is_castable' ), array( true ), " videoid='" . $vdetails['videoid'] . "'" );
+            e( sprintf( lang( 'castable_status_fixed' ), $vdetails['title'] ), 'm' );
+		} else if( $data > 2) {
 			e(sprintf( lang('castable_status_failed'), $vdetails['title'], $data),'w');
 		}
 	}
 
-    function update_bits_color($vdetails){
+    function update_bits_color($vdetails)
+    {
         if( is_null($vdetails) ){
             return;
         }
 
         global $db;
-        $filepath = VIDEOS_DIR.DIRECTORY_SEPARATOR.$vdetails['file_directory'].DIRECTORY_SEPARATOR.$vdetails['file_name'].'-'.json_decode($vdetails['video_files'])[0].'.mp4';
+        $filepath = get_high_res_file($vdetails);
         $cmd = get_binaries('ffprobe_path').' -show_streams '.$filepath.' 2>/dev/null | grep "bits_per_raw_sample" | grep -v "N/A" | awk -v FS="=" \'{print $2}\'';
         $data = shell_exec( $cmd );
 
