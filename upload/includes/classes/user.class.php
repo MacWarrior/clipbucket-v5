@@ -1339,7 +1339,7 @@ class userquery extends CBCategory{
 	function get_user_subscribers_detail($id,$limit=NULL)
 	{
 		global $db;
-		$result = $db->select(tbl('users,'.$this->dbtbl['subtbl']),'*',' '.tbl('subscriptions.subscribed_to')." = '$id' AND ".tbl('subscriptions.userid').'='.tbl("'users.userid"),$limit);
+		$result = $db->select(tbl('users,'.$this->dbtbl['subtbl']),'*',' '.tbl('subscriptions.subscribed_to')." = '$id' AND ".tbl('subscriptions.userid').'='.tbl('users.userid'),$limit);
 		if(count($result)>0){
 			return $result;
         }

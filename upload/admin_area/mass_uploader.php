@@ -1,4 +1,6 @@
 <?php
+define('THIS_PAGE','mass_uploader');
+
 require_once '../includes/admin_config.php';
 require_once(dirname(dirname(__FILE__)).'/includes/classes/sLog.php');
 global $Cbucket,$userquery,$pages,$cbmass,$Upload,$db;

@@ -125,7 +125,7 @@ class FFMpeg
 
 	function log($name,$value)
 	{
-		$this->log .= $name.' : '.$value."\r\n";
+		$this->log .= $name.' : '.$value.PHP_EOL;
 	}
 	
 	/**
@@ -133,8 +133,8 @@ class FFMpeg
 	 */
 	function start_log()
 	{
-		$TemplogData = 'Started on '.NOW().' - '.date('Y M d')."\n\n";
-		$TemplogData .= 'Checking File...'."\n";
+		$TemplogData = 'Started on '.NOW().' - '.date('Y M d').PHP_EOL.PHP_EOL;
+		$TemplogData .= 'Checking File...'.PHP_EOL;
 		$TemplogData .= 'File : '.$this->input_file;
 		$this->log->writeLine('Starting Conversion', $TemplogData, true);
 	}
@@ -147,7 +147,7 @@ class FFMpeg
 		$details = $this->input_details;
 		$configLog = '';
         foreach($details as $name => $value) {
-            $configLog .= "<strong>{$name}</strong> : {$value}\n";
+            $configLog .= '<strong>'.$name.'</strong> : '.$value.PHP_EOL;
         }
 
 		$this->log->writeLine('Preparing file...', $configLog, true);
@@ -162,10 +162,10 @@ class FFMpeg
 		$configLog = '';
 		if(is_array($details)) {
 			foreach($details as $name => $value) {
-				$configLog .= "<strong>{$name}</strong> : {$value}\n";
+				$configLog .= '<strong>'.$name.'</strong> : '.$value.PHP_EOL;
 			}
 		} else {
-			$configLog = "Unknown file details - Unable to get video details using FFMPEG \n";
+			$configLog = 'Unknown file details - Unable to get video details using FFMPEG'.PHP_EOL;
 		}
 
 		$this->log->writeLine('OutPut Details', $configLog, true);
@@ -244,9 +244,9 @@ class FFMpeg
             $max_duration = config('max_video_duration') * 60;
             if( $this->input_details['duration'] > $max_duration ) {
                 $max_duration_seconds = $max_duration / 60;
-                $log = 'Video duration was '.$this->input_details['duration']." minutes and Max video duration is {$max_duration_seconds} minutes, Therefore Video cancelled\n";
-                $log .= "Conversion_status : failed\n";
-                $log .= "Failed Reason : Max Duration Configurations\n";
+                $log = 'Video duration was '.$this->input_details['duration'].' minutes and Max video duration is '.$max_duration_seconds.' minutes, Therefore Video cancelled'.PHP_EOL;
+                $log .= 'Conversion_status : failed'.PHP_EOL;
+                $log .= 'Failed Reason : Max Duration Configurations'.PHP_EOL;
                 $this->log->writeLine('Max Duration configs', $log, true);
                 break;
             }
@@ -255,10 +255,10 @@ class FFMpeg
             try {
                 $this->generateAllThumbs();
             } catch(Exception $e) {
-                $log .= "\r\n Error Occured : ".$e->getMessage()."\r\n";
+                $log .= PHP_EOL.'Error Occured : '.$e->getMessage().PHP_EOL;
             }
 
-            $log .= "\r\n ====== End : Thumbs Generation ======= \r\n";
+            $log .= PHP_EOL.'====== End : Thumbs Generation ======='.PHP_EOL;
             $this->log->writeLine('Thumbs Generation', $log, true);
 
             if( config('extract_subtitles') ){
@@ -268,30 +268,38 @@ class FFMpeg
             $orig_file = $this->input_file;
             $resolutions = $this->get_eligible_resolutions();
 
-            switch( $this->conversion_type ){
-                default:
-                    $this->conversion_type = 'mp4';
-                case 'mp4':
-                    if( config('stay_mp4') == 'yes' ){
-                        $this->output_file = $this->output_dir.$this->file_name.'.'.$this->conversion_type;
-                        copy($orig_file,$this->output_file);
+            $log = '';
+
+            if( !empty($resolutions) ){
+                switch( $this->conversion_type ){
+                    default:
+                        $this->conversion_type = 'mp4';
+                    case 'mp4':
+                        if( config('stay_mp4') == 'yes' ){
+                            $this->output_file = $this->output_dir.$this->file_name.'.'.$this->conversion_type;
+                            copy($orig_file,$this->output_file);
+                            break;
+                        }
+
+                        foreach($resolutions as $res){
+                            error_log('5');
+                            $this->convert_mp4($res);
+                        }
                         break;
-                    }
 
-                    foreach($resolutions as $res){
-                        $this->convert_mp4($res);
-                    }
-                    break;
-
-                case 'hls':
-                    $this->convert_hls($resolutions);
-                    break;
+                    case 'hls':
+                        $this->convert_hls($resolutions);
+                        break;
+                }
+            } else {
+                $log = '<b>No video resolution available for conversion</b>'.PHP_EOL;
+                $log .= '<i>(Video resolution is lower than the lowest resolution enabled)</i>'.PHP_EOL;
             }
 
             $this->end_time_check();
             $this->total_time();
 
-            $log = 'Time Took : '.$this->total_time.' seconds'."\r\n";
+            $log .= 'Time Took : '.$this->total_time.' seconds'.PHP_EOL;
 
             if(file_exists($this->output_file) && filesize($this->output_file) > 0) {
                 $log .= 'Conversion_status : completed';
@@ -324,15 +332,15 @@ class FFMpeg
                 $count++;
                 $display_count = str_pad((string)$count, 2, '0', STR_PAD_LEFT);
                 $command = config('ffmpegpath').' -i '.$this->input_file.' -map 0:'.$map_id.' -f '.config('subtitle_format').' '.$subtitle_dir.$this->file_name.'-'.$display_count.'.srt 2>&1';
-                $log .= "\r\n".$command;
+                $log .= PHP_EOL.$command;
                 $output = shell_exec($command);
                 $db->insert(tbl('video_subtitle'),array('videoid','number','title'),array($video['videoid'], $display_count, $title));
                 if( DEVELOPMENT_MODE ) {
-                    $log .= "\r\n".$output;
+                    $log .= PHP_EOL.$output;
                 }
             }
 
-            $log .= "\r\n ====== End : Subtitles extraction ======= \r\n";
+            $log .= PHP_EOL.'====== End : Subtitles extraction ======='.PHP_EOL;
             $this->log->writeLine('Subtitles extraction', $log, true);
         }
     }
@@ -493,12 +501,12 @@ class FFMpeg
         }
         $cmd .= ' 2>&1';
 
-        $log = "\r\n\r\n== Conversion Command == \r\n\r\n";
+        $log = PHP_EOL.PHP_EOL.'== Conversion Command =='.PHP_EOL.PHP_EOL;
         $log .= $cmd;
 
         $output = shell_exec($cmd);
         if( DEVELOPMENT_MODE ) {
-            $log .= "\r\n\r\n== Conversion Output == \r\n\r\n";
+            $log .= PHP_EOL.PHP_EOL.'== Conversion Output =='.PHP_EOL.PHP_EOL;
             $log .= $output;
         }
 
@@ -522,7 +530,7 @@ class FFMpeg
 
 		$tmp_file = time().RandomString(5).'.tmp';
 
-        $TemplogData = "Converting Video file ".$more_res['height'].' @ '.date('Y-m-d H:i:s')." \r\n";
+        $TemplogData = "Converting Video file ".$more_res['height'].' @ '.date('Y-m-d H:i:s').PHP_EOL;
         $command = config('ffmpegpath').' -i '.$this->input_file.$opt_av.' '.$this->output_file.' 2> '.TEMP_DIR.DIRECTORY_SEPARATOR.$tmp_file;
 
         $output = shell_exec($command);
@@ -535,20 +543,20 @@ class FFMpeg
         if(file_exists($this->output_file) && filesize($this->output_file)>0)
         {
             $this->video_files[] = $more_res['height'];
-            $TemplogData .="\r\nFiles resolution : ".$more_res['height']." \r\n";
+            $TemplogData .= PHP_EOL.'Files resolution : '.$more_res['height'].PHP_EOL;
         } else {
-            $TemplogData .="\r\n\r\nFile doesn't exist. Path: ".$this->output_file."\r\n\r\n";
+            $TemplogData .= PHP_EOL.PHP_EOL.'File doesn\'t exist. Path: '.$this->output_file.PHP_EOL.PHP_EOL;
         }
 
-        $TemplogData .= "\r\n\r\n== Conversion Command == \r\n\r\n";
+        $TemplogData .= PHP_EOL.PHP_EOL.'== Conversion Command =='.PHP_EOL.PHP_EOL;
         $TemplogData .= $command;
 
         if( DEVELOPMENT_MODE ) {
-            $TemplogData .= "\r\n\r\n== Conversion OutPut == \r\n\r\n";
+            $TemplogData .= PHP_EOL.PHP_EOL.'== Conversion OutPut =='.PHP_EOL.PHP_EOL;
             $TemplogData .= $output;
         }
 
-		$TemplogData .="\r\nEnd resolutions @ ".date('Y-m-d H:i:s')."\r\n\r\n";
+		$TemplogData .= PHP_EOL.'End resolutions @ '.date('Y-m-d H:i:s').PHP_EOL.PHP_EOL;
 		$this->log->writeLine('Conversion Ouput', $TemplogData, true);
 
 		$this->output_details = $this->get_file_info($this->output_file);
@@ -699,8 +707,8 @@ class FFMpeg
 
 				if (!$regenerateThumbs && !file_exists($file_path))
 				{
-                    $TempLogData = "\r\n\r\n Command : $command ";
-                    $TempLogData .= "\r\n\r\n OutPut : $output ";
+                    $TempLogData = PHP_EOL.PHP_EOL.'Command : '.$command;
+                    $TempLogData .= PHP_EOL.PHP_EOL.'OutPut : '.$output;
                     $this->log->writeLine($TempLogData, true);
 				}
 			}
@@ -715,9 +723,9 @@ class FFMpeg
 			$command = config('ffmpegpath')." -i $input_file -an $dimension -y -f image2 -vframes $num $file_path 2>&1";
 			$output = shell_exec($command);
 			if (!$regenerateThumbs && !file_exists($file_path)){
-                $TempLogData = "\r\n Command : $command ";
-                $TempLogData .= "\r\n File : $file_path ";
-                $TempLogData .= "\r\n Output : $output ";
+                $TempLogData = PHP_EOL.'Command : '.$command ;
+                $TempLogData .= PHP_EOL.'File : '.$file_path ;
+                $TempLogData .= PHP_EOL.'Output : '.$output ;
                 $this->log->writeLine($TempLogData, true);
 			}
 		}
