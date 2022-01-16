@@ -14,16 +14,7 @@ $breadcrumb[1] = array('title' => 'Mass Upload Videos', 'url' => ADMIN_BASEURL.'
 
 global $cbvid;
 $cats = $cbvid->get_categories();
-$total_cats = count($cats);
-$category_names = array();
-for ($i=0; $i < $total_cats ; $i++) {
-    $category_values = $cats[$i]['category_id'];
-    $category_names[$category_values] = $cats[$i]['category_name'];
-}
-
 assign('cats', $cats);
-assign('cat_values', $category_values);
-assign('total_cats', $total_cats);
 
 if(isset($_POST['mass_upload_video']))
 {
@@ -51,9 +42,6 @@ if(isset($_POST['mass_upload_video']))
         if( isset($_POST[$hash.'_track']) ){
             $file_track = $_POST[$hash.'_track'];
         }
-
-        $code = $i+1;
-        //Inserting Video Data...
 
         $file_directory = createDataFolders();
         $array = array(
@@ -94,11 +82,10 @@ if(isset($_POST['mass_upload_video']))
             $cond='file_name='.'\''.$fname[0].'\'';
             $result=$db->db_update(tbl('video'), $fields, $cond);
             $result=exec(php_path().' -q '.BASEDIR."/actions/video_convert.php {$file_name} {$file_key} {$file_directory} {$logFile} {$file_track} > /dev/null &");
-            if(file_exists(CON_DIR.DIRECTORY_SEPARATOR.$file_name))
-            {
+            if(file_exists(CON_DIR.DIRECTORY_SEPARATOR.$file_name)) {
                 unlink(CON_DIR.DIRECTORY_SEPARATOR.$file_name);
                 foreach ($vtitle as $title) {
-                    $resul1 = glob(FILES_DIR.'/videos/'.$title.'.*');
+                    $resul1 = glob(FILES_DIR.DIRECTORY_SEPARATOR.'videos'.DIRECTORY_SEPARATOR.$title.'.*');
                     unlink($resul1[0]);
                 }
             }

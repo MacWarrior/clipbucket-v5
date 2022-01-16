@@ -270,6 +270,7 @@ class FFMpeg
 
             switch( $this->conversion_type ){
                 default:
+                    $this->conversion_type = 'mp4';
                 case 'mp4':
                     if( config('stay_mp4') == 'yes' ){
                         $this->output_file = $this->output_dir.$this->file_name.'.'.$this->conversion_type;

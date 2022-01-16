@@ -636,7 +636,7 @@ CREATE TABLE `{tbl_prefix}video` (
   `userid` int(11) NULL DEFAULT NULL,
   `title` text DEFAULT NULL,
   `file_name` varchar(32) NOT NULL DEFAULT '',
-  `file_type` int(10) NOT NULL DEFAULT 0,
+  `file_type` VARCHAR(3) NULL DEFAULT NULL,
   `file_directory` varchar(25) NOT NULL DEFAULT '',
   `description` text DEFAULT NULL,
   `tags` mediumtext NOT NULL,
