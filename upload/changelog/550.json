@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"30",
+  "revision":"31",
   "status":"dev",
   "detail":[
     {
@@ -32,6 +32,8 @@
         ,"Update requierements doc"
         ,"Update PHP 8+ compatibility"
         ,"Update translations"
+        ,"Update Readme"
+        ,"Update compatibility to PHP 8.1.X"
       ]
     },
     {
