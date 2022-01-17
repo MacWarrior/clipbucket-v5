@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"31",
+  "revision":"32",
   "status":"dev",
   "detail":[
     {
@@ -20,6 +20,7 @@
         ,"Add SQL request if an error occured during installation when in DEV mode"
         ,"Fix video castable status after conversion <i>#193</i>"
         ,"Fix video bits_colors status after conversion <i>#194</i>"
+        ,"Fix default language selection <i>#199</i>"
       ]
     },
     {

@@ -5,22 +5,20 @@
 <form name="default_lang" method="post" action="?default">
     <table class="table table-bordered table-striped manageUsersTable">
         <tr>
-            <td>
-                <input type="checkbox" name="checkall" onclick="checkUncheckAll(this);"/>
-            </td>
-            <td>ID</td>
-            <td>Package Name</td>
-            <td>Options</td>
+            <td class="col-md-1">Default</td>
+            <td class="col-md-1">ID</td>
+            <td>Language</td>
+            <td class="col-md-1"></td>
         </tr>
         {section name=l_list loop=$language_list}
         <tr id="showWala">
             <td><label>
-                <input type="checkbox" name="make_default" id="radio" value="{$language_list[l_list].language_id}" {if $language_list[l_list].language_default =='yes'}checked{/if} onclick="document.default_lang.submit()"/></label>
+                <input type="checkbox" name="make_default" id="radio" value="{$language_list[l_list].language_id}" {if $language_list[l_list].language_default =='yes'}checked{/if}/></label>
             </td>
             <td>{$language_list[l_list].language_id}</td>
-            <td>{$language_list[l_list].language_name}({$language_list[l_list].language_code}){if $language_list[l_list].language_default=='yes'} <span style="color:#cccccc;"> as <i>Default Language</i></span>{/if}</td>
+            <td>{$language_list[l_list].language_name} <i>({$language_list[l_list].language_code})</i></td>
             <td>
-                <div class="dropdown clearfix alignRight">
+                <div class="dropdown clearfix alignCenter">
                     <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
                     Actions <i class="caret"></i></button>
                     <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
@@ -217,15 +215,23 @@
 <div id="ref"></div>
 </br>
 <script type="text/javascript">
-    
+    // Default language checkbox
+    $('input[name="make_default"]').change(function(){
+        $('input[name="make_default"]').not(this).prop('checked', false);
+        document.default_lang.submit();
+    });
+
+
+
+
+
+
     var process,progress,lastElementArray = 0;
-    var progress = 0;
     var NewLang,langExists,sizeOfArray;
-    var percentPakro,allTextLines = [];  
+    var allTextLines = [];
     var set=true;
     var sec = '{$secret_Id}';
     var firstHit = true;
-    var dialogLangPack= $('<div class="alert-msg-holder" id="headErr"><div role="alert" class="alert alert-success alert-dismissible alert-ajax"><button aria-label="Close" data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span></button><strong>Language Pack Uploaded </strong></div></div>');
     var log = $('<div class="alert-msg-holder" id="headErr"><div role="alert" class="alert alert-danger alert-dismissible alert-ajax"><button aria-label="Close" data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span></button><strong>Invalid keys stored in database </strong></div></div>');
     
     var dialogLangExisit = $('<div class="alert-msg-holder"  id="lang-exist"><div role="alert" class="alert alert-danger alert-dismissible alert-ajax"><button aria-label="Close" data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span></button><strong>Language Already Exisits </strong></div></div>');
@@ -267,8 +273,7 @@
             $('#remove-'+id).show();
             $('#edit-'+id).hide();
         });
-    
-    
+
         $('.remove_phrase').on("click",function(){
             var _this = $(this);
             var id = _this.data('id');
@@ -283,13 +288,11 @@
             var _this = $(this);
             var id = _this.data('id');
             var value = $('#input-'+id).val();
-            var pk = id;
             $.ajax({
                 url: "/actions/update_phrase.php",
                 type: "post",
-                data: { pk: pk, value: value},
-                success : function()
-                {
+                data: { pk: id, value: value},
+                success : function() {
                     $('#'+id).html(value);
                     $('#input-'+id).hide();
                     $('#ok-'+id).hide();
@@ -297,20 +300,18 @@
                      $('#edit-'+id).show();
                 }
             });
-    
         });
     })
 
     thePhrases = {$langData|@json_encode};
-    var cleanRunway = true,
-    totalPhrases = 0,
-    phraseNum = 1,
-    interval = '',
-    currentKey = 0,
-    phrase_code = Object.keys(thePhrases)[0],
-    phrase = thePhrases[phrase_code],
-    selectFieldValue = $('.changeStatus').val(),
-    langDetect = $('option:selected', '#lang_option').attr('data-check');
+    var totalPhrases = 0,
+        phraseNum = 1,
+        interval = '',
+        currentKey = 0,
+        phrase_code = Object.keys(thePhrases)[0],
+        phrase = thePhrases[phrase_code],
+        selectFieldValue = $('.changeStatus').val(),
+        langDetect = $('option:selected', '#lang_option').attr('data-check');
     $.each( thePhrases, function( phrase_code, phrase ) {
             totalPhrases = totalPhrases + 1;
     });
@@ -325,14 +326,9 @@
             type: "post",
             data: data,
             dataType: 'json',
-            beforeSend: function() {
-                
-
-            },
+            beforeSend: function() {},
             success:function(xhr) {
-                
                 if (xhr.phrase != 'aye') {
-
                     var progressNow = xhr.progress,
                     existingLog = $('#progMsg').html();
                     $('#bar').show();
@@ -365,13 +361,11 @@
                     $('#lang_option, #submit_lang1').attr("disabled",false);
                     alert("Unable to translate "+phrase);
                 }
-                //alert("NOW");
                 goodToGo = true;
                 return true;
             }
         });
     }
-
 
     $(document).on("click", "#submit_lang1", function () {  
         $('#submit_lang1').text("Translating...");
