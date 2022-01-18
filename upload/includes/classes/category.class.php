@@ -64,7 +64,7 @@ abstract class CBCategory
 	 *
 	 * @param $name
 	 *
-	 * @return bool
+	 * @return bool|array
 	 */
 	function get_cat_by_name($name)
 	{
@@ -90,8 +90,8 @@ abstract class CBCategory
 		$desc = $array['desc'];
 		$default = mysql_clean($array['default']);
 		
-		$flds = array('category_name','category_desc','date_added');
-		$values = array($name,$desc,now());
+		$flds = ['category_name','category_desc','date_added','category_thumb'];
+		$values = [$name,$desc,now(),''];
 		
 		if(!empty($this->use_sub_cats)) {
 			$parent_id = mysql_clean($array['parent_cat']);
@@ -349,14 +349,14 @@ abstract class CBCategory
 			} elseif(!$pcat && $this->is_parent($cid)) { //Checking if category is only parent
 				$to = NULL;
 				$has_child = NULL;
-				$db->update(tbl($this->cat_tbl),array('parent_id'),array('0'),' parent_id = '.mysql_clean($cid));
+				$db->update(tbl($this->cat_tbl),['parent_id'],['0'],' parent_id = '.mysql_clean($cid));
 			}
 				
 			//Moving all contents to parent OR default category									
 			$this->change_category($cid,$to,$has_child);
 			
 			//Removing Category
-			$db->execute('DELETE FROM '.tbl($this->cat_tbl).' WHERE category_id=\''.mysql_clean($cid).'\'');
+			$db->execute('DELETE FROM '.tbl($this->cat_tbl).' WHERE category_id='.mysql_clean($cid));
 			e(lang('class_cat_del_msg'),'m');
 		}
 	}
@@ -570,7 +570,7 @@ abstract class CBCategory
 			if(!is_numeric($order) || $order <1){
 				$order = 1;
             }
-			$db->update(tbl($this->cat_tbl),array('category_order'),array($order)," category_id='".$id."'");
+			$db->update(tbl($this->cat_tbl),['category_order'],[$order]," category_id='".$id."'");
 		}
 	}
 
@@ -586,7 +586,7 @@ abstract class CBCategory
 		$pid = mysql_clean($pid);
 
 		global $db;
-		$result = $db->select(tbl($this->cat_tbl),"*"," category_id = $pid");
+		$result = $db->select(tbl($this->cat_tbl),'*',' category_id = '.$pid);
 		if(count($result)>0){
 			return $result;
         }
@@ -626,12 +626,11 @@ abstract class CBCategory
 		$cid = mysql_clean($cid);
 
 		global $db;
-		$result = $db->select(tbl($this->cat_tbl),'*'," category_id = $cid AND parent_id != 0");
-		 
-		if($result > 0) {
+		$result = $db->select(tbl($this->cat_tbl),'*',' category_id = '.$cid.' AND parent_id != 0');
+
+		if(is_array($result) && count($result) > 0) {
 			if($return_parent) {
-				$pid = $this->get_parent_category($result[0]['parent_id']);
-				return $pid;
+				return $this->get_parent_category($result[0]['parent_id']);
 			}
 			return true;
 		}
@@ -650,12 +649,9 @@ abstract class CBCategory
 		global $db;
 		
 		if($count) {
-			$result = $db->count(tbl($this->cat_tbl),'*',' parent_id = 0');
-		} else {	
-			$result = $db->select(tbl($this->cat_tbl),'*',' parent_id = 0');
+			return $db->count(tbl($this->cat_tbl),'*',' parent_id = 0');
 		}
-		
-		return $result;
+        return $db->select(tbl($this->cat_tbl),'*',' parent_id = 0');
 	}
 
 	/**
@@ -749,7 +745,7 @@ abstract class CBCategory
 	function get_category_field($cid,$field)
 	{
 		global $db;
-		$result = $db->select(tbl($this->cat_tbl),$field," category_id = $cid");
+		$result = $db->select(tbl($this->cat_tbl),$field,' category_id ='.mysql_clean($cid));
 
 		if($result){
 			return $result[0][$field];

@@ -30,40 +30,45 @@ class Clipbucket_db
 	 * @param $uname
 	 * @param $pwd
 	 *
-	 * @return bool { boolean }
+	 * @return bool|void
 	 *
 	 * @internal param $ : { string } { $host } { your database host e.g localhost }
 	 * @internal param $ : { string } { $name } { name of database to connect to }
 	 * @internal param $ : { string } { $uname } { your database username }
 	 * @internal param $ : { string } { $pwd } { password of database to connect to }
 	 */
-    function connect($host="", $name="", $uname="", $pwd="")
+    function connect($host='', $name='', $uname='', $pwd='')
 	{
         try
 		{
-            if(!$host)
+            if(!$host){
             	$host = $this->db_host;
-            else
+            } else {
             	$this->db_host = $host;
+            }
 
-            if(!$name)
+            if(!$name){
             	$name = $this->db_name;
-            else
+            } else {
 				$this->db_name = $name;
+            }
 
-            if(!$uname)
+            if(!$uname){
             	$uname = $this->db_uname;
-            else
+            } else {
 				$this->db_uname = $uname;
+            }
 
-            if(!$pwd)
+            if(!$pwd){
             	$pwd = $this->db_pwd;
-            else
+            } else {
 				$this->db_pwd = $pwd;
+            }
 
             $this->mysqli = new mysqli($host,$uname, $pwd, $name);
-            if($this->mysqli->connect_errno)
+            if($this->mysqli->connect_errno){
             	return false;
+            }
 
             $this->execute('SET NAMES "utf8"');
         } catch(Exception $e) {
@@ -82,27 +87,15 @@ class Clipbucket_db
     {
 		$this->ping();
 
-        if ( in_dev() )
-        {
-            $start = microtime(true);
-            $result = $this->mysqli->query($query);
-            $end = microtime(true);
-            $timetook = $end - $start;
-            devWitch($query, 'select', $timetook);
-        } else {
-            $result = $this->mysqli->query($query);
-        }
+        $result = $this->execute($query, 'select');
 
-		$data = array();
-		if( $result )
-		{
+		$data = [];
+		if( $result ) {
 			while( $row = $result->fetch_assoc() ) {
 				$data[] = $row;
 			}
-
 			$result->close();
 		}
-
         return $data;
     }
 
@@ -132,16 +125,8 @@ class Clipbucket_db
             $query_params .= ' LIMIT '.$limit;
         }
 
-       $query = 'SELECT '.$fields.' FROM '.$tbl.$query_params.' '.$ep;
-    
-        if ( in_dev() ) {
-            $start = microtime();
-            $data = $this->_select($query);
-            $end = microtime();
-            $timetook = $end - $start;
-            devWitch($query, 'select', $timetook);
-            return $data;
-        }
+        $query = 'SELECT '.$fields.' FROM '.$tbl.$query_params.' '.$ep;
+
 		return $this->_select($query);
     }
 
@@ -152,26 +137,20 @@ class Clipbucket_db
 	 * @param string $fields
 	 * @param bool   $cond
 	 *
-	 * @return bool : { integer } { $field } { count of elements }
+	 * @return bool|int
 	 */
     function count($tbl, $fields='*', $cond=false)
 	{
 		$condition = '';
-        if ($cond)
-            $condition = " WHERE $cond ";
-        $query = 'SELECT COUNT('.$fields.') FROM '.$tbl.$condition;
-        if ( in_dev() ) {
-            $start = microtime();
-            $result = $this->_select($query);
-            $end = microtime();
-            $timetook = $end - $start;
-            devWitch($query, 'count', $timetook);
-        } else {
-            $result = $this->_select($query);
+        if ($cond){
+            $condition = ' WHERE '.$cond;
         }
-        $fields = $result[0];
+        $query = 'SELECT COUNT('.$fields.') FROM '.$tbl.$condition;
 
-        if ($fields) {
+        $result = $this->_select($query);
+
+        if( $result ){
+            $fields = $result[0];
             foreach ($fields as $field){
                 return $field;
             }
@@ -190,8 +169,9 @@ class Clipbucket_db
     function GetRow($query)
     {
         $result = $this->_select($query);
-        if($result)
+        if($result){
         	return $result[0];
+        }
     }
 
 	/**
@@ -199,9 +179,9 @@ class Clipbucket_db
 	 *
 	 * @param : { string } { $query } { query that you want to execute }
 	 *
-	 * @return mixed : { array } { array of data depending on query }
+	 * @return bool|array
 	 */
-    function Execute($query)
+    function execute($query, $type = 'execute')
     {
 		$this->ping();
 
@@ -211,7 +191,7 @@ class Clipbucket_db
                 $data = $this->mysqli->query($query);
                 $end = microtime(true);
                 $timetook = $end - $start;
-                devWitch($query, 'execute', $timetook);
+                devWitch($query, $type, $timetook);
             } else {
                 $data = $this->mysqli->query($query);
             }
@@ -220,6 +200,7 @@ class Clipbucket_db
         } catch(Exception $e) {
 			$this->handleError($query);
         }
+        return false;
     }
 
 	/**
@@ -243,7 +224,7 @@ class Clipbucket_db
 
         $total_fields = count($flds);
         $count = 0;
-        $fields_query = "";
+        $fields_query = '';
         for($i=0;$i<$total_fields;$i++) {
             $count++;
             $val = ($vls[$i]);
@@ -259,7 +240,7 @@ class Clipbucket_db
                 $fields_query .= $flds[$i]."='".$val."'";
             } else {
                 $val = substr($val,3,strlen($val));
-                $fields_query .= $flds[$i]."=".$val."";
+                $fields_query .= $flds[$i].'='.$val.'';
             }
             if($total_fields!=$count)
                 $fields_query .= ',';
@@ -267,23 +248,7 @@ class Clipbucket_db
         //Complete Query
         $query = 'UPDATE '.$tbl.' SET '.$fields_query.' WHERE '.$cond.' '.$ep;
 
-        try {
-            if( in_dev() ) {
-                $start = microtime();
-                $this->mysqli->query($query);
-                $end = microtime();
-                $timetook = $end - $start;
-                devWitch($query, 'update', $timetook);
-
-                $this->total_queries++;
-                $this->total_queries_sql[] = $query;
-            } else {
-                $this->mysqli->query($query);
-            }
-			$this->handleError($query);
-        } catch(Exception $e) {
-			$this->handleError($query);
-        }
+        $this->execute($query, 'update');
     }
 
 	/**
@@ -323,12 +288,7 @@ class Clipbucket_db
         }
         //Complete Query
         $query = 'UPDATE '.$tbl.' SET '.$fields_query.' WHERE '.$cond.' '.$ep;
-        try {
-            $this->mysqli->query($query);
-			$this->handleError($query);
-        } catch(Exception $e) {
-			$this->handleError($query);
-        }
+        $this->execute($query, 'update');
         return true;
     }
 
@@ -350,7 +310,7 @@ class Clipbucket_db
 		$this->ping();
 
         $total_fields = count($flds);
-        $fields_query = "";
+        $fields_query = '';
         $count = 0;
         for($i=0;$i<$total_fields;$i++) {
             $count++;
@@ -360,7 +320,7 @@ class Clipbucket_db
                 $fields_query .= $flds[$i]."='".$val."'";
             } else {
                 $val = substr($val,3,strlen($val));
-                $fields_query .= $flds[$i]."=".$val."";
+                $fields_query .= $flds[$i].'='.$val.'';
             }
             if($total_fields!=$count) {
                 $fields_query .= ' AND ';
@@ -370,20 +330,8 @@ class Clipbucket_db
         $query = 'DELETE FROM '.$tbl.' WHERE '.$fields_query.' '.$ep;
         if(isset($this->total_queries)) $this->total_queries++;
         $this->total_queries_sql[] = $query;
-        try {
-            if( in_dev() ) {
-                $start = microtime();
-                $this->mysqli->query($query);
-                $end = microtime();
-                $timetook = $end - $start;
-                devWitch($query, 'delete', $timetook);
-            } else {
-                $this->mysqli->query($query);
-            }
-			$this->handleError($query);
-        } catch(Exception $e) {
-			$this->handleError($query);
-        }
+
+        $this->execute($query, 'delete');
     }
 
 	/**
@@ -407,8 +355,8 @@ class Clipbucket_db
 
         $total_fields = count($flds);
         $count = 0;
-        $fields_query = "";
-        $values_query = "";
+        $fields_query = '';
+        $values_query = '';
         foreach($flds as $field) {
             $count++;
             $fields_query .= $field;
@@ -444,8 +392,9 @@ class Clipbucket_db
         }
         $query = "INSERT INTO $tbl ($fields_query) VALUES ($values_query) $ep";
         $this->total_queries_sql[] = $query;
-        if(isset($this->total_queries))
+        if(isset($this->total_queries)){
         	$this->total_queries++;
+        }
 
         try {
             $this->mysqli->query($query);

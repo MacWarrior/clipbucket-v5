@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"32",
+  "revision":"33",
   "status":"dev",
   "detail":[
     {
@@ -21,6 +21,7 @@
         ,"Fix video castable status after conversion <i>#193</i>"
         ,"Fix video bits_colors status after conversion <i>#194</i>"
         ,"Fix default language selection <i>#199</i>"
+        ,"Fix categories creation <i>#200</i> and deletion"
       ]
     },
     {
@@ -35,6 +36,7 @@
         ,"Update translations"
         ,"Update Readme"
         ,"Update compatibility to PHP 8.1.X"
+        ,"Update DB functions"
       ]
     },
     {
