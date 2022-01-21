@@ -572,34 +572,34 @@ class myquery
 		
 		switch($type)
 		{
-			case "video":
-			case "videos":
-			case "v":
-			case "vdo":
+			case 'video':
+			case 'videos':
+			case 'v':
+			case 'vdo':
 				$type = 'v';
 				break;
 			
-			case "photo":
-			case "p":
-			case "photos":
+			case 'photo':
+			case 'p':
+			case 'photos':
 				$type='p';
 				break;
 
-			case "social":
-			case "s":
+			case 'social':
+			case 's':
 				$type='s';
 				break;
 			
-			case "channel":
-			case "c":
-			case "channels":
+			case 'channel':
+			case 'c':
+			case 'channels':
 				$type='c';
 				break;
 			
-			case "cl":
-			case "collect":
-			case "collection":
-			case "collections":
+			case 'cl':
+			case 'collect':
+			case 'collection':
+			case 'collections':
 				$type='cl';
 				break;
 			
@@ -609,14 +609,14 @@ class myquery
 		{
 			$file = $type.$type_id.str_replace(',','_',$limit).'-'.strtotime($last_update).'.tmp';
 			
-			$files = glob(COMM_CACHE_DIR.'/'.$type.$type_id.str_replace(',','_',$limit).'*');
+			$files = glob(COMM_CACHE_DIR.DIRECTORY_SEPARATOR.$type.$type_id.str_replace(',','_',$limit).'*');
 			
 			$theFile = getName($files[0]);
 			$theFileDetails = explode('-',$theFile);
 			$timeDiff = time() - $theFileDetails[1];
 			
-			if(file_exists(COMM_CACHE_DIR.'/'.$file) && $timeDiff < COMM_CACHE_TIME){
-				return json_decode(file_get_contents(COMM_CACHE_DIR.'/'.$file),true);
+			if(file_exists(COMM_CACHE_DIR.DIRECTORY_SEPARATOR.$file) && $timeDiff < COMM_CACHE_TIME){
+				return json_decode(file_get_contents(COMM_CACHE_DIR.DIRECTORY_SEPARATOR.$file),true);
             }
 		}
 		
