@@ -8,7 +8,7 @@ function new_player_height (videoid) {
 	    return;
     }
 
-	var native_player_height  = native_player_width/player_ratio;
+	var native_player_height = native_player_width/player_ratio;
 
 	native_player.css("height",native_player_height+"px");
 }
