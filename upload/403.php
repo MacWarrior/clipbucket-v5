@@ -5,8 +5,6 @@ require 'includes/config.inc.php';
 
 if(file_exists(LAYOUT.'/403.html')) {
     template_files('403.html');
-    $videos = $cbvid->get_videos(array('order'=>'date_added DESC','limit'=>4));
-    assign('videos',$videos);
 } else {
     $data = '403_error';
     if(has_access('admin_access')) {

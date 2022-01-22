@@ -52,6 +52,7 @@
       "title": "Server",
       "description": [
         "Remove LSHW dependency"
+        ,"Fix Nginx Vhost for 404 & 403 pages <i>#207</i>"
       ]
     },
     {

@@ -89,6 +89,15 @@ server {
         rewrite ^/([a-zA-Z0-9-]+)/?$ /view_channel.php?uid=$1&seo_diret=yes last;
     }
 
+    error_page 404 /404;
+    error_page 403 /403;
+    location /403 {
+        try_files $uri /403.php;
+    }
+    location /404 {
+        try_files $uri /404.php;
+    }
+
     location /includes/ {
         return 302 /404;
     }
