@@ -108,12 +108,6 @@ if(isset($_POST['mass_upload_video']))
     }
 }
 
-if(error()) {
-    foreach(error() as $e){
-        e($e);
-    }
-}
-
 subtitle('Mass Uploader');
 template_files('mass_uploader.html');
 display_it();
