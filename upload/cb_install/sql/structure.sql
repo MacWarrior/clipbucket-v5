@@ -76,7 +76,7 @@ CREATE TABLE `{tbl_prefix}collection_categories` (
   `category_order` int(5) NOT NULL DEFAULT 0,
   `category_desc` text NULL DEFAULT NULL,
   `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `category_thumb` mediumint(9) NOT NULL DEFAULT 0,
+  `category_thumb` mediumtext NOT NULL,
   `isdefault` enum('yes','no') NOT NULL DEFAULT 'no'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

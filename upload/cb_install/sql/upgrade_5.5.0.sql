@@ -86,3 +86,7 @@ DELETE FROM `{tbl_prefix}config` WHERE name IN(
     ,'max_bg_height'
     ,'max_profile_pic_height'
 );
+
+-- REV 36
+ALTER TABLE `{tbl_prefix}collection_categories`
+	MODIFY COLUMN `category_thumb` MEDIUMTEXT NOT NULL;

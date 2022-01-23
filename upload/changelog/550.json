@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"35",
+  "revision":"36",
   "status":"dev",
   "detail":[
     {
@@ -22,7 +22,7 @@
         ,"Fix video bits_colors status after conversion <i>#194</i>"
         ,"Fix default language selection <i>#199</i>"
         ,"Fix categories creation <i>#200</i> and deletion"
-        ,"Fix collections SQL error <i>#204</i>"
+        ,"Fix collections SQL error <i>#204</i>, <i>#206</i>"
       ]
     },
     {
