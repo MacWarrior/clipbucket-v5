@@ -2,10 +2,8 @@
 <template>
 	<name>Clipbucket V5.X</name>
 	<author>Jamil ur Rehman, Fahad Abbas, Saqib Razzaq, MacWarrior</author>
-	<smarty_version>3</smarty_version>
-	<version>5.2</version>
-	<released>1st November 2018</released>
-	<description>ClipBucket V2.8 Theme, Updated by MacWarrior</description>
-	<website title="Github MacWarrior">https://github.com/MacWarrior/clipbucket</website>
-	<license>Attribute Assurance License</license>
+	<version>5.5.0</version>
+	<released>27th january 2022</released>
+	<description>Default ClipBucket 5.X Theme</description>
+	<website title="Github ClipBucketV5">https://github.com/MacWarrior/clipbucket-v5</website>
 </template>

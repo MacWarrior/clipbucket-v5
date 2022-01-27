@@ -323,31 +323,40 @@ abstract class CBCategory
 		$cat_details = $this->category_exists($cid);
 		if(!$cat_details){
 			e(lang('cat_exist_error'));
-        } elseif($cat_details['isdefault'] == 'yes') { //Checking if category is default or not
+            return;
+        }
+        if($cat_details['isdefault'] == 'yes') { //Checking if category is default or not
 			e(lang('cat_default_err'));
+            return;
+        }
+
+        if( $this->cat_tbl = 'user_categories' ) {
+            $has_child = false;
+            $to = $this->get_default_category()['category_id'];
         } else {
-			$pcat = $this->has_parent($cid,true);
-			
-			//Checking if category is both parent and child
-			if($pcat && $this->is_parent($cid)) {
-				$to = $pcat[0]['category_id'];
-				$has_child = TRUE;
-			} elseif($pcat && !$this->is_parent($cid)) { //Checking if category is only child
-				$to = $pcat[0]['category_id'];
-				$has_child = TRUE;
-			} elseif(!$pcat && $this->is_parent($cid)) { //Checking if category is only parent
-				$to = NULL;
-				$has_child = NULL;
-				$db->update(tbl($this->cat_tbl),['parent_id'],['0'],' parent_id = '.mysql_clean($cid));
-			}
-				
-			//Moving all contents to parent OR default category									
-			$this->change_category($cid,$to,$has_child);
-			
-			//Removing Category
-			$db->execute('DELETE FROM '.tbl($this->cat_tbl).' WHERE category_id='.mysql_clean($cid));
-			e(lang('class_cat_del_msg'),'m');
-		}
+            $parent_category = $this->has_parent($cid,true);
+
+            if( $parent_category ){
+                if($this->is_parent($cid)) {
+                    $to = $parent_category[0]['category_id'];
+                    $has_child = TRUE;
+                } else { //Checking if category is only child
+                    $to = $parent_category[0]['category_id'];
+                    $has_child = TRUE;
+                }
+            } else if($this->is_parent($cid)) { //Checking if category is only parent
+                $to = NULL;
+                $has_child = FALSE;
+                $db->update(tbl($this->cat_tbl),['parent_id'],['0'],' parent_id = '.mysql_clean($cid));
+            }
+        }
+
+        //Moving all contents to parent OR default category
+        $this->change_category($cid,$to,$has_child);
+
+        //Removing Category
+        $db->execute('DELETE FROM '.tbl($this->cat_tbl).' WHERE category_id='.mysql_clean($cid));
+        e(lang('class_cat_del_msg'),'m');
 	}
 	
 	/**

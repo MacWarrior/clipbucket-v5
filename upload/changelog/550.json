@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"37",
+  "revision":"38",
   "status":"dev",
   "detail":[
     {
@@ -25,6 +25,7 @@
         ,"Fix collections SQL error <i>#204</i>, <i>#206</i>"
         ,"Fix mass upload error displaying <i>#205</i>"
         ,"Fix video category list in search form <i>#212</i>"
+        ,"Fix user categories deletion"
       ]
     },
     {
