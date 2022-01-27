@@ -303,10 +303,11 @@
 		$.ajax({
 		  type: "POST",
 		  url: "/actions/vote_channel.php",
-		  data: { vote: vote, channelId : channelId}
-		}).success(function(data){
-		  $("#likes").text(likes);
-		  $("#totalVotes").text(totalVotes);
+		  data: { vote: vote, channelId : channelId},
+          success: function(){
+              $("#likes").text(likes);
+              $("#totalVotes").text(totalVotes);
+          }
 		});
 	  }
 	})
@@ -450,7 +451,7 @@
 		});
 	});
 
-	$('.playerRatio').load(function(){
+	$('.playerRatio').on('load', function(){
         userActivities();
 	});
 	$(window).resize(function() {

@@ -48,9 +48,9 @@
 		<link rel="stylesheet" href="{$theme}/css/all.css?cache={$cache_buster}">
 		{*/if*}
 
-		<script src="{$theme}/js/jquery-1.11.3.min.js"></script>
+		<script src="{$theme}/js/jquery-3.6.0.min.js"></script>
 		<script src="/js/ui/jquery-ui-1.12.1.min.js"></script>
-		{if isset($__devmsgs)}
+        {if $development_mode}
 			<link rel="stylesheet" href="/styles/global/jquery_ui.css">
 		{else}
 			<link rel="stylesheet" href="/styles/global/jquery_ui.min.css">
@@ -67,16 +67,18 @@
             var lang_subscribe = "{lang code='subscribe'}";
             var lang_unsubscribe = "{lang code='unsubscribe'}";
 		</script>
-		{if isset($__devmsgs)}
+        {if $development_mode}
 			<script src="{$theme}/js/custom.js"></script>
+            <script src="{$theme}/js/bootstrap.js"></script>
 		{else}
 			<script src="{$theme}/js/custom.min.js"></script>
+            <script src="{$theme}/js/bootstrap.min.js"></script>
 		{/if}
 
-		<script src="{$theme}/js/bootstrap.min.js"></script>
+
 		<script src="{$theme}/js/ui_plugins.js"></script>
 
-		{if isset($__devmsgs)}
+        {if $development_mode}
 		<script src="/js/clipbucket.js"></script>
 		{else}
 		<script src="/js/clipbucket.min.js"></script>
@@ -105,7 +107,7 @@
 			var pageNow = "{$smarty.const.THIS_PAGE}";
 		</script>
 		{include file="$style_dir/blocks/quicklist/qlist_main.html"}
-		{if isset($__devmsgs)}
+        {if $development_mode}
 			<script type="text/javascript" src="{$theme}/js/fast_qlist.js"></script>
 		{else}
 			<script type="text/javascript" src="{$theme}/js/fast_qlist.min.js"></script>

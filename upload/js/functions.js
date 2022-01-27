@@ -1283,14 +1283,11 @@ function loadObject(currentDOM,type,objID,container)
             },
             success : function(data)
             {
-                if(data['error'])
-                {
+                if(data['error']) {
                     obj.find('img').animate({ opacity : 1 });
                     $("#"+object['container']).animate({ opacity : 1 });
                     alert(data['error']);
-                }
-                else
-                {
+                } else {
                     obj.parent().children('.selected').removeClass('selected');
                     obj.addClass('selected');
                     obj.find('img').animate({ opacity : 1 });
@@ -1309,16 +1306,14 @@ function channelObjects(object,div,type,user,assign)
 
     if(curRel)
     {
-        if($("#"+curRel).css('display') == 'block')
+        if($("#"+curRel).css('display') == 'block'){
             return false;
-        else
-        {
-            obj.parents('ul').find('a.selected').removeClass('selected');
-            obj.addClass('selected');
-
-            $("#"+oldRel).hide();
-            $("#"+curRel).show();
         }
+        obj.parents('ul').find('a.selected').removeClass('selected');
+        obj.addClass('selected');
+
+        $("#"+oldRel).hide();
+        $("#"+curRel).show();
     } else {
         var newRel = type+"DIV";
         obj.attr('rel',newRel);
@@ -1348,15 +1343,16 @@ function getComments(type,type_id,last_update,pageNum,total,object_type,admin)
     $.ajax({
         type: 'POST',
         url: page,
-        data:  {mode:'getComments',
+        data:  {
+            mode:'getComments',
             page:pageNum,type:type,
             type_id:type_id,
             object_type : object_type,
             last_update : last_update,
             total_comments : total,
-            comments_voting : comments_voting,admin : admin},
-        success: function(data)
-        {
+            comments_voting : comments_voting,admin : admin
+        },
+        success: function(data) {
             $('#comments').hide();
             $('#comments').html(data);
             $('#comments').fadeIn('slow');
@@ -1422,12 +1418,7 @@ function setPageHash(Page)
 {
     // Removing baseurl
     var hashPart = Page.replace(baseurl,"");
-    var prevHash = window.location.hash.replace("#!",'');
-    //alert(hashPart+"       "+prevHash);
-    {
-        window.location.hash = "#!"+hashPart;
-    }
-
+    window.location.hash = "#!"+hashPart;
 }
 
 function callURLParser()
@@ -1436,14 +1427,13 @@ function callURLParser()
         location = window.location.href,
         returned = location.match(expression),
         lastVisited;
-    if(returned)
-    {
+    if(returned) {
         lastVisited = returned[returned.length - 1];
-        if(lastVisited)
+        if(lastVisited){
             window.location.href = lastVisited.replace("#!",'');
+        }
     }
 }
-
 
 var loading_new = "<img style='vertical-align:middle' src='"+imageurl+"/view_group.gif' height='22'>";
 function groupsAjax(event,selector,divSelector)
@@ -1469,7 +1459,6 @@ function groupsAjax(event,selector,divSelector)
     } else {
         PreserveHTML = jqueryObj.html();
         setPageHash(ajaxPage);
-        //return false;
         if(onLink == true) {
             ParentTag = jqueryObj.parent().parent();
             ParentTag.children().filter('.selected').removeClass('selected');
@@ -1479,9 +1468,8 @@ function groupsAjax(event,selector,divSelector)
             ParentTag.children().filter('.selected').removeClass('selected');
             jqueryObj.addClass('selected');
         }
-        //jqueryObj.html(loading_img);
         jqueryObj.html(loading_new);
-        $("#"+divSelector).load(ajaxPage+" #"+divSelector+"",function(response, status, xhr){
+        $("#"+divSelector).on('load', ajaxPage+" #"+divSelector+"",function(response, status, xhr){
             jqueryObj.html(PreserveHTML);
             if(document.getElementById('flag_item'))
                 $('#flag_item').show();
@@ -1489,7 +1477,6 @@ function groupsAjax(event,selector,divSelector)
     }
 }
 
-//alert(imageurl);
 var ua = navigator.userAgent.toLowerCase();
 if (ua.indexOf(" chrome/") >= 0 || ua.indexOf(" firefox/") >= 0 || ua.indexOf(' gecko/') >= 0) {
     var StringMaker = function () {

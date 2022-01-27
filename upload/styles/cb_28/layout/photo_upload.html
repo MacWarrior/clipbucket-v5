@@ -287,18 +287,19 @@
                         $.ajax({
                             url : "/actions/photo_uploader.php",
                             type : "post",
-                            data : data
-                        }).success(function(msg){
-                            $("#uploadMessage").removeClass("hidden");
-                            $("#uploadMessage").html("Picture details are successfully updated").attr("class", "alert alert-success container");
+                            data : data,
+                            success: function(){
+                                $("#uploadMessage").removeClass("hidden");
+                                $("#uploadMessage").html("Picture details are successfully updated").attr("class", "alert alert-success container");
 
-                            $('html,body').animate({
-                                scrollTop: $("body").offset().top
-                            },'medium');
+                                $('html,body').animate({
+                                    scrollTop: $("body").offset().top
+                                },'medium');
 
-                            setTimeout(function(){
-                                $("#uploadMessage").addClass("hidden");
-                            }, 5000);
+                                setTimeout(function(){
+                                    $("#uploadMessage").addClass("hidden");
+                                }, 5000);
+                            }
                         }).fail(function(err){
                             console.log(err);
                         });
@@ -452,17 +453,18 @@
                         ,photo_tags : fileDetails.name
                     },
                     dataType: "JSON",
-                }).success(function(msg){
-                    var hiddenField_photoId = document.createElement('input');
-                    hiddenField_photoId.name = 'photo_id';
-                    hiddenField_photoId.type = 'hidden';
-                    hiddenField_photoId.value = msg.photoID;
-                    $('#tab'+current_index+' form').append(hiddenField_photoId);
-                    $('#tab'+current_index+' form').find('.edit-img-thumbnail > img').prop('src',msg.photoPreview);
-                    $('#tab'+current_index+' .savePhotoDetails').removeAttr('disabled');
+                    success: function(msg){
+                        var hiddenField_photoId = document.createElement('input');
+                        hiddenField_photoId.name = 'photo_id';
+                        hiddenField_photoId.type = 'hidden';
+                        hiddenField_photoId.value = msg.photoID;
+                        $('#tab'+current_index+' form').append(hiddenField_photoId);
+                        $('#tab'+current_index+' form').find('.edit-img-thumbnail > img').prop('src',msg.photoPreview);
+                        $('#tab'+current_index+' .savePhotoDetails').removeAttr('disabled');
 
-                    fileDetails.data.photoThumb = msg.photoPreview;
-                    fileDetails.data.photo_id = msg.photoID;
+                        fileDetails.data.photoThumb = msg.photoPreview;
+                        fileDetails.data.photo_id = msg.photoID;
+                    }
                 });
             });
 
@@ -494,33 +496,34 @@
                     formData += "&mode=add_collection";
                     var collectionName = $(this).parents("form").find("#collection_name").val();
                     $.ajax({
-                    type: "post",
-                    url: "/ajax.php",
-                    data: formData,
-                    }).success(function(msg){
-                        msg = $.parseJSON(msg);
-                        if(msg.err === null || msg.err === undefined){
-                            var newCollectionElement = document.createElement('option');
-                            newCollectionElement.value = parseInt(msg.id);
-                            newCollectionElement.innerHTML = collectionName;
-                            newCollectionElement.selected = true;
-                            $("#collectionSelection").get(0).appendChild(newCollectionElement);
-                            $("#uploadMessage").html(msg.msg).attr("class", "alert alert-success").removeClass("hidden");
+                        type: "post",
+                        url: "/ajax.php",
+                        data: formData,
+                        success: function(msg){
+                            msg = $.parseJSON(msg);
+                            if(msg.err === null || msg.err === undefined){
+                                var newCollectionElement = document.createElement('option');
+                                newCollectionElement.value = parseInt(msg.id);
+                                newCollectionElement.innerHTML = collectionName;
+                                newCollectionElement.selected = true;
+                                $("#collectionSelection").get(0).appendChild(newCollectionElement);
+                                $("#uploadMessage").html(msg.msg).attr("class", "alert alert-success").removeClass("hidden");
 
-                            $("#CollectionDIV").toggle("fast");
-                            $('.form_header').show();
-                            $(".upload-area").show();
-                            $('#collectionSelection').parent().show()
-                            $('#SelectionDIV').find('.alert-danger').hide();
+                                $("#CollectionDIV").toggle("fast");
+                                $('.form_header').show();
+                                $(".upload-area").show();
+                                $('#collectionSelection').parent().show()
+                                $('#SelectionDIV').find('.alert-danger').hide();
 
-                            setTimeout(function(){
-                                $("#uploadMessage").addClass("hidden");
-                            }, 5000);
-                        }else{
-                            $("#uploadMessage").html(msg.err).attr("class", "alert alert-danger").removeClass("hidden");
-                            setTimeout(function(){
-                                $("#uploadMessage").addClass("hidden");
-                            }, 5000);
+                                setTimeout(function(){
+                                    $("#uploadMessage").addClass("hidden");
+                                }, 5000);
+                            }else{
+                                $("#uploadMessage").html(msg.err).attr("class", "alert alert-danger").removeClass("hidden");
+                                setTimeout(function(){
+                                    $("#uploadMessage").addClass("hidden");
+                                }, 5000);
+                            }
                         }
                     });
                 }

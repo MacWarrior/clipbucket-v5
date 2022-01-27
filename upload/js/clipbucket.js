@@ -203,17 +203,18 @@
                                     url : '/actions/file_uploader.php',
                                     type : 'post',
                                     data : formData,
-                                }).success(function(data){
-                                    msg = $.parseJSON(data);
-                                    $('#uploadMessage').removeClass('hidden');
-                                    if(msg.error){
-                                        $('#uploadMessage').html(msg.error).attr('class', 'alert alert-danger');
-                                    }else{
-                                        $('#uploadMessage').html(msg.msg).attr('class', 'alert alert-success');
+                                    success: function(data){
+                                        msg = $.parseJSON(data);
+                                        $('#uploadMessage').removeClass('hidden');
+                                        if(msg.error){
+                                            $('#uploadMessage').html(msg.error).attr('class', 'alert alert-danger');
+                                        }else{
+                                            $('#uploadMessage').html(msg.msg).attr('class', 'alert alert-success');
+                                        }
+                                        setTimeout(function(){
+                                            $('#uploadMessage').addClass('hidden');
+                                        }, 5000);
                                     }
-                                    setTimeout(function(){
-                                        $('#uploadMessage').addClass('hidden');
-                                    }, 5000);
                                 });
                             }
                         });
@@ -239,16 +240,17 @@
                                     type : 'post',
                                     data : data,
                                     dataType: 'json',
-                                }).success(function(msg){
-                                    $('#uploadMessage').removeClass('hidden');
-                                    if(msg.error){
-                                        $('#uploadMessage').html(msg.error).attr('class', "alert alert-danger");
-                                    } else {
-                                        $('#uploadMessage').html(msg.msg).attr('class', "alert alert-success");
+                                    success: function(msg){
+                                        $('#uploadMessage').removeClass('hidden');
+                                        if(msg.error){
+                                            $('#uploadMessage').html(msg.error).attr('class', "alert alert-danger");
+                                        } else {
+                                            $('#uploadMessage').html(msg.msg).attr('class', "alert alert-success");
+                                        }
+                                        setTimeout(function(){
+                                            $('#uploadMessage').addClass('hidden');
+                                        }, 5000);
                                     }
-                                    setTimeout(function(){
-                                        $('#uploadMessage').addClass('hidden');
-                                    }, 5000);
                                 }).fail(function(err){
                                     console.log(err);
                                 });
@@ -275,15 +277,14 @@
 				type: 'post',
 				data:({file_name:file_name}),
 				dataType: 'json',
-			});
-			ajaxCall.success(function(serverResponse){
-				//console.log(serverResponse);
-				if(false === self.force_stop){
-					self.updateProgress(serverResponse);
-					setTimeout(function(){
-						self.remoteUploadStatusUpdate();
-					}, self.status_refesh*1000);
-				}
+                success: function(serverResponse){
+                    if(false === self.force_stop){
+                        self.updateProgress(serverResponse);
+                        setTimeout(function(){
+                            self.remoteUploadStatusUpdate();
+                        }, self.status_refesh*1000);
+                    }
+                }
 			});
 		};
 
@@ -1443,7 +1444,7 @@
                 jqueryObj.addClass('selected');
             }
             jqueryObj.html(this.loading_img);
-            $('#'+divSelector).load(ajaxPage+' #'+divSelector+'',function(response, status, xhr){
+            $('#'+divSelector).on('load',ajaxPage+' #'+divSelector+'',function(response, status, xhr){
                 jqueryObj.html(PreserveHTML);
                 if(document.getElementById('flag_item')){
                     $('#flag_item').show();

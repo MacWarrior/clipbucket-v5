@@ -232,8 +232,8 @@ function homePageVideos(qlist_items)
             moreRecent = true,
             moreFeatured = true,
             featuredFound = '',
-            featuredShown = $('#featured_vid_sec .item-video').size(),
-            recentShown = $('#recent_vids_sec .item-video').size(),
+            featuredShown = $('#featured_vid_sec .item-video').length,
+            recentShown = $('#recent_vids_sec .item-video').length,
             totalFeaturedVids = $('#container').find('.total_videos_featured').first().text(),
             totalRecentVids = $('#container').find('.total_videos_recent').first().text();
         first_launch = true;
@@ -361,7 +361,7 @@ function homePageVideos(qlist_items)
                             $('#recent_pre').html('');
                             $(data).appendTo('#recent_vids_sec').fadeIn('slow');
 
-                            recentShown = $('#recent_vids_sec .item-video').size();
+                            recentShown = $('#recent_vids_sec .item-video').length;
                             totalRecentVids = $('#container').find('.total_videos_recent').first().text();
                             gotMoreRecent = parseInt(totalRecentVids) - parseInt(recentShown);
 
@@ -374,7 +374,7 @@ function homePageVideos(qlist_items)
                             $('#featured_pre').html('');
                             $(data).appendTo('#featured_vid_sec').fadeIn('slow');
 
-                            featuredShown = $('#featured_vid_sec .item-video').size();
+                            featuredShown = $('#featured_vid_sec .item-video').length;
                             totalFeaturedVids = $('#container').find('.total_videos_featured').first().text();
                             gotMoreFeatured = parseInt(totalFeaturedVids) - parseInt(featuredShown);
 

@@ -33,7 +33,7 @@ function overlayDimension(){
 	$('#myNav .overlay-content').css("height",screenHeight+"px");
 }
 
-$("#gallery img").load(function() {
+$("#gallery img").on('load',function() {
 	galleryDimension();
 });
 
@@ -162,7 +162,7 @@ function sample(){
 		$("#gallery-exd").removeClass('tallest');
 	}
 }
-$("#gallery-exd").load(function() {
+$("#gallery-exd").on('load',function() {
 	t = setTimeout("sample()",100);
 });
 
@@ -181,4 +181,61 @@ $( document ).on( 'keydown', function ( e ) {
        	 	myNav.style.left = "-100%";
        	}
     }
+});
+
+$(document).on('click','.pick-lang',function(){
+    var _this = $(this);
+    var lang_code = _this.data('lang');
+    var $currentLocation = window.location.href,
+        matchedElement = $currentLocation.match(/\?/);
+
+    if(matchedElement == null) {
+        window.location = "?set_site_lang="+lang_code;
+    } else {
+        window.location = window.location+"&set_site_lang="+lang_code;
+    }
+});
+
+$('.dropdown-menu li').on('click',function(){
+    var searchQuery = $('input#query').val();
+    if (searchQuery.length > 1) {
+        $('#cbsearch').trigger('click');
+    }
+});
+
+$(document).ready(function($){
+    //open popup
+    $(document).on('click','.cd-popup-trigger', function(event){
+        event.preventDefault();
+        $('.cd-popup').addClass('is-visible');
+    });
+
+    //close popup
+    $(document).on('click','.cd-popup', function(event){
+        if( $(event.target).is('.cd-popup-close') || $(event.target).is('.cd-popup') ) {
+            event.preventDefault();
+            $(this).removeClass('is-visible');
+            $(".my-modal-content").html("");
+        }
+    });
+    //close popup when clicking the esc keyboard button
+    $(document).keydown(function(event){
+        if(event.which=='27'){
+            var videoId = $(".my-modal-content").attr("id");
+            var cbPlayer = _cb.getPlayerEl(videoId);
+
+            if (!$(cbPlayer).hasClass("vjs-fullscreen")){
+                $('.cd-popup').removeClass('is-visible');
+                $(".my-modal-content").html("");
+                var modalPlayerInterval = setInterval(function(){
+                    var player = $(cbPlayer).find('video');
+                    var isPlaying = !$(player)[0].paused;
+                    if (isPlaying){
+                        $(player)[0].pause()
+                        clearInterval(modalPlayerInterval);
+                    }
+                },100);
+            }
+        }
+    });
 });

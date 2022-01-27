@@ -1,11 +1,6 @@
 <?php
-/**
- * iFrame based embed player ClipBucket
- * reason to use iFrame instead of embed code
- * is to control player with full support of javascript
- */
-
-define("THIS_PAGE","watch_video");
+define('THIS_PAGE','watch_video');
+global $cbvid;
 include("../includes/config.inc.php"); 
 
 $vkey = $_GET['vid'];
@@ -38,7 +33,7 @@ if(!$vdetails){
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><?php echo $vdetails['title']; ?></title>
-<script type="text/javascript" src="/styles/cb_28/theme/js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="/styles/cb_28/theme/js/jquery-3.6.0.min.js"></script>
 <?php
 Template(STYLES_DIR.'/global/head.html',false);
 ?>

@@ -38,7 +38,7 @@
     var lang_loading = "{lang code='loading'}";
     var lang_add_comment = "{lang code='user_add_comment'}";
 </script>
-{if isset($__devmsgs)}
+{if $development_mode}
 	<script type="text/javascript" src="/js/jquery_plugs/cookie.js"></script>
 	<script type="text/javascript" src="/js/functions.js"></script>
 {else}
@@ -271,8 +271,7 @@ function showPhotoPreview(ID,preview)
 	var object = $("#"+ID+"Preview"), parentObj = object.parent();
 	var FinalPreview = new Image();
 	FinalPreview.src = preview;
-	$(FinalPreview).load(function()
-	{
+	$(FinalPreview).on('load', function() {
 		object.hide();
 		$("<img />").addClass(object.attr('class')).attr({ "id" : "FinalPreview"+ID, "src" : preview }).appendTo(parentObj).fadeIn('normal');
 	});

@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"38",
+  "revision":"39",
   "status":"dev",
   "detail":[
     {
@@ -73,6 +73,7 @@
         ,"Fix playlist creation <i>#196</i>"
         ,"Fix adding video to playlist <i>#197</i>"
         ,"Fix IE11 compatibility <i>#210</i>"
+        ,"Update jQuery to 3.6.0 <i>#208</i>"
       ]
     }
   ]
