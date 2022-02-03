@@ -35,7 +35,7 @@ class FFMpeg
 		$info['video_color']         = 'N/A';
 		$info['path']                = $file_path;
 
-		$cmd = config('ffprobe_path'). " -v quiet -print_format json -show_format -show_streams '".$file_path."' ";
+		$cmd = config('ffprobe_path'). ' -v quiet -print_format json -show_format -show_streams \''.$file_path.'\'';
 		$output = shell_output($cmd);
 		$output = preg_replace('/([a-zA-Z 0-9\r\n]+){/', '{', $output, 1);
 
@@ -81,7 +81,7 @@ class FFMpeg
 		$info['rotation']       = (float) $video['tags']['rotate'];
 
 		if(!$info['duration']) {
-			$CMD = config('media_info')." '--Inform=General;%Duration%' '". $file_path."' 2>&1";
+			$CMD = config('media_info').' \'--Inform=General;%Duration%\' \''. $file_path.'\' 2>&1';
 			$info['duration'] = round((int)shell_output( $CMD )/1000,2);
 		}
 
@@ -89,27 +89,24 @@ class FFMpeg
 		$int_1_video_rate = (int)$video_rate[0];
 		$int_2_video_rate = (int)$video_rate[1];
 
-		$CMD = config('media_info') . " '--Inform=Video;' ". $file_path;
+		$CMD = config('media_info').' \'--Inform=Video;\' '.$file_path;
 
 		$results = shell_output($CMD);
 		$needle_start = 'Original height';
 		$needle_end = 'pixels';
 		$original_height = find_string($needle_start,$needle_end,$results);
 		$original_height[1] = str_replace(' ', '', $original_height[1]);
-		if(!empty($original_height)&&$original_height!=false)
-		{
+		if( !empty($original_height) ) {
 			$o_height = trim($original_height[1]);
 			$o_height = (int)$o_height;
-			if($o_height!=0&&!empty($o_height))
-			{
+			if($o_height!=0&&!empty($o_height)) {
 				$info['video_height'] = $o_height;
 			}
 		}
 		$needle_start = 'Original width';
 		$original_width = find_string($needle_start,$needle_end,$results);
 		$original_width[1] = str_replace(' ', '', $original_width[1]);
-		if(!empty($original_width) && $original_width!=false)
-		{
+		if( !empty($original_width) ) {
 			$o_width = trim($original_width[1]);
 			$o_width = (int)$o_width;
 			if($o_width!=0 && !empty($o_width)) {
@@ -282,7 +279,6 @@ class FFMpeg
                         }
 
                         foreach($resolutions as $res){
-                            error_log('5');
                             $this->convert_mp4($res);
                         }
                         break;
@@ -318,7 +314,7 @@ class FFMpeg
         global $cbvideo, $db;
 
         $log = '';
-        $subtitles = FFMpeg::get_track_title($this->input_file, 'subtitle');
+        $subtitles = FFMpeg::get_track_infos($this->input_file, 'subtitle');
 
         if( count($subtitles) > 0 ){
             $video = $cbvideo->get_video($this->file_name,true);
@@ -328,13 +324,18 @@ class FFMpeg
             }
 
             $count = 0;
-            foreach( $subtitles as $map_id => $title ) {
+            foreach( $subtitles as $map_id => $data ) {
+                if( isset($data['codec_name']) && $data['codec_name'] == 'hdmv_pgs_subtitle' ){
+                    $log .= PHP_EOL.' Subtitle '.$data['title'].' can\'t be extracted because it\'s in bitmat format';
+                    continue;
+                }
+
                 $count++;
                 $display_count = str_pad((string)$count, 2, '0', STR_PAD_LEFT);
                 $command = config('ffmpegpath').' -i '.$this->input_file.' -map 0:'.$map_id.' -f '.config('subtitle_format').' '.$subtitle_dir.$this->file_name.'-'.$display_count.'.srt 2>&1';
                 $log .= PHP_EOL.$command;
                 $output = shell_exec($command);
-                $db->insert(tbl('video_subtitle'),array('videoid','number','title'),array($video['videoid'], $display_count, $title));
+                $db->insert(tbl('video_subtitle'),['videoid','number','title'],[$video['videoid'], $display_count, $data['title']]);
                 if( DEVELOPMENT_MODE ) {
                     $log .= PHP_EOL.$output;
                 }
@@ -530,7 +531,7 @@ class FFMpeg
 
 		$tmp_file = time().RandomString(5).'.tmp';
 
-        $TemplogData = "Converting Video file ".$more_res['height'].' @ '.date('Y-m-d H:i:s').PHP_EOL;
+        $TemplogData = 'Converting Video file '.$more_res['height'].' @ '.date('Y-m-d H:i:s').PHP_EOL;
         $command = config('ffmpegpath').' -i '.$this->input_file.$opt_av.' '.$this->output_file.' 2> '.TEMP_DIR.DIRECTORY_SEPARATOR.$tmp_file;
 
         $output = shell_exec($command);
@@ -697,7 +698,7 @@ class FFMpeg
 
 				$time_sec = (int)($division*$count);
 
-				$command = config('ffmpegpath')." -ss $time_sec -i $input_file -pix_fmt yuvj422p -an -r 1 $dimension -y -f image2 -vframes 1 $file_path 2>&1";
+				$command = config('ffmpegpath').' -ss '.$time_sec.' -i '.$input_file.' -pix_fmt yuvj422p -an -r 1 '.$dimension.' -y -f image2 -vframes 1 '.$file_path.' 2>&1';
 				$output = shell_exec($command);
 
 				//checking if file exists in temp dir
@@ -714,13 +715,13 @@ class FFMpeg
 			}
 		} else {
 			if (empty($filename)){
-				$file_name = getName($input_file)."-{$size_tag}1.jpg";	
+				$file_name = getName($input_file).'-'.$size_tag.'1.jpg';
 			} else {
-				$file_name = $filename."-{$size_tag}1.jpg";	
+				$file_name = $filename.'-'.$size_tag.'1.jpg';
 			}
 			
 			$file_path = THUMBS_DIR.DIRECTORY_SEPARATOR.$thumbs_outputPath.$file_name;
-			$command = config('ffmpegpath')." -i $input_file -an $dimension -y -f image2 -vframes $num $file_path 2>&1";
+			$command = config('ffmpegpath').' -i '.$input_file.' -an '.$dimension.' -y -f image2 -vframes '.$num.' '.$file_path.' 2>&1';
 			$output = shell_exec($command);
 			if (!$regenerateThumbs && !file_exists($file_path)){
                 $TempLogData = PHP_EOL.'Command : '.$command ;
@@ -732,6 +733,54 @@ class FFMpeg
 		rmdir($tmpDir);
 	}
 
+    public static function get_track_infos(string $filepath, string $type)
+    {
+        $stats = stat($filepath);
+        if($stats && is_array($stats)) {
+            $json = shell_exec(config('ffprobe_path') . ' -i "'.$filepath.'" -loglevel panic -print_format json -show_entries stream 2>&1');
+            $tracks_json = json_decode($json, true)['streams'];
+            $data = [];
+            foreach($tracks_json as $track) {
+                if( $track['codec_type'] != $type ){
+                    continue;
+                }
+
+                if( !isset($track['tags']) ){
+                    continue;
+                }
+
+                $map_id = $track['index'];
+                $tags = $track['tags'];
+
+                if( !isset($tags['language']) && !isset($tags['LANGUAGE']) && !isset($tags['title']) ){
+                    continue;
+                }
+
+                $title = '';
+                if( isset($tags['language']) ){
+                    $title .= $tags['language'];
+                } else if( isset($tags['LANGUAGE']) ) {
+                    $title .= $tags['LANGUAGE'];
+                }
+
+                if( isset($tags['title']) ){
+                    if( !empty($title) ){
+                        $title .= ' : ';
+                    }
+                    $title .= $tags['title'];
+                }
+
+                $data[$map_id]['title'] = $title;
+                if( isset($track['codec_name']) ){
+                    $data[$map_id]['codec_name'] = $track['codec_name'];
+                }
+
+            }
+            return $data;
+        }
+        return false;
+    }
+
 	public static function get_track_title(string $filepath, string $type)
 	{
 		$stats = stat($filepath);
@@ -739,7 +788,7 @@ class FFMpeg
 		{
 			$json = shell_exec(config('ffprobe_path') . ' -i "'.$filepath.'" -loglevel panic -print_format json -show_entries stream 2>&1');
 			$tracks_json = json_decode($json, true)['streams'];
-			$langs = array();
+			$langs = [];
 			foreach($tracks_json as $track)
 			{
 				if( $track['codec_type'] != $type ){
@@ -785,7 +834,7 @@ class FFMpeg
 		{
 			$json = shell_exec(config('ffprobe_path') . ' -i "'.$filepath.'" -loglevel panic -print_format json -show_entries stream 2>&1');
 			$tracks_json = json_decode($json, true)['streams'];
-			$streams_ids = array();
+			$streams_ids = [];
 			foreach($tracks_json as $track)
 			{
 				if( $track['codec_type'] != $type ){
@@ -824,15 +873,15 @@ class FFMpeg
 			}
 
 			if($video) {
-				$info = array();
+				$info = [];
 				$info['duration'] = SetTime($data['format']['duration']);
 				$info['width']    = (int) $video['width'];
 				$info['height']   = (int) $video['height'];
 				return $info;
 			}
-			return array();
+			return [];
 		}
-		return array();
+		return [];
 	}
 
 }
