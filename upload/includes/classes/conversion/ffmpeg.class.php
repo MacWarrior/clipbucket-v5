@@ -326,7 +326,7 @@ class FFMpeg
             $count = 0;
             foreach( $subtitles as $map_id => $data ) {
                 if( isset($data['codec_name']) && $data['codec_name'] == 'hdmv_pgs_subtitle' ){
-                    $log .= PHP_EOL.' Subtitle '.$data['title'].' can\'t be extracted because it\'s in bitmat format';
+                    $log .= PHP_EOL.' Subtitle '.$data['title'].' can\'t be extracted because it\'s in bitmap format';
                     continue;
                 }
 
@@ -460,10 +460,15 @@ class FFMpeg
                 }
                 // Keeping subtitles
                 if( config('keep_subtitles') || $this->conversion_type == 'hls' ) {
-                    $subtitles = self::get_media_stream_id( 'subtitle', $this->input_file );
-                    foreach( $subtitles as $track_id ) {
+                    $subtitles = self::get_track_infos($this->input_file, 'subtitle');
+                    foreach( $subtitles as $track_id => $data ) {
+                        if( $data['codec_name'] == 'hdmv_pgs_subtitle' ){
+                            continue;
+                        }
+
                         $cmd .= ' -map 0:' . $track_id;
                     }
+
                     if( $this->conversion_type == 'mp4' ){
                         $cmd .= ' -c:s mov_text';
                     } else {
@@ -733,7 +738,7 @@ class FFMpeg
 		rmdir($tmpDir);
 	}
 
-    public static function get_track_infos(string $filepath, string $type)
+    public static function get_track_infos(string $filepath, string $type): array
     {
         $stats = stat($filepath);
         if($stats && is_array($stats)) {
@@ -778,7 +783,7 @@ class FFMpeg
             }
             return $data;
         }
-        return false;
+        return [];
     }
 
 	public static function get_track_title(string $filepath, string $type)
@@ -829,8 +834,7 @@ class FFMpeg
 
 	public static function get_media_stream_id($type, $filepath)
 	{
-		$stats = stat($filepath);
-		if($stats && is_array($stats))
+		if( file_exists($filepath) )
 		{
 			$json = shell_exec(config('ffprobe_path') . ' -i "'.$filepath.'" -loglevel panic -print_format json -show_entries stream 2>&1');
 			$tracks_json = json_decode($json, true)['streams'];
