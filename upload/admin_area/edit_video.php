@@ -68,30 +68,6 @@ if(isset($_POST['del_cmt'])){
     $cbvid->update_comments_count($type_id);
 }
 
-if(isset($_GET['delete_thumb'])) {
-    $file_name_num = explode('-', $_GET['delete_thumb']);
-    $num = get_thumb_num($_GET['delete_thumb']);
-
-    $file_name = $file_name_num[0];
-
-    delete_video_thumb($data['file_directory'],$file_name,$num);
-}
-
-if(!$array['order']){
-    $result_array['order'] = ' doj DESC LIMIT 1 ';
-}
-
-$users = get_users($result_array);
-
-Assign('users', $users);
-
-if(!$array['order']){
-    $result_array['order'] = ' views DESC LIMIT 8 ';
-}
-$videos = get_videos($result_array);
-
-Assign('videos', $videos);
-
 function format_number($number)
 {
     if($number >= 1000) {
@@ -99,10 +75,6 @@ function format_number($number)
     }
     return $number;
 }
-
-$get_limit = create_query_limit($page,5);
-$videos = $cbvid->action->get_flagged_objects($get_limit);
-Assign('flagedVideos', $videos);
 
 $comments = getComments($comment_cond);
 assign('comments',$comments);

@@ -40,6 +40,11 @@
 						{/if}
 						<li><a href="edit_video.php?video={$data.videoid}&amp;mode=update_bits_color">{lang code='update_bits_color'}</a></li>
 						<li><a href="javascript:void(0);" onClick="javascript:Confirm_Delete('video_manager.php?delete_video={$data.videoid}')">{lang code='delete'}</a></li>
+
+                        {if $data.embeded != 'yes'}
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="upload_thumbs.php?video={$data.videoid}&gen_more=true">Regenerate thumbnails</a></li>
+                        {/if}
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="upload_thumbs.php?video={$data.videoid}">Manage thumbnails</a></li>
 					</ul>
 				</div>
 			</h2>
@@ -273,7 +278,7 @@
                     </li>
                     <li>
                         <a data-toggle="tab" href="#thumbnails">
-                            <i class="glyphicon glyphicon-picture"></i> Video Thumbnails
+                            <i class="glyphicon glyphicon-picture"></i> Default thumbnail
                         </a>
                     </li>
                     <li>
@@ -319,28 +324,16 @@
                         {/foreach}
                     </div>
                     <div id="thumbnails" class="tab-pane">
-                        <div class="row dropdown marginBottom">
-                            <a class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">Manage Thumbs <i class="caret"></i></a>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
-                                {if $data.embeded != 'yes'}
-                                <li role="presentation"><a role="menuitem" tabindex="-1" href="upload_thumbs.php?video={$data.videoid}&gen_more=true">Regenerate</a></li>
-                                {/if}
-                                <li role="presentation"><a role="menuitem" tabindex="-1" href="upload_thumbs.php?video={$data.videoid}">Manage</a></li>
-                            </ul>
-                        </div>
                         <div class="row">
-                            {assign var=vidthumbs value=get_thumb($data,1,TRUE,FALSE,TRUE,FALSE,'original')}
+                            {assign var=vidthumbs value=get_thumb($data,1,TRUE,FALSE,TRUE,FALSE,'168x105')}
                             <ul class="ace-thumbnails">
                                 {foreach from=$vidthumbs item=vid_thumb}
                                 <li style="display:inline;">
-                                    <img src="{$vid_thumb}" width="100" height="100"/>
-                                    <div class="tools">
-                                        <input type="radio" value="{GetName($vid_thumb)}.{GetExt($vid_thumb)}" id="{$vid_thumb|getname}" name="default_thumb" {if $data.default_thumb==$vid_thumb|get_thumb_num}checked{/if}/>
-                                        {if $vid_thumb|getname!='processing'}
-                                        <a href="?video={$data.videoid}&delete_thumb={$vid_thumb|getname}.{$vid_thumb|getext}">
-                                            <i class="icon-remove red"></i>
-                                        </a>
-                                        {/if}
+                                    <label for="{$vid_thumb|getname}" class="no-margin">
+                                        <img src="{$vid_thumb}" width="100" height="63"/>
+                                    </label>
+                                    <div class="tools tools-bottom">
+                                        <input type="radio" id="{$vid_thumb|getname}" value="{GetName($vid_thumb)}.{GetExt($vid_thumb)}" name="default_thumb" {if $data.default_thumb==$vid_thumb|get_thumb_num}checked{/if} />
                                     </div>
                                 </li>
                                 {/foreach}
@@ -418,7 +411,6 @@
                         </div>
                         {/if}
                     </div>
-
                 </div>
                 <div class="form-group alignCenter">
                     <input type="submit" class="btn btn-primary btn-sm" value="Update video details" style="margin:5px 0 15px 0;" name="update">
@@ -454,12 +446,10 @@
                                     <form method="post" name="delete_Comment" id="edit_video">
                                         {if $comment != ''}
                                         <div class="itemdiv dialogdiv">
-                                            {foreach from=$users item=u}
                                             {$userdetails = $userquery->get_user_details($comment.userid)}
                                             <div class="user">
                                                 <img alt="{display_clean($userdetails.username)}" title="{display_clean($userdetails.username)}" src="{$userquery->getUserThumb($userdetails,'small')}">
                                             </div>
-                                            {/foreach}
                                             <div class="body clearfix">
                                                 <div class="col-md-3">
                                                     <a href="#">{display_clean($comment.anonym_name)}</a>

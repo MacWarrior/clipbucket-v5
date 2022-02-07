@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"41",
+  "revision":"42",
   "status":"dev",
   "detail":[
     {
@@ -26,6 +26,8 @@
         ,"Fix mass upload error displaying <i>#205</i>"
         ,"Fix video category list in search form <i>#212</i>"
         ,"Fix user categories deletion"
+        ,"Update video edition interface"
+        ,"Update video thumbnails edition interface"
       ]
     },
     {

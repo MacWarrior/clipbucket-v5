@@ -269,17 +269,16 @@ class Upload
 	 * @param      FILE_Name
 	 * @param bool $big
 	 *
-	 * @return int
+	 * @return string
 	 */
-	function get_available_file_num($file_name,$big=false): int
+	function get_available_file_num($file_name,$big=false): string
     {
 		$code = 1;
         if($big){
 			$big = 'big-';
         }
 
-       	if(defined('dir'))
-       	{
+       	if(defined('dir')) {
             while(1){
 		  		//setting variable for CB 2.8 greater versions
               	$path = THUMBS_DIR.DIRECTORY_SEPARATOR.dir.DIRECTORY_SEPARATOR.$file_name.'-original-'.$code.'.';
@@ -303,7 +302,8 @@ class Upload
 				$code = $code + 1;
 			}
 	    }
-		return $code;
+           error_log(str_pad((string)$code, strlen(config('num_thumbs')), '0', STR_PAD_LEFT));
+       return str_pad((string)$code, strlen(config('num_thumbs')), '0', STR_PAD_LEFT);
 	}
 
 	function upload_thumb($file_name,$file_array,$key=0,$files_dir=NULL,$thumbs_ver=false)
@@ -318,11 +318,11 @@ class Upload
 			$ext = getExt($file['name'][$key]);
 			if($imgObj->ValidateImage($file['tmp_name'][$key],$ext))
 			{
-				//One more IF statement considering CB 2.8.1 thumbs strucure
+				//One more IF statement considering CB 2.8.1 thumbs structure
 				if (!empty($thumbs_ver) && $thumbs_ver >= '2.8')
 				{
 					$thumbs_settings_28 = thumbs_res_settings_28();
-					$temp_file_path = THUMBS_DIR.'/'.$files_dir.'/'.$file_name.'-'.$file_num.'.'.$ext;
+					$temp_file_path = THUMBS_DIR.DIRECTORY_SEPARATOR.$files_dir.DIRECTORY_SEPARATOR.$file_name.'-'.$file_num.'.'.$ext;
 					
 					$imageDetails = getimagesize($file['tmp_name'][$key]);
 					

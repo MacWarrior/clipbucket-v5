@@ -436,7 +436,7 @@
         $functions = cb_get_functions('video_link');
         if($functions) {
             foreach($functions as $func) {
-                $array = array('vdetails'=>$vdetails,'type'=>$type);
+                $array = ['vdetails'=>$vdetails,'type'=>$type];
                 if(function_exists($func['func'])) {
                     $returned = $func['func']($array);
                     if($returned) {
@@ -528,7 +528,7 @@
             return false;
 		}
 
-		$new_array = array();
+		$new_array = [];
 		foreach($array as $arr) {
 			if($cbvid->category_exists($arr)){
 				$new_array[] = $arr;
@@ -602,7 +602,7 @@
 		$results = $db->select(tbl('conversion_queue'),'*',"cqueue_conversion='no' AND cqueue_name ='$queueName' AND cqueue_ext ='$ext'",1);
 
 		$result = $results[0];
-        $db->update(tbl('conversion_queue'),array('cqueue_conversion','time_started'),array('p',time())," cqueue_id = '".$result['cqueue_id']."'");
+        $db->update(tbl('conversion_queue'),['cqueue_conversion','time_started'],['p',time()]," cqueue_id = '".$result['cqueue_id']."'");
 		return $result;
     }
 
@@ -800,7 +800,7 @@
                 }
 			}
 
-			$db->update(tbl('video'),array('status','duration','failed_reason'), array($status, $duration, 'none')," file_name='".$file_name."'");
+			$db->update(tbl('video'),['status','duration','failed_reason'], [$status, $duration, 'none']," file_name='".$file_name."'");
 		}
     }
 
@@ -1064,10 +1064,10 @@
         }
 
         //Updating Video Downloads
-        $db->update(tbl('video'),array('downloads'),array('|f|downloads+1'),"videoid = '".$vdo['videoid']."'");
+        $db->update(tbl('video'),['downloads'],['|f|downloads+1'],"videoid = '".$vdo['videoid']."'");
         //Updating User Download
         if(userid()){
-            $db->update(tbl('users'),array('total_downloads'),array('|f|total_downloads+1'),"userid = '".userid()."'");
+            $db->update(tbl('users'),['total_downloads'],['|f|total_downloads+1'],"userid = '".userid()."'");
 		}
     }
 
@@ -1255,53 +1255,6 @@
 		return $files;
     }
 
-    function upload_thumb($array)
-    {
-        global $Upload;
-
-        //Get File Name
-        $file       = $array['name'];
-        $ext        = getExt($file);
-        $image = new ResizeImage();
-        
-        if(!empty($file) && file_exists($array['tmp_name']) && !error()) {
-            $file_directory = "";
-            if(isset($_REQUEST['time_stamp'])) {
-                $file_directory = create_dated_folder(NULL,$_REQUEST['time_stamp']);
-                $file_directory .='/';
-            }
-            if($image->ValidateImage($array['tmp_name'],$ext)) {
-                $imageDetails = getimagesize($array['tmp_name']);
-                $file_num = $Upload->get_available_file_num($_POST['file_name']);
-                $temp_file = THUMBS_DIR.'/'.$file_directory.'/'.$_POST['file_name'].'-'.$file_num.'.'.$ext;
-                
-                move_uploaded_file($array['tmp_name'],$temp_file);
-
-                $thumbs_settings_28 = thumbs_res_settings_28();
-
-                foreach ($thumbs_settings_28 as $key => $thumbs_size) {
-                    $height_setting = $thumbs_size[1];
-                    $width_setting = $thumbs_size[0];
-                    if( $key != 'original' ){
-                        $dimensions = implode('x',$thumbs_size);
-                    } else {
-                        $dimensions = 'original';
-                        $width_setting  = $imageDetails[0];
-                        $height_setting = $imageDetails[1];
-                    }
-
-                    $outputFilePath = THUMBS_DIR.DIRECTORY_SEPARATOR.$file_directory.DIRECTORY_SEPARATOR.$_POST['file_name'].'-'.$dimensions.'-'.$file_num.'.'.$ext;
-                    $image->CreateThumb($temp_file,$outputFilePath,$width_setting,$ext,$height_setting,false);
-                }
-                unlink($temp_file);
-            } else {
-                e(lang('vdo_thumb_up_err'));
-            }
-        } else {
-            return true;
-        }
-    }
-
 	/**
 	 * Assigns videos array to video player's HTML in VideoJS and HTML5 Player
 	 *
@@ -1312,7 +1265,7 @@
     function vids_assign($array)
     {
         if (!is_array($array)){
-            assign('video_files',array($array));
+            assign('video_files',[$array]);
             return false;
         }
 
@@ -1321,13 +1274,13 @@
 
     function thumbs_res_settings_28(): array
     {
-        return array(
+        return [
             'original' => 'original',
             '105' => ['168','105'],
             '260' => ['416','260'],
             '320' => ['632','395'],
             '480' => ['768','432']
-		);
+        ];
     }
 
     function get_high_res_file($vdetails): string
@@ -1393,11 +1346,11 @@
         }
 
         $raw_cookies = $_COOKIE[ $cookie ] ?? false;
-        $clean_cookies = str_replace(array('[',']'), '', $raw_cookies);
+        $clean_cookies = str_replace(['[',']'], '', $raw_cookies);
         $vids = explode(',', $clean_cookies);
         assign('qlist_vids', $vids);
-        $vid_dets = array();
-        foreach ($vids as $key => $vid) {
+        $vid_dets = [];
+        foreach ($vids as $vid) {
             $vid_dets[] = $cbvid->get_video_details($vid);
         }
 
@@ -1406,7 +1359,7 @@
     
     function dateNow(): string
     {
-        return date("Y-m-d H:i:s");
+        return date('Y-m-d H:i:s');
     }
 
 	/**
@@ -1445,7 +1398,7 @@
             $field = 'status';
         }
 
-        $db->update(tbl('video'),array($field),array($status),"$type='$video'");          
+        $db->update(tbl('video'),[$field],[$status],"$type='$video'");
     }
 
 
@@ -1483,7 +1436,7 @@
 		$data = get_audio_channels($filepath);
 
 		if( $data <= 2 && $vdetails['is_castable'] == 0 ) {
-            $db->update( tbl( 'video' ), array( 'is_castable' ), array( true ), " videoid='" . $vdetails['videoid'] . "'" );
+            $db->update( tbl( 'video' ), ['is_castable'], [true], " videoid='" . $vdetails['videoid'] . "'" );
             e( sprintf( lang( 'castable_status_fixed' ), $vdetails['title'] ), 'm' );
 		} else if( $data > 2) {
 			e(sprintf( lang('castable_status_failed'), $vdetails['title'], $data),'w');
@@ -1501,7 +1454,7 @@
         $cmd = get_binaries('ffprobe_path').' -show_streams '.$filepath.' 2>/dev/null | grep "bits_per_raw_sample" | grep -v "N/A" | awk -v FS="=" \'{print $2}\'';
         $data = shell_exec( $cmd );
 
-        $db->update(tbl('video'),array('bits_color'),array((int)$data)," videoid=".$vdetails['videoid']);
+        $db->update(tbl('video'),['bits_color'],[(int)$data]," videoid=".$vdetails['videoid']);
     }
 
 	/**

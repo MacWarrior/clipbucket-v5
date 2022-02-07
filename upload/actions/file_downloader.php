@@ -17,9 +17,9 @@ if(isset($_POST['check_url']))
 		
 	if(checkRemoteFile($url) && in_array($file_ext,$types_array) )
 	{
-		echo json_encode(array('ok'=>'yes'));
+		echo json_encode(['ok'=>'yes']);
 	} else {
-		echo json_encode(array('err'=>'Invalid remote url'));
+		echo json_encode(['err'=>'Invalid remote url']);
     }
 	exit();
 }
@@ -36,12 +36,12 @@ if(isset($_POST['check_url']))
  */
 
 if(!isCurlInstalled()) {
-	exit(json_encode(array('error'=>'Sorry, we do not support remote upload')));
+	exit(json_encode(['error'=>'Sorry, we do not support remote upload']));
 }
 
 //checking if user is logged in or not
 if(!userid()){
-	exit(json_encode(array('error'=>'You are not logged in')));
+	exit(json_encode(['error'=>'You are not logged in']));
 }
 
 /*Setting up file name for the video to be converted*/
@@ -55,7 +55,7 @@ if(isset($_POST['youtube']))
 	$YouTubeId = $youtube_url_prop['v'] ?? '';
 	
 	if(!$YouTubeId) {
-		exit(json_encode(array("error"=>"Invalid youtube url")));
+		exit(json_encode(['error'=>'Invalid youtube url']));
 	}
 
 	########################################
@@ -104,7 +104,7 @@ if(isset($_POST['youtube']))
 	$vid_array['embed_code'] 	.= 'frameborder="0" allowfullscreen></iframe>';
 	$file_directory 			= createDataFolders();
 	$vid_array['file_directory'] = $file_directory;
-	$vid_array['category'] 		= array($cbvid->get_default_cid());
+	$vid_array['category'] 		= [$cbvid->get_default_cid()];
 	$vid_array['file_name'] 	= $file_name;
 	$vid_array['userid'] 		= userid();
 	
@@ -112,17 +112,17 @@ if(isset($_POST['youtube']))
 	$vid = $Upload->submit_upload($vid_array);
 
 	if(!function_exists('get_refer_url_from_embed_code')) {
-		exit(json_encode(array('error'=>'Clipbucket embed module is not installed')));
+		exit(json_encode(['error'=>'Clipbucket embed module is not installed']));
 	}
 	
-	$ref_url = get_refer_url_from_embed_code(unhtmlentities(stripslashes($vdetails['embed_code'])));
+	$ref_url = get_refer_url_from_embed_code(unhtmlentities(stripslashes($vid_array['embed_code'])));
 	$ref_url = $ref_url['url'];
-	$db->update(tbl('video'),array('status','refer_url','duration'),array('Successful',$ref_url,$duration)," videoid='$vid'");
+	$db->update(tbl('video'),['status','refer_url','duration'],['Successful',$ref_url,$duration],' videoid=\''.$vid.'\'');
 
 	//Downloading thumb
-	$downloaded_thumb = snatch_it(urlencode($max_quality_thumb),THUMBS_DIR.'/'.$file_directory,$file_name.'-ytmax.jpg');
+	$downloaded_thumb = snatch_it(urlencode($max_quality_thumb),THUMBS_DIR.DIRECTORY_SEPARATOR.$file_directory,$file_name.'-ytmax.jpg');
 
-	$params = array();
+	$params = [];
 	$params['filepath'] = $downloaded_thumb;
 	$params['files_dir'] = $file_directory;
 	$params['file_name'] = $file_name;
@@ -131,13 +131,15 @@ if(isset($_POST['youtube']))
 
 	thumbs_black_magic($params);
 
-	exit(json_encode(array('youtubeID'=>$YouTubeId,
-	'vid'=>$vid,
-	'title'=>$vid_array['title'],'desc'=>$vid_array['description'],
-	'tags'=>$vid_array['tags'])));	
+	exit(json_encode([
+        'youtubeID'=>$YouTubeId,
+        'vid'=>$vid,
+        'title'=>$vid_array['title'],'desc'=>$vid_array['description'],
+        'tags'=>$vid_array['tags']
+    ]));
 }
 
-$logDetails = array();
+$logDetails = [];
 
 /*
 A callback accepting five parameters. The first is the cURL resource, 
@@ -153,16 +155,16 @@ function callback($resource, $download_size, $downloaded, $upload_size, $uploade
 	$fo = fopen($log_file,'w+');
 
 	if(is_object($resource)){
-		$curl_info = array(
+		$curl_info = [
 			'total_size' => $download_size,
 			'downloaded' => $downloaded
-		);
+        ];
 	} else {
 		// for some curl extensions
-		$curl_info = array(
+		$curl_info = [
 			'total_size' => $resource,
 			'downloaded' => $download_size
-		);
+        ];
 	}
 	fwrite($fo,json_encode($curl_info));
 	$logDetails = $curl_info;
@@ -171,13 +173,13 @@ function callback($resource, $download_size, $downloaded, $upload_size, $uploade
 
 $file = $_POST['file'];
 
-$log_file = TEMP_DIR.'/'.$file_name.'_curl_log.cblog';
+$log_file = TEMP_DIR.DIRECTORY_SEPARATOR.$file_name.'_curl_log.cblog';
 
 //For PHP < 5.3.0
-$dummy_file = TEMP_DIR.'/'.$file_name.'_curl_dummy.cblog';
+$dummy_file = TEMP_DIR.DIRECTORY_SEPARATOR.$file_name.'_curl_dummy.cblog';
 
 $ext = getExt($file);
-$svfile = TEMP_DIR.'/'.$file_name.'.'.$ext;
+$svfile = TEMP_DIR.DIRECTORY_SEPARATOR.$file_name.'.'.$ext;
 
 //Checking for the url
 if(empty($file))
@@ -195,7 +197,7 @@ $types_array = explode(' ',$types_array);
 $extension_whitelist = $types_array;
 if(!in_array($ext,$extension_whitelist))
 {
-	$array['error'] = 'This file type is not allowed : '.$ext." (".$file.")";
+	$array['error'] = 'This file type is not allowed : '.$ext.' ('.$file.')';
 	echo json_encode($array);
 	exit();
 }
@@ -240,27 +242,27 @@ if(file_exists($dummy_file)){
 
 //Inserting data
 $title = urldecode(mysql_clean(getName($file)));
-$title = $title ? $title : 'Untitled';
+$title = $title ? : 'Untitled';
 
-$vidDetails = array(
+$vidDetails = [
 	'title' => $title,
 	'description' => $title,
 	'duration' => $total,
 	'tags' => genTags(str_replace(' ',', ',$title)),
-	'category' => array($cbvid->get_default_cid()),
+	'category' => [$cbvid->get_default_cid()],
 	'file_name' => $file_name,
 	'userid' => userid(),
 	'file_directory' => createDataFolders()
-);
+];
 
 $vid = $Upload->submit_upload($vidDetails);
 
-echo json_encode(array('vid'=>$vid));
+echo json_encode(['vid'=>$vid]);
 $file_dir = $vidDetails['file_directory'];
 $logFile = LOGS_DIR.DIRECTORY_SEPARATOR.$file_dir.DIRECTORY_SEPARATOR.$file_name.'.log';
 
 if (stristr(PHP_OS, 'WIN')) {
-    exec(php_path().' -q '.BASEDIR."/actions/video_convert.php $targetFileName sleep");
+    exec(php_path().' -q '.BASEDIR.'/actions/video_convert.php '.$targetFileName.' sleep');
 } else {
-    exec(php_path().' -q '.BASEDIR."/actions/video_convert.php $targetFileName $file_name $file_dir $logFile > /dev/null &");
+    exec(php_path().' -q '.BASEDIR.'/actions/video_convert.php '.$targetFileName.' '.$file_name.' '.$file_dir.' '.$logFile.' > /dev/null &');
 }

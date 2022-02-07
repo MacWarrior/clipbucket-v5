@@ -8,7 +8,7 @@ class mass_upload extends Upload
 
     function get_video_files_list($listonly = false, $dir = MASS_UPLOAD_DIR)
     {
-        require_once(BASEDIR.'/includes/classes/conversion/ffmpeg.class.php');
+        require_once BASEDIR.'/includes/classes/conversion/ffmpeg.class.php';
         $allowed_exts = get_vid_extensions();
         $FILES = scandir($dir);
         $FILE_LIST = array();

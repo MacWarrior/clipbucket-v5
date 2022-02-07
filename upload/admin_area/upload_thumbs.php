@@ -23,8 +23,7 @@ if(@$_GET['msg']){
 }
 
 //Check Video Exists or Not
-if($myquery->VideoExists($video))
-{
+if($myquery->VideoExists($video)) {
     # Setting Default thumb
     if(isset($_POST['update_default_thumb'])) {
         $myquery->set_default_thumb($video, $_POST['default_thumb']);
@@ -39,19 +38,15 @@ if($myquery->VideoExists($video))
     }
 
     # Delete Thumb
-    if(isset($_GET['delete']))
-    {
+    if(isset($_GET['delete'])) {
        $file_name_num = explode('-', $_GET['delete']);
        $num = get_thumb_num($_GET['delete']);
-
        $file_name = $file_name_num[0];
-
        delete_video_thumb($data['file_directory'],$file_name,$num);
     }
 
     # Generating more thumbs
-    if(isset($_GET['gen_more']))
-    {
+    if(isset($_GET['gen_more'])) {
         $thumbs_settings_28 = thumbs_res_settings_28();
         $vid_file = get_high_res_file($data);
         $thumbs_num = config('num_thumbs');
@@ -62,19 +57,17 @@ if($myquery->VideoExists($video))
         $thumbs_input['file_directory'] = $data['file_directory'];
         $thumbs_input['file_name'] = $data['file_name'];
 
-        require_once(BASEDIR.'/includes/classes/sLog.php');
+        require_once BASEDIR.'/includes/classes/sLog.php';
         $log = new SLog();
 
-        require_once(BASEDIR.'/includes/classes/conversion/ffmpeg.class.php');
+        require_once BASEDIR.'/includes/classes/conversion/ffmpeg.class.php';
         $ffmpeg = new FFMpeg($log);
 
-        foreach ($thumbs_settings_28 as $key => $thumbs_size)
-        {
+        foreach ($thumbs_settings_28 as $key => $thumbs_size) {
             $height_setting = $thumbs_size[1];
             $width_setting = $thumbs_size[0];
             $thumbs_input['dim'] = $width_setting.'x'.$height_setting;
-            if($key == 'original')
-            {
+            if($key == 'original') {
                 $thumbs_input['dim'] = $key;
                 $thumbs_input['size_tag'] = $key;
             } else {
@@ -84,7 +77,7 @@ if($myquery->VideoExists($video))
         }
 
         e(lang('Video thumbs has been regenerated successfully'),'m');
-        $db->update(tbl('video'), array('thumbs_version'), array(VERSION), " file_name = '".$data['file_name']."' ");
+        $db->update(tbl('video'), ['thumbs_version'], [VERSION], ' file_name = \''.$data['file_name'].'\'');
     }
 
     Assign('data',$data);
