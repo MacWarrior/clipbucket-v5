@@ -20,6 +20,10 @@ class CBTemplate {
         $Smarty->setDebugging(false);
         $Smarty->setTemplateDir(BASEDIR.'/styles');
         $Smarty->setCompileDir(BASEDIR.'/cache/views');
+
+        if( DEVELOPMENT_MODE) {
+            $Smarty->clearAllCache();
+        }
     }
 
     function create()

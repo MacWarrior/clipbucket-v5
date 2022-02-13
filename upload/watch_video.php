@@ -42,7 +42,7 @@ if( $perm ) {
     $videoid = $vdo['videoid'];
     $related_videos = get_videos(['title'=>$title,'tags'=>$tags,'exclude'=>$videoid,'show_related'=>'yes','limit'=>12,'order'=>'RAND()']);
     if(!$related_videos){
-        $relMode = "ono";
+        $relMode = 'ono';
         $related_videos = get_videos(['exclude'=>$videoid,'limit'=>12,'order'=>'date_added DESC']);
     }
     $playlist = $cbvid->action->get_playlist($pid,userid());

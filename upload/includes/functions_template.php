@@ -23,7 +23,7 @@ function Fetch($name,$inside=FALSE)
 function Template($template,$layout=true){
     global $admin_area,$cbtpl;
     if($layout) {
-        $cbtpl->display(LAYOUT.'/'.$template);
+        $cbtpl->display(LAYOUT.DIRECTORY_SEPARATOR.$template);
     } else {
         $cbtpl->display($template);
     }
@@ -58,18 +58,18 @@ function display_it()
     try {
         global $ClipBucket,$__devmsgs,$breadcrumb;
         if (is_array($__devmsgs)) {
-            assign("thebase", BASEDIR);
-            assign("__devmsgs",$__devmsgs);
+            assign('thebase', BASEDIR);
+            assign('__devmsgs',$__devmsgs);
         }
         $new_list = array();
         foreach($ClipBucket->template_files as $file) {
-            if(file_exists(LAYOUT.'/'.$file['file']) || is_array($file)) {
+            if(file_exists(LAYOUT.DIRECTORY_SEPARATOR.$file['file']) || is_array($file)) {
                 if($ClipBucket->show_page || !$file['follow_show_page']) {
                     if(!is_array($file)){
                         $new_list[] = $file;
                     } else {
-                        if(isset($file['folder']) && file_exists($file['folder'].'/'.$file['file'])){
-                            $new_list[] = $file['folder'].'/'.$file['file'];
+                        if(isset($file['folder']) && file_exists($file['folder'].DIRECTORY_SEPARATOR.$file['file'])){
+                            $new_list[] = $file['folder'].DIRECTORY_SEPARATOR.$file['file'];
                         } else {
                             $new_list[] = $file['file'];
                         }
