@@ -90,3 +90,11 @@ DELETE FROM `{tbl_prefix}config` WHERE name IN(
 -- REV 36
 ALTER TABLE `{tbl_prefix}collection_categories`
 	MODIFY COLUMN `category_thumb` MEDIUMTEXT NOT NULL;
+
+-- REV 43
+ALTER TABLE `{tbl_prefix}collections`
+    ADD `collection_id_parent` BIGINT(25) NULL DEFAULT NULL AFTER `collection_id`,
+	ADD INDEX(`collection_id_parent`),
+	ADD FOREIGN KEY (`collection_id_parent`) REFERENCES `{tbl_prefix}collections`(`collection_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
+	('enable_sub_collection', '1');

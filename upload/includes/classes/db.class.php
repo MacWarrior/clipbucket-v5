@@ -240,10 +240,12 @@ class Clipbucket_db
                 $fields_query .= $flds[$i]."='".$val."'";
             } else {
                 $val = substr($val,3,strlen($val));
-                $fields_query .= $flds[$i].'='.$val.'';
+                $fields_query .= $flds[$i].'='.$val;
             }
-            if($total_fields!=$count)
+
+            if($total_fields != $count){
                 $fields_query .= ',';
+            }
         }
         //Complete Query
         $query = 'UPDATE '.$tbl.' SET '.$fields_query.' WHERE '.$cond.' '.$ep;
@@ -320,7 +322,7 @@ class Clipbucket_db
                 $fields_query .= $flds[$i]."='".$val."'";
             } else {
                 $val = substr($val,3,strlen($val));
-                $fields_query .= $flds[$i].'='.$val.'';
+                $fields_query .= $flds[$i].'='.$val;
             }
             if($total_fields!=$count) {
                 $fields_query .= ' AND ';
@@ -328,7 +330,9 @@ class Clipbucket_db
         }
         //Complete Query
         $query = 'DELETE FROM '.$tbl.' WHERE '.$fields_query.' '.$ep;
-        if(isset($this->total_queries)) $this->total_queries++;
+        if(isset($this->total_queries)){
+            $this->total_queries++;
+        }
         $this->total_queries_sql[] = $query;
 
         $this->execute($query, 'delete');
@@ -374,7 +378,7 @@ class Clipbucket_db
             } else {
                 $val = $this->clean_var($value);
             }
-            if( $val == 'NULL' ){
+            if( strtoupper($val) == 'NULL' ){
 				$values_query .= 'NULL';
 			} else {
 				$needle = substr($val,0,3);
@@ -481,6 +485,7 @@ class Clipbucket_db
 
     private function handleError($query)
 	{
+
 		if( $this->mysqli->error != '' ) {
 			if( in_dev() ) {
 				e( 'SQL : '.$query);

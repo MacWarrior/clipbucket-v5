@@ -6,17 +6,19 @@
     		<p>{lang code='please_select_collection'}</p>
 			<div class="form-group clearfix">
 				<select name="collection" id="collection" class="form-control">
-					{section name=clist loop=$collections}
-					<option value="{$collections[clist].collection_id}">{display_clean($collections[clist].collection_name)} ({$collections[clist].total_objects})</option>
-					{sectionelse}
-					<option>--- {lang code="no_collection_found"} ---</option>
-					{/section}
+                    {if count($collections) > 0}
+                        {foreach $collections as $col_id => $col_data}
+                    <option value="{$col_id}">{$col_data['name']} ({$col_data['count']})</option>
+                        {/foreach}
+                    {else}
+                    <option>--- {lang code="no_collection_found"} ---</option>
+                    {/if}
 				</select>
 			</div>
 
 			<div class="form-group clearfix">
 				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-					<input type="button" class="btn mtm btn-block btn-primary" name="add_to_collection" value="{lang code='add_to_collection'}" class="cb_button" onclick="collection_actions('add_collection_form','add_new_item','{$id}','#collection_form_result','video');">
+					<input type="button" class="cb_button btn mtm btn-block btn-primary" name="add_to_collection" value="{lang code='add_to_collection'}" onclick="collection_actions('add_collection_form','add_new_item','{$id}','#collection_form_result','video');">
 				</div>
 				{if (has_access('allow_create_collection',false,$verify_logged_user))}
 				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">

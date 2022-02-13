@@ -2049,23 +2049,10 @@
 	 * @internal param $ : { array } { $params } { array with parameters }
 	 */
 	function show_collection_form() {
-		global $db,$cbcollection;
-		$brace = 1;
-		if(!userid()) {
-			$loggedIn = 'not';
-		} else {		
-			$collectArray = array('order'=>' collection_name ASC','type'=>'videos','user'=>userid(),'public_upload'=>'yes');
-			$collections = $cbcollection->get_collections($collectArray,$brace);           
-            $contributions = $cbcollection->get_contributor_collections(userid());
-            if($contributions) {
-                if(!$collections) {
-                    $collections = $contributions;
-                } else {
-                    $collections = array_merge($collections,$contributions);
-                }
-            }
+		global $cbcollection;
+		if(userid()) {
+            $collections = $cbcollection->get_collections_hierarchy(0, null, null, 'videos');
 			assign('collections',$collections);
-			assign('contributions',$contributions);
 		}
 		Template('/blocks/collection_form.html');
 	}

@@ -47,6 +47,7 @@ CREATE TABLE `{tbl_prefix}ads_placements` (
 
 CREATE TABLE `{tbl_prefix}collections` (
   `collection_id` bigint(25) NOT NULL,
+  `collection_id_parent` BIGINT(25) NULL DEFAULT NULL,
   `collection_name` varchar(225) NOT NULL,
   `collection_description` text NOT NULL,
   `collection_tags` text NOT NULL,
@@ -781,7 +782,9 @@ ALTER TABLE `{tbl_prefix}collections`
   ADD KEY `userid` (`userid`),
   ADD KEY `featured` (`featured`),
   ADD KEY `userid_2` (`userid`),
-  ADD KEY `featured_2` (`featured`);
+  ADD KEY `featured_2` (`featured`),
+  ADD INDEX(`collection_id_parent`),
+  ADD FOREIGN KEY (`collection_id_parent`) REFERENCES `{tbl_prefix}collections`(`collection_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 ALTER TABLE `{tbl_prefix}collection_categories`
   ADD PRIMARY KEY (`category_id`);

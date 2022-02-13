@@ -1183,7 +1183,7 @@
     "manage_collections": "Gestion des Collections",
     "manage_categories": "Manage Categories",
     "flagged_collections": "Flagged Collections",
-    "create_collection": "Create Collection",
+    "create_collection": "Création d'une collection",
     "selected_items_removed": "Les %s sélectionnées ont été retirées",
     "edit_collection": "Edit Collection",
     "manage_collection_items": "Manage Collection Items",
@@ -1444,7 +1444,7 @@
     "write_msg": "write message",
     "content": "content",
     "no_video": "No Video",
-    "back_to_collection": "Back to Collection",
+    "back_to_collection": "Retour aux collections",
     "long_txt": "All the photos uploaded are dependent on their collections/albums. When you remove some photo from collection/album, this will not delete photo permenently. It will move photo here. You can also use this to make your photos private. Direct link is available for you to share with your friends.",
     "make_my_album": "Make my album",
     "public": "Public",
@@ -1598,6 +1598,6 @@
 	"dashboard_php_config_allow_url_fopen":"Veuillez activer 'allow_url_fopen' pour pouvoir profiter du statut de mise à jour",
 	"signup_error_email_unauthorized":"Email non autorisé",
 	"video_detail_saved":"Les détails de la vidéo ont été sauvegardés",
-	"video_subtitles_deleted":"Les sous-titres de la vidéo ont été supprimés"
-
+	"video_subtitles_deleted":"Les sous-titres de la vidéo ont été supprimés",
+	"collection_no_parent":"Aucun parent"
 }

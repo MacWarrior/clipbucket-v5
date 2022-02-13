@@ -210,7 +210,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'extract_subtitles', '1'),
 	(NULL, 'player_subtitles', '1'),
 	(NULL, 'subtitle_format', 'webvtt'),
-	(NULL, 'conversion_type', 'mp4');
+	(NULL, 'conversion_type', 'mp4'),
+	(NULL, 'enable_sub_collection', '1');
 
 INSERT INTO `{tbl_prefix}languages` (`language_id`, `language_code`, `language_name`, `language_regex`, `language_active`, `language_default`) VALUES
 	(1, 'en', 'English', '/^en/i', 'yes', 'yes'),
