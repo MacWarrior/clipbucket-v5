@@ -172,5 +172,5 @@ ALTER TABLE `{tbl_prefix}user_profile`
 	MODIFY COLUMN `rated_by` int(150) NOT NULL DEFAULT 0;
 
 ALTER TABLE `{tbl_prefix}_video`
-	MODIFY COLUMN `datecreated` DATE NOT NULL DEFAULT CURRENT_TIMESTAMP;
+	MODIFY COLUMN `datecreated` DATE NOT NULL DEFAULT (CURRENT_DATE);
 UPDATE `{tbl_prefix}_video` SET datecreated = '1000-01-01' WHERE datecreated = '0000-00-00';

@@ -645,7 +645,7 @@ CREATE TABLE `{tbl_prefix}video` (
   `category_parents` text NULL DEFAULT NULL,
   `broadcast` varchar(10) NOT NULL DEFAULT '',
   `location` mediumtext DEFAULT NULL,
-  `datecreated` date NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `datecreated` date NOT NULL DEFAULT (CURRENT_DATE),
   `country` mediumtext DEFAULT NULL,
   `blocked_countries` text NULL DEFAULT NULL,
   `sprite_count` int(11) NOT NULL DEFAULT 0,
@@ -783,8 +783,7 @@ ALTER TABLE `{tbl_prefix}collections`
   ADD KEY `featured` (`featured`),
   ADD KEY `userid_2` (`userid`),
   ADD KEY `featured_2` (`featured`),
-  ADD INDEX(`collection_id_parent`),
-  ADD FOREIGN KEY (`collection_id_parent`) REFERENCES `{tbl_prefix}collections`(`collection_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD INDEX(`collection_id_parent`);
 
 ALTER TABLE `{tbl_prefix}collection_categories`
   ADD PRIMARY KEY (`category_id`);
@@ -1169,3 +1168,6 @@ ALTER TABLE `{tbl_prefix}video_subtitle`
 
 ALTER TABLE `{tbl_prefix}video_subtitle`
 	ADD CONSTRAINT `{tbl_prefix}video_subtitle_ibfk_1` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `{tbl_prefix}collections`
+	ADD FOREIGN KEY (`collection_id_parent`) REFERENCES `{tbl_prefix}collections`(`collection_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
