@@ -4640,24 +4640,34 @@
 		{
 			case 'video':
 				$toselect = 'videoid';
+                $field = 'voter_ids';
 				break;
 
 			case 'photo':
+                $type = 'photos';
 				$toselect = 'photo_id';
+                $field = 'voters';
 				break;
+
+            // TODO : USER
+            case 'user':
+                /*$type = 'users';
+                $toselect = 'userid';
+                $field = '';
+                break;*/
 			
 			default:
+                error_log('has_rated unknown type : '.$type.PHP_EOL);
 				$type = 'video';
 				$toselect = 'videoid';
+                $field = 'voter_ids';
 				break;
 		}
-		$raw_rating = $db->select(tbl($type),'voter_ids',"$toselect = $itemid");
+		$raw_rating = $db->select(tbl($type),$field,"$toselect = $itemid");
 		$ratedby_json = $raw_rating[0]['voter_ids'];
 		$ratedby_cleaned = json_decode($ratedby_json,true);
-		foreach ($ratedby_cleaned as $key => $rating_data)
-		{
-			if ($rating_data['userid'] == $userid)
-			{
+		foreach ($ratedby_cleaned as $rating_data) {
+			if ($rating_data['userid'] == $userid) {
 				if ($rating_data['rating'] == 0) {
 					return 'disliked';
 				}

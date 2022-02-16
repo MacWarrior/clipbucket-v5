@@ -47,9 +47,9 @@
 		</span>
 		<span class="btn btn-app btn-sm btn-primary no-hover">
 			{if $FlaggedPhotos != NULL}
-				{$FlaggedPhotos[list].total_flags}
+				{$count_flagged_photos}
 				{section name=list loop=$FlaggedPhotos}
-			<span class="line-height-1 smaller-90">{$FlaggedPhotos[list].total_flags}</span>
+			<span class="line-height-1 smaller-90">{$count_flagged_photos}</span>
 				{/section}
 			<br>
 			<span class="line-height-1 smaller-90"> Flagged </span>

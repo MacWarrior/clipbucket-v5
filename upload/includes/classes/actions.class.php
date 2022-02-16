@@ -374,9 +374,8 @@ class cbactions
 	{
 		global $db;
    
-    	$results = $db->select(tbl($this->flag_tbl.','.$this->type_tbl),'*,
-            count(*) AS total_flags',tbl($this->flag_tbl).'.id = '.tbl($this->type_tbl).'.'.$this->type_id_field.' 
-            AND '.tbl($this->flag_tbl).'.type=\''.$this->type.'\' GROUP BY '.tbl($this->flag_tbl).'.id ,'.tbl($this->flag_tbl).'.type ',$limit);
+    	$results = $db->select(tbl($this->flag_tbl.','.$this->type_tbl),'*',tbl($this->flag_tbl).'.id = '.tbl($this->type_tbl).'.'.$this->type_id_field.' 
+            AND '.tbl($this->flag_tbl).'.type=\''.$this->type.'\'',$limit);
 		if(count($results)>0){
 			return $results;
         }

@@ -774,7 +774,7 @@
     "add_fav_message": "Cette %s a été ajoutée à vos favoris",
     "obj_not_exists": "%s n'existe pas",
     "already_fav_message": "Cette %s a déjà été ajoutée à vos favoris",
-    "obj_report_msg": "Cette %s a été signalé",
+    "obj_report_msg": "Cette %s a été signalée",
     "obj_report_err": "Vous avez déjà signalé cette %s",
     "user_no_exist_wid_username": "'%s' does not exist",
     "share_video_no_user_err": "Please enter usernames or emails to send this %s",
@@ -1599,5 +1599,6 @@
 	"signup_error_email_unauthorized":"Email non autorisé",
 	"video_detail_saved":"Les détails de la vidéo ont été sauvegardés",
 	"video_subtitles_deleted":"Les sous-titres de la vidéo ont été supprimés",
-	"collection_no_parent":"Aucun parent"
+	"collection_no_parent":"Aucun parent",
+	"collection_parent":"Collection parent"
 }

@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"46",
+  "revision":"47",
   "status":"dev",
   "detail":[
     {
@@ -44,7 +44,6 @@
         ,"Update compatibility to PHP 8.1.X"
         ,"Update DB functions"
         ,"Auto-clear templates cache when in DEV mode"
-        ,"Fix installation on MySQL 8+"
         ,"Fix compatibility with MySQL 8.0.X"
       ]
     },
@@ -81,6 +80,8 @@
         ,"Update jQuery to 3.6.0 <i>#208</i>"
         ,"Fix collection deletion"
         ,"Implement recursive collections (WIP)"
+        ,"Fix SQL error on photos page"
+        ,"Fix title display on photos page"
       ]
     }
   ]

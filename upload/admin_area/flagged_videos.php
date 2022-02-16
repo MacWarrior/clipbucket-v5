@@ -1,115 +1,104 @@
 <?php
-	/*
-	 ****************************************************************
-	 | Copyright (c) 2007-2008 Clip-Bucket.com. All rights reserved.
-	 | @ Author 	: ArslanHassan
-	 | @ Software 	: ClipBucket , © PHPBucket.com
-	 ****************************************************************
-	*/
+require_once '../includes/admin_config.php';
 
-	require_once '../includes/admin_config.php';
-	$userquery->admin_login_check();
-	$userquery->login_check('video_moderation');
+global $userquery,$cbvideo,$eh,$cbvid,$pages;
 
-	/* Generating breadcrumb */
-	global $breadcrumb;
-	$breadcrumb[0] = array('title' => lang('videos'), 'url' => '');
-	$breadcrumb[1] = array('title' => 'List Flagged Videos', 'url' => ADMIN_BASEURL.'/flagged_videos.php');
+$userquery->admin_login_check();
+$userquery->login_check('video_moderation');
 
-	$mode = $_GET['mode'];
+/* Generating breadcrumb */
+global $breadcrumb;
+$breadcrumb[0] = ['title' => lang('videos'), 'url' => ''];
+$breadcrumb[1] = ['title' => 'List Flagged Videos', 'url' => ADMIN_BASEURL.'/flagged_videos.php'];
 
-	//Delete Video
-	if(isset($_GET['delete_video'])){
-		$video = mysql_clean($_GET['delete_video']);
-		$cbvideo->delete_video($video);
-	}
+$mode = $_GET['mode'];
 
-	//Deleting Multiple Videos
-	if(isset($_POST['delete_selected']))
-	{
-		for($id=0;$id<=RESULTS;$id++)
-		{
-			$cbvideo->delete_video($_POST['check_video'][$id]);
-		}
-		$eh->flush();
-		e(lang("vdo_multi_del_erro"),"m");
-	}
+//Delete Video
+if(isset($_GET['delete_video'])){
+    $video = mysql_clean($_GET['delete_video']);
+    $cbvideo->delete_video($video);
+}
 
-	//Activate / Deactivate
-	if(isset($_GET['activate'])){
-		$video = mysql_clean($_GET['activate']);
-		$cbvid->action('activate',$video);
-	}
-	if(isset($_GET['deactivate'])){
-		$video = mysql_clean($_GET['deactivate']);
-		$cbvid->action('deactivate',$video);
-	}
+//Deleting Multiple Videos
+if(isset($_POST['delete_selected'])) {
+    for($id=0;$id<=RESULTS;$id++) {
+        $cbvideo->delete_video($_POST['check_video'][$id]);
+    }
+    $eh->flush();
+    e(lang('vdo_multi_del_erro'),'m');
+}
 
-	//Using Multiple Action
-	if(isset($_POST['activate_selected']))
-	{
-		for($id=0;$id<=RESULTS;$id++){
-			$cbvid->action('activate',$_POST['check_video'][$id]);
-		}
-		e("Selected Videos Have Been Activated","m");
-	}
-	if(isset($_POST['deactivate_selected']))
-	{
-		for($id=0;$id<=RESULTS;$id++){
-			$cbvid->action('deactivate',$_POST['check_video'][$id]);
-		}
-		e("Selected Videos Have Been Dectivated","m");
-	}
+//Activate / Deactivate
+if(isset($_GET['activate'])){
+    $video = mysql_clean($_GET['activate']);
+    $cbvid->action('activate',$video);
+}
+if(isset($_GET['deactivate'])){
+    $video = mysql_clean($_GET['deactivate']);
+    $cbvid->action('deactivate',$video);
+}
 
-	if(isset($_REQUEST['delete_flags']))
-	{
-		$video = mysql_clean($_GET['delete_flags']);
-		$cbvid->action->delete_flags($video);
-	}
+//Using Multiple Action
+if(isset($_POST['activate_selected'])) {
+    for($id=0;$id<=RESULTS;$id++){
+        $cbvid->action('activate',$_POST['check_video'][$id]);
+    }
+    e('Selected Videos Have Been Activated','m');
+}
+if(isset($_POST['deactivate_selected'])) {
+    for($id=0;$id<=RESULTS;$id++){
+        $cbvid->action('deactivate',$_POST['check_video'][$id]);
+    }
+    e('Selected Videos Have Been Dectivated','m');
+}
 
-	//Deleting Multiple Videos
-	if(isset($_POST['delete_flags']))
-	{
-		for($id=0;$id<=RESULTS;$id++)
-		{
-			$eh->flush();
-			$cbvid->action->delete_flags($_POST['check_video'][$id]);
-		}
-	}
+if(isset($_REQUEST['delete_flags'])) {
+    $video = mysql_clean($_GET['delete_flags']);
+    $cbvid->action->delete_flags($video);
+}
 
-	switch($mode)
-	{
-		case "view":
-		default:
-			assign("mode","view");
-			//Getting Video List
-			$page = mysql_clean($_GET['page']);
-			$get_limit = create_query_limit($page,5);
-			$videos = $cbvid->action->get_flagged_objects($get_limit);
-			Assign('videos', $videos);
+//Deleting Multiple Videos
+if(isset($_POST['delete_flags'])) {
+    for($id=0;$id<=RESULTS;$id++) {
+        $eh->flush();
+        $cbvid->action->delete_flags($_POST['check_video'][$id]);
+    }
+}
 
-			//Collecting Data for Pagination
-			$total_rows  = $cbvid->action->count_flagged_objects();
-			$total_pages = count_pages($total_rows,5);
+switch($mode)
+{
+    case 'view':
+    default:
+        assign('mode','view');
+        //Getting Video List
+        $page = mysql_clean($_GET['page']);
+        $get_limit = create_query_limit($page,5);
+        $videos = $cbvid->action->get_flagged_objects($get_limit);
+        Assign('videos', $videos);
 
-			//Pagination
-			$pages->paginate($total_pages,$page);
-			break;
+        //Collecting Data for Pagination
+        $total_rows  = $cbvid->action->count_flagged_objects();
+        Assign('count_flagged_objects', $total_rows);
+        $total_pages = count_pages($total_rows,5);
 
-		case "view_flags":
-			assign("mode","view_flags");
-			$vid = mysql_clean($_GET['vid']);
-			$vdetails = $cbvid->get_video($vid);
-			if($vdetails)
-			{
-				$flags = $cbvid->action->get_flags($vid);
-				assign('flags',$flags);
-				assign('video',$vdetails);
-			} else
-				e("Video does not exist");
-			break;
-	}
+        //Pagination
+        $pages->paginate($total_pages,$page);
+        break;
 
-	subtitle("Flagged Videos");
-	template_files('flagged_videos.html');
-	display_it();
+    case 'view_flags':
+        assign('mode','view_flags');
+        $vid = mysql_clean($_GET['vid']);
+        $vdetails = $cbvid->get_video($vid);
+        if($vdetails) {
+            $flags = $cbvid->action->get_flags($vid);
+            assign('flags',$flags);
+            assign('video',$vdetails);
+        } else {
+            e('Video does not exist');
+        }
+        break;
+}
+
+subtitle('Flagged Videos');
+template_files('flagged_videos.html');
+display_it();

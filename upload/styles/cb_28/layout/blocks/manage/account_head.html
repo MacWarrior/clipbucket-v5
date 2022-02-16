@@ -116,7 +116,7 @@
 									<li class="active">
 										<a data-toggle="tab" href="#fvideos">{lang code="videos"}</a>
 									</li>
-									{if $Cbucket->configs['photosSection']==yes}
+									{if $Cbucket->configs['photosSection'] == "yes"}
 									<li class="photos">
 										<a data-toggle="tab" href="#fphotos">{lang code="photos"}</a>
 									</li>
@@ -137,13 +137,13 @@
 											<div class="col-md-7 fvideos">
 												<label class="label label-danger">Uploaded {$flagedVideos[list].date_added|niceTime}</label>
 												<label class="label label-default"> {lang code='views'} : {$flagedVideos.views|number_format}</label>
-												<label class="label label-primary"> Flags:{$flagedVideos[list].total_flags}</label>
+												<label class="label label-primary"> Flags:{$count_flagged_videos}</label>
 											</div>
 										</div>
 										<hr class="newhr">
 										{/section}
 									</div>
-									{if $Cbucket->configs['photosSection']==yes}
+									{if $Cbucket->configs['photosSection'] == "yes"}
 									<div id="fphotos" class="tab-pane">
 										{section name=list loop=$flagedPhotos}
 										<div class="row">
@@ -154,7 +154,7 @@
 												{display_clean($flagedphotos[list].title|truncate:50)}
 											</div>
 											<div class="col-md-2">
-												<strong class="btn btn-primary btn-xs pull-right"> Flags:{$flagedPhotos[list].total_flags}</strong>
+												<strong class="btn btn-primary btn-xs pull-right"> Flags:{$count_flagged_photos}</strong>
 											</div>
 											<div class="col-md-7 fusers">
 												<label class="label label-danger">Uploaded {$flagedPhotos[list].date_added|niceTime}</label>
@@ -175,9 +175,6 @@
 	</table>
 </div>
 
-
-
-
 <div class="col-md-12">
 	<div class="padding38">
 		{if $user.userid == userid()}
@@ -186,7 +183,7 @@
 			<br>
 			<span class="line-height-1 smaller-90 new1"> {lang code='videos'} </span>
 		</button>
-			{if $Cbucket->configs['photosSection']==yes}
+			{if $Cbucket->configs['photosSection'] == "yes"}
 			<span class="btn btn-primary new1" style="background-color: #000000;color: #ffffff">
 				<span class="line-height-1 bigger-170 blue">{$user.total_photos}</span>
 				<br>

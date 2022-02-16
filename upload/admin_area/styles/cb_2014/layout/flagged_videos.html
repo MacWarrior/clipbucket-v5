@@ -5,7 +5,7 @@
 <!-- DIsplaying Videos -->
 <form name="flagged_video" method="post" id="flagged_video">
 
-    <div class="btn-group" style="margin-bottom: 10px;">
+    <div class="btn-group" style="margin-bottom:10px;">
 		<input class="btn btn-primary btn-xs button" type="submit" name="activate_selected" value="{lang code='activate'}"/>
 		<input class="btn btn-primary btn-xs button" type="submit" name="deactivate_selected" value="{lang code='deactivate'}"/>
 		<input class="btn btn-primary btn-xs button" type="submit" name="delete_selected" value="Delete Videos" onclick="return _cb.confirm_it('Are you sure you want to delete these videos')"/>
@@ -22,40 +22,42 @@
         </tr>
         {assign var = bgcolor value = ""}
         {section name=list loop=$videos}
-                <tr>
-                    <td>
-                        <input name="check_video[]" type="checkbox" id="check_video" value="{$videos[list].videoid}" /></td>
-                    <td>
-                        {$videos[list].videoid}</td>
-                    <td>
-                    <div>
+        <tr>
+            <td>
+                <input name="check_video[]" type="checkbox" id="check_video" value="{$videos[list].videoid}" /></td>
+            <td>
+                {$videos[list].videoid}
+            </td>
+            <td>
+                <div class="row">
+                    <div class="col-md-10">
                         <div class="row">
-                            <div class="col-md-10">
-                                <div class="row">
-                                     <div class="col-md-3">
-                                        <img src="{getThumb vdetails=$videos[list]}" width="130" height="80" id="thumbs_{$videos[list].videoid}">
+                             <div class="col-md-3">
+                                <img src="{getThumb vdetails=$videos[list]}" width="130" height="80" id="thumbs_{$videos[list].videoid}"/>
                             </div>
-                                <div class="col-md-9 labels1">
-                                <a href="edit_video.php?video={$videos[list].videoid}" target="_blank" >
-                                    {$videos[list].title|truncate:80}</a>-({if $videos[list].duration>1}{$videos[list].duration|SetTime}{else}00:00{/if})<br>
-                         <span class="labels1">{$videos[list].date_added|niceTime}
-                                {lang code='views'} : {$videos.views|number_format}</span>
-                                    <div class="labels">
-                                        <span class="label {if $videos[list].active=='yes'}label-success{else}label-warning{/if}">{if $videos[list].active=='yes'}{lang code='active'}{else}{lang code='inactive'}{/if}</span>
-
-                                        <span class="label {if $video_status == Ok}label-success{else}label-success{/if}">{$videos[list].status}</span>
-                                        <a href="?mode=view_flags&vid={$videos[list].videoid}"><span class="label label-info">Flags:{$videos[list].total_flags}</span></a>
-                                        </span>
-                                    </div>
-                                  </div>
+                            <div class="col-md-9 labels1">
+                                <a href="edit_video.php?video={$videos[list].videoid}" target="_blank">
+                                    {$videos[list].title|truncate:80}
+                                </a>-({if $videos[list].duration>1}{$videos[list].duration|SetTime}{else}00:00{/if})<br/>
+                                <span class="labels1">
+                                    {$videos[list].date_added|niceTime}
+                                    {lang code='views'} : {$videos.views|number_format}
+                                </span>
+                                <div class="labels">
+                                    <span class="label {if $videos[list].active=='yes'}label-success{else}label-warning{/if}">{if $videos[list].active=='yes'}{lang code='active'}{else}{lang code='inactive'}{/if}</span>
+                                    <span class="label {if $video_status == Ok}label-success{else}label-success{/if}">{$videos[list].status}</span>
+                                        <a href="?mode=view_flags&vid={$videos[list].videoid}"><span class="label label-info">Flags:{$count_flagged_objects}</span></a>
+                                    </span>
                                 </div>
                             </div>
-                                <div class="col-md-2">
-                                    Owner<a href="view_user.php?uid={$videos[list].userid}"> {display_clean($videos[list].username)}</a>
-                            </div>
                         </div>
-                    </td>
-               <td>
+                    </div>
+                    <div class="col-md-2">
+                        Owner<a href="view_user.php?uid={$videos[list].userid}"> {display_clean($videos[list].username)}</a>
+                    </div>
+                </div>
+            </td>
+            <td>
                 <div id="vid_opt-{$videos[list].videoid}" class="dropdown">
                     <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">Actions <i class="caret"></i></button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" role="menu">
@@ -73,16 +75,15 @@
                         <li class="divider"></li>
                         
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="?delete_flags={$videos[list].videoid}">Delete Flags</a></li>
-
-
+                    </ul>
                 </div>
+            </td>
         </tr>
-        {if $bgcolor == ""}
-        {assign var = bgcolor value = "#EEEEEE"}
-        {else}
-        {assign var = bgcolor value = ""}
-        {/if}
-
+            {if $bgcolor == ""}
+                {assign var = bgcolor value = "#EEEEEE"}
+            {else}
+                {assign var = bgcolor value = ""}
+            {/if}
         {/section}
     </table>
 
@@ -93,28 +94,25 @@
 		<input class="btn btn-primary btn-xs button" type="submit" name="delete_flags" value="Delete Flags" onclick="return _cb.confirm_it('Are you sure you want to delete flags of selected videos')"/>
 	</div>
 </form>
-
-<!-- DIsplaying Videos Ends-->
-{include file="$style_dir/blocks/pagination.html" }
-
+    <!-- DIsplaying Videos Ends-->
+    {include file="$style_dir/blocks/pagination.html" }
 {/if}
 
 {if $mode=='view_flags'}
 <span class="lead">Viewing {display_clean($video.title)} flags</span>
-        <div class="dropdown">
-            <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle pull-right" data-toggle="dropdown">Actions <i class="caret"></i></button>
-            <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
+<div class="dropdown">
+    <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle pull-right" data-toggle="dropdown">Actions <i class="caret"></i></button>
+    <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="watch_video.php?v={$video.videokey}">View video</a>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="edit_video.php?video={$video.videoid}">Edit video</a>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="?delete_flags={$video.videoid}">Delete Flags</a>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="?delete_video={$video.videoid}">Delete Video</a>
+        </li>
+    </ul>
+</div>
+<br/><br/>
 
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="/watch_video.php?v={$video.videokey}">View video</a>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="edit_video.php?video={$video.videoid}">Edit video</a>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="?delete_flags={$video.videoid}">Delete Flags</a>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="?delete_video={$video.videoid}">Delete Video</a>
-                </li>
-                </ul>
-            </div><br><br>
-
-<!-- DIsplaying Videos -->
-
+<!-- Displaying Videos -->
 <form name="video_manage" method="post">
     <table class="table table-bordered table-striped manageUsersTable">
         <tr>
@@ -127,14 +125,12 @@
             <td>{$smarty.section.list.iteration}</td>
             <td>Reported as "<strong>{$flags[list].flag_type|flag_type}</strong>" by <strong>{$flags[list].userid|get_username}</strong> {$flags[list].date_added|niceTime}</td>
         </tr>
-        {if $bgcolor == ""}
-        {assign var = bgcolor value = "#EEEEEE"}
-        {else}
-        {assign var = bgcolor value = ""}
-        {/if}
-
+            {if $bgcolor == ""}
+                {assign var = bgcolor value = "#EEEEEE"}
+            {else}
+                {assign var = bgcolor value = ""}
+            {/if}
         {/section}
     </table>
 </form>
-
 {/if}

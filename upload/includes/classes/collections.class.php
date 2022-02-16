@@ -279,7 +279,7 @@ class Collections extends CBCategory
         global $db;
         $result = $db->select(tbl($this->section_tbl).','.tbl('users'),
         ' '.tbl($this->section_tbl).'.*,'.tbl('users').'.userid,'.tbl('users').'.username',
-        ' '.tbl($this->section_tbl).'.collection_id = '.$id.' AND '.tbl($this->section_tbl).'.userid = '.tbl('users').'.userid '.$cond);
+        ' '.tbl($this->section_tbl).'.collection_id = '.mysql_clean($id).' AND '.tbl($this->section_tbl).'.userid = '.tbl('users').'.userid '.$cond);
 
         if($result){
             return $result[0];
