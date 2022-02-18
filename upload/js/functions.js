@@ -583,28 +583,6 @@ function delete_comment(cid,type)
         },'json');
 }
 
-
-/*	function get_the_comment(id,div)
-	{
-
-		$(div).html(loading);
-		$.post(page,
-		{
-			mode : 'get_comment',
-			cid : id
-		},
-		function(data)
-		{
-			if(!data)
-				alert("No data");
-			else
-			{
-				$(div).css("display","none");
-				$(div).html(data).fadeIn("slow");
-			}
-		},'text');
-	}*/
-
 function add_playlist(mode,vid,form_id,objtype)
 {
     $("#playlist_form_result").css("display","block");
@@ -1622,7 +1600,6 @@ function add_comment_js(form_id,type)
 
 function get_the_comment(id,type_id,div)
 {
-    //$(div).html(loading);
     $.post(page,
         {
             mode : 'get_comment',
@@ -1631,21 +1608,17 @@ function get_the_comment(id,type_id,div)
         },
         function(data)
         {
-            if(!data)
+            if(!data){
                 alert("No data");
-            else
-            {
-                if (data.parent_id)
-                {
+            } else {
+                if (data.parent_id) {
                     $('.reply-box-' + data.parent_id).hide();
                     $('.comments-reply-' + data.parent_id).append(data.li_data).slideDown();
                     $('html, body').animate({
                         scrollTop: $('#reply-' + id).offset().top
                     }, 1000);
                     comment_transition('.reply-',id);
-                }
-                else
-                {
+                } else {
                     $(data.li_data).hide().prependTo('#comments-ul').slideDown("slow");
                 }
             }

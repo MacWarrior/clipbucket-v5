@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"47",
+  "revision":"48",
   "status":"dev",
   "detail":[
     {
@@ -82,6 +82,8 @@
         ,"Implement recursive collections (WIP)"
         ,"Fix SQL error on photos page"
         ,"Fix title display on photos page"
+        ,"Fix comments display"
+        ,"Fix report tab display"
       ]
     }
   ]

@@ -1313,7 +1313,7 @@
     "collection_rating_not_allowed": "Collection rating is now allowed",
     "you_cant_rate_own_video": "Vous ne pouvez voter pour vos propres vidéos",
     "you_cant_rate_own_channel": "You cannot rate your own channel",
-    "you_cannot_rate_own_photo": "You cannot rate your own photo",
+    "you_cannot_rate_own_photo": "Vous ne pouvez voter pour vos propres photos",
     "cant_pm_banned_user": "You cannot send private messages to %s",
     "you_are_not_allowed_to_view_user_channel": "You are not allowed to view %s's channel",
     "you_cant_send_pm_yourself": "You cannot send private messages to yourself",

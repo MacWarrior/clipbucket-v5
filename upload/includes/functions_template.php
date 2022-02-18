@@ -13,7 +13,7 @@ function Fetch($name,$inside=FALSE)
     if($inside){
         $file = $cbtpl->fetch($name);
     } else {
-        $file = $cbtpl->fetch(LAYOUT.'/'.$name);
+        $file = $cbtpl->fetch(LAYOUT.DIRECTORY_SEPARATOR.$name);
     }
 
     return $file;

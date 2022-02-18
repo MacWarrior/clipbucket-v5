@@ -57,11 +57,6 @@
 
 
 {else}
-	<script>
-		var assigningClassToId = document.getElementById("comment_{$comment.comment_id}");
-		assigningClassToId.className += " heighlightacomment";
-	</script>
-
 	<li id="comment_{$comment.comment_id}" class="clearfix" {$comment_attr}>
 		<hr>
 		<div class="comments-box clearfix">

@@ -15,8 +15,8 @@ if(isset($_GET['collection'])) {
 if(isset($_POST['EnterInfo'])) {
     assign('step',2);
     $datas = $_POST['photoIDS'];
-    $moreData = explode(",",$datas);
-    $details = array();
+    $moreData = explode(',',$datas);
+    $details = [];
 
     foreach($moreData as $key=>$data) {
         $data = str_replace(' ','',$data);
@@ -30,7 +30,7 @@ if(isset($_POST['updatePhotos'])) {
     assign('step',3);
 }
 
-$collections = $cbphoto->collection->get_collections(array('type'=>'photos','public_upload'=>'yes','user'=>userid()),1);
+$collections = $cbphoto->collection->get_collections(['type'=>'photos','public_upload'=>'yes','user'=>userid()],1);
 
 assign('collections',$collections);
 subtitle(lang('photos_upload'));

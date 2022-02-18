@@ -473,13 +473,11 @@ if(!empty($mode))
 
             $rating = $myquery->spam_comment($cid);
 
-            if(msg())
-            {
+            if(msg()) {
                 $msg = msg_list();
                 $msg = $msg[0]['val'];
             }
-            if(error())
-            {
+            if(error()) {
                 $err = error_list();
                 $err = $err[0]['val'];
             }
@@ -500,8 +498,9 @@ if(!empty($mode))
             $comment = $_POST['comment'];
             $reply_to = $_POST['reply_to'];
             $id = $_POST['obj_id'];
-            if($comment == 'undefined')
+            if($comment == 'undefined'){
                 $comment = '';
+            }
 
             switch($type)
             {
@@ -562,12 +561,11 @@ if(!empty($mode))
             assign('type_id',$type_id);
             assign('comment',$new_com);
 
-            if ($parent_id)
-            {
+            if ($parent_id) {
                 assign('rep_mode',true);
-                echo json_encode(array('parent_id'=>$parent_id,'li_data'=>Fetch('blocks/comments/comment.html')));
+                echo json_encode(['parent_id'=>$parent_id,'li_data'=>Fetch('blocks/comments/comment.html')]);
             } else {
-                echo json_encode(array('li_data'=>Fetch('blocks/comments/comment.html')));
+                echo json_encode(['li_data'=>Fetch('blocks/comments/comment.html')]);
             }
             break;
 

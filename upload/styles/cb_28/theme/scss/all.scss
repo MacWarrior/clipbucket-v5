@@ -3713,14 +3713,6 @@ textarea#comment_box{
 
 }
 // **
-	.heighlightacomment{
-		
-	    &:target {
-	        animation: heighlight_comment 5s;
-	        border-radius: 10px;
-	    }
-
-	}	
 
 	@mixin heighlight_comment_function(){
 		0%{

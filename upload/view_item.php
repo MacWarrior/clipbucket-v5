@@ -46,7 +46,6 @@ if($cbcollection->is_viewable($cid)) {
                             
                             assign('object',$video);
                             assign('user',$userquery->get_user_details($video['userid']));
-                            assign('c',$collect);                        
                             
                             subtitle($video['title']);
                         } else {
@@ -72,7 +71,6 @@ if($cbcollection->is_viewable($cid)) {
                                 
                                 assign('object',$photo);
                                 assign('user',$userquery->get_user_details($photo['userid']));
-                                assign('c',$collect);
                                 
                                 subtitle($collect['collection_name'].' > '.$photo['photo_title']);
                             } else {
