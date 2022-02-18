@@ -777,3 +777,7 @@ ALTER TABLE `{tbl_prefix}collections`
 	ADD FOREIGN KEY (`collection_id_parent`) REFERENCES `{tbl_prefix}collections`(`collection_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 	('enable_sub_collection', '1');
+
+-- REV 49
+INSERT INTO `{tbl_prefix}languages` (`language_id`, `language_code`, `language_name`, `language_regex`, `language_active`, `language_default`) VALUES
+	(3, 'de', 'German', '/^de/i', 'yes', 'no');
