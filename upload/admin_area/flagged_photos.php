@@ -1,6 +1,5 @@
 <?php
 define('THIS_PAGE','flagged_photos');
-define('PARENT_PAGE','photos');
 
 require_once '../includes/admin_config.php';
 

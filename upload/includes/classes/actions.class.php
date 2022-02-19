@@ -127,10 +127,6 @@ class cbactions
         }
     }
 
-	function add_to_favorites($id){ return $this->add_to_fav($id); }
-	function add_favorites($id){ return $this->add_to_fav($id); }
-	function add_fav($id){ return $this->add_to_fav($id); }
-
 	/**
 	 * Function used to check weather object already added to favorites or not
 	 *
@@ -200,7 +196,6 @@ class cbactions
 			e(sprintf(lang('obj_not_exists'), lang($this->name)));
 		}
 	}
-	function flag_it($id){ return $this->report_id($id); }
 
 	/**
 	 * Function used to delete flags
@@ -212,7 +207,7 @@ class cbactions
 		global $db;
 		$id = mysql_clean($id);
 		$db->delete(tbl($this->flag_tbl),['id','type'],[$id,$this->type]);
-		e(sprintf(lang('type_flags_removed'),$this->name),'m');
+		e(sprintf(lang('type_flags_removed'), lang($this->name)),'m');
 	}
 
 	/**
@@ -222,8 +217,8 @@ class cbactions
 	 *
 	 * @return bool
 	 */
-	function report_check($id)
-	{
+	function report_check($id): bool
+    {
 		global $db;
 		$id = mysql_clean($id);
 		$results = $db->select(tbl($this->flag_tbl),'flag_id',' id=\''.mysql_clean($id).'\' AND type=\''.$this->type.'\' AND userid=\''.userid().'\'');

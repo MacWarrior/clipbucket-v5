@@ -65,8 +65,8 @@
 				</div>
 				<div class="user-likes-sub clearfix">
 					<div class="clearfix like-rating col-lg-6 col-md-6 col-sm-6 col-xs-12" id="rating_container">
-						{if $photo.allow_rating != 'no'}
-							{show_video_rating  rating=$photo.rating ratings=$photo.rated_by total='10' id=$photo.photo_id type=photo}
+                        {if config('photo_rating')=='1'}
+							{show_video_rating rating=$photo.rating ratings=$photo.rated_by total='10' id=$photo.photo_id type=photo}
 						{/if}
 					</div>
 					<div class="clearfix subscribe-col col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -206,7 +206,7 @@
 
 		{else}
 		<div align="center" class="moveL no_comments">
-			{lang code='Comments disabled for this photo'}
+            {lang code='comments_disabled_for_photo'}
 		</div>
 		{/if}
 	</div>

@@ -1,18 +1,12 @@
 <?php
 
-if(defined("THIS_PAGE")){
-	$this_page = THIS_PAGE;
-} else {
-	$this_page = "home";
-}
-if(defined("PARENT_PAGE")){
+global $Smarty;
+
+if(defined('PARENT_PAGE')){
 	$parent_page = PARENT_PAGE;
 } else {
-	$parent_page = "home";
+	$parent_page = 'home';
 }
-
-assign("this_page",$this_page);
-assign("parent_page",$parent_page);
 
 function current_page($params)
 {
@@ -21,9 +15,9 @@ function current_page($params)
 	$class = getArrayValue($params, 'class');
 	
 	if($class ==''){
-		$class = "selected";
+		$class = 'selected';
     }
-		
+
 	if($page==$parent_page) {
         return ' class="' . $class . '" ';
     }

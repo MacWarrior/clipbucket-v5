@@ -98,7 +98,7 @@
                 </li>
                 <li>
                     <a data-toggle="tab" href="#config_users">
-                        <h8>Users</h8>
+                        <h8>{lang code='users'}</h8>
                     </a>
                 </li>
                 <li>
@@ -108,12 +108,17 @@
                 </li>
                 <li>
                     <a data-toggle="tab" href="#config_videos">
-                        <h8>Videos</h8>
+                        <h8>{lang code='videos'}</h8>
+                    </a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#config_photos">
+                        <h8>{lang code='photos'}</h8>
                     </a>
                 </li>
                 <li>
                     <a data-toggle="tab" href="#config_comments">
-                        <h8>Comments</h8>
+                        <h8>{lang code='comments'}</h8>
                     </a>
                 </li>
                 <li>
@@ -1261,6 +1266,106 @@
 						</div>
 					</div>
 				</div>
+
+                <div id="config_photos" class="tab-pane">
+					<div class="row">
+						<div class="col-md-4">
+							<div class="row">
+								<div class="col-md-3">
+									<label class="nowrap" for="photo_ratio" title="Photo ratio"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Your photo thumb and medium size thumb will be resized according to these ratios"> Photo ratio</label>
+								</div>
+								<div class="col-md-3 row-size">
+                                    <select class="form-control" id="photo_ratio" name="photo_ratio">
+                                        <option class="form-control" value="4:3" {if $row.photo_ratio=='4:3'}selected{/if} >4:3</option>
+                                        <option class="form-control" value="16:9" {if $row.photo_ratio=='16:9'}selected{/if}>16:9</option>
+                                        <option class="form-control" value="16:10" {if $row.photo_ratio=='16:10'}selected{/if}>16:10</option>
+                                    </select>
+								</div>
+								<div class="col-md-4">
+									<label class="nowrap" for="photo_multi_upload" title="Multi-upload"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Number of photos, user can upload at once"> Multi-upload</label>
+								</div>
+								<div class="col-md-2 row-size">
+                                    <input class="form-control" type="text" name="photo_multi_upload" id="photo_multi_upload" value="{$row.photo_multi_upload}"/>
+								</div>
+							</div>
+							<hr/>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="photo_lar_width" title="Large photo width">Large photo width</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input class="form-control" type="text" maxlength="3" name="photo_lar_width" id="photo_lar_width" value="{$row.photo_lar_width}"/>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="photo_crop" title="Crop Image">Crop Image</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="1" name="photo_crop" id="photo_crop" {if $row.photo_crop=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+
+						</div>
+						<div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="max_photo_size" title="Max photo size"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Maximum allowed photo size, in MBs"> Max photo size</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input class="form-control" type="text" name="max_photo_size" id="max_photo_size" value="{$row.max_photo_size}"/>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="photo_download" title="Photo Downloading">Photo Downloading</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="1" name="photo_download" id="photo_download" {if $row.photo_download=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+
+						</div>
+						<div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="nowrap" title="Photo thumb size">Thumb size</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="nowrap" for="photo_thumb_width" title="Width">Width</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input class="form-control" name="photo_thumb_width" id="photo_thumb_width" value="{$row.photo_thumb_width}"/>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="nowrap" for="photo_thumb_height" title="Height">Height</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input class="form-control" name="photo_thumb_height" id="photo_thumb_height" value="{$row.photo_thumb_height}"/>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="nowrap" title="Photo thumb size">Medium thumb size</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="nowrap" for="photo_med_width" title="Width">Width</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input class="form-control" name="photo_med_width" id="photo_med_width" value="{$row.photo_med_width}"/>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="nowrap" for="photo_med_height" title="Height">Height</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input class="form-control" name="photo_med_height" id="photo_med_height" value="{$row.photo_med_height}"/>
+                                </div>
+                            </div>
+                            <hr/>
+						</div>
+					</div>
+				</div>
 				<div id="config_comments" class="tab-pane">
 					<div class="row">
 						<div class="col-md-4">
@@ -1281,16 +1386,16 @@
 								</div>
 							</div>
 							<hr/>
-							<div class="row">
-								<div class="col-md-10">
-									<label class="nowrap" for="anonym_comments" title="Allow guests to comment">Allow guests to comment</label>
-								</div>
-								<div class="col-md-2 row-size">
-									<input value="yes" name="anonym_comments" id="anonym_comments" {if $row.anonym_comments=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
-							</div>
-							<hr/>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="photo_comments" title="Photo comments">Photo comments</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="1" name="photo_comments" id="photo_comments" {if $row.photo_comments=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
 
 						</div>
 						<div class="col-md-4">
@@ -1303,6 +1408,16 @@
 								</div>
 							</div>
 							<hr/>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <label class="nowrap" for="anonym_comments" title="Allow guests to comment">Allow guests to comment</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="yes" name="anonym_comments" id="anonym_comments" {if $row.anonym_comments=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
 
 						</div>
 						<div class="col-md-4">
@@ -1328,7 +1443,7 @@
 						<div class="col-md-4">
 							<div class="row">
 								<div class="col-md-4">
-									<label class="nowrap" for="video_rating" title="Videos rating">Videos rating</label>
+									<label class="nowrap" for="video_rating" title="Video rating">Video rating</label>
 								</div>
 								<div class="col-md-2 row-size">
 									<input value="1" name="video_rating" id="video_rating" {if $row.video_rating=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -1343,16 +1458,23 @@
 								</div>
 							</div>
 							<hr/>
-							<div class="row">
-								<div class="col-md-4">
-									<label class="nowrap" for="comment_rating" title="Comments rating">Comments rating</label>
-								</div>
-								<div class="col-md-2 row-size">
-									<input value="1" name="comment_rating" id="comment_rating" {if $row.comment_rating=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
-							</div>
-							<hr/>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="photo_rating" title="Video rating">Photo rating</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="1" name="video_rating" id="photo_rating" {if $row.photo_rating=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="own_photo_rating" title="Rate own photo">Rate own photo</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="1" name="own_video_rating" id="own_photo_rating" {if $row.own_photo_rating=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
 
 						</div>
 						<div class="col-md-4">
@@ -1373,6 +1495,16 @@
 								</div>
 							</div>
 							<hr/>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="comment_rating" title="Comments rating">Comments rating</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="1" name="comment_rating" id="comment_rating" {if $row.comment_rating=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
 
 						</div>
 						<div class="col-md-4">

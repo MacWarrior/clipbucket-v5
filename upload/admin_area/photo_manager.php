@@ -1,6 +1,5 @@
 <?php
 define('THIS_PAGE','photo_manager');
-define('PARENT_PAGE','photos');
 
 require_once '../includes/admin_config.php';
 
@@ -134,11 +133,9 @@ if(!$parr['order']){
     $parr['order'] = $parr['order'].' DESC';
 }
 
-$collections = $cbcollection->get_collections(['type'=>'photos']);
 $photos = $cbphoto->get_photos($parr);
 
 Assign('photos', $photos);
-assign('c',$collections);
 
 $pcount = $parr;
 $pcount['count_only'] = true;

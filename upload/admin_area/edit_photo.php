@@ -10,8 +10,9 @@ $pages->page_redir();
 // TODO : Complete URL
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = array('title' => 'Photos', 'url' => '');
-$breadcrumb[1] = array('title' => 'Edit Photo', 'url' => '');
+$breadcrumb[0] = ['title' => 'Photos', 'url' => ''];
+$breadcrumb[1] = ['title' => 'Photo Manager', 'url' => ADMIN_BASEURL.'/photo_manager.php'];
+$breadcrumb[2] = ['title' => 'Edit Photo', 'url' => ''];
 
 $id = mysql_clean($_GET['photo']);
 

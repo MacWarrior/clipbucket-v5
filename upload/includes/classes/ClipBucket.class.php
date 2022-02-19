@@ -491,9 +491,9 @@ class ClipBucket
 	 *
 	 * @param $type
 	 *
-	 * @return mixed
+	 * @return array
 	 */
-    function get_countries($type = 'iso2')
+    function get_countries($type = 'iso2'): array
     {
         global $db;
         $results = $db->select(tbl("countries"), "*");
@@ -559,14 +559,13 @@ class ClipBucket
             $template = $_SESSION['the_template'] = $_GET['set_the_template'];
         }
 
-        if (!is_dir(STYLES_DIR . '/' . $template) || !$template) {
+        if (!is_dir(STYLES_DIR . DIRECTORY_SEPARATOR . $template) || !$template) {
             $template = $cbtpl->get_any_template();
         }
 
-        if (!is_dir(STYLES_DIR . '/' . $template) || !$template){
+        if (!is_dir(STYLES_DIR . DIRECTORY_SEPARATOR . $template) || !$template){
             exit("Unable to find any template, please goto <a href='http://clip-bucket.com/no-template-found'><strong>ClipBucket Support!</strong></a>");
         }
-
 
         if (isset($_GET['set_template'])) {
             $myquery->set_template($template);
@@ -600,7 +599,7 @@ class ClipBucket
         return $new_form;
     }
 
-    function get_extensions($type = 'video')
+    function get_extensions($type = 'video'): string
     {
         switch($type){
             default:
@@ -627,7 +626,7 @@ class ClipBucket
 	 *
 	 * @param null $params
 	 *
-	 * @return array
+	 * @return array|void
 	 */
     function head_menu($params = NULL)
     {
@@ -673,18 +672,15 @@ class ClipBucket
         }
 
 		/* Excluding tabs from menu */
-		if (isset($params['exclude']))
-		{
+		if (isset($params['exclude'])) {
 			if (is_array($params['exclude'])){
 				$exclude = $params['exclude'];
             } else {
-				$exclude = explode(",", $params['exclude']);
+				$exclude = explode(',', $params['exclude']);
             }
 
-			foreach ($headMenu as $key => $hm)
-			{
-				foreach ($exclude as $ex)
-				{
+			foreach ($headMenu as $key => $hm) {
+				foreach ($exclude as $ex) {
 					$ex = trim($ex);
 					if (strtolower(trim($hm['name'])) == strtolower($ex)){
 						unset($headMenu[$key]);
@@ -693,12 +689,10 @@ class ClipBucket
 			}
 		}
 
-		$main_menu = array();
-		foreach($headMenu as $menu)
-		{
-			if (isSectionEnabled($menu['this']))
-			{
-				$selected = current_page(array('page' => $menu['this']));
+		$main_menu = [];
+		foreach($headMenu as $menu) {
+			if (isSectionEnabled($menu['this'])) {
+				$selected = current_page(['page' => $menu['this']]);
 				if($selected){
 					$menu['active'] = true;
                 }

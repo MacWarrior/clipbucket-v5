@@ -73,9 +73,12 @@ if(isset($_POST['update']))
         ,'video_download'
         ,'bits_color_warning'
         ,'video_comments'
+        ,'photo_comments'
         ,'channel_comments'
         ,'video_rating'
         ,'own_video_rating'
+        ,'photo_rating'
+        ,'own_photo_rating'
         ,'comment_rating'
         ,'collection_rating'
         ,'own_collection_rating'
@@ -85,6 +88,8 @@ if(isset($_POST['update']))
         ,'keep_subtitles'
         ,'extract_subtitles'
         ,'enable_sub_collection'
+        ,'photo_crop'
+        ,'photo_download'
     ];
 
     $rows = array(
@@ -187,6 +192,7 @@ if(isset($_POST['update']))
         'own_channel_rating',
         'own_collection_rating',
         'own_video_rating',
+        'own_photo_rating',
 
         'php_path',
         'picture_url',
@@ -199,6 +205,16 @@ if(isset($_POST['update']))
         'photo_user_photos',
         'photo_user_favorites',
         'photo_other_limit',
+        'photo_ratio',
+        'photo_multi_upload',
+        'photo_lar_width',
+        'photo_crop',
+        'max_photo_size',
+        'photo_download',
+        'photo_thumb_width',
+        'photo_thumb_height',
+        'photo_med_width',
+        'photo_med_height',
 
         'resize',
         'remoteUpload',
@@ -240,8 +256,9 @@ if(isset($_POST['update']))
         'bits_color_warning',
         'video_embed',
         'video_comments',
+        'photo_comments',
         'video_rating',
-        'video_comments3',
+        'photo_rating',
         'video_categories',
         'video_codec',
         'vrate',
@@ -323,7 +340,15 @@ if(isset($_POST['update']))
         'collection_user_collections',
         'collection_items_page',
         'collection_user_favorites',
-        'collection_channel_page'
+        'collection_channel_page',
+
+        'photo_multi_upload',
+        'photo_lar_width',
+        'max_photo_size',
+        'photo_thumb_width',
+        'photo_thumb_height',
+        'photo_med_width',
+        'photo_med_height'
     );
 
     foreach($rows as $field) {

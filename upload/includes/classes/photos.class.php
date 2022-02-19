@@ -220,10 +220,6 @@ class CBPhotos
                         ,'url' => ADMIN_BASEURL.'/orphan_photos.php'
                     )
                     ,array(
-                        'title' => 'Photo Settings'
-                        ,'url' => ADMIN_BASEURL.'/photo_settings.php'
-                    )
-                    ,array(
                         'title' => 'Watermark Settings'
                         ,'url' => ADMIN_BASEURL.'/photo_settings.php?mode=watermark_settings'
                     )
@@ -424,7 +420,7 @@ class CBPhotos
 		$cond = '';
 		
 		if(!has_access('admin_access',TRUE)) {
-			$cond = " ".('photos.broadcast')." = 'public' AND ".('photos.active')." = 'yes'";
+			$cond = ' '.('photos.broadcast')." = 'public' AND ".('photos.active')." = 'yes'";
 		} else {
 			if($p['active']){
 				$cond .= ' '.('photos.active')." = '".$p['active']."'";
@@ -442,21 +438,21 @@ class CBPhotos
 			if($cond != ''){
 				$cond .= ' AND ';
             }
-			$cond .= $this->constructMultipleQuery(array('ids'=>$p['pid'],'sign'=>'=','operator'=>'OR'));
+			$cond .= $this->constructMultipleQuery(['ids'=>$p['pid'],'sign'=>'=','operator'=>'OR']);
 		}
 		
 		if($p['key']) {
 			if($cond != ''){
 				$cond .= ' AND ';
             }
-			$cond .= " ".('photos.photo_key')." = '".$p['key']."'";
+			$cond .= ' '.('photos.photo_key')." = '".$p['key']."'";
 		}
 		
 		if($p['filename']) {
 			if($cond != ''){
 				$cond .= ' AND ';
             }
-			$cond .= " ".('photos.filename')." = '".$p['filename']."'";
+			$cond .= ' '.('photos.filename')." = '".$p['filename']."'";
 		}
 		
 		if($p['extension']) {
@@ -465,7 +461,7 @@ class CBPhotos
 					if($cond != ''){
 						$cond .= ' AND ';
                     }
-					$cond .= " ".('photos.ext')." = '".$p['extension']."'";
+					$cond .= ' '.('photos.ext')." = '".$p['extension']."'";
 				}
 			}
 		}
@@ -488,14 +484,14 @@ class CBPhotos
 			if($cond != ''){
 				$cond .= ' AND ';
             }
-			$cond .= $this->constructMultipleQuery(array('ids'=>$p['user'],'sign'=>'=','operator'=>'AND','column'=>'userid'));
+			$cond .= $this->constructMultipleQuery(['ids'=>$p['user'],'sign'=>'=','operator'=>'AND','column'=>'userid']);
 		}
 		
 		if($p['exclude']) {
 			if($cond != ''){
 				$cond .= ' AND ';
             }
-			$cond .= $this->constructMultipleQuery(array('ids'=>$p['exclude'],'sign'=>'<>'));
+			$cond .= $this->constructMultipleQuery(['ids'=>$p['exclude'],'sign'=>'<>']);
 		}
 		
 		$title_tag = '';
@@ -538,7 +534,7 @@ class CBPhotos
 			if($cond != ''){
 				$cond .= ' AND ';
             }
-			$cond .= $this->constructMultipleQuery(array('ids'=>$p['ex_user'],'sign'=>'<>','operator'=>'AND','column'=>'userid'));
+			$cond .= $this->constructMultipleQuery(['ids'=>$p['ex_user'],'sign'=>'<>','operator'=>'AND','column'=>'userid']);
 		}
 		
 		if($p['extra_cond']) {
@@ -557,16 +553,16 @@ class CBPhotos
         }
 
 		if($p['collection'] || $p['get_orphans']) {
-			$cond .= $this->constructMultipleQuery(array('ids'=>$p['collection'],'sign'=>'=','operator'=>'OR','column'=>'collection_id'));
+			$cond .= $this->constructMultipleQuery(['ids'=>$p['collection'],'sign'=>'=','operator'=>'OR','column'=>'collection_id']);
 		} else {
-			$cond .= " ".('photos.collection_id')." <> '0'";
+			$cond .= ' '.('photos.collection_id')." <> '0'";
 		}
 
-        $fields = array(
+        $fields = [
             'photos' => get_photo_fields(),
             'users' => get_user_fields(),
-            'collections' => array( 'collection_name', 'type', 'category', 'views as collection_views', 'date_added as collection_added' )
-        );
+            'collections' => ['collection_name', 'type', 'category', 'views as collection_views', 'date_added as collection_added' ]
+        ];
 
         $string = tbl_fields( $fields );
 
@@ -637,14 +633,14 @@ class CBPhotos
 					if($cond != ''){
 						$cond .= ' AND ';
                     }
-					$cond .= $this->constructMultipleQuery(array("ids"=>$p['exclude'],'sign'=>'<>'));
+					$cond .= $this->constructMultipleQuery(['ids'=>$p['exclude'],'sign'=>'<>']);
 				}
 				
 				if($p['collection']) {
 					if($cond != ''){
 						$cond .= ' AND ';
                     }
-					$cond .= $this->constructMultipleQuery(array('ids'=>$p['collection'],'sign'=>'<>','column'=>'collection_id'));
+					$cond .= $this->constructMultipleQuery(['ids'=>$p['collection'],'sign'=>'<>','column'=>'collection_id']);
 				}
 				
 				if($p['extra_cond']) {
