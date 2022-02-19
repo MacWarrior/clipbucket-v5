@@ -1475,7 +1475,7 @@ class Collections extends CBCategory
      *
      * @return array
      */
-    function rate_collection($id,$rating)
+    function rate_collection($id,$rating): array
     {
         global $db;
         
@@ -1507,7 +1507,12 @@ class Collections extends CBCategory
         } elseif($c_rating['allow_rating'] == 'no' || !config('collection_rating')) {
             e(lang('collection_rating_not_allowed'));
         } else {
-            $voters[userid()] = ['rate'=>$rating,'time'=>NOW()];
+            $voters[userid()] = [
+                'userid'   => userid(),
+                'username' => user_name(),
+                'time'     => now(),
+                'rating'   => $rating
+            ];
             $voters = json_encode($voters);
                     
             $t = $c_rating['rated_by'] * $c_rating['rating'];
@@ -1519,12 +1524,12 @@ class Collections extends CBCategory
             ["$new_rate","$rated_by","|no_mc|$voters"],
             ' collection_id = '.$id);
             $userDetails = [
-                'object_id'    =>    $id,
-                'type'    =>    'collection',
-                'time'    =>    now(),
-                'rating'    =>    $rating,
-                'userid'    =>    userid(),
-                'username'    =>    user_name()
+                'object_id' => $id,
+                'type'      => 'collection',
+                'time'      => now(),
+                'rating'    => $rating,
+                'userid'    => userid(),
+                'username'  => user_name()
             ];    
             /* Updating user details */        
             update_user_voted($userDetails);            

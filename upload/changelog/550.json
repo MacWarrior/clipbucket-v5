@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"51",
+  "revision":"52",
   "status":"dev",
   "detail":[
     {
@@ -88,6 +88,7 @@
         ,"Fix comments display"
         ,"Fix report tab display"
         ,"Fix rating display"
+        ,"Fix ratings"
       ]
     }
   ]

@@ -4649,12 +4649,11 @@
                 $field = 'voters';
 				break;
 
-            // TODO : USER
             case 'user':
-                /*$type = 'users';
+                $type = 'user_profile';
                 $toselect = 'userid';
-                $field = '';
-                break;*/
+                $field = 'voters';
+                break;
 			
 			default:
                 error_log('has_rated unknown type : '.$type.PHP_EOL);
@@ -4664,16 +4663,19 @@
 				break;
 		}
 		$raw_rating = $db->select(tbl($type),$field,"$toselect = $itemid");
-		$ratedby_json = $raw_rating[0]['voter_ids'];
+		$ratedby_json = $raw_rating[0][$field];
 		$ratedby_cleaned = json_decode($ratedby_json,true);
 		foreach ($ratedby_cleaned as $rating_data) {
 			if ($rating_data['userid'] == $userid) {
 				if ($rating_data['rating'] == 0) {
+                    error_log('disliked');
 					return 'disliked';
 				}
+                error_log('liked');
 				return 'liked';
 			}
 		}
+        error_log('KO');
 		return false;
 	}
 

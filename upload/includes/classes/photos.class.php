@@ -2402,9 +2402,9 @@ class CBPhotos
 	 *
 	 * @return array
 	 */
-	function rate_photo($id,$rating)
-	{
-		global $db,$json;
+	function rate_photo($id,$rating): array
+    {
+		global $db;
 		
 		if(!is_numeric($rating) || $rating <= 9){
 			$rating = 0;
@@ -2426,36 +2426,40 @@ class CBPhotos
         }
 			
 		if(!userid()){
-			e(lang("please_login_to_rate"));
+			e(lang('please_login_to_rate'));
         } elseif(userid()==$c_rating['userid'] && !config('own_photo_rating')) {
-			e(lang("you_cannot_rate_own_photo"));
+			e(lang('you_cannot_rate_own_photo'));
         } elseif(!empty($already_voted)) {
-			e(lang("you_hv_already_rated_photo"));
+			e(lang('you_hv_already_rated_photo'));
         } elseif($c_rating['allow_rating'] == 'no' || !config('photo_rating')) {
-			e(lang("photo_rate_disabled"));
+			e(lang('photo_rate_disabled'));
         } else {
-			$voters[userid()] = array('rate'=>$rating,'time'=>NOW());
+            $voters[userid()] = [
+                'userid'   => userid(),
+                'username' => user_name(),
+                'time'     => now(),
+                'rating'   => $rating
+            ];
 			$voters = json_encode($voters);
 					
 			$t = $c_rating['rated_by'] * $c_rating['rating'];
 			$rated_by = $c_rating['rated_by'] + 1;
 			$new_rate = ($t + $rating) / $rated_by;
-			$db->update(tbl('photos'),array('rating','rated_by','voters'),array("$new_rate","$rated_by","|no_mc|$voters")," photo_id = ".$id."");
-			$userDetails = array(
+			$db->update(tbl('photos'),['rating','rated_by','voters'],["$new_rate","$rated_by","|no_mc|$voters"],' photo_id = '.$id);
+			$userDetails = [
 				"object_id"	=>	$id,
-				"type"	=>	"photo",
+				"type"	=>	'photo',
 				"time"	=>	now(),
 				"rating"	=>	$rating,
 				"userid"	=>	userid(),
 				"username"	=>	user_name()
-			);	
+            ];
 			/* Updating user details */		
 			update_user_voted($userDetails);			
-			e(lang("thnx_for_voting"),"m");			
+			e(lang('thnx_for_voting'),'m');
 		}
 		
-		$return = array("rating"=>$new_rate,"rated_by"=>$rated_by,'total'=>10,"id"=>$id,"type"=>"photo","disable"=>"disabled");
-		return $return;	
+		return ['rating'=>$new_rate,'rated_by'=>$rated_by,'total'=>10,'id'=>$id,'type'=>'photo','disable'=>'disabled'];
 	}
 
 	/**
@@ -2484,31 +2488,31 @@ class CBPhotos
         }
 		switch($type)
 		{
-			case "html":
+			case 'html':
 				if($p['with_url']){
 					$code .= "&lt;a href='".$this->collection->collection_links($photo,'view_item')."' target='_blank'&gt;";
                 }
-				$code .= "&lt;img src='".BASEURL.$image_file."' title='".display_clean($photo['photo_title'])."' alt='".display_clean($photo['photo_title'])."&nbsp;".TITLE."' /&gt;";
+				$code .= "&lt;img src='".BASEURL.$image_file."' title='".display_clean($photo['photo_title'])."' alt='".display_clean($photo['photo_title']).'&nbsp;'.TITLE."' /&gt;";
 				if($p['with_url']){
 					$code .= "&lt;/a&gt;";
                 }
 				break;
 			
-			case "forum":
+			case 'forum':
 				if($p['with_url']){
-					$code .= "&#91;URL=".$this->collection->collection_links($photo,'view_item')."&#93;";
+					$code .= '&#91;URL='.$this->collection->collection_links($photo,'view_item').'&#93;';
                 }
-				$code .= "&#91;IMG&#93;".BASEURL.$image_file."&#91;/IMG&#93;";
+				$code .= '&#91;IMG&#93;'.BASEURL.$image_file.'&#91;/IMG&#93;';
 				if($p['with_url']){
-					$code .= "&#91;/URL&#93;";
+					$code .= '&#91;/URL&#93;';
                 }
 				break;
 			
-			case "email":
+			case 'email':
 				$code .= $this->collection->collection_links($photo,'view_item');
 				break;
 			
-			case "direct":
+			case 'direct':
                 $code .= BASEURL.$image_file;
 				break;
 			
