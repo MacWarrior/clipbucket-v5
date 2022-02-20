@@ -85,8 +85,6 @@ class Clipbucket_db
 	 */
     function _select($query): array
     {
-		$this->ping();
-
         $result = $this->execute($query, 'select');
 
 		$data = [];
@@ -126,7 +124,6 @@ class Clipbucket_db
         }
 
         $query = 'SELECT '.$fields.' FROM '.$tbl.$query_params.' '.$ep;
-
 		return $this->_select($query);
     }
 

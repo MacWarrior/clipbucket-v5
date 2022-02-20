@@ -665,11 +665,11 @@ class userquery extends CBCategory{
         global $sess;
 
         $is_email = strpos( $id , '@' ) !== false;
-        $select_field = ( !$is_email and !is_numeric( $id ) ) ? 'username' : ( !is_numeric( $id ) ? 'email' : 'userid' );
+        $select_field = ( !$is_email && !is_numeric( $id ) ) ? 'username' : ( !is_numeric( $id ) ? 'email' : 'userid' );
         if($email == false){
-            $fields = tbl_fields( array( 'users' => array( '*' ) ) );
+            $fields = tbl_fields( ['users' => ['*']] );
         } else {
-            $fields = tbl_fields( array( 'users' => array( 'email' ) ) );
+            $fields = tbl_fields( ['users' => ['email']] );
         }
 
         $query = "SELECT $fields FROM ".cb_sql_table( 'users' );
@@ -847,18 +847,18 @@ class userquery extends CBCategory{
         if(!$friend){
             e(lang('usr_exist_err'));
         } elseif($this->is_requested_friend($uid,$fid)) {
-            e(lang("you_already_sent_frend_request"));
+            e(lang('you_already_sent_frend_request'));
         } elseif($this->is_requested_friend($uid,$fid,"in")) {
             $this->confirm_friend($fid,$uid);
-            e(lang("friend_added"));
+            e(lang('friend_added'));
         } elseif($uid==$fid) {
-            e(lang("friend_add_himself_error"));
+            e(lang('friend_add_himself_error'));
         } else {
             $db->insert(tbl($this->dbtbl['contacts']),array('userid','contact_userid','date_added','request_type'),
                                                  array($uid,$fid,now(),'out'));
             $insert_id = $db->insert_id();
             
-            e(lang("friend_request_sent"),"m");
+            e(lang('friend_request_sent'),'m');
             
             //Sending friendship request email
             $tpl = $cbemail->get_template('friend_request_email');
@@ -890,7 +890,7 @@ class userquery extends CBCategory{
     function is_confirmed_friend($uid,$fid): bool
     {
         global $db;
-        $count = $db->count(tbl($this->dbtbl['contacts']),"contact_id",
+        $count = $db->count(tbl($this->dbtbl['contacts']),'contact_id',
                     " (userid='$uid' AND contact_userid='$fid') OR (userid='$fid' AND contact_userid='$uid') AND confirmed='yes'" );
         if($count[0]>0){
             return true;
@@ -899,7 +899,7 @@ class userquery extends CBCategory{
     }
 
     /**
-     * function used to check weather users are firends or not
+     * function used to check weather users are friends or not
      *
      * @param $uid
      * @param $fid
@@ -909,7 +909,7 @@ class userquery extends CBCategory{
     function is_friend($uid,$fid): bool
     {
         global $db;
-        $count = $db->count(tbl($this->dbtbl['contacts']),"contact_id",
+        $count = $db->count(tbl($this->dbtbl['contacts']),'contact_id',
                     " (userid='$uid' AND contact_userid='$fid') OR (userid='$fid' AND contact_userid='$uid')" );
         if($count[0]>0){
             return true;
@@ -3064,7 +3064,7 @@ class userquery extends CBCategory{
     {
         global $Cbucket;
 
-        $default = array();
+        $default = [];
 
         if(isset($input)){
             $default = $input;
@@ -3227,9 +3227,9 @@ class userquery extends CBCategory{
                 'type' => 'dropdown',
                 'name' => 'category',
                 'id' => 'category',
-                'value' => array('category', $default['category']),
+                'value' => array('category', ($default['category'] ?? '') ),
                 'db_field' => 'category',
-                'checked' => $default['category'],
+                'checked' => ($default['category'] ?? ''),
                 'required' =>'yes',
                 'invalid_err' => lang('select_category'),
                 'display_function' => 'convert_to_categories',

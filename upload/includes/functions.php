@@ -4668,14 +4668,11 @@
 		foreach ($ratedby_cleaned as $rating_data) {
 			if ($rating_data['userid'] == $userid) {
 				if ($rating_data['rating'] == 0) {
-                    error_log('disliked');
 					return 'disliked';
 				}
-                error_log('liked');
 				return 'liked';
 			}
 		}
-        error_log('KO');
 		return false;
 	}
 

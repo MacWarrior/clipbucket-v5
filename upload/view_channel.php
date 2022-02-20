@@ -7,19 +7,17 @@ require 'includes/config.inc.php';
 global $pages, $userquery, $Cbucket;
 
 $pages->page_redir();
-if( $userquery->perm_check('view_channel',true) )
-{
+if( $userquery->perm_check('view_channel',true) ) {
     $u = $_GET['user'];
-    $u = $u ? $u : $_GET['userid'];
-    $u = $u ? $u : $_GET['username'];
-    $u = $u ? $u : $_GET['uid'];
-    $u = $u ? $u : $_GET['u'];
+    $u = $u ? : $_GET['userid'];
+    $u = $u ? : $_GET['username'];
+    $u = $u ? : $_GET['uid'];
+    $u = $u ? : $_GET['u'];
     $u = mysql_clean($u);
 
     $udetails = $userquery->get_user_details($u);
     if( !$udetails ){
-        if($_GET['seo_diret'] != 'yes')
-        {
+        if($_GET['seo_diret'] != 'yes') {
             e(lang('usr_exist_err'));
             $Cbucket->show_page = false;
         } else {
@@ -36,7 +34,8 @@ if( $userquery->perm_check('view_channel',true) )
         }
         display_it();
         exit();
-    } else if( $udetails['ban_status'] == 'yes') {
+    }
+    if( $udetails['ban_status'] == 'yes') {
         e(lang('usr_uban_msg'));
         if(!has_access('admin_access',true)){
             $Cbucket->show_page = false;
@@ -67,27 +66,14 @@ if( $userquery->perm_check('view_channel',true) )
     Assign('extensions', $Cbucket->get_extensions('photo'));
 
     //Getting users channel List
-    $result_array['limit'] = $get_limit;
-    if(!$array['order']){
-        $result_array['order'] = ' profile_hits DESC limit 6 ';
-    }
-
+    $result_array['order'] = ' profile_hits DESC limit 6';
     $users = get_users($result_array);
     Assign('users', $users);
-    global $db;
-    $results = $db->select(tbl('users'),'*');
-    Assign('user_s',$results);
-
-    // pulls user profile
-    $profile = $userquery->get_user_profile($udetails['userid']);
-    Assign('u_control', $profile);
 
     //Checking Profile permissions
     $perms = $p['show_profile'];
-    if(userid() != $udetails['userid'])
-    {
-        if(($perms == 'friends' || $perms == 'members') && !userid())
-        {
+    if(userid() != $udetails['userid']) {
+        if(($perms == 'friends' || $perms == 'members') && !userid()) {
             global $Cbucket;
             e(lang('you_cant_view_profile'));
             $Cbucket->show_page = false;
@@ -99,10 +85,8 @@ if( $userquery->perm_check('view_channel',true) )
             }
         }
         //Checking if user is not banned by admin
-        if(userid())
-        {
-            if($userquery->is_user_banned(user_name(),$udetails['userid'],$udetails['banned_users']))
-            {
+        if(userid()) {
+            if($userquery->is_user_banned(user_name(),$udetails['userid'],$udetails['banned_users'])) {
                 e(sprintf(lang('you_are_not_allowed_to_view_user_channel'),$udetails['username']));
                 assign('isBlocked','yes');
                 if(!has_access('admin_access',true)){
@@ -114,12 +98,7 @@ if( $userquery->perm_check('view_channel',true) )
 
     subtitle(sprintf(lang('user_s_channel'),$udetails['username']));
 
-    //Setting profile item
-    $profileItem = $userquery->getProfileItem($udetails['userid'],true);
-
-    assign('profile_item',$profileItem);
-
-    add_js(array('jquery_plugs/compressed/jquery.jCarousel.js'=>'view_channel'));
+    add_js(['jquery_plugs/compressed/jquery.jCarousel.js'=>'view_channel']);
 
     if($Cbucket->show_page || $udetails){
         template_files('view_channel.html');
