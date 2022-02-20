@@ -1,5 +1,9 @@
 <?php
+define('THIS_PAGE','login_as_user');
+
 require_once '../includes/admin_config.php';
+
+global $userquery,$pages;
 
 if(!$userquery->is_admin_logged_as_user()) {
 	$userquery->admin_login_check();
@@ -20,7 +24,7 @@ $userToLoginAsDetails = $userquery->get_user_details($uid);
 $userToLoginAsLevel = $userToLoginAsDetails['level'];
 
 if ($userLevel > 1 && $userToLoginAsLevel == 1) {
-	e("You do not have enough permissions to login as Admin user");
+	e('You do not have enough permissions to login as Admin user');
 }
 
 if($userquery->login_as_user($uid)){
