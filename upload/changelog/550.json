@@ -48,6 +48,7 @@
         ,"Auto-clear templates cache when in DEV mode"
         ,"Fix compatibility with MySQL 8.0.X"
         ,"Add german translation <i>#219</i> (Thanks joo4mart !)"
+        ,"Update PHPMailer to 5.2.28"
       ]
     },
     {
