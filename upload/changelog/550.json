@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"54",
+  "revision":"55",
   "status":"dev",
   "detail":[
     {
@@ -64,6 +64,7 @@
       "description": [
         "Remove LSHW dependency"
         ,"Fix Nginx Vhost for 404 & 403 pages <i>#207</i>"
+        ,"Fix wrong permission on directories creation"
       ]
     },
     {

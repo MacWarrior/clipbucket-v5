@@ -114,7 +114,7 @@ class cbfeeds
 		$ufeedDir = USER_FEEDS_DIR.DIRECTORY_SEPARATOR.$uid;
 		//checking user feed folder exists or not
 		if(!file_exists($ufeedDir)){
-			mkdir($ufeedDir, 755, true);
+			mkdir($ufeedDir, 0755, true);
         }
 		return $ufeedDir.DIRECTORY_SEPARATOR.$time.'.feed';
 	}

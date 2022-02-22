@@ -75,7 +75,7 @@ if(isset($_POST['mass_upload_video'])) {
             $results=$Upload->add_conversion_queue($file_name);
             $str1 = date('Y').DIRECTORY_SEPARATOR.date('m').DIRECTORY_SEPARATOR.date('d');
             $str = DIRECTORY_SEPARATOR.$str1.DIRECTORY_SEPARATOR;
-            mkdir(VIDEOS_DIR.$str, 755, true);
+            mkdir(VIDEOS_DIR.$str, 0755, true);
             $fields['file_directory'] = $str1;
             $fname=explode('.', $file_name);
             $cond='file_name='.'\''.$fname[0].'\'';
