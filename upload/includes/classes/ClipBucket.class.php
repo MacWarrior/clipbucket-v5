@@ -611,7 +611,7 @@ class ClipBucket
                 break;
         }
 
-        $exts = preg_replace('/ /', '', $exts);
+        $exts = preg_replace('/ /', '', strtolower($exts));
         $exts = explode(',', $exts);
         $new_form = '';
         foreach ($exts as $ext) {

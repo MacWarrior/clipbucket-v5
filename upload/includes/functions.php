@@ -4888,10 +4888,10 @@
         global $Cbucket;
 
         $filename = $_FILES['fileToUpload']['name'];
-        $file_ext = pathinfo($filename, PATHINFO_EXTENSION);
+        $file_ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
         $file_basename = pathinfo($filename, PATHINFO_FILENAME);
         $filesize = $_FILES['fileToUpload']['size'];
-        $allowed_file_types = explode(',', $Cbucket->configs['allowed_photo_types']);
+        $allowed_file_types = explode(',', strtolower($Cbucket->configs['allowed_photo_types']));
 
         if (in_array($file_ext,$allowed_file_types) && ($filesize < 4000000))
         {

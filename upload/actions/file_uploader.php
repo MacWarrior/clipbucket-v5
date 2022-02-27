@@ -5,6 +5,7 @@ include('../includes/config.inc.php');
 require_once(dirname(dirname(__FILE__)).'/includes/classes/sLog.php');
 global $Cbucket,$cbvid,$Upload,$db,$eh;
 
+$mode = '';
 if($_FILES['Filedata']){
     $mode = 'upload';
 }
@@ -42,12 +43,12 @@ switch($mode)
             $tags = $title;
         }
 
-        $vidDetails = array(
+        $vidDetails = [
             'title'			=> $title,
             'description' 	=> $desc,
             'tags'			=> $tags,
-            'category'		=> array($cbvid->get_default_cid())
-        );
+            'category'		=> [$cbvid->get_default_cid()]
+        ];
 
         assign('objId',$_POST['objId']);
         assign('input',$vidDetails);
@@ -61,27 +62,26 @@ switch($mode)
 
     case 'upload':
         $ffmpegpath = $Cbucket->configs['ffmpegpath'];
-        $extension = getExt($_FILES['Filedata']['name']);
+        $extension = strtolower(getExt($_FILES['Filedata']['name']));
 
         #checking for if the right file is uploaded
-        $content_type = get_mime_type($_FILES['Filedata']['tmp_name']);
+        $tempFile = $_FILES['Filedata']['tmp_name'];
+        $content_type = get_mime_type($tempFile);
         if ( $content_type != 'video')  {
-            echo json_encode(array('status'=>'400','err'=>'Invalid Content'));
+            echo json_encode(['status'=>'400','err'=>'Invalid Content']);
             exit();
         }
 
         $types = strtolower(config('allowed_video_types'));
         $supported_extensions = explode(',', $types);
-
         if (!in_array($extension, $supported_extensions)) {
-            echo json_encode(array('status'=>'504','msg'=>'Invalid video extension'));
+            echo json_encode(['status'=>'504','msg'=>'Invalid video extension']);
             exit();
         }
 
         $file_name	= time().RandomString(5);
-        $tempFile = $_FILES['Filedata']['tmp_name'];
         $file_directory = date('Y/m/d');
-        $targetFileName = $file_name.'.'.getExt( $_FILES['Filedata']['name']);
+        $targetFileName = $file_name.'.'.$extension;
 
         createDataFolders(LOGS_DIR);
         $logFile = LOGS_DIR.DIRECTORY_SEPARATOR.$file_directory.DIRECTORY_SEPARATOR.$file_name.'.log';
@@ -104,7 +104,7 @@ switch($mode)
         }
 
         //Checking uploading errors
-        $uploadErrors = array(
+        $uploadErrors = [
             0=>'There is no error, the file uploaded with success',
             1=>'The uploaded file exceeds the upload_max_filesize directive in php.ini',
             2=>'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
@@ -113,12 +113,12 @@ switch($mode)
             6=>'Missing a temporary folder',
             7=>'Failed to write file to disk',
             8=>'A PHP extension stopped the file upload. PHP does not provide a way to ascertain which extension caused the file upload to stop; examining the list of loaded extensions with phpinfo() may help'
-        );
+        ];
         if (!isset($_FILES['Filedata'])) {
             upload_error('No file was selected');
             exit(0);
         }
-        if (isset($_FILES['Filedata']["error"]) && $_FILES['Filedata']["error"] != 0) {
+        if (isset($_FILES['Filedata']['error']) && $_FILES['Filedata']['error'] != 0) {
             upload_error($uploadErrors[$_FILES['Filedata']['error']]);
             exit(0);
         }
@@ -156,25 +156,25 @@ switch($mode)
             $log->writeLine('Temporary Uploading', 'Went something wrong in moving the file in Temp directory!', true);
         }
 
-        $vidDetails = array(
+        $vidDetails = [
             'title'           => $_FILES['Filedata']['name']
             ,'file_name'      => $file_name
             ,'file_directory' => $file_directory
             ,'description'    => $_FILES['Filedata']['name']
-            ,'tags'           => genTags(str_replace(array(' ','_','-'),', ',$_FILES['Filedata']['name']))
+            ,'tags'           => genTags(str_replace([' ','_','-'],', ',$_FILES['Filedata']['name']))
             ,'category'       => [$cbvid->get_default_cid()]
             ,'userid'         => userid()
-        );
+        ];
         $vid = $Upload->submit_upload($vidDetails);
 
         $Upload->add_conversion_queue($targetFileName);
 
         if (stristr(PHP_OS, 'WIN')) {
-            exec(php_path().' -q '.BASEDIR."/actions/video_convert.php $targetFileName");
+            exec(php_path().' -q '.BASEDIR.'/actions/video_convert.php '.$targetFileName);
         } elseif(stristr(PHP_OS, 'darwin')) {
-            exec(php_path().' -q '.BASEDIR."/actions/video_convert.php $targetFileName </dev/null >/dev/null &");
+            exec(php_path().' -q '.BASEDIR.'/actions/video_convert.php '.$targetFileName.' </dev/null >/dev/null &');
         } else { // for ubuntu or linux
-            exec(php_path().' -q '.BASEDIR."/actions/video_convert.php {$targetFileName} {$file_name} {$file_directory} {$logFile} > /dev/null &");
+            exec(php_path().' -q '.BASEDIR.'/actions/video_convert.php '.$targetFileName.' '.$file_name.' '.$file_directory.' '.$logFile.' > /dev/null &');
         }
 
         $TempLogData = 'Video Converson File executed successfully with Target File > !'.$targetFileName;
@@ -184,7 +184,7 @@ switch($mode)
         $query = 'INSERT INTO '.tbl('video_views').' (video_id, video_views, last_updated) VALUES('.$vid.',0,'.time().')';
         $db->Execute($query);
 
-        echo json_encode(array('success'=>'yes','file_name'=>$file_name));
+        echo json_encode(['success'=>'yes','file_name'=>$file_name]);
         exit();
 
     default:
@@ -195,5 +195,5 @@ switch($mode)
 //function used to display error
 function upload_error($error)
 {
-    echo json_encode(array('error'=>$error));
+    echo json_encode(['error'=>$error]);
 }

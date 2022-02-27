@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"55",
+  "revision":"56",
   "status":"dev",
   "detail":[
     {
@@ -49,6 +49,7 @@
         ,"Fix compatibility with MySQL 8.0.X"
         ,"Add german translation <i>#219</i> (Thanks joo4mart !)"
         ,"Update PHPMailer to 5.2.28"
+        ,"Fix file extension check <i>#221</i>"
       ]
     },
     {

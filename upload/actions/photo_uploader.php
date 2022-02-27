@@ -177,7 +177,7 @@ switch($mode)
             exit();
         }
 
-        $extension = getExt( $_FILES['file']['name']);
+        $extension = strtolower(getExt($_FILES['file']['name']));
         $types = strtolower(config('allowed_photo_types'));
         $supported_extensions = explode(',', $types);
 
@@ -186,7 +186,6 @@ switch($mode)
             exit();
         }
 
-        //pr($_REQUEST);
         $targetDir = PHOTOS_DIR;
         $directory = create_dated_folder( PHOTOS_DIR );
         $targetDir .= DIRECTORY_SEPARATOR.$directory;
