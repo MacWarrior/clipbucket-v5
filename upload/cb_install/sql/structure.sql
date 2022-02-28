@@ -641,7 +641,7 @@ CREATE TABLE `{tbl_prefix}video` (
   `file_directory` varchar(25) NOT NULL DEFAULT '',
   `description` text DEFAULT NULL,
   `tags` mediumtext NOT NULL,
-  `category` VARCHAR(3) NULL DEFAULT NULL,
+  `category` VARCHAR(200) NULL DEFAULT NULL,
   `category_parents` text NULL DEFAULT NULL,
   `broadcast` varchar(10) NOT NULL DEFAULT '',
   `location` mediumtext DEFAULT NULL,

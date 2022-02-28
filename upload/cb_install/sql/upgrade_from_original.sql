@@ -781,3 +781,7 @@ INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 -- REV 49
 INSERT INTO `{tbl_prefix}languages` (`language_id`, `language_code`, `language_name`, `language_regex`, `language_active`, `language_default`) VALUES
 	(3, 'de', 'German', '/^de/i', 'yes', 'no');
+
+-- REV 57
+ALTER TABLE `{tbl_prefix}video`
+	MODIFY COLUMN `category` VARCHAR(200) NULL DEFAULT NULL;
