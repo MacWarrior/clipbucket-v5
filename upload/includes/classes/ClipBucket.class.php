@@ -324,7 +324,7 @@ class ClipBucket
                         ,'url' => ADMIN_BASEURL.'/add_member.php'
                     )
                     ,array(
-                        'title' => 'Manage categories'
+                        'title' => lang('manage_categories')
                         ,'url' => ADMIN_BASEURL.'/user_category.php'
                     )
                     ,array(

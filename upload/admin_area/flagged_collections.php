@@ -12,7 +12,7 @@ $mode = $_GET['mode'];
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = array('title' => 'Collections', 'url' => '');
+$breadcrumb[0] = array('title' => lang('collections'), 'url' => '');
 $breadcrumb[1] = array('title' => 'Flagged Collections', 'url' => ADMIN_BASEURL.'/flagged_collections.php');
 
 //Delete Photo

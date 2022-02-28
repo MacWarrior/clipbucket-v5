@@ -67,7 +67,7 @@ class CBvideo extends CBCategory
                         ,'url' => ADMIN_BASEURL.'/manage_playlist.php'
                     )
                     ,array(
-                        'title' => 'Manage Categories'
+                        'title' => lang('manage_categories')
                         ,'url' => ADMIN_BASEURL.'/category.php'
                     )
                     ,array(

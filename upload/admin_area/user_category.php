@@ -8,7 +8,7 @@ $pages->page_redir();
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = array('title' => lang('users'), 'url' => '');
-$breadcrumb[1] = array('title' => 'Manage categories', 'url' => ADMIN_BASEURL.'/user_category.php');
+$breadcrumb[1] = array('title' => lang('manage_categories'), 'url' => ADMIN_BASEURL.'/user_category.php');
 
 //Form Processing
 if(isset($_POST['add_category'])) {

@@ -8,7 +8,7 @@ $pages->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => 'Collections', 'url' => ''];
+$breadcrumb[0] = ['title' => lang('collections'), 'url' => ''];
 $breadcrumb[1] = ['title' => lang('manage_collections'), 'url' => ADMIN_BASEURL.'/flagged_collections.php'];
 
 if(isset($_GET['make_feature'])) {

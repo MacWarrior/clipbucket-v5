@@ -1173,7 +1173,7 @@
     "collection_not_exist": "Cette collection n'existe pas",
     "selected_collects_del": "Selected collections have been deleted.",
     "manage_collections": "Gestion des Collections",
-    "manage_categories": "Manage Categories",
+    "manage_categories": "Gestion des catégories",
     "flagged_collections": "Flagged Collections",
     "create_collection": "Création d'une collection",
     "selected_items_removed": "Les %s sélectionnées ont été retirées",

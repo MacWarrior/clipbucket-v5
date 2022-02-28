@@ -92,7 +92,7 @@ class Collections extends CBCategory
             // Adding Collection links in Admin Area
             if($per['collection_moderation'] == 'yes'){
                 $menu_collection = [
-                    'title' => 'Collections'
+                    'title' => lang('collections')
                     ,'class' => 'glyphicon glyphicon-folder-close'
                     ,'sub' => [
                         [
