@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"57",
+  "revision":"58",
   "status":"dev",
   "detail":[
     {
@@ -30,6 +30,7 @@
         ,"Update video thumbnails edition interface"
         ,"Move photo options to website configurations"
         ,"Fix photo edition breadcrumb"
+        ,"Fix collection search"
       ]
     },
     {

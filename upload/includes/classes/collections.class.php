@@ -82,8 +82,7 @@ class Collections extends CBCategory
         global $userquery,$Cbucket;
         $per = $userquery->get_user_level(userid());
         // Adding My Account Links    
-        if(isSectionEnabled('collections'))
-        {
+        if(isSectionEnabled('collections')) {
             $userquery->user_account[lang('collections')] = [
                 lang('add_new_collection') => cblink(['name'=>'manage_collections','extra_params'=>'mode=add_new']),
                 lang('manage_collections') => cblink(['name'=>'manage_collections']),
@@ -154,17 +153,17 @@ class Collections extends CBCategory
         $this->search->has_user_id = true;
             
         $sorting = [
-            'date_added'    => lang('date_added'),
-            'views'            => lang('views'),
-            'total_comments'=> lang('comments'),
-            'total_objects' => lang('Items')
+            'date_added'     => lang('date_added'),
+            'views'          => lang('views'),
+            'total_comments' => lang('comments'),
+            'total_objects'  => lang('Items')
         ];
                                 
         $this->search->sorting    = [
-            'date_added'    => ' date_added DESC',
-            'views'         => ' views DESC',
-            'total_comments'=> ' total_comments DESC',
-            'total_objects' => ' total_objects DESC'
+            'date_added'     => ' date_added DESC',
+            'views'          => ' views DESC',
+            'total_comments' => ' total_comments DESC',
+            'total_objects'  => ' total_objects DESC'
         ];
                         
         $default = $_GET;
@@ -242,7 +241,7 @@ class Collections extends CBCategory
     function collection_exists($id): bool
     {
         global $db;
-        $result = $db->count(tbl($this->section_tbl),'collection_id'," collection_id = $id");
+        $result = $db->count(tbl($this->section_tbl),'collection_id',' collection_id = '.$id);
         if($result){
             return true;
         }
@@ -316,7 +315,7 @@ class Collections extends CBCategory
      * @param null $p
      * @param bool $brace
      *
-     * @return array|bool
+     * @return array|bool|void
      */
     function get_collections($p=NULL,$brace = false)
     {
@@ -326,25 +325,22 @@ class Collections extends CBCategory
         $order = $p['order'];    
         $cond = '';
         
-        if(!has_access('admin_access',TRUE) && $p['user'] != userid()){
-            $cond .= ' '.tbl('collections.active').' = \'yes\'';
-        } elseif($p['user'] && $p['user'] == userid()) {
-            $cond .= ' '.tbl('collections.active').' = \'yes\'';
+        if((!has_access('admin_access',TRUE) && $p['user'] != userid()) || ($p['user'] && $p['user'] == userid()) ){
+            $cond .= ' C.active = \'yes\'';
         } else {
             if($p['active']) {
-                $cond .= ' '.tbl('collections.active').' = \''.$p['active'].'\'';
+                $cond .= ' C.active = \''.$p['active'].'\'';
             }
             
             if($p['broadcast']) {
                 if($cond != ''){
                     $cond .= ' AND ';
                 }
-                $cond .= ' '.tbl('collections.broadcast').' = \''.$p['broadcast'].'\'';
+                $cond .= ' C.broadcast = \''.$p['broadcast'].'\'';
             }
         }
         
-        if($p['category'] && !empty($p['category']))
-        {
+        if(isset($p['category']) && !empty($p['category'])) {
             $get_all = false;
             if(!is_array($p['category'])){
                 if(strtolower($p['category']) == 'all'){
@@ -370,7 +366,7 @@ class Collections extends CBCategory
                     if($count > 1){
                         $cond .= ' OR ';
                     }
-                    $cond .= ' '.tbl('collections.category')." LIKE '%#$cat#%'";
+                    $cond .= ' C.category LIKE \'%#'.$cat.'#%\'';
                 }
                 $cond .= ')';
             }
@@ -387,7 +383,7 @@ class Collections extends CBCategory
             if($cond != ''){
                 $cond .= ' AND ';
             }
-            $cond .= ' '.tbl('collections.type').' = \''.$p['type'].'\'';
+            $cond .= ' C.type = \''.$p['type'].'\'';
         }
 
         if($p['user']) {
@@ -397,14 +393,14 @@ class Collections extends CBCategory
             if($brace){
                 $cond .= '(';
             }
-            $cond .= ' '.tbl('collections.userid').' = \''.$p['user'].'\'';
+            $cond .= ' C.userid = \''.$p['user'].'\'';
         }
 
         if($p['featured']) {
             if($cond != '')    {
                 $cond .= ' AND ';
             }
-            $cond .= ' '.tbl('collections.featured').' = \''.$p['featured'].'\'';
+            $cond .= ' C.featured = \''.$p['featured'].'\'';
         }
 
         if($p['public_upload']) {
@@ -412,7 +408,7 @@ class Collections extends CBCategory
                 $cond .= ' OR ';
             }
 
-            $cond .= ' '.tbl('collections.public_upload').' = \''.$p['public_upload'].'\'';
+            $cond .= ' C.public_upload = \''.$p['public_upload'].'\'';
             if($brace){
                 $cond .= ')';
             }
@@ -422,14 +418,14 @@ class Collections extends CBCategory
             if($cond != ''){
                 $cond .= ' AND ';
             }
-            $cond .= ' '.tbl('collections.collection_id')." <> '".$p['exclude'].'\'';
+            $cond .= ' C.collection_id <> \''.$p['exclude'].'\'';
         }
         
         if($p['cid']) {
             if($cond != ''){
                 $cond .= ' AND ';
             }
-            $cond .= ' '.tbl('collections.collection_id').' = \''.$p['cid'].'\'';
+            $cond .= ' C.collection_id = \''.$p['cid'].'\'';
         }
 
         /** Get only with those who have items **/
@@ -437,20 +433,20 @@ class Collections extends CBCategory
             if($cond != ''){
                 $cond .= ' AND ';
             }
-            $cond .= ' '.tbl('collections.total_objects').' >= \'1\'';
+            $cond .= ' C.total_objects >= \'1\'';
         }
 
         if (!has_access('admin_access')) {
             if($cond != ''){
                 $cond .= ' AND ';
             }
-            $cond .= ' '.tbl('collections.broadcast').' != \'private\'';
+            $cond .= ' C.broadcast != \'private\'';
         }
 
         $title_tag = '';
         
         if($p['name']) {
-            $title_tag .= ' '.tbl('collections.collection_name').' LIKE \'%'.$p['name'].'%\'';
+            $title_tag .= ' C.collection_name LIKE \'%'.$p['name'].'%\'';
         }
         
         if($p['tags']) {
@@ -462,8 +458,8 @@ class Collections extends CBCategory
                 $total = count($tags);
                 $loop = 1;
                 foreach($tags as $tag) {
-                    $title_tag .= ' '.tbl('collections.collection_tags').' LIKE \'%'.$tag.'%\'';
-                    if($loop<$total){
+                    $title_tag .= ' C.collection_tags LIKE \'%'.$tag.'%\'';
+                    if($loop < $total){
                         $title_tag .= ' OR ';
                     }
                     $loop++;        
@@ -472,7 +468,7 @@ class Collections extends CBCategory
                 if($title_tag != ''){
                     $title_tag .= ' OR ';
                 }
-                $title_tag .= ' '.tbl('collections.collection_tags').' LIKE \'%'.$p['tags'].'%\'';
+                $title_tag .= ' C.collection_tags LIKE \'%'.$p['tags'].'%\'';
             }
         }
         
@@ -483,15 +479,16 @@ class Collections extends CBCategory
             $cond .= ' ('.$title_tag.') ';
         }
 
+        $from = tbl('collections').' C'.
+            ' INNER JOIN '.tbl('users').' U ON C.userid = U.userid'.
+            ' LEFT JOIN '.tbl('collections').' CPARENT ON C.collection_id_parent = CPARENT.collection_id';
+
         if(!$p['count_only']) {
-            if($cond != ''){
-                $cond .= ' AND ';
-            }
-            $result = $db->select(tbl('collections,users'),
-                        tbl('collections.*,users.userid,users.username'),
-                        $cond.tbl('collections.userid').' = '.tbl('users.userid'),$limit,$order);
+            $select = 'C.*, U.username, CPARENT.collection_name AS collection_name_parent';
+
+            $result = $db->select($from, $select, $cond, $limit, $order);
         } else {
-            return $db->count(tbl('collections'),'collection_id',$cond);
+            return $db->count($from, 'C.collection_id', $cond);
         }
         
         if($p['assign']){
@@ -551,25 +548,25 @@ class Collections extends CBCategory
             $order = '';
         }
         
-        $cond = " $iTbl.collection_id = $cid AND $iTbl.ci_id $op $ci_id AND $iTbl.object_id = $oTbl.".$this->objFieldID." AND $oTbl.userid = $uTbl.userid";
+        $cond = ' '.$iTbl.'.collection_id = '.$cid.' AND '.$iTbl.'.ci_id '.$op.' '.$ci_id.' AND '.$iTbl.'.object_id = '.$oTbl.'.'.$this->objFieldID.' AND '.$oTbl.'.userid = '.$uTbl.'.userid';
         if(!$check_only) {
-            $result = $db->select($tbls,"$iTbl.*,$oTbl.*,$uTbl.username", $cond,$limit,$order);
+            $result = $db->select($tbls,$iTbl.'.*,'.$oTbl.'.*,'.$uTbl.'.username', $cond,$limit,$order);
             
             // Result was empty. Checking if we were going backwards, So bring last item
             if(empty($result) && $item == 'prev') {
                 $order = $iTbl.'.ci_id ASC';
                 $op = '<';
-                $result = $db->select($tbls,"$iTbl.*,$oTbl.*,$uTbl.username", " $iTbl.collection_id = $cid AND $iTbl.ci_id $op $ci_id AND $iTbl.object_id = $oTbl.".$this->objFieldID." AND $oTbl.userid = $uTbl.userid",$limit,$order);
+                $result = $db->select($tbls,$iTbl.'.*,'.$oTbl.'.*,'.$uTbl.'.username', ' '.$iTbl.'.collection_id = '.$cid.' AND '.$iTbl.'.ci_id '.$op.' '.$ci_id.' AND '.$iTbl.'.object_id = '.$oTbl.'.'.$this->objFieldID.' AND '.$oTbl.'.userid = '.$uTbl.'.userid',$limit,$order);
             }
             
             // Result was empty. Checking if we were going forwards, So bring first item
             if(empty($result) && $item == 'next') {
                 $order = $iTbl.'.ci_id DESC';
                 $op = '>';
-                $result = $db->select($tbls,"$iTbl.*,$oTbl.*,$uTbl.username", " $iTbl.collection_id = $cid AND $iTbl.ci_id $op $ci_id AND $iTbl.object_id = $oTbl.".$this->objFieldID." AND $oTbl.userid = $uTbl.userid",$limit,$order);    
+                $result = $db->select($tbls,$iTbl.'.*,'.$oTbl.'.*,'.$uTbl.'.username', ' '.$iTbl.'.collection_id = '.$cid.' AND '.$iTbl.'.ci_id '.$op.' '.$ci_id.' AND '.$iTbl.'.object_id = '.$oTbl.'.'.$this->objFieldID.' AND '.$oTbl.'.userid = '.$uTbl.'.userid',$limit,$order);
             }
         } else {
-            $result = $db->count($iTbl.','.$oTbl,"$iTbl.ci_id", " $iTbl.collection_id = $cid AND $iTbl.ci_id $op $ci_id AND $iTbl.object_id = $oTbl.".$this->objFieldID,$limit,$order);
+            $result = $db->count($iTbl.','.$oTbl,$iTbl.'.ci_id', ' '.$iTbl.'.collection_id = '.$cid.' AND '.$iTbl.'.ci_id '.$op.' '.$ci_id.' AND '.$iTbl.'.object_id = $oTbl.'.$this->objFieldID,$limit,$order);
         }
 
         if($result){
@@ -596,9 +593,9 @@ class Collections extends CBCategory
         $tables = $itemsTbl.','.$objTbl.','.tbl('users');
 
         if(!$count_only) {
-            $result = $db->select($tables,"$itemsTbl.ci_id,$itemsTbl.collection_id,$objTbl.*,".tbl('users').'.username'," $itemsTbl.collection_id = '$id' AND active = 'yes' AND $itemsTbl.object_id = $objTbl.".$this->objFieldID." AND $objTbl.userid = ".tbl('users').'.userid',$limit,$order);
+            $result = $db->select($tables,$itemsTbl.'.ci_id,'.$itemsTbl.'.collection_id,'.$objTbl.'.*,'.tbl('users').'.username',' '.$itemsTbl.'.collection_id = \''.$id.'\' AND active = \'yes\' AND '.$itemsTbl.'.object_id = '.$objTbl.'.'.$this->objFieldID.' AND '.$objTbl.'.userid = '.tbl('users').'.userid',$limit,$order);
         } else {
-            $result = $db->count($itemsTbl,'ci_id'," collection_id = $id");
+            $result = $db->count($itemsTbl,'ci_id',' collection_id = '.$id);
         }
         
         if($result){
@@ -620,7 +617,7 @@ class Collections extends CBCategory
     function get_collection_item_fields($cid,$objID,$fields)
     {
         global $db;
-        $result = $db->select(tbl($this->items),$fields," object_id = $objID AND collection_id = $cid");
+        $result = $db->select(tbl($this->items),$fields,' object_id = '.$objID.' AND collection_id = '.$cid);
         if($result){
             return $result;
         }
@@ -882,8 +879,7 @@ class Collections extends CBCategory
 
     function create_collection($array=NULL)
     {
-        if(has_access('allow_create_collection',false))
-        {
+        if(has_access('allow_create_collection',false)) {
             global $db;
 
             if($array==NULL){
@@ -960,7 +956,7 @@ class Collections extends CBCategory
                 addFeed(['action'=>'add_collection','object_id' => $insert_id,'object'=>'collection']);
 
                 //Incrementing usr collection
-                $db->update(tbl('users'),['total_collections'],['|f|total_collections+1']," userid='".$userid.'\'');
+                $db->update(tbl('users'),['total_collections'],['|f|total_collections+1'],' userid=\''.$userid.'\'');
 
                 e(lang('collect_added_msg'),'m');
                 return $insert_id;
@@ -993,7 +989,7 @@ class Collections extends CBCategory
                 $flds = ['collection_id','object_id','type','userid','date_added'];
                 $vls = [$cid,$objID,$this->objType,userid(),NOW()];
                 $db->insert(tbl($this->items),$flds,$vls);
-                $db->update(tbl($this->section_tbl),['total_objects'],['|f|total_objects+1']," collection_id = $cid");
+                $db->update(tbl($this->section_tbl),['total_objects'],['|f|total_objects+1'],' collection_id = '.$cid);
                 e(sprintf(lang('item_added_in_collection'),$this->objName),'m');    
             }
         } else {
@@ -1014,7 +1010,7 @@ class Collections extends CBCategory
         global $db;
         $id = mysql_clean($id);
         $cid = mysql_clean($cid);
-        $result = $db->select(tbl($this->items),'*'," object_id = $id AND collection_id = $cid");
+        $result = $db->select(tbl($this->items),'*',' object_id = '.$id.' AND collection_id = '.$cid);
         if($result){
             return $result[0];
         }
@@ -1436,8 +1432,8 @@ class Collections extends CBCategory
 
                 foreach($voters as $id=>$details) {
                     $username = get_username($id);
-                    $output = "<li id='user".$id.$c['collection_id']."' class='PhotoRatingStats'>";
-                    $output .= "<a href='".$userquery->profile_link($id)."'>$username</a>";
+                    $output = '<li id=\'user'.$id.$c['collection_id'].'\' class=\'PhotoRatingStats\'>';
+                    $output .= '<a href=\''.$userquery->profile_link($id).'\'>'.$username.'</a>';
                     $output .= ' rated <strong>'. $details['rate']/2 .'</strong> stars <small>(';
                     $output .= niceTime($details['time']).')</small>';
                     $output .= '</li>';
@@ -1460,7 +1456,7 @@ class Collections extends CBCategory
     {
         global $db;
         $id = mysql_clean($id);
-        $result = $db->select(tbl('collections'),'allow_rating,rating,rated_by,voters,userid'," collection_id = ".$id."");
+        $result = $db->select(tbl('collections'),'allow_rating,rating,rated_by,voters,userid',' collection_id = '.$id);
         if($result){
             return $result[0];
         }
@@ -1520,9 +1516,7 @@ class Collections extends CBCategory
             $new_rate = ($t + $rating) / $rated_by;
             
             $id = mysql_clean($id);
-            $db->update(tbl('collections'),['rating','rated_by','voters'],
-            ["$new_rate","$rated_by","|no_mc|$voters"],
-            ' collection_id = '.$id);
+            $db->update(tbl('collections'),['rating','rated_by','voters'], [$new_rate,$rated_by,'|no_mc|'.$voters], ' collection_id = '.$id);
             $userDetails = [
                 'object_id' => $id,
                 'type'      => 'collection',
@@ -1645,8 +1639,8 @@ class Collections extends CBCategory
     function update_total_comments($cid)
     {
         global $db;
-        $count = $db->count(tbl('comments'),'comment_id'," type = 'cl' AND type_id = '$cid' AND parent_id='0'");
-        $db->update(tbl($this->section_tbl),['total_comments','last_commented'],[$count,now()]," collection_id = '$cid'");
+        $count = $db->count(tbl('comments'),'comment_id',' type = \'cl\' AND type_id = \''.$cid.'\' AND parent_id=\'0\'');
+        $db->update(tbl($this->section_tbl),['total_comments','last_commented'],[$count,now()],' collection_id = \''.$cid.'\'');
     }
 
     /**
@@ -1735,7 +1729,7 @@ class Collections extends CBCategory
     function update_collection_counts($id,$amount,$op)
     {
         global $db;
-        $db->update(tbl('collections'),['total_objects'],["|f|total_objects$op$amount"]," collection_id = $id");
+        $db->update(tbl('collections'),['total_objects'],['|f|total_objects'.$op.$amount],' collection_id = '.$id);
     }
 
     /**
@@ -1756,7 +1750,7 @@ class Collections extends CBCategory
         {
             $this->add_collection_item($obj,$new);
         } else {
-            $db->update(tbl($this->items),['collection_id'],[$new]," collection_id = $old AND type = '".$this->objType."' AND object_id = $obj");
+            $db->update(tbl($this->items),['collection_id'],[$new],' collection_id = '.$old.' AND type = \''.$this->objType.'\' AND object_id = '.$obj);
             $this->update_collection_counts($new,1,'+');
             $this->update_collection_counts($old,1,'-');
         }
@@ -1795,28 +1789,28 @@ class Collections extends CBCategory
             case 'activate':
             case 'activation':
             case 'ac':
-                $db->update(tbl($this->section_tbl),['active'],['yes']," collection_id = $cid");
+                $db->update(tbl($this->section_tbl),['active'],['yes'],' collection_id = '.$cid);
                 e(lang('collection_activated'),'m');
                 break;
             
             case 'deactivate':
             case 'deactivation':
             case 'dac':
-                $db->update(tbl($this->section_tbl),['active'],['no']," collection_id = $cid");
+                $db->update(tbl($this->section_tbl),['active'],['no'],' collection_id = '.$cid);
                 e(lang('collection_deactivated'),'m');
                 break;
             
             case 'make_feature':
             case 'featured':
             case 'mcf':
-                $db->update(tbl($this->section_tbl),['featured'],['yes']," collection_id = $cid");
+                $db->update(tbl($this->section_tbl),['featured'],['yes'],' collection_id = '.$cid);
                 e(lang('collection_featured'),'m');
                 break;
             
             case 'make_unfeature':
             case 'unfeatured':
             case 'mcuf':
-                $db->update(tbl($this->section_tbl),['featured'],['no']," collection_id = $cid");
+                $db->update(tbl($this->section_tbl),['featured'],['no'],' collection_id = '.$cid);
                 e(lang('collection_unfeatured'),'m');
                 break;
             
@@ -1842,10 +1836,10 @@ class Collections extends CBCategory
         $objId = mysql_clean($objId);
         $db->update(tbl('collections,collection_items'),['total_objects'],['|f|total_objects -1'],
         tbl('collections.collection_id').' = '.tbl('collection_items.collection_id').' AND '
-        .tbl("collection_items.type='".$type.'\'').' AND '.tbl("collection_items.object_id='".$objId.'\''));
+        .tbl('collection_items.type=\''.$type.'\'').' AND '.tbl('collection_items.object_id=\''.$objId.'\''));
 
         $db->execute('DELETE FROM '.tbl('collection_items').' WHERE '
-        .("type='".$type.'\'').' AND '.("object_id='".$objId.'\''));
+        .('type=\''.$type.'\'').' AND '.('object_id=\''.$objId.'\''));
     }
 
     /**
@@ -1921,7 +1915,7 @@ class Collections extends CBCategory
         $uid = mysql_clean($uid);
 
         $query = 'SELECT contributor_id FROM '.tbl('collection_contributors');
-        $query .= " WHERE userid='$uid' AND collection_id ='$cid' LIMIT 1";
+        $query .= ' WHERE userid = \''.$uid.'\' AND collection_id = \''.$cid.'\' LIMIT 1';
         $data = db_select($query);
 
         if($data){
@@ -1954,7 +1948,7 @@ class Collections extends CBCategory
             e(lang('You cannot remove this contributor'));
         }
 
-        $query = 'DELETE FROM '.tbl('collection_contributors')." WHERE userid='$uid' LIMIT 1";
+        $query = 'DELETE FROM '.tbl('collection_contributors').' WHERE userid = \''.$uid.'\' LIMIT 1';
         global $db;
         $db->Execute($query);
 
@@ -1981,8 +1975,8 @@ class Collections extends CBCategory
 
         $query = ' SELECT cb.contributor_id,cl.* FROM '.tbl('collection_contributors').' AS cb ';
         $query .= ' LEFT JOIN '.tbl('collections').' AS cl ON cb.collection_id=cl.collection_id ';
-        $query .= " WHERE cb.userid='$uid' ";
-        $query .= " AND cl.broadcast='public' AND cl.active='yes' AND cl.type='$type' ";
+        $query .= ' WHERE cb.userid = \''.$uid.'\' ';
+        $query .= ' AND cl.broadcast = \'public\' AND cl.active = \'yes\' AND cl.type = \''.$type.'\'';
 
         if($order){
             $query .= ' ORDER BY '.$order;
@@ -2001,7 +1995,7 @@ class Collections extends CBCategory
         if (is_array($col_data))
         {
             if (isset($_GET['h']) && isset($_GET['w'])) {
-                $size = $_GET['h']."x".$_GET['w'];
+                $size = $_GET['h'].'x'.$_GET['w'];
             }
             switch ($col_data['type'])
             {
@@ -2042,11 +2036,9 @@ class Collections extends CBCategory
     /**
      * Get collections that have at least 1 item, skips photos collection if photos are disabled from admin area
      *
-     * @param : { array } { $collections } { array of all collections fetched from database }
+     * @param array { $collections } { array of all collections fetched from database }
      *
-     * @return  : { array } { $collections } { collections with items only }
-     * @since : May 11th, 2016 ClipBucket 2.8.1
-     * @author : Saqib Razzaq
+     * @return array|void { $collections } { collections with items only }
      */
     function activeCollections($collections)
     {

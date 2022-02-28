@@ -8,8 +8,8 @@ $pages->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = array('title' => 'Collections', 'url' => '');
-$breadcrumb[1] = array('title' => lang('manage_collections'), 'url' => ADMIN_BASEURL.'/flagged_collections.php');
+$breadcrumb[0] = ['title' => 'Collections', 'url' => ''];
+$breadcrumb[1] = ['title' => lang('manage_collections'), 'url' => ADMIN_BASEURL.'/flagged_collections.php'];
 
 if(isset($_GET['make_feature'])) {
     $id = mysql_clean($_GET['make_feature']);
@@ -92,9 +92,8 @@ if(isset($_POST['delete_selected'])) {
 }
 
 /* IF SEARCH EXISTS */
-if($_GET['search'])
-{
-    $array = array(
+if($_GET['search']) {
+    $carray =[
         'name'      => $_GET['title'],
         'tags'      => $_GET['tags'],
         'cid'       => $_GET['collectionid'],
@@ -104,10 +103,10 @@ if($_GET['search'])
         'broadcast' => $_GET['broadcast'],
         'featured'  => $_GET['featured'],
         'active'    => $_GET['active']
-    );
+    ];
+} else {
+    $carray = [];
 }
-
-$carray = $array;
 
 /* CREATING LIMIT */
 $page = mysql_clean($_GET['page']);
@@ -121,13 +120,9 @@ if(!empty($carray['order'])){
 }
 
 $collections = $cbcollection->get_collections($carray);
-assign('c',$collections);
+assign('collections',$collections);
 
-/* COUNTING ALL COLLECTIONS */
-$ccount = $carray;
-$ccount['count_only'] = TRUE;
-$total_rows = $cbcollection->get_collections($ccount);
-$total_pages = count_pages($total_rows,RESULTS);
+$total_pages = count_pages(count($collections),RESULTS);
 $pages->paginate($total_pages,$page);
 
 subtitle(lang('manage_collections'));
