@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"59",
+  "revision":"60",
   "status":"dev",
   "detail":[
     {
@@ -76,6 +76,7 @@
         "Add conversion support for 21/9"
         ,"Refactor FFMPEG conversion (WIP)"
         ,"Implement HLS conversion (WIP)"
+        ,"Refactor video rate <i>#222</i>"
       ]
     }
     ,{

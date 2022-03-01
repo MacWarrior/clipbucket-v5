@@ -352,8 +352,7 @@ class FFMpeg
         $resolutions = $myquery->getEnabledVideoResolutions();
         $eligible_resolutions = [];
 
-        foreach( $resolutions as $key => $value )
-        {
+        foreach( $resolutions as $key => $value ) {
             $video_height = (int)$key;
             $video_width  = (int)$value;
 
@@ -370,8 +369,7 @@ class FFMpeg
             $res = [];
 
             // Here we must check width and height to be able to import other formats than 16/9 (For example : 1920x800, 1800x1080, ...)
-            if( $this->input_details['video_width'] >= $video_width_test || $this->input_details['video_height'] >= $video_height_test )
-            {
+            if( $this->input_details['video_width'] >= $video_width_test || $this->input_details['video_height'] >= $video_height_test ) {
                 $res['video_width']  = $video_width;
                 $res['video_height'] = $video_height;
                 $res['height']		 = $video_height;
@@ -381,6 +379,23 @@ class FFMpeg
         }
 
         return $eligible_resolutions;
+    }
+
+    private function get_video_rate_param($video_rate): float
+    {
+        $conf_vrate = config('vrate');
+
+        if( $video_rate <= $conf_vrate ){
+            $final_vrate = $video_rate;
+        } else {
+            $div = intdiv(max($video_rate,$conf_vrate),min($video_rate,$conf_vrate));
+            if( $div == 1 ){
+                $final_vrate = max($video_rate,$conf_vrate)/ceil($video_rate/$conf_vrate);
+            } else {
+                $final_vrate = $video_rate/$div;
+            }
+        }
+        return $final_vrate;
     }
 
     private function get_conversion_option($type, array $resolution = []): string
@@ -396,7 +411,10 @@ class FFMpeg
                     $cmd .= ' -preset medium';
                 }
                 // Video Rate
-                $cmd .= ' -r '.config('vrate');
+                $original_video_framerate = $this->input_details['video_rate'];
+                $framerate = self::get_video_rate_param($this->input_details['video_rate']);
+                $cmd .= ' -r '.$framerate;
+                $this->log->writeLine('Video framerate calculation', 'Original rate : '.$original_video_framerate.', final rate : '.$framerate.PHP_EOL, true);
                 // Fix for browsers compatibility : yuv420p10le seems to be working only on Chrome like browsers
                 if( config('force_8bits') ){
                     $cmd .= ' -pix_fmt yuv420p';
