@@ -79,11 +79,12 @@
 		$dir = BASEDIR.'/'.TEMPLATEFOLDER.'/'.$_GET['temp'].'/layout/';
 		$cur_dir = $_GET['temp'];
 	}
-	if(!($dp = opendir($dir)))
+	if(!($dp = opendir($dir))){
 		die("Cannot open $dir.");
+    }
 	while($file = readdir($dp))
 	{
-		$ext = GetExt($file);
+		$ext = getExt($file);
 		if($ext == 'html' || $ext == 'HTML'){
 			$files[] = $file;
 		}

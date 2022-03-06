@@ -13,7 +13,7 @@ if(isset($_POST['check_url']))
 	
 	$types_array = preg_replace('/,/',' ',strtolower(config('allowed_video_types')));
 	$types_array = explode(' ',$types_array);
-	$file_ext = strtolower(getExt(strtolower($url)));
+	$file_ext = getExt($url);
 		
 	if(checkRemoteFile($url) && in_array($file_ext,$types_array) )
 	{

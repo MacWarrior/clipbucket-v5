@@ -467,7 +467,7 @@ abstract class CBCategory
             $dir = $this->thumb_dir ?? $this->section_tbl;
 			
 			//Checking File Extension
-			$ext = strtolower(getext($file['name']));
+			$ext = getext($file['name']);
 			
 			if($ext=='jpg' || $ext =='png' || $ext=='gif') {
 				$dir_path = CAT_THUMB_DIR.DIRECTORY_SEPARATOR.$dir;

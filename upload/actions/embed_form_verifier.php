@@ -9,7 +9,7 @@ switch($mode)
 		$duration = $_POST['duration'];
 		$thumb_file = $_POST['thumb_file'];
 		$url = $_POST['remote_play_url'];
-		$ext = strtolower(getExt($thumb_file));
+		$ext = getExt($thumb_file);
 		
 		validate_duration($duration);
 		check_remote_play_link($url);
@@ -28,7 +28,7 @@ switch($mode)
 		$embed_code = $_POST['embed_code'];
 		$duration = $_POST['duration'];
 		$thumb_file = $_POST['thumb_file'];
-		$ext = strtolower(getExt($thumb_file));
+		$ext = getExt($thumb_file);
 		
 		validate_embed_code($embed_code);
 		validate_duration($duration);

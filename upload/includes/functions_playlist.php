@@ -180,7 +180,7 @@ function playlist_upload_cover ( $args ) {
     global $db;
 
     $filename = $args[ 'playlist_id' ];
-    $extension = GetExt( $args[ 'name' ] );
+    $extension = getExt( $args[ 'name' ] );
     $folder = create_dated_folder( PLAYLIST_COVERS_DIR );
     $uploaded_file = PLAYLIST_COVERS_DIR.'/'.$folder.'/'.$filename.'.'.$extension;
 

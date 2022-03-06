@@ -29,7 +29,7 @@ if(isset($_FILES['coverPhoto'])){
 	if(isset($_FILES['coverPhoto']) && get_mime_type($_FILES['coverPhoto']['tmp_name']) == 'image'){
 		$array = $_FILES;
 
-		$extension = strtolower(getExt( $_FILES['coverPhoto']['name']));
+		$extension = getExt( $_FILES['coverPhoto']['name']);
 	   	$types = strtolower(config('allowed_photo_types'));
 	    $supported_extensions = explode(',', $types);
 

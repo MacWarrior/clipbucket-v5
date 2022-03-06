@@ -488,8 +488,8 @@ class myquery
      *
      * @return array
      */
-	function get_category($id)
-	{
+	function get_category($id): array
+    {
 		global $db;
 		$results = $db->select(tbl("category"),"*"," categoryid='$id'");
 		return $results[0];

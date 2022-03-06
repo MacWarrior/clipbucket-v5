@@ -719,7 +719,7 @@ class Upload
 	{
 		global $db;
 
-        $ext = strtolower(getExt($file));
+        $ext = getExt($file);
         $name = getName($file);
         if(!$name){
             return false;

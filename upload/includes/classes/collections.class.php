@@ -1197,7 +1197,7 @@ class Collections extends CBCategory
     function upload_thumb($cid,$file)
     {
         global $imgObj;
-        $file_ext = strtolower(getext($file['name']));
+        $file_ext = getext($file['name']);
 
         $exts = ['jpg','gif','jpeg','png'];
         

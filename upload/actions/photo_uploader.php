@@ -177,7 +177,7 @@ switch($mode)
             exit();
         }
 
-        $extension = strtolower(getExt($_FILES['file']['name']));
+        $extension = getExt($_FILES['file']['name']);
         $types = strtolower(config('allowed_photo_types'));
         $supported_extensions = explode(',', $types);
 

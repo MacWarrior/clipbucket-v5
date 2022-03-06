@@ -16,7 +16,7 @@ class errorhandler extends ClipBucket
     /**
      * @return array
      */
-	public function get_error()
+	public function get_error(): array
     {
         return $this->error_list;
     }
@@ -33,7 +33,7 @@ class errorhandler extends ClipBucket
 		$this->warning_list[] = array('val' => $message, 'secure' => $secure);
 	}
 
-    public function get_warning()
+    public function get_warning(): array
     {
         return $this->warning_list;
     }
@@ -52,7 +52,7 @@ class errorhandler extends ClipBucket
 	    $this->message_list[] = array('val' => $message, 'secure' => $secure);
 	}
 
-    public function get_message()
+    public function get_message(): array
     {
         return $this->message_list;
     }

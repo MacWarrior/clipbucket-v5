@@ -62,7 +62,7 @@ switch($mode)
 
     case 'upload':
         $ffmpegpath = $Cbucket->configs['ffmpegpath'];
-        $extension = strtolower(getExt($_FILES['Filedata']['name']));
+        $extension = getExt($_FILES['Filedata']['name']);
 
         #checking for if the right file is uploaded
         $tempFile = $_FILES['Filedata']['tmp_name'];
@@ -141,7 +141,7 @@ switch($mode)
         //Checking file type
         $types_array = preg_replace('/,/',' ',$types);
         $types_array = explode(' ',$types_array);
-        $file_ext = strtolower(getExt($_FILES['Filedata']['name']));
+        $file_ext = getExt($_FILES['Filedata']['name']);
         if(!in_array($file_ext,$types_array)) {
             upload_error('Invalid file extension');
             exit(0);

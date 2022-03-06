@@ -317,7 +317,7 @@
 	 * @return string : { string } { extension of file }
 	 *
 	 */
-	function GetExt($file): string
+	function getExt($file): string
     {
         $parts = explode('.', $file);
 		return strtolower(end($parts));
@@ -343,7 +343,7 @@
 		$hours = intval(intval($sec) / 3600);
 		// add to $hms, with a leading 0 if asked for
 		$hms .= ($padHours)
-			  ? str_pad($hours, 2, "0", STR_PAD_LEFT). ':'
+			  ? str_pad($hours, 2, '0', STR_PAD_LEFT). ':'
 			  : $hours. ':';
 		// dividing the total seconds by 60 will give us
 		// the number of minutes, but we're interested in
@@ -351,12 +351,12 @@
 		// divide by 60 again and keep the remainder
 		$minutes = intval(($sec / 60) % 60);
 		// then add to $hms (with a leading 0 if needed)
-		$hms .= str_pad($minutes, 2, "0", STR_PAD_LEFT). ':';
+		$hms .= str_pad($minutes, 2, '0', STR_PAD_LEFT). ':';
 		// seconds are simple - just divide the total
 		// seconds by 60 and keep the remainder
 		$seconds = intval($sec % 60);
 		// add to $hms, again with a leading 0 if needed
-		$hms .= str_pad($seconds, 2, "0", STR_PAD_LEFT);
+		$hms .= str_pad($seconds, 2, '0', STR_PAD_LEFT);
 		return $hms;
 	}
 
@@ -1211,8 +1211,8 @@
 	 *
 	 * @return
 	 */
-	function get_category($id)
-	{
+	function get_category($id): array
+    {
 		global $myquery;
 		return $myquery->get_category($id);
 	}
@@ -1247,21 +1247,21 @@
 		return $userquery->get_user_vids($uid,$cond,$count_only);
 	}
 
-	function error_list()
-	{
+	function error_list(): array
+    {
 		global $eh;
 		return $eh->get_error();
 	}
 
-    function warning_list()
+    function warning_list(): array
     {
         global $eh;
         return $eh->get_warning();
     }
 
 
-    function msg_list()
-	{
+    function msg_list(): array
+    {
 		global $eh;
 		return $eh->get_message();
 	}
@@ -1307,15 +1307,16 @@
 	 *
 	 * @return bool : { boolean } { true or false depending on situation }
 	 */
-	function username_check($username)
-	{
+	function username_check($username): bool
+    {
 		global $Cbucket;
 		$banned_words = $Cbucket->configs['disallowed_usernames'];
 		$banned_words = explode(',',$banned_words);
 		foreach($banned_words as $word) {
 			preg_match("/$word/Ui",$username,$match);
-			if(!empty($match[0]))
+			if(!empty($match[0])){
 				return false;
+            }
 		}
 		//Checking if its syntax is valid or not
 		$multi = config('allow_unicode_usernames');

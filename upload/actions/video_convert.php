@@ -40,7 +40,7 @@ $log->writeLine("Getting Arguments",$TempLogData, true, true);
     Getting the videos which are currently in our queue
     waiting for conversion
 */
-$extension = GetExt($fileName);
+$extension = getExt($fileName);
 
 switch($extension)
 {

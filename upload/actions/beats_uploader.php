@@ -59,7 +59,7 @@ switch($mode)
             exit();
         }
 
-        $extension = strtolower(getExt( $_FILES['file']['name']));
+        $extension = getExt( $_FILES['file']['name']);
         $types = strtolower(config('allowed_photo_types'));
         $supported_extensions = explode(',', $types);
 
@@ -183,12 +183,12 @@ switch($mode)
         }
 
         $filename = $cbphoto->create_filename();
-        $targetFileName = $filename . '.' . getExt($filePath);
+        $targetFileName = $filename . '.'.getExt($filePath);
         $targetFile = $targetDir . "/" . $targetFileName;
 
         rename($filePath, $targetFile);
 
-        echo json_encode( array("success"=>"yes","file_name"=>$filename, "extension" => getExt( $filePath ), "file_directory" => $targetDir ) );
+        echo json_encode( array("success"=>"yes","file_name"=>$filename, "extension" => getExt($filePath), "file_directory" => $targetDir ) );
 		break;
 }
 
