@@ -729,8 +729,9 @@ class Upload
             $cqueue_name = $name;
         }
 
+        $tmp_filepath = TEMP_DIR.DIRECTORY_SEPARATOR.$sub_directory.$file;
 		//Checking file exists or not
-		if(!file_exists(TEMP_DIR.DIRECTORY_SEPARATOR.$sub_directory.$file)) {
+		if(!file_exists($tmp_filepath)) {
             return false;
 		}
 
@@ -743,10 +744,12 @@ class Upload
                 $tmp_ext = $Cbucket->temp_exts;
                 $tmp_ext = $tmp_ext[rand(0,count($tmp_ext)-1)];
                 //Creating New File Name
-                $new_file = $name.'.'.$tmp_ext;
+                $dest_filepath = TEMP_DIR.DIRECTORY_SEPARATOR.$sub_directory.$name.'.'.$tmp_ext;
+
                 //Renaming File for security purpose
-                rename(TEMP_DIR.DIRECTORY_SEPARATOR.$sub_directory.$file,TEMP_DIR.DIRECTORY_SEPARATOR.$sub_directory.$new_file);
+                rename($tmp_filepath,$dest_filepath);
                 break;
+
             case 'm3u8':
                 $tmp_ext = '';
                 break;

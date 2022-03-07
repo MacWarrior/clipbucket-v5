@@ -249,20 +249,25 @@ class FFMpeg
             }
 
             $log = '';
-            try {
-                $this->generateAllThumbs();
-            } catch(Exception $e) {
-                $log .= PHP_EOL.'Error Occured : '.$e->getMessage().PHP_EOL;
+            if( file_exists($this->input_file) ){
+
+                try {
+                    $this->generateAllThumbs();
+                } catch(Exception $e) {
+                    $log .= PHP_EOL.'Error Occured : '.$e->getMessage().PHP_EOL;
+                }
+
+                $log .= PHP_EOL.'====== End : Thumbs Generation ======='.PHP_EOL;
+            } else {
+                $log .= 'Input file is missing ; no thumbs generation !'.PHP_EOL;
             }
 
-            $log .= PHP_EOL.'====== End : Thumbs Generation ======='.PHP_EOL;
             $this->log->writeLine('Thumbs Generation', $log, true);
 
             if( config('extract_subtitles') ){
                 $this->extract_subtitles();
             }
 
-            $orig_file = $this->input_file;
             $resolutions = $this->get_eligible_resolutions();
 
             $log = '';
@@ -274,7 +279,7 @@ class FFMpeg
                     case 'mp4':
                         if( config('stay_mp4') == 'yes' ){
                             $this->output_file = $this->output_dir.$this->file_name.'.'.$this->conversion_type;
-                            copy($orig_file,$this->output_file);
+                            copy($this->input_file,$this->output_file);
                             break;
                         }
 
@@ -587,23 +592,8 @@ class FFMpeg
 		$this->log_ouput_file_info();
 	}
 
-	/**
-	 * Prepare file to be converted
-	 * this will first get info of the file
-	 * and enter its info into database
-	 *
-	 * @param null $file
-	 */
-	function prepare($file=NULL)
+	function prepare()
 	{
-		if($file){
-			$this->input_file = $file;
-        }
-
-		if(!file_exists($this->input_file)){
-			$this->input_file = TEMP_DIR.DIRECTORY_SEPARATOR.$this->input_file;
-        }
-
 		//Checking File Exists
 		if(!file_exists($this->input_file)) {
 			$this->log->writeLine('File Exists','No',true);

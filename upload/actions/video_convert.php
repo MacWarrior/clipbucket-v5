@@ -131,8 +131,7 @@ if(!empty($_filename))
         setVideoStatus($_filename, 'completed', true, true);
     }
 
-    if (stristr(PHP_OS, 'WIN'))
-    {
+    if (stristr(PHP_OS, 'WIN')) {
         exec(php_path().' -q '.BASEDIR.'/actions/verify_converted_videos.php '.$queue_details['cqueue_name']);
     } elseif(stristr(PHP_OS, 'darwin')) {
         exec(php_path().' -q '.BASEDIR."/actions/verify_converted_videos.php {$queue_details['cqueue_name']} </dev/null >/dev/null &");

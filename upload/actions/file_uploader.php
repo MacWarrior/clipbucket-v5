@@ -138,15 +138,6 @@ switch($mode)
             exit(0);
         }
 
-        //Checking file type
-        $types_array = preg_replace('/,/',' ',$types);
-        $types_array = explode(' ',$types_array);
-        $file_ext = getExt($_FILES['Filedata']['name']);
-        if(!in_array($file_ext,$types_array)) {
-            upload_error('Invalid file extension');
-            exit(0);
-        }
-
         $targetFile = TEMP_DIR.DIRECTORY_SEPARATOR.$targetFileName;
         $moved = move_uploaded_file($tempFile,$targetFile);
 
@@ -177,7 +168,7 @@ switch($mode)
             exec(php_path().' -q '.BASEDIR.'/actions/video_convert.php '.$targetFileName.' '.$file_name.' '.$file_directory.' '.$logFile.' > /dev/null &');
         }
 
-        $TempLogData = 'Video Converson File executed successfully with Target File > !'.$targetFileName;
+        $TempLogData = 'Video Converson File executed successfully with Target File > '.$targetFileName;
         $log->writeLine('Video Conversion File Execution', $TempLogData, true);
 
         // inserting into video views as well
