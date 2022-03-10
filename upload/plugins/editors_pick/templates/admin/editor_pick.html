@@ -1,5 +1,5 @@
 <div class="heading">
-    <h2>Editor's Pick</h2>
+    <h2>{lang code='plugin_editors_picks'}</h2>
 </div>
 
 <form name="editors_pick" method="post">
@@ -8,7 +8,7 @@
     <td width="30" align="center" valign="middle"><img src="{$imageurl}/arrow_return.png" width="25" height="25"></td>
     <td height="50" style="padding-left:15px">
     <input type="submit" value="{lang code='update'}" name="update_order" class="btn btn-primary btn-xs"/>
-    <input type="submit" name="delete_selected" value="{lang code='delete'}" class="btn btn-primary btn-xs" onclick="return confirm_it('Are you sure you want to delete selected video(s)')"/>
+    <input type="submit" name="delete_selected" value="{lang code='delete'}" class="btn btn-primary btn-xs" onclick="return confirm_it('{addslashes(lang('plugin_editors_picks_remove_confirm'))}')"/>
     
     </td>
     </tr>
@@ -17,8 +17,8 @@
     <table class="table table-bordered table-striped manageUsersTable">
         <tr>
             <td>
-                <input type="checkbox" name="checkall" onclick="checkUncheckAll(this);"/></td>
-          <!--   <td>Order</td> -->
+                <input type="checkbox" name="checkall" onclick="checkUncheckAll(this);"/>
+            </td>
             <td>Order</td>
             <td>Videos Details</td>
             <td style="width:200px;">&nbsp;</td>
@@ -31,7 +31,7 @@
             <td>
                 <input name="check_video[]" type="checkbox" id="check_video" value="{$video.videoid}"/>
             </td>
-           <td><input name="ep_order_{$video.pick_id}" type="text" id="order" style="border:1px solid #999; padding:2px; width:30px" value="{$video.sort}" size="5" maxlength="5"/></td>
+           <td><input name="ep_order_{$video.pick_id}" type="text" id="order" style="border:1px solid #999; padding:2px; width:30px;" value="{$video.sort}" size="5" maxlength="5"/></td>
             <td>
                 <div class="row">
                     <div class="col-md-10">
@@ -43,19 +43,16 @@
                                 <a href="/admin_area/edit_video.php?video={$video.videoid}">
                                     {display_clean($video.title)|truncate:80} </a>({if
                                 $video.duration>1}{$video.duration|SetTime}{else}00:00{/if})<br>
-                         <span class="labels1"> <strong>{$video.date_added|niceTime}</strong>
+                                <span class="labels1"> <strong>{$video.date_added|niceTime}</strong>
                             {lang code='views'} : <strong>{$video.views|number_format}</strong></span>
                                 <div class="labels">
                             {if $video.featured=='yes'}<span class="label label-primary">{lang code='featured'}</span>{else}<span class="label label-primary">Unfeatured</span>{/if}
-
-                             <span class="label label-info">
-                                           {$video.featured}</span>
                                     <span class="label {if $video.active=='yes'}label-success{else}label-warning{/if}">
-                                        {if $video.active=='yes'}{lang code='active'}{else}{lang code='inactive'}{/if} </span>
-                                    <span class="label {if $video.status=='Successful'}label-success{else}label-warning{/if}">
-                                        {if $video.status=='Successful'}Successful{else}Processing{/if}</span>
+                                        {if $video.active=='yes'}{lang code='active'}{else}{lang code='inactive'}{/if}
+                                    </span>
                                     <span class="label label-info">
-                                       {lang code='viewed'} {$video.last_viewed|niceTime}</span>
+                                       {lang code='viewed'} {$video.last_viewed|niceTime}
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -71,7 +68,7 @@
                         Actions <i class="caret"></i>
                     </button>
                     <ul role="menu" aria-labelledby="dropdownMenu1" class="dropdown-menu">
-                        <li><a href="/plugins/editors_pick/admin/editor_pick.php?remove={$video.videoid}" tabindex="-1" role="menuitem">Remove From Editor's Pick</a></li>
+                        <li><a href="/plugins/editors_pick/admin/editor_pick.php?remove={$video.videoid}" tabindex="-1" role="menuitem">{lang code='plugin_editors_picks_remove_from'}</a></li>
                     </ul>
                 </div>
             </td>
@@ -89,9 +86,9 @@
 
 <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
   <tr>
-    <td width="30" align="center" valign="middle"><img src="{$imageurl}/arrow_return_invert.png" width="25" height="25"></td>
+    <td width="30" align="center" valign="middle"><img src="{$imageurl}/arrow_return_invert.png" width="25" height="25"/></td>
     <td height="50" style="padding-left:15px;"><input type="submit" value="{lang code='update'}" name="update_order" class="btn btn-primary btn-xs" />
-    	<input type="submit" name="delete_selected" value="{lang code='delete'}" class="btn btn-primary btn-xs" onclick="return confirm_it('Are you sure you want to delete selected video(s)')"/>
+    	<input type="submit" name="delete_selected" value="{lang code='delete'}" class="btn btn-primary btn-xs" onclick="return confirm_it('{addslashes(lang('plugin_editors_picks_remove_confirm'))}')"/>
     </td>
     </tr>
 </table>

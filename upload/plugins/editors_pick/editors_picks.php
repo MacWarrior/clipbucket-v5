@@ -3,7 +3,7 @@
     Plugin Name: ClipBucket Editor's Pick Plugin
     Description: This plugin is used to display Editor's Pick Player On Home Page and also let you pick videos for editor's pick
     Author: Arslan Hassan & MacWarrior
-    ClipBucket Version: CB5.4
+    ClipBucket Version: CB5.5.0
     Website: https://github.com/MacWarrior/clipbucket-v5/
 */
 
@@ -26,14 +26,14 @@ function add_to_editor_pick($vid)
     if($cbvid->video_exists($vid)) {
         if(!is_video_in_editors_pick($vid)) {
             $sort = get_highest_sort_number() + 1 ;
-            $db->insert(tbl("editors_picks"),array("videoid","sort","date_added"),array($vid,$sort,now()));
-            $db->update(tbl("video"), array("in_editor_pick"), array("yes")," videoid = '".$vid."'");
-            e(lang("Video has been added to editor's pick"),"m");
+            $db->insert(tbl('editors_picks'),['videoid','sort','date_added'],[$vid,$sort,now()]);
+            $db->update(tbl('video'), ['in_editor_pick'], ['yes'],' videoid = \''.$vid.'\'');
+            e(lang('plugin_editors_picks_added'),'m');
         } else {
-            e(lang("Video is already in editor's pick"),"e");
+            e(lang('plugin_editors_picks_add_error'),'e');
         }
     } else {
-        e(lang("video_exist_err"));
+        e(lang('class_vdo_exist_err'));
     }
 }
 
@@ -44,16 +44,16 @@ function remove_vid_editors_pick($vid)
         $vid = $vid['videoid'];
     }
     if(is_video_in_editors_pick($vid)) {
-        $db->delete(tbl('editors_picks'),array('videoid'),array($vid));
-        $db->update(tbl("video"), array("in_editor_pick"), array("no")," videoid = '".$vid."'");
-        e(lang("Video has been removed from editor's pick"),"m");
+        $db->delete(tbl('editors_picks'),['videoid'],[$vid]);
+        $db->update(tbl('video'), ['in_editor_pick'], ['no'],' videoid = \''.$vid.'\'');
+        e(lang('plugin_editors_picks_removed'),'m');
     }
 }
 
-function is_video_in_editors_pick($vid)
+function is_video_in_editors_pick($vid): bool
 {
     global $db;
-    $count = $db->count(tbl("editors_picks"),"videoid"," videoid='$vid'");
+    $count = $db->count(tbl('editors_picks'),'videoid',' videoid = \''.$vid.'\'');
     if($count>0){
         return true;
     }
@@ -63,22 +63,22 @@ function is_video_in_editors_pick($vid)
 function get_highest_sort_number()
 {
     global $db;
-    $result = $db->select(tbl("editors_picks"),"sort",NULL,NULL," sort DESC ");
+    $result = $db->select(tbl('editors_picks'),'sort',NULL,NULL,' sort DESC ');
     return $result[0]['sort'];
 }
 
-function video_manager_ep_link($vid)
+function video_manager_ep_link($vid): string
 {
     if(is_video_in_editors_pick($vid['videoid'])){
-        return '<li><a role="menuitem" tabindex="-1" href="'.queryString(NULL, array('remove_editor_pick','add_editor_pick','mode')).'remove_editor_pick='.$vid['videoid'].'">Remove From Editor\'s Pick</a><li>';
+        return '<li><a role="menuitem" tabindex="-1" href="'.queryString(NULL, ['remove_editor_pick','add_editor_pick','mode']).'remove_editor_pick='.$vid['videoid'].'">'.lang('plugin_editors_picks_remove_from').'</a><li>';
     }
-    return '<li><a role="menuitem" tabindex="-1" href="'.queryString(NULL, array('remove_editor_pick','add_editor_pick','mode')).'add_editor_pick='.$vid['videoid'].'">Add To Editor\'s Pick</a></li>';
+    return '<li><a role="menuitem" tabindex="-1" href="'.queryString(NULL, ['remove_editor_pick','add_editor_pick','mode']).'add_editor_pick='.$vid['videoid'].'">'.lang('plugin_editors_picks_add_to').'</a></li>';
 }
 
-function get_ep_videos()
+function get_ep_videos(): array
 {
     global $db;
-    return $db->select(tbl('editors_picks,video,users'),tbl('editors_picks.*,video.*,users.userid,users.username')," ".tbl('editors_picks').".videoid = ".tbl('video').".videoid AND ".tbl('video.active')." = 'yes' AND ".tbl('video.broadcast')." = 'public' AND ".tbl("video.userid")." = ".tbl("users.userid")." ORDER BY ".tbl('editors_picks').".sort ASC");
+    return $db->select(tbl('editors_picks,video,users'), tbl('editors_picks.*,video.*,users.userid,users.username'),' '.tbl('editors_picks').'.videoid = '.tbl('video').'.videoid AND '.tbl('video.active').' = \'yes\' AND '.tbl('video.broadcast').' = \'public\' AND '.tbl('video.userid').' = '.tbl('users.userid').' ORDER BY '.tbl('editors_picks').'.sort ASC');
 }
 
 function move_epick($id,$order)
@@ -90,14 +90,14 @@ function move_epick($id,$order)
         if(!is_numeric($order) || $order <1) {
             $order = 1;
         }
-        $db->update(tbl("editors_picks"),array("sort"),array($order)," videoid='".$id."'");
+        $db->update(tbl('editors_picks'),['sort'],[$order],' videoid=\''.$id.'\'');
     }
 }
 
-function admin_area_tab($vid)
+function admin_area_tab($vid): string
 {
     if(is_video_in_editors_pick($vid['videoid'])){
-        return '<span class="label label-success">Added to editors pick</span>';
+        return '<span class="label label-info">'.lang('plugin_editors_picks').'</span>';
     }
     return '';
 }
@@ -107,6 +107,8 @@ function display_editors_pick()
     assign('editor_picks',get_ep_videos());
     echo Fetch(PLUG_DIR.'/editors_pick/templates/front/editorspicks.html',true);
 }
+
+global $cbvid;
 
 //Adding Editor's Pick Link
 $cbvid->video_manager_link[] = 'video_manager_ep_link';
@@ -118,11 +120,11 @@ $cbvid->video_manager_link_new[] = 'admin_area_tab';
 $cbvid->video_manager_funcs[] = 'editors_pick';
 
 if( in_dev() ){
-    add_js(array('editors_pick/assets/js/editors_pick.js'=>'plugin'));
+    add_js(['editors_pick/assets/js/editors_pick.js'=>'plugin']);
 } else {
-    add_js(array('editors_pick/assets/js/editors_pick.min.js'=>'plugin'));
+    add_js(['editors_pick/assets/js/editors_pick.min.js'=>'plugin']);
 }
 register_anchor_function('display_editors_pick','global');
 register_action_remove_video('remove_vid_editors_pick');
 
-add_admin_menu('Plugin Manager','Editor\'s Pick',PLUG_URL.'/editors_pick/admin/editor_pick.php');
+add_admin_menu('Plugin Manager', lang('plugin_editors_picks'),PLUG_URL.'/editors_pick/admin/editor_pick.php');

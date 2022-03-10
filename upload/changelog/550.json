@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"62",
+  "revision":"63",
   "status":"dev",
   "detail":[
     {
@@ -95,6 +95,12 @@
         ,"Fix report tab display"
         ,"Fix rating display"
         ,"Fix ratings"
+      ]
+    }
+  ,{
+      "title":"Plugin",
+      "description":[
+        "Update Editor's Pick to CB5.5.0"
       ]
     }
   ]

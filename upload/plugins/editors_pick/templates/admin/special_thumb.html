@@ -41,9 +41,6 @@
 		$("#special-thumb").submit(function(e){
 			e.preventDefault();
 
-			var size = $("input[name=size]").val();
-			var desc = $("textarea[name=special_thumb]").val();
-
 			var data = new FormData(this);
 			$.ajax({
 	            url: ajaxurl,
@@ -64,9 +61,7 @@
 	            	$('.msg-alert').html(data.msg);
 	            	$('#special-thumb').slideUp("slow");
 	            },
-	            error : function(data) {
-		            
-		        }
+	            error : function(data) {}
 	        });
 	    });
 	});

@@ -230,10 +230,7 @@
     "class_vdo_fav_err1":"Dieses Video befindet sich nicht in Ihrer Favoritenliste",
     "class_cont_del_msg":"Kontakt wurde gelöscht",
     "class_cot_err":"Sorry, dieser Kontakt ist nicht in Ihrer Kontaktliste",
-    "class_vdo_ep_add_msg":"Video wurde zur Auswahl der Redaktion hinzugefügt",
-    "class_vdo_ep_err":"Video ist bereits in der Auswahl der Redaktion",
     "class_vdo_ep_err1":"Sie haben bereits 10 Videos ausgewählt Bitte löschen Sie mindestens ein Video, um weitere hinzuzufügen",
-    "class_vdo_ep_msg":"Video wurde aus dem Auswahl der Redakteure entfernt",
     "class_vdo_exist_err":"Entschuldigung, Video existiert nicht",
     "class_img_gif_err":"Bitte nur Gif-Bilder hochladen",
     "class_img_png_err":"Bitte nur Png-Bilder hochladen",
@@ -1591,4 +1588,13 @@
     "collection_no_parent":"Kein Elternteil",
     "collection_parent":"Übergeordnete Sammlung",
     "comments_disabled_for_photo":"Kommentare deaktiviert für dieses foto",
+
+    "plugin_editors_picks": "Editor's Pick",
+	"plugin_editors_picks_added": "Video wurde zur Auswahl der Redaktion hinzugefügt",
+	"plugin_editors_picks_removed": "Video wurde aus dem Auswahl der Redakteure entfernt",
+	"plugin_editors_picks_removed_plural": "Selected video has been removed from Editor's Pick",
+	"plugin_editors_picks_add_error": "Video ist bereits in der Auswahl der Redaktion",
+	"plugin_editors_picks_add_to": "Add to Editor's Pick",
+	"plugin_editors_picks_remove_from": "Remove from Editor's Pick",
+	"plugin_editors_picks_remove_confirm": "Are you sure you want to remove selected videos from Editor's Pick ?"
 }

@@ -230,10 +230,7 @@
     "class_vdo_fav_err1":"This Video Is Not In Your Favourites List",
     "class_cont_del_msg":"Contact Has Been Deleted",
     "class_cot_err":"Sorry, This Contact Is Not In Your Contact List",
-    "class_vdo_ep_add_msg":"Video Has Been Added To Editor's Pick",
-    "class_vdo_ep_err":"Video Is Already In The Editor's Pick",
     "class_vdo_ep_err1":"You Have Already Picked 10 Videos Please Delete Alteast One to Add More",
-    "class_vdo_ep_msg":"Video Has Been Removed From Editor's Pick",
     "class_vdo_exist_err":"Sorry, Video Doesn't Exist",
     "class_img_gif_err":"Please Upload Gif Image Only",
     "class_img_png_err":"Please Upload Png Image Only",
@@ -1580,5 +1577,14 @@
     "video_subtitles_deleted":"Video subtitles has been deleted",
     "collection_no_parent":"No parent",
     "collection_parent":"Parent collection",
-    "comments_disabled_for_photo":"Comments disabled for this photo"
+    "comments_disabled_for_photo":"Comments disabled for this photo",
+
+	"plugin_editors_picks": "Editor's Pick",
+    "plugin_editors_picks_added": "Video has been added to Editor's Pick",
+	"plugin_editors_picks_removed": "Video has been removed from Editor's Pick",
+	"plugin_editors_picks_removed_plural": "Selected video has been removed from Editor's Pick",
+	"plugin_editors_picks_add_error": "Video is already in the Editor's Pick",
+	"plugin_editors_picks_add_to": "Add to Editor's Pick",
+	"plugin_editors_picks_remove_from": "Remove from Editor's Pick",
+	"plugin_editors_picks_remove_confirm": "Are you sure you want to remove selected videos from Editor's Pick ?"
 }

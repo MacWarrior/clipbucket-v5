@@ -1,6 +1,8 @@
 <?php
 require_once '../../../includes/admin_config.php';
-$mode = $_POST['mode'];	
+$mode = $_POST['mode'];
+
+global $Upload,$imgObj;
 
 if(!empty($mode))
 {
@@ -28,18 +30,18 @@ if(!empty($mode))
 			
 			if($imgObj->ValidateImage($file['tmp_name'],$ext)) {
 				if($files_dir!=NULL){
-					$file_path = THUMBS_DIR.'/'.$files_dir.'/'.$file_name.'-'.$file_num.'.'.$ext;	
+					$file_path = THUMBS_DIR.DIRECTORY_SEPARATOR.$files_dir.DIRECTORY_SEPARATOR.$file_name.'-'.$file_num.'.'.$ext;
 				} else {
-					$file_path = THUMBS_DIR.'/'.$file_name.'-'.$file_num.'.'.$ext;
+					$file_path = THUMBS_DIR.DIRECTORY_SEPARATOR.$file_name.'-'.$file_num.'.'.$ext;
 				}
 			}
 			$file_path = str_replace('-', '-original', $file_path);
 			move_uploaded_file($file['tmp_name'],$file_path);
 			$imgObj->CreateThumb($file_path,$file_path,$width,$ext,$height,false);
 
-			echo json_encode(array('msg'=>'Your Thumb has been Uploaded. Please Go to  custom thumbs manager to set it as a default <a href="/admin_area/upload_thumbs.php?video='.$video_id.'" target="self" > Custom Thumb Manger </a>'));
+			echo json_encode(['msg'=>'Your Thumb has been Uploaded. Please Go to  custom thumbs manager to set it as a default <a href="/admin_area/upload_thumbs.php?video='.$video_id.'" target="self" > Custom Thumb Manger </a>']);
 		    break;
 	}
 } else {
-    echo json_encode(array("no_index"=>"You Are Lost! Please Send the correct mode"));
+    echo json_encode(['no_index'=>'You Are Lost! Please Send the correct mode']);
 }
