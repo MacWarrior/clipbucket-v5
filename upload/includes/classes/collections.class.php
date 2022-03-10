@@ -376,7 +376,7 @@ class Collections extends CBCategory
             if($cond!=''){
                 $cond .= ' AND ';
             }
-            $cond .= ' '.cbsearch::date_margin('date_added',$p['date_span']);
+            $cond .= ' '.cbsearch::date_margin('C.date_added',$p['date_span']);
         }
         
         if($p['type']) {
