@@ -14,9 +14,8 @@
 		</a>
 
 		<ul class="submenu" {if $breadcrumb[0]["title"] == $menu['title']}style="display:block;"{/if}>
-
 			{foreach from=$menu['sub'] item=subMenu}
-			<li {if $breadcrumb[1]['title'] == $subMenu['title']}class="active"{/if}>
+			<li {if $breadcrumb[0]['title'] == $menu['title'] && $breadcrumb[1]['title'] == $subMenu['title']}class="active"{/if}>
 			<a href="{$subMenu['url']}">
 				<i class="glyphicon glyphicon-hand-right"></i>
 				{$subMenu['title']}
