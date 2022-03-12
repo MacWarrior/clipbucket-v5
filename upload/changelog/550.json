@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"69",
+  "revision":"70",
   "status":"dev",
   "detail":[
     {
@@ -97,6 +97,7 @@
         ,"Fix report tab display"
         ,"Fix rating display"
         ,"Fix ratings"
+        ,"Update categories filter <i>#213</i>"
       ]
     }
   ,{
