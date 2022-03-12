@@ -33,6 +33,19 @@ if(file_exists(dirname(__FILE__).'/../files/temp/development.dev')) {
         'expensive_query'=>'',
         'cheapest_query'=>''
     );
+
+    require_once(dirname(__DIR__).DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php');
+    $whoops = new \Whoops\Run;
+    $whoops->pushHandler( new \Whoops\Handler\PrettyPageHandler );
+    $whoops->register();
+
+    /*set_error_handler(function($severity, $message, $file, $line){
+        if (!(error_reporting() & $severity)) {
+            // This error code is not included in error_reporting
+            return;
+        }
+        throw new \ErrorException($message, 0, $severity, $file, $line);
+    });*/
 } else {
     define('DEVELOPMENT_MODE',false);
 }
