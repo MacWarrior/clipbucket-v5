@@ -134,7 +134,7 @@ switch($mode)
         //Check file size
         $file_size = @filesize($_FILES['Filedata']['tmp_name']);
         if (!$file_size || $file_size > $max_file_size_in_bytes) {
-            upload_error('File exceeds the maximum allowed size') ;
+            upload_error('File exceeds the maximum allowed size');
             exit(0);
         }
 

@@ -166,7 +166,7 @@
     "title_inbox":" - Inbox",
     "title_sent":" - Sent Folder",
     "title_usr_contact":"'s Contact List",
-    "title_usr_fav_vids":"%s\u2019s Favorite Videos",
+    "title_usr_fav_vids":"%s's Favorite Videos",
     "title_edit_video":"Edit Video - ",
     "vdo_title_err":"Please Enter Video Title",
     "vdo_des_err":"Please Enter Video Description",
@@ -1397,7 +1397,7 @@
     "offline":"offline",
     "upload_video":"Upload Video",
     "upload_photo":"Upload Photo",
-    "upload_audio":"Upload Audio", "upload_beats_guide":"<strong>Important: Do not upload any audios that can be construed as Obscenity, copyrighted material, harassment, or spam.<\/strong>\r\n<p>By continuing \"Your Upload\", you are representing that these audios do not violate Our website's Terms of Use and that you own all copyrights of these audios or have authorization to upload it.<\/p>",
+	"upload_beats_guide":"<strong>Important: Do not upload any audios that can be construed as Obscenity, copyrighted material, harassment, or spam.<\/strong>\r\n<p>By continuing \"Your Upload\", you are representing that these audios do not violate Our website's Terms of Use and that you own all copyrights of these audios or have authorization to upload it.<\/p>",
     "admin_area":"Admin Area",
     "view_channels":"View Channels",
     "my_channel":"My Channel",
@@ -1436,10 +1436,6 @@
     "private":"Private",
     "for_friends":"For friends",
     "submit_now":"Submit Now",
-    "upload_text":"Video can be",
-    "upload_txt":"MB in size",
-    "upload_txt2":"Min in Duration and of any common format You can also upload HD videos",
-    "select_video":" Select Video",
     "drag_drop":"Drag &amp; Drop Files Here",
     "upload_more_videos":"Upload More Videos",
     "selected_files":"Selected Files",
@@ -1448,8 +1444,6 @@
     "playlist_videos":"Playlist videos",
     "popular_videos":"Popular Videos",
     "uploading":"Uploading",
-    "photo_can_be":"Photo can be",
-    "photo_upload_txt":" MB in size and any common valid image format",
     "select_photos":"Select Photos",
     "uploading_in_progress":"Uploading in progress ",
     "complete_of_photo":"Complete of Photo",
@@ -1586,5 +1580,9 @@
 	"plugin_editors_picks_add_error": "Video is already in the Editor's Pick",
 	"plugin_editors_picks_add_to": "Add to Editor's Pick",
 	"plugin_editors_picks_remove_from": "Remove from Editor's Pick",
-	"plugin_editors_picks_remove_confirm": "Are you sure you want to remove selected videos from Editor's Pick ?"
+	"plugin_editors_picks_remove_confirm": "Are you sure you want to remove selected videos from Editor's Pick ?",
+
+	"page_upload_video_limits": "Each video can't excess the weight of %s Mo, neither a length of %s minutes, and must be in any common video format",
+	"page_upload_video_select":" Select Video",
+	"page_upload_photo_limits": "Each photo can't excess the weight of %s Mo and must be in any common image format"
 }

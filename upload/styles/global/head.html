@@ -54,10 +54,6 @@
 
 {if $smarty.const.THIS_PAGE == 'upload'}
 
-<link href="{$js}/uploadify/uploadify.css" type="text/css" rel="stylesheet" />
-<script type="text/javascript" src="{$js}/uploadify/swfobject.js"></script>
-<script type="text/javascript" src="{$js}/uploadify/jquery.uploadify.v2.1.4.js"></script>
-
 <script type="text/javascript">
 var uploadError = false;
 var lang = new Array();
@@ -66,16 +62,14 @@ lang['savingData'] = '{lang code='saving'}';
 lang['remoteUploadFile'] = '{lang code="remote_upload_file"}';
 lang['upload_video_button'] = '{lang code="upload_video_button"}';
 var fileExt = '{$Cbucket->list_extensions()|replace:",":";"}';
-
-var uploadSwfPath = '{$uploaderDetails.uploadSwfPath}';
 var uploadScriptPath = '{$uploaderDetails.uploadScriptPath}';
 
 function show_error(msg,ID,fade)
 {
-      $('#file_uploads'+ID+' .percentage').after('<div class=\"uploadErrorDiv\"><div class=\"uploadErrorMsg\">'+msg+'<\/div><\/div>');
-        if(fade){
-            $('.uploadSuccessDiv').delay(3000).fadeOut('slow');
-        }
+    $('#file_uploads'+ID+' .percentage').after('<div class=\"uploadErrorDiv\"><div class=\"uploadErrorMsg\">'+msg+'<\/div><\/div>');
+    if(fade){
+        $('.uploadSuccessDiv').delay(3000).fadeOut('slow');
+    }
 }
   
 function show_message(msg,ID,fade)
@@ -98,15 +92,14 @@ function doUpdateVideo(formId,ID)
     .attr("onClick","return false;");
     
     $.post('/actions/file_uploader.php',formObjectData,function(data) {
-        if(data.msg)
-        show_message(data.msg,ID,true);
-        if(data.error)
-        show_error(data.error,ID,true);
+        if(data.msg){
+            show_message(data.msg,ID,true);
+        }
+        if(data.error){
+            show_error(data.error,ID,true);
+        }
         $('#updateVideoDataLoading').empty();
-        $('#cbSubmitUpload'+ID)
-        .removeAttr("disabled")
-        .attr("value",lang.saveData)
-        .attr("onClick","doUpdateVideo('#uploadForm"+ID+"','"+ID+"')")
+        $('#cbSubmitUpload'+ID).removeAttr("disabled").attr("value",lang.saveData).attr("onClick","doUpdateVideo('#uploadForm"+ID+"','"+ID+"')")
     },"json");
 }
 </script>
@@ -125,10 +118,6 @@ window.onload = function() {ldelim}
 {/if}
 
 {if $smarty.const.THIS_PAGE == 'photo_upload'}
-<link href="{$js}/uploadify/uploadify.css" type="text/css" rel="stylesheet" />
-<script type="text/javascript" src="{$js}/uploadify/swfobject.js"></script>
-<script type="text/javascript" src="{$js}/uploadify/jquery.uploadify.v2.1.4.js"></script>
-
 <script type="text/javascript" language="javascript">
     fileExt = '{$cbphoto->extensions()}',
     lang = new Array(),
@@ -288,67 +277,6 @@ function update_collection_selection(obj)
         This.removeAttr('disabled');    
     },1000);
 }
-    
-$(document).ready(function() {
-    function photoUploadify(object)
-    {
-        $(object).uploadify(
-        {
-            'uploader'  : uploadSwfPath,
-            'script'    : uploadScriptPath,
-            'scriptAccess' : 'always',
-            'fileDataName' : 'photoUpload',
-            'cancelImg' : imageurl+'/cancel_upload.png',
-            'auto'      : true,
-            'removeCompleted' : false,
-            'displayData' : 'both',
-            'fileExt'     : fileExt,
-            'multi'          : true,
-            'queueSizeLimit': '{$Cbucket->configs.photo_multi_upload}',
-            'fileDesc'    : 'Photo Files',
-            'buttonText' : lang.browsePhrase,
-            'queueID' : 'photoUploadQueue',
-            'sizeLimit' : '{$cbphoto->max_file_size}',
-            'onSelect' : function(event,ID,fileObj)
-            {
-                uploadError = false;
-                $.ajax({
-                    url : '/actions/photo_uploader.php',
-                    dataType : 'json',
-                    type : 'POST',
-                    data : ({ "photoForm":"yes" , "objID":ID , "name":fileObj.name , "collection":collectionID }),
-                    success : function(data)
-                    {
-                        if(!uploadError)
-                            $("#photo_uploads"+ID).append(data['form']);
-                    }
-                });
-            },
-            'onComplete' : function(event,ID,fileObj,response,data)
-            {
-            
-                var resObj = $.parseJSON(response);
-                if(resObj.success == "yes")
-                {
-                    insertAjaxPhoto(ID,resObj.filename,resObj.extension,resObj.server_url,resObj.folder);    
-                }
-                
-            },
-            'onQueueFull' : function(event,queueSizeLimit)
-            {
-                QueueError = "I'm stuffed, "+queueSizeLimit+" is my limit. Thanks.";
-                QueueLimitError(QueueError,true);
-                return false;
-            },
-            'onError' : function(event,ID,fileObj,errorObj)
-            {
-                uploadError = true;    
-            }
-        });
-    }
-         
-    photoUploadify('#photo_uploads'); 
-});
 </script>
 {/if}
 

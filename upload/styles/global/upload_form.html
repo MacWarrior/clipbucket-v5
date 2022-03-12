@@ -4,30 +4,27 @@
 {$dateAndLocation = $videoFields[2]}
 {$custom_fields = $videoFields[4]}
 
-{$config_for_mp4 = config('stay_mp4')}
 <div class="uploaderContainer clearfix" id="uploaderContainer">
     <div class="upload-area col-md-12">
         <div class="fileUploaderForm">
             <div class="dragDropContainer" id="dragDrop">
                 <span class="upload-logo"></span>
                 <strong class="block-title">{lang code="drag_drop"}</strong>
-                <p>{lang code="upload_text"} {$Cbucket->configs['max_upload_size']} {lang code="upload_txt"} , {$Cbucket->configs['max_video_duration']} {lang code="upload_txt2"}</p>
+                <p>
+                    {sprintf(lang(page_upload_video_limits),$Cbucket->configs['max_upload_size'],$Cbucket->configs['max_video_duration'])}
+                </p>
             </div>
             <div class="selectButtonContainer">
-                <a id="selectFiles" href="javascript;" class="btn btn-primary btn-lg selectFiles">{lang code="select_video"}</a>
+                <a id="selectFiles" href="javascript;" class="btn btn-primary btn-lg selectFiles">{lang code="page_upload_video_select"}</a>
             </div>
         </div>
     </div>
 </div>
 <div id="uploadDataContainer" class="uploadDataContainer hidden">
-    <div class="uploadingProgressContainer">
-    </div>
-    <div class="realProgressBars">
-        
-    </div>
+    <div class="uploadingProgressContainer"></div>
+    <div class="realProgressBars"></div>
     <div class="align-right hidden" id="uploadMore">
         <a href="#" class="btn btn-primary uploadMoreVideos" id="uploadMoreVideos">{lang code="upload_more_videos"}</a>
-
     </div>
     <div id="files"></div>
     <div id="allUploadForms" class="tab-content allUploadForms"></div>

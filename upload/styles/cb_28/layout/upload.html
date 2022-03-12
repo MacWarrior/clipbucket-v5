@@ -88,10 +88,10 @@
 				url : uploadurl,
 				file_data_name : 'Filedata',
 				filters: {
-				  mime_types : [
-					{ title : 'Image files', extensions : extensions },
-					{ title : 'Video files', extensions : extensions }
-				  ]
+                    mime_types : [
+                        { title : 'Video files', extensions : extensions }
+                    ],
+                    max_file_size : '{$Cbucket->configs.max_upload_size}Mb'
 				}
 			});
 
@@ -423,10 +423,10 @@
 				}, 5000);
 			});
 
-			uploader.bind('Error', function(up, err) {
+			uploader.bind('error', function(up, err) {
 				$("#uploadMessage").removeClass('hidden');
 				if(err){
-					$("#uploadMessage").html(err.message).attr('class', 'alert alert-danger');
+					$("#uploadMessage").html(err.message).attr('class', 'alert alert-danger container');
 				}
 				setTimeout(function(){
 					$("#uploadMessage").addClass('hidden');
@@ -470,9 +470,9 @@
                     $("#uploadMessage").removeClass('hidden');
                     msg = $.parseJSON(msg);
                     if(msg.error){
-                        $("#uploadMessage").html(msg.error).attr('class', 'alert alert-danger');
+                        $("#uploadMessage").html(msg.error).attr('class', 'alert alert-danger container');
                     }else{
-                        $("#uploadMessage").html(msg.msg).attr('class', 'alert alert-success');
+                        $("#uploadMessage").html(msg.msg).attr('class', 'alert alert-success container');
                     }
                     setTimeout(function(){
                         $("#uploadMessage").addClass('hidden');

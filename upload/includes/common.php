@@ -538,7 +538,6 @@ register_action_remove_video('remove_video_thumbs');
 register_action_remove_video('remove_video_subtitles');
 register_action_remove_video('remove_video_log');
 register_action_remove_video('remove_video_files');
-register_anchor_function( 'add_photo_plupload_javascript_block', 'cb_head' );
 cb_register_function( 'plupload_photo_uploader', 'uploaderDetails' );
 
 cb_register_action( 'increment_playlist_played', 'view_playlist' );

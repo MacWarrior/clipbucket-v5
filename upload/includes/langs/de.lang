@@ -1397,7 +1397,6 @@
     "offline":"offline",
     "upload_video":"Video hochladen",
     "upload_photo":"Foto hochladen",
-    "upload_audio":"Audio hochladen",
     "upload_beats_guide":"<strong>Wichtig! Laden Sie keine Audios hoch, die als Obszönität, urheberrechtlich geschütztes Material, Belästigung oder Spam ausgelegt werden können.</strong>\r\n<p>Indem Sie mit \"Ihr Upload\" fortfahren, erklären Sie, dass diese Audios nicht gegen die Nutzungsbedingungen unserer Website verstoßen und dass Sie alle Urheberrechte an diesen Audios besitzen oder berechtigt sind, sie hochzuladen.</p>",
     "admin_area":"Verwaltungsbereich",
     "view_channels":"Kanäle anzeigen",
@@ -1437,10 +1436,6 @@
     "private":"Privat",
     "for_friends":"Für Freunde",
     "submit_now":"Jetzt einreichen",
-    "upload_text":"Video kann sein",
-    "upload_txt":"MB groß sein",
-    "upload_txt2":"Min. lang sein und jedes gängige Format haben. Sie können auch HD-Videos hochladen.",
-    "select_video":" Video auswählen",
     "drag_drop":"Dateien hierher ziehen & ablegen",
     "upload_more_videos":"Weitere Videos hochladen",
     "selected_files":"Ausgewählte Dateien",
@@ -1449,8 +1444,6 @@
     "playlist_videos":"Wiedergabeliste Videos",
     "popular_videos":"Beliebte Videos",
     "uploading":"Hochladen",
-    "photo_can_be":"Foto kann sein",
-    "photo_upload_txt":"MB groß sein und ein beliebiges gültiges Bildformat haben",
     "select_photos":"Fotos auswählen",
     "uploading_in_progress":"Hochladen im Gange ",
     "complete_of_photo":"Foto fertigstellen",
@@ -1596,5 +1589,9 @@
 	"plugin_editors_picks_add_error": "Video ist bereits in der Auswahl der Redaktion",
 	"plugin_editors_picks_add_to": "Add to Editor's Pick",
 	"plugin_editors_picks_remove_from": "Remove from Editor's Pick",
-	"plugin_editors_picks_remove_confirm": "Are you sure you want to remove selected videos from Editor's Pick ?"
+	"plugin_editors_picks_remove_confirm": "Are you sure you want to remove selected videos from Editor's Pick ?",
+
+	"page_upload_video_limits": "Each video can't excess the weight of %s Mo, neither a length of %s minutes, and must be in any common video format",
+	"page_upload_video_select":" Video auswählen",
+	"page_upload_photo_limits": "Each photo can't excess the weight of %s Mo and must be in any common image format"
 }

@@ -107,7 +107,9 @@
                             <div class="dragDropContainer clearfix" id="dragDrop">
                                 <span class="upload-logo"></span>
                                 <strong class="block-title">{lang code="drag_drop"}</strong>
-                                <p>{lang code="photo_can_be"} {config('max_upload_size')} {lang code="photo_upload_txt"}</p>
+                                <p>
+                                    {sprintf(lang(page_upload_photo_limits),$Cbucket->configs['max_photo_size'])}
+                                </p>
                             </div>
                             <div class="selectButtonContainer">
                                 <a id="selectFiles" href="javascript:;" class="btn btn-primary btn-lg selectFiles">{lang code="select_photos"}</a>
@@ -166,6 +168,7 @@
                 url : uploadScriptPath,
                 dragdrop: true,
                 drop_element: "dragDrop",
+                max_file_size : '{$Cbucket->configs.max_photo_size}Mb',
                 filters: {
                     mime_types : [
                         { title : "Image files", extensions : photo_extensions },
@@ -479,7 +482,7 @@
                 }, 5000);
             });
 
-            uploader.bind('Error', function(up, err) {
+            uploader.bind('error', function(up, err) {
                 $("#uploadMessage").removeClass("hidden");
                 if(err){
                     $("#uploadMessage").html(err.message).attr("class", "alert alert-danger container");
@@ -507,7 +510,7 @@
                                 newCollectionElement.innerHTML = collectionName;
                                 newCollectionElement.selected = true;
                                 $("#collectionSelection").get(0).appendChild(newCollectionElement);
-                                $("#uploadMessage").html(msg.msg).attr("class", "alert alert-success").removeClass("hidden");
+                                $("#uploadMessage").html(msg.msg).attr("class", "alert alert-success container").removeClass("hidden");
 
                                 $("#CollectionDIV").toggle("fast");
                                 $('.form_header').show();
@@ -519,7 +522,7 @@
                                     $("#uploadMessage").addClass("hidden");
                                 }, 5000);
                             }else{
-                                $("#uploadMessage").html(msg.err).attr("class", "alert alert-danger").removeClass("hidden");
+                                $("#uploadMessage").html(msg.err).attr("class", "alert alert-danger container").removeClass("hidden");
                                 setTimeout(function(){
                                     $("#uploadMessage").addClass("hidden");
                                 }, 5000);

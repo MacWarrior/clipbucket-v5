@@ -30,22 +30,22 @@ switch($mode)
 		$desc = $name;
 		$tags = $name;
 		$collection = $_POST['collection'];
-		$photoArray = array(
+		$photoArray = [
 			'photo_title' => $name,
 			'photo_description' => $name,
 			'photo_tags' => $name,
 			'collection_id' => $collection
-		);
+        ];
 		assign('uniqueID',$_POST['objID']);
 		assign('photoArray',$photoArray);
 		$form = Fetch('/blocks/upload/photo_form.html');
-		echo json_encode(array('form'=>$form));
+		echo json_encode(['form'=>$form]);
 	    break;
 
 	case 'insert_photo':
 		$_POST['photo_title'] = mysql_clean($_POST['photo_title']);
 		$_POST['photo_description'] = mysql_clean($_POST['photo_description']);
-		$_POST['photo_tags'] = genTags(str_replace(array(' ','_','-'),', ',$_POST['photo_tags']));
+		$_POST['photo_tags'] = genTags(str_replace([' ','_','-'],', ',$_POST['photo_tags']));
 		$_POST['server_url'] = 'undefined';
 		$_POST['active'] = config('photo_activation') ? 'no' : 'yes';
 		$_POST['folder'] = str_replace('..','',mysql_clean($_POST['folder']));
@@ -63,7 +63,7 @@ switch($mode)
 			$details = $cbphoto->get_photo($insert_id);
 			$details['filename'] = $_POST['file_name'];
 			$cbphoto->generate_photos($details);
-			$params = array('details'=>$details,'size'=>'m','static'=>true);
+			$params = ['details'=>$details,'size'=>'m','static'=>true];
 			$response['photoPreview'] = get_image_file($params);
 		}
 
@@ -73,7 +73,7 @@ switch($mode)
 	case 'update_photo':
 		$_POST['photo_title'] = mysql_clean($_POST['photo_title']);
 		$_POST['photo_description'] = mysql_clean($_POST['photo_description']);
-		$_POST['photo_tags'] = genTags(str_replace(array(' ','_','-'),', ',mysql_clean($_POST['photo_tags'])));
+		$_POST['photo_tags'] = genTags(str_replace([' ','_','-'],', ',mysql_clean($_POST['photo_tags'])));
 				
 		$cbphoto->update_photo();
 		
@@ -97,7 +97,7 @@ switch($mode)
 		$path = PHOTOS_DIR.DIRECTORY_SEPARATOR;
 		
 		// These are found in $_FILES. We can access them like $_FILES['file']['error'].
-		$upErrors = array(
+		$upErrors = [
 			0 => 'There is no error, the file uploaded with success.',
 			1 => 'The uploaded file exceeds the upload_max_filesize directive in php.ini.',
 			2 => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.',
@@ -105,7 +105,7 @@ switch($mode)
 			4 => 'No file was uploaded.',
 			6 => 'Missing a temporary folder.',
 			7 => 'Failed to write file to disk.'
-		);
+        ];
 
 		// Let's see if everything is working fine by checking $_FILES.
 		if(!isset($_FILES[$form])) {
@@ -116,12 +116,12 @@ switch($mode)
 			upload_error($upErrors[$_FILES[$form]['error']]);
 			exit(0);
 		}
-		if(!isset($_FILES[$form]["tmp_name"]) || !@is_uploaded_file($_FILES[$form]["tmp_name"])) {
-			upload_error("Upload failed is_uploaded_file test.");
+		if(!isset($_FILES[$form]['tmp_name']) || !@is_uploaded_file($_FILES[$form]['tmp_name'])) {
+			upload_error('Upload failed is_uploaded_file test.');
 			exit(0);
 		}
 		if(empty($_FILES[$form]['name'])) {
-			upload_error("File name is empty");
+			upload_error('File name is empty');
 			exit(0);	
 		}
 		
@@ -138,22 +138,30 @@ switch($mode)
 		}
 		
 		if(!$valid_extension) {
-			upload_error("Invalid file extension");
+			upload_error('Invalid file extension');
 			exit(0);	
 		}
 
 		#checking for if the right file is uploaded
         $content_type = get_mime_type($_FILES[$form]['tmp_name']);
         if ( $content_type != 'image')  {
-            upload_error("Invalid file type");
+            upload_error('Invalid file type');
             exit();
+        }
+
+        //Check file size
+        $max_file_size_in_bytes = config('max_photo_size')*1024*1024;
+        $file_size = @filesize($_FILES['Filedata']['tmp_name']);
+        if (!$file_size || $file_size > $max_file_size_in_bytes) {
+            upload_error('File exceeds the maximum allowed size');
+            exit(0);
         }
 
 		$filename = $cbphoto->create_filename();
 
 		//Now uploading the file
 		if(move_uploaded_file($_FILES[$form]['tmp_name'],$path.$filename.'.'.$extension)) {
-			echo json_encode(array('success'=>"yes",'filename'=>$filename,'extension'=>$extension));
+			echo json_encode(['success'=>'yes','filename'=>$filename,'extension'=>$extension]);
 		} else {	
 			upload_error('File could not be saved.');
 			exit(0);	
@@ -162,7 +170,7 @@ switch($mode)
 
 
     case 'plupload':
-        $status_array = array();
+        $status_array = [];
         // HTTP headers for no cache etc
         header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
         header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
@@ -173,7 +181,7 @@ switch($mode)
         #checking for if the right file is uploaded
         $content_type = get_mime_type($_FILES['file']['tmp_name']);
         if ( $content_type != 'image')  {
-            echo json_encode(array('status'=>'400','err'=>'Invalid Content'));
+            echo json_encode(['status'=>'400','err'=>'Invalid Content']);
             exit();
         }
 
@@ -182,7 +190,7 @@ switch($mode)
         $supported_extensions = explode(',', $types);
 
         if (!in_array($extension, $supported_extensions)) {
-            echo json_encode(array('status'=>'504','msg'=>'Invalid extension'));
+            echo json_encode(['status'=>'504','msg'=>'Invalid extension']);
             exit();
         }
 
@@ -250,14 +258,11 @@ switch($mode)
         }
 
         // Handle non multipart uploads older WebKit versions didn't support multipart in HTML5
-        if (strpos($contentType, 'multipart') !== false)
-        {
-            if (isset($_FILES['file']['tmp_name']) && is_uploaded_file($_FILES['file']['tmp_name']))
-            {
+        if (strpos($contentType, 'multipart') !== false) {
+            if (isset($_FILES['file']['tmp_name']) && is_uploaded_file($_FILES['file']['tmp_name'])) {
                 // Open temp file
                 $out = fopen("{$filePath}.part", $chunk == 0 ? 'wb' : 'ab');
-                if ($out)
-                {
+                if ($out) {
                     // Read binary input stream and append it to temp file
                     $in = fopen($_FILES['file']['tmp_name'], 'rb');
 
@@ -280,8 +285,7 @@ switch($mode)
         } else {
             // Open temp file
             $out = fopen("{$filePath}.part", $chunk == 0 ? 'wb' : 'ab');
-            if ($out)
-            {
+            if ($out) {
                 // Read binary input stream and append it to temp file
                 $in = fopen('php://input', 'rb');
 
@@ -312,12 +316,12 @@ switch($mode)
 
         rename($filePath, $targetFile);
 
-        echo json_encode( array('success'=>'yes','file_name'=>$filename, 'extension' => getExt( $filePath ), 'file_directory' => $directory ) );
+        echo json_encode( ['success'=>'yes','file_name'=>$filename, 'extension' => getExt( $filePath ), 'file_directory' => $directory] );
         break;
 }
 
 //function used to display error
 function upload_error($error)
 {
-	echo json_encode(array('error'=>$error));
+	echo json_encode(['error'=>$error]);
 } 

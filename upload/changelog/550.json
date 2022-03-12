@@ -98,6 +98,7 @@
         ,"Fix rating display"
         ,"Fix ratings"
         ,"Update categories filter <i>#213</i>"
+        ,"Fix video & photo upload file size check <i>#221</i>"
       ]
     }
   ,{

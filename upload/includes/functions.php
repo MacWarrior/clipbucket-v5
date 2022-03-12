@@ -3812,12 +3812,10 @@
 	function uploaderDetails()
 	{
 		$uploaderDetails = array(
-			'uploadSwfPath' => JS_URL.'/uploadify/uploadify.swf',
 			'uploadScriptPath' => '/actions/file_uploader.php',
 		);
 		
 		$photoUploaderDetails = array(
-			'uploadSwfPath' => JS_URL.'/uploadify/uploadify.swf',
 			'uploadScriptPath' => '/actions/photo_uploader.php',
 		);
 		

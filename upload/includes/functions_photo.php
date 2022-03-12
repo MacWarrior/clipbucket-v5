@@ -1,312 +1,291 @@
 <?php
-	/**
-	 * Created by JetBrains PhpStorm.
-	 * User: Fawaz
-	 * Date: 9/3/13
-	 * Time: 11:38 AM
-	 * To change this template use File | Settings | File Templates.
-	 */
+function get_photo_fields() {
+    global $cb_columns;
+    return $cb_columns->object( 'photos' )->get_columns();
+}
 
-	function get_photo_fields() {
-		global $cb_columns;
-		return $cb_columns->object( 'photos' )->get_columns();
-	}
+/**
+ * function used to get photos
+ */
+function get_photos($param)
+{
+    global $cbphoto;
+    return $cbphoto->get_photos($param);
+}
 
-	/**
-	 * function used to get photos
-	 */
-	function get_photos($param)
-	{
-		global $cbphoto;
-		return $cbphoto->get_photos($param);
-	}
+//Simple Width Fetcher
+function getWidth($file)
+{
+    $sizes = getimagesize($file);
+    if($sizes)
+        return $sizes[0];
+}
 
-	//Simple Width Fetcher
-	function getWidth($file)
-	{
-		$sizes = getimagesize($file);
-		if($sizes)
-			return $sizes[0];
-	}
+//Simple Height Fetcher
+function getHeight($file)
+{
+    $sizes = getimagesize($file);
+    if($sizes)
+        return $sizes[1];
+}
 
-	//Simple Height Fetcher
-	function getHeight($file)
-	{
-		$sizes = getimagesize($file);
-		if($sizes)
-			return $sizes[1];
-	}
+//Load Photo Upload Form
+function loadPhotoUploadForm($params)
+{
+    global $cbphoto;
+    return $cbphoto->loadUploadForm($params);
+}
+//Photo File Fetcher
+function get_photo($params)
+{
+    return get_image_file( $params );
+}
 
-	//Load Photo Upload Form
-	function loadPhotoUploadForm($params)
-	{
-		global $cbphoto;
-		return $cbphoto->loadUploadForm($params);
-	}
-	//Photo File Fetcher
-	function get_photo($params)
-	{
-		return get_image_file( $params );
-	}
+//Photo Upload Button
+function upload_photo_button($params)
+{
+    global $cbphoto;
+    return $cbphoto->upload_photo_button($params);
+}
 
-	//Photo Upload Button
-	function upload_photo_button($params)
-	{
-		global $cbphoto;
-		return $cbphoto->upload_photo_button($params);
-	}
+//Photo Embed Cides
+function photo_embed_codes($params)
+{
+    global $cbphoto;
+    return $cbphoto->photo_embed_codes($params);
+}
 
-	//Photo Embed Cides
-	function photo_embed_codes($params)
-	{
-		global $cbphoto;
-		return $cbphoto->photo_embed_codes($params);
-	}
+//Create download button
 
-	//Create download button
+function photo_download_button($params)
+{
+    global $cbphoto;
+    return $cbphoto->download_button($params);
+}
 
-	function photo_download_button($params)
-	{
-		global $cbphoto;
-		return $cbphoto->download_button($params);
-	}
+function plupload_photo_uploader() {
+    $photoUploaderDetails = [
+        'uploadScriptPath' => '/actions/photo_uploader.php?plupload=true'
+    ];
 
-	function add_photo_plupload_javascript_block() {
-		if( THIS_PAGE == 'photo_upload' ) {
-			return Fetch( JS_DIR.'/plupload/uploaders/photo.plupload.html', true );
-		}
-	}
+    assign('photoUploaderDetails',$photoUploaderDetails);
+}
 
-	function plupload_photo_uploader() {
-		$photoUploaderDetails = array
-		(
-			'uploadSwfPath' => JS_URL.'/plupload/Moxie.swf',
-			'uploadScriptPath' => '/actions/photo_uploader.php?plupload=true',
-		);
+/**
+ * Function is used to confirm the current photo has photo file saved in
+ * structured folders. If file is found at structured folder, function
+ * will the dates folder structure.
+ *
+ * @param INT|array $photo_id
+ * @return bool|string $directory
+ */
+function get_photo_date_folder( $photo_id )
+{
+    global $cbphoto, $db;
 
-		assign('photoUploaderDetails',$photoUploaderDetails);
-	}
+    if ( is_array( $photo_id ) ) {
+        $photo = $photo_id;
+    } else {
+        $photo = $cbphoto->get_photo( $photo_id );
+    }
 
+    if ( !$photo ) {
+        return false;
+    }
 
-	/**
-	 * Function is used to confirm the current photo has photo file saved in
-	 * structured folders. If file is found at structured folder, function
-	 * will the dates folder structure.
-	 *
-	 * @param INT|array $photo_id
-	 * @return bool|string $directory
-	 */
-	function get_photo_date_folder( $photo_id )
-	{
-		global $cbphoto, $db;
+    /**
+     * Check if file_directory index has value or not
+     */
+    if( $photo['file_directory'] ) {
+        $directory = $photo['file_directory'];
+    }
 
-		if ( is_array( $photo_id ) ) {
-			$photo = $photo_id;
-		} else {
-			$photo = $cbphoto->get_photo( $photo_id );
-		}
+    if ( !$directory )
+    {
+        /**
+         * No value found. Extract time from filename
+         */
+        $random = substr( $photo['filename'], -6, 6 );
+        $time = str_replace( $random, '', $photo['filename'] );
+        $directory = date('Y/m/d', $time );
 
-		if ( !$photo ) {
-			return false;
-		}
+        /**
+         * Making sure file exists at path
+         */
+        $path = PHOTOS_DIR.DIRECTORY_SEPARATOR.$directory.DIRECTORY_SEPARATOR.$photo['filename'].'.'.$photo['ext'];
+        $photo['file_path'] = $path;
+        $photo = apply_filters( $photo, 'checking_photo_at_structured_path' );
 
-		/**
-		 * Check if file_directory index has value or not
-		 */
-		if( $photo[ 'file_directory' ] ) {
-			$directory = $photo[ 'file_directory' ];
-		}
+        if( file_exists( $photo[ 'file_path' ] ) ) {
+            /**
+             * Photo exists, update file_directory index
+             */
+            $db->update( tbl('photos'), ['file_directory'], [$directory], ' photo_id = \''.$photo['photo_id'].'\'' );
+        } else {
+            $directory = false;
+        }
+    }
 
-		if ( !$directory )
-		{
-			/**
-			 * No value found. Extract time from filename
-			 */
-			$random = substr( $photo['filename'], -6, 6 );
-			$time = str_replace( $random, '', $photo['filename'] );
-			$directory = date('Y/m/d', $time );
+    return $directory;
+}
 
-			/**
-			 * Making sure file exists at path
-			 */
-			$path = PHOTOS_DIR.DIRECTORY_SEPARATOR.$directory.DIRECTORY_SEPARATOR.$photo[ 'filename' ].'.'.$photo[ 'ext' ];
-			$photo[ 'file_path' ] = $path;
-			$photo = apply_filters( $photo, 'checking_photo_at_structured_path' );
+function get_photo_default_thumb( $size = null, $output = null ) {
+    global $cbphoto;
+    return $cbphoto->default_thumb( $size, $output );
+}
 
-			if( file_exists( $photo[ 'file_path' ] ) ) {
-				/**
-				 * Photo exists, update file_directory index
-				 */
-				$db->update( tbl( 'photos' ), array( 'file_directory' ), array( $directory ), " photo_id = '".$photo[ 'photo_id' ]."' " );
-			} else {
-				$directory = false;
-			}
-		}
+function get_image_file( $params )
+{
+    global $cbphoto, $Cbucket;
+    $details = $params['details'];
+    $output = $params['output'] ?? false;
+    $static = $params['static'] ?? false;
 
-		return $directory;
-	}
+    $default = ['t', 'm', 'l', 'o'];
+    $size = $params['size'];
+    $size = ( !in_array( $size, $default ) or !$size ) ? 't' : $size;
 
-	function get_photo_default_thumb( $size = null, $output = null ) {
-		global $cbphoto;
-		return $cbphoto->default_thumb( $size, $output );
-	}
+    if( !$details ) {
+        return get_photo_default_thumb($size, $output);
+    }
+    if ($static) {
+        return '/files/photos/'.$details['file_directory'].'/'.$details['filename'].'_'.$size.'.'.$details['ext'];
+    }
 
-	function get_image_file( $params )
-	{
-		global $cbphoto, $Cbucket;
-		$details = $params['details'];
-		$output = $params['output'] ?? false;
-		$static = $params['static'] ?? false;
+    if ( !is_array( $details ) ) {
+        $photo = $cbphoto->get_photo($details);
+    } else {
+        $photo = $details;
+    }
 
-		$default = array( 't', 'm', 'l', 'o' );
-		$size = $params['size'];
-		$size = ( !in_array( $size, $default ) or !$size ) ? 't' : $size;
+    if ( empty( $photo['photo_id'] ) or empty($photo['photo_key']) ) {
+        return get_photo_default_thumb($size, $output);
+    }
 
-		if( !$details ) {
-			return get_photo_default_thumb($size, $output);
-		}
-		if ($static) {
-			return '/files/photos/'.$details['file_directory'].'/'.$details['filename'].'_'.$size.'.'.$details['ext'];
-		}
+    if( empty( $photo['filename'] ) or empty($photo['ext']) ) {
+        return get_photo_default_thumb($size, $output);
+    }
 
-		if ( !is_array( $details ) ) {
-			$photo = $cbphoto->get_photo($details);
-		} else {
-			$photo = $details;
-		}
+    $params['photo'] = $photo;
 
-		if ( empty( $photo['photo_id'] ) or empty($photo['photo_key']) ) {
-			return get_photo_default_thumb($size, $output);
-		}
+    if( isset($Cbucket->custom_get_photo_funcs) && count( $Cbucket->custom_get_photo_funcs ) > 0 ) {
+        $functions = $Cbucket->custom_get_photo_funcs;
+        foreach( $functions as $func ) {
+            if( function_exists( $func ) ) {
+                $func_data = $func( $params );
+                if( $func_data ) {
+                    return $func_data;
+                }
+            }
+        }
+    }
 
-		if( empty( $photo['filename'] ) or empty($photo['ext']) ) {
-			return get_photo_default_thumb($size, $output);
-		}
+    $directory = get_photo_date_folder($photo);
+    $with_path = $params['with_path'] = ( $params['with_path'] === false ) ? false : true;
+    $with_original = $params['with_orig'] ?? false;
 
-		$params['photo'] = $photo;
+    if( $directory ) {
+        $directory .= '/';
+    }
 
-		if( isset($Cbucket->custom_get_photo_funcs) && count( $Cbucket->custom_get_photo_funcs ) > 0 ) {
-			$functions = $Cbucket->custom_get_photo_funcs;
-			foreach( $functions as $func ) {
-				if( function_exists( $func ) ) {
-					$func_data = $func( $params );
-					if( $func_data ) {
-						return $func_data;
-					}
-				}
-			}
-		}
+    $path = PHOTOS_DIR.'/'.$directory;
+    $filename = $photo['filename'].'%s.'.$photo['ext'];
 
-		$directory = get_photo_date_folder($photo);
-		$with_path = $params['with_path'] = ( $params['with_path'] === false ) ? false : true;
-		$with_original = isset($params['with_orig']) ? $params['with_orig'] : false;
+    $files = glob( $path.sprintf($filename, '*') );
+    if( !empty( $files ) ){
+        $thumbs = [];
+        foreach($files as $file) {
+            $splitted   = explode('/', $file);
+            $thumb_name = end( $splitted );
+            $thumb_type = $cbphoto->get_image_type($thumb_name);
 
-		if( $directory ) {
-			$directory .= '/';
-		}
+            if( $with_original ) {
+                $thumbs[] = ( ( $with_path ) ? PHOTOS_URL.'/' : '' ) . $directory . $thumb_name;
+            } else if( !empty( $thumb_type ) ) {
+                $thumbs[] = ( ( $with_path ) ? PHOTOS_URL.'/' : '' ) . $directory . $thumb_name;
+            }
+        }
 
-		$path = PHOTOS_DIR.'/'.$directory;
-		$filename = $photo['filename'].'%s.'.$photo['ext'];
+        if ( empty( $output ) or $output == 'non_html' ) {
+            if ( isset($params['assign']) && isset($params['multi']) ) {
+                assign( $params['assign'], $thumbs );
+            } else if( ( isset($params['multi']) ) ) {
+                return $thumbs;
+            } else {
+                $search_name = sprintf($filename, '_'.$size);
+                $return_thumb = array_find($search_name, $thumbs);
 
-		$files = glob( $path.sprintf($filename, '*') );
-		if ( !empty( $files ) )
-		{
-			$thumbs = array();
-			foreach($files as $file)
-			{
-				$splitted   = explode("/", $file);
-				$thumb_name = end( $splitted );
-				$thumb_type = $cbphoto->get_image_type($thumb_name);
+                if( empty( $return_thumb ) ) {
+                    return get_photo_default_thumb($size, $output);
+                }
 
-				if( $with_original ) {
-					$thumbs[] = ( ( $with_path ) ? PHOTOS_URL.'/' : '' ) . $directory . $thumb_name;
-				} else if( !empty( $thumb_type ) ) {
-					$thumbs[] = ( ( $with_path ) ? PHOTOS_URL.'/' : '' ) . $directory . $thumb_name;
-				}
-			}
+                if( isset($params['assign']) ) {
+                    assign($params['assign'], $return_thumb);
+                } else {
+                    return $return_thumb;
+                }
+            }
+        }
 
-			if ( empty( $output ) or $output == 'non_html' )
-			{
-				if ( isset($params['assign']) && isset($params['multi']) ) {
-					assign( $params['assign'], $thumbs );
-				} else if( ( isset($params['multi']) ) ) {
-					return $thumbs;
-				} else {
-					$search_name = sprintf($filename, "_".$size);
-					$return_thumb = array_find($search_name, $thumbs);
+        if ( $output == 'html' ) {
+            $search_name = sprintf( $filename, '_'.$size );
+            $src = array_find( $search_name, $thumbs );
 
-					if( empty( $return_thumb ) ) {
-						return get_photo_default_thumb($size, $output);
-					}
+            $src = ( empty( $src ) ) ? get_photo_default_thumb( $size ) : $src;
+            $attrs = ['src' => $src];
 
-					if( isset($params['assign']) ) {
-						assign($params['assign'], $return_thumb);
-					} else {
-						return $return_thumb;
-					}
-				}
-			}
+            $attrs[ 'id' ] = ( ( $params[ 'id' ] ) ? $params[ 'id' ].'_' : 'photo_' ).$photo['photo_id'];
 
-			if ( $output == 'html' )
-			{
-				$search_name = sprintf( $filename, "_".$size );
-				$src = array_find( $search_name, $thumbs );
+            if( $params['class'] ) {
+                $attrs['class'] = mysql_clean($params['class']);
+            }
 
-				$src = ( empty( $src ) ) ? get_photo_default_thumb( $size ) : $src;
-				$attrs = array( 'src' => $src );
+            if ( $params['align'] ) {
+                $attrs['align'] = mysql_clean( $params['align'] );
+            }
 
-				$attrs[ 'id' ] = ( ( $params[ 'id' ] ) ? $params[ 'id' ].'_' : 'photo_' ).$photo['photo_id'];
+            $attrs['title'] = $photo['photo_title'];
 
-				if( $params['class'] ) {
-					$attrs['class'] = mysql_clean($params['class']);
-				}
+            if ( isset($params['title']) and $params['title'] == '' ) {
+                unset($attrs['title']);
+            }
 
-				if ( $params['align'] ) {
-					$attrs['align'] = mysql_clean( $params['align'] );
-				}
+            $attrs[ 'alt' ] = TITLE.' - '.$photo['photo_title'];
 
-				$attrs['title'] = $photo['photo_title'];
+            $anchor_p = ['place' => 'photo_thumb', 'data' => $photo];
+            $params['extra'] = ANCHOR($anchor_p);
 
-				if ( isset($params['title']) and $params['title'] == '' ) {
-					unset($attrs['title']);
-				}
+            if ( $params['style'] ) {
+                $attrs['style'] = ( $params['style'] );
+            }
 
-				$attrs[ 'alt' ] = TITLE.' - '.$photo['photo_title'];
+            if ( $params['extra'] ) {
+                $attrs['extra'] = ( $params['extra'] );
+            }
 
-				$anchor_p = array( "place" => 'photo_thumb', "data" => $photo );
-				$params['extra'] = ANCHOR($anchor_p);
+            $image = cb_create_html_tag( 'img', true, $attrs );
 
-				if ( $params['style'] ) {
-					$attrs['style'] = ( $params['style'] );
-				}
+            if ( $params['assign'] ) {
+                assign( $params['assign'], $image );
+            } else {
+                return $image;
+            }
+        }
+    } else {
+        return get_photo_default_thumb( $size, $output );
+    }
+}
 
-				if ( $params['extra'] ) {
-					$attrs['extra'] = ( $params['extra'] );
-				}
+function get_photo_file( $photo_id, $size = 't', $multi = false, $assign = null, $with_path = true, $with_orig = false )
+{
+    $args = [
+        'details' => $photo_id,
+        'size' => $size,
+        'multi' => $multi,
+        'assign' => $assign,
+        'with_path' => $with_path,
+        'with_orig' => $with_orig
+    ];
 
-				$image = cb_create_html_tag( 'img', true, $attrs );
-
-				if ( $params['assign'] ) {
-					assign( $params['assign'], $image );
-				} else {
-					return $image;
-				}
-			}
-		} else {
-			return get_photo_default_thumb( $size, $output );
-		}
-	}
-
-	function get_photo_file( $photo_id, $size = 't', $multi = false, $assign = null, $with_path = true, $with_orig = false )
-	{
-		$args = array(
-			'details' => $photo_id,
-			'size' => $size,
-			'multi' => $multi,
-			'assign' => $assign,
-			'with_path' => $with_path,
-			'with_orig' => $with_orig
-		);
-
-		return get_image_file( $args );
-	}
+    return get_image_file( $args );
+}
