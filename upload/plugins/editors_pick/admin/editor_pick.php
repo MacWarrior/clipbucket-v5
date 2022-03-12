@@ -1,5 +1,5 @@
 <?php
-require_once '../../../includes/admin_config.php';
+require_once dirname(__DIR__,3).'/includes/admin_config.php';
 
 global $userquery,$pages,$eh;
 
@@ -16,7 +16,7 @@ if(isset($_GET['remove'])){
     remove_vid_editors_pick($id);
 }
 
-if(isset($_POST['delete_selected'])) {
+if( isset($_POST['delete_selected']) && is_array($_POST['check_video']) ) {
     for($id=0;$id<=count($_POST['check_video']);$id++) {
         remove_vid_editors_pick($_POST['check_video'][$id]);
     }

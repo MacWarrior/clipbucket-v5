@@ -4195,8 +4195,8 @@
      *
      * @return Boolean
      */
-    function in_dev()
-	{
+    function in_dev(): bool
+    {
         if(defined('DEVELOPMENT_MODE')) {
             return DEVELOPMENT_MODE;
         }

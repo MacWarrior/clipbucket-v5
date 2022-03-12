@@ -745,7 +745,7 @@
     "vid_thumb_changed": "La vignette par défaut de la vidéo a été changée",
     "vid_thumb_change_err": "Video thumbnail was not found",
     "upload_vid_thumbs_msg": "All video thumbs have been uploaded",
-    "video_thumb_delete_msg": "Video thumb has been deleted",
+    "video_thumb_delete_msg": "La vignette de la vidéo a été supprimée",
     "video_thumb_delete_err": "Could not delete video thumb",
     "no_comment_del_perm": "You dont have permission to delete this comment",
     "my_text_context": "My test context",
