@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"71",
+  "revision":"72",
   "status":"dev",
   "detail":[
     {
@@ -32,6 +32,7 @@
         ,"Fix photo edition breadcrumb"
         ,"Fix collection search"
         ,"Fix left menu active flag display <i>#223</i>"
+        ,"Fix FFmpeg version check <i>#226</i>"
       ]
     },
     {

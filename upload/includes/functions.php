@@ -1001,7 +1001,7 @@
 		if(PHP_PATH !='') {
 			return PHP_PATH;
 		}
-		return "/usr/bin/php";
+		return '/usr/bin/php';
 	 }
 
 	/**
@@ -1032,7 +1032,7 @@
 					$software_path = config('media_info');
 					break;
 
-				case 'ffprobe_path':
+				case 'ffprobe':
 					$software_path = config('ffprobe_path');
 					break;
 
@@ -1066,7 +1066,7 @@
 				}
 				return 'Unable to find media_info path';
 
-			case 'ffprobe_path':
+			case 'ffprobe':
 				$return_path = shell_output('which ffprobe');
 				if($return_path) {
 					return $return_path;
@@ -3203,161 +3203,57 @@
 		return $codec_installed;
 	}
 
-	/**
-	 * Check if a module is installed on server or not using path
-	 *
-	 * @param : { array } { $params } { array with parameters including path }
-	 *
-	 * @return array|bool|string : { string / boolean } { path if found, else false }
-	 */
-	function check_module_path($params)
-	{
-		$path = $params['path'];
-		if($path['get_path'])
-			$path = get_binaries($path);
-		$array = array();
-		$result = shell_output($path." -version");
-		if ($result) {
-			if(strstr($result,'error') || strstr(($result),'No such file or directory')) {
-				$error['error'] = $result;
-				if($params['assign']) {
-					assign($params['assign'],$error);
-				}
-				return false;
-			}		
-			if($params['assign']) {
-				$array['status'] = 'ok';
-				$array['version'] = parse_version($params['path'],$result);
-				assign($params['assign'],$array);
-				return $array;
-			}
-			return $result;
-		}
-        if($params['assign']) {
-            assign($params['assign']['error'],"error");
-        } else {
-            return false;
+    function check_version($name)
+    {
+        switch($name)
+        {
+            case 'ffmpeg':
+            case 'ffprobe':
+                $path = get_binaries($name);
+                $matches = [];
+                $result = shell_output($path.' -version | head -n1');
+                if($result) {
+                    if (preg_match('/git/i', $result)) {
+                        preg_match('@^(?:'.$name.' version)?([^C]+)@i',$result, $matches);
+                        return $matches[1];
+                    }
+
+                    // for three-part version number
+                    preg_match('/(?:'.$name.'\\s)(?:version\\s)?(\\d\\.\\d\\.(?:\\d|[\\w]+))/i', strtolower($result), $matches);
+                    if(count($matches) > 0) {
+                        return array_pop($matches);
+                    }
+
+                    // for two-part version number
+                    preg_match('#(?:'.$name.'\\s)(?:version\\s)?(\\d\\.\\d)#i', strtolower($result), $matches);
+                    if(count($matches) > 0) {
+                        return array_pop($matches);
+                    }
+
+                    return false;
+                }
+                return false;
+
+            case 'media_info':
+                $path = get_binaries($name);
+                $result = shell_output($path.' --version');
+                $media_info_version = explode('v', $result);
+                return $media_info_version[1];
+
+            case 'php':
+                $path = get_binaries($name);
+                $matches = [];
+                $result = shell_output($path.' --version | head -n1');
+                if($result) {
+                    preg_match('/(?:php\\s)(?:version\\s)?(\\d\\.\\d\\.(?:\\d|[\\w]+))/i', strtolower($result), $matches);
+                    if(count($matches) > 0) {
+                        return array_pop($matches);
+                    }
+                    return false;
+                }
+                return false;
         }
-	}
-
-	/**
-	 * Check if FFMPEG is installed by extracting its version
-	 *
-	 * @param : { string } { $path } { path to FFMPEG }
-	 *
-	 * @return bool|mixed|string : { string } { version if found, else false }
-	 */
-	function check_ffmpeg($path)
-	{
-		$path = get_binaries($path);
-		$matches = array();
-		$result = shell_output($path." -version");
-		if($result)
-		{
-			if (preg_match("/git/i", $result)) {
-				preg_match('@^(?:ffmpeg version)?([^C]+)@i',$result, $matches);
-				$host = $matches[1];
-				return $host;
-			}
-
-            preg_match("/(?:ffmpeg\\s)(?:version\\s)?(\\d\\.\\d\\.(?:\\d|[\\w]+))/i", strtolower($result), $matches);
-            if(count($matches) > 0) {
-                $version = array_pop($matches);
-                return $version;
-            }
-			return false;
-		}
-		return false;
-	}
-
-	/**
-	 * Check if PHP_CLI is installed by extracting its version
-	 *
-	 * @param : { string } { $path } { path to PHP_CLI }
-	 *
-	 * @return bool|mixed : { string } { version if found, else false }
-	 */
-	function check_php_cli($path)
-	{
-		$path = get_binaries($path);
-		$matches = array();
-		$result = shell_output($path." --version");
-		if($result) {
-			preg_match("/(?:php\\s)(?:version\\s)?(\\d\\.\\d\\.(?:\\d|[\\w]+))/i", strtolower($result), $matches);
-			if(count($matches) > 0) {
-				$version = array_pop($matches);
-				return $version;
-			}
-			return false;
-		}
-		return false;
-	}
-
-	/**
-	 * Check if MediaInfo is installed by extracting its version
-	 *
-	 * @param : { string } { $path } { path to MediaInfo }
-	 *
-	 * @return  : { string } { version if found, else false }
-	 */
-	function check_media_info($path)
-	{
-		$path = get_binaries($path);
-		$result = shell_output($path." --version");
-		$media_info_version  = explode('v', $result);
-		return $media_info_version[1];
-	}
-
-	/**
-	 * Check if FFPROBE is installed by extracting its version
-	 *
-	 * @param : { string } { $path } { path to FFPROBE }
-	 *
-	 * @return array|string : { string } { version if found, else false }
-	 */
-	function check_ffprobe_path($path)
-	{
-		$path = get_binaries($path);
-		$result = shell_output($path." -version");
-		$result = explode(" ", $result);
-		$result = $result[2];
-		return $result;
-	}
-
-	/**
-	 * Function used to parse versions from info
-	 *
-	 * @param : { string } { $path } { tool to check }
-	 * @param : { string } { $result } { data to parse version from }
-	 *
-	 * @return bool
-	 */
-	function parse_version($path,$result)
-	{
-		switch($path)
-		{
-			case 'ffmpeg':
-				//Get FFMPEG SVN version
-				preg_match("/svn-r([0-9]+)/i",strtolower($result),$matches);
-				if(is_numeric(floatval($matches[1])) && $matches[1]) {
-					return 'Svn '.$matches[1];
-				}
-				//Get FFMPEG version
-				preg_match("/FFmpeg version ([0-9.]+),/i",strtolower($result),$matches);
-				if(is_numeric(floatval($matches[1])) && $matches[1]) {
-					return  $matches[1];
-				}
-				//Get FFMPEG GIT version
-				preg_match("/ffmpeg version n\-([0-9]+)/i",strtolower($result),$matches);
-				if(is_numeric(floatval($matches[1])) && $matches[1]) {
-					return 'Git '.$matches[1];
-				}
-				break;
-
-			case 'php':
-				return phpversion(); 
-		}
-	}
+    }
 
 	/**
 	 * Calls ClipBucket footer into the battlefield
@@ -3426,13 +3322,13 @@
 	* Function used to get database size
 	* @return int : { $dbsize }
 	*/
-	function get_db_size()
-	{
+	function get_db_size(): int
+    {
 		global $db;
-		$results = $db->_select("SHOW TABLE STATUS");
+		$results = $db->_select('SHOW TABLE STATUS');
 		$dbsize = 0;
 		foreach($results as $row) {
-			$dbsize += $row[ "Data_length" ] + $row[ "Index_length" ];
+			$dbsize += $row['Data_length'] + $row['Index_length'];
 		}
 		return $dbsize;
 	}
@@ -3444,8 +3340,8 @@
 	 *
 	 * @return bool : { boolean } { true if marked as spam, else false }
 	 */
-	function marked_spammed($comment)
-	{
+	function marked_spammed($comment): bool
+    {
 		$spam_voters = explode("|",$comment['spam_voters']);
 		$spam_votes = $comment['spam_votes'];
 		$admin_vote = in_array('1',$spam_voters);
@@ -3464,12 +3360,12 @@
 	 *
 	 * @param : { string } { $type } { shortcode of type ie v=>video }
 	 *
-	 * @return string : { string } { complete type name }
+	 * @return string|void : { string } { complete type name }
 	 */
 	function get_obj_type($type)
 	{
 		if( $type == 'v' ){
-			return "video";
+			return 'video';
         }
 	}
 
@@ -3478,7 +3374,7 @@
 	 *
 	 * @param : { string } { $type } { type of check e.g before, after }
 	 *
-	 * @return bool
+	 * @return bool|void
 	 */
     function check_install($type)
 	{
@@ -3509,8 +3405,8 @@
 	 * @return string { string } { url of server }
 	 * @internal param $ : { none }
 	 */
-    function get_server_url()
-	{
+    function get_server_url(): string
+    {
         $DirName = dirname($_SERVER['PHP_SELF']);
         if(preg_match('/admin_area/i', $DirName)) {
             $DirName = str_replace('/admin_area','',$DirName);

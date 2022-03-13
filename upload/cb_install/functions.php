@@ -1,5 +1,5 @@
 <?php
-define('BASEDIR',dirname(dirname(__FILE__)));
+define('BASEDIR',dirname(__FILE__, 2));
 
 if(!file_exists(BASEDIR.'/files/temp/install.me')){
     $mode = 'lock';
@@ -7,9 +7,9 @@ if(!file_exists(BASEDIR.'/files/temp/install.me')){
 
 function get_cbla()
 {
-    $license	= file_get_contents('LICENSE');
-    $license	= str_replace("\n",'<BR>',$license);
-    $license	= str_replace('{this_year}',date('Y',time()),$license);
+    $license = file_get_contents('LICENSE');
+    $license = str_replace("\n",'<BR>',$license);
+    $license = str_replace('{this_year}',date('Y',time()),$license);
     return $license;
 }
 
@@ -50,7 +50,7 @@ if(!function_exists('emsg'))
     }
 }
 
-function check_module($type)
+function check_module($type): array
 {
     $return = array();
     switch($type)
@@ -68,7 +68,7 @@ function check_module($type)
 
         case 'ffmpeg':
             $ffmpeg_path = exec('which ffmpeg');
-            $ffmpeg_version = shell_output("$ffmpeg_path -version");
+            $ffmpeg_version = shell_output("$ffmpeg_path -version | head -n1");
 
             $version = false;
             preg_match("/SVN-r([0-9]+)/i",$ffmpeg_version,$matches);
@@ -89,7 +89,7 @@ function check_module($type)
 
         case 'ffprobe':
             $ffprobe_path = exec('which ffprobe');
-            $ffprobe_version = shell_output("$ffprobe_path -version");
+            $ffprobe_version = shell_output("$ffprobe_path -version | head -n1");
 
             $version = false;
             preg_match("/SVN-r([0-9]+)/i",$ffprobe_version,$matches);
