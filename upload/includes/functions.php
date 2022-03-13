@@ -2286,13 +2286,14 @@
 	 * @return string
 	 * @uses : { function : lang() }
 	 */
-	function nicetime($date,$istime=false)
-	{
+	function nicetime($date,$istime=false): string
+    {
 		if(empty($date)) {
 			return lang('no_date_provided');
 		}
-		$periods = array(lang('second'), lang('minute'), lang('hour'), lang('day'), lang('week'), lang('month'), lang('year'), lang('decade'));
-		$lengths = array(60,60,24,7,4.35,12,10);
+		$period_sing = [lang('second'), lang('minute'), lang('hour'), lang('day'), lang('week'), lang('month'), lang('year'), lang('decade')];
+		$period_plur = [lang('seconds'), lang('minutes'), lang('hours'), lang('days'), lang('weeks'), lang('months'), lang('years'), lang('decades')];
+		$lengths = [60,60,24,7,4.35,12,10];
 		$now = time();
 		if(!$istime) {
 			$unix_date = strtotime($date);
@@ -2308,7 +2309,6 @@
 			//time_ago
 			$difference = $now - $unix_date;
 			$tense = 'time_ago';
-		   
 		} else {
 			//from_now
 			$difference = $unix_date - $now;
@@ -2318,14 +2318,16 @@
 			$difference /= $lengths[$j];
 		}
 		$difference = round($difference);
-	   
-		if($difference > 1) {
-			// *** Dont apply plural if terms ending by a "s". Typically, french word for "month" is "mois".
-			if(substr($periods[$j], -1) != "s") {
-				$periods[$j] .= 's';
-			}
-		}
-		return sprintf(lang($tense),$difference,$periods[$j]);
+
+        $period = $difference > 1 ? $period_plur[$j] : $period_sing[$j];
+
+        if( $difference > 1 ){
+            $period = $period_plur[$j];
+        } else {
+            $period = $period_sing[$j];
+        }
+
+		return sprintf(lang($tense),$difference,$period);
 	}
 
 	/**

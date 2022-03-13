@@ -429,7 +429,7 @@ class cbactions
                 'invalid_err' => lang('please_enter_playlist_name')
             ],
             'description' => [
-                'title' => lang ('playlist_description'),
+                'title' => lang('playlist_description'),
                 'type' => 'textarea',
                 'name' => 'description',
                 'id' => 'description',
