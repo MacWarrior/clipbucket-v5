@@ -9,17 +9,13 @@ global $userquery,$pages,$cbcollection,$cbvideo,$cbphoto,$Cbucket;
 $userquery->perm_check('view_video',true);
 $pages->page_redir();
 
-$c = mysql_clean((int)$_GET['cid']);
-$type = mysql_clean($_GET['type']);
+$c = (int)$_GET['cid'];
 
-$page = mysql_clean($_GET['page']);
+$page = $_GET['page'];
 $get_limit = create_query_limit($page,COLLIP);
 $order = tbl('collection_items').'.ci_id DESC';
 
-
-if($cbcollection->is_viewable($c))
-{
-    $param = ['cid'=>$c];
+if($cbcollection->is_viewable($c)) {
     $cdetails = $cbcollection->get_collection($c);
 
     if( !$cdetails || !isSectionEnabled($cdetails['type']) ){
@@ -34,17 +30,28 @@ if($cbcollection->is_viewable($c))
             default:
             case 'videos':
                 $items = $cbvideo->collection->get_collection_items_with_details($c,$order,$get_limit);
-                $count = $cbvideo->collection->get_collection_items_with_details($c,NULL,NULL,TRUE);
                 break;
 
             case 'photos':
                 $items = $cbphoto->collection->get_collection_items_with_details($c,$order,$get_limit);
-                $count = $cbphoto->collection->get_collection_items_with_details($c,NULL,NULL,TRUE);
                 break;
         }
         // Calling necessary function for view collection
         call_view_collection_functions($cdetails);
 
+        $cond = [
+            'parent_id' => $c
+            ,'limit'     => $get_limit
+        ];
+
+        $collections = $cbcollection->get_collections($cond);
+        Assign('collections', $collections);
+
+        if( !$items ){
+            $count = 0;
+        } else {
+            $count = count($items);
+        }
         $total_pages = count_pages($count,COLLIP);
         //Pagination
         $tag='<li><a #params#>#page#</a><li>';
@@ -53,18 +60,10 @@ if($cbcollection->is_viewable($c))
         assign('objects',$items);
         assign('c',$cdetails);
         subtitle($cdetails['collection_name']);
-
     }
 } else {
     $Cbucket->show_page = false;
 }
 
-//Getting Collection List
-$page = mysql_clean($_GET['page']);
-$get_limit = create_query_limit($page,COLLPP);
-$clist['limit'] = $get_limit;
-$collections = $cbcollection->get_collections($clist);
-
-assign('collections', $collections);
 template_files('view_collection.html');
 display_it();

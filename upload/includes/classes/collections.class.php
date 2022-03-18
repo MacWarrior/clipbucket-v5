@@ -444,7 +444,6 @@ class Collections extends CBCategory
         }
 
         $title_tag = '';
-        
         if($p['name']) {
             $title_tag .= ' C.collection_name LIKE \'%'.$p['name'].'%\'';
         }
@@ -471,6 +470,20 @@ class Collections extends CBCategory
                 $title_tag .= ' C.collection_tags LIKE \'%'.$p['tags'].'%\'';
             }
         }
+
+        if($p['parents_only']) {
+            if($cond != ''){
+                $cond .= ' AND ';
+            }
+            $cond .= ' C.collection_id_parent IS NULL ';
+        }
+
+        if($p['parent_id']) {
+            if($cond != ''){
+                $cond .= ' AND ';
+            }
+            $cond .= ' C.collection_id_parent = '.mysql_clean($p['parent_id']).' ';
+        }
         
         if($title_tag != '') {
             if($cond != ''){
@@ -483,14 +496,14 @@ class Collections extends CBCategory
             ' INNER JOIN '.tbl('users').' U ON C.userid = U.userid'.
             ' LEFT JOIN '.tbl('collections').' CPARENT ON C.collection_id_parent = CPARENT.collection_id';
 
-        if(!$p['count_only']) {
-            $select = 'C.*, U.username, CPARENT.collection_name AS collection_name_parent';
-
-            $result = $db->select($from, $select, $cond, $limit, $order);
-        } else {
+        if($p['count_only']) {
             return $db->count($from, 'C.collection_id', $cond);
         }
-        
+
+        $select = 'C.*, U.username, CPARENT.collection_name AS collection_name_parent';
+
+        $result = $db->select($from, $select, $cond, $limit, $order);
+
         if($p['assign']){
             assign($p['assign'], $result);
         } else {
@@ -593,9 +606,9 @@ class Collections extends CBCategory
         $tables = $itemsTbl.','.$objTbl.','.tbl('users');
 
         if(!$count_only) {
-            $result = $db->select($tables,$itemsTbl.'.ci_id,'.$itemsTbl.'.collection_id,'.$objTbl.'.*,'.tbl('users').'.username',' '.$itemsTbl.'.collection_id = \''.$id.'\' AND active = \'yes\' AND '.$itemsTbl.'.object_id = '.$objTbl.'.'.$this->objFieldID.' AND '.$objTbl.'.userid = '.tbl('users').'.userid',$limit,$order);
+            $result = $db->select($tables,$itemsTbl.'.ci_id,'.$itemsTbl.'.collection_id,'.$objTbl.'.*,'.tbl('users').'.username',' '.$itemsTbl.'.collection_id = \''.mysql_clean($id).'\' AND active = \'yes\' AND '.$itemsTbl.'.object_id = '.$objTbl.'.'.$this->objFieldID.' AND '.$objTbl.'.userid = '.tbl('users').'.userid',$limit,$order);
         } else {
-            $result = $db->count($itemsTbl,'ci_id',' collection_id = '.$id);
+            $result = $db->count($itemsTbl,'ci_id',' collection_id = '.mysql_clean($id));
         }
         
         if($result){

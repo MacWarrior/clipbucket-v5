@@ -1,81 +1,66 @@
 <?php
-	/*
-	 ********************************************************************
-	 | Copyright (c) 2007-2009 Clip-Bucket.com. All rights reserved.
-	 | @ Author : ArslanHassan
-	 | @ Software : ClipBucket , © PHPBucket.com
-	 ********************************************************************
-	*/
-	define("THIS_PAGE",'collections');
-	define("PARENT_PAGE",'collections');
-	require 'includes/config.inc.php';
-	$pages->page_redir();
-	$userquery->perm_check('view_collections',true);
-	$sort = $_GET['sort'];
-	$cond = array("category"=>mysql_clean($_GET['cat']),"date_span"=>mysql_clean($_GET['time']));
-	$content = mysql_clean($_GET['content']);
+define('THIS_PAGE','collections');
+define('PARENT_PAGE','collections');
 
-	switch($sort)
-	{
-		case "most_recent":
-		default:
-			$cond['order'] = " date_added DESC";
-			break;
+require 'includes/config.inc.php';
 
-		case "featured":
-			$cond['featured'] = "yes";
-			break;
+global $pages,$userquery,$cbcollection;
 
-		case "most_viewed":
-			$cond['order'] = " views DESC";
-			break;
+$pages->page_redir();
+$userquery->perm_check('view_collections',true);
+$sort = $_GET['sort'];
+$cond = [
+    'date_span'     => mysql_clean($_GET['time'])
+    ,'parents_only' => true
+];
 
-		case "most_commented":
-			$cond['order'] = " total_comments DESC";
-			break;
+switch($sort)
+{
+    case 'most_recent':
+    default:
+        $cond['order'] = ' date_added DESC';
+        break;
 
-		case "most_items":
-			$cond['order'] = " total_objects DESC";
-			break;
-	}
+    case 'featured':
+        $cond['featured'] = 'yes';
+        break;
 
-	switch($content)
-	{
-		case "videos":
-			$cond['type'] = "videos";
-			break;
+    case 'most_viewed':
+        $cond['order'] = ' views DESC';
+        break;
 
-		case "photos":
-			$cond['type'] = "photos";
-			break;
-	}
+    case 'most_commented':
+        $cond['order'] = ' total_comments DESC';
+        break;
 
-	//Getting Collection List
-	$page = $_GET['page'];
-	$get_limit = create_query_limit($page,COLLPP);
-	$clist = $cond;
-	$clist['limit'] = $get_limit;
-	if (!isSectionEnabled('photos') && isSectionEnabled('videos')) {
-		$clist['type'] = 'videos';
-	} elseif (isSectionEnabled('photos') && !isSectionEnabled('videos')) {
-		$clist['type'] = 'photos';
-	} elseif (!isSectionEnabled('photos') && !isSectionEnabled('videos')) {
-		$clist['type'] = 'none';
-	}
-	$collections = $cbcollection->get_collections($clist);
+    case 'most_items':
+        $cond['order'] = ' total_objects DESC';
+        break;
+}
 
-	Assign('collections', $collections);
+//Getting Collection List
+$page = $_GET['page'];
+$get_limit = create_query_limit($page,COLLPP);
+$cond['limit'] = $get_limit;
+if (!isSectionEnabled('photos') && !isSectionEnabled('videos')) {
+    $cond['type'] = 'none';
+} else if( !isSectionEnabled('photos') ) {
+    $cond['type'] = 'videos';
+} else if( !isSectionEnabled('videos') ) {
+    $cond['type'] = 'photos';
+}
+$collections = $cbcollection->get_collections($cond);
 
-	//Collecting Data for Pagination
-	$ccount = $cond;
-	$ccount['count_only'] = true;
-	$total_rows  = $cbcollection->get_collections($ccount);
-	$total_pages = count_pages($total_rows,COLLPP);
+Assign('collections', $collections);
 
-	//Pagination
-	$pages->paginate($total_pages,$page);
+//Collecting Data for Pagination
+$total_rows  = count($collections);
+$total_pages = count_pages($total_rows,COLLPP);
 
-	subtitle(lang('collections'));
-	//Displaying The Template
-	template_files('collections.html');
-	display_it();
+//Pagination
+$pages->paginate($total_pages,$page);
+
+subtitle(lang('collections'));
+//Displaying The Template
+template_files('collections.html');
+display_it();

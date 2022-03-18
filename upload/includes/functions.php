@@ -1432,8 +1432,8 @@
 	 *
 	 * @return string
 	 */
-	function create_query_limit($page,$result)
-	{
+	function create_query_limit($page,$result): string
+    {
 		$page = mysql_clean($page);
 		$result = mysql_clean($result);
 		$limit = $result;
