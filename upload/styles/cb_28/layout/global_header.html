@@ -44,9 +44,13 @@
 		<link rel="stylesheet" href="{$theme}/css/icon-font.css?cache={$cache_buster}">
 		<link rel="stylesheet" href="{$theme}/css/custom-elements.css?cache={$cache_buster}">
 
-		{*if !in_dev()*}
+        {if $development_mode}
+        <link rel="stylesheet" href="{$theme}/css/clipbucket.css?cache={$cache_buster}">
+        {else}
+        <link rel="stylesheet" href="{$theme}/css/clipbucket.min.css?cache={$cache_buster}">
+        {/if}
+
 		<link rel="stylesheet" href="{$theme}/css/all.css?cache={$cache_buster}">
-		{*/if*}
 
 		<script src="{$theme}/js/jquery-3.6.0.min.js"></script>
 		<script src="/js/ui/jquery-ui-1.12.1.min.js"></script>

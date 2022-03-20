@@ -4,6 +4,18 @@
 			{if config("enable_advertisement") == "yes"}
 			<div class="clearfix leaderboard-ad ad">{AD place='ad_728x90'}</div>
 			{/if}
+
+            {if $breadcrum}
+            <div id="breadcrumbs" class="breadcrumbs">
+                <ul class="breadcrumb">
+                    <li><a href="{$collection_baseurl}" class="glyphicon glyphicon-folder-open" title="{lang code='collections'}"></a></li>
+                {foreach $breadcrum as $parent}
+                    <li><a href="{$parent['url']}">{display_clean($parent['title'])}</a></li>
+                {/foreach}
+                </ul>
+            </div>
+            {/if}
+
 			<h1>
 				{display_clean($c.collection_name)}&nbsp;
 				({$c.total_objects}&nbsp;{lang code="{$c.type}"})

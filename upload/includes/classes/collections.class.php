@@ -309,6 +309,14 @@ class Collections extends CBCategory
         return true;
     }
 
+    public function get_parent_collection($collection)
+    {
+        if( is_null($collection['collection_id_parent']) ){
+            return false;
+        }
+        return $this->get_collection($collection['collection_id_parent']);
+    }
+
     /**
      * Function used to get collections
      *
@@ -1656,6 +1664,14 @@ class Collections extends CBCategory
         $db->update(tbl($this->section_tbl),['total_comments','last_commented'],[$count,now()],' collection_id = \''.$cid.'\'');
     }
 
+    public function get_base_url(): String
+    {
+        if( config('seo') == 'yes' ){
+            return '/collections';
+        }
+        return '/collections.php';
+    }
+
     /**
      * Function used return collection links
      *
@@ -1666,8 +1682,7 @@ class Collections extends CBCategory
      */
     function collection_links($details,$type=NULL)
     {        
-        if(is_array($details))
-        {
+        if(is_array($details)) {
             if(empty($details['collection_id'])){
                 return BASEURL;
             }
@@ -1682,18 +1697,14 @@ class Collections extends CBCategory
         
         if(!empty($cdetails))
         {
-            if($type == NULL || $type == 'main')
-            {
-                if(SEO == 'yes'){
-                    return '/collections';
-                }
-                return     '/collections.php';
+            if($type == NULL || $type == 'main') {
+                return $this->get_base_url();
             }
             if($type == 'vc' || $type == 'view_collection' ||$type == 'view') {
                 if(SEO == 'yes'){
                     return BASEURL.'/collection/'.$cdetails['collection_id'].'/'.$cdetails['type'].'/'.SEO(($cdetails['collection_name']));
                 }
-                return BASEURL.'/view_collection.php?cid='.$cdetails['collection_id'].'&amp;type='.$cdetails['type'];
+                return BASEURL.'/view_collection.php?cid='.$cdetails['collection_id'];
             }
             if($type == 'vi' || $type == 'view_item' ||$type == 'item') {
                 if($cdetails['videoid']){

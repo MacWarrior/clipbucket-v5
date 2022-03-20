@@ -9,10 +9,11 @@ global $pages,$userquery,$cbcollection;
 $pages->page_redir();
 $userquery->perm_check('view_collections',true);
 $sort = $_GET['sort'];
-$cond = [
-    'date_span'     => mysql_clean($_GET['time'])
-    ,'parents_only' => true
-];
+
+$cond = ['date_span' => mysql_clean($_GET['time'])];
+if( config('enable_sub_collection') ){
+    $cond['parents_only'] = true;
+}
 
 switch($sort)
 {
