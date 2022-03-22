@@ -1600,6 +1600,11 @@
 	"plugin_editors_picks_remove_from": "Retirer du choix de l'éditeur",
 	"plugin_editors_picks_remove_confirm": "Êtes-vous sûr de vouloir retirer les vidéos sélectionnées du choix de l'éditeur ?",
 
+	"plugin_global_announcement": "Annonce Globale",
+	"plugin_global_announcement_subtitle": "Gestionnaire d'annonce",
+	"plugin_global_announcement_edit": "Editer l'annonce",
+	"plugin_global_announcement_updated": "L'annonce a été mise à jour",
+
 	"page_upload_video_limits": "Chaque vidéo ne peut excéder un poids de %s Mo, ni une durée de %s minutes, et doit se présenter dans un format vidéo commun",
 	"page_upload_video_select": "Selectionner une vidéo",
 	"page_upload_photo_limits": "Chaque photo ne peut excéder un poids de %s Mo et doit se présenter dans un format image commun"

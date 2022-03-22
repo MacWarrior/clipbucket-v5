@@ -9,7 +9,7 @@ function install_global_announcement()
 	);
 	
 	//inserting new announcement
-	$db->Execute('INSERT INTO  '.tbl('global_announcement')." (announcement) VALUES ('')");
+	$db->Execute('INSERT INTO  '.tbl('global_announcement').' (announcement) VALUES (\'\')');
 }
 
 //This will first check if plugin is installed or not, if not this function will install the plugin details

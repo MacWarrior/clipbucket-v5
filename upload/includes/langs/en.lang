@@ -1599,6 +1599,11 @@
 	"plugin_editors_picks_remove_from": "Remove from Editor's Pick",
 	"plugin_editors_picks_remove_confirm": "Are you sure you want to remove selected videos from Editor's Pick ?",
 
+	"plugin_global_announcement": "Global Announcement",
+	"plugin_global_announcement_subtitle": "Global Announcement Manager",
+	"plugin_global_announcement_edit": "Edit global announcement",
+	"plugin_global_announcement_updated": "Global announcement has been updated",
+
 	"page_upload_video_limits": "Each video may not exceed %s MB in size or %s minutes in length and must be in a common video format",
 	"page_upload_video_select":" Select Video",
 	"page_upload_photo_limits": "Each photo may not exceed %s MB in size and must be in a common image format"

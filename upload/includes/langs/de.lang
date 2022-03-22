@@ -1599,6 +1599,11 @@
     "plugin_editors_picks_remove_from":"Von der redaktionellen Auswahl entfernen",
     "plugin_editors_picks_remove_confirm":"Wollen Sie das ausgewählte Videos wirklich aus der redaktionellen Auswahl entfernen?",
 
+    "plugin_global_announcement": "Global Announcement",
+   	"plugin_global_announcement_subtitle": "Global Announcement Manager",
+   	"plugin_global_announcement_edit": "Edit global announcement",
+   	"plugin_global_announcement_updated": "Global announcement has been updated",
+
 	"page_upload_video_limits":"Jedes Video darf höchstens %s MB groß und %s Minuten lang sein und muss in einem gängigen Videoformat vorliegen.",
     "page_upload_video_select":" Video auswählen",
     "page_upload_photo_limits":"Jedes Foto darf höchstens %s MB groß sein und muss in einem gängigen Bildformat vorliegen"
