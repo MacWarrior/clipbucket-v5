@@ -77,7 +77,7 @@
     "usr_cpass_err":"Confirm Password Doesn't Match",
     "usr_pass_err":"Old password is incorrect",
     "usr_email_err":"Please Provide A Valid Email Address",
-    "usr_cpass_err1":"Confirm password is incorrect",
+    "usr_cpass_err1":"Password confirmation is incorrect",
     "usr_pass_err1":"Password is Incorrect",
     "usr_cmt_err":"You Must Login First To Comment",
     "usr_cmt_err1":"Please Type Something In the Comment Box",
@@ -1598,7 +1598,7 @@
 	"plugin_editors_picks_remove_from": "Remove from Editor's Pick",
 	"plugin_editors_picks_remove_confirm": "Are you sure you want to remove selected videos from Editor's Pick ?",
 
-	"page_upload_video_limits": "Each video can't excess the weight of %s Mo, neither a length of %s minutes, and must be in any common video format",
+	"page_upload_video_limits": "Each video may not exceed %s MB in size or %s minutes in length and must be in a common video format",
 	"page_upload_video_select":" Select Video",
-	"page_upload_photo_limits": "Each photo can't excess the weight of %s Mo and must be in any common image format"
+	"page_upload_photo_limits": "Each photo may not exceed %s MB in size and must be in a common image format"
 }
