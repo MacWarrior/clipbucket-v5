@@ -171,6 +171,6 @@ ALTER TABLE `{tbl_prefix}user_profile`
 	MODIFY COLUMN `rating` tinyint(2) NOT NULL DEFAULT 0,
 	MODIFY COLUMN `rated_by` int(150) NOT NULL DEFAULT 0;
 
-ALTER TABLE `{tbl_prefix}_video`
-	MODIFY COLUMN `datecreated` DATE NOT NULL DEFAULT (CURRENT_DATE);
-UPDATE `{tbl_prefix}_video` SET datecreated = '1000-01-01' WHERE datecreated = '0000-00-00';
+ALTER TABLE `{tbl_prefix}video`
+	MODIFY COLUMN `datecreated` DATE NOT NULL DEFAULT '1000-01-01';
+UPDATE `{tbl_prefix}video` SET datecreated = '1000-01-01' WHERE datecreated = '0000-00-00';

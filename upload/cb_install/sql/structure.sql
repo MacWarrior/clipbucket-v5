@@ -645,7 +645,7 @@ CREATE TABLE `{tbl_prefix}video` (
   `category_parents` text NULL DEFAULT NULL,
   `broadcast` varchar(10) NOT NULL DEFAULT '',
   `location` mediumtext DEFAULT NULL,
-  `datecreated` date NOT NULL DEFAULT (CURRENT_DATE),
+  `datecreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `country` mediumtext DEFAULT NULL,
   `blocked_countries` text NULL DEFAULT NULL,
   `sprite_count` int(11) NOT NULL DEFAULT 0,

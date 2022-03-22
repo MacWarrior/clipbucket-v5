@@ -107,3 +107,7 @@ INSERT INTO `{tbl_prefix}languages` (`language_id`, `language_code`, `language_n
 -- REV 57
 ALTER TABLE `{tbl_prefix}video`
 	MODIFY COLUMN `category` VARCHAR(200) NULL DEFAULT NULL;
+
+-- REV 77
+ALTER TABLE `{tbl_prefix}video`
+	MODIFY COLUMN `datecreated` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;
