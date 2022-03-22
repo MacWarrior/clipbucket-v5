@@ -330,7 +330,7 @@ class FFMpeg
 
             $count = 0;
             foreach( $subtitles as $map_id => $data ) {
-                if( isset($data['codec_name']) && $data['codec_name'] == 'hdmv_pgs_subtitle' ){
+                if( isset($data['codec_name']) && in_array($data['codec_name'], ['hdmv_pgs_subtitle','dvd_subtitle']) ){
                     $log .= PHP_EOL.' Subtitle '.$data['title'].' can\'t be extracted because it\'s in bitmap format';
                     continue;
                 }
@@ -485,7 +485,7 @@ class FFMpeg
                 if( config('keep_subtitles') || $this->conversion_type == 'hls' ) {
                     $subtitles = self::get_track_infos($this->input_file, 'subtitle');
                     foreach( $subtitles as $track_id => $data ) {
-                        if( $data['codec_name'] == 'hdmv_pgs_subtitle' ){
+                        if( in_array($data['codec_name'], ['hdmv_pgs_subtitle','dvd_subtitle']) ){
                             continue;
                         }
 
