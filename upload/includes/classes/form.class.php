@@ -51,8 +51,8 @@ class formObj
 	 *
 	 * @return string
 	 */
-	function createTextfield($field, $multi=FALSE)
-	{
+	function createTextfield($field, $multi=FALSE): string
+    {
 	    $textField = '';
 		//Starting Text Field
 		if($field['type'] == 'textfield'){
@@ -135,7 +135,7 @@ class formObj
 	 * @param extra_tags
 	 * @param label
 	 *
-	 * @return bool|string
+	 * @return bool|string|void
 	 */
 	function createCheckBox($field,$multi=FALSE)
 	{
@@ -382,7 +382,7 @@ class formObj
 	}
 
     /**
-     * FUNCTION USED TO REMOVE BRACKET FROM FROM FIELD NAME IF IT IS AN ARRAY
+     * FUNCTION USED TO REMOVE BRACKET FROM FIELD NAME IF IT IS AN ARRAY
      *
      * @param string with brackets
      *

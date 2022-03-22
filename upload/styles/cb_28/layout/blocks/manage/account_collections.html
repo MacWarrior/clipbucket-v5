@@ -101,7 +101,7 @@
 			{display_clean($collection.collection_name)}
 			<div class="btn-group show">
 				<a class="btn btn-primary btn-sm" href="{$cbcollection->collection_links($collection,'view')}">{lang code="view_collection"}</a>
-				<a class="btn btn-primary btn-sm" href="javascript:void(0);" onmousedown="delete_item('delete_coll','{$collection.collection_id}','{lang code="Are you sure you want to remove this collection from favorites?"}','?mode={$mode}&amp;remove_fav_collection={$collection.collection_id}');" id="delete_coll-{$collection.collection_id}">
+				<a class="btn btn-primary btn-sm" href="javascript:void(0);" onmousedown="delete_item('delete_coll','{$collection.collection_id}','{lang code="remove_fav_collection_confirm"}','?mode={$mode}&amp;remove_fav_collection={$collection.collection_id}');" id="delete_coll-{$collection.collection_id}">
 					{lang code="remove"}
 				</a>
 			</div>

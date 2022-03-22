@@ -732,11 +732,7 @@ class Collections extends CBCategory
 
         if( config('enable_sub_collection') ){
             $list_parent_categories = ['null' => lang('collection_no_parent')];
-            $type = null;
-            if( isset($default['type']) ){
-                $type = $default['type'];
-            }
-            foreach($this->get_collections_hierarchy(0, null, $collection_id, $type) as $col_id => $col_data){
+            foreach($this->get_collections_hierarchy(0, null, $collection_id, null, userid()) as $col_id => $col_data){
                 $list_parent_categories[$col_id] = $col_data['name'];
             }
 
@@ -755,7 +751,7 @@ class Collections extends CBCategory
         return $data;
     }
 
-    public function get_collections_hierarchy( int $level = 0, $collection_id = null, $exclude_id = null, $type = null): array
+    public function get_collections_hierarchy( int $level = 0, $collection_id = null, $exclude_id = null, $type = null, $userid = null): array
     {
         global $db;
 
@@ -775,11 +771,15 @@ class Collections extends CBCategory
             $cond .= ' AND type = \''.mysql_clean($type).'\'';
         }
 
+        if( !is_null($type) ){
+            $cond .= ' AND userid = '.mysql_clean($userid);
+        }
+
         $collections_parent = $db->select(tbl($this->section_tbl),'*',$cond);
         foreach($collections_parent as $col_parent){
             $data[$col_parent['collection_id']]['name'] = str_repeat('&nbsp;', $level*3).display_clean($col_parent['collection_name']);
             $data[$col_parent['collection_id']]['count'] = $col_parent['total_objects'];
-            $collections_children = $this->get_collections_hierarchy(($level+1), $col_parent['collection_id'], $exclude_id, $type);
+            $collections_children = $this->get_collections_hierarchy(($level+1), $col_parent['collection_id'], $exclude_id, $type, $userid);
             foreach($collections_children as $col_id => $col_name){
                 $data[$col_id] = $col_name;
             }

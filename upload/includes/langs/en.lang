@@ -803,6 +803,7 @@
     "no_edit_video":"You cannot edit this video",
     "confirm_del_video":"Are you sure you want to delete this video ?",
     "remove_fav_video_confirm":"Are you sure you want to remove this video from your favorites ?",
+    "remove_fav_collection_confirm":"Are you sure you want to remove this collection from your favorites ?",
     "fav_remove_msg":"%s has been removed from your favorites",
     "unknown_favorite":"Unknown favorite %s",
     "vdo_multi_del_fav_msg":"Videos have been removed from your favorites",

@@ -26,7 +26,7 @@ switch($mode)
             $cbcollection->delete_collection($cid);    
         }
         
-        if($_POST['delete_selected']) {
+        if($_POST['delete_selected'] && is_array($_POST['check_col'])) {
             $count = count($_POST['check_col']);
             for($i=0;$i<$count;$i++) {
                 $cbcollection->delete_collection($_POST['check_col'][$i]);    
@@ -68,7 +68,7 @@ switch($mode)
     case 'edit_collection':
     case 'edit_collect':
         if(isset($_POST['update_collection'])) {
-            $cbcollection->update_collection($_POST);    
+            $cbcollection->update_collection($_POST);
         }
         
         $collection = $cbcollection->get_collection($cid);
@@ -138,7 +138,7 @@ switch($mode)
             $cbcollection->action->remove_favorite($cid);    
         }
         
-        if(isset($_POST['remove_selected_favs'])) {
+        if(isset($_POST['remove_selected_favs']) && is_array($_POST['check_col'])) {
             $total = count($_POST['check_col']);
             for($i=0;$i<$total;$i++) {
                 $cbcollection->action->remove_favorite($_POST['check_col'][$i]);    
