@@ -308,12 +308,13 @@
 									<input value="yes" name="use_cached_pagin" id="use_cached_pagin" {if $row.use_cached_pagin=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 									<span class="lbl"></span>
 								</div>
-								<div class="col-md-4">
-									<label class="nowrap" for="cached_pagin_time" title="Pagination caching time">Pagination caching time</label>
-								</div>
-								<div class="col-md-2 row-size no_padding">
-									<input class="form-control" name="cached_pagin_time" id="cached_pagin_time" value="{$row.cached_pagin_time}" size="5"/>
-								</div>
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="enable_sub_collection" title="Enable Sub-Collections">Enable Sub-Collections</label>
+                                </div>
+                                <div class="col-md-2 row-size no_padding">
+                                    <input value="1" name="enable_sub_collection" id="enable_sub_collection" {if $row.enable_sub_collection=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
 							</div>
 							<hr/>
 							<div class="row">
@@ -323,12 +324,12 @@
 								<div class="col-md-2 row-size no_padding">
 									<input class="form-control" name="search_list_per_page" id="search_list_per_page" value="{$row.search_list_per_page}" size="5"/>
 								</div>
-								<div class="col-md-4">
-									<label class="nowrap" for="recently_viewed_limit" title="Recently viewed videos">Recently viewed videos</label>
-								</div>
-								<div class="col-md-2 row-size no_padding">
-									<input class="form-control" name="recently_viewed_limit" id="recently_viewed_limit" value="{$row.recently_viewed_limit}" size="5"/>
-								</div>
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="cached_pagin_time" title="Pagination caching time">Pagination caching time</label>
+                                </div>
+                                <div class="col-md-2 row-size no_padding">
+                                    <input class="form-control" name="cached_pagin_time" id="cached_pagin_time" value="{$row.cached_pagin_time}" size="5"/>
+                                </div>
 							</div>
 							<hr/>
 							<div class="row">
@@ -338,6 +339,12 @@
 								<div class="col-md-2 row-size no_padding">
 									<input class="form-control" name="comments_per_page" id="comments_per_page" value="{$row.comments_per_page}" size="5"/>
 								</div>
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="recently_viewed_limit" title="Recently viewed videos">Recently viewed videos</label>
+                                </div>
+                                <div class="col-md-2 row-size no_padding">
+                                    <input class="form-control" name="recently_viewed_limit" id="recently_viewed_limit" value="{$row.recently_viewed_limit}" size="5"/>
+                                </div>
 							</div>
 							<hr/>
 
@@ -639,16 +646,6 @@
                                 </div>
                                 <div class="col-md-6">
                                     <input class="form-control" name="youtube_api_key" id="youtube_api_key" value="{$row.youtube_api_key}"/>
-                                </div>
-                            </div>
-                            <hr/>
-                            <div class="row">
-                                <div class="col-md-10">
-                                    <label class="nowrap" for="enable_sub_collection" title="Enable Sub-Collections">Enable Sub-Collections</label>
-                                </div>
-                                <div class="col-md-2 row-size">
-                                    <input value="1" name="enable_sub_collection" id="enable_sub_collection" {if $row.enable_sub_collection=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                    <span class="lbl"></span>
                                 </div>
                             </div>
                             <hr/>
