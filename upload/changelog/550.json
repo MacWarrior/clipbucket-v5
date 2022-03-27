@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"81",
+  "revision":"82",
   "status":"dev",
   "detail":[
     {
@@ -106,7 +106,8 @@
       "title":"Plugin",
       "description":[
         "Update Editor's Pick to CB5.5.0",
-        "Update Global Announcement to CB5.5.0"
+        "Update Global Announcement to CB5.5.0",
+        "Update CB Server Thumb to CB5.5.0"
       ]
     }
   ]
