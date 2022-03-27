@@ -2,47 +2,46 @@
 
 class CBPlugin extends ClipBucket
 {
-	//var $admin_plug_menu = CBucket::AdminMenu;
 	function __construct() {}
 	
 	/**
 	* get plugin list 
 	*/
-	function getPlugins()
-	{
+	function getPlugins(): array
+    {
 		#first we will read the plugin directory
-		#Current Plugin Class will read files only, not sub directories
+		#Current Plugin Class will read files only, not subdirectories
 		$dir = PLUG_DIR;
 		$dir_list = scandir($dir);
 		foreach($dir_list as $item) {
 			if($item=='..' || $item=='.' || substr($item,0,1)=='_'|| substr($item,0,1)=='.') {
-				//Skip $item_list[] = $item;
-				//$sub_dir_list = scandir(PLUG_DIR.'/'.$item);
-			} else {
-				//Now Checking if its file, not a directory
-				if(!is_dir(PLUG_DIR.'/'.$item)) {
-					$item_list[] = $item;
-				} else {
-					$sub_dir = $item;
-					$sub_dir_list = scandir(PLUG_DIR.'/'.$item);
-					foreach($sub_dir_list as $item) {
-						if($item=='..' || $item=='.' || substr($item,0,1)=='_'|| substr($item,0,1)=='.') {
-							//Skip $item_list[] = $item;
-							//$sub_dir_list = scandir(PLUG_DIR.'/'.$item);
-						} else if(!is_dir(PLUG_DIR.'/'.$sub_dir.'/'.$item)){
-							//Now Checking if its file, not a directory
-                            $subitem_list[$sub_dir][] = $item;
-						}
-					}
-				}
+                continue;
 			}
+
+            //Now Checking if its file, not a directory
+            if(!is_dir(PLUG_DIR.DIRECTORY_SEPARATOR.$item)) {
+                $item_list[] = $item;
+            } else {
+                $sub_dir = $item;
+                $sub_dir_list = scandir(PLUG_DIR.DIRECTORY_SEPARATOR.$item);
+                foreach($sub_dir_list as $item) {
+                    if($item=='..' || $item=='.' || substr($item,0,1)=='_'|| substr($item,0,1)=='.') {
+                        continue;
+                    }
+                    if(!is_dir(PLUG_DIR.DIRECTORY_SEPARATOR.$sub_dir.DIRECTORY_SEPARATOR.$item)){
+                        //Now Checking if its file, not a directory
+                        $subitem_list[$sub_dir][] = $item;
+                    }
+                }
+            }
 		}
 		
 		//Our Plugin List has plugin main files only, now star reading files
 		foreach($item_list as $plugin_file) {
 			$plugin_details = $this->getPluginDetails($plugin_file);
-			if(!empty($plugin_details['name']))
-			$plugins_array[]= $plugin_details;
+			if(!empty($plugin_details['name'])){
+			    $plugins_array[]= $plugin_details;
+            }
 		}
 		
 		//Now Reading Sub Dir Files
@@ -59,8 +58,8 @@ class CBPlugin extends ClipBucket
 		return $plugins_array;
 	}
 	
-	function getPluginList()
-	{
+	function getPluginList(): array
+    {
 		return $this->getPlugins();
 	}
 	
@@ -75,6 +74,7 @@ class CBPlugin extends ClipBucket
 		
 		//Now Checking if plugin is installed or not
 		if(is_array($plugin_list)) {
+            $plug_array = [];
 			foreach($plugin_list as $plugin) {
 				if(!$this->is_installed($plugin['file'])){
 				    $plug_array[] = $plugin;
@@ -126,15 +126,16 @@ class CBPlugin extends ClipBucket
 	 *
 	 * @return bool
 	 */
-	function is_installed($file,$v=NULL,$folder=NULL)
-	{
+	function is_installed($file,$v=NULL,$folder=NULL): bool
+    {
 		global $db;
 
+        $folder_check = '';
 		if($folder){
 			$folder_check = " AND plugin_folder ='$folder'";
         }
 
-		$details = $db->select(tbl("plugins"),"plugin_file","plugin_file='".$file."' $version_check $folder_check");
+		$details = $db->select(tbl('plugins'),"plugin_file","plugin_file='".$file."' $folder_check");
 		if(count($details)>0){
 			return true;
         }
@@ -152,11 +153,11 @@ class CBPlugin extends ClipBucket
 	 */
 	function get_plugin_details($plug_file,$sub_dir=NULL)
 	{
-		if($sub_dir!=''){
+		if($sub_dir != ''){
 			$sub_dir = $sub_dir.DIRECTORY_SEPARATOR;
         }
 			
-		$file = PLUG_DIR.'/'.$sub_dir.$plug_file;
+		$file = PLUG_DIR.DIRECTORY_SEPARATOR.$sub_dir.$plug_file;
 
 		if(file_exists($file) && is_file($file)) {
 			// We don't need to write to the file, so just open for reading.
@@ -174,7 +175,7 @@ class CBPlugin extends ClipBucket
 			preg_match( '/ClipBucket Version:(.*)$/mi', $plugin_data, $cbversion );
 			preg_match( '/Plugin Type:(.*)$/mi', $plugin_data, $type );
 			
-			$details_array = array(
+			$details_array = [
                 'name',
                 'website',
                 'version',
@@ -184,7 +185,7 @@ class CBPlugin extends ClipBucket
                 'code',
                 'author_page',
                 'type'
-            );
+            ];
 			foreach ($details_array as $detail) {
 				$plugin_array[$detail]= (isset(${$detail}[1])) ? ${$detail}[1] : false;
 			}
@@ -218,7 +219,7 @@ class CBPlugin extends ClipBucket
 		 	$folder_query = " AND plugin_folder = '$folder'";
          }
 			
-		 $result = $db->select(tbl("plugins"),"*"," plugin_file ='".$file."' $folder_query" );
+		 $result = $db->select(tbl('plugins'),'*'," plugin_file ='".$file."' $folder_query" );
 		 return $result[0];
 	 }
 
@@ -247,19 +248,19 @@ class CBPlugin extends ClipBucket
         if(empty($msg))
         {
             $file_folder = $folder;
-            if($folder!=''){
+            if($folder != ''){
                 $folder  = $folder.DIRECTORY_SEPARATOR;
             }
             $plug_details = $this->getPluginDetails($folder.$pluginFile);
 
-            if(file_exists(PLUG_DIR.DIRECTORY_SEPARATOR.$folder.'install_'.$pluginFile)){
-                require_once(PLUG_DIR.DIRECTORY_SEPARATOR.$folder.'install_'.$pluginFile);
+            $plug_install_file = PLUG_DIR.DIRECTORY_SEPARATOR.$folder.'install_'.$pluginFile;
+            if(file_exists($plug_install_file)){
+                require_once($plug_install_file);
             }
 
-            dbInsert
-            (
+            dbInsert(
                 tbl('plugins'),
-                array(
+                [
                     'plugin_file',
                     'plugin_license_type',
                     'plugin_license_key',
@@ -267,8 +268,8 @@ class CBPlugin extends ClipBucket
                     'plugin_active',
                     'plugin_folder',
                     'plugin_version'
-                ),
-                array(
+                ],
+                [
                     $pluginFile,
                     $plug_details['license_type'],
                     $plug_details['license_key'],
@@ -276,11 +277,11 @@ class CBPlugin extends ClipBucket
                     'yes',
                     $file_folder,
                     $plug_details['version']
-                )
+                ]
             );
 			 
             //Checking For the installation SQL
-            $msg = e(lang('plugin_install_msg'),'m');
+            e(lang('plugin_install_msg'),'m');
             define('NEW_INSTALL',false);
             return PLUG_DIR.DIRECTORY_SEPARATOR.$folder.$pluginFile;
         }
@@ -304,9 +305,9 @@ class CBPlugin extends ClipBucket
         }
 			
 		if($this->is_installed($plugin_file)) {
-			$db->Execute("UPDATE ".tbl("plugins")." SET plugin_active='".$active."' WHERE plugin_file='".$plugin_file."' $folder_query");
+			$db->Execute('UPDATE '.tbl('plugins')." SET plugin_active='".$active."' WHERE plugin_file='".$plugin_file."' $folder_query");
 			$active_msg = $active=='yes' ? 'activated' : 'deactiveted';
-			$msg = e(sprintf(lang("plugin_has_been_s"),$active_msg),'m');
+			$msg = e(sprintf(lang('plugin_has_been_s'),$active_msg),'m');
 		} else {
 			$msg = e(lang('plugin_no_install_err'));
 		}
@@ -328,15 +329,17 @@ class CBPlugin extends ClipBucket
 		 		$folder_query = " AND plugin_folder = '$folder'";
             }
 				
-			if($folder!=''){
-				$folder  = $folder.'/';
+			if($folder != ''){
+				$folder = $folder.DIRECTORY_SEPARATOR;
             }
 
-			$db->Execute("DELETE FROM ".tbl("plugins")." WHERE plugin_file='".$file."' $folder_query");
-			if(file_exists(PLUG_DIR.'/'.$folder.'uninstall_'.$file)){
-			    require_once(PLUG_DIR.'/'.$folder.'uninstall_'.$file);
+			$db->Execute('DELETE FROM '.tbl('plugins')." WHERE plugin_file='".$file."' $folder_query");
+
+            $plug_uninstall_file = PLUG_DIR.DIRECTORY_SEPARATOR.$folder.'uninstall_'.$file;
+			if(file_exists($plug_uninstall_file)){
+			    require_once($plug_uninstall_file);
             }
-			$msg = e(lang("plugin_uninstalled"),"m");
+			$msg = e(lang('plugin_uninstalled'),'m');
 		} else {
 			$msg = e(lang('plugin_no_install_err'));
 		}

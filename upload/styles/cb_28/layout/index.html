@@ -63,8 +63,7 @@
 			<!-- ******************************************* -->
 			<!-- ************* USER BLOCK END ************** -->
 			<!-- ******************************************* -->
-			{$row = $myquery->Get_Website_Details()}
-			{if $row.collectionsSection == 'yes'}
+			{if config('collectionsSection') == 'yes'}
 				{$collections = $cbcollection->get_collections(['limit'=>4, 'active'=>'yes', 'order'=>'total_objects DESC'])}
 				{$collections = $cbcollection->activeCollections($collections)}
 				<h2 title="Collections with most items">{lang code="top_collections"}</h2>
@@ -84,7 +83,7 @@
 			{/if}
 
 			<!-- playlists -->
-			{if $row.playlistsSection == 'yes'}
+			{if config('playlistsSection') == 'yes'}
 				{$playlists = get_playlists(['limit'=>4, 'order'=>'total_items DESC'])}
 				{$playlists = activePlaylists($playlists)}
 				{if $playlists}

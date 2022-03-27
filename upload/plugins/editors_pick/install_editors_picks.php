@@ -14,5 +14,4 @@ function install_editors_pick()
 	$db->Execute('ALTER TABLE '.tbl('video')." ADD `in_editor_pick` varchar(255) DEFAULT 'no'");
 }
 
-//This will first check if plugin is installed or not, if not this function will install the plugin details
 install_editors_pick();

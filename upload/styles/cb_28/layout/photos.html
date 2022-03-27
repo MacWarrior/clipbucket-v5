@@ -1,9 +1,6 @@
 {$myAccountLinks = $userquery->my_account_links()}
 {$leftMenuLinks = array_slice($myAccountLinks, 6)}
 <div id="main" class="clearfix container">
-{if !function_exists('server_thumb') && has_access("admin_access")}
-	<div class="alert alert-warning">Kindly install <strong>Server Thumb</strong> plugin by going to <strong><a href="/admin_area/plugin_manager.php">Plugin Manager</a> to make photos show properly</strong></div>
-{/if}
 	<div class="clearfix">
 		<section id="content" class="clearfix photos">
 			{if config("enable_advertisement") == "yes"}
@@ -29,7 +26,7 @@
 						<ul class="dropdown-menu">
 							{foreach from=$sorting_links item=name key=sort}
 							<li>
-								<a href="{link name=sort sort=$sort type=photos}&sorting=sort" {if $smarty.get.sort==$sort} class="selected" {/if}>{if $smarty.get.sort==$sort}<i class="icon-tick"></i>{/if}{$name}</a>
+								<a href="{link name=sort sort=$sort type=photos}&sorting=sort" {if $smarty.get.sort==$sort}class="selected"{/if}>{if $smarty.get.sort==$sort}<i class="icon-tick"></i>{/if}{$name}</a>
 							</li>
 							{/foreach}
 						</ul>
@@ -51,7 +48,7 @@
 						  <ul class="dropdown-menu">
 							{foreach from=$time_links item=name key=sort name=times}
 								<li>
-									<a href="{link name=time sort=$sort type=photos}&timing=time" {if $smarty.get.time==$sort} class="selected"{/if}>{if $smarty.get.time==$sort}<i class="icon-tick"></i>{/if}{$name}</a>
+									<a href="{link name=time sort=$sort type=photos}&timing=time" {if $smarty.get.time==$sort}class="selected"{/if}>{if $smarty.get.time==$sort}<i class="icon-tick"></i>{/if}{$name}</a>
 								</li>
 							{/foreach}
 						  </ul>
@@ -92,8 +89,7 @@
 				</div>
 			</div>
 			{/if}
-			{$row = $myquery->Get_Website_Details()}
-			{if $row.collectionsSection == 'yes'}
+			{if config('collectionsSection') == 'yes'}
 				{$collections = $cbcollection->get_collections(['limit'=>5, 'active'=>'yes'])}
 				{$collections = $cbcollection->activeCollections($collections)}
 				<h2>{lang code="top_collections"}</h2>

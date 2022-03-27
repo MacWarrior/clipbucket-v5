@@ -1,0 +1,15 @@
+.breadcrumb>li+li:before {
+	font-family: FontAwesome;
+	font-size: 14px;
+	content: "\f105";
+	margin-right: 2px;
+	padding: 0 5px 0 2px;
+}
+.breadcrumb>li>a {
+	padding: 0 4px;
+	color: #4c8fbd;
+	font-size: 13px;
+}
+.breadcrumb:first-child{
+	padding-left: 10px;
+}

@@ -111,14 +111,12 @@
 								<li id="category"></li>
 
 								<li><strong>{lang('collection_name')}</strong>:&nbsp;
-
 									{if $Cbucket->configs.seo == 'yes'}
 									<span id="category"><a href="/collection/{$c.collection_id}/{$c.type}/{$c.collection_name}">{display_clean($c.collection_name)}</a></span>
-								</li>
-								{else}
-								<span id="category"><a href="/view_collection.php?cid={$c.collection_id}&type={$c.type}">{display_clean($c.collection_name)}</a></span>
-							</li>
-							{/if}
+								    {else}
+								    <span id="category"><a href="/view_collection.php?cid={$c.collection_id}&type={$c.type}">{display_clean($c.collection_name)}</a></span>
+							        {/if}
+                                </li>
 							<li><strong>{lang('tags')}</strong>:&nbsp;<span id="tags"></span></strong>{$photo.photo_tags|tags:photos}</li>
 
 							<li><strong>{lang('views')}</strong>:&nbsp; <span id="views">{$photo.views}</span></li>
@@ -151,7 +149,7 @@
 						<div class="photo-share-tab col-lg-6 col-md-6 col-sm-6 col-xs-12 form-group">
 							<label class="col-sm-2 col-xs-3 control-label" for="{$item.type}">{$item.name}</label>
 							<div class="col-sm-10 col-xs-9">
-								<input class="form-control" onFocus="this.select();" value="{$item.code}" id="{$item.type}">
+								<input class="form-control" onFocus="this.select();" value="{$item.code}" id="{$item.type}"/>
 							</div>
 						</div>
 
@@ -235,10 +233,9 @@
 		{/if}
 	</div>
 
-	{$row = $myquery->Get_Website_Details()}
-	{if $row.collectionsSection == 'yes'}
-	{$collections = $cbcollection->get_collections(['limit'=>5, 'active'=>'yes'])}
-	{$collections = $cbcollection->activeCollections($collections)}
+	{if config('collectionsSection') == 'yes'}
+        {$collections = $cbcollection->get_collections(['limit'=>5, 'active'=>'yes'])}
+        {$collections = $cbcollection->activeCollections($collections)}
 	<h2>{lang code="top_collections"}</h2>
 	<div class="clearfix sidebar-items collections-grid">
 		<div class="clearfix row">
