@@ -809,7 +809,7 @@
     "vdo_multi_del_fav_msg": "Videos have been removed from your favorites",
     "unknown_sender": "Unknown Sender",
     "please_enter_message": "Please enter something for message",
-    "unknown_reciever": "Unknown reciever",
+    "unknown_reciever": "Le destinataire n'existe pas",
     "no_pm_exist": "Private message does not exist",
     "pm_sent_success": "Private message has been sent successfully",
     "msg_delete_inbox": "Message has been deleted from inbox",

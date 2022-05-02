@@ -1998,7 +1998,10 @@
 	 * @return mixed
 	 */
 	function post($var) {
-		return $_POST[$var];
+        if( isset($_POST[$var]) ){
+            return $_POST[$var];
+        }
+		return '';
 	}
 
 	/**

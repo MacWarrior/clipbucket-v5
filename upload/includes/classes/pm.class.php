@@ -1,25 +1,4 @@
 <?php
-/**
- * This Class is used to
- * Send and receive
- * private or personal messages
- * within the CLIPBUCKET system
- *
- * @Author : Arslan Hassan (=D)
- * @Software : ClipBucket v2
- * @License : Attribution Assurance License -- http://www.opensource.org/licenses/attribution.php
- *
- * Pleae check CBLA for more details
- * For code reference, please check docs.clip-bucket.com
- * This Code is property of PHPBucket - ClipBucket - Arslan Hassan
- *
- * NOTE : MAINTAIN THIS SECTION
- *
- *
- * Attachment Pattern : {v:videoidid}{p:pictureid}{g:groupid}{c:channelid}
- * For Multi Users : uid can be uid1|uid2|uid3|....
- */
-
 define('CB_PM','ON');
 define('CB_PM_MAX_INBOX',500); // 0 - OFF , U - Unlimited
 
@@ -28,7 +7,7 @@ define('CB_PM_MAX_INBOX',500); // 0 - OFF , U - Unlimited
 	 *
 	 * @param array => 'attachment_video'
 	 *
-	 * @return string
+	 * @return string|void
 	 */
 	function attach_video($array)
 	{
@@ -61,12 +40,12 @@ define('CB_PM_MAX_INBOX',500); // 0 - OFF , U - Unlimited
 	/**
 	 * Function used to add custom video attachment form field
 	 */
-	function video_attachment_form()
-	{
+	function video_attachment_form(): array
+    {
 		global $cbvid;
-		$vid_array = array('user'=>userid(),'order'=>'date_added DESC','limit'=>15);
+		$vid_array = ['user'=>userid(),'order'=>'date_added DESC','limit'=>15];
 		$videos = $cbvid->get_videos($vid_array);
-		$vids_array = array('' => lang("no_video"));
+		$vids_array = ['' => lang('no_video')];
 
 		if($videos) {
 			foreach($videos as $video) {
@@ -74,17 +53,17 @@ define('CB_PM_MAX_INBOX',500); // 0 - OFF , U - Unlimited
 			}
 		}
 
-		return array(
-		   'video_form' => array(
-				'title'=> lang('usr_attach_video'),
-				'type'=>'dropdown',
-				'name'=> 'attach_video',
-				'id'=> 'attach_video',
-				'value'=> $vids_array,
-				'checked'=>post('attach_video'),
-				'anchor_before'=>'before_video_attach_box',
-			)
-		);
+		return [
+		   'video_form' => [
+				'title'         => lang('usr_attach_video'),
+				'type'          => 'dropdown',
+				'name'          => 'attach_video',
+				'id'            => 'attach_video',
+				'value'         => $vids_array,
+				'checked'       => post('attach_video'),
+				'anchor_before' => 'before_video_attach_box',
+           ]
+        ];
 	}
 	
 	
@@ -101,43 +80,22 @@ class cb_pm
 	 * Allow multi users
 	 */
 	var $multi = true;
-	
-	
+
 	/**
 	 * Default Template
 	 */
 	var $email_template = 'pm_email_message';
 	
-	/**
-	 * Send Email on pm
-	 */
-	var $send_email = true;
-	
-	/**
-	 * Allow inline attachments
-	 * these attachements are linked in the messages instead of attached like emails
-	 */
-	var $allow_attachments = true;
-	
-	//Attachment functionss
+	//Attachment functions
 	var $pm_attachments = array('attach_video');
 	var $pm_attachments_parse = array('parse_and_attach_video');
 	var $pm_custom_field = array();
-
-	/**
-	 * Calling Constructor
-	 */
-	function init()
-	{
-		// $array = video_attachment_form();
-		// $this->add_custom_field( $array );
-	}
 	
 	/**
 	 * Sending PM
 	 */
-	function send_pm($array)
-	{
+	function send_pm($array): bool
+    {
 		global $userquery, $db;
 		$to = $this->check_users($array['to'],$array['from']);
 
@@ -145,50 +103,48 @@ class cb_pm
 		if(!$userquery->user_exists($array['from'])) {
 			e(lang('unknown_sender'));
 			return false;
-		} else if(!$to) {//checking to user
+		}
+        if(!$to) {//checking to user
 			return false;
-        } else if(empty($array['subj'])) {//Checking if subject is empty
+        }
+        if(empty($array['subj'])) {//Checking if subject is empty
 			e(lang('class_subj_err'));
 			return false;
-        } else if(empty($array['content'])) {
+        }
+        if(empty($array['content'])) {
 			e(lang('please_enter_message'));
 			return false;
         }
 
         $from = $this->get_the_user($array['from']);
         $attachments = $this->get_attachments($array);
-        $type = $array['type'] ? $array['type'] : 'pm';
-        $reply_to = $this->is_reply($array['reply_to'],$from);
 
-        $fields = array('message_from','message_to','message_content', 'message_subject','date_added','message_attachments','message_box','reply_to');
-        $values = array($from,$to,$array['content'], $array['subj'],now(),$attachments);
+        $fields = ['message_from','message_to','message_content', 'message_subject','date_added','message_attachments'];
+        $values = [$from,$to,$array['content'], $array['subj'],now(),$attachments];
 
-        //PM INBOX FIELDS
-        $fields_in = $fields;
-        //PM INBOX
-        $values_in = $values;
-        $values_in[] = 'in';
-        $values_in[] = $reply_to;
+        $fields_tmp = $fields;
+        $values_tmp = $values;
+        $fields_tmp[] = 'message_box';
+        $values_tmp[] = 'in';
 
-        $db->insert(tbl($this->tbl),$fields_in,$values_in);
+        $db->insert(tbl($this->tbl),$fields_tmp,$values_tmp);
         $array['msg_id'] = $db->insert_id();
+
         if($array['is_pm']) {
-            //PM SENTBOX FIELDS
-            $fields_out = $fields;
-            $fields_out[] = 'message_status';
+            $fields_tmp = $fields;
+            $values_tmp = $values;
 
-            //PM SENTBOX
-            $values_out = $values;
-            $values_out[] = 'out';
-            $values_out[] = $reply_to;
-            $values_out[] = 'read';
+            $fields_tmp[] = 'message_box';
+            $values_tmp[] = 'out';
+            $fields_tmp[] = 'message_status';
+            $values_tmp[] = 'read';
 
-            $db->insert(tbl($this->tbl),$fields_out,$values_out);
+            $db->insert(tbl($this->tbl),$fields_tmp,$values_tmp);
         }
 
         //Sending Email
-        $this->send_pm_email($array);
-        e(lang("pm_sent_success"),"m");
+        //$this->send_pm_email($array);
+        e(lang('pm_sent_success'),'m');
         return true;
 	}
 
@@ -209,7 +165,7 @@ class cb_pm
 		if(empty($input)) {
 			e(lang("unknown_reciever"));
 		} else {
-			//check if usernames are sperated by colon ';'
+			//check if usernames are separated by colon ';'
 			$input = preg_replace('/;/',',',$input);
 			//Now Exploding Input and converting it to and array
 			$usernames = explode(',',$input);
@@ -220,13 +176,13 @@ class cb_pm
 			{
 				$user_id = $this->get_the_user($username);
 				if($userquery->is_user_banned($username,userid())) {
-					e(sprintf(lang("cant_pm_banned_user"),$username));
+					e(sprintf(lang('cant_pm_banned_user'),$username));
 				} elseif($userquery->is_user_banned(user_name(),$username)){
-					e(sprintf(lang("cant_pm_user_banned_you"),$username));
+					e(sprintf(lang('cant_pm_user_banned_you'),$username));
 				}elseif(!$userquery->user_exists($username)) {
-					e(lang("unknown_reciever"));
+					e(lang('unknown_reciever'));
 				} elseif($user_id == $sender) {
-					e(lang("you_cant_send_pm_yourself"));				
+					e(lang('you_cant_send_pm_yourself'));
 				} else {
 					$valid_users[] = $user_id;	
 				}
@@ -237,7 +193,7 @@ class cb_pm
 			if(count($valid_users)>0) {
 				$vusers = '';
 				foreach($valid_users as $vu) {
-					$vusers .="#".$vu."#";
+					$vusers .='#'.$vu.'#';
 				}
 				return $vusers;				
 			}
@@ -252,10 +208,10 @@ class cb_pm
 	function get_the_user($user)
 	{
 		global $userquery;
-		if(!is_numeric($user))
+		if(!is_numeric($user)){
 			return $userquery->get_user_field_only($user,'userid');
-		else
-			return $user;
+        }
+        return $user;
 	}
 	
 	
@@ -289,7 +245,7 @@ class cb_pm
 	function is_reply($id,$uid): bool
     {
 		global $db;
-		$results = $db->select(tbl($this->tbl),'message_to'," message_id = '$id' AND message_to LIKE '%#$uid#%'");
+		$results = $db->select(tbl($this->tbl),'message_to',' message_id = \''.mysql_clean($id).'\' AND message_to LIKE \'%#'.mysql_clean($uid).'#%\'');
 		if(count($results)>0){
 			return true;
         }
@@ -329,7 +285,7 @@ class cb_pm
 		if(!$uid){
 			$uid = userid();
         }
-		$result = $db->select(tbl($this->tbl.',users'),tbl($this->tbl.'.*,users.userid,users.username')," message_id='$mid' AND message_to LIKE '%#$uid#%' AND userid=".tbl($this->tbl).".message_from",NULL," date_added DESC ");
+		$result = $db->select(tbl($this->tbl.',users'),tbl($this->tbl.'.*,users.userid,users.username')," message_id='$mid' AND message_to LIKE '%#$uid#%' AND userid=".tbl($this->tbl).'.message_from',NULL,' date_added DESC ');
 		
 		if(count($result)>0) {
 			return $result[0];
@@ -492,30 +448,29 @@ class cb_pm
 	/**
 	 * Function used to create PM FORM
 	 */
-	function load_compose_form()
-	{
+	function load_compose_form(): array
+    {
 		$to = post('to');
 		$to = $to ? $to : get('to');
 		
-		$array = array(
-			'to'	=>array(
+		$array = [
+			'to' => [
 				'title'=> lang('to'),
 				'type'=>'textfield',
 				'name'=> 'to',
 				'id'=> 'to',
 				'value'=> $to,
-				//'hint_2'=> "seperate usernames by comma ','",
 				'required'=>'yes'
-			),
-			'subj'	=>array(
+            ],
+			'subj' => [
 				'title'=> lang('subject'),
 				'type'=>'textfield',
 				'name'=> 'subj',
 				'id'=> 'subj',
 				'value'=> post('subj'),
 				'required'=>'yes'
-			),
-			'content'	=>array(
+            ],
+			'content' => [
 				'title'=> lang('content'),
 				'type'=>'textarea',
 				'name'=> 'content',
@@ -523,11 +478,11 @@ class cb_pm
 				'value'=> post('content'),
 				'required'=>'yes',
 				'anchor_before'=>'before_pm_compose_box',
-			)
-		 );
+            ]
+        ];
 
         $videos = video_attachment_form();
-        $this->add_custom_field( $videos );
+        $this->add_custom_field($videos);
 
 		return array_merge($array,$this->pm_custom_field);
 	}

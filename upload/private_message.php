@@ -1,7 +1,9 @@
 <?php
-define("THIS_PAGE",'private_message');
+define('THIS_PAGE','private_message');
 
 require 'includes/config.inc.php';
+
+global $userquery,$cbpm,$eh;
 
 //Adding JS Scroll
 add_js('jquery_plugs/compressed/jquery.scrollTo-min.js');
@@ -56,7 +58,7 @@ switch($mode)
 		//Get User Messages
 		assign('user_msgs',$cbpm->get_user_inbox_messages(userid()));
 		
-		subtitle(lang("com_my_inbox"));
+		subtitle(lang('com_my_inbox'));
 	    break;
 	
 	case 'sent':
@@ -77,7 +79,7 @@ switch($mode)
 		//Get User Messages
 		assign('user_msgs',$cbpm->get_user_outbox_messages(userid()));
 		
-		subtitle(lang("user_sent_box"));
+		subtitle(lang('user_sent_box'));
 	    break;
 	
 	case 'notification':
@@ -98,20 +100,20 @@ switch($mode)
 		//Get User Messages
 		assign('user_msgs',$cbpm->get_user_notification_messages(userid()));
 		
-		subtitle(lang("my_notifications"));
+		subtitle(lang('my_notifications'));
 	    break;
 	
 	case 'new_msg':
 	case 'compose':
 		assign('mode','new_msg');
 		
-		//Checkking If reply
+		//Checking if reply
 		if($_GET['reply']!='') {
 			$mid = mysql_clean($_GET['reply']);
 			if(!isset($_POST['send_message']) && $cbpm->is_reply($mid,userid())) {
 				$reply_msg = $cbpm->get_inbox_message($mid,userid());
 				$_POST['to'] = $userquery->get_user_field_only($reply_msg['message_from'],'username');
-				$_POST['subj'] = "Re:".$reply_msg['message_subject'];
+				$_POST['subj'] = 'Re:'.$reply_msg['message_subject'];
 			}
 		}
 		
@@ -123,12 +125,12 @@ switch($mode)
 			$array['from'] = userid();
 			$cbpm->send_pm($array);
 			unset($_POST);
-			if(!error())
+			if(!error()){
 				$_POST = '';
+            }
 		}	
 
-		subtitle(lang("title_crt_new_msg"));
-
+		subtitle(lang('title_crt_new_msg'));
 }
 
 template_files('private_message.html');

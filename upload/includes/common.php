@@ -351,10 +351,9 @@ $cbtpl->caching = 0;
 $cbobjects = new CBObjects();
 $swfobj	   = new SWFObject();
 
-# Initializng Userquery class
+# Initializing Userquery class
 $userquery->init();
 $cbvideo->init();
-$cbpm->init();
 $cbphoto->init_photos();
 $thisurl = curPageURL();
 

@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"84",
+  "revision":"85",
   "status":"dev",
   "detail":[
     {
@@ -100,6 +100,7 @@
         ,"Fix ratings"
         ,"Update categories filter <i>#213</i>"
         ,"Fix video & photo upload file size check <i>#221</i>"
+        ,"Fix PM <i>#237</i>"
       ]
     }
   ,{
