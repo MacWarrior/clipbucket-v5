@@ -108,7 +108,7 @@
     "usr_ament_err": "Sorry, you need to agree to the terms of use and privacy policy to create an account",
     "usr_reg_err": "Sorry, Registrations Are Temporarily Not Allowed, Please Try Again Later",
     "usr_ban_err": "Votre compte est banni, veuillez contacter l'administrateur du site",
-    "usr_login_err": "Username and Password Didn't Match",
+    "usr_login_err": "Le couple identifiant/mot de passe ne correspond à aucun compte",
     "usr_sadmin_msg": "Super Admin Has Been Updated",
     "usr_pass_msg": "Your Password Has Been Changed",
     "usr_cnt_msg": "This User Has Been Added To Your Contact List",
