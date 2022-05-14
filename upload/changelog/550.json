@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"85",
+  "revision":"86",
   "status":"dev",
   "detail":[
     {
@@ -33,6 +33,7 @@
         ,"Fix collection search"
         ,"Fix left menu active flag display <i>#223</i>"
         ,"Fix FFmpeg version check <i>#226</i>"
+        ,"Fix user creation <i>#238</i>"
       ]
     },
     {

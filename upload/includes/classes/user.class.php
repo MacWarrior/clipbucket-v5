@@ -3047,9 +3047,9 @@ class userquery extends CBCategory{
      *
      * @param null $uid
      *
-     * @return
+     * @return array
      */
-    function get_user_details_with_profile($uid=NULL)
+    function get_user_details_with_profile($uid=NULL): array
     {
         global $db;
         if(!$uid){
@@ -3127,11 +3127,11 @@ class userquery extends CBCategory{
         }
 
         if (strlen($selected_cont) != 2) {
-            $selected_cont = "PK";
+            $selected_cont = 'PK';
         }
 
-        $user_signup_fields = array(
-            'username' => array(
+        $user_signup_fields = [
+            'username' => [
                 'title' => lang('username'),
                 'type' => 'textfield',
                 'placehoder' => lang('username'),
@@ -3148,8 +3148,8 @@ class userquery extends CBCategory{
                 'db_value_err' => lang('usr_uname_err2'),
                 'min_length' => config('min_username'),
                 'max_length' => config('max_username')
-            ),
-            'email' => array(
+            ],
+            'email' => [
                 'title'=> lang('email'),
                 'type'=> 'textfield',
                 'placehoder'=>'Email',
@@ -3165,8 +3165,8 @@ class userquery extends CBCategory{
                 'validate_function'=> 'isValidEmail',
                 'constraint_func'=>'check_email_domain',
                 'constraint_err'=>lang('signup_error_email_unauthorized')
-            ),
-            'password' => array(
+            ],
+            'password' => [
                 'title' => lang('password'),
                 'type' => 'password',
                 'placehoder'=> lang('password'),
@@ -3177,8 +3177,8 @@ class userquery extends CBCategory{
                 'relative_to' => 'cpassword',
                 'relative_type' => 'exact',
                 'relative_err' => lang('usr_pass_err3'),
-            ),
-            'cpassword' => array(
+            ],
+            'cpassword' => [
                 'title' => lang('user_confirm_pass'),
                 'type' => 'password',
                 'placehoder' => lang('user_confirm_pass'),
@@ -3186,8 +3186,8 @@ class userquery extends CBCategory{
                 'id' => 'cpassword',
                 'required' => 'no',
                 'invalid_err' => lang('usr_cpass_err')
-            ),
-            'dob' => array(
+            ],
+            'dob' => [
                 'title' => lang('user_date_of_birth'),
                 'type' => 'textfield',
                 'name' => 'dob',
@@ -3199,8 +3199,8 @@ class userquery extends CBCategory{
                 'db_field' => 'dob',
                 'required' => 'yes',
                 'invalid_err' => sprintf( lang('register_min_age_request'), config('min_age_reg') )
-            ),
-            'country' => array(
+            ],
+            'country' => [
                 'title' => lang('country'),
                 'type' => 'dropdown',
                 'value' => $countries,
@@ -3209,35 +3209,35 @@ class userquery extends CBCategory{
                 'checked' => $selected_cont,
                 'db_field' => 'country',
                 'required' => 'yes'
-            ),
-            'gender' => array(
+            ],
+            'gender' => [
                 'title' => lang('gender'),
                 'type' => 'radiobutton',
                 'name' => 'gender',
                 'class' => 'radio',
                 'id' => 'gender',
-                'value' => array('Male'=>lang('male'),'Female'=>lang('female')),
+                'value' => ['Male'=>lang('male'),'Female'=>lang('female')],
                 'sep' => '&nbsp;',
                 'checked' => 'Male',
                 'db_field' => 'sex',
                 'required' => 'yes'
-            ),
-            'cat' => array(
+            ],
+            'cat' => [
                 'title'=> lang('category'),
                 'type' => 'dropdown',
                 'name' => 'category',
                 'id' => 'category',
-                'value' => array('category', ($default['category'] ?? '') ),
+                'value' => ['category', ($default['category'] ?? '') ],
                 'db_field' => 'category',
                 'checked' => ($default['category'] ?? ''),
                 'required' =>'yes',
                 'invalid_err' => lang('select_category'),
                 'display_function' => 'convert_to_categories',
                 'category_type' => 'user'
-            )
-        );
+            ]
+        ];
 
-         $new_array = array();
+         $new_array = [];
          foreach($user_signup_fields as $id => $fields)
          {
              $the_array = $fields;
@@ -3391,7 +3391,7 @@ class userquery extends CBCategory{
             }
             global $Upload;
             $custom_fields_array = $Upload->load_custom_form_fields(false,false,false,true);
-            foreach ($custom_fields_array as $key => $cfield) {
+            foreach ($custom_fields_array as $cfield) {
                 $db_field = $cfield['db_field'];
                 $query_field[] = $db_field;
                 $query_val[] = $array[$db_field];
@@ -3459,7 +3459,7 @@ class userquery extends CBCategory{
             foreach($query_val as $qval)
             {
                 $i++;
-                $query .= "'$qval'";
+                $query .= '\''.$qval.'\'';
                 if($i<$total_fields){
                     $query .= ',';
                 }
@@ -3470,8 +3470,7 @@ class userquery extends CBCategory{
             $db->Execute($query);
             $insert_id = $db->insert_id();
 
-            $db->update(tbl($this->dbtbl['users']),array('password'),array(pass_code($array['password'], $insert_id))," userid='".$insert_id."'");
-
+            $db->update(tbl($this->dbtbl['users']),['password'],[pass_code($array['password'], $insert_id)],' userid=\''.$insert_id.'\'');
 
             $fields_list = [];
             $fields_data = [];
@@ -3512,38 +3511,38 @@ class userquery extends CBCategory{
             if(!has_access('admin_access',true) && EMAIL_VERIFICATION && $send_signup_email) {
                 global $cbemail;
                 $tpl = $cbemail->get_template('email_verify_template');
-                $more_var = array(
-                    '{username}'    => post('username'),
-                    '{password}'    => post('password'),
-                    '{email}'        => post('email'),
-                     '{avcode}'        => $avcode
-                );
+                $more_var = [
+                    '{username}' => post('username'),
+                    '{password}' => post('password'),
+                    '{email}'    => post('email'),
+                    '{avcode}'   => $avcode
+                ];
 
-                $var = array();
+                $var = [];
                 $var = array_merge($more_var, $var);
                 $subj = $cbemail->replace($tpl['email_template_subject'], $var);
                 $msg = nl2br($cbemail->replace($tpl['email_template'], $var));
 
                 //Now Finally Sending Email
-                cbmail(array('to'=>post('email'), 'from'=>WEBSITE_EMAIL, 'subject'=>$subj, 'content'=>$msg));
+                cbmail(['to'=>post('email'), 'from'=>WEBSITE_EMAIL, 'subject'=>$subj, 'content'=>$msg]);
             } elseif(!has_access('admin_access',true) && $send_signup_email) {
                 $this->send_welcome_email($insert_id);
             }
 
-            $log_array = array(
-                'username'    => $array['username'],
+            $log_array = [
+                'username'  => $array['username'],
                 'userid'    => $insert_id,
-                'userlevel'    => $array['level'],
-                'useremail'    => $array['email'],
-                'success'    =>'yes',
-                'details'    => sprintf('%s signed up',$array['username'])
-            );
+                'userlevel' => $array['level'],
+                'useremail' => $array['email'],
+                'success'   =>'yes',
+                'details'   => sprintf('%s signed up',$array['username'])
+            ];
 
             //Login Signup
             insert_log('signup', $log_array);
 
             //Adding User has Signup Feed
-            addFeed(array('action' => 'signup', 'object_id' => $insert_id, 'object'=>'signup', 'uid'=>$insert_id));
+            addFeed(['action' => 'signup', 'object_id' => $insert_id, 'object'=>'signup', 'uid'=>$insert_id]);
 
             return $insert_id;
         }

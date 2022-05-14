@@ -1,4 +1,4 @@
-{$required_fields=$userquery->load_signup_fields()|@array_filter}
+{$required_fields=$userquery->load_signup_fields()|array_filter}
 {$custom_fields=$userquery->custom_signup_fields}
 {if $mode == 'signup_success'}
 	<div class="simple_container">
@@ -58,7 +58,6 @@
 							{/if}
 
 							<div class="form-group clearfix">
-								{*<label for="{$field.id}">{$field.title}</label>*}
 								{if $field.type=='radiobutton'}
 									{$field.label_class="radio-inline"}
 									{$field.sep=" "}
@@ -84,7 +83,6 @@
 						<!-- Loading Custom Fields -->
 						{foreach from=$custom_fields item=field}
 							<div class="form-group clearfix">
-								{*<label for="{$field.id}">{$field.title}</label>*}
 								{if $field.type=='radiobutton'}
 									{$field.label_class="radio-inline"}
 									{$field.sep=" "}
@@ -94,7 +92,6 @@
 									{$field.label_class="checkbox-inline"}
 									{$field.sep=" "}
 								{/if}
-
 
 								{if $field.hint_before}
 								<span class="help-block">{$field.hint_before}</span>
@@ -363,11 +360,11 @@
 	});
 </script>
 
-	<style>
-		.ui-datepicker {
-			background: #fff;
-			/*border: 1px solid #357EBD;*/
-			width: 140px;
-			vertical-align: center;
-		}
-	</style>
+<style>
+    .ui-datepicker {
+        background: #fff;
+        /*border: 1px solid #357EBD;*/
+        width: 140px;
+        vertical-align: center;
+    }
+</style>
