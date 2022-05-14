@@ -11,12 +11,11 @@ $udetails = $userquery->get_user_details($uid);
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = array('title' => lang('users'), 'url' => '');
-$breadcrumb[0] = array('title' => lang('grp_manage_members_title'), 'url' => ADMIN_BASEURL.'/members.php');
-$breadcrumb[1] = array('title' => 'Editing : '.display_clean($udetails['username']), 'url' => ADMIN_BASEURL.'/view_user.php?uid='.display_clean($uid));
+$breadcrumb[0] = ['title' => lang('users'), 'url' => ''];
+$breadcrumb[0] = ['title' => lang('grp_manage_members_title'), 'url' => ADMIN_BASEURL.'/members.php'];
+$breadcrumb[1] = ['title' => 'Editing : '.display_clean($udetails['username']), 'url' => ADMIN_BASEURL.'/view_user.php?uid='.display_clean($uid)];
 
-if($udetails)
-{
+if($udetails) {
     //Deactivating User
     if(isset($_GET['deactivate'])) {
         $userquery->action('deactivate',$uid);
@@ -67,8 +66,7 @@ if($udetails)
         $myquery->delete_comment($cid);
     }
 
-    if(isset($_POST['update_user']))
-    {
+    if(isset($_POST['update_user'])) {
         $userquery->update_user($_POST);
         if(!error()){
             $udetails = $userquery->get_user_details($uid);

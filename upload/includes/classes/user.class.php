@@ -2306,7 +2306,7 @@ class userquery extends CBCategory{
                     $pass = pass_code($array['pass'], $array['userid']);
                 }
                 $uquery_field[] = 'password';
-                $uquery_val[]    = $pass;
+                $uquery_val[]   = $pass;
             }
             
             //Changing User Level
@@ -2342,7 +2342,7 @@ class userquery extends CBCategory{
                 $uquery_val[] = $array['doj'];
             }
         }
-        
+
         //Changing Gender
         if($array['sex']) {
             $uquery_field[] = 'sex';
@@ -2384,7 +2384,7 @@ class userquery extends CBCategory{
             $uquery_field[] = 'avatar_url';
             $uquery_val[] = '';
         }
-        
+
         //Deleting User Avatar
         if($array['delete_avatar']=='yes') {
             $udetails = $this->get_user_details($array['userid']);
@@ -2397,7 +2397,7 @@ class userquery extends CBCategory{
             $uquery_field[] = 'avatar';
             $uquery_val[] = '';
         } else {
-            if(isset($_FILES['avatar_file']['name'])) {
+            if(isset($_FILES['avatar_file']['name']) && !empty($_FILES['avatar_file']['name'])) {
                 $file = $Upload->upload_user_file('a', $_FILES['avatar_file'], $array['userid']);
                 if($file) {
                     $uquery_field[] = 'avatar';
@@ -2430,7 +2430,7 @@ class userquery extends CBCategory{
             $uquery_val[] = $array['background_repeat'];
         }
 
-        if(isset($_FILES['background_file']['name'])) {
+        if(isset($_FILES['background_file']['name']) && !empty($_FILES['background_file']['name'])) {
             $file = $Upload->upload_user_file('b',$_FILES['background_file'],$array['userid']);
             if($file) {
                 $uquery_field[] = 'background';
@@ -2476,10 +2476,10 @@ class userquery extends CBCategory{
 
         //updating user profile
         if(!error()) {
-            $log_array = array(
+            $log_array = [
                 'success' => 'yes',
                 'details' => 'updated profile'
-            );
+            ];
             //Login Upload
             insert_log('profile_update',$log_array);
             
