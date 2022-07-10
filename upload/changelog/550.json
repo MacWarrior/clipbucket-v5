@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"89",
+  "revision":"90",
   "status":"dev",
   "detail":[
     {
@@ -104,6 +104,7 @@
         ,"Fix video & photo upload file size check <i>#221</i>"
         ,"Fix PM <i>#237</i>"
         ,"Fix SQL injection <i>Thanks @svmorris !</i>"
+        ,"Fix JS error"
       ]
     }
   ,{

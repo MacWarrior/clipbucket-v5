@@ -789,3 +789,6 @@ ALTER TABLE `{tbl_prefix}video`
 -- REV 77
 ALTER TABLE `{tbl_prefix}video`
 	MODIFY COLUMN `datecreated` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+-- REV 90
+DELETE FROM `{tbl_prefix}config` WHERE name = 'photo_download';

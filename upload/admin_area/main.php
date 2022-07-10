@@ -89,7 +89,6 @@ if(isset($_POST['update']))
         ,'extract_subtitles'
         ,'enable_sub_collection'
         ,'photo_crop'
-        ,'photo_download'
     ];
 
     $rows = array(
@@ -210,7 +209,6 @@ if(isset($_POST['update']))
         'photo_lar_width',
         'photo_crop',
         'max_photo_size',
-        'photo_download',
         'photo_thumb_width',
         'photo_thumb_height',
         'photo_med_width',

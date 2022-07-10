@@ -147,11 +147,6 @@ $(document).on("click", "#enlarge", function () {
 	overlayDimension();
 });
 
-// var imgwd = $("#gallery-exd").width();
-// 	alert(imgwd);
-// 	// if($("#gallery-exd").width() < $("#gallery-exd").height()){
-// 	// 	alert("tall");
-// 	// }
 function sample(){
 	var imgwd = $("#gallery-exd").width();
 	var imght = $("#gallery-exd").height();
@@ -201,41 +196,4 @@ $('.dropdown-menu li').on('click',function(){
     if (searchQuery.length > 1) {
         $('#cbsearch').trigger('click');
     }
-});
-
-$(document).ready(function($){
-    //open popup
-    $(document).on('click','.cd-popup-trigger', function(event){
-        event.preventDefault();
-        $('.cd-popup').addClass('is-visible');
-    });
-
-    //close popup
-    $(document).on('click','.cd-popup', function(event){
-        if( $(event.target).is('.cd-popup-close') || $(event.target).is('.cd-popup') ) {
-            event.preventDefault();
-            $(this).removeClass('is-visible');
-            $(".my-modal-content").html("");
-        }
-    });
-    //close popup when clicking the esc keyboard button
-    $(document).keydown(function(event){
-        if(event.which=='27'){
-            var videoId = $(".my-modal-content").attr("id");
-            var cbPlayer = _cb.getPlayerEl(videoId);
-
-            if (!$(cbPlayer).hasClass("vjs-fullscreen")){
-                $('.cd-popup').removeClass('is-visible');
-                $(".my-modal-content").html("");
-                var modalPlayerInterval = setInterval(function(){
-                    var player = $(cbPlayer).find('video');
-                    var isPlaying = !$(player)[0].paused;
-                    if (isPlaying){
-                        $(player)[0].pause()
-                        clearInterval(modalPlayerInterval);
-                    }
-                },100);
-            }
-        }
-    });
 });
