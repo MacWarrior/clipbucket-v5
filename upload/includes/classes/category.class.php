@@ -681,10 +681,9 @@ abstract class CBCategory
 	 */
 	function get_sub_categories($cid)
 	{
-		$cid = mysql_clean($cid);
-
 		global $db;
-		$result = $db->select(tbl($this->cat_tbl),'*',' parent_id = '.mysql_clean($cid));
+		$result = $db->select(tbl($this->cat_tbl),'*',' parent_id = '.(int)mysql_clean($cid));
+
 		if($result > 0){
 		 	return $result;		
 		}

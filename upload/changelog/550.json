@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"88",
+  "revision":"89",
   "status":"dev",
   "detail":[
     {
@@ -103,6 +103,7 @@
         ,"Update categories filter <i>#213</i>"
         ,"Fix video & photo upload file size check <i>#221</i>"
         ,"Fix PM <i>#237</i>"
+        ,"Fix SQL injection <i>Thanks @svmorris !</i>"
       ]
     }
   ,{

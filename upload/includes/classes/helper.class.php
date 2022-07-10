@@ -73,20 +73,20 @@ class clip_helper extends ClipBucket
         global $cbvid, $pages;
         if (!$show_page) {
             if ($msg) {
-                e($msg, "e");
+                e($msg, 'e');
             }
             return false;
         }
         $sort = $_GET['sort'];
-        $child_ids = "";
+        $child_ids = '';
         $assign_arry = array();
-        if($_GET['cat'] && $_GET['cat']!='all') {
-            $childs = $cbvid->get_sub_categories(mysql_clean($_GET['cat']));
+        if($_GET['cat'] && is_numeric($_GET['cat'])) {
+            $childs = $cbvid->get_sub_categories($_GET['cat']);
             $child_ids = array();
             if($childs) {
                 foreach($childs as $child) {
                     $child_ids[] = $child['category_id'];
-                    $subchilds = $childs = $cbvid->get_sub_categories($child['category_id']);
+                    $subchilds = $cbvid->get_sub_categories($child['category_id']);
                     if($subchilds) {
                         foreach($subchilds as $subchild) {
                             $child_ids[] = $subchild['category_id'];

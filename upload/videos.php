@@ -8,8 +8,8 @@ $userquery->perm_check('view_videos',true);
 $sort = $_GET['sort'];
 $child_ids = '';
 $assign_arry = [];
-if($_GET['cat'] && $_GET['cat']!='all') {
-    $childs = $cbvid->get_sub_categories(mysql_clean($_GET['cat']));
+if($_GET['cat'] && is_numeric($_GET['cat']) ) {
+    $childs = $cbvid->get_sub_categories($_GET['cat']);
     $child_ids = [];
     if($childs) {
         foreach($childs as $child) {
