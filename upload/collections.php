@@ -41,7 +41,7 @@ switch($sort)
 
 //Getting Collection List
 $page = $_GET['page'];
-$get_limit = create_query_limit($page,COLLPP);
+$get_limit = create_query_limit($page, config('collection_per_page'));
 
 if (!isSectionEnabled('photos') && !isSectionEnabled('videos')) {
     $cond['type'] = 'none';
@@ -61,7 +61,7 @@ Assign('collections', $collections);
 
 //Collecting Data for Pagination
 $total_rows = $cbcollection->get_collections($collection_count);
-$total_pages = count_pages($total_rows,COLLPP);
+$total_pages = count_pages($total_rows, config('collection_per_page'));
 
 //Pagination
 $pages->paginate($total_pages,$page);
