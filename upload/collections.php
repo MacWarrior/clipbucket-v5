@@ -42,7 +42,7 @@ switch($sort)
 //Getting Collection List
 $page = $_GET['page'];
 $get_limit = create_query_limit($page,COLLPP);
-$cond['limit'] = $get_limit;
+
 if (!isSectionEnabled('photos') && !isSectionEnabled('videos')) {
     $cond['type'] = 'none';
 } else if( !isSectionEnabled('photos') ) {
@@ -50,12 +50,17 @@ if (!isSectionEnabled('photos') && !isSectionEnabled('videos')) {
 } else if( !isSectionEnabled('videos') ) {
     $cond['type'] = 'photos';
 }
+
+$collection_count = $cond;
+$collection_count['count_only'] = true;
+
+$cond['limit'] = $get_limit;
 $collections = $cbcollection->get_collections($cond);
 
 Assign('collections', $collections);
 
 //Collecting Data for Pagination
-$total_rows  = count($collections);
+$total_rows = $cbcollection->get_collections($collection_count);
 $total_pages = count_pages($total_rows,COLLPP);
 
 //Pagination

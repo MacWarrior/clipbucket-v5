@@ -325,7 +325,7 @@ class Collections extends CBCategory
      *
      * @return array|bool|void
      */
-    function get_collections($p=NULL,$brace = false)
+    function get_collections($p=NULL, $brace = false)
     {
         global $db;
 
@@ -508,13 +508,20 @@ class Collections extends CBCategory
             return $db->count($from, 'C.collection_id', $cond);
         }
 
-        $select = 'C.*, U.username, CPARENT.collection_name AS collection_name_parent';
+        if( isset($p['count_only']) ){
+            $select = 'COUNT(C.*) AS total_collections';
+        } else {
+            $select = 'C.*, U.username, CPARENT.collection_name AS collection_name_parent';
+        }
 
         $result = $db->select($from, $select, $cond, $limit, $order);
 
         if($p['assign']){
             assign($p['assign'], $result);
         } else {
+            if( isset($p['count_only']) ){
+                return $result[0]['total_collections'];
+            }
             return $result;
         }
     }
