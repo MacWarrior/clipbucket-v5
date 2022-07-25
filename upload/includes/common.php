@@ -505,8 +505,6 @@ $Smarty->register_function('website_logo','website_logo');
 $Smarty->register_function('get_photo','get_image_file');
 $Smarty->register_function('uploadButton','upload_photo_button');
 $Smarty->register_function('embedCodes','photo_embed_codes');
-$Smarty->register_function('DownloadButtonP','photo_download_button');
-$Smarty->register_function('loadPhotoUploadForm','loadPhotoUploadForm');
 $Smarty->register_function('cbCategories','getSmartyCategoryList');
 $Smarty->register_function('getCbCategories','getSmartyCategoryList');
 $Smarty->register_function('getComments','getSmartyComments');
@@ -527,8 +525,6 @@ $Smarty->register_modifier('country','get_country');
 $Smarty->register_modifier('flag_type','flag_type');
 $Smarty->register_modifier('get_username','get_username');
 $Smarty->register_modifier('formatfilesize','formatfilesize');
-$Smarty->register_modifier('getWidth','getWidth');
-$Smarty->register_modifier('getHeight','getHeight');
 
 assign('updateEmbedCode','updateEmbed');
 # Registering Video Remove Functions

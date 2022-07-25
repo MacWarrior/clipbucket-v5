@@ -13,28 +13,6 @@ function get_photos($param)
     return $cbphoto->get_photos($param);
 }
 
-//Simple Width Fetcher
-function getWidth($file)
-{
-    $sizes = getimagesize($file);
-    if($sizes)
-        return $sizes[0];
-}
-
-//Simple Height Fetcher
-function getHeight($file)
-{
-    $sizes = getimagesize($file);
-    if($sizes)
-        return $sizes[1];
-}
-
-//Load Photo Upload Form
-function loadPhotoUploadForm($params)
-{
-    global $cbphoto;
-    return $cbphoto->loadUploadForm($params);
-}
 //Photo File Fetcher
 function get_photo($params)
 {
@@ -56,12 +34,6 @@ function photo_embed_codes($params)
 }
 
 //Create download button
-
-function photo_download_button($params)
-{
-    global $cbphoto;
-    return $cbphoto->download_button($params);
-}
 
 function plupload_photo_uploader() {
     $photoUploaderDetails = [
@@ -181,7 +153,7 @@ function get_image_file( $params )
     }
 
     $directory = get_photo_date_folder($photo);
-    $with_path = $params['with_path'] = ( $params['with_path'] === false ) ? false : true;
+    $with_path = $params['with_path'] = !($params['with_path'] === false);
     $with_original = $params['with_orig'] ?? false;
 
     if( $directory ) {

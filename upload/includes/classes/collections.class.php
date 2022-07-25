@@ -1678,9 +1678,9 @@ class Collections extends CBCategory
      * @param      $details
      * @param null $type
      *
-     * @return mixed|null|string|string[]
+     * @return string
      */
-    function collection_links($details,$type=NULL)
+    function collection_links($details,$type=NULL): string
     {        
         if(is_array($details)) {
             if(empty($details['collection_id'])){
