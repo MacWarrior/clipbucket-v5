@@ -1,6 +1,8 @@
 <?php
 class Collections extends CBCategory
 {
+    public $search;
+
     var $collect_thumb_width = 360;
     var $collect_thumb_height = 680;
     var $collect_orignal_thumb_width = 1399;
@@ -123,14 +125,6 @@ class Collections extends CBCategory
                 'manage_collections.php?mode=manage_items&amp;cid=%s&amp;type=%s',
                 'manage_collections.php?mode=manage_items&amp;cid=%s&amp;type=%s'
             ];
-            $Cbucket->links['user_collections']     = [
-                'user_collections.php?mode=uploaded&user=',
-                'user_collections.php?mode=uploaded&user='
-            ];
-            $Cbucket->links['user_fav_collections'] = [
-                'user_collections.php?mode=favorite&user=',
-                'user_collections.php?mode=favorite&user='
-            ];
         }
     }
         
@@ -151,65 +145,9 @@ class Collections extends CBCategory
         $this->search->display_template = LAYOUT.'/blocks/collection.html';
         $this->search->template_var = 'collection';
         $this->search->has_user_id = true;
-            
-        $sorting = [
-            'date_added'     => lang('date_added'),
-            'views'          => lang('views'),
-            'total_comments' => lang('comments'),
-            'total_objects'  => lang('Items')
-        ];
-                                
-        $this->search->sorting    = [
-            'date_added'     => ' date_added DESC',
-            'views'          => ' views DESC',
-            'total_comments' => ' total_comments DESC',
-            'total_objects'  => ' total_objects DESC'
-        ];
-                        
-        $default = $_GET;
-        if(is_array($default['category'])){
-            $cat_array = [$default['category']];
-        }
-        $uploaded = $default['datemargin'];
-        $sort = $default['sort'];
-        
-        $this->search->search_type['collections'] = ['title'=>lang('collections')];
-        $this->search->results_per_page = config('videos_items_search_page');
-        
-        $fields = [
-            'query' => [
-                'title' => lang('keywords'),
-                'type' => 'textfield',
-                'name' => 'query',
-                'id' => 'query',
-                'value' => mysql_clean($default['query'])
-            ],
-            'category' =>  [
-                'title' => lang('category'),
-                'type' => 'checkbox',
-                'name' => 'category[]',
-                'id' => 'category',
-                'value' => ['category',$cat_array],
-                'category_type' => 'collections'
-            ],
-            'uploaded' => [
-                'title' => lang('uploaded'),
-                'type' => 'dropdown',
-                'name' => 'datemargin',
-                'id' => 'datemargin',
-                'value' => $this->search->date_margins(),
-                'checked' => $uploaded
-            ],
-            'sort' => [
-                'title' => lang('sort_by'),
-                'type' => 'dropdown',
-                'name' => 'sort',
-                'value' => $sorting,
-                'checked' => $sort
-            ]
-        ];
 
-        $this->search->search_type['collections']['fields'] = $fields;                                            
+        $this->search->search_type['collections'] = ['title'=>lang('collections')];
+        $this->search->results_per_page = config('collection_search_result');
     }
 
     /**

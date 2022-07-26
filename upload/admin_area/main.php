@@ -134,12 +134,11 @@ if(isset($_POST['update']))
         'comments_captcha',
         'comment_rating',
         'collection_per_page',
-        'collection_home_page',
         'collection_search_result',
-        'collection_user_collections',
         'collection_items_page',
-        'collection_user_favorites',
-        'collection_channel_page',
+        'collection_home_top_collections',
+        'collection_collection_top_collections',
+        'collection_photos_top_collections',
 
         'embed_type',
 
@@ -333,12 +332,11 @@ if(isset($_POST['update']))
         'photo_other_limit',
 
         'collection_per_page',
-        'collection_home_page',
         'collection_search_result',
-        'collection_user_collections',
         'collection_items_page',
-        'collection_user_favorites',
-        'collection_channel_page',
+        'collection_home_top_collections',
+        'collection_collection_top_collections',
+        'collection_photos_top_collections',
 
         'photo_multi_upload',
         'photo_lar_width',

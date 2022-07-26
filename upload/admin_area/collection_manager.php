@@ -1,4 +1,5 @@
 <?php
+define('THIS_PAGE','collection_manager');
 global $userquery,$pages,$cbcollection,$eh;
 
 require_once '../includes/admin_config.php';

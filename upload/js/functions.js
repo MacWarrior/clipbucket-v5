@@ -1277,43 +1277,6 @@ function loadObject(currentDOM,type,objID,container)
     }
 }
 
-function channelObjects(object,div,type,user,assign)
-{
-    var obj = $(object), curRel = obj.attr('rel'),
-        DIV = $(div), oldRel = obj.parents('ul').find('a.selected').attr('rel');
-
-    if(curRel)
-    {
-        if($("#"+curRel).css('display') == 'block'){
-            return false;
-        }
-        obj.parents('ul').find('a.selected').removeClass('selected');
-        obj.addClass('selected');
-
-        $("#"+oldRel).hide();
-        $("#"+curRel).show();
-    } else {
-        var newRel = type+"DIV";
-        obj.attr('rel',newRel);
-        $.ajax({
-            url : page,
-            type : "POST",
-            dataType : "json",
-            data : ({ mode : "channelObjects", content : type, user : user, assign : assign}),
-            beforeSend : function() { obj.append(loading_img_2) },
-            success : function(data)
-            {
-                obj.find('img').remove();
-                obj.parents('ul').find('a.selected').removeClass('selected');
-                obj.addClass('selected');
-
-                $("#"+oldRel).hide();
-                $("<div></div>").attr('id',newRel).addClass($("#"+oldRel).attr('class')).html(data.html).appendTo(DIV);
-            }
-        })
-    }
-}
-
 var comments_voting = 'no';
 function getComments(type,type_id,last_update,pageNum,total,object_type,admin)
 {

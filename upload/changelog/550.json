@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"93",
+  "revision":"94",
   "status":"dev",
   "detail":[
     {
@@ -35,6 +35,7 @@
         ,"Fix FFmpeg version check <i>#226</i>"
         ,"Fix user creation <i>#238</i>"
         ,"Fix user edition"
+        ,"Add listing configurations"
       ]
     },
     {

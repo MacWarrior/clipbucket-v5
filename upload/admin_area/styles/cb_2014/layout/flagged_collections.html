@@ -19,7 +19,7 @@
         </tr>
         {assign var = bgcolor value = ""}
         {section name=list loop=$cl}
-        {*var_dump($cl)*}
+
         <tr>
             <td>
                 <input name="check_collect[]" type="checkbox" id="check_collect" value="{$cl[list].collection_id}" /></td>
@@ -31,8 +31,9 @@
                         <div class="col-md-10">
                             <div class="row">
                                 <div class="col-md-3">
-
-                                    <img src=" {$cbgroup->get_group_thumb($cl[list])}" width="130" height="80" id="thumbs_{$cl[list].collection_id}">
+                                    {$collection = $cbcollection->get_collection($cl[list].collection_id)}
+                                    {$first_col_thumb = $cbcollection->coll_first_thumb($collection,'l')}
+                                    <img src="{$first_col_thumb}" width="130" height="80" id="thumbs_{$cl[list].collection_id}"/>
                                 </div>
                                 <div class="col-md-9 labels1">
                                     <a href="edit_collection.php?collection={$cl[list].collection_id}" target="_blank" >
@@ -46,7 +47,7 @@
                         </div>
                         {assign var='uname' value=$userquery->get_user_field({$cl[list].userid}, 'username')}
                         <div class="col-md-2">
-                         <a href="view_user.php?uid={$cl[list].userid}">  {$uname.username}</a>
+                         <a href="view_user.php?uid={$cl[list].userid}">{display_clean($uname.username)}</a>
                         </div>
                     </div>
                     </div>
@@ -64,9 +65,9 @@
                 </div>
         </tr>
         {if $bgcolor == ""}
-        {assign var = bgcolor value = "#EEEEEE"}
+            {assign var = bgcolor value = "#EEEEEE"}
         {else}
-        {assign var = bgcolor value = ""}
+            {assign var = bgcolor value = ""}
         {/if}
 
         {/section}
@@ -88,8 +89,8 @@
 <div class="dropdown">
     <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle pull-right" data-toggle="dropdown">Actions <i class="caret"></i></button>
     <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
-        <li role="presentation"><a role="menuitem" tabindex="-1" href="/watch_video.php?v={$video.videokey}">View video</a></li>
-        <li role="presentation"><a role="menuitem" tabindex="-1" href="edit_video.php?video={$video.videoid}">Edit video</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="/watch_video.php?v={$video.videokey}">{lang code='view_video'}</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="edit_video.php?video={$video.videoid}">{lang code='vdo_edit_vdo'}</a></li>
         <li role="presentation"><a role="menuitem" tabindex="-1" href="?delete_flags={$video.videoid}">Delete Flags</a></li>
         <li role="presentation"><a role="menuitem" tabindex="-1" href="?delete_video={$video.videoid}">Delete Video</a></li>
     </ul>
@@ -110,9 +111,9 @@
             <td>Reported as "{$flags[list].flag_type|flag_type}" by<strong>{display_clean($flags[list].userid|get_username)}</strong> {$flags[list].date_added|niceTime}</td>
         </tr>
         {if $bgcolor == ""}
-        {assign var = bgcolor value = "#EEEEEE"}
+            {assign var = bgcolor value = "#EEEEEE"}
         {else}
-        {assign var = bgcolor value = ""}
+            {assign var = bgcolor value = ""}
         {/if}
 
         {/section}

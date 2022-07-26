@@ -15,7 +15,7 @@ $cid = mysql_clean($_GET['cid']);
 
 assign('mode',$mode);
 $page = mysql_clean($_GET['page']);
-$get_limit = create_query_limit($page,COLLPP);
+$get_limit = create_query_limit($page,config('collection_per_page'));
 
 switch($mode)
 {
@@ -41,7 +41,7 @@ switch($mode)
         
         $collectArray['count_only'] = TRUE;
         $total_rows = $cbcollection->get_collections($collectArray);
-        $total_pages = count_pages($total_rows,COLLPP);
+        $total_pages = count_pages($total_rows, config('collection_per_page'));
         
         //Pagination
         $pages->paginate($total_pages,$page);

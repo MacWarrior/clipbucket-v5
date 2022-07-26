@@ -35,5 +35,6 @@
 		'edit_account'			=>array('edit_account.php','edit_account.php')
 	);
 
-	if(is_array($Cbucket->links))
+	if(is_array($Cbucket->links)){
 		$Cbucket->links  = array_merge($Cbucket->links,$cbLinks);
+    }

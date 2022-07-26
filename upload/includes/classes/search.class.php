@@ -51,6 +51,9 @@ class cbsearch
      */
     var $match_fields = [];
 
+    public $search_type;
+    public $results_per_page;
+
     /**
      * INITIATION SEARCH
      *
