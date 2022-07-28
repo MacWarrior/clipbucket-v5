@@ -293,10 +293,6 @@ ul.mainTabs{
 /* 
     Logo
 */
-.logoContainer{
-    padding: 1px;
-}
-
 .logoContainer span{
     font-weight: bold;
     text-transform: uppercase;
