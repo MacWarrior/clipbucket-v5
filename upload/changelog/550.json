@@ -108,6 +108,7 @@
         ,"Fix SQL injection <i>Thanks @svmorris !</i>"
         ,"Fix JS error"
         ,"Fix collection list & collection pagination"
+        ,"Fix channel load more videos"
       ]
     }
   ,{
