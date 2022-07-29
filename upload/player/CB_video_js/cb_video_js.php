@@ -82,6 +82,8 @@ if (!function_exists('cb_video_js'))
 
             if (in_array($player_default_resolution, $all_res)){
                 $quality = $player_default_resolution;
+            } elseif ($player_default_resolution > max($all_res)) {
+                $quality = 'high';
             } else {
                 $quality = 'low';
             }
@@ -111,10 +113,8 @@ if (!function_exists('cb_video_js'))
 		}
 
 		switch ($function) {
-
 			case 'get_ultimate_ads':
 				if( defined('CB_ULTIMATE_ADS') && CB_ULTIMATE_ADS == 'installed'){
-
 					global $CbUads;
 					$ads_array = array("filter_ad"=>true,"status"=>"1","non_expiry"=>'true');
 					$current_ad = $CbUads->get_ultimate_ads($ads_array);
