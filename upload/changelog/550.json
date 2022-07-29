@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"96",
+  "revision":"97",
   "status":"dev",
   "detail":[
     {
@@ -38,6 +38,7 @@
         ,"Add listing configurations"
         ,"Fix header display"
         ,"Fix manage collection items"
+        ,"Speed-up collection loading"
       ]
     },
     {
