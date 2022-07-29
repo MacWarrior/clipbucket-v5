@@ -89,9 +89,9 @@
 								</td>
 								<td class="last">
 									<p>
-											<span>
-												<input disabled="disabled" name="collecionID" type="text" id="collecionID" value="{$data.collection_id}" size="30" />
-											</span>
+                                        <span>
+                                            <input disabled="disabled" name="collecionID" type="text" id="collecionID" value="{$data.collection_id}" size="30" />
+                                        </span>
 									</p>
 								</td>
 							</tr>
@@ -146,16 +146,14 @@
 			<br>
 			<div class="row">
 				<legend>Collection Stats</legend>
-				<div class="col-md-6">
-					<label for="total_objects">Total Objects</label>
-					<input class="form-control" name="total_objects" type="text" id="total_objects" value="{$data.total_objects}" />
-				</div>
-				<div class="col-md-6">
-					<label for="total_comments">Total Comments</label>
-					<input name="total_comments" class="form-control" type="text" id="total_comments" value="{$data.total_comments}" />
-				</div>
+				<div class="col-md-3">
+					Total Objects : {$data.total_objects}
+                </div>
+				<div class="col-md-3">
+					Total Comments : {$data.total_comments}
+                </div>
 			</div>
-			<input type="submit" class="btn btn-primary" value="Update Collection Details" style="margin:15px 0px 0px 15px" name="update_collection">
+			<input type="submit" class="btn btn-primary" value="Update Collection Details" style="margin:15px 0 0 15px;" name="update_collection"/>
 		</div>
 	</div>
 		<div class="col-md-6">

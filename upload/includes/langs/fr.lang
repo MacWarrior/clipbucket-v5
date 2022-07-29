@@ -1290,7 +1290,7 @@
     "user_activity": "Activités de l'utilisateur",
     "you_cant_view_profile": "You don't have permission to view this channel :\/",
     "only_friends_view_channel": "Only %s's friends can view this channel",
-    "collect_type": "Collection type",
+    "collect_type": "Type de collection",
     "add_to_my_collection": "Ajouter à ma collection",
     "total_collections": "Total collections",
     "total_photos": "Total photos",

@@ -1,4 +1,6 @@
 <?php
+define('THIS_PAGE','edit_collection');
+
 require_once '../includes/admin_config.php';
 
 global $userquery,$pages,$cbcollection,$cbvideo,$cbphoto,$cbvid;
@@ -52,14 +54,10 @@ if(!empty($items)){
 }
 assign('data',$c);
 
-$get_limit = create_query_limit($page,5);
-$FlaggedPhotos = $cbvid->action->get_flagged_objects($get_limit);
+$FlaggedPhotos = $cbvid->action->get_flagged_objects();
 Assign('flaggedPhoto', $FlaggedPhotos);
 $count_flagged_photos = $cbvid->action->count_flagged_objects();
 Assign('count_flagged_photos', $FlaggedPhotos);
-
-$comments = getComments($comment_cond);
-assign('comments',$comments);
 
 assign('randon_number', rand(-5000, 5000));
 subtitle('Edit Collection');

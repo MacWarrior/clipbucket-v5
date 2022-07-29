@@ -1,4 +1,4 @@
-<h2>Manage Items - <a href="/admin_area/edit_collection.php?collection={$data.collection_id}">{display_clean($data.collection_name)}</a></h2>
+<h2>{lang code='manage_items'} - <a href="/admin_area/edit_collection.php?collection={$smarty.get.collection}">{display_clean($collection.collection_name)}</a></h2>
 <form method="post">
     <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
         <tr>
@@ -7,9 +7,9 @@
                 <input type="submit" name="remove_selected" value="Remove Selected" class="btn btn-primary btn-xs"/>
                 <input type="submit" name="move_selected" value="Move Selected" class="btn btn-primary btn-xs"/>
                 <select name="collection_id" id="collection_id">
-                {foreach from=$c item=item}
-                <option value="{$item.collection_id}"{if $smarty.get.collection == $item.collection_id} selected{/if}>{display_clean($item.collection_name)}</option>
-                {/foreach}
+                    {foreach $collections as $col_id => $col_data}
+                    <option value="{$col_id}" {if $col_id==$smarty.get.collection}selected{/if}>{$col_data['name']}</option>
+                    {/foreach}
                 </select>
                 <br />
             </td>
@@ -21,7 +21,7 @@
     {else}
     {if $type == 'photos'}
     <div class="clearfix PhotoDetails" style=" text-align:center; min-height:10px;">
-        <a style="font-size:11px" href="/admin_area/recreate_thumbs.php?mode=collection&amp;cid={$data.collection_id}">Re-create photos</a>. This will re-create photos found in the collection.
+        <a style="font-size:11px;" href="/admin_area/recreate_thumbs.php?mode=collection&cid={$smarty.get.collection}">Re-create photos</a>. This will re-create photos found in the collection.
     </div>
     {/if}
     <table class="table table-bordered table-striped manageUsersTable">
@@ -30,7 +30,7 @@
                 <input type="checkbox" name="checkall" onclick="checkUncheckAll(this);"/>
             </td>
             <td>Object Id</td>
-            <td>Details</td>
+            <td>{lang code='details'}</td>
         </tr>
         {section name=list loop=$obj}
         {if $type == 'photos'}
@@ -74,7 +74,7 @@
         <tr>
             <td class="moveL PhotoCheckBox">
                 <div>
-                    <input name="check_obj[]" type="checkbox" id="check_obj-{$collection.videoid}" value="{$obj[list].videoid}" style="display: inline"/>
+                    <input name="check_obj[]" type="checkbox" id="check_obj-{$collection.videoid}" value="{$obj[list].videoid}" style="display:inline;"/>
                 </div>
             </td>
             <td>{$obj[list].videoid}</td>
@@ -86,7 +86,7 @@
                                 <img src="{get_thumb vdetails=$obj[list]}" width="120" height="70" id="video_{$obj[list].videoid}" style="padding:2px; border:1px solid #ccc" />
                             </div>
                             <div class="col-md-9">
-                                <a href="/admin_area/edit_video.php?video={$obj[list].videoid}" target="_blank">{display_clean($obj[list].title)}</a>
+                                <a href="/admin_area/edit_video.php?video={$obj[list].videoid}" target="_blank">{display_clean($obj[list].title)}</a><br/>
                                 <span class="labels1"> <strong>{$obj[list].date_added|niceTime}</strong>
                                 {lang code='views'} : <strong>{$obj[list].views|number_format}</strong></span>
                                 <div class="labels">

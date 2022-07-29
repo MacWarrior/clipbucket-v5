@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"95",
+  "revision":"96",
   "status":"dev",
   "detail":[
     {
@@ -37,6 +37,7 @@
         ,"Fix user edition"
         ,"Add listing configurations"
         ,"Fix header display"
+        ,"Fix manage collection items"
       ]
     },
     {

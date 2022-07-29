@@ -2058,7 +2058,7 @@
             $collections = $cbcollection->get_collections_hierarchy(0, null, null, 'videos', userid());
 			assign('collections',$collections);
 		}
-		Template('/blocks/collection_form.html');
+		Template('blocks/collection_form.html');
 	}
 
 	/**

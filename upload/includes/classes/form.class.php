@@ -97,7 +97,11 @@ class formObj
 		if(!empty($field['extra_tags'])){
 			$textField .= ' '.$field['extra_tags'];
         }
-		
+
+        if(!empty($field['disabled'])){
+            $textField .= ' disabled';
+        }
+
 		if(!empty($field['value'])) {
 			if($field['type']=='textfield' || $field['type']=='password'){
 				$textField .= ' value="'.display_clean($field['value']).'" ';
@@ -429,8 +433,26 @@ class formObj
         } else {
 			$field_name = $field['name'].'[]';
         }
+
+        $select = '';
+        if(!empty($field['id'])){
+            $select .= ' id="'.$field['id'].'"';
+        }
+
+        if(!empty($field['class'])){
+            $select .= ' class="'.$field['class'].'"';
+        }
+
+        if(!empty($field['disabled'])){
+            $select .= ' disabled';
+        }
+
+        $hidden = '';
+        if(!empty($field['input_hidden'])){
+            $hidden = '<input type="hidden" name="'.$field_name.'" value="'.$field['checked'].'">';
+        }
 		
-		$ddFieldStart = '<select name="'.$field_name.'" id="'.$field['id'].'" class="'.$field['class'].'">';
+		$ddFieldStart = '<select name=\''.$field_name.'\''.$select.'>';
 		$arrayName = $this->rmBrackets($field['name']);
 		if( is_string($field['value']) ) {
 			$field['value'] = explode(',', $field['value']);
@@ -456,6 +478,6 @@ class formObj
             }
         }
 		$ddFieldEnd = '</select>';
-		echo $ddFieldStart.$fieldOpts.$ddFieldEnd;
+		echo $hidden.$ddFieldStart.$fieldOpts.$ddFieldEnd;
 	}
 }

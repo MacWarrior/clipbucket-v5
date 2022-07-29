@@ -615,7 +615,7 @@ class Collections extends CBCategory
             preg_match_all('/#([0-9]+)#/',$default['category'],$m);
             $cat_array = [$m[1]];
         }
-        
+
         $data = [
             'name' => [
                 'title'=> lang('collection_name'),
@@ -674,6 +674,11 @@ class Collections extends CBCategory
                 'checked' => $type
             ]
         ];
+
+        if( $default['total_objects'] > 0 ){
+            $data['type']['disabled'] = true;
+            $data['type']['input_hidden'] = true;
+        }
 
         if( config('enable_sub_collection') ){
             $list_parent_categories = ['null' => lang('collection_no_parent')];
@@ -1107,7 +1112,7 @@ class Collections extends CBCategory
             } else {
                 $db->execute('DELETE FROM '.tbl($this->items).' WHERE object_id = '.$id.' AND collection_id = '.$cid);
                 $db->update(tbl($this->section_tbl),['total_objects'],['|f|total_objects-1'],' collection_id = '.$cid);
-                e(sprintf(lang('collect_item_removed'),$this->objName),'m');    
+                e(sprintf(lang('collect_item_removed'),$this->objName),'m');
             }
         } else {
             e(lang('collect_not_exists'));
@@ -1251,7 +1256,7 @@ class Collections extends CBCategory
                 if(!empty($field['db_field'])){
                     $query_val[] = $val;
                 }
-                
+
             }
             
             if(has_access('admin_access',TRUE)) {
