@@ -467,14 +467,14 @@ class Clipbucket_db
         return $this->mysqli->insert_id;
     }
 
-	/**
-	 * Clean variable for mysql
-	 *
-	 * @param $var
-	 *
-	 * @return mixed
-	 */
-    function clean_var($var)
+    /**
+     * Clean variable for mysql
+     *
+     * @param $var
+     *
+     * @return string
+     */
+    function clean_var($var): string
     {
     	$this->ping();
         return $this->mysqli->real_escape_string($var);
@@ -482,7 +482,6 @@ class Clipbucket_db
 
     private function handleError($query)
 	{
-
 		if( $this->mysqli->error != '' ) {
 			if( in_dev() ) {
 				e( 'SQL : '.$query);
@@ -498,7 +497,7 @@ class Clipbucket_db
 	private function ping()
 	{
 		if( !$this->mysqli->ping() ) {
-			error_log("SQL ERROR : ".$this->mysqli->error);
+			error_log('SQL ERROR : '.$this->mysqli->error);
 			$this->connect();
 		}
 	}

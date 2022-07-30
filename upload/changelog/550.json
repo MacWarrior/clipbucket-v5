@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"98",
+  "revision":"99",
   "status":"dev",
   "detail":[
     {
@@ -112,6 +112,7 @@
         ,"Fix JS error"
         ,"Fix collection list & collection pagination"
         ,"Fix channel load more videos"
+        ,"Fix photos filter <i>#243</i>"
       ]
     }
   ,{

@@ -4744,15 +4744,15 @@
 					break;
 
 				case 'top_rated':
-					$vid_cond['order'] = ' rating DESC';
+					$vid_cond['order'] = ' photos.rating DESC';
 					break;
 
 				case 'most_commented':
 					$vid_cond['order'] = ' comments_count DESC';
 					break;
 			}
-			return $vid_cond;
 		}
+        return $vid_cond;
 	}
 
     function get_website_logo_path()

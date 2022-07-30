@@ -53,6 +53,7 @@ class cbsearch
 
     public $search_type;
     public $results_per_page;
+    public $date_margins;
 
     /**
      * INITIATION SEARCH
@@ -325,15 +326,15 @@ class cbsearch
     function date_margins(): array
     {
         $this->date_margins = [
-            'alltime'    => lang('alltime'),
-            'today'    => lang('today'),
-            'yesterday'=> lang('yesterday'),
-            'thisweek'    => lang('thisweek'),
-            'lastweek'    => lang('lastweek'),
-            'thismonth'=> lang('thismonth'),
-            'lastmonth'=> lang('lastmonth'),
-            'thisyear'    => lang('thisyear'),
-            'lastyear'    => lang('lastyear'),
+            'alltime'   => lang('alltime'),
+            'today'     => lang('today'),
+            'yesterday' => lang('yesterday'),
+            'thisweek'  => lang('thisweek'),
+            'lastweek'  => lang('lastweek'),
+            'thismonth' => lang('thismonth'),
+            'lastmonth' => lang('lastmonth'),
+            'thisyear'  => lang('thisyear'),
+            'lastyear'  => lang('lastyear')
         ];
         
         return $this->date_margins;
@@ -343,9 +344,9 @@ class cbsearch
      * Function used to create match_against query
      * it will simple loop the input fields
      * add table prefix and create MATCH(fields) AGAINST (keyword) query
-     * @return - MATCH (fields) AGAINST (kewyord)
+     * @return string - MATCH (fields) AGAINST (kewyord)
      */
-    function match_against_query()
+    function match_against_query(): string
     {
         $cond = ' MATCH ( ';
         $count = 0;

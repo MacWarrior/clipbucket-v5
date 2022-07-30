@@ -78,7 +78,6 @@ require_once('classes/category.class.php');
 require_once('classes/user.class.php');
 require_once('classes/lang.class.php');
 require_once('classes/pages.class.php');
-require_once('classes/helper.class.php');
 
 $cb_columns = new cb_columns();
 $myquery = new myquery();
