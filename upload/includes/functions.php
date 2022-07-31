@@ -2055,7 +2055,7 @@
 	function show_collection_form() {
 		global $cbcollection;
 		if(userid()) {
-            $collections = $cbcollection->get_collections_hierarchy(0, null, null, 'videos', userid());
+            $collections = $cbcollection->get_collections_list(0, null, null, 'videos', userid());
 			assign('collections',$collections);
 		}
 		Template('blocks/collection_form.html');

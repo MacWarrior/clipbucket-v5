@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"99",
+  "revision":"100",
   "status":"dev",
   "detail":[
     {
@@ -98,7 +98,7 @@
         ,"Fix IE11 compatibility <i>#210</i>"
         ,"Update jQuery to 3.6.0 <i>#208</i>"
         ,"Fix collection deletion"
-        ,"Implement recursive collections (WIP)"
+        ,"Implement recursive collections"
         ,"Fix SQL error on photos page"
         ,"Fix title display on photos page"
         ,"Fix comments display"

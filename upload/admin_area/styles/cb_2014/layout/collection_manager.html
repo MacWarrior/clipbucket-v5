@@ -19,7 +19,9 @@
             <td>CID</td>
             <td>{lang code='details'}</td>
             <td>{lang code='views'}</td>
-            <td>Parent collection</td>
+    {if config('enable_sub_collection')}
+            <td>{lang code='collection_parent'}</td>
+    {/if}
             <td>Options</td>
         </thead>
     {section name=list loop=$collections}
@@ -55,9 +57,11 @@
             <td>
                 {$collections[list].views}
             </td>
+            {if config('enable_sub_collection')}
             <td>
                 {display_clean($collections[list].collection_name_parent)}
             </td>
+            {/if}
             <td>
                 <div class="dropdown">
                     <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">Actions <i class="caret"></i></button>

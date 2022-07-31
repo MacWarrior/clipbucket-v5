@@ -70,10 +70,8 @@ switch($type)
         break;
 }
 
-if( config('enable_sub_collection') ){
-    $collections = $cbcollection->get_collections_hierarchy(0, null, null, $type, userid());
-    assign('collections',$collections);
-}
+$collections = $cbcollection->get_collections_list(0, null, null, $type, userid());
+assign('collections',$collections);
 
 assign('data',$data);
 assign('obj',$items);

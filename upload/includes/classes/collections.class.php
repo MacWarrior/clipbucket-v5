@@ -682,7 +682,8 @@ class Collections extends CBCategory
 
         if( config('enable_sub_collection') ){
             $list_parent_categories = ['null' => lang('collection_no_parent')];
-            foreach($this->get_collections_hierarchy(0, null, $collection_id, null, userid()) as $col_id => $col_data){
+            $type = $default['type'] ?? null;
+            foreach($this->get_collections_list(0, null, $collection_id, $type, userid()) as $col_id => $col_data){
                 $list_parent_categories[$col_id] = $col_data['name'];
             }
 
@@ -701,7 +702,7 @@ class Collections extends CBCategory
         return $data;
     }
 
-    public function get_collections_hierarchy( int $level = 0, $collection_id = null, $exclude_id = null, $type = null, $userid = null): array
+    public function get_collections_list( int $level = 0, $collection_id = null, $exclude_id = null, $type = null, $userid = null): array
     {
         global $db;
 
@@ -727,9 +728,13 @@ class Collections extends CBCategory
 
         $collections_parent = $db->select(tbl($this->section_tbl),'*',$cond);
         foreach($collections_parent as $col_parent){
-            $data[$col_parent['collection_id']]['name'] = str_repeat('&nbsp;', $level*3).display_clean($col_parent['collection_name']);
+            $space = '';
+            if( config('enable_sub_collection') ){
+                $space = str_repeat('&nbsp;', $level*3);
+            }
+            $data[$col_parent['collection_id']]['name'] = $space.display_clean($col_parent['collection_name']);
             $data[$col_parent['collection_id']]['count'] = $col_parent['total_objects'];
-            $collections_children = $this->get_collections_hierarchy(($level+1), $col_parent['collection_id'], $exclude_id, $type, $userid);
+            $collections_children = $this->get_collections_list(($level+1), $col_parent['collection_id'], $exclude_id, $type, $userid);
             foreach($collections_children as $col_id => $col_name){
                 $data[$col_id] = $col_name;
             }
