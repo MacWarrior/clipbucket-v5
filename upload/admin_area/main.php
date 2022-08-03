@@ -378,6 +378,9 @@ Assign('row',$row);
 $video_resolutions = $myquery->getVideoResolutions();
 Assign('video_resolutions',$video_resolutions);
 
+$ffmpeg_version = check_version('ffmpeg');
+Assign('ffmpeg_version',$ffmpeg_version);
+
 subtitle('Website Configurations');
 template_files('main.html');
 display_it();

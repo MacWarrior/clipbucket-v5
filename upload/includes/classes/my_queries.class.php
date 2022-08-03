@@ -107,6 +107,9 @@ class myquery
 
     public function getVideoResolutionTitleFromHeight($height): string
     {
+        if( $height == 'index' ){
+            return lang('video_resolution_auto');
+        }
         $sql_select = 'SELECT title FROM '.tbl('video_resolution').' WHERE height = '.$height;
         $results = db_select($sql_select);
 

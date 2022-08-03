@@ -54,16 +54,14 @@ if (!function_exists('cb_video_js'))
         {
             default:
             case 'mp4':
-                $quality = explode('-', $src);
-                $quality = end($quality);
-                $quality = explode('.',$quality);
-                return $quality[0];
+                $quality = explode('-', basename($src));
+                $quality = explode('.',end($quality));
+                break;
             case 'hls':
-                $quality = explode('/',$src);
-                $quality = end($quality);
-                $quality = explode('.',$quality);
-                return $quality[0];
+                $quality = explode('.',basename($src));
+                break;
         }
+        return $quality[0];
 	}
 
 	/*
@@ -78,7 +76,11 @@ if (!function_exists('cb_video_js'))
             }
             $all_res = $res;
 
-            $player_default_resolution = config('player_default_resolution');
+            if( getExt($video_files[0]) == 'mp4' ){
+                $player_default_resolution = config('player_default_resolution');
+            } else {
+                $player_default_resolution = config('player_default_resolution_hls');
+            }
 
             if (in_array($player_default_resolution, $all_res)){
                 $quality = $player_default_resolution;

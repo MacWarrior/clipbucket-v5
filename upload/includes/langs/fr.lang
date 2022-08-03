@@ -1606,5 +1606,7 @@
 
 	"page_upload_video_limits": "Chaque vidéo ne peut excéder un poids de %s Mo, ni une durée de %s minutes, et doit se présenter dans un format vidéo commun",
 	"page_upload_video_select": "Selectionner une vidéo",
-	"page_upload_photo_limits": "Chaque photo ne peut excéder un poids de %s Mo et doit se présenter dans un format image commun"
+	"page_upload_photo_limits": "Chaque photo ne peut excéder un poids de %s Mo et doit se présenter dans un format image commun",
+
+	"video_resolution_auto":"Auto"
 }

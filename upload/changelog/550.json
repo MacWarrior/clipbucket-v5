@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"103",
+  "revision":"104",
   "status":"dev",
   "detail":[
     {
@@ -72,6 +72,7 @@
         ,"Add support for HLS video files (WIP)"
         ,"Improve video quality selection <i>#230</i> (Thanks joo4mart !)"
         ,"Update VideoJS to version 7.20.1"
+        ,"Add HLS player default quality option"
       ]
     },
     {

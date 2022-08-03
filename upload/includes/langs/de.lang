@@ -1605,5 +1605,7 @@
 
 	"page_upload_video_limits":"Jedes Video darf höchstens %s MB groß und %s Minuten lang sein und muss in einem gängigen Videoformat vorliegen.",
     "page_upload_video_select":" Video auswählen",
-    "page_upload_photo_limits":"Jedes Foto darf höchstens %s MB groß sein und muss in einem gängigen Bildformat vorliegen"
+    "page_upload_photo_limits":"Jedes Foto darf höchstens %s MB groß sein und muss in einem gängigen Bildformat vorliegen",
+
+    "video_resolution_auto":"Auto"
 }

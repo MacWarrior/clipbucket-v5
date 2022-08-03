@@ -799,3 +799,7 @@ INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 	('collection_home_top_collections', '4'),
 	('collection_collection_top_collections', '6'),
 	('collection_photos_top_collections', '6');
+
+-- REV 104
+INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
+	('player_default_resolution_hls', 'auto');

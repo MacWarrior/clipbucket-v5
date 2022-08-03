@@ -408,8 +408,12 @@ class FFMpeg
         $cmd = '';
         switch($type)
         {
-            case 'video':
-                global $myquery;
+            case 'global':
+                $cmd .= ' -y';
+                $cmd .= ' -hide_banner';
+                break;
+
+            case 'video_global':
                 // Video Codec
                 $cmd .= ' -vcodec '.config('video_codec');
                 if( config('video_codec') == 'libx264' ) {
@@ -427,10 +431,6 @@ class FFMpeg
                 // Fix rare video conversion fail
                 $cmd .= ' -max_muxing_queue_size 1024';
                 $cmd .= ' -start_at_zero';
-                // Video Bitrate
-                $cmd .= ' -vb '.$myquery->getVideoResolutionBitrateFromHeight($resolution['height']);
-                // Resolution
-                $cmd .= ' -s '.$resolution['video_width'].'x'.$resolution['video_height'];
                 // Ratio
                 if ($this->input_details['video_wh_ratio'] >= 2.3){
                     $ratio = '21/9';
@@ -441,7 +441,30 @@ class FFMpeg
                 }
                 $cmd .= ' -aspect '.$ratio;
                 break;
-            case 'audio':
+
+            case 'video_mp4':
+                global $myquery;
+                // Video Bitrate
+                $cmd .= ' -vb '.$myquery->getVideoResolutionBitrateFromHeight($resolution['height']);
+                // Resolution
+                $cmd .= ' -s '.$resolution['video_width'].'x'.$resolution['video_height'];
+                break;
+
+            case 'video_hls':
+                global $myquery;
+                $count = 0;
+                $bitrates = '';
+                $resolutions = '';
+                foreach($resolution as $res){
+                    $video_bitrate = $myquery->getVideoResolutionBitrateFromHeight($res['height']);
+                    $bitrates .= ' -b:v:'.$count.' '.$video_bitrate;
+                    $resolutions .= ' -s:v:'.$count.' '.$res['video_width'].'x'.$res['video_height'];
+                    $count++;
+                }
+                $cmd .= $bitrates.$resolutions;
+                break;
+
+            case 'audio_global':
                 // Audio Bitrate
                 $cmd .= ' -b:a '.config('sbrate');
                 // Audio Rate
@@ -456,15 +479,13 @@ class FFMpeg
                     $cmd .= ' -ac 2';
                 }
                 break;
+
             case 'mp4':
                 $cmd .= ' -f '.$this->conversion_type;
                 $cmd .= ' -movflags faststart';
                 break;
-            case 'global':
-                $cmd .= ' -y';
-                $cmd .= ' -hide_banner';
-                break;
-            case 'map':
+
+            case 'map_mp4':
                 // Keeping video map
                 $video_track_id = self::get_media_stream_id('video', $this->input_file);
                 $cmd .= ' -map 0:'.$video_track_id;
@@ -499,12 +520,46 @@ class FFMpeg
                     }
                 }
                 break;
+
+            case 'map_hls':
+                global $myquery;
+
+                $map = '';
+                $var_stream_map = ' -var_stream_map \'';
+                $video_track_id = self::get_media_stream_id('video', $this->input_file);
+                $count = 0;
+                foreach($resolution as $res){
+                    $map .= ' -map 0:'.$video_track_id;
+                    $var_stream_map .= ' v:'.$count.',name:'.$res['height'].',agroup:audios';
+
+                    $count++;
+                }
+
+                $count = 0;
+                $audio_tracks = self::get_media_stream_id('audio', $this->input_file);
+                foreach($audio_tracks as $audio_track_id){
+                    $map .= ' -map 0:'.$audio_track_id;
+                    $var_stream_map .= ' a:'.$count.',name:audio_'.($count+1).',agroup:audios';
+                    if( $audio_track_id == $this->audio_track ){
+                        $var_stream_map .= ',default:yes';
+                    }
+
+                    $count++;
+                }
+
+                $var_stream_map .= '\'';
+
+                $cmd .= $map.$var_stream_map;
+
+                break;
+
             case 'hls':
                 $cmd .= ' -hls_time 4';
+                $cmd .= ' -force_key_frames "expr:gte(t,n_forced*1)"';
                 $cmd .= ' -hls_playlist_type vod';
-                $cmd .= ' -hls_segment_filename '.$this->output_dir.$resolution['height'].'_%03d.ts';
-                $cmd .= ' '.$this->output_dir.$resolution['height'].'.m3u8';
-                $this->output_file = $this->output_dir.$resolution['height'].'.m3u8';
+                $cmd .= ' -master_pl_name "index.m3u8"';
+                $cmd .= ' '.$this->output_dir.'%v.m3u8';
+                $this->output_file = $this->output_dir.'index.m3u8';
                 break;
         }
         return $cmd.' ';
@@ -512,22 +567,14 @@ class FFMpeg
 
     private function convert_hls(array $resolutions)
     {
-        $ffmpeg_path = config('ffmpegpath');
-        $input_filepath = $this->input_file;
-
-        $option_global = $this->get_conversion_option('global');
-        $option_autio = $this->get_conversion_option('audio');
-        $option_map = $this->get_conversion_option('map');
-
-        $cmd = $ffmpeg_path.$option_global.' -i '.$input_filepath;
-        foreach($resolutions as $res){
-            $cmd .= $this->get_conversion_option('video', $res);
-            $cmd .= $this->get_conversion_option('hls', $res);
-            $cmd .= $option_autio;
-            $cmd .= $option_map;
-
-            $this->video_files[] = $res['height'];
-        }
+        $cmd = config('ffmpegpath');
+        $cmd .= $this->get_conversion_option('global');
+        $cmd .= ' -i '.$this->input_file;
+        $cmd .= $this->get_conversion_option('video_global');
+        $cmd .= $this->get_conversion_option('audio_global');
+        $cmd .= $this->get_conversion_option('video_hls', $resolutions);
+        $cmd .= $this->get_conversion_option('map_hls', $resolutions);
+        $cmd .= $this->get_conversion_option('hls');
         $cmd .= ' 2>&1';
 
         $log = PHP_EOL.PHP_EOL.'== Conversion Command =='.PHP_EOL.PHP_EOL;
@@ -550,9 +597,10 @@ class FFMpeg
 	function convert_mp4(array $more_res)
 	{
         $opt_av = $this->get_conversion_option('global');
-        $opt_av .= $this->get_conversion_option('video', $more_res);
-        $opt_av .= $this->get_conversion_option('audio');
-        $opt_av .= $this->get_conversion_option('map');
+        $opt_av .= $this->get_conversion_option('video_global');
+        $opt_av .= $this->get_conversion_option('video_mp4', $more_res);
+        $opt_av .= $this->get_conversion_option('audio_global');
+        $opt_av .= $this->get_conversion_option('map_mp4');
         $opt_av .= $this->get_conversion_option('mp4');
 
         $this->output_file = $this->output_dir.$this->file_name.'-'.$more_res['height'].'.'.$this->conversion_type;

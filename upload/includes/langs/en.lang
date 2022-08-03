@@ -1605,5 +1605,7 @@
 
 	"page_upload_video_limits": "Each video may not exceed %s MB in size or %s minutes in length and must be in a common video format",
 	"page_upload_video_select":" Select Video",
-	"page_upload_photo_limits": "Each photo may not exceed %s MB in size and must be in a common image format"
+	"page_upload_photo_limits": "Each photo may not exceed %s MB in size and must be in a common image format",
+
+	"video_resolution_auto":"Auto"
 }

@@ -883,7 +883,7 @@
 							<hr/>
 							<div class="row">
 								<div class="col-md-6 row-size">
-									<img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Choose it wisely ! MP4 won't allow multiple audio tracks ; HLS won't allow download"> <label>Conversion type</label>
+									<img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Choose it wisely ! MP4 won't allow multiple audio tracks ; HLS won't allow download and require FFmpeg 4.3+"> <label>Conversion type</label>
 								</div>
 								<div class="col-md-1">
 									<input value="mp4" name="conversion_type" id="convesion_type_mp4" {if $row.conversion_type=='mp4'}checked{/if} type="radio" class="ace ace-switch ace-switch-5"/>
@@ -893,7 +893,7 @@
 									<label class="nowrap" for="convesion_type_mp4" title="MP4">MP4</label>
 								</div>
 								<div class="col-md-1">
-									<input value="hls" name="conversion_type" id="convesion_type_hls" {if $row.conversion_type=='hls'}checked{/if} type="radio" class="ace ace-switch ace-switch-5"/>
+									<input value="hls" name="conversion_type" id="convesion_type_hls" {if $row.conversion_type=='hls'}checked{/if} type="radio" class="ace ace-switch ace-switch-5" {if $ffmpeg_version<'4.3'}disabled title='Require FFmpeg 4.3+'{/if}/>
 									<span class="lbl"></span>
 								</div>
 								<div class="col-md-2">

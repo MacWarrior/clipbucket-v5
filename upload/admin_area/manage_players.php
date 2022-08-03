@@ -32,6 +32,7 @@ if(isset($_POST['update'])) {
         'player_logo_url',
         'player_thumbnails',
         'player_default_resolution',
+        'player_default_resolution_hls',
         'player_subtitles'
     );
 

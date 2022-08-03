@@ -159,8 +159,8 @@
 						</div>
 					</div>
 
-					<hr/>
-					<div class="row">
+                    <hr/>
+                    <div class="row">
                         <div class="col-md-3">
                             <label class="nowrap" for="player_default_resolution" title="Default video resolution">Default video resolution</label>
                         </div>
@@ -168,16 +168,34 @@
                             <select class="form-control" name="player_default_resolution" id="player_default_resolution">
 
                                 {foreach from=$myquery->getVideoResolutions() item=ratio}
-                                    {foreach from=$ratio item=resolution}
+                                {foreach from=$ratio item=resolution}
                                 <option {if $resolution.height==$row.player_default_resolution}selected{/if} value="{$resolution.height}">
                                     {$resolution.title}
                                 </option>
-                                    {/foreach}
+                                {/foreach}
                                 {/foreach}
 
                             </select>
                         </div>
-					</div>
+                        <div class="col-md-3">
+                            <label class="nowrap" for="player_default_resolution_hls" title="Default HLS video resolution">Default HLS video resolution</label>
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-control" name="player_default_resolution_hls" id="player_default_resolution_hls">
+                                <option {if $row.player_default_resolution_hls=="auto"}selected{/if} value="auto">
+                                    {lang code='video_resolution_auto'}
+                                </option>
+                                {foreach from=$myquery->getVideoResolutions() item=ratio}
+                                {foreach from=$ratio item=resolution}
+                                <option {if $resolution.height==$row.player_default_resolution_hls}selected{/if} value="{$resolution.height}">
+                                    {$resolution.title}
+                                </option>
+                                {/foreach}
+                                {/foreach}
+
+                            </select>
+                        </div>
+                    </div>
 
 					<hr/>
 				</fieldset>

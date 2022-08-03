@@ -23,6 +23,8 @@ I <i>(<a href="https://github.com/MacWarrior">MacWarrior</a>)</i> have been work
 - Updated libraries <i>(VideoJS, Smarty, amCharts, ...)</i>
 - Chromecast support
 - Subtitles support
+- Recursive collections
+- HLS conversion (WIP)
 - Easy installation scripts
 - New configuration options
 - Security, performance, stability and codestyle improvements
@@ -36,7 +38,7 @@ All you need is here : <a href="https://github.com/MacWarrior/clipbucket-v5/tree
 ### Advanced users
 <i>“Your path you must decide.”</i><br/> 
 Required : MySQL 5.6+ / MariaDB 10.3+ ; PHP 7.0+ (+ modules : mysqli, curl, xml, mbstring, gd) ; FFmpeg 3+ ; mediainfo ; sendmail<br/>
-Recommended : MariaDB 10.3+ ; PHP 8.0+ ; FFmpeg 4+
+Recommended : MariaDB 10.3+ ; PHP 8.0+ ; FFmpeg 4.3+
 Optionnal : Git<br/>
 <i>Only stable versions have been tested, mainly on Debian</i>
 
