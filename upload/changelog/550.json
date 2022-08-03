@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"102",
+  "revision":"103",
   "status":"dev",
   "detail":[
     {
@@ -89,6 +89,7 @@
         ,"Refactor FFMPEG conversion (WIP)"
         ,"Implement HLS conversion (WIP)"
         ,"Refactor video rate <i>#222</i>"
+        ,"Fix audio channels selection and bits color detection"
       ]
     }
     ,{

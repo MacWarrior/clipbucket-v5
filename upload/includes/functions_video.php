@@ -1421,7 +1421,7 @@
         if( !file_exists($filepath) ){
             return 0;
         }
-        $cmd = get_binaries('ffprobe_path').' -show_entries stream=channels -of compact=p=0:nk=1 -v 0 '.$filepath.' | grep .';
+        $cmd = get_binaries('ffprobe').' -show_entries stream=channels -of compact=p=0:nk=1 -v 0 '.$filepath.' | grep .';
         return (int)shell_exec( $cmd );
     }
 
@@ -1436,7 +1436,7 @@
 		$data = get_audio_channels($filepath);
 
 		if( $data <= 2 && $vdetails['is_castable'] == 0 ) {
-            $db->update( tbl( 'video' ), ['is_castable'], [true], " videoid='" . $vdetails['videoid'] . "'" );
+            $db->update( tbl( 'video' ), ['is_castable'], [true], 'videoid='.$vdetails['videoid']);
             e( sprintf( lang( 'castable_status_fixed' ), $vdetails['title'] ), 'm' );
 		} else if( $data > 2) {
 			e(sprintf( lang('castable_status_failed'), $vdetails['title'], $data),'w');
@@ -1451,10 +1451,10 @@
 
         global $db;
         $filepath = get_high_res_file($vdetails);
-        $cmd = get_binaries('ffprobe_path').' -show_streams '.$filepath.' 2>/dev/null | grep "bits_per_raw_sample" | grep -v "N/A" | awk -v FS="=" \'{print $2}\'';
-        $data = shell_exec( $cmd );
+        $cmd = get_binaries('ffprobe').' -show_streams '.$filepath.' 2>/dev/null | grep "bits_per_raw_sample" | grep -v "N/A" | awk -v FS="=" \'{print $2}\'';
+        $data = shell_exec($cmd);
 
-        $db->update(tbl('video'),['bits_color'],[(int)$data]," videoid=".$vdetails['videoid']);
+        $db->update(tbl('video'),['bits_color'],[(int)$data],'videoid='.$vdetails['videoid']);
     }
 
 	/**

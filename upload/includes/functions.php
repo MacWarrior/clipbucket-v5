@@ -1081,6 +1081,7 @@
 				return 'Unable to find ffmpeg path';
 
 			default:
+                error_log('get_binaries wrong path : '.$path);
 				return 'Unknown path : '.$path;
 		}
 	}

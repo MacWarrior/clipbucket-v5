@@ -116,12 +116,12 @@ if(!empty($_filename))
         $ffmpeg->audio_track = $audio_track;
     }
 
-    $db->update(tbl('video'), array('file_type'), array($ffmpeg->conversion_type), " file_name = '{$_filename}'");
+    $db->update(tbl('video'), ['file_type'], [$ffmpeg->conversion_type], " file_name = '{$_filename}'");
 
     $ffmpeg->ClipBucket();
 
     $video_files = json_encode($ffmpeg->video_files);
-    $db->update(tbl('video'), array('video_files'), array($video_files), " file_name = '{$_filename}'");
+    $db->update(tbl('video'), ['video_files'], [$video_files], " file_name = '{$_filename}'");
 
     $videoDetails = $cbvideo->get_video($queue_details['cqueue_name'],true);
     update_bits_color($videoDetails);
