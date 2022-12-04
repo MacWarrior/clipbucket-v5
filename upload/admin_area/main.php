@@ -101,7 +101,6 @@ if(isset($_POST['update']))
         'allow_template_change',
         'enable_advertisement',
         'allow_upload',
-        'anonymous_id',
         'anonym_comments',
         'approve_video_notification',
         'audio_codec',
@@ -295,8 +294,6 @@ if(isset($_POST['update']))
 
     //Numeric Array
     $num_array = array(
-        'anonymous_id',
-
         'channels_list_per_page',
 
         'max_upload_size',

@@ -77,7 +77,6 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'support_email', 'webmaster@localhost'),
 	(NULL, 'website_email', 'webmaster@localhost'),
 	(NULL, 'welcome_email', 'webmaster@localhost'),
-	(NULL, 'anonymous_id', '99'),
 	(NULL, 'date_format', 'Y-m-d'),
 	(NULL, 'autoplay_video', 'no'),
 	(NULL, 'channel_comments', '1'),

@@ -803,3 +803,6 @@ INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 -- REV 104
 INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 	('player_default_resolution_hls', 'auto');
+
+-- REV 105
+DELETE FROM `{tbl_prefix}config` WHERE name = 'anonymous_id';

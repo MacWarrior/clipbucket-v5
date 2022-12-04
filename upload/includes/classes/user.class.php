@@ -517,21 +517,15 @@ class userquery extends CBCategory{
     {
         global $db;
         
-        if($this->user_exists($uid))
-        {
-            
+        if($this->user_exists($uid)) {
             $udetails = $this->get_user_details($uid);
 
-            if(userid()!=$uid&&has_access('admin_access',true)&&$uid!=1)
-            {
+            if(userid() != $uid && has_access('admin_access',true) && $uid != 1) {
                 //list of functions to perform while deleting a video
                 $del_user_funcs = $this->delete_user_functions;
-                if(is_array($del_user_funcs))
-                {
-                    foreach($del_user_funcs as $func)
-                    {
-                        if(function_exists($func))
-                        {
+                if(is_array($del_user_funcs)) {
+                    foreach($del_user_funcs as $func) {
+                        if(function_exists($func)) {
                             $func($udetails);
                         }
                     }
@@ -542,21 +536,21 @@ class userquery extends CBCategory{
                 $this->remove_user_subscribers($uid);
                 
                 //Changing User Videos To Anonymous
-                $db->execute("UPDATE ".tbl("video")." SET userid='".$this->get_anonymous_user()."' WHERE userid='".$uid."'");
+                $db->execute('UPDATE '.tbl('video').' SET userid=\''.$this->get_anonymous_user().'\' WHERE userid=\''.$uid.'\'');
                 //Changing User Group To Anonymous
-                $db->execute("UPDATE ".tbl("groups")." SET userid='".$this->get_anonymous_user()."' WHERE userid='".$uid."'");
+                $db->execute('UPDATE '.tbl('groups').' SET userid=\''.$this->get_anonymous_user().'\' WHERE userid=\''.$uid.'\'');
                 //Deleting User Contacts
                 $this->remove_contacts($uid);
                 
                 //Deleting User PMS
                 $this->remove_user_pms($uid);
                 //Changing From Messages to Anonymous
-                $db->execute('UPDATE '.tbl('messages')." SET message_from='".$this->get_anonymous_user()."' WHERE message_from='".$uid."'");
+                $db->execute('UPDATE '.tbl('messages').' SET message_from=\''.$this->get_anonymous_user().'\' WHERE message_from=\''.$uid.'\'');
                 //Finally Removing Database entry of user
-                $db->execute("DELETE FROM ".tbl('users')." WHERE userid='$uid'");
-                $db->execute("DELETE FROM ".tbl('user_profile')." WHERE userid='$uid'");
+                $db->execute('DELETE FROM '.tbl('users').' WHERE userid=\''.$uid.'\'');
+                $db->execute('DELETE FROM '.tbl('user_profile').' WHERE userid=\''.$uid.'\'');
                 
-                e(lang('usr_del_msg'),"m");
+                e(lang('usr_del_msg'),'m');
             } else {
                 e(lang('you_cant_delete_this_user'));
             }
@@ -578,8 +572,8 @@ class userquery extends CBCategory{
         } elseif(!has_access('admin_access')) {
             e(lang('you_dont_hv_perms'));
         } else {
-            $db->execute("DELETE FROM ".tbl($this->dbtbl['subtbl'])." WHERE userid='$uid'");
-            e(lang('user_subs_hv_been_removed'),"m");
+            $db->execute('DELETE FROM '.tbl($this->dbtbl['subtbl']).' WHERE userid=\''.$uid.'\'');
+            e(lang('user_subs_hv_been_removed'),'m');
         }
     }
 
@@ -591,62 +585,54 @@ class userquery extends CBCategory{
     function remove_user_subscribers($uid)
     {
         global $db;
-        if(!$this->user_exists($uid))
-            e(lang("user_doesnt_exist"));
-        elseif(!has_access('admin_access'))
-            e(lang("you_dont_hv_perms"));
-        else
-        {
-            $db->execute("DELETE FROM ".tbl($this->dbtbl['subtbl'])." WHERE subscribed_to='$uid'");
-            e(lang("user_subsers_hv_removed"),"m");
+        if(!$this->user_exists($uid)){
+            e(lang('user_doesnt_exist'));
+        } elseif(!has_access('admin_access')) {
+            e(lang('you_dont_hv_perms'));
+        } else {
+            $db->execute('DELETE FROM '.tbl($this->dbtbl['subtbl']).' WHERE subscribed_to=\''.$uid.'\'');
+            e(lang('user_subsers_hv_removed'),'m');
         }
     }
 
-    //Delete User
-    function DeleteUser($id){
-        return $this->delete_user($id);
-    }
-
-    //Count Inactive users
-    function CountUsers(){}
-        
     //Check User Exists or Not
-    function Check_User_Exists($id,$global=false){
+    function Check_User_Exists($id,$global=false): bool
+    {
         global $db;
         
-        if($global)
-        {
-            if(empty($this->user_exist))
-            {
-                if(is_numeric($id))
-                    $result = $db->count(tbl($this->dbtbl['users']),"userid"," userid='".$id."' ");
-                else
-                    $result = $db->count(tbl($this->dbtbl['users']),"userid"," username='".$id."' ");
-                if($result>0)
-                {
+        if($global) {
+            if(empty($this->user_exist)) {
+                if(is_numeric($id)){
+                    $result = $db->count(tbl($this->dbtbl['users']),'userid',' userid=\''.$id.'\'');
+                } else {
+                    $result = $db->count(tbl($this->dbtbl['users']),'userid',' username=\''.$id.'\'');
+                }
+                if($result > 0) {
                     $this->user_exist = 'yes';
                 } else {
                     $this->user_exist = 'no';
                 }    
             }
             
-            if($this->user_exist=='yes')
+            if($this->user_exist=='yes'){
                 return true;
-            return false;
-        } else {
-            if(is_numeric($id))
-                $result = $db->count(tbl($this->dbtbl['users']),"userid"," userid='".$id."'");
-            else
-                $result = $db->count(tbl($this->dbtbl['users']),"userid"," username='".$id."'");
-
-            if($result>0)
-                return true;
+            }
             return false;
         }
-        
+
+        if(is_numeric($id)){
+            $result = $db->count(tbl($this->dbtbl['users']),'userid',' userid=\''.$id.'\'');
+        } else {
+            $result = $db->count(tbl($this->dbtbl['users']),'userid',' username=\''.$id.'\'');
+        }
+
+        if($result>0){
+            return true;
+        }
+        return false;
     }
     
-    function user_exists($username,$global=false)
+    function user_exists($username,$global=false): bool
     {
         return $this->Check_User_Exists($username,$global);
     }
@@ -4039,7 +4025,7 @@ class userquery extends CBCategory{
             $sess->set('sess_salt',$session_salt);
             $sess->set('PHPSESSID',$sess->get('dummy_PHPSESSID'));
 
-            $db->delete(tbl("sessions"),array("session"),array($sess->get('dummy_PHPSESSID')));
+            $db->delete(tbl('sessions'),['session'],[$sess->get('dummy_PHPSESSID')]);
             $sess->add_session($userid,'smart_sess',$smart_sess);
 
             $sess->set('dummy_sess_salt','');
@@ -4068,29 +4054,28 @@ class userquery extends CBCategory{
     function get_anonymous_user()
     {
         global $db;
-        $uid = config('anonymous_id');
         /*Added to resolve bug 222*/    
-        $result = $db->select(tbl('users'),'userid'," username='anonymous%' AND email='anonymous%'","1");
+        $result = $db->select(tbl('users'),'userid'," username='anonymous%' AND email='anonymous%'",'1');
         if($result[0]['userid']){
             return $result[0]['userid'];
         }
 
-        $result = $db->select(tbl('users'),'userid'," level='6' AND usr_status='ToActivate' ","1");
+        $result = $db->select(tbl('users'),'userid'," level='6' AND usr_status='ToActivate' ",'1');
         if($result[0]['userid']){
             return $result[0]['userid'];
         }
 
         $pass = RandomString(10);
 
-        if($_SERVER['HTTP_HOST']!='localhost' && $_SERVER['HTTP_HOST']!='127.0.0.1'){
+        if($_SERVER['HTTP_HOST'] != 'localhost' && $_SERVER['HTTP_HOST'] != '127.0.0.1'){
             $email = 'anonymous'.RandomString(5).'@'.$_SERVER['HTTP_HOST'];
         } else {
             $email = 'anonymous'.RandomString(5).'@'.$_SERVER['HTTP_HOST'].'.tld';
         }
 
         //Create Anonymous user
-        $uid = $this->signup_user(
-            array(
+        return $this->signup_user(
+            [
                 'username' => 'anonymous'.RandomString(5),
                 'email'    => $email,
                 'password' => $pass,
@@ -4102,12 +4087,7 @@ class userquery extends CBCategory{
                 'level' => '6',
                 'active' => 'yes',
                 'agree' => 'yes'
-            ),false);
-
-        global $myquery;
-        $myquery->Set_Website_Details('anonymous_id',$uid);
-
-        return $uid;
+            ],false);
     }
 
     /**
