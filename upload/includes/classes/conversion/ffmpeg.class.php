@@ -530,7 +530,7 @@ class FFMpeg
                 $count = 0;
                 foreach($resolution as $res){
                     $map .= ' -map 0:'.$video_track_id;
-                    $var_stream_map .= ' v:'.$count.',name:'.$res['height'].',agroup:audios';
+                    $var_stream_map .= ' v:'.$count.',name:video_'.$myquery->getVideoResolutionTitleFromHeight($res['height']).',agroup:audios';
 
                     $count++;
                 }

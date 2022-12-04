@@ -1206,7 +1206,7 @@
                 case 'hls':
                     $vid_files = glob(VIDEOS_DIR.DIRECTORY_SEPARATOR.$fileDirectory.$vdetails['file_name'].DIRECTORY_SEPARATOR.'*.m3u8');
                     foreach($vid_files as $index => $path){
-                        if(strpos(basename($path), 'audio') === 0){
+                        if(strpos(basename($path), 'audio_') === 0 || strpos(basename($path), 'video_') === 0){
                             unset($vid_files[$index]);
                         }
                     }
