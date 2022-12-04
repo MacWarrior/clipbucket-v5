@@ -22,7 +22,7 @@ if(isset($_GET['delete_photo'])){
 }
 
 //Deleting Multiple Photos
-if(isset($_POST['delete_selected'])) {
+if(isset($_POST['delete_selected']) && is_array($_POST['check_photo'])) {
     for($id=0;$id<=count($_POST['check_photo']);$id++) {
         $cbphoto->delete_photo($_POST['check_photo'][$id]);
     }
@@ -36,7 +36,7 @@ if(isset($_REQUEST['delete_flags'])) {
 }
 
 //Deleting Multiple Videos
-if(isset($_POST['delete_flags'])) {
+if(isset($_POST['delete_flags']) && is_array($_POST['check_photo'])) {
     for($id=0;$id<=count($_POST['check_photo']);$id++) {
         $eh->flush();
         $cbphoto->action->delete_flags($_POST['check_photo'][$id]);

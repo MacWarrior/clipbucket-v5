@@ -90,6 +90,7 @@ switch($mode)
         $get_limit = create_query_limit($page,COLLIP);
         switch($type)
         {
+            default:
             case 'videos':
                 if(isset($_POST['delete_selected'])) {
                     $count = count($_POST['check_item']);
@@ -146,7 +147,8 @@ switch($mode)
             $eh->flush();
             e(sprintf(lang('total_fav_collection_removed'),$total),'m');
         }
-        
+
+        $cond = '';
         if(get('query')!='') {
             $cond = ' (collection.collection_name LIKE \'%'.mysql_clean(get('query')).'%\' OR collection.collection_tags LIKE \'%'.mysql_clean(get('query')).'%\' )';
         }

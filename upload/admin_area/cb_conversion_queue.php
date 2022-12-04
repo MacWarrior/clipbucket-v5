@@ -9,8 +9,8 @@ $pages->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = array('title' => 'Tool Box', 'url' => '');
-$breadcrumb[1] = array('title' => 'Conversion Queue Manager', 'url' => ADMIN_BASEURL.'/cb_conversion_queue.php');
+$breadcrumb[0] = ['title' => 'Tool Box', 'url' => ''];
+$breadcrumb[1] = ['title' => 'Conversion Queue Manager', 'url' => ADMIN_BASEURL.'/cb_conversion_queue.php'];
 
 if($_GET['delete_lock']) {
     if(conv_lock_exists()) {
@@ -25,7 +25,7 @@ if($_GET['delete_lock']) {
     }
 }
 
-if(isset($_POST['delete_selected'])) {
+if(isset($_POST['delete_selected']) && is_array($_POST['check_queue'])) {
     $total = count($_POST['check_queue']);
     for($i=0;$i<=$total;$i++) {
         $myquery->queue_action('delete',$_POST['check_queue'][$i]);
@@ -33,7 +33,7 @@ if(isset($_POST['delete_selected'])) {
     e('Selected items have been deleted','m');
 }
 
-if(isset($_POST['processed'])) {
+if(isset($_POST['processed']) && is_array($_POST['check_queue'])) {
     $total = count($_POST['check_queue']);
     for($i=0;$i<=$total;$i++) {
         $myquery->queue_action('processed',$_POST['check_queue'][$i]);
@@ -41,7 +41,7 @@ if(isset($_POST['processed'])) {
     e('Selected items have been set changed to processed','m');
 }
 
-if(isset($_POST['pending'])) {
+if(isset($_POST['pending']) && is_array($_POST['check_queue'])) {
     $total = count($_POST['check_queue']);
     for($i=0;$i<=$total;$i++) {
         $myquery->queue_action('pending',$_POST['check_queue'][$i]);

@@ -38,7 +38,7 @@ if(isset($_GET['delete_collection'])) {
 }
 
 /* ACTIONS ON MULTI ITEMS */
-if(isset($_POST['activate_selected'])) {
+if(isset($_POST['activate_selected']) && is_array($_POST['check_collection'])) {
     $total = count($_POST['check_collection']);
     for($i=0;$i<$total;$i++) {
         $cbcollection->collection_actions('ac',$_POST['check_collection'][$i]);
@@ -47,7 +47,7 @@ if(isset($_POST['activate_selected'])) {
     e($total.' collections has been activated','m');
 }
 
-if(isset($_POST['deactivate_selected'])) {
+if(isset($_POST['deactivate_selected']) && is_array($_POST['check_collection'])) {
     $total = count($_POST['check_collection']);
     for($i=0;$i<$total;$i++) {
         $cbcollection->collection_actions('dac',$_POST['check_collection'][$i]);
@@ -56,7 +56,7 @@ if(isset($_POST['deactivate_selected'])) {
     e($total.' collections has been deactivated','m');
 }
 
-if(isset($_POST['make_featured_selected'])) {
+if(isset($_POST['make_featured_selected']) && is_array($_POST['check_collection'])) {
     $total = count($_POST['check_collection']);
     for($i=0;$i<$total;$i++) {
         $cbcollection->collection_actions('mcf',$_POST['check_collection'][$i]);
@@ -65,7 +65,7 @@ if(isset($_POST['make_featured_selected'])) {
     e($total.' collections has been marked as <strong>'.lang('featured').'</strong>','m');
 }
 
-if(isset($_POST['make_unfeatured_selected'])) {
+if(isset($_POST['make_unfeatured_selected']) && is_array($_POST['check_collection'])) {
     $total = count($_POST['check_collection']);
     for($i=0;$i<$total;$i++) {
         $cbcollection->collection_actions('mcuf',$_POST['check_collection'][$i]);
@@ -74,7 +74,7 @@ if(isset($_POST['make_unfeatured_selected'])) {
     e($total.' collections has been marked as <strong>Unfeatured</strong>','m');
 }
 
-if(isset($_POST['make_unfeatured_selected'])) {
+if(isset($_POST['make_unfeatured_selected']) && is_array($_POST['check_collection'])) {
     $total = count($_POST['check_collection']);
     for($i=0;$i<$total;$i++) {
         $cbcollection->collection_actions('mcuf',$_POST['check_collection'][$i]);
@@ -83,7 +83,7 @@ if(isset($_POST['make_unfeatured_selected'])) {
     e($total.' collections has been marked as <strong>Unfeatured</strong>','m');
 }
 
-if(isset($_POST['delete_selected'])) {
+if(isset($_POST['delete_selected']) && is_array($_POST['check_collection'])) {
     $total = count($_POST['check_collection']);
     for($i=0;$i<$total;$i++) {
         $cbcollection->delete_collection($_POST['check_collection'][$i]);

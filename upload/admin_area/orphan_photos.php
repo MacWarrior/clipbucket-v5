@@ -20,7 +20,7 @@ if(isset($_GET['delete_photo'])) {
 }
 
 //Thanks to didier.saintes
-if(isset($_POST['delete_selected'])) {   //HACK : delete_selected in place of deleted_selected
+if(isset($_POST['delete_selected']) && is_array($_POST['check_photo'])) {   //HACK : delete_selected in place of deleted_selected
     $total = count($_POST['check_photo']);  //HACK Add count
     for($i=0;$i<$total;$i++) {
         $cbphoto->delete_photo($_POST['check_photo'][$i],true); //HACK : Add true
@@ -30,7 +30,7 @@ if(isset($_POST['delete_selected'])) {   //HACK : delete_selected in place of de
 }
 
 //Multi-featured
-if(isset($_POST['make_featured_selected'])) {
+if(isset($_POST['make_featured_selected']) && is_array($_POST['check_photo'])) {
     $total = count($_POST['check_photo']);
     for($i=0;$i<$total;$i++) {
         $cbphoto->photo_actions('feature_photo',$_POST['check_photo'][$i]);
@@ -40,7 +40,7 @@ if(isset($_POST['make_featured_selected'])) {
 }
 
 //Multi-unfeatured
-if(isset($_POST['make_unfeatured_selected'])) {
+if(isset($_POST['make_unfeatured_selected']) && is_array($_POST['check_photo'])) {
     $total = count($_POST['check_photo']);
     for($i=0;$i<$total;$i++) {
         $cbphoto->photo_actions('unfeature_photo',$_POST['check_photo'][$i]);
@@ -49,7 +49,7 @@ if(isset($_POST['make_unfeatured_selected'])) {
     e($total.' photos have been marked as <strong>Unfeatured</strong>','m');
 }
 
-if(isset($_POST['move_selected'])) {
+if(isset($_POST['move_selected']) && is_array($_POST['check_photo'])) {
     $total = count($_POST['check_photo']);
     $new = mysql_clean($_POST['collection_id']);
     for($i=0;$i<$total;$i++) {

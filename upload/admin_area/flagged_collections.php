@@ -12,8 +12,8 @@ $mode = $_GET['mode'];
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = array('title' => lang('collections'), 'url' => '');
-$breadcrumb[1] = array('title' => 'Flagged Collections', 'url' => ADMIN_BASEURL.'/flagged_collections.php');
+$breadcrumb[0] = ['title' => lang('collections'), 'url' => ''];
+$breadcrumb[1] = ['title' => 'Flagged Collections', 'url' => ADMIN_BASEURL.'/flagged_collections.php'];
 
 //Delete Photo
 if(isset($_GET['delete_collect'])){
@@ -22,12 +22,12 @@ if(isset($_GET['delete_collect'])){
 }
 
 //Deleting Multiple Photos
-if(isset($_POST['delete_selected'])) {
+if(isset($_POST['delete_selected']) && is_array($_POST['check_collect'])) {
     for($id=0;$id<=count($_POST['check_collect']);$id++) {
         $cbphoto->delete_photo($_POST['check_collect'][$id]);
     }
     $eh->flush();
-    e("Selected collections have been deleted","m");
+    e('Selected collections have been deleted','m');
 }
 
 if(isset($_GET['delete_flags'])) {
@@ -36,7 +36,7 @@ if(isset($_GET['delete_flags'])) {
 }
 
 //Deleting Multiple Videos
-if(isset($_POST['delete_flags'])) {
+if(isset($_POST['delete_flags']) && is_array($_POST['check_collect'])) {
     for($id=0;$id<=count($_POST['check_collect']);$id++) {
         $eh->flush();
         $cbcollection->action->delete_flags($_POST['check_collect'][$id]);
@@ -67,13 +67,13 @@ switch($mode)
         assign('mode','view_flags');
         $cid = mysql_clean($_GET['cid']);
         $cdetails = $cbcollection->get_collection($cid);
-        if($cdetails)
-        {
-            $flags = $cbcollection->action->get_flags($pid);
+        if($cdetails) {
+            $flags = $cbcollection->action->get_flags($cid);
             assign('flags',$flags);
             assign('collection',$cdetails);
-        } else
+        } else {
             e('Collection does not exist');
+        }
         break;
 }
 

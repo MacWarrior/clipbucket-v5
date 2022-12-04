@@ -16,7 +16,7 @@ assign('p',$userquery->get_user_profile($udetails['userid']));
 $mode = $_GET['mode'];
 
 //Deleting Multiple Message
-if(isset($_POST['delete_pm'])) {
+if(isset($_POST['delete_pm']) && is_array($_POST['msg_id'])) {
 	if($mode=='inbox' || $mode =='notification'){
 		$box = 'in';
     } else {
@@ -50,8 +50,9 @@ switch($mode)
 		if($_GET['mid']) {
 			$mid = mysql_clean($_GET['mid']);
 			$pr_msg = $cbpm->get_inbox_message($mid,userid());
-			if($pr_msg['message_status'] =='unread')
+			if($pr_msg['message_status'] =='unread'){
 				 $cbpm->set_message_status($mid,'read');
+            }
 			assign('pr_msg',$pr_msg);
 		}
 		

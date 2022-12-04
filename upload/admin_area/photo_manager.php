@@ -51,7 +51,7 @@ if(isset($_GET['delete_photo'])) {
 }
 
 //Multi-Active
-if(isset($_POST['deactivate_selected'])) {
+if(isset($_POST['deactivate_selected']) && is_array($_POST['check_photo'])) {
     $total = count($_POST['check_photo']);
     for($i=0;$i<$total;$i++) {
         $cbphoto->photo_actions('deactivation',$_POST['check_photo'][$i]);
@@ -61,7 +61,7 @@ if(isset($_POST['deactivate_selected'])) {
 }
 
 //Multi-Deactive
-if(isset($_POST['activate_selected'])) {
+if(isset($_POST['activate_selected']) && is_array($_POST['check_photo'])) {
     $total = count($_POST['check_photo']);
     for($i=0;$i<$total;$i++) {
         $cbphoto->photo_actions('activation',$_POST['check_photo'][$i]);
@@ -71,7 +71,7 @@ if(isset($_POST['activate_selected'])) {
 }
 
 //Multi-featured
-if(isset($_POST['make_featured_selected'])) {
+if(isset($_POST['make_featured_selected']) && is_array($_POST['check_photo'])) {
     $total = count($_POST['check_photo']);
     for($i=0;$i<$total;$i++) {
         $cbphoto->photo_actions('feature_photo',$_POST['check_photo'][$i]);
@@ -81,7 +81,7 @@ if(isset($_POST['make_featured_selected'])) {
 }
 
 //Multi-unfeatured
-if(isset($_POST['make_unfeatured_selected'])) {
+if(isset($_POST['make_unfeatured_selected']) && is_array($_POST['check_photo'])) {
     $total = count($_POST['check_photo']);
     for($i=0;$i<$total;$i++) {
         $cbphoto->photo_actions('unfeature_photo',$_POST['check_photo'][$i]);
@@ -91,7 +91,7 @@ if(isset($_POST['make_unfeatured_selected'])) {
 }
 
 //Multi-delete
-if(isset($_POST['delete_selected'])) {
+if(isset($_POST['delete_selected']) && is_array($_POST['check_photo'])) {
     $total = count($_POST['check_photo']);
     for($i=0;$i<$total;$i++) {
         $cbphoto->delete_photo($_POST['check_photo'][$i]);
@@ -100,7 +100,7 @@ if(isset($_POST['delete_selected'])) {
     e($total.' photos has been deleted successfully','m');
 }
 
-if(isset($_POST['move_to_selected'])) {
+if(isset($_POST['move_to_selected']) && is_array($_POST['check_photo'])) {
     $total = count($_POST['check_photo']);
     for($i=0;$i<$total;$i++) {
         $id_array[] = $_POST['check_photo'][$i];
