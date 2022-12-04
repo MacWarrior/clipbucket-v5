@@ -445,8 +445,7 @@ class CBvideo extends CBCategory
             //Tag index
             $query_val[3] = strtolower($query_val[3]);
 
-            if(!userid())
-            {
+            if(!userid()) {
                 e(lang('you_dont_have_permission_to_update_this_video'));
             } elseif(!$this->video_exists($vid)) {
                 e(lang('class_vdo_del_err'));
@@ -702,10 +701,13 @@ class CBvideo extends CBCategory
         
         $cond = '';
         $superCond = '';
-        if( !has_access('admin_access',TRUE) )
-        {
-            $superCond = ' '.('video.status')."='Successful' AND
-            ".('video.active')."='yes' AND ".('video.broadcast')." !='unlisted' ";
+        if( !has_access('admin_access',TRUE) ) {
+
+            $superCond = ' ( video.status =\'Successful\' AND video.active = \'yes\' AND video.broadcast !=\'unlisted\') ';
+
+            if( isset($params['filename'], $params['user']) ){
+                $superCond = '( video.userid = '.$params['user'].' OR'.$superCond.')';
+            }
         } else {
             if($params['active']){
                 $cond .= ' '.('video.active')."='".$params['active']."'";
