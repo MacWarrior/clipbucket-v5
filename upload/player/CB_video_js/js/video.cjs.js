@@ -1,6 +1,6 @@
 /**
  * @license
- * Video.js 7.20.1 <http://videojs.com/>
+ * Video.js 7.21.1 <http://videojs.com/>
  * Copyright Brightcove, Inc. <https://www.brightcove.com/>
  * Available under Apache License Version 2.0
  * <https://github.com/videojs/video.js/blob/main/LICENSE>
@@ -50,7 +50,7 @@ var _inherits__default = /*#__PURE__*/_interopDefaultLegacy(_inherits);
 var _resolveUrl__default = /*#__PURE__*/_interopDefaultLegacy(_resolveUrl);
 var parseSidx__default = /*#__PURE__*/_interopDefaultLegacy(parseSidx);
 
-var version$5 = "7.20.1";
+var version$5 = "7.21.1";
 
 /**
  * An Object that contains lifecycle hooks as keys which point to an array
@@ -2899,7 +2899,8 @@ EventTarget$2.prototype.queueTrigger = function (event) {
   map["delete"](type);
   window__default['default'].clearTimeout(oldTimeout);
   var timeout = window__default['default'].setTimeout(function () {
-    // if we cleared out all timeouts for the current target, delete its map
+    map["delete"](type); // if we cleared out all timeouts for the current target, delete its map
+
     if (map.size === 0) {
       map = null;
       EVENT_MAP["delete"](_this);
@@ -7809,13 +7810,20 @@ var TextTrack = /*#__PURE__*/function (_Track) {
     var cues = new TextTrackCueList(_this.cues_);
     var activeCues = new TextTrackCueList(_this.activeCues_);
     var changed = false;
-    _this.timeupdateHandler = bind(_assertThisInitialized__default['default'](_this), function () {
+    _this.timeupdateHandler = bind(_assertThisInitialized__default['default'](_this), function (event) {
+      if (event === void 0) {
+        event = {};
+      }
+
       if (this.tech_.isDisposed()) {
         return;
       }
 
       if (!this.tech_.isReady_) {
-        this.rvf_ = this.tech_.requestVideoFrameCallback(this.timeupdateHandler);
+        if (event.type !== 'timeupdate') {
+          this.rvf_ = this.tech_.requestVideoFrameCallback(this.timeupdateHandler);
+        }
+
         return;
       } // Accessing this.activeCues for the side-effects of updating itself
       // due to its nature as a getter function. Do not remove or cues will
@@ -7830,7 +7838,9 @@ var TextTrack = /*#__PURE__*/function (_Track) {
         changed = false;
       }
 
-      this.rvf_ = this.tech_.requestVideoFrameCallback(this.timeupdateHandler);
+      if (event.type !== 'timeupdate') {
+        this.rvf_ = this.tech_.requestVideoFrameCallback(this.timeupdateHandler);
+      }
     });
 
     var disposeHandler = function disposeHandler() {
@@ -7999,7 +8009,10 @@ var TextTrack = /*#__PURE__*/function (_Track) {
   var _proto = TextTrack.prototype;
 
   _proto.startTracking = function startTracking() {
-    this.rvf_ = this.tech_.requestVideoFrameCallback(this.timeupdateHandler);
+    // More precise cues based on requestVideoFrameCallback with a requestAnimationFram fallback
+    this.rvf_ = this.tech_.requestVideoFrameCallback(this.timeupdateHandler); // Also listen to timeupdate in case rVFC/rAF stops (window in background, audio in video el)
+
+    this.tech_.on('timeupdate', this.timeupdateHandler);
   };
 
   _proto.stopTracking = function stopTracking() {
@@ -8007,6 +8020,8 @@ var TextTrack = /*#__PURE__*/function (_Track) {
       this.tech_.cancelVideoFrameCallback(this.rvf_);
       this.rvf_ = undefined;
     }
+
+    this.tech_.off('timeupdate', this.timeupdateHandler);
   }
   /**
    * Add a cue to the internal list of cues.
@@ -9388,7 +9403,7 @@ var Tech = /*#__PURE__*/function (_Component) {
 
     var id = newGUID();
 
-    if (this.paused()) {
+    if (!this.isReady_ || this.paused()) {
       this.queuedHanders_.add(id);
       this.one('playing', function () {
         if (_this8.queuedHanders_.has(id)) {
@@ -19988,7 +20003,8 @@ var Html5 = /*#__PURE__*/function (_Tech) {
 
     _this = _Tech.call(this, options, ready) || this;
     var source = options.source;
-    var crossoriginTracks = false; // Set the source if one is provided
+    var crossoriginTracks = false;
+    _this.featuresVideoFrameCallback = _this.featuresVideoFrameCallback && _this.el_.tagName === 'VIDEO'; // Set the source if one is provided
     // 1) Check if the source is new (if not, we want to keep the original so playback isn't interrupted)
     // 2) Check to see if the network state of the tag was failed at init, and if so, reset the source
     // anyway so the error gets fired.
@@ -20062,8 +20078,6 @@ var Html5 = /*#__PURE__*/function (_Tech) {
 
 
     _this.proxyWebkitFullscreen_();
-
-    _this.featuresVideoFrameCallback = _this.featuresVideoFrameCallback && _this.el_.tagName === 'VIDEO';
 
     _this.triggerReady();
 
@@ -20713,6 +20727,9 @@ var Html5 = /*#__PURE__*/function (_Tech) {
   }
   /**
    * Native requestVideoFrameCallback if supported by browser/tech, or fallback
+   * Don't use rVCF on Safari when DRM is playing, as it doesn't fire
+   * Needs to be checked later than the constructor
+   * This will be a false positive for clear sources loaded after a Fairplay source
    *
    * @param {function} cb function to call
    * @return {number} id of request
@@ -20720,7 +20737,7 @@ var Html5 = /*#__PURE__*/function (_Tech) {
   ;
 
   _proto.requestVideoFrameCallback = function requestVideoFrameCallback(cb) {
-    if (this.featuresVideoFrameCallback) {
+    if (this.featuresVideoFrameCallback && !this.el_.webkitKeys) {
       return this.el_.requestVideoFrameCallback(cb);
     }
 
@@ -20734,7 +20751,7 @@ var Html5 = /*#__PURE__*/function (_Tech) {
   ;
 
   _proto.cancelVideoFrameCallback = function cancelVideoFrameCallback(id) {
-    if (this.featuresVideoFrameCallback) {
+    if (this.featuresVideoFrameCallback && !this.el_.webkitKeys) {
       this.el_.cancelVideoFrameCallback(id);
     } else {
       _Tech.prototype.cancelVideoFrameCallback.call(this, id);
@@ -26764,7 +26781,7 @@ var Player = /*#__PURE__*/function (_Component) {
   /**
    * The player's language code.
    *
-   * Changing the langauge will trigger
+   * Changing the language will trigger
    * [languagechange]{@link Player#event:languagechange}
    * which Components can use to update control text.
    * ClickableComponent will update its control text by default on
@@ -28142,11 +28159,13 @@ Player.prototype.hasPlugin = function (name) {
  * @file extend.js
  * @module extend
  */
+var hasLogged = false;
 /**
  * Used to subclass an existing class by emulating ES subclassing using the
  * `extends` keyword.
  *
  * @function
+ * @deprecated
  * @example
  * var MyComponent = videojs.extend(videojs.getComponent('Component'), {
  *   myCustomMethod: function() {
@@ -28167,6 +28186,14 @@ Player.prototype.hasPlugin = function (name) {
 var extend = function extend(superClass, subClassMethods) {
   if (subClassMethods === void 0) {
     subClassMethods = {};
+  }
+
+  // Log a warning the first time extend is called to note that it is deprecated
+  // It was previously deprecated in our documentation (guides, specifically),
+  // but was never formally deprecated in code.
+  if (!hasLogged) {
+    log$1.warn('videojs.extend is deprecated as of Video.js 7.22.0 and will be removed in Video.js 8.0.0');
+    hasLogged = true;
   }
 
   var subClass = function subClass() {
@@ -28653,7 +28680,7 @@ videojs.addLanguage('en', {
   'Non-Fullscreen': 'Exit Fullscreen'
 });
 
-/*! @name @videojs/http-streaming @version 2.14.2 @license Apache-2.0 */
+/*! @name @videojs/http-streaming @version 2.15.1 @license Apache-2.0 */
 /**
  * @file resolve-url.js - Handling how URLs are resolved and manipulated
  */
@@ -32764,7 +32791,7 @@ var transform = function transform(code) {
 var getWorkerString = function getWorkerString(fn) {
   return fn.toString().replace(/^function.+?{/, '').slice(0, -1);
 };
-/* rollup-plugin-worker-factory start for worker!/Users/bclifford/Code/vhs-release-test/src/transmuxer-worker.js */
+/* rollup-plugin-worker-factory start for worker!/Users/gkatsevman/p/http-streaming/src/transmuxer-worker.js */
 
 
 var workerCode$1 = transform(getWorkerString(function () {
@@ -41570,7 +41597,7 @@ var workerCode$1 = transform(getWorkerString(function () {
   };
 }));
 var TransmuxWorker = factory(workerCode$1);
-/* rollup-plugin-worker-factory end for worker!/Users/bclifford/Code/vhs-release-test/src/transmuxer-worker.js */
+/* rollup-plugin-worker-factory end for worker!/Users/gkatsevman/p/http-streaming/src/transmuxer-worker.js */
 
 var handleData_ = function handleData_(event, transmuxedData, callback) {
   var _event$data$segment = event.data.segment,
@@ -46635,6 +46662,7 @@ var SegmentLoader = /*#__PURE__*/function (_videojs$EventTarget) {
     this.bandwidth = 1;
     this.roundTrip = NaN;
     this.trigger('bandwidthupdate');
+    this.trigger('timeout');
   }
   /**
    * Handle the callback from the segmentRequest function and set the
@@ -48418,7 +48446,12 @@ var VTTSegmentLoader = /*#__PURE__*/function (_SegmentLoader) {
     var segmentInfo = this.pendingSegment_; // although the VTT segment loader bandwidth isn't really used, it's good to
     // maintain functionality between segment loaders
 
-    this.saveBandwidthRelatedStats_(segmentInfo.duration, simpleSegment.stats);
+    this.saveBandwidthRelatedStats_(segmentInfo.duration, simpleSegment.stats); // if this request included a segment key, save that data in the cache
+
+    if (simpleSegment.key) {
+      this.segmentKey(simpleSegment.key, true);
+    }
+
     this.state = 'APPENDING'; // used for tests
 
     this.trigger('appending');
@@ -49357,7 +49390,7 @@ var TimelineChangeController = /*#__PURE__*/function (_videojs$EventTarget) {
 
   return TimelineChangeController;
 }(videojs.EventTarget);
-/* rollup-plugin-worker-factory start for worker!/Users/bclifford/Code/vhs-release-test/src/decrypter-worker.js */
+/* rollup-plugin-worker-factory start for worker!/Users/gkatsevman/p/http-streaming/src/decrypter-worker.js */
 
 
 var workerCode = transform(getWorkerString(function () {
@@ -50060,7 +50093,7 @@ var workerCode = transform(getWorkerString(function () {
   };
 }));
 var Decrypter = factory(workerCode);
-/* rollup-plugin-worker-factory end for worker!/Users/bclifford/Code/vhs-release-test/src/decrypter-worker.js */
+/* rollup-plugin-worker-factory end for worker!/Users/gkatsevman/p/http-streaming/src/decrypter-worker.js */
 
 /**
  * Convert the properties of an HLS track into an audioTrackKind.
@@ -51287,16 +51320,20 @@ var MasterPlaylistController = /*#__PURE__*/function (_videojs$EventTarget) {
   /**
    * Run selectPlaylist and switch to the new playlist if we should
    *
+   * @param {string} [reason=abr] a reason for why the ABR check is made
    * @private
-   *
    */
   ;
 
-  _proto.checkABR_ = function checkABR_() {
+  _proto.checkABR_ = function checkABR_(reason) {
+    if (reason === void 0) {
+      reason = 'abr';
+    }
+
     var nextPlaylist = this.selectPlaylist();
 
     if (nextPlaylist && this.shouldSwitchToMedia_(nextPlaylist)) {
-      this.switchMedia_(nextPlaylist, 'abr');
+      this.switchMedia_(nextPlaylist, reason);
     }
   };
 
@@ -51548,7 +51585,9 @@ var MasterPlaylistController = /*#__PURE__*/function (_videojs$EventTarget) {
         _this3.requestOptions_.timeout = 0;
       } else {
         _this3.requestOptions_.timeout = requestTimeout;
-      } // TODO: Create a new event on the PlaylistLoader that signals
+      }
+
+      _this3.masterPlaylistLoader_.load(); // TODO: Create a new event on the PlaylistLoader that signals
       // that the segments have changed in some way and use that to
       // update the SegmentLoader instead of doing it twice here and
       // on `loadedplaylist`
@@ -51752,16 +51791,25 @@ var MasterPlaylistController = /*#__PURE__*/function (_videojs$EventTarget) {
   _proto.setupSegmentLoaderListeners_ = function setupSegmentLoaderListeners_() {
     var _this4 = this;
 
+    this.mainSegmentLoader_.on('bandwidthupdate', function () {
+      // Whether or not buffer based ABR or another ABR is used, on a bandwidth change it's
+      // useful to check to see if a rendition switch should be made.
+      _this4.checkABR_('bandwidthupdate');
+
+      _this4.tech_.trigger('bandwidthupdate');
+    });
+    this.mainSegmentLoader_.on('timeout', function () {
+      if (_this4.experimentalBufferBasedABR) {
+        // If a rendition change is needed, then it would've be done on `bandwidthupdate`.
+        // Here the only consideration is that for buffer based ABR there's no guarantee
+        // of an immediate switch (since the bandwidth is averaged with a timeout
+        // bandwidth value of 1), so force a load on the segment loader to keep it going.
+        _this4.mainSegmentLoader_.load();
+      }
+    }); // `progress` events are not reliable enough of a bandwidth measure to trigger buffer
+    // based ABR.
+
     if (!this.experimentalBufferBasedABR) {
-      this.mainSegmentLoader_.on('bandwidthupdate', function () {
-        var nextPlaylist = _this4.selectPlaylist();
-
-        if (_this4.shouldSwitchToMedia_(nextPlaylist)) {
-          _this4.switchMedia_(nextPlaylist, 'bandwidthupdate');
-        }
-
-        _this4.tech_.trigger('bandwidthupdate');
-      });
       this.mainSegmentLoader_.on('progress', function () {
         _this4.trigger('progress');
       });
@@ -53058,6 +53106,7 @@ var Representation = function Representation(vhsHandler, playlist, id) {
     this.width = resolution && resolution.width;
     this.height = resolution && resolution.height;
     this.bandwidth = playlist.attributes.BANDWIDTH;
+    this.frameRate = playlist.attributes['FRAME-RATE'];
   }
 
   this.codecs = codecsForPlaylist(mpc.master(), playlist);
@@ -53896,10 +53945,10 @@ var reloadSourceOnError = function reloadSourceOnError(options) {
   initPlugin(this, options);
 };
 
-var version$4 = "2.14.2";
+var version$4 = "2.15.1";
 var version$3 = "6.0.1";
-var version$2 = "0.21.1";
-var version$1 = "4.7.1";
+var version$2 = "0.22.1";
+var version$1 = "4.8.0";
 var version = "3.1.3";
 var Vhs = {
   PlaylistLoader: PlaylistLoader,
@@ -54915,12 +54964,34 @@ var VhsHandler = /*#__PURE__*/function (_Component) {
       audioMedia: audioPlaylistLoader && audioPlaylistLoader.media()
     });
     this.player_.tech_.on('keystatuschange', function (e) {
-      if (e.status === 'output-restricted') {
-        _this5.masterPlaylistController_.blacklistCurrentPlaylist({
-          playlist: _this5.masterPlaylistController_.media(),
-          message: "DRM keystatus changed to " + e.status + ". Playlist will fail to play. Check for HDCP content.",
-          blacklistDuration: Infinity
-        });
+      if (e.status !== 'output-restricted') {
+        return;
+      }
+
+      var masterPlaylist = _this5.masterPlaylistController_.master();
+
+      if (!masterPlaylist || !masterPlaylist.playlists) {
+        return;
+      }
+
+      var excludedHDPlaylists = []; // Assume all HD streams are unplayable and exclude them from ABR selection
+
+      masterPlaylist.playlists.forEach(function (playlist) {
+        if (playlist && playlist.attributes && playlist.attributes.RESOLUTION && playlist.attributes.RESOLUTION.height >= 720) {
+          if (!playlist.excludeUntil || playlist.excludeUntil < Infinity) {
+            playlist.excludeUntil = Infinity;
+            excludedHDPlaylists.push(playlist);
+          }
+        }
+      });
+
+      if (excludedHDPlaylists.length) {
+        var _videojs$log;
+
+        (_videojs$log = videojs.log).warn.apply(_videojs$log, ['DRM keystatus changed to "output-restricted." Removing the following HD playlists ' + 'that will most likely fail to play and clearing the buffer. ' + 'This may be due to HDCP restrictions on the stream and the capabilities of the current device.'].concat(excludedHDPlaylists)); // Clear the buffer before switching playlists, since it may already contain unplayable segments
+
+
+        _this5.masterPlaylistController_.fastQualityChange_();
       }
     });
     this.handleWaitingForKey_ = this.handleWaitingForKey_.bind(this);
