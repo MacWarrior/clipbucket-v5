@@ -10,11 +10,11 @@ $pages->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = array('title' => lang('videos'), 'url' => '');
+$breadcrumb[0] = ['title' => lang('videos'), 'url' => ''];
 if($_GET['active'] == 'no'){
-    $breadcrumb[1] = array('title' => 'List Inactive Videos', 'url' => ADMIN_BASEURL.'/video_manager.php');
+    $breadcrumb[1] = ['title' => 'List Inactive Videos', 'url' => ADMIN_BASEURL.'/video_manager.php'];
 } else {
-    $breadcrumb[1] = array('title' => lang('videos_manager'), 'url' => ADMIN_BASEURL.'/video_manager.php');
+    $breadcrumb[1] = ['title' => lang('videos_manager'), 'url' => ADMIN_BASEURL.'/video_manager.php'];
 }
 
 if (isset($_POST['reconvert_selected']) || isset($_GET['reconvert_video'])) {
@@ -41,7 +41,7 @@ if(isset($_GET['check_castable'])){
     $vdetails = get_video_details($videoid);
     update_castable_status($vdetails);
 }
-if(isset($_POST['check_castable_selected'])) {
+if(isset($_POST['check_castable_selected']) && is_array($_POST['check_video'])) {
     for($id=0;$id<count($_POST['check_video']);$id++){
         $vdetails = get_video_details($_POST['check_video'][$id]);
         update_castable_status($vdetails);
@@ -53,7 +53,7 @@ if(isset($_GET['update_bits_color'])){
     $vdetails = get_video_details($videoid);
     update_bits_color($vdetails);
 }
-if(isset($_POST['update_bits_color_selected'])) {
+if(isset($_POST['update_bits_color_selected']) && is_array($_POST['check_video'])) {
     for($id=0;$id<count($_POST['check_video']);$id++){
         $vdetails = get_video_details($_POST['check_video'][$id]);
         update_bits_color($vdetails);
@@ -61,19 +61,19 @@ if(isset($_POST['update_bits_color_selected'])) {
 }
 
 //Using Multiple Action
-if(isset($_POST['make_featured_selected'])) {
+if(isset($_POST['make_featured_selected']) && is_array($_POST['check_video'])) {
     for($id=0;$id<count($_POST['check_video']);$id++){
         $cbvid->action('feature',$_POST['check_video'][$id]);
     }
     $eh->flush();
-    e("Selected videos have been set as featured","m");
+    e('Selected videos have been set as featured','m');
 }
-if(isset($_POST['make_unfeatured_selected'])) {
+if(isset($_POST['make_unfeatured_selected']) && is_array($_POST['check_video'])) {
     for($id=0;$id<count($_POST['check_video']);$id++){
         $cbvid->action('unfeature',$_POST['check_video'][$id]);
     }
     $eh->flush();
-    e("Selected videos have been removed from featured list","m");
+    e('Selected videos have been removed from featured list','m');
 }
 
 //Activate / Deactivate
@@ -87,19 +87,19 @@ if(isset($_GET['deactivate'])){
 }
 
 //Using Multiple Action
-if(isset($_POST['activate_selected'])) {
+if(isset($_POST['activate_selected']) && is_array($_POST['check_video'])) {
     for($id=0;$id<count($_POST['check_video']);$id++){
         $cbvid->action('activate',$_POST['check_video'][$id]);
     }
     $eh->flush();
-    e("Selected Videos Have Been Activated","m");
+    e('Selected Videos Have Been Activated','m');
 }
-if(isset($_POST['deactivate_selected'])) {
+if(isset($_POST['deactivate_selected']) && is_array($_POST['check_video'])) {
     for($id=0;$id<count($_POST['check_video']);$id++){
         $cbvid->action('deactivate',$_POST['check_video'][$id]);
     }
     $eh->flush();
-    e("Selected Videos Have Been Dectivated","m");
+    e('Selected Videos Have Been Dectivated','m');
 }
 
 //Delete Video
@@ -109,7 +109,7 @@ if(isset($_GET['delete_video'])){
 }
 
 //Deleting Multiple Videos
-if(isset($_POST['delete_selected'])) {
+if(isset($_POST['delete_selected']) && is_array($_POST['check_video'])) {
     for($id=0;$id<count($_POST['check_video']);$id++) {
         $cbvideo->delete_video($_POST['check_video'][$id]);
     }
@@ -124,25 +124,22 @@ $page = mysql_clean($_GET['page']);
 $get_limit = create_query_limit($page,RESULTS);
 
 $all_categories = $cbvid->get_categories();
-$all_category_ids = array();
+$all_category_ids = [];
 
 foreach ($all_categories as $cats ) {
     $all_category_ids[] = $cats['category_id'];
 }
 
-if(isset($_GET['category']))
-{
-    if($_GET['category'][0] == 'all')
-    {
-        $cat_field = "";
+if(isset($_GET['category'])) {
+    if($_GET['category'][0] == 'all') {
+        $cat_field = '';
     } else {
         $cat_field = $_GET['category'];
     }
 }
 
-if(isset($_GET['search']))
-{
-    $array = array(
+if(isset($_GET['search'])) {
+    $array = [
         'videoid' 	=> $_GET['videoid'],
         'videokey' 	=> $_GET['videokey'],
         'title'		=> $_GET['title'],
@@ -152,7 +149,7 @@ if(isset($_GET['search']))
         'featured' 	=> $_GET['featured'],
         'active'	=> $_GET['active'],
         'status'	=> $_GET['status']
-    );
+    ];
 }
 
 $result_array = $array;
@@ -175,20 +172,20 @@ $pages->paginate($total_pages,$page);
 
 //Category Array
 if(is_array($_GET['category'])) {
-    $cats_array = array($_GET['category']);
+    $cats_array = [$_GET['category']];
 } else {
     preg_match_all('/#([0-9]+)#/',$_GET['category'],$m);
-    $cats_array = array($m[1]);
+    $cats_array = [$m[1]];
 }
-$cat_array = array(
+$cat_array =[
     lang('vdo_cat'),
     'type'=> 'checkbox',
     'name'=> 'category[]',
     'id'=> 'category',
-    'value'=> array('category',$cats_array),
+    'value'=> ['category',$cats_array],
     'hint_1'=> lang('vdo_cat_msg'),
     'display_function' => 'convert_to_categories'
-);
+];
 
 assign('cat_array',$cat_array);
 subtitle(lang('videos_manager'));
