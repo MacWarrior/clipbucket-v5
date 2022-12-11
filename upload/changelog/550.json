@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"113",
+  "revision":"114",
   "status":"dev",
   "detail":[
     {
@@ -53,7 +53,7 @@
         ,"Update PHP 8+ compatibility"
         ,"Update translations"
         ,"Update Readme"
-        ,"Update compatibility to PHP 8.1.X"
+        ,"Update compatibility to PHP 8.2.X"
         ,"Update DB functions"
         ,"Auto-clear templates cache when in DEV mode"
         ,"Fix compatibility with MySQL 8.0.X"
