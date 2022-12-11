@@ -135,11 +135,11 @@
             {include file="$style_dir/blocks/manage/userMenuLeft.html"}
         </div>
         <div class="col-md-9 col-sm-9 col-xs-12">
-            <div class="coverPhotoContainer">
-                <img src="{$coverPhoto}" alt="coverPhoto" id="coverPhoto" class="edit-img-thumbnail img-responsive"/>
+            <div class="backgroundPhotoContainer">
+                <img src="{$backgroundPhoto}" alt="backgroundPhoto" id="backgroundPhoto" class="edit-img-thumbnail img-responsive"/>
             </div>
             <div class="avatar_bg">
-                <input type="file" name="coverPhoto" style="display:none;">
+                <input type="file" name="backgroundPhoto" style="display:none;">
                 <a href="javascript:none" id="selectCover" class="btn btn-primary">Select Cover</a>
             </div>
         </div>
@@ -352,7 +352,7 @@
                 browse_button: 'selectCover',
                 runtimes : 'html5,flash,silverlight,html4',
                 url : "/edit_account.php?mode=avatar_bg",
-                file_data_name : "coverPhoto",
+                file_data_name : "backgroundPhoto",
                 filters: {
                     mime_types : [ { title : "Image files", extensions : extensions }, ],
                     max_file_size: "2mb",
@@ -362,7 +362,7 @@
             window.uploader = uploader;
             uploader.init();
             uploader.bind("FilesAdded", function(up, uploadedFiles){
-                $("#coverPhoto").attr("src", "/images/loading.png");
+                $("#backgroundPhoto").attr("src", "/images/loading.png");
                 up.start();
             });
             uploader.bind('UploadComplete', function(plupload, files, response){});
@@ -370,7 +370,7 @@
             uploader.bind("FileUploaded", function(plupload, files, response){
                 var response = $.parseJSON(response.response);
                 if(response.status == true){
-                    $("#coverPhoto").attr("src", response.url);
+                    $("#backgroundPhoto").attr("src", response.url);
                 } else {
                     alert(response.msg);
                 }

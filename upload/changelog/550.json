@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"112",
+  "revision":"113",
   "status":"dev",
   "detail":[
     {
@@ -39,6 +39,7 @@
         ,"Fix header display"
         ,"Fix manage collection items"
         ,"Speed-up collection loading"
+        ,"Fix user background management"
       ]
     },
     {
@@ -81,6 +82,7 @@
         "Remove LSHW dependency"
         ,"Fix Nginx Vhost for 404 & 403 pages <i>#207</i>"
         ,"Fix wrong permission on directories creation"
+        ,"Change user's background storage"
       ]
     },
     {
@@ -118,6 +120,7 @@
         ,"Fix channel load more videos"
         ,"Fix photos filter <i>#243</i>"
         ,"Fix video detail saving during conversion <i>#243</i>"
+        ,"Fix user background management"
       ]
     }
   ,{

@@ -62,7 +62,7 @@ if( $userquery->perm_check('view_channel',true) ) {
     //Getting profile details
     $p = $userquery->get_user_profile($udetails['userid']);
     assign('p',$p);
-    assign('coverPhoto', $userquery->getCover($udetails['userid']));
+    assign('backgroundPhoto', $userquery->getBackground($udetails['userid']));
     Assign('extensions', $Cbucket->get_extensions('photo'));
 
     //Getting users channel List

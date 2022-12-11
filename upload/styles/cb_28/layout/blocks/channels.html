@@ -14,14 +14,14 @@
 	</span>
 	
 	<h2>{$user.total_videos|number_format} {lang code="videos"} {$user.profile_hits|number_format} {lang code="views"}</h2>
-	<img src="{$userquery->getCover($user.userid)}" alt="">
+	<img src="{$userquery->getBackground($user.userid)}" alt="">
 </div>
 {/if}
 
 {if $block_type == 'homeChannel' || $block_type=='normal'}
-{assign var='user_cover' value=$userquery->getCover($user.userid)}
+{assign var='user_cover' value=$userquery->getBackground($user.userid)}
 
-<a href="{$userquery->profile_link($user)}" id="user-{$user.userid}" style="background:url({if $user_cover != ''} {$user_cover} {else} {$theme}/images/cover_default.jpg  {/if} )">
+<a href="{$userquery->profile_link($user)}" id="user-{$user.userid}" style="background:url({if $user_cover != ''}{$user_cover}{else}{$theme}/images/background_default.jpg{/if})">
 	<img class="avatar" src="{avatar details=$user}">
 	<div class="info">
 		<h2>{display_clean($user.username)}</h2>
@@ -34,10 +34,10 @@
 {/if}
 
 {if $block_type == 'featuredChannel'}
-{assign var='user_cover' value=$userquery->getCover($featured.userid)}
+{assign var='user_cover' value=$userquery->getBackground($featured.userid)}
 
 <a href="{$userquery->profile_link($featured)}" id="user-{$featured.userid}" class="featured-userlink">
-	<img class="sm-cover img-responsive" src="{if $user_cover != ''} {$user_cover} {else} {$theme}/images/cover_default.jpg  {/if}"  size='368x124'>
+	<img class="sm-cover img-responsive" src="{if $user_cover != ''} {$user_cover} {else} {$theme}/images/background_default.jpg{/if}" size='368x124'>
 	<div class="info">
 		<img class="avatar" src="{avatar details=$featured}">
 		<h2>{$featured.username}</h2>
@@ -51,7 +51,7 @@
 {/if}
 
 {if $block_type == 'itemChannel' || $block_type=='normal'}
-{assign var='user_cover_tune' value=$userquery->getCover($user.userid)}
+{assign var='user_cover_tune' value=$userquery->getBackground($user.userid)}
 
 <div class="channel-holder">
 	<a href="{$userquery->profile_link($user)}" id="user-{$user.userid}" class="user-block">

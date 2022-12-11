@@ -257,8 +257,8 @@ const MASS_UPLOAD_DIR = FILES_DIR . '/mass_uploads';
 const LOGS_DIR = FILES_DIR . '/logs';
 const IMAGES_DIR = BASEDIR . '/images';
 const IMAGES_URL = '/images';
-const USER_THUMBS_DIR = BASEDIR . '/images/avatars';
-const USER_BG_DIR = BASEDIR . '/images/backgrounds';
+const USER_THUMBS_DIR = BASEDIR . '/files/avatars';
+const USER_BG_DIR = BASEDIR . '/files/backgrounds';
 const ICONS_URL = '/images/icons';
 const JS_DIR = BASEDIR . '/js';
 const JS_URL = '/js';
@@ -271,8 +271,8 @@ const THUMBS_URL = FILES_URL . '/thumbs';
 const PLAYER_DIR = BASEDIR . '/player';
 const PLAYER_URL = '/player';
 
-const USER_THUMBS_URL = '/images/avatars';
-const USER_BG_URL = '/images/backgrounds';
+const USER_THUMBS_URL = FILES_URL.'/avatars';
+const USER_BG_URL = FILES_URL.'/backgrounds';
 
 # Required Settings For Video Conversion
 define('VBRATE', $row['vbrate']);

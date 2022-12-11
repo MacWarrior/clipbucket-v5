@@ -7,8 +7,7 @@ require 'includes/config.inc.php';
 $userquery->logincheck();
 
 //Updating Profile
-if(isset($_POST['update_profile']))
-{
+if(isset($_POST['update_profile'])) {
 	$array = $_POST;
 	$array['userid'] = userid();
 	/*Checks profile fields data*/
@@ -25,56 +24,41 @@ if(isset($_POST['update_avatar_bg'])) {
 	$userquery->update_user_avatar_bg($array);
 }
 
-if(isset($_FILES['coverPhoto'])){
-	if(isset($_FILES['coverPhoto']) && get_mime_type($_FILES['coverPhoto']['tmp_name']) == 'image'){
-		$array = $_FILES;
-
-		$extension = getExt( $_FILES['coverPhoto']['name']);
+if(isset($_FILES['backgroundPhoto'])){
+	if(get_mime_type($_FILES['backgroundPhoto']['tmp_name']) == 'image'){
+		$extension = getExt($_FILES['backgroundPhoto']['name']);
 	   	$types = strtolower(config('allowed_photo_types'));
 	    $supported_extensions = explode(',', $types);
 
 	    if (!in_array($extension, $supported_extensions)) {
-	        $response = array(
+	        $response = [
 				'status' => false,
 				'msg' => 'Invalid extension provided',
 				'url' => false
-            );
+            ];
 			echo json_encode($response);
 			die();
 	    }
 
+        $array = $_FILES['backgroundPhoto'];
 		$array['userid'] = userid();
-		$coverUpload = $userquery->updateCover($array);
+		$coverUpload = $userquery->updateBackground($array);
 		$timeStamp = time();
-		$response = array(
+		$response = [
 			'status' => $coverUpload['status'],
 			'msg' => $coverUpload['msg'],
-			'url' => $userquery->getCover(userid()) . "?{$timeStamp}"
-        );
-		echo json_encode($response);
-		die();
-	} else {
-		$response = array(
-			'status' => false,
-			'msg' => 'Invalid Image provided',
-			'url' => false
-        );
+			'url' => $userquery->getBackground(userid()) . '?'.$timeStamp
+        ];
 		echo json_encode($response);
 		die();
 	}
-}
-if(isset($_FILES['avatar_file']) && $_GET['ajax'] == true){
-	$array = $_FILES;
-	$array['userid'] = userid();
-	$userquery->update_user_avatar_bg($array);
-	$timeStamp = time();
-	$response = array(
-		'status' => $coverUpload['status'],
-		'msg' => $coverUpload['msg'],
-		'url' => $userquery->getUserThumb(false,false,userid()) . "?{$timeStamp}"
-    );
-	echo json_encode($response);
-	die();
+    $response = [
+        'status' => false,
+        'msg' => 'Invalid Image provided',
+        'url' => false
+    ];
+    echo json_encode($response);
+    die();
 }
 
 //Changing Email
@@ -115,19 +99,19 @@ switch($mode)
 	
 	case 'avatar_bg':
 		Assign('extensions', $Cbucket->get_extensions('photo'));
-		assign('coverPhoto', $userquery->getCover(userid()));
+		assign('backgroundPhoto', $userquery->getBackground(userid()));
 		assign('mode','avatar_bg');
 		break;
 
 	case 'channel_bg':
 		Assign('extensions', $Cbucket->get_extensions('photo'));
-		assign('coverPhoto', $userquery->getCover(userid()));
+		assign('backgroundPhoto', $userquery->getBackground(userid()));
 		assign('mode','channel_bg');
 		break;
 
 	case 'change_cover':
 		Assign('extensions', $Cbucket->get_extensions('photo'));
-		assign('coverPhoto', $userquery->getCover(userid()));
+		assign('backgroundPhoto', $userquery->getBackground(userid()));
 		assign('mode','change_cover');
 		break;
 	

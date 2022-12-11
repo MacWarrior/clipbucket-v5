@@ -302,7 +302,7 @@ class Upload
 				$code = $code + 1;
 			}
 	    }
-           error_log(str_pad((string)$code, strlen(config('num_thumbs')), '0', STR_PAD_LEFT));
+
        return str_pad((string)$code, strlen(config('num_thumbs')), '0', STR_PAD_LEFT);
 	}
 
@@ -910,45 +910,89 @@ class Upload
 	 *
 	 * @return string|bool
 	 */
-	function upload_user_file($type,$file,$uid)
+	function upload_user_file(string $type, $file, $uid)
     {
 		global $userquery,$cbphoto,$imgObj;
+        if(empty($file['tmp_name'])){
+            e(lang('please_select_img_file'));
+            return false;
+        }
 		$av_details = getimagesize($file['tmp_name']);
 		
-		if($userquery->user_exists($uid))
-		{
-			switch($type)
-			{
-				case 'a':
-				case 'avatar':
-					if($file['size']/1024 > config('max_profile_pic_size')){
-						e(sprintf(lang('file_size_exceeds'),config('max_profile_pic_size')));
-					} elseif($av_details[0] > config('max_profile_pic_width')) {
-						e(lang('File width exeeds').' '.config('max_profile_pic_width').'px');
-					} elseif(file_exists($file['tmp_name'])) {
-						$ext = getext($file['name']);
-						$file_name = $uid.'.'.$ext;
-						$file_path = AVATARS_DIR.DIRECTORY_SEPARATOR.$file_name;
-						if(move_uploaded_file($file['tmp_name'],$file_path)) {
-							if(!$imgObj->ValidateImage($file_path,$ext)) {
-								e(lang('Invalid file type'));
-								@unlink($file_path);
-							} else {
-								$small_size = AVATARS_DIR.DIRECTORY_SEPARATOR.$uid.'-small.'.$ext;
-								$cbphoto->CreateThumb($file_path,$file_path,$ext,AVATAR_SIZE,AVATAR_SIZE);
-								$cbphoto->CreateThumb($file_path,$small_size,$ext,AVATAR_SMALL_SIZE,AVATAR_SMALL_SIZE);
-							}
-						} else {
-							e(lang('class_error_occured'));
-						}
-					}
-				    break;
-			}
-			return $file_name;
-		} else {
-			e(lang('user_doesnt_exist'));
+		if( !$userquery->user_exists($uid)) {
+            e(lang('user_doesnt_exist'));
+            return false;
         }
-		return false;
+
+        switch($type)
+        {
+            case 'a':
+            case 'avatar':
+                if($file['size']/1024 > config('max_profile_pic_size')){
+                    e(sprintf(lang('file_size_exceeds'),config('max_profile_pic_size')));
+                    return false;
+                }
+
+                if($av_details[0] > config('max_profile_pic_width')) {
+                    e( lang( 'File width exeeds' ) . ' ' . config( 'max_profile_pic_width' ) . 'px' );
+                    return false;
+                }
+
+                if(!file_exists($file['tmp_name'])) {
+                    e(lang('class_error_occured'));
+                    return false;
+                }
+
+                $ext = getext($file['name']);
+                $file_name = $uid.'.'.$ext;
+                $file_path = AVATARS_DIR.DIRECTORY_SEPARATOR.$file_name;
+                if(move_uploaded_file($file['tmp_name'],$file_path)) {
+                    if(!$imgObj->ValidateImage($file_path,$ext)) {
+                        e(lang('Invalid file type'));
+                        @unlink($file_path);
+                        return false;
+                    }
+                    $small_size = AVATARS_DIR.DIRECTORY_SEPARATOR.$uid.'-small.'.$ext;
+                    $cbphoto->CreateThumb($file_path,$file_path,$ext,AVATAR_SIZE,AVATAR_SIZE);
+                    $cbphoto->CreateThumb($file_path,$small_size,$ext,AVATAR_SMALL_SIZE,AVATAR_SMALL_SIZE);
+                    return $file_name;
+                }
+                e(lang('class_error_occured'));
+                return false;
+
+            case 'b':
+            case 'background':
+                if($file['size']/1024 > config('max_bg_size')){
+                    e(sprintf(lang('file_size_exceeds'),config('max_bg_size')));
+                    return false;
+                }
+
+                if($av_details[0] > config('max_bg_width')) {
+                    e( lang( 'File width exeeds' ) . ' ' . config( 'max_bg_width' ) . 'px' );
+                    return false;
+                }
+
+                if(!file_exists($file['tmp_name'])) {
+                    e(lang('class_error_occured'));
+                    return false;
+                }
+
+                $ext = getext($file['name']);
+                $file_name = $uid.'.'.$ext;
+                $file_path = USER_BG_DIR.DIRECTORY_SEPARATOR.$file_name;
+                if(move_uploaded_file($file['tmp_name'],$file_path)) {
+                    if(!$imgObj->ValidateImage($file_path,$ext)) {
+                        e(lang('Invalid file type'));
+                        @unlink($file_path);
+                        return false;
+                    }
+                    return $file_name;
+                }
+                e(lang('class_error_occured'));
+                return false;
+
+        }
+        return false;
 	}
 	
 	
