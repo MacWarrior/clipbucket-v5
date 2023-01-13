@@ -223,7 +223,7 @@ class userquery extends CBCategory
      *
      * @return bool
      */
-    function login_user($username,$password,$remember=false)
+    function login_user($username,$password,$remember=false): bool
     {
         global $sess, $db;
 
@@ -294,7 +294,7 @@ class userquery extends CBCategory
                         'success'   => 'yes',
                         'level'     => $udetails['level']
                     ];
-                    insert_log('Try to login',$log_array);
+                    insert_log('Login',$log_array);
                     return true;
                 }
             }
@@ -305,8 +305,10 @@ class userquery extends CBCategory
             //Logging Action
             $log_array['success'] = 'no';
             $log_array['details'] = $msg[0]['val'];
-            insert_log('Try to login',$log_array);
+            $log_array['username'] = $username;
+            insert_log('Login',$log_array);
         }
+        return false;
     }
 
     /**
@@ -3881,7 +3883,7 @@ class userquery extends CBCategory
      *
      * @return bool
      */
-    function login_as_user($id,$realtime=false)
+    function login_as_user($id,$realtime=false): bool
     {
         global $sess,$db;
         $udetails = $this->get_user_details($id);
@@ -3899,25 +3901,23 @@ class userquery extends CBCategory
                 
                 $smart_sess = md5($udetails['user_session_key'].$session_salt);
                 
-                $db->delete(tbl('sessions'),array('session'),array($sess->id));
+                $db->delete(tbl('sessions'),['session'],[$sess->id]);
                 $sess->add_session($userid,'smart_sess',$smart_sess);
             } else {
                 if($this->login_check(NULL,true)){
                     $msg[] = e(lang('you_already_logged'));
                 } elseif(!$this->user_exists($udetails['username'])) {
                     $msg[] = e(lang('user_doesnt_exist'));
-                } elseif(!$udetails) {
-                    $msg[] = e(lang('usr_login_err'));
                 } elseif(strtolower($udetails['usr_status']) != 'ok') {
                     $msg[] = e(lang('user_inactive_msg'), 'e', false);
                 } elseif($udetails['ban_status'] == 'yes') {
                     $msg[] = e(lang('usr_ban_err'));
                 } else {
                     $userid = $udetails['userid'];
-                    $log_array['userid'] = $userid  = $udetails['userid'];
+                    $log_array['userid'] = $userid;
                     $log_array['useremail'] = $udetails['email'];
                     $log_array['success'] = 'yes';
-                    $log_array['level'] = $level = $udetails['level'];
+                    $log_array['level'] = $udetails['level'];
                         
                     //Starting special sessions for security
                     $session_salt = RandomString(5);
@@ -3926,7 +3926,7 @@ class userquery extends CBCategory
                     
                     $smart_sess = md5($udetails['user_session_key'].$session_salt);
                     
-                    $db->delete(tbl('sessions'),array('session','session_string'),array($sess->id,'guest'));
+                    $db->delete(tbl('sessions'),['session','session_string'],[$sess->id,'guest']);
                     $sess->add_session($userid,'smart_sess',$smart_sess);
 
                     //Setting Vars
@@ -3936,14 +3936,14 @@ class userquery extends CBCategory
                     
                     //Updating User last login , num of visits and ip
                     $db->update(tbl('users'),
-                        array('num_visits','last_logged','ip'),
-                        array('|f|num_visits+1',NOW(),$_SERVER['REMOTE_ADDR']),
-                        "userid='".$userid."'"
+                        ['num_visits','last_logged','ip'],
+                        ['|f|num_visits+1',NOW(),$_SERVER['REMOTE_ADDR']],
+                        'userid=\''.$userid.'\''
                     );
 
                     $this->init();
                     //Logging Action
-                    insert_log('Try to login',$log_array);
+                    insert_log('Login as',$log_array);
                     return true;
                 }
                 
@@ -3952,14 +3952,15 @@ class userquery extends CBCategory
                     //Logging Action
                     $log_array['success'] = 'no';
                     $log_array['details'] = $msg[0]['val'];
-                    insert_log('Try to login',$log_array);
+                    insert_log('Login as',$log_array);
                 }
             }
                         
             return true;
         }
 
-        e(lang("usr_exist_err"));
+        e(lang('usr_exist_err'));
+        return false;
     }
     
     /**
