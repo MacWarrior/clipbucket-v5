@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"121",
+  "revision":"122",
   "status":"dev",
   "detail":[
     {
@@ -125,6 +125,7 @@
         ,"Fix user background management"
         ,"Fix video upload with too long name"
         ,"Use filename without extension as default title and description <i>#248</i>"
+        ,"Update jQuery-ui to 1.13.2"
       ]
     }
   ,{
