@@ -12,7 +12,7 @@ if(isset($_POST['update_profile'])) {
 	$array['userid'] = userid();
 	/*Checks profile fields data*/
     $post_clean = profile_fileds_check($array);
-	if ($post_clean == true) {
+	if($post_clean){
 		$userquery->update_user($array);
 	}
 }

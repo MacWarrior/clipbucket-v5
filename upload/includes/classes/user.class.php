@@ -2149,7 +2149,7 @@ class userquery extends CBCategory
     function update_user($array)
     {
         global $db,$Upload;
-        if($array==NULL){
+        if(is_null($array)){
             $array = $_POST;
         }
         
@@ -3553,7 +3553,7 @@ class userquery extends CBCategory
                 $cond .= " users.category LIKE '%$cat_params%' ";
             }
 
-            $cond .= ")";
+            $cond .= ')';
         }
 
         //date span
@@ -3634,15 +3634,15 @@ class userquery extends CBCategory
             $cond .= ' '.$params['cond'].' ';
         }
 
-        if(!isset($params['count_only']) || (isset($params['count_only']) && empty($params['count_only'])) ) {
-            $fields = array(
+        if(!isset($params['count_only']) || empty($params['count_only']) ) {
+            $fields = [
                 'users' => get_user_fields(),
-                'profile' => array( 'rating', 'rated_by', 'voters', 'first_name', 'last_name', 'profile_title', 'profile_desc','city','hometown')
-            );
+                'profile' => ['rating', 'rated_by', 'voters', 'first_name', 'last_name', 'profile_title', 'profile_desc','city','hometown']
+            ];
             $fields['users'][] = 'last_active';
             $fields['users'][] = 'total_collections';
             $fields['users'][] = 'total_groups';
-            $query = ' SELECT '.tbl_fields( $fields )." FROM ".tbl( 'users' ).' AS users ';
+            $query = ' SELECT '.tbl_fields( $fields ).' FROM '.tbl( 'users' ).' AS users ';
             $query .= ' LEFT JOIN '.table( 'user_profile', 'profile' ).' ON users.userid = profile.userid ';
 
             if ( $cond ) {
@@ -3695,7 +3695,7 @@ class userquery extends CBCategory
             case 'av':
             case 'a':
                 $avcode = RandomString(10);
-                $db->update($tbl,array('usr_status','avcode'),array('Ok',$avcode)," userid='$uid' ");
+                $db->update($tbl,['usr_status','avcode'],['Ok',$avcode]," userid='$uid' ");
                 e(lang('usr_ac_msg'),'m');
                 break;
             
@@ -3704,7 +3704,7 @@ class userquery extends CBCategory
             case 'dav':
             case 'd':
                 $avcode = RandomString(10);
-                $db->update($tbl,array('usr_status','avcode'),array('ToActivate',$avcode)," userid='$uid' ");
+                $db->update($tbl,['usr_status','avcode'],['ToActivate',$avcode]," userid='$uid' ");
                 e(lang('usr_dac_msg'),'m');
                 break;
             
@@ -3712,7 +3712,7 @@ class userquery extends CBCategory
             case 'feature':
             case 'featured':
             case 'f':
-                $db->update($tbl,array('featured','featured_date'),array('yes',now())," userid='$uid' ");
+                $db->update($tbl,['featured','featured_date'],['yes',now()]," userid='$uid' ");
                 e(lang('User has been set as featured'),'m');
                 break;
 
@@ -3720,21 +3720,21 @@ class userquery extends CBCategory
             case 'unfeature':
             case 'unfeatured':
             case 'uf':
-                $db->update($tbl,array('featured'),array('no')," userid='$uid' ");
+                $db->update($tbl,['featured'],['no']," userid='$uid' ");
                 e(lang('User has been removed from featured users'),'m');
                 break;
             
             //Ban User
             case 'ban':
             case 'banned':
-                $db->update($tbl,array('ban_status'),array('yes')," userid='$uid' ");
+                $db->update($tbl,['ban_status'],['yes']," userid='$uid' ");
                 e(lang('usr_uban_msg'),'m');
                 break;
 
             //Ban User
             case 'unban':
             case 'unbanned':
-                $db->update($tbl,array('ban_status'),array('no')," userid='$uid' ");
+                $db->update($tbl,['ban_status'],['no']," userid='$uid' ");
                 e(lang('usr_uuban_msg'),'m');
                 break;
         }
@@ -3754,15 +3754,15 @@ class userquery extends CBCategory
             array('field'=>'ban_status','type'=>'=','var'=>'no','op'=>'AND','value'=>'static'),
         */
         if(!has_access('admin_access',TRUE)) {
-            $this->search->columns = array(
-                array('field'=>'username','type'=>'LIKE','var'=>'%{KEY}%'),
-                array('field'=>'usr_status','type'=>'=','var'=>'Ok','op'=>'AND','value'=>'static'),
-                array('field'=>'ban_status','type'=>'=','var'=>'no','op'=>'AND','value'=>'static')
-            );
+            $this->search->columns = [
+                ['field'=>'username','type'=>'LIKE','var'=>'%{KEY}%'],
+                ['field'=>'usr_status','type'=>'=','var'=>'Ok','op'=>'AND','value'=>'static'],
+                ['field'=>'ban_status','type'=>'=','var'=>'no','op'=>'AND','value'=>'static']
+            ];
         } else {
-            $this->search->columns = array(
-                array('field'=>'username','type'=>'LIKE','var'=>'%{KEY}%')
-            );
+            $this->search->columns = [
+                ['field'=>'username','type'=>'LIKE','var'=>'%{KEY}%']
+            ];
         }    
             
         $this->search->cat_tbl = $this->cat_tbl;
@@ -3777,64 +3777,64 @@ class userquery extends CBCategory
          * Setting up the sorting thing
          */
         
-        $sorting = array(
-            'doj'             => lang('date_added'),
+        $sorting = [
+            'doj'            => lang('date_added'),
             'profile_hits'   => lang('views'),
             'total_comments' => lang('comments'),
             'total_videos'   => lang('videos')
-        );
+        ];
         
-        $this->search->sorting = array(
+        $this->search->sorting = [
             'doj'            => ' doj DESC',
             'profile_hits'   => ' profile_hits DESC',
-            'total_comments' => ' total_comments DESC ',
+            'total_comments' => ' total_comments DESC',
             'total_videos'   => ' total_videos DESC'
-        );
+        ];
 
         /**
          * Setting Up The Search Fields
          */
         $default = $_GET;
         if(is_array($default['category'])){
-            $cat_array = array($default['category']);
+            $cat_array = [$default['category']];
         }
         $uploaded = $default['datemargin'];
         $sort = $default['sort'];
         
-        $this->search->search_type['channels'] = array('title'=>lang('users'));
+        $this->search->search_type['channels'] = ['title'=>lang('users')];
         
-        $fields = array(
-            'query'    => array(
-                'title'=> lang('keywords'),
-                'type'=> 'textfield',
-                'name'=> 'query',
-                'id'=> 'query',
-                'value'=>mysql_clean($default['query'])
-            ),
-            'category'    =>  array(
-                'title'        => lang('category'),
-                'type'        => 'checkbox',
-                'name'        => 'category[]',
-                'id'        => 'category',
-                'value'        => array('category',$cat_array),
-                'category_type'=>'user'
-            ),
-            'date_margin'    =>  array(
-                'title'        => lang('joined'),
-                'type'        => 'dropdown',
-                'name'        => 'datemargin',
-                'id'        => 'datemargin',
-                'value'        => $this->search->date_margins(),
-                'checked'    => $uploaded
-            ),
-            'sort'        => array(
-                'title'        => lang('sort_by'),
-                'type'        => 'dropdown',
-                'name'        => 'sort',
-                'value'        => $sorting,
-                'checked'    => $sort
-            )
-        );
+        $fields = [
+            'query' => [
+                'title' => lang('keywords'),
+                'type'  => 'textfield',
+                'name'  => 'query',
+                'id'    => 'query',
+                'value' =>mysql_clean($default['query'])
+            ],
+            'category' => [
+                'title'         => lang('category'),
+                'type'          => 'checkbox',
+                'name'          => 'category[]',
+                'id'            => 'category',
+                'value'         => ['category',$cat_array],
+                'category_type' => 'user'
+            ],
+            'date_margin' => [
+                'title'   => lang('joined'),
+                'type'    => 'dropdown',
+                'name'    => 'datemargin',
+                'id'      => 'datemargin',
+                'value'   => $this->search->date_margins(),
+                'checked' => $uploaded
+            ],
+            'sort' => [
+                'title'   => lang('sort_by'),
+                'type'    => 'dropdown',
+                'name'    => 'sort',
+                'value'   => $sorting,
+                'checked' => $sort
+            ]
+        ];
 
         $this->search->search_type['users']['fields'] = $fields;
     }
