@@ -147,16 +147,26 @@ switch($mode)
             $log->writeLine('Temporary Uploading', 'Went something wrong in moving the file in Temp directory!', true);
         }
 
+        $filename_without_ext = pathinfo($_FILES['Filedata']['name'], PATHINFO_FILENAME);
+        if( strlen($filename_without_ext) > config('max_video_title') ){
+            $filename_without_ext = substr($filename_without_ext,0,config('max_video_title'));
+        }
         $vidDetails = [
-            'title'           => $_FILES['Filedata']['name']
+            'title'           => $filename_without_ext
             ,'file_name'      => $file_name
             ,'file_directory' => $file_directory
-            ,'description'    => $_FILES['Filedata']['name']
-            ,'tags'           => genTags(str_replace([' ','_','-'],', ',$_FILES['Filedata']['name']))
+            ,'description'    => $filename_without_ext
+            ,'tags'           => genTags(str_replace([' ','_','-'],', ',$filename_without_ext))
             ,'category'       => [$cbvid->get_default_cid()]
             ,'userid'         => userid()
         ];
+
         $vid = $Upload->submit_upload($vidDetails);
+
+        if( !$vid ){
+            echo json_encode(['success'=>'no','file_name'=>$filename_without_ext]);
+            exit();
+        }
 
         $Upload->add_conversion_queue($targetFileName);
 

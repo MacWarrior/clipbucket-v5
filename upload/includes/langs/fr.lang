@@ -1118,7 +1118,7 @@
     "commented": "Commenté",
     "searching_keyword_in_obj": "Recherche de '%s' dans %s",
     "no_results_found": "Aucun résultat disponible",
-    "please_enter_val_bw_min_max": "Please enter '%s' value between '%s' and '%s'",
+    "please_enter_val_bw_min_max": "Le champ '%s' doit avoir une taille comprise entre '%s' et '%s'",
     "no_new_subs_video": "No new videos found in subscriptions",
     "inapp_content": "Contenu inapproprié",
     "copyright_infring": "Violation de copyright",

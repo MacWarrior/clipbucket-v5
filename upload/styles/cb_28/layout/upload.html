@@ -213,10 +213,16 @@
 			uploader.bind('FilesAdded', function(up, uploadedFiles) {
 				$("#uploadMore").addClass("hidden");
 
+                const filename = uploadedFiles[0].name;
+                let filename_without_extension = filename.substring(0, filename.lastIndexOf('.'));
+                if( filename_without_extension.length > {config('max_video_title')} ){
+                    filename_without_extension = filename_without_extension.substring(0, {config('max_video_title')});
+                }
+
 				uploadedFiles[0].data = [];
-				uploadedFiles[0].data.title = uploadedFiles[0].name;
-				uploadedFiles[0].data.description = uploadedFiles[0].name;
-				uploadedFiles[0].data.tags = uploadedFiles[0].name;
+				uploadedFiles[0].data.title = filename_without_extension;
+				uploadedFiles[0].data.description = filename_without_extension;
+				uploadedFiles[0].data.tags = filename_without_extension;
 				uploadedFiles[0].data.country = "{config('default_country_iso2')}";
 				uploadedFiles[0].data.location = '';
 				uploadedFiles[0].data.datecreated = "{date(config('date_format'),time())}";

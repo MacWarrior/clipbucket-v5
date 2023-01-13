@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"118",
+  "revision":"119",
   "status":"dev",
   "detail":[
     {
@@ -123,6 +123,8 @@
         ,"Fix photos filter <i>#243</i>"
         ,"Fix video detail saving during conversion <i>#243</i>"
         ,"Fix user background management"
+        ,"Fix video upload with too long name"
+        ,"Use filename without extension as default title and description <i>#248</i>"
       ]
     }
   ,{
