@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"117",
+  "revision":"118",
   "status":"dev",
   "detail":[
     {
@@ -64,6 +64,7 @@
         ,"Fix SQL structure <i>#220</i>"
         ,"Implement Whoops 2.14.5 in DEV mode <i>#217</i> (Thanks veka-server !)"
         ,"Update Smarty to version 3.1.45"
+        ,"Update login logs <i>#252</i>"
       ]
     },
     {

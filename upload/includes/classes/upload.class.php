@@ -1,9 +1,9 @@
 <?php
 class Upload
 {
- 	var $custom_form_fields = array();  //Step 1 of Uploading
-	var $custom_form_fields_groups = array() ; //Groups of custom fields
-	var $custom_upload_fields = array(); //Step 2 of Uploading
+ 	var $custom_form_fields = [];  //Step 1 of Uploading
+	var $custom_form_fields_groups = [] ; //Groups of custom fields
+	var $custom_upload_fields = []; //Step 2 of Uploading
 	var $actions_after_video_upload = array('activate_video_with_file');
 
 	/**
@@ -234,8 +234,7 @@ class Upload
 			//Finalizing Query
 			$query .= ')';
 
-			if(!userid() && !has_access('allow_video_upload',false,false))
-			{
+			if(!userid() && !has_access('allow_video_upload',false,false)) {
 				e(lang('you_not_logged_in'));
 			} else {
 				$insert_id = file_name_exists($file_name);
@@ -245,21 +244,25 @@ class Upload
 					$insert_id = $db->insert_id();
 
 					//logging Upload
-					$log_array = array(
+					$log_array = [
 						'success'=>'yes',
 						'action_obj_id' => $insert_id,
 						'userid' => $userid,
 						'details' => $array['title']
-					);
+                    ];
 					insert_log('Uploaded a video',$log_array);
 
-					$db->update(tbl('users'),array('total_videos'),array('|f|total_videos+1')," userid='".$userid."'");
+					$db->update(tbl('users'),['total_videos'],['|f|total_videos+1'],' userid=\''.$userid.'\'');
 				}
 			}
 		}
 
 		//Adding Video Feed
-		addFeed(array('action' => 'upload_video','object_id' => $insert_id,'object'=>'video'));
+		addFeed([
+            'action' => 'upload_video',
+            'object_id' => $insert_id,
+            'object'=>'video'
+        ]);
 		return $insert_id;
 	}
 
@@ -864,7 +867,7 @@ class Upload
 					$array = pull_custom_fields('video');
 				}
 			}
-			$cleaned = array();
+			$cleaned = [];
 
 			if (!$insertion) {
 				foreach ($array as $key => $field) {
