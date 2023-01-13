@@ -8,18 +8,18 @@ $userquery->login_check('admin_access');
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = array('title' => 'Templates And Players', 'url' => '');
+$breadcrumb[0] = ['title' => 'Templates And Players', 'url' => ''];
 if($_GET['mode'] == 'show_settings'){
-    $breadcrumb[1] = array('title' => lang('player_settings'), 'url' => ADMIN_BASEURL.'/manage_players.php?mode=show_settings');
+    $breadcrumb[1] = ['title' => lang('player_settings'), 'url' => ADMIN_BASEURL.'/manage_players.php?mode=show_settings'];
 } else {
-    $breadcrumb[1] = array('title' => 'Players Manager', 'url' => ADMIN_BASEURL.'/manage_players.php');
+    $breadcrumb[1] = ['title' => 'Players Manager', 'url' => ADMIN_BASEURL.'/manage_players.php'];
 }
 
 //Set Mode
 assign('mode',$_GET['mode']);
 
 if(isset($_POST['update'])) {
-    $rows = array(
+    $rows = [
         'autoplay_video',
         'embed_player_height',
         'embed_player_width',
@@ -34,7 +34,7 @@ if(isset($_POST['update'])) {
         'player_default_resolution',
         'player_default_resolution_hls',
         'player_subtitles'
-    );
+    ];
 
     //Checking for logo
     if(isset($_FILES['logo_file']['name'])) {
@@ -62,7 +62,7 @@ if(isset($_POST['update'])) {
     e(lang('player_settings_updated'),'m');
 }
 
-if(isset( $_POST['reset_control_bar_logo_url']) ){
+if(isset($_POST['reset_control_bar_logo_url']) ){
     if( file_exists(LOGOS_DIR.'/player-logo.png') ){
         unlink(LOGOS_DIR.'/player-logo.png');
     }

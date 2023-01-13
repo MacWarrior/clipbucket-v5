@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"115",
+  "revision":"116",
   "status":"dev",
   "detail":[
     {
@@ -40,6 +40,7 @@
         ,"Fix manage collection items"
         ,"Speed-up collection loading"
         ,"Fix user background management"
+        ,"Fix enable subtitles player option <i>#252</i>"
       ]
     },
     {
