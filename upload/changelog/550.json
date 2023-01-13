@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"116",
+  "revision":"117",
   "status":"dev",
   "detail":[
     {
@@ -46,7 +46,7 @@
     {
       "title": "Miscellaneous",
       "description": [
-        "Cleanup code"
+        "Cleanup code <i>#251</i>"
         ,"Remove unused config"
         ,"Remove unused DB columns"
         ,"Fix installation process"

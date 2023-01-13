@@ -14,13 +14,13 @@ const DEV_INGNORE_SYNTAX = true;
 
 if(file_exists(dirname(__FILE__).'/../files/temp/development.dev')) {
     define('DEVELOPMENT_MODE',true);
-    $__devmsgs = array(
-        'insert_queries'=>array(),
-        'select_queries'=>array(),
-        'update_queries'=>array(),
-        'delete_queries'=>array(),
-        'count_queries'=>array(),
-        'execute_queries'=>array(),
+    $__devmsgs = [
+        'insert_queries'=>[],
+        'select_queries'=>[],
+        'update_queries'=>[],
+        'delete_queries'=>[],
+        'count_queries'=>[],
+        'execute_queries'=>[],
         'insert'=>'0',
         'select'=>'0',
         'update'=>'0',
@@ -32,7 +32,7 @@ if(file_exists(dirname(__FILE__).'/../files/temp/development.dev')) {
         'total_memory_used'=>'0',
         'expensive_query'=>'',
         'cheapest_query'=>''
-    );
+    ];
 
     require_once(dirname(__DIR__).DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php');
     $whoops = new \Whoops\Run;
@@ -127,7 +127,7 @@ if(count($matches)>0) {
 }
 
 $clean_base = false;
-if(defined("CLEAN_BASEURL")) {
+if(defined('CLEAN_BASEURL')) {
     $clean_base = CLEAN_BASEURL;
 }
 
@@ -148,7 +148,6 @@ require_once('classes/errorhandler.class.php');
 require_once('classes/session.class.php');
 require_once('classes/log.class.php');
 require_once('classes/swfObj.class.php');
-require_once('classes/image.class.php');
 require_once('classes/video.class.php');
 require_once('classes/player.class.php');
 require_once('classes/cbemail.class.php');
@@ -195,10 +194,10 @@ $GoogleTranslator = new GoogleTranslator();
 
 check_install('after');
 @include($Cbucket->BASEDIR.'/includes/clipbucket.php');
-$Cbucket->cbinfo = array("version"=>VERSION,"state"=>STATE,"rev"=>REV);
+$Cbucket->cbinfo = ['version'=>VERSION,'state'=>STATE,'rev'=>REV];
 
 # Holds Advertisement IDS that are being Viewed
-$ads_array = array();
+$ads_array = [];
 
 # Website Details
 define('CB_VERSION', $row['version']);
@@ -310,8 +309,8 @@ const AVATARS_DIR = FILES_DIR . '/avatars';
 const AVATARS_URL = '/files/avatars';
 
 # LOGOS DIR
-const LOGOS_DIR = FILES_DIR . "/logos";
-const LOGOS_URL = "/files/logos";
+const LOGOS_DIR = FILES_DIR . '/logos';
+const LOGOS_URL = '/files/logos';
 
 # ADVANCE CACHING
 const CACHE_DIR = BASEDIR . '/cache';
@@ -334,8 +333,8 @@ $cbphoto->cropping = $row['photo_crop'];
 $cbphoto->position = $row['watermark_placement'];
 
 # Enable youtube videos
-define("EMBED_VDO_WIDTH",$row['embed_player_width']);
-define("EMBED_VDO_HEIGHT",$row['embed_player_height']);
+define('EMBED_VDO_WIDTH',$row['embed_player_width']);
+define('EMBED_VDO_HEIGHT',$row['embed_player_height']);
 
 # Checking Website Template
 include 'plugin.functions.php';
@@ -409,22 +408,22 @@ if (!file_exists( PLAYLIST_COVERS_DIR)) {
     mkdir(PLAYLIST_COVERS_DIR, 0777);
 }
 
-$ClipBucket->upload_opt_list = array();
+$ClipBucket->upload_opt_list = [];
 
 if( config('load_upload_form') == 'yes' ){
-    $ClipBucket->upload_opt_list['file_upload_div'] = array(
+    $ClipBucket->upload_opt_list['file_upload_div'] = [
         'title'      => lang('upload_file'),
         'func_class' => 'Upload',
-        'load_func'  => 'load_upload_form',
-    );
+        'load_func'  => 'load_upload_form'
+    ];
 }
 
 if( config('load_remote_upload_form') == 'yes' ){
-    $ClipBucket->upload_opt_list['remote_upload_div'] = array(
+    $ClipBucket->upload_opt_list['remote_upload_div'] = [
         'title'      => lang('remote_upload'),
         'func_class' => 'Upload',
-        'load_func'  => 'load_remote_upload_form',
-    );
+        'load_func'  => 'load_remote_upload_form'
+    ];
 }
 
 Assign('LANG',$LANG);
