@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"122",
+  "revision":"123",
   "status":"dev",
   "detail":[
     {
@@ -65,6 +65,7 @@
         ,"Implement Whoops 2.14.5 in DEV mode <i>#217</i> (Thanks veka-server !)"
         ,"Update Smarty to version 3.1.46"
         ,"Update login logs <i>#252</i>"
+        ,"Add porguguese (BR) translation <i>#253</i> (Thanks raiancollyn !)"
       ]
     },
     {

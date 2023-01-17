@@ -214,7 +214,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 INSERT INTO `{tbl_prefix}languages` (`language_id`, `language_code`, `language_name`, `language_regex`, `language_active`, `language_default`) VALUES
 	(1, 'en', 'English', '/^en/i', 'yes', 'yes'),
 	(2, 'fr', 'French', '/^fr/i', 'yes', 'no'),
-	(3, 'de', 'German', '/^de/i', 'yes', 'no');
+	(3, 'de', 'German', '/^de/i', 'yes', 'no'),
+	(4, 'pt-BR', 'Português (BR)', '/^pt-BR/i', 'yes', 'no');
 
 INSERT INTO `{tbl_prefix}validation_re` (`re_id`, `re_name`, `re_code`, `re_syntax`) VALUES
 	(1, 'Username', 'username', '^^[a-zA-Z0-9_]+$'),

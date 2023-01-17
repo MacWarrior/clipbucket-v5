@@ -806,3 +806,7 @@ INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
 
 -- REV 105
 DELETE FROM `{tbl_prefix}config` WHERE name = 'anonymous_id';
+
+-- REV 123
+INSERT INTO `{tbl_prefix}languages` (`language_id`, `language_code`, `language_name`, `language_regex`, `language_active`, `language_default`) VALUES
+	(4, 'pt-BR', 'Português (BR)', '/^pt-BR/i', 'yes', 'no');
