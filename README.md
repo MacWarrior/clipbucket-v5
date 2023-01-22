@@ -12,7 +12,7 @@ You can start a fully dedicated video sharing website or photo sharing websites 
 </p>
 
 # History
-ClipBucket official repository has been slowly dying since the release 4.1 (May 2018)<br/>
+ClipBucket official repository has been slowly dying since the release 4.1 (May 2018) and has been closed on December 2022.<br/>
 I <i>(<a href="https://github.com/MacWarrior">MacWarrior</a>)</i> have been working on <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> since 2016 and haven't stop using and upgrading it since
 
 # Why <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a>
@@ -38,7 +38,7 @@ All you need is here : <a href="https://github.com/MacWarrior/clipbucket-v5/tree
 ### Advanced users
 <i>“Your path you must decide.”</i><br/> 
 Required : MySQL 5.6+ / MariaDB 10.3+ ; PHP 7.0+ (+ modules : mysqli, curl, xml, mbstring, gd) ; FFmpeg 3+ ; mediainfo ; sendmail<br/>
-Recommended : MariaDB 10.3+ ; PHP 8.0+ ; FFmpeg 4.3+
+Recommended : MariaDB 10.3+ ; PHP 8.1+ ; FFmpeg 4.3+
 Optionnal : Git<br/>
 <i>Only stable versions have been tested, mainly on Debian</i>
 
