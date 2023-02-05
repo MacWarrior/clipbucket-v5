@@ -25,6 +25,8 @@
 	height: 100% !important;
 	width: 100% !important;
 	border: none !important;
+	margin-left: 0 !important;
+	margin-top: 0 ! important;
 }
 
 .vjs-cb-header-caption {

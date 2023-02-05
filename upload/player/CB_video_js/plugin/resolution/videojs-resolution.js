@@ -40,12 +40,11 @@
         * Resolution menu item
         */
         var MenuItem = videojs.getComponent('MenuItem');
-        var ResolutionMenuItem = videojs.extend(MenuItem, {
-            constructor: function(player, options, onClickListener, label){
+        class ResolutionMenuItem extends MenuItem {
+            constructor(player, options, onClickListener, label) {
+                super(player, options);
                 this.onClickListener = onClickListener;
                 this.label = label;
-                // Sets this.player_, this.options_ and initializes the component
-                MenuItem.call(this, player, options);
                 this.src = options.src;
 
                 this.on('click', this.onClick);
@@ -57,14 +56,18 @@
 
                     this.addClass('vjs-selected');
                 }
-            },
-            showAsLabel: function() {
+            }
+
+            showAsLabel()
+            {
                 // Change menu button label to the label of this item if the menu button label is provided
                 if(this.label) {
                     this.label.innerHTML = this.options_.label;
                 }
-            },
-            onClick: function(customSourcePicker){
+            }
+
+            onClick(customSourcePicker)
+            {
                 this.onClickListener(this);
                 // Remember player state
                 var currentTime = this.player_.currentTime();
@@ -100,20 +103,23 @@
                     }
                 });
             }
-        });
+        }
+        videojs.registerComponent('ResolutionMenuItem', ResolutionMenuItem);
 
         /*
         * Resolution menu button
         */
         var MenuButton = videojs.getComponent('MenuButton');
-        var ResolutionMenuButton = videojs.extend(MenuButton, {
-            constructor: function(player, options, settings, label){
-                this.sources = options.sources;
+        var sourcescb = '';
+        class ResolutionMenuButton extends MenuButton {
+            constructor(player, options, settings, label) {
+                sourcescb = options.sources;
+
+                super(player, options, options, settings);
+
+                this.controlText(lang_quality);
                 this.label = label;
                 this.label.innerHTML = options.initialySelectedLabel;
-                // Sets this.player_, this.options_ and initializes the component
-                MenuButton.call(this, player, options, settings);
-                this.controlText(lang_quality);
 
                 if(settings.dynamicLabel){
                     this.el().appendChild(label);
@@ -122,10 +128,12 @@
                     videojs.dom.addClass(staticLabel, 'vjs-resolution-button-staticlabel');
                     this.el().appendChild(staticLabel);
                 }
-            },
-            createItems: function(){
+            }
+
+            createItems()
+            {
                 var menuItems = [];
-                var labels = (this.sources && this.sources.label) || {};
+                var labels = (sourcescb && sourcescb.label) || {};
                 var onClickUnselectOthers = function(clickedItem) {
                     menuItems.map(function(item) {
                         item.selected(item === clickedItem);
@@ -151,13 +159,15 @@
                 }
                 return menuItems;
             }
-        });
+        }
+        videojs.registerComponent('ResolutionMenuButton', ResolutionMenuButton);
 
         /**
          * Initialize the plugin.
          * @param {object} [options] configuration for the plugin
          */
         videoJsResolutionSwitcher = function(options) {
+            // TODO VideoJS 8 : videojs.obj.merge(defaults, options)
             var settings = videojs.mergeOptions(defaults, options),
                 player = this,
                 label = document.createElement('span'),
