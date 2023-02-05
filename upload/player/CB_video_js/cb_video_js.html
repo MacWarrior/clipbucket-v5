@@ -140,11 +140,7 @@
 <video playsinline id="cb_video_js_{$vdata.videoid}" class="video-js vjs-default-skin vjs-show-big-play-button-on-pause" height="{$height}" width="{$width}" poster="{getThumb vdetails=$vdata size=768x432}" >
 	{foreach $video_files as $file}
 		{$quality = get_cbvjs_quality($file, $vdata['file_type'])}
-        {if $vdata['file_type'] == 'hls'}
-    <source src='{$file}' type="application/x-mpegURL" label="{$myquery->getVideoResolutionTitleFromHeight($quality)}" res="{$quality}" />
-        {else}
-    <source src='{$file}' type="video/mp4" label="{$myquery->getVideoResolutionTitleFromHeight($quality)}" res="{$quality}" />
-        {/if}
+    <source src='{$file}' type="{if $vdata['file_type']=='hls'}application/x-mpegURL{else}video/mp4{/if}" label="{$myquery->getVideoResolutionTitleFromHeight($quality)}" res="{$quality}" />
     {/foreach}
 	{if config('player_subtitles')}
 		{$subtitles = get_video_subtitles($vdata)}

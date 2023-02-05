@@ -1206,6 +1206,7 @@
                 case 'hls':
                     $vid_files = glob(VIDEOS_DIR.DIRECTORY_SEPARATOR.$fileDirectory.$vdetails['file_name'].DIRECTORY_SEPARATOR.'*.m3u8');
                     foreach($vid_files as $index => $path){
+                        // Only index.m3u8 is kept, this is the only format yet working with audio
                         if(strpos(basename($path), 'audio_') === 0 || strpos(basename($path), 'video_') === 0){
                             unset($vid_files[$index]);
                         }
@@ -1258,23 +1259,6 @@
 			return false;
         }
 		return $files;
-    }
-
-	/**
-	 * Assigns videos array to video player's HTML in VideoJS and HTML5 Player
-	 *
-	 * @param : { array } { $array } { array of all sources for video }
-	 *
-	 * @author : Saqib Razzaq
-	 */
-    function vids_assign($array)
-    {
-        if (!is_array($array)){
-            assign('video_files',[$array]);
-            return false;
-        }
-
-        assign('video_files', $array);
     }
 
     function thumbs_res_settings_28(): array

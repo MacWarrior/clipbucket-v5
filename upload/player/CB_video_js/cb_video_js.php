@@ -12,9 +12,9 @@ $cb_video_js = false;
 
 if (!function_exists('cb_video_js'))
 {
-	define("CB_VJS_PLAYER",basename(dirname(__FILE__)));
-	define("CB_VJS_PLAYER_DIR",PLAYER_DIR.DIRECTORY_SEPARATOR.CB_VJS_PLAYER);
-	define("CB_VJS_PLAYER_URL",PLAYER_URL.'/'.CB_VJS_PLAYER);
+	define('CB_VJS_PLAYER',basename(dirname(__FILE__)));
+	define('CB_VJS_PLAYER_DIR',PLAYER_DIR.DIRECTORY_SEPARATOR.CB_VJS_PLAYER);
+	define('CB_VJS_PLAYER_URL',PLAYER_URL.'/'.CB_VJS_PLAYER);
 	assign('cb_vjs_player_dir',CB_VJS_PLAYER_DIR);
 	assign('cb_vjs_player_url',CB_VJS_PLAYER_URL);
 
@@ -26,8 +26,12 @@ if (!function_exists('cb_video_js'))
 		$vdetails = $in['vdetails'];
 
 		$video_play = get_video_files($vdetails,true,true);
-	
-		vids_assign($video_play);
+
+        if (!is_array($video_play)){
+            assign('video_files',[$video_play]);
+            return false;
+        }
+        assign('video_files', $video_play);
 
 		if(!strstr($in['width'],"%")){
 			$in['width'] = $in['width'].'px';
@@ -56,12 +60,13 @@ if (!function_exists('cb_video_js'))
             case 'mp4':
                 $quality = explode('-', basename($src));
                 $quality = explode('.',end($quality));
-                break;
+                return $quality[0];
             case 'hls':
-                $quality = explode('.',basename($src));
-                break;
+                $quality = explode('video_', basename($src));
+                $quality = explode('.',end($quality));
+                return substr(reset($quality), 0, -1);
         }
-        return $quality[0];
+
 	}
 
 	/*
@@ -74,7 +79,6 @@ if (!function_exists('cb_video_js'))
             foreach ($video_files as $file) {
                 $res[] = get_cbvjs_quality($file, $file_type);
             }
-            $all_res = $res;
 
             if( getExt($video_files[0]) == 'mp4' ){
                 $player_default_resolution = config('player_default_resolution');
@@ -82,9 +86,9 @@ if (!function_exists('cb_video_js'))
                 $player_default_resolution = config('player_default_resolution_hls');
             }
 
-            if (in_array($player_default_resolution, $all_res)){
+            if (in_array($player_default_resolution, $res)){
                 $quality = $player_default_resolution;
-            } elseif ($player_default_resolution > max($all_res)) {
+            } elseif ($player_default_resolution > max($res)) {
                 $quality = 'high';
             } else {
                 $quality = 'low';
@@ -118,7 +122,7 @@ if (!function_exists('cb_video_js'))
 			case 'get_ultimate_ads':
 				if( defined('CB_ULTIMATE_ADS') && CB_ULTIMATE_ADS == 'installed'){
 					global $CbUads;
-					$ads_array = array("filter_ad"=>true,"status"=>"1","non_expiry"=>'true');
+					$ads_array = ['filter_ad'=>true,'status'=>'1','non_expiry'=>'true'];
 					$current_ad = $CbUads->get_ultimate_ads($ads_array);
 					
 					if ( !empty($current_ad) ){
@@ -164,7 +168,7 @@ if (!function_exists('cb_video_js'))
 					}
 					$slot_id = $ia_ads->get_slot($slot_paramas)[0]['slot_id'];
 					if (!empty($slot_id)){
-						$instances = $ia_ads->get_instance(array("slot_id"=>$slot_id,'order'=>'starttime ASC'));	
+						$instances = $ia_ads->get_instance(['slot_id'=>$slot_id,'order'=>'starttime ASC']);
 					}
 					return $instances;
 				}
