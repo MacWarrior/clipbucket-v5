@@ -49,7 +49,6 @@ if($myquery->VideoExists($video)) {
     if(isset($_GET['gen_more'])) {
         $thumbs_settings_28 = thumbs_res_settings_28();
         $vid_file = get_high_res_file($data);
-        error_log($vid_file);
         $thumbs_num = config('num_thumbs');
 
         $thumbs_input['vid_file'] = $vid_file;

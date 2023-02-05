@@ -1309,7 +1309,9 @@
                 return $filepath.$vdetails['file_name'].'-'.$max_quality.'.mp4';
 
             case 'hls':
-                return $filepath.$vdetails['file_name'].DIRECTORY_SEPARATOR.$max_quality.'.m3u8';
+                global $myquery;
+                $video_quality_title = $myquery->getVideoResolutionTitleFromHeight($max_quality);
+                return $filepath.$vdetails['file_name'].DIRECTORY_SEPARATOR.'video_'.$video_quality_title.'.m3u8';
         }
     }
 

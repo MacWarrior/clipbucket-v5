@@ -457,6 +457,7 @@ class FFMpeg
                 $resolutions = '';
                 foreach($resolution as $res){
                     $video_bitrate = $myquery->getVideoResolutionBitrateFromHeight($res['height']);
+                    $this->video_files[] = $res['height'];
                     $bitrates .= ' -b:v:'.$count.' '.$video_bitrate;
                     $resolutions .= ' -s:v:'.$count.' '.$res['video_width'].'x'.$res['video_height'];
                     $count++;
