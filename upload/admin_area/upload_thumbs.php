@@ -49,6 +49,7 @@ if($myquery->VideoExists($video)) {
     if(isset($_GET['gen_more'])) {
         $thumbs_settings_28 = thumbs_res_settings_28();
         $vid_file = get_high_res_file($data);
+        error_log($vid_file);
         $thumbs_num = config('num_thumbs');
 
         $thumbs_input['vid_file'] = $vid_file;
@@ -76,7 +77,7 @@ if($myquery->VideoExists($video)) {
             $ffmpeg->generateThumbs($thumbs_input);
         }
 
-        e(lang('Video thumbs has been regenerated successfully'),'m');
+        e(lang('video_thumbs_regenerated'),'m');
         $db->update(tbl('video'), ['thumbs_version'], [VERSION], ' file_name = \''.$data['file_name'].'\'');
     }
 

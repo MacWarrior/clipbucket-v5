@@ -1,4 +1,4 @@
-{
+ {
     "ad_name_error":"Bitte geben Sie einen Namen für die Anzeige ein",
     "ad_code_error":"Fehler : Bitte geben Sie einen Code für die Anzeige ein",
     "ad_exists_error1":"Die Anzeige existiert nicht",
@@ -1607,5 +1607,6 @@
     "page_upload_video_select":" Video auswählen",
     "page_upload_photo_limits":"Jedes Foto darf höchstens %s MB groß sein und muss in einem gängigen Bildformat vorliegen",
 
-    "video_resolution_auto":"Auto"
+    "video_resolution_auto":"Auto",
+	"video_thumbs_regenerated":"Video thumbs has been regenerated successfully"
 }

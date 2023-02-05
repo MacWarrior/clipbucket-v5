@@ -1607,5 +1607,6 @@
 	"page_upload_video_select":" Select Video",
 	"page_upload_photo_limits": "Each photo may not exceed %s MB in size and must be in a common image format",
 
-	"video_resolution_auto":"Auto"
+	"video_resolution_auto":"Auto",
+	"video_thumbs_regenerated":"Video thumbs has been regenerated successfully"
 }

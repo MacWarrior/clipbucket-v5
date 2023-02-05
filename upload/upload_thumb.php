@@ -61,8 +61,8 @@ if($myquery->VideoExists($video))
             $ffmpeg->generateThumbs($thumbs_input);
         }
 
-        e(lang('Video thumbs has been regenerated successfully'),'m');
-        $db->update(tbl('video'), array('thumbs_version'), array(VERSION), " file_name = '".$data['file_name']."' ");
+        e(lang('video_thumbs_regenerated'),'m');
+        $db->update(tbl('video'), ['thumbs_version'], [VERSION], " file_name = '".$data['file_name']."' ");
     }
 
     Assign('data',$data);

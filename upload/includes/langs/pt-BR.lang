@@ -1603,5 +1603,6 @@
     "page_upload_video_limits": "Cada vídeo não pode exceder %s MB de tamanho ou %s minutos de duração e deve estar em um formato de vídeo comum",
     "page_upload_video_select": " Selecionar vídeo",
     "page_upload_photo_limits": "Cada foto não pode exceder %s MB de tamanho e deve estar em um formato de imagem comum",
-    "video_resolution_auto": "Automático"
+    "video_resolution_auto": "Automático",
+	"video_thumbs_regenerated":"Video thumbs has been regenerated successfully"
 }

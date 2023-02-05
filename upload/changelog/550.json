@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"124",
+  "revision":"125",
   "status":"dev",
   "detail":[
     {
@@ -16,7 +16,7 @@
         ,"Add video type tag to video manager"
         ,"Fix failed conversion status display"
         ,"Fix delete Conversion Lock"
-        ,"Add option to select conversion type (WIP)"
+        ,"Add option to select conversion type"
         ,"Add SQL request if an error occured during installation when in DEV mode"
         ,"Fix video castable status after conversion <i>#193</i>"
         ,"Fix video bits_colors status after conversion <i>#194</i>"
@@ -73,7 +73,7 @@
       "description": [
         "Implement subtitles"
         ,"Add option to enable subtitles"
-        ,"Add support for HLS video files (WIP)"
+        ,"Add support for HLS video files"
         ,"Improve video quality selection <i>#230</i> (Thanks joo4mart !)"
         ,"Update VideoJS to version 7.21.1"
         ,"Add HLS player default quality option"
