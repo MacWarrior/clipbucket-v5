@@ -1,6 +1,6 @@
 /**
  * @license
- * Video.js 7.21.1 <http://videojs.com/>
+ * Video.js 7.21.2 <http://videojs.com/>
  * Copyright Brightcove, Inc. <https://www.brightcove.com/>
  * Available under Apache License Version 2.0
  * <https://github.com/videojs/video.js/blob/main/LICENSE>
@@ -16,7 +16,7 @@
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.videojs = factory());
 }(this, (function () { 'use strict';
 
-  var version$5 = "7.21.1";
+  var version$5 = "7.21.2";
 
   /**
    * An Object that contains lifecycle hooks as keys which point to an array
@@ -31389,9 +31389,9 @@
     })();
   });
 
-  var DEFAULT_LOCATION = 'http://example.com';
+  var DEFAULT_LOCATION$1 = 'http://example.com';
 
-  var resolveUrl$1 = function resolveUrl(baseUrl, relativeUrl) {
+  var resolveUrl$2 = function resolveUrl(baseUrl, relativeUrl) {
     // return early if we don't need to resolve
     if (/^[a-z]+:/i.test(relativeUrl)) {
       return relativeUrl;
@@ -31411,7 +31411,7 @@
     var removeLocation = !window.location && !/\/\//i.test(baseUrl); // if the base URL is relative then combine with the current location
 
     if (nativeURL) {
-      baseUrl = new window.URL(baseUrl, window.location || DEFAULT_LOCATION);
+      baseUrl = new window.URL(baseUrl, window.location || DEFAULT_LOCATION$1);
     } else if (!/\/\//i.test(baseUrl)) {
       baseUrl = urlToolkit.buildAbsoluteURL(window.location && window.location.href || '', baseUrl);
     }
@@ -31422,7 +31422,7 @@
       // otherwise, return the url unmodified
 
       if (removeLocation) {
-        return newUrl.href.slice(DEFAULT_LOCATION.length);
+        return newUrl.href.slice(DEFAULT_LOCATION$1.length);
       } else if (protocolLess) {
         return newUrl.href.slice(newUrl.protocol.length);
       }
@@ -33541,6 +33541,50 @@
       var aByte = mask[i] ? mask[i] & a[offset + i] : a[offset + i];
       return bByte === aByte;
     });
+  };
+
+  var DEFAULT_LOCATION = 'http://example.com';
+
+  var resolveUrl$1 = function resolveUrl(baseUrl, relativeUrl) {
+    // return early if we don't need to resolve
+    if (/^[a-z]+:/i.test(relativeUrl)) {
+      return relativeUrl;
+    } // if baseUrl is a data URI, ignore it and resolve everything relative to window.location
+
+
+    if (/^data:/.test(baseUrl)) {
+      baseUrl = window.location && window.location.href || '';
+    } // IE11 supports URL but not the URL constructor
+    // feature detect the behavior we want
+
+
+    var nativeURL = typeof window.URL === 'function';
+    var protocolLess = /^\/\//.test(baseUrl); // remove location if window.location isn't available (i.e. we're in node)
+    // and if baseUrl isn't an absolute url
+
+    var removeLocation = !window.location && !/\/\//i.test(baseUrl); // if the base URL is relative then combine with the current location
+
+    if (nativeURL) {
+      baseUrl = new window.URL(baseUrl, window.location || DEFAULT_LOCATION);
+    } else if (!/\/\//i.test(baseUrl)) {
+      baseUrl = urlToolkit.buildAbsoluteURL(window.location && window.location.href || '', baseUrl);
+    }
+
+    if (nativeURL) {
+      var newUrl = new URL(relativeUrl, baseUrl); // if we're a protocol-less url, remove the protocol
+      // and if we're location-less, remove the location
+      // otherwise, return the url unmodified
+
+      if (removeLocation) {
+        return newUrl.href.slice(DEFAULT_LOCATION.length);
+      } else if (protocolLess) {
+        return newUrl.href.slice(newUrl.protocol.length);
+      }
+
+      return newUrl.href;
+    }
+
+    return urlToolkit.buildAbsoluteURL(baseUrl, relativeUrl);
   };
 
   /**
@@ -40726,12 +40770,67 @@
   };
   var clock_1 = clock.ONE_SECOND_IN_TS;
 
-  /*! @name @videojs/http-streaming @version 2.15.1 @license Apache-2.0 */
+  var getPrototypeOf = createCommonjsModule(function (module) {
+    function _getPrototypeOf(o) {
+      module.exports = _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
+        return o.__proto__ || Object.getPrototypeOf(o);
+      };
+      return _getPrototypeOf(o);
+    }
+
+    module.exports = _getPrototypeOf;
+  });
+
+  function _isNativeFunction(fn) {
+    return Function.toString.call(fn).indexOf("[native code]") !== -1;
+  }
+
+  var isNativeFunction = _isNativeFunction;
+
+  var wrapNativeSuper = createCommonjsModule(function (module) {
+    function _wrapNativeSuper(Class) {
+      var _cache = typeof Map === "function" ? new Map() : undefined;
+
+      module.exports = _wrapNativeSuper = function _wrapNativeSuper(Class) {
+        if (Class === null || !isNativeFunction(Class)) return Class;
+
+        if (typeof Class !== "function") {
+          throw new TypeError("Super expression must either be null or a function");
+        }
+
+        if (typeof _cache !== "undefined") {
+          if (_cache.has(Class)) return _cache.get(Class);
+
+          _cache.set(Class, Wrapper);
+        }
+
+        function Wrapper() {
+          return construct(Class, arguments, getPrototypeOf(this).constructor);
+        }
+
+        Wrapper.prototype = Object.create(Class.prototype, {
+          constructor: {
+            value: Wrapper,
+            enumerable: false,
+            writable: true,
+            configurable: true
+          }
+        });
+        return setPrototypeOf(Wrapper, Class);
+      };
+
+      return _wrapNativeSuper(Class);
+    }
+
+    module.exports = _wrapNativeSuper;
+  });
+
+  /*! @name @videojs/http-streaming @version 2.16.0 @license Apache-2.0 */
   /**
    * @file resolve-url.js - Handling how URLs are resolved and manipulated
    */
 
-  var resolveUrl = resolveUrl$1;
+  var resolveUrl = resolveUrl$2;
   /**
    * Checks whether xhr request was redirected and returns correct url depending
    * on `handleManifestRedirects` option
@@ -44837,7 +44936,7 @@
   var getWorkerString = function getWorkerString(fn) {
     return fn.toString().replace(/^function.+?{/, '').slice(0, -1);
   };
-  /* rollup-plugin-worker-factory start for worker!/Users/gkatsevman/p/http-streaming/src/transmuxer-worker.js */
+  /* rollup-plugin-worker-factory start for worker!/Users/ddashkevich/projects/vhs-release/src/transmuxer-worker.js */
 
 
   var workerCode$1 = transform(getWorkerString(function () {
@@ -53643,7 +53742,7 @@
     };
   }));
   var TransmuxWorker = factory(workerCode$1);
-  /* rollup-plugin-worker-factory end for worker!/Users/gkatsevman/p/http-streaming/src/transmuxer-worker.js */
+  /* rollup-plugin-worker-factory end for worker!/Users/ddashkevich/projects/vhs-release/src/transmuxer-worker.js */
 
   var handleData_ = function handleData_(event, transmuxedData, callback) {
     var _event$data$segment = event.data.segment,
@@ -60208,6 +60307,16 @@
   var VTT_LINE_TERMINATORS = new Uint8Array('\n\n'.split('').map(function (_char3) {
     return _char3.charCodeAt(0);
   }));
+
+  var NoVttJsError = /*#__PURE__*/function (_Error) {
+    inheritsLoose(NoVttJsError, _Error);
+
+    function NoVttJsError() {
+      return _Error.call(this, 'Trying to parse received VTT cues, but there is no WebVTT. Make sure vtt.js is loaded.') || this;
+    }
+
+    return NoVttJsError;
+  }( /*#__PURE__*/wrapNativeSuper(Error));
   /**
    * An object that manages segment loading and appending.
    *
@@ -60215,6 +60324,7 @@
    * @param {Object} options required and optional options
    * @extends videojs.EventTarget
    */
+
 
   var VTTSegmentLoader = /*#__PURE__*/function (_SegmentLoader) {
     inheritsLoose(VTTSegmentLoader, _SegmentLoader);
@@ -60232,7 +60342,8 @@
       _this.mediaSource_ = null;
       _this.subtitlesTrack_ = null;
       _this.loaderType_ = 'subtitle';
-      _this.featuresNativeTextTracks_ = settings.featuresNativeTextTracks; // The VTT segment will have its own time mappings. Saving VTT segment timing info in
+      _this.featuresNativeTextTracks_ = settings.featuresNativeTextTracks;
+      _this.loadVttJs = settings.loadVttJs; // The VTT segment will have its own time mappings. Saving VTT segment timing info in
       // the sync controller leads to improper behavior.
 
       _this.shouldSaveSegmentTimingInfo_ = false;
@@ -60507,30 +60618,19 @@
         segment.map.bytes = simpleSegment.map.bytes;
       }
 
-      segmentInfo.bytes = simpleSegment.bytes; // Make sure that vttjs has loaded, otherwise, wait till it finished loading
+      segmentInfo.bytes = simpleSegment.bytes; // Make sure that vttjs has loaded, otherwise, load it and wait till it finished loading
 
-      if (typeof window.WebVTT !== 'function' && this.subtitlesTrack_ && this.subtitlesTrack_.tech_) {
-        var loadHandler;
+      if (typeof window.WebVTT !== 'function' && typeof this.loadVttJs === 'function') {
+        this.state = 'WAITING_ON_VTTJS'; // should be fine to call multiple times
+        // script will be loaded once but multiple listeners will be added to the queue, which is expected.
 
-        var errorHandler = function errorHandler() {
-          _this3.subtitlesTrack_.tech_.off('vttjsloaded', loadHandler);
-
-          _this3.stopForError({
+        this.loadVttJs().then(function () {
+          return _this3.segmentRequestFinished_(error, simpleSegment, result);
+        }, function () {
+          return _this3.stopForError({
             message: 'Error loading vtt.js'
           });
-
-          return;
-        };
-
-        loadHandler = function loadHandler() {
-          _this3.subtitlesTrack_.tech_.off('vttjserror', errorHandler);
-
-          _this3.segmentRequestFinished_(error, simpleSegment, result);
-        };
-
-        this.state = 'WAITING_ON_VTTJS';
-        this.subtitlesTrack_.tech_.one('vttjsloaded', loadHandler);
-        this.subtitlesTrack_.tech_.one('vttjserror', errorHandler);
+        });
         return;
       }
 
@@ -60590,6 +60690,8 @@
     /**
      * Uses the WebVTT parser to parse the segment response
      *
+     * @throws NoVttJsError
+     *
      * @param {Object} segmentInfo
      *        a segment info object that describes the current segment
      * @private
@@ -60599,6 +60701,11 @@
     _proto.parseVTTCues_ = function parseVTTCues_(segmentInfo) {
       var decoder;
       var decodeBytesToString = false;
+
+      if (typeof window.WebVTT !== 'function') {
+        // caller is responsible for exception handling.
+        throw new NoVttJsError();
+      }
 
       if (typeof window.TextDecoder === 'function') {
         decoder = new window.TextDecoder('utf8');
@@ -61436,7 +61543,7 @@
 
     return TimelineChangeController;
   }(videojs.EventTarget);
-  /* rollup-plugin-worker-factory start for worker!/Users/gkatsevman/p/http-streaming/src/decrypter-worker.js */
+  /* rollup-plugin-worker-factory start for worker!/Users/ddashkevich/projects/vhs-release/src/decrypter-worker.js */
 
 
   var workerCode = transform(getWorkerString(function () {
@@ -62139,7 +62246,7 @@
     };
   }));
   var Decrypter = factory(workerCode);
-  /* rollup-plugin-worker-factory end for worker!/Users/gkatsevman/p/http-streaming/src/decrypter-worker.js */
+  /* rollup-plugin-worker-factory end for worker!/Users/ddashkevich/projects/vhs-release/src/decrypter-worker.js */
 
   /**
    * Convert the properties of an HLS track into an audioTrackKind.
@@ -63276,7 +63383,25 @@
       }), options);
       _this.subtitleSegmentLoader_ = new VTTSegmentLoader(videojs.mergeOptions(segmentLoaderSettings, {
         loaderType: 'vtt',
-        featuresNativeTextTracks: _this.tech_.featuresNativeTextTracks
+        featuresNativeTextTracks: _this.tech_.featuresNativeTextTracks,
+        loadVttJs: function loadVttJs() {
+          return new Promise(function (resolve, reject) {
+            function onLoad() {
+              tech.off('vttjserror', onError);
+              resolve();
+            }
+
+            function onError() {
+              tech.off('vttjsloaded', onLoad);
+              reject();
+            }
+
+            tech.one('vttjsloaded', onLoad);
+            tech.one('vttjserror', onError); // safe to call multiple times, script will be loaded only once:
+
+            tech.addWebVttScript_();
+          });
+        }
       }), options);
 
       _this.setupSegmentLoaderListeners_();
@@ -65991,7 +66116,7 @@
     initPlugin(this, options);
   };
 
-  var version$4 = "2.15.1";
+  var version$4 = "2.16.0";
   var version$3 = "6.0.1";
   var version$2 = "0.22.1";
   var version$1 = "4.8.0";
@@ -67255,23 +67380,33 @@
       return tech.vhs;
     },
     canPlayType: function canPlayType(type, options) {
+      var simpleType = simpleTypeFromSourceType(type);
+
+      if (!simpleType) {
+        return '';
+      }
+
+      var overrideNative = VhsSourceHandler.getOverrideNative(options);
+      var supportsTypeNatively = Vhs.supportsTypeNatively(simpleType);
+      var canUseMsePlayback = !supportsTypeNatively || overrideNative;
+      return canUseMsePlayback ? 'maybe' : '';
+    },
+    getOverrideNative: function getOverrideNative(options) {
       if (options === void 0) {
         options = {};
       }
 
-      var _videojs$mergeOptions = videojs.mergeOptions(videojs.options, options),
-          _videojs$mergeOptions2 = _videojs$mergeOptions.vhs;
-
-      _videojs$mergeOptions2 = _videojs$mergeOptions2 === void 0 ? {} : _videojs$mergeOptions2;
-      var _videojs$mergeOptions3 = _videojs$mergeOptions2.overrideNative,
-          overrideNative = _videojs$mergeOptions3 === void 0 ? !videojs.browser.IS_ANY_SAFARI : _videojs$mergeOptions3,
-          _videojs$mergeOptions4 = _videojs$mergeOptions.hls;
-      _videojs$mergeOptions4 = _videojs$mergeOptions4 === void 0 ? {} : _videojs$mergeOptions4;
-      var _videojs$mergeOptions5 = _videojs$mergeOptions4.overrideNative,
-          legacyOverrideNative = _videojs$mergeOptions5 === void 0 ? false : _videojs$mergeOptions5;
-      var supportedType = simpleTypeFromSourceType(type);
-      var canUseMsePlayback = supportedType && (!Vhs.supportsTypeNatively(supportedType) || legacyOverrideNative || overrideNative);
-      return canUseMsePlayback ? 'maybe' : '';
+      var _options = options,
+          _options$vhs = _options.vhs,
+          vhs = _options$vhs === void 0 ? {} : _options$vhs,
+          _options$hls = _options.hls,
+          hls = _options$hls === void 0 ? {} : _options$hls;
+      var defaultOverrideNative = !(videojs.browser.IS_ANY_SAFARI || videojs.browser.IS_IOS);
+      var _vhs$overrideNative = vhs.overrideNative,
+          overrideNative = _vhs$overrideNative === void 0 ? defaultOverrideNative : _vhs$overrideNative;
+      var _hls$overrideNative = hls.overrideNative,
+          legacyOverrideNative = _hls$overrideNative === void 0 ? false : _hls$overrideNative;
+      return legacyOverrideNative || overrideNative;
     }
   };
   /**

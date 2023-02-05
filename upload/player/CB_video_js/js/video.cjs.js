@@ -1,6 +1,6 @@
 /**
  * @license
- * Video.js 7.21.1 <http://videojs.com/>
+ * Video.js 7.21.2 <http://videojs.com/>
  * Copyright Brightcove, Inc. <https://www.brightcove.com/>
  * Available under Apache License Version 2.0
  * <https://github.com/videojs/video.js/blob/main/LICENSE>
@@ -33,6 +33,7 @@ var parseSidx = require('mux.js/lib/tools/parse-sidx');
 var id3Helpers = require('@videojs/vhs-utils/cjs/id3-helpers');
 var containers = require('@videojs/vhs-utils/cjs/containers');
 var clock = require('mux.js/lib/utils/clock');
+var _wrapNativeSuper = require('@babel/runtime/helpers/wrapNativeSuper');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
@@ -49,8 +50,9 @@ var _construct__default = /*#__PURE__*/_interopDefaultLegacy(_construct);
 var _inherits__default = /*#__PURE__*/_interopDefaultLegacy(_inherits);
 var _resolveUrl__default = /*#__PURE__*/_interopDefaultLegacy(_resolveUrl);
 var parseSidx__default = /*#__PURE__*/_interopDefaultLegacy(parseSidx);
+var _wrapNativeSuper__default = /*#__PURE__*/_interopDefaultLegacy(_wrapNativeSuper);
 
-var version$5 = "7.21.1";
+var version$5 = "7.21.2";
 
 /**
  * An Object that contains lifecycle hooks as keys which point to an array
@@ -28680,7 +28682,7 @@ videojs.addLanguage('en', {
   'Non-Fullscreen': 'Exit Fullscreen'
 });
 
-/*! @name @videojs/http-streaming @version 2.15.1 @license Apache-2.0 */
+/*! @name @videojs/http-streaming @version 2.16.0 @license Apache-2.0 */
 /**
  * @file resolve-url.js - Handling how URLs are resolved and manipulated
  */
@@ -32791,7 +32793,7 @@ var transform = function transform(code) {
 var getWorkerString = function getWorkerString(fn) {
   return fn.toString().replace(/^function.+?{/, '').slice(0, -1);
 };
-/* rollup-plugin-worker-factory start for worker!/Users/gkatsevman/p/http-streaming/src/transmuxer-worker.js */
+/* rollup-plugin-worker-factory start for worker!/Users/ddashkevich/projects/vhs-release/src/transmuxer-worker.js */
 
 
 var workerCode$1 = transform(getWorkerString(function () {
@@ -41597,7 +41599,7 @@ var workerCode$1 = transform(getWorkerString(function () {
   };
 }));
 var TransmuxWorker = factory(workerCode$1);
-/* rollup-plugin-worker-factory end for worker!/Users/gkatsevman/p/http-streaming/src/transmuxer-worker.js */
+/* rollup-plugin-worker-factory end for worker!/Users/ddashkevich/projects/vhs-release/src/transmuxer-worker.js */
 
 var handleData_ = function handleData_(event, transmuxedData, callback) {
   var _event$data$segment = event.data.segment,
@@ -48162,6 +48164,16 @@ var uint8ToUtf8 = function uint8ToUtf8(uintArray) {
 var VTT_LINE_TERMINATORS = new Uint8Array('\n\n'.split('').map(function (_char3) {
   return _char3.charCodeAt(0);
 }));
+
+var NoVttJsError = /*#__PURE__*/function (_Error) {
+  _inheritsLoose__default['default'](NoVttJsError, _Error);
+
+  function NoVttJsError() {
+    return _Error.call(this, 'Trying to parse received VTT cues, but there is no WebVTT. Make sure vtt.js is loaded.') || this;
+  }
+
+  return NoVttJsError;
+}( /*#__PURE__*/_wrapNativeSuper__default['default'](Error));
 /**
  * An object that manages segment loading and appending.
  *
@@ -48169,6 +48181,7 @@ var VTT_LINE_TERMINATORS = new Uint8Array('\n\n'.split('').map(function (_char3)
  * @param {Object} options required and optional options
  * @extends videojs.EventTarget
  */
+
 
 var VTTSegmentLoader = /*#__PURE__*/function (_SegmentLoader) {
   _inheritsLoose__default['default'](VTTSegmentLoader, _SegmentLoader);
@@ -48186,7 +48199,8 @@ var VTTSegmentLoader = /*#__PURE__*/function (_SegmentLoader) {
     _this.mediaSource_ = null;
     _this.subtitlesTrack_ = null;
     _this.loaderType_ = 'subtitle';
-    _this.featuresNativeTextTracks_ = settings.featuresNativeTextTracks; // The VTT segment will have its own time mappings. Saving VTT segment timing info in
+    _this.featuresNativeTextTracks_ = settings.featuresNativeTextTracks;
+    _this.loadVttJs = settings.loadVttJs; // The VTT segment will have its own time mappings. Saving VTT segment timing info in
     // the sync controller leads to improper behavior.
 
     _this.shouldSaveSegmentTimingInfo_ = false;
@@ -48461,30 +48475,19 @@ var VTTSegmentLoader = /*#__PURE__*/function (_SegmentLoader) {
       segment.map.bytes = simpleSegment.map.bytes;
     }
 
-    segmentInfo.bytes = simpleSegment.bytes; // Make sure that vttjs has loaded, otherwise, wait till it finished loading
+    segmentInfo.bytes = simpleSegment.bytes; // Make sure that vttjs has loaded, otherwise, load it and wait till it finished loading
 
-    if (typeof window__default['default'].WebVTT !== 'function' && this.subtitlesTrack_ && this.subtitlesTrack_.tech_) {
-      var loadHandler;
+    if (typeof window__default['default'].WebVTT !== 'function' && typeof this.loadVttJs === 'function') {
+      this.state = 'WAITING_ON_VTTJS'; // should be fine to call multiple times
+      // script will be loaded once but multiple listeners will be added to the queue, which is expected.
 
-      var errorHandler = function errorHandler() {
-        _this3.subtitlesTrack_.tech_.off('vttjsloaded', loadHandler);
-
-        _this3.stopForError({
+      this.loadVttJs().then(function () {
+        return _this3.segmentRequestFinished_(error, simpleSegment, result);
+      }, function () {
+        return _this3.stopForError({
           message: 'Error loading vtt.js'
         });
-
-        return;
-      };
-
-      loadHandler = function loadHandler() {
-        _this3.subtitlesTrack_.tech_.off('vttjserror', errorHandler);
-
-        _this3.segmentRequestFinished_(error, simpleSegment, result);
-      };
-
-      this.state = 'WAITING_ON_VTTJS';
-      this.subtitlesTrack_.tech_.one('vttjsloaded', loadHandler);
-      this.subtitlesTrack_.tech_.one('vttjserror', errorHandler);
+      });
       return;
     }
 
@@ -48544,6 +48547,8 @@ var VTTSegmentLoader = /*#__PURE__*/function (_SegmentLoader) {
   /**
    * Uses the WebVTT parser to parse the segment response
    *
+   * @throws NoVttJsError
+   *
    * @param {Object} segmentInfo
    *        a segment info object that describes the current segment
    * @private
@@ -48553,6 +48558,11 @@ var VTTSegmentLoader = /*#__PURE__*/function (_SegmentLoader) {
   _proto.parseVTTCues_ = function parseVTTCues_(segmentInfo) {
     var decoder;
     var decodeBytesToString = false;
+
+    if (typeof window__default['default'].WebVTT !== 'function') {
+      // caller is responsible for exception handling.
+      throw new NoVttJsError();
+    }
 
     if (typeof window__default['default'].TextDecoder === 'function') {
       decoder = new window__default['default'].TextDecoder('utf8');
@@ -49390,7 +49400,7 @@ var TimelineChangeController = /*#__PURE__*/function (_videojs$EventTarget) {
 
   return TimelineChangeController;
 }(videojs.EventTarget);
-/* rollup-plugin-worker-factory start for worker!/Users/gkatsevman/p/http-streaming/src/decrypter-worker.js */
+/* rollup-plugin-worker-factory start for worker!/Users/ddashkevich/projects/vhs-release/src/decrypter-worker.js */
 
 
 var workerCode = transform(getWorkerString(function () {
@@ -50093,7 +50103,7 @@ var workerCode = transform(getWorkerString(function () {
   };
 }));
 var Decrypter = factory(workerCode);
-/* rollup-plugin-worker-factory end for worker!/Users/gkatsevman/p/http-streaming/src/decrypter-worker.js */
+/* rollup-plugin-worker-factory end for worker!/Users/ddashkevich/projects/vhs-release/src/decrypter-worker.js */
 
 /**
  * Convert the properties of an HLS track into an audioTrackKind.
@@ -51230,7 +51240,25 @@ var MasterPlaylistController = /*#__PURE__*/function (_videojs$EventTarget) {
     }), options);
     _this.subtitleSegmentLoader_ = new VTTSegmentLoader(videojs.mergeOptions(segmentLoaderSettings, {
       loaderType: 'vtt',
-      featuresNativeTextTracks: _this.tech_.featuresNativeTextTracks
+      featuresNativeTextTracks: _this.tech_.featuresNativeTextTracks,
+      loadVttJs: function loadVttJs() {
+        return new Promise(function (resolve, reject) {
+          function onLoad() {
+            tech.off('vttjserror', onError);
+            resolve();
+          }
+
+          function onError() {
+            tech.off('vttjsloaded', onLoad);
+            reject();
+          }
+
+          tech.one('vttjsloaded', onLoad);
+          tech.one('vttjserror', onError); // safe to call multiple times, script will be loaded only once:
+
+          tech.addWebVttScript_();
+        });
+      }
     }), options);
 
     _this.setupSegmentLoaderListeners_();
@@ -53945,7 +53973,7 @@ var reloadSourceOnError = function reloadSourceOnError(options) {
   initPlugin(this, options);
 };
 
-var version$4 = "2.15.1";
+var version$4 = "2.16.0";
 var version$3 = "6.0.1";
 var version$2 = "0.22.1";
 var version$1 = "4.8.0";
@@ -55209,23 +55237,33 @@ var VhsSourceHandler = {
     return tech.vhs;
   },
   canPlayType: function canPlayType(type, options) {
+    var simpleType = mediaTypes_js.simpleTypeFromSourceType(type);
+
+    if (!simpleType) {
+      return '';
+    }
+
+    var overrideNative = VhsSourceHandler.getOverrideNative(options);
+    var supportsTypeNatively = Vhs.supportsTypeNatively(simpleType);
+    var canUseMsePlayback = !supportsTypeNatively || overrideNative;
+    return canUseMsePlayback ? 'maybe' : '';
+  },
+  getOverrideNative: function getOverrideNative(options) {
     if (options === void 0) {
       options = {};
     }
 
-    var _videojs$mergeOptions = videojs.mergeOptions(videojs.options, options),
-        _videojs$mergeOptions2 = _videojs$mergeOptions.vhs;
-
-    _videojs$mergeOptions2 = _videojs$mergeOptions2 === void 0 ? {} : _videojs$mergeOptions2;
-    var _videojs$mergeOptions3 = _videojs$mergeOptions2.overrideNative,
-        overrideNative = _videojs$mergeOptions3 === void 0 ? !videojs.browser.IS_ANY_SAFARI : _videojs$mergeOptions3,
-        _videojs$mergeOptions4 = _videojs$mergeOptions.hls;
-    _videojs$mergeOptions4 = _videojs$mergeOptions4 === void 0 ? {} : _videojs$mergeOptions4;
-    var _videojs$mergeOptions5 = _videojs$mergeOptions4.overrideNative,
-        legacyOverrideNative = _videojs$mergeOptions5 === void 0 ? false : _videojs$mergeOptions5;
-    var supportedType = mediaTypes_js.simpleTypeFromSourceType(type);
-    var canUseMsePlayback = supportedType && (!Vhs.supportsTypeNatively(supportedType) || legacyOverrideNative || overrideNative);
-    return canUseMsePlayback ? 'maybe' : '';
+    var _options = options,
+        _options$vhs = _options.vhs,
+        vhs = _options$vhs === void 0 ? {} : _options$vhs,
+        _options$hls = _options.hls,
+        hls = _options$hls === void 0 ? {} : _options$hls;
+    var defaultOverrideNative = !(videojs.browser.IS_ANY_SAFARI || videojs.browser.IS_IOS);
+    var _vhs$overrideNative = vhs.overrideNative,
+        overrideNative = _vhs$overrideNative === void 0 ? defaultOverrideNative : _vhs$overrideNative;
+    var _hls$overrideNative = hls.overrideNative,
+        legacyOverrideNative = _hls$overrideNative === void 0 ? false : _hls$overrideNative;
+    return legacyOverrideNative || overrideNative;
   }
 };
 /**
