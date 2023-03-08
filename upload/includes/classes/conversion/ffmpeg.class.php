@@ -277,8 +277,12 @@ class FFMpeg
                     default:
                         $this->conversion_type = 'mp4';
                     case 'mp4':
-                        if( config('stay_mp4') == 'yes' ){
-                            $this->output_file = $this->output_dir.$this->file_name.'.'.$this->conversion_type;
+                        $ext = getExt($this->input_file);
+                        if( config('stay_mp4') == 'yes' && $ext == 'mp4'){
+                            $resolution = $this->get_max_resolution_from_file();
+                            $this->video_files[] = $resolution;
+
+                            $this->output_file = $this->output_dir.$this->file_name.'-'.$resolution.'.'.$this->conversion_type;
                             copy($this->input_file,$this->output_file);
                             break;
                         }
@@ -945,4 +949,36 @@ class FFMpeg
 		return [];
 	}
 
+    private function get_max_resolution_from_file()
+    {
+        global $myquery;
+        $video_resolutions = $myquery->getVideoResolutions();
+        $max_resolution = false;
+
+        foreach($video_resolutions as $ratio) {
+            foreach( $ratio as $res ) {
+                $video_height = (int)$res['height'];
+                $video_width = (int)$res['witdh'];
+
+                // This option allow video with a 1% lower resolution to be included in the superior resolution
+                // For example : 1900x800 will be allowed in 1080p resolution
+                if ( config( 'allow_conversion_1_percent' ) == 'yes' ) {
+                    $video_height_test = floor( $video_height * 0.99 );
+                    $video_width_test = floor( $video_width * 0.99 );
+                } else {
+                    $video_height_test = $video_height;
+                    $video_width_test = $video_width;
+                }
+
+                // Here we must check width and height to be able to import other formats than 16/9 (For example : 1920x800, 1800x1080, ...)
+                if ( $this->input_details['video_width'] >= $video_width_test || $this->input_details['video_height'] >= $video_height_test ) {
+                    if ( $video_height > $max_resolution ) {
+                        $max_resolution = $video_height;
+                    }
+                }
+            }
+        }
+
+        return $max_resolution;
+    }
 }

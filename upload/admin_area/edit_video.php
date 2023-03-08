@@ -11,9 +11,9 @@ $data = get_video_details($video);
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = array('title' => lang('videos'), 'url' => '');
-$breadcrumb[1] = array('title' => lang('videos_manager'), 'url' => ADMIN_BASEURL.'/video_manager.php');
-$breadcrumb[2] = array('title' => 'Editing : '.display_clean($data['title']), 'url' => ADMIN_BASEURL.'/edit_video.php?video='.display_clean($video));
+$breadcrumb[0] = ['title' => lang('videos'), 'url' => ''];
+$breadcrumb[1] = ['title' => lang('videos_manager'), 'url' => ADMIN_BASEURL.'/video_manager.php'];
+$breadcrumb[2] = ['title' => 'Editing : '.display_clean($data['title']), 'url' => ADMIN_BASEURL.'/edit_video.php?video='.display_clean($video)];
 
 if(@$_GET['msg']){
     $msg[] = clean($_GET['msg']);
@@ -55,11 +55,11 @@ if($myquery->VideoExists($video)) {
 }
 
 $type = 'v';
-$comment_cond = array();
+$comment_cond = [];
 $comment_cond['order'] = ' comment_id DESC';
 $comment_cond['videoid'] = $video;
 $comments = getComments($comment_cond);
-assign("comments",$comments);
+assign('comments',$comments);
 
 //Deleting comment
 if(isset($_POST['del_cmt'])){

@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"129",
+  "revision":"130",
   "status":"dev",
   "detail":[
     {
@@ -97,6 +97,8 @@
         ,"Implement HLS conversion (WIP)"
         ,"Refactor video rate <i>#222</i>"
         ,"Fix audio channels selection and bits color detection"
+        ,"Fix video storage when using 'Stay MP4 as it is'"
+        ,"With 'Stay MP4 as it is', non-mp4 videos must be converted"
       ]
     }
     ,{
