@@ -96,7 +96,7 @@ class myquery
 
     public function getVideoResolutionBitrateFromHeight($height): int
     {
-        $sql_select = 'SELECT video_bitrate FROM '.tbl('video_resolution').' WHERE height = '.$height;
+        $sql_select = 'SELECT video_bitrate FROM '.tbl('video_resolution').' WHERE height = \''.mysql_clean($height).'\'';
         $results = db_select($sql_select);
 
         if( empty($results) ){
@@ -110,7 +110,7 @@ class myquery
         if( $height == 'index' ){
             return lang('video_resolution_auto');
         }
-        $sql_select = 'SELECT title FROM '.tbl('video_resolution').' WHERE height = '.$height;
+        $sql_select = 'SELECT title FROM '.tbl('video_resolution').' WHERE height = \''.mysql_clean($height).'\'';
         $results = db_select($sql_select);
 
         if( empty($results) ){

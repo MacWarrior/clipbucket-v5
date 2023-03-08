@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"130",
+  "revision":"131",
   "status":"dev",
   "detail":[
     {
@@ -66,6 +66,7 @@
         ,"Update Smarty to version 3.1.46"
         ,"Update login logs <i>#252</i>"
         ,"Add portuguese (BR) translation <i>#253</i> (Thanks raiancollyn !)"
+        ,"Fix possible SQL injection"
       ]
     },
     {
