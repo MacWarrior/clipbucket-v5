@@ -30,13 +30,14 @@ if( !function_exists( 'tbl' ) ) {
     {
         global $DBNAME;
         $prefix = TABLE_PREFIX;
-        $tbls = explode(",",$tbl);
-        $new_tbls = "";
+        $tbls = explode(',',$tbl);
+        $new_tbls = '';
         foreach($tbls as $ntbl)
         {
-            if(!empty($new_tbls))
-                $new_tbls .= ",";
-            $new_tbls .= "`".$DBNAME."`.".$prefix.$ntbl."";
+            if(!empty($new_tbls)){
+                $new_tbls .= ',';
+            }
+            $new_tbls .= '`'.$DBNAME.'`.'.$prefix.$ntbl;
         }
 
         return $new_tbls;
@@ -63,20 +64,23 @@ function table_fields( $fields, $table = false ) {
             {
                 foreach ($_fields as $field)
                 {
-                    if ($the_fields)
-                        $the_fields .=", ";
+                    if ($the_fields){
+                        $the_fields .= ', ';
+                    }
                     $the_fields .= $key . '.' . $field;
                 }
             } else {
                 $field = $_fields;
 
-                if ($the_fields)
-                    $the_fields .=", ";
+                if ($the_fields){
+                    $the_fields .= ', ';
+                }
 
-                if ($tbl)
-                    $the_tbl = tbl($tbl). '.' ;
-                else
+                if ($table) {
+                    $the_tbl = tbl($table). '.' ;
+                } else {
                     $the_tbl = '';
+                }
 
                 $the_fields .= $the_tbl . $field;
             }
@@ -116,7 +120,7 @@ if ( !function_exists('cb_sql_table') ) {
      */
     function cb_sql_table( $table, $as = null ) {
         if ( $table ) {
-            $from_query = tbl( $table )." AS ".( ( !is_null( $as ) and is_string( $as ) ) ? $as : $table );
+            $from_query = tbl( $table ).' AS '.( ( !is_null( $as ) and is_string( $as ) ) ? $as : $table );
             return $from_query;
         }
         return false;
@@ -147,7 +151,6 @@ function cb_select( $query ) {
  * @return mixed
  */
 function select( $query ) {
-    
     return cb_select( $query );
 }
 
