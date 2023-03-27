@@ -1173,7 +1173,6 @@
        global $Cbucket;
         # checking if there is any other functions
         # available
-        define('VIDEO_VERSION',$vdetails['video_version']);
 
         if(is_array($Cbucket->custom_video_file_funcs)) {
             foreach($Cbucket->custom_video_file_funcs as $func) {
@@ -1196,7 +1195,9 @@
             {
                 default:
                 case 'mp4':
-                    if(VIDEO_VERSION >= '2.7'){
+                    if( $vdetails['video_version'] == 'COMMERCIAL' ){
+                        $vid_files = glob(VIDEOS_DIR.DIRECTORY_SEPARATOR.$fileDirectory.$vdetails['file_name'].DIRECTORY_SEPARATOR.$vdetails['file_name'].'*.'.$vdetails['file_type']);
+                    } else if($vdetails['video_version'] >= '2.7'){
                         $vid_files = glob(VIDEOS_DIR.DIRECTORY_SEPARATOR.$fileDirectory.$vdetails['file_name'].'*.'.$vdetails['file_type']);
                     } else {
                         $vid_files = glob(VIDEOS_DIR.DIRECTORY_SEPARATOR.$vdetails['file_name'].'*.'.$vdetails['file_type']);
@@ -1230,9 +1231,11 @@
                     {
                         default:
                         case 'mp4':
-                            if(VIDEO_VERSION >= '2.7'){
+                            if( $vdetails['video_version'] == 'COMMERCIAL' ){
+                                $files[] = VIDEOS_URL.'/'.$fileDirectory.$vdetails['file_name'].'/'.$video_file;
+                            } else if($vdetails['video_version'] >= '2.7'){
                                 $files[] = VIDEOS_URL.'/'.$fileDirectory.$video_file;
-                            } else if(VIDEO_VERSION == '2.6') {
+                            } else if($vdetails['video_version'] == '2.6') {
                                 $files[] = VIDEOS_URL.'/'.$video_file;
                             }
                             break;
