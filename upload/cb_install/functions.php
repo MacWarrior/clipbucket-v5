@@ -52,7 +52,7 @@ if(!function_exists('emsg'))
 
 function check_module($type): array
 {
-    $return = array();
+    $return = [];
     switch($type)
     {
         case 'php':
@@ -102,9 +102,9 @@ function check_module($type): array
             }
 
             if(!$version){
-                $return['err'] = _("Unable to find FFPROBE");
+                $return['err'] = _('Unable to find FFPROBE');
             } else {
-                $return['msg'] = sprintf(_("Found FFPROBE %s : %s"),$version,$ffprobe_path);
+                $return['msg'] = sprintf(_('Found FFPROBE %s : %s'),$version,$ffprobe_path);
             }
             break;
 
@@ -121,7 +121,7 @@ function check_module($type): array
             if(!$version){
                 $return['err'] = _('Unable to find Media Info');
             } else {
-                $return['msg'] = sprintf(_("Found Media Info %s : %s"),$version,$mediainfo_path);
+                $return['msg'] = sprintf(_('Found Media Info %s : %s'),$version,$mediainfo_path);
             }
             break;
 
@@ -132,9 +132,9 @@ function check_module($type): array
             }
 
             if(!$version){
-                $return['err'] = _("cURL extension is not enabled");
+                $return['err'] = _('cURL extension is not enabled');
             } else {
-                $return['msg'] = sprintf(_("cURL %s extension is enabled"),$version['version']);
+                $return['msg'] = sprintf(_('cURL %s extension is enabled'),$version['version']);
             }
             break;
     }
@@ -184,13 +184,14 @@ if(!function_exists('pr'))
 /**
  * Function used to check folder permissions
  */
-function checkPermissions()
+function checkPermissions(): array
 {
-    $files = array(
+    $files = [
         'cache',
         'cache/comments',
         'cache/userfeeds',
         'files',
+        'files/backgrounds',
         'files/conversion_queue',
         'files/logs',
         'files/mass_uploads',
@@ -202,21 +203,19 @@ function checkPermissions()
         'files/videos',
         'images',
         'images/avatars',
-        'images/backgrounds',
         'images/category_thumbs',
         'images/collection_thumbs',
         'images/groups_thumbs',
         'includes',
         'includes/langs/en.lang'
-    );
+    ];
 
-    $permsArray = array();
-    foreach($files as $file)
-    {
-        if(is_writeable(BASEDIR.'/'.$file)){
-            $permsArray[] = array('path'=>$file,'msg'=>'writeable');
+    $permsArray = [];
+    foreach($files as $file) {
+        if(is_writeable(BASEDIR.DIRECTORY_SEPARATOR.$file)){
+            $permsArray[] = ['path'=>$file,'msg'=>'writeable'];
         } else {
-            $permsArray[] = array('path'=>$file,'err'=>'please chmod this file/directory to 755');
+            $permsArray[] = ['path'=>$file,'err'=>'please chmod this file/directory to 755'];
         }
     }
     return $permsArray;
@@ -230,7 +229,7 @@ function selected($selected)
     }
 }
 
-function GetServerProtocol()
+function GetServerProtocol(): string
 {
     if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on'){
         return 'https://';
@@ -240,7 +239,7 @@ function GetServerProtocol()
     return $protocol;
 }
 
-function GetServerURL()
+function GetServerURL(): string
 {
     return GetServerProtocol().$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']);
 }

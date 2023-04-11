@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"133",
+  "revision":"134",
   "status":"dev",
   "detail":[
     {
@@ -140,6 +140,12 @@
         "Update Editor's Pick to CB5.5.0",
         "Update Global Announcement to CB5.5.0",
         "Update CB Server Thumb to CB5.5.0"
+      ]
+    },
+    {
+      "title":"Installation",
+      "description":[
+        "Fix directories check"
       ]
     }
   ]

@@ -381,7 +381,6 @@ Assign('category_thumbs',CAT_THUMB_URL);
 Assign('video_thumbs',THUMBS_URL);
 
 Assign('email_verification',EMAIL_VERIFICATION);
-Assign('bg_dir','/images/backgrounds');
 Assign('captcha_type',$row['captcha_type']);
 Assign('languages',(isset($languages)) ? $languages : false);
 
