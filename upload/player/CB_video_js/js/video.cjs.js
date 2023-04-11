@@ -1,6 +1,6 @@
 /**
  * @license
- * Video.js 7.21.2 <http://videojs.com/>
+ * Video.js 7.21.4 <http://videojs.com/>
  * Copyright Brightcove, Inc. <https://www.brightcove.com/>
  * Available under Apache License Version 2.0
  * <https://github.com/videojs/video.js/blob/main/LICENSE>
@@ -52,7 +52,7 @@ var _resolveUrl__default = /*#__PURE__*/_interopDefaultLegacy(_resolveUrl);
 var parseSidx__default = /*#__PURE__*/_interopDefaultLegacy(parseSidx);
 var _wrapNativeSuper__default = /*#__PURE__*/_interopDefaultLegacy(_wrapNativeSuper);
 
-var version$5 = "7.21.2";
+var version$5 = "7.21.4";
 
 /**
  * An Object that contains lifecycle hooks as keys which point to an array
@@ -24497,7 +24497,8 @@ var Player = /*#__PURE__*/function (_Component) {
     }
 
     this.playCallbacks_.push(callback);
-    var isSrcReady = Boolean(!this.changingSrc_ && (this.src() || this.currentSrc())); // treat calls to play_ somewhat like the `one` event function
+    var isSrcReady = Boolean(!this.changingSrc_ && (this.src() || this.currentSrc()));
+    var isSafariOrIOS = Boolean(IS_ANY_SAFARI || IS_IOS); // treat calls to play_ somewhat like the `one` event function
 
     if (this.waitToPlay_) {
       this.off(['ready', 'loadstart'], this.waitToPlay_);
@@ -24514,7 +24515,7 @@ var Player = /*#__PURE__*/function (_Component) {
       this.one(['ready', 'loadstart'], this.waitToPlay_); // if we are in Safari, there is a high chance that loadstart will trigger after the gesture timeperiod
       // in that case, we need to prime the video element by calling load so it'll be ready in time
 
-      if (!isSrcReady && (IS_ANY_SAFARI || IS_IOS)) {
+      if (!isSrcReady && isSafariOrIOS) {
         this.load();
       }
 
@@ -24522,7 +24523,14 @@ var Player = /*#__PURE__*/function (_Component) {
     } // If the player/tech is ready and we have a source, we can attempt playback.
 
 
-    var val = this.techGet_('play'); // play was terminated if the returned value is null
+    var val = this.techGet_('play'); // For native playback, reset the progress bar if we get a play call from a replay.
+
+    var isNativeReplay = isSafariOrIOS && this.hasClass('vjs-ended');
+
+    if (isNativeReplay) {
+      this.resetProgressBar_();
+    } // play was terminated if the returned value is null
+
 
     if (val === null) {
       this.runPlayTerminatedQueue_();
@@ -28682,7 +28690,7 @@ videojs.addLanguage('en', {
   'Non-Fullscreen': 'Exit Fullscreen'
 });
 
-/*! @name @videojs/http-streaming @version 2.16.0 @license Apache-2.0 */
+/*! @name @videojs/http-streaming @version 2.16.2 @license Apache-2.0 */
 /**
  * @file resolve-url.js - Handling how URLs are resolved and manipulated
  */
@@ -29872,6 +29880,11 @@ var log = videojs.log;
 
 var createPlaylistID = function createPlaylistID(index, uri) {
   return index + "-" + uri;
+}; // default function for creating a group id
+
+
+var groupID = function groupID(type, group, label) {
+  return "placeholder-uri-" + type + "-" + group + "-" + label;
 };
 /**
  * Parses a given m3u8 playlist
@@ -30136,10 +30149,16 @@ var masterForMedia = function masterForMedia(media, uri) {
  *        Master manifest object
  * @param {string} uri
  *        The source URI
+ * @param {function} createGroupID
+ *        A function to determine how to create the groupID for mediaGroups
  */
 
 
-var addPropertiesToMaster = function addPropertiesToMaster(master, uri) {
+var addPropertiesToMaster = function addPropertiesToMaster(master, uri, createGroupID) {
+  if (createGroupID === void 0) {
+    createGroupID = groupID;
+  }
+
   master.uri = uri;
 
   for (var i = 0; i < master.playlists.length; i++) {
@@ -30154,8 +30173,7 @@ var addPropertiesToMaster = function addPropertiesToMaster(master, uri) {
 
   var audioOnlyMaster = isAudioOnly(master);
   forEachMediaGroup(master, function (properties, mediaType, groupKey, labelKey) {
-    var groupId = "placeholder-uri-" + mediaType + "-" + groupKey + "-" + labelKey; // add a playlist array under properties
-
+    // add a playlist array under properties
     if (!properties.playlists || !properties.playlists.length) {
       // If the manifest is audio only and this media group does not have a uri, check
       // if the media group is located in the main list of playlists. If it is, don't add
@@ -30174,6 +30192,7 @@ var addPropertiesToMaster = function addPropertiesToMaster(master, uri) {
     }
 
     properties.playlists.forEach(function (p, i) {
+      var groupId = createGroupID(mediaType, groupKey, labelKey, p);
       var id = createPlaylistID(i, groupId);
 
       if (p.uri) {
@@ -31911,6 +31930,19 @@ var dashPlaylistUnchanged = function dashPlaylistUnchanged(a, b) {
   return true;
 };
 /**
+ * Use the representation IDs from the mpd object to create groupIDs, the NAME is set to mandatory representation
+ * ID in the parser. This allows for continuous playout across periods with the same representation IDs
+ * (continuous periods as defined in DASH-IF 3.2.12). This is assumed in the mpd-parser as well. If we want to support
+ * periods without continuous playback this function may need modification as well as the parser.
+ */
+
+
+var dashGroupId = function dashGroupId(type, group, label, playlist) {
+  // If the manifest somehow does not have an ID (non-dash compliant), use the label.
+  var playlistId = playlist.attributes.NAME || label;
+  return "placeholder-uri-" + type + "-" + group + "-" + playlistId;
+};
+/**
  * Parses the master XML string and updates playlist URI references.
  *
  * @param {Object} config
@@ -31940,8 +31972,25 @@ var parseMasterXml = function parseMasterXml(_ref) {
     sidxMapping: sidxMapping,
     previousManifest: previousManifest
   });
-  addPropertiesToMaster(manifest, srcUrl);
+  addPropertiesToMaster(manifest, srcUrl, dashGroupId);
   return manifest;
+};
+/**
+ * Removes any mediaGroup labels that no longer exist in the newMaster
+ *
+ * @param {Object} update
+ *         The previous mpd object being updated
+ * @param {Object} newMaster
+ *         The new mpd object
+ */
+
+
+var removeOldMediaGroupLabels = function removeOldMediaGroupLabels(update, newMaster) {
+  forEachMediaGroup(update, function (properties, type, group, label) {
+    if (!(label in newMaster.mediaGroups[type][group])) {
+      delete update.mediaGroups[type][group][label];
+    }
+  });
 };
 /**
  * Returns a new master manifest that is the result of merging an updated master manifest
@@ -31993,13 +32042,20 @@ var updateMaster = function updateMaster(oldMaster, newMaster, sidxMapping) {
       var _playlistUpdate = updateMaster$1(update, properties.playlists[0], dashPlaylistUnchanged);
 
       if (_playlistUpdate) {
-        update = _playlistUpdate; // update the playlist reference within media groups
+        update = _playlistUpdate; // add new mediaGroup label if it doesn't exist and assign the new mediaGroup.
+
+        if (!(label in update.mediaGroups[type][group])) {
+          update.mediaGroups[type][group][label] = properties;
+        } // update the playlist reference within media groups
+
 
         update.mediaGroups[type][group][label].playlists[0] = update.playlists[id];
         noChanges = false;
       }
     }
-  });
+  }); // remove mediaGroup labels and references that no longer exist in the newMaster
+
+  removeOldMediaGroupLabels(update, newMaster);
 
   if (newMaster.minimumUpdatePeriod !== oldMaster.minimumUpdatePeriod) {
     noChanges = false;
@@ -32793,7 +32849,7 @@ var transform = function transform(code) {
 var getWorkerString = function getWorkerString(fn) {
   return fn.toString().replace(/^function.+?{/, '').slice(0, -1);
 };
-/* rollup-plugin-worker-factory start for worker!/Users/ddashkevich/projects/vhs-release/src/transmuxer-worker.js */
+/* rollup-plugin-worker-factory start for worker!/Users/ddashkevich/projects/http-streaming/src/transmuxer-worker.js */
 
 
 var workerCode$1 = transform(getWorkerString(function () {
@@ -41599,7 +41655,7 @@ var workerCode$1 = transform(getWorkerString(function () {
   };
 }));
 var TransmuxWorker = factory(workerCode$1);
-/* rollup-plugin-worker-factory end for worker!/Users/ddashkevich/projects/vhs-release/src/transmuxer-worker.js */
+/* rollup-plugin-worker-factory end for worker!/Users/ddashkevich/projects/http-streaming/src/transmuxer-worker.js */
 
 var handleData_ = function handleData_(event, transmuxedData, callback) {
   var _event$data$segment = event.data.segment,
@@ -45226,6 +45282,7 @@ var SegmentLoader = /*#__PURE__*/function (_videojs$EventTarget) {
 
   _proto.resetEverything = function resetEverything(done) {
     this.ended_ = false;
+    this.activeInitSegmentId_ = null;
     this.appendInitSegment_ = {
       audio: true,
       video: true
@@ -46023,6 +46080,10 @@ var SegmentLoader = /*#__PURE__*/function (_videojs$EventTarget) {
     }
 
     return this.getCurrentMediaInfo_(segmentInfo) || this.startingMediaInfo_;
+  };
+
+  _proto.getPendingSegmentPlaylist = function getPendingSegmentPlaylist() {
+    return this.pendingSegment_ ? this.pendingSegment_.playlist : null;
   };
 
   _proto.hasEnoughInfoToAppend_ = function hasEnoughInfoToAppend_() {
@@ -49400,7 +49461,7 @@ var TimelineChangeController = /*#__PURE__*/function (_videojs$EventTarget) {
 
   return TimelineChangeController;
 }(videojs.EventTarget);
-/* rollup-plugin-worker-factory start for worker!/Users/ddashkevich/projects/vhs-release/src/decrypter-worker.js */
+/* rollup-plugin-worker-factory start for worker!/Users/ddashkevich/projects/http-streaming/src/decrypter-worker.js */
 
 
 var workerCode = transform(getWorkerString(function () {
@@ -50103,7 +50164,7 @@ var workerCode = transform(getWorkerString(function () {
   };
 }));
 var Decrypter = factory(workerCode);
-/* rollup-plugin-worker-factory end for worker!/Users/ddashkevich/projects/vhs-release/src/decrypter-worker.js */
+/* rollup-plugin-worker-factory end for worker!/Users/ddashkevich/projects/http-streaming/src/decrypter-worker.js */
 
 /**
  * Convert the properties of an HLS track into an audioTrackKind.
@@ -52770,10 +52831,11 @@ var MasterPlaylistController = /*#__PURE__*/function (_videojs$EventTarget) {
     var media = {
       main: this.mainSegmentLoader_.getCurrentMediaInfo_() || {},
       audio: this.audioSegmentLoader_.getCurrentMediaInfo_() || {}
-    }; // set "main" media equal to video
+    };
+    var playlist = this.mainSegmentLoader_.getPendingSegmentPlaylist() || this.media(); // set "main" media equal to video
 
     media.video = media.main;
-    var playlistCodecs = codecsForPlaylist(this.master(), this.media());
+    var playlistCodecs = codecsForPlaylist(this.master(), playlist);
     var codecs = {};
     var usingAudioLoader = !!this.mediaTypes_.AUDIO.activePlaylistLoader;
 
@@ -52794,7 +52856,7 @@ var MasterPlaylistController = /*#__PURE__*/function (_videojs$EventTarget) {
 
     if (!codecs.audio && !codecs.video) {
       this.blacklistCurrentPlaylist({
-        playlist: this.media(),
+        playlist: playlist,
         message: 'Could not determine codecs for playlist.',
         blacklistDuration: Infinity
       });
@@ -52820,12 +52882,12 @@ var MasterPlaylistController = /*#__PURE__*/function (_videojs$EventTarget) {
       }
     });
 
-    if (usingAudioLoader && unsupportedAudio && this.media().attributes.AUDIO) {
-      var audioGroup = this.media().attributes.AUDIO;
+    if (usingAudioLoader && unsupportedAudio && playlist.attributes.AUDIO) {
+      var audioGroup = playlist.attributes.AUDIO;
       this.master().playlists.forEach(function (variant) {
         var variantAudioGroup = variant.attributes && variant.attributes.AUDIO;
 
-        if (variantAudioGroup === audioGroup && variant !== _this9.media()) {
+        if (variantAudioGroup === audioGroup && variant !== playlist) {
           variant.excludeUntil = Infinity;
         }
       });
@@ -52843,7 +52905,7 @@ var MasterPlaylistController = /*#__PURE__*/function (_videojs$EventTarget) {
         return acc;
       }, '') + '.';
       this.blacklistCurrentPlaylist({
-        playlist: this.media(),
+        playlist: playlist,
         internal: true,
         message: message,
         blacklistDuration: Infinity
@@ -52865,7 +52927,7 @@ var MasterPlaylistController = /*#__PURE__*/function (_videojs$EventTarget) {
 
       if (switchMessages.length) {
         this.blacklistCurrentPlaylist({
-          playlist: this.media(),
+          playlist: playlist,
           message: "Codec switching not supported: " + switchMessages.join(', ') + ".",
           blacklistDuration: Infinity,
           internal: true
@@ -53973,7 +54035,7 @@ var reloadSourceOnError = function reloadSourceOnError(options) {
   initPlugin(this, options);
 };
 
-var version$4 = "2.16.0";
+var version$4 = "2.16.2";
 var version$3 = "6.0.1";
 var version$2 = "0.22.1";
 var version$1 = "4.8.0";
