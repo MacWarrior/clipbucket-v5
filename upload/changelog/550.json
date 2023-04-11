@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"134",
+  "revision":"135",
   "status":"dev",
   "detail":[
     {
@@ -80,6 +80,7 @@
         ,"Add HLS player default quality option"
         ,"Update resolution plugin compatibility to VideoJS 8.X"
         ,"Add support for CB 4.X commercial version migration"
+        ,"Fix JS error on minified JS file <i>#256</i>"
       ]
     },
     {
