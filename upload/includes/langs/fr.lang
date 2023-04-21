@@ -931,7 +931,7 @@
     "pelase_enter_something_for_comment": "Please type something in a comment box",
     "please_enter_your_name": "Please enter your name",
     "please_enter_your_email": "Please enter your email",
-    "template_activated": "Template has been activated",
+    "template_activated": "Le thème a été activé",
     "error_occured_changing_template": "An error occured while changing the template",
     "phrase_code_empty": "Phrase code was empty",
     "phrase_text_empty": "Phrase text was empty",

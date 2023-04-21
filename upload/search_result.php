@@ -8,7 +8,7 @@ $pages->page_redir();
 
 $page = $_GET['page'];
 $type = strtolower($_GET['type']);
-if( !$type || !in_array($type, array('videos','photos','collections','channels') ) ){
+if( !$type || !in_array($type, ['videos','photos','collections','channels'] ) ){
     $type = 'videos';
 }
 $chkType = $type;
@@ -31,20 +31,15 @@ if(!is_array($_GET['category'])) {
 if($type!='videos') {
     $search->category = $_GET['category'];
 } else {
-    $child_ids = array();
-    if($_GET['category'])
-    {
-        foreach($_GET['category'] as $category)
-        {
+    $child_ids = [];
+    if($_GET['category']) {
+        foreach($_GET['category'] as $category) {
             $childs = $cbvid->get_sub_categories($category);
-            if($childs)
-            {
-                foreach($childs as $child)
-                {
+            if($childs) {
+                foreach($childs as $child) {
                     $child_ids[] = $child['category_id'];
                     $subchilds = $childs = $cbvid->get_sub_categories($child['category_id']);
-                    if($subchilds)
-                    {
+                    if($subchilds) {
                         foreach($subchilds as $subchild) {
                             $child_ids[] = $subchild['category_id'];
                         }
@@ -57,8 +52,7 @@ if($type!='videos') {
     $search->category = $child_ids;
 
     $search->query_conds[] = tbl('video').'.active = "yes"';
-    if( !has_access('admin_access',TRUE) )
-    {
+    if( !has_access('admin_access',TRUE) ) {
         $search->query_conds[] = 'AND '.tbl('video').'.status = "Successful"';
         $search->query_conds[] = 'AND '.tbl('video').'.broadcast != "unlisted"';
     }
@@ -84,14 +78,13 @@ assign('display_template',$search->display_template);
 if(empty($search->key)) {
     assign('search_type_title',$search->search_type[$type]['title']);
 } else {
-    assign('search_type_title',sprintf(lang('searching_keyword_in_obj'), get('query'), lang($type)));
+    assign('search_type_title',sprintf(lang('searching_keyword_in_obj'), display_clean(get('query')), lang($type)));
 }
 
-if(get('query'))
-{
+if(get('query')) {
     $squery = get('query');
     if ($squery == 'clipbucket') {
-        subtitle("Awesomeness...!!");
+        subtitle('Awesomeness...!!');
     } else {
         subtitle($search->search_type[$type]['title'].' : '.get('query'));
     }
