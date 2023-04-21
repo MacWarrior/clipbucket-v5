@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"137",
+  "revision":"138",
   "status":"dev",
   "detail":[
     {
@@ -67,6 +67,7 @@
         ,"Update login logs <i>#252</i>"
         ,"Add portuguese (BR) translation <i>#253</i> (Thanks raiancollyn !)"
         ,"Fix possible SQL injection"
+        ,"Remove unused files"
       ]
     },
     {
@@ -111,7 +112,7 @@
         ,"Fix playlist creation <i>#196</i>"
         ,"Fix adding video to playlist <i>#197</i>"
         ,"Fix IE11 compatibility <i>#210</i>"
-        ,"Update jQuery to 3.6.3 <i>#208</i>"
+        ,"Update jQuery to 3.6.4 <i>#208</i>"
         ,"Fix collection deletion"
         ,"Implement recursive collections"
         ,"Fix SQL error on photos page"
