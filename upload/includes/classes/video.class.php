@@ -1029,7 +1029,7 @@ class CBvideo extends CBCategory
             }
             
             $cond .= 'MATCH('.('video.title,video.tags').')
-            AGAINST (\''.display_clean($params['title']).'\' IN NATURAL LANGUAGE MODE) ';
+            AGAINST (\''.mysql_clean($params['title']).'\' IN NATURAL LANGUAGE MODE) ';
 
             if($params['exclude']) {
                 if($cond!=''){
@@ -1057,7 +1057,7 @@ class CBvideo extends CBCategory
                 }
                 //Try Finding videos via tags
                 $cond .= 'MATCH('.('video.title,video.tags').')
-                AGAINST (\''.display_clean($params['tags']).'\' IN NATURAL LANGUAGE MODE) ';
+                AGAINST (\''.mysql_clean($params['tags']).'\' IN NATURAL LANGUAGE MODE) ';
                 if($params['exclude'])
                 {
                     if($cond!=''){
