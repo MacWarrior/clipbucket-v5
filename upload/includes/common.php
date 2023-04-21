@@ -147,7 +147,6 @@ require_once('classes/plugin.class.php');
 require_once('classes/errorhandler.class.php');
 require_once('classes/session.class.php');
 require_once('classes/log.class.php');
-require_once('classes/swfObj.class.php');
 require_once('classes/video.class.php');
 require_once('classes/player.class.php');
 require_once('classes/cbemail.class.php');
@@ -347,7 +346,6 @@ $cbtpl = new CBTemplate();
 # STOP CACHING
 $cbtpl->caching = 0;
 $cbobjects = new CBObjects();
-$swfobj	   = new SWFObject();
 
 # Initializing Userquery class
 $userquery->init();

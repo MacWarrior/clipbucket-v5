@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"140",
+  "revision":"141",
   "status":"dev",
   "detail":[
     {
@@ -41,6 +41,7 @@
         ,"Speed-up collection loading"
         ,"Fix user background management"
         ,"Fix enable subtitles player option <i>#252</i>"
+        ,"Fix SQL error when updating a converting video"
       ]
     },
     {

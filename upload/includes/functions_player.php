@@ -40,19 +40,4 @@ function flashPlayer($param)
         return false;
     }
 
-    return blank_screen($param);
-}
-
-/**
- * Function used to display
- * Blank Screen
- * if there is nothing to play or to show
- * then show a blank screen
- */
-function blank_screen($data)
-{
-    global $swfobj;
-    $code = '<div class="blank_screen" align="center">No Player or Video File Found - Unable to Play Any Video</div>';
-    $swfobj->EmbedCode(unhtmlentities($code),$data['player_div']);
-    return $swfobj->code;
 }

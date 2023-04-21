@@ -1391,6 +1391,9 @@ class CBvideo extends CBCategory
     function set_default_thumb($vid,$thumb)
     {
         global $db;
+        if( is_null($thumb)){
+            return;
+        }
         $num = get_thumb_num($thumb);
         $db->update(tbl('video'),['default_thumb'],[$num],' videoid=\''.mysql_clean($vid).'\'');
         e(lang('vid_thumb_changed'),'m');
