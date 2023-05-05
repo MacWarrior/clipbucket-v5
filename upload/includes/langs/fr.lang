@@ -457,16 +457,14 @@
     "vdo_for_date": "format MM \/ DD \/ YYYY ",
     "vdo_add_eg": "e.g London Greenland, Sialkot Mubarak Pura",
     "vdo_share_opt": "Sharing and privacy options",
-    "vdo_allow_comm": "Allow Comments",
+    "vdo_allow_comm": "Autoriser les commentaires",
     "vdo_dallow_comm": "Do Not Allow Comments",
     "vdo_comm_vote": "Comments Voting",
     "vdo_allow_com_vote": "Allow Voting on Comments",
     "vdo_dallow_com_vote": "Do Not Allow on Comments",
-    "vdo_allow_rating": "Yes, Allow Rating on this video",
-    "vdo_dallow_ratig": "No, Do Not Allow Rating on this video",
+    "vdo_allow_rating": "Autoriser la notation de la vidéo",
     "vdo_embedding": "Embedding",
-    "vdo_embed_opt1": "Yes, People can play this video on other websites",
-    "vdo_embed_opt2": "No, People cannot play this video on other websites",
+    "vdo_embed_opt1": "Autoriser la publication sur d'autres sites",
     "vdo_update_title": "Update",
     "vdo_inactive_msg": "Your Account is Inactive. Please Activate it to Upload Videos, To Activate your account Please",
     "vdo_click_here": "Click Here",
@@ -1609,5 +1607,6 @@
 	"page_upload_photo_limits": "Chaque photo ne peut excéder un poids de %s Mo et doit se présenter dans un format image commun",
 
 	"video_resolution_auto":"Auto",
-    "video_thumbs_regenerated":"Les vignettes de la vidéo ont été re-générées"
+    "video_thumbs_regenerated":"Les vignettes de la vidéo ont été re-générées",
+    "video_allow_comment_vote":"Autoriser les votes sur les commentaires"
 }

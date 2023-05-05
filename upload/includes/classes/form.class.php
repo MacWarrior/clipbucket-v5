@@ -38,6 +38,10 @@ class formObj
 			case 'dropdown':
                 $fields = $this->createDropDown($field,$multi, $skipall);
                 break;
+
+            case 'radiobuttonv2':
+                $fields = $this->createRadioButtonV2($field);
+                break;
 		}
 		return $fields;
 	}
@@ -222,6 +226,24 @@ class formObj
             }
         }
 	}
+
+    function createRadioButtonV2($field)
+    {
+        $field_label = $field['label'];
+        $field_name = $field['name'];
+        $field_value = $field['value'];
+        $checked = ($field['checked'] == $field_value) ? 'checked' : '';
+
+        echo '
+        <div class="col-md-1">
+            <input value="'.$field_value.'" name="'.$field_name.'" id="'.$field_name.'" '.$checked.' type="checkbox" class="ace ace-switch ace-switch-5"/>
+            <span class="lbl"></span>
+        </div>
+        <div class="col-md-7">
+            <label class="nowrap" for="'.$field_name.'" title="'.$field_label.'">'.$field_label.'</label>
+        </div>
+        ';
+    }
 	
 	function listCategoryCheckBoxCollapsed($in,$multi)
 	{

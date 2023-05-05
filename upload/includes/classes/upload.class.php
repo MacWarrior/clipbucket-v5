@@ -529,10 +529,6 @@ class Upload
         }
 			
 		$broadcast = $default['broadcast'] ?? 'public';
-		$comments = $default['allow_comments'] ?? 'yes';
-		$comment_voting = $default['comment_voting'] ?? 'yes';
-		$rating = $default['allow_rating'] ?? 'yes';
-		$embedding = $default['allow_embedding'] ?? 'yes';
 		
 		//Checking weather to enabled or disable password field
 		$video_pass_disable = 'disabled="disabled" ';
@@ -591,52 +587,44 @@ class Upload
 				'use_func_val'      => true
             ],
 			'comments'=> [
-				'title'             => lang('comments'),
-				'type'              => 'radiobutton',
+				'type'              => 'radiobuttonv2',
 				'name'              => 'allow_comments',
-				'value'             => ['yes'=>lang('vdo_allow_comm'),'no'=>lang('vdo_dallow_comm')],
-				'checked'           => $comments,
+				'value'             => 'yes',
+                'label'             => lang('vdo_allow_comm'),
+				'checked'           => $default['allow_comments'] ?? 'yes',
 				'db_field'          => 'allow_comments',
 				'required'          => 'no',
-				'validate_function' => 'yes_or_no',
-				'display_function'  => 'display_sharing_opt',
-				'default_value'     => 'yes'
+				'validate_function' => 'yes_or_no'
             ],
 		 	'commentsvote'=> [
-		 		'title'             => lang('vdo_comm_vote'),
-				'type'              => 'radiobutton',
+				'type'              => 'radiobuttonv2',
 				'name'              => 'comment_voting',
-				'value'             => ['yes'=>lang('vdo_allow_comm').' Voting','no'=>lang('vdo_dallow_comm').' Voting'],
-				'checked'           => $comment_voting,
+				'value'             => 'yes',
+                'label'             => lang('video_allow_comment_vote'),
+				'checked'           => $default['comment_voting'] ?? 'yes',
 				'db_field'          => 'comment_voting',
 				'required'          => 'no',
-				'validate_function' => 'yes_or_no',
-				'display_function'  => 'display_sharing_opt',
-				'default_value'     => 'yes'
+				'validate_function' => 'yes_or_no'
             ],
 		 	'rating'=> [
-				'title'             => lang('ratings'),
-				'type'              => 'radiobutton',
+				'type'              => 'radiobuttonv2',
 				'name'              => 'allow_rating',
-				'value'             => ['yes'=>lang('vdo_allow_rating'),'no'=>lang('vdo_dallow_ratig')],
-				'checked'           => $rating,
+				'value'             => 'yes',
+                'label'             => lang('vdo_allow_rating'),
+				'checked'           => $default['allow_rating'] ?? 'yes',
 				'db_field'          => 'allow_rating',
 				'required'          => 'no',
-				'validate_function' => 'yes_or_no',
-				'display_function'  => 'display_sharing_opt',
-				'default_value'     => 'yes'
+				'validate_function' => 'yes_or_no'
             ],
 		 	'embedding'=> [
-				'title'             => lang('vdo_embedding'),
-				'type'              => 'radiobutton',
+				'type'              => 'radiobuttonv2',
 				'name'              => 'allow_embedding',
-				'value'             => ['yes'=>lang('vdo_embed_opt1'),'no'=>lang('vdo_embed_opt2')],
-				'checked'           => $embedding,
+				'value'             => 'yes',
+                'label'             => lang('vdo_embed_opt1'),
+				'checked'           => $default['allow_embedding'] ?? 'yes',
 				'db_field'          => 'allow_embedding',
 				'required'          => 'no',
-				'validate_function' => 'yes_or_no',
-				'display_function'  => 'display_sharing_opt',
-				'default_value'     => 'yes'
+				'validate_function' => 'yes_or_no'
             ]
         ];
 	}
