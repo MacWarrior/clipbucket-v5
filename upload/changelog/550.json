@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"141",
+  "revision":"142",
   "status":"dev",
   "detail":[
     {
@@ -104,6 +104,7 @@
         ,"Fix audio channels selection and bits color detection"
         ,"Fix video storage when using 'Stay MP4 as it is'"
         ,"With 'Stay MP4 as it is', non-mp4 videos must be converted"
+        ,"Fix video duration detection failure in some rare cases"
       ]
     }
     ,{

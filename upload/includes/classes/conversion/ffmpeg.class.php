@@ -9,6 +9,7 @@ class FFMpeg
     public /*string*/ $input_file = '';
     public /*int*/ $audio_track = -1;
     public /*array*/ $input_details = [];
+    public /*array*/ $output_details = [];
 	public /*SLog*/ $log;
 	public /*string*/ $output_dir = '';
 	public /*string*/ $output_file = '';
@@ -60,10 +61,8 @@ class FFMpeg
 		}
 
 		$info['format']         = $data['format']['format_name'];
-		$info['duration']       = (float) round($video['duration'],2);
-
-		$info['bitrate']        = (int) $data['format']['bit_rate'];
-		$info['video_bitrate']  = (int) $video['bit_rate'];
+		$info['duration']       = round($data['format']['duration'],2);
+		$info['video_bitrate']  = (int) ($video['bit_rate'] ?? $data['format']['bit_rate']);
 		$info['video_width']    = (int) $video['width'];
 		$info['video_height']   = (int) $video['height'];
 		$info['bits_per_raw_sample'] = (int) $video['bits_per_raw_sample'];
@@ -144,7 +143,10 @@ class FFMpeg
 		$details = $this->input_details;
 		$configLog = '';
         foreach($details as $name => $value) {
-            $configLog .= '<strong>'.$name.'</strong> : '.$value.PHP_EOL;
+            if( $configLog != '' ){
+                $configLog .= PHP_EOL;
+            }
+            $configLog .= '<strong>'.$name.'</strong> : '.$value;
         }
 
 		$this->log->writeLine('Preparing file...', $configLog, true);
@@ -335,22 +337,31 @@ class FFMpeg
             $count = 0;
             foreach( $subtitles as $map_id => $data ) {
                 if( isset($data['codec_name']) && in_array($data['codec_name'], ['hdmv_pgs_subtitle','dvd_subtitle']) ){
-                    $log .= PHP_EOL.' Subtitle '.$data['title'].' can\'t be extracted because it\'s in bitmap format';
+                    if( $log != '' ){
+                        $log .= PHP_EOL;
+                    }
+                    $log .= ' Subtitle '.$data['title'].' can\'t be extracted because it\'s in bitmap format';
                     continue;
                 }
 
                 $count++;
                 $display_count = str_pad((string)$count, 2, '0', STR_PAD_LEFT);
                 $command = config('ffmpegpath').' -i '.$this->input_file.' -map 0:'.$map_id.' -f '.config('subtitle_format').' '.$subtitle_dir.$this->file_name.'-'.$display_count.'.srt 2>&1';
-                $log .= PHP_EOL.$command;
                 $output = shell_exec($command);
                 $db->insert(tbl('video_subtitle'),['videoid','number','title'],[$video['videoid'], $display_count, $data['title']]);
                 if( DEVELOPMENT_MODE ) {
+                    if( $log != '' ){
+                        $log .= PHP_EOL;
+                    }
+                    $log .= PHP_EOL.$command;
                     $log .= PHP_EOL.$output;
                 }
             }
 
-            $log .= PHP_EOL.'====== End : Subtitles extraction ======='.PHP_EOL;
+            if( $log != '' ){
+                $log .= PHP_EOL;
+            }
+            $log .= '====== End : Subtitles extraction ======='.PHP_EOL;
             $this->log->writeLine('Subtitles extraction', $log, true);
         }
     }
@@ -751,8 +762,7 @@ class FFMpeg
 			$division = $duration / $num;
 			$num_length = strlen($num);
 
-			for($count=0;$count<=$num;$count++)
-			{
+			for($count=0;$count<=$num;$count++) {
 			    $thumb_file_number = str_pad((string)$count, $num_length, '0', STR_PAD_LEFT);
 				if (empty($filename)){
 					$file_name = getName($input_file).'-'.$size_tag.$thumb_file_number.'.jpg';
@@ -772,29 +782,15 @@ class FFMpeg
 					rename($tmpDir.'/00000001.jpg',THUMBS_DIR.DIRECTORY_SEPARATOR.$file_name);
 				}
 
-				if (!$regenerateThumbs && !file_exists($file_path))
-				{
+				if (!$regenerateThumbs && !file_exists($file_path)) {
                     $TempLogData = PHP_EOL.PHP_EOL.'Command : '.$command;
                     $TempLogData .= PHP_EOL.PHP_EOL.'OutPut : '.$output;
                     $this->log->writeLine($TempLogData, true);
 				}
 			}
 		} else {
-			if (empty($filename)){
-				$file_name = getName($input_file).'-'.$size_tag.'1.jpg';
-			} else {
-				$file_name = $filename.'-'.$size_tag.'1.jpg';
-			}
-			
-			$file_path = THUMBS_DIR.DIRECTORY_SEPARATOR.$thumbs_outputPath.$file_name;
-			$command = config('ffmpegpath').' -i '.$input_file.' -an '.$dimension.' -y -f image2 -vframes '.$num.' '.$file_path.' 2>&1';
-			$output = shell_exec($command);
-			if (!$regenerateThumbs && !file_exists($file_path)){
-                $TempLogData = PHP_EOL.'Command : '.$command ;
-                $TempLogData .= PHP_EOL.'File : '.$file_path ;
-                $TempLogData .= PHP_EOL.'Output : '.$output ;
-                $this->log->writeLine($TempLogData, true);
-			}
+            $TempLogData = PHP_EOL.' ERROR while generating thumbs with num : '.$num;
+            $this->log->writeLine($TempLogData, true);
 		}
 		rmdir($tmpDir);
 	}
