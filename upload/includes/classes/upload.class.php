@@ -587,7 +587,7 @@ class Upload
 				'use_func_val'      => true
             ],
 			'comments'=> [
-				'type'              => 'radiobuttonv2',
+				'type'              => 'checkboxv2',
 				'name'              => 'allow_comments',
 				'value'             => 'yes',
                 'label'             => lang('vdo_allow_comm'),
@@ -597,7 +597,7 @@ class Upload
 				'validate_function' => 'yes_or_no'
             ],
 		 	'commentsvote'=> [
-				'type'              => 'radiobuttonv2',
+				'type'              => 'checkboxv2',
 				'name'              => 'comment_voting',
 				'value'             => 'yes',
                 'label'             => lang('video_allow_comment_vote'),
@@ -607,7 +607,7 @@ class Upload
 				'validate_function' => 'yes_or_no'
             ],
 		 	'rating'=> [
-				'type'              => 'radiobuttonv2',
+				'type'              => 'checkboxv2',
 				'name'              => 'allow_rating',
 				'value'             => 'yes',
                 'label'             => lang('vdo_allow_rating'),
@@ -617,7 +617,7 @@ class Upload
 				'validate_function' => 'yes_or_no'
             ],
 		 	'embedding'=> [
-				'type'              => 'radiobuttonv2',
+				'type'              => 'checkboxv2',
 				'name'              => 'allow_embedding',
 				'value'             => 'yes',
                 'label'             => lang('vdo_embed_opt1'),

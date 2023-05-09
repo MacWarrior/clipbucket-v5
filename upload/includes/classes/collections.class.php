@@ -1622,7 +1622,7 @@ class Collections extends CBCategory
     public function get_base_url(): String
     {
         if( config('seo') == 'yes' ){
-            return '/collections';
+            return '/collections/';
         }
         return '/collections.php';
     }

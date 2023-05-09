@@ -45,18 +45,18 @@ class Session
 		$sessions = $this->get_user_session($user,$name,true);
 		
 		if(count($sessions)>0) {
-			$db->delete(tbl($this->tbl),array('session_string','session'),array($name,$this->id));
+			$db->delete(tbl($this->tbl), ['session_string','session'], [$name,$this->id]);
 		}
 		
 		$cur_url = $pages->GetCurrentUrl();
 		
-		if( THIS_PAGE != 'cb_install' ) {
-			if($name === 'guest' && config('store_guest_session') !== 'yes'){
+		if( getConstant('THIS_PAGE') != 'cb_install' ) {
+			if($name == 'guest' && config('store_guest_session') != 'yes'){
 				// do nothing
 			} else {
-				$db->insert(tbl($this->tbl),array('session_user','session','session_string','ip','session_value','session_date',
-				'last_active','referer','agent','current_page'),
-				array($user,$this->id,$name,$_SERVER['REMOTE_ADDR'],$value,now(),now(),getArrayValue($_SERVER, 'HTTP_REFERER'),$_SERVER['HTTP_USER_AGENT'],$cur_url));
+				$db->insert(tbl($this->tbl),['session_user','session','session_string','ip','session_value','session_date',
+				'last_active','referer','agent','current_page'],
+				[$user,$this->id,$name,$_SERVER['REMOTE_ADDR'],$value,now(),now(),getArrayValue($_SERVER, 'HTTP_REFERER'),$_SERVER['HTTP_USER_AGENT'],$cur_url]);
 			}
 		}
 
@@ -80,12 +80,12 @@ class Session
 		global $db;
 		$session_cond = false;
 		if($session_name)
-			$session_cond = " session_string='".mysql_clean($session_name)."'";
-		if($phpsess)
-		{
-			if($session_cond)
-				$session_cond .= " AND ";
-			$session_cond .= " session ='".$this->id."' ";
+			$session_cond = ' session_string=\''.mysql_clean($session_name).'\'';
+		if($phpsess) {
+			if($session_cond) {
+				$session_cond .= ' AND ';
+            }
+			$session_cond .= ' session =\''.$this->id.'\' ';
 		}
 		return $db->select(tbl($this->tbl),'*',$session_cond);
 	}
@@ -98,16 +98,15 @@ class Session
 	function get_sessions()
 	{
 		global $db,$pages;
-		$results = $db->select(tbl($this->tbl),'*'," session ='".$this->id."' ");
+		$results = $db->select(tbl($this->tbl),'*',' session =\''.$this->id.'\' ');
 		
 		$cur_url = $pages->GetCurrentUrl();
 		
-		if(getConstant('THIS_PAGE')!='cb_install')
-		{
-			if(getConstant('THIS_PAGE')!='ajax') {
-				$db->update(tbl($this->tbl),array("last_active","current_page"),array(now(),$cur_url)," session='".$this->id."' ");
-			}else {
-				$db->update(tbl($this->tbl),array("last_active"),array(now())," session='".$this->id."' ");
+		if(getConstant('THIS_PAGE') != 'cb_install') {
+			if(getConstant('THIS_PAGE') != 'ajax') {
+				$db->update(tbl($this->tbl), ['last_active','current_page'], [now(),$cur_url],' session=\''.$this->id.'\' ');
+			} else {
+				$db->update(tbl($this->tbl), ['last_active'], [now()],' session=\''.$this->id.'\' ');
             }
 		}
 			
@@ -133,13 +132,13 @@ class Session
      */
 	function set_session($name,$val)
 	{
-		if($this->cookie)
-		{
+		if($this->cookie) {
             set_cookie_secure($name,$val,time()+$this->timeout);
 		} else {
 			$_SESSION[$name] = $val;
 		}
 	}
+
 	function set($name,$val)
 	{
 		$this->set_session($name,$val);
@@ -152,8 +151,7 @@ class Session
      */
 	function unset_session($name)
 	{
-		if($this->cookie)
-		{
+		if($this->cookie) {
 			unset($_COOKIE[$name]);
             set_cookie_secure($name,'',0);
 		} else {
@@ -175,8 +173,7 @@ class Session
      */
 	function get_session($name)
 	{
-		if($this->cookie)
-		{
+		if($this->cookie) {
 			if(isset($_COOKIE[$name])){
 				return $_COOKIE[$name];
             }
@@ -195,7 +192,7 @@ class Session
 	function destroy()
 	{
 		global $db;
-		$db->delete(tbl($this->tbl),array('session'),array($this->id));
+		$db->delete(tbl($this->tbl), ['session'], [$this->id]);
 		session_destroy();
 	}
 
@@ -219,28 +216,28 @@ class Session
      */
 	function get_cookie($name)
 	{
-		if(isset($_COOKIE[$name]))
+		if(isset($_COOKIE[$name])){
 			return stripslashes(($_COOKIE[$name]));
+        }
 		return false;
 	}
 
-	function kick($id)
-	{
+	function kick($id): bool
+    {
 		global $db;
 		//Getting little details from sessions such that
 		//some lower class user can kick admins out ;)
-		$results = $db->select(tbl("sessions")." LEFT JOIN (".tbl("users").") ON 
-		(".tbl("sessions").".session_user=".tbl("users").".userid)", tbl("sessions").".*,
-		".tbl("users").".level","session_id='".$id."'");
+		$results = $db->select(tbl('sessions').' LEFT JOIN ('.tbl('users').') ON 
+		('.tbl('sessions').'.session_user='.tbl('users').'.userid)', tbl('sessions').'.*,
+		'.tbl('users').'.level','session_id=\''.$id.'\'');
 		
 		$results = $results[0];
 		
-		if($results['level']==1)
-		{
-			e("You cannot kick administrators");
+		if($results['level']==1) {
+			e('You cannot kick administrators');
 			return false;
 		}
-		$db->delete(tbl($this->tbl),array("session_id"),array($id));
+		$db->delete(tbl($this->tbl), ['session_id'], [$id]);
 		return true;
 	}
 }

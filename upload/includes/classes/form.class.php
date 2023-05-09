@@ -39,8 +39,8 @@ class formObj
                 $fields = $this->createDropDown($field,$multi, $skipall);
                 break;
 
-            case 'radiobuttonv2':
-                $fields = $this->createRadioButtonV2($field);
+            case 'checkboxv2':
+                $fields = $this->createCheckBoxV2($field);
                 break;
 		}
 		return $fields;
@@ -227,7 +227,7 @@ class formObj
         }
 	}
 
-    function createRadioButtonV2($field)
+    function createCheckBoxV2($field)
     {
         $field_label = $field['label'];
         $field_name = $field['name'];

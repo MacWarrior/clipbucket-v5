@@ -781,8 +781,6 @@ ALTER TABLE `{tbl_prefix}collections`
   ADD PRIMARY KEY (`collection_id`),
   ADD KEY `userid` (`userid`),
   ADD KEY `featured` (`featured`),
-  ADD KEY `userid_2` (`userid`),
-  ADD KEY `featured_2` (`featured`),
   ADD INDEX(`collection_id_parent`);
 
 ALTER TABLE `{tbl_prefix}collection_categories`
@@ -806,8 +804,7 @@ ALTER TABLE `{tbl_prefix}contacts`
 
 ALTER TABLE `{tbl_prefix}conversion_queue`
   ADD PRIMARY KEY (`cqueue_id`),
-  ADD KEY `cqueue_conversion` (`cqueue_conversion`),
-  ADD KEY `cqueue_conversion_2` (`cqueue_conversion`);
+  ADD KEY `cqueue_conversion` (`cqueue_conversion`);
 
 ALTER TABLE `{tbl_prefix}counters`
   ADD PRIMARY KEY (`counter_id`),
@@ -822,8 +819,7 @@ ALTER TABLE `{tbl_prefix}email_templates`
 
 ALTER TABLE `{tbl_prefix}favorites`
   ADD PRIMARY KEY (`favorite_id`),
-  ADD KEY `userid` (`userid`),
-  ADD KEY `userid_2` (`userid`);
+  ADD KEY `userid` (`userid`);
 
 ALTER TABLE `{tbl_prefix}flags`
   ADD PRIMARY KEY (`flag_id`);
@@ -852,9 +848,7 @@ ALTER TABLE `{tbl_prefix}group_videos`
 ALTER TABLE `{tbl_prefix}languages`
   ADD PRIMARY KEY (`language_id`),
   ADD KEY `language_default` (`language_default`),
-  ADD KEY `language_code` (`language_code`,`language_id`),
-  ADD KEY `language_default_2` (`language_default`),
-  ADD KEY `language_code_2` (`language_code`,`language_id`);
+  ADD KEY `language_code` (`language_code`,`language_id`);
 
 ALTER TABLE `{tbl_prefix}mass_emails`
   ADD PRIMARY KEY (`id`);
@@ -864,8 +858,7 @@ ALTER TABLE `{tbl_prefix}messages`
 
 ALTER TABLE `{tbl_prefix}pages`
   ADD PRIMARY KEY (`page_id`),
-  ADD KEY `active` (`active`,`display`),
-  ADD KEY `active_2` (`active`,`display`);
+  ADD KEY `active` (`active`,`display`);
 
 ALTER TABLE `{tbl_prefix}photos`
   ADD PRIMARY KEY (`photo_id`),
@@ -874,15 +867,7 @@ ALTER TABLE `{tbl_prefix}photos`
   ADD KEY `featured` (`featured`),
   ADD KEY `last_viewed` (`last_viewed`),
   ADD KEY `rating` (`rating`),
-  ADD KEY `total_comments` (`total_comments`),
-  ADD KEY `last_viewed_2` (`last_viewed`),
-  ADD KEY `userid_2` (`userid`),
-  ADD KEY `collection_id_2` (`collection_id`),
-  ADD KEY `featured_2` (`featured`),
-  ADD KEY `last_viewed_3` (`last_viewed`),
-  ADD KEY `rating_2` (`rating`),
-  ADD KEY `total_comments_2` (`total_comments`),
-  ADD KEY `last_viewed_4` (`last_viewed`);
+  ADD KEY `total_comments` (`total_comments`);
 ALTER TABLE `{tbl_prefix}photos` ADD FULLTEXT KEY `photo_title` (`photo_title`,`photo_tags`);
 
 ALTER TABLE `{tbl_prefix}phrases`
@@ -902,8 +887,7 @@ ALTER TABLE `{tbl_prefix}plugin_config`
 
 ALTER TABLE `{tbl_prefix}sessions`
   ADD PRIMARY KEY (`session_id`),
-  ADD KEY `session` (`session`),
-  ADD KEY `session_2` (`session`);
+  ADD KEY `session` (`session`);
 
 ALTER TABLE `{tbl_prefix}stats`
   ADD PRIMARY KEY (`stat_id`);
@@ -919,8 +903,7 @@ ALTER TABLE `{tbl_prefix}users`
   ADD KEY `ind_status_doj` (`doj`),
   ADD KEY `ind_status_id` (`userid`),
   ADD KEY `ind_hits_doj` (`profile_hits`,`doj`),
-  ADD KEY `username` (`username`(255),`userid`),
-  ADD KEY `username_2` (`username`(255),`userid`);
+  ADD KEY `username` (`username`(255),`userid`);
 
 ALTER TABLE `{tbl_prefix}user_categories`
   ADD PRIMARY KEY (`category_id`);
@@ -930,8 +913,7 @@ ALTER TABLE `{tbl_prefix}user_levels`
 
 ALTER TABLE `{tbl_prefix}user_levels_permissions`
   ADD PRIMARY KEY (`user_level_permission_id`),
-  ADD KEY `user_level_id` (`user_level_id`),
-  ADD KEY `user_level_id_2` (`user_level_id`);
+  ADD KEY `user_level_id` (`user_level_id`);
 
 ALTER TABLE `{tbl_prefix}user_permissions`
   ADD PRIMARY KEY (`permission_id`),
@@ -955,19 +937,8 @@ ALTER TABLE `{tbl_prefix}video`
   ADD KEY `last_viewed` (`last_viewed`),
   ADD KEY `rating` (`rating`),
   ADD KEY `comments_count` (`comments_count`),
-  ADD KEY `last_viewed_2` (`last_viewed`),
   ADD KEY `status` (`status`,`active`,`broadcast`,`userid`),
-  ADD KEY `userid_2` (`userid`),
-  ADD KEY `videoid` (`videoid`,`videokey`(255)),
-  ADD KEY `userid_3` (`userid`),
-  ADD KEY `featured_2` (`featured`),
-  ADD KEY `last_viewed_3` (`last_viewed`),
-  ADD KEY `rating_2` (`rating`),
-  ADD KEY `comments_count_2` (`comments_count`),
-  ADD KEY `last_viewed_4` (`last_viewed`),
-  ADD KEY `status_2` (`status`,`active`,`broadcast`,`userid`),
-  ADD KEY `userid_4` (`userid`),
-  ADD KEY `videoid_2` (`videoid`,`videokey`(255));
+  ADD KEY `videoid` (`videoid`,`videokey`(255));
 ALTER TABLE `{tbl_prefix}video` ADD FULLTEXT KEY `description` (`description`,`title`);
 ALTER TABLE `{tbl_prefix}video` ADD FULLTEXT KEY `title` (`title`,`tags`);
 
