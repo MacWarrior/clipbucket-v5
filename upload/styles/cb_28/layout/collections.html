@@ -90,12 +90,11 @@
 			<div class="box-ad ad">{AD place='ad_300x250'}</div>
 			{/if}
 			{if config('collectionsSection') == 'yes'}
-                {$collections = $cbcollection->get_collections(['limit'=>config('collection_collection_top_collections'), 'active'=>'yes'])}
-                {$collections = $cbcollection->activeCollections($collections)}
+                {$collections = $cbcollection->get_collections(['limit'=>config('collection_collection_top_collections'), 'active'=>'yes', 'parents_only'=>true, 'has_items'=>true])}
+                {if $collections}
 			<h2>{lang code="top_collections"}</h2>
 			<div class="clearfix sidebar-items collections-grid">
 				<div class="clearfix row">
-				{$limit=10}
 				{if $collections}
 				{foreach from=$collections item=collection}
 					<div class="clearfix collection-item col-lg-6 col-md-6 col-sm-12 col-xs-6">
@@ -103,10 +102,8 @@
 					</div>
 				{/foreach}
 				</div>
-				{else}
-				<div class="well well-info">{lang code='no_collection_found'}</div>
-				{/if}
 			</div>
+                {/if}
 			{/if}
 		</aside>
 	</div>

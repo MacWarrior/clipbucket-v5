@@ -140,11 +140,14 @@
 			</div>
 			{/if}
 			{if config('collectionsSection') == 'yes'}
-				{$collections = $cbcollection->get_collections(['limit'=>5, 'active'=>'yes'])}
+                {$cond = ['limit'=>5, 'active'=>'yes', 'has_items'=>true]}
+                {if config('enable_sub_collection')}
+                    {$cond['parent_id'] = $c.collection_id}
+                {/if}
+				{$collections = $cbcollection->get_collections($cond)}
+                {if $collections}
 				<h2>{lang code="top_collections"}</h2>
 				<div class="clearfix sidebar-items collections-grid">
-					{$limit=10}
-					{if $collections}
 					<div class="clearfix row">
 						{foreach from=$collections item=collection}
 							<div class="clearfix collection-item col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -152,10 +155,8 @@
 							</div>
 						{/foreach}
 					</div>
-					{else}
-					<div class="well well-info">{lang code='no_items_found_in_collect'}</div>
-					{/if}
 				</div>
+                {/if}
 			{/if}
 		</aside>
 	</div>

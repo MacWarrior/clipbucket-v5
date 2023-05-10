@@ -419,17 +419,17 @@ class CBPhotos
         $cond = '';
         
         if(!has_access('admin_access',TRUE)) {
-            $cond = ' '.('photos.broadcast')." = 'public' AND ".('photos.active')." = 'yes'";
+            $cond = 'photos.broadcast = \'public\' AND photos.active = \'yes\'';
         } else {
             if($p['active']){
-                $cond .= ' '.('photos.active')." = '".$p['active']."'";
+                $cond .= 'photos.active = \''.mysql_clean($p['active']).'\'';
             }
                 
             if($p['broadcast']) {
                 if($cond != ''){
                     $cond .= ' AND ';
                 }
-                $cond .= ' '.('photos.broadcast')." = '".$p['broadcast']."'";
+                $cond .= 'photos.broadcast = \''.mysql_clean($p['broadcast']).'\'';
             }
         }
         
@@ -444,14 +444,14 @@ class CBPhotos
             if($cond != ''){
                 $cond .= ' AND ';
             }
-            $cond .= ' '.('photos.photo_key')." = '".$p['key']."'";
+            $cond .= 'photos.photo_key = \''.mysql_clean($p['key']).'\'';
         }
         
         if($p['filename']) {
             if($cond != ''){
                 $cond .= ' AND ';
             }
-            $cond .= ' '.('photos.filename')." = '".$p['filename']."'";
+            $cond .= 'photos.filename = \''.mysql_clean($p['filename']).'\'';
         }
         
         if($p['extension']) {
@@ -460,7 +460,7 @@ class CBPhotos
                     if($cond != ''){
                         $cond .= ' AND ';
                     }
-                    $cond .= ' '.('photos.ext')." = '".$p['extension']."'";
+                    $cond .= 'photos.ext = \''.mysql_clean($p['extension']).'\'';
                 }
             }
         }
@@ -469,14 +469,14 @@ class CBPhotos
             if($cond != ''){
                 $cond .= ' AND ';
             }
-            $cond .= ' '.cbsearch::date_margin('photos.date_added',$p['date_span']);
+            $cond .= cbsearch::date_margin('photos.date_added',$p['date_span']);
         }
         
         if($p['featured']) {
             if($cond != ''){
                 $cond .= ' AND ';
             }
-            $cond .= ' '.('photos.featured')." = '".$p['featured']."'";
+            $cond .= 'photos.featured = \''.mysql_clean($p['featured']).'\'';
         }
         
         if($p['user']) {
@@ -494,9 +494,8 @@ class CBPhotos
         }
         
         $title_tag = '';
-        
         if($p['title']) {
-            $title_tag = ' '.('photos.photo_title')." LIKE '%".$p['title']."%'";
+            $title_tag = 'photos.photo_title LIKE \'%'.mysql_clean($p['title']).'%\'';
         }
         
         if($p['tags']) {
@@ -508,7 +507,7 @@ class CBPhotos
                 $total = count($tags);
                 $loop = 1;
                 foreach($tags as $tag) {
-                    $title_tag .= ' '.('photos.photo_tags')." LIKE '%$tag%'";
+                    $title_tag .= 'photos.photo_tags LIKE \'%'.mysql_clean($tag).'%\'';
                     if($loop<$total){
                         $title_tag .= ' OR ';
                     }
@@ -518,7 +517,7 @@ class CBPhotos
                 if($title_tag != ''){
                     $title_tag .= ' OR ';
                 }
-                $title_tag .= ' '.('photos.photo_tags')." LIKE '%".$p['tags']."%'";
+                $title_tag .= 'photos.photo_tags LIKE \'%'.mysql_clean($p['tags']).'%\'';
             }
         }
         
@@ -554,7 +553,7 @@ class CBPhotos
         if($p['collection'] || $p['get_orphans']) {
             $cond .= $this->constructMultipleQuery(['ids'=>$p['collection'],'sign'=>'=','operator'=>'OR','column'=>'collection_id']);
         } else {
-            $cond .= ' '.('photos.collection_id')." <> '0'";
+            $cond .= 'photos.collection_id <> \'0\'';
         }
 
         $fields = [
@@ -565,9 +564,9 @@ class CBPhotos
 
         $string = tbl_fields( $fields );
 
-        $main_query = "SELECT $string FROM ".table( 'photos' );
-        $main_query .= ' LEFT JOIN '.table( 'collections' ).' ON photos.collection_id = collections.collection_id';
-        $main_query .= ' LEFT JOIN '.table( 'users' ).' ON collections.userid = users.userid';
+        $main_query = 'SELECT '.$string.' FROM '.table('photos');
+        $main_query .= ' LEFT JOIN '.table('collections').' ON photos.collection_id = collections.collection_id';
+        $main_query .= ' LEFT JOIN '.table('users').' ON collections.userid = users.userid';
 
         $order = $order ? ' ORDER BY '.$order : false;
         $limit = $limit ? ' LIMIT '.$limit : false;
@@ -593,21 +592,21 @@ class CBPhotos
                 if($cond != ''){
                     $cond .= ' AND ';
                 }
-                $cond .= $this->constructMultipleQuery(array('ids'=>$p['exclude'],'sign'=>'<>'));
+                $cond .= $this->constructMultipleQuery(['ids'=>$p['exclude'],'sign'=>'<>']);
             }
             
             if($p['collection']) {
                 if($cond != ''){
                     $cond .= ' AND ';
                 }
-                $cond .= $this->constructMultipleQuery(array('ids'=>$p['collection'],'sign'=>'<>','column'=>'collection_id'));
+                $cond .= $this->constructMultipleQuery(['ids'=>$p['collection'],'sign'=>'<>','column'=>'collection_id']);
             }
             
             if($p['extra_cond']) {
                 if($cond != ''){
                     $cond .= ' AND ';
                 }
-                $cond .= $p['extra_cond'];        
+                $cond .= mysql_clean($p['extra_cond']);
             }
 
             $where = ' WHERE '.$cond.' AND photos.collection_id <> 0';
@@ -700,7 +699,7 @@ class CBPhotos
                 if($count>0){
                     $cond .= ' '.($params['operator']?$params['operator']:'AND').' ';
                 }
-                $cond .= ('photos.'.($params['column']?$params['column']:'photo_id'))." ".($params['sign']?$params['sign']:'=')." '".$id."'";
+                $cond .= ('photos.'.($params['column']?$params['column']:'photo_id')).' '.($params['sign']?$params['sign']:'=')." '".$id."'";
                 $count++;    
             }
         }

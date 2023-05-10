@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"146",
+  "revision":"147",
   "status":"dev",
   "detail":[
     {
@@ -138,6 +138,7 @@
         ,"Use filename without extension as default title and description <i>#248</i>"
         ,"Update jQuery-ui to 1.13.2"
         ,"Fix XSS injection <i>#79</i>"
+        ,"Update top collections display"
       ]
     }
   ,{

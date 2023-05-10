@@ -64,11 +64,10 @@
 			<!-- ************* USER BLOCK END ************** -->
 			<!-- ******************************************* -->
 			{if config('collectionsSection') == 'yes'}
-				{$collections = $cbcollection->get_collections(['limit'=>config('collection_home_top_collections'), 'active'=>'yes', 'order'=>'total_objects DESC'])}
-				{$collections = $cbcollection->activeCollections($collections)}
+				{$collections = $cbcollection->get_collections(['limit'=>config('collection_home_top_collections'), 'active'=>'yes', 'order'=>'total_objects DESC', 'parents_only'=>true, 'has_items'=>true])}
+                {if $collections}
 				<h2 title="Collections with most items">{lang code="top_collections"}</h2>
 				<div class="clearfix sidebar-items collections-grid">
-					{if $collections}
 					<div class="clearfix row">
 						{foreach from=$collections item=collection}
 							<div class="clearfix collection-item col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -76,10 +75,8 @@
 							</div>
 						{/foreach}
 					</div>
-					{else}
-					<div class="clearfix well">{lang code='no_collection_found'}</div>
-					{/if}
 				</div>
+                {/if}
 			{/if}
 
 			<!-- playlists -->

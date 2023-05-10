@@ -223,7 +223,32 @@ class Collections extends CBCategory
         }
         return false;
     }
-    
+
+    private function get_collection_childs($id,$cond=NULL)
+    {
+        global $db;
+        $result = $db->select(tbl($this->section_tbl).','.tbl('users'),
+            ' '.tbl($this->section_tbl).'.*,'.tbl('users').'.userid,'.tbl('users').'.username',
+            ' '.tbl($this->section_tbl).'.collection_id_parent = '.mysql_clean($id).' AND '.tbl($this->section_tbl).'.userid = '.tbl('users').'.userid '.$cond);
+
+        if($result){
+            return $result;
+        }
+        return false;
+    }
+
+    private function get_total_object_sub_collection($collection)
+    {
+        $childrens = $this->get_collection_childs($collection['collection_id']);
+        $total = $collection['total_objects'];
+        if( $childrens ){
+            foreach($childrens as $child){
+                $total += $this->get_total_object_sub_collection($child);
+            }
+        }
+        return $total;
+    }
+
     function is_viewable($cid): bool
     {
         global $userquery;
@@ -272,21 +297,21 @@ class Collections extends CBCategory
         $cond = '';
         
         if((!has_access('admin_access',TRUE) && $p['user'] != userid()) || ($p['user'] && $p['user'] == userid()) ){
-            $cond .= ' C.active = \'yes\'';
+            $cond .= 'C.active = \'yes\'';
         } else {
             if($p['active']) {
-                $cond .= ' C.active = \''.$p['active'].'\'';
+                $cond .= 'C.active = \''.$p['active'].'\'';
             }
             
             if($p['broadcast']) {
                 if($cond != ''){
                     $cond .= ' AND ';
                 }
-                $cond .= ' C.broadcast = \''.$p['broadcast'].'\'';
+                $cond .= 'C.broadcast = \''.$p['broadcast'].'\'';
             }
         }
         
-        if(isset($p['category']) && !empty($p['category'])) {
+        if( !empty($p['category']) ) {
             $get_all = false;
             if(!is_array($p['category'])){
                 if(strtolower($p['category']) == 'all'){
@@ -312,7 +337,7 @@ class Collections extends CBCategory
                     if($count > 1){
                         $cond .= ' OR ';
                     }
-                    $cond .= ' C.category LIKE \'%#'.$cat.'#%\'';
+                    $cond .= 'C.category LIKE \'%#'.$cat.'#%\'';
                 }
                 $cond .= ')';
             }
@@ -322,14 +347,14 @@ class Collections extends CBCategory
             if($cond!=''){
                 $cond .= ' AND ';
             }
-            $cond .= ' '.cbsearch::date_margin('C.date_added',$p['date_span']);
+            $cond .= cbsearch::date_margin('C.date_added',$p['date_span']);
         }
         
         if($p['type']) {
             if($cond != ''){
                 $cond .= ' AND ';
             }
-            $cond .= ' C.type = \''.$p['type'].'\'';
+            $cond .= 'C.type = \''.$p['type'].'\'';
         }
 
         if($p['user']) {
@@ -339,14 +364,14 @@ class Collections extends CBCategory
             if($brace){
                 $cond .= '(';
             }
-            $cond .= ' C.userid = \''.$p['user'].'\'';
+            $cond .= 'C.userid = \''.$p['user'].'\'';
         }
 
         if($p['featured']) {
             if($cond != '')    {
                 $cond .= ' AND ';
             }
-            $cond .= ' C.featured = \''.$p['featured'].'\'';
+            $cond .= 'C.featured = \''.$p['featured'].'\'';
         }
 
         if($p['public_upload']) {
@@ -354,7 +379,7 @@ class Collections extends CBCategory
                 $cond .= ' OR ';
             }
 
-            $cond .= ' C.public_upload = \''.$p['public_upload'].'\'';
+            $cond .= 'C.public_upload = \''.$p['public_upload'].'\'';
             if($brace){
                 $cond .= ')';
             }
@@ -364,14 +389,14 @@ class Collections extends CBCategory
             if($cond != ''){
                 $cond .= ' AND ';
             }
-            $cond .= ' C.collection_id <> \''.$p['exclude'].'\'';
+            $cond .= 'C.collection_id <> \''.$p['exclude'].'\'';
         }
         
         if($p['cid']) {
             if($cond != ''){
                 $cond .= ' AND ';
             }
-            $cond .= ' C.collection_id = \''.$p['cid'].'\'';
+            $cond .= 'C.collection_id = \''.$p['cid'].'\'';
         }
 
         /** Get only with those who have items **/
@@ -379,19 +404,19 @@ class Collections extends CBCategory
             if($cond != ''){
                 $cond .= ' AND ';
             }
-            $cond .= ' C.total_objects >= \'1\'';
+            $cond .= 'C.total_objects >= \'1\'';
         }
 
         if (!has_access('admin_access')) {
             if($cond != ''){
                 $cond .= ' AND ';
             }
-            $cond .= ' C.broadcast != \'private\'';
+            $cond .= 'C.broadcast != \'private\'';
         }
 
         $title_tag = '';
         if($p['name']) {
-            $title_tag .= ' C.collection_name LIKE \'%'.$p['name'].'%\'';
+            $title_tag .= 'C.collection_name LIKE \'%'.$p['name'].'%\'';
         }
         
         if($p['tags']) {
@@ -403,7 +428,7 @@ class Collections extends CBCategory
                 $total = count($tags);
                 $loop = 1;
                 foreach($tags as $tag) {
-                    $title_tag .= ' C.collection_tags LIKE \'%'.$tag.'%\'';
+                    $title_tag .= 'C.collection_tags LIKE \'%'.$tag.'%\'';
                     if($loop < $total){
                         $title_tag .= ' OR ';
                     }
@@ -413,7 +438,7 @@ class Collections extends CBCategory
                 if($title_tag != ''){
                     $title_tag .= ' OR ';
                 }
-                $title_tag .= ' C.collection_tags LIKE \'%'.$p['tags'].'%\'';
+                $title_tag .= 'C.collection_tags LIKE \'%'.$p['tags'].'%\'';
             }
         }
 
@@ -421,21 +446,21 @@ class Collections extends CBCategory
             if($cond != ''){
                 $cond .= ' AND ';
             }
-            $cond .= ' C.collection_id_parent IS NULL ';
+            $cond .= 'C.collection_id_parent IS NULL';
         }
 
         if($p['parent_id']) {
             if($cond != ''){
                 $cond .= ' AND ';
             }
-            $cond .= ' C.collection_id_parent = '.mysql_clean($p['parent_id']).' ';
+            $cond .= 'C.collection_id_parent = '.mysql_clean($p['parent_id']);
         }
         
         if($title_tag != '') {
             if($cond != ''){
                 $cond .= ' AND ';
             }
-            $cond .= ' ('.$title_tag.') ';
+            $cond .= '('.$title_tag.')';
         }
 
         $from = tbl('collections').' C'.
@@ -447,12 +472,18 @@ class Collections extends CBCategory
         }
 
         if( isset($p['count_only']) ){
-            $select = 'COUNT(C.*) AS total_collections';
+            $select = 'COUNT(C.collection_id) AS total_collections';
         } else {
             $select = 'C.*, U.username, CPARENT.collection_name AS collection_name_parent';
         }
 
         $result = $db->select($from, $select, $cond, $limit, $order);
+
+        if( config('enable_sub_collection') ){
+            foreach($result AS &$line){
+                $line['total_objects'] = $this->get_total_object_sub_collection($line);
+            }
+        }
 
         if($p['assign']){
             assign($p['assign'], $result);
