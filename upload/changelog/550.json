@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"149",
+  "revision":"150",
   "status":"dev",
   "detail":[
     {
@@ -43,6 +43,7 @@
         ,"Fix enable subtitles player option <i>#252</i>"
         ,"Fix SQL error when updating a converting video"
         ,"Add options to disable video and photo uploads"
+        ,"Refactor Dev mode page"
       ]
     },
     {

@@ -12,32 +12,24 @@ $breadcrumb[0] = ['title' => 'Tool Box', 'url' => ''];
 $breadcrumb[1] = ['title' => 'Development Mode', 'url' => ADMIN_BASEURL.'/dev_mode.php'];
 
 $filepath_dev_file = TEMP_DIR.'/development.dev';
-if (isset($_GET)) {
-    $action = $_GET['enable'];
-    $data = $_GET['devpower'];
-    if ($action == 'yes') {
+if (!empty($_POST)) {
+    if (!in_dev()) {
         if (is_writable(BASEDIR.'/includes')) {
-            file_put_contents($filepath_dev_file, $data);
+            file_put_contents($filepath_dev_file, '');
             if (file_exists($filepath_dev_file)) {
+                assign('development_mode',true);
                 assign('devmsg','Development has been enabled successfuly');
             }
         } else {
             assign('deverror','"includes" directory is not writeable');
         }
-    } elseif ($action == 'no') {
+    } else {
         unlink($filepath_dev_file);
         if (!file_exists($filepath_dev_file)) {
+            assign('development_mode',false);
             assign('devmsg','Development has been disabled successfuly');
         }
     }
-}
-
-if( in_dev() ) {
-    $devpower = file_get_contents($filepath_dev_file);
-    assign('devpower',$devpower);
-    assign('devmode','yes');
-} else {
-    assign('devmode','no');
 }
 
 subtitle('Development Mode');
