@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"151",
+  "revision":"152",
   "status":"dev",
   "detail":[
     {
@@ -141,6 +141,7 @@
         ,"Update jQuery-ui to 1.13.2"
         ,"Fix XSS injection <i>#79</i>"
         ,"Update top collections display"
+        ,"Fix collection creation from photo upload"
       ]
     }
   ,{

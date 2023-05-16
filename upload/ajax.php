@@ -847,32 +847,33 @@ if(!empty($mode))
                 echo json_encode(array("error"=>TRUE));
             break;
 
-        case "add_collection":
+        case 'add_collection':
             $name = $_POST['collection_name'];
             $desc = $_POST['collection_description'];
             $tags = genTags($_POST['collection_tags']);
-            $cat  = $_POST['category'];
-            $type = "photos";
-            $CollectParams = array(
-                'collection_name'		=> $name,
-                'collection_description'=> $desc,
-                'collection_tags'		=> $tags,
-                'category'				=> $cat,
-                'type'					=> $type,
-                'allow_comments'		=> 'yes',
-                'broadcast'				=> 'public',
-                'public_upload'			=> 'yes'
-            );
+            $cat = $_POST['category'];
+            $type = 'photos';
+            $CollectParams = [
+                'collection_name'        => $name,
+                'collection_description' => $desc,
+                'collection_tags'        => $tags,
+                'category'               => $cat,
+                'type'                   => $type,
+                'allow_comments'         => 'yes',
+                'broadcast'              => 'public',
+                'public_upload'          => 'yes'
+            ];
+            if (config('enable_sub_collection')) {
+                $CollectParams['collection_id_parent'] = $_POST['collection_id_parent'];
+            }
             $insert_id = $cbcollection->create_collection($CollectParams);
 
-            if(msg())
-            {
+            if (msg()) {
                 $msg = msg_list();
                 $msg = $msg[0]['val'];
                 $ajax['msg'] = $msg;
             }
-            if(error())
-            {
+            if (error()) {
                 $err = error_list();
                 $err = $err[0]['val'];
                 $ajax['err'] = $err;
