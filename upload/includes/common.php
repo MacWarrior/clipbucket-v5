@@ -407,19 +407,19 @@ if (!file_exists( PLAYLIST_COVERS_DIR)) {
 
 $ClipBucket->upload_opt_list = [];
 
-if( config('load_upload_form') == 'yes' ){
+if( config('enable_video_file_upload') == 'yes' ){
     $ClipBucket->upload_opt_list['file_upload_div'] = [
         'title'      => lang('upload_file'),
         'func_class' => 'Upload',
-        'load_func'  => 'load_upload_form'
+        'load_func'  => 'enable_video_file_upload'
     ];
 }
 
-if( config('load_remote_upload_form') == 'yes' ){
+if( config('enable_video_remote_upload') == 'yes' ){
     $ClipBucket->upload_opt_list['remote_upload_div'] = [
         'title'      => lang('remote_upload'),
         'func_class' => 'Upload',
-        'load_func'  => 'load_remote_upload_form'
+        'load_func'  => 'enable_video_remote_upload'
     ];
 }
 

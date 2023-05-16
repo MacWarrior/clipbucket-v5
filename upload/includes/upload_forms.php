@@ -4,13 +4,12 @@
  *
  * @param $params
  */
-function load_upload_form($params)
+function enable_video_file_upload($params)
 {
     assign('params',$params);
     Template(STYLES_DIR.'/global/upload_form.html',false);
 }
-
-function load_remote_upload_form($params=NULL)
+function enable_video_remote_upload($params=NULL)
 {
     assign('params',$params);
     Template(STYLES_DIR.'/global/remote_upload_form.html',false);

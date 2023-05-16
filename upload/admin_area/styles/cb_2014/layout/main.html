@@ -662,23 +662,30 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="load_upload_form" title="Enable file upload">Enable file upload</label>
+                                    <label class="nowrap" for="enable_video_file_upload" title="Enable file upload">Enable video file upload</label>
                                 </div>
                                 <div class="col-md-2 row-size">
-                                    <input value="yes" name="load_upload_form" id="load_upload_form" {if $row.load_upload_form=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <input value="yes" name="enable_video_file_upload" id="enable_video_file_upload" {if $row.enable_video_file_upload=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="load_remote_upload_form" title="Enable remote upload">Enable remote upload</label>
+                                    <label class="nowrap" for="enable_video_remote_upload" title="Enable remote upload">Enable video remote upload</label>
                                 </div>
                                 <div class="col-md-2 row-size">
-                                    <input value="yes" name="load_remote_upload_form" id="load_remote_upload_form" {if $row.load_remote_upload_form=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <input value="yes" name="enable_video_remote_upload" id="enable_video_remote_upload" {if $row.enable_video_remote_upload=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
                             </div>
                             <hr/>
                             <div class="row">
-                                <div class="col-md-10">
+								<div class="col-md-4">
+									<label class="nowrap" for="enable_photo_file_upload" title="Enable remote upload">Enable photo file upload</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="enable_photo_file_upload" id="enable_photo_file_upload" {if $row.enable_photo_file_upload=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+                                <div class="col-md-4">
                                     <label class="nowrap" for="feedsSection" title="Enable feeds">Enable feeds</label>
                                 </div>
                                 <div class="col-md-2 row-size">

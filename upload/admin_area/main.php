@@ -43,8 +43,9 @@ if(isset($_POST['update']))
         ,'feedsSection'
         ,'stay_mp4'
         ,'delete_mass_upload'
-        ,'load_upload_form'
-        ,'load_remote_upload_form'
+        ,'enable_video_file_upload'
+        ,'enable_video_remote_upload'
+        ,'enable_photo_file_upload'
         ,'send_comment_notification'
         ,'approve_video_notification'
         ,'smtp_auth'
@@ -268,8 +269,9 @@ if(isset($_POST['update']))
         'stay_mp4',
         'popup_video',
         'video_round_views',
-        'load_upload_form',
-        'load_remote_upload_form',
+        'enable_video_file_upload',
+        'enable_video_remote_upload',
+        'enable_photo_file_upload',
 
         'allow_conversion_1_percent',
 

@@ -188,3 +188,10 @@ ALTER TABLE `{tbl_prefix}video`
 	DROP INDEX IF EXISTS `status_2`,
 	DROP INDEX IF EXISTS `userid_4`,
 	DROP INDEX IF EXISTS `videoid_2`;
+
+-- REV 149
+INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
+	('enable_video_file_upload', (SELECT `value` FROM `{tbl_prefix}config` WHERE `name` = 'load_upload_form')),
+	('enable_video_remote_upload', (SELECT `value` FROM `{tbl_prefix}config` WHERE `name` = 'load_remote_upload_form')),
+	('enable_photo_file_upload', 'yes');
+DELETE FROM `{tbl_prefix}config` WHERE `name` IN ('load_upload_form','load_remote_upload_form');

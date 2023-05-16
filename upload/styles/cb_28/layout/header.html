@@ -119,14 +119,14 @@
 							{/if}
 							<ul class="nav navbar-nav navbar-right right-menu">
 								{if userid()}
-								{if (isSectionEnabled('videos') && (config('load_upload_form') == 'yes' || config('load_remote_upload_form') == 'yes')) || isSectionEnabled('photos')}
+								{if (isSectionEnabled('videos') && (config('enable_video_file_upload') == 'yes' || config('enable_video_remote_upload') == 'yes')) || (isSectionEnabled('photos') && config('enable_photo_file_upload') == 'yes')}
 								<li class="dropdown upload_link">
 									<a href="{link name='upload'}" class="dropdown-toggle btn-upload btn btn-default" data-toggle="dropdown"><i class="icon-upload"></i><span>{lang code="upload"}</span><b class="icon-down-arrow"></b></a>
 									<ul role="menu" class="dropdown-menu">
-										{if has_access('allow_video_upload',true,true) && isSectionEnabled('videos') && (config('load_upload_form') == 'yes' || config('load_remote_upload_form') == 'yes')}
+										{if has_access('allow_video_upload',true,true) && isSectionEnabled('videos') && (config('enable_video_file_upload') == 'yes' || config('enable_video_remote_upload') == 'yes')}
 										<li class="up_vid"><a href="{link name='upload'}">{lang code="upload_video"}<i class="icon-video visible-xs"></i></a></li>
 										{/if}
-										{if isSectionEnabled('photos')}
+										{if isSectionEnabled('photos') && config('enable_photo_file_upload') == 'yes'}
 										<li class="up_img"><a href="{link name='photo_upload'}">{lang code="upload_photo"}<i class="icon-photo visible-xs"></i></a></li>
 										{/if}
 										{ANCHOR place="aud_upload_link"}

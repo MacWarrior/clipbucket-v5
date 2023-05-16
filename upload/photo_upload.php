@@ -37,7 +37,10 @@ subtitle(lang('photos_upload'));
 
 //Displaying The Template
 if (!isSectionEnabled('photos')) {
-    e('Photo are disabled the moment');
+    e('Photos are disabled');
+    $Cbucket->show_page = false;
+} else if ( config('enable_photo_file_upload') == 'no') {
+    e('Photo upload is disabled');
     $Cbucket->show_page = false;
 }
 

@@ -47,6 +47,11 @@ assign('step',$step);
 assign('extensions', $Cbucket->get_extensions('video'));
 assign('stay_mp4', config('stay_mp4'));
 subtitle(lang('upload'));
+
+if ( config('enable_video_file_upload') == 'no' && config('enable_video_remote_upload') == 'no') {
+    e('Video upload is disabled');
+    $Cbucket->show_page = false;
+}
 //Displaying The Template
 if ( !userid() ) {
     echo '<div id="notlogged_err" class="container alert alert-danger" style="margin-top:70px;">You must login to be able to upload content. Login if you have account or register</div>';
