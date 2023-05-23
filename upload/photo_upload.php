@@ -30,7 +30,7 @@ if(isset($_POST['updatePhotos'])) {
     assign('step',3);
 }
 
-$collections = $cbphoto->collection->get_collections(['type'=>'photos','public_upload'=>'yes','user'=>userid()],1);
+$collections = $cbphoto->collection->get_collections_list(0,null,null,'photos',userid());
 
 assign('collections',$collections);
 subtitle(lang('photos_upload'));

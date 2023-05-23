@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"152",
+  "revision":"153",
   "status":"dev",
   "detail":[
     {
@@ -142,6 +142,7 @@
         ,"Fix XSS injection <i>#79</i>"
         ,"Update top collections display"
         ,"Fix collection creation from photo upload"
+        ,"Fix display collection selection from photo upload"
       ]
     }
   ,{

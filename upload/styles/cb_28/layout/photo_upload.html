@@ -48,8 +48,8 @@
                                     <div class="form-group clearfix" {if !$collections}style='display:none;'{/if} >
                                         <label for="collectionSelection">{lang code="select_collection_upload"}</label>
                                         <select class="form-control" id="collectionSelection" name="collectionSelection">
-                                        {foreach from=$collections item=item}
-                                            <option value="{$item.collection_id}">{display_clean($item.collection_name)}</option>
+                                        {foreach from=$collections key=key item=item}
+                                            <option value="{$key}">{$item.name}</option>
                                         {/foreach}
                                         </select>
                                     </div>
