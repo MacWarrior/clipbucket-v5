@@ -48,7 +48,7 @@
     var lang_quality = "{lang code='quality'}";
 </script>
 
-{if $development_mode}
+{if in_dev()}
 <script type="text/javascript" src="{$cb_vjs_player_url}/js/video.js"></script>
 <script type="text/javascript" src="{$cb_vjs_player_url}/plugin/clipbucket/videojs-clipbucket.js"></script>
 <script type="text/javascript" src="{$cb_vjs_player_url}/plugin/resolution/videojs-resolution.js"></script>
@@ -73,7 +73,7 @@
 
 {if config('chromecast')=='yes'}
 <script type="text/javascript" src="{$cb_vjs_player_url}/plugin/chromecast/cast_sender.js"></script>
-	{if $development_mode}
+	{if in_dev()}
 <script type="text/javascript" src="{$cb_vjs_player_url}/plugin/chromecast/videojs-chromecast.js"></script>
 <link rel="stylesheet" href="{$cb_vjs_player_url}/plugin/chromecast/videojs-chromecast.css">
 	{else}
@@ -83,7 +83,7 @@
 {/if}
 
 {if config('player_thumbnails')=='yes'}
-	{if $development_mode}
+	{if in_dev()}
 <script type="text/javascript" src="{$cb_vjs_player_url}/plugin/thumbnails/videojs-thumbnails.js"></script>
 <link rel="stylesheet" href="{$cb_vjs_player_url}/plugin/thumbnails/videojs-thumbnails.css">
 	{else}
@@ -102,7 +102,7 @@
 
 
 {if config("enable_advertisement") == "yes"}
-{if $development_mode}
+{if in_dev()}
 <link rel="stylesheet" href="{$cb_vjs_player_url}/plugin/ads/videojs.ads.css">
 
 <script type="text/javascript" src="{$cb_vjs_player_url}/plugin/ads/videojs-contrib-ads.js"></script>

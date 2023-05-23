@@ -44,7 +44,7 @@
 		<link rel="stylesheet" href="{$theme}/css/icon-font.css?cache={$cache_buster}">
 		<link rel="stylesheet" href="{$theme}/css/custom-elements.css?cache={$cache_buster}">
 
-        {if $development_mode}
+        {if in_dev()}
         <link rel="stylesheet" href="{$theme}/css/clipbucket.css?cache={$cache_buster}">
         {else}
         <link rel="stylesheet" href="{$theme}/css/clipbucket.min.css?cache={$cache_buster}">
@@ -54,7 +54,7 @@
 
 		<script src="{$theme}/js/jquery-3.6.4.min.js"></script>
 		<script src="/js/jquery-ui-1.13.2.min.js"></script>
-        {if $development_mode}
+        {if in_dev()}
 			<link rel="stylesheet" href="/styles/global/jquery_ui.css">
 		{else}
 			<link rel="stylesheet" href="/styles/global/jquery_ui.min.css">
@@ -71,7 +71,7 @@
             var lang_subscribe = "{lang code='subscribe'}";
             var lang_unsubscribe = "{lang code='unsubscribe'}";
 		</script>
-        {if $development_mode}
+        {if in_dev()}
 			<script src="{$theme}/js/custom.js"></script>
             <script src="{$theme}/js/bootstrap.js"></script>
 		{else}
@@ -82,7 +82,7 @@
 
 		<script src="{$theme}/js/ui_plugins.js"></script>
 
-        {if $development_mode}
+        {if in_dev()}
 		<script src="/js/clipbucket.js"></script>
 		{else}
 		<script src="/js/clipbucket.min.js"></script>
@@ -111,7 +111,7 @@
 			var pageNow = "{$smarty.const.THIS_PAGE}";
 		</script>
 		{include file="$style_dir/blocks/quicklist/qlist_main.html"}
-        {if $development_mode}
+        {if in_dev()}
 			<script type="text/javascript" src="{$theme}/js/fast_qlist.js"></script>
 		{else}
 			<script type="text/javascript" src="{$theme}/js/fast_qlist.min.js"></script>

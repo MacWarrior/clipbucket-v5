@@ -399,7 +399,6 @@ Assign('video_embed',$row['video_embed']);
 assign('icons_url',ICONS_URL);
 const PLAYLIST_COVERS_DIR = IMAGES_DIR . '/playlist_covers';
 const PLAYLIST_COVERS_URL = IMAGES_URL . '/playlist_covers';
-assign('development_mode', DEVELOPMENT_MODE);
 
 if (!file_exists( PLAYLIST_COVERS_DIR)) {
     mkdir(PLAYLIST_COVERS_DIR, 0777);

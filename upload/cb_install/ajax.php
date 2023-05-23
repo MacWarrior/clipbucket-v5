@@ -102,7 +102,7 @@ if($mode=='adminsettings')
 
 						if( $cnnct->error != '' ) {
 							$result['err'] = "<span class='alert'>An SQL error occured : ".$cnnct->error.'</span>';
-                            if( DEVELOPMENT_MODE ) {
+                            if( in_dev() ) {
                                 $result['err'] .= "<span class='alert'>SQL : ".$templine.'</span>';
                             }
 							error_log('SQL : ' . $templine);
@@ -154,7 +154,7 @@ if($mode=='adminsettings')
 
 							if( $cnnct->error != '' ) {
 								$result['err'] = "<span class='alert'>An SQL error occured : ".$cnnct->error.'</span>';
-                                if( DEVELOPMENT_MODE ) {
+                                if( in_dev() ) {
                                     $result['err'] .= "<span class='alert'>SQL : ".$templine.'</span>';
                                 }
 								error_log('SQL : ' . $templine);
@@ -185,7 +185,7 @@ if($mode=='adminsettings')
 
 							if( $cnnct->error != '' ) {
 								$result['err'] = "<span class='alert'>An SQL error occured : ".$cnnct->error.'</span>';
-                                if( DEVELOPMENT_MODE ) {
+                                if( in_dev() ) {
                                     $result['err'] .= "<span class='alert'>SQL : ".$templine.'</span>';
                                 }
 								error_log('SQL : ' . $templine);

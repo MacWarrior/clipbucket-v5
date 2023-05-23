@@ -349,7 +349,7 @@ class FFMpeg
                 $command = config('ffmpegpath').' -i '.$this->input_file.' -map 0:'.$map_id.' -f '.config('subtitle_format').' '.$subtitle_dir.$this->file_name.'-'.$display_count.'.srt 2>&1';
                 $output = shell_exec($command);
                 $db->insert(tbl('video_subtitle'),['videoid','number','title'],[$video['videoid'], $display_count, $data['title']]);
-                if( DEVELOPMENT_MODE ) {
+                if( in_dev() ) {
                     if( $log != '' ){
                         $log .= PHP_EOL;
                     }
@@ -597,7 +597,7 @@ class FFMpeg
         $log .= $cmd;
 
         $output = shell_exec($cmd);
-        if( DEVELOPMENT_MODE ) {
+        if( in_dev() ) {
             $log .= PHP_EOL.PHP_EOL.'== Conversion Output =='.PHP_EOL.PHP_EOL;
             $log .= $output;
         }
@@ -644,7 +644,7 @@ class FFMpeg
         $TemplogData .= PHP_EOL.PHP_EOL.'== Conversion Command =='.PHP_EOL.PHP_EOL;
         $TemplogData .= $command;
 
-        if( DEVELOPMENT_MODE ) {
+        if( in_dev() ) {
             $TemplogData .= PHP_EOL.PHP_EOL.'== Conversion OutPut =='.PHP_EOL.PHP_EOL;
             $TemplogData .= $output;
         }

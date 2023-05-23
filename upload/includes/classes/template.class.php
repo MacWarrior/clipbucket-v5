@@ -21,7 +21,7 @@ class CBTemplate {
         $Smarty->setTemplateDir(BASEDIR.'/styles');
         $Smarty->setCompileDir(BASEDIR.'/cache/views');
 
-        if( DEVELOPMENT_MODE) {
+        if( in_dev()) {
             $Smarty->clearAllCache();
         }
     }
