@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"155",
+  "revision":"156",
   "status":"dev",
   "detail":[
     {
@@ -144,6 +144,7 @@
         ,"Update top collections display"
         ,"Fix collection creation from photo upload"
         ,"Fix display collection selection from photo upload"
+        ,"Update date of birth on signup form <i>#203</i>"
       ]
     }
   ,{

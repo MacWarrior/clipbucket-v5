@@ -1490,50 +1490,47 @@
 		return $_POST[$val];
 	}
 
-	/**
-	 * Function used to return LANG variable
-	 *
-	 * @param      $var
-	 * @param bool $sprintf
-	 *
-	 * @return mixed|string
-	 */
-	function lang($var,$sprintf=false)
-	{
-		if( $var == '' ){
-			return '';
-        }
+/**
+ * Function used to return LANG variable
+ *
+ * @param      $var
+ * @param bool $sprintf
+ *
+ * @return mixed|string
+ */
+function lang($var, $sprintf = false)
+{
+    if ($var == '') {
+        return '';
+    }
 
-		global $LANG;
-		$array_str = array( '{title}');
-		$array_replace = array( 'Title' );
-		if(isset($LANG[$var])) {
-			$phrase = str_replace($array_str,$array_replace,$LANG[$var]);
-		} else {
-			$phrase = str_replace($array_str,$array_replace,$var);
-		}
-		
-		if($sprintf)
-		{
-			$sprints = explode(',',$sprintf);
-			if(is_array($sprints))
-			{
-				foreach($sprints as $sprint) {
-					$phrase = sprintf($phrase,$sprint);
-				}
-			}
-		}
+    global $LANG;
+    $array_str = ['{title}'];
+    $array_replace = ['Title'];
+    if (isset($LANG[$var])) {
+        $phrase = str_replace($array_str, $array_replace, $LANG[$var]);
+    } else {
+        $phrase = str_replace($array_str, $array_replace, $var);
+    }
 
-		if($LANG != null && !isset($LANG[$var]))
-		{
-			error_log('[LANG] Missing translation for "'.$var.'"');
-			if( in_dev() ){
-				error_log(print_r(debug_backtrace(), TRUE));
+    if ($sprintf) {
+        $sprints = explode(',', $sprintf);
+        if (is_array($sprints)) {
+            foreach ($sprints as $sprint) {
+                $phrase = sprintf($phrase, $sprint);
             }
-		}
+        }
+    }
 
-		return $phrase;
-	}
+    if ($LANG != null && !isset($LANG[$var])) {
+        error_log('[LANG] Missing translation for "' . $var . '"');
+        if (in_dev()) {
+            error_log(print_r(debug_backtrace(), TRUE));
+        }
+    }
+
+    return $phrase;
+}
 
 	function get_current_language(){
         global $lang_obj;

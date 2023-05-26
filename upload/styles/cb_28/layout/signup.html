@@ -138,8 +138,8 @@
 {/if}
 
 <script type="text/javascript" src="/js/jquery-ui-1.13.2.min.js"></script>
+<script type="text/javascript" src="/js/jquery_plugs/datepicker_languages/datepicker-{$lang_obj->getLang()}.js"></script>
 <script>
-
 	$(document).ready(function(){
 		var pageMode = "{display_clean($smarty.get.mode)}";
 		if (pageMode == 'login') {
@@ -151,11 +151,10 @@
 			changeMonth: true,
 			dateFormat:"{get_date_js()}",
 			changeYear: true,
-			yearRange: "-56:+0"
+			yearRange: "-56:+0",
+			regional:"{$lang_obj->getLang()}"
 		});
 		$('.simple_container').addClass('alert-success alert container');
-		var currentDate = new Date();
-		$("#dob").datepicker("setDate", currentDate);
 	 });
 
 	var errors = {

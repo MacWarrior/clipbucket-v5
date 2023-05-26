@@ -3138,6 +3138,7 @@ class userquery extends CBCategory
                 'validate_function' => 'verify_age',
                 'db_field' => 'dob',
                 'required' => 'yes',
+                'placehoder' => lang('user_date_of_birth'),
                 'invalid_err' => sprintf( lang('register_min_age_request'), config('min_age_reg') )
             ],
             'country' => [

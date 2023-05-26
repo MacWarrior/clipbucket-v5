@@ -639,4 +639,12 @@ class language
 		}
 	}
 
+    /**
+     * @return string
+     */
+    function getLang()
+    {
+        return $this->lang;
+    }
+
 }
