@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"154",
+  "revision":"155",
   "status":"dev",
   "detail":[
     {
@@ -44,6 +44,7 @@
         ,"Fix SQL error when updating a converting video"
         ,"Add options to disable video and photo uploads"
         ,"Refactor Dev mode page"
+        ,"Fix video search by video key"
       ]
     },
     {

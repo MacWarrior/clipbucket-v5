@@ -891,7 +891,7 @@ class CBvideo extends CBCategory
                 if($cond!=''){
                     $cond .= ' AND ';
                 }
-                $cond .= ' '.tbl('video.videokey').' = \''.$params['videokey'].'\' ';
+                $cond .= ' '.('video.videokey').' = \''.$params['videokey'].'\' ';
             } else {
                 if($cond!=''){
                     $cond .= ' AND (';
@@ -903,7 +903,7 @@ class CBvideo extends CBCategory
                     if($vkeyQue>0){
                         $cond .= ' OR ';
                     }
-                    $cond .= ' '.tbl('video.videokey').' = \''.$videokey.'\' ';
+                    $cond .= ' '.('video.videokey').' = \''.$videokey.'\' ';
                     $vkeyQue++;
                 }
                 
