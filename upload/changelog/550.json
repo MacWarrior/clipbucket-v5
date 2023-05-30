@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"156",
+  "revision":"157",
   "status":"dev",
   "detail":[
     {
@@ -45,6 +45,7 @@
         ,"Add options to disable video and photo uploads"
         ,"Refactor Dev mode page"
         ,"Fix video search by video key"
+        ,"Fix video search form"
       ]
     },
     {

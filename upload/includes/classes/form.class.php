@@ -439,67 +439,67 @@ class formObj
         return $data;
     }
 
-	function createDropDown($field,$multi=FALSE, $skipall = false)
-	{
-		//First Checking if value is CATEGORY
-		if($field['value'][0]=='category') {
-			$field['value'] = [];
-			//Generate Category list
-			$catArray = getCategoryList(['type'=>$field['category_type'],'with_all'=>true]);
+    function createDropDown($field, $multi = FALSE, $skipall = false)
+    {
+        //First Checking if value is CATEGORY
+        if ($field['value'][0] == 'category') {
+            $field['value'] = [];
+            //Generate Category list
+            $catArray = getCategoryList(['type' => $field['category_type'], 'with_all' => true]);
 
             $field['value'] = $this->getCategories($catArray, $skipall);
-		}
+        }
 
-		if(!$multi){
-			$field_name = $field['name'];
+        if (!$multi) {
+            $field_name = $field['name'];
         } else {
-			$field_name = $field['name'].'[]';
+            $field_name = $field['name'] . '[]';
         }
 
         $select = '';
-        if(!empty($field['id'])){
-            $select .= ' id="'.$field['id'].'"';
+        if (!empty($field['id'])) {
+            $select .= ' id="' . $field['id'] . '"';
         }
 
-        if(!empty($field['class'])){
-            $select .= ' class="'.$field['class'].'"';
+        if (!empty($field['class'])) {
+            $select .= ' class="' . $field['class'] . '"';
         }
 
-        if(!empty($field['disabled'])){
+        if (!empty($field['disabled'])) {
             $select .= ' disabled';
         }
 
         $hidden = '';
-        if(!empty($field['input_hidden'])){
-            $hidden = '<input type="hidden" name="'.$field_name.'" value="'.$field['checked'].'">';
+        if (!empty($field['input_hidden'])) {
+            $hidden = '<input type="hidden" name="' . $field_name . '" value="' . $field['checked'] . '">';
         }
-		
-		$ddFieldStart = '<select name=\''.$field_name.'\''.$select.'>';
-		$arrayName = $this->rmBrackets($field['name']);
-		if( is_string($field['value']) ) {
-			$field['value'] = explode(',', $field['value']);
-		}
+
+        $ddFieldStart = '<select name=\'' . $field_name . '\'' . $select . '>';
+        $arrayName = $this->rmBrackets($field['name']);
+        if (is_string($field['value'])) {
+            $field['value'] = explode(',', $field['value']);
+        }
         $fieldOpts = '';
-		if(is_array($field['value'])){
-            foreach($field['value'] as $key => $value) {
-                if((is_array($_POST) && !empty($_POST[$arrayName])) || !empty($field['checked'])) {
-                    if( (is_array($_POST) && $_POST[$arrayName] == $key) || $field['checked']== $key){
+        if (is_array($field['value'])) {
+            foreach ($field['value'] as $key => $value) {
+                if ((is_array($_REQUEST) && !empty($_REQUEST[$arrayName])) || !empty($field['checked'])) {
+                    if ((is_array($_REQUEST) && $_REQUEST[$arrayName] == $key) || $field['checked'] == $key) {
                         $checked = ' selected ';
                     } else {
                         $checked = '';
                     }
                 } else {
-                    if($count==0) {
+                    if ($count == 0) {
                         $checked = ' selected ';
                     } else {
                         $checked = '';
                     }
                     $count++;
                 }
-                $fieldOpts .='<option value="'.$key.'" '.$checked.' '.$field['extra_tags'].'>'.$value.'</option>';
+                $fieldOpts .= '<option value="' . $key . '" ' . $checked . ' ' . $field['extra_tags'] . '>' . $value . '</option>';
             }
         }
-		$ddFieldEnd = '</select>';
-		echo $hidden.$ddFieldStart.$fieldOpts.$ddFieldEnd;
-	}
+        $ddFieldEnd = '</select>';
+        echo $hidden . $ddFieldStart . $fieldOpts . $ddFieldEnd;
+    }
 }
