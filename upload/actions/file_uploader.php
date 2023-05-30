@@ -152,13 +152,17 @@ switch($mode)
             $filename_without_ext = substr($filename_without_ext,0,config('max_video_title'));
         }
         $vidDetails = [
-            'title'           => $filename_without_ext
-            ,'file_name'      => $file_name
-            ,'file_directory' => $file_directory
-            ,'description'    => $filename_without_ext
-            ,'tags'           => genTags(str_replace([' ','_','-'],', ',$filename_without_ext))
-            ,'category'       => [$cbvid->get_default_cid()]
-            ,'userid'         => userid()
+            'title'             => $filename_without_ext
+            , 'file_name'       => $file_name
+            , 'file_directory'  => $file_directory
+            , 'description'     => $filename_without_ext
+            , 'tags'            => genTags(str_replace([' ', '_', '-'], ', ', $filename_without_ext))
+            , 'category'        => [$cbvid->get_default_cid()]
+            , 'userid'          => userid()
+            , 'allow_comments'  => 'yes'
+            , 'comment_voting'  => 'yes'
+            , 'allow_rating'    => 'yes'
+            , 'allow_embedding' => 'yes'
         ];
 
         $vid = $Upload->submit_upload($vidDetails);

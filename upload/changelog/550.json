@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"158",
+  "revision":"159",
   "status":"dev",
   "detail":[
     {
@@ -47,6 +47,7 @@
         ,"Fix video search by video key"
         ,"Fix video search form"
         ,"Fix thumbs count <i>#132</i>"
+        ,"Fix mass upload default values"
       ]
     },
     {
@@ -147,6 +148,7 @@
         ,"Fix collection creation from photo upload"
         ,"Fix display collection selection from photo upload"
         ,"Update date of birth on signup form <i>#203</i>"
+        ,"Fix video upload default values"
       ]
     }
   ,{
