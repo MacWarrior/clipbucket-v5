@@ -10,7 +10,7 @@ $breadcrumb[0] = array('title' => 'General Configurations', 'url' => '');
 $breadcrumb[1] = array('title' => 'Reports &amp; Stats', 'url' => ADMIN_BASEURL.'/reports.php');
 
 $vid_dir = get_directory_size(VIDEOS_DIR);
-$thumb_dir = get_directory_size(THUMBS_DIR);
+$thumb_dir = get_directory_size(THUMBS_DIR, ['.gitignore', 'processing.jpg']);
 $orig_dir = get_directory_size(ORIGINAL_DIR);
 $user_thumbs = get_directory_size(USER_THUMBS_DIR);
 $user_bg = get_directory_size(USER_BG_DIR);

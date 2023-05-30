@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"157",
+  "revision":"158",
   "status":"dev",
   "detail":[
     {
@@ -46,6 +46,7 @@
         ,"Refactor Dev mode page"
         ,"Fix video search by video key"
         ,"Fix video search form"
+        ,"Fix thumbs count <i>#132</i>"
       ]
     },
     {

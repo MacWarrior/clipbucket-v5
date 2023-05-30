@@ -372,45 +372,46 @@
 		return filter_var($email, FILTER_VALIDATE_EMAIL);
    	}
 
-	/**
-	 * Get Directory Size - get_video_file($vdata,$no_video,false);
-	 *
-	 * @param : { string } { $path } { path to directory to determine size of }
-	 *
-	 * @return mixed : { integer } { $total } { size of directory }
-	 */
-	function get_directory_size($path)
-	{
-		$totalsize = 0;
-		$totalcount = 0;
-		$dircount = 0;
-		if ($handle = opendir ($path))
-		{
-			while (false !== ($file = readdir($handle)))
-			{
-				$nextpath = $path . '/' . $file;
-				if ($file != '.' && $file != '..' && !is_link ($nextpath))
-				{
-					if (is_dir ($nextpath))
-					{
-					  $dircount++;
-					  $result = get_directory_size($nextpath);
-					  $totalsize += $result['size'];
-					  $totalcount += $result['count'];
-					  $dircount += $result['dircount'];
-					} elseif (is_file ($nextpath)) {
-					  $totalsize += filesize ($nextpath);
-					  $totalcount++;
-					}
-				}
-			}
-		}
-		closedir ($handle);
-		$total['size'] = $totalsize;
-		$total['count'] = $totalcount;
-		$total['dircount'] = $dircount;
-		return $total;
-	}
+
+/**
+ * Get Directory Size - get_video_file($vdata,$no_video,false);
+ *
+ * @param string $path : path to directory to determine size of
+ * @param array $excluded : array of files to be ignored in count
+ * @return array : { integer } { $total } { size of directory }
+ */
+function get_directory_size(string $path, array $excluded = []) : array
+{
+    $totalsize = 0;
+    $totalcount = 0;
+    $dircount = 0;
+    if ($handle = opendir($path)) {
+        while (false !== ($file = readdir($handle))) {
+            $nextpath = $path . '/' . $file;
+            if ($file != '.' && $file != '..' && !is_link($nextpath)) {
+                if (is_dir($nextpath)) {
+                    $dircount++;
+                    $result = get_directory_size($nextpath);
+                    $totalsize += $result['size'];
+                    $totalcount += $result['count'];
+                    $dircount += $result['dircount'];
+                } elseif (is_file($nextpath)
+                    && !array_filter($excluded, function ($value) use ($nextpath) {
+                        return str_contains($nextpath, $value);
+                    })
+                ) {
+                    $totalsize += filesize($nextpath);
+                    $totalcount++;
+                }
+            }
+        }
+        closedir($handle);
+    }
+    $total['size'] = $totalsize;
+    $total['count'] = $totalcount;
+    $total['dircount'] = $dircount;
+    return $total;
+}
 
 	/**
 	 * Format file size in readable format
