@@ -162,9 +162,9 @@ class pages{
 		}
 		$total_pages = $total;
 		$pagination_start = 14;
-		$display_page = 7;
+		$display_page = 5;
 		$this->selected = $selected = $page;
-		$hellip = '<a>&hellip;</a>';
+		$hellip = '<li><a>&hellip;</a></li>';
 		$first_hellip = '';
 		$second_hellip = '';
 		
@@ -192,7 +192,7 @@ class pages{
 			}
 			
 			//Starting Last
-			for($i=$total_pages-$display_page;$i<=$total_pages;$i++)
+			for($i=$total_pages-$display_page+1;$i<=$total_pages;$i++)
 			{
 				if($end_first == ''){
 					$end_first = $i;

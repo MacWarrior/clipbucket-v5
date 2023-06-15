@@ -1499,43 +1499,35 @@ function get_directory_size(string $path, array $excluded = []) : array
  *
  * @return mixed|string
  */
-function lang($var, $sprintf = false)
+function lang($var)
 {
     if ($var == '') {
         return '';
     }
+    if (empty(Language::getInstance()->arrayTranslation[$var])) {
 
-    global $LANG;
-    $array_str = ['{title}'];
-    $array_replace = ['Title'];
-    if (isset($LANG[$var])) {
-        $phrase = str_replace($array_str, $array_replace, $LANG[$var]);
-    } else {
-        $phrase = str_replace($array_str, $array_replace, $var);
-    }
+        //check default value in db
+        $translation = Language::getInstance()->getTranslationByKey($var, Language::$english_id)['translation'];
 
-    if ($sprintf) {
-        $sprints = explode(',', $sprintf);
-        if (is_array($sprints)) {
-            foreach ($sprints as $sprint) {
-                $phrase = sprintf($phrase, $sprint);
+        if (!array_key_exists($var, Language::getInstance()->arrayTranslation)) {
+            $translation = $var;
+            error_log('[LANG] Missing translation for "' . $var . '"');
+
+            if (in_dev()) {
+                error_log(print_r(debug_backtrace(), true));
             }
         }
+    } else {
+        $translation = Language::getInstance()->arrayTranslation[$var];
     }
 
-    if ($LANG != null && !isset($LANG[$var])) {
-        error_log('[LANG] Missing translation for "' . $var . '"');
-        if (in_dev()) {
-            error_log(print_r(debug_backtrace(), TRUE));
-        }
-    }
-
-    return $phrase;
+    $array_str = ['{title}'];
+    $array_replace = ['Title'];
+    return str_replace($array_str, $array_replace, $translation);
 }
 
 	function get_current_language(){
-        global $lang_obj;
-	    return $lang_obj->get_default_language()['language_code'];
+	    return Language::getDefaultLanguage()['language_code'];
     }
 
 	/**

@@ -1,10 +1,12 @@
 <?php
 require_once '../includes/admin_config.php';
+global $userquery;
 $userquery->admin_login_check();
 
-$phrase_id = $_POST['pk'];
-$value = $_POST['value'];
+$id_language_key = $_POST['id_language_key'];
+$translation = $_POST['translation'];
+$language_id = $_POST['language_id'];
 
-$lang_obj->update_phrase($phrase_id,$value);
+Language::getInstance()->update_phrase($id_language_key, $translation, $language_id);
 
-echo ($value);
+echo $translation;

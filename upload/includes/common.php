@@ -12,31 +12,31 @@ const DEV_INGNORE_SYNTAX = true;
 //Create an empty development.dev file in includes folder
 //To Activate Development mode
 
-if(file_exists(dirname(__FILE__).'/../files/temp/development.dev')) {
-    define('DEVELOPMENT_MODE',true);
+if (file_exists(dirname(__FILE__) . '/../files/temp/development.dev')) {
+    define('DEVELOPMENT_MODE', true);
     $__devmsgs = [
-        'insert_queries'=>[],
-        'select_queries'=>[],
-        'update_queries'=>[],
-        'delete_queries'=>[],
-        'count_queries'=>[],
-        'execute_queries'=>[],
-        'insert'=>'0',
-        'select'=>'0',
-        'update'=>'0',
-        'delete'=>'0',
-        'count'=>'0',
-        'execute'=>'0',
-        'total_queries'=>'0',
-        'total_query_exec_time'=>'0',
-        'total_memory_used'=>'0',
-        'expensive_query'=>'',
-        'cheapest_query'=>''
+        'insert_queries'        => [],
+        'select_queries'        => [],
+        'update_queries'        => [],
+        'delete_queries'        => [],
+        'count_queries'         => [],
+        'execute_queries'       => [],
+        'insert'                => '0',
+        'select'                => '0',
+        'update'                => '0',
+        'delete'                => '0',
+        'count'                 => '0',
+        'execute'               => '0',
+        'total_queries'         => '0',
+        'total_query_exec_time' => '0',
+        'total_memory_used'     => '0',
+        'expensive_query'       => '',
+        'cheapest_query'        => ''
     ];
 
-    require_once(dirname(__DIR__).DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php');
+    require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php');
     $whoops = new \Whoops\Run;
-    $whoops->pushHandler( new \Whoops\Handler\PrettyPageHandler );
+    $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
     $whoops->register();
 
     /*set_error_handler(function($severity, $message, $file, $line){
@@ -47,13 +47,13 @@ if(file_exists(dirname(__FILE__).'/../files/temp/development.dev')) {
         throw new \ErrorException($message, 0, $severity, $file, $line);
     });*/
 } else {
-    define('DEVELOPMENT_MODE',false);
+    define('DEVELOPMENT_MODE', false);
 }
 
-if(!@$in_bg_cron) {
+if (!@$in_bg_cron) {
     //Setting Session Max Life
     ini_set('session.gc_maxlifetime', GARBAGE_TIMEOUT);
-    session_set_cookie_params(COOKIE_TIMEOUT,'/');
+    session_set_cookie_params(COOKIE_TIMEOUT, '/');
     session_start();
 }
 
@@ -63,11 +63,12 @@ require_once('classes/db.class.php');
 require_once 'functions.php';
 check_install('before');
 
-if( file_exists(__DIR__.'/config.php') ){
+if (file_exists(__DIR__ . '/config.php')) {
     require_once 'config.php'; // New config file
 } else {
     require_once 'dbconnect.php'; // Old config file
 }
+
 
 # class for storing common ClipBucket functions
 require_once('classes/ClipBucket.class.php');
@@ -83,13 +84,13 @@ $cb_columns = new cb_columns();
 $myquery = new myquery();
 $row = $myquery->Get_Website_Details();
 
-if( !in_dev() ) {
+if (!in_dev()) {
     define('DEBUG_LEVEL', 0);
 } else {
     define('DEBUG_LEVEL', 2);
 }
 
-switch(DEBUG_LEVEL) {
+switch (DEBUG_LEVEL) {
     case 0:
         error_reporting(0);
         ini_set('display_errors', '0');
@@ -106,10 +107,12 @@ switch(DEBUG_LEVEL) {
         ini_set('display_errors', 'on');
 }
 
+Language::getInstance()->init();
+$arrayTranslations = Language::getInstance()->loadTranslations(Language::getInstance()->lang_id);
 $pages = new pages();
 $ClipBucket = $Cbucket = new ClipBucket();
-define('BASEDIR',$Cbucket->BASEDIR);
-if(!file_exists(BASEDIR.'/index.php')){
+define('BASEDIR', $Cbucket->BASEDIR);
+if (!file_exists(BASEDIR . '/index.php')) {
     die('Basedir is incorrect, please set the correct basedir value in \'config\' table');
 }
 $baseurl = $row['baseurl'];
@@ -121,19 +124,18 @@ if (is_ssl()) {
 }
 
 //Removing www. as it effects SEO and updating Config
-$wwwcheck = preg_match('/:\/\/www\./',$baseurl,$matches);
-if(count($matches)>0) {
-    $baseurl = preg_replace('/:\/\/www\./','://',$baseurl);
+$wwwcheck = preg_match('/:\/\/www\./', $baseurl, $matches);
+if (count($matches) > 0) {
+    $baseurl = preg_replace('/:\/\/www\./', '://', $baseurl);
 }
 
 $clean_base = false;
-if(defined('CLEAN_BASEURL')) {
+if (defined('CLEAN_BASEURL')) {
     $clean_base = CLEAN_BASEURL;
 }
 
-define('BASEURL',$baseurl);
-$userquery 	= new userquery();
-$lang_obj	= new language;
+define('BASEURL', $baseurl);
+$userquery = new userquery();
 
 //Setting Time Zone date_default_timezone_set
 require_once('classes/search.class.php');
@@ -163,37 +165,35 @@ require_once('classes/translation.class.php');
 require_once('classes/gravatar.class.php');
 require 'defined_links.php';
 require_once 'languages.php';
-$lang_obj->init();
-$LANG = $lang_obj->lang_phrases('file');
+$eh = new errorhandler();
 
-$calcdate	= new CalcDate();
-$signup 	= new signup();
-$Upload 	= new Upload();
-$adsObj		= new AdsManager();
-$formObj	= new formObj();
 
-$cbplugin	= new CBPlugin();
-$eh			= new errorhandler();
+$calcdate = new CalcDate();
+$signup = new signup();
+$Upload = new Upload();
+$adsObj = new AdsManager();
+$formObj = new formObj();
 
-$sess		= new Session();
-$cblog		= new CBLogs();
-$imgObj		= new ResizeImage();
-$cbvideo	= $cbvid = new CBvideo();
-$cbplayer	= new CBPlayer();
-$cbemail	= new CBEmail();
-$cbsearch	= new CBSearch();
-$cbpm		= new cb_pm();
-$cbpage		= new cbpage();
-$cbindex	= new CBreindex();
+$cbplugin = new CBPlugin();
+$sess = new Session();
+$cblog = new CBLogs();
+$imgObj = new ResizeImage();
+$cbvideo = $cbvid = new CBvideo();
+$cbplayer = new CBPlayer();
+$cbemail = new CBEmail();
+$cbsearch = new CBSearch();
+$cbpm = new cb_pm();
+$cbpage = new cbpage();
+$cbindex = new CBreindex();
 $cbcollection = new Collections();
-$cbphoto    = new CBPhotos();
+$cbphoto = new CBPhotos();
 
-$cbfeeds 	= new cbfeeds();
+$cbfeeds = new cbfeeds();
 $GoogleTranslator = new GoogleTranslator();
 
 check_install('after');
-@include($Cbucket->BASEDIR.'/includes/clipbucket.php');
-$Cbucket->cbinfo = ['version'=>VERSION,'state'=>STATE,'rev'=>REV];
+@include($Cbucket->BASEDIR . '/includes/clipbucket.php');
+$Cbucket->cbinfo = ['version' => VERSION, 'state' => STATE, 'rev' => REV];
 
 # Holds Advertisement IDS that are being Viewed
 $ads_array = [];
@@ -201,39 +201,39 @@ $ads_array = [];
 # Website Details
 define('CB_VERSION', $row['version']);
 define('TITLE', $row['site_title']);
-if(!defined('SLOGAN')){
-    define('SLOGAN',$row['site_slogan']);
+if (!defined('SLOGAN')) {
+    define('SLOGAN', $row['site_slogan']);
 }
 
 # Seo URLS
-define('SEO',$row['seo']); //Set yes / no
+define('SEO', $row['seo']); //Set yes / no
 
 # Registration & Email Settings
-define('EMAIL_VERIFICATION',$row['email_verification']);
-define('ALLOW_REG',getArrayValue($row, 'allow_registration'));
-define('WEBSITE_EMAIL',$row['website_email']);
-define('SUPPORT_EMAIL',$row['support_email']);
-define('WELCOME_EMAIL',$row['welcome_email']);
-define('ACTIVATION',$row['activation']);
+define('EMAIL_VERIFICATION', $row['email_verification']);
+define('ALLOW_REG', getArrayValue($row, 'allow_registration'));
+define('WEBSITE_EMAIL', $row['website_email']);
+define('SUPPORT_EMAIL', $row['support_email']);
+define('WELCOME_EMAIL', $row['welcome_email']);
+define('ACTIVATION', $row['activation']);
 define('DATE_FORMAT', config('date_format'));
 
 # Listing Of Videos , Channels
-define('VLISTPP',$row['videos_list_per_page']);				//Video List Per page
-define('CLISTPP',$row['channels_list_per_page']);			//Channels List Per page
+define('VLISTPP', $row['videos_list_per_page']);                //Video List Per page
+define('CLISTPP', $row['channels_list_per_page']);            //Channels List Per page
 
 # Defining Photo Limits
-define('MAINPLIST',$row['photo_main_list']);
+define('MAINPLIST', $row['photo_main_list']);
 
 # Defining Collection Limits
-define('COLLPP',$row['collection_per_page']);
-define('COLLIP',$row['collection_items_page']);
+define('COLLPP', $row['collection_per_page']);
+define('COLLIP', $row['collection_items_page']);
 
 # Video Options
-define('VIDEO_COMMENT',$row['video_comments']);
-define('VIDEO_RATING',$row['video_rating']);
-define('COMMENT_RATING',$row['comment_rating']);
-define('VIDEO_DOWNLOAD',$row['video_download']);
-define('VIDEO_EMBED',$row['video_embed']);
+define('VIDEO_COMMENT', $row['video_comments']);
+define('VIDEO_RATING', $row['video_rating']);
+define('COMMENT_RATING', $row['comment_rating']);
+define('VIDEO_DOWNLOAD', $row['video_download']);
+define('VIDEO_EMBED', $row['video_embed']);
 const TEMPLATEFOLDER = 'styles';                            //Template Folder Name, usually STYLES
 const STYLES_DIR = BASEDIR . DIRECTORY_SEPARATOR . TEMPLATEFOLDER;
 
@@ -269,8 +269,8 @@ const THUMBS_URL = FILES_URL . '/thumbs';
 const PLAYER_DIR = BASEDIR . '/player';
 const PLAYER_URL = '/player';
 
-const USER_THUMBS_URL = FILES_URL.'/avatars';
-const USER_BG_URL = FILES_URL.'/backgrounds';
+const USER_THUMBS_URL = FILES_URL . '/avatars';
+const USER_BG_URL = FILES_URL . '/backgrounds';
 
 # Required Settings For Video Conversion
 define('VBRATE', $row['vbrate']);
@@ -288,8 +288,8 @@ define('PHP_PATH', $row['php_path']);
 const PLUG_DIR = BASEDIR . '/plugins';
 const PLUG_URL = '/plugins';
 
-define('MAX_COMMENT_CHR',$Cbucket->configs['max_comment_chr']);
-define('USER_COMMENT_OWN',$Cbucket->configs['user_comment_own']);
+define('MAX_COMMENT_CHR', $Cbucket->configs['max_comment_chr']);
+define('USER_COMMENT_OWN', $Cbucket->configs['user_comment_own']);
 
 # Defining Category Thumbs directory
 const CAT_THUMB_DIR = BASEDIR . '/images/category_thumbs';
@@ -332,15 +332,15 @@ $cbphoto->cropping = $row['photo_crop'];
 $cbphoto->position = $row['watermark_placement'];
 
 # Enable youtube videos
-define('EMBED_VDO_WIDTH',$row['embed_player_width']);
-define('EMBED_VDO_HEIGHT',$row['embed_player_height']);
+define('EMBED_VDO_WIDTH', $row['embed_player_width']);
+define('EMBED_VDO_HEIGHT', $row['embed_player_height']);
 
 # Checking Website Template
 include 'plugin.functions.php';
 include 'plugins_functions.php';
 
-require BASEDIR.'/includes/classes/template.class.php';
-require BASEDIR.'/includes/classes/objects.class.php';
+require BASEDIR . '/includes/classes/template.class.php';
+require BASEDIR . '/includes/classes/objects.class.php';
 $cbtpl = new CBTemplate();
 
 # STOP CACHING
@@ -355,58 +355,58 @@ $thisurl = curPageURL();
 
 $Cbucket->set_the_template();
 
-require_once BASEDIR.'/includes/smartyv3/bootstrap.php';
+require_once BASEDIR . '/includes/smartyv3/bootstrap.php';
 
 $cbtpl->init();
-require BASEDIR.'/includes/active.php';
+require BASEDIR . '/includes/active.php';
 Assign('THIS_URL', $thisurl);
-define('ALLOWED_VDO_CATS',$row['video_categories']);
+define('ALLOWED_VDO_CATS', $row['video_categories']);
 const ALLOWED_CATEGORIES = 3;
 
 $ClipBucket->initAdminMenu();
 
 # Assigning Smarty Tags & Values
-Assign('CB_VERSION',CB_VERSION);
-Assign('PHP_PATH',PHP_PATH);
-Assign('FFMPEG_BINARY',getConstant('FFMPEG_BINARY'));
-Assign('FFMPEG_MENCODER_BINARY',getConstant('FFMPEG_MENCODER_BINARY'));
-Assign('js',JS_URL);
-Assign('title',TITLE);
-Assign('slogan',SLOGAN);
-Assign('avatardir','/images/avatars');
-Assign('whatis',getArrayValue($row, 'whatis'));
-Assign('category_thumbs',CAT_THUMB_URL);
-Assign('video_thumbs',THUMBS_URL);
+Assign('CB_VERSION', CB_VERSION);
+Assign('PHP_PATH', PHP_PATH);
+Assign('FFMPEG_BINARY', getConstant('FFMPEG_BINARY'));
+Assign('FFMPEG_MENCODER_BINARY', getConstant('FFMPEG_MENCODER_BINARY'));
+Assign('js', JS_URL);
+Assign('title', TITLE);
+Assign('slogan', SLOGAN);
+Assign('avatardir', '/images/avatars');
+Assign('whatis', getArrayValue($row, 'whatis'));
+Assign('category_thumbs', CAT_THUMB_URL);
+Assign('video_thumbs', THUMBS_URL);
 
-Assign('email_verification',EMAIL_VERIFICATION);
-Assign('captcha_type',$row['captcha_type']);
-Assign('languages',(isset($languages)) ? $languages : false);
+Assign('email_verification', EMAIL_VERIFICATION);
+Assign('captcha_type', $row['captcha_type']);
+Assign('languages', (isset($languages)) ? $languages : false);
 
-Assign('VIDEOS_URL',VIDEOS_URL);
-Assign('THUMBS_URL',THUMBS_URL);
-Assign('PLUG_URL','/plugins');
+Assign('VIDEOS_URL', VIDEOS_URL);
+Assign('THUMBS_URL', THUMBS_URL);
+Assign('PLUG_URL', '/plugins');
 
 #Remote and Embed
-Assign('remoteUpload',$row['remoteUpload']);
-Assign('embedUpload',$row['embedUpload']);
+Assign('remoteUpload', $row['remoteUpload']);
+Assign('embedUpload', $row['embedUpload']);
 
 # Video Options
-Assign('video_comment',$row['video_comments']);
-Assign('video_rating',$row['video_rating']);
-Assign('comment_rating',$row['comment_rating']);
-Assign('video_download',$row['video_download']);
-Assign('video_embed',$row['video_embed']);
-assign('icons_url',ICONS_URL);
+Assign('video_comment', $row['video_comments']);
+Assign('video_rating', $row['video_rating']);
+Assign('comment_rating', $row['comment_rating']);
+Assign('video_download', $row['video_download']);
+Assign('video_embed', $row['video_embed']);
+assign('icons_url', ICONS_URL);
 const PLAYLIST_COVERS_DIR = IMAGES_DIR . '/playlist_covers';
 const PLAYLIST_COVERS_URL = IMAGES_URL . '/playlist_covers';
 
-if (!file_exists( PLAYLIST_COVERS_DIR)) {
+if (!file_exists(PLAYLIST_COVERS_DIR)) {
     mkdir(PLAYLIST_COVERS_DIR, 0777);
 }
 
 $ClipBucket->upload_opt_list = [];
 
-if( config('enable_video_file_upload') == 'yes' ){
+if (config('enable_video_file_upload') == 'yes') {
     $ClipBucket->upload_opt_list['file_upload_div'] = [
         'title'      => lang('upload_file'),
         'func_class' => 'Upload',
@@ -414,7 +414,7 @@ if( config('enable_video_file_upload') == 'yes' ){
     ];
 }
 
-if( config('enable_video_remote_upload') == 'yes' ){
+if (config('enable_video_remote_upload') == 'yes') {
     $ClipBucket->upload_opt_list['remote_upload_div'] = [
         'title'      => lang('remote_upload'),
         'func_class' => 'Upload',
@@ -422,7 +422,7 @@ if( config('enable_video_remote_upload') == 'yes' ){
     ];
 }
 
-Assign('LANG',$LANG);
+Assign('LANG', $arrayTranslations);
 
 # Configuration of time format
 $config['date'] = '%I:%M %p';
@@ -430,7 +430,7 @@ $config['time'] = '%H:%M';
 assign('config', $config);
 
 # Assigning Page
-Assign('page',getConstant('PAGE'));
+Assign('page', getConstant('PAGE'));
 
 # REGISTER OBJECTS FOR SMARTY
 global $Smarty;
@@ -445,92 +445,96 @@ $Smarty->assign_by_ref('formObj', $formObj);
 $Smarty->assign_by_ref('Cbucket', $Cbucket);
 $Smarty->assign_by_ref('ClipBucket', $Cbucket);
 $Smarty->assign_by_ref('eh', $eh);
-$Smarty->assign_by_ref('lang_obj', $lang_obj);
+$Smarty->assign_by_ref('lang_obj', Language::getInstance());
 $Smarty->assign_by_ref('cbvid', $cbvid);
-$Smarty->assign_by_ref('cbtpl',$cbtpl);
-$Smarty->assign_by_ref('cbobjects',$cbobjects);
-$Smarty->assign_by_ref('cbplayer',$cbplayer);
-$Smarty->assign_by_ref('cbsearch',$cbsearch);
-$Smarty->assign_by_ref('cbpm',$cbpm);
-$Smarty->assign_by_ref('cbpage',$cbpage);
-$Smarty->assign_by_ref('cbemail',$cbemail);
-$Smarty->assign_by_ref('cbcollection',$cbcollection);
-$Smarty->assign_by_ref('cbphoto',$cbphoto);
-$Smarty->assign_by_ref('cbfeeds',$cbfeeds);
+$Smarty->assign_by_ref('cbtpl', $cbtpl);
+$Smarty->assign_by_ref('cbobjects', $cbobjects);
+$Smarty->assign_by_ref('cbplayer', $cbplayer);
+$Smarty->assign_by_ref('cbsearch', $cbsearch);
+$Smarty->assign_by_ref('cbpm', $cbpm);
+$Smarty->assign_by_ref('cbpage', $cbpage);
+$Smarty->assign_by_ref('cbemail', $cbemail);
+$Smarty->assign_by_ref('cbcollection', $cbcollection);
+$Smarty->assign_by_ref('cbphoto', $cbphoto);
+$Smarty->assign_by_ref('cbfeeds', $cbfeeds);
 
 # REGISTERING FUNCTION FOR SMARTY TEMPLATES
-function show_video_rating($params){ global $cbvid; return $cbvid->show_video_rating($params); }
+function show_video_rating($params)
+{
+    global $cbvid;
+    return $cbvid->show_video_rating($params);
+}
 
-$Smarty->register_function('AD','getAd');
-$Smarty->register_function('get_thumb','getSmartyThumb');
-$Smarty->register_function('getThumb','getSmartyThumb');
-$Smarty->register_function('videoLink','videoSmartyLink');
-$Smarty->register_function('show_rating','show_rating');
-$Smarty->register_function('ANCHOR','ANCHOR');
-$Smarty->register_function('FUNC','FUNC');
-$Smarty->register_function('avatar','avatar');
-$Smarty->register_function('load_form','load_form');
+$Smarty->register_function('AD', 'getAd');
+$Smarty->register_function('get_thumb', 'getSmartyThumb');
+$Smarty->register_function('getThumb', 'getSmartyThumb');
+$Smarty->register_function('videoLink', 'videoSmartyLink');
+$Smarty->register_function('show_rating', 'show_rating');
+$Smarty->register_function('ANCHOR', 'ANCHOR');
+$Smarty->register_function('FUNC', 'FUNC');
+$Smarty->register_function('avatar', 'avatar');
+$Smarty->register_function('load_form', 'load_form');
 $Smarty->register_function('get_all_video_files', 'get_all_video_files_smarty');
-$Smarty->register_function('input_value','input_value');
-$Smarty->register_function('userid','userid');
-$Smarty->register_function('FlashPlayer','flashPlayer');
-$Smarty->register_function('link','cblink');
-$Smarty->register_function('show_share_form','show_share_form');
-$Smarty->register_function('show_flag_form','show_flag_form');
-$Smarty->register_function('show_playlist_form','show_playlist_form');
-$Smarty->register_function('show_collection_form','show_collection_form');
-$Smarty->register_function('lang','smarty_lang');
-$Smarty->register_function('get_videos','get_videos');
-$Smarty->register_function('get_users','get_users');
-$Smarty->register_function('get_photos','get_photos');
-$Smarty->register_function('get_collections','get_collections');
-$Smarty->register_function('private_message','private_message');
-$Smarty->register_function('show_video_rating','show_video_rating');
-$Smarty->register_function('load_captcha','load_captcha');
-$Smarty->register_function('cbtitle','cbtitle');
-$Smarty->register_function('head_menu','head_menu');
-$Smarty->register_function('foot_menu','foot_menu');
-$Smarty->register_function('include_header','include_header');
-$Smarty->register_function('include_template_file','include_template_file');
-$Smarty->register_function('include_js','include_js');
-$Smarty->register_function('get_binaries','get_binaries');
-$Smarty->register_function('rss_feeds','rss_feeds');
-$Smarty->register_function('website_logo','website_logo');
-$Smarty->register_function('get_photo','get_image_file');
-$Smarty->register_function('uploadButton','upload_photo_button');
-$Smarty->register_function('embedCodes','photo_embed_codes');
-$Smarty->register_function('cbCategories','getSmartyCategoryList');
-$Smarty->register_function('getCbCategories','getSmartyCategoryList');
-$Smarty->register_function('getComments','getSmartyComments');
-$Smarty->register_function('cbMenu','cbMenu');
+$Smarty->register_function('input_value', 'input_value');
+$Smarty->register_function('userid', 'userid');
+$Smarty->register_function('FlashPlayer', 'flashPlayer');
+$Smarty->register_function('link', 'cblink');
+$Smarty->register_function('show_share_form', 'show_share_form');
+$Smarty->register_function('show_flag_form', 'show_flag_form');
+$Smarty->register_function('show_playlist_form', 'show_playlist_form');
+$Smarty->register_function('show_collection_form', 'show_collection_form');
+$Smarty->register_function('lang', 'smarty_lang');
+$Smarty->register_function('get_videos', 'get_videos');
+$Smarty->register_function('get_users', 'get_users');
+$Smarty->register_function('get_photos', 'get_photos');
+$Smarty->register_function('get_collections', 'get_collections');
+$Smarty->register_function('private_message', 'private_message');
+$Smarty->register_function('show_video_rating', 'show_video_rating');
+$Smarty->register_function('load_captcha', 'load_captcha');
+$Smarty->register_function('cbtitle', 'cbtitle');
+$Smarty->register_function('head_menu', 'head_menu');
+$Smarty->register_function('foot_menu', 'foot_menu');
+$Smarty->register_function('include_header', 'include_header');
+$Smarty->register_function('include_template_file', 'include_template_file');
+$Smarty->register_function('include_js', 'include_js');
+$Smarty->register_function('get_binaries', 'get_binaries');
+$Smarty->register_function('rss_feeds', 'rss_feeds');
+$Smarty->register_function('website_logo', 'website_logo');
+$Smarty->register_function('get_photo', 'get_image_file');
+$Smarty->register_function('uploadButton', 'upload_photo_button');
+$Smarty->register_function('embedCodes', 'photo_embed_codes');
+$Smarty->register_function('cbCategories', 'getSmartyCategoryList');
+$Smarty->register_function('getCbCategories', 'getSmartyCategoryList');
+$Smarty->register_function('getComments', 'getSmartyComments');
+$Smarty->register_function('cbMenu', 'cbMenu');
 
-$Smarty->register_modifier('SetTime','SetTime');
-$Smarty->register_modifier('getname','getname');
-$Smarty->register_modifier('getext','getext');
-$Smarty->register_modifier('post_form_val','post_form_val');
-$Smarty->register_modifier('get_thumb_num','get_thumb_num');
-$Smarty->register_modifier('ad','ad');
-$Smarty->register_modifier('get_user_level','get_user_level');
-$Smarty->register_modifier('is_online','is_online');
-$Smarty->register_modifier('get_age','get_age');
-$Smarty->register_modifier('outgoing_link','outgoing_link');
-$Smarty->register_modifier('nicetime','nicetime');
-$Smarty->register_modifier('country','get_country');
-$Smarty->register_modifier('flag_type','flag_type');
-$Smarty->register_modifier('get_username','get_username');
-$Smarty->register_modifier('formatfilesize','formatfilesize');
+$Smarty->register_modifier('SetTime', 'SetTime');
+$Smarty->register_modifier('getname', 'getname');
+$Smarty->register_modifier('getext', 'getext');
+$Smarty->register_modifier('post_form_val', 'post_form_val');
+$Smarty->register_modifier('get_thumb_num', 'get_thumb_num');
+$Smarty->register_modifier('ad', 'ad');
+$Smarty->register_modifier('get_user_level', 'get_user_level');
+$Smarty->register_modifier('is_online', 'is_online');
+$Smarty->register_modifier('get_age', 'get_age');
+$Smarty->register_modifier('outgoing_link', 'outgoing_link');
+$Smarty->register_modifier('nicetime', 'nicetime');
+$Smarty->register_modifier('country', 'get_country');
+$Smarty->register_modifier('flag_type', 'flag_type');
+$Smarty->register_modifier('get_username', 'get_username');
+$Smarty->register_modifier('formatfilesize', 'formatfilesize');
 
-assign('updateEmbedCode','updateEmbed');
+assign('updateEmbedCode', 'updateEmbed');
 # Registering Video Remove Functions
 register_action_remove_video('remove_video_thumbs');
 register_action_remove_video('remove_video_subtitles');
 register_action_remove_video('remove_video_log');
 register_action_remove_video('remove_video_files');
-cb_register_function( 'plupload_photo_uploader', 'uploaderDetails' );
+cb_register_function('plupload_photo_uploader', 'uploaderDetails');
 
-cb_register_action( 'increment_playlist_played', 'view_playlist' );
+cb_register_action('increment_playlist_played', 'view_playlist');
 
 include('admin.functions.php');
 # Other settings
-define('SEND_COMMENT_NOTIFICATION',config('send_comment_notification'));
-define('SEND_VID_APPROVE_EMAIL',config('approve_video_notification'));
+define('SEND_COMMENT_NOTIFICATION', config('send_comment_notification'));
+define('SEND_VID_APPROVE_EMAIL', config('approve_video_notification'));

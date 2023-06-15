@@ -29,7 +29,7 @@
 							{else}
 								{$selected = "" }
 							{/if}
-							<li data-lang="{$lang.language_code}" class="pick-lang {$selected}"><a href="javascript:void(0);">{$lang.language_name}</a></li>
+							<li data-lang="{$lang.language_id}" class="pick-lang {$selected}"><a href="javascript:void(0);">{display_clean($lang.language_name)}</a></li>
 						{/foreach}
 				 	</ul>
 				</div>

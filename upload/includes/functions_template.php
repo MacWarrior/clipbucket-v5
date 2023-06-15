@@ -36,6 +36,23 @@ function Template($template,$layout=true){
     }
 }
 
+/**
+ * return JSON string containing msg template and $template
+ * use this for AJAX call to print result template and msg generated with e()
+ * @param $template
+ * @return string|false
+ */
+function templateWithMsgJson($template)
+{
+    ob_start();
+    Template('msg.html');
+    $msg = ob_get_contents();
+    ob_clean();
+    Template($template);
+    $template = ob_get_clean();
+    return json_encode(['msg'=>$msg, 'template'=>$template]);
+}
+
 function Assign($name,$value)
 {
     global $cbtpl;
@@ -88,4 +105,21 @@ function display_it()
     catch(SmartyException $e) {
         show_cb_error($e);
     }
+}
+
+function display_language_list()
+{
+    $ll = Language::getInstance()->get_langs(false, true);
+    foreach ($ll as &$language) {
+        $language['pourcentage_traduction'] = $language['nb_trads'] * 100 / $language['nb_codes'];
+    }
+    //Get List Of Languages
+    assign('language_list', $ll);
+    echo templateWithMsgJson('blocks/language_list.html');
+}
+function display_language_edit()
+{
+    $detail = Language::getInstance()->getLangById($_POST['language_id']);
+    assign('lang_details', $detail);
+    echo templateWithMsgJson('blocks/language_edit.html');
 }

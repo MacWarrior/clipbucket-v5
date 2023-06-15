@@ -1,385 +1,172 @@
 {if $edit_lang != 'yes'}
-<div class="heading">
-    <h2>Language Settings</h2>
+    <div class="heading">
+        <h2>Language Settings</h2>
+    </div>
+    <div id="language_list">
+        {include file="$style_dir/blocks/language_list.html"}
+    </div>
+    <legend>Add Languages</legend>
+    <!-- language select option for translation -->
+<div class="form-group">
+    <form id="formAdd" name="formAdd" method="post">
+        <div class="row">
+            <div class="col-md-5">
+                <label for="name">Language Name</label>
+                <div style="vertical-align: bottom">
+                    <input style="display: inline-block; width: calc(100% - 150px); vertical-align: middle;" name="name" type="text" class="form-control" id="nameAdd" value="{$lang_details.language_name}"/>
+                    <input style="display: inline-block; width: 120px; margin-left: 10px;" type="submit" name="update_language" class="btn btn-primary" value="{lang code='add'}" id="add_language"/>
+                </div>
+            </div>
+        </div>
+    </form>
 </div>
-<form name="default_lang" method="post" action="?default">
+    <form id="formDelete" name="formDelete" method="post">
+        <input name="id_delete" type="hidden" class="form-control" id="id_delete" />
+    </form>
+{else}
+    <div id="language_edit">
+        {include file="$style_dir/blocks/language_edit.html"}
+    </div>
     <table class="table table-bordered table-striped manageUsersTable">
         <tr>
-            <td class="col-md-1">Default</td>
-            <td class="col-md-1">ID</td>
-            <td>Language</td>
-            <td class="col-md-1"></td>
+            <th class="col-md-2">Language key</th>
+            <th class="col-md-9">Translation</th>
+            <th class="col-md-1">Action</th>
         </tr>
-        {section name=l_list loop=$language_list}
-        <tr id="showWala">
-            <td><label>
-                <input type="checkbox" name="make_default" id="radio" value="{$language_list[l_list].language_id}" {if $language_list[l_list].language_default =='yes'}checked{/if}/></label>
+        {section name=p_list loop=$lang_phrases}
+        <tr>
+            <td class="col-md-2">{$lang_phrases[p_list].language_key}</td>
+            <td class="col-md-9">
+                <span class="xedit" id="{$lang_phrases[p_list].id_language_key}">{display_clean($lang_phrases[p_list].translation)}</span>
+                <input type="text" class="form-control" id="input-{$lang_phrases[p_list].id_language_key}" name="pk" value="{display_clean($lang_phrases[p_list].translation)}" style="display:none;">
             </td>
-            <td>{$language_list[l_list].language_id}</td>
-            <td>{$language_list[l_list].language_name} <i>({$language_list[l_list].language_code})</i></td>
-            <td>
-                <div class="dropdown clearfix alignCenter">
-                    <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
-                    Actions <i class="caret"></i></button>
-                    <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
-                        <li role="presentation"><a role="menuitem" tabindex="-1"
-                            href="?create_package={$language_list[l_list].language_code}">Recreate Pack</a></li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1"
-                            href="?recreate_from_pack={$language_list[l_list].language_code}" >Recreate from pack</a></li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1"
-                            href="?edit_language={$language_list[l_list].language_id}" >Edit Phrases</a></li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1"
-                            href="?edit_language={$language_list[l_list].language_id}">{lang code='edit'}</a></li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1"
-                            href="javascript:void(0);" onclick="if(confirm_it('Are you sure you want to delete \'{$language_list[l_list].language_name}\' pack')) window.location = '?delete={$language_list[l_list].language_id}'">{lang code='delete'}</a>
-                        <li role="presentation"><a role="menuitem" tabindex="-1"
-                            href="?download={$language_list[l_list].language_id}" target="_blank">Export</a></li>
-                        {if $language_list[l_list].language_active!='yes'}
-                        <li role="presentation"><a role="menuitem" tabindex="-1"
-                            href="?action=activate&id={$language_list[l_list].language_id}">{lang code='activate'}</a></li>
-                        {/if}
-                        <li role="presentation" class="divider"></li>
-                        {if $language_list[l_list].language_active=='yes'}
-                        <li role="presentation"><a role="menuitem" tabindex="-1"
-                            href="?action=deactivate&id={$language_list[l_list].language_id}">{lang code='deactivate'}</a>
-                        </li>
-                        {/if}
-                        {if $language_list[l_list].language_default!='yes'}
-                        <li role="presentation"><a role="menuitem" tabindex="-1"
-                            href="?make_default={$language_list[l_list].language_id}">Make Default</a>
-                        </li>
-                        {else}
-                        <li role="presentation" class="disabled"><a href="#">Make Default</a></li>
-                        {/if}
-                    </ul>
-                </div>
+            <td class="col-md-1" style="text-align: center; vertical-align: middle;">
+                <span class="btn btn-success btn-xs edit_translation" title="{lang code=edit}" id="edit-{$lang_phrases[p_list].id_language_key}" data-id="{$lang_phrases[p_list].id_language_key}"><i class="glyphicon glyphicon-edit"></i></span>
+                <span class="glyphicon glyphicon-ok-circle confirm_update_translation" title="{lang code=confirm}" id="ok-{$lang_phrases[p_list].id_language_key}" data-id="{$lang_phrases[p_list].id_language_key}" style="display:none;color:#87b87f;font-size:1.5em;cursor:pointer;"></span>
+                <span class="glyphicon glyphicon-remove-circle cancel_translation" title="{lang code=cancel}" id="remove-{$lang_phrases[p_list].id_language_key}" data-id="{$lang_phrases[p_list].id_language_key}" style="display:none;color:#d15b47;font-size:1.5em;cursor:pointer; margin-left: 15px;"></span>
             </td>
         </tr>
         {/section}
     </table>
-</form>
-{else}
-<span class="lead">Editing {$lang_details.language_name}</span>
-<div class="form-group">
-    <form id="form1" name="form1" method="post">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label for="name">Language Name</label>
-                    <input name="name" type="text" class="form-control" id="name" value="{$lang_details.language_name}" />
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label for="code">Language Code</label>
-                    <input name="code" type="text" class="form-control" id="code" value="{$lang_details.language_code}" />
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label for="regex">Language Regex</label>
-                    <input name="regex" type="text" class="form-control" id="regex" value="{$lang_details.language_regex}" />
-                </div>
-            </div>
-        </div>
-        <input type="submit" name="update_language" class="btn btn-primary" value="{lang code='update'}" id="update_language"/>
-    </form>
-</div>
-<legend>Editing {$lang_details.language_name} Phrases</legend>
-<div class="form-group">
-    <form id="form2" name="form1" method="get" action="?">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="varname">Phrase Code - Name</label>
-                    <input name="varname" type="text" class="form-control" id="varname" value="{display_clean($smarty.get.varname)}" />
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="text">Phrase Text</label>
-                    <input name="text" class="form-control" type="text" id="text" value="{display_clean($smarty.get.text)}" />
-                </div>
-            </div>
-        </div>
-        <label>
-			<input name="edit_language" type="hidden" value="{$smarty.get.edit_language}" />
-			<input type="submit" name="search_phrase" class="btn btn-primary" value='{lang code="search"}' id="search_phrase"/>
-        </label>
-    </form>
-</div>
-<table class="table table-bordered table-striped manageUsersTable">
-    <tr>
-        <td>
-            <legend>Phrase Code</legend>
-        </td>
-        <td>
-            <legend>Phrase</legend>
-        </td>
-    </tr>
-    {section name=p_list loop=$lang_phrases}
-	<tr>
-        <td>{$lang_phrases[p_list].varname}</td>
-        <td ><span class="xedit" id="{$lang_phrases[p_list].id}">{display_clean($lang_phrases[p_list].text)}</span>
-            <span class="btn btn-success btn-xs edit_phrase" title="edit" id="edit-{$lang_phrases[p_list].id}" data-id="{$lang_phrases[p_list].id}"><i class="glyphicon glyphicon-edit"></i></span>
-            <span class="glyphicon glyphicon-ok-circle add_phrase" id="ok-{$lang_phrases[p_list].id}" data-id="{$lang_phrases[p_list].id}" style="display:none;color:#87b87f;font-size:1.5em;cursor:pointer;"></span>&nbsp;&nbsp;&nbsp;
-            <span class="glyphicon glyphicon-remove-circle remove_phrase" id="remove-{$lang_phrases[p_list].id}" data-id="{$lang_phrases[p_list].id}" style="display:none;color:#d15b47;font-size:1.5em;cursor:pointer;"></span>
-            <input type="text" class="form-control" id="input-{$lang_phrases[p_list].id}" name="pk" value="{display_clean($lang_phrases[p_list].text)}"
-                style="display:none;"> 
-        </td>
-    </tr>
-    {/section}
-</table>
-{include file="$style_dir/blocks/pagination.html"}
+    {include file="$style_dir/blocks/pagination.html"}
 {/if}
-<div class="heading">
-    <h2>Add Languages </h2>
-</div>
-<!-- language select option for translation -->
-<select name="lang_option" class="changeStatus" id="lang_option" style="width:30%">
-    <option value="de" data-check="German">German</option>
-    <option value="ar" data-check="Arabic">Arabic</option>
-    <option value="bs-Latn" data-check="Bosnian (Latin)">Bosnian (Latin)</option>
-    <option value="bg" data-check="Bulgarian">Bulgarian</option>
-    <option value="ca" data-check="Catalan">Catalan</option>
-    <option value="zh-CHS" data-check="Chinese-Simplified">Chinese Simplified</option>
-    <option value="zh-CHT" data-check="Chinese-Traditional">Chinese Traditional</option>
-    <option value="hr" data-check="Croatian">Croatian</option>
-    <option value="cs" data-check="Czech">Czech</option>
-    <option value="da" data-check="Danish">Danish</option>
-    <option value="nl" data-check="Dutch">Dutch</option>
-    <option value="et" data-check="Estonian">Estonian</option>
-    <option value="fi" data-check="Finnish">Finnish</option>
-    <option value="fr" data-check="French">French</option>
-    <option value="el" data-check="Greek">Greek</option>
-    <option value="ht" data-check="Haitian-Creole">Haitian Creole</option>
-    <option value="he" data-check="Hebrew">Hebrew</option>
-    <option value="hi" data-check="Hindi">Hindi</option>
-    <option value="mww" data-check="Hmong-Daw">Hmong Daw</option>
-    <option value="hu" data-check="Hungarian">Hungarian</option>
-    <option value="id" data-check="Indonesian">Indonesian</option>
-    <option value="it" data-check="Italian">Italian</option>
-    <option value="ja" data-check="Japanese">Japanese</option>
-    <option value="sw" data-check="Kiswahili">Kiswahili</option>
-    <option value="tlh" data-check="Klingon">Klingon</option>
-    <option value="tlh-Qaak" data-check="Klingon(pIqaD)">Klingon(pIqaD)</option>
-    <option value="ko" data-check="Korean">Korean</option>
-    <option value="lv" data-check="Latvian">Latvian</option>
-    <option value="lt" data-check="Lithuanian">Lithuanian</option>
-    <option value="ms" data-check="Malay">Malay</option>
-    <option value="mt" data-check="Maltese">Maltese</option>
-    <option value="no" data-check="Norwegian">Norwegian</option>
-    <option value="fa" data-check="Persian">Persian    </option>
-    <option value="pl" data-check="Polish">Polish</option>
-    <option value="pt" data-check="Portuguese">Portuguese</option>
-    <option value="otq" data-check="Querétaro-Otomi">Querétaro Otomi</option>
-    <option value="ro" data-check="Romanian">Romanian</option>
-    <option value="ru" data-check="Russian">Russian</option>
-    <option value="sr-Cyrl" data-check="Serbian(Cyrillic)">Serbian(Cyrillic)</option>
-    <option value="sr-Latn" data-check="Serbian(Latin)">Serbian(Latin)</option>
-    <option value="sk" data-check="Slovak">Slovak</option>
-    <option value="sl" data-check="Slovenian">Slovenian</option>
-    <option value="es" data-check="Spanish">Spanish</option>
-    <option value="sv" data-check="Swedish">Swedish</option>
-    <option value="th" data-check="Thai">Thai</option>
-    <option value="tr" data-check="Turkish">Turkish</option>
-    <option value="uk" data-check="Ukrainian">Ukrainian</option>
-    <option value="ur" data-check="Urdu">Urdu</option>
-    <option value="vi" data-check="Vietnamese">Vietnamese</option>
-    <option value="cy" data-check="Welsh">Welsh</option>
-    <option value="yua" data-check="Yucatec-Maya">Yucatec Maya</option>
-</select>
-<input type="button" id="submit_lang1" name="lang" class="btn btn-primary" value="Generate Pack"/>
-<div id="uploadPack" style="display: none;">
-    <p><strong>Importing Language Pack. Please sit back and relax while magic happens.</strong></p>
-</div>
-<!-- Progress Bar  -->
-<div class="col-md-12" id="bar" style="display:none; margin-top: 20px">
-<h3>Current Progress</h3>
-    <div class="progress">
-        <div class="progress-bar" id="progress-bar"role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
-            <span id="loaderVal"></span>
-        </div>
-    </div>
-</div>
 
-
-<div id="progMsg" style="display: none"></div>
-
-<div id= "lang-pack">
-</div>
-
-<div id = "lang-ex">
-</div>
-<div id= "div"></div>
-<div id="ref"></div>
-</br>
 <script type="text/javascript">
-    // Default language checkbox
-    $('input[name="make_default"]').change(function(){
-        $('input[name="make_default"]').not(this).prop('checked', false);
-        document.default_lang.submit();
-    });
+    {literal}
 
+    function initListenerList() {
 
-
-
-
-
-    var process,progress,lastElementArray = 0;
-    var NewLang,langExists,sizeOfArray;
-    var allTextLines = [];
-    var set=true;
-    var sec = '{$secret_Id}';
-    var firstHit = true;
-    var log = $('<div class="alert-msg-holder" id="headErr"><div role="alert" class="alert alert-danger alert-dismissible alert-ajax"><button aria-label="Close" data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span></button><strong>Invalid keys stored in database </strong></div></div>');
-    
-    var dialogLangExisit = $('<div class="alert-msg-holder"  id="lang-exist"><div role="alert" class="alert alert-danger alert-dismissible alert-ajax"><button aria-label="Close" data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span></button><strong>Language Already Exisits </strong></div></div>');
-    var UploadText = $('<p><strong>Importing Language Pack. Please sit back and relax while magic happens.</strong></p>');
-    
-    var refresh_ch = $('<div class="alert-msg-holder"  id="lang-exist"><div role="alert" class="alert alert-danger alert-dismissible alert-ajax"><button aria-label="Close" data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span></button><strong>Refresh to set cookie </strong></div></div>');
-    function timeCheck(){
-         process = setInterval(function() {
-                $.get('/files/percent.lang', function(data) {
-               //process text file line by line
-               allTextLines = data.split(/\r\n|\n/);
-               lastElementArray = allTextLines.slice(-2, -1)[0];
-                 if(lastElementArray == 99){
-                lastElementArray = 100;
-               }
-               console.log(lastElementArray);
+        $('input[name="make_default"]').change(function () {
+            $('input[name="make_default"]').not(this).prop('checked', false);
+            $.ajax({
+                url: "/actions/language_make_default.php",
+                type: "POST",
+                data: $('#default_lang').serialize(),
+                dataType: 'json',
+                success: function (result) {
+                    $('#language_list').html(result['template']);
+                    $('.close').click();
+                    $('.page-content').prepend(result['msg']);
+                    initListenerList();
+                }
             });
-        },1000);
-    }
-
-    var goodToGo = true;
-
-    function checkExists(){
-        clearInterval(process);
-        $('#lang-ex').append(dialogLangExisit);
-        clearInterval(progress);
-        $('#bar').toggle();
-        $('#lang_option').toggle();
-        $('#uploadPack').toggle();
-        $('#submit_lang1').toggle();
-    }
-    $(document).ready(function(){
-    
-        $('.edit_phrase').on("click",function(){
-            var _this = $(this);
-            var id = _this.data('id');
-            $('#input-'+id).show();
-            $('#ok-'+id).show();
-            $('#remove-'+id).show();
-            $('#edit-'+id).hide();
         });
 
-        $('.remove_phrase').on("click",function(){
-            var _this = $(this);
-            var id = _this.data('id');
-            $('#input-'+id).hide();
-            $('#ok-'+id).hide();
-            $('#remove-'+id).hide();
-             $('#edit-'+id).show();
+        $('#formAdd').on('submit', function (event) {
+            event.preventDefault();
+            $.ajax({
+                url: "/actions/language_add.php",
+                type: "POST",
+                data: $('#formAdd').serialize(),
+                dataType: 'json',
+                success: function (result) {
+                    $('#language_list').html(result['template']);
+                    $('.close').click();
+                    $('.page-content').prepend(result['msg']);
+                    initListenerList();
+                }
+            });
         });
-    
-        $('.add_phrase').on("click",function(){
-    
+    }
+
+    function initListenerEdit() {
+        $('#form1').on('submit', function (event) {
+            event.preventDefault();
+            $.ajax({
+                url: "/actions/language_update.php",
+                type: "POST",
+                data: $('#form1').serialize(),
+                dataType: 'json',
+                success: function (result) {
+                    $('#language_edit').html(result['template']);
+                    $('.close').click();
+                    $('.page-content').prepend(result['msg']);
+                    initListenerEdit();
+                }
+            });
+        });
+    }
+
+    var sec = '{$secret_Id}';
+
+    function deleteLanguage(language_id, language_name) {
+        if (confirm_it('Are you sure you want to delete ' + language_name)) {
+            $.ajax({
+                url: "/actions/language_delete.php",
+                type: "POST",
+                data: {language_id: language_id},
+                dataType: 'json',
+                success: function (result) {
+                    $('#language_list').html(result['template']);
+                    $('.close').click();
+                    $('.page-content').prepend(result['msg']);
+                    initListenerList();
+                }
+            });
+        }
+    }
+
+    $(document).ready(function () {
+        initListenerList();
+        initListenerEdit();
+        $('.edit_translation').on("click", function () {
             var _this = $(this);
             var id = _this.data('id');
-            var value = $('#input-'+id).val();
+            $('#input-' + id).show();
+            $('#ok-' + id).show();
+            $('#remove-' + id).show();
+            $('#edit-' + id).hide();
+        });
+
+        $('.cancel_translation').on("click", function () {
+            var _this = $(this);
+            var id = _this.data('id');
+            $('#input-' + id).hide();
+            $('#ok-' + id).hide();
+            $('#remove-' + id).hide();
+            $('#edit-' + id).show();
+        });
+
+        $('.confirm_update_translation').on("click", function () {
+
+            var _this = $(this);
+            var id = _this.data('id');
+            var value = $('#input-' + id).val();
+            var language_id = $('#language_id').val();
             $.ajax({
                 url: "/actions/update_phrase.php",
                 type: "post",
-                data: { pk: id, value: value},
-                success : function() {
-                    $('#'+id).html(value);
-                    $('#input-'+id).hide();
-                    $('#ok-'+id).hide();
-                    $('#remove-'+id).hide();
-                     $('#edit-'+id).show();
+                data: {id_language_key: id, translation: value, language_id: language_id},
+                success: function () {
+                    $('#' + id).html(value);
+                    $('#input-' + id).hide();
+                    $('#ok-' + id).hide();
+                    $('#remove-' + id).hide();
+                    $('#edit-' + id).show();
                 }
             });
         });
-    })
-
-    thePhrases = {$langData|@json_encode};
-    var totalPhrases = 0,
-        phraseNum = 1,
-        interval = '',
-        currentKey = 0,
-        phrase_code = Object.keys(thePhrases)[0],
-        phrase = thePhrases[phrase_code],
-        selectFieldValue = $('.changeStatus').val(),
-        langDetect = $('option:selected', '#lang_option').attr('data-check');
-    $.each( thePhrases, function( phrase_code, phrase ) {
-            totalPhrases = totalPhrases + 1;
     });
-    totalPhrases = totalPhrases -1;
 
-    function sendAjax(data) {
-        goodToGo = false;
-
-        $.ajax({
-            //async: false,
-            url: 'ajaxLang.php', 
-            type: "post",
-            data: data,
-            dataType: 'json',
-            beforeSend: function() {},
-            success:function(xhr) {
-                if (xhr.phrase != 'aye') {
-                    var progressNow = xhr.progress,
-                    existingLog = $('#progMsg').html();
-                    $('#bar').show();
-                    $('#progMsg').show();
-                    $('#loaderVal').text(progressNow);
-                    $('.progress-bar').attr('aria-valuenow',progressNow);
-                    $('.progress-bar').css('width', progressNow+"%");
-
-                    $('#progMsg').html(existingLog+"<br>Translated : "+xhr.phrase+" ( phrase #"+phraseNum+" out of "+totalPhrases+" phrases )");
-
-                    currentKey = currentKey + 1;
-                    phrase_code = Object.keys(thePhrases)[currentKey];
-                    phrase = thePhrases[phrase_code];
-                    
-                    phraseNum = phraseNum + 1;
-                    data = {
-                     'selectFieldValue': $('#lang_option').val(),
-                     'langDetect': $('#lang_option option:selected').attr('data-check'),
-                     'phrase_code' : phrase_code,
-                     'phrase' : phrase,
-                     'totalPhrases' : totalPhrases,
-                     'phraseNum' : phraseNum
-                    }
-                    sendAjax(data);
-                } else {
-                    $('#lang_option, #submit_lang1').attr("disabled",false);
-                    $('#submit_lang1').val('Successfully completed');
-                }
-                if (!xhr.status == 'success') {
-                    $('#lang_option, #submit_lang1').attr("disabled",false);
-                    alert("Unable to translate "+phrase);
-                }
-                goodToGo = true;
-                return true;
-            }
-        });
-    }
-
-    $(document).on("click", "#submit_lang1", function () {  
-        $('#submit_lang1').text("Translating...");
-        $('#lang_option, #submit_lang1').attr("disabled",true);
-
-        data = {
-			'selectFieldValue': $('#lang_option').val(),
-			'langDetect': $('#lang_option option:selected').attr('data-check'),
-			'phrase_code' : phrase_code,
-			'phrase' : phrase,
-			'totalPhrases' : totalPhrases,
-			'phraseNum' : phraseNum
-		};
-
-		sendAjax(data);
-  });
+    {/literal}
 </script>

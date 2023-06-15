@@ -54,17 +54,22 @@ if($mode=='adminsettings')
 	}
 
 	$step = $_POST['step'];
-	$files = array(
-		'structure' 		=> 'structure.sql',
-		'configs'			=> 'configs.sql',
-		'ads_placements'	=> 'ads_placements.sql',
-		'countries'			=> 'countries.sql',
-		'email_templates'	=> 'email_templates.sql',
-		'pages'				=> 'pages.sql',
-		'user_levels'		=> 'user_levels.sql'
-	);
+    $files = [
+        'structure'       => 'structure.sql',
+        'configs'         => 'configs.sql',
+        'languages'       => 'languages.sql',
+        'languages_ENG'   => 'languages_ENG.sql',
+        'languages_FRA'   => 'languages_FRA.sql',
+        'languages_DEU'   => 'languages_DEU.sql',
+        'languages_POR'   => 'languages_POR.sql',
+        'ads_placements'  => 'ads_placements.sql',
+        'countries'       => 'countries.sql',
+        'email_templates' => 'email_templates.sql',
+        'pages'           => 'pages.sql',
+        'user_levels'     => 'user_levels.sql'
+    ];
 
-	$next = false;
+    $next = false;
 	if(array_key_exists($step,$files) && $step)
 	{
 		$total = count($files);

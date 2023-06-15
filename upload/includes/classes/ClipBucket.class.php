@@ -289,10 +289,6 @@ class ClipBucket
                         ,'url' => ADMIN_BASEURL.'/language_settings.php'
                     )
                     ,array(
-                        'title' => 'Add New Phrases'
-                        ,'url' => ADMIN_BASEURL.'/add_phrase.php'
-                    )
-                    ,array(
                         'title' => 'Manage Pages'
                         ,'url' => ADMIN_BASEURL.'/manage_pages.php'
                     )

@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"159",
+  "revision":"160",
   "status":"dev",
   "detail":[
     {
@@ -48,6 +48,7 @@
         ,"Fix video search form"
         ,"Fix thumbs count <i>#132</i>"
         ,"Fix mass upload default values"
+        ,"Refactor languages and translations <i>#201</i>"
       ]
     },
     {
