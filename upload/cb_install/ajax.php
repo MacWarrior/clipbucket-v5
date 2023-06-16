@@ -58,10 +58,10 @@ if($mode=='adminsettings')
         'structure'       => 'structure.sql',
         'configs'         => 'configs.sql',
         'languages'       => 'languages.sql',
-        'languages_ENG'   => 'languages_ENG.sql',
-        'languages_FRA'   => 'languages_FRA.sql',
-        'languages_DEU'   => 'languages_DEU.sql',
-        'languages_POR'   => 'languages_POR.sql',
+        'language_ENG'   => 'language_ENG.sql',
+        'language_FRA'   => 'language_FRA.sql',
+        'language_DEU'   => 'language_DEU.sql',
+        'language_POR'   => 'language_POR.sql',
         'ads_placements'  => 'ads_placements.sql',
         'countries'       => 'countries.sql',
         'email_templates' => 'email_templates.sql',
@@ -92,7 +92,6 @@ if($mode=='adminsettings')
 			$next = 'add_categories';
 			$next_msg = 'Creating categories';
 		}
-
 		if($current) {
 			$lines = file(BASEDIR."/cb_install/sql/".$files[$current]);
 			foreach ($lines as $line_num => $line)
@@ -103,7 +102,11 @@ if($mode=='adminsettings')
 					if (substr(trim($line), -1, 1) == ';')
 					{
 						@$templine = preg_replace("/{tbl_prefix}/",$dbprefix,$templine);
-						mysqli_query($cnnct, $templine);
+                        try {
+                            mysqli_query($cnnct, $templine);
+                        }catch (Exception $exception) {
+                            exit($exception->getMessage());
+                        }
 
 						if( $cnnct->error != '' ) {
 							$result['err'] = "<span class='alert'>An SQL error occured : ".$cnnct->error.'</span>';
@@ -121,7 +124,7 @@ if($mode=='adminsettings')
 			}
 		}
 
-		$return = array();
+		$return = [];
 		$return['msg'] = '<div class="ok green">'.$files[$current].' has been imported successfully</div>';
 
 		if(@$files[$next]) {

@@ -138,7 +138,7 @@
 {/if}
 
 <script type="text/javascript" src="/js/jquery-ui-1.13.2.min.js"></script>
-<script type="text/javascript" src="/js/jquery_plugs/datepicker_languages/datepicker-{$lang_obj->getLang()}.js"></script>
+<script type="text/javascript" src="/js/jquery_plugs/datepicker{if $lang_obj->getLang()!='en'}_languages/datepicker-{$lang_obj->getLang()}{/if}.js"></script>
 <script>
 	$(document).ready(function(){
 		var pageMode = "{display_clean($smarty.get.mode)}";

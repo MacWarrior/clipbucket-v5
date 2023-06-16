@@ -1,5 +1,5 @@
-INSERT INTO `{tbl_prefix}languages` (`language_name`, language_active, language_default)
-VALUES ('Deutsche', 'yes', 'no');
+INSERT INTO `{tbl_prefix}languages` (`language_name`, `language_active`, `language_default`, `language_code`)
+VALUES ('Deutsche', 'yes', 'no', 'de');
 
 SET @language_id = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_name LIKE 'Deutsche');
 
@@ -3203,3 +3203,5 @@ INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_ke
 VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key LIKE 'video_thumbs_regenerated'), 'Die Video-Thumbs wurden erfolgreich neu generiert');
 INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
 VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key LIKE 'video_allow_comment_vote'), 'Stimmen Sie über Kommentare ab');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key LIKE 'code'), 'Code');

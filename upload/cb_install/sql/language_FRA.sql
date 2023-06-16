@@ -1,5 +1,5 @@
-INSERT INTO `{tbl_prefix}languages` (`language_name`, language_active, language_default)
-VALUES ('Français', 'yes', 'no');
+INSERT INTO `{tbl_prefix}languages` (`language_name`, `language_active`, `language_default`, `language_code`)
+VALUES ('Français', 'yes', 'no', 'fr');
 
 SET @language_id = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_name LIKE 'Français');
 
@@ -1125,3 +1125,5 @@ INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_ke
 VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key LIKE 'progression'), 'Progression');
 INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
 VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key LIKE 'confirm'), 'Confirmer');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key LIKE 'code'), 'Code');

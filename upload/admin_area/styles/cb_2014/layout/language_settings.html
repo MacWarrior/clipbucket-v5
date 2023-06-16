@@ -11,9 +11,15 @@
     <form id="formAdd" name="formAdd" method="post">
         <div class="row">
             <div class="col-md-5">
-                <label for="name">Language Name</label>
-                <div style="vertical-align: bottom">
+                <label for="nameAdd">Language Name</label>
+                <div style="vertical-align: bottom;">
                     <input style="display: inline-block; width: calc(100% - 150px); vertical-align: middle;" name="name" type="text" class="form-control" id="nameAdd" value="{$lang_details.language_name}"/>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <label for="codeAdd">Language Code</label>
+                <div style="vertical-align: bottom;">
+                    <input style="display: inline-block; width: calc(100% - 150px); vertical-align: middle;" name="code" type="text" class="form-control" id="codeAdd" value="{$lang_details.language_code}"/>
                     <input style="display: inline-block; width: 120px; margin-left: 10px;" type="submit" name="update_language" class="btn btn-primary" value="{lang code='add'}" id="add_language"/>
                 </div>
             </div>

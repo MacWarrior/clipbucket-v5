@@ -1,23 +1,4 @@
 <?php
-##################################################################
-###                                                            ###
-##                                                              ##
-#       this class was writtend by Arslan Hassan                 #
-#       it will be used to create new language pack              #
-#       add, edit or delete phrases of existing language packs   #
-#       easy to manipulate and easy to use                       #
-#       made for ClipBucket                                      #
-##                                                              ##
-###                                                            ###
-##################################################################
-
-#
-# @ Author :Arslan Hassan
-# @ software : ClipBucket
-# @ License : Attribution Assurance License -- http://www.opensource.org/licenses/attribution.php
-# @ file : language.class.php
-#
-
 class Language
 {
     public $lang = 'en';
@@ -36,10 +17,7 @@ class Language
     /**
      * __Constructor
      */
-    public function __construct()
-    {
-        $this->lang = $this->lang_iso = 'en';
-    }
+    public function __construct(){}
 
     /**
      * @return Language
@@ -51,7 +29,6 @@ class Language
         }
         return self::$_instance;
     }
-
 
     /**
      * INIT
@@ -79,7 +56,8 @@ class Language
         }
 
         if ($default['language_id']) {
-            $this->lang_name = $this->lang_iso = $default['language_name'];
+            $this->lang_name = $default['language_name'];
+            $this->lang = $this->lang_iso = $default['language_code'];
             $this->lang_id = $default['language_id'];
         }
     }
@@ -287,7 +265,7 @@ class Language
 
 
     /**
-     * Function used to delete language pack
+     * Function used to delete language
      *
      * @param $i
      */
@@ -319,8 +297,10 @@ class Language
             e(lang("language_does_not_exist"));
         } elseif (empty($array['name'])) {
             e(lang("lang_name_empty"));
+        } elseif (empty($array['code'])) {
+            e(lang("lang_code_empty"));
         } else {
-            $db->update(tbl('languages'), ["language_name"], [$array['name']], " language_id='" . $array['language_id'] . "'");
+            $db->update(tbl('languages'), ["language_name","language_code"], [$array['name'],$array['code']], " language_id='" . $array['language_id'] . "'");
             e(lang("lang_updated"), "m");
         }
     }
@@ -335,8 +315,10 @@ class Language
         global $db;
         if (empty($array['name'])) {
             e(lang("lang_name_empty"));
+        } elseif (empty($array['code'])) {
+            e(lang("lang_code_empty"));
         } else {
-            $db->insert(tbl('languages'), ["language_name", "language_default"], [$array['name'], "no"]);
+            $db->insert(tbl('languages'), ["language_name", "language_default", "language_code"], [$array['name'], "no", $array['code']]);
             e(lang("lang_added"), "m");
         }
     }
@@ -349,6 +331,11 @@ class Language
         $sc = $secertId;
         $db->update(tbl('config'), ["value"], [$cl], " name='clientid' ");
         $db->update(tbl('config'), ["value"], [$sc], " name='secretId' ");
+    }
+
+    public function getLang()
+    {
+        return $this->lang;
     }
 
 }

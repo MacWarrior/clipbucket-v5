@@ -269,6 +269,7 @@ CREATE TABLE `{tbl_prefix}group_videos` (
 CREATE TABLE `{tbl_prefix}languages` (
   `language_id` int(9) NOT NULL,
   `language_name` varchar(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
+  `language_code` varchar(5) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL UNIQUE ,
   `language_active` enum('yes','no') NOT NULL DEFAULT 'yes',
   `language_default` enum('yes','no') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -845,8 +846,7 @@ ALTER TABLE `{tbl_prefix}group_videos`
 
 ALTER TABLE `{tbl_prefix}languages`
   ADD PRIMARY KEY (`language_id`),
-  ADD KEY `language_default` (`language_default`),
-  ADD KEY `language_code` (`language_id`);
+  ADD KEY `language_default` (`language_default`);
 
 ALTER TABLE `{tbl_prefix}mass_emails`
   ADD PRIMARY KEY (`id`);
@@ -1154,7 +1154,7 @@ CREATE TABLE `{tbl_prefix}languages_translations`
 (
     `language_id`     INT(11)      NOT NULL,
     `id_language_key` INT(11)      NOT NULL,
-    `translation`     VARCHAR(512) NOT NULL
+    `translation`     VARCHAR(1024) NOT NULL
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 
@@ -1166,7 +1166,3 @@ ALTER TABLE `{tbl_prefix}languages_translations`
 ALTER TABLE `{tbl_prefix}languages_translations`
     ADD CONSTRAINT `{tbl_prefix}languages_translations_ibfk_1` FOREIGN KEY (`language_id`) REFERENCES `{tbl_prefix}languages` (`language_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
     ADD CONSTRAINT `{tbl_prefix}languages_translations_ibfk_2` FOREIGN KEY (`id_language_key`) REFERENCES `{tbl_prefix}languages_keys` (`id_language_key`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
-ALTER TABLE `{tbl_prefix}languages`
-    DROP COLUMN language_code,
-    DROP COLUMN language_regex;

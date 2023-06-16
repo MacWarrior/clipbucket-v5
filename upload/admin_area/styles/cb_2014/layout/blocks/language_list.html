@@ -3,6 +3,7 @@
         <tr>
             <th class="col-md-1">Is default</th>
             <th class="col-md-2">{lang code='language'}</th>
+            <th class="col-md-2">{lang code='code'}</th>
             <th class="col-md-2">{lang code='progression'}</th>
             <th class="col-md-1"></th>
         </tr>
@@ -13,6 +14,7 @@
                 <span class="lbl"></span>
             </td>
             <td style="vertical-align: middle;">{display_clean($language_list[l_list].language_name)}</td>
+            <td style="vertical-align: middle;">{display_clean($language_list[l_list].language_code)}</td>
             <td style="text-align: center; vertical-align: middle;">
                 <span>{$language_list[l_list].pourcentage_traduction|string_format:"%.2f" }%</span>
                 <div class="progress">

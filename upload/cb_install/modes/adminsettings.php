@@ -10,8 +10,6 @@ $db->update(tbl("config"),array("value"),array(BASEDIR)," name='basedir'");
 
 echo '<span class="glyphicon glyphicon-ok" style="color:#fff"></span><span style="color:#fff"> Installation details have been updated</span>';
 
-$lang_obj->updateFromPack('en');
-
 echo '<br><span class="glyphicon glyphicon-ok" style="color:#fff"></span><span style="color:#fff"> Language phrases have been imported</span>';
 ?>
 

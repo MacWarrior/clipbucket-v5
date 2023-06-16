@@ -1603,4 +1603,5 @@ VALUES ('friend_requests'),
        ('video_thumbs_regenerated'),
        ('video_allow_comment_vote'),
        ('language'),
-       ('progression');
+       ('progression'),
+       ('code');

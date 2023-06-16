@@ -1,7 +1,7 @@
 SET @language_id = 1;
 
-INSERT INTO `{tbl_prefix}languages` (`language_id`, `language_name`, language_active, language_default)
-VALUES (@language_id, 'English', 'yes', 'yes');
+INSERT INTO `{tbl_prefix}languages` (`language_id`, `language_name`, `language_active`, `language_default`, `language_code`)
+VALUES (@language_id, 'English', 'yes', 'yes','en');
 
 INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
 VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key LIKE 'ad_name_error'), 'Please enter a name for the Advertisment');
@@ -2086,7 +2086,7 @@ VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` 
 INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
 VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key LIKE 'video_complete_msg'), '<h2>Video Upload Has Been Completed<\/h2>\r\n<span class=\"header1\">Thank you! Your upload is complete.<\/span><br>\r\n<span class=\"tips\">This video will be available in <a href=\"%s\"><strong>My Videos<\/strong><\/a> after it has finished processing.<\/span>  \r\n<div class=\"upload_link_button\" align=\"center\">\r\n    <ul>\r\n        <li><a href=\"%s\" >Upload Another Video<\/a><\/li>\r\n        <li><a href=\"%s\" >Go to My Videos<\/a><\/li>\r\n    <\/ul>\r\n<div class=\'clearfix\'><\/div>\r\n<\/div>\r\n');
 INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
-VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key LIKE 'upload_right_guide'), ' <div>\r\n            <div>\r\n              <p>\r\n                <strong>\r\n                <strong>Important:<\/strong>\r\n                Do not upload any TV shows, music videos, music concerts, or  commercials without permission unless they consist entirely of content  you created yourself.<\/strong><\/p>\r\n                <p>The \r\n                <a href=\"#\">Copyright Tips page<\/a> and the \r\n                <a href=\"#\">Community Guidelines<\/a> can help you determine whether your video infringes someone else\'s copyright.<\/p>\r\n                <p>By clicking \"Upload Video\'), you are representing that this video does not violate Our website\'s \r\n                <a id=\"terms-of-use-link\" href=\"#\">Terms of Use<\/a> \r\n                and that you own all copyrights in this video or have authorization to upload it.<\/p>\r\n            <\/div>\r\n        <\/div>');
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key LIKE 'upload_right_guide'), ' <div>\r\n            <div>\r\n              <p>\r\n                <strong>\r\n                <strong>Important:<\/strong>\r\n                Do not upload any TV shows, music videos, music concerts, or  commercials without permission unless they consist entirely of content  you created yourself.<\/strong><\/p>\r\n                <p>The \r\n                <a href=\"#\">Copyright Tips page<\/a> and the \r\n                <a href=\"#\">Community Guidelines<\/a> can help you determine whether your video infringes someone else\'s copyright.<\/p>\r\n                <p>By clicking \"Upload Video\"), you are representing that this video does not violate Our website\'s \r\n                <a id=\"terms-of-use-link\" href=\"#\">Terms of Use<\/a> \r\n                and that you own all copyrights in this video or have authorization to upload it.<\/p>\r\n            <\/div>\r\n        <\/div>');
 INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
 VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key LIKE 'report_this_user'), 'Report This User');
 INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
@@ -3209,3 +3209,5 @@ INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_ke
 VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key LIKE 'language'), 'Language');
 INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
 VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key LIKE 'progression'), 'Progression');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key LIKE 'code'), 'Code');
