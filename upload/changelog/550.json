@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"161",
+  "revision":"162",
   "status":"dev",
   "detail":[
     {
@@ -100,6 +100,7 @@
         ,"Fix Nginx Vhost for 404 & 403 pages <i>#207</i>"
         ,"Fix wrong permission on directories creation"
         ,"Change user's background storage"
+        ,"Fix Whoops handling CLI errors"
       ]
     },
     {

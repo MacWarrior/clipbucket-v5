@@ -35,9 +35,12 @@ if (file_exists(dirname(__FILE__) . '/../files/temp/development.dev')) {
     ];
 
     require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php');
-    $whoops = new \Whoops\Run;
-    $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
-    $whoops->register();
+
+    if( php_sapi_name() != 'cli' ){
+        $whoops = new \Whoops\Run;
+        $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
+        $whoops->register();
+    }
 
     /*set_error_handler(function($severity, $message, $file, $line){
         if (!(error_reporting() & $severity)) {
