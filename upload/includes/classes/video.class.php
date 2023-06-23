@@ -523,57 +523,18 @@ class CBvideo extends CBCategory
      */
     function remove_thumbs($vdetails)
     {
-        //First lets get list of all thumbs
-        $thumbs = get_thumb($vdetails,1,true,false,false,true,false);
-
-        if(!is_default_thumb($thumbs)) {
-            if(is_array($thumbs)) {
-                foreach($thumbs as $thumb) {
-                    if (strstr($thumb,'timthumb')){
-                        $thumb = $this->convert_tim_thumb_url_to_file( $thumb, false );
-                    }
-
-                    if (!empty($vdetails['file_directory'])){
-                        $file = THUMBS_DIR.DIRECTORY_SEPARATOR.$vdetails['file_directory'].DIRECTORY_SEPARATOR.$thumb;
-                    } else {
-                        $file = THUMBS_DIR.DIRECTORY_SEPARATOR.$thumb;
-                    }
-                    
-                    if(file_exists($file) && is_file($file)){
-                        unlink($file);
-                    }
-                }
-            } else {
-                if (strstr($thumbs,'timthumb')){
-                    $thumbs_ = $this->convert_tim_thumb_url_to_file( $thumbs, false );
-                } else {
-                    $thumbs_ = substr($thumbs, 0, -6);
-                }
-
-                $file = THUMBS_DIR.DIRECTORY_SEPARATOR.$thumbs_;
-                if(file_exists($file) && is_file($file)){
-                    unlink($file);
-                }
-
-                if (strstr($thumbs,'timthumb')){
-                    $fn = $this->convert_tim_thumb_url_to_file( $thumbs, true );
-                } else {
-                    $fn = substr($thumbs, 0, -6);
-                }
-
-                $result = db_select('SELECT * FROM '.tbl('video').' WHERE file_name = \''.mysql_clean($fn).'\'');
-                if($result) {
-                    foreach($result as $result1) {
-                        $str = DIRECTORY_SEPARATOR.$result1['file_directory'].DIRECTORY_SEPARATOR;
-                        $file1 = THUMBS_DIR.$str.$thumbs;
-                        if(file_exists($file1) && is_file($file1)) {
-                            unlink($file1);
-                        }
-                    }
-                }
-            }
-            e(lang('vid_thumb_removed_msg'),'m');
+        global $db;
+        //delete olds thumbs from db and on disk
+        $db->delete(tbl('video_thumbs'), ['videoid'], [$vdetails['videoid']]);
+        $pattern = THUMBS_DIR . DIRECTORY_SEPARATOR . $vdetails['file_directory'] . DIRECTORY_SEPARATOR . $vdetails['file_name'] . '*';
+        $glob = glob($pattern);
+        foreach ($glob as $thumb) {
+            unlink($thumb);
         }
+
+        //reset default thumb
+        $db->update(tbl('video'), ['default_thumb'], [1], ' videoid = ' . mysql_clean($vdetails['videoid']));
+        e(lang('vid_thumb_removed_msg'), 'm');
     }
 
     /**

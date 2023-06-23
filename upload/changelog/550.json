@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"162",
+  "revision":"163",
   "status":"dev",
   "detail":[
     {
@@ -49,6 +49,7 @@
         ,"Fix thumbs count <i>#132</i>"
         ,"Fix mass upload default values"
         ,"Refactor languages and translations <i>#201, #257, #259</i>"
+        ,"Refactor thumbs"
       ]
     },
     {

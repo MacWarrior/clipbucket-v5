@@ -76,24 +76,28 @@ class Clipbucket_db
         }
     }
 
-	/**
-	 * Select elements from database with query
-	 *
-	 * @param : { string } { $query } { mysql query to run }
-	 *
-	 * @return array : { array } { $data } { array of selected data }
-	 */
+    /**
+     * Select elements from database with query
+     *
+     * @param : { string } { $query } { mysql query to run }
+     *
+     * @return array : { array } { $data } { array of selected data }
+     */
     function _select($query): array
     {
-        $result = $this->execute($query, 'select');
-
-		$data = [];
-		if( $result ) {
-			while( $row = $result->fetch_assoc() ) {
-				$data[] = $row;
-			}
-			$result->close();
-		}
+        try {
+            $result = $this->execute($query, 'select');
+            $this->handleError($query);
+            $data = [];
+            if ($result) {
+                while ($row = $result->fetch_assoc()) {
+                    $data[] = $row;
+                }
+                $result->close();
+            }
+        } catch (Exception $e) {
+            $this->handleError($query);
+        }
         return $data;
     }
 
@@ -331,7 +335,6 @@ class Clipbucket_db
             $this->total_queries++;
         }
         $this->total_queries_sql[] = $query;
-
         $this->execute($query, 'delete');
     }
 

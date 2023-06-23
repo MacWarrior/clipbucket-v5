@@ -23,3 +23,11 @@ function addStickiesToPage(value){
     note.appendChild(span);
     stickies.appendChild(note);
 }
+
+function showSpinner() {
+    $('.taskHandler').show();
+}
+
+function hideSpinner() {
+    $('.taskHandler').hide();
+}

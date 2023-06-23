@@ -108,188 +108,131 @@
 	 * FUNCTION USED TO GET THUMBNAIL
 	 *
 	 * @param array  $vdetails video_details, or videoid will also work
-	 * @param string $num
 	 * @param bool   $multi
-	 * @param bool   $count
-	 * @param bool   $return_full_path
-	 * @param bool   $return_big
 	 * @param bool   $size
 	 *
-	 * @return mixed
+	 * @return array|string
 	 */
-    function get_thumb($vdetails,$num='default',$multi=false,$count=false,$return_full_path=true,$return_big=true,$size=false)
-	{
-        $num = $num ? $num : 'default';
-        #checking what kind of input we have
-        if(is_array($vdetails))
-        {
-            if(empty($vdetails['title']))
-            {
-                #check for videoid
-                if(empty($vdetails['videoid']) && empty($vdetails['vid']) && empty($vdetails['videokey'])) {
-                    if($multi){
-                        return $dthumb[0] = default_thumb();
-					}
-                    return default_thumb();
-                }
-                if(!empty($vdetails['videoid'])) {
-                    $vid = $vdetails['videoid'];
-                } else if(!empty($vdetails['vid'])) {
-                    $vid = $vdetails['vid'];
-                } else if(!empty($vdetails['videokey'])) {
-                    $vid = $vdetails['videokey'];
-                } else {
-                    if($multi){
-                        return $dthumb[0] = default_thumb();
-                    }
-                    return default_thumb();
-                }
-            }
+function get_thumb($vdetails, $multi = false, $size = false)
+{
+
+    /**  getting video ID*/
+    if (is_array($vdetails)) {
+        #check for videoid
+        if (empty($vdetails['videoid']) && empty($vdetails['vid'])) {
+            e(lang('technical_error'));
+            error_log('get_thumb - called on empty vdetails');
+            return $multi ? [default_thumb()] : default_thumb();
+        }
+        if (!empty($vdetails['videoid'])) {
+            $vid = $vdetails['videoid'];
+        } elseif (!empty($vdetails['vid'])) {
+            $vid = $vdetails['vid'];
+        }
+    } else {
+        if (is_numeric($vdetails)) {
+            $vid = $vdetails;
         } else {
-            if(is_numeric($vdetails)){
-                $vid = $vdetails;
-			} else {
-                if($multi){
-                    return $dthumb[0] = default_thumb();
-				}
-                return default_thumb();
-            }
+            e(lang('technical_error'));
+            error_log('get_thumb - called on empty vdetails');
+            return $multi ? [default_thumb()] : default_thumb();
         }
-
-        #checking if we have vid , so fetch the details
-        if(!empty($vid)){
-            $vdetails = get_video_details($vid);
-		}
-
-        #get all possible thumbs of video
-        $thumbDir = (isset($vdetails['file_directory']) && $vdetails['file_directory']) ? $vdetails['file_directory'] : '';
-        if(!isset($vdetails['file_directory'])){
-            $justDate = explode(' ', $vdetails['date_added']);
-            $thumbDir = implode('/', explode('-', array_shift($justDate)));
-        }
-        if(substr($thumbDir, (strlen($thumbDir) - 1)) !== '/'){
-            $thumbDir .= DIRECTORY_SEPARATOR;
-        }
-
-        $file_dir = '';
-        if(isset($vdetails['file_name']) && $thumbDir) {
-           $file_dir = DIRECTORY_SEPARATOR.$thumbDir;
-        }
-
-        if( !$multi && !$count && $size && isset($vdetails['default_thumb']) ){
-            $thumb_file_number = str_pad($vdetails['default_thumb'], strlen(config('num_thumbs')), '0', STR_PAD_LEFT);
-            $filepath = $file_dir.$vdetails['file_name'].'-'.$size.'-'.$thumb_file_number.'.jpg';
-
-            if( file_exists(THUMBS_DIR.$filepath) ){
-                return THUMBS_URL.$filepath;
-            }
-
-            $filepath = $file_dir.$vdetails['file_name'].'-'.$size.'-'.$vdetails['default_thumb'].'.jpg';
-            if( file_exists(THUMBS_DIR.$filepath) ){
-			    return THUMBS_URL.$filepath;
-            }
-		}
-
-        $glob = THUMBS_DIR.DIRECTORY_SEPARATOR.$file_dir.$vdetails['file_name'].'*';
-        if( $size ){
-            $glob .= $size.'*';
-        }
-
-        $vid_thumbs = glob($glob);
-        #replace Dir with URL
-        if(is_array($vid_thumbs)) {
-            foreach($vid_thumbs as $thumb){
-                if(file_exists($thumb) && filesize($thumb)>0) {
-                    $thumb_parts = explode('/',$thumb);
-                    $thumb_file = $thumb_parts[count($thumb_parts)-1];
-
-                    //Saving All Thumbs
-                    if(!is_big($thumb_file) || $return_big){
-                        if($return_full_path){
-                            $thumbs[] = THUMBS_URL.'/'.$thumbDir.$thumb_file;
-						} else {
-                            $thumbs[] = $thumb_file;
-						}
-                    }
-                    //Saving Original Thumbs
-                    if (is_original($thumb_file)){
-                        if($return_full_path){
-                            $original_thumbs[] = THUMBS_URL.'/'.$thumbDir.$thumb_file;
-						} else {
-                            $original_thumbs[] = $thumb_file;
-						}
-                    }
-                } else if(file_exists($thumb)) {
-                    unlink($thumb);
-				}
-            }
-		}
-
-        if(!is_array($thumbs) || count($thumbs) == 0) {
-            if($count){
-                return 0;
-			}
-            if($multi){
-                return $dthumb[0] = default_thumb();
-			}
-            return default_thumb();
-        }
-
-		//Initializing thumbs settings
-		$thumbs_res_settings = thumbs_res_settings_28();
-
-		if($multi){
-			if (!empty($original_thumbs) && $size == 'original'){
-				return $original_thumbs;
-			}
-			return $thumbs;
-		}
-
-		if($count){
-			return count($thumbs);
-		}
-
-		//Now checking for thumb
-		if($num=='default'){
-			$num = $vdetails['default_thumb'];
-		}
-
-		if($num=='big' || $size=='big'){
-			$num = 'big-'.$vdetails['default_thumb'];
-			$num_big_28 = implode('x', $thumbs_res_settings['320']).'-'.$vdetails['default_thumb'];
-
-			$big_thumb_cb26 = THUMBS_DIR.'/'.$vdetails['file_name'].'-'.$num.'.jpg';
-			$big_thumb_cb27 = THUMBS_DIR.'/'.$thumbDir.$vdetails['file_name'].'-'.$num.'.jpg';
-			$big_thumb_cb28 = THUMBS_DIR.'/'.$thumbDir.$vdetails['file_name'].'-'.$num_big_28.'.jpg';
-
-			if(file_exists($big_thumb_cb26)){
-				return THUMBS_URL.'/'.$vdetails['file_name'].'-'.$num.'.jpg';
-			}
-
-			if (file_exists($big_thumb_cb27)){
-				return THUMBS_URL.'/'.$thumbDir.$vdetails['file_name'].'-'.$num.'.jpg';
-			}
-
-			if (file_exists($big_thumb_cb28)){
-				return THUMBS_URL.'/'.$thumbDir.$vdetails['file_name'].'-'.$num_big_28.'.jpg';
-			}
-		}
-
-	   $default_thumb = array_find($vdetails['file_name'].'-'.$size.'-'.$num,$thumbs);
-
-		if(!empty($default_thumb)){
-			return $default_thumb;
-		} else {
-			$default_thumb = array_find($vdetails['file_name'].'-'.$num,$thumbs);
-			if (!empty($default_thumb)){
-				return $default_thumb;
-			}
-			return $thumbs[0];
-		}
     }
 
+    global $db;
+    //get current video from db
+    $resVideo = $db->select(tbl('video') . ' AS V LEFT JOIN '.tbl('video_thumbs').' AS VT ON VT.videoid = V.videoid ', 'V.videoid, V.file_name, V.file_directory, VT.num, V.default_thumb', 'V.videoid = ' . mysql_clean($vid ));
+    if (empty($resVideo)) {
+        error_log('get_thumb - called on missing videoid ' . $vid);
+        e(lang('technical_error'));
+        return $multi ? [default_thumb()] : default_thumb();
+    }
+    $resVideo = $resVideo[0];
+
+    //get thumbs for current video from db
+    $where[] = 'videoid = ' . mysql_clean($vid);
+    if (!$multi) {
+        $where[] = ' num = ' . mysql_clean($resVideo['default_thumb']);
+    }
+    if (!empty($size)) {
+        $where[] = ' resolution LIKE \'' . mysql_clean($size) . '\'';
+    }
+
+    $resThumb = $db->select(tbl('video_thumbs'), '*', implode(' AND ', $where));
+
+    if (empty($resThumb) && $resVideo['num'] === null) {
+        //if no thumbs, we put some in db see \create_thumb()
+        return create_thumb($resVideo, $multi, $size);
+    }
+    if (empty($resThumb)) {
+        return $multi ? [default_thumb()] : default_thumb();
+    }
+    if ($multi) {
+        $thumb = [];
+        foreach ($resThumb as $re) {
+            if ($re['size'] === '') {
+                return [default_thumb()];
+            }
+            $filepath = $resVideo['file_directory'] . DIRECTORY_SEPARATOR . $resVideo['file_name'] . '-' . $re['resolution'] . '-' . $re['num'] . '.' . $re['extension'];
+            if (file_exists(THUMBS_DIR . DIRECTORY_SEPARATOR . $filepath)) {
+                $thumb[] = THUMBS_URL . DIRECTORY_SEPARATOR . $filepath;
+            } else {
+                error_log('get_thumb - missing file : ' . $filepath);
+                $thumb[] = default_thumb();
+            }
+        }
+        return $thumb;
+    }
+    $filepath = $resVideo['file_directory'] . DIRECTORY_SEPARATOR . $resVideo['file_name'] . '-' . $resThumb[0]['resolution'] . '-' . $resThumb[0]['num'] . '.' . $resThumb[0]['extension'];
+    if (!file_exists(THUMBS_DIR . DIRECTORY_SEPARATOR . $filepath)) {
+        error_log('get_thumb - missing file : ' . $filepath);
+        return default_thumb();
+    }
+    return THUMBS_URL . DIRECTORY_SEPARATOR . $filepath;
+}
+
+function get_count_thumb ($videoid) {
+    global $db;
+    $resVideo = $db->select(tbl('video') . ' AS V INNER JOIN '.tbl('video_thumbs').' AS VT ON VT.videoid = V.videoid ', 'COUNT(V.videoid) as nb_thumbs', 'V.videoid = ' . mysql_clean($videoid ));
+    if (empty($resVideo)) {
+        error_log('get_count_thumb - no thumbnails for videoid : ' . $videoid);
+        return 0;
+    }
+    return $resVideo[0]['nb_thumbs'];
+
+}
+
+/**
+ * @param $video_db
+ * @param $multi
+ * @param $size
+ * @return array|string
+ */
+function create_thumb($video_db, $multi, $size)
+{
+    global $db;
+    //check files
+    $glob = THUMBS_DIR . DIRECTORY_SEPARATOR . $video_db['file_directory'] . DIRECTORY_SEPARATOR . $video_db['file_name'] . '*';
+    $vid_thumbs = glob($glob);
+    if (!empty($vid_thumbs)) {
+        foreach ($vid_thumbs as $thumb) {
+            $files_info = [];
+            //pattern must match :  /`file_name`-`size`-`num`.`extension`
+            preg_match('/\/\w*-(\w{1,16})-(\d{1,3})\.(\w{2,4})$/', $thumb, $files_info);
+            if (!empty($files_info)) {
+                $db->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version'], [$video_db['videoid'], $files_info[1], $files_info[2], $files_info[3], VERSION]);
+            }
+        }
+    } else {
+        //insert default
+        $db->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version'], [$video_db['videoid'], '', '', '', VERSION]);
+        error_log('create_thumb - no thumb file for videoid : ' . $video_db['videoid']);
+    }
+    return get_thumb($video_db['videoid'], $multi, $size);
+}
+
     function get_player_thumbs_json($data){
-        $thumbs = get_thumb($data,1,TRUE,FALSE,TRUE,FALSE,'168x105');
+        $thumbs = get_thumb($data,TRUE,'168x105');
         $duration = $data['duration'];
         $json = '';
         if( is_array($thumbs) ){
@@ -359,11 +302,6 @@
             return true;
 		}
 		return false;
-    }
-
-    function GetThumb($vdetails,$num='default',$multi=false,$count=false)
-    {
-        return get_thumb($vdetails,$num,$multi,$count);
     }
 
     /**
@@ -929,32 +867,34 @@
         return  $list[0];
     }
 
-	/**
-	 * Function used to remove specific thumbs number
-	 *
-	 * @param $file_dir
-	 * @param $file_name
-	 * @param $num
-	 */
-    function delete_video_thumb($file_dir,$file_name,$num)
-    {
-        if(!empty($file_dir)){
-            $files = glob(THUMBS_DIR.DIRECTORY_SEPARATOR.$file_dir.DIRECTORY_SEPARATOR.$file_name.'*'.$num.'.*');
-        } else {
-            $files = glob(THUMBS_DIR.DIRECTORY_SEPARATOR.$file_name.'*'.$num.'.*');
-        }
-
-        if ($files) {
-            foreach ($files as $key => $file) {
-                if (file_exists($file)){
-                    unlink($file);
-                }
+/**
+ * Function used to remove specific thumbs number
+ *
+ * @param $file_dir
+ * @param $file_name
+ * @param $num
+ */
+function delete_video_thumb($videoDetails, $num)
+{
+    global $db;
+    $files = glob(THUMBS_DIR . DIRECTORY_SEPARATOR . $videoDetails['file_directory'] . DIRECTORY_SEPARATOR . $videoDetails['file_name'] . '*' . $num . '.*');
+    if ($files) {
+        foreach ($files as $file) {
+            if (file_exists($file)) {
+                unlink($file);
             }
-            e(lang('video_thumb_delete_msg'),'m');
-        } else {
-        	e(lang('video_thumb_delete_err'));
         }
+        e(lang('video_thumb_delete_msg'), 'm');
+    } else {
+        e(lang('video_thumb_delete_err'));
     }
+
+    $db->delete(tbl('video_thumbs'), ['videoid', 'num'], [$videoDetails['videoid'], $num]);
+
+    if ($videoDetails['default_thumb'] == $num) {
+        $db->execute('UPDATE '.tbl('video').' SET `default_thumb` =  (SELECT MIN(num) FROM ' . tbl('video_thumbs') . ' WHERE  videoid = ' . mysql_clean($videoDetails['videoid']). ') WHERE videoid = ' . mysql_clean($videoDetails['videoid']),'update');
+    }
+}
 
 	/**
 	 * function used to remove video thumbs
@@ -1628,4 +1568,27 @@
             return $qual;
         }
     }
+
+/**
+ * @param $data
+ * @param Clipbucket_db $db
+ * @return void
+ */
+function generatingMoreThumbs($data)
+{
+    global $db;
+    $vid_file = get_high_res_file($data);
+    require_once BASEDIR . '/includes/classes/sLog.php';
+    $log = new SLog();
+    require_once BASEDIR . '/includes/classes/conversion/ffmpeg.class.php';
+    $ffmpeg = new FFMpeg($log);
+    $ffmpeg->input_details['duration'] = $data['duration'];
+    $ffmpeg->input_file = $vid_file;
+    $ffmpeg->file_directory = $data['file_directory'];
+    $ffmpeg->file_name = $data['file_name'];
+    $ffmpeg->generateAllThumbs();
+
+    e(lang('video_thumbs_regenerated'), 'm');
+    $db->update(tbl('video'), ['thumbs_version'], [VERSION], ' file_name = \'' . $data['file_name'] . '\'');
+}
 

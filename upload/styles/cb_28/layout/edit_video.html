@@ -30,7 +30,7 @@
 						{* GETTING THUMBS INFO *}
 						
 						<div class="row">
-							{assign var=vidthumbs value=get_thumb($v,1,TRUE,FALSE,TRUE,FALSE,'original')}
+							{assign var=vidthumbs value=get_thumb($v,TRUE,'original')}
 							{foreach from=$vidthumbs item=vid_thumb}
 							<div class="col-md-3">
 								<div class="form-group text-center">

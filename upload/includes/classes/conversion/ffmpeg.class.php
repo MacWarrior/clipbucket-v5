@@ -684,116 +684,117 @@ class FFMpeg
         }
 	}
 
+    /**
+     * @return void
+     */
     public function generateAllThumbs()
     {
+        global $db;
         $thumbs_res_settings = thumbs_res_settings_28();
 
         $thumbs_settings = [];
-        $thumbs_settings['vid_file'] = $this->input_file;
         $thumbs_settings['duration'] = $this->input_details['duration'];
-        $thumbs_settings['num']      = config('num_thumbs');
+        $thumbs_settings['num'] = config('num_thumbs');
+        $rs = $db->select(tbl('video'), 'videoid', 'file_name LIKE \'' . $this->file_name . '\'');
+        if (!empty($rs)) {
+            $videoid = $rs[0]['videoid'];
+        } else {
+            e(lang('technical_error'));
+            $videoid = 0;
+        }
+        $thumbs_settings['videoid'] = $videoid;
 
-        foreach( $thumbs_res_settings as $key => $thumbs_size ) {
+        //delete olds thumbs from db and on disk
+        $db->delete(tbl('video_thumbs'), ['videoid'], [$videoid]);
+        $pattern = THUMBS_DIR . DIRECTORY_SEPARATOR . $this->file_directory . DIRECTORY_SEPARATOR . $this->file_name . '*';
+        $glob = glob($pattern);
+        foreach ($glob as $thumb) {
+            unlink($thumb);
+        }
+
+        //reset default thumb
+        $db->update(tbl('video'), ['default_thumb'], [1], ' videoid = ' . mysql_clean($videoid));
+
+        foreach ($thumbs_res_settings as $key => $thumbs_size) {
             $height_setting = $thumbs_size[1];
             $width_setting = $thumbs_size[0];
 
-            if( $key == 'original' ) {
+            if ($key == 'original') {
                 $thumbs_settings['dim'] = $key;
                 $thumbs_settings['size_tag'] = $key;
             } else {
-                $thumbs_settings['dim'] = $width_setting.'x'.$height_setting;
-                $thumbs_settings['size_tag'] = $width_setting.'x'.$height_setting;
+                $thumbs_settings['dim'] = $width_setting . 'x' . $height_setting;
+                $thumbs_settings['size_tag'] = $width_setting . 'x' . $height_setting;
             }
 
             $this->generateThumbs($thumbs_settings);
         }
     }
 
+    /**
+     * @param $array
+     * @return void
+     */
 	public function generateThumbs($array)
-	{
-		$input_file = $array['vid_file'];
-		$duration = $array['duration'];
-		$dim = $array['dim'];
-		$num = $array['num'];
+    {
+        global $db;
+        $duration = $array['duration'];
+        $dim = $array['dim'];
+        $num = $array['num'];
 
-		if( $num > $duration ){
-		    $num = $duration;
+        if ($num > $duration) {
+            $num = $duration;
         }
 
-		if (!empty($array['size_tag'])){
-			$size_tag = $array['size_tag'];
-		}
-
-        $regenerateThumbs = false;
-		if (!empty($array['file_directory'])){
-			$regenerateThumbs = true;
-			$file_directory = $array['file_directory'];
-		}
-
-		if (!empty($array['file_name'])){
-			$filename = $array['file_name'];
-		}
-		$tmpDir = TEMP_DIR.DIRECTORY_SEPARATOR.getName($input_file);
-		
-		mkdir($tmpDir,0777, true);
-
-		$dimension = '';
-		
-		if(!empty($size_tag)) {
-			$size_tag = $size_tag.'-';
-		}
-
-		if (!empty($file_directory) && !empty($filename)) {
-			$thumbs_outputPath = $file_directory.DIRECTORY_SEPARATOR;
-		} else {
-			$thumbs_outputPath = $this->file_directory;
-		}
-
-		if($dim!='original'){
-			$dimension = ' -s '.$dim.' ';
-		}
-
-        $thumb_dir = THUMBS_DIR.DIRECTORY_SEPARATOR.$thumbs_outputPath;
-        if(!is_dir($thumb_dir)){
-            mkdir($thumb_dir,0755, true);
+        if (!empty($array['size_tag'])) {
+            $size_tag = $array['size_tag'];
         }
 
-		if($num > 1) {
-			$division = $duration / $num;
-			$num_length = strlen($num);
+        if (!empty($size_tag)) {
+            $size_tag = $size_tag . '-';
+        }
 
-			for($count=0;$count<=$num;$count++) {
-			    $thumb_file_number = str_pad((string)$count, $num_length, '0', STR_PAD_LEFT);
-				if (empty($filename)){
-					$file_name = getName($input_file).'-'.$size_tag.$thumb_file_number.'.jpg';
-				} else {
-					$file_name = $filename.'-'.$size_tag.$thumb_file_number.'.jpg';
-				}
-				
-				$file_path = $thumb_dir.$file_name;
+        $dimension = '';
+        if ($dim != 'original') {
+            $dimension = ' -s ' . $dim . ' ';
+        }
 
-				$time_sec = (int)($division*$count);
+        $thumb_dir = THUMBS_DIR . DIRECTORY_SEPARATOR . $this->file_directory . DIRECTORY_SEPARATOR;
+        if (!is_dir($thumb_dir)) {
+            mkdir($thumb_dir, 0755, true);
+        }
 
-				$command = config('ffmpegpath').' -ss '.$time_sec.' -i '.$input_file.' -pix_fmt yuvj422p -an -r 1 '.$dimension.' -y -f image2 -vframes 1 '.$file_path.' 2>&1';
-				$output = shell_exec($command);
+        $videoid = $array['videoid'];
 
-				//checking if file exists in temp dir
-				if(file_exists($tmpDir.'/00000001.jpg')) {
-					rename($tmpDir.'/00000001.jpg',THUMBS_DIR.DIRECTORY_SEPARATOR.$file_name);
-				}
+        $extension = 'jpg';
+        if ($num > 1) {
+            $division = $duration / $num;
+            $num_length = strlen($num);
 
-				if (!$regenerateThumbs && !file_exists($file_path)) {
-                    $TempLogData = PHP_EOL.PHP_EOL.'Command : '.$command;
-                    $TempLogData .= PHP_EOL.PHP_EOL.'OutPut : '.$output;
+            for ($count = 1; $count <= $num; $count++) {
+                $thumb_file_number = str_pad((string)$count, $num_length, '0', STR_PAD_LEFT);
+                $file_name = $this->file_name . '-' . $size_tag . $thumb_file_number . '.' . $extension;
+                $file_path = $thumb_dir . $file_name;
+                $time_sec = (int)($division * $count);
+
+                $command = config('ffmpegpath') . ' -ss ' . $time_sec . ' -i ' . $this->input_file . ' -pix_fmt yuvj422p -an -r 1 ' . $dimension . ' -y -f image2 -vframes 1 ' . $file_path . ' 2>&1';
+                $output = shell_exec($command);
+
+                if (file_exists($file_path)) {
+                    $db->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version'], [$videoid, $dim, $thumb_file_number, $extension, VERSION]);
+                }
+
+                if (!file_exists($file_path)) {
+                    $TempLogData = PHP_EOL . PHP_EOL . 'Command : ' . $command;
+                    $TempLogData .= PHP_EOL . PHP_EOL . 'OutPut : ' . $output;
                     $this->log->writeLine($TempLogData, true);
-				}
-			}
-		} else {
-            $TempLogData = PHP_EOL.' ERROR while generating thumbs with num : '.$num;
+                }
+            }
+        } else {
+            $TempLogData = PHP_EOL . ' ERROR while generating thumbs with num : ' . $num;
             $this->log->writeLine($TempLogData, true);
-		}
-		rmdir($tmpDir);
-	}
+        }
+    }
 
     public static function get_track_infos(string $filepath, string $type): array
     {

@@ -53,6 +53,12 @@ function templateWithMsgJson($template)
     return json_encode(['msg'=>$msg, 'template'=>$template]);
 }
 
+function getTemplateMsg () {
+    ob_start();
+    Template('msg.html');
+    return ob_get_clean();
+}
+
 function Assign($name,$value)
 {
     global $cbtpl;
@@ -123,3 +129,23 @@ function display_language_edit()
     assign('lang_details', $detail);
     echo templateWithMsgJson('blocks/language_edit.html');
 }
+
+function display_thumb_list($data)
+{
+    assign('data', $data);
+    echo templateWithMsgJson('blocks/thumb_list.html');
+}
+
+//todO séparer en 2 fonctions
+function return_thumb_mini_list($data)
+{
+    assign('data', $data);
+    return (templateWithMsgJson('blocks/thumb_mini_list.html'));
+}
+
+function display_flash_player($data)
+{
+    assign('data', $data);
+    echo flashPlayer(['vdetails'=>$data]);
+}
+

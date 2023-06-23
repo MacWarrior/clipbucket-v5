@@ -200,7 +200,7 @@
                                     {get_photo details=$objects[list] output='html' title=$photos[list].photo_title}
                                 {/if}
                                 {if $data.type == 'videos'}
-						<img src="{get_thumb($objects[list],1,FALSE,FALSE,TRUE,FALSE,'168x105')}" width="120" height="75"/>
+						<img src="{get_thumb($objects[list],FALSE,'168x105')}" width="120" height="75"/>
 						        {/if}
 						    {/section}
 						    {assign var=rest value=$data.total_objects-4}

@@ -570,7 +570,7 @@ function get_directory_size(string $path, array $excluded = []) : array
 	 */
 	function getSmartyThumb($params)
 	{
-		return get_thumb($params['vdetails'],$params['num'],$params['multi'],$params['count_only'],true,true,$params['size']);
+		return get_thumb($params['vdetails'],$params['multi'],$params['size']);
 	}
 
 	/**
@@ -4647,7 +4647,7 @@ function lang($var)
 		$thumbs_settings_28 = thumbs_res_settings_28();
 		foreach ($thumbs_settings_28 as $key => $thumbs_size)
 		{
-			$file_num = $Upload->get_available_file_num($file_name);
+			$file_num = $Upload->get_next_available_num($file_name);
 			$height_setting = $thumbs_size[1];
 			$width_setting = $thumbs_size[0];
 			if ( $key != 'original' ){

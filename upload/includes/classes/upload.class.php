@@ -267,103 +267,69 @@ class Upload
 
 	}
 
-	/**
-	 * Function used to get available name for video thumb
-	 *
-	 * @param      FILE_Name
-	 * @param bool $big
-	 *
-	 * @return string
-	 */
-	function get_available_file_num($file_name,$big=false): string
+    /**
+     * Function used to get available name for video thumb
+     *
+     * @param $file_name
+     * @return string
+     */
+    function get_next_available_num($file_name): string
     {
-		$code = 1;
-        if($big){
-			$big = 'big-';
+        global $db;
+        $res = $db->select(tbl('video_thumbs'), 'MAX(num) + 1 as num_max', ' videoid = (SELECT videoid FROM ' . tbl('video') . ' WHERE file_name LIKE \'' . mysql_clean($file_name) . '\')');
+        if (empty($res)) {
+            $code = 0;
+        } else {
+            $code = $res[0]['num_max'];
         }
+        return str_pad((string)$code, strlen(config('num_thumbs')), '0', STR_PAD_LEFT);
+    }
 
-       	if(defined('dir')) {
-            while(1){
-		  		//setting variable for CB 2.8 greater versions
-              	$path = THUMBS_DIR.DIRECTORY_SEPARATOR.dir.DIRECTORY_SEPARATOR.$file_name.'-original-'.$code.'.';
-              	if(!file_exists($path.'jpg') && !file_exists($path.'png') && !file_exists($path.'gif')){
-              		//setting variable for CB 2.8 lower versions
-              		$path = THUMBS_DIR.DIRECTORY_SEPARATOR.dir.DIRECTORY_SEPARATOR.$file_name.'-'.$big.$code.'.';
-              	}
+    function upload_thumb($file_name, $file_array, $key = 0, $files_dir = null, $thumbs_ver = false)
+    {
+        global $imgObj;
+        $file = $file_array;
+        if (!empty($file['name'][$key])) {
+            define('dir', $files_dir);
 
-		      	if(!file_exists($path.'jpg') && !file_exists($path.'png') && !file_exists($path.'gif')){
-		          	break;
+            $file_num = $this->get_next_available_num($file_name);
+            $ext = getExt($file['name'][$key]);
+            if ($imgObj->ValidateImage($file['tmp_name'][$key], $ext)) {
+                $thumbs_settings_28 = thumbs_res_settings_28();
+                $temp_file_path = THUMBS_DIR . DIRECTORY_SEPARATOR . $files_dir . DIRECTORY_SEPARATOR . $file_name . '-' . $file_num . '.' . $ext;
+
+                $imageDetails = getimagesize($file['tmp_name'][$key]);
+
+                move_uploaded_file($file['tmp_name'][$key], $temp_file_path);
+
+                foreach ($thumbs_settings_28 as $key => $thumbs_size) {
+                    $height_setting = $thumbs_size[1];
+                    $width_setting = $thumbs_size[0];
+                    if ($key != 'original') {
+                        $dimensions = implode('x', $thumbs_size);
+                    } else {
+                        $dimensions = 'original';
+                        $width_setting = $imageDetails[0];
+                        $height_setting = $imageDetails[1];
+                    }
+                    $outputFilePath = THUMBS_DIR . DIRECTORY_SEPARATOR . $files_dir . DIRECTORY_SEPARATOR . $file_name . '-' . $dimensions . '-' . $file_num . '.' . $ext;
+                    $imgObj->CreateThumb($temp_file_path, $outputFilePath, $width_setting, $ext, $height_setting, false);
+                    global $db;
+                    $rs = $db->select(tbl('video'), 'videoid', 'file_name LIKE \'' . $file_name . '\'');
+                    if (!empty($rs)) {
+                        $videoid = $rs[0]['videoid'];
+                    } else {
+                        e(lang('technical_error'));
+                        $videoid = 0;
+                    }
+                    $db->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version'], [$videoid, $dimensions, $file_num, $ext, VERSION]);
                 }
-			  	$code = $code + 1;
-			}
-		} else {
-            while(1)
-			{
-		        $path = THUMBS_DIR.DIRECTORY_SEPARATOR.$file_name.'-'.$big.$code.'.';
-			    if(!file_exists($path.'jpg') && !file_exists($path.'png') && !file_exists($path.'gif')){
-			      	break;
-			    }
-				$code = $code + 1;
-			}
-	    }
 
-       return str_pad((string)$code, strlen(config('num_thumbs')), '0', STR_PAD_LEFT);
-	}
-
-	function upload_thumb($file_name,$file_array,$key=0,$files_dir=NULL,$thumbs_ver=false)
-	{
-		global $imgObj;
-		$file = $file_array;
-		if(!empty($file['name'][$key]))
-		{   
-			define('dir',$files_dir);
-			
-			$file_num = $this->get_available_file_num($file_name);
-			$ext = getExt($file['name'][$key]);
-			if($imgObj->ValidateImage($file['tmp_name'][$key],$ext))
-			{
-				//One more IF statement considering CB 2.8.1 thumbs structure
-				if (!empty($thumbs_ver) && $thumbs_ver >= '2.8')
-				{
-					$thumbs_settings_28 = thumbs_res_settings_28();
-					$temp_file_path = THUMBS_DIR.DIRECTORY_SEPARATOR.$files_dir.DIRECTORY_SEPARATOR.$file_name.'-'.$file_num.'.'.$ext;
-					
-					$imageDetails = getimagesize($file['tmp_name'][$key]);
-					
-					move_uploaded_file($file['tmp_name'][$key],$temp_file_path);
-
-					foreach ($thumbs_settings_28 as $key => $thumbs_size) {
-						$height_setting = $thumbs_size[1];
-						$width_setting = $thumbs_size[0];
-						if ( $key != 'original' ){
-							$dimensions = implode('x',$thumbs_size);
-						} else {
-							$dimensions = 'original';
-							$width_setting  = $imageDetails[0];
-							$height_setting = $imageDetails[1];
-						}
-						$outputFilePath = THUMBS_DIR.DIRECTORY_SEPARATOR.$files_dir.DIRECTORY_SEPARATOR.$file_name.'-'.$dimensions.'-'.$file_num.'.'.$ext;
-						$imgObj->CreateThumb($temp_file_path,$outputFilePath,$width_setting,$ext,$height_setting,false);
-					}
-
-					unlink($temp_file_path);
-				} else {
-					if($files_dir!=NULL){
-						$file_path = THUMBS_DIR.DIRECTORY_SEPARATOR.$files_dir.DIRECTORY_SEPARATOR.$file_name.'-'.$file_num.'.'.$ext;
-						$big_file_path = THUMBS_DIR.DIRECTORY_SEPARATOR.$files_dir.DIRECTORY_SEPARATOR.$file_name.'-big-'.$file_num.'.'.$ext;
-					} else {
-						$file_path = THUMBS_DIR.DIRECTORY_SEPARATOR.$file_name.'-'.$file_num.'.'.$ext;
-						$big_file_path = THUMBS_DIR.DIRECTORY_SEPARATOR.$file_name.'-big-'.$file_num.'.'.$ext;
-					}
-					move_uploaded_file($file['tmp_name'][$key],$file_path);
-					$imgObj->CreateThumb($file_path,$big_file_path,config('big_thumb_width'),$ext,config('big_thumb_height'),false);
-					$imgObj->CreateThumb($file_path,$file_path,config('thumb_width'),$ext,config('thumb_height'),false);
-				}
-
-				e(lang('upload_vid_thumb_msg'),'m');
-			}	
-		}
-	}
+                unlink($temp_file_path);
+                e(lang('upload_vid_thumb_msg'), 'm');
+            }
+        }
+    }
 
 	/**
 	 * Function used to upload video thumbs
