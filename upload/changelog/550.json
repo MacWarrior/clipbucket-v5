@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"163",
+  "revision":"164",
   "status":"dev",
   "detail":[
     {
@@ -50,6 +50,7 @@
         ,"Fix mass upload default values"
         ,"Refactor languages and translations <i>#201, #257, #259</i>"
         ,"Refactor thumbs"
+        ,"Remove unused Convertion Lab"
       ]
     },
     {

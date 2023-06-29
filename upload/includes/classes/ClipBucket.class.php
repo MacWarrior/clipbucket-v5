@@ -451,10 +451,6 @@ class ClipBucket
                         ,'url' => ADMIN_BASEURL.'/reindex_cb.php'
                     )
                     ,array(
-                        'title' => 'Conversion Lab &alpha;'
-                        ,'url' => ADMIN_BASEURL.'/conversion_lab.php'
-                    )
-                    ,array(
                         'title' => 'Repair video duration'
                         ,'url' => ADMIN_BASEURL.'/repair_vid_duration.php'
                     )
