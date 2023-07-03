@@ -201,8 +201,7 @@ function checkPermissions(): array
         'images/category_thumbs',
         'images/collection_thumbs',
         'images/groups_thumbs',
-        'includes',
-        'includes/langs/en.lang'
+        'includes'
     ];
 
     $permsArray = [];

@@ -225,3 +225,7 @@ INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`
 	('1080p', '16/9', 1, 1920, 1080, 4096000),
 	('1440p', '16/9', 0, 2560, 1440, 7280000),
 	('2160p', '16/9', 0, 4096, 2160, 17472000);
+
+INSERT INTO `{tbl_prefix}tools_status` (`language_key_title`) VALUES ('ready'), ('in_progress'), ('stopping');
+INSERT INTO `{tbl_prefix}tools` (`id_tool`, `language_key_label`, `language_key_description`, `function_name`, `id_tools_status`, `elements_total`, `elements_done`) VALUES
+    (1, 'generate_missing_thumbs_label', 'generate_missing_thumbs_description', 'AdminTool::generateMissingThumbs', 1, NULL, NULL);

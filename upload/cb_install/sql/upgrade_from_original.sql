@@ -13348,3 +13348,7 @@ INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translatio
 INSERT INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES ('generate_missing_thumbs_description');
 INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`) VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` LIKE 'generate_missing_thumbs_description'), 'Generate thumbs for all videos without thumbs', 1);
 INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`) VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` LIKE 'generate_missing_thumbs_description'), 'Génération des miniatures pour toutes les vidéos qui n\'ont pas de miniatures', 2);
+
+-- REV167
+INSERT INTO `{tbl_prefix}tools` (`id_tool`, `language_key_label`, `language_key_description`, `function_name`, `id_tools_status`, `elements_total`, `elements_done`) VALUES
+    (1, 'generate_missing_thumbs_label', 'generate_missing_thumbs_description', 'AdminTool::generateMissingThumbs', 1, NULL, NULL);
