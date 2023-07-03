@@ -22,21 +22,22 @@
 function smarty_function_popup($params, &$smarty)
 {
     $append = '';
-    foreach ($params as $_key=>$_value) {
+    foreach ($params as $_key => $_value) {
         switch ($_key) {
             case 'text':
             case 'trigger':
             case 'function':
             case 'inarray':
                 $$_key = (string)$_value;
-                if ($_key == 'function' || $_key == 'inarray')
+                if ($_key == 'function' || $_key == 'inarray') {
                     $append .= ',' . strtoupper($_key) . ",'$_value'";
+                }
                 break;
 
             case 'caption':
             case 'closetext':
             case 'status':
-                $append .= ',' . strtoupper($_key) . ",'" . str_replace("'","\'",$_value) . "'";
+                $append .= ',' . strtoupper($_key) . ",'" . str_replace("'", "\'", $_value) . "'";
                 break;
 
             case 'fgcolor':
@@ -90,7 +91,9 @@ function smarty_function_popup($params, &$smarty)
             case 'mouseoff':
             case 'followmouse':
             case 'closeclick':
-                if ($_value) $append .= ',' . strtoupper($_key);
+                if ($_value) {
+                    $append .= ',' . strtoupper($_key);
+                }
                 break;
 
             default:
@@ -103,12 +106,15 @@ function smarty_function_popup($params, &$smarty)
         return false;
     }
 
-    if (empty($trigger)) { $trigger = "onmouseover"; }
+    if (empty($trigger)) {
+        $trigger = "onmouseover";
+    }
 
-    $retval = $trigger . '="return overlib(\''.preg_replace(array("!'!","![\r\n]!"),array("\'",'\r'),$text).'\'';
+    $retval = $trigger . '="return overlib(\'' . preg_replace(["!'!", "![\r\n]!"], ["\'", '\r'], $text) . '\'';
     $retval .= $append . ');"';
-    if ($trigger == 'onmouseover')
-       $retval .= ' onmouseout="nd();"';
+    if ($trigger == 'onmouseover') {
+        $retval .= ' onmouseout="nd();"';
+    }
 
 
     return $retval;

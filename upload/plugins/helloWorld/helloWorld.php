@@ -1,13 +1,13 @@
 <?php
 /**
-* Plugin Name: HelloWorld
-* Description: Demonstrates to developers how ClipBucket plugins work
-* Author: Saqib Razzaq
-* ClipBucket Version: 2.8.1
-* Plugin Version: Version of plugin
-* @since October 3rd, 2016
-* Github: https://github.com/saqirzzq
-*/
+ * Plugin Name: HelloWorld
+ * Description: Demonstrates to developers how ClipBucket plugins work
+ * Author: Saqib Razzaq
+ * ClipBucket Version: 2.8.1
+ * Plugin Version: Version of plugin
+ * @since October 3rd, 2016
+ * Github: https://github.com/saqirzzq
+ */
 
 /*
 * This will be the base name of your plugin. It is stored
@@ -18,7 +18,7 @@
 * using this constant will give folder name of your plugin
 */
 
-define("helloWorld_BASE",basename(dirname(__FILE__)));
+define("helloWorld_BASE", basename(dirname(__FILE__)));
 
 /*
 * Uses helloWorld_BASE constant to create full base path
@@ -27,7 +27,7 @@ define("helloWorld_BASE",basename(dirname(__FILE__)));
 * html templates
 */
 
-define("helloWorld_DIR",PLUG_DIR.'/'.helloWorld_BASE);
+define("helloWorld_DIR", PLUG_DIR . '/' . helloWorld_BASE);
 
 /*
 * Directory constant is quite handy but you cannot use it include
@@ -36,7 +36,7 @@ define("helloWorld_DIR",PLUG_DIR.'/'.helloWorld_BASE);
 * images, CSS and javascript
 */
 
-define("helloWorld_URL",PLUG_URL.'/'.helloWorld_BASE);
+define("helloWorld_URL", PLUG_URL . '/' . helloWorld_BASE);
 
 /*
 * It is strongly recomended that you use a totally different folder
@@ -48,13 +48,13 @@ define("helloWorld_URL",PLUG_URL.'/'.helloWorld_BASE);
 * to include them
 */
 
-define("helloWorld_ADMIN_DIR", helloWorld_DIR.'/admin');
+define("helloWorld_ADMIN_DIR", helloWorld_DIR . '/admin');
 
 /*
 * Again, we define a constant for fetching CSS and js etc files
 */
 
-define("helloWorld_ADMIN_URL", helloWorld_URL.'/admin');
+define("helloWorld_ADMIN_URL", helloWorld_URL . '/admin');
 
 
 /*
@@ -64,7 +64,8 @@ define("helloWorld_ADMIN_URL", helloWorld_URL.'/admin');
 * to display a hello world message to users
 */
 
-function helloWorld() {
+function helloWorld()
+{
     global $userquery;
     if (!empty($userquery->username)) {
         $user = $userquery->username;
@@ -72,8 +73,8 @@ function helloWorld() {
         $user = "";
     }
 
-    $message = "Say hello to ClipBucket! Have fun ".$user." while browsing our website";
-    echo '<alert alert-info>'.$message.'</alert>';
+    $message = "Say hello to ClipBucket! Have fun " . $user . " while browsing our website";
+    echo '<alert alert-info>' . $message . '</alert>';
 }
 
 /*
@@ -82,7 +83,7 @@ function helloWorld() {
 * a file is executed directly and rest will be handled by ClipBucket
 */
 
-add_admin_menu('Menu Main Name','Submenu Name','file_to_execute.php', 'path_dir_where_file_exists');
+add_admin_menu('Menu Main Name', 'Submenu Name', 'file_to_execute.php', 'path_dir_where_file_exists');
 
 /*
 * ClipBucket uses anchors for making it easier to call functions wherever you need
@@ -90,4 +91,4 @@ add_admin_menu('Menu Main Name','Submenu Name','file_to_execute.php', 'path_dir_
 * inside html templates
 */
 
-register_anchor_function('helloWorld','helloWorld');
+register_anchor_function('helloWorld', 'helloWorld');

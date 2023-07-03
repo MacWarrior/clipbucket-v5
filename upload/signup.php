@@ -1,29 +1,29 @@
 <?php
-define('THIS_PAGE','signup');
-define('PARENT_PAGE','signup');
+define('THIS_PAGE', 'signup');
+define('PARENT_PAGE', 'signup');
 
 require 'includes/config.inc.php';
-global $Cbucket,$userquery,$eh;
-if($userquery->login_check('',true)) {
+global $Cbucket, $userquery, $eh;
+if ($userquery->login_check('', true)) {
     redirect_to(BASEURL);
 }
 
 /**
  * Function used to call all signup functions
  */
-if(cb_get_functions('signup_page')){
+if (cb_get_functions('signup_page')) {
     cb_call_functions('signup_page');
 }
 
 /**
  * Signing up new user
  */
-if(!config('allow_registeration')){
-    assign('allow_registeration',lang('usr_reg_err'));
+if (!config('allow_registeration')) {
+    assign('allow_registeration', lang('usr_reg_err'));
 }
 
-if(isset($_POST['signup'])){
-    if(!config('allow_registeration')){
+if (isset($_POST['signup'])) {
+    if (!config('allow_registeration')) {
         e(lang('usr_reg_err'));
     } else {
         $form_data = $_POST;
@@ -34,44 +34,44 @@ if(isset($_POST['signup'])){
         $signup = $userquery->signup_user($signup_data);
 
         // checking if user signup was successful
-        if($signup) {
+        if ($signup) {
             // user signed up, lets get his details
             $udetails = $userquery->get_user_details($signup);
             $eh->flush();
-            assign('udetails',$udetails);
+            assign('udetails', $udetails);
             if (empty($Cbucket->configs['email_verification'])) {
                 // login user and redirect to home page
                 $userquery->login_as_user($udetails['userid']);
-                header('Location: '.BASEURL);
+                header('Location: ' . BASEURL);
             } else {
-                assign('mode','signup_success');
+                assign('mode', 'signup_success');
             }
         }
     }
 }
 
 //Login User
-if(isset($_POST['login'])){
+if (isset($_POST['login'])) {
     $username = mysql_clean($_POST['username']);
     $password = mysql_clean($_POST['password']);
 
     $remember = false;
-    if($_POST['rememberme']){
+    if ($_POST['rememberme']) {
         $remember = true;
     }
 
-    if($userquery->login_user($username,$password,$remember)) {
-        if($_COOKIE['pageredir']) {
+    if ($userquery->login_user($username, $password, $remember)) {
+        if ($_COOKIE['pageredir']) {
             redirect_to($_COOKIE['pageredir']);
         } else {
-            redirect_to(cblink(array('name'=>'my_account')));
+            redirect_to(cblink(['name' => 'my_account']));
         }
     }
 }
 
 //Checking Ban Error
-if(!isset($_POST['login']) && !isset($_POST['signup'])){
-    if(@$_GET['ban'] == true){
+if (!isset($_POST['login']) && !isset($_POST['signup'])) {
+    if (@$_GET['ban'] == true) {
         $msg = lang('usr_ban_err');
     }
 }

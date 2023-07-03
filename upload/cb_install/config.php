@@ -9,11 +9,11 @@ $DBUSER = '_DB_USER_';
 //Database Password
 $DBPASS = '_DB_PASS_';
 //Setting Table Prefix
-define('TABLE_PREFIX','_TABLE_PREFIX_');
+define('TABLE_PREFIX', '_TABLE_PREFIX_');
 
 $db = new Clipbucket_db();
 
-$db->connect($DBHOST,$DBNAME,$DBUSER,$DBPASS);
+$db->connect($DBHOST, $DBNAME, $DBUSER, $DBPASS);
 
 /*
  * Enable this array to overwrite configurations over DB values

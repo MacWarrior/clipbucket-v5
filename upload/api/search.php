@@ -7,7 +7,7 @@ $type = $request['type'];
 $page = mysql_clean($request['page']);
 $limit = 20;
 
-if(!$type){
+if (!$type) {
     $type = 'video';
 }
 

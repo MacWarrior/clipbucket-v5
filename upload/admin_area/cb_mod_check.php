@@ -1,14 +1,14 @@
 <?php
-require_once dirname(__DIR__).'/includes/admin_config.php';
+require_once dirname(__DIR__) . '/includes/admin_config.php';
 
-global $userquery,$pages;
+global $userquery, $pages;
 $userquery->admin_login_check();
 $pages->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => 'Tool Box', 'url' => ''];
-$breadcrumb[1] = ['title' => 'Server Modules Info', 'url' => ADMIN_BASEURL.'/cb_mod_check.php'];
+$breadcrumb[1] = ['title' => 'Server Modules Info', 'url' => ADMIN_BASEURL . '/cb_mod_check.php'];
 
 $ffmpegVersion = check_version('ffmpeg');
 assign('ffmpegVersion', $ffmpegVersion);

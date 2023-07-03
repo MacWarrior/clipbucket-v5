@@ -7,20 +7,22 @@
  * To change this template use File | Settings | File Templates.
  */
 
-class cb_columns {
+class cb_columns
+{
 
-    protected $columns = array();
+    protected $columns = [];
     protected $object = null;
-    protected $temp_actions = array();
+    protected $temp_actions = [];
 
     /**
      * Constructor sets the object if current object
      * is null
      */
-    function __construct() {
+    function __construct()
+    {
 
-        if( is_null( $this->get_object() ) ) {
-            $this->set_object( 'videos' );
+        if (is_null($this->get_object())) {
+            $this->set_object('videos');
         }
 
     }
@@ -30,7 +32,8 @@ class cb_columns {
      *
      * @return STRING|NULL
      */
-    function get_object() {
+    function get_object()
+    {
         return $this->object;
     }
 
@@ -40,7 +43,8 @@ class cb_columns {
      * @param string $object Object is required
      * @return object $this
      */
-    function set_object( $object ) {
+    function set_object($object)
+    {
         $this->object = $object;
         return $this;
     }
@@ -51,8 +55,9 @@ class cb_columns {
      * @param string $object
      * @return object $this
      */
-    function object( $object ) {
-        return $this->set_object( $object );
+    function object($object)
+    {
+        return $this->set_object($object);
     }
 
     /**
@@ -61,24 +66,25 @@ class cb_columns {
      * @param mixed $columns
      * @return object $this
      */
-    function register_columns( $columns ) {
+    function register_columns($columns)
+    {
         $num_of_args = func_num_args();
 
-        if( $num_of_args > 1 ) {
+        if ($num_of_args > 1) {
             $columns = func_get_args();
         }
 
-        $columns = is_array( $columns ) ? $columns : explode( ',', $columns );
+        $columns = is_array($columns) ? $columns : explode(',', $columns);
 
-        if( $columns ) {
+        if ($columns) {
             $object = $this->get_object();
-            $columns = array_map( 'trim', $columns  );
+            $columns = array_map('trim', $columns);
 
-            if ( !isset( $this->columns[ $object ] ) ) {
-                $this->columns[ $object ] = array();
+            if (!isset($this->columns[$object])) {
+                $this->columns[$object] = [];
             }
 
-            $this->columns[ $object ] = $columns;
+            $this->columns[$object] = $columns;
 
             return $this;
         }
@@ -91,14 +97,15 @@ class cb_columns {
      *
      * @return array|bool
      */
-    function get_columns() {
-        $columns = $this->columns[ $this->get_object() ];
+    function get_columns()
+    {
+        $columns = $this->columns[$this->get_object()];
 
-        if ( empty( $columns ) ) {
+        if (empty($columns)) {
             return false;
         }
 
-        return $this->perform_temp_actions( $columns );
+        return $this->perform_temp_actions($columns);
     }
 
     /**
@@ -114,31 +121,32 @@ class cb_columns {
      * @param $columns
      * @return mixed
      */
-    function add_column( $columns ) {
+    function add_column($columns)
+    {
         $num_of_args = func_num_args();
 
-        if( $num_of_args > 1 ) {
+        if ($num_of_args > 1) {
             $columns = func_get_args();
         }
 
-        $columns = is_array( $columns ) ? $columns : explode( ',', $columns );
+        $columns = is_array($columns) ? $columns : explode(',', $columns);
 
-        if( $columns ) {
+        if ($columns) {
             $object = $this->get_object();
-            $columns = array_map( 'trim', $columns  );
+            $columns = array_map('trim', $columns);
 
-            if ( !isset( $this->columns[ $object ] ) ) {
-                $this->columns[ $object ] = array();
+            if (!isset($this->columns[$object])) {
+                $this->columns[$object] = [];
             }
 
-            $new_columns = array_merge( $this->columns[ $object ], $columns );
+            $new_columns = array_merge($this->columns[$object], $columns);
 
             /**
              * Make sure columns are unique
              */
-            $new_columns = array_unique( $new_columns );
+            $new_columns = array_unique($new_columns);
 
-            return $this->register_columns( $new_columns );
+            return $this->register_columns($new_columns);
         }
 
         return false;
@@ -151,29 +159,30 @@ class cb_columns {
      * @param $columns
      * @return mixed
      */
-    function remove_column ( $columns ) {
+    function remove_column($columns)
+    {
         $num_of_args = func_num_args();
 
-        if( $num_of_args > 1 ) {
+        if ($num_of_args > 1) {
             $columns = func_get_args();
         }
 
-        $columns = is_array( $columns ) ? $columns : explode( ',', $columns );
+        $columns = is_array($columns) ? $columns : explode(',', $columns);
 
-        if( $columns ) {
+        if ($columns) {
             $object = $this->get_object();
-            $columns = array_map( 'trim', $columns );
+            $columns = array_map('trim', $columns);
 
-            foreach ( $columns as $column ) {
-                $key = array_search( $column, $this->columns[ $object ] );
+            foreach ($columns as $column) {
+                $key = array_search($column, $this->columns[$object]);
 
-                if ( $key !== false ) {
-                    unset( $this->columns[ $object ][ $key ] );
+                if ($key !== false) {
+                    unset($this->columns[$object][$key]);
                 }
 
             }
 
-            return $this->register_columns( $this->columns[ $object ] );
+            return $this->register_columns($this->columns[$object]);
         }
 
         return false;
@@ -187,34 +196,35 @@ class cb_columns {
      * @param string|array $to
      * @return array
      */
-    function change_column( $from, $to ) {
+    function change_column($from, $to)
+    {
 
-        $from = is_array( $from ) ? $from : explode( ",", $from );
-        $to = is_array( $to ) ? $to : explode( ",", $to );
-        $replacements = array();
+        $from = is_array($from) ? $from : explode(",", $from);
+        $to = is_array($to) ? $to : explode(",", $to);
+        $replacements = [];
 
-        if ( isset( $from ) and isset( $to ) ) {
-            $total_from = count( $from );
-            $total_to = count( $to );
+        if (isset($from) and isset($to)) {
+            $total_from = count($from);
+            $total_to = count($to);
 
-            if ( $total_from == $total_to ) {
+            if ($total_from == $total_to) {
 
                 $columns = $this->get_columns();
 
-                for ( $i=0; $i <= $total_from; $i++ ) {
-                    $column = $from[ $i ];
+                for ($i = 0; $i <= $total_from; $i++) {
+                    $column = $from[$i];
 
-                    if( !in_array( $column, $columns ) ) {
+                    if (!in_array($column, $columns)) {
                         continue;
                     }
 
-                    $replacements[] = $from[ $i ].' AS '.$to[ $i ];
+                    $replacements[] = $from[$i] . ' AS ' . $to[$i];
                 }
 
-                if( !empty( $replacements ) ) {
+                if (!empty($replacements)) {
 
-                    $this->remove_column( $from );
-                    $this->add_column( $replacements );
+                    $this->remove_column($from);
+                    $this->add_column($replacements);
 
                 }
             }
@@ -232,21 +242,22 @@ class cb_columns {
      * @param null $to
      * @return $this
      */
-    private function setup_temp_actions( $columns, $action = 'add', $to = null ) {
+    private function setup_temp_actions($columns, $action = 'add', $to = null)
+    {
 
-        $columns = is_array( $columns ) ? $columns : explode( ",", $columns );
+        $columns = is_array($columns) ? $columns : explode(",", $columns);
 
-        if ( $action == 'change' and !is_null( $to ) ) {
-            $to = is_array( $to ) ? $to : explode( ",", $to );
+        if ($action == 'change' and !is_null($to)) {
+            $to = is_array($to) ? $to : explode(",", $to);
         }
 
-        $action_items = array( 'columns' => $columns );
+        $action_items = ['columns' => $columns];
 
-        if ( !is_null( $to ) ) {
-            $action_items[ 'change_to' ] = $to;
+        if (!is_null($to)) {
+            $action_items['change_to'] = $to;
         }
 
-        $this->temp_actions[ $action ] = $action_items;
+        $this->temp_actions[$action] = $action_items;
 
         return $this;
     }
@@ -257,70 +268,71 @@ class cb_columns {
      * @param $columns
      * @return array
      */
-    private function perform_temp_actions( $columns ) {
+    private function perform_temp_actions($columns)
+    {
         $temp_actions = $this->temp_actions;
 
-        if ( !empty( $temp_actions ) ) {
+        if (!empty($temp_actions)) {
 
 
-            if( isset( $temp_actions[ 'change' ] ) ) {
-                $action_items = $temp_actions[ 'change' ];
+            if (isset($temp_actions['change'])) {
+                $action_items = $temp_actions['change'];
 
-                $from = $action_items[ 'columns' ];
-                $to = $action_items[ 'change_to' ];
-                $total = array( 'from' => count( $from ), 'to' => count( $to ) );
+                $from = $action_items['columns'];
+                $to = $action_items['change_to'];
+                $total = ['from' => count($from), 'to' => count($to)];
 
-                if ( $total[ 'from' ] == $total[ 'to' ] ) {
+                if ($total['from'] == $total['to']) {
 
-                    for ( $i=0; $i <= $total[ 'from' ]; $i++ ) {
-                        $column = $from[ $i ];
+                    for ($i = 0; $i <= $total['from']; $i++) {
+                        $column = $from[$i];
 
-                        if( !in_array( $column, $columns ) ) {
+                        if (!in_array($column, $columns)) {
                             continue;
                         }
 
-                        $replacements[] = $from[ $i ].' AS '.$to[ $i ];
+                        $replacements[] = $from[$i] . ' AS ' . $to[$i];
                     }
 
-                    if( !empty( $replacements ) ) {
-                        $temp_actions[ 'add' ][ 'columns' ] = ( isset( $temp_actions[ 'add' ][ 'columns' ] ) and is_array( $temp_actions[ 'add' ][ 'columns' ] ) ) ? array_merge( $replacements, $temp_actions[ 'add' ][ 'columns' ] ) : $replacements;
-                        $temp_actions[ 'remove' ][ 'columns' ] = ( isset( $temp_actions[ 'remove' ][ 'columns' ] ) and is_array( $temp_actions[ 'remove' ][ 'columns' ] ) ) ? array_merge( $from, $temp_actions[ 'remove' ][ 'columns' ] ) : $from;
+                    if (!empty($replacements)) {
+                        $temp_actions['add']['columns'] = (isset($temp_actions['add']['columns']) and is_array($temp_actions['add']['columns'])) ? array_merge($replacements, $temp_actions['add']['columns']) : $replacements;
+                        $temp_actions['remove']['columns'] = (isset($temp_actions['remove']['columns']) and is_array($temp_actions['remove']['columns'])) ? array_merge($from, $temp_actions['remove']['columns']) : $from;
                     }
 
                 }
             }
 
-            if ( isset( $temp_actions[ 'remove' ] ) ) {
-                $action_items = $temp_actions[ 'remove' ];
-                $rcolumns = $action_items[ 'columns' ];
-                $rcolumns = array_map( 'trim', $rcolumns );
+            if (isset($temp_actions['remove'])) {
+                $action_items = $temp_actions['remove'];
+                $rcolumns = $action_items['columns'];
+                $rcolumns = array_map('trim', $rcolumns);
 
-                foreach( $rcolumns as $column ) {
-                    $key = array_search( $column, $columns );
+                foreach ($rcolumns as $column) {
+                    $key = array_search($column, $columns);
 
-                    if ( $key !== false ) {
-                        unset( $columns[ $key ] );
+                    if ($key !== false) {
+                        unset($columns[$key]);
                     }
                 }
             }
 
-            if ( isset( $temp_actions[ 'add' ] ) ) {
-                $action_items = $temp_actions[ 'add' ];
-                $acolumns = array_map( 'trim', $action_items[ 'columns' ] );
+            if (isset($temp_actions['add'])) {
+                $action_items = $temp_actions['add'];
+                $acolumns = array_map('trim', $action_items['columns']);
 
-                $columns = is_array( $acolumns ) ? array_merge( $columns, $acolumns ) : $columns;
+                $columns = is_array($acolumns) ? array_merge($columns, $acolumns) : $columns;
             }
         }
 
         /**
          * Make sure $columns are unique
          */
-        $columns = array_unique( $columns );
+        $columns = array_unique($columns);
 
         /**
          * Empty the temp actions
          */
-        $this->temp_actions = array();
+        $this->temp_actions = [];
 
         return $columns;
     }
@@ -334,8 +346,9 @@ class cb_columns {
      * @param $columns
      * @return $this
      */
-    function temp_add( $columns ) {
-        return $this->setup_temp_actions( $columns, 'add' );
+    function temp_add($columns)
+    {
+        return $this->setup_temp_actions($columns, 'add');
     }
 
     /**
@@ -347,8 +360,9 @@ class cb_columns {
      * @param $columns
      * @return $this
      */
-    function temp_remove( $columns ) {
-        return $this->setup_temp_actions( $columns, 'remove' );
+    function temp_remove($columns)
+    {
+        return $this->setup_temp_actions($columns, 'remove');
     }
 
     /**
@@ -362,10 +376,11 @@ class cb_columns {
      * @param $to
      * @return $this
      */
-    function temp_change( $from, $to ) {
-        return $this->setup_temp_actions( $from, 'change', $to );
+    function temp_change($from, $to)
+    {
+        return $this->setup_temp_actions($from, 'change', $to);
 
     }
-    
+
 
 }

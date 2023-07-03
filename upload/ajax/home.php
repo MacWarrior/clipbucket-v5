@@ -1,32 +1,30 @@
 <?php
-define('THIS_PAGE','ajax');
+define('THIS_PAGE', 'ajax');
 require '../includes/config.inc.php';
-$params = array();
-if (isset($_POST['load_type']))
-{
+$params = [];
+if (isset($_POST['load_type'])) {
     $load_type = $_POST['load_type'];
-    if (isset($_POST['load_mode']))
-    {
+    if (isset($_POST['load_mode'])) {
         $load_mode = $_POST['load_mode'];
         if ($load_mode == 'featured') {
             $params['featured'] = "yes";
             $params['order'] = 'featured_date DESC';
-        } else if ($load_mode == 'recent') {
-            $params['order'] = 'date_added DESC';
         } else {
-            $params['order'] = 'views';
+            if ($load_mode == 'recent') {
+                $params['order'] = 'date_added DESC';
+            } else {
+                $params['order'] = 'views';
+            }
         }
     }
 
-    if( isset($_POST['current_displayed']) )
-    {
+    if (isset($_POST['current_displayed'])) {
         $start = $_POST['current_displayed'];
     } else {
         $start = '0';
     }
 
-    if( isset($_POST['wanted']) )
-    {
+    if (isset($_POST['wanted'])) {
         $end = $_POST['wanted'];
     } else {
         $end = '6';
@@ -34,17 +32,15 @@ if (isset($_POST['load_type']))
 
     $params['limit'] = "$start,$end";
 
-    if( isset($_POST['first_launch']) && $_POST['first_launch'] = 'true' )
-    {
+    if (isset($_POST['first_launch']) && $_POST['first_launch'] = 'true') {
         $params['count_only'] = true;
         $total_vids = get_videos($params);
         assign("total_vids", $total_vids);
     } else {
-        assign("total_vids",'');
+        assign("total_vids", '');
     }
 
-    switch ($load_type)
-    {
+    switch ($load_type) {
         case 'video':
             $params['count_only'] = false;
             $data = get_videos($params);
@@ -64,10 +60,8 @@ if (isset($_POST['load_type']))
             break;
     }
 
-    if (is_array($data))
-    {
-        if (count($data) >= 1)
-        {
+    if (is_array($data)) {
+        if (count($data) >= 1) {
             $json_string['array_meta'] = $data;
             if ($load_mode == 'recent') {
                 $display_type = 'ajaxHome';
@@ -75,24 +69,23 @@ if (isset($_POST['load_type']))
                 $display_type = 'featuredHome';
             }
             $quicklists = $_COOKIE['fast_qlist'];
-            $clean_cookies = str_replace(array("[","]"), "", $quicklists);
+            $clean_cookies = str_replace(["[", "]"], "", $quicklists);
             $clean_cookies = explode(",", $clean_cookies);
             $clean_cookies = array_filter($clean_cookies);
             assign("qlist_vids", $clean_cookies);
-            foreach ($data as $key => $video)
-            {
-                assign("video",$video);
-                assign("display_type",$display_type);
+            foreach ($data as $key => $video) {
+                assign("video", $video);
+                assign("display_type", $display_type);
                 Template('blocks/videos/video.html');
             }
         } else {
-            $msg = array();
+            $msg = [];
             $msg['notice'] = "You've reached end of list";
             echo json_encode($msg);
         }
     }
 } else {
-    $msg = array();
+    $msg = [];
     $msg['error'] = "Invalid request made";
     echo json_encode($msg);
 }

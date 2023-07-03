@@ -1,45 +1,45 @@
 <?php
-$Cbucket->upload_opt_list['link_video_link'] = array(
-   'title'	=> lang('remote_play'),
-   'load_func'	=>	'load_link_video_form',
-);
+$Cbucket->upload_opt_list['link_video_link'] = [
+    'title'     => lang('remote_play'),
+    'load_func' => 'load_link_video_form',
+];
 
 /**
  * Function used create duration from input
  * @param int DURATION
  */
-if(!function_exists('validate_duration'))
-{
+if (!function_exists('validate_duration')) {
     function validate_duration($time)
     {
-        if(empty($time)){
+        if (empty($time)) {
             return true;
         }
-        $time = explode(':',$time);
-        if(count($time)>0 && is_array($time))
-        {
+        $time = explode(':', $time);
+        if (count($time) > 0 && is_array($time)) {
             $total = count($time);
 
-            if($total==3) {
-                $hrs = $time[0]*60*60;
-                $mins = $time[1]*60;
+            if ($total == 3) {
+                $hrs = $time[0] * 60 * 60;
+                $mins = $time[1] * 60;
                 $secs = $time[2];
-            } else if($total==2) {
-                $hrs = 0;
-                $mins = $time[0]*60;
-                $secs = $time[1];
             } else {
-                $hrs = 0;
-                $mins = 0;
-                $secs = $time[0];
+                if ($total == 2) {
+                    $hrs = 0;
+                    $mins = $time[0] * 60;
+                    $secs = $time[1];
+                } else {
+                    $hrs = 0;
+                    $mins = 0;
+                    $secs = $time[0];
+                }
             }
-            $sec = $hrs+$mins+$secs;
-            if(!empty($sec)){
+            $sec = $hrs + $mins + $secs;
+            if (!empty($sec)) {
                 return $sec;
             }
             e(lang('invalid_duration'));
         } else {
-            if(is_numeric($time)){
+            if (is_numeric($time)) {
                 return $time;
             }
             e(lang('invalid_duration'));
@@ -51,15 +51,14 @@ if(!function_exists('validate_duration'))
 function check_remote_play_link($val)
 {
     //checking file exension
-    $validExts = array('flv','mp4');
+    $validExts = ['flv', 'mp4'];
     $ext = getExt($val);
-    if(!in_array($ext,$validExts) || !$val
-    ||
-    ( !stristr($val,'http://')
-    && !stristr($val,'https://')
-    && !stristr($val,'rtsp://')
-    && !stristr($val,'rtmp://') ))
-    {
+    if (!in_array($ext, $validExts) || !$val
+        ||
+        (!stristr($val, 'http://')
+            && !stristr($val, 'https://')
+            && !stristr($val, 'rtsp://')
+            && !stristr($val, 'rtmp://'))) {
         e("Invalid video url");
         return false;
     }
@@ -76,19 +75,18 @@ function check_remote_play_link($val)
  */
 function validate_video_link($val)
 {
-    if(empty($val) || $val=='none') {
+    if (empty($val) || $val == 'none') {
         return 'none';
     }
     //checking file exension
-    $validExts = array('flv','mp4');
+    $validExts = ['flv', 'mp4'];
     $ext = getExt($val);
-    if(!in_array($ext,$validExts)
+    if (!in_array($ext, $validExts)
         ||
-        ( !stristr($val,'http://')
-        && !stristr($val,'https://')
-        && !stristr($val,'rtsp://')
-        && !stristr($val,'rtmp://') ))
-    {
+        (!stristr($val, 'http://')
+            && !stristr($val, 'https://')
+            && !stristr($val, 'rtsp://')
+            && !stristr($val, 'rtmp://'))) {
         return false;
     }
     return $val;
@@ -102,50 +100,47 @@ function validate_video_link($val)
 function load_link_video_form($params)
 {
     global $file_name;
-    if($params['class']){
-        $class = ' '.$params['class'];
+    if ($params['class']) {
+        $class = ' ' . $params['class'];
     }
-    assign('objId',RandomString(5));
-    assign('class',$class);
-    Template(PLUG_DIR.'/cb_link_video/form.html',false);
+    assign('objId', RandomString(5));
+    assign('class', $class);
+    Template(PLUG_DIR . '/cb_link_video/form.html', false);
 }
 
-$link_vid_field_array['remote_play_url'] = array
-(
-    'title'		=>'Link to video',
-    'name'		=>'remote_play_url',
-    'db_field'	=>'remote_play_url',
-    'required'	=>'no',
-    'validate_function'=>'validate_video_link',
-    'use_func_val' => true,
-    'type'	=> 'textfield',
-    'use_if_value' => true,
-    'hint_2'=>'Type "none" to set as empty',
-    'size'=>'45',
-    'rows'=>5
- );
+$link_vid_field_array['remote_play_url'] = [
+    'title'             => 'Link to video',
+    'name'              => 'remote_play_url',
+    'db_field'          => 'remote_play_url',
+    'required'          => 'no',
+    'validate_function' => 'validate_video_link',
+    'use_func_val'      => true,
+    'type'              => 'textfield',
+    'use_if_value'      => true,
+    'hint_2'            => 'Type "none" to set as empty',
+    'size'              => '45',
+    'rows'              => 5
+];
 
-$link_vid_field_array['duration'] = array
-(
-    'title'		=>'Video duration',
-    'name'		=>'duration',
-    'db_field'	=>'duration',
-    'required'	=>'no',
-    'validate_function'=>'validate_duration',
-    'use_func_val' => true,
-    'display_admin'	=> 'no_display',
-    'use_if_value' => true,
- );
+$link_vid_field_array['duration'] = [
+    'title'             => 'Video duration',
+    'name'              => 'duration',
+    'db_field'          => 'duration',
+    'required'          => 'no',
+    'validate_function' => 'validate_duration',
+    'use_func_val'      => true,
+    'display_admin'     => 'no_display',
+    'use_if_value'      => true,
+];
 
-$link_vid_field_array['thumb_file_field'] = array
-(
-    'title'	=> 'Thumb File',
-    'type'	=> 'fileField',
-    'name'	=> 'thumb_file',
-    'required' => 'no',
+$link_vid_field_array['thumb_file_field'] = [
+    'title'             => 'Thumb File',
+    'type'              => 'fileField',
+    'name'              => 'thumb_file',
+    'required'          => 'no',
     'validate_function' => 'upload_thumb',
-    'display_admin'	=> 'no_display',
-);
+    'display_admin'     => 'no_display',
+];
 
 function clean_remote_code($input)
 {
@@ -161,28 +156,28 @@ function clean_remote_code($input)
  */
 function remote_video_check($vid)
 {
-    global $myquery,$db;
-    if(is_array($vid)){
+    global $myquery, $db;
+    if (is_array($vid)) {
         $vdetails = $vid;
     } else {
         $vdetails = $myquery->get_video_details($vid);
     }
 
-    if(!empty($vdetails['remote_play_url']) && $vdetails['remote_play_url'] !=' ' && $vdetails['remote_play_url'] !='none') {
-        $db->update(tbl("video"),array("status"),array('Successful')," videoid='$vid'");
+    if (!empty($vdetails['remote_play_url']) && $vdetails['remote_play_url'] != ' ' && $vdetails['remote_play_url'] != 'none') {
+        $db->update(tbl("video"), ["status"], ['Successful'], " videoid='$vid'");
     }
 }
 
 /**
-* Function used to play embed code
-*
-* @param array Video details
-*
-* @return mixed
-*/
+ * Function used to play embed code
+ *
+ * @param array Video details
+ *
+ * @return mixed
+ */
 function play_remote_video($vdetails)
 {
-    if(!empty($vdetails['remote_play_url']) && $vdetails['remote_play_url']!='none') {
+    if (!empty($vdetails['remote_play_url']) && $vdetails['remote_play_url'] != 'none') {
         return $vdetails['remote_play_url'];
     }
 }
@@ -190,4 +185,4 @@ function play_remote_video($vdetails)
 $Cbucket->custom_video_file_funcs[] = 'play_remote_video';
 register_after_video_upload_action('remote_video_check');
 register_custom_upload_field($link_vid_field_array);
-$Cbucket->add_header(PLUG_DIR.'/cb_link_video/header.html');
+$Cbucket->add_header(PLUG_DIR . '/cb_link_video/header.html');

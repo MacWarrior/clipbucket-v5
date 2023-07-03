@@ -9,4 +9,4 @@ $data = get_video_details($_POST['videoid']);
 
 $num = $_POST['num'];
 delete_video_thumb($data, $num);
-echo json_encode(['msg'=>getTemplateMsg()]);
+echo json_encode(['msg' => getTemplateMsg()]);

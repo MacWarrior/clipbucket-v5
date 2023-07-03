@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE','ajax');
+define('THIS_PAGE', 'ajax');
 require '../includes/config.inc.php';
 
 if (isset($_POST['mode'])) {
@@ -13,14 +13,14 @@ if (isset($_POST['mode'])) {
             $start = $load_limit * $load_hit - $load_limit;
             $sql_limit = "$start, $load_limit";
             $total_items = $_POST['totalVids'];
-            $items = get_videos(['user'=>$user, 'order'=>'date_added DESC','limit'=>$sql_limit]);
+            $items = get_videos(['user' => $user, 'order' => 'date_added DESC', 'limit' => $sql_limit]);
             if ($start >= $total_items) {
                 return false;
             }
 
             foreach ($items as $key => $video) {
                 assign('video', $video);
-                assign('display_type','ajaxHome');
+                assign('display_type', 'ajaxHome');
                 get_fast_qlist();
                 echo trim(Fetch('blocks/videos/video.html'));
             }
@@ -33,13 +33,13 @@ if (isset($_POST['mode'])) {
             $start = $load_limit * $load_hit - $load_limit;
             $sql_limit = "$start, $load_limit";
             $total_items = $_POST['totalPhotos'];
-            $items = get_photos(['user'=>$user, 'order'=>'date_added DESC','limit'=>$sql_limit]);
+            $items = get_photos(['user' => $user, 'order' => 'date_added DESC', 'limit' => $sql_limit]);
             if ($start >= $total_items) {
                 return false;
             }
             foreach ($items as $key => $p_list) {
                 assign('photo', $p_list);
-                assign('display_type','view_channelAjax');
+                assign('display_type', 'view_channelAjax');
                 echo trim(Fetch('/blocks/photo.html'));
             }
             break;

@@ -13,8 +13,8 @@ function comment($comment): string
     //Getting List of comment functions
     $func_list = $Cbucket->getFunctionList('comment');
     //Applying Function
-    if( is_array($func_list) && count($func_list) > 0 ) {
-        foreach($func_list as $func) {
+    if (is_array($func_list) && count($func_list) > 0) {
+        foreach ($func_list as $func) {
             $comment = $func($comment);
         }
     }
@@ -34,8 +34,8 @@ function description($description): string
     //Getting List of comment functions
     $func_list = $Cbucket->getFunctionList('description');
     //Applying Function
-    if( is_array($func_list) && count($func_list) > 0 ) {
-        foreach($func_list as $func) {
+    if (is_array($func_list) && count($func_list) > 0) {
+        foreach ($func_list as $func) {
             $description = $func($description);
         }
     }
@@ -56,8 +56,8 @@ function title($title)
     //Getting List of comment functions
     $func_list = $Cbucket->getFunctionList('title');
     //Applying Function
-    if( is_array($func_list) && count($func_list) > 0  ){
-        foreach($func_list as $func) {
+    if (is_array($func_list) && count($func_list) > 0) {
+        foreach ($func_list as $func) {
             $title = $func($title);
         }
     }
@@ -77,9 +77,9 @@ function private_message($array)
     $func_list = $Cbucket->getFunctionList('private_message');
 
     //Applying Function
-    if( is_array($func_list) && count($func_list) > 0 ) {
-        foreach($func_list as $func) {
-            if(function_exists($func)){
+    if (is_array($func_list) && count($func_list) > 0) {
+        foreach ($func_list as $func) {
+            if (function_exists($func)) {
                 $message = $func($message);
             }
         }
@@ -98,17 +98,17 @@ function private_message($array)
  *
  * @return string
  */
-function tags($input,$type,$sep=', ',$class="")
+function tags($input, $type, $sep = ', ', $class = "")
 {
     //Exploding using comma
-    $tags = explode(',',$input);
+    $tags = explode(',', $input);
     $count = 1;
     $total = count($tags);
     $new_tags = '';
-    foreach($tags as $tag) {
-        $params = array('name'=>'tag','tag'=>trim($tag),'type'=>$type);
-        $new_tags .= '<a href="'.cblink($params).'" class="'.$class.'">'.$tag.'</a>';
-        if($count<$total){
+    foreach ($tags as $tag) {
+        $params = ['name' => 'tag', 'tag' => trim($tag), 'type' => $type];
+        $new_tags .= '<a href="' . cblink($params) . '" class="' . $class . '">' . $tag . '</a>';
+        if ($count < $total) {
             $new_tags .= $sep;
         }
         $count++;
@@ -123,15 +123,14 @@ function tags($input,$type,$sep=', ',$class="")
  * @param        $input
  * @param        $type
  * @param string $sep
- * @param null   $object_name
+ * @param null $object_name
  *
  * @return string
  */
-function categories($input,$type,$sep=', ',$object_name=null)
+function categories($input, $type, $sep = ', ', $object_name = null)
 {
     global $cbvideo;
-    switch($type)
-    {
+    switch ($type) {
         case 'video':
             $obj = $cbvideo;
             break;
@@ -154,18 +153,18 @@ function categories($input,$type,$sep=', ',$object_name=null)
             break;
     }
 
-    preg_match_all('/#([0-9]+)#/',$input,$m);
-    $cat_array = array($m[1]);
+    preg_match_all('/#([0-9]+)#/', $input, $m);
+    $cat_array = [$m[1]];
     $cat_array = $cat_array[0];
 
     $count = 1;
     $total = count($cat_array);
     $cats = '';
-    foreach($cat_array as $cat) {
+    foreach ($cat_array as $cat) {
         $cat_details = $obj->get_category($cat);
 
-        $cats .= '<a href="'.category_link($cat_details,$type).'">'.display_clean($cat_details['category_name']).'</a>';
-        if($count<$total){
+        $cats .= '<a href="' . category_link($cat_details, $type) . '">' . display_clean($cat_details['category_name']) . '</a>';
+        if ($count < $total) {
             $cats .= $sep;
         }
         $count++;
@@ -174,20 +173,20 @@ function categories($input,$type,$sep=', ',$object_name=null)
 }
 
 /**
-* Function used to display page
-*
-* @param $content
-*
-* @return string
-*/
+ * Function used to display page
+ *
+ * @param $content
+ *
+ * @return string
+ */
 function page($content): string
 {
     global $Cbucket;
     //Getting List of comment functions
     $func_list = $Cbucket->getFunctionList('page');
     //Applying Function
-    if( is_array($func_list) && count($func_list) > 0 ){
-        foreach($func_list as $func) {
+    if (is_array($func_list) && count($func_list) > 0) {
+        foreach ($func_list as $func) {
             $content = $func($content);
         }
     }

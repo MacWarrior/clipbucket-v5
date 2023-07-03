@@ -25,7 +25,7 @@ if (!empty($_GET['edit_language']) && Language::getInstance()->getLangById($_GET
     assign('edit_lang', 'yes');
     $detail = Language::getInstance()->getLangById($_GET['edit_language']);
     assign('lang_details', $detail);
-    $breadcrumb[2] = ['title' => 'Editing : '.display_clean($detail['language_name']), 'url' => ADMIN_BASEURL . '/language_settings.php?edit_language='.display_clean($_GET['edit_language'])];
+    $breadcrumb[2] = ['title' => 'Editing : ' . display_clean($detail['language_name']), 'url' => ADMIN_BASEURL . '/language_settings.php?edit_language=' . display_clean($_GET['edit_language'])];
     $edit_id = mysql_clean($_GET['edit_language']);
     $limit = RESULTS;
 

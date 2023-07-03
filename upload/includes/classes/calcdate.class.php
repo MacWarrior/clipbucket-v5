@@ -1,20 +1,23 @@
 <?php
+
 class CalcDate
 {
-    function age($age){
-        list($year,$day,$month) = explode("-",$age);
-        $year_diff  = date("Y") - $year;
+    function age($age)
+    {
+        list($year, $day, $month) = explode("-", $age);
+        $year_diff = date("Y") - $year;
         $month_diff = date("m") - $month;
-        $day_diff   = date("d") - $day;
-        if ($day_diff < 0 || $month_diff < 0){
-          $year_diff--;
+        $day_diff = date("d") - $day;
+        if ($day_diff < 0 || $month_diff < 0) {
+            $year_diff--;
         }
         return $year_diff;
     }
-  
-    function DateFormat($date,$format){
+
+    function DateFormat($date, $format)
+    {
         $date = strtotime($date);
-        $newdate = date($format,$date);
+        $newdate = date($format, $date);
         return $newdate;
-	}
+    }
 }

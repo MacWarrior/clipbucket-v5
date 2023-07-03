@@ -5,13 +5,12 @@ class files
     function get_file_list($directory, $type = "img_creation", $print_list = false)
     {
         // Checks the dir
-        if(!is_dir($directory)) {
+        if (!is_dir($directory)) {
             $this->_error("Invalid Directory: " . $directory, E_USER_ERROR);
         }
-        
+
         // File types regex
-        switch($type)
-        {
+        switch ($type) {
             case "img_creation":
                 $types_regex = "jpeg|jpg|png";
                 break;
@@ -32,60 +31,60 @@ class files
                 $types_regex = "txt|doc|rtf|xsl";
                 break;
 
-            Default:
+            default:
                 $types_regex = false;
                 break;
         }
-        
+
         // Open dir handle
-        if(!$dir_handle = @opendir($directory)) {
+        if (!$dir_handle = @opendir($directory)) {
             $this->_error("I couldn't open the dir: " . $directory, E_USER_ERROR);
         }
-        
+
         // Initilization of the list array
-        $file_list = array();
-        
+        $file_list = [];
+
         // Starts dir navigation
         while (false !== ($file = @readdir($dir_handle))) {
             if ($file == "." || $file == "..") {
                 continue;
             }
-            
+
             // The list will be generate with specific types, according to the regex
-            if($types_regex) {
-                if(eregi( "\.(" . $types_regex . ")$", $file)) {
+            if ($types_regex) {
+                if (eregi("\.(" . $types_regex . ")$", $file)) {
                     $file_list[] = $file;
                 }
             } else { // The list will be generate with all dir's files
                 // Add only files to the list
-                if(is_file($directory . $file)) {
+                if (is_file($directory . $file)) {
                     $file_list[] = $file;
                 }
             }
         }
-        
+
         // Close dir handle
         @closedir($dir_handle);
-        
+
         // Has no files in the dir
-        if(!sizeof($file_list)) {
+        if (!sizeof($file_list)) {
             $this->_error("The directory: " . $directory . " is empty!", E_USER_NOTICE);
         }
 
         // If debugging...
-        if($print_list) {
+        if ($print_list) {
             echo "<pre>";
             print_r($file_list);
             echo "</pre>";
         }
-        
+
         // Returns file list
         return $file_list;
     }
 
-	function _error($mensagem, $tipo)
-	{
-        if($tipo == E_USER_ERROR) {
+    function _error($mensagem, $tipo)
+    {
+        if ($tipo == E_USER_ERROR) {
             $topo = "Error!";
         } else {
             $topo = "Notification";
@@ -93,9 +92,9 @@ class files
 
         echo "<span style=\"background-color: #FFD7D7\"><font face=verdana size=2><font color=red><b>" . $topo . "</b></font>: " . $mensagem . "</font></span><br><br>";
 
-        if($tipo == E_USER_ERROR) {
+        if ($tipo == E_USER_ERROR) {
             exit;
         }
-	}
+    }
 
 }

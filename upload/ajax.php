@@ -1,71 +1,69 @@
 <?php
-define('THIS_PAGE','ajax');
+define('THIS_PAGE', 'ajax');
 require 'includes/config.inc.php';
 
-global $userquery,$cbvid,$cbphoto,$cbcollection,$eh,$cbvideo,$myquery,$cbfeeds;
+global $userquery, $cbvid, $cbphoto, $cbcollection, $eh, $cbvideo, $myquery, $cbfeeds;
 
-if( isset($_POST['mode']) ){
+if (isset($_POST['mode'])) {
     $mode = $_POST['mode'];
 } else {
-    header('location:'.BASEURL);
+    header('location:' . BASEURL);
     die();
 }
 
-if(!empty($mode))
-{
-    switch($mode)
-    {
+if (!empty($mode)) {
+    switch ($mode) {
         case 'recent_viewed_vids':
-            if(!isSectionEnabled('videos') || !$userquery->perm_check('view_videos',false,true) ){
+            if (!isSectionEnabled('videos') || !$userquery->perm_check('view_videos', false, true)) {
                 exit();
             }
 
-            $videos = get_videos(array('limit'=>config('videos_items_hme_page'),'order'=>'last_viewed DESC'));
-            if($videos) {
-                foreach($videos as $video) {
-                    assign('video',$video);
+            $videos = get_videos(['limit' => config('videos_items_hme_page'), 'order' => 'last_viewed DESC']);
+            if ($videos) {
+                foreach ($videos as $video) {
+                    assign('video', $video);
                     Template('blocks/video.html');
                 }
             }
             break;
 
         case 'most_viewed':
-            if(!isSectionEnabled('videos') || !$userquery->perm_check('view_videos',false,true) ){
+            if (!isSectionEnabled('videos') || !$userquery->perm_check('view_videos', false, true)) {
                 exit();
             }
 
-            $videos = get_videos(array('limit'=>config('videos_items_hme_page'),'order'=>'views DESC'));
-            if($videos) {
-                foreach($videos as $video) {
-                    assign('video',$video);
+            $videos = get_videos(['limit' => config('videos_items_hme_page'), 'order' => 'views DESC']);
+            if ($videos) {
+                foreach ($videos as $video) {
+                    assign('video', $video);
                     Template('blocks/video.html');
                 }
             }
             break;
 
         case 'recently_added':
-            if(!isSectionEnabled('videos') || !$userquery->perm_check('view_videos',false,true) ){
+            if (!isSectionEnabled('videos') || !$userquery->perm_check('view_videos', false, true)) {
                 exit();
             }
 
-            $videos = get_videos(array('limit'=>config('videos_items_hme_page'),'order'=>'date_added DESC'));
-            if($videos) {
-                foreach($videos as $video) {
-                    assign('video',$video);
+            $videos = get_videos(['limit' => config('videos_items_hme_page'), 'order' => 'date_added DESC']);
+            if ($videos) {
+                foreach ($videos as $video) {
+                    assign('video', $video);
                     Template('blocks/video.html');
                 }
             }
             break;
 
         case 'featured_videos':
-            if(!isSectionEnabled('videos') || !$userquery->perm_check('view_videos',false,true) ){
+            if (!isSectionEnabled('videos') || !$userquery->perm_check('view_videos', false, true)) {
                 exit();
             }
 
-            $videos = get_videos(array('limit'=>config('videos_items_hme_page'),'featured'=>'yes','order'=>'featured_date DESC'));
-            if($videos) {
-                foreach($videos as $video) {
-                    assign('video',$video);
+            $videos = get_videos(['limit' => config('videos_items_hme_page'), 'featured' => 'yes', 'order' => 'featured_date DESC']);
+            if ($videos) {
+                foreach ($videos as $video) {
+                    assign('video', $video);
                     Template('blocks/video.html');
                 }
             }
@@ -76,15 +74,14 @@ if(!empty($mode))
             $total = $_POST['total'];
 
             $inner_mode = $_POST['inner_mode'];
-            switch($inner_mode)
-            {
+            switch ($inner_mode) {
                 case 'load_more_videos':
-                    $videos_arr = array('order'=>'date_added DESC','limit' =>''.$limit.','.$limit);
+                    $videos_arr = ['order' => 'date_added DESC', 'limit' => '' . $limit . ',' . $limit];
                     $results = get_videos($videos_arr);
                     $next_limit = $limit + $limit;
-                    $videos_arr_next = array('order'=>'date_added DESC','limit' =>''.$next_limit.','.$next_limit);
+                    $videos_arr_next = ['order' => 'date_added DESC', 'limit' => '' . $next_limit . ',' . $next_limit];
                     $videos_next = get_videos($videos_arr_next);
-                    if($total == $next_limit||$total < $next_limit) {
+                    if ($total == $next_limit || $total < $next_limit) {
                         $count_next = 0;
                     } else {
                         $count_next = count($videos_next);
@@ -95,12 +92,12 @@ if(!empty($mode))
                     break;
 
                 case 'load_more_users':
-                    $users_arr = array( 'limit' =>''.$limit.','.$limit);
+                    $users_arr = ['limit' => '' . $limit . ',' . $limit];
                     $results = get_users($users_arr);
                     $next_limit = $limit + $limit;
-                    $users_arr_next = array( 'limit' =>''.$next_limit.','.$next_limit);
+                    $users_arr_next = ['limit' => '' . $next_limit . ',' . $next_limit];
                     $users_next = get_videos($users_arr_next);
-                    if($total == $next_limit||$total < $next_limit) {
+                    if ($total == $next_limit || $total < $next_limit) {
                         $count_next = 0;
                     } else {
                         $count_next = count($users_next);
@@ -113,12 +110,12 @@ if(!empty($mode))
 
                 case 'load_more_playlist':
                     $userid = $_POST['cat_id'];
-                    $play_arr = array('user'=>$userid,'order'=>'date_added DESC','limit' =>''.$limit.','.$limit);
+                    $play_arr = ['user' => $userid, 'order' => 'date_added DESC', 'limit' => '' . $limit . ',' . $limit];
                     $results = $cbvid->action->get_playlists($play_arr);
                     $next_limit = $limit + $limit;
-                    $play_arr_next = array('user'=>$userid,'order'=>'date_added DESC','limit' =>''.$next_limit.','.$next_limit);
+                    $play_arr_next = ['user' => $userid, 'order' => 'date_added DESC', 'limit' => '' . $next_limit . ',' . $next_limit];
                     $playlist_next = $cbvid->action->get_playlists($play_arr_next);
-                    if($total == $next_limit||$total < $next_limit) {
+                    if ($total == $next_limit || $total < $next_limit) {
                         $count_next = 0;
                     } else {
                         $count_next = count($playlist_next);
@@ -129,80 +126,81 @@ if(!empty($mode))
                     $assigned_variable_smarty = 'playlist';
                     break;
             }
-            $arr = template_assign($results,$limit,$total_results,$template_path,$assigned_variable_smarty);
+            $arr = template_assign($results, $limit, $total_results, $template_path, $assigned_variable_smarty);
 
             if ($count_next > 0) {
-                $arr['limit_exceeds']=false;
-                echo json_encode($arr);
-            } else if($count_next == 0) {
-                $arr['limit_exceeds']=true;
+                $arr['limit_exceeds'] = false;
                 echo json_encode($arr);
             } else {
-                if(isset($arr['limit_exceeds'])){
-                    $arr['limit_exceeds']=true;
+                if ($count_next == 0) {
+                    $arr['limit_exceeds'] = true;
+                    echo json_encode($arr);
+                } else {
+                    if (isset($arr['limit_exceeds'])) {
+                        $arr['limit_exceeds'] = true;
+                    }
+                    echo json_encode($arr);
                 }
-                echo json_encode($arr);
             }
             break;
 
         case 'rating':
-            switch($_POST['type'])
-            {
+            switch ($_POST['type']) {
                 case 'video':
-                    $rating = mysql_clean($_POST['rating'])*2;
+                    $rating = mysql_clean($_POST['rating']) * 2;
                     $id = mysql_clean($_POST['id']);
-                    $result = $cbvid->rate_video($id,$rating);
+                    $result = $cbvid->rate_video($id, $rating);
                     $result['is_rating'] = true;
                     $cbvid->show_video_rating($result);
 
                     $funcs = cb_get_functions('rate_video');
-                    if($funcs) {
-                        foreach($funcs as $func) {
+                    if ($funcs) {
+                        foreach ($funcs as $func) {
                             $func['func']($id);
                         }
                     }
                     break;
 
                 case 'photo':
-                    $rating = mysql_clean($_POST['rating'])*2;
+                    $rating = mysql_clean($_POST['rating']) * 2;
                     $id = mysql_clean($_POST['id']);
-                    $result = $cbphoto->rate_photo($id,$rating);
+                    $result = $cbphoto->rate_photo($id, $rating);
                     $result['is_rating'] = true;
                     $cbvid->show_video_rating($result);
 
                     $funcs = cb_get_functions('rate_photo');
-                    if($funcs) {
-                        foreach($funcs as $func) {
+                    if ($funcs) {
+                        foreach ($funcs as $func) {
                             $func['func']($id);
                         }
                     }
                     break;
 
                 case 'collection':
-                    $rating = mysql_clean($_POST['rating'])*2;
+                    $rating = mysql_clean($_POST['rating']) * 2;
                     $id = mysql_clean($_POST['id']);
-                    $result = $cbcollection->rate_collection($id,$rating);
+                    $result = $cbcollection->rate_collection($id, $rating);
                     $result['is_rating'] = true;
                     $cbvid->show_video_rating($result);
 
                     $funcs = cb_get_functions('rate_collection');
-                    if($funcs) {
-                        foreach($funcs as $func) {
+                    if ($funcs) {
+                        foreach ($funcs as $func) {
                             $func['func']($id);
                         }
                     }
                     break;
 
                 case 'user':
-                    $rating = mysql_clean($_POST['rating'])*2;
+                    $rating = mysql_clean($_POST['rating']) * 2;
                     $id = mysql_clean($_POST['id']);
-                    $result = $userquery->rate_user($id,$rating);
+                    $result = $userquery->rate_user($id, $rating);
                     $result['is_rating'] = true;
                     $cbvid->show_video_rating($result);
 
                     $funcs = cb_get_functions('rate_user');
-                    if($funcs) {
-                        foreach($funcs as $func) {
+                    if ($funcs) {
+                        foreach ($funcs as $func) {
                             $func['func']($id);
                         }
                     }
@@ -212,8 +210,7 @@ if(!empty($mode))
 
         case 'share_object':
             $type = strtolower($_POST['type']);
-            switch($type)
-            {
+            switch ($type) {
                 case 'v':
                 case 'video':
                 default:
@@ -242,32 +239,35 @@ if(!empty($mode))
             $warning = $eh->get_warning();
             $message = $eh->get_message();
 
-            if( $error ){
-                echo '<div class="error">'.$error[0]['val'].'</div>';
-            } else if( $warning ) {
-                echo '<div class="warning">'.$warning[0]['val'].'</div>';
-            } else if( $message ) {
-                echo '<div class="msg">'.$message[0]['val'].'</div>';
+            if ($error) {
+                echo '<div class="error">' . $error[0]['val'] . '</div>';
+            } else {
+                if ($warning) {
+                    echo '<div class="warning">' . $warning[0]['val'] . '</div>';
+                } else {
+                    if ($message) {
+                        echo '<div class="msg">' . $message[0]['val'] . '</div>';
+                    }
+                }
             }
             break;
 
         case 'add_to_fav':
             $type = strtolower($_POST['type']);
             $id = $_POST['id'];
-            switch($type)
-            {
+            switch ($type) {
                 case 'v':
                 case 'video':
                 default:
                     $cbvideo->action->add_to_fav($id);
-                    updateObjectStats('fav','video',$id); // Increment in total favs
+                    updateObjectStats('fav', 'video', $id); // Increment in total favs
                     $funcs = cb_get_functions('favorite_video');
                     break;
 
                 case 'p':
                 case 'photo':
                     $cbphoto->action->add_to_fav($id);
-                    updateObjectStats('fav','photo',$id); // Increment in total favs
+                    updateObjectStats('fav', 'photo', $id); // Increment in total favs
                     $funcs = cb_get_functions('favorite_photo');
                     break;
 
@@ -278,8 +278,8 @@ if(!empty($mode))
                     break;
             }
 
-            if($funcs) {
-                foreach($funcs as $func) {
+            if ($funcs) {
+                foreach ($funcs as $func) {
                     $func['func']($id);
                 }
             }
@@ -288,20 +288,23 @@ if(!empty($mode))
             $warning = $eh->get_warning();
             $message = $eh->get_message();
 
-            if( $error ){
-                echo '<div class="error">'.$error[0]['val'].'</div>';
-            } else if( $warning ) {
-                echo '<div class="warning">'.$warning[0]['val'].'</div>';
-            } else if( $message ) {
-                echo '<div class="msg">'.$message[0]['val'].'</div>';
+            if ($error) {
+                echo '<div class="error">' . $error[0]['val'] . '</div>';
+            } else {
+                if ($warning) {
+                    echo '<div class="warning">' . $warning[0]['val'] . '</div>';
+                } else {
+                    if ($message) {
+                        echo '<div class="msg">' . $message[0]['val'] . '</div>';
+                    }
+                }
             }
             break;
 
         case 'flag_object':
             $type = strtolower($_POST['type']);
             $id = $_POST['id'];
-            switch($type)
-            {
+            switch ($type) {
                 case 'v':
                 case 'video':
                 default:
@@ -328,33 +331,41 @@ if(!empty($mode))
             $warning = $eh->get_warning();
             $message = $eh->get_message();
 
-            if( $error ){
-                echo '<div class="error">'.$error[0]['val'].'</div>';
-            } else if( $warning ) {
-                echo '<div class="warning">'.$warning[0]['val'].'</div>';
-            } else if( $message ) {
-                echo '<div class="msg">'.$message[0]['val'].'</div>';
+            if ($error) {
+                echo '<div class="error">' . $error[0]['val'] . '</div>';
+            } else {
+                if ($warning) {
+                    echo '<div class="warning">' . $warning[0]['val'] . '</div>';
+                } else {
+                    if ($message) {
+                        echo '<div class="msg">' . $message[0]['val'] . '</div>';
+                    }
+                }
             }
             break;
 
         case 'subscribe_user':
             $subscribe_to = mysql_clean($_POST['subscribe_to']);
-            $mailId = $userquery->get_user_details($subscribe_to,false,true);
+            $mailId = $userquery->get_user_details($subscribe_to, false, true);
             $userquery->subscribe_user($subscribe_to);
 
             $error = $eh->get_error();
             $warning = $eh->get_warning();
             $message = $eh->get_message();
 
-            if( $error ){
+            if ($error) {
                 $msg['msg'] = $error[0]['val'];
                 $msg['typ'] = 'err';
-            } else if( $warning ) {
-                $msg['msg'] = $warning[0]['val'];
-                $msg['typ'] = 'err';
-            } else if( $message ) {
-                $msg['msg'] = $message[0]['val'];
-                $msg['typ'] = 'msg';
+            } else {
+                if ($warning) {
+                    $msg['msg'] = $warning[0]['val'];
+                    $msg['typ'] = 'err';
+                } else {
+                    if ($message) {
+                        $msg['msg'] = $message[0]['val'];
+                        $msg['typ'] = 'msg';
+                    }
+                }
             }
 
             $msg['severity'] = userid() ? 1 : 2;
@@ -370,15 +381,19 @@ if(!empty($mode))
             $warning = $eh->get_warning();
             $message = $eh->get_message();
 
-            if( $error ){
+            if ($error) {
                 $msg['msg'] = $error[0]['val'];
                 $msg['typ'] = 'err';
-            } else if( $warning ) {
-                $msg['msg'] = $warning[0]['val'];
-                $msg['typ'] = 'err';
-            } else if( $message ) {
-                $msg['msg'] = $message[0]['val'];
-                $msg['typ'] = 'msg';
+            } else {
+                if ($warning) {
+                    $msg['msg'] = $warning[0]['val'];
+                    $msg['typ'] = 'err';
+                } else {
+                    if ($message) {
+                        $msg['msg'] = $message[0]['val'];
+                        $msg['typ'] = 'msg';
+                    }
+                }
             }
 
             $msg['severity'] = userid() ? 1 : 2;
@@ -389,11 +404,11 @@ if(!empty($mode))
 
         case 'get_subscribers_count':
             $userid = $_POST['userid'];
-            if(isset($userid) ) {
-                $sub_count = $userquery->get_user_subscribers($userid,true);
-                echo json_encode(array('subscriber_count'=>$sub_count));
+            if (isset($userid)) {
+                $sub_count = $userquery->get_user_subscribers($userid, true);
+                echo json_encode(['subscriber_count' => $sub_count]);
             } else {
-                echo json_encode(array('msg'=>'Userid is empty'));
+                echo json_encode(['msg' => 'Userid is empty']);
             }
             break;
 
@@ -402,24 +417,28 @@ if(!empty($mode))
             $friend = mysql_clean($_POST['uid']);
             $userid = userid();
             $username = user_name();
-            $mailId = $userquery->get_user_details($friend,false,true);
-            $cbemail->friend_request_email($mailId['email'],$username);
+            $mailId = $userquery->get_user_details($friend, false, true);
+            $cbemail->friend_request_email($mailId['email'], $username);
 
-            if($userid) {
-                $userquery->add_contact($userid,$friend);
+            if ($userid) {
+                $userquery->add_contact($userid, $friend);
                 $error = $eh->get_error();
                 $warning = $eh->get_warning();
                 $message = $eh->get_message();
 
-                if( $error ){
-                    echo '<div class="error">'.$error[0]['val'].'</div>';
-                } else if( $warning ) {
-                    echo '<div class="warning">'.$warning[0]['val'].'</div>';
-                } else if( $message ) {
-                    echo '<div class="msg">'.$message[0]['val'].'</div>';
+                if ($error) {
+                    echo '<div class="error">' . $error[0]['val'] . '</div>';
+                } else {
+                    if ($warning) {
+                        echo '<div class="warning">' . $warning[0]['val'] . '</div>';
+                    } else {
+                        if ($message) {
+                            echo '<div class="msg">' . $message[0]['val'] . '</div>';
+                        }
+                    }
                 }
             } else {
-                echo '<div class="error">'.lang('you_not_logged_in').'</div>';
+                echo '<div class="error">' . lang('you_not_logged_in') . '</div>';
             }
             break;
 
@@ -430,12 +449,16 @@ if(!empty($mode))
             $warning = $eh->get_warning();
             $message = $eh->get_message();
 
-            if( $error ){
-                echo '<div class="error">'.$error[0]['val'].'</div>';
-            } else if( $warning ) {
-                echo '<div class="warning">'.$warning[0]['val'].'</div>';
-            } else if( $message ) {
-                echo '<div class="msg">'.$message[0]['val'].'</div>';
+            if ($error) {
+                echo '<div class="error">' . $error[0]['val'] . '</div>';
+            } else {
+                if ($warning) {
+                    echo '<div class="warning">' . $warning[0]['val'] . '</div>';
+                } else {
+                    if ($message) {
+                        echo '<div class="msg">' . $message[0]['val'] . '</div>';
+                    }
+                }
             }
             echo $msg;
             break;
@@ -444,18 +467,22 @@ if(!empty($mode))
             $thumb = $_POST['thumb'];
             $cid = mysql_clean($_POST['cid']);
             $rate = ($thumb == 'down') ? -1 : 1;
-            $rating = $myquery->rate_comment($rate,$cid);
+            $rating = $myquery->rate_comment($rate, $cid);
 
             $error = $eh->get_error();
             $warning = $eh->get_warning();
             $message = $eh->get_message();
 
-            if( $error ){
+            if ($error) {
                 $msg = $error[0]['val'];
-            } else if( $warning ) {
-                $msg = $warning[0]['val'];
-            } else if( $message ) {
-                $msg = $message[0]['val'];
+            } else {
+                if ($warning) {
+                    $msg = $warning[0]['val'];
+                } else {
+                    if ($message) {
+                        $msg = $message[0]['val'];
+                    }
+                }
             }
             $ajax['msg'] = $msg;
             $ajax['rate'] = comment_rating($rating);
@@ -463,7 +490,7 @@ if(!empty($mode))
             //updating last update...
             $type = $_POST['type'];
             $typeid = $_POST['typeid'];
-            update_last_commented($type,$typeid);
+            update_last_commented($type, $typeid);
 
             echo json_encode($ajax);
             break;
@@ -473,11 +500,11 @@ if(!empty($mode))
 
             $rating = $myquery->spam_comment($cid);
 
-            if(msg()) {
+            if (msg()) {
                 $msg = msg_list();
                 $msg = $msg[0]['val'];
             }
-            if(error()) {
+            if (error()) {
                 $err = error_list();
                 $err = $err[0]['val'];
             }
@@ -487,8 +514,9 @@ if(!empty($mode))
             $type = $_POST['type'];
             $typeid = $_POST['typeid'];
 
-            if($_POST['type'] != 't')
-            update_last_commented($type,$typeid);
+            if ($_POST['type'] != 't') {
+                update_last_commented($type, $typeid);
+            }
 
             echo json_encode($ajax);
             break;
@@ -498,52 +526,48 @@ if(!empty($mode))
             $comment = $_POST['comment'];
             $reply_to = $_POST['reply_to'];
             $id = $_POST['obj_id'];
-            if($comment == 'undefined'){
+            if ($comment == 'undefined') {
                 $comment = '';
             }
 
-            switch($type)
-            {
+            switch ($type) {
                 case 'v':
                 case 'video':
                 default:
-                    $cid = $cbvid->add_comment($comment,$id,$reply_to);
+                    $cid = $cbvid->add_comment($comment, $id, $reply_to);
                     break;
 
                 case 'u':
                 case 'c':
-                    $cid = $userquery->add_comment($comment,$id,$reply_to);
+                    $cid = $userquery->add_comment($comment, $id, $reply_to);
                     break;
 
                 case 'cl':
                 case 'collection':
-                    $cid = $cbcollection->add_comment($comment,$id,$reply_to);
+                    $cid = $cbcollection->add_comment($comment, $id, $reply_to);
                     break;
 
                 case 'p':
                 case 'photo':
-                    $cid = $cbphoto->add_comment($comment,$id,$reply_to);
+                    $cid = $cbphoto->add_comment($comment, $id, $reply_to);
                     break;
             }
 
-            if(msg())
-            {
+            if (msg()) {
                 $msg = msg_list();
                 $msg = $msg[0]['val'];
                 $ajax['msg'] = $msg ? $msg : '';
                 $ajax['err'] = "";
                 $is_msg = true;
             }
-            if(error())
-            {
+            if (error()) {
                 $err = error_list();
                 $err = $err[0]['val'];
                 $ajax['err'] = $err;
             }
 
             //Getting Comment
-            if($cid)
-            {
+            if ($cid) {
                 $ajax['cid'] = $cid;
                 $ajax['type_id'] = $id;
             }
@@ -558,14 +582,14 @@ if(!empty($mode))
 
             //getting parent id if it is a reply comment
             $parent_id = $new_com['parent_id'];
-            assign('type_id',$type_id);
-            assign('comment',$new_com);
+            assign('type_id', $type_id);
+            assign('comment', $new_com);
 
             if ($parent_id) {
-                assign('rep_mode',true);
-                echo json_encode(['parent_id'=>$parent_id,'li_data'=>Fetch('blocks/comments/comment.html')]);
+                assign('rep_mode', true);
+                echo json_encode(['parent_id' => $parent_id, 'li_data' => Fetch('blocks/comments/comment.html')]);
             } else {
-                echo json_encode(['li_data'=>Fetch('blocks/comments/comment.html')]);
+                echo json_encode(['li_data' => Fetch('blocks/comments/comment.html')]);
             }
             break;
 
@@ -578,22 +602,23 @@ if(!empty($mode))
 
             $type = post('objtype');
 
-            if($type == 'video')
-            {
-                $cbvid->action->add_playlist_item($pid,$id );
-                updateObjectStats('plist','video',$id);
+            if ($type == 'video') {
+                $cbvid->action->add_playlist_item($pid, $id);
+                updateObjectStats('plist', 'video', $id);
 
                 $error = $eh->get_error();
                 $warning = $eh->get_warning();
                 $message = $eh->get_message();
 
-                if( $error ){
-                    $err = '<div class="error">'.$error[0]['val'].'</div>';
-                } else if( $warning ) {
-                    $err = '<div class="warning">'.$warning[0]['val'].'</div>';
+                if ($error) {
+                    $err = '<div class="error">' . $error[0]['val'] . '</div>';
+                } else {
+                    if ($warning) {
+                        $err = '<div class="warning">' . $warning[0]['val'] . '</div>';
+                    }
                 }
-                if( $message ) {
-                    $msg = '<div class="msg">'.$message[0]['val'].'</div>';
+                if ($message) {
+                    $msg = '<div class="msg">' . $message[0]['val'] . '</div>';
                 }
 
                 $ajax['msg'] = $msg ? $msg : '';
@@ -604,30 +629,30 @@ if(!empty($mode))
             break;
 
         case 'add_new_playlist';
-            if(post('objtype')=='video')
-            {
+            if (post('objtype') == 'video') {
                 $vid = mysql_clean($_POST['id']);
 
-                $params = array('name'=>mysql_clean($_POST['plname']));
+                $params = ['name' => mysql_clean($_POST['plname'])];
                 $pid = $cbvid->action->create_playlist($params);
 
-                if($pid)
-                {
+                if ($pid) {
                     $eh->flush();
-                    $cbvid->action->add_playlist_item($pid,$vid);
+                    $cbvid->action->add_playlist_item($pid, $vid);
                 }
 
                 $error = $eh->get_error();
                 $warning = $eh->get_warning();
                 $message = $eh->get_message();
 
-                if( $error ){
-                    $err = '<div class="error">'.$error[0]['val'].'</div>';
-                } else if( $warning ) {
-                    $err = '<div class="warning">'.$warning[0]['val'].'</div>';
+                if ($error) {
+                    $err = '<div class="error">' . $error[0]['val'] . '</div>';
+                } else {
+                    if ($warning) {
+                        $err = '<div class="warning">' . $warning[0]['val'] . '</div>';
+                    }
                 }
-                if( $message ) {
-                    $msg = '<div class="msg">'.$message[0]['val'].'</div>';
+                if ($message) {
+                    $msg = '<div class="msg">' . $message[0]['val'] . '</div>';
                 }
                 $ajax['msg'] = $msg ? $msg : '';
                 $ajax['err'] = $err ? $err : '';
@@ -641,16 +666,18 @@ if(!empty($mode))
             $todo = $_POST['todo'];
             $id = mysql_clean($_POST['vid']);
 
-            if($todo == 'add')
+            if ($todo == 'add') {
                 echo $cbvid->add_to_quicklist($id);
-            else
+            } else {
                 echo $cbvid->remove_from_quicklist($id);
+            }
 
             break;
 
         case 'getquicklistbox';
-            if($cbvid->total_quicklist()>0)
+            if ($cbvid->total_quicklist() > 0) {
                 TEMPLATE('blocks/quicklist/block.html');
+            }
             break;
 
         case 'clear_quicklist':
@@ -661,8 +688,7 @@ if(!empty($mode))
             $type = $_POST['type'];
             $cid = mysql_clean($_POST['cid']);
             $type_id = $myquery->delete_comment($cid);
-            switch($type)
-            {
+            switch ($type) {
                 case 'v':
                 case 'video':
                 default:
@@ -688,12 +714,14 @@ if(!empty($mode))
             $warning = $eh->get_warning();
             $message = $eh->get_message();
 
-            if( $error ){
+            if ($error) {
                 $err = $error[0]['val'];
-            } else if( $warning ) {
-                $err = $warning[0]['val'];
+            } else {
+                if ($warning) {
+                    $err = $warning[0]['val'];
+                }
             }
-            if( $message ) {
+            if ($message) {
                 $msg = $message[0]['val'];
             }
             $ajax['msg'] = $msg;
@@ -707,18 +735,17 @@ if(!empty($mode))
             $cid = $_POST['cid'];
             $id = $_POST['obj_id'];
 
-            switch($type)
-            {
+            switch ($type) {
                 case "videos":
                 case "video":
                 case "v":
-                    $cbvideo->collection->add_collection_item($id,$cid);
+                    $cbvideo->collection->add_collection_item($id, $cid);
                     break;
 
                 case "photos":
                 case "photo":
                 case "p":
-                    $cbphoto->collection->add_collection_item($id,$cid);
+                    $cbphoto->collection->add_collection_item($id, $cid);
                     break;
             }
 
@@ -726,13 +753,15 @@ if(!empty($mode))
             $warning = $eh->get_warning();
             $message = $eh->get_message();
 
-            if( $error ){
-                $err = '<div class="error">'.$error[0]['val'].'</div>';
-            } else if( $warning ) {
-                $err = '<div class="warning">'.$warning[0]['val'].'</div>';
+            if ($error) {
+                $err = '<div class="error">' . $error[0]['val'] . '</div>';
+            } else {
+                if ($warning) {
+                    $err = '<div class="warning">' . $warning[0]['val'] . '</div>';
+                }
             }
-            if( $message ) {
-                $msg = '<div class="msg">'.$message[0]['val'].'</div>';
+            if ($message) {
+                $msg = '<div class="msg">' . $message[0]['val'] . '</div>';
             }
             $ajax['msg'] = $msg;
             $ajax['err'] = $err;
@@ -745,23 +774,24 @@ if(!empty($mode))
             $obj_id = $_POST['obj_id'];
             $cid = $_POST['cid'];
 
-            $cbvideo->collection->remove_item($obj_id,$cid);
-            if( $type == 'photos' )
-            {
-                $cbphoto->make_photo_orphan($cid,$obj_id);
+            $cbvideo->collection->remove_item($obj_id, $cid);
+            if ($type == 'photos') {
+                $cbphoto->make_photo_orphan($cid, $obj_id);
             }
 
             $error = $eh->get_error();
             $warning = $eh->get_warning();
             $message = $eh->get_message();
 
-            if( $error ){
-                $err = '<div class="error">'.$error[0]['val'].'</div>';
-            } else if( $warning ) {
-                $err = '<div class="warning">'.$warning[0]['val'].'</div>';
+            if ($error) {
+                $err = '<div class="error">' . $error[0]['val'] . '</div>';
+            } else {
+                if ($warning) {
+                    $err = '<div class="warning">' . $warning[0]['val'] . '</div>';
+                }
             }
-            if( $message ) {
-                $msg = '<div class="msg">'.$message[0]['val'].'</div>';
+            if ($message) {
+                $msg = '<div class="msg">' . $message[0]['val'] . '</div>';
             }
             $ajax['msg'] = $msg;
             $ajax['err'] = $err;
@@ -775,29 +805,27 @@ if(!empty($mode))
             $direc = mysql_clean($_POST['direction']);
             $t = $_POST['type'];
 
-            switch($t)
-            {
+            switch ($t) {
                 case "videos":
                 case "video":
                 case "v":
                 default:
-                    $N_item = $cbvideo->collection->get_next_prev_item($item_id,$cid,$direc);
+                    $N_item = $cbvideo->collection->get_next_prev_item($item_id, $cid, $direc);
                     break;
 
                 case "photos":
                 case "photo":
                 case "p":
-                    $N_item = $cbphoto->collection->get_next_prev_item($item_id,$cid,$direc);
-                    increment_views($N_item[0]['photo_id'],'photo');
+                    $N_item = $cbphoto->collection->get_next_prev_item($item_id, $cid, $direc);
+                    increment_views($N_item[0]['photo_id'], 'photo');
                     break;
             }
-            if($N_item)
-            {
+            if ($N_item) {
                 $ajax['key'] = $N_item[0]['videokey'];
                 $ajax['cid'] = $N_item[0]['collection_id'];
-                assign('type',$t);
-                assign('user',$userquery->get_user_details($N_item[0]['userid']));
-                assign('object',$N_item[0]);
+                assign('type', $t);
+                assign('user', $userquery->get_user_details($N_item[0]['userid']));
+                assign('object', $N_item[0]);
                 $ajax['content'] = Fetch('view_item.html');
                 echo json_encode($ajax);
             } else {
@@ -810,41 +838,39 @@ if(!empty($mode))
         case "moreItems":
             $cid = mysql_clean($_POST['cid']);
             $page = mysql_clean($_POST['page']);
-            $newPage = $page+1;
+            $newPage = $page + 1;
             $type = $_POST['type'];
-            $limit = create_query_limit($page,COLLIP);
-            $order = tbl("collection_items").".ci_id DESC";
+            $limit = create_query_limit($page, COLLIP);
+            $order = tbl("collection_items") . ".ci_id DESC";
 
-            switch($type)
-            {
+            switch ($type) {
                 case "videos":
                 case "video":
                 case "v":
-                    $items = $cbvideo->collection->get_collection_items_with_details($cid,$order,$limit);
+                    $items = $cbvideo->collection->get_collection_items_with_details($cid, $order, $limit);
                     break;
 
                 case "photos":
                 case "photo":
                 case "p":
-                    $items = $cbphoto->collection->get_collection_items_with_details($cid,$order,$limit);
+                    $items = $cbphoto->collection->get_collection_items_with_details($cid, $order, $limit);
                     break;
             }
-            if($items)
-            {
+            if ($items) {
                 assign('page_no', $newPage);
                 assign('type', $type);
                 assign('cid', $cid);
-                assign('display_type','view_collection');
+                assign('display_type', 'view_collection');
                 $itemsArray['pagination'] = Fetch("blocks/new_pagination.html");
 
-                foreach($items as $item)
-                {
-                    assign('object',$item);
+                foreach ($items as $item) {
+                    assign('object', $item);
                     $itemsArray['content'] .= Fetch("blocks/collection.html");
                 }
                 echo json_encode($itemsArray);
-            } else
-                echo json_encode(array("error"=>TRUE));
+            } else {
+                echo json_encode(["error" => true]);
+            }
             break;
 
         case 'add_collection':
@@ -886,18 +912,16 @@ if(!empty($mode))
 
         case "ajaxPhotos":
             $cbphoto->insert_photo();
-            $ajax = array();
+            $ajax = [];
 
-            if(msg())
-            {
+            if (msg()) {
                 $msg = msg_list();
-                $msg = '<div id="photoUploadingMessages" class="ajaxMessages msg">'.$msg[0]['val'].'</div>';
+                $msg = '<div id="photoUploadingMessages" class="ajaxMessages msg">' . $msg[0]['val'] . '</div>';
                 $ajax['msg'] = $msg;
             }
-            if(error())
-            {
+            if (error()) {
                 $err = error_list();
-                $err = '<div id="photoUploadingMessages" class="ajaxMessages err">'.$err[0]['val'].'</div>';
+                $err = '<div id="photoUploadingMessages" class="ajaxMessages err">' . $err[0]['val'] . '</div>';
                 $ajax['err'] = $err;
             }
 
@@ -912,21 +936,18 @@ if(!empty($mode))
 
         case "channelFeatured":
             $contentType = $_POST['contentType'];
-            if(!$contentType)
-                echo json_encode(array("error"=>lang("content_type_empty")));
-            else
-            {
-                switch($contentType)
-                {
+            if (!$contentType) {
+                echo json_encode(["error" => lang("content_type_empty")]);
+            } else {
+                switch ($contentType) {
                     case "videos":
                     case "video":
                     case "vid":
                     case "v":
                     case "vdo":
                         $video = $cbvideo->get_video_details(mysql_clean($_POST['objID']));
-                        if($video)
-                        {
-                            assign('object',$video);
+                        if ($video) {
+                            assign('object', $video);
                             $content = Fetch('/blocks/view_channel/channel_item.html');
                         }
                         break;
@@ -936,32 +957,31 @@ if(!empty($mode))
                     case "foto":
                     case "p":
                         $photo = $cbphoto->get_photo(mysql_clean($_POST['objID']));
-                        if($photo)
-                        {
-                            assign('object',$photo);
+                        if ($photo) {
+                            assign('object', $photo);
                             $content = Fetch('/blocks/view_channel/channel_item.html');
                         }
                         break;
                 }
 
-                if($content)
-                    echo json_encode(array("data"=>$content));
-                else
-                    echo json_encode(array("error"=>"Nothing Found"));
+                if ($content) {
+                    echo json_encode(["data" => $content]);
+                } else {
+                    echo json_encode(["error" => "Nothing Found"]);
+                }
             }
             break;
 
         case "viewCollectionRating":
             $cid = mysql_clean($_POST['cid']);
             $returnedArray = $cbcollection->collection_voters($cid);
-            echo ($returnedArray);
+            echo($returnedArray);
             break;
 
         case "loadAjaxPhotos":
             $photosType = $_POST['photosType'];
-            $cond = array('limit'=>config("photo_home_tabs"));
-            switch($photosType)
-            {
+            $cond = ['limit' => config("photo_home_tabs")];
+            switch ($photosType) {
                 case "last_viewed":
                 default:
                     $cond['order'] = " last_viewed DESC";
@@ -997,11 +1017,9 @@ if(!empty($mode))
             }
 
             $photos = get_photos($cond);
-            if($photos)
-            {
-                foreach($photos as $photo)
-                {
-                    assign("photo",$photo);
+            if ($photos) {
+                foreach ($photos as $photo) {
+                    assign("photo", $photo);
                     $cond['photoBlocks'] .= Fetch("/blocks/photo.html");
                 }
                 $cond['completed'] = "successfull";
@@ -1016,75 +1034,73 @@ if(!empty($mode))
          * Getting comments along with template
          */
         case "getComments":
-            $params = array();
+            $params = [];
 
             $limit = config('comment_per_page') ? config('comment_per_page') : 10;
             $page = $_POST['page'];
             $params['type'] = mysql_clean($_POST['type']);
             $params['type_id'] = mysql_clean($_POST['type_id']);
             $params['last_update'] = mysql_clean($_POST['last_update']);
-            $params['limit'] = create_query_limit($page,$limit);
+            $params['limit'] = create_query_limit($page, $limit);
             $params['cache'] = 'no';
 
             $admin = "";
-            if($_POST['admin']=='yes' && has_access('admin_access',true))
-            {
-                $params['cache'] ='no';
+            if ($_POST['admin'] == 'yes' && has_access('admin_access', true)) {
+                $params['cache'] = 'no';
                 $admin = "yes";
             }
             $comments = $myquery->getComments($params);
             //Adding Pagination
-            $total_pages = count_pages($_POST['total_comments'],$limit);
+            $total_pages = count_pages($_POST['total_comments'], $limit);
             assign('object_type', $_POST['object_type']);
             //Pagination
-            $pages->paginate($total_pages,$page,NULL,NULL,'<li><a href="javascript:void(0);"
-            onClick="_cb.getAllComments(\''.$params['type'].'\',\''.$params['type_id'].'\',\''.$params['last_update'].'\',
-            \'#page#\',\''.$_POST['total_comments'].'\',\''.mysql_clean($_POST['object_type']).'\',\''.$admin.'\')">#page#</a></li>');
+            $pages->paginate($total_pages, $page, null, null, '<li><a href="javascript:void(0);"
+            onClick="_cb.getAllComments(\'' . $params['type'] . '\',\'' . $params['type_id'] . '\',\'' . $params['last_update'] . '\',
+            \'#page#\',\'' . $_POST['total_comments'] . '\',\'' . mysql_clean($_POST['object_type']) . '\',\'' . $admin . '\')">#page#</a></li>');
 
-            assign('comments',$comments);
-            assign('type',$params['type']);
-            assign('type_id',$params['type_id']);
-            assign('last_update',$params['last_update']);
-            assign('total',$_POST['total_comments']);
-            assign('total_pages',$total_pages);
-            assign('comments_voting',$_POST['comments_voting']);
-            assign('commentPagination','yes');
-            assign('commentPagination','yes');
+            assign('comments', $comments);
+            assign('type', $params['type']);
+            assign('type_id', $params['type_id']);
+            assign('last_update', $params['last_update']);
+            assign('total', $_POST['total_comments']);
+            assign('total_pages', $total_pages);
+            assign('comments_voting', $_POST['comments_voting']);
+            assign('commentPagination', 'yes');
+            assign('commentPagination', 'yes');
 
             Template('blocks/comments/comments.html');
             Template('blocks/pagination.html');
             break;
 
         case "getCommentsNew":
-            $params = array();
+            $params = [];
 
             $limit = config('comment_per_page') ? config('comment_per_page') : 10;
             $page = $_POST['page'];
             $params['type'] = mysql_clean($_POST['type']);
             $params['type_id'] = mysql_clean($_POST['type_id']);
             $params['last_update'] = mysql_clean($_POST['last_update']);
-            $params['limit'] = create_query_limit($page,$limit);
+            $params['limit'] = create_query_limit($page, $limit);
             $params['cache'] = 'no';
 
             $admin = "";
-            if($_POST['admin']=='yes' && has_access('admin_access',true))
-            {
-                $params['cache'] ='no';
+            if ($_POST['admin'] == 'yes' && has_access('admin_access', true)) {
+                $params['cache'] = 'no';
                 $admin = "yes";
             }
             $comments = $myquery->getComments($params);
             //Adding Pagination
-            $total_pages = count_pages($_POST['total_comments'],$limit);
-            assign('object_type',mysql_clean($_POST['object_type']));
+            $total_pages = count_pages($_POST['total_comments'], $limit);
+            assign('object_type', mysql_clean($_POST['object_type']));
 
-            assign('comments',$comments);
-            assign('type',$params['type']);
-            assign('type_id',$params['type_id']);
-            assign('last_update',$params['last_update']);
-            assign('total',$_POST['total_comments']);
-            assign('total_pages',$total_pages);
-            assign('comments_voting',$_POST['comments_voting']);
-            assign('commentPagination','yes');
+            assign('comments', $comments);
+            assign('type', $params['type']);
+            assign('type_id', $params['type_id']);
+            assign('last_update', $params['last_update']);
+            assign('total', $_POST['total_comments']);
+            assign('total_pages', $total_pages);
+            assign('comments_voting', $_POST['comments_voting']);
+            assign('commentPagination', 'yes');
             if ($comments) {
                 Template('blocks/comments/comments.html');
             } else {
@@ -1094,15 +1110,14 @@ if(!empty($mode))
 
         case "delete_feed":
             $uid = mysql_clean($_POST['uid']);
-            $file = mysql_clean($_POST['file']).'.feed';
-            if($uid && $file)
-            {
-                if($uid==userid() || has_access("admin_access",true))
-                {
-                    $cbfeeds->deleteFeed($uid,$file);
+            $file = mysql_clean($_POST['file']) . '.feed';
+            if ($uid && $file) {
+                if ($uid == userid() || has_access("admin_access", true)) {
+                    $cbfeeds->deleteFeed($uid, $file);
                     $array['msg'] = lang("feed_has_been_deleted");
-                } else
+                } else {
                     $array['err'] = lang("you_cant_del_this_feed");
+                }
             }
             echo json_encode($array);
             break;
@@ -1110,10 +1125,9 @@ if(!empty($mode))
         case "become_contributor" :
             $uid = userid();
             $cid = $_POST['cid'];
-            $array = array();
+            $array = [];
 
-            if($cbcollection->add_contributor($cid,$uid))
-            {
+            if ($cbcollection->add_contributor($cid, $uid)) {
                 $array['msg'] = 'Successfully added as contributor';
             } else {
                 $array['err'] = error('single');
@@ -1125,12 +1139,11 @@ if(!empty($mode))
         case "remove_contributor" :
             $uid = userid();
             $cid = $_POST['cid'];
-            $array = array();
+            $array = [];
 
-            if($cbcollection->remove_contributor($cid,$uid))
-            {
+            if ($cbcollection->remove_contributor($cid, $uid)) {
                 $array['msg'] = 'Successfully removed from contributors';
-            }  else {
+            } else {
                 $array['err'] = error('single');
             }
 
@@ -1138,16 +1151,15 @@ if(!empty($mode))
             break;
 
         case 'photo_ajax':
-            try{
-                if(isset($_POST['photo_pre']) )
-                {
+            try {
+                if (isset($_POST['photo_pre'])) {
                     $photo = $_POST['photo_pre'];
                     $user = $_POST['user'];
                     $items = $_POST['item'];
                     $ci_id = $photo['ci_id'];
-                    $collection = $photo['collection_id']; 	// collection id.
-                    $link = $cbcollection->get_next_prev_item($ci_id,$collection,$item=$items,$limit=1,$check_only=false); // getting Previous item
-                    $srcString ='/files/photos/'.$link[0]['file_directory'].'/'.$link[0]['filename'].'.'.$link[0]['ext']; // Image Source...
+                    $collection = $photo['collection_id'];    // collection id.
+                    $link = $cbcollection->get_next_prev_item($ci_id, $collection, $item = $items, $limit = 1, $check_only = false); // getting Previous item
+                    $srcString = '/files/photos/' . $link[0]['file_directory'] . '/' . $link[0]['filename'] . '.' . $link[0]['ext']; // Image Source...
                     $photo_key = $link[0]['photo_key']; // Image Key.
                     $response['photo'] = $link;
                     $response['photo_key'] = $photo_key;
@@ -1155,11 +1167,10 @@ if(!empty($mode))
                     $response['collection_id'] = $collection;
                     echo json_encode($response);
                 }
-            }
-            catch(Exception $e) {
+            } catch (Exception $e) {
                 $response["error_ex"] = true;
-                $response["msg"] = 'Message: ' .$e->getMessage();
-                echo (json_encode($response));
+                $response["msg"] = 'Message: ' . $e->getMessage();
+                echo(json_encode($response));
             }
             break;
 
@@ -1169,8 +1180,8 @@ if(!empty($mode))
             if (empty($typed)) {
                 return "none";
             }
-            $raw_users = $db->select(tbl("users"),"username","username LIKE '%$typed%' LIMIT 0,5");
-            $matching_users['matching_users'] = array();
+            $raw_users = $db->select(tbl("users"), "username", "username LIKE '%$typed%' LIMIT 0,5");
+            $matching_users['matching_users'] = [];
             foreach ($raw_users as $key => $userdata) {
                 $matching_users['matching_users'][] = $userdata['username'];
             }
@@ -1182,11 +1193,11 @@ if(!empty($mode))
             break;
 
         default:
-            header('location:'.BASEURL);
+            header('location:' . BASEURL);
             break;
     }
 } else {
-    header('location:'.BASEURL);
+    header('location:' . BASEURL);
     die();
 }
 

@@ -1,98 +1,97 @@
 <?php
 
 require_once '../includes/admin_config.php';
-global $userquery,$pages,$Upload,$myquery;
+global $userquery, $pages, $Upload, $myquery;
 $userquery->admin_login_check();
 $userquery->login_check('web_config_access');
 $pages->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = array('title' => 'General Configurations', 'url' => '');
-$breadcrumb[1] = array('title' => 'Website Configurations', 'url' => ADMIN_BASEURL.'/main.php');
+$breadcrumb[0] = ['title' => 'General Configurations', 'url' => ''];
+$breadcrumb[1] = ['title' => 'Website Configurations', 'url' => ADMIN_BASEURL . '/main.php'];
 
-if(@$_GET['msg']){
+if (@$_GET['msg']) {
     $msg = mysql_clean($_GET['msg']);
 }
 
 $opt_list = $Upload->load_upload_options();
 
-assign('opt_list',$opt_list);
-assign('post_max_size',ini_get('post_max_size'));
-assign('upload_max_size',ini_get('upload_max_filesize'));
+assign('opt_list', $opt_list);
+assign('post_max_size', ini_get('post_max_size'));
+assign('upload_max_size', ini_get('upload_max_filesize'));
 
-if(isset($_POST['update']))
-{
+if (isset($_POST['update'])) {
     $config_booleans = [
         'seo'
-        ,'store_guest_session'
-        ,'videosSection'
-        ,'photosSection'
-        ,'collectionsSection'
-        ,'channelsSection'
-        ,'enable_advertisement'
-        ,'use_cached_pagin'
-        ,'gravatars'
-        ,'picture_url'
-        ,'picture_upload'
-        ,'background_url'
-        ,'background_upload'
-        ,'background_color'
-        ,'allow_unicode_usernames'
-        ,'allow_username_spaces'
-        ,'feedsSection'
-        ,'stay_mp4'
-        ,'delete_mass_upload'
-        ,'enable_video_file_upload'
-        ,'enable_video_remote_upload'
-        ,'enable_photo_file_upload'
-        ,'send_comment_notification'
-        ,'approve_video_notification'
-        ,'smtp_auth'
-        ,'video_round_views'
-        ,'anonym_comments'
-        ,'popup_video'
-        ,'proxy_enable'
-        ,'proxy_auth'
+        , 'store_guest_session'
+        , 'videosSection'
+        , 'photosSection'
+        , 'collectionsSection'
+        , 'channelsSection'
+        , 'enable_advertisement'
+        , 'use_cached_pagin'
+        , 'gravatars'
+        , 'picture_url'
+        , 'picture_upload'
+        , 'background_url'
+        , 'background_upload'
+        , 'background_color'
+        , 'allow_unicode_usernames'
+        , 'allow_username_spaces'
+        , 'feedsSection'
+        , 'stay_mp4'
+        , 'delete_mass_upload'
+        , 'enable_video_file_upload'
+        , 'enable_video_remote_upload'
+        , 'enable_photo_file_upload'
+        , 'send_comment_notification'
+        , 'approve_video_notification'
+        , 'smtp_auth'
+        , 'video_round_views'
+        , 'anonym_comments'
+        , 'popup_video'
+        , 'proxy_enable'
+        , 'proxy_auth'
     ];
 
     $config_booleans_to_refactor = [
         'closed'
-        ,'enable_update_checker'
-        ,'allow_language_change'
-        ,'allow_registeration'
-        ,'allow_template_change'
-        ,'pick_geo_country'
-        ,'email_verification'
-        ,'show_collapsed_checkboxes'
-        ,'use_subs'
-        ,'activation'
-        ,'chromecast_fix'
-        ,'photo_activation'
-        ,'force_8bits'
-        ,'video_embed'
-        ,'video_download'
-        ,'bits_color_warning'
-        ,'video_comments'
-        ,'photo_comments'
-        ,'channel_comments'
-        ,'video_rating'
-        ,'own_video_rating'
-        ,'photo_rating'
-        ,'own_photo_rating'
-        ,'comment_rating'
-        ,'collection_rating'
-        ,'own_collection_rating'
-        ,'channel_rating'
-        ,'own_channel_rating'
-        ,'keep_audio_tracks'
-        ,'keep_subtitles'
-        ,'extract_subtitles'
-        ,'enable_sub_collection'
-        ,'photo_crop'
+        , 'enable_update_checker'
+        , 'allow_language_change'
+        , 'allow_registeration'
+        , 'allow_template_change'
+        , 'pick_geo_country'
+        , 'email_verification'
+        , 'show_collapsed_checkboxes'
+        , 'use_subs'
+        , 'activation'
+        , 'chromecast_fix'
+        , 'photo_activation'
+        , 'force_8bits'
+        , 'video_embed'
+        , 'video_download'
+        , 'bits_color_warning'
+        , 'video_comments'
+        , 'photo_comments'
+        , 'channel_comments'
+        , 'video_rating'
+        , 'own_video_rating'
+        , 'photo_rating'
+        , 'own_photo_rating'
+        , 'comment_rating'
+        , 'collection_rating'
+        , 'own_collection_rating'
+        , 'channel_rating'
+        , 'own_channel_rating'
+        , 'keep_audio_tracks'
+        , 'keep_subtitles'
+        , 'extract_subtitles'
+        , 'enable_sub_collection'
+        , 'photo_crop'
     ];
 
-    $rows = array(
+    $rows = [
         'allowed_video_types',
         'allowed_photo_types',
         'allow_language_change',
@@ -288,14 +287,14 @@ if(isset($_POST['update']))
         'proxy_port',
         'proxy_username',
         'proxy_password'
-    );
+    ];
 
-    foreach($opt_list as $optl) {
+    foreach ($opt_list as $optl) {
         $rows[] = $optl['load_func'];
     }
 
     //Numeric Array
-    $num_array = array(
+    $num_array = [
         'channels_list_per_page',
 
         'max_upload_size',
@@ -344,41 +343,41 @@ if(isset($_POST['update']))
         'photo_thumb_height',
         'photo_med_width',
         'photo_med_height'
-    );
+    ];
 
-    foreach($rows as $field) {
+    foreach ($rows as $field) {
         $value = ($_POST[$field]);
-        if(in_array($field,$num_array)) {
-            if($value <= 0 || !is_numeric($value)){
+        if (in_array($field, $num_array)) {
+            if ($value <= 0 || !is_numeric($value)) {
                 $value = 1;
             }
         }
-        if( in_array($field, $config_booleans) ){
-            if( $value != 'yes' ){
+        if (in_array($field, $config_booleans)) {
+            if ($value != 'yes') {
                 $value = 'no';
             }
         }
-        if( in_array($field, $config_booleans_to_refactor) ){
-            if( $value != '1' ){
+        if (in_array($field, $config_booleans_to_refactor)) {
+            if ($value != '1') {
                 $value = '0';
             }
         }
 
-        $myquery->Set_Website_Details($field,$value);
+        $myquery->Set_Website_Details($field, $value);
     }
 
     $myquery->saveVideoResolutions($_POST);
-    e('Website settings have been updated','m');
+    e('Website settings have been updated', 'm');
 }
 
 $row = $myquery->Get_Website_Details();
-Assign('row',$row);
+Assign('row', $row);
 
 $video_resolutions = $myquery->getVideoResolutions();
-Assign('video_resolutions',$video_resolutions);
+Assign('video_resolutions', $video_resolutions);
 
 $ffmpeg_version = check_version('ffmpeg');
-Assign('ffmpeg_version',$ffmpeg_version);
+Assign('ffmpeg_version', $ffmpeg_version);
 
 subtitle('Website Configurations');
 template_files('main.html');

@@ -1,19 +1,21 @@
 <?php
 /**
-* Lists all of custom fields by name
-* @return : { array } { $flds } { an array with fields }
-*/
-function custom_fields_list() {
+ * Lists all of custom fields by name
+ * @return : { array } { $flds } { an array with fields }
+ */
+function custom_fields_list()
+{
     global $db;
-    $raw_flds = $db->select(tbl("custom_fields"),'custom_field_name','custom_field_list_id != 0');
-    $flds = array();
+    $raw_flds = $db->select(tbl("custom_fields"), 'custom_field_name', 'custom_field_list_id != 0');
+    $flds = [];
     foreach ($raw_flds as $key => $name) {
         $flds[] = $name['custom_field_name'];
     }
     return $flds;
 }
 
-function push_custom_field($data = false) {
+function push_custom_field($data = false)
+{
     global $db;
     if (!is_array($data)) {
         $data = $_POST;
@@ -24,8 +26,8 @@ function push_custom_field($data = false) {
     $type = $data['type'];
     $df_val = $data['default_value'];
     $ptype = $data['section_type'];
-    $flds = array('custom_field_name','custom_field_title','custom_field_type','custom_field_value','custom_field_ptype');
-    $vals = array($name, $label, $type, $df_val, $ptype);
+    $flds = ['custom_field_name', 'custom_field_title', 'custom_field_type', 'custom_field_value', 'custom_field_ptype'];
+    $vals = [$name, $label, $type, $df_val, $ptype];
     $insert_id = $db->insert(tbl("custom_fields"), $flds, $vals);
     if ($insert_id) {
         if ($ptype == 'video') {
@@ -33,13 +35,14 @@ function push_custom_field($data = false) {
         } else {
             $table = 'users';
         }
-        $db->Execute("ALTER TABLE ".tbl($table)." ADD `cfld_".$name."` varchar(255) NOT NULL");
+        $db->Execute("ALTER TABLE " . tbl($table) . " ADD `cfld_" . $name . "` varchar(255) NOT NULL");
         return $insert_id;
     }
     return false;
 }
 
-function pull_custom_fields($type = false, $id = false) {
+function pull_custom_fields($type = false, $id = false)
+{
     global $db;
     if ($type) {
         $cond = "custom_field_ptype = '$type'";
@@ -50,14 +53,15 @@ function pull_custom_fields($type = false, $id = false) {
             $cond .= " AND custom_field_ptype = '$type'";
         }
     }
-    $raw_pull = $db->select(tbl("custom_fields"),"custom_field_list_id,custom_field_title,custom_field_type,custom_field_ptype,custom_field_name,custom_field_value,custom_field_required",$cond);
+    $raw_pull = $db->select(tbl("custom_fields"), "custom_field_list_id,custom_field_title,custom_field_type,custom_field_ptype,custom_field_name,custom_field_value,custom_field_required", $cond);
     if (is_array($raw_pull)) {
         return $raw_pull;
     }
     return false;
 }
 
-function update_cstm_field($data = false, $id = false) {
+function update_cstm_field($data = false, $id = false)
+{
     global $db;
     if (!is_array($data)) {
         $data = $_POST;
@@ -70,12 +74,13 @@ function update_cstm_field($data = false, $id = false) {
     $db_field = $data['db_field'];
     $type = $data['field_type'];
 
-    $flds = array('custom_field_name', 'custom_field_title', 'custom_field_db_field', 'custom_field_type');
-    $vals = array($name, $label, $db_field, $type);
+    $flds = ['custom_field_name', 'custom_field_title', 'custom_field_db_field', 'custom_field_type'];
+    $vals = [$name, $label, $db_field, $type];
     $db->update(tbl("custom_fields"), $flds, $vals, "custom_field_list_id = '$id'");
 }
 
-function delete_custom_field($fid) {
+function delete_custom_field($fid)
+{
     global $db;
     $file_data = pull_custom_fields(false, $fid);
     $type = $file_data[0]['custom_field_ptype'];
@@ -85,8 +90,8 @@ function delete_custom_field($fid) {
     } else {
         $table = 'users';
     }
-    $db->Execute("ALTER TABLE ".tbl($table)." DROP `cfld_".$name."` varchar(255) NOT NULL");
-    $db->delete(tbl('custom_fields'),array('custom_field_list_id'),array($fid));
+    $db->Execute("ALTER TABLE " . tbl($table) . " DROP `cfld_" . $name . "` varchar(255) NOT NULL");
+    $db->delete(tbl('custom_fields'), ['custom_field_list_id'], [$fid]);
 }
 
 /**
@@ -95,28 +100,28 @@ function delete_custom_field($fid) {
 function add_custom_field($array)
 {
     global $db;
-    foreach($array as $key=>$attr) {
-        if($key=='name' || $key=='title') {
-            if(empty($attr)){
-                e(sprintf(lang('cust_field_err'),$key));
+    foreach ($array as $key => $attr) {
+        if ($key == 'name' || $key == 'title') {
+            if (empty($attr)) {
+                e(sprintf(lang('cust_field_err'), $key));
             }
         }
 
-        if(!error_list()) {
-            if(!empty($attr)) {
-                $fields_array[] = 'custom_field_'.$key;
+        if (!error_list()) {
+            if (!empty($attr)) {
+                $fields_array[] = 'custom_field_' . $key;
                 $value_array[] = mysql_clean($attr);
             }
 
-            if($key=='db_field') {
-                $db->execute("ALTER TABLE ".tbl('video')." ADD `".$attr."` TEXT NOT NULL");
+            if ($key == 'db_field') {
+                $db->execute("ALTER TABLE " . tbl('video') . " ADD `" . $attr . "` TEXT NOT NULL");
             }
         }
 
     }
 
-    if(!error_list()){
-        $db->insert(tbl("custom_fields"),$fields_array,$value_array);
+    if (!error_list()) {
+        $db->insert(tbl("custom_fields"), $fields_array, $value_array);
     }
 }
 
@@ -127,17 +132,17 @@ function add_custom_field($array)
 function load_form_fields()
 {
     global $db;
-    $results = $db->select(tbl("custom_fields"),"*");
-    if(count($results[0])>0) {
-        foreach($results as $result) {
+    $results = $db->select(tbl("custom_fields"), "*");
+    if (count($results[0]) > 0) {
+        foreach ($results as $result) {
             $name = $result['custom_field_name'];
-            foreach($result as $field => $value) {
-                $field_array[$name][substr($field,13,strlen($field))] = $value;
+            foreach ($result as $field => $value) {
+                $field_array[$name][substr($field, 13, strlen($field))] = $value;
             }
         }
     }
 
-    if(count($field_array)>0){
+    if (count($field_array) > 0) {
         return false;
     }
     return $field_array;

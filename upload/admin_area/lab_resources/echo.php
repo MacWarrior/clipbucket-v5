@@ -1,2 +1,2 @@
 <?php
-	echo "Pakistan Zindabad!! ^_^";
+echo "Pakistan Zindabad!! ^_^";

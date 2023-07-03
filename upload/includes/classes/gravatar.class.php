@@ -1,31 +1,32 @@
 <?php
+
 /**
-*  Class Gravatar
-*
-* From Gravatar Help:
-*        "A gravatar is a dynamic image resource that is requested from our server. The request
-*        URL is presented here, broken into its segments."
-* Source:
-*    http://site.gravatar.com/site/implement
-*
-* Usage:
-* <code>
-*        $email = "youremail@yourhost.com";
-*        $default = "http://www.yourhost.com/default_image.jpg";    // Optional
-*        $gravatar = new Gravatar($email, $default);
-*        $gravatar->size = 80;
-*        $gravatar->rating = "G";
-*        $gravatar->border = "FF0000";
-*
-*        echo $gravatar; // Or echo $gravatar->toHTML();
-* </code>
-*
-*    Class Page: http://www.phpclasses.org/browse/package/4227.html
-*
-* @author Lucas Araújo <araujo.lucas@gmail.com>
-* @version 1.0
-* @package Gravatar
-*/
+ *  Class Gravatar
+ *
+ * From Gravatar Help:
+ *        "A gravatar is a dynamic image resource that is requested from our server. The request
+ *        URL is presented here, broken into its segments."
+ * Source:
+ *    http://site.gravatar.com/site/implement
+ *
+ * Usage:
+ * <code>
+ *        $email = "youremail@yourhost.com";
+ *        $default = "http://www.yourhost.com/default_image.jpg";    // Optional
+ *        $gravatar = new Gravatar($email, $default);
+ *        $gravatar->size = 80;
+ *        $gravatar->rating = "G";
+ *        $gravatar->border = "FF0000";
+ *
+ *        echo $gravatar; // Or echo $gravatar->toHTML();
+ * </code>
+ *
+ *    Class Page: http://www.phpclasses.org/browse/package/4227.html
+ *
+ * @author Lucas Araújo <araujo.lucas@gmail.com>
+ * @version 1.0
+ * @package Gravatar
+ */
 class Gravatar
 {
     /**
@@ -36,18 +37,18 @@ class Gravatar
     /**
      *    Ratings available
      */
-    private $GRAVATAR_RATING = array("G", "PG", "R", "X");
-    
+    private $GRAVATAR_RATING = ["G", "PG", "R", "X"];
+
     /**
      *    Query string. key/value
      */
-    protected $properties = array(
-        "gravatar_id" => NULL,
-        "default"     => NULL,
+    protected $properties = [
+        "gravatar_id" => null,
+        "default"     => null,
         "size"        => 80, // The default value
-        "rating"      => NULL,
-        "border"      => NULL,
-    );
+        "rating"      => null,
+        "border"      => null,
+    ];
 
     /**
      *    E-mail. This will be converted to md5($email)
@@ -59,12 +60,14 @@ class Gravatar
      */
     protected $extra = "";
 
-    public function __construct($email=NULL, $default=NULL) {
+    public function __construct($email = null, $default = null)
+    {
         $this->setEmail($email);
         $this->setDefault($default);
     }
 
-    public function setEmail($email) {
+    public function setEmail($email)
+    {
         if ($this->isValidEmail($email)) {
             $this->email = $email;
             $this->properties['gravatar_id'] = md5(strtolower($this->email));
@@ -73,11 +76,13 @@ class Gravatar
         return false;
     }
 
-    public function setDefault($default) {
+    public function setDefault($default)
+    {
         $this->properties['default'] = $default;
     }
 
-    public function setRating($rating) {
+    public function setRating($rating)
+    {
         if (in_array($rating, $this->GRAVATAR_RATING)) {
             $this->properties['rating'] = $rating;
             return true;
@@ -85,19 +90,23 @@ class Gravatar
         return false;
     }
 
-    public function setSize($size) {
-        $size = (int) $size;
-        if ($size <= 0)
-            $size = NULL;        // Use the default size
+    public function setSize($size)
+    {
+        $size = (int)$size;
+        if ($size <= 0) {
+            $size = null;
+        }        // Use the default size
         $this->properties['size'] = $size;
     }
 
-    public function setExtra($extra) {
+    public function setExtra($extra)
+    {
         $this->extra = $extra;
     }
 
-    public function isValidEmail($email) {
-		return is_valid_syntax('email',$email);
+    public function isValidEmail($email)
+    {
+        return is_valid_syntax('email', $email);
     }
 
     /**
@@ -107,7 +116,10 @@ class Gravatar
      *
      * @return mixed
      */
-    public function __get($var) { return @$this->properties[$var]; }
+    public function __get($var)
+    {
+        return @$this->properties[$var];
+    }
 
     /**
      *    Object property overloading
@@ -117,8 +129,9 @@ class Gravatar
      *
      * @return bool|void
      */
-    public function __set($var, $value) {
-        switch($var) {
+    public function __set($var, $value)
+    {
+        switch ($var) {
             case "email":
                 return $this->setEmail($value);
             case "rating":
@@ -141,7 +154,10 @@ class Gravatar
      *
      * @return bool
      */
-    public function __isset($var) { return isset($this->properties[$var]); }
+    public function __isset($var)
+    {
+        return isset($this->properties[$var]);
+    }
 
     /**
      *    Object property overloading
@@ -150,28 +166,37 @@ class Gravatar
      *
      * @return bool
      */
-    public function __unset($var) { return @$this->properties[$var] == NULL; }
+    public function __unset($var)
+    {
+        return @$this->properties[$var] == null;
+    }
 
-    public function getSrc() {
-        $url = self::GRAVATAR_URL ."?";
+    public function getSrc()
+    {
+        $url = self::GRAVATAR_URL . "?";
         $first = true;
-        foreach($this->properties as $key => $value) {
+        foreach ($this->properties as $key => $value) {
             if (isset($value)) {
-                if (!$first)
+                if (!$first) {
                     $url .= "&";
-                $url .= $key."=".urlencode($value);
+                }
+                $url .= $key . "=" . urlencode($value);
                 $first = false;
             }
         }
-        return $url;    
+        return $url;
     }
 
-    public function toHTML() {
-        return '<img src="'. $this->getSrc() .'"'
-                .(!isset($this->size) ? "" : ' width="'.$this->size.'" height="'.$this->size.'"')
-                .$this->extra
-                .' />';    
+    public function toHTML()
+    {
+        return '<img src="' . $this->getSrc() . '"'
+            . (!isset($this->size) ? "" : ' width="' . $this->size . '" height="' . $this->size . '"')
+            . $this->extra
+            . ' />';
     }
 
-    public function __toString() { return $this->toHTML(); }
+    public function __toString()
+    {
+        return $this->toHTML();
+    }
 }

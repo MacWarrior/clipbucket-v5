@@ -26,7 +26,7 @@ function smarty_function_eval($params, &$smarty)
         return;
     }
 
-    if($params['var'] == '') {
+    if ($params['var'] == '') {
         return;
     }
 

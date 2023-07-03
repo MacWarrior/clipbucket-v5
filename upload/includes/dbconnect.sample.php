@@ -9,8 +9,8 @@ $DBUSER = 'root';
 //Database Password
 $DBPASS = '';
 //Setting Table Prefix
-define('TABLE_PREFIX','cb_');
+define('TABLE_PREFIX', 'cb_');
 
 $db = new Clipbucket_db();
 
-$db->connect($DBHOST,$DBNAME,$DBUSER,$DBPASS);
+$db->connect($DBHOST, $DBNAME, $DBUSER, $DBPASS);

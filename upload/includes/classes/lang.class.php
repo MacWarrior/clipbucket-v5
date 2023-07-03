@@ -1,4 +1,5 @@
 <?php
+
 class Language
 {
     public $lang = 'en';
@@ -17,7 +18,9 @@ class Language
     /**
      * __Constructor
      */
-    public function __construct(){}
+    public function __construct()
+    {
+    }
 
     /**
      * @return Language
@@ -300,7 +303,7 @@ class Language
         } elseif (empty($array['code'])) {
             e(lang("lang_code_empty"));
         } else {
-            $db->update(tbl('languages'), ["language_name","language_code"], [$array['name'],$array['code']], " language_id='" . $array['language_id'] . "'");
+            $db->update(tbl('languages'), ["language_name", "language_code"], [$array['name'], $array['code']], " language_id='" . $array['language_id'] . "'");
             e(lang("lang_updated"), "m");
         }
     }

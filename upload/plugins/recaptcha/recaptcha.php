@@ -21,24 +21,28 @@ $resp = null;
 # the error code from reCAPTCHA, if any
 $error = null;
 
-function cbRecaptcha(){ global $publickey, $error; return recaptcha_get_html($publickey, $error);}
-
-function validateCbRecaptcha($val=NULL)
+function cbRecaptcha()
 {
-	global $privatekey;
-	if ($_POST["recaptcha_response_field"]) {
-		$resp = recaptcha_check_answer ($privatekey,
-		$_SERVER["REMOTE_ADDR"],
-		$_POST["recaptcha_challenge_field"],
-		$_POST["recaptcha_response_field"]);
-
-		if ($resp->is_valid){
-		    return true;
-        }
-		return false;
-	}
+    global $publickey, $error;
+    return recaptcha_get_html($publickey, $error);
 }
 
-register_cb_captcha('cbRecaptcha','validateCbRecaptcha',false);
-register_anchor('; Recaptcha.reload ();','onClickAddComment');
-add_header(PLUG_DIR.'/recaptcha/reCaptcha_header.html');
+function validateCbRecaptcha($val = null)
+{
+    global $privatekey;
+    if ($_POST["recaptcha_response_field"]) {
+        $resp = recaptcha_check_answer($privatekey,
+            $_SERVER["REMOTE_ADDR"],
+            $_POST["recaptcha_challenge_field"],
+            $_POST["recaptcha_response_field"]);
+
+        if ($resp->is_valid) {
+            return true;
+        }
+        return false;
+    }
+}
+
+register_cb_captcha('cbRecaptcha', 'validateCbRecaptcha', false);
+register_anchor('; Recaptcha.reload ();', 'onClickAddComment');
+add_header(PLUG_DIR . '/recaptcha/reCaptcha_header.html');

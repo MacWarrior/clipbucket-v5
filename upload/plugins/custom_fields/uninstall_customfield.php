@@ -4,7 +4,7 @@ function un_install_customfield()
 {
     global $db;
     $db->Execute(
-    'DROP TABLE '.tbl("custom_field")
+        'DROP TABLE ' . tbl("custom_field")
     );
 }
 

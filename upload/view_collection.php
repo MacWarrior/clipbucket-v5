@@ -1,52 +1,51 @@
 <?php
-define('THIS_PAGE','view_collection');
-define('PARENT_PAGE','collections');
+define('THIS_PAGE', 'view_collection');
+define('PARENT_PAGE', 'collections');
 
 require 'includes/config.inc.php';
 
-global $userquery,$pages,$cbcollection,$cbvideo,$cbphoto,$Cbucket;
+global $userquery, $pages, $cbcollection, $cbvideo, $cbphoto, $Cbucket;
 
-$userquery->perm_check('view_video',true);
+$userquery->perm_check('view_video', true);
 $pages->page_redir();
 
 $c = (int)$_GET['cid'];
 
 $page = $_GET['page'];
 
-$order = tbl('collection_items').'.ci_id DESC';
+$order = tbl('collection_items') . '.ci_id DESC';
 
-if($cbcollection->is_viewable($c)) {
+if ($cbcollection->is_viewable($c)) {
     $cdetails = $cbcollection->get_collection($c);
 
-    if( !$cdetails || !isSectionEnabled($cdetails['type']) ){
+    if (!$cdetails || !isSectionEnabled($cdetails['type'])) {
         $Cbucket->show_page = false;
     }
 
-    if( !$cdetails ){
+    if (!$cdetails) {
         e(lang('collection_not_exists'));
     } else {
         $get_limit = create_query_limit($page, config('collection_items_page'));
-        if( config('enable_sub_collection') ){
+        if (config('enable_sub_collection')) {
             $cond = [
-                'limit'      => $get_limit
-                ,'parent_id' => $c
+                'limit'       => $get_limit
+                , 'parent_id' => $c
             ];
 
             $collections = $cbcollection->get_collections($cond);
             Assign('collections', $collections);
         }
 
-        switch($cdetails['type'])
-        {
+        switch ($cdetails['type']) {
             default:
             case 'videos':
-                $total_items = $cbvideo->collection->get_collection_items_with_details($c,$order,null,true);
-                $items = $cbvideo->collection->get_collection_items_with_details($c,$order,$get_limit);
+                $total_items = $cbvideo->collection->get_collection_items_with_details($c, $order, null, true);
+                $items = $cbvideo->collection->get_collection_items_with_details($c, $order, $get_limit);
                 break;
 
             case 'photos':
-                $total_items = $cbphoto->collection->get_collection_items_with_details($c,$order,null,true);
-                $items = $cbphoto->collection->get_collection_items_with_details($c,$order,$get_limit);
+                $total_items = $cbphoto->collection->get_collection_items_with_details($c, $order, null, true);
+                $items = $cbphoto->collection->get_collection_items_with_details($c, $order, $get_limit);
                 break;
         }
 
@@ -55,29 +54,29 @@ if($cbcollection->is_viewable($c)) {
 
         $total_pages = count_pages($total_items, config('collection_items_page'));
         //Pagination
-        $pages->paginate($total_pages,$page);
+        $pages->paginate($total_pages, $page);
 
-        if( config('enable_sub_collection') ) {
+        if (config('enable_sub_collection')) {
             $breadcrum = [];
             $collection_parent = $cdetails;
-            do{
-                if( config('seo') == 'yes' ){
-                    $url = '/collection/'.$collection_parent['collection_id'].'/'.$collection_parent['type'].'/'.display_clean($collection_parent['collection_name']);
+            do {
+                if (config('seo') == 'yes') {
+                    $url = '/collection/' . $collection_parent['collection_id'] . '/' . $collection_parent['type'] . '/' . display_clean($collection_parent['collection_name']);
                 } else {
-                    $url = '/view_collection.php?cid='.$collection_parent['collection_id'];
+                    $url = '/view_collection.php?cid=' . $collection_parent['collection_id'];
                 }
                 $breadcrum[] = [
                     'title' => $collection_parent['collection_name']
-                    ,'url'  => $url
+                    , 'url' => $url
                 ];
                 $collection_parent = $cbcollection->get_parent_collection($collection_parent);
             } while ($collection_parent);
-            assign('breadcrum',array_reverse($breadcrum));
-            assign('collection_baseurl', $cbcollection->get_base_url() );
+            assign('breadcrum', array_reverse($breadcrum));
+            assign('collection_baseurl', $cbcollection->get_base_url());
         }
 
-        assign('objects',$items);
-        assign('c',$cdetails);
+        assign('objects', $items);
+        assign('c', $cdetails);
         subtitle($cdetails['collection_name']);
     }
 } else {

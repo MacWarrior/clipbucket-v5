@@ -1,38 +1,40 @@
 <?php
-function redirect_to($url){
+function redirect_to($url)
+{
     echo '<script type="text/javascript">
-		window.location = "'.$url.'"
+		window.location = "' . $url . '"
 		</script>';
     exit("Javascript is turned off, <a href='$url'>click here to go to requested page</a>");
 }
 
 //Test function to return template file
-function Fetch($name,$inside=FALSE)
+function Fetch($name, $inside = false)
 {
     global $cbtpl;
-    if($inside){
+    if ($inside) {
         $file = $cbtpl->fetch($name);
     } else {
-        $file = $cbtpl->fetch(LAYOUT.DIRECTORY_SEPARATOR.$name);
+        $file = $cbtpl->fetch(LAYOUT . DIRECTORY_SEPARATOR . $name);
     }
 
     return $file;
 }
 
 //Simple Template Displaying Function
-function Template($template,$layout=true){
-    global $admin_area,$cbtpl;
-    if($layout) {
-        $cbtpl->display(LAYOUT.DIRECTORY_SEPARATOR.$template);
+function Template($template, $layout = true)
+{
+    global $admin_area, $cbtpl;
+    if ($layout) {
+        $cbtpl->display(LAYOUT . DIRECTORY_SEPARATOR . $template);
     } else {
         $cbtpl->display($template);
     }
 
-    if($template == 'footer.html' && $admin_area !=TRUE){
-        $cbtpl->display(BASEDIR.'/includes/templatelib/'.$template);
+    if ($template == 'footer.html' && $admin_area != true) {
+        $cbtpl->display(BASEDIR . '/includes/templatelib/' . $template);
     }
-    if($template == 'header.html'){
-        $cbtpl->display(BASEDIR.'/includes/templatelib/'.$template);
+    if ($template == 'header.html') {
+        $cbtpl->display(BASEDIR . '/includes/templatelib/' . $template);
     }
 }
 
@@ -50,19 +52,20 @@ function templateWithMsgJson($template)
     ob_clean();
     Template($template);
     $template = ob_get_clean();
-    return json_encode(['msg'=>$msg, 'template'=>$template]);
+    return json_encode(['msg' => $msg, 'template' => $template]);
 }
 
-function getTemplateMsg () {
+function getTemplateMsg()
+{
     ob_start();
     Template('msg.html');
     return ob_get_clean();
 }
 
-function Assign($name,$value)
+function Assign($name, $value)
 {
     global $cbtpl;
-    $cbtpl->assign($name,$value);
+    $cbtpl->assign($name, $value);
 }
 
 /**
@@ -71,7 +74,11 @@ function Assign($name,$value)
  * @param array $params
  * @return array
  */
-function cb_menu($params=NULL){ global $Cbucket; return $Cbucket->cbMenu($params); }
+function cb_menu($params = null)
+{
+    global $Cbucket;
+    return $Cbucket->cbMenu($params);
+}
 
 /**
  * Function used to call display
@@ -79,20 +86,20 @@ function cb_menu($params=NULL){ global $Cbucket; return $Cbucket->cbMenu($params
 function display_it()
 {
     try {
-        global $ClipBucket,$__devmsgs,$breadcrumb;
+        global $ClipBucket, $__devmsgs, $breadcrumb;
         if (is_array($__devmsgs)) {
             assign('thebase', BASEDIR);
-            assign('__devmsgs',$__devmsgs);
+            assign('__devmsgs', $__devmsgs);
         }
-        $new_list = array();
-        foreach($ClipBucket->template_files as $file) {
-            if(file_exists(LAYOUT.DIRECTORY_SEPARATOR.$file['file']) || is_array($file)) {
-                if($ClipBucket->show_page || !$file['follow_show_page']) {
-                    if(!is_array($file)){
+        $new_list = [];
+        foreach ($ClipBucket->template_files as $file) {
+            if (file_exists(LAYOUT . DIRECTORY_SEPARATOR . $file['file']) || is_array($file)) {
+                if ($ClipBucket->show_page || !$file['follow_show_page']) {
+                    if (!is_array($file)) {
                         $new_list[] = $file;
                     } else {
-                        if(isset($file['folder']) && file_exists($file['folder'].DIRECTORY_SEPARATOR.$file['file'])){
-                            $new_list[] = $file['folder'].DIRECTORY_SEPARATOR.$file['file'];
+                        if (isset($file['folder']) && file_exists($file['folder'] . DIRECTORY_SEPARATOR . $file['file'])) {
+                            $new_list[] = $file['folder'] . DIRECTORY_SEPARATOR . $file['file'];
                         } else {
                             $new_list[] = $file['file'];
                         }
@@ -101,14 +108,13 @@ function display_it()
             }
         }
 
-        assign('template_files',$new_list);
+        assign('template_files', $new_list);
         assign('breadcrumb', $breadcrumb);
 
         Template('body.html');
 
         footer();
-    }
-    catch(SmartyException $e) {
+    } catch (SmartyException $e) {
         show_cb_error($e);
     }
 }
@@ -123,6 +129,7 @@ function display_language_list()
     assign('language_list', $ll);
     echo templateWithMsgJson('blocks/language_list.html');
 }
+
 function display_language_edit()
 {
     $detail = Language::getInstance()->getLangById($_POST['language_id']);
@@ -146,6 +153,6 @@ function return_thumb_mini_list($data)
 function display_flash_player($data)
 {
     assign('data', $data);
-    echo flashPlayer(['vdetails'=>$data]);
+    echo flashPlayer(['vdetails' => $data]);
 }
 

@@ -154,11 +154,11 @@ class SMTP
      * @var array Patterns to extract an SMTP transaction id from reply to a DATA command.
      * The first capture group in each regex will be used as the ID.
      */
-    protected $smtp_transaction_id_patterns = array(
-        'exim' => '/[0-9]{3} OK id=(.*)/',
+    protected $smtp_transaction_id_patterns = [
+        'exim'     => '/[0-9]{3} OK id=(.*)/',
         'sendmail' => '/[0-9]{3} 2.0.0 (.*) Message/',
-        'postfix' => '/[0-9]{3} 2.0.0 Ok: queued as (.*)/'
-    );
+        'postfix'  => '/[0-9]{3} 2.0.0 Ok: queued as (.*)/'
+    ];
 
     /**
      * @var string The last transaction ID issued in response to a DATA command,
@@ -176,12 +176,12 @@ class SMTP
      * Error information, if any, for the last SMTP command.
      * @var array
      */
-    protected $error = array(
-        'error' => '',
-        'detail' => '',
-        'smtp_code' => '',
+    protected $error = [
+        'error'        => '',
+        'detail'       => '',
+        'smtp_code'    => '',
         'smtp_code_ex' => ''
-    );
+    ];
 
     /**
      * The reply the server sent to us for HELO.
@@ -209,11 +209,11 @@ class SMTP
 
     /**
      * Output debugging info via a user-selected method.
-     * @see SMTP::$Debugoutput
-     * @see SMTP::$do_debug
      * @param string $str Debug string to output
      * @param integer $level The debug level of this message; see DEBUG_* constants
      * @return void
+     * @see SMTP::$do_debug
+     * @see SMTP::$Debugoutput
      */
     protected function edebug($str, $level = 0)
     {
@@ -221,7 +221,7 @@ class SMTP
             return;
         }
         //Avoid clash with built-in function names
-        if (!in_array($this->Debugoutput, array('error_log', 'html', 'echo')) and is_callable($this->Debugoutput)) {
+        if (!in_array($this->Debugoutput, ['error_log', 'html', 'echo']) and is_callable($this->Debugoutput)) {
             call_user_func($this->Debugoutput, $str, $level);
             return;
         }
@@ -233,20 +233,20 @@ class SMTP
             case 'html':
                 //Cleans up output a bit for a better looking, HTML-safe output
                 echo gmdate('Y-m-d H:i:s') . ' ' . htmlentities(
-                    preg_replace('/[\r\n]+/', '', $str),
-                    ENT_QUOTES,
-                    'UTF-8'
-                ) . "<br>\n";
+                        preg_replace('/[\r\n]+/', '', $str),
+                        ENT_QUOTES,
+                        'UTF-8'
+                    ) . "<br>\n";
                 break;
             case 'echo':
             default:
                 //Normalize line breaks
                 $str = preg_replace('/(\r\n|\r|\n)/ms', "\n", $str);
                 echo gmdate('Y-m-d H:i:s') . "\t" . str_replace(
-                    "\n",
-                    "\n                   \t                  ",
-                    trim($str)
-                ) . "\n";
+                        "\n",
+                        "\n                   \t                  ",
+                        trim($str)
+                    ) . "\n";
         }
     }
 
@@ -259,7 +259,7 @@ class SMTP
      * @access public
      * @return boolean
      */
-    public function connect($host, $port = null, $timeout = 30, $options = array())
+    public function connect($host, $port = null, $timeout = 30, $options = [])
     {
         static $streamok;
         //This is enabled by default since 5.0.0 but some providers disable it
@@ -288,7 +288,7 @@ class SMTP
         $errstr = '';
         if ($streamok) {
             $socket_context = stream_context_create($options);
-            set_error_handler(array($this, 'errorHandler'));
+            set_error_handler([$this, 'errorHandler']);
             $this->smtp_conn = stream_socket_client(
                 $host . ":" . $port,
                 $errno,
@@ -304,7 +304,7 @@ class SMTP
                 "Connection: stream_socket_client not available, falling back to fsockopen",
                 self::DEBUG_CONNECTION
             );
-            set_error_handler(array($this, 'errorHandler'));
+            set_error_handler([$this, 'errorHandler']);
             $this->smtp_conn = fsockopen(
                 $host,
                 $port,
@@ -367,7 +367,7 @@ class SMTP
         }
 
         // Begin encrypted connection
-        set_error_handler(array($this, 'errorHandler'));
+        set_error_handler([$this, 'errorHandler']);
         $crypto_ok = stream_socket_enable_crypto(
             $this->smtp_conn,
             true,
@@ -380,7 +380,6 @@ class SMTP
     /**
      * Perform SMTP authentication.
      * Must be run after hello().
-     * @see hello()
      * @param string $username The user name
      * @param string $password The password
      * @param string $authtype The auth type (PLAIN, LOGIN, NTLM, CRAM-MD5, XOAUTH2)
@@ -388,6 +387,7 @@ class SMTP
      * @param string $workstation The auth workstation for NTLM
      * @param null|OAuth $OAuth An optional OAuth instance (@see PHPMailerOAuth)
      * @return bool True if successfully authenticated.* @access public
+     * @see hello()
      */
     public function authenticate(
         $username,
@@ -396,7 +396,8 @@ class SMTP
         $realm = '',
         $workstation = '',
         $OAuth = null
-    ) {
+    )
+    {
         if (!$this->server_caps) {
             $this->setError('Authentication is not allowed before HELO/EHLO');
             return false;
@@ -418,7 +419,7 @@ class SMTP
             );
 
             if (empty($authtype)) {
-                foreach (array('CRAM-MD5', 'LOGIN', 'PLAIN', 'NTLM', 'XOAUTH2') as $method) {
+                foreach (['CRAM-MD5', 'LOGIN', 'PLAIN', 'NTLM', 'XOAUTH2'] as $method) {
                     if (in_array($method, $this->server_caps['AUTH'])) {
                         $authtype = $method;
                         break;
@@ -611,9 +612,9 @@ class SMTP
     /**
      * Close the socket and clean up the state of the class.
      * Don't use this function without first trying to use QUIT.
+     * @return void
      * @see quit()
      * @access public
-     * @return void
      */
     public function close()
     {
@@ -656,7 +657,7 @@ class SMTP
          */
 
         // Normalize line breaks before exploding
-        $lines = explode("\n", str_replace(array("\r\n", "\r"), "\n", $msg_data));
+        $lines = explode("\n", str_replace(["\r\n", "\r"], "\n", $msg_data));
 
         /* To distinguish between a complete RFC822 message and a plain message body, we check if the first field
          * of the first line (':' separated) does not contain a space then it _should_ be a header and we will
@@ -670,7 +671,7 @@ class SMTP
         }
 
         foreach ($lines as $line) {
-            $lines_out = array();
+            $lines_out = [];
             if ($in_headers and $line == '') {
                 $in_headers = false;
             }
@@ -739,11 +740,11 @@ class SMTP
     /**
      * Send an SMTP HELO or EHLO command.
      * Low-level implementation used by hello()
-     * @see hello()
      * @param string $hello The HELO string
      * @param string $host The hostname to say we are
      * @access protected
      * @return boolean
+     * @see hello()
      */
     protected function sendHello($hello, $host)
     {
@@ -765,7 +766,7 @@ class SMTP
      */
     protected function parseHelloFields($type)
     {
-        $this->server_caps = array();
+        $this->server_caps = [];
         $lines = explode("\n", $this->helo_rply);
 
         foreach ($lines as $n => $s) {
@@ -787,7 +788,7 @@ class SMTP
                             break;
                         case 'AUTH':
                             if (!is_array($fields)) {
-                                $fields = array();
+                                $fields = [];
                             }
                             break;
                         default:
@@ -853,7 +854,7 @@ class SMTP
         return $this->sendCommand(
             'RCPT TO',
             'RCPT TO:<' . $address . '>',
-            array(250, 251)
+            [250, 251]
         );
     }
 
@@ -892,7 +893,7 @@ class SMTP
 
         $this->last_reply = $this->get_lines();
         // Fetch SMTP code and possible error code explanation
-        $matches = array();
+        $matches = [];
         if (preg_match("/^([0-9]{3})[ -](?:([0-9]\\.[0-9]\\.[0-9]) )?/", $this->last_reply, $matches)) {
             $code = $matches[1];
             $code_ex = (count($matches) > 2 ? $matches[2] : null);
@@ -956,7 +957,7 @@ class SMTP
      */
     public function verify($name)
     {
-        return $this->sendCommand('VRFY', "VRFY $name", array(250, 251));
+        return $this->sendCommand('VRFY', "VRFY $name", [250, 251]);
     }
 
     /**
@@ -995,7 +996,7 @@ class SMTP
     public function client_send($data)
     {
         $this->edebug("CLIENT -> SERVER: $data", self::DEBUG_CLIENT);
-        set_error_handler(array($this, 'errorHandler'));
+        set_error_handler([$this, 'errorHandler']);
         $result = fwrite($this->smtp_conn, $data);
         restore_error_handler();
         return $result;
@@ -1153,12 +1154,12 @@ class SMTP
      */
     protected function setError($message, $detail = '', $smtp_code = '', $smtp_code_ex = '')
     {
-        $this->error = array(
-            'error' => $message,
-            'detail' => $detail,
-            'smtp_code' => $smtp_code,
+        $this->error = [
+            'error'        => $message,
+            'detail'       => $detail,
+            'smtp_code'    => $smtp_code,
             'smtp_code_ex' => $smtp_code_ex
-        );
+        ];
     }
 
     /**

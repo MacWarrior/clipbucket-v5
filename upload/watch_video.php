@@ -1,23 +1,23 @@
 <?php
-define('THIS_PAGE','watch_video');
-define('PARENT_PAGE','videos');
+define('THIS_PAGE', 'watch_video');
+define('PARENT_PAGE', 'videos');
 require 'includes/config.inc.php';
-global $cbvid,$userquery,$pages,$Cbucket;
-$perm = $userquery->perm_check('view_video',true);
+global $cbvid, $userquery, $pages, $Cbucket;
+$perm = $userquery->perm_check('view_video', true);
 $pages->page_redir();
 
-if( $perm ) {
+if ($perm) {
     $vkey = @$_GET['v'];
     $vkey = mysql_clean($vkey);
     $vdo = $cbvid->get_video($vkey);
     $cbvid->update_comments_count($vdo['videoid']);
     $assign_arry['vdo'] = $vdo;
-    if(video_playable($vdo)) {
+    if (video_playable($vdo)) {
         //Checking for playlist
         $pid = (int)$_GET['play_list'];
-        if(!empty($pid)) {
-            $plist = get_playlist( $pid );
-            if ( $plist ) {
+        if (!empty($pid)) {
+            $plist = get_playlist($pid);
+            if ($plist) {
                 $assign_arry['playlist'] = $plist;
             }
         }
@@ -30,25 +30,25 @@ if( $perm ) {
 
     //Return category id without '#'
     $v_cat = $vdo['category'];
-    if($v_cat[2] == '#') {
+    if ($v_cat[2] == '#') {
         $video_cat = $v_cat[1];
     } else {
-        $video_cat = $v_cat[1].$v_cat[2];
+        $video_cat = $v_cat[1] . $v_cat[2];
     }
-    $vid_cat = str_replace('%#%','',$video_cat);
+    $vid_cat = str_replace('%#%', '', $video_cat);
     $assign_arry['vid_cat'] = $vid_cat;
     $title = $vdo['title'];
     $tags = $vdo['tags'];
     $videoid = $vdo['videoid'];
-    $related_videos = get_videos(['title'=>$title,'tags'=>$tags,'exclude'=>$videoid,'show_related'=>'yes','limit'=>12,'order'=>'RAND()']);
-    if(!$related_videos){
+    $related_videos = get_videos(['title' => $title, 'tags' => $tags, 'exclude' => $videoid, 'show_related' => 'yes', 'limit' => 12, 'order' => 'RAND()']);
+    if (!$related_videos) {
         $relMode = 'ono';
-        $related_videos = get_videos(['exclude'=>$videoid,'limit'=>12,'order'=>'date_added DESC']);
+        $related_videos = get_videos(['exclude' => $videoid, 'limit' => 12, 'order' => 'date_added DESC']);
     }
-    $playlist = $cbvid->action->get_playlist($pid,userid());
+    $playlist = $cbvid->action->get_playlist($pid, userid());
     $assign_arry['playlist'] = $playlist;
     //Getting Playlist Item
-    $items = $cbvid->get_playlist_items( $pid,'playlist_items.date_added DESC');
+    $items = $cbvid->get_playlist_items($pid, 'playlist_items.date_added DESC');
     $assign_arry['items'] = $items;
     $assign_arry['videos'] = $related_videos;
     $assign_arry['relMode'] = $relMode;

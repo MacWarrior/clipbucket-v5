@@ -3,9 +3,9 @@ require_once('../includes/common.php');
 
 function install_custom_fields()
 {
-	global $db;
-	$db->Execute(
-        'CREATE TABLE IF NOT EXISTS '.tbl("custom_fields")." (
+    global $db;
+    $db->Execute(
+        'CREATE TABLE IF NOT EXISTS ' . tbl("custom_fields") . " (
         `custom_field_list_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
         `custom_field_title` TEXT NOT NULL ,
         `custom_field_type` TEXT NOT NULL ,
@@ -26,4 +26,5 @@ function install_custom_fields()
         ) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_general_ci;"
     );
 }
+
 install_custom_fields();

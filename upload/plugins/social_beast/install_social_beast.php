@@ -1,10 +1,11 @@
 <?php
 require_once('../includes/common.php');
 
-function produce_beast() {
+function produce_beast()
+{
     global $db;
     $db->Execute(
-        'CREATE TABLE IF NOT EXISTS '.tbl("social_beast_links").' (
+        'CREATE TABLE IF NOT EXISTS ' . tbl("social_beast_links") . ' (
         `id` int(20) NOT NULL AUTO_INCREMENT,
         `facebook` TEXT NOT NULL,
         `twitter` TEXT NOT NULL,
@@ -22,7 +23,7 @@ function produce_beast() {
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;'
     );
 
-    $db->Execute("INSERT INTO  ".tbl('social_beast_links')." (`id`, `facebook`, `twitter`, `google`, `linkedin`, `pinterest`, `reddit`, `youtube`, `vine`, `rss`, `github`, `dropbox`, `stumbleupon`) VALUES (NULL, '', '', '', '', '', '', '', '', '', '', '', '');");
+    $db->Execute("INSERT INTO  " . tbl('social_beast_links') . " (`id`, `facebook`, `twitter`, `google`, `linkedin`, `pinterest`, `reddit`, `youtube`, `vine`, `rss`, `github`, `dropbox`, `stumbleupon`) VALUES (NULL, '', '', '', '', '', '', '', '', '', '', '', '');");
 }
 
 produce_beast()

@@ -2,18 +2,18 @@
 function delete_directory($dirname): bool
 {
     $dir_handle = false;
-    if (is_dir($dirname)){
+    if (is_dir($dirname)) {
         $dir_handle = opendir($dirname);
     }
-    if (!$dir_handle){
+    if (!$dir_handle) {
         return false;
     }
-    while($file = readdir($dir_handle)) {
+    while ($file = readdir($dir_handle)) {
         if ($file != '.' && $file != '..') {
-            if (!is_dir($dirname.DIRECTORY_SEPARATOR.$file)){
-                unlink($dirname.DIRECTORY_SEPARATOR.$file);
+            if (!is_dir($dirname . DIRECTORY_SEPARATOR . $file)) {
+                unlink($dirname . DIRECTORY_SEPARATOR . $file);
             } else {
-                delete_directory($dirname.DIRECTORY_SEPARATOR.$file);
+                delete_directory($dirname . DIRECTORY_SEPARATOR . $file);
             }
         }
     }
@@ -24,9 +24,9 @@ function delete_directory($dirname): bool
 
 function uninstall_cb_server_thumb()
 {
-    $cache_dir = dirname(__DIR__,2).DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.'cb_server_thumb';
-    if( !delete_directory($cache_dir) ){
-        e('Unable to remove directory \''.$cache_dir.'\'');
+    $cache_dir = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'cb_server_thumb';
+    if (!delete_directory($cache_dir)) {
+        e('Unable to remove directory \'' . $cache_dir . '\'');
     }
 }
 

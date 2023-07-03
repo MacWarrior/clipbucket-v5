@@ -1,22 +1,21 @@
 <?php
-define('THIS_PAGE','collections');
-define('PARENT_PAGE','collections');
+define('THIS_PAGE', 'collections');
+define('PARENT_PAGE', 'collections');
 
 require 'includes/config.inc.php';
 
-global $pages,$userquery,$cbcollection;
+global $pages, $userquery, $cbcollection;
 
 $pages->page_redir();
-$userquery->perm_check('view_collections',true);
+$userquery->perm_check('view_collections', true);
 $sort = $_GET['sort'];
 
 $cond = ['date_span' => mysql_clean($_GET['time'])];
-if( config('enable_sub_collection') ){
+if (config('enable_sub_collection')) {
     $cond['parents_only'] = true;
 }
 
-switch($sort)
-{
+switch ($sort) {
     case 'most_recent':
     default:
         $cond['order'] = ' date_added DESC';
@@ -45,10 +44,14 @@ $get_limit = create_query_limit($page, config('collection_per_page'));
 
 if (!isSectionEnabled('photos') && !isSectionEnabled('videos')) {
     $cond['type'] = 'none';
-} else if( !isSectionEnabled('photos') ) {
-    $cond['type'] = 'videos';
-} else if( !isSectionEnabled('videos') ) {
-    $cond['type'] = 'photos';
+} else {
+    if (!isSectionEnabled('photos')) {
+        $cond['type'] = 'videos';
+    } else {
+        if (!isSectionEnabled('videos')) {
+            $cond['type'] = 'photos';
+        }
+    }
 }
 
 $collection_count = $cond;
@@ -64,7 +67,7 @@ $total_rows = $cbcollection->get_collections($collection_count);
 $total_pages = count_pages($total_rows, config('collection_per_page'));
 
 //Pagination
-$pages->paginate($total_pages,$page);
+$pages->paginate($total_pages, $page);
 
 subtitle(lang('collections'));
 //Displaying The Template

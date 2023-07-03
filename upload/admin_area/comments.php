@@ -9,29 +9,29 @@ $pages->page_redir();
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => 'General Configurations', 'url' => ''];
-$breadcrumb[1] = ['title' => 'Manage Comments', 'url' => ADMIN_BASEURL.'/comments.php'];
+$breadcrumb[1] = ['title' => 'Manage Comments', 'url' => ADMIN_BASEURL . '/comments.php'];
 
 /* Delete comments */
-if(isset($_POST['delete_selected']) && is_array($_POST['check_comments'])) {
+if (isset($_POST['delete_selected']) && is_array($_POST['check_comments'])) {
     foreach ($_POST['check_comments'] as $key => $value) {
         $myquery->delete_comment($value);
     }
 }
 
 /* Make spam */
-if(isset($_POST['not_spam']) && is_array($_POST['check_comments'])){
-    for($id=0;$id<=count($_POST['check_comments']);$id++){
+if (isset($_POST['not_spam']) && is_array($_POST['check_comments'])) {
+    for ($id = 0; $id <= count($_POST['check_comments']); $id++) {
         $myquery->spam_comment($_POST['check_comments'][$id]);
     }
 }
 /* Remove Make spam */
-if(isset($_POST['mark_spam']) && is_array($_POST['check_comments'])){
-    for($id=0;$id<=count($_POST['check_comments']);$id++){
+if (isset($_POST['mark_spam']) && is_array($_POST['check_comments'])) {
+    for ($id = 0; $id <= count($_POST['check_comments']); $id++) {
         $myquery->remove_spam($_POST['check_comments'][$id]);
     }
 }
 
-if(empty($_GET['type'])){
+if (empty($_GET['type'])) {
     $type = 'v';
 } else {
     $type = $_GET['type'];
@@ -40,11 +40,10 @@ $comment_cond = [];
 $comment_cond['order'] = ' comment_id DESC';
 
 $page = mysql_clean($_GET['page']);
-$get_limit = create_query_limit($page,RESULTS);
+$get_limit = create_query_limit($page, RESULTS);
 $comment_cond['limit'] = $get_limit;
-assign('type',$type);
-switch($type)
-{
+assign('type', $type);
+switch ($type) {
     case 'v':
     default:
         $comment_cond['type'] = 'v';
@@ -71,12 +70,12 @@ switch($type)
         break;
 }
 $comments = getComments($comment_cond);
-assign('comments',$comments);
+assign('comments', $comments);
 
-$comment_cond['count_only'] = TRUE;
-$total_rows  = getComments($comment_cond);
-$total_pages = count_pages($total_rows,RESULTS);
-$pages->paginate($total_pages,$page);
+$comment_cond['count_only'] = true;
+$total_rows = getComments($comment_cond);
+$total_pages = count_pages($total_rows, RESULTS);
+$pages->paginate($total_pages, $page);
 
 subtitle(lang('comments'));
 template_files('comments.html');

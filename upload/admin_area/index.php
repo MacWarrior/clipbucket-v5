@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE','dashboard');
+define('THIS_PAGE', 'dashboard');
 global $userquery, $myquery, $db, $cbvid, $eh, $cbphoto;
 
 require_once '../includes/admin_config.php';
@@ -7,12 +7,12 @@ $userquery->admin_login_check();
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = array('title' => 'Dashboard', 'url' => '');
+$breadcrumb[0] = ['title' => 'Dashboard', 'url' => ''];
 
 $result_array = $array;
 //Getting Video List
 $result_array['limit'] = $get_limit;
-if(!$array['order']){
+if (!$array['order']) {
     $result_array['order'] = ' doj DESC LIMIT 5 ';
 }
 
@@ -22,15 +22,14 @@ Assign('users', $users);
 
 //////////////////getting todolist/////////////
 $mode = $_POST['mode'];
-if(!isset($mode)){
+if (!isset($mode)) {
     $mode = $_GET['mode'];
 }
-switch($mode)
-{
+switch ($mode) {
     case 'add_todo':
-        $response = array();
+        $response = [];
         $value = $_POST['val'];
-        if(!empty($value)){
+        if (!empty($value)) {
             $myquery->insert_todo($value);
             $response['todo'] = nl2br($value);
             $response['id'] = $db->insert_id();
@@ -42,14 +41,14 @@ switch($mode)
         $id = $_POST['pk'];
         $value = trim($_POST['value']);
         $myquery->update_todo($value, $id);
-        echo json_encode(array('msg' => 'success'));
+        echo json_encode(['msg' => 'success']);
         die();
 
     case 'update_pharse': /* Never used yet */
         $id = $_POST['pk'];
         $value = trim($_POST['value']);
         $myquery->update_pharse($value, $id);
-        echo json_encode(array('msg' => 'success'));
+        echo json_encode(['msg' => 'success']);
         die();
 
     case 'delete_todo':
@@ -61,10 +60,9 @@ switch($mode)
 
 ////////////////getting notes
 $mode = $_POST['mode'];
-switch($mode)
-{
+switch ($mode) {
     case 'add_note':
-        $response = array();
+        $response = [];
         $value = $_POST['note'];
         $myquery->insert_note($value);
         $response['note'] = nl2br($value);
@@ -79,8 +77,7 @@ switch($mode)
 
     case 'delete_comment':
         $type = $_POST['type'];
-        switch($type)
-        {
+        switch ($type) {
             case 'v':
             case 'video':
             default:
@@ -101,12 +98,14 @@ switch($mode)
         $warning = $eh->get_warning();
         $message = $eh->get_message();
 
-        if( $error ){
+        if ($error) {
             $err = $error[0]['val'];
-        } else if( $warning ) {
-            $err = $warning[0]['val'];
+        } else {
+            if ($warning) {
+                $err = $warning[0]['val'];
+            }
         }
-        if( $message ) {
+        if ($message) {
             $msg = $message[0]['val'];
         }
 
@@ -123,12 +122,14 @@ switch($mode)
         $warning = $eh->get_warning();
         $message = $eh->get_message();
 
-        if( $error ){
+        if ($error) {
             $err = $error[0]['val'];
-        } else if( $warning ) {
-            $err = $warning[0]['val'];
+        } else {
+            if ($warning) {
+                $err = $warning[0]['val'];
+            }
         }
-        if( $message ) {
+        if ($message) {
             $msg = $message[0]['val'];
         }
 
@@ -145,12 +146,14 @@ switch($mode)
         $warning = $eh->get_warning();
         $message = $eh->get_message();
 
-        if( $error ){
+        if ($error) {
             $err = $error[0]['val'];
-        } else if( $warning ) {
-            $err = $warning[0]['val'];
+        } else {
+            if ($warning) {
+                $err = $warning[0]['val'];
+            }
         }
-        if( $message ) {
+        if ($message) {
             $msg = $message[0]['val'];
         }
 
@@ -162,7 +165,7 @@ switch($mode)
 }
 
 /////////////////////////ending notes
-if(!$array['order']){
+if (!$array['order']) {
     $result_array['order'] = ' views DESC LIMIT 8 ';
 }
 
@@ -173,17 +176,17 @@ Assign('videos', $videos);
 $comment_cond['limit'] = 10;
 $comment_cond['order'] = 'date_added DESC';
 $comments = getComments($comment_cond);
-Assign('comments',$comments);
+Assign('comments', $comments);
 
-$get_limit = create_query_limit($page,5);
+$get_limit = create_query_limit($page, 5);
 $videos = $cbvid->action->get_flagged_objects($get_limit);
 Assign('flaggedVideos', $videos);
 
-$get_limit = create_query_limit($page,5);
+$get_limit = create_query_limit($page, 5);
 $users = $userquery->action->get_flagged_objects($get_limit);
 Assign('flaggedUsers', $users);
 
-$get_limit = create_query_limit($page,5);
+$get_limit = create_query_limit($page, 5);
 $photos = $cbphoto->action->get_flagged_objects($get_limit);
 Assign('flaggedPhotos', $photos);
 

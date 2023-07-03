@@ -1,4 +1,4 @@
 <?php
-$blacklist_fields = array(
+$blacklist_fields = [
     'password', 'video_password', 'avcode', 'session'
-);
+];

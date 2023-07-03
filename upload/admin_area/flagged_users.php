@@ -1,7 +1,7 @@
 <?php
 require_once '../includes/admin_config.php';
 
-global $userquery,$eh,$pages;
+global $userquery, $eh, $pages;
 
 $userquery->admin_login_check();
 $userquery->login_check('video_moderation');
@@ -9,92 +9,90 @@ $userquery->login_check('video_moderation');
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('users'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'Reported Users', 'url' => ADMIN_BASEURL.'/flagged_users.php'];
+$breadcrumb[1] = ['title' => 'Reported Users', 'url' => ADMIN_BASEURL . '/flagged_users.php'];
 
 $mode = $_GET['mode'];
 
 //Delete Video
-if(isset($_GET['delete_user'])){
+if (isset($_GET['delete_user'])) {
     $user = mysql_clean($_GET['delete_user']);
     $userquery->delete_user($user);
 }
 
 //Deleting Multiple Videos
-if(isset($_POST['delete_selected']) && is_array($_POST['check_user'])) {
-    for($id=0;$id<=count($_POST['check_user']);$id++) {
+if (isset($_POST['delete_selected']) && is_array($_POST['check_user'])) {
+    for ($id = 0; $id <= count($_POST['check_user']); $id++) {
         $userquery->delete_user($_POST['check_user'][$id]);
     }
     $eh->flush();
-    e('Selected users have been deleted','m');
+    e('Selected users have been deleted', 'm');
 }
 
 //Activate / Deactivate
-if(isset($_GET['activate'])){
+if (isset($_GET['activate'])) {
     $user = mysql_clean($_GET['activate']);
-    $userquery->action('activate',$user);
+    $userquery->action('activate', $user);
 }
 
-if(isset($_GET['deactivate'])){
+if (isset($_GET['deactivate'])) {
     $user = mysql_clean($_GET['deactivate']);
-    $userquery->action('deactivate',$user);
+    $userquery->action('deactivate', $user);
 }
 
 //Using Multiple Action
-if(isset($_POST['activate_selected']) && is_array($_POST['check_user'])) {
-    for($id=0;$id<=count($_POST['check_user']);$id++){
-        $userquery->action('activate',$_POST['check_user'][$id]);
+if (isset($_POST['activate_selected']) && is_array($_POST['check_user'])) {
+    for ($id = 0; $id <= count($_POST['check_user']); $id++) {
+        $userquery->action('activate', $_POST['check_user'][$id]);
     }
-    e('Selected users Have Been Activated','m');
+    e('Selected users Have Been Activated', 'm');
 }
 
-if(isset($_POST['deactivate_selected']) && is_array($_POST['check_user'])) {
-    for($id=0;$id<=count($_POST['check_user']);$id++){
-        $userquery->action('activate',$_POST['check_user'][$id]);
+if (isset($_POST['deactivate_selected']) && is_array($_POST['check_user'])) {
+    for ($id = 0; $id <= count($_POST['check_user']); $id++) {
+        $userquery->action('activate', $_POST['check_user'][$id]);
     }
-    e('Selected users Have Been Dectivated','m');
+    e('Selected users Have Been Dectivated', 'm');
 }
 
-if(isset($_REQUEST['delete_flags'])) {
+if (isset($_REQUEST['delete_flags'])) {
     $user = mysql_clean($_GET['delete_flags']);
     $userquery->action->delete_flags($user);
 }
 
 //Deleting Multiple Videos
-if(isset($_POST['delete_flags']) && is_array($_POST['check_user'])) {
-    for($id=0;$id<=count($_POST['check_user']);$id++) {
+if (isset($_POST['delete_flags']) && is_array($_POST['check_user'])) {
+    for ($id = 0; $id <= count($_POST['check_user']); $id++) {
         $eh->flush();
         $userquery->action->delete_flags($_POST['check_user'][$id]);
     }
 }
 
-switch($mode)
-{
+switch ($mode) {
     case 'view':
     default:
-        assign('mode','view');
+        assign('mode', 'view');
         //Getting Video List
         $page = mysql_clean($_GET['page']);
-        $get_limit = create_query_limit($page,5);
+        $get_limit = create_query_limit($page, 5);
         $users = $userquery->action->get_flagged_objects($get_limit);
         Assign('users', $users);
 
         //Collecting Data for Pagination
-        $total_rows  = $userquery->action->count_flagged_objects();
-        $total_pages = count_pages($total_rows,5);
+        $total_rows = $userquery->action->count_flagged_objects();
+        $total_pages = count_pages($total_rows, 5);
 
         //Pagination
-        $pages->paginate($total_pages,$page);
+        $pages->paginate($total_pages, $page);
         break;
 
     case 'view_flags':
-        assign('mode','view_flags');
+        assign('mode', 'view_flags');
         $uid = mysql_clean($_GET['uid']);
         $udetails = $userquery->get_user_details($uid);
-        if($udetails)
-        {
+        if ($udetails) {
             $flags = $userquery->action->get_flags($uid);
-            assign('flags',$flags);
-            assign('user',$udetails);
+            assign('flags', $flags);
+            assign('user', $udetails);
         } else {
             e('user does not exist');
         }

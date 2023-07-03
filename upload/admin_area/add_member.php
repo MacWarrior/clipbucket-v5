@@ -1,7 +1,7 @@
 <?php
 require_once '../includes/admin_config.php';
 
-global $userquery,$pages;
+global $userquery, $pages;
 
 $userquery->admin_login_check();
 $userquery->login_check('member_moderation');
@@ -10,11 +10,11 @@ $pages->page_redir();
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('users'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'Add Member', 'url' => ADMIN_BASEURL.'/add_member.php'];
+$breadcrumb[1] = ['title' => 'Add Member', 'url' => ADMIN_BASEURL . '/add_member.php'];
 
-if(isset($_POST['add_member'])) {
-    if($userquery->signup_user($_POST)) {
-        e(lang('new_mem_added'),'m');
+if (isset($_POST['add_member'])) {
+    if ($userquery->signup_user($_POST)) {
+        e(lang('new_mem_added'), 'm');
         $_POST = '';
     }
 }

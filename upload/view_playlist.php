@@ -7,32 +7,32 @@
  *******************************************************************
 */
 
-define( 'THIS_PAGE','view_playlist' );
-define( 'PARENT_PAGE', 'videos' );
+define('THIS_PAGE', 'view_playlist');
+define('PARENT_PAGE', 'videos');
 
 require 'includes/config.inc.php';
 
 $pages->page_redir();
 
-$list_id = mysql_clean( $_GET[ 'list_id' ] );
+$list_id = mysql_clean($_GET['list_id']);
 
-$playlist = get_playlist( $list_id );
+$playlist = get_playlist($list_id);
 
-if( is_playlist_viewable( $playlist ) and isset( $playlist ) ) {
+if (is_playlist_viewable($playlist) and isset($playlist)) {
 
-    $items = get_playlist_items( $list_id );
+    $items = get_playlist_items($list_id);
 
-    if ( !empty( $items ) ) {
-        $playlist[ 'videos' ] = $items;
+    if (!empty($items)) {
+        $playlist['videos'] = $items;
     }
 
-    cb_do_action( 'view_playlist', array(
+    cb_do_action('view_playlist', [
         'playlist' => $playlist
-    ));
+    ]);
 
-    assign( 'playlist', $playlist );
+    assign('playlist', $playlist);
 
-    subtitle( $playlist[ 'playlist_name' ] );
+    subtitle($playlist['playlist_name']);
 } else {
     $Cbucket->show_page = false;
 }

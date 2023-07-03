@@ -1,42 +1,41 @@
 <?php
-define('THIS_PAGE','manage_playlists');
-define('PARENT_PAGE','videos');
+define('THIS_PAGE', 'manage_playlists');
+define('PARENT_PAGE', 'videos');
 
 require 'includes/config.inc.php';
 
-global $userquery,$cbvid,$eh;
+global $userquery, $cbvid, $eh;
 
 $userquery->logincheck();
 $udetails = $userquery->get_user_details(userid());
-assign('user',$udetails);
-assign('p',$userquery->get_user_profile($udetails['userid']));
+assign('user', $udetails);
+assign('p', $userquery->get_user_profile($udetails['userid']));
 
 $mode = $_GET['mode'];
 
 $page = mysql_clean($_GET['page']);
-$get_limit = create_query_limit($page,VLISTPP);
+$get_limit = create_query_limit($page, VLISTPP);
 
-switch($mode)
-{
+switch ($mode) {
     case 'manage_playlist':
     case 'manage_video_playlist':
     default:
         //Deleting Playlist
-        if(!empty($_GET['delete_pl'])) {
+        if (!empty($_GET['delete_pl'])) {
             $cbvid->action->delete_playlist($_GET['delete_pl']);
         }
 
-        if(isset($_POST['delete_playlists'])) {
+        if (isset($_POST['delete_playlists'])) {
             $playlists = post('check_playlist');
 
-            if(count($playlists)>0) {
-                foreach($playlists as $playlist) {
+            if (count($playlists) > 0) {
+                foreach ($playlists as $playlist) {
                     $cbvid->action->delete_playlist($playlist);
                 }
 
                 $eh->flush();
-                if(!error()) {
-                    e(lang('playlists_have_been_removed'),'m');
+                if (!error()) {
+                    e(lang('playlists_have_been_removed'), 'm');
                 } else {
                     e(lang('playlist_not_exist'));
                 }
@@ -47,28 +46,28 @@ switch($mode)
         }
 
         //Adding New Playlist
-        if(isset($_POST['add_playlist'])) {
+        if (isset($_POST['add_playlist'])) {
             $cbvid->action->create_playlist($_POST);
         }
 
-        assign('mode','manage_playlist');
+        assign('mode', 'manage_playlist');
         //Getting List of available playlists
-        $playlists = $cbvid->action->get_playlists( ['user'=>userid(), 'order' => 'playlists.date_added DESC'] );
-        assign('playlists',$playlists);
+        $playlists = $cbvid->action->get_playlists(['user' => userid(), 'order' => 'playlists.date_added DESC']);
+        assign('playlists', $playlists);
         break;
 
     case 'edit_playlist':
-        if(isset($_POST['delete_playlist_item'])) {
+        if (isset($_POST['delete_playlist_item'])) {
             $items = post('check_playlist_items');
-            if(is_array($items) && count($items)>0) {
-                foreach($items as $item) {
+            if (is_array($items) && count($items) > 0) {
+                foreach ($items as $item) {
                     $item = mysql_clean($item);
                     $cbvid->action->delete_playlist_item($item);
                 }
 
-                if(!error()) {
+                if (!error()) {
                     $eh->flush();
-                    e(lang('playlist_items_have_been_removed'),"m");
+                    e(lang('playlist_items_have_been_removed'), "m");
                 } else {
                     $eh->flush();
                     e(lang("playlist_item_doesnt_exist"));
@@ -78,39 +77,39 @@ switch($mode)
             }
         }
 
-        assign('mode','edit_playlist');
+        assign('mode', 'edit_playlist');
         $pid = $_GET['pid'];
 
-        if(isset($_POST['edit_playlist'])) {
+        if (isset($_POST['edit_playlist'])) {
             $_POST['list_id'] = $pid;
             $cbvid->action->edit_playlist();
         }
 
-        if ( isset( $_POST['upload_playlist_cover'] ) ) {
+        if (isset($_POST['upload_playlist_cover'])) {
             $cover = $_FILES['playlist_cover'];
             $cover['playlist_id'] = $pid;
 
-            if ( playlist_upload_cover( $cover ) ) {
-                e( lang( 'Playlist cover has been uploaded' ), 'm' );
+            if (playlist_upload_cover($cover)) {
+                e(lang('Playlist cover has been uploaded'), 'm');
             }
 
-            if ( file_exists( $cover['tmp_name'] ) ) {
-                unlink( $cover['tmp_name'] );
+            if (file_exists($cover['tmp_name'])) {
+                unlink($cover['tmp_name']);
             }
         }
 
         //Deleting Item
-        if(!empty($_GET['delete_item'])) {
+        if (!empty($_GET['delete_item'])) {
             $delid = mysql_clean($_GET['delete_item']);
             $cbvid->action->delete_playlist_item($delid);
         }
 
-        $playlist = $cbvid->action->get_playlist($pid,userid());
-        if($playlist) {
-            assign('playlist',$playlist);
+        $playlist = $cbvid->action->get_playlist($pid, userid());
+        if ($playlist) {
+            assign('playlist', $playlist);
             //Getting Playlist Item
-            $items = $cbvid->get_playlist_items( $pid, 'playlist_items.date_added DESC', 0);
-            assign('items',$items);
+            $items = $cbvid->get_playlist_items($pid, 'playlist_items.date_added DESC', 0);
+            assign('items', $items);
         } else {
             e(lang('playlist_not_exist'));
         }

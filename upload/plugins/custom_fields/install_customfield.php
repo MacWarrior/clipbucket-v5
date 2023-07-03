@@ -4,7 +4,7 @@ function install_customfield()
 {
     global $db;
     $db->Execute(
-        'CREATE TABLE IF NOT EXISTS '.tbl("custom_field").' (
+        'CREATE TABLE IF NOT EXISTS ' . tbl("custom_field") . ' (
         `custom_field_list_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
         `field_name` text NOT NULL,
         `field_title` text NOT NULL,
@@ -16,4 +16,5 @@ function install_customfield()
         ) ENGINE=InnoDB;'
     );
 }
+
 install_customfield();

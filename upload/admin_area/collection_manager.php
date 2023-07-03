@@ -1,6 +1,6 @@
 <?php
-define('THIS_PAGE','collection_manager');
-global $userquery,$pages,$cbcollection,$eh;
+define('THIS_PAGE', 'collection_manager');
+global $userquery, $pages, $cbcollection, $eh;
 
 require_once '../includes/admin_config.php';
 $userquery->admin_login_check();
@@ -10,91 +10,91 @@ $pages->page_redir();
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('collections'), 'url' => ''];
-$breadcrumb[1] = ['title' => lang('manage_collections'), 'url' => ADMIN_BASEURL.'/flagged_collections.php'];
+$breadcrumb[1] = ['title' => lang('manage_collections'), 'url' => ADMIN_BASEURL . '/flagged_collections.php'];
 
-if(isset($_GET['make_feature'])) {
+if (isset($_GET['make_feature'])) {
     $id = mysql_clean($_GET['make_feature']);
-    $cbcollection->collection_actions('mcf',$id);
+    $cbcollection->collection_actions('mcf', $id);
 }
 
-if(isset($_GET['make_unfeature'])) {
+if (isset($_GET['make_unfeature'])) {
     $id = mysql_clean($_GET['make_unfeature']);
-    $cbcollection->collection_actions('mcuf',$id);
+    $cbcollection->collection_actions('mcuf', $id);
 }
 
-if(isset($_GET['activate'])) {
+if (isset($_GET['activate'])) {
     $id = mysql_clean($_GET['activate']);
-    $cbcollection->collection_actions('ac',$id);
+    $cbcollection->collection_actions('ac', $id);
 }
 
-if(isset($_GET['deactivate'])) {
+if (isset($_GET['deactivate'])) {
     $id = mysql_clean($_GET['deactivate']);
-    $cbcollection->collection_actions('dac',$id);
+    $cbcollection->collection_actions('dac', $id);
 }
 
-if(isset($_GET['delete_collection'])) {
+if (isset($_GET['delete_collection'])) {
     $id = mysql_clean($_GET['delete_collection']);
     $cbcollection->delete_collection($id);
 }
 
 /* ACTIONS ON MULTI ITEMS */
-if(isset($_POST['activate_selected']) && is_array($_POST['check_collection'])) {
+if (isset($_POST['activate_selected']) && is_array($_POST['check_collection'])) {
     $total = count($_POST['check_collection']);
-    for($i=0;$i<$total;$i++) {
-        $cbcollection->collection_actions('ac',$_POST['check_collection'][$i]);
+    for ($i = 0; $i < $total; $i++) {
+        $cbcollection->collection_actions('ac', $_POST['check_collection'][$i]);
     }
     $eh->flush();
-    e($total.' collections has been activated','m');
+    e($total . ' collections has been activated', 'm');
 }
 
-if(isset($_POST['deactivate_selected']) && is_array($_POST['check_collection'])) {
+if (isset($_POST['deactivate_selected']) && is_array($_POST['check_collection'])) {
     $total = count($_POST['check_collection']);
-    for($i=0;$i<$total;$i++) {
-        $cbcollection->collection_actions('dac',$_POST['check_collection'][$i]);
+    for ($i = 0; $i < $total; $i++) {
+        $cbcollection->collection_actions('dac', $_POST['check_collection'][$i]);
     }
     $eh->flush();
-    e($total.' collections has been deactivated','m');
+    e($total . ' collections has been deactivated', 'm');
 }
 
-if(isset($_POST['make_featured_selected']) && is_array($_POST['check_collection'])) {
+if (isset($_POST['make_featured_selected']) && is_array($_POST['check_collection'])) {
     $total = count($_POST['check_collection']);
-    for($i=0;$i<$total;$i++) {
-        $cbcollection->collection_actions('mcf',$_POST['check_collection'][$i]);
+    for ($i = 0; $i < $total; $i++) {
+        $cbcollection->collection_actions('mcf', $_POST['check_collection'][$i]);
     }
     $eh->flush();
-    e($total.' collections has been marked as <strong>'.lang('featured').'</strong>','m');
+    e($total . ' collections has been marked as <strong>' . lang('featured') . '</strong>', 'm');
 }
 
-if(isset($_POST['make_unfeatured_selected']) && is_array($_POST['check_collection'])) {
+if (isset($_POST['make_unfeatured_selected']) && is_array($_POST['check_collection'])) {
     $total = count($_POST['check_collection']);
-    for($i=0;$i<$total;$i++) {
-        $cbcollection->collection_actions('mcuf',$_POST['check_collection'][$i]);
+    for ($i = 0; $i < $total; $i++) {
+        $cbcollection->collection_actions('mcuf', $_POST['check_collection'][$i]);
     }
     $eh->flush();
-    e($total.' collections has been marked as <strong>Unfeatured</strong>','m');
+    e($total . ' collections has been marked as <strong>Unfeatured</strong>', 'm');
 }
 
-if(isset($_POST['make_unfeatured_selected']) && is_array($_POST['check_collection'])) {
+if (isset($_POST['make_unfeatured_selected']) && is_array($_POST['check_collection'])) {
     $total = count($_POST['check_collection']);
-    for($i=0;$i<$total;$i++) {
-        $cbcollection->collection_actions('mcuf',$_POST['check_collection'][$i]);
+    for ($i = 0; $i < $total; $i++) {
+        $cbcollection->collection_actions('mcuf', $_POST['check_collection'][$i]);
     }
     $eh->flush();
-    e($total.' collections has been marked as <strong>Unfeatured</strong>','m');
+    e($total . ' collections has been marked as <strong>Unfeatured</strong>', 'm');
 }
 
-if(isset($_POST['delete_selected']) && is_array($_POST['check_collection'])) {
+if (isset($_POST['delete_selected']) && is_array($_POST['check_collection'])) {
     $total = count($_POST['check_collection']);
-    for($i=0;$i<$total;$i++) {
+    for ($i = 0; $i < $total; $i++) {
         $cbcollection->delete_collection($_POST['check_collection'][$i]);
     }
     $eh->flush();
-    e($total.' collection(s) has been deleted successfully','m');
+    e($total . ' collection(s) has been deleted successfully', 'm');
 }
 
 /* IF SEARCH EXISTS */
-if($_GET['search']) {
-    $carray =[
+if ($_GET['search']) {
+    $carray = [
         'name'      => $_GET['title'],
         'tags'      => $_GET['tags'],
         'cid'       => $_GET['collectionid'],
@@ -111,20 +111,20 @@ if($_GET['search']) {
 
 /* CREATING LIMIT */
 $page = mysql_clean($_GET['page']);
-$get_limit = create_query_limit($page,RESULTS);
+$get_limit = create_query_limit($page, RESULTS);
 
 $carray['limit'] = $get_limit;
-if(!empty($carray['order'])){
-    $carray['order'] = $carray['order'].' DESC';
+if (!empty($carray['order'])) {
+    $carray['order'] = $carray['order'] . ' DESC';
 } else {
     $carray['order'] = ' collection_id DESC';
 }
 
 $collections = $cbcollection->get_collections($carray);
-assign('collections',$collections);
+assign('collections', $collections);
 
-$total_pages = count_pages(count($collections),RESULTS);
-$pages->paginate($total_pages,$page);
+$total_pages = count_pages(count($collections), RESULTS);
+$pages->paginate($total_pages, $page);
 
 subtitle(lang('manage_collections'));
 template_files('collection_manager.html');

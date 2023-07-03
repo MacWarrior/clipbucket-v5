@@ -7,29 +7,31 @@
  */
 
 
-function get_playlist ( $list_id, $user = null ) {
+function get_playlist($list_id, $user = null)
+{
     global $cbvid;
-    return $cbvid->action->get_playlist( $list_id, $user );
+    return $cbvid->action->get_playlist($list_id, $user);
 }
 
-function is_playlist_viewable( $list_id ) {
+function is_playlist_viewable($list_id)
+{
 
-    if ( is_array( $list_id ) ) {
+    if (is_array($list_id)) {
         $playlist = $list_id;
     } else {
-        $playlist = get_playlist( $list_id );
+        $playlist = get_playlist($list_id);
     }
 
-    if ( isset( $playlist[ 'playlist_id' ] ) ) {
+    if (isset($playlist['playlist_id'])) {
 
-        if ( $playlist[ 'privacy' ] == 'private' and $playlist[ 'userid' ] != userid() ) {
-            e( lang( 'User has made this playlist private.' ) );
+        if ($playlist['privacy'] == 'private' and $playlist['userid'] != userid()) {
+            e(lang('User has made this playlist private.'));
             return false;
         }
 
-        $data = cb_do_action( 'is_playlist_viewable', array( 'playlist' => $playlist ) );
+        $data = cb_do_action('is_playlist_viewable', ['playlist' => $playlist]);
 
-        if ( $data ) {
+        if ($data) {
             return $data;
         }
 
@@ -39,164 +41,174 @@ function is_playlist_viewable( $list_id ) {
     return true;
 }
 
-function get_playlists( $args = array() ) {
+function get_playlists($args = [])
+{
     global $cbvid;
-    return $cbvid->action->get_playlists( $args );
+    return $cbvid->action->get_playlists($args);
 }
 
-function get_playlist_items( $list_id, $limit = -1, $order = "playlist_items.playlist_item_id DESC" ) {
+function get_playlist_items($list_id, $limit = -1, $order = "playlist_items.playlist_item_id DESC")
+{
     global $cbvid;
-    return $cbvid->get_playlist_items( $list_id, $order, $limit );
+    return $cbvid->get_playlist_items($list_id, $order, $limit);
 }
 
-function playlist_runtime ( $playlist ) {
+function playlist_runtime($playlist)
+{
 
     $runtime = (int)0;
 
-    if ( is_array( $playlist ) ) {
-        $runtime = $playlist[ 'runtime' ];
-    } else if ( is_numeric( $playlist ) ) {
-        $runtime = $playlist;
+    if (is_array($playlist)) {
+        $runtime = $playlist['runtime'];
+    } else {
+        if (is_numeric($playlist)) {
+            $runtime = $playlist;
+        }
     }
 
     $string = '';
 
-    if ( $runtime >= 3600 ) {
-        $hours = intval( intval( $runtime ) / 3600 );
-        if ( $hours > 0 ) {
-            $hours = str_pad( $hours, 2, "0", STR_PAD_LEFT );
-            $string .= $hours.' '.( ( $hours == 1 ) ? lang( 'hour' ) : lang( 'hours' ) );
+    if ($runtime >= 3600) {
+        $hours = intval(intval($runtime) / 3600);
+        if ($hours > 0) {
+            $hours = str_pad($hours, 2, "0", STR_PAD_LEFT);
+            $string .= $hours . ' ' . (($hours == 1) ? lang('hour') : lang('hours'));
         }
     }
 
-    $minutes = intval( ( $runtime / 60 ) % 60 );
+    $minutes = intval(($runtime / 60) % 60);
 
-    if ( $minutes > 0 ) {
-        $minutes = str_pad( $minutes, 2, "0", STR_PAD_LEFT );
-        $string .= $minutes.' '.( ( $minutes == 1 ) ? lang( 'minute' ) : lang( 'minutes' ) );
+    if ($minutes > 0) {
+        $minutes = str_pad($minutes, 2, "0", STR_PAD_LEFT);
+        $string .= $minutes . ' ' . (($minutes == 1) ? lang('minute') : lang('minutes'));
     }
 
-    $seconds = intval( $runtime % 60 );
-    $string .= $seconds.' '.( ( $seconds == 1 ) ? lang( 'second' ) : lang( 'seconds' ) );
+    $seconds = intval($runtime % 60);
+    $string .= $seconds . ' ' . (($seconds == 1) ? lang('second') : lang('seconds'));
 
     return $string;
 }
 
-function get_playlist_cover ( $playlist, $return_default = false ) {
-    $cover = $playlist[ 'cover' ];
+function get_playlist_cover($playlist, $return_default = false)
+{
+    $cover = $playlist['cover'];
     $playlist_dir = PLAYLIST_COVERS_DIR;
 
-    if ( empty( $cover ) ) {
-        return ( $return_default == true ) ? get_playlist_default_thumb() : false;
+    if (empty($cover)) {
+        return ($return_default == true) ? get_playlist_default_thumb() : false;
     }
 
-    if ( file_exists( $playlist_dir.'/'.$cover ) ) {
-        return PLAYLIST_COVERS_URL.'/'.$cover;
+    if (file_exists($playlist_dir . '/' . $cover)) {
+        return PLAYLIST_COVERS_URL . '/' . $cover;
     }
 
-    return ( $return_default == true ) ? get_playlist_default_thumb() : false;
+    return ($return_default == true) ? get_playlist_default_thumb() : false;
 }
 
-function get_playlist_thumb ( $playlist, $size = false ) {
+function get_playlist_thumb($playlist, $size = false)
+{
 
     if (!$size) {
         $size = 'big';
     }
 
-    $first_item = $playlist[ 'first_item' ];
+    $first_item = $playlist['first_item'];
 
-    if ( isset( $first_item ) ) {
+    if (isset($first_item)) {
 
-        if ( !is_array( $first_item ) ) {
-            $first_item = json_decode( $first_item, true );
+        if (!is_array($first_item)) {
+            $first_item = json_decode($first_item, true);
         }
 
-        $thumb = get_thumb( $first_item, $size );
+        $thumb = get_thumb($first_item, $size);
 
-        if ( strpos( $thumb, 'processing' ) === false ) {
+        if (strpos($thumb, 'processing') === false) {
             return $thumb;
         }
     }
 
-    $thumb = get_playlist_cover( $playlist );
+    $thumb = get_playlist_cover($playlist);
 
-    return ( $thumb ? $thumb : get_playlist_default_thumb() );
+    return ($thumb ? $thumb : get_playlist_default_thumb());
 }
 
-function get_playlist_default_thumb() {
+function get_playlist_default_thumb()
+{
     $name = 'playlist_thumb.png';
     $template = TEMPLATEDIR;
     $images = IMAGES_URL;
 
-    $url = $images.'/'.$name;
+    $url = $images . '/' . $name;
 
-    if ( file_exists( $template.'/images/'.$name ) ) {
-        $url = TEMPLATEURL.'/images/'.$name;
+    if (file_exists($template . '/images/' . $name)) {
+        $url = TEMPLATEURL . '/images/' . $name;
     }
 
     return $url;
 }
 
-function view_playlist( $playlist_id ) {
+function view_playlist($playlist_id)
+{
 
     $playlist_link = BASEURL;
 
-    if ( is_array( $playlist_id ) and isset( $playlist_id[ 'playlist_id' ] ) ) {
+    if (is_array($playlist_id) and isset($playlist_id['playlist_id'])) {
         $playlist = $playlist_id;
     } else {
-        $playlist = get_playlist( $playlist_id );
+        $playlist = get_playlist($playlist_id);
     }
 
-    if ( empty( $playlist  ) ) {
+    if (empty($playlist)) {
         return BASEURL;
     }
 
     $is_seo = SEO;
 
 
-    $data = cb_do_action( 'view_playlist_link', array( 'playlist' => $playlist, 'seo_enabled' => $is_seo ) );
+    $data = cb_do_action('view_playlist_link', ['playlist' => $playlist, 'seo_enabled' => $is_seo]);
 
-    if ( $is_seo ) {
-        $playlist_link .= '/list/'.$playlist[ 'playlist_id' ].'/'.SEO( $playlist[ 'playlist_name' ] );
+    if ($is_seo) {
+        $playlist_link .= '/list/' . $playlist['playlist_id'] . '/' . SEO($playlist['playlist_name']);
     } else {
-        $playlist_link .= '/view_playlist.php?list='.$playlist_id;
+        $playlist_link .= '/view_playlist.php?list=' . $playlist_id;
     }
 
 
-    $data = cb_do_action( 'view_playlist_link', array(
-        'playlist' => $playlist,
-        'seo_enabled' => $is_seo,
+    $data = cb_do_action('view_playlist_link', [
+        'playlist'      => $playlist,
+        'seo_enabled'   => $is_seo,
         'playlist_link' => $playlist_link
-    ) );
+    ]);
 
-    if ( $data ) {
+    if ($data) {
         return $data;
     }
 
     return $playlist_link;
 }
 
-function playlist_upload_cover ( $args ) {
+function playlist_upload_cover($args)
+{
     global $db;
 
-    $filename = $args[ 'playlist_id' ];
-    $extension = getExt( $args[ 'name' ] );
-    $folder = create_dated_folder( PLAYLIST_COVERS_DIR );
-    $uploaded_file = PLAYLIST_COVERS_DIR.'/'.$folder.'/'.$filename.'.'.$extension;
+    $filename = $args['playlist_id'];
+    $extension = getExt($args['name']);
+    $folder = create_dated_folder(PLAYLIST_COVERS_DIR);
+    $uploaded_file = PLAYLIST_COVERS_DIR . '/' . $folder . '/' . $filename . '.' . $extension;
 
-    if ( !empty( $filename ) ) {
+    if (!empty($filename)) {
 
-        if ( move_uploaded_file( $args[ 'tmp_name' ], $uploaded_file ) ) {
+        if (move_uploaded_file($args['tmp_name'], $uploaded_file)) {
 
-            $cover_name = $filename.'.'.$extension;
+            $cover_name = $filename . '.' . $extension;
 
-            $resizer = new CB_Resizer( $uploaded_file );
+            $resizer = new CB_Resizer($uploaded_file);
             $resizer->target = $uploaded_file;
-            $resizer->resize( 1280, 800 );
+            $resizer->resize(1280, 800);
             $resizer->save();
 
 
-            $db->update( tbl( 'playlists' ), array( 'cover' ), array( $folder.'/'.$cover_name ), " playlist_id = '".$filename."' " );
+            $db->update(tbl('playlists'), ['cover'], [$folder . '/' . $cover_name], " playlist_id = '" . $filename . "' ");
 
             return true;
         }
@@ -206,17 +218,18 @@ function playlist_upload_cover ( $args ) {
     return false;
 }
 
-function increment_playlist_played( $args = array() ) {
+function increment_playlist_played($args = [])
+{
     global $db;
 
-    if ( isset( $args[ 'playlist' ] ) ) {
+    if (isset($args['playlist'])) {
 
-        $cookie = 'playlist_played_'.$args[ 'playlist' ][ 'playlist_id' ];
+        $cookie = 'playlist_played_' . $args['playlist']['playlist_id'];
 
-        if ( !isset( $_COOKIE[ $cookie ] ) ) {
+        if (!isset($_COOKIE[$cookie])) {
 
-            $db->update( tbl( 'playlists' ), array( 'played' ), array( '|f|played+1' ), " playlist_id = '".$args[ 'playlist' ][ 'playlist_id' ]."' " );
-            set_cookie_secure( $cookie, true);
+            $db->update(tbl('playlists'), ['played'], ['|f|played+1'], " playlist_id = '" . $args['playlist']['playlist_id'] . "' ");
+            set_cookie_secure($cookie, true);
 
         }
 
@@ -225,15 +238,16 @@ function increment_playlist_played( $args = array() ) {
 }
 
 /**
-* Get playlists that have at least 1 item
-* @param : { array } { $playlists } { array of all playlists fetched from database }
-* @since : May 11th, 2016 ClipBucket 2.8.1
-* @author : Saqib Razzaq
-*
-* @return : { array } { $playlists } { playlists with items only }
-*/
+ * Get playlists that have at least 1 item
+ * @param : { array } { $playlists } { array of all playlists fetched from database }
+ * @return : { array } { $playlists } { playlists with items only }
+ * @author : Saqib Razzaq
+ *
+ * @since : May 11th, 2016 ClipBucket 2.8.1
+ */
 
-function activePlaylists($playlists) {
+function activePlaylists($playlists)
+{
     if (is_array($playlists)) {
         foreach ($playlists as $key => $coll) {
             $totalObjs = $coll['total_items'];
@@ -243,7 +257,7 @@ function activePlaylists($playlists) {
                 unset($playlists[$key]);
             }
         }
-    return $playlists;
+        return $playlists;
     }
 }
 

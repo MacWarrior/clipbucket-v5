@@ -36,7 +36,7 @@ if (file_exists(dirname(__FILE__) . '/../files/temp/development.dev')) {
 
     require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php');
 
-    if( php_sapi_name() != 'cli' ){
+    if (php_sapi_name() != 'cli') {
         $whoops = new \Whoops\Run;
         $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
         $whoops->register();

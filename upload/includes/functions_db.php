@@ -2,7 +2,7 @@
 
 /**
  * functions related to database
- * 
+ *
  */
 function db_select($query)
 {
@@ -10,8 +10,9 @@ function db_select($query)
     return $db->_select($query);
 }
 
-function cb_query_id( $query ) {
-    return md5( $query );
+function cb_query_id($query)
+{
+    return md5($query);
 }
 
 
@@ -24,20 +25,19 @@ function cb_query_id( $query ) {
  */
 
 
-if( !function_exists( 'tbl' ) ) {
+if (!function_exists('tbl')) {
 
     function tbl($tbl)
     {
         global $DBNAME;
         $prefix = TABLE_PREFIX;
-        $tbls = explode(',',$tbl);
+        $tbls = explode(',', $tbl);
         $new_tbls = '';
-        foreach($tbls as $ntbl)
-        {
-            if(!empty($new_tbls)){
+        foreach ($tbls as $ntbl) {
+            if (!empty($new_tbls)) {
                 $new_tbls .= ',';
             }
-            $new_tbls .= '`'.$DBNAME.'`.'.$prefix.$ntbl;
+            $new_tbls .= '`' . $DBNAME . '`.' . $prefix . $ntbl;
         }
 
         return $new_tbls;
@@ -52,19 +52,17 @@ if( !function_exists( 'tbl' ) ) {
  * @param bool $table
  * @return bool|string
  */
-function table_fields( $fields, $table = false ) {
+function table_fields($fields, $table = false)
+{
     $the_fields = '';
 
-    if ( $fields ) {
+    if ($fields) {
         $array = $fields;
-        foreach ($array as $key => $_fields)
-        {
+        foreach ($array as $key => $_fields) {
 
-            if (is_array($_fields))
-            {
-                foreach ($_fields as $field)
-                {
-                    if ($the_fields){
+            if (is_array($_fields)) {
+                foreach ($_fields as $field) {
+                    if ($the_fields) {
                         $the_fields .= ', ';
                     }
                     $the_fields .= $key . '.' . $field;
@@ -72,12 +70,12 @@ function table_fields( $fields, $table = false ) {
             } else {
                 $field = $_fields;
 
-                if ($the_fields){
+                if ($the_fields) {
                     $the_fields .= ', ';
                 }
 
                 if ($table) {
-                    $the_tbl = tbl($table). '.' ;
+                    $the_tbl = tbl($table) . '.';
                 } else {
                     $the_tbl = '';
                 }
@@ -90,7 +88,7 @@ function table_fields( $fields, $table = false ) {
     return $the_fields ? $the_fields : false;
 }
 
-if( !function_exists( 'tbl_fields' ) ) {
+if (!function_exists('tbl_fields')) {
     /**
      * Alias function for table_fields
      *
@@ -98,12 +96,13 @@ if( !function_exists( 'tbl_fields' ) ) {
      * @param bool $table
      * @return bool|string
      */
-    function tbl_fields( $fields, $table = false ) {
-        return table_fields( $fields, $table );
+    function tbl_fields($fields, $table = false)
+    {
+        return table_fields($fields, $table);
     }
 }
 
-if ( !function_exists('cb_sql_table') ) {
+if (!function_exists('cb_sql_table')) {
     /**
      * Since we start using AS in our sql queries, it was getting
      * more and more difficult to know how author has defined
@@ -113,23 +112,25 @@ if ( !function_exists('cb_sql_table') ) {
      * If author still wants to define table name differently, he
      * can provide it in $as
      *
-     * @author Fawaz Tahir <fawaz.cb@gmail.com>
      * @param string $table
      * @param string $as
      * @return string $from_query
+     * @author Fawaz Tahir <fawaz.cb@gmail.com>
      */
-    function cb_sql_table( $table, $as = null ) {
-        if ( $table ) {
-            $from_query = tbl( $table ).' AS '.( ( !is_null( $as ) and is_string( $as ) ) ? $as : $table );
+    function cb_sql_table($table, $as = null)
+    {
+        if ($table) {
+            $from_query = tbl($table) . ' AS ' . ((!is_null($as) and is_string($as)) ? $as : $table);
             return $from_query;
         }
         return false;
     }
 }
 
-if ( !function_exists( 'table' ) ) {
-    function table( $table, $as = null ) {
-        return cb_sql_table( $table, $as );
+if (!function_exists('table')) {
+    function table($table, $as = null)
+    {
+        return cb_sql_table($table, $as);
     }
 }
 
@@ -139,9 +140,10 @@ if ( !function_exists( 'table' ) ) {
  * @param $query
  * @return mixed
  */
-function cb_select( $query ) {
+function cb_select($query)
+{
     global $db;
-    return $db->_select( $query );
+    return $db->_select($query);
 }
 
 /**
@@ -150,7 +152,8 @@ function cb_select( $query ) {
  * @param $query
  * @return mixed
  */
-function select( $query ) {
-    return cb_select( $query );
+function select($query)
+{
+    return cb_select($query);
 }
 

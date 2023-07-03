@@ -3,8 +3,8 @@ require '../../includes/config.inc.php';
 if (isset($_POST)) {
     global $db;
     $data = $_POST;
-    $flds = array();
-    $vals = array();
+    $flds = [];
+    $vals = [];
 
     foreach ($data as $network => $link) {
         if (!empty($network)) {
@@ -17,5 +17,5 @@ if (isset($_POST)) {
             $vals[] = "";
         }
     }
-    $db->update(tbl("social_beast_links"),$flds,$vals," id!=''");
+    $db->update(tbl("social_beast_links"), $flds, $vals, " id!=''");
 }

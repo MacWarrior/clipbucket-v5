@@ -1,271 +1,279 @@
-<?php 
+<?php
 
 include("../../includes/config.inc.php");
 
 $request = $_REQUEST;
 $mode = $request["mode"];
 $type = $request["type"];
-if (!isset($request["method"])){
-	$method = "get";
+if (!isset($request["method"])) {
+    $method = "get";
 } else {
-	$method = $request["method"];
+    $method = $request["method"];
 }
 $offset = 0;
 $count = 0;
 
-if (isset($request["offset"])){
-	$offset = $request["offset"];
+if (isset($request["offset"])) {
+    $offset = $request["offset"];
 }
-if (isset($request["count"])){
-	$count = $request["count"];
+if (isset($request["count"])) {
+    $count = $request["count"];
 }
 
-$response = array();
+$response = [];
 $response["data"] = null;
-$results = array();
-try{
+$results = [];
+try {
 
-	if (!$mode){
-		throw new Exception("Please provide mode to map or index");
-	}
+    if (!$mode) {
+        throw new Exception("Please provide mode to map or index");
+    }
 
-	switch ($mode) {
-		default:
-		case 'videos':
-			$index = $mode;
-			$es = new ElasticSearch($index);
+    switch ($mode) {
+        default:
+        case 'videos':
+            $index = $mode;
+            $es = new ElasticSearch($index);
 
-			if ($type == 'map'){
-				//mapping the database with ES server for videos
-				$mappingData = $es->videoMappingData;
-				//Finally Calling the Function
-				$extras["method"] = $method;
-				$response["data"] = $es->EsMap($mappingData,$extras);
-				if ($response["data"]["curl_error_no"]){
-					exit(json_encode(array("err"=>$response["data"]["curl_error"],"data"=>$response)));
-				} else {
-					exit(json_encode(array("msg"=>"success","data"=>$response)));
-				}
-			} else if ($type == 'index') {
-				$videoRequest = array();
+            if ($type == 'map') {
+                //mapping the database with ES server for videos
+                $mappingData = $es->videoMappingData;
+                //Finally Calling the Function
+                $extras["method"] = $method;
+                $response["data"] = $es->EsMap($mappingData, $extras);
+                if ($response["data"]["curl_error_no"]) {
+                    exit(json_encode(["err" => $response["data"]["curl_error"], "data" => $response]));
+                } else {
+                    exit(json_encode(["msg" => "success", "data" => $response]));
+                }
+            } else {
+                if ($type == 'index') {
+                    $videoRequest = [];
 
-				//applying dynamic limit
-				if ($count){
-					$videoRequest["limit"] = $offset.','.$count;
-				}
-				 
-				// get a specific video
-				if ( isset($request["id"]) ){
-					$videoRequest["videoid"] = $request["id"];
-				} 
-				
-				//Fetching Videos to process
-				$videos = $cbvid->get_videos($videoRequest);
-				$extras["method"] = $method;
-				
-				if ($videos){
-					foreach ($videos as $key => $video) {
-						$formattedVideo = $es->FormatVideo($video);
-						$extras["id"] = $video["videoid"];
-						$response["data"] = $es->EsIndex($formattedVideo,$extras);
-						
-						//checking for Curl Error
-						if ($response["data"]["curl_error_no"]){
-							throw new Exception($response["data"]["curl_error"]);
-							
- 						}
- 						$results[] = $response["data"];
- 					}
-				} else {
-					throw new Exception("No Video Found for this request");
-				}
+                    //applying dynamic limit
+                    if ($count) {
+                        $videoRequest["limit"] = $offset . ',' . $count;
+                    }
 
-				//Creating Response
-				exit(json_encode(array("msg"=>"success","data"=>$results)));
-			} else {
-				throw new Exception("Invalid Request, please select proper type");	
-			}
-		    break;
+                    // get a specific video
+                    if (isset($request["id"])) {
+                        $videoRequest["videoid"] = $request["id"];
+                    }
 
-		case 'photos':
-			$index = $mode;
-			$es = new ElasticSearch($index);
+                    //Fetching Videos to process
+                    $videos = $cbvid->get_videos($videoRequest);
+                    $extras["method"] = $method;
 
-			if ($type == 'map'){
-				//mapping the database with ES server for videos
-				$mappingData = $es->photoMappingData;
-				//Finally Calling the Function
-				$extras["method"] = $method;
-				$response["data"] = $es->EsMap($mappingData,$extras);
-				if ($response["data"]["curl_error_no"]){
-					exit(json_encode(array("err"=>$response["data"]["curl_error"],"data"=>$response)));
-				} else {
-					exit(json_encode(array("msg"=>"success","data"=>$response)));
-				}
-			} else if ($type == 'index') {
-				$photoRequest = array();
+                    if ($videos) {
+                        foreach ($videos as $key => $video) {
+                            $formattedVideo = $es->FormatVideo($video);
+                            $extras["id"] = $video["videoid"];
+                            $response["data"] = $es->EsIndex($formattedVideo, $extras);
 
-				//applying dynamic limit
-				if ($count){
-					$photoRequest["limit"] = $offset.','.$count;
-				}
-				 
-				// get a specific photo
-				if ( isset($request["id"]) ){
-					$photoRequest["photoid"] = $request["id"];
-				} 
-				
-				//Fetching photos to process
-				$photos = $cbphoto->get_photos($photoRequest);
-				$extras["method"] = $method;
-				
-				if ($photos){
-					foreach ($photos as $key => $photo) {
-						$formattedPhoto = $es->FormatPhoto($photo);
-						$extras["id"] = $photo["photo_id"];
-						$response["data"] = $es->EsIndex($formattedPhoto,$extras);
-						
-						//checking for Curl Error
-						if ($response["data"]["curl_error_no"]){
-							throw new Exception($response["data"]["curl_error"]);
-							
- 						}
- 						$results[] = $response["data"];
- 					}
-				} else {
-					throw new Exception("No photo Found for this request");
-				}
+                            //checking for Curl Error
+                            if ($response["data"]["curl_error_no"]) {
+                                throw new Exception($response["data"]["curl_error"]);
 
-				//Creating Response
-				exit(json_encode(array("msg"=>"success","data"=>$results)));
-			} else {
-				throw new Exception("Invalid Request, please select proper type");	
-			}
-		    break;
+                            }
+                            $results[] = $response["data"];
+                        }
+                    } else {
+                        throw new Exception("No Video Found for this request");
+                    }
 
-		case 'users':
-			$index = $mode;
-			$es = new ElasticSearch($index);
+                    //Creating Response
+                    exit(json_encode(["msg" => "success", "data" => $results]));
+                } else {
+                    throw new Exception("Invalid Request, please select proper type");
+                }
+            }
+            break;
 
-			if ($type == 'map'){
-				//mapping the database with ES server for videos
-				$mappingData = $es->userMappingData;
-				//Finally Calling the Function
-				$extras["method"] = $method;
-				$response["data"] = $es->EsMap($mappingData,$extras);
-				if ($response["data"]["curl_error_no"]){
-					exit(json_encode(array("err"=>$response["data"]["curl_error"],"data"=>$response)));
-				} else {
-					exit(json_encode(array("msg"=>"success","data"=>$response)));
-				}
-			} else if ($type == 'index') {
-				$userRequest = array();
+        case 'photos':
+            $index = $mode;
+            $es = new ElasticSearch($index);
 
-				//applying dynamic limit
-				if ($count){
-					$userRequest["limit"] = $offset.','.$count;
-				}
-				
-				// get a specific user
-				if ( isset($request["id"]) ){
-					$userRequest["userid"] = $request["id"];
-				} 
-				
-				//Fetching users to process
-				$users = $userquery->get_users($userRequest);
-				$extras["method"] = $method;
+            if ($type == 'map') {
+                //mapping the database with ES server for videos
+                $mappingData = $es->photoMappingData;
+                //Finally Calling the Function
+                $extras["method"] = $method;
+                $response["data"] = $es->EsMap($mappingData, $extras);
+                if ($response["data"]["curl_error_no"]) {
+                    exit(json_encode(["err" => $response["data"]["curl_error"], "data" => $response]));
+                } else {
+                    exit(json_encode(["msg" => "success", "data" => $response]));
+                }
+            } else {
+                if ($type == 'index') {
+                    $photoRequest = [];
 
-				if ($users){
-					foreach ($users as $key => $user) {
-						$formatteduser = $es->FormatUser($user);
-						$extras["id"] = $user["userid"];
-						$response["data"] = $es->EsIndex($formatteduser,$extras);
-						
-						//checking for Curl Error
-						if ($response["data"]["curl_error_no"]){
-							throw new Exception($response["data"]["curl_error"]);
-							
- 						}
- 						$results[] = $response["data"];
- 					}
-				} else {
-					throw new Exception("No Video Found for this request");
-				}
+                    //applying dynamic limit
+                    if ($count) {
+                        $photoRequest["limit"] = $offset . ',' . $count;
+                    }
 
-				//Creating Response
-				exit(json_encode(array("msg"=>"success","data"=>$results)));
-			} else {
-				throw new Exception("Invalid Request, please select proper type");	
-			}
-		    break;
+                    // get a specific photo
+                    if (isset($request["id"])) {
+                        $photoRequest["photoid"] = $request["id"];
+                    }
 
-		case 'collections':
-		case 'groups':
-			$index = $mode;
-			$es = new ElasticSearch($index);
+                    //Fetching photos to process
+                    $photos = $cbphoto->get_photos($photoRequest);
+                    $extras["method"] = $method;
 
-			if ($type == 'map'){
-				//mapping the database with ES server for videos
-				if ($index == 'groups'){
-					$mappingData = $es->groupMappingData;
-				} else {
-					$mappingData = $es->collectionMappingData;
-				}
-				//Finally Calling the Function
-				$extras["method"] = $method;
-				$response["data"] = $es->EsMap($mappingData,$extras);
-				if ($response["data"]["curl_error_no"]){
-					exit(json_encode(array("err"=>$response["data"]["curl_error"],"data"=>$response)));
-				} else {
-					exit(json_encode(array("msg"=>"success","data"=>$response)));
-				}
-			} else if ($type == 'index') {
-				$groupRequest = array();
+                    if ($photos) {
+                        foreach ($photos as $key => $photo) {
+                            $formattedPhoto = $es->FormatPhoto($photo);
+                            $extras["id"] = $photo["photo_id"];
+                            $response["data"] = $es->EsIndex($formattedPhoto, $extras);
 
-				//applying dynamic limit
-				if ($count){
-					$groupRequest["limit"] = $offset.','.$count;
-				}
-				// get a specific group
-				if ( isset($request["id"]) ){
-					$groupRequest["group_id"] = $request["id"];
-				} 
-				
-				if ($index == 'collections'){
-					$groupRequest["is_collection"] = "yes";
-				} else {
-					$groupRequest["is_collection"] = "no";
-				}
+                            //checking for Curl Error
+                            if ($response["data"]["curl_error_no"]) {
+                                throw new Exception($response["data"]["curl_error"]);
 
-				//Fetching groups to process
-				$groups = $cbgroup->get_groups($groupRequest);
-				$extras["method"] = $method;
+                            }
+                            $results[] = $response["data"];
+                        }
+                    } else {
+                        throw new Exception("No photo Found for this request");
+                    }
 
-				if ($groups){
-					foreach ($groups as $key => $group) {
-						$formattedgroup = $es->FormatGroupCollection($group);
-						$extras["id"] = $group["group_id"];
-						$response["data"] = $es->EsIndex($formattedgroup,$extras);
+                    //Creating Response
+                    exit(json_encode(["msg" => "success", "data" => $results]));
+                } else {
+                    throw new Exception("Invalid Request, please select proper type");
+                }
+            }
+            break;
 
-						//checking for Curl Error
-						if ($response["data"]["curl_error_no"]){
-							throw new Exception($response["data"]["curl_error"]);
- 						}
- 						$results[] = $response["data"];
- 					}
-				} else {
-					throw new Exception("No Video Found for this request");
-				}
+        case 'users':
+            $index = $mode;
+            $es = new ElasticSearch($index);
 
-				//Creating Response
-				exit(json_encode(array("msg"=>"success","data"=>$results)));
-				
-			} else {
-				throw new Exception("Invalid Request, please select proper type");	
-			}
-		    break;
-	}
+            if ($type == 'map') {
+                //mapping the database with ES server for videos
+                $mappingData = $es->userMappingData;
+                //Finally Calling the Function
+                $extras["method"] = $method;
+                $response["data"] = $es->EsMap($mappingData, $extras);
+                if ($response["data"]["curl_error_no"]) {
+                    exit(json_encode(["err" => $response["data"]["curl_error"], "data" => $response]));
+                } else {
+                    exit(json_encode(["msg" => "success", "data" => $response]));
+                }
+            } else {
+                if ($type == 'index') {
+                    $userRequest = [];
 
-}catch(Exception $e){
-	exit(json_encode(array("err"=>$e->getMessage(),"data"=>$response)));
+                    //applying dynamic limit
+                    if ($count) {
+                        $userRequest["limit"] = $offset . ',' . $count;
+                    }
+
+                    // get a specific user
+                    if (isset($request["id"])) {
+                        $userRequest["userid"] = $request["id"];
+                    }
+
+                    //Fetching users to process
+                    $users = $userquery->get_users($userRequest);
+                    $extras["method"] = $method;
+
+                    if ($users) {
+                        foreach ($users as $key => $user) {
+                            $formatteduser = $es->FormatUser($user);
+                            $extras["id"] = $user["userid"];
+                            $response["data"] = $es->EsIndex($formatteduser, $extras);
+
+                            //checking for Curl Error
+                            if ($response["data"]["curl_error_no"]) {
+                                throw new Exception($response["data"]["curl_error"]);
+
+                            }
+                            $results[] = $response["data"];
+                        }
+                    } else {
+                        throw new Exception("No Video Found for this request");
+                    }
+
+                    //Creating Response
+                    exit(json_encode(["msg" => "success", "data" => $results]));
+                } else {
+                    throw new Exception("Invalid Request, please select proper type");
+                }
+            }
+            break;
+
+        case 'collections':
+        case 'groups':
+            $index = $mode;
+            $es = new ElasticSearch($index);
+
+            if ($type == 'map') {
+                //mapping the database with ES server for videos
+                if ($index == 'groups') {
+                    $mappingData = $es->groupMappingData;
+                } else {
+                    $mappingData = $es->collectionMappingData;
+                }
+                //Finally Calling the Function
+                $extras["method"] = $method;
+                $response["data"] = $es->EsMap($mappingData, $extras);
+                if ($response["data"]["curl_error_no"]) {
+                    exit(json_encode(["err" => $response["data"]["curl_error"], "data" => $response]));
+                } else {
+                    exit(json_encode(["msg" => "success", "data" => $response]));
+                }
+            } else {
+                if ($type == 'index') {
+                    $groupRequest = [];
+
+                    //applying dynamic limit
+                    if ($count) {
+                        $groupRequest["limit"] = $offset . ',' . $count;
+                    }
+                    // get a specific group
+                    if (isset($request["id"])) {
+                        $groupRequest["group_id"] = $request["id"];
+                    }
+
+                    if ($index == 'collections') {
+                        $groupRequest["is_collection"] = "yes";
+                    } else {
+                        $groupRequest["is_collection"] = "no";
+                    }
+
+                    //Fetching groups to process
+                    $groups = $cbgroup->get_groups($groupRequest);
+                    $extras["method"] = $method;
+
+                    if ($groups) {
+                        foreach ($groups as $key => $group) {
+                            $formattedgroup = $es->FormatGroupCollection($group);
+                            $extras["id"] = $group["group_id"];
+                            $response["data"] = $es->EsIndex($formattedgroup, $extras);
+
+                            //checking for Curl Error
+                            if ($response["data"]["curl_error_no"]) {
+                                throw new Exception($response["data"]["curl_error"]);
+                            }
+                            $results[] = $response["data"];
+                        }
+                    } else {
+                        throw new Exception("No Video Found for this request");
+                    }
+
+                    //Creating Response
+                    exit(json_encode(["msg" => "success", "data" => $results]));
+
+                } else {
+                    throw new Exception("Invalid Request, please select proper type");
+                }
+            }
+            break;
+    }
+
+} catch (Exception $e) {
+    exit(json_encode(["err" => $e->getMessage(), "data" => $response]));
 }

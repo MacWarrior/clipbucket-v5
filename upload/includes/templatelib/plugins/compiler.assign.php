@@ -31,13 +31,14 @@ function smarty_compiler_assign($tag_attrs, &$compiler)
         $compiler->_syntax_error("assign: missing 'value' parameter", E_USER_WARNING);
         return;
     }
-	
-	$val = $_params['value'];
-	if(substr($val,1,6)=='func->')
-		$_params['value'] = substr($val,7,strlen($val)-8);
-	$_params['value'] = preg_replace(array("/\"\./","/\.\"/"),'',$_params['value']);
-	
-	
+
+    $val = $_params['value'];
+    if (substr($val, 1, 6) == 'func->') {
+        $_params['value'] = substr($val, 7, strlen($val) - 8);
+    }
+    $_params['value'] = preg_replace(["/\"\./", "/\.\"/"], '', $_params['value']);
+
+
     return "\$this->assign({$_params['var']}, {$_params['value']});";
 }
 

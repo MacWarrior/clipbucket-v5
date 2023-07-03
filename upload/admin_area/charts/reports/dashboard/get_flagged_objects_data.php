@@ -2,51 +2,51 @@
 error_reporting(E_ALL);
 require_once('../../../../includes/admin_config.php');
 
-$flaggedVideos['today'] = $cbvid->get_videos(array("count_only"=>true, "flagged" => "yes", "data_span" => "today"),TRUE);
-$flaggedVideos['this_week'] = $cbvid->get_videos(array("count_only"=>true, "flagged" => "yes", "data_span" => "this_week"),TRUE);
-$flaggedVideos['this_month'] = $cbvid->get_videos(array("count_only"=>true, "flagged" => "yes", "data_span" => "this_month"),TRUE);
+$flaggedVideos['today'] = $cbvid->get_videos(["count_only" => true, "flagged" => "yes", "data_span" => "today"], true);
+$flaggedVideos['this_week'] = $cbvid->get_videos(["count_only" => true, "flagged" => "yes", "data_span" => "this_week"], true);
+$flaggedVideos['this_month'] = $cbvid->get_videos(["count_only" => true, "flagged" => "yes", "data_span" => "this_month"], true);
 
-$flaggedUsers['today'] = $userquery->get_users(array("count_only"=>true, "flagged" => "yes", "data_span" => "today"),TRUE);
-$flaggedUsers['this_week'] = $userquery->get_users(array("count_only"=>true, "flagged" => "yes", "data_span" => "this_week"),TRUE);
-$flaggedUsers['this_month'] = $userquery->get_users(array("count_only"=>true, "flagged" => "yes", "data_span" => "this_month"),TRUE);
+$flaggedUsers['today'] = $userquery->get_users(["count_only" => true, "flagged" => "yes", "data_span" => "today"], true);
+$flaggedUsers['this_week'] = $userquery->get_users(["count_only" => true, "flagged" => "yes", "data_span" => "this_week"], true);
+$flaggedUsers['this_month'] = $userquery->get_users(["count_only" => true, "flagged" => "yes", "data_span" => "this_month"], true);
 
-$flaggedPhotos['today'] = $cbphoto->get_photos(array("count_only"=>true, "flagged" => "yes", "data_span" => "today"),TRUE);
-$flaggedPhotos['this_week'] = $cbphoto->get_photos(array("count_only"=>true, "flagged" => "yes", "data_span" => "this_week"),TRUE);
-$flaggedPhotos['this_month'] = $cbphoto->get_photos(array("count_only"=>true, "flagged" => "yes", "data_span" => "this_month"),TRUE);
-
-
-$flaggedTodayStats = array(
-	"label" => "Today flagged objects", 
-	"data" => array(
-		array('users', $flaggedUsers['today']),
-		array('photos',  $flaggedPhotos['today']),
-		array('videos', $flaggedVideos['today']),
-		)
-	);
-
-$flaggedWeekStats = array(
-	"label" => "Week flagged objects", 
-	"data" => array(
-		array('users', $flaggedUsers['this_week']),
-		array('photos',  $flaggedPhotos['this_week']),
-		array('videos', $flaggedVideos['this_week']),
-		)
-	);
+$flaggedPhotos['today'] = $cbphoto->get_photos(["count_only" => true, "flagged" => "yes", "data_span" => "today"], true);
+$flaggedPhotos['this_week'] = $cbphoto->get_photos(["count_only" => true, "flagged" => "yes", "data_span" => "this_week"], true);
+$flaggedPhotos['this_month'] = $cbphoto->get_photos(["count_only" => true, "flagged" => "yes", "data_span" => "this_month"], true);
 
 
-$flaggedMonthStats = array(
-	"label" => "Month flagged objects", 
-	"data" => array(
-		array('users', $flaggedUsers['this_month']),
-		array('photos',  $flaggedPhotos['this_month']),
-		array('videos', $flaggedVideos['this_month']),
-		)
-	);
+$flaggedTodayStats = [
+    "label" => "Today flagged objects",
+    "data"  => [
+        ['users', $flaggedUsers['today']],
+        ['photos', $flaggedPhotos['today']],
+        ['videos', $flaggedVideos['today']],
+    ]
+];
 
-$data = array(
-	"today" => $flaggedTodayStats,
-	"this_week" => $flaggedWeekStats,
-	"this_month" => $flaggedMonthStats,
-	);
+$flaggedWeekStats = [
+    "label" => "Week flagged objects",
+    "data"  => [
+        ['users', $flaggedUsers['this_week']],
+        ['photos', $flaggedPhotos['this_week']],
+        ['videos', $flaggedVideos['this_week']],
+    ]
+];
+
+
+$flaggedMonthStats = [
+    "label" => "Month flagged objects",
+    "data"  => [
+        ['users', $flaggedUsers['this_month']],
+        ['photos', $flaggedPhotos['this_month']],
+        ['videos', $flaggedVideos['this_month']],
+    ]
+];
+
+$data = [
+    "today"      => $flaggedTodayStats,
+    "this_week"  => $flaggedWeekStats,
+    "this_month" => $flaggedMonthStats,
+];
 
 echo json_encode($data);

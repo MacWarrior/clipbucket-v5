@@ -10,23 +10,23 @@
 function get_global_announcement()
 {
     global $db;
-    $results = $db->select(tbl('global_announcement'),'*');
+    $results = $db->select(tbl('global_announcement'), '*');
     $ann = $results[0]['announcement'];
-    if( !$ann =='' ){
-        echo '<div class="alert alert-info margin-bottom-10 ">'.$ann.'</div>';
+    if (!$ann == '') {
+        echo '<div class="alert alert-info margin-bottom-10 ">' . $ann . '</div>';
     }
 }
 
 function update_announcement($text)
 {
     global $db;
-    $textCheck = str_replace(['<p>','</p>','<br>'], '', $text);
+    $textCheck = str_replace(['<p>', '</p>', '<br>'], '', $text);
     if (strlen($textCheck) < 1) {
         $text = '';
     }
-    $db->Execute('UPDATE '.tbl('global_announcement').' SET announcement=\''.mysql_clean($text).'\'');
+    $db->Execute('UPDATE ' . tbl('global_announcement') . ' SET announcement=\'' . mysql_clean($text) . '\'');
 }
 
-register_anchor_function('get_global_announcement','global');
+register_anchor_function('get_global_announcement', 'global');
 
-add_admin_menu('Plugin Manager',lang('plugin_global_announcement'),PLUG_URL.'/global_announcement/edit_announcement.php');
+add_admin_menu('Plugin Manager', lang('plugin_global_announcement'), PLUG_URL . '/global_announcement/edit_announcement.php');
