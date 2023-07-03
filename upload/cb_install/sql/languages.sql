@@ -1604,4 +1604,12 @@ VALUES ('friend_requests'),
        ('video_allow_comment_vote'),
        ('language'),
        ('progression'),
-       ('code');
+       ('code'),
+       ('admin_tool'),
+       ('launch'),
+       ('stop'),
+       ('in_progress'),
+       ('ready'),
+       ('stopping'),
+       ('generate_missing_thumbs_label'),
+       ('generate_missing_thumbs_description');

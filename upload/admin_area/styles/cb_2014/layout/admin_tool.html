@@ -1,0 +1,94 @@
+<div class="heading">
+    <h2>{lang code='admin_tool'}</h2>
+</div>
+<div id="language_list">
+    <table class="table table-bordered table-striped manageUsersTable">
+        <tr>
+            <th class="col-md-2">{lang code='title'}</th>
+            <th class="col-md-4">{lang code='description'}</th>
+            <th class="col-md-4">{lang code='vdo_status'}</th>
+            <th class="col-md-2">{lang code='vdo_actions'}</th>
+        </tr>
+        {section name=tool_list loop=$admin_tool_list}
+        <tr>
+            <td style="vertical-align: middle;">{lang code = ($admin_tool_list[tool_list].language_key_label)}</td>
+            <td style="vertical-align: middle;">{lang code = ($admin_tool_list[tool_list].language_key_description)}</td>
+            <td style="vertical-align: middle;">
+                <span id="span-{$admin_tool_list[tool_list].id_tool}">
+                    {lang code = ($admin_tool_list[tool_list].language_key_title)}
+                </span>
+                <div id="progress-{$admin_tool_list[tool_list].id_tool}" style=" text-align: center; vertical-align: middle; {if $admin_tool_list[tool_list].language_key_title == 'ready'} display: none; {/if} ">
+                    <br/>
+                    <p>{$admin_tool_list[tool_list].pourcentage_progress|string_format:"%.2f"}% <span {if $admin_tool_list[tool_list].language_key_title == 'ready'} style="display: none;" {/if}>({$admin_tool_list[tool_list].elements_done} / {$admin_tool_list[tool_list].elements_total}) </span></p>
+                    <div  class="progress ">
+                        <div class="progress-bar" role="progressbar" id="progress-bar-{$admin_tool_list[tool_list].id_tool}"  aria-valuenow="{$admin_tool_list[tool_list].pourcentage_progress}"
+                             aria-valuemin="0" aria-valuemax="100" style="width:{$admin_tool_list[tool_list].pourcentage_progress}%">
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <td style="vertical-align: middle;">
+                <div class="dropdown clearfix alignCenter">
+                    <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
+                        Actions <i class="caret"></i></button>
+                    <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
+                        <li role="presentation"  {if $admin_tool_list[tool_list].language_key_title != 'ready'} class="disabled" {/if}>
+                            <a role="menuitem" class="launch" data-id="{$admin_tool_list[tool_list].id_tool}" >
+                                {lang code='launch'}
+                            </a>
+                        </li>
+                        <li role="presentation" {if $admin_tool_list[tool_list].language_key_title != 'in_progress'} class="disabled" {/if}>
+                            <a role="menuitem" class="stop" data-id="{$admin_tool_list[tool_list].id_tool}" >
+                                {lang code='stop'}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+        {/section}
+    </table>
+</div>
+<script type="text/javascript">
+    {literal}
+    $(function () {
+        $('.launch').on('click', function () {
+            var elem = $(this);
+            if (!elem.parent().hasClass('disabled')) {
+                var id_tool = $(this).data('id');
+                $.ajax({
+                    url: "/actions/launch_tool.php",
+                    type: "POST",
+                    data: {id_tool: id_tool},
+                    dataType: 'json',
+                    success: function (result) {
+                        $('#progress-' + id_tool).show();
+                        $('#progress-bar-' + id_tool).attr('aria-valuenow', 0);
+                        $('#span-' + id_tool).html(result['libelle_status']);
+                        $('.page-content').prepend(result['msg']);
+                        elem.parent().addClass('disabled');
+                        $('.stop[data-id="'+id_tool+'"]').parent().removeClass('disabled');
+                    }
+                });
+            }
+        });
+        $('.stop').on('click', function () {
+            var elem = $(this);
+            if (!$(this).parent().hasClass('disabled')) {
+                var id_tool = elem.data('id');
+                $.ajax({
+                    url: "/actions/stop_tool.php",
+                    type: "POST",
+                    data: {id_tool: id_tool},
+                    dataType: 'json',
+                    success: function (result) {
+                        $('#span-' + id_tool).html(result['libelle_status']);
+                        elem.parent().addClass('disabled');
+                        $('.page-content').prepend(result['msg']);
+                    }
+                });
+            }
+        });
+    });
+    {/literal}
+</script>

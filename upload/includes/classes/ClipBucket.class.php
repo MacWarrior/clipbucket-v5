@@ -454,6 +454,10 @@ class ClipBucket
                         'title' => 'Repair video duration'
                         ,'url' => ADMIN_BASEURL.'/repair_vid_duration.php'
                     )
+                    ,array(
+                        'title' => lang('admin_tool')
+                        ,'url' => ADMIN_BASEURL.'/admin_tool.php'
+                    )
                 )
             );
 

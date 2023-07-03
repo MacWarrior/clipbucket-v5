@@ -1180,3 +1180,26 @@ CREATE TABLE `{tbl_prefix}video_thumbs`
 
 ALTER TABLE `{tbl_prefix}video_thumbs`
     ADD CONSTRAINT `{tbl_prefix}video_thumbs_ibfk_1` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE RESTRICT ON UPDATE NO ACTION;
+
+CREATE TABLE `clipbucket`.`{tbl_prefix}tools`
+(
+    `id_tool`                  INT          NOT NULL AUTO_INCREMENT,
+    `language_key_label`       VARCHAR(128) NOT NULL,
+    `language_key_description` VARCHAR(128) NOT NULL,
+    `function_name`            VARCHAR(128) NOT NULL,
+    `id_tools_status`          INT          NOT NULL,
+    `elements_total`           INT          NULL DEFAULT NULL,
+    `elements_done`            INT          NULL DEFAULT NULL,
+    PRIMARY KEY (`id_tool`)
+) ENGINE = InnoDB;
+
+CREATE TABLE `clipbucket`.`{tbl_prefix}tools_status`
+(
+    `id_tools_status`    INT          NOT NULL AUTO_INCREMENT,
+    `language_key_title` VARCHAR(128) NOT NULL,
+    PRIMARY KEY (`id_tools_status`)
+) ENGINE = InnoDB;
+
+ALTER TABLE `{tbl_prefix}tools`
+    ADD FOREIGN KEY (`id_tools_status`) REFERENCES `{tbl_prefix}tools_status` (`id_tools_status`) ON DELETE RESTRICT ON UPDATE NO ACTION;
+

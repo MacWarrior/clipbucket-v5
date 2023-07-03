@@ -796,3 +796,7 @@ textarea.form-control{
     height: 180px;
     text-align: center;
 }
+
+a[role='menuitem'] {
+    cursor: pointer;
+}
