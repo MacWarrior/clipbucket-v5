@@ -12640,7 +12640,7 @@ ALTER TABLE `{tbl_prefix}tools`
 
 INSERT INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES ('admin_tool');
 INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`) VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` LIKE 'admin_tool'), 'Administrations Tools', 1);
-INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`) VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` LIKE 'admin_tool'), 'Outils d\'adminisatration', 2);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`) VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` LIKE 'admin_tool'), 'Outils d\'administration', 2);
 
 INSERT INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES ('launch');
 INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`) VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` LIKE 'launch'), 'Launch', 1);
@@ -12674,3 +12674,35 @@ INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translatio
 -- REV167
 INSERT INTO `{tbl_prefix}tools` (`id_tool`, `language_key_label`, `language_key_description`, `function_name`, `id_tools_status`, `elements_total`, `elements_done`) VALUES
     (1, 'generate_missing_thumbs_label', 'generate_missing_thumbs_description', 'AdminTool::generateMissingThumbs', 1, NULL, NULL);
+
+--  REV 168
+INSERT INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description`, `function_name`, `id_tools_status`, `elements_total`, `elements_done`) VALUES
+    ('update_castable_status_label', 'update_castable_status_description', 'AdminTool::updateCastableStatus', 1, NULL, NULL);
+INSERT INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description`, `function_name`, `id_tools_status`, `elements_total`, `elements_done`) VALUES
+    ('update_bits_color_label', 'update_bits_color_description', 'AdminTool::updateBitsColor', 1, NULL, NULL);
+INSERT INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description`, `function_name`, `id_tools_status`, `elements_total`, `elements_done`) VALUES
+    ('update_videos_duration_label', 'update_videos_duration_description', 'AdminTool::updateVideoDuration', 1, NULL, NULL);
+
+INSERT INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES ('update_castable_status_label');
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`) VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` LIKE 'update_castable_status_label'), 'Update videos castable status', 1);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`) VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` LIKE 'update_castable_status_label'), 'Mise à jour du statut de diffusion des vidéos', 2);
+
+INSERT INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES ('update_castable_status_description');
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`) VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` LIKE 'update_castable_status_description'), 'Update all videos castable status, based on video files', 1);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`) VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` LIKE 'update_castable_status_description'), 'Met à jour le statut de diffusion de toutes les vidéos, en se basant sur les fichiers vidéo', 2);
+
+INSERT INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES ('update_bits_color_label');
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`) VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` LIKE 'update_bits_color_label'), 'Update video colors encoding status', 1);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`) VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` LIKE 'update_bits_color_label'), 'Mise à jour du statut d\'encodage des couleurs des vidéos', 2);
+
+INSERT INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES ('update_bits_color_description');
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`) VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` LIKE 'update_bits_color_description'), 'Update all videos color encoding status, based on video files', 1);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`) VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` LIKE 'update_bits_color_description'), 'Met à jour le statut d\'encodage des couleurs des vidéos, en se basant sur les fichiers vidéo', 2);
+
+INSERT INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES ('update_videos_duration_label');
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`) VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` LIKE 'update_videos_duration_label'), 'Update videos durations', 1);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`) VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` LIKE 'update_videos_duration_label'), 'Mise à jour des durées des vidéos', 2);
+
+INSERT INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES ('update_videos_duration_description');
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`) VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` LIKE 'update_videos_duration_description'), 'Update all videos durations, based on video files', 1);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`) VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` LIKE 'update_videos_duration_description'), 'Met à jour la durée de toutes les vidéos, en se basant sur les fichiers vidéo', 2);

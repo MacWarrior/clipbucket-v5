@@ -1612,4 +1612,10 @@ VALUES ('friend_requests'),
        ('ready'),
        ('stopping'),
        ('generate_missing_thumbs_label'),
-       ('generate_missing_thumbs_description');
+       ('generate_missing_thumbs_description'),
+       ('update_castable_status_label'),
+       ('update_castable_status_description'),
+       ('update_bits_color_label'),
+       ('update_bits_color_description'),
+       ('update_videos_duration_label'),
+       ('update_videos_duration_description');

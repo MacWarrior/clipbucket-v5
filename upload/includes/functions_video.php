@@ -11,12 +11,12 @@
  *
  * @license: Attribution Assurance License
  */
+
 function get_video_fields($extra = null)
 {
     global $cb_columns;
     return $cb_columns->set_object('videos')->get_columns($extra);
 }
-
 /**
  * Function used to check video is playlable or not
  *
@@ -1604,3 +1604,22 @@ function generatingMoreThumbs($data)
     $db->update(tbl('video'), ['thumbs_version'], [VERSION], ' file_name = \'' . $data['file_name'] . '\'');
 }
 
+/**
+ * @param $vdetails
+ * @return void
+ */
+function update_duration($vdetails)
+{
+    if (is_null($vdetails)) {
+        return;
+    }
+
+    global $db;
+    $filepath = get_high_res_file($vdetails);
+    require_once BASEDIR . '/includes/classes/conversion/ffmpeg.class.php';
+    $data = FFMpeg::get_video_basic_infos($filepath);
+
+    if (isset($data['duration'])) {
+        $db->update(tbl('video'), ['duration'], [$data['duration']], 'videoid=' . $vdetails['videoid']);
+    }
+}

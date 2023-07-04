@@ -30,6 +30,8 @@ if (!empty($_POST)) {
             assign('devmsg', 'Development has been disabled successfuly');
         }
     }
+} else {
+    assign('development_mode', in_dev());
 }
 
 subtitle('Development Mode');

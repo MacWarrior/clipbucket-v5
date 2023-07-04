@@ -227,5 +227,8 @@ INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`
 	('2160p', '16/9', 0, 4096, 2160, 17472000);
 
 INSERT INTO `{tbl_prefix}tools_status` (`language_key_title`) VALUES ('ready'), ('in_progress'), ('stopping');
-INSERT INTO `{tbl_prefix}tools` (`id_tool`, `language_key_label`, `language_key_description`, `function_name`, `id_tools_status`, `elements_total`, `elements_done`) VALUES
-    (1, 'generate_missing_thumbs_label', 'generate_missing_thumbs_description', 'AdminTool::generateMissingThumbs', 1, NULL, NULL);
+INSERT INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description`, `function_name`, `id_tools_status`, `elements_total`, `elements_done`) VALUES
+    ('generate_missing_thumbs_label', 'generate_missing_thumbs_description', 'AdminTool::generateMissingThumbs', 1, NULL, NULL),
+    ('update_castable_status_label', 'update_castable_status_description', 'AdminTool::updateCastableStatus', 1, NULL, NULL),
+    ('update_bits_color_label', 'update_bits_color_description', 'AdminTool::updateBitsColor', 1, NULL, NULL),
+    ('update_videos_duration_label', 'update_videos_duration_description', 'AdminTool::updateVideoDuration', 1, NULL, NULL);

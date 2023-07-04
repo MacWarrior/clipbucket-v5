@@ -136,22 +136,64 @@ class AdminTool
     public static function generateMissingThumbs($id_tool)
     {
         global $db;
-        //optimisation to call mysql_clean only once
-        $secureIdTool = mysql_clean($id_tool);
         //get list of video without thumbs
         $videos = $db->select(tbl('video') . ' AS V LEFT JOIN ' . tbl('video_thumbs') . ' AS VT ON V.videoid = VT.videoid', 'V.*', ' 1 GROUP by videoid HAVING COUNT(VT.videoid) = 0');
-        if (!empty($videos)) {
+        self::executeTool($id_tool, $videos, 'generatingMoreThumbs');
+    }
+
+    /**
+     * check videos to change to castable status if needed
+     * @param $id_tool
+     * @return void
+     */
+    public static function updateCastableStatus($id_tool)
+    {
+        global $db;
+        $videos = $db->select(tbl('video'), '*', ' status LIKE \'Successful\'');
+        self::executeTool($id_tool, $videos, 'update_castable_status');
+    }
+
+    /**
+     * check videos to change to castable status if needed
+     * @param $id_tool
+     * @return void
+     */
+    public static function updateBitsColor($id_tool)
+    {
+        global $db;
+        $videos = $db->select(tbl('video'), '*', ' status LIKE \'Successful\'');
+        self::executeTool($id_tool, $videos, 'update_bits_color');
+    }
+    /**
+     * check videos duration
+     * @param $id_tool
+     * @return void
+     */
+    public static function updateVideoDuration($id_tool)
+    {
+        global $db;
+        $videos = $db->select(tbl('video'), '*', ' status LIKE \'Successful\'');
+        self::executeTool($id_tool, $videos, 'update_duration');
+    }
+
+    private static function executeTool($id_tool, $array, $function)
+    {
+        global $db;
+        //optimisation to call mysql_clean only once
+        $secureIdTool = mysql_clean($id_tool);
+        //get list of video
+        if (!empty($array)) {
             //update nb_elements of tools
-            $db->update(tbl('tools'), ['elements_total', 'elements_done'], [count($videos), 0], ' id_tool = ' . $secureIdTool);
+            $db->update(tbl('tools'), ['elements_total', 'elements_done'], [count($array), 0], ' id_tool = ' . $secureIdTool);
             $nb_done = 0;
-            foreach ($videos as $video) {
+            foreach ($array as $item) {
                 //check if user request stop
                 $has_to_stop = $db->select(tbl('tools') . ' AS T INNER JOIN ' . tbl('tools_status') . ' AS TS ON T.id_tools_status = TS.id_tools_status', 'TS.id_tools_status', 'T.id_tool = ' . $secureIdTool . ' AND TS.language_key_title like \'stopping\'');
                 if (!empty($has_to_stop)) {
                     break;
                 }
-                //generate thumbs
-                generatingMoreThumbs($video);
+                //call function
+                call_user_func($function, $item);
                 //update nb_done of tools
                 $nb_done++;
                 $db->update(tbl('tools'), ['elements_done'], [$nb_done], ' id_tool = ' . $secureIdTool);
