@@ -1,6 +1,6 @@
 <?php
 
-class errorhandler extends ClipBucket
+class errorhandler
 {
     public $error_list = [];
     public $message_list = [];

@@ -264,6 +264,9 @@ class ClipBucket
         ];
         $this->addMenuAdmin($menu_dashboard, 1);
 
+        if (NEED_UPDATE) {
+            return;
+        }
         if ($per['web_config_access'] == "yes") {
             $menu_general = [
                 'title'   => 'General Configurations'

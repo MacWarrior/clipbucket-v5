@@ -1202,4 +1202,3 @@ CREATE TABLE `clipbucket`.`{tbl_prefix}tools_status`
 
 ALTER TABLE `{tbl_prefix}tools`
     ADD FOREIGN KEY (`id_tools_status`) REFERENCES `{tbl_prefix}tools_status` (`id_tools_status`) ON DELETE RESTRICT ON UPDATE NO ACTION;
-

@@ -9,6 +9,7 @@ const REMBER_DAYS = 7;
 
 const DEV_INGNORE_SYNTAX = true;
 
+
 //Create an empty development.dev file in includes folder
 //To Activate Development mode
 
@@ -42,13 +43,6 @@ if (file_exists(dirname(__FILE__) . '/../files/temp/development.dev')) {
         $whoops->register();
     }
 
-    /*set_error_handler(function($severity, $message, $file, $line){
-        if (!(error_reporting() & $severity)) {
-            // This error code is not included in error_reporting
-            return;
-        }
-        throw new \ErrorException($message, 0, $severity, $file, $line);
-    });*/
 } else {
     define('DEVELOPMENT_MODE', false);
 }
@@ -71,7 +65,6 @@ if (file_exists(__DIR__ . '/config.php')) {
 } else {
     require_once 'dbconnect.php'; // Old config file
 }
-
 
 # class for storing common ClipBucket functions
 require_once('classes/ClipBucket.class.php');
@@ -109,10 +102,11 @@ switch (DEBUG_LEVEL) {
         error_reporting(E_ALL & ~(E_NOTICE | E_DEPRECATED | E_STRICT | E_WARNING));
         ini_set('display_errors', 'on');
 }
-
+require_once('classes/errorhandler.class.php');
+$pages = new pages();
+$eh = new errorhandler();
 Language::getInstance()->init();
 $arrayTranslations = Language::getInstance()->loadTranslations(Language::getInstance()->lang_id);
-$pages = new pages();
 $ClipBucket = $Cbucket = new ClipBucket();
 define('BASEDIR', $Cbucket->BASEDIR);
 if (!file_exists(BASEDIR . '/index.php')) {
@@ -138,8 +132,100 @@ if (defined('CLEAN_BASEURL')) {
 }
 
 define('BASEURL', $baseurl);
-$userquery = new userquery();
 
+const TEMPLATEFOLDER = 'styles';                            //Template Folder Name, usually STYLES
+const STYLES_DIR = BASEDIR . DIRECTORY_SEPARATOR . TEMPLATEFOLDER;
+
+# Define Lang Select & Style Select
+//Javascript Directory Name
+const ADMINDIR = 'admin_area';
+const ADMINBASEDIR = BASEDIR . DIRECTORY_SEPARATOR . 'admin_area';                //Admin Accessible Folder
+const ADMIN_BASEURL = DIRECTORY_SEPARATOR . ADMINDIR;
+
+# DIRECT PATHS OF VIDEO FILES
+const FILES_DIR = BASEDIR . '/files';
+const VIDEOS_DIR = FILES_DIR . '/videos';
+const SUBTITLES_DIR = FILES_DIR . '/subtitles';
+const THUMBS_DIR = FILES_DIR . '/thumbs';
+const ORIGINAL_DIR = FILES_DIR . '/original';
+const TEMP_DIR = FILES_DIR . '/temp';
+const CON_DIR = FILES_DIR . '/conversion_queue';
+const MASS_UPLOAD_DIR = FILES_DIR . '/mass_uploads';
+const LOGS_DIR = FILES_DIR . '/logs';
+const IMAGES_DIR = BASEDIR . '/images';
+const IMAGES_URL = '/images';
+const USER_THUMBS_DIR = BASEDIR . '/files/avatars';
+const USER_BG_DIR = BASEDIR . '/files/backgrounds';
+const ICONS_URL = '/images/icons';
+const JS_DIR = BASEDIR . '/js';
+const JS_URL = '/js';
+
+#DIRECT URL OF VIDEO FILES
+const FILES_URL = BASEURL . '/files';
+const VIDEOS_URL = FILES_URL . '/videos';
+const SUBTITLES_URL = FILES_URL . '/subtitles';
+const THUMBS_URL = FILES_URL . '/thumbs';
+const PLAYER_DIR = BASEDIR . '/player';
+const PLAYER_URL = '/player';
+
+const USER_THUMBS_URL = FILES_URL . '/avatars';
+const USER_BG_URL = FILES_URL . '/backgrounds';
+# Defining Category Thumbs directory
+const CAT_THUMB_DIR = BASEDIR . '/images/category_thumbs';
+const CAT_THUMB_URL = '/images/category_thumbs';
+
+# COLLECTIONS ICON DIR
+const COLLECT_THUMBS_DIR = BASEDIR . '/images/collection_thumbs';
+const COLLECT_THUMBS_URL = '/images/collection_thumbs';
+
+# PHOTOS DETAILS
+const PHOTOS_DIR = FILES_DIR . '/photos';
+const PHOTOS_URL = '/files/photos';
+
+# AVATARS DIR
+const AVATARS_DIR = FILES_DIR . '/avatars';
+const AVATARS_URL = '/files/avatars';
+
+# LOGOS DIR
+const LOGOS_DIR = FILES_DIR . '/logos';
+const LOGOS_URL = '/files/logos';
+
+# ADVANCE CACHING
+const CACHE_DIR = BASEDIR . '/cache';
+const COMM_CACHE_DIR = CACHE_DIR . '/comments';
+const COMM_CACHE_TIME = 1000; //in seconds
+
+# User Feeds
+const USER_FEEDS_DIR = CACHE_DIR . '/userfeeds';
+
+# Number of activity feeds to display on channel page
+const USER_ACTIVITY_FEEDS_LIMIT = 15;
+const ALLOWED_CATEGORIES = 3;
+# Defining Plugin Directory
+const PLUG_DIR = BASEDIR . '/plugins';
+const PLUG_URL = '/plugins';
+const PLAYLIST_COVERS_DIR = IMAGES_DIR . '/playlist_covers';
+const PLAYLIST_COVERS_URL = IMAGES_URL . '/playlist_covers';
+
+require_once('classes/session.class.php');
+$sess = new Session();
+$userquery = new userquery();
+$userquery->init();
+
+$thisurl = curPageURL();
+
+if (need_to_update_version()) {
+    define('NEED_UPDATE', true);
+    if (strpos($thisurl, '/admin_area/upgrade_db.php') === false
+        && strpos($thisurl, '/admin_area/logout.php') === false
+        && strpos($thisurl, 'actions/upgrade_db.php') === false
+        && $userquery->admin_login_check(true)) {
+        header('Location: /admin_area/upgrade_db.php');
+        die();
+    }
+} else {
+    define('NEED_UPDATE', false);
+}
 //Setting Time Zone date_default_timezone_set
 require_once('classes/search.class.php');
 require_once('classes/calcdate.class.php');
@@ -149,8 +235,6 @@ require_once('classes/upload.class.php');
 require_once('classes/ads.class.php');
 require_once('classes/form.class.php');
 require_once('classes/plugin.class.php');
-require_once('classes/errorhandler.class.php');
-require_once('classes/session.class.php');
 require_once('classes/log.class.php');
 require_once('classes/video.class.php');
 require_once('classes/player.class.php');
@@ -167,9 +251,6 @@ require_once('classes/translation.class.php');
 //Adding Gravatar
 require_once('classes/gravatar.class.php');
 require 'defined_links.php';
-require_once 'languages.php';
-$eh = new errorhandler();
-
 
 $calcdate = new CalcDate();
 $signup = new signup();
@@ -178,7 +259,7 @@ $adsObj = new AdsManager();
 $formObj = new formObj();
 
 $cbplugin = new CBPlugin();
-$sess = new Session();
+
 $cblog = new CBLogs();
 $imgObj = new ResizeImage();
 $cbvideo = $cbvid = new CBvideo();
@@ -237,43 +318,6 @@ define('VIDEO_RATING', $row['video_rating']);
 define('COMMENT_RATING', $row['comment_rating']);
 define('VIDEO_DOWNLOAD', $row['video_download']);
 define('VIDEO_EMBED', $row['video_embed']);
-const TEMPLATEFOLDER = 'styles';                            //Template Folder Name, usually STYLES
-const STYLES_DIR = BASEDIR . DIRECTORY_SEPARATOR . TEMPLATEFOLDER;
-
-# Define Lang Select & Style Select
-//Javascript Directory Name
-const ADMINDIR = 'admin_area';
-const ADMINBASEDIR = BASEDIR . DIRECTORY_SEPARATOR . 'admin_area';                //Admin Accessible Folder
-const ADMIN_BASEURL = DIRECTORY_SEPARATOR . ADMINDIR;
-
-# DIRECT PATHS OF VIDEO FILES
-const FILES_DIR = BASEDIR . '/files';
-const VIDEOS_DIR = FILES_DIR . '/videos';
-const SUBTITLES_DIR = FILES_DIR . '/subtitles';
-const THUMBS_DIR = FILES_DIR . '/thumbs';
-const ORIGINAL_DIR = FILES_DIR . '/original';
-const TEMP_DIR = FILES_DIR . '/temp';
-const CON_DIR = FILES_DIR . '/conversion_queue';
-const MASS_UPLOAD_DIR = FILES_DIR . '/mass_uploads';
-const LOGS_DIR = FILES_DIR . '/logs';
-const IMAGES_DIR = BASEDIR . '/images';
-const IMAGES_URL = '/images';
-const USER_THUMBS_DIR = BASEDIR . '/files/avatars';
-const USER_BG_DIR = BASEDIR . '/files/backgrounds';
-const ICONS_URL = '/images/icons';
-const JS_DIR = BASEDIR . '/js';
-const JS_URL = '/js';
-
-#DIRECT URL OF VIDEO FILES
-const FILES_URL = BASEURL . '/files';
-const VIDEOS_URL = FILES_URL . '/videos';
-const SUBTITLES_URL = FILES_URL . '/subtitles';
-const THUMBS_URL = FILES_URL . '/thumbs';
-const PLAYER_DIR = BASEDIR . '/player';
-const PLAYER_URL = '/player';
-
-const USER_THUMBS_URL = FILES_URL . '/avatars';
-const USER_BG_URL = FILES_URL . '/backgrounds';
 
 # Required Settings For Video Conversion
 define('VBRATE', $row['vbrate']);
@@ -287,43 +331,8 @@ define('THUMB_HEIGHT', $row['thumb_height']);
 define('THUMB_WIDTH', $row['thumb_width']);
 define('PHP_PATH', $row['php_path']);
 
-# Defining Plugin Directory
-const PLUG_DIR = BASEDIR . '/plugins';
-const PLUG_URL = '/plugins';
-
 define('MAX_COMMENT_CHR', $Cbucket->configs['max_comment_chr']);
 define('USER_COMMENT_OWN', $Cbucket->configs['user_comment_own']);
-
-# Defining Category Thumbs directory
-const CAT_THUMB_DIR = BASEDIR . '/images/category_thumbs';
-const CAT_THUMB_URL = '/images/category_thumbs';
-
-# COLLECTIONS ICON DIR
-const COLLECT_THUMBS_DIR = BASEDIR . '/images/collection_thumbs';
-const COLLECT_THUMBS_URL = '/images/collection_thumbs';
-
-# PHOTOS DETAILS
-const PHOTOS_DIR = FILES_DIR . '/photos';
-const PHOTOS_URL = '/files/photos';
-
-# AVATARS DIR
-const AVATARS_DIR = FILES_DIR . '/avatars';
-const AVATARS_URL = '/files/avatars';
-
-# LOGOS DIR
-const LOGOS_DIR = FILES_DIR . '/logos';
-const LOGOS_URL = '/files/logos';
-
-# ADVANCE CACHING
-const CACHE_DIR = BASEDIR . '/cache';
-const COMM_CACHE_DIR = CACHE_DIR . '/comments';
-const COMM_CACHE_TIME = 1000; //in seconds
-
-# User Feeds
-const USER_FEEDS_DIR = CACHE_DIR . '/userfeeds';
-
-# Number of activity feeds to display on channel page
-const USER_ACTIVITY_FEEDS_LIMIT = 15;
 
 # SETTING PHOTO SETTING
 $cbphoto->thumb_width = $row['photo_thumb_width'];
@@ -350,11 +359,8 @@ $cbtpl = new CBTemplate();
 $cbtpl->caching = 0;
 $cbobjects = new CBObjects();
 
-# Initializing Userquery class
-$userquery->init();
 $cbvideo->init();
 $cbphoto->init_photos();
-$thisurl = curPageURL();
 
 $Cbucket->set_the_template();
 
@@ -364,9 +370,9 @@ $cbtpl->init();
 require BASEDIR . '/includes/active.php';
 Assign('THIS_URL', $thisurl);
 define('ALLOWED_VDO_CATS', $row['video_categories']);
-const ALLOWED_CATEGORIES = 3;
 
 $ClipBucket->initAdminMenu();
+Assign('NEED_UPDATE', NEED_UPDATE);
 
 # Assigning Smarty Tags & Values
 Assign('CB_VERSION', CB_VERSION);
@@ -400,8 +406,6 @@ Assign('comment_rating', $row['comment_rating']);
 Assign('video_download', $row['video_download']);
 Assign('video_embed', $row['video_embed']);
 assign('icons_url', ICONS_URL);
-const PLAYLIST_COVERS_DIR = IMAGES_DIR . '/playlist_covers';
-const PLAYLIST_COVERS_URL = IMAGES_URL . '/playlist_covers';
 
 if (!file_exists(PLAYLIST_COVERS_DIR)) {
     mkdir(PLAYLIST_COVERS_DIR, 0777);

@@ -800,3 +800,11 @@ textarea.form-control{
 a[role='menuitem'] {
     cursor: pointer;
 }
+
+.row.display-flex {
+    display: flex;
+    flex-wrap: wrap;
+}
+.row.display-flex > [class*='col-'] {
+    flex-grow: 1;
+}

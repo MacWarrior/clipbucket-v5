@@ -1,9 +1,9 @@
 <div class="heading">
     <h2>ClipBucket V{$VERSION} {$STATE} Dashboard</h2>
 </div>
-<div class="row">
+<div class="row display-flex">
 	<div class="col-md-6">
-		<ul class="nav nav-tabs">
+		<ul class="nav nav-tabs" style="height: 53px;">
 			<li class="active">
 				<a data-toggle="tab" href="#rcomments">
 					<h5><i class="glyphicon glyphicon-comment"></i> Recent Comments</h5>
@@ -20,38 +20,38 @@
 				</a>
 			</li>
 		</ul>
-		<div class="tab-content">
-			<div id="rcomments" class="tab-pane active">
-				<div class="widgetBox">
+		<div class="tab-content" style="height: calc(100% - 72px);">
+			<div id="rcomments" class="tab-pane active" style="height: 100%; ">
+				<div class="widgetBox" style="height: 100%; min-height: 200px;">
 					{if $comments}
-						{foreach from=$comments item=comment}
-							{$userdetails = $userquery->get_user_details($comment.userid)}
-							<div class="itemdiv dialogdiv">
-								<div class="user">
-									<img alt="{display_clean($userdetails.username)}" title="{display_clean($userdetails.username)}" src="{$userquery->getUserThumb($userdetails,'small')}">
-								</div>
-								<div class="body">
-									<div class="time">
-										<i class="icon-time"></i>
-										<span class="green">{$comment.date_added|date_format}</span>
-									</div>
-									<div class="name">
-										<a href="#">{display_clean($comment.anonym_name)}</a>
-									</div>
-									<div class="text">{display_clean($comment.comment|comment)}</div>
-									<div class="tools">
-										<a href="{getCommentAdminLink($comment.type, $comment.type_id)}" class="btn btn-minier btn-info">
-											<i class="icon-only icon-share-alt"></i>
-										</a>
-									</div>
-								</div>
+					{foreach from=$comments item=comment}
+					{$userdetails = $userquery->get_user_details($comment.userid)}
+					<div class="itemdiv dialogdiv">
+						<div class="user">
+							<img alt="{display_clean($userdetails.username)}" title="{display_clean($userdetails.username)}" src="{$userquery->getUserThumb($userdetails,'small')}">
+						</div>
+						<div class="body">
+							<div class="time">
+								<i class="icon-time"></i>
+								<span class="green">{$comment.date_added|date_format}</span>
 							</div>
-						{/foreach}
+							<div class="name">
+								<a href="#">{display_clean($comment.anonym_name)}</a>
+							</div>
+							<div class="text">{display_clean($comment.comment|comment)}</div>
+							<div class="tools">
+								<a href="{getCommentAdminLink($comment.type, $comment.type_id)}" class="btn btn-minier btn-info">
+									<i class="icon-only icon-share-alt"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+					{/foreach}
 					{/if}
 				</div>
 			</div>
-			<div id="todolist" class="tab-pane">
-				<div class="widgetBox">
+			<div id="todolist" class="tab-pane"  style="height: 100%; ">
+				<div class="widgetBox" style="height: 100%;min-height: 200px;">
 					<div class="addTodo paddingRightSmall paddingLeftLarge marginBottomLarge">
 						<div class="row">
 							<div class="from-group relative">
@@ -63,7 +63,7 @@
 						</div>
 					</div>
 					{assign var=todos value=$myquery->get_todos()}
-					<ul class="row todosList" id="note-{$the_note.note_id}" >
+					<ul class="row todosList" id="note-{$the_note.note_id}">
 						{foreach from=$todos item=note}
 						<li class="col-md-12">
 							<div class="col-md-12">
@@ -77,8 +77,8 @@
 					</ul>
 				</div>
 			</div>
-			<div id="pnotes" class="tab-pane">
-				<div class="widgetBox">
+			<div id="pnotes" class="tab-pane"  style="height: 100%; ">
+				<div class="widgetBox" style="height: 100%; min-height: 200px;">
 					<div class="addNote form-group paddingRightSmall">
 						<textarea class="form-control" name="note"></textarea>
 						<div class="alignRight marginTopSmall">
@@ -86,7 +86,7 @@
 						</div>
 					</div>
 					{assign var=notes value=$myquery->get_notes()}
-					<ul class="notesList row paddingRightSmall" id="note-{$the_note.note_id}" >
+					<ul class="notesList row paddingRightSmall" id="note-{$the_note.note_id}">
 						{foreach from=$notes item=note}
 						<li class="col-md-4">
 							<div>
@@ -107,11 +107,11 @@
 			<li class="title">
 				<h5><i class="glyphicon glyphicon-list-alt"></i> {lang code='dashboard_changelogs'}</h5>
 			</li>
-            <li class="active">
-                <a data-toggle="tab" href="#550">
-                    <h5>5.5.0</h5>
-                </a>
-            </li>
+			<li class="active">
+				<a data-toggle="tab" href="#550">
+					<h5>5.5.0</h5>
+				</a>
+			</li>
 			<li>
 				<a data-toggle="tab" href="#541">
 					<h5>5.4.1</h5>
@@ -141,11 +141,11 @@
 			{/if}
 		</ul>
 		<div class="tab-content nopadding">
-            <div id="550" class="tab-pane active">
-                <div class="widgetBox">
-                    {display_changelog('550')}
-                </div>
-            </div>
+			<div id="550" class="tab-pane active">
+				<div class="widgetBox">
+					{display_changelog('550')}
+				</div>
+			</div>
 			<div id="541" class="tab-pane">
 				<div class="widgetBox">
 					{display_changelog('541')}
@@ -174,8 +174,13 @@
 			</div>
 			{/if}
 		</div>
+		<!--		message version -->
+		<div>
+			{get_db_update_status()}
+		</div>
 	</div>
 </div>
+
 <br/>
 <div class="row">
 	<div class="col-md-6">

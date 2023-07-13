@@ -1618,4 +1618,12 @@ VALUES ('friend_requests'),
        ('update_bits_color_label'),
        ('update_bits_color_description'),
        ('update_videos_duration_label'),
-       ('update_videos_duration_description');
+       ('update_videos_duration_description'),
+       ('need_db_upgrade'),
+       ('db_up_to_date'),
+       ('update_database_version_label'),
+       ('update_database_version_description'),
+       ('no_version'),
+       ('select_version'),
+       ('version'),
+       ('revision');

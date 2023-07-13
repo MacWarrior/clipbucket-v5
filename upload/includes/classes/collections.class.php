@@ -85,7 +85,7 @@ class Collections extends CBCategory
         global $userquery, $Cbucket;
         $per = $userquery->get_user_level(userid());
         // Adding My Account Links    
-        if (isSectionEnabled('collections')) {
+        if (isSectionEnabled('collections') && !NEED_UPDATE) {
             $userquery->user_account[lang('collections')] = [
                 lang('add_new_collection')          => cblink(['name' => 'manage_collections', 'extra_params' => 'mode=add_new']),
                 lang('manage_collections')          => cblink(['name' => 'manage_collections']),

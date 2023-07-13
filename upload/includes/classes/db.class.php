@@ -86,7 +86,6 @@ class Clipbucket_db
     {
         try {
             $result = $this->execute($query, 'select');
-            $this->handleError($query);
             $data = [];
             if ($result) {
                 while ($row = $result->fetch_assoc()) {
@@ -95,6 +94,9 @@ class Clipbucket_db
                 $result->close();
             }
         } catch (Exception $e) {
+            if ($e->getMessage() == 'lang_not_installed' || $e->getMessage() == 'version_not_installed') {
+                throw $e;
+            }
             $this->handleError($query);
         }
         return $data;
@@ -198,6 +200,9 @@ class Clipbucket_db
             $this->handleError($query);
             return $data;
         } catch (Exception $e) {
+            if ($e->getMessage() == 'lang_not_installed' || $e->getMessage() == 'version_not_installed') {
+                throw $e;
+            }
             $this->handleError($query);
         }
         return false;
@@ -482,14 +487,26 @@ class Clipbucket_db
         return $this->mysqli->real_escape_string($var);
     }
 
+    /**
+     * @param $query
+     * @return void
+     * @throws Exception
+     */
     private function handleError($query)
     {
-        if ($this->mysqli->error != '') {
+        if ($this->getError() != '') {
+            //customize exceptions
+            if (preg_match('/language.*doesn\'t exist/', $this->getError())) {
+                throw new Exception("lang_not_installed");
+            }
+            if (preg_match('/version.*doesn\'t exist/', $this->getError())) {
+                throw new Exception("version_not_installed");
+            }
             if (in_dev()) {
                 e('SQL : ' . $query);
-                e('ERROR : ' . $this->mysqli->error);
+                e('ERROR : ' . $this->getError());
                 error_log('SQL : ' . $query);
-                error_log('ERROR : ' . $this->mysqli->error);
+                error_log('ERROR : ' . $this->getError());
             } else {
                 e(lang('technical_error'));
             }
@@ -510,6 +527,11 @@ class Clipbucket_db
     function Affected_Rows()
     {
         return $this->mysqli->affected_rows;
+    }
+
+    function getError()
+    {
+        return $this->mysqli->error;
     }
 
 }

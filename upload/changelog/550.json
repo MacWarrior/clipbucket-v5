@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"168",
+  "revision":"169",
   "status":"dev",
   "detail":[
     {
@@ -52,6 +52,7 @@
         ,"Refactor thumbs"
         ,"Remove unused Convertion Lab"
         ,"Implement AdminTool"
+        ,"Implement SQL update system"
       ]
     },
     {

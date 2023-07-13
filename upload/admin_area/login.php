@@ -15,7 +15,6 @@ if ($userquery->is_admin_logged_as_user()) {
 if ($userquery->admin_login_check(true)) {
     redirect_to("/" . ADMINDIR . "/index.php");
 }
-$eh->flush();
 
 $thisurl = $_SERVER['PHP_SELF'];
 Assign('THIS_URL', $thisurl);

@@ -1,0 +1,20 @@
+<br/>
+{if !$need_db_update}
+<div class="alert alert-success alert-dismissable">
+    <ul class="list-unstyled">
+        <li>
+            <img alt='msg' src="{$imageurl}/ok.png"/>
+            {lang code='db_up_to_date'}
+        </li>
+    </ul>
+</div>
+{else}
+<div class="alert alert-warning alert-dismissable">
+    <ul class="list-unstyled">
+        <li>
+            <img alt='warning' src="{$imageurl}/error.png"/>
+            {$nb_db_update}<a href="admin_tool.php?id_tool=5">{lang code='update'}</a>
+        </li>
+    </ul>
+</div>
+{/if}

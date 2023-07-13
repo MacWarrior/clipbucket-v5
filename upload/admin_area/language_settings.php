@@ -1,6 +1,6 @@
 <?php
 require_once '../includes/admin_config.php';
-
+define('THIS_PAGE', 'language_setting');
 global $userquery, $pages, $Cbucket;
 
 $userquery->admin_login_check();

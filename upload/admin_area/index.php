@@ -16,6 +16,10 @@ if (!$array['order']) {
     $result_array['order'] = ' doj DESC LIMIT 5 ';
 }
 
+if (!empty($_GET['finish_upgrade'])) {
+    $eh->add_message('Your database has been successfuly updated to version ' . display_clean($_GET['version']));
+}
+
 $users = get_users($result_array);
 
 Assign('users', $users);

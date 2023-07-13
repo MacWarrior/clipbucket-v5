@@ -206,7 +206,7 @@ class CBPhotos
         global $Cbucket, $userquery;
         $per = $userquery->get_user_level(userid());
 
-        if ($per['photos_moderation'] == "yes" && isSectionEnabled('photos')) {
+        if ($per['photos_moderation'] == "yes" && isSectionEnabled('photos') && !NEED_UPDATE) {
             $menu_photo = [
                 'title'   => 'Photos'
                 , 'class' => 'glyphicon glyphicon-picture'

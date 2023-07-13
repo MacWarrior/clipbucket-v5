@@ -157,3 +157,144 @@ function select($query)
     return cb_select($query);
 }
 
+/**
+ * @param $version
+ * @param $revision
+ * @return bool
+ */
+function check_need_upgrade($version, $revision)
+{
+    $folders = glob(BASEDIR . DIRECTORY_SEPARATOR . 'cb_install' . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
+    $folder_version = '';
+    foreach ($folders as $folder) {
+        if (basename($folder) == $version) {
+            $folder_version = $folder;
+        } elseif (basename($folder) > $version) {
+            return true;
+        }
+    }
+    $clean_folder = array_diff(scandir($folder_version), ['..', '.']);
+    foreach ($clean_folder as $file) {
+        if ((int)pathinfo($file)['filename'] > $revision) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function get_files_to_upgrade($version, $revision, $count = false)
+{
+    //Get folders superior or equal to current version
+    $folders = array_filter(glob(BASEDIR . DIRECTORY_SEPARATOR . 'cb_install' . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR)
+        , function ($dir) use ($version) {
+            return basename($dir) >= $version;
+        });
+
+    $files = [];
+
+    foreach ($folders as $folder) {
+        //get files in folder minus . and .. folders
+        $clean_folder = array_diff(scandir($folder), ['..', '.']);
+        $files = array_merge(
+            $files,
+            //clean null files
+            array_filter(
+            //return absolute path
+                array_map(function ($file) use ($revision, $version, $folder) {
+                    return
+                        //if current version, then only superior revisions
+                        ((int)pathinfo($file)['filename'] > $revision && basename($folder) == $version
+                            // or all files from superior version
+                            || basename($folder) > $version
+                        ) ?
+                            $folder . DIRECTORY_SEPARATOR . $file
+                            : null;
+                }, $clean_folder)
+            )
+        );
+    }
+    return ($count ? count($files) : $files);
+}
+
+/**
+ * @throws Exception
+ */
+function execute_migration_SQL_file($path)
+{
+    $lines = file($path);
+    if (empty($lines)) {
+        e(lang('class_error_occured'));
+        return false;
+    }
+    global $db;
+    $templine = '';
+    $db->mysqli->begin_transaction();
+    try {
+        foreach ($lines as $line) {
+            @$templine .= $line;
+            if (substr(trim($line), -1, 1) == ';') {
+                @$templine = preg_replace("/{tbl_prefix}/", TABLE_PREFIX, $templine);
+                $db->mysqli->query($templine);
+                if ($db->mysqli->error != '') {
+                    error_log('SQL : ' . $templine);
+                    error_log('ERROR : ' . $db->mysqli->error);
+                    $db->mysqli->rollback();
+                    exit($db->mysqli->error);
+                }
+                $templine = '';
+            }
+        }
+    } catch (Exception $e) {
+        $db->mysqli->rollback();
+        e('SQL : ' . $templine);
+        e('ERROR : ' . $e->getMessage());
+        throw $e;
+    }
+    $db->mysqli->commit();
+
+    $regex = '/\/(\d{0,3}\.\d{0,3}\.\d{0,3})\/(\d{5})\.sql/';
+    $match = [];
+    preg_match($regex, $path, $match);
+
+    $sql = 'INSERT INTO ' . tbl('version') . ' SET version = \'' . mysql_clean($match['1']) . '\' , revision = ' . mysql_clean((int)$match['2']) . ', id = 1 ON DUPLICATE KEY UPDATE version = \'' . mysql_clean($match['1']) . '\' , revision = ' . mysql_clean((int)$match['2']);
+    $db->mysqli->query($sql);
+}
+
+/**
+ * @return array
+ */
+function getRevisions()
+{
+    $versions = array_map(
+        function ($dir) {
+            return basename($dir);
+        }
+        , array_filter(glob(BASEDIR . DIRECTORY_SEPARATOR . 'cb_install' . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR)
+        , function ($dir) {
+            return basename($dir) >= '5.3.0' && basename($dir) <= '5.5.0';
+        }
+    ));
+    $revisions = [];
+    foreach ($versions as $version) {
+        $changelog_url = BASEDIR . DIRECTORY_SEPARATOR . 'changelog' . DIRECTORY_SEPARATOR . str_replace('.', '', $version) . '.json';
+        $changelog = json_decode(file_get_contents($changelog_url, false), true);
+        //after revision 168, version system should be already ready
+        $revisions[$version] = min($changelog['revision'], 168);
+    }
+    return $revisions;
+}
+
+/**
+ * @return array
+ */
+function getVersions()
+{
+    $versions = [];
+    $changelog_url = BASEDIR . DIRECTORY_SEPARATOR . 'changelog' . DIRECTORY_SEPARATOR;
+    $files = glob($changelog_url . '[0-9]*' . '.json');
+    foreach ($files as $file) {
+        $changelog = json_decode(file_get_contents($file), true);
+        $versions[$changelog['version']] = $changelog['revision'];
+    }
+    return $versions;
+}

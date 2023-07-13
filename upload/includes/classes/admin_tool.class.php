@@ -1,4 +1,5 @@
 <?php
+
 class AdminTool
 {
     private static $_instance = null;
@@ -101,7 +102,7 @@ class AdminTool
      * Send respond to execute ajax return and continue execution
      * @param $callback
      */
-    public static function sendClientResponseAndContinue($callback)
+    public static function sendClientResponseAndContinue($callback, $ajax = true)
     {
         ob_end_clean();
         ignore_user_abort(true);
@@ -125,7 +126,9 @@ class AdminTool
         if (session_id()) {
             session_write_close();
         }
-        fastcgi_finish_request();
+        if ($ajax) {
+            fastcgi_finish_request();
+        }
     }
 
     /**
@@ -164,6 +167,7 @@ class AdminTool
         $videos = $db->select(tbl('video'), '*', ' status LIKE \'Successful\'');
         self::executeTool($id_tool, $videos, 'update_bits_color');
     }
+
     /**
      * check videos duration
      * @param $id_tool
@@ -176,7 +180,35 @@ class AdminTool
         self::executeTool($id_tool, $videos, 'update_duration');
     }
 
-    private static function executeTool($id_tool, $array, $function)
+    /**
+     * check videos duration
+     * @param $id_tool
+     * @return void
+     */
+    public static function updateDataBaseVersion($id_tool)
+    {
+        global $db;
+        $version = $db->select(tbl('version'), '*')[0];
+        $folder_version = $version['version'];
+        $revision = $version['revision'];
+
+        $files = get_files_to_upgrade($folder_version, $revision);
+        if (empty($files)) {
+            //update to current revision
+            $sql = 'INSERT INTO ' . tbl('version') . ' SET version = \'' . mysql_clean(VERSION) . '\' , revision = ' . mysql_clean(REV) . ', id = 1 ON DUPLICATE KEY UPDATE version = \'' . mysql_clean(VERSION) . '\' , revision = ' . mysql_clean(REV);
+            $db->mysqli->query($sql);
+        }
+        self::executeTool($id_tool, $files, 'execute_migration_SQL_file', true);
+    }
+
+    /**
+     * @param $id_tool
+     * @param $array
+     * @param $function
+     * @param $stop_on_error
+     * @return void
+     */
+    private static function executeTool($id_tool, $array, $function, $stop_on_error = false)
     {
         global $db;
         //optimisation to call mysql_clean only once
@@ -193,7 +225,14 @@ class AdminTool
                     break;
                 }
                 //call function
-                call_user_func($function, $item);
+                try {
+                    call_user_func($function, $item);
+                } catch (Exception $e) {
+                    e(lang($e->getMessage()));
+                    if ($stop_on_error) {
+                        break;
+                    }
+                }
                 //update nb_done of tools
                 $nb_done++;
                 $db->update(tbl('tools'), ['elements_done'], [$nb_done], ' id_tool = ' . $secureIdTool);

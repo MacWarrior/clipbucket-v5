@@ -1,27 +1,24 @@
--- 4.0
--- Author Awais
-
 -- Addition for Cooporate cb seting bitrates for dash/hls
 INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES
-	('vbrate_hd','4096000'),
-	('vbrate_1080','4096000'),
-	('vbrate_720','2500000'),
-	('vbrate_480','700000'),
-	('vbrate_360','400000'),
-	('vbrate_240','240000');
+    ('vbrate_hd','4096000'),
+    ('vbrate_1080','4096000'),
+    ('vbrate_720','2500000'),
+    ('vbrate_480','700000'),
+    ('vbrate_360','400000'),
+    ('vbrate_240','240000');
 
 -- Addition for Cooporate cb use video watermark or not
-INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES 
-	('use_watermark', 'no');
+INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES
+    ('use_watermark', 'no');
 
 -- Addition for Cooporate cb stream via hls or dash
-INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES 
-	('stream_via', 'hls');
+INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES
+    ('stream_via', 'hls');
 -- Addition for video type
 ALTER TABLE `{tbl_prefix}video` ADD `file_type` INT( 10 ) NOT NULL DEFAULT '0' AFTER  `file_name`;
 ALTER TABLE `{tbl_prefix}video` ADD `blocked_countries` TEXT( 255 ) NOT NULL AFTER `country`;
 ALTER TABLE `{tbl_prefix}video` ADD `sprite_count` INT(11) NOT NULL DEFAULT '0' AFTER `blocked_countries`;
---Addition in users table 
+--Addition in users table
 ALTER TABLE `{tbl_prefix}users` ADD `is_live` enum('yes','no') NOT NULL DEFAULT 'no' AFTER `likes`;
 
 --Addition of social media link on channel
@@ -32,20 +29,20 @@ ALTER TABLE `{tbl_prefix}user_profile` ADD `fb_url` VARCHAR(200) NOT NULL AFTER 
 UPDATE `{tbl_prefix}config` SET value = 'yes' WHERE name = 'cb_combo_res';
 
 -- Addition for Cooporate cb access to logged in users
-INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES 
-	('access_to_logged_in', 'no');
+INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES
+    ('access_to_logged_in', 'no');
 
 -- Addition for clipbucket license --
-INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES 
-	('cb_license', 'CBCORP-XXXXXXXXXXX'),
-	('cb_license_local', '');
+INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES
+    ('cb_license', 'CBCORP-XXXXXXXXXXX'),
+    ('cb_license_local', '');
 
 --Updating featured videos limit for new template
 -- value here is yes because no playlist page added yet in cb-git
 UPDATE `{tbl_prefix}config` SET value = 'yes' WHERE name = 'collectionsSection';
 -- Addition for Cooporate cb allowing collection and playlist page
-INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES 
-	('playlistsSection', 'yes');
+INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES
+    ('playlistsSection', 'yes');
 
 
 -- Updating featured videos limit for new template

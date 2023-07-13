@@ -55,6 +55,7 @@ if ($mode == 'adminsettings') {
     $step = $_POST['step'];
     $files = [
         'structure'       => 'structure.sql',
+        'version'         => 'table_version.sql',
         'configs'         => 'configs.sql',
         'languages'       => 'languages.sql',
         'language_ENG'    => 'language_ENG.sql',
@@ -138,6 +139,19 @@ if ($mode == 'adminsettings') {
             $sql = 'UPDATE ' . $dbprefix . 'config SET value = "' . $cnnct->real_escape_string(exec("which ffprobe")) . '" WHERE name = "ffprobe_path"';
             mysqli_query($cnnct, $sql);
             $sql = 'UPDATE ' . $dbprefix . 'config SET value = "' . $cnnct->real_escape_string(exec("which mediainfo")) . '" WHERE name = "media_info"';
+            mysqli_query($cnnct, $sql);
+        }
+        //update database version from last json
+        $versions = json_decode(file_get_contents(BASEDIR . DIRECTORY_SEPARATOR . 'changelog' . DIRECTORY_SEPARATOR . 'latest.json', false), true);
+        $state = 'STABLE';
+        if ($versions['stable'] != $versions['dev']) {
+            $state = 'DEV';
+        }
+        if ($step == 'version') {
+            $last_version = $versions[strtolower($state)];
+            $changelog = json_decode(file_get_contents(BASEDIR . DIRECTORY_SEPARATOR . 'changelog' . DIRECTORY_SEPARATOR . $last_version . '.json', false), true);
+            $sql = 'INSERT INTO ' . $dbprefix . 'version SET version = \'' . $cnnct->real_escape_string($changelog['version']) . '\' , revision = ' . $cnnct->real_escape_string($changelog['revision']) . ', id = 1
+            ON DUPLICATE KEY UPDATE version = \'' . $cnnct->real_escape_string($changelog['version']) . '\' , revision = ' . $cnnct->real_escape_string($changelog['revision']);
             mysqli_query($cnnct, $sql);
         }
     } else {

@@ -28,5 +28,6 @@ function update_announcement($text)
 }
 
 register_anchor_function('get_global_announcement', 'global');
-
-add_admin_menu('Plugin Manager', lang('plugin_global_announcement'), PLUG_URL . '/global_announcement/edit_announcement.php');
+if (!NEED_UPDATE) {
+    add_admin_menu('Plugin Manager', lang('plugin_global_announcement'), PLUG_URL . '/global_announcement/edit_announcement.php');
+}

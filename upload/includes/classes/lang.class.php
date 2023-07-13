@@ -15,6 +15,8 @@ class Language
 
     private static $_instance = null;
 
+    private $uninstalled = false;
+
     /**
      * __Constructor
      */
@@ -63,6 +65,8 @@ class Language
             $this->lang = $this->lang_iso = $default['language_code'];
             $this->lang_id = $default['language_id'];
         }
+
+
     }
 
     /**
@@ -75,6 +79,9 @@ class Language
      */
     public function getTranslationByKey($language_key, $language_id)
     {
+        if ($this->uninstalled) {
+            return false;
+        }
         global $db;
 
         $select = tbl("languages_translations") . ' AS LT
@@ -96,6 +103,9 @@ class Language
      */
     public function getTranslationByIdKey($id_language_key, $language_id)
     {
+        if ($this->uninstalled) {
+            return false;
+        }
         global $db;
 
         $select = tbl("languages_translations") . ' AS LT
@@ -119,6 +129,9 @@ class Language
      */
     public function getAllTranslations($language_id = 1, $fields = "language_key, translation", $limit = null, $extra_param = null): array
     {
+        if ($this->uninstalled) {
+            return [];
+        }
         global $db;
 
         $select = tbl("languages_keys") . ' AS LK
@@ -138,6 +151,9 @@ class Language
      */
     public function countTranslations($language_id = null, $extra_param = null): int
     {
+        if ($this->uninstalled) {
+            return false;
+        }
         global $db;
         $select = tbl('languages_keys') . ' AS LK
         LEFT JOIN ' . tbl('languages_translations') . ' AS LT ON LK.id_language_key = LT.id_language_key AND LT.language_id = ' . $language_id;
@@ -176,11 +192,25 @@ class Language
      * @param int $langId
      *
      * @return array
+     * @throws Exception
      */
     public function loadTranslations($langId): array
     {
         $lang = [];
-        $phrases = $this->getAllTranslations($langId);
+        try {
+            $phrases = $this->getAllTranslations($langId);
+        } catch (Exception $e) {
+            if ($e->getMessage() == 'lang_not_installed') {
+                $this->uninstalled = true;
+                if (BACK_END) {
+                    e('Translation system isn\'t installed, please connect and follow upgrade instructions.');
+                } elseif (in_dev()) {
+                    e('Translation system isn\'t installed, please contact your administrator.');
+                }
+                return [];
+            }
+            throw $e;
+        }
         foreach ($phrases as $phrase) {
             $lang[$phrase['language_key']] = $phrase['translation'];
         }
@@ -198,6 +228,9 @@ class Language
      */
     public function get_langs(bool $active = false, bool $countTrads = false): array
     {
+        if ($this->uninstalled) {
+            return [];
+        }
         global $db;
 
         if ($active) {

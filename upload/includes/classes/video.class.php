@@ -50,6 +50,9 @@ class CBvideo extends CBCategory
 
     function init_admin_menu()
     {
+        if (NEED_UPDATE) {
+            return;
+        }
         global $Cbucket, $userquery;
         $per = $userquery->get_user_level(userid());
 

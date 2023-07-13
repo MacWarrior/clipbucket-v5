@@ -5119,11 +5119,11 @@ function get_update_status($only_flag = false)
     $is_new_version = $current_version > $changelog['version'];
     $is_new_revision = $is_new_version || $current_revision > $changelog['revision'];
 
-    if ($current_version == $changelog['version'] && $current_revision == $changelog['revision']) {
-        if ($only_flag) {
-            return 'green';
-        }
-        echo '<h3 style="text-align:center;">Your Clipbucket seems up-to-date !</h3>';
+    if ($current_version == $changelog['version'] && $current_revision == $changelog['revision'] ) {
+            if ($only_flag) {
+                return 'green';
+            }
+            echo '<h3 style="text-align:center;">Your Clipbucket seems up-to-date !</h3>';
     } else {
         if ($is_new_version || $is_new_revision) {
             if ($only_flag) {
@@ -5131,6 +5131,7 @@ function get_update_status($only_flag = false)
             }
 
             echo '<h3 style="text-align:center;">Keep working on this new version ! :)</h3>';
+
         } else {
             if ($only_flag) {
                 return 'orange';
@@ -5148,6 +5149,54 @@ function get_update_status($only_flag = false)
 
     if ($current_status == 'dev') {
         echo '<div class="well changelog"><h5>Thank you for using the developpement version of Clipbucket !<br/>Please create an <a href="https://github.com/MacWarrior/clipbucket-v5/issues" target="_blank">issue</a> if you encounter any bug.</h5></div>';
+    }
+}
+
+function get_db_update_status()
+{
+    global $db;
+    $version = $db->select(tbl('version'), '*')[0];
+    $folder_version = $version['version'];
+    $revision = $version['revision'];
+
+    $need_db_upgrade = check_need_upgrade($folder_version, $revision);
+    assign('need_db_update', $need_db_upgrade);
+    if ($need_db_upgrade) {
+        assign('nb_db_update', str_replace('%s', get_files_to_upgrade($folder_version, $revision, true), lang('need_db_upgrade')));
+    }
+    Template('msg_update_db.html');
+}
+
+/**
+ * @return bool
+ * @throws Exception
+ */
+function need_to_update_version(): bool
+{
+    global $db;
+
+    try {
+        $db->select(tbl('version'), '*')[0];
+    } catch (Exception $e) {
+        if ($e->getMessage() == 'version_not_installed') {
+            if (BACK_END) {
+                e('Version system isn\'t installed, please connect and follow upgrade instructions.');
+            } elseif (in_dev()) {
+                e('Version system isn\'t installed, please contact your administrator.');
+            }
+            return true;
+        }
+        throw $e;
+    }
+    return false;
+}
+
+function error_lang_cli ($msg)
+{
+    if (php_sapi_name() == 'cli') {
+        echo $msg . PHP_EOL;
+    } else {
+        e($msg);
     }
 }
 

@@ -127,4 +127,6 @@ if (in_dev()) {
 register_anchor_function('display_editors_pick', 'global');
 register_action_remove_video('remove_vid_editors_pick');
 
-add_admin_menu('Plugin Manager', lang('plugin_editors_picks'), PLUG_URL . '/editors_pick/admin/editor_pick.php');
+if (!NEED_UPDATE) {
+    add_admin_menu('Plugin Manager', lang('plugin_editors_picks'), PLUG_URL . '/editors_pick/admin/editor_pick.php');
+}

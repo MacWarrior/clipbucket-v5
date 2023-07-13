@@ -1,10 +1,8 @@
 <?php
 function redirect_to($url)
 {
-    echo '<script type="text/javascript">
-		window.location = "' . $url . '"
-		</script>';
-    exit("Javascript is turned off, <a href='$url'>click here to go to requested page</a>");
+    header('Location: ./' . $url);
+    die();
 }
 
 //Test function to return template file
