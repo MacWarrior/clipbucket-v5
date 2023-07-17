@@ -1,0 +1,227 @@
+<style type="text/css">
+    {literal}
+    .php_info body {background-color: #fff; color: #222; font-family: sans-serif;}
+    .php_info pre {margin: 0; font-family: monospace;}
+    .php_info a:link {color: #009; text-decoration: none; background-color: #fff;}
+    .php_info a:hover {text-decoration: underline;}
+    .php_info table {border-collapse: collapse; border: 0; width: 934px; box-shadow: 1px 2px 3px #ccc;}
+    .php_info .center {text-align: center;}
+    .php_info .center table {margin: 1em auto; text-align: left;}
+    .php_info .center th {text-align: center !important;}
+    .php_info td, th {border: 1px solid #666; font-size: 75%; vertical-align: baseline; padding: 4px 5px;}
+    .php_info th {position: sticky; top: 0; background: inherit;}
+    .php_info h1 {font-size: 150%;}
+    .php_info h2 {font-size: 125%;}
+    .php_info .p {text-align: left;}
+    .php_info .e {background-color: #ccf; width: 300px; font-weight: bold;}
+    .php_info .h {background-color: #99c; font-weight: bold;}
+    .php_info .v {background-color: #ddd; max-width: 300px; overflow-x: auto; word-wrap: break-word;}
+    .php_info .v i {color: #999;}
+    .php_info img { float: right; border: 0;}
+    .php_info hr {width: 934px; background-color: #ccc; border: 0; height: 1px;}
+    {/literal}
+</style>
+<div class="heading">
+    <h2>{lang code = 'system_info'}</h2>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <ul class="nav nav-tabs">
+            <li class="active">
+                <a data-toggle="tab" href="#hosting">
+                    <h6>{lang code = 'hosting'}</h6>
+                </a>
+            </li>
+            <li>
+                <a data-toggle="tab" href="#php_info">
+                    <h6>PHP INFO</h6>
+                </a>
+            </li>
+            <li>
+                <a data-toggle="tab" href="#services">
+                    <h6>{lang code = 'services'}</h6>
+                </a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div id="php_info" class="tab-pane">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h3 style="margin-left: 4em;">PHP WEB</h3>
+                    </div>
+                    <div class="col-md-4 {if $phpVersionCli == 0} hidden {/if}">
+                        <h3>PHP CLI</h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8 php_info" style="overflow-x: scroll;">
+                        {$php_info}
+                    </div>
+                    <div class="col-md-4 {if $phpVersionCli == 0} hidden {/if}" style="overflow-x: scroll;">
+                        {$cli_php_info}
+                    </div>
+                </div>
+            </div>
+            <div id="services" class="tab-pane">
+                <div class="row">
+                    <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $ffmpegVersion}tick{else}alert{/if}.png"/>
+                    <label>
+                        FFMPEG -
+                        {if !$ffmpegVersion}
+                            <div class="alert alert-danger">{lang code = 'not_found'}</div>
+                        {else}
+                            Version <strong>{$ffmpegVersion}</strong>
+                            - {lang code='info_ffmpeg'}
+                        {/if}
+                    </label>
+                </div>
+                <div class="row">
+                    <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $ffprobe_path}tick{else}alert{/if}.png"/>
+                    <label>
+                        FFProbe -
+                        {if !$ffprobe_path}
+                            <p class="alert alert-danger">Imagick {lang code = 'not_found'}</p>
+                            {if $ffprobe_path.error}
+                                <br><span style="color:#e70000">{$ffprobe_path.error}</span>
+                            {/if}
+                        {else}
+                            Version <strong>{$ffprobe_path}</strong>
+                            - {lang code='info_ffprobe'}
+                        {/if}
+                    </label>
+                </div>
+                <div class="row">
+                    <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $media_info}tick{else}alert{/if}.png"/>
+                    <label>
+                        Media Info -
+                        {if !$media_info}
+                            <div class="alert alert-danger">{lang code = 'not_found'}</div>
+                        {else}
+                            Version <strong>{$media_info}</strong>
+                             - {lang code='info_media_info'}
+                        {/if}
+                    </label>
+                </div>
+
+                <div class="row">
+                    <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $phpVersionWeb}tick{else}alert{/if}.png"/>
+                    <label>
+                        PHP WEB -
+                        {if !$phpVersionWeb}
+                            <div class="alert alert-danger">php {lang code = 'not_found'}</div>
+                        {else}
+                            Version <strong>{$phpVersionWeb}</strong>
+                             - {lang code='info_php_web'}
+                        {/if}
+                    </label>
+                </div>
+                <div class="row">
+                    <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $phpVersionCli}tick{else}alert{/if}.png"/>
+                    <label>
+                        PHP CLI - {if !$phpVersionCli}<span class="alert-danger">{lang code = 'php_cli_not_found'}</span>
+                        {else}
+                            Version <strong>{$phpVersionCli}</strong>
+                             - {lang code='info_php_cli'}
+                        {/if}
+                    </label>
+                </div>
+            </div>
+            <div id="hosting" class="tab-pane active">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3>PHP WEB</h3>
+                    </div>
+                    <div class="col-md-6 {if $phpVersionCli == 0} hidden {/if}">
+                        <h3>PHP CLI</h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <img style="margin-left: 1em; margin-top: 0.4em;"
+                                 src="{$imageurl}/{if getBytesFromFileSize($post_max_size) > getBytesFromFileSize('50M')}tick{else}alert{/if}.png"
+                            />
+                            <label>{lang code = 'post_max_size'} :
+                                <strong> {$post_max_size} {if getBytesFromFileSize($post_max_size) <= getBytesFromFileSize('50M') }
+                                    {lang code = 'must_be_least'} : 50M {/if}
+                                </strong>
+                            </label>
+                        </div>
+                        <div class="row">
+                            <img style="margin-left: 1em; margin-top: 0.4em;"
+                                 src="{$imageurl}/{if getBytesFromFileSize($upload_max_filesize) > getBytesFromFileSize('50M')}tick{else}alert{/if}.png"
+                            />
+                            <label>{lang code = 'upload_max_size'} :
+                                <strong> {$upload_max_filesize} {if getBytesFromFileSize($upload_max_filesize) <= getBytesFromFileSize('50M') }
+                                    {lang code = 'must_be_least'} : 50M {/if}
+                                </strong>
+                            </label>
+                        </div>
+                        <div class="row">
+                            <img style="margin-left: 1em; margin-top: 0.4em;"
+                                 src="{$imageurl}/{if getBytesFromFileSize($memory_limit) >= getBytesFromFileSize('128M')}tick{else}alert{/if}.png"
+                            />
+                            <label>{lang code = 'memory_limit'} :
+                                <strong> {$memory_limit} {if getBytesFromFileSize($memory_limit) < getBytesFromFileSize('128M') }
+                                    {lang code = 'must_be_least'} : 128M {/if}
+                                </strong>
+                            </label>
+                        </div>
+                        <div class="row">
+                            <img style="margin-left: 1em; margin-top: 0.4em;"
+                                 src="{$imageurl}/{if $max_execution_time >= 7200}tick{else}alert{/if}.png"
+                            />
+                            <label>{lang code = 'max_execution_time'} :
+                                <strong> {$max_execution_time} {if $max_execution_time < 7200 }
+                                    {lang code = 'must_be_least'} : 128M {/if}
+                                </strong>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-6 {if $phpVersionCli == 0} hidden {/if}">
+                        <div class="row">
+                            <img style="margin-left: 1em; margin-top: 0.4em;"
+                                 src="{$imageurl}/{if getBytesFromFileSize($post_max_size_cli) > getBytesFromFileSize('50M')}tick{else}alert{/if}.png"
+                            />
+                            <label>{lang code = 'post_max_size'} :
+                                <strong> {$post_max_size_cli} {if getBytesFromFileSize($post_max_size_cli) <= getBytesFromFileSize('50M') }
+                                    {lang code = 'must_be_least'} : 50M {/if}
+                                </strong>
+                            </label>
+                        </div>
+                        <div class="row">
+                            <img style="margin-left: 1em; margin-top: 0.4em;"
+                                 src="{$imageurl}/{if getBytesFromFileSize($upload_max_filesize_cli) > getBytesFromFileSize('50M')}tick{else}alert{/if}.png"
+                            />
+                            <label>{lang code = 'upload_max_size'} :
+                                <strong> {$upload_max_filesize_cli} {if getBytesFromFileSize($upload_max_filesize_cli) <= getBytesFromFileSize('50M') }
+                                    {lang code = 'must_be_least'} : 50M {/if}
+                                </strong>
+                            </label>
+                        </div>
+                        <div class="row">
+                            <img style="margin-left: 1em; margin-top: 0.4em;"
+                                 src="{$imageurl}/{if $memory_limit_cli != '-1'}{if getBytesFromFileSize($memory_limit_cli) >= getBytesFromFileSize('128M')}tick{else}alert{/if}{else}tick{/if}.png"
+                            />
+                            <label>{lang code = 'memory_limit'} :
+                                <strong> {$memory_limit_cli} {if $memory_limit_cli != -1 && getBytesFromFileSize($memory_limit_cli) < getBytesFromFileSize('128M') }
+                                    {lang code = 'must_be_least'} : 128M {/if}
+                                </strong>
+                            </label>
+                        </div>
+                        <div class="row">
+                            <img style="margin-left: 1em; margin-top: 0.4em;"
+                                 src="{$imageurl}/{if $max_execution_time_cli >= 7200 || $max_execution_time_cli==0}tick{else}alert{/if}.png"
+                            />
+                            <label>{lang code = 'max_execution_time'} :
+                                <strong> {$max_execution_time_cli} {if $max_execution_time_cli < 7200 && $max_execution_time_cli > 0}
+                                    {lang code = 'must_be_least'} : 7200 {/if}
+                                </strong>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

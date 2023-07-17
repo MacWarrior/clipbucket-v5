@@ -9,7 +9,7 @@ $pages->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => 'Tool Box', 'url' => ''];
+$breadcrumb[0] = ['title' => lang('tool_box'), 'url' => ''];
 $breadcrumb[1] = ['title' => 'Maintenance', 'url' => ADMIN_BASEURL . '/maintenance.php'];
 
 /**

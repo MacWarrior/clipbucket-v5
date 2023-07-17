@@ -1,11 +1,4 @@
 <?php
-/*
- ***********************************************************************
- | Copyright (c) 2007-2010 Clip-Bucket.com. All rights reserved.
- | @ Author 	: ArslanHassan
- | @ Software 	: ClipBucket , © PHPBucket.com
- *************************************************************************
-*/
 
 require_once '../includes/admin_config.php';
 $userquery->admin_login_check();
@@ -13,7 +6,7 @@ $pages->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => 'Tool Box', 'url' => ''];
+$breadcrumb[0] = ['title' => lang('tool_box'), 'url' => ''];
 $breadcrumb[1] = ['title' => 'View online users', 'url' => ADMIN_BASEURL . '/online_users.php'];
 
 if ($_GET['kick']) {

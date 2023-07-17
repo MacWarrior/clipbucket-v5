@@ -419,14 +419,10 @@ class ClipBucket
 
         if ($per['tool_box'] == "yes") {
             $menu_tool = [
-                'title'   => 'Tool Box'
+                'title'   => lang('tool_box')
                 , 'class' => 'glyphicon glyphicon-wrench'
                 , 'sub'   => [
                     [
-                        'title' => 'PHP Info'
-                        , 'url' => ADMIN_BASEURL . '/phpinfo.php'
-                    ]
-                    , [
                         'title' => 'Development Mode'
                         , 'url' => ADMIN_BASEURL . '/dev_mode.php'
                     ]
@@ -439,14 +435,6 @@ class ClipBucket
                         , 'url' => ADMIN_BASEURL . '/action_logs.php?type=login'
                     ]
                     , [
-                        'title' => 'Server Modules Info'
-                        , 'url' => ADMIN_BASEURL . '/cb_mod_check.php'
-                    ]
-                    , [
-                        'title' => 'Server Configuration Info'
-                        , 'url' => ADMIN_BASEURL . '/cb_server_conf_info.php'
-                    ]
-                    , [
                         'title' => 'Conversion Queue Manager'
                         , 'url' => ADMIN_BASEURL . '/cb_conversion_queue.php'
                     ]
@@ -457,6 +445,10 @@ class ClipBucket
                     , [
                         'title' => lang('admin_tool')
                         , 'url' => ADMIN_BASEURL . '/admin_tool.php'
+                    ]
+                    , [
+                        'title' => lang('system_info')
+                        , 'url' => ADMIN_BASEURL . '/system_info.php'
                     ]
                 ]
             ];

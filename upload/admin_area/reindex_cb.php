@@ -1,14 +1,5 @@
 <?php
-/*
- ***************************************************************
- | Copyright (c) 2007-2010 Clip-Bucket.com. All rights reserved.
- | @ Author 	: ArslanHassan
- | @ Software 	: ClipBucket , © PHPBucket.com
- | @ File       : Sometime stats of Clipbucket get messed up.
- | This file will re-index all stats of videos, users and
- | groups to provide most accurate results.
- ***************************************************************
-*/
+
 
 //including config file..
 require_once '../includes/admin_config.php';
@@ -17,7 +8,7 @@ $pages->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => 'Tool Box', 'url' => ''];
+$breadcrumb[0] = ['title' => lang('tool_box'), 'url' => ''];
 $breadcrumb[1] = ['title' => 'ReIndexer', 'url' => ADMIN_BASEURL . '/reindex_cb.php'];
 
 $vtbl = tbl("video");

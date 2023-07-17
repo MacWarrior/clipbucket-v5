@@ -8,7 +8,7 @@ $pages->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => 'Tool Box', 'url' => ''];
+$breadcrumb[0] = ['title' => lang('tool_box'), 'url' => ''];
 $breadcrumb[1] = ['title' => 'Development Mode', 'url' => ADMIN_BASEURL . '/dev_mode.php'];
 
 $filepath_dev_file = TEMP_DIR . '/development.dev';
