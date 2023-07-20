@@ -136,6 +136,11 @@
                         <h8>Proxy</h8>
                     </a>
                 </li>
+                <li>
+                    <a data-toggle="tab" href="#config_cache">
+                        <h8>{lang code='cache'|ucfirst}</h8>
+                    </a>
+                </li>
             </ul>
 			<div class="tab-content">
 				<div id="config_general" class="tab-pane active">
@@ -1844,9 +1849,70 @@
 								</div>
 							</div>
 							<hr/>
-
 						</div>
-
+					</div>
+				</div>
+				<div id="config_cache" class="tab-pane">
+					<div class="row">
+						<div class="col-md-12">
+							<h3>Redis</h3>
+						</div>
+					</div>
+					<hr/>
+					<div class="row">
+						<div class="col-md-3">
+							<div class="row">
+								<div class="col-md-8">
+									<label class="nowrap" for="cache_enable" title="{lang code='enable_cache'}">{lang code='enable_cache'}</label>
+								</div>
+								<div class="col-md-4 row-size">
+									<input value="yes" name="cache_enable" id="cache_enable" {if $row.cache_enable=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-8">
+									<label class="nowrap" for="cache_auth" title="{lang code='enable_cache_authentification'}">{lang code='enable_cache_authentification'}</label>
+								</div>
+								<div class="col-md-4 row-size">
+									<input value="yes" name="cache_auth" id="cache_auth" {if $row.cache_auth=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+						</div>
+						<div class="col-md-3">
+							<div class="row">
+								<div class="col-md-4">
+									<label class="nowrap" for="cache_host" title="{lang code='host'}">{lang code='host'}</label>
+								</div>
+								<div class="col-md-8 row-size">
+									<input class="form-control" name="cache_host" id="cache_host" value="{$row.cache_host}"/>
+								</div>
+							</div>
+							<hr/>
+						</div>
+						<div class="col-md-3">
+							<div class="row">
+								<div class="col-md-4">
+									<label class="nowrap" for="cache_port" title="{lang code='port'}">{lang code='port'}</label>
+								</div>
+								<div class="col-md-8 row-size">
+									<input class="form-control" name="cache_port" id="cache_port" value="{$row.cache_port}"/>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-4">
+									<label class="nowrap" for="cache_password" title="{lang code='password'}">{lang code='password'}</label>
+								</div>
+								<div class="col-md-8 row-size">
+									<input class="form-control" name="cache_password" id="cache_password" value="{$row.cache_password}"/>
+								</div>
+							</div>
+							<hr/>
+						</div>
 					</div>
 				</div>
 			</div>

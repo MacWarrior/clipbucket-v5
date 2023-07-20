@@ -1,6 +1,6 @@
 <?php
 define('THIS_PAGE', 'cb_install');
-include('../includes/clipbucket.php');
+include_once('../includes/clipbucket.php');
 
 $modes = [
     'agreement',

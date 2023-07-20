@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"170",
+  "revision":"171",
   "status":"dev",
   "detail":[
     {
@@ -75,7 +75,7 @@
         ,"Update PHPMailer to 5.2.28"
         ,"Fix file extension check <i>#221</i>"
         ,"Fix SQL structure <i>#220</i>"
-        ,"Implement Whoops 2.14.5 in DEV mode <i>#217</i> (Thanks veka-server !)"
+        ,"Implement Whoops 2.15.3 in DEV mode <i>#217</i> (Thanks veka-server !)"
         ,"Update Smarty to version 3.1.48"
         ,"Update login logs <i>#252</i>"
         ,"Add portuguese (BR) translation <i>#253</i> (Thanks raiancollyn !)"
@@ -106,6 +106,7 @@
         ,"Fix wrong permission on directories creation"
         ,"Change user's background storage"
         ,"Fix Whoops handling CLI errors"
+        ,"Implement Redis cache"
       ]
     },
     {

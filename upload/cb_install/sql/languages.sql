@@ -1636,4 +1636,9 @@ VALUES ('friend_requests'),
        ('info_ffprobe'),
        ('info_php_web'),
        ('must_be_least'),
-       ('php_cli_not_found');
+       ('php_cli_not_found'),
+       ('cache'),
+       ('enable_cache'),
+       ('enable_cache_authentification'),
+       ('reset_cache_label'),
+       ('reset_cache_description');

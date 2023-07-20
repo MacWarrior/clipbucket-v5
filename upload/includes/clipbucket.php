@@ -1,6 +1,4 @@
 <?php
-define('ClipBucket', 'ClipBucket - Open Source Media Sharing Script');
-define('AUTHORS', 'ARSLAN HASSAN, FAHAD ABBAS, MACWARRIOR');
 
 $base_filepath = realpath(__DIR__ . '/../changelog');
 

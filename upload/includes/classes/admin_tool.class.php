@@ -201,6 +201,11 @@ class AdminTool
         self::executeTool($id_tool, $files, 'execute_migration_SQL_file', true);
     }
 
+    public static function resetCache($id_tool)
+    {
+        self::executeTool($id_tool, ['flush'], 'CacheRedis::flushAll');
+    }
+
     /**
      * @param $id_tool
      * @param $array

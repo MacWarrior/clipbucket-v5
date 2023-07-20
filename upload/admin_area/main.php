@@ -53,6 +53,8 @@ if (isset($_POST['update'])) {
         , 'popup_video'
         , 'proxy_enable'
         , 'proxy_auth'
+        , 'cache_enable'
+        , 'cache_auth'
     ];
 
     $config_booleans_to_refactor = [
@@ -286,7 +288,13 @@ if (isset($_POST['update'])) {
         'proxy_url',
         'proxy_port',
         'proxy_username',
-        'proxy_password'
+        'proxy_password',
+
+        'cache_enable',
+        'cache_auth',
+        'cache_host',
+        'cache_port',
+        'cache_password'
     ];
 
     foreach ($opt_list as $optl) {
@@ -365,6 +373,7 @@ if (isset($_POST['update'])) {
 
         $myquery->Set_Website_Details($field, $value);
     }
+    CacheRedis::flushAll();
 
     $myquery->saveVideoResolutions($_POST);
     e('Website settings have been updated', 'm');

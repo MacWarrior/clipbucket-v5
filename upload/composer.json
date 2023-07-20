@@ -1,5 +1,7 @@
 {
   "require": {
-    "filp/whoops": "^2.14"
+    "filp/whoops": "2.15.3",
+    "predis/predis": "^v1.1.10",
+    "psr/log": "1.1.4"
   }
 }

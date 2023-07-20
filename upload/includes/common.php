@@ -13,6 +13,8 @@ const DEV_INGNORE_SYNTAX = true;
 //Create an empty development.dev file in includes folder
 //To Activate Development mode
 
+require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php');
+
 if (file_exists(dirname(__FILE__) . '/../files/temp/development.dev')) {
     define('DEVELOPMENT_MODE', true);
     $__devmsgs = [
@@ -32,17 +34,15 @@ if (file_exists(dirname(__FILE__) . '/../files/temp/development.dev')) {
         'total_query_exec_time' => '0',
         'total_memory_used'     => '0',
         'expensive_query'       => '',
-        'cheapest_query'        => ''
+        'cheapest_query'        => '',
+        'total_cached_queries'  => '0'
     ];
-
-    require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php');
 
     if (php_sapi_name() != 'cli') {
         $whoops = new \Whoops\Run;
         $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
         $whoops->register();
     }
-
 } else {
     define('DEVELOPMENT_MODE', false);
 }
@@ -56,8 +56,11 @@ if (!@$in_bg_cron) {
 
 //Required Files
 require_once('classes/db.class.php');
+require_once('classes/rediscache.class.php');
+
 # file with most frequently used functions
 require_once 'functions.php';
+include_once('clipbucket.php');
 check_install('before');
 
 if (file_exists(__DIR__ . '/config.php')) {
@@ -105,10 +108,24 @@ switch (DEBUG_LEVEL) {
 require_once('classes/errorhandler.class.php');
 $pages = new pages();
 $eh = new errorhandler();
+$param_redis = ['host' => $row['cache_host'], 'port' => $row['cache_port']];
+
+if ($row['cache_auth'] == 'yes') {
+    $param_redis['password'] = $row['cache_password'];
+}
+try {
+    $redis = new CacheRedis($row['cache_enable'], $param_redis);
+} catch (Predis\Connection\ConnectionException $e) {
+    $error_redis = 'Cannot connect to redis server';
+} catch (Predis\Response\ServerException $e) {
+    $error_redis = 'You need to authenticate to Redis server';
+}
+
 Language::getInstance()->init();
 $arrayTranslations = Language::getInstance()->loadTranslations(Language::getInstance()->lang_id);
 $ClipBucket = $Cbucket = new ClipBucket();
 define('BASEDIR', $Cbucket->BASEDIR);
+$Cbucket->cbinfo = ['version' => VERSION, 'state' => STATE, 'rev' => REV];
 if (!file_exists(BASEDIR . '/index.php')) {
     die('Basedir is incorrect, please set the correct basedir value in \'config\' table');
 }
@@ -212,6 +229,10 @@ $sess = new Session();
 $userquery = new userquery();
 $userquery->init();
 
+if (has_access('admin_access', true) && !empty($error_redis)) {
+    e($error_redis);
+}
+
 $thisurl = curPageURL();
 
 if (need_to_update_version()) {
@@ -276,8 +297,6 @@ $cbfeeds = new cbfeeds();
 $GoogleTranslator = new GoogleTranslator();
 
 check_install('after');
-@include($Cbucket->BASEDIR . '/includes/clipbucket.php');
-$Cbucket->cbinfo = ['version' => VERSION, 'state' => STATE, 'rev' => REV];
 
 # Holds Advertisement IDS that are being Viewed
 $ads_array = [];

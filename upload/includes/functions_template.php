@@ -1,7 +1,13 @@
 <?php
 function redirect_to($url)
 {
-    header('Location: ./' . $url);
+    $header = './';
+    //if not complete URL
+    if (!preg_match('/https?:\/\//',$url )) {
+        //make sure we don't have .// in URL
+        $url= preg_replace('/\/\//', '/', $header.$url);
+    }
+    header('Location: ' . $url);
     die();
 }
 

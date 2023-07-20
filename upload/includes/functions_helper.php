@@ -192,7 +192,7 @@ function prettyNum($num)
  * @since : 27th May, 2016
  * @author : Saqib Razzaq
  */
-function devWitch($query, $query_type, $time)
+function devWitch($query, $query_type, $time, $cache = false)
 {
     global $__devmsgs;
     $memoryBefore = $__devmsgs['total_memory_used'];
@@ -204,6 +204,7 @@ function devWitch($query, $query_type, $time)
     $__devmsgs[$query_type . '_queries'][$__devmsgs[$query_type]]['memBefore'] = $memoryBefore;
     $__devmsgs[$query_type . '_queries'][$__devmsgs[$query_type]]['memAfter'] = $memoryNow;
     $__devmsgs[$query_type . '_queries'][$__devmsgs[$query_type]]['memUsed'] = $memoryDif;
+    $__devmsgs[$query_type . '_queries'][$__devmsgs[$query_type]]['use_cache'] = $cache;
     $queryDetails = $__devmsgs[$query_type . '_queries'][$__devmsgs[$query_type]];
 
     $expesiveQuery = $__devmsgs['expensive_query'];
@@ -227,7 +228,8 @@ function devWitch($query, $query_type, $time)
     $__devmsgs['cheapest_query'] = $cheapestQuery;
     $__devmsgs['total_memory_used'] = $memoryNow;
     $__devmsgs[$query_type] = $__devmsgs[$query_type] + 1;
-    $__devmsgs['total_queries'] = $__devmsgs['total_queries'] + 1;
+    $__devmsgs['total_queries'] = !$cache ? $__devmsgs['total_queries'] + 1 : $__devmsgs['total_queries'];
+    $__devmsgs['total_cached_queries'] = $cache ? $__devmsgs['total_cached_queries'] + 1 : $__devmsgs['total_cached_queries'];
 
     return $__devmsgs;
 }

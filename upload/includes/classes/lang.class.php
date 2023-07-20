@@ -138,7 +138,7 @@ class Language
         LEFT JOIN ' . tbl("languages_translations") . ' AS LT ON LK.id_language_key = LT.id_language_key AND LT.language_id = ' . mysql_clean($language_id);
 
         /** concat aaaaaaa to sort when translation is missing */
-        return $db->select($select, $fields, $extra_param, $limit, " CASE WHEN LT.translation IS NULL THEN concat('aaaaaaaaaaaaaaaaaaaa',language_key) ELSE LK.language_key END");
+        return $db->select($select, $fields, $extra_param, $limit, " CASE WHEN LT.translation IS NULL THEN concat('aaaaaaaaaaaaaaaaaaaa',language_key) ELSE LK.language_key END", false, 3600);
     }
 
     /**
@@ -183,6 +183,7 @@ class Language
         } else {
             $db->insert(tbl("languages_translations"), ['translation,id_language_key,language_id'], [mysql_clean($translation), mysql_clean($id_language_key), mysql_clean($language_id)]);
         }
+        CacheRedis::flushAll();
     }
 
 
@@ -286,6 +287,7 @@ class Language
             $db->update(tbl("languages"), ["language_default"], ["no"], " language_default='yes'");
             $db->update(tbl("languages"), ["language_default"], ["yes"], " language_id='$lid'");
             e($lang['language_name'] . " has been set as default language", "m");
+            CacheRedis::flushAll();
         }
     }
 
@@ -295,7 +297,7 @@ class Language
     public static function getDefaultLanguage()
     {
         global $db;
-        $result = $db->select(tbl('languages'), "*", " language_default='yes' ");
+        $result = $db->select(tbl('languages'), "*", " language_default='yes' ", false, false, false, 3600);
         return $result[0];
     }
 
@@ -317,6 +319,7 @@ class Language
             $db->delete(tbl('languages'), ["language_id"], [$lang['language_id']]);
             $db->delete(tbl('languages_translations'), ["language_id"], [$lang['language_id']]);
             e(lang("lang_deleted"), "m");
+            CacheRedis::flushAll();
         }
     }
 
@@ -338,6 +341,7 @@ class Language
         } else {
             $db->update(tbl('languages'), ["language_name", "language_code"], [$array['name'], $array['code']], " language_id='" . $array['language_id'] . "'");
             e(lang("lang_updated"), "m");
+            CacheRedis::flushAll();
         }
     }
 

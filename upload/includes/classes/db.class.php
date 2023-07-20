@@ -82,9 +82,24 @@ class Clipbucket_db
      *
      * @return array : { array } { $data } { array of selected data }
      */
-    function _select($query): array
+    function _select($query, $cached_time=-1): array
     {
         try {
+            $redis = CacheRedis::getInstance();
+            if ($redis->isEnabled()) {
+                if (in_dev()) {
+                    $start = microtime(true);
+                    $return =  $redis->get($redis->getPrefix() . ':'. $query);
+                    $end = microtime(true);
+                    $timetook = $end - $start;
+                    devWitch($query, 'select', $timetook, !empty($return));
+                } else {
+                    $return =  $redis->get($redis->getPrefix() . ':'. $query);
+                }
+                if (!empty($return)) {
+                    return $return;
+                }
+            }
             $result = $this->execute($query, 'select');
             $data = [];
             if ($result) {
@@ -92,6 +107,9 @@ class Clipbucket_db
                     $data[] = $row;
                 }
                 $result->close();
+            }
+            if ($redis->isEnabled() && $cached_time != -1) {
+                $redis->set($redis->getPrefix() . ':'. $query, $data, $cached_time);
             }
         } catch (Exception $e) {
             if ($e->getMessage() == 'lang_not_installed' || $e->getMessage() == 'version_not_installed') {
@@ -114,7 +132,7 @@ class Clipbucket_db
      *
      * @return array : { array } { $data } { array of selected data }
      */
-    function select($tbl, $fields = '*', $cond = false, $limit = false, $order = false, $ep = false): array
+    function select($tbl, $fields = '*', $cond = false, $limit = false, $order = false, $ep = false, $cached_time = -1): array
     {
         $query_params = '';
 
@@ -129,7 +147,7 @@ class Clipbucket_db
         }
 
         $query = 'SELECT ' . $fields . ' FROM ' . $tbl . $query_params . ' ' . $ep;
-        return $this->_select($query);
+        return $this->_select($query, $cached_time);
     }
 
     /**

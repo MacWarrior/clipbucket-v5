@@ -13,7 +13,7 @@ if ($userquery->is_admin_logged_as_user()) {
 }
 
 if ($userquery->admin_login_check(true)) {
-    redirect_to("/" . ADMINDIR . "/index.php");
+    redirect_to(BASEURL . ADMIN_BASEURL . "/index.php");
 }
 
 $thisurl = $_SERVER['PHP_SELF'];

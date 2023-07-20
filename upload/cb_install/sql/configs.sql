@@ -210,7 +210,12 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'subtitle_format', 'webvtt'),
 	(NULL, 'conversion_type', 'mp4'),
 	(NULL, 'enable_sub_collection', '1'),
-	(NULL, 'player_default_resolution_hls', 'auto');
+	(NULL, 'player_default_resolution_hls', 'auto'),
+    (NULL, 'cache_enable', 'no'),
+    (NULL, 'cache_auth', 'no'),
+    (NULL, 'cache_host', ''),
+    (NULL, 'cache_password', ''),
+    (NULL, 'cache_port', '');
 
 INSERT INTO `{tbl_prefix}validation_re` (`re_id`, `re_name`, `re_code`, `re_syntax`) VALUES
 	(1, 'Username', 'username', '^^[a-zA-Z0-9_]+$'),
@@ -232,4 +237,5 @@ INSERT INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description
     ('update_castable_status_label', 'update_castable_status_description', 'AdminTool::updateCastableStatus', 1, NULL, NULL),
     ('update_bits_color_label', 'update_bits_color_description', 'AdminTool::updateBitsColor', 1, NULL, NULL),
     ('update_videos_duration_label', 'update_videos_duration_description', 'AdminTool::updateVideoDuration', 1, NULL, NULL),
-    ('update_database_version_label', 'update_database_version_description', 'AdminTool::updateDataBaseVersion', 1, NULL, NULL);
+    ('update_database_version_label', 'update_database_version_description', 'AdminTool::updateDataBaseVersion', 1, NULL, NULL),
+    ('reset_cache_label', 'reset_cache_description', 'AdminTool::resetCache', 1, NULL, NULL);
