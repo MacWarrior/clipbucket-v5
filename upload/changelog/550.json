@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"172",
+  "revision":"173",
   "status":"dev",
   "detail":[
     {
@@ -96,6 +96,7 @@
         ,"Add support for CB 4.X commercial version migration"
         ,"Fix JS error on minified JS file <i>#256</i>"
         ,"Update chromecast plugin compatibility to VideoJS 8.X (Thanks veka-server !)"
+        ,"Fix resolution switch button icon"
       ]
     },
     {
