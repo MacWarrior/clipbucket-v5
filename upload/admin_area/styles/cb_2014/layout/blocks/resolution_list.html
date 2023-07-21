@@ -1,0 +1,32 @@
+<table class="table table-bordered table-striped manageUsersTable">
+    <tr>
+        <th class="col-md-1">{lang code='resolution'}</th>
+        <th class="col-md-2">{lang code='filesize'}</th>
+        <th class="col-md-2">{lang code='nb_files'}</th>
+        <th class="col-md-1"></th>
+    </tr>
+    {section name=res loop=$resolution_list}
+    <tr>
+        <td>{$resolution_list[res].resolution}p</td>
+        <td>{$resolution_list[res].size}</td>
+        <td>{$resolution_list[res].nb_files}</td>
+        <td>
+            <div class="dropdown clearfix alignCenter">
+                <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
+                    Actions <i class="caret"></i></button>
+                <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
+                    <li role="presentation" {if count($resolution_list) <=1} class="disabled" {/if}>
+                    <a role="menuitem" tabindex="-1" href="javascript:void(0);"
+                       {if count($resolution_list)> 1 }
+                        onclick="deleteResolution({$resolution_list[res].resolution})"
+                        {/if}
+                        >
+                        {lang code='delete'}
+                    </a>
+                    </li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+    {/section}
+</table>

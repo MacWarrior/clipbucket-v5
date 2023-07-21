@@ -599,6 +599,48 @@ class CBvideo extends CBCategory
     }
 
     /**
+     * @param $resolution
+     * @param $video_detail
+     * @return void
+     * @throws Exception
+     */
+    function remove_resolution($resolution, &$video_detail)
+    {
+        $directory_path = VIDEOS_DIR . DIRECTORY_SEPARATOR . $video_detail['file_directory'] . DIRECTORY_SEPARATOR;
+        switch ($video_detail['file_type']) {
+            default:
+            case 'mp4':
+                $file = $video_detail['file_name'] . '-' . $resolution . '.mp4';
+
+                if ($video_detail['video_version'] >= 2.7) {
+                    if (file_exists($directory_path . $file) && is_file($directory_path . $file)) {
+                        unlink($directory_path . $file);
+                    }
+                } else {
+                    if (file_exists(DIRECTORY_SEPARATOR . $file) && is_file(DIRECTORY_SEPARATOR . $file)) {
+                        unlink(DIRECTORY_SEPARATOR . $file);
+                    }
+                }
+                break;
+
+            case 'hls':
+                $directory_path .= $video_detail['file_name'] . DIRECTORY_SEPARATOR;
+                $vid_files = glob($directory_path . 'video_' . $resolution . '*');
+                foreach ($vid_files as $file) {
+                    unlink($file);
+                }
+                //TODO regenerate index
+                break;
+
+        }
+        global $db;
+        $video_detail['video_files'] = json_encode(array_values(array_filter(json_decode($video_detail['video_files']), function ($reso) use ($resolution) {
+            return $reso != $resolution;
+        })));
+        $db->update(tbl('video'), ['video_files'], [$video_detail['video_files']], 'videoid = ' . mysql_clean($video_detail['videoid']));
+    }
+
+    /**
      * Function used to remove video files
      *
      * @param $vdetails
@@ -615,37 +657,18 @@ class CBvideo extends CBCategory
         //Calling Video Delete Functions
         call_delete_video_function($vdetails);
 
-        $directory_path = VIDEOS_DIR . DIRECTORY_SEPARATOR . $vdetails['file_directory'] . DIRECTORY_SEPARATOR;
-        switch ($vdetails['file_type']) {
-            default:
-            case 'mp4':
-                $files = json_decode($vdetails['video_files']);
-                foreach ($files as $quality) {
-                    $file = $vdetails['file_name'] . '-' . $quality . '.mp4';
+        $files = json_decode($vdetails['video_files']);
 
-                    if ($vdetails['video_version'] >= 2.7) {
-                        if (file_exists($directory_path . $file) && is_file($directory_path . $file)) {
-                            unlink($directory_path . $file);
-                        }
-                    } else {
-                        if (file_exists(DIRECTORY_SEPARATOR . $file) && is_file(DIRECTORY_SEPARATOR . $file)) {
-                            unlink(DIRECTORY_SEPARATOR . $file);
-                        }
-                    }
-                }
-                break;
-            case 'hls':
-                $directory_path .= $vdetails['file_name'] . DIRECTORY_SEPARATOR;
-                $vid_files = glob($directory_path . '*');
-                foreach ($vid_files as $file) {
-                    unlink($file);
-                }
-                rmdir($directory_path);
-                break;
+        foreach ($files as $quality) {
+            remove_resolution($quality, $vdetails);
         }
-
+        if ($vdetails['file_type'] == 'hls') {
+            $directory_path = VIDEOS_DIR . DIRECTORY_SEPARATOR . $vdetails['file_directory'] . DIRECTORY_SEPARATOR . $vdetails['file_name'] . DIRECTORY_SEPARATOR;
+            rmdir($directory_path);
+        }
         e(lang('vid_files_removed_msg'), 'm');
     }
+
 
     /**
      * Function used to get videos
@@ -742,7 +765,7 @@ class CBvideo extends CBCategory
             $cond .= ' ' . cbsearch::date_margin($column, $params['date_span']);
         }
 
-        //uid 
+        //uid
         if ($params['user']) {
             if (!is_array($params['user'])) {
                 if ($cond != '') {

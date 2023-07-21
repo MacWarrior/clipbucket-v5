@@ -54,6 +54,9 @@ if ($myquery->VideoExists($video)) {
     $msg[] = lang('class_vdo_del_err');
 }
 
+$resolution_list = getResolution_list($data);
+
+assign('resolution_list', $resolution_list);
 $type = 'v';
 $comment_cond = [];
 $comment_cond['order'] = ' comment_id DESC';

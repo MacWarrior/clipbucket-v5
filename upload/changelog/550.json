@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"173",
+  "revision":"174",
   "status":"dev",
   "detail":[
     {
@@ -54,6 +54,7 @@
         ,"Implement AdminTool"
         ,"Implement SQL update system"
         ,"Refactor system information"
+        ,"Implement video resolution file management"
       ]
     },
     {

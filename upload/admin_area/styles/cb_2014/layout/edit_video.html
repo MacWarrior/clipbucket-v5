@@ -286,6 +286,11 @@
                             <i class="glyphicon glyphicon-info-sign"></i> Miscellaneous informations
                         </a>
                     </li>
+                    <li>
+                        <a data-toggle="tab" href="#resolutions">
+                            <i class="glyphicon glyphicon-hdd"></i> {lang code='video_file_management'}
+                        </a>
+                    </li>
                 </ul>
                 <div class="tab-content">
                     <div id="videoinfos" class="tab-pane active">
@@ -397,6 +402,9 @@
                         </div>
                         {/if}
                     </div>
+                    <div id="resolutions" class="tab-pane">
+                        {include file="$style_dir/blocks/resolution_list.html"}
+                    </div>
                 </div>
                 <div class="form-group alignCenter">
                     <input type="submit" class="btn btn-primary btn-sm" value="Update video details" style="margin:5px 0 15px 0;" name="update">
@@ -470,6 +478,8 @@
 	</div>
 
 <script>
+    var text_confirm = '{lang code = 'confirm_delete_video_file'}';
+    var videoid = '{$data.videoid}';
     {literal}
     function regenerateThumbs (videoid) {
         showSpinner();
@@ -488,6 +498,22 @@
         }).always(function () {
             hideSpinner();
         });
+    }
+
+    function deleteResolution (resolution) {
+        if (confirm_it(text_confirm.replace('%s', resolution))) {
+            $.ajax({
+                url: "/actions/resolution_delete.php",
+                type: "POST",
+                data: {resolution: resolution, videoid: videoid},
+                dataType: 'json',
+                success: function (result) {
+                    $('#resolutions').html(result['template']);
+                    $('.close').click();
+                    $('.page-content').prepend(result['msg']);
+                }
+            });
+        }
     }
 
     {/literal}

@@ -1641,4 +1641,7 @@ VALUES ('friend_requests'),
        ('enable_cache'),
        ('enable_cache_authentification'),
        ('reset_cache_label'),
-       ('reset_cache_description');
+       ('reset_cache_description'),
+       ('nb_files'),
+       ('video_file_management'),
+       ('confirm_delete_video_file');

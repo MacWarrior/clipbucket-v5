@@ -1623,3 +1623,59 @@ function update_duration($vdetails)
         $db->update(tbl('video'), ['duration'], [$data['duration']], 'videoid=' . $vdetails['videoid']);
     }
 }
+
+/**
+ * @param $data
+ * @return array
+ */
+function getResolution_list($data): array
+{
+    $resolution_list = [];
+    foreach (json_decode($data['video_files']) as $video_file) {
+        switch ($data['file_type']) {
+            default:
+            case 'mp4':
+                $path = VIDEOS_DIR . DIRECTORY_SEPARATOR . $data['file_directory'] . DIRECTORY_SEPARATOR . $data['file_name'] . '-' . $video_file . '.' . $data['file_type'];
+                if (file_exists($path)) {
+                    $nb_file = 1;
+                    $size = filesize($path);
+                } else {
+                    $nb_file = 0;
+                    $size = 0;
+                }
+                break;
+            case 'hls':
+                $info = getHlsFilesInfo($video_file, $data);
+                $size = $info['files_size'];
+                $nb_file = $info['nb_file'];
+                break;
+        }
+        if ($nb_file > 0) {
+            $resolution_list[] = [
+                'resolution' => $video_file,
+                'size'       => formatfilesize($size),
+                'nb_files'   => $nb_file
+            ];
+        }
+    }
+    return $resolution_list;
+}
+
+/**
+ * @param $resolution
+ * @param $data
+ * @return array
+ */
+function getHlsFilesInfo($resolution, $data): array
+{
+    //get list nb files + size hls
+    $path = VIDEOS_DIR . DIRECTORY_SEPARATOR . $data['file_directory'] . DIRECTORY_SEPARATOR . $data['file_name'] . DIRECTORY_SEPARATOR;
+    $files = glob($path . 'video_' . $resolution . '*');
+    $nb = 0;
+    $size = 0;
+    foreach ($files as $file) {
+        $nb++;
+        $size += filesize($file);
+    }
+    return ['nb_file' => $nb, 'files_size' => $size];
+}

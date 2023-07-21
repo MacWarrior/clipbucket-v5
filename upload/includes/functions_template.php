@@ -146,6 +146,11 @@ function display_thumb_list($data)
     assign('data', $data);
     echo templateWithMsgJson('blocks/thumb_list.html');
 }
+function display_resolution_list($data)
+{
+    assign('resolution_list', $data);
+    echo templateWithMsgJson('blocks/resolution_list.html');
+}
 
 //todO séparer en 2 fonctions
 function return_thumb_mini_list($data)
