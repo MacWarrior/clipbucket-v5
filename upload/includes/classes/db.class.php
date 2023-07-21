@@ -1,23 +1,13 @@
 <?php
-/**
- * File: Database Class
- * Description: All mysql function being called from one place. Simplifies things for developers
- * @author : Arslan Hassan, Saqib Razzaq
- * @since : ClipBucket 2.7
- * @modified: ClipBucket 2.8.1 [ Saqib Razzaq ]
- * @functions: Various
- * @db_actions: connect, select, update, count, insert
- */
-
 class Clipbucket_db
 {
     /** @var mysqli $mysqli */
-    var $mysqli = "";
+    var $mysqli = '';
 
-    var $db_name = "";
-    var $db_uname = "";
-    var $db_pwd = "";
-    var $db_host = "";
+    var $db_name = '';
+    var $db_uname = '';
+    var $db_pwd = '';
+    var $db_host = '';
 
     var $total_queries_sql = [];
     var $total_queries = 0;
@@ -71,7 +61,11 @@ class Clipbucket_db
 
             $this->execute('SET NAMES "utf8"');
         } catch (Exception $e) {
-            error_log($e->getError());
+            $error = $e->getMessage();
+            error_log($error);
+            if (in_dev()) {
+                die($error);
+            }
         }
     }
 
@@ -81,6 +75,7 @@ class Clipbucket_db
      * @param : { string } { $query } { mysql query to run }
      *
      * @return array : { array } { $data } { array of selected data }
+     * @throws Exception
      */
     function _select($query, $cached_time=-1): array
     {
@@ -131,6 +126,7 @@ class Clipbucket_db
      * @param bool $ep
      *
      * @return array : { array } { $data } { array of selected data }
+     * @throws Exception
      */
     function select($tbl, $fields = '*', $cond = false, $limit = false, $order = false, $ep = false, $cached_time = -1): array
     {
@@ -158,6 +154,7 @@ class Clipbucket_db
      * @param bool $cond
      *
      * @return bool|int
+     * @throws Exception
      */
     function count($tbl, $fields = '*', $cond = false)
     {
@@ -185,6 +182,7 @@ class Clipbucket_db
      * @param : { string } { $query } { query to run to get row }
      *
      * @return mixed
+     * @throws Exception
      */
     function GetRow($query)
     {
@@ -199,7 +197,8 @@ class Clipbucket_db
      *
      * @param : { string } { $query } { query that you want to execute }
      *
-     * @return bool|array
+     * @return bool|mysqli_result
+     * @throws Exception
      */
     function execute($query, $type = 'execute')
     {
@@ -235,6 +234,7 @@ class Clipbucket_db
      * @param      $cond
      * @param null $ep
      *
+     * @throws Exception
      * @internal param $ : { string } { $tbl } { table to ujpdate values in }
      * @internal param $ : { array } { $flds } { array of fields you want to update }
      * @internal param $ : { array } { $vls } { array of values to update against fields }
@@ -286,9 +286,10 @@ class Clipbucket_db
      *
      * @return bool : { boolean }
      *
-     * @internal param $ : { string } { $tbl } { table to update values in }
+     * @throws Exception
      * @internal param $ : { array } { $fields } { associative array with fields and values }
      * @internal param $ : { string } { $cond } { mysql condition for query }
+     * @internal param $ : { string } { $tbl } { table to update values in }
      */
     function db_update($tbl, $fields, $cond, $ep = null)
     {
@@ -325,10 +326,11 @@ class Clipbucket_db
      * @param      $vls
      * @param null $ep
      *
-     * @internal param $ : { string } { $tbl } { table to delete value from }
+     * @throws Exception
      * @internal param $ : { array } { $flds } { array of fields to update }
      * @internal param $ : { array } { $vlds } { array of values to update against fields }
      * @internal param $ : { string } { $ep } { extra parameters to consider }
+     * @internal param $ : { string } { $tbl } { table to delete value from }
      */
     function delete($tbl, $flds, $vls, $ep = null)
     {
@@ -370,6 +372,7 @@ class Clipbucket_db
      *
      * @return mixed|void : { integer } { $insert_id } { id of inserted element }
      *
+     * @throws Exception
      * @internal param $ : { string } { $tbl } { table to insert values in }
      * @internal param $ : { array } { $flds } { array of fields to update }
      * @internal param $ : { array } { $vlds } { array of values to update against fields }
@@ -440,8 +443,9 @@ class Clipbucket_db
      *
      * @return mixed : { integer } { $insert_id } { id of inserted element }
      *
-     * @internal param $ : { string } { $tbl } { table to insert values in }
+     * @throws Exception
      * @internal param $ : { array } { $flds } { array of fields and values to update (associative array) }
+     * @internal param $ : { string } { $tbl } { table to insert values in }
      */
     function db_insert($tbl, $fields)
     {
@@ -520,6 +524,10 @@ class Clipbucket_db
             if (preg_match('/version.*doesn\'t exist/', $this->getError())) {
                 throw new Exception("version_not_installed");
             }
+            if (preg_match('/doesn\'t exist/', $this->getError())) {
+                throw new Exception("missing_table");
+            }
+
             if (in_dev()) {
                 e('SQL : ' . $query);
                 e('ERROR : ' . $this->getError());

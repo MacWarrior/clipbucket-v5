@@ -12,8 +12,8 @@ You can start a fully dedicated video sharing website or photo sharing websites 
 </p>
 
 # History
-ClipBucket official repository has been slowly dying since the release 4.1 (May 2018) and has been closed on December 2022.<br/>
-I <i>(<a href="https://github.com/MacWarrior">MacWarrior</a>)</i> have been working on <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> since 2016 and haven't stop using and upgrading it since
+ClipBucket <a href="https://github.com/arslancb/clipbucket">original repository</a> has been slowly dying since the release 4.1 (May 2018) and has been archived on December 2022.<br/>
+<a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> was created on 2016 by <a href="https://github.com/MacWarrior">MacWarrior</a> and is part of Oxygenz's projects since 2023
 
 # Why <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a>
 - PHP 7.0 - 8.2+ compatibility
@@ -27,6 +27,7 @@ I <i>(<a href="https://github.com/MacWarrior">MacWarrior</a>)</i> have been work
 - HLS conversion (WIP)
 - Easy installation scripts
 - New configuration options
+- Integrated DB update system
 - Security, performance, stability and codestyle improvements
 <br/><br/>And even more !
 
@@ -42,6 +43,10 @@ Recommended : MariaDB 10.3+ ; PHP 8.1+ ; FFmpeg 4.3+
 Optionnal : Git<br/>
 <i>Only stable versions have been tested, mainly on Debian</i>
 
+# DB auto-update system
+On version 5.5.0 (WIP), Revision 169, a new DB update system has been implemented, since then, you can easily update your DB from any version since 5.3.0 to any new version/revision.<br/>
+Update your sources, log in and follow instructions displayed.
+
 # Updating from ClipBucket 4.2
 Follow our [quick steps tutorial](https://github.com/MacWarrior/clipbucket-v5/wiki/Upgrade-from-Clipbucket-4.2)
 
@@ -53,6 +58,6 @@ Take a step back, breath slowly, and create an <a href="https://github.com/MacWa
 Be the more precise you can, add screenshots, give examples... I'm sure we will find a solution !
 
 # More
-| <a href="https://discord.gg/HDm5CjM">!['Discord'](./upload/images/discord.png "Join us on Discord")</a> | <a href="https://paypal.me/JullienLadoire">!['Paypal'](./upload/images/paypal.png "Donate with paypal") |
-| --- | --- |
-| You speak french or you're simply not <br/>affraid by my english ? Welcome ! | You want to support me with a donation ?<br/>From all my heart, thank YOU ! |
+| <a href="https://discord.gg/HDm5CjM">!['Discord'](./upload/images/discord.png "Join us on Discord")</a> |
+|---------------------------------------------------------------------------------------------------------| 
+| You speak french or you're simply not <br/>affraid by my english ? Welcome !                            |
