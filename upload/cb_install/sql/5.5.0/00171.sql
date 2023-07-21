@@ -1,3 +1,6 @@
+SET @language_id_eng = 1;
+SET @language_id_fra = 2;
+
 INSERT INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES ('cache');
 INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` LIKE 'cache'), 'cache', @language_id_eng);
