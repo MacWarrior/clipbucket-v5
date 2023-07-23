@@ -1,4 +1,4 @@
-CREATE TABLE `clipbucket`.`{tbl_prefix}tools`
+CREATE TABLE `{tbl_prefix}tools`
 (
     `id_tool`                  INT          NOT NULL AUTO_INCREMENT,
     `language_key_label`       VARCHAR(128) NOT NULL,
@@ -10,7 +10,7 @@ CREATE TABLE `clipbucket`.`{tbl_prefix}tools`
     PRIMARY KEY (`id_tool`)
 ) ENGINE = InnoDB;
 
-CREATE TABLE `clipbucket`.`{tbl_prefix}tools_status`
+CREATE TABLE `{tbl_prefix}tools_status`
 (
     `id_tools_status`    INT          NOT NULL AUTO_INCREMENT,
     `language_key_title` VARCHAR(128) NOT NULL,

@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"174",
+  "revision":"175",
   "status":"dev",
   "detail":[
     {
@@ -75,7 +75,7 @@
         ,"Add german translation <i>#219</i> (Thanks joo4mart !)"
         ,"Update PHPMailer to 5.2.28"
         ,"Fix file extension check <i>#221</i>"
-        ,"Fix SQL structure <i>#220</i>"
+        ,"Fix SQL structure <i>#220</i>, <i>#261</i>"
         ,"Implement Whoops 2.15.3 in DEV mode <i>#217</i> (Thanks veka-server !)"
         ,"Update Smarty to version 3.1.48"
         ,"Update login logs <i>#252</i>"
