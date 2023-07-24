@@ -3,7 +3,7 @@
 function un_install_customfield()
 {
     global $db;
-    $db->Execute(
+    $db->execute(
         'DROP TABLE ' . tbl("custom_field")
     );
 }

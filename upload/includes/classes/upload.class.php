@@ -240,7 +240,7 @@ class Upload
             } else {
                 $insert_id = file_name_exists($file_name);
                 if (!$insert_id) {
-                    $db->Execute($query);
+                    $db->execute($query);
                     $insert_id = $db->insert_id();
 
                     //logging Upload
@@ -715,7 +715,7 @@ class Upload
         }
 
         //Adding Details to database
-        $db->Execute('INSERT INTO ' . tbl('conversion_queue') . " (cqueue_name,cqueue_ext,cqueue_tmp_ext,date_added)
+        $db->execute('INSERT INTO ' . tbl('conversion_queue') . " (cqueue_name,cqueue_ext,cqueue_tmp_ext,date_added)
 							VALUES ('" . mysql_clean($cqueue_name) . "','" . mysql_clean($ext) . "','" . mysql_clean($tmp_ext) . "','" . NOW() . "') ");
         return $db->insert_id();
     }

@@ -105,7 +105,7 @@ class AdsManager
         if (!$this->ad_exists($id)) {
             e(lang("ad_exists_error1"));
         } else {
-            $db->Execute("DELETE FROM " . tbl("ads_data") . " WHERE ad_id='" . $id . "'");
+            $db->execute("DELETE FROM " . tbl("ads_data") . " WHERE ad_id='" . $id . "'");
             $msg = e(lang('ad_del_msg'), "m");
         }
     }
@@ -200,7 +200,7 @@ class AdsManager
     {
         global $db;
         $query = "UPDATE " . tbl("ads_data") . " SET ad_impressions = ad_impressions+1 WHERE ad_id='" . $ad_id . "'";
-        $db->Execute($query);
+        $db->execute($query);
     }
 
     /**

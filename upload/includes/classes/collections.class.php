@@ -1955,7 +1955,7 @@ class Collections extends CBCategory
 
         $query = 'DELETE FROM ' . tbl('collection_contributors') . ' WHERE userid = \'' . $uid . '\' LIMIT 1';
         global $db;
-        $db->Execute($query);
+        $db->execute($query);
 
         return true;
     }

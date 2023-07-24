@@ -222,7 +222,7 @@ class CBEmail
 
         switch ($action) {
             case "delete":
-                $db->Execute("DELETE FROM " . tbl('mass_emails') . " WHERE id='$id'");
+                $db->execute("DELETE FROM " . tbl('mass_emails') . " WHERE id='$id'");
                 e(lang("Email has been deleted"), "m");
                 break;
 

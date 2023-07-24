@@ -13,7 +13,7 @@ $breadcrumb[1] = ['title' => 'Action Logs', 'url' => ADMIN_BASEURL . '/action_lo
 //Getting User List
 if (isset($_GET['clean'])) {
     global $db;
-    $db->Execute('TRUNCATE TABLE ' . tbl('action_log'));
+    $db->execute('TRUNCATE TABLE ' . tbl('action_log'));
 }
 
 if (isset($_GET['type'])) {

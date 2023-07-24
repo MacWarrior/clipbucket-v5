@@ -4,7 +4,7 @@ require_once('../includes/common.php');
 function install_custom_fields()
 {
     global $db;
-    $db->Execute(
+    $db->execute(
         'CREATE TABLE IF NOT EXISTS ' . tbl("custom_fields") . " (
         `custom_field_list_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
         `custom_field_title` TEXT NOT NULL ,

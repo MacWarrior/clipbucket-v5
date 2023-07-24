@@ -120,8 +120,7 @@ if (!function_exists('cb_sql_table')) {
     function cb_sql_table($table, $as = null)
     {
         if ($table) {
-            $from_query = tbl($table) . ' AS ' . ((!is_null($as) and is_string($as)) ? $as : $table);
-            return $from_query;
+            return tbl($table) . ' AS ' . ((!is_null($as) and is_string($as)) ? $as : $table);
         }
         return false;
     }
@@ -135,26 +134,17 @@ if (!function_exists('table')) {
 }
 
 /**
- * Alias function for method _select
- *
- * @param $query
- * @return mixed
- */
-function cb_select($query)
-{
-    global $db;
-    return $db->_select($query);
-}
-
-/**
  * Alias function for function cb_select
  *
  * @param $query
- * @return mixed
+ * @param int $cached_time
+ * @return array
+ * @throws Exception
  */
-function select($query)
+function select($query, $cached_time=-1): array
 {
-    return cb_select($query);
+    global $db;
+    return $db->_select($query, $cached_time);
 }
 
 /**

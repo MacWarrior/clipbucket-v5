@@ -184,15 +184,15 @@ function prettyNum($num)
 
 /**
  * Handles everything going in ClipBucket development mode
- * @param : { string } { $query } { MySQL query for which to run process }
- * @param : { string } { $query_type } { type of query, select, delete etc }
- * @param : { integer } { $time } { time took to execute query }
- *
- * @return : { array } { $__devmsgs } { array with all debugging data }
+ * @param $query
+ * @param $query_type
+ * @param $time
+ * @param bool $cache
+ * @return array : { array } { $__devmsgs } { array with all debugging data }
  * @since : 27th May, 2016
  * @author : Saqib Razzaq
  */
-function devWitch($query, $query_type, $time, $cache = false)
+function devWitch($query, $query_type, $time, $cache = false): array
 {
     global $__devmsgs;
     $memoryBefore = $__devmsgs['total_memory_used'];
@@ -204,7 +204,8 @@ function devWitch($query, $query_type, $time, $cache = false)
     $__devmsgs[$query_type . '_queries'][$__devmsgs[$query_type]]['memBefore'] = $memoryBefore;
     $__devmsgs[$query_type . '_queries'][$__devmsgs[$query_type]]['memAfter'] = $memoryNow;
     $__devmsgs[$query_type . '_queries'][$__devmsgs[$query_type]]['memUsed'] = $memoryDif;
-    $__devmsgs[$query_type . '_queries'][$__devmsgs[$query_type]]['use_cache'] = $cache;
+    $__devmsgs[$query_type . '_queries'][$__devmsgs[$query_type]]['use_cache'] = $cache ? 'yes' : 'no';
+    $__devmsgs[$query_type . '_queries'][$__devmsgs[$query_type]]['backtrace'] = debug_backtrace_string();
     $queryDetails = $__devmsgs[$query_type . '_queries'][$__devmsgs[$query_type]];
 
     $expesiveQuery = $__devmsgs['expensive_query'];

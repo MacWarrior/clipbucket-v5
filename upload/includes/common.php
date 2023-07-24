@@ -540,7 +540,6 @@ $Smarty->register_modifier('post_form_val', 'post_form_val');
 $Smarty->register_modifier('get_thumb_num', 'get_thumb_num');
 $Smarty->register_modifier('ad', 'ad');
 $Smarty->register_modifier('get_user_level', 'get_user_level');
-$Smarty->register_modifier('is_online', 'is_online');
 $Smarty->register_modifier('get_age', 'get_age');
 $Smarty->register_modifier('outgoing_link', 'outgoing_link');
 $Smarty->register_modifier('nicetime', 'nicetime');

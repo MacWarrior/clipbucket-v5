@@ -3,7 +3,7 @@
 function install_customfield()
 {
     global $db;
-    $db->Execute(
+    $db->execute(
         'CREATE TABLE IF NOT EXISTS ' . tbl("custom_field") . ' (
         `custom_field_list_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
         `field_name` text NOT NULL,

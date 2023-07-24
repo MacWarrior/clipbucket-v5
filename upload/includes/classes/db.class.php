@@ -77,20 +77,23 @@ class Clipbucket_db
      * @return array : { array } { $data } { array of selected data }
      * @throws Exception
      */
-    function _select($query, $cached_time=-1): array
+    function _select($query, $cached_time = -1): array
     {
         try {
             $redis = CacheRedis::getInstance();
-            if ($redis->isEnabled()) {
+            if ($redis->isEnabled() && $cached_time != -1) {
                 if (in_dev()) {
                     $start = microtime(true);
-                    $return =  $redis->get($redis->getPrefix() . ':'. $query);
+                    $return = $redis->get($redis->getPrefix() . ':'. $query);
                     $end = microtime(true);
                     $timetook = $end - $start;
-                    devWitch($query, 'select', $timetook, !empty($return));
+                    if (!empty($return)) {
+                        devWitch($query, 'select', $timetook, true);
+                    }
                 } else {
-                    $return =  $redis->get($redis->getPrefix() . ':'. $query);
+                    $return = $redis->get($redis->getPrefix() . ':'. $query);
                 }
+
                 if (!empty($return)) {
                     return $return;
                 }
@@ -103,7 +106,8 @@ class Clipbucket_db
                 }
                 $result->close();
             }
-            if ($redis->isEnabled() && $cached_time != -1) {
+
+            if ($redis->isEnabled() && $cached_time != -1 && !empty($data)) {
                 $redis->set($redis->getPrefix() . ':'. $query, $data, $cached_time);
             }
         } catch (Exception $e) {
@@ -156,7 +160,7 @@ class Clipbucket_db
      * @return bool|int
      * @throws Exception
      */
-    function count($tbl, $fields = '*', $cond = false)
+    function count($tbl, $fields = '*', $cond = false, $cached_time = -1)
     {
         $condition = '';
         if ($cond) {
@@ -164,7 +168,7 @@ class Clipbucket_db
         }
         $query = 'SELECT COUNT(' . $fields . ') FROM ' . $tbl . $condition;
 
-        $result = $this->_select($query);
+        $result = $this->_select($query, $cached_time);
 
         if ($result) {
             $fields = $result[0];
@@ -210,7 +214,7 @@ class Clipbucket_db
                 $data = $this->mysqli->query($query);
                 $end = microtime(true);
                 $timetook = $end - $start;
-                devWitch($query, $type, $timetook);
+                devWitch($query, $type, $timetook, false);
             } else {
                 $data = $this->mysqli->query($query);
             }

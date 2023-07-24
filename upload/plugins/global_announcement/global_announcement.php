@@ -24,7 +24,7 @@ function update_announcement($text)
     if (strlen($textCheck) < 1) {
         $text = '';
     }
-    $db->Execute('UPDATE ' . tbl('global_announcement') . ' SET announcement=\'' . mysql_clean($text) . '\'');
+    $db->execute('UPDATE ' . tbl('global_announcement') . ' SET announcement=\'' . mysql_clean($text) . '\'');
 }
 
 register_anchor_function('get_global_announcement', 'global');

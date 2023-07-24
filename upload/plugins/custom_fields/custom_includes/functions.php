@@ -35,7 +35,7 @@ function push_custom_field($data = false)
         } else {
             $table = 'users';
         }
-        $db->Execute("ALTER TABLE " . tbl($table) . " ADD `cfld_" . $name . "` varchar(255) NOT NULL");
+        $db->execute("ALTER TABLE " . tbl($table) . " ADD `cfld_" . $name . "` varchar(255) NOT NULL");
         return $insert_id;
     }
     return false;
@@ -90,7 +90,7 @@ function delete_custom_field($fid)
     } else {
         $table = 'users';
     }
-    $db->Execute("ALTER TABLE " . tbl($table) . " DROP `cfld_" . $name . "` varchar(255) NOT NULL");
+    $db->execute("ALTER TABLE " . tbl($table) . " DROP `cfld_" . $name . "` varchar(255) NOT NULL");
     $db->delete(tbl('custom_fields'), ['custom_field_list_id'], [$fid]);
 }
 

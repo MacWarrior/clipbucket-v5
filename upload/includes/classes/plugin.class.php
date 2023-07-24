@@ -1,10 +1,8 @@
 <?php
 
-class CBPlugin extends ClipBucket
+class CBPlugin
 {
-    function __construct()
-    {
-    }
+    function __construct(){}
 
     /**
      * get plugin list
@@ -60,19 +58,13 @@ class CBPlugin extends ClipBucket
         return $plugins_array;
     }
 
-    function getPluginList(): array
-    {
-        return $this->getPlugins();
-    }
-
-
     /**
      * Function used to get new plugins, that are not installed yet
      */
     function getNewPlugins()
     {
         //first get list of all plugins
-        $plugin_list = $this->getPluginList();
+        $plugin_list = $this->getPlugins();
 
         //Now Checking if plugin is installed or not
         if (is_array($plugin_list)) {
@@ -86,22 +78,20 @@ class CBPlugin extends ClipBucket
         }
     }
 
-
     /**
      * Function used to get new plugins, that are not installed yet
+     * @throws Exception
      */
     function getInstalledPlugins()
     {
         global $db;
-        //first get list of all plugins
-        $plugin_list = $this->getPluginList();
 
+        $active_query = null;
         if (FRONT_END) {
-            $active_query = " plugin_active='yes' ";
-        } else {
-            $active_query = null;
+            $active_query = 'plugin_active=\'yes\'';
         }
-        $results = $db->select(tbl('plugins'), '*', $active_query);
+
+        $results = $db->select(tbl('plugins'), '*', $active_query, false, false, false, 60);
 
         if (is_array($results)) {
             foreach ($results as $result) {
@@ -307,7 +297,7 @@ class CBPlugin extends ClipBucket
         }
 
         if ($this->is_installed($plugin_file)) {
-            $db->Execute('UPDATE ' . tbl('plugins') . " SET plugin_active='" . $active . "' WHERE plugin_file='" . $plugin_file . "' $folder_query");
+            $db->execute('UPDATE ' . tbl('plugins') . " SET plugin_active='" . $active . "' WHERE plugin_file='" . $plugin_file . "' $folder_query");
             $active_msg = $active == 'yes' ? 'activated' : 'deactiveted';
             $msg = e(sprintf(lang('plugin_has_been_s'), $active_msg), 'm');
         } else {
@@ -336,7 +326,7 @@ class CBPlugin extends ClipBucket
                 $folder = $folder . DIRECTORY_SEPARATOR;
             }
 
-            $db->Execute('DELETE FROM ' . tbl('plugins') . " WHERE plugin_file='" . $file . "' $folder_query");
+            $db->execute('DELETE FROM ' . tbl('plugins') . " WHERE plugin_file='" . $file . "' $folder_query");
 
             $plug_uninstall_file = PLUG_DIR . DIRECTORY_SEPARATOR . $folder . 'uninstall_' . $file;
             if (file_exists($plug_uninstall_file)) {

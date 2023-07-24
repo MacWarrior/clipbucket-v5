@@ -1566,7 +1566,7 @@ class CBPhotos
 
                 $query .= " WHERE " . tbl('photos.photo_id') . " = '$id'";
 
-                $db->Execute($query);
+                $db->execute($query);
                 $cbcollection->add_collection_item($id, $details['collection_id']);
             }
         }

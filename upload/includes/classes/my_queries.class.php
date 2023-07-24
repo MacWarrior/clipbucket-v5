@@ -193,7 +193,7 @@ class myquery
                 }
             }
 
-            $db->Execute('DELETE FROM ' . tbl('comments') . " WHERE comment_id='$cid'");
+            $db->execute('DELETE FROM ' . tbl('comments') . " WHERE comment_id='$cid'");
 
             e(lang('usr_cmt_del_msg'), 'm');
             return $cdetails['type_id'];
@@ -749,7 +749,7 @@ class myquery
     function update_comment($cid, $text)
     {
         global $db;
-        $db->Execute('UPDATE ' . tbl('comments') . " SET comment='$text' WHERE comment_id='$cid'");
+        $db->execute('UPDATE ' . tbl('comments') . " SET comment='$text' WHERE comment_id='$cid'");
     }
 
     /**
@@ -758,7 +758,7 @@ class myquery
     function update_comment_vote($cid, $text)
     {
         global $db;
-        $db->Execute('UPDATE ' . tbl('comments') . " SET vote='$text' WHERE comment_id='$cid'");
+        $db->execute('UPDATE ' . tbl('comments') . " SET vote='$text' WHERE comment_id='$cid'");
     }
 
     function get_todos()
@@ -776,7 +776,7 @@ class myquery
     function update_todo($id, $text)
     {
         global $db;
-        $db->Execute('UPDATE ' . tbl('admin_todo') . " SET todo='" . mysql_clean($text) . "' WHERE comment_id='$id'");
+        $db->execute('UPDATE ' . tbl('admin_todo') . " SET todo='" . mysql_clean($text) . "' WHERE comment_id='$id'");
     }
 
     function delete_todo($id)

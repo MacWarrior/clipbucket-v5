@@ -49,7 +49,7 @@ function edit_field($field_name, $field_title, $field_type, $db_field, $default_
 {
     global $db;
     $sql = "UPDATE " . tbl("custom_field") . " SET field_name= '" . $field_name . "',field_type='$field_type',field_title='$field_title',default_value='$default_value',db_field='$db_field' WHERE custom_field_list_id='" . $edit_id . "'";
-    $db->Execute($sql);
+    $db->execute($sql);
 }
 
 /**

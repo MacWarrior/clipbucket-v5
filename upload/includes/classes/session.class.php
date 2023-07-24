@@ -1,9 +1,4 @@
 <?php
-/**
- * Rally simple session class
- * Author Arslan Hassan <arslan@clip-bucket.com>
- * http://clip-bucket.com/
- */
 
 class Session
 {
@@ -32,6 +27,7 @@ class Session
      * @param bool $value
      * @param bool $reg
      *
+     * @throws Exception
      * @todo: Find a proper solution to avoid database crashing because of sessions insertion and updation
      */
 
@@ -74,8 +70,9 @@ class Session
      * @param bool $phpsess
      *
      * @return array
+     * @throws Exception
      */
-    function get_user_session($user, $session_name = false, $phpsess = false)
+    function get_user_session($user, $session_name = false, $phpsess = false): array
     {
         global $db;
         $session_cond = false;
@@ -94,12 +91,13 @@ class Session
     /**
      * Function used to get sessins
      *
+     * @throws Exception
      * @todo : They are updated on every page refresh, highly  critical for performance.
      */
-    function get_sessions()
+    function get_sessions(): array
     {
         global $db, $pages;
-        $results = $db->select(tbl($this->tbl), '*', ' session =\'' . $this->id . '\' ');
+        $results = $db->select(tbl($this->tbl), '*', 'session =\'' . $this->id . '\' ');
 
         $cur_url = $pages->GetCurrentUrl();
 
@@ -194,6 +192,7 @@ class Session
 
     /**
      * Destroy Session
+     * @throws Exception
      */
     function destroy()
     {
@@ -228,6 +227,9 @@ class Session
         return false;
     }
 
+    /**
+     * @throws Exception
+     */
     function kick($id): bool
     {
         global $db;

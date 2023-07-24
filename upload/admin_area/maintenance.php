@@ -16,11 +16,11 @@ $breadcrumb[1] = ['title' => 'Maintenance', 'url' => ADMIN_BASEURL . '/maintenan
  * Removing Inactive Sessions
  */
 if (@$_GET['mode'] == 'remove_sessions') {
-    $db->Execute('DELETE FROM ' . tbl('sessions') . ' WHERE 
+    $db->execute('DELETE FROM ' . tbl('sessions') . ' WHERE 
         TIMESTAMPDIFF(MINUTE,last_active,now()) 
             > 5 AND session_string=\'guest\'');
     $guest_sess = $db->Affected_Rows();
-    $db->Execute('DELETE FROM ' . tbl('sessions') . ' WHERE 
+    $db->execute('DELETE FROM ' . tbl('sessions') . ' WHERE 
         TIMESTAMPDIFF(MINUTE,last_active,now()) 
             > ' . COOKIE_TIMEOUT / 60 . ' AND session_string=\'smart_sess\'');
     $smart_sess = $db->Affected_Rows();
@@ -50,7 +50,7 @@ if (@$_GET['mode'] == 'remove_access_log') {
     $query = 'DELETE FROM ' . tbl('action_log') . ' WHERE 
         DATEDIFF(now(),date_added) > ' . $days;
 
-    $db->Execute($query);
+    $db->execute($query);
 
     $rows = $db->Affected_Rows();
 

@@ -37,6 +37,7 @@ class Language
 
     /**
      * INIT
+     * @throws Exception
      */
     public function init()
     {
@@ -65,8 +66,6 @@ class Language
             $this->lang = $this->lang_iso = $default['language_code'];
             $this->lang_id = $default['language_id'];
         }
-
-
     }
 
     /**
@@ -76,6 +75,7 @@ class Language
      * @param STRING $language_id
      *
      * @return bool|array
+     * @throws Exception
      */
     public function getTranslationByKey($language_key, $language_id)
     {
@@ -84,9 +84,9 @@ class Language
         }
         global $db;
 
-        $select = tbl("languages_translations") . ' AS LT
-        INNER JOIN ' . tbl("languages_keys") . ' AS LK ON LK.id_language_key = LT.id_language_key';
-        $results = $db->select($select, '*', " language_key = '" . mysql_clean($language_key) . "' AND language_id = '" . mysql_clean($language_id) . "'");
+        $select = tbl('languages_translations') . ' AS LT
+        INNER JOIN ' . tbl('languages_keys') . ' AS LK ON LK.id_language_key = LT.id_language_key';
+        $results = $db->select($select, '*', ' language_key = \'' . mysql_clean($language_key) . '\' AND language_id = \'' . mysql_clean($language_id) . '\'');
         if (!empty($results)) {
             return $results[0];
         }
@@ -100,6 +100,7 @@ class Language
      * @param STRING $language_id
      *
      * @return bool|array
+     * @throws Exception
      */
     public function getTranslationByIdKey($id_language_key, $language_id)
     {
@@ -108,9 +109,9 @@ class Language
         }
         global $db;
 
-        $select = tbl("languages_translations") . ' AS LT
-        INNER JOIN ' . tbl("languages_keys") . ' AS LK ON LK.id_language_key = LT.id_language_key';
-        $results = $db->select($select, '*', " id_language_key = '" . mysql_clean($id_language_key) . "' AND language_id = '" . mysql_clean($language_id) . "'");
+        $select = tbl('languages_translations') . ' AS LT
+        INNER JOIN ' . tbl('languages_keys') . ' AS LK ON LK.id_language_key = LT.id_language_key';
+        $results = $db->select($select, '*', ' id_language_key = \'' . mysql_clean($id_language_key) . '\' AND language_id = \'' . mysql_clean($language_id) . '\'');
         if (!empty($results)) {
             return $results[0];
         }
@@ -126,19 +127,20 @@ class Language
      * @param null $extra_param
      *
      * @return array
+     * @throws Exception
      */
-    public function getAllTranslations($language_id = 1, $fields = "language_key, translation", $limit = null, $extra_param = null): array
+    public function getAllTranslations($language_id = 1, $fields = 'language_key, translation', $limit = null, $extra_param = null): array
     {
         if ($this->uninstalled) {
             return [];
         }
         global $db;
 
-        $select = tbl("languages_keys") . ' AS LK
-        LEFT JOIN ' . tbl("languages_translations") . ' AS LT ON LK.id_language_key = LT.id_language_key AND LT.language_id = ' . mysql_clean($language_id);
+        $select = tbl('languages_keys') . ' AS LK
+        LEFT JOIN ' . tbl('languages_translations') . ' AS LT ON LK.id_language_key = LT.id_language_key AND LT.language_id = ' . mysql_clean($language_id);
 
         /** concat aaaaaaa to sort when translation is missing */
-        return $db->select($select, $fields, $extra_param, $limit, " CASE WHEN LT.translation IS NULL THEN concat('aaaaaaaaaaaaaaaaaaaa',language_key) ELSE LK.language_key END", false, 3600);
+        return $db->select($select, $fields, $extra_param, $limit, ' CASE WHEN LT.translation IS NULL THEN concat(\'aaaaaaaaaaaaaaaaaaaa\',language_key) ELSE LK.language_key END', false, 3600);
     }
 
     /**
@@ -148,6 +150,7 @@ class Language
      * @param null $extra_param
      *
      * @return int
+     * @throws Exception
      */
     public function countTranslations($language_id = null, $extra_param = null): int
     {
@@ -172,6 +175,7 @@ class Language
      * @param int $id_language_key
      * @param string $translation
      * @param int $language_id
+     * @throws Exception
      */
     public function update_phrase($id_language_key, $translation, $language_id = 1)
     {
@@ -179,9 +183,9 @@ class Language
 
         //First checking if phrase already exists or not
         if ($this->getTranslationByIdKey($id_language_key, $language_id)) {
-            $db->update(tbl("languages_translations"), ['translation'], [mysql_clean($translation)], " id_language_key = " . mysql_clean($id_language_key) . " AND language_id = " . mysql_clean($language_id));
+            $db->update(tbl('languages_translations'), ['translation'], [mysql_clean($translation)], ' id_language_key = ' . mysql_clean($id_language_key) . ' AND language_id = ' . mysql_clean($language_id));
         } else {
-            $db->insert(tbl("languages_translations"), ['translation,id_language_key,language_id'], [mysql_clean($translation), mysql_clean($id_language_key), mysql_clean($language_id)]);
+            $db->insert(tbl('languages_translations'), ['translation,id_language_key,language_id'], [mysql_clean($translation), mysql_clean($id_language_key), mysql_clean($language_id)]);
         }
         CacheRedis::flushAll();
     }
@@ -235,17 +239,17 @@ class Language
         global $db;
 
         if ($active) {
-            $cond = " language_active='yes' ";
+            $cond = ' language_active=\'yes\' ';
         } else {
-            $cond = "1 ";
+            $cond = '1 ';
         }
 
-        $select = tbl("languages") . " AS L ";
+        $select = tbl('languages') . ' AS L ';
         $field = 'L.* ';
         if ($countTrads) {
-            $select .= " LEFT JOIN " . tbl('languages_translations') . " AS LT ON LT.language_id = L.language_id ";
-            $field .= " , COUNT(LT.id_language_key) as nb_trads, (select count(id_language_key) from cb_languages_keys) as nb_codes ";
-            $cond .= " GROUP BY L.language_id ";
+            $select .= ' LEFT JOIN ' . tbl('languages_translations') . ' AS LT ON LT.language_id = L.language_id ';
+            $field .= ' , COUNT(LT.id_language_key) as nb_trads, (select count(id_language_key) from cb_languages_keys) as nb_codes ';
+            $cond .= ' GROUP BY L.language_id ';
         }
 
         return $db->select($select, $field, $cond);
@@ -259,13 +263,14 @@ class Language
      * @param $id
      *
      * @return bool|array
+     * @throws Exception
      */
     public static function getLangById($id)
     {
         global $db;
 
         $id = mysql_clean($id);
-        $results = $db->select(tbl('languages'), '*', ' language_id = ' . mysql_clean($id));
+        $results = $db->select(tbl('languages'), '*', 'language_id = ' . mysql_clean($id), false, false, false, 3600);
 
         if (!empty($results)) {
             return $results[0];
@@ -277,6 +282,7 @@ class Language
      * Make Language Default
      *
      * @param $lid
+     * @throws Exception
      */
     public function make_default($lid)
     {
@@ -284,20 +290,21 @@ class Language
         $lang = self::getLangById($lid);
         if ($lang) {
             set_cookie_secure('cb_lang', $lid);
-            $db->update(tbl("languages"), ["language_default"], ["no"], " language_default='yes'");
-            $db->update(tbl("languages"), ["language_default"], ["yes"], " language_id='$lid'");
-            e($lang['language_name'] . " has been set as default language", "m");
+            $db->update(tbl('languages'), ['language_default'], ['no'], ' language_default=\'yes\'');
+            $db->update(tbl('languages'), ['language_default'], ['yes'], ' language_id=\''.$lid.'\'');
+            e($lang['language_name'] . ' has been set as default language', 'm');
             CacheRedis::flushAll();
         }
     }
 
     /**
      * function used to get default language
+     * @throws Exception
      */
     public static function getDefaultLanguage()
     {
         global $db;
-        $result = $db->select(tbl('languages'), "*", " language_default='yes' ", false, false, false, 3600);
+        $result = $db->select(tbl('languages'), '*', ' language_default=\'yes\' ', false, false, false, 3600);
         return $result[0];
     }
 
@@ -306,19 +313,20 @@ class Language
      * Function used to delete language
      *
      * @param $i
+     * @throws Exception
      */
     public static function delete_lang($i)
     {
         global $db;
         $lang = self::getLangById($i);
         if (!$lang) {
-            e(lang("language_does_not_exist"));
+            e(lang('language_does_not_exist'));
         } elseif ($lang['language_default'] == 'yes' || $i == 1) {
-            e(lang("default_lang_del_error"));
+            e(lang('default_lang_del_error'));
         } else {
-            $db->delete(tbl('languages'), ["language_id"], [$lang['language_id']]);
-            $db->delete(tbl('languages_translations'), ["language_id"], [$lang['language_id']]);
-            e(lang("lang_deleted"), "m");
+            $db->delete(tbl('languages'), ['language_id'], [$lang['language_id']]);
+            $db->delete(tbl('languages_translations'), ['language_id'], [$lang['language_id']]);
+            e(lang('lang_deleted'), 'm');
             CacheRedis::flushAll();
         }
     }
@@ -327,20 +335,21 @@ class Language
      * Function used to update language
      *
      * @param $array
+     * @throws Exception
      */
     public static function update_lang($array)
     {
         global $db;
         $lang = self::getLangById($array['language_id']);
         if (!$lang) {
-            e(lang("language_does_not_exist"));
+            e(lang('language_does_not_exist'));
         } elseif (empty($array['name'])) {
-            e(lang("lang_name_empty"));
+            e(lang('lang_name_empty'));
         } elseif (empty($array['code'])) {
-            e(lang("lang_code_empty"));
+            e(lang('lang_code_empty'));
         } else {
-            $db->update(tbl('languages'), ["language_name", "language_code"], [$array['name'], $array['code']], " language_id='" . $array['language_id'] . "'");
-            e(lang("lang_updated"), "m");
+            $db->update(tbl('languages'), ['language_name', 'language_code'], [$array['name'], $array['code']], ' language_id=\'' . $array['language_id'] . '\'');
+            e(lang('lang_updated'), 'm');
             CacheRedis::flushAll();
         }
     }
@@ -349,28 +358,31 @@ class Language
      * Function used to update language
      *
      * @param $array
+     * @throws Exception
      */
     public static function add_lang($array)
     {
         global $db;
         if (empty($array['name'])) {
-            e(lang("lang_name_empty"));
+            e(lang('lang_name_empty'));
         } elseif (empty($array['code'])) {
-            e(lang("lang_code_empty"));
+            e(lang('lang_code_empty'));
         } else {
-            $db->insert(tbl('languages'), ["language_name", "language_default", "language_code"], [$array['name'], "no", $array['code']]);
-            e(lang("lang_added"), "m");
+            $db->insert(tbl('languages'), ['language_name', 'language_default', 'language_code'], [$array['name'], 'no', $array['code']]);
+            e(lang('lang_added'), 'm');
         }
     }
-
-
+    
+    /**
+     * @throws Exception
+     */
     public function set_lang($ClientId, $secertId)
     {
         global $db;
         $cl = $ClientId;
         $sc = $secertId;
-        $db->update(tbl('config'), ["value"], [$cl], " name='clientid' ");
-        $db->update(tbl('config'), ["value"], [$sc], " name='secretId' ");
+        $db->update(tbl('config'), ['value'], [$cl], ' name=\'clientid\' ');
+        $db->update(tbl('config'), ['value'], [$sc], ' name=\'secretId\' ');
     }
 
     public function getLang()

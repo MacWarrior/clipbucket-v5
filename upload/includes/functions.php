@@ -1818,7 +1818,7 @@ function increment_views($id, $type = null)
                 $views = (int)$videoViewsRecord['video_views'] + 1;
                 $db->update(tbl('video_views'), ['video_views', 'last_updated'], [$views, $currentTime], " video_id='$id' OR videokey='$id'");
                 $query = "UPDATE " . tbl("video_views") . " SET video_views = video_views + 1 WHERE video_id = {$id}";
-                $db->Execute($query);
+                $db->execute($query);
                 set_cookie_secure('video_' . $id, 'watched');
             }
             break;
@@ -4018,6 +4018,23 @@ function dump($data = [], $die = false)
     if ($die) {
         die();
     }
+}
+
+function debug_backtrace_string(): string
+{
+    $stack = '';
+    $i = 1;
+    $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+    unset($trace[0]); //Remove call to this function from stack trace
+    foreach($trace as $node) {
+        $stack .= '#'.$i.' '.$node['file'] .'(' .$node['line'].'): ';
+        if(isset($node['class'])) {
+            $stack .= $node['class'] . '->';
+        }
+        $stack .= $node['function'] . '()' . PHP_EOL;
+        $i++;
+    }
+    return $stack;
 }
 
 /**
