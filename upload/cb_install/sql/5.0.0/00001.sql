@@ -100,7 +100,7 @@ UPDATE `{tbl_prefix}photos` SET owner_ip = convert(cast(convert(owner_ip using  
 UPDATE `{tbl_prefix}photos` SET photo_details = convert(cast(convert(photo_details using  latin1) as binary) using utf8);
 UPDATE `{tbl_prefix}phrases` SET lang_iso = convert(cast(convert(lang_iso using  latin1) as binary) using utf8);
 UPDATE `{tbl_prefix}phrases` SET varname = convert(cast(convert(varname using  latin1) as binary) using utf8);
-UPDATE `{tbl_prefix}phrases` SET text = convert(cast(convert(text using  latin1) as binary) using utf8);
+# UPDATE `{tbl_prefix}phrases` SET text = convert(cast(convert(text using  latin1) as binary) using utf8);
 UPDATE `{tbl_prefix}playlist_items` SET playlist_item_type = convert(cast(convert(playlist_item_type using  latin1) as binary) using utf8);
 UPDATE `{tbl_prefix}playlists` SET playlist_name = convert(cast(convert(playlist_name using  latin1) as binary) using utf8);
 UPDATE `{tbl_prefix}playlists` SET playlist_type = convert(cast(convert(playlist_type using  latin1) as binary) using utf8);
@@ -289,3 +289,7 @@ ALTER TABLE `{tbl_prefix}user_levels_permissions` ADD `view_collections` ENUM('y
 INSERT INTO `{tbl_prefix}user_permissions` (`permission_type`, `permission_name`, `permission_code`, `permission_desc`, `permission_default`) VALUES
     (1, 'View Photos Page', 'view_photos', 'User can view photos page', 'yes'),
     (1, 'View Collections Page', 'view_collections', 'User can view collections page', 'yes');
+
+UPDATE `{tbl_prefix}languages` SET `language_id` = 1 WHERE `language_code` LIKE 'en';
+INSERT INTO `{tbl_prefix}languages` (`language_id`, `language_code`, `language_name`, `language_regex`, `language_active`, `language_default`)
+    VALUES (2, 'fr', 'Français', 'fra', 'no', 'no');

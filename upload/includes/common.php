@@ -125,6 +125,8 @@ Language::getInstance()->init();
 $arrayTranslations = Language::getInstance()->loadTranslations(Language::getInstance()->lang_id);
 $ClipBucket = $Cbucket = new ClipBucket();
 define('BASEDIR', $Cbucket->BASEDIR);
+const DIR_SQL = BASEDIR . DIRECTORY_SEPARATOR . 'cb_install' . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR;
+
 $Cbucket->cbinfo = ['version' => VERSION, 'state' => STATE, 'rev' => REV];
 if (!file_exists(BASEDIR . '/index.php')) {
     die('Basedir is incorrect, please set the correct basedir value in \'config\' table');

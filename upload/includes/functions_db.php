@@ -162,9 +162,9 @@ function select($query)
  * @param $revision
  * @return bool
  */
-function check_need_upgrade($version, $revision)
+function check_need_upgrade($version, $revision): bool
 {
-    $folders = glob(BASEDIR . DIRECTORY_SEPARATOR . 'cb_install' . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
+    $folders = glob(DIR_SQL . '[0-9]**', GLOB_ONLYDIR);
     $folder_version = '';
     foreach ($folders as $folder) {
         if (basename($folder) == $version) {
@@ -182,16 +182,25 @@ function check_need_upgrade($version, $revision)
     return false;
 }
 
+/**
+ * @param $version
+ * @param $revision
+ * @param $count
+ * @return array|int
+ */
 function get_files_to_upgrade($version, $revision, $count = false)
 {
     //Get folders superior or equal to current version
-    $folders = array_filter(glob(BASEDIR . DIRECTORY_SEPARATOR . 'cb_install' . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR)
+    $folders = array_filter(glob(DIR_SQL . '[0-9]**', GLOB_ONLYDIR)
         , function ($dir) use ($version) {
             return basename($dir) >= $version;
         });
 
     $files = [];
 
+    if ($version == '4.2-RC1-premium') {
+        $files[] = DIR_SQL . 'commercial' . DIRECTORY_SEPARATOR . '00001.sql';
+    }
     foreach ($folders as $folder) {
         //get files in folder minus . and .. folders
         $clean_folder = array_diff(scandir($folder), ['..', '.']);
@@ -269,12 +278,18 @@ function getRevisions()
         function ($dir) {
             return basename($dir);
         }
-        , array_filter(glob(BASEDIR . DIRECTORY_SEPARATOR . 'cb_install' . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR)
+        , array_filter(glob(DIR_SQL . '*', GLOB_ONLYDIR)
         , function ($dir) {
             return basename($dir) >= '5.3.0' && basename($dir) <= '5.5.0';
         }
     ));
-    $revisions = [];
+    $revisions = [
+        '4.2-RC1-free'    => '1',
+        '4.2-RC1-premium' => '1',
+        '5.0.0'           => '1',
+        '5.1.0'           => '1',
+        '5.2.0'           => '1',
+    ];
     foreach ($versions as $version) {
         $changelog_url = BASEDIR . DIRECTORY_SEPARATOR . 'changelog' . DIRECTORY_SEPARATOR . str_replace('.', '', $version) . '.json';
         $changelog = json_decode(file_get_contents($changelog_url, false), true);
@@ -289,7 +304,13 @@ function getRevisions()
  */
 function getVersions()
 {
-    $versions = [];
+    $versions = [
+        '4.2-RC1-free'    => '1',
+        '4.2-RC1-premium' => '1',
+        '5.0.0'           => '1',
+        '5.1.0'           => '1',
+        '5.2.0'           => '1',
+    ];
     $changelog_url = BASEDIR . DIRECTORY_SEPARATOR . 'changelog' . DIRECTORY_SEPARATOR;
     $files = glob($changelog_url . '[0-9]*' . '.json');
     foreach ($files as $file) {
