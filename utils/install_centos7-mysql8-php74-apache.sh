@@ -49,7 +49,7 @@ echo -ne " OK"
 echo ""
 echo -ne "Updating sources access permissions..."
 chown apache: -R ../clipbucket/
-chmod 755 -R ./upload/cache ./upload/files ./upload/images ./upload/includes/langs
+chmod 755 -R ./upload/cache ./upload/files ./upload/images
 chmod 755 ./upload/includes
 echo -ne " OK"
 

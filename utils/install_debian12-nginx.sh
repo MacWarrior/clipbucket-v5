@@ -1,25 +1,25 @@
 #!/bin/bash
-# Clipbucket install on Debian 9.0 - 9.4
+# Clipbucket install on Debian 12
 ## THIS SCRIPT MUST BE LAUNCHED AS ROOT
 
 echo ""
 echo -ne "Updating Debian system..."
-apt-get update > /dev/null
-apt-get dist-upgrade -f > /dev/null
+apt update > /dev/null 2>&1
+apt dist-upgrade -y > /dev/null 2>&1
 echo -ne " OK"
 
 echo ""
 echo -ne "Installing requiered elements..."
-apt-get install php7.0-fpm nginx-full mariadb-server git php-curl ffmpeg php7.0-mysqli php7.0-xml php7.0-mbstring php7.0-gd sendmail mediainfo --yes > /dev/null 2>&1
-sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 100M/g" /etc/php/7.0/fpm/php.ini
-sed -i "s/post_max_size = 8M/post_max_size = 100M/g" /etc/php/7.0/fpm/php.ini
-sed -i "s/max_execution_time = 30/max_execution_time = 7200/g" /etc/php/7.0/fpm/php.ini
-service php7.0-fpm restart
+apt install php8.2-fpm nginx-full mariadb-server git php8.2-curl ffmpeg php8.2-mysqli php8.2-xml php8.2-mbstring php8.2-gd sendmail mediainfo --yes > /dev/null 2>&1
+sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 100M/g" /etc/php/8.2/fpm/php.ini
+sed -i "s/post_max_size = 8M/post_max_size = 100M/g" /etc/php/8.2/fpm/php.ini
+sed -i "s/max_execution_time = 30/max_execution_time = 7200/g" /etc/php/8.2/fpm/php.ini
+systemctl restart php8.2-fpm
 echo -ne " OK"
 
 echo ""
 echo -ne "Installing Clipbucket sources..."
-mkdir -p /home/http/clipbucket/ && cd "$_"
+mkdir -p /srv/http/clipbucket/ && cd "$_"
 git clone https://github.com/MacWarrior/clipbucket-v5.git ./ > /dev/null 2>&1
 echo -ne " OK"
 
@@ -52,7 +52,7 @@ server {
     listen 80;
     server_name clipbucket.local;
 
-    root /home/http/clipbucket/upload/;
+    root /srv/http/clipbucket/upload/;
     index index.php;
 
     client_max_body_size 100M;
@@ -64,7 +64,7 @@ server {
     }
 
     location ~* \.php$ {
-        fastcgi_pass unix:/var/run/php/php7.0-fpm.sock;
+        fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
         fastcgi_index index.php;
         fastcgi_split_path_info ^(.+\.php)(.*)$;
         include fastcgi_params;
@@ -76,7 +76,7 @@ server {
             rewrite ^/([^.]*)/?$ /index.php last;
         }
         rewrite ^/(.*)_v([0-9]+) /watch_video.php?v=$2&$query_string last;
-    rewrite ^/([a-zA-Z0-9-]+)/?$ /view_channel.php?uid=$1&seo_diret=yes last;
+        rewrite ^/([a-zA-Z0-9-]+)/?$ /view_channel.php?uid=$1&seo_diret=yes last;
     }
 
     error_page 404 /404;

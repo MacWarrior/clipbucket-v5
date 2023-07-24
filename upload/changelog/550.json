@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"176",
+  "revision":"177",
   "status":"dev",
   "detail":[
     {
@@ -173,6 +173,8 @@
       "title":"Installation",
       "description":[
         "Fix directories check"
+        ,"Fix chmod in all scripts"
+        ,"Add script for Debian 12 + Nginx"
       ]
     }
   ]
