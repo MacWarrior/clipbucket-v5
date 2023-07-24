@@ -809,73 +809,6 @@ function NOW()
 }
 
 /**
- * Function used to get Regular Expression from database
- *
- * @param : { string } { $code } { code to be filtered }
- *
- * @return bool
- */
-function get_re($code)
-{
-    global $db;
-    $results = $db->select(tbl('validation_re'), '*', " re_code='$code'");
-    if (count($results) > 0) {
-        return $results[0]['re_syntax'];
-    }
-    return false;
-}
-
-/**
- * Function used to check weather input is valid or not
- * based on preg_match
- *
- * @param $syntax
- * @param $text
- *
- * @return bool
- */
-function check_re($syntax, $text)
-{
-    preg_match('/' . $syntax . '/i', $text, $matches);
-    if (!empty($matches[0])) {
-        return true;
-    }
-    return false;
-}
-
-/**
- * Check regular expression
- * @param $code
- * @param $text
- *
- * @return bool
- * @uses: { function : check_re }
- *
- */
-function check_regular_expression($code, $text)
-{
-    return check_re($code, $text);
-}
-
-/**
- * Function used to check field directly
- * @param $code
- * @param $text
- *
- * @return bool
- * @uses : { function : check_regular_expression }
- *
- */
-function validate_field($code, $text)
-{
-    $syntax = get_re($code);
-    if (empty($syntax)) {
-        return true;
-    }
-    return check_regular_expression($syntax, $text);
-}
-
-/**
  * Check if syntax is valid
  * @param $code
  * @param $text
@@ -884,12 +817,27 @@ function validate_field($code, $text)
  * @uses : { function : validate_field }
  *
  */
-function is_valid_syntax($code, $text)
+function is_valid_syntax($code, $text): bool
 {
-    if (DEV_INGNORE_SYNTAX) {
+    switch($code){
+        case 'username':
+            $pattern = '^[A-Za-z0-9_.]+$';
+            break;
+        case 'email':
+            $pattern = '^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,10})$';
+            break;
+        case 'field_text':
+            $pattern = '^[_a-z0-9-]+$';
+            break;
+        default:
+            return true;
+    }
+
+    preg_match('/'.$pattern.'/i', $text, $matches);
+    if (!empty($matches[0])) {
         return true;
     }
-    return validate_field($code, $text);
+    return false;
 }
 
 /**
@@ -900,7 +848,7 @@ function is_valid_syntax($code, $text)
  *
  * @return bool
  */
-function is_valid_value($func, $val)
+function is_valid_value($func, $val): bool
 {
     if (!function_exists($func)) {
         return true;

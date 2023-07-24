@@ -217,11 +217,6 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'cache_password', ''),
     (NULL, 'cache_port', '');
 
-INSERT INTO `{tbl_prefix}validation_re` (`re_id`, `re_name`, `re_code`, `re_syntax`) VALUES
-	(1, 'Username', 'username', '^^[a-zA-Z0-9_]+$'),
-	(2, 'Email', 'email', '^[_a-z0-9-]+(\\.[_a-z0-9-]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,10})$'),
-	(3, 'Field Text', 'field_text', '^^[_a-z0-9-]+$');
-
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 428, 240, 240000),
 	('360p', '16/9', 1, 640, 360, 400000),

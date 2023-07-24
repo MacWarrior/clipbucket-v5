@@ -7,9 +7,6 @@ const COOKIE_TIMEOUT = 86400 * 1; // 1
 const GARBAGE_TIMEOUT = COOKIE_TIMEOUT;
 const REMBER_DAYS = 7;
 
-const DEV_INGNORE_SYNTAX = true;
-
-
 //Create an empty development.dev file in includes folder
 //To Activate Development mode
 

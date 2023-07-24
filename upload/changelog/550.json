@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"177",
+  "revision":"178",
   "status":"dev",
   "detail":[
     {
@@ -62,7 +62,7 @@
       "description": [
         "Cleanup code <i>#251</i>"
         ,"Remove unused config"
-        ,"Remove unused DB columns"
+        ,"Remove unused DB columns & tables"
         ,"Fix installation process"
         ,"Update requierements doc"
         ,"Update PHP 8+ compatibility"

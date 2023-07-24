@@ -620,13 +620,6 @@ CREATE TABLE `{tbl_prefix}user_profile` (
   `show_my_friends` enum('yes','no') NOT NULL DEFAULT 'yes'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `{tbl_prefix}validation_re` (
-  `re_id` int(25) NOT NULL,
-  `re_name` varchar(60) NOT NULL,
-  `re_code` varchar(60) NOT NULL,
-  `re_syntax` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 CREATE TABLE `{tbl_prefix}video` (
   `videoid` bigint(20) NOT NULL,
   `videokey` mediumtext NOT NULL,
@@ -925,9 +918,6 @@ ALTER TABLE `{tbl_prefix}user_profile`
   ADD KEY `ind_status_id` (`userid`);
 ALTER TABLE `{tbl_prefix}user_profile` ADD FULLTEXT KEY `profile_tags` (`profile_tags`);
 
-ALTER TABLE `{tbl_prefix}validation_re`
-  ADD PRIMARY KEY (`re_id`);
-
 ALTER TABLE `{tbl_prefix}video`
   ADD PRIMARY KEY (`videoid`),
   ADD KEY `userid` (`userid`),
@@ -1090,9 +1080,6 @@ ALTER TABLE `{tbl_prefix}user_permission_types`
 
 ALTER TABLE `{tbl_prefix}user_profile`
   MODIFY `user_profile_id` int(11) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `{tbl_prefix}validation_re`
-  MODIFY `re_id` int(25) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `{tbl_prefix}video`
   MODIFY `videoid` bigint(20) NOT NULL AUTO_INCREMENT;
