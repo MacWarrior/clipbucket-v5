@@ -10,6 +10,7 @@ class mass_upload extends Upload
     function get_video_files_list($listonly = false, $dir = MASS_UPLOAD_DIR)
     {
         require_once BASEDIR . '/includes/classes/conversion/ffmpeg.class.php';
+        $cache_key = CacheRedis::getInstance()->getPrefix() . ':vid_info:';
         $allowed_exts = get_vid_extensions();
         $FILES = scandir($dir);
         $FILE_LIST = [];
@@ -39,17 +40,21 @@ class mass_upload extends Upload
                 $file_extension = getext($filename);
 
                 if (in_array($file_extension, $allowed_exts)) {
-                    $video_file = [];
-                    $video_file['path'] = $dir . DIRECTORY_SEPARATOR;
-                    $video_file['file'] = $filename;
-                    $video_file['title'] = $filename;
-                    $video_file['description'] = $filename;
-                    $video_file['tags'] = gentags(str_replace(' ', ',', $filename));
-                    $video_file['size'] = formatfilesize(filesize($filepath));
-                    if ($tracks = FFMpeg::get_track_title($filepath, 'audio')) {
-                        $video_file['tracks'] = $tracks;
+                    $video_file = CacheRedis::getInstance()->get($cache_key . $filename);
+                    if (empty($video_file)) {
+                        $video_file = [];
+                        $video_file['path'] = $dir . DIRECTORY_SEPARATOR;
+                        $video_file['file'] = $filename;
+                        $video_file['title'] = $filename;
+                        $video_file['description'] = $filename;
+                        $video_file['tags'] = gentags(str_replace(' ', ',', $filename));
+                        $video_file['size'] = formatfilesize(filesize($filepath));
+                        if ($tracks = FFMpeg::get_track_title($filepath, 'audio')) {
+                            $video_file['tracks'] = $tracks;
+                        }
+                        $video_file = array_merge($video_file, FFMpeg::get_video_basic_infos($filepath));
+                        CacheRedis::getInstance()->set($cache_key . $filename, $video_file, 900);
                     }
-                    $video_file = array_merge($video_file, FFMpeg::get_video_basic_infos($filepath));
 
                     $FILE_LIST[] = $video_file;
                 }
