@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"180",
+  "revision":"181",
   "status":"dev",
   "detail":[
     {
@@ -80,7 +80,7 @@
         ,"Implement Whoops 2.15.3 in DEV mode <i>#217</i> (Thanks veka-server !)"
         ,"Update Smarty to version 3.1.48"
         ,"Update login logs <i>#252</i>"
-        ,"Add portuguese (BR) translation <i>#253</i> (Thanks raiancollyn !)"
+        ,"Add portuguese (BR) translation <i>#253, #262</i> (Thanks raiancollyn !)"
         ,"Fix possible SQL injection"
         ,"Remove unused files"
       ]
