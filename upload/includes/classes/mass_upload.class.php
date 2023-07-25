@@ -40,7 +40,7 @@ class mass_upload extends Upload
                 $file_extension = getext($filename);
 
                 if (in_array($file_extension, $allowed_exts)) {
-                    $video_file = CacheRedis::getInstance()->get($cache_key . $filename);
+                    $video_file = CacheRedis::getInstance()->get($cache_key . $filepath);
                     if (empty($video_file)) {
                         $video_file = [];
                         $video_file['path'] = $dir . DIRECTORY_SEPARATOR;
@@ -53,7 +53,7 @@ class mass_upload extends Upload
                             $video_file['tracks'] = $tracks;
                         }
                         $video_file = array_merge($video_file, FFMpeg::get_video_basic_infos($filepath));
-                        CacheRedis::getInstance()->set($cache_key . $filename, $video_file, 900);
+                        CacheRedis::getInstance()->set($cache_key . $filepath, $video_file, 900);
                     }
 
                     $FILE_LIST[] = $video_file;
