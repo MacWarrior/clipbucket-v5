@@ -17,6 +17,7 @@ function get_video_fields($extra = null)
     global $cb_columns;
     return $cb_columns->set_object('videos')->get_columns($extra);
 }
+
 /**
  * Function used to check video is playlable or not
  *
@@ -1678,4 +1679,42 @@ function getHlsFilesInfo($resolution, $data): array
         $size += filesize($file);
     }
     return ['nb_file' => $nb, 'files_size' => $size];
+}
+
+/**
+ * @param $log_file
+ * @return void
+ */
+function reset_video_log($log_file)
+{
+    $file_to_delete = '';
+    $base = basename($log_file,'.log');
+    if (!array_key_exists($base, AdminTool::getTemp())) {
+        $file_to_delete = $log_file;
+    } elseif (AdminTool::getTemp()[$base]['status'] == 'Successful') {
+        $file_to_delete = $log_file;
+    }
+
+    if ($file_to_delete != '') {
+        unlink($log_file);
+        remove_empty_directory_log(dirname($log_file));
+    }
+}
+
+/**
+ * delete empty parent until $stop_path
+ * @param $path
+ * @param string $stop_path path where function has to stop
+ * @return void
+ */
+function remove_empty_directory_log($path, string $stop_path = LOGS_DIR)
+{
+    if ($path == LOGS_DIR) {
+        return;
+    }
+    $current_dir_content = array_diff(scandir($path), ['..', '.']);
+    if (count($current_dir_content) <= 0) {
+        rmdir($path);
+        remove_empty_directory_log(dirname($path));
+    }
 }

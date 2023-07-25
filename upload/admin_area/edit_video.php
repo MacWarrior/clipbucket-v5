@@ -50,6 +50,14 @@ if ($myquery->VideoExists($video)) {
     $data['date_added'] = $date_added->format(DATE_FORMAT);
 
     Assign('data', $data);
+
+    if ($data['file_server_path']) {
+        $file = $data['file_server_path'] . '/logs/' . $data['file_directory'] . $data['file_name'] . '.log';
+    } else {
+        $str = DIRECTORY_SEPARATOR . $data['file_directory'] . DIRECTORY_SEPARATOR;
+        $file = LOGS_DIR . $str . $data['file_name'] . '.log';
+    }
+    assign('has_log', file_exists($file));
 } else {
     $msg[] = lang('class_vdo_del_err');
 }

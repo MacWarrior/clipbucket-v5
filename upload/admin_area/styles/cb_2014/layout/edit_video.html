@@ -169,10 +169,10 @@
                                     </tr>
                                     <tr>
                                         <td class="first">
-                                            <label>Conversion log</label>
+                                            <label>{lang code='conversion_log'}</label>
                                         </td>
                                         <td class="last">
-                                            <p><span><a href="view_conversion_log.php?file_name={$data.file_name}">Conversion log</a></span></p>
+                                            <p><span>{if $has_log}<a href="view_conversion_log.php?file_name={$data.file_name}">{lang code='watch_conversion_log'}</a>{else}{lang code='no_conversion_log'}{/if}</span></p>
                                         </td>
                                     </tr>
                                     <tr>

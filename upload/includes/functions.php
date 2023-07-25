@@ -5165,6 +5165,17 @@ function error_lang_cli ($msg)
     }
 }
 
+function rglob($pattern, $flags = 0) {
+    $files = glob($pattern, $flags);
+    foreach (glob(dirname($pattern).'/*', GLOB_ONLYDIR|GLOB_NOSORT) as $dir) {
+        $files = array_merge(
+            [],
+            ...[$files, rglob($dir . '/' . basename($pattern), $flags)]
+        );
+    }
+    return $files;
+}
+
 include('functions_db.php');
 include('functions_filter.php');
 include('functions_player.php');

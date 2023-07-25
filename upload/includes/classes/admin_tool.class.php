@@ -3,6 +3,7 @@
 class AdminTool
 {
     private static $_instance = null;
+    private static $temp;
 
     /**
      * @return AdminTool
@@ -208,6 +209,30 @@ class AdminTool
 
     /**
      * @param $id_tool
+     * @return void
+     */
+    public static function resetVideoLog($id_tool)
+    {
+        $logs = rglob(LOGS_DIR . DIRECTORY_SEPARATOR . '*.log');
+        global $db;
+        $logs_sql = array_map(function ($log) {
+            return  '\''. mysql_clean(basename($log, '.log')).'\'' ;
+        },$logs);
+        $query = 'SELECT file_name, status, file_directory FROM ' . tbl('video') . ' WHERE file_name IN (' . implode(', ', $logs_sql) . ')';
+        $result = $db->execute($query, 'select');
+        $videos = [];
+        if ($result) {
+            while ($row = $result->fetch_assoc()) {
+                $videos[$row['file_name']] = $row;
+            }
+            $result->close();
+        }
+        self::$temp = $videos;
+        self::executeTool($id_tool, $logs, 'reset_video_log');
+    }
+
+    /**
+     * @param $id_tool
      * @param $array
      * @param $function
      * @param $stop_on_error
@@ -267,6 +292,14 @@ class AdminTool
             return false;
         }
         $db->update(tbl('tools'), ['id_tools_status'], ['|no_mc||f|(SELECT id_tools_status FROM ' . tbl('tools_status') . ' WHERE language_key_title like \'stopping\')'], ' id_tool = ' . mysql_clean($id_tool));
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function getTemp()
+    {
+        return self::$temp;
     }
 
 }

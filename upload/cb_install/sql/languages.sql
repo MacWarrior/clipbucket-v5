@@ -1644,4 +1644,9 @@ VALUES ('friend_requests'),
        ('reset_cache_description'),
        ('nb_files'),
        ('video_file_management'),
-       ('confirm_delete_video_file');
+       ('confirm_delete_video_file'),
+       ('reset_video_log_label'),
+       ('reset_video_log_description'),
+       ('no_conversion_log'),
+       ('watch_conversion_log'),
+       ('conversion_log');

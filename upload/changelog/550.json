@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"179",
+  "revision":"180",
   "status":"dev",
   "detail":[
     {
@@ -55,6 +55,7 @@
         ,"Implement SQL update system"
         ,"Refactor system information"
         ,"Implement video resolution file management"
+        ,"Implement cleanup conversion log tool"
       ]
     },
     {

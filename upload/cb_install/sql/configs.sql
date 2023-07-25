@@ -233,4 +233,5 @@ INSERT INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description
     ('update_bits_color_label', 'update_bits_color_description', 'AdminTool::updateBitsColor', 1, NULL, NULL),
     ('update_videos_duration_label', 'update_videos_duration_description', 'AdminTool::updateVideoDuration', 1, NULL, NULL),
     ('update_database_version_label', 'update_database_version_description', 'AdminTool::updateDataBaseVersion', 1, NULL, NULL),
-    ('reset_cache_label', 'reset_cache_description', 'AdminTool::resetCache', 1, NULL, NULL);
+    ('reset_cache_label', 'reset_cache_description', 'AdminTool::resetCache', 1, NULL, NULL),
+    ('reset_video_log_label', 'reset_video_log_description', 'AdminTool::resetVideoLog', 1, NULL, NULL);

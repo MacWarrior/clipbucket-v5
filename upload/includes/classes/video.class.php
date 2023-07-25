@@ -660,7 +660,7 @@ class CBvideo extends CBCategory
         $files = json_decode($vdetails['video_files']);
 
         foreach ($files as $quality) {
-            remove_resolution($quality, $vdetails);
+            $this->remove_resolution($quality, $vdetails);
         }
         if ($vdetails['file_type'] == 'hls') {
             $directory_path = VIDEOS_DIR . DIRECTORY_SEPARATOR . $vdetails['file_directory'] . DIRECTORY_SEPARATOR . $vdetails['file_name'] . DIRECTORY_SEPARATOR;
