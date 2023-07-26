@@ -1,9 +1,14 @@
 <?php
 //Lets just save admin settings so we can move forward
-$uid = 1;
-$pass = pass_code(post('password'), $uid);
+$pass = pass_code(post('password'), 1);
+global $db, $userquery;
 
-$db->update(tbl("users"), ['username', 'password', 'email', 'doj', 'num_visits', 'ip', 'signup_ip', 'background_color', 'total_groups', 'banned_users'], [post('username'), $pass, post('email'), now(), 1, $_SERVER['REMOTE_ADDR'], $_SERVER['REMOTE_ADDR'], '', 0, ''], "userid='$uid'");
+$db->update(
+    tbl('users'),
+    ['username', 'password', 'email', 'doj', 'num_visits', 'ip', 'signup_ip'],
+    [post('username'), $pass, post('email'), now(), 1, $_SERVER['REMOTE_ADDR'], $_SERVER['REMOTE_ADDR']]
+    , 'userid=1'
+);
 
 //Login user
 $userquery->login_user(post('username'), post('password'))
@@ -13,7 +18,7 @@ $userquery->login_user(post('username'), post('password'))
     <div class="cb_container">
         <h4 style="color:#fff;">Website basic configurations</h4>
         <p style="color:#fff; font-size:13px;">
-            here you can set basic configuration of your website, you can change them later by going to Admin area &gt; Website Configurations
+            Here you can set basic configuration of your website, you can change them later by going to Admin area > Website Configurations
         </p>
     </div>
 </div>

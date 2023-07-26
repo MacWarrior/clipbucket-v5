@@ -1,56 +1,40 @@
 <?php
 define('THIS_PAGE', 'cb_install');
-include('../includes/clipbucket.php');
+require_once '../includes/clipbucket.php';
+require_once 'functions.php';
 
-/**
- * ClipBucket v2.1 Installation Ajax
- */
 $mode = $_POST['mode'];
 
-include('functions.php');
 
-if ($mode == 'dataimport') {
-    $result = [];
 
-    $dbhost = $_POST['dbhost'];
-    $dbpass = $_POST['dbpass'];
-    $dbuser = $_POST['dbuser'];
-    $dbname = $_POST['dbname'];
+$result = [];
 
-    $cnnct = @mysqli_connect($dbhost, $dbuser, $dbpass);
+$dbhost = $_POST['dbhost'];
+$dbpass = $_POST['dbpass'];
+$dbuser = $_POST['dbuser'];
+$dbname = $_POST['dbname'];
+$dbprefix = $_POST['dbprefix'];
 
-    if (!$cnnct) {
-        $result['err'] = "<span class='alert'>Unable to connect to mysql : " . mysqli_connect_error() . '</span>';
-    } else {
-        $dbselect = @mysqli_select_db($cnnct, $dbname);
-        if (!$dbselect) {
-            $result['err'] = "<span class='alert'>Unable to select database : " . mysqli_connect_error() . '</span>';
-        }
+try{
+    $cnnct = mysqli_connect($dbhost, $dbuser, $dbpass);
+
+    try{
+        $dbselect = mysqli_select_db($cnnct, $dbname);
     }
-    echo json_encode($result);
+    catch(Exception $e){
+        $result['err'] = "<span class='alert'>Unable to select database : " . $e->getMessage() . '</span>';
+    }
+}
+catch(Exception $e){
+    $result['err'] = "<span class='alert'>Unable to connect to mysql : " . $e->getMessage() . '</span>';
+}
+
+
+if ($mode == 'dataimport' || !empty($result['err'])) {
+    die(json_encode($result));
 }
 
 if ($mode == 'adminsettings') {
-    $dbhost = $_POST['dbhost'];
-    $dbpass = $_POST['dbpass'];
-    $dbuser = $_POST['dbuser'];
-    $dbname = $_POST['dbname'];
-    $dbprefix = $_POST['dbprefix'];
-
-    $cnnct = @mysqli_connect($dbhost, $dbuser, $dbpass);
-
-    if (!$cnnct) {
-        $result['err'] = "<span class='alert'>Unable to connect to mysql : " . mysqli_connect_error() . '</span>';
-    } else {
-        $dbselect = @mysqli_select_db($cnnct, $dbname);
-        if (!$dbselect) {
-            $result['err'] = "<span class='alert'>Unable to select database : " . mysqli_error($cnnct) . '</span>';
-        }
-    }
-
-    if (@$result['err']) {
-        exit(json_encode($result));
-    }
 
     $step = $_POST['step'];
     $files = [
@@ -91,33 +75,9 @@ if ($mode == 'adminsettings') {
             $next = 'add_categories';
             $next_msg = 'Creating categories';
         }
+
         if ($current) {
-            $lines = file(BASEDIR . "/cb_install/sql/" . $files[$current]);
-            foreach ($lines as $line_num => $line) {
-                if (substr($line, 0, 2) != '--' && $line != '') {
-                    @$templine .= $line;
-                    if (substr(trim($line), -1, 1) == ';') {
-                        @$templine = preg_replace("/{tbl_prefix}/", $dbprefix, $templine);
-                        try {
-                            mysqli_query($cnnct, $templine);
-                        } catch (Exception $exception) {
-                            exit($exception->getMessage());
-                        }
-
-                        if ($cnnct->error != '') {
-                            $result['err'] = "<span class='alert'>An SQL error occured : " . $cnnct->error . '</span>';
-                            if (in_dev()) {
-                                $result['err'] .= "<span class='alert'>SQL : " . $templine . '</span>';
-                            }
-                            error_log('SQL : ' . $templine);
-                            error_log('ERROR : ' . $cnnct->error);
-                            exit(json_encode($result));
-                        }
-
-                        $templine = '';
-                    }
-                }
-            }
+            install_execute_sql_file($cnnct, BASEDIR . '/cb_install/sql/' . $files[$current], $dbprefix);
         }
 
         $return = [];
@@ -186,9 +146,10 @@ if ($mode == 'adminsettings') {
 
             case "add_admin":
                 $lines = file(BASEDIR . "/cb_install/sql/add_admin.sql");
+                $templine = '';
                 foreach ($lines as $line_num => $line) {
                     if (substr($line, 0, 2) != '--' && $line != '') {
-                        @$templine .= $line;
+                        $templine .= $line;
                         if (substr(trim($line), -1, 1) == ';') {
                             @$templine = preg_replace("/{tbl_prefix}/", $dbprefix, $templine);
                             mysqli_query($cnnct, $templine);
@@ -225,7 +186,7 @@ if ($mode == 'adminsettings') {
                 fwrite($fp, $dbconnect);
                 fclose($fp);
 
-                $return['msg'] = '<div class="ok green">Config file have been created</div>';
+                $return['msg'] = '<div class="ok green">Config file has been created</div>';
                 $return['status'] = 'forwarding you to admin settings..';
                 $return['step'] = 'forward';
                 break;

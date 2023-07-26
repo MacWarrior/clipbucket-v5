@@ -7,9 +7,8 @@ if (!file_exists(BASEDIR . '/files/temp/install.me')) {
 
 function get_cbla()
 {
-    $license = file_get_contents('LICENSE');
+    $license = file_get_contents(dirname(__FILE__, 2).DIRECTORY_SEPARATOR.'LICENSE');
     $license = str_replace("\n", '<BR>', $license);
-    $license = str_replace('{this_year}', date('Y', time()), $license);
     return $license;
 }
 
@@ -236,4 +235,41 @@ function GetServerProtocol(): string
 function GetServerURL(): string
 {
     return GetServerProtocol() . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']);
+}
+
+/**
+ * @throws Exception
+ */
+function install_execute_sql_file($cnnct, $path, $dbprefix): bool
+{
+    $lines = file($path);
+    if (empty($lines)) {
+        $result['err'] = "<span class='alert'>Sorry, An Error Occured</span>'";
+        die(json_encode($result));
+    }
+
+    $templine = '';
+    mysqli_begin_transaction($cnnct);
+    try {
+        foreach ($lines as $line) {
+            $templine .= $line;
+            if (substr(trim($line), -1, 1) == ';') {
+                $templine = preg_replace("/{tbl_prefix}/", $dbprefix, $templine);
+                mysqli_query($cnnct, $templine);
+                if ($cnnct->error != '') {
+                    $result['err'] = "<span class='alert'><b>SQL</b> : ".$templine."<br/><b>Error</b> : ".$cnnct->error."</span>";
+                    mysqli_rollback($cnnct);
+                    die(json_encode($result));
+                }
+                $templine = '';
+            }
+        }
+    } catch (Exception $e) {
+        $result['err'] = "<span class='alert'><b>SQL</b> : ".$templine."<br/><b>Error</b> : ".$cnnct->error."</span>";
+        mysqli_rollback($cnnct);
+        die(json_encode($result));
+    }
+
+    mysqli_commit($cnnct);
+    return true;
 }

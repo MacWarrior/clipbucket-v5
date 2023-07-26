@@ -5,27 +5,16 @@ if (substr($baseurl, strlen($baseurl) - 1, 1) == '/') {
     $baseurl = substr($baseurl, 0, strlen($baseurl) - 1);
 }
 
-$db->update(tbl("config"), ["value"], [$baseurl], " name='baseurl'");
-$db->update(tbl("config"), ["value"], [BASEDIR], " name='basedir'");
-
-echo '<span class="glyphicon glyphicon-ok" style="color:#fff"></span><span style="color:#fff"> Installation details have been updated</span>';
-
-echo '<br><span class="glyphicon glyphicon-ok" style="color:#fff"></span><span style="color:#fff"> Language phrases have been imported</span>';
+$db->update(tbl('config'), ['value'], [$baseurl], " name='baseurl'");
+$db->update(tbl('config'), ['value'], [BASEDIR], " name='basedir'");
 ?>
-
 
 <div class="nav_des clearfix">
     <div class="cb_container">
         <h4 style="color:#fff;">Admin Settings</h4>
         <p style="color:#fff;font-size:13px;">
             All major steps are done, now enter username and password for your admin,
-            by default its username : <strong>admin</strong> | pass : <strong>admin</strong><br/>
-            we now update installation details and insert language phrases.
-        </p>
-        <p>
-            <span class="glyphicon glyphicon-ok" style="color:#fff"></span><span style="color:#fff"> Installation details have been updated</span>
-            <br/>
-            <span class="glyphicon glyphicon-ok" style="color:#fff"></span><span style="color:#fff"> Language phrases have been imported</span>
+            by default its username : <strong>admin</strong> | pass : <strong>admin</strong>
         </p>
     </div>
 </div>

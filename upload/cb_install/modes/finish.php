@@ -20,11 +20,6 @@ if (file_exists(FILES_DIR . '/temp/install.me')) {
 </div>
 
 <div id="sub_container">
-
-    <div class="errorDiv">
-        <span style="color:#A32727;">Please delete cb_install directory</span>
-    </div>
-
     <div style="margin-top:40px;text-align:center;">
         <?php
         button_danger("Continue to Admin Area", ' onclick="window.location=\'/admin_area\'" ');

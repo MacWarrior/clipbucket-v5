@@ -1,5 +1,4 @@
-CREATE TABLE `cb_version`
-(
+CREATE TABLE `{tbl_prefix}version`(
     `id`       INT(11)     NOT NULL,
     `version`  VARCHAR(16) NOT NULL,
     `revision` INT(11)     NOT NULL,

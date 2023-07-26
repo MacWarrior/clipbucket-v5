@@ -24,10 +24,11 @@ function dodatabase(step)
 	$.post(p,formData,function(data)
 	{
 		if(data.msg){
-			$('#resultsDiv').before(data.msg);
+			$('#dbresult').show().append(data.msg);
         }
 		if(data.err){
-			$('#resultsDiv').before(data.err);
+			$('.errorDiv').show().append(data.err);
+			$('#loading').attr('src','images/cross_arrow.png');
         }
 		if(data.status){
 			$('#current').html(data.status);

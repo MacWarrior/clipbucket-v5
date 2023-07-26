@@ -174,14 +174,18 @@ dl{background-color:#F7F7F7; padding:0px; border:1px dotted #999}
 	border-radius: 8px;
 }
 
-.alert{background:url(images/cross_arrow.png) no-repeat left 0px bottom 0px; height:10px;
- padding-left:23px; display:inline-block; margin-right-right:23px;
-line-height:20px}
+.alert{
+	background: url(images/cross_arrow.png) no-repeat 0;
+	padding-left: 25px !important;
+	display: inline-block;
+	margin-right: 23px;
+	line-height: 20px;
+	margin-bottom: 0 !important;
+}
 
 .ok{background:url(images/tick_arrow.png); background-repeat:no-repeat; height:20px; padding-left:23px; display:inline-block;line-height:20px}
 .line{height: 1px; background-color: #C9C9C9; margin-top: 10px; margin-bottom: 10px;}
 .green{display:block; margin-bottom:10px}
-.fb_finish{width: 39.6%;  background-color:#f3f3f3;}
 
 .finish{margin-left: 28%; border:1px solid #d6d6d6; background-color:#f3f3f3; width: 38%; margin-top: -500px; position: absolute; height : 500px; overflow: auto;}
 
@@ -201,4 +205,8 @@ line-height:20px}
 	font-size:14px; 
 	text-align:left; 
 	overflow:auto; 
+}
+
+.small{
+	line-height: 8px;
 }
