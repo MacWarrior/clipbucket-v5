@@ -7,6 +7,9 @@
     Website: https://github.com/MacWarrior/clipbucket-v5/
 */
 
+/**
+ * @throws Exception
+ */
 function get_global_announcement()
 {
     global $db;
@@ -17,6 +20,9 @@ function get_global_announcement()
     }
 }
 
+/**
+ * @throws Exception
+ */
 function update_announcement($text)
 {
     global $db;

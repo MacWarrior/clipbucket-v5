@@ -3,18 +3,18 @@
 /**
  * functions related to database
  *
+ * @throws Exception
  */
-function db_select($query)
+function db_select($query): array
 {
     global $db;
     return $db->_select($query);
 }
 
-function cb_query_id($query)
+function cb_query_id($query): string
 {
     return md5($query);
 }
-
 
 /**
  * Created by JetBrains PhpStorm.
@@ -23,26 +23,20 @@ function cb_query_id($query)
  * Time: 3:51 PM
  * To change this template use File | Settings | File Templates.
  */
-
-
-if (!function_exists('tbl')) {
-
-    function tbl($tbl)
-    {
-        global $DBNAME;
-        $prefix = TABLE_PREFIX;
-        $tbls = explode(',', $tbl);
-        $new_tbls = '';
-        foreach ($tbls as $ntbl) {
-            if (!empty($new_tbls)) {
-                $new_tbls .= ',';
-            }
-            $new_tbls .= '`' . $DBNAME . '`.' . $prefix . $ntbl;
+function tbl($tbl): string
+{
+    global $DBNAME;
+    $prefix = TABLE_PREFIX;
+    $tbls = explode(',', $tbl);
+    $new_tbls = '';
+    foreach ($tbls as $ntbl) {
+        if (!empty($new_tbls)) {
+            $new_tbls .= ',';
         }
-
-        return $new_tbls;
+        $new_tbls .= '`' . $DBNAME . '`.' . $prefix . $ntbl;
     }
 
+    return $new_tbls;
 }
 
 /**
@@ -88,49 +82,43 @@ function table_fields($fields, $table = false)
     return $the_fields ? $the_fields : false;
 }
 
-if (!function_exists('tbl_fields')) {
-    /**
-     * Alias function for table_fields
-     *
-     * @param $fields
-     * @param bool $table
-     * @return bool|string
-     */
-    function tbl_fields($fields, $table = false)
-    {
-        return table_fields($fields, $table);
-    }
+/**
+ * Alias function for table_fields
+ *
+ * @param $fields
+ * @param bool $table
+ * @return bool|string
+ */
+function tbl_fields($fields, $table = false)
+{
+    return table_fields($fields, $table);
 }
 
-if (!function_exists('cb_sql_table')) {
-    /**
-     * Since we start using AS in our sql queries, it was getting
-     * more and more difficult to know how author has defined
-     * the table name. Using this, will confirm that table will be
-     * defined AS it's name provided in $table.
-     *
-     * If author still wants to define table name differently, he
-     * can provide it in $as
-     *
-     * @param string $table
-     * @param string $as
-     * @return string $from_query
-     * @author Fawaz Tahir <fawaz.cb@gmail.com>
-     */
-    function cb_sql_table($table, $as = null)
-    {
-        if ($table) {
-            return tbl($table) . ' AS ' . ((!is_null($as) and is_string($as)) ? $as : $table);
-        }
-        return false;
+/**
+ * Since we start using AS in our sql queries, it was getting
+ * more and more difficult to know how author has defined
+ * the table name. Using this, will confirm that table will be
+ * defined AS it's name provided in $table.
+ *
+ * If author still wants to define table name differently, he
+ * can provide it in $as
+ *
+ * @param string $table
+ * @param string $as
+ * @return string $from_query
+ * @author Fawaz Tahir <fawaz.cb@gmail.com>
+ */
+function cb_sql_table($table, $as = null)
+{
+    if ($table) {
+        return tbl($table) . ' AS ' . ((!is_null($as) and is_string($as)) ? $as : $table);
     }
+    return false;
 }
 
-if (!function_exists('table')) {
-    function table($table, $as = null)
-    {
-        return cb_sql_table($table, $as);
-    }
+function table($table, $as = null)
+{
+    return cb_sql_table($table, $as);
 }
 
 /**
@@ -218,7 +206,7 @@ function get_files_to_upgrade($version, $revision, $count = false)
 /**
  * @throws Exception
  */
-function execute_migration_SQL_file($path)
+function execute_sql_file($path): bool
 {
     $lines = file($path);
     if (empty($lines)) {
@@ -230,15 +218,15 @@ function execute_migration_SQL_file($path)
     $db->mysqli->begin_transaction();
     try {
         foreach ($lines as $line) {
-            @$templine .= $line;
+            $templine .= $line;
             if (substr(trim($line), -1, 1) == ';') {
-                @$templine = preg_replace("/{tbl_prefix}/", TABLE_PREFIX, $templine);
+                $templine = preg_replace("/{tbl_prefix}/", TABLE_PREFIX, $templine);
                 $db->mysqli->query($templine);
                 if ($db->mysqli->error != '') {
                     error_log('SQL : ' . $templine);
                     error_log('ERROR : ' . $db->mysqli->error);
                     $db->mysqli->rollback();
-                    exit($db->mysqli->error);
+                    return false;
                 }
                 $templine = '';
             }
@@ -247,22 +235,37 @@ function execute_migration_SQL_file($path)
         $db->mysqli->rollback();
         e('SQL : ' . $templine);
         e('ERROR : ' . $e->getMessage());
-        throw $e;
+        return false;
     }
+
     $db->mysqli->commit();
+    return true;
+}
+
+/**
+ * @throws Exception
+ */
+function execute_migration_SQL_file($path): bool
+{
+    if(!execute_sql_file($path)){
+        return false;
+    }
 
     $regex = '/\/(\d{0,3}\.\d{0,3}\.\d{0,3})\/(\d{5})\.sql/';
     $match = [];
     preg_match($regex, $path, $match);
 
+    global $db;
     $sql = 'INSERT INTO ' . tbl('version') . ' SET version = \'' . mysql_clean($match['1']) . '\' , revision = ' . mysql_clean((int)$match['2']) . ', id = 1 ON DUPLICATE KEY UPDATE version = \'' . mysql_clean($match['1']) . '\' , revision = ' . mysql_clean((int)$match['2']);
     $db->mysqli->query($sql);
+    CacheRedis::flushAll();
+    return true;
 }
 
 /**
  * @return array
  */
-function getRevisions()
+function getRevisions(): array
 {
     $versions = array_map(
         function ($dir) {
@@ -292,7 +295,7 @@ function getRevisions()
 /**
  * @return array
  */
-function getVersions()
+function getVersions(): array
 {
     $versions = [
         '4.2-RC1-free'    => '1',

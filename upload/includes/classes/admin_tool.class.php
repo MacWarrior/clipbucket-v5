@@ -19,12 +19,9 @@ class AdminTool
     /**
      * Function used to get all phrases of particular language
      *
-     * @param null $language_id
-     * @param string $fields
-     * @param null $limit
-     * @param null $extra_param
-     *
+     * @param array $condition
      * @return array
+     * @throws Exception
      */
     private static function getTools($condition = []): array
     {
@@ -44,8 +41,9 @@ class AdminTool
      * Change status of tool to 'in progress'
      * @param $id
      * @return bool
+     * @throws Exception
      */
-    public static function setToolInProgress($id)
+    public static function setToolInProgress($id): bool
     {
         global $db;
         if (empty($id)) {
@@ -65,6 +63,7 @@ class AdminTool
      * check if tool exist and execute the function stored in database
      * @param $id
      * @return false|void
+     * @throws Exception
      */
     public static function launch($id)
     {
@@ -83,6 +82,7 @@ class AdminTool
     /**
      * return all tools
      * @return array
+     * @throws Exception
      */
     public static function getAllTools(): array
     {
@@ -93,6 +93,7 @@ class AdminTool
      * Return an admin tool by his id
      * @param $id
      * @return array
+     * @throws Exception
      */
     public static function getToolById($id): array
     {
@@ -102,6 +103,7 @@ class AdminTool
     /**
      * Send respond to execute ajax return and continue execution
      * @param $callback
+     * @param bool $ajax
      */
     public static function sendClientResponseAndContinue($callback, $ajax = true)
     {
@@ -136,6 +138,7 @@ class AdminTool
      * Find videos which don't have thumbs and generate them
      * @param $id_tool
      * @return void
+     * @throws Exception
      */
     public static function generateMissingThumbs($id_tool)
     {
@@ -149,6 +152,7 @@ class AdminTool
      * check videos to change to castable status if needed
      * @param $id_tool
      * @return void
+     * @throws Exception
      */
     public static function updateCastableStatus($id_tool)
     {
@@ -161,6 +165,7 @@ class AdminTool
      * check videos to change to castable status if needed
      * @param $id_tool
      * @return void
+     * @throws Exception
      */
     public static function updateBitsColor($id_tool)
     {
@@ -173,6 +178,7 @@ class AdminTool
      * check videos duration
      * @param $id_tool
      * @return void
+     * @throws Exception
      */
     public static function updateVideoDuration($id_tool)
     {
@@ -185,6 +191,7 @@ class AdminTool
      * check videos duration
      * @param $id_tool
      * @return void
+     * @throws Exception
      */
     public static function updateDataBaseVersion($id_tool)
     {
@@ -202,6 +209,9 @@ class AdminTool
         self::executeTool($id_tool, $files, 'execute_migration_SQL_file', true);
     }
 
+    /**
+     * @throws Exception
+     */
     public static function resetCache($id_tool)
     {
         self::executeTool($id_tool, ['flush'], 'CacheRedis::flushAll');
@@ -210,6 +220,7 @@ class AdminTool
     /**
      * @param $id_tool
      * @return void
+     * @throws Exception
      */
     public static function resetVideoLog($id_tool)
     {
@@ -237,6 +248,7 @@ class AdminTool
      * @param $function
      * @param $stop_on_error
      * @return void
+     * @throws Exception
      */
     private static function executeTool($id_tool, $array, $function, $stop_on_error = false)
     {
@@ -275,6 +287,7 @@ class AdminTool
      * Set status to false in order to stop function execution at the next iteration
      * @param $id_tool
      * @return false|void
+     * @throws Exception
      */
     public static function stop($id_tool)
     {

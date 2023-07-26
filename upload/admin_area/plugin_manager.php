@@ -15,6 +15,7 @@ $breadcrumb[1] = ['title' => 'Plugin Manager', 'url' => ADMIN_BASEURL . '/plugin
 if (isset($_GET['uninstall'])) {
     $folder = $_GET['f'];
     $cbplugin->uninstallPlugin(mysql_clean($_GET['uninstall']), $folder);
+    CacheRedis::flushAll();
 }
 
 /**
@@ -26,6 +27,7 @@ if (isset($_POST['uninstall_selected']) && is_array($_POST['check_plugin'])) {
         $itr = $_POST['check_plugin'][$i];
         $cbplugin->uninstallPlugin($_POST['plugin_file_' . $itr], $_POST['plugin_folder_' . $itr]);
     }
+    CacheRedis::flushAll();
 }
 
 //Activation or deactivating plugin
@@ -33,6 +35,7 @@ if (isset($_GET['activate'])) {
     $folder = $_GET['f'];
     $id = mysql_clean($_GET['activate']);
     $msg = $cbplugin->pluginActive($id, 'yes', $folder);
+    CacheRedis::flushAll();
 }
 
 /**
@@ -44,12 +47,14 @@ if (isset($_POST['activate_selected']) && is_array($_POST['check_plugin'])) {
         $itr = $_POST['check_plugin'][$i];
         $cbplugin->pluginActive($_POST['plugin_file_' . $itr], 'yes', $_POST['plugin_folder_' . $itr]);
     }
+    CacheRedis::flushAll();
 }
 
 if (isset($_GET['deactivate'])) {
     $folder = $_GET['f'];
     $id = mysql_clean($_GET['deactivate']);
     $msg = $cbplugin->pluginActive($id, 'no', $folder);
+    CacheRedis::flushAll();
 }
 
 /**
@@ -61,6 +66,7 @@ if (isset($_POST['deactivate_selected']) && is_array($_POST['check_plugin'])) {
         $itr = $_POST['check_plugin'][$i];
         $cbplugin->pluginActive($_POST['plugin_file_' . $itr], 'no', $_POST['plugin_folder_' . $itr]);
     }
+    CacheRedis::flushAll();
 }
 
 //Installing Plugin
@@ -70,6 +76,7 @@ if (isset($_GET['install_plugin'])) {
     if ($installed) {
         include($installed);
     }
+    CacheRedis::flushAll();
 }
 
 /**
@@ -84,6 +91,7 @@ if (isset($_POST['install_selected']) && is_array($_POST['check_plugin'])) {
             include($installed);
         }
     }
+    CacheRedis::flushAll();
 }
 
 //Get New Plugin List

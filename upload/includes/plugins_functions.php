@@ -50,7 +50,7 @@ function description($description): string
  *
  * @return string
  */
-function title($title)
+function title($title): string
 {
     global $Cbucket;
     //Getting List of comment functions
@@ -98,7 +98,7 @@ function private_message($array)
  *
  * @return string
  */
-function tags($input, $type, $sep = ', ', $class = "")
+function tags($input, $type, $sep = ', ', $class = ''): string
 {
     //Exploding using comma
     $tags = explode(',', $input);
@@ -127,7 +127,7 @@ function tags($input, $type, $sep = ', ', $class = "")
  *
  * @return string
  */
-function categories($input, $type, $sep = ', ', $object_name = null)
+function categories($input, $type, $sep = ', ', $object_name = null): string
 {
     global $cbvideo;
     switch ($type) {

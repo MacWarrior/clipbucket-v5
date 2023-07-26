@@ -1,7 +1,7 @@
 INSERT INTO `{tbl_prefix}languages` (`language_name`, `language_active`, `language_default`, `language_code`)
 VALUES ('Portuguesa', 'yes', 'no', 'pt-BR');
 
-SET @language_id = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_name LIKE 'Portuguesa');
+SET @language_id = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = 'pt-BR');
 
 INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
 VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key LIKE 'ad_name_error'), 'Por favor, insira um nome para o anúncio');
@@ -3183,14 +3183,6 @@ INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_ke
 VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key LIKE 'plugin_editors_picks_remove_from'), 'Remover da Escolha do Editor');
 INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
 VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key LIKE 'plugin_editors_picks_remove_confirm'), 'Tem certeza de que deseja remover os vídeos selecionados da Escolha do Editor?');
-INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
-VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key LIKE 'plugin_global_announcement'), 'Anúncio Global');
-INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
-VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key LIKE 'plugin_global_announcement_subtitle'), 'Gerenciador de Anúncios Globais');
-INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
-VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key LIKE 'plugin_global_announcement_edit'), 'Editar anúncio global');
-INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
-VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key LIKE 'plugin_global_announcement_updated'), 'O anúncio global foi atualizado');
 INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
 VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key LIKE 'page_upload_video_limits'), 'Cada vídeo não pode exceder %s MB de tamanho ou %s minutos de duração e deve estar em um formato de vídeo comum');
 INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)

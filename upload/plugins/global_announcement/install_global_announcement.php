@@ -1,15 +1,10 @@
 <?php
+/**
+ * @throws Exception
+ */
 function install_global_announcement()
 {
-    global $db;
-    $db->execute(
-        'CREATE TABLE IF NOT EXISTS ' . tbl('global_announcement') . ' (
-        `announcement` text NOT NULL
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;'
-    );
-
-    //inserting new announcement
-    $db->execute('INSERT INTO  ' . tbl('global_announcement') . ' (announcement) VALUES (\'\')');
+    execute_sql_file(__DIR__.DIRECTORY_SEPARATOR.'sql'.DIRECTORY_SEPARATOR.'install.sql');
 }
 
 install_global_announcement();

@@ -11,9 +11,9 @@ class CacheRedis
     private $prefix = '';
 
     /**
-     * @return string|self
+     * @return self
      */
-    public static function getInstance()
+    public static function getInstance(): CacheRedis
     {
         if (is_null(self::$_instance)) {
             self::$_instance = new CacheRedis(false, []);
@@ -22,6 +22,10 @@ class CacheRedis
     }
 
 
+    /**
+     * @throws \Predis\Connection\ConnectionException
+     * @throws \Predis\Response\ServerException
+     */
     public function __construct($enabled, $params)
     {
         $this->isEnabled = ($enabled == 'yes');
@@ -30,6 +34,10 @@ class CacheRedis
         }
     }
 
+    /**
+     * @throws \Predis\Connection\ConnectionException
+     * @throws \Predis\Response\ServerException
+     */
     private function init($params)
     {
         try {
@@ -75,7 +83,7 @@ class CacheRedis
         return null;
     }
 
-    public function set($key, $value, $timeExpired)
+    public function set($key, $value, $timeExpired): bool
     {
         if ($this->isEnabled) {
             $this->nbset++;
@@ -90,21 +98,20 @@ class CacheRedis
         $this->client->connect($pass);
     }
 
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return $this->isEnabled;
     }
 
-    public function getPrefix()
+    public function getPrefix(): string
     {
         return $this->prefix;
     }
 
-    private static function redislize($data)
+    private static function redislize($data): string
     {
         // Only serialize if it's not a string or a integer
-        if(!is_string($data) && !is_integer($data))
-        {
+        if(!is_string($data) && !is_integer($data)) {
             return urlencode(serialize($data));
         }
         // Encode string to escape wrong saves
@@ -116,8 +123,7 @@ class CacheRedis
         $data = urldecode($data);
         // unserialize data if we can
         $unserializedData = unserialize($data);
-        if($unserializedData !== false)
-        {
+        if($unserializedData !== false) {
             return $unserializedData;
         }
         return $data;
