@@ -253,18 +253,12 @@ class CBPlugin
                 tbl('plugins'),
                 [
                     'plugin_file',
-                    'plugin_license_type',
-                    'plugin_license_key',
-                    'plugin_license_code',
                     'plugin_active',
                     'plugin_folder',
                     'plugin_version'
                 ],
                 [
                     $pluginFile,
-                    $plug_details['license_type'],
-                    $plug_details['license_key'],
-                    $plug_details['license_code'],
                     'yes',
                     $file_folder,
                     $plug_details['version']

@@ -6,6 +6,7 @@ Simple Plugin System
 
 //Getting Plugin Config Details
 
+global $cbplugin, $userquery, $Cbucket;
 $installed_plugins = $cbplugin->getInstalledPlugins();
 if (is_array($installed_plugins)) {
     $plug_permission = $userquery->permission['plugins_perms'];
@@ -16,7 +17,7 @@ if (is_array($installed_plugins)) {
         if ($plugin['folder']) {
             $folder = '/' . $plugin['folder'];
         }
-        $file = PLUG_DIR . $folder . '/' . $plugin['file'];
+        $file = PLUG_DIR . $folder . DIRECTORY_SEPARATOR . $plugin['file'];
 
         $plugin_code = $plugin['file'] . $folder;
 
@@ -38,7 +39,7 @@ if ($Cbucket->configs['player_file'] != '') {
     if ($Cbucket->configs['player_dir']) {
         $folder = '/' . $Cbucket->configs['player_dir'];
     }
-    $file = PLAYER_DIR . $folder . '/' . $Cbucket->configs['player_file'];
+    $file = PLAYER_DIR . $folder . DIRECTORY_SEPARATOR . $Cbucket->configs['player_file'];
     if (file_exists($file)) {
         include_once($file);
     }

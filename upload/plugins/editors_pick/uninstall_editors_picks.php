@@ -1,9 +1,10 @@
 <?php
+/**
+ * @throws Exception
+ */
 function un_install_editors_pick()
 {
-    global $db;
-    $db->execute('DROP TABLE ' . tbl('editors_picks'));
-    $db->execute('ALTER TABLE ' . tbl('video') . ' DROP `in_editor_pick` ');
+    execute_sql_file(__DIR__.DIRECTORY_SEPARATOR.'sql'.DIRECTORY_SEPARATOR.'uninstall.sql');;
 }
 
 un_install_editors_pick();

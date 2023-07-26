@@ -7,6 +7,9 @@
     Website: https://github.com/MacWarrior/clipbucket-v5/
 */
 
+/**
+ * @throws Exception
+ */
 function editors_pick()
 {
     if ($_GET['add_editor_pick']) {
@@ -20,6 +23,9 @@ function editors_pick()
     }
 }
 
+/**
+ * @throws Exception
+ */
 function add_to_editor_pick($vid)
 {
     global $cbvid, $db;
@@ -37,6 +43,9 @@ function add_to_editor_pick($vid)
     }
 }
 
+/**
+ * @throws Exception
+ */
 function remove_vid_editors_pick($vid)
 {
     global $db;
@@ -50,6 +59,9 @@ function remove_vid_editors_pick($vid)
     }
 }
 
+/**
+ * @throws Exception
+ */
 function is_video_in_editors_pick($vid): bool
 {
     global $db;
@@ -60,6 +72,9 @@ function is_video_in_editors_pick($vid): bool
     return false;
 }
 
+/**
+ * @throws Exception
+ */
 function get_highest_sort_number()
 {
     global $db;
@@ -67,6 +82,9 @@ function get_highest_sort_number()
     return $result[0]['sort'];
 }
 
+/**
+ * @throws Exception
+ */
 function video_manager_ep_link($vid): string
 {
     if (is_video_in_editors_pick($vid['videoid'])) {
@@ -75,17 +93,23 @@ function video_manager_ep_link($vid): string
     return '<li><a role="menuitem" tabindex="-1" href="' . queryString(null, ['remove_editor_pick', 'add_editor_pick', 'mode']) . 'add_editor_pick=' . $vid['videoid'] . '">' . lang('plugin_editors_picks_add_to') . '</a></li>';
 }
 
+/**
+ * @throws Exception
+ */
 function get_ep_videos(): array
 {
     global $db;
     return $db->select(tbl('editors_picks,video,users'), tbl('editors_picks.*,video.*,users.userid,users.username'), ' ' . tbl('editors_picks') . '.videoid = ' . tbl('video') . '.videoid AND ' . tbl('video.active') . ' = \'yes\' AND ' . tbl('video.broadcast') . ' = \'public\' AND ' . tbl('video.userid') . ' = ' . tbl('users.userid') . ' ORDER BY ' . tbl('editors_picks') . '.sort ASC');
 }
 
+/**
+ * @throws Exception
+ */
 function move_epick($id, $order)
 {
     global $db;
     if (!is_video_in_editors_pick($id)) {
-        e("Video doesnt exist in editor's picks");
+        e('Video doesn\'t exist in editor\'s picks');
     } else {
         if (!is_numeric($order) || $order < 1) {
             $order = 1;
@@ -94,6 +118,9 @@ function move_epick($id, $order)
     }
 }
 
+/**
+ * @throws Exception
+ */
 function admin_area_tab($vid): string
 {
     if (is_video_in_editors_pick($vid['videoid'])) {
@@ -102,6 +129,9 @@ function admin_area_tab($vid): string
     return '';
 }
 
+/**
+ * @throws Exception
+ */
 function display_editors_pick()
 {
     assign('editor_picks', get_ep_videos());

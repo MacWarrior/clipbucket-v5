@@ -1,4 +1,5 @@
 <?php
+global $userquery, $pages;
 require_once '../includes/admin_config.php';
 $userquery->admin_login_check();
 $userquery->login_check('video_moderation');
@@ -14,9 +15,9 @@ $player = str_replace('..', '', $player);
 
 if ($folder && $file) {
     if (!$player) {
-        $file = PLUG_DIR . '/' . $folder . '/' . $file;
+        $file = PLUG_DIR . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $file;
     } else {
-        $file = PLAYER_DIR . '/' . $folder . '/' . $file;
+        $file = PLAYER_DIR . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $file;
     }
 
     if (file_exists($file)) {
