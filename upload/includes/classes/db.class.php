@@ -77,21 +77,21 @@ class Clipbucket_db
      * @return array : { array } { $data } { array of selected data }
      * @throws Exception
      */
-    function _select($query, $cached_time = -1): array
+    function _select($query, $cached_time = -1, $cached_key = ''): array
     {
         try {
             $redis = CacheRedis::getInstance();
             if ($redis->isEnabled() && $cached_time != -1) {
                 if (in_dev()) {
                     $start = microtime(true);
-                    $return = $redis->get($redis->getPrefix() . ':'. $query);
+                    $return = $redis->get($cached_key . ':' . $query);
                     $end = microtime(true);
                     $timetook = $end - $start;
                     if (!empty($return)) {
                         devWitch($query, 'select', $timetook, true);
                     }
                 } else {
-                    $return = $redis->get($redis->getPrefix() . ':'. $query);
+                    $return = $redis->get($cached_key . ':' . $query);
                 }
 
                 if (!empty($return)) {
@@ -108,7 +108,7 @@ class Clipbucket_db
             }
 
             if ($redis->isEnabled() && $cached_time != -1 && !empty($data)) {
-                $redis->set($redis->getPrefix() . ':'. $query, $data, $cached_time);
+                $redis->set($cached_key.':'.$query, $data, $cached_time);
             }
         } catch (Exception $e) {
             if ($e->getMessage() == 'lang_not_installed' || $e->getMessage() == 'version_not_installed') {
@@ -132,7 +132,7 @@ class Clipbucket_db
      * @return array : { array } { $data } { array of selected data }
      * @throws Exception
      */
-    function select($tbl, $fields = '*', $cond = false, $limit = false, $order = false, $ep = false, $cached_time = -1): array
+    function select($tbl, $fields = '*', $cond = false, $limit = false, $order = false, $ep = false, $cached_time = -1, $cached_key = ''): array
     {
         $query_params = '';
 
@@ -147,7 +147,7 @@ class Clipbucket_db
         }
 
         $query = 'SELECT ' . $fields . ' FROM ' . $tbl . $query_params . ' ' . $ep;
-        return $this->_select($query, $cached_time);
+        return $this->_select($query, $cached_time, $cached_key);
     }
 
     /**
@@ -160,7 +160,7 @@ class Clipbucket_db
      * @return bool|int
      * @throws Exception
      */
-    function count($tbl, $fields = '*', $cond = false, $cached_time = -1)
+    function count($tbl, $fields = '*', $cond = false, $cached_time = -1, $cached_key = '')
     {
         $condition = '';
         if ($cond) {
@@ -168,7 +168,7 @@ class Clipbucket_db
         }
         $query = 'SELECT COUNT(' . $fields . ') FROM ' . $tbl . $condition;
 
-        $result = $this->_select($query, $cached_time);
+        $result = $this->_select($query, $cached_time, $cached_key);
 
         if ($result) {
             $fields = $result[0];

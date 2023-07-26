@@ -74,7 +74,7 @@ class CacheRedis
     public function get($key)
     {
         if ($this->isEnabled) {
-            $result = $this->client->get($key);
+            $result = $this->client->get($this->prefix . ':' . $key);
             if ($result !== null) {
                 $this->nbget++;
             }
@@ -87,7 +87,7 @@ class CacheRedis
     {
         if ($this->isEnabled) {
             $this->nbset++;
-            $this->client->setex($key, $timeExpired, self::redislize($value));
+            $this->client->setex($this->prefix . ':' . $key, $timeExpired, self::redislize($value));
             return true;
         }
         return false;
@@ -103,36 +103,52 @@ class CacheRedis
         return $this->isEnabled;
     }
 
-    public function getPrefix(): string
-    {
-        return $this->prefix;
-    }
 
     private static function redislize($data): string
     {
         // Only serialize if it's not a string or a integer
-        if(!is_string($data) && !is_integer($data)) {
+        if (!is_string($data) && !is_integer($data)) {
             return urlencode(serialize($data));
         }
         // Encode string to escape wrong saves
         return urlencode($data);
     }
 
+    /**
+     * @param $data
+     * @return mixed|string
+     */
     private static function unredislize($data)
     {
         $data = urldecode($data);
         // unserialize data if we can
         $unserializedData = unserialize($data);
-        if($unserializedData !== false) {
+        if ($unserializedData !== false) {
             return $unserializedData;
         }
         return $data;
     }
 
-    public static function flushAll ()
+    /**
+     * @return void
+     */
+    public static function flushAll()
     {
         if (self::getInstance()->isEnabled) {
             self::getInstance()->client->flushall();
+        }
+    }
+
+    /**
+     * @param $key
+     * @return void
+     */
+    public static function flushKeyStart($key)
+    {
+        $redisCache = self::getInstance();
+        if ($redisCache->isEnabled) {
+            $keys = $redisCache->client->keys($redisCache->prefix . ':' . $key . '*');
+            $redisCache->client->del($keys);
         }
     }
 

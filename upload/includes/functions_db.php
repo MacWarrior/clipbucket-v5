@@ -129,10 +129,10 @@ function table($table, $as = null)
  * @return array
  * @throws Exception
  */
-function select($query, $cached_time=-1): array
+function select($query, $cached_time=-1, $cached_key = ''): array
 {
     global $db;
-    return $db->_select($query, $cached_time);
+    return $db->_select($query, $cached_time, $cached_key);
 }
 
 /**

@@ -10,7 +10,7 @@ class mass_upload extends Upload
     function get_video_files_list($listonly = false, $dir = MASS_UPLOAD_DIR)
     {
         require_once BASEDIR . '/includes/classes/conversion/ffmpeg.class.php';
-        $cache_key = CacheRedis::getInstance()->getPrefix() . ':vid_info:';
+        $cache_key = 'vid_info:';
         $allowed_exts = get_vid_extensions();
         $FILES = scandir($dir);
         $FILE_LIST = [];
