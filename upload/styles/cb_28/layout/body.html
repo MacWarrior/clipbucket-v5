@@ -22,6 +22,8 @@
 				{include file="$style_dir/footer.html" }
 			{/if}
 		</div>
-        {showDevWitch()}
+		{if in_dev()}
+			{showDevWitch()}
+		{/if}
     </body>
 </html>

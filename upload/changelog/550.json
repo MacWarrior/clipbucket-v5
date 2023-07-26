@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"183",
+  "revision":"184",
   "status":"dev",
   "detail":[
     {
@@ -83,6 +83,7 @@
         ,"Add portuguese (BR) translation <i>#253, #262</i> (Thanks raiancollyn !)"
         ,"Fix possible SQL injection"
         ,"Remove unused files"
+        ,"Refactor SQL debug"
       ]
     },
     {

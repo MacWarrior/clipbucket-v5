@@ -785,6 +785,14 @@ textarea.form-control{
     color: white;
     font-size: 40pt;
 }
+
+.open-modal {
+    color: #9124a3;
+    cursor: pointer;
+    font-size: 1.5em;
+    margin-right: 1em;
+}
+
 .animate-spin {
     -webkit-animation: spin 2s infinite linear;
     animation: spin 2s infinite linear;

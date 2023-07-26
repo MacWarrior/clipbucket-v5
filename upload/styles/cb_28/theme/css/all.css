@@ -5413,3 +5413,9 @@ textarea#comment_box {
     background: none; } }
 
 /*# sourceMappingURL=all.css.map */
+.open-modal {
+  color: #9124a3;
+  cursor: pointer;
+  font-size: 1.3em;
+  margin-right: 1em;
+}

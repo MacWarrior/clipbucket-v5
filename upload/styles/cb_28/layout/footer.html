@@ -37,6 +37,9 @@
 				{/if}
 			</div>
 			<div class="copyright-poweredby column">
+				{if in_dev()}
+					<i class="fa fa-bug open-modal" title="{lang code='open_debug'}" data-toggle="modal" data-target="#devModal"></i>
+				{/if}
 				<span>©ClipBucket, {lang code='edited_by'} MacWarrior</span>
 			</div>
 		</div>
