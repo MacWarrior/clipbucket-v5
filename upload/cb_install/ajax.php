@@ -92,13 +92,13 @@ if ($mode == 'adminsettings') {
         $return['step'] = $next;
 
         if ($step == 'configs') {
-            $sql = 'UPDATE ' . $dbprefix . 'config SET value = "' . $cnnct->real_escape_string(exec("which php")) . '" WHERE name = "php_path"';
+            $sql = 'UPDATE ' . $dbprefix . 'config SET value = "' . $cnnct->real_escape_string(exec('which php')) . '" WHERE name = "php_path"';
             mysqli_query($cnnct, $sql);
-            $sql = 'UPDATE ' . $dbprefix . 'config SET value = "' . $cnnct->real_escape_string(exec("which ffmpeg")) . '" WHERE name = "ffmpegpath"';
+            $sql = 'UPDATE ' . $dbprefix . 'config SET value = "' . $cnnct->real_escape_string(exec('which ffmpeg')) . '" WHERE name = "ffmpegpath"';
             mysqli_query($cnnct, $sql);
-            $sql = 'UPDATE ' . $dbprefix . 'config SET value = "' . $cnnct->real_escape_string(exec("which ffprobe")) . '" WHERE name = "ffprobe_path"';
+            $sql = 'UPDATE ' . $dbprefix . 'config SET value = "' . $cnnct->real_escape_string(exec('which ffprobe')) . '" WHERE name = "ffprobe_path"';
             mysqli_query($cnnct, $sql);
-            $sql = 'UPDATE ' . $dbprefix . 'config SET value = "' . $cnnct->real_escape_string(exec("which mediainfo")) . '" WHERE name = "media_info"';
+            $sql = 'UPDATE ' . $dbprefix . 'config SET value = "' . $cnnct->real_escape_string(exec('which mediainfo')) . '" WHERE name = "media_info"';
             mysqli_query($cnnct, $sql);
         }
         //update database version from last json
@@ -117,57 +117,15 @@ if ($mode == 'adminsettings') {
     } else {
         switch ($step) {
             case 'add_categories':
-                $lines = file(BASEDIR . "/cb_install/sql/categories.sql");
-                foreach ($lines as $line_num => $line) {
-                    if (substr($line, 0, 2) != '--' && $line != '') {
-                        @$templine .= $line;
-                        if (substr(trim($line), -1, 1) == ';') {
-                            @$templine = preg_replace("/{tbl_prefix}/", $dbprefix, $templine);
-                            mysqli_query($cnnct, $templine);
+                install_execute_sql_file($cnnct, BASEDIR . '/cb_install/sql/categories.sql', $dbprefix);
 
-                            if ($cnnct->error != '') {
-                                $result['err'] = "<span class='alert'>An SQL error occured : " . $cnnct->error . '</span>';
-                                if (in_dev()) {
-                                    $result['err'] .= "<span class='alert'>SQL : " . $templine . '</span>';
-                                }
-                                error_log('SQL : ' . $templine);
-                                error_log('ERROR : ' . $cnnct->error);
-                                exit(json_encode($result));
-                            }
-
-                            $templine = '';
-                        }
-                    }
-                }
                 $return['msg'] = '<div class="ok green">Videos, Users, Groups and Collections Categories have been created</div>';
                 $return['status'] = 'adding admin account..';
                 $return['step'] = 'add_admin';
                 break;
 
-            case "add_admin":
-                $lines = file(BASEDIR . "/cb_install/sql/add_admin.sql");
-                $templine = '';
-                foreach ($lines as $line_num => $line) {
-                    if (substr($line, 0, 2) != '--' && $line != '') {
-                        $templine .= $line;
-                        if (substr(trim($line), -1, 1) == ';') {
-                            @$templine = preg_replace("/{tbl_prefix}/", $dbprefix, $templine);
-                            mysqli_query($cnnct, $templine);
-
-                            if ($cnnct->error != '') {
-                                $result['err'] = "<span class='alert'>An SQL error occured : " . $cnnct->error . '</span>';
-                                if (in_dev()) {
-                                    $result['err'] .= "<span class='alert'>SQL : " . $templine . '</span>';
-                                }
-                                error_log('SQL : ' . $templine);
-                                error_log('ERROR : ' . $cnnct->error);
-                                exit(json_encode($result));
-                            }
-
-                            $templine = '';
-                        }
-                    }
-                }
+            case 'add_admin':
+                install_execute_sql_file($cnnct, BASEDIR . '/cb_install/sql/add_admin.sql', $dbprefix);
                 $return['msg'] = '<div class="ok green">Admin account has been created</div>';
                 $return['status'] = 'Creating config files...';
                 $return['step'] = 'create_files';
