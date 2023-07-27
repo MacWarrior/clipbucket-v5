@@ -59,12 +59,16 @@ if ($myquery->VideoExists($video)) {
     }
     assign('has_log', file_exists($file));
 } else {
-    $msg[] = lang('class_vdo_del_err');
+    //add parameter to display message after redirect
+    redirect_to(BASEURL . ADMIN_BASEURL . '/video_manager.php?missing_video=1');
 }
 
 $resolution_list = getResolution_list($data);
-
 assign('resolution_list', $resolution_list);
+
+$subtitle_list = get_video_subtitles($data) ?: [];
+assign('subtitle_list', $subtitle_list);
+
 $type = 'v';
 $comment_cond = [];
 $comment_cond['order'] = ' comment_id DESC';

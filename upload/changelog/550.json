@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"190",
+  "revision":"191",
   "status":"dev",
   "detail":[
     {
@@ -57,6 +57,8 @@
         ,"Implement video resolution file management"
         ,"Implement cleanup conversion log tool"
         ,"Implement email deactivation"
+        ,"Implement subtitles management"
+        ,"Add redirection on editing missing video"
       ]
     },
     {

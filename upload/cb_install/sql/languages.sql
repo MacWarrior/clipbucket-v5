@@ -1659,4 +1659,8 @@ VALUES ('friend_requests'),
        ('display'),
        ('disable_email'),
        ('signup_success_usr_ok_description'),
-       ('signup_success_usr_ok_description_no_email');
+       ('signup_success_usr_ok_description_no_email'),
+       ('number'),
+       ('confirm_delete_subtitle_file'),
+       ('video_subtitles_deleted_num'),
+       ('video_subtitle_management');

@@ -259,8 +259,17 @@ function get_player_thumbs_json($data)
     echo '{' . $json . '}';
 }
 
+/**
+ * @param $vdetails
+ * @return array|false
+ * @throws Exception
+ */
 function get_video_subtitles($vdetails)
 {
+    if (empty($vdetails)) {
+        return false;
+    }
+
     global $db;
     $results = $db->select(tbl('video_subtitle'), 'videoid,number,title', ' videoid=' . $vdetails['videoid']);
 
@@ -273,6 +282,7 @@ function get_video_subtitles($vdetails)
         $subtitles[] = [
             'url'     => SUBTITLES_URL . '/' . $vdetails['file_directory'] . '/' . $vdetails['file_name'] . '-' . $line['number'] . '.srt'
             , 'title' => $line['title']
+            , 'number' => $line['number']
         ];
     }
 

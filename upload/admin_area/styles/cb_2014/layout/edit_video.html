@@ -291,6 +291,13 @@
                             <i class="glyphicon glyphicon-hdd"></i> {lang code='video_file_management'}
                         </a>
                     </li>
+                    {if count($subtitle_list) > 0}
+                        <li>
+                            <a data-toggle="tab" href="#subtitiles">
+                                <i class="glyphicon glyphicon-subtitles"></i> {lang code='video_subtitle_management'}
+                            </a>
+                        </li>
+                    {/if}
                 </ul>
                 <div class="tab-content">
                     <div id="videoinfos" class="tab-pane active">
@@ -405,6 +412,11 @@
                     <div id="resolutions" class="tab-pane">
                         {include file="$style_dir/blocks/resolution_list.html"}
                     </div>
+                    {if count($subtitle_list) > 0}
+                        <div id="subtitiles" class="tab-pane">
+                            {include file="$style_dir/blocks/subtitle_list.html"}
+                        </div>
+                    {/if}
                 </div>
                 <div class="form-group alignCenter">
                     <input type="submit" class="btn btn-primary btn-sm" value="Update video details" style="margin:5px 0 15px 0;" name="update">
@@ -478,7 +490,8 @@
 	</div>
 
 <script>
-    var text_confirm = '{lang code = 'confirm_delete_video_file'}';
+    var text_confirm_vid_file = '{lang code = 'confirm_delete_video_file'}';
+    var text_confirm_sub_file = '{lang code = 'confirm_delete_subtitle_file'}';
     var videoid = '{$data.videoid}';
     {literal}
     function regenerateThumbs (videoid) {
@@ -501,7 +514,7 @@
     }
 
     function deleteResolution (resolution) {
-        if (confirm_it(text_confirm.replace('%s', resolution))) {
+        if (confirm_it(text_confirm_vid_file.replace('%s', resolution))) {
             $.ajax({
                 url: "/actions/resolution_delete.php",
                 type: "POST",
@@ -514,6 +527,45 @@
                 }
             });
         }
+    }
+    function deleteSubtitle (number) {
+        if (confirm_it(text_confirm_sub_file.replace('%s', number))) {
+            $.ajax({
+                url: "/actions/subtitle_delete.php",
+                type: "POST",
+                data: {number: number, videoid: videoid},
+                dataType: 'json',
+                success: function (result) {
+                    $('#subtitiles').html(result['template']);
+                    $('.close').click();
+                    $('.page-content').prepend(result['msg']);
+                }
+            });
+        }
+    }
+
+    function editTitle(number) {
+        $('#buttons-' + number).css('display', 'inline');
+        $('#edit_sub_' + number).css('display', 'inline');
+    }
+
+    function cancelEditTitle(number) {
+        $('#buttons-' + number).hide();
+        $('#edit_sub_' + number).hide();
+    }
+
+    function saveSubtitle(number) {
+        $.ajax({
+            url: "/actions/subtitle_edit.php",
+            type: "POST",
+            data: {title: $('#edit_sub_' + number).val(), videoid: videoid, number: number},
+            dataType: 'json',
+            success: function (result) {
+                $('#subtitiles').html(result['template']);
+                $('.close').click();
+                $('.page-content').prepend(result['msg']);
+            }
+        });
     }
 
     {/literal}

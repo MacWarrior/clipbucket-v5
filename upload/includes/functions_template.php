@@ -146,10 +146,17 @@ function display_thumb_list($data)
     assign('data', $data);
     echo templateWithMsgJson('blocks/thumb_list.html');
 }
+
 function display_resolution_list($data)
 {
     assign('resolution_list', $data);
     echo templateWithMsgJson('blocks/resolution_list.html');
+}
+
+function display_subtitle_list($data)
+{
+    assign('subtitle_list', $data);
+    echo templateWithMsgJson('blocks/subtitle_list.html');
 }
 
 //todO séparer en 2 fonctions
@@ -164,4 +171,3 @@ function display_flash_player($data)
     assign('data', $data);
     echo flashPlayer(['vdetails' => $data]);
 }
-

@@ -485,6 +485,18 @@ class CBvideo extends CBCategory
     }
 
     /**
+     * @throws Exception
+     */
+    function update_subtitle ($videoid, $number, $title)
+    {
+        global $db;
+
+        if ($this->video_exists($videoid)) {
+            $db->update(tbl('video_subtitle'), ['title'], [$title], ' videoid = ' . mysql_clean($videoid) . ' AND number LIKE \'' . $number . '\'');
+        }
+    }
+
+    /**
      * Function used to delete a video
      *
      * @param $vid
@@ -579,11 +591,20 @@ class CBvideo extends CBCategory
         e(lang('vid_log_delete_msg'), 'm');
     }
 
-    function remove_subtitles($vdetails)
+    /**
+     * @param $vdetails
+     * @param string|null $number
+     * @throws Exception
+     */
+    function remove_subtitles($vdetails, string $number = null)
     {
         global $db;
         $directory = SUBTITLES_DIR . DIRECTORY_SEPARATOR . $vdetails['file_directory'] . DIRECTORY_SEPARATOR;
-        $result = db_select('SELECT * FROM ' . tbl('video_subtitle') . ' WHERE videoid = ' . $vdetails['videoid']);
+        $query = 'SELECT * FROM ' . tbl('video_subtitle') . ' WHERE videoid = ' . $vdetails['videoid'];
+        if ($number !== null) {
+            $query .= ' AND number = \'' . mysql_clean($number) . '\'';
+        }
+        $result = db_select($query);
         if ($result) {
             foreach ($result as $row) {
                 $filepath = $directory . $vdetails['file_name'] . '-' . $row['number'] . '.srt';
@@ -594,8 +615,11 @@ class CBvideo extends CBCategory
 
             $db->execute('DELETE FROM ' . tbl('video_subtitle') . ' WHERE videoid = ' . $vdetails['videoid']);
         }
-
-        e(lang('video_subtitles_deleted'), 'm');
+        if ($number !== null) {
+            e(str_replace('%s', $number,lang('video_subtitles_deleted_num')), 'm');
+        } else {
+            e(lang('video_subtitles_deleted'), 'm');
+        }
     }
 
     /**
