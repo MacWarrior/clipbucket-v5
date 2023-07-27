@@ -22,9 +22,11 @@
                             <div class="form-group">
                                 <input type="submit" name="login" class="btn btn-primary btn-block" value="{lang code='login'}">
                             </div>
-                            <div align="center">
-								<a href="/forgot.php">{lang code='user_forgot_message'}</a>
-							</div>
+                            {if config('disable_email') == 'no'}
+                                <div align="center">
+                                    <a href="/forgot.php">{lang code='user_forgot_message'}</a>
+                                </div>
+                            {/if}
                         </form>
                     </div>
                 </div>

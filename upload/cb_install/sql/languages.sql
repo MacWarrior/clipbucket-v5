@@ -1656,4 +1656,7 @@ VALUES ('friend_requests'),
        ('total_memory_used'),
        ('memory_usage'),
        ('everything'),
-       ('display');
+       ('display'),
+       ('disable_email'),
+       ('signup_success_usr_ok_description'),
+       ('signup_success_usr_ok_description_no_email');

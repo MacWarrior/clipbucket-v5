@@ -165,16 +165,18 @@ function RandomString($length): string
  * you can extend or replace this function easily
  *
  * @param : { array } { $array } { array with all details of email }
- *
+ * @param bool $force force sending email even if emails are disabled
  * @return bool
  * @throws phpmailerException
- *
  * @param_list : { content, subject, to, from, to_name, from_name }
  *
  * @author : Arslan Hassan
  */
-function cbmail($array)
+function cbmail($array, $force = false)
 {
+    if (config('disabled_email') == 'yes' && !$force) {
+        return false;
+    }
     $func_array = get_functions('email_functions');
     if (is_array($func_array)) {
         foreach ($func_array as $func) {

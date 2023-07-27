@@ -55,6 +55,7 @@ if (isset($_POST['update'])) {
         , 'proxy_auth'
         , 'cache_enable'
         , 'cache_auth'
+        , 'disable_email'
     ];
 
     $config_booleans_to_refactor = [
@@ -229,6 +230,7 @@ if (isset($_POST['update'])) {
         'search_list_per_page',
         'support_email',
         'show_collapsed_checkboxes',
+        'disable_email',
 
         'thumb_width',
         'thumb_height',

@@ -339,12 +339,15 @@ class ClipBucket
                         'title' => 'Reported Users'
                         , 'url' => ADMIN_BASEURL . '/flagged_users.php'
                     ]
-                    , [
-                        'title' => 'Mass Email'
-                        , 'url' => ADMIN_BASEURL . '/mass_email.php'
-                    ]
                 ]
             ];
+
+            if (config('disable_email') == 'no') {
+                $menu_users['sub'][] = [
+                    'title' => 'Mass Email'
+                    , 'url' => ADMIN_BASEURL . '/mass_email.php'
+                ];
+            }
 
             if ($per['allow_manage_user_level'] == 'yes' || $userquery->level == 1) {
                 $menu_users['sub'][] = [

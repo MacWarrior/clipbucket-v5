@@ -34,16 +34,18 @@ if (isset($_GET['delete'])) {
     $cbemail->action($del, 'delete');
 }
 
-//Sending Email
-if (isset($_GET['send_email'])) {
-    $eId = mysql_clean($_GET['send_email']);
-    $email = $cbemail->get_email($eId);
-    if ($email) {
-        $msgs = $cbemail->send_emails($email);
-        assign('msgs', $msgs);
 
+if (config('disable_email') == 'no') { //Sending Email
+    if (isset($_GET['send_email'])) {
+        $eId = mysql_clean($_GET['send_email']);
         $email = $cbemail->get_email($eId);
-        assign('send_email', $email);
+        if ($email) {
+            $msgs = $cbemail->send_emails($email);
+            assign('msgs', $msgs);
+
+            $email = $cbemail->get_email($eId);
+            assign('send_email', $email);
+        }
     }
 }
 

@@ -81,7 +81,7 @@ if (isset($_POST['start_test'])) {
             'content'   => $body
         ];
 
-        $test = cbmail($mail);
+        $test = cbmail($mail, true);
 
         if ($test == false) {
             e(sprintf(lang('mail_not_send'), $to_email));

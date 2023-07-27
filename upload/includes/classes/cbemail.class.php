@@ -255,12 +255,11 @@ class CBEmail
     }
 
     /**
-     * function send emails
-     *
      * @param $id
      *
      * @return array|bool
      * @throws phpmailerException
+     * @throws Exception
      */
     function send_emails($id)
     {
@@ -401,6 +400,13 @@ class CBEmail
         }
     }
 
+
+    /**
+     * @param $email
+     * @param $username
+     * @return void
+     * @throws phpmailerException
+     */
     function friend_request_email($email, $username)
     {
         global $db;

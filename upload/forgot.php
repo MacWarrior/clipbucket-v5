@@ -6,6 +6,10 @@ require 'includes/config.inc.php';
 
 $mode = $_GET['mode'];
 
+if (config('disable_email') == 'yes') {
+    redirect_to(config('baseurl'));
+}
+global $userquery;
 /**
  * Reseting Password
  * Sending Email

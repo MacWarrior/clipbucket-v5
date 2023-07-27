@@ -215,7 +215,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'cache_auth', 'no'),
     (NULL, 'cache_host', ''),
     (NULL, 'cache_password', ''),
-    (NULL, 'cache_port', '');
+    (NULL, 'cache_port', ''),
+    (NULL, 'disable_email', 'no');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 428, 240, 240000),

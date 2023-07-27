@@ -3,7 +3,14 @@
 {if $mode == 'signup_success'}
 	<div class="simple_container">
 		{if $udetails.usr_status != 'Ok'}
-			{lang code='signup_success_usr_ok'}
+			<h2 style="margin: 5px 5px 8px; font-family: Arial,Verdana,sans-serif;">{lang code='signup_success_usr_ok'}</h2>
+			<p style="margin: 0px 5px; line-height: 18px; font-size: 14px;">
+				{if config('disable_email') == 'no'}
+					{lang code='signup_success_usr_ok_description'}
+				{else}
+					{lang code='signup_success_usr_ok_description_no_email'}
+				{/if}
+			</p>
 		{else}
 			{lang code='signup_success_usr_emailverify' assign='signupsuccessusremailverify'}
 			{link name='login' assign='login_link'}
@@ -38,8 +45,9 @@
 						</div>
 
 						<input id="login_btn" type="submit" name="login" value="{lang code='login'}" class="btn btn-primary btn-lg btn-block">
-
-						<a href="/forgot.php?mode=recover_username">{lang code='user_forgot_username'}</a> - <a href="/forgot.php">{lang code='user_forgot_message'}</a>
+						{if config('disable_email') == 'no'}
+							<a href="/forgot.php?mode=recover_username">{lang code='user_forgot_username'}</a> - <a href="/forgot.php">{lang code='user_forgot_message'}</a>
+						{/if}
 						<input type="hidden" name="login" value="login"/>
 					</form>
 				</div>
