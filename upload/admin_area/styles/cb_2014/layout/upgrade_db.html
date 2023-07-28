@@ -8,7 +8,7 @@
     <br/>
     <form id="versionInfo">
         <div class="row">
-            <div class="col-md-1">
+            <div class="col-md-2">
                 <label for="version">Version</label>
                 <select id="version" name="version">
                     {html_options values=$versions output=$versions}
@@ -54,7 +54,6 @@
                     dataType: 'json'
                 }).done(function (result) {
                     if (result['success']) {
-                        console.log('index.php?finish_upgrade=1&version=' + result['msg']);
                         location.replace('index.php?finish_upgrade=1&version=' + result['msg']);
                     } else {
                         $('.page-content').prepend(result['msg']);

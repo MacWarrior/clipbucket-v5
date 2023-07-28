@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"192",
+  "revision":"193",
   "status":"dev",
   "detail":[
     {
@@ -183,6 +183,7 @@
         ,"Fix chmod in all scripts"
         ,"Add script for Debian 12 + Nginx"
         ,"Update installation process"
+        ,"Fix SQL queries"
       ]
     }
   ]

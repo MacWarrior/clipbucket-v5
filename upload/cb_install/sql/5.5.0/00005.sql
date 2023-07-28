@@ -1,12 +1,12 @@
-INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
+INSERT IGNORE INTO `{tbl_prefix}config`(`name`, `value`) VALUES
     ('extract_audio_tracks', '1');
 
-CREATE TABLE `{tbl_prefix}video_audio_tracks` (
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_audio_tracks` (
     `videoid` bigint(20) NOT NULL,
     `number` varchar(2) NOT NULL,
     `title` varchar(64) NOT NULL,
     `channels` tinyint(4) NOT NULL
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 ALTER TABLE `{tbl_prefix}video_audio_tracks`
     ADD UNIQUE KEY `videoid` (`videoid`,`number`);

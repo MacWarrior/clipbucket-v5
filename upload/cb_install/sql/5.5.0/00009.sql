@@ -1,5 +1,4 @@
-DELETE FROM `{tbl_prefix}config`
-WHERE NAME IN (
+DELETE FROM `{tbl_prefix}config` WHERE `name` IN (
     'high_resolution'
     , 'normal_resolution'
     , 'videos_list_per_tab'
@@ -16,4 +15,4 @@ WHERE NAME IN (
     , 'grp_categories'
     , 'max_bg_height'
     , 'max_profile_pic_height'
-    );
+);

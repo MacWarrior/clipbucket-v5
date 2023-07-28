@@ -1,1 +1,1 @@
-DROP TABLE `{tbl_prefix}validation_re`;
+DROP TABLE IF EXISTS `{tbl_prefix}validation_re`;

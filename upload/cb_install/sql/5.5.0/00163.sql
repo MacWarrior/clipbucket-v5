@@ -1,5 +1,4 @@
-CREATE TABLE `{tbl_prefix}video_thumbs`
-(
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_thumbs`(
     `videoid`    BIGINT(20)  NOT NULL,
     `resolution` VARCHAR(16) NOT NULL,
     `num`        VARCHAR(4)  NOT NULL,

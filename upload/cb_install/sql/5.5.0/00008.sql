@@ -1,5 +1,5 @@
 ALTER TABLE `{tbl_prefix}video`
-DROP COLUMN filegrp_size,
+    DROP COLUMN filegrp_size,
 	DROP COLUMN file_thumbs_count,
 	DROP COLUMN conv_progress,
 	DROP COLUMN is_hd,
@@ -14,5 +14,5 @@ DROP COLUMN filegrp_size,
 
 UPDATE `{tbl_prefix}video` SET file_type = 'mp4';
 
-INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
+INSERT IGNORE INTO `{tbl_prefix}config`(`name`, `value`) VALUES
     ('conversion_type', 'mp4');

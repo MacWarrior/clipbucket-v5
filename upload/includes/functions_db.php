@@ -203,14 +203,11 @@ function get_files_to_upgrade($version, $revision, $count = false)
     return ($count ? count($files) : $files);
 }
 
-/**
- * @throws Exception
- */
 function execute_sql_file($path): bool
 {
     $lines = file($path);
     if (empty($lines)) {
-        e(lang('class_error_occured'));
+        error_lang_cli(lang('class_error_occured'));
         return false;
     }
     global $db;
@@ -235,6 +232,8 @@ function execute_sql_file($path): bool
         $db->mysqli->rollback();
         e('SQL : ' . $templine);
         e('ERROR : ' . $e->getMessage());
+        error_log('SQL : ' . $templine);
+        error_log('ERROR : ' . $e->getMessage());
         return false;
     }
 
