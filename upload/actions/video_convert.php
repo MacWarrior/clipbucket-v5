@@ -1,5 +1,6 @@
 <?php
 // This script runs only via command line
+ini_set('max_execution_time', '0');
 sleep(5);
 define('THIS_PAGE', 'video_convert');
 
@@ -31,10 +32,10 @@ $reconvert = $argv[6] ?? false;
 $log = new SLog($logFile);
 
 $log->newSection('Starting Conversion Log');
-$TempLogData = "Filename : {$fileName}\n";
-$TempLogData .= "File directory : {$file_directory_}\n";
-$TempLogData .= "Log file : {$logFile}\n";
-$log->writeLine("Getting Arguments", $TempLogData, true, true);
+$TempLogData = 'Filename : '.$fileName.PHP_EOL;
+$TempLogData .= 'File directory : '.$file_directory_.PHP_EOL;
+$TempLogData .= 'Log file : '.$logFile.PHP_EOL;
+$log->writeLine('Getting Arguments', $TempLogData, true, true);
 
 /*
     Getting the videos which are currently in our queue

@@ -147,6 +147,7 @@ class CBvideo extends CBCategory
      * @param int|string VID or VKEY
      *
      * @return bool
+     * @throws Exception
      */
     function video_exists($vid)
     {
@@ -240,6 +241,7 @@ class CBvideo extends CBCategory
      *
      * @return bool|string|void
      * @throws phpmailerException
+     * @throws Exception
      */
     function action($case, $vid)
     {
@@ -266,7 +268,7 @@ class CBvideo extends CBCategory
                     $tpl = $cbemail->get_template('video_activation_email');
                     $var = [
                         '{username}'   => $video['username'],
-                        '{video_link}' => videoLink($video)
+                        '{video_link}' => video_link($video)
                     ];
                     $subj = $cbemail->replace($tpl['email_template_subject'], $var);
                     $msg = nl2br($cbemail->replace($tpl['email_template'], $var));
@@ -330,6 +332,7 @@ class CBvideo extends CBCategory
      * Function used to update video
      *
      * @param null $array
+     * @throws Exception
      */
     function update_video($array = null)
     {
@@ -500,6 +503,7 @@ class CBvideo extends CBCategory
      * Function used to delete a video
      *
      * @param $vid
+     * @throws Exception
      */
     function delete_video($vid)
     {
@@ -546,6 +550,7 @@ class CBvideo extends CBCategory
      * Function used to remove video thumbs
      *
      * @param $vdetails
+     * @throws Exception
      */
     function remove_thumbs($vdetails)
     {
@@ -567,6 +572,7 @@ class CBvideo extends CBCategory
      * Function used to remove video log
      *
      * @param $vdetails
+     * @throws Exception
      */
     function remove_log($vdetails)
     {
@@ -670,6 +676,7 @@ class CBvideo extends CBCategory
      * @param $vdetails
      *
      * @return bool|void
+     * @throws Exception
      */
     function remove_files($vdetails)
     {
@@ -702,7 +709,8 @@ class CBvideo extends CBCategory
      *
      * @param $params
      *
-     * @return bool|array
+     * @return bool|array|void
+     * @throws Exception
      */
     function get_videos($params)
     {
@@ -1123,7 +1131,8 @@ class CBvideo extends CBCategory
      *
      * @param $id
      *
-     * @return bool
+     * @return int
+     * @throws Exception
      */
     function count_video_comments($id)
     {
@@ -1135,6 +1144,7 @@ class CBvideo extends CBCategory
      * Function used to update video comments count
      *
      * @param $id
+     * @throws Exception
      */
     function update_comments_count($id)
     {
@@ -1153,6 +1163,7 @@ class CBvideo extends CBCategory
      *
      * @return bool|mixed
      * @throws phpmailerException
+     * @throws Exception
      */
     function add_comment($comment, $obj_id, $reply_to = null, $force_name_email = false)
     {
@@ -1165,7 +1176,7 @@ class CBvideo extends CBCategory
         } else {
             //Getting Owner Id
             $owner_id = $this->get_video_owner($obj_id, true);
-            $add_comment = $myquery->add_comment($comment, $obj_id, $reply_to, 'v', $owner_id, videoLink($video), $force_name_email);
+            $add_comment = $myquery->add_comment($comment, $obj_id, $reply_to, 'v', $owner_id, video_link($video), $force_name_email);
             if ($add_comment) {
                 //Logging Comment
                 $log_array = [
@@ -1398,10 +1409,11 @@ class CBvideo extends CBCategory
         $this->search->search_type['videos']['fields'] = $fields;
     }
 
-    /*
+    /**
      * Function used to update video and set a thumb as default
-     * @param VID
-     * @param THUMB NUM
+     * @param $vid
+     * @param $thumb NUM
+     * @throws Exception
      */
     function set_default_thumb($vid, $thumb)
     {
@@ -1421,6 +1433,7 @@ class CBvideo extends CBCategory
      * @param bool $idonly
      *
      * @return bool|array
+     * @throws Exception
      */
     function get_video_owner($vid, $idonly = false)
     {
@@ -1447,6 +1460,7 @@ class CBvideo extends CBCategory
      * @param $uid
      *
      * @return bool
+     * @throws Exception
      */
     function is_video_owner($vid, $uid): bool
     {
@@ -1522,6 +1536,7 @@ class CBvideo extends CBCategory
      * @param $id
      *
      * @return bool|array
+     * @throws Exception
      */
     function get_video_rating($id)
     {
@@ -1618,6 +1633,7 @@ class CBvideo extends CBCategory
      * @param $rating
      *
      * @return array
+     * @throws Exception
      */
     function rate_video($id, $rating): array
     {
@@ -1723,6 +1739,7 @@ class CBvideo extends CBCategory
      * @param int $limit
      *
      * @return bool|mixed
+     * @throws Exception
      */
     function get_playlist_items($playlist_id, $order = null, $limit = 10)
     {
@@ -1873,6 +1890,7 @@ class CBvideo extends CBCategory
      * @param null $params
      *
      * @return array|bool
+     * @throws Exception
      */
     function get_comments($params = null)
     {
@@ -1932,6 +1950,7 @@ class CBvideo extends CBCategory
      * @param $cid
      *
      * @return bool|array
+     * @throws Exception
      */
     function get_comment($cid)
     {
@@ -1941,29 +1960,6 @@ class CBvideo extends CBCategory
             return $result[0];
         }
         return false;
-    }
-
-    /**
-     * Function used to convert timthumb url to filename and file
-     *
-     * @param  : url, flag
-     * @param bool $file_name
-     *
-     * @date   : 6/2/2015
-     * @return string
-     * @author : Fahad Abbas
-     * @reason : to delete the thumb from server forcefully
-     */
-    function convert_tim_thumb_url_to_file($url, bool $file_name): string
-    {
-        $thumb = explode('src=', $url);
-        if ($file_name) {
-            $thumb = explode('-', $thumb[1]);
-        } else {
-            $thumb = explode('&', $thumb[1]);
-        }
-
-        return $thumb[0];
     }
 
 }

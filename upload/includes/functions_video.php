@@ -1,17 +1,4 @@
 <?php
-/**
- * File: Video Functions
- * Description: Various functions to perform operations on VIDEOS section
- * @param null $extra
- * @since: ClipBucket 1.0
- * @author[s]: Arslan Hassan, Fawaz Tahir, Fahad Abbass, Saqib Razzaq
- * @copyright: (c) 2008 - 2017 ClipBucket / PHPBucket
- * @notice: Please maintain this section
- * @modified: { January 10th, 2017 } { Saqib Razzaq } { Updated copyright date }
- *
- * @license: Attribution Assurance License
- */
-
 function get_video_fields($extra = null)
 {
     global $cb_columns;
@@ -23,7 +10,8 @@ function get_video_fields($extra = null)
  *
  * @param : { string / id } { $id } { id of key of video }
  *
- * @return bool : { boolean } { true if playable, else false }
+ * @return bool|void : { boolean } { true if playable, else false }
+ * @throws Exception
  */
 function video_playable($id)
 {
@@ -115,10 +103,10 @@ function video_playable($id)
  * @param bool $size
  *
  * @return array|string
+ * @throws Exception
  */
 function get_thumb($vdetails, $multi = false, $size = false)
 {
-
     /**  getting video ID*/
     if (is_array($vdetails)) {
         #check for videoid
@@ -163,7 +151,7 @@ function get_thumb($vdetails, $multi = false, $size = false)
 
     $resThumb = $db->select(tbl('video_thumbs'), '*', implode(' AND ', $where));
 
-    if (empty($resThumb) && $resVideo['num'] === null) {
+    if (empty($resThumb) && $resVideo['num'] === null && $vdetails['status'] == 'Successful') {
         //if no thumbs, we put some in db see \create_thumb()
         return create_thumb($resVideo, $multi, $size);
     }
@@ -203,7 +191,6 @@ function get_count_thumb($videoid)
         return 0;
     }
     return $resVideo[0]['nb_thumbs'];
-
 }
 
 /**
@@ -211,6 +198,7 @@ function get_count_thumb($videoid)
  * @param $multi
  * @param $size
  * @return array|string
+ * @throws Exception
  */
 function create_thumb($video_db, $multi, $size)
 {
@@ -235,6 +223,9 @@ function create_thumb($video_db, $multi, $size)
     return get_thumb($video_db['videoid'], $multi, $size);
 }
 
+/**
+ * @throws Exception
+ */
 function get_player_thumbs_json($data)
 {
     $thumbs = get_thumb($data, true, '168x105');
@@ -280,43 +271,13 @@ function get_video_subtitles($vdetails)
     $subtitles = [];
     foreach ($results as $line) {
         $subtitles[] = [
-            'url'     => SUBTITLES_URL . '/' . $vdetails['file_directory'] . '/' . $vdetails['file_name'] . '-' . $line['number'] . '.srt'
-            , 'title' => $line['title']
+            'url'      => SUBTITLES_URL . '/' . $vdetails['file_directory'] . '/' . $vdetails['file_name'] . '-' . $line['number'] . '.srt'
+            , 'title'  => $line['title']
             , 'number' => $line['number']
         ];
     }
 
     return $subtitles;
-}
-
-/**
- * Function used to check if given thumb is big or not
- *
- * @param : { string } { $thumb_file } { the file to be checked for size }
- *
- * @return bool : { boolean } { true if thumb is big, false }
- */
-function is_big($thumb_file): bool
-{
-    if (strstr($thumb_file, 'big')) {
-        return true;
-    }
-    return false;
-}
-
-/**
- * Function used to check if given thumb is original or not
- *
- * @param $thumb_file
- *
- * @return bool
- */
-function is_original($thumb_file): bool
-{
-    if (strstr($thumb_file, 'original')) {
-        return true;
-    }
-    return false;
 }
 
 /**
@@ -331,17 +292,6 @@ function default_thumb(): string
         return TEMPLATEURL . '/images/thumbs/processing.jpg';
     }
     return '/files/thumbs/processing.jpg';
-}
-
-/**
- * Function used to check weather give thumb is default or not
- */
-function is_default_thumb($i): bool
-{
-    if (getname($i) == 'processing.jpg') {
-        return true;
-    }
-    return false;
 }
 
 /**
@@ -439,12 +389,6 @@ function video_link($vdetails, $type = null): string
     }
 }
 
-//Function That will use in creating SEO urls
-function VideoLink($vdetails, $type = null): string
-{
-    return video_link($vdetails, $type);
-}
-
 /**
  * Function Used to format video duration
  *
@@ -454,7 +398,7 @@ function VideoLink($vdetails, $type = null): string
  */
 function videoSmartyLink($params)
 {
-    $link = VideoLink($params['vdetails'], $params['type']);
+    $link = video_link($params['vdetails'], $params['type']);
     if (!$params['assign']) {
         return $link;
     }
@@ -511,6 +455,7 @@ function validate_vid_category($array = null): bool
  * @param $key
  *
  * @return bool
+ * @throws Exception
  */
 function vkey_exists($key): bool
 {
@@ -529,6 +474,7 @@ function vkey_exists($key): bool
  * @param $name
  *
  * @return bool|int
+ * @throws Exception
  */
 function file_name_exists($name)
 {
@@ -547,6 +493,7 @@ function file_name_exists($name)
  * @param string $fileName
  *
  * @return array
+ * @throws Exception
  */
 function get_queued_video(string $fileName): array
 {
@@ -568,6 +515,7 @@ function get_queued_video(string $fileName): array
  * @param null $queueName
  *
  * @return array
+ * @throws Exception
  */
 function get_video_being_processed($queueName = null): array
 {
@@ -667,16 +615,16 @@ function get_video_file($vdetails, $return_default = true, $with_path = true, $m
     }
 
     $fileDirectory = '';
-    if (isset($vdetails['file_directory']) && !empty($vdetails['file_directory'])) {
+    if (!empty($vdetails['file_directory'])) {
         $fileDirectory = $vdetails['file_directory'] . DIRECTORY_SEPARATOR;
     }
 
     #Now there is no function so let's continue as
-    if (isset($vdetails['file_name']) && !empty($vdetails['file_name'])) {
-        $vid_files = glob(VIDEOS_DIR . DIRECTORY_SEPARATOR . $fileDirectory . $vdetails['file_name'] . '*');
-    } else {
+    if (empty($vdetails['file_name'])) {
         return false;
     }
+
+    $vid_files = glob(VIDEOS_DIR . DIRECTORY_SEPARATOR . $fileDirectory . $vdetails['file_name'] . '*');
 
     #replace Dir with URL
     if (is_array($vid_files)) {
@@ -703,25 +651,25 @@ function get_video_file($vdetails, $return_default = true, $with_path = true, $m
             return 'no_video.mp4';
         }
         return false;
-    } else {
-        if ($multi) {
-            return $files;
-        }
-        if ($count_only) {
-            return count($files);
-        }
+    }
 
-        foreach ($files as $file) {
-            if ($hq) {
-                if (getext($file) == 'mp4') {
-                    return $file;
-                }
-            } else {
+    if ($multi) {
+        return $files;
+    }
+    if ($count_only) {
+        return count($files);
+    }
+
+    foreach ($files as $file) {
+        if ($hq) {
+            if (getext($file) == 'mp4') {
                 return $file;
             }
+        } else {
+            return $file;
         }
-        return $files[0];
     }
+    return $files[0];
 }
 
 /**
@@ -740,8 +688,9 @@ function get_hq_video_file($vdetails, $return_default = true)
 /**
  * Function used to update processed video
  *
- * @param Files details
+ * @param Files $file_array
  * @param string $status
+ * @throws Exception
  */
 function update_processed_video($file_array, $status = 'Successful')
 {
@@ -767,13 +716,14 @@ function update_processed_video($file_array, $status = 'Successful')
  * This function will activate the video if file exists
  *
  * @param $vid
+ * @throws Exception
  */
 function activate_video_with_file($vid)
 {
     global $db;
     $vdetails = get_video_basic_details($vid);
     $file_name = $vdetails['file_name'];
-    $results = $db->select(tbl("conversion_queue"), "*", " cqueue_name='$file_name' AND cqueue_conversion='yes'");
+    $results = $db->select(tbl('conversion_queue'), '*', " cqueue_name='$file_name' AND cqueue_conversion='yes'");
     $result = $results[0];
 
     update_processed_video($result);
@@ -786,6 +736,7 @@ function activate_video_with_file($vid)
  * @param bool $get_jsoned
  *
  * @return bool|string|array
+ * @throws Exception
  */
 function get_file_details($file_name, $get_jsoned = false)
 {
@@ -851,9 +802,9 @@ function parse_duration($log)
         if (isset($matches[1][0]) && isset($matches[2][0]) && isset($matches[3][0])) {
             //Now we will multiple hours, minutes accordingly and then add up with seconds to
             //make a single variable of duration
-            $hours = $matches[1][0];
-            $minutes = $matches[2][0];
-            $seconds = $matches[3][0];
+            $hours = (int)$matches[1][0];
+            $minutes = (int)$matches[2][0];
+            $seconds = (int)$matches[3][0];
 
             $hours = $hours * 60 * 60;
             $minutes = $minutes * 60;
@@ -894,6 +845,7 @@ function get_thumb_num($name): string
  * @param $file_dir
  * @param $file_name
  * @param $num
+ * @throws Exception
  */
 function delete_video_thumb($videoDetails, $num)
 {
@@ -944,7 +896,7 @@ function remove_video_log($vdetails)
  *
  * @param $vdetails
  *
- * @return bool
+ * @return bool|void
  */
 function remove_video_files($vdetails)
 {
@@ -952,6 +904,9 @@ function remove_video_files($vdetails)
     return $cbvid->remove_files($vdetails);
 }
 
+/**
+ * @throws Exception
+ */
 function remove_video_subtitles($vdetails)
 {
     global $cbvid;
@@ -964,6 +919,7 @@ function remove_video_subtitles($vdetails)
  * ie in watch_video.php
  *
  * @param $vdo
+ * @throws Exception
  */
 function call_watch_video_function($vdo)
 {
@@ -1011,6 +967,7 @@ function call_delete_video_function($vdo)
  * ie in download.php
  *
  * @param $vdo
+ * @throws Exception
  */
 function call_download_video_function($vdo)
 {
@@ -1053,6 +1010,7 @@ function get_videos($param)
  * @param $users
  *
  * @return string
+ * @throws Exception
  */
 function video_users($users)
 {
@@ -1267,23 +1225,6 @@ function get_high_res_file($vdetails): string
 }
 
 /**
- * @param : { Var } { quality of input file }
- *
- * @return string : { Variable } { resolution of a file }
- *
- * @author : Fahad Abbas
- *
- * @since : 03-03-2016
- */
-function get_video_file_quality($file): string
-{
-    $quality = explode('-', $file);
-    $quality = end($quality);
-    $quality = explode('.', $quality);
-    return $quality[0];
-}
-
-/**
  * Fetches quicklists stored in cookies
  *
  * @param bool $cookie_name
@@ -1294,7 +1235,7 @@ function get_video_file_quality($file): string
  * @since : 18th March, 2016 ClipBucket 2.8.1
  * @author : Saqib Razzaq <saqi.cb@gmail.com>
  */
-function get_fast_qlist($cookie_name = false)
+function get_fast_qlist($cookie_name = false): array
 {
     global $cbvid;
     if ($cookie_name) {
@@ -1328,6 +1269,7 @@ function dateNow(): string
  * @param bool $reconv
  * @param bool $byFilename
  *
+ * @throws Exception
  * @internal param $ : { mixed } { $video } { videoid, videokey or filename }
  * @internal param $ : { string } { $status } { new status to be set } { $status } { new status to be set }
  * @internal param $ : { boolean } { $reconv } { if you are setting reconversion status, pass this true }
@@ -1364,6 +1306,7 @@ function setVideoStatus($video, $status, $reconv = false, $byFilename = false)
  * Checks current reconversion status of any given video : default is empty
  * @param : { integer } { $vid } { id of video that we need to check status for }
  * @return string|void : { reconversion status of video }
+ * @throws Exception
  */
 function checkReConvStatus($vid)
 {
@@ -1383,6 +1326,9 @@ function get_audio_channels($filepath): int
     return (int)shell_exec($cmd);
 }
 
+/**
+ * @throws Exception
+ */
 function update_castable_status($vdetails)
 {
     if (is_null($vdetails)) {
@@ -1403,6 +1349,9 @@ function update_castable_status($vdetails)
     }
 }
 
+/**
+ * @throws Exception
+ */
 function update_bits_color($vdetails)
 {
     if (is_null($vdetails)) {
@@ -1467,8 +1416,9 @@ function isReconvertAble($vdetails): bool
  *
  * @param string $data
  *
- * @since : October 28th, 2016
+ * @throws Exception
  * @author : { Saqib Razzaq }
+ * @since : October 28th, 2016
  */
 function reConvertVideos($data = '')
 {
@@ -1596,6 +1546,7 @@ function resString($res)
  * @param $data
  * @param Clipbucket_db $db
  * @return void
+ * @throws Exception
  */
 function generatingMoreThumbs($data)
 {
@@ -1618,6 +1569,7 @@ function generatingMoreThumbs($data)
 /**
  * @param $vdetails
  * @return void
+ * @throws Exception
  */
 function update_duration($vdetails)
 {

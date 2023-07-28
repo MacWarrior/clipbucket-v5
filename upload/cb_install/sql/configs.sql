@@ -17,7 +17,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'r_height', ''),
 	(NULL, 'r_width', ''),
 	(NULL, 'resize', ''),
-	(NULL, 'activation', ''),
+	(NULL, 'activation', '0'),
 	(NULL, 'email_verification', '1'),
 	(NULL, 'allow_registeration', '1'),
 	(NULL, 'php_path', ''),

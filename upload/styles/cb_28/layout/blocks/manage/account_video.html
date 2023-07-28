@@ -134,7 +134,7 @@
 
 	{if $control=='onWatch'}
 	<div class="playlist featured-video clearfix" style="{if $ajax_load=="yes"}display:none;{/if}{if $video.videoid==$vdo.videoid}background: rgb(241, 236, 236);{/if}" id="{$video.videoid}"  >
-		<a href="{videoLink($video)}">
+		<a href="{video_link($video)}">
 			<div class="video_thumb">
 				<img src="{getThumb vdetails=$video size=168x105}" {ANCHOR place="video_thumb" data=$video} class="img-responsive"/>
 				<img src="{$theme}/images/thumb-ratio.png" alt="" class="thumb-ratio"/>
@@ -145,7 +145,7 @@
 		</a>
 		<div class="details_block">
 			<strong class="title">
-				<a href="{videoLink($video)}">{display_clean($video.title)|truncate:50}</a>
+				<a href="{video_link($video)}">{display_clean($video.title)|truncate:50}</a>
 			</strong>
 			<div class="views-date">
 				<span>{$video.views}&nbsp;{lang code='views'}</span>

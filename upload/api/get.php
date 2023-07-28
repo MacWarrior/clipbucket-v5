@@ -126,7 +126,7 @@ class API extends REST
                 $video['description'] = utf8_encode($video['description']);
                 $video['thumbs'] = ['default' => get_thumb($video), 'big' => get_thumb($video, 'big')];
 
-                $video['url'] = $video['video_link'] = $video['videoLink'] = videoLink($video);
+                $video['url'] = $video['video_link'] = $video['videoLink'] = video_link($video);
                 $video['avatar'] = $video['user_photo'] = $video['displayPic'] = $userquery->avatar($video);
 
                 foreach ($blacklist_fields as $field)
@@ -264,7 +264,7 @@ class API extends REST
                 $video = array_merge($video, $udetails);
 
                 $video['thumbs'] = ['default' => get_thumb($video)];
-                $video['url'] = $video['video_link'] = $video['videoLink'] = videoLink($video);
+                $video['url'] = $video['video_link'] = $video['videoLink'] = video_link($video);
                 $video['avatar'] = $video['user_photo'] = $video['displayPic'] = $userquery->avatar($video);
 
                 foreach ($blacklist_fields as $field) {
@@ -427,7 +427,7 @@ class API extends REST
                 $video = array_merge($video, $udetails);
 
                 $video['thumbs'] = ['default' => get_thumb($video)];
-                $video['url'] = $video['video_link'] = $video['videoLink'] = videoLink($video);
+                $video['url'] = $video['video_link'] = $video['videoLink'] = video_link($video);
                 $video['avatar'] = $video['user_photo'] = $video['displayPic'] = $userquery->avatar($video);
 
                 foreach ($blacklist_fields as $field) {
@@ -671,7 +671,7 @@ class API extends REST
                 $video['title'] = utf8_encode($video['title']);
                 $video['description'] = utf8_encode($video['description']);
                 $video['thumbs'] = ['default' => get_thumb($video), 'big' => get_thumb($video, 'big'), '640x480' => get_thumb($video, '640x480')];
-                $video['url'] = $video['video_link'] = $video['videoLink'] = videoLink($video);
+                $video['url'] = $video['video_link'] = $video['videoLink'] = video_link($video);
                 $video['avatar'] = $video['user_photo'] = $video['displayPic'] = $userquery->avatar($video);
                 $video['avatars']['medium'] = $userquery->avatar($video, 'small');
                 $video['avatars']['xmedium'] = $userquery->avatar($video, 'xmedium');
@@ -706,7 +706,7 @@ class API extends REST
                     $video['description'] = utf8_encode($video['description']);
                     $video['thumbs'] = ['default' => get_thumb($video), 'big' => get_thumb($video, 'big'), '640x480' => get_thumb($video, '640x480')];
 
-                    $video['url'] = $video['video_link'] = $video['videoLink'] = videoLink($video);
+                    $video['url'] = $video['video_link'] = $video['videoLink'] = video_link($video);
                     $video['avatar'] = $video['user_photo'] = $video['displayPic'] = $userquery->avatar($video);
                     $video['avatars']['medium'] = $userquery->avatar($video, 'medium');
                     $video['avatars']['xmedium'] = $userquery->avatar($video, 'xmedium');

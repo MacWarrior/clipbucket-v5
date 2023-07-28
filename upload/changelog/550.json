@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"193",
+  "revision":"194",
   "status":"dev",
   "detail":[
     {
@@ -87,6 +87,7 @@
         ,"Fix possible SQL injection"
         ,"Remove unused files"
         ,"Refactor SQL debug"
+        ,"Fix Smarty error handling compatibility for PHP 8.1+"
       ]
     },
     {
@@ -127,6 +128,7 @@
         ,"Fix video storage when using 'Stay MP4 as it is'"
         ,"With 'Stay MP4 as it is', non-mp4 videos must be converted"
         ,"Fix video duration detection failure in some rare cases"
+        ,"Fix long conversion process failing"
       ]
     }
     ,{
@@ -184,6 +186,7 @@
         ,"Add script for Debian 12 + Nginx"
         ,"Update installation process"
         ,"Fix SQL queries"
+        ,"Fix default video activation config value"
       ]
     }
   ]

@@ -89,7 +89,7 @@
 					{foreach $playlists as $playlist}
 					<div class="playlist clearfix">
 						{$items = get_playlist_items($playlist.playlist_id)}
-						<a href="{VideoLink($items[0])}"><h3>{display_clean($playlist.playlist_name)}</h3></a>
+						<a href="{video_link($items[0])}"><h3>{display_clean($playlist.playlist_name)}</h3></a>
 						<div class="clearfix row">
 							{foreach $items as $item}
 								{if $item@iteration == 5}
@@ -100,7 +100,7 @@
 							<div class="video col-lg-3 col-md-4 col-sm-6 col-xs-6">
 									{$videos = get_videos(['videoid'=>$videoid,'limit'=>'2'])}
 									{foreach $videos as $video}
-								<a href="{videoLink($video)}{if $Cbucket->configs.seo == 'no'}&{else}?{/if}play_list={$playlist.playlist_id}" class="playlist-video">
+								<a href="{video_link($video)}{if $Cbucket->configs.seo == 'no'}&{else}?{/if}play_list={$playlist.playlist_id}" class="playlist-video">
 									<img src="{getThumb vdetails=$video size=168x105}" class="img-responsive">
 									<img src="{$theme}/images/thumb-ratio.png" alt="" class="thumb-ratio">
 								</a>

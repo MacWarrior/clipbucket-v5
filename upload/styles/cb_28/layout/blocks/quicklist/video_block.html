@@ -4,14 +4,14 @@
 <div class="qlist_item clearfix" style="background-color:#{$bg}; {if $selected==$video.videoid} border:1px solid #999{/if}" id="{$unique_id}playlist_cont_{$video.videoid}">
 	<div class="pl_num">{$smarty.section.item.iteration}</div>
 	<div class="pl_thumb">
-		<a href="{videoLink($video)}" target="blank">
+		<a href="{video_link($video)}" target="blank">
 			<img src="{getThumb vdetails=$video}" class="img-responsive" alt="">
 			<img src="{$theme}/images/thumb-ratio.png" alt="" class="thumb-ratio">
 		</a>
 		<span class="pl_duration">{$video.duration|SetTime}</span>
 	</div>
 	<div class="pl_details" onclick="window.location='{$videoLink}'">
-		<p><a href="{videoLink($video)}" target="blank" >{display_clean($video.title|truncate:25)}</a></p>
+		<p><a href="{video_link($video)}" target="blank" >{display_clean($video.title|truncate:25)}</a></p>
 		<p>{lang code="by"} {display_clean($video.username)}</p>
 	</div>
 	{if $show_delete=='yes'}

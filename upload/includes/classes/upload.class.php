@@ -1,5 +1,4 @@
 <?php
-
 class Upload
 {
     var $custom_form_fields = [];  //Step 1 of Uploading
@@ -50,6 +49,7 @@ class Upload
 
     /**
      * @throws phpmailerException
+     * @throws Exception
      */
     function submit_upload($array = null)
     {
@@ -88,10 +88,8 @@ class Upload
                 } else {
                     return false;
                 }
-            } else {
-                if (!has_access('allow_video_upload', true, true)) {
-                    return false;
-                }
+            } else if (!has_access('allow_video_upload', true, true)) {
+                return false;
             }
 
             if (is_array($_FILES)) {
@@ -180,16 +178,9 @@ class Upload
             $query_field[] = 'uploader_ip';
             $query_val[] = $_SERVER['REMOTE_ADDR'];
 
-            $activation = ACTIVATION;
-
             //Setting Activation Option
-            if ($activation == 0) {
-                $active = 'yes';
-            } else {
-                $active = 'no';
-            }
             $query_field[] = 'active';
-            $query_val[] = $active;
+            $query_val[] = config('activation') == 0 ? 'yes' : 'no';
 
             $query_field[] = 'date_added';
             $query_val[] = dateNow();

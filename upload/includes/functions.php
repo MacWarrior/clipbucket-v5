@@ -1674,7 +1674,6 @@ function show_rating($params)
             break;
 
         case 'custom':
-        case 'own_style':
             $file = LAYOUT . DIRECTORY_SEPARATOR . $params['file'];
             if (!empty($params['file']) && file_exists($file)) {
                 // File exists, lets start assign things
@@ -1702,7 +1701,7 @@ function show_rating($params)
  *
  * @return string
  */
-function ad($in)
+function ad($in): string
 {
     return stripslashes($in);
 }

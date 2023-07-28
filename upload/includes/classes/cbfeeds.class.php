@@ -158,6 +158,7 @@ class cbfeeds
      * @param $user
      *
      * @return array|bool
+     * @throws Exception
      */
     function getUserFeeds($user)
     {
@@ -235,10 +236,10 @@ class cbfeeds
                             if ($action == 'add_favorite') {
                                 $farr['action_title'] = sprintf(lang('user_has_favorited_video'), $userlink);
                             }
-                            $farr['link'] = videoLink($video);
+                            $farr['link'] = video_link($video);
                             $farr['object_content'] = $video['description'];
                             $farr['thumb'] = get_thumb($video);
-                            $farr['links'][] = ['link' => videoLink($video), 'text' => lang('watch_video')];
+                            $farr['links'][] = ['link' => video_link($video), 'text' => lang('watch_video')];
                             $farr['icon'] = 'video.png';
 
                             if ($action == 'add_favorite') {
@@ -297,10 +298,10 @@ class cbfeeds
                             //Content Title
                             $farr['title'] = $comment['title'];
                             $farr['action_title'] = $userlink . ' ' . lang('commented on a post');
-                            $farr['link'] = videoLink($video);
+                            $farr['link'] = video_link($video);
                             $farr['object_content'] = $video['description'];
                             $farr['thumb'] = get_thumb($video);
-                            $farr['links'][] = ['link' => videoLink($video), 'text' => lang('watch_video')];
+                            $farr['links'][] = ['link' => video_link($video), 'text' => lang('watch_video')];
                             $farr['icon'] = 'video.png';
                             if ($action == 'add_favorite') {
                                 $farr['icon'] = 'heart.png';

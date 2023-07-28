@@ -21,7 +21,7 @@ if (is_array($files)) {
         $file_details = get_file_details($fileName, true);
 
         //Thanks to pandusetiawan @ forums.clip-bucket.com
-        if ($file_details['conversion_status'] == 'failed' or strpos($file_details['conversion_log'], 'Conversion_status : failed') > 0) {
+        if ($file_details['conversion_status'] == 'failed' || strpos($file_details['conversion_log'], 'Conversion_status : failed') > 0) {
             update_processed_video($file, 'Failed');
 
             $db->update(tbl('conversion_queue'),
@@ -39,7 +39,7 @@ if (is_array($files)) {
                 }
             }
 
-        } elseif ($file_details['conversion_status'] == 'completed' or strpos($file_details['conversion_log'], 'Conversion_status : completed') > 0 or $file_details['conversion_status'] == 'Successful' or strpos($file_details['conversion_log'], 'Conversion_status : Successful') > 0) {
+        } elseif ($file_details['conversion_status'] == 'completed' || strpos($file_details['conversion_log'], 'Conversion_status : completed') > 0 || $file_details['conversion_status'] == 'Successful' || strpos($file_details['conversion_log'], 'Conversion_status : Successful') > 0) {
             update_processed_video($file, 'Successful');
             $db->update(tbl('conversion_queue'),
                 ['cqueue_conversion', 'time_completed'],
