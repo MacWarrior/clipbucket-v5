@@ -1,16 +1,12 @@
 <?php
-
 /*
-Plugin Name: Comment Censor
-Description: This plugin will remove bullshit words from ClipBucket
-Author: Arslan Hassan
-Author Website: http://clip-bucket.com/
-ClipBucket Version: 2
-Version: 1.0
-Website: http://labguru.com/
-Plugin Type: global
+    Plugin Name: Comment Censor
+    Description: This plugin will remove bullshit words from ClipBucket
+    Author: Arslan Hassan
+    ClipBucket Version: 2
+    Version: 1.0
+    Website: https://github.com/arslancb/clipbucket
 */
-
 
 if (!function_exists('censor_words')) {
     function censor_words($comment, $show_something = null)

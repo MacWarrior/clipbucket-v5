@@ -1,15 +1,12 @@
 <?php
 /*
-Plugin Name: Comment BBCode
-Description: SAMPLE PLUGIN FOR COMMENT AND DESCRIPTION MODIFICATION
-Author: Arslan Hassan
-Author Website: http://clip-bucket.com/
-ClipBucket Version: 2
-Version: 1.0
-Website: http://labguru.com/
-Plugin Type: global
+    Plugin Name: Comment BBCode
+    Description: SAMPLE PLUGIN FOR COMMENT AND DESCRIPTION MODIFICATION
+    Author: Arslan Hassan
+    ClipBucket Version: 2
+    Version: 1.0
+    Website: https://github.com/arslancb/clipbucket
 */
-
 
 if (!function_exists('bb_to_html')) {
     function bb_to_html($comment)

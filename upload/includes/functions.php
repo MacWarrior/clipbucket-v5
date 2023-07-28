@@ -684,6 +684,7 @@ function getSmartyCategoryList($params)
  * @param      $flds
  * @param      $vls
  * @param null $ep
+ * @throws Exception
  * @uses : { class : $db } { function : dbInsert }
  *
  */
@@ -701,7 +702,7 @@ function dbInsert($tbl, $flds, $vls, $ep = null)
  * @param string $type
  * @param bool $secure
  *
- * @return null
+ * @return array|void
  * @internal param $ { string } { $msg } { message to display }
  * @internal param $ { string } { $type } { e for error and m for message }
  * @internal param $ { integer } { $id } { Any Predefined Message ID }
@@ -791,10 +792,11 @@ function user_name()
  * @param bool $verify_logged_user
  *
  * @return bool
+ * @throws Exception
  * @uses : { class : $userquery } { function : login_check }
  *
  */
-function has_access($access, $check_only = true, $verify_logged_user = true)
+function has_access($access, $check_only = true, $verify_logged_user = true): bool
 {
     global $userquery;
     return $userquery->login_check($access, $check_only, $verify_logged_user);
@@ -892,7 +894,7 @@ function apply_func($func, $val)
  *
  * @return string
  */
-function yes_or_no($input, $return = 'yes')
+function yes_or_no($input, $return = 'yes'): string
 {
     $input = strtolower($input);
     if ($input != 'yes' && $input != 'no') {
@@ -966,7 +968,7 @@ function php_path()
  *
  * @return string
  */
-function get_binaries($path)
+function get_binaries($path): string
 {
     $type = '';
     if (is_array($path)) {
@@ -1044,7 +1046,7 @@ function get_binaries($path)
  *
  * @return string
  */
-function unhtmlentities($string)
+function unhtmlentities($string): string
 {
     $trans_tbl = get_html_translation_table(HTML_ENTITIES);
     $trans_tbl = array_flip($trans_tbl);
@@ -1185,6 +1187,7 @@ function display_sharing_opt($input)
  * @param bool $count_only
  *
  * @return array|bool|int
+ * @throws Exception
  * @uses : { class : $userquery } { function : get_user_vids }
  *
  */
@@ -1286,6 +1289,7 @@ function username_check($username): bool
  * @param $user
  *
  * @return bool
+ * @throws Exception
  * @uses : { class : $userquery } { function : username_exists }
  *
  */

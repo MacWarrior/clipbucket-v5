@@ -3,8 +3,9 @@
     Plugin Name: ClipBucket Editor's Pick Plugin
     Description: This plugin is used to display Editor's Pick Player On Home Page and also let you pick videos for editor's pick
     Author: Arslan Hassan & MacWarrior
-    ClipBucket Version: CB5.5.0
     Website: https://github.com/MacWarrior/clipbucket-v5/
+    Version: 2.0.0
+    ClipBucket Version: 5.5.0
 */
 
 /**

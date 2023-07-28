@@ -1,13 +1,11 @@
 <?php
 /*
-Plugin Name: Provides ReCaptcha for your ClipBucket Website
-Description: This will enabled recaptcha for your clipbucket on variuos areas such as signup, comment, forgot password etc..
-Author: Arslan Hassan
-Author Website: http://clip-bucket.com/
-ClipBucket Version: 2
-Version: 1.0
-Website: http://clip-bucket.com/
-Plugin Type: global
+    Plugin Name: Provides ReCaptcha for your ClipBucket Website
+    Description: This will enabled recaptcha for your clipbucket on variuos areas such as signup, comment, forgot password etc..
+    Author: Arslan Hassan
+    ClipBucket Version: 2
+    Version: 1.0
+    Website: https://github.com/arslancb/clipbucket
 */
 
 include("recaptchalib.php");

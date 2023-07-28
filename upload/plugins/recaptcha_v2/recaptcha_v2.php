@@ -1,14 +1,11 @@
 <?php
-
 /*
-Plugin Name: ReCaptcha V2
-Description: Advanced recaptcha varification plugin integrated with google's Recaptcha V2 API
-Author: Awais Fiaz
-Author Website: http://clip-bucket.com/
-ClipBucket Version: 2.8.x
-Version: 1.0
-Website: http://clip-bucket.com/
-Plugin Type: global
+    Plugin Name: ReCaptcha V2
+    Description: Advanced recaptcha varification plugin integrated with google's Recaptcha V2 API
+    Author: Awais Fiaz
+    ClipBucket Version: 2.8.x
+    Version: 1.0
+    Website: https://github.com/arslancb/clipbucket
 */
 
 // Get a key from https://www.google.com/recaptcha/admin

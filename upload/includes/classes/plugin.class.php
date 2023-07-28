@@ -38,7 +38,7 @@ class CBPlugin
 
         //Our Plugin List has plugin main files only, now star reading files
         foreach ($item_list as $plugin_file) {
-            $plugin_details = $this->getPluginDetails($plugin_file);
+            $plugin_details = $this->get_plugin_details($plugin_file);
             if (!empty($plugin_details['name'])) {
                 $plugins_array[] = $plugin_details;
             }
@@ -47,7 +47,7 @@ class CBPlugin
         //Now Reading Sub Dir Files
         foreach ($subitem_list as $sub_dir => $sub_dir_list) {
             foreach ($subitem_list[$sub_dir] as $plugin_file) {
-                $plugin_details = $this->getPluginDetails($plugin_file, $sub_dir);
+                $plugin_details = $this->get_plugin_details($plugin_file, $sub_dir);
                 $plugin_details['folder'] = $sub_dir;
                 if (!empty($plugin_details['name'])) {
                     $plugins_array[] = $plugin_details;
@@ -67,7 +67,7 @@ class CBPlugin
         $plugin_list = $this->getPlugins();
 
         //Now Checking if plugin is installed or not
-        if (is_array($plugin_list)) {
+        if (!empty($plugin_list)) {
             $plug_array = [];
             foreach ($plugin_list as $plugin) {
                 if (!$this->is_installed($plugin['file'])) {
@@ -110,13 +110,12 @@ class CBPlugin
     }
 
     /**
-     * Function used to check weather plugin is instlled or not
-     *
      * @param      $file
      * @param null $v
      * @param null $folder
      *
      * @return bool
+     * @throws Exception
      */
     function is_installed($file, $v = null, $folder = null): bool
     {
@@ -158,14 +157,13 @@ class CBPlugin
             $plugin_data = fread($fp, 8192);
             // PHP will close file handle, but we are good citizens.
             fclose($fp);
-            preg_match('/Plugin Name:(.*)$/mi', $plugin_data, $name);
-            preg_match('/Website:(.*)$/mi', $plugin_data, $website);
-            preg_match('/Version:(.*)/mi', $plugin_data, $version);
-            preg_match('/Description:(.*)$/mi', $plugin_data, $description);
-            preg_match('/Author:(.*)$/mi', $plugin_data, $author);
-            preg_match('/Author Website:(.*)$/mi', $plugin_data, $author_page);
+            preg_match('/Plugin Name:(.*)$/mi'       , $plugin_data, $name);
+            preg_match('/Website:(.*)$/mi'           , $plugin_data, $website);
+            preg_match('/Version:(.*)/mi'            , $plugin_data, $version);
+            preg_match('/Description:(.*)$/mi'       , $plugin_data, $description);
+            preg_match('/Author:(.*)$/mi'            , $plugin_data, $author);
+            preg_match('/Author Website:(.*)$/mi'    , $plugin_data, $author_website);
             preg_match('/ClipBucket Version:(.*)$/mi', $plugin_data, $cbversion);
-            preg_match('/Plugin Type:(.*)$/mi', $plugin_data, $type);
 
             $details_array = [
                 'name',
@@ -173,14 +171,15 @@ class CBPlugin
                 'version',
                 'description',
                 'author',
-                'cbversion',
-                'code',
-                'author_page',
-                'type'
+                'author_website',
+                'cbversion'
             ];
             foreach ($details_array as $detail) {
-                $plugin_array[$detail] = (isset(${$detail}[1])) ? ${$detail}[1] : false;
+                $plugin_array[$detail] = (isset(${$detail}[1])) ? trim(${$detail}[1]) : false;
             }
+
+            $plugin_array['compatibility'] = ($plugin_array['cbversion'] == VERSION);
+
             $plugin_array['file'] = $plug_file;
             if (isset($code[1])) {
                 $plugin_array['code'] = preg_replace('/\s/', '', $code[1]);
@@ -191,30 +190,6 @@ class CBPlugin
         return false;
     }
 
-    function getPluginDetails($file, $sub_dir = null)
-    {
-        return $this->get_plugin_details($file, $sub_dir);
-    }
-
-    /**
-     * Function used to get plugin details from database
-     *
-     * @param      $file
-     * @param null $folder
-     *
-     * @return mixed
-     */
-    function getPlugin($file, $folder = null)
-    {
-        global $db;
-        if ($folder) {
-            $folder_query = " AND plugin_folder = '$folder'";
-        }
-
-        $result = $db->select(tbl('plugins'), '*', " plugin_file ='" . $file . "' $folder_query");
-        return $result[0];
-    }
-
     /**
      * ClipBucket Internal Plugin Installer
      *
@@ -222,6 +197,7 @@ class CBPlugin
      * @param null $folder
      *
      * @return bool|string
+     * @throws Exception
      */
     function installPlugin($pluginFile, $folder = null)
     {
@@ -242,7 +218,7 @@ class CBPlugin
             if ($folder != '') {
                 $folder = $folder . DIRECTORY_SEPARATOR;
             }
-            $plug_details = $this->getPluginDetails($folder . $pluginFile);
+            $plug_details = $this->get_plugin_details($folder . $pluginFile);
 
             $plug_install_file = PLUG_DIR . DIRECTORY_SEPARATOR . $folder . 'install_' . $pluginFile;
             if (file_exists($plug_install_file)) {
@@ -267,7 +243,6 @@ class CBPlugin
 
             //Checking For the installation SQL
             e(lang('plugin_install_msg'), 'm');
-            define('NEW_INSTALL', false);
             return PLUG_DIR . DIRECTORY_SEPARATOR . $folder . $pluginFile;
         }
         return false;
@@ -281,6 +256,7 @@ class CBPlugin
      * @param null $folder
      *
      * @return null
+     * @throws Exception
      */
     function pluginActive($plugin_file, $active = 'yes', $folder = null)
     {
@@ -307,6 +283,7 @@ class CBPlugin
      * @param null $folder
      *
      * @return null
+     * @throws Exception
      */
     function uninstallPlugin($file, $folder = null)
     {

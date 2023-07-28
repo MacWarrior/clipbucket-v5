@@ -1,14 +1,12 @@
 <?php
-
 /*
-Plugin Name: Clipbucket Elastic Search Module 
-Description: This Plugins provides a new experience for efficient search 
-Author: Fahad Abbas
-Author Website: http://clip-bucket.com/
-Version: 2.0
-ClipBucket Version: 4.2
+    Plugin Name: Clipbucket Elastic Search Module
+    Description: This Plugins provides a new experience for efficient search
+    Author: Fahad Abbas
+    Website: https://github.com/arslancb/clipbucket
+    Version: 2.0
+    ClipBucket Version: 4.2
 */
-
 
 define('CB_ES', this_plugin(__FILE__));
 assign('cb_es', CB_ES_MANAGER);

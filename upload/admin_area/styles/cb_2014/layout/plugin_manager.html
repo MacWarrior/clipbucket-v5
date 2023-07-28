@@ -26,17 +26,25 @@
 				<input type="hidden" name="plugin_folder_{$smarty.foreach.item.iteration}" value="{$plug.folder}" />
 			</td>
 			<td>
-				<strong>{$plug.name}</strong>
-				<p>{$plug.description}</p>
+				<strong>
+					{if $plug.website}<a href="{display_clean($plug.website)}" target="_blank">{/if}
+					{display_clean($plug.name)}
+					{if $plug.website}</a>{/if}
+				</strong>
+				<p>{display_clean($plug.description)}</p>
 				<div class="pluginStatus">
 				{if $plug.plugin_active == 'yes'}
 					<span class="label label-success">Active</span>
-				{elseif $plug.plugin_active != 'Active'}
+				{else}
 					<span class="label label-danger">Inactive</span>
 				{/if}
-					Author : <strong>{$plug.author}</strong>
-					|
-					Ver : <strong>{$plug.version}</strong>
+					Author : <strong>
+					{if $plug.author_website}<a href="{display_clean($plug.author_website)}" target="_blank">{/if}
+					{display_clean($plug.author)}
+					{if $plug.author_website}</a>{/if}
+					</strong>
+					| Version : <strong>{display_clean($plug.version)}</strong>
+					| Compatibility : <strong>{display_clean($plug.cbversion)} <i class="glyphicon {if $plug.compatibility}glyphicon-ok green{else}glyphicon-warning-sign orange{/if}" title="{if $plug.compatibility}{lang code='plugin_compatible'}{else}{lang code='plugin_not_compatible'}{/if}"></i></strong>
 				</div>
 			</td>
 			<td>
@@ -96,16 +104,21 @@
 				<input type="hidden" name="plugin_folder_{$smarty.foreach.item.iteration}" value="{$plug.folder}" />
 			</td>
 			<td>
-				<strong>{$plug.name}</strong>
-				<span class="vdo_sets">
-					<strong>{$plug.plugin_active}</strong><br/>
-					Author :
-					<strong>
-						<a href="{$plug.website}">{$plug.author}</a>
-					</strong><br/>
-					Version : <strong>{$plug.version}</strong>
-				</span>
-				<p>{$plug.description}</p>
+				<strong>
+					{if $plug.website}<a href="{display_clean($plug.website)}" target="_blank">{/if}
+					{display_clean($plug.name)}
+					{if $plug.website}</a>{/if}
+				</strong>
+				<p>{display_clean($plug.description)}</p>
+				<div class="pluginStatus">
+					Author : <strong>
+					{if $plug.author_website}<a href="{display_clean($plug.author_website)}" target="_blank">{/if}
+					{display_clean($plug.author)}
+					{if $plug.author_website}</a>{/if}
+				</strong>
+					| Version : <strong>{display_clean($plug.version)}</strong>
+					| Compatibility : <strong>{display_clean($plug.cbversion)} <i class="glyphicon {if $plug.compatibility}glyphicon-ok green{else}glyphicon-warning-sign orange{/if}" title="{if $plug.compatibility}{lang code='plugin_compatible'}{else}{lang code='plugin_not_compatible'}{/if}"></i></strong>
+				</div>
 				<span>
 					<a class="btn btn-info btn-xs" href="?install_plugin={$plug.file}{if $plug.folder!=''}&f={$plug.folder}{/if}">
 						Install Plugin

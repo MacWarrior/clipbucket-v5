@@ -3,8 +3,9 @@
     Plugin Name: Server Thumb for ClipBucket
     Description: Increase photos thumbs quality of default theme
     Author: Mohammad Shoaib & MacWarrior
-    Version: CB5.5.0
     Website: https://github.com/MacWarrior/clipbucket-v5/
+    Version: 2.0.0
+    ClipBucket Version: 5.5.0
 */
 const DEFAULT_WIDTH = 200;
 const DEFAULT_HEIGHT = 120;

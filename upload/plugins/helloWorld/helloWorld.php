@@ -1,13 +1,12 @@
 <?php
-/**
- * Plugin Name: HelloWorld
- * Description: Demonstrates to developers how ClipBucket plugins work
- * Author: Saqib Razzaq
- * ClipBucket Version: 2.8.1
- * Plugin Version: Version of plugin
- * @since October 3rd, 2016
- * Github: https://github.com/saqirzzq
- */
+/*
+    Plugin Name: HelloWorld
+    Description: Demonstrates to developers how ClipBucket plugins work
+    Author: Saqib Razzaq
+    Website: https://github.com/arslancb/clipbucket
+    Version: Version of plugin
+    ClipBucket Version: 2.8.1
+*/
 
 /*
 * This will be the base name of your plugin. It is stored
