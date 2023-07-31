@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"195",
+  "revision":"196",
   "status":"dev",
   "detail":[
     {
@@ -59,6 +59,8 @@
         ,"Implement email deactivation"
         ,"Implement subtitles management"
         ,"Add redirection on editing missing video"
+        ,"Update summernote to 0.8.18"
+        ,"Fix jQuery-UI loaded twice"
       ]
     },
     {
