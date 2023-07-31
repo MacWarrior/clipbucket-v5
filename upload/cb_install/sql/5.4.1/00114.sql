@@ -6,7 +6,7 @@ CREATE TABLE `{tbl_prefix}video_resolution` (
     `width` int(11) UNSIGNED NOT NULL DEFAULT 0,
     `height` int(11) UNSIGNED NOT NULL DEFAULT 0,
     `video_bitrate` int(10) UNSIGNED NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 ALTER TABLE `{tbl_prefix}video_resolution`
     ADD PRIMARY KEY (`id_video_resolution`),

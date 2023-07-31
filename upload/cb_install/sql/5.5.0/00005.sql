@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_audio_tracks` (
     `number` varchar(2) NOT NULL,
     `title` varchar(64) NOT NULL,
     `channels` tinyint(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 ALTER TABLE `{tbl_prefix}video_audio_tracks`
     ADD UNIQUE KEY `videoid` (`videoid`,`number`);

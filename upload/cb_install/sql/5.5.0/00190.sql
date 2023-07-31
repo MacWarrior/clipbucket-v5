@@ -6,9 +6,9 @@ SET @language_id_fra = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE 
 SET @language_id_deu = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = 'de');
 SET @language_id_por = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = 'pt-BR');
 
-SET @language_key = 'disable_email';
+SET @language_key = 'disable_email' COLLATE utf8mb4_unicode_520_ci;
 INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);
-SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = @language_key);
+SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
     VALUES (@id_language_key, 'Disable Emails', @language_id_eng);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
@@ -20,9 +20,9 @@ UPDATE `{tbl_prefix}languages_translations` SET translation = 'Dernière étape'
 UPDATE `{tbl_prefix}languages_translations` SET translation = 'Nur noch ein Schritt' WHERE id_language_key = @id_language_key AND language_id = @language_id_deu;
 UPDATE `{tbl_prefix}languages_translations` SET translation = 'Apenas mais um passo' WHERE id_language_key = @id_language_key AND language_id = @language_id_por;
 
-SET @language_key = 'signup_success_usr_ok_description';
+SET @language_key = 'signup_success_usr_ok_description' COLLATE utf8mb4_unicode_520_ci;
 INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);
-SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = @language_key);
+SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
     VALUES (@id_language_key, 'Your are just one step behind from becoming an official member of our website.  Please check your email, we have sent you a confirmation email which contains a confirmation link from our website, Please click it to complete your registration.', @language_id_eng);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
@@ -32,9 +32,9 @@ INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `tra
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
     VALUES (@id_language_key, 'Você é apenas um passo para trás de se tornar um meme oficial do nosso site. Por favor, verifique seu e-mail, enviamos um e-mail de confirmação que contém um link de confirmação do nosso site. Por favor, clique nele para completar o seu registro.', @language_id_por);
 
-SET @language_key = 'signup_success_usr_ok_description_no_email';
+SET @language_key = 'signup_success_usr_ok_description_no_email' COLLATE utf8mb4_unicode_520_ci;
 INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);
-SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = @language_key);
+SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
     VALUES (@id_language_key, 'Emails have been disabled, please contact an administrator to manually enable your account.', @language_id_eng);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)

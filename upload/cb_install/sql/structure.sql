@@ -11,21 +11,21 @@ CREATE TABLE `{tbl_prefix}action_log` (
   `action_details` text NOT NULL,
   `action_obj_id` int(255) NOT NULL,
   `action_done_id` int(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}admin_notes` (
   `note_id` int(225) NOT NULL,
   `note` text CHARACTER SET ucs2 NOT NULL,
   `date_added` datetime NOT NULL,
   `userid` int(225) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}admin_todo` (
   `todo_id` int(225) NOT NULL,
   `todo` text CHARACTER SET ucs2 NOT NULL,
   `date_added` datetime NOT NULL,
   `userid` int(225) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}ads_data` (
   `ad_id` int(50) NOT NULL,
@@ -36,14 +36,14 @@ CREATE TABLE `{tbl_prefix}ads_data` (
   `ad_impressions` bigint(255) NOT NULL DEFAULT 0,
   `last_viewed` datetime NOT NULL DEFAULT '1000-01-01 00:00:00',
   `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}ads_placements` (
   `placement_id` int(20) NOT NULL,
   `placement` varchar(26) NOT NULL,
   `placement_name` varchar(50) NOT NULL,
   `disable` enum('yes','no') NOT NULL DEFAULT 'no'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}collections` (
   `collection_id` bigint(25) NOT NULL,
@@ -68,7 +68,7 @@ CREATE TABLE `{tbl_prefix}collections` (
   `active` varchar(4) NOT NULL,
   `public_upload` varchar(4) NOT NULL,
   `type` varchar(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}collection_categories` (
   `category_id` int(255) NOT NULL,
@@ -79,7 +79,7 @@ CREATE TABLE `{tbl_prefix}collection_categories` (
   `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `category_thumb` mediumtext NOT NULL,
   `isdefault` enum('yes','no') NOT NULL DEFAULT 'no'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}collection_contributors` (
   `contributor_id` int(200) NOT NULL,
@@ -87,7 +87,7 @@ CREATE TABLE `{tbl_prefix}collection_contributors` (
   `userid` int(255) NOT NULL,
   `can_edit` enum('yes','no') NOT NULL DEFAULT 'no',
   `date_added` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}collection_items` (
   `ci_id` bigint(20) NOT NULL,
@@ -96,7 +96,7 @@ CREATE TABLE `{tbl_prefix}collection_items` (
   `userid` bigint(20) NOT NULL,
   `type` varchar(10) NOT NULL,
   `date_added` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}comments` (
   `comment_id` int(60) NOT NULL,
@@ -114,13 +114,13 @@ CREATE TABLE `{tbl_prefix}comments` (
   `spam_voters` text NULL DEFAULT NULL,
   `date_added` datetime NOT NULL,
   `comment_ip` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}config` (
   `configid` int(20) NOT NULL,
   `name` varchar(100) NOT NULL DEFAULT '',
   `value` mediumtext NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}contacts` (
   `contact_id` int(225) NOT NULL,
@@ -130,7 +130,7 @@ CREATE TABLE `{tbl_prefix}contacts` (
   `contact_group_id` int(255) NOT NULL DEFAULT 0,
   `request_type` enum('in','out') NOT NULL,
   `date_added` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}conversion_queue` (
   `cqueue_id` int(11) NOT NULL,
@@ -141,7 +141,7 @@ CREATE TABLE `{tbl_prefix}conversion_queue` (
   `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `time_started` varchar(32) NOT NULL DEFAULT '0',
   `time_completed` varchar(32) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}counters` (
   `counter_id` int(100) NOT NULL,
@@ -150,7 +150,7 @@ CREATE TABLE `{tbl_prefix}counters` (
   `query_md5` varchar(200) NOT NULL,
   `counts` bigint(200) NOT NULL,
   `date_added` varchar(200) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}countries` (
   `country_id` int(80) NOT NULL,
@@ -159,7 +159,7 @@ CREATE TABLE `{tbl_prefix}countries` (
   `name_en` varchar(80) NOT NULL,
   `iso3` char(3) DEFAULT NULL,
   `numcode` smallint(6) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}email_templates` (
   `email_template_id` int(11) NOT NULL,
@@ -168,7 +168,7 @@ CREATE TABLE `{tbl_prefix}email_templates` (
   `email_template_subject` mediumtext NOT NULL,
   `email_template` text NOT NULL,
   `email_template_allowed_tags` mediumtext NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}favorites` (
   `favorite_id` int(225) NOT NULL,
@@ -176,7 +176,7 @@ CREATE TABLE `{tbl_prefix}favorites` (
   `id` int(225) NOT NULL,
   `userid` int(225) NOT NULL,
   `date_added` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}flags` (
   `flag_id` int(225) NOT NULL,
@@ -185,28 +185,28 @@ CREATE TABLE `{tbl_prefix}flags` (
   `userid` int(225) NOT NULL,
   `flag_type` bigint(25) NOT NULL,
   `date_added` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}groups` (
   `group_id` int(225) NOT NULL,
-  `group_name` mediumtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `group_name` mediumtext NOT NULL,
   `userid` int(255) NOT NULL,
   `group_admins` text NOT NULL,
-  `group_description` mediumtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `group_tags` mediumtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `group_url` mediumtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `category` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `group_privacy` enum('0','1','2') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
-  `video_type` enum('0','1','2') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
-  `post_type` enum('0','1','2') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
-  `active` enum('yes','no') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT 'yes',
+  `group_description` mediumtext NOT NULL,
+  `group_tags` mediumtext NOT NULL,
+  `group_url` mediumtext NOT NULL,
+  `category` varchar(100) NOT NULL,
+  `group_privacy` enum('0','1','2') NOT NULL DEFAULT '0',
+  `video_type` enum('0','1','2') NOT NULL DEFAULT '0',
+  `post_type` enum('0','1','2') NOT NULL DEFAULT '0',
+  `active` enum('yes','no') NOT NULL DEFAULT 'yes',
   `date_added` datetime NOT NULL,
-  `featured` enum('yes','no') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT 'no',
+  `featured` enum('yes','no') NOT NULL DEFAULT 'no',
   `total_views` bigint(225) NOT NULL,
   `total_videos` int(225) NOT NULL,
   `total_members` int(225) NOT NULL,
   `total_topics` int(225) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}group_categories` (
   `category_id` int(225) NOT NULL,
@@ -216,7 +216,7 @@ CREATE TABLE `{tbl_prefix}group_categories` (
   `date_added` datetime NOT NULL,
   `category_thumb` mediumtext NOT NULL,
   `isdefault` enum('yes','no') NOT NULL DEFAULT 'no'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}group_invitations` (
   `invitation_id` int(225) NOT NULL,
@@ -224,7 +224,7 @@ CREATE TABLE `{tbl_prefix}group_invitations` (
   `userid` int(255) NOT NULL,
   `invited` int(225) NOT NULL,
   `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}group_members` (
   `group_mid` int(225) NOT NULL,
@@ -232,7 +232,7 @@ CREATE TABLE `{tbl_prefix}group_members` (
   `userid` int(11) NOT NULL,
   `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `active` enum('yes','no') NOT NULL DEFAULT 'yes'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}group_posts` (
   `post_id` int(11) NOT NULL,
@@ -240,7 +240,7 @@ CREATE TABLE `{tbl_prefix}group_posts` (
   `topic_id` int(11) NOT NULL,
   `post_content` text NOT NULL,
   `date_added` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}group_topics` (
   `topic_id` int(225) NOT NULL,
@@ -255,7 +255,7 @@ CREATE TABLE `{tbl_prefix}group_topics` (
   `total_replies` bigint(225) NOT NULL,
   `topic_icon` varchar(225) NOT NULL,
   `approved` enum('yes','no') NOT NULL DEFAULT 'yes'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}group_videos` (
   `group_video_id` int(225) NOT NULL,
@@ -263,16 +263,16 @@ CREATE TABLE `{tbl_prefix}group_videos` (
   `group_id` int(225) NOT NULL,
   `userid` int(255) NOT NULL,
   `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `approved` enum('yes','no') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `approved` enum('yes','no') NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}languages` (
   `language_id` int(9) NOT NULL,
-  `language_name` varchar(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
-  `language_code` varchar(5) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL UNIQUE ,
+  `language_name` varchar(20) NOT NULL DEFAULT '0',
+  `language_code` varchar(5) NOT NULL UNIQUE ,
   `language_active` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `language_default` enum('yes','no') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `language_default` enum('yes','no') NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}mass_emails` (
   `id` int(255) NOT NULL,
@@ -288,7 +288,7 @@ CREATE TABLE `{tbl_prefix}mass_emails` (
   `status` enum('completed','pending','sending') NOT NULL,
   `date_added` datetime NOT NULL,
   `last_update` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}messages` (
   `message_id` int(225) NOT NULL,
@@ -302,7 +302,7 @@ CREATE TABLE `{tbl_prefix}messages` (
   `message_status` enum('unread','read') NOT NULL DEFAULT 'unread',
   `reply_to` int(225) NOT NULL DEFAULT 0,
   `message_box` enum('in','out') NOT NULL DEFAULT 'in'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}pages` (
   `page_id` int(11) NOT NULL,
@@ -315,7 +315,7 @@ CREATE TABLE `{tbl_prefix}pages` (
   `active` enum('yes','no') NOT NULL,
   `delete_able` enum('yes','no') NOT NULL DEFAULT 'yes',
   `date_added` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}photos` (
   `photo_id` bigint(255) NOT NULL,
@@ -349,14 +349,7 @@ CREATE TABLE `{tbl_prefix}photos` (
   `server_url` text NULL DEFAULT NULL,
   `owner_ip` varchar(20) NOT NULL,
   `photo_details` text NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `{tbl_prefix}phrases` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `lang_iso` varchar(5) NOT NULL DEFAULT 'en',
-  `varname` varchar(250) NOT NULL DEFAULT '',
-  `text` text CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}playlists` (
   `playlist_id` int(11) NOT NULL,
@@ -380,7 +373,7 @@ CREATE TABLE `{tbl_prefix}playlists` (
   `cover` text NULL DEFAULT NULL,
   `played` int(255) NOT NULL DEFAULT 0,
   `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}playlist_items` (
   `playlist_item_id` int(225) NOT NULL,
@@ -389,7 +382,7 @@ CREATE TABLE `{tbl_prefix}playlist_items` (
   `playlist_item_type` varchar(10) NOT NULL,
   `userid` int(255) NOT NULL,
   `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}plugins` (
   `plugin_id` int(255) NOT NULL,
@@ -397,7 +390,7 @@ CREATE TABLE `{tbl_prefix}plugins` (
   `plugin_folder` text NOT NULL,
   `plugin_version` varchar(32) NOT NULL,
   `plugin_active` enum('yes','no') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}plugin_config` (
   `plugin_config_id` int(223) NOT NULL,
@@ -407,7 +400,7 @@ CREATE TABLE `{tbl_prefix}plugin_config` (
   `player_type` enum('built-in','plugin') NOT NULL DEFAULT 'built-in',
   `player_admin_file` text NOT NULL,
   `player_include_file` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}sessions` (
   `session_id` int(11) NOT NULL,
@@ -421,7 +414,7 @@ CREATE TABLE `{tbl_prefix}sessions` (
   `referer` text NOT NULL,
   `agent` text NOT NULL,
   `last_active` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}stats` (
   `stat_id` int(255) NOT NULL,
@@ -429,20 +422,20 @@ CREATE TABLE `{tbl_prefix}stats` (
   `video_stats` text NOT NULL,
   `user_stats` text NOT NULL,
   `group_stats` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}subscriptions` (
   `subscription_id` int(225) NOT NULL,
   `userid` int(11) NOT NULL,
   `subscribed_to` mediumtext NOT NULL,
   `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}template` (
   `template_id` int(20) NOT NULL,
   `template_name` varchar(25) NOT NULL,
   `template_dir` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}users` (
   `userid` bigint(20) NOT NULL,
@@ -496,7 +489,7 @@ CREATE TABLE `{tbl_prefix}users` (
   `album_privacy` enum('public','private','friends') NOT NULL DEFAULT 'private',
   `likes` int(11) NOT NULL DEFAULT 0,
   `is_live` enum('yes','no') NOT NULL DEFAULT 'no'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}user_categories` (
   `category_id` int(225) NOT NULL,
@@ -506,14 +499,14 @@ CREATE TABLE `{tbl_prefix}user_categories` (
   `date_added` datetime NOT NULL,
   `category_thumb` mediumtext NOT NULL,
   `isdefault` enum('yes','no') NOT NULL DEFAULT 'no'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}user_levels` (
   `user_level_id` int(20) NOT NULL,
   `user_level_active` enum('yes','no') NOT NULL DEFAULT 'yes',
   `user_level_name` varchar(100) NOT NULL,
   `user_level_is_default` enum('yes','no') NOT NULL DEFAULT 'no'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}user_levels_permissions` (
   `user_level_permission_id` int(22) NOT NULL,
@@ -549,7 +542,7 @@ CREATE TABLE `{tbl_prefix}user_levels_permissions` (
   `allow_manage_user_level` enum('yes','no') NOT NULL DEFAULT 'no',
   `allow_create_collection` enum('yes','no') NOT NULL DEFAULT 'yes',
   `allow_create_playlist` enum('yes','no') NOT NULL DEFAULT 'yes'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}user_permissions` (
   `permission_id` int(225) NOT NULL,
@@ -558,13 +551,13 @@ CREATE TABLE `{tbl_prefix}user_permissions` (
   `permission_code` varchar(225) NOT NULL,
   `permission_desc` mediumtext NOT NULL,
   `permission_default` enum('yes','no') NOT NULL DEFAULT 'yes'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}user_permission_types` (
   `user_permission_type_id` int(225) NOT NULL,
   `user_permission_type_name` varchar(225) NOT NULL,
   `user_permission_type_desc` mediumtext NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}user_profile` (
   `user_profile_id` int(11) NOT NULL,
@@ -615,7 +608,7 @@ CREATE TABLE `{tbl_prefix}user_profile` (
   `show_my_subscriptions` enum('yes','no') NOT NULL DEFAULT 'yes',
   `show_my_subscribers` enum('yes','no') NOT NULL DEFAULT 'yes',
   `show_my_friends` enum('yes','no') NOT NULL DEFAULT 'yes'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}video` (
   `videoid` bigint(20) NOT NULL,
@@ -679,7 +672,7 @@ CREATE TABLE `{tbl_prefix}video` (
   `is_castable` tinyint(1) NOT NULL DEFAULT 0,
   `bits_color` tinyint(4) DEFAULT NULL,
   `subscription_email` enum('pending','sent') NOT NULL DEFAULT 'pending'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}video_categories` (
   `category_id` int(225) NOT NULL,
@@ -690,14 +683,14 @@ CREATE TABLE `{tbl_prefix}video_categories` (
   `date_added` datetime NULL DEFAULT NULL,
   `category_thumb` mediumtext NOT NULL,
   `isdefault` enum('yes','no') NOT NULL DEFAULT 'no'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}video_favourites` (
   `fav_id` int(11) NOT NULL,
   `videoid` int(11) NOT NULL,
   `userid` int(11) NOT NULL,
   `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}video_files` (
   `id` int(10) UNSIGNED NOT NULL,
@@ -741,14 +734,14 @@ CREATE TABLE `{tbl_prefix}video_files` (
   `output_audio_channels` char(16) NOT NULL,
   `hd` enum('yes','no') NOT NULL DEFAULT 'no',
   `hq` enum('yes','no') NOT NULL DEFAULT 'no'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}video_views` (
   `id` int(11) NOT NULL,
   `video_id` varchar(255) NOT NULL,
   `video_views` int(11) NOT NULL,
   `last_updated` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 
 ALTER TABLE `{tbl_prefix}action_log`
@@ -857,9 +850,6 @@ ALTER TABLE `{tbl_prefix}photos`
   ADD KEY `rating` (`rating`),
   ADD KEY `total_comments` (`total_comments`);
 ALTER TABLE `{tbl_prefix}photos` ADD FULLTEXT KEY `photo_title` (`photo_title`,`photo_tags`);
-
-ALTER TABLE `{tbl_prefix}phrases`
-  ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `{tbl_prefix}playlists`
   ADD PRIMARY KEY (`playlist_id`);
@@ -1030,9 +1020,6 @@ ALTER TABLE `{tbl_prefix}pages`
 ALTER TABLE `{tbl_prefix}photos`
   MODIFY `photo_id` bigint(255) NOT NULL AUTO_INCREMENT;
 
-ALTER TABLE `{tbl_prefix}phrases`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
 ALTER TABLE `{tbl_prefix}playlists`
   MODIFY `playlist_id` int(11) NOT NULL AUTO_INCREMENT;
 
@@ -1101,7 +1088,7 @@ CREATE TABLE `{tbl_prefix}video_resolution` (
 	`width` int(11) UNSIGNED NOT NULL DEFAULT 0,
 	`height` int(11) UNSIGNED NOT NULL DEFAULT 0,
 	`video_bitrate` int(10) UNSIGNED NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 ALTER TABLE `{tbl_prefix}video_resolution`
 	ADD PRIMARY KEY (`id_video_resolution`),
@@ -1114,7 +1101,7 @@ CREATE TABLE `{tbl_prefix}video_subtitle` (
 	`videoid` bigint(20) NOT NULL,
 	`number` varchar(2) NOT NULL,
 	`title` varchar(64) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 ALTER TABLE `{tbl_prefix}video_subtitle`
 	ADD UNIQUE KEY `videoid` (`videoid`,`number`);
@@ -1125,22 +1112,18 @@ ALTER TABLE `{tbl_prefix}video_subtitle`
 ALTER TABLE `{tbl_prefix}collections`
 	ADD FOREIGN KEY (`collection_id_parent`) REFERENCES `{tbl_prefix}collections`(`collection_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
-CREATE TABLE `{tbl_prefix}languages_keys`
-(
+CREATE TABLE `{tbl_prefix}languages_keys`(
     `id_language_key` INT          NOT NULL AUTO_INCREMENT,
     `language_key`    VARCHAR(256) NOT NULL,
     PRIMARY KEY (`id_language_key`),
     UNIQUE (`language_key`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
-CREATE TABLE `{tbl_prefix}languages_translations`
-(
+CREATE TABLE `{tbl_prefix}languages_translations`(
     `language_id`     INT(11)      NOT NULL,
     `id_language_key` INT(11)      NOT NULL,
     `translation`     VARCHAR(1024) NOT NULL
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 ALTER TABLE `{tbl_prefix}languages_translations`
     ADD PRIMARY KEY (`language_id`, `id_language_key`),
@@ -1151,8 +1134,7 @@ ALTER TABLE `{tbl_prefix}languages_translations`
     ADD CONSTRAINT `{tbl_prefix}languages_translations_ibfk_1` FOREIGN KEY (`language_id`) REFERENCES `{tbl_prefix}languages` (`language_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
     ADD CONSTRAINT `{tbl_prefix}languages_translations_ibfk_2` FOREIGN KEY (`id_language_key`) REFERENCES `{tbl_prefix}languages_keys` (`id_language_key`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
-CREATE TABLE `{tbl_prefix}video_thumbs`
-(
+CREATE TABLE `{tbl_prefix}video_thumbs`(
     `videoid`    BIGINT(20)  NOT NULL,
     `resolution` VARCHAR(16) NOT NULL,
     `num`        VARCHAR(4)  NOT NULL,
@@ -1160,13 +1142,12 @@ CREATE TABLE `{tbl_prefix}video_thumbs`
     `version`    VARCHAR(30) NOT NULL,
     PRIMARY KEY `resolution` (`videoid`, `resolution`, `num`),
     KEY `videoid` (`videoid`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 ALTER TABLE `{tbl_prefix}video_thumbs`
     ADD CONSTRAINT `{tbl_prefix}video_thumbs_ibfk_1` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE RESTRICT ON UPDATE NO ACTION;
 
-CREATE TABLE `{tbl_prefix}tools`
-(
+CREATE TABLE `{tbl_prefix}tools`(
     `id_tool`                  INT          NOT NULL AUTO_INCREMENT,
     `language_key_label`       VARCHAR(128) NOT NULL,
     `language_key_description` VARCHAR(128) NOT NULL,
@@ -1175,14 +1156,13 @@ CREATE TABLE `{tbl_prefix}tools`
     `elements_total`           INT          NULL DEFAULT NULL,
     `elements_done`            INT          NULL DEFAULT NULL,
     PRIMARY KEY (`id_tool`)
-) ENGINE = InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
-CREATE TABLE `{tbl_prefix}tools_status`
-(
+CREATE TABLE `{tbl_prefix}tools_status`(
     `id_tools_status`    INT          NOT NULL AUTO_INCREMENT,
     `language_key_title` VARCHAR(128) NOT NULL,
     PRIMARY KEY (`id_tools_status`)
-) ENGINE = InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 ALTER TABLE `{tbl_prefix}tools`
     ADD FOREIGN KEY (`id_tools_status`) REFERENCES `{tbl_prefix}tools_status` (`id_tools_status`) ON DELETE RESTRICT ON UPDATE NO ACTION;

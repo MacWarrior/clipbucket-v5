@@ -59,7 +59,7 @@ class Clipbucket_db
                 return false;
             }
 
-            $this->execute('SET NAMES "utf8"');
+            $this->execute('SET NAMES "utf8mb4"');
         } catch (Exception $e) {
             $error = $e->getMessage();
             error_log($error);

@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"194",
+  "revision":"195",
   "status":"dev",
   "detail":[
     {
@@ -171,8 +171,8 @@
   ,{
       "title":"Plugin",
       "description":[
-        "Update Editor's Pick to 2.0.0",
-        "Update Global Announcement to 2.0.0",
+        "Update Editor's Pick to 2.0.1",
+        "Update Global Announcement to 2.0.1",
         "Update CB Server Thumb to 2.0.0",
         "Implement plugin compatibility check",
         "Update plugin management interface"
@@ -187,6 +187,7 @@
         ,"Update installation process"
         ,"Fix SQL queries"
         ,"Fix default video activation config value"
+        ,"Update DB charset"
       ]
     }
   ]

@@ -240,7 +240,7 @@ function GetServerURL(): string
 /**
  * @throws Exception
  */
-function install_execute_sql_file($cnnct, $path, $dbprefix): bool
+function install_execute_sql_file($cnnct, $path, $dbprefix, $dbname): bool
 {
     $lines = file($path);
     if (empty($lines)) {
@@ -255,6 +255,7 @@ function install_execute_sql_file($cnnct, $path, $dbprefix): bool
             $templine .= $line;
             if (substr(trim($line), -1, 1) == ';') {
                 $templine = preg_replace("/{tbl_prefix}/", $dbprefix, $templine);
+                $templine = preg_replace("/{dbname}/", $dbname, $templine);
                 mysqli_query($cnnct, $templine);
                 if ($cnnct->error != '') {
                     $result['err'] = "<span class='alert'><b>SQL</b> : ".$templine."<br/><b>Error</b> : ".$cnnct->error."</span>";

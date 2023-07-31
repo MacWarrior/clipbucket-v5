@@ -8,49 +8,49 @@ INSERT IGNORE INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_desc
 SET @language_id_eng = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = 'en');
 SET @language_id_fra = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = 'fr');
 
-SET @language_key = 'update_castable_status_label';
+SET @language_key = 'update_castable_status_label' COLLATE utf8mb4_unicode_520_ci;
 INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);
-SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = @language_key);
+SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
     VALUES (@id_language_key, 'Update videos castable status', @language_id_eng);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
     VALUES (@id_language_key, 'Mise à jour du statut de diffusion des vidéos', @language_id_fra);
 
-SET @language_key = 'update_castable_status_description';
+SET @language_key = 'update_castable_status_description' COLLATE utf8mb4_unicode_520_ci;
 INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);
-SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = @language_key);
+SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
     VALUES (@id_language_key, 'Update all videos castable status, based on video files', @language_id_eng);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
     VALUES (@id_language_key, 'Met à jour le statut de diffusion de toutes les vidéos, en se basant sur les fichiers vidéo', @language_id_fra);
 
-SET @language_key = 'update_bits_color_label';
+SET @language_key = 'update_bits_color_label' COLLATE utf8mb4_unicode_520_ci;
 INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);
-SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = @language_key);
+SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
     VALUES (@id_language_key, 'Update video colors encoding status', @language_id_eng);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
     VALUES (@id_language_key, 'Mise à jour du statut d\'encodage des couleurs des vidéos', @language_id_fra);
 
-SET @language_key = 'update_bits_color_description';
+SET @language_key = 'update_bits_color_description' COLLATE utf8mb4_unicode_520_ci;
 INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);
-SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = @language_key);
+SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
     VALUES (@id_language_key, 'Update all videos color encoding status, based on video files', @language_id_eng);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
     VALUES (@id_language_key, 'Met à jour le statut d\'encodage des couleurs des vidéos, en se basant sur les fichiers vidéo', @language_id_fra);
 
-SET @language_key = 'update_videos_duration_label';
+SET @language_key = 'update_videos_duration_label' COLLATE utf8mb4_unicode_520_ci;
 INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);
-SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = @language_key);
+SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
     VALUES (@id_language_key, 'Update videos durations', @language_id_eng);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
     VALUES (@id_language_key, 'Mise à jour des durées des vidéos', @language_id_fra);
 
-SET @language_key = 'update_videos_duration_description';
+SET @language_key = 'update_videos_duration_description' COLLATE utf8mb4_unicode_520_ci;
 INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);
-SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = @language_key);
+SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
     VALUES (@id_language_key, 'Update all videos durations, based on video files', @language_id_eng);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)

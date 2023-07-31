@@ -5,8 +5,6 @@ require_once 'functions.php';
 
 $mode = $_POST['mode'];
 
-
-
 $result = [];
 
 $dbhost = $_POST['dbhost'];
@@ -20,6 +18,7 @@ try{
 
     try{
         $dbselect = mysqli_select_db($cnnct, $dbname);
+        mysqli_query($cnnct, 'SET NAMES "utf8mb4"');
     }
     catch(Exception $e){
         $result['err'] = "<span class='alert'>Unable to select database : " . $e->getMessage() . '</span>';
@@ -77,7 +76,7 @@ if ($mode == 'adminsettings') {
         }
 
         if ($current) {
-            install_execute_sql_file($cnnct, BASEDIR . '/cb_install/sql/' . $files[$current], $dbprefix);
+            install_execute_sql_file($cnnct, BASEDIR . '/cb_install/sql/' . $files[$current], $dbprefix, $dbname);
         }
 
         $return = [];
@@ -117,7 +116,7 @@ if ($mode == 'adminsettings') {
     } else {
         switch ($step) {
             case 'add_categories':
-                install_execute_sql_file($cnnct, BASEDIR . '/cb_install/sql/categories.sql', $dbprefix);
+                install_execute_sql_file($cnnct, BASEDIR . '/cb_install/sql/categories.sql', $dbprefix, $dbname);
 
                 $return['msg'] = '<div class="ok green">Videos, Users, Groups and Collections Categories have been created</div>';
                 $return['status'] = 'adding admin account..';
@@ -125,7 +124,7 @@ if ($mode == 'adminsettings') {
                 break;
 
             case 'add_admin':
-                install_execute_sql_file($cnnct, BASEDIR . '/cb_install/sql/add_admin.sql', $dbprefix);
+                install_execute_sql_file($cnnct, BASEDIR . '/cb_install/sql/add_admin.sql', $dbprefix, $dbname);
                 $return['msg'] = '<div class="ok green">Admin account has been created</div>';
                 $return['status'] = 'Creating config files...';
                 $return['step'] = 'create_files';

@@ -3,7 +3,7 @@
     Plugin Name: Global announcement
     Description: This will let you post a global announcement on your website
     Author: Arslan Hassan & MacWarrior
-    Version: 2.0.0
+    Version: 2.0.1
     Website: https://github.com/MacWarrior/clipbucket-v5/
     ClipBucket Version: 5.5.0
 */

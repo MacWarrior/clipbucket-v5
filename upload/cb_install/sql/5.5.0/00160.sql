@@ -3,15 +3,13 @@ CREATE TABLE `{tbl_prefix}languages_keys`(
     `language_key`    VARCHAR(256) NOT NULL,
     PRIMARY KEY (`id_language_key`),
     UNIQUE (`language_key`)
-    ) ENGINE = InnoDB
-    DEFAULT CHARSET = utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}languages_translations`(
     `language_id`     INT(11)      NOT NULL,
     `id_language_key` INT(11)      NOT NULL,
     `translation`     VARCHAR(1024) NOT NULL
-) ENGINE = InnoDB
-DEFAULT CHARSET = utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 ALTER TABLE `{tbl_prefix}languages_translations`
     ADD PRIMARY KEY (`language_id`, `id_language_key`),

@@ -24,9 +24,9 @@ ALTER TABLE `{tbl_prefix}languages`
 ALTER TABLE `{tbl_prefix}languages_translations` 
     MODIFY COLUMN `translation` VARCHAR(1024) NOT NULL;
 
-SET @language_key = 'code';
+SET @language_key = 'code' COLLATE utf8mb4_unicode_520_ci;
 INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);
-SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = @language_key);
+SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
     VALUES (@language_id_eng, @id_language_key, 'Code');
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)

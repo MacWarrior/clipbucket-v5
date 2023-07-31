@@ -218,6 +218,7 @@ function execute_sql_file($path): bool
             $templine .= $line;
             if (substr(trim($line), -1, 1) == ';') {
                 $templine = preg_replace("/{tbl_prefix}/", TABLE_PREFIX, $templine);
+                $templine = preg_replace("/{dbname}/", $db->db_name, $templine);
                 $db->mysqli->query($templine);
                 if ($db->mysqli->error != '') {
                     error_log('SQL : ' . $templine);
