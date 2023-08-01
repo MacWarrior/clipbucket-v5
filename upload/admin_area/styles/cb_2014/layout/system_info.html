@@ -128,15 +128,18 @@
             </div>
             <div id="hosting" class="tab-pane active">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <h3>PHP WEB</h3>
                     </div>
-                    <div class="col-md-6 {if $phpVersionCli == 0} hidden {/if}">
+                    <div class="col-md-4 {if $phpVersionCli == 0}hidden{/if}">
                         <h3>PHP CLI</h3>
+                    </div>
+                    <div class="col-md-4 {if !$isNginx}hidden{/if}">
+                        <h3>Nginx</h3>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="row">
                             <img style="margin-left: 1em; margin-top: 0.4em;"
                                  src="{$imageurl}/{if getBytesFromFileSize($post_max_size) > getBytesFromFileSize('50M')}tick{else}alert{/if}.png"
@@ -178,7 +181,7 @@
                             </label>
                         </div>
                     </div>
-                    <div class="col-md-6 {if $phpVersionCli == 0} hidden {/if}">
+                    <div class="col-md-4 {if $phpVersionCli == 0}hidden{/if}">
                         <div class="row">
                             <img style="margin-left: 1em; margin-top: 0.4em;"
                                  src="{$imageurl}/{if getBytesFromFileSize($post_max_size_cli) > getBytesFromFileSize('50M')}tick{else}alert{/if}.png"
@@ -219,6 +222,12 @@
                                 </strong>
                             </label>
                         </div>
+                    </div>
+                    <div class="col-md-4 {if !$isNginx}hidden{/if}">
+                        <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/help.png"/>
+                        PHP is unable to check Nginx configuration.<br/>
+                        Please make sure client_max_body_size is set correctly.<br/>
+                        Incorrect configuration might cause 413 errors.
                     </div>
                 </div>
             </div>

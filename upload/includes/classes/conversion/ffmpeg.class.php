@@ -694,6 +694,7 @@ class FFMpeg
 
     /**
      * @return void
+     * @throws Exception
      */
     public function generateAllThumbs()
     {

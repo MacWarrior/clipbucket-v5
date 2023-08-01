@@ -1081,7 +1081,7 @@ class cbactions
         if ($items) {
             foreach ($items as $item) {
                 $item['type'] = 'v';
-                $array[] = GetThumb($item['object_id']);
+                $array[] = get_thumb($item['object_id']);
             }
         } else {
             return [TEMPLATEURL . '/images/playlist-default.png'];

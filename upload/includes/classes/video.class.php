@@ -1301,6 +1301,7 @@ class CBvideo extends CBCategory
     /**
      * Function used to create value array for email templates
      * @param array video_details ARRAY
+     * @throws Exception
      */
     function set_share_email($details)
     {
@@ -1310,7 +1311,7 @@ class CBvideo extends CBCategory
             '{video_tags}'        => $details['tags'],
             '{video_date}'        => cbdate(DATE_FORMAT, $details['date_added']),
             '{video_link}'        => video_link($details),
-            '{video_thumb}'       => GetThumb($details)
+            '{video_thumb}'       => get_thumb($details)
         ];
 
         $this->action->share_template_name = 'share_video_template';
@@ -1412,7 +1413,7 @@ class CBvideo extends CBCategory
     /**
      * Function used to update video and set a thumb as default
      * @param $vid
-     * @param $thumb NUM
+     * @param $thumb
      * @throws Exception
      */
     function set_default_thumb($vid, $thumb)
@@ -1479,7 +1480,7 @@ class CBvideo extends CBCategory
      * @param $link
      * @param $vid
      *
-     * @return string
+     * @return string|void
      */
     function video_manager_link($link, $vid)
     {
@@ -1517,7 +1518,7 @@ class CBvideo extends CBCategory
      * @param $link
      * @param $vid
      *
-     * @return string
+     * @return string|void
      */
     function video_categories_manager_link($link, $vid)
     {

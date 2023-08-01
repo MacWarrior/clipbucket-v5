@@ -88,8 +88,8 @@ if (empty($exec_output)) {
     }
 }
 
+assign('isNginx', (strpos($_SERVER['SERVER_SOFTWARE'], 'nginx') !== false) );
 assign('phpVersionCli', $phpVersion);
-
 assign("post_max_size_cli", $post_max_size_cli);
 assign("memory_limit_cli", $memory_limit_cli);
 assign("upload_max_filesize_cli", $upload_max_filesize_cli);

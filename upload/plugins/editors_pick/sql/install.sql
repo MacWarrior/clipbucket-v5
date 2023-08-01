@@ -74,7 +74,7 @@ INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`language_id`, `id_lang
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
     VALUES (@language_id_ptbr, @id_language_key, 'O vídeo já está na Escolha do Editor');
 
-SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'plugin_editors_picks_add_error');
+SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'plugin_editors_picks_add_to');
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
     VALUES (@language_id_en, @id_language_key, 'Add to Editor\'s Pick');
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
@@ -94,7 +94,7 @@ INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`language_id`, `id_lang
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
     VALUES (@language_id_ptbr, @id_language_key, 'Remover da Escolha do Editor');
 
-SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'plugin_editors_picks_remove_from');
+SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'plugin_editors_picks_remove_confirm');
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
     VALUES (@language_id_en, @id_language_key, 'Are you sure you want to remove selected videos from Editor\'s Pick ?');
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
