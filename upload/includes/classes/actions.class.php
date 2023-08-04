@@ -236,7 +236,6 @@ class cbactions
      *
      * @param $id
      *
-     * @throws phpmailerException
      * @throws Exception
      */
     function share_content($id)

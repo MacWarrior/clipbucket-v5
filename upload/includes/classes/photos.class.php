@@ -1632,6 +1632,7 @@ class CBPhotos
      * Function used to validate form fields
      *
      * @param null $array
+     * @throws \PHPMailer\PHPMailer\Exception
      */
     function validate_form_fields($array = null)
     {
@@ -2230,7 +2231,7 @@ class CBPhotos
      * @param bool $force_name_email
      *
      * @return bool|mixed
-     * @throws phpmailerException
+     * @throws Exception
      */
     function add_comment($comment, $obj_id, $reply_to = null, $force_name_email = false)
     {

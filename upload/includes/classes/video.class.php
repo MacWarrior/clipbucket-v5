@@ -236,7 +236,6 @@ class CBvideo extends CBCategory
      * @param $vid
      *
      * @return bool|string|void
-     * @throws phpmailerException
      * @throws Exception
      */
     function action($case, $vid)
@@ -1158,7 +1157,6 @@ class CBvideo extends CBCategory
      * @param bool $force_name_email
      *
      * @return bool|mixed
-     * @throws phpmailerException
      * @throws Exception
      */
     function add_comment($comment, $obj_id, $reply_to = null, $force_name_email = false)

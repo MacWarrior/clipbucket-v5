@@ -213,7 +213,7 @@ class CBEmail
      * @param $action
      *
      * @return bool
-     * @throws phpmailerException
+     * @throws \PHPMailer\PHPMailer\Exception
      */
     function action($id, $action)
     {
@@ -263,7 +263,6 @@ class CBEmail
      * @param $id
      *
      * @return array|bool
-     * @throws phpmailerException
      * @throws Exception
      */
     function send_emails($id)
@@ -410,7 +409,7 @@ class CBEmail
      * @param $email
      * @param $username
      * @return void
-     * @throws phpmailerException
+     * @throws \PHPMailer\PHPMailer\Exception
      */
     function friend_request_email($email, $username)
     {

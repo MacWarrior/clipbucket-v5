@@ -503,7 +503,6 @@ class userquery extends CBCategory
      *
      * @param $uid
      *
-     * @throws phpmailerException
      * @throws Exception
      */
     function delete_user($uid)
@@ -657,7 +656,6 @@ class userquery extends CBCategory
     }
 
     /**
-     * @throws phpmailerException
      * @throws Exception
      */
     function activate_user_with_avcode($user, $avcode)
@@ -689,7 +687,6 @@ class userquery extends CBCategory
      *
      * @param : $usenrma,$email or $userid
      *
-     * @throws phpmailerException
      * @throws Exception
      */
     function send_activation_code($email)
@@ -726,7 +723,6 @@ class userquery extends CBCategory
      * @param      $user
      * @param bool $update_email_status
      *
-     * @throws phpmailerException
      * @throws Exception
      */
     function send_welcome_email($user, $update_email_status = false)
@@ -792,7 +788,6 @@ class userquery extends CBCategory
      * @param $uid
      * @param $fid
      *
-     * @throws phpmailerException
      * @throws Exception
      */
     function add_contact($uid, $fid)
@@ -916,7 +911,6 @@ class userquery extends CBCategory
      * @param      $rid
      * @param bool $msg
      *
-     * @throws phpmailerException
      * @throws Exception
      */
     function confirm_friend($uid, $rid, $msg = true)
@@ -988,7 +982,6 @@ class userquery extends CBCategory
      * @param      $rid
      * @param null $uid
      *
-     * @throws phpmailerException
      * @throws Exception
      */
     function confirm_request($rid, $uid = null)
@@ -1307,7 +1300,7 @@ class userquery extends CBCategory
      * @param null $code
      *
      * @return bool
-     * @throws phpmailerException
+     * @throws \PHPMailer\PHPMailer\Exception
      */
 
     function reset_password($step, $input, $code = null)
@@ -1389,7 +1382,6 @@ class userquery extends CBCategory
 
     /**
      * Function used to recover username
-     * @throws phpmailerException
      */
     function recover_username($email): string
     {
@@ -1841,7 +1833,6 @@ class userquery extends CBCategory
 
     /**
      * Function used to add comment on users profile
-     * @throws phpmailerException
      * @throws Exception
      */
     function add_comment($comment, $obj_id, $reply_to = null, $type = 'c')
@@ -2071,6 +2062,7 @@ class userquery extends CBCategory
      * @param $default
      *
      * @return array
+     * @throws Exception
      */
     function load_profile_fields($default): array
     {
@@ -3164,6 +3156,7 @@ class userquery extends CBCategory
      * Function used to validate Signup Form
      *
      * @param null $array
+     * @throws \PHPMailer\PHPMailer\Exception
      */
     function validate_form_fields($array = null)
     {
@@ -3190,7 +3183,6 @@ class userquery extends CBCategory
      * @param bool $send_signup_email
      *
      * @return bool|mixed
-     * @throws phpmailerException
      * @throws Exception
      */
     function signup_user($array = null, $send_signup_email = true)
@@ -3968,7 +3960,6 @@ class userquery extends CBCategory
 
     /**
      * Function used to get anonymous user
-     * @throws phpmailerException
      */
     function get_anonymous_user()
     {

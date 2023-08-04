@@ -1,4 +1,7 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 require 'define_php_links.php';
 include_once 'upload_forms.php';
 
@@ -167,9 +170,9 @@ function RandomString($length): string
  * @param : { array } { $array } { array with all details of email }
  * @param bool $force force sending email even if emails are disabled
  * @return bool
- * @throws phpmailerException
  * @param_list : { content, subject, to, from, to_name, from_name }
  *
+ * @throws Exception
  * @author : Arslan Hassan
  */
 function cbmail($array, $force = false)
@@ -204,10 +207,7 @@ function cbmail($array, $force = false)
     }
     $message = $content;
 
-    //ClipBucket uses PHPMailer for sending emails
-    include_once('classes/phpmailer/class.phpmailer.php');
-    include_once('classes/phpmailer/class.smtp.php');
-    $mail = new PHPMailer(); // defaults to using php "mail()"
+    $mail = new PHPMailer(true); // defaults to using php "mail()"
     $mail_type = config('mail_type');
     //---Setting SMTP ---
     if ($mail_type == 'smtp') {
@@ -249,9 +249,8 @@ function cbmail($array, $force = false)
  * @param $message
  *
  * @return bool
- * @throws phpmailerException
+ * @throws Exception
  * @uses : { function : cbmail }
- *
  */
 function send_email($from, $to, $subj, $message)
 {
@@ -691,7 +690,6 @@ function getSmartyCategoryList($params)
  * @param null $ep
  * @throws Exception
  * @uses : { class : $db } { function : dbInsert }
- *
  */
 function dbInsert($tbl, $flds, $vls, $ep = null)
 {
@@ -776,7 +774,6 @@ function user_name()
  * @return bool
  * @throws Exception
  * @uses : { class : $userquery } { function : login_check }
- *
  */
 function has_access($access, $check_only = true, $verify_logged_user = true): bool
 {
@@ -890,8 +887,8 @@ function yes_or_no($input, $return = 'yes'): string
  * @param null $array
  *
  * @return bool
+ * @throws Exception
  * @uses : { class : $cbcollection } { function : validate_collection_category }
- *
  */
 function validate_collection_category($array = null)
 {
@@ -1172,7 +1169,6 @@ function display_sharing_opt($input)
  * @return array|bool|int
  * @throws Exception
  * @uses : { class : $userquery } { function : get_user_vids }
- *
  */
 function get_user_vids($uid, $cond = null, $count_only = false)
 {
@@ -1275,7 +1271,6 @@ function username_check($username): bool
  * @return bool
  * @throws Exception
  * @uses : { class : $userquery } { function : username_exists }
- *
  */
 function user_exists($user): bool
 {
@@ -1458,6 +1453,7 @@ function lang($var)
 }
 
 /**
+ * @return mixed
  * @throws Exception
  */
 function get_current_language()
@@ -2325,7 +2321,6 @@ function get_collections($param)
  * @return bool|mixed
  * @throws Exception
  * @uses : { class : $userquery } { function : get_users }
- *
  */
 function get_users($param)
 {
@@ -2745,8 +2740,8 @@ function delete_collection_photos($details)
  * @param null $params
  *
  * @return array
+ * @throws Exception
  * @uses : { class : $Cbucket } { function : head_menu }
- *
  */
 function head_menu($params = null)
 {
@@ -2773,8 +2768,8 @@ function cbMenu($params = null)
  * @param null $params
  *
  * @return array
+ * @throws Exception
  * @uses : { class : $Cbucket } { function : foot_menu }
- *
  */
 function foot_menu($params = null)
 {

@@ -11,6 +11,7 @@ class Upload
      *
      * @param null $array
      * @param bool $is_upload
+     * @throws \PHPMailer\PHPMailer\Exception
      */
     function validate_video_upload_form($array = null, $is_upload = false)
     {
@@ -48,7 +49,6 @@ class Upload
     }
 
     /**
-     * @throws phpmailerException
      * @throws Exception
      */
     function submit_upload($array = null)

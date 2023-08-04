@@ -350,7 +350,6 @@ class myquery
      * @param bool $force_name_email
      *
      * @return bool|mixed
-     * @throws phpmailerException
      * @throws Exception
      */
     function add_comment($comment, $obj_id, $reply_to = null, $type = 'v', $obj_owner = null, $obj_link = null, $force_name_email = false)
