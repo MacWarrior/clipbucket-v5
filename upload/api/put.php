@@ -221,7 +221,7 @@ switch ($mode) {
             'category'       => [$cbvid->get_default_cid()],
             'file_name'      => $file_name,
             'file_directory' => $file_directory,
-            'userid'         => userid(),
+            'userid'         => user_id(),
         ];
 
         $vid = $Upload->submit_upload($vidDetails);
@@ -464,7 +464,7 @@ switch ($mode) {
         $message = mysql_clean($request['message']);
 
         if (!$uid) {
-            $uid = userid();
+            $uid = user_id();
         }
 
         if (!$uid) {
@@ -492,7 +492,7 @@ switch ($mode) {
         $fid = mysql_clean($request['fid']);
 
         if (!$uid) {
-            $uid = userid();
+            $uid = user_id();
         }
 
         if (!$uid) {

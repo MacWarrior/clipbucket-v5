@@ -3,12 +3,12 @@
 	<div class="cover-holder clearfix">
 		<img class="img-responsive cb-live-background" src="{if $backgroundPhoto != ''}{$backgroundPhoto}{else}/images/background_default.jpg{/if}" size='1140x276' alt="">
 		
-		{if $user.userid == userid()}
+		{if $user.userid == user_id()}
 		<a href="#" class="btn btn-sm changeCover" id="changeCover">{lang code="update_cover"}<span class="icon-photo"></span></a>
 		{/if}
 
 		<div class="ratting-counts clearfix">
-			{if $user.userid != userid() && config('channel_rating')=='1' }
+			{if $user.userid != user_id() && config('channel_rating')=='1' }
 			<div class="user-ratting" id="rating_container">
 				{show_video_rating rating=$p.rating ratings=$p.rated_by total='10' id=$user.userid type=user}
 			</div>
@@ -34,8 +34,8 @@
 			</ul>
 		</div>
 		<div class="friend-block clearfix">
-			{if $user.userid != userid()}
-				{$friend_status = $userquery->friendship_status(userid(), $user.userid)}
+			{if $user.userid != user_id()}
+				{$friend_status = $userquery->friendship_status(user_id(), $user.userid)}
 				{if $friend_status == "f"}
 				<a href="/manage_contacts.php?mode=delete&userid={$u.userid}" class="btn btn-danger btn-sm new1">
 					{lang code="unfriend"}
@@ -65,12 +65,12 @@
 	<div class="profile-buttons clearfix">
 		<h2>{display_clean($user.username)}</h2>
 		<div class="btn-holder">
-			{if $user.userid != userid()}
+			{if $user.userid != user_id()}
 				<button id="report-user" class="btn btn-default">{lang code="report_usr"}</button>
 				<a href="/private_message.php?mode=new_msg&to={display_clean($user.username)}" class="btn btn-default">
 					{lang code="user_send_message"}
 				</a>
-				{if $userquery->is_subscribed($user.userid,userid())}
+				{if $userquery->is_subscribed($user.userid,user_id())}
 					<button class="btn btn-default subs_{$user.userid}" onclick="_cb.unsubscribeToChannel('{$user.userid}','unsubscribe_user');">
 						{lang code="unsubscribe"}
 					</button>

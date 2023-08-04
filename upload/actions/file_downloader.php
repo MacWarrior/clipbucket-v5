@@ -38,7 +38,7 @@ if (!isCurlInstalled()) {
 }
 
 //checking if user is logged in or not
-if (!userid()) {
+if (!user_id()) {
     exit(json_encode(['error' => 'You are not logged in']));
 }
 
@@ -103,7 +103,7 @@ if (isset($_POST['youtube'])) {
     $vid_array['file_directory'] = $file_directory;
     $vid_array['category'] = [$cbvid->get_default_cid()];
     $vid_array['file_name'] = $file_name;
-    $vid_array['userid'] = userid();
+    $vid_array['userid'] = user_id();
 
     $duration = $vid_array['duration'];
     $vid = $Upload->submit_upload($vid_array);
@@ -246,7 +246,7 @@ $vidDetails = [
     'tags'           => genTags(str_replace(' ', ', ', $title)),
     'category'       => [$cbvid->get_default_cid()],
     'file_name'      => $file_name,
-    'userid'         => userid(),
+    'userid'         => user_id(),
     'file_directory' => createDataFolders()
 ];
 

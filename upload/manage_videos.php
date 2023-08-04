@@ -7,7 +7,7 @@ require 'includes/config.inc.php';
 global $userquery, $cbvideo, $eh, $pages, $cbvid;
 
 $userquery->logincheck();
-$udetails = $userquery->get_user_details(userid());
+$udetails = $userquery->get_user_details(user_id());
 assign('user', $udetails);
 assign('p', $userquery->get_user_profile($udetails['userid']));
 
@@ -94,7 +94,7 @@ switch ($mode) {
         if (get('query') != '') {
             $cond = " (video.title LIKE '%" . mysql_clean(get('query')) . "%' OR video.tags LIKE '%" . mysql_clean(get('query')) . "%' )";
         }
-        $params = ['userid' => userid(), 'limit' => $get_limit, 'cond' => $cond];
+        $params = ['userid' => user_id(), 'limit' => $get_limit, 'cond' => $cond];
 
         $videos = $cbvid->action->get_favorites($params);
 

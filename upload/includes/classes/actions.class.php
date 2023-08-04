@@ -1,5 +1,4 @@
 <?php
-
 class cbactions
 {
     /**
@@ -93,17 +92,17 @@ class cbactions
 
     /**
      * Function used to add content to favorites
+     * @throws Exception
      */
-
     function add_to_fav($id)
     {
         global $db;
         $id = mysql_clean($id);
         //First checking weather object exists or not
         if ($this->exists($id)) {
-            if (userid()) {
+            if (user_id()) {
                 if (!$this->fav_check($id)) {
-                    $db->insert(tbl($this->fav_tbl), ['type', 'id', 'userid', 'date_added'], [$this->type, $id, userid(), NOW()]);
+                    $db->insert(tbl($this->fav_tbl), ['type', 'id', 'userid', 'date_added'], [$this->type, $id, user_id(), NOW()]);
                     addFeed(['action' => 'add_favorite', 'object_id' => $id, 'object' => 'video']);
 
                     //Logging Favorite
@@ -134,15 +133,16 @@ class cbactions
      * @param null $uid
      *
      * @return bool
+     * @throws Exception
      */
-    function fav_check($id, $uid = null)
+    function fav_check($id, $uid = null): bool
     {
         global $db;
 
         $id = mysql_clean($id);
 
         if (!$uid) {
-            $uid = userid();
+            $uid = user_id();
         }
         $results = $db->select(tbl($this->fav_tbl), 'favorite_id', ' id=\'' . mysql_clean($id) . '\' AND userid=\'' . mysql_clean($uid) . '\' AND type=\'' . $this->type . '\'');
         if (count($results) > 0) {
@@ -172,18 +172,19 @@ class cbactions
      * Function used to report a content
      *
      * @param $id
+     * @throws Exception
      */
     function report_it($id)
     {
         global $db;
         //First checking weather object exists or not
         if ($this->exists($id)) {
-            if (userid()) {
+            if (user_id()) {
                 if (!$this->report_check($id)) {
                     $db->insert(
                         tbl($this->flag_tbl),
                         ['type', 'id', 'userid', 'flag_type', 'date_added'],
-                        [$this->type, $id, userid(), post('flag_type'), NOW()]
+                        [$this->type, $id, user_id(), post('flag_type'), NOW()]
                     );
                     e(sprintf(lang('obj_report_msg'), lang($this->name)), 'm');
                 } else {
@@ -201,6 +202,7 @@ class cbactions
      * Function used to delete flags
      *
      * @param $id
+     * @throws Exception
      */
     function delete_flags($id)
     {
@@ -216,12 +218,13 @@ class cbactions
      * @param $id
      *
      * @return bool
+     * @throws Exception
      */
     function report_check($id): bool
     {
         global $db;
         $id = mysql_clean($id);
-        $results = $db->select(tbl($this->flag_tbl), 'flag_id', ' id=\'' . mysql_clean($id) . '\' AND type=\'' . $this->type . '\' AND userid=\'' . userid() . '\'');
+        $results = $db->select(tbl($this->flag_tbl), 'flag_id', ' id=\'' . mysql_clean($id) . '\' AND type=\'' . $this->type . '\' AND userid=\'' . user_id() . '\'');
         if (count($results) > 0) {
             return true;
         }
@@ -234,6 +237,7 @@ class cbactions
      * @param $id
      *
      * @throws phpmailerException
+     * @throws Exception
      */
     function share_content($id)
     {
@@ -244,7 +248,7 @@ class cbactions
         $id = mysql_clean($id);
         //First checking weather object exists or not
         if ($this->exists($id)) {
-            if (userid()) {
+            if (user_id()) {
                 $post_users = mysql_clean(post('users'));
                 $users = explode(',', $post_users);
                 if (is_array($users) && !empty($post_users)) {
@@ -293,6 +297,7 @@ class cbactions
      * @param $params
      *
      * @return array|bool
+     * @throws Exception
      */
     function get_favorites($params)
     {
@@ -304,7 +309,7 @@ class cbactions
         $order = $params['order'];
 
         if (!$uid) {
-            $uid = userid();
+            $uid = user_id();
         }
 
         if ($cond) {
@@ -329,6 +334,7 @@ class cbactions
 
     /**
      * Function used to count total favorites only
+     * @throws Exception
      */
     function total_favorites()
     {
@@ -336,18 +342,18 @@ class cbactions
         return $db->count(tbl($this->fav_tbl), 'favorite_id', ' type=\'' . $this->type . '\'');
     }
 
-
     /**
      * Function used remove video from favorites
      *
      * @param      $fav_id
      * @param null $uid
+     * @throws Exception
      */
     function remove_favorite($fav_id, $uid = null)
     {
         global $db;
         if (!$uid) {
-            $uid = userid();
+            $uid = user_id();
         }
         if ($this->fav_check($fav_id, $uid)) {
             $db->delete(tbl($this->fav_tbl), ['userid', 'type', 'id'], [$uid, $this->type, $fav_id]);
@@ -357,13 +363,13 @@ class cbactions
         }
     }
 
-
     /**
      * Function used to get object flags
      *
      * @param null $limit
      *
      * @return array|bool
+     * @throws Exception
      */
     function get_flagged_objects($limit = null)
     {
@@ -383,6 +389,7 @@ class cbactions
      * @param $id
      *
      * @return array|bool
+     * @throws Exception
      */
     function get_flags($id)
     {
@@ -394,9 +401,9 @@ class cbactions
         return false;
     }
 
-
     /**
      * Function used to count object flags
+     * @throws Exception
      */
     function count_flagged_objects(): int
     {
@@ -522,20 +529,23 @@ class cbactions
         ];
     }
 
+    /**
+     * @throws Exception
+     */
     function create_playlist($params)
     {
         if (has_access('allow_create_playlist', false)) {
             global $db;
             $name = mysql_clean($params['name']);
-            if (!userid()) {
+            if (!user_id()) {
                 e(lang('please_login_create_playlist'));
             } elseif (empty($name)) {
                 e(lang('please_enter_playlist_name'));
-            } elseif ($this->playlist_exists($name, userid(), $this->type)) {
+            } elseif ($this->playlist_exists($name, user_id(), $this->type)) {
                 e(sprintf(lang('play_list_with_this_name_arlready_exists'), $name));
             } else {
                 $fields = ['playlist_name', 'userid', 'date_added', 'playlist_type', 'description', 'tags'];
-                $values = [$name, userid(), now(), $this->type, '', ''];
+                $values = [$name, user_id(), now(), $this->type, '', ''];
 
                 $db->insert(tbl($this->playlist_tbl), $fields, $values);
 
@@ -550,6 +560,7 @@ class cbactions
 
     /**
      * Function used to check weather playlist already exists or not
+     * @throws Exception
      */
     function playlist_exists($name, $user, $type = null): bool
     {
@@ -567,6 +578,7 @@ class cbactions
 
     /**
      * Function used to get playlist
+     * @throws Exception
      */
     function get_playlist($id, $user = null)
     {
@@ -630,6 +642,7 @@ class cbactions
 
     /**
      * Function used to add new item in playlist
+     * @throws Exception
      */
     function add_playlist_item($pid, $id)
     {
@@ -641,7 +654,7 @@ class cbactions
             e(sprintf(lang('obj_not_exists'), $this->name));
         } elseif (!$playlist) {
             e(lang('playlist_not_exist'));
-        } elseif (!userid()) {
+        } elseif (!user_id()) {
             e(lang('you_not_logged_in'));
         } elseif ($this->playlist_item_with_obj($id, $pid)) {
             e(sprintf(lang('this_already_exist_in_pl'), $this->name));
@@ -656,7 +669,7 @@ class cbactions
                     'playlist_id'        => $pid,
                     'date_added'         => now(),
                     'playlist_item_type' => $this->type,
-                    'userid'             => userid()
+                    'userid'             => user_id()
                 ];
 
                 /* insert item */
@@ -678,9 +691,9 @@ class cbactions
         }
     }
 
-
     /**
      * Function use to delete playlist item
+     * @throws Exception
      */
     function delete_playlist_item($id)
     {
@@ -690,7 +703,7 @@ class cbactions
 
         if (!$item) {
             e(lang('playlist_item_not_exist'));
-        } elseif ($item['userid'] != userid() && !has_access('admin_access')) {
+        } elseif ($item['userid'] != user_id() && !has_access('admin_access')) {
             e(lang('you_dont_hv_permission_del_playlist'));
         } else {
             $video = get_video_basic_details($item['object_id']);
@@ -736,7 +749,6 @@ class cbactions
 
     function is_item_first($details, $check_id): bool
     {
-
         if (!isset($details['first_item'])) {
             return false;
         }
@@ -756,6 +768,7 @@ class cbactions
 
     /**
      * Function used to check weather playlist item exists or not
+     * @throws Exception
      */
     function playlist_item($id, $join_playlist = false)
     {
@@ -805,6 +818,7 @@ class cbactions
      * @param null $pid
      *
      * @return bool|array
+     * @throws Exception
      */
     function playlist_item_with_obj($id, $pid = null)
     {
@@ -824,6 +838,7 @@ class cbactions
      * Function used to update playlist details
      *
      * @param null $array
+     * @throws Exception
      */
     function edit_playlist($array = null)
     {
@@ -838,9 +853,9 @@ class cbactions
 
         if (!$pdetails) {
             e(lang('playlist_not_exist'));
-        } elseif (!userid()) {
+        } elseif (!user_id()) {
             e(lang('you_not_logged_in'));
-        } elseif ($this->playlist_exists($name, userid(), $this->type)) {
+        } elseif ($this->playlist_exists($name, user_id(), $this->type)) {
             e(sprintf(lang('play_list_with_this_name_arlready_exists'), $name));
         } else {
             $upload_fields = $this->load_playlist_fields($array);
@@ -902,6 +917,7 @@ class cbactions
 
     /**
      * Function used to delete playlist
+     * @throws Exception
      */
     function delete_playlist($id)
     {
@@ -909,7 +925,7 @@ class cbactions
         $playlist = $this->get_playlist($id);
         if (!$playlist) {
             e(lang('playlist_not_exist'));
-        } elseif ($playlist['userid'] != userid() && !has_access('admin_access', true)) {
+        } elseif ($playlist['userid'] != user_id() && !has_access('admin_access', true)) {
             e(lang('you_dont_hv_permission_del_playlist'));
         } else {
             $id = mysql_clean($id);
@@ -921,6 +937,7 @@ class cbactions
 
     /**
      * Function used to get playlists
+     * @throws Exception
      */
     function get_playlists($params = [])
     {
@@ -1051,11 +1068,12 @@ class cbactions
 
     /**
      * this method has been deprecated
+     * @throws Exception
      */
     function get_playlists_no_more_cb26()
     {
         global $db;
-        $result = $db->select(tbl($this->playlist_tbl), '*', ' playlist_type=\'' . $this->type . '\' AND userid=\'' . userid() . '\'');
+        $result = $db->select(tbl($this->playlist_tbl), '*', ' playlist_type=\'' . $this->type . '\' AND userid=\'' . user_id() . '\'');
 
         if (count($result) > 0) {
             return $result;
@@ -1071,6 +1089,7 @@ class cbactions
      * @param PID playlistid
      *
      * @return array Array
+     * @throws Exception
      */
     function getPlaylistThumb($pid)
     {
@@ -1101,6 +1120,7 @@ class cbactions
      * @param int $limit
      *
      * @return array|bool
+     * @throws Exception
      */
     function get_playlist_items($playlist_id, $order = null, $limit = -1)
     {
@@ -1119,6 +1139,7 @@ class cbactions
      * @param $id
      *
      * @return bool
+     * @throws Exception
      */
     function count_playlist_items($id)
     {
@@ -1126,13 +1147,13 @@ class cbactions
         return $db->count(tbl($this->playlist_items_tbl), 'playlist_item_id', 'playlist_id=\'' . mysql_clean($id) . '\'');
     }
 
-
     /**
      * Function used to count total playlist or items
      *
      * @param bool $item
      *
      * @return bool
+     * @throws Exception
      */
     function count_total_playlist($item = false)
     {

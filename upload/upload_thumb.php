@@ -20,7 +20,7 @@ $video = mysql_clean($_GET['video']);
  */
 
 
-if ($myquery->VideoExists($video)) {
+if ($myquery->video_exists($video)) {
     # Setting Default thumb
     if (isset($_POST['update_default_thumb'])) {
         $myquery->set_default_thumb($video, $_POST['default_thumb']);

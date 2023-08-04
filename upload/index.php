@@ -7,7 +7,7 @@ require 'includes/config.inc.php';
 global $pages, $userquery;
 $pages->page_redir();
 
-if (!$userquery->perm_check('view_videos', false, false, true) && !userid()) {
+if (!$userquery->perm_check('view_videos', false, false, true) && !user_id()) {
     template_files('signup_or_login.html');
 } else {
     template_files('index.html');

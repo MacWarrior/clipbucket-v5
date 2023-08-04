@@ -8,7 +8,7 @@ global $userquery;
 
 $userquery->logincheck();
 
-$udetails = $userquery->get_user_details(userid());
+$udetails = $userquery->get_user_details(user_id());
 assign('user', $udetails);
 assign('p', $userquery->get_user_profile($udetails['userid']));
 

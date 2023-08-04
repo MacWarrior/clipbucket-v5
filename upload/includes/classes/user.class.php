@@ -78,7 +78,7 @@ class userquery extends CBCategory
             $this->udetails = $udetails;
             $this->username = $udetails['username'];
             $this->level = $this->udetails['level'];
-            $this->permission = $this->get_user_level(userid());
+            $this->permission = $this->get_user_level(user_id());
 
             //Calling Logout Functions
             $funcs = $this->init_login_functions ?? false;
@@ -91,7 +91,7 @@ class userquery extends CBCategory
             }
 
             if ($sess->get('dummy_username') == '') {
-                $this->UpdateLastActive(userid());
+                $this->UpdateLastActive(user_id());
             }
         } else {
             $this->permission = $this->get_user_level(4, true);
@@ -327,7 +327,7 @@ class userquery extends CBCategory
 
         if ($verify_logged_user) {
             //First check weather userid is here or not
-            if (!userid()) {
+            if (!user_id()) {
                 if (!$check_only) {
                     e(lang('you_not_logged_in'));
                 }
@@ -335,7 +335,7 @@ class userquery extends CBCategory
             }
 
             //Now Check if logged in user exists or not
-            if (!$this->user_exists(userid(), true)) {
+            if (!$this->user_exists(user_id(), true)) {
                 if (!$check_only) {
                     e(lang('invalid_user'));
                 }
@@ -343,7 +343,7 @@ class userquery extends CBCategory
             }
 
             //Now Check logged in user is banned or not
-            if ($this->is_banned(userid()) == 'yes') {
+            if ($this->is_banned(user_id()) == 'yes') {
                 if (!$check_only) {
                     e(lang('usr_ban_err'));
                 }
@@ -449,7 +449,7 @@ class userquery extends CBCategory
      */
     function is_banned($uid)
     {
-        if (empty($this->udetails['ban_status']) && userid()) {
+        if (empty($this->udetails['ban_status']) && user_id()) {
             $this->udetails['ban_status'] = $this->get_user_field($uid, 'ban_status');
         }
         return $this->udetails['ban_status'];
@@ -511,7 +511,7 @@ class userquery extends CBCategory
         if ($this->user_exists($uid)) {
             $udetails = $this->get_user_details($uid);
 
-            if (userid() != $uid && has_access('admin_access', true) && $uid != 1) {
+            if (user_id() != $uid && has_access('admin_access', true) && $uid != 1) {
                 //list of functions to perform while deleting a video
                 $del_user_funcs = $this->delete_user_functions;
                 if (is_array($del_user_funcs)) {
@@ -625,9 +625,9 @@ class userquery extends CBCategory
         $is_email = strpos($id, '@') !== false;
         $select_field = (!$is_email && !is_numeric($id)) ? 'username' : (!is_numeric($id) ? 'email' : 'userid');
         if (!$email) {
-            $fields = tbl_fields(['users' => ['*']]);
+            $fields = table_fields(['users' => ['*']]);
         } else {
-            $fields = tbl_fields(['users' => ['email']]);
+            $fields = table_fields(['users' => ['email']]);
         }
 
         $query = "SELECT $fields FROM " . cb_sql_table('users');
@@ -972,7 +972,7 @@ class userquery extends CBCategory
                 'userlevel'     => $friend['level'],
                 'useremail'     => $friend['email'],
                 'action_obj_id' => $insert_id,
-                'details'       => 'friend with ' . userid()
+                'details'       => 'friend with ' . user_id()
             ];
 
             //Login Upload
@@ -994,7 +994,7 @@ class userquery extends CBCategory
         global $db;
 
         if (!$uid) {
-            $uid = userid();
+            $uid = user_id();
         }
 
         $result = $db->select(tbl($this->dbtbl['contacts']), '*', " userid='$rid' AND contact_userid='$uid' ");
@@ -1093,7 +1093,7 @@ class userquery extends CBCategory
     {
         global $db;
         if (!$uid) {
-            $uid = userid();
+            $uid = user_id();
         }
 
         if (!$this->is_friend($fid, $uid)) {
@@ -1127,7 +1127,7 @@ class userquery extends CBCategory
     function subscribe_user($to, $user = null)
     {
         if (!$user) {
-            $user = userid();
+            $user = user_id();
         }
         global $db;
 
@@ -1173,7 +1173,7 @@ class userquery extends CBCategory
     function is_subscribed($to, $user = null)
     {
         if (!$user) {
-            $user = userid();
+            $user = user_id();
         }
         global $db;
 
@@ -1201,7 +1201,7 @@ class userquery extends CBCategory
     {
         global $db;
         if (!$uid) {
-            $uid = userid();
+            $uid = user_id();
         }
 
         if ($this->is_subscribed($subid, $uid)) {
@@ -1592,7 +1592,7 @@ class userquery extends CBCategory
             $level = $this->udetails['level'] ?? false;
         }
 
-        if ($level == userid() or $level == $this->udetails['level']) {
+        if ($level == user_id() or $level == $this->udetails['level']) {
             if (isset($this->permission)) {
                 return $this->permission;
             }
@@ -2025,7 +2025,7 @@ class userquery extends CBCategory
         }
 
         if (!$silent) {
-            if (!$check_login || userid()) {
+            if (!$check_login || user_id()) {
                 e(lang('insufficient_privileges'));
             } else {
                 e(sprintf(lang('insufficient_privileges_loggin'), cblink(['name' => 'signup']), cblink(['name' => 'signup'])));
@@ -2405,7 +2405,7 @@ class userquery extends CBCategory
 
         //Deleting User Avatar
         if ($array['delete_avatar'] == 'yes') {
-            $udetails = $this->get_user_details(userid());
+            $udetails = $this->get_user_details(user_id());
 
             $file = AVATARS_DIR . DIRECTORY_SEPARATOR . $udetails['avatar_url'];
             if (file_exists($file) && $udetails['avatar_url'] != '') {
@@ -2425,7 +2425,7 @@ class userquery extends CBCategory
             }
 
             if (isset($_FILES['avatar_file']['name'])) {
-                $file = $Upload->upload_user_file('a', $_FILES['avatar_file'], userid());
+                $file = $Upload->upload_user_file('a', $_FILES['avatar_file'], user_id());
                 if ($file) {
                     $uquery_field[] = 'avatar';
                     $uquery_val[] = $file;
@@ -2456,7 +2456,7 @@ class userquery extends CBCategory
         }
 
         if (isset($_FILES['background_file']['name'])) {
-            $file = $Upload->upload_user_file('b', $_FILES['background_file'], userid());
+            $file = $Upload->upload_user_file('b', $_FILES['background_file'], user_id());
             if ($file) {
                 $uquery_field[] = 'background';
                 $uquery_val[] = $file;
@@ -2471,7 +2471,7 @@ class userquery extends CBCategory
         //Login Upload
         insert_log('profile_update', $log_array);
 
-        $db->update(tbl($this->dbtbl['users']), $uquery_field, $uquery_val, ' userid=\'' . userid() . '\'');
+        $db->update(tbl($this->dbtbl['users']), $uquery_field, $uquery_val, ' userid=\'' . user_id() . '\'');
         e(lang('usr_avatar_bg_update'), 'm');
     }
 
@@ -2532,7 +2532,7 @@ class userquery extends CBCategory
     public function getBackground($userId = false)
     {
         if (!$userId) {
-            $userId = userid();
+            $userId = user_id();
         }
 
         global $userquery;
@@ -2755,7 +2755,7 @@ class userquery extends CBCategory
             lang('account_settings')  => 'edit_account.php?mode=account'
         ];
 
-        $udetails = $this->get_user_details(userid());
+        $udetails = $this->get_user_details(user_id());
         if (config('picture_upload') == 'yes' || config('picture_url') == 'yes' || !empty($udetails['avatar_url']) || !empty($udetails['avatar'])) {
             $array[lang('account')][lang('change_avatar')] = 'edit_account.php?mode=avatar_bg';
         }
@@ -2845,7 +2845,7 @@ class userquery extends CBCategory
     {
         global $db;
         if (!$uid) {
-            $uid = userid();
+            $uid = user_id();
         }
         $users_array = explode(',', $users);
         $new_users = [];
@@ -2876,7 +2876,7 @@ class userquery extends CBCategory
     function ban_user($user)
     {
         global $db;
-        $uid = userid();
+        $uid = user_id();
 
         if (!$uid) {
             e(lang('you_not_logged_in'));
@@ -2915,7 +2915,7 @@ class userquery extends CBCategory
     {
         global $db;
         if (!$user) {
-            $user = userid();
+            $user = user_id();
         }
 
         if (!$banned_users) {
@@ -2946,7 +2946,7 @@ class userquery extends CBCategory
     {
         global $db;
         if (!$uid) {
-            $uid = userid();
+            $uid = user_id();
         }
         $result = $db->select(tbl($this->dbtbl['users'] . ',' . $this->dbtbl['user_profile']), '*', tbl($this->dbtbl['users']) . ".userid ='$uid' AND " . tbl($this->dbtbl['users']) . '.userid = ' . tbl($this->dbtbl['user_profile']) . '.userid');
         return $result[0];
@@ -3598,7 +3598,7 @@ class userquery extends CBCategory
             $fields['users'][] = 'last_active';
             $fields['users'][] = 'total_collections';
             $fields['users'][] = 'total_groups';
-            $query = ' SELECT ' . tbl_fields($fields) . ' FROM ' . tbl('users') . ' AS users ';
+            $query = ' SELECT ' . table_fields($fields) . ' FROM ' . tbl('users') . ' AS users ';
             $query .= ' LEFT JOIN ' . table('user_profile', 'profile') . ' ON users.userid = profile.userid ';
 
             if ($cond) {
@@ -3631,7 +3631,7 @@ class userquery extends CBCategory
     function action($case, $uid)
     {
         global $db;
-        $udetails = $this->get_user_details(userid());
+        $udetails = $this->get_user_details(user_id());
         $logged_user_level = $udetails['level'];
         if ($logged_user_level > 1) {
             $data = $this->get_user_details($uid);
@@ -3846,7 +3846,7 @@ class userquery extends CBCategory
             if (!$realtime) {
                 $sess->set('dummy_sess_salt', $sess->get('sess_salt'));
                 $sess->set('dummy_PHPSESSID', $sess->get('PHPSESSID'));
-                $sess->set('dummy_userid', userid());
+                $sess->set('dummy_userid', user_id());
                 $sess->set('dummy_user_session_key', $this->udetails['user_session_key']);
 
                 $userid = $udetails['userid'];
@@ -4187,7 +4187,7 @@ class userquery extends CBCategory
     {
         global $cbvid, $db, $cbphoto;
         if (!$uid) {
-            $uid = userid();
+            $uid = user_id();
         }
 
         if (!$uid) {
@@ -4236,7 +4236,7 @@ class userquery extends CBCategory
     {
         global $db;
         if (!$uid) {
-            $uid = userid();
+            $uid = user_id();
         }
 
         if (!$uid) {
@@ -4263,7 +4263,7 @@ class userquery extends CBCategory
     {
         global $db, $cbvid, $cbphoto;
         if (!$uid) {
-            $uid = userid();
+            $uid = user_id();
         }
 
         if (!$uid) {
@@ -4271,7 +4271,7 @@ class userquery extends CBCategory
             return false;
         }
 
-        if ($uid == userid() && $this->profileItem && !$withDetails) {
+        if ($uid == user_id() && $this->profileItem && !$withDetails) {
             return $this->profileItem;
         }
 
@@ -4886,20 +4886,20 @@ class userquery extends CBCategory
         $voters = json_decode($voters, true);
 
         if (!empty($voters)) {
-            $already_voted = array_key_exists(userid(), $voters);
+            $already_voted = array_key_exists(user_id(), $voters);
         }
 
-        if (!userid()) {
+        if (!user_id()) {
             e(lang('please_login_to_rate'));
-        } elseif (userid() == $c_rating['userid'] && !config('own_channel_rating')) {
+        } elseif (user_id() == $c_rating['userid'] && !config('own_channel_rating')) {
             e(lang('you_cant_rate_own_channel'));
         } elseif (!empty($already_voted)) {
             e(lang('you_have_already_voted_channel'));
         } elseif ($c_rating['allow_ratings'] == 'no' || !config('channel_rating')) {
             e(lang('channel_rating_disabled'));
         } else {
-            $voters[userid()] = [
-                'userid'   => userid(),
+            $voters[user_id()] = [
+                'userid'   => user_id(),
                 'username' => user_name(),
                 'time'     => now(),
                 'rating'   => $rating
@@ -4915,7 +4915,7 @@ class userquery extends CBCategory
                 'type'      => 'user',
                 'time'      => now(),
                 'rating'    => $rating,
-                'userid'    => userid(),
+                'userid'    => user_id(),
                 'username'  => user_name()
             ];
             /* Updating user details */
@@ -5061,7 +5061,7 @@ class userquery extends CBCategory
     {
         global $db;
         if (!$userid) {
-            $userid = userid();
+            $userid = user_id();
         }
 
         if (is_array($array)) {

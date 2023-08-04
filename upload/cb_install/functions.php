@@ -12,40 +12,36 @@ function get_cbla()
     return $license;
 }
 
-function button($text, $params = null, $alt = false)
+
+
+function button($text, $params, $class = 'btn-primary')
 {
     echo '<span ' . $params . '>&nbsp;</span>';
-    echo '<span class="btn btn-primary" ' . $params . '>' . $text . '</span>';
+    echo '<span class="btn '.$class.'" ' . $params . '>' . $text . '</span>';
     echo '<span ' . $params . '>&nbsp;</span>';
 }
 
 function button_green($text, $params = null)
 {
-    echo '<span ' . $params . '>&nbsp;</span>';
-    echo '<span class="btn btn-success" ' . $params . '>' . $text . '</span>';
-    echo '<span ' . $params . '>&nbsp;</span>';
+    button($text, $params, 'btn-success');
 }
 
 function button_danger($text, $params = null)
 {
-    echo '<span ' . $params . '>&nbsp;</span>';
-    echo '<span class="btn btn-danger" ' . $params . '>' . $text . '</span>';
-    echo '<span ' . $params . '>&nbsp;</span>';
+    button($text, $params, 'btn-danger');
 }
 
-function msg_arr($arr)
+function msg_arr($arr): string
 {
     if (@$arr['msg']) {
-        return emsg($arr['msg'], 'ok');
+        $text = $arr['msg'];
+        $type = 'ok';
+    } else {
+        $text = $arr['err'];
+        $type = 'alert_cross';
     }
-    return emsg($arr['err'], 'alert_cross');
-}
 
-if (!function_exists('emsg')) {
-    function emsg($text, $type = 'ok')
-    {
-        return '<span class="msg ' . $type . '">' . $text . '</span>';
-    }
+    return '<span class="msg ' . $type . '">' . $text . '</span>';
 }
 
 function check_module($type): array
@@ -57,9 +53,9 @@ function check_module($type): array
             $php_path = exec('which php');
             $req = '7.0.0';
             if ($php_version < $req) {
-                $return['err'] = sprintf(_('Found PHP %s but required is PHP %s : %s'), $php_version, $req, $php_path);
+                $return['err'] = sprintf('Found PHP %s but required is PHP %s : %s', $php_version, $req, $php_path);
             } else {
-                $return['msg'] = sprintf(_('Found PHP %s : %s'), $php_version, $php_path);
+                $return['msg'] = sprintf('Found PHP %s : %s', $php_version, $php_path);
             }
             break;
 
@@ -68,19 +64,19 @@ function check_module($type): array
             $ffmpeg_version = shell_output("$ffmpeg_path -version | head -n1");
 
             $version = false;
-            preg_match("/SVN-r([0-9]+)/i", $ffmpeg_version, $matches);
+            preg_match('/SVN-r([0-9]+)/i', $ffmpeg_version, $matches);
             if (@$matches[1]) {
                 $version = 'r' . $matches[1];
             }
-            preg_match("/version ([0-9.]+)/i", $ffmpeg_version, $matches);
+            preg_match('/version ([0-9.]+)/i', $ffmpeg_version, $matches);
             if (@$matches[1]) {
                 $version = $matches[1];
             }
 
             if (!$version) {
-                $return['err'] = _('Unable to find FFMPEG');
+                $return['err'] = 'Unable to find FFMPEG';
             } else {
-                $return['msg'] = sprintf(_('Found FFMPEG %s : %s'), $version, $ffmpeg_path);
+                $return['msg'] = sprintf('Found FFMPEG %s : %s', $version, $ffmpeg_path);
             }
             break;
 
@@ -89,19 +85,19 @@ function check_module($type): array
             $ffprobe_version = shell_output("$ffprobe_path -version | head -n1");
 
             $version = false;
-            preg_match("/SVN-r([0-9]+)/i", $ffprobe_version, $matches);
+            preg_match('/SVN-r([0-9]+)/i', $ffprobe_version, $matches);
             if (@$matches[1]) {
                 $version = 'r' . $matches[1];
             }
-            preg_match("/version ([0-9.]+)/i", $ffprobe_version, $matches);
+            preg_match('/version ([0-9.]+)/i', $ffprobe_version, $matches);
             if (@$matches[1]) {
                 $version = $matches[1];
             }
 
             if (!$version) {
-                $return['err'] = _('Unable to find FFPROBE');
+                $return['err'] = 'Unable to find FFPROBE';
             } else {
-                $return['msg'] = sprintf(_('Found FFPROBE %s : %s'), $version, $ffprobe_path);
+                $return['msg'] = sprintf('Found FFPROBE %s : %s', $version, $ffprobe_path);
             }
             break;
 
@@ -116,9 +112,9 @@ function check_module($type): array
             }
 
             if (!$version) {
-                $return['err'] = _('Unable to find Media Info');
+                $return['err'] = 'Unable to find Media Info';
             } else {
-                $return['msg'] = sprintf(_('Found Media Info %s : %s'), $version, $mediainfo_path);
+                $return['msg'] = sprintf('Found Media Info %s : %s', $version, $mediainfo_path);
             }
             break;
 
@@ -129,28 +125,19 @@ function check_module($type): array
             }
 
             if (!$version) {
-                $return['err'] = _('cURL extension is not enabled');
+                $return['err'] = 'cURL extension is not enabled';
             } else {
-                $return['msg'] = sprintf(_('cURL %s extension is enabled'), $version['version']);
+                $return['msg'] = sprintf('cURL %s extension is enabled', $version['version']);
             }
             break;
     }
     return $return;
 }
 
-if (!function_exists('_')) {
-    function _($in)
-    {
-        return $in;
-    }
-}
-
 if (!function_exists('shell_output')) {
     function shell_output($cmd)
     {
-        if (stristr(PHP_OS, 'WIN')) {
-            $cmd = $cmd;
-        } else {
+        if( !stristr(PHP_OS, 'WIN') ) {
             $cmd = "PATH=\$PATH:/bin:/usr/bin:/usr/local/bin bash -c \"$cmd\" 2>&1";
         }
         return shell_exec($cmd);

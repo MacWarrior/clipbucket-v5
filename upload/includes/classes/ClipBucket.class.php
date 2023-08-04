@@ -255,7 +255,7 @@ class ClipBucket
     function initAdminMenu()
     {
         global $userquery;
-        $per = $userquery->get_user_level(userid());
+        $per = $userquery->get_user_level(user_id());
 
         $menu_dashboard = [
             'title'   => 'Dashboard'

@@ -19,4 +19,3 @@ function SEO($text, $slash = false)
 
     return $slash . $clean_text;
 }	
-

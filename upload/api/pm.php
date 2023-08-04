@@ -14,7 +14,7 @@ if ($api_keys) {
     }
 }
 
-if (!userid()) {
+if (!user_id()) {
     exit(json_encode(['err' => 'User not logged in']));
 }
 

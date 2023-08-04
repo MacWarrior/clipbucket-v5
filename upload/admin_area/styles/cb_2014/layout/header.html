@@ -102,7 +102,7 @@
                 {/if}
                 <li class="blue">
                     <a data-toggle="dropdown" href="#" class="dropdown-toggle">
-                        <img src="{$userquery->getUserThumb('', '',userid())}" class="img-circle" width="25" height="25"/>
+                        <img src="{$userquery->getUserThumb('', '',user_id())}" class="img-circle" width="25" height="25"/>
                         <span class="user-info">
                          {display_clean($userquery->username)}<br>
                          {assign var=levels value=$userquery->get_levels()}
@@ -121,7 +121,7 @@
                         </li>
 
                         <li>
-                            <a href="/admin_area/view_user.php?uid={userid()}">
+                            <a href="/admin_area/view_user.php?uid={user_id()}">
                                 <i class="icon-user"></i> Profile
                             </a>
                         </li>

@@ -368,7 +368,7 @@ if (!empty($mode)) {
                 }
             }
 
-            $msg['severity'] = userid() ? 1 : 2;
+            $msg['severity'] = user_id() ? 1 : 2;
             $msg = json_encode($msg);
             echo $msg;
             break;
@@ -396,7 +396,7 @@ if (!empty($mode)) {
                 }
             }
 
-            $msg['severity'] = userid() ? 1 : 2;
+            $msg['severity'] = user_id() ? 1 : 2;
             $msg = json_encode($msg);
 
             echo $msg;
@@ -415,7 +415,7 @@ if (!empty($mode)) {
         case 'add_friend':
             global $cbemail;
             $friend = mysql_clean($_POST['uid']);
-            $userid = userid();
+            $userid = user_id();
             $username = user_name();
             $mailId = $userquery->get_user_details($friend, false, true);
             $cbemail->friend_request_email($mailId['email'], $username);
@@ -1112,7 +1112,7 @@ if (!empty($mode)) {
             $uid = mysql_clean($_POST['uid']);
             $file = mysql_clean($_POST['file']) . '.feed';
             if ($uid && $file) {
-                if ($uid == userid() || has_access("admin_access", true)) {
+                if ($uid == user_id() || has_access("admin_access", true)) {
                     $cbfeeds->deleteFeed($uid, $file);
                     $array['msg'] = lang("feed_has_been_deleted");
                 } else {
@@ -1123,7 +1123,7 @@ if (!empty($mode)) {
             break;
 
         case "become_contributor" :
-            $uid = userid();
+            $uid = user_id();
             $cid = $_POST['cid'];
             $array = [];
 
@@ -1137,7 +1137,7 @@ if (!empty($mode)) {
             break;
 
         case "remove_contributor" :
-            $uid = userid();
+            $uid = user_id();
             $cid = $_POST['cid'];
             $array = [];
 

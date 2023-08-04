@@ -1,5 +1,5 @@
 {$topMenuLinks = array_slice($myAccountLinks, 0, 6)}
- {if userid()}
+ {if user_id()}
 <div class="userAccountMenu navbar navbar-default cb-box row visible-xs">
     <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
@@ -9,9 +9,9 @@
             <span class="icon-bar"></span>
         </button>
         <div class="userPicContainer">
-            {if userid()}
-            <a class="navbar-brand {if userid()} nopadding {/if}"  style="{if userid()} padding-top: 7px ! important; {/if}" href="#">
-                <img class="cb_img_thum" src="{$userquery->getUserThumb('','small',userid())}" style="width: 40px; height: 40px;"/>
+            {if user_id()}
+            <a class="navbar-brand {if user_id()} nopadding {/if}"  style="{if user_id()} padding-top: 7px ! important; {/if}" href="#">
+                <img class="cb_img_thum" src="{$userquery->getUserThumb('','small',user_id())}" style="width: 40px; height: 40px;"/>
                 My Account &nbsp;&nbsp;&nbsp;<small>Total Uploaded Videos: {$user['total_videos']}</small>
             </a>
             {/if}

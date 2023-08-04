@@ -9,7 +9,7 @@ global $userquery, $cbpm, $eh;
 add_js('jquery_plugs/compressed/jquery.scrollTo-min.js');
 
 $userquery->logincheck();
-$udetails = $userquery->get_user_details(userid());
+$udetails = $userquery->get_user_details(user_id());
 assign('user', $udetails);
 assign('p', $userquery->get_user_profile($udetails['userid']));
 
@@ -26,7 +26,7 @@ if (isset($_POST['delete_pm']) && is_array($_POST['msg_id'])) {
     $total = count($_POST['msg_id']);
     for ($pms = 0; $pms < $total; $pms++) {
         if (!empty($_POST['msg_id'][$pms])) {
-            $cbpm->delete_msg($_POST['msg_id'][$pms], userid(), $box);
+            $cbpm->delete_msg($_POST['msg_id'][$pms], user_id(), $box);
         }
 
         $eh->flush();
@@ -42,13 +42,13 @@ switch ($mode) {
         //Deleting Message
         if ($_GET['delete_mid']) {
             $mid = mysql_clean($_GET['delete_mid']);
-            $cbpm->delete_msg($mid, userid());
+            $cbpm->delete_msg($mid, user_id());
         }
 
         //Getting Message
         if ($_GET['mid']) {
             $mid = mysql_clean($_GET['mid']);
-            $pr_msg = $cbpm->get_inbox_message($mid, userid());
+            $pr_msg = $cbpm->get_inbox_message($mid, user_id());
             if ($pr_msg['message_status'] == 'unread') {
                 $cbpm->set_message_status($mid, 'read');
             }
@@ -56,7 +56,7 @@ switch ($mode) {
         }
 
         //Get User Messages
-        assign('user_msgs', $cbpm->get_user_inbox_messages(userid()));
+        assign('user_msgs', $cbpm->get_user_inbox_messages(user_id()));
 
         subtitle(lang('com_my_inbox'));
         break;
@@ -67,17 +67,17 @@ switch ($mode) {
         //Deleting Message
         if ($_GET['delete_mid']) {
             $mid = mysql_clean($_GET['delete_mid']);
-            $cbpm->delete_msg($mid, userid(), 'out');
+            $cbpm->delete_msg($mid, user_id(), 'out');
         }
 
         //Getting Message
         if ($_GET['mid']) {
             $mid = mysql_clean($_GET['mid']);
-            assign('pr_msg', $cbpm->get_outbox_message($mid, userid()));
+            assign('pr_msg', $cbpm->get_outbox_message($mid, user_id()));
         }
 
         //Get User Messages
-        assign('user_msgs', $cbpm->get_user_outbox_messages(userid()));
+        assign('user_msgs', $cbpm->get_user_outbox_messages(user_id()));
 
         subtitle(lang('user_sent_box'));
         break;
@@ -88,17 +88,17 @@ switch ($mode) {
         //Deleting Message
         if ($_GET['delete_mid']) {
             $mid = mysql_clean($_GET['delete_mid']);
-            $cbpm->delete_msg($mid, userid());
+            $cbpm->delete_msg($mid, user_id());
         }
 
         //Getting Message
         if ($_GET['mid']) {
             $mid = mysql_clean($_GET['mid']);
-            assign('pr_msg', $cbpm->get_inbox_message($mid, userid()));
+            assign('pr_msg', $cbpm->get_inbox_message($mid, user_id()));
         }
 
         //Get User Messages
-        assign('user_msgs', $cbpm->get_user_notification_messages(userid()));
+        assign('user_msgs', $cbpm->get_user_notification_messages(user_id()));
 
         subtitle(lang('my_notifications'));
         break;
@@ -110,8 +110,8 @@ switch ($mode) {
         //Checking if reply
         if ($_GET['reply'] != '') {
             $mid = mysql_clean($_GET['reply']);
-            if (!isset($_POST['send_message']) && $cbpm->is_reply($mid, userid())) {
-                $reply_msg = $cbpm->get_inbox_message($mid, userid());
+            if (!isset($_POST['send_message']) && $cbpm->is_reply($mid, user_id())) {
+                $reply_msg = $cbpm->get_inbox_message($mid, user_id());
                 $_POST['to'] = $userquery->get_user_field_only($reply_msg['message_from'], 'username');
                 $_POST['subj'] = 'Re:' . $reply_msg['message_subject'];
             }
@@ -122,7 +122,7 @@ switch ($mode) {
             $array = $_POST;
             $array['reply_to'] = mysql_clean($_GET['reply']);
             $array['is_pm'] = true;
-            $array['from'] = userid();
+            $array['from'] = user_id();
             $cbpm->send_pm($array);
             unset($_POST);
             if (!error()) {

@@ -52,6 +52,7 @@ function plupload_photo_uploader()
  *
  * @param INT|array $photo_id
  * @return bool|string $directory
+ * @throws Exception
  */
 function get_photo_date_folder($photo_id)
 {
@@ -93,7 +94,7 @@ function get_photo_date_folder($photo_id)
             /**
              * Photo exists, update file_directory index
              */
-            $db->update(tbl('photos'), ['file_directory'], [$directory], ' photo_id = \'' . $photo['photo_id'] . '\'');
+            $db->update(tbl('photos'), ['file_directory'], [$directory], ' photo_id = \'' . mysql_clean($photo['photo_id']) . '\'');
         } else {
             $directory = false;
         }

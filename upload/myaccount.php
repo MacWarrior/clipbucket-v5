@@ -6,8 +6,8 @@ require 'includes/config.inc.php';
 global $db, $cbvid, $userquery, $cbphoto, $cbvideo;
 $userquery->logincheck();
 
-assign('user', $userquery->get_user_details(userid()));
-$videos = $userquery->get_user_vids(userid(), false, false, true);
+assign('user', $userquery->get_user_details(user_id()));
+$videos = $userquery->get_user_vids(user_id(), false, false, true);
 assign('videos', $videos);
 
 $result_array['limit'] = $get_limit;

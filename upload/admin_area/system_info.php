@@ -15,11 +15,27 @@ $memory_limit = ini_get('memory_limit');
 $upload_max_filesize = ini_get('upload_max_filesize');
 $max_execution_time = ini_get('max_execution_time');
 
-assign("post_max_size", $post_max_size);
-assign("memory_limit", $memory_limit);
-assign("upload_max_filesize", $upload_max_filesize);
-assign("max_execution_time", $max_execution_time);
-assign('VERSION', VERSION);
+$isNginx = (strpos($_SERVER['SERVER_SOFTWARE'], 'nginx') !== false);
+$can_access_nginx = false;
+$client_max_body_size = '';
+if( $isNginx ){
+    $nginx_path = exec('which nginx');
+    if( !empty($nginx_path) ){
+        $client_max_body_size = exec($nginx_path.' -T 2>&1 | grep client_max_body_size | awk \'BEGIN{RS=";"; FS="client_max_body_size "}NF>1{print $NF}\'');
+
+        if( !empty($client_max_body_size) ){
+            $can_access_nginx = true;
+        }
+    }
+}
+
+assign('post_max_size', $post_max_size);
+assign('memory_limit', $memory_limit);
+assign('upload_max_filesize', $upload_max_filesize);
+assign('max_execution_time', $max_execution_time);
+assign('isNginx', $isNginx );
+assign('canAccessNginx', $can_access_nginx );
+assign('clientMaxBodySize', $client_max_body_size );
 
 /** services info */
 $ffmpegVersion = check_version('ffmpeg');
@@ -88,12 +104,12 @@ if (empty($exec_output)) {
     }
 }
 
-assign('isNginx', (strpos($_SERVER['SERVER_SOFTWARE'], 'nginx') !== false) );
 assign('phpVersionCli', $phpVersion);
-assign("post_max_size_cli", $post_max_size_cli);
-assign("memory_limit_cli", $memory_limit_cli);
-assign("upload_max_filesize_cli", $upload_max_filesize_cli);
-assign("max_execution_time_cli", $max_execution_time_cli);
+assign('post_max_size_cli', $post_max_size_cli);
+assign('memory_limit_cli', $memory_limit_cli);
+assign('upload_max_filesize_cli', $upload_max_filesize_cli);
+assign('max_execution_time_cli', $max_execution_time_cli);
+
 subtitle(lang('system_info'));
 template_files("system_info.html");
 display_it();

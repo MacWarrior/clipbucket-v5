@@ -1,10 +1,4 @@
 <?php
-/**
- * Function used to display flash player for ClipBucket video
- *
- * @param : { array } { $param } { an array of parameters }
- */
-
 function flashPlayer($param)
 {
     global $Cbucket;

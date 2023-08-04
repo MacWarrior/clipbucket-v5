@@ -204,7 +204,7 @@ class CBPhotos
     function photos_admin_menu()
     {
         global $Cbucket, $userquery;
-        $per = $userquery->get_user_level(userid());
+        $per = $userquery->get_user_level(user_id());
 
         if ($per['photos_moderation'] == "yes" && isSectionEnabled('photos') && !NEED_UPDATE) {
             $menu_photo = [
@@ -572,7 +572,7 @@ class CBPhotos
             'collections' => ['collection_name', 'type', 'category', 'views as collection_views', 'date_added as collection_added']
         ];
 
-        $string = tbl_fields($fields);
+        $string = table_fields($fields);
 
         $main_query = 'SELECT ' . $string . ' FROM ' . table('photos');
         $main_query .= ' LEFT JOIN ' . table('collections') . ' ON photos.collection_id = collections.collection_id';
@@ -1253,7 +1253,7 @@ class CBPhotos
         if ($array['user']) {
             $p['user'] = $array['user'];
         } else {
-            $p['user'] = userid();
+            $p['user'] = user_id();
         }
 
         $p['type'] = 'photos';
@@ -1362,7 +1362,7 @@ class CBPhotos
 
             $query_field[] = 'userid';
             if (!$array['userid']) {
-                $userid = userid();
+                $userid = user_id();
                 $query_val[] = $userid;
             } else {
                 $query_val[] = $array['userid'];
@@ -1716,13 +1716,13 @@ class CBPhotos
             }
 
             if (!error()) {
-                if (!userid()) {
+                if (!user_id()) {
                     e(lang("you_not_logged_in"));
                 } else {
                     if (!$this->photo_exists($pid)) {
                         e(lang("photo_not_exist"));
                     } else {
-                        if ($this->get_photo_owner($pid) != userid() && !has_access('admin_access', true)) {
+                        if ($this->get_photo_owner($pid) != user_id() && !has_access('admin_access', true)) {
                             e(lang("cant_edit_photo"));
                         } else {
                             if ($cid != $array['collection_id']) {
@@ -2265,10 +2265,10 @@ class CBPhotos
             return false;
         }
 
-        if (($details['active'] == 'yes' || $details['broadcast'] == 'public') && $details['userid'] == userid()) {
+        if (($details['active'] == 'yes' || $details['broadcast'] == 'public') && $details['userid'] == user_id()) {
             return true;
         }
-        if ($details['userid'] == userid()) {
+        if ($details['userid'] == user_id()) {
             return true;
         }
         return false;
@@ -2288,7 +2288,7 @@ class CBPhotos
     {
         global $json;
         $p = $this->get_photo($id);
-        if ((!empty($p) && $p['userid'] == userid()) || $show_all === true) {
+        if ((!empty($p) && $p['userid'] == user_id()) || $show_all === true) {
             global $userquery;
             $voters = $p['voters'];
             $voters = json_decode($voters, true);
@@ -2366,20 +2366,20 @@ class CBPhotos
         $voters = json_decode($voters, true);
 
         if (!empty($voters)) {
-            $already_voted = array_key_exists(userid(), $voters);
+            $already_voted = array_key_exists(user_id(), $voters);
         }
 
-        if (!userid()) {
+        if (!user_id()) {
             e(lang('please_login_to_rate'));
-        } elseif (userid() == $c_rating['userid'] && !config('own_photo_rating')) {
+        } elseif (user_id() == $c_rating['userid'] && !config('own_photo_rating')) {
             e(lang('you_cannot_rate_own_photo'));
         } elseif (!empty($already_voted)) {
             e(lang('you_hv_already_rated_photo'));
         } elseif ($c_rating['allow_rating'] == 'no' || !config('photo_rating')) {
             e(lang('photo_rate_disabled'));
         } else {
-            $voters[userid()] = [
-                'userid'   => userid(),
+            $voters[user_id()] = [
+                'userid'   => user_id(),
                 'username' => user_name(),
                 'time'     => now(),
                 'rating'   => $rating
@@ -2395,7 +2395,7 @@ class CBPhotos
                 "type"      => 'photo',
                 "time"      => now(),
                 "rating"    => $rating,
-                "userid"    => userid(),
+                "userid"    => user_id(),
                 "username"  => user_name()
             ];
             /* Updating user details */

@@ -157,7 +157,7 @@ switch ($mode) {
             , 'description'     => $filename_without_ext
             , 'tags'            => genTags(str_replace([' ', '_', '-'], ', ', $filename_without_ext))
             , 'category'        => [$cbvid->get_default_cid()]
-            , 'userid'          => userid()
+            , 'userid'          => user_id()
             , 'allow_comments'  => 'yes'
             , 'comment_voting'  => 'yes'
             , 'allow_rating'    => 'yes'

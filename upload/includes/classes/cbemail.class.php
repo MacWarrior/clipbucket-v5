@@ -74,7 +74,7 @@ class CBEmail
             '{date_format}'   => cbdate(DATE_FORMAT),
             '{date}'          => cbdate(),
             '{username}'      => user_name(),
-            '{userid}'        => userid(),
+            '{userid}'        => user_id(),
             '{date_year}'     => cbdate("Y"),
             '{date_month}'    => cbdate("m"),
             '{date_day}'      => cbdate("d"),

@@ -249,6 +249,7 @@ function cbmail($array, $force = false)
  * @param $message
  *
  * @return bool
+ * @throws phpmailerException
  * @uses : { function : cbmail }
  *
  */
@@ -298,7 +299,7 @@ function GetName($file)
     return substr($file, 0, strrpos($file, '.'));
 }
 
-function old_set_time($temps)
+function old_set_time($temps): string
 {
     $temps = round($temps);
     $heures = floor($temps / 3600);
@@ -335,7 +336,7 @@ function getExt($file): string
  *
  * @return string : { string } { $hms } { formatted time string }
  */
-function SetTime($sec, $padHours = true)
+function SetTime($sec, $padHours = true): string
 {
     if ($sec < 3600) {
         return old_set_time($sec);
@@ -369,7 +370,7 @@ function SetTime($sec, $padHours = true)
  *
  * @param : { string } { $email } { email address to check }
  *
- * @return bool : { boolean } { if valid return true, else false }
+ * @return mixed
  */
 function isValidEmail($email)
 {
@@ -391,7 +392,7 @@ function get_directory_size(string $path, array $excluded = []): array
     $dircount = 0;
     if ($handle = opendir($path)) {
         while (false !== ($file = readdir($handle))) {
-            $nextpath = $path . '/' . $file;
+            $nextpath = $path . DIRECTORY_SEPARATOR . $file;
             if ($file != '.' && $file != '..' && !is_link($nextpath)) {
                 if (is_dir($nextpath)) {
                     $dircount++;
@@ -401,7 +402,7 @@ function get_directory_size(string $path, array $excluded = []): array
                     $dircount += $result['dircount'];
                 } elseif (is_file($nextpath)
                     && !array_filter($excluded, function ($value) use ($nextpath) {
-                        return str_contains($nextpath, $value);
+                        return strpos($nextpath, $value) !== false;
                     })
                 ) {
                     $totalsize += filesize($nextpath);
@@ -424,7 +425,7 @@ function get_directory_size(string $path, array $excluded = []): array
  *
  * @return string : { string } { $data } { file size in readable format }
  */
-function formatfilesize($data)
+function formatfilesize($data): string
 {
     // bytes
     if ($data < 1024) {
@@ -447,7 +448,7 @@ function formatfilesize($data)
  *
  * @param : { string } { $cmd } { command to run }
  *
- * @return string
+ * @return mixed
  */
 function shell_output($cmd)
 {
@@ -457,7 +458,7 @@ function shell_output($cmd)
     return shell_exec($cmd);
 }
 
-function getCommentAdminLink($type, $id)
+function getCommentAdminLink($type, $id): string
 {
     return '/admin_area/edit_video.php?video=' . $id;
 }
@@ -469,6 +470,7 @@ function getCommentAdminLink($type, $id)
  *
  * @return array|bool : { array } { $results } { array of fetched comments }
  * { $results } { array of fetched comments }
+ * @throws Exception
  */
 function getComments($params = null)
 {
@@ -531,6 +533,7 @@ function getComments($params = null)
  * @param $params
  *
  * @return bool|mixed
+ * @throws Exception
  * @uses : { class : $myquery } { function : getComments }
  */
 function getSmartyComments($params)
@@ -551,7 +554,7 @@ function getSmartyComments($params)
  *
  * @return string
  */
-function getAd($params)
+function getAd($params): string
 {
     global $adsObj;
     $data = '';
@@ -571,6 +574,7 @@ function getAd($params)
  * @param : { array } { $params } { array of parameters }
  *
  * @return mixed
+ * @throws Exception
  */
 function getSmartyThumb($params)
 {
@@ -735,20 +739,6 @@ function pr($text, $pretty = false)
 }
 
 /**
- * This function is used to call function in smarty template
- * This wont let you pass parameters to the function, but it will only call it
- *
- * @param $params
- */
-function FUNC($params)
-{
-    $func = $params['name'];
-    if (function_exists($func)) {
-        $func();
-    }
-}
-
-/**
  * Function used to get userid anywhere
  * if there is no user_id it will return false
  * @uses : { class : $userquery } { var : userid }
@@ -760,15 +750,6 @@ function user_id()
         return $userquery->userid;
     }
     return false;
-}
-
-/**
- * Get current user's userid
- * @uses : { function : user_id }
- */
-function userid()
-{
-    return user_id();
 }
 
 /**
@@ -940,7 +921,7 @@ function avatar($param)
  *
  * @param : { array } { $param } { array with parameters e.g $param['name'] }
  *
- * @return mixed
+ * @return mixed|void
  */
 function load_form($param)
 {
@@ -1061,7 +1042,7 @@ function unhtmlentities($string): string
  * @param $needle
  * @param $haystack
  *
- * @return mixed : { string / int } { item if it is found }
+ * @return mixed|void
  * @internal param $ : { string / int } { $needle } { element to find } { $needle } { element to find }
  * @internal param $ : { array / string }  { $haystack } { element to do search in }  { $haystack } { element to do search in }
  */
@@ -1156,9 +1137,9 @@ function convert_to_categories($input)
  * Function used to get categorie details
  * @param $id
  *
- * @return
+ * @return array
+ * @throws Exception
  * @uses : { class : $myquery } { function : get_category }
- *
  */
 function get_category($id): array
 {
@@ -1171,7 +1152,7 @@ function get_category($id): array
  *
  * @param $input
  *
- * @return int|string
+ * @return int|string|void
  */
 function display_sharing_opt($input)
 {
@@ -1293,7 +1274,7 @@ function username_check($username): bool
  * @uses : { class : $userquery } { function : username_exists }
  *
  */
-function user_exists($user)
+function user_exists($user): bool
 {
     global $userquery;
     return $userquery->username_exists($user);
@@ -1307,13 +1288,13 @@ function user_exists($user)
  * @return bool
  * @uses : { class : $userquery } { function : duplicate_email }
  */
-function email_exists($user)
+function email_exists($user): bool
 {
     global $userquery;
     return $userquery->duplicate_email($user);
 }
 
-function check_email_domain($email)
+function check_email_domain($email): bool
 {
     global $userquery;
     return $userquery->check_email_domain($email);
@@ -1474,6 +1455,9 @@ function lang($var)
     return str_replace($array_str, $array_replace, $translation);
 }
 
+/**
+ * @throws Exception
+ */
 function get_current_language()
 {
     return Language::getDefaultLanguage()['language_code'];
@@ -1539,7 +1523,7 @@ function getConstant($constantName = false)
  * @param : { array } { $params } { an array of parameters }
  * @param bool $fullurl
  *
- * @return string : { string } { buils link }
+ * @return string|void
  */
 function cblink($params, $fullurl = false)
 {
@@ -1807,9 +1791,10 @@ function call_view_collection_functions($cdetails)
  * @param      $id
  * @param null $type
  *
- * @internal param $ : { integer } { $id } { id of element to update views for } { $id } { id of element to update views for }
+ * @throws Exception
  * @internal param $ : { string } { $type } { type of object e.g video, user } { $type } { type of object e.g video, user }
  * @action : database updating
+ * @internal param $ : { integer } { $id } { id of element to update views for } { $id } { id of element to update views for }
  */
 function increment_views($id, $type = null)
 {
@@ -1864,9 +1849,10 @@ function increment_views($id, $type = null)
  * @param      $id
  * @param null $type
  *
- * @internal param $ : { integer } { $id } { id of element to update views for } { $id } { id of element to update views for }
+ * @throws Exception
  * @internal param $ : { string } { $type } { type of object e.g video, user } { $type } { type of object e.g video, user }
  * @action : database updating
+ * @internal param $ : { integer } { $id } { id of element to update views for } { $id } { id of element to update views for }
  */
 function increment_views_new($id, $type = null)
 {
@@ -1882,7 +1868,7 @@ function increment_views_new($id, $type = null)
                 $db->update(tbl('video'), ['views', 'last_viewed'], ['|f|views+1', '|f|NOW()'], " videoid='$id' OR videokey='$id'");
                 set_cookie_secure('video_' . $id, 'watched');
 
-                $userid = userid();
+                $userid = user_id();
                 if ($userid) {
                     $log_array = [
                         'success'       => 'NULL',
@@ -1943,13 +1929,14 @@ function post($var)
 /**
  * Function used to show flag form
  * @param : { array } { $array } { array of parameters }
+ * @throws Exception
  */
 function show_share_form($array)
 {
     assign('params', $array);
 
     global $userquery;
-    $contacts = $userquery->get_contacts(userid());
+    $contacts = $userquery->get_contacts(user_id());
     assign('contacts', $contacts);
     Template('blocks/common/share.html');
 }
@@ -1979,7 +1966,7 @@ function show_playlist_form($array)
     if (!empty($array['user'])) {
         $playlists = $cbvid->action->get_playlists($array);
     } else {
-        if (userid()) {
+        if (user_id()) {
             $playlists = $cbvid->action->get_playlists();
         }
     }
@@ -1994,8 +1981,8 @@ function show_playlist_form($array)
 function show_collection_form()
 {
     global $cbcollection;
-    if (userid()) {
-        $collections = $cbcollection->get_collections_list(0, null, null, 'videos', userid());
+    if (user_id()) {
+        $collections = $cbcollection->get_collections_list(0, null, null, 'videos', user_id());
         assign('collections', $collections);
     }
     Template('blocks/collection_form.html');
@@ -2082,7 +2069,7 @@ function get_user_level($id)
  *
  * @return string : { string  }{ status of user e.g online or offline }
  */
-function is_online($time, $margin = '5')
+function is_online($time, $margin = '5'): string
 {
     $margin = $margin * 60;
     $active = strtotime($time);
@@ -2201,7 +2188,7 @@ function validate_cb_form($input, $array)
  *
  * @param : { string } { $input } { date to count age }
  *
- * @return float : { integer } { $iYears } { years old }
+ * @return float|false : { integer } { $iYears } { years old }
  */
 function get_age($input)
 {
@@ -2279,7 +2266,7 @@ function nicetime($date, $istime = false): string
  *
  * @return string : { string } { HTML anchor tag with link in place }
  */
-function outgoing_link($out)
+function outgoing_link($out): string
 {
     preg_match("/http/", $out, $matches);
     if (empty($matches[0])) {
@@ -2327,6 +2314,7 @@ function get_collections($param)
  * @param $param
  *
  * @return bool|mixed
+ * @throws Exception
  * @uses : { class : $userquery } { function : get_users }
  *
  */
@@ -3260,7 +3248,7 @@ function marked_spammed($comment): bool
     $spam_voters = explode("|", $comment['spam_voters']);
     $spam_votes = $comment['spam_votes'];
     $admin_vote = in_array('1', $spam_voters);
-    if (userid() && in_array(userid(), $spam_voters)) {
+    if (user_id() && in_array(user_id(), $spam_voters)) {
         return true;
     }
 
@@ -3719,7 +3707,7 @@ function addFeed($array)
     if ($array['uid']) {
         $userid = $array['uid'];
     } else {
-        $userid = userid();
+        $userid = user_id();
     }
 
     switch ($action) {

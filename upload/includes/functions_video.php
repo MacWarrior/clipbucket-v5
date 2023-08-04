@@ -28,7 +28,7 @@ function video_playable($id)
     } else {
         $vdo = $id;
     }
-    $uid = userid();
+    $uid = user_id();
     if (!$vdo) {
         e(lang("class_vdo_del_err"));
         return false;
@@ -41,7 +41,7 @@ function video_playable($id)
         return true;
     }
     if ($vdo['broadcast'] == 'private'
-        && !$userquery->is_confirmed_friend($vdo['userid'], userid())
+        && !$userquery->is_confirmed_friend($vdo['userid'], user_id())
         && !is_video_user($vdo)
         && !has_access('video_moderation', true)
         && $vdo['userid'] != $uid) {
@@ -50,19 +50,19 @@ function video_playable($id)
     }
     if ($vdo['active'] == 'pen') {
         e(lang("video_in_pending_list"));
-        if (has_access('admin_access', true) || $vdo['userid'] == userid()) {
+        if (has_access('admin_access', true) || $vdo['userid'] == user_id()) {
             return true;
         }
         return false;
     }
     if ($vdo['broadcast'] == 'logged'
-        && !userid()
+        && !user_id()
         && !has_access('video_moderation', true)
         && $vdo['userid'] != $uid) {
         e(lang('not_logged_video_error'));
         return false;
     }
-    if ($vdo['active'] == 'no' && $vdo['userid'] != userid()) {
+    if ($vdo['active'] == 'no' && $vdo['userid'] != user_id()) {
         e(lang("vdo_iac_msg"));
         if (!has_access('admin_access', true)) {
             return false;
@@ -936,7 +936,7 @@ function call_watch_video_function($vdo)
 
     increment_views_new($vdo['videokey'], 'video');
 
-    $userid = userid();
+    $userid = user_id();
     if ($userid) {
         $userquery->increment_watched_vides($userid);
     }
@@ -984,8 +984,8 @@ function call_download_video_function($vdo)
     //Updating Video Downloads
     $db->update(tbl('video'), ['downloads'], ['|f|downloads+1'], "videoid = '" . $vdo['videoid'] . "'");
     //Updating User Download
-    if (userid()) {
-        $db->update(tbl('users'), ['total_downloads'], ['|f|total_downloads+1'], "userid = '" . userid() . "'");
+    if (user_id()) {
+        $db->update(tbl('users'), ['total_downloads'], ['|f|total_downloads+1'], "userid = '" . user_id() . "'");
     }
 }
 

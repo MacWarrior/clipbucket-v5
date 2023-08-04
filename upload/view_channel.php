@@ -72,12 +72,12 @@ if ($userquery->perm_check('view_channel', true)) {
 
     //Checking Profile permissions
     $perms = $p['show_profile'];
-    if (userid() != $udetails['userid']) {
-        if (($perms == 'friends' || $perms == 'members') && !userid()) {
+    if (user_id() != $udetails['userid']) {
+        if (($perms == 'friends' || $perms == 'members') && !user_id()) {
             global $Cbucket;
             e(lang('you_cant_view_profile'));
             $Cbucket->show_page = false;
-        } elseif ($perms == 'friends' && !$userquery->is_confirmed_friend($udetails['userid'], userid())) {
+        } elseif ($perms == 'friends' && !$userquery->is_confirmed_friend($udetails['userid'], user_id())) {
             e(sprintf(lang('only_friends_view_channel'), $udetails['username']));
 
             if (!has_access('admin_access', true)) {
@@ -85,7 +85,7 @@ if ($userquery->perm_check('view_channel', true)) {
             }
         }
         //Checking if user is not banned by admin
-        if (userid()) {
+        if (user_id()) {
             if ($userquery->is_user_banned(user_name(), $udetails['userid'], $udetails['banned_users'])) {
                 e(sprintf(lang('you_are_not_allowed_to_view_user_channel'), $udetails['username']));
                 assign('isBlocked', 'yes');

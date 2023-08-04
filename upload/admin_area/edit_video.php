@@ -37,7 +37,7 @@ if ($_GET['mode'] != '') {
 }
 
 //Check Video Exists or Not
-if ($myquery->VideoExists($video)) {
+if ($myquery->video_exists($video)) {
     //Deleting Comment
     $cid = mysql_clean($_GET['delete_comment']);
     if (!empty($cid)) {

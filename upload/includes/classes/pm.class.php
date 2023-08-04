@@ -43,7 +43,7 @@ function parse_and_attach_video($att)
 function video_attachment_form(): array
 {
     global $cbvid;
-    $vid_array = ['user' => userid(), 'order' => 'date_added DESC', 'limit' => 15];
+    $vid_array = ['user' => user_id(), 'order' => 'date_added DESC', 'limit' => 15];
     $videos = $cbvid->get_videos($vid_array);
     $vids_array = ['' => lang('no_video')];
 
@@ -172,7 +172,7 @@ class cb_pm
             $valid_users = [];
             foreach ($usernames as $username) {
                 $user_id = $this->get_the_user($username);
-                if ($userquery->is_user_banned($username, userid())) {
+                if ($userquery->is_user_banned($username, user_id())) {
                     e(sprintf(lang('cant_pm_banned_user'), $username));
                 } elseif ($userquery->is_user_banned(user_name(), $username)) {
                     e(sprintf(lang('cant_pm_user_banned_you'), $username));
@@ -280,7 +280,7 @@ class cb_pm
     {
         global $db;
         if (!$uid) {
-            $uid = userid();
+            $uid = user_id();
         }
         $result = $db->select(tbl($this->tbl . ',users'), tbl($this->tbl . '.*,users.userid,users.username'), " message_id='$mid' AND message_to LIKE '%#$uid#%' AND userid=" . tbl($this->tbl) . '.message_from', null, ' date_added DESC ');
 
@@ -303,7 +303,7 @@ class cb_pm
     {
         global $db;
         if (!$uid) {
-            $uid = userid();
+            $uid = user_id();
         }
         $result = $db->select(tbl($this->tbl . ',users'), tbl($this->tbl . '.*,users.userid,users.username'), " message_id='$mid' AND message_from='$uid' AND userid=" . tbl($this->tbl . ".message_from"));
 
@@ -331,7 +331,7 @@ class cb_pm
         global $db;
 
         if (!$uid) {
-            $uid = userid();
+            $uid = user_id();
         }
 
         switch ($box) {
@@ -606,7 +606,7 @@ class cb_pm
     function get_new_messages($uid = null, $type = 'pm')
     {
         if (!$uid) {
-            $uid = userid();
+            $uid = user_id();
         }
         global $db;
         switch ($type) {

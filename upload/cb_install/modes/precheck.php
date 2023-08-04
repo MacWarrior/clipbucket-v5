@@ -7,7 +7,7 @@
 
 <div id="sub_container">
     <dl>
-        <dt class="grey-text">PHP</dt>
+        <dt class="grey-text">PHP CLI</dt>
         <?php $php_ver = check_module('php'); ?>
         <dd><span style="margin-left:60px;" class="grey-text"><?php echo msg_arr($php_ver); ?></span></dd>
 

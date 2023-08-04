@@ -34,7 +34,7 @@ if (isset($_POST['login'])) {
     }
 }
 
-if (userid() && !has_access('admin_access', true)) {
+if (user_id() && !has_access('admin_access', true)) {
     e(lang("you_dont_hv_perms"));
 }
 

@@ -81,7 +81,7 @@ class Upload
                 $upload_fields = array_merge($upload_fields, $this->custom_form_fields);
             }
 
-            $userid = userid();
+            $userid = user_id();
             if (!$userid) {
                 if (has_access('allow_video_upload', true, false)) {
                     $userid = $userquery->get_anonymous_user();
@@ -226,7 +226,7 @@ class Upload
             //Finalizing Query
             $query .= ')';
 
-            if (!userid() && !has_access('allow_video_upload', false, false)) {
+            if (!user_id() && !has_access('allow_video_upload', false, false)) {
                 e(lang('you_not_logged_in'));
             } else {
                 $insert_id = file_name_exists($file_name);

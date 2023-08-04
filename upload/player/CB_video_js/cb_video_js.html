@@ -241,8 +241,8 @@
 				comments : timecomments,
 				dummy : false,
 				videoid : vid_id,
-				userid : "{userid()}",
-				userprofile : "{$userquery->avatar('','m',userid())}",
+				userid : "{user_id()}",
+				userprofile : "{$userquery->avatar('','m',user_id())}",
 				username : "{display_clean(user_name())}",
 				allowComments : "{$Comments_allowed}",
 				forceShow : true

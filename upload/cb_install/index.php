@@ -25,13 +25,11 @@ if (!$mode || !in_array($mode, $modes)) {
  * function file does not create a conflict
  */
 $cbarray = ['adminsettings', 'sitesettings', 'finish'];
-$baseDir = dirname(dirname(__FILE__));
+$baseDir = dirname(__FILE__, 2);
 
 if (in_array($mode, $cbarray)) {
-    chdir('..');
-    require_once 'includes/config.inc.php';
-    chdir('cb_install');
+    require_once '../includes/config.inc.php';
 }
 
-include('functions.php');
-include('modes/body.php');
+require_once 'functions.php';
+require_once 'modes/body.php';

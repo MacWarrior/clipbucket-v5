@@ -83,7 +83,7 @@ class Collections extends CBCategory
     function setting_up_collections()
     {
         global $userquery, $Cbucket;
-        $per = $userquery->get_user_level(userid());
+        $per = $userquery->get_user_level(user_id());
         // Adding My Account Links    
         if (isSectionEnabled('collections') && !NEED_UPDATE) {
             $userquery->user_account[lang('collections')] = [
@@ -266,7 +266,7 @@ class Collections extends CBCategory
             }
             return true;
         }
-        if ($c['broadcast'] == 'private' && !$userquery->is_confirmed_friend($c['userid'], userid()) && $c['userid'] != userid() && !has_access('admin_access', true)) {
+        if ($c['broadcast'] == 'private' && !$userquery->is_confirmed_friend($c['userid'], user_id()) && $c['userid'] != user_id() && !has_access('admin_access', true)) {
             e(lang('collection_is_private'));
             return false;
         }
@@ -297,7 +297,7 @@ class Collections extends CBCategory
         $order = $p['order'];
         $cond = '';
 
-        if ((!has_access('admin_access', true) && $p['user'] != userid()) || ($p['user'] && $p['user'] == userid())) {
+        if ((!has_access('admin_access', true) && $p['user'] != user_id()) || ($p['user'] && $p['user'] == user_id())) {
             $cond .= 'C.active = \'yes\'';
         } else {
             if ($p['active']) {
@@ -715,7 +715,7 @@ class Collections extends CBCategory
         if (config('enable_sub_collection')) {
             $list_parent_categories = ['null' => lang('collection_no_parent')];
             $type = $default['type'] ?? null;
-            foreach ($this->get_collections_list(0, null, $collection_id, $type, userid()) as $col_id => $col_data) {
+            foreach ($this->get_collections_list(0, null, $collection_id, $type, user_id()) as $col_id => $col_data) {
                 $list_parent_categories[$col_id] = $col_data['name'];
             }
 
@@ -953,7 +953,7 @@ class Collections extends CBCategory
                 if ($array['userid']) {
                     $query_val[] = $userid = $array['userid'];
                 } else {
-                    $query_val[] = $userid = userid();
+                    $query_val[] = $userid = user_id();
                 }
 
                 // active
@@ -986,7 +986,7 @@ class Collections extends CBCategory
         $cid = mysql_clean($cid);
 
         if ($this->collection_exists($cid)) {
-            if (!userid()) {
+            if (!user_id()) {
                 e(lang('you_not_logged_in'));
             } elseif (!$this->object_exists($objID)) {
                 e(sprintf(lang('object_does_not_exists'), $this->objName));
@@ -994,7 +994,7 @@ class Collections extends CBCategory
                 e(sprintf(lang('object_exists_collection'), $this->objName));
             } else {
                 $flds = ['collection_id', 'object_id', 'type', 'userid', 'date_added'];
-                $vls = [$cid, $objID, $this->objType, userid(), NOW()];
+                $vls = [$cid, $objID, $this->objType, user_id(), NOW()];
                 $db->insert(tbl($this->items), $flds, $vls);
                 $db->update(tbl($this->section_tbl), ['total_objects'], ['|f|total_objects+1'], ' collection_id = ' . $cid);
                 e(sprintf(lang('item_added_in_collection'), $this->objName), 'm');
@@ -1065,7 +1065,7 @@ class Collections extends CBCategory
     function is_collection_owner($cdetails, $userid = null): bool
     {
         if ($userid == null) {
-            $userid = userid();
+            $userid = user_id();
         }
 
         if (!is_array($cdetails)) {
@@ -1091,7 +1091,7 @@ class Collections extends CBCategory
         $collection = $this->get_collection($cid);
         if (empty($collection)) {
             e(lang('collection_not_exists'));
-        } elseif ($collection['userid'] != userid() && !has_access('admin_access', true)) {
+        } elseif ($collection['userid'] != user_id() && !has_access('admin_access', true)) {
             e(lang('cant_perform_action_collect'));
         } else {
 
@@ -1140,7 +1140,7 @@ class Collections extends CBCategory
         $cid = mysql_clean($cid);
 
         if ($this->collection_exists($cid)) {
-            if (!userid()) {
+            if (!user_id()) {
                 e(lang('you_not_logged_in'));
             } elseif (!$this->object_in_collection($id, $cid)) {
                 e(sprintf(lang('object_not_in_collect'), $this->objName));
@@ -1318,11 +1318,11 @@ class Collections extends CBCategory
         }
 
         if (!error()) {
-            if (!userid()) {
+            if (!user_id()) {
                 e(lang('you_not_logged_in'));
             } elseif (!$this->collection_exists($cid)) {
                 e(lang('collect_not_exist'));
-            } elseif (!$this->is_collection_owner($cid, userid()) && !has_access('admin_access', true)) {
+            } elseif (!$this->is_collection_owner($cid, user_id()) && !has_access('admin_access', true)) {
                 e(lang('cant_edit_collection'));
             } else {
                 $cid = mysql_clean($cid);
@@ -1427,7 +1427,7 @@ class Collections extends CBCategory
     function collection_voters($id, $return_array = false, $show_all = false)
     {
         $c = $this->get_collection($id);
-        if ((!empty($c) && $c['userid'] == userid()) || $show_all === true) {
+        if ((!empty($c) && $c['userid'] == user_id()) || $show_all === true) {
             global $userquery;
             $voters = $c['voters'];
             $voters = json_decode($voters, true);
@@ -1498,20 +1498,20 @@ class Collections extends CBCategory
         $voters = json_decode($voters, true);
 
         if (!empty($voters)) {
-            $already_voted = array_key_exists(userid(), $voters);
+            $already_voted = array_key_exists(user_id(), $voters);
         }
 
-        if (!userid()) {
+        if (!user_id()) {
             e(lang('please_login_to_rate'));
-        } elseif (userid() == $c_rating['userid'] && !config('own_collection_rating')) {
+        } elseif (user_id() == $c_rating['userid'] && !config('own_collection_rating')) {
             e(lang('you_cannot_rate_own_collection'));
         } elseif (!empty($already_voted)) {
             e(lang('you_hv_already_rated_photo'));
         } elseif ($c_rating['allow_rating'] == 'no' || !config('collection_rating')) {
             e(lang('collection_rating_not_allowed'));
         } else {
-            $voters[userid()] = [
-                'userid'   => userid(),
+            $voters[user_id()] = [
+                'userid'   => user_id(),
                 'username' => user_name(),
                 'time'     => now(),
                 'rating'   => $rating
@@ -1529,7 +1529,7 @@ class Collections extends CBCategory
                 'type'      => 'collection',
                 'time'      => now(),
                 'rating'    => $rating,
-                'userid'    => userid(),
+                'userid'    => user_id(),
                 'username'  => user_name()
             ];
             /* Updating user details */
@@ -1949,7 +1949,7 @@ class Collections extends CBCategory
 
         $collection = $this->get_collection($cid);
 
-        if ($collection['userid'] != userid() && !has_access('collection_moderation') && $uid != userid()) {
+        if ($collection['userid'] != user_id() && !has_access('collection_moderation') && $uid != user_id()) {
             e(lang('You cannot remove this contributor'));
         }
 
@@ -1994,6 +1994,9 @@ class Collections extends CBCategory
         return db_select($query);
     }
 
+    /**
+     * @throws Exception
+     */
     function coll_first_thumb($col_data, $size = false)
     {
         global $cbphoto, $cbvid;
@@ -2029,10 +2032,9 @@ class Collections extends CBCategory
                             $size = '416x260';
                         }
                     }
-                    $first_col = get_thumb($vdata, 'default', false, false, true, false, $size);
+                    $first_col = get_thumb($vdata, false, $size);
                     break;
             }
-
             return $first_col;
         }
         return false;

@@ -34,10 +34,7 @@ function Template($template, $layout = true)
         $cbtpl->display($template);
     }
 
-    if ($template == 'footer.html' && $admin_area != true) {
-        $cbtpl->display(BASEDIR . '/includes/templatelib/' . $template);
-    }
-    if ($template == 'header.html') {
+    if (($template == 'footer.html' && !$admin_area) || $template == 'header.html') {
         $cbtpl->display(BASEDIR . '/includes/templatelib/' . $template);
     }
 }

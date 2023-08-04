@@ -7,7 +7,7 @@ require 'includes/config.inc.php';
 global $userquery, $cbvid, $eh;
 
 $userquery->logincheck();
-$udetails = $userquery->get_user_details(userid());
+$udetails = $userquery->get_user_details(user_id());
 assign('user', $udetails);
 assign('p', $userquery->get_user_profile($udetails['userid']));
 
@@ -52,7 +52,7 @@ switch ($mode) {
 
         assign('mode', 'manage_playlist');
         //Getting List of available playlists
-        $playlists = $cbvid->action->get_playlists(['user' => userid(), 'order' => 'playlists.date_added DESC']);
+        $playlists = $cbvid->action->get_playlists(['user' => user_id(), 'order' => 'playlists.date_added DESC']);
         assign('playlists', $playlists);
         break;
 
@@ -104,7 +104,7 @@ switch ($mode) {
             $cbvid->action->delete_playlist_item($delid);
         }
 
-        $playlist = $cbvid->action->get_playlist($pid, userid());
+        $playlist = $cbvid->action->get_playlist($pid, user_id());
         if ($playlist) {
             assign('playlist', $playlist);
             //Getting Playlist Item

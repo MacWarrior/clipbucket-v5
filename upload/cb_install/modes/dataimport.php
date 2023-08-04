@@ -9,7 +9,7 @@
     <div class="errorDiv" style="display:none;"></div>
     <div id="dbresult" style="display:none;"></div>
     <div id="resultsDiv" style="margin-top:20px;">
-        <img src="images/loading.gif" alt="loading" id="loading"/>
+        <img src="./images/loading.gif" alt="loading" id="loading"/>
         <span id="current">Creating database structure...</span>
     </div>
 

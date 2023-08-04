@@ -1,12 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Fawaz
- * Date: 11/15/13
- * Time: 2:59 PM
- */
-
-
 function get_playlist($list_id, $user = null)
 {
     global $cbvid;
@@ -24,7 +16,7 @@ function is_playlist_viewable($list_id)
 
     if (isset($playlist['playlist_id'])) {
 
-        if ($playlist['privacy'] == 'private' and $playlist['userid'] != userid()) {
+        if ($playlist['privacy'] == 'private' and $playlist['userid'] != user_id()) {
             e(lang('User has made this playlist private.'));
             return false;
         }
@@ -47,46 +39,13 @@ function get_playlists($args = [])
     return $cbvid->action->get_playlists($args);
 }
 
+/**
+ * @throws Exception
+ */
 function get_playlist_items($list_id, $limit = -1, $order = "playlist_items.playlist_item_id DESC")
 {
     global $cbvid;
     return $cbvid->get_playlist_items($list_id, $order, $limit);
-}
-
-function playlist_runtime($playlist)
-{
-
-    $runtime = (int)0;
-
-    if (is_array($playlist)) {
-        $runtime = $playlist['runtime'];
-    } else {
-        if (is_numeric($playlist)) {
-            $runtime = $playlist;
-        }
-    }
-
-    $string = '';
-
-    if ($runtime >= 3600) {
-        $hours = intval(intval($runtime) / 3600);
-        if ($hours > 0) {
-            $hours = str_pad($hours, 2, "0", STR_PAD_LEFT);
-            $string .= $hours . ' ' . (($hours == 1) ? lang('hour') : lang('hours'));
-        }
-    }
-
-    $minutes = intval(($runtime / 60) % 60);
-
-    if ($minutes > 0) {
-        $minutes = str_pad($minutes, 2, "0", STR_PAD_LEFT);
-        $string .= $minutes . ' ' . (($minutes == 1) ? lang('minute') : lang('minutes'));
-    }
-
-    $seconds = intval($runtime % 60);
-    $string .= $seconds . ' ' . (($seconds == 1) ? lang('second') : lang('seconds'));
-
-    return $string;
 }
 
 function get_playlist_cover($playlist, $return_default = false)
@@ -95,19 +54,21 @@ function get_playlist_cover($playlist, $return_default = false)
     $playlist_dir = PLAYLIST_COVERS_DIR;
 
     if (empty($cover)) {
-        return ($return_default == true) ? get_playlist_default_thumb() : false;
+        return $return_default ? get_playlist_default_thumb() : false;
     }
 
     if (file_exists($playlist_dir . '/' . $cover)) {
         return PLAYLIST_COVERS_URL . '/' . $cover;
     }
 
-    return ($return_default == true) ? get_playlist_default_thumb() : false;
+    return $return_default ? get_playlist_default_thumb() : false;
 }
 
+/**
+ * @throws Exception
+ */
 function get_playlist_thumb($playlist, $size = false)
 {
-
     if (!$size) {
         $size = 'big';
     }
@@ -149,7 +110,6 @@ function get_playlist_default_thumb()
 
 function view_playlist($playlist_id)
 {
-
     $playlist_link = BASEURL;
 
     if (is_array($playlist_id) and isset($playlist_id['playlist_id'])) {
@@ -187,6 +147,9 @@ function view_playlist($playlist_id)
     return $playlist_link;
 }
 
+/**
+ * @throws Exception
+ */
 function playlist_upload_cover($args)
 {
     global $db;
@@ -234,7 +197,6 @@ function increment_playlist_played($args = [])
         }
 
     }
-
 }
 
 /**
@@ -245,7 +207,6 @@ function increment_playlist_played($args = [])
  *
  * @since : May 11th, 2016 ClipBucket 2.8.1
  */
-
 function activePlaylists($playlists)
 {
     if (is_array($playlists)) {
@@ -260,5 +221,3 @@ function activePlaylists($playlists)
         return $playlists;
     }
 }
-
-# BASEURL/show/SHOW-NAME/

@@ -6,7 +6,7 @@ require 'includes/config.inc.php';
 global $userquery, $cbphoto, $eh, $pages, $db;
 
 $userquery->logincheck();
-$udetails = $userquery->get_user_details(userid());
+$udetails = $userquery->get_user_details(user_id());
 assign('user', $udetails);
 assign('p', $userquery->get_user_profile($udetails['userid']));
 
@@ -56,7 +56,7 @@ switch ($mode) {
         }
 
         $photo_arr = [
-            'user'  => userid(),
+            'user'  => user_id(),
             'limit' => $get_limit,
             'order' => ' date_added DESC'
         ];
@@ -101,7 +101,7 @@ switch ($mode) {
             $cond = ' (photos.photo_title LIKE \'%' . mysql_clean(get('query')) . '%\' OR photos.photo_tags LIKE \'%' . mysql_clean(get('query')) . '%\' )';
         }
 
-        $photo_arr = ['user' => userid(), 'limit' => $get_limit, 'cond' => $cond];
+        $photo_arr = ['user' => user_id(), 'limit' => $get_limit, 'cond' => $cond];
         $photos = $cbphoto->action->get_favorites($photo_arr);
         assign('photos', $photos);
 
@@ -120,7 +120,7 @@ switch ($mode) {
 
         if (isset($_GET['album_privacy'])) {
             if (in_array(get('album_privacy'), ['private', 'public', 'friends'])) {
-                $db->update(tbl('users'), ['album_privacy'], [mysql_clean(get('album_privacy'))], ' userid=\'' . userid() . '\'');
+                $db->update(tbl('users'), ['album_privacy'], [mysql_clean(get('album_privacy'))], ' userid=\'' . user_id() . '\'');
                 e(lang('album_privacy_updated'), 'm');
                 $udetails ['album_privacy'] = get('album_privacy');
                 assign('user', $udetails);
@@ -140,8 +140,8 @@ switch ($mode) {
             $eh->flush();
             e(sprintf(lang('total_photos_deleted'), $total), 'm');
         }
-        $photo_arr = ['user' => userid(), 'limit' => $get_limit, 'order' => ' date_added DESC', 'get_orphans' => true];
-        $collection = $cbphoto->collection->get_collections(['user' => userid(), 'type' => 'photos']);
+        $photo_arr = ['user' => user_id(), 'limit' => $get_limit, 'order' => ' date_added DESC', 'get_orphans' => true];
+        $collection = $cbphoto->collection->get_collections(['user' => user_id(), 'type' => 'photos']);
 
         if (get('query') != '') {
             $photo_arr['title'] = mysql_clean(get('query'));

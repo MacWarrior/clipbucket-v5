@@ -144,7 +144,7 @@
                             <img style="margin-left: 1em; margin-top: 0.4em;"
                                  src="{$imageurl}/{if getBytesFromFileSize($post_max_size) > getBytesFromFileSize('50M')}tick{else}alert{/if}.png"
                             />
-                            <label>{lang code = 'post_max_size'} :
+                            <label>post_max_size :
                                 <strong> {$post_max_size} {if getBytesFromFileSize($post_max_size) <= getBytesFromFileSize('50M') }
                                     {lang code = 'must_be_least'} : 50M {/if}
                                 </strong>
@@ -154,7 +154,7 @@
                             <img style="margin-left: 1em; margin-top: 0.4em;"
                                  src="{$imageurl}/{if getBytesFromFileSize($upload_max_filesize) > getBytesFromFileSize('50M')}tick{else}alert{/if}.png"
                             />
-                            <label>{lang code = 'upload_max_size'} :
+                            <label>upload_max_size :
                                 <strong> {$upload_max_filesize} {if getBytesFromFileSize($upload_max_filesize) <= getBytesFromFileSize('50M') }
                                     {lang code = 'must_be_least'} : 50M {/if}
                                 </strong>
@@ -164,7 +164,7 @@
                             <img style="margin-left: 1em; margin-top: 0.4em;"
                                  src="{$imageurl}/{if getBytesFromFileSize($memory_limit) >= getBytesFromFileSize('128M')}tick{else}alert{/if}.png"
                             />
-                            <label>{lang code = 'memory_limit'} :
+                            <label>memory_limit :
                                 <strong> {$memory_limit} {if getBytesFromFileSize($memory_limit) < getBytesFromFileSize('128M') }
                                     {lang code = 'must_be_least'} : 128M {/if}
                                 </strong>
@@ -174,7 +174,7 @@
                             <img style="margin-left: 1em; margin-top: 0.4em;"
                                  src="{$imageurl}/{if $max_execution_time >= 7200}tick{else}alert{/if}.png"
                             />
-                            <label>{lang code = 'max_execution_time'} :
+                            <label>max_execution_time :
                                 <strong> {$max_execution_time} {if $max_execution_time < 7200 }
                                     {lang code = 'must_be_least'} : 128M {/if}
                                 </strong>
@@ -186,7 +186,7 @@
                             <img style="margin-left: 1em; margin-top: 0.4em;"
                                  src="{$imageurl}/{if getBytesFromFileSize($post_max_size_cli) > getBytesFromFileSize('50M')}tick{else}alert{/if}.png"
                             />
-                            <label>{lang code = 'post_max_size'} :
+                            <label>post_max_size :
                                 <strong> {$post_max_size_cli} {if getBytesFromFileSize($post_max_size_cli) <= getBytesFromFileSize('50M') }
                                     {lang code = 'must_be_least'} : 50M {/if}
                                 </strong>
@@ -196,7 +196,7 @@
                             <img style="margin-left: 1em; margin-top: 0.4em;"
                                  src="{$imageurl}/{if getBytesFromFileSize($upload_max_filesize_cli) > getBytesFromFileSize('50M')}tick{else}alert{/if}.png"
                             />
-                            <label>{lang code = 'upload_max_size'} :
+                            <label>upload_max_size :
                                 <strong> {$upload_max_filesize_cli} {if getBytesFromFileSize($upload_max_filesize_cli) <= getBytesFromFileSize('50M') }
                                     {lang code = 'must_be_least'} : 50M {/if}
                                 </strong>
@@ -206,7 +206,7 @@
                             <img style="margin-left: 1em; margin-top: 0.4em;"
                                  src="{$imageurl}/{if $memory_limit_cli != '-1'}{if getBytesFromFileSize($memory_limit_cli) >= getBytesFromFileSize('128M')}tick{else}alert{/if}{else}tick{/if}.png"
                             />
-                            <label>{lang code = 'memory_limit'} :
+                            <label>memory_limit :
                                 <strong> {$memory_limit_cli} {if $memory_limit_cli != -1 && getBytesFromFileSize($memory_limit_cli) < getBytesFromFileSize('128M') }
                                     {lang code = 'must_be_least'} : 128M {/if}
                                 </strong>
@@ -216,7 +216,7 @@
                             <img style="margin-left: 1em; margin-top: 0.4em;"
                                  src="{$imageurl}/{if $max_execution_time_cli >= 7200 || $max_execution_time_cli==0}tick{else}alert{/if}.png"
                             />
-                            <label>{lang code = 'max_execution_time'} :
+                            <label>max_execution_time :
                                 <strong> {$max_execution_time_cli} {if $max_execution_time_cli < 7200 && $max_execution_time_cli > 0}
                                     {lang code = 'must_be_least'} : 7200 {/if}
                                 </strong>
@@ -224,10 +224,22 @@
                         </div>
                     </div>
                     <div class="col-md-4 {if !$isNginx}hidden{/if}">
+                    {if !$canAccessNginx}
                         <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/help.png"/>
                         PHP is unable to check Nginx configuration.<br/>
-                        Please make sure client_max_body_size is set correctly.<br/>
+                        Please make sure <b>client_max_body_size</b> is set correctly.<br/>
+                        Minimum configuration recommended is <b>50M</b>.<br/>
                         Incorrect configuration might cause 413 errors.
+                    {else}
+                        <img style="margin-left: 1em; margin-top: 0.4em;"
+                             src="{$imageurl}/{if getBytesFromFileSize($clientMaxBodySize) > getBytesFromFileSize('50M')}tick{else}alert{/if}.png"
+                        />
+                        <label>client_max_body_size :
+                            <strong> {$clientMaxBodySize} {if getBytesFromFileSize($clientMaxBodySize) <= getBytesFromFileSize('50M') }
+                                {lang code = 'must_be_least'} : 50M {/if}
+                            </strong>
+                        </label>
+                    {/if}
                     </div>
                 </div>
             </div>

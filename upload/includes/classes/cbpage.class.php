@@ -43,7 +43,7 @@ class cbpage
 
         if (!error()) {
             $db->insert(tbl($this->page_tbl), ["page_name", "page_title", "page_content", "userid", "date_added", "active"],
-                [$name, $title, "|no_mc|" . $content, userid(), now(), "yes"]);
+                [$name, $title, "|no_mc|" . $content, user_id(), now(), "yes"]);
             e(lang("new_page_added_successfully"), "m");
             return false;
         }

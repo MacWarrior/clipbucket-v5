@@ -6,6 +6,9 @@ class myquery
     static $website_details = [];
     static $video_resolutions = [];
 
+    /**
+     * @throws Exception
+     */
     function Set_Website_Details($name, $value)
     {
         global $db, $Cbucket;
@@ -14,6 +17,9 @@ class myquery
         static::$website_details[$name] = $value;
     }
 
+    /**
+     * @throws Exception
+     */
     function Get_Website_Details(): array
     {
         if (!empty(static::$website_details)) {
@@ -58,6 +64,9 @@ class myquery
         return static::$video_resolutions;
     }
 
+    /**
+     * @throws Exception
+     */
     public function saveVideoResolutions($post)
     {
         global $db;
@@ -73,12 +82,15 @@ class myquery
                     $enabled = 0;
                 }
 
-                $db->update(tbl('video_resolution'), ['enabled'], [$enabled], " title = '" . $resolution['title'] . "'");
+                $db->update(tbl('video_resolution'), ['enabled'], [$enabled], " title = '" . mysql_clean($resolution['title']) . "'");
             }
         }
         static::$video_resolutions = [];
     }
 
+    /**
+     * @throws Exception
+     */
     public function getEnabledVideoResolutions(string $orderby = ''): array
     {
         $sql_select = 'SELECT height, width FROM ' . tbl('video_resolution') . ' WHERE enabled = 1';
@@ -94,6 +106,9 @@ class myquery
         return $data;
     }
 
+    /**
+     * @throws Exception
+     */
     public function getVideoResolutionBitrateFromHeight($height): int
     {
         $sql_select = 'SELECT video_bitrate FROM ' . tbl('video_resolution') . ' WHERE height = \'' . mysql_clean($height) . '\'';
@@ -105,6 +120,9 @@ class myquery
         return $results[0]['video_bitrate'];
     }
 
+    /**
+     * @throws Exception
+     */
     public function getVideoResolutionTitleFromHeight($height): string
     {
         if ($height == 'index') {
@@ -120,16 +138,13 @@ class myquery
         return $results[0]['title'];
     }
 
-    //Function Used to Check Weather Video Exists or not
-    function VideoExists($videoid)
-    {
-        global $cbvid;
-        return $cbvid->exists($videoid);
-    }
-
+    /**
+     * @throws Exception
+     */
     function video_exists($videoid)
     {
-        return $this->VideoExists($videoid);
+        global $cbvid;
+        return $cbvid->video_exists($videoid);
     }
 
     /**
@@ -139,6 +154,7 @@ class myquery
      * @param INPUT vid or videokey
      *
      * @return bool|mixed|STRING
+     * @throws Exception
      */
     function get_video_details($vid)
     {
@@ -148,6 +164,7 @@ class myquery
 
     /**
      * Function used to check weather username exists not
+     * @throws Exception
      */
     function check_user($username)
     {
@@ -157,6 +174,7 @@ class myquery
 
     /**
      * Function used to check weather email exists not
+     * @throws Exception
      */
     function check_email($email)
     {
@@ -173,6 +191,7 @@ class myquery
      * @param bool $forceDelete
      *
      * @return bool|mixed
+     * @throws Exception
      */
     function delete_comment($cid, $type = 'v', $is_reply = false, $forceDelete = false)
     {
@@ -183,7 +202,7 @@ class myquery
         $uid = user_id();
 
         if (($uid == $cdetails['userid'] && $cdetails['userid'] != '')
-            || $cdetails['type_owner_id'] == userid()
+            || $cdetails['type_owner_id'] == user_id()
             || has_access("admin_del_access", false)
             || $is_reply == true || $forceDelete) {
             $replies = $this->get_child_comments($cid);
@@ -213,15 +232,15 @@ class myquery
             $voters = $comment['spam_voters'];
 
             $niddle = '|';
-            $niddle .= userid();
+            $niddle .= user_id();
             $niddle .= '|';
             $flag = strstr($voters, $niddle);
 
             if (!$comment) {
                 e(lang('no_comment_exists'));
-            } elseif (!userid()) {
+            } elseif (!user_id()) {
                 e(lang('login_to_mark_as_spam'));
-            } elseif (userid() == $comment['userid'] || (!userid() && $_SERVER['REMOTE_ADDR'] == $comment['comment_ip'])) {
+            } elseif (user_id() == $comment['userid'] || (!user_id() && $_SERVER['REMOTE_ADDR'] == $comment['comment_ip'])) {
                 e(lang('no_own_commen_spam'));
             } elseif (!empty($flag)) {
                 e(lang('already_spammed_comment'));
@@ -230,12 +249,12 @@ class myquery
                     $voters .= '|';
                 }
 
-                $voters .= userid();
+                $voters .= user_id();
                 $voters .= '|';
 
                 $newscore = $comment['spam_votes'] + 1;
                 $db->update(tbl('comments'), ['spam_votes', 'spam_voters'], [$newscore, $voters], " comment_id='$cid'");
-                e(lang('spam_comment_ok'), "m");
+                e(lang('spam_comment_ok'), 'm');
                 return $newscore;
             }
 
@@ -258,11 +277,11 @@ class myquery
             $votes = $comment['spam_votes'];
             if (!$votes) {
                 e(lang('Comment is not a spam'));
-            } elseif (!userid()) {
+            } elseif (!user_id()) {
                 e(lang('login_to_mark_as_spam'));
             } else {
                 $db->update(tbl('comments'), ['spam_votes', 'spam_voters'], [$vote, $none], " comment_id='$cid'");
-                e(lang('Spam removed from comment.'), "m");
+                e(lang('Spam removed from comment.'), 'm');
             }
         } else {
             e(lang('no_comment_exists'));
@@ -278,6 +297,7 @@ class myquery
      * @param $cid
      *
      * @return bool|mixed
+     * @throws Exception
      */
     function rate_comment($rate, $cid)
     {
@@ -285,16 +305,16 @@ class myquery
         $comment = $this->get_comment($cid);
         $voters = $comment['voters'];
 
-        $niddle = "|";
-        $niddle .= userid();
-        $niddle .= "|";
+        $niddle = '|';
+        $niddle .= user_id();
+        $niddle .= '|';
         $flag = strstr($voters, $niddle);
 
         if (!$comment) {
             e(lang('no_comment_exists'));
-        } elseif (!userid()) {
+        } elseif (!user_id()) {
             e(lang('class_comment_err6'));
-        } elseif (userid() == $comment['userid'] || (!userid() && $_SERVER['REMOTE_ADDR'] == $comment['comment_ip'])) {
+        } elseif (user_id() == $comment['userid'] || (!user_id() && $_SERVER['REMOTE_ADDR'] == $comment['comment_ip'])) {
             e(lang('no_own_commen_rate'));
         } elseif (!empty($flag)) {
             e(lang('class_comment_err7'));
@@ -303,7 +323,7 @@ class myquery
                 $voters .= '|';
             }
 
-            $voters .= userid();
+            $voters .= user_id();
             $voters .= '|';
 
             $newscore = $comment['vote'] + $rate;
@@ -331,40 +351,41 @@ class myquery
      *
      * @return bool|mixed
      * @throws phpmailerException
+     * @throws Exception
      */
     function add_comment($comment, $obj_id, $reply_to = null, $type = 'v', $obj_owner = null, $obj_link = null, $force_name_email = false)
     {
         global $userquery, $eh, $db, $Cbucket;
         //Checking maximum comments characters allowed
-        if (defined("MAX_COMMENT_CHR")) {
+        if (defined('MAX_COMMENT_CHR')) {
             $comment_len = strlen($comment);
             if ($comment_len > MAX_COMMENT_CHR) {
                 e(sprintf("'%d' characters allowed for comment", MAX_COMMENT_CHR));
             } elseif ($comment_len < 5) {
-                e("Comment is too short. It should be at least 5 characters");
+                e('Comment is too short. It should be at least 5 characters');
             }
         }
         if (!verify_captcha()) {
             e(lang('recap_verify_failed'));
         }
         if (empty($comment)) {
-            e(lang("pelase_enter_something_for_comment"));
+            e(lang('pelase_enter_something_for_comment'));
         }
 
         $params = ['comment' => $comment, 'obj_id' => $obj_id, 'reply_to' => $reply_to, 'type' => $type];
         $this->validate_comment_functions($params);
 
-        if (!userid() && $Cbucket->configs['anonym_comments'] != 'yes') {
-            e(lang("you_not_logged_in"));
+        if (!user_id() && $Cbucket->configs['anonym_comments'] != 'yes') {
+            e(lang('you_not_logged_in'));
         }
 
-        if ((!userid() && $Cbucket->configs['anonym_comments'] == 'yes') || $force_name_email) {
+        if ((!user_id() && $Cbucket->configs['anonym_comments'] == 'yes') || $force_name_email) {
             //Checking for input name and email
             if (empty($_POST['name'])) {
-                e(lang("please_enter_your_name"));
+                e(lang('please_enter_your_name'));
             }
             if (empty($_POST['email'])) {
-                e(lang("please_enter_your_email"));
+                e(lang('please_enter_your_email'));
             }
 
             $name = $_POST['name'];
@@ -372,7 +393,7 @@ class myquery
         }
 
         if (empty($eh->get_error())) {
-            $userid = userid() ? userid() : 'NULL';
+            $userid = user_id() ? user_id() : 'NULL';
             $db->insert(
                 tbl('comments'),
                 ['type,comment,type_id,userid,date_added,parent_id,anonym_name,anonym_email', 'comment_ip', 'type_owner_id'],
@@ -380,8 +401,8 @@ class myquery
             );
             $cid = $db->insert_id();
 
-            if (userid()) {
-                $db->update(tbl('users'), ['total_comments'], ['|f|total_comments+1'], " userid='" . userid() . "'");
+            if (user_id()) {
+                $db->update(tbl('users'), ['total_comments'], ['|f|total_comments+1'], " userid='" . user_id() . "'");
             }
 
             e(lang('grp_comment_msg'), 'm');
@@ -438,9 +459,6 @@ class myquery
                         '{comment}'  => $comment,
                         '{obj}'      => get_obj_type($type)
                     ];
-                    if (!is_array($var)) {
-                        $var = [];
-                    }
                     $var = array_merge($more_var, $var);
                     $subj = $cbemail->replace($tpl['email_template_subject'], $var);
                     $msg = nl2br($cbemail->replace($tpl['email_template'], $var));
@@ -474,6 +492,7 @@ class myquery
      * @param $thumb
      *
      * @return void
+     * @throws Exception
      */
     function set_default_thumb($vid, $thumb)
     {
@@ -496,11 +515,12 @@ class myquery
      * @param $id
      *
      * @return array
+     * @throws Exception
      */
     function get_category($id): array
     {
         global $db;
-        $results = $db->select(tbl("category"), "*", " categoryid='$id'");
+        $results = $db->select(tbl('category'), '*', " categoryid='$id'");
         return $results[0];
     }
 
@@ -511,11 +531,12 @@ class myquery
      * @param $id
      *
      * @return array|bool
+     * @throws Exception
      */
     function get_comment($id)
     {
         global $db, $userquery;
-        $result = $db->select(tbl("comments"), "*", " comment_id='$id'");
+        $result = $db->select(tbl('comments'), '*', " comment_id='$id'");
         if (count($result) > 0) {
             $result = $result[0];
             if ($result['userid']) {
@@ -562,15 +583,17 @@ class myquery
      * @param $parent_id
      *
      * @return array
+     * @throws Exception
      */
     function get_child_comments($parent_id = null): array
     {
         global $db;
-        return $db->select(tbl("comments"), '*', " parent_id='" . $parent_id . "'");
+        return $db->select(tbl('comments'), '*', " parent_id='" . mysql_clean($parent_id) . "'");
     }
 
     /**
      * Function used to get using ARRAY as parameter
+     * @throws Exception
      */
     function getComments($params)
     {
@@ -654,11 +677,11 @@ class myquery
             $query .= " WHERE type='$type' $typeid_query $cond ";
 
             if ($order) {
-                $query .= " ORDER BY " . $order;
+                $query .= ' ORDER BY ' . $order;
             }
 
             if ($limit) {
-                $query .= " LIMIT $limit";
+                $query .= ' LIMIT '.$limit;
             }
 
             $results = db_select($query);
@@ -684,7 +707,7 @@ class myquery
                     }
 
                     if ($replies) {
-                        $replies = ["comments" => $replies];
+                        $replies = ['comments' => $replies];
                         $result['children'] = $replies;
                     } else {
                         $result['children'] = '';
@@ -697,7 +720,7 @@ class myquery
             $comment['comments'] = $parents_array;
 
             //Deleting any other previuos comment file
-            $files = glob(COMM_CACHE_DIR . '/' . $type . $type_id . str_replace(',', '_', $limit) . '*');
+            $files = glob(COMM_CACHE_DIR . DIRECTORY_SEPARATOR . $type . $type_id . str_replace(',', '_', $limit) . '*');
 
             foreach ($files as $delFile) {
                 if (file_exists($delFile)) {
@@ -707,7 +730,7 @@ class myquery
 
             //Caching comment file
             if ($file) {
-                file_put_contents(COMM_CACHE_DIR . '/' . $file, json_encode($comment));
+                file_put_contents(COMM_CACHE_DIR . DIRECTORY_SEPARATOR . $file, json_encode($comment));
             }
             foreach ($comment['comments'] as $key => $c) {
                 $tempCom[] = $c;
@@ -720,22 +743,12 @@ class myquery
     }
 
     /**
-     * Function used to get video owner
-     */
-    function get_vid_owner($vid)
-    {
-        global $db;
-        $results = $db->select(tbl('video'), 'userid', " videoid='$vid'");
-        return $results[0];
-    }
-
-    /**
      * Function used to set website template
      */
     function set_template($template)
     {
         global $myquery;
-        if (is_dir(STYLES_DIR . '/' . $template) && $template) {
+        if (is_dir(STYLES_DIR . DIRECTORY_SEPARATOR . $template) && $template) {
             $myquery->Set_Website_Details('template_dir', $template);
             e(lang('template_activated'), 'm');
         } else {
@@ -745,40 +758,44 @@ class myquery
 
     /**
      * Function used to update comment
+     * @throws Exception
      */
     function update_comment($cid, $text)
     {
         global $db;
-        $db->execute('UPDATE ' . tbl('comments') . " SET comment='$text' WHERE comment_id='$cid'");
+        $db->execute('UPDATE ' . tbl('comments') . ' SET comment=\''.mysql_clean($text).'\' WHERE comment_id=\''.mysql_clean($cid).'\'');
     }
 
     /**
-     * Function used to update comment vote
+     * @throws Exception
      */
-    function update_comment_vote($cid, $text)
-    {
-        global $db;
-        $db->execute('UPDATE ' . tbl('comments') . " SET vote='$text' WHERE comment_id='$cid'");
-    }
-
     function get_todos()
     {
         global $db;
-        return $db->select(tbl('admin_todo'), '*', " userid='" . userid() . "'", null, ' date_added DESC ');
+        return $db->select(tbl('admin_todo'), '*', ' userid=\'' . user_id() . '\'', null, ' date_added DESC ');
     }
 
+    /**
+     * @throws Exception
+     */
     function insert_todo($text)
     {
         global $db;
-        $db->insert(tbl('admin_todo'), ['todo,date_added,userid'], [mysql_clean($text), NOW(), userid()]);
+        $db->insert(tbl('admin_todo'), ['todo,date_added,userid'], [mysql_clean($text), NOW(), user_id()]);
     }
 
+    /**
+     * @throws Exception
+     */
     function update_todo($id, $text)
     {
         global $db;
-        $db->execute('UPDATE ' . tbl('admin_todo') . " SET todo='" . mysql_clean($text) . "' WHERE comment_id='$id'");
+        $db->execute('UPDATE ' . tbl('admin_todo') . ' SET todo=\'' . mysql_clean($text) . '\' WHERE comment_id=\''.mysql_clean($id).'\'');
     }
 
+    /**
+     * @throws Exception
+     */
     function delete_todo($id)
     {
         global $db;
@@ -787,6 +804,7 @@ class myquery
 
     /**
      * Function used to validate comments
+     * @throws Exception
      */
     function validate_comment_functions($params)
     {
@@ -811,29 +829,32 @@ class myquery
 
     /**
      * Function used to insert note in data base for admin referance
+     * @throws Exception
      */
     function insert_note($note)
     {
         global $db;
-        $db->insert(tbl('admin_notes'), ['note,date_added,userid'], [$note, now(), userid()]);
+        $db->insert(tbl('admin_notes'), ['note,date_added,userid'], [$note, now(), user_id()]);
     }
 
     /**
      * Function used to get notes
+     * @throws Exception
      */
-    function get_notes()
+    function get_notes(): array
     {
         global $db;
-        return $db->select(tbl('admin_notes'), '*', " userid='" . userid() . "'", null, " date_added DESC ");
+        return $db->select(tbl('admin_notes'), '*', ' userid=\'' . user_id() . '\'', null, ' date_added DESC ');
     }
 
     /**
      * Function usde to delete note
+     * @throws Exception
      */
     function delete_note($id)
     {
         global $db;
-        $db->delete(tbl("admin_notes"), ["note_id"], [$id]);
+        $db->delete(tbl('admin_notes'), ['note_id'], [$id]);
     }
 
     /**
@@ -842,37 +863,37 @@ class myquery
     function is_commentable($obj, $type)
     {
         switch ($type) {
-            case "video":
-            case "v":
-            case "vdo":
-            case "videos":
-            case "vid":
+            case 'video':
+            case 'v':
+            case 'vdo':
+            case 'videos':
+            case 'vid':
                 if ($obj['allow_comments'] == 'yes' && config('video_comments') == 1) {
                     return true;
                 }
                 break;
 
-            case "channel":
-            case "user":
-            case "users":
-            case "u":
-            case "c":
+            case 'channel':
+            case 'user':
+            case 'users':
+            case 'u':
+            case 'c':
                 if ($obj['allow_comments'] == 'Yes' && config('channel_comments') == 1) {
                     return true;
                 }
                 break;
 
-            case "collection":
-            case "collect":
-            case "cl":
+            case 'collection':
+            case 'collect':
+            case 'cl':
                 if ($obj['allow_comments'] == 'yes') {
                     return true;
                 }
                 break;
 
-            case "photo":
-            case "p":
-            case "photos":
+            case 'photo':
+            case 'p':
+            case 'photos':
                 if ($obj['allow_comments'] == 'yes' && config('photo_comments') == 1) {
                     return true;
                 }
@@ -889,11 +910,12 @@ class myquery
      * @param string $order
      *
      * @return array|bool
+     * @throws Exception
      */
     function get_conversion_queue($cond = null, $limit = null, $order = 'date_added DESC')
     {
         global $db;
-        $result = $db->select(tbl("conversion_queue"), "*", $cond, $limit, $order);
+        $result = $db->select(tbl('conversion_queue'), '*', $cond, $limit, $order);
         if (count($result) > 0) {
             return $result;
         }
@@ -905,6 +927,7 @@ class myquery
      *
      * @param $action
      * @param $id
+     * @throws Exception
      */
     function queue_action($action, $id)
     {
@@ -912,14 +935,14 @@ class myquery
 
         $id = mysql_clean($id);
         switch ($action) {
-            case "delete":
-                $db->execute("DELETE from " . tbl('conversion_queue') . " WHERE cqueue_id ='$id' ");
+            case 'delete':
+                $db->execute('DELETE FROM ' . tbl('conversion_queue') . 'WHERE cqueue_id =\''.mysql_clean($id).'\'');
                 break;
-            case "processed":
-                $db->update(tbl('conversion_queue'), ['cqueue_conversion'], ['yes'], " cqueue_id ='$id' ");
+            case 'processed':
+                $db->update(tbl('conversion_queue'), ['cqueue_conversion'], ['yes'], 'cqueue_id =\''.mysql_clean($id).'\'');
                 break;
-            case "pending":
-                $db->update(tbl('conversion_queue'), ['cqueue_conversion'], ['no'], " cqueue_id ='$id' ");
+            case 'pending':
+                $db->update(tbl('conversion_queue'), ['cqueue_conversion'], ['no'], 'cqueue_id =\''.mysql_clean($id).'\'');
                 break;
         }
     }

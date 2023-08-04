@@ -53,7 +53,7 @@
 				<h1 id="img-title"></h1>
 				<div class="user-video-info clearfix">
 					<a href="{$userquery->profile_link($user)}" class="avatar">
-						<img src="{$userquery->avatar($video,'m',userid())}" class="img-responsive">
+						<img src="{$userquery->avatar($video,'m',user_id())}" class="img-responsive">
 					</a>
 					<h2 class="user-title">
 						<a href="{$userquery->profile_link($user)}">{display_clean($user.username)}</a>
@@ -70,8 +70,8 @@
 						{/if}
 					</div>
 					<div class="clearfix subscribe-col col-lg-6 col-md-6 col-sm-6 col-xs-12">
-						{if $photo.userid != userid()}
-							{if $userquery->is_subscribed($photo.userid,userid())}
+						{if $photo.userid != user_id()}
+							{if $userquery->is_subscribed($photo.userid,user_id())}
 						<button onclick="_cb.unsubscribeToChannel('{$photo.userid}','unsubscribe_user');" class="btn btn-subscribe btn-primary subs_{$photo.userid}">
 							{lang code="unsubscribe"}
 						</button>

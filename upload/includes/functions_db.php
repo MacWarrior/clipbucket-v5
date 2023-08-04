@@ -83,18 +83,6 @@ function table_fields($fields, $table = false)
 }
 
 /**
- * Alias function for table_fields
- *
- * @param $fields
- * @param bool $table
- * @return bool|string
- */
-function tbl_fields($fields, $table = false)
-{
-    return table_fields($fields, $table);
-}
-
-/**
  * Since we start using AS in our sql queries, it was getting
  * more and more difficult to know how author has defined
  * the table name. Using this, will confirm that table will be

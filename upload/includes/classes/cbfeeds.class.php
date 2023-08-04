@@ -130,7 +130,7 @@ class cbfeeds
     function getUserFeedsFiles($uid = null)
     {
         if (!$uid) {
-            $uid = userid();
+            $uid = user_id();
         }
 
         $feeds = [];

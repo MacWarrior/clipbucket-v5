@@ -311,7 +311,7 @@ class API extends REST
         $request = $_REQUEST;
         $uid = $request['userid'];
         if (!$uid) {
-            $uid = userid();
+            $uid = user_id();
         }
 
         if (!$uid) {
@@ -351,7 +351,7 @@ class API extends REST
         $request = $_REQUEST;
         $uid = $request['userid'];
         if (!$uid) {
-            $uid = userid();
+            $uid = user_id();
         }
 
         if (!$uid) {
@@ -398,7 +398,7 @@ class API extends REST
         $get_limit = create_query_limit($page, $limit);
         $uid = $request['userid'];
         if (!$uid) {
-            $uid = userid();
+            $uid = user_id();
         }
 
         if (!$uid) {
@@ -565,7 +565,7 @@ class API extends REST
 
         $uid = $request['userid'];
         if (!$uid) {
-            $uid = userid();
+            $uid = user_id();
         }
 
         if (!$uid) {

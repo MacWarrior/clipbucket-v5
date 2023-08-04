@@ -72,8 +72,8 @@ switch ($mode) {
     case "is_logged_in":
     case "checkauth":
     case "isloggedin":
-        $userid = userid();
-        if (!userid()) {
+        $userid = user_id();
+        if (!user_id()) {
             exit(json_encode(['status' => 'failed', 'msg' => 'User is not logged in', 'session' => $_COOKIE['PHPSESSID']]));
         } else {
             $uDetails = ['username', 'userid', 'email', 'total_videos', 'total_photos', 'total_collections', 'total_groups'];

@@ -6,7 +6,7 @@ global $userquery, $pages, $eh;
 $userquery->admin_login_check();
 $userquery->login_check('member_moderation');
 $pages->page_redir();
-$udetails = $userquery->get_user_details(userid());
+$udetails = $userquery->get_user_details(user_id());
 $userLevel = $udetails['level'];
 
 /* Generating breadcrumb */

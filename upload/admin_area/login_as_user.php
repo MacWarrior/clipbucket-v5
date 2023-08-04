@@ -17,7 +17,7 @@ if ($_GET['revert']) {
 }
 $uid = $_GET['uid'];
 
-$udetails = $userquery->get_user_details(userid());
+$udetails = $userquery->get_user_details(user_id());
 $userLevel = $udetails['level'];
 
 $userToLoginAsDetails = $userquery->get_user_details($uid);

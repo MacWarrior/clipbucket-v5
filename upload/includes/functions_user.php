@@ -1,17 +1,9 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * @author: Fawaz Tahir
- * @since: August 26th, 2013 ClipBucket 2.6
- * Functions for users section
- */
-
 function get_user_fields($array = null)
 {
     global $cb_columns;
     return $cb_columns->object('users')->get_columns();
 }
-
 
 /**
  * Get name of a user from array
@@ -19,11 +11,10 @@ function get_user_fields($array = null)
  * @param { array } { $user_array } { array with user details }
  * @return { string } { $name } { name of user fetched from array }
  */
-
 function name($user_array)
 {
     $user = $user_array;
-    $name = "";
+    $name = '';
     if (isset($user['first_name']) && $user['first_name']) {
         $name = $user['first_name'];
     }
@@ -46,7 +37,6 @@ function name($user_array)
  * @return: { boolean }  { true or false depending on situation }
  * @since: ClipBucket 2.8
  */
-
 function profile_fileds_check($array)
 {
     $post_clean = true;
@@ -71,10 +61,10 @@ function profile_fileds_check($array)
  * Resend verification email to a given user
  * @param: { integer } { $userid } { id of user to resend verification to }
  * @return: { boolean } { true if success, else false }
- * @since: March 10th, 2016 ClipBucket 2.8.1
+ * @throws Exception
  * @author: Saqib Razzaq
+ * @since: March 10th, 2016 ClipBucket 2.8.1
  */
-
 function resend_verification($userid)
 {
     global $db;
@@ -137,7 +127,6 @@ function userMainVideo($userVideos)
                     break;
                 case 'public':
                     return $vKey;
-                    break;
             }
 
         }

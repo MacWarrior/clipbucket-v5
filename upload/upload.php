@@ -7,7 +7,7 @@ $pages->page_redir();
 subtitle('upload');
 
 //Checking if user is guest
-$verify_logged_user = (bool)userid();
+$verify_logged_user = (bool)user_id();
 
 if (has_access('allow_video_upload', false, $verify_logged_user)) {
     $step = 1;
@@ -52,7 +52,7 @@ if (config('enable_video_file_upload') == 'no' && config('enable_video_remote_up
     $Cbucket->show_page = false;
 }
 //Displaying The Template
-if (!userid()) {
+if (!user_id()) {
     echo '<div id="notlogged_err" class="container alert alert-danger" style="margin-top:70px;">You must login to be able to upload content. Login if you have account or register</div>';
 } else {
     template_files('upload.html');

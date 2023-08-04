@@ -8,7 +8,7 @@ global $userquery, $cbphoto, $Cbucket;
 
 $userquery->login_check('edit_video');
 
-$udetails = $userquery->get_user_details(userid());
+$udetails = $userquery->get_user_details(user_id());
 assign('user', $udetails);
 assign('p', $userquery->get_user_profile($udetails['userid']));
 
@@ -17,7 +17,7 @@ $photo = $cbphoto->get_photo($pid);
 
 if (empty($photo)) {
     e(lang('photo_not_exist'));
-} elseif ($photo['userid'] != userid()) {
+} elseif ($photo['userid'] != user_id()) {
     e(lang('You can not edit this photo.'));
     $Cbucket->show_page = false;
 } else {

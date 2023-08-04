@@ -9,7 +9,7 @@ $userquery->logincheck();
 //Updating Profile
 if (isset($_POST['update_profile'])) {
     $array = $_POST;
-    $array['userid'] = userid();
+    $array['userid'] = user_id();
     /*Checks profile fields data*/
     $post_clean = profile_fileds_check($array);
     if ($post_clean) {
@@ -20,7 +20,7 @@ if (isset($_POST['update_profile'])) {
 //Updating Avatar
 if (isset($_POST['update_avatar_bg'])) {
     $array = $_POST;
-    $array['userid'] = userid();
+    $array['userid'] = user_id();
     $userquery->update_user_avatar_bg($array);
 }
 
@@ -41,13 +41,13 @@ if (isset($_FILES['backgroundPhoto'])) {
         }
 
         $array = $_FILES['backgroundPhoto'];
-        $array['userid'] = userid();
+        $array['userid'] = user_id();
         $coverUpload = $userquery->updateBackground($array);
         $timeStamp = time();
         $response = [
             'status' => $coverUpload['status'],
             'msg'    => $coverUpload['msg'],
-            'url'    => $userquery->getBackground(userid()) . '?' . $timeStamp
+            'url'    => $userquery->getBackground(user_id()) . '?' . $timeStamp
         ];
         echo json_encode($response);
         die();
@@ -64,14 +64,14 @@ if (isset($_FILES['backgroundPhoto'])) {
 //Changing Email
 if (isset($_POST['change_email'])) {
     $array = $_POST;
-    $array['userid'] = userid();
+    $array['userid'] = user_id();
     $userquery->change_email($array);
 }
 
 //Changing User Password
 if (isset($_POST['change_password'])) {
     $array = $_POST;
-    $array['userid'] = userid();
+    $array['userid'] = user_id();
     $userquery->change_password($array);
 }
 
@@ -98,19 +98,19 @@ switch ($mode) {
 
     case 'avatar_bg':
         Assign('extensions', $Cbucket->get_extensions('photo'));
-        assign('backgroundPhoto', $userquery->getBackground(userid()));
+        assign('backgroundPhoto', $userquery->getBackground(user_id()));
         assign('mode', 'avatar_bg');
         break;
 
     case 'channel_bg':
         Assign('extensions', $Cbucket->get_extensions('photo'));
-        assign('backgroundPhoto', $userquery->getBackground(userid()));
+        assign('backgroundPhoto', $userquery->getBackground(user_id()));
         assign('mode', 'channel_bg');
         break;
 
     case 'change_cover':
         Assign('extensions', $Cbucket->get_extensions('photo'));
-        assign('backgroundPhoto', $userquery->getBackground(userid()));
+        assign('backgroundPhoto', $userquery->getBackground(user_id()));
         assign('mode', 'change_cover');
         break;
 
@@ -133,7 +133,7 @@ switch ($mode) {
             $userquery->unsubscribe_user($sid);
         }
         assign('mode', 'subs');
-        assign('subs', $userquery->get_user_subscriptions(userid()));
+        assign('subs', $userquery->get_user_subscriptions(user_id()));
         break;
 
     default:
@@ -142,7 +142,7 @@ switch ($mode) {
         break;
 }
 
-$udetails = $userquery->get_user_details(userid());
+$udetails = $userquery->get_user_details(user_id());
 $profile = $userquery->get_user_profile($udetails['userid']);
 if (is_array($profile)) {
     $user_profile = array_merge($udetails, $profile);

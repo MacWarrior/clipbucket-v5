@@ -9,7 +9,7 @@ global $userquery, $pages, $cbvid, $Cbucket, $Upload, $eh;
 $userquery->logincheck();
 $pages->page_redir();
 
-$userid = userid();
+$userid = user_id();
 $udetails = $userquery->get_user_details($userid);
 assign('user', $udetails);
 assign('p', $userquery->get_user_profile($udetails['userid']));

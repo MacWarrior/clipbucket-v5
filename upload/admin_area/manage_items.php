@@ -69,7 +69,7 @@ switch ($type) {
         break;
 }
 
-$collections = $cbcollection->get_collections_list(0, null, null, $type, userid());
+$collections = $cbcollection->get_collections_list(0, null, null, $type, user_id());
 assign('collections', $collections);
 
 assign('data', $data);

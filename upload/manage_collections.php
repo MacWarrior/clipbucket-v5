@@ -6,7 +6,7 @@ require 'includes/config.inc.php';
 global $userquery, $cbcollection, $eh, $pages, $cbvideo, $cbphoto;
 
 $userquery->logincheck();
-$udetails = $userquery->get_user_details(userid());
+$udetails = $userquery->get_user_details(user_id());
 assign('user', $udetails);
 $order = tbl('collection_items') . '.date_added DESC';
 
@@ -33,7 +33,7 @@ switch ($mode) {
             $eh->flush();
             e('selected_collects_del', 'm');
         }
-        $collectArray = ['user' => userid(), 'limit' => $get_limit];
+        $collectArray = ['user' => user_id(), 'limit' => $get_limit];
         $usr_collections = $cbcollection->get_collections($collectArray);
 
         assign('usr_collects', $usr_collections);
@@ -151,7 +151,7 @@ switch ($mode) {
             $cond = ' (collection.collection_name LIKE \'%' . mysql_clean(get('query')) . '%\' OR collection.collection_tags LIKE \'%' . mysql_clean(get('query')) . '%\' )';
         }
 
-        $col_arr = ['user' => userid(), 'limit' => $get_limit, 'order' => tbl('favorites.date_added DESC'), 'cond' => $cond];
+        $col_arr = ['user' => user_id(), 'limit' => $get_limit, 'order' => tbl('favorites.date_added DESC'), 'cond' => $cond];
         $collections = $cbcollection->action->get_favorites($col_arr);
         assign('collections', $collections);
 

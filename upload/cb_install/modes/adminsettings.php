@@ -1,10 +1,10 @@
 <?php
-
 $baseurl = dirname(GetServerURL());
 if (substr($baseurl, strlen($baseurl) - 1, 1) == '/') {
     $baseurl = substr($baseurl, 0, strlen($baseurl) - 1);
 }
 
+global $db;
 $db->update(tbl('config'), ['value'], [$baseurl], " name='baseurl'");
 $db->update(tbl('config'), ['value'], [BASEDIR], " name='basedir'");
 ?>
@@ -20,7 +20,7 @@ $db->update(tbl('config'), ['value'], [BASEDIR], " name='basedir'");
 </div>
 
 <div id="sub_container">
-    <form method="post" id="installation" style="background-image:url(images/user_thumb.png);background-repeat:no-repeat;background-position:right;">
+    <form method="post" id="installation" style="background-image:url(./images/user_thumb.png);background-repeat:no-repeat;background-position:right;">
         <div class="field">
             <label class="grey-text" for="username">Admin username</label>
             <input name="username" type="text" id="username" class="form-control" value="admin">

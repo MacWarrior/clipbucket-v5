@@ -54,7 +54,7 @@ class CBvideo extends CBCategory
             return;
         }
         global $Cbucket, $userquery;
-        $per = $userquery->get_user_level(userid());
+        $per = $userquery->get_user_level(user_id());
 
         if ($per['video_moderation'] == 'yes' && isSectionEnabled('videos')) {
             $menu_video = [
@@ -153,14 +153,9 @@ class CBvideo extends CBCategory
     {
         global $db;
         if (is_numeric($vid)) {
-            return $db->count(tbl('video'), 'videoid', ' videoid=\'' . $vid . '\' ');
+            return $db->count(tbl('video'), 'videoid', ' videoid=\'' . mysql_clean($vid) . '\' ');
         }
         return $db->count(tbl('video'), 'videoid', ' videokey=\'' . mysql_clean($vid) . '\' ');
-    }
-
-    function exists($vid)
-    {
-        return $this->video_exists($vid);
     }
 
     /**
@@ -171,6 +166,7 @@ class CBvideo extends CBCategory
      * @param bool $basic
      *
      * @return bool|mixed|STRING
+     * @throws Exception
      */
     function get_video($vid, $file = false, $basic = false)
     {
@@ -190,7 +186,7 @@ class CBvideo extends CBCategory
 
         $cond = (($file) ? 'video.file_name' : (is_numeric($vid) ? 'video.videoid' : 'video.videokey')) . ' = \'%s\' ';
 
-        $query = 'SELECT ' . tbl_fields($fields) . ' FROM ' . cb_sql_table('video');
+        $query = 'SELECT ' . table_fields($fields) . ' FROM ' . cb_sql_table('video');
         $query .= ' LEFT JOIN ' . cb_sql_table('users') . ' ON video.userid = users.userid';
 
         if ($cond) {
@@ -363,7 +359,7 @@ class CBvideo extends CBCategory
                 if (isset($array['file_name'])) {
                     $params = [
                         'filename' => $array['file_name']
-                        , 'user'   => userid()
+                        , 'user'   => user_id()
                     ];
                     $video = get_videos($params);
                     if (isset($video[0])) {
@@ -460,11 +456,11 @@ class CBvideo extends CBCategory
             //Tag index
             $query_val[3] = strtolower($query_val[3]);
 
-            if (!userid()) {
+            if (!user_id()) {
                 e(lang('you_dont_have_permission_to_update_this_video'));
             } elseif (!$this->video_exists($vid)) {
                 e(lang('class_vdo_del_err'));
-            } elseif (!$this->is_video_owner($vid, userid()) && !has_access('admin_access', true)) {
+            } elseif (!$this->is_video_owner($vid, user_id()) && !has_access('admin_access', true)) {
                 e(lang('no_edit_video'));
             } elseif (strlen($array['title']) > 100) {
                 e(lang('Title exceeds max length of 100 characters')); // TODO : Translation
@@ -512,7 +508,7 @@ class CBvideo extends CBCategory
         if ($this->video_exists($vid)) {
             $vdetails = $this->get_video($vid);
 
-            if ($this->is_video_owner($vid, userid()) || has_access('admin_access', true)) {
+            if ($this->is_video_owner($vid, user_id()) || has_access('admin_access', true)) {
                 #THIS SHOULD NOT BE REMOVED :O
                 //list of functions to perform while deleting a video
                 $del_vid_funcs = $this->video_delete_functions;
@@ -1022,7 +1018,7 @@ class CBvideo extends CBCategory
             $fields[] = 'video_users';
         }
 
-        $fields = tbl_fields($fields);
+        $fields = table_fields($fields);
 
         if (!$params['count_only'] && !$params['show_related']) {
             $query = 'SELECT ' . $fields . ' FROM ' . cb_sql_table('video');
@@ -1674,20 +1670,20 @@ class CBvideo extends CBCategory
         }
 
         if (!empty($voters)) {
-            $already_voted = array_key_exists(userid(), $voters);
+            $already_voted = array_key_exists(user_id(), $voters);
         }
 
-        if (!userid()) {
+        if (!user_id()) {
             e(lang('please_login_to_rate'));
-        } elseif (userid() == $rating_details['userid'] && !config('own_video_rating')) {
+        } elseif (user_id() == $rating_details['userid'] && !config('own_video_rating')) {
             e(lang('you_cant_rate_own_video'));
         } elseif (!empty($already_voted)) {
             e(lang('you_hv_already_rated_vdo'));
         } elseif (!config('video_rating') || $rating_details['allow_rating'] != 'yes') {
             e(lang('vid_rate_disabled'));
         } else {
-            $voters[userid()] = [
-                'userid'   => userid(),
+            $voters[user_id()] = [
+                'userid'   => user_id(),
                 'username' => user_name(),
                 'time'     => now(),
                 'rating'   => $rating
@@ -1714,7 +1710,7 @@ class CBvideo extends CBCategory
                 'type'      => 'video',
                 'time'      => now(),
                 'rating'    => $rating,
-                'userid'    => userid(),
+                'userid'    => user_id(),
                 'username'  => user_name()
             ];
             /* Updating user details */
@@ -1794,12 +1790,13 @@ class CBvideo extends CBCategory
      * @param $id
      *
      * @return bool
+     * @throws Exception
      */
     function add_to_quicklist($id): bool
     {
         global $sess;
 
-        if ($this->exists($id)) {
+        if ($this->video_exists($id)) {
             $list = json_decode($sess->get_cookie(QUICK_LIST_SESS), true);
 
             $list[] = $id;
