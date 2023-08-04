@@ -177,7 +177,7 @@ function RandomString($length): string
  */
 function cbmail($array, $force = false)
 {
-    if (config('disabled_email') == 'yes' && !$force) {
+    if (config('disable_email') == 'yes' && !$force) {
         return false;
     }
     $func_array = get_functions('email_functions');
