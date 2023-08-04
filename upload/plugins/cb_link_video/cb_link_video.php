@@ -153,6 +153,7 @@ function clean_remote_code($input)
  * if video is embeded , it will check its code
  * if everthing goes ok , it will change its status to successfull
  * @param array VID
+ * @throws Exception
  */
 function remote_video_check($vid)
 {

@@ -1,5 +1,4 @@
 <?php
-
 class CBPlayer
 {
     /**
@@ -46,7 +45,7 @@ class CBPlayer
 
         //Now Reading Sub Dir Files
         foreach ($subitem_list as $sub_dir => $sub_dir_list) {
-            foreach ($subitem_list[$sub_dir] as $player_file) {
+            foreach ($sub_dir_list as $player_file) {
                 $player_details = $this->getPlayerDetails($player_file, $sub_dir);
                 $player_details['dir'] = $player_details['folder'] = $sub_dir;
                 if (!empty($player_details['name'])) {
@@ -59,21 +58,13 @@ class CBPlayer
     }
 
     /**
-     * Function used to get ClipBucket Player
-     */
-    function get_players()
-    {
-        return $this->getPlayers();
-    }
-
-    /**
      * Function used to get player details
      * @input = file
      *
      * @param      $player_file
      * @param null $sub_dir
      *
-     * @return bool
+     * @return bool|array
      */
     function get_player_details($player_file, $sub_dir = null)
     {
@@ -141,7 +132,7 @@ class CBPlayer
         $exts = ['png', 'jpg', 'gif'];
         $thumb_path = '/images/icons/no_thumb_player.png';
         foreach ($exts as $ext) {
-            $file = PLAYER_DIR . '/' . $path . $ext;
+            $file = PLAYER_DIR . DIRECTORY_SEPARATOR . $path . $ext;
             if (file_exists($file)) {
                 $thumb_path = PLAYER_URL . '/' . $path . $ext;
                 break;
@@ -154,6 +145,7 @@ class CBPlayer
      * Function used to set player for ClipBucket
      *
      * @param $details
+     * @throws Exception
      */
     function set_player($details)
     {
@@ -162,15 +154,10 @@ class CBPlayer
         if ($this->getPlayerDetails($details['file'], $details['folder'])) {
             $myquery->Set_Website_Details('player_file', $details['file']);
             $myquery->Set_Website_Details('player_dir', $details['folder']);
-            e(lang("player_activated"), 'm');
+            e(lang('player_activated'), 'm');
         } else {
-            e(lang("error_occured_while_activating_player"));
+            e(lang('error_occured_while_activating_player'));
         }
-    }
-
-    function setplayer($details)
-    {
-        return $this->set_player($details);
     }
 
 }

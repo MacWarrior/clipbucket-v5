@@ -480,9 +480,10 @@ class ClipBucket
     /**
      * Function used to get list of countries
      *
-     * @param $type
+     * @param string $type
      *
      * @return array
+     * @throws Exception
      */
     function get_countries($type = 'iso2'): array
     {
@@ -617,6 +618,7 @@ class ClipBucket
      * @param null $params
      *
      * @return array|void
+     * @throws Exception
      */
     function head_menu($params = null)
     {
@@ -728,6 +730,7 @@ class ClipBucket
      * @param null $params
      *
      * @return array
+     * @throws Exception
      */
     function foot_menu($params = null)
     {

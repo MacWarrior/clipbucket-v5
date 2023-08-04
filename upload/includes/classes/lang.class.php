@@ -230,6 +230,7 @@ class Language
      * @param bool $active
      * @param bool $countTrads
      * @return array
+     * @throws Exception
      */
     public function get_langs(bool $active = false, bool $countTrads = false): array
     {

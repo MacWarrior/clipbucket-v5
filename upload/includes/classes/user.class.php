@@ -446,6 +446,7 @@ class userquery extends CBCategory
      * @param $uid
      *
      * @return mixed
+     * @throws Exception
      */
     function is_banned($uid)
     {
@@ -461,6 +462,7 @@ class userquery extends CBCategory
      * @param $check_only bool if true, after checking user will be redirected to login page if needed
      *
      * @return bool
+     * @throws Exception
      */
     function admin_login_check($check_only = false): bool
     {
@@ -1061,6 +1063,7 @@ class userquery extends CBCategory
      * @param bool $count_only
      *
      * @return array|bool
+     * @throws Exception
      */
     function get_pending_contacts($uid, $group = 0, $count_only = false)
     {
@@ -1436,6 +1439,7 @@ class userquery extends CBCategory
      * @param null $uid
      *
      * @return string
+     * @throws Exception
      */
     function getUserThumb($udetails, $size = '', $uid = null): string
     {
@@ -1541,6 +1545,7 @@ class userquery extends CBCategory
      * @param $field
      *
      * @return bool|array
+     * @throws Exception
      */
     function get_user_field($uid, $field)
     {
@@ -1612,6 +1617,7 @@ class userquery extends CBCategory
      * @param : filter
      *
      * @return array|bool
+     * @throws Exception
      */
     function get_levels($filter = null)
     {
@@ -1652,6 +1658,7 @@ class userquery extends CBCategory
      * @param string $fields
      *
      * @return array|int
+     * @throws Exception
      */
     function get_level_users($id, $count = false, $fields = 'level')
     {
@@ -2000,6 +2007,7 @@ class userquery extends CBCategory
      * @param bool $silent
      *
      * @return bool
+     * @throws Exception
      */
     function perm_check($access = '', $check_login = false, $control_page = true, $silent = false): bool
     {
@@ -2832,6 +2840,7 @@ class userquery extends CBCategory
      * @param null $uid
      *
      * @return void
+     * @throws Exception
      */
     function block_users($users, $uid = null)
     {
@@ -3803,6 +3812,7 @@ class userquery extends CBCategory
      * @param bool $count
      *
      * @return array|bool
+     * @throws Exception
      */
     function get_online_users($group = true, $count = false)
     {
@@ -3837,6 +3847,7 @@ class userquery extends CBCategory
      * @param bool $realtime
      *
      * @return bool
+     * @throws Exception
      */
     function login_as_user($id, $realtime = false): bool
     {
@@ -4002,6 +4013,7 @@ class userquery extends CBCategory
      * Function used to delete user videos
      *
      * @param $uid
+     * @throws Exception
      */
     function delete_user_vids($uid)
     {
@@ -4020,6 +4032,7 @@ class userquery extends CBCategory
      * Function used to remove user contacts
      *
      * @param $uid
+     * @throws Exception
      */
     function remove_contacts($uid)
     {
@@ -4039,6 +4052,7 @@ class userquery extends CBCategory
      *
      * @param        $uid
      * @param string $box
+     * @throws Exception
      */
     function remove_user_pms($uid, $box = 'both')
     {
@@ -4329,6 +4343,7 @@ class userquery extends CBCategory
      * @param $default
      *
      * @return array
+     * @throws Exception
      */
     function load_personal_details($default): array
     {
@@ -4424,6 +4439,7 @@ class userquery extends CBCategory
      * @param $default
      *
      * @return array
+     * @throws Exception
      */
     function load_location_fields($default): array
     {
@@ -4467,6 +4483,7 @@ class userquery extends CBCategory
      * @param $default
      *
      * @return array
+     * @throws Exception
      */
     function load_education_interests($default): array
     {
@@ -4575,6 +4592,7 @@ class userquery extends CBCategory
      * @param $default
      *
      * @return array
+     * @throws Exception
      */
     function load_privacy_field($default): array
     {
@@ -4641,6 +4659,7 @@ class userquery extends CBCategory
      *
      * @param $default array values for channel settings
      * @return array of channel info fields
+     * @throws Exception
      */
     function load_channel_settings($default): array
     {
@@ -4743,6 +4762,7 @@ class userquery extends CBCategory
      * in Clipbucket v2.1 , video fields are loaded in form of groups arrays
      * each group has it name and fields wrapped in array
      * and that array will be part of video fields
+     * @throws Exception
      */
     function load_user_fields($default, $type = 'all')
     {

@@ -1,10 +1,11 @@
 <?php
-define("THIS_PAGE", 'user_photos');
-define("PARENT_PAGE", 'photos');
+define('THIS_PAGE', 'user_photos');
+define('PARENT_PAGE', 'photos');
+
+global $pages,$userquery,$cbphoto,$Cbucket;
 
 require 'includes/config.inc.php';
 $pages->page_redir();
-//$userquery->perm_check('view_videos',true);
 
 $u = $_GET['user'];
 $u = $u ? $u : $_GET['userid'];
@@ -22,22 +23,22 @@ if ($user) {
     $mode = $_GET['mode'];
 
     switch ($mode) {
-        case "photos":
-        case "uploaded":
+        case 'photos':
+        case 'uploaded':
         default:
             $limit = create_query_limit($page, config('photo_user_photos'));
-            assign("the_title", $user['username'] . " " . lang('photos'));
+            assign("the_title", $user['username'] . ' ' . lang('photos'));
             $photos = get_photos(["limit" => $limit, "user" => $user['userid']]);
             $total_rows = get_photos(["count_only" => true, "user" => $user['userid']]);
             $total_pages = count_pages($total_rows, config('photo_user_photos'));
             break;
 
-        case "favorites":
-        case "fav_photos":
-        case "favorite":
+        case 'favorites':
+        case 'fav_photos':
+        case 'favorite':
             $limit = create_query_limit($page, config('photo_user_favorites'));
-            assign("the_title", $user['username'] . " " . lang('Favorite') . " " . lang('photos'));
-            $favP = ["user" => $user['userid'], "limit", $limit];
+            assign('the_title', $user['username'] . " " . lang('Favorite') . " " . lang('photos'));
+            $favP = ['user' => $user['userid'], 'limit', $limit];
             $photos = $cbphoto->action->get_favorites($favP);
             $favP['count_only'] = true;
             $total_rows = $cbphoto->action->get_favorites($favP);
@@ -49,7 +50,7 @@ if ($user) {
 
     $pages->paginate($total_pages, $page);
 } else {
-    e(lang("usr_exist_err"));
+    e(lang('usr_exist_err'));
     $Cbucket->show_page = false;
 }
 

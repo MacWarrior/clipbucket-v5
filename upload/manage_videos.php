@@ -1,6 +1,6 @@
 <?php
-define("THIS_PAGE", 'manage_videos');
-define("PARENT_PAGE", "videos");
+define('THIS_PAGE', 'manage_videos');
+define('PARENT_PAGE', "videos");
 
 require 'includes/config.inc.php';
 
@@ -37,7 +37,7 @@ switch ($mode) {
                 $cbvideo->delete_video($_POST['check_vid'][$id]);
             }
             $eh->flush();
-            e(lang("vdo_multi_del_erro"), m);
+            e(lang('vdo_multi_del_erro'), 'm');
         }
 
         //Setting Profile Video
@@ -89,7 +89,7 @@ switch ($mode) {
                 $cbvideo->delete_video($_POST['check_vid'][$id]);
             }
             $eh->flush();
-            e(lang("vdo_multi_del_fav_msg"), m);
+            e(lang('vdo_multi_del_fav_msg'), 'm');
         }
         if (get('query') != '') {
             $cond = " (video.title LIKE '%" . mysql_clean(get('query')) . "%' OR video.tags LIKE '%" . mysql_clean(get('query')) . "%' )";
@@ -107,7 +107,7 @@ switch ($mode) {
         //Pagination
         $pages->paginate($total_pages, $page);
 
-        subtitle(lang("com_manage_fav"));
+        subtitle(lang('com_manage_fav'));
         break;
 }
 

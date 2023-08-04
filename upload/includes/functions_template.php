@@ -33,10 +33,6 @@ function Template($template, $layout = true)
     } else {
         $cbtpl->display($template);
     }
-
-    if (($template == 'footer.html' && !$admin_area) || $template == 'header.html') {
-        $cbtpl->display(BASEDIR . '/includes/templatelib/' . $template);
-    }
 }
 
 /**

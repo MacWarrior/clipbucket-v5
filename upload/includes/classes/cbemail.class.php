@@ -24,6 +24,7 @@ class CBEmail
      * @param $code
      *
      * @return bool|array
+     * @throws Exception
      */
     function get_email_template($code)
     {
@@ -48,6 +49,7 @@ class CBEmail
      * @param $code
      *
      * @return bool
+     * @throws Exception
      */
     function template_exists($code)
     {
@@ -111,6 +113,7 @@ class CBEmail
      * Function used to update email template
      *
      * @param $params
+     * @throws Exception
      */
     function update_template($params)
     {
@@ -142,6 +145,7 @@ class CBEmail
      * @param null $array
      *
      * @return bool
+     * @throws Exception
      */
     function add_mass_email($array = null)
     {
@@ -238,6 +242,7 @@ class CBEmail
      * @param $id
      *
      * @return bool
+     * @throws Exception
      */
     function get_email($id)
     {

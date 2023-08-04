@@ -442,7 +442,6 @@ class formObj
     {
         //First Checking if value is CATEGORY
         if ($field['value'][0] == 'category') {
-            $field['value'] = [];
             //Generate Category list
             $catArray = getCategoryList(['type' => $field['category_type'], 'with_all' => true]);
 

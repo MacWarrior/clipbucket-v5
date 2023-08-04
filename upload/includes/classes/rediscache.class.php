@@ -12,6 +12,8 @@ class CacheRedis
 
     /**
      * @return self
+     * @throws \Predis\Connection\ConnectionException
+     * @throws \Predis\Response\ServerException
      */
     public static function getInstance(): CacheRedis
     {
@@ -131,6 +133,8 @@ class CacheRedis
 
     /**
      * @return void
+     * @throws \Predis\Connection\ConnectionException
+     * @throws \Predis\Response\ServerException
      */
     public static function flushAll()
     {
@@ -142,6 +146,8 @@ class CacheRedis
     /**
      * @param $key
      * @return void
+     * @throws \Predis\Connection\ConnectionException
+     * @throws \Predis\Response\ServerException
      */
     public static function flushKeyStart($key)
     {

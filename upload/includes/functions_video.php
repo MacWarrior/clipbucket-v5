@@ -412,6 +412,7 @@ function videoSmartyLink($params)
  * @param null $array
  *
  * @return bool
+ * @throws Exception
  */
 function validate_vid_category($array = null): bool
 {
@@ -873,6 +874,7 @@ function delete_video_thumb($videoDetails, $num)
  * function used to remove video thumbs
  *
  * @param $vdetails
+ * @throws Exception
  */
 function remove_video_thumbs($vdetails)
 {
@@ -884,6 +886,7 @@ function remove_video_thumbs($vdetails)
  * function used to remove video log
  *
  * @param $vdetails
+ * @throws Exception
  */
 function remove_video_log($vdetails)
 {
@@ -897,6 +900,7 @@ function remove_video_log($vdetails)
  * @param $vdetails
  *
  * @return bool|void
+ * @throws Exception
  */
 function remove_video_files($vdetails)
 {
@@ -995,6 +999,7 @@ function call_download_video_function($vdo)
  * @param $param
  *
  * @return array
+ * @throws Exception
  */
 function get_videos($param)
 {

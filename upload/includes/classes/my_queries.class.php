@@ -562,6 +562,7 @@ class myquery
      * @param        $parent_id
      *
      * @return bool
+     * @throws Exception
      */
     function get_comments($type_id = '*', $type = 'v', $count_only = false, $get_type = 'all', $parent_id = null): bool
     {

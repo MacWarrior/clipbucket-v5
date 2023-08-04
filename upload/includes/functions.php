@@ -553,6 +553,7 @@ function getSmartyComments($params)
  * @param : { array } { $params } { array of parameters }
  *
  * @return string
+ * @throws Exception
  */
 function getAd($params): string
 {
@@ -1091,6 +1092,7 @@ function input_value($params)
 /**
  * Function used to convert input to categories
  * @param { string / array } { $input } { categories to be converted e.g #12# }
+ * @throws Exception
  */
 function convert_to_categories($input)
 {
@@ -1237,6 +1239,7 @@ function include_template_file($params)
  * @param : { string } { $username } { username to be checked }
  *
  * @return bool : { boolean } { true or false depending on situation }
+ * @throws Exception
  */
 function username_check($username): bool
 {
@@ -1424,9 +1427,8 @@ function post_form_val($val, $filter = false)
  * Function used to return LANG variable
  *
  * @param      $var
- * @param bool $sprintf
- *
  * @return mixed|string
+ * @throws Exception
  */
 function lang($var)
 {
@@ -1469,6 +1471,7 @@ function get_current_language()
  * @param : { array } { $param } { array of parameters }
  *
  * @return mixed|string
+ * @throws Exception
  * @uses : { function lang() }
  */
 function smarty_lang($param)
@@ -1754,6 +1757,7 @@ function add_admin_header($files)
 /**
  * Functions used to call functions when users views a channel
  * @param : { array } { $u } { array with details of user }
+ * @throws Exception
  */
 function call_view_channel_functions($u)
 {
@@ -1771,6 +1775,7 @@ function call_view_channel_functions($u)
 /**
  * Functions used to call functions when users views a collection
  * @param : { array } { $cdetails } { array with details of collection }
+ * @throws Exception
  */
 function call_view_collection_functions($cdetails)
 {
@@ -2068,6 +2073,7 @@ function get_user_level($id)
  * @param string $margin
  *
  * @return string : { string  }{ status of user e.g online or offline }
+ * @throws Exception
  */
 function is_online($time, $margin = '5'): string
 {
@@ -2089,6 +2095,7 @@ function is_online($time, $margin = '5'): string
  * @param $input
  * @param $array
  *
+ * @throws Exception
  * @internal param $ : { array } { $input } { array of form values } { $input } { array of form values }
  * @internal param $ : { array } { $array } { array of form fields } { $array } { array of form fields }
  */
@@ -2213,6 +2220,7 @@ function get_age($input)
  * @param bool $istime
  *
  * @return string
+ * @throws Exception
  * @uses : { function : lang() }
  */
 function nicetime($date, $istime = false): string
@@ -2281,6 +2289,7 @@ function outgoing_link($out): string
  * @param : { string } { $code } { country code name }
  *
  * @return bool|string : { string } { country name of flag }
+ * @throws Exception
  */
 function get_country($code)
 {
@@ -2300,8 +2309,8 @@ function get_country($code)
  * @param $param
  *
  * @return array|bool
+ * @throws Exception
  * @uses : { class : $cbcollection } { function : get_collections }
- *
  */
 function get_collections($param)
 {
@@ -2698,8 +2707,8 @@ function get_username($uid)
  * @param string $field
  *
  * @return bool
+ * @throws Exception
  * @uses : { class : $cbcollection } { function : get_collection_field }
- *
  */
 function get_collection_field($cid, $field = 'collection_name')
 {
@@ -2713,6 +2722,7 @@ function get_collection_field($cid, $field = 'collection_name')
  *
  * @param : { array } { $details } { an array with collection's details }
  *
+ * @throws Exception
  * @action: makes photos orphan
  */
 function delete_collection_photos($details)
@@ -2992,6 +3002,7 @@ function array2xml($array, $level = 1)
  * @param : { array } { $params } { parameters array e.g file, type }
  *
  * @return bool : { false }
+ * @throws Exception
  */
 function include_header($params)
 {
@@ -3212,8 +3223,8 @@ function rss_feeds($params)
  * Function used to insert Log
  * @param $type
  * @param $details
+ * @throws Exception
  * @uses { class : $cblog } { function : insert }
- *
  */
 function insert_log($type, $details)
 {
@@ -3224,6 +3235,7 @@ function insert_log($type, $details)
 /**
  * Function used to get database size
  * @return int : { $dbsize }
+ * @throws Exception
  */
 function get_db_size(): int
 {
@@ -3427,9 +3439,10 @@ function is_ssl()
  *
  * @param string $type
  * @param string $object
- * @param : { string } { $type } { favorite by default, type of stats to update }
+ * @param $id
  * @param string $op
  *
+ * @throws Exception
  * @action : database updation
  */
 function updateObjectStats($type, $object, $id, $op = '+')
@@ -3649,8 +3662,9 @@ function isSectionEnabled($input, $restrict = false)
 
 /**
  * Updates last commented data - helps cache refresh
- * @param : { string } { $type } { type of comment e.g video, channel }
- * @param : { integer } { $id } { id of element to update }
+ * @param $type
+ * @param $id
+ * @throws Exception
  * @action : database updation
  */
 function update_last_commented($type, $id)
@@ -3910,6 +3924,7 @@ function checkRemoteFile($url)
  * @param $query
  *
  * @return bool : { integer } { $select[0]['counts'] } { count for requested field }
+ * @throws Exception
  * @internal param $ : { string } { $section } { section to select count for }
  * @internal param $ : { string } { $query } { query to fetch data against }
  */
@@ -3941,6 +3956,7 @@ function get_counter($section, $query)
  * @param $query
  * @param $counter
  *
+ * @throws Exception
  * @internal param $ : { string } { $section } { section to update counter for }
  * @internal param $ : { string } { $query } { query to run for updating }
  * @internal param $ : { integer } { $counter } { count to update }
@@ -4096,6 +4112,7 @@ function parent_page($name = '')
  * Function used for building sort links that are used
  * on main pages such as videos.php, photos.php etc
  * @return array : { array } { $array } { an array with all possible sort sorts }
+ * @throws Exception
  * @internal param $ : { none }
  */
 function sorting_links(): array
@@ -4121,6 +4138,7 @@ function sorting_links(): array
  * Function used for building time links that are used
  * on main pages such as videos.php, photos.php etc
  * @return array : { array } { $array } { an array with all possible time sorts }
+ * @throws Exception
  * @internal param $ : { none }
  */
 function time_links(): array
@@ -4428,6 +4446,7 @@ function ip_info($ip = null, $purpose = "location", $deep_detect = true)
  * @param bool $type
  *
  * @return bool|string : { string / boolean } { rating status if found, else false }
+ * @throws Exception
  * @internal param $ : { integer } { $userid } { id of user to check rating by } { $userid } { id of user to check rating by }
  * @internal param $ : { integer } { $itemid } { id of item to check rating for } { $itemid } { id of item to check rating for }
  * @internal param $ : { boolean } { false by default, type of item [video / photo] } { false by default, type of item [video / photo] }
@@ -4538,6 +4557,7 @@ function maxres_youtube($video, $thumbarray = false)
 /**
  * Takes thumb file and generates upto 5 possible qualities from it
  * @param : { array } { $params } { an array of parameters }
+ * @throws Exception
  * @since : 14th April, 2016 ClipBucket 2.8.1
  * @author : Saqib Razzaq
  */
@@ -5026,6 +5046,7 @@ function get_proxy_settings(string $format = '')
 /**
  * @param bool
  * @return string|void
+ * @throws Exception
  */
 function get_update_status($only_flag = false)
 {

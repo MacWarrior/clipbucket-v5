@@ -953,11 +953,9 @@ class ElasticSearch
 
     public function makeFilters()
     {
-        global $userquery;
         $results = json_decode($this->results["result"], 1);
         $aggregations = $results["aggregations"];
 
-        $filters["SOURCE"] = [];
         $filters["AUTHOR"] = [];
         $filters["CATEGORY"] = [];
         $filters["COLLECTION"] = [];

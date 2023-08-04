@@ -23,6 +23,7 @@ class cbpage
      * @param $param array
      *
      * @return bool
+     * @throws Exception
      */
     function create_page($param)
     {
@@ -56,6 +57,7 @@ class cbpage
      * @param $id
      *
      * @return bool
+     * @throws Exception
      */
     function get_page($id)
     {
@@ -73,6 +75,7 @@ class cbpage
      * @param bool $params
      *
      * @return array|bool
+     * @throws Exception
      */
     function get_pages($params = false)
     {
@@ -117,6 +120,7 @@ class cbpage
      * Function used to edit page
      *
      * @param $param
+     * @throws Exception
      */
     function edit_page($param)
     {
@@ -152,6 +156,7 @@ class cbpage
      * Function used to delete page
      *
      * @param $id
+     * @throws Exception
      */
     function delete_page($id)
     {
@@ -188,6 +193,7 @@ class cbpage
      * @param $id
      *
      * @return string
+     * @throws Exception
      */
     function get_page_link($id)
     {
@@ -200,6 +206,7 @@ class cbpage
      *
      * @param $type
      * @param $id
+     * @throws Exception
      */
     function page_actions($type, $id)
     {
@@ -252,6 +259,7 @@ class cbpage
      * @param $id
      *
      * @return bool
+     * @throws Exception
      */
     function is_active($id)
     {

@@ -64,7 +64,7 @@ class cb_columns
      * Register columns for current object
      *
      * @param mixed $columns
-     * @return object $this
+     * @return object|bool $this
      */
     function register_columns($columns)
     {
@@ -79,11 +79,6 @@ class cb_columns
         if ($columns) {
             $object = $this->get_object();
             $columns = array_map('trim', $columns);
-
-            if (!isset($this->columns[$object])) {
-                $this->columns[$object] = [];
-            }
-
             $this->columns[$object] = $columns;
 
             return $this;

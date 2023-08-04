@@ -743,6 +743,7 @@ class FFMpeg
     /**
      * @param $array
      * @return void
+     * @throws Exception
      */
     public function generateThumbs($array)
     {

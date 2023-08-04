@@ -266,7 +266,6 @@ require_once('classes/collections.class.php');
 require_once('classes/photos.class.php');
 require_once('classes/cbfeeds.class.php');
 require_once('classes/resizer.class.php');
-require_once('classes/translation.class.php');
 
 //Adding Gravatar
 require_once('classes/gravatar.class.php');
@@ -293,7 +292,6 @@ $cbcollection = new Collections();
 $cbphoto = new CBPhotos();
 
 $cbfeeds = new cbfeeds();
-$GoogleTranslator = new GoogleTranslator();
 
 check_install('after');
 
@@ -369,12 +367,10 @@ include 'plugin.functions.php';
 include 'plugins_functions.php';
 
 require BASEDIR . '/includes/classes/template.class.php';
-require BASEDIR . '/includes/classes/objects.class.php';
 $cbtpl = new CBTemplate();
 
 # STOP CACHING
 $cbtpl->caching = 0;
-$cbobjects = new CBObjects();
 
 $cbvideo->init();
 $cbphoto->init_photos();
@@ -472,7 +468,6 @@ $Smarty->assign_by_ref('eh', $eh);
 $Smarty->assign_by_ref('lang_obj', Language::getInstance());
 $Smarty->assign_by_ref('cbvid', $cbvid);
 $Smarty->assign_by_ref('cbtpl', $cbtpl);
-$Smarty->assign_by_ref('cbobjects', $cbobjects);
 $Smarty->assign_by_ref('cbplayer', $cbplayer);
 $Smarty->assign_by_ref('cbsearch', $cbsearch);
 $Smarty->assign_by_ref('cbpm', $cbpm);

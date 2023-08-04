@@ -46,7 +46,7 @@ class CBPlugin
 
         //Now Reading Sub Dir Files
         foreach ($subitem_list as $sub_dir => $sub_dir_list) {
-            foreach ($subitem_list[$sub_dir] as $plugin_file) {
+            foreach ($sub_dir_list as $plugin_file) {
                 $plugin_details = $this->get_plugin_details($plugin_file, $sub_dir);
                 $plugin_details['folder'] = $sub_dir;
                 if (!empty($plugin_details['name'])) {

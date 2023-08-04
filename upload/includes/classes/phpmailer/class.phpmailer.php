@@ -816,6 +816,7 @@ class PHPMailer
      * @param string $address The email address to send to
      * @param string $name
      * @return boolean true on success, false if address already used or invalid in some way
+     * @throws phpmailerException
      */
     public function addAddress($address, $name = '')
     {
@@ -828,6 +829,7 @@ class PHPMailer
      * @param string $address The email address to send to
      * @param string $name
      * @return boolean true on success, false if address already used or invalid in some way
+     * @throws phpmailerException
      */
     public function addCC($address, $name = '')
     {
@@ -840,6 +842,7 @@ class PHPMailer
      * @param string $address The email address to send to
      * @param string $name
      * @return boolean true on success, false if address already used or invalid in some way
+     * @throws phpmailerException
      */
     public function addBCC($address, $name = '')
     {
@@ -851,6 +854,7 @@ class PHPMailer
      * @param string $address The email address to reply to
      * @param string $name
      * @return boolean true on success, false if address already used or invalid in some way
+     * @throws phpmailerException
      */
     public function addReplyTo($address, $name = '')
     {
@@ -2704,7 +2708,6 @@ class PHPMailer
      * @param string $path The full path to the file
      * @param string $encoding The encoding to use; one of 'base64', '7bit', '8bit', 'binary', 'quoted-printable'
      * @return string
-     * @throws phpmailerException
      * @access protected
      */
     protected function encodeFile($path, $encoding = 'base64')
@@ -3892,6 +3895,7 @@ class PHPMailer
      * @param string $subject Subject
      * @param string $body Body
      * @return string
+     * @throws phpmailerException
      */
     public function DKIM_Add($headers_line, $subject, $body)
     {

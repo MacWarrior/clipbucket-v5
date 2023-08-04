@@ -10,14 +10,11 @@
         </button>
         <div class="userPicContainer">
             {if user_id()}
-            <a class="navbar-brand {if user_id()} nopadding {/if}"  style="{if user_id()} padding-top: 7px ! important; {/if}" href="#">
-                <img class="cb_img_thum" src="{$userquery->getUserThumb('','small',user_id())}" style="width: 40px; height: 40px;"/>
+            <a class="navbar-brand {if user_id()}nopadding{/if}" style="{if user_id()}padding-top:7px !important;{/if}" href="#">
+                <img class="cb_img_thum" src="{$userquery->getUserThumb('','small',user_id())}" style="width:40px; height:40px;"/>
                 My Account &nbsp;&nbsp;&nbsp;<small>Total Uploaded Videos: {$user['total_videos']}</small>
             </a>
             {/if}
-            <!--<a class="navbar-brand"  href="#">   -->
-                <!--My Account-->
-            <!--</a>-->
         </div>
     </div>
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">

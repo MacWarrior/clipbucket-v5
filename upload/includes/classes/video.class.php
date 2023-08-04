@@ -1199,6 +1199,7 @@ class CBvideo extends CBCategory
      * @param bool $is_reply
      *
      * @return bool|mixed
+     * @throws Exception
      */
     function delete_comment($cid, $is_reply = false)
     {
@@ -1218,6 +1219,7 @@ class CBvideo extends CBCategory
      * @param string $type
      *
      * @return bool|string
+     * @throws Exception
      */
     function embed_code($vdetails, $type = 'embed_object')
     {
