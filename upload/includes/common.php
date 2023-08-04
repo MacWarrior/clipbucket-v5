@@ -377,8 +377,6 @@ $cbphoto->init_photos();
 
 $Cbucket->set_the_template();
 
-require_once BASEDIR . '/includes/smartyv3/bootstrap.php';
-
 $cbtpl->init();
 require BASEDIR . '/includes/active.php';
 Assign('THIS_URL', $thisurl);

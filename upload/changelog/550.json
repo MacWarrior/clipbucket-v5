@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"202",
+  "revision":"203",
   "status":"dev",
   "detail":[
     {
@@ -84,7 +84,7 @@
         ,"Fix file extension check <i>#221</i>"
         ,"Fix SQL structure <i>#220</i>, <i>#261</i>"
         ,"Implement Whoops 2.15.3 in DEV mode <i>#217</i> (Thanks veka-server !)"
-        ,"Update Smarty to version 3.1.48"
+        ,"Update Smarty to version 3.1.48 & move it into composer"
         ,"Update login logs <i>#252</i>"
         ,"Add portuguese (BR) translation <i>#253, #262</i> (Thanks raiancollyn !)"
         ,"Fix possible SQL injection"

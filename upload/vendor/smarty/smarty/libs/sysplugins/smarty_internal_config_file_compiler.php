@@ -207,7 +207,6 @@ class Smarty_Internal_Config_File_Compiler
             // output parser error message
             $error_text .= ' - Unexpected "' . $this->lex->value . '", expected one of: ' . implode(' , ', $expect);
         }
-
         if (version_compare(phpversion(), '7.4.0', '<')) {
             throw new SmartyCompilerException($error_text);
         } else {
