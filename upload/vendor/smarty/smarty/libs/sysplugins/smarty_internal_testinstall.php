@@ -334,6 +334,7 @@ class Smarty_Internal_TestInstall
         if (is_dir($source)) {
             $expectedSysplugins = array(
                 'smartycompilerexception.php'                               => true,
+                'smartycompilerexception74.php'                               => true,
                 'smartyexception.php'                                       => true,
                 'smarty_cacheresource.php'                                  => true,
                 'smarty_cacheresource_custom.php'                           => true,

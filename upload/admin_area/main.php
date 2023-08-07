@@ -56,6 +56,9 @@ if (isset($_POST['update'])) {
         , 'cache_enable'
         , 'cache_auth'
         , 'disable_email'
+        , 'enable_country'
+        , 'enable_gender'
+        , 'enable_user_category'
     ];
 
     $config_booleans_to_refactor = [
@@ -231,6 +234,9 @@ if (isset($_POST['update'])) {
         'support_email',
         'show_collapsed_checkboxes',
         'disable_email',
+        'enable_country',
+        'enable_gender',
+        'enable_user_category',
 
         'thumb_width',
         'thumb_height',

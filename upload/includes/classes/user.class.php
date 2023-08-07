@@ -2953,7 +2953,10 @@ class userquery extends CBCategory
         return $result[0];
     }
 
-
+    /**
+     * @throws \PHPMailer\PHPMailer\Exception
+     * @throws Exception
+     */
     function load_signup_fields($input = null): array
     {
         global $Cbucket;
@@ -3000,28 +3003,6 @@ class userquery extends CBCategory
             if ($dob_datetime) {
                 $dob = $dob_datetime->format(DATE_FORMAT);
             }
-        }
-
-        $countries = $Cbucket->get_countries();
-        $selected_cont = null;
-        $pick_geo_country = config('pick_geo_country');
-        if ($pick_geo_country == 'yes') {
-            $user_ip = $_SERVER['REMOTE_ADDR']; // getting user's ip
-            $user_country = ip_info($user_ip, 'country'); // get country using IP
-            foreach ($countries as $code => $name) {
-                $name = strtolower($name);
-                $user_country = strtolower($user_country);
-                if ($name == $user_country) {
-                    $selected_cont = $code;
-                    break;
-                }
-            }
-        } else {
-            $selected_cont = config('default_country_iso2');
-        }
-
-        if (strlen($selected_cont) != 2) {
-            $selected_cont = 'PK';
         }
 
         $user_signup_fields = [
@@ -3094,8 +3075,33 @@ class userquery extends CBCategory
                 'required'          => 'yes',
                 'placehoder'        => lang('user_date_of_birth'),
                 'invalid_err'       => sprintf(lang('register_min_age_request'), config('min_age_reg'))
-            ],
-            'country'   => [
+            ]
+        ];
+
+        if( config('enable_country') == 'yes' ){
+            $countries = $Cbucket->get_countries();
+            $selected_cont = null;
+            $pick_geo_country = config('pick_geo_country');
+            if ($pick_geo_country == 'yes') {
+                $user_ip = $_SERVER['REMOTE_ADDR']; // getting user's ip
+                $user_country = ip_info($user_ip, 'country'); // get country using IP
+                foreach ($countries as $code => $name) {
+                    $name = strtolower($name);
+                    $user_country = strtolower($user_country);
+                    if ($name == $user_country) {
+                        $selected_cont = $code;
+                        break;
+                    }
+                }
+            } else {
+                $selected_cont = config('default_country_iso2');
+            }
+
+            if (strlen($selected_cont) != 2) {
+                $selected_cont = 'PK';
+            }
+
+            $user_signup_fields['country'] = [
                 'title'    => lang('country'),
                 'type'     => 'dropdown',
                 'value'    => $countries,
@@ -3104,8 +3110,11 @@ class userquery extends CBCategory
                 'checked'  => $selected_cont,
                 'db_field' => 'country',
                 'required' => 'yes'
-            ],
-            'gender'    => [
+            ];
+        }
+
+        if( config('enable_gender') == 'yes' ) {
+            $user_signup_fields['gender'] = [
                 'title'    => lang('gender'),
                 'type'     => 'radiobutton',
                 'name'     => 'gender',
@@ -3116,8 +3125,11 @@ class userquery extends CBCategory
                 'checked'  => 'Male',
                 'db_field' => 'sex',
                 'required' => 'yes'
-            ],
-            'cat'       => [
+            ];
+        }
+
+        if( config('enable_user_category') == 'yes' ) {
+            $user_signup_fields['cat'] = [
                 'title'            => lang('category'),
                 'type'             => 'dropdown',
                 'name'             => 'category',
@@ -3129,8 +3141,8 @@ class userquery extends CBCategory
                 'invalid_err'      => lang('select_category'),
                 'display_function' => 'convert_to_categories',
                 'category_type'    => 'user'
-            ]
-        ];
+            ];
+        }
 
         $new_array = [];
         foreach ($user_signup_fields as $id => $fields) {
@@ -3150,7 +3162,6 @@ class userquery extends CBCategory
 
         return $new_array;
     }
-
 
     /**
      * Function used to validate Signup Form

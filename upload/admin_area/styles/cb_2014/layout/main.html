@@ -547,6 +547,40 @@
 								</div>
 							</div>
 							<hr/>
+
+							<div class="row">
+								<div class="col-md-8">
+									<label class="nowrap" for="enable_country" title="{lang code='option_enable_country'}">{lang code='option_enable_country'}</label>
+								</div>
+								<div class="col-md-4 row-size">
+									<input value="yes" name="enable_country" id="enable_country" {if $row.enable_country=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+
+							<div class="row">
+								<div class="col-md-8">
+									<label class="nowrap" for="enable_gender" title="{lang code='option_enable_gender'}">{lang code='option_enable_gender'}</label>
+								</div>
+								<div class="col-md-4 row-size">
+									<input value="yes" name="enable_gender" id="enable_gender" {if $row.enable_gender=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+
+							<div class="row">
+								<div class="col-md-8">
+									<label class="nowrap" for="enable_user_category" title="{lang code='option_enable_user_category'}">{lang code='option_enable_user_category'}</label>
+								</div>
+								<div class="col-md-4 row-size">
+									<input value="yes" name="enable_user_category" id="enable_user_category" {if $row.enable_user_category=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+
 							<div class="row">
 								<div class="col-md-12">
 									<label class="nowrap" for="disallowed_usernames" title="Disallowed usernames"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Sperate by commas"> Disallowed usernames</label>

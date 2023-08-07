@@ -10,6 +10,7 @@ return array(
     'Smarty' => $vendorDir . '/smarty/smarty/libs/Smarty.class.php',
     'SmartyBC' => $vendorDir . '/smarty/smarty/libs/SmartyBC.class.php',
     'SmartyCompilerException' => $vendorDir . '/smarty/smarty/libs/sysplugins/smartycompilerexception.php',
+    'SmartyCompilerException74' => $vendorDir . '/smarty/smarty/libs/sysplugins/smartycompilerexception74.php',
     'SmartyException' => $vendorDir . '/smarty/smarty/libs/sysplugins/smartyexception.php',
     'Smarty_Autoloader' => $vendorDir . '/smarty/smarty/libs/Autoloader.php',
     'Smarty_CacheResource' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_cacheresource.php',

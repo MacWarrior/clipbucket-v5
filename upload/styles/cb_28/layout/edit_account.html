@@ -68,6 +68,7 @@
                                 {$signup_fields = $userquery->load_signup_fields($user)}
                                 {$cust_signup_fields = $userquery->load_custom_signup_fields($user,false,true)}
                                 <h2>{lang code='account_details'}</h2>
+                                {if config('enable_country')=='yes'}
                                 <div class="form-group">
                                     <label for="country">{lang code='country'}</label>
                                     <select class="form-control" name="country" id="country">
@@ -77,6 +78,8 @@
                                         {/foreach}
                                     </select>
                                 </div>
+                                {/if}
+                                {if config('enable_gender')=='yes'}
                                 <div class="form-group">
                                     <label for="country" class="show">{lang code='gender'}</label>
                                     <label class="radio-inline">
@@ -88,13 +91,16 @@
                                         {lang code='female'}
                                     </label>
                                 </div>
+                                {/if}
+                                {if config('enable_user_category')=='yes'}
                                 <div class="form-group">
-                                    <label for="category">{lang code='account_details'}</label>
+                                    <label for="category">{lang code='category'}</label>
                                     {ANCHOR place=$signup_fields.cat.anchor_before}
                                     {$signup_fields.cat.class='form-control'}
                                     {$formObj->createField($signup_fields.cat)}
                                     {ANCHOR place=$signup_fields.cat.anchor_after}
                                 </div>
+                                {/if}
                                 <div class="form-group">
                                     <label for="dob">{lang code='user_date_of_birth'}</label>
                                     {ANCHOR place=$signup_fields.dob.anchor_before}
