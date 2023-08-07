@@ -142,6 +142,7 @@ abstract class CBCategory
 
     /**
      * Function used to get list of categories
+     * @throws Exception
      */
     function get_categories(): array
     {
@@ -149,6 +150,9 @@ abstract class CBCategory
         return $db->select(tbl($this->cat_tbl), '*', null, null, ' category_order ASC');
     }
 
+    /**
+     * @throws \PHPMailer\PHPMailer\Exception
+     */
     function getCbCategories($params): array
     {
         global $db;
@@ -742,10 +746,13 @@ abstract class CBCategory
         return $html;
     }
 
+    /**
+     * @throws Exception
+     */
     function get_category_field($cid, $field)
     {
         global $db;
-        $result = $db->select(tbl($this->cat_tbl), $field, ' category_id =' . mysql_clean($cid));
+        $result = $db->select(tbl($this->cat_tbl), $field, 'category_id =' . mysql_clean($cid));
 
         if ($result) {
             return $result[0][$field];

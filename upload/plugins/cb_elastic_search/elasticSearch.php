@@ -337,7 +337,7 @@ class ElasticSearch
         $newVideo->description = htmlspecialchars($video["description"]);
         $newVideo->tags = $video['tags'];
 
-        $categories = $cbvid->get_category_names($video["category"], false);
+        $categories = $cbvid->get_category_names($video["category"]);
         $category = [];
         if (is_array($categories)) {
             foreach ($categories as $key => $cat) {
@@ -442,7 +442,7 @@ class ElasticSearch
         $newUser->email = $user["email"];
         $newUser->views = $user["profile_hits"];
         $newUser->usr_status = $user["usr_status"];
-        $categories = $userquery->get_category_names($user["category"], false);
+        $categories = $userquery->get_category_names($user["category"]);
         $category = [];
         if (is_array($categories)) {
             foreach ($categories as $key => $cat) {
@@ -493,7 +493,7 @@ class ElasticSearch
         $NewGroup->group_description = htmlspecialchars($group["group_description"]);
         $NewGroup->group_tags = $group["group_tags"];
         $NewGroup->group_url = $group["group_url"];
-        $categories = $cbgroup->get_category_names($group["category"], false);
+        $categories = $cbgroup->get_category_names($group["category"]);
         $category = [];
         if (is_array($categories)) {
             foreach ($categories as $key => $cat) {

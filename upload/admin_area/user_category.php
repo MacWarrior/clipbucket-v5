@@ -56,7 +56,6 @@ if (isset($_POST['update_order'])) {
 //Assign Category Values
 assign('category', $cats);
 assign('total', $userquery->total_categories());
-Assign('msg', @$msg);
 subtitle('User Category Manager');
 template_files('user_category.html');
 display_it();

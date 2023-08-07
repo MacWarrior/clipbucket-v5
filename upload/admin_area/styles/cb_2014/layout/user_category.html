@@ -10,7 +10,6 @@
     </div>
 </div>
 
-
 {if $edit_category != "show"}
 <div id="content" style="display:none;">
     <form action="user_category.php" method="post" enctype="multipart/form-data" name="add_category" id="Add Category">
@@ -19,9 +18,6 @@
                 <label>Category Name*</label>
                 <input type="text" id="name" name="name" required="required" class="form-control" >
             </div>
-            {assign var=useSubs value=config(use_subs)}
-            {if $useSubs == 1}
-
             <div class="col-md-6">
                 <label>Make Default Category</label>
                 <select class="form-control" name="default_categ">
@@ -31,7 +27,6 @@
             </div>
         </div>
         <div class="row">
-
             <div class="col-md-8" style="margin-top: 15px">
             <hr>
             <label>Decription</label>
@@ -48,7 +43,6 @@
                 <input type="submit" class="btn btn-primary pull-right button" name="add_category" id="button" value="Add Category"/>
             </div>
         </div>
-        {/if}
     </form>
 </div>
 
@@ -84,7 +78,7 @@
         <div class="row">
             <div class="col-md-6">
                 <label>Category Thumb</label>
-                <input type="file"  name="cat_thumb" id="cat_thumb"/>
+                <input type="file" name="cat_thumb" id="cat_thumb"/>
             </div>
             <div class="col-md-6">
                 <input type="submit" class="btn btn-primary pull-right button" name="update_category" id="button" value="Update Category"/>
@@ -93,7 +87,6 @@
         {/if}
     </form>
 </div>
-
 
 <div style="margin:10px 0 10px 0;">
     <legend>Category List</legend>
@@ -115,15 +108,11 @@
             <td><input name="check_user[]" type="checkbox" id="check_user" value="{$u.userid}"/></td>
             <td>{display_clean($category[list].category_name)}
                 <a id="thumbs_{$category[list].category_id}" class="label label-danger arrowed popoverButton" data-html="true"
-                   data-placement="top" data-toggle="popover" data-content="<img src='{$cbvid->get_category_thumb($category[list], 'users')}' height='90' width='90' />" href="javascript:void(0);">View Thumb</a></td>
-
-
-            <td> <input name="category_order_{$category[list].category_id}" type="text" id="order" style="border:1px solid #999; padding:2px; width:30px" value="{$category[list].category_order}" size="5" maxlength="5" /></td>
-            {if $category[list].parent_id == "0"}
-            {assign var=p_name value="None"}
-            {else}
-            {assign var=p_name value=$cbvid->get_category_field($category[list].parent_id,'category_name')}
-            {/if}
+                   data-placement="top" data-toggle="popover" data-content="<img src='{$cbvid->get_category_thumb($category[list], 'users')}' height='90' width='90' />" href="javascript:void(0);">View Thumb</a>
+            </td>
+            <td>
+                <input name="category_order_{$category[list].category_id}" type="text" id="order" style="border:1px solid #999; padding:2px; width:30px" value="{$category[list].category_order}" size="5" maxlength="5"/>
+            </td>
             <td>{if $category[list].category_desc}{display_clean($category[list].category_desc)}{else}<em>N/A</em>{/if}</td>
             <td>{$category[list].isdefault}</td>
             <td>
@@ -132,9 +121,13 @@
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" role="menu">
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="?category={$category[list].category_id}">{lang code='edit'}</a></li>
                         {if $category[list].isdefault!="yes"}
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:_cb.Confirm_Delete('?delete_category={$category[list].category_id}')">{lang code="delete"}</a>
+                        <li role="presentation">
+                            <a role="menuitem" tabindex="-1" href="javascript:_cb.Confirm_Delete('?delete_category={$category[list].category_id}')">{lang code="delete"}</a>
                         </li>
-                        <li><a href="?make_default={$category[list].category_id}">Make Default</a></li>{/if}
+                        <li>
+                            <a href="?make_default={$category[list].category_id}">Make Default</a>
+                        </li>
+                        {/if}
                     </ul>
                 </div>
             </td>

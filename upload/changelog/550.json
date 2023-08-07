@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"204",
+  "revision":"206",
   "status":"dev",
   "detail":[
     {
@@ -63,6 +63,8 @@
         ,"Fix jQuery-UI loaded twice"
         ,"Add Nginx hosting info in System info"
         ,"Implement video waiting conversion status"
+        ,"Add new options to reduce personnal informations"
+        ,"Fix SQL error on user category page"
       ]
     },
     {
@@ -92,6 +94,7 @@
         ,"Remove unused files"
         ,"Refactor SQL debug"
         ,"Fix Smarty error handling compatibility for PHP 8.1+"
+        ,"Catch email sending with a wrong email configuration"
       ]
     },
     {

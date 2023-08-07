@@ -180,6 +180,12 @@ function cbmail($array, $force = false)
     if (config('disable_email') == 'yes' && !$force) {
         return false;
     }
+    $from = $array['from'];
+    if( !isValidEmail($from) ){
+        error_log('Invalid sender email : '.$from);
+        return false;
+    }
+
     $func_array = get_functions('email_functions');
     if (is_array($func_array)) {
         foreach ($func_array as $func) {
@@ -192,7 +198,6 @@ function cbmail($array, $force = false)
     $content = $array['content'];
     $subject = $array['subject'];
     $to = $array['to'];
-    $from = $array['from'];
     $to_name = $array['to_name'];
     $from_name = $array['from_name'];
     if ($array['nl2br']) {
@@ -4262,15 +4267,15 @@ function yt_time_convert($time)
 {
     if (!empty($time)) {
         $str = $time;
-        $str = str_replace("P", "", $str);
-        $from = "T";
-        $to = "H";
+        $str = str_replace('P', '', $str);
+        $from = 'T';
+        $to = 'H';
         $hours = getStringBetween($str, $from, $to);
-        $from = "H";
-        $to = "M";
+        $from = 'H';
+        $to = 'M';
         $mins = getStringBetween($str, $from, $to);
-        $from = "M";
-        $to = "S";
+        $from = 'M';
+        $to = 'S';
         $secs = getStringBetween($str, $from, $to);
 
         $hours = $hours * 3600;
@@ -4284,6 +4289,9 @@ function yt_time_convert($time)
     return false;
 }
 
+/**
+ * @throws Exception
+ */
 function fetch_action_logs($params)
 {
     global $db;
