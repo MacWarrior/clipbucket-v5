@@ -546,12 +546,6 @@ function get_video_basic_details($vid)
     return $cbvid->get_video($vid, false, true);
 }
 
-function get_video_details_from_filename($filename, $basic = false)
-{
-    global $cbvid;
-    return $cbvid->get_video($filename, true, $basic);
-}
-
 function get_basic_video_details_from_filename($filename)
 {
     global $cbvid;
@@ -674,19 +668,6 @@ function get_video_file($vdetails, $return_default = true, $with_path = true, $m
 }
 
 /**
- * Function used to get HQ ie mp4 video
- *
- * @param      $vdetails
- * @param bool $return_default
- *
- * @return int|mixed
- */
-function get_hq_video_file($vdetails, $return_default = true)
-{
-    return get_video_file($vdetails, $return_default, true, false, false, true);
-}
-
-/**
  * Function used to update processed video
  *
  * @param Files $file_array
@@ -709,8 +690,17 @@ function update_processed_video($file_array, $status = 'Successful')
             }
         }
 
-        $db->update(tbl('video'), ['status', 'duration', 'failed_reason'], [$status, $duration, 'none'], " file_name='" . $file_name . "'");
+        $db->update(tbl('video'), ['status', 'duration', 'failed_reason'], [$status, $duration, 'none'], " file_name='" . display_clean($file_name) . "'");
     }
+}
+
+/**
+ * @throws Exception
+ */
+function update_video_status($file_name, $status = 'Successful')
+{
+    global $db;
+    $db->update(tbl('video'), ['status'], [$status], " file_name='" . display_clean($file_name) . "'");
 }
 
 /**

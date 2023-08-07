@@ -245,6 +245,8 @@ class FFMpeg
                 continue;
             }
 
+            update_video_status($this->file_name, 'Processing');
+
             $this->start_time_check();
             $this->start_log();
             $this->prepare();

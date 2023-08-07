@@ -651,7 +651,7 @@ CREATE TABLE `{tbl_prefix}video` (
   `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `flagged` varchar(3) NOT NULL DEFAULT 'no',
   `duration` varchar(20) NOT NULL DEFAULT '00',
-  `status` enum('Successful','Processing','Failed') NOT NULL DEFAULT 'Processing',
+  `status` enum('Successful','Processing','Failed','Waiting') NOT NULL DEFAULT 'Processing',
   `failed_reason` enum('none','max_duration','max_file','invalid_format','invalid_upload') NOT NULL DEFAULT 'none',
   `default_thumb` int(3) NOT NULL DEFAULT 1,
   `aspect_ratio` varchar(10) NOT NULL DEFAULT '',

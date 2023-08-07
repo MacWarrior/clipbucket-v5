@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"203",
+  "revision":"204",
   "status":"dev",
   "detail":[
     {
@@ -62,6 +62,7 @@
         ,"Update summernote to 0.8.18"
         ,"Fix jQuery-UI loaded twice"
         ,"Add Nginx hosting info in System info"
+        ,"Implement video waiting conversion status"
       ]
     },
     {
