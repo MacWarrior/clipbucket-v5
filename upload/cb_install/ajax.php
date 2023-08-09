@@ -1,7 +1,7 @@
 <?php
 define('THIS_PAGE', 'cb_install');
 require_once '../includes/clipbucket.php';
-require_once 'functions.php';
+require_once 'functions_install.php';
 
 $mode = $_POST['mode'];
 

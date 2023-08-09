@@ -31,5 +31,5 @@ if (in_array($mode, $cbarray)) {
     require_once '../includes/config.inc.php';
 }
 
-require_once 'functions.php';
+require_once 'functions_install.php';
 require_once 'modes/body.php';

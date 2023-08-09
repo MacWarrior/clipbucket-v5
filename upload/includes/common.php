@@ -56,12 +56,12 @@ require_once('classes/db.class.php');
 require_once('classes/rediscache.class.php');
 
 # file with most frequently used functions
-require_once 'functions.php';
+require_once __DIR__ . '/functions.php';
 include_once('clipbucket.php');
 check_install('before');
 
 if (file_exists(__DIR__ . '/config.php')) {
-    require_once 'config.php'; // New config file
+    require_once __DIR__ . '/config.php'; // New config file
 } else {
     require_once 'dbconnect.php'; // Old config file
 }
