@@ -117,7 +117,7 @@ function table($table, $as = null)
  * @return array
  * @throws \Exception
  */
-function select($query, $cached_time=-1, $cached_key = ''): array
+function select($query, $cached_time = -1, $cached_key = ''): array
 {
     global $db;
     return $db->_select($query, $cached_time, $cached_key);
@@ -133,15 +133,17 @@ function check_need_upgrade($version, $revision): bool
     $folders = glob(DIR_SQL . '[0-9]**', GLOB_ONLYDIR);
     $folder_version = '';
     foreach ($folders as $folder) {
-        if (basename($folder) == $version) {
+        $folder_cur_version = basename($folder);
+        if ($folder_cur_version == $version) {
             $folder_version = $folder;
-        } elseif (basename($folder) > $version) {
+        } elseif ($folder_cur_version > $version && $folder_cur_version <= VERSION) {
             return true;
         }
     }
     $clean_folder = array_diff(scandir($folder_version), ['..', '.']);
     foreach ($clean_folder as $file) {
-        if ((int)pathinfo($file)['filename'] > $revision) {
+        $file_rev = (int)pathinfo($file)['filename'];
+        if ($file_rev > $revision && $file_rev <= REV) {
             return true;
         }
     }
@@ -176,12 +178,21 @@ function get_files_to_upgrade($version, $revision, $count = false)
             array_filter(
             //return absolute path
                 array_map(function ($file) use ($revision, $version, $folder) {
+                    $file_rev = (int)pathinfo($file)['filename'];
+                    $folder_version = basename($folder);
                     return
-                        //if current version, then only superior revisions
-                        ((int)pathinfo($file)['filename'] > $revision && basename($folder) == $version
-                            // or all files from superior version
-                            || basename($folder) > $version
-                        ) ?
+                        //if current version, then only superior revisions but still under current revision in changelog
+                        (
+                            ($file_rev > $revision && $folder_version == $version
+                                // or all files from superior version but still under current version in changelog
+                                || $folder_version > $version
+                            )
+                            && //check if version and revision or not superior to changelog
+                            ($folder_version == VERSION && $file_rev <= REV
+                                || $folder_version < VERSION
+                            )
+                        )
+                            ?
                             $folder . DIRECTORY_SEPARATOR . $file
                             : null;
                 }, $clean_folder)
@@ -235,7 +246,7 @@ function execute_sql_file($path): bool
  */
 function execute_migration_SQL_file($path): bool
 {
-    if(!execute_sql_file($path)){
+    if (!execute_sql_file($path)) {
         return false;
     }
 
