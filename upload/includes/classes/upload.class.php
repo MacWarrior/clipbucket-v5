@@ -49,7 +49,7 @@ class Upload
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     function submit_upload($array = null)
     {
@@ -264,7 +264,7 @@ class Upload
      *
      * @param $file_name
      * @return string
-     * @throws Exception
+     * @throws \Exception
      */
     function get_next_available_num($file_name): string
     {
@@ -332,7 +332,7 @@ class Upload
      * @param null $files_dir
      * @param bool $thumbs_ver
      *
-     * @throws Exception
+     * @throws \Exception
      * @internal param $FILE_NAME
      * @internal param array $_FILES name
      */
@@ -359,7 +359,7 @@ class Upload
      * @param null $default
      *
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     function loadRequiredFields($default = null): array
     {
@@ -482,7 +482,7 @@ class Upload
      * @param null $default
      *
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     function loadOptionFields($default = null): array
     {
@@ -602,7 +602,7 @@ class Upload
      * @param null $default
      *
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     function loadLocationFields($default = null): array
     {
@@ -671,7 +671,7 @@ class Upload
      * @param string $sub_directory
      * @param string $cqueue_name
      * @return bool|int
-     * @throws Exception
+     * @throws \Exception
      */
     function add_conversion_queue($file, $sub_directory = '', $cqueue_name = '')
     {
@@ -865,7 +865,7 @@ class Upload
      * @param        $uid
      *
      * @return string|bool
-     * @throws Exception
+     * @throws \Exception
      */
     function upload_user_file(string $type, $file, $uid)
     {
@@ -993,7 +993,7 @@ class Upload
      * in clipbucket v2.5 , video fields are loaded in form of groups arrays
      * each group has it name and fields wrapped in array
      * and that array will be part of video fields
-     * @throws Exception
+     * @throws \Exception
      */
     function load_video_fields($input): array
     {

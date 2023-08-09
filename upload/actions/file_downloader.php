@@ -99,7 +99,7 @@ if (isset($_POST['youtube'])) {
     $vid_array['embed_code'] = '<iframe width="560" height="315"';
     $vid_array['embed_code'] .= ' src="//www.youtube.com/embed/' . $YouTubeId . '" ';
     $vid_array['embed_code'] .= 'frameborder="0" allowfullscreen></iframe>';
-    $file_directory = createDataFolders();
+    $file_directory = create_dated_folder();
     $vid_array['file_directory'] = $file_directory;
     $vid_array['category'] = [$cbvid->get_default_cid()];
     $vid_array['file_name'] = $file_name;
@@ -247,7 +247,7 @@ $vidDetails = [
     'category'       => [$cbvid->get_default_cid()],
     'file_name'      => $file_name,
     'userid'         => user_id(),
-    'file_directory' => createDataFolders()
+    'file_directory' => create_dated_folder()
 ];
 
 $vid = $Upload->submit_upload($vidDetails);

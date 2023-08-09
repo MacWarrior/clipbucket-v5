@@ -2,7 +2,7 @@
 /**
  * Lists all of custom fields by name
  * @return array : { array } { $flds } { an array with fields }
- * @throws Exception
+ * @throws \Exception
  */
 function custom_fields_list()
 {

@@ -212,7 +212,7 @@ switch ($mode) {
         $title = $request['title'];
         $file_name = time() . RandomString(5);
 
-        $file_directory = createDataFolders();
+        $file_directory = create_dated_folder();
 
         $vidDetails = [
             'title'          => $title,

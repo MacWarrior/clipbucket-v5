@@ -14,7 +14,7 @@ if (php_sapi_name() == 'cli') {
         if (!empty($argv[1]) || !empty($argv[2])) {
             echo 'Upgrade system is already installed, parameters so are ignored' . PHP_EOL;
         }
-    } catch (Exception $e) {
+    } catch (\Exception $e) {
         if ($e->getMessage() == 'version_not_installed') {
             if (empty($argv[1]) && empty($argv[2])) {
                 $version = readline('Version : ');
@@ -93,14 +93,14 @@ try {
         $match = [];
         preg_match($regex, $file, $match);
         if( !execute_migration_SQL_file($file) ){
-            throw new Exception();
+            throw new \Exception();
         }
     }
     echo json_encode([
         'success' => true
         , 'msg'   => htmlentities($match['1'] . ' - revision ' . (int)$match['2'])
     ]);
-} catch (Exception $e) {
+} catch (\Exception $e) {
     $regex = '/\/(\d{0,3}\.\d{0,3}\.\d{0,3}|commercial)\/(\d{5})\.sql/';
     $match = [];
     preg_match($regex, $file, $match);

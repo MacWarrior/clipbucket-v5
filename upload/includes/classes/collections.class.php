@@ -155,7 +155,7 @@ class Collections extends CBCategory
      * Function used to set-up sharing
      *
      * @param $data
-     * @throws Exception
+     * @throws \Exception
      */
     function set_share_mail($data)
     {
@@ -177,7 +177,7 @@ class Collections extends CBCategory
      * @param $id
      *
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     function collection_exists($id): bool
     {
@@ -213,7 +213,7 @@ class Collections extends CBCategory
      * @param null $cond
      *
      * @return bool|array
-     * @throws Exception
+     * @throws \Exception
      */
     function get_collection($id, $cond = null)
     {
@@ -291,7 +291,7 @@ class Collections extends CBCategory
      * @param bool $brace
      *
      * @return array|bool|void
-     * @throws Exception
+     * @throws \Exception
      */
     function get_collections($p = null, $brace = false)
     {
@@ -508,7 +508,7 @@ class Collections extends CBCategory
      * @param null $limit
      *
      * @return array|bool
-     * @throws Exception
+     * @throws \Exception
      */
     function get_collection_items($id, $order = null, $limit = null)
     {
@@ -531,7 +531,7 @@ class Collections extends CBCategory
      * @param bool $check_only
      *
      * @return array|bool
-     * @throws Exception
+     * @throws \Exception
      */
     function get_next_prev_item($ci_id, $cid, $item = 'prev', $limit = 1, $check_only = false)
     {
@@ -588,7 +588,7 @@ class Collections extends CBCategory
      * @param bool $count_only
      *
      * @return array|bool
-     * @throws Exception
+     * @throws \Exception
      */
     function get_collection_items_with_details($id, $order = null, $limit = null, $count_only = false)
     {
@@ -618,7 +618,7 @@ class Collections extends CBCategory
      * @param $fields
      *
      * @return array|bool
-     * @throws Exception
+     * @throws \Exception
      */
     function get_collection_item_fields($cid, $objID, $fields)
     {
@@ -636,7 +636,7 @@ class Collections extends CBCategory
      * @param null $default
      *
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     function load_required_fields($default = null): array
     {
@@ -869,7 +869,7 @@ class Collections extends CBCategory
      * @param array
      *
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     function validate_collection_category($array = null): bool
     {
@@ -988,7 +988,7 @@ class Collections extends CBCategory
      *
      * @param $objID
      * @param $cid
-     * @throws Exception
+     * @throws \Exception
      */
     function add_collection_item($objID, $cid)
     {
@@ -1023,7 +1023,7 @@ class Collections extends CBCategory
      * @param $cid
      *
      * @return bool|array
-     * @throws Exception
+     * @throws \Exception
      */
     function object_in_collection($id, $cid)
     {
@@ -1044,7 +1044,7 @@ class Collections extends CBCategory
      * @param $cid
      * @param null $field
      * @return bool|array
-     * @throws Exception
+     * @throws \Exception
      */
     function get_collection_field($cid, $field = null)
     {
@@ -1074,7 +1074,7 @@ class Collections extends CBCategory
      * @param null $userid
      *
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     function is_collection_owner($cdetails, $userid = null): bool
     {
@@ -1098,7 +1098,7 @@ class Collections extends CBCategory
      * Function used to delete collection
      *
      * @param $cid
-     * @throws Exception
+     * @throws \Exception
      */
     function delete_collection($cid)
     {
@@ -1147,7 +1147,7 @@ class Collections extends CBCategory
      * @param $cid
      *
      * @return bool|void
-     * @throws Exception
+     * @throws \Exception
      */
     function remove_item($id, $cid)
     {
@@ -1179,7 +1179,7 @@ class Collections extends CBCategory
      * @param $cid
      *
      * @return bool|int
-     * @throws Exception
+     * @throws \Exception
      */
     function count_items($cid)
     {
@@ -1440,7 +1440,7 @@ class Collections extends CBCategory
      * @param bool $show_all
      *
      * @return bool|mixed
-     * @throws Exception
+     * @throws \Exception
      */
     function collection_voters($id, $return_array = false, $show_all = false)
     {
@@ -1476,7 +1476,7 @@ class Collections extends CBCategory
      * @param $id
      *
      * @return bool|array
-     * @throws Exception
+     * @throws \Exception
      */
     function current_rating($id)
     {
@@ -1496,7 +1496,7 @@ class Collections extends CBCategory
      * @param $rating
      *
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     function rate_collection($id, $rating): array
     {
@@ -1661,7 +1661,7 @@ class Collections extends CBCategory
      * Function used to update total comments of collection
      *
      * @param $cid
-     * @throws Exception
+     * @throws \Exception
      */
     function update_total_comments($cid)
     {
@@ -1685,7 +1685,7 @@ class Collections extends CBCategory
      * @param null $type
      *
      * @return string
-     * @throws Exception
+     * @throws \Exception
      */
     function collection_links($details, $type = null): string
     {
@@ -1754,7 +1754,7 @@ class Collections extends CBCategory
      * @param $id
      * @param $amount
      * @param $op
-     * @throws Exception
+     * @throws \Exception
      */
     function update_collection_counts($id, $amount, $op)
     {
@@ -1768,7 +1768,7 @@ class Collections extends CBCategory
      * @param      $new
      * @param      $obj
      * @param null $old
-     * @throws Exception
+     * @throws \Exception
      */
     function change_collection($new, $obj, $old = null)
     {
@@ -1809,7 +1809,7 @@ class Collections extends CBCategory
      *
      * @param $action
      * @param $cid
-     * @throws Exception
+     * @throws \Exception
      */
     function collection_actions($action, $cid)
     {
@@ -1855,7 +1855,7 @@ class Collections extends CBCategory
      * and decrement collection item count
      * @param $objId
      * @param null $type
-     * @throws Exception
+     * @throws \Exception
      */
     function deleteItemFromCollections($objId, $type = null)
     {
@@ -1880,7 +1880,7 @@ class Collections extends CBCategory
      * @param $uid
      *
      * @return BOOLEAN
-     * @throws Exception
+     * @throws \Exception
      */
     function add_contributor($cid, $uid)
     {
@@ -1940,7 +1940,7 @@ class Collections extends CBCategory
      * @param $uid
      *
      * @return bool|int
-     * @throws Exception
+     * @throws \Exception
      */
     function is_contributor($cid, $uid)
     {
@@ -1964,7 +1964,7 @@ class Collections extends CBCategory
      * @param INT $uid
      *
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     function remove_contributor($cid, $uid): bool
     {
@@ -1999,7 +1999,7 @@ class Collections extends CBCategory
      * @param string $order
      *
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     function get_contributor_collections($uid, $type = 'videos', $limit = null, $order = 'date_added DESC'): array
     {
@@ -2025,7 +2025,7 @@ class Collections extends CBCategory
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     function coll_first_thumb($col_data, $size = false)
     {

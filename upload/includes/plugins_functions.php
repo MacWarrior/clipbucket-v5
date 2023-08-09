@@ -126,7 +126,7 @@ function tags($input, $type, $sep = ', ', $class = ''): string
  * @param null $object_name
  *
  * @return string
- * @throws Exception
+ * @throws \Exception
  */
 function categories($input, $type, $sep = ', ', $object_name = null): string
 {

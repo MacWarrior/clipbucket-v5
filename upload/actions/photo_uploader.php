@@ -48,7 +48,7 @@ switch ($mode) {
         $_POST['server_url'] = 'undefined';
         $_POST['active'] = config('photo_activation') ? 'no' : 'yes';
         $_POST['folder'] = str_replace('..', '', mysql_clean($_POST['folder']));
-        $_POST['folder'] = createDataFolders(PHOTOS_DIR);
+        $_POST['folder'] = create_dated_folder(PHOTOS_DIR);
         $_POST['filename'] = mysql_clean($_POST['file_name']);
         $insert_id = $cbphoto->insert_photo();
 

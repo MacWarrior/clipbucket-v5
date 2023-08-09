@@ -25,7 +25,7 @@ $response["data"] = null;
 $results = [];
 try {
     if (!$mode) {
-        throw new Exception("Please provide mode to map or index");
+        throw new \Exception("Please provide mode to map or index");
     }
 
     switch ($mode) {
@@ -71,19 +71,19 @@ try {
 
                             //checking for Curl Error
                             if ($response["data"]["curl_error_no"]) {
-                                throw new Exception($response["data"]["curl_error"]);
+                                throw new \Exception($response["data"]["curl_error"]);
                             }
 
                             $results[] = $response["data"];
                         }
                     } else {
-                        throw new Exception("No Video Found for this request");
+                        throw new \Exception("No Video Found for this request");
                     }
 
                     //Creating Response
                     exit(json_encode(["msg" => "success", "data" => $results]));
                 } else {
-                    throw new Exception("Invalid Request, please select proper type");
+                    throw new \Exception("Invalid Request, please select proper type");
                 }
             }
             break;
@@ -129,21 +129,21 @@ try {
 
                             //checking for Curl Error
                             if ($response["data"]["curl_error_no"]) {
-                                throw new Exception($response["data"]["curl_error"]);
+                                throw new \Exception($response["data"]["curl_error"]);
 
                             }
 
                             $results[] = $response["data"];
                         }
                     } else {
-                        throw new Exception("No Video Found for this request");
+                        throw new \Exception("No Video Found for this request");
                     }
 
                     //Creating Response
                     exit(json_encode(["msg" => "success", "data" => $results]));
 
                 } else {
-                    throw new Exception("Invalid Request, please select proper type");
+                    throw new \Exception("Invalid Request, please select proper type");
                 }
             }
             break;
@@ -200,24 +200,24 @@ try {
                         #pr($response,1);
                         //checking for Curl Error
                         if ($response["data"]["curl_error_no"]) {
-                            throw new Exception($response["data"]["curl_error"]);
+                            throw new \Exception($response["data"]["curl_error"]);
 
                         }
                         $results[] = $response["data"];
                     }
                 } else {
-                    throw new Exception("No Video Found for this request");
+                    throw new \Exception("No Video Found for this request");
                 }
 
                 //Creating Response
                 exit(json_encode(["msg" => "success", "data" => $results]));
 
             } else {
-                throw new Exception("Invalid Request, please select proper type");
+                throw new \Exception("Invalid Request, please select proper type");
             }
             break;
     }
 
-} catch (Exception $e) {
+} catch (\Exception $e) {
     exit(json_encode(["err" => $e->getMessage(), "data" => $response]));
 }

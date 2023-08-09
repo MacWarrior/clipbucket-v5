@@ -1,6 +1,6 @@
 <?php
 /**
- * @throws Exception
+ * @throws \Exception
  */
 function install_global_announcement()
 {

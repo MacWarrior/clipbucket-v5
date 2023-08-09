@@ -19,13 +19,12 @@
                     <label>Category Name*</label>
                     <input type="text" id="name" name="name" class="form-control" >
                 </div>
-    {assign var=useSubs value=config(use_subs)}
-    {if $useSubs == 1}
+                {if config('use_subs')==1}
                 <div class="col-md-4">
                     <label>Parent Category</label>
                     {cbCategories output="dropdown" class="form-control" name="parent_cat" id="parent_cat" blank_option=TRUE echo=TRUE type="video"}
                 </div>
-    {/if}
+                {/if}
                 <div class="col-md-4">
                     <label for="default">Make Default Category</label>
                     <select class="form-control" name="default" id="default">
@@ -68,10 +67,12 @@
                     <label for="name">Category Name*</label>
                     <input name="name" class="form-control" type="text" id="name" value="{display_clean($cat_details.category_name)}" size="45" />
                 </div>
+                {if config('use_subs')==1}
                 <div class="col-md-4">
                     <label>Parent Category</label>
                     {cbCategories output="dropdown" class='form-control' selected=$cat_details.parent_id name="parent_cat" id="parent_cat" blank_option=TRUE type="video" echo=TRUE}
                 </div>
+                {/if}
                 <div class="col-md-4">
                     <label for="default_categ">Make Default Category</label>
                     <select class="form-control" name="default_categ" id="default_categ">
@@ -113,7 +114,9 @@
                 <td width="20"><input type="checkbox" name="checkall" onclick="checkUncheckAll(this);"/></td>
                 <td width="225" class="left_head" style="text-indent:10px">Category Name</td>
                 <td width="75" align="left" class="head">Order</td>
+                {if config('use_subs')==1}
                 <td width="225" align="left" class="head">Parent Category</td>
+                {/if}
                 <td width="250" class="head">{lang code='description'}</td>
                 <td width="100" class="head">Default</td>
                 <td width="150" class="head">Action</td>
@@ -135,7 +138,9 @@
                 <td>
                     <input name="category_order_{$category[list].category_id}" type="text" id="order" style="border:1px solid #999; padding:2px; width:30px" value="{$category[list].category_order}" size="5" maxlength="5" />
                 </td>
+                {if config('use_subs')==1}
                 <td>{display_clean($p_name)}</td>
+                {/if}
                 <td>{if $category[list].category_desc}{display_clean($category[list].category_desc)}{else}<em>N/A</em>{/if}</td>
                 <td>{$category[list].isdefault}</td>
                 <td>
@@ -165,7 +170,7 @@
             </tr>
     {/section}
         </table>
-        <input type="submit" value="Update Category" name="update_order" class="btn btn-primary btn-sm"  style="margin-top:10px;"/>
+        <input type="submit" value="Update Category" name="update_order" class="btn btn-primary btn-sm" style="margin-top:10px;"/>
     </form>
 {else}
     No Category Has Been Created Yet

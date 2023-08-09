@@ -225,7 +225,7 @@ function GetServerURL(): string
 }
 
 /**
- * @throws Exception
+ * @throws \Exception
  */
 function install_execute_sql_file($cnnct, $path, $dbprefix, $dbname): bool
 {
@@ -252,7 +252,7 @@ function install_execute_sql_file($cnnct, $path, $dbprefix, $dbname): bool
                 $templine = '';
             }
         }
-    } catch (Exception $e) {
+    } catch (\Exception $e) {
         $result['err'] = "<span class='alert'><b>SQL</b> : ".$templine."<br/><b>Error</b> : ".$cnnct->error."</span>";
         mysqli_rollback($cnnct);
         die(json_encode($result));

@@ -1,6 +1,6 @@
 <?php
 /**
- * @throws Exception
+ * @throws \Exception
  */
 function install_editors_pick()
 {

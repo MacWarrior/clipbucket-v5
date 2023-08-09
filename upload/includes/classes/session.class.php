@@ -27,7 +27,7 @@ class Session
      * @param bool $value
      * @param bool $reg
      *
-     * @throws Exception
+     * @throws \Exception
      * @todo: Find a proper solution to avoid database crashing because of sessions insertion and updation
      */
 
@@ -70,7 +70,7 @@ class Session
      * @param bool $phpsess
      *
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     function get_user_session($user, $session_name = false, $phpsess = false): array
     {
@@ -91,7 +91,7 @@ class Session
     /**
      * Function used to get sessins
      *
-     * @throws Exception
+     * @throws \Exception
      * @todo : They are updated on every page refresh, highly  critical for performance.
      */
     function get_sessions(): array
@@ -192,7 +192,7 @@ class Session
 
     /**
      * Destroy Session
-     * @throws Exception
+     * @throws \Exception
      */
     function destroy()
     {
@@ -228,7 +228,7 @@ class Session
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     function kick($id): bool
     {

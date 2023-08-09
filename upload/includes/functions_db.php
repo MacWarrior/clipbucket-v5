@@ -3,7 +3,7 @@
 /**
  * functions related to database
  *
- * @throws Exception
+ * @throws \Exception
  */
 function db_select($query): array
 {
@@ -115,7 +115,7 @@ function table($table, $as = null)
  * @param $query
  * @param int $cached_time
  * @return array
- * @throws Exception
+ * @throws \Exception
  */
 function select($query, $cached_time=-1, $cached_key = ''): array
 {
@@ -217,7 +217,7 @@ function execute_sql_file($path): bool
                 $templine = '';
             }
         }
-    } catch (Exception $e) {
+    } catch (\Exception $e) {
         $db->mysqli->rollback();
         e('SQL : ' . $templine);
         e('ERROR : ' . $e->getMessage());
@@ -231,7 +231,7 @@ function execute_sql_file($path): bool
 }
 
 /**
- * @throws Exception
+ * @throws \Exception
  */
 function execute_migration_SQL_file($path): bool
 {

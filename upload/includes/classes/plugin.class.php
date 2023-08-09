@@ -80,7 +80,7 @@ class CBPlugin
 
     /**
      * Function used to get new plugins, that are not installed yet
-     * @throws Exception
+     * @throws \Exception
      */
     function getInstalledPlugins()
     {
@@ -115,7 +115,7 @@ class CBPlugin
      * @param null $folder
      *
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     function is_installed($file, $v = null, $folder = null): bool
     {
@@ -197,7 +197,7 @@ class CBPlugin
      * @param null $folder
      *
      * @return bool|string
-     * @throws Exception
+     * @throws \Exception
      */
     function installPlugin($pluginFile, $folder = null)
     {
@@ -256,7 +256,7 @@ class CBPlugin
      * @param null $folder
      *
      * @return null
-     * @throws Exception
+     * @throws \Exception
      */
     function pluginActive($plugin_file, $active = 'yes', $folder = null)
     {
@@ -283,7 +283,7 @@ class CBPlugin
      * @param null $folder
      *
      * @return null
-     * @throws Exception
+     * @throws \Exception
      */
     function uninstallPlugin($file, $folder = null)
     {

@@ -266,7 +266,7 @@ class FFMpeg
 
                 try {
                     $this->generateAllThumbs();
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     $log .= PHP_EOL . 'Error Occured : ' . $e->getMessage() . PHP_EOL;
                 }
 
@@ -696,7 +696,7 @@ class FFMpeg
 
     /**
      * @return void
-     * @throws Exception
+     * @throws \Exception
      */
     public function generateAllThumbs()
     {
@@ -745,7 +745,7 @@ class FFMpeg
     /**
      * @param $array
      * @return void
-     * @throws Exception
+     * @throws \Exception
      */
     public function generateThumbs($array)
     {

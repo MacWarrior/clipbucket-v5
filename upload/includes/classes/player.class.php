@@ -145,7 +145,7 @@ class CBPlayer
      * Function used to set player for ClipBucket
      *
      * @param $details
-     * @throws Exception
+     * @throws \Exception
      */
     function set_player($details)
     {

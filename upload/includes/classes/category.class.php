@@ -15,7 +15,7 @@ abstract class CBCategory
      * @param $cid
      *
      * @return bool|array
-     * @throws Exception
+     * @throws \Exception
      */
     function category_exists($cid)
     {
@@ -28,7 +28,7 @@ abstract class CBCategory
      * @param $cid
      *
      * @return bool|array
-     * @throws Exception
+     * @throws \Exception
      */
     function get_category($cid)
     {
@@ -46,7 +46,7 @@ abstract class CBCategory
      * @param $cid
      *
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     function get_category_name($cid)
     {
@@ -64,7 +64,7 @@ abstract class CBCategory
      * @param $name
      *
      * @return bool|array
-     * @throws Exception
+     * @throws \Exception
      */
     function get_cat_by_name($name)
     {
@@ -80,7 +80,7 @@ abstract class CBCategory
      * Function used to add new category
      *
      * @param $array
-     * @throws Exception
+     * @throws \Exception
      */
     function add_category($array)
     {
@@ -126,7 +126,7 @@ abstract class CBCategory
      * Function used to make category as default
      *
      * @param $cid
-     * @throws Exception
+     * @throws \Exception
      */
     function make_default_category($cid)
     {
@@ -142,7 +142,7 @@ abstract class CBCategory
 
     /**
      * Function used to get list of categories
-     * @throws Exception
+     * @throws \Exception
      */
     function get_categories(): array
     {
@@ -327,7 +327,7 @@ abstract class CBCategory
      * Function used to delete category
      *
      * @param $cid
-     * @throws Exception
+     * @throws \Exception
      */
     function delete_category($cid)
     {
@@ -401,7 +401,7 @@ abstract class CBCategory
      * @param      $from
      * @param null $to
      * @param null $has_child
-     * @throws Exception
+     * @throws \Exception
      */
     function change_category($from, $to = null, $has_child = null)
     {
@@ -426,7 +426,7 @@ abstract class CBCategory
      * submit values and it will update category
      *
      * @param $array
-     * @throws Exception
+     * @throws \Exception
      */
     function update_category($array)
     {
@@ -472,7 +472,7 @@ abstract class CBCategory
      * @param $cid
      * @param $file
      *
-     * @throws Exception
+     * @throws \Exception
      * @internal param and $Cid Array
      */
     function add_category_thumb($cid, $file)
@@ -565,7 +565,7 @@ abstract class CBCategory
      *
      * @param $id
      * @param $order
-     * @throws Exception
+     * @throws \Exception
      */
     function update_cat_order($id, $order)
     {
@@ -589,7 +589,7 @@ abstract class CBCategory
      * @param $pid
      *
      * @return array|bool
-     * @throws Exception
+     * @throws \Exception
      */
     function get_parent_category($pid)
     {
@@ -607,7 +607,7 @@ abstract class CBCategory
      * @param $cid
      *
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     function is_parent($cid)
     {
@@ -627,7 +627,7 @@ abstract class CBCategory
      * @param bool $return_parent
      *
      * @return array|bool
-     * @throws Exception
+     * @throws \Exception
      */
     function has_parent($cid, $return_parent = false)
     {
@@ -649,7 +649,7 @@ abstract class CBCategory
      * @param bool $count
      *
      * @return array|bool
-     * @throws Exception
+     * @throws \Exception
      */
     function get_parents($count = false)
     {
@@ -668,7 +668,7 @@ abstract class CBCategory
      * @param $selected
      *
      * @return string
-     * @throws Exception
+     * @throws \Exception
      */
     function admin_area_cats($selected): string
     {
@@ -700,7 +700,7 @@ abstract class CBCategory
      * @param $cid
      *
      * @return array|bool
-     * @throws Exception
+     * @throws \Exception
      */
     function get_sub_categories($cid)
     {
@@ -721,7 +721,7 @@ abstract class CBCategory
      * @param string $space
      *
      * @return string
-     * @throws Exception
+     * @throws \Exception
      */
     function get_sub_subs($cid, $selected, $space = '&nbsp; - '): string
     {
@@ -747,7 +747,7 @@ abstract class CBCategory
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     function get_category_field($cid, $field)
     {
@@ -766,7 +766,7 @@ abstract class CBCategory
      * @param $cid_array
      *
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     function get_category_names($cid_array): array
     {

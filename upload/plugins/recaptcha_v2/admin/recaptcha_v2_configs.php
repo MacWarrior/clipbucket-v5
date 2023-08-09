@@ -31,7 +31,7 @@ try {
     assign('rec_config', $rec_config);
 
 
-} catch (Exception $e) {
+} catch (\Exception $e) {
 
 
     e($e->getMessage(), "e");

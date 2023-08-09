@@ -299,7 +299,6 @@ check_install('after');
 $ads_array = [];
 
 # Website Details
-define('CB_VERSION', $row['version']);
 define('TITLE', $row['site_title']);
 if (!defined('SLOGAN')) {
     define('SLOGAN', $row['site_slogan']);
@@ -386,10 +385,7 @@ $ClipBucket->initAdminMenu();
 Assign('NEED_UPDATE', NEED_UPDATE);
 
 # Assigning Smarty Tags & Values
-Assign('CB_VERSION', CB_VERSION);
 Assign('PHP_PATH', PHP_PATH);
-Assign('FFMPEG_BINARY', getConstant('FFMPEG_BINARY'));
-Assign('FFMPEG_MENCODER_BINARY', getConstant('FFMPEG_MENCODER_BINARY'));
 Assign('js', JS_URL);
 Assign('title', TITLE);
 Assign('slogan', SLOGAN);

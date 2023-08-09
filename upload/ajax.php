@@ -1167,7 +1167,7 @@ if (!empty($mode)) {
                     $response['collection_id'] = $collection;
                     echo json_encode($response);
                 }
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 $response["error_ex"] = true;
                 $response["msg"] = 'Message: ' . $e->getMessage();
                 echo(json_encode($response));

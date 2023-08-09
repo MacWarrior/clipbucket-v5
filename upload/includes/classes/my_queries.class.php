@@ -7,7 +7,7 @@ class myquery
     static $video_resolutions = [];
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     function Set_Website_Details($name, $value)
     {
@@ -18,7 +18,7 @@ class myquery
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     function Get_Website_Details(): array
     {
@@ -65,7 +65,7 @@ class myquery
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function saveVideoResolutions($post)
     {
@@ -89,7 +89,7 @@ class myquery
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function getEnabledVideoResolutions(string $orderby = ''): array
     {
@@ -107,7 +107,7 @@ class myquery
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function getVideoResolutionBitrateFromHeight($height): int
     {
@@ -121,7 +121,7 @@ class myquery
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function getVideoResolutionTitleFromHeight($height): string
     {
@@ -139,7 +139,7 @@ class myquery
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     function video_exists($videoid)
     {
@@ -154,7 +154,7 @@ class myquery
      * @param INPUT vid or videokey
      *
      * @return bool|mixed|STRING
-     * @throws Exception
+     * @throws \Exception
      */
     function get_video_details($vid)
     {
@@ -164,7 +164,7 @@ class myquery
 
     /**
      * Function used to check weather username exists not
-     * @throws Exception
+     * @throws \Exception
      */
     function check_user($username)
     {
@@ -174,7 +174,7 @@ class myquery
 
     /**
      * Function used to check weather email exists not
-     * @throws Exception
+     * @throws \Exception
      */
     function check_email($email)
     {
@@ -191,7 +191,7 @@ class myquery
      * @param bool $forceDelete
      *
      * @return bool|mixed
-     * @throws Exception
+     * @throws \Exception
      */
     function delete_comment($cid, $type = 'v', $is_reply = false, $forceDelete = false)
     {
@@ -297,7 +297,7 @@ class myquery
      * @param $cid
      *
      * @return bool|mixed
-     * @throws Exception
+     * @throws \Exception
      */
     function rate_comment($rate, $cid)
     {
@@ -350,7 +350,7 @@ class myquery
      * @param bool $force_name_email
      *
      * @return bool|mixed
-     * @throws Exception
+     * @throws \Exception
      */
     function add_comment($comment, $obj_id, $reply_to = null, $type = 'v', $obj_owner = null, $obj_link = null, $force_name_email = false)
     {
@@ -491,7 +491,7 @@ class myquery
      * @param $thumb
      *
      * @return void
-     * @throws Exception
+     * @throws \Exception
      */
     function set_default_thumb($vid, $thumb)
     {
@@ -514,7 +514,7 @@ class myquery
      * @param $id
      *
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     function get_category($id): array
     {
@@ -530,7 +530,7 @@ class myquery
      * @param $id
      *
      * @return array|bool
-     * @throws Exception
+     * @throws \Exception
      */
     function get_comment($id)
     {
@@ -561,7 +561,7 @@ class myquery
      * @param        $parent_id
      *
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     function get_comments($type_id = '*', $type = 'v', $count_only = false, $get_type = 'all', $parent_id = null): bool
     {
@@ -583,7 +583,7 @@ class myquery
      * @param $parent_id
      *
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     function get_child_comments($parent_id = null): array
     {
@@ -593,7 +593,7 @@ class myquery
 
     /**
      * Function used to get using ARRAY as parameter
-     * @throws Exception
+     * @throws \Exception
      */
     function getComments($params)
     {
@@ -758,7 +758,7 @@ class myquery
 
     /**
      * Function used to update comment
-     * @throws Exception
+     * @throws \Exception
      */
     function update_comment($cid, $text)
     {
@@ -767,7 +767,7 @@ class myquery
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     function get_todos()
     {
@@ -776,7 +776,7 @@ class myquery
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     function insert_todo($text)
     {
@@ -785,7 +785,7 @@ class myquery
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     function update_todo($id, $text)
     {
@@ -794,7 +794,7 @@ class myquery
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     function delete_todo($id)
     {
@@ -804,7 +804,7 @@ class myquery
 
     /**
      * Function used to validate comments
-     * @throws Exception
+     * @throws \Exception
      */
     function validate_comment_functions($params)
     {
@@ -829,7 +829,7 @@ class myquery
 
     /**
      * Function used to insert note in data base for admin referance
-     * @throws Exception
+     * @throws \Exception
      */
     function insert_note($note)
     {
@@ -839,7 +839,7 @@ class myquery
 
     /**
      * Function used to get notes
-     * @throws Exception
+     * @throws \Exception
      */
     function get_notes(): array
     {
@@ -849,7 +849,7 @@ class myquery
 
     /**
      * Function usde to delete note
-     * @throws Exception
+     * @throws \Exception
      */
     function delete_note($id)
     {
@@ -910,7 +910,7 @@ class myquery
      * @param string $order
      *
      * @return array|bool
-     * @throws Exception
+     * @throws \Exception
      */
     function get_conversion_queue($cond = null, $limit = null, $order = 'date_added DESC')
     {
@@ -927,7 +927,7 @@ class myquery
      *
      * @param $action
      * @param $id
-     * @throws Exception
+     * @throws \Exception
      */
     function queue_action($action, $id)
     {

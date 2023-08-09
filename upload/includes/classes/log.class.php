@@ -27,7 +27,7 @@ class CBLogs
      * Function used to insert log
      * @param string $type , type of action
      * @param array $details_array , action details array
-     * @throws Exception
+     * @throws \Exception
      */
     function insert($type, $details_array)
     {

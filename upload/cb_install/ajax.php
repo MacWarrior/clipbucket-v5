@@ -20,11 +20,11 @@ try{
         $dbselect = mysqli_select_db($cnnct, $dbname);
         mysqli_query($cnnct, 'SET NAMES "utf8mb4"');
     }
-    catch(Exception $e){
+    catch(\Exception $e){
         $result['err'] = "<span class='alert'>Unable to select database : " . $e->getMessage() . '</span>';
     }
 }
-catch(Exception $e){
+catch(\Exception $e){
     $result['err'] = "<span class='alert'>Unable to connect to mysql : " . $e->getMessage() . '</span>';
 }
 

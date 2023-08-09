@@ -269,7 +269,7 @@ class ElasticSearch
     /**
      * @param   : { $index,$postData } { tablename and mapping Data }
      * @return  : { Array } {Video Array}
-     * @throws Exception if any of the Error come
+     * @throws \Exception
      *
      * @todo    : This method is used to map Mysql Database tables with ES
      * @author  : <fahad.dev@iu.com.pk> <Fahad Abbas>
@@ -315,7 +315,7 @@ class ElasticSearch
     /**
      * @param   : { $video } { video to be processed }
      * @return  : { Array } {Video Array}
-     * @throws Exception if any of the Error come
+     * @throws \Exception
      *
      * @todo    : This method is used to format video for ES sever request
      * @author  : <fahad.dev@iu.com.pk> <Fahad Abbas>
@@ -374,7 +374,7 @@ class ElasticSearch
     /**
      * @param   : { $video } { video to be processed }
      * @return  : { Array } {Video Array}
-     * @throws Exception if any of the Error come
+     * @throws \Exception
      *
      * @todo    : This method is used to format video for ES sever request
      * @author  : <fahad.dev@iu.com.pk> <Fahad Abbas>
@@ -419,7 +419,7 @@ class ElasticSearch
     /**
      * @param   : { $video } { video to be processed }
      * @return  : { Array } {Video Array}
-     * @throws Exception if any of the Error come
+     * @throws \Exception
      *
      * @todo    : This method is used to format video for ES sever request
      * @author  : <fahad.dev@iu.com.pk> <Fahad Abbas>
@@ -471,7 +471,7 @@ class ElasticSearch
     /**
      * @param   : { $video } { video to be processed }
      * @return  : { Array } {Video Array}
-     * @throws Exception if any of the Error come
+     * @throws \Exception
      *
      * @todo    : This method is used to format video for ES sever request
      * @author  : <fahad.dev@iu.com.pk> <Fahad Abbas>
@@ -523,7 +523,7 @@ class ElasticSearch
     /**
      * @param   : { $video } { video to be processed }
      * @return  : { Array } {Video Array}
-     * @throws Exception if any of the Error come
+     * @throws \Exception
      *
      * @todo    : This method is used to format video for ES sever request
      * @author  : <fahad.dev@iu.com.pk> <Fahad Abbas>
@@ -554,7 +554,7 @@ class ElasticSearch
     /**
      * @param   : { $video } { video to be processed }
      * @return  : { Array } {Video Array}
-     * @throws Exception if any of the Error come
+     * @throws \Exception if any of the Error come
      *
      * @todo    : This method is used to format video for ES sever request
      * @author  : <fahad.dev@iu.com.pk> <Fahad Abbas>
@@ -612,7 +612,7 @@ class ElasticSearch
     /**
      * @param   : { $video } { video to be processed }
      * @return  : { Array } {Video Array}
-     * @throws Exception if any of the Error come
+     * @throws \Exception if any of the Error come
      *
      * @todo    : This method is used to format video for ES sever request
      * @author  : <fahad.dev@iu.com.pk> <Fahad Abbas>
@@ -658,7 +658,7 @@ class ElasticSearch
     /**
      * @param   : { $video } { video to be processed }
      * @return  : { Array } {Video Array}
-     * @throws Exception if any of the Error come
+     * @throws \Exception if any of the Error come
      *
      * @todo    : This method is used to format video for ES sever request
      * @author  : <fahad.dev@iu.com.pk> <Fahad Abbas>
@@ -718,7 +718,7 @@ class ElasticSearch
     /**
      * @param   : { $video } { video to be processed }
      * @return  : { Array } {Video Array}
-     * @throws Exception if any of the Error come
+     * @throws \Exception if any of the Error come
      *
      * @todo    : This method is used to format video for ES sever request
      * @author  : <fahad.dev@iu.com.pk> <Fahad Abbas>
@@ -804,7 +804,7 @@ class ElasticSearch
     /**
      * @param   : { $video } { video to be processed }
      * @return  : { Array } {Video Array}
-     * @throws Exception if any of the Error come
+     * @throws \Exception if any of the Error come
      *
      * @todo    : This method is used to format video for ES sever request
      * @author  : <fahad.dev@iu.com.pk> <Fahad Abbas>

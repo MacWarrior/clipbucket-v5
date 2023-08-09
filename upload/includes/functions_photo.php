@@ -52,7 +52,7 @@ function plupload_photo_uploader()
  *
  * @param INT|array $photo_id
  * @return bool|string $directory
- * @throws Exception
+ * @throws \Exception
  */
 function get_photo_date_folder($photo_id)
 {

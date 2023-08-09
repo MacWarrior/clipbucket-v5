@@ -62,7 +62,7 @@ class CacheRedis
             } else {
                 throw $e;
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             error_log($e->getMessage());
         }
         self::$_instance = $this;

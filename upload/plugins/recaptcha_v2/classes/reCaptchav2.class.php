@@ -14,10 +14,10 @@ class reCaptchav2
         $secretkey = $param['recaptcha_v2_secret_key'];
 
         if ($sitekey == null || empty($sitekey)) {
-            throw new Exception("Please add recapcha's site key!");
+            throw new \Exception("Please add recapcha's site key!");
         } else {
             if ($sitekey == null || empty($sitekey)) {
-                throw new Exception("Please add recapcha's secret key!");
+                throw new \Exception("Please add recapcha's secret key!");
             } else {
                 $sitekey = mysql_clean($sitekey);
                 $secretkey = mysql_clean($secretkey);
@@ -39,7 +39,7 @@ class reCaptchav2
         if (!empty($rec_config)) {
             return $rec_config;
         }
-        throw new Exception("There was an error getting reCaptchav2 configs!");
+        throw new \Exception("There was an error getting reCaptchav2 configs!");
     }
 
 }

@@ -72,7 +72,7 @@ if (isset($_POST['mode'])) {
                         $response['failure'] = true;
                         $response['message'] = $msg;
                     }
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     $response['failure'] = true;
                     $response['message'] = $e->getMessage();
                 }

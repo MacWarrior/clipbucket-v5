@@ -82,7 +82,7 @@ switch ($mode) {
         $file_directory = date('Y/m/d');
         $targetFileName = $file_name . '.' . $extension;
 
-        createDataFolders(LOGS_DIR);
+        create_dated_folder(LOGS_DIR);
         $logFile = LOGS_DIR . DIRECTORY_SEPARATOR . $file_directory . DIRECTORY_SEPARATOR . $file_name . '.log';
 
         $log = new SLog($logFile);

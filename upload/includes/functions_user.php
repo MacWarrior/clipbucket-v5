@@ -61,7 +61,7 @@ function profile_fileds_check($array)
  * Resend verification email to a given user
  * @param: { integer } { $userid } { id of user to resend verification to }
  * @return: { boolean } { true if success, else false }
- * @throws Exception
+ * @throws \Exception
  * @author: Saqib Razzaq
  * @since: March 10th, 2016 ClipBucket 2.8.1
  */

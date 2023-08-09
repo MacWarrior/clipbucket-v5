@@ -19,13 +19,12 @@
                 <label>Category Name*</label>
                 <input type="text" id="name" name="name" class="form-control" >
             </div>
-            {assign var=useSubs value=config(use_subs)}
-            {if $useSubs == 1}
+            {if config('use_subs')==1}
             <div class="col-md-4">
                 <label>Parent Category</label>
                 {cbCategories output="dropdown" class="form-control" name="parent_cat" id="parent_cat" blank_option=TRUE echo=TRUE type="collection"}
-
             </div>
+            {/if}
             <div class="col-md-4">
                 <label>Make Default Category</label>
                 <select class="form-control" name="default_categ">
@@ -50,7 +49,6 @@
                 <input type="submit" class="btn btn-primary pull-right button" name="add_category" id="button" value="Add Category"/>
             </div>
         </div>
-        {/if}
     </form>
 </div>
 
@@ -65,10 +63,12 @@
                 <label>Category Name*</label>
                 <input name="name" class="form-control" type="text" id="name" value="{display_clean($cat_details.category_name)}" size="45" />
             </div>
+            {if config('use_subs')==1}
             <div class="col-md-4">
                 <label>Parent Category</label>
                 {cbCategories output="dropdown" class='form-control' selected=$cat_details.parent_id name="parent_cat" id="parent_cat" blank_option=TRUE type="collection" echo=TRUE}
             </div>
+            {/if}
             <div class="col-md-4">
                 <label>Make Default Category</label>
                 <select class="form-control" name="default_categ">
@@ -108,7 +108,9 @@
             <td width="20"><input type="checkbox" name="checkall" onclick="checkUncheckAll(this);"/></td>
             <td width="225" class="left_head" style="text-indent:10px">Category Name</td>
             <td width="75" align="left" class="head">Order</td>
+            {if config('use_subs')==1}
             <td width="225" align="left" class="head">Parent Category</td>
+            {/if}
             <td width="250" class="head">{lang code='description'}</td>
             <td width="100" class="head">Default</td>
             <td width="150" class="head">Action</td>
@@ -121,12 +123,14 @@
                    data-placement="top" data-toggle="popover" data-content="<img src='{$cbvid->get_category_thumb($category[list], 'collections')}' height='90' width='90' />" href="javascript:void(0);">View Thumb</a></td>
 
             <td> <input name="category_order_{$category[list].category_id}" type="text" id="order" style="border:1px solid #999; padding:2px; width:30px" value="{$category[list].category_order}" size="5" maxlength="5" /></td>
-            {if $category[list].parent_id == "0"}
-            	{assign var=p_name value="None"}
-            {else}
-            	{assign var=p_name value=$cbvid->get_category_field($category[list].parent_id,'category_name')}
-            {/if}
+            {if config('use_subs')==1}
+                {if $category[list].parent_id == "0"}
+                    {assign var=p_name value="None"}
+                {else}
+                    {assign var=p_name value=$cbvid->get_category_field($category[list].parent_id,'category_name')}
+                {/if}
             <td>{display_clean($p_name)}</td>
+            {/if}
             <td>{if $category[list].category_desc}{display_clean($category[list].category_desc)}{else}<em>N/A</em>{/if}</td>
             <td>{lang code="{$category[list].isdefault}"}</td>
             <td>
@@ -158,8 +162,7 @@ No Category Has Been Created Yet
         var div = document.getElementById('content');
         if (div.style.display !== 'none') {
             div.style.display = 'none';
-        }
-        else {
+        } else {
             div.style.display = 'block';
         }
     };

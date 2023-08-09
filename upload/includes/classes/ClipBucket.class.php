@@ -483,7 +483,7 @@ class ClipBucket
      * @param string $type
      *
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     function get_countries($type = 'iso2'): array
     {
@@ -618,7 +618,7 @@ class ClipBucket
      * @param null $params
      *
      * @return array|void
-     * @throws Exception
+     * @throws \Exception
      */
     function head_menu($params = null)
     {
@@ -730,7 +730,7 @@ class ClipBucket
      * @param null $params
      *
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     function foot_menu($params = null)
     {

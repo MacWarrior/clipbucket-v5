@@ -13,13 +13,13 @@ if (isset($_POST['start_test'])) {
     try {
         $to_email = $_POST['to_email'];
         if (empty($to_email)) {
-            throw new Exception('Please provide a recipient email');
+            throw new \Exception('Please provide a recipient email');
         }
 
         $to_email = filter_var($to_email, FILTER_SANITIZE_EMAIL);
         $to_email = filter_var($to_email, FILTER_VALIDATE_EMAIL);
         if ($to_email === false) {
-            throw new Exception('Please provide a valid recipient email address');
+            throw new \Exception('Please provide a valid recipient email address');
         }
 
         $to_name = $_POST['to_name'];
@@ -35,7 +35,7 @@ if (isset($_POST['start_test'])) {
         $from_email = filter_var($from_email, FILTER_SANITIZE_EMAIL);
         $from_email = filter_var($from_email, FILTER_VALIDATE_EMAIL);
         if ($from_email === false) {
-            throw new Exception('Please provide a valid sender email address');
+            throw new \Exception('Please provide a valid sender email address');
         }
 
         $from_name = $_POST['from_name'];
@@ -63,12 +63,12 @@ if (isset($_POST['start_test'])) {
         } else {
             $subject = trim($_POST['subject']);
             if (empty($subject) || $subject == '') {
-                throw new Exception('Please provide test email subject');
+                throw new \Exception('Please provide test email subject');
             }
 
             $body = trim($_POST['body']);
             if (empty($body) || $body == '') {
-                throw new Exception('Please provide test email body');
+                throw new \Exception('Please provide test email body');
             }
         }
 
@@ -89,7 +89,7 @@ if (isset($_POST['start_test'])) {
             e(sprintf(lang('mail_send'), $to_email), 'm');
         }
 
-    } catch (Exception $e) {
+    } catch (\Exception $e) {
         e($e->getMessage());
     }
 }

@@ -363,7 +363,7 @@ class CBPhotos
      * @param $id
      *
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     function photo_exists($id): bool
     {
@@ -397,7 +397,7 @@ class CBPhotos
      * @param $pid
      *
      * @return bool|array
-     * @throws Exception
+     * @throws \Exception
      */
     function get_photo($pid)
     {
@@ -421,7 +421,7 @@ class CBPhotos
      * @param $p
      *
      * @return bool|mixed
-     * @throws Exception
+     * @throws \Exception
      */
     function get_photos($p)
     {
@@ -751,7 +751,7 @@ class CBPhotos
      * @param $key
      *
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     function pkey_exists($key)
     {
@@ -768,7 +768,7 @@ class CBPhotos
      *
      * @param      $id
      * @param bool $orphan
-     * @throws Exception
+     * @throws \Exception
      */
     function delete_photo($id, $orphan = false)
     {
@@ -812,7 +812,7 @@ class CBPhotos
      * Used to delete photo files
      *
      * @param $id
-     * @throws Exception
+     * @throws \Exception
      */
     function delete_photo_files($id)
     {
@@ -839,7 +839,7 @@ class CBPhotos
      * Used to delete photo from database
      *
      * @param $id
-     * @throws Exception
+     * @throws \Exception
      */
     function delete_from_db($id)
     {
@@ -860,7 +860,7 @@ class CBPhotos
      * @param $id
      *
      * @return bool|mixed
-     * @throws Exception
+     * @throws \Exception
      */
     function get_photo_owner($id)
     {
@@ -874,7 +874,7 @@ class CBPhotos
      * @param $field
      *
      * @return bool|mixed
-     * @throws Exception
+     * @throws \Exception
      */
     function get_photo_field($id, $field)
     {
@@ -951,7 +951,7 @@ class CBPhotos
      * Used to resize and watermark image
      *
      * @param $array
-     * @throws Exception
+     * @throws \Exception
      */
     function generate_photos($array)
     {
@@ -990,7 +990,7 @@ class CBPhotos
      * then encode in json and finally update photo details column
      *
      * @param $photo
-     * @throws Exception
+     * @throws \Exception
      */
     function update_image_details($photo)
     {
@@ -1250,7 +1250,7 @@ class CBPhotos
      * @param null $array
      *
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     function load_required_forms($array = null): array
     {
@@ -1433,7 +1433,7 @@ class CBPhotos
      * Update watermark file
      *
      * @param $file
-     * @throws Exception
+     * @throws \Exception
      */
     function update_watermark($file)
     {
@@ -1469,7 +1469,7 @@ class CBPhotos
      * @param null $array
      *
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     function load_other_forms($array = null): array
     {
@@ -1561,7 +1561,7 @@ class CBPhotos
      * Single update will be different.
      *
      * @param $arr
-     * @throws Exception
+     * @throws \Exception
      */
     function update_multiple_photos($arr)
     {
@@ -1655,7 +1655,7 @@ class CBPhotos
      * Update Photo
      *
      * @param null $array
-     * @throws Exception
+     * @throws \Exception
      */
     function update_photo($array = null)
     {
@@ -1812,7 +1812,7 @@ class CBPhotos
      * @param $p
      *
      * @return string|array
-     * @throws Exception
+     * @throws \Exception
      */
     function getFileSmarty($p)
     {
@@ -2005,7 +2005,7 @@ class CBPhotos
      *
      * @param      $details
      * @param null $pid
-     * @throws Exception
+     * @throws \Exception
      */
     function make_photo_orphan($details, $pid = null)
     {
@@ -2033,7 +2033,7 @@ class CBPhotos
      * @param $arr
      *
      * @return bool|mixed|null|string|string[]|void
-     * @throws Exception
+     * @throws \Exception
      */
     function upload_photo_button($arr)
     {
@@ -2231,7 +2231,7 @@ class CBPhotos
      * @param bool $force_name_email
      *
      * @return bool|mixed
-     * @throws Exception
+     * @throws \Exception
      */
     function add_comment($comment, $obj_id, $reply_to = null, $force_name_email = false)
     {
@@ -2257,7 +2257,7 @@ class CBPhotos
      * Function used to update total comments of collection
      *
      * @param $pid
-     * @throws Exception
+     * @throws \Exception
      */
     function update_total_comments($pid)
     {
@@ -2304,7 +2304,7 @@ class CBPhotos
      * @param bool $show_all
      *
      * @return bool|mixed
-     * @throws Exception
+     * @throws \Exception
      */
     function photo_voters($id, $return_array = false, $show_all = false)
     {
@@ -2341,7 +2341,7 @@ class CBPhotos
      * @param $id
      *
      * @return bool|array
-     * @throws Exception
+     * @throws \Exception
      */
     function current_rating($id)
     {
@@ -2368,7 +2368,7 @@ class CBPhotos
      * @param $rating
      *
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     function rate_photo($id, $rating): array
     {
@@ -2437,7 +2437,7 @@ class CBPhotos
      * @param $p
      *
      * @return bool|string
-     * @throws Exception
+     * @throws \Exception
      */
     function generate_embed_codes($p)
     {
@@ -2497,7 +2497,7 @@ class CBPhotos
      * @param $newArr
      *
      * @return array|void
-     * @throws Exception
+     * @throws \Exception
      */
     function photo_embed_codes($newArr)
     {
@@ -2565,7 +2565,7 @@ class CBPhotos
      *
      * @param $action
      * @param $id
-     * @throws Exception
+     * @throws \Exception
      */
     function photo_actions($action, $id)
     {

@@ -34,7 +34,7 @@ function website_logo(): string
 }
 
 /**
- * createDataFolders()
+ * create_dated_folder()
  *
  * create date folders with respect to date. so that no folder gets overloaded
  * with number of files.
@@ -46,7 +46,7 @@ function website_logo(): string
  * @internal param FOLDER $string , if set to null, sub-date-folders will be created in
  * all data folders
  */
-function createDataFolders($headFolder = null, $custom_date = null)
+function create_dated_folder($headFolder = null, $custom_date = null)
 {
     $time = time();
 
@@ -79,11 +79,6 @@ function createDataFolders($headFolder = null, $custom_date = null)
     }
 
     return apply_filters($folder, 'dated_folder');
-}
-
-function create_dated_folder($headFolder = null, $custom_date = null)
-{
-    return createDataFolders($headFolder, $custom_date);
 }
 
 function cb_create_html_tag($tag = 'p', $self_closing = false, $attrs = [], $content = null): string

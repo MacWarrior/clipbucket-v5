@@ -119,11 +119,11 @@
 							{/if}
 							<ul class="nav navbar-nav navbar-right right-menu">
 								{if user_id()}
-								{if (isSectionEnabled('videos') && (config('enable_video_file_upload') == 'yes' || config('enable_video_remote_upload') == 'yes')) || (isSectionEnabled('photos') && config('enable_photo_file_upload') == 'yes')}
+								{if (isSectionEnabled('videos') && !empty($ClipBucket->upload_opt_list)) || (isSectionEnabled('photos') && config('enable_photo_file_upload') == 'yes')}
 								<li class="dropdown upload_link">
 									<a href="{link name='upload'}" class="dropdown-toggle btn-upload btn btn-default" data-toggle="dropdown"><i class="icon-upload"></i><span>{lang code="upload"}</span><b class="icon-down-arrow"></b></a>
 									<ul role="menu" class="dropdown-menu">
-										{if has_access('allow_video_upload',true,true) && isSectionEnabled('videos') && (config('enable_video_file_upload') == 'yes' || config('enable_video_remote_upload') == 'yes')}
+										{if has_access('allow_video_upload',true,true) && isSectionEnabled('videos') && !empty($ClipBucket->upload_opt_list)}
 										<li class="up_vid"><a href="{link name='upload'}">{lang code="upload_video"}<i class="icon-video visible-xs"></i></a></li>
 										{/if}
 										{if isSectionEnabled('photos') && config('enable_photo_file_upload') == 'yes'}
@@ -137,7 +137,7 @@
 								<li class="dropdown myaccount-dd">
 									<a href="javascript:void(0);" class="user-area dropdown-toggle" data-toggle="dropdown">
 										{$user_det = $userquery->get_user_details(user_id())}
-										<img src="{$userquery->getUserThumb($user_det)}" width="35" height="35">
+										<img src="{$userquery->getUserThumb($user_det)}" width="35" height="35"/>
 										<span>{display_clean($userquery->username|truncate:15)}</span>
 									</a>
 									<ul class="dropdown-menu">

@@ -43,7 +43,7 @@ if (isset($_POST['mass_upload_video'])) {
             $file_track = $_POST[$hash . '_track'];
         }
 
-        $file_directory = createDataFolders();
+        $file_directory = create_dated_folder();
         $array = [
             'title'             => $file_title
             , 'description'     => $file_description
@@ -69,7 +69,7 @@ if (isset($_POST['mass_upload_video'])) {
             //Moving file to temp dir and Inserting in conversion queue...
             $file_name = $cbmass->move_to_temp($file_arr, $file_key);
 
-            createDataFolders(LOGS_DIR);
+            create_dated_folder(LOGS_DIR);
             $logFile = LOGS_DIR . DIRECTORY_SEPARATOR . $file_directory . DIRECTORY_SEPARATOR . $file_key . '.log';
             $log = new SLog($logFile);
 

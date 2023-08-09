@@ -21,7 +21,7 @@ class AdminTool
      *
      * @param array $condition
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     private static function getTools($condition = []): array
     {
@@ -41,7 +41,7 @@ class AdminTool
      * Change status of tool to 'in progress'
      * @param $id
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     public static function setToolInProgress($id): bool
     {
@@ -63,7 +63,7 @@ class AdminTool
      * check if tool exist and execute the function stored in database
      * @param $id
      * @return false|void
-     * @throws Exception
+     * @throws \Exception
      */
     public static function launch($id)
     {
@@ -82,7 +82,7 @@ class AdminTool
     /**
      * return all tools
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     public static function getAllTools(): array
     {
@@ -93,7 +93,7 @@ class AdminTool
      * Return an admin tool by his id
      * @param $id
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     public static function getToolById($id): array
     {
@@ -138,7 +138,7 @@ class AdminTool
      * Find videos which don't have thumbs and generate them
      * @param $id_tool
      * @return void
-     * @throws Exception
+     * @throws \Exception
      */
     public static function generateMissingThumbs($id_tool)
     {
@@ -152,7 +152,7 @@ class AdminTool
      * check videos to change to castable status if needed
      * @param $id_tool
      * @return void
-     * @throws Exception
+     * @throws \Exception
      */
     public static function updateCastableStatus($id_tool)
     {
@@ -165,7 +165,7 @@ class AdminTool
      * check videos to change to castable status if needed
      * @param $id_tool
      * @return void
-     * @throws Exception
+     * @throws \Exception
      */
     public static function updateBitsColor($id_tool)
     {
@@ -178,7 +178,7 @@ class AdminTool
      * check videos duration
      * @param $id_tool
      * @return void
-     * @throws Exception
+     * @throws \Exception
      */
     public static function updateVideoDuration($id_tool)
     {
@@ -191,7 +191,7 @@ class AdminTool
      * check videos duration
      * @param $id_tool
      * @return void
-     * @throws Exception
+     * @throws \Exception
      */
     public static function updateDataBaseVersion($id_tool)
     {
@@ -210,7 +210,7 @@ class AdminTool
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public static function resetCache($id_tool)
     {
@@ -220,7 +220,7 @@ class AdminTool
     /**
      * @param $id_tool
      * @return void
-     * @throws Exception
+     * @throws \Exception
      */
     public static function resetVideoLog($id_tool)
     {
@@ -248,7 +248,7 @@ class AdminTool
      * @param $function
      * @param $stop_on_error
      * @return void
-     * @throws Exception
+     * @throws \Exception
      */
     private static function executeTool($id_tool, $array, $function, $stop_on_error = false)
     {
@@ -269,7 +269,7 @@ class AdminTool
                 //call function
                 try {
                     call_user_func($function, $item);
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     e(lang($e->getMessage()));
                     if ($stop_on_error) {
                         break;
@@ -287,7 +287,7 @@ class AdminTool
      * Set status to false in order to stop function execution at the next iteration
      * @param $id_tool
      * @return false|void
-     * @throws Exception
+     * @throws \Exception
      */
     public static function stop($id_tool)
     {

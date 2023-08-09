@@ -92,7 +92,7 @@ class cbactions
 
     /**
      * Function used to add content to favorites
-     * @throws Exception
+     * @throws \Exception
      */
     function add_to_fav($id)
     {
@@ -133,7 +133,7 @@ class cbactions
      * @param null $uid
      *
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     function fav_check($id, $uid = null): bool
     {
@@ -172,7 +172,7 @@ class cbactions
      * Function used to report a content
      *
      * @param $id
-     * @throws Exception
+     * @throws \Exception
      */
     function report_it($id)
     {
@@ -202,7 +202,7 @@ class cbactions
      * Function used to delete flags
      *
      * @param $id
-     * @throws Exception
+     * @throws \Exception
      */
     function delete_flags($id)
     {
@@ -218,7 +218,7 @@ class cbactions
      * @param $id
      *
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     function report_check($id): bool
     {
@@ -236,7 +236,7 @@ class cbactions
      *
      * @param $id
      *
-     * @throws Exception
+     * @throws \Exception
      */
     function share_content($id)
     {
@@ -296,7 +296,7 @@ class cbactions
      * @param $params
      *
      * @return array|bool
-     * @throws Exception
+     * @throws \Exception
      */
     function get_favorites($params)
     {
@@ -333,7 +333,7 @@ class cbactions
 
     /**
      * Function used to count total favorites only
-     * @throws Exception
+     * @throws \Exception
      */
     function total_favorites()
     {
@@ -346,7 +346,7 @@ class cbactions
      *
      * @param      $fav_id
      * @param null $uid
-     * @throws Exception
+     * @throws \Exception
      */
     function remove_favorite($fav_id, $uid = null)
     {
@@ -368,7 +368,7 @@ class cbactions
      * @param null $limit
      *
      * @return array|bool
-     * @throws Exception
+     * @throws \Exception
      */
     function get_flagged_objects($limit = null)
     {
@@ -388,7 +388,7 @@ class cbactions
      * @param $id
      *
      * @return array|bool
-     * @throws Exception
+     * @throws \Exception
      */
     function get_flags($id)
     {
@@ -402,7 +402,7 @@ class cbactions
 
     /**
      * Function used to count object flags
-     * @throws Exception
+     * @throws \Exception
      */
     function count_flagged_objects(): int
     {
@@ -529,7 +529,7 @@ class cbactions
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     function create_playlist($params)
     {
@@ -559,7 +559,7 @@ class cbactions
 
     /**
      * Function used to check weather playlist already exists or not
-     * @throws Exception
+     * @throws \Exception
      */
     function playlist_exists($name, $user, $type = null): bool
     {
@@ -577,7 +577,7 @@ class cbactions
 
     /**
      * Function used to get playlist
-     * @throws Exception
+     * @throws \Exception
      */
     function get_playlist($id, $user = null)
     {
@@ -641,7 +641,7 @@ class cbactions
 
     /**
      * Function used to add new item in playlist
-     * @throws Exception
+     * @throws \Exception
      */
     function add_playlist_item($pid, $id)
     {
@@ -692,7 +692,7 @@ class cbactions
 
     /**
      * Function use to delete playlist item
-     * @throws Exception
+     * @throws \Exception
      */
     function delete_playlist_item($id)
     {
@@ -767,7 +767,7 @@ class cbactions
 
     /**
      * Function used to check weather playlist item exists or not
-     * @throws Exception
+     * @throws \Exception
      */
     function playlist_item($id, $join_playlist = false)
     {
@@ -817,7 +817,7 @@ class cbactions
      * @param null $pid
      *
      * @return bool|array
-     * @throws Exception
+     * @throws \Exception
      */
     function playlist_item_with_obj($id, $pid = null)
     {
@@ -837,7 +837,7 @@ class cbactions
      * Function used to update playlist details
      *
      * @param null $array
-     * @throws Exception
+     * @throws \Exception
      */
     function edit_playlist($array = null)
     {
@@ -916,7 +916,7 @@ class cbactions
 
     /**
      * Function used to delete playlist
-     * @throws Exception
+     * @throws \Exception
      */
     function delete_playlist($id)
     {
@@ -936,7 +936,7 @@ class cbactions
 
     /**
      * Function used to get playlists
-     * @throws Exception
+     * @throws \Exception
      */
     function get_playlists($params = [])
     {
@@ -1067,7 +1067,7 @@ class cbactions
 
     /**
      * this method has been deprecated
-     * @throws Exception
+     * @throws \Exception
      */
     function get_playlists_no_more_cb26()
     {
@@ -1088,7 +1088,7 @@ class cbactions
      * @param PID playlistid
      *
      * @return array Array
-     * @throws Exception
+     * @throws \Exception
      */
     function getPlaylistThumb($pid)
     {
@@ -1119,7 +1119,7 @@ class cbactions
      * @param int $limit
      *
      * @return array|bool
-     * @throws Exception
+     * @throws \Exception
      */
     function get_playlist_items($playlist_id, $order = null, $limit = -1)
     {
@@ -1138,7 +1138,7 @@ class cbactions
      * @param $id
      *
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     function count_playlist_items($id)
     {
@@ -1152,7 +1152,7 @@ class cbactions
      * @param bool $item
      *
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     function count_total_playlist($item = false)
     {

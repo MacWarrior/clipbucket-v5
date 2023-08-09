@@ -51,7 +51,7 @@ class userquery extends CBCategory
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     function init()
     {
@@ -219,7 +219,7 @@ class userquery extends CBCategory
      * @param bool $remember
      *
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     function login_user($username, $password, $remember = false): bool
     {
@@ -319,7 +319,7 @@ class userquery extends CBCategory
      * @param bool $verify_logged_user
      *
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     function login_check($access = null, $check_only = false, $verify_logged_user = true)
     {
@@ -391,7 +391,7 @@ class userquery extends CBCategory
      * @param bool $redirect
      *
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     function logincheck($access = null, $redirect = true): bool
     {
@@ -412,7 +412,7 @@ class userquery extends CBCategory
      * @param $pass
      *
      * @return bool|array
-     * @throws Exception
+     * @throws \Exception
      */
     function get_user_with_pass($username, $pass)
     {
@@ -427,7 +427,7 @@ class userquery extends CBCategory
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     function get_user_id($username)
     {
@@ -446,7 +446,7 @@ class userquery extends CBCategory
      * @param $uid
      *
      * @return mixed
-     * @throws Exception
+     * @throws \Exception
      */
     function is_banned($uid)
     {
@@ -462,7 +462,7 @@ class userquery extends CBCategory
      * @param $check_only bool if true, after checking user will be redirected to login page if needed
      *
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     function admin_login_check($check_only = false): bool
     {
@@ -478,7 +478,7 @@ class userquery extends CBCategory
     //This Function Is Used to Logout
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     function logout($page = 'login.php')
     {
@@ -503,7 +503,7 @@ class userquery extends CBCategory
      *
      * @param $uid
      *
-     * @throws Exception
+     * @throws \Exception
      */
     function delete_user($uid)
     {
@@ -555,7 +555,7 @@ class userquery extends CBCategory
      * Remove all user subscriptions
      *
      * @param $uid
-     * @throws Exception
+     * @throws \Exception
      */
     function remove_user_subscriptions($uid)
     {
@@ -574,7 +574,7 @@ class userquery extends CBCategory
      * Remove all user subscribers
      *
      * @param $uid
-     * @throws Exception
+     * @throws \Exception
      */
     function remove_user_subscribers($uid)
     {
@@ -590,7 +590,7 @@ class userquery extends CBCategory
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     function user_exists($id, $global = false): bool
     {
@@ -617,7 +617,7 @@ class userquery extends CBCategory
      * @param bool $email
      *
      * @return bool|STRING
-     * @throws Exception
+     * @throws \Exception
      */
     function get_user_details($id = null, $checksess = false, $email = false)
     {
@@ -656,7 +656,7 @@ class userquery extends CBCategory
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     function activate_user_with_avcode($user, $avcode)
     {
@@ -687,7 +687,7 @@ class userquery extends CBCategory
      *
      * @param : $usenrma,$email or $userid
      *
-     * @throws Exception
+     * @throws \Exception
      */
     function send_activation_code($email)
     {
@@ -723,7 +723,7 @@ class userquery extends CBCategory
      * @param      $user
      * @param bool $update_email_status
      *
-     * @throws Exception
+     * @throws \Exception
      */
     function send_welcome_email($user, $update_email_status = false)
     {
@@ -756,7 +756,7 @@ class userquery extends CBCategory
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     function change_password($array)
     {
@@ -788,7 +788,7 @@ class userquery extends CBCategory
      * @param $uid
      * @param $fid
      *
-     * @throws Exception
+     * @throws \Exception
      */
     function add_contact($uid, $fid)
     {
@@ -839,7 +839,7 @@ class userquery extends CBCategory
      * @param $fid
      *
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     function is_confirmed_friend($uid, $fid): bool
     {
@@ -859,7 +859,7 @@ class userquery extends CBCategory
      * @param $fid
      *
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     function is_friend($uid, $fid): bool
     {
@@ -881,7 +881,7 @@ class userquery extends CBCategory
      * @param null $confirm
      *
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     function is_requested_friend($uid, $fid, $type = 'out', $confirm = null): bool
     {
@@ -911,7 +911,7 @@ class userquery extends CBCategory
      * @param      $rid
      * @param bool $msg
      *
-     * @throws Exception
+     * @throws \Exception
      */
     function confirm_friend($uid, $rid, $msg = true)
     {
@@ -982,7 +982,7 @@ class userquery extends CBCategory
      * @param      $rid
      * @param null $uid
      *
-     * @throws Exception
+     * @throws \Exception
      */
     function confirm_request($rid, $uid = null)
     {
@@ -1015,7 +1015,7 @@ class userquery extends CBCategory
      * @param null $type
      *
      * @return array|bool
-     * @throws Exception
+     * @throws \Exception
      */
     function get_contacts($uid, $group = 0, $confirmed = null, $count_only = false, $type = null)
     {
@@ -1056,7 +1056,7 @@ class userquery extends CBCategory
      * @param bool $count_only
      *
      * @return array|bool
-     * @throws Exception
+     * @throws \Exception
      */
     function get_pending_contacts($uid, $group = 0, $count_only = false)
     {
@@ -1083,7 +1083,7 @@ class userquery extends CBCategory
      * Function used to remove user from contact list
      * @param $fid {id of friend that user wants to remove}
      * @param $uid {id of user who is removing other from friendlist}
-     * @throws Exception
+     * @throws \Exception
      */
     function remove_contact($fid, $uid = null)
     {
@@ -1105,7 +1105,7 @@ class userquery extends CBCategory
      * Function used to increas user total_watched field
      *
      * @param $userid
-     * @throws Exception
+     * @throws \Exception
      */
     function increment_watched_vides($userid)
     {
@@ -1118,7 +1118,7 @@ class userquery extends CBCategory
      *
      * @param      $to
      * @param null $user
-     * @throws Exception
+     * @throws \Exception
      */
     function subscribe_user($to, $user = null)
     {
@@ -1164,7 +1164,7 @@ class userquery extends CBCategory
      * @param null $user
      *
      * @return array|bool
-     * @throws Exception
+     * @throws \Exception
      */
     function is_subscribed($to, $user = null)
     {
@@ -1191,7 +1191,7 @@ class userquery extends CBCategory
      * @param null $uid
      *
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     function remove_subscription($subid, $uid = null): bool
     {
@@ -1216,7 +1216,7 @@ class userquery extends CBCategory
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     function unsubscribe_user($subid, $uid = null)
     {
@@ -1230,7 +1230,7 @@ class userquery extends CBCategory
      * @param bool $count
      *
      * @return array|bool
-     * @throws Exception
+     * @throws \Exception
      */
     function get_user_subscribers($id, $count = false)
     {
@@ -1253,7 +1253,7 @@ class userquery extends CBCategory
      * @param null $limit
      *
      * @return array|bool
-     * @throws Exception
+     * @throws \Exception
      */
     function get_user_subscribers_detail($id, $limit = null)
     {
@@ -1272,7 +1272,7 @@ class userquery extends CBCategory
      * @param null $limit
      *
      * @return array|bool
-     * @throws Exception
+     * @throws \Exception
      */
     function get_user_subscriptions($id, $limit = null)
     {
@@ -1413,7 +1413,7 @@ class userquery extends CBCategory
     //FUNCTION USED TO UPDATE LAST ACTIVE FOR OF USER
     // @ Param : username
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     function UpdateLastActive($username)
     {
@@ -1431,7 +1431,7 @@ class userquery extends CBCategory
      * @param null $uid
      *
      * @return string
-     * @throws Exception
+     * @throws \Exception
      */
     function getUserThumb($udetails, $size = '', $uid = null): string
     {
@@ -1537,7 +1537,7 @@ class userquery extends CBCategory
      * @param $field
      *
      * @return bool|array
-     * @throws Exception
+     * @throws \Exception
      */
     function get_user_field($uid, $field)
     {
@@ -1577,7 +1577,7 @@ class userquery extends CBCategory
      * @param bool $is_level
      *
      * @return bool|mixed
-     * @throws Exception
+     * @throws \Exception
      */
     function get_user_level($uid, $is_level = false)
     {
@@ -1609,7 +1609,7 @@ class userquery extends CBCategory
      * @param : filter
      *
      * @return array|bool
-     * @throws Exception
+     * @throws \Exception
      */
     function get_levels($filter = null)
     {
@@ -1628,7 +1628,7 @@ class userquery extends CBCategory
      * @param : level_id INT
      *
      * @return bool|int
-     * @throws Exception
+     * @throws \Exception
      */
     function get_level_details($lid)
     {
@@ -1650,7 +1650,7 @@ class userquery extends CBCategory
      * @param string $fields
      *
      * @return array|int
-     * @throws Exception
+     * @throws \Exception
      */
     function get_level_users($id, $count = false, $fields = 'level')
     {
@@ -1672,7 +1672,7 @@ class userquery extends CBCategory
 
     /**
      * Function used to add user level
-     * @throws Exception
+     * @throws \Exception
      */
     function add_user_level($array)
     {
@@ -1704,7 +1704,7 @@ class userquery extends CBCategory
      * @param $id
      *
      * @return bool|array
-     * @throws Exception
+     * @throws \Exception
      */
     function get_level_permissions($id)
     {
@@ -1744,7 +1744,7 @@ class userquery extends CBCategory
      * Function used to update user level
      * @param INT level_id
      * @param ARRAY perm_level
-     * @throws Exception
+     * @throws \Exception
      */
     function update_user_level($id, $array): bool
     {
@@ -1787,7 +1787,7 @@ class userquery extends CBCategory
     /**
      * Function used to delete user levels
      * @param INT level_id
-     * @throws Exception
+     * @throws \Exception
      */
     function delete_user_level($id): bool
     {
@@ -1812,7 +1812,7 @@ class userquery extends CBCategory
 
     /**
      * Function used to count total video comments
-     * @throws Exception
+     * @throws \Exception
      */
     function count_profile_comments($id)
     {
@@ -1822,7 +1822,7 @@ class userquery extends CBCategory
 
     /**
      * Function used to update user comments count
-     * @throws Exception
+     * @throws \Exception
      */
     function update_comments_count($id)
     {
@@ -1833,7 +1833,7 @@ class userquery extends CBCategory
 
     /**
      * Function used to add comment on users profile
-     * @throws Exception
+     * @throws \Exception
      */
     function add_comment($comment, $obj_id, $reply_to = null, $type = 'c')
     {
@@ -1864,7 +1864,7 @@ class userquery extends CBCategory
 
     /**
      * Function used to remove video comment
-     * @throws Exception
+     * @throws \Exception
      */
     function delete_comment($cid, $is_reply = false)
     {
@@ -1886,7 +1886,7 @@ class userquery extends CBCategory
      * @param bool $myacc
      *
      * @return array|bool|int
-     * @throws Exception
+     * @throws \Exception
      */
     function get_user_vids($uid, $cond = null, $count_only = false, $myacc = false)
     {
@@ -1938,7 +1938,7 @@ class userquery extends CBCategory
      * @param $udetails
      *
      * @return string
-     * @throws Exception
+     * @throws \Exception
      */
     function profile_link($udetails): string
     {
@@ -1968,7 +1968,7 @@ class userquery extends CBCategory
      * @param null $type
      *
      * @return array|bool
-     * @throws Exception
+     * @throws \Exception
      */
     function get_permissions($type = null)
     {
@@ -1998,7 +1998,7 @@ class userquery extends CBCategory
      * @param bool $silent
      *
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     function perm_check($access = '', $check_login = false, $control_page = true, $silent = false): bool
     {
@@ -2043,7 +2043,7 @@ class userquery extends CBCategory
      * @param $uid
      *
      * @return bool|array
-     * @throws Exception
+     * @throws \Exception
      */
     function get_user_profile($uid)
     {
@@ -2062,7 +2062,7 @@ class userquery extends CBCategory
      * @param $default
      *
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     function load_profile_fields($default): array
     {
@@ -2082,7 +2082,7 @@ class userquery extends CBCategory
      * Function used to update use details
      *
      * @param $array
-     * @throws Exception
+     * @throws \Exception
      */
     function update_user($array)
     {
@@ -2397,7 +2397,7 @@ class userquery extends CBCategory
      * Function used to update user avatar and background only
      *
      * @param $array
-     * @throws Exception
+     * @throws \Exception
      */
     function update_user_avatar_bg($array)
     {
@@ -2553,7 +2553,7 @@ class userquery extends CBCategory
      * @param $i
      *
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     function username_exists($i)
     {
@@ -2567,7 +2567,7 @@ class userquery extends CBCategory
      * @param $i
      *
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     function email_exists($i): bool
     {
@@ -2601,7 +2601,7 @@ class userquery extends CBCategory
      * @param null $limit
      *
      * @return array|bool
-     * @throws Exception
+     * @throws \Exception
      */
     function get_user_action_log($uid, $limit = null)
     {
@@ -2725,7 +2725,7 @@ class userquery extends CBCategory
     * Get number of all unread messages of a user using his userid
     */
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     function get_unread_msgs($userid, $label = false)
     {
@@ -2805,7 +2805,7 @@ class userquery extends CBCategory
      * Function used to change email
      *
      * @param $array
-     * @throws Exception
+     * @throws \Exception
      */
     function change_email($array)
     {
@@ -2832,7 +2832,7 @@ class userquery extends CBCategory
      * @param null $uid
      *
      * @return void
-     * @throws Exception
+     * @throws \Exception
      */
     function block_users($users, $uid = null)
     {
@@ -2840,7 +2840,7 @@ class userquery extends CBCategory
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     function ban_users($users, $uid = null)
     {
@@ -2872,7 +2872,7 @@ class userquery extends CBCategory
      * Function used to ban single user
      *
      * @param $user
-     * @throws Exception
+     * @throws \Exception
      */
     function ban_user($user)
     {
@@ -2910,7 +2910,7 @@ class userquery extends CBCategory
      * @param null $banned_users
      *
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     function is_user_banned($ban, $user = null, $banned_users = null): bool
     {
@@ -2941,7 +2941,7 @@ class userquery extends CBCategory
      * @param null $uid
      *
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     function get_user_details_with_profile($uid = null): array
     {
@@ -2955,7 +2955,7 @@ class userquery extends CBCategory
 
     /**
      * @throws \PHPMailer\PHPMailer\Exception
-     * @throws Exception
+     * @throws \Exception
      */
     function load_signup_fields($input = null): array
     {
@@ -3194,7 +3194,7 @@ class userquery extends CBCategory
      * @param bool $send_signup_email
      *
      * @return bool|mixed
-     * @throws Exception
+     * @throws \Exception
      */
     function signup_user($array = null, $send_signup_email = true)
     {
@@ -3469,7 +3469,7 @@ class userquery extends CBCategory
      * @param bool $force_admin
      *
      * @return array|bool|int|void
-     * @throws Exception
+     * @throws \Exception
      */
     function get_users($params = null, $force_admin = false)
     {
@@ -3815,7 +3815,7 @@ class userquery extends CBCategory
      * @param bool $count
      *
      * @return array|bool
-     * @throws Exception
+     * @throws \Exception
      */
     function get_online_users($group = true, $count = false)
     {
@@ -3850,7 +3850,7 @@ class userquery extends CBCategory
      * @param bool $realtime
      *
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     function login_as_user($id, $realtime = false): bool
     {
@@ -4015,7 +4015,7 @@ class userquery extends CBCategory
      * Function used to delete user videos
      *
      * @param $uid
-     * @throws Exception
+     * @throws \Exception
      */
     function delete_user_vids($uid)
     {
@@ -4034,7 +4034,7 @@ class userquery extends CBCategory
      * Function used to remove user contacts
      *
      * @param $uid
-     * @throws Exception
+     * @throws \Exception
      */
     function remove_contacts($uid)
     {
@@ -4054,7 +4054,7 @@ class userquery extends CBCategory
      *
      * @param        $uid
      * @param string $box
-     * @throws Exception
+     * @throws \Exception
      */
     function remove_user_pms($uid, $box = 'both')
     {
@@ -4094,7 +4094,7 @@ class userquery extends CBCategory
      * @param string $uploadsTimeSpan
      *
      * @return bool|array
-     * @throws Exception
+     * @throws \Exception
      */
     function getSubscriptionsUploadsWeek($uid, $limit = 20, $uploadsType = 'both', $uploadsTimeSpan = 'this_week')
     {
@@ -4197,7 +4197,7 @@ class userquery extends CBCategory
      * @param null $uid
      *
      * @return bool|void
-     * @throws Exception
+     * @throws \Exception
      */
     function setProfileItem($id, $type = 'v', $uid = null)
     {
@@ -4246,7 +4246,7 @@ class userquery extends CBCategory
      * @param null $uid
      *
      * @return bool|void
-     * @throws Exception
+     * @throws \Exception
      */
     function removeProfileItem($uid = null)
     {
@@ -4273,7 +4273,7 @@ class userquery extends CBCategory
      * @param bool $withDetails
      *
      * @return bool|mixed|STRING
-     * @throws Exception
+     * @throws \Exception
      */
     function getProfileItem($uid = null, $withDetails = false)
     {
@@ -4327,7 +4327,7 @@ class userquery extends CBCategory
      * @param null $uid
      *
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     function isProfileItem($id, $type = 'v', $uid = null): bool
     {
@@ -4345,7 +4345,7 @@ class userquery extends CBCategory
      * @param $default
      *
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     function load_personal_details($default): array
     {
@@ -4441,7 +4441,7 @@ class userquery extends CBCategory
      * @param $default
      *
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     function load_location_fields($default): array
     {
@@ -4485,7 +4485,7 @@ class userquery extends CBCategory
      * @param $default
      *
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     function load_education_interests($default): array
     {
@@ -4594,7 +4594,7 @@ class userquery extends CBCategory
      * @param $default
      *
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     function load_privacy_field($default): array
     {
@@ -4661,7 +4661,7 @@ class userquery extends CBCategory
      *
      * @param $default array values for channel settings
      * @return array of channel info fields
-     * @throws Exception
+     * @throws \Exception
      */
     function load_channel_settings($default): array
     {
@@ -4764,7 +4764,7 @@ class userquery extends CBCategory
      * in Clipbucket v2.1 , video fields are loaded in form of groups arrays
      * each group has it name and fields wrapped in array
      * and that array will be part of video fields
-     * @throws Exception
+     * @throws \Exception
      */
     function load_user_fields($default, $type = 'all')
     {
@@ -4887,7 +4887,7 @@ class userquery extends CBCategory
      * @param $rating
      *
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     function rate_user($id, $rating): array
     {
@@ -4954,7 +4954,7 @@ class userquery extends CBCategory
      * @param $id
      *
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     function current_rating($id)
     {
@@ -4992,7 +4992,7 @@ class userquery extends CBCategory
      * @param bool $updateStatus
      *
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     function sendSubscriptionEmail($vidDetails, $updateStatus = true): bool
     {
@@ -5058,7 +5058,7 @@ class userquery extends CBCategory
 
     /**
      * function used to get user sessions
-     * @throws Exception
+     * @throws \Exception
      */
     function get_sessions()
     {
@@ -5077,7 +5077,7 @@ class userquery extends CBCategory
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     function update_user_voted($array, $userid = null)
     {
@@ -5134,7 +5134,7 @@ class userquery extends CBCategory
      * @param : { integer } { $user } { id of user to fetch requests against }
      *
      * @return array : { array } { $data } { array with all sent requests details }
-     * @throws Exception
+     * @throws \Exception
      * @author : Saqib Razzaq
      * @since : 15th April, 2016, ClipBucket 2.8.1
      */
@@ -5150,7 +5150,7 @@ class userquery extends CBCategory
      * @param : { integer } { $user } { id of user to fetch requests against }
      *
      * @return array : { array } { $data } { array with all recieved requests details }
-     * @throws Exception
+     * @throws \Exception
      * @author : Saqib Razzaq
      * @since : 15th April, 2016, ClipBucket 2.8.1
      */
@@ -5166,7 +5166,7 @@ class userquery extends CBCategory
      * @param : { integer } { $user } { id of user to fetch friends against }
      *
      * @return array : { array } { $data } { array with all friends details }
-     * @throws Exception
+     * @throws \Exception
      * @author : Saqib Razzaq
      * @since : 15th April, 2016, ClipBucket 2.8.1
      */
@@ -5183,7 +5183,7 @@ class userquery extends CBCategory
      * @param $channel_user
      *
      * @return string : { string } { s = sent, r = recieved, f = friends }
-     * @throws Exception
+     * @throws \Exception
      */
     function friendship_status($logged_in_user, $channel_user): string
     {

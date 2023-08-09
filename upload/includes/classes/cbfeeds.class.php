@@ -158,7 +158,7 @@ class cbfeeds
      * @param $user
      *
      * @return array|bool
-     * @throws Exception
+     * @throws \Exception
      */
     function getUserFeeds($user)
     {

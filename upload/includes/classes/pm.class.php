@@ -8,7 +8,7 @@ define('CB_PM_MAX_INBOX', 500); // 0 - OFF , U - Unlimited
  * @param array => 'attachment_video'
  *
  * @return string|void
- * @throws Exception
+ * @throws \Exception
  */
 function attach_video($array)
 {
@@ -156,7 +156,7 @@ class cb_pm
      * @param $sender
      *
      * @return bool|string
-     * @throws Exception
+     * @throws \Exception
      */
     function check_users($input, $sender)
     {
@@ -240,7 +240,7 @@ class cb_pm
      * @param $uid
      *
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     function is_reply($id, $uid): bool
     {
@@ -259,7 +259,7 @@ class cb_pm
      * @param $id
      *
      * @return bool|array
-     * @throws Exception
+     * @throws \Exception
      */
     function get_message($id)
     {
@@ -278,7 +278,7 @@ class cb_pm
      * @param $mid
      * @param null $uid
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     function get_inbox_message($mid, $uid = null)
     {
@@ -301,7 +301,7 @@ class cb_pm
      * @param $mid
      * @param null $uid
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     function get_outbox_message($mid, $uid = null)
     {

@@ -9,7 +9,7 @@
 */
 
 /**
- * @throws Exception
+ * @throws \Exception
  */
 function get_global_announcement()
 {
@@ -22,7 +22,7 @@ function get_global_announcement()
 }
 
 /**
- * @throws Exception
+ * @throws \Exception
  */
 function update_announcement($text)
 {
