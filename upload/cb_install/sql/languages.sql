@@ -1664,4 +1664,7 @@ VALUES ('friend_requests'),
        ('confirm_delete_subtitle_file'),
        ('video_subtitles_deleted_num'),
        ('video_subtitle_management'),
-       ('waiting');
+       ('waiting'),
+       ('option_enable_country'),
+       ('option_enable_gender'),
+       ('option_enable_user_category');
