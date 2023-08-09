@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"206",
+  "revision":"208",
   "status":"dev",
   "detail":[
     {
@@ -65,6 +65,7 @@
         ,"Implement video waiting conversion status"
         ,"Add new options to reduce personnal informations"
         ,"Fix SQL error on user category page"
+        ,"Fix category display when sub-categories is disabled"
       ]
     },
     {
