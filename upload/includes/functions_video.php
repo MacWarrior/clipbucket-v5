@@ -1539,11 +1539,11 @@ function resString($res)
 
 /**
  * @param $data
- * @param Clipbucket_db $db
+ * @param bool $regenerate
  * @return void
- * @throws \Exception
+ * @throws Exception
  */
-function generatingMoreThumbs($data)
+function generatingMoreThumbs($data, bool $regenerate = false)
 {
     global $db;
     $vid_file = get_high_res_file($data);
@@ -1555,7 +1555,11 @@ function generatingMoreThumbs($data)
     $ffmpeg->input_file = $vid_file;
     $ffmpeg->file_directory = $data['file_directory'];
     $ffmpeg->file_name = $data['file_name'];
-    $ffmpeg->generateAllThumbs();
+    if ($regenerate) {
+        $ffmpeg->generateAllThumbs();
+    } else {
+        $ffmpeg->generateAllMissingThumbs();
+    }
 
     e(lang('video_thumbs_regenerated'), 'm');
     $db->update(tbl('video'), ['thumbs_version'], [VERSION], ' file_name = \'' . $data['file_name'] . '\'');

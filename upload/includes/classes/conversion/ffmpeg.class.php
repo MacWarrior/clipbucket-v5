@@ -724,22 +724,7 @@ class FFMpeg
         }
 
         //reset default thumb
-        $db->update(tbl('video'), ['default_thumb'], [1], ' videoid = ' . mysql_clean($videoid));
-
-        foreach ($thumbs_res_settings as $key => $thumbs_size) {
-            $height_setting = $thumbs_size[1];
-            $width_setting = $thumbs_size[0];
-
-            if ($key == 'original') {
-                $thumbs_settings['dim'] = $key;
-                $thumbs_settings['size_tag'] = $key;
-            } else {
-                $thumbs_settings['dim'] = $width_setting . 'x' . $height_setting;
-                $thumbs_settings['size_tag'] = $width_setting . 'x' . $height_setting;
-            }
-
-            $this->generateThumbs($thumbs_settings);
-        }
+        $this->generateDefaultsThumbs($db, $videoid, $thumbs_res_settings, $thumbs_settings);
     }
 
     /**
@@ -805,6 +790,37 @@ class FFMpeg
         } else {
             $TempLogData = PHP_EOL . ' ERROR while generating thumbs with num : ' . $num;
             $this->log->writeLine($TempLogData, true);
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function generateAllMissingThumbs()
+    {
+        global $db;
+        $thumbs_res_settings = thumbs_res_settings_28();
+
+        $thumbs_settings = [];
+        $thumbs_settings['duration'] = $this->input_details['duration'];
+        $thumbs_settings['num'] = config('num_thumbs');
+        $rs = $db->select(tbl('video'), '*', 'file_name LIKE \'' . $this->file_name . '\'');
+        if (!empty($rs)) {
+            $video_details = $rs[0];
+            $videoid = $rs[0]['videoid'];
+        } else {
+            $video_details = null;
+            e(lang('technical_error'));
+            $videoid = 0;
+        }
+        $thumbs_settings['videoid'] = $videoid;
+
+        $thumbs = get_thumb($video_details, true);
+        //si rien en base
+        if (empty($thumbs) || $thumbs[0] == default_thumb()) {
+            $db->delete(tbl('video_thumbs'), ['videoid'], [$videoid]);
+            //generate default thumb
+            $this->generateDefaultsThumbs($db, $videoid, $thumbs_res_settings, $thumbs_settings);
         }
     }
 
@@ -987,5 +1003,33 @@ class FFMpeg
         }
 
         return $max_resolution;
+    }
+
+    /**
+     * @param Clipbucket_db $db
+     * @param $videoid
+     * @param array $thumbs_res_settings
+     * @param array $thumbs_settings
+     * @return void
+     * @throws Exception
+     */
+    public function generateDefaultsThumbs(Clipbucket_db $db, $videoid, array $thumbs_res_settings, array $thumbs_settings)
+    {
+        $db->update(tbl('video'), ['default_thumb'], [1], ' videoid = ' . mysql_clean($videoid));
+
+        foreach ($thumbs_res_settings as $key => $thumbs_size) {
+            $height_setting = $thumbs_size[1];
+            $width_setting = $thumbs_size[0];
+
+            if ($key == 'original') {
+                $thumbs_settings['dim'] = $key;
+                $thumbs_settings['size_tag'] = $key;
+            } else {
+                $thumbs_settings['dim'] = $width_setting . 'x' . $height_setting;
+                $thumbs_settings['size_tag'] = $width_setting . 'x' . $height_setting;
+            }
+
+            $this->generateThumbs($thumbs_settings);
+        }
     }
 }

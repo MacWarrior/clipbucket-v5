@@ -6,7 +6,7 @@ $userquery->admin_login_check();
 
 # Generating more thumbs
 $data = get_video_details($_POST['videoid']);
-generatingMoreThumbs($data);
+generatingMoreThumbs($data, true);
 if ($_POST['origin'] == 'edit_video') {
     $thumb_mini_list = return_thumb_mini_list($data);
     ob_start();
