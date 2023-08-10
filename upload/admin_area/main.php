@@ -15,7 +15,7 @@ if (@$_GET['msg']) {
     $msg = mysql_clean($_GET['msg']);
 }
 
-$opt_list = $Upload->load_upload_options();
+$opt_list = $Upload->get_upload_options();
 
 assign('opt_list', $opt_list);
 assign('post_max_size', ini_get('post_max_size'));

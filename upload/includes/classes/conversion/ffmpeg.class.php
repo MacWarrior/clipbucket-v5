@@ -331,7 +331,10 @@ class FFMpeg
         $this->unLock();
     }
 
-    private function extract_subtitles()
+    /**
+     * @throws Exception
+     */
+    public function extract_subtitles()
     {
         global $cbvideo, $db;
 
@@ -377,7 +380,7 @@ class FFMpeg
         }
     }
 
-    private function get_eligible_resolutions(): array
+    public function get_eligible_resolutions(): array
     {
         global $myquery;
         $resolutions = $myquery->getEnabledVideoResolutions();
@@ -826,52 +829,48 @@ class FFMpeg
 
     public static function get_track_infos(string $filepath, string $type): array
     {
-        $stats = stat($filepath);
-        if ($stats && is_array($stats)) {
-            $json = shell_exec(config('ffprobe_path') . ' -i "' . $filepath . '" -loglevel panic -print_format json -show_entries stream 2>&1');
-            $tracks_json = json_decode($json, true)['streams'];
-            $data = [];
-            foreach ($tracks_json as $track) {
-                if ($track['codec_type'] != $type) {
-                    continue;
-                }
-
-                if (!isset($track['tags'])) {
-                    continue;
-                }
-
-                $map_id = $track['index'];
-                $tags = $track['tags'];
-
-                if (!isset($tags['language']) && !isset($tags['LANGUAGE']) && !isset($tags['title'])) {
-                    continue;
-                }
-
-                $title = '';
-                if (isset($tags['language'])) {
-                    $title .= $tags['language'];
-                } else {
-                    if (isset($tags['LANGUAGE'])) {
-                        $title .= $tags['LANGUAGE'];
-                    }
-                }
-
-                if (isset($tags['title'])) {
-                    if (!empty($title)) {
-                        $title .= ' : ';
-                    }
-                    $title .= $tags['title'];
-                }
-
-                $data[$map_id]['title'] = $title;
-                if (isset($track['codec_name'])) {
-                    $data[$map_id]['codec_name'] = $track['codec_name'];
-                }
-
+        $json = shell_exec(config('ffprobe_path') . ' -i "' . $filepath . '" -loglevel panic -print_format json -show_entries stream 2>&1');
+        $tracks_json = json_decode($json, true)['streams'];
+        $data = [];
+        foreach ($tracks_json as $track) {
+            if ($track['codec_type'] != $type) {
+                continue;
             }
-            return $data;
+
+            if (!isset($track['tags'])) {
+                continue;
+            }
+
+            $map_id = $track['index'];
+            $tags = $track['tags'];
+
+            if (!isset($tags['language']) && !isset($tags['LANGUAGE']) && !isset($tags['title'])) {
+                continue;
+            }
+
+            $title = '';
+            if (isset($tags['language'])) {
+                $title .= $tags['language'];
+            } else {
+                if (isset($tags['LANGUAGE'])) {
+                    $title .= $tags['LANGUAGE'];
+                }
+            }
+
+            if (isset($tags['title'])) {
+                if (!empty($title)) {
+                    $title .= ' : ';
+                }
+                $title .= $tags['title'];
+            }
+
+            $data[$map_id]['title'] = $title;
+            if (isset($track['codec_name'])) {
+                $data[$map_id]['codec_name'] = $track['codec_name'];
+            }
+
         }
-        return [];
+        return $data;
     }
 
     public static function get_track_title(string $filepath, string $type)

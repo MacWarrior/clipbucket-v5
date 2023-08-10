@@ -8,7 +8,7 @@ $userquery->logincheck('allow_video_upload', true);
 
 subtitle('upload');
 
-if( empty($ClipBucket->upload_opt_list) ) {
+if( empty($Upload->get_upload_options()) ) {
     e('Video upload is disabled');
     $Cbucket->show_page = false;
     display_it();
@@ -22,21 +22,6 @@ if (isset($_POST['submit_data'])) {
         $step = 2;
     }
 }
-
-if (isset($_POST['submit_upload'])) {
-    $file_directory = create_dated_folder(null, $_REQUEST['time_stamp']);
-
-    $vid = $Upload->submit_upload();
-    $Upload->do_after_video_upload($vid);
-
-    if (!error()) {
-        e('Video has been Embeded succesfully ..', 'm');
-        $step = 3;
-    }
-}
-
-//assigning Form Name [RECOMMEND for submitting purpose]
-assign('upload_form_name', 'UploadForm');
 
 //Adding Uploading JS Files
 add_js(['swfupload/swfupload.js' => 'uploadactive']);

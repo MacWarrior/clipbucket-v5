@@ -2,7 +2,7 @@
 define('THIS_PAGE', 'ajax');
 
 include('../includes/config.inc.php');
-require_once(dirname(dirname(__FILE__)) . '/includes/classes/sLog.php');
+require_once(dirname(__FILE__, 2) . '/includes/classes/sLog.php');
 global $Cbucket, $cbvid, $Upload, $db, $eh;
 
 $mode = '';

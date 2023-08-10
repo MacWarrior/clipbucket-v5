@@ -38,6 +38,12 @@ if (file_exists(dirname(__FILE__) . '/../files/temp/development.dev')) {
     if (php_sapi_name() != 'cli') {
         $whoops = new \Whoops\Run;
         $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
+
+        // Keep errors in php errors log file
+        $whoops->pushHandler(function($e){
+            error_log($e->getMessage().PHP_EOL.$e->getTraceAsString());
+        });
+
         $whoops->register();
     }
 } else {
@@ -400,7 +406,7 @@ Assign('languages', (isset($languages)) ? $languages : false);
 
 Assign('VIDEOS_URL', VIDEOS_URL);
 Assign('THUMBS_URL', THUMBS_URL);
-Assign('PLUG_URL', '/plugins');
+Assign('PLUG_URL', PLUG_URL);
 
 #Remote and Embed
 Assign('remoteUpload', $row['remoteUpload']);
@@ -423,16 +429,14 @@ $ClipBucket->upload_opt_list = [];
 if (config('enable_video_file_upload') == 'yes') {
     $ClipBucket->upload_opt_list['file_upload_div'] = [
         'title'      => lang('upload_file'),
-        'func_class' => 'Upload',
-        'load_func'  => 'enable_video_file_upload'
+        'function'  => 'enable_video_file_upload'
     ];
 }
 
 if (config('enable_video_remote_upload') == 'yes') {
     $ClipBucket->upload_opt_list['remote_upload_div'] = [
         'title'      => lang('remote_upload'),
-        'func_class' => 'Upload',
-        'load_func'  => 'enable_video_remote_upload'
+        'function'  => 'enable_video_remote_upload'
     ];
 }
 

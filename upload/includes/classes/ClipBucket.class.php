@@ -1,12 +1,4 @@
 <?php
-
-/**
- * @ Author Arslan Hassan
- * @ License : Attribution Assurance License -- http://www.opensource.org/licenses/attribution.php
- * @ Class : CLipBucket Class
- * @ date : 12 MARCH 2009
- * @ Version : v1.8
- */
 class ClipBucket
 {
     var $BASEDIR;
@@ -35,7 +27,6 @@ class ClipBucket
     var $template = "";
     var $cbinfo = [];
     var $search_types = [];
-    var $theUploaderDetails = [];
 
     /**
      * All Functions that are called
@@ -66,6 +57,9 @@ class ClipBucket
     //This array contains the public pages name for private access to website 
     var $public_pages = ["signup", "view_page"];
 
+    /**
+     * @throws Exception
+     */
     function __construct()
     {
         global $pages;
@@ -252,6 +246,9 @@ class ClipBucket
         ksort($Cbucket->AdminMenu);
     }
 
+    /**
+     * @throws Exception
+     */
     function initAdminMenu()
     {
         global $userquery;
@@ -470,6 +467,7 @@ class ClipBucket
 
     /**
      * Function used to assign ClipBucket configurations
+     * @throws Exception
      */
     function get_configs()
     {
@@ -636,6 +634,9 @@ class ClipBucket
         }
     }
 
+    /**
+     * @throws Exception
+     */
     function cbMenu($params = null)
     {
         $this->head_menu($params);
@@ -729,7 +730,7 @@ class ClipBucket
      *
      * @param null $params
      *
-     * @return array
+     * @return array|void
      * @throws \Exception
      */
     function foot_menu($params = null)

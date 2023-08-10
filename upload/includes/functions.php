@@ -932,9 +932,16 @@ function avatar($param)
 function load_form($param)
 {
     $func = $param['name'];
+    $class = $param['function_class'] ?? '';
+    if( !empty($class) && method_exists($class, $func) ){
+        return $class::$func($param);
+    }
+
     if (function_exists($func)) {
         return $func($param);
     }
+
+    error_log('Unknown method : '.$func.' for class : '.$class);
 }
 
 /**

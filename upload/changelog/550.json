@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"212",
+  "revision":"213",
   "status":"dev",
   "detail":[
     {
@@ -96,6 +96,7 @@
         ,"Refactor SQL debug"
         ,"Fix Smarty error handling compatibility for PHP 8.1+"
         ,"Catch email sending with a wrong email configuration"
+        ,"Update form field generator"
       ]
     },
     {
@@ -123,6 +124,7 @@
         ,"Change user's background storage"
         ,"Fix Whoops handling CLI errors"
         ,"Implement Redis cache"
+        ,"Fix PHP errors not displayed in error file"
       ]
     },
     {
@@ -179,11 +181,12 @@
   ,{
       "title":"Plugin",
       "description":[
-        "Update Editor's Pick to 2.0.2",
-        "Update Global Announcement to 2.0.1",
-        "Update CB Server Thumb to 2.0.0",
-        "Implement plugin compatibility check",
-        "Update plugin management interface"
+        "Update Editor's Pick to 2.0.2"
+        ,"Update Global Announcement to 2.0.1"
+        ,"Update CB Server Thumb to 2.0.0"
+        ,"Implement plugin compatibility check"
+        ,"Update plugin management interface"
+        ,"Refactor custom_video_file_funcs"
       ]
     },
     {

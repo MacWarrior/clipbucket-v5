@@ -11,7 +11,7 @@ class Upload
      *
      * @param null $array
      * @param bool $is_upload
-     * @throws \PHPMailer\PHPMailer\Exception
+     * @throws \PHPMailer\PHPMailer\Exception|Exception
      */
     function validate_video_upload_form($array = null, $is_upload = false)
     {
@@ -62,201 +62,199 @@ class Upload
         $this->validate_video_upload_form($array, true);
 
         $errors = $eh->get_error();
-        if (empty($errors)) {
-            $required_fields = $this->loadRequiredFields($array);
-            $location_fields = $this->loadLocationFields($array);
-            $option_fields = $this->loadOptionFields($array);
-            $empty_fields = [
-                'voter_ids'
-                , 'featured_description'
-            ];
+        if( !empty($errors) ){
+            return false;
+        }
 
-            $upload_fields = array_merge($required_fields, $location_fields, $option_fields);
-            //Adding Custom Upload Fields
-            if (count($this->custom_upload_fields) > 0) {
-                $upload_fields = array_merge($upload_fields, $this->custom_upload_fields);
-            }
-            //Adding Custom Form Fields
-            if (count($this->custom_form_fields) > 0) {
-                $upload_fields = array_merge($upload_fields, $this->custom_form_fields);
-            }
-
-            $userid = user_id();
-            if (!$userid) {
-                if (has_access('allow_video_upload', true, false)) {
-                    $userid = $userquery->get_anonymous_user();
-                } else {
-                    return false;
-                }
-            } else if (!has_access('allow_video_upload', true, true)) {
+        $userid = user_id();
+        if (!$userid) {
+            if (has_access('allow_video_upload', true, false)) {
+                $userid = $userquery->get_anonymous_user();
+            } else {
+                e(lang('you_not_logged_in'));
                 return false;
             }
+        } else if (!has_access('allow_video_upload', true, true)) {
+            e(lang('insufficient_privileges'));
+            return false;
+        }
 
-            if (is_array($_FILES)) {
-                $array = array_merge($array, $_FILES);
+        $required_fields = $this->loadRequiredFields($array);
+        $location_fields = $this->loadLocationFields($array);
+        $option_fields = $this->loadOptionFields($array);
+        $empty_fields = [
+            'voter_ids'
+            , 'featured_description'
+        ];
+
+        $upload_fields = array_merge($required_fields, $location_fields, $option_fields);
+        //Adding Custom Upload Fields
+        if (count($this->custom_upload_fields) > 0) {
+            $upload_fields = array_merge($upload_fields, $this->custom_upload_fields);
+        }
+        //Adding Custom Form Fields
+        if (count($this->custom_form_fields) > 0) {
+            $upload_fields = array_merge($upload_fields, $this->custom_form_fields);
+        }
+
+        if (is_array($_FILES)) {
+            $array = array_merge($array, $_FILES);
+        }
+
+        foreach ($upload_fields as $field) {
+            $name = formObj::rmBrackets($field['name']);
+            $val = $array[$name];
+
+            if ($field['use_func_val']) {
+                $val = $field['validate_function']($val);
             }
 
-            foreach ($upload_fields as $field) {
-                $name = formObj::rmBrackets($field['name']);
-                $val = $array[$name];
-
-                if ($field['use_func_val']) {
-                    $val = $field['validate_function']($val);
-                }
-
-                if (!empty($field['db_field'])) {
-                    $query_field[] = $field['db_field'];
-                }
-
-                if (is_array($val)) {
-                    $new_val = '';
-                    foreach ($val as $v) {
-                        $new_val .= '#' . $v . '# ';
-                    }
-                    $val = $new_val;
-                }
-
-                if (!$field['clean_func'] || (!apply_func($field['clean_func'], $val) && !is_array($field['clean_func']))) {
-                    $val = mysql_clean($val);
-                } else {
-                    $val = apply_func($field['clean_func'], mysql_clean($val));
-                }
-
-                if (empty($val) && !empty($field['default_value'])) {
-                    $val = $field['default_value'];
-                }
-
-                if (!empty($field['db_field'])) {
-                    $query_val[] = $val;
-                }
+            if (!empty($field['db_field'])) {
+                $query_field[] = $field['db_field'];
             }
 
-            //Adding Video Code
-            $query_field[] = 'file_name';
-            $file_name = mysql_clean($array['file_name']);
-            $query_val[] = $file_name;
+            if (is_array($val)) {
+                $new_val = '';
+                foreach ($val as $v) {
+                    $new_val .= '#' . $v . '# ';
+                }
+                $val = $new_val;
+            }
 
-            //Adding Video Key
-            $query_field[] = 'videokey';
-            $query_val[] = $this->video_keygen();
-
-            if (!isset($array['file_directory']) && isset($array['time_stamp'])) {
-                $query_field[] = 'file_directory';
-                $file_directory = create_dated_folder(null, $array['time_stamp']);
-                $query_val[] = $file_directory;
+            if (!$field['clean_func'] || (!apply_func($field['clean_func'], $val) && !is_array($field['clean_func']))) {
+                $val = mysql_clean($val);
             } else {
-                if (isset($array['file_directory'])) {
-                    $query_field[] = 'file_directory';
-                    $file_directory = mysql_clean($array['file_directory']);
-                    $query_val[] = $file_directory;
-                }
+                $val = apply_func($field['clean_func'], mysql_clean($val));
             }
 
-            //Userid
-            $query_field[] = 'userid';
-
-            if (!$array['userid']) {
-                $query_val[] = $userid;
-            } else {
-                $query_val[] = $array['userid'];
+            if (empty($val) && !empty($field['default_value'])) {
+                $val = $field['default_value'];
             }
 
-            if (isset($array['serverUrl'])) {
-                $query_field[] = 'file_thumbs_path';
-                $query_val[] = $array['thumbsUrl'];
-            }
-
-            //video_version
-            $query_field[] = 'video_version';
-            $query_val[] = VERSION;
-
-            //thumbs_version
-            $query_field[] = 'thumbs_version';
-            $query_val[] = VERSION;
-
-            //Upload Ip
-            $query_field[] = 'uploader_ip';
-            $query_val[] = $_SERVER['REMOTE_ADDR'];
-
-            //Setting Activation Option
-            $query_field[] = 'active';
-            $query_val[] = config('activation') == 0 ? 'yes' : 'no';
-
-            $query_field[] = 'date_added';
-            $query_val[] = dateNow();
-
-            if (config('stay_mp4') == 'yes') {
-                $query_field[] = 'status';
-                $query_val[] = 'Successful';
-            }
-
-            foreach ($empty_fields as $field) {
-                $query_field[] = $field;
-                $query_val[] = '';
-            }
-
-            $query = 'INSERT INTO ' . tbl('video') . ' (';
-            $total_fields = count($query_field);
-
-            //Adding Fields to query
-            $i = 0;
-            foreach ($query_field as $qfield) {
-                $i++;
-                $query .= $qfield;
-                if ($i < $total_fields) {
-                    $query .= ',';
-                }
-            }
-
-            $query .= ') VALUES (';
-
-            $i = 0;
-            $query_val[0] = str_replace('&lt;!--', '', $query_val[0]);
-            $query_val[1] = str_replace('&lt;!--', '', $query_val[1]);
-
-            //Adding Fields Values to query
-            foreach ($query_val as $qval) {
-                $i++;
-                $query .= "'$qval'";
-                if ($i < $total_fields) {
-                    $query .= ',';
-                }
-            }
-
-            //Finalizing Query
-            $query .= ')';
-
-            if (!user_id() && !has_access('allow_video_upload', false, false)) {
-                e(lang('you_not_logged_in'));
-            } else {
-                $insert_id = file_name_exists($file_name);
-                if (!$insert_id) {
-                    $db->execute($query);
-                    $insert_id = $db->insert_id();
-
-                    //logging Upload
-                    $log_array = [
-                        'success'       => 'yes',
-                        'action_obj_id' => $insert_id,
-                        'userid'        => $userid,
-                        'details'       => $array['title']
-                    ];
-                    insert_log('Uploaded a video', $log_array);
-
-                    $db->update(tbl('users'), ['total_videos'], ['|f|total_videos+1'], ' userid=\'' . $userid . '\'');
-                }
-
-                //Adding Video Feed
-                addFeed([
-                    'action'    => 'upload_video',
-                    'object_id' => $insert_id,
-                    'object'    => 'video'
-                ]);
-                return $insert_id;
+            if (!empty($field['db_field'])) {
+                $query_val[] = $val;
             }
         }
 
+        //Adding Video Code
+        $query_field[] = 'file_name';
+        $file_name = mysql_clean($array['file_name']);
+        $query_val[] = $file_name;
 
+        //Adding Video Key
+        $query_field[] = 'videokey';
+        $query_val[] = $this->video_keygen();
+
+        if (!isset($array['file_directory']) && isset($array['time_stamp'])) {
+            $query_field[] = 'file_directory';
+            $file_directory = create_dated_folder(null, $array['time_stamp']);
+            $query_val[] = $file_directory;
+        } else {
+            if (isset($array['file_directory'])) {
+                $query_field[] = 'file_directory';
+                $file_directory = mysql_clean($array['file_directory']);
+                $query_val[] = $file_directory;
+            }
+        }
+
+        //Userid
+        $query_field[] = 'userid';
+
+        if (!$array['userid']) {
+            $query_val[] = $userid;
+        } else {
+            $query_val[] = $array['userid'];
+        }
+
+        if (isset($array['serverUrl'])) {
+            $query_field[] = 'file_thumbs_path';
+            $query_val[] = $array['thumbsUrl'];
+        }
+
+        //video_version
+        $query_field[] = 'video_version';
+        $query_val[] = VERSION;
+
+        //thumbs_version
+        $query_field[] = 'thumbs_version';
+        $query_val[] = VERSION;
+
+        //Upload Ip
+        $query_field[] = 'uploader_ip';
+        $query_val[] = $_SERVER['REMOTE_ADDR'];
+
+        //Setting Activation Option
+        $query_field[] = 'active';
+        $query_val[] = config('activation') == 0 ? 'yes' : 'no';
+
+        $query_field[] = 'date_added';
+        $query_val[] = dateNow();
+
+        if (config('stay_mp4') == 'yes') {
+            $query_field[] = 'status';
+            $query_val[] = 'Successful';
+        }
+
+        foreach ($empty_fields as $field) {
+            $query_field[] = $field;
+            $query_val[] = '';
+        }
+
+        $query = 'INSERT INTO ' . tbl('video') . ' (';
+        $total_fields = count($query_field);
+
+        //Adding Fields to query
+        $i = 0;
+        foreach ($query_field as $qfield) {
+            $i++;
+            $query .= $qfield;
+            if ($i < $total_fields) {
+                $query .= ',';
+            }
+        }
+
+        $query .= ') VALUES (';
+
+        $i = 0;
+        $query_val[0] = str_replace('&lt;!--', '', $query_val[0]);
+        $query_val[1] = str_replace('&lt;!--', '', $query_val[1]);
+
+        //Adding Fields Values to query
+        foreach ($query_val as $qval) {
+            $i++;
+            $query .= "'$qval'";
+            if ($i < $total_fields) {
+                $query .= ',';
+            }
+        }
+
+        //Finalizing Query
+        $query .= ')';
+
+        $insert_id = file_name_exists($file_name);
+        if (!$insert_id) {
+            $db->execute($query);
+            $insert_id = $db->insert_id();
+
+            //logging Upload
+            $log_array = [
+                'success'       => 'yes',
+                'action_obj_id' => $insert_id,
+                'userid'        => $userid,
+                'details'       => $array['title']
+            ];
+            insert_log('Uploaded a video', $log_array);
+
+            $db->update(tbl('users'), ['total_videos'], ['|f|total_videos+1'], ' userid=\'' . $userid . '\'');
+        }
+
+        //Adding Video Feed
+        addFeed([
+            'action'    => 'upload_video',
+            'object_id' => $insert_id,
+            'object'    => 'video'
+        ]);
+        return $insert_id;
     }
 
     /**
@@ -744,16 +742,10 @@ class Upload
     /**
      * Function used to load upload form
      */
-    function load_upload_options(): array
+    function get_upload_options(): array
     {
-        global $Cbucket, $Smarty;
-        $opt_list = $Cbucket->upload_opt_list;
-
-        foreach ($opt_list as $opt) {
-            $Smarty->register_function($opt['load_func'], $opt['load_func']);
-        }
-
-        return $opt_list;
+        global $Cbucket;
+        return $Cbucket->upload_opt_list;
     }
 
     /**

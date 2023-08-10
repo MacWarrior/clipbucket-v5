@@ -29,9 +29,9 @@ if (!function_exists('cb_video_js'))
 
         if (!is_array($video_play)){
             assign('video_files',[$video_play]);
-            return false;
+        } else {
+            assign('video_files', $video_play);
         }
-        assign('video_files', $video_play);
 
 		if(!strstr($in['width'],"%")){
 			$in['width'] = $in['width'].'px';
@@ -73,8 +73,7 @@ if (!function_exists('cb_video_js'))
 	* This Function is written to set default resolution for cb_vjs_player
 	*/
 	function get_cbvjs_quality_type($video_files, $file_type){
-		if ($video_files)
-		{
+		if ($video_files) {
             $res = [];
             foreach ($video_files as $file) {
                 $res[] = get_cbvjs_quality($file, $file_type);

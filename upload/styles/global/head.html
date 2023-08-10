@@ -46,12 +46,6 @@
     callURLParser();
 </script>
 
-<!-- Including Plugin Headers -->
-{foreach key=file item=type from=$Cbucket->header_files}
-    {include_header file=$file type=$type}
-{/foreach}
-<!-- Ending Plugin Headers -->
-
 {if $smarty.const.THIS_PAGE == 'upload'}
 
 <script type="text/javascript">

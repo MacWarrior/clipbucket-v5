@@ -1,4 +1,5 @@
 <?php
+define('THIS_PAGE', 'edit_video');
 global $userquery, $pages, $Upload, $eh, $myquery, $cbvid;
 require_once '../includes/admin_config.php';
 

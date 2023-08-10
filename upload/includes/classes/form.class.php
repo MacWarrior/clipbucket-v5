@@ -387,6 +387,16 @@ class formObj
                 $field_name = $field['name'] . '[]';
             }
 
+            $class = '';
+            if (!empty($field['class'])) {
+                $class = ' class="' . $field['class'] . '"';
+            }
+
+            $title = '';
+            if (!empty($field['title'])) {
+                $title = ' title="' . $field['title'] . '"';
+            }
+
             if ($field['wrapper_class']) {
                 echo '<div class="' . $field['wrapper_class'] . '">';
             }
@@ -396,7 +406,7 @@ class formObj
                 $label_class = 'class="' . $field['label_class'] . '"';
             }
 
-            echo '<label ' . $label_class . '> <input name="' . $field_name . '" type="radio" value="' . $key . '" ' . $field_id . ' ' . $checked . ' ' . $field['extra_tags'] . '>' . $value . '</label>';
+            echo '<label ' . $label_class . '> <input name="' . $field_name . '" type="radio" value="' . $key . '" ' . $field_id . ' ' . $class . ' ' . $title . ' ' . $checked . ' ' . $field['extra_tags'] . '>' . $value . '</label>';
 
             if ($field['wrapper_class']) {
                 echo '</div>';
