@@ -1,31 +1,22 @@
 <?php
-
 class FFMpeg
 {
-    public /*string*/
-        $conversion_type = '';
-    public /*string*/
-        $file_directory = '';
-    public /*string*/
-        $file_name = '';
-    public /*string*/
-        $lock_file = '';
-    public /*string*/
-        $input_file = '';
-    public /*int*/
-        $audio_track = -1;
-    public /*array*/
-        $input_details = [];
-    public /*array*/
-        $output_details = [];
-    public /*SLog*/
-        $log;
-    public /*string*/
-        $output_dir = '';
-    public /*string*/
-        $output_file = '';
-    public /*array*/
-        $video_files = [];
+    public $conversion_type = '';
+    public $file_directory = '';
+    public $file_name = '';
+    public $lock_file = '';
+    public $input_file = '';
+    public $audio_track = -1;
+    public $input_details = [];
+    public $output_details = [];
+    public $log;
+    public $output_dir = '';
+    public $output_file = '';
+    public $video_files = [];
+
+    private $start_time;
+    private $end_time;
+    private $total_time;
 
     public function __construct(SLog $log)
     {
@@ -131,11 +122,6 @@ class FFMpeg
         return $info;
     }
 
-    function log($name, $value)
-    {
-        $this->log .= $name . ' : ' . $value . PHP_EOL;
-    }
-
     /**
      * Function used to start log
      */
@@ -213,9 +199,10 @@ class FFMpeg
         $this->total_time = round(($this->end_time - $this->start_time), 4);
     }
 
-    function isLocked($num = 1): bool
+    function isLocked(): bool
     {
-        for ($i = 0; $i < $num; $i++) {
+        $max_conversion = config('max_conversion');
+        for ($i = 0; $i < $max_conversion; $i++) {
             $conv_file = TEMP_DIR . '/conv_lock' . $i . '.loc';
             if (!file_exists($conv_file)) {
                 $this->lock_file = $conv_file;
@@ -235,99 +222,97 @@ class FFMpeg
         }
     }
 
+    /**
+     * @throws Exception
+     */
     function ClipBucket()
     {
-        //We will now add a loop that will check weather
-        while (true) {
-            if ($this->isLocked(config('max_conversion'))) {
-                // Prevent video_convert action to use 100% cpu while waiting for queued videos to end conversion
-                sleep(5);
-                continue;
-            }
-
-            update_video_status($this->file_name, 'Processing');
-
-            $this->start_time_check();
-            $this->start_log();
-            $this->prepare();
-
-            $max_duration = config('max_video_duration') * 60;
-            if ($this->input_details['duration'] > $max_duration) {
-                $max_duration_seconds = $max_duration / 60;
-                $log = 'Video duration was ' . $this->input_details['duration'] . ' minutes and Max video duration is ' . $max_duration_seconds . ' minutes, Therefore Video cancelled' . PHP_EOL;
-                $log .= 'Conversion_status : failed' . PHP_EOL;
-                $log .= 'Failed Reason : Max Duration Configurations' . PHP_EOL;
-                $this->log->writeLine('Max Duration configs', $log, true);
-                break;
-            }
-
-            $log = '';
-            if (file_exists($this->input_file)) {
-
-                try {
-                    $this->generateAllThumbs();
-                } catch (\Exception $e) {
-                    $log .= PHP_EOL . 'Error Occured : ' . $e->getMessage() . PHP_EOL;
-                }
-
-                $log .= PHP_EOL . '====== End : Thumbs Generation =======' . PHP_EOL;
-            } else {
-                $log .= 'Input file is missing ; no thumbs generation !' . PHP_EOL;
-            }
-
-            $this->log->writeLine('Thumbs Generation', $log, true);
-
-            if (config('extract_subtitles')) {
-                $this->extract_subtitles();
-            }
-
-            $resolutions = $this->get_eligible_resolutions();
-
-            $log = '';
-
-            if (!empty($resolutions)) {
-                switch ($this->conversion_type) {
-                    default:
-                        $this->conversion_type = 'mp4';
-                    case 'mp4':
-                        $ext = getExt($this->input_file);
-                        if (config('stay_mp4') == 'yes' && $ext == 'mp4') {
-                            $resolution = $this->get_max_resolution_from_file();
-                            $this->video_files[] = $resolution;
-
-                            $this->output_file = $this->output_dir . $this->file_name . '-' . $resolution . '.' . $this->conversion_type;
-                            copy($this->input_file, $this->output_file);
-                            break;
-                        }
-
-                        foreach ($resolutions as $res) {
-                            $this->convert_mp4($res);
-                        }
-                        break;
-
-                    case 'hls':
-                        $this->convert_hls($resolutions);
-                        break;
-                }
-            } else {
-                $log = '<b>No video resolution available for conversion</b>' . PHP_EOL;
-                $log .= '<i>(Video resolution is lower than the lowest resolution enabled)</i>' . PHP_EOL;
-            }
-
-            $this->end_time_check();
-            $this->total_time();
-
-            $log .= 'Time Took : ' . $this->total_time . ' seconds' . PHP_EOL;
-
-            if (file_exists($this->output_file) && filesize($this->output_file) > 0) {
-                $log .= 'Conversion_status : completed';
-            } else {
-                $log .= 'Conversion_status : failed';
-            }
-
-            $this->log->writeLine('Conversion Completed', $log, true);
-            break;
+        while($this->isLocked()){
+            // Prevent video_convert action to use 100% cpu while waiting for queued videos to end conversion
+            sleep(5);
         }
+
+        update_video_status($this->file_name, 'Processing');
+
+        $this->start_time_check();
+        $this->start_log();
+        $this->prepare();
+
+        $max_duration = config('max_video_duration') * 60;
+        if ($this->input_details['duration'] > $max_duration) {
+            $max_duration_seconds = $max_duration / 60;
+            $log = 'Video duration was ' . $this->input_details['duration'] . ' minutes and Max video duration is ' . $max_duration_seconds . ' minutes, Therefore Video cancelled' . PHP_EOL;
+            $log .= 'Conversion_status : failed' . PHP_EOL;
+            $log .= 'Failed Reason : Max Duration Configurations' . PHP_EOL;
+            $this->log->writeLine('Max Duration configs', $log, true);
+            $this->unLock();
+            return;
+        }
+
+        $log = '';
+        if (file_exists($this->input_file)) {
+            try {
+                $this->generateAllThumbs();
+            } catch (\Exception $e) {
+                $log .= PHP_EOL . 'Error Occured : ' . $e->getMessage() . PHP_EOL;
+            }
+
+            $log .= PHP_EOL . '====== End : Thumbs Generation =======' . PHP_EOL;
+        } else {
+            $log .= 'Input file is missing ; no thumbs generation !' . PHP_EOL;
+        }
+
+        $this->log->writeLine('Thumbs Generation', $log, true);
+
+        if (config('extract_subtitles')) {
+            $this->extract_subtitles();
+        }
+
+        $resolutions = $this->get_eligible_resolutions();
+
+        $log = '';
+
+        if (!empty($resolutions)) {
+            switch ($this->conversion_type) {
+                default:
+                    $this->conversion_type = 'mp4';
+                case 'mp4':
+                    $ext = getExt($this->input_file);
+                    if (config('stay_mp4') == 'yes' && $ext == 'mp4') {
+                        $resolution = $this->get_max_resolution_from_file();
+                        $this->video_files[] = $resolution;
+
+                        $this->output_file = $this->output_dir . $this->file_name . '-' . $resolution . '.' . $this->conversion_type;
+                        copy($this->input_file, $this->output_file);
+                        break;
+                    }
+
+                    foreach ($resolutions as $res) {
+                        $this->convert_mp4($res);
+                    }
+                    break;
+
+                case 'hls':
+                    $this->convert_hls($resolutions);
+                    break;
+            }
+        } else {
+            $log = '<b>No video resolution available for conversion</b>' . PHP_EOL;
+            $log .= '<i>(Video resolution is lower than the lowest resolution enabled)</i>' . PHP_EOL;
+        }
+
+        $this->end_time_check();
+        $this->total_time();
+
+        $log .= 'Time Took : ' . $this->total_time . ' seconds' . PHP_EOL;
+
+        if (file_exists($this->output_file) && filesize($this->output_file) > 0) {
+            $log .= 'Conversion_status : completed';
+        } else {
+            $log .= 'Conversion_status : failed';
+        }
+
+        $this->log->writeLine('Conversion Completed', $log, true);
         $this->unLock();
     }
 

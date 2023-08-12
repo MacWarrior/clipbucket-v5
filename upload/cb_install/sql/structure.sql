@@ -660,7 +660,6 @@ CREATE TABLE `{tbl_prefix}video` (
   `downloads` bigint(255) NOT NULL DEFAULT 0,
   `uploader_ip` varchar(20) NOT NULL DEFAULT '',
   `unique_embed_code` varchar(50) NOT NULL DEFAULT '',
-  `remote_play_url` text NULL DEFAULT NULL,
   `video_files` tinytext NULL DEFAULT NULL,
   `server_ip` varchar(20) NOT NULL DEFAULT '',
   `file_server_path` text NULL DEFAULT NULL,

@@ -10,7 +10,7 @@ $pages->page_redir();
 
 $breadcrumb[0] = ['title' => lang('tool_box'), 'url' => ''];
 $breadcrumb[1] = ['title' => lang('admin_tool'), 'url' => ADMIN_BASEURL . '/admin_tool.php'];
-AdminTool::sendClientResponseAndContinue(function () {
+sendClientResponseAndContinue(function () {
     if (!empty($_GET['id_tool'])) {
         AdminTool::setToolInProgress($_GET['id_tool']);
     }

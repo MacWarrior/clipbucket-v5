@@ -235,3 +235,37 @@ function showDevWitch()
     $file = BASEDIR . '/styles/global/devmode.html';
     Template($file, false);
 }
+
+/**
+ * Send respond to execute ajax return and continue execution
+ * @param $callback
+ * @param bool $ajax
+ */
+function sendClientResponseAndContinue($callback, $ajax = true)
+{
+    ob_end_clean();
+    ignore_user_abort(true);
+
+    ob_start();
+
+    header("Connection: close\r\n");
+    header("Content-Encoding: none\r\n");
+
+    $callback();
+
+    $size = ob_get_length();
+    header("Content-Length: $size");
+
+    // Flush all output.
+    ob_end_flush();
+    ob_flush();
+    flush();
+
+    // Close current session (if it exists).
+    if (session_id()) {
+        session_write_close();
+    }
+    if ($ajax) {
+        fastcgi_finish_request();
+    }
+}

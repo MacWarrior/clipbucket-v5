@@ -9,7 +9,7 @@ $userquery->logincheck('allow_video_upload', true);
 subtitle('upload');
 
 if( empty($Upload->get_upload_options()) ) {
-    e('Video upload is disabled');
+    e(lang('video_upload_disabled'));
     $Cbucket->show_page = false;
     display_it();
     die();

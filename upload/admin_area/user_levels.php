@@ -1,14 +1,7 @@
 <?php
-/**
- * @author : Arslan Hassan
- * @software : ClipBucket
- * @since : June 20 2009
- * @License : Attribution Assurance License -- http://www.opensource.org/licenses/attribution.php
- * @URI : http://clip-bucket.com
- */
-
-#Including Maing file and checking user level
+define('THIS_PAGE', 'user_levels');
 require_once '../includes/admin_config.php';
+global $userquery, $pages, $Cbucket;
 $userquery->admin_login_check();
 $userquery->login_check('admin_access');
 $pages->page_redir();
@@ -18,10 +11,9 @@ global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('users'), 'url' => ''];
 $breadcrumb[1] = ['title' => 'User Levels', 'url' => ADMIN_BASEURL . '/user_levels.php'];
 
-
 if (!has_access('allow_manage_user_level') && $userquery->udetails['level'] != 1) {
     $Cbucket->show_page = false;
-    e("You are not allowed to manage user levels");
+    e('You are not allowed to manage user levels');
 }
 
 $mode = $_GET['mode'];
@@ -72,6 +64,6 @@ switch ($mode) {
         break;
 }
 
-subtitle("User levels");
+subtitle('User levels');
 template_files('user_levels.html');
 display_it();

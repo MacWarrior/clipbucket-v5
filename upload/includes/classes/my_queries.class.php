@@ -936,7 +936,7 @@ class myquery
         $id = mysql_clean($id);
         switch ($action) {
             case 'delete':
-                $db->execute('DELETE FROM ' . tbl('conversion_queue') . 'WHERE cqueue_id =\''.mysql_clean($id).'\'');
+                $db->execute('DELETE FROM ' . tbl('conversion_queue') . ' WHERE cqueue_id =\''.mysql_clean($id).'\'');
                 break;
             case 'processed':
                 $db->update(tbl('conversion_queue'), ['cqueue_conversion'], ['yes'], 'cqueue_id =\''.mysql_clean($id).'\'');

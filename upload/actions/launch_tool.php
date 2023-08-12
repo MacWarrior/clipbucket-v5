@@ -5,7 +5,7 @@ global $userquery;
 
 $userquery->admin_login_check();
 
-AdminTool::sendClientResponseAndContinue(function () {
+sendClientResponseAndContinue(function () {
     AdminTool::setToolInProgress($_POST['id_tool']);
     echo json_encode([
         'msg'              => getTemplateMsg()

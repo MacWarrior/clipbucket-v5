@@ -121,10 +121,8 @@ class Upload
                 $val = $new_val;
             }
 
-            if (!$field['clean_func'] || (!apply_func($field['clean_func'], $val) && !is_array($field['clean_func']))) {
-                $val = mysql_clean($val);
-            } else {
-                $val = apply_func($field['clean_func'], mysql_clean($val));
+            if( !empty($field['clean_func']) && !apply_func($field['clean_func'], $val) ){
+                $val = apply_func($field['clean_func'], $val);
             }
 
             if (empty($val) && !empty($field['default_value'])) {
@@ -140,10 +138,6 @@ class Upload
         $query_field[] = 'file_name';
         $file_name = mysql_clean($array['file_name']);
         $query_val[] = $file_name;
-
-        //Adding Video Key
-        $query_field[] = 'videokey';
-        $query_val[] = $this->video_keygen();
 
         if (!isset($array['file_directory']) && isset($array['time_stamp'])) {
             $query_field[] = 'file_directory';
@@ -190,50 +184,23 @@ class Upload
         $query_field[] = 'date_added';
         $query_val[] = dateNow();
 
-        if (config('stay_mp4') == 'yes') {
-            $query_field[] = 'status';
-            $query_val[] = 'Successful';
-        }
-
         foreach ($empty_fields as $field) {
             $query_field[] = $field;
             $query_val[] = '';
         }
 
-        $query = 'INSERT INTO ' . tbl('video') . ' (';
-        $total_fields = count($query_field);
-
-        //Adding Fields to query
-        $i = 0;
-        foreach ($query_field as $qfield) {
-            $i++;
-            $query .= $qfield;
-            if ($i < $total_fields) {
-                $query .= ',';
-            }
-        }
-
-        $query .= ') VALUES (';
-
-        $i = 0;
-        $query_val[0] = str_replace('&lt;!--', '', $query_val[0]);
-        $query_val[1] = str_replace('&lt;!--', '', $query_val[1]);
-
-        //Adding Fields Values to query
-        foreach ($query_val as $qval) {
-            $i++;
-            $query .= "'$qval'";
-            if ($i < $total_fields) {
-                $query .= ',';
-            }
-        }
-
-        //Finalizing Query
-        $query .= ')';
-
         $insert_id = file_name_exists($file_name);
         if (!$insert_id) {
-            $db->execute($query);
+            //Adding Video Key
+            $query_field[] = 'videokey';
+            $query_val[] = $this->video_keygen();
+
+            if (config('stay_mp4') == 'yes') {
+                $query_field[] = 'status';
+                $query_val[] = 'Successful';
+            }
+
+            $db->insert(tbl('video'),$query_field, $query_val);
             $insert_id = $db->insert_id();
 
             //logging Upload
@@ -246,15 +213,21 @@ class Upload
             insert_log('Uploaded a video', $log_array);
 
             $db->update(tbl('users'), ['total_videos'], ['|f|total_videos+1'], ' userid=\'' . $userid . '\'');
+
+            update_video_status($file_name, 'Waiting');
+
+            //Adding Video Feed
+            addFeed([
+                'action'    => 'upload_video',
+                'object_id' => $insert_id,
+                'object'    => 'video'
+            ]);
+            return $insert_id;
         }
 
-        //Adding Video Feed
-        addFeed([
-            'action'    => 'upload_video',
-            'object_id' => $insert_id,
-            'object'    => 'video'
-        ]);
-        return $insert_id;
+        // Case when video already exists
+        $db->update(tbl('video'), $query_field, $query_val, 'file_name = \''.mysql_clean($file_name).'\'');
+        return true;
     }
 
     /**

@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"213",
+  "revision":"214",
   "status":"dev",
   "detail":[
     {
@@ -66,6 +66,7 @@
         ,"Add new options to reduce personnal informations"
         ,"Fix SQL error on user category page"
         ,"Fix category display when sub-categories is disabled"
+        ,"Fix SQL error on conversion queue manager"
       ]
     },
     {
