@@ -1,8 +1,10 @@
 <?php
-function uninstall_embed_video_mode()
+/**
+ * @throws Exception
+ */
+function uninstall_cb_link_video()
 {
-    global $db;
-    $db->execute("ALTER TABLE " . tbl('video') . " DROP `remote_play_url` ");
+    execute_sql_file(__DIR__ . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR . 'uninstall.sql');;
 }
 
-uninstall_embed_video_mode();
+uninstall_cb_link_video();

@@ -614,7 +614,7 @@ CREATE TABLE `{tbl_prefix}video` (
   `videoid` bigint(20) NOT NULL,
   `videokey` mediumtext NOT NULL,
   `video_password` varchar(255) NOT NULL DEFAULT '',
-  `video_users` text NOT NULL,
+  `video_users` text NOT NULL DEFAULT '',
   `username` text NULL DEFAULT NULL,
   `userid` int(11) NULL DEFAULT NULL,
   `title` text DEFAULT NULL,

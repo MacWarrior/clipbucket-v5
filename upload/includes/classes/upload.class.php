@@ -105,6 +105,10 @@ class Upload
             $name = formObj::rmBrackets($field['name']);
             $val = $array[$name];
 
+            if( empty($val) && $field['required'] == 'no'){
+                continue;
+            }
+
             if ($field['use_func_val']) {
                 $val = $field['validate_function']($val);
             }

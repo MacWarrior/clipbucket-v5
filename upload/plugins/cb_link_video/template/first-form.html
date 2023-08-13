@@ -1,0 +1,16 @@
+<div class="upload_form">
+    <div class="alert alert-info">
+        {lang('plugin_cb_link_video_form_description')}
+    </div>
+    <form action="#" id="cb_link_video_form" class="template" enctype="multipart/form-data" method="post">
+        <label for="cb_link_video_file_url">{lang code='plugin_cb_link_video_input_url'}</label>
+        <div class="input-group">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-link"></i></span>
+            <input id="cb_link_video_file_url" name="cb_link_video_file_url" type="text" class="form-control" placeholder="{$placeholder_url}"/>
+        </div>
+        <button class="btn btn-primary btn-lg" id="cb_link_video_submit_form1">{lang code="submit_now"}</button>
+        <div id="second-form" style="display:none;">
+            {include file="./second-form.html"}
+        </div>
+    </form>
+</div>

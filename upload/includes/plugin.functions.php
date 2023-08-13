@@ -304,7 +304,6 @@ function add_admin_link($array)
     $link = $array['link'];
 }
 
-
 /**
  * function use to register function that will be
  * called while deleting a video
@@ -336,7 +335,7 @@ function register_action_remove_video_files($func)
  *
  * @return string
  */
-function comment_rating($input)
+function comment_rating($input): string
 {
     if ($input < 0) {
         return '<font color="#ed0000">' . $input . '</font>';
@@ -467,13 +466,11 @@ function get_remote_url_function()
     return 'check_remote_url()';
 }
 
-if (!function_exists('plug_url')) {
-    function plug_url($file, $dir, $admin_base = false)
-    {
-        $url = 'plugin.php?folder=' . $dir . '&file=' . $file;
-        if ($admin_base) {
-            $url = ADMIN_BASEURL . '/' . $url;
-        }
-        return $url;
+function plug_url($file, $dir, $admin_base = false)
+{
+    $url = 'plugin.php?folder=' . $dir . '&file=' . $file;
+    if ($admin_base) {
+        $url = ADMIN_BASEURL . '/' . $url;
     }
+    return $url;
 }

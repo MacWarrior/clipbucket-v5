@@ -1,189 +1,176 @@
 <?php
-$Cbucket->upload_opt_list['link_video_link'] = [
-    'title'     => lang('remote_play'),
-    'load_func' => 'load_link_video_form',
-];
+/*
+	Plugin Name: Remote video link
+	Description: Allow to add external videos from URL
+	Author: MacWarrior
+    Version: 1.0.0
+	ClipBucket Version: 5.5.0
+	Website: https://github.com/MacWarrior/clipbucket-v5/
+*/
 
-/**
- * Function used create duration from input
- * @param int DURATION
- */
-if (!function_exists('validate_duration')) {
-    function validate_duration($time)
+class cb_link_video {
+    static $name = 'cb_link_video';
+    static $template_dir = DIRECTORY_SEPARATOR.'template'.DIRECTORY_SEPARATOR;
+    static $media_dir = DIRECTORY_SEPARATOR.'media'.DIRECTORY_SEPARATOR;
+    static $js_dir = DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR;
+
+    /**
+     * @throws Exception
+     */
+    public static function add_upload_form(){
+        global $Cbucket;
+
+        $Cbucket->upload_opt_list['link_video_link'] = [
+            'title'      => lang('plugin_cb_link_video_remote_play'),
+            'class'      => cb_link_video::class,
+            'function'   => 'load_form'
+        ];
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function load_form()
     {
-        if (empty($time)) {
-            return true;
-        }
-        $time = explode(':', $time);
-        if (count($time) > 0 && is_array($time)) {
-            $total = count($time);
-
-            if ($total == 3) {
-                $hrs = $time[0] * 60 * 60;
-                $mins = $time[1] * 60;
-                $secs = $time[2];
-            } else {
-                if ($total == 2) {
-                    $hrs = 0;
-                    $mins = $time[0] * 60;
-                    $secs = $time[1];
-                } else {
-                    $hrs = 0;
-                    $mins = 0;
-                    $secs = $time[0];
-                }
-            }
-            $sec = $hrs + $mins + $secs;
-            if (!empty($sec)) {
-                return $sec;
-            }
-            e(lang('invalid_duration'));
-        } else {
-            if (is_numeric($time)) {
-                return $time;
-            }
-            e(lang('invalid_duration'));
-        }
+        $plugin_cb_link_video_input_url_example = sprintf( lang('plugin_cb_link_video_input_url_example'), BASEURL.PLUG_URL.self::$media_dir.'example.mp4' );
+        assign('placeholder_url', $plugin_cb_link_video_input_url_example);
+        Template(PLUG_DIR . DIRECTORY_SEPARATOR . self::$name . self::$template_dir.'first-form.html', false);
     }
-}
 
+    public static function add_js(){
+         if( defined('THIS_PAGE') && THIS_PAGE != 'upload' ){
+             return;
+         }
 
-function check_remote_play_link($val)
-{
-    //checking file exension
-    $validExts = ['flv', 'mp4'];
-    $ext = getExt($val);
-    if (!in_array($ext, $validExts) || !$val
-        ||
-        (!stristr($val, 'http://')
-            && !stristr($val, 'https://')
-            && !stristr($val, 'rtsp://')
-            && !stristr($val, 'rtmp://'))) {
-        e("Invalid video url");
+        $js_file = 'cb_link_video.min.js';
+        if(in_dev()){
+            $js_file = 'cb_link_video.js';
+        }
+        add_js([self::$name.'/js/'.$js_file => 'plugin']);
+
+        global $Cbucket;
+        $Cbucket->add_header(PLUG_DIR . DIRECTORY_SEPARATOR.self::$name.self::$js_dir.'header.html');
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function register_custom_upload_field()
+    {
+        $link_vid_field_array['remote_play_url'] = [
+            'title'		        => lang('plugin_cb_link_video_input_url'),
+            'name'		        => 'remote_play_url',
+            'db_field'	        => 'remote_play_url',
+            'required'	        => 'no',
+            'validate_function' => self::class.'::isValidVideoURL',
+            'use_func_val'      => true,
+            'type'	            => 'textfield',
+            'use_if_value'      => true
+        ];
+
+        register_custom_upload_field($link_vid_field_array);
+    }
+
+    public static function isValidVideoURL($video_url){
+        if (filter_var($video_url, FILTER_VALIDATE_URL) === FALSE) {
+            return false;
+        }
+
+        $extension = strtolower(getExt($video_url));
+        $allowed_extensions = ['mp4','m3u8'];
+        if( !in_array($extension, $allowed_extensions) ){
+            return false;
+        }
+
+        $check_url = get_headers($video_url);
+        if( !isset($check_url[0]) ){
+            return false;
+        }
+
+        if( strpos($check_url[0], '200') === false ){
+            return false;
+        }
+
+        return $video_url;
+    }
+
+    public static function register_custom_video_file_funcs(){
+        register_custom_video_file_func('get_video_url', self::class);
+    }
+
+    public static function get_video_url($vdetails, $hq = false)
+    {
+        if( !empty($vdetails['remote_play_url']) ) {
+            return $vdetails['remote_play_url'];
+        }
         return false;
     }
 
-    return true;
-}
+    /**
+     * @throws Exception
+     */
+    public static function process_file($video_url, $video_id){
+        require_once(dirname(__DIR__, 2) . '/includes/classes/sLog.php');
+        require_once(dirname(__DIR__, 2) . '/includes/classes/conversion/ffmpeg.class.php');
 
-/**
- * Function used to validate embed code
- *
- * @param $val
- *
- * @return bool|string
- */
-function validate_video_link($val)
-{
-    if (empty($val) || $val == 'none') {
-        return 'none';
-    }
-    //checking file exension
-    $validExts = ['flv', 'mp4'];
-    $ext = getExt($val);
-    if (!in_array($ext, $validExts)
-        ||
-        (!stristr($val, 'http://')
-            && !stristr($val, 'https://')
-            && !stristr($val, 'rtsp://')
-            && !stristr($val, 'rtmp://'))) {
-        return false;
-    }
-    return $val;
-}
+        $log = new SLog();
+        $ffmpeg = new FFMpeg($log);
 
-/**
- * Function used to load embed form
- *
- * @param $params
- */
-function load_link_video_form($params)
-{
-    global $file_name;
-    if ($params['class']) {
-        $class = ' ' . $params['class'];
-    }
-    assign('objId', RandomString(5));
-    assign('class', $class);
-    Template(PLUG_DIR . '/cb_link_video/form.html', false);
-}
+        while($ffmpeg->isLocked()){
+            sleep(5);
+        }
 
-$link_vid_field_array['remote_play_url'] = [
-    'title'             => 'Link to video',
-    'name'              => 'remote_play_url',
-    'db_field'          => 'remote_play_url',
-    'required'          => 'no',
-    'validate_function' => 'validate_video_link',
-    'use_func_val'      => true,
-    'type'              => 'textfield',
-    'use_if_value'      => true,
-    'hint_2'            => 'Type "none" to set as empty',
-    'size'              => '45',
-    'rows'              => 5
-];
+        $video_infos = $ffmpeg->get_file_info($video_url);
 
-$link_vid_field_array['duration'] = [
-    'title'             => 'Video duration',
-    'name'              => 'duration',
-    'db_field'          => 'duration',
-    'required'          => 'no',
-    'validate_function' => 'validate_duration',
-    'use_func_val'      => true,
-    'display_admin'     => 'no_display',
-    'use_if_value'      => true,
-];
+        $vdetails = get_video_details($video_id);
 
-$link_vid_field_array['thumb_file_field'] = [
-    'title'             => 'Thumb File',
-    'type'              => 'fileField',
-    'name'              => 'thumb_file',
-    'required'          => 'no',
-    'validate_function' => 'upload_thumb',
-    'display_admin'     => 'no_display',
-];
+        update_video_status($vdetails['file_name'], 'Processing');
+        $ffmpeg->input_details['video_width'] = $video_infos['video_width'];
+        $ffmpeg->input_details['video_height'] = $video_infos['video_height'];
+        $resolutions = $ffmpeg->get_eligible_resolutions();
+        $max_resolution = '';
+        foreach($resolutions as $res){
+            if( $res['height'] > $max_resolution ){
+                $max_resolution =  $res['height'];
+            }
+        }
 
-function clean_remote_code($input)
-{
-    $input = htmlspecialchars($input);
-    return $input;
-}
+        $file_directory = create_dated_folder();
 
-/**
- * Function used to check embed video
- * if video is embeded , it will check its code
- * if everthing goes ok , it will change its status to successfull
- * @param array VID
- * @throws Exception
- */
-function remote_video_check($vid)
-{
-    global $myquery, $db;
-    if (is_array($vid)) {
-        $vdetails = $vid;
-    } else {
-        $vdetails = $myquery->get_video_details($vid);
+        $ffmpeg->file_name = $vdetails['file_name'];
+        $ffmpeg->input_file = $video_url;
+        $ffmpeg->file_directory = $file_directory.DIRECTORY_SEPARATOR;
+        $ffmpeg->extract_subtitles();
+
+        $ffmpeg->input_details['duration'] = $video_infos['duration'];
+        $ffmpeg->generateAllThumbs();
+
+        $fields = [
+            'duration' => $video_infos['duration']
+            ,'file_type' => getExt($video_url)
+            ,'video_files' => '['.$max_resolution.']'
+            ,'bits_color' => $video_infos['bits_per_raw_sample']
+            ,'file_directory' => $file_directory
+            ,'is_castable' => $video_infos['audio_channels'] <= 2 ? '1' : '0'
+            ,'status' => 'Successful'
+        ];
+
+        global $db;
+        $db->update(tbl('video'), array_keys($fields), array_values($fields), ' videoid = \''.$video_id.'\'');
+
+        $ffmpeg->unLock();
     }
 
-    if (!empty($vdetails['remote_play_url']) && $vdetails['remote_play_url'] != ' ' && $vdetails['remote_play_url'] != 'none') {
-        $db->update(tbl("video"), ["status"], ['Successful'], " videoid='$vid'");
+    /**
+     * @throws Exception
+     */
+    public static function init(){
+        self::add_upload_form();
+        self::add_js();
+        self::register_custom_upload_field();
+        self::register_custom_video_file_funcs();
     }
+
 }
 
-/**
- * Function used to play embed code
- *
- * @param array Video details
- *
- * @return mixed
- */
-function play_remote_video($vdetails)
-{
-    if (!empty($vdetails['remote_play_url']) && $vdetails['remote_play_url'] != 'none') {
-        return $vdetails['remote_play_url'];
-    }
-}
-
-$Cbucket->custom_video_file_funcs[] = 'play_remote_video';
-register_after_video_upload_action('remote_video_check');
-register_custom_upload_field($link_vid_field_array);
-$Cbucket->add_header(PLUG_DIR . '/cb_link_video/header.html');
+cb_link_video::init();

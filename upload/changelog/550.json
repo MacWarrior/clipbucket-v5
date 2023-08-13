@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"214",
+  "revision":"215",
   "status":"dev",
   "detail":[
     {
@@ -188,6 +188,7 @@
         ,"Implement plugin compatibility check"
         ,"Update plugin management interface"
         ,"Refactor custom_video_file_funcs"
+        ,"Implement cb_link_video"
       ]
     },
     {

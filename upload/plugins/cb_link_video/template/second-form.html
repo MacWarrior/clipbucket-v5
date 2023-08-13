@@ -1,0 +1,149 @@
+{$videoFields = $Upload->load_video_fields($input)}
+{$requiredFields = $videoFields[0]}
+{$sharingOptions = $videoFields[1]}
+{$dateAndLocation = $videoFields[2]}
+{$custom_fields = $videoFields[4]}
+
+<div class="row">
+    <div class="col-md-8">
+        <div id="updateVideoInfo">
+            <div class="requiredFields">
+                {foreach $requiredFields.fields as $field}
+                <div class="form-group">
+                    {$field.id = ''}
+                    {if $field.type != 'checkbox' && $field.type != 'radiobutton' && $field.type != 'checkbox2'}
+                        {if empty($field.class)}
+                            {$field.class = 'form-control'}
+                        {else}
+                            {$field.class = $field.class|cat:' form-control'}
+                        {/if}
+                    {/if}
+                    {$field.notShowSeprator='yes'}
+                    {if $field.type == 'radiobutton'}
+                        {$field.label_class='radio'}
+                        {$field.class=''}
+                        {$formObj->createField($field)}
+                    {elseif $field.type == 'checkbox'}
+                        {$categories = $field}
+                    {else}
+                    <label for="{$field.id}">{$field.title}</label>
+                        {$formObj->createField($field)}
+                    {/if}
+                </div>
+                {/foreach}
+
+                {ANCHOR place="upload_video_form"}
+            </div>
+            {if $custom_flag && $custom_fields!=""}
+            <div class="formSection clear">
+                <h4>{$custom_fields.group_name} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
+                <div class="sectionContent hidden">
+                    {foreach $custom_fields.fields as $field}
+                    <div class="form-group">
+                        {$field.id = ''}
+                        {if $field.type != 'checkbox' && $field.type != 'radiobutton' && $field.type != 'checkbox2'}
+                            {if empty($field.class)}
+                                {$field.class = 'form-control'}
+                            {else}
+                                {$field.class = $field.class|cat:' form-control'}
+                            {/if}
+                        {/if}
+                        {$field.notShowSeprator='yes'}
+                        {if $field.type == 'radiobutton'}
+                            {$field.label_class='radio'}
+                            {$formObj->createField($field)}
+                        {elseif $field.type == 'checkbox'}
+                        <h4>{$field.title}</h4>
+                            {$field.label_class='checkbox'}
+                            {if empty($field.class)}
+                                {$field.class = 'checkbox'}
+                            {else}
+                                {$field.class = $field.class|cat:' checkbox'}
+                            {/if}
+                            {$formObj->createField($field)}
+                        {else}
+                        <label for="{$field.id}">{$field.title}</label>
+                            {$formObj->createField($field)}
+                        {/if}
+                    </div>
+                    {/foreach}
+                </div>
+            </div>
+            {/if}
+            <div class="formSection clear">
+                <h4>{$dateAndLocation.group_name} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
+                <div class="sectionContent hidden">
+                    {foreach $dateAndLocation.fields as $field}
+                    <div class="form-group">
+                        {$field.id = ''}
+                        {if $field.type != 'checkbox' && $field.type != 'radiobutton' && $field.type != 'checkbox2'}
+                            {if empty($field.class)}
+                                {$field.class = 'form-control'}
+                            {else}
+                                {$field.class = $field.class|cat:' form-control'}
+                            {/if}
+                        {/if}
+                        {$field.notShowSeprator='yes'}
+                        {if $field.type == 'radiobutton'}
+                            {$field.label_class='radio'}
+                            {$formObj->createField($field)}
+                        {elseif $field.type == 'checkbox'}
+                        <h4>{$field.title}</h4>
+                            {$field.label_class='checkbox'}
+                            {if empty($field.class)}
+                                {$field.class = 'checkbox'}
+                            {else}
+                                {$field.class = $field.class|cat:' checkbox'}
+                            {/if}
+                            {$formObj->createField($field)}
+                        {else}
+                        <label for="{$field.id}">{$field.title}</label>
+                            {$formObj->createField($field)}
+                        {/if}
+                    </div>
+                    {/foreach}
+                </div>
+            </div>
+
+            <div class="formSection clear">
+                <h4>{$sharingOptions.group_name}<i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
+                <div class="sectionContent hidden">
+                    {foreach $sharingOptions.fields as $field}
+                    <div class="form-group">
+                        {$field.id = ''}
+                        {if $field.type != 'checkbox' && $field.type != 'radiobutton' && $field.type != 'checkbox2'}
+                            {if empty($field.class)}
+                                {$field.class = 'form-control'}
+                            {else}
+                                {$field.class = $field.class|cat:' form-control'}
+                            {/if}
+                        {/if}
+                        {$field.notShowSeprator='yes'}
+                        {if $field.type == 'radiobutton'}
+                            {$field.label_class='radio'}
+                            {$formObj->createField($field)}
+                        {else}
+                        <label for="{$field.id}">{$field.title}</label>
+                            {$formObj->createField($field)}
+                        {/if}
+                    </div>
+                    {/foreach}
+                </div>
+            </div>
+
+            <input type="hidden" name="videokey" disabled/>
+            <div class="pad-bottom-sm text-right">
+                <button class="btn btn-primary btn-lg" id="cb_link_video_submit_form2">{lang code="submit_now"}</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 uploadFormSidebarDiv">
+        <h4>{$categories.title}</h4>
+        <small>{$categories.hint_1}</small>
+        <div class="categoriesContainer">
+            {$categories.label_class='checkbox'}
+            {$categories.class='checkbox'}
+            {$formObj->createField($categories)}
+        </div>
+    </div>
+</div>

@@ -1,8 +1,10 @@
 <?php
-function install_cb_link_video_mode()
+/**
+ * @throws Exception
+ */
+function install_cb_link_video()
 {
-    global $db;
-    $db->execute("ALTER TABLE " . tbl('video') . " ADD `remote_play_url` TEXT NOT NULL ");
+    execute_sql_file(__DIR__ . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR . 'install.sql');
 }
 
-install_cb_link_video_mode();
+install_cb_link_video();
