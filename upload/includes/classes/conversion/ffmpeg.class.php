@@ -18,6 +18,8 @@ class FFMpeg
     private $end_time;
     private $total_time;
 
+    private $frame_rate;
+
     public function __construct(SLog $log)
     {
         $this->log = $log;
@@ -123,31 +125,15 @@ class FFMpeg
     }
 
     /**
-     * Function used to start log
-     */
-    function start_log()
-    {
-        $TemplogData = 'Started on ' . NOW() . ' - ' . date('Y M d') . PHP_EOL . PHP_EOL;
-        $TemplogData .= 'Checking File...' . PHP_EOL;
-        $TemplogData .= 'File : ' . $this->input_file;
-        $this->log->writeLine('Starting Conversion', $TemplogData, true);
-    }
-
-    /**
      * Function used to log video info
      */
-    function log_file_info()
+    function log_input_file_infos()
     {
         $details = $this->input_details;
-        $configLog = '';
+        $this->log->newSection('Input file details');
         foreach ($details as $name => $value) {
-            if ($configLog != '') {
-                $configLog .= PHP_EOL;
-            }
-            $configLog .= '<strong>' . $name . '</strong> : ' . $value;
+            $this->log->writeLine('- <b>' . $name . '</b> : ' . $value);
         }
-
-        $this->log->writeLine('Preparing file...', $configLog, true);
     }
 
     /**
@@ -156,16 +142,13 @@ class FFMpeg
     function log_ouput_file_info()
     {
         $details = $this->output_details;
-        $configLog = '';
-        if (is_array($details)) {
-            foreach ($details as $name => $value) {
-                $configLog .= '<strong>' . $name . '</strong> : ' . $value . PHP_EOL;
-            }
-        } else {
-            $configLog = 'Unknown file details - Unable to get video details using FFMPEG' . PHP_EOL;
+
+        $infos = '';
+        foreach ($details as $name => $value) {
+            $infos .='- <b>' . $name . '</b> : ' . $value.'<br/>';
         }
 
-        $this->log->writeLine('OutPut Details', $configLog, true);
+        $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output file details : </p><p class="content">'.$infos.'</p></div>', '', true, false, true);
     }
 
     function time_check()
@@ -227,42 +210,39 @@ class FFMpeg
      */
     function ClipBucket()
     {
+        $this->log->newSection('Conversion lock');
         while($this->isLocked()){
             // Prevent video_convert action to use 100% cpu while waiting for queued videos to end conversion
+            $this->log->writeLine(date('Y-m-d H:i:s').' - Waiting for conversion lock...');
             sleep(5);
         }
 
+        $this->log->writeLine(date('Y-m-d H:i:s').' - Starting conversion...');
         update_video_status($this->file_name, 'Processing');
 
         $this->start_time_check();
-        $this->start_log();
         $this->prepare();
 
         $max_duration = config('max_video_duration') * 60;
         if ($this->input_details['duration'] > $max_duration) {
             $max_duration_seconds = $max_duration / 60;
-            $log = 'Video duration was ' . $this->input_details['duration'] . ' minutes and Max video duration is ' . $max_duration_seconds . ' minutes, Therefore Video cancelled' . PHP_EOL;
-            $log .= 'Conversion_status : failed' . PHP_EOL;
-            $log .= 'Failed Reason : Max Duration Configurations' . PHP_EOL;
-            $this->log->writeLine('Max Duration configs', $log, true);
+            $this->log->newSection('Conversion failed');
+            $this->log->writeLine('Video duration was ' . $this->input_details['duration'] . ' minutes and Max video duration is ' . $max_duration_seconds . ' minutes');
+            $this->log->writeLine('Conversion_status : failed');
             $this->unLock();
             return;
         }
 
-        $log = '';
         if (file_exists($this->input_file)) {
             try {
                 $this->generateAllThumbs();
             } catch (\Exception $e) {
-                $log .= PHP_EOL . 'Error Occured : ' . $e->getMessage() . PHP_EOL;
+                $this->log->writeLine(date('Y-m-d H:i:s').' - Error Occured : ' . $e->getMessage());
             }
 
-            $log .= PHP_EOL . '====== End : Thumbs Generation =======' . PHP_EOL;
         } else {
-            $log .= 'Input file is missing ; no thumbs generation !' . PHP_EOL;
+            $this->log->writeLine('Input file is missing ; no thumbs generation !');
         }
-
-        $this->log->writeLine('Thumbs Generation', $log, true);
 
         if (config('extract_subtitles')) {
             $this->extract_subtitles();
@@ -270,8 +250,7 @@ class FFMpeg
 
         $resolutions = $this->get_eligible_resolutions();
 
-        $log = '';
-
+        $this->log->newSection('FFMpeg '.strtoupper($this->conversion_type).' conversion');
         if (!empty($resolutions)) {
             switch ($this->conversion_type) {
                 default:
@@ -279,6 +258,7 @@ class FFMpeg
                 case 'mp4':
                     $ext = getExt($this->input_file);
                     if (config('stay_mp4') == 'yes' && $ext == 'mp4') {
+                        $this->log->writeLine('<b>Stay MP4 as it is enabled, no conversion done</b>');
                         $resolution = $this->get_max_resolution_from_file();
                         $this->video_files[] = $resolution;
 
@@ -297,22 +277,21 @@ class FFMpeg
                     break;
             }
         } else {
-            $log = '<b>No video resolution available for conversion</b>' . PHP_EOL;
-            $log .= '<i>(Video resolution is lower than the lowest resolution enabled)</i>' . PHP_EOL;
+            $this->log->writeLine('<b>Video resolution is lower than lower resolution enabled : no video resolution available for conversion</b>');
         }
 
         $this->end_time_check();
         $this->total_time();
 
-        $log .= 'Time Took : ' . $this->total_time . ' seconds' . PHP_EOL;
+        $this->log->newSection('Conversion completed');
+        $this->log->writeLine(date('Y-m-d H:i:s').'- Time Took : ' . $this->total_time . ' seconds');
 
         if (file_exists($this->output_file) && filesize($this->output_file) > 0) {
-            $log .= 'Conversion_status : completed';
+            $this->log->writeLine('Conversion_status : completed');
         } else {
-            $log .= 'Conversion_status : failed';
+            $this->log->writeLine('Conversion_status : failed');
         }
 
-        $this->log->writeLine('Conversion Completed', $log, true);
         $this->unLock();
     }
 
@@ -323,7 +302,8 @@ class FFMpeg
     {
         global $cbvideo, $db;
 
-        $log = '';
+        $this->log->newSection('Subtitle extraction');
+
         $subtitles = FFMpeg::get_track_infos($this->input_file, 'subtitle');
 
         if (count($subtitles) > 0) {
@@ -335,11 +315,10 @@ class FFMpeg
 
             $count = 0;
             foreach ($subtitles as $map_id => $data) {
+                $this->log->writeLine(date('Y-m-d H:i:s').' - Extracting '.$data['title'].'...');
+
                 if (isset($data['codec_name']) && in_array($data['codec_name'], ['hdmv_pgs_subtitle', 'dvd_subtitle'])) {
-                    if ($log != '') {
-                        $log .= PHP_EOL;
-                    }
-                    $log .= ' Subtitle ' . $data['title'] . ' can\'t be extracted because it\'s in bitmap format';
+                    $this->log->writeLine(date('Y-m-d H:i:s').' => Subtitle ' . $data['title'] . ' can\'t be extracted because it\'s in bitmap format');
                     continue;
                 }
 
@@ -349,22 +328,18 @@ class FFMpeg
                 $output = shell_exec($command);
                 $db->insert(tbl('video_subtitle'), ['videoid', 'number', 'title'], [$video['videoid'], $display_count, $data['title']]);
                 if (in_dev()) {
-                    if ($log != '') {
-                        $log .= PHP_EOL;
-                    }
-                    $log .= PHP_EOL . $command;
-                    $log .= PHP_EOL . $output;
+                    $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Command : </p><p class="content">'.$command.'</p></div>', '', true, false, true);
+                    $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output : </p><p class="content">'.$output.'</p></div>', '', true, false, true);
                 }
             }
-
-            if ($log != '') {
-                $log .= PHP_EOL;
-            }
-            $log .= '====== End : Subtitles extraction =======' . PHP_EOL;
-            $this->log->writeLine('Subtitles extraction', $log, true);
+        } else {
+            $this->log->writeLine('No subtitle to extract');
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function get_eligible_resolutions(): array
     {
         global $myquery;
@@ -417,6 +392,9 @@ class FFMpeg
         return $final_vrate;
     }
 
+    /**
+     * @throws Exception
+     */
     private function get_conversion_option($type, array $resolution = []): string
     {
         $cmd = '';
@@ -433,10 +411,15 @@ class FFMpeg
                     $cmd .= ' -preset medium';
                 }
                 // Video Rate
-                $original_video_framerate = $this->input_details['video_rate'];
-                $framerate = self::get_video_rate_param($this->input_details['video_rate']);
-                $cmd .= ' -r ' . $framerate;
-                $this->log->writeLine('Video framerate calculation', 'Original rate : ' . $original_video_framerate . ', final rate : ' . $framerate . PHP_EOL, true);
+                if( empty($this->frame_rate)){
+                    $original_video_framerate = $this->input_details['video_rate'];
+                    $framerate = self::get_video_rate_param($this->input_details['video_rate']);
+                    $this->log->writeLine(date('Y-m-d H:i:s').' - Original rate : ' . $original_video_framerate . ', final rate : ' . $framerate);
+                    $this->frame_rate = $framerate;
+                }
+
+                $cmd .= ' -r ' . $this->frame_rate;
+
                 // Fix for browsers compatibility : yuv420p10le seems to be working only on Chrome like browsers
                 if (config('force_8bits')) {
                     $cmd .= ' -pix_fmt yuv420p';
@@ -470,13 +453,19 @@ class FFMpeg
                 $count = 0;
                 $bitrates = '';
                 $resolutions = '';
+                $log_res = '';
                 foreach ($resolution as $res) {
                     $video_bitrate = $myquery->getVideoResolutionBitrateFromHeight($res['height']);
                     $this->video_files[] = $res['height'];
+                    if( !empty($log_res) ){
+                        $log_res .= ' & ';
+                    }
+                    $log_res .= $res['height'];
                     $bitrates .= ' -b:v:' . $count . ' ' . $video_bitrate;
                     $resolutions .= ' -s:v:' . $count . ' ' . $res['video_width'] . 'x' . $res['video_height'];
                     $count++;
                 }
+                $this->log->writeLine(date('Y-m-d H:i:s').' - Converting into '.$log_res.'...');
                 $cmd .= $bitrates . $resolutions;
                 break;
 
@@ -581,34 +570,39 @@ class FFMpeg
         return $cmd . ' ';
     }
 
+    /**
+     * @throws Exception
+     */
     private function convert_hls(array $resolutions)
     {
-        $cmd = config('ffmpegpath');
-        $cmd .= $this->get_conversion_option('global');
-        $cmd .= ' -i ' . $this->input_file;
-        $cmd .= $this->get_conversion_option('video_global');
-        $cmd .= $this->get_conversion_option('audio_global');
-        $cmd .= $this->get_conversion_option('video_hls', $resolutions);
-        $cmd .= $this->get_conversion_option('map_hls', $resolutions);
-        $cmd .= $this->get_conversion_option('hls');
-        $cmd .= ' 2>&1';
+        $command = config('ffmpegpath');
+        $command .= $this->get_conversion_option('global');
+        $command .= ' -i ' . $this->input_file;
+        $command .= $this->get_conversion_option('video_global');
+        $command .= $this->get_conversion_option('audio_global');
+        $command .= $this->get_conversion_option('video_hls', $resolutions);
+        $command .= $this->get_conversion_option('map_hls', $resolutions);
+        $command .= $this->get_conversion_option('hls');
+        $command .= ' 2>&1';
+        $output = shell_exec($command);
 
-        $log = PHP_EOL . PHP_EOL . '== Conversion Command ==' . PHP_EOL . PHP_EOL;
-        $log .= $cmd;
-
-        $output = shell_exec($cmd);
-        if (in_dev()) {
-            $log .= PHP_EOL . PHP_EOL . '== Conversion Output ==' . PHP_EOL . PHP_EOL;
-            $log .= $output;
+        if (file_exists($this->output_file) && filesize($this->output_file) > 0) {
+            $this->log->writeLine(date('Y-m-d H:i:s').' => Video converted');
+        } else {
+            $this->log->writeLine(date('Y-m-d H:i:s').' => Conversion failed, output file doesn\'t exist : '.$this->output_file);
         }
 
-        $this->log->writeLine('Conversion Ouput', $log, true);
+        if (in_dev()) {
+            $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Command : </p><p class="content">'.$command.'</p></div>', '', true, false, true);
+            $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output : </p><p class="content">'.$output.'</p></div>', '', true, false, true);
+        }
     }
 
     /**
      * Function used to convert video
      *
      * @param array $more_res
+     * @throws Exception
      */
     function convert_mp4(array $more_res)
     {
@@ -622,8 +616,7 @@ class FFMpeg
         $this->output_file = $this->output_dir . $this->file_name . '-' . $more_res['height'] . '.' . $this->conversion_type;
 
         $tmp_file = time() . RandomString(5) . '.tmp';
-
-        $TemplogData = 'Converting Video file ' . $more_res['height'] . ' @ ' . date('Y-m-d H:i:s') . PHP_EOL;
+        $this->log->writeLine(date('Y-m-d H:i:s').' - Converting into '.$more_res['height'].'...');
         $command = config('ffmpegpath') . ' -i ' . $this->input_file . $opt_av . ' ' . $this->output_file . ' 2> ' . TEMP_DIR . DIRECTORY_SEPARATOR . $tmp_file;
 
         $output = shell_exec($command);
@@ -635,21 +628,15 @@ class FFMpeg
 
         if (file_exists($this->output_file) && filesize($this->output_file) > 0) {
             $this->video_files[] = $more_res['height'];
-            $TemplogData .= PHP_EOL . 'Files resolution : ' . $more_res['height'] . PHP_EOL;
+            $this->log->writeLine(date('Y-m-d H:i:s').' => Video converted');
         } else {
-            $TemplogData .= PHP_EOL . PHP_EOL . 'File doesn\'t exist. Path: ' . $this->output_file . PHP_EOL . PHP_EOL;
+            $this->log->writeLine(date('Y-m-d H:i:s').' => Conversion failed, output file doesn\'t exist : '.$this->output_file);
         }
-
-        $TemplogData .= PHP_EOL . PHP_EOL . '== Conversion Command ==' . PHP_EOL . PHP_EOL;
-        $TemplogData .= $command;
 
         if (in_dev()) {
-            $TemplogData .= PHP_EOL . PHP_EOL . '== Conversion OutPut ==' . PHP_EOL . PHP_EOL;
-            $TemplogData .= $output;
+            $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Command : </p><p class="content">'.$command.'</p></div>', '', true, false, true);
+            $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output : </p><p class="content">'.$output.'</p></div>', '', true, false, true);
         }
-
-        $TemplogData .= PHP_EOL . 'End resolutions @ ' . date('Y-m-d H:i:s') . PHP_EOL . PHP_EOL;
-        $this->log->writeLine('Conversion Ouput', $TemplogData, true);
 
         $this->output_details = $this->get_file_info($this->output_file);
         $this->log_ouput_file_info();
@@ -665,7 +652,7 @@ class FFMpeg
         //Get File info
         $this->input_details = $this->get_file_info($this->input_file);
         //Logging File Details
-        $this->log_file_info();
+        $this->log_input_file_infos();
 
         switch ($this->conversion_type) {
             default:
@@ -684,10 +671,12 @@ class FFMpeg
 
     /**
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     public function generateAllThumbs()
     {
+        $this->log->newSection('Thumbs generation');
+
         global $db;
         $thumbs_res_settings = thumbs_res_settings_28();
 
@@ -704,6 +693,7 @@ class FFMpeg
         $thumbs_settings['videoid'] = $videoid;
 
         //delete olds thumbs from db and on disk
+        $this->log->writeLine(date('Y-m-d H:i:s').' - Deleting old thumbs...');
         $db->delete(tbl('video_thumbs'), ['videoid'], [$videoid]);
         $pattern = THUMBS_DIR . DIRECTORY_SEPARATOR . $this->file_directory . DIRECTORY_SEPARATOR . $this->file_name . '*';
         $glob = glob($pattern);
@@ -718,7 +708,7 @@ class FFMpeg
     /**
      * @param $array
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     public function generateThumbs($array)
     {
@@ -726,6 +716,8 @@ class FFMpeg
         $duration = $array['duration'];
         $dim = $array['dim'];
         $num = $array['num'];
+
+        $this->log->writeLine(date('Y-m-d H:i:s').' - Generating '.$dim.'...');
 
         if ($num > $duration) {
             $num = $duration;
@@ -762,22 +754,24 @@ class FFMpeg
                 $file_path = $thumb_dir . $file_name;
                 $time_sec = (int)($division * $count);
 
+                $this->log->writeLine(date('Y-m-d H:i:s').' => Generating '.$file_name.'...');
+
                 $command = config('ffmpegpath') . ' -ss ' . $time_sec . ' -i ' . $this->input_file . ' -pix_fmt yuvj422p -an -r 1 ' . $dimension . ' -y -f image2 -vframes 1 ' . $file_path . ' 2>&1';
                 $output = shell_exec($command);
 
-                if (file_exists($file_path)) {
-                    $db->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version'], [$videoid, $dim, $thumb_file_number, $extension, VERSION]);
+                if(in_dev()){
+                    $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Command : </p><p class="content">'.$command.'</p></div>', '', true, false, true);
+                    $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output : </p><p class="content">'.$output.'</p></div>', '', true, false, true);
                 }
 
-                if (!file_exists($file_path)) {
-                    $TempLogData = PHP_EOL . PHP_EOL . 'Command : ' . $command;
-                    $TempLogData .= PHP_EOL . PHP_EOL . 'OutPut : ' . $output;
-                    $this->log->writeLine($TempLogData, true);
+                if (file_exists($file_path)) {
+                    $db->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version'], [$videoid, $dim, $thumb_file_number, $extension, VERSION]);
+                } else {
+                    $this->log->writeLine(date('Y-m-d H:i:s').' => Error generating '.$file_name.'...');
                 }
             }
         } else {
-            $TempLogData = PHP_EOL . ' ERROR while generating thumbs with num : ' . $num;
-            $this->log->writeLine($TempLogData, true);
+            $this->log->writeLine(date('Y-m-d H:i:s').' - Thumbs num can\'t be '.$num.'...');
         }
     }
 
@@ -999,21 +993,18 @@ class FFMpeg
      */
     public function generateDefaultsThumbs(Clipbucket_db $db, $videoid, array $thumbs_res_settings, array $thumbs_settings)
     {
-        $db->update(tbl('video'), ['default_thumb'], [1], ' videoid = ' . mysql_clean($videoid));
-
         foreach ($thumbs_res_settings as $key => $thumbs_size) {
             $height_setting = $thumbs_size[1];
             $width_setting = $thumbs_size[0];
 
             if ($key == 'original') {
-                $thumbs_settings['dim'] = $key;
-                $thumbs_settings['size_tag'] = $key;
+                $thumbs_settings['dim'] = $thumbs_settings['size_tag'] = $key;
             } else {
-                $thumbs_settings['dim'] = $width_setting . 'x' . $height_setting;
-                $thumbs_settings['size_tag'] = $width_setting . 'x' . $height_setting;
+                $thumbs_settings['dim'] = $thumbs_settings['size_tag'] = $width_setting . 'x' . $height_setting;
             }
 
             $this->generateThumbs($thumbs_settings);
         }
+        $db->update(tbl('video'), ['default_thumb'], [1], ' videoid = ' . mysql_clean($videoid));
     }
 }

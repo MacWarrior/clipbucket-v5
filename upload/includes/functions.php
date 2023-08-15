@@ -3079,6 +3079,9 @@ function include_js($params)
         if ($type == 'plugin') {
             return '<script src="' . PLUG_URL . '/' . $file . '" type="text/javascript"></script>';
         }
+        if ($type == 'admin') {
+            return '<script src="' . TEMPLATEURL . '/theme/js/' . $file . '" type="text/javascript"></script>';
+        }
         if (is_array($type)) {
             foreach ($type as $t) {
                 if ($t == THIS_PAGE) {

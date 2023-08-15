@@ -31,11 +31,10 @@ $reconvert = $argv[6] ?? false;
 
 $log = new SLog($logFile);
 
-$log->newSection('Starting Conversion Log');
-$TempLogData = 'Filename : '.$fileName.PHP_EOL;
-$TempLogData .= 'File directory : '.$file_directory_.PHP_EOL;
-$TempLogData .= 'Log file : '.$logFile.PHP_EOL;
-$log->writeLine('Getting Arguments', $TempLogData, true, true);
+$log->newSection('Starting conversion');
+$log->writeLine(date('Y-m-d H:i:s').' - Filename : '.$fileName);
+$log->writeLine(date('Y-m-d H:i:s').' - File directory : '.$file_directory_);
+$log->writeLine(date('Y-m-d H:i:s').' - Log file : '.$logFile);
 
 /*
     Getting the videos which are currently in our queue
@@ -43,6 +42,7 @@ $log->writeLine('Getting Arguments', $TempLogData, true, true);
 */
 $extension = getExt($fileName);
 
+$log->writeLine(date('Y-m-d H:i:s').' - Getting file informatiosn from queue...');
 switch ($extension) {
     default:
     case 'mp4':
@@ -52,8 +52,6 @@ switch ($extension) {
         $queue_details = get_queued_video($_filename . '.' . $extension);
         break;
 }
-
-$log->writeLine('Conversion queue', 'Getting the file information from the queue for conversion', true);
 
 if (!$file_directory_) {
     $fileDir = $queue_details['date_added'];
@@ -73,6 +71,7 @@ if (empty($tmp_ext)) {
     $tmp_ext = $ext;
 }
 if (!empty($_filename)) {
+    $log->writeLine(date('Y-m-d H:i:s').' - Moving file to conversion queue...');
     switch ($ext) {
         default:
         case 'mp4':
@@ -98,9 +97,9 @@ if (!empty($_filename)) {
     }
 
     if ($renamed) {
-        $log->writeLine('Conversion queue', 'File has been moved from temporary dir to Conversion Queue', true);
+        $log->writeLine(date('Y-m-d H:i:s').' => File moved to '.$orig_file);
     } else {
-        $log->writeLine('Conversion queue', 'Something went wrong in moving the file to Conversion Queue', true);
+        $log->writeLine(date('Y-m-d H:i:s').' => Something went wrong while moving file...');
     }
 
     require_once(BASEDIR . '/includes/classes/conversion/ffmpeg.class.php');

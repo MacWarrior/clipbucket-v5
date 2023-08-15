@@ -18,37 +18,55 @@ class SLog
         }
     }
 
-    public function newSection($sectionName = false)
+    public function newSection($sectionName = false, $writeNow = true)
     {
         if (!$sectionName) {
             $sectionName = 'New Section';
         }
-        $this->logData .= "\n\r==========================================\n\r";
-        $this->logData .= "\t" . $sectionName;
-        $this->logData .= "\n\r==========================================\n\r";
+        $this->logData .= "\n\n".'==========================================';
+        $this->logData .= "\n" . $sectionName;
+        $this->logData .= "\n".'==========================================';
+
+        if ($writeNow) {
+            $this->writeLog();
+        }
     }
 
-    public function writeLine($title = false, $description = false, $writeNow = true, $append = false)
+    public function writeLine($title = false, $description = false, $writeNow = true, $append = false, $isHtml = false)
     {
-        if ($title && $description) {
-            if (is_array($description)) {
-                $description = json_encode($description);
-            }
-            $underline = '';
+        if (is_array($description)) {
+            $description = json_encode($description);
+        }
+
+        $newLine = "\n";
+        if( $isHtml ){
+            $newLine = '';
+        }
+
+        if(!empty($title)){
+            $this->logData .= $newLine.$title;
+        }
+
+        if(!empty($title) && !empty($description)){
             $loop = strlen($title);
+            $underline = '';
             for ($i = 0; $i < $loop; $i++) {
                 $underline .= '-';
             }
-            $underline .= "\n";
-            $this->logData .= "\n{$title}\n{$underline}\t\t{$description}\n";
-            if (!$append) {
-                if ($writeNow) {
-                    $this->writeLog();
-                }
-            } else {
-                if ($writeNow) {
-                    $this->appendLog();
-                }
+            $this->logData .= $newLine.$underline;
+        }
+
+        if(!empty($description)){
+            $this->logData .= $newLine.$description;
+        }
+
+        if (!$append) {
+            if ($writeNow) {
+                $this->writeLog();
+            }
+        } else {
+            if ($writeNow) {
+                $this->appendLog();
             }
         }
     }

@@ -478,6 +478,7 @@ class myquery
 
     /**
      * Function used to  get file details from database
+     * @throws Exception
      */
     function file_details($file_name)
     {
@@ -491,7 +492,7 @@ class myquery
      * @param $thumb
      *
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     function set_default_thumb($vid, $thumb)
     {

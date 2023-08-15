@@ -816,3 +816,25 @@ a[role='menuitem'] {
 .row.display-flex > [class*='col-'] {
     flex-grow: 1;
 }
+
+.conversion_log p.title{
+    margin: 0;
+    font-weight: bold;
+    margin-left: 5px;
+    cursor: pointer;
+}
+.conversion_log p.title::before{
+    position: relative;
+    top: 1px;
+    left: -5px;
+    display: inline-block;
+    font-family: "Glyphicons Halflings";
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.conversion_log p.content{
+    display: none;
+}

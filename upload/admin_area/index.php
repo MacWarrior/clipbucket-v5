@@ -1,6 +1,6 @@
 <?php
 define('THIS_PAGE', 'dashboard');
-global $userquery, $myquery, $db, $cbvid, $eh, $cbphoto;
+global $userquery, $myquery, $db, $cbvid, $eh, $cbphoto, $Cbucket;
 
 require_once '../includes/admin_config.php';
 $userquery->admin_login_check();
@@ -197,6 +197,13 @@ Assign('flaggedPhotos', $photos);
 Assign('baseurl', BASEURL);
 Assign('VERSION', VERSION);
 Assign('STATE', STATE);
+
+if(in_dev()){
+    $js_file = 'dashboard.js';
+} else {
+    $js_file = 'dashboard.min.js';
+}
+$Cbucket->addAdminJS(['pages/dashboard/'.$js_file => 'admin']);
 
 template_files('index.html');
 display_it();

@@ -113,17 +113,21 @@ class cb_link_video {
         require_once(dirname(__DIR__, 2) . '/includes/classes/sLog.php');
         require_once(dirname(__DIR__, 2) . '/includes/classes/conversion/ffmpeg.class.php');
 
-        $log = new SLog();
+        $file_directory = create_dated_folder();
+        $vdetails = get_video_details($video_id);
+        $logFile = LOGS_DIR . DIRECTORY_SEPARATOR . $file_directory . DIRECTORY_SEPARATOR . $vdetails['file_name'] . '.log';
+
+        $log = new SLog($logFile);
         $ffmpeg = new FFMpeg($log);
 
+        $ffmpeg->log->newSection('Conversion lock');
         while($ffmpeg->isLocked()){
+            $ffmpeg->log->writeLine(date('Y-m-d H:i:s').' - Waiting for conversion lock...');
             sleep(5);
         }
+        $ffmpeg->log->writeLine(date('Y-m-d H:i:s').' - Starting conversion...');
 
         $video_infos = $ffmpeg->get_file_info($video_url);
-
-        $vdetails = get_video_details($video_id);
-
         update_video_status($vdetails['file_name'], 'Processing');
         $ffmpeg->input_details['video_width'] = $video_infos['video_width'];
         $ffmpeg->input_details['video_height'] = $video_infos['video_height'];
@@ -134,8 +138,6 @@ class cb_link_video {
                 $max_resolution =  $res['height'];
             }
         }
-
-        $file_directory = create_dated_folder();
 
         $ffmpeg->file_name = $vdetails['file_name'];
         $ffmpeg->input_file = $video_url;
@@ -159,6 +161,8 @@ class cb_link_video {
         $db->update(tbl('video'), array_keys($fields), array_values($fields), ' videoid = \''.$video_id.'\'');
 
         $ffmpeg->unLock();
+
+        $ffmpeg->log->newSection('<b>Conversion Completed</b>');
     }
 
     /**

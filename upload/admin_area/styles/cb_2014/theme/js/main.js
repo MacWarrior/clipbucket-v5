@@ -1,5 +1,4 @@
 window.onload = init;
-
 function init(){
 
     for (var i=0; i < localStorage.length; i++){
