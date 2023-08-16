@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"215",
+  "revision":"216",
   "status":"dev",
   "detail":[
     {
@@ -67,6 +67,8 @@
         ,"Fix SQL error on user category page"
         ,"Fix category display when sub-categories is disabled"
         ,"Fix SQL error on conversion queue manager"
+        ,"Refactor view conversion log page"
+        ,"Fix dashboard JS error"
       ]
     },
     {
@@ -140,6 +142,7 @@
         ,"With 'Stay MP4 as it is', non-mp4 videos must be converted"
         ,"Fix video duration detection failure in some rare cases"
         ,"Fix long conversion process failing"
+        ,"Refactor video conversion log"
       ]
     }
     ,{
