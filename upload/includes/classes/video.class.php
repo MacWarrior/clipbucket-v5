@@ -613,8 +613,11 @@ class CBvideo extends CBCategory
                     unlink($filepath);
                 }
             }
-
-            $db->execute('DELETE FROM ' . tbl('video_subtitle') . ' WHERE videoid = ' . $vdetails['videoid']);
+            $query_delete = 'DELETE FROM ' . tbl('video_subtitle') . ' WHERE videoid = ' . $vdetails['videoid'];
+            if ($number !== null) {
+                $query_delete .= ' AND number = \'' . mysql_clean($number) . '\'';
+            }
+            $db->execute($query_delete);
         }
         if ($number !== null) {
             e(str_replace('%s', $number,lang('video_subtitles_deleted_num')), 'm');

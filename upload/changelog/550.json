@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"216",
+  "revision":"217",
   "status":"dev",
   "detail":[
     {
@@ -69,6 +69,8 @@
         ,"Fix SQL error on conversion queue manager"
         ,"Refactor view conversion log page"
         ,"Fix dashboard JS error"
+        ,"Fix subtitle suppression"
+        ,"Fix thumbs suppression SQL"
       ]
     },
     {

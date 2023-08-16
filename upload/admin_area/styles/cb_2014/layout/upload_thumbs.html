@@ -45,8 +45,8 @@
             type: "post",
             dataType: 'json',
             data: {videoid: videoid, num: num}
-        }).done(function () {
-            $('#thumb_' + num).remove();
+        }).done(function (result) {
+            $('#set_default_thumb').html(result['template']);
         }).always(function (result) {
             $('.page-content').prepend(result['msg']);
         });

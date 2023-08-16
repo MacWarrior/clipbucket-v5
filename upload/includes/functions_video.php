@@ -858,8 +858,13 @@ function delete_video_thumb($videoDetails, $num)
 
     $db->delete(tbl('video_thumbs'), ['videoid', 'num'], [$videoDetails['videoid'], $num]);
 
+    //check if there are thumbs left
+    $thumbs = $db->select(tbl('video_thumbs'), '*', ' videoid = ' . mysql_clean($videoDetails['videoid']));
+    if (count($thumbs) == 0 ) {
+        create_thumb($videoDetails,'','');
+    }
     if ($videoDetails['default_thumb'] == $num) {
-        $db->execute('UPDATE ' . tbl('video') . ' SET `default_thumb` =  (SELECT MIN(num) FROM ' . tbl('video_thumbs') . ' WHERE  videoid = ' . mysql_clean($videoDetails['videoid']) . ') WHERE videoid = ' . mysql_clean($videoDetails['videoid']), 'update');
+        $db->execute('UPDATE ' . tbl('video') . ' SET `default_thumb` =  (SELECT  CASE WHEN num = \'\' THEN 0 ELSE MIN(`num`) END FROM ' . tbl('video_thumbs') . ' WHERE  videoid = ' . mysql_clean($videoDetails['videoid']) . ') WHERE videoid = ' . mysql_clean($videoDetails['videoid']), 'update');
     }
 }
 
