@@ -608,7 +608,7 @@ function get_all_video_files_smarty($params)
 function get_video_file($vdetails, $return_default = true, $with_path = true, $multi = false, $count_only = false, $hq = false)
 {
     $custom_video_file_funcs_retun = exec_custom_video_file_funcs($vdetails, $hq);
-    if( $custom_video_file_funcs_retun ){
+    if ($custom_video_file_funcs_retun) {
         return $custom_video_file_funcs_retun;
     }
 
@@ -860,8 +860,8 @@ function delete_video_thumb($videoDetails, $num)
 
     //check if there are thumbs left
     $thumbs = $db->select(tbl('video_thumbs'), '*', ' videoid = ' . mysql_clean($videoDetails['videoid']));
-    if (count($thumbs) == 0 ) {
-        create_thumb($videoDetails,'','');
+    if (count($thumbs) == 0) {
+        create_thumb($videoDetails, '', '');
     }
     if ($videoDetails['default_thumb'] == $num) {
         $db->execute('UPDATE ' . tbl('video') . ' SET `default_thumb` =  (SELECT  CASE WHEN num = \'\' THEN 0 ELSE MIN(`num`) END FROM ' . tbl('video_thumbs') . ' WHERE  videoid = ' . mysql_clean($videoDetails['videoid']) . ') WHERE videoid = ' . mysql_clean($videoDetails['videoid']), 'update');
@@ -1077,17 +1077,17 @@ function get_vid_extensions(): array
 
 function register_custom_video_file_func($method, $class = null): bool
 {
-    if( empty($method) ){
+    if (empty($method)) {
         return false;
     }
 
     global $Cbucket;
-    if( empty($class) ){
+    if (empty($class)) {
         $Cbucket->custom_video_file_funcs[] = $method;
     } else {
         $Cbucket->custom_video_file_funcs[] = [
-            'class' => $class
-            ,'method' => $method
+            'class'    => $class
+            , 'method' => $method
         ];
     }
     return true;
@@ -1104,19 +1104,19 @@ function exec_custom_video_file_funcs($vdetails, $hq = false)
     $custom_video_file_funcs = get_custom_video_file_funcs();
     if (!empty($custom_video_file_funcs)) {
         foreach ($custom_video_file_funcs as $func) {
-            if( is_array($func) ){
+            if (is_array($func)) {
                 $class = $func['class'];
                 $method = $func['method'];
-                if( method_exists($class, $method) ){
+                if (method_exists($class, $method)) {
                     $func_return = $class::$method($vdetails, $hq);
-                    if( $func_return ){
+                    if ($func_return) {
                         return $func_return;
                     }
                 }
             } else {
                 if (function_exists($func)) {
                     $func_return = $func($vdetails, $hq);
-                    if($func_return) {
+                    if ($func_return) {
                         return $func_return;
                     }
                 }
@@ -1144,7 +1144,7 @@ function exec_custom_video_file_funcs($vdetails, $hq = false)
 function get_video_files($vdetails, $return_default = true, $with_path = true, $multi = false, $count_only = false, $hq = false)
 {
     $custom_video_file_funcs_retun = exec_custom_video_file_funcs($vdetails, $hq);
-    if( $custom_video_file_funcs_retun ){
+    if ($custom_video_file_funcs_retun) {
         return $custom_video_file_funcs_retun;
     }
 
@@ -1248,7 +1248,7 @@ function thumbs_res_settings_28(): array
 function get_high_res_file($vdetails): string
 {
     $custom_video_file_funcs_retun = exec_custom_video_file_funcs($vdetails);
-    if( $custom_video_file_funcs_retun ){
+    if ($custom_video_file_funcs_retun) {
         return $custom_video_file_funcs_retun;
     }
 
@@ -1703,7 +1703,7 @@ function getHlsFilesInfo($resolution, $data): array
 function reset_video_log($log_file)
 {
     $file_to_delete = '';
-    $base = basename($log_file,'.log');
+    $base = basename($log_file, '.log');
     if (!array_key_exists($base, AdminTool::getTemp())) {
         $file_to_delete = $log_file;
     } elseif (AdminTool::getTemp()[$base]['status'] == 'Successful') {
@@ -1717,19 +1717,68 @@ function reset_video_log($log_file)
 }
 
 /**
- * delete empty parent until $stop_path
+ * delete empty parent until log root folder
+ * @param $path
+ * @return void
+ */
+function remove_empty_directory_log($path)
+{
+    remove_empty_directory($path, LOGS_DIR);
+}
+
+/**
+ * delete empty parent until $stop_path from files to root
  * @param $path
  * @param string $stop_path path where function has to stop
  * @return void
  */
-function remove_empty_directory_log($path, string $stop_path = LOGS_DIR)
+function remove_empty_directory($path, string $stop_path)
 {
-    if ($path == LOGS_DIR) {
+    if ($path == $stop_path) {
         return;
     }
     $current_dir_content = array_diff(scandir($path), ['..', '.']);
     if (count($current_dir_content) <= 0) {
         rmdir($path);
-        remove_empty_directory_log(dirname($path));
+        remove_empty_directory(dirname($path), $stop_path);
     }
+}
+
+/**
+ * @param $files
+ * @return void
+ */
+function clean_orphan_files($file)
+{
+    if (in_array($file['video'], AdminTool::getTemp())) {
+        return;
+    }
+    $stop_path = null;
+    switch ($file['type']) {
+        case 'log':
+            unlink($file['data']);
+            $stop_path = LOGS_DIR;
+            break;
+        case 'video_mp':
+            unlink($file['data']);
+            $stop_path = VIDEOS_DIR;
+            break;
+        case 'video_hls':
+            $files_hls = array_diff(scandir($file['data']), ['.', '..']);
+            foreach ($files_hls as $file_hls) {
+                unlink($file['data'] . DIRECTORY_SEPARATOR . $file_hls);
+            }
+            rmdir($file['data']);
+            $stop_path = VIDEOS_DIR;
+            break;
+        case 'thumb':
+            unlink($file['data']);
+            $stop_path = THUMBS_DIR;
+            break;
+        case 'subtitle':
+            unlink($file['data']);
+            $stop_path = SUBTITLES_DIR;
+            break;
+    }
+    remove_empty_directory(dirname($file['data']), $stop_path);
 }

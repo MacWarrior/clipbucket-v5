@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"217",
+  "revision":"218",
   "status":"dev",
   "detail":[
     {
@@ -71,6 +71,7 @@
         ,"Fix dashboard JS error"
         ,"Fix subtitle suppression"
         ,"Fix thumbs suppression SQL"
+        ,"Implement cleanup orphan files tool"
       ]
     },
     {

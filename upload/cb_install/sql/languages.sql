@@ -1668,4 +1668,6 @@ VALUES ('friend_requests'),
        ('option_enable_user_category'),
        ('video_upload_disabled'),
        ('plugin_compatible'),
-       ('plugin_not_compatible');
+       ('plugin_not_compatible'),
+       ('clean_orphan_files_label'),
+       ('clean_orphan_files_description');

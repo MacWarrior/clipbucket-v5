@@ -5206,6 +5206,29 @@ function rglob($pattern, $flags = 0) {
     return $files;
 }
 
+/**
+ * @param $path
+ * @return bool
+ */
+function delete_empty_directories($path)
+{
+    if (!is_dir($path)) {
+        return false;
+    }
+    $content = glob($path . '/*', GLOB_ONLYDIR);
+    foreach ($content as $sub_dir) {
+        delete_empty_directories($sub_dir);
+    }
+    $content = glob($path . '/*');
+    // Si le répertoire est maintenant vide, le supprimer
+    if (empty($content)) {
+        rmdir($path);
+        return true;
+    }
+
+    return false;
+}
+
 include('functions_db.php');
 include('functions_filter.php');
 include('functions_player.php');
