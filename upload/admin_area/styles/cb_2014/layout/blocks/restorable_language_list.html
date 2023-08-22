@@ -1,0 +1,17 @@
+{if count($restore_lang_options) > 0 }
+<legend>{lang code='restore_language'}</legend>
+<!-- language select option for translation -->
+<div class="form-group" >
+    <form id="formRestore" name="formRestore" method="post">
+        <div class="row">
+            <div class="col-md-5">
+                <label for="code">{lang code='language_name'}</label>
+                <div style="vertical-align: bottom;">
+                    {html_options name=code id=code_restore options=$restore_lang_options}
+                    <input style="display: inline-block; width: 120px; margin-left: 10px;" type="submit" name="update_language" class="btn btn-primary" value="{lang code='restore'}" id="restore_language"/>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{/if}

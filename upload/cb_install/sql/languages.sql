@@ -1670,4 +1670,8 @@ VALUES ('friend_requests'),
        ('plugin_compatible'),
        ('plugin_not_compatible'),
        ('clean_orphan_files_label'),
-       ('clean_orphan_files_description');
+       ('clean_orphan_files_description'),
+       ('lang_restored'),
+       ('language_name'),
+       ('restore_language'),
+       ('restore');

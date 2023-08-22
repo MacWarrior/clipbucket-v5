@@ -292,7 +292,7 @@ class Language
         if ($lang) {
             set_cookie_secure('cb_lang', $lid);
             $db->update(tbl('languages'), ['language_default'], ['no'], ' language_default=\'yes\'');
-            $db->update(tbl('languages'), ['language_default'], ['yes'], ' language_id=\''.$lid.'\'');
+            $db->update(tbl('languages'), ['language_default'], ['yes'], ' language_id=\'' . $lid . '\'');
             e($lang['language_name'] . ' has been set as default language', 'm');
             CacheRedis::flushAll();
         }
@@ -325,8 +325,8 @@ class Language
         } elseif ($lang['language_default'] == 'yes' || $i == 1) {
             e(lang('default_lang_del_error'));
         } else {
-            $db->delete(tbl('languages'), ['language_id'], [$lang['language_id']]);
             $db->delete(tbl('languages_translations'), ['language_id'], [$lang['language_id']]);
+            $db->delete(tbl('languages'), ['language_id'], [$lang['language_id']]);
             e(lang('lang_deleted'), 'm');
             CacheRedis::flushAll();
         }
@@ -373,7 +373,7 @@ class Language
             e(lang('lang_added'), 'm');
         }
     }
-    
+
     /**
      * @throws \Exception
      */
@@ -389,6 +389,33 @@ class Language
     public function getLang()
     {
         return $this->lang;
+    }
+
+    /**
+     * Function used to update language
+     *
+     * @param $array
+     * @throws \Exception
+     */
+    public static function restore_lang($code)
+    {
+        if (empty($code)) {
+            e(lang('lang_code_empty'));
+        } else {
+            $restorable_langs = [
+                'en'    => 'ENG',
+                'fr'    => 'FRA',
+                'pt-BR' => 'POR',
+                'de'    => 'DEU'
+            ];
+
+            $path = DIR_SQL . 'language_' . $restorable_langs[$code] . '.sql';
+            if (file_exists($path)) {
+                execute_sql_file($path);
+            }
+            e(str_replace('%s', $restorable_langs[$code], lang('lang_restored')), 'm');
+            CacheRedis::flushAll();
+        }
     }
 
 }

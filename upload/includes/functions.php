@@ -5266,6 +5266,29 @@ function delete_empty_directories($path)
     return false;
 }
 
+/**
+ * @param array $list_language
+ * @return array
+ * @throws Exception
+ */
+function get_restorable_languages(array $list_language = []): array
+{
+    if (empty($list_language)) {
+        $list_language = Language::getInstance()->get_langs(false, true);
+    }
+    $restorable_langs = [
+        'en'    => 'English',
+        'fr'    => 'Français',
+        'pt-BR' => 'Portuguesa',
+        'de'    => 'Deutsche'
+    ];
+
+    return array_filter($restorable_langs, function ($lang) use ($list_language) {
+        $column = array_column($list_language, 'language_name');
+        return !in_array($lang, $column);
+    });
+}
+
 include('functions_db.php');
 include('functions_filter.php');
 include('functions_player.php');

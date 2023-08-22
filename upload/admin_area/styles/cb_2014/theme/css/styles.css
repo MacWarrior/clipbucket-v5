@@ -838,3 +838,9 @@ a[role='menuitem'] {
 .conversion_log p.content{
     display: none;
 }
+
+#code_restore {
+    display: inline-block;
+    width: calc(100% - 150px);
+    vertical-align: middle;
+}

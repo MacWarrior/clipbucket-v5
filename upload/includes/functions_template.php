@@ -116,6 +116,14 @@ function display_it()
     }
 }
 
+function display_restorable_language_list()
+{
+    $restorable_langs = get_restorable_languages();
+    //Get List Of Languages
+    assign('restore_lang_options', $restorable_langs);
+    echo templateWithMsgJson('blocks/restorable_language_list.html');
+}
+
 function display_language_list()
 {
     $ll = Language::getInstance()->get_langs(false, true);

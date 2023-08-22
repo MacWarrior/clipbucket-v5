@@ -7,25 +7,28 @@
     </div>
     <legend>Add Languages</legend>
     <!-- language select option for translation -->
-<div class="form-group">
-    <form id="formAdd" name="formAdd" method="post">
-        <div class="row">
-            <div class="col-md-5">
-                <label for="nameAdd">Language Name</label>
-                <div style="vertical-align: bottom;">
-                    <input style="display: inline-block; width: calc(100% - 150px); vertical-align: middle;" name="name" type="text" class="form-control" id="nameAdd" value="{$lang_details.language_name}"/>
+    <div class="form-group">
+        <form id="formAdd" name="formAdd" method="post">
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="nameAdd">{lang code='language_name'}</label>
+                    <div style="vertical-align: bottom;">
+                        <input style="display: inline-block; width: calc(100% - 150px); vertical-align: middle;" name="name" type="text" class="form-control" id="nameAdd" value="{$lang_details.language_name}"/>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <label for="codeAdd">Language Code</label>
+                    <div style="vertical-align: bottom;">
+                        <input style="display: inline-block; width: calc(100% - 150px); vertical-align: middle;" name="code" type="text" class="form-control" id="codeAdd" value="{$lang_details.language_code}"/>
+                        <input style="display: inline-block; width: 120px; margin-left: 10px;" type="submit" name="update_language" class="btn btn-primary" value="{lang code='add'}" id="add_language"/>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-5">
-                <label for="codeAdd">Language Code</label>
-                <div style="vertical-align: bottom;">
-                    <input style="display: inline-block; width: calc(100% - 150px); vertical-align: middle;" name="code" type="text" class="form-control" id="codeAdd" value="{$lang_details.language_code}"/>
-                    <input style="display: inline-block; width: 120px; margin-left: 10px;" type="submit" name="update_language" class="btn btn-primary" value="{lang code='add'}" id="add_language"/>
-                </div>
-            </div>
-        </div>
-    </form>
-</div>
+        </form>
+    </div>
+    <div id="div_restore_lang">
+        {include file="$style_dir/blocks/restorable_language_list.html"}
+    </div>
     <form id="formDelete" name="formDelete" method="post">
         <input name="id_delete" type="hidden" class="form-control" id="id_delete" />
     </form>
@@ -56,123 +59,3 @@
     </table>
     {include file="$style_dir/blocks/pagination.html"}
 {/if}
-
-<script type="text/javascript">
-    {literal}
-
-    function initListenerList() {
-
-        $('input[name="make_default"]').change(function () {
-            $('input[name="make_default"]').not(this).prop('checked', false);
-            $.ajax({
-                url: "/actions/language_make_default.php",
-                type: "POST",
-                data: $('#default_lang').serialize(),
-                dataType: 'json',
-                success: function (result) {
-                    $('#language_list').html(result['template']);
-                    $('.close').click();
-                    $('.page-content').prepend(result['msg']);
-                    initListenerList();
-                }
-            });
-        });
-
-        $('#formAdd').on('submit', function (event) {
-            event.preventDefault();
-            $.ajax({
-                url: "/actions/language_add.php",
-                type: "POST",
-                data: $('#formAdd').serialize(),
-                dataType: 'json',
-                success: function (result) {
-                    $('#language_list').html(result['template']);
-                    $('.close').click();
-                    $('.page-content').prepend(result['msg']);
-                    initListenerList();
-                }
-            });
-        });
-    }
-
-    function initListenerEdit() {
-        $('#form1').on('submit', function (event) {
-            event.preventDefault();
-            $.ajax({
-                url: "/actions/language_update.php",
-                type: "POST",
-                data: $('#form1').serialize(),
-                dataType: 'json',
-                success: function (result) {
-                    $('#language_edit').html(result['template']);
-                    $('.close').click();
-                    $('.page-content').prepend(result['msg']);
-                    initListenerEdit();
-                }
-            });
-        });
-    }
-
-    var sec = '{$secret_Id}';
-
-    function deleteLanguage(language_id, language_name) {
-        if (confirm_it('Are you sure you want to delete ' + language_name)) {
-            $.ajax({
-                url: "/actions/language_delete.php",
-                type: "POST",
-                data: {language_id: language_id},
-                dataType: 'json',
-                success: function (result) {
-                    $('#language_list').html(result['template']);
-                    $('.close').click();
-                    $('.page-content').prepend(result['msg']);
-                    initListenerList();
-                }
-            });
-        }
-    }
-
-    $(document).ready(function () {
-        initListenerList();
-        initListenerEdit();
-        $('.edit_translation').on("click", function () {
-            var _this = $(this);
-            var id = _this.data('id');
-            $('#input-' + id).show();
-            $('#ok-' + id).show();
-            $('#remove-' + id).show();
-            $('#edit-' + id).hide();
-        });
-
-        $('.cancel_translation').on("click", function () {
-            var _this = $(this);
-            var id = _this.data('id');
-            $('#input-' + id).hide();
-            $('#ok-' + id).hide();
-            $('#remove-' + id).hide();
-            $('#edit-' + id).show();
-        });
-
-        $('.confirm_update_translation').on("click", function () {
-
-            var _this = $(this);
-            var id = _this.data('id');
-            var value = $('#input-' + id).val();
-            var language_id = $('#language_id').val();
-            $.ajax({
-                url: "/actions/update_phrase.php",
-                type: "post",
-                data: {id_language_key: id, translation: value, language_id: language_id},
-                success: function () {
-                    $('#' + id).html(value);
-                    $('#input-' + id).hide();
-                    $('#ok-' + id).hide();
-                    $('#remove-' + id).hide();
-                    $('#edit-' + id).show();
-                }
-            });
-        });
-    });
-
-    {/literal}
-</script>

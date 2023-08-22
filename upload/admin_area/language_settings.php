@@ -16,6 +16,10 @@ $ll = Language::getInstance()->get_langs(false, true);
 foreach ($ll as &$language) {
     $language['pourcentage_traduction'] = $language['nb_trads'] * 100 / $language['nb_codes'];
 }
+
+$restorable_langs = get_restorable_languages($ll);
+
+assign('restore_lang_options', $restorable_langs);
 //Get List Of Languages
 assign('language_list', $ll);
 Assign('msg', $msg);
@@ -49,6 +53,14 @@ if (!empty($_GET['edit_language']) && Language::getInstance()->getLangById($_GET
     //Pagination
     $pages->paginate($total_pages, $current_page);
 }
+
+//TODO ajouter JS
+if(in_dev()){
+    $js_file = 'language_settings.js';
+} else {
+    $js_file = 'language_settings.min.js';
+}
+$Cbucket->addAdminJS(['pages/language_settings/'.$js_file => 'admin']);
 
 assign('client_id', $Cbucket->configs['clientid']);
 assign('secret_Id', $Cbucket->configs['secretId']);
