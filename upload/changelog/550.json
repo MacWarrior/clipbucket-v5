@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"218",
+  "revision":"219",
   "status":"dev",
   "detail":[
     {
@@ -195,6 +195,7 @@
         ,"Update plugin management interface"
         ,"Refactor custom_video_file_funcs"
         ,"Implement cb_link_video"
+        ,"Implement SQL update system"
       ]
     },
     {

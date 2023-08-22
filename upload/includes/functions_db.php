@@ -149,6 +149,24 @@ function check_need_upgrade($version, $revision): bool
     }
     return false;
 }
+/**
+ * @param $version
+ * @param $revision
+ * @return bool
+ */
+function check_need_plugin_upgrade($installed_plugin): bool
+{
+    global $cbplugin;
+    $detail = $cbplugin->get_plugin_details($installed_plugin['plugin_file'], $installed_plugin['plugin_folder']);
+    $files = glob(PLUG_DIR . DIRECTORY_SEPARATOR . $installed_plugin['plugin_folder'] . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . '*.sql');
+    foreach ($files as $file) {
+        $file_cur_version = pathinfo($file)['filename'];
+        if ($file_cur_version > $installed_plugin['plugin_version'] && $file_cur_version <= $detail['version']) {
+            return true;
+        }
+    }
+    return false;
+}
 
 /**
  * @param $version
@@ -202,6 +220,37 @@ function get_files_to_upgrade($version, $revision, $count = false)
     return ($count ? count($files) : $files);
 }
 
+/**
+ * @param $installed_plugins
+ * @param bool $count
+ * @return array|int
+ */
+function get_plugins_files_to_upgrade($installed_plugins, bool $count = false)
+{
+    global $cbplugin;
+    $update_files = [];
+    foreach ($installed_plugins as $installed_plugin) {
+        $db_version = $installed_plugin['plugin_version'];
+        $detail_verision = $cbplugin->get_plugin_details($installed_plugin['plugin_file'], $installed_plugin['plugin_folder'])['version'];
+        //get files in update folder
+        $folder = PLUG_DIR . DIRECTORY_SEPARATOR . $installed_plugin['plugin_folder'] . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR;
+        $files = glob($folder . '*.sql');
+        //filter files which are between db version and detail version
+        $update_files = array_merge(
+            $update_files,
+            array_filter(
+                array_map(function ($file) use ($db_version, $detail_verision, $folder) {
+                    $file_version = pathinfo($file)['filename'];
+                    return  ($file_version > $db_version && $file_version <= $detail_verision)
+                        ? $file
+                        : null;
+                }, $files)
+            )
+        );
+    }
+    return ($count ? count($update_files) : $update_files);
+}
+
 function execute_sql_file($path): bool
 {
     $lines = file($path);
@@ -250,12 +299,20 @@ function execute_migration_SQL_file($path): bool
         return false;
     }
 
-    $regex = '/\/(\d{0,3}\.\d{0,3}\.\d{0,3})\/(\d{5})\.sql/';
-    $match = [];
-    preg_match($regex, $path, $match);
 
     global $db;
-    $sql = 'INSERT INTO ' . tbl('version') . ' SET version = \'' . mysql_clean($match['1']) . '\' , revision = ' . mysql_clean((int)$match['2']) . ', id = 1 ON DUPLICATE KEY UPDATE version = \'' . mysql_clean($match['1']) . '\' , revision = ' . mysql_clean((int)$match['2']);
+    if (strpos($path,'plugin')!== false) {
+        $plugin_folder = basename(dirname($path, 3));
+        $regex = '/\/(\d{0,3}\.\d{0,3}\.\d{0,3})\.sql/';
+        $match = [];
+        preg_match($regex, $path, $match);
+        $sql = 'UPDATE ' . tbl('plugins') . ' SET plugin_version = \'' .  mysql_clean($match['1']) . '\' WHERE plugin_folder = \'' .$plugin_folder . '\'';
+    } else {
+        $regex = '/\/(\d{0,3}\.\d{0,3}\.\d{0,3})\/(\d{5})\.sql/';
+        $match = [];
+        preg_match($regex, $path, $match);
+        $sql = 'INSERT INTO ' . tbl('version') . ' SET version = \'' . mysql_clean($match['1']) . '\' , revision = ' . mysql_clean((int)$match['2']) . ', id = 1 ON DUPLICATE KEY UPDATE version = \'' . mysql_clean($match['1']) . '\' , revision = ' . mysql_clean((int)$match['2']);
+    }
     $db->mysqli->query($sql);
     CacheRedis::flushAll();
     return true;

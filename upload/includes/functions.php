@@ -1,6 +1,6 @@
 <?php
+
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
 
 require 'define_php_links.php';
 include_once 'upload_forms.php';
@@ -181,8 +181,8 @@ function cbmail($array, $force = false)
         return false;
     }
     $from = $array['from'];
-    if( !isValidEmail($from) ){
-        error_log('Invalid sender email : '.$from);
+    if (!isValidEmail($from)) {
+        error_log('Invalid sender email : ' . $from);
         return false;
     }
 
@@ -342,7 +342,7 @@ function getExt($file): string
  */
 function SetTime($sec, $padHours = true): string
 {
-    if( empty($sec) ){
+    if (empty($sec)) {
         return '';
     }
     if ($sec < 3600) {
@@ -810,7 +810,7 @@ function NOW()
  */
 function is_valid_syntax($code, $text): bool
 {
-    switch($code){
+    switch ($code) {
         case 'username':
             $pattern = '^[A-Za-z0-9_.]+$';
             break;
@@ -824,7 +824,7 @@ function is_valid_syntax($code, $text): bool
             return true;
     }
 
-    preg_match('/'.$pattern.'/i', $text, $matches);
+    preg_match('/' . $pattern . '/i', $text, $matches);
     if (!empty($matches[0])) {
         return true;
     }
@@ -933,7 +933,7 @@ function load_form($param)
 {
     $func = $param['name'];
     $class = $param['function_class'] ?? '';
-    if( !empty($class) && method_exists($class, $func) ){
+    if (!empty($class) && method_exists($class, $func)) {
         return $class::$func($param);
     }
 
@@ -941,7 +941,7 @@ function load_form($param)
         return $func($param);
     }
 
-    error_log('Unknown method : '.$func.' for class : '.$class);
+    error_log('Unknown method : ' . $func . ' for class : ' . $class);
 }
 
 /**
@@ -1452,7 +1452,7 @@ function lang($var)
 
         if (!array_key_exists($var, Language::getInstance()->arrayTranslation)) {
             $translation = $var;
-            error_log('[LANG] Missing translation for "' . $var . '"'.PHP_EOL);
+            error_log('[LANG] Missing translation for "' . $var . '"' . PHP_EOL);
 
             if (in_dev()) {
                 error_log(debug_backtrace_string());
@@ -4048,9 +4048,9 @@ function debug_backtrace_string(): string
     $i = 1;
     $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
     unset($trace[0]); //Remove call to this function from stack trace
-    foreach($trace as $node) {
-        $stack .= '#'.$i.' '.$node['file'] .'(' .$node['line'].'): ';
-        if(isset($node['class'])) {
+    foreach ($trace as $node) {
+        $stack .= '#' . $i . ' ' . $node['file'] . '(' . $node['line'] . '): ';
+        if (isset($node['class'])) {
             $stack .= $node['class'] . '->';
         }
         $stack .= $node['function'] . '()' . PHP_EOL;
@@ -5114,11 +5114,11 @@ function get_update_status($only_flag = false)
     $is_new_version = $current_version > $changelog['version'];
     $is_new_revision = $is_new_version || $current_revision > $changelog['revision'];
 
-    if ($current_version == $changelog['version'] && $current_revision == $changelog['revision'] ) {
-            if ($only_flag) {
-                return 'green';
-            }
-            echo '<h3 style="text-align:center;">Your Clipbucket seems up-to-date !</h3>';
+    if ($current_version == $changelog['version'] && $current_revision == $changelog['revision']) {
+        if ($only_flag) {
+            return 'green';
+        }
+        echo '<h3 style="text-align:center;">Your Clipbucket seems up-to-date !</h3>';
     } else {
         if ($is_new_version || $is_new_revision) {
             if ($only_flag) {
@@ -5155,10 +5155,46 @@ function get_db_update_status()
     $revision = $version['revision'];
 
     $need_db_upgrade = check_need_upgrade($folder_version, $revision);
-    assign('need_db_update', $need_db_upgrade);
+
+    $nb_db_update = 0;
     if ($need_db_upgrade) {
-        assign('nb_db_update', str_replace('%s', get_files_to_upgrade($folder_version, $revision, true), lang('need_db_upgrade')));
+        $nb_db_update += get_files_to_upgrade($folder_version, $revision, true);
     }
+
+    $nb_db_update += get_plugin_db_update_status(true);
+
+    assign('need_db_update', ($nb_db_update > 0));
+    if ($nb_db_update > 0) {
+        assign('nb_db_update', str_replace('%s', $nb_db_update, lang('need_db_upgrade')));
+    }
+    Template('msg_update_db.html');
+}
+
+function get_plugin_db_update_status($only_nb = false)
+{
+    global $db;
+
+    $installed_plugins = $db->select(tbl('plugins'), '*');
+
+    $need_db_plugin_upgrade = false;
+    foreach ($installed_plugins as $installed_plugin) {
+        $need_db_plugin_upgrade = check_need_plugin_upgrade($installed_plugin);
+        if ($need_db_plugin_upgrade) {
+            break;
+        }
+    }
+    $nb_db_update = 0;
+    if ($need_db_plugin_upgrade) {
+        $nb_db_update += get_plugins_files_to_upgrade($installed_plugins, true);
+    }
+    if ($only_nb) {
+        return $nb_db_update;
+    }
+    if ($nb_db_update > 0) {
+        assign('nb_db_update', str_replace('%s', $nb_db_update, lang('need_db_upgrade')));
+    }
+    assign('need_db_update', $need_db_plugin_upgrade);
+    assign('is_plugin_db', true);
     Template('msg_update_db.html');
 }
 
@@ -5186,7 +5222,7 @@ function need_to_update_version(): bool
     return false;
 }
 
-function error_lang_cli ($msg)
+function error_lang_cli($msg)
 {
     if (php_sapi_name() == 'cli') {
         echo $msg . PHP_EOL;
@@ -5195,9 +5231,10 @@ function error_lang_cli ($msg)
     }
 }
 
-function rglob($pattern, $flags = 0) {
+function rglob($pattern, $flags = 0)
+{
     $files = glob($pattern, $flags);
-    foreach (glob(dirname($pattern).'/*', GLOB_ONLYDIR|GLOB_NOSORT) as $dir) {
+    foreach (glob(dirname($pattern) . '/*', GLOB_ONLYDIR | GLOB_NOSORT) as $dir) {
         $files = array_merge(
             [],
             ...[$files, rglob($dir . '/' . basename($pattern), $flags)]

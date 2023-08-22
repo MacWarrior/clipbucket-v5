@@ -86,6 +86,8 @@ try {
     }
 
     $files = get_files_to_upgrade($version, $revision);
+    $installed_plugins = $db->select(tbl('plugins'), '*');
+    $files = array_merge($files, get_plugins_files_to_upgrade($installed_plugins));
 
     $match = [];
     foreach ($files as $file) {

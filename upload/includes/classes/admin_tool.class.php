@@ -167,6 +167,8 @@ class AdminTool
         $revision = $version['revision'];
 
         $files = get_files_to_upgrade($folder_version, $revision);
+        $installed_plugins = $db->select(tbl('plugins'), '*');
+        $files = array_merge($files, get_plugins_files_to_upgrade($installed_plugins));
         if (empty($files)) {
             //update to current revision
             $sql = 'INSERT INTO ' . tbl('version') . ' SET version = \'' . mysql_clean(VERSION) . '\' , revision = ' . mysql_clean(REV) . ', id = 1 ON DUPLICATE KEY UPDATE version = \'' . mysql_clean(VERSION) . '\' , revision = ' . mysql_clean(REV);

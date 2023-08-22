@@ -1,5 +1,5 @@
 <br/>
-{if !$need_db_update}
+{if !$need_db_update && !$is_plugin_db}
 <div class="alert alert-success alert-dismissable">
     <ul class="list-unstyled">
         <li>
@@ -8,7 +8,7 @@
         </li>
     </ul>
 </div>
-{else}
+{else if $need_db_update}
 <div class="alert alert-warning alert-dismissable">
     <ul class="list-unstyled">
         <li>
