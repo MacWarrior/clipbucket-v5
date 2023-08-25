@@ -179,8 +179,8 @@ const IMAGES_URL = '/images';
 const USER_THUMBS_DIR = BASEDIR . '/files/avatars';
 const USER_BG_DIR = BASEDIR . '/files/backgrounds';
 const ICONS_URL = '/images/icons';
-const JS_DIR = BASEDIR . '/js';
 const JS_URL = '/js';
+const CSS_URL = '/css';
 
 #DIRECT URL OF VIDEO FILES
 const FILES_URL = BASEURL . '/files';

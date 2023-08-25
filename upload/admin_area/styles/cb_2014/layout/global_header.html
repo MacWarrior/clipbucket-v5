@@ -118,6 +118,14 @@
 <!-- Including JS Files-->
 {/if}
 
+{if $Cbucket->AdminCSSArray}
+<!-- Including CSS Files-->
+{foreach from=$Cbucket->AdminCSSArray key=file item=type}
+{include_js type=$type file=$file}
+{/foreach}
+<!-- Including CSS Files-->
+{/if}
+
 {if $Cbucket->admin_header_files}
     <!-- Including Headers -->
     {foreach from=$Cbucket->admin_header_files key=file item=type}

@@ -4,6 +4,8 @@ class ClipBucket
     var $BASEDIR;
     var $JSArray = [];
     var $AdminJSArray = [];
+    var $CSSArray = [];
+    var $AdminCSSArray = [];
     var $moduleList = [];
     var $actionList = [];
     var $anchorList = [];
@@ -113,23 +115,36 @@ class ClipBucket
 
     function addJS($files)
     {
-        if (is_array($files)) {
-            foreach ($files as $key => $file) {
-                $this->JSArray[$key] = $file;
-            }
-        } else {
-            $this->JSArray[$files] = 'global';
-        }
+        $this->addFile($this->JSArray, $files);
     }
 
     function addAdminJS($files)
     {
+        $this->addFile($this->AdminJSArray, $files);
+    }
+
+    function addCSS($files)
+    {
+        $this->addFile($this->CSSArray, $files);
+    }
+
+    function addAdminCSS($files)
+    {
+        $this->addFile($this->AdminCSSArray, $files);
+    }
+
+    private function addFile(&$array_var, $files)
+    {
         if (is_array($files)) {
             foreach ($files as $key => $file) {
-                $this->AdminJSArray[$key] = $file;
+                if( !isset($array_var[$key]) ) {
+                    $array_var[$key] = $file;
+                }
             }
         } else {
-            $this->AdminJSArray[$files] = 'global';
+            if( !isset($array_var[$files]) ){
+                $array_var[$files] = 'global';
+            }
         }
     }
 

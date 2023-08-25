@@ -3073,26 +3073,62 @@ function include_js($params)
     $type = $params['type'];
     if (!in_array($file, $the_js_files)) {
         $the_js_files[] = $file;
-        if ($type == 'global') {
-            return '<script src="' . JS_URL . '/' . $file . '" type="text/javascript"></script>';
-        }
-        if ($type == 'plugin') {
-            return '<script src="' . PLUG_URL . '/' . $file . '" type="text/javascript"></script>';
-        }
-        if ($type == 'admin') {
-            return '<script src="' . TEMPLATEURL . '/theme/js/' . $file . '" type="text/javascript"></script>';
-        }
+
         if (is_array($type)) {
             foreach ($type as $t) {
                 if ($t == THIS_PAGE) {
                     return '<script src="' . JS_URL . '/' . $file . '" type="text/javascript"></script>';
                 }
             }
-        } else {
-            if ($type == THIS_PAGE) {
-                return '<script src="' . JS_URL . '/' . $file . '" type="text/javascript"></script>';
+        }
+
+        switch($type){
+            default:
+            case 'global:':
+                $url = JS_URL.'/';
+                break;
+            case 'plugin':
+                $url = PLUG_URL.'/';
+                break;
+            case 'admin':
+                $url = TEMPLATEURL.'/theme/js/';
+                break;
+        }
+        return '<script src="' . $url . $file . '" type="text/javascript"></script>';
+    }
+    return false;
+}
+
+$the_css_files = [];
+function include_css($params)
+{
+    global $the_css_files;
+    $file = $params['file'];
+    $type = $params['type'];
+    if (!in_array($file, $the_css_files)) {
+        $the_css_files[] = $file;
+
+        if (is_array($type)) {
+            foreach ($type as $t) {
+                if ($t == THIS_PAGE) {
+                    return '<link rel="stylesheet" href="' . CSS_URL . '/' . $file . '" ">';
+                }
             }
         }
+
+        switch($type){
+            default:
+            case 'global:':
+                $url = CSS_URL.'/';
+                break;
+            case 'plugin':
+                $url = PLUG_URL.'/';
+                break;
+            case 'admin':
+                $url = TEMPLATEURL.'/theme/js/';
+                break;
+        }
+        return '<link rel="stylesheet" href="' . $url . $file . '">';
     }
     return false;
 }
