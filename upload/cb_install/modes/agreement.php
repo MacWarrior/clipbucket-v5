@@ -11,7 +11,7 @@
         <br/><br/>
         Because Clipbucket original is dead since 2018 <i>(officially since 2022)</i>, branding removal license can't be bought anymore.<br/><i class="small">(It would be a shame if branding was integraded in translations system)</i>
         <br/><br/>
-        This version of Clipbucket and futher updates are supported by <a href="https://github.com/MacWarrior/clipbucket-v5" target="_blank" style="color:#fff;text-decoration:underline;">Clipbucket V5</a> team and Oxygenz.
+        This version of Clipbucket and futher updates are supported by <a href="https://github.com/MacWarrior/clipbucket-v5" target="_blank" style="color:#fff;text-decoration:underline;">Clipbucket V5</a> team and <a href='https://clipbucket.oxygenz.fr' target='_blank'  style="color:#fff;text-decoration:underline;">Oxygenz</a>.
     </div>
 </div>
 

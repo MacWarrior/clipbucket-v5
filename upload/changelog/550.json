@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"223",
+  "revision":"224",
   "status":"dev",
   "detail":[
     {
@@ -85,7 +85,7 @@
         ,"Update requierements doc"
         ,"Update PHP 8+ compatibility"
         ,"Update translations"
-        ,"Update Readme"
+        ,"Update Readme & Copyright"
         ,"Update compatibility to PHP 8.2.X"
         ,"Update DB functions"
         ,"Auto-clear templates cache when in DEV mode"
