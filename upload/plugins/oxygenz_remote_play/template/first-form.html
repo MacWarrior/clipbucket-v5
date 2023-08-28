@@ -1,0 +1,16 @@
+<div class="upload_form">
+    <div class="alert alert-info">
+        {lang('plugin_oxygenz_remote_play_form_description')}
+    </div>
+    <form action="#" id="oxygenz_remote_play_form" class="template" enctype="multipart/form-data" method="post">
+        <label for="oxygenz_remote_play_file_url">{lang code='plugin_oxygenz_remote_play_input_url'}</label>
+        <div class="input-group">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-link"></i></span>
+            <input id="oxygenz_remote_play_file_url" name="oxygenz_remote_play_file_url" type="text" class="form-control" placeholder="{$placeholder_url}"/>
+        </div>
+        <button class="btn btn-primary btn-lg" id="oxygenz_remote_play_submit_form1">{lang code="submit_now"}</button>
+        <div id="second-form" style="display:none;">
+            {include file="./second-form.html"}
+        </div>
+    </form>
+</div>

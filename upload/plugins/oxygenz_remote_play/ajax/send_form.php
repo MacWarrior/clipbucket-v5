@@ -15,7 +15,7 @@ if( empty($Upload->get_upload_options()) ) {
 
 $step = $_POST['step'];
 if( empty($step) || !in_array($step, ['check_link', 'save', 'update']) ){
-    echo json_encode(['error'=>lang('plugin_cb_link_video_invalid_step')]);
+    echo json_encode(['error'=>lang('plugin_oxygenz_remote_play_invalid_step')]);
     die();
 }
 
@@ -25,28 +25,28 @@ if( !empty($_POST['form_data']) ){
     $_POST = array_merge($_POST, $form_data);
 }
 
-$video_url = $_POST['remote_play_url'] = $_POST['cb_link_video_file_url'];
-unset($_POST['cb_link_video_file_url']);
+$video_url = $_POST['remote_play_url'] = $_POST['oxygenz_remote_play_file_url'];
+unset($_POST['oxygenz_remote_play_file_url']);
 if (filter_var($video_url, FILTER_VALIDATE_URL) === FALSE) {
-    echo json_encode(['error'=>lang('plugin_cb_link_video_invalid_url')]);
+    echo json_encode(['error'=>lang('plugin_oxygenz_remote_play_invalid_url')]);
     die();
 }
 
 $extension = strtolower(getExt($video_url));
 $allowed_extensions = ['mp4','m3u8'];
 if( !in_array($extension, $allowed_extensions) ){
-    echo json_encode(['error'=>lang('plugin_cb_link_video_invalid_extension')]);
+    echo json_encode(['error'=>lang('plugin_oxygenz_remote_play_invalid_extension')]);
     die();
 }
 
 $check_url = get_headers($video_url);
 if( !isset($check_url[0]) ){
-    echo json_encode(['error'=>lang('plugin_cb_link_video_website_not_responding')]);
+    echo json_encode(['error'=>lang('plugin_oxygenz_remote_play_website_not_responding')]);
     die();
 }
 
 if( strpos($check_url[0], '200') === false ){
-    echo json_encode(['error'=>lang('plugin_cb_link_video_url_not_working')]);
+    echo json_encode(['error'=>lang('plugin_oxygenz_remote_play_url_not_working')]);
     die();
 }
 
@@ -60,7 +60,7 @@ switch($step){
         $video_infos = $ffmpeg->get_file_info($video_url);
 
         if( empty($video_infos['format']) ){
-            echo json_encode(['error'=>lang('plugin_cb_link_video_not_valid_video')]);
+            echo json_encode(['error'=>lang('plugin_oxygenz_remote_play_not_valid_video')]);
             die();
         }
 
@@ -84,12 +84,12 @@ switch($step){
         sendClientResponseAndContinue(function () use($video_id) {
             $vdetails = get_video_details($video_id);
             echo json_encode([
-                'msg'       => lang('plugin_cb_link_video_video_saved')
+                'msg'       => lang('plugin_oxygenz_remote_play_video_saved')
                 ,'videokey' => $vdetails['videokey']
             ]);
         });
 
-        cb_link_video::process_file($video_url, $video_id);
+        oxygenz_remote_play::process_file($video_url, $video_id);
         die();
 
     case 'update':
@@ -101,7 +101,7 @@ switch($step){
         $vdetails = get_video_details($_POST['videokey']);
 
         if( $vdetails['userid'] != user_id() ){
-            echo json_encode(['error'=>lang('plugin_cb_link_video_saving_error')]);
+            echo json_encode(['error'=>lang('plugin_oxygenz_remote_play_saving_error')]);
             die();
         }
 

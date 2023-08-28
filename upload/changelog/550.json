@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"225",
+  "revision":"226",
   "status":"dev",
   "detail":[
     {
@@ -195,7 +195,7 @@
         ,"Implement plugin compatibility check"
         ,"Update plugin management interface"
         ,"Refactor custom_video_file_funcs"
-        ,"Implement cb_link_video"
+        ,"Implement Oxygenz - Remote Play - 1.0.1"
         ,"Implement SQL update system"
       ]
     },

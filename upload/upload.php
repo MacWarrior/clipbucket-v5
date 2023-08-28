@@ -23,12 +23,6 @@ if (isset($_POST['submit_data'])) {
     }
 }
 
-//Adding Uploading JS Files
-add_js(['swfupload/swfupload.js' => 'uploadactive']);
-add_js(['swfupload/plugins/swfupload.queue.js' => 'uploadactive']);
-add_js(['swfupload/plugins/handlers.js' => 'uploadactive']);
-add_js(['swfupload/plugins/fileprogress.js' => 'uploadactive']);
-
 assign('step', $step);
 assign('extensions', $Cbucket->get_extensions('video'));
 subtitle(lang('upload'));

@@ -12,18 +12,18 @@ $( document ).ready(function() {
         }
     });
 
-    $('#cb_link_video_submit_form1').click(function(e) {
+    $('#oxygenz_remote_play_submit_form1').click(function(e) {
         e.preventDefault();
         $.ajax({
-            url: cb_link_video_submit_form_url,
+            url: oxygenz_remote_play_submit_form_url,
             type: 'POST',
             data: {
                 step : 'check_link'
-                ,cb_link_video_file_url : $('#cb_link_video_file_url').val()
+                ,oxygenz_remote_play_file_url : $('#oxygenz_remote_play_file_url').val()
             },
             dataType: 'json',
             beforeSend: function(){
-                $('#cb_link_video_submit_form1').attr('disabled', true).html(cb_link_video_lang_checking);
+                $('#oxygenz_remote_play_submit_form1').attr('disabled', true).html(oxygenz_remote_play_lang_checking);
             },
             success: function(data) {
                 if(data.error){
@@ -31,13 +31,13 @@ $( document ).ready(function() {
                     setTimeout(function(){
                         $('#uploadMessage').fadeOut(500);
                     }, 5000);
-                    $('#cb_link_video_submit_form1').attr('disabled', false).html(cb_link_video_lang_submit_now);
+                    $('#oxygenz_remote_play_submit_form1').attr('disabled', false).html(oxygenz_remote_play_lang_submit_now);
                 } else {
-                    $('#cb_link_video_form').find('input[name="title"]').val(data.filename);
-                    $('#cb_link_video_form').find('textarea[name="description"]').val(data.filename);
-                    $('#cb_link_video_form').find('input[name="tags"]').val(data.filename);
+                    $('#oxygenz_remote_play_form').find('input[name="title"]').val(data.filename);
+                    $('#oxygenz_remote_play_form').find('textarea[name="description"]').val(data.filename);
+                    $('#oxygenz_remote_play_form').find('input[name="tags"]').val(data.filename);
 
-                    $('#cb_link_video_submit_form1').fadeOut(250);
+                    $('#oxygenz_remote_play_submit_form1').fadeOut(250);
                     $('#second-form').slideDown(1000);
                 }
             },
@@ -47,18 +47,18 @@ $( document ).ready(function() {
     });
 
     var step = 'save';
-    $('#cb_link_video_submit_form2').click(function(e) {
+    $('#oxygenz_remote_play_submit_form2').click(function(e) {
         e.preventDefault();
         $.ajax({
-            url: cb_link_video_submit_form_url,
+            url: oxygenz_remote_play_submit_form_url,
             type: 'POST',
             data: {
                 step : step
-                ,form_data : $('#cb_link_video_form').serialize()
+                ,form_data : $('#oxygenz_remote_play_form').serialize()
             },
             dataType: 'json',
             beforeSend: function(){
-                $('#cb_link_video_submit_form2').attr('disabled', true).html(cb_link_video_lang_saving);
+                $('#oxygenz_remote_play_submit_form2').attr('disabled', true).html(oxygenz_remote_play_lang_saving);
             },
             success: function(data) {
                 if(data.error){
@@ -66,7 +66,7 @@ $( document ).ready(function() {
                     setTimeout(function(){
                         $('#uploadMessage').fadeOut(500);
                     }, 5000);
-                    $('#cb_link_video_submit_form2').attr('disabled', false).html(cb_link_video_lang_submit_now);
+                    $('#oxygenz_remote_play_submit_form2').attr('disabled', false).html(oxygenz_remote_play_lang_submit_now);
                 } else {
                     $('#uploadMessage').html(data.msg).attr('class', 'alert alert-success').show();
                     setTimeout(function(){
@@ -74,12 +74,12 @@ $( document ).ready(function() {
                     }, 5000);
 
                     if(step === 'save'){
-                        $('#cb_link_video_form').find('input[name="videokey"]').attr('disabled', false).val(data.videokey);
-                        $('#cb_link_video_form').find('input[name="cb_link_video_file_url"]').attr('readonly', true);
+                        $('#oxygenz_remote_play_form').find('input[name="videokey"]').attr('disabled', false).val(data.videokey);
+                        $('#oxygenz_remote_play_form').find('input[name="oxygenz_remote_play_file_url"]').attr('readonly', true);
                         step='update';
                     }
 
-                    $('#cb_link_video_submit_form2').attr('disabled', false).html(cb_link_video_lang_submit_now);
+                    $('#oxygenz_remote_play_submit_form2').attr('disabled', false).html(oxygenz_remote_play_lang_submit_now);
                 }
             },
             //error: function(){},
