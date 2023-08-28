@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"224",
+  "revision":"225",
   "status":"dev",
   "detail":[
     {
@@ -113,7 +113,7 @@
         ,"Add option to enable subtitles"
         ,"Add support for HLS video files"
         ,"Improve video quality selection <i>#230</i> (Thanks joo4mart !)"
-        ,"Update VideoJS to version 8.5.1"
+        ,"Update VideoJS to version 8.5.3"
         ,"Add HLS player default quality option"
         ,"Update resolution plugin compatibility to VideoJS 8.X"
         ,"Add support for CB 4.X commercial version migration"

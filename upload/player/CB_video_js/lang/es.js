@@ -68,7 +68,7 @@ videojs.addLanguage('es', {
   "Raised": "En relieve",
   "Depressed": "Hundido",
   "Uniform": "Uniforme",
-  "Dropshadow": "Sombra paralela",
+  "Drop shadow": "Sombra paralela",
   "Font Family": "Familia de fuente",
   "Proportional Sans-Serif": "Sans-Serif proporcional",
   "Monospace Sans-Serif": "Sans-Serif monoespacio",
