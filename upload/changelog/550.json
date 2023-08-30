@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"228",
+  "revision":"229",
   "status":"dev",
   "detail":[
     {
@@ -205,6 +205,7 @@
         "Fix directories check"
         ,"Fix chmod in all scripts"
         ,"Add script for Debian 12 + Nginx"
+        ,"Add script for Ubuntu 22.04 + Nginx"
         ,"Add script for Ubuntu 23.04 + Nginx"
         ,"Update installation process"
         ,"Fix SQL queries"
