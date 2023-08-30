@@ -84,23 +84,22 @@ function display_it()
 {
     try {
         global $ClipBucket, $__devmsgs, $breadcrumb;
-        if (is_array($__devmsgs)) {
+        if( in_dev() ) {
             assign('thebase', BASEDIR);
             assign('__devmsgs', $__devmsgs);
         }
+
         $new_list = [];
         foreach ($ClipBucket->template_files as $file) {
-            if (file_exists(LAYOUT . DIRECTORY_SEPARATOR . $file['file']) || is_array($file)) {
-                if ($ClipBucket->show_page || !$file['follow_show_page']) {
-                    if (!is_array($file)) {
-                        $new_list[] = $file;
-                    } else {
-                        if (isset($file['folder']) && file_exists($file['folder'] . DIRECTORY_SEPARATOR . $file['file'])) {
-                            $new_list[] = $file['folder'] . DIRECTORY_SEPARATOR . $file['file'];
-                        } else {
-                            $new_list[] = $file['file'];
-                        }
-                    }
+            if ($ClipBucket->show_page || !$file['follow_show_page']) {
+                if( isset($file['folder']) ){
+                    $filepath = $file['folder'].DIRECTORY_SEPARATOR.$file['file'];
+                } else {
+                    $filepath = LAYOUT.DIRECTORY_SEPARATOR.$file['file'];
+                }
+
+                if( file_exists($filepath) ){
+                    $new_list[] = $filepath;
                 }
             }
         }
@@ -116,6 +115,9 @@ function display_it()
     }
 }
 
+/**
+ * @throws Exception
+ */
 function display_restorable_language_list()
 {
     $restorable_langs = get_restorable_languages();
@@ -124,6 +126,9 @@ function display_restorable_language_list()
     echo templateWithMsgJson('blocks/restorable_language_list.html');
 }
 
+/**
+ * @throws Exception
+ */
 function display_language_list()
 {
     $ll = Language::getInstance()->get_langs(false, true);
@@ -135,6 +140,9 @@ function display_language_list()
     echo templateWithMsgJson('blocks/language_list.html');
 }
 
+/**
+ * @throws Exception
+ */
 function display_language_edit()
 {
     $detail = Language::getInstance()->getLangById($_POST['language_id']);

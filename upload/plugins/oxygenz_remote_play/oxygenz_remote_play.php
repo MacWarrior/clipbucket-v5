@@ -2,14 +2,15 @@
 /*
 	Plugin Name: Oxygenz - Remote Play
 	Description: Allow to add external videos from URL
-	Author: MacWarrior
-    Version: 1.0.1
+	Author: Oxygenz
+    Author Website: https://oxygenz.fr
+    Version: 1.0.2
 	ClipBucket Version: 5.5.0
 	Website: https://github.com/MacWarrior/clipbucket-v5/
 */
 
 class oxygenz_remote_play {
-    static $template_dir = DIRECTORY_SEPARATOR.'template'.DIRECTORY_SEPARATOR;
+    static $template_dir = PLUG_DIR.DIRECTORY_SEPARATOR.self::class.DIRECTORY_SEPARATOR.'template'.DIRECTORY_SEPARATOR;
     static $media_dir = DIRECTORY_SEPARATOR.'media'.DIRECTORY_SEPARATOR;
     static $js_dir = DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR;
     static $lang_prefix = 'plugin_'.self::class.'_';
@@ -17,7 +18,17 @@ class oxygenz_remote_play {
     /**
      * @throws Exception
      */
-    public static function add_upload_form(){
+    function __construct(){
+        $this->add_upload_form();
+        $this->add_js();
+        $this->register_custom_upload_field();
+        $this->register_custom_video_file_funcs();
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function add_upload_form(){
         global $Cbucket;
 
         $Cbucket->upload_opt_list['link_video_link'] = [
@@ -27,20 +38,10 @@ class oxygenz_remote_play {
         ];
     }
 
-    /**
-     * @throws Exception
-     */
-    public static function load_form()
-    {
-        $plugin_cb_link_video_input_url_example = sprintf( lang(self::$lang_prefix.'input_url_example'), BASEURL.PLUG_URL.self::$media_dir.'example.mp4' );
-        assign('placeholder_url', $plugin_cb_link_video_input_url_example);
-        Template(PLUG_DIR . DIRECTORY_SEPARATOR . self::class . self::$template_dir.'first-form.html', false);
-    }
-
-    public static function add_js(){
-         if( defined('THIS_PAGE') && THIS_PAGE != 'upload' ){
-             return;
-         }
+    private function add_js(){
+        if( defined('THIS_PAGE') && THIS_PAGE != 'upload' ){
+            return;
+        }
 
         $js_file = self::class.'.min.js';
         if(in_dev()){
@@ -55,7 +56,7 @@ class oxygenz_remote_play {
     /**
      * @throws Exception
      */
-    public static function register_custom_upload_field()
+    private function register_custom_upload_field()
     {
         $link_vid_field_array['remote_play_url'] = [
             'title'		        => lang(self::$lang_prefix.'input_url'),
@@ -69,6 +70,20 @@ class oxygenz_remote_play {
         ];
 
         register_custom_upload_field($link_vid_field_array);
+    }
+
+    private function register_custom_video_file_funcs(){
+        register_custom_video_file_func('get_video_url', self::class);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function load_form()
+    {
+        $plugin_cb_link_video_input_url_example = sprintf( lang(self::$lang_prefix.'input_url_example'), BASEURL.PLUG_URL.self::$media_dir.'example.mp4' );
+        assign('placeholder_url', $plugin_cb_link_video_input_url_example);
+        Template(self::$template_dir.'first-form.html', false);
     }
 
     public static function isValidVideoURL($video_url){
@@ -92,10 +107,6 @@ class oxygenz_remote_play {
         }
 
         return $video_url;
-    }
-
-    public static function register_custom_video_file_funcs(){
-        register_custom_video_file_func('get_video_url', self::class);
     }
 
     public static function get_video_url($vdetails, $hq = false)
@@ -165,16 +176,6 @@ class oxygenz_remote_play {
         $ffmpeg->log->newSection('<b>Conversion Completed</b>');
     }
 
-    /**
-     * @throws Exception
-     */
-    public static function init(){
-        self::add_upload_form();
-        self::add_js();
-        self::register_custom_upload_field();
-        self::register_custom_video_file_funcs();
-    }
-
 }
 
-oxygenz_remote_play::init();
+new oxygenz_remote_play();
