@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"229",
+  "revision":"230",
   "status":"dev",
   "detail":[
     {
@@ -193,14 +193,15 @@
   ,{
       "title":"Plugin",
       "description":[
-        "Update Editor's Pick to 2.0.2"
+        "Update Editor's Pick to 2.0.3"
         ,"Update Global Announcement to 2.0.2"
         ,"Update CB Server Thumb to 2.0.0"
         ,"Implement plugin compatibility check"
         ,"Update plugin management interface"
         ,"Refactor custom_video_file_funcs"
-        ,"Implement Oxygenz - Remote Play - 1.0.1"
+        ,"Implement Oxygenz - Remote Play - 1.0.2"
         ,"Implement SQL update system"
+        ,"Update anchor mechanism"
       ]
     },
     {

@@ -56,8 +56,18 @@ function ANCHOR($params)
     $funcs = $Cbucket->get_anchor_function_list($params['place']);
 
     if (!empty($funcs)) {
-        if (is_array($funcs)) {
-            foreach ($funcs as $func) {
+        foreach ($funcs as $func) {
+            if (is_array($func)) {
+                $class = $func['class'];
+                $method = $func['method'];
+                if (method_exists($class, $method)) {
+                    if (isset($params['data'])) {
+                        $class::$method($params['data']);
+                    } else {
+                        $class::$method();
+                    }
+                }
+            } else {
                 if (function_exists($func)) {
                     if (isset($params['data'])) {
                         $func($params['data']);
@@ -65,12 +75,6 @@ function ANCHOR($params)
                         $func();
                     }
                 }
-            }
-        } else {
-            if ($params['data']) {
-                $funcs($params['data']);
-            } else {
-                $funcs();
             }
         }
     }
@@ -110,27 +114,31 @@ function register_anchor($name, $type = null)
  * some place, you can simple register function that will be execute where anchor points are
  * placed
  *
- * @param      $name
+ * @param      $method
  * @param null $type
+ * @param null $class
+ * @return bool
  */
-function register_anchor_function($name, $type = null)
+function register_anchor_function($method, $type, $class = null): bool
 {
     global $Cbucket;
-    if (is_array($name)) {
-        foreach ($name as $key => $naam) {
-            if (is_array($naam)) {
-                foreach ($naam as $name) {
-                    $Cbucket->anchor_function_list[$name][] = $key;
-                }
-            } else {
-                $Cbucket->anchor_function_list[$naam][] = $key;
-            }
+
+    if( empty($type) ){
+        if( in_dev() ){
+            error_log('register_anchor_function '.$method.' must have a type specified');
         }
-    } else {
-        if ($type != null) {
-            $Cbucket->anchor_function_list[$type][] = $name;
-        }
+        return false;
     }
+
+    if (empty($class)) {
+        $Cbucket->anchor_function_list[$type][] = $method;
+    } else {
+        $Cbucket->anchor_function_list[$type][] = [
+            'class'    => $class
+            , 'method' => $method
+        ];
+    }
+    return true;
 }
 
 /**
@@ -148,6 +156,10 @@ function register_anchor_function($name, $type = null)
  */
 function add_admin_menu($header, $name, $link, $plug_folder = false, $is_player_file = false)
 {
+    if (NEED_UPDATE) {
+        return;
+    }
+
     global $Cbucket;
 
     if ($plug_folder) {

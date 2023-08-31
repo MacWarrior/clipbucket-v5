@@ -1,8 +1,13 @@
 <?php
 define('BASEDIR', dirname(__FILE__, 2));
 
-if (!file_exists(BASEDIR . '/files/temp/install.me') && !file_exists(BASEDIR.'/files/temp/install.me.not')) {
-    $mode = 'lock';
+if (!file_exists(BASEDIR . '/files/temp/install.me') ) {
+    if( file_exists(BASEDIR . '/files/temp/development.dev') ){
+        $mode = 'lock';
+    } else {
+        header('Location: //' . $_SERVER['SERVER_NAME']);
+        die();
+    }
 }
 
 function get_cbla()
@@ -11,8 +16,6 @@ function get_cbla()
     $license = str_replace("\n", '<BR>', $license);
     return $license;
 }
-
-
 
 function button($text, $params, $class = 'btn-primary')
 {
