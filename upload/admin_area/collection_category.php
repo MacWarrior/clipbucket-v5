@@ -1,5 +1,5 @@
 <?php
-global $userquery, $pages, $cbcollection;
+global $userquery, $pages, $cbcollection, $Cbucket, $breadcrumb;
 require_once '../includes/admin_config.php';
 
 $userquery->admin_login_check();
@@ -7,7 +7,6 @@ $userquery->login_check('video_moderation');
 $pages->page_redir();
 
 /* Generating breadcrumb */
-global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('collections'), 'url' => ''];
 $breadcrumb[1] = ['title' => lang('manage_categories'), 'url' => ADMIN_BASEURL . '/collection_category.php'];
 
@@ -61,5 +60,14 @@ assign('total', count($cats));
 
 subtitle('Collection Category Manager');
 Assign('msg', @$msg);
+
+if(in_dev()){
+    $min_suffixe = '';
+} else {
+    $min_suffixe = '.min';
+}
+$Cbucket->addAdminJS(['jquery-ui-1.13.2.min.js' => 'global']);
+$Cbucket->addAdminJS(['pages/collection_category/collection_category'.$min_suffixe.'.js' => 'admin']);
+
 template_files('collection_category.html');
 display_it();

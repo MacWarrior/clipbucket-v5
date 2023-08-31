@@ -144,11 +144,18 @@ switch ($mode) {
 
 $udetails = $userquery->get_user_details(user_id());
 $profile = $userquery->get_user_profile($udetails['userid']);
-if (is_array($profile)) {
-    $user_profile = array_merge($udetails, $profile);
+
+if(in_dev()){
+    $min_suffixe = '';
 } else {
-    $user_profile = $udetails;
+    $min_suffixe = '.min';
 }
+
+$Cbucket->addJS(['jquery-ui-1.13.2.min.js' => 'global']);
+$Cbucket->addJS(['tag-it'.$min_suffixe.'.js' => 'global']);
+$Cbucket->addJS(['pages/edit_account/edit_account'.$min_suffixe.'.js' => 'admin']);
+$Cbucket->addCSS(['jquery.tagit'.$min_suffixe.'.css' => 'admin']);
+$Cbucket->addCSS(['tagit.ui-zendesk'.$min_suffixe.'.css' => 'admin']);
 
 assign('user', $udetails);
 assign('p', $user_profile);

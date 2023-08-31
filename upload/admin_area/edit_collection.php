@@ -3,7 +3,7 @@ define('THIS_PAGE', 'edit_collection');
 
 require_once '../includes/admin_config.php';
 
-global $userquery, $pages, $cbcollection, $cbvideo, $cbphoto, $cbvid;
+global $userquery, $pages, $cbcollection, $cbvideo, $cbphoto, $cbvid, $Cbucket;
 
 $userquery->admin_login_check();
 $userquery->login_check('video_moderation');
@@ -12,15 +12,6 @@ $pages->page_redir();
 if (!isset($_GET['collection'])) {
     redirect_to('/collection_manager.php');
 }
-
-$id = $_GET['collection'];
-$c = $cbcollection->get_collection($id);
-
-/* Generating breadcrumb */
-global $breadcrumb;
-$breadcrumb[0] = ['title' => lang('collections'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'Manage Collections', 'url' => ADMIN_BASEURL . '/collection_manager.php'];
-$breadcrumb[2] = ['title' => 'Editing : ' . display_clean($c['collection_name']), 'url' => ADMIN_BASEURL . '/edit_collection.php?collection=' . display_clean($id)];
 
 if (isset($_POST['update_collection'])) {
     $cbcollection->update_collection();
@@ -35,6 +26,15 @@ if (isset($_POST['delete_preview'])) {
 if ($_GET['mode'] != '') {
     $cbcollection->collection_actions($_GET['mode'], $id);
 }
+
+$id = $_GET['collection'];
+$c = $cbcollection->get_collection($id);
+
+/* Generating breadcrumb */
+global $breadcrumb;
+$breadcrumb[0] = ['title' => lang('collections'), 'url' => ''];
+$breadcrumb[1] = ['title' => 'Manage Collections', 'url' => ADMIN_BASEURL . '/collection_manager.php'];
+$breadcrumb[2] = ['title' => 'Editing : ' . display_clean($c['collection_name']), 'url' => ADMIN_BASEURL . '/edit_collection.php?collection=' . display_clean($id)];
 
 switch ($c['type']) {
     case 'videos':
@@ -57,6 +57,18 @@ $FlaggedPhotos = $cbvid->action->get_flagged_objects();
 Assign('flaggedPhoto', $FlaggedPhotos);
 $count_flagged_photos = $cbvid->action->count_flagged_objects();
 Assign('count_flagged_photos', $FlaggedPhotos);
+
+if (in_dev()) {
+    $min_suffixe = '.min';
+} else {
+    $min_suffixe = '';
+}
+$Cbucket->addAdminJS(['jquery-ui-1.13.2.min.js' => 'admin']);
+$Cbucket->addAdminJS(['tag-it' . $min_suffixe . '.js' => 'admin']);
+$Cbucket->addAdminJS(['pages/edit_collection/edit_collection' . $min_suffixe . '.js' => 'admin']);
+
+$Cbucket->addAdminCSS(['jquery.tagit' . $min_suffixe . '.css' => 'admin']);
+$Cbucket->addAdminCSS(['tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin']);
 
 assign('randon_number', rand(-5000, 5000));
 subtitle('Edit Collection');

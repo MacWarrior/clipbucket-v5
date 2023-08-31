@@ -27,5 +27,16 @@ assign('step', $step);
 assign('extensions', $Cbucket->get_extensions('video'));
 subtitle(lang('upload'));
 
+if(in_dev()){
+    $min_suffixe = '';
+} else {
+    $min_suffixe = '.min';
+}
+$Cbucket->addJS(['jquery-ui-1.13.2.min.js' => 'global']);
+$Cbucket->addJS(['tag-it'.$min_suffixe.'.js' => 'global']);
+$Cbucket->addJS(['pages/upload/upload'.$min_suffixe.'.js' => 'admin']);
+$Cbucket->addCSS(['jquery.tagit'.$min_suffixe.'.css' => 'admin']);
+$Cbucket->addCSS(['tagit.ui-zendesk'.$min_suffixe.'.css' => 'admin']);
+
 template_files('upload.html');
 display_it();

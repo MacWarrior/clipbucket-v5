@@ -1,6 +1,6 @@
 <?php
 define('THIS_PAGE', 'edit_video');
-global $userquery, $pages, $Upload, $eh, $myquery, $cbvid;
+global $userquery, $pages, $Upload, $eh, $myquery, $cbvid, $breadcrumb, $Cbucket;
 require_once '../includes/admin_config.php';
 
 $userquery->admin_login_check();
@@ -11,7 +11,6 @@ $video = $_GET['video'];
 $data = get_video_details($video);
 
 /* Generating breadcrumb */
-global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('videos'), 'url' => ''];
 $breadcrumb[1] = ['title' => lang('videos_manager'), 'url' => ADMIN_BASEURL . '/video_manager.php'];
 $breadcrumb[2] = ['title' => 'Editing : ' . display_clean($data['title']), 'url' => ADMIN_BASEURL . '/edit_video.php?video=' . display_clean($video)];
@@ -91,6 +90,18 @@ function format_number($number)
     }
     return $number;
 }
+
+$Cbucket->addAdminJS(['jquery-ui-1.13.2.min.js' => 'admin']);
+if(in_dev()){
+    $min_suffixe = '';
+} else {
+    $min_suffixe = '.min';
+}
+$Cbucket->addAdminJS(['tag-it'.$min_suffixe.'.js' => 'admin']);
+$Cbucket->addAdminJS(['pages/edit_video/edit_video'.$min_suffixe.'.js' => 'admin']);
+
+$Cbucket->addAdminCSS(['jquery.tagit'.$min_suffixe.'.css'=>'admin']);
+$Cbucket->addAdminCSS(['tagit.ui-zendesk'.$min_suffixe.'.css'=>'admin']);
 
 $comments = getComments($comment_cond);
 assign('comments', $comments);

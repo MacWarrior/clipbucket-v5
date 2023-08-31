@@ -415,7 +415,7 @@ class Upload
             ],
             'tags'  => [
                 'title'             => lang('tag_title'),
-                'type'              => 'textfield',
+                'type'              => 'hidden',
                 'name'              => 'tags',
                 'id'                => 'tags',
                 'value'             => genTags($tags),

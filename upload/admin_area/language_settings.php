@@ -54,13 +54,12 @@ if (!empty($_GET['edit_language']) && Language::getInstance()->getLangById($_GET
     $pages->paginate($total_pages, $current_page);
 }
 
-//TODO ajouter JS
 if(in_dev()){
-    $js_file = 'language_settings.js';
+    $min_suffixe = '';
 } else {
-    $js_file = 'language_settings.min.js';
+    $min_suffixe = '.min';
 }
-$Cbucket->addAdminJS(['pages/language_settings/'.$js_file => 'admin']);
+$Cbucket->addAdminJS(['pages/language_settings/language_settings'.$min_suffixe.'.js' => 'admin']);
 
 assign('client_id', $Cbucket->configs['clientid']);
 assign('secret_Id', $Cbucket->configs['secretId']);

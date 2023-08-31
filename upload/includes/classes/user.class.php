@@ -4415,7 +4415,7 @@ class userquery extends CBCategory
             ],
             'profile_tags'    => [
                 'title'     => lang('profile_tags'),
-                'type'      => 'textfield',
+                'type'      => 'hidden',
                 'name'      => 'profile_tags',
                 'id'        => 'profile_tags',
                 'value'     => $default['profile_tags'],

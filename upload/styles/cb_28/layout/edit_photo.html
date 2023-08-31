@@ -26,6 +26,10 @@
                                         {$field.class = 'form-control'}
                                         {$field.hint_1}
                                         {$formObj->createField($field)}
+
+                                        {if $field.id == 'tags'}
+                                            <ul id="list_tags"></ul>
+                                        {/if}
                                         {$field.hint_2}
                                     </div>        
                                 {/foreach}  

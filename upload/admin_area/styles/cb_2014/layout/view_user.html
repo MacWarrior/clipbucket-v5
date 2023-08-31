@@ -229,6 +229,10 @@
                                     <td class="last">
                                         <p>
                                         {$field.class = "form-control"}
+                                        {if $field.id == 'profile_tags'}
+                                            {$field.type='hidden'}
+                                            <ul id="list_tags"></ul>
+                                        {/if}
                                         {ANCHOR place=$field.anchor_before}{$formObj->createField($field)}
                                         {$field.hint_2}
                                         </p>

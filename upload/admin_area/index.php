@@ -199,11 +199,11 @@ Assign('VERSION', VERSION);
 Assign('STATE', STATE);
 
 if(in_dev()){
-    $js_file = 'dashboard.js';
+    $min_suffixe = '';
 } else {
-    $js_file = 'dashboard.min.js';
+    $min_suffixe = '.min';
 }
-$Cbucket->addAdminJS(['pages/dashboard/'.$js_file => 'admin']);
+$Cbucket->addAdminJS(['pages/dashboard/dashboard'.$min_suffixe.'.js' => 'admin']);
 
 template_files('index.html');
 display_it();

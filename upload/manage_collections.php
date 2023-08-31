@@ -3,7 +3,7 @@ define('THIS_PAGE', 'manage_collections');
 define('PARENT_PAGE', 'collections');
 
 require 'includes/config.inc.php';
-global $userquery, $cbcollection, $eh, $pages, $cbvideo, $cbphoto;
+global $userquery, $cbcollection, $eh, $pages, $cbvideo, $cbphoto, $Cbucket;
 
 $userquery->logincheck();
 $udetails = $userquery->get_user_details(user_id());
@@ -163,6 +163,18 @@ switch ($mode) {
         $pages->paginate($total_pages, $page);
         subtitle(lang('manage_favorite_collections'));
 }
+
+if(in_dev()){
+    $min_suffixe = '';
+} else {
+    $min_suffixe = '.min';
+}
+$Cbucket->addJS(['jquery-ui-1.13.2.min.js' => 'global']);
+$Cbucket->addJS(['tag-it'.$min_suffixe.'.js' => 'global']);
+$Cbucket->addJS(['pages/manage_collections/manage_collections'.$min_suffixe.'.js' => 'admin']);
+$Cbucket->addCSS(['jquery.tagit'.$min_suffixe.'.css' => 'admin']);
+$Cbucket->addCSS(['tagit.ui-zendesk'.$min_suffixe.'.css' => 'admin']);
+
 
 template_files('manage_collections.html');
 display_it();

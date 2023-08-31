@@ -1,4 +1,3 @@
-
 <!-- Manage playlist backend -->
 {$myAccountLinks = $userquery->my_account_links()}
     <div class="row cb-box">
@@ -73,11 +72,15 @@
 
                         {foreach from=$playlist_fields item=group}
                             {foreach from=$group.fields item=field}
-                        <div class="form-group">
-                            <label class="label-heading" for="{$field.id}">{$field.title}</label>
-                                {$field.class='form-control'}
-                                {$formObj->createField($field)}
-                        </div>
+                            <div class="form-group">
+                                <label class="label-heading" for="{$field.id}">{$field.title}</label>
+                                    {$field.class='form-control'}
+                                    {if $field.id == 'tags'}
+                                        {$field.type='hidden'}
+                                        <ul id="list_tags"></ul>
+                                    {/if}
+                                    {$formObj->createField($field)}
+                            </div>
                             {/foreach}
                         {/foreach}
                         <div>

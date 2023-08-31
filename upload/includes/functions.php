@@ -3125,7 +3125,7 @@ function include_css($params)
                 $url = PLUG_URL.'/';
                 break;
             case 'admin':
-                $url = TEMPLATEURL.'/theme/js/';
+                $url = TEMPLATEURL.'/theme/css/';
                 break;
         }
         return '<link rel="stylesheet" href="' . $url . $file . '">';

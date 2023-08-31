@@ -120,9 +120,9 @@
 
 {if $Cbucket->AdminCSSArray}
 <!-- Including CSS Files-->
-{foreach from=$Cbucket->AdminCSSArray key=file item=type}
-{include_js type=$type file=$file}
-{/foreach}
+    {foreach from=$Cbucket->AdminCSSArray key=file item=type}
+        {include_css type=$type file=$file}
+    {/foreach}
 <!-- Including CSS Files-->
 {/if}
 

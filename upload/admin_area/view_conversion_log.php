@@ -24,11 +24,11 @@ if ($file_details) {
 }
 
 if(in_dev()){
-    $js_file = 'view_conversion_log.js';
+    $min_suffixe = '';
 } else {
-    $js_file = 'view_conversion_log.min.js';
+    $min_suffixe = '.min';
 }
-$Cbucket->addAdminJS(['pages/view_conversion_log/'.$js_file => 'admin']);
+$Cbucket->addAdminJS(['pages/view_conversion_log/view_conversion_log'.$min_suffixe.'.js' => 'admin']);
 
 assign('videoDetails', $data);
 subtitle('Conversion Log');

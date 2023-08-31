@@ -54,13 +54,17 @@
 							<div class="account_form">
 								{foreach from=$fields item=field}
 									<div class="form-group">
+										{$field.id}
 										<label for="{$field.id}">{$field.title}</label>
 										{if $field.hint_1}<div class="hint">{$field.hint_1}</div>{/if}
 										{ANCHOR place=$field.anchor_before}
 										{$field.class="form-control"}
+										{if $field.id == 'collection_tags'}
+											<ul id="list_tags"></ul>
+										{/if}
 										{$formObj->createField($field)}
 										{if $field.hint_2}
-										<div class="hint">{$field.hint_2}</div>
+											<div class="hint">{$field.hint_2}</div>
                                         {/if}
 									</div>
 								{/foreach}
@@ -93,12 +97,17 @@
 								{foreach from=$fields item=field}
 									<div class="form-group">
 										<label for="{$field.id}">{$field.title}</label>
+										{$field.id}
 										{if $field.hint_1}<div class="hint">{$field.hint_1}</div>{/if}
 										{ANCHOR place=$field.anchor_before}
 										{$field.class="form-control"}
 										{$formObj->createField($field)}
+										{if $field.id == 'collection_tags'}
+											<ul id="list_tags"></ul>
+										{/if}
 										{if $field.hint_2}
-										<div class="hint">{$field.hint_2}</div>{/if}
+											<div class="hint">{$field.hint_2}</div>
+										{/if}
 									</div>
 								{/foreach}
 								{foreach from=$other_fields item=field}

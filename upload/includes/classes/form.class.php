@@ -20,6 +20,7 @@ class formObj
         switch ($field['type']) {
             case 'textfield':
             case 'password':
+            case 'hidden':
             case 'textarea':
             default:
                 $field['type'] = $field['type'] ?: 'textfield';
@@ -62,6 +63,8 @@ class formObj
             $textField = '<input type="text"';
         } elseif ($field['type'] == 'password') {
             $textField = '<input type="password"';
+        } elseif ($field['type'] == 'hidden') {
+            $textField = '<input type="hidden"';
         } elseif ($field['type'] == 'textarea') {
             $textField = '<textarea';
         }
@@ -106,7 +109,7 @@ class formObj
         }
 
         if (!empty($field['value'])) {
-            if ($field['type'] == 'textfield' || $field['type'] == 'password') {
+            if ($field['type'] == 'textfield' || $field['type'] == 'password' || $field['type'] == 'hidden' ) {
                 $textField .= ' value="' . display_clean($field['value']) . '" ';
             }
         }
@@ -116,7 +119,7 @@ class formObj
         }
 
         //Finishing It
-        if ($field['type'] == 'textfield' || $field['type'] == 'password') {
+        if ($field['type'] == 'textfield' || $field['type'] == 'password' || $field['type'] == 'hidden' ) {
             $textField .= ' >';
         } elseif ($field['type'] == 'textarea') {
             $textField .= '</textarea>';

@@ -102,19 +102,6 @@
         <input type="submit" name="add_member" value="Add Member" class="btn btn-info" id="add_member"/>
     </div>
 </form>
-
-<script type="text/javascript" src="/js/jquery-ui-1.13.2.min.js"></script>
 <script>
-    $(document).ready(function(){
-        jQuery('#datecreated').datepicker({
-            showOtherMonths: true,
-            selectOtherMonths: false,
-            changeMonth: true,
-            dateFormat:"{get_date_js()}",
-            changeYear: true,
-            yearRange: "-56:+0"
-        });
-        var currentDate = new Date();
-        $("#dob").datepicker("setDate", currentDate);
-    });
+    var date_format = '{get_date_js()}';
 </script>

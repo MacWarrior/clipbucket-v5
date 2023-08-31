@@ -1,11 +1,10 @@
 <?php
-global $userquery;
+global $userquery, $Cbucket, $breadcrumb;
 require_once '../includes/admin_config.php';
 $userquery->admin_login_check();
 $userquery->login_check('web_config_access');
 
 /* Generating breadcrumb */
-global $breadcrumb;
 $breadcrumb[0] = ['title' => 'General Configurations', 'url' => ''];
 $breadcrumb[1] = ['title' => 'Reports &amp; Stats', 'url' => ADMIN_BASEURL . '/reports.php'];
 
@@ -24,5 +23,12 @@ assign('user_bg', $user_bg);
 assign('cat_thumbs', $cat_thumbs);
 assign('db_size', formatfilesize(get_db_size()));
 
+
+if(in_dev()){
+    $min_suffixe = '';
+} else {
+    $min_suffixe = '.min';
+}
+$Cbucket->addAdminJS(['pages/reports/reports'.$min_suffixe.'.js' => 'admin']);
 template_files('reports.html');
 display_it();

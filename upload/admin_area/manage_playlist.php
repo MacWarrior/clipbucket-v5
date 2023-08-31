@@ -3,7 +3,7 @@ define('THIS_PAGE', 'manage_playlists');
 
 require_once '../includes/admin_config.php';
 
-global $userquery, $pages, $cbvid, $eh;
+global $userquery, $pages, $cbvid, $eh, $Cbucket;
 
 $userquery->admin_login_check();
 $pages->page_redir();
@@ -145,6 +145,18 @@ switch ($mode) {
         }
         break;
 }
+$Cbucket->addAdminJS(['jquery-ui-1.13.2.min.js' => 'admin']);
+if(in_dev()){
+    $min_suffixe = '';
+} else {
+    $min_suffixe = '.min';
+}
+$Cbucket->addAdminJS(['tag-it'.$min_suffixe.'.js' => 'admin']);
+$Cbucket->addAdminJS(['advanced_search/advanced_search'.$min_suffixe.'.js' => 'admin']);
+$Cbucket->addAdminJS(['init_default_tag/init_default_tag'.$min_suffixe.'.js' => 'admin']);
+
+$Cbucket->addAdminCSS(['jquery.tagit' . $min_suffixe . '.css' => 'admin']);
+$Cbucket->addAdminCSS(['tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin']);
 
 //- manage play front end
 template_files('manage_playlist.html');

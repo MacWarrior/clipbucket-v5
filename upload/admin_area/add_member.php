@@ -1,7 +1,7 @@
 <?php
 require_once '../includes/admin_config.php';
 
-global $userquery, $pages;
+global $userquery, $pages, $Cbucket;
 
 $userquery->admin_login_check();
 $userquery->login_check('member_moderation');
@@ -18,6 +18,14 @@ if (isset($_POST['add_member'])) {
         $_POST = '';
     }
 }
+
+if(in_dev()){
+    $min_suffixe = '';
+} else {
+    $min_suffixe = '.min';
+}
+$Cbucket->addAdminJS(['jquery-ui-1.13.2.min.js' => 'global']);
+$Cbucket->addAdminJS(['pages/add_member/add_member'.$min_suffixe.'.js' => 'admin']);
 
 subtitle('Add New Member');
 template_files('add_members.html');

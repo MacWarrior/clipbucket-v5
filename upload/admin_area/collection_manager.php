@@ -1,6 +1,6 @@
 <?php
 define('THIS_PAGE', 'collection_manager');
-global $userquery, $pages, $cbcollection, $eh;
+global $userquery, $pages, $cbcollection, $eh, $Cbucket;
 
 require_once '../includes/admin_config.php';
 $userquery->admin_login_check();
@@ -10,7 +10,7 @@ $pages->page_redir();
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('collections'), 'url' => ''];
-$breadcrumb[1] = ['title' => lang('manage_collections'), 'url' => ADMIN_BASEURL . '/flagged_collections.php'];
+$breadcrumb[1] = ['title' => lang('manage_collections'), 'url' => ADMIN_BASEURL . '/collection_manager.php'];
 
 if (isset($_GET['make_feature'])) {
     $id = mysql_clean($_GET['make_feature']);
@@ -125,6 +125,19 @@ assign('collections', $collections);
 
 $total_pages = count_pages(count($collections), RESULTS);
 $pages->paginate($total_pages, $page);
+
+if (in_dev()) {
+    $min_suffixe = '';
+} else {
+    $min_suffixe = '.min';
+}
+$Cbucket->addAdminJS(['jquery-ui-1.13.2.min.js' => 'admin']);
+$Cbucket->addAdminJS(['tag-it'.$min_suffixe.'.js' => 'admin']);
+$Cbucket->addAdminJS(['advanced_search/advanced_search'.$min_suffixe.'.js' => 'admin']);
+$Cbucket->addAdminJS(['init_default_tag/init_default_tag'.$min_suffixe.'.js' => 'admin']);
+
+$Cbucket->addAdminCSS(['jquery.tagit'.$min_suffixe.'.css'=>'admin']);
+$Cbucket->addAdminCSS(['tagit.ui-zendesk'.$min_suffixe.'.css'=>'admin']);
 
 subtitle(lang('manage_collections'));
 template_files('collection_manager.html');

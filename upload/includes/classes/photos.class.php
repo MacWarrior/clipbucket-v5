@@ -1293,10 +1293,11 @@ class CBPhotos
                 'required'      => 'yes',
                 'invalid_err'   => lang('photo_caption_err')
             ],
-            'tags'       => [
+            'tags' => [
                 'title'       => lang('photo_tags'),
                 'name'        => 'photo_tags',
-                'type'        => 'textfield',
+                'type'        => 'hidden',
+                'id'          => 'tags',
                 'value'       => genTags($tags),
                 'db_field'    => 'photo_tags',
                 'required'    => 'yes',

@@ -1,5 +1,5 @@
 <?php
-global $userquery, $pages, $myquery, $CBucket;
+global $userquery, $pages, $myquery, $CBucket, $Cbucket;
 
 require_once '../includes/admin_config.php';
 $userquery->admin_login_check();
@@ -12,8 +12,8 @@ $udetails = $userquery->get_user_details($uid);
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('users'), 'url' => ''];
-$breadcrumb[0] = ['title' => lang('grp_manage_members_title'), 'url' => ADMIN_BASEURL . '/members.php'];
-$breadcrumb[1] = ['title' => 'Editing : ' . display_clean($udetails['username']), 'url' => ADMIN_BASEURL . '/view_user.php?uid=' . display_clean($uid)];
+$breadcrumb[1] = ['title' => lang('grp_manage_members_title'), 'url' => ADMIN_BASEURL . '/members.php'];
+$breadcrumb[2] = ['title' => 'Editing : ' . display_clean($udetails['username']), 'url' => ADMIN_BASEURL . '/view_user.php?uid=' . display_clean($uid)];
 
 if ($udetails) {
     //Deactivating User
@@ -87,6 +87,17 @@ if ($udetails) {
     e('No User Found');
     $CBucket->show_page = false;
 }
+if(in_dev()){
+    $min_suffixe = '';
+} else {
+    $min_suffixe = '.min';
+}
+
+$Cbucket->addAdminJS(['jquery-ui-1.13.2.min.js' => 'admin']);
+$Cbucket->addAdminJS(['pages/view_user/view_user'.$min_suffixe.'.js' => 'admin']);
+$Cbucket->addAdminJS(['tag-it'.$min_suffixe.'.js' => 'admin']);
+$Cbucket->addAdminCSS(['jquery.tagit'.$min_suffixe.'.css'=>'admin']);
+$Cbucket->addAdminCSS(['tagit.ui-zendesk'.$min_suffixe.'.css'=>'admin']);
 
 subtitle('View User');
 template_files('view_user.html');

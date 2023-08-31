@@ -47,6 +47,9 @@
                                             {/if}
                                             {$field.class = 'form-control'}
                                             {ANCHOR place=$field.anchor_before}
+                                            {if $field.id == 'profile_tags'}
+                                                <ul id="list_tags"></ul>
+                                            {/if}
                                             {$formObj->createField($field)}
                                             {ANCHOR place=$field.anchor_after}
                                             {$field.hint_2}

@@ -1,13 +1,12 @@
 <?php
 
 require_once '../includes/admin_config.php';
-global $userquery, $pages, $Upload, $myquery;
+global $userquery, $pages, $Upload, $myquery, $Cbucket, $breadcrumb;
 $userquery->admin_login_check();
 $userquery->login_check('web_config_access');
 $pages->page_redir();
 
 /* Generating breadcrumb */
-global $breadcrumb;
 $breadcrumb[0] = ['title' => 'General Configurations', 'url' => ''];
 $breadcrumb[1] = ['title' => 'Website Configurations', 'url' => ADMIN_BASEURL . '/main.php'];
 
@@ -397,5 +396,13 @@ $ffmpeg_version = check_version('ffmpeg');
 Assign('ffmpeg_version', $ffmpeg_version);
 
 subtitle('Website Configurations');
+
+if(in_dev()){
+    $min_suffixe = '';
+} else {
+    $min_suffixe = '.min';
+}
+$Cbucket->addAdminJS(['jquery-ui-1.13.2.min.js' => 'global']);
+$Cbucket->addAdminJS(['pages/main/main'.$min_suffixe.'.js' => 'admin']);
 template_files('main.html');
 display_it();

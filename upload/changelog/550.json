@@ -73,6 +73,8 @@
         ,"Fix thumbs suppression SQL"
         ,"Implement cleanup orphan files tool"
         ,"Implement default languages restoration"
+        ,"Fix collection manager, edit collection, view user page's breadcrumb"
+        ,"Implement easy tag input (#68)"
       ]
     },
     {
@@ -104,6 +106,8 @@
         ,"Fix Smarty error handling compatibility for PHP 8.1+"
         ,"Catch email sending with a wrong email configuration"
         ,"Update form field generator"
+        ,"Separate and minify CSS & JS from templates"
+        ,"Implement hidden input type"
       ]
     },
     {

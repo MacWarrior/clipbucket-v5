@@ -45,6 +45,16 @@ if (!isSectionEnabled('photos')) {
         $Cbucket->show_page = false;
     }
 }
+if(in_dev()){
+    $min_suffixe = '';
+} else {
+    $min_suffixe = '.min';
+}
+$Cbucket->addJS(['jquery-ui-1.13.2.min.js' => 'global']);
+$Cbucket->addJS(['tag-it'.$min_suffixe.'.js' => 'global']);
+$Cbucket->addJS(['pages/photo_upload/photo_upload'.$min_suffixe.'.js' => 'admin']);
+$Cbucket->addCSS(['jquery.tagit'.$min_suffixe.'.css' => 'admin']);
+$Cbucket->addCSS(['tagit.ui-zendesk'.$min_suffixe.'.css' => 'admin']);
 
 template_files('photo_upload.html');
 display_it();

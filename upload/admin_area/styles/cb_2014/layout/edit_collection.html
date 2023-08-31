@@ -101,7 +101,13 @@
 								<td class="first"><label>{$field.title}</label></td>
 								<td class="last">
 									<p>
-										<span>{$formObj->createField($field)}</span>
+										<span>
+											{if $field.id == 'collection_tags'}
+												{$field.type='hidden'}
+												<ul id="list_tags"></ul>
+											{/if}
+											{$formObj->createField($field)}
+										</span>
 									</p>
 								</td>
 							</tr>

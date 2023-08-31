@@ -681,7 +681,7 @@ class Collections extends CBCategory
             ],
             'tags' => [
                 'title'             => lang('collection_tags'),
-                'type'              => 'textfield',
+                'type'              => 'hidden',
                 'name'              => 'collection_tags',
                 'id'                => 'collection_tags',
                 'value'             => genTags($tags),

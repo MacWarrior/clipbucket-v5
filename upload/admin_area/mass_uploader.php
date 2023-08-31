@@ -3,18 +3,16 @@ define('THIS_PAGE', 'mass_uploader');
 
 require_once '../includes/admin_config.php';
 require_once(BASEDIR . '/includes/classes/sLog.php');
-global $Cbucket, $userquery, $pages, $cbmass, $Upload, $db;
+global $Cbucket, $userquery, $pages, $cbmass, $Upload, $db, $cbvid, $breadcrumb;
 $userquery->admin_login_check();
 $pages->page_redir();
 
 $delMassUpload = config('delete_mass_upload');
 
 /* Generating breadcrumb */
-global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('videos'), 'url' => ''];
 $breadcrumb[1] = ['title' => 'Mass Upload Videos', 'url' => ADMIN_BASEURL . '/mass_uploader.php'];
 
-global $cbvid;
 $cats = $cbvid->get_categories();
 assign('cats', $cats);
 
@@ -106,6 +104,16 @@ if (isset($_POST['mass_upload_video'])) {
         }
     }
 }
+$Cbucket->addAdminJS(['jquery-ui-1.13.2.min.js' => 'admin']);
+if(in_dev()){
+    $min_suffixe = '';
+} else {
+    $min_suffixe = '.min';
+}
+$Cbucket->addAdminJS(['tag-it'.$min_suffixe.'.js' => 'admin']);
+$Cbucket->addAdminJS(['pages/mass_uploader/mass_uploader'.$min_suffixe.'.js' => 'admin']);
+$Cbucket->addAdminCSS(['jquery.tagit' . $min_suffixe . '.css' => 'admin']);
+$Cbucket->addAdminCSS(['tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin']);
 
 subtitle('Mass Uploader');
 template_files('mass_uploader.html');

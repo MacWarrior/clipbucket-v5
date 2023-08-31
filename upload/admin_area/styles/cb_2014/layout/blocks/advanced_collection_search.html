@@ -24,7 +24,8 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="tags">{lang code='collection_tags'}</label>
-                    <input name="tags" type="text" class="form-control" id="tags" value="{'tags'|get_form_val:true}" />
+                    <input name="tags" type="hidden" class="form-control" id="tags" value="{'tags'|get_form_val:true}" />
+                    <ul id="list_tags"></ul>
                 </div>
             </div>
             <div class="col-md-2">
@@ -93,17 +94,3 @@
         </div>
     </form>
 </div>
-<script type="text/javascript">
-    $(document).ready(function neww () {
-        $(".current").click(function() {
-            $(this).toggleClass('after');
-            if(!$(this).hasClass('after')) {
-                $('.down').hide();
-                $('.up').show();
-            } else {
-                $('.down').show();
-                $('.up').hide();
-            }
-        });
-    })
-</script>

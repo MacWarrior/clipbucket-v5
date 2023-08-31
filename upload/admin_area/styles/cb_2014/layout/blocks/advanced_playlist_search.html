@@ -24,8 +24,9 @@
             <div class="col-md-4">
               <div class="form-group">
                     <label for="tags">Playlist tags</label>
-                    <input class="form-control" name="tags" type="text" id="tags" value="{'tags'|get_form_val:true}" />
-                </div>  
+                    <input class="form-control" name="tags" type="hidden" id="tags" value="{'tags'|get_form_val:true}" />
+                    <ul id="list_tags"></ul>
+                </div>
             </div>
         </div>
         <div class="form-group">
@@ -33,20 +34,3 @@
         </div>
     </form>
 </div>
-
- <script type="text/javascript">
-	$(document).ready(function neww ()
-	{
-		$(".current").click(function() {
-			$(this).toggleClass('after');
-			if(!$(this).hasClass('after'))
-			{
-				$('.down').hide();
-				$('.up').show();
-			} else {
-				$('.down').show();
-				$('.up').hide();
-			}
-		});
-	})
-</script>

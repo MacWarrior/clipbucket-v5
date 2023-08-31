@@ -9,7 +9,7 @@
             Edit Collection ({$data.collection_id|get_collection_field})
         </a>
         {else}
-        <a class="btn btn-primary btn-xs" href="#collection_id">
+        <a class="btn btn-primary btn-xs" id="collection_id">
             Photo is orphan
         </a>
         {/if}
@@ -95,47 +95,26 @@
                         <div id="photodetails" class="tab-pane">
                             <div class="photoDetails">
                                 <h3>Photo Details</h3>
-                                <div class="row">
+                                    {$numCol=3}
+                                    {$rowCount=0}
+                                    {$isRow=false}
                                 {foreach from=$requiredFields item=field}
-
-                                {if $field.title=='Photo Title'}
-                                {$field.class = 'form-control'}
-                                <div class="col-md-4">
-                                <label for="{$field.id}">{$field.title}</label>
-                                {$formObj->createField($field)}
-                                </div>
-                                {/if}
+                                    {if $rowCount mod $numCol == 0}
+                                        <div class="row">
+                                    {/if}
+                                    {$rowCount=$rowCount+1}
+                                        {$field.class = 'form-control'}
+                                        <div class="col-md-4">
+                                            <label for="{$field.id}">{$field.title}</label>
+                                            {if $field.id == 'tags'}
+                                                <ul id="list_tags"></ul>
+                                            {/if}
+                                            {$formObj->createField($field)}
+                                        </div>
+                                    {if $rowCount mod $numCol == 0 || $rowCount==count($requiredFields)}
+                                        </div >
+                                    {/if}
                                 {/foreach}
-                                {foreach from=$requiredFields item=field}
-                                {if $field.title=='Photo Caption'}
-                                {$field.class = 'form-control'}
-                                <div class="col-md-4">
-                                <label for="{$field.id}">{$field.title}</label>
-                                {$formObj->createField($field)}
-                                </div>
-                                {/if}
-                                {/foreach}
-                                {foreach from=$requiredFields item=field}
-                                {if $field.title=='Photo Tags'}
-                                {$field.class = 'form-control'}
-                                <div class="col-md-4">
-                                <label for="{$field.id}">{$field.title}</label>
-                                {$formObj->createField($field)}
-                                </div>
-                                {/if}
-                                {/foreach}
-                                </div>
-                                <div class="row">
-                                {foreach from=$requiredFields item=field}
-                                {if $field.title=='Collection'}
-                                {$field.class = 'form-control'}
-                                <div class="col-md-4">
-                                <label for="{$field.id}">{$field.title}</label>
-                                {$formObj->createField($field)}
-                                </div>
-                                {/if}
-                                {/foreach}
-                                </div>
                             </div>
                         </div>
                         <div id="photostats" class="tab-pane">
@@ -240,23 +219,3 @@
             </div>
         </div>
 </form>
-
-<script type="text/javascript">
-    var changed_col = false;
-    var cur_col = false;
-    $('#collection_id').focus(function(){
-        console.log('hovered');
-        if (changed_col == false) {
-            changed_col = true;
-            cur_col = $('#collection_id').val();
-            $('#cur_col').attr('value',cur_col);
-        }
-    });
-
-    $('#edit_photo_submit').on("click",function(e){
-        e.preventDefault();
-        $('#edit_photo').submit();
-    })
-
-       
-</script>
