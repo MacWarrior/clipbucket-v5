@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"232",
+  "revision":"233",
   "status":"dev",
   "detail":[
     {
@@ -189,6 +189,7 @@
         ,"Update date of birth on signup form <i>#203</i>"
         ,"Fix video upload default values"
         ,"Implement easy tag input (#68)"
+        ,"Fix edit_photo display"
       ]
     }
   ,{
