@@ -127,8 +127,9 @@
 									<li><strong>{lang code='duration'}</strong>:&nbsp;{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</li>
 									<li><strong>{lang code='date'}</strong>:&nbsp; {$video.date_added|nicetime}</li>
 									<li>
-										<strong class="pull-left">{lang('tags')}:&nbsp;&nbsp;</strong>
-										<span class="pull-left">{display_clean($vdo.tags)|tags:videos}</span>
+										<strong class="pull-left" id="label_tags">{lang('tags')}:&nbsp;&nbsp;</strong>
+										<input type="hidden" id="tags" value="{$vdo.tags}">
+										<ul id="list_tags" style="border: 0;"></ul>
 									</li>
 								</ul>
 							</div>
@@ -292,124 +293,11 @@
 
 <script>
 	/*Cookie based comments backup start*/
-	var current_video = "{$video.videoid}",
-	cookieToSave = 'comment_data_u'+userid+"v"+current_video,
-	commentDataCheck = $.cookie(cookieToSave);
-
-	if (commentDataCheck !== null) {
-		$('#comment_box').val(commentDataCheck);
-	}
-	$('#comment_box').on('keyup', function() {
-		var comment_data = $('#comment_box').val();
-        set_cookie_secure(cookieToSave, comment_data);
-	});
-
-	$('#add_comment_button').on("click",function(){
-        set_cookie_secure(cookieToSave, null);
-	});
-	/*Cookie based comments backup end*/
-
+	var current_video = "{$video.videoid}";
 	var playlist_total = "{$total_items}";
-	$('#ShareUsers').on("keyup",function(){
-	    if( $('#ShareUsers').val() === "" )
-	        return;
-
-		var typed = $(this).val();
-		$.ajax({
-			url: '/ajax.php',
-			type: 'post',
-			dataType: 'html',
-			data: {
-				"mode":'user_suggest',
-				"typed": typed
-			},
-			beforeSend: function() {
-			},
-
-			success: function(data) {
-				$('#suggested_users').html('');
-				var jsoned = $.parseJSON(data);
-				$( jsoned.matching_users ).each(function( index, element ) {
-					$('#suggested_users').append("<option label='"+element+"' value='"+element+"'>");
-				});
-			}
-		});
-	});
-
-	/*Playlist load more start*/
-	var playlist_total = "{$total_items}";
-	$('#playlist-pull').on("click",function(){
-		var __this = $(this);
-		loadHit = $(this).attr('dataHit');
-		loadLimit = $(this).attr('dataLimit');
-		playlist = $(this).attr('dataList');
-
-		$.ajax({
-			url: '/ajax/watch.php',
-			type: 'post',
-			dataType: 'html',
-			data: {
-				"mode":'playlistMore',
-				"loadHit":loadHit,
-				"loadLimit":loadLimit,
-				"playlist": playlist
-			},
-			beforeSend: function() {
-				$(__this).text(lang_loading);
-			},
-
-			success: function(data) {
-				var loaded = loadLimit * loadHit;
-				if (playlist_total <= loaded) {
-					$(__this).remove();
-				} else {
-					$(__this).text(lang_load_more);
-				}
-				if (data == 'none') {
-					$('#playlist-pull').remove();
-				}
-				$(data).appendTo('#playlist_items').fadeIn('slow');
-				$('#playlist-pull').attr('dataHit', parseInt(loadHit) + 1);
-			}
-		});
-	});
-	/*Playlist load more end*/
-
-	var aspect_ratio = 1.77778
-	var $cb_player = $("#cb_player");
-
-	$(document).ready(function()
-	{
-        getAllComments('v','{$vdo.videoid}','{$vdo.last_commented}',1,'{$vdo.comments_count}','{$object_type}');
-
-		$cb_player.height( $cb_player.width() / aspect_ratio );
-
-		var videoInfo = $("#videoDescription").text();
-		var newInfo = videoInfo.replace(/(((https?:\/\/)|([\s\t]))(www.)?([a-z0-9]+)\.[a-z]+)/g, '<a href="$1">$1</a>');
-		$("#videoDescription").html(newInfo);
-
-		$("#reportVideo").on({
-			click : function(e){
-				e.preventDefault();
-				$("#flag_item").show();
-			}
-		});
-
-		$("#subscribeUser").on({
-			click: function(e){
-				e.preventDefault();
-				_cb.subscribeToChannelNew('{$video.userid}','subscribe_user');
-			}
-		});
-		var adHtml = $('.ad-holder').html();
-		if(adHtml<1){
-			$('.ad-holder').remove();
-		}
-	});
-
-	var resizePlayer = _cb.debounce(function() {
-		$cb_player.height( $cb_player.width() / aspect_ratio );
-	}, 500, false);
-
-	$(window).resize(resizePlayer);
+	var videoid='{$vdo.videoid}';
+	var last_commented = '{$vdo.last_commented}';
+	var comments_count = '{$vdo.comments_count}';
+	var object_type= '{$object_type}';
+	var userid= '{$video.userid}';
 </script>
