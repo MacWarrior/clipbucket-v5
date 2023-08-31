@@ -218,7 +218,11 @@ class ClipBucket
     function get_anchor_function_list($place)
     {
         //Getting list of functions
-        return $this->anchor_function_list[$place] ?? false;
+        $place = $this->anchor_function_list[$place];
+        $all = $this->anchor_function_list['*'];
+
+        $funcs = array_merge($place ?? [], $all ?? []);
+        return !empty($funcs) ? $funcs : false;
     }
 
     function addMenuAdmin($menu_params, $order = null)
@@ -765,14 +769,6 @@ class ClipBucket
         } else {
             return $this->foot_menu;
         }
-    }
-
-    /**
-     * Function used to call footer
-     */
-    function footer()
-    {
-        ANCHOR(['place' => 'the_footer']);
     }
 
     /**

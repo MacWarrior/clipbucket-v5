@@ -45,12 +45,14 @@
 			<!-- Brand and toggle get grouped for better mobile display -->
 			<div class="header-holder">
 				<div class="navbar-header clearfix">
-					
+
+					{ANCHOR place="before_logo"}
 					<h1 class="logo">
 						<a href="/">
 							<img src="{get_website_logo_path()}" class="img-responsive"/>
 						</a>
 					</h1>
+					{ANCHOR place="after_logo"}
 					
 					<button class="navbar-toggle" data-toggle="collapse" data-target="#bs-collapse">Menu<span class="icon-down-arrow"></span></button>
 					
@@ -65,6 +67,8 @@
 							<nav class="main-links">
 								{$head_menu=cb_menu()}
 								<ul>
+									{ANCHOR place="before_menu_top"}
+
 									{foreach $head_menu as $menu}
 										{if $menu@iteration < 6}
 											{if $menu.this|lower == 'home'}
@@ -79,7 +83,7 @@
 										{/if}
 									{/foreach}
 
-									{ANCHOR place="cb_28_head"}
+									{ANCHOR place="after_menu_top"}
 								</ul>
 							</nav>
 						</div>
@@ -106,13 +110,12 @@
 														<a class="s-types" href="#" valNow="{$stype}">{lang code ="{$stype}"}</a>
 													</li>
 												{/foreach}
-												{ANCHOR place="beat_search"}
+												{ANCHOR place="inside_search"}
 											</ul>
 										</div>
 										<input type="text" class="form-control" name="query" placeholder="{lang code='search_keyword_feed'}" value="{'query'|get_form_val:true}" id="query">
 										<input type="hidden" name="type" class="type" value="{$toSearch}" id="type">
 										<button tabindex="-1" type="submit" name="cbsearch" id="cbsearch" class="btn btn-default btn-search icon-search"></button>
-										{ANCHOR place="elastic_mode_search"}
 									</div>
 								</form><!-- form Ends -->
 							</div>
@@ -129,7 +132,7 @@
 										{if isSectionEnabled('photos') && config('enable_photo_file_upload') == 'yes'}
 										<li class="up_img"><a href="{link name='photo_upload'}">{lang code="upload_photo"}<i class="icon-photo visible-xs"></i></a></li>
 										{/if}
-										{ANCHOR place="aud_upload_link"}
+										{ANCHOR place="inside_upload"}
 									</ul>
 								</li>
 								{/if}
@@ -148,7 +151,6 @@
 										{if isSectionEnabled('videos')}
 										<li class="hidden-xs"><a href="{link name='my_videos'}">{lang code="manage_videos"}</a></li>
 										{/if}
-										{ANCHOR place="head_audio_dropdown"}
 										{if isSectionEnabled('channels')}
 										<li><a href="{link name='channels'}">{lang code="view_channels"}</a></li>
 										<li><a href="/view_channel.php?user={display_clean($userquery->username)}">{lang code="my_channel"}</a></li>
@@ -156,7 +158,7 @@
 										{if isSectionEnabled('playlists')}
 										<li><a href="/manage_playlists.php?user={display_clean($userquery->username)}">{lang code="my_playlists"}</a></li>
 										{/if}
-										{ANCHOR place='premium_button_link'}
+										{ANCHOR place="inside_user_menu"}
 										<li class="divider"></li>
 										<li><a href="{link name='logout'}">{lang code="logout"}</a></li>
 									</ul>

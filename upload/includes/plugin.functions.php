@@ -54,6 +54,10 @@ function ANCHOR($params)
 
     //Getting list of function that will be performed while calling achor
     $funcs = $Cbucket->get_anchor_function_list($params['place']);
+    global $current_anchor;
+    $current_anchor = $params['place'];
+
+    error_log($params['place'].PHP_EOL);
 
     if (!empty($funcs)) {
         foreach ($funcs as $func) {

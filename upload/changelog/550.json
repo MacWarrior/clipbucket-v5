@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"233",
+  "revision":"234",
   "status":"dev",
   "detail":[
     {
@@ -204,6 +204,7 @@
         ,"Implement Oxygenz - Remote Play - 1.0.2"
         ,"Implement SQL update system"
         ,"Update anchor mechanism"
+        ,"Implement Oxygenz - Plugin example - 1.0.0"
       ]
     },
     {
