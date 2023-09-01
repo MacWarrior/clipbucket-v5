@@ -4,7 +4,7 @@
 	Description: Allow to add external videos from URL
 	Author: Oxygenz
     Author Website: https://oxygenz.fr
-    Version: 1.0.2
+    Version: 1.0.3
 	ClipBucket Version: 5.5.0
 	Website: https://github.com/MacWarrior/clipbucket-v5/
 */
