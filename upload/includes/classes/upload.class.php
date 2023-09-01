@@ -420,7 +420,6 @@ class Upload
                 'id'                => 'tags',
                 'value'             => genTags($tags),
                 'hint_1'            => '',
-                'hint_2'            => lang('vdo_tags_msg'),
                 'db_field'          => 'tags',
                 'required'          => 'yes',
                 'validate_function' => 'genTags'

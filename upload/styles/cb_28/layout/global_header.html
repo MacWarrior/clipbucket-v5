@@ -38,6 +38,9 @@
 
             var lang_subscribe = "{lang code='subscribe'}";
             var lang_unsubscribe = "{lang code='unsubscribe'}";
+			var fastQitems = "{$got_qlitems}";
+			var pageNow = "{$smarty.const.THIS_PAGE}";
+
 		</script>
 
 		{if $Cbucket->JSArray}
@@ -71,13 +74,12 @@
 		    <!-- Ending Headers -->
 		{/if}
 		<script>
-			var fastQitems = "{$got_qlitems}";
+
 			$(document).ready(function(){
 				loading = '<i class="glyphicon glyphicon-refresh animate-spin"></i> {lang code="loading"}...';
 				$( 'ul#photos li:visible' ).each( function( i ){
 					$( this )[ (1&i) ? 'addClass' : 'removeClass' ]( 'photo-land-no' );
 				})
 			})
-			var pageNow = "{$smarty.const.THIS_PAGE}";
 		</script>
 	</head>
