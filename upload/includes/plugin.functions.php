@@ -39,6 +39,10 @@ function register_action($name, $type = null)
  */
 function ANCHOR($params)
 {
+    if( empty($params['place']) ){
+        return;
+    }
+
     global $Cbucket;
     //Getting List of codes to display at this anchor
     $codes = $Cbucket->get_anchor_codes($params['place']);
@@ -56,8 +60,6 @@ function ANCHOR($params)
     $funcs = $Cbucket->get_anchor_function_list($params['place']);
     global $current_anchor;
     $current_anchor = $params['place'];
-
-    error_log($params['place'].PHP_EOL);
 
     if (!empty($funcs)) {
         foreach ($funcs as $func) {

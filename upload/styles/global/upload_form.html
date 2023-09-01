@@ -34,11 +34,12 @@
     <div class="row">
         <div class="col-md-8">
             <div id="updateVideoInfo">
+                {ANCHOR place="before_upload_form_required_fields"}
                 <fieldset>
                     <legend>{$requiredFields.group_name}</legend>
                 </fieldset>
                 <div class="requiredFields">
-                  {foreach $requiredFields.fields as $field}
+                    {foreach $requiredFields.fields as $field}
                         <div class="form-group">
                         {$field.class='form-control'}
                         {$field.notShowSeprator='yes'}
@@ -54,17 +55,16 @@
                         {/if}
                         </div>
                     {/foreach}
-                  
-                    
+
                     <div class="form-group hidden">
                         <label for="duration">Duration</label>
                         <input type="text" placeholder="" name="duration" id="duration" class="form-control" disabled>
-
                     </div>
-
-                    {ANCHOR place="upload_video_form"}
                 </div>
+                {ANCHOR place="after_upload_form_required_fields"}
+
                 {if $custom_flag && $custom_fields!=""}
+                    {ANCHOR place="before_upload_form_custom_fields"}
                     <div class="formSection clear">
                         <h4>{$custom_fields.group_name} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
                         <div class="sectionContent hidden">
@@ -89,7 +89,10 @@
                             {/foreach}    
                         </div>
                     </div>
+                    {ANCHOR place="after_upload_form_custom_fields"}
                 {/if}
+
+                {ANCHOR place="before_upload_form_location_fields"}
                 <div class="formSection clear">
                     <h4>{$dateAndLocation.group_name} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
                     <div class="sectionContent hidden">
@@ -114,7 +117,9 @@
                         {/foreach}    
                     </div>
                 </div>
-  
+                {ANCHOR place="after_upload_form_location_fields"}
+
+                {ANCHOR place="before_upload_form_sharing_fields"}
                 <div class="formSection clear">
                     <h4>{$sharingOptions.group_name}<i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
                     <div class="sectionContent hidden">
@@ -134,13 +139,17 @@
                         {/foreach}
                     </div>
                 </div>
+                {ANCHOR place="after_upload_form_sharing_fields"}
 
+                {ANCHOR place="before_upload_form_submit"}
                 <div class="pad-bottom-sm text-right">
                     <button class="btn btn-primary btn-lg saveVideoDetails">{lang code="submit_now"}</button>
-                </div>  
+                </div>
+                {ANCHOR place="after_upload_form_submit"}
             </div>
         </div>
         <div class="col-md-4 uploadFormSidebarDiv">
+            {ANCHOR place="before_upload_form_categories_field"}
             <h4>{$categories.title}</h4>
             <small>{$categories.hint_1}</small>
             <div class="categoriesContainer">
@@ -148,6 +157,7 @@
                 {$categories.class='checkbox'}
                 {$formObj->createField($categories)}
             </div>
+            {ANCHOR place="after_upload_form_categories_field"}
         </div>
     </div>
 </form>
