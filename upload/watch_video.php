@@ -63,8 +63,7 @@ if(in_dev()){
     $min_suffixe = '.min';
 }
 
-$Cbucket->addJS(['jquery-ui-1.13.2.min.js' => 'global']);
-$Cbucket->addJS(['tag-it'.$min_suffixe.'.js' => 'global']);
+$Cbucket->addJS(['tag-it'.$min_suffixe.'.js' => 'admin']);
 $Cbucket->addJS(['init_readonly_tag/init_readonly_tag'.$min_suffixe.'.js' => 'admin']);
 $Cbucket->addJS(['pages/watch_video/watch_video'.$min_suffixe.'.js' => 'admin']);
 $Cbucket->addCSS(['jquery.tagit'.$min_suffixe.'.css' => 'admin']);

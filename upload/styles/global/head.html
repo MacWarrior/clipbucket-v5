@@ -32,16 +32,6 @@
     }
 </script>
 
-<!-- Including JS Files-->
-{if in_dev()}
-    <script type="text/javascript" src="/js/jquery_plugs/cookie.js"></script>
-    <script type="text/javascript" src="/js/functions.js"></script>
-{else}
-    <script type="text/javascript" src="/js/jquery_plugs/cookie.min.js"></script>
-    <script type="text/javascript" src="/js/functions.min.js"></script>
-{/if}
-<!-- Including JS Files-->
-
 <script type="text/javascript">
     callURLParser();
 </script>
@@ -244,17 +234,6 @@ window.onload = function() {ldelim}
 </script>
 {/if}
 
-{if $Cbucket->JSArray}
-    {foreach from=$Cbucket->JSArray key=file item=type}
-        {include_js type=$type file=$file}
-    {/foreach}
-{/if}
-
-{if $Cbucket->CSSArray}
-    {foreach from=$Cbucket->CSSArray key=file item=type}
-        {include_css type=$type file=$file}
-    {/foreach}
-{/if}
 
 {if $smarty.const.THIS_PAGE == 'view_item'}
 <script type="text/javascript">

@@ -3019,14 +3019,9 @@ function include_header($params)
     $file = getArrayValue($params, 'file');
     $type = getArrayValue($params, 'type');
     if ($file == 'global_header') {
+
         Template(BASEDIR . '/styles/global/head.html', false);
         return false;
-    }
-    if ($file == 'admin_bar') {
-        if (has_access('admin_access', true)) {
-            Template(BASEDIR . '/styles/global/admin_bar.html', false);
-            return false;
-        }
     }
     if (!$type) {
         $type = "global";
@@ -3082,16 +3077,16 @@ function include_js($params)
             }
         }
 
-        switch($type){
+        switch ($type) {
             default:
             case 'global:':
-                $url = JS_URL.'/';
+                $url = JS_URL . '/';
                 break;
             case 'plugin':
-                $url = PLUG_URL.'/';
+                $url = PLUG_URL . '/';
                 break;
             case 'admin':
-                $url = TEMPLATEURL.'/theme/js/';
+                $url = TEMPLATEURL . '/theme/js/';
                 break;
         }
         return '<script src="' . $url . $file . '" type="text/javascript"></script>';
@@ -3116,16 +3111,16 @@ function include_css($params)
             }
         }
 
-        switch($type){
+        switch ($type) {
             default:
             case 'global:':
-                $url = CSS_URL.'/';
+                $url = CSS_URL . '/';
                 break;
             case 'plugin':
-                $url = PLUG_URL.'/';
+                $url = PLUG_URL . '/';
                 break;
             case 'admin':
-                $url = TEMPLATEURL.'/theme/css/';
+                $url = TEMPLATEURL . '/theme/css/';
                 break;
         }
         return '<link rel="stylesheet" href="' . $url . $file . '">';

@@ -151,8 +151,7 @@ if(in_dev()){
     $min_suffixe = '.min';
 }
 
-$Cbucket->addJS(['jquery-ui-1.13.2.min.js' => 'global']);
-$Cbucket->addJS(['tag-it'.$min_suffixe.'.js' => 'global']);
+$Cbucket->addJS(['tag-it'.$min_suffixe.'.js' => 'admin']);
 $Cbucket->addJS(['pages/edit_account/edit_account'.$min_suffixe.'.js' => 'admin']);
 $Cbucket->addCSS(['jquery.tagit'.$min_suffixe.'.css' => 'admin']);
 $Cbucket->addCSS(['tagit.ui-zendesk'.$min_suffixe.'.css' => 'admin']);

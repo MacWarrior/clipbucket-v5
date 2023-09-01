@@ -71,11 +71,6 @@ class ClipBucket
         $pages->redirectOrig();
         //Get Base Directory
         $this->BASEDIR = $this->getBasedir();
-        //Listing Common JS File
-        $this->addJS([
-            'jquery_plugs/cookie.js' => 'global',
-            'functions.js'           => 'global',
-        ]);
 
         //This is used to create Admin Menu
         //Updating Upload Options		
@@ -554,6 +549,7 @@ class ClipBucket
         }
         $template = $this->template;
 
+        require_once STYLES_DIR . DIRECTORY_SEPARATOR . $this->template . DIRECTORY_SEPARATOR . 'header.php';
         if (isset($_SESSION['the_template']) && $cbtpl->is_template($_SESSION['the_template'])) {
             $template = $_SESSION['the_template'];
         }

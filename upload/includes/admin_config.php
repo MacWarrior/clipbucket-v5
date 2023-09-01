@@ -44,6 +44,8 @@ define('TEMPLATEURLFO', DIRECTORY_SEPARATOR . TEMPLATEFOLDER . DIRECTORY_SEPARAT
 define('LAYOUT', TEMPLATEDIR . DIRECTORY_SEPARATOR . 'layout');
 define('TEMPLATE', $row['template_dir']);
 
+
+require_once TEMPLATEDIR . DIRECTORY_SEPARATOR . 'header.php';
 /*
 * Calling this function to check server configs
 * Checks : MEMORY_LIMIT, UPLOAD_MAX_FILESIZE, POST_MAX_SIZE, MAX_EXECUTION_TIME
