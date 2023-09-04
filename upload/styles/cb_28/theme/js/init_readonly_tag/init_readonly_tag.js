@@ -5,5 +5,6 @@ $(function () {
         readOnly:true,
         singleFieldNode:$('#tags'),
         animate:false,
+        caseSensitive:false
     });
 })

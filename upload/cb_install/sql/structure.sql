@@ -1165,3 +1165,31 @@ CREATE TABLE `{tbl_prefix}tools_status`(
 
 ALTER TABLE `{tbl_prefix}tools`
     ADD FOREIGN KEY (`id_tools_status`) REFERENCES `{tbl_prefix}tools_status` (`id_tools_status`) ON DELETE RESTRICT ON UPDATE NO ACTION;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}tags`
+(
+    `id_tag`      INT          NOT NULL AUTO_INCREMENT,
+    `id_tag_type` INT          NOT NULL,
+    `name`        VARCHAR(128) NOT NULL,
+    PRIMARY KEY (`id_tag`),
+    UNIQUE  `id_tag_type` (`id_tag_type`, `name`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}tags_type`
+(
+    `id_tag_type` INT         NOT NULL AUTO_INCREMENT,
+    `name`        VARCHAR(32) NOT NULL,
+    PRIMARY KEY (`id_tag_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}tags` ADD CONSTRAINT `tag_type` FOREIGN KEY (`id_tag_type`) REFERENCES `{tbl_prefix}tags_type`(`id_tag_type`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_tags`
+(
+    `id_video` BIGINT NOT NULL,
+    `id_tag`   INT    NOT NULL,
+    PRIMARY KEY (`id_video`, `id_tag`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}video_tags` ADD CONSTRAINT `video_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags`(`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}video_tags` ADD CONSTRAINT `video_tags_video` FOREIGN KEY (`id_video`) REFERENCES `{tbl_prefix}video`(`videoid`) ON DELETE RESTRICT ON UPDATE RESTRICT;

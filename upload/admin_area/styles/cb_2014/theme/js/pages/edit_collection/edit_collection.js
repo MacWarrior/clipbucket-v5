@@ -5,5 +5,6 @@ $(function () {
         readOnly: false,
         singleFieldNode: $('#collection_tags'),
         animate: true,
+        caseSensitive:false
     });
 });

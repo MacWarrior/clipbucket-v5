@@ -85,7 +85,8 @@
                         singleField:true,
                         readOnly:false,
                         singleFieldNode: $(oneUploadForm).find('#tags'+ index),
-                        animate:true
+                        animate:true,
+                        caseSensitive:false
                     });
 
                     wrapperDiv.appendChild(oneUploadForm);
@@ -434,5 +435,14 @@
                 }
             });
         });
+        $('#list_tags').tagit({
+            singleField:true,
+            fieldName:"collection_tags",
+            readOnly:false,
+            singleFieldNode:$('#collection_tags'),
+            animate:true,
+            caseSensitive:false
+        });
+
     });
 })(window);

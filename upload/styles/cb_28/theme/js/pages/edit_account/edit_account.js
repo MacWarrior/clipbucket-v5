@@ -5,5 +5,6 @@ $(function () {
         readOnly:false,
         singleFieldNode:$('#profile_tags'),
         animate:true,
+        caseSensitive:false
     });
 })

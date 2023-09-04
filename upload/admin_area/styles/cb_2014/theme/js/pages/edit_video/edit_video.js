@@ -79,5 +79,6 @@ $(function () {
         readOnly:false,
         singleFieldNode:$('#tags'),
         animate:true,
+        caseSensitive:false
     });
 });

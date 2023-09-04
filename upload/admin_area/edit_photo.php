@@ -39,7 +39,6 @@ if (in_dev()) {
 } else {
     $min_suffixe = '.min';
 }
-$Cbucket->addAdminJS(['jquery-ui-1.13.2.min.js' => 'admin']);
 $Cbucket->addAdminJS(['tag-it' . $min_suffixe . '.js' => 'admin']);
 $Cbucket->addAdminJS(['init_default_tag/init_default_tag' . $min_suffixe . '.js' => 'admin']);
 $Cbucket->addAdminJS(['pages/edit_photo/edit_photo' . $min_suffixe . '.js' => 'admin']);

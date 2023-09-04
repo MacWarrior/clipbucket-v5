@@ -87,7 +87,8 @@ $(document).ready(function(){
                     singleField:true,
                     readOnly:false,
                     singleFieldNode: $(oneUploadForm).find('#tags'+ index),
-                    animate:true
+                    animate:true,
+                    caseSensitive:false
                 });
 
                 if(file.data.broadcast === 'unlisted'){
