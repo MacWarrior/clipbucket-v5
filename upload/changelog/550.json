@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"238",
+  "revision":"239",
   "status":"dev",
   "detail":[
     {
@@ -75,6 +75,7 @@
         ,"Implement default languages restoration"
         ,"Fix collection manager, edit collection, view user page's breadcrumb"
         ,"Implement easy tag input (#68)"
+        ,"Refactor tags management"
       ]
     },
     {
@@ -151,6 +152,7 @@
         ,"Fix video duration detection failure in some rare cases"
         ,"Fix long conversion process failing"
         ,"Refactor video conversion log"
+        ,"Fix video duration not saving properly while not in dev mode"
       ]
     }
     ,{

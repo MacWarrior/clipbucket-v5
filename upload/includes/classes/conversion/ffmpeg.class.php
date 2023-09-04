@@ -744,7 +744,7 @@ class FFMpeg
         $videoid = $array['videoid'];
 
         $extension = 'jpg';
-        if ($num > 1) {
+        if ($num >= 1) {
             $division = $duration / $num;
             $num_length = strlen($num);
 

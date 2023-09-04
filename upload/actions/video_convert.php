@@ -119,7 +119,7 @@ if (!empty($_filename)) {
     $ffmpeg->ClipBucket();
 
     $video_files = json_encode($ffmpeg->video_files);
-    $db->update(tbl('video'), ['video_files'], [$video_files], ' file_name = \''.display_clean($_filename).'\'');
+    $db->update(tbl('video'), ['video_files', 'duration'], [$video_files, $ffmpeg->input_details['duration']], ' file_name = \''.display_clean($_filename).'\'');
 
     $videoDetails = $cbvideo->get_video($queue_details['cqueue_name'], true);
     update_bits_color($videoDetails);

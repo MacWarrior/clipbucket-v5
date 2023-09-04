@@ -684,16 +684,7 @@ function update_processed_video($file_array, $status = 'Successful')
 
     $result = db_select('SELECT * FROM ' . tbl('video') . " WHERE file_name = '$file_name'");
     if ($result) {
-        $duration = 0;
-        foreach ($result as $result1) {
-            $str = DIRECTORY_SEPARATOR . $result1['file_directory'] . DIRECTORY_SEPARATOR;
-            $duration = parse_duration(LOGS_DIR . $str . $file_array['cqueue_name'] . '.log');
-            if ($duration != 0) {
-                break;
-            }
-        }
-
-        $db->update(tbl('video'), ['status', 'duration', 'failed_reason'], [$status, $duration, 'none'], " file_name='" . display_clean($file_name) . "'");
+        $db->update(tbl('video'), ['status', 'failed_reason'], [$status, 'none'], " file_name='" . display_clean($file_name) . "'");
     }
 }
 
@@ -775,43 +766,6 @@ function get_file_details($file_name, $get_jsoned = false)
         return $statistics;
     }
     return false;
-}
-
-function parse_duration($log)
-{
-    $duration = false;
-
-    if (isset($log['output_duration'])) {
-        $duration = $log['output_duration'];
-    }
-
-    if ((!$duration || !is_numeric($duration)) && isset($log['duration'])) {
-        $duration = $log['duration'];
-    }
-
-    if ((!$duration || !is_numeric($duration)) && file_exists($log)) {
-        $log_content = file_get_contents($log);
-
-        preg_match_all('/Duration: ([0-9]{1,2}):([0-9]{1,2}):([0-9.]{1,5})/i', $log_content, $matches);
-        if (isset($matches[1][0]) && isset($matches[2][0]) && isset($matches[3][0])) {
-            //Now we will multiple hours, minutes accordingly and then add up with seconds to
-            //make a single variable of duration
-            $hours = (int)$matches[1][0];
-            $minutes = (int)$matches[2][0];
-            $seconds = (int)$matches[3][0];
-
-            $hours = $hours * 60 * 60;
-            $minutes = $minutes * 60;
-            $duration = $hours + $minutes + $seconds;
-        } else {
-            preg_match_all('/<strong>duration<\/strong> : ([0-9.]*)/i', $log_content, $matches);
-            if (isset($matches[1][0])) {
-                $duration = $matches[1][0];
-            }
-        }
-
-    }
-    return $duration;
 }
 
 /**
