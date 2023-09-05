@@ -5,5 +5,10 @@
     "psr/log": "1.1.4",
     "phpmailer/phpmailer": "^6.8.0",
     "smarty/smarty": "3.1.48"
+  },
+  "config": {
+    "platform": {
+      "php": "7.0"
+    }
   }
 }

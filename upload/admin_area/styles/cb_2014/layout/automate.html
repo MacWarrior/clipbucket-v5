@@ -1,0 +1,25 @@
+<div class="heading">
+    <h2>{lang code='automate'}</h2>
+</div>
+<div id="language_list">
+    <table class="table table-bordered table-striped manageUsersTable">
+        <tr>
+            <th class="col-md-2">{lang code='title'}</th>
+            <th class="col-md-2">{lang code='description'}</th>
+            <th class="col-md-2">{lang code='recurence'}</th>
+            <th class="col-md-2">{lang code='status'}</th>
+            <th class="col-md-2">{lang code='log'}</th>
+            <th class="col-md-2">{lang code='action'}</th>
+        </tr>
+        {section name=automate_key loop=$automate_list}
+        <tr>
+            <td style="vertical-align: middle;">{lang code = ($automate_list[automate_key].nom)}</td>
+            <td style="vertical-align: middle;">{lang code = ($automate_list[automate_key].description)}</td>
+            <td style="vertical-align: middle;">{lang code = ($automate_list[automate_key].frequence_trad)}</td>
+            <td style="vertical-align: middle;">{lang code = ($automate_list[automate_key].statut)}</td>
+            <td style="vertical-align: middle;">{lang code = ($automate_list[automate_key].id_automate_histo)}</td>
+            <td style="vertical-align: middle;">{lang code = ($automate_list[automate_key].id_automate_histo)}</td>
+        </tr>
+        {/section}
+    </table>
+</div>

@@ -12,6 +12,8 @@ const REMBER_DAYS = 7;
 
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php');
 
+$whoops = new \Whoops\Run;
+
 if (file_exists(dirname(__FILE__) . '/../files/temp/development.dev')) {
     define('DEVELOPMENT_MODE', true);
     $__devmsgs = [
@@ -36,19 +38,18 @@ if (file_exists(dirname(__FILE__) . '/../files/temp/development.dev')) {
     ];
 
     if (php_sapi_name() != 'cli') {
-        $whoops = new \Whoops\Run;
         $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
-
-        // Keep errors in php errors log file
-        $whoops->pushHandler(function($e){
-            error_log($e->getMessage().PHP_EOL.$e->getTraceAsString());
-        });
-
-        $whoops->register();
     }
 } else {
     define('DEVELOPMENT_MODE', false);
 }
+
+// Keep errors in php errors log file
+$whoops->pushHandler(function($e){
+    error_log($e->getMessage().PHP_EOL.$e->getTraceAsString());
+});
+
+$whoops->register();
 
 if (!@$in_bg_cron) {
     //Setting Session Max Life
