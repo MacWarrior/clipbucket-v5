@@ -317,7 +317,7 @@
                 <div class="tab-content">
                     <div id="videoinfos" class="tab-pane active">
                         {foreach from=$video_fields item=field}
-                        {if $field.title==lang('vdo_cat')}
+                        {if $field.id == 'category'}
                         <div>
                             {if $field.type != 'checkbox' && $field.type != 'radiobutton' && $field.type != 'checkbox2'}
                                 {if empty($field.class)}

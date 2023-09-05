@@ -450,7 +450,7 @@ switch ($mode) {
             $_POST = $request;
             $cbvid->update_video();
 
-            $vdetails = $cbvid->get_video_details($vid);
+            $vdetails = $cbvid->get_video($vid);
             echo json_encode(['success' => 'yes', 'vdetails' => $vdetails]);
         } else {
             echo json_encode(['err' => error()]);

@@ -144,10 +144,10 @@ class CBvideo extends CBCategory
     /**
      * Function used to check weather video exists or not
      *
-     * @param int|string VID or VKEY
+     * @param int|string $vid
      *
-     * @return bool
-     * @throws \Exception
+     * @return bool|int
+     * @throws Exception
      */
     function video_exists($vid)
     {
@@ -162,29 +162,24 @@ class CBvideo extends CBCategory
      * Function used to get video data
      *
      * @param      $vid
-     * @param bool $file
-     * @param bool $basic
+     * @param bool $filename
      *
      * @return bool|mixed|STRING
-     * @throws \Exception
+     * @throws Exception
      */
-    function get_video($vid, $file = false, $basic = false)
+    function get_video($vid, bool $filename = false)
     {
         $vid = mysql_clean($vid);
 
         $userFields = get_user_fields();
-        $videoFields = ['video' => '*'];
-
-        if ($basic === true) {
-            $videoFields = get_video_fields();
-        }
+        $videoFields = get_video_fields();
 
         $fields = [
             'video' => $videoFields,
             'users' => $userFields
         ];
 
-        $cond = (($file) ? 'video.file_name' : (is_numeric($vid) ? 'video.videoid' : 'video.videokey')) . ' = \'%s\' ';
+        $cond = (($filename) ? 'video.file_name' : (is_numeric($vid) ? 'video.videoid' : 'video.videokey')) . ' = \'%s\' ';
 
         $query = 'SELECT ' . table_fields($fields) . ' FROM ' . cb_sql_table('video');
         $query .= ' LEFT JOIN ' . cb_sql_table('users') . ' ON video.userid = users.userid';
@@ -219,16 +214,6 @@ class CBvideo extends CBCategory
         return false;
     }
 
-    function getvideo($vid)
-    {
-        return $this->get_video($vid);
-    }
-
-    function get_video_details($vid)
-    {
-        return $this->get_video($vid);
-    }
-
     /**
      * Function used to perform several actions with a video
      *
@@ -236,13 +221,13 @@ class CBvideo extends CBCategory
      * @param $vid
      *
      * @return bool|string|void
-     * @throws \Exception
+     * @throws Exception
      */
     function action($case, $vid)
     {
         global $db;
 
-        $video = $this->get_video_details($vid);
+        $video = $this->get_video($vid);
 
         if (!$video) {
             return false;
@@ -327,7 +312,7 @@ class CBvideo extends CBCategory
      * Function used to update video
      *
      * @param null $array
-     * @throws \Exception
+     * @throws Exception
      */
     function update_video($array = null)
     {
@@ -483,7 +468,7 @@ class CBvideo extends CBCategory
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     function update_subtitle ($videoid, $number, $title)
     {
@@ -498,7 +483,7 @@ class CBvideo extends CBCategory
      * Function used to delete a video
      *
      * @param $vid
-     * @throws \Exception
+     * @throws Exception
      */
     function delete_video($vid)
     {
@@ -545,7 +530,7 @@ class CBvideo extends CBCategory
      * Function used to remove video thumbs
      *
      * @param $vdetails
-     * @throws \Exception
+     * @throws Exception
      */
     function remove_thumbs($vdetails)
     {
@@ -567,7 +552,7 @@ class CBvideo extends CBCategory
      * Function used to remove video log
      *
      * @param $vdetails
-     * @throws \Exception
+     * @throws Exception
      */
     function remove_log($vdetails)
     {
@@ -595,7 +580,7 @@ class CBvideo extends CBCategory
     /**
      * @param $vdetails
      * @param string|null $number
-     * @throws \Exception
+     * @throws Exception
      */
     function remove_subtitles($vdetails, string $number = null)
     {
@@ -630,7 +615,7 @@ class CBvideo extends CBCategory
      * @param $resolution
      * @param $video_detail
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     function remove_resolution($resolution, &$video_detail)
     {
@@ -674,7 +659,7 @@ class CBvideo extends CBCategory
      * @param $vdetails
      *
      * @return bool|void
-     * @throws \Exception
+     * @throws Exception
      */
     function remove_files($vdetails)
     {
@@ -708,7 +693,7 @@ class CBvideo extends CBCategory
      * @param $params
      *
      * @return bool|array|void
-     * @throws \Exception
+     * @throws Exception
      */
     function get_videos($params)
     {
@@ -1013,12 +998,9 @@ class CBvideo extends CBCategory
 
         $fields = [
             'video' => get_video_fields(),
-            'users' => $cb_columns->object('users')->temp_change('featured', 'user_featured')->get_columns()
+            'users' => $cb_columns->object('users')->temp_change('featured', 'user_featured')->get_columns(),
+            'video_users'
         ];
-
-        if (!isset($fields['video_users'])) {
-            $fields[] = 'video_users';
-        }
 
         $fields = table_fields($fields);
 
@@ -1129,8 +1111,8 @@ class CBvideo extends CBCategory
      *
      * @param $id
      *
-     * @return int
-     * @throws \Exception
+     * @return int|bool
+     * @throws Exception
      */
     function count_video_comments($id)
     {
@@ -1142,7 +1124,7 @@ class CBvideo extends CBCategory
      * Function used to update video comments count
      *
      * @param $id
-     * @throws \Exception
+     * @throws Exception
      */
     function update_comments_count($id)
     {
@@ -1160,13 +1142,13 @@ class CBvideo extends CBCategory
      * @param bool $force_name_email
      *
      * @return bool|mixed
-     * @throws \Exception
+     * @throws Exception
      */
     function add_comment($comment, $obj_id, $reply_to = null, $force_name_email = false)
     {
         global $myquery;
 
-        $video = $this->get_video_details($obj_id);
+        $video = $this->get_video($obj_id);
 
         if (!$video) {
             e(lang('class_vdo_del_err'));
@@ -1200,7 +1182,7 @@ class CBvideo extends CBCategory
      * @param bool $is_reply
      *
      * @return bool|mixed
-     * @throws \Exception
+     * @throws Exception
      */
     function delete_comment($cid, $is_reply = false)
     {
@@ -1220,7 +1202,7 @@ class CBvideo extends CBCategory
      * @param string $type
      *
      * @return bool|string
-     * @throws \Exception
+     * @throws Exception
      */
     function embed_code($vdetails, $type = 'embed_object')
     {
@@ -1258,24 +1240,19 @@ class CBvideo extends CBCategory
         }
 
         if (!$embed_code) {
-            //Default ClipBucket Embed Code
-            if (function_exists('default_embed_code')) {
-                $embed_code = default_embed_code($vdetails);
-            } else {
-                //return new Embed Code
-                $vid_file = get_video_file($vdetails, false, false);
-                if ($vid_file) {
-                    $code = '<object width="' . EMBED_VDO_WIDTH . '" height="' . EMBED_VDO_HEIGHT . '">';
-                    $code .= '<param name="movie" value="' . BASEURL . '/embed_player.php?vid=' . $vdetails['videoid'] . '"></param>';
-                    $code .= '<param name="allowFullScreen" value="true"></param>';
-                    $code .= '<param name="allowscriptaccess" value="always"></param>';
-                    $code .= '<embed src="' . BASEURL . '/embed_player.php?vid=' . $vdetails['videoid'] . '"';
-                    $code .= 'type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="300" height="250"></embed>';
-                    $code .= '</object>';
-                    return $code;
-                }
-                return embeded_code($vdetails);
+            //return new Embed Code
+            $vid_file = get_video_file($vdetails, false, false);
+            if ($vid_file) {
+                $code = '<object width="' . EMBED_VDO_WIDTH . '" height="' . EMBED_VDO_HEIGHT . '">';
+                $code .= '<param name="movie" value="' . BASEURL . '/embed_player.php?vid=' . $vdetails['videoid'] . '"></param>';
+                $code .= '<param name="allowFullScreen" value="true"></param>';
+                $code .= '<param name="allowscriptaccess" value="always"></param>';
+                $code .= '<embed src="' . BASEURL . '/embed_player.php?vid=' . $vdetails['videoid'] . '"';
+                $code .= 'type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="300" height="250"></embed>';
+                $code .= '</object>';
+                return $code;
             }
+            return embeded_code($vdetails);
         }
         return $embed_code;
     }
@@ -1300,7 +1277,7 @@ class CBvideo extends CBCategory
     /**
      * Function used to create value array for email templates
      * @param array video_details ARRAY
-     * @throws \Exception
+     * @throws Exception
      */
     function set_share_email($details)
     {
@@ -1320,6 +1297,7 @@ class CBvideo extends CBCategory
     /**
      * Function used to use to initialize search object for video section
      * op=>operator (AND OR)
+     * @throws Exception
      */
     function init_search()
     {
@@ -1413,7 +1391,7 @@ class CBvideo extends CBCategory
      * Function used to update video and set a thumb as default
      * @param $vid
      * @param $thumb
-     * @throws \Exception
+     * @throws Exception
      */
     function set_default_thumb($vid, $thumb)
     {
@@ -1433,7 +1411,7 @@ class CBvideo extends CBCategory
      * @param bool $idonly
      *
      * @return bool|array
-     * @throws \Exception
+     * @throws Exception
      */
     function get_video_owner($vid, $idonly = false)
     {
@@ -1460,7 +1438,7 @@ class CBvideo extends CBCategory
      * @param $uid
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     function is_video_owner($vid, $uid): bool
     {
@@ -1536,7 +1514,7 @@ class CBvideo extends CBCategory
      * @param $id
      *
      * @return bool|array
-     * @throws \Exception
+     * @throws Exception
      */
     function get_video_rating($id)
     {
@@ -1633,7 +1611,7 @@ class CBvideo extends CBCategory
      * @param $rating
      *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     function rate_video($id, $rating): array
     {
@@ -1739,7 +1717,7 @@ class CBvideo extends CBCategory
      * @param int $limit
      *
      * @return bool|mixed
-     * @throws \Exception
+     * @throws Exception
      */
     function get_playlist_items($playlist_id, $order = null, $limit = 10)
     {
@@ -1751,9 +1729,9 @@ class CBvideo extends CBCategory
             'video'          => $cb_columns->object('videos')->get_columns()
         ];
 
-        $query = 'SELECT ' . table_fields($fields) . ' FROM ' . table('playlist_items');
-        $query .= ' LEFT JOIN ' . table('playlists') . ' ON playlist_items.playlist_id = playlists.playlist_id';
-        $query .= ' LEFT JOIN ' . table('video') . ' ON playlist_items.object_id = video.videoid';
+        $query = 'SELECT ' . table_fields($fields) . ' FROM ' . cb_sql_table('playlist_items');
+        $query .= ' LEFT JOIN ' . cb_sql_table('playlists') . ' ON playlist_items.playlist_id = playlists.playlist_id';
+        $query .= ' LEFT JOIN ' . cb_sql_table('video') . ' ON playlist_items.object_id = video.videoid';
         $query .= ' WHERE playlist_items.playlist_id = \'' . $playlist_id . '\'';
 
         if (!is_null($order)) {
@@ -1793,7 +1771,7 @@ class CBvideo extends CBCategory
      * @param $id
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     function add_to_quicklist($id): bool
     {
@@ -1891,7 +1869,7 @@ class CBvideo extends CBCategory
      * @param null $params
      *
      * @return array|bool
-     * @throws \Exception
+     * @throws Exception
      */
     function get_comments($params = null)
     {
@@ -1951,7 +1929,7 @@ class CBvideo extends CBCategory
      * @param $cid
      *
      * @return bool|array
-     * @throws \Exception
+     * @throws Exception
      */
     function get_comment($cid)
     {

@@ -3611,7 +3611,7 @@ class userquery extends CBCategory
             $fields['users'][] = 'total_collections';
             $fields['users'][] = 'total_groups';
             $query = ' SELECT ' . table_fields($fields) . ' FROM ' . tbl('users') . ' AS users ';
-            $query .= ' LEFT JOIN ' . table('user_profile', 'profile') . ' ON users.userid = profile.userid ';
+            $query .= ' LEFT JOIN ' . cb_sql_table('user_profile', 'profile') . ' ON users.userid = profile.userid ';
 
             if ($cond) {
                 $query .= ' WHERE ' . $cond;

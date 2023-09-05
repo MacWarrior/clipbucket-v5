@@ -16,7 +16,7 @@ assign('p', $userquery->get_user_profile($udetails['userid']));
 
 $vid = mysql_clean($_GET['vid']);
 //get video details
-$vdetails = $cbvid->get_video_details($vid);
+$vdetails = $cbvid->get_video($vid);
 
 if ($vdetails['userid'] != $userid) {
     e(lang('no_edit_video'));
@@ -29,7 +29,7 @@ if ($vdetails['userid'] != $userid) {
             $_POST['videoid'] = $vid;
             $cbvid->update_video();
             $cbvid->set_default_thumb($vid, mysql_clean(post('default_thumb')));
-            $vdetails = $cbvid->get_video_details($vid);
+            $vdetails = $cbvid->get_video($vid);
         }
     }
 
