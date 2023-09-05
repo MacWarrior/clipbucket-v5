@@ -15,7 +15,13 @@ $pages->page_redir();
 $breadcrumb[0] = ['title' => lang('tool_box'), 'url' => ''];
 $breadcrumb[1] = ['title' => lang('admin_tool'), 'url' => ADMIN_BASEURL . '/admin_tool.php'];
 
-$automate_list = Automate::getAll();
+$id_automate_task = null;
+if(isset($_GET['logs'])) {
+    $logs = Automate::getLogs($_GET['logs']);
+    assign('logs', $logs);
+}
+
+$automate_list = Automate::getFromIdAutomteHisto($_GET['logs'] ?? null);
 assign('automate_list', $automate_list);
 
 subtitle( lang('admin_tool'));
