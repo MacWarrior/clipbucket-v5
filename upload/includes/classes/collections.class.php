@@ -685,7 +685,6 @@ class Collections extends CBCategory
                 'name'              => 'collection_tags',
                 'id'                => 'collection_tags',
                 'value'             => genTags($tags),
-                'hint_2'            => lang('collect_tag_hint'),
                 'db_field'          => 'collection_tags',
                 'required'          => 'yes',
                 'invalid_err'       => lang('collect_tag_er'),

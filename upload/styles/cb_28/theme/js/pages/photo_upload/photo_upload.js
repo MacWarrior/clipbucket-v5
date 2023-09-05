@@ -435,6 +435,7 @@
                 }
             });
         });
+
         $('#list_tags').tagit({
             singleField:true,
             fieldName:"collection_tags",
@@ -443,6 +444,5 @@
             animate:true,
             caseSensitive:false
         });
-
     });
 })(window);
