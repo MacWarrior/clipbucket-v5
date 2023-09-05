@@ -1193,3 +1193,34 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_tags`
 
 ALTER TABLE `{tbl_prefix}video_tags` ADD CONSTRAINT `video_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags`(`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 ALTER TABLE `{tbl_prefix}video_tags` ADD CONSTRAINT `video_tags_video` FOREIGN KEY (`id_video`) REFERENCES `{tbl_prefix}video`(`videoid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}photo_tags`
+(
+    `id_photo` BIGINT NOT NULL,
+    `id_tag`   INT    NOT NULL,
+    PRIMARY KEY (`id_photo`, `id_tag`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}photo_tags` ADD CONSTRAINT `photo_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}photo_tags` ADD CONSTRAINT `photo_tags_photo` FOREIGN KEY (`id_photo`) REFERENCES `{tbl_prefix}photos` (`photo_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}collection_tags`
+(
+    `id_collection` BIGINT NOT NULL,
+    `id_tag`        INT    NOT NULL,
+    PRIMARY KEY (`id_collection`, `id_tag`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}collection_tags` ADD CONSTRAINT `collection_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}collection_tags` ADD CONSTRAINT `collection_tags_collection` FOREIGN KEY (`id_collection`) REFERENCES `{tbl_prefix}collections` (`collection_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}profile_tags`
+(
+    `id_profile` INT NOT NULL,
+    `id_tag`     INT NOT NULL,
+    PRIMARY KEY (`id_profile`, `id_tag`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}profile_tags` ADD CONSTRAINT `profile_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}profile_tags` ADD CONSTRAINT `profile_tags_profile` FOREIGN KEY (`id_profile`) REFERENCES `{tbl_prefix}user_profile` (`user_profile_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
