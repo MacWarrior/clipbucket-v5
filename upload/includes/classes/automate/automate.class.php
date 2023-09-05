@@ -314,11 +314,10 @@ class Automate
                     ,AST.trad AS statut
                     ,AH.id_automate_histo
                     , CASE 
-                        WHEN AST.id_automate_statut = 1 THEN \'text-muted\' 
-                        WHEN AST.id_automate_statut = 2 THEN \'text-info\' 
-                        WHEN AST.id_automate_statut = 3 THEN \'text-warning\' 
-                        WHEN AST.id_automate_statut = 4 THEN \'text-danger\' 
-                        WHEN AST.id_automate_statut = 5 THEN \'text-success\' 
+                        WHEN AST.id_automate_statut = 1 THEN \'glyphicon-cog blue\' 
+                        WHEN AST.id_automate_statut = 2 THEN \'glyphicon-ok green\' 
+                        WHEN AST.id_automate_statut = 3 THEN \'glyphicon-alert red\' 
+                        WHEN AST.id_automate_statut = 4 THEN \'glyphicon-hourglass\'
                         ELSE \'\'
                     END statut_icon
                 FROM ' . tbl('automate_task') . ' AT
@@ -359,11 +358,10 @@ class Automate
                     ,AST.trad AS statut
                     ,AH.id_automate_histo
                     , CASE 
-                        WHEN AST.id_automate_statut = 1 THEN \'text-muted\' 
-                        WHEN AST.id_automate_statut = 2 THEN \'text-info\' 
-                        WHEN AST.id_automate_statut = 3 THEN \'text-warning\' 
-                        WHEN AST.id_automate_statut = 4 THEN \'text-danger\' 
-                        WHEN AST.id_automate_statut = 5 THEN \'text-success\' 
+                        WHEN AST.id_automate_statut = 1 THEN \'glyphicon-cog blue\' 
+                        WHEN AST.id_automate_statut = 2 THEN \'glyphicon-ok green\' 
+                        WHEN AST.id_automate_statut = 3 THEN \'glyphicon-alert red\' 
+                        WHEN AST.id_automate_statut = 4 THEN \'glyphicon-hourglass\'
                         ELSE \'\'
                     END statut_icon
                 FROM ' . tbl('automate_task') . ' AT
