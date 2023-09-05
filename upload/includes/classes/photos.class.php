@@ -577,9 +577,9 @@ class CBPhotos
 
         $string = table_fields($fields);
 
-        $main_query = 'SELECT ' . $string . ' FROM ' . table('photos');
-        $main_query .= ' LEFT JOIN ' . table('collections') . ' ON photos.collection_id = collections.collection_id';
-        $main_query .= ' LEFT JOIN ' . table('users') . ' ON collections.userid = users.userid';
+        $main_query = 'SELECT ' . $string . ' FROM ' . cb_sql_table('photos');
+        $main_query .= ' LEFT JOIN ' . cb_sql_table('collections') . ' ON photos.collection_id = collections.collection_id';
+        $main_query .= ' LEFT JOIN ' . cb_sql_table('users') . ' ON collections.userid = users.userid';
 
         $order = $order ? ' ORDER BY ' . $order : false;
         $limit = $limit ? ' LIMIT ' . $limit : false;
@@ -678,7 +678,7 @@ class CBPhotos
                 $cond .= $p['extra_cond'];
             }
 
-            $result = $db->count(table('photos'), 'photo_id', $cond);
+            $result = $db->count(cb_sql_table('photos'), 'photo_id', $cond);
         }
 
         if ($p['assign']) {

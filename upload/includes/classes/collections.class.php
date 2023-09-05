@@ -1403,7 +1403,7 @@ class Collections extends CBCategory
             switch ($type) {
                 case 'v':
                     global $cbvideo;
-                    $thumb = get_thumb($cbvideo->get_video_details($item[0]['object_id']));
+                    $thumb = get_thumb($cbvideo->get_video($item[0]['object_id']));
                     break;
 
                 case 'p':

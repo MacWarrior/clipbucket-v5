@@ -1,15 +1,6 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: Fawaz
- * Date: 11/7/13
- * Time: 12:09 PM
- * To change this template use File | Settings | File Templates.
- */
-
 class cb_columns
 {
-
     protected $columns = [];
     protected $object = null;
     protected $temp_actions = [];
@@ -20,11 +11,9 @@ class cb_columns
      */
     function __construct()
     {
-
         if (is_null($this->get_object())) {
             $this->set_object('videos');
         }
-
     }
 
     /**

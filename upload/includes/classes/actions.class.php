@@ -589,8 +589,8 @@ class cbactions
 
         $fields['users'] = $cb_columns->object('users')->temp_remove('usr_status,user_session_key')->get_columns();
 
-        $query = 'SELECT ' . table_fields($fields) . ' FROM ' . table('playlists');
-        $query .= ' LEFT JOIN ' . table('users') . ' ON playlists.userid = users.userid';
+        $query = 'SELECT ' . table_fields($fields) . ' FROM ' . cb_sql_table('playlists');
+        $query .= ' LEFT JOIN ' . cb_sql_table('users') . ' ON playlists.userid = users.userid';
 
         $query .= ' WHERE playlists.playlist_id = \'' . mysql_clean($id) . '\'';
 
@@ -781,10 +781,10 @@ class cbactions
             $fields['playlists'] = $cb_columns->object('playlists')->temp_change('date_added', 'playlist_added')->get_columns();
         }
 
-        $query = 'SELECT ' . table_fields($fields) . ' FROM ' . table('playlist_items');
+        $query = 'SELECT ' . table_fields($fields) . ' FROM ' . cb_sql_table('playlist_items');
 
         if ($join_playlist == true) {
-            $query .= ' LEFT JOIN ' . table('playlists') . ' ON playlist_items.playlist_id = playlists.playlist_id';
+            $query .= ' LEFT JOIN ' . cb_sql_table('playlists') . ' ON playlist_items.playlist_id = playlists.playlist_id';
         }
 
         $query .= ' WHERE playlist_items.playlist_item_id = \'' . mysql_clean($id) . '\' LIMIT 1';
@@ -954,7 +954,7 @@ class cbactions
         $tags = $params['tags'];
         $userid = $params['userid'];
 
-        $query = 'SELECT ' . table_fields($fields) . ' FROM ' . table('playlists');
+        $query = 'SELECT ' . table_fields($fields) . ' FROM ' . cb_sql_table('playlists');
         $condition = '';
 
         if (!has_access('admin_access')) {

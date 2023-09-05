@@ -945,7 +945,7 @@ if (!empty($mode)) {
                     case "vid":
                     case "v":
                     case "vdo":
-                        $video = $cbvideo->get_video_details(mysql_clean($_POST['objID']));
+                        $video = $cbvideo->get_video(mysql_clean($_POST['objID']));
                         if ($video) {
                             assign('object', $video);
                             $content = Fetch('/blocks/view_channel/channel_item.html');

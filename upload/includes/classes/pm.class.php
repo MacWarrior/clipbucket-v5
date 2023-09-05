@@ -29,7 +29,7 @@ function parse_and_attach_video($att)
     preg_match('/{v:(.*)}/', $att, $matches);
     $vkey = $matches[1];
     if (!empty($vkey)) {
-        assign('video', $cbvid->get_video_details($vkey));
+        assign('video', $cbvid->get_video($vkey));
         assign('only_once', true);
         echo '<h3>Attached Video</h3>';
         echo '<div class="clearfix videos row">';

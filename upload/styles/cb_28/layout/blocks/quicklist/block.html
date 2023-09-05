@@ -17,7 +17,7 @@
 			<!-- Getting Playlist Items-->
 			{assign var='bg' value='fff'}
 			{foreach from=$quicklist item=vid}
-			    {assign var=item value=$cbvid->get_video_details($vid)}
+			    {assign var=item value=$cbvid->get_video($vid)}
 			    
 				{include file="$style_dir/blocks/quicklist/video_block.html" video=$item bg=$bg show_delete='yes' unique_id="quicklist_"}
 			    

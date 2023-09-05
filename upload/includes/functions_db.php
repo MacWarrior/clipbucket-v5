@@ -46,40 +46,38 @@ function tbl($tbl): string
  * @param bool $table
  * @return bool|string
  */
-function table_fields($fields, $table = false)
+function table_fields($fields)
 {
+    if(empty($fields)){
+        return '';
+    }
+
     $the_fields = '';
 
-    if ($fields) {
-        $array = $fields;
-        foreach ($array as $key => $_fields) {
+    $array = $fields;
+    foreach ($array as $key => $_fields) {
 
-            if (is_array($_fields)) {
-                foreach ($_fields as $field) {
-                    if ($the_fields) {
-                        $the_fields .= ', ';
-                    }
-                    $the_fields .= $key . '.' . $field;
-                }
-            } else {
-                $field = $_fields;
-
+        if (is_array($_fields)) {
+            foreach ($_fields as $field) {
                 if ($the_fields) {
                     $the_fields .= ', ';
                 }
-
-                if ($table) {
-                    $the_tbl = tbl($table) . '.';
-                } else {
-                    $the_tbl = '';
-                }
-
-                $the_fields .= $the_tbl . $field;
+                $the_fields .= $key . '.' . $field;
             }
+        } else {
+            $field = $_fields;
+
+            if ($the_fields) {
+                $the_fields .= ', ';
+            }
+
+            $the_tbl = '';
+
+            $the_fields .= $the_tbl . $field;
         }
     }
 
-    return $the_fields ? $the_fields : false;
+    return $the_fields;
 }
 
 /**
@@ -104,18 +102,14 @@ function cb_sql_table($table, $as = null)
     return false;
 }
 
-function table($table, $as = null)
-{
-    return cb_sql_table($table, $as);
-}
-
 /**
  * Alias function for function cb_select
  *
  * @param $query
  * @param int $cached_time
+ * @param string $cached_key
  * @return array
- * @throws \Exception
+ * @throws Exception
  */
 function select($query, $cached_time = -1, $cached_key = ''): array
 {
