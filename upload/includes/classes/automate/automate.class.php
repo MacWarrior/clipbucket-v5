@@ -306,12 +306,21 @@ class Automate
                     , DATE_FORMAT(COALESCE(AT.datetime_previsionnel_precedente, AT.datetime_previsionnel, AT.datetime_creation),\'%Y-%m-%d %H:%i:%s.%f\') as datetime_previsionnel_force
                     ,COALESCE(AH.date_debut, AT.datetime_creation) AS date_debut
                     ,CONCAT(
-                        NULLIF(DATE_FORMAT((AH.date_fin - AH.date_debut),\'dd\'), \'00\')
-                        ,\' \'
-                        ,DATE_FORMAT((AH.date_fin - AH.date_debut),\'HH24:MI:ss\')
+                        CASE WHEN FLOOR(HOUR(TIMEDIFF(AH.date_fin , AH.date_debut)) / 24) > 0 THEN FLOOR(HOUR(TIMEDIFF(AH.date_fin , AH.date_debut)) / 24) ELSE \'\' END, \' \',
+                        LPAD(MOD(HOUR(TIMEDIFF(AH.date_fin , AH.date_debut)), 24), 2, \'0\'), \':\',
+                        LPAD(MINUTE(TIMEDIFF(AH.date_fin , AH.date_debut)), 2, \'0\'), \':\',
+                        LPAD(SECOND(TIMEDIFF(AH.date_fin , AH.date_debut)), 2, \'0\')
                     ) as diff
                     ,AST.trad AS statut
                     ,AH.id_automate_histo
+                    , CASE 
+                        WHEN AST.id_automate_statut = 1 THEN \'text-muted\' 
+                        WHEN AST.id_automate_statut = 2 THEN \'text-info\' 
+                        WHEN AST.id_automate_statut = 3 THEN \'text-warning\' 
+                        WHEN AST.id_automate_statut = 4 THEN \'text-danger\' 
+                        WHEN AST.id_automate_statut = 5 THEN \'text-success\' 
+                        ELSE \'\'
+                    END statut_icon
                 FROM ' . tbl('automate_task') . ' AT
                 LEFT JOIN (
                         SELECT AT.id_automate_task, (@id_automate_task := AT.id_automate_task),
@@ -347,10 +356,20 @@ class Automate
                         ,\' \'
                         ,DATE_FORMAT((AH.date_fin - AH.date_debut),\'HH24:MI:ss\')
                     ) as diff
-                    ,AH.id_automate_statut AS statut
+                    ,AST.trad AS statut
                     ,AH.id_automate_histo
+                    , CASE 
+                        WHEN AST.id_automate_statut = 1 THEN \'text-muted\' 
+                        WHEN AST.id_automate_statut = 2 THEN \'text-info\' 
+                        WHEN AST.id_automate_statut = 3 THEN \'text-warning\' 
+                        WHEN AST.id_automate_statut = 4 THEN \'text-danger\' 
+                        WHEN AST.id_automate_statut = 5 THEN \'text-success\' 
+                        ELSE \'\'
+                    END statut_icon
                 FROM ' . tbl('automate_task') . ' AT
                 LEFT JOIN ' . tbl('automate_histo') . ' AH ON AH.id_automate_task = AT.id_automate_task
+                LEFT JOIN ' . tbl('automate_statut') . ' AST ON AST.id_automate_statut = AH.id_automate_statut
+
                WHERE AT.id_automate_task_type = 2 /* one shot */ '.$condition_histo.'
                
            ) SELECT * 

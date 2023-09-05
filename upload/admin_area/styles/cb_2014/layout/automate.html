@@ -8,6 +8,8 @@
             <th class="col-md-4">{lang code='description'}</th>
             <th class="col-md-2">{lang code='recurence'}</th>
             <th class="col-md-1">{lang code='status'}</th>
+            {if $logs} <th class="col-md-1">{lang code='date_debut'}</th> {/if}
+            {if $logs} <th class="col-md-1">{lang code='diff'}</th> {/if}
             {if ! $logs} <th class="col-md-1">{lang code='log'}</th> {/if}
             <th class="col-md-1">{lang code='action'}</th>
         </tr>
@@ -16,10 +18,17 @@
             <td style="vertical-align: middle;">{lang code = ($automate_list[automate_key].nom)}</td>
             <td style="vertical-align: middle;">{lang code = ($automate_list[automate_key].description)}</td>
             <td style="vertical-align: middle;">{lang code = ($automate_list[automate_key].frequence_trad)}</td>
-            <td style="vertical-align: middle;" class="text-center">{lang code = ($automate_list[automate_key].statut)}</td>
+            <td style="vertical-align: middle;" class="text-center">
+                <span class="glyphicon {$automate_list[automate_key].statut_icon} glyphicon-ok green" title="{lang code = ($automate_list[automate_key].statut)}" style="font-size:2em;"></span>
+
+            </td>
             {if ! $logs} <td style="vertical-align: middle;" class="text-center">
-                <a href="/admin_area/automate.php?logs={$automate_list[automate_key].id_automate_histo}"><button type="button" class="btn btn-info btn-xs">{lang code='logs'}</button></a>
+                <a href="/admin_area/automate.php?logs={$automate_list[automate_key].id_automate_histo}">
+                    <button type="button" class="btn btn-info btn-xs">{lang code='logs'}</button>
+                </a>
             </td> {/if}
+            {if $logs} <td style="vertical-align: middle;">{lang code = ($automate_list[automate_key].date_debut)}</td> {/if}
+            {if $logs} <td style="vertical-align: middle;">{lang code = ($automate_list[automate_key].diff)}</td> {/if}
             <td style="vertical-align: middle;" class="text-center">
                 <div class="dropdown clearfix alignCenter">
                     <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
