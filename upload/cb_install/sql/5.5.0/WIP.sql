@@ -138,6 +138,7 @@ INSERT IGNORE INTO `{tbl_prefix}profile_tags` (`id_tag`, `id_profile`) (
              INNER JOIN `{tbl_prefix}tags` AS T ON T.name = LOWER(jsontable.profile_tags) COLLATE utf8mb4_unicode_520_ci AND T.id_tag_type = @type_profile
 );
 
-
+ALTER TABLE `{tbl_prefix}video` DROP COLUMN `tags`;
+ALTER TABLE `{tbl_prefix}tags` ADD FULLTEXT KEY `tag` (`name`);
 
 # DELETE CHAMp

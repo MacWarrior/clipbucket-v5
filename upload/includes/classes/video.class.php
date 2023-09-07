@@ -113,7 +113,7 @@ class CBvideo extends CBCategory
     {
         # Set basic video fields
         $basic_fields = [
-            'videoid', 'videokey', 'userid', 'title', 'server_ip', 'description', 'tags', 'category', 'file_directory',
+            'videoid', 'videokey', 'userid', 'title', 'server_ip', 'description', 'category', 'file_directory',
             'active', 'date_added', 'broadcast', 'rating', 'file_server_path', 'files_thumbs_path',
             'duration', 'views', 'file_name', 'rated_by', 'file_type', 'bits_color', 'is_castable',
             'default_thumb', 'comments_count', 'last_viewed', 'featured', 'featured_date', 'status', 're_conv_status', 'embed_code'
@@ -181,14 +181,15 @@ class CBvideo extends CBCategory
 
         $cond = (($filename) ? 'video.file_name' : (is_numeric($vid) ? 'video.videoid' : 'video.videokey')) . ' = \'%s\' ';
 
-        $query = 'SELECT ' . table_fields($fields) . ' FROM ' . cb_sql_table('video');
+        $query = 'SELECT ' . table_fields($fields) . ' , GROUP_CONCAT(T.name SEPARATOR \',\') AS tags FROM ' . cb_sql_table('video');
         $query .= ' LEFT JOIN ' . cb_sql_table('users') . ' ON video.userid = users.userid';
-
+        $query .= ' LEFT JOIN ' . tbl('video_tags') . ' AS VT ON video.videoid = VT.id_video 
+                    LEFT JOIN ' . tbl('tags') .' AS T ON VT.id_tag = T.id_tag' ;
         if ($cond) {
             $query .= ' WHERE ' . sprintf($cond, $vid);
         }
 
-        $query .= 'LIMIT 1';
+        $query .= 'GROUP BY video.videoid LIMIT 1';
         $query_id = cb_query_id($query);
 
         $data = cb_do_action('select_video', ['query_id' => $query_id, 'videoid' => $vid]);
@@ -450,6 +451,10 @@ class CBvideo extends CBCategory
                 e(lang('Title exceeds max length of 100 characters')); // TODO : Translation
             } else {
                 $db->update(tbl('video'), $query_field, $query_val, ' videoid=\'' . $vid . '\'');
+
+                if (!empty($array['tags'])) {
+                    saveTags($array['tags'], 'video', $vid);
+                }
 
                 cb_do_action('update_video', [
                     'object_id' => $vid,
@@ -1007,7 +1012,8 @@ class CBvideo extends CBCategory
         if (!$params['count_only'] && !$params['show_related']) {
             $query = 'SELECT ' . $fields . ' FROM ' . cb_sql_table('video');
             $query .= ' LEFT JOIN ' . cb_sql_table('users') . ' ON video.userid = users.userid';
-
+            $query .= ' LEFT JOIN ' . tbl('video_tags') . ' AS VT ON video.videoid = VT.id_video 
+                    LEFT JOIN ' . tbl('tags') .' AS T ON VT.id_tag = T.id_tag' ;
             if (!empty($superCond)) {
                 if ($cond !== '') {
                     $cond .= ' AND ' . $superCond;
@@ -1032,8 +1038,10 @@ class CBvideo extends CBCategory
                 $cond = $superCond . ' AND ';
             }
 
-            $cond .= 'MATCH(' . ('video.title,video.tags') . ')
-            AGAINST (\'' . mysql_clean($params['title']) . '\' IN NATURAL LANGUAGE MODE) ';
+            $cond .= 'MATCH(' . ('video.title') . ')
+            AGAINST (\'' . mysql_clean($params['title']) . '\' IN NATURAL LANGUAGE MODE) 
+                OR MATCH(' . ('T.name') . ')
+            AGAINST (\'' . mysql_clean($params['tags']) . '\' IN NATURAL LANGUAGE MODE) ';
 
             if ($params['exclude']) {
                 if ($cond != '') {
@@ -1045,6 +1053,8 @@ class CBvideo extends CBCategory
             $query = ' SELECT ' . $fields . ' FROM ' . cb_sql_table('video');
             $query .= ' LEFT JOIN ' . cb_sql_table('users');
             $query .= ' ON video.userid = users.userid ';
+            $query .= ' LEFT JOIN ' . tbl('video_tags') . ' AS VT ON video.videoid = VT.id_video 
+                    LEFT JOIN ' . tbl('tags') .' AS T ON VT.id_tag = T.id_tag' ;
 
             if ($cond) {
                 $query .= ' WHERE ' . $cond;
@@ -1060,8 +1070,12 @@ class CBvideo extends CBCategory
                     $cond = $superCond . ' AND ';
                 }
                 //Try Finding videos via tags
-                $cond .= 'MATCH(' . ('video.title,video.tags') . ')
+                $cond .=
+                    ' MATCH(' . ('video.title') . ')
+                AGAINST (\'' . mysql_clean($params['tags']) . '\' IN NATURAL LANGUAGE MODE) 
+                    OR MATCH(' . ('T.name') . ')
                 AGAINST (\'' . mysql_clean($params['tags']) . '\' IN NATURAL LANGUAGE MODE) ';
+
                 if ($params['exclude']) {
                     if ($cond != '') {
                         $cond .= ' AND ';
@@ -1072,6 +1086,8 @@ class CBvideo extends CBCategory
                 $query = ' SELECT ' . $fields . ' FROM ' . cb_sql_table('video');
                 $query .= ' LEFT JOIN ' . cb_sql_table('users');
                 $query .= ' ON video.userid = users.userid ';
+                $query .= ' LEFT JOIN ' . tbl('video_tags') . ' AS VT ON video.videoid = VT.id_video 
+                    LEFT JOIN ' . tbl('tags') .' AS T ON VT.id_tag = T.id_tag' ;
 
                 if ($cond) {
                     $query .= ' WHERE ' . $cond;

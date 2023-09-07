@@ -164,7 +164,7 @@ $(document).ready(function(){
             uploadedFiles[0].data = [];
             uploadedFiles[0].data.title = filename_without_extension;
             uploadedFiles[0].data.description = filename_without_extension;
-            uploadedFiles[0].data.tags = filename_without_extension;
+            uploadedFiles[0].data.tags = '';
             uploadedFiles[0].data.country = default_country_iso2;
             uploadedFiles[0].data.location = '';
             uploadedFiles[0].data.datecreated = date_format_time;

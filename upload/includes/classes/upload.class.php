@@ -420,8 +420,7 @@ class Upload
                 'id'                => 'tags',
                 'value'             => genTags($tags),
                 'hint_1'            => '',
-                'db_field'          => 'tags',
-                'required'          => 'yes',
+                'required'          => 'no',
                 'validate_function' => 'genTags'
             ]
         ];

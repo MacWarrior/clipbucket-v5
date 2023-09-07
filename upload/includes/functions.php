@@ -627,8 +627,7 @@ function genTags($tags, $sep = ','): string
  */
 function isValidtag($tag): bool
 {
-    $disallow_array = ['of', 'is', 'no', 'on', 'off', 'a', 'the', 'why', 'how', 'what', 'in'];
-    if (!in_array($tag, $disallow_array) && strlen($tag) > 2) {
+    if (strlen($tag) <= 128 && strlen($tag) >= 3) {
         return true;
     }
     return false;
@@ -2147,8 +2146,11 @@ function validate_cb_form($input, $array)
                     $block = false;
                 }
             }
-            $funct_err = is_valid_value($field['validate_function'], $val);
-            if ($block != true) {
+            if (!empty($val)) {
+                //don't test validity if field is empty
+                $funct_err = is_valid_value($field['validate_function'], $val);
+            }
+            if (!$block) {
                 //Checking Syntax
                 if (!$funct_err) {
                     if (!empty($function_error_msg)) {

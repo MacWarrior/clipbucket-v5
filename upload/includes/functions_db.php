@@ -362,3 +362,59 @@ function getVersions(): array
     }
     return $versions;
 }
+
+function saveTags(string $tags, string $object_type, int $object_id)
+{
+
+    switch ($object_type) {
+        case 'video':
+            $id_field = 'id_video';
+            $table_tag = 'video_tags';
+            break;
+        case 'photo':
+            $id_field = 'id_photo';
+            $table_tag = 'photo_tags';
+            break;
+        case 'collection':
+            $id_field = 'id_collection';
+            $table_tag = 'collection_tags';
+            break;
+        case 'profile':
+            $id_field = 'id_profile';
+            $table_tag = 'profile_tags';
+            break;
+        default:
+            //TODO
+            return false;
+    }
+    global $db;
+    $sql_id_type = 'SELECT id_tag_type
+                   FROM ' . tbl('tags_type') . '
+                   WHERE name LIKE \'' . $object_type . '\'';
+    $res = $db->_select($sql_id_type);
+    if (!empty($res)) {
+        $id_type = $res[0]['id_tag_type'];
+    } else {
+        e(lang('unknown_tag_type'));
+        return false;
+    }
+    $sql_insert_tag = 'INSERT IGNORE INTO ' . tbl('tags') . ' (id_tag_type, name) (SELECT ' . mysql_clean($id_type) . ', jsontable.tags
+                          FROM JSON_TABLE(CONCAT(\'["\', REPLACE(LOWER(\'' . mysql_clean($tags) . '\'), \',\', \'","\'), \'"]\'), \'$[*]\' COLUMNS (`tags` TEXT PATH \'$\')) jsontable)';
+    if (!$db->execute($sql_insert_tag, 'insert')) {
+        e(lang('error_inserting_tags'));
+        return false;
+    }
+
+    $sql_link_tag = 'INSERT IGNORE INTO ' . tbl($table_tag) . ' (`id_tag`, `' . $id_field . '`) (
+        SELECT T.id_tag, ' . mysql_clean($object_id) . '
+        FROM JSON_TABLE(CONCAT(\'["\', REPLACE(LOWER(\'' . mysql_clean($tags) . '\'), \',\', \'","\'), \'"]\'), \'$[*]\' COLUMNS (`tags` TEXT PATH \'$\')) jsontable
+        INNER JOIN ' . tbl('tags') . ' AS T ON T.name = LOWER(jsontable.tags) COLLATE utf8mb4_unicode_520_ci AND T.id_tag_type = ' . mysql_clean($id_type) . '
+    )';
+    if (!$db->execute($sql_link_tag, 'insert')) {
+        //TODO
+        e(lang('error_linking_tags'));
+        return false;
+    }
+
+    return true;
+}
