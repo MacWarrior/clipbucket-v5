@@ -1026,6 +1026,7 @@ class CBvideo extends CBCategory
                 $query .= ' WHERE ' . $cond;
             }
 
+            $query .= ' GROUP BY videoid ';
             $query .= $order ? ' ORDER BY ' . $order : false;
             $query .= $limit ? ' LIMIT ' . $limit : false;
 
@@ -1060,6 +1061,7 @@ class CBvideo extends CBCategory
                 $query .= ' WHERE ' . $cond;
             }
 
+            $query .= ' GROUP BY videoid ';
             $query .= $order ? ' ORDER BY ' . $order : false;
             $query .= $limit ? ' LIMIT ' . $limit : false;
 
@@ -1093,6 +1095,7 @@ class CBvideo extends CBCategory
                     $query .= ' WHERE ' . $cond;
                 }
 
+                $query .= ' GROUP BY videoid ';
                 $query .= $order ? ' ORDER BY ' . $order : false;
                 $query .= $limit ? ' LIMIT ' . $limit : false;
 

@@ -139,6 +139,7 @@ INSERT IGNORE INTO `{tbl_prefix}profile_tags` (`id_tag`, `id_profile`) (
 );
 
 ALTER TABLE `{tbl_prefix}video` DROP COLUMN `tags`;
+ALTER TABLE `{tbl_prefix}photos` DROP COLUMN `tags`;
 ALTER TABLE `{tbl_prefix}tags` ADD FULLTEXT KEY `tag` (`name`);
 
 # DELETE CHAMp

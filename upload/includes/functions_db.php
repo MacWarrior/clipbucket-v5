@@ -405,13 +405,18 @@ function saveTags(string $tags, string $object_type, int $object_id)
         return false;
     }
 
+    $sql_delete_link = 'DELETE FROM ' . tbl($table_tag) . ' WHERE ' . $id_field . ' = ' . mysql_clean($id_field);
+    if (!$db->execute($sql_delete_link, 'delete')) {
+        e(lang('error_delete_linking_tags'));
+        return false;
+    }
+
     $sql_link_tag = 'INSERT IGNORE INTO ' . tbl($table_tag) . ' (`id_tag`, `' . $id_field . '`) (
         SELECT T.id_tag, ' . mysql_clean($object_id) . '
         FROM JSON_TABLE(CONCAT(\'["\', REPLACE(LOWER(\'' . mysql_clean($tags) . '\'), \',\', \'","\'), \'"]\'), \'$[*]\' COLUMNS (`tags` TEXT PATH \'$\')) jsontable
         INNER JOIN ' . tbl('tags') . ' AS T ON T.name = LOWER(jsontable.tags) COLLATE utf8mb4_unicode_520_ci AND T.id_tag_type = ' . mysql_clean($id_type) . '
     )';
     if (!$db->execute($sql_link_tag, 'insert')) {
-        //TODO
         e(lang('error_linking_tags'));
         return false;
     }

@@ -218,10 +218,16 @@ class Collections extends CBCategory
     function get_collection($id, $cond = null)
     {
         global $db;
-        $result = $db->select(tbl($this->section_tbl) . ',' . tbl('users'),
-            ' ' . tbl($this->section_tbl) . '.*,' . tbl('users') . '.userid,' . tbl('users') . '.username',
-            ' ' . tbl($this->section_tbl) . '.collection_id = ' . mysql_clean($id) . ' AND ' . tbl($this->section_tbl) . '.userid = ' . tbl('users') . '.userid ' . $cond);
 
+        $query = 'SELECT C.*, U.username, GROUP_CONCAT(T.name SEPARATOR \',\') as collection_tags
+                    FROM ' . tbl($this->section_tbl) . ' AS C 
+                    INNER JOIN ' . tbl('users') . ' AS U ON U.userid = C.userid
+                    LEFT JOIN ' . tbl('collection_tags') . ' AS CT ON C.collection_id = CT.id_collection  
+                    LEFT JOIN ' . tbl('tags') . ' AS T ON CT.id_tag = T.id_tag
+                    WHERE C.collection_id = ' . mysql_clean($id) . '
+                    GROUP BY C.collection_id
+                    ';
+        $result = $db->_select($query);
         if ($result) {
             return $result[0];
         }
@@ -685,8 +691,7 @@ class Collections extends CBCategory
                 'name'              => 'collection_tags',
                 'id'                => 'collection_tags',
                 'value'             => genTags($tags),
-                'db_field'          => 'collection_tags',
-                'required'          => 'yes',
+                'required'          => 'no',
                 'invalid_err'       => lang('collect_tag_er'),
                 'validate_function' => 'genTags'
             ],
@@ -975,6 +980,7 @@ class Collections extends CBCategory
 
                 //Incrementing usr collection
                 $db->update(tbl('users'), ['total_collections'], ['|f|total_collections+1'], ' userid=\'' . $userid . '\'');
+                saveTags($array['collection_tags'], 'collection', $insert_id);
 
                 e(lang('collect_added_msg'), 'm');
                 return $insert_id;
@@ -1343,6 +1349,9 @@ class Collections extends CBCategory
             } else {
                 $cid = mysql_clean($cid);
                 $db->update(tbl($this->section_tbl), $query_field, $query_val, ' collection_id = ' . $cid);
+
+                saveTags($array['collection_tags'], 'collection', $cid);
+
                 e(lang('collection_updated'), 'm');
 
                 if (!empty($array['collection_thumb']['tmp_name'])) {
