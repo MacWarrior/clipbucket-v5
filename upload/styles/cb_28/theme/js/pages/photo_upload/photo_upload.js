@@ -174,7 +174,7 @@
                 uploadedFiles[0].data = [];
                 uploadedFiles[0].data.photo_title = uploadedFiles[0].name;
                 uploadedFiles[0].data.photo_description = uploadedFiles[0].name;
-                uploadedFiles[0].data.photo_tags = uploadedFiles[0].name;
+                uploadedFiles[0].data.photo_tags = '';
                 uploadedFiles[0].data.collection_id = $('#collectionSelection').val();
                 uploadedFiles[0].data.allow_comments = 'yes';
                 uploadedFiles[0].data.allow_embedding = 'yes';
@@ -305,7 +305,7 @@
                         ,ext: serverResponse.extension
                         ,photo_title : fileDetails.name
                         ,photo_description : fileDetails.name
-                        ,photo_tags : fileDetails.name
+                        ,photo_tags : ''
                     },
                     dataType: "JSON",
                     success: function(msg){

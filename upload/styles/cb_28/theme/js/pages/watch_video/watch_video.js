@@ -1,5 +1,5 @@
 var cookieToSave, commentDataCheck;
-
+var link_tags = true;
 /*Cookie based comments backup end*/
 
 
@@ -145,10 +145,7 @@ $(document).ready(function () {
         }
         return true;
     });*/
-    var labels = $('.tagit-label');
-    labels.each(function () {
-        $(this).parent().wrap('<a href="/search_result.php?query=' + $(this).html()+ '&type=tag"></a>');
-    });
+
 });
 
 var resizePlayer = _cb.debounce(function () {

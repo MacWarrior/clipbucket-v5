@@ -44,11 +44,8 @@ class CBPhotos
         $this->exts = ['jpg', 'png', 'gif', 'jpeg']; // This should be added from Admin Area. may be some people also want to allow BMPs;
         $this->embed_types = ["html", "forum", "email", "direct"];
 
-        $basic_fields = [
-            'photo_id', 'photo_key', 'userid', 'photo_title', 'photo_description', 'photo_tags', 'collection_id',
-            'photo_details', 'date_added', 'filename', 'ext', 'active', 'broadcast', 'file_directory', 'views',
-            'last_commented', 'total_comments', 'last_viewed', 'featured as photo_featured'
-        ];
+
+        $basic_fields = $this->basic_fields_setup();
 
         $cb_columns->object('photos')->register_columns($basic_fields);
     }
@@ -70,7 +67,7 @@ class CBPhotos
     {
         # Set basic video fields
         $basic_fields = [
-            'photo_id', 'photo_key', 'userid', 'photo_title', 'photo_description', 'photo_tags', 'collection_id',
+            'photo_id', 'photo_key', 'userid', 'photo_title', 'photo_description', 'collection_id',
             'photo_details', 'date_added', 'filename', 'ext', 'active', 'broadcast', 'file_directory', 'views',
             'last_commented', 'total_comments'
         ];
@@ -404,11 +401,20 @@ class CBPhotos
         global $db;
 
         if (is_numeric($pid)) {
-            $result = $db->select(tbl($this->p_tbl), '*', ' photo_id = \'' . $pid . '\'');
+            $field = 'photo_id';
         } else {
-            $result = $db->select(tbl($this->p_tbl), '*', ' photo_key = \'' . $pid . '\'');
+            $field = 'photo_key';
         }
 
+
+        $query = 'SELECT GROUP_CONCAT(T.name SEPARATOR \',\') as photo_tags, P.* 
+                    FROM ' . tbl($this->p_tbl) . ' AS P 
+                    LEFT JOIN ' . tbl('photo_tags') . ' AS PT ON P.photo_id = PT.id_photo  
+                    LEFT JOIN ' . tbl('tags') . ' AS T ON PT.id_tag = T.id_tag
+                    WHERE P.' . $field . ' = \'' . $pid . '\'
+                    GROUP BY P.photo_id ';
+
+        $result = $db->_select($query);
         if (count($result) > 0) {
             return $result[0];
         }
@@ -513,25 +519,27 @@ class CBPhotos
 
         if ($p['tags']) {
             $tags = explode(',', $p['tags']);
-            if (count($tags) > 0) {
-                if ($title_tag != '') {
-                    $title_tag .= ' OR ';
-                }
-                $total = count($tags);
-                $loop = 1;
-                foreach ($tags as $tag) {
-                    $title_tag .= 'photos.photo_tags LIKE \'%' . mysql_clean($tag) . '%\'';
-                    if ($loop < $total) {
-                        $title_tag .= ' OR ';
-                    }
-                    $loop++;
-                }
-            } else {
-                if ($title_tag != '') {
-                    $title_tag .= ' OR ';
-                }
-                $title_tag .= 'photos.photo_tags LIKE \'%' . mysql_clean($p['tags']) . '%\'';
-            }
+
+            $title_tag .= ' T.name IN ' . mysql_clean($p['tags']);
+//            if (count($tags) > 0) {
+//                if ($title_tag != '') {
+//                    $title_tag .= ' OR ';
+//                }
+//                $total = count($tags);
+//                $loop = 1;
+//                foreach ($tags as $tag) {
+//                    $title_tag .= 'photos.photo_tags LIKE \'%' . mysql_clean($tag) . '%\'';
+//                    if ($loop < $total) {
+//                        $title_tag .= ' OR ';
+//                    }
+//                    $loop++;
+//                }
+//            } else {
+//                if ($title_tag != '') {
+//                    $title_tag .= ' OR ';
+//                }
+//                $title_tag .= 'photos.photo_tags LIKE \'%' . mysql_clean($p['tags']) . '%\'';
+//            }
         }
 
         if ($title_tag != '') {
@@ -577,9 +585,11 @@ class CBPhotos
 
         $string = table_fields($fields);
 
-        $main_query = 'SELECT ' . $string . ' FROM ' . cb_sql_table('photos');
+        $main_query = 'SELECT ' . $string . ' , GROUP_CONCAT(T.name SEPARATOR \',\') AS photo_tags FROM ' . cb_sql_table('photos');
         $main_query .= ' LEFT JOIN ' . cb_sql_table('collections') . ' ON photos.collection_id = collections.collection_id';
         $main_query .= ' LEFT JOIN ' . cb_sql_table('users') . ' ON collections.userid = users.userid';
+        $main_query .= ' LEFT JOIN ' . tbl('photo_tags') . ' AS PT ON photos.photo_id = PT.id_photo';
+        $main_query .= ' LEFT JOIN ' . tbl('tags') . ' AS T ON PT.id_tag = T.id_tag';
 
         $order = $order ? ' ORDER BY ' . $order : false;
         $limit = $limit ? ' LIMIT ' . $limit : false;
@@ -590,6 +600,7 @@ class CBPhotos
                 $query .= ' WHERE ' . $cond;
             }
 
+            $query .= ' GROUP BY photos.photo_id ';
             $query .= $order;
             $query .= $limit;
 
@@ -625,6 +636,8 @@ class CBPhotos
             $where = ' WHERE ' . $cond . ' AND photos.collection_id <> 0';
 
             $query .= $where;
+            $query .= ' GROUP BY photos.photo_id';
+
             $query .= $order;
             $query .= $limit;
 
@@ -663,6 +676,7 @@ class CBPhotos
 
                 $where = ' WHERE ' . $cond . ' AND photos.collection_id <> 0';
                 $query .= $where;
+                $query .= ' GROUP BY photos.photo_id ';
                 $query .= $order;
                 $query .= $limit;
 
@@ -1299,8 +1313,7 @@ class CBPhotos
                 'type'        => 'hidden',
                 'id'          => 'tags',
                 'value'       => genTags($tags),
-                'db_field'    => 'photo_tags',
-                'required'    => 'yes',
+                'required'    => 'no',
                 'invalid_err' => lang('photo_tags_err')
             ],
             'collection' => [
@@ -1748,6 +1761,9 @@ class CBPhotos
                             }
 
                             $db->update(tbl('photos'), $query_field, $query_val, " photo_id='$pid'");
+
+                            saveTags($array['photo_tags'], 'photo', $pid);
+
                             e(lang("photo_updated_successfully"), "m");
                         }
                     }
