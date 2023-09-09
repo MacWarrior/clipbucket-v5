@@ -48,6 +48,9 @@ class CBvideo extends CBCategory
         $cb_columns->object('videos')->register_columns($basic_fields);
     }
 
+    /**
+     * @throws Exception
+     */
     function init_admin_menu()
     {
         if (NEED_UPDATE) {
@@ -96,14 +99,6 @@ class CBvideo extends CBCategory
         }
     }
 
-    /**
-     * @return array
-     */
-    function get_basic_fields()
-    {
-        return $this->basic_fields;
-    }
-
     function set_basic_fields($fields = [])
     {
         return $this->basic_fields = $fields;
@@ -113,10 +108,14 @@ class CBvideo extends CBCategory
     {
         # Set basic video fields
         $basic_fields = [
-            'videoid', 'videokey', 'userid', 'title', 'server_ip', 'description', 'tags', 'category', 'file_directory',
-            'active', 'date_added', 'broadcast', 'rating', 'file_server_path', 'files_thumbs_path',
-            'duration', 'views', 'file_name', 'rated_by', 'file_type', 'bits_color', 'is_castable',
-            'default_thumb', 'comments_count', 'last_viewed', 'featured', 'featured_date', 'status', 're_conv_status', 'embed_code'
+            'videoid', 'videokey', 'video_password', 'video_users', 'username', 'userid', 'title', 'file_name', 'file_type'
+            , 'file_directory', 'description', 'tags', 'category', 'category_parents', 'broadcast', 'location', 'datecreated'
+            , 'country', 'blocked_countries', 'sprite_count', 'allow_embedding', 'rating', 'rated_by', 'voter_ids', 'allow_comments'
+            , 'comment_voting', 'comments_count', 'last_commented', 'featured', 'featured_date', 'featured_description', 'allow_rating'
+            , 'active', 'favourite_count', 'playlist_count', 'views', 'last_viewed', 'date_added', 'flagged', 'duration', 'status'
+            , 'failed_reason', 'default_thumb', 'aspect_ratio', 'embed_code', 'refer_url', 'downloads', 'uploader_ip', 'unique_embed_code'
+            , 'video_files', 'server_ip', 'file_server_path', 'files_thumbs_path', 'process_status', 'video_version', 'thumbs_version'
+            , 're_conv_status', 'is_castable', 'bits_color', 'subscription_email'
         ];
 
         return $this->set_basic_fields($basic_fields);

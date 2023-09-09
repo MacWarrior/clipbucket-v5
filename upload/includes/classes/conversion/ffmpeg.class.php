@@ -287,10 +287,15 @@ class FFMpeg
         $this->log->writeLine(date('Y-m-d H:i:s').'- Time Took : ' . $this->total_time . ' seconds');
 
         if (file_exists($this->output_file) && filesize($this->output_file) > 0) {
-            $this->log->writeLine('Conversion_status : completed');
+            $conversion_status = 'completed';
+            $video_status = 'Successful';
         } else {
-            $this->log->writeLine('Conversion_status : failed');
+            $conversion_status = 'failed';
+            $video_status = 'Failed';
         }
+
+        $this->log->writeLine('Conversion_status : '.$conversion_status);
+        setVideoStatus($this->file_name, $video_status, false, true);
 
         $this->unLock();
     }

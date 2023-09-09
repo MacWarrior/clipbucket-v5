@@ -122,11 +122,12 @@ if (!empty($_filename)) {
     $db->update(tbl('video'), ['video_files', 'duration'], [$video_files, $ffmpeg->input_details['duration']], ' file_name = \''.display_clean($_filename).'\'');
 
     $videoDetails = $cbvideo->get_video($queue_details['cqueue_name'], true);
+
     update_bits_color($videoDetails);
     update_castable_status($videoDetails);
 
     if ($reconvert) {
-        setVideoStatus($_filename, 'completed', true, true);
+        setVideoStatus($_filename, 'completed', $reconvert, true);
     }
 
     if (stristr(PHP_OS, 'WIN')) {
