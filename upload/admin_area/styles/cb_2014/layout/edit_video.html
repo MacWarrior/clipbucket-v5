@@ -7,9 +7,7 @@
 <script>
     $(document).ready(function(){
         $("#datecreated").datepicker({
-            showOtherMonths: true,
-            selectOtherMonths: false,
-            dateFormat:"{get_date_js()}"
+            format: 'yyyy-mm-dd' // TODO : Use config date_format
         });
     });
 </script>

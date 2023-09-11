@@ -24,7 +24,7 @@ if(in_dev()){
 } else {
     $min_suffixe = '.min';
 }
-$Cbucket->addAdminJS(['jquery-ui-1.13.2.min.js' => 'global']);
+
 $Cbucket->addAdminJS(['pages/add_member/add_member'.$min_suffixe.'.js' => 'admin']);
 
 subtitle('Add New Member');

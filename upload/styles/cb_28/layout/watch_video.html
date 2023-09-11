@@ -67,7 +67,7 @@
 							{/if}
 						</div>
 						<div class="clearfix subscribe-col col-lg-6 col-md-6 col-sm-6 col-xs-12">
-							{if $video.userid != user_id()}
+							{if user_id() && $video.userid != user_id()}
 								{if $userquery->is_subscribed($video.userid,user_id())}
 									<button onclick="_cb.unsubscribeToChannel('{$video.userid}','unsubscribe_user');" class="btn btn-subscribe btn-primary subs_{$video.userid}">
 										{lang code="unsubscribe"}
@@ -111,9 +111,11 @@
 						<li>
 							<a href="#cb-item-share" data-toggle="tab"><span class="icon-share"></span>{lang code='share_embed'}</a>
 						</li>
+						{if user_id()}
 						<li>
 							<a href="#cb-item-addto" data-toggle="tab"><span class="icon-plusrounded"></span>{lang code='add_to'}</a>
 						</li>
+						{/if}
 						<li>
 							<a href="#cb-item-report" data-toggle="tab"><span class="icon-flag"></span>{lang code='report_this'}</a>
 						</li>

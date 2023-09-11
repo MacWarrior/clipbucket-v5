@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"244",
+  "revision":"245",
   "status":"dev",
   "detail":[
     {
@@ -194,6 +194,8 @@
         ,"Fix video upload default values"
         ,"Implement easy tag input (#68)"
         ,"Fix edit_photo display"
+        ,"Hide social buttons for guests users"
+        ,"Translate date picker"
       ]
     }
   ,{

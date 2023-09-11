@@ -13,7 +13,7 @@ $Cbucket->addAdminCSS([
     'styles' . $min_suffixe . '.css'             => 'admin',
     'open_sans' . $min_suffixe . '.css'          => 'admin',
     'summernote' . $min_suffixe . '.css'         => 'admin',
-    'bootstrap-editable' . $min_suffixe . '.css' => 'admin',
+    'bootstrap-editable' . $min_suffixe . '.css' => 'admin'
 ]);
 
 if (!this_page('admin_login')) {
@@ -40,5 +40,5 @@ $Cbucket->addAdminJS([
     'jquery.pie' . $min_suffixe . '.js'            => 'admin',
     'jquery.light' . $min_suffixe . '.js'          => 'admin',
     'jquery.serial' . $min_suffixe . '.js'         => 'admin',
-    'bootstrap-editable' . $min_suffixe . '.js'    => 'admin',
+    'bootstrap-editable' . $min_suffixe . '.js'    => 'admin'
 ]);

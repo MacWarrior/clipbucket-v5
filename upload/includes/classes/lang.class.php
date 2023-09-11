@@ -37,7 +37,7 @@ class Language
 
     /**
      * INIT
-     * @throws \Exception
+     * @throws Exception
      */
     public function init()
     {
@@ -75,7 +75,7 @@ class Language
      * @param STRING $language_id
      *
      * @return bool|array
-     * @throws \Exception
+     * @throws Exception
      */
     public function getTranslationByKey($language_key, $language_id)
     {
@@ -100,7 +100,7 @@ class Language
      * @param STRING $language_id
      *
      * @return bool|array
-     * @throws \Exception
+     * @throws Exception
      */
     public function getTranslationByIdKey($id_language_key, $language_id)
     {
@@ -127,7 +127,7 @@ class Language
      * @param null $extra_param
      *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function getAllTranslations($language_id = 1, $fields = 'language_key, translation', $limit = null, $extra_param = null): array
     {
@@ -150,7 +150,7 @@ class Language
      * @param null $extra_param
      *
      * @return int
-     * @throws \Exception
+     * @throws Exception
      */
     public function countTranslations($language_id = null, $extra_param = null): int
     {
@@ -175,7 +175,7 @@ class Language
      * @param int $id_language_key
      * @param string $translation
      * @param int $language_id
-     * @throws \Exception
+     * @throws Exception
      */
     public function update_phrase($id_language_key, $translation, $language_id = 1)
     {
@@ -197,7 +197,7 @@ class Language
      * @param int $langId
      *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function loadTranslations($langId): array
     {
@@ -230,7 +230,7 @@ class Language
      * @param bool $active
      * @param bool $countTrads
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function get_langs(bool $active = false, bool $countTrads = false): array
     {
@@ -264,7 +264,7 @@ class Language
      * @param $id
      *
      * @return bool|array
-     * @throws \Exception
+     * @throws Exception
      */
     public static function getLangById($id)
     {
@@ -283,7 +283,7 @@ class Language
      * Make Language Default
      *
      * @param $lid
-     * @throws \Exception
+     * @throws Exception
      */
     public function make_default($lid)
     {
@@ -300,7 +300,7 @@ class Language
 
     /**
      * function used to get default language
-     * @throws \Exception
+     * @throws Exception
      */
     public static function getDefaultLanguage()
     {
@@ -314,7 +314,7 @@ class Language
      * Function used to delete language
      *
      * @param $i
-     * @throws \Exception
+     * @throws Exception
      */
     public static function delete_lang($i)
     {
@@ -336,7 +336,7 @@ class Language
      * Function used to update language
      *
      * @param $array
-     * @throws \Exception
+     * @throws Exception
      */
     public static function update_lang($array)
     {
@@ -359,7 +359,7 @@ class Language
      * Function used to update language
      *
      * @param $array
-     * @throws \Exception
+     * @throws Exception
      */
     public static function add_lang($array)
     {
@@ -375,7 +375,7 @@ class Language
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function set_lang($ClientId, $secertId)
     {
@@ -395,7 +395,7 @@ class Language
      * Function used to update language
      *
      * @param $array
-     * @throws \Exception
+     * @throws Exception
      */
     public static function restore_lang($code)
     {
