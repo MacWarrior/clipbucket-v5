@@ -70,6 +70,7 @@ function Assign($name, $value)
  *
  * @param array $params
  * @return array
+ * @throws Exception
  */
 function cb_menu($params = null)
 {

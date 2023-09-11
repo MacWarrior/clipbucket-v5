@@ -6,6 +6,10 @@ $userquery->admin_login_check();
 $pages->page_redir();
 $userquery->login_check('admin_access');
 
+if( count($cbplayer->getPlayers()) <= 1 && !in_dev() && $_GET['mode'] != 'show_settings' ){
+    redirect_to(BASEURL.ADMIN_BASEURL);
+}
+
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => 'Templates And Players', 'url' => ''];

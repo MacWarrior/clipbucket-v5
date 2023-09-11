@@ -8,7 +8,7 @@ Simple Plugin System
 
 global $cbplugin, $userquery, $Cbucket;
 $installed_plugins = $cbplugin->getInstalledPlugins();
-if (is_array($installed_plugins)) {
+if (!empty($installed_plugins)) {
     $plug_permission = $userquery->permission['plugins_perms'];
     $plug_permission = json_decode($plug_permission, true);
 
