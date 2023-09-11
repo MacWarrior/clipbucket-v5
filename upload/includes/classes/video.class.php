@@ -19,6 +19,7 @@ class CBvideo extends CBCategory
 
     /**
      * __Constructor of CBVideo
+     * @throws Exception
      */
     function init()
     {
@@ -109,12 +110,12 @@ class CBvideo extends CBCategory
         # Set basic video fields
         $basic_fields = [
             'videoid', 'videokey', 'video_password', 'video_users', 'username', 'userid', 'title', 'file_name', 'file_type'
-            , 'file_directory', 'description', 'tags', 'category', 'category_parents', 'broadcast', 'location', 'datecreated'
-            , 'country', 'blocked_countries', 'sprite_count', 'allow_embedding', 'rating', 'rated_by', 'voter_ids', 'allow_comments'
-            , 'comment_voting', 'comments_count', 'last_commented', 'featured', 'featured_date', 'featured_description', 'allow_rating'
+            , 'file_directory', 'description', 'tags', 'category', 'broadcast', 'location', 'datecreated'
+            , 'country', 'allow_embedding', 'rating', 'rated_by', 'voter_ids', 'allow_comments'
+            , 'comment_voting', 'comments_count', 'last_commented', 'featured', 'featured_date', 'allow_rating'
             , 'active', 'favourite_count', 'playlist_count', 'views', 'last_viewed', 'date_added', 'flagged', 'duration', 'status'
-            , 'failed_reason', 'default_thumb', 'aspect_ratio', 'embed_code', 'refer_url', 'downloads', 'uploader_ip', 'unique_embed_code'
-            , 'video_files', 'server_ip', 'file_server_path', 'files_thumbs_path', 'process_status', 'video_version', 'thumbs_version'
+            , 'default_thumb', 'embed_code', 'downloads', 'uploader_ip'
+            , 'video_files', 'file_server_path', 'video_version', 'thumbs_version'
             , 're_conv_status', 'is_castable', 'bits_color', 'subscription_email'
         ];
 
@@ -241,7 +242,7 @@ class CBvideo extends CBCategory
                 $db->update(tbl('video'), ['active'], ['yes'], ' videoid=\'' . mysql_clean($vid) . '\' OR videokey = \'' . mysql_clean($vid) . '\' ');
                 e(lang('class_vdo_act_msg'), 'm');
 
-                if (SEND_VID_APPROVE_EMAIL == 'yes') {
+                if (config('approve_video_notification') == 'yes') {
                     //Sending Email
                     global $cbemail;
                     $tpl = $cbemail->get_template('video_activation_email');
@@ -691,7 +692,7 @@ class CBvideo extends CBCategory
      *
      * @param $params
      *
-     * @return bool|array|void
+     * @return bool|array|void|int
      * @throws Exception
      */
     function get_videos($params)

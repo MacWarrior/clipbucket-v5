@@ -115,7 +115,6 @@ class ElasticSearch
                     "videokey"          => ["type" => "text"],
                     "file_name"         => ["type" => "text"],
                     "file_server_path"  => ["type" => "text"],
-                    "files_thumbs_path" => ["type" => "text"],
                     "file_directory"    => ["type" => "text"],
                     "rating"            => ["type" => "text"],
                     "comments_count"    => ["type" => "integer"],
@@ -358,7 +357,6 @@ class ElasticSearch
         $newVideo->videokey = $video['videokey'];
         $newVideo->file_name = $video['file_name'];
         $newVideo->file_server_path = $video['file_server_path'];
-        $newVideo->files_thumbs_path = $video['file_server_path'];
         $newVideo->file_directory = $video['file_directory'];
         $newVideo->rating = $video['rating'];
         $newVideo->comments_count = $video['comments_count'];

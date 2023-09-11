@@ -20,9 +20,9 @@
 		this.perc_download = 0;
 
 		this.force_stop = false;
-		this.remoteObjID = "";
+		this.remoteObjID = '';
 
-		this.current_menu = "";
+		this.current_menu = '';
 
 		this.collectionID = false;
 
@@ -32,7 +32,7 @@
 
 		if (this.ua.indexOf(" chrome/") >= 0 || this.ua.indexOf(" firefox/") >= 0 || this.ua.indexOf(' gecko/') >= 0) {
 			var StringMaker = function () {
-				this.str = "";
+				this.str = '';
 				this.length = 0;
 				this.append = function (s) {
 					this.str += s;
@@ -107,7 +107,6 @@
 		this.check_remote_url = function(){
 			var self = this;
 			var file = $("#remote_file_url").val();
-			var $youtubeButton = $('#ytUploadBttn'); // youtube upload button
 			var $uploadButton = $('#remoteUploadBttn'); // upload button
 			var $cancelButton = $('#remoteUploadBttnStop'); // cancel upload button
 			this.force_stop = false;
@@ -119,30 +118,14 @@
 
 			// these functions will only be used in remote upload
 			// they manage the UI changes
-			var remoteUploadStart = function(youtube){
-				if(typeof youtube !== "undefined"){
-					$uploadButton.attr("disabled","disabled");
-					$youtubeButton.attr("disabled","disabled");
-					//$cancelButton.show();
-				}else{
-					$(".downloadStatusContainer").removeClass("hidden");
-					$uploadButton.attr("disabled","disabled").hide();
-					$youtubeButton.attr("disabled","disabled");
-					$cancelButton.show();
-				}
+			var remoteUploadStart = function(){
+				$uploadButton.attr("disabled","disabled");
 			};
 
-			var remoteUploadStop = function(youtube){
-				if(typeof youtube !== "undefined"){
-					$cancelButton.removeAttr("disabled").hide();
-					$youtubeButton.removeAttr("disabled");
-					$uploadButton.removeAttr("disabled").show();
-				}else{
-					$(".downloadStatusContainer").addClass("hidden");
-					$cancelButton.removeAttr("disabled").hide();
-					$youtubeButton.removeAttr("disabled");
-					$uploadButton.removeAttr("disabled").show();
-				}
+			var remoteUploadStop = function(){
+				$(".downloadStatusContainer").addClass("hidden");
+				$cancelButton.removeAttr("disabled").hide();
+				$uploadButton.removeAttr("disabled").show();
 			};
 
 			remoteUploadStart();
@@ -298,81 +281,6 @@
 				$("#downloadStatus").find("#totalSize").text(total+" Mb");
 				$("#prog_bar").css("width", progress+"%");
 			}
-		};
-		this.youtube_check_url = function(){
-			var file = $("#remote_file_url").val();
-			this.force_stop = false;
-			if(file.match(/^e.g/) || typeof file === "undefined" || file.length === 0){
-				// given url is not valid
-				alert("Please enter file url");
-				return false;
-			}
-			return true;
-
-		};
-		this.youtube_upload = function(){
-
-			if(!this.youtube_check_url()){
-				return false;
-			}
-
-			$('#remoteUploadBttn').attr("disabled","disabled");
-			$('#ytUploadBttn').attr("disabled","disabled");
-
-			var file = $("#remote_file_url").val();
-			force_stop = false;		
-			if(!file || file=='undefined')
-			{
-				alert("Please enter file url");
-				$('#remoteUploadBttn').attr('disabled','');
-				$('#ytUploadBttn').attr("disabled",'');
-				return false;
-			}
-
-			var ajaxCall = $.ajax({
-			  url: download_page,
-			  type: "POST",
-			  data: ({file:file,file_name:file_name,"youtube":"yes"}),
-			  dataType : 'json',
-			  beforeSend : function()
-			  {
-				$("#loading").html('<div style="float: left; display: inline-block;"><img src="'+imageurl+'/ajax-loader.gif"></div><div style="float: left; line-height: 16px; padding-left:5px">Uploading video from youtube, please wait...</div><div class="clear"></div>');
-			  },
-			  success: function(data)
-			  {
-				  if(data.error)
-				  {		  
-					force_stop = true;
-					$('#remoteUploadBttn').attr('disabled','');
-					$('#ytUploadBttn').attr("disabled","");
-					alert(data.error);
-				  }else if(data.vid) {
-                      alert('this is checked success');
-					  vid = data.vid;
-					  $('#remoteUploadBttn').attr("disabled","disabled").hide();
-					  $('#ytUploadBttn').attr("disabled","disabled").hide();
-						
-					  $.post('/actions/file_uploader.php',
-					  {"getForm":"get_form",
-					  "title":data.title,
-					  "desc":data.desc,
-					  "tags":data.tags,"objId":remoteObjID},
-					  function(data)
-					  {
-							$('#remoteForm').append(data);
-							$('#cbSubmitUpload'+remoteObjID)
-							.before('<span id="updateVideoDataLoading" style="margin-right:5px"></span>')
-							.attr("disabled","")
-							.attr("value",lang.saveData)
-							.attr("onClick","doUpdateVideo('#uploadForm"+remoteObjID+"','"+remoteObjID+"')")
-							.after('<input type="hidden" name="videoid" value="'+vid+'" id="videoid" />')
-							.after('<input type="hidden" name="updateVideo" value="yes" id="updateVideo" />');
-					
-					  },'text');  
-				  }
-				  $("#loading").html('');
-			  }
-		    });
 		};
 
 		this.status_update = function(){

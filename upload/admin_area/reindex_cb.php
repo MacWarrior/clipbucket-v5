@@ -1,8 +1,8 @@
 <?php
-
-
-//including config file..
 require_once '../includes/admin_config.php';
+
+global $userquery, $pages, $cbindex;
+
 $userquery->admin_login_check();
 $pages->page_redir();
 
@@ -14,13 +14,6 @@ $breadcrumb[1] = ['title' => 'ReIndexer', 'url' => ADMIN_BASEURL . '/reindex_cb.
 $vtbl = tbl("video");
 $utbl = tbl("users");
 $gtbl = tbl("groups");
-
-function p_r($array)
-{
-    echo "<pre>";
-    print_r($array);
-    echo "</pre>";
-}
 
 $start_index = $_GET['start_index'] ? $_GET['start_index'] : 0;
 $loop_size = $_GET['loop_size'];

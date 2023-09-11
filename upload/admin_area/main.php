@@ -269,7 +269,6 @@ if (isset($_POST['update'])) {
         'vrate',
         'video_require_login',
         'feedsSection',
-        'youtube_api_key',
         'website_email',
         'welcome_email',
         'store_guest_session',
