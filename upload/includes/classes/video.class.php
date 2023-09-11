@@ -1475,7 +1475,7 @@ class CBvideo extends CBCategory
      * @param $link
      * @param $vid
      *
-     * @return string
+     * @return string|void
      */
     function video_manager_link_new($link, $vid)
     {
