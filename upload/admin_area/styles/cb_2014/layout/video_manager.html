@@ -82,12 +82,6 @@
 
                                     <span class="label label-info">{strtoupper($video.file_type)}</span>
 
-                                    {$quals = resString($video.video_files)}
-                                    {if $quals}
-                                        <span class="label label-primary">
-                                            {$quals}
-                                        </span>
-                                    {/if}
                                     <div class="clearfix"></div>
                                     {$catString = {$video.category|categories:video}}
                                     {$catString = strip_tags($catString)}

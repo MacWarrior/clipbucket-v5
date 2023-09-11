@@ -673,11 +673,11 @@ function get_video_file($vdetails, $return_default = true, $with_path = true, $m
 /**
  * Function used to update processed video
  *
- * @param Files $file_array
+ * @param array $file_array
  * @param string $status
  * @throws Exception
  */
-function update_processed_video($file_array, $status = 'Successful')
+function update_processed_video($file_array, string $status = 'Successful')
 {
     global $db;
     $file_name = $file_array['cqueue_name'];
@@ -727,7 +727,7 @@ function get_file_details($file_name, $get_jsoned = false)
 {
     $file_name = mysql_clean($file_name);
     //Reading Log File
-    $result = db_select('SELECT * FROM ' . tbl('video') . " WHERE file_name = '" . $file_name . "'");
+    $result = db_select('SELECT * FROM ' . tbl('video') . " WHERE file_name = '" . display_clean($file_name) . "'");
 
     if ($result) {
         $video = $result[0];
@@ -1207,6 +1207,7 @@ function get_high_res_file($vdetails): string
     }
 
     $video_qualities = json_decode($vdetails['video_files']);
+
     if (is_int($video_qualities[0])) {
         $max_quality = max($video_qualities);
     } else {
@@ -1526,22 +1527,6 @@ function reConvertVideos($data = '')
     }
     if ($toConvert >= 1) {
         e("Reconversion is underway. Kindly don't run reconversion on videos that are already reconverting. Doing so may cause things to become lunatic fringes :P", "w");
-    }
-}
-
-/**
- * Returns cleaned string containing video qualities
- * @param $res
- *
- * @return mixed
- * @since : 2nd December, 2016
- *
- */
-function resString($res)
-{
-    $qual = preg_replace("/[^a-zA-Z0-9-,]+/", "", html_entity_decode($res, ENT_QUOTES));
-    if (!empty($qual)) {
-        return $qual;
     }
 }
 

@@ -245,11 +245,11 @@ class Language
             $cond = '1 ';
         }
 
-        $select = tbl('languages') . ' AS L ';
+        $select = tbl('languages') . ' L ';
         $field = 'L.* ';
         if ($countTrads) {
-            $select .= ' LEFT JOIN ' . tbl('languages_translations') . ' AS LT ON LT.language_id = L.language_id ';
-            $field .= ' , COUNT(LT.id_language_key) as nb_trads, (select count(id_language_key) from cb_languages_keys) as nb_codes ';
+            $select .= ' LEFT JOIN ' . tbl('languages_translations') . ' LT ON LT.language_id = L.language_id ';
+            $field .= ' , COUNT(LT.id_language_key) AS nb_trads, (SELECT COUNT(id_language_key) FROM ' . tbl('languages_keys') . ') as nb_codes ';
             $cond .= ' GROUP BY L.language_id ';
         }
 
