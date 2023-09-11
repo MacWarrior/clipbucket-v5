@@ -1840,7 +1840,7 @@ class CBPhotos
             return $this->default_thumb($size, $output);
         } else {
             //Calling Custom Functions
-            if (count($Cbucket->custom_get_photo_funcs) > 0) {
+            if (!empty($Cbucket->custom_get_photo_funcs)) {
                 foreach ($Cbucket->custom_get_photo_funcs as $funcs) {
                     if (function_exists($funcs)) {
                         $func_returned = $funcs($p);

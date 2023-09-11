@@ -1,7 +1,6 @@
 INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'clientid', ''),
 	(NULL, 'secretId', ''),
-	(NULL, 'youtube_api_key', ''),
 	(NULL, 'site_title', ''),
 	(NULL, 'site_slogan', ''),
 	(NULL, 'baseurl', ''),

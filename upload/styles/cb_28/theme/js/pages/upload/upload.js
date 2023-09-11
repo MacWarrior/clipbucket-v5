@@ -402,32 +402,4 @@ $(document).ready(function(){
         }
         return null;
     };
-
-    $(document).on('click','#youtube_update',function(e){
-        e.preventDefault();
-        $(document).find('.__theClassHere').find('form').attr('id','youtube_update_form');
-        var theForm = $('#youtube_update_form');
-        var data = theForm.serialize();
-        data += '&updateVideo=yes&videoid='+grabbed_json.vid;
-
-        $.ajax({
-            url : uploadurl,
-            type : 'post',
-            data : data,
-            success: function(msg){
-                $("#uploadMessage").removeClass('hidden');
-                msg = $.parseJSON(msg);
-                if(msg.error){
-                    $("#uploadMessage").html(msg.error).attr('class', 'alert alert-danger container');
-                }else{
-                    $("#uploadMessage").html(msg.msg).attr('class', 'alert alert-success container');
-                }
-                setTimeout(function(){
-                    $("#uploadMessage").addClass('hidden');
-                }, 5000);
-            }
-        }).fail(function(err){
-            console.log(err);
-        });
-    });
 });

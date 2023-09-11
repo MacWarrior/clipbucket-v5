@@ -363,7 +363,6 @@ $cbphoto->lar_width = $row['photo_lar_width'];
 $cbphoto->cropping = $row['photo_crop'];
 $cbphoto->position = $row['watermark_placement'];
 
-# Enable youtube videos
 define('EMBED_VDO_WIDTH', $row['embed_player_width']);
 define('EMBED_VDO_HEIGHT', $row['embed_player_height']);
 
@@ -552,4 +551,3 @@ cb_register_action('increment_playlist_played', 'view_playlist');
 include('admin.functions.php');
 # Other settings
 define('SEND_COMMENT_NOTIFICATION', config('send_comment_notification'));
-define('SEND_VID_APPROVE_EMAIL', config('approve_video_notification'));

@@ -84,7 +84,6 @@ class Upload
         $option_fields = $this->loadOptionFields($array);
         $empty_fields = [
             'voter_ids'
-            , 'featured_description'
         ];
 
         $upload_fields = array_merge($required_fields, $location_fields, $option_fields);
@@ -966,7 +965,6 @@ class Upload
     {
         $fields = [
             [
-                'group_name' => lang('required_fields'),
                 'group_id'   => 'required_fields',
                 'fields'     => $this->loadRequiredFields($input)
             ],

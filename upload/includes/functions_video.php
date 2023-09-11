@@ -684,7 +684,7 @@ function update_processed_video($file_array, string $status = 'Successful')
 
     $result = db_select('SELECT * FROM ' . tbl('video') . " WHERE file_name = '$file_name'");
     if ($result) {
-        $db->update(tbl('video'), ['status', 'failed_reason'], [$status, 'none'], " file_name='" . display_clean($file_name) . "'");
+        $db->update(tbl('video'), ['status'], [$status], " file_name='" . display_clean($file_name) . "'");
     }
 }
 
@@ -950,7 +950,7 @@ function call_download_video_function($vdo)
  *
  * @param $param
  *
- * @return array
+ * @return bool|array|void|int
  * @throws Exception
  */
 function get_videos($param)
