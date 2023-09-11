@@ -278,7 +278,7 @@ class ClipBucket
         if (NEED_UPDATE) {
             return;
         }
-        if ($per['web_config_access'] == "yes") {
+        if ($per['web_config_access'] == 'yes') {
             $menu_general = [
                 'title'   => 'General Configurations'
                 , 'class' => 'glyphicon glyphicon-stats'
@@ -321,7 +321,7 @@ class ClipBucket
             $this->addMenuAdmin($menu_general, 10);
         }
 
-        if ($per['member_moderation'] == "yes") {
+        if ($per['member_moderation'] == 'yes') {
             $menu_users = [
                 'title'   => lang('users')
                 , 'class' => 'glyphicon glyphicon-user'
@@ -370,7 +370,7 @@ class ClipBucket
             $this->addMenuAdmin($menu_users, 20);
         }
 
-        if ($per['ad_manager_access'] == "yes" && config("enable_advertisement") == "yes") {
+        if ($per['ad_manager_access'] == 'yes' && config('enable_advertisement') == 'yes' ) {
             $menu_ad = [
                 'title'   => 'Advertisement'
                 , 'class' => 'glyphicon glyphicon-bullhorn'
@@ -389,34 +389,47 @@ class ClipBucket
             $this->addMenuAdmin($menu_ad, 30);
         }
 
-        if ($per['manage_template_access'] == "yes") {
+        if ($per['manage_template_access'] == 'yes') {
+            $sub = [];
+            global $cbtpl, $cbplayer;
+            if( count($cbtpl->get_templates()) > 1 || in_dev() ){
+                $sub[] = [
+                    'title' => 'Templates Manager'
+                    , 'url' => ADMIN_BASEURL . '/templates.php'
+                ];
+            }
+            $sub[] = [
+                'title' => 'Templates Editor'
+                , 'url' => ADMIN_BASEURL . '/template_editor.php'
+            ];
+
+
+            if( count($cbplayer->getPlayers()) > 1 || in_dev() ){
+                $sub[] = [
+                    'title' => 'Players Manager'
+                    , 'url' => ADMIN_BASEURL . '/manage_players.php'
+                ];
+            }
+            $sub[] = [
+                'title' => lang('player_settings')
+                , 'url' => ADMIN_BASEURL . '/manage_players.php?mode=show_settings'
+            ];
+
+
             $menu_template = [
                 'title'   => 'Templates And Players'
                 , 'class' => 'glyphicon glyphicon-play-circle'
-                , 'sub'   => [
-                    [
-                        'title' => 'Templates Manager'
-                        , 'url' => ADMIN_BASEURL . '/templates.php'
-                    ]
-                    , [
-                        'title' => 'Templates Editor'
-                        , 'url' => ADMIN_BASEURL . '/template_editor.php'
-                    ]
-                    , [
-                        'title' => 'Players Manager'
-                        , 'url' => ADMIN_BASEURL . '/manage_players.php'
-                    ]
-                    , [
-                        'title' => lang('player_settings')
-                        , 'url' => ADMIN_BASEURL . '/manage_players.php?mode=show_settings'
-                    ]
-                ]
+                , 'sub'   => $sub
             ];
 
             $this->addMenuAdmin($menu_template, 40);
         }
 
-        if ($per['plugins_moderation'] == "yes") {
+        global $cbplugin;
+        $plugins_available = count($cbplugin->getNewPlugins());
+        $plugins_installed = count($cbplugin->getInstalledPlugins());
+        $plugins_count = $plugins_available + $plugins_installed;
+        if ($per['plugins_moderation'] == 'yes' && ($plugins_count >= 1 || in_dev())) {
             $menu_plugin = [
                 'title'   => 'Plugin Manager'
                 , 'class' => 'glyphicon glyphicon-tasks'
@@ -431,7 +444,7 @@ class ClipBucket
             $this->addMenuAdmin($menu_plugin, 50);
         }
 
-        if ($per['tool_box'] == "yes") {
+        if ($per['tool_box'] == 'yes') {
             $menu_tool = [
                 'title'   => lang('tool_box')
                 , 'class' => 'glyphicon glyphicon-wrench'
@@ -468,7 +481,7 @@ class ClipBucket
             ];
 
 
-            if ($per['web_config_access'] == "yes") {
+            if ($per['web_config_access'] == 'yes') {
                 $menu_tool['sub'][] = [
                     'title' => 'Maintenance'
                     , 'url' => ADMIN_BASEURL . '/maintenance.php'

@@ -59,6 +59,7 @@ class CBPlugin
 
     /**
      * Function used to get new plugins, that are not installed yet
+     * @throws Exception
      */
     function getNewPlugins()
     {
@@ -92,6 +93,7 @@ class CBPlugin
 
         $results = $db->select(tbl('plugins'), '*', $active_query, false, false, false, 60);
 
+        $plug_array = [];
         if (is_array($results)) {
             foreach ($results as $result) {
                 //Now Checking if plugin is installed or not
@@ -105,7 +107,7 @@ class CBPlugin
             }
         }
 
-        return $plug_array ?? false;
+        return $plug_array;
     }
 
     /**

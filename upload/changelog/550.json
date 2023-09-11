@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"242",
+  "revision":"243",
   "status":"dev",
   "detail":[
     {
@@ -76,6 +76,7 @@
         ,"Fix collection manager, edit collection, view user page's breadcrumb"
         ,"Implement easy tag input (#68)"
         ,"Refactor tags management"
+        ,"Hide player and template menus when no choice available"
       ]
     },
     {
