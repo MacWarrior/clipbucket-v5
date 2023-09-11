@@ -76,7 +76,7 @@ class cbactions
             lang('other')
         ];
 
-        $fields = ['playlist_id', 'playlist_name', 'userid', 'description', 'tags', 'category',
+        $fields = ['playlist_id', 'playlist_name', 'userid', 'description', 'category',
             'played', 'privacy', 'total_comments', 'total_items', 'runtime',
             'last_update', 'date_added', 'first_item', 'playlist_type', 'cover'];
 
@@ -444,11 +444,10 @@ class cbactions
             ],
             'tags'        => [
                 'title'    => lang('tags'),
-                'type'     => 'textfield',
+                'type'     => 'hidden',
                 'name'     => 'tags',
                 'id'       => 'tags',
-                'db_field' => 'tags',
-                'value'    => $tags
+                'value'    => genTags($tags)
             ],
             'privacy'     => [
                 'title'         => lang('playlist_privacy'),
@@ -589,16 +588,17 @@ class cbactions
 
         $fields['users'] = $cb_columns->object('users')->temp_remove('usr_status,user_session_key')->get_columns();
 
-        $query = 'SELECT ' . table_fields($fields) . ' FROM ' . cb_sql_table('playlists');
-        $query .= ' LEFT JOIN ' . cb_sql_table('users') . ' ON playlists.userid = users.userid';
-
-        $query .= ' WHERE playlists.playlist_id = \'' . mysql_clean($id) . '\'';
+        $query = 'SELECT ' . table_fields($fields) . ', GROUP_CONCAT(T.name SEPARATOR \',\') AS tags  FROM ' . cb_sql_table('playlists').'
+                LEFT JOIN ' . cb_sql_table('users') . ' ON playlists.userid = users.userid
+                LEFT JOIN ' . tbl('playlist_tags') . ' PT ON  playlists.playlist_id = PT.id_playlist
+                LEFT JOIN ' . tbl('tags') . ' T ON T.id_tag = PT.id_tag
+                WHERE playlists.playlist_id = \'' . mysql_clean($id) . '\'';
 
         if (!is_null($user) and is_numeric($user)) {
             $query .= ' AND playlists.userid = \'' . mysql_clean($user) . '\'';
         }
 
-        $query .= ' LIMIT 1';
+        $query .= ' GROUP BY playlists.playlist_id LIMIT 1';
 
         $query_id = cb_query_id($query);
 
@@ -902,6 +902,8 @@ class cbactions
                 $query_values['last_update'] = NOW();
 
                 $db->update(tbl('playlists'), array_keys($query_values), array_values($query_values), ' playlist_id = \'' . mysql_clean($pdetails['playlist_id']) . '\'');
+
+                saveTags($array['tags'], 'playlist', $pdetails['playlist_id']);
 
                 $array['playlist_id'] = $array['pid'] ? $array['pid'] : $array['list_id'];
 

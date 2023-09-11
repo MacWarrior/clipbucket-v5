@@ -144,7 +144,9 @@ switch ($mode) {
 
 $udetails = $userquery->get_user_details(user_id());
 $profile = $userquery->get_user_profile($udetails['userid']);
-
+if (is_array($profile)) {
+    $udetails = array_merge($udetails, $profile);
+}
 if(in_dev()){
     $min_suffixe = '';
 } else {
@@ -157,7 +159,6 @@ $Cbucket->addCSS(['jquery.tagit'.$min_suffixe.'.css' => 'admin']);
 $Cbucket->addCSS(['tagit.ui-zendesk'.$min_suffixe.'.css' => 'admin']);
 
 assign('user', $udetails);
-assign('p', $user_profile);
 subtitle(lang('user_manage_my_account'));
 template_files('edit_account.html');
 display_it();

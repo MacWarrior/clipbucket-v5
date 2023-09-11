@@ -380,8 +380,12 @@ function saveTags(string $tags, string $object_type, int $object_id)
             $table_tag = 'collection_tags';
             break;
         case 'profile':
-            $id_field = 'id_profile';
-            $table_tag = 'profile_tags';
+            $id_field = 'id_user';
+            $table_tag = 'user_tags';
+            break;
+        case 'playlist':
+            $id_field = 'id_playlist';
+            $table_tag = 'playlist_tags';
             break;
         default:
             //TODO

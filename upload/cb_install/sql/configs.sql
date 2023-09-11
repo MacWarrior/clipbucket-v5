@@ -240,4 +240,4 @@ INSERT INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description
     ('reset_video_log_label', 'reset_video_log_description', 'AdminTool::resetVideoLog', 1, NULL, NULL),
     ('clean_orphan_files_label', 'clean_orphan_files_description', 'AdminTool::cleanOrphanFiles', 1, NULL, NULL);
 
-INSERT INTO `{tbl_prefix}tags_type` (`name`) VALUES ('video'), ('photo'), ('collection'), ('profile');
+INSERT INTO `{tbl_prefix}tags_type` (`name`) VALUES ('video'), ('photo'), ('collection'), ('profile'), ('playlist');

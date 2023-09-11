@@ -322,7 +322,6 @@ CREATE TABLE `{tbl_prefix}photos` (
   `photo_key` mediumtext NOT NULL,
   `photo_title` mediumtext NOT NULL,
   `photo_description` mediumtext NOT NULL,
-  `photo_tags` mediumtext NOT NULL,
   `userid` int(255) NOT NULL,
   `collection_id` int(255) NOT NULL,
   `date_added` datetime NOT NULL,
@@ -562,7 +561,7 @@ CREATE TABLE `{tbl_prefix}user_permission_types` (
 CREATE TABLE `{tbl_prefix}user_profile` (
   `user_profile_id` int(11) NOT NULL,
   `show_my_collections` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `userid` bigint(20) NOT NULL,
+  `userid` bigint(20) NOT NULL UNIQUE,
   `profile_title` mediumtext NOT NULL,
   `profile_desc` mediumtext NOT NULL,
   `featured_video` mediumtext NOT NULL,
@@ -622,7 +621,6 @@ CREATE TABLE `{tbl_prefix}video` (
   `file_type` VARCHAR(3) NULL DEFAULT NULL,
   `file_directory` varchar(25) NOT NULL DEFAULT '',
   `description` text DEFAULT NULL,
-  `tags` mediumtext NOT NULL,
   `category` VARCHAR(200) NULL DEFAULT NULL,
   `broadcast` varchar(10) NOT NULL DEFAULT '',
   `location` mediumtext DEFAULT NULL,
@@ -837,7 +835,7 @@ ALTER TABLE `{tbl_prefix}photos`
   ADD KEY `last_viewed` (`last_viewed`),
   ADD KEY `rating` (`rating`),
   ADD KEY `total_comments` (`total_comments`);
-ALTER TABLE `{tbl_prefix}photos` ADD FULLTEXT KEY `photo_title` (`photo_title`,`photo_tags`);
+ALTER TABLE `{tbl_prefix}photos` ADD FULLTEXT KEY `photo_title` (`photo_title`);
 
 ALTER TABLE `{tbl_prefix}playlists`
   ADD PRIMARY KEY (`playlist_id`);
@@ -903,7 +901,7 @@ ALTER TABLE `{tbl_prefix}video`
   ADD KEY `status` (`status`,`active`,`broadcast`,`userid`),
   ADD KEY `videoid` (`videoid`,`videokey`(255));
 ALTER TABLE `{tbl_prefix}video` ADD FULLTEXT KEY `description` (`description`,`title`);
-ALTER TABLE `{tbl_prefix}video` ADD FULLTEXT KEY `title` (`title`,`tags`);
+ALTER TABLE `{tbl_prefix}video` ADD FULLTEXT KEY `title` (`title`);
 
 ALTER TABLE `{tbl_prefix}video_categories`
   ADD PRIMARY KEY (`category_id`);
@@ -1204,12 +1202,22 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}collection_tags`
 ALTER TABLE `{tbl_prefix}collection_tags` ADD CONSTRAINT `collection_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 ALTER TABLE `{tbl_prefix}collection_tags` ADD CONSTRAINT `collection_tags_collection` FOREIGN KEY (`id_collection`) REFERENCES `{tbl_prefix}collections` (`collection_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
-CREATE TABLE IF NOT EXISTS `{tbl_prefix}profile_tags`
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}user_tags`
 (
-    `id_profile` INT NOT NULL,
+    `id_user` INT NOT NULL,
     `id_tag`     INT NOT NULL,
-    PRIMARY KEY (`id_profile`, `id_tag`)
+    PRIMARY KEY (`id_user`, `id_tag`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
-ALTER TABLE `{tbl_prefix}profile_tags` ADD CONSTRAINT `profile_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `{tbl_prefix}profile_tags` ADD CONSTRAINT `profile_tags_profile` FOREIGN KEY (`id_profile`) REFERENCES `{tbl_prefix}user_profile` (`user_profile_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}user_tags` ADD CONSTRAINT `user_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}user_tags` ADD CONSTRAINT `user_tags_user` FOREIGN KEY (`id_profile`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}playlist_tags`
+(
+    `id_playlist` BIGINT NOT NULL,
+    `id_tag`        INT    NOT NULL,
+    PRIMARY KEY (`id_playlist`, `id_tag`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}playlist_tags` ADD CONSTRAINT `playlist_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}playlist_tags` ADD CONSTRAINT `playlist_tags_playlist` FOREIGN KEY (`id_playlist`) REFERENCES `{tbl_prefix}playlists` (`playlist_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;

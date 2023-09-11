@@ -58,30 +58,38 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}collection_tags`
   DEFAULT CHARSET = utf8mb4
   COLLATE utf8mb4_unicode_520_ci;
 
-ALTER TABLE `{tbl_prefix}collection_tags`
-    ADD CONSTRAINT `collection_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `{tbl_prefix}collection_tags`
-    ADD CONSTRAINT `collection_tags_collection` FOREIGN KEY (`id_collection`) REFERENCES `{tbl_prefix}collections` (`collection_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}collection_tags` ADD CONSTRAINT `collection_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}collection_tags` ADD CONSTRAINT `collection_tags_collection` FOREIGN KEY (`id_collection`) REFERENCES `{tbl_prefix}collections` (`collection_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
-CREATE TABLE IF NOT EXISTS `{tbl_prefix}profile_tags`
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}user_tags`
 (
-    `id_profile` INT NOT NULL,
+    `id_user` BIGINT NOT NULL,
     `id_tag`     INT NOT NULL,
-    PRIMARY KEY (`id_profile`, `id_tag`)
+    PRIMARY KEY (`id_user`, `id_tag`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE utf8mb4_unicode_520_ci;
 
-ALTER TABLE `{tbl_prefix}profile_tags`
-    ADD CONSTRAINT `profile_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `{tbl_prefix}profile_tags`
-    ADD CONSTRAINT `profile_tags_profile` FOREIGN KEY (`id_profile`) REFERENCES `{tbl_prefix}user_profile` (`user_profile_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}user_tags` ADD CONSTRAINT `user_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}user_tags` ADD CONSTRAINT `user_tags_profile` FOREIGN KEY (`id_user`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}playlist_tags`
+(
+    `id_playlist` INT NOT NULL,
+    `id_tag`        INT    NOT NULL,
+    PRIMARY KEY (`id_playlist`, `id_tag`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}playlist_tags` ADD CONSTRAINT `playlist_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}playlist_tags` ADD CONSTRAINT `playlist_tags_playlist` FOREIGN KEY (`id_playlist`) REFERENCES `{tbl_prefix}playlists` (`playlist_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
 
 INSERT INTO `{tbl_prefix}tags_type` (`name`)
 VALUES ('video'),
        ('photo'),
        ('collection'),
-       ('profile');
+       ('profile'),
+       ('playlist');
 
 SET @type_video = (SELECT id_tag_type
                    FROM `{tbl_prefix}tags_type`
@@ -129,17 +137,33 @@ SET @type_profile = (SELECT id_tag_type
                         FROM `{tbl_prefix}tags_type`
                         WHERE name LIKE 'profile');
 INSERT IGNORE INTO `{tbl_prefix}tags` (id_tag_type, name) (SELECT @type_profile, jsontable.profile_tags
-                                                           FROM `{tbl_prefix}user_profile`
-                                                                    CROSS JOIN JSON_TABLE(CONCAT('["', REPLACE(LOWER(`profile_tags`), ',', '","'), '"]'), '$[*]' COLUMNS (`profile_tags` TEXT PATH '$')) jsontable WHERE TRIM(jsontable.profile_tags) != '');
-INSERT IGNORE INTO `{tbl_prefix}profile_tags` (`id_tag`, `id_profile`) (
-    SELECT T.id_tag, user_profile_id AS tag
+       FROM `{tbl_prefix}user_profile`
+                CROSS JOIN JSON_TABLE(CONCAT('["', REPLACE(LOWER(`profile_tags`), ',', '","'), '"]'), '$[*]' COLUMNS (`profile_tags` TEXT PATH '$')) jsontable WHERE TRIM(jsontable.profile_tags) != '');
+INSERT IGNORE INTO `{tbl_prefix}user_tags` (`id_tag`, `id_user`) (
+    SELECT T.id_tag, userid
     FROM `{tbl_prefix}user_profile`
              CROSS JOIN JSON_TABLE(CONCAT('["', REPLACE(LOWER(`profile_tags`), ',', '","'), '"]'), '$[*]' COLUMNS (`profile_tags` TEXT PATH '$')) jsontable
              INNER JOIN `{tbl_prefix}tags` AS T ON T.name = LOWER(jsontable.profile_tags) COLLATE utf8mb4_unicode_520_ci AND T.id_tag_type = @type_profile
 );
 
+
+SET @type_playlist = (SELECT id_tag_type
+                        FROM `{tbl_prefix}tags_type`
+                        WHERE name LIKE 'playlist');
+INSERT IGNORE INTO `{tbl_prefix}tags` (id_tag_type, name) (SELECT @type_playlist, jsontable.tags AS tag
+                                                           FROM `{tbl_prefix}playlists`
+                                                                    CROSS JOIN JSON_TABLE(CONCAT('["', REPLACE(LOWER(`tags`), ',', '","'), '"]'), '$[*]' COLUMNS (`tags` TEXT PATH '$')) jsontable);
+INSERT IGNORE INTO `{tbl_prefix}playlist_tags` (`id_tag`, `id_playlist`) (
+    SELECT T.id_tag, playlist_id
+    FROM `{tbl_prefix}playlists`
+             CROSS JOIN JSON_TABLE(CONCAT('["', REPLACE(LOWER(`tags`), ',', '","'), '"]'), '$[*]' COLUMNS (`tags` TEXT PATH '$')) jsontable
+             INNER JOIN `{tbl_prefix}tags` AS T ON T.name = LOWER(jsontable.tags) COLLATE utf8mb4_unicode_520_ci AND T.id_tag_type = @type_playlist
+);
+
 ALTER TABLE `{tbl_prefix}video` DROP COLUMN `tags`;
-ALTER TABLE `{tbl_prefix}photos` DROP COLUMN `tags`;
+ALTER TABLE `{tbl_prefix}photos` DROP COLUMN `photo_tags`;
+ALTER TABLE `{tbl_prefix}user_profile` DROP COLUMN `profile_tags`;
+ALTER TABLE `{tbl_prefix}playlists` DROP COLUMN `tags`;
 ALTER TABLE `{tbl_prefix}tags` ADD FULLTEXT KEY `tag` (`name`);
 
 # DELETE CHAMp

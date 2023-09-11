@@ -2048,7 +2048,13 @@ class userquery extends CBCategory
     function get_user_profile($uid)
     {
         global $db;
-        $result = $db->select(tbl($this->dbtbl['user_profile']), '*', "userid='$uid'", false, false, false, 60);
+        $query = 'SELECT UP.*, GROUP_CONCAT(T.name SEPARATOR \',\') as profile_tags
+                    FROM '.tbl($this->dbtbl['user_profile']).' UP
+                    LEFT JOIN '.tbl('user_tags').' UT ON UP.userid = UT.id_user
+                    LEFT JOIN '.tbl('tags').' T ON T.id_tag = UT.id_tag
+                    WHERE UP.userid = ' . mysql_clean($uid).'
+                    GROUP BY UP.userid';
+        $result = $db->_select($query, 60);
 
         if (count($result) > 0) {
             return $result[0];
@@ -2389,6 +2395,8 @@ class userquery extends CBCategory
             insert_log('profile_update', $log_array);
 
             $db->update(tbl($this->dbtbl['user_profile']), $query_field, $query_val, " userid='" . mysql_clean($array['userid']) . "'");
+
+//            saveTags($array['tags'], 'video', $vid);
             e(lang('usr_pof_upd_msg'), 'm');
         }
     }
@@ -4418,8 +4426,7 @@ class userquery extends CBCategory
                 'type'      => 'hidden',
                 'name'      => 'profile_tags',
                 'id'        => 'profile_tags',
-                'value'     => $default['profile_tags'],
-                'db_field'  => 'profile_tags',
+                'value'     => genTags($default['profile_tags']),
                 'auto_view' => 'no'
             ],
             'web_url'         => [
