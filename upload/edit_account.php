@@ -153,10 +153,20 @@ if(in_dev()){
     $min_suffixe = '.min';
 }
 
-$Cbucket->addJS(['tag-it'.$min_suffixe.'.js' => 'admin']);
-$Cbucket->addJS(['pages/edit_account/edit_account'.$min_suffixe.'.js' => 'admin']);
-$Cbucket->addCSS(['jquery.tagit'.$min_suffixe.'.css' => 'admin']);
-$Cbucket->addCSS(['tagit.ui-zendesk'.$min_suffixe.'.css' => 'admin']);
+$Cbucket->addJS([
+    'tag-it'.$min_suffixe.'.js' => 'admin'
+    ,'pages/edit_account/edit_account'.$min_suffixe.'.js' => 'admin'
+]);
+$Cbucket->addCSS([
+    'jquery.tagit'.$min_suffixe.'.css' => 'admin',
+    'tagit.ui-zendesk'.$min_suffixe.'.css' => 'admin'
+]);
+
+$datepicker_js_lang = '';
+if( Language::getInstance()->getLang() != 'en'){
+    $datepicker_js_lang = '_languages/datepicker-'.Language::getInstance()->getLang();
+}
+$Cbucket->addJS(['jquery_plugs/datepicker'.$datepicker_js_lang.'.js' => 'global']);
 
 assign('user', $udetails);
 subtitle(lang('user_manage_my_account'));

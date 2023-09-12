@@ -76,6 +76,12 @@ if (!isset($_POST['login']) && !isset($_POST['signup'])) {
     }
 }
 
+$datepicker_js_lang = '';
+if( Language::getInstance()->getLang() != 'en'){
+    $datepicker_js_lang = '_languages/datepicker-'.Language::getInstance()->getLang();
+}
+$Cbucket->addJS(['jquery_plugs/datepicker'.$datepicker_js_lang.'.js' => 'global']);
+
 subtitle(lang('signup'));
 //Displaying The Template
 template_files('signup.html');

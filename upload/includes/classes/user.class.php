@@ -5194,6 +5194,9 @@ class userquery extends CBCategory
      */
     function friendship_status($logged_in_user, $channel_user): string
     {
+        if (!user_id()) {
+            return '';
+        }
         $sent = $this->sent_contact_requests($logged_in_user);
         $pending = $this->recieved_contact_requests($logged_in_user);
         $friends = $this->added_contacts($logged_in_user);

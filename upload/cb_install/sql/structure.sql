@@ -50,7 +50,6 @@ CREATE TABLE `{tbl_prefix}collections` (
   `collection_id_parent` BIGINT(25) NULL DEFAULT NULL,
   `collection_name` varchar(225) NOT NULL,
   `collection_description` text NOT NULL,
-  `collection_tags` text NOT NULL,
   `category` varchar(200) NOT NULL,
   `userid` int(10) NOT NULL,
   `views` bigint(20) NOT NULL DEFAULT 0,
@@ -571,7 +570,6 @@ CREATE TABLE `{tbl_prefix}user_profile` (
   `show_dob` enum('no','yes') DEFAULT 'no',
   `postal_code` varchar(20) NOT NULL DEFAULT '',
   `time_zone` tinyint(4) NOT NULL DEFAULT 0,
-  `profile_tags` mediumtext DEFAULT NULL,
   `web_url` varchar(200) NOT NULL DEFAULT '',
   `fb_url` varchar(200) DEFAULT '',
   `twitter_url` varchar(200) DEFAULT '',
@@ -889,7 +887,6 @@ ALTER TABLE `{tbl_prefix}user_permission_types`
 ALTER TABLE `{tbl_prefix}user_profile`
   ADD PRIMARY KEY (`user_profile_id`),
   ADD KEY `ind_status_id` (`userid`);
-ALTER TABLE `{tbl_prefix}user_profile` ADD FULLTEXT KEY `profile_tags` (`profile_tags`);
 
 ALTER TABLE `{tbl_prefix}video`
   ADD PRIMARY KEY (`videoid`),
@@ -1161,6 +1158,7 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}tags`
     PRIMARY KEY (`id_tag`),
     UNIQUE  `id_tag_type` (`id_tag_type`, `name`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+ALTER TABLE `{tbl_prefix}tags` ADD FULLTEXT KEY `tag` (`name`);
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}tags_type`
 (
@@ -1204,18 +1202,18 @@ ALTER TABLE `{tbl_prefix}collection_tags` ADD CONSTRAINT `collection_tags_collec
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}user_tags`
 (
-    `id_user` INT NOT NULL,
-    `id_tag`     INT NOT NULL,
+    `id_user` BIGINT NOT NULL,
+    `id_tag`  INT    NOT NULL,
     PRIMARY KEY (`id_user`, `id_tag`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 ALTER TABLE `{tbl_prefix}user_tags` ADD CONSTRAINT `user_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `{tbl_prefix}user_tags` ADD CONSTRAINT `user_tags_user` FOREIGN KEY (`id_profile`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}user_tags` ADD CONSTRAINT `user_tags_user` FOREIGN KEY (`id_user`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}playlist_tags`
 (
-    `id_playlist` BIGINT NOT NULL,
-    `id_tag`        INT    NOT NULL,
+    `id_playlist` INT NOT NULL,
+    `id_tag`      INT NOT NULL,
     PRIMARY KEY (`id_playlist`, `id_tag`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 

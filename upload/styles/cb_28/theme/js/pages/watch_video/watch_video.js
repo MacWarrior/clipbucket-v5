@@ -9,7 +9,7 @@ var aspect_ratio = 1.77778
 
 $(document).ready(function () {
 
-    var $cb_player = $("#cb_player");
+    var cb_player = $("#cb_player");
 
     cookieToSave = 'comment_data_u' + userid + "v" + current_video
         commentDataCheck = $.cookie(cookieToSave);
@@ -45,10 +45,9 @@ $(document).ready(function () {
         });
     });
 
-
     getAllComments('v', videoid, last_commented, 1, comments_count, object_type);
 
-    $cb_player.height($cb_player.width() / aspect_ratio);
+    cb_player.height(cb_player.width() / aspect_ratio);
 
     var videoInfo = $("#videoDescription").text();
     var newInfo = videoInfo.replace(/(((https?:\/\/)|([\s\t]))(www.)?([a-z0-9]+)\.[a-z]+)/g, '<a href="$1">$1</a>');
@@ -119,8 +118,6 @@ $(document).ready(function () {
         set_cookie_secure(cookieToSave, null);
     });
 
-
-
 /*    labels.on('mouseup', function (e) {
         switch (e.which)
         {
@@ -149,7 +146,7 @@ $(document).ready(function () {
 });
 
 var resizePlayer = _cb.debounce(function () {
-    $cb_player.height($cb_player.width() / aspect_ratio);
+    cb_player.height(cb_player.width() / aspect_ratio);
 }, 500, false);
 
 $(window).resize(resizePlayer);
