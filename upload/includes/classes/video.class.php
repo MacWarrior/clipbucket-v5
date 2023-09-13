@@ -1099,8 +1099,11 @@ class CBvideo extends CBCategory
                 }
                 $cond .= $superCond;
             }
+            if (!empty($cond)) {
+                $cond = ' WHERE ' . $cond;
+            }
 
-            $query_count = 'SELECT COUNT(*) AS total FROM (SELECT videoid FROM'.cb_sql_table('video') . $joined . ' WHERE ' . $cond . ' GROUP BY video.videoid) T';
+            $query_count = 'SELECT COUNT(*) AS total FROM (SELECT videoid FROM'.cb_sql_table('video') . $joined . ' ' . $cond . ' GROUP BY video.videoid) T';
             $count = $db->_select($query_count);
             if (!empty($count)) {
                 $result = $count[0]['total'];
