@@ -128,11 +128,11 @@ class cbsearch
             $condition .= $cond . ' ';
         }
 
+        $query_cond = '(' . $condition . ')';
+        if (!$condition) {
+            $query_cond = '';
+        }
         if ($this->has_user_id) {
-            $query_cond = '(' . $condition . ')';
-            if (!$condition) {
-                $query_cond = '';
-            }
             $join_user = 'INNER JOIN ' . tbl('users') . ' ON ' . tbl($this->db_tbl) . '.userid = '.tbl('users').'.userid ';
             $add_select_field .= ' , ' . tbl('users.userid,users.username') . ' ';
         }

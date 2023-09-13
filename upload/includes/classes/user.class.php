@@ -3733,12 +3733,14 @@ class userquery extends CBCategory
         if (!has_access('admin_access', true)) {
             $this->search->columns = [
                 ['field' => 'username', 'type' => 'LIKE', 'var' => '%{KEY}%'],
+                ['field' => 'name', 'type' => 'LIKE', 'var' => '%{KEY}%', 'op' => 'OR', 'db'=>'tags'],
                 ['field' => 'usr_status', 'type' => '=', 'var' => 'Ok', 'op' => 'AND', 'value' => 'static'],
                 ['field' => 'ban_status', 'type' => '=', 'var' => 'no', 'op' => 'AND', 'value' => 'static']
             ];
         } else {
             $this->search->columns = [
-                ['field' => 'username', 'type' => 'LIKE', 'var' => '%{KEY}%']
+                ['field' => 'username', 'type' => 'LIKE', 'var' => '%{KEY}%'],
+                ['field' => 'name', 'type' => 'LIKE', 'var' => '%{KEY}%', 'op' => 'OR', 'db'=>'tags']
             ];
         }
 
