@@ -409,7 +409,7 @@ function saveTags(string $tags, string $object_type, int $object_id)
         return false;
     }
 
-    $sql_delete_link = 'DELETE FROM ' . tbl($table_tag) . ' WHERE ' . $id_field . ' = ' . mysql_clean($id_field);
+    $sql_delete_link = 'DELETE FROM ' . tbl($table_tag) . ' WHERE ' . $id_field . ' = ' . mysql_clean($object_id) ;
     if (!$db->execute($sql_delete_link, 'delete')) {
         e(lang('error_delete_linking_tags'));
         return false;

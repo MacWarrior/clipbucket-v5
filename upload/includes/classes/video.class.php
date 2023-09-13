@@ -829,23 +829,7 @@ class CBvideo extends CBCategory
         //Tags
         if ($params['tags']) {
             //checking for commas ;)
-            $tags = explode(',', $params['tags']);
-            if ($tag_n_title != '') {
-                $tag_n_title .= ' OR ';
-            }
-            if (count($tags) > 0) {
-                $total = count($tags);
-                $loop = 1;
-                foreach ($tags as $tag) {
-                    $tag_n_title .= ' ' . ('video.tags') . ' LIKE \'%' . $tag . '%\'';
-                    if ($loop < $total) {
-                        $tag_n_title .= ' OR ';
-                    }
-                    $loop++;
-                }
-            } else {
-                $tag_n_title .= ' ' . ('video.tags') . ' LIKE \'%' . $params['tags'] . '%\'';
-            }
+            $tag_n_title .= 'T.name IN (\'' . $params['tags'] . '\') ' ;
         }
         //TITLE
         if ($params['title']) {
@@ -1322,9 +1306,10 @@ class CBvideo extends CBCategory
     {
         $this->search = new cbsearch;
         $this->search->db_tbl = 'video';
+        
         $this->search->columns = [
             ['field' => 'title', 'type' => 'LIKE', 'var' => '%{KEY}%'],
-            ['field' => 'tags', 'type' => 'LIKE', 'var' => '%{KEY}%', 'op' => 'OR'],
+            ['field' => 'name', 'type' => 'LIKE', 'var' => '%{KEY}%', 'op' => 'OR', 'db'=>'tags'],
             ['field' => 'broadcast', 'type' => '!=', 'var' => 'unlisted', 'op' => 'AND', 'value' => 'static'],
             ['field' => 'status', 'type' => '=', 'var' => 'Successful', 'op' => 'AND', 'value' => 'static']
         ];

@@ -76,7 +76,7 @@ ALTER TABLE `{tbl_prefix}user_tags` ADD CONSTRAINT `user_tags_profile` FOREIGN K
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}playlist_tags`
 (
     `id_playlist` INT NOT NULL,
-    `id_tag`        INT    NOT NULL,
+    `id_tag`      INT NOT NULL,
     PRIMARY KEY (`id_playlist`, `id_tag`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
@@ -162,6 +162,7 @@ INSERT IGNORE INTO `{tbl_prefix}playlist_tags` (`id_tag`, `id_playlist`) (
 
 ALTER TABLE `{tbl_prefix}video` DROP COLUMN `tags`;
 ALTER TABLE `{tbl_prefix}photos` DROP COLUMN `photo_tags`;
+ALTER TABLE `{tbl_prefix}collections` DROP COLUMN `collection_tags`;
 ALTER TABLE `{tbl_prefix}user_profile` DROP COLUMN `profile_tags`;
 ALTER TABLE `{tbl_prefix}playlists` DROP COLUMN `tags`;
 ALTER TABLE `{tbl_prefix}tags` ADD FULLTEXT KEY `tag` (`name`);
