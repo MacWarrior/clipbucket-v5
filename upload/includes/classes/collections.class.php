@@ -138,7 +138,7 @@ class Collections extends CBCategory
         $this->search->db_tbl = 'collections';
         $this->search->columns = [
             ['field' => 'collection_name', 'type' => 'LIKE', 'var' => '%{KEY}%'],
-            ['field' => 'collection_tags', 'type' => 'LIKE', 'var' => '%{KEY}%', 'op' => 'OR']
+            ['field' => 'name', 'type' => 'LIKE', 'var' => '%{KEY}%', 'op' => 'OR', 'db'=>'tags'],
         ];
         $this->search->match_fields = ['collection_name', 'collection_tags'];
         $this->search->cat_tbl = $this->cat_tbl;

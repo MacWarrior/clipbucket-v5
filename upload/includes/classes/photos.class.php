@@ -280,7 +280,7 @@ class CBPhotos
 
         $this->search->columns = [
             ['field' => 'photo_title', 'type' => 'LIKE', 'var' => '%{KEY}%'],
-            ['field' => 'photo_tags', 'type' => 'LIKE', 'var' => '%{KEY}%', 'op' => 'OR']
+            ['field' => 'name', 'type' => 'LIKE', 'var' => '%{KEY}%', 'op' => 'OR', 'db'=>'tags'],
         ];
         $this->search->match_fields = ['photo_title', 'photo_tags'];
         $this->search->cat_tbl = $this->cat_tbl;
