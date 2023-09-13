@@ -992,12 +992,13 @@ class CBvideo extends CBCategory
         ];
 
         $fields = table_fields($fields);
+        $joined = ' LEFT JOIN ' . tbl('video_tags') . ' AS VT ON video.videoid = VT.id_video 
+                    LEFT JOIN ' . tbl('tags') .' AS T ON VT.id_tag = T.id_tag';
 
         if (!$params['count_only'] && !$params['show_related']) {
             $query = 'SELECT ' . $fields . ' FROM ' . cb_sql_table('video');
             $query .= ' LEFT JOIN ' . cb_sql_table('users') . ' ON video.userid = users.userid';
-            $query .= ' LEFT JOIN ' . tbl('video_tags') . ' AS VT ON video.videoid = VT.id_video 
-                    LEFT JOIN ' . tbl('tags') .' AS T ON VT.id_tag = T.id_tag' ;
+            $query .=  $joined;
             if (!empty($superCond)) {
                 if ($cond !== '') {
                     $cond .= ' AND ' . $superCond;
@@ -1038,8 +1039,7 @@ class CBvideo extends CBCategory
             $query = ' SELECT ' . $fields . ' FROM ' . cb_sql_table('video');
             $query .= ' LEFT JOIN ' . cb_sql_table('users');
             $query .= ' ON video.userid = users.userid ';
-            $query .= ' LEFT JOIN ' . tbl('video_tags') . ' AS VT ON video.videoid = VT.id_video 
-                    LEFT JOIN ' . tbl('tags') .' AS T ON VT.id_tag = T.id_tag' ;
+            $query .= $joined;
 
             if ($cond) {
                 $query .= ' WHERE ' . $cond;
@@ -1072,8 +1072,7 @@ class CBvideo extends CBCategory
                 $query = ' SELECT ' . $fields . ' FROM ' . cb_sql_table('video');
                 $query .= ' LEFT JOIN ' . cb_sql_table('users');
                 $query .= ' ON video.userid = users.userid ';
-                $query .= ' LEFT JOIN ' . tbl('video_tags') . ' AS VT ON video.videoid = VT.id_video 
-                    LEFT JOIN ' . tbl('tags') .' AS T ON VT.id_tag = T.id_tag' ;
+                $query .= $joined;
 
                 if ($cond) {
                     $query .= ' WHERE ' . $cond;
@@ -1100,7 +1099,15 @@ class CBvideo extends CBCategory
                 }
                 $cond .= $superCond;
             }
-            return $db->count(cb_sql_table('video'), 'videoid', $cond);
+
+            $query_count = 'SELECT COUNT(*) AS total FROM (SELECT videoid FROM'.cb_sql_table('video') . $joined . ' WHERE ' . $cond . ' GROUP BY video.videoid) T';
+            $count = $db->_select($query_count);
+            if (!empty($count)) {
+                $result = $count[0]['total'];
+            } else {
+                $result = 0;
+            }
+            return $result;
         }
         if ($params['assign']) {
             assign($params['assign'], apply_filters($result, 'get_video'));

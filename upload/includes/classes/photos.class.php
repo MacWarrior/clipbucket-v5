@@ -517,29 +517,12 @@ class CBPhotos
             $title_tag = 'photos.photo_title LIKE \'%' . mysql_clean($p['title']) . '%\'';
         }
 
-        if ($p['tags']) {
+        if (!empty($p['tags'])) {
             $tags = explode(',', $p['tags']);
-
-            $title_tag .= ' T.name IN ' . mysql_clean($p['tags']);
-//            if (count($tags) > 0) {
-//                if ($title_tag != '') {
-//                    $title_tag .= ' OR ';
-//                }
-//                $total = count($tags);
-//                $loop = 1;
-//                foreach ($tags as $tag) {
-//                    $title_tag .= 'photos.photo_tags LIKE \'%' . mysql_clean($tag) . '%\'';
-//                    if ($loop < $total) {
-//                        $title_tag .= ' OR ';
-//                    }
-//                    $loop++;
-//                }
-//            } else {
-//                if ($title_tag != '') {
-//                    $title_tag .= ' OR ';
-//                }
-//                $title_tag .= 'photos.photo_tags LIKE \'%' . mysql_clean($p['tags']) . '%\'';
-//            }
+            if ($title_tag != '') {
+                $title_tag .= ' OR ';
+            }
+            $title_tag .= ' T.name IN (\'' . mysql_clean($p['tags']) . '\')';
         }
 
         if ($title_tag != '') {
@@ -588,9 +571,9 @@ class CBPhotos
         $main_query = 'SELECT ' . $string . ' , GROUP_CONCAT(T.name SEPARATOR \',\') AS photo_tags FROM ' . cb_sql_table('photos');
         $main_query .= ' LEFT JOIN ' . cb_sql_table('collections') . ' ON photos.collection_id = collections.collection_id';
         $main_query .= ' LEFT JOIN ' . cb_sql_table('users') . ' ON collections.userid = users.userid';
-        $main_query .= ' LEFT JOIN ' . tbl('photo_tags') . ' AS PT ON photos.photo_id = PT.id_photo';
-        $main_query .= ' LEFT JOIN ' . tbl('tags') . ' AS T ON PT.id_tag = T.id_tag';
-
+        $joined =  ' LEFT JOIN ' . tbl('photo_tags') . ' AS PT ON photos.photo_id = PT.id_photo 
+                    LEFT JOIN ' . tbl('tags') . ' AS T ON PT.id_tag = T.id_tag';
+        $main_query.= $joined;
         $order = $order ? ' ORDER BY ' . $order : false;
         $limit = $limit ? ' LIMIT ' . $limit : false;
 
@@ -692,7 +675,14 @@ class CBPhotos
                 $cond .= $p['extra_cond'];
             }
 
-            $result = $db->count(cb_sql_table('photos'), 'photo_id', $cond);
+            //don't remove alias T at the end, request will crash
+            $query_count = 'SELECT COUNT(*) AS total FROM (SELECT photo_id FROM'.cb_sql_table('photos') . $joined . ' WHERE ' . $cond . ' GROUP BY photos.photo_id) T';
+            $count = $db->_select($query_count);
+            if (!empty($count)) {
+                $result = $count[0]['total'];
+            } else {
+                $result = 0;
+            }
         }
 
         if ($p['assign']) {
