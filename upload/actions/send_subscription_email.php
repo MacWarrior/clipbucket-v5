@@ -2,14 +2,12 @@
 global $cbvid, $userquery;
 $in_bg_cron = true;
 
-include(dirname(__FILE__, 2) . "/includes/config.inc.php");
+include(dirname(__FILE__, 2) . '/includes/config.inc.php');
 
 $videoid = $argv[1];
 
 $video = $cbvid->get_video($videoid);
 
-if ($video) {
-    if (($video['broadcast'] == 'public' || $video['broadcast'] == 'logged') && $video['subscription_email'] == 'pending') {
-        $userquery->sendSubscriptionEmail($video, true);
-    }
+if( !empty($video) && $video['status'] == 'Successful' && in_array($video['broadcast'], ['public', 'logged']) && $video['subscription_email'] == 'pending' && $video['active'] == 'yes' ){
+    $userquery->sendSubscriptionEmail($video, true);
 }

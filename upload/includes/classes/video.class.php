@@ -229,7 +229,7 @@ class CBvideo extends CBCategory
 
         $video = $this->get_video($vid);
 
-        if (!$video) {
+        if (empty($video)) {
             return false;
         }
 
@@ -264,7 +264,7 @@ class CBvideo extends CBCategory
                     }
                 }
 
-                if (($video['broadcast'] == 'public' || $video['broadcast'] == 'logged') && $video['subscription_email'] == 'pending') {
+                if( $video['status'] == 'Successful' && in_array($video['broadcast'], ['public', 'logged']) && $video['subscription_email'] == 'pending' ){
                     //Sending Subscription email in background
                     if (stristr(PHP_OS, 'WIN')) {
                         exec(php_path() . ' -q ' . BASEDIR . '/actions/send_subscription_email.php ' . $vid);
@@ -316,7 +316,7 @@ class CBvideo extends CBCategory
      */
     function update_video($array = null)
     {
-        global $eh, $db, $Upload;
+        global $eh, $db, $Upload, $userquery, $cbvid;
 
         $Upload->validate_video_upload_form(null, true);
 
@@ -456,12 +456,12 @@ class CBvideo extends CBCategory
                     'results'   => $array
                 ]);
 
-                e(lang('class_vdo_update_msg'), 'm');
-
-                // condition for Clip press plugin
-                if (function_exists('post_to_wp_upload_culr')) {
-                    post_to_wp_upload_culr($vid);
+                $videoDetails = $cbvid->get_video($vid);
+                if( !empty($videoDetails) && $videoDetails['status'] == 'Successful' && in_array($videoDetails['broadcast'], ['public', 'logged']) && $videoDetails['subscription_email'] == 'pending' && $videoDetails['active'] == 'yes' ){
+                    $userquery->sendSubscriptionEmail($videoDetails, true);
                 }
+
+                e(lang('class_vdo_update_msg'), 'm');
             }
 
         }
