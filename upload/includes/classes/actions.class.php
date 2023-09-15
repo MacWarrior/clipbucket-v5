@@ -956,7 +956,11 @@ class cbactions
         $tags = $params['tags'];
         $userid = $params['userid'];
 
-        $query = 'SELECT ' . table_fields($fields) . ' FROM ' . cb_sql_table('playlists');
+        $query = 'SELECT ' . table_fields($fields) . ' FROM ';
+        $from = cb_sql_table('playlists')
+                . ' LEFT JOIN ' . tbl('playlist_tags') . ' AS PT ON playlists.playlist_id = PT.id_playlist 
+                    LEFT JOIN ' . tbl('tags') .' AS T ON PT.id_tag = T.id_tag' ;
+        $query .= $from;
         $condition = '';
 
         if (!has_access('admin_access')) {
@@ -1017,7 +1021,7 @@ class cbactions
 
         if (isset($tags)) {
             $condition .= $condition ? ' AND ' : '';
-            $condition .= ' playlists.tags LIKE \'%' . mysql_clean($tags) . '%\' ';
+            $condition .= ' T.name LIKE \'%' . mysql_clean($tags) . '%\' ';
         }
 
         if (isset($playlist_name)) {
@@ -1033,7 +1037,7 @@ class cbactions
         }
 
         if (isset($params['count_only'])) {
-            return $db->count(cb_sql_table('playlists'), 'playlist_id', $condition);
+            return $db->count($from, 'playlist_id', $condition);
         }
 
         if ($condition) {

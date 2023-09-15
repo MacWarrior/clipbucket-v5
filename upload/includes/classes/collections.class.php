@@ -431,26 +431,10 @@ class Collections extends CBCategory
         }
 
         if ($p['tags']) {
-            $tags = explode(',', $p['tags']);
-            if (count($tags) > 0) {
-                if ($title_tag != '') {
-                    $title_tag .= ' OR ';
-                }
-                $total = count($tags);
-                $loop = 1;
-                foreach ($tags as $tag) {
-                    $title_tag .= 'C.collection_tags LIKE \'%' . $tag . '%\'';
-                    if ($loop < $total) {
-                        $title_tag .= ' OR ';
-                    }
-                    $loop++;
-                }
-            } else {
-                if ($title_tag != '') {
-                    $title_tag .= ' OR ';
-                }
-                $title_tag .= 'C.collection_tags LIKE \'%' . $p['tags'] . '%\'';
+            if (!empty($title_tag)) {
+                $title_tag .= ' OR ';
             }
+            $title_tag .= 'T.name IN (\'' . $p['tags'] . '\') ' ;
         }
 
         if ($p['parents_only']) {
@@ -474,10 +458,11 @@ class Collections extends CBCategory
             $cond .= '(' . $title_tag . ')';
         }
 
-        $from = tbl('collections') . ' C' .
-            ' INNER JOIN ' . tbl('users') . ' U ON C.userid = U.userid' .
-            ' LEFT JOIN ' . tbl('collections') . ' CPARENT ON C.collection_id_parent = CPARENT.collection_id';
-
+        $from = tbl('collections') . ' C
+            INNER JOIN ' . tbl('users') . ' U ON C.userid = U.userid
+             LEFT JOIN ' . tbl('collections') . ' CPARENT ON C.collection_id_parent = CPARENT.collection_id
+             LEFT JOIN ' . tbl('collection_tags') . ' AS CT ON C.collection_id = CT.id_collection 
+                    LEFT JOIN ' . tbl('tags') . ' AS T ON CT.id_tag = T.id_tag';
         if ($p['count_only']) {
             return $db->count($from, 'C.collection_id', $cond);
         }
