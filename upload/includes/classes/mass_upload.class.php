@@ -7,6 +7,10 @@ class mass_upload extends Upload
         return $this->get_video_files_list(true);
     }
 
+    /**
+     * @throws \Predis\Connection\ConnectionException
+     * @throws \Predis\Response\ServerException
+     */
     function get_video_files_list($listonly = false, $dir = MASS_UPLOAD_DIR)
     {
         require_once BASEDIR . '/includes/classes/conversion/ffmpeg.class.php';

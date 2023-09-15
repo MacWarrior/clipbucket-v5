@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"245",
+  "revision":"246",
   "status":"dev",
   "detail":[
     {
@@ -196,6 +196,7 @@
         ,"Fix edit_photo display"
         ,"Hide social buttons for guests users"
         ,"Translate date picker"
+        ,"Fix video subscribers emails"
       ]
     }
   ,{

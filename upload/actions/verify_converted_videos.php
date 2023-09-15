@@ -35,19 +35,12 @@ if (is_array($files)) {
             }
         }
 
-        if(
-            config('disable_email') == 'yes' &&
-            ($file_details['conversion_status'] == 'completed'
-            || strpos($file_details['conversion_log'], 'Conversion_status : completed') !== false
-            || $file_details['conversion_status'] == 'Successful'
-            || strpos($file_details['conversion_log'], 'Conversion_status : Successful') !== false)
-        ) {
+        if(config('disable_email') == 'no') {
             //Sending Subscription Emails
             $videoDetails = $cbvideo->get_video($file['cqueue_name'], true);
-            if ($videoDetails) {
-                if (($videoDetails['broadcast'] == 'public' || $videoDetails['logged']) && $videoDetails['active'] == 'yes') {
-                    $userquery->sendSubscriptionEmail($videoDetails, true);
-                }
+
+            if( !empty($videoDetails) && $videoDetails['status'] == 'Successful' && in_array($videoDetails['broadcast'], ['public', 'logged']) && $videoDetails['subscription_email'] == 'pending' && $videoDetails['active'] == 'yes' ){
+                $userquery->sendSubscriptionEmail($videoDetails, true);
             }
         }
     }

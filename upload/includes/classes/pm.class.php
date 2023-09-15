@@ -22,6 +22,7 @@ function attach_video($array)
  * Function used to pars video from attachment
  *
  * @param $att
+ * @throws Exception
  */
 function parse_and_attach_video($att)
 {
@@ -40,6 +41,7 @@ function parse_and_attach_video($att)
 
 /**
  * Function used to add custom video attachment form field
+ * @throws Exception
  */
 function video_attachment_form(): array
 {
@@ -92,6 +94,7 @@ class cb_pm
 
     /**
      * Sending PM
+     * @throws Exception
      */
     function send_pm($array): bool
     {
