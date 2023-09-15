@@ -463,8 +463,9 @@ class Collections extends CBCategory
              LEFT JOIN ' . tbl('collections') . ' CPARENT ON C.collection_id_parent = CPARENT.collection_id
              LEFT JOIN ' . tbl('collection_tags') . ' AS CT ON C.collection_id = CT.id_collection 
                     LEFT JOIN ' . tbl('tags') . ' AS T ON CT.id_tag = T.id_tag';
+        $ep = ' GROUP BY C.collection_id ';
         if ($p['count_only']) {
-            return $db->count($from, 'C.collection_id', $cond);
+            return $db->count($from, 'C.collection_id', $cond, $ep);
         }
 
         if (isset($p['count_only'])) {
@@ -473,6 +474,12 @@ class Collections extends CBCategory
             $select = 'C.*, U.username, CPARENT.collection_name AS collection_name_parent';
         }
 
+        //have to do this because $db->select cant correctly add GROUP BY
+        if (!empty($cond)) {
+            $cond .= $ep;
+        } else {
+            $from .= $ep;
+        }
         $result = $db->select($from, $select, $cond, $limit, $order);
 
         if (config('enable_sub_collection')) {

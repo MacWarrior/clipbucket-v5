@@ -1,10 +1,3 @@
 $(function () {
-    $('#list_tags').tagit({
-        singleField: true,
-        fieldName: "tags",
-        readOnly: false,
-        singleFieldNode: $('#collection_tags'),
-        animate: true,
-        caseSensitive:false
-    });
+    init_tags('collection_tags', available_tags);
 });

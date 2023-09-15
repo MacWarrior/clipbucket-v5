@@ -520,3 +520,6 @@
     {assign var=id value=$u.userid}{include file="$style_dir/blocks/comments.html" type=u id=$u.userid link="user=$id"}
     </div>
 
+<script>
+    var available_tags = JSON.parse('{$available_tags|json_encode}');
+</script>

@@ -94,3 +94,8 @@
 {/if}
 
 {include file="$style_dir/blocks/pagination.html" }
+
+<script>
+    var available_tags = JSON.parse('{$available_tags|json_encode}');
+    var id_input = 'tags';
+</script>

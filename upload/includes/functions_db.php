@@ -48,7 +48,7 @@ function tbl($tbl): string
  */
 function table_fields($fields)
 {
-    if(empty($fields)){
+    if (empty($fields)) {
         return '';
     }
 
@@ -143,6 +143,7 @@ function check_need_upgrade($version, $revision): bool
     }
     return false;
 }
+
 /**
  * @param $version
  * @param $revision
@@ -235,7 +236,7 @@ function get_plugins_files_to_upgrade($installed_plugins, bool $count = false)
             array_filter(
                 array_map(function ($file) use ($db_version, $detail_verision, $folder) {
                     $file_version = pathinfo($file)['filename'];
-                    return  ($file_version > $db_version && $file_version <= $detail_verision)
+                    return ($file_version > $db_version && $file_version <= $detail_verision)
                         ? $file
                         : null;
                 }, $files)
@@ -295,12 +296,12 @@ function execute_migration_SQL_file($path): bool
 
 
     global $db;
-    if (strpos($path,'plugin')!== false) {
+    if (strpos($path, 'plugin') !== false) {
         $plugin_folder = basename(dirname($path, 3));
         $regex = '/\/(\d{0,3}\.\d{0,3}\.\d{0,3})\.sql/';
         $match = [];
         preg_match($regex, $path, $match);
-        $sql = 'UPDATE ' . tbl('plugins') . ' SET plugin_version = \'' .  mysql_clean($match['1']) . '\' WHERE plugin_folder = \'' .$plugin_folder . '\'';
+        $sql = 'UPDATE ' . tbl('plugins') . ' SET plugin_version = \'' . mysql_clean($match['1']) . '\' WHERE plugin_folder = \'' . $plugin_folder . '\'';
     } else {
         $regex = '/\/(\d{0,3}\.\d{0,3}\.\d{0,3})\/(\d{5})\.sql/';
         $match = [];
@@ -409,7 +410,7 @@ function saveTags(string $tags, string $object_type, int $object_id)
         return false;
     }
 
-    $sql_delete_link = 'DELETE FROM ' . tbl($table_tag) . ' WHERE ' . $id_field . ' = ' . mysql_clean($object_id) ;
+    $sql_delete_link = 'DELETE FROM ' . tbl($table_tag) . ' WHERE ' . $id_field . ' = ' . mysql_clean($object_id);
     if (!$db->execute($sql_delete_link, 'delete')) {
         e(lang('error_delete_linking_tags'));
         return false;
@@ -426,4 +427,29 @@ function saveTags(string $tags, string $object_type, int $object_id)
     }
 
     return true;
+}
+
+/**
+ * @param $object_type
+ * @return array
+ * @throws Exception
+ */
+function fill_auto_complete_tags($object_type): array
+{
+    global $db;
+    $sql_id_type = 'SELECT id_tag_type
+                   FROM ' . tbl('tags_type') . '
+                   WHERE name LIKE \'' . $object_type . '\'';
+    $res = $db->_select($sql_id_type);
+    if (!empty($res)) {
+        $id_type = $res[0]['id_tag_type'];
+    } else {
+        e(lang('unknown_tag_type'));
+        return [];
+    }
+    $query = 'SELECT name FROM ' . tbl('tags') . ' T  WHERE T.id_tag_type = ' . mysql_clean($id_type);
+    $result = $db->_select($query, 0);
+    return array_map(function ($item) {
+        return $item['name'];
+    }, $result);
 }

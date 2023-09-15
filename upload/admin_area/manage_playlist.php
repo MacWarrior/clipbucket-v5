@@ -10,8 +10,14 @@ $pages->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => lang('videos'), 'url' => ''];
-$breadcrumb[1] = ['title' => lang('manage_playlists'), 'url' => ADMIN_BASEURL . '/manage_playlist.php'];
+$breadcrumb[0] = [
+    'title' => lang('videos'),
+    'url'   => ''
+];
+$breadcrumb[1] = [
+    'title' => lang('manage_playlists'),
+    'url'   => ADMIN_BASEURL . '/manage_playlist.php'
+];
 
 $mode = $_GET['mode'];
 
@@ -146,17 +152,24 @@ switch ($mode) {
         break;
 }
 $Cbucket->addAdminJS(['jquery-ui-1.13.2.min.js' => 'admin']);
-if(in_dev()){
+if (in_dev()) {
     $min_suffixe = '';
 } else {
     $min_suffixe = '.min';
 }
-$Cbucket->addAdminJS(['tag-it'.$min_suffixe.'.js' => 'admin']);
-$Cbucket->addAdminJS(['advanced_search/advanced_search'.$min_suffixe.'.js' => 'admin']);
-$Cbucket->addAdminJS(['init_default_tag/init_default_tag'.$min_suffixe.'.js' => 'admin']);
+$Cbucket->addAdminJS([
+    'tag-it' . $min_suffixe . '.js'                            => 'admin',
+    'advanced_search/advanced_search' . $min_suffixe . '.js'   => 'admin',
+    'init_default_tag/init_default_tag' . $min_suffixe . '.js' => 'admin'
+]);
 
-$Cbucket->addAdminCSS(['jquery.tagit' . $min_suffixe . '.css' => 'admin']);
-$Cbucket->addAdminCSS(['tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin']);
+$Cbucket->addAdminCSS([
+    'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
+    'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
+]);
+
+$available_tags = fill_auto_complete_tags('playlist');
+assign('available_tags',$available_tags);
 
 //- manage play front end
 template_files('manage_playlist.html');

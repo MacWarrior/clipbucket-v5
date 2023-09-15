@@ -601,7 +601,7 @@ class userquery extends CBCategory
         } else {
             $field = 'username';
         }
-        $result = $db->count(tbl($this->dbtbl['users']), 'userid', $field.'=\'' . $id . '\'', 60);
+        $result = $db->count(tbl($this->dbtbl['users']), 'userid', $field.'=\'' . $id . '\'', '',60);
 
         if ($result > 0) {
             return true;

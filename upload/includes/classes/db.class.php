@@ -160,13 +160,13 @@ class Clipbucket_db
      * @return bool|int
      * @throws \Exception
      */
-    function count($tbl, $fields = '*', $cond = false, $cached_time = -1, $cached_key = '')
+    function count($tbl, $fields = '*', $cond = false, $ep = '',$cached_time = -1, $cached_key = '')
     {
         $condition = '';
         if ($cond) {
             $condition = ' WHERE ' . $cond;
         }
-        $query = 'SELECT COUNT(' . $fields . ') FROM ' . $tbl . $condition;
+        $query = 'SELECT COUNT(' . $fields . ') FROM ' . $tbl . $condition . $ep;
 
         $result = $this->_select($query, $cached_time, $cached_key);
 

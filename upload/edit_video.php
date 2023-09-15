@@ -36,15 +36,23 @@ if ($vdetails['userid'] != $userid) {
     assign('v', $vdetails);
 }
 
-if(in_dev()){
+if (in_dev()) {
     $min_suffixe = '';
 } else {
     $min_suffixe = '.min';
 }
-$Cbucket->addJS(['tag-it'.$min_suffixe.'.js' => 'admin']);
-$Cbucket->addJS(['init_default_tag/init_default_tag'.$min_suffixe.'.js' => 'admin']);
-$Cbucket->addCSS(['jquery.tagit'.$min_suffixe.'.css' => 'admin']);
-$Cbucket->addCSS(['tagit.ui-zendesk'.$min_suffixe.'.css' => 'admin']);
+$Cbucket->addJS([
+    'tag-it' . $min_suffixe . '.js'                            => 'admin',
+    'init_default_tag/init_default_tag' . $min_suffixe . '.js' => 'admin',
+    'pages/edit_video/edit_video' . $min_suffixe . '.js' => 'admin'
+]);
+$Cbucket->addCSS([
+    'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
+    'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
+]);
+
+$available_tags = fill_auto_complete_tags('video');
+assign('available_tags', $available_tags);
 
 subtitle(lang('vdo_edit_vdo'));
 template_files('edit_video.html');
