@@ -296,10 +296,6 @@ class ClipBucket
                         , 'url' => ADMIN_BASEURL . '/email_settings.php'
                     ]
                     , [
-                        'title' => 'Email Tester'
-                        , 'url' => ADMIN_BASEURL . '/email_tester.php'
-                    ]
-                    , [
                         'title' => 'Language Settings'
                         , 'url' => ADMIN_BASEURL . '/language_settings.php'
                     ]
@@ -480,6 +476,10 @@ class ClipBucket
                     , [
                         'title' => lang('system_info')
                         , 'url' => ADMIN_BASEURL . '/system_info.php'
+                    ]
+                    , [
+                        'title' => lang('email_tester')
+                        , 'url' => ADMIN_BASEURL . '/email_tester.php'
                     ]
                 ]
             ];
