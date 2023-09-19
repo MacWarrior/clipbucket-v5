@@ -99,12 +99,9 @@ class Clipbucket_db
                 }
             }
             $result = $this->execute($query, 'select');
-            $foundRows = $this->mysqli->query("SELECT FOUND_ROWS() as foundRows");
-            $count = $foundRows->fetch_assoc();
             $data = [];
             if ($result) {
                 while ($row = $result->fetch_assoc()) {
-                    $row['count'] = $count['foundRows'];
                     $data[] = $row;
                 }
                 $result->close();

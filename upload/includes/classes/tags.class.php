@@ -5,7 +5,7 @@ class Tags
     public static function getTags($limit = 'false', $cond = false)
     {
         global $db;
-        $query = 'SELECT SQL_CALC_FOUND_ROWS T.name AS tag, TT.name AS tag_type, T.id_tag, 
+        $query = 'SELECT T.name AS tag, TT.name AS tag_type, T.id_tag, 
         IF(COUNT(CT.id_tag) = 0 AND COUNT(PT.id_tag) = 0 AND COUNT(PLT.id_tag) = 0 AND COUNT(UT.id_tag) = 0 AND COUNT(VT.id_tag) = 0, true, false) AS can_delete
         FROM ' . tbl('tags') . ' T 
         INNER JOIN ' . tbl('tags_type') . ' TT ON TT.id_tag_type = T.id_tag_type 
@@ -22,6 +22,18 @@ class Tags
         }
 
         return $db->_select($query, 0);
+    }
+
+    public static function countTags($cond)
+    {
+        global $db;
+        return $db->count(tbl('tags') . ' T 
+        INNER JOIN ' . tbl('tags_type') . ' TT ON TT.id_tag_type = T.id_tag_type 
+        LEFT JOIN ' . tbl('collection_tags') . ' CT ON CT.id_tag = T.id_tag 
+        LEFT JOIN ' . tbl('photo_tags') . ' PT ON PT.id_tag = T.id_tag 
+        LEFT JOIN ' . tbl('playlist_tags') . ' PLT ON PLT.id_tag = T.id_tag 
+        LEFT JOIN ' . tbl('user_tags') . ' UT ON UT.id_tag = T.id_tag 
+        LEFT JOIN ' . tbl('video_tags') . ' VT ON VT.id_tag = T.id_tag ', 'DISTINCT T.name, TT.name, T.id_tag', $cond);
     }
 
     /**

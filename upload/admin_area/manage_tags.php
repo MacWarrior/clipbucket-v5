@@ -33,8 +33,8 @@ if (!empty($_GET['search'])) {
 }
 
 $tags = Tags::getTags($curr_limit, $cond);
-
-$total_pages = $tags[0]['count'] / $limit;
+$count = Tags::countTags($cond);
+$total_pages = $count / $limit;
 $total_pages = round($total_pages + 0.49, 0);
 //Pagination
 $pages->paginate($total_pages, $current_page);
