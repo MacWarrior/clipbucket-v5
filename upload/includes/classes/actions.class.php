@@ -903,7 +903,7 @@ class cbactions
 
                 $db->update(tbl('playlists'), array_keys($query_values), array_values($query_values), ' playlist_id = \'' . mysql_clean($pdetails['playlist_id']) . '\'');
 
-                saveTags($array['tags'], 'playlist', $pdetails['playlist_id']);
+                Tags::saveTags($array['tags'], 'playlist', $pdetails['playlist_id']);
 
                 $array['playlist_id'] = $array['pid'] ? $array['pid'] : $array['list_id'];
 

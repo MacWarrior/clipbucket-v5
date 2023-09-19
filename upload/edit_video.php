@@ -51,7 +51,7 @@ $Cbucket->addCSS([
     'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
 ]);
 
-$available_tags = fill_auto_complete_tags('video');
+$available_tags = Tags::fill_auto_complete_tags('video');
 assign('available_tags', $available_tags);
 
 subtitle(lang('vdo_edit_vdo'));

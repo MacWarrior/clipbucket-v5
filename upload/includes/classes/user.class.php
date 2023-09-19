@@ -2397,7 +2397,7 @@ class userquery extends CBCategory
 
             $db->update(tbl($this->dbtbl['user_profile']), $query_field, $query_val, " userid='" . mysql_clean($array['userid']) . "'");
 
-            saveTags($array['profile_tags'], 'profile', $array['userid']);
+            Tags::saveTags($array['profile_tags'], 'profile', $array['userid']);
             e(lang('usr_pof_upd_msg'), 'm');
         }
     }

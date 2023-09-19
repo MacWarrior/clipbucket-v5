@@ -167,4 +167,6 @@ ALTER TABLE `{tbl_prefix}user_profile` DROP COLUMN `profile_tags`;
 ALTER TABLE `{tbl_prefix}playlists` DROP COLUMN `tags`;
 ALTER TABLE `{tbl_prefix}tags` ADD FULLTEXT KEY `tag` (`name`);
 
-# DELETE CHAMp
+
+INSERT IGNORE INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description`, `function_name`, `id_tools_status`, `elements_total`, `elements_done`) VALUES
+    ('clean_orphan_tags', 'clean_orphan_tags_description', 'AdminTool::cleanOrphanTags', 1, NULL, NULL);

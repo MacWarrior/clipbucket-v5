@@ -1752,7 +1752,7 @@ class CBPhotos
 
                             $db->update(tbl('photos'), $query_field, $query_val, " photo_id='$pid'");
 
-                            saveTags($array['photo_tags'], 'photo', $pid);
+                            Tags::saveTags($array['photo_tags'], 'photo', $pid);
 
                             e(lang("photo_updated_successfully"), "m");
                         }

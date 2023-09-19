@@ -315,6 +315,10 @@ class ClipBucket
                         'title' => 'Update Logos'
                         , 'url' => ADMIN_BASEURL . '/upload_logo.php'
                     ]
+                    , [
+                        'title' => lang('manage_tags')
+                        , 'url' => ADMIN_BASEURL . '/manage_tags.php'
+                    ]
                 ]
             ];
 

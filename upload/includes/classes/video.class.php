@@ -453,7 +453,7 @@ class CBvideo extends CBCategory
                 $db->update(tbl('video'), $query_field, $query_val, ' videoid=\'' . $vid . '\'');
 
                 if (!empty($array['tags'])) {
-                    saveTags($array['tags'], 'video', $vid);
+                    Tags::saveTags($array['tags'], 'video', $vid);
                 }
 
                 cb_do_action('update_video', [

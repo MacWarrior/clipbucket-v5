@@ -1,0 +1,45 @@
+<div class="heading">
+    <h2>{lang code='tag_setting'}</h2>
+</div>
+<div class="form-group">
+    <form id="form2" name="form2" method="get" action="?">
+        <div class="row align-items-end">
+            <div class="col-md-5">
+                <label for="search">{lang code="search"}</label>
+                <div style="vertical-align: bottom;">
+                    <input style="display: inline-block; width: calc(100% - 150px); vertical-align: middle;" name="search" class="form-control" type="text" id="search" value="{display_clean($smarty.get.search)}"/>
+                    <input style="display: inline-block; width: 120px; margin-left: 10px;" type="submit" name="search_phrase" class="btn btn-primary" value='{lang code="search"}' id="search_phrase"/>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<table class="table table-bordered table-striped manageUsersTable">
+    <tr>
+        <th class="col-md-2">{lang code='type'}</th>
+        <th class="col-md-9">{lang code='label'}</th>
+        <th class="col-md-1">{lang code='action'}</th>
+    </tr>
+    {section name=tag loop=$tags}
+    <tr>
+        <td class="col-md-2">
+            <span >{display_clean($tags[tag].tag_type)}</span>
+        </td>
+
+        <td class="col-md-9">
+            <span class="xedit" id="{$tags[tag].id_tag}">{display_clean($tags[tag].tag)}</span>
+            <input type="text" class="form-control" id="input-{$tags[tag].id_tag}" name="pk" value="{display_clean($tags[tag].tag)}" style="display:none;">
+        </td>
+        <td class="col-md-1" style="text-align: center; vertical-align: middle;">
+            <span class="btn btn-success btn-xs edit_tag" title="{lang code=edit}" id="edit-{$tags[tag].id_tag}" data-id="{$tags[tag].id_tag}"><i class="glyphicon glyphicon-edit"></i></span>
+            <span class="btn btn-danger btn-xs delete_tag {if !$tags[tag].can_delete} disabled {/if}" title="{lang code=edit}" id="delete-{$tags[tag].id_tag}" data-id="{$tags[tag].id_tag}"><i class="glyphicon glyphicon-trash"></i></span>
+            <span class="glyphicon glyphicon-ok-circle confirm_update_tag" title="{lang code=confirm}" id="ok-{$tags[tag].id_tag}" data-id="{$tags[tag].id_tag}" style="display:none;color:#87b87f;font-size:1.5em;cursor:pointer;"></span>
+            <span class="glyphicon glyphicon-remove-circle cancel_tag" title="{lang code=cancel}" id="cancel-{$tags[tag].id_tag}" data-id="{$tags[tag].id_tag}" style="display:none;color:#d15b47;font-size:1.5em;cursor:pointer; margin-left: 15px;"></span>
+        </td>
+    </tr>
+    {/section}
+</table>
+{include file="$style_dir/blocks/pagination.html"}
+<script>
+    var text_confirm_delete_tag = '{lang code = "confirm_delete_tag"}';
+</script>

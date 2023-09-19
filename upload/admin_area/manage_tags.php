@@ -1,0 +1,53 @@
+<?php
+
+require_once '../includes/admin_config.php';
+require_once('../includes/classes/admin_tool.class.php');
+/* Generating breadcrumb */
+global $breadcrumb, $pages, $userquery, $Cbucket;
+
+$userquery->admin_login_check();
+$userquery->login_check('web_config_access');
+$pages->page_redir();
+
+$breadcrumb[0] = [
+    'title' => lang('general'),
+    'url'   => ''
+];
+$breadcrumb[1] = [
+    'title' => lang('manage_tags'),
+    'url'   => ADMIN_BASEURL . '/manage_tags.php'
+];
+
+
+$limit = RESULTS;
+
+$current_page = $_GET['page'];
+$current_page = is_numeric($current_page) && $current_page > 0 ? $current_page : 1;
+
+$curr_limit = ($current_page - 1) * $limit . ',' . $limit;
+
+if (!empty($_GET['search'])) {
+    $cond = ' T.name LIKE \'%' . mysql_clean($_GET['search']) . '%\'';
+} else {
+    $cond = false;
+}
+
+$tags = Tags::getTags($curr_limit, $cond);
+
+$total_pages = $tags[0]['count'] / $limit;
+$total_pages = round($total_pages + 0.49, 0);
+//Pagination
+$pages->paginate($total_pages, $current_page);
+
+assign('tags', $tags);
+
+if(in_dev()){
+    $min_suffixe = '';
+} else {
+    $min_suffixe = '.min';
+}
+$Cbucket->addAdminJS(['pages/manage_tags/manage_tags'.$min_suffixe.'.js' => 'admin']);
+
+subtitle(lang('manage_tag'));
+template_files('manage_tags.html');
+display_it();

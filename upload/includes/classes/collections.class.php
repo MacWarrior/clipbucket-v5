@@ -972,7 +972,7 @@ class Collections extends CBCategory
 
                 //Incrementing usr collection
                 $db->update(tbl('users'), ['total_collections'], ['|f|total_collections+1'], ' userid=\'' . $userid . '\'');
-                saveTags($array['collection_tags'], 'collection', $insert_id);
+                Tags::saveTags($array['collection_tags'], 'collection', $insert_id);
 
                 e(lang('collect_added_msg'), 'm');
                 return $insert_id;
@@ -1342,7 +1342,7 @@ class Collections extends CBCategory
                 $cid = mysql_clean($cid);
                 $db->update(tbl($this->section_tbl), $query_field, $query_val, ' collection_id = ' . $cid);
 
-                saveTags($array['collection_tags'], 'collection', $cid);
+                Tags::saveTags($array['collection_tags'], 'collection', $cid);
 
                 e(lang('collection_updated'), 'm');
 
