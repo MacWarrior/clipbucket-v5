@@ -91,17 +91,21 @@ function format_number($number)
     return $number;
 }
 
-$Cbucket->addAdminJS(['jquery-ui-1.13.2.min.js' => 'admin']);
 if(in_dev()){
     $min_suffixe = '';
 } else {
     $min_suffixe = '.min';
 }
-$Cbucket->addAdminJS(['tag-it'.$min_suffixe.'.js' => 'admin']);
-$Cbucket->addAdminJS(['pages/edit_video/edit_video'.$min_suffixe.'.js' => 'admin']);
+$Cbucket->addAdminJS([
+    'jquery-ui-1.13.2.min.js' => 'admin'
+    ,'tag-it'.$min_suffixe.'.js' => 'admin'
+    ,'pages/edit_video/edit_video'.$min_suffixe.'.js' => 'admin'
+]);
 
-$Cbucket->addAdminCSS(['jquery.tagit'.$min_suffixe.'.css'=>'admin']);
-$Cbucket->addAdminCSS(['tagit.ui-zendesk'.$min_suffixe.'.css'=>'admin']);
+$Cbucket->addAdminCSS([
+    'jquery.tagit'.$min_suffixe.'.css'=>'admin'
+    ,'tagit.ui-zendesk'.$min_suffixe.'.css'=>'admin'
+]);
 
 $comments = getComments($comment_cond);
 assign('comments', $comments);

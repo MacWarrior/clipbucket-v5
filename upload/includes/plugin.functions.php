@@ -311,18 +311,6 @@ function register_collection_delete_functions($func)
 }
 
 /**
- * Function used to add links in admin area
- *
- * @param array $array
- */
-function add_admin_link($array)
-{
-    $area = $array['area'];
-    $title = $array['title'];
-    $link = $array['link'];
-}
-
-/**
  * function use to register function that will be
  * called while deleting a video
  *

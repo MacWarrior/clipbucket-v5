@@ -2465,7 +2465,7 @@ function category_link($data, $type): string
  * @internal param $ : { string } { $mode } { element to sort e.g time } { $mode } { element to sort e.g time }
  * @internal param $ : { string } { $type } { type of element to sort e.g channels } { $type } { type of element to sort e.g channels }
  */
-function sort_link($sort, $mode, $type)
+function sort_link($sort, $mode, $type): string
 {
     switch ($type) {
         case 'video':
@@ -3085,6 +3085,9 @@ function include_js($params)
             case 'plugin':
                 $url = PLUG_URL . '/';
                 break;
+            case 'player':
+                $url = PLAYER_URL . '/';
+                break;
             case 'admin':
                 $url = TEMPLATEURL . '/theme/js/';
                 break;
@@ -3118,6 +3121,9 @@ function include_css($params)
                 break;
             case 'plugin':
                 $url = PLUG_URL . '/';
+                break;
+            case 'player':
+                $url = PLAYER_URL . '/';
                 break;
             case 'admin':
                 $url = TEMPLATEURL . '/theme/css/';

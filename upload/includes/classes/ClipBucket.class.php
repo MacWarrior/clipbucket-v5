@@ -118,6 +118,12 @@ class ClipBucket
         $this->addFile($this->AdminJSArray, $files);
     }
 
+    function addAllJS($files)
+    {
+        $this->addFile($this->JSArray, $files);
+        $this->addFile($this->AdminJSArray, $files);
+    }
+
     function addCSS($files)
     {
         $this->addFile($this->CSSArray, $files);
@@ -125,6 +131,12 @@ class ClipBucket
 
     function addAdminCSS($files)
     {
+        $this->addFile($this->AdminCSSArray, $files);
+    }
+
+    function addAllCSS($files)
+    {
+        $this->addFile($this->CSSArray, $files);
         $this->addFile($this->AdminCSSArray, $files);
     }
 
