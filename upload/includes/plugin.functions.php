@@ -296,12 +296,24 @@ function register_after_video_upload_action($func)
  * Function used to add actions that will be performed
  * when video is going to play, it will check which player to use
  * what type to use and what to do
- * @param string Function name
+ * @param string $method Function name
  */
-function register_actions_play_video($func)
+function register_actions_play_video(string $method, string $class = null): bool
 {
+    if (empty($method)) {
+        return false;
+    }
+
     global $Cbucket;
-    $Cbucket->actions_play_video[] = $func;
+    if (empty($class)) {
+        $Cbucket->actions_play_video[] = $method;
+    } else {
+        $Cbucket->actions_play_video[] = [
+            'class'    => $class
+            , 'method' => $method
+        ];
+    }
+    return true;
 }
 
 function register_collection_delete_functions($func)

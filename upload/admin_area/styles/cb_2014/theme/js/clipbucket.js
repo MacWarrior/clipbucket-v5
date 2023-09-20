@@ -1799,7 +1799,6 @@
 							if (isPlaying){
 								clearInterval(modalPlayerInterval);
 							}
-							new_player_height(vid_id);
 						}, 300);
 					}else if(data.failure){
 						$('.my-modal-content').html('<div class="alert alert-warning">'+data.message+'</div>');

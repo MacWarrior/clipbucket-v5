@@ -945,7 +945,7 @@ class FFMpeg
 
             if ($video) {
                 $info = [];
-                $info['duration'] = SetTime($data['format']['duration']);
+                $info['duration'] = $data['format']['duration'];
                 $info['width'] = (int)$video['width'];
                 $info['height'] = (int)$video['height'];
                 return $info;
