@@ -9,7 +9,6 @@ $(document).ready(function () {
         $('#edit-' + id).hide();
     });
 
-
     $('.delete_tag').on("click", function () {
             var _this = $(this);
             if (_this.hasClass('disabled')) {
@@ -48,8 +47,10 @@ $(document).ready(function () {
         $.ajax({
             url: "/actions/tag_update.php",
             type: "post",
+            dataType: 'json',
             data: {id_tag: id, tag: value},
-            success: function () {
+            success: function (result) {
+                $('.page-content').prepend(result['msg']);
                 $('#' + id).html(value);
                 $('#input-' + id).hide();
                 $('#ok-' + id).hide();
@@ -59,6 +60,4 @@ $(document).ready(function () {
             }
         });
     });
-
-
 });

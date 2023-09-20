@@ -48,6 +48,6 @@ if(in_dev()){
 }
 $Cbucket->addAdminJS(['pages/manage_tags/manage_tags'.$min_suffixe.'.js' => 'admin']);
 
-subtitle(lang('manage_tag'));
+subtitle(lang('manage_tags'));
 template_files('manage_tags.html');
 display_it();
