@@ -105,16 +105,12 @@
             dynamicLabel : false
         };
         this.videoJsResolutionSwitcher(res_options);
-		console.log('mp4');
 		{else}
 		this.qualitySelectorHls({
 			displayCurrentQuality: false,
 			vjsIconClass: 'vjs-icon-cog'
 		});
-		console.log('hls');
 		{/if}
-
-
 
         {if config('contextual_menu_disabled') === 'yes'}
 		$(".video-js").on("contextmenu",function() {

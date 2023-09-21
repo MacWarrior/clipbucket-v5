@@ -1593,8 +1593,6 @@ function update_duration($vdetails)
     require_once BASEDIR . '/includes/classes/conversion/ffmpeg.class.php';
     $data = FFMpeg::get_video_basic_infos($filepath);
 
-    error_log(print_r($data, true));
-
     if (isset($data['duration'])) {
         $db->update(tbl('video'), ['duration'], [$data['duration']], 'videoid=' . $vdetails['videoid']);
     }
