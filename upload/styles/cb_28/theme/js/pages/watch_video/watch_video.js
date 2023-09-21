@@ -1,16 +1,7 @@
 var cookieToSave, commentDataCheck;
 var link_tags = true;
-/*Cookie based comments backup end*/
-
-
-/*Playlist load more end*/
-
-var aspect_ratio = 1.77778
 
 $(document).ready(function () {
-
-    var cb_player = $("#cb_player");
-
     cookieToSave = 'comment_data_u' + userid + "v" + current_video
         commentDataCheck = $.cookie(cookieToSave);
 
@@ -46,8 +37,6 @@ $(document).ready(function () {
     });
 
     getAllComments('v', videoid, last_commented, 1, comments_count, object_type);
-
-    cb_player.height(cb_player.width() / aspect_ratio);
 
     var videoInfo = $("#videoDescription").text();
     var newInfo = videoInfo.replace(/(((https?:\/\/)|([\s\t]))(www.)?([a-z0-9]+)\.[a-z]+)/g, '<a href="$1">$1</a>');
@@ -144,9 +133,3 @@ $(document).ready(function () {
     });*/
 
 });
-
-var resizePlayer = _cb.debounce(function () {
-    cb_player.height(cb_player.width() / aspect_ratio);
-}, 500, false);
-
-$(window).resize(resizePlayer);

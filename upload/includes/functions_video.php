@@ -1082,107 +1082,75 @@ function exec_custom_video_file_funcs($vdetails, $hq = false)
 
 /**
  * Function used to get list of videos files
- * ..
- * ..
  * @param      $vdetails
- * @param bool $return_default
  * @param bool $with_path
  * @param bool $multi
  * @param bool $count_only
  * @param bool $hq
  *
  * @return array|bool|string
- * @since 2.7
  *
+ * @throws Exception
  */
-function get_video_files($vdetails, $return_default = true, $with_path = true, $multi = false, $count_only = false, $hq = false)
+function get_video_files($vdetails, $with_path = true, $multi = false, $count_only = false, $hq = false)
 {
+    if( $vdetails['status'] != 'Successful' || empty($vdetails['file_directory']) || empty($vdetails['file_name']) || empty($vdetails['file_type']) ){
+        if ($with_path) {
+            return [VIDEOS_URL . '/no_video.mp4'];
+        }
+        return ['no_video.mp4'];
+    }
+
     $custom_video_file_funcs_retun = exec_custom_video_file_funcs($vdetails, $hq);
     if ($custom_video_file_funcs_retun) {
         return $custom_video_file_funcs_retun;
     }
 
-    $fileDirectory = '';
-    if (!empty($vdetails['file_directory'])) {
-        $fileDirectory = $vdetails['file_directory'] . DIRECTORY_SEPARATOR;
+    if( empty($vdetails['video_files']) ){
+        update_video_files($vdetails);
+        $vdetails = get_video_details($vdetails['videoid']);
     }
 
-    if (isset($vdetails['file_name'])) {
-        switch ($vdetails['file_type']) {
-            default:
-            case 'mp4':
-                if ($vdetails['video_version'] == 'COMMERCIAL') {
-                    $vid_files = glob(VIDEOS_DIR . DIRECTORY_SEPARATOR . $fileDirectory . $vdetails['file_name'] . DIRECTORY_SEPARATOR . $vdetails['file_name'] . '*.' . $vdetails['file_type']);
+    if( empty($vdetails['video_files']) || empty(json_decode($vdetails['video_files'])) ){
+        if ($with_path) {
+            return [VIDEOS_URL . '/no_video.mp4'];
+        }
+        return ['no_video.mp4'];
+    }
+
+    $vid_files = [];
+    switch($vdetails['file_type']){
+        default:
+        case 'mp4':
+            $video_qualities = json_decode($vdetails['video_files']);
+            foreach($video_qualities as $quality){
+                $file_name = $vdetails['file_name'] . '-' . $quality . '.mp4';
+                if( !$with_path ) {
+                    $vid_files[] = $file_name;
                 } else {
-                    if ($vdetails['video_version'] >= '2.7') {
-                        $vid_files = glob(VIDEOS_DIR . DIRECTORY_SEPARATOR . $fileDirectory . $vdetails['file_name'] . '*.' . $vdetails['file_type']);
+                    if ($vdetails['video_version'] == 'COMMERCIAL') {
+                        $vid_files[] = VIDEOS_URL . '/' . $vdetails['file_directory'] . '/' . $vdetails['file_name'] . '/' . $file_name;
                     } else {
-                        $vid_files = glob(VIDEOS_DIR . DIRECTORY_SEPARATOR . $vdetails['file_name'] . '*.' . $vdetails['file_type']);
-                    }
-                }
-                break;
-
-            case 'hls':
-                $vid_files = glob(VIDEOS_DIR . DIRECTORY_SEPARATOR . $fileDirectory . $vdetails['file_name'] . DIRECTORY_SEPARATOR . '*.m3u8');
-                foreach ($vid_files as $index => $path) {
-                    // Only index.m3u8 is kept, this is the only format yet working with audio
-                    if (strpos(basename($path), 'audio_') === 0 || strpos(basename($path), 'video_') === 0) {
-                        unset($vid_files[$index]);
-                    }
-                }
-                break;
-        }
-    }
-
-    #replace Dir with URL
-    if (is_array($vid_files)) {
-        foreach ($vid_files as $file) {
-
-            if (filesize($file) < 100) {
-                continue;
-            }
-            $files_part = explode('/', $file);
-            $video_file = $files_part[count($files_part) - 1];
-
-            if ($with_path) {
-                switch ($vdetails['file_type']) {
-                    default:
-                    case 'mp4':
-                        if ($vdetails['video_version'] == 'COMMERCIAL') {
-                            $files[] = VIDEOS_URL . '/' . $fileDirectory . $vdetails['file_name'] . '/' . $video_file;
+                        if ($vdetails['video_version'] >= '2.7') {
+                            $vid_files[] = VIDEOS_URL . '/' . $vdetails['file_directory'] . '/' . $file_name;
                         } else {
-                            if ($vdetails['video_version'] >= '2.7') {
-                                $files[] = VIDEOS_URL . '/' . $fileDirectory . $video_file;
-                            } else {
-                                if ($vdetails['video_version'] == '2.6') {
-                                    $files[] = VIDEOS_URL . '/' . $video_file;
-                                }
-                            }
+                            $vid_files[] = VIDEOS_URL . '/' . $file_name;
                         }
-                        break;
-
-                    case 'hls':
-                        if (strpos($video_file, '_vtt') === false) {
-                            $files[] = VIDEOS_URL . '/' . $fileDirectory . $vdetails['file_name'] . DIRECTORY_SEPARATOR . $video_file;
-                        }
-                        break;
+                    }
                 }
-            } else {
-                $files[] = $video_file;
             }
-        }
-    }
+            break;
 
-    if (!is_array($files) || (count($files) == 0 && !$multi && !$count_only)) {
-        if ($return_default) {
-            if ($with_path) {
-                return VIDEOS_URL . '/no_video.mp4';
+        case 'hls':
+            $file_name = 'index.m3u8';
+            if( !$with_path ) {
+                $vid_files[] = $file_name;
+            } else {
+                $vid_files[] = VIDEOS_URL . '/' . $vdetails['file_directory'] . '/' . $vdetails['file_name'] . '/' . $file_name;
             }
-            return 'no_video.mp4';
-        }
-        return false;
+            break;
     }
-    return $files;
+    return $vid_files;
 }
 
 function thumbs_res_settings_28(): array
@@ -1207,6 +1175,10 @@ function get_high_res_file($vdetails): string
     }
 
     $video_qualities = json_decode($vdetails['video_files']);
+
+    if( empty($video_qualities) ){
+        return false;
+    }
 
     if (is_int($video_qualities[0])) {
         $max_quality = max($video_qualities);
@@ -1238,9 +1210,10 @@ function get_high_res_file($vdetails): string
  *
  * @return array : { array } { $vid_dets } { an array with all details of videos in quicklists }
  *
- * @internal param $ : { string } { $cookie_name } { false by default, read from certain cookie }
+ * @throws Exception
  * @since : 18th March, 2016 ClipBucket 2.8.1
  * @author : Saqib Razzaq <saqi.cb@gmail.com>
+ * @internal param $ : { string } { $cookie_name } { false by default, read from certain cookie }
  */
 function get_fast_qlist($cookie_name = false): array
 {
@@ -1335,7 +1308,7 @@ function get_audio_channels($filepath): int
  */
 function update_castable_status($vdetails)
 {
-    if (is_null($vdetails)) {
+    if (is_null($vdetails) || $vdetails['status'] != 'Successful' || empty($vdetails['video_files']) ) {
         return;
     }
 
@@ -1356,9 +1329,55 @@ function update_castable_status($vdetails)
 /**
  * @throws Exception
  */
+function update_video_files($vdetails)
+{
+    global $db;
+
+    $fileDirectory = $vdetails['file_directory'] . DIRECTORY_SEPARATOR;
+    $video_qualities = [];
+    switch ($vdetails['file_type'])
+    {
+        default:
+        case 'mp4':
+            if ($vdetails['video_version'] == 'COMMERCIAL') {
+                $list_videos = glob(VIDEOS_DIR . DIRECTORY_SEPARATOR . $fileDirectory . $vdetails['file_name'] . DIRECTORY_SEPARATOR . $vdetails['file_name'] . '*.' . $vdetails['file_type']);
+            } else {
+                if ($vdetails['video_version'] >= '2.7') {
+                    $list_videos = glob(VIDEOS_DIR . DIRECTORY_SEPARATOR . $fileDirectory . $vdetails['file_name'] . '*.' . $vdetails['file_type']);
+                } else {
+                    $list_videos = glob(VIDEOS_DIR . DIRECTORY_SEPARATOR . $vdetails['file_name'] . '*.' . $vdetails['file_type']);
+                }
+            }
+
+            foreach ($list_videos as  $path) {
+                $quality = explode('-', $path);
+                $quality = explode('.', end($quality));
+                $video_qualities[] = (int)$quality[0];
+            }
+            break;
+
+        case 'hls':
+            $list_videos = glob(VIDEOS_DIR . DIRECTORY_SEPARATOR . $fileDirectory . $vdetails['file_name'] . DIRECTORY_SEPARATOR . 'video_*.m3u8');
+            foreach ($list_videos as  $path) {
+                $quality = explode('video_', $path);
+                $quality = explode('p.',end($quality));
+                $quality = reset($quality);
+                $video_qualities[] = (int)$quality;
+            }
+            break;
+    }
+
+    sort($video_qualities, SORT_NUMERIC);
+
+    $db->update(tbl('video'), ['video_files'], [json_encode($video_qualities)], ' videoid = '.display_clean($vdetails['videoid']));
+}
+
+/**
+ * @throws Exception
+ */
 function update_bits_color($vdetails)
 {
-    if (is_null($vdetails)) {
+    if (is_null($vdetails) || $vdetails['status'] != 'Successful' || empty($vdetails['video_files']) ) {
         return;
     }
 

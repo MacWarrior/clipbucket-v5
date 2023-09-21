@@ -9,9 +9,6 @@ function regenerateThumbs(videoid) {
         $('#thumbnails').html(result['template']);
         $('.page-content').prepend(result['msg']);
         $('#player').html(result['player']);
-        setTimeout(function () {
-            new_player_height(65);
-        }, 300);
     }).always(function () {
         hideSpinner();
     });

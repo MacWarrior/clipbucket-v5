@@ -85,7 +85,7 @@
 									<span class="caret"></span>
 								</button>
 								<ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu1">
-								{$files = get_video_files($vdo,true,true)}
+								{$files = get_video_files($vdo,true)}
 								{foreach $files as $file}
 									{$quality = explode('-',$file)}
 									{$quality = array_reverse($quality)}

@@ -1,36 +1,6 @@
-<!-- Following is the code for cb ultimate invideo ads settings  -->
-{$tcomments_params = ['function'=>'get_ultimate_ads']}
-{$current_ad = get_my_function($tcomments_params)}
-{if !empty($current_ad)}
-	{$play_ad = true}
-{/if}
-<!-- End  -->
-
 <!-- This code is added for timecomments plugin-->
 {$tcomments_params = ['function'=>'get_timeCommnets','videoid'=>$vdata.videoid]}
 {$Comments_allowed = $myquery->is_commentable($vdata,'v') }
-{$timecomments = get_my_function($tcomments_params)}
-<!-- End -->
-
-<!-- This code is added for instance manager Interactive ads plugin-->
-{$v_editor_params = ['function'=>'get_video_editor']}
-{$video_editor_enabled = get_my_function($v_editor_params)}
-<!-- End -->
-
-{$svg_manager_params = ['function'=>'get_svg_manager']}
-{$svg_manager = get_my_function($svg_manager_params)}
-{if $svg_manager}
-    {$svg_manager}
-{/if}
-
-<!-- This code is added for instance manager Interactive ads plugin intances-->
-{if !$video_editor_enabled }
-	{$intance_params = ['function'=>'get_slot','videoid'=>$vdata.videoid]}
-	{$active_instances = get_my_function($intance_params)}
-	{if is_array($active_instances)}
-		{$active_instances = json_encode($active_instances)}
-	{/if}
-{/if}
 <!-- End -->
 
 <!-- This code is added for Related Videos carousel plugin-->
@@ -46,101 +16,25 @@
 <script type="text/javascript">
     var lang_by = "{lang code='by'}";
     var lang_quality = "{lang code='quality'}";
+	var video_id = "{$vdata.videoid}";
+	var autoplay = "{config('autoplay_video')}" === 'yes';
+	var video_uploader = "{display_clean($vdata.username)}";
+	var video_title = "{display_clean($vdata.title)}";
 </script>
 
-{if in_dev()}
-<script type="text/javascript" src="{$cb_vjs_player_url}/js/video.js"></script>
-<script type="text/javascript" src="{$cb_vjs_player_url}/plugin/clipbucket/videojs-clipbucket.js"></script>
-<script type="text/javascript" src="{$cb_vjs_player_url}/plugin/resolution/videojs-resolution.js"></script>
-<script type="text/javascript" src="{$cb_vjs_player_url}/plugin/playinline/iphone-inline-video.js"></script>
 
-<link rel="stylesheet" href="{$cb_vjs_player_url}/css/video-js.css">
-<link rel="stylesheet" href="{$cb_vjs_player_url}/plugin/clipbucket/videojs-clipbucket.css">
-<link rel="stylesheet" href="{$cb_vjs_player_url}/plugin/resolution/videojs-resolution.css">
-
-{else}
-<script type="text/javascript" src="{$cb_vjs_player_url}/js/video.min.js"></script>
-<script type="text/javascript" src="{$cb_vjs_player_url}/plugin/clipbucket/videojs-clipbucket.min.js"></script>
-<script type="text/javascript" src="{$cb_vjs_player_url}/plugin/resolution/videojs-resolution.min.js"></script>
-<script type="text/javascript" src="{$cb_vjs_player_url}/plugin/playinline/iphone-inline-video.min.js"></script>
-
-<link rel="stylesheet" href="{$cb_vjs_player_url}/css/video-js.min.css">
-<link rel="stylesheet" href="{$cb_vjs_player_url}/plugin/clipbucket/videojs-clipbucket.min.css">
-<link rel="stylesheet" href="{$cb_vjs_player_url}/plugin/resolution/videojs-resolution.min.css">
-{/if}
-
-<script type="text/javascript" src="{$cb_vjs_player_url}/lang/{get_current_language()}.js"></script>
-
-{if config('chromecast')=='yes'}
-<script type="text/javascript" src="{$cb_vjs_player_url}/plugin/chromecast/cast_sender.js"></script>
-	{if in_dev()}
-<script type="text/javascript" src="{$cb_vjs_player_url}/plugin/chromecast/videojs-chromecast.js"></script>
-<link rel="stylesheet" href="{$cb_vjs_player_url}/plugin/chromecast/videojs-chromecast.css">
-	{else}
-<script type="text/javascript" src="{$cb_vjs_player_url}/plugin/chromecast/videojs-chromecast.min.js"></script>
-<link rel="stylesheet" href="{$cb_vjs_player_url}/plugin/chromecast/videojs-chromecast.min.css">
-	{/if}
-{/if}
-
-{if config('player_thumbnails')=='yes'}
-	{if in_dev()}
-<script type="text/javascript" src="{$cb_vjs_player_url}/plugin/thumbnails/videojs-thumbnails.js"></script>
-<link rel="stylesheet" href="{$cb_vjs_player_url}/plugin/thumbnails/videojs-thumbnails.css">
-	{else}
-<script type="text/javascript" src="{$cb_vjs_player_url}/plugin/thumbnails/videojs-thumbnails.min.js"></script>
-<link rel="stylesheet" href="{$cb_vjs_player_url}/plugin/thumbnails/videojs-thumbnails.min.css">
-	{/if}
-{/if}
-
-
-
-
-
-
-
-
-
-
-{if config("enable_advertisement") == "yes"}
-{if in_dev()}
-<link rel="stylesheet" href="{$cb_vjs_player_url}/plugin/ads/videojs.ads.css">
-
-<script type="text/javascript" src="{$cb_vjs_player_url}/plugin/ads/videojs-contrib-ads.js"></script>
-<script type="text/javascript" src="{$cb_vjs_player_url}/plugin/ads/videojs.ads.js"></script>
-
-{else}
-<link rel="stylesheet" href="{$cb_vjs_player_url}/plugin/ads/videojs.ads.min.css">
-
-<script type="text/javascript" src="{$cb_vjs_player_url}/plugin/ads/videojs-contrib-ads.min.js"></script>
-<script type="text/javascript" src="{$cb_vjs_player_url}/plugin/ads/videojs.ads.min.js"></script>
-{/if}
-
-<script type="text/javascript" src="{$cb_vjs_player_url}/plugin/ads/cb_ultimate_ads.js"></script>
-
-
-
-
-
-
-
-<link rel="stylesheet" href="{$cb_vjs_player_url}/css/videojs.ima.css">
-<script type="text/javascript" src="{$cb_vjs_player_url}/js/videojs.ima.js"></script>
-
-
-	{if $play_ad == true}
-<script type="text/javascript" src="//imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
-	{/if}
-{/if}
-
-
-{if $cb_timecomments_plugin == 'installed'}
-<script type="text/javascript" src="{$cb_vjs_player_url}/js/timecomments.js"></script>
-{/if}
-
-<video playsinline id="cb_video_js_{$vdata.videoid}" class="video-js vjs-default-skin vjs-show-big-play-button-on-pause" height="{$height}" width="{$width}" poster="{getThumb vdetails=$vdata size=768x432}" >
+<video playsinline id="cb_video_js_{$vdata.videoid}" class="video-js vjs-default-skin vjs-show-big-play-button-on-pause" height="100%" width="100%" poster="{getThumb vdetails=$vdata size=768x432}" >
 	{foreach $video_files as $file}
-		{$quality = get_cbvjs_quality($file, $vdata['file_type'])}
-    <source src='{$file}' type="{if $vdata['file_type']=='hls'}application/x-mpegURL{else}video/mp4{/if}" label="{$myquery->getVideoResolutionTitleFromHeight($quality)}" res="{$quality}" />
+		{if strpos($file, 'no_video.mp4') !== false}
+			<source src='{$file}' type="video/mp4"/>
+		{else}
+			{if $vdata['file_type']=='hls'}
+				<source src='{$file}' type="application/x-mpegURL"/>
+			{else}
+				<source src='{$file}' type="video/mp4" label="{display_clean(CB_video_js::getVideoResolutionTitleFromFilePath($file))}"/>
+			{/if}
+
+		{/if}
     {/foreach}
 	{if config('player_subtitles')}
 		{$subtitles = get_video_subtitles($vdata)}
@@ -154,18 +48,31 @@
 </video>
 
 <script type="text/javascript">
-	var vid_id = "{$vdata.videoid}";
-	var autoplay = "{config('autoplay_video')}" === 'yes';
-
 	//player settings
 	var cb_player_setup = {
-		plugins : { }, 
+		plugins : { },
 		"techOrder" : ['html5'],
 		"controls": true,
 		"autoplay": autoplay,
 		"preload": "auto",
 		"muted": false,
-		"loop" : false
+		"loop" : false,
+		"fluid": true,
+		"responsive": true,
+
+		playbackRates: [0.5, 0.75, 1, 1.25, 1.5, 2],
+		controlBar: {
+			children: [
+				"PlayToggle", // Play/Pause
+				"VolumePanel", // Gestion du volume
+				"ProgressControl", // Barre de chargement
+				"RemainingTimeDisplay", // Temps restant
+				"PlaybackRateMenuButton", // Vitesse de lecture
+				"subsCapsButton", // Sous-titres
+				"PictureInPictureToggle", // PictureInPicture
+				"FullscreenToggle" // Plein écran
+			]
+		}
 	};
 
 	//Setting CallBack
@@ -173,9 +80,9 @@
 
         // PLUGIN : Clipbucket - Header
         var header_options = {
-			uploader : "{display_clean($vdata.username)}",
-			videotitle : "{display_clean($vdata.title)}",
-			videoid : vid_id
+			uploader : video_uploader,
+			videotitle : video_title,
+			videoid : video_id
         };
 	    this.clipbucket_header(header_options);
 
@@ -191,12 +98,19 @@
         // PLUGIN : Clipbucket - Volume
 		this.clipbucket_volume();
 
-        // PLUGIN : resolution
+        // PLUGIN : resolution MP4
+		{if $vdata['file_type'] == 'mp4'}
         var res_options = {
-            default : "{get_cbvjs_quality_type($video_files, $vdata['file_type'])}",
+            default : "{CB_video_js::getDefaultVideo($video_files)}",
             dynamicLabel : false
         };
         this.videoJsResolutionSwitcher(res_options);
+		{else}
+		this.qualitySelectorHls({
+			displayCurrentQuality: false,
+			vjsIconClass: 'vjs-icon-cog'
+		});
+		{/if}
 
         {if config('contextual_menu_disabled') === 'yes'}
 		$(".video-js").on("contextmenu",function() {
@@ -207,69 +121,10 @@
 		{if config('player_thumbnails') === 'yes'}
 		this.thumbnails({get_player_thumbs_json($vdata)});
 		{/if}
-
-		{if config("enable_advertisement") === 'yes'}
-		//Calling Ima Ads plugin
-		if ("{$play_ad}"){
-			var ad_options = {
-			  	ad_id: "{$current_ad.ad_id}",
-			    ad_code: "{$current_ad.ad_tag}",
-			    autoplay: autoplay
-			};
-			this.cb_ultimate_ads(ad_options);
-		}
-
-        //Calling interactive ads plugin
-        var i_instances = '{$active_instances}';
-        if (i_instances){
-            var i_instances_settings = {
-                enable : true,
-                dummy : false,
-                instances : JSON.parse(i_instances)
-            };
-            this.interactiveAds(i_instances_settings);
-        }
-		{/if}
-
-		//Calling TimeComments switcher plugin
-        var cb_timecomments_plugin = "{$cb_timecomments_plugin}";
-		if ( cb_timecomments_plugin === 'installed'  && typeof cb_timecomments_plugin !== 'undefined')
-		{
-			var timecomments = '{$timecomments}';
-			var comments_options = {
-				comments : timecomments,
-				dummy : false,
-				videoid : vid_id,
-				userid : "{user_id()}",
-				userprofile : "{$userquery->avatar('','m',user_id())}",
-				username : "{display_clean(user_name())}",
-				allowComments : "{$Comments_allowed}",
-				forceShow : true
-			};
-			this.timecomments(comments_options);
-			if (typeof timecomments != 'undefined' && timecomments !== ''){
-				console.log("Initialized Time Comments");
-			}else{
-				console.log("Time Comments are empty.. /");
-			}
-		}
-
-        //Calling instance manager plugin for backend
-        var video_editor_enabled = "{$video_editor_enabled}";
-		if ( video_editor_enabled && typeof video_editor_enabled != 'undefined'){
-			var instance_manager_settings = {
-			    slot_id : slot_id
-			};
-			this.instanceManager(instance_manager_settings);
-		}
-
-		new_player_height(vid_id);
 	}
 	//Initializing
-	var cb_player = new videojs('cb_video_js_'+vid_id, cb_player_setup, cb_vjs_callback);
-
-	$(window).resize(function(event) {
-		new_player_height(vid_id);
+	$(document).ready(function() {
+		var cb_player = new videojs('cb_video_js_' + video_id, cb_player_setup, cb_vjs_callback);
 	});
 </script>
 

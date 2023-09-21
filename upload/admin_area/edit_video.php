@@ -11,18 +11,9 @@ $video = $_GET['video'];
 $data = get_video_details($video);
 
 /* Generating breadcrumb */
-$breadcrumb[0] = [
-    'title' => lang('videos'),
-    'url'   => ''
-];
-$breadcrumb[1] = [
-    'title' => lang('videos_manager'),
-    'url'   => ADMIN_BASEURL . '/video_manager.php'
-];
-$breadcrumb[2] = [
-    'title' => 'Editing : ' . display_clean($data['title']),
-    'url'   => ADMIN_BASEURL . '/edit_video.php?video=' . display_clean($video)
-];
+$breadcrumb[0] = ['title' => lang('videos'), 'url' => ''];
+$breadcrumb[1] = ['title' => lang('videos_manager'), 'url' => ADMIN_BASEURL . '/video_manager.php'];
+$breadcrumb[2] = ['title' => 'Editing : ' . display_clean($data['title']), 'url' => ADMIN_BASEURL . '/edit_video.php?video=' . display_clean($video)];
 
 if (@$_GET['msg']) {
     $msg[] = clean($_GET['msg']);
