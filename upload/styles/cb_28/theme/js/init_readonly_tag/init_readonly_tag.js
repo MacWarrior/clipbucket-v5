@@ -8,10 +8,10 @@ $(function () {
         caseSensitive:false
     });
 
-    if (link_tags !== undefined && link_tags) {
+    if (link_type !== undefined && link_type) {
         var labels = $('.tagit-label');
         labels.each(function () {
-            $(this).parent().wrap('<a href="/search_result.php?query=' + $(this).html()+ '&type=tag"></a>');
+            $(this).parent().wrap('<a href="/search_result.php?query=' + $(this).html()+ '&type=' + link_type + '"></a>');
         });
     }
 })

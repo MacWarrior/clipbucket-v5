@@ -1,5 +1,5 @@
 var cookieToSave, commentDataCheck;
-var link_tags = true;
+var link_type = "videos";
 
 $(document).ready(function () {
     cookieToSave = 'comment_data_u' + userid + "v" + current_video

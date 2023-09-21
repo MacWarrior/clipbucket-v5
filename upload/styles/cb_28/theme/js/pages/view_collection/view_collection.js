@@ -1,5 +1,5 @@
 
-var link_tags = true;
+var link_type = "collections";
 $(document).ready(function(){
     getAllComments('cl','{$c.collection_id}','{$c.last_commented}',1,'{$c.total_comments}','{$object_type}');
     var adHtml = $('.ad-holder').html();

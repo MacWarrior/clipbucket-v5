@@ -81,7 +81,7 @@ function get_playlist_thumb($playlist, $size = false)
             $first_item = json_decode($first_item, true);
         }
 
-        $thumb = get_thumb($first_item, $size);
+        $thumb = get_thumb($first_item, false, $size);
 
         if (strpos($thumb, 'processing') === false) {
             return $thumb;

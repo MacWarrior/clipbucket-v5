@@ -292,7 +292,7 @@ class ClipBucket
         }
         if ($per['web_config_access'] == 'yes') {
             $menu_general = [
-                'title'   => 'General Configurations'
+                'title'   => lang('general')
                 , 'class' => 'glyphicon glyphicon-stats'
                 , 'sub'   => [
                     [

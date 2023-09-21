@@ -14,7 +14,7 @@ class Tags
         LEFT JOIN ' . tbl('playlist_tags') . ' PLT ON PLT.id_tag = T.id_tag 
         LEFT JOIN ' . tbl('user_tags') . ' UT ON UT.id_tag = T.id_tag 
         LEFT JOIN ' . tbl('video_tags') . ' VT ON VT.id_tag = T.id_tag 
-        '. ($cond ? 'WHERE '. $cond : '') .'
+        '. ($cond ? 'WHERE '. (is_array($cond) ? implode(' AND ', $cond) : $cond) : '') .'
         GROUP BY T.id_tag
         ';
         if ($limit) {
@@ -33,7 +33,7 @@ class Tags
         LEFT JOIN ' . tbl('photo_tags') . ' PT ON PT.id_tag = T.id_tag 
         LEFT JOIN ' . tbl('playlist_tags') . ' PLT ON PLT.id_tag = T.id_tag 
         LEFT JOIN ' . tbl('user_tags') . ' UT ON UT.id_tag = T.id_tag 
-        LEFT JOIN ' . tbl('video_tags') . ' VT ON VT.id_tag = T.id_tag ', 'DISTINCT T.name, TT.name, T.id_tag', $cond);
+        LEFT JOIN ' . tbl('video_tags') . ' VT ON VT.id_tag = T.id_tag ', 'DISTINCT T.name, TT.name, T.id_tag', (is_array($cond) ? implode(' AND ', $cond) : $cond));
     }
 
     /**
@@ -63,16 +63,27 @@ class Tags
     }
 
 
-    public static function updateTag($name, $id_tag)
+    /**
+     * @param $name
+     * @param $id_tag
+     * @return bool
+     * @throws Exception
+     */
+    public static function updateTag($name, $id_tag):bool
     {
         global $db;
+        if (strlen(trim($name)) <= 2) {
+            e(lang('tag_too_short'),'warning');
+            return false;
+        }
         try {
             $db->update(tbl('tags'), ['name'], [$name], 'id_tag = ' . mysql_clean($id_tag));
             e(lang('tag_updated'), 'm');
+            return true;
         } catch (Exception $e) {
             e(lang('error'));
+            return false;
         }
-
     }
 
     public static function saveTags(string $tags, string $object_type, int $object_id)
@@ -157,5 +168,15 @@ class Tags
         return array_map(function ($item) {
             return $item['name'];
         }, $result);
+    }
+
+    /**
+     * @return array
+     * @throws Exception
+     */
+    public static function getTagTypes(): array
+    {
+        global $db;
+        return $db->select(tbl('tags_type'),'*',false, false, false, false, 300);
     }
 }
