@@ -106,7 +106,6 @@ $Cbucket->addAdminCSS([
     'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
     'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
 ]);
-
 $comments = getComments($comment_cond);
 assign('comments', $comments);
 

@@ -4,10 +4,10 @@
 <div class="form-group">
     <form id="form2" name="form2" method="get" action="?">
         <div class="row align-items-end">
-            <div class="col-md-2">
+            <div class="col-md-2" style="padding-left: 0">
                 <label for="search">{lang code="tag_type"}</label>
                 <div style="vertical-align: bottom;">
-                    {html_options name=id_tag_type options=$tag_types class='form-control' style='vertical-align: middle;'}
+                    {html_options name=id_tag_type options=$tag_types class='form-control' style='vertical-align: middle;' selected=$selected_tag_type}
                 </div>
             </div>
             <div class="col-md-10">
@@ -29,7 +29,7 @@
     {section name=tag loop=$tags}
     <tr>
         <td class="col-md-2">
-            <span >{display_clean($tags[tag].tag_type)}</span>
+            <span >{lang($tags[tag].tag_type)|ucfirst}</span>
         </td>
 
         <td class="col-md-9">

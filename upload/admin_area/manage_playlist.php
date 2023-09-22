@@ -167,7 +167,6 @@ $Cbucket->addAdminCSS([
     'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
     'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
 ]);
-
 $available_tags = Tags::fill_auto_complete_tags('playlist');
 assign('available_tags',$available_tags);
 

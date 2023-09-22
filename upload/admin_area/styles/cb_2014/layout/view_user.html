@@ -231,7 +231,7 @@
                                         {$field.class = "form-control"}
                                         {if $field.id == 'profile_tags'}
                                             {$field.type='hidden'}
-                                            <ul id="list_tags"></ul>
+                                            <ul id="list_tags" style="margin-left: 0"></ul>
                                         {/if}
                                         {ANCHOR place=$field.anchor_before}{$formObj->createField($field)}
                                         {$field.hint_2}

@@ -477,7 +477,7 @@ ul.mainTabs{
     padding: 0;
 }
 
-.myTable .last div{
+.myTable .last div,p{
     margin-left: 10px;
     padding: 6px;
     margin-bottom: 0;

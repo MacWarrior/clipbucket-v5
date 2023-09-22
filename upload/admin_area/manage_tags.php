@@ -22,9 +22,10 @@ $cond = [];
 if (!empty($_GET['search'])) {
     $cond[] = ' T.name LIKE \'%' . mysql_clean($_GET['search']) . '%\'';
 }
-
+$selected_tag_type = 0;
 if (!empty($_GET['id_tag_type'])) {
     $cond[] = ' T.id_tag_type = ' . mysql_clean($_GET['id_tag_type']);
+    $selected_tag_type = $_GET['id_tag_type'];
 }
 
 $tag_types =  [lang('all')];
@@ -39,6 +40,7 @@ $pages->paginate($total_pages, $current_page);
 
 assign('tags', $tags);
 assign('tag_types', $tag_types);
+assign('selected_tag_type', $selected_tag_type);
 
 if (in_dev()) {
     $min_suffixe = '';

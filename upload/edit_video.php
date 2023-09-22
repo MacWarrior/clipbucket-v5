@@ -50,7 +50,6 @@ $Cbucket->addCSS([
     'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
     'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
 ]);
-
 $available_tags = Tags::fill_auto_complete_tags('video');
 assign('available_tags', $available_tags);
 
