@@ -29,7 +29,9 @@ if (!empty($_GET['id_tag_type'])) {
 }
 
 $tag_types =  [lang('all')];
-$tag_types = array_merge($tag_types, array_column(Tags::getTagTypes(), 'name', 'id_tag_type'));
+$tag_types = array_merge($tag_types, array_map(function ($item) {
+    return ucfirst(lang($item));
+}, array_column(Tags::getTagTypes(), 'name', 'id_tag_type')));
 
 $tags = Tags::getTags($curr_limit, $cond);
 $count = Tags::countTags($cond);

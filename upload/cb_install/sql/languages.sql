@@ -1680,4 +1680,9 @@ VALUES ('friend_requests'),
        ('general'),
        ('confirm_delete_tag'),
        ('clean_orphan_tags'),
-       ('clean_orphan_tags_description');
+       ('clean_orphan_tags_description'),
+       ('cannot_delete_tag'),
+       ('tag_too_short'),
+       ('tag_type'),
+       ('playlist'),
+       ('profile');
