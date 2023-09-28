@@ -266,9 +266,9 @@ SET @language_key = 'tag_too_short' COLLATE utf8mb4_unicode_520_ci;
 INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);
 SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
-VALUES (@id_language_key, 'Tags less than 2 characters are not allowed', @language_id_eng);
+VALUES (@id_language_key, 'Tags less than 3 characters are not allowed', @language_id_eng);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
-VALUES (@id_language_key, 'Les tags de moins de 2 caractères ne sont pas autorisés', @language_id_fra);
+VALUES (@id_language_key, 'Les tags de moins de 3 caractères ne sont pas autorisés', @language_id_fra);
 
 SET @language_key = 'tag_type' COLLATE utf8mb4_unicode_520_ci;
 INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);

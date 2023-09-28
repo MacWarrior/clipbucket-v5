@@ -37,7 +37,7 @@ $breadcrumb[0] = [
     'url'   => ''
 ];
 $breadcrumb[1] = [
-    'title' => 'Manage Collections',
+    'title' => lang('manage_collections'),
     'url'   => ADMIN_BASEURL . '/collection_manager.php'
 ];
 $breadcrumb[2] = [
@@ -68,9 +68,9 @@ $count_flagged_photos = $cbvid->action->count_flagged_objects();
 Assign('count_flagged_photos', $FlaggedPhotos);
 
 if (in_dev()) {
-    $min_suffixe = '.min';
-} else {
     $min_suffixe = '';
+} else {
+    $min_suffixe = '.min';
 }
 $Cbucket->addAdminJS([
     'tag-it' . $min_suffixe . '.js'                                => 'admin',

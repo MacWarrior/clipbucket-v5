@@ -13,11 +13,10 @@ function init_tags(id_input, available_tags) {
                 if (!alert_shown) {
                     alert_shown = true;
                     alert(tag_too_short);
-                    console.log('closed');
                 }
                 return false;
             }
-            alert_shown = true;
+            alert_shown = false;
         }
     });
 }
