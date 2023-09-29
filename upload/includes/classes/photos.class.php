@@ -1306,7 +1306,6 @@ class CBPhotos
                 'id'                => 'tags',
                 'value'             => genTags($tags),
                 'required'          => 'no',
-                'invalid_err'       => lang('photo_tags_err'),
                 'validate_function' => 'genTags'
             ],
             'collection' => [

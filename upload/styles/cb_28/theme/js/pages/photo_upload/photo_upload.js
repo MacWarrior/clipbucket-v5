@@ -155,17 +155,25 @@
                             url : "/actions/photo_uploader.php",
                             type : "post",
                             data : data,
-                            success: function(){
+                            success: function (msg) {
+                                msg = $.parseJSON(msg);
                                 $("#uploadMessage").removeClass("hidden");
-                                $("#uploadMessage").html("Picture details are successfully updated").attr("class", "alert alert-success container");
+                                if (msg.error) {
+                                    $('#uploadMessage').html(msg.error.val).attr('class', 'alert alert-danger container');
+                                    $('html,body').animate({
+                                        scrollTop: $("body").offset().top
+                                    }, 'medium');
+                                } else {
+                                    $("#uploadMessage").html("Picture details are successfully updated").attr("class", "alert alert-success container");
 
-                                $('html,body').animate({
-                                    scrollTop: $("body").offset().top
-                                },'medium');
+                                    $('html,body').animate({
+                                        scrollTop: $("body").offset().top
+                                    }, 'medium');
 
-                                setTimeout(function(){
-                                    $("#uploadMessage").addClass("hidden");
-                                }, 5000);
+                                    setTimeout(function () {
+                                        $("#uploadMessage").addClass("hidden");
+                                    }, 5000);
+                                }
                             }
                         }).fail(function(err){
                             console.log(err);
