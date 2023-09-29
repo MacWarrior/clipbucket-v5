@@ -191,8 +191,8 @@
 		$(".cbsearchtype a").on({
 			click: function(e){
 				e.preventDefault();
-				var prent_li = $(this).parents();
-				var theNewVal = $(this).attr('valNow');
+				let prent_li = $(this).parents();
+				let theNewVal = $(this).attr('valNow');
 				$('.type').val(theNewVal);
 				$('.cbsearchtype li').removeClass('active');
 				prent_li.addClass('active');
@@ -200,9 +200,43 @@
 		});
 
 		$('.s-types').on("click", function(){
-			var _this = $(this);
-			var text = _this.html();
+			let text = $(this).html();
 			$('.search-type').html(text);
 		});
+
+		$('#cbsearch').on("click", function(e){
+			e.preventDefault();
+			let searchQuery = $('#query').val();
+			let queryLen = searchQuery.length;
+			if (queryLen <= 2) {
+				let msg = '{lang code="search_too_short"}';
+				msg = msg.replace('%s', '<b>'+searchQuery+'</b>');
+				_cb.throwHeadMsg('warning', msg, 3000, true);
+			} else {
+				$('.search-form').submit();
+			}
+		});
+
+		window.addEventListener('resize', adaptRatioPlayer);
 	});
+	function adaptRatioPlayer(){
+		var div = document.querySelector('.player-holder');
+
+		if(div === null){
+			return;
+		}
+
+		const clean_class = div.className.replace(" fix_ratio ", "");
+
+		const ratio_window = window.innerWidth / window.innerHeight;
+		const ratio_div = document.querySelector('.player-holder video').videoWidth / document.querySelector('.player-holder video').videoHeight;
+
+		div.style.aspectRatio = ratio_div;
+
+		if ( ratio_window > ratio_div) {
+			div.className = clean_class+' fix_ratio '
+		} else {
+			div.className = clean_class
+		}
+	}
 </script>

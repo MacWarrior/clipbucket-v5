@@ -10,7 +10,7 @@ $Cbucket->addCSS([
     'font-awesome.min.css'               => 'admin',
     'icon-font.css'                      => 'admin',
     'custom-elements.css'                => 'admin',
-    'all.css'                            => 'admin',
+    'all' . $min_suffixe . '.css'        => 'admin',
     'clipbucket' . $min_suffixe . '.css' => 'admin',
     'jquery_ui' . $min_suffixe . '.css'  => 'admin'
 ]);

@@ -1757,56 +1757,6 @@
 			}
 		};
 
-		this.getModalVideo = function(video_id){
-			$.ajax({
-				type: 'post',
-				url: '/ajax/commonAjax.php',
-				data: { videoid : video_id , mode : 'get_video'},
-				dataType: 'json',
-				beforeSend: function (data) {
-					$('.my-modal-content').html('<div style="color:#fff;font-size:25px;padding:10px 10px 10px 10px;">'+loadingImg+'</div>');
-				},
-				success: function (data) {
-					if( data.success ){
-						var videoLink = data.video_link;
-						var vData = data.video_details;
-						$('.my-modal-content').attr('id',vData.videoid).html(data.video);
-
-						var cbModalPlayer = $(document).find('#cb_video_js_'+vData.videoid+'_html5_api');
-						cbModalPlayer = cbModalPlayer[0];
-
-						var modalPlayerInterval = setInterval(function(){
-							if (!navigator.userAgent.match(/Android/i)){
-								cbModalPlayer.play();
-								$(cbModalPlayerCont).find('.uploaderName').append('<a href="'+videoLink+'" title="Watch Video Page" style="margin:-2px 5px 0 0;"><i class="glyphicon glyphicon-log-in pull-right" style="font-size:20px;color:#fff;"></i></a>');
-							}
-							var isPlaying = !cbModalPlayer.paused;
-							var cbModalPlayerCont = $(document).find('#cb_video_js_'+vData.videoid);
-
-							// Making Videos paused if any other video playing in Dom
-							var domVideos = $(document).find('video');
-							if (domVideos.length > 0){
-								for (var i = 0 ; i < domVideos.length ; i++) {
-									var id = $(domVideos[i]).attr('id');
-									var video_id = id.split('_');
-									video_id = video_id[3];
-									if (vData.videoid !== video_id){
-										$(domVideos[i])[0].pause();
-									}
-								}
-							}
-
-							if (isPlaying){
-								clearInterval(modalPlayerInterval);
-							}
-						}, 300);
-					}else if(data.failure){
-						$('.my-modal-content').html('<div class="alert alert-warning">'+data.message+'</div>');
-					}
-				}
-			});
-		}
-
 		this.getPlayerEl = function(videoid){
 			var player = $(document).find('.cb_video_js_'+videoid+'-dimensions');
 			if (player){

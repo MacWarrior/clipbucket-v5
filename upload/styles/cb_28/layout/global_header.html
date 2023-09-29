@@ -21,7 +21,6 @@
 		<meta name="msapplication-TileImage" content="{get_website_favicon_path()}">
 		<meta name="msapplication-TileColor" content="#ffffff">
 		<meta name="theme-color" content="#ffffff">
-		<!-- RSS FEEDS -->
 		{rss_feeds link_tag=true}
 		<meta name="keywords" content="{$Cbucket->configs.keywords}">
 		<meta name="description" content="{$Cbucket->configs.description}">
@@ -40,7 +39,6 @@
             var lang_unsubscribe = "{lang code='unsubscribe'}";
 			var fastQitems = "{$got_qlitems}";
 			var pageNow = "{$smarty.const.THIS_PAGE}";
-
 		</script>
 
 		{if $Cbucket->JSArray}
