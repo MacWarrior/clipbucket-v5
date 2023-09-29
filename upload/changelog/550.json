@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"249",
+  "revision":"250",
   "status":"dev",
   "detail":[
     {
@@ -129,6 +129,7 @@
         ,"Update VideoJS Player to version 2.0.0"
         ,"Implement video playback speed"
         ,"Implement HLS video quality switch"
+        ,"Fix typo in file name"
       ]
     },
     {
