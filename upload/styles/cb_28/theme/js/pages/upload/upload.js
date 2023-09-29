@@ -89,6 +89,7 @@ $(document).ready(function(){
                     singleFieldNode: $(oneUploadForm).find('#tags'+ index),
                     animate:true,
                     caseSensitive:false,
+                    availableTags: available_tags,
                     beforeTagAdded: function (event,info) {
                         if (info.tagLabel.length <= 2) {
                             if (!alert_shown) {

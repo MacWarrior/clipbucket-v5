@@ -88,6 +88,7 @@
                         singleFieldNode: $(oneUploadForm).find('#tags'+ index),
                         animate:true,
                         caseSensitive:false,
+                        availableTags: available_tags,
                         beforeTagAdded: function (event,info) {
                             if (info.tagLabel.length <= 2) {
                                 if (!alert_shown) {
@@ -455,13 +456,6 @@
             });
         });
 
-        $('#list_tags').tagit({
-            singleField:true,
-            fieldName:"collection_tags",
-            readOnly:false,
-            singleFieldNode:$('#collection_tags'),
-            animate:true,
-            caseSensitive:false
-        });
+        init_tags('collection_tags', available_collection_tags);
     });
 })(window);
