@@ -8,7 +8,7 @@ $userquery->logincheck('allow_video_upload', true);
 
 subtitle('upload');
 
-if( empty($Upload->get_upload_options()) ) {
+if (empty($Upload->get_upload_options())) {
     e(lang('video_upload_disabled'));
     $Cbucket->show_page = false;
     display_it();
@@ -27,15 +27,19 @@ assign('step', $step);
 assign('extensions', $Cbucket->get_extensions('video'));
 subtitle(lang('upload'));
 
-if(in_dev()){
+if (in_dev()) {
     $min_suffixe = '';
 } else {
     $min_suffixe = '.min';
 }
-$Cbucket->addJS(['tag-it'.$min_suffixe.'.js' => 'admin']);
-$Cbucket->addJS(['pages/upload/upload'.$min_suffixe.'.js' => 'admin']);
-$Cbucket->addCSS(['jquery.tagit'.$min_suffixe.'.css' => 'admin']);
-$Cbucket->addCSS(['tagit.ui-zendesk'.$min_suffixe.'.css' => 'admin']);
+$Cbucket->addJS([
+    'tag-it' . $min_suffixe . '.js'                            => 'admin',
+    'pages/upload/upload' . $min_suffixe . '.js'               => 'admin'
+]);
+$Cbucket->addCSS([
+    'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
+    'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
+]);
 
 template_files('upload.html');
 display_it();

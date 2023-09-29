@@ -81,12 +81,23 @@
                         $(oneUploadForm).find('.savePhotoDetails').removeAttr('disabled');
                     }
 
+                    var alert_shown  = false;
                     $(oneUploadForm).find('#list_tags_'+ index).tagit({
                         singleField:true,
                         readOnly:false,
                         singleFieldNode: $(oneUploadForm).find('#tags'+ index),
                         animate:true,
-                        caseSensitive:false
+                        caseSensitive:false,
+                        beforeTagAdded: function (event,info) {
+                            if (info.tagLabel.length <= 2) {
+                                if (!alert_shown) {
+                                    alert_shown = true;
+                                    alert(tag_too_short);
+                                }
+                                return false;
+                            }
+                            alert_shown = false;
+                        }
                     });
 
                     wrapperDiv.appendChild(oneUploadForm);

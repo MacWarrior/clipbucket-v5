@@ -452,9 +452,7 @@ class CBvideo extends CBCategory
             } else {
                 $db->update(tbl('video'), $query_field, $query_val, ' videoid=\'' . $vid . '\'');
 
-                if (!empty($array['tags'])) {
-                    Tags::saveTags($array['tags'], 'video', $vid);
-                }
+                Tags::saveTags($array['tags'], 'video', $vid);
 
                 cb_do_action('update_video', [
                     'object_id' => $vid,
@@ -510,6 +508,8 @@ class CBvideo extends CBCategory
                     }
                 }
 
+                //Remove tags
+                \Tags::saveTags('', 'video', $vdetails['videoid']);
                 //Finally Removing Database entry of video
                 $db->execute('DELETE FROM ' . tbl('video') . ' WHERE videoid=\'' . mysql_clean($vid) . '\'');
                 //Removing Video From Playlist

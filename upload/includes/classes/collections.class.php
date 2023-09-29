@@ -1123,6 +1123,9 @@ class Collections extends CBCategory
             }
             $db->update(tbl($this->section_tbl), ['collection_id_parent'], [$collection_id_parent], ' collection_id_parent = ' . $cid);
 
+            //Remove tags
+            \Tags::saveTags('', 'collection', $cid);
+
             $db->delete(tbl($this->items), ['collection_id'], [$cid]);
             $this->delete_thumbs($cid);
             $db->delete(tbl($this->section_tbl), ['collection_id'], [$cid]);

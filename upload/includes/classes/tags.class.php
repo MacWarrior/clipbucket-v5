@@ -114,38 +114,41 @@ class Tags
                 return false;
         }
         global $db;
-        $sql_id_type = 'SELECT id_tag_type
-                   FROM ' . tbl('tags_type') . '
-                   WHERE name LIKE \'' . $object_type . '\'';
-        $res = $db->_select($sql_id_type);
-        if (!empty($res)) {
-            $id_type = $res[0]['id_tag_type'];
-        } else {
-            e(lang('unknown_tag_type'));
-            return false;
-        }
-        $sql_insert_tag = 'INSERT IGNORE INTO ' . tbl('tags') . ' (id_tag_type, name) (SELECT ' . mysql_clean($id_type) . ', jsontable.tags
-                          FROM JSON_TABLE(CONCAT(\'["\', REPLACE(LOWER(\'' . mysql_clean($tags) . '\'), \',\', \'","\'), \'"]\'), \'$[*]\' COLUMNS (`tags` TEXT PATH \'$\')) jsontable)';
-        if (!$db->execute($sql_insert_tag, 'insert')) {
-            e(lang('error_inserting_tags'));
-            return false;
-        }
-
         $sql_delete_link = 'DELETE FROM ' . tbl($table_tag) . ' WHERE ' . $id_field . ' = ' . mysql_clean($object_id);
         if (!$db->execute($sql_delete_link, 'delete')) {
             e(lang('error_delete_linking_tags'));
             return false;
         }
+        if (!empty($tags)) {
+            $sql_id_type = 'SELECT id_tag_type
+                       FROM ' . tbl('tags_type') . '
+                       WHERE name LIKE \'' . $object_type . '\'';
+            $res = $db->_select($sql_id_type);
+            if (!empty($res)) {
+                $id_type = $res[0]['id_tag_type'];
+            } else {
+                e(lang('unknown_tag_type'));
+                return false;
+            }
+            $sql_insert_tag = 'INSERT IGNORE INTO ' . tbl('tags') . ' (id_tag_type, name) (SELECT ' . mysql_clean($id_type) . ', jsontable.tags
+                          FROM JSON_TABLE(CONCAT(\'["\', REPLACE(LOWER(\'' . mysql_clean($tags) . '\'), \',\', \'","\'), \'"]\'), \'$[*]\' COLUMNS (`tags` TEXT PATH \'$\')) jsontable)';
+            if (!$db->execute($sql_insert_tag, 'insert')) {
+                e(lang('error_inserting_tags'));
+                return false;
+            }
 
-        $sql_link_tag = 'INSERT IGNORE INTO ' . tbl($table_tag) . ' (`id_tag`, `' . $id_field . '`) (
+
+            $sql_link_tag = 'INSERT IGNORE INTO ' . tbl($table_tag) . ' (`id_tag`, `' . $id_field . '`) (
             SELECT T.id_tag, ' . mysql_clean($object_id) . '
             FROM JSON_TABLE(CONCAT(\'["\', REPLACE(LOWER(\'' . mysql_clean($tags) . '\'), \',\', \'","\'), \'"]\'), \'$[*]\' COLUMNS (`tags` TEXT PATH \'$\')) jsontable
             INNER JOIN ' . tbl('tags') . ' AS T ON T.name = LOWER(jsontable.tags) COLLATE utf8mb4_unicode_520_ci AND T.id_tag_type = ' . mysql_clean($id_type) . '
         )';
-        if (!$db->execute($sql_link_tag, 'insert')) {
-            e(lang('error_linking_tags'));
-            return false;
+            if (!$db->execute($sql_link_tag, 'insert')) {
+                e(lang('error_linking_tags'));
+                return false;
+            }
         }
+
 
         return true;
     }

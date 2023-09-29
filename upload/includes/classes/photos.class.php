@@ -792,6 +792,8 @@ class CBPhotos
             if ($orphan == false) {//removing from collection
                 $this->collection->remove_item($photo['photo_id'], $photo['collection_id']);
             }
+            //Remove tags
+            \Tags::saveTags('', 'photo', $photo['photo_id']);
 
             //now removing photo files
             $this->delete_photo_files($photo);
@@ -1298,13 +1300,14 @@ class CBPhotos
                 'invalid_err'   => lang('photo_caption_err')
             ],
             'tags' => [
-                'title'       => lang('photo_tags'),
-                'name'        => 'photo_tags',
-                'type'        => 'hidden',
-                'id'          => 'tags',
-                'value'       => genTags($tags),
-                'required'    => 'no',
-                'invalid_err' => lang('photo_tags_err')
+                'title'             => lang('photo_tags'),
+                'name'              => 'photo_tags',
+                'type'              => 'hidden',
+                'id'                => 'tags',
+                'value'             => genTags($tags),
+                'required'          => 'no',
+                'invalid_err'       => lang('photo_tags_err'),
+                'validate_function' => 'genTags'
             ],
             'collection' => [
                 'title'       => lang('collection'),

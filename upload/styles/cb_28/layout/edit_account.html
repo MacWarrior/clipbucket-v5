@@ -345,6 +345,7 @@
 </div>
 
 <script>
+    var available_tags = JSON.parse('{$available_tags|json_encode}');
     $(document).ready(function(){
         $('#dob').datepicker({
             showOtherMonths: true,
