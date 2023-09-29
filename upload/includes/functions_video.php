@@ -1708,7 +1708,9 @@ function remove_empty_directory($path, string $stop_path)
  */
 function clean_orphan_files($file)
 {
-    if (in_array($file['video'], AdminTool::getTemp())) {
+
+    if (($file['type'] == 'photo' && in_array($file['photo'] , AdminTool::getTemp()['photo']))
+    || ( $file['type'] != 'photo' && (in_array($file['video'], AdminTool::getTemp()['video'])))) {
         return;
     }
     $stop_path = null;
@@ -1736,6 +1738,10 @@ function clean_orphan_files($file)
         case 'subtitle':
             unlink($file['data']);
             $stop_path = SUBTITLES_DIR;
+            break;
+        case 'photo':
+            unlink($file['data']);
+            $stop_path = PHOTOS_DIR;
             break;
     }
     remove_empty_directory(dirname($file['data']), $stop_path);
