@@ -152,6 +152,18 @@ class AdminTool
         $videos = $db->select(tbl('video'), '*', ' status LIKE \'Successful\'');
         self::executeTool($id_tool, $videos, 'update_duration');
     }
+    /**
+     * check videos duration which have duration at 0
+     * @param $id_tool
+     * @return void
+     * @throws \Exception
+     */
+    public static function repairVideoDuration($id_tool)
+    {
+        global $db;
+        $videos = $db->select(tbl('video'), '*', ' status LIKE \'Successful\' AND duration = 0');
+        self::executeTool($id_tool, $videos, 'update_duration');
+    }
 
     /**
      * check videos duration
