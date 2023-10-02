@@ -4,7 +4,7 @@
 	Description: Allow to add external videos from URL
 	Author: Oxygenz
     Author Website: https://oxygenz.fr
-    Version: 1.0.3
+    Version: 1.0.4
 	ClipBucket Version: 5.5.0
 	Website: https://github.com/MacWarrior/clipbucket-v5/
 */
@@ -58,6 +58,7 @@ class oxygenz_remote_play {
      */
     private function register_custom_upload_field()
     {
+        global $cb_columns;
         $link_vid_field_array['remote_play_url'] = [
             'title'		        => lang(self::$lang_prefix.'input_url'),
             'name'		        => 'remote_play_url',
@@ -70,6 +71,8 @@ class oxygenz_remote_play {
         ];
 
         register_custom_upload_field($link_vid_field_array);
+
+        $cb_columns->object('videos')->add_column('remote_play_url');
     }
 
     private function register_custom_video_file_funcs(){

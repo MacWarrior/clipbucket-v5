@@ -113,7 +113,7 @@ class CB_video_js
     public static function getDefaultVideo($video_files)
     {
         global $myquery;
-        if (!empty($video_files)) {
+        if (!empty($video_files) && is_array($video_files)) {
             $res = [];
             foreach ($video_files as $file) {
                 $res[] = self::getVideoQualityFromFilePath($file);
