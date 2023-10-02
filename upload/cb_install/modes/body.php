@@ -17,7 +17,7 @@
             <li><a href="https://github.com/MacWarrior/clipbucket-v5/issues" target="_blank">Bug Report</a></li>
         </ul>
     </div>
-    <p></p> <span id="logo"><span style="color:#09c;">ClipBucket</span> Installer v<?php echo VERSION . ' - Revision ' . REV . ' <i>(' . STATE . ')</i>'; ?></span>
+    <p></p> <span id="logo"><span style="color:#09c;">ClipBucketV5</span> Installer v<?php echo VERSION . ' - Revision ' . REV . ' <i>(' . STATE . ')</i>'; ?></span>
     <p></p>
 </div>
 
