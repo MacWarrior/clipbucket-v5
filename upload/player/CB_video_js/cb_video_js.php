@@ -55,7 +55,7 @@ class CB_video_js
         if( config('enable_advertisement') == 'yes' ){
             $Cbucket->addAllJS([
                 $player_name.'/plugin/ads/videojs-contrib-ads'.$min_suffixe.'.js' => 'player'
-                ,$player_name.'/plugin/ads/videojs.ads.js'.$min_suffixe.'.js' => 'player'
+                ,$player_name.'/plugin/ads/videojs.ads'.$min_suffixe.'.js' => 'player'
                 ,$player_name.'/js/videojs.ima.js' => 'player'
             ]);
 

@@ -8,8 +8,6 @@ $log_file = TEMP_DIR . '/' . $file_name . '_curl_log.cblog';
 //For PHP < 5.3.0
 $dummy_file = TEMP_DIR . '/' . $file_name . '_curl_dummy.cblog';
 
-include("include_functions.php");
-
 if (file_exists($dummy_file)) {
     //Read the data
     $data = file_get_contents($dummy_file);
