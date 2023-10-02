@@ -197,6 +197,6 @@
 </div>
 <div style="height:20px;"> </div>
 <script>
-	var available_tags = JSON.parse('{$available_tags|json_encode}');
+	var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
 </script>
 
