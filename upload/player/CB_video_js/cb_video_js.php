@@ -107,8 +107,12 @@ class CB_video_js
         return $myquery->getVideoResolutionTitleFromHeight($quality);
     }
 
+    /**
+     * @throws Exception
+     */
     public static function getDefaultVideo($video_files)
     {
+        global $myquery;
         if (!empty($video_files)) {
             $res = [];
             foreach ($video_files as $file) {
@@ -118,14 +122,12 @@ class CB_video_js
             $player_default_resolution = config('player_default_resolution');
 
             if (in_array($player_default_resolution, $res)){
-                $quality = $player_default_resolution;
-            } elseif ($player_default_resolution > max($res)) {
-                $quality = 'high';
-            } else {
-                $quality = 'low';
+                return $myquery->getVideoResolutionTitleFromHeight($player_default_resolution);
             }
-
-            return $quality;
+            if ($player_default_resolution > max($res)) {
+                return 'high';
+            }
+           return 'low';
         }
         return false;
     }
