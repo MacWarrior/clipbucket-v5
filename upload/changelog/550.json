@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"254",
+  "revision":"255",
   "status":"dev",
   "detail":[
     {
@@ -127,10 +127,10 @@
         ,"Fix JS error on minified JS file <i>#256</i>"
         ,"Update chromecast plugin compatibility to VideoJS 8.X (Thanks veka-server !)"
         ,"Fix resolution switch button icon"
-        ,"Update VideoJS Player to version 2.0.1"
         ,"Implement video playback speed"
         ,"Implement HLS video quality switch"
         ,"Fix typo in file name"
+        ,"Fix MP4 default quality selector"
       ]
     },
     {
