@@ -206,6 +206,8 @@ class Upload
             $db->insert(tbl('video'),$query_field, $query_val);
             $insert_id = $db->insert_id();
 
+            \Tags::saveTags($array['tags'], 'video', $insert_id);
+
             //logging Upload
             $log_array = [
                 'success'       => 'yes',
@@ -214,6 +216,8 @@ class Upload
                 'details'       => $array['title']
             ];
             insert_log('Uploaded a video', $log_array);
+
+
 
             $db->update(tbl('users'), ['total_videos'], ['|f|total_videos+1'], ' userid=\'' . $userid . '\'');
 
