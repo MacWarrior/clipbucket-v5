@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"251",
+  "revision":"260",
   "status":"dev",
   "detail":[
     {
@@ -77,6 +77,7 @@
         ,"Implement easy tag input (#68)"
         ,"Refactor tags management"
         ,"Hide player and template menus when no choice available"
+        ,"Fix admin tools while using Apache PHP mod"
       ]
     },
     {
@@ -119,17 +120,17 @@
         ,"Add option to enable subtitles"
         ,"Add support for HLS video files"
         ,"Improve video quality selection <i>#230</i> (Thanks joo4mart !)"
-        ,"Update VideoJS to version 8.5.3"
+        ,"Update VideoJS to version 8.6.0"
         ,"Add HLS player default quality option"
         ,"Update resolution plugin compatibility to VideoJS 8.X"
         ,"Add support for CB 4.X commercial version migration"
         ,"Fix JS error on minified JS file <i>#256</i>"
         ,"Update chromecast plugin compatibility to VideoJS 8.X (Thanks veka-server !)"
         ,"Fix resolution switch button icon"
-        ,"Update VideoJS Player to version 2.0.0"
         ,"Implement video playback speed"
         ,"Implement HLS video quality switch"
         ,"Fix typo in file name"
+        ,"Fix MP4 default quality selector"
       ]
     },
     {
@@ -214,7 +215,7 @@
         ,"Implement plugin compatibility check"
         ,"Update plugin management interface"
         ,"Refactor custom_video_file_funcs"
-        ,"Implement Oxygenz - Remote Play - 1.0.3"
+        ,"Implement Oxygenz - Remote Play - 1.0.4"
         ,"Implement SQL update system"
         ,"Update anchor mechanism"
         ,"Implement Oxygenz - Plugin example - 1.0.0"

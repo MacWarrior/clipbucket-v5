@@ -1,6 +1,6 @@
 /**
  * @license
- * Video.js 8.5.3 <http://videojs.com/>
+ * Video.js 8.6.0 <http://videojs.com/>
  * Copyright Brightcove, Inc. <https://www.brightcove.com/>
  * Available under Apache License Version 2.0
  * <https://github.com/videojs/video.js/blob/main/LICENSE>
@@ -28,7 +28,7 @@ import { getId3Offset } from '@videojs/vhs-utils/es/id3-helpers';
 import { detectContainerForBytes, isLikelyFmp4MediaSegment } from '@videojs/vhs-utils/es/containers';
 import { ONE_SECOND_IN_TS } from 'mux.js/lib/utils/clock';
 
-var version$6 = "8.5.3";
+var version$6 = "8.6.0";
 
 /**
  * An Object that contains lifecycle hooks as keys which point to an array
@@ -164,22 +164,30 @@ let history = [];
  * Log messages to the console and history based on the type of message
  *
  * @private
- * @param  {string} type
+ * @param  {string} name
  *         The name of the console method to use.
  *
- * @param  {Array} args
+ * @param  {Object} log
  *         The arguments to be passed to the matching console method.
+ *
+ * @param {string} [styles]
+ *        styles for name
  */
-const LogByTypeFactory = (name, log) => (type, level, args) => {
+const LogByTypeFactory = (name, log, styles) => (type, level, args) => {
   const lvl = log.levels[level];
   const lvlRegExp = new RegExp(`^(${lvl})$`);
+  let resultName = name;
   if (type !== 'log') {
     // Add the type to the front of the message when it's not "log".
     args.unshift(type.toUpperCase() + ':');
   }
+  if (styles) {
+    resultName = `%c${name}`;
+    args.unshift(styles);
+  }
 
   // Add console prefix after adding to history.
-  args.unshift(name + ':');
+  args.unshift(resultName + ':');
 
   // Add a clone of the args at this point to history.
   if (history) {
@@ -213,7 +221,7 @@ const LogByTypeFactory = (name, log) => (type, level, args) => {
   }
   fn[Array.isArray(args) ? 'apply' : 'call'](window$1.console, args);
 };
-function createLogger$1(name) {
+function createLogger$1(name, delimiter = ':', styles = '') {
   // This is the private tracking variable for logging level.
   let level = 'info';
 
@@ -246,10 +254,10 @@ function createLogger$1(name) {
   };
 
   // This is the logByType helper that the logging methods below use
-  logByType = LogByTypeFactory(name, log);
+  logByType = LogByTypeFactory(name, log, styles);
 
   /**
-   * Create a new sublogger which chains the old name to the new name.
+   * Create a new subLogger which chains the old name to the new name.
    *
    * For example, doing `videojs.log.createLogger('player')` and then using that logger will log the following:
    * ```js
@@ -257,11 +265,35 @@ function createLogger$1(name) {
    *  // > VIDEOJS: player: foo
    * ```
    *
-   * @param {string} name
+   * @param {string} subName
    *        The name to add call the new logger
+   * @param {string} [subDelimiter]
+   *        Optional delimiter
+   * @param {string} [subStyles]
+   *        Optional styles
    * @return {Object}
    */
-  log.createLogger = subname => createLogger$1(name + ': ' + subname);
+  log.createLogger = (subName, subDelimiter, subStyles) => {
+    const resultDelimiter = subDelimiter !== undefined ? subDelimiter : delimiter;
+    const resultStyles = subStyles !== undefined ? subStyles : styles;
+    const resultName = `${name} ${resultDelimiter} ${subName}`;
+    return createLogger$1(resultName, resultDelimiter, resultStyles);
+  };
+
+  /**
+   * Create a new logger.
+   *
+   * @param {string} newName
+   *        The name for the new logger
+   * @param {string} [newDelimiter]
+   *        Optional delimiter
+   * @param {string} [newStyles]
+   *        Optional styles
+   * @return {Object}
+   */
+  log.createNewLogger = (newName, newDelimiter, newStyles) => {
+    return createLogger$1(newName, newDelimiter, newStyles);
+  };
 
   /**
    * Enumeration of available logging levels, where the keys are the level names
@@ -298,7 +330,7 @@ function createLogger$1(name) {
    * If a string matching a key from {@link module:log.levels} is provided, acts
    * as a setter.
    *
-   * @param  {string} [lvl]
+   * @param  {'all'|'debug'|'info'|'warn'|'error'|'off'} [lvl]
    *         Pass a valid level to set a new logging level.
    *
    * @return {string}
@@ -26295,7 +26327,7 @@ videojs.registerPlugin('qualityLevels', qualityLevels); // Include the version n
 
 qualityLevels.VERSION = version$5;
 
-/*! @name @videojs/http-streaming @version 3.5.3 @license Apache-2.0 */
+/*! @name @videojs/http-streaming @version 3.6.0 @license Apache-2.0 */
 
 /**
  * @file resolve-url.js - Handling how URLs are resolved and manipulated
@@ -26351,6 +26383,26 @@ function createTimeRanges(...args) {
   const context = videojs.time || videojs;
   const fn = context.createTimeRanges || context.createTimeRanges;
   return fn.apply(context, args);
+}
+/**
+ * Converts any buffered time range to a descriptive string
+ *
+ * @param {TimeRanges} buffered - time ranges
+ * @return {string} - descriptive string
+ */
+
+function prettyBuffered(buffered) {
+  let result = '';
+  for (let i = 0; i < buffered.length; i++) {
+    const start = buffered.start(i);
+    const end = buffered.end(i);
+    const duration = end - start;
+    if (result.length) {
+      result += '\n';
+    }
+    result += `[${duration}](${start} -> ${end})`;
+  }
+  return result || 'empty';
 }
 
 /**
@@ -39180,14 +39232,6 @@ const transmuxAndNotify = ({
           isMuxed
         });
         trackInfoFn = null;
-        if (probeResult.hasAudio && !isMuxed) {
-          audioStartFn(probeResult.audioStart);
-        }
-        if (probeResult.hasVideo) {
-          videoStartFn(probeResult.videoStart);
-        }
-        audioStartFn = null;
-        videoStartFn = null;
       }
       finish();
     }
@@ -40958,6 +41002,7 @@ const segmentInfoString = segmentInfo => {
   return `${name} [${seq + index}/${seq + segmentLen}]` + (hasPartIndex ? ` part [${partIndex}/${zeroBasedPartCount}]` : '') + ` segment start/end [${segment.start} => ${segment.end}]` + (hasPartIndex ? ` part start/end [${part.start} => ${part.end}]` : '') + ` startOfSegment [${startOfSegment}]` + ` duration [${duration}]` + ` timeline [${timeline}]` + ` selected by [${selection}]` + ` playlist [${id}]`;
 };
 const timingInfoPropertyForMedia = mediaType => `${mediaType}TimingInfo`;
+const getBufferedEndOrFallback = (buffered, fallback) => buffered.length ? buffered.end(buffered.length - 1) : fallback;
 /**
  * Returns the timestamp offset to use for the segment.
  *
@@ -40969,6 +41014,8 @@ const timingInfoPropertyForMedia = mediaType => `${mediaType}TimingInfo`;
  *        The estimated segment start
  * @param {TimeRange[]} buffered
  *        The loader's buffer
+ * @param {boolean} calculateTimestampOffsetForEachSegment
+ *        Feature flag to always calculate timestampOffset
  * @param {boolean} overrideCheck
  *        If true, no checks are made to see if the timestamp offset value should be set,
  *        but sets it directly to a value.
@@ -40983,14 +41030,18 @@ const timestampOffsetForSegment = ({
   currentTimeline,
   startOfSegment,
   buffered,
+  calculateTimestampOffsetForEachSegment,
   overrideCheck
 }) => {
-  // Check to see if we are crossing a discontinuity to see if we need to set the
+  if (calculateTimestampOffsetForEachSegment) {
+    return getBufferedEndOrFallback(buffered, startOfSegment);
+  } // Check to see if we are crossing a discontinuity to see if we need to set the
   // timestamp offset on the transmuxer and source buffer.
   //
   // Previously, we changed the timestampOffset if the start of this segment was less than
   // the currently set timestampOffset, but this isn't desirable as it can produce bad
   // behavior, especially around long running live streams.
+
   if (!overrideCheck && segmentTimeline === currentTimeline) {
     return null;
   } // When changing renditions, it's possible to request a segment on an older timeline. For
@@ -41026,7 +41077,7 @@ const timestampOffsetForSegment = ({
   // content post discontinuity should line up with the buffered end as if it were
   // time 0 for the new content.
 
-  return buffered.length ? buffered.end(buffered.length - 1) : startOfSegment;
+  return getBufferedEndOrFallback(buffered, startOfSegment);
 };
 /**
  * Returns whether or not the loader should wait for a timeline change from the timeline
@@ -41314,6 +41365,7 @@ class SegmentLoader extends videojs.EventTarget {
     this.shouldSaveSegmentTimingInfo_ = true;
     this.parse708captions_ = settings.parse708captions;
     this.useDtsForTimestampOffset_ = settings.useDtsForTimestampOffset;
+    this.calculateTimestampOffsetForEachSegment_ = settings.calculateTimestampOffsetForEachSegment;
     this.captionServices_ = settings.captionServices;
     this.exactManifestTimings = settings.exactManifestTimings;
     this.addMetadataToTextTrack = settings.addMetadataToTextTrack; // private instance variables
@@ -42222,6 +42274,7 @@ class SegmentLoader extends videojs.EventTarget {
       currentTimeline: this.currentTimeline_,
       startOfSegment,
       buffered: this.buffered_(),
+      calculateTimestampOffsetForEachSegment: this.calculateTimestampOffsetForEachSegment_,
       overrideCheck
     });
     const audioBufferedEnd = lastBufferedEnd(this.sourceUpdater_.audioBuffered());
@@ -43859,12 +43912,15 @@ const pushQueue = ({
   shiftQueue(type, sourceUpdater);
 };
 const onUpdateend = (type, sourceUpdater) => e => {
-  // Although there should, in theory, be a pending action for any updateend receieved,
+  const buffered = sourceUpdater[`${type}Buffered`]();
+  const bufferedAsString = prettyBuffered(buffered);
+  sourceUpdater.logger_(`${type} source buffer update end. Buffered: \n`, bufferedAsString); // Although there should, in theory, be a pending action for any updateend receieved,
   // there are some actions that may trigger updateend events without set definitions in
   // the w3c spec. For instance, setting the duration on the media source may trigger
   // updateend events on source buffers. This does not appear to be in the spec. As such,
   // if we encounter an updateend without a corresponding pending action from our queue
   // for that source buffer type, process the next action.
+
   if (sourceUpdater.queuePending[type]) {
     const doneFn = sourceUpdater.queuePending[type].doneFn;
     sourceUpdater.queuePending[type] = null;
@@ -47082,6 +47138,7 @@ class PlaylistController extends videojs.EventTarget {
       vhs: this.vhs_,
       parse708captions: options.parse708captions,
       useDtsForTimestampOffset: options.useDtsForTimestampOffset,
+      calculateTimestampOffsetForEachSegment: options.calculateTimestampOffsetForEachSegment,
       captionServices,
       mediaSource: this.mediaSource,
       currentTime: this.tech_.currentTime.bind(this.tech_),
@@ -49383,9 +49440,9 @@ const initPlugin = function (player, options) {
 const reloadSourceOnError = function (options) {
   initPlugin(this, options);
 };
-var version$4 = "3.5.3";
+var version$4 = "3.6.0";
 var version$3 = "7.0.0";
-var version$2 = "1.1.1";
+var version$2 = "1.2.2";
 var version$1 = "7.1.0";
 var version = "4.0.1";
 
@@ -49945,6 +50002,7 @@ class VhsHandler extends Component {
     this.options_.useForcedSubtitles = this.options_.useForcedSubtitles || false;
     this.options_.useNetworkInformationApi = this.options_.useNetworkInformationApi || false;
     this.options_.useDtsForTimestampOffset = this.options_.useDtsForTimestampOffset || false;
+    this.options_.calculateTimestampOffsetForEachSegment = this.options_.calculateTimestampOffsetForEachSegment || false;
     this.options_.customTagParsers = this.options_.customTagParsers || [];
     this.options_.customTagMappers = this.options_.customTagMappers || [];
     this.options_.cacheEncryptionKeys = this.options_.cacheEncryptionKeys || false;
@@ -49981,7 +50039,7 @@ class VhsHandler extends Component {
 
     this.options_.enableLowInitialPlaylist = this.options_.enableLowInitialPlaylist && this.options_.bandwidth === Config.INITIAL_BANDWIDTH; // grab options passed to player.src
 
-    ['withCredentials', 'useDevicePixelRatio', 'limitRenditionByPlayerDimensions', 'bandwidth', 'customTagParsers', 'customTagMappers', 'cacheEncryptionKeys', 'playlistSelector', 'initialPlaylistSelector', 'bufferBasedABR', 'liveRangeSafeTimeDelta', 'llhls', 'useForcedSubtitles', 'useNetworkInformationApi', 'useDtsForTimestampOffset', 'exactManifestTimings', 'leastPixelDiffSelector'].forEach(option => {
+    ['withCredentials', 'useDevicePixelRatio', 'limitRenditionByPlayerDimensions', 'bandwidth', 'customTagParsers', 'customTagMappers', 'cacheEncryptionKeys', 'playlistSelector', 'initialPlaylistSelector', 'bufferBasedABR', 'liveRangeSafeTimeDelta', 'llhls', 'useForcedSubtitles', 'useNetworkInformationApi', 'useDtsForTimestampOffset', 'calculateTimestampOffsetForEachSegment', 'exactManifestTimings', 'leastPixelDiffSelector'].forEach(option => {
       if (typeof this.source_[option] !== 'undefined') {
         this.options_[option] = this.source_[option];
       }
