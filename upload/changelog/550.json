@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"251",
+  "revision":"252",
   "status":"dev",
   "detail":[
     {
@@ -77,6 +77,7 @@
         ,"Implement easy tag input (#68)"
         ,"Refactor tags management"
         ,"Hide player and template menus when no choice available"
+        ,"Fix admin tools while using Apache PHP mod"
       ]
     },
     {
