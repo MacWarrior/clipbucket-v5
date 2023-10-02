@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"253",
+  "revision":"254",
   "status":"dev",
   "detail":[
     {
@@ -120,14 +120,14 @@
         ,"Add option to enable subtitles"
         ,"Add support for HLS video files"
         ,"Improve video quality selection <i>#230</i> (Thanks joo4mart !)"
-        ,"Update VideoJS to version 8.5.3"
+        ,"Update VideoJS to version 8.6.0"
         ,"Add HLS player default quality option"
         ,"Update resolution plugin compatibility to VideoJS 8.X"
         ,"Add support for CB 4.X commercial version migration"
         ,"Fix JS error on minified JS file <i>#256</i>"
         ,"Update chromecast plugin compatibility to VideoJS 8.X (Thanks veka-server !)"
         ,"Fix resolution switch button icon"
-        ,"Update VideoJS Player to version 2.0.0"
+        ,"Update VideoJS Player to version 2.0.1"
         ,"Implement video playback speed"
         ,"Implement HLS video quality switch"
         ,"Fix typo in file name"
