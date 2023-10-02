@@ -140,6 +140,25 @@ function check_remote_url()
                         .attr("onClick","doUpdateVideo('#uploadForm"+remoteObjID+"','"+remoteObjID+"')")
                         .after('<input type="hidden" name="videoid" value="'+vid+'" id="videoid" />')
                         .after('<input type="hidden" name="updateVideo" value="yes" id="updateVideo" />');
+                    var alert_shown = false;
+                    $('#remoteForm').find('#list_tags').tagit({
+                        singleField:true,
+                        readOnly:false,
+                        singleFieldNode: $('#remoteForm').find('#tags'),
+                        animate:true,
+                        caseSensitive:false,
+                        availableTags: available_tags,
+                        beforeTagAdded: function (event,info) {
+                            if (info.tagLabel.length <= 2) {
+                                if (!alert_shown) {
+                                    alert_shown = true;
+                                    alert(tag_too_short);
+                                }
+                                return false;
+                            }
+                            alert_shown = false;
+                        }
+                    });
                 },'text');
         }
     });
