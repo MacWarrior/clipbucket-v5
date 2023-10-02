@@ -1768,38 +1768,32 @@
 				},
 				success: function (data) {
 					if( data.success ){
-						var videoLink = data.video_link;
-						var vData = data.video_details;
-						$('.my-modal-content').attr('id',vData.videoid).html(data.video);
+						let vData = data.video_details;
 
-						var cbModalPlayer = $(document).find('#cb_video_js_'+vData.videoid+'_html5_api');
-						cbModalPlayer = cbModalPlayer[0];
-
-						var modalPlayerInterval = setInterval(function(){
-							if (!navigator.userAgent.match(/Android/i)){
-								cbModalPlayer.play();
-								$(cbModalPlayerCont).find('.uploaderName').append('<a href="'+videoLink+'" title="Watch Video Page" style="margin:-2px 5px 0 0;"><i class="glyphicon glyphicon-log-in pull-right" style="font-size:20px;color:#fff;"></i></a>');
+						$('.my-modal-content').attr('id',vData.videoid).html(data.video).promise().done(function(){
+							let videoplayer = $('.my-modal-content').find('video')[0];
+							let playPromise = videoplayer.play();
+							if (playPromise !== null){
+								playPromise.catch(() => {
+									videoplayer.play();
+									document.querySelector('.player-holder video').addEventListener( "loadedmetadata", function (e) {
+										adaptRatioPlayer();
+									});
+								})
 							}
-							var isPlaying = !cbModalPlayer.paused;
-							var cbModalPlayerCont = $(document).find('#cb_video_js_'+vData.videoid);
 
-							// Making Videos paused if any other video playing in Dom
-							var domVideos = $(document).find('video');
+							let domVideos = $(document).find('video');
 							if (domVideos.length > 0){
-								for (var i = 0 ; i < domVideos.length ; i++) {
-									var id = $(domVideos[i]).attr('id');
-									var video_id = id.split('_');
+								for (let i = 0 ; i < domVideos.length ; i++) {
+									let id = $(domVideos[i]).attr('id');
+									let video_id = id.split('_');
 									video_id = video_id[3];
 									if (vData.videoid !== video_id){
 										$(domVideos[i])[0].pause();
 									}
 								}
 							}
-
-							if (isPlaying){
-								clearInterval(modalPlayerInterval);
-							}
-						}, 300);
+						});
 					}else if(data.failure){
 						$('.my-modal-content').html('<div class="alert alert-warning">'+data.message+'</div>');
 					}

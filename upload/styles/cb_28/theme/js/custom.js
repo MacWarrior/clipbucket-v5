@@ -219,7 +219,7 @@ $(document).ready(function()
 
 function homePageVideos(qlist_items)
 {
-    console.log("Hey there Pumpkin! Looks like you really like what we do, hence trying to look under the hood. Happy sneaking buddy! Drop us an email for any questions : info@clipbucket.com")
+    console.log("Greetings Adventurers ! Having a look under the hood ? Happy sneaking buddy ! Drop us an email for any questions : contact+clipbucket@oxygenz.fr")
     $('#container').on("click","#recent_load_more, #featured_load_more",function()
     {
         var loadLink = '/ajax/home.php',

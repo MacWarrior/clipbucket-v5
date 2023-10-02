@@ -1,22 +1,22 @@
-<!-- This Condition is for view photo ajax mode--> 
+{* This Condition is for view photo ajax mode *}
 {if (!isset($smarty.get['moto']) || $smarty.get['moto'] != 'ajax')}
 	{include file="$style_dir/global_header.html"}
 {/if}
 	<body>
     	<div id="container">
 			{ANCHOR place="before_content"}
-			<!-- This Condition is added for view photo ajx based request -->
+			{* This Condition is added for view photo ajx based request *}
 			{if (!isset($smarty.get['moto']) || $smarty.get['moto'] != 'ajax')}
            		 {include file="$style_dir/header.html"}
         	{/if}
-			<!-- Message -->
+			{* Message *}
 			{include file="$style_dir/message.html"}
 			
 			{foreach from=$template_files item=file}
 			    {include_template_file file=$file}
 			{/foreach}
 
-			<!-- This Condition is for view photo ajax mode--> 
+			{* This Condition is for view photo ajax mode *}
 			{if (!isset($smarty.get['moto']) || $smarty.get['moto'] != 'ajax')}
 				{include file="$style_dir/footer.html" }
 			{/if}
