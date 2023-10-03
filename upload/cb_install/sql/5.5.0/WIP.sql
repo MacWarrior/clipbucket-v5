@@ -16,6 +16,6 @@ SET @language_key = 'repair_video_duration_description' COLLATE utf8mb4_unicode_
 INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);
 SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
-VALUES (@id_language_key, 'Repair duration of videos with duration which is 0', @language_id_eng);
+VALUES (@id_language_key, 'Repair duration of videos with 0 duration', @language_id_eng);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES (@id_language_key, 'Corrige la durée des vidéos ayant une durée de 0', @language_id_fra);
