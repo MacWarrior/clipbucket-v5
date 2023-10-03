@@ -4,7 +4,7 @@
 	Description: Official CBV5 player
 	Author: Oxygenz
     Author Website: https://clipbucket.oxygenz.fr/
-	Version: 2.0.0
+	Version: 2.0.1
     Released: 2023-09-20
     Website: https://github.com/MacWarrior/clipbucket-v5
  */
@@ -55,15 +55,15 @@ class CB_video_js
         if( config('enable_advertisement') == 'yes' ){
             $Cbucket->addAllJS([
                 $player_name.'/plugin/ads/videojs-contrib-ads'.$min_suffixe.'.js' => 'player'
-                ,$player_name.'/plugin/ads/videojs.ads.js'.$min_suffixe.'.js' => 'player'
-                ,$player_name.'/js/videojs.ima.js' => 'player'
+                ,$player_name.'/plugin/ads/videojs.ads'.$min_suffixe.'.js' => 'player'
+                ,$player_name.'/plugin/ads/videojs.ima.js' => 'player'
             ]);
 
             $Cbucket->addAllCSS([
                 $player_name.'/plugin/ads/videojs.ads'.$min_suffixe.'.css' => 'player'
                 ,$player_name.'/plugin/clipbucket/videojs-clipbucket'.$min_suffixe.'.css' => 'player'
                 ,$player_name.'/plugin/resolution/videojs-resolution'.$min_suffixe.'.css' => 'player'
-                ,$player_name.'/css/videojs.ima.css' => 'player'
+                ,$player_name.'/plugin/ads/videojs.ima.css' => 'player'
             ]);
 
         }
@@ -107,9 +107,13 @@ class CB_video_js
         return $myquery->getVideoResolutionTitleFromHeight($quality);
     }
 
+    /**
+     * @throws Exception
+     */
     public static function getDefaultVideo($video_files)
     {
-        if (!empty($video_files)) {
+        global $myquery;
+        if (!empty($video_files) && is_array($video_files)) {
             $res = [];
             foreach ($video_files as $file) {
                 $res[] = self::getVideoQualityFromFilePath($file);
@@ -118,14 +122,12 @@ class CB_video_js
             $player_default_resolution = config('player_default_resolution');
 
             if (in_array($player_default_resolution, $res)){
-                $quality = $player_default_resolution;
-            } elseif ($player_default_resolution > max($res)) {
-                $quality = 'high';
-            } else {
-                $quality = 'low';
+                return $myquery->getVideoResolutionTitleFromHeight($player_default_resolution);
             }
-
-            return $quality;
+            if ($player_default_resolution > max($res)) {
+                return 'high';
+            }
+           return 'low';
         }
         return false;
     }

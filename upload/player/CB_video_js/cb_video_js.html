@@ -5,10 +5,10 @@
 
 <!-- This code is added for Related Videos carousel plugin-->
 {foreach $videos as $video}
-	{$related['imageSrc'] = get_thumb($video,FALSE,'168x105')}
-	{$related['url'] = video_link($video)}
-	{$related['title'] = display_clean($video.title)|truncate:30}
-	{$related_videos[] = $related}
+    {$related['imageSrc'] = get_thumb($video,FALSE,'168x105')}
+    {$related['url'] = video_link($video)}
+    {$related['title'] = display_clean($video.title)|truncate:30}
+    {$related_videos[] = $related}
 {/foreach}
 {$related_videos = json_encode($related_videos)}
 <!-- End -->
@@ -16,115 +16,115 @@
 <script type="text/javascript">
     var lang_by = "{lang code='by'}";
     var lang_quality = "{lang code='quality'}";
-	var video_id = "{$vdata.videoid}";
-	var autoplay = "{config('autoplay_video')}" === 'yes';
-	var video_uploader = "{display_clean($vdata.username)}";
-	var video_title = "{display_clean($vdata.title)}";
+    var video_id = "{$vdata.videoid}";
+    var autoplay = "{config('autoplay_video')}" === 'yes';
+    var video_uploader = "{display_clean($vdata.username)}";
+    var video_title = "{display_clean($vdata.title)}";
 </script>
 
 
 <video playsinline id="cb_video_js_{$vdata.videoid}" class="video-js vjs-default-skin vjs-show-big-play-button-on-pause" height="100%" width="100%" poster="{getThumb vdetails=$vdata size=768x432}" >
-	{foreach $video_files as $file}
-		{if strpos($file, 'no_video.mp4') !== false}
-			<source src='{$file}' type="video/mp4"/>
-		{else}
-			{if $vdata['file_type']=='hls'}
-				<source src='{$file}' type="application/x-mpegURL"/>
-			{else}
-				<source src='{$file}' type="video/mp4" label="{display_clean(CB_video_js::getVideoResolutionTitleFromFilePath($file))}"/>
-			{/if}
+    {foreach $video_files as $file}
+        {if strpos($file, 'no_video.mp4') !== false}
+            <source src='{$file}' type="video/mp4"/>
+        {else}
+            {if $vdata['file_type']=='hls'}
+                <source src='{$file}' type="application/x-mpegURL"/>
+            {else}
+				{$video_resolution = display_clean(CB_video_js::getVideoResolutionTitleFromFilePath($file))}
+                <source src='{$file}' type="video/mp4" res="{$video_resolution}" label="{$video_resolution}"/>
+            {/if}
 
-		{/if}
+        {/if}
     {/foreach}
-	{if config('player_subtitles')}
-		{$subtitles = get_video_subtitles($vdata)}
-		{if $subtitles}
-			{foreach $subtitles as $file}
-				<track kind="captions" src="{$file['url']}" label="{display_clean($file['title'])}" />
-			{/foreach}
-		{/if}
-	{/if}
+    {if config('player_subtitles')}
+        {$subtitles = get_video_subtitles($vdata)}
+        {if $subtitles}
+            {foreach $subtitles as $file}
+                <track kind="captions" src="{$file['url']}" label="{display_clean($file['title'])}" />
+            {/foreach}
+        {/if}
+    {/if}
     <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
 </video>
 
 <script type="text/javascript">
-	//player settings
-	var cb_player_setup = {
-		plugins : { },
-		"techOrder" : ['html5'],
-		"controls": true,
-		"autoplay": autoplay,
-		"preload": "auto",
-		"muted": false,
-		"loop" : false,
-		"fluid": true,
-		"responsive": true,
+    //player settings
+    var cb_player_setup = {
+        plugins : { },
+        "techOrder" : ['html5'],
+        "controls": true,
+        "autoplay": autoplay,
+        "preload": "auto",
+        "muted": false,
+        "loop" : false,
+        "fluid": true,
+        "responsive": true,
 
-		playbackRates: [0.5, 0.75, 1, 1.25, 1.5, 2],
-		controlBar: {
-			children: [
-				"PlayToggle", // Play/Pause
-				"VolumePanel", // Gestion du volume
-				"ProgressControl", // Barre de chargement
-				"RemainingTimeDisplay", // Temps restant
-				"PlaybackRateMenuButton", // Vitesse de lecture
-				"subsCapsButton", // Sous-titres
-				"PictureInPictureToggle", // PictureInPicture
-				"FullscreenToggle" // Plein écran
-			]
-		}
-	};
+        playbackRates: [0.5, 0.75, 1, 1.25, 1.5, 2],
+        controlBar: {
+            children: [
+                "PlayToggle", // Play/Pause
+                "VolumePanel", // Gestion du volume
+                "ProgressControl", // Barre de chargement
+                "RemainingTimeDisplay", // Temps restant
+                "PlaybackRateMenuButton", // Vitesse de lecture
+                "subsCapsButton", // Sous-titres
+                "PictureInPictureToggle", // PictureInPicture
+                "FullscreenToggle" // Plein écran
+            ]
+        }
+    };
 
-	//Setting CallBack
-	var cb_vjs_callback = function(){
+    //Setting CallBack
+    var cb_vjs_callback = function(){
 
         // PLUGIN : Clipbucket - Header
         var header_options = {
-			uploader : video_uploader,
-			videotitle : video_title,
-			videoid : video_id
+            uploader : video_uploader,
+            videotitle : video_title,
+            videoid : video_id
         };
-	    this.clipbucket_header(header_options);
+        this.clipbucket_header(header_options);
 
-		// PLUGIN : Clipbucket - Controlbar Logo
-		if( "{config('control_bar_logo')}" === 'yes' ){
-			var controlbar_logo_options = {
-				branding_logo : "{config('control_bar_logo_url')}",
-				product_link : "{config('player_logo_url')}"
-			};
-			this.clipbucket_controlbar_logo(controlbar_logo_options);
+        // PLUGIN : Clipbucket - Controlbar Logo
+        if( "{config('control_bar_logo')}" === 'yes' ){
+            var controlbar_logo_options = {
+                branding_logo : "{config('control_bar_logo_url')}",
+                product_link : "{config('player_logo_url')}"
+            };
+            this.clipbucket_controlbar_logo(controlbar_logo_options);
         }
 
         // PLUGIN : Clipbucket - Volume
-		this.clipbucket_volume();
+        this.clipbucket_volume();
 
         // PLUGIN : resolution MP4
-		{if $vdata['file_type'] == 'mp4'}
+        {if $vdata['file_type'] == 'mp4'}
         var res_options = {
-            default : "{CB_video_js::getDefaultVideo($video_files)}",
-            dynamicLabel : false
+            default : "{CB_video_js::getDefaultVideo($video_files)}"
         };
         this.videoJsResolutionSwitcher(res_options);
-		{else}
-		this.qualitySelectorHls({
-			displayCurrentQuality: false,
-			vjsIconClass: 'vjs-icon-cog'
-		});
-		{/if}
+        {else}
+        this.qualitySelectorHls({
+            displayCurrentQuality: false,
+            vjsIconClass: 'vjs-icon-cog'
+        });
+        {/if}
 
         {if config('contextual_menu_disabled') === 'yes'}
-		$(".video-js").on("contextmenu",function() {
-			return false;
-		});
-		{/if}
+        $(".video-js").on("contextmenu",function() {
+            return false;
+        });
+        {/if}
 
-		{if config('player_thumbnails') === 'yes'}
-		this.thumbnails({get_player_thumbs_json($vdata)});
-		{/if}
-	}
-	//Initializing
-	$(document).ready(function() {
-		var cb_player = new videojs('cb_video_js_' + video_id, cb_player_setup, cb_vjs_callback);
-	});
+        {if config('player_thumbnails') === 'yes'}
+        this.thumbnails({get_player_thumbs_json($vdata)});
+        {/if}
+    }
+    //Initializing
+    $(document).ready(function() {
+        var cb_player = new videojs('cb_video_js_' + video_id, cb_player_setup, cb_vjs_callback);
+    });
 </script>
 

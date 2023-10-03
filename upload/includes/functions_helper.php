@@ -241,7 +241,7 @@ function showDevWitch()
  * @param $callback
  * @param bool $ajax
  */
-function sendClientResponseAndContinue($callback, $ajax = true)
+function sendClientResponseAndContinue($callback, bool $ajax = true)
 {
     ob_end_clean();
     ignore_user_abort(true);
@@ -265,7 +265,11 @@ function sendClientResponseAndContinue($callback, $ajax = true)
     if (session_id()) {
         session_write_close();
     }
+
     if ($ajax) {
-        fastcgi_finish_request();
+        // PHP-FPM only
+        if (function_exists('fastcgi_finish_request')) {
+            fastcgi_finish_request();
+        }
     }
 }
