@@ -269,7 +269,8 @@ class AdminTool
 
         $query = 'SELECT file_name FROM ' . tbl('video') . ' WHERE file_name IN (' . implode(', ', $sql_video_file_name) . ')';
         $result = $db->execute($query, 'select');
-        $data = [];
+        $data['video'] = [];
+        $data['photo'] = [];
         if ($result) {
             while ($row = $result->fetch_assoc()) {
                 $data['video'][] = $row['file_name'];
