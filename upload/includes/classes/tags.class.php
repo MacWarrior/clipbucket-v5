@@ -4,6 +4,11 @@ class Tags
 {
     public static function getTags($limit = 'false', $cond = false)
     {
+        $version = get_current_version();
+        if ($version['version'] <= '5.5.0' && ($version['version'] != '5.5.0' || $version['revision'] <= 261)) {
+            e(lang('missing_table'));
+            return [];
+        }
         global $db;
         $query = 'SELECT T.name AS tag, TT.name AS tag_type, T.id_tag, 
         IF(COUNT(CT.id_tag) = 0 AND COUNT(PT.id_tag) = 0 AND COUNT(PLT.id_tag) = 0 AND COUNT(UT.id_tag) = 0 AND COUNT(VT.id_tag) = 0, true, false) AS can_delete
@@ -26,6 +31,11 @@ class Tags
 
     public static function countTags($cond)
     {
+        $version = get_current_version();
+        if ($version['version'] <= '5.5.0' && ($version['version'] != '5.5.0' || $version['revision'] <= 261)) {
+            e(lang('missing_table'));
+            return 0;
+        }
         global $db;
         return $db->count(tbl('tags') . ' T 
         INNER JOIN ' . tbl('tags_type') . ' TT ON TT.id_tag_type = T.id_tag_type 
@@ -43,6 +53,11 @@ class Tags
      */
     public static function deleteTag($id_tag)
     {
+        $version = get_current_version();
+        if ($version['version'] <= '5.5.0' && ($version['version'] != '5.5.0' || $version['revision'] <= 261)) {
+            e(lang('missing_table'));
+            return false;
+        }
         global $db;
         $query = 'SELECT 
                     IF(COUNT(CT.id_tag) = 0 AND COUNT(PT.id_tag) = 0 AND COUNT(PLT.id_tag) = 0 AND COUNT(UT.id_tag) = 0 AND COUNT(VT.id_tag) = 0, true, false) AS can_delete
@@ -71,6 +86,11 @@ class Tags
      */
     public static function updateTag($name, $id_tag):bool
     {
+        $version = get_current_version();
+        if ($version['version'] <= '5.5.0' && ($version['version'] != '5.5.0' || $version['revision'] <= 261)) {
+            e(lang('missing_table'));
+            return false;
+        }
         global $db;
         if (strlen(trim($name)) <= 2) {
             e(lang('tag_too_short'),'warning');
@@ -88,6 +108,11 @@ class Tags
 
     public static function saveTags(string $tags, string $object_type, int $object_id)
     {
+        $version = get_current_version();
+        if ($version['version'] <= '5.5.0' && ($version['version'] != '5.5.0' || $version['revision'] <= 261)) {
+            e(lang('missing_table'));
+            return false;
+        }
         switch ($object_type) {
             case 'video':
                 $id_field = 'id_video';
@@ -156,6 +181,11 @@ class Tags
     public static function fill_auto_complete_tags($object_type): array
     {
         global $db;
+        $version = get_current_version();
+        if ($version['version'] <= '5.5.0' && ($version['version'] != '5.5.0' || $version['revision'] <= 261)) {
+            e(lang('missing_table'));
+            return [];
+        }
         $sql_id_type = 'SELECT id_tag_type
                    FROM ' . tbl('tags_type') . '
                    WHERE name LIKE \'' . $object_type . '\'';
@@ -179,6 +209,11 @@ class Tags
      */
     public static function getTagTypes(): array
     {
+        $version = get_current_version();
+        if ($version['version'] <= '5.5.0' && ($version['version'] != '5.5.0' || $version['revision'] <= 261)) {
+            e(lang('missing_table'));
+            return [];
+        }
         global $db;
         return $db->select(tbl('tags_type'),'*',false, false, false, false, 300);
     }

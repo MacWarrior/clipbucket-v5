@@ -280,8 +280,11 @@ class CBPhotos
 
         $this->search->columns = [
             ['field' => 'photo_title', 'type' => 'LIKE', 'var' => '%{KEY}%'],
-            ['field' => 'name', 'type' => 'LIKE', 'var' => '%{KEY}%', 'op' => 'OR', 'db'=>'tags'],
         ];
+        $version = get_current_version();
+        if ($version['version'] > '5.5.0' || $version['version'] == '5.5.0' && $version['revision'] > 261) {
+            $this->search->columns[] = ['field' => 'name', 'type' => 'LIKE', 'var' => '%{KEY}%', 'op' => 'OR', 'db'=>'tags'];
+        }
         $this->search->match_fields = ['photo_title', 'photo_tags'];
         $this->search->cat_tbl = $this->cat_tbl;
 
@@ -406,11 +409,22 @@ class CBPhotos
             $field = 'photo_key';
         }
 
+        $select_tag = '';
+        $join_tag = '';
+        $group_tag = '';
+        $match_tag='';
+        $version = get_current_version();
+        if ($version['version'] > '5.5.0' || $version['version'] == '5.5.0' && $version['revision'] > 261) {
+            $match_tag = ',photos.photo_tags';
+            $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') as photo_tags';
+            $join_tag = 'LEFT JOIN ' . tbl('photo_tags') . ' AS PT ON P.photo_id = PT.id_photo  
+                    LEFT JOIN ' . tbl('tags') . ' AS T ON PT.id_tag = T.id_tag';
+            $group_tag = ' GROUP BY photos.photo_id ';
+        }
 
-        $query = 'SELECT GROUP_CONCAT(T.name SEPARATOR \',\') as photo_tags, P.* 
+        $query = 'SELECT P.* '. $select_tag.'  
                     FROM ' . tbl($this->p_tbl) . ' AS P 
-                    LEFT JOIN ' . tbl('photo_tags') . ' AS PT ON P.photo_id = PT.id_photo  
-                    LEFT JOIN ' . tbl('tags') . ' AS T ON PT.id_tag = T.id_tag
+                   '.$join_tag.'
                     WHERE P.' . $field . ' = \'' . $pid . '\'
                     GROUP BY P.photo_id ';
 
@@ -566,14 +580,25 @@ class CBPhotos
             'collections' => ['collection_name', 'type', 'category', 'views as collection_views', 'date_added as collection_added']
         ];
 
+        $select_tag = '';
+        $join_tag = '';
+        $group_tag = '';
+        $match_tag='';
+        $version = get_current_version();
+        if ($version['version'] > '5.5.0' || $version['version'] == '5.5.0' && $version['revision'] > 261) {
+            $match_tag = ',photos.photo_tags';
+            $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') as photo_tags';
+            $join_tag = ' LEFT JOIN ' . tbl('photo_tags') . ' AS PT ON photos.photo_id = PT.id_photo 
+                    LEFT JOIN ' . tbl('tags') . ' AS T ON PT.id_tag = T.id_tag';
+            $group_tag = ' GROUP BY photos.photo_id ';
+        }
+
         $string = table_fields($fields);
 
-        $main_query = 'SELECT ' . $string . ' , GROUP_CONCAT(T.name SEPARATOR \',\') AS photo_tags FROM ' . cb_sql_table('photos');
+        $main_query = 'SELECT ' . $string . ' ' . $select_tag . ' ' . cb_sql_table('photos');
         $main_query .= ' LEFT JOIN ' . cb_sql_table('collections') . ' ON photos.collection_id = collections.collection_id';
         $main_query .= ' LEFT JOIN ' . cb_sql_table('users') . ' ON collections.userid = users.userid';
-        $joined =  ' LEFT JOIN ' . tbl('photo_tags') . ' AS PT ON photos.photo_id = PT.id_photo 
-                    LEFT JOIN ' . tbl('tags') . ' AS T ON PT.id_tag = T.id_tag';
-        $main_query.= $joined;
+        $main_query .= $join_tag;
         $order = $order ? ' ORDER BY ' . $order : false;
         $limit = $limit ? ' LIMIT ' . $limit : false;
 
@@ -583,7 +608,7 @@ class CBPhotos
                 $query .= ' WHERE ' . $cond;
             }
 
-            $query .= ' GROUP BY photos.photo_id ';
+            $query .= $group_tag;
             $query .= $order;
             $query .= $limit;
 
@@ -593,7 +618,7 @@ class CBPhotos
         if ($p['show_related']) {
             $query = $main_query;
 
-            $cond = 'MATCH(' . ('photos.photo_title,photos.photo_tags') . ')';
+            $cond = 'MATCH(' . ('photos.photo_title'.$match_tag) . ')';
             $cond .= " AGAINST ('" . $cbsearch->set_the_key($p['title']) . "' IN NATURAL LANGUAGE MODE)";
             if ($p['exclude']) {
                 if ($cond != '') {
@@ -619,7 +644,7 @@ class CBPhotos
             $where = ' WHERE ' . $cond . ' AND photos.collection_id <> 0';
 
             $query .= $where;
-            $query .= ' GROUP BY photos.photo_id';
+            $query .= $group_tag;
 
             $query .= $order;
             $query .= $limit;
@@ -633,7 +658,7 @@ class CBPhotos
                 $tags = $cbsearch->set_the_key($p['tags']);
                 $tags = str_replace('+', '', $tags);
 
-                $cond = 'MATCH(' . ('photos.photo_title,photos.photo_tags') . ')';
+                $cond = 'MATCH(' . ('photos.photo_title'.$match_tag) . ')';
                 $cond .= " AGAINST ('" . $tags . "' IN NATURAL LANGUAGE MODE)";
 
                 if ($p['exclude']) {
@@ -659,7 +684,7 @@ class CBPhotos
 
                 $where = ' WHERE ' . $cond . ' AND photos.collection_id <> 0';
                 $query .= $where;
-                $query .= ' GROUP BY photos.photo_id ';
+                $query .= $group_tag;
                 $query .= $order;
                 $query .= $limit;
 
@@ -676,7 +701,7 @@ class CBPhotos
             }
 
             //don't remove alias T at the end, request will crash
-            $query_count = 'SELECT COUNT(*) AS total FROM (SELECT photo_id FROM'.cb_sql_table('photos') . $joined . ' WHERE ' . $cond . ' GROUP BY photos.photo_id) T';
+            $query_count = 'SELECT COUNT(*) AS total FROM (SELECT photo_id FROM' . cb_sql_table('photos') . $join_tag . ' WHERE ' . $cond . ' ' . $group_tag . ') T';
             $count = $db->_select($query_count);
             if (!empty($count)) {
                 $result = $count[0]['total'];
@@ -1415,6 +1440,12 @@ class CBPhotos
                 $query_val[] = $array['folder'];
             }
             $query_val['0'] = $array['title'];
+
+            $version = get_current_version();
+            if ($version['version'] <= '5.5.0' && ($version['version'] != '5.5.0' || $version['revision'] <= 261)) {
+                $query_field[] = 'photo_tags';
+                $query_val[] = '';
+            }
 
             $insert_id = $db->insert(tbl($this->p_tbl), $query_field, $query_val);
 

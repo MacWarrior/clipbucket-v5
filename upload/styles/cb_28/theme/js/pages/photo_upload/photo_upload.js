@@ -393,6 +393,11 @@
                                 setTimeout(function(){
                                     $("#uploadMessage").addClass("hidden");
                                 }, 5000);
+                            }else if (msg.err == 'missing_table') {
+                                $("#uploadMessage").html(msg.err).attr("class", "alert alert-danger container").removeClass("hidden");
+                                setTimeout(function(){
+                                    $("#uploadMessage").addClass("hidden");
+                                }, 5000);
                             }else{
                                 $("#uploadMessage").html(msg.err).attr("class", "alert alert-danger container").removeClass("hidden");
                                 setTimeout(function(){

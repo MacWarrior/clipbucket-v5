@@ -138,8 +138,11 @@ class Collections extends CBCategory
         $this->search->db_tbl = 'collections';
         $this->search->columns = [
             ['field' => 'collection_name', 'type' => 'LIKE', 'var' => '%{KEY}%'],
-            ['field' => 'name', 'type' => 'LIKE', 'var' => '%{KEY}%', 'op' => 'OR', 'db'=>'tags'],
         ];
+        $version = get_current_version();
+        if ($version['version'] > '5.5.0' || $version['version'] == '5.5.0' && $version['revision'] > 261) {
+            $this->search->columns[] = ['field' => 'name', 'type' => 'LIKE', 'var' => '%{KEY}%', 'op' => 'OR', 'db'=>'tags'];
+        }
         $this->search->match_fields = ['collection_name', 'collection_tags'];
         $this->search->cat_tbl = $this->cat_tbl;
 
@@ -458,12 +461,22 @@ class Collections extends CBCategory
             $cond .= '(' . $title_tag . ')';
         }
 
+        $select_tag = '';
+        $join_tag = '';
+        $group_tag = '';
+        $version = get_current_version();
+        if ($version['version'] > '5.5.0' || $version['version'] == '5.5.0' && $version['revision'] > 261) {
+            $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') as profile_tags';
+            $join_tag = 'LEFT JOIN ' . tbl('collection_tags') . ' AS CT ON C.collection_id = CT.id_collection 
+                    LEFT JOIN ' . tbl('tags') . ' AS T ON CT.id_tag = T.id_tag';
+            $group_tag = ' GROUP BY C.collection_id ';
+        }
+
         $from = tbl('collections') . ' C
             INNER JOIN ' . tbl('users') . ' U ON C.userid = U.userid
              LEFT JOIN ' . tbl('collections') . ' CPARENT ON C.collection_id_parent = CPARENT.collection_id
-             LEFT JOIN ' . tbl('collection_tags') . ' AS CT ON C.collection_id = CT.id_collection 
-                    LEFT JOIN ' . tbl('tags') . ' AS T ON CT.id_tag = T.id_tag';
-        $ep = ' GROUP BY C.collection_id ';
+            ' . $join_tag;
+        $ep = $group_tag;
         if ($p['count_only']) {
             return $db->count($from, 'C.collection_id', $cond, $ep);
         }
@@ -966,6 +979,12 @@ class Collections extends CBCategory
                 // active
                 $query_field[] = 'active';
                 $query_val[] = 'yes';
+
+                $version = get_current_version();
+                if ($version['version'] <= '5.5.0' && ($version['version'] != '5.5.0' || $version['revision'] <= 261)) {
+                    $query_field[] = 'collection_tags';
+                    $query_val[] = '';
+                }
 
                 $insert_id = $db->insert(tbl($this->section_tbl), $query_field, $query_val);
                 addFeed(['action' => 'add_collection', 'object_id' => $insert_id, 'object' => 'collection']);

@@ -2049,12 +2049,21 @@ class userquery extends CBCategory
     function get_user_profile($uid)
     {
         global $db;
-        $query = 'SELECT UP.*, GROUP_CONCAT(T.name SEPARATOR \',\') as profile_tags
-                    FROM '.tbl($this->dbtbl['user_profile']).' UP
-                    LEFT JOIN '.tbl('user_tags').' UT ON UP.userid = UT.id_user
-                    LEFT JOIN '.tbl('tags').' T ON T.id_tag = UT.id_tag
-                    WHERE UP.userid = ' . mysql_clean($uid).'
-                    GROUP BY UP.userid';
+        $select = '';
+        $join = '';
+        $group = '';
+        $version = get_current_version();
+        if ($version['version'] > '5.5.0' || $version['version'] == '5.5.0' && $version['revision'] > 261) {
+            $select = ', GROUP_CONCAT(T.name SEPARATOR \',\') as profile_tags';
+            $join = ' LEFT JOIN ' . tbl('user_tags') . ' UT ON UP.userid = UT.id_user
+                    LEFT JOIN ' . tbl('tags') . ' T ON T.id_tag = UT.id_tag';
+            $group = ' GROUP BY UP.userid';
+        }
+        $query = 'SELECT UP.* ' . $select . '
+                    FROM ' . tbl($this->dbtbl['user_profile']) . ' UP
+                   ' . $join . '
+                    WHERE UP.userid = ' . mysql_clean($uid) . '
+                   ' . $group;
         $result = $db->_select($query, 60);
 
         if (count($result) > 0) {
@@ -3734,15 +3743,17 @@ class userquery extends CBCategory
         if (!has_access('admin_access', true)) {
             $this->search->columns = [
                 ['field' => 'username', 'type' => 'LIKE', 'var' => '%{KEY}%'],
-                ['field' => 'name', 'type' => 'LIKE', 'var' => '%{KEY}%', 'op' => 'OR', 'db'=>'tags'],
                 ['field' => 'usr_status', 'type' => '=', 'var' => 'Ok', 'op' => 'AND', 'value' => 'static'],
                 ['field' => 'ban_status', 'type' => '=', 'var' => 'no', 'op' => 'AND', 'value' => 'static']
             ];
         } else {
             $this->search->columns = [
                 ['field' => 'username', 'type' => 'LIKE', 'var' => '%{KEY}%'],
-                ['field' => 'name', 'type' => 'LIKE', 'var' => '%{KEY}%', 'op' => 'OR', 'db'=>'tags']
             ];
+        }
+        $version = get_current_version();
+        if ($version['version'] > '5.5.0' || $version['version'] == '5.5.0' && $version['revision'] > 261) {
+            $this->search->columns[] = ['field' => 'name', 'type' => 'LIKE', 'var' => '%{KEY}%', 'op' => 'OR', 'db'=>'tags'];
         }
 
         $this->search->cat_tbl = $this->cat_tbl;

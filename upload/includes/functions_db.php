@@ -363,3 +363,9 @@ function getVersions(): array
     }
     return $versions;
 }
+
+function get_current_version()
+{
+    global $db;
+    return $db->select(tbl('version'), '*')[0];
+}

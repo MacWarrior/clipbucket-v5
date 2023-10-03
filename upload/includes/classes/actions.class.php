@@ -588,17 +588,28 @@ class cbactions
 
         $fields['users'] = $cb_columns->object('users')->temp_remove('usr_status,user_session_key')->get_columns();
 
-        $query = 'SELECT ' . table_fields($fields) . ', GROUP_CONCAT(T.name SEPARATOR \',\') AS tags  FROM ' . cb_sql_table('playlists').'
+        $select_tag = '';
+        $join_tag = '';
+        $group_tag = '';
+        $version = get_current_version();
+        if ($version['version'] > '5.5.0' || $version['version'] == '5.5.0' && $version['revision'] > 261) {
+            $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') AS tags';
+            $join_tag = ' LEFT JOIN ' . tbl('playlist_tags') . ' AS PT ON playlists.playlist_id = PT.id_playlist 
+                    LEFT JOIN ' . tbl('tags') .' AS T ON PT.id_tag = T.id_tag' ;
+            $group_tag = ' GROUP BY videoid';
+        }
+
+
+        $query = 'SELECT ' . table_fields($fields) . ' '.$select_tag.' FROM ' . cb_sql_table('playlists').'
                 LEFT JOIN ' . cb_sql_table('users') . ' ON playlists.userid = users.userid
-                LEFT JOIN ' . tbl('playlist_tags') . ' PT ON  playlists.playlist_id = PT.id_playlist
-                LEFT JOIN ' . tbl('tags') . ' T ON T.id_tag = PT.id_tag
+                '.$join_tag.'
                 WHERE playlists.playlist_id = \'' . mysql_clean($id) . '\'';
 
         if (!is_null($user) and is_numeric($user)) {
             $query .= ' AND playlists.userid = \'' . mysql_clean($user) . '\'';
         }
 
-        $query .= ' GROUP BY playlists.playlist_id LIMIT 1';
+        $query .= $group_tag . ' LIMIT 1';
 
         $query_id = cb_query_id($query);
 
@@ -956,10 +967,20 @@ class cbactions
         $tags = $params['tags'];
         $userid = $params['userid'];
 
+        $select_tag = '';
+        $join_tag = '';
+        $group_tag = '';
+        $version = get_current_version();
+        if ($version['version'] > '5.5.0' || $version['version'] == '5.5.0' && $version['revision'] > 261) {
+            $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') as profile_tags';
+            $join_tag = ' LEFT JOIN ' . tbl('playlist_tags') . ' AS PT ON playlists.playlist_id = PT.id_playlist 
+                    LEFT JOIN ' . tbl('tags') .' AS T ON PT.id_tag = T.id_tag' ;
+            $group_tag = ' GROUP BY videoid';
+        }
+
         $query = 'SELECT ' . table_fields($fields) . ' FROM ';
         $from = cb_sql_table('playlists')
-                . ' LEFT JOIN ' . tbl('playlist_tags') . ' AS PT ON playlists.playlist_id = PT.id_playlist 
-                    LEFT JOIN ' . tbl('tags') .' AS T ON PT.id_tag = T.id_tag' ;
+                . $join_tag ;
         $query .= $from;
         $condition = '';
 
