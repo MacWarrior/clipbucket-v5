@@ -725,7 +725,7 @@ class FFMpeg
         $this->log->writeLine(date('Y-m-d H:i:s').' - Generating '.$dim.'...');
 
         if ($num > $duration) {
-            $num = $duration;
+            $num = (int)$duration;
         }
 
         if (!empty($array['size_tag'])) {
