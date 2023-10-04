@@ -185,7 +185,7 @@ class CBvideo extends CBCategory
         $join_tag = '';
         $group_tag = '';
         $version = get_current_version();
-        if ($version['version'] > '5.5.0' || $version['version'] == '5.5.0' && $version['revision'] > 261) {
+        if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
             $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') AS tags';
             $join_tag = ' LEFT JOIN ' . tbl('video_tags') . ' AS VT ON video.videoid = VT.id_video 
                     LEFT JOIN ' . tbl('tags') .' AS T ON VT.id_tag = T.id_tag';
@@ -1008,7 +1008,7 @@ class CBvideo extends CBCategory
         $join_tag = '';
         $group_tag = '';
         $version = get_current_version();
-        if ($version['version'] > '5.5.0' || $version['version'] == '5.5.0' && $version['revision'] > 261) {
+        if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
             $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') as profile_tags';
             $join_tag = ' LEFT JOIN ' . tbl('video_tags') . ' AS VT ON video.videoid = VT.id_video 
                     LEFT JOIN ' . tbl('tags') .' AS T ON VT.id_tag = T.id_tag';
@@ -1346,7 +1346,7 @@ class CBvideo extends CBCategory
             ['field' => 'status', 'type' => '=', 'var' => 'Successful', 'op' => 'AND', 'value' => 'static']
         ];
         $version = get_current_version();
-        if ($version['version'] > '5.5.0' || $version['version'] == '5.5.0' && $version['revision'] > 261) {
+        if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
             $this->search->columns[] = ['field' => 'name', 'type' => 'LIKE', 'var' => '%{KEY}%', 'op' => 'OR', 'db'=>'tags'];
         }
 

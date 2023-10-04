@@ -140,7 +140,7 @@ class Collections extends CBCategory
             ['field' => 'collection_name', 'type' => 'LIKE', 'var' => '%{KEY}%'],
         ];
         $version = get_current_version();
-        if ($version['version'] > '5.5.0' || $version['version'] == '5.5.0' && $version['revision'] > 261) {
+        if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
             $this->search->columns[] = ['field' => 'name', 'type' => 'LIKE', 'var' => '%{KEY}%', 'op' => 'OR', 'db'=>'tags'];
         }
         $this->search->match_fields = ['collection_name', 'collection_tags'];
@@ -465,7 +465,7 @@ class Collections extends CBCategory
         $join_tag = '';
         $group_tag = '';
         $version = get_current_version();
-        if ($version['version'] > '5.5.0' || $version['version'] == '5.5.0' && $version['revision'] > 261) {
+        if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
             $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') as profile_tags';
             $join_tag = 'LEFT JOIN ' . tbl('collection_tags') . ' AS CT ON C.collection_id = CT.id_collection 
                     LEFT JOIN ' . tbl('tags') . ' AS T ON CT.id_tag = T.id_tag';
@@ -981,7 +981,7 @@ class Collections extends CBCategory
                 $query_val[] = 'yes';
 
                 $version = get_current_version();
-                if ($version['version'] <= '5.5.0' && ($version['version'] != '5.5.0' || $version['revision'] <= 261)) {
+                if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
                     $query_field[] = 'collection_tags';
                     $query_val[] = '';
                 }

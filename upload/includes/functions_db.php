@@ -3,7 +3,7 @@
 /**
  * functions related to database
  *
- * @throws \Exception
+ * @throws Exception
  */
 function db_select($query): array
 {
@@ -16,13 +16,6 @@ function cb_query_id($query): string
     return md5($query);
 }
 
-/**
- * Created by JetBrains PhpStorm.
- * User: Fawaz
- * Date: 8/26/13
- * Time: 3:51 PM
- * To change this template use File | Settings | File Templates.
- */
 function tbl($tbl): string
 {
     global $DBNAME;
@@ -43,7 +36,6 @@ function tbl($tbl): string
  * Format array into table fields
  *
  * @param $fields
- * @param bool $table
  * @return bool|string
  */
 function table_fields($fields)
@@ -145,8 +137,7 @@ function check_need_upgrade($version, $revision): bool
 }
 
 /**
- * @param $version
- * @param $revision
+ * @param $installed_plugin
  * @return bool
  */
 function check_need_plugin_upgrade($installed_plugin): bool
@@ -286,14 +277,13 @@ function execute_sql_file($path): bool
 }
 
 /**
- * @throws \Exception
+ * @throws Exception
  */
 function execute_migration_SQL_file($path): bool
 {
     if (!execute_sql_file($path)) {
         return false;
     }
-
 
     global $db;
     if (strpos($path, 'plugin') !== false) {
@@ -364,6 +354,9 @@ function getVersions(): array
     return $versions;
 }
 
+/**
+ * @throws Exception
+ */
 function get_current_version()
 {
     global $db;

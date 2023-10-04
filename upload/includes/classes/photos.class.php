@@ -282,7 +282,7 @@ class CBPhotos
             ['field' => 'photo_title', 'type' => 'LIKE', 'var' => '%{KEY}%'],
         ];
         $version = get_current_version();
-        if ($version['version'] > '5.5.0' || $version['version'] == '5.5.0' && $version['revision'] > 261) {
+        if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
             $this->search->columns[] = ['field' => 'name', 'type' => 'LIKE', 'var' => '%{KEY}%', 'op' => 'OR', 'db'=>'tags'];
         }
         $this->search->match_fields = ['photo_title', 'photo_tags'];
@@ -414,7 +414,7 @@ class CBPhotos
         $group_tag = '';
         $match_tag='';
         $version = get_current_version();
-        if ($version['version'] > '5.5.0' || $version['version'] == '5.5.0' && $version['revision'] > 261) {
+        if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
             $match_tag = ',photos.photo_tags';
             $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') as photo_tags';
             $join_tag = 'LEFT JOIN ' . tbl('photo_tags') . ' AS PT ON P.photo_id = PT.id_photo  
@@ -585,7 +585,7 @@ class CBPhotos
         $group_tag = '';
         $match_tag='';
         $version = get_current_version();
-        if ($version['version'] > '5.5.0' || $version['version'] == '5.5.0' && $version['revision'] > 261) {
+        if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
             $match_tag = ',photos.photo_tags';
             $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') as photo_tags';
             $join_tag = ' LEFT JOIN ' . tbl('photo_tags') . ' AS PT ON photos.photo_id = PT.id_photo 
@@ -1442,7 +1442,7 @@ class CBPhotos
             $query_val['0'] = $array['title'];
 
             $version = get_current_version();
-            if ($version['version'] <= '5.5.0' && ($version['version'] != '5.5.0' || $version['revision'] <= 261)) {
+            if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
                 $query_field[] = 'photo_tags';
                 $query_val[] = '';
             }

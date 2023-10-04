@@ -2053,7 +2053,7 @@ class userquery extends CBCategory
         $join = '';
         $group = '';
         $version = get_current_version();
-        if ($version['version'] > '5.5.0' || $version['version'] == '5.5.0' && $version['revision'] > 261) {
+        if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
             $select = ', GROUP_CONCAT(T.name SEPARATOR \',\') as profile_tags';
             $join = ' LEFT JOIN ' . tbl('user_tags') . ' UT ON UP.userid = UT.id_user
                     LEFT JOIN ' . tbl('tags') . ' T ON T.id_tag = UT.id_tag';
@@ -3752,7 +3752,7 @@ class userquery extends CBCategory
             ];
         }
         $version = get_current_version();
-        if ($version['version'] > '5.5.0' || $version['version'] == '5.5.0' && $version['revision'] > 261) {
+        if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
             $this->search->columns[] = ['field' => 'name', 'type' => 'LIKE', 'var' => '%{KEY}%', 'op' => 'OR', 'db'=>'tags'];
         }
 

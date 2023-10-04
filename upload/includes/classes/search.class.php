@@ -164,7 +164,7 @@ class cbsearch
         $join_tag = '';
         $group_tag = '';
         $version = get_current_version();
-        if ($version['version'] > '5.5.0' || $version['version'] == '5.5.0' && $version['revision'] > 261) {
+        if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
             $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') as profile_tags';
             $join_tag = '  INNER JOIN ' . tbl($table_tag) . ' ON ' . tbl($table_tag) . '.' . $id_field . ' = ' . tbl($this->db_tbl) . '.' . $object_id . '
                 INNER JOIN ' . tbl('tags') . ' ON ' . tbl($table_tag) . '.id_tag = ' . tbl('tags') . '.id_tag' ;

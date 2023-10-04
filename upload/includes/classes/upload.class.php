@@ -203,7 +203,7 @@ class Upload
                 $query_val[] = 'Successful';
             }
             $version = get_current_version();
-            if ($version['version'] <= '5.5.0' && ($version['version'] != '5.5.0' || $version['revision'] <= 261)) {
+            if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
                 $query_field[] = 'tags';
                 $query_val[] = '';
             }

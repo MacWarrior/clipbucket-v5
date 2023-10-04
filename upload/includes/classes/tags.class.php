@@ -2,10 +2,13 @@
 
 class Tags
 {
+    /**
+     * @throws Exception
+     */
     public static function getTags($limit = 'false', $cond = false)
     {
         $version = get_current_version();
-        if ($version['version'] <= '5.5.0' && ($version['version'] != '5.5.0' || $version['revision'] <= 261)) {
+        if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
             e(lang('missing_table'));
             return [];
         }
@@ -29,10 +32,13 @@ class Tags
         return $db->_select($query, 0);
     }
 
+    /**
+     * @throws Exception
+     */
     public static function countTags($cond)
     {
         $version = get_current_version();
-        if ($version['version'] <= '5.5.0' && ($version['version'] != '5.5.0' || $version['revision'] <= 261)) {
+        if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
             e(lang('missing_table'));
             return 0;
         }
@@ -48,13 +54,13 @@ class Tags
 
     /**
      * @param $id_tag
-     * @return false|mixed
+     * @return false|void
      * @throws Exception
      */
     public static function deleteTag($id_tag)
     {
         $version = get_current_version();
-        if ($version['version'] <= '5.5.0' && ($version['version'] != '5.5.0' || $version['revision'] <= 261)) {
+        if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
             e(lang('missing_table'));
             return false;
         }
@@ -87,7 +93,7 @@ class Tags
     public static function updateTag($name, $id_tag):bool
     {
         $version = get_current_version();
-        if ($version['version'] <= '5.5.0' && ($version['version'] != '5.5.0' || $version['revision'] <= 261)) {
+        if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
             e(lang('missing_table'));
             return false;
         }
@@ -106,10 +112,13 @@ class Tags
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public static function saveTags(string $tags, string $object_type, int $object_id)
     {
         $version = get_current_version();
-        if ($version['version'] <= '5.5.0' && ($version['version'] != '5.5.0' || $version['revision'] <= 261)) {
+        if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
             e(lang('missing_table'));
             return false;
         }
@@ -174,15 +183,17 @@ class Tags
             }
         }
 
-
         return true;
     }
 
+    /**
+     * @throws Exception
+     */
     public static function fill_auto_complete_tags($object_type): array
     {
         global $db;
         $version = get_current_version();
-        if ($version['version'] <= '5.5.0' && ($version['version'] != '5.5.0' || $version['revision'] <= 261)) {
+        if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
             e(lang('missing_table'));
             return [];
         }
@@ -210,7 +221,7 @@ class Tags
     public static function getTagTypes(): array
     {
         $version = get_current_version();
-        if ($version['version'] <= '5.5.0' && ($version['version'] != '5.5.0' || $version['revision'] <= 261)) {
+        if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
             e(lang('missing_table'));
             return [];
         }
