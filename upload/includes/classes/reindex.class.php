@@ -329,7 +329,7 @@ class CBreindex
                             $fields[] = "total_favorites";
                         }
 
-                        if (array_key_exists("total_commnets", $arr)) {
+                        if (array_key_exists("total_comments", $arr)) {
                             $fields[] = "total_comments";
                         }
 
