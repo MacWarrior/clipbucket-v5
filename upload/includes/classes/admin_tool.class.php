@@ -152,6 +152,18 @@ class AdminTool
         $videos = $db->select(tbl('video'), '*', ' status LIKE \'Successful\'');
         self::executeTool($id_tool, $videos, 'update_duration');
     }
+    /**
+     * check videos duration which have duration at 0
+     * @param $id_tool
+     * @return void
+     * @throws \Exception
+     */
+    public static function repairVideoDuration($id_tool)
+    {
+        global $db;
+        $videos = $db->select(tbl('video'), '*', ' status LIKE \'Successful\' AND duration = 0');
+        self::executeTool($id_tool, $videos, 'update_duration');
+    }
 
     /**
      * check videos duration
@@ -220,8 +232,10 @@ class AdminTool
     {
         global $db;
         $video_file_name = [];
+        $photo_file_name = [];
         $logs = rglob(LOGS_DIR . DIRECTORY_SEPARATOR . '*.log');
         $videos_mp4 = rglob(VIDEOS_DIR . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*.mp4');
+        $photos = rglob(PHOTOS_DIR . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*');
         $videos_hls = glob(VIDEOS_DIR . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
         $thumbs = rglob(THUMBS_DIR . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*.jpg');
         $subtitles = rglob(SUBTITLES_DIR . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*.srt');
@@ -247,6 +261,11 @@ class AdminTool
                 $video_file_name[] = $vid_file_name;
                 return ['type' => 'video_mp', 'data' => $video, 'video' => $vid_file_name];
             }, $videos_mp4),
+            array_map(function ($photo) use (&$photo_file_name) {
+                $pic_file_name = explode('_', pathinfo($photo)['filename'])[0];
+                $photo_file_name[] = $pic_file_name;
+                return ['type' => 'photo', 'data' => $photo, 'photo' => $pic_file_name];
+            }, $photos),
             array_map(function ($video) use (&$video_file_name) {
                 $vid_file_name = basename($video);
                 $video_file_name[] = $vid_file_name;
@@ -256,24 +275,37 @@ class AdminTool
         $sql_video_file_name = array_map(function ($video_file_name) {
             return '\'' . mysql_clean($video_file_name) . '\'';
         }, array_unique($video_file_name));
+        $sql_photo_file_name = array_map(function ($photo_file_name) {
+            return '\'' . mysql_clean($photo_file_name) . '\'';
+        }, array_unique($photo_file_name));
 
         $query = 'SELECT file_name FROM ' . tbl('video') . ' WHERE file_name IN (' . implode(', ', $sql_video_file_name) . ')';
         $result = $db->execute($query, 'select');
-        $data = [];
+        $data['video'] = [];
+        $data['photo'] = [];
         if ($result) {
             while ($row = $result->fetch_assoc()) {
-                $data[] = $row['file_name'];
+                $data['video'][] = $row['file_name'];
+            }
+            $result->close();
+        }
+        $query = 'SELECT filename FROM ' . tbl('photos') . ' WHERE filename IN (' . implode(', ', $sql_photo_file_name) . ')';
+        $result = $db->execute($query, 'select');
+        if ($result) {
+            while ($row = $result->fetch_assoc()) {
+                $data['photo'][] = $row['filename'];
             }
             $result->close();
         }
         self::$temp = $data;
         self::executeTool($id_tool, $files, 'clean_orphan_files');
-        //remove empty folders
+        //remove already empty folders
         $empty_logs = glob(LOGS_DIR . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
         $empty_subs = glob(SUBTITLES_DIR . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
         $empty_thumbs = glob(THUMBS_DIR . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
         $empty_vids = glob(VIDEOS_DIR . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
-        $empty_folders = array_merge($empty_logs, $empty_subs, $empty_thumbs, $empty_vids);
+        $empty_pics = glob(PHOTOS_DIR . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
+        $empty_folders = array_merge($empty_logs, $empty_subs, $empty_thumbs, $empty_vids, $empty_pics);
         foreach ($empty_folders as $folder) {
             delete_empty_directories($folder);
         }
