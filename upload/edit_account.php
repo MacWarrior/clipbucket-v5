@@ -144,7 +144,9 @@ switch ($mode) {
 
 $udetails = $userquery->get_user_details(user_id());
 $profile = $userquery->get_user_profile($udetails['userid']);
-
+if (is_array($profile)) {
+    $udetails = array_merge($udetails, $profile);
+}
 if(in_dev()){
     $min_suffixe = '';
 } else {
@@ -152,8 +154,9 @@ if(in_dev()){
 }
 
 $Cbucket->addJS([
-    'tag-it'.$min_suffixe.'.js' => 'admin'
-    ,'pages/edit_account/edit_account'.$min_suffixe.'.js' => 'admin'
+    'tag-it' . $min_suffixe . '.js'                            => 'admin',
+    'pages/edit_account/edit_account' . $min_suffixe . '.js'   => 'admin',
+    'init_default_tag/init_default_tag' . $min_suffixe . '.js' => 'admin'
 ]);
 $Cbucket->addCSS([
     'jquery.tagit'.$min_suffixe.'.css' => 'admin',
@@ -166,8 +169,10 @@ if( Language::getInstance()->getLang() != 'en'){
 }
 $Cbucket->addJS(['jquery_plugs/datepicker'.$datepicker_js_lang.'.js' => 'global']);
 
+$available_tags = Tags::fill_auto_complete_tags('profile');
+assign('available_tags', $available_tags);
+
 assign('user', $udetails);
-assign('p', $user_profile);
 subtitle(lang('user_manage_my_account'));
 template_files('edit_account.html');
 display_it();

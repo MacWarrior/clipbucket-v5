@@ -1,4 +1,5 @@
 var cookieToSave, commentDataCheck;
+var link_type = "videos";
 
 $(document).ready(function () {
     cookieToSave = 'comment_data_u' + userid + "v" + current_video
@@ -130,8 +131,5 @@ $(document).ready(function () {
         }
         return true;
     });*/
-    var labels = $('.tagit-label');
-    labels.each(function () {
-        $(this).parent().wrap('<a href="/search_result.php?query=' + $(this).html()+ '&type=tag"></a>');
-    });
+
 });

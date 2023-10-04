@@ -11,9 +11,18 @@ $udetails = $userquery->get_user_details($uid);
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => lang('users'), 'url' => ''];
-$breadcrumb[1] = ['title' => lang('grp_manage_members_title'), 'url' => ADMIN_BASEURL . '/members.php'];
-$breadcrumb[2] = ['title' => 'Editing : ' . display_clean($udetails['username']), 'url' => ADMIN_BASEURL . '/view_user.php?uid=' . display_clean($uid)];
+$breadcrumb[0] = [
+    'title' => lang('users'),
+    'url'   => ''
+];
+$breadcrumb[1] = [
+    'title' => lang('grp_manage_members_title'),
+    'url'   => ADMIN_BASEURL . '/members.php'
+];
+$breadcrumb[2] = [
+    'title' => 'Editing : ' . display_clean($udetails['username']),
+    'url'   => ADMIN_BASEURL . '/view_user.php?uid=' . display_clean($uid)
+];
 
 if ($udetails) {
     //Deactivating User
@@ -87,17 +96,23 @@ if ($udetails) {
     e('No User Found');
     $CBucket->show_page = false;
 }
-if(in_dev()){
+if (in_dev()) {
     $min_suffixe = '';
 } else {
     $min_suffixe = '.min';
 }
 
-$Cbucket->addAdminJS(['jquery-ui-1.13.2.min.js' => 'admin']);
-$Cbucket->addAdminJS(['pages/view_user/view_user'.$min_suffixe.'.js' => 'admin']);
-$Cbucket->addAdminJS(['tag-it'.$min_suffixe.'.js' => 'admin']);
-$Cbucket->addAdminCSS(['jquery.tagit'.$min_suffixe.'.css'=>'admin']);
-$Cbucket->addAdminCSS(['tagit.ui-zendesk'.$min_suffixe.'.css'=>'admin']);
+$Cbucket->addAdminJS([
+    'pages/view_user/view_user' . $min_suffixe . '.js'         => 'admin',
+    'init_default_tag/init_default_tag' . $min_suffixe . '.js' => 'admin',
+    'tag-it' . $min_suffixe . '.js'                            => 'admin'
+]);
+$Cbucket->addAdminCSS([
+    'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
+    'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
+]);
+$available_tags = Tags::fill_auto_complete_tags('profile');
+assign('available_tags',$available_tags);
 
 subtitle('View User');
 template_files('view_user.html');

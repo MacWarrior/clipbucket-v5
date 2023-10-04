@@ -292,7 +292,7 @@ class ClipBucket
         }
         if ($per['web_config_access'] == 'yes') {
             $menu_general = [
-                'title'   => 'General Configurations'
+                'title'   => lang('general')
                 , 'class' => 'glyphicon glyphicon-stats'
                 , 'sub'   => [
                     [
@@ -306,10 +306,6 @@ class ClipBucket
                     , [
                         'title' => 'Email Templates'
                         , 'url' => ADMIN_BASEURL . '/email_settings.php'
-                    ]
-                    , [
-                        'title' => 'Email Tester'
-                        , 'url' => ADMIN_BASEURL . '/email_tester.php'
                     ]
                     , [
                         'title' => 'Language Settings'
@@ -326,6 +322,10 @@ class ClipBucket
                     , [
                         'title' => 'Update Logos'
                         , 'url' => ADMIN_BASEURL . '/upload_logo.php'
+                    ]
+                    , [
+                        'title' => lang('manage_tags')
+                        , 'url' => ADMIN_BASEURL . '/manage_tags.php'
                     ]
                 ]
             ];
@@ -488,6 +488,10 @@ class ClipBucket
                     , [
                         'title' => lang('system_info')
                         , 'url' => ADMIN_BASEURL . '/system_info.php'
+                    ]
+                    , [
+                        'title' => lang('email_tester')
+                        , 'url' => ADMIN_BASEURL . '/email_tester.php'
                     ]
                 ]
             ];

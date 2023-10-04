@@ -155,7 +155,6 @@ switch ($mode) {
             , 'file_name'       => $file_name
             , 'file_directory'  => $file_directory
             , 'description'     => $filename_without_ext
-            , 'tags'            => genTags(str_replace([' ', '_', '-'], ', ', $filename_without_ext))
             , 'category'        => [$cbvid->get_default_cid()]
             , 'userid'          => user_id()
             , 'allow_comments'  => 'yes'

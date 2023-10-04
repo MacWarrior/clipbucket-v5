@@ -117,7 +117,11 @@
 								    <span id="category"><a href="/view_collection.php?cid={$c.collection_id}&type={$c.type}">{display_clean($c.collection_name)}</a></span>
 							        {/if}
                                 </li>
-							<li><strong>{lang('tags')}</strong>:&nbsp;<span id="tags"></span></strong>{$photo.photo_tags|tags:photos}</li>
+							<li>
+								<strong class="pull-left" id="label_tags">{lang('tags')}:&nbsp;&nbsp;</strong>
+								<input type="hidden" id="tags" value="{$photo.photo_tags}">
+								<ul id="list_tags" style="border: 0;"></ul>
+							</li>
 
 							<li><strong>{lang('views')}</strong>:&nbsp; <span id="views">{$photo.views}</span></li>
 						</ul>
@@ -253,6 +257,7 @@
 <script type="text/javascript">
 	var seoUrls = "{$Cbucket->configs.seo}";
 	var srcFirst = "{$srcfirst}";
+	var link_type = "photos";
 var key_globel; // image source key0
 var first_source; 
 var collection_id;

@@ -81,11 +81,24 @@
                         $(oneUploadForm).find('.savePhotoDetails').removeAttr('disabled');
                     }
 
+                    var alert_shown  = false;
                     $(oneUploadForm).find('#list_tags_'+ index).tagit({
                         singleField:true,
                         readOnly:false,
                         singleFieldNode: $(oneUploadForm).find('#tags'+ index),
-                        animate:true
+                        animate:true,
+                        caseSensitive:false,
+                        availableTags: available_tags,
+                        beforeTagAdded: function (event,info) {
+                            if (info.tagLabel.length <= 2) {
+                                if (!alert_shown) {
+                                    alert_shown = true;
+                                    alert(tag_too_short);
+                                }
+                                return false;
+                            }
+                            alert_shown = false;
+                        }
                     });
 
                     wrapperDiv.appendChild(oneUploadForm);
@@ -143,17 +156,25 @@
                             url : "/actions/photo_uploader.php",
                             type : "post",
                             data : data,
-                            success: function(){
+                            success: function (msg) {
+                                msg = $.parseJSON(msg);
                                 $("#uploadMessage").removeClass("hidden");
-                                $("#uploadMessage").html("Picture details are successfully updated").attr("class", "alert alert-success container");
+                                if (msg.error) {
+                                    $('#uploadMessage').html(msg.error.val).attr('class', 'alert alert-danger container');
+                                    $('html,body').animate({
+                                        scrollTop: $("body").offset().top
+                                    }, 'medium');
+                                } else {
+                                    $("#uploadMessage").html("Picture details are successfully updated").attr("class", "alert alert-success container");
 
-                                $('html,body').animate({
-                                    scrollTop: $("body").offset().top
-                                },'medium');
+                                    $('html,body').animate({
+                                        scrollTop: $("body").offset().top
+                                    }, 'medium');
 
-                                setTimeout(function(){
-                                    $("#uploadMessage").addClass("hidden");
-                                }, 5000);
+                                    setTimeout(function () {
+                                        $("#uploadMessage").addClass("hidden");
+                                    }, 5000);
+                                }
                             }
                         }).fail(function(err){
                             console.log(err);
@@ -173,7 +194,7 @@
                 uploadedFiles[0].data = [];
                 uploadedFiles[0].data.photo_title = uploadedFiles[0].name;
                 uploadedFiles[0].data.photo_description = uploadedFiles[0].name;
-                uploadedFiles[0].data.photo_tags = uploadedFiles[0].name;
+                uploadedFiles[0].data.photo_tags = '';
                 uploadedFiles[0].data.collection_id = $('#collectionSelection').val();
                 uploadedFiles[0].data.allow_comments = 'yes';
                 uploadedFiles[0].data.allow_embedding = 'yes';
@@ -304,7 +325,7 @@
                         ,ext: serverResponse.extension
                         ,photo_title : fileDetails.name
                         ,photo_description : fileDetails.name
-                        ,photo_tags : fileDetails.name
+                        ,photo_tags : ''
                     },
                     dataType: "JSON",
                     success: function(msg){
@@ -372,6 +393,11 @@
                                 setTimeout(function(){
                                     $("#uploadMessage").addClass("hidden");
                                 }, 5000);
+                            }else if (msg.err == 'missing_table') {
+                                $("#uploadMessage").html(msg.err).attr("class", "alert alert-danger container").removeClass("hidden");
+                                setTimeout(function(){
+                                    $("#uploadMessage").addClass("hidden");
+                                }, 5000);
                             }else{
                                 $("#uploadMessage").html(msg.err).attr("class", "alert alert-danger container").removeClass("hidden");
                                 setTimeout(function(){
@@ -435,13 +461,6 @@
             });
         });
 
-        $('#list_tags').tagit({
-            singleField:true,
-            fieldName:"collection_tags",
-            readOnly:false,
-            singleFieldNode:$('#collection_tags'),
-            animate:true,
-            caseSensitive:false
-        });
+        init_tags('collection_tags', available_collection_tags);
     });
 })(window);

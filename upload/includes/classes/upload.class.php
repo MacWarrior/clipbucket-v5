@@ -202,9 +202,15 @@ class Upload
                 $query_field[] = 'status';
                 $query_val[] = 'Successful';
             }
-
+            $version = get_current_version();
+            if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
+                $query_field[] = 'tags';
+                $query_val[] = '';
+            }
             $db->insert(tbl('video'),$query_field, $query_val);
             $insert_id = $db->insert_id();
+
+            \Tags::saveTags($array['tags'] ?? '', 'video', $insert_id);
 
             //logging Upload
             $log_array = [
@@ -214,6 +220,8 @@ class Upload
                 'details'       => $array['title']
             ];
             insert_log('Uploaded a video', $log_array);
+
+
 
             $db->update(tbl('users'), ['total_videos'], ['|f|total_videos+1'], ' userid=\'' . $userid . '\'');
 
@@ -419,8 +427,7 @@ class Upload
                 'id'                => 'tags',
                 'value'             => genTags($tags),
                 'hint_1'            => '',
-                'db_field'          => 'tags',
-                'required'          => 'yes',
+                'required'          => 'no',
                 'validate_function' => 'genTags'
             ]
         ];

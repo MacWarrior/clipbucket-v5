@@ -10,7 +10,7 @@ class cbsearch
     /**
      * Search Table
      */
-    var $db_tbl = 'video';
+    var $db_tbl = 'videos';
     var $columns = [];
     var $category = '';
     var $cat_tbl = '';
@@ -82,6 +82,9 @@ class cbsearch
      */
     var $query_conds = [];
 
+    /**
+     * @throws Exception
+     */
     function search(): array
     {
         global $db;
@@ -128,30 +131,60 @@ class cbsearch
             $condition .= $cond . ' ';
         }
 
+        $query_cond = '(' . $condition . ')';
+        if (!$condition) {
+            $query_cond = '';
+        }
         if ($this->has_user_id) {
-            $query_cond = '(' . $condition . ')';
-            if ($condition) {
-                $query_cond .= ' AND ';
-            } else {
-                $query_cond = $condition;
-            }
-
-            if (!has_access('admin_access', true)) {
-                $results = $db->select(tbl($this->db_tbl . ',users'),
-                    tbl($this->db_tbl . '.*,users.userid,users.username') . $add_select_field,
-                    $query_cond . ' ' . tbl($this->db_tbl) . '.userid=' . tbl('users.userid'), $this->limit, $sorting);
-            } else {
-                $results = $db->select(tbl($this->db_tbl . ',users'),
-                    tbl($this->db_tbl . '.*,users.userid,users.username') . $add_select_field,
-                    $query_cond . ' ' . tbl($this->db_tbl) . '.userid=' . tbl('users.userid'), $this->limit, $sorting);
-            }
-
-            $this->total_results = $db->count(tbl($this->db_tbl), '*', $condition);
-        } else {
-            $results = $db->select(tbl($this->db_tbl), '*', $condition, $this->limit, $sorting);
-            $this->total_results = $db->count(tbl($this->db_tbl), '*', $condition);
+            $join_user = 'INNER JOIN ' . tbl('users') . ' ON ' . tbl($this->db_tbl) . '.userid = '.tbl('users').'.userid ';
+            $add_select_field .= ' , ' . tbl('users.userid,users.username') . ' ';
+        }
+        switch ($this->db_tbl) {
+            case 'video':
+                $id_field = 'id_video';
+                $table_tag = 'video_tags';
+                $object_id = 'videoid';
+                break;
+            case 'photos':
+                $id_field = 'id_photo';
+                $table_tag = 'photo_tags';
+                $object_id = 'photo_id';
+                break;
+            case 'collections':
+                $id_field = 'id_collection';
+                $table_tag = 'collection_tags';
+                $object_id = 'collection_id';
+                break;
+            case 'users':
+                $id_field = 'id_user';
+                $table_tag = 'user_tags';
+                $object_id = 'userid';
+                break;
+            default:
+                break;
+        }
+        $join_tag = '';
+        $group_tag = '';
+        $version = get_current_version();
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+            $join_tag = '  INNER JOIN ' . tbl($table_tag) . ' ON ' . tbl($table_tag) . '.' . $id_field . ' = ' . tbl($this->db_tbl) . '.' . $object_id . '
+                INNER JOIN ' . tbl('tags') . ' ON ' . tbl($table_tag) . '.id_tag = ' . tbl('tags') . '.id_tag' ;
+            $group_tag = ' GROUP BY ' . $object_id;
         }
 
+        $select = tbl($this->db_tbl . '.*') . $add_select_field;
+        $from_join = ' FROM ' . tbl($this->db_tbl) . '
+                ' . ($join_user ?? '') . ' '.$join_tag .'
+                WHERE ' . $query_cond . '
+                '.$group_tag;
+
+
+        $results = $db->_select('SELECT ' . $select . $from_join . ' LIMIT ' . $this->limit);
+
+        $count = $db->_select('SELECT COUNT(*) AS total ' . $from_join);
+        if (!empty($count)) {
+            $this->total_results = $count[0]['total'];
+        }
         return $results;
     }
 
@@ -206,7 +239,7 @@ class cbsearch
 
 
         if (!empty($this->key) && $type != 'match') {
-            $this->query_conds[] = $op . ' ' . tbl($this->db_tbl) . '.' . $array['field'] . ' ' . $type . ' \'' . preg_replace('/{KEY}/', $this->key, $var) . '\'';
+            $this->query_conds[] = $op . ' ' . (empty($array['db']) ? tbl($this->db_tbl) : tbl($array['db'])) . '.' . $array['field'] . ' ' . $type . ' \'' . preg_replace('/{KEY}/', $this->key, $var) . '\'';
         }
 
         if (!empty($this->key) && $type == 'match') {

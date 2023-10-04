@@ -9,7 +9,7 @@ $pages->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => 'General Configurations', 'url' => ''];
+$breadcrumb[0] = ['title' => lang('general'), 'url' => ''];
 $breadcrumb[1] = ['title' => 'Update Logos', 'url' => ADMIN_BASEURL . '/upload_logo.php'];
 
 // Upload and Rename File

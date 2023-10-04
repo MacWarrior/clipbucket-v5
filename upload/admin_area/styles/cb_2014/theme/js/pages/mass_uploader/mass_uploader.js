@@ -52,6 +52,7 @@ $(document).ready(function () {
             readOnly: false,
             singleFieldNode: $('#tags' + id),
             animate: true,
+            caseSensitive:false
         });
     });
 });

@@ -50,7 +50,6 @@ CREATE TABLE `{tbl_prefix}collections` (
   `collection_id_parent` BIGINT(25) NULL DEFAULT NULL,
   `collection_name` varchar(225) NOT NULL,
   `collection_description` text NOT NULL,
-  `collection_tags` text NOT NULL,
   `category` varchar(200) NOT NULL,
   `userid` int(10) NOT NULL,
   `views` bigint(20) NOT NULL DEFAULT 0,
@@ -322,7 +321,6 @@ CREATE TABLE `{tbl_prefix}photos` (
   `photo_key` mediumtext NOT NULL,
   `photo_title` mediumtext NOT NULL,
   `photo_description` mediumtext NOT NULL,
-  `photo_tags` mediumtext NOT NULL,
   `userid` int(255) NOT NULL,
   `collection_id` int(255) NOT NULL,
   `date_added` datetime NOT NULL,
@@ -562,7 +560,7 @@ CREATE TABLE `{tbl_prefix}user_permission_types` (
 CREATE TABLE `{tbl_prefix}user_profile` (
   `user_profile_id` int(11) NOT NULL,
   `show_my_collections` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `userid` bigint(20) NOT NULL,
+  `userid` bigint(20) NOT NULL UNIQUE,
   `profile_title` mediumtext NOT NULL,
   `profile_desc` mediumtext NOT NULL,
   `featured_video` mediumtext NOT NULL,
@@ -572,7 +570,6 @@ CREATE TABLE `{tbl_prefix}user_profile` (
   `show_dob` enum('no','yes') DEFAULT 'no',
   `postal_code` varchar(20) NOT NULL DEFAULT '',
   `time_zone` tinyint(4) NOT NULL DEFAULT 0,
-  `profile_tags` mediumtext DEFAULT NULL,
   `web_url` varchar(200) NOT NULL DEFAULT '',
   `fb_url` varchar(200) DEFAULT '',
   `twitter_url` varchar(200) DEFAULT '',
@@ -622,7 +619,6 @@ CREATE TABLE `{tbl_prefix}video` (
   `file_type` VARCHAR(3) NULL DEFAULT NULL,
   `file_directory` varchar(25) NOT NULL DEFAULT '',
   `description` text DEFAULT NULL,
-  `tags` mediumtext NOT NULL,
   `category` VARCHAR(200) NULL DEFAULT NULL,
   `broadcast` varchar(10) NOT NULL DEFAULT '',
   `location` mediumtext DEFAULT NULL,
@@ -837,7 +833,7 @@ ALTER TABLE `{tbl_prefix}photos`
   ADD KEY `last_viewed` (`last_viewed`),
   ADD KEY `rating` (`rating`),
   ADD KEY `total_comments` (`total_comments`);
-ALTER TABLE `{tbl_prefix}photos` ADD FULLTEXT KEY `photo_title` (`photo_title`,`photo_tags`);
+ALTER TABLE `{tbl_prefix}photos` ADD FULLTEXT KEY `photo_title` (`photo_title`);
 
 ALTER TABLE `{tbl_prefix}playlists`
   ADD PRIMARY KEY (`playlist_id`);
@@ -891,7 +887,6 @@ ALTER TABLE `{tbl_prefix}user_permission_types`
 ALTER TABLE `{tbl_prefix}user_profile`
   ADD PRIMARY KEY (`user_profile_id`),
   ADD KEY `ind_status_id` (`userid`);
-ALTER TABLE `{tbl_prefix}user_profile` ADD FULLTEXT KEY `profile_tags` (`profile_tags`);
 
 ALTER TABLE `{tbl_prefix}video`
   ADD PRIMARY KEY (`videoid`),
@@ -903,7 +898,7 @@ ALTER TABLE `{tbl_prefix}video`
   ADD KEY `status` (`status`,`active`,`broadcast`,`userid`),
   ADD KEY `videoid` (`videoid`,`videokey`(255));
 ALTER TABLE `{tbl_prefix}video` ADD FULLTEXT KEY `description` (`description`,`title`);
-ALTER TABLE `{tbl_prefix}video` ADD FULLTEXT KEY `title` (`title`,`tags`);
+ALTER TABLE `{tbl_prefix}video` ADD FULLTEXT KEY `title` (`title`);
 
 ALTER TABLE `{tbl_prefix}video_categories`
   ADD PRIMARY KEY (`category_id`);
@@ -1154,3 +1149,73 @@ CREATE TABLE `{tbl_prefix}tools_status`(
 
 ALTER TABLE `{tbl_prefix}tools`
     ADD FOREIGN KEY (`id_tools_status`) REFERENCES `{tbl_prefix}tools_status` (`id_tools_status`) ON DELETE RESTRICT ON UPDATE NO ACTION;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}tags`
+(
+    `id_tag`      INT          NOT NULL AUTO_INCREMENT,
+    `id_tag_type` INT          NOT NULL,
+    `name`        VARCHAR(128) NOT NULL,
+    PRIMARY KEY (`id_tag`),
+    UNIQUE  `id_tag_type` (`id_tag_type`, `name`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+ALTER TABLE `{tbl_prefix}tags` ADD FULLTEXT KEY `tag` (`name`);
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}tags_type`
+(
+    `id_tag_type` INT         NOT NULL AUTO_INCREMENT,
+    `name`        VARCHAR(32) NOT NULL,
+    PRIMARY KEY (`id_tag_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}tags` ADD CONSTRAINT `tag_type` FOREIGN KEY (`id_tag_type`) REFERENCES `{tbl_prefix}tags_type`(`id_tag_type`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_tags`
+(
+    `id_video` BIGINT NOT NULL,
+    `id_tag`   INT    NOT NULL,
+    PRIMARY KEY (`id_video`, `id_tag`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}video_tags` ADD CONSTRAINT `video_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags`(`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}video_tags` ADD CONSTRAINT `video_tags_video` FOREIGN KEY (`id_video`) REFERENCES `{tbl_prefix}video`(`videoid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}photo_tags`
+(
+    `id_photo` BIGINT NOT NULL,
+    `id_tag`   INT    NOT NULL,
+    PRIMARY KEY (`id_photo`, `id_tag`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}photo_tags` ADD CONSTRAINT `photo_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}photo_tags` ADD CONSTRAINT `photo_tags_photo` FOREIGN KEY (`id_photo`) REFERENCES `{tbl_prefix}photos` (`photo_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}collection_tags`
+(
+    `id_collection` BIGINT NOT NULL,
+    `id_tag`        INT    NOT NULL,
+    PRIMARY KEY (`id_collection`, `id_tag`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}collection_tags` ADD CONSTRAINT `collection_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}collection_tags` ADD CONSTRAINT `collection_tags_collection` FOREIGN KEY (`id_collection`) REFERENCES `{tbl_prefix}collections` (`collection_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}user_tags`
+(
+    `id_user` BIGINT NOT NULL,
+    `id_tag`  INT    NOT NULL,
+    PRIMARY KEY (`id_user`, `id_tag`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}user_tags` ADD CONSTRAINT `user_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}user_tags` ADD CONSTRAINT `user_tags_user` FOREIGN KEY (`id_user`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}playlist_tags`
+(
+    `id_playlist` INT NOT NULL,
+    `id_tag`      INT NOT NULL,
+    PRIMARY KEY (`id_playlist`, `id_tag`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}playlist_tags` ADD CONSTRAINT `playlist_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}playlist_tags` ADD CONSTRAINT `playlist_tags_playlist` FOREIGN KEY (`id_playlist`) REFERENCES `{tbl_prefix}playlists` (`playlist_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;

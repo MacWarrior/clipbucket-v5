@@ -83,5 +83,18 @@ if ($cbcollection->is_viewable($c)) {
     $Cbucket->show_page = false;
 }
 
+if(in_dev()){
+    $min_suffixe = '';
+} else {
+    $min_suffixe = '.min';
+}
+
+$Cbucket->addJS(['tag-it'.$min_suffixe.'.js' => 'admin']);
+$Cbucket->addJS(['pages/view_collection/view_collection'.$min_suffixe.'.js' => 'admin']);
+$Cbucket->addJS(['init_readonly_tag/init_readonly_tag'.$min_suffixe.'.js' => 'admin']);
+$Cbucket->addCSS(['jquery.tagit'.$min_suffixe.'.css' => 'admin']);
+$Cbucket->addCSS(['tagit.ui-zendesk'.$min_suffixe.'.css' => 'admin']);
+$Cbucket->addCSS(['readonly_tag'.$min_suffixe.'.css' => 'admin']);
+
 template_files('view_collection.html');
 display_it();

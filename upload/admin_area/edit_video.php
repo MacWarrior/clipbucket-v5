@@ -91,24 +91,26 @@ function format_number($number)
     return $number;
 }
 
-if(in_dev()){
+if (in_dev()) {
     $min_suffixe = '';
 } else {
     $min_suffixe = '.min';
 }
 $Cbucket->addAdminJS([
-    'jquery-ui-1.13.2.min.js' => 'admin'
-    ,'tag-it'.$min_suffixe.'.js' => 'admin'
-    ,'pages/edit_video/edit_video'.$min_suffixe.'.js' => 'admin'
+    'tag-it' . $min_suffixe . '.js'                            => 'admin',
+    'pages/edit_video/edit_video' . $min_suffixe . '.js'       => 'admin',
+    'init_default_tag/init_default_tag' . $min_suffixe . '.js' => 'admin'
 ]);
 
 $Cbucket->addAdminCSS([
-    'jquery.tagit'.$min_suffixe.'.css'=>'admin'
-    ,'tagit.ui-zendesk'.$min_suffixe.'.css'=>'admin'
+    'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
+    'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
 ]);
-
 $comments = getComments($comment_cond);
 assign('comments', $comments);
+
+$available_tags = Tags::fill_auto_complete_tags('video');
+assign('available_tags',$available_tags);
 
 subtitle('Edit Video');
 template_files('edit_video.html');

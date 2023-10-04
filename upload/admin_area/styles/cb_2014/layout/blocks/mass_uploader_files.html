@@ -17,7 +17,7 @@
 	{$requiredFields.audio_track.name="{$hash|cat:'_track'}"}
 	{$requiredFields.audio_track.class='form-control'}
 {/if}
-{$requiredFields.tags.id="{$requiredFields.tags.id|cat:$k}"}
+{$requiredFields.tags.id="{$requiredFields.tags.id|cat:$index}"}
 
 <div class="well">
 	<input type="checkbox" name="{$hash}" class="checkboxMassImport"/>
@@ -32,7 +32,7 @@
 			<div class="col-md-6">
 				<label for="{$requiredFields.tags.id}"><b style="color:#000000;">{$requiredFields.tags.title}</b></label>
 				{$formObj->createField($requiredFields.tags)}
-				<ul id="list_tags{$k}" data-id="{$k}"></ul>
+				<ul id="list_tags{$index}" data-id="{$index}"></ul>
 			</div>
 		</div>
 

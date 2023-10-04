@@ -44,11 +44,8 @@ class CBPhotos
         $this->exts = ['jpg', 'png', 'gif', 'jpeg']; // This should be added from Admin Area. may be some people also want to allow BMPs;
         $this->embed_types = ["html", "forum", "email", "direct"];
 
-        $basic_fields = [
-            'photo_id', 'photo_key', 'userid', 'photo_title', 'photo_description', 'photo_tags', 'collection_id',
-            'photo_details', 'date_added', 'filename', 'ext', 'active', 'broadcast', 'file_directory', 'views',
-            'last_commented', 'total_comments', 'last_viewed', 'featured as photo_featured'
-        ];
+
+        $basic_fields = $this->basic_fields_setup();
 
         $cb_columns->object('photos')->register_columns($basic_fields);
     }
@@ -70,7 +67,7 @@ class CBPhotos
     {
         # Set basic video fields
         $basic_fields = [
-            'photo_id', 'photo_key', 'userid', 'photo_title', 'photo_description', 'photo_tags', 'collection_id',
+            'photo_id', 'photo_key', 'userid', 'photo_title', 'photo_description', 'collection_id',
             'photo_details', 'date_added', 'filename', 'ext', 'active', 'broadcast', 'file_directory', 'views',
             'last_commented', 'total_comments'
         ];
@@ -274,6 +271,7 @@ class CBPhotos
 
     /**
      * Initiating Search
+     * @throws Exception
      */
     function init_search()
     {
@@ -283,8 +281,11 @@ class CBPhotos
 
         $this->search->columns = [
             ['field' => 'photo_title', 'type' => 'LIKE', 'var' => '%{KEY}%'],
-            ['field' => 'photo_tags', 'type' => 'LIKE', 'var' => '%{KEY}%', 'op' => 'OR']
         ];
+        $version = get_current_version();
+        if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
+            $this->search->columns[] = ['field' => 'name', 'type' => 'LIKE', 'var' => '%{KEY}%', 'op' => 'OR', 'db'=>'tags'];
+        }
         $this->search->match_fields = ['photo_title', 'photo_tags'];
         $this->search->cat_tbl = $this->cat_tbl;
 
@@ -363,7 +364,7 @@ class CBPhotos
      * @param $id
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     function photo_exists($id): bool
     {
@@ -397,18 +398,34 @@ class CBPhotos
      * @param $pid
      *
      * @return bool|array
-     * @throws \Exception
+     * @throws Exception
      */
     function get_photo($pid)
     {
         global $db;
 
         if (is_numeric($pid)) {
-            $result = $db->select(tbl($this->p_tbl), '*', ' photo_id = \'' . $pid . '\'');
+            $field = 'photo_id';
         } else {
-            $result = $db->select(tbl($this->p_tbl), '*', ' photo_key = \'' . $pid . '\'');
+            $field = 'photo_key';
         }
 
+        $select_tag = '';
+        $join_tag = '';
+        $version = get_current_version();
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+            $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') as photo_tags';
+            $join_tag = 'LEFT JOIN ' . tbl('photo_tags') . ' AS PT ON P.photo_id = PT.id_photo  
+                    LEFT JOIN ' . tbl('tags') . ' AS T ON PT.id_tag = T.id_tag';
+        }
+
+        $query = 'SELECT P.* '. $select_tag.'  
+                    FROM ' . tbl($this->p_tbl) . ' AS P 
+                   '.$join_tag.'
+                    WHERE P.' . $field . ' = \'' . $pid . '\'
+                    GROUP BY P.photo_id';
+
+        $result = $db->_select($query);
         if (count($result) > 0) {
             return $result[0];
         }
@@ -421,7 +438,7 @@ class CBPhotos
      * @param $p
      *
      * @return bool|mixed
-     * @throws \Exception
+     * @throws Exception
      */
     function get_photos($p)
     {
@@ -511,27 +528,12 @@ class CBPhotos
             $title_tag = 'photos.photo_title LIKE \'%' . mysql_clean($p['title']) . '%\'';
         }
 
-        if ($p['tags']) {
+        if (!empty($p['tags'])) {
             $tags = explode(',', $p['tags']);
-            if (count($tags) > 0) {
-                if ($title_tag != '') {
-                    $title_tag .= ' OR ';
-                }
-                $total = count($tags);
-                $loop = 1;
-                foreach ($tags as $tag) {
-                    $title_tag .= 'photos.photo_tags LIKE \'%' . mysql_clean($tag) . '%\'';
-                    if ($loop < $total) {
-                        $title_tag .= ' OR ';
-                    }
-                    $loop++;
-                }
-            } else {
-                if ($title_tag != '') {
-                    $title_tag .= ' OR ';
-                }
-                $title_tag .= 'photos.photo_tags LIKE \'%' . mysql_clean($p['tags']) . '%\'';
+            if ($title_tag != '') {
+                $title_tag .= ' OR ';
             }
+            $title_tag .= ' T.name IN (\'' . mysql_clean($p['tags']) . '\')';
         }
 
         if ($title_tag != '') {
@@ -575,12 +577,26 @@ class CBPhotos
             'collections' => ['collection_name', 'type', 'category', 'views as collection_views', 'date_added as collection_added']
         ];
 
+        $select_tag = '';
+        $join_tag = '';
+        $group_tag = '';
+        $match_tag='';
+        $version = get_current_version();
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+            $match_tag = 'T.name';
+            $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') as photo_tags';
+            $join_tag = ' LEFT JOIN ' . tbl('photo_tags') . ' AS PT ON photos.photo_id = PT.id_photo 
+                    LEFT JOIN ' . tbl('tags') . ' AS T ON PT.id_tag = T.id_tag';
+            $group_tag = ' GROUP BY photos.photo_id ';
+        }
+
         $string = table_fields($fields);
 
-        $main_query = 'SELECT ' . $string . ' FROM ' . cb_sql_table('photos');
+        $main_query = 'SELECT ' . $string . ' ' . $select_tag;
+        $main_query .= ' FROM '.cb_sql_table('photos');
         $main_query .= ' LEFT JOIN ' . cb_sql_table('collections') . ' ON photos.collection_id = collections.collection_id';
         $main_query .= ' LEFT JOIN ' . cb_sql_table('users') . ' ON collections.userid = users.userid';
-
+        $main_query .= $join_tag;
         $order = $order ? ' ORDER BY ' . $order : false;
         $limit = $limit ? ' LIMIT ' . $limit : false;
 
@@ -590,6 +606,7 @@ class CBPhotos
                 $query .= ' WHERE ' . $cond;
             }
 
+            $query .= $group_tag;
             $query .= $order;
             $query .= $limit;
 
@@ -599,8 +616,12 @@ class CBPhotos
         if ($p['show_related']) {
             $query = $main_query;
 
-            $cond = 'MATCH(' . ('photos.photo_title,photos.photo_tags') . ')';
-            $cond .= " AGAINST ('" . $cbsearch->set_the_key($p['title']) . "' IN NATURAL LANGUAGE MODE)";
+            $cond .= '(MATCH(photos.photo_title) AGAINST (\'' . mysql_clean($cbsearch->set_the_key($p['title'])) . '\' IN NATURAL LANGUAGE MODE) ';
+            if( $match_tag != ''){
+                $cond .= 'OR MATCH('.$match_tag.') AGAINST (\'' . mysql_clean($cbsearch->set_the_key($p['title'])) . '\' IN NATURAL LANGUAGE MODE)';
+            }
+            $cond .= ')';
+
             if ($p['exclude']) {
                 if ($cond != '') {
                     $cond .= ' AND ';
@@ -625,6 +646,7 @@ class CBPhotos
             $where = ' WHERE ' . $cond . ' AND photos.collection_id <> 0';
 
             $query .= $where;
+            $query .= $group_tag;
             $query .= $order;
             $query .= $limit;
 
@@ -637,8 +659,11 @@ class CBPhotos
                 $tags = $cbsearch->set_the_key($p['tags']);
                 $tags = str_replace('+', '', $tags);
 
-                $cond = 'MATCH(' . ('photos.photo_title,photos.photo_tags') . ')';
-                $cond .= " AGAINST ('" . $tags . "' IN NATURAL LANGUAGE MODE)";
+                $cond .= '(MATCH(photos.photo_title) AGAINST (\'' . mysql_clean($tags) . '\' IN NATURAL LANGUAGE MODE) ';
+                if( $match_tag != ''){
+                    $cond .= 'OR MATCH('.$match_tag.') AGAINST (\'' . mysql_clean($tags) . '\' IN NATURAL LANGUAGE MODE)';
+                }
+                $cond .= ')';
 
                 if ($p['exclude']) {
                     if ($cond != '') {
@@ -663,6 +688,7 @@ class CBPhotos
 
                 $where = ' WHERE ' . $cond . ' AND photos.collection_id <> 0';
                 $query .= $where;
+                $query .= $group_tag;
                 $query .= $order;
                 $query .= $limit;
 
@@ -678,7 +704,14 @@ class CBPhotos
                 $cond .= $p['extra_cond'];
             }
 
-            $result = $db->count(cb_sql_table('photos'), 'photo_id', $cond);
+            //don't remove alias T at the end, request will crash
+            $query_count = 'SELECT COUNT(*) AS total FROM (SELECT photo_id FROM' . cb_sql_table('photos') . $join_tag . ' WHERE ' . $cond . ' ' . $group_tag . ') T';
+            $count = $db->_select($query_count);
+            if (!empty($count)) {
+                $result = $count[0]['total'];
+            } else {
+                $result = 0;
+            }
         }
 
         if ($p['assign']) {
@@ -751,7 +784,7 @@ class CBPhotos
      * @param $key
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     function pkey_exists($key)
     {
@@ -768,7 +801,7 @@ class CBPhotos
      *
      * @param      $id
      * @param bool $orphan
-     * @throws \Exception
+     * @throws Exception
      */
     function delete_photo($id, $orphan = false)
     {
@@ -788,6 +821,8 @@ class CBPhotos
             if ($orphan == false) {//removing from collection
                 $this->collection->remove_item($photo['photo_id'], $photo['collection_id']);
             }
+            //Remove tags
+            \Tags::saveTags('', 'photo', $photo['photo_id']);
 
             //now removing photo files
             $this->delete_photo_files($photo);
@@ -812,7 +847,7 @@ class CBPhotos
      * Used to delete photo files
      *
      * @param $id
-     * @throws \Exception
+     * @throws Exception
      */
     function delete_photo_files($id)
     {
@@ -839,7 +874,7 @@ class CBPhotos
      * Used to delete photo from database
      *
      * @param $id
-     * @throws \Exception
+     * @throws Exception
      */
     function delete_from_db($id)
     {
@@ -860,7 +895,7 @@ class CBPhotos
      * @param $id
      *
      * @return bool|mixed
-     * @throws \Exception
+     * @throws Exception
      */
     function get_photo_owner($id)
     {
@@ -874,7 +909,7 @@ class CBPhotos
      * @param $field
      *
      * @return bool|mixed
-     * @throws \Exception
+     * @throws Exception
      */
     function get_photo_field($id, $field)
     {
@@ -951,7 +986,7 @@ class CBPhotos
      * Used to resize and watermark image
      *
      * @param $array
-     * @throws \Exception
+     * @throws Exception
      */
     function generate_photos($array)
     {
@@ -990,7 +1025,7 @@ class CBPhotos
      * then encode in json and finally update photo details column
      *
      * @param $photo
-     * @throws \Exception
+     * @throws Exception
      */
     function update_image_details($photo)
     {
@@ -1250,7 +1285,7 @@ class CBPhotos
      * @param null $array
      *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     function load_required_forms($array = null): array
     {
@@ -1294,14 +1329,13 @@ class CBPhotos
                 'invalid_err'   => lang('photo_caption_err')
             ],
             'tags' => [
-                'title'       => lang('photo_tags'),
-                'name'        => 'photo_tags',
-                'type'        => 'hidden',
-                'id'          => 'tags',
-                'value'       => genTags($tags),
-                'db_field'    => 'photo_tags',
-                'required'    => 'yes',
-                'invalid_err' => lang('photo_tags_err')
+                'title'             => lang('photo_tags'),
+                'name'              => 'photo_tags',
+                'type'              => 'hidden',
+                'id'                => 'tags',
+                'value'             => genTags($tags),
+                'required'          => 'no',
+                'validate_function' => 'genTags'
             ],
             'collection' => [
                 'title'       => lang('collection'),
@@ -1316,6 +1350,10 @@ class CBPhotos
         ];
     }
 
+    /**
+     * @throws \PHPMailer\PHPMailer\Exception
+     * @throws Exception
+     */
     function insert_photo($array = null)
     {
         global $db, $eh;
@@ -1434,7 +1472,7 @@ class CBPhotos
      * Update watermark file
      *
      * @param $file
-     * @throws \Exception
+     * @throws Exception
      */
     function update_watermark($file)
     {
@@ -1470,7 +1508,7 @@ class CBPhotos
      * @param null $array
      *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     function load_other_forms($array = null): array
     {
@@ -1562,7 +1600,7 @@ class CBPhotos
      * Single update will be different.
      *
      * @param $arr
-     * @throws \Exception
+     * @throws Exception
      */
     function update_multiple_photos($arr)
     {
@@ -1656,7 +1694,7 @@ class CBPhotos
      * Update Photo
      *
      * @param null $array
-     * @throws \Exception
+     * @throws Exception
      */
     function update_photo($array = null)
     {
@@ -1748,6 +1786,9 @@ class CBPhotos
                             }
 
                             $db->update(tbl('photos'), $query_field, $query_val, " photo_id='$pid'");
+
+                            Tags::saveTags($array['photo_tags'], 'photo', $pid);
+
                             e(lang("photo_updated_successfully"), "m");
                         }
                     }
@@ -1813,7 +1854,7 @@ class CBPhotos
      * @param $p
      *
      * @return string|array
-     * @throws \Exception
+     * @throws Exception
      */
     function getFileSmarty($p)
     {
@@ -2006,7 +2047,7 @@ class CBPhotos
      *
      * @param      $details
      * @param null $pid
-     * @throws \Exception
+     * @throws Exception
      */
     function make_photo_orphan($details, $pid = null)
     {
@@ -2034,7 +2075,7 @@ class CBPhotos
      * @param $arr
      *
      * @return bool|mixed|null|string|string[]|void
-     * @throws \Exception
+     * @throws Exception
      */
     function upload_photo_button($arr)
     {
@@ -2232,7 +2273,7 @@ class CBPhotos
      * @param bool $force_name_email
      *
      * @return bool|mixed
-     * @throws \Exception
+     * @throws Exception
      */
     function add_comment($comment, $obj_id, $reply_to = null, $force_name_email = false)
     {
@@ -2258,7 +2299,7 @@ class CBPhotos
      * Function used to update total comments of collection
      *
      * @param $pid
-     * @throws \Exception
+     * @throws Exception
      */
     function update_total_comments($pid)
     {
@@ -2305,7 +2346,7 @@ class CBPhotos
      * @param bool $show_all
      *
      * @return bool|mixed
-     * @throws \Exception
+     * @throws Exception
      */
     function photo_voters($id, $return_array = false, $show_all = false)
     {
@@ -2342,7 +2383,7 @@ class CBPhotos
      * @param $id
      *
      * @return bool|array
-     * @throws \Exception
+     * @throws Exception
      */
     function current_rating($id)
     {
@@ -2369,7 +2410,7 @@ class CBPhotos
      * @param $rating
      *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     function rate_photo($id, $rating): array
     {
@@ -2438,7 +2479,7 @@ class CBPhotos
      * @param $p
      *
      * @return bool|string
-     * @throws \Exception
+     * @throws Exception
      */
     function generate_embed_codes($p)
     {
@@ -2498,7 +2539,7 @@ class CBPhotos
      * @param $newArr
      *
      * @return array|void
-     * @throws \Exception
+     * @throws Exception
      */
     function photo_embed_codes($newArr)
     {
@@ -2566,7 +2607,7 @@ class CBPhotos
      *
      * @param $action
      * @param $id
-     * @throws \Exception
+     * @throws Exception
      */
     function photo_actions($action, $id)
     {

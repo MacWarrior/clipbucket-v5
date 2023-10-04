@@ -72,8 +72,6 @@ switch ($mode) {
     case 'update_photo':
         $_POST['photo_title'] = mysql_clean($_POST['photo_title']);
         $_POST['photo_description'] = mysql_clean($_POST['photo_description']);
-        $_POST['photo_tags'] = genTags(str_replace([' ', '_', '-'], ', ', mysql_clean($_POST['photo_tags'])));
-
         $cbphoto->update_photo();
 
         if (error()) {

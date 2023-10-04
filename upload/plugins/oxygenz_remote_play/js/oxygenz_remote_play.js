@@ -36,7 +36,25 @@ $( document ).ready(function() {
                     $('#oxygenz_remote_play_form').find('input[name="title"]').val(data.filename);
                     $('#oxygenz_remote_play_form').find('textarea[name="description"]').val(data.filename);
                     $('#oxygenz_remote_play_form').find('input[name="tags"]').val(data.filename);
-
+                    var alert_shown = false;
+                    $('#oxygenz_remote_play_form').find('#list_tags').tagit({
+                        singleField:true,
+                        readOnly:false,
+                        singleFieldNode: $('#oxygenz_remote_play_form').find('input[name="tags"]'),
+                        animate:true,
+                        caseSensitive:false,
+                        availableTags: available_tags,
+                        beforeTagAdded: function (event,info) {
+                            if (info.tagLabel.length <= 2) {
+                                if (!alert_shown) {
+                                    alert_shown = true;
+                                    alert(tag_too_short);
+                                }
+                                return false;
+                            }
+                            alert_shown = false;
+                        }
+                    });
                     $('#oxygenz_remote_play_submit_form1').fadeOut(250);
                     $('#second-form').slideDown(1000);
                 }
