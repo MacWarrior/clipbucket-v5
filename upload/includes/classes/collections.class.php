@@ -999,12 +999,6 @@ class Collections extends CBCategory
                 $query_field[] = 'active';
                 $query_val[] = 'yes';
 
-                $version = get_current_version();
-                if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
-                    $query_field[] = 'collection_tags';
-                    $query_val[] = '';
-                }
-
                 $insert_id = $db->insert(tbl($this->section_tbl), $query_field, $query_val);
                 addFeed(['action' => 'add_collection', 'object_id' => $insert_id, 'object' => 'collection']);
 

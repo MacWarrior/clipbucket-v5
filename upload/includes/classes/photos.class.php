@@ -583,7 +583,7 @@ class CBPhotos
         $match_tag='';
         $version = get_current_version();
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
-            $match_tag = ',photos.photo_tags';
+            $match_tag = 'T.name';
             $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') as photo_tags';
             $join_tag = ' LEFT JOIN ' . tbl('photo_tags') . ' AS PT ON photos.photo_id = PT.id_photo 
                     LEFT JOIN ' . tbl('tags') . ' AS T ON PT.id_tag = T.id_tag';
@@ -592,7 +592,8 @@ class CBPhotos
 
         $string = table_fields($fields);
 
-        $main_query = 'SELECT ' . $string . ' ' . $select_tag . ' ' . cb_sql_table('photos');
+        $main_query = 'SELECT ' . $string . ' ' . $select_tag;
+        $main_query .= ' FROM '.cb_sql_table('photos');
         $main_query .= ' LEFT JOIN ' . cb_sql_table('collections') . ' ON photos.collection_id = collections.collection_id';
         $main_query .= ' LEFT JOIN ' . cb_sql_table('users') . ' ON collections.userid = users.userid';
         $main_query .= $join_tag;
@@ -615,8 +616,12 @@ class CBPhotos
         if ($p['show_related']) {
             $query = $main_query;
 
-            $cond = 'MATCH(' . ('photos.photo_title'.$match_tag) . ')';
-            $cond .= " AGAINST ('" . $cbsearch->set_the_key($p['title']) . "' IN NATURAL LANGUAGE MODE)";
+            $cond .= '(MATCH(photos.photo_title) AGAINST (\'' . mysql_clean($cbsearch->set_the_key($p['title'])) . '\' IN NATURAL LANGUAGE MODE) ';
+            if( $match_tag != ''){
+                $cond .= 'OR MATCH('.$match_tag.') AGAINST (\'' . mysql_clean($cbsearch->set_the_key($p['title'])) . '\' IN NATURAL LANGUAGE MODE)';
+            }
+            $cond .= ')';
+
             if ($p['exclude']) {
                 if ($cond != '') {
                     $cond .= ' AND ';
@@ -642,7 +647,6 @@ class CBPhotos
 
             $query .= $where;
             $query .= $group_tag;
-
             $query .= $order;
             $query .= $limit;
 
@@ -655,8 +659,11 @@ class CBPhotos
                 $tags = $cbsearch->set_the_key($p['tags']);
                 $tags = str_replace('+', '', $tags);
 
-                $cond = 'MATCH(' . ('photos.photo_title'.$match_tag) . ')';
-                $cond .= " AGAINST ('" . $tags . "' IN NATURAL LANGUAGE MODE)";
+                $cond .= '(MATCH(photos.photo_title) AGAINST (\'' . mysql_clean($tags) . '\' IN NATURAL LANGUAGE MODE) ';
+                if( $match_tag != ''){
+                    $cond .= 'OR MATCH('.$match_tag.') AGAINST (\'' . mysql_clean($tags) . '\' IN NATURAL LANGUAGE MODE)';
+                }
+                $cond .= ')';
 
                 if ($p['exclude']) {
                     if ($cond != '') {
@@ -1441,12 +1448,6 @@ class CBPhotos
                 $query_val[] = $array['folder'];
             }
             $query_val['0'] = $array['title'];
-
-            $version = get_current_version();
-            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
-                $query_field[] = 'photo_tags';
-                $query_val[] = '';
-            }
 
             $insert_id = $db->insert(tbl($this->p_tbl), $query_field, $query_val);
 

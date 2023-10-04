@@ -92,7 +92,7 @@ class cbactions
 
     /**
      * Function used to add content to favorites
-     * @throws \Exception
+     * @throws Exception
      */
     function add_to_fav($id)
     {
@@ -133,7 +133,7 @@ class cbactions
      * @param null $uid
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     function fav_check($id, $uid = null): bool
     {
@@ -172,7 +172,7 @@ class cbactions
      * Function used to report a content
      *
      * @param $id
-     * @throws \Exception
+     * @throws Exception
      */
     function report_it($id)
     {
@@ -202,7 +202,7 @@ class cbactions
      * Function used to delete flags
      *
      * @param $id
-     * @throws \Exception
+     * @throws Exception
      */
     function delete_flags($id)
     {
@@ -218,7 +218,7 @@ class cbactions
      * @param $id
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     function report_check($id): bool
     {
@@ -236,7 +236,7 @@ class cbactions
      *
      * @param $id
      *
-     * @throws \Exception
+     * @throws Exception
      */
     function share_content($id)
     {
@@ -296,7 +296,7 @@ class cbactions
      * @param $params
      *
      * @return array|bool
-     * @throws \Exception
+     * @throws Exception
      */
     function get_favorites($params)
     {
@@ -333,7 +333,7 @@ class cbactions
 
     /**
      * Function used to count total favorites only
-     * @throws \Exception
+     * @throws Exception
      */
     function total_favorites()
     {
@@ -346,7 +346,7 @@ class cbactions
      *
      * @param      $fav_id
      * @param null $uid
-     * @throws \Exception
+     * @throws Exception
      */
     function remove_favorite($fav_id, $uid = null)
     {
@@ -368,7 +368,7 @@ class cbactions
      * @param null $limit
      *
      * @return array|bool
-     * @throws \Exception
+     * @throws Exception
      */
     function get_flagged_objects($limit = null)
     {
@@ -388,7 +388,7 @@ class cbactions
      * @param $id
      *
      * @return array|bool
-     * @throws \Exception
+     * @throws Exception
      */
     function get_flags($id)
     {
@@ -402,7 +402,7 @@ class cbactions
 
     /**
      * Function used to count object flags
-     * @throws \Exception
+     * @throws Exception
      */
     function count_flagged_objects(): int
     {
@@ -528,7 +528,7 @@ class cbactions
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     function create_playlist($params)
     {
@@ -558,7 +558,7 @@ class cbactions
 
     /**
      * Function used to check weather playlist already exists or not
-     * @throws \Exception
+     * @throws Exception
      */
     function playlist_exists($name, $user, $type = null): bool
     {
@@ -576,7 +576,7 @@ class cbactions
 
     /**
      * Function used to get playlist
-     * @throws \Exception
+     * @throws Exception
      */
     function get_playlist($id, $user = null)
     {
@@ -596,10 +596,9 @@ class cbactions
             $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') AS tags';
             $join_tag = ' LEFT JOIN ' . tbl('playlist_tags') . ' AS PT ON playlists.playlist_id = PT.id_playlist 
                     LEFT JOIN ' . tbl('tags') .' AS T ON PT.id_tag = T.id_tag' ;
-            $group_tag = ' GROUP BY videoid';
+            $group_tag = ' GROUP BY playlists.playlist_id';
         }
-
-
+        
         $query = 'SELECT ' . table_fields($fields) . ' '.$select_tag.' FROM ' . cb_sql_table('playlists').'
                 LEFT JOIN ' . cb_sql_table('users') . ' ON playlists.userid = users.userid
                 '.$join_tag.'
@@ -652,7 +651,7 @@ class cbactions
 
     /**
      * Function used to add new item in playlist
-     * @throws \Exception
+     * @throws Exception
      */
     function add_playlist_item($pid, $id)
     {
@@ -703,7 +702,7 @@ class cbactions
 
     /**
      * Function use to delete playlist item
-     * @throws \Exception
+     * @throws Exception
      */
     function delete_playlist_item($id)
     {
@@ -778,7 +777,7 @@ class cbactions
 
     /**
      * Function used to check weather playlist item exists or not
-     * @throws \Exception
+     * @throws Exception
      */
     function playlist_item($id, $join_playlist = false)
     {
@@ -828,7 +827,7 @@ class cbactions
      * @param null $pid
      *
      * @return bool|array
-     * @throws \Exception
+     * @throws Exception
      */
     function playlist_item_with_obj($id, $pid = null)
     {
@@ -848,7 +847,7 @@ class cbactions
      * Function used to update playlist details
      *
      * @param null $array
-     * @throws \Exception
+     * @throws Exception
      */
     function edit_playlist($array = null)
     {
@@ -929,7 +928,7 @@ class cbactions
 
     /**
      * Function used to delete playlist
-     * @throws \Exception
+     * @throws Exception
      */
     function delete_playlist($id)
     {
@@ -949,7 +948,7 @@ class cbactions
 
     /**
      * Function used to get playlists
-     * @throws \Exception
+     * @throws Exception
      */
     function get_playlists($params = [])
     {
@@ -975,10 +974,10 @@ class cbactions
             $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') as profile_tags';
             $join_tag = ' LEFT JOIN ' . tbl('playlist_tags') . ' AS PT ON playlists.playlist_id = PT.id_playlist 
                     LEFT JOIN ' . tbl('tags') .' AS T ON PT.id_tag = T.id_tag' ;
-            $group_tag = ' GROUP BY videoid';
+            $group_tag = ' GROUP BY playlists.playlist_id';
         }
 
-        $query = 'SELECT ' . table_fields($fields) . ' FROM ';
+        $query = 'SELECT ' . table_fields($fields) .$select_tag.' FROM ';
         $from = cb_sql_table('playlists')
                 . $join_tag ;
         $query .= $from;
@@ -1068,7 +1067,7 @@ class cbactions
         $order = ' ORDER BY ' . ($order ? trim($order) : 'playlists.date_added DESC');
         $limit = ($limit) ? ' LIMIT ' . $limit : '';
 
-        $query .= $order . $limit;
+        $query .= $group_tag . $order . $limit;
 
         $query_id = cb_query_id($query);
 
@@ -1094,7 +1093,7 @@ class cbactions
 
     /**
      * this method has been deprecated
-     * @throws \Exception
+     * @throws Exception
      */
     function get_playlists_no_more_cb26()
     {
@@ -1115,9 +1114,9 @@ class cbactions
      * @param PID playlistid
      *
      * @return array Array
-     * @throws \Exception
+     * @throws Exception
      */
-    function getPlaylistThumb($pid)
+    function getPlaylistThumb($pid): array
     {
         $pid = (int)$pid;
         $items = $this->get_playlist_items($pid, null, 3);
@@ -1146,7 +1145,7 @@ class cbactions
      * @param int $limit
      *
      * @return array|bool
-     * @throws \Exception
+     * @throws Exception
      */
     function get_playlist_items($playlist_id, $order = null, $limit = -1)
     {
@@ -1164,8 +1163,8 @@ class cbactions
      *
      * @param $id
      *
-     * @return bool
-     * @throws \Exception
+     * @return bool|int
+     * @throws Exception
      */
     function count_playlist_items($id)
     {
@@ -1179,7 +1178,7 @@ class cbactions
      * @param bool $item
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     function count_total_playlist($item = false)
     {
