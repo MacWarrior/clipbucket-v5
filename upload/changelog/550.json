@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"261",
+  "revision":"262",
   "status":"dev",
   "detail":[
     {
@@ -78,6 +78,7 @@
         ,"Refactor tags management"
         ,"Hide player and template menus when no choice available"
         ,"Fix admin tools while using Apache PHP mod"
+        ,"Implement duration repair tool"
       ]
     },
     {
