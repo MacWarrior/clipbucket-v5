@@ -7,6 +7,7 @@ function get_photo_fields()
 
 /**
  * function used to get photos
+ * @throws Exception
  */
 function get_photos($param)
 {

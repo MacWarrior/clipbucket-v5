@@ -271,6 +271,7 @@ class CBPhotos
 
     /**
      * Initiating Search
+     * @throws Exception
      */
     function init_search()
     {
@@ -363,7 +364,7 @@ class CBPhotos
      * @param $id
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     function photo_exists($id): bool
     {
@@ -397,7 +398,7 @@ class CBPhotos
      * @param $pid
      *
      * @return bool|array
-     * @throws \Exception
+     * @throws Exception
      */
     function get_photo($pid)
     {
@@ -411,22 +412,18 @@ class CBPhotos
 
         $select_tag = '';
         $join_tag = '';
-        $group_tag = '';
-        $match_tag='';
         $version = get_current_version();
-        if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
-            $match_tag = ',photos.photo_tags';
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
             $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') as photo_tags';
             $join_tag = 'LEFT JOIN ' . tbl('photo_tags') . ' AS PT ON P.photo_id = PT.id_photo  
                     LEFT JOIN ' . tbl('tags') . ' AS T ON PT.id_tag = T.id_tag';
-            $group_tag = ' GROUP BY photos.photo_id ';
         }
 
         $query = 'SELECT P.* '. $select_tag.'  
                     FROM ' . tbl($this->p_tbl) . ' AS P 
                    '.$join_tag.'
                     WHERE P.' . $field . ' = \'' . $pid . '\'
-                    GROUP BY P.photo_id ';
+                    GROUP BY P.photo_id';
 
         $result = $db->_select($query);
         if (count($result) > 0) {
@@ -441,7 +438,7 @@ class CBPhotos
      * @param $p
      *
      * @return bool|mixed
-     * @throws \Exception
+     * @throws Exception
      */
     function get_photos($p)
     {
@@ -585,7 +582,7 @@ class CBPhotos
         $group_tag = '';
         $match_tag='';
         $version = get_current_version();
-        if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
             $match_tag = ',photos.photo_tags';
             $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') as photo_tags';
             $join_tag = ' LEFT JOIN ' . tbl('photo_tags') . ' AS PT ON photos.photo_id = PT.id_photo 
@@ -780,7 +777,7 @@ class CBPhotos
      * @param $key
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     function pkey_exists($key)
     {
@@ -797,7 +794,7 @@ class CBPhotos
      *
      * @param      $id
      * @param bool $orphan
-     * @throws \Exception
+     * @throws Exception
      */
     function delete_photo($id, $orphan = false)
     {
@@ -843,7 +840,7 @@ class CBPhotos
      * Used to delete photo files
      *
      * @param $id
-     * @throws \Exception
+     * @throws Exception
      */
     function delete_photo_files($id)
     {
@@ -870,7 +867,7 @@ class CBPhotos
      * Used to delete photo from database
      *
      * @param $id
-     * @throws \Exception
+     * @throws Exception
      */
     function delete_from_db($id)
     {
@@ -891,7 +888,7 @@ class CBPhotos
      * @param $id
      *
      * @return bool|mixed
-     * @throws \Exception
+     * @throws Exception
      */
     function get_photo_owner($id)
     {
@@ -905,7 +902,7 @@ class CBPhotos
      * @param $field
      *
      * @return bool|mixed
-     * @throws \Exception
+     * @throws Exception
      */
     function get_photo_field($id, $field)
     {
@@ -982,7 +979,7 @@ class CBPhotos
      * Used to resize and watermark image
      *
      * @param $array
-     * @throws \Exception
+     * @throws Exception
      */
     function generate_photos($array)
     {
@@ -1021,7 +1018,7 @@ class CBPhotos
      * then encode in json and finally update photo details column
      *
      * @param $photo
-     * @throws \Exception
+     * @throws Exception
      */
     function update_image_details($photo)
     {
@@ -1281,7 +1278,7 @@ class CBPhotos
      * @param null $array
      *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     function load_required_forms($array = null): array
     {
@@ -1346,6 +1343,10 @@ class CBPhotos
         ];
     }
 
+    /**
+     * @throws \PHPMailer\PHPMailer\Exception
+     * @throws Exception
+     */
     function insert_photo($array = null)
     {
         global $db, $eh;
@@ -1442,7 +1443,7 @@ class CBPhotos
             $query_val['0'] = $array['title'];
 
             $version = get_current_version();
-            if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
+            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
                 $query_field[] = 'photo_tags';
                 $query_val[] = '';
             }
@@ -1470,7 +1471,7 @@ class CBPhotos
      * Update watermark file
      *
      * @param $file
-     * @throws \Exception
+     * @throws Exception
      */
     function update_watermark($file)
     {
@@ -1506,7 +1507,7 @@ class CBPhotos
      * @param null $array
      *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     function load_other_forms($array = null): array
     {
@@ -1598,7 +1599,7 @@ class CBPhotos
      * Single update will be different.
      *
      * @param $arr
-     * @throws \Exception
+     * @throws Exception
      */
     function update_multiple_photos($arr)
     {
@@ -1692,7 +1693,7 @@ class CBPhotos
      * Update Photo
      *
      * @param null $array
-     * @throws \Exception
+     * @throws Exception
      */
     function update_photo($array = null)
     {
@@ -1852,7 +1853,7 @@ class CBPhotos
      * @param $p
      *
      * @return string|array
-     * @throws \Exception
+     * @throws Exception
      */
     function getFileSmarty($p)
     {
@@ -2045,7 +2046,7 @@ class CBPhotos
      *
      * @param      $details
      * @param null $pid
-     * @throws \Exception
+     * @throws Exception
      */
     function make_photo_orphan($details, $pid = null)
     {
@@ -2073,7 +2074,7 @@ class CBPhotos
      * @param $arr
      *
      * @return bool|mixed|null|string|string[]|void
-     * @throws \Exception
+     * @throws Exception
      */
     function upload_photo_button($arr)
     {
@@ -2271,7 +2272,7 @@ class CBPhotos
      * @param bool $force_name_email
      *
      * @return bool|mixed
-     * @throws \Exception
+     * @throws Exception
      */
     function add_comment($comment, $obj_id, $reply_to = null, $force_name_email = false)
     {
@@ -2297,7 +2298,7 @@ class CBPhotos
      * Function used to update total comments of collection
      *
      * @param $pid
-     * @throws \Exception
+     * @throws Exception
      */
     function update_total_comments($pid)
     {
@@ -2344,7 +2345,7 @@ class CBPhotos
      * @param bool $show_all
      *
      * @return bool|mixed
-     * @throws \Exception
+     * @throws Exception
      */
     function photo_voters($id, $return_array = false, $show_all = false)
     {
@@ -2381,7 +2382,7 @@ class CBPhotos
      * @param $id
      *
      * @return bool|array
-     * @throws \Exception
+     * @throws Exception
      */
     function current_rating($id)
     {
@@ -2408,7 +2409,7 @@ class CBPhotos
      * @param $rating
      *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     function rate_photo($id, $rating): array
     {
@@ -2477,7 +2478,7 @@ class CBPhotos
      * @param $p
      *
      * @return bool|string
-     * @throws \Exception
+     * @throws Exception
      */
     function generate_embed_codes($p)
     {
@@ -2537,7 +2538,7 @@ class CBPhotos
      * @param $newArr
      *
      * @return array|void
-     * @throws \Exception
+     * @throws Exception
      */
     function photo_embed_codes($newArr)
     {
@@ -2605,7 +2606,7 @@ class CBPhotos
      *
      * @param $action
      * @param $id
-     * @throws \Exception
+     * @throws Exception
      */
     function photo_actions($action, $id)
     {

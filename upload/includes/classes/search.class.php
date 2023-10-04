@@ -82,6 +82,9 @@ class cbsearch
      */
     var $query_conds = [];
 
+    /**
+     * @throws Exception
+     */
     function search(): array
     {
         global $db;
@@ -160,12 +163,10 @@ class cbsearch
             default:
                 break;
         }
-        $select_tag = '';
         $join_tag = '';
         $group_tag = '';
         $version = get_current_version();
-        if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
-            $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') as profile_tags';
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
             $join_tag = '  INNER JOIN ' . tbl($table_tag) . ' ON ' . tbl($table_tag) . '.' . $id_field . ' = ' . tbl($this->db_tbl) . '.' . $object_id . '
                 INNER JOIN ' . tbl('tags') . ' ON ' . tbl($table_tag) . '.id_tag = ' . tbl('tags') . '.id_tag' ;
             $group_tag = ' GROUP BY ' . $object_id;

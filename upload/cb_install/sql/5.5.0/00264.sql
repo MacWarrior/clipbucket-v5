@@ -83,7 +83,6 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}playlist_tags`
 ALTER TABLE `{tbl_prefix}playlist_tags` ADD CONSTRAINT `playlist_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 ALTER TABLE `{tbl_prefix}playlist_tags` ADD CONSTRAINT `playlist_tags_playlist` FOREIGN KEY (`id_playlist`) REFERENCES `{tbl_prefix}playlists` (`playlist_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
-
 INSERT INTO `{tbl_prefix}tags_type` (`name`)
 VALUES ('video'),
        ('photo'),
@@ -91,82 +90,98 @@ VALUES ('video'),
        ('profile'),
        ('playlist');
 
-SET @type_video = (SELECT id_tag_type
-                   FROM `{tbl_prefix}tags_type`
-                   WHERE name LIKE 'video');
-
-INSERT IGNORE INTO `{tbl_prefix}tags` (id_tag_type, name) (SELECT @type_video, jsontable.tags
-                                                           FROM `{tbl_prefix}video`
-                                                                    CROSS JOIN JSON_TABLE(CONCAT('["', REPLACE(LOWER(`tags`), ',', '","'), '"]'), '$[*]' COLUMNS (`tags` TEXT PATH '$')) jsontable
-                                                           WHERE TRIM(jsontable.tags) != '');
+SET @type_video = (
+    SELECT id_tag_type
+    FROM `{tbl_prefix}tags_type`
+    WHERE name LIKE 'video'
+);
+INSERT IGNORE INTO `{tbl_prefix}tags` (id_tag_type, name) (
+    SELECT @type_video, TRIM(jsontable.tags)
+    FROM `{tbl_prefix}video`
+             CROSS JOIN JSON_TABLE(CONCAT('["', REPLACE(LOWER(`tags`), ',', '","'), '"]'), '$[*]' COLUMNS (`tags` TEXT PATH '$')) jsontable
+    WHERE TRIM(jsontable.tags) != ''
+);
 INSERT IGNORE INTO `{tbl_prefix}video_tags` (`id_tag`, `id_video`) (
     SELECT T.id_tag, videoid
     FROM `{tbl_prefix}video`
              CROSS JOIN JSON_TABLE(CONCAT('["', REPLACE(LOWER(`tags`), ',', '","'), '"]'), '$[*]' COLUMNS (`tags` TEXT PATH '$')) jsontable
-             INNER JOIN `{tbl_prefix}tags` AS T ON T.name = LOWER(jsontable.tags) COLLATE utf8mb4_unicode_520_ci AND T.id_tag_type = @type_video
+             INNER JOIN `{tbl_prefix}tags` AS T ON T.name = TRIM(LOWER(jsontable.tags)) COLLATE utf8mb4_unicode_520_ci AND T.id_tag_type = @type_video
     WHERE TRIM(jsontable.tags) != ''
 );
 
-SET @type_photo = (SELECT id_tag_type
-                   FROM `{tbl_prefix}tags_type`
-                   WHERE name LIKE 'photo');
-INSERT IGNORE INTO `{tbl_prefix}tags` (id_tag_type, name) (SELECT @type_photo, jsontable.photo_tags AS tag
-                                                           FROM `{tbl_prefix}photos`
-                                                                    CROSS JOIN JSON_TABLE(CONCAT('["', REPLACE(LOWER(`photo_tags`), ',', '","'), '"]'), '$[*]' COLUMNS (`photo_tags` TEXT PATH '$')) jsontable
-                                                           WHERE TRIM(jsontable.photo_tags) != '' );
+SET @type_photo = (
+    SELECT id_tag_type
+    FROM `{tbl_prefix}tags_type`
+    WHERE name LIKE 'photo'
+);
+INSERT IGNORE INTO `{tbl_prefix}tags` (id_tag_type, name) (
+    SELECT @type_photo, TRIM(jsontable.photo_tags)
+    FROM `{tbl_prefix}photos`
+             CROSS JOIN JSON_TABLE(CONCAT('["', REPLACE(LOWER(`photo_tags`), ',', '","'), '"]'), '$[*]' COLUMNS (`photo_tags` TEXT PATH '$')) jsontable
+    WHERE TRIM(jsontable.photo_tags) != ''
+);
 INSERT IGNORE INTO `{tbl_prefix}photo_tags` (`id_tag`, `id_photo`) (
     SELECT T.id_tag, photo_id
     FROM `{tbl_prefix}photos`
              CROSS JOIN JSON_TABLE(CONCAT('["', REPLACE(LOWER(`photo_tags`), ',', '","'), '"]'), '$[*]' COLUMNS (`photo_tags` TEXT PATH '$')) jsontable
-             INNER JOIN `{tbl_prefix}tags` AS T ON T.name = LOWER(jsontable.photo_tags) COLLATE utf8mb4_unicode_520_ci AND T.id_tag_type = @type_photo
+             INNER JOIN `{tbl_prefix}tags` AS T ON T.name = TRIM(LOWER(jsontable.photo_tags)) COLLATE utf8mb4_unicode_520_ci AND T.id_tag_type = @type_photo
     WHERE TRIM(jsontable.photo_tags) != ''
 );
 
-
-SET @type_collection = (SELECT id_tag_type
-                        FROM `{tbl_prefix}tags_type`
-                        WHERE name LIKE 'collection');
-INSERT IGNORE INTO `{tbl_prefix}tags` (id_tag_type, name) (SELECT @type_collection, jsontable.collection_tags AS tag
-                                                           FROM `{tbl_prefix}collections`
-                                                                    CROSS JOIN JSON_TABLE(CONCAT('["', REPLACE(LOWER(`collection_tags`), ',', '","'), '"]'), '$[*]' COLUMNS (`collection_tags` TEXT PATH '$')) jsontable
-                                                           WHERE TRIM(jsontable.collection_tags) != '');
+SET @type_collection = (
+    SELECT id_tag_type
+    FROM `{tbl_prefix}tags_type`
+    WHERE name LIKE 'collection'
+);
+INSERT IGNORE INTO `{tbl_prefix}tags` (id_tag_type, name) (
+    SELECT @type_collection, TRIM(jsontable.collection_tags)
+    FROM `{tbl_prefix}collections`
+             CROSS JOIN JSON_TABLE(CONCAT('["', REPLACE(LOWER(`collection_tags`), ',', '","'), '"]'), '$[*]' COLUMNS (`collection_tags` TEXT PATH '$')) jsontable
+    WHERE TRIM(jsontable.collection_tags) != ''
+);
 INSERT IGNORE INTO `{tbl_prefix}collection_tags` (`id_tag`, `id_collection`) (
     SELECT T.id_tag, collection_id
     FROM `{tbl_prefix}collections`
              CROSS JOIN JSON_TABLE(CONCAT('["', REPLACE(LOWER(`collection_tags`), ',', '","'), '"]'), '$[*]' COLUMNS (`collection_tags` TEXT PATH '$')) jsontable
-             INNER JOIN `{tbl_prefix}tags` AS T ON T.name = LOWER(jsontable.collection_tags) COLLATE utf8mb4_unicode_520_ci AND T.id_tag_type = @type_collection
+             INNER JOIN `{tbl_prefix}tags` AS T ON T.name = TRIM(LOWER(jsontable.collection_tags)) COLLATE utf8mb4_unicode_520_ci AND T.id_tag_type = @type_collection
     WHERE TRIM(jsontable.collection_tags) != ''
 );
 
-
-SET @type_profile = (SELECT id_tag_type
-                     FROM `{tbl_prefix}tags_type`
-                     WHERE name LIKE 'profile');
-INSERT IGNORE INTO `{tbl_prefix}tags` (id_tag_type, name) (SELECT @type_profile, jsontable.profile_tags
-                                                           FROM `{tbl_prefix}user_profile`
-                                                                    CROSS JOIN JSON_TABLE(CONCAT('["', REPLACE(LOWER(`profile_tags`), ',', '","'), '"]'), '$[*]' COLUMNS (`profile_tags` TEXT PATH '$')) jsontable
-                                                           WHERE TRIM(jsontable.profile_tags) != '');
+SET @type_profile = (
+    SELECT id_tag_type
+    FROM `{tbl_prefix}tags_type`
+    WHERE name LIKE 'profile'
+);
+INSERT IGNORE INTO `{tbl_prefix}tags` (id_tag_type, name) (
+    SELECT @type_profile, TRIM(jsontable.profile_tags)
+    FROM `{tbl_prefix}user_profile`
+             CROSS JOIN JSON_TABLE(CONCAT('["', REPLACE(LOWER(`profile_tags`), ',', '","'), '"]'), '$[*]' COLUMNS (`profile_tags` TEXT PATH '$')) jsontable
+    WHERE TRIM(jsontable.profile_tags) != ''
+);
 INSERT IGNORE INTO `{tbl_prefix}user_tags` (`id_tag`, `id_user`) (
     SELECT T.id_tag, userid
     FROM `{tbl_prefix}user_profile`
              CROSS JOIN JSON_TABLE(CONCAT('["', REPLACE(LOWER(`profile_tags`), ',', '","'), '"]'), '$[*]' COLUMNS (`profile_tags` TEXT PATH '$')) jsontable
-             INNER JOIN `{tbl_prefix}tags` AS T ON T.name = LOWER(jsontable.profile_tags) COLLATE utf8mb4_unicode_520_ci AND T.id_tag_type = @type_profile
+             INNER JOIN `{tbl_prefix}tags` AS T ON T.name = TRIM(LOWER(jsontable.profile_tags)) COLLATE utf8mb4_unicode_520_ci AND T.id_tag_type = @type_profile
     WHERE TRIM(jsontable.profile_tags) != ''
 );
 
-
-SET @type_playlist = (SELECT id_tag_type
-                      FROM `{tbl_prefix}tags_type`
-                      WHERE name LIKE 'playlist');
-INSERT IGNORE INTO `{tbl_prefix}tags` (id_tag_type, name) (SELECT @type_playlist, jsontable.tags AS tag
-                                                           FROM `{tbl_prefix}playlists`
-                                                                    CROSS JOIN JSON_TABLE(CONCAT('["', REPLACE(LOWER(`tags`), ',', '","'), '"]'), '$[*]' COLUMNS (`tags` TEXT PATH '$')) jsontable
-                                                           WHERE TRIM(jsontable.tags) != '');
+SET @type_playlist = (
+    SELECT id_tag_type
+    FROM `{tbl_prefix}tags_type`
+    WHERE name LIKE 'playlist'
+);
+INSERT IGNORE INTO `{tbl_prefix}tags` (id_tag_type, name) (
+    SELECT @type_playlist, TRIM(jsontable.tags)
+    FROM `{tbl_prefix}playlists`
+             CROSS JOIN JSON_TABLE(CONCAT('["', REPLACE(LOWER(`tags`), ',', '","'), '"]'), '$[*]' COLUMNS (`tags` TEXT PATH '$')) jsontable
+    WHERE TRIM(jsontable.tags) != ''
+);
 INSERT IGNORE INTO `{tbl_prefix}playlist_tags` (`id_tag`, `id_playlist`) (
     SELECT T.id_tag, playlist_id
     FROM `{tbl_prefix}playlists`
              CROSS JOIN JSON_TABLE(CONCAT('["', REPLACE(LOWER(`tags`), ',', '","'), '"]'), '$[*]' COLUMNS (`tags` TEXT PATH '$')) jsontable
-             INNER JOIN `{tbl_prefix}tags` AS T ON T.name = LOWER(jsontable.tags) COLLATE utf8mb4_unicode_520_ci AND T.id_tag_type = @type_playlist
+             INNER JOIN `{tbl_prefix}tags` AS T ON T.name = TRIM(LOWER(jsontable.tags)) COLLATE utf8mb4_unicode_520_ci AND T.id_tag_type = @type_playlist
     WHERE TRIM(jsontable.tags) != ''
 );
 
@@ -176,7 +191,6 @@ ALTER TABLE `{tbl_prefix}collections` DROP COLUMN `collection_tags`;
 ALTER TABLE `{tbl_prefix}user_profile` DROP COLUMN `profile_tags`;
 ALTER TABLE `{tbl_prefix}playlists` DROP COLUMN `tags`;
 ALTER TABLE `{tbl_prefix}tags` ADD FULLTEXT KEY `tag` (`name`);
-
 
 INSERT IGNORE INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description`, `function_name`, `id_tools_status`, `elements_total`, `elements_done`) VALUES
     ('clean_orphan_tags', 'clean_orphan_tags_description', 'AdminTool::cleanOrphanTags', 1, NULL, NULL);
