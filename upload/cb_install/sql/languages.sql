@@ -1670,4 +1670,6 @@ VALUES ('friend_requests'),
        ('lang_restored'),
        ('language_name'),
        ('restore_language'),
-       ('restore');
+       ('restore'),
+       ('repair_video_duration_label'),
+       ('repair_video_duration_description');
