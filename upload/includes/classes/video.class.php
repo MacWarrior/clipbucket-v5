@@ -839,7 +839,9 @@ class CBvideo extends CBCategory
 
         $tag_n_title = '';
         //Tags
-        if ($params['tags']) {
+
+        $version = get_current_version();
+        if ($params['tags'] && ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) ) {
             //checking for commas ;)
             $tag_n_title .= 'T.name IN (\'' . $params['tags'] . '\') ' ;
         }
@@ -1008,8 +1010,6 @@ class CBvideo extends CBCategory
         $join_tag = '';
         $group_tag = '';
         $match_tag='';
-        $version = get_current_version();
-
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
             $match_tag = 'T.name';
             $join_tag = ' LEFT JOIN ' . tbl('video_tags') . ' AS VT ON video.videoid = VT.id_video 

@@ -223,14 +223,23 @@ class Collections extends CBCategory
     {
         global $db;
 
-        $query = 'SELECT C.*, U.username, GROUP_CONCAT(T.name SEPARATOR \',\') as collection_tags
+        $select_tag = '';
+        $join_tag = '';
+        $group_tag = '';
+        $version = get_current_version();
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+            $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') as collection_tags';
+            $join_tag = ' LEFT JOIN ' . tbl('collection_tags') . ' AS CT ON C.collection_id = CT.id_collection  
+                    LEFT JOIN ' . tbl('tags') . ' AS T ON CT.id_tag = T.id_tag';
+            $group_tag = ' GROUP BY C.collection_id ';
+        }
+
+        $query = 'SELECT C.*, U.username '.$select_tag.'
                     FROM ' . tbl($this->section_tbl) . ' AS C 
                     INNER JOIN ' . tbl('users') . ' AS U ON U.userid = C.userid
-                    LEFT JOIN ' . tbl('collection_tags') . ' AS CT ON C.collection_id = CT.id_collection  
-                    LEFT JOIN ' . tbl('tags') . ' AS T ON CT.id_tag = T.id_tag
-                    WHERE C.collection_id = ' . mysql_clean($id) . '
-                    GROUP BY C.collection_id
-                    ';
+                    '.$join_tag.'
+                    WHERE C.collection_id = ' . mysql_clean($id)
+                    .$group_tag;
         $result = $db->_select($query);
         if ($result) {
             return $result[0];
