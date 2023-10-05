@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"263",
+  "revision":"264",
   "status":"dev",
   "detail":[
     {
@@ -79,6 +79,8 @@
         ,"Hide player and template menus when no choice available"
         ,"Fix admin tools while using Apache PHP mod"
         ,"Implement duration repair tool"
+        ,"Implement tag management"
+        ,"Implement cleanup orphan tags tool"
       ]
     },
     {
@@ -112,6 +114,7 @@
         ,"Update form field generator"
         ,"Separate and minify CSS & JS from templates"
         ,"Implement hidden input type"
+        ,"Refactor tag storage and management"
       ]
     },
     {

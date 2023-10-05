@@ -1,0 +1,51 @@
+<div class="heading">
+    <h2>{lang code='manage_tags'}</h2>
+</div>
+<div class="form-group">
+    <form id="form2" name="form2" method="get" action="?">
+        <div class="row align-items-end">
+            <div class="col-md-2" style="padding-left: 0">
+                <label for="search">{lang code="tag_type"}</label>
+                <div style="vertical-align: bottom;">
+                    {html_options name=id_tag_type options=$tag_types class='form-control' style='vertical-align: middle;' selected=$selected_tag_type}
+                </div>
+            </div>
+            <div class="col-md-10">
+                <label for="search">{lang code="search"}</label>
+                <div style="vertical-align: bottom;">
+                    <input style="display: inline-block; width: calc(100% - 550px); vertical-align: middle;" name="search" class="form-control" type="text" id="search" value="{display_clean($smarty.get.search)}"/>
+                    <input style="display: inline-block; width: 120px; margin-left: 10px; height: 35px;padding: 0;" type="submit" name="search_phrase" class="btn btn-primary" value='{lang code="search"}' id="search_phrase"/>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<table class="table table-bordered table-striped manageUsersTable">
+    <tr>
+        <th class="col-md-2">{lang code='type'}</th>
+        <th class="col-md-9">{lang code='label'}</th>
+        <th class="col-md-1">{lang code='action'}</th>
+    </tr>
+    {section name=tag loop=$tags}
+    <tr>
+        <td class="col-md-2">
+            <span >{lang($tags[tag].tag_type)|ucfirst}</span>
+        </td>
+
+        <td class="col-md-9">
+            <span class="xedit" id="{$tags[tag].id_tag}">{display_clean($tags[tag].tag)}</span>
+            <input type="text" class="form-control input_tag" minlength="2" id="input-{$tags[tag].id_tag}" data-id="{$tags[tag].id_tag}" name="pk" value="{display_clean($tags[tag].tag)}" style="display:none;">
+        </td>
+        <td class="col-md-1" style="text-align: center; vertical-align: middle;">
+            <span class="btn btn-success btn-xs edit_tag" title="{lang code=edit}" id="edit-{$tags[tag].id_tag}" data-id="{$tags[tag].id_tag}"><i class="glyphicon glyphicon-edit"></i></span>
+            <span class="btn btn-danger btn-xs delete_tag {if !$tags[tag].can_delete} disabled {/if}" title="{if !$tags[tag].can_delete} {lang code=delete} {else} {lang code=cannot_delete_tag} {/if}" id="delete-{$tags[tag].id_tag}" data-id="{$tags[tag].id_tag}"><i class="glyphicon glyphicon-trash"></i></span>
+            <span class="glyphicon glyphicon-ok-circle confirm_update_tag text-success" title="{lang code=confirm}" id="ok-{$tags[tag].id_tag}" data-id="{$tags[tag].id_tag}" style="display:none;font-size:1.5em;cursor:pointer;"></span>
+            <span class="glyphicon glyphicon-remove-circle cancel_tag text-danger" title="{lang code=cancel}" id="cancel-{$tags[tag].id_tag}" data-id="{$tags[tag].id_tag}" style="display:none;font-size:1.5em;cursor:pointer; margin-left: 15px;"></span>
+        </td>
+    </tr>
+    {/section}
+</table>
+{include file="$style_dir/blocks/pagination.html"}
+<script>
+    var text_confirm_delete_tag = '{lang code = "confirm_delete_tag"}';
+</script>

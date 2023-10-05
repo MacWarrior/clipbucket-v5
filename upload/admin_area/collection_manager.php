@@ -9,8 +9,14 @@ $pages->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => lang('collections'), 'url' => ''];
-$breadcrumb[1] = ['title' => lang('manage_collections'), 'url' => ADMIN_BASEURL . '/collection_manager.php'];
+$breadcrumb[0] = [
+    'title' => lang('collections'),
+    'url'   => ''
+];
+$breadcrumb[1] = [
+    'title' => lang('manage_collections'),
+    'url'   => ADMIN_BASEURL . '/collection_manager.php'
+];
 
 if (isset($_GET['make_feature'])) {
     $id = mysql_clean($_GET['make_feature']);
@@ -131,13 +137,19 @@ if (in_dev()) {
 } else {
     $min_suffixe = '.min';
 }
-$Cbucket->addAdminJS(['jquery-ui-1.13.2.min.js' => 'admin']);
-$Cbucket->addAdminJS(['tag-it'.$min_suffixe.'.js' => 'admin']);
-$Cbucket->addAdminJS(['advanced_search/advanced_search'.$min_suffixe.'.js' => 'admin']);
-$Cbucket->addAdminJS(['init_default_tag/init_default_tag'.$min_suffixe.'.js' => 'admin']);
+$Cbucket->addAdminJS([
+    'jquery-ui-1.13.2.min.js'                                  => 'admin',
+    'tag-it' . $min_suffixe . '.js'                            => 'admin',
+    'advanced_search/advanced_search' . $min_suffixe . '.js'   => 'admin',
+    'init_default_tag/init_default_tag' . $min_suffixe . '.js' => 'admin'
+]);
 
-$Cbucket->addAdminCSS(['jquery.tagit'.$min_suffixe.'.css'=>'admin']);
-$Cbucket->addAdminCSS(['tagit.ui-zendesk'.$min_suffixe.'.css'=>'admin']);
+$Cbucket->addAdminCSS([
+    'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
+    'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
+]);
+$available_tags = Tags::fill_auto_complete_tags('collection');
+assign('available_tags', $available_tags);
 
 subtitle(lang('manage_collections'));
 template_files('collection_manager.html');

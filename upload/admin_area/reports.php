@@ -5,7 +5,7 @@ $userquery->admin_login_check();
 $userquery->login_check('web_config_access');
 
 /* Generating breadcrumb */
-$breadcrumb[0] = ['title' => 'General Configurations', 'url' => ''];
+$breadcrumb[0] = ['title' => lang('general'), 'url' => ''];
 $breadcrumb[1] = ['title' => 'Reports &amp; Stats', 'url' => ADMIN_BASEURL . '/reports.php'];
 
 $vid_dir = get_directory_size(VIDEOS_DIR);

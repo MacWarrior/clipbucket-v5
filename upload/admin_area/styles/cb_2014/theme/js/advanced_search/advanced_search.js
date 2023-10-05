@@ -10,4 +10,5 @@ $(function () {
             $('.up').hide();
         }
     });
+    init_tags(id_input, available_tags);
 })

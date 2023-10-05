@@ -33,7 +33,10 @@ switch ($mode) {
             $eh->flush();
             e('selected_collects_del', 'm');
         }
-        $collectArray = ['user' => user_id(), 'limit' => $get_limit];
+        $collectArray = [
+            'user'  => user_id(),
+            'limit' => $get_limit
+        ];
         $usr_collections = $cbcollection->get_collections($collectArray);
 
         assign('usr_collects', $usr_collections);
@@ -151,7 +154,12 @@ switch ($mode) {
             $cond = ' (collection.collection_name LIKE \'%' . mysql_clean(get('query')) . '%\' OR collection.collection_tags LIKE \'%' . mysql_clean(get('query')) . '%\' )';
         }
 
-        $col_arr = ['user' => user_id(), 'limit' => $get_limit, 'order' => tbl('favorites.date_added DESC'), 'cond' => $cond];
+        $col_arr = [
+            'user'  => user_id(),
+            'limit' => $get_limit,
+            'order' => tbl('favorites.date_added DESC'),
+            'cond'  => $cond
+        ];
         $collections = $cbcollection->action->get_favorites($col_arr);
         assign('collections', $collections);
 
@@ -164,16 +172,23 @@ switch ($mode) {
         subtitle(lang('manage_favorite_collections'));
 }
 
-if(in_dev()){
+if (in_dev()) {
     $min_suffixe = '';
 } else {
     $min_suffixe = '.min';
 }
-$Cbucket->addJS(['tag-it'.$min_suffixe.'.js' => 'admin']);
-$Cbucket->addJS(['pages/manage_collections/manage_collections'.$min_suffixe.'.js' => 'admin']);
-$Cbucket->addCSS(['jquery.tagit'.$min_suffixe.'.css' => 'admin']);
-$Cbucket->addCSS(['tagit.ui-zendesk'.$min_suffixe.'.css' => 'admin']);
+$Cbucket->addJS([
+    'tag-it' . $min_suffixe . '.js'                                      => 'admin',
+    'pages/manage_collections/manage_collections' . $min_suffixe . '.js' => 'admin',
+    'init_default_tag/init_default_tag' . $min_suffixe . '.js'           => 'admin'
+]);
+$Cbucket->addCSS([
+    'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
+    'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
+]);
 
+$available_tags = Tags::fill_auto_complete_tags('collection');
+assign('available_tags', $available_tags);
 
 template_files('manage_collections.html');
 display_it();

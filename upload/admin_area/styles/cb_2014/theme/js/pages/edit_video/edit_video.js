@@ -70,11 +70,5 @@ function saveSubtitle(number) {
     });
 }
 $(function () {
-    $('#list_tags').tagit({
-        singleField:true,
-        fieldName:"tags",
-        readOnly:false,
-        singleFieldNode:$('#tags'),
-        animate:true,
-    });
+    init_tags('tags', available_tags);
 });

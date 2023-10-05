@@ -93,6 +93,9 @@
 						<div class="form-group">
 							<label class="label-heading" for="{$field.id}">{$field.title}</label>
 							{$field.class='form-control'}
+							{if $field.id == 'tags'}
+							<ul id="list_tags"></ul>
+							{/if}
 							{$formObj->createField($field)}
 						</div>
 							{/foreach}
@@ -131,3 +134,6 @@
 			</div>
 		</div>
 	</div>
+<script>
+	var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
+</script>

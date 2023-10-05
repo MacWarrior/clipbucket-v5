@@ -131,6 +131,7 @@ class Collections extends CBCategory
 
     /**
      * Initiating Search
+     * @throws Exception
      */
     function init_search()
     {
@@ -138,8 +139,11 @@ class Collections extends CBCategory
         $this->search->db_tbl = 'collections';
         $this->search->columns = [
             ['field' => 'collection_name', 'type' => 'LIKE', 'var' => '%{KEY}%'],
-            ['field' => 'collection_tags', 'type' => 'LIKE', 'var' => '%{KEY}%', 'op' => 'OR']
         ];
+        $version = get_current_version();
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+            $this->search->columns[] = ['field' => 'name', 'type' => 'LIKE', 'var' => '%{KEY}%', 'op' => 'OR', 'db'=>'tags'];
+        }
         $this->search->match_fields = ['collection_name', 'collection_tags'];
         $this->search->cat_tbl = $this->cat_tbl;
 
@@ -155,7 +159,7 @@ class Collections extends CBCategory
      * Function used to set-up sharing
      *
      * @param $data
-     * @throws \Exception
+     * @throws Exception
      */
     function set_share_mail($data)
     {
@@ -177,7 +181,7 @@ class Collections extends CBCategory
      * @param $id
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     function collection_exists($id): bool
     {
@@ -213,16 +217,25 @@ class Collections extends CBCategory
      * @param null $cond
      *
      * @return bool|array
-     * @throws \Exception
+     * @throws Exception
      */
     function get_collection($id, $cond = null)
     {
         global $db;
+        $version = get_current_version();
+        $select_tag = '';
+        $join_tag = '';
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+            $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') as collection_tags';
+            $join_tag = ' LEFT JOIN ' . tbl('collection_tags') . ' AS CT ON C.collection_id = CT.id_collection  
+                    LEFT JOIN ' . tbl('tags') . ' AS T ON CT.id_tag = T.id_tag';
+        }
         $result = $db->select(tbl($this->section_tbl) . ' C
             INNER JOIN ' . tbl('users') . ' U ON C.userid = U.userid
             LEFT JOIN ' . tbl($this->items) . ' citem ON C.collection_id = citem.collection_id
-            LEFT JOIN ' . tbl($this->objTable) . ' obj ON obj.'.$this->objFieldID .' = citem.object_id'
-            ,'C.*, U.userid,U.username, count(citem.ci_id) as total_objects',
+            LEFT JOIN ' . tbl($this->objTable) . ' obj ON obj.'.$this->objFieldID .' = citem.object_id
+            ' . $join_tag
+            ,'C.*, U.userid,U.username, count(citem.ci_id) as total_objects' . $select_tag,
             ' C.collection_id = ' . mysql_clean($id) . ' ' . $cond . ' GROUP BY C.collection_id') ;
 
         if ($result) {
@@ -231,6 +244,9 @@ class Collections extends CBCategory
         return false;
     }
 
+    /**
+     * @throws Exception
+     */
     private function get_collection_childs($id, $cond = null)
     {
         global $db;
@@ -247,6 +263,9 @@ class Collections extends CBCategory
         return false;
     }
 
+    /**
+     * @throws Exception
+     */
     private function get_total_object_sub_collection($collection)
     {
         $childrens = $this->get_collection_childs($collection['collection_id']);
@@ -259,6 +278,9 @@ class Collections extends CBCategory
         return $total;
     }
 
+    /**
+     * @throws Exception
+     */
     function is_viewable($cid): bool
     {
         global $userquery;
@@ -282,6 +304,9 @@ class Collections extends CBCategory
         return true;
     }
 
+    /**
+     * @throws Exception
+     */
     public function get_parent_collection($collection)
     {
         if (is_null($collection['collection_id_parent'])) {
@@ -297,7 +322,7 @@ class Collections extends CBCategory
      * @param bool $brace
      *
      * @return array|bool|void
-     * @throws \Exception
+     * @throws Exception
      */
     function get_collections($p = null, $brace = false)
     {
@@ -431,26 +456,10 @@ class Collections extends CBCategory
         }
 
         if ($p['tags']) {
-            $tags = explode(',', $p['tags']);
-            if (count($tags) > 0) {
-                if ($title_tag != '') {
-                    $title_tag .= ' OR ';
-                }
-                $total = count($tags);
-                $loop = 1;
-                foreach ($tags as $tag) {
-                    $title_tag .= 'C.collection_tags LIKE \'%' . $tag . '%\'';
-                    if ($loop < $total) {
-                        $title_tag .= ' OR ';
-                    }
-                    $loop++;
-                }
-            } else {
-                if ($title_tag != '') {
-                    $title_tag .= ' OR ';
-                }
-                $title_tag .= 'C.collection_tags LIKE \'%' . $p['tags'] . '%\'';
+            if (!empty($title_tag)) {
+                $title_tag .= ' OR ';
             }
+            $title_tag .= 'T.name IN (\'' . $p['tags'] . '\') ' ;
         }
 
         if ($p['parents_only']) {
@@ -474,11 +483,26 @@ class Collections extends CBCategory
             $cond .= '(' . $title_tag . ')';
         }
 
+        $select_tag = '';
+        $join_tag = '';
+        $group_tag = '';
+        $version = get_current_version();
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+            $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') as profile_tags';
+            $join_tag = 'LEFT JOIN ' . tbl('collection_tags') . ' AS CT ON C.collection_id = CT.id_collection 
+                    LEFT JOIN ' . tbl('tags') . ' AS T ON CT.id_tag = T.id_tag';
+        }
         $from = tbl('collections') . ' C' .
             ' INNER JOIN ' . tbl('users') . ' U ON C.userid = U.userid
             LEFT JOIN ' . tbl('collections') . ' CPARENT ON C.collection_id_parent = CPARENT.collection_id
             LEFT JOIN ' . tbl($this->items) . ' citem ON C.collection_id = citem.collection_id
-            LEFT JOIN ' . tbl($this->objTable) . ' obj ON obj.'.$this->objFieldID .' = citem.object_id';
+            LEFT JOIN ' . tbl($this->objTable) . ' obj ON obj.'.$this->objFieldID .' = citem.object_id
+            ' . $join_tag;
+        if (!empty ($cond)) {
+            $cond .= ' GROUP BY C.collection_id ';
+        } else {
+            $cond = ' 1 GROUP BY C.collection_id ';
+        }
         if ($p['count_only']) {
             return $db->count($from, 'C.collection_id', $cond);
         }
@@ -486,14 +510,10 @@ class Collections extends CBCategory
         if (isset($p['count_only'])) {
             $select = 'COUNT(C.collection_id) AS total_collections';
         } else {
-            $select = 'C.*, U.username, CPARENT.collection_name AS collection_name_parent, count(citem.ci_id) as total_objects';
+            $select = 'C.*, U.username, CPARENT.collection_name AS collection_name_parent, count(citem.ci_id) as total_objects ' . $select_tag;
         }
 
-        if (!empty ($cond)) {
-            $cond .= ' GROUP BY C.collection_id ';
-        } else {
-            $cond = ' 1 GROUP BY C.collection_id ';
-        }
+
         $result = $db->select($from, $select, $cond, $limit, $order);
 
         if (config('enable_sub_collection')) {
@@ -520,7 +540,7 @@ class Collections extends CBCategory
      * @param null $limit
      *
      * @return array|bool
-     * @throws \Exception
+     * @throws Exception
      */
     function get_collection_items($id, $order = null, $limit = null)
     {
@@ -543,7 +563,7 @@ class Collections extends CBCategory
      * @param bool $check_only
      *
      * @return array|bool
-     * @throws \Exception
+     * @throws Exception
      */
     function get_next_prev_item($ci_id, $cid, $item = 'prev', $limit = 1, $check_only = false)
     {
@@ -600,7 +620,7 @@ class Collections extends CBCategory
      * @param bool $count_only
      *
      * @return array|bool
-     * @throws \Exception
+     * @throws Exception
      */
     function get_collection_items_with_details($id, $order = null, $limit = null, $count_only = false)
     {
@@ -639,7 +659,7 @@ class Collections extends CBCategory
      * @param $fields
      *
      * @return array|bool
-     * @throws \Exception
+     * @throws Exception
      */
     function get_collection_item_fields($cid, $objID, $fields)
     {
@@ -657,7 +677,7 @@ class Collections extends CBCategory
      * @param null $default
      *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     function load_required_fields($default = null): array
     {
@@ -706,8 +726,7 @@ class Collections extends CBCategory
                 'name'              => 'collection_tags',
                 'id'                => 'collection_tags',
                 'value'             => genTags($tags),
-                'db_field'          => 'collection_tags',
-                'required'          => 'yes',
+                'required'          => 'no',
                 'invalid_err'       => lang('collect_tag_er'),
                 'validate_function' => 'genTags'
             ],
@@ -807,6 +826,7 @@ class Collections extends CBCategory
 
     /**
      * Function used to load collections optional fields
+     * @throws Exception
      */
     function load_other_fields($default = null): array
     {
@@ -866,6 +886,7 @@ class Collections extends CBCategory
      *
      * @param null $array
      * @throws \PHPMailer\PHPMailer\Exception
+     * @throws Exception
      */
     function validate_form_fields($array = null)
     {
@@ -887,10 +908,10 @@ class Collections extends CBCategory
     /**
      * Function used to validate collection category
      *
-     * @param array
+     * @param $array
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     function validate_collection_category($array = null): bool
     {
@@ -917,6 +938,10 @@ class Collections extends CBCategory
         return true;
     }
 
+    /**
+     * @throws \PHPMailer\PHPMailer\Exception
+     * @throws Exception
+     */
     function create_collection($array = null)
     {
         if (has_access('allow_create_collection', false)) {
@@ -997,6 +1022,7 @@ class Collections extends CBCategory
 
                 //Incrementing usr collection
                 $db->update(tbl('users'), ['total_collections'], ['|f|total_collections+1'], ' userid=\'' . $userid . '\'');
+                Tags::saveTags($array['collection_tags'], 'collection', $insert_id);
 
                 e(lang('collect_added_msg'), 'm');
                 return $insert_id;
@@ -1009,7 +1035,7 @@ class Collections extends CBCategory
      *
      * @param $objID
      * @param $cid
-     * @throws \Exception
+     * @throws Exception
      */
     function add_collection_item($objID, $cid)
     {
@@ -1043,7 +1069,7 @@ class Collections extends CBCategory
      * @param $cid
      *
      * @return bool|array
-     * @throws \Exception
+     * @throws Exception
      */
     function object_in_collection($id, $cid)
     {
@@ -1064,7 +1090,7 @@ class Collections extends CBCategory
      * @param $cid
      * @param null $field
      * @return bool|array
-     * @throws \Exception
+     * @throws Exception
      */
     function get_collection_field($cid, $field = null)
     {
@@ -1094,7 +1120,7 @@ class Collections extends CBCategory
      * @param null $userid
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     function is_collection_owner($cdetails, $userid = null): bool
     {
@@ -1118,7 +1144,7 @@ class Collections extends CBCategory
      * Function used to delete collection
      *
      * @param $cid
-     * @throws \Exception
+     * @throws Exception
      */
     function delete_collection($cid)
     {
@@ -1146,6 +1172,9 @@ class Collections extends CBCategory
             }
             $db->update(tbl($this->section_tbl), ['collection_id_parent'], [$collection_id_parent], ' collection_id_parent = ' . $cid);
 
+            //Remove tags
+            \Tags::saveTags('', 'collection', $cid);
+
             $db->delete(tbl($this->items), ['collection_id'], [$cid]);
             $this->delete_thumbs($cid);
             $db->delete(tbl($this->section_tbl), ['collection_id'], [$cid]);
@@ -1167,7 +1196,7 @@ class Collections extends CBCategory
      * @param $cid
      *
      * @return bool|void
-     * @throws \Exception
+     * @throws Exception
      */
     function remove_item($id, $cid)
     {
@@ -1198,7 +1227,7 @@ class Collections extends CBCategory
      * @param $cid
      *
      * @return bool|int
-     * @throws \Exception
+     * @throws Exception
      */
     function count_items($cid)
     {
@@ -1364,6 +1393,9 @@ class Collections extends CBCategory
             } else {
                 $cid = mysql_clean($cid);
                 $db->update(tbl($this->section_tbl), $query_field, $query_val, ' collection_id = ' . $cid);
+
+                Tags::saveTags($array['collection_tags'], 'collection', $cid);
+
                 e(lang('collection_updated'), 'm');
 
                 if (!empty($array['collection_thumb']['tmp_name'])) {
@@ -1460,7 +1492,7 @@ class Collections extends CBCategory
      * @param bool $show_all
      *
      * @return bool|mixed
-     * @throws \Exception
+     * @throws Exception
      */
     function collection_voters($id, $return_array = false, $show_all = false)
     {
@@ -1496,7 +1528,7 @@ class Collections extends CBCategory
      * @param $id
      *
      * @return bool|array
-     * @throws \Exception
+     * @throws Exception
      */
     function current_rating($id)
     {
@@ -1516,7 +1548,7 @@ class Collections extends CBCategory
      * @param $rating
      *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     function rate_collection($id, $rating): array
     {
@@ -1681,7 +1713,7 @@ class Collections extends CBCategory
      * Function used to update total comments of collection
      *
      * @param $cid
-     * @throws \Exception
+     * @throws Exception
      */
     function update_total_comments($cid)
     {
@@ -1705,7 +1737,7 @@ class Collections extends CBCategory
      * @param null $type
      *
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     function collection_links($details, $type = null): string
     {
@@ -1774,7 +1806,7 @@ class Collections extends CBCategory
      * @param $id
      * @param $amount
      * @param $op
-     * @throws \Exception
+     * @throws Exception
      */
     function update_collection_counts($id, $amount, $op)
     {
@@ -1789,7 +1821,7 @@ class Collections extends CBCategory
      * @param      $new
      * @param      $obj
      * @param null $old
-     * @throws \Exception
+     * @throws Exception
      */
     function change_collection($new, $obj, $old = null)
     {
@@ -1830,7 +1862,7 @@ class Collections extends CBCategory
      *
      * @param $action
      * @param $cid
-     * @throws \Exception
+     * @throws Exception
      */
     function collection_actions($action, $cid)
     {
@@ -1876,7 +1908,7 @@ class Collections extends CBCategory
      * and decrement collection item count
      * @param $objId
      * @param null $type
-     * @throws \Exception
+     * @throws Exception
      */
     function deleteItemFromCollections($objId, $type = null)
     {
@@ -1902,7 +1934,7 @@ class Collections extends CBCategory
      * @param $uid
      *
      * @return BOOLEAN
-     * @throws \Exception
+     * @throws Exception
      */
     function add_contributor($cid, $uid)
     {
@@ -1962,7 +1994,7 @@ class Collections extends CBCategory
      * @param $uid
      *
      * @return bool|int
-     * @throws \Exception
+     * @throws Exception
      */
     function is_contributor($cid, $uid)
     {
@@ -1986,7 +2018,7 @@ class Collections extends CBCategory
      * @param INT $uid
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     function remove_contributor($cid, $uid): bool
     {
@@ -2021,7 +2053,7 @@ class Collections extends CBCategory
      * @param string $order
      *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     function get_contributor_collections($uid, $type = 'videos', $limit = null, $order = 'date_added DESC'): array
     {
@@ -2047,7 +2079,7 @@ class Collections extends CBCategory
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     function coll_first_thumb($col_data, $size = false)
     {

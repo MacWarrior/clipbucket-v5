@@ -88,11 +88,9 @@
 									<label for="collecionID">Collection Id</label>
 								</td>
 								<td class="last">
-									<p>
-                                        <span>
-                                            <input disabled="disabled" name="collecionID" type="text" id="collecionID" value="{$data.collection_id}" size="30" />
-                                        </span>
-									</p>
+									<div>
+										<input disabled="disabled" name="collecionID" type="text" id="collecionID" value="{$data.collection_id}" size="30" />
+									</div>
 								</td>
 							</tr>
 
@@ -100,15 +98,14 @@
 							<tr>
 								<td class="first"><label>{$field.title}</label></td>
 								<td class="last">
-									<p>
-										<span>
-											{if $field.id == 'collection_tags'}
-												{$field.type='hidden'}
-												<ul id="list_tags"></ul>
-											{/if}
-											{$formObj->createField($field)}
-										</span>
-									</p>
+									<div>
+										{if $field.id == 'collection_tags'}
+										{$field.type='hidden'}
+										<ul id="list_tags" style="margin: 1px 0 0 0"></ul>
+										{/if}
+										{$formObj->createField($field)}
+									</div>
+
 								</td>
 							</tr>
 							{/foreach}
@@ -222,3 +219,6 @@
 		</div>
 	</div>
 </form>
+<script>
+	var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
+</script>

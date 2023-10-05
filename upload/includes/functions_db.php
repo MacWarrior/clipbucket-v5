@@ -3,7 +3,7 @@
 /**
  * functions related to database
  *
- * @throws \Exception
+ * @throws Exception
  */
 function db_select($query): array
 {
@@ -16,13 +16,6 @@ function cb_query_id($query): string
     return md5($query);
 }
 
-/**
- * Created by JetBrains PhpStorm.
- * User: Fawaz
- * Date: 8/26/13
- * Time: 3:51 PM
- * To change this template use File | Settings | File Templates.
- */
 function tbl($tbl): string
 {
     global $DBNAME;
@@ -43,12 +36,11 @@ function tbl($tbl): string
  * Format array into table fields
  *
  * @param $fields
- * @param bool $table
  * @return bool|string
  */
 function table_fields($fields)
 {
-    if(empty($fields)){
+    if (empty($fields)) {
         return '';
     }
 
@@ -143,9 +135,9 @@ function check_need_upgrade($version, $revision): bool
     }
     return false;
 }
+
 /**
- * @param $version
- * @param $revision
+ * @param $installed_plugin
  * @return bool
  */
 function check_need_plugin_upgrade($installed_plugin): bool
@@ -235,7 +227,7 @@ function get_plugins_files_to_upgrade($installed_plugins, bool $count = false)
             array_filter(
                 array_map(function ($file) use ($db_version, $detail_verision, $folder) {
                     $file_version = pathinfo($file)['filename'];
-                    return  ($file_version > $db_version && $file_version <= $detail_verision)
+                    return ($file_version > $db_version && $file_version <= $detail_verision)
                         ? $file
                         : null;
                 }, $files)
@@ -285,7 +277,7 @@ function execute_sql_file($path): bool
 }
 
 /**
- * @throws \Exception
+ * @throws Exception
  */
 function execute_migration_SQL_file($path): bool
 {
@@ -293,14 +285,13 @@ function execute_migration_SQL_file($path): bool
         return false;
     }
 
-
     global $db;
-    if (strpos($path,'plugin')!== false) {
+    if (strpos($path, 'plugin') !== false) {
         $plugin_folder = basename(dirname($path, 3));
         $regex = '/\/(\d{0,3}\.\d{0,3}\.\d{0,3})\.sql/';
         $match = [];
         preg_match($regex, $path, $match);
-        $sql = 'UPDATE ' . tbl('plugins') . ' SET plugin_version = \'' .  mysql_clean($match['1']) . '\' WHERE plugin_folder = \'' .$plugin_folder . '\'';
+        $sql = 'UPDATE ' . tbl('plugins') . ' SET plugin_version = \'' . mysql_clean($match['1']) . '\' WHERE plugin_folder = \'' . $plugin_folder . '\'';
     } else {
         $regex = '/\/(\d{0,3}\.\d{0,3}\.\d{0,3})\/(\d{5})\.sql/';
         $match = [];
@@ -361,4 +352,13 @@ function getVersions(): array
         $versions[$changelog['version']] = $changelog['revision'];
     }
     return $versions;
+}
+
+/**
+ * @throws Exception
+ */
+function get_current_version()
+{
+    global $db;
+    return $db->select(tbl('version'), '*')[0];
 }

@@ -7,7 +7,7 @@ $userquery->login_check('web_config_access');
 $pages->page_redir();
 
 /* Generating breadcrumb */
-$breadcrumb[0] = ['title' => 'General Configurations', 'url' => ''];
+$breadcrumb[0] = ['title' => lang('general'), 'url' => ''];
 $breadcrumb[1] = ['title' => 'Website Configurations', 'url' => ADMIN_BASEURL . '/main.php'];
 
 if (@$_GET['msg']) {

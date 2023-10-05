@@ -314,6 +314,31 @@ class AdminTool
 
     /**
      * @param $id_tool
+     * @return void
+     * @throws Exception
+     */
+    private static function cleanOrphanTags($id_tool)
+    {
+        global $db;
+        $query = '
+            SELECT T.* FROM '.tbl('tags').' T
+            LEFT JOIN '.tbl('video_tags').' VT ON T.id_tag = VT.id_tag
+            LEFT JOIN '.tbl('photo_tags').' PT ON T.id_tag = PT.id_tag
+            LEFT JOIN '.tbl('collection_tags').' CT ON T.id_tag = CT.id_tag
+            LEFT JOIN '.tbl('playlist_tags').' PLT ON T.id_tag = PLT.id_tag
+            LEFT JOIN '.tbl('user_tags').' UT ON T.id_tag = UT.id_tag
+            WHERE 1
+            GROUP BY T.id_tag
+            HAVING COUNT(VT.id_tag) = 0 AND COUNT(PT.id_tag) = 0 AND COUNT(CT.id_tag) = 0 AND COUNT(PLT.id_tag) = 0 AND COUNT(UT.id_tag) = 0;';
+        $tags = $db->_select($query);
+        $tags = array_map(function ($tag) {
+            return $tag['id_tag'];
+        }, $tags);
+        self::executeTool($id_tool, $tags, 'Tags::deleteTag');
+    }
+
+    /**
+     * @param $id_tool
      * @param $array
      * @param $function
      * @param $stop_on_error

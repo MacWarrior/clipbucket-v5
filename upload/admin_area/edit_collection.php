@@ -32,9 +32,18 @@ $c = $cbcollection->get_collection($id);
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => lang('collections'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'Manage Collections', 'url' => ADMIN_BASEURL . '/collection_manager.php'];
-$breadcrumb[2] = ['title' => 'Editing : ' . display_clean($c['collection_name']), 'url' => ADMIN_BASEURL . '/edit_collection.php?collection=' . display_clean($id)];
+$breadcrumb[0] = [
+    'title' => lang('collections'),
+    'url'   => ''
+];
+$breadcrumb[1] = [
+    'title' => lang('manage_collections'),
+    'url'   => ADMIN_BASEURL . '/collection_manager.php'
+];
+$breadcrumb[2] = [
+    'title' => 'Editing : ' . display_clean($c['collection_name']),
+    'url'   => ADMIN_BASEURL . '/edit_collection.php?collection=' . display_clean($id)
+];
 
 switch ($c['type']) {
     case 'videos':
@@ -59,16 +68,22 @@ $count_flagged_photos = $cbvid->action->count_flagged_objects();
 Assign('count_flagged_photos', $FlaggedPhotos);
 
 if (in_dev()) {
-    $min_suffixe = '.min';
-} else {
     $min_suffixe = '';
+} else {
+    $min_suffixe = '.min';
 }
-$Cbucket->addAdminJS(['jquery-ui-1.13.2.min.js' => 'admin']);
-$Cbucket->addAdminJS(['tag-it' . $min_suffixe . '.js' => 'admin']);
-$Cbucket->addAdminJS(['pages/edit_collection/edit_collection' . $min_suffixe . '.js' => 'admin']);
+$Cbucket->addAdminJS([
+    'tag-it' . $min_suffixe . '.js'                                => 'admin',
+    'pages/edit_collection/edit_collection' . $min_suffixe . '.js' => 'admin',
+    'init_default_tag/init_default_tag' . $min_suffixe . '.js'     => 'admin'
+]);
 
-$Cbucket->addAdminCSS(['jquery.tagit' . $min_suffixe . '.css' => 'admin']);
-$Cbucket->addAdminCSS(['tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin']);
+$Cbucket->addAdminCSS([
+    'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
+    'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
+]);
+$available_tags = Tags::fill_auto_complete_tags('collection');
+assign('available_tags', $available_tags);
 
 assign('randon_number', rand(-5000, 5000));
 subtitle('Edit Collection');

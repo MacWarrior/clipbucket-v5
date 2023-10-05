@@ -182,6 +182,9 @@ function get_thumb($vdetails, $multi = false, $size = false)
     return THUMBS_URL . DIRECTORY_SEPARATOR . $filepath;
 }
 
+/**
+ * @throws Exception
+ */
 function get_count_thumb($videoid)
 {
     global $db;

@@ -76,4 +76,5 @@
 	var date_format_time = "{date(config('date_format'),time())}";
 	var get_default_cid = "{$cbvid->get_default_cid()}";
 	var stay_mp4 = "{config('stay_mp4')}";
+	var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
 </script>

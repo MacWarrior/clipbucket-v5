@@ -75,7 +75,7 @@ class Clipbucket_db
      * @param : { string } { $query } { mysql query to run }
      *
      * @return array : { array } { $data } { array of selected data }
-     * @throws \Exception
+     * @throws Exception
      */
     function _select($query, $cached_time = -1, $cached_key = ''): array
     {
@@ -130,7 +130,7 @@ class Clipbucket_db
      * @param bool $ep
      *
      * @return array : { array } { $data } { array of selected data }
-     * @throws \Exception
+     * @throws Exception
      */
     function select($tbl, $fields = '*', $cond = false, $limit = false, $order = false, $ep = false, $cached_time = -1, $cached_key = ''): array
     {
@@ -158,15 +158,15 @@ class Clipbucket_db
      * @param bool $cond
      *
      * @return bool|int
-     * @throws \Exception
+     * @throws Exception
      */
-    function count($tbl, $fields = '*', $cond = false, $cached_time = -1, $cached_key = '')
+    function count($tbl, $fields = '*', $cond = false, $ep = '',$cached_time = -1, $cached_key = '')
     {
         $condition = '';
         if ($cond) {
             $condition = ' WHERE ' . $cond;
         }
-        $query = 'SELECT COUNT(' . $fields . ') FROM ' . $tbl . $condition;
+        $query = 'SELECT COUNT(' . $fields . ') FROM ' . $tbl . $condition . $ep;
 
         $result = $this->_select($query, $cached_time, $cached_key);
 
@@ -186,7 +186,7 @@ class Clipbucket_db
      * @param : { string } { $query } { query to run to get row }
      *
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     function GetRow($query)
     {
@@ -202,7 +202,7 @@ class Clipbucket_db
      * @param : { string } { $query } { query that you want to execute }
      *
      * @return bool|mysqli_result
-     * @throws \Exception
+     * @throws Exception
      */
     function execute($query, $type = 'execute')
     {
@@ -238,7 +238,7 @@ class Clipbucket_db
      * @param      $cond
      * @param null $ep
      *
-     * @throws \Exception
+     * @throws Exception
      * @internal param $ : { string } { $tbl } { table to ujpdate values in }
      * @internal param $ : { array } { $flds } { array of fields you want to update }
      * @internal param $ : { array } { $vls } { array of values to update against fields }
@@ -290,7 +290,7 @@ class Clipbucket_db
      *
      * @return bool : { boolean }
      *
-     * @throws \Exception
+     * @throws Exception
      * @internal param $ : { array } { $fields } { associative array with fields and values }
      * @internal param $ : { string } { $cond } { mysql condition for query }
      * @internal param $ : { string } { $tbl } { table to update values in }
@@ -330,7 +330,7 @@ class Clipbucket_db
      * @param      $vls
      * @param null $ep
      *
-     * @throws \Exception
+     * @throws Exception
      * @internal param $ : { array } { $flds } { array of fields to update }
      * @internal param $ : { array } { $vlds } { array of values to update against fields }
      * @internal param $ : { string } { $ep } { extra parameters to consider }
@@ -376,7 +376,7 @@ class Clipbucket_db
      *
      * @return mixed|void : { integer } { $insert_id } { id of inserted element }
      *
-     * @throws \Exception
+     * @throws Exception
      * @internal param $ : { string } { $tbl } { table to insert values in }
      * @internal param $ : { array } { $flds } { array of fields to update }
      * @internal param $ : { array } { $vlds } { array of values to update against fields }
@@ -447,7 +447,7 @@ class Clipbucket_db
      *
      * @return mixed : { integer } { $insert_id } { id of inserted element }
      *
-     * @throws \Exception
+     * @throws Exception
      * @internal param $ : { array } { $flds } { array of fields and values to update (associative array) }
      * @internal param $ : { string } { $tbl } { table to insert values in }
      */
@@ -516,7 +516,7 @@ class Clipbucket_db
     /**
      * @param $query
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     private function handleError($query)
     {

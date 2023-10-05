@@ -125,6 +125,7 @@ function userMainVideo($userVideos)
                         return $vKey;
                     }
                     break;
+                default:
                 case 'public':
                     return $vKey;
             }
