@@ -768,7 +768,9 @@ class Collections extends CBCategory
             //getting direct parent collection
             if (array_key_exists('null', $list_parent_categories)) {
                 $parent = $this->get_collection($collection_id_parent);
-                $list_parent_categories [$parent['collection_id']] =$parent['collection_name'];
+                if ($parent) {
+                    $list_parent_categories [$parent['collection_id']] =$parent['collection_name'];
+                }
             }
 
             $data['parent'] = [
