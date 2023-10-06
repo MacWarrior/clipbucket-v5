@@ -235,7 +235,7 @@ class Collections extends CBCategory
             LEFT JOIN ' . tbl($this->items) . ' citem ON C.collection_id = citem.collection_id
             LEFT JOIN ' . tbl($this->objTable) . ' obj ON obj.'.$this->objFieldID .' = citem.object_id
             ' . $join_tag
-            ,'C.*, U.userid,U.username, count(citem.ci_id) as total_objects' . $select_tag,
+            ,'C.*, U.userid,U.username, count( distinct citem.ci_id) as total_objects' . $select_tag,
             ' C.collection_id = ' . mysql_clean($id) . ' ' . $cond . ' GROUP BY C.collection_id') ;
 
         if ($result) {
@@ -254,7 +254,7 @@ class Collections extends CBCategory
             INNER JOIN ' . tbl('users') . ' U ON C.userid = U.userid
             LEFT JOIN ' . tbl($this->items) . ' citem ON C.collection_id = citem.collection_id
             LEFT JOIN ' . tbl($this->objTable) . ' obj ON obj.'.$this->objFieldID .' = citem.object_id',
-            ' C.* ,U.userid,U.username, count(citem.ci_id) as total_objects ',
+            ' C.* ,U.userid,U.username, count( distinct citem.ci_id) as total_objects ',
             ' C.collection_id_parent = ' . mysql_clean($id) . ' ' . $cond . ' GROUP BY C.collection_id');
 
         if ($result) {
@@ -485,10 +485,9 @@ class Collections extends CBCategory
 
         $select_tag = '';
         $join_tag = '';
-        $group_tag = '';
         $version = get_current_version();
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
-            $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') as profile_tags';
+            $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') as collection_tags';
             $join_tag = 'LEFT JOIN ' . tbl('collection_tags') . ' AS CT ON C.collection_id = CT.id_collection 
                     LEFT JOIN ' . tbl('tags') . ' AS T ON CT.id_tag = T.id_tag';
         }
@@ -496,7 +495,7 @@ class Collections extends CBCategory
             ' INNER JOIN ' . tbl('users') . ' U ON C.userid = U.userid
             LEFT JOIN ' . tbl('collections') . ' CPARENT ON C.collection_id_parent = CPARENT.collection_id
             LEFT JOIN ' . tbl($this->items) . ' citem ON C.collection_id = citem.collection_id
-            LEFT JOIN ' . tbl($this->objTable) . ' obj ON obj.'.$this->objFieldID .' = citem.object_id
+            LEFT JOIN ' . tbl($this->objTable) . ' obj ON obj.' . $this->objFieldID . ' = citem.object_id
             ' . $join_tag;
         if (!empty ($cond)) {
             $cond .= ' GROUP BY C.collection_id ';
@@ -510,7 +509,7 @@ class Collections extends CBCategory
         if (isset($p['count_only'])) {
             $select = 'COUNT(C.collection_id) AS total_collections';
         } else {
-            $select = 'C.*, U.username, CPARENT.collection_name AS collection_name_parent, count(citem.ci_id) as total_objects ' . $select_tag;
+            $select = 'C.*, U.username, CPARENT.collection_name AS collection_name_parent, count( distinct citem.ci_id) as total_objects ' . $select_tag;
         }
 
 
@@ -766,6 +765,11 @@ class Collections extends CBCategory
             foreach ($this->get_collections_list(0, null, $collection_id, $type, user_id()) as $col_id => $col_data) {
                 $list_parent_categories[$col_id] = $col_data['name'];
             }
+            //getting direct parent collection
+            if (array_key_exists('null', $list_parent_categories)) {
+                $parent = $this->get_collection($collection_id_parent);
+                $list_parent_categories [$parent['collection_id']] =$parent['collection_name'];
+            }
 
             $data['parent'] = [
                 'title'    => lang('collection_parent'),
@@ -789,25 +793,31 @@ class Collections extends CBCategory
         $data = [];
 
         if ($level == 0 && is_null($collection_id)) {
-            $cond = ' collection_id_parent IS NULL';
+            $cond = ' C.collection_id_parent IS NULL';
         } else {
-            $cond = ' collection_id_parent = ' . mysql_clean($collection_id);
+            $cond = ' C.collection_id_parent = ' . mysql_clean($collection_id);
         }
 
         if (!is_null($exclude_id)) {
-            $cond .= ' AND collection_id != ' . mysql_clean($exclude_id);
+            $cond .= ' AND C.collection_id != ' . mysql_clean($exclude_id);
         }
 
         if (!is_null($type)) {
-            $cond .= ' AND type = \'' . mysql_clean($type) . '\'';
+            $cond .= ' AND C.type = \'' . mysql_clean($type) . '\'';
         }
 
         if (!is_null($type)) {
-            $cond .= ' AND userid = ' . mysql_clean($userid);
+            $cond .= ' AND C.userid = ' . mysql_clean($userid);
         }
-
-        /** @TODO correct total_objects */
-        $collections_parent = $db->select(tbl($this->section_tbl), '*', $cond);
+        if (!empty ($cond)) {
+            $cond .= ' GROUP BY C.collection_id ';
+        } else {
+            $cond = ' 1 GROUP BY C.collection_id ';
+        }
+        $collections_parent = $db->select(tbl($this->section_tbl) . ' C  
+            LEFT JOIN ' . tbl($this->items) . ' citem ON C.collection_id = citem.collection_id'
+            , 'C.*, count( distinct citem.ci_id) as total_objects'
+            , $cond);
         foreach ($collections_parent as $col_parent) {
             $space = '';
             if (config('enable_sub_collection')) {
@@ -1370,16 +1380,6 @@ class Collections extends CBCategory
                     $query_field[] = 'total_comments';
                     $query_val[] = $total_comments;
                 }
-
-                if (!empty($array['total_objects'])) {
-                    /** @TODO correct total_objects */
-                    $tobj = $array['total_objects'];
-                    if (!is_numeric($tobj) || $tobj < 0) {
-                        $tobj = 0;
-                    }
-                    $query_field[] = 'total_objects';
-                    $query_val[] = $tobj;
-                }
             }
         }
 
@@ -1801,21 +1801,6 @@ class Collections extends CBCategory
     }
 
     /**
-     *    Used to update counts
-     *
-     * @param $id
-     * @param $amount
-     * @param $op
-     * @throws Exception
-     */
-    function update_collection_counts($id, $amount, $op)
-    {
-        global $db;
-        /** @TODO correct total_objects */
-        $db->update(tbl('collections'), ['total_objects'], ['|f|total_objects' . $op . $amount], ' collection_id = ' . $id);
-    }
-
-    /**
      *    Used to change collection of product
      *
      * @param      $new
@@ -1834,8 +1819,6 @@ class Collections extends CBCategory
             $this->add_collection_item($obj, $new);
         } else {
             $db->update(tbl($this->items), ['collection_id'], [$new], ' collection_id = ' . $old . ' AND type = \'' . $this->objType . '\' AND object_id = ' . $obj);
-            $this->update_collection_counts($new, 1, '+');
-            $this->update_collection_counts($old, 1, '-');
         }
     }
 
@@ -1918,10 +1901,6 @@ class Collections extends CBCategory
         }
 
         $objId = mysql_clean($objId);
-        /** @TODO correct total_objects */
-        $db->update(tbl('collections,collection_items'), ['total_objects'], ['|f|total_objects -1'],
-            tbl('collections.collection_id') . ' = ' . tbl('collection_items.collection_id') . ' AND '
-            . tbl('collection_items.type=\'' . $type . '\'') . ' AND ' . tbl('collection_items.object_id=\'' . $objId . '\''));
 
         $db->execute('DELETE FROM ' . tbl('collection_items') . ' WHERE '
             . ('type=\'' . $type . '\'') . ' AND ' . ('object_id=\'' . $objId . '\''));
@@ -2122,29 +2101,6 @@ class Collections extends CBCategory
             return $first_col;
         }
         return false;
-    }
-
-    /**
-     * Get collections that have at least 1 item, skips photos collection if photos are disabled from admin area
-     *
-     * @param array { $collections } { array of all collections fetched from database }
-     *
-     * @return array|void { $collections } { collections with items only }
-     */
-    function activeCollections($collections)
-    {
-        global $Cbucket;
-        $photosEnabled = $Cbucket->configs['photosSection'];
-        /** @TODO correct total_objects */
-        if (is_array($collections)) {
-            foreach ($collections as $key => $coll) {
-                if ($coll['total_objects'] >= 1 && !($coll['type'] == 'photos' && $photosEnabled != 'yes')) {
-                    continue;
-                }
-                unset($collections[$key]);
-            }
-            return $collections;
-        }
     }
 
 }
