@@ -132,7 +132,10 @@ function get_thumb($vdetails, $multi = false, $size = false)
 
     global $db;
     //get current video from db
-    $resVideo = $db->select(tbl('video') . ' AS V LEFT JOIN ' . tbl('video_thumbs') . ' AS VT ON VT.videoid = V.videoid ', 'V.videoid, V.file_name, V.file_directory, VT.num, V.default_thumb', 'V.videoid = ' . mysql_clean($vid));
+    $resVideo = $db->select(tbl('video') . ' AS V 
+    LEFT JOIN ' . tbl('video_thumbs') . ' AS VT ON VT.videoid = V.videoid '
+        , 'V.videoid, V.file_name, V.file_directory, VT.num, V.default_thumb'
+        , 'V.videoid = ' . mysql_clean($vid));
     if (empty($resVideo)) {
         error_log('get_thumb - called on missing videoid ' . $vid);
         e(lang('technical_error'));
@@ -164,7 +167,7 @@ function get_thumb($vdetails, $multi = false, $size = false)
             if ($re['size'] === '') {
                 return [default_thumb()];
             }
-            $filepath = $resVideo['file_directory'] . DIRECTORY_SEPARATOR . $resVideo['file_name'] . '-' . $re['resolution'] . '-' . $re['num'] . '.' . $re['extension'];
+            $filepath = $resVideo['file_directory'] . DIRECTORY_SEPARATOR . $resVideo['file_name'] . '-' . $re['resolution'] . '-' . $re['num'] . ($re['type'] == 'custom' ? '-c' : '') .'.' . $re['extension'];
             if (file_exists(THUMBS_DIR . DIRECTORY_SEPARATOR . $filepath)) {
                 $thumb[] = THUMBS_URL . DIRECTORY_SEPARATOR . $filepath;
             } else {
@@ -174,7 +177,7 @@ function get_thumb($vdetails, $multi = false, $size = false)
         }
         return $thumb;
     }
-    $filepath = $resVideo['file_directory'] . DIRECTORY_SEPARATOR . $resVideo['file_name'] . '-' . $resThumb[0]['resolution'] . '-' . $resThumb[0]['num'] . '.' . $resThumb[0]['extension'];
+    $filepath = $resVideo['file_directory'] . DIRECTORY_SEPARATOR . $resVideo['file_name'] . '-' . $resThumb[0]['resolution'] . '-' . $resThumb[0]['num'] . ($resThumb[0]['type'] == 'custom' ? '-c' : '') .'.' . $resThumb[0]['extension'];
     if (!file_exists(THUMBS_DIR . DIRECTORY_SEPARATOR . $filepath)) {
         error_log('get_thumb - missing file : ' . $filepath);
         return default_thumb();
@@ -772,11 +775,7 @@ function get_file_details($file_name, $get_jsoned = false)
 }
 
 /**
- * Function used to get thumbnail number from its name
- * Updated: If we provide full path for some reason and
- * web-address has '-' in it, this means our result is messed.
- * But we know our number will always be in last index
- * So wrap it with end() and problem solved.
+ * use regex to get thumb's num
  *
  * @param $name
  *
@@ -784,10 +783,10 @@ function get_file_details($file_name, $get_jsoned = false)
  */
 function get_thumb_num($name): string
 {
-    $list = explode('-', $name);
-    $list = end($list);
-    $list = explode('.', $list);
-    return $list[0];
+    $regex = '`.*-.*-(\d+)(?:-c)?.\w+`';
+    $match = [];
+    $res = preg_match($regex, $name, $match);
+    return $match[1];
 }
 
 /**
@@ -801,7 +800,7 @@ function get_thumb_num($name): string
 function delete_video_thumb($videoDetails, $num)
 {
     global $db;
-    $files = glob(THUMBS_DIR . DIRECTORY_SEPARATOR . $videoDetails['file_directory'] . DIRECTORY_SEPARATOR . $videoDetails['file_name'] . '*' . $num . '.*');
+    $files = glob(THUMBS_DIR . DIRECTORY_SEPARATOR . $videoDetails['file_directory'] . DIRECTORY_SEPARATOR . $videoDetails['file_name'] . '*' . $num .'*.*');
     if ($files) {
         foreach ($files as $file) {
             if (file_exists($file)) {

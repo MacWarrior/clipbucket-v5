@@ -1123,12 +1123,14 @@ CREATE TABLE `{tbl_prefix}video_thumbs`(
     `num`        VARCHAR(4)  NOT NULL,
     `extension`  VARCHAR(4)  NOT NULL,
     `version`    VARCHAR(30) NOT NULL,
+    `type`       VARCHAR(15) NOT NULL,
     PRIMARY KEY `resolution` (`videoid`, `resolution`, `num`),
     KEY `videoid` (`videoid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 ALTER TABLE `{tbl_prefix}video_thumbs`
-    ADD CONSTRAINT `{tbl_prefix}video_thumbs_ibfk_1` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE RESTRICT ON UPDATE NO ACTION;
+    ADD CONSTRAINT `{tbl_prefix}video_thumbs_ibfk_1` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE RESTRICT ON UPDATE NO ACTION,
+    ADD INDEX(`type`);
 
 CREATE TABLE `{tbl_prefix}tools`(
     `id_tool`                  INT          NOT NULL AUTO_INCREMENT,
