@@ -105,7 +105,7 @@ function video_playable($id)
  * @return array|string
  * @throws Exception
  */
-function get_thumb($vdetails, $multi = false, $size = false)
+function get_thumb($vdetails, $multi = false, $size = false, $type = false)
 {
     /**  getting video ID*/
     if (is_array($vdetails)) {
@@ -150,6 +150,10 @@ function get_thumb($vdetails, $multi = false, $size = false)
     }
     if (!empty($size)) {
         $where[] = ' resolution LIKE \'' . mysql_clean($size) . '\'';
+    }
+
+    if ($type) {
+        $where[] = ' type = \'' . $type . '\'';
     }
 
     $resThumb = $db->select(tbl('video_thumbs'), '*', implode(' AND ', $where));
