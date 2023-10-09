@@ -412,7 +412,8 @@
             $("#createNewCollection").on({
                 click: function(e){
                     e.preventDefault();
-                    $("#CollectionDIV").toggle("fast");
+                    $('#CollectionDIV').toggle("fast").find('form')[0].reset();
+                    $('.tagit li:not(.tagit-new)').remove();
                     $('.form_header').hide();
                     $(".upload-area").hide();
                 }
