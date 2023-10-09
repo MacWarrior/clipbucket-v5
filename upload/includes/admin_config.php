@@ -8,6 +8,8 @@ $admin_area = true;
 
 /* Config.Inc.php */
 include('common.php');
+global $ClipBucket;
+$ClipBucket->initAdminMenu();
 
 //Including Massuploader Class,
 require_once('classes/mass_upload.class.php');

@@ -5,10 +5,10 @@
  *
  * @throws Exception
  */
-function db_select($query): array
+function db_select($query, $cached_time = -1, $cached_key = ''): array
 {
     global $db;
-    return $db->_select($query);
+    return $db->_select($query, $cached_time, $cached_key);
 }
 
 function cb_query_id($query): string
@@ -360,5 +360,5 @@ function getVersions(): array
 function get_current_version()
 {
     global $db;
-    return $db->select(tbl('version'), '*')[0];
+    return $db->select(tbl('version'), '*', false, false, false, false, 30, 'version')[0];
 }

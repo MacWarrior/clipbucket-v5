@@ -218,7 +218,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'disable_email', 'no'),
     (NULL, 'enable_country', 'yes'),
     (NULL, 'enable_gender', 'yes'),
-    (NULL, 'enable_user_category', 'yes');
+    (NULL, 'enable_user_category', 'yes'),
+    (NULL, 'enable_rss_feeds', 'no');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 428, 240, 240000),

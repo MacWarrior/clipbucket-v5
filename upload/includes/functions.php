@@ -3245,6 +3245,9 @@ function footer()
  */
 function rss_feeds($params)
 {
+    if( config('enable_rss_feeds') == 'no'){
+        return false;
+    }
     /**
      * setting up the feeds arrays..
      * if you want to call em in your functions..simply call the global variable $rss_feeds
