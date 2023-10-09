@@ -36,7 +36,7 @@ function tbl($tbl): string
  * Format array into table fields
  *
  * @param $fields
- * @return bool|string
+ * @return string
  */
 function table_fields($fields)
 {
@@ -237,6 +237,9 @@ function get_plugins_files_to_upgrade($installed_plugins, bool $count = false)
     return ($count ? count($update_files) : $update_files);
 }
 
+/**
+ * @throws Exception
+ */
 function execute_sql_file($path): bool
 {
     $lines = file($path);

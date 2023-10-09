@@ -512,7 +512,6 @@ class Collections extends CBCategory
             $select = 'C.*, U.username, CPARENT.collection_name AS collection_name_parent, count( distinct citem.ci_id) as total_objects ' . $select_tag;
         }
 
-
         $result = $db->select($from, $select, $cond, $limit, $order);
 
         if (config('enable_sub_collection')) {
@@ -626,16 +625,14 @@ class Collections extends CBCategory
         global $db;
         $itemsTbl = tbl($this->items);
         $objTbl = tbl($this->objTable);
-        $tables = $itemsTbl . ',' . $objTbl . ', '.tbl('users')  ;
+        $tables = $itemsTbl . ',' . $objTbl . ', '.tbl('users');
 
         $condition[] = $itemsTbl . '.collection_id = ' . mysql_clean($id);
         $condition[] = $itemsTbl . '.object_id = ' . $objTbl . '.' . $this->objFieldID;
         $condition[] = $objTbl . '.userid = ' . tbl('users') . '.userid';
         if (!has_access('admin_access', true) ) {
-            $condition[] = ' active = \'yes\'';
-            $tables .= ',' . tbl('users');
+            $condition[] = 'active = \'yes\'';
         }
-
 
         if (!$count_only) {
             $result = $db->select($tables, $itemsTbl . '.ci_id,' . $itemsTbl . '.collection_id,' . $objTbl . '.*,' . tbl('users') . '.username', implode(' AND ', $condition), $limit, $order);

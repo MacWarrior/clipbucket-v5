@@ -1,12 +1,4 @@
 <?php
-/**
- * Author : Arslan Hassan
- * Script : ClipBucket v2
- * License : Attribution Assurance License -- http://www.opensource.org/licenses/attribution.php
- *
- * Class : Reindex
- **/
-
 class CBreindex
 {
     var $indexing = false; // Tells whether indexing is completed or not
@@ -18,15 +10,15 @@ class CBreindex
      * Function is used to calculate
      * the percentage of total figure
      */
-    function percent($percent, $total)
+    function percent($percent, $total): string
     {
-        $result = number_format($percent * $total / 100);
-        return $result;
+        return number_format($percent * $total / 100);
     }
 
     /**
      * Function used to count
      * indexes
+     * @throws Exception
      */
     function count_index($type, $params)
     {
