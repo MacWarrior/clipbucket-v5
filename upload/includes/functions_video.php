@@ -158,6 +158,10 @@ function get_thumb($vdetails, $multi = false, $size = false, $type = false)
 
     $resThumb = $db->select(tbl('video_thumbs'), '*', implode(' AND ', $where));
 
+    if (empty($resThumb) && $type =='custom') {
+        return $multi ? [] : '';
+    }
+
     if (empty($resThumb) && $resVideo['num'] === null && $vdetails['status'] == 'Successful') {
         //if no thumbs, we put some in db see \create_thumb()
         return create_thumb($resVideo, $multi, $size);
@@ -790,7 +794,7 @@ function get_thumb_num($name): string
     $regex = '`.*-.*-(\d+)(?:-c)?.\w+`';
     $match = [];
     $res = preg_match($regex, $name, $match);
-    return $match[1];
+    return $match[1] ?? '' ;
 }
 
 /**

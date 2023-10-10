@@ -3,4 +3,4 @@ ALTER TABLE `{tbl_prefix}video_thumbs`
 
 UPDATE `{tbl_prefix}video_thumbs` SET `type` = 'auto' WHERE `type` IS NULL;
 
-ALTER TABLE `{tbl_prefix}_video_thumbs` ADD INDEX(`type`);
+ALTER TABLE `{tbl_prefix}video_thumbs` ADD INDEX(`type`);
