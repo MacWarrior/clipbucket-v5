@@ -291,7 +291,7 @@ class Language
         $lang = self::getLangById($lid);
         if ($lang) {
             set_cookie_secure('cb_lang', $lid);
-            $db->update(tbl('languages'), ['language_default'], ['no'], ' language_default=\'yes\'');
+            $db->update(tbl('languages'), ['language_default'], ['no'], 'language_default=\'yes\'');
             $db->update(tbl('languages'), ['language_default'], ['yes'], ' language_id=\'' . $lid . '\'');
             e($lang['language_name'] . ' has been set as default language', 'm');
             CacheRedis::flushAll();
@@ -305,7 +305,7 @@ class Language
     public static function getDefaultLanguage()
     {
         global $db;
-        $result = $db->select(tbl('languages'), '*', ' language_default=\'yes\' ', false, false, false, 3600);
+        $result = $db->select(tbl('languages'), '*', 'language_default=\'yes\' ', false, false, false, 3600, 'default_language');
         return $result[0];
     }
 

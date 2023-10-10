@@ -387,7 +387,6 @@ require BASEDIR . '/includes/active.php';
 Assign('THIS_URL', $thisurl);
 define('ALLOWED_VDO_CATS', $row['video_categories']);
 
-$ClipBucket->initAdminMenu();
 Assign('NEED_UPDATE', NEED_UPDATE);
 
 # Assigning Smarty Tags & Values

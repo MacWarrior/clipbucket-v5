@@ -58,6 +58,7 @@ if (isset($_POST['update'])) {
         , 'enable_country'
         , 'enable_gender'
         , 'enable_user_category'
+        , 'enable_rss_feeds'
     ];
 
     $config_booleans_to_refactor = [
@@ -118,6 +119,7 @@ if (isset($_POST['update'])) {
         'extract_subtitles',
         'conversion_type',
         'enable_sub_collection',
+        'enable_rss_feeds',
 
         'background_color',
         'background_upload',

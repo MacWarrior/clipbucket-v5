@@ -82,7 +82,7 @@ class CBPlugin
      * Function used to get new plugins, that are not installed yet
      * @throws Exception
      */
-    function getInstalledPlugins()
+    function getInstalledPlugins(): array
     {
         global $db;
 
@@ -127,7 +127,7 @@ class CBPlugin
             $folder_check = " AND plugin_folder ='$folder'";
         }
 
-        $details = $db->select(tbl('plugins'), "plugin_file", "plugin_file='" . $file . "' $folder_check");
+        $details = $db->select(tbl('plugins'), 'plugin_file', "plugin_file='" . $file . "' $folder_check");
         if (count($details) > 0) {
             return true;
         }

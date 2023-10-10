@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"264",
+  "revision":"265",
   "status":"dev",
   "detail":[
     {
@@ -81,6 +81,7 @@
         ,"Implement duration repair tool"
         ,"Implement tag management"
         ,"Implement cleanup orphan tags tool"
+        ,"Add new option to enable RSS feeds"
       ]
     },
     {
@@ -209,6 +210,7 @@
         ,"Fix video subscribers emails"
         ,"Fix short search warning"
         ,"Fix home popup video"
+        ,"Fix photo collection creation form"
       ]
     }
   ,{
