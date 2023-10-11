@@ -9,7 +9,10 @@ $pages->page_redir();
 $userquery->perm_check('view_photos', true);
 
 $sort = $_GET['sort'];
-$cond = ['category' => mysql_clean($_GET['cat']), 'date_span' => $_GET['time'], 'active' => 'yes'];
+$cond = ['category' => mysql_clean($_GET['cat']), 'date_span' => $_GET['time']];
+if (!has_access('admin_access',true)) {
+    $cond[] = ['active' => 'yes'];
+}
 $table_name = 'photos';
 $cond = build_sort_photos($sort, $cond);
 $page = mysql_clean($_GET['page']);

@@ -537,6 +537,7 @@ class Clipbucket_db
                 e('ERROR : ' . $this->getError());
                 error_log('SQL : ' . $query);
                 error_log('ERROR : ' . $this->getError());
+                error_log(debug_backtrace_string());
             } else {
                 e(lang('technical_error'));
             }

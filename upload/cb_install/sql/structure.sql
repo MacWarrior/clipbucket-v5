@@ -60,7 +60,6 @@ CREATE TABLE `{tbl_prefix}collections` (
   `allow_rating` enum('yes','no') NOT NULL DEFAULT 'yes',
   `total_comments` bigint(20) NOT NULL DEFAULT 0,
   `last_commented` datetime DEFAULT NULL,
-  `total_objects` bigint(20) NOT NULL DEFAULT 0,
   `rating` bigint(20) NOT NULL DEFAULT 0,
   `rated_by` bigint(20) NOT NULL DEFAULT 0,
   `voters` longtext DEFAULT NULL,

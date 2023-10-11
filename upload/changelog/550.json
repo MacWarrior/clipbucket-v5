@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"265",
+  "revision":"266",
   "status":"dev",
   "detail":[
     {
@@ -211,6 +211,7 @@
         ,"Fix short search warning"
         ,"Fix home popup video"
         ,"Fix photo collection creation form"
+        ,"Fix collection count display"
       ]
     }
   ,{
