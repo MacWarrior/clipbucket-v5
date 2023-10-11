@@ -616,6 +616,10 @@ class CBPhotos
         if ($p['show_related']) {
             $query = $main_query;
 
+            if ($cond != '') {
+                $cond .= ' AND ';
+            }
+
             $cond .= '(MATCH(photos.photo_title) AGAINST (\'' . mysql_clean($cbsearch->set_the_key($p['title'])) . '\' IN NATURAL LANGUAGE MODE) ';
             if( $match_tag != ''){
                 $cond .= 'OR MATCH('.$match_tag.') AGAINST (\'' . mysql_clean($cbsearch->set_the_key($p['title'])) . '\' IN NATURAL LANGUAGE MODE)';
@@ -659,6 +663,9 @@ class CBPhotos
                 $tags = $cbsearch->set_the_key($p['tags']);
                 $tags = str_replace('+', '', $tags);
 
+                if ($cond != '') {
+                    $cond .= ' AND ';
+                }
                 $cond .= '(MATCH(photos.photo_title) AGAINST (\'' . mysql_clean($tags) . '\' IN NATURAL LANGUAGE MODE) ';
                 if( $match_tag != ''){
                     $cond .= 'OR MATCH('.$match_tag.') AGAINST (\'' . mysql_clean($tags) . '\' IN NATURAL LANGUAGE MODE)';

@@ -230,13 +230,30 @@ class Collections extends CBCategory
             $join_tag = ' LEFT JOIN ' . tbl('collection_tags') . ' AS CT ON C.collection_id = CT.id_collection  
                     LEFT JOIN ' . tbl('tags') . ' AS T ON CT.id_tag = T.id_tag';
         }
+
+        $where = '';
+        if( !empty($cond) ){
+            $where .= 'WHERE '.$cond;
+        }
+
+        $userid = user_id();
+        $left_join_cond = '';
+        if( !has_access('admin_access', true) ) {
+            $left_join_cond .= ' AND (obj.active = \'yes\' AND obj.broadcast != \'private\'';
+            if( !empty($userid) ){
+                $select_contacts = 'SELECT contact_userid FROM '.tbl('contacts').' WHERE confirmed = \'yes\' AND userid = '.$userid;
+                $left_join_cond .= ' OR obj.userid = '.$userid.' OR ( obj.broadcast = \'private\' AND obj.userid IN('.$select_contacts.') )';
+            }
+            $left_join_cond .= ')';
+        }
+
         $result = $db->select(tbl($this->section_tbl) . ' C
             INNER JOIN ' . tbl('users') . ' U ON C.userid = U.userid
             LEFT JOIN ' . tbl($this->items) . ' citem ON C.collection_id = citem.collection_id
-            LEFT JOIN ' . tbl($this->objTable) . ' obj ON obj.'.$this->objFieldID .' = citem.object_id
-            ' . $join_tag
-            ,'C.*, U.userid,U.username, count( distinct citem.ci_id) as total_objects' . $select_tag,
-            ' C.collection_id = ' . mysql_clean($id) . ' ' . $cond . ' GROUP BY C.collection_id') ;
+            LEFT JOIN ' . tbl($this->objTable) . ' obj ON obj.'.$this->objFieldID .' = citem.object_id' . $left_join_cond
+            . $join_tag
+            ,'C.*, U.userid,U.username, COUNT(distinct citem.ci_id) AS total_objects' . $select_tag,
+            ' C.collection_id = ' . mysql_clean($id) . ' ' . $where . ' GROUP BY C.collection_id') ;
 
         if ($result) {
             return $result[0];
@@ -254,8 +271,8 @@ class Collections extends CBCategory
             INNER JOIN ' . tbl('users') . ' U ON C.userid = U.userid
             LEFT JOIN ' . tbl($this->items) . ' citem ON C.collection_id = citem.collection_id
             LEFT JOIN ' . tbl($this->objTable) . ' obj ON obj.'.$this->objFieldID .' = citem.object_id',
-            ' C.* ,U.userid,U.username, count( distinct citem.ci_id) as total_objects ',
-            ' C.collection_id_parent = ' . mysql_clean($id) . ' ' . $cond . ' GROUP BY C.collection_id');
+            'C.* ,U.userid,U.username, COUNT(DISTINCT citem.ci_id) AS total_objects',
+            'C.collection_id_parent = ' . mysql_clean($id) . ' ' . $cond . ' GROUP BY C.collection_id');
 
         if ($result) {
             return $result;
@@ -290,14 +307,18 @@ class Collections extends CBCategory
             e(lang('collection_not_exists'));
             return false;
         }
-        if ($c['active'] == 'no') {
-            e(lang('collection_not_active'));
-            if (!has_access('admin_access', true)) {
-                return false;
-            }
+
+        if (!has_access('admin_access', true)) {
             return true;
         }
-        if ($c['broadcast'] == 'private' && !$userquery->is_confirmed_friend($c['userid'], user_id()) && $c['userid'] != user_id() && !has_access('admin_access', true)) {
+
+        if ($c['active'] == 'no') {
+            e(lang('collection_not_active'));
+            return true;
+        }
+
+        $userid = user_id();
+        if ($c['broadcast'] == 'private' && !$userquery->is_confirmed_friend($c['userid'], $userid) && $c['userid'] != $userid ) {
             e(lang('collection_is_private'));
             return false;
         }
@@ -332,19 +353,21 @@ class Collections extends CBCategory
         $order = $p['order'];
         $cond = '';
 
-        if ((!has_access('admin_access', true) && $p['user'] != user_id()) || ($p['user'] && $p['user'] == user_id())) {
-            $cond .= 'C.active = \'yes\'';
-        } else {
-            if ($p['active']) {
-                $cond .= 'C.active = \'' . $p['active'] . '\'';
+        $userid = user_id();
+        $left_join_cond = '';
+        if( !has_access('admin_access', true) ) {
+            $select_contacts = 'SELECT contact_userid FROM '.tbl('contacts').' WHERE confirmed = \'yes\' AND userid = '.$userid;
+            $cond .= '(C.active = \'yes\' AND C.broadcast != \'private\'';
+            if( !empty($userid) ){
+                $cond .= ' OR C.userid = '.$userid.' OR ( C.broadcast = \'private\' AND C.userid IN('.$select_contacts.') )';
             }
+            $cond .= ')';
 
-            if ($p['broadcast']) {
-                if ($cond != '') {
-                    $cond .= ' AND ';
-                }
-                $cond .= 'C.broadcast = \'' . $p['broadcast'] . '\'';
+            $left_join_cond .= ' AND (obj.active = \'yes\' AND obj.broadcast != \'private\'';
+            if( !empty($userid) ){
+                $left_join_cond .= ' OR obj.userid = '.$userid.' OR ( obj.broadcast = \'private\' AND obj.userid IN('.$select_contacts.') )';
             }
+            $left_join_cond .= ')';
         }
 
         if (!empty($p['category'])) {
@@ -435,19 +458,9 @@ class Collections extends CBCategory
             $cond .= 'C.collection_id = \'' . $p['cid'] . '\'';
         }
 
-        /** Get only with those who have items **/
+        $having = '';
         if ($p['has_items']) {
-            if ($cond != '') {
-                $cond .= ' AND ';
-            }
-            $cond .= 'C.total_objects >= \'1\'';
-        }
-
-        if (!has_access('admin_access')) {
-            if ($cond != '') {
-                $cond .= ' AND ';
-            }
-            $cond .= 'C.broadcast != \'private\'';
+            $having = 'COUNT(DISTINCT citem.ci_id) >= 1';
         }
 
         $title_tag = '';
@@ -487,21 +500,27 @@ class Collections extends CBCategory
         $join_tag = '';
         $version = get_current_version();
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
-            $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') as collection_tags';
-            $join_tag = 'LEFT JOIN ' . tbl('collection_tags') . ' AS CT ON C.collection_id = CT.id_collection 
+            $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') AS collection_tags';
+            $join_tag = ' LEFT JOIN ' . tbl('collection_tags') . ' AS CT ON C.collection_id = CT.id_collection 
                     LEFT JOIN ' . tbl('tags') . ' AS T ON CT.id_tag = T.id_tag';
         }
         $from = tbl('collections') . ' C' .
             ' INNER JOIN ' . tbl('users') . ' U ON C.userid = U.userid
             LEFT JOIN ' . tbl('collections') . ' CPARENT ON C.collection_id_parent = CPARENT.collection_id
             LEFT JOIN ' . tbl($this->items) . ' citem ON C.collection_id = citem.collection_id
-            LEFT JOIN ' . tbl($this->objTable) . ' obj ON obj.' . $this->objFieldID . ' = citem.object_id
-            ' . $join_tag;
+            LEFT JOIN ' . tbl($this->objTable) . ' obj ON obj.' . $this->objFieldID . ' = citem.object_id' . $left_join_cond
+            . $join_tag;
+
         if (!empty ($cond)) {
-            $cond .= ' GROUP BY C.collection_id ';
+            $cond .= ' GROUP BY C.collection_id';
         } else {
-            $cond = ' 1 GROUP BY C.collection_id ';
+            $cond = ' 1 GROUP BY C.collection_id';
         }
+
+        if (!empty($having)){
+            $cond .= ' HAVING '.$having;
+        }
+
         if ($p['count_only']) {
             return $db->count($from, 'C.collection_id', $cond);
         }
@@ -509,7 +528,7 @@ class Collections extends CBCategory
         if (isset($p['count_only'])) {
             $select = 'COUNT(C.collection_id) AS total_collections';
         } else {
-            $select = 'C.*, U.username, CPARENT.collection_name AS collection_name_parent, count( distinct citem.ci_id) as total_objects ' . $select_tag;
+            $select = 'C.* ,U.username ,CPARENT.collection_name AS collection_name_parent ,COUNT(DISTINCT citem.ci_id) AS total_objects' . $select_tag;
         }
 
         $result = $db->select($from, $select, $cond, $limit, $order);
@@ -763,7 +782,7 @@ class Collections extends CBCategory
                 $list_parent_categories[$col_id] = $col_data['name'];
             }
             //getting direct parent collection
-            if (array_key_exists('null', $list_parent_categories)) {
+            if (array_key_exists('null', $list_parent_categories) && !empty($collection_id_parent)) {
                 $parent = $this->get_collection($collection_id_parent);
                 if ($parent) {
                     $list_parent_categories [$parent['collection_id']] =$parent['collection_name'];
@@ -785,6 +804,9 @@ class Collections extends CBCategory
         return $data;
     }
 
+    /**
+     * @throws Exception
+     */
     public function get_collections_list(int $level = 0, $collection_id = null, $exclude_id = null, $type = null, $userid = null): array
     {
         global $db;
@@ -809,13 +831,13 @@ class Collections extends CBCategory
             $cond .= ' AND C.userid = ' . mysql_clean($userid);
         }
         if (!empty ($cond)) {
-            $cond .= ' GROUP BY C.collection_id ';
+            $cond .= ' GROUP BY C.collection_id';
         } else {
-            $cond = ' 1 GROUP BY C.collection_id ';
+            $cond = ' 1 GROUP BY C.collection_id';
         }
         $collections_parent = $db->select(tbl($this->section_tbl) . ' C  
             LEFT JOIN ' . tbl($this->items) . ' citem ON C.collection_id = citem.collection_id'
-            , 'C.*, count( distinct citem.ci_id) as total_objects'
+            , 'C.*, COUNT(DISTINCT citem.ci_id) AS total_objects'
             , $cond);
         foreach ($collections_parent as $col_parent) {
             $space = '';
