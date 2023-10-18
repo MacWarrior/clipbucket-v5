@@ -411,12 +411,10 @@ class Clipbucket_db
                 $values_query .= 'NULL';
             } else {
                 $needle = substr($val, 0, 3);
-                if ($needle != '|f|') {
-                    $values_query .= "'" . $val . "'";
-                } else {
+                if ($needle == '|f|') {
                     $val = substr($val, 3, strlen($val));
-                    $values_query .= "'" . $val . "'";
                 }
+                $values_query .= "'" . $val . "'";
             }
 
             if ($total_values != $count) {

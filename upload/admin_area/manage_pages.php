@@ -43,27 +43,33 @@ if (isset($_GET['hide'])) {
 }
 
 if (isset($_POST['activate_selected']) && is_array($_POST['check_page'])) {
-    for ($id = 0; $id <= count($_POST['check_page']); $id++) {
-        $cbpage->page_actions('activate', $_POST['check_page'][$id]);
+    foreach($_POST['check_page'] as $id){
+        $cbpage->page_actions('activate', $id);
     }
-    $eh->flush();
-    e('Selected pages have been activated', 'm');
+    if( !error() && !warning() ) {
+        $eh->flush();
+        e('Selected pages have been activated', 'm');
+    }
 }
 
 if (isset($_POST['deactivate_selected']) && is_array($_POST['check_page'])) {
-    for ($id = 0; $id <= count($_POST['check_page']); $id++) {
-        $cbpage->page_actions('deactivate', $_POST['check_page'][$id]);
+    foreach($_POST['check_page'] as $id){
+        $cbpage->page_actions('deactivate', $id);
     }
-    $eh->flush();
-    e('Selected pages have been deactivated', 'm');
+    if( !error() && !warning() ) {
+        $eh->flush();
+        e('Selected pages have been deactivated', 'm');
+    }
 }
 
 if (isset($_POST['delete_selected']) && is_array($_POST['check_page'])) {
-    for ($id = 0; $id <= count($_POST['check_page']); $id++) {
-        $cbpage->page_actions('delete', $_POST['check_page'][$id]);
+    foreach($_POST['check_page'] as $id){
+        $cbpage->page_actions('delete', $id);
     }
-    $eh->flush();
-    e('Selected pages have been deleted', 'm');
+    if( !error() && !warning() ) {
+        $eh->flush();
+        e('Selected pages have been deleted', 'm');
+    }
 }
 
 $mode = $_GET['mode'];
@@ -80,7 +86,10 @@ if (isset($_POST['add_page'])) {
 //Updating order
 if (isset($_POST['update_order'])) {
     $cbpage->update_order();
-    e(lang('Page order has been updated'), 'm');
+    if( !error() && !warning() ) {
+        $eh->flush();
+        e(lang('Page order has been updated'), 'm');
+    }
 }
 
 switch ($mode) {

@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"267",
+  "revision":"268",
   "status":"dev",
   "detail":[
     {
@@ -83,6 +83,8 @@
         ,"Implement cleanup orphan tags tool"
         ,"Add new option to enable RSS feeds"
         ,"Fix dashboard comments"
+        ,"Fix custom page creation <i>#275</i>"
+        ,"Update page management display"
       ]
     },
     {
@@ -215,6 +217,7 @@
         ,"Fix collection & playlists count display"
         ,"Fix collection & playlists privacy"
         ,"Implement photo breadcrumb"
+        ,"Fix custom page privacy"
       ]
     }
   ,{

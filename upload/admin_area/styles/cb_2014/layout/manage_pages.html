@@ -72,12 +72,12 @@
     </div><br><br>
 <table class="table table-bordered">
   <tr>
-    <td width="30" align="center" valign="middle" class="left_head">
+    <td width="30">
     <input type="checkbox" name="checkall" onclick="checkUncheckAll(this);"/></td>
-    <td width="50" class="head_sep_left">PID</td>
-    <td width="50" class="head_sep_left">Order</td>
-    <td class="head"><div class="head_sep_left" style="width:250px">Details</div></td>
-    <td width="103">Options</td>
+    <td width="50" align="center">PID</td>
+    <td width="50">Order</td>
+    <td class="head">Details</td>
+    <td width="120" align="center">Options</td>
   </tr>
 
 {assign var = bgcolor value = ""}
@@ -94,7 +94,6 @@
                   onmouseover="$('#vid_opt-{$cbpages[list].page_id}').show()"
                   onmouseout="$('#vid_opt-{$cbpages[list].page_id}').hide()" style="padding-left:10px">
       </a>
-      <br>
         <div class="row">
             <div class="col-md-10">
                 <div class="row">
@@ -104,37 +103,38 @@
                         </div>
      <div class="col-md-9">
         <div class="labels">
-            <span class="label {if $cbpages[list].active=='yes'}label-success{else}label-warning{/if}"><span>{if $cbpages[list].active=='yes'}{lang code='active'}{else}{lang code='inactive'}{/if}</span></span>
-            <span class="label label-info"><span>Added:{$cbpages[list].date_added|niceTime}</span></span>
+            <span class="label {if $cbpages[list].active=='yes'}label-success{else}label-warning{/if}">{if $cbpages[list].active=='yes'}{lang code='active'}{else}{lang code='inactive'}{/if}</span>
+            <span class="label label-info">Added: {$cbpages[list].date_added|niceTime}</span>
             {if $u.usr.featured=='yes'}<span class="label label-primary">{lang code='featured'}</span>{/if}
-            <span class="label {if $cbpages[list].delete_able=='yes'}label-success{else}label-warning{/if}">
-           <span>{if $cbpages[list].delete_able =='no'}UNDELETE-ABLE{else}{$cbpages[list].delete_able =='yes'}DELETE-ABLE{/if}</span>
-                </span>
+            <span class="label {if $cbpages[list].delete_able=='yes'}label-success{else}label-warning{/if}">{if $cbpages[list].delete_able =='no'}Undeletable{else}Deletable{/if}</span>
+            <span class="label {if $cbpages[list].display=='yes'}label-success{else}label-warning{/if}">{if $cbpages[list].display =='yes'}Visible{else}Hidden{/if}</span>
         </div>
-         </div>
+     </div>
                     </div>
                 </div>
             </div>
     </td>
     
     <td>
-      <div class="dropdown">
-          <button class="btn btn-primary btn-xs dropdown-toggle pull-right" type="button" id="dropdownMenu1" data-toggle="dropdown">
+      <div class="dropdown" style="text-align:center;">
+          <button class="btn btn-primary btn-xs dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
             Actions <i class="caret"></i>
           </button>
           <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-          <li role="presentation"><a role="menuitem" tabindex="-1" href="{$cbpage->page_link($cbpages[list])}">{lang code='views'}</a></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="{$cbpage->page_link($cbpages[list])}">{lang code='view'}</a></li>
           <li role="presentation"><a role="menuitem" tabindex="-1" href="?mode=edit&pid={$cbpages[list].page_id}">{lang code='edit'}</a></li>
           {if $cbpages[list].active == yes}
           <li role="presentation"><a role="menuitem" tabindex="-1" href="?deactivate={$cbpages[list].page_id}">{lang code='deactivate'}</a></li>
           {else}
           <li role="presentation"><a role="menuitem" tabindex="-1" href="?activate={$cbpages[list].page_id}">{lang code='activate'}</a></li>
           {/if}
+              {if $cbpages[list].delete_able =='yes'}
           <li role="presentation"><a class="disabled" role="menuitem" tabindex="-1" href="#">{lang code='delete'}</a></li>
+              {/if}
           {if $cbpages[list].display!='yes'}
             <li role="presentation"><a role="menuitem" tabindex="-1" href="?display={$cbpages[list].page_id}">Display in footer</a></li>
           {else}
-          <li role="presentation"><a role="menuitem" tabindex="-1" href="?hide={$cbpages[list].page_id}">Hide in footer</a></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="?hide={$cbpages[list].page_id}">Hide from footer</a></li>
           {/if}
         </ul> 
       </div>
@@ -163,13 +163,3 @@
         $('#page_content').summernote();
     });
 </script>
-
-<style type="text/css">
-  .form-group .note-image-input {
-    display: none;
-  }
-  .form-group h5 {
-    display: none;
-  }
-  
-</style>

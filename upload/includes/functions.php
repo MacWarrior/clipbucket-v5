@@ -1343,6 +1343,22 @@ function error($param = 'array')
     return false;
 }
 
+function warning($param = 'array')
+{
+    global $eh;
+    $error = $eh->get_warning();
+    if (count($error) > 0) {
+        if ($param != 'array') {
+            if ($param == 'single') {
+                $param = 0;
+            }
+            return $error[$param];
+        }
+        return $error;
+    }
+    return false;
+}
+
 /**
  * Function used to check weather msg exists or not
  *
