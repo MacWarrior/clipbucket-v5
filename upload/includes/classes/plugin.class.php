@@ -151,6 +151,11 @@ class CBPlugin
 
         $file = PLUG_DIR . DIRECTORY_SEPARATOR . $sub_dir . $plug_file;
 
+        // Prevent directory change
+        if( strpos(realpath($file), realpath(PLUG_DIR)) === false ){
+            return false;
+        }
+
         if (file_exists($file) && is_file($file)) {
             // We don't need to write to the file, so just open for reading.
             $fp = fopen($file, 'r');
@@ -202,51 +207,58 @@ class CBPlugin
      */
     function installPlugin($pluginFile, $folder = null)
     {
+        if (is_null($pluginFile) || is_null($folder)) {
+            e(lang('technical_error'));
+            error_log('Error: $pluginFile or $folder is null.');
+            return false;
+        }
+
         $plug_details = $this->get_plugin_details($pluginFile, $folder);
 
         if (!$plug_details) {
-            $msg = e(lang('plugin_no_file_err'));
+            e(lang('plugin_no_file_err'));
+            return false;
         }
+
         if (empty($plug_details['name'])) {
-            $msg = e(lang('plugin_file_detail_err'));
+            e(lang('plugin_file_detail_err'));
+            return false;
         }
+
         if ($this->is_installed($pluginFile, $folder)) {
-            $msg = e(lang('plugin_installed_err'));
+            e(lang('plugin_installed_err'));
+            return false;
         }
 
-        if (empty($msg)) {
-            $file_folder = $folder;
-            if ($folder != '') {
-                $folder = $folder . DIRECTORY_SEPARATOR;
-            }
-            $plug_details = $this->get_plugin_details($folder . $pluginFile);
-
-            $plug_install_file = PLUG_DIR . DIRECTORY_SEPARATOR . $folder . 'install_' . $pluginFile;
-            if (file_exists($plug_install_file)) {
-                require_once($plug_install_file);
-            }
-
-            dbInsert(
-                tbl('plugins'),
-                [
-                    'plugin_file',
-                    'plugin_active',
-                    'plugin_folder',
-                    'plugin_version'
-                ],
-                [
-                    $pluginFile,
-                    'yes',
-                    $file_folder,
-                    $plug_details['version']
-                ]
-            );
-
-            //Checking For the installation SQL
-            e(lang('plugin_install_msg'), 'm');
-            return PLUG_DIR . DIRECTORY_SEPARATOR . $folder . $pluginFile;
+        $file_folder = $folder;
+        if ($folder != '') {
+            $folder = $folder . DIRECTORY_SEPARATOR;
         }
-        return false;
+
+        $plug_install_file = PLUG_DIR . DIRECTORY_SEPARATOR . $folder . 'install_' . $pluginFile;
+
+        if (file_exists($plug_install_file)) {
+            require_once($plug_install_file);
+        }
+
+        dbInsert(
+            tbl('plugins'),
+            [
+                'plugin_file',
+                'plugin_folder',
+                'plugin_version',
+                'plugin_active'
+            ],
+            [
+                $pluginFile,
+                $file_folder,
+                $plug_details['version'],
+                'yes'
+            ]
+        );
+        e(lang('plugin_install_msg'), 'm');
+
+        return PLUG_DIR . DIRECTORY_SEPARATOR . $folder . $pluginFile;
     }
 
     /**
