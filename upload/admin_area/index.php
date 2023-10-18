@@ -9,22 +9,10 @@ $userquery->admin_login_check();
 global $breadcrumb;
 $breadcrumb[0] = ['title' => 'Dashboard', 'url' => ''];
 
-$result_array = $array;
-//Getting Video List
-$result_array['limit'] = $get_limit;
-if (!$array['order']) {
-    $result_array['order'] = ' doj DESC LIMIT 5 ';
-}
-
 if (!empty($_GET['finish_upgrade'])) {
     $eh->add_message('Your database has been successfuly updated to version ' . display_clean($_GET['version']));
 }
 
-$users = get_users($result_array);
-
-Assign('users', $users);
-
-//////////////////getting todolist/////////////
 $mode = $_POST['mode'];
 if (!isset($mode)) {
     $mode = $_GET['mode'];
@@ -60,9 +48,7 @@ switch ($mode) {
         $myquery->delete_todo($id);
         die();
 }
-///////////////////ends here/////////////
 
-////////////////getting notes
 $mode = $_POST['mode'];
 switch ($mode) {
     case 'add_note':
@@ -168,32 +154,11 @@ switch ($mode) {
         break;
 }
 
-/////////////////////////ending notes
-if (!$array['order']) {
-    $result_array['order'] = ' views DESC LIMIT 8 ';
-}
-
-$videos = get_videos($result_array);
-
-Assign('videos', $videos);
-
 $comment_cond['limit'] = 10;
 $comment_cond['order'] = 'date_added DESC';
+$comment_cond['type']  = 'all';
 $comments = getComments($comment_cond);
 Assign('comments', $comments);
-
-$get_limit = create_query_limit($page, 5);
-$videos = $cbvid->action->get_flagged_objects($get_limit);
-Assign('flaggedVideos', $videos);
-
-$get_limit = create_query_limit($page, 5);
-$users = $userquery->action->get_flagged_objects($get_limit);
-Assign('flaggedUsers', $users);
-
-$get_limit = create_query_limit($page, 5);
-$photos = $cbphoto->action->get_flagged_objects($get_limit);
-Assign('flaggedPhotos', $photos);
-
 Assign('baseurl', BASEURL);
 Assign('VERSION', VERSION);
 Assign('STATE', STATE);

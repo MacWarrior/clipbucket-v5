@@ -2,7 +2,7 @@ function buildPhotoUrl(xhr,display) {
 	var collectionId = xhr.collection_id,
 	photo_key = xhr.photo_key,
 	photo_title = xhr.photo['0'].photo_title,
-	nonSeoUrl = "view_item.php?item="+photo_key+"&type=photos&collection="+collectionId,
+	nonSeoUrl = "view_item.php?item="+photo_key+"&collection="+collectionId,
 	theSeoUrl = "item/photos/"+collectionId+"/"+photo_key+"/"+photo_title,
 	mainUrl = nonSeoUrl;
 

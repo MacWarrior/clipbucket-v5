@@ -215,8 +215,6 @@ const LOGOS_URL = '/files/logos';
 
 # ADVANCE CACHING
 const CACHE_DIR = BASEDIR . '/cache';
-const COMM_CACHE_DIR = CACHE_DIR . '/comments';
-const COMM_CACHE_TIME = 1000; //in seconds
 
 # User Feeds
 const USER_FEEDS_DIR = CACHE_DIR . '/userfeeds';

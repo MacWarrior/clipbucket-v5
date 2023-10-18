@@ -1768,10 +1768,21 @@ class CBvideo extends CBCategory
             'video'          => $cb_columns->object('videos')->get_columns()
         ];
 
+        $where = '';
+        if( !has_access('admin_access', true) ){
+            $where = ' AND (video.active = \'yes\' AND video.broadcast != \'private\'';
+
+            if( !empty($userid) ){
+                $select_contacts = 'SELECT contact_userid FROM '.tbl('contacts').' WHERE confirmed = \'yes\' AND userid = '.$userid;
+                $where .= ' OR video.userid = '.$userid.' OR ( video.broadcast = \'private\' AND video.userid IN('.$select_contacts.') )';
+            }
+            $where .= ')';
+        }
+
         $query = 'SELECT ' . table_fields($fields) . ' FROM ' . cb_sql_table('playlist_items');
         $query .= ' LEFT JOIN ' . cb_sql_table('playlists') . ' ON playlist_items.playlist_id = playlists.playlist_id';
         $query .= ' LEFT JOIN ' . cb_sql_table('video') . ' ON playlist_items.object_id = video.videoid';
-        $query .= ' WHERE playlist_items.playlist_id = \'' . $playlist_id . '\'';
+        $query .= ' WHERE playlist_items.playlist_id = \'' . $playlist_id . '\'' . $where;
 
         if (!is_null($order)) {
             $query .= ' ORDER BY ' . $order;
@@ -1790,18 +1801,16 @@ class CBvideo extends CBCategory
         }
 
         $data = select($query);
-
-        if ($data) {
-            cb_do_action('return_playlist_items', [
-                    'query_id' => $query_id,
-                    'results'  => $data
-                ]
-            );
-
-            return $data;
+        if(!$data){
+            return false;
         }
 
-        return false;
+        cb_do_action('return_playlist_items', [
+            'query_id' => $query_id,
+            'results'  => $data
+        ]);
+
+        return $data;
     }
 
     /**

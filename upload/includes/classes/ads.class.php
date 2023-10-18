@@ -213,6 +213,7 @@ class AdsManager
 
     /**
      * Function usd to get all placements
+     * @throws Exception
      */
     function get_placements()
     {
@@ -227,6 +228,7 @@ class AdsManager
 
     /**
      * Function used to get all advertisements
+     * @throws Exception
      */
     function get_advertisements()
     {

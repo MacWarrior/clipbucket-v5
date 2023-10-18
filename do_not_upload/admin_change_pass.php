@@ -11,6 +11,7 @@
  */
 
 include("includes/config.inc.php");
+global $userquery, $db;
 
 //Username of account you want to change password
 $username = 'admin';

@@ -30,6 +30,7 @@ class Collections extends CBCategory
 
     /**
      * Constructor function to set values of tables
+     * @throws Exception
      */
     function __construct()
     {
@@ -64,6 +65,7 @@ class Collections extends CBCategory
 
     /**
      *     Settings up Action Class
+     * @throws Exception
      */
     function init_actions()
     {
@@ -79,6 +81,7 @@ class Collections extends CBCategory
 
     /**
      * Setting links up in my account Edited on 12 march 2014 for collections links
+     * @throws Exception
      */
     function setting_up_collections()
     {
@@ -353,23 +356,6 @@ class Collections extends CBCategory
         $order = $p['order'];
         $cond = '';
 
-        $userid = user_id();
-        $left_join_cond = '';
-        if( !has_access('admin_access', true) ) {
-            $select_contacts = 'SELECT contact_userid FROM '.tbl('contacts').' WHERE confirmed = \'yes\' AND userid = '.$userid;
-            $cond .= '(C.active = \'yes\' AND C.broadcast != \'private\'';
-            if( !empty($userid) ){
-                $cond .= ' OR C.userid = '.$userid.' OR ( C.broadcast = \'private\' AND C.userid IN('.$select_contacts.') )';
-            }
-            $cond .= ')';
-
-            $left_join_cond .= ' AND (obj.active = \'yes\' AND obj.broadcast != \'private\'';
-            if( !empty($userid) ){
-                $left_join_cond .= ' OR obj.userid = '.$userid.' OR ( obj.broadcast = \'private\' AND obj.userid IN('.$select_contacts.') )';
-            }
-            $left_join_cond .= ')';
-        }
-
         if (!empty($p['category'])) {
             $get_all = false;
             if (!is_array($p['category'])) {
@@ -458,9 +444,13 @@ class Collections extends CBCategory
             $cond .= 'C.collection_id = \'' . $p['cid'] . '\'';
         }
 
+        $count = 'COUNT( DISTINCT
+                CASE WHEN C.type = \'photos\' THEN photos.photo_id ELSE video.videoid END
+            )';
+
         $having = '';
         if ($p['has_items']) {
-            $having = 'COUNT(DISTINCT citem.ci_id) >= 1';
+            $having = $count.' >= 1';
         }
 
         $title_tag = '';
@@ -496,6 +486,30 @@ class Collections extends CBCategory
             $cond .= '(' . $title_tag . ')';
         }
 
+        $userid = user_id();
+        $left_join_video_cond = '';
+        $left_join_photos_cond = '';
+        if( !has_access('admin_access', true) ) {
+            $select_contacts = 'SELECT contact_userid FROM '.tbl('contacts').' WHERE confirmed = \'yes\' AND userid = '.$userid;
+            if ($cond != '') {
+                $cond .= ' AND ';
+            }
+            $cond .= '(C.active = \'yes\' AND C.broadcast != \'private\'';
+            if( !empty($userid) ){
+                $cond .= ' OR C.userid = '.$userid.' OR ( C.broadcast = \'private\' AND C.userid IN('.$select_contacts.') )';
+            }
+            $cond .= ')';
+
+            $left_join_video_cond .= ' AND (video.active = \'yes\' AND video.broadcast != \'private\'';
+            $left_join_photos_cond .= ' AND (photos.active = \'yes\' AND photos.broadcast != \'private\'';
+            if( !empty($userid) ){
+                $left_join_video_cond .= ' OR video.userid = '.$userid.' OR ( video.broadcast = \'private\' AND video.userid IN('.$select_contacts.') )';
+                $left_join_photos_cond .= ' OR photos.userid = '.$userid.' OR ( photos.broadcast = \'private\' AND photos.userid IN('.$select_contacts.') )';
+            }
+            $left_join_video_cond .= ')';
+            $left_join_photos_cond .= ')';
+        }
+
         $select_tag = '';
         $join_tag = '';
         $version = get_current_version();
@@ -508,7 +522,8 @@ class Collections extends CBCategory
             ' INNER JOIN ' . tbl('users') . ' U ON C.userid = U.userid
             LEFT JOIN ' . tbl('collections') . ' CPARENT ON C.collection_id_parent = CPARENT.collection_id
             LEFT JOIN ' . tbl($this->items) . ' citem ON C.collection_id = citem.collection_id
-            LEFT JOIN ' . tbl($this->objTable) . ' obj ON obj.' . $this->objFieldID . ' = citem.object_id' . $left_join_cond
+            LEFT JOIN ' . cb_sql_table('video') . ' ON C.type = \'videos\' AND citem.object_id = video.videoid ' . $left_join_video_cond . '
+            LEFT JOIN ' . cb_sql_table('photos') . ' ON C.type = \'photos\' AND citem.object_id = photos.photo_id ' . $left_join_photos_cond
             . $join_tag;
 
         if (!empty ($cond)) {
@@ -528,7 +543,7 @@ class Collections extends CBCategory
         if (isset($p['count_only'])) {
             $select = 'COUNT(C.collection_id) AS total_collections';
         } else {
-            $select = 'C.* ,U.username ,CPARENT.collection_name AS collection_name_parent ,COUNT(DISTINCT citem.ci_id) AS total_objects' . $select_tag;
+            $select = 'C.*, U.username, CPARENT.collection_name AS collection_name_parent, '.$count.' AS total_objects' . $select_tag;
         }
 
         $result = $db->select($from, $select, $cond, $limit, $order);
@@ -1332,6 +1347,8 @@ class Collections extends CBCategory
 
     /**
      * Function used to create collection preview
+     * @throws \PHPMailer\PHPMailer\Exception
+     * @throws Exception
      */
     function update_collection($array = null)
     {
@@ -1450,6 +1467,7 @@ class Collections extends CBCategory
 
     /**
      * Function used get collection thumb
+     * @throws Exception
      */
     function get_thumb($cdetails, $size = null, $return_c_thumb = false)
     {
@@ -1699,6 +1717,7 @@ class Collections extends CBCategory
      *
      * @return bool|mixed
      * @throws \PHPMailer\PHPMailer\Exception
+     * @throws Exception
      */
     function add_comment($comment, $obj_id, $reply_to = null, $force_name_email = false)
     {
@@ -1786,26 +1805,10 @@ class Collections extends CBCategory
                 return BASEURL . '/view_collection.php?cid=' . $cdetails['collection_id'];
             }
             if ($type == 'vi' || $type == 'view_item' || $type == 'item') {
-                if ($cdetails['videoid']) {
-                    $item_type = 'videos';
-                } else {
-                    $item_type = 'photos';
+                if (SEO == 'yes') {
+                    return BASEURL . '/item/photos/' . $details['collection_id'] . '/' . $details['photo_key'] . '/' . SEO(clean(str_replace(' ', '-', $details['photo_title'])));
                 }
-                switch ($item_type) {
-                    case 'videos':
-                    case 'v':
-                        if (SEO == 'yes') {
-                            return BASEURL . '/item/' . $item_type . '/' . $details['collection_id'] . '/' . $details['videokey'] . '/' . SEO(clean(str_replace(' ', '-', $details['title'])));
-                        }
-                        return BASEURL . '/view_item.php?item=' . $details['videokey'] . '&amp;type=' . $item_type . '&amp;collection=' . $details['collection_id'];
-
-                    case 'photos':
-                    case 'p':
-                        if (SEO == 'yes') {
-                            return BASEURL . '/item/' . $item_type . '/' . $details['collection_id'] . '/' . $details['photo_key'] . '/' . SEO(clean(str_replace(' ', '-', $details['photo_title'])));
-                        }
-                        return BASEURL . '/view_item.php?item=' . $details['photo_key'] . '&amp;type=' . $item_type . '&amp;collection=' . $details['collection_id'];
-                }
+                return BASEURL . '/view_item.php?item=' . $details['photo_key'] . '&amp;collection=' . $details['collection_id'];
             }
             if ($type == 'load_more' || $type == 'more_items' || $type = 'moreItems') {
                 if (empty($cdetails['page_no'])) {
@@ -1813,9 +1816,9 @@ class Collections extends CBCategory
                 }
 
                 if (SEO == 'yes') {
-                    return BASEURL . '?cid=' . $cdetails['collection_id'] . '&amp;type=' . $cdetails['type'] . '&amp;page=' . $cdetails['page_no'];
+                    return BASEURL . '?cid=' . $cdetails['collection_id'] . '&amp;page=' . $cdetails['page_no'];
                 }
-                return BASEURL . '?cid=' . $cdetails['collection_id'] . '&amp;type=' . $cdetails['type'] . '&amp;page=' . $cdetails['page_no'];
+                return BASEURL . '?cid=' . $cdetails['collection_id'] . '&amp;page=' . $cdetails['page_no'];
             }
         }
         return BASEURL;
@@ -1845,6 +1848,7 @@ class Collections extends CBCategory
 
     /**
      * Sorting links for collection
+     * @throws Exception
      */
     function sorting_links()
     {

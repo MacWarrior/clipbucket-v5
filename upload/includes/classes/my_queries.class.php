@@ -1,6 +1,4 @@
 <?php
-define('STATIC_COMM', false);
-
 class myquery
 {
     static $website_details = [];
@@ -604,10 +602,7 @@ class myquery
         global $db;
         $cond = '';
 
-        $p = $params;
-        extract($p, EXTR_SKIP);
-
-        switch ($type) {
+        switch ($params['$type']) {
             case 'video':
             case 'videos':
             case 'v':
@@ -641,113 +636,79 @@ class myquery
 
         }
 
-        if (!$count_only && STATIC_COMM) {
-            $file = $type . $type_id . str_replace(',', '_', $limit) . '-' . strtotime($last_update) . '.tmp';
-
-            $files = glob(COMM_CACHE_DIR . DIRECTORY_SEPARATOR . $type . $type_id . str_replace(',', '_', $limit) . '*');
-
-            $theFile = getName($files[0]);
-            $theFileDetails = explode('-', $theFile);
-            $timeDiff = time() - $theFileDetails[1];
-
-            if (file_exists(COMM_CACHE_DIR . DIRECTORY_SEPARATOR . $file) && $timeDiff < COMM_CACHE_TIME) {
-                return json_decode(file_get_contents(COMM_CACHE_DIR . DIRECTORY_SEPARATOR . $file), true);
-            }
-        }
-
-        if (!$order) {
-            $order = ' date_added DESC ';
-        }
-        #Checking if user wants to get replies of comment
-        if ($parent_id != null && $get_reply_only) {
-            $cond .= " AND parent_id='$parent_id'";
+        if( empty($params['order']) ){
+            $order = 'date_added DESC';
         } else {
-            $cond .= " AND parent_id='0' ";
+            $order = mysql_clean($params['order']);
         }
 
-        if ($type_id != '*') {
-            $typeid_query = "AND type_id='$type_id' ";
+        $cond .= 'type = \''.mysql_clean($params['type']).'\'';
+
+        #Checking if user wants to get replies of comment
+        if( !empty($params['parent_id']) && !empty($params['get_reply_only']) ) {
+            $parent_id_cond = ' AND parent_id = '.mysql_clean($params['parent_id']);
+        } else {
+            $parent_id_cond = ' AND parent_id = 0';
         }
 
-        if (!$count_only) {
-            /**
-             * we have to get comments in such way that
-             * comment replies comes along with their parents
-             * in order to achieve this, we have to create a complex logic
-             * lets see if we can get some tips from WP commenting system ;)
-             * HAIL Open Source
-             */
-            $query = "SELECT * FROM " . tbl('comments');
-            $query .= " WHERE type='$type' $typeid_query $cond ";
-
-            if ($order) {
-                $query .= ' ORDER BY ' . $order;
-            }
-
-            if ($limit) {
-                $query .= ' LIMIT '.$limit;
-            }
-
-            $results = db_select($query);
-
-            foreach ($results as $key => $val) {
-                $results[$key]['comment'] = $results[$key]['comment'];
-            }
-
-            if (!$results) {
-                return false;
-            }
-
-            //getting relies of comments
-            if ($results) {
-                $parents_array = [];
-                foreach ($results as $result) {
-                    $query = "SELECT * FROM " . tbl('comments');
-                    $query .= " WHERE type='$type' $typeid_query AND parent_id='" . $result['comment_id'] . "' ";
-                    $replies = db_select($query);
-
-                    foreach ($replies as $key => $val) {
-                        $replies[$key]['comment'] = $replies[$key]['comment'];
-                    }
-
-                    if ($replies) {
-                        $replies = ['comments' => $replies];
-                        $result['children'] = $replies;
-                    } else {
-                        $result['children'] = '';
-                    }
-
-                    $parents_array[] = $result;
-                }
-            }
-
-            $comment['comments'] = $parents_array;
-
-            //Deleting any other previuos comment file
-            $files = glob(COMM_CACHE_DIR . DIRECTORY_SEPARATOR . $type . $type_id . str_replace(',', '_', $limit) . '*');
-
-            foreach ($files as $delFile) {
-                if (file_exists($delFile)) {
-                    unlink($delFile);
-                }
-            }
-
-            //Caching comment file
-            if ($file) {
-                file_put_contents(COMM_CACHE_DIR . DIRECTORY_SEPARATOR . $file, json_encode($comment));
-            }
-            foreach ($comment['comments'] as $key => $c) {
-                $tempCom[] = $c;
-            }
-            $comment['comments'] = $tempCom;
-            return $comment;
+        if (!empty($params['type_id']) && $params['type_id'] != '*') {
+            $cond .= ' AND type_id = '.mysql_clean($params['type_id']);
         }
 
-        return $db->count(tbl('comments'), '*', " type='$type' $typeid_query $cond");
+        if( !empty($params['count_only']) ){
+            return $db->count(tbl('comments'), '*', $cond.$parent_id_cond);
+        }
+
+        $query = 'SELECT * FROM ' . tbl('comments');
+        $query .= ' WHERE '.$cond.$parent_id_cond;
+
+        $query .= ' ORDER BY ' . mysql_clean($order);
+
+        if( !empty($params['limit']) ) {
+            $query .= ' LIMIT '.$params['limit'];
+        }
+
+        $results = db_select($query);
+        if (!$results) {
+            return false;
+        }
+
+        $parents_array = [];
+        foreach ($results as $result) {
+            $query = 'SELECT * FROM ' . tbl('comments');
+            $parent_id_cond = ' AND parent_id = '.$result['comment_id'];
+            $query .= ' WHERE '.$cond.$parent_id_cond;
+
+            $query .= ' ORDER BY ' . mysql_clean($order);
+
+            if( !empty($params['limit']) ) {
+                $query .= ' LIMIT '.$params['limit'];
+            }
+            $replies = db_select($query);
+
+            if ($replies) {
+                $replies = ['comments' => $replies];
+                $result['children'] = $replies;
+            } else {
+                $result['children'] = '';
+            }
+
+            $parents_array[] = $result;
+        }
+
+        $comment['comments'] = $parents_array;
+
+        $tempCom = [];
+        foreach ($comment['comments'] AS $key => $c) {
+            $tempCom[] = $c;
+        }
+        $comment['comments'] = $tempCom;
+        return $comment;
     }
 
     /**
      * Function used to set website template
+     * @throws Exception
      */
     function set_template($template)
     {

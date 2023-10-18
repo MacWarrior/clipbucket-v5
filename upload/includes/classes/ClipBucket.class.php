@@ -569,6 +569,7 @@ class ClipBucket
      * @param bool $ctemplate
      *
      * @return bool|mixed|string
+     * @throws Exception
      */
     function set_the_template($ctemplate = false)
     {

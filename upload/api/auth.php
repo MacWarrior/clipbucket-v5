@@ -1,6 +1,7 @@
 <?php
 include('../includes/config.inc.php');
 include('global.php');
+global $Cbucket, $userquery;
 
 $request = $_REQUEST;
 $mode = strtolower($request['mode']);

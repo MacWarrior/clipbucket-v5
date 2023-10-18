@@ -14,7 +14,7 @@ if (isset($_POST)) {
         if (!empty($link)) {
             $vals[] = $link;
         } else {
-            $vals[] = "";
+            $vals[] = '';
         }
     }
     $db->update(tbl("social_beast_links"), $flds, $vals, " id!=''");

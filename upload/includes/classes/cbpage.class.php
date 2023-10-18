@@ -275,6 +275,7 @@ class cbpage
 
     /**
      * Function used to update order
+     * @throws Exception
      */
     function update_order()
     {

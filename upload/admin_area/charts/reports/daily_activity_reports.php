@@ -1,5 +1,6 @@
 <?php
 require_once('../../../includes/admin_config.php');
+global $db, $cbvid, $userquery;
 
 $days = 10;
 $last_week = time() - 86400 * $days + 86400;

@@ -35,9 +35,7 @@
 			{if config("enable_advertisement") == "yes"}
 			<div class="box-ad ad">{AD place='ad_300x250'}</div>
 			{/if}
-			<!-- ******************************************* -->
-			<!-- ************* USER BLOCK START ************ -->
-			<!-- ******************************************* -->
+
 			{$feature_users=get_users(['featured'=>'yes','limit'=>5])}
 			{if $feature_users}
 			<h2>{lang code="featured_users"}</h2>
@@ -59,11 +57,9 @@
 				{/foreach}
 			</div>
 			{/if}
-			<!-- ******************************************* -->
-			<!-- ************* USER BLOCK END ************** -->
-			<!-- ******************************************* -->
+
 			{if config('collectionsSection') == 'yes'}
-				{$collections = $cbcollection->get_collections(['limit'=>config('collection_home_top_collections'), 'active'=>'yes', 'order'=>'COUNT(DISTINCT citem.ci_id) DESC', 'parents_only'=>true, 'has_items'=>true])}
+				{$collections = $cbcollection->get_collections(['limit'=>config('collection_home_top_collections'), 'active'=>'yes', 'order'=>'COUNT( DISTINCT CASE WHEN C.type = \'photos\' THEN photos.photo_id ELSE video.videoid END ) DESC', 'parents_only'=>true, 'has_items'=>true])}
                 {if $collections}
 				<h2 title="Collections with most items">{lang code="top_collections"}</h2>
 				<div class="clearfix sidebar-items collections-grid">
@@ -110,7 +106,7 @@
 								{/if}
 							{/foreach}
 						</div>
-						<span class="videos-count">{$cbvid->action->count_playlist_items($playlist.playlist_id)|number_format}&nbsp;{lang code="videos"}</span>
+						<span class="videos-count">{count($items)|number_format}&nbsp;{lang code="videos"}</span>
 					</div>
 					{/foreach}
 				</div>

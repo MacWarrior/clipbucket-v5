@@ -467,7 +467,15 @@ function shell_output($cmd)
 
 function getCommentAdminLink($type, $id): string
 {
-    return '/admin_area/edit_video.php?video=' . $id;
+    switch($type){
+        default:
+        case 'v':
+            return '/admin_area/edit_video.php?video=' . $id;
+        case 'p':
+            return '/admin_area/edit_photo.php?photo=' . $id;
+        case 'cl':
+            return '/admin_area/edit_collection.php?collection=' . $id;
+    }
 }
 
 /**
@@ -493,10 +501,12 @@ function getComments($params = null)
     if (empty($type)) {
         $type = 'v';
     }
-    $cond .= tbl('comments.type') . " = '" . $type . "'";
+    if( $type != 'all' ){
+        $cond .= tbl('comments.type') . ' = \'' . mysql_clean($type) . '\'';
+    }
     if ($params['type_id'] && $params['sectionTable']) {
-        if ($cond != "") {
-            $cond .= " AND ";
+        if ($cond != '') {
+            $cond .= ' AND ';
         }
         $cond .= tbl('comments.type_id') . ' = ' . tbl($params['sectionTable'] . '.' . $params['type_id']);
     }
@@ -519,13 +529,11 @@ function getComments($params = null)
     if ($limit) {
         $query .= ' LIMIT ' . $limit;
     }
-    if (!$params['count_only']) {
-        $result = db_select($query);
-    }
 
     if ($params['count_only']) {
-        $cond = tbl('comments.type') . "= '" . $params['type'] . "'";
         $result = $db->count(tbl('comments'), '*', $cond);
+    } else {
+        $result = db_select($query);
     }
 
     if ($result) {
@@ -1376,14 +1384,11 @@ function load_plugin()
  */
 function create_query_limit($page, $result): string
 {
-    $page = mysql_clean($page);
-    $result = mysql_clean($result);
-    $limit = $result;
     if (empty($page) || $page == 0 || !is_numeric($page)) {
         $page = 1;
     }
     $from = $page - 1;
-    $from = $from * $limit;
+    $from = $from * $result;
     return $from . ',' . $result;
 }
 
@@ -1796,7 +1801,7 @@ function call_view_collection_functions($cdetails)
                 $func($cdetails);
             }
         }
-    };
+    }
     increment_views($cdetails['collection_id'], 'collection');
 }
 
@@ -2055,6 +2060,9 @@ function cbdatetime($format = null, $timestamp = null)
  */
 function count_pages($total, $count)
 {
+    if (empty($total)){
+        return 0;
+    }
     if ($count < 1) {
         $count = 1;
     }

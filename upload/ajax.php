@@ -2,7 +2,7 @@
 define('THIS_PAGE', 'ajax');
 require 'includes/config.inc.php';
 
-global $userquery, $cbvid, $cbphoto, $cbcollection, $eh, $cbvideo, $myquery, $cbfeeds;
+global $userquery, $cbvid, $cbphoto, $cbcollection, $eh, $cbvideo, $myquery, $cbfeeds, $pages;
 
 if (isset($_POST['mode'])) {
     $mode = $_POST['mode'];
@@ -823,10 +823,9 @@ if (!empty($mode)) {
             if ($N_item) {
                 $ajax['key'] = $N_item[0]['videokey'];
                 $ajax['cid'] = $N_item[0]['collection_id'];
-                assign('type', $t);
                 assign('user', $userquery->get_user_details($N_item[0]['userid']));
-                assign('object', $N_item[0]);
-                $ajax['content'] = Fetch('view_item.html');
+                assign('photo', $N_item[0]);
+                $ajax['content'] = Fetch('view_photo.html');
                 echo json_encode($ajax);
             } else {
                 return false;
@@ -1044,7 +1043,7 @@ if (!empty($mode)) {
             $params['limit'] = create_query_limit($page, $limit);
             $params['cache'] = 'no';
 
-            $admin = "";
+            $admin = '';
             if ($_POST['admin'] == 'yes' && has_access('admin_access', true)) {
                 $params['cache'] = 'no';
                 $admin = "yes";

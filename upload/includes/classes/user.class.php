@@ -4816,7 +4816,7 @@ class userquery extends CBCategory
                     'group_name' => lang('channel_settings'),
                     'group_id'   => 'channel_settings',
                     'fields'     => array_merge($this->load_channel_settings($default)
-                        , $this->load_privacy_field($default)),
+                        , $this->load_privacy_field($default))
                 ]
             ];
         }

@@ -38,6 +38,9 @@ class CBEmail
         return false;
     }
 
+    /**
+     * @throws Exception
+     */
     function get_template($code)
     {
         return $this->get_email_template($code);
@@ -98,6 +101,7 @@ class CBEmail
 
     /**
      * Function used to get all templates
+     * @throws Exception
      */
     function get_templates()
     {
@@ -194,6 +198,7 @@ class CBEmail
 
     /**
      * function used to get email
+     * @throws Exception
      */
     function get_mass_emails()
     {
@@ -214,6 +219,7 @@ class CBEmail
      *
      * @return bool
      * @throws \PHPMailer\PHPMailer\Exception
+     * @throws Exception
      */
     function action($id, $action)
     {
@@ -254,6 +260,9 @@ class CBEmail
         return false;
     }
 
+    /**
+     * @throws Exception
+     */
     function email_exists($id)
     {
         return $this->get_email($id);
@@ -410,6 +419,7 @@ class CBEmail
      * @param $username
      * @return void
      * @throws \PHPMailer\PHPMailer\Exception
+     * @throws Exception
      */
     function friend_request_email($email, $username)
     {

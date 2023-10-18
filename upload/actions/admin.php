@@ -1,5 +1,6 @@
 <?php
 require_once '../includes/admin_config.php';
+global $userquery, $myquery, $cbvid, $eh, $db;
 $userquery->admin_login_check();
 
 $mode = $_POST['mode'];

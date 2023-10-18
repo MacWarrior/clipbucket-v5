@@ -109,6 +109,7 @@ class CB_video_js
 
     /**
      * @throws Exception
+     * @used-by cb_video_js.html
      */
     public static function getDefaultVideo($video_files)
     {

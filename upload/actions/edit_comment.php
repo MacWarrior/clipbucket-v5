@@ -1,13 +1,7 @@
 <?php
-
-/**
- * This file is used to update
- * Comment
- * Author : Arslan Hassan
- * Since : 10 Aug, 2009
- */
-
 require_once '../includes/admin_config.php';
+global $userquery, $myquery;
+
 $userquery->admin_login_check();
 
 $cid = $_POST['id'];

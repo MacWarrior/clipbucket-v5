@@ -61,6 +61,7 @@ class cbactions
 
     /**
      * initializing
+     * @throws Exception
      */
     function init()
     {
@@ -77,7 +78,7 @@ class cbactions
         ];
 
         $fields = ['playlist_id', 'playlist_name', 'userid', 'description', 'category',
-            'played', 'privacy', 'total_comments', 'total_items', 'runtime',
+            'played', 'privacy', 'total_comments', 'runtime',
             'last_update', 'date_added', 'first_item', 'playlist_type', 'cover'];
 
         $cb_columns->object('playlists')->register_columns($fields);
@@ -412,6 +413,9 @@ class cbactions
         return count($results);
     }
 
+    /**
+     * @throws Exception
+     */
     function load_basic_fields($array = null): array
     {
         if (is_null($array)) {
@@ -465,6 +469,9 @@ class cbactions
         ];
     }
 
+    /**
+     * @throws Exception
+     */
     function load_other_options($array = null): array
     {
         if (is_null($array)) {
@@ -787,13 +794,13 @@ class cbactions
             'playlist_items' => $cb_columns->object('playlist_items')->get_columns()
         ];
 
-        if ($join_playlist == true) {
+        if ($join_playlist) {
             $fields['playlists'] = $cb_columns->object('playlists')->temp_change('date_added', 'playlist_added')->get_columns();
         }
 
         $query = 'SELECT ' . table_fields($fields) . ' FROM ' . cb_sql_table('playlist_items');
 
-        if ($join_playlist == true) {
+        if ($join_playlist) {
             $query .= ' LEFT JOIN ' . cb_sql_table('playlists') . ' ON playlist_items.playlist_id = playlists.playlist_id';
         }
 
@@ -940,7 +947,7 @@ class cbactions
             e(lang('you_dont_hv_permission_del_playlist'));
         } else {
             $id = mysql_clean($id);
-            $db->delete(tbl($this->playlist_tbl), ['playlist_id'], [$id]);
+            $db->delete(tbl($this->playlist_tbl), ['playlist_id'], [mysql_clean($id)]);
             $db->delete(tbl($this->playlist_items_tbl), ['playlist_id'], [$id]);
             e(lang('playlist_delete_msg'), 'm');
         }
@@ -968,18 +975,32 @@ class cbactions
 
         $select_tag = '';
         $join_tag = '';
-        $group_tag = '';
         $version = get_current_version();
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
-            $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') as profile_tags';
+            $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') AS profile_tags';
             $join_tag = ' LEFT JOIN ' . tbl('playlist_tags') . ' AS PT ON playlists.playlist_id = PT.id_playlist 
                     LEFT JOIN ' . tbl('tags') .' AS T ON PT.id_tag = T.id_tag' ;
-            $group_tag = ' GROUP BY playlists.playlist_id';
         }
 
-        $query = 'SELECT ' . table_fields($fields) .$select_tag.' FROM ';
+        $left_join_video_cond = '';
+        if( !has_access('admin_access', true) ){
+            $left_join_video_cond = ' AND (video.active = \'yes\' AND video.broadcast != \'private\'';
+
+            if( !empty($userid) ){
+                $select_contacts = 'SELECT contact_userid FROM '.tbl('contacts').' WHERE confirmed = \'yes\' AND userid = '.$userid;
+                $left_join_video_cond .= ' OR video.userid = '.$userid.' OR ( video.broadcast = \'private\' AND video.userid IN('.$select_contacts.') )';
+            }
+            $left_join_video_cond .= ')';
+        }
+
+        $select = ', COUNT(video.videoid) AS total_items';
+        $group_by = ' GROUP BY playlists.playlist_id';
+
+        $query = 'SELECT ' . table_fields($fields) . $select . $select_tag . ' FROM ';
         $from = cb_sql_table('playlists')
-                . $join_tag ;
+                . ' LEFT JOIN '.cb_sql_table('playlist_items').' ON playlists.playlist_id = playlist_items.playlist_id '
+                . ' LEFT JOIN '.cb_sql_table('video').' ON playlist_items.object_id = video.videoid ' . $left_join_video_cond
+                . $join_tag;
         $query .= $from;
         $condition = '';
 
@@ -1067,7 +1088,7 @@ class cbactions
         $order = ' ORDER BY ' . ($order ? trim($order) : 'playlists.date_added DESC');
         $limit = ($limit) ? ' LIMIT ' . $limit : '';
 
-        $query .= $group_tag . $order . $limit;
+        $query .= $group_by . $order . $limit;
 
         $query_id = cb_query_id($query);
 
@@ -1092,73 +1113,6 @@ class cbactions
     }
 
     /**
-     * this method has been deprecated
-     * @throws Exception
-     */
-    function get_playlists_no_more_cb26()
-    {
-        global $db;
-        $result = $db->select(tbl($this->playlist_tbl), '*', ' playlist_type=\'' . $this->type . '\' AND userid=\'' . user_id() . '\'');
-
-        if (count($result) > 0) {
-            return $result;
-        }
-        return false;
-    }
-
-    /**
-     * Get playlist thumb
-     *
-     * return a group of playlist thumbs
-     *
-     * @param PID playlistid
-     *
-     * @return array Array
-     * @throws Exception
-     */
-    function getPlaylistThumb($pid): array
-    {
-        $pid = (int)$pid;
-        $items = $this->get_playlist_items($pid, null, 3);
-        $array = [];
-
-        if ($items) {
-            foreach ($items as $item) {
-                $item['type'] = 'v';
-                $array[] = get_thumb($item['object_id']);
-            }
-        } else {
-            return [TEMPLATEURL . '/images/playlist-default.png'];
-        }
-
-        $array = array_unique($array);
-        rsort($array);
-
-        return $array;
-    }
-
-    /**
-     * Function used to get playlist items
-     *
-     * @param      $playlist_id
-     * @param null $order
-     * @param int $limit
-     *
-     * @return array|bool
-     * @throws Exception
-     */
-    function get_playlist_items($playlist_id, $order = null, $limit = -1)
-    {
-        global $db;
-
-        $result = $db->select(tbl($this->playlist_items_tbl), '*', 'playlist_id=\'' . mysql_clean($playlist_id) . '\'');
-        if (count($result) > 0) {
-            return $result;
-        }
-        return false;
-    }
-
-    /**
      * Function used to count playlist item
      *
      * @param $id
@@ -1169,7 +1123,22 @@ class cbactions
     function count_playlist_items($id)
     {
         global $db;
-        return $db->count(tbl($this->playlist_items_tbl), 'playlist_item_id', 'playlist_id=\'' . mysql_clean($id) . '\'');
+
+        $left_join_video = '';
+        $where_video = '';
+        if( !has_access('admin_access', true) ){
+            $left_join_video = ' LEFT JOIN '.cb_sql_table('video').' ON AND playlist_items.object_id = video.videoid';
+
+            $where_video = ' AND (video.active = \'yes\' AND video.broadcast != \'private\'';
+
+            if( !empty($userid) ){
+                $select_contacts = 'SELECT contact_userid FROM '.tbl('contacts').' WHERE confirmed = \'yes\' AND userid = '.$userid;
+                $where_video .= ' OR video.userid = '.$userid.' OR ( video.broadcast = \'private\' AND video.userid IN('.$select_contacts.') )';
+            }
+            $where_video .= ')';
+        }
+
+        return $db->count(cb_sql_table($this->playlist_items_tbl) . $left_join_video, 'playlist_items.object_id', 'playlist_id=\'' . mysql_clean($id) . '\'' . $where_video);
     }
 
     /**

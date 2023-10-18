@@ -1,9 +1,4 @@
 <?php
-/*
-Simple Plugin System
-@ Author :  Arslan
-*/
-
 //Getting Plugin Config Details
 
 global $cbplugin, $userquery, $Cbucket;
@@ -47,6 +42,7 @@ if ($Cbucket->configs['player_file'] != '') {
 
 /**
  * Adding Inactive sign on vdeo
+ * @throws Exception
  */
 function display_inactive_sign($vdo = [])
 {

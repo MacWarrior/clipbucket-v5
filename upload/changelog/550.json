@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"266",
+  "revision":"267",
   "status":"dev",
   "detail":[
     {
@@ -82,6 +82,7 @@
         ,"Implement tag management"
         ,"Implement cleanup orphan tags tool"
         ,"Add new option to enable RSS feeds"
+        ,"Fix dashboard comments"
       ]
     },
     {
@@ -211,7 +212,9 @@
         ,"Fix short search warning"
         ,"Fix home popup video"
         ,"Fix photo collection creation form"
-        ,"Fix collection count display"
+        ,"Fix collection & playlists count display"
+        ,"Fix collection & playlists privacy"
+        ,"Implement photo breadcrumb"
       ]
     }
   ,{

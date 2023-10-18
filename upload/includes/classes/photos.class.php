@@ -422,7 +422,7 @@ class CBPhotos
         $query = 'SELECT P.* '. $select_tag.'  
                     FROM ' . tbl($this->p_tbl) . ' AS P 
                    '.$join_tag.'
-                    WHERE P.' . $field . ' = \'' . $pid . '\'
+                    WHERE P.' . $field . ' = \'' . mysql_clean($pid) . '\'
                     GROUP BY P.photo_id';
 
         $result = $db->_select($query);
