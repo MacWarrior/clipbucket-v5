@@ -20,11 +20,7 @@
 				<div class="clearfix ">
 					<label>{lang code="comment_as"}&nbsp;</label>
 					<span>
-						{if $userquery->udetails.fullname}
-							{display_clean($userquery->udetails.fullname)}
-						{else}
-							{display_clean($userquery->username)}
-						{/if}
+						{display_clean($userquery->username)}
 					</span>
 				</div>
 			{/if}
@@ -73,8 +69,7 @@
 			add_comment_js(form_selector,type,video_id);
 		});
 		$('#comment_box').keypress(function(e){
-			if(e.keyCode == 13 && !e.shiftKey)
-			{
+			if(e.keyCode == 13 && !e.shiftKey) {
 				e.preventDefault();
 				add_comment_js(form_selector,type,video_id);
 			}

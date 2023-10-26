@@ -334,11 +334,11 @@ function homePageVideos(qlist_items)
                             if (loadMode == 'featured') {
                                 $('#featured_load_more').hide();
                                 $('#featured_pre').hide();
-                                $("#featured_vid_sec").html('<div class="break2"></div><span class="well well-info btn-block">'+langCo+'</span>');
+                                $("#featured_vid_sec").html('<span class="well well-info btn-block">'+langCo+'</span>');
                             } else if (loadMode == 'recent') {
                                 $('#recent_load_more').remove();
                                 $('#recent_pre').remove();
-                                $("#recent_vids_sec").html('<div class="break2"></div><span class="well well-info btn-block">'+noRecent+'</span>');
+                                $("#recent_vids_sec").html('<span class="well well-info btn-block">'+noRecent+'</span>');
                             }
                         }
                         return true;

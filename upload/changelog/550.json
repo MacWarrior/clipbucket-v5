@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"269",
+  "revision":"270",
   "status":"dev",
   "detail":[
     {
@@ -119,6 +119,7 @@
         ,"Separate and minify CSS & JS from templates"
         ,"Implement hidden input type"
         ,"Refactor tag storage and management"
+        ,"Refactor comments management"
       ]
     },
     {
@@ -218,6 +219,7 @@
         ,"Fix collection & playlists privacy"
         ,"Implement photo breadcrumb"
         ,"Fix custom page privacy"
+        ,"Fix comments display"
       ]
     }
   ,{

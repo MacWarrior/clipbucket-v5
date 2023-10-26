@@ -77,7 +77,7 @@ if (isset($_GET['index_usrs'])) {
     while ($i < $total_users) {
         if ($users[$i]['userid']) {
             $params = ["user"        => $users[$i]['userid'], "comment_added" => true, "subscriptions_count" => true, "subscribers_count" => true,
-                       "video_count" => true, "groups_count" => true, "comment_received" => true, "collections_count" => true, "photos_count" => true];
+                       "video_count" => true, "groups_count" => true, "collections_count" => true, "photos_count" => true];
             $indexes = $cbindex->count_index("user", $params);
             $fields = $cbindex->extract_fields("user", $params);
             $msg[] = $users[$i]['userid'] . ": Updating <strong><em>" . $users[$i]['username'] . "</em></strong>";

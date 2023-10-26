@@ -87,7 +87,7 @@ switch ($mode) {
             $items = $cbphoto->collection->get_collection_items_with_details($cid);
             assign('items', $items);
         } else {
-            e(lang('Collection does not exist'));
+            e(lang('collection_not_exist'));
         }
         break;
 }

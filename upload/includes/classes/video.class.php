@@ -17,6 +17,12 @@ class CBvideo extends CBCategory
     private $basic_fields = [];
     private $extra_fields = [];
 
+    public static function getInstance()
+    {
+        global $cbvid;
+        return $cbvid;
+    }
+
     /**
      * __Constructor of CBVideo
      * @throws Exception
@@ -529,7 +535,11 @@ class CBvideo extends CBCategory
                 $db->update(tbl('users'), ['total_videos'], ['|f|total_videos-1'], ' userid=\'' . $vdetails['userid'] . '\'');
 
                 //Removing video Comments
-                $db->delete(tbl('comments'), ['type', 'type_id'], ['v', $vdetails['videoid']]);
+                $params = [];
+                $params['type'] = 'v';
+                $params['type_id'] = $vdetails['videoid'];
+                Comments::delete($params);
+
                 //Removing video From Favorites
                 $db->delete(tbl('favorites'), ['type', 'id'], ['v', $vdetails['videoid']]);
 
@@ -1138,95 +1148,6 @@ class CBvideo extends CBCategory
         } else {
             return apply_filters($result, 'get_video');
         }
-    }
-
-    /**
-     * Function used to count total video comments
-     *
-     * @param $id
-     *
-     * @return int|bool
-     * @throws Exception
-     */
-    function count_video_comments($id)
-    {
-        global $db;
-        return $db->count(tbl('comments'), 'comment_id', 'type=\'v\' AND type_id=\'' . $id . '\' AND parent_id=\'0\'');
-    }
-
-    /**
-     * Function used to update video comments count
-     *
-     * @param $id
-     * @throws Exception
-     */
-    function update_comments_count($id)
-    {
-        global $db;
-        $total_comments = $this->count_video_comments($id);
-        $db->update(tbl('video'), ['comments_count', 'last_commented'], [$total_comments, now()], ' videoid=\'' . $id . '\'');
-    }
-
-    /**
-     * Function used to add video comment
-     *
-     * @param      $comment
-     * @param      $obj_id
-     * @param null $reply_to
-     * @param bool $force_name_email
-     *
-     * @return bool|mixed
-     * @throws Exception
-     */
-    function add_comment($comment, $obj_id, $reply_to = null, $force_name_email = false)
-    {
-        global $myquery;
-
-        $video = $this->get_video($obj_id);
-
-        if (!$video) {
-            e(lang('class_vdo_del_err'));
-        } else {
-            //Getting Owner Id
-            $owner_id = $this->get_video_owner($obj_id, true);
-            $add_comment = $myquery->add_comment($comment, $obj_id, $reply_to, 'v', $owner_id, video_link($video), $force_name_email);
-            if ($add_comment) {
-                //Logging Comment
-                $log_array = [
-                    'success'        => 'yes',
-                    'details'        => 'comment on a video',
-                    'action_obj_id'  => $obj_id,
-                    'action_done_id' => $add_comment
-                ];
-                insert_log('video_comment', $log_array);
-
-                //Updating Number of comments of video if comment is not a reply
-                if ($reply_to < 1) {
-                    $this->update_comments_count($obj_id);
-                }
-            }
-            return $add_comment;
-        }
-    }
-
-    /**
-     * Function used to remove video comment
-     *
-     * @param      $cid
-     * @param bool $is_reply
-     *
-     * @return bool|mixed
-     * @throws Exception
-     */
-    function delete_comment($cid, $is_reply = false)
-    {
-        global $myquery;
-        $remove_comment = $myquery->delete_comment($cid, 'v', $is_reply);
-        if ($remove_comment) {
-            //Updating Number of comments of video
-            $this->update_comments_count($cid);
-        }
-        return $remove_comment;
     }
 
     /**
@@ -1907,84 +1828,6 @@ class CBvideo extends CBCategory
         $file = get_video_file($vdo, false);
         if ($file) {
             return true;
-        }
-        return false;
-    }
-
-    /**
-     * Function used get comments of videos
-     *
-     * @param null $params
-     *
-     * @return array|bool
-     * @throws Exception
-     */
-    function get_comments($params = null)
-    {
-        global $db;
-        $comtbl = tbl('comments');
-        $limit = $params['limit'];
-        $order = $params['order'];
-        $type = $params['type'];
-
-        if ($type) {
-            $cond = ' ' . $comtbl . '.type = \'' . $type . '\'';
-        } else {
-            $cond = '';
-        }
-
-        switch ($type) {
-            case 'c':
-                $sectbl = tbl('users');
-                $sectblName = 'users';
-                $secfields = $sectbl . '.username,' . $sectbl . '.userid';
-                if ($cond) {
-                    $cond .= ' AND';
-                }
-                $cond .= ' ' . $comtbl . '.type_id = ' . $sectbl . '.userid';
-                break;
-
-            case 'v':
-            default:
-                $sectbl = tbl('video');
-                $sectblName = 'video';
-                $secfields = $sectbl . '.videokey,' . $sectbl . '.videoid,' . $sectbl . '.file_name,' . $sectbl . '.title';
-                if ($cond) {
-                    $cond .= ' AND';
-                }
-                $cond .= ' ' . $comtbl . '.type_id = ' . $sectbl . '.videoid';
-                break;
-        }
-
-        if ($params['cond']) {
-            $cond .= ' ' . $params['cond'];
-        }
-
-        if (!$params['count_only']) {
-            $result = $db->select(
-                tbl('comments,' . $sectblName),
-                $comtbl . '.*,' . $secfields,
-                $cond, $limit, $order);
-        } else {
-            $result = $db->count(tbl('comments,video'), '*', $cond);
-        }
-        return $result;
-    }
-
-    /**
-     * Function used get single comment
-     *
-     * @param $cid
-     *
-     * @return bool|array
-     * @throws Exception
-     */
-    function get_comment($cid)
-    {
-        global $db;
-        $result = $db->select(tbl('comments'), '*', ' comment_id = ' . $cid);
-        if ($result) {
-            return $result[0];
         }
         return false;
     }

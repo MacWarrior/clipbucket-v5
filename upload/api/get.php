@@ -162,13 +162,11 @@ class API extends REST
             $limit = 20;
         }
 
-        $params['type'] = mysql_clean($request['type']);
-        $params['type_id'] = mysql_clean($request['type_id']);
-        $params['last_update'] = mysql_clean($request['last_update']);
+        $params['type'] = $request['type'];
+        $params['type_id'] = $request['type_id'];
         $params['limit'] = create_query_limit($page, $limit);
 
-        global $myquery;
-        $comments = $myquery->getComments($params);
+        $comments = Comments::getAll($params);
 
         $blacklist_fields = [
             'password', 'video_password', 'avcode', 'session'

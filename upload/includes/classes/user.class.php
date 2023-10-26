@@ -1,11 +1,10 @@
 <?php
-
 class userquery extends CBCategory
 {
     var $userid = '';
     var $username = '';
+    var $email = '';
     var $level = '';
-    var $permissions = '';
     var $access_type_list = []; //Access list
     var $usr_levels = [];
     var $custom_signup_fields = [];
@@ -34,6 +33,12 @@ class userquery extends CBCategory
 
     private $basic_fields = [];
     private $extra_fields = [];
+
+    public static function getInstance()
+    {
+        global $userquery;
+        return $userquery;
+    }
 
     function __construct()
     {
@@ -79,6 +84,7 @@ class userquery extends CBCategory
             $this->udetails = $udetails;
             $this->username = $udetails['username'];
             $this->level = $this->udetails['level'];
+            $this->email = $this->udetails['email'];
             $this->permission = $this->get_user_level(user_id());
 
             //Calling Logout Functions
@@ -1812,73 +1818,6 @@ class userquery extends CBCategory
     }
 
     /**
-     * Function used to count total video comments
-     * @throws Exception
-     */
-    function count_profile_comments($id)
-    {
-        global $db;
-        return $db->count(tbl('comments'), 'comment_id', "type='c' AND type_id='$id' AND parent_id='0'");
-    }
-
-    /**
-     * Function used to update user comments count
-     * @throws Exception
-     */
-    function update_comments_count($id)
-    {
-        global $db;
-        $total_comments = $this->count_profile_comments($id);
-        $db->update(tbl('users'), ['comments_count', 'last_commented'], [$total_comments, now()], " userid='$id'");
-    }
-
-    /**
-     * Function used to add comment on users profile
-     * @throws Exception
-     */
-    function add_comment($comment, $obj_id, $reply_to = null, $type = 'c')
-    {
-        global $myquery;
-        if (!$this->user_exists($obj_id)) {
-            e(lang('usr_exist_err'));
-        } else {
-            $add_comment = $myquery->add_comment($comment, $obj_id, $reply_to, $type, $obj_id);
-        }
-
-        if ($add_comment) {
-            //Logging Comment
-            $log_array = [
-                'success'        => 'yes',
-                'details'        => 'comment on a profile',
-                'action_obj_id'  => $obj_id,
-                'action_done_id' => $add_comment
-            ];
-            insert_log('profile_comment', $log_array);
-
-            //Updating Number of comments of user if comment is not a reply
-            if ($reply_to < 1) {
-                $this->update_comments_count($obj_id);
-            }
-        }
-        return $add_comment;
-    }
-
-    /**
-     * Function used to remove video comment
-     * @throws Exception
-     */
-    function delete_comment($cid, $is_reply = false)
-    {
-        global $myquery;
-        $remove_comment = $myquery->delete_comment($cid, 'c', $is_reply);
-        if ($remove_comment) {
-            //Updating Number of comments of video
-            $this->update_comments_count($obj_id);
-        }
-        return $remove_comment;
-    }
-
-    /**
      * Function used to get number of videos uploaded by user
      *
      * @param      $uid
@@ -2761,6 +2700,7 @@ class userquery extends CBCategory
 
     /**
      * My Account links Edited on 12 march 2014 for user account links
+     * @throws Exception
      */
     function my_account_links()
     {

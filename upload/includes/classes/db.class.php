@@ -12,6 +12,11 @@ class Clipbucket_db
     var $total_queries_sql = [];
     var $total_queries = 0;
 
+    public static function getInstance(){
+        global $db;
+        return $db;
+    }
+
     /**
      * Connect to mysqli Database
      *
@@ -185,7 +190,7 @@ class Clipbucket_db
      *
      * @param : { string } { $query } { query to run to get row }
      *
-     * @return mixed
+     * @return array|void
      * @throws Exception
      */
     function GetRow($query)
@@ -220,7 +225,7 @@ class Clipbucket_db
             }
             $this->handleError($query);
             return $data;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             if ($e->getMessage() == 'lang_not_installed' || $e->getMessage() == 'version_not_installed') {
                 throw $e;
             }

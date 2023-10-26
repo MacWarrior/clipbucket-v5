@@ -1,15 +1,4 @@
 <?php
-/**
- * @ Author Arslan Hassan, Fawaz Tahir
- * @ License : Attribution Assurance License -- http://www.opensource.org/licenses/attribution.php
- * @ Class : Photos Class
- * @ date : 06 November 2010
- * @ Version : v2.0.91
- * @ Description: Well guys time to work on one of the most wanted Module. Photo Module.
- * @ New Things Needed:
- *      - Photo Sharing Email Template
- */
-
 class CBPhotos
 {
     var $action = '';
@@ -33,6 +22,12 @@ class CBPhotos
 
     private $basic_fields = [];
     private $extra_fields = [];
+
+    public static function getInstance()
+    {
+        global $cbphoto;
+        return $cbphoto;
+    }
 
     /**
      * __Constructor of CBPhotos
@@ -841,7 +836,10 @@ class CBPhotos
             $db->update(tbl('users'), ['total_photos'], ['|f|total_photos-1'], " userid='" . $photo['userid'] . "'");
 
             //Removing Photo Comments
-            $db->delete(tbl('comments'), ['type', 'type_id'], ['p', $photo['photo_id']]);
+            $params = [];
+            $params['type'] = 'p';
+            $params['type_id'] = $photo['photo_id'];
+            Comments::delete($params);
 
             //Removing Photo From Favorites
             $db->delete(tbl('favorites'), ['type', 'id'], ['p', $photo['photo_id']]);
@@ -2269,50 +2267,6 @@ class CBPhotos
         } else {
             return $path;
         }
-    }
-
-    /**
-     * Used to add comment
-     *
-     * @param      $comment
-     * @param      $obj_id
-     * @param null $reply_to
-     * @param bool $force_name_email
-     *
-     * @return bool|mixed
-     * @throws Exception
-     */
-    function add_comment($comment, $obj_id, $reply_to = null, $force_name_email = false)
-    {
-        global $myquery;
-        $photo = $this->get_photo($obj_id);
-        if (empty($photo)) {
-            e('photo_not_exist');
-        } else {
-            $ownerID = $photo['userid'];
-            $photoLink = $this->photo_links($photo, 'view_item');
-            $comment = $myquery->add_comment($comment, $obj_id, $reply_to, 'p', $ownerID, $photoLink, $force_name_email);
-            if ($comment) {
-                //Updating Number of comments of photo if comment is not a reply
-                if ($reply_to < 1) {
-                    $this->update_total_comments($obj_id);
-                }
-            }
-            return $comment;
-        }
-    }
-
-    /**
-     * Function used to update total comments of collection
-     *
-     * @param $pid
-     * @throws Exception
-     */
-    function update_total_comments($pid)
-    {
-        global $db;
-        $count = $db->count(tbl('comments'), 'comment_id', ' type=\'p\' AND type_id =\'' . $pid . '\' AND parent_id=\'0\'');
-        $db->update(tbl('photos'), ['total_comments', 'last_commented'], [$count, now()], ' photo_id = \'' . $pid . '\'');
     }
 
     /**

@@ -7,6 +7,6 @@ $userquery->admin_login_check();
 $cid = $_POST['id'];
 $value = $_POST['value'];
 
-$myquery->update_comment($cid, $value);
+Comments::update($cid, $value);
 
 echo display_clean($value);

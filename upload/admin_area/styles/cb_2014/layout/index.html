@@ -38,7 +38,7 @@
 							<div class="name">
 								<a href="#">{display_clean($comment.anonym_name)}</a>
 							</div>
-							<div class="text">{display_clean($comment.comment|comment)}</div>
+							<div class="text">{display_clean($comment.comment)|comment}</div>
 							<div class="tools">
 								<a href="{getCommentAdminLink($comment.type, $comment.type_id)}" class="btn btn-minier btn-info">
 									<i class="icon-only icon-share-alt"></i>

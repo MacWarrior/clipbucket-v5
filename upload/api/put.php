@@ -17,94 +17,42 @@ if ($api_keys) {
 }
 
 switch ($mode) {
-    case "upload_video":
+    case 'upload_video':
         echo json_encode($_POST, $_FILES);
         break;
 
-    case "addComment":
+    case 'addComment':
         $type = $request['type'];
-        switch ($type) {
-            case 'v':
-            case 'video':
-                $id = mysql_clean($request['obj_id']);
-                $comment = $request['comment'];
-                if ($comment == 'undefined') {
-                    $comment = '';
-                }
-                $reply_to = $request['reply_to'];
 
-                $cid = $cbvid->add_comment($comment, $id, $reply_to);
-                break;
-
-            case 'u':
-            case 'c':
-                $id = mysql_clean($request['obj_id']);
-                $comment = $request['comment'];
-                if ($comment == 'undefined') {
-                    $comment = '';
-                }
-                $reply_to = $request['reply_to'];
-
-                $cid = $userquery->add_comment($comment, $id, $reply_to);
-                break;
-
-            case 'cl':
-            case 'collection':
-                $id = mysql_clean($request['obj_id']);
-                $comment = $request['comment'];
-                if ($comment == 'undefined') {
-                    $comment = '';
-                }
-                $reply_to = $request['reply_to'];
-
-                $cid = $cbcollection->add_comment($comment, $id, $reply_to);
-                break;
-
-            case "p":
-            case "photo":
-                $id = mysql_clean($request['obj_id']);
-                $comment = $request['comment'];
-                if ($comment == 'undefined') {
-                    $comment = '';
-                }
-                $reply_to = $request['reply_to'];
-                $cid = $cbphoto->add_comment($comment, $id, $reply_to);
-                break;
-
-            case 'f':
-            case 'feed':
-                $id = mysql_clean($request['obj_id']);
-                $comment = $request['comment'];
-                if ($comment == 'undefined') {
-                    $comment = '';
-                }
-                $reply_to = $request['reply_to'];
-
-                $cid = $cbfeeds->add_comment($comment, $id, $reply_to);
-                break;
-
-            default:
-                echo json_encode(['err' => 'Invalid Type']);
-                exit();
+        $id = mysql_clean($request['obj_id']);
+        $comment = $request['comment'];
+        if ($comment == 'undefined') {
+            $comment = '';
         }
+        $reply_to = $request['reply_to'];
+        $comment_id = Comments::add($comment, $id, $type, $reply_to);
 
         if (error()) {
             exit(json_encode(['err' => error(), 'session' => $_COOKIE['PHPSESSID']]));
         }
 
-        $comment = $myquery->get_comment($cid);
+        $params = [];
+        $params['comment_id'] = $comment_id;
+        $params['first_only'] = true;
+        $comment = Comments::getAll($params);
+
         $array = [
             'msg'     => msg(),
             'comment' => $comment,
             'success' => 'ok',
-            'cid'     => $cid
+            'cid'     => $comment_id
         ];
         echo json_encode($array);
         break;
 
-    case "create_playlist":
-    case "addPlaylist":
-    case "add_playlist":
+    case 'create_playlist':
+    case 'addPlaylist':
+    case 'add_playlist':
         $array = [
             'name',
             'description',
@@ -128,7 +76,7 @@ switch ($mode) {
         }
 
         if (!$type) {
-            e(lang("Invalid playlist type"));
+            e(lang('Invalid playlist type'));
         }
 
         if (VERSION > 2.7) {
@@ -147,7 +95,7 @@ switch ($mode) {
         }
         break;
 
-    case "delete_playlist":
+    case 'delete_playlist':
         $cbvid->action->delete_playlist($request['playlist_id']);
 
         if (error()) {
@@ -158,7 +106,7 @@ switch ($mode) {
         break;
 
 
-    case "add_playlist_item":
+    case 'add_playlist_item':
         $type = $request['type'];
         $pid = mysql_clean($request['playlist_id']);
         $id = mysql_clean($request['object_id']);
@@ -178,7 +126,7 @@ switch ($mode) {
         }
         break;
 
-    case "remove_playlist_item":
+    case 'remove_playlist_item':
         $item_id = mysql_clean($request['item_id']);
         $cbvid->action->delete_playlist_item($item_id);
         if (error()) {
@@ -188,7 +136,7 @@ switch ($mode) {
         }
         break;
 
-    case "delete_favorite":
+    case 'delete_favorite':
         $video_id = mysql_clean($request['videoid']);
         $cbvid->action->remove_favorite($video_id);
         if (error()) {
@@ -198,7 +146,7 @@ switch ($mode) {
         }
         break;
 
-    case "add_favorite":
+    case 'add_favorite':
         $video_id = mysql_clean($request['videoid']);
         $cbvid->action->add_to_fav($video_id);
         if (error()) {
@@ -208,7 +156,7 @@ switch ($mode) {
         }
         break;
 
-    case "insert_video":
+    case 'insert_video':
         $title = $request['title'];
         $file_name = time() . RandomString(5);
 
@@ -231,7 +179,7 @@ switch ($mode) {
                           'file_name' => $file_name]);
         break;
 
-    case "update_video":
+    case 'update_video':
         //Setting up the categories..
         $request['category'] = explode(',', $request['category']);
         $request['videoid'] = trim($request['videoid']);
@@ -251,19 +199,19 @@ switch ($mode) {
         }
         break;
 
-    case "rating":
+    case 'rating':
         $type = mysql_clean($request['type']);
         $id = mysql_clean($request['id']);
         $rating = mysql_clean($request['rating']);
 
         switch ($type) {
-            case "video":
-            case "v":
+            case 'video':
+            case 'v':
                 $result = $cbvid->rate_video($id, $rating);
                 echo json_encode(['success' => 'ok']);
                 break;
 
-            case "photo":
+            case 'photo':
                 $rating = $_POST['rating'] * 2;
                 $id = $_POST['id'];
                 $result = $cbphoto->rate_photo($id, $rating);
@@ -277,7 +225,7 @@ switch ($mode) {
                 }
                 break;
 
-            case "collection":
+            case 'collection':
                 $rating = $_POST['rating'] * 2;
                 $id = $_POST['id'];
                 $result = $cbcollection->rate_collection($id, $rating);
@@ -291,7 +239,7 @@ switch ($mode) {
                 }
                 break;
 
-            case "user":
+            case 'user':
                 $rating = $_POST['rating'] * 2;
                 $id = $_POST['id'];
                 $result = $userquery->rate_user($id, $rating);
@@ -327,8 +275,8 @@ switch ($mode) {
                 $cbphoto->action->report_it($id);
                 break;
 
-            case "cl":
-            case "collection":
+            case 'cl':
+            case 'collection':
                 $cbcollection->action->report_it($id);
                 break;
         }
@@ -358,10 +306,10 @@ switch ($mode) {
         break;
 
 
-    case "removeVideo":
-    case "remove_video":
-    case "deleteVideo":
-    case "delete_video":
+    case 'removeVideo':
+    case 'remove_video':
+    case 'deleteVideo':
+    case 'delete_video':
         $vid = $request['vid'];
         $vid = mysql_clean($vid);
         $cbvideo->delete_video($vid);
@@ -390,7 +338,7 @@ switch ($mode) {
         echo json_encode($msg);
         break;
 
-    case "subscribe":
+    case 'subscribe':
         $to = $request['to'];
         $to = mysql_clean($to);
         $subscribe_to = $to;
@@ -416,7 +364,7 @@ switch ($mode) {
         echo json_encode($msg);
         break;
 
-    case "unsubscribe":
+    case 'unsubscribe':
         $to = $request['to'];
         $to = mysql_clean($to);
         $subscribe_to = $to;
@@ -442,8 +390,8 @@ switch ($mode) {
         echo json_encode($msg);
         break;
 
-    case "edit_video":
-    case "editVideo":
+    case 'edit_video':
+    case 'editVideo':
         $vid = mysql_clean($request['videoid']);
         $Upload->validate_video_upload_form();
         if (empty($eh->get_error())) {
@@ -513,8 +461,8 @@ switch ($mode) {
         }
         break;
 
-    case "like_feed":
-    case "addLike":
+    case 'like_feed':
+    case 'addLike':
         $liked = mysql_clean($request['liked']);
         $feed_id = mysql_clean($request['feed_id']);
 

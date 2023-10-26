@@ -288,7 +288,11 @@ class cbfeeds
 
                     case 'add_comment':
                         global $myquery;
-                        $comment = $myquery->get_comment($object_id);
+
+                        $params = [];
+                        $params['comment_id'] = $object_id;
+                        $params['first_only'] = true;
+                        $comment = Comments::getAll($params);
 
                         //If photo does not exists, simply remove the feed
                         if (!$comment) {

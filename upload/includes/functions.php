@@ -479,90 +479,6 @@ function getCommentAdminLink($type, $id): string
 }
 
 /**
- * FUNCTION USED TO GET COMMENTS
- *
- * @param : { array } { $params } { array of parameters e.g order,limit,type }
- *
- * @return array|bool : { array } { $results } { array of fetched comments }
- * { $results } { array of fetched comments }
- * @throws Exception
- */
-function getComments($params = null)
-{
-    global $db;
-    $order = $params['order'];
-    $limit = $params['limit'];
-    $type = $params['type'];
-    $cond = '';
-    if (!empty($params['videoid'])) {
-        $cond .= 'type_id=' . $params['videoid'];
-        $cond .= ' AND ';
-    }
-    if (empty($type)) {
-        $type = 'v';
-    }
-    if( $type != 'all' ){
-        $cond .= tbl('comments.type') . ' = \'' . mysql_clean($type) . '\'';
-    }
-    if ($params['type_id'] && $params['sectionTable']) {
-        if ($cond != '') {
-            $cond .= ' AND ';
-        }
-        $cond .= tbl('comments.type_id') . ' = ' . tbl($params['sectionTable'] . '.' . $params['type_id']);
-    }
-
-    if ($params['cond']) {
-        if ($cond != '') {
-            $cond .= ' AND ';
-        }
-        $cond .= $params['cond'];
-    }
-
-    $query = 'SELECT * , ' . tbl('comments.userid') . ' AS c_userid FROM ' . tbl('comments' . ($params['sectionTable'] ? ',' . $params['sectionTable'] : null));
-
-    if ($cond) {
-        $query .= ' WHERE ' . $cond;
-    }
-    if ($order) {
-        $query .= ' ORDER BY ' . $order;
-    }
-    if ($limit) {
-        $query .= ' LIMIT ' . $limit;
-    }
-
-    if ($params['count_only']) {
-        $result = $db->count(tbl('comments'), '*', $cond);
-    } else {
-        $result = db_select($query);
-    }
-
-    if ($result) {
-        return $result;
-    }
-    return false;
-}
-
-/**
- * Fetches comments using params, built for smarty
- *
- * @param $params
- *
- * @return bool|mixed
- * @throws Exception
- * @uses : { class : $myquery } { function : getComments }
- */
-function getSmartyComments($params)
-{
-    global $myquery;
-    $comments = $myquery->getComments($params);
-    if ($params['assign']) {
-        assign($params['assign'], $comments);
-    } else {
-        return $comments;
-    }
-}
-
-/**
  * FUNCTION USED TO GET ADVERTISMENT
  *
  * @param : { array } { $params } { array of parameters }
@@ -778,6 +694,15 @@ function user_name()
         return $userquery->user_name;
     }
     return $userquery->get_logged_username();
+}
+
+function user_email()
+{
+    global $userquery;
+    if ($userquery->email) {
+        return $userquery->email;
+    }
+    return false;
 }
 
 /**
@@ -3045,12 +2970,11 @@ function include_header($params)
     $file = getArrayValue($params, 'file');
     $type = getArrayValue($params, 'type');
     if ($file == 'global_header') {
-
         Template(BASEDIR . '/styles/global/head.html', false);
         return false;
     }
     if (!$type) {
-        $type = "global";
+        $type = 'global';
     }
     if (is_includeable($type)) {
         Template($file, false);
@@ -3350,20 +3274,6 @@ function marked_spammed($comment): bool
 }
 
 /**
- * Function used to get object type from its code
- *
- * @param : { string } { $type } { shortcode of type ie v=>video }
- *
- * @return string|void : { string } { complete type name }
- */
-function get_obj_type($type)
-{
-    if ($type == 'v') {
-        return 'video';
-    }
-}
-
-/**
  * Check installation of ClipBucket
  *
  * @param : { string } { $type } { type of check e.g before, after }
@@ -3454,10 +3364,9 @@ function isUTF8($string)
  *
  * @return string : { string } { $code } { embed code for video }
  */
-function embeded_code($vdetails)
+function embeded_code($vdetails): string
 {
-    $code = '';
-    $code .= '<object width="' . EMBED_VDO_WIDTH . '" height="' . EMBED_VDO_HEIGHT . '">';
+    $code = '<object width="' . EMBED_VDO_WIDTH . '" height="' . EMBED_VDO_HEIGHT . '">';
     $code .= '<param name="allowFullScreen" value="true">';
     $code .= '</param><param name="allowscriptaccess" value="always"></param>';
     //Replacing Height And Width
@@ -3720,7 +3629,7 @@ function uploaderDetails()
  * @param : { string } { $input } { section to check }
  * @param bool $restrict
  *
- * @return bool : { boolean } { true of false depending on situation }
+ * @return bool|void
  */
 function isSectionEnabled($input, $restrict = false)
 {

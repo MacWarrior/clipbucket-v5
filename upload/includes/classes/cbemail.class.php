@@ -1,17 +1,14 @@
 <?php
-/**
- * It is better to keep everything sperated
- * and code properly
- * so i created this file coz i like it this way :p
- *
- *
- * Author : Arslan
- */
-
 class CBEmail
 {
     var $smtp = false;
     var $db_tpl = 'email_templates';
+
+    public static function getInstance()
+    {
+        global $cbemail;
+        return $cbemail;
+    }
 
     function __construct()
     {
@@ -24,7 +21,7 @@ class CBEmail
      * @param $code
      *
      * @return bool|array
-     * @throws \Exception
+     * @throws Exception
      */
     function get_email_template($code)
     {
@@ -52,7 +49,7 @@ class CBEmail
      * @param $code
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     function template_exists($code)
     {
@@ -117,7 +114,7 @@ class CBEmail
      * Function used to update email template
      *
      * @param $params
-     * @throws \Exception
+     * @throws Exception
      */
     function update_template($params)
     {
@@ -149,7 +146,7 @@ class CBEmail
      * @param null $array
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     function add_mass_email($array = null)
     {
@@ -217,7 +214,7 @@ class CBEmail
      * @param $id
      * @param $action
      *
-     * @return bool
+     * @return bool|void
      * @throws \PHPMailer\PHPMailer\Exception
      * @throws Exception
      */
@@ -247,13 +244,13 @@ class CBEmail
      *
      * @param $id
      *
-     * @return bool
-     * @throws \Exception
+     * @return bool|array
+     * @throws Exception
      */
     function get_email($id)
     {
         global $db;
-        $result = $db->select(tbl("mass_emails"), "*", "id='$id'");
+        $result = $db->select(tbl('mass_emails'), '*', 'id='.mysql_clean($id));
         if (count($result) > 0) {
             return $result[0];
         }
@@ -271,8 +268,8 @@ class CBEmail
     /**
      * @param $id
      *
-     * @return array|bool
-     * @throws \Exception
+     * @return array|bool|void
+     * @throws Exception
      */
     function send_emails($id)
     {

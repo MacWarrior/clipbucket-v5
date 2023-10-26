@@ -544,44 +544,18 @@
 				},'text');
 		};
 
-		this.rate_comment = function (cid,thumb,type,typeid){
-			$.post(page,
-				{
-					mode : 'rate_comment',
-					thumb : thumb,
-					cid : cid,
-					type : type,
-					typeid : typeid
-				},
-				function(data)
-				{
-					if(!data){
-						alert('No data');
-					} else {
-						if(data.msg !== ''){
-							alert(data.msg);
-						}
-						if(data.rate !== '') {
-							$('#comment_rating_' + cid).html(data.rate);
-						}
-					}
-				},'json');
-		}
-
-		this.delete_comment = function (cid,type){
+		this.delete_comment = function (cid){
 			$.post(page,
 				{
 					mode : 'delete_comment',
-					cid : cid,
-					type : type
+					cid : cid
 				},
 				function(data)
 				{
 					if(!data){
 						alert('No data');
 					} else {
-						if(data.msg)
-						{
+						if(data.msg) {
 							alert(data.msg);
 							$('#comment_'+cid).fadeOut('slow');
 							$('#spam_comment_'+cid).fadeOut('slow');

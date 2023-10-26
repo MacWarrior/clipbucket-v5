@@ -272,6 +272,8 @@ require_once('classes/photos.class.php');
 require_once('classes/cbfeeds.class.php');
 require_once('classes/resizer.class.php');
 
+require_once('classes/comments.class.php');
+
 //Adding Gravatar
 require_once('classes/gravatar.class.php');
 require 'defined_links.php';
@@ -518,7 +520,6 @@ $Smarty->register_function('get_photo', 'get_image_file');
 $Smarty->register_function('uploadButton', 'upload_photo_button');
 $Smarty->register_function('embedCodes', 'photo_embed_codes');
 $Smarty->register_function('cbCategories', 'getSmartyCategoryList');
-$Smarty->register_function('getComments', 'getSmartyComments');
 $Smarty->register_function('cbMenu', 'cbMenu');
 
 $Smarty->register_modifier('SetTime', 'SetTime');

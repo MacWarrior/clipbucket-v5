@@ -19,7 +19,7 @@ class CBreindex
      * indexes
      * @throws Exception
      */
-    function count_index($type, $params)
+    function count_index($type, $params): array
     {
         global $db;
         $arr = [];
@@ -35,19 +35,10 @@ class CBreindex
                 }
 
                 if ($params['comment_added']) {
-                    $ctbl = tbl('comments');
-                    $comment_added = $db->count($ctbl,
-                        $ctbl . '.comment_id',
-                        $ctbl . '.userid = ' . $params['user']);
-                    $arr[] = $comment_added;
-                }
-
-                if ($params['comment_received']) {
-                    $ctbl = tbl('comments');
-                    $comment_received = $db->count($ctbl,
-                        $ctbl . '.comment_id',
-                        $ctbl . '.type_id = ' . $params['user'] . ' AND ' . $ctbl . '.type = \'c\'');
-                    $arr[] = $comment_received;
+                    $comment_params = [];
+                    $comment_params['count'] = true;
+                    $comment_params['userid'] = $params['user'];
+                    $arr[] = Comments::getAll($comment_params);
                 }
 
                 // Counting user subscribers
@@ -58,7 +49,6 @@ class CBreindex
                         $subtbl . '.subscribed_to = ' . $params['user']);
                     $arr[] = $subscribers_count;
                 }
-
 
                 // Counting user subscriptions
                 if ($params['subscriptions_count']) {
@@ -90,11 +80,11 @@ class CBreindex
             case 'vid':
             case 'v':
                 if ($params['video_comments']) {
-                    $ctbl = tbl('comments');
-                    $video_comments = $db->count($ctbl,
-                        $ctbl . '.comment_id',
-                        $ctbl . '.type_id = ' . $params['video_id'] . ' AND ' . $ctbl . '.type = \'v\'');
-                    $arr[] = $video_comments;
+                    $comment_params = [];
+                    $comment_params['count'] = true;
+                    $comment_params['type'] = 'v';
+                    $comment_params['type_id'] = $params['video_id'];
+                    $arr[] = Comments::getAll($comment_params);
                 }
 
                 if ($params['favs_count']) {
@@ -124,8 +114,11 @@ class CBreindex
                 }
 
                 if ($params['total_comments']) {
-                    $comment_count = $db->count(tbl('comments'), 'comment_id', tbl('comments.type_id') . ' = ' . $params['photo_id'] . ' AND ' . tbl('comments.type') . ' = \'p\' ');
-                    $arr[] = $comment_count;
+                    $comment_params = [];
+                    $comment_params['count'] = true;
+                    $comment_params['type'] = 'p';
+                    $comment_params['type_id'] = $params['photo_id'];
+                    $arr[] = Comments::getAll($comment_params);
                 }
 
                 return $arr;
@@ -139,8 +132,11 @@ class CBreindex
                 }
 
                 if ($params['total_comments']) {
-                    $comment_count = $db->count(tbl('comments'), 'comment_id', tbl('comments.type_id') . ' = ' . $params['collection_id'] . ' AND ' . tbl('comments.type') . ' = \'cl\' ');
-                    $arr[] = $comment_count;
+                    $comment_params = [];
+                    $comment_params['count'] = true;
+                    $comment_params['type'] = 'cl';
+                    $comment_params['type_id'] = $params['collection_id'];
+                    $arr[] = Comments::getAll($comment_params);
                 }
 
                 if ($params['total_items']) {
@@ -206,10 +202,6 @@ class CBreindex
 
                     if (array_key_exists('comment_added', $arr)) {
                         $fields[] = 'total_comments';
-                    }
-
-                    if (array_key_exists('comment_received', $arr)) {
-                        $fields[] = 'comments_count';
                     }
 
                     if (array_key_exists('subscribers_count', $arr)) {

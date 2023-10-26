@@ -242,7 +242,7 @@ window.onload = function() {ldelim}
 </script>
 {/if}
 
-{if $smarty.const.THIS_PAGE=='watch_video' || $object.videoid}
+{if $smarty.const.THIS_PAGE=='watch_video' && (!empty($object.videoid) || !empty($vdo))}
     {if $object.videoid}
         {assign var=vdo value=$object}
     {/if}

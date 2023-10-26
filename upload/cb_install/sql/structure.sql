@@ -79,14 +79,6 @@ CREATE TABLE `{tbl_prefix}collection_categories` (
   `isdefault` enum('yes','no') NOT NULL DEFAULT 'no'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
-CREATE TABLE `{tbl_prefix}collection_contributors` (
-  `contributor_id` int(200) NOT NULL,
-  `collection_id` int(255) NOT NULL,
-  `userid` int(255) NOT NULL,
-  `can_edit` enum('yes','no') NOT NULL DEFAULT 'no',
-  `date_added` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
-
 CREATE TABLE `{tbl_prefix}collection_items` (
   `ci_id` bigint(20) NOT NULL,
   `collection_id` bigint(20) NOT NULL,
@@ -751,9 +743,6 @@ ALTER TABLE `{tbl_prefix}collections`
 ALTER TABLE `{tbl_prefix}collection_categories`
   ADD PRIMARY KEY (`category_id`);
 
-ALTER TABLE `{tbl_prefix}collection_contributors`
-  ADD PRIMARY KEY (`contributor_id`);
-
 ALTER TABLE `{tbl_prefix}collection_items`
   ADD PRIMARY KEY (`ci_id`);
 
@@ -932,9 +921,6 @@ ALTER TABLE `{tbl_prefix}collections`
 
 ALTER TABLE `{tbl_prefix}collection_categories`
   MODIFY `category_id` int(255) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `{tbl_prefix}collection_contributors`
-  MODIFY `contributor_id` int(200) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `{tbl_prefix}collection_items`
   MODIFY `ci_id` bigint(20) NOT NULL AUTO_INCREMENT;

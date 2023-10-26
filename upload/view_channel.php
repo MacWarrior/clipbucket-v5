@@ -50,10 +50,6 @@ if ($userquery->perm_check('view_channel', true)) {
         $userquery->subscribe_user($udetails['userid']);
     }
 
-    //Adding Comment
-    if (isset($_POST['add_comment'])) {
-        $userquery->add_comment($_POST['comment'], $udetails['userid']);
-    }
     //Calling view channel functions
     call_view_channel_functions($udetails);
 
