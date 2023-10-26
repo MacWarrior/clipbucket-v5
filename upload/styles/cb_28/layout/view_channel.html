@@ -16,9 +16,11 @@
 	<div class="clearfix">
 		{include file="$style_dir/blocks/view_channel/channel_header.html"}
 	</div>
+	{if user_id() && $user.userid != user_id()}
 	<div class="clearfix report-block" id="report-user-form" style="display:none;">
 		{show_flag_form id=$user.userid type=user}	
 	</div>
+	{/if}
 	<div class="clearfix">
 		<section id="content" class="clearfix">
 			{if $uservideos}

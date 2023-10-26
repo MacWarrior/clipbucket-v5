@@ -65,7 +65,7 @@
 	<div class="profile-buttons clearfix">
 		<h2>{display_clean($user.username)}</h2>
 		<div class="btn-holder">
-			{if !user_id() || $user.userid != user_id()}
+			{if user_id() && $user.userid != user_id()}
 				<button id="report-user" class="btn btn-default">{lang code="report_usr"}</button>
 			{/if}
 			{if user_id() && $user.userid != user_id()}

@@ -1691,13 +1691,14 @@ class CBvideo extends CBCategory
 
         $where = '';
         if( !has_access('admin_access', true) ){
-            $where = ' AND (video.active = \'yes\' AND video.broadcast != \'private\'';
+            $where = ' AND ((video.active = \'yes\'';
 
-            if( !empty($userid) ){
-                $select_contacts = 'SELECT contact_userid FROM '.tbl('contacts').' WHERE confirmed = \'yes\' AND userid = '.$userid;
-                $where .= ' OR video.userid = '.$userid.' OR ( video.broadcast = \'private\' AND video.userid IN('.$select_contacts.') )';
+            $current_user_id = user_id();
+            if( $current_user_id ){
+                $select_contacts = 'SELECT contact_userid FROM '.tbl('contacts').' WHERE confirmed = \'yes\' AND userid = '.$current_user_id;
+                $where .= ' OR video.userid = '.$current_user_id.') AND (video.broadcast IN(\'public\',\'logged\') OR (video.broadcast = \'private\' AND video.userid IN('.$select_contacts.')) OR video.userid = '.$current_user_id;
             }
-            $where .= ')';
+            $where .= ') AND video.broadcast = \'public\')';
         }
 
         $query = 'SELECT ' . table_fields($fields) . ' FROM ' . cb_sql_table('playlist_items');

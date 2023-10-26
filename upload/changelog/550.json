@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"270",
+  "revision":"271",
   "status":"dev",
   "detail":[
     {
@@ -216,7 +216,7 @@
         ,"Fix home popup video"
         ,"Fix photo collection creation form"
         ,"Fix collection & playlists count display"
-        ,"Fix collection & playlists privacy"
+        ,"Fix photo, video, collection & playlists privacy"
         ,"Implement photo breadcrumb"
         ,"Fix custom page privacy"
         ,"Fix comments display"

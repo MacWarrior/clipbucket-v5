@@ -247,12 +247,12 @@ class Collections extends CBCategory
         $userid = user_id();
         $left_join_cond = '';
         if( !has_access('admin_access', true) ) {
-            $left_join_cond .= ' AND (obj.active = \'yes\' AND obj.broadcast != \'private\'';
+            $left_join_cond .= ' AND ((obj.active = \'yes\'';
             if( !empty($userid) ){
                 $select_contacts = 'SELECT contact_userid FROM '.tbl('contacts').' WHERE confirmed = \'yes\' AND userid = '.$userid;
-                $left_join_cond .= ' OR obj.userid = '.$userid.' OR ( obj.broadcast = \'private\' AND obj.userid IN('.$select_contacts.') )';
+                $left_join_cond .= ' OR obj.userid = '.$userid.') AND (obj.broadcast IN(\'public\',\'logged\') OR (obj.broadcast = \'private\' AND obj.userid IN('.$select_contacts.')) OR obj.userid = '.$userid;
             }
-            $left_join_cond .= ')';
+            $left_join_cond .= ')  AND obj.broadcast = \'public\')';
         }
 
         $result = $db->select(tbl($this->section_tbl) . ' C
@@ -260,7 +260,7 @@ class Collections extends CBCategory
             LEFT JOIN ' . tbl($this->items) . ' citem ON C.collection_id = citem.collection_id
             LEFT JOIN ' . tbl($this->objTable) . ' obj ON obj.'.$this->objFieldID .' = citem.object_id' . $left_join_cond
             . $join_tag
-            ,'C.*, U.userid,U.username, COUNT(distinct citem.ci_id) AS total_objects' . $select_tag,
+            ,'C.*, U.userid,U.username, COUNT(DISTINCT obj.'.$this->objFieldID.') AS total_objects' . $select_tag,
             ' C.collection_id = ' . mysql_clean($id) . ' ' . $where . ' GROUP BY C.collection_id') ;
 
         if ($result) {
@@ -500,19 +500,19 @@ class Collections extends CBCategory
                 $cond .= ' AND ';
             }
             $cond .= '(C.active = \'yes\' AND C.broadcast != \'private\'';
-            if( !empty($userid) ){
+            if( $userid ){
                 $cond .= ' OR C.userid = '.$userid.' OR ( C.broadcast = \'private\' AND C.userid IN('.$select_contacts.') )';
             }
             $cond .= ')';
 
-            $left_join_video_cond .= ' AND (video.active = \'yes\' AND video.broadcast != \'private\'';
-            $left_join_photos_cond .= ' AND (photos.active = \'yes\' AND photos.broadcast != \'private\'';
-            if( !empty($userid) ){
-                $left_join_video_cond .= ' OR video.userid = '.$userid.' OR ( video.broadcast = \'private\' AND video.userid IN('.$select_contacts.') )';
-                $left_join_photos_cond .= ' OR photos.userid = '.$userid.' OR ( photos.broadcast = \'private\' AND photos.userid IN('.$select_contacts.') )';
+            $left_join_video_cond .= ' AND ((video.active = \'yes\'';
+            $left_join_photos_cond .= ' AND ((photos.active = \'yes\'';
+            if( $userid ){
+                $left_join_video_cond .= ' OR video.userid = '.$userid.') AND (video.broadcast IN(\'public\',\'logged\') OR (video.broadcast = \'private\' AND video.userid IN('.$select_contacts.')) OR video.userid = '.$userid;
+                $left_join_photos_cond .= ' OR photos.userid = '.$userid.') AND (photos.broadcast IN(\'public\',\'logged\') OR ( photos.broadcast = \'private\' AND photos.userid IN('.$select_contacts.')) OR photos.userid = '.$userid;
             }
-            $left_join_video_cond .= ')';
-            $left_join_photos_cond .= ')';
+            $left_join_video_cond .= ') AND video.broadcast = \'public\')';
+            $left_join_photos_cond .= ') AND photos.broadcast = \'public\')';
         }
 
         $select_tag = '';
@@ -1685,32 +1685,25 @@ class Collections extends CBCategory
             case 'v':
                 global $cbvideo;
                 $items = $cbvideo->collection->get_collection_items_with_details($cid);
-                $total_rating = '';
-                if (!empty($items)) {
-                    foreach ($items as $item) {
-                        $total_rating += $item['rating'];
-                        if (!empty($item['rated_by']) && $item['rated_by'] != 0) {
-                            $voters[] = $item['rated_by'];
-                        }
-                    }
-                }
                 break;
 
             case 'photos':
             case 'p':
                 global $cbphoto;
                 $items = $cbphoto->collection->get_collection_items_with_details($cid);
-                $total_rating = '';
-                if (!empty($items)) {
-                    foreach ($items as $item) {
-                        $total_rating += $item['rating'];
-                        if (!empty($item['rated_by']) && $item['rated_by'] != 0) {
-                            $voters[] = $item['rated_by'];
-                        }
-                    }
-                }
                 break;
         }
+
+        $total_rating = '';
+        if (!empty($items)) {
+            foreach ($items as $item) {
+                $total_rating += $item['rating'];
+                if (!empty($item['rated_by']) && $item['rated_by'] != 0) {
+                    $voters[] = $item['rated_by'];
+                }
+            }
+        }
+
         $total_voters = count($voters);
         if (!empty($total_rating) && $total_voters != 0) {
             $collect_rating = $total_rating / $total_voters;
@@ -1903,7 +1896,6 @@ class Collections extends CBCategory
                 default :
                     $order = tbl('photos') . '.date_added DESC';
                     $first_col = $cbphoto->collection->get_collection_items_with_details($col_data['collection_id'], $order, 1, false);
-
                     $param['details'] = $first_col[0];
                     if (!$size) {
                         $param['size'] = 's';
@@ -1911,11 +1903,15 @@ class Collections extends CBCategory
                         $param['size'] = $size;
                     }
                     $param['class'] = 'img-responsive';
-                    $first_col = get_photo($param);
-                    break;
+                    return get_photo($param);
 
                 case 'videos':
                     $first_col = $cbvid->collection->get_collection_items_with_details($col_data['collection_id'], 0, 1, false);
+
+                    if( empty($first_col) ){
+                        return default_thumb();
+                    }
+
                     $vdata = $first_col[0];
                     if (!$size || $size == 's') {
                         $size = '168x105';
@@ -1926,10 +1922,8 @@ class Collections extends CBCategory
                             $size = '416x260';
                         }
                     }
-                    $first_col = get_thumb($vdata, false, $size);
-                    break;
+                    return get_thumb($vdata, false, $size);
             }
-            return $first_col;
         }
         return false;
     }
