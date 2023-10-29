@@ -73,7 +73,7 @@ class CBvideo extends CBCategory
         }
 
         if( !empty($text) ){
-            echo '<div class="video_banner '.$class.'">' . $text . '</div>';
+            echo '<div class="thumb_banner '.$class.'">' . $text . '</div>';
         }
     }
 

@@ -18,6 +18,7 @@
 {if $display_type == "default_photo"}
 	<div class="photoAppending">
 		<a class="photo-holder" href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
+			{ANCHOR place='in_photo_thumb' data=$photo}
 			{get_photo details=$photo size='l' class='img-responsive photo-land' output='html'}
 			<i class="icon-zoom"></i>
 		</a>
@@ -137,6 +138,7 @@
 {if $display_type == "collection_item"}
 <div class="photoAppending">
     <a class="photo-holder" href="{$cbphoto->photo_links($object,'view_item')}" title="{display_clean($object.photo_title)}">
+		{ANCHOR place='in_photo_thumb' data=$object}
         {get_photo details=$object size='l' class='img-responsive photo-land' output='html'}
         <i class="icon-zoom"></i>
     </a>

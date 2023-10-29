@@ -43,6 +43,25 @@ class CBPhotos
         $basic_fields = $this->basic_fields_setup();
 
         $cb_columns->object('photos')->register_columns($basic_fields);
+
+        register_anchor_function('display_banner', 'in_photo_thumb', self::class);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function display_banner($vdo = [])
+    {
+        $text = '';
+        $class = '';
+        if ($vdo['active'] == 'no') {
+            $text = sprintf(lang('photo_is'), strtolower(lang('inactive')) );
+            $class = 'label-danger';
+        }
+
+        if( !empty($text) ){
+            echo '<div class="thumb_banner '.$class.'">' . $text . '</div>';
+        }
     }
 
     /**

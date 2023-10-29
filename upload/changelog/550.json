@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"272",
+  "revision":"273",
   "status":"dev",
   "detail":[
     {
@@ -222,6 +222,8 @@
         ,"Fix custom page privacy"
         ,"Fix comments display"
         ,"Refactor video banner"
+        ,"Implement photo banner"
+        ,"Fix channel main video, feed and popular users display"
       ]
     }
   ,{

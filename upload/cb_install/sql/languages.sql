@@ -1683,4 +1683,6 @@ VALUES ('friend_requests'),
        ('tag_type'),
        ('playlist'),
        ('profile'),
-       ('sign_in_with_your_cb_account');
+       ('sign_in_with_your_cb_account'),
+       ('video_is');
+       ('photo_is');

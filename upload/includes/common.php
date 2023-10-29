@@ -278,6 +278,10 @@ require_once('classes/comments.class.php');
 require_once('classes/gravatar.class.php');
 require 'defined_links.php';
 
+# Checking Website Template
+include 'plugin.functions.php';
+include 'plugins_functions.php';
+
 $calcdate = new CalcDate();
 $signup = new signup();
 $Upload = new Upload();
@@ -366,10 +370,6 @@ $cbphoto->position = $row['watermark_placement'];
 
 define('EMBED_VDO_WIDTH', $row['embed_player_width']);
 define('EMBED_VDO_HEIGHT', $row['embed_player_height']);
-
-# Checking Website Template
-include 'plugin.functions.php';
-include 'plugins_functions.php';
 
 require BASEDIR . '/includes/classes/template.class.php';
 $cbtpl = new CBTemplate();
