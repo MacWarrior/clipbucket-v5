@@ -53,6 +53,28 @@ class CBvideo extends CBCategory
         $basic_fields = $this->basic_fields_setup();
 
         $cb_columns->object('videos')->register_columns($basic_fields);
+
+        register_anchor_function('display_banner', 'in_video_thumb', self::class);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function display_banner($vdo = [])
+    {
+        $text = '';
+        $class = '';
+        if ($vdo['active'] == 'no') {
+            $text = sprintf(lang('video_is'), strtolower(lang('inactive')) );
+            $class = 'label-danger';
+        } else if ($vdo['status'] != 'Successful') {
+            $text = sprintf(lang('video_is'), strtolower(lang(strtolower($vdo['status']))) );
+            $class = 'label-warning';
+        }
+
+        if( !empty($text) ){
+            echo '<div class="video_banner '.$class.'">' . $text . '</div>';
+        }
     }
 
     /**

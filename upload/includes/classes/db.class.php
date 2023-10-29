@@ -549,7 +549,10 @@ class Clipbucket_db
 
     private function ping()
     {
-        if (!$this->mysqli->ping()) {
+        try{
+            $this->mysqli->ping();
+        }
+        catch(Exception $e){
             error_log('SQL ERROR : ' . $this->mysqli->error);
             $this->connect();
         }

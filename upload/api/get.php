@@ -1,11 +1,4 @@
 <?php
-
-/**
- * @Author Mohammad Shoaib
- *
- * Rest full Api for ClipBucket to let other application access data
- */
-
 require_once("Rest.inc.php");
 include('../includes/config.inc.php');
 include('global.php');

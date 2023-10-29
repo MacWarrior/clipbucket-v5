@@ -1682,4 +1682,5 @@ VALUES ('friend_requests'),
        ('tag_too_short'),
        ('tag_type'),
        ('playlist'),
-       ('profile');
+       ('profile'),
+       ('sign_in_with_your_cb_account');

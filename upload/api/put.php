@@ -1,8 +1,4 @@
 <?php
-/**
- * Api Put method to add/upload/insert stuff
- * on ClipBucket website
- */
 include('../includes/config.inc.php');
 include('global.php');
 

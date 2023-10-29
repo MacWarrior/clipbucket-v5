@@ -48,13 +48,7 @@ function video_playable($id)
         e(lang('private_video_error'));
         return false;
     }
-    if ($vdo['active'] == 'pen') {
-        e(lang("video_in_pending_list"));
-        if (has_access('admin_access', true) || $vdo['userid'] == user_id()) {
-            return true;
-        }
-        return false;
-    }
+
     if ($vdo['broadcast'] == 'logged'
         && !user_id()
         && !has_access('video_moderation', true)

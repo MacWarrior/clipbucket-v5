@@ -1,5 +1,5 @@
 #!/bin/bash
-# Clipbucket install on Ubuntu 22.04
+# ClipbucketV5 install on Ubuntu 22.04
 ## THIS SCRIPT MUST BE LAUNCHED AS ROOT
 
 echo ""
@@ -19,7 +19,7 @@ service mariadb start > /dev/null
 echo -ne " OK"
 
 echo ""
-echo -ne "Installing Clipbucket sources..."
+echo -ne "Installing ClipbucketV5 sources..."
 mkdir -p /srv/www/clipbucket/ && cd "$_"
 git clone https://github.com/MacWarrior/clipbucket-v5.git ./ > /dev/null 2>&1
 echo -ne " OK"
@@ -211,5 +211,5 @@ echo ""
 echo "- Website URL : http://clipbucket.local"
 
 echo ""
-echo "Clipbucket installation completed"
+echo "ClipbucketV5 installation completed"
 echo ""

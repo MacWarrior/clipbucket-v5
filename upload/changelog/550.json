@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"271",
+  "revision":"272",
   "status":"dev",
   "detail":[
     {
@@ -120,6 +120,7 @@
         ,"Implement hidden input type"
         ,"Refactor tag storage and management"
         ,"Refactor comments management"
+        ,"Fix SQL timeout"
       ]
     },
     {
@@ -220,6 +221,7 @@
         ,"Implement photo breadcrumb"
         ,"Fix custom page privacy"
         ,"Fix comments display"
+        ,"Refactor video banner"
       ]
     }
   ,{
