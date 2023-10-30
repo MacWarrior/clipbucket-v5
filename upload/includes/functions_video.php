@@ -1700,16 +1700,18 @@ function remove_empty_directory($path, string $stop_path)
 }
 
 /**
- * @param $files
+ * @param $file
  * @return void
  */
 function clean_orphan_files($file)
 {
-
-    if (($file['type'] == 'photo' && in_array($file['photo'] , AdminTool::getTemp()['photo']))
-    || ( $file['type'] != 'photo' && (in_array($file['video'], AdminTool::getTemp()['video'])))) {
+    if (($file['type'] == 'photo' && in_array($file['photo'], AdminTool::getTemp()['photo']))
+    || ( in_array($file['type'], ['video_mp','video_hls','thumb','log','subtitle']) && in_array($file['video'], AdminTool::getTemp()['video']))
+    || ( $file['type'] == 'userfeeds' && in_array($file['user'], AdminTool::getTemp()['user']))
+    ) {
         return;
     }
+
     $stop_path = null;
     switch ($file['type']) {
         case 'log':
@@ -1739,6 +1741,10 @@ function clean_orphan_files($file)
         case 'photo':
             unlink($file['data']);
             $stop_path = PHOTOS_DIR;
+            break;
+        case 'userfeeds':
+            unlink($file['data']);
+            $stop_path = USER_FEEDS_DIR;
             break;
     }
     remove_empty_directory(dirname($file['data']), $stop_path);
