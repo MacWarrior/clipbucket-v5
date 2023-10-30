@@ -1684,5 +1684,5 @@ VALUES ('friend_requests'),
        ('playlist'),
        ('profile'),
        ('sign_in_with_your_cb_account'),
-       ('video_is');
+       ('video_is'),
        ('photo_is');
