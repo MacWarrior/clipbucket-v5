@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"278",
+  "revision":"279",
   "status":"dev",
   "detail":[
     {
@@ -121,7 +121,7 @@
         ,"Refactor tag storage and management"
         ,"Refactor comments management"
         ,"Fix SQL timeout"
-        ,"Update Plupload to 3.1.5"
+        ,"Update Plupload to 3.1.5 <i>#281</i>"
       ]
     },
     {
@@ -181,7 +181,7 @@
         ,"Fix playlist creation <i>#196</i>"
         ,"Fix adding video to playlist <i>#197</i>"
         ,"Fix IE11 compatibility <i>#210</i>"
-        ,"Update jQuery to 3.6.4 <i>#208</i>"
+        ,"Update jQuery to 3.7.1 <i>#208</i>, <i>#281</i>"
         ,"Fix collection deletion"
         ,"Implement recursive collections"
         ,"Fix SQL error on photos page"

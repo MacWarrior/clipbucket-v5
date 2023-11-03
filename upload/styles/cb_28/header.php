@@ -16,7 +16,7 @@ $Cbucket->addCSS([
 ]);
 
 $Cbucket->addJS([
-    'jquery-3.6.4.min.js'                        => 'admin',
+    'jquery-3.7.1.min.js'                        => 'admin',
     'jquery-ui-1.13.2.min.js'                    => 'global',
     'clipbucket' . $min_suffixe . '.js'          => 'admin',
     'jquery_plugs/cookie' . $min_suffixe . '.js' => 'global',

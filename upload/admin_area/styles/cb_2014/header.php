@@ -25,7 +25,7 @@ if (!this_page('admin_login')) {
 }
 
 $Cbucket->addAdminJS([
-    'jquery-3.6.4.min.js'                          => 'admin',
+    'jquery-3.7.1.min.js'                          => 'admin',
     'jquery-ui-1.13.2.min.js'                      => 'global',
     'html5shiv' . $min_suffixe . '.js'             => 'admin',
     'respond.min.js'                               => 'admin',
