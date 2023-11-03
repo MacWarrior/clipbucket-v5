@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"276",
+  "revision":"277",
   "status":"dev",
   "detail":[
     {
@@ -224,6 +224,7 @@
         ,"Refactor video banner"
         ,"Implement photo banner"
         ,"Fix channel main video, feed and popular users display"
+        ,"Refactor search <i>#290</i>"
       ]
     }
   ,{

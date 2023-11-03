@@ -1,6 +1,249 @@
 <?php
 define('QUICK_LIST_SESS', 'quick_list');
 
+class Video
+{
+    private static $video;
+    private $tablename = '';
+    private $fields = [];
+    private $display_block = '';
+    private $display_var_name = '';
+    private $search_limit = 0;
+
+    public function __construct(){
+        $this->tablename = 'video';
+        $this->fields = [
+            'videoid'
+            ,'videokey'
+            ,'video_password'
+            ,'video_users'
+            ,'username'
+            ,'userid'
+            ,'title'
+            ,'file_name'
+            ,'file_type'
+            ,'file_directory'
+            ,'description'
+            ,'category'
+            ,'broadcast'
+            ,'location'
+            ,'datecreated'
+            ,'country'
+            ,'allow_embedding'
+            ,'rating'
+            ,'rated_by'
+            ,'voter_ids'
+            ,'allow_comments'
+            ,'comment_voting'
+            ,'comments_count'
+            ,'last_commented'
+            ,'featured'
+            ,'featured_date'
+            ,'allow_rating'
+            ,'active'
+            ,'favourite_count'
+            ,'playlist_count'
+            ,'views'
+            ,'last_viewed'
+            ,'date_added'
+            ,'flagged'
+            ,'duration'
+            ,'status'
+            ,'default_thumb'
+            ,'embed_code'
+            ,'downloads'
+            ,'uploader_ip'
+            ,'video_files'
+            ,'file_server_path'
+            ,'video_version'
+            ,'thumbs_version'
+            ,'re_conv_status'
+            ,'is_castable'
+            ,'bits_color'
+            ,'subscription_email'
+        ];
+        $this->display_block = LAYOUT . '/blocks/video.html';
+        $this->display_var_name = 'video';
+        $this->search_limit = (int)config('videos_items_search_page');
+    }
+
+    public static function getInstance(): self
+    {
+        if( empty(self::$video) ){
+            self::$video = new self();
+        }
+        return self::$video;
+    }
+
+    private function getAllFields(): array
+    {
+        return array_map(function($field) {
+            return $this->tablename . '.' . $field;
+        }, $this->fields);
+    }
+
+    public function getSearchLimit(): int
+    {
+        return $this->search_limit;
+    }
+
+    public function getDisplayBlock(): string
+    {
+        return $this->display_block;
+    }
+
+    public function getDisplayVarName(): string
+    {
+        return $this->display_var_name;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getAll(array $params = [])
+    {
+        $param_videoid = $params['videooid'] ?? false;
+        $param_videokey = $params['videokey'] ?? false;
+        $param_userid = $params['userid'] ?? false;
+        $param_file_name = $params['file_name'] ?? false;
+        $param_category = $params['category'] ?? false;
+        $param_search = $params['search'] ?? false;
+
+        $param_condition = $params['condition'] ?? false;
+        $param_limit = $params['limit'] ?? false;
+        $param_order = $params['order'] ?? false;
+        $param_group = $params['group'] ?? false;
+        $param_having = $params['having'] ?? false;
+        $param_count = $params['count'] ?? false;
+        $param_first_only = $params['first_only'] ?? false;
+
+        $conditions = [];
+        if( $param_videoid ){
+            $conditions[] = 'video.videoid = \''.mysql_clean($param_videoid).'\'';
+        }
+        if( $param_videokey ){
+            $conditions[] = 'video.videokey = \''.mysql_clean($param_videokey).'\'';
+        }
+        if( $param_userid ){
+            $conditions[] = 'video.userid = \''.mysql_clean($param_userid).'\'';
+        }
+        if( $param_file_name ){
+            $conditions[] = 'video.file_name = \''.mysql_clean($param_file_name).'\'';
+        }
+        if( $param_category ){
+            if( !is_array($param_category) ){
+                $conditions[] = 'video.category LIKE \'%#'.mysql_clean($param_category).'#%\'';
+            } else {
+                $category_cond = [];
+                foreach($param_category as $category){
+                    $category_cond[] = 'video.category LIKE \'%#'.mysql_clean($category).'#%\'';
+                }
+                $conditions[] = '(' . implode(' OR ', $category_cond) . ')';
+            }
+        }
+        if( $param_condition ){
+            $conditions[] = '(' . $param_condition . ')';
+        }
+
+        $version = get_current_version();
+
+        if( $param_search ){
+            /* Search is done on video title, video tags */
+            // TODO : Add search on video categories
+            $cond = '(MATCH(video.title) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(video.title) LIKE \'%' . mysql_clean($param_search) . '%\'';
+            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+                $cond .= 'OR MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+            }
+            $cond .= ')';
+
+            $conditions[] = $cond;
+        }
+
+        if( !has_access('admin_access', true) ){
+            $cond = '( (video.active = \'yes\' AND video.status = \'Successful\' AND video.broadcast = \'public\'';
+
+            $current_user_id = user_id();
+            if( $current_user_id ){
+                $select_contacts = 'SELECT contact_userid FROM '.tbl('contacts').' WHERE confirmed = \'yes\' AND userid = '.$current_user_id;
+                $cond .= ' OR video.userid = '.$current_user_id.')';
+                $cond .= ' OR (video.active = \'yes\' AND video.status = \'Successful\' AND video.broadcast IN(\'public\',\'logged\'))';
+                $cond .= ' OR (video.broadcast = \'private\' AND video.userid IN('.$select_contacts.'))';
+            } else {
+                $cond .= ')';
+            }
+            $cond .= ')';
+
+            $conditions[] = $cond;
+        }
+
+        if( $param_count ){
+            $select = ['COUNT(video.videoid) AS count'];
+        } else {
+            $select = $this->getAllFields();
+            $select[] = 'users.username AS user_username';
+        }
+
+        $join = [];
+        $group = [];
+        $version = get_current_version();
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+            $select[] = 'GROUP_CONCAT(tags.name SEPARATOR \',\') AS tags';
+            $join[] = 'LEFT JOIN ' . cb_sql_table('video_tags') . ' ON video.videoid = video_tags.id_video';
+            $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON video_tags.id_tag = tags.id_tag';
+            $group[] = 'video.videoid';
+        }
+
+        if( $param_group ){
+            $group[] = $param_group;
+        }
+
+        $having = '';
+        if( $param_having ){
+            $having = ' HAVING '.$param_having;
+        }
+
+        $order = '';
+        if( $param_order ){
+            $order = ' ORDER BY '.$param_order;
+        }
+
+        $limit = '';
+        if( $param_limit ){
+            $limit = ' LIMIT '.$param_limit;
+        }
+
+        $sql ='SELECT ' . implode(', ', $select) . '
+                FROM ' . cb_sql_table('video') . '
+                LEFT JOIN ' . cb_sql_table('users') . ' ON video.userid = users.userid '
+            . implode(' ', $join)
+            . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions))
+            . (empty($group) ? '' : ' GROUP BY ' . implode(',', $group))
+            . $having
+            . $order
+            . $limit;
+
+        $result = Clipbucket_db::getInstance()->_select($sql);
+
+        if( $param_count ){
+            if( empty($result) ){
+                return 0;
+            }
+            return $result[0]['count'];
+        }
+
+        if( !$result ){
+            return false;
+        }
+
+        if( $param_first_only ){
+            return $result[0];
+        }
+
+        return $result;
+    }
+}
+
+
 class CBvideo extends CBCategory
 {
     var $embed_func_list = []; //Function list that are applied while asking for video embed code
@@ -750,16 +993,21 @@ class CBvideo extends CBCategory
         $limit = $params['limit'];
         $order = $params['order'];
 
-
         $cond = '';
         $superCond = '';
         if (!has_access('admin_access', true)) {
+            $superCond = '( (video.active = \'yes\' AND video.status = \'Successful\' AND video.broadcast = \'public\'';
 
-            $superCond = ' ( video.status =\'Successful\' AND video.active = \'yes\' AND video.broadcast !=\'unlisted\') ';
-
-            if (isset($params['filename'], $params['user'])) {
-                $superCond = '( video.userid = ' . $params['user'] . ' OR' . $superCond . ')';
+            $current_user_id = user_id();
+            if( $current_user_id ){
+                $select_contacts = 'SELECT contact_userid FROM '.tbl('contacts').' WHERE confirmed = \'yes\' AND userid = '.$current_user_id;
+                $superCond .= ' OR video.userid = '.$current_user_id.')';
+                $superCond .= ' OR (video.active = \'yes\' AND video.status = \'Successful\' AND video.broadcast IN(\'public\',\'logged\'))';
+                $superCond .= ' OR (video.broadcast = \'private\' AND video.userid IN('.$select_contacts.'))';
+            } else {
+                $superCond .= ')';
             }
+            $superCond .= ')';
         } else {
             if ($params['active']) {
                 $cond .= ' ' . ('video.active') . '=\'' . $params['active'] . '\'';
@@ -1272,104 +1520,6 @@ class CBvideo extends CBCategory
     }
 
     /**
-     * Function used to use to initialize search object for video section
-     * op=>operator (AND OR)
-     * @throws Exception
-     */
-    function init_search()
-    {
-        $this->search = new cbsearch;
-        $this->search->db_tbl = 'video';
-        
-        $this->search->columns = [
-            ['field' => 'title', 'type' => 'LIKE', 'var' => '%{KEY}%'],
-            ['field' => 'broadcast', 'type' => '!=', 'var' => 'unlisted', 'op' => 'AND', 'value' => 'static'],
-            ['field' => 'status', 'type' => '=', 'var' => 'Successful', 'op' => 'AND', 'value' => 'static']
-        ];
-        $version = get_current_version();
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
-            $this->search->columns[] = ['field' => 'name', 'type' => 'LIKE', 'var' => '%{KEY}%', 'op' => 'OR', 'db'=>'tags'];
-        }
-
-        //commit this line so that videos search can be applied to %like% instead of whole word search
-        //$this->search->use_match_method = true;
-        $this->search->match_fields = ['title', 'tags'];
-
-        $this->search->cat_tbl = $this->cat_tbl;
-
-        $this->search->display_template = LAYOUT . '/blocks/video.html';
-        $this->search->template_var = 'video';
-        $this->search->has_user_id = true;
-
-        /**
-         * Setting up the sorting thing
-         */
-
-        $sorting = [
-            'date_added' => lang('date_added'),
-            'views'      => lang('views'),
-            'comments'   => lang('comments'),
-            'rating'     => lang('rating'),
-            'favorites'  => lang('favorites')
-        ];
-
-        $this->search->sorting = [
-            'date_added' => ' date_added DESC',
-            'views'      => ' views DESC',
-            'comments'   => ' comments_count DESC',
-            'rating'     => ' rating DESC',
-            'favorites'  => ' favorites DeSC'
-        ];
-        /**
-         * Setting Up The Search Fields
-         */
-
-        $default = $_GET;
-        if (is_array($default['category'])) {
-            $cat_array = [$default['category']];
-        }
-        $uploaded = $default['datemargin'];
-        $sort = $default['sort'];
-
-        $this->search->search_type['videos'] = ['title' => lang('videos')];
-        $this->search->results_per_page = config('videos_items_search_page');
-
-        $fields = [
-            'query'    => [
-                'title' => lang('keywords'),
-                'type'  => 'textfield',
-                'name'  => 'query',
-                'id'    => 'query',
-                'value' => mysql_clean($default['query'])
-            ],
-            'category' => [
-                'title' => lang('vdo_cat'),
-                'type'  => 'checkbox',
-                'name'  => 'category[]',
-                'id'    => 'category',
-                'value' => ['category', $cat_array]
-            ],
-            'uploaded' => [
-                'title'   => lang('uploaded'),
-                'type'    => 'dropdown',
-                'name'    => 'datemargin',
-                'id'      => 'datemargin',
-                'value'   => $this->search->date_margins(),
-                'checked' => $uploaded
-            ],
-            'sort'     => [
-                'title'   => lang('sort_by'),
-                'type'    => 'dropdown',
-                'name'    => 'sort',
-                'value'   => $sorting,
-                'checked' => $sort
-            ]
-        ];
-
-        $this->search->search_type['videos']['fields'] = $fields;
-    }
-
-    /**
      * Function used to update video and set a thumb as default
      * @param $vid
      * @param $thumb
@@ -1384,33 +1534,6 @@ class CBvideo extends CBCategory
         $num = get_thumb_num($thumb);
         $db->update(tbl('video'), ['default_thumb'], [$num], ' videoid=\'' . mysql_clean($vid) . '\'');
         e(lang('vid_thumb_changed'), 'm');
-    }
-
-    /**
-     * Function used to get video owner
-     *
-     * @param      $vid
-     * @param bool $idonly
-     *
-     * @return bool|array
-     * @throws Exception
-     */
-    function get_video_owner($vid, $idonly = false)
-    {
-        global $db;
-        if ($idonly) {
-            $results = $db->select(tbl('video'), 'userid', ' videoid=\'' . mysql_clean($vid) . '\'', 1);
-            if (count($results) > 0) {
-                return $results[0]['userid'];
-            }
-            return false;
-        }
-
-        $results = $db->select(tbl('video'), '*', ' videoid=\'' . mysql_clean($vid) . '\'', 1);
-        if (count($results) > 0) {
-            return $results[0];
-        }
-        return false;
     }
 
     /**
@@ -1713,14 +1836,18 @@ class CBvideo extends CBCategory
 
         $where = '';
         if( !has_access('admin_access', true) ){
-            $where = ' AND ((video.active = \'yes\'';
+            $where = ' AND ((video.active = \'yes\' AND video.status = \'Successful\' AND video.broadcast = \'public\'';
 
             $current_user_id = user_id();
             if( $current_user_id ){
                 $select_contacts = 'SELECT contact_userid FROM '.tbl('contacts').' WHERE confirmed = \'yes\' AND userid = '.$current_user_id;
-                $where .= ' OR video.userid = '.$current_user_id.') AND (video.broadcast IN(\'public\',\'logged\') OR (video.broadcast = \'private\' AND video.userid IN('.$select_contacts.')) OR video.userid = '.$current_user_id;
+                $where .= ' OR video.userid = '.$current_user_id.')';
+                $where .= ' OR (video.active = \'yes\' AND video.status = \'Successful\' AND video.broadcast IN(\'public\',\'logged\'))';
+                $where .= ' OR (video.broadcast = \'private\' AND video.userid IN('.$select_contacts.'))';
+            } else {
+                $where .= ')';
             }
-            $where .= ') AND video.broadcast = \'public\')';
+            $where .= ')';
         }
 
         $query = 'SELECT ' . table_fields($fields) . ' FROM ' . cb_sql_table('playlist_items');

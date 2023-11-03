@@ -1,4 +1,196 @@
 <?php
+class Photo
+{
+    private static $photo;
+    private $tablename = '';
+    private $fields = [];
+    private $display_block = '';
+    private $search_limit = 0;
+
+    public function __construct(){
+        $this->tablename = 'photos';
+        $this->fields = [
+            'photo_id'
+            ,'photo_key'
+            ,'photo_title'
+            ,'photo_description'
+            ,'userid'
+            ,'collection_id'
+            ,'date_added'
+            ,'last_viewed'
+            ,'views'
+            ,'allow_comments'
+            ,'allow_embedding'
+            ,'allow_tagging'
+            ,'featured'
+            ,'reported'
+            ,'allow_rating'
+            ,'broadcast'
+            ,'active'
+            ,'total_comments'
+            ,'last_commented'
+            ,'total_favorites'
+            ,'rating'
+            ,'rated_by'
+            ,'voters'
+            ,'filename'
+            ,'file_directory'
+            ,'ext'
+            ,'downloaded'
+            ,'server_url'
+            ,'owner_ip'
+            ,'photo_details'
+        ];
+        $this->display_block = LAYOUT . '/blocks/photo.html';
+        $this->display_var_name = 'photo';
+        $this->search_limit = (int)config('photo_search_result');
+    }
+
+    public static function getInstance(): self
+    {
+        if( empty(self::$photo) ){
+            self::$photo = new self();
+        }
+        return self::$photo;
+    }
+
+    private function getAllFields(): array
+    {
+        return array_map(function($field) {
+            return $this->tablename . '.' . $field;
+        }, $this->fields);
+    }
+
+    public function getSearchLimit(): int
+    {
+        return $this->search_limit;
+    }
+
+    public function getDisplayBlock(): string
+    {
+        return $this->display_block;
+    }
+
+    public function getDisplayVarName(): string
+    {
+        return $this->display_var_name;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getAll(array $params = [])
+    {
+        $param_photo_id = $params['photo_id'] ?? false;
+        $param_photo_key = $params['photo_key'] ?? false;
+        $param_filename = $params['filename'] ?? false;
+        $param_userid = $params['userid'] ?? false;
+        $param_search = $params['search'] ?? false;
+
+        $param_condition = $params['condition'] ?? false;
+        $param_limit = $params['limit'] ?? false;
+        $param_order = $params['order'] ?? false;
+        $param_group = $params['group'] ?? false;
+        $param_having = $params['having'] ?? false;
+        $param_count = $params['count'] ?? false;
+        $param_first_only = $params['first_only'] ?? false;
+
+        $conditions = [];
+        if( $param_photo_id ){
+            $conditions[] = 'photos.photo_id = \''.mysql_clean($param_photo_id).'\'';
+        }
+        if( $param_photo_key ){
+            $conditions[] = 'photos.videokey = \''.mysql_clean($param_photo_key).'\'';
+        }
+        if( $param_userid ){
+            $conditions[] = 'photos.userid = \''.mysql_clean($param_userid).'\'';
+        }
+        if( $param_filename ){
+            $conditions[] = 'photos.file_name = \''.mysql_clean($param_filename).'\'';
+        }
+        if( $param_condition ){
+            $conditions[] = '(' . $param_condition . ')';
+        }
+
+        $version = get_current_version();
+
+        if( $param_search ){
+            /* Search is done on photo title, photo tags */
+            $cond = '(MATCH(photos.photo_title) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(photos.photo_title) LIKE \'%' . mysql_clean($param_search) . '%\'';
+            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+                $cond .= 'OR MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+            }
+            $cond .= ')';
+
+            $conditions[] = $cond;
+        }
+
+        if( $param_count ){
+            $select = ['COUNT(photos.photo_id) AS count'];
+        } else {
+            $select = $this->getAllFields();
+            $select[] = 'users.username';
+        }
+
+        $join = [];
+        $group = [];
+        $version = get_current_version();
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+            $select[] = 'GROUP_CONCAT(tags.name SEPARATOR \',\') AS tags';
+            $join[] = 'LEFT JOIN ' . cb_sql_table('photo_tags') . ' ON photos.photo_id = photo_tags.id_photo';
+            $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON photo_tags.id_tag = tags.id_tag';
+            $group[] = 'photos.photo_id';
+        }
+
+        if( $param_group ){
+            $group[] = $param_group;
+        }
+
+        $having = '';
+        if( $param_having ){
+            $having = ' HAVING '.$param_having;
+        }
+
+        $order = '';
+        if( $param_order ){
+            $order = ' ORDER BY '.$param_order;
+        }
+
+        $limit = '';
+        if( $param_limit ){
+            $limit = ' LIMIT '.$param_limit;
+        }
+
+        $sql ='SELECT ' . implode(', ', $select) . '
+                FROM ' . cb_sql_table('photos') . '
+                LEFT JOIN ' . cb_sql_table('users') . ' ON photos.userid = users.userid '
+            . implode(' ', $join)
+            . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions))
+            . (empty($group) ? '' : ' GROUP BY ' . implode(',', $group))
+            . $having
+            . $order
+            . $limit;
+
+        $result = Clipbucket_db::getInstance()->_select($sql);
+
+        if( $param_count ){
+            if( empty($result) ){
+                return 0;
+            }
+            return $result[0]['count'];
+        }
+
+        if( !$result ){
+            return false;
+        }
+
+        if( $param_first_only ){
+            return $result[0];
+        }
+
+        return $result;
+    }
+}
 class CBPhotos
 {
     var $action = '';
@@ -254,6 +446,7 @@ class CBPhotos
 
     /**
      * Setting other things
+     * @throws Exception
      */
     function setting_other_things()
     {
@@ -281,81 +474,6 @@ class CBPhotos
         $Cbucket->links['manage_orphan_photos'] = ['manage_photos.php?mode=orphan', 'manage_photos.php?mode=orphan'];
         $Cbucket->links['user_photos'] = ['user_photos.php?mode=uploaded&amp;user=', 'user_photos.php?mode=uploaded&amp;user='];
         $Cbucket->links['user_fav_photos'] = ['user_photos.php?mode=favorite&amp;user=', 'user_photos.php?mode=favorite&amp;user='];
-    }
-
-    /**
-     * Initiating Search
-     * @throws Exception
-     */
-    function init_search()
-    {
-        $this->search = new cbsearch;
-        $this->search->db_tbl = 'photos';
-        $this->search->use_match_method = false;
-
-        $this->search->columns = [
-            ['field' => 'photo_title', 'type' => 'LIKE', 'var' => '%{KEY}%'],
-        ];
-        $version = get_current_version();
-        if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
-            $this->search->columns[] = ['field' => 'name', 'type' => 'LIKE', 'var' => '%{KEY}%', 'op' => 'OR', 'db'=>'tags'];
-        }
-        $this->search->match_fields = ['photo_title', 'photo_tags'];
-        $this->search->cat_tbl = $this->cat_tbl;
-
-        $this->search->display_template = LAYOUT . '/blocks/photo.html';
-        $this->search->template_var = 'photo';
-        $this->search->has_user_id = true;
-        $this->search->results_per_page = config('photo_search_result');
-        $this->search->search_type['photos'] = ['title' => lang('photos')];
-        $this->search->add_cond(tbl('photos.collection_id') . ' <> 0');
-
-        $sorting = [
-            'date_added'      => lang('date_added'),
-            'views'           => lang('views'),
-            'total_comments'  => lang('comments'),
-            'rating'          => lang('rating'),
-            'total_favorites' => lang('favorites')
-        ];
-
-        $this->search->sorting = [
-            'date_added'      => ' date_added DESC',
-            'views'           => ' views DESC',
-            'rating'          => ' rating DESC, rated_by DESC',
-            'total_comments'  => ' total_comments DESC ',
-            'total_favorites' => ' total_favorites DESC'
-        ];
-
-        $array = $_GET;
-        $uploaded = $array['datemargin'];
-        $sort = $array['sort'];
-
-        $forms = [
-            'query'       => [
-                'title' => lang('keywords'),
-                'type'  => 'textfield',
-                'name'  => 'query',
-                'id'    => 'query',
-                'value' => mysql_clean($array['query'])
-            ],
-            'date_margin' => [
-                'title'   => lang('uploaded'),
-                'type'    => 'dropdown',
-                'name'    => 'datemargin',
-                'id'      => 'datemargin',
-                'value'   => $this->search->date_margins(),
-                'checked' => $uploaded
-            ],
-            'sort'        => [
-                'title'   => lang('sort_by'),
-                'type'    => 'dropdown',
-                'name'    => 'sort',
-                'value'   => $sorting,
-                'checked' => $sort
-            ]
-        ];
-
-        $this->search->search_type['photos']['fields'] = $forms;
     }
 
     /**
@@ -456,14 +574,25 @@ class CBPhotos
      */
     function get_photos($p)
     {
-        global $db, $cbsearch;
+        global $db;
 
         $order = $p['order'];
         $limit = $p['limit'];
         $cond = '';
 
         if (!has_access('admin_access', true)) {
-            $cond = 'photos.broadcast = \'public\' AND photos.active = \'yes\'';
+            $cond .= '((photos.active = \'yes\' AND photos.broadcast = \'public\'';
+            $userid = user_id();
+            if( $userid ){
+                $select_contacts = 'SELECT contact_userid FROM '.tbl('contacts').' WHERE confirmed = \'yes\' AND userid = '.$userid;
+                $cond .= ' OR photos.userid = '.$userid.')';
+                $cond .= ' OR (photos.active = \'yes\' AND photos.broadcast IN(\'public\',\'logged\'))';
+                $cond .= ' OR (photos.broadcast = \'private\' AND photos.userid IN('.$select_contacts.'))';
+            } else {
+                $cond .= ')';
+            }
+            $cond .= ')';
+
         } else {
             if ($p['active']) {
                 $cond .= 'photos.active = \'' . mysql_clean($p['active']) . '\'';
@@ -634,9 +763,9 @@ class CBPhotos
                 $cond .= ' AND ';
             }
 
-            $cond .= '(MATCH(photos.photo_title) AGAINST (\'' . mysql_clean($cbsearch->set_the_key($p['title'])) . '\' IN NATURAL LANGUAGE MODE) ';
+            $cond .= '(MATCH(photos.photo_title) AGAINST (\'' . mysql_clean($p['title']) . '\' IN NATURAL LANGUAGE MODE) ';
             if( $match_tag != ''){
-                $cond .= 'OR MATCH('.$match_tag.') AGAINST (\'' . mysql_clean($cbsearch->set_the_key($p['title'])) . '\' IN NATURAL LANGUAGE MODE)';
+                $cond .= 'OR MATCH('.$match_tag.') AGAINST (\'' . mysql_clean($p['title']) . '\' IN NATURAL LANGUAGE MODE)';
             }
             $cond .= ')';
 
@@ -674,8 +803,7 @@ class CBPhotos
             if (count($result) == 0) {
                 $query = $main_query;
 
-                $tags = $cbsearch->set_the_key($p['tags']);
-                $tags = str_replace('+', '', $tags);
+                $tags = str_replace('+', '', $p['tags']);
 
                 if ($cond != '') {
                     $cond .= ' AND ';

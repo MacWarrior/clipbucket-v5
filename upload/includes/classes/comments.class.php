@@ -80,28 +80,27 @@ class Comments
             $limit = ' LIMIT '.$param_limit;
         }
 
-        $select = [
-            'comments.comment_id'
-            ,'comments.type'
-            ,'comments.comment'
-            ,'comments.userid'
-            ,'comments.anonym_name'
-            ,'comments.anonym_email'
-            ,'comments.parent_id'
-            ,'comments.type_id'
-            ,'comments.type_owner_id'
-            ,'comments.spam_votes'
-            ,'comments.spam_voters'
-            ,'comments.date_added'
-            ,'comments.comment_ip'
-            ,'users.userid'
-            ,'users.username'
-            ,'users.email'
-            ,'CASE ' . $case_when . ' END AS title'
-        ];
-
         if( $param_count ){
             $select = ['COUNT(comments.comment_id) AS count'];
+        } else {
+            $select = [
+                'comments.comment_id'
+                ,'comments.type'
+                ,'comments.comment'
+                ,'comments.userid'
+                ,'comments.anonym_name'
+                ,'comments.anonym_email'
+                ,'comments.parent_id'
+                ,'comments.type_id'
+                ,'comments.type_owner_id'
+                ,'comments.spam_votes'
+                ,'comments.spam_voters'
+                ,'comments.date_added'
+                ,'comments.comment_ip'
+                ,'users.username'
+                ,'users.email'
+                ,'CASE ' . $case_when . ' END AS title'
+            ];
         }
 
         $sql ='SELECT ' . implode(', ', $select) . '

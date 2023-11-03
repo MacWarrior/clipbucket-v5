@@ -161,6 +161,7 @@ switch ($mode) {
             , 'comment_voting'  => 'yes'
             , 'allow_rating'    => 'yes'
             , 'allow_embedding' => 'yes'
+            , 'broadcast'       => 'public'
         ];
 
         $vid = $Upload->submit_upload($vidDetails);

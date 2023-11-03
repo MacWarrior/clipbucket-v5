@@ -984,14 +984,18 @@ class cbactions
 
         $left_join_video_cond = '';
         if( !has_access('admin_access', true) ){
-            $left_join_video_cond = ' AND ((video.active = \'yes\'';
+            $left_join_video_cond = ' AND ( (video.active = \'yes\' AND video.status = \'Successful\' AND video.broadcast = \'public\'';
 
             $current_user_id = user_id();
             if( $current_user_id ){
                 $select_contacts = 'SELECT contact_userid FROM '.tbl('contacts').' WHERE confirmed = \'yes\' AND userid = '.$current_user_id;
-                $left_join_video_cond .= ' OR video.userid = '.$current_user_id.') AND (video.broadcast IN(\'public\',\'logged\') OR ( video.broadcast = \'private\' AND video.userid IN('.$select_contacts.')) OR video.userid = '.$current_user_id;
+                $left_join_video_cond .= ' OR video.userid = '.$current_user_id.')';
+                $left_join_video_cond .= ' OR (video.active = \'yes\' AND video.status = \'Successful\' AND video.broadcast IN(\'public\',\'logged\'))';
+                $left_join_video_cond .= ' OR (video.broadcast = \'private\' AND video.userid IN('.$select_contacts.'))';
+            } else {
+                $left_join_video_cond .= ')';
             }
-            $left_join_video_cond .= ') AND video.broadcast = \'public\')';
+            $left_join_video_cond .= ')';
         }
 
         $select = ', COUNT(video.videoid) AS total_items';
@@ -1130,14 +1134,18 @@ class cbactions
         if( !has_access('admin_access', true) ){
             $left_join_video = ' LEFT JOIN '.cb_sql_table('video').' ON playlist_items.object_id = video.videoid';
 
-            $where_video = ' AND ((video.active = \'yes\'';
+            $where_video = ' AND ( (video.active = \'yes\' AND video.status = \'Successful\' AND video.broadcast = \'public\'';
 
             $current_user_id = user_id();
             if( $current_user_id ){
                 $select_contacts = 'SELECT contact_userid FROM '.tbl('contacts').' WHERE confirmed = \'yes\' AND userid = '.$current_user_id;
-                $where_video .= ' OR video.userid = '.$current_user_id.') AND (video.broadcast IN(\'public\',\'logged\') OR ( video.broadcast = \'private\' AND video.userid IN('.$select_contacts.')) OR video.userid = '.$current_user_id;
+                $where_video .= ' OR video.userid = '.$current_user_id.')';
+                $where_video .= ' OR (video.active = \'yes\' AND video.status = \'Successful\' AND video.broadcast IN(\'public\',\'logged\'))';
+                $where_video .= ' OR (video.broadcast = \'private\' AND video.userid IN('.$select_contacts.'))';
+            } else {
+                $where_video .= ')';
             }
-            $where_video .= ') AND video.broadcast = \'public\')';
+            $where_video .= ')';
         }
 
         return $db->count(cb_sql_table($this->playlist_items_tbl) . $left_join_video, 'playlist_items.object_id', 'playlist_id=\'' . mysql_clean($id) . '\'' . $where_video);

@@ -738,7 +738,8 @@ ALTER TABLE `{tbl_prefix}collections`
   ADD PRIMARY KEY (`collection_id`),
   ADD KEY `userid` (`userid`),
   ADD KEY `featured` (`featured`),
-  ADD INDEX(`collection_id_parent`);
+  ADD INDEX(`collection_id_parent`),
+  ADD FULLTEXT KEY `collection_name` (`collection_name`);
 
 ALTER TABLE `{tbl_prefix}collection_categories`
   ADD PRIMARY KEY (`category_id`);
@@ -820,8 +821,8 @@ ALTER TABLE `{tbl_prefix}photos`
   ADD KEY `featured` (`featured`),
   ADD KEY `last_viewed` (`last_viewed`),
   ADD KEY `rating` (`rating`),
-  ADD KEY `total_comments` (`total_comments`);
-ALTER TABLE `{tbl_prefix}photos` ADD FULLTEXT KEY `photo_title` (`photo_title`);
+  ADD KEY `total_comments` (`total_comments`),
+  ADD FULLTEXT KEY `photo_title` (`photo_title`);
 
 ALTER TABLE `{tbl_prefix}playlists`
   ADD PRIMARY KEY (`playlist_id`);
@@ -853,7 +854,8 @@ ALTER TABLE `{tbl_prefix}users`
   ADD KEY `ind_status_doj` (`doj`),
   ADD KEY `ind_status_id` (`userid`),
   ADD KEY `ind_hits_doj` (`profile_hits`,`doj`),
-  ADD KEY `username` (`username`(255),`userid`);
+  ADD KEY `username` (`username`(255),`userid`),
+  ADD FULLTEXT KEY `username_fulltext` (`username`);
 
 ALTER TABLE `{tbl_prefix}user_categories`
   ADD PRIMARY KEY (`category_id`);
@@ -884,9 +886,9 @@ ALTER TABLE `{tbl_prefix}video`
   ADD KEY `rating` (`rating`),
   ADD KEY `comments_count` (`comments_count`),
   ADD KEY `status` (`status`,`active`,`broadcast`,`userid`),
-  ADD KEY `videoid` (`videoid`,`videokey`(255));
-ALTER TABLE `{tbl_prefix}video` ADD FULLTEXT KEY `description` (`description`,`title`);
-ALTER TABLE `{tbl_prefix}video` ADD FULLTEXT KEY `title` (`title`);
+  ADD KEY `videoid` (`videoid`,`videokey`(255)),
+  ADD FULLTEXT KEY `description` (`description`,`title`),
+  ADD FULLTEXT KEY `title` (`title`);
 
 ALTER TABLE `{tbl_prefix}video_categories`
   ADD PRIMARY KEY (`category_id`);
@@ -895,8 +897,8 @@ ALTER TABLE `{tbl_prefix}video_favourites`
   ADD PRIMARY KEY (`fav_id`);
 
 ALTER TABLE `{tbl_prefix}video_files`
-  ADD PRIMARY KEY (`id`);
-ALTER TABLE `{tbl_prefix}video_files` ADD FULLTEXT KEY `src_bitrate` (`src_bitrate`);
+  ADD PRIMARY KEY (`id`),
+  ADD FULLTEXT KEY `src_bitrate` (`src_bitrate`);
 
 ALTER TABLE `{tbl_prefix}video_views`
   ADD PRIMARY KEY (`id`);
@@ -1161,8 +1163,9 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_tags`
     PRIMARY KEY (`id_video`, `id_tag`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
-ALTER TABLE `{tbl_prefix}video_tags` ADD CONSTRAINT `video_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags`(`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `{tbl_prefix}video_tags` ADD CONSTRAINT `video_tags_video` FOREIGN KEY (`id_video`) REFERENCES `{tbl_prefix}video`(`videoid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}video_tags`
+  ADD CONSTRAINT `video_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags`(`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `video_tags_video` FOREIGN KEY (`id_video`) REFERENCES `{tbl_prefix}video`(`videoid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}photo_tags`
@@ -1172,8 +1175,9 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}photo_tags`
     PRIMARY KEY (`id_photo`, `id_tag`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
-ALTER TABLE `{tbl_prefix}photo_tags` ADD CONSTRAINT `photo_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `{tbl_prefix}photo_tags` ADD CONSTRAINT `photo_tags_photo` FOREIGN KEY (`id_photo`) REFERENCES `{tbl_prefix}photos` (`photo_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}photo_tags`
+  ADD CONSTRAINT `photo_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `photo_tags_photo` FOREIGN KEY (`id_photo`) REFERENCES `{tbl_prefix}photos` (`photo_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}collection_tags`
 (
@@ -1182,8 +1186,9 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}collection_tags`
     PRIMARY KEY (`id_collection`, `id_tag`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
-ALTER TABLE `{tbl_prefix}collection_tags` ADD CONSTRAINT `collection_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `{tbl_prefix}collection_tags` ADD CONSTRAINT `collection_tags_collection` FOREIGN KEY (`id_collection`) REFERENCES `{tbl_prefix}collections` (`collection_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}collection_tags`
+  ADD CONSTRAINT `collection_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `collection_tags_collection` FOREIGN KEY (`id_collection`) REFERENCES `{tbl_prefix}collections` (`collection_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}user_tags`
 (
@@ -1192,8 +1197,9 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}user_tags`
     PRIMARY KEY (`id_user`, `id_tag`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
-ALTER TABLE `{tbl_prefix}user_tags` ADD CONSTRAINT `user_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `{tbl_prefix}user_tags` ADD CONSTRAINT `user_tags_user` FOREIGN KEY (`id_user`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}user_tags`
+  ADD CONSTRAINT `user_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `user_tags_user` FOREIGN KEY (`id_user`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}playlist_tags`
 (
@@ -1202,5 +1208,6 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}playlist_tags`
     PRIMARY KEY (`id_playlist`, `id_tag`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
-ALTER TABLE `{tbl_prefix}playlist_tags` ADD CONSTRAINT `playlist_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `{tbl_prefix}playlist_tags` ADD CONSTRAINT `playlist_tags_playlist` FOREIGN KEY (`id_playlist`) REFERENCES `{tbl_prefix}playlists` (`playlist_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}playlist_tags`
+  ADD CONSTRAINT `playlist_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `playlist_tags_playlist` FOREIGN KEY (`id_playlist`) REFERENCES `{tbl_prefix}playlists` (`playlist_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;

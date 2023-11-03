@@ -9,7 +9,7 @@
 */
 
 /**
- * @throws \Exception
+ * @throws Exception
  */
 function editors_pick()
 {
@@ -25,7 +25,7 @@ function editors_pick()
 }
 
 /**
- * @throws \Exception
+ * @throws Exception
  */
 function add_to_editor_pick($vid)
 {
@@ -45,7 +45,7 @@ function add_to_editor_pick($vid)
 }
 
 /**
- * @throws \Exception
+ * @throws Exception
  */
 function remove_vid_editors_pick($vid)
 {
@@ -61,7 +61,7 @@ function remove_vid_editors_pick($vid)
 }
 
 /**
- * @throws \Exception
+ * @throws Exception
  */
 function is_video_in_editors_pick($vid): bool
 {
@@ -74,7 +74,7 @@ function is_video_in_editors_pick($vid): bool
 }
 
 /**
- * @throws \Exception
+ * @throws Exception
  */
 function get_highest_sort_number()
 {
@@ -84,7 +84,7 @@ function get_highest_sort_number()
 }
 
 /**
- * @throws \Exception
+ * @throws Exception
  */
 function video_manager_ep_link($vid): string
 {
@@ -95,7 +95,7 @@ function video_manager_ep_link($vid): string
 }
 
 /**
- * @throws \Exception
+ * @throws Exception
  */
 function get_ep_videos(): array
 {
@@ -104,7 +104,7 @@ function get_ep_videos(): array
 }
 
 /**
- * @throws \Exception
+ * @throws Exception
  */
 function move_epick($id, $order)
 {
@@ -120,7 +120,7 @@ function move_epick($id, $order)
 }
 
 /**
- * @throws \Exception
+ * @throws Exception
  */
 function admin_area_tab($vid): string
 {
@@ -131,7 +131,7 @@ function admin_area_tab($vid): string
 }
 
 /**
- * @throws \Exception
+ * @throws Exception
  */
 function display_editors_pick()
 {

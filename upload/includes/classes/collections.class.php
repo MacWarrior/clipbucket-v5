@@ -1,4 +1,197 @@
 <?php
+class Collection
+{
+    private static $collection;
+    private $tablename = '';
+    private $fields = [];
+    private $display_block = '';
+    private $search_limit = 0;
+
+    public function __construct(){
+        $this->tablename = 'collections';
+        $this->fields = [
+            'collection_id'
+            ,'collection_id_parent'
+            ,'collection_name'
+            ,'collection_description'
+            ,'category'
+            ,'userid'
+            ,'views'
+            ,'date_added'
+            ,'featured'
+            ,'broadcast'
+            ,'allow_comments'
+            ,'allow_rating'
+            ,'total_comments'
+            ,'last_commented'
+            ,'rating'
+            ,'rated_by'
+            ,'voters'
+            ,'active'
+            ,'public_upload'
+            ,'type'
+        ];
+        $this->display_block = LAYOUT . '/blocks/collection.html';
+        $this->display_var_name = 'collection';
+        $this->search_limit = (int)config('collection_search_result');
+    }
+
+    public static function getInstance(): self
+    {
+        if( empty(self::$collection) ){
+            self::$collection = new self();
+        }
+        return self::$collection;
+    }
+
+    private function getAllFields(): array
+    {
+        return array_map(function($field) {
+            return $this->tablename . '.' . $field;
+        }, $this->fields);
+    }
+
+    public function getSearchLimit(): int
+    {
+        return $this->search_limit;
+    }
+
+    public function getDisplayBlock(): string
+    {
+        return $this->display_block;
+    }
+
+    public function getDisplayVarName(): string
+    {
+        return $this->display_var_name;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getAll(array $params = [])
+    {
+        $param_collection_id = $params['collection_id'] ?? false;
+        $param_collection_id_parent = $params['collection_id_parent'] ?? false;
+        $param_category = $params['category'] ?? false;
+        $param_userid = $params['userid'] ?? false;
+        $param_search = $params['search'] ?? false;
+
+        $param_condition = $params['condition'] ?? false;
+        $param_limit = $params['limit'] ?? false;
+        $param_order = $params['order'] ?? false;
+        $param_group = $params['group'] ?? false;
+        $param_having = $params['having'] ?? false;
+        $param_count = $params['count'] ?? false;
+        $param_first_only = $params['first_only'] ?? false;
+
+        $conditions = [];
+        if( $param_collection_id ){
+            $conditions[] = 'collections.collection_id = \''.mysql_clean($param_collection_id).'\'';
+        }
+        if( $param_collection_id_parent ){
+            $conditions[] = 'collections.collection_id_parent = \''.mysql_clean($param_collection_id_parent).'\'';
+        }
+        if( $param_userid ){
+            $conditions[] = 'collections.userid = \''.mysql_clean($param_userid).'\'';
+        }
+        if( $param_category ){
+            if( !is_array($param_category) ){
+                $conditions[] = 'collections.category LIKE \'%#'.mysql_clean($param_category).'#%\'';
+            } else {
+                $category_cond = [];
+                foreach($param_category as $category){
+                    $category_cond[] = 'collections.category LIKE \'%#'.mysql_clean($category).'#%\'';
+                }
+                $conditions[] = '(' . implode(' OR ', $category_cond) . ')';
+            }
+        }
+        if( $param_condition ){
+            $conditions[] = '(' . $param_condition . ')';
+        }
+
+        $version = get_current_version();
+
+        if( $param_search ){
+            /* Search is done on collection title, collection tags */
+            // TODO : Add search on collection categories
+            $cond = '(MATCH(collections.collection_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(collections.collection_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+                $cond .= 'OR MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+            }
+            $cond .= ')';
+
+            $conditions[] = $cond;
+        }
+
+        if( $param_count ){
+            $select = ['COUNT(collections.collection_id) AS count'];
+        } else {
+            $select = $this->getAllFields();
+            $select[] = 'users.username AS user_username';
+        }
+
+        $join = [];
+        $group = [];
+        $version = get_current_version();
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+            $select[] = 'GROUP_CONCAT(tags.name SEPARATOR \',\') AS tags';
+            $join[] = 'LEFT JOIN ' . cb_sql_table('collection_tags') . ' ON collections.collection_id = collection_tags.id_collection';
+            $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON collection_tags.id_tag = tags.id_tag';
+            $group[] = 'collections.collection_id';
+        }
+
+        if( $param_group ){
+            $group[] = $param_group;
+        }
+
+        $having = '';
+        if( $param_having ){
+            $having = ' HAVING '.$param_having;
+        }
+
+        $order = '';
+        if( $param_order ){
+            $order = ' ORDER BY '.$param_order;
+        }
+
+        $limit = '';
+        if( $param_limit ){
+            $limit = ' LIMIT '.$param_limit;
+        }
+
+        $sql ='SELECT ' . implode(', ', $select) . '
+                FROM ' . cb_sql_table('collections') . '
+                LEFT JOIN ' . cb_sql_table('users') . ' ON collections.userid = users.userid '
+            . implode(' ', $join)
+            . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions))
+            . (empty($group) ? '' : ' GROUP BY ' . implode(',', $group))
+            . $having
+            . $order
+            . $limit;
+
+        $result = Clipbucket_db::getInstance()->_select($sql);
+
+        if( $param_count ){
+            if( empty($result) ){
+                return 0;
+            }
+            return $result[0]['count'];
+        }
+
+        if( !$result ){
+            return false;
+        }
+
+        if( $param_first_only ){
+            return $result[0];
+        }
+
+        return $result;
+    }
+}
+
+
 class Collections extends CBCategory
 {
     public $search;
@@ -138,32 +331,6 @@ class Collections extends CBCategory
     }
 
     /**
-     * Initiating Search
-     * @throws Exception
-     */
-    function init_search()
-    {
-        $this->search = new cbsearch;
-        $this->search->db_tbl = 'collections';
-        $this->search->columns = [
-            ['field' => 'collection_name', 'type' => 'LIKE', 'var' => '%{KEY}%'],
-        ];
-        $version = get_current_version();
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
-            $this->search->columns[] = ['field' => 'name', 'type' => 'LIKE', 'var' => '%{KEY}%', 'op' => 'OR', 'db'=>'tags'];
-        }
-        $this->search->match_fields = ['collection_name', 'collection_tags'];
-        $this->search->cat_tbl = $this->cat_tbl;
-
-        $this->search->display_template = LAYOUT . '/blocks/collection.html';
-        $this->search->template_var = 'collection';
-        $this->search->has_user_id = true;
-
-        $this->search->search_type['collections'] = ['title' => lang('collections')];
-        $this->search->results_per_page = config('collection_search_result');
-    }
-
-    /**
      * Function used to set-up sharing
      *
      * @param $data
@@ -247,12 +414,22 @@ class Collections extends CBCategory
         $userid = user_id();
         $left_join_cond = '';
         if( !has_access('admin_access', true) ) {
-            $left_join_cond .= ' AND ((obj.active = \'yes\'';
-            if( !empty($userid) ){
-                $select_contacts = 'SELECT contact_userid FROM '.tbl('contacts').' WHERE confirmed = \'yes\' AND userid = '.$userid;
-                $left_join_cond .= ' OR obj.userid = '.$userid.') AND (obj.broadcast IN(\'public\',\'logged\') OR (obj.broadcast = \'private\' AND obj.userid IN('.$select_contacts.')) OR obj.userid = '.$userid;
+            $cond_video = '';
+            if( $this->objTable == 'video' ){
+                $cond_video = ' AND obj.status = \'Successful\'';
             }
-            $left_join_cond .= ')  AND obj.broadcast = \'public\')';
+
+            $left_join_cond = ' AND ( (obj.active = \'yes\'' . $cond_video . ' AND obj.broadcast = \'public\'';
+
+            if( $userid ){
+                $select_contacts = 'SELECT contact_userid FROM '.tbl('contacts').' WHERE confirmed = \'yes\' AND userid = '.$userid;
+                $left_join_cond .= ' OR obj.userid = '.$userid.')';
+                $left_join_cond .= ' OR (obj.active = \'yes\'' . $cond_video . ' AND obj.broadcast IN(\'public\',\'logged\'))';
+                $left_join_cond .= ' OR (obj.broadcast = \'private\' AND obj.userid IN('.$select_contacts.'))';
+            } else {
+                $left_join_cond .= ')';
+            }
+            $left_join_cond .= ')';
         }
 
         $result = $db->select(tbl($this->section_tbl) . ' C
@@ -505,14 +682,22 @@ class Collections extends CBCategory
             }
             $cond .= ')';
 
-            $left_join_video_cond .= ' AND ((video.active = \'yes\'';
-            $left_join_photos_cond .= ' AND ((photos.active = \'yes\'';
+            $left_join_video_cond .= ' AND ((video.active = \'yes\' AND video.status = \'Successful\' AND video.broadcast = \'public\'';
+            $left_join_photos_cond .= ' AND ((photos.active = \'yes\' AND photos.broadcast = \'public\'';
             if( $userid ){
-                $left_join_video_cond .= ' OR video.userid = '.$userid.') AND (video.broadcast IN(\'public\',\'logged\') OR (video.broadcast = \'private\' AND video.userid IN('.$select_contacts.')) OR video.userid = '.$userid;
-                $left_join_photos_cond .= ' OR photos.userid = '.$userid.') AND (photos.broadcast IN(\'public\',\'logged\') OR ( photos.broadcast = \'private\' AND photos.userid IN('.$select_contacts.')) OR photos.userid = '.$userid;
+                $left_join_video_cond .= ' OR video.userid = '.$userid.')';
+                $left_join_video_cond .= ' OR (video.active = \'yes\' AND video.status = \'Successful\' AND video.broadcast IN(\'public\',\'logged\'))';
+                $left_join_video_cond .= ' OR (video.broadcast = \'private\' AND video.userid IN('.$select_contacts.'))';
+
+                $left_join_photos_cond .= ' OR photos.userid = '.$userid.')';
+                $left_join_photos_cond .= ' OR (photos.active = \'yes\' AND photos.broadcast IN(\'public\',\'logged\'))';
+                $left_join_photos_cond .= ' OR (photos.broadcast = \'private\' AND photos.userid IN('.$select_contacts.'))';
+            } else {
+                $left_join_video_cond .= ')';
+                $left_join_photos_cond .= ')';
             }
-            $left_join_video_cond .= ') AND video.broadcast = \'public\')';
-            $left_join_photos_cond .= ') AND photos.broadcast = \'public\')';
+            $left_join_video_cond .= ')';
+            $left_join_photos_cond .= ')';
         }
 
         $select_tag = '';
