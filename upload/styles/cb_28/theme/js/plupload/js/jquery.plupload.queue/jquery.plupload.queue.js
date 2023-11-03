@@ -1,8 +1,8 @@
 /**
  * jquery.plupload.queue.js
  *
- * Copyright 2009, Moxiecode Systems AB
- * Released under GPL License.
+ * Copyright 2017, Ephox
+ * Released under AGPLv3 License.
  *
  * License: http://www.plupload.com/license
  * Contributing: http://www.plupload.com/contributing
@@ -73,7 +73,7 @@ used as it is.
 	@param {Boolean} [settings.rename=false] Enable ability to rename files in the queue.
 	@param {Boolean} [settings.multiple_queues=true] Re-activate the widget after each upload procedure.
 */
-(function($, o) {
+;(function($) {
 	var uploaders = {};
 
 	function _(str) {
@@ -198,7 +198,7 @@ used as it is.
 					$('span.plupload_total_status', target).html(uploader.total.percent + '%');
 					$('div.plupload_progress_bar', target).css('width', uploader.total.percent + '%');
 					$('span.plupload_upload_status', target).html(
-						o.sprintf(_('Uploaded %d/%d files'), uploader.total.uploaded, uploader.files.length)
+						plupload.sprintf(_('Uploaded %d/%d files'), uploader.total.uploaded, uploader.files.length)
 					);
 				}
 
@@ -223,7 +223,7 @@ used as it is.
 
 						fileList.append(
 							'<li id="' + file.id + '">' +
-								'<div class="plupload_file_name"><span>' + file.name + '</span></div>' +
+								'<div class="plupload_file_name"><span>' + plupload.xmlEncode(file.name) + '</span></div>' +
 								'<div class="plupload_file_action"><a href="#"></a></div>' +
 								'<div class="plupload_file_status">' + file.percent + '%</div>' +
 								'<div class="plupload_file_size">' + plupload.formatSize(file.size) + '</div>' +
@@ -247,7 +247,7 @@ used as it is.
 					if (uploader.total.queued === 0) {
 						$('span.plupload_add_text', target).html(_('Add Files'));
 					} else {
-						$('span.plupload_add_text', target).html(o.sprintf(_('%d files queued'), uploader.total.queued));
+						$('span.plupload_add_text', target).html(plupload.sprintf(_('%d files queued'), uploader.total.queued));
 					}
 
 					$('a.plupload_start', target).toggleClass('plupload_disabled', uploader.files.length == (uploader.total.uploaded + uploader.total.failed));
@@ -301,7 +301,7 @@ used as it is.
 
 									// Rename file and glue extension back on
 									file.name = targetInput.val() + ext;
-									targetSpan.html(file.name);
+									targetSpan.text(file.name);
 									targetInput.blur();
 								}
 							});
@@ -367,6 +367,8 @@ used as it is.
 				uploader.bind('StateChanged', function() {
 					if (uploader.state === plupload.STARTED) {
 						$('li.plupload_delete a,div.plupload_buttons', target).hide();
+						uploader.disableBrowse(true);
+
 						$('span.plupload_upload_status,div.plupload_progress,a.plupload_stop', target).css('display', 'block');
 						$('span.plupload_upload_status', target).html('Uploaded ' + uploader.total.uploaded + '/' + uploader.files.length + ' files');
 
@@ -380,6 +382,8 @@ used as it is.
 
 						if (settings.multiple_queues && uploader.total.uploaded + uploader.total.failed == uploader.files.length) {
 							$(".plupload_buttons,.plupload_upload_status", target).css("display", "inline");
+							uploader.disableBrowse(false);
+
 							$(".plupload_start", target).addClass("plupload_disabled");
 							$('span.plupload_total_status,span.plupload_total_file_size', target).hide();
 						}
@@ -421,4 +425,4 @@ used as it is.
 			return uploaders[$(this[0]).attr('id')];
 		}
 	};
-})(jQuery, mOxie);
+})(jQuery);
