@@ -167,10 +167,9 @@ class Tags
             $sql_insert_tag = 'INSERT IGNORE INTO ' . tbl('tags') . ' (id_tag_type, name) (SELECT ' . mysql_clean($id_type) . ', jsontable.tags
                           FROM JSON_TABLE(CONCAT(\'["\', REPLACE(LOWER(\'' . mysql_clean($tags) . '\'), \',\', \'","\'), \'"]\'), \'$[*]\' COLUMNS (`tags` TEXT PATH \'$\')) jsontable)';
             if (!$db->execute($sql_insert_tag, 'insert')) {
-                e(lang('error_inserting_tags'));
+                e(lang('technical_error'));
                 return false;
             }
-
 
             $sql_link_tag = 'INSERT IGNORE INTO ' . tbl($table_tag) . ' (`id_tag`, `' . $id_field . '`) (
             SELECT T.id_tag, ' . mysql_clean($object_id) . '
@@ -178,7 +177,7 @@ class Tags
             INNER JOIN ' . tbl('tags') . ' AS T ON T.name = LOWER(jsontable.tags) COLLATE utf8mb4_unicode_520_ci AND T.id_tag_type = ' . mysql_clean($id_type) . '
         )';
             if (!$db->execute($sql_link_tag, 'insert')) {
-                e(lang('error_linking_tags'));
+                e(lang('technical_error'));
                 return false;
             }
         }

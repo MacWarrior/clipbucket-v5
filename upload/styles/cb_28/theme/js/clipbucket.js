@@ -1746,15 +1746,17 @@
 
 						$('.my-modal-content').attr('id',vData.videoid).html(data.video).promise().done(function(){
 							let videoplayer = $('.my-modal-content').find('video')[0];
-							let playPromise = videoplayer.play();
-							if (playPromise !== null){
-								playPromise.catch(() => {
-									videoplayer.play();
-									document.querySelector('.player-holder video').addEventListener( "loadedmetadata", function (e) {
-										adaptRatioPlayer();
-									});
-								})
-							}
+
+							document.querySelector('.player-holder video').addEventListener( "loadedmetadata", function (e) {
+								adaptRatioPlayer();
+
+								let playPromise = videoplayer.play();
+								if (playPromise !== null){
+									playPromise.catch(() => {
+										videoplayer.play();
+									})
+								}
+							});
 
 							let domVideos = $(document).find('video');
 							if (domVideos.length > 0){

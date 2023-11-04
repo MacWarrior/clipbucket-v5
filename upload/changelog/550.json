@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"279",
+  "revision":"280",
   "status":"dev",
   "detail":[
     {
@@ -226,6 +226,7 @@
         ,"Implement photo banner"
         ,"Fix channel main video, feed and popular users display"
         ,"Refactor search <i>#290</i>"
+        ,"Fix homepage pop-up video"
       ]
     }
   ,{
@@ -256,6 +257,7 @@
         ,"Fix SQL queries"
         ,"Fix default video activation config value"
         ,"Update DB charset"
+        ,"Fix missing component in CentOS 7 script"
       ]
     }
   ]
