@@ -887,7 +887,8 @@ ALTER TABLE `{tbl_prefix}video`
   ADD KEY `comments_count` (`comments_count`),
   ADD KEY `status` (`status`,`active`,`broadcast`,`userid`),
   ADD KEY `videoid` (`videoid`,`videokey`(255)),
-  ADD FULLTEXT KEY `description` (`description`,`title`),
+  ADD FULLTEXT KEY `description` (`description`,`title`);
+ALTER TABLE `{tbl_prefix}video`
   ADD FULLTEXT KEY `title` (`title`);
 
 ALTER TABLE `{tbl_prefix}video_categories`

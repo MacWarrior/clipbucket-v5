@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"281",
+  "revision":"282",
   "status":"dev",
   "detail":[
     {
@@ -227,6 +227,7 @@
         ,"Fix channel main video, feed and popular users display"
         ,"Refactor search <i>#290</i>"
         ,"Fix homepage pop-up video"
+        ,"Update add to playlist and create playlist forms"
       ]
     }
   ,{

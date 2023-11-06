@@ -8,7 +8,7 @@ class AdsManager
      * @param : Array
      *
      * @return null
-     * @throws \Exception
+     * @throws Exception
      */
     function AddAd($array = null)
     {
@@ -42,7 +42,7 @@ class AdsManager
      *
      * @param $status
      * @param $id
-     * @throws \Exception
+     * @throws Exception
      */
     function ChangeAdStatus($status, $id)
     {
@@ -73,7 +73,7 @@ class AdsManager
      *
      * @params Array
      * @param null $array
-     * @throws \Exception
+     * @throws Exception
      */
     function EditAd($array = null)
     {
@@ -101,7 +101,7 @@ class AdsManager
     /**
      * Function used to delete advertisements
      * @param integer Id
-     * @throws \Exception
+     * @throws Exception
      */
     function DeleteAd($id)
     {
@@ -118,7 +118,7 @@ class AdsManager
      * Function used to remove advertismetn placement
      *
      * @param $placement
-     * @throws \Exception
+     * @throws Exception
      */
     function RemovePlacement($placement)
     {
@@ -137,7 +137,7 @@ class AdsManager
      * @param array
      * Array [0] => placement name
      * Array [1] => placement code
-     * @throws \Exception
+     * @throws Exception
      */
     function AddPlacement($array)
     {
@@ -165,7 +165,7 @@ class AdsManager
      * @param int $limit
      *
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     function getAd($placement_code, $limit = 1)
     {
@@ -202,7 +202,7 @@ class AdsManager
     /**
      * FUNCTION USED TO INCREASE AD IMPRESSIONGS
      * @param integer
-     * @throws \Exception
+     * @throws Exception
      */
     function incrementImpression($ad_id)
     {
@@ -247,7 +247,7 @@ class AdsManager
      * @param $place
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     function get_placement($place)
     {
@@ -265,7 +265,7 @@ class AdsManager
      * @param $place
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     function get_placement_name($place)
     {
@@ -282,7 +282,7 @@ class AdsManager
      * @param $id
      *
      * @return array|bool
-     * @throws \Exception
+     * @throws Exception
      */
     function get_ad_details($id)
     {
@@ -302,7 +302,7 @@ class AdsManager
      * @param $id
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     function ad_exists($id)
     {
@@ -320,7 +320,7 @@ class AdsManager
      * @param $place
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     function count_ads_in_placement($place)
     {
@@ -331,7 +331,7 @@ class AdsManager
     /**
      * @reason : { this method used to convert ads_placement.xml content to php array}
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      * @author : Fahad Abbas
      * @date   : 24-Feb-2016
      */

@@ -1668,67 +1668,71 @@
 			});
 		}
 
-		this.add_playlistNew = function (mode,vid,form_id,objtype){
+		this.addToPlaylist = function (vid,form_id,objtype){
 			curObj = this;
-			$('#playlist_form_result').css('display','block').html('loading');
-			switch(mode)
-			{
-				case 'add':
-					$.post(page,
-						{
-							mode : 'add_playlist',
-							id : vid,
-							objtype : objtype,
-							pid : $('#playlist_id option:selected').val()
-						},
-						function(data)
-						{
-							$('#playlist_form_result').html('');
-							if(!data){
-								alert('No data');
-							} else {
-								if(data.err.length > 2) {
-									cleanedHtml = $.parseHTML(data.err);
-									var msg = $(cleanedHtml).html();
-									curObj.throwHeadMsg('danger',msg, 5000, true);
-								}
+			$('#playlist_form_result').html(loading).show();
+			$.post(page,
+				{
+					mode : 'add_playlist',
+					id : vid,
+					objtype : objtype,
+					pid : $('#playlist_id option:selected').val()
+				},
+				function(data)
+				{
+					if(!data){
+						alert('No data');
+					} else {
+						if(data.err.length > 2) {
+							cleanedHtml = $.parseHTML(data.err);
+							var msg = $(cleanedHtml).html();
+							curObj.throwHeadMsg('danger',msg, 5000, true);
+						}
 
-								if(data.msg.length > 2) {
-									cleanedHtml = $.parseHTML(data.msg);
-									var msg = $(cleanedHtml).find('div.alert').html();
-									curObj.throwHeadMsg('success',msg, 5000, true);
-									$('#'+form_id).css('display','none');
-								}
+						if(data.msg.length > 2) {
+							cleanedHtml = $.parseHTML(data.msg);
+							var msg = $(cleanedHtml).find('div.alert').html();
+							curObj.throwHeadMsg('success',msg, 5000, true);
+							$('#addPlaylistCont').toggle();
+						}
+					}
+					$('#playlist_form_result').hide();
+				},'json'
+			);
+		};
 
-							}
-						},'json');
-					break;
+		this.createPlaylist = function (vid,form_id,objtype){
+			curObj = this;
+			$('#playlist_form_result').html(loading).show();
+			$.post(page, {
+					mode : 'add_new_playlist',
+					id : vid,
+					objtype : objtype,
+					plname : $('#playlist_name').val()
+				},
+				function(data) {
+					if(!data){
+						alert('No data');
+					} else {
+						if(data.err.length > 2) {
+							cleanedHtml = $.parseHTML(data.err);
+							var msg = $(cleanedHtml).html();
+							curObj.throwHeadMsg('danger',msg, 5000, true);
+						}
 
-				case 'new':
-					$.post(page,
-						{
-							mode : 'add_new_playlist',
-							id : vid,
-							objtype : objtype,
-							plname : $('#playlist_name').val()
-						},
-						function(data)
-						{
-							if(!data){
-								alert('No data');
-							} else {
-								if(data.err ) {
-									$('#playlist_form_result').css('display','block').html(data.err);
-								}
-
-								if(data.msg) {
-									$('#playlist_form_result').css('display','block').html(data.msg);
-									$('#'+form_id).css('display','none');
-								}
-							}
-						},'json');
-					break;
-			}
+						if(data.msg) {
+							cleanedHtml = $.parseHTML(data.msg);
+							var msg = $(cleanedHtml).find('div.alert').html();
+							curObj.throwHeadMsg('success',msg, 5000, true);
+							$('#'+form_id)[0].reset();
+							$('#addPlaylistCont').toggle();
+							$('#add_playlist_form').css('display','block');
+							$('#new_playlist_form').css('display','none')
+						}
+					}
+					$('#playlist_form_result').hide();
+				},'json'
+			);
 		};
 
 		this.getModalVideo = function(video_id){

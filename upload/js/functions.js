@@ -474,68 +474,6 @@ function delete_comment(cid)
     );
 }
 
-function add_playlist(mode,vid,form_id,objtype)
-{
-    $('#playlist_form_result').css('display','block');
-    $('#playlist_form_result').html(loading);
-    switch(mode)
-    {
-        case 'add':
-            $.post(page, {
-                    mode : 'add_playlist',
-                    id : vid,
-                    objtype : objtype,
-                    pid : $("#playlist_id option:selected").val()
-                },
-                function(data) {
-                    if(!data){
-                        alert('No data');
-                    } else {
-                        if(data.err != '') {
-                            $('#playlist_form_result').css('display','block');
-                            $('#playlist_form_result').html(data.err);
-                        }
-
-                        if(data.msg!='') {
-                            $('#playlist_form_result').css('display','block');
-                            $('#playlist_form_result').html(data.msg);
-                            $('#'+form_id).css('display','none');
-                        }
-                    }
-                },'json'
-            );
-            break;
-
-        case 'new':
-            $.post(page, {
-                    mode : 'add_new_playlist',
-                    id : vid,
-                    objtype : objtype,
-                    plname : $('#playlist_name').val()
-                },
-                function(data) {
-                    if(!data){
-                        alert('No data');
-                    } else {
-                        if(data.err ) {
-                            $('#playlist_form_result').css('display','block');
-                            $('#playlist_form_result').html(data.err);
-                        }
-
-                        if(data.msg) {
-                            $('#playlist_form_result').css('display','block');
-                            $('#playlist_form_result').html(data.msg);
-                            $("#"+form_id).css('display','none');
-                        }
-
-                    }
-                },'json'
-            );
-            break;
-    }
-}
-
-
 /**
  * Function used to add and remove video from quicklist
  * THIS FEATURE IS SPECIALLY ADDED ON REQUEST BY JAHANZEB HASSAN

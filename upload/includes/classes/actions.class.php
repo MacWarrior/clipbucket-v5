@@ -1083,7 +1083,7 @@ class cbactions
         }
 
         if (isset($params['count_only'])) {
-            return $db->count($from, 'playlist_id', $condition);
+            return $db->count($from, 'playlists.playlist_id', $condition);
         }
 
         if ($condition) {

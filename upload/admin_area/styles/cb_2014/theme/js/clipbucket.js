@@ -1669,69 +1669,6 @@
 			});
 		}
 
-		this.add_playlistNew = function (mode,vid,form_id,objtype){
-			curObj = this;
-			$('#playlist_form_result').css('display','block').html('loading');
-			switch(mode)
-			{
-				case 'add':
-					$.post(page,
-						{
-							mode : 'add_playlist',
-							id : vid,
-							objtype : objtype,
-							pid : $('#playlist_id option:selected').val()
-						},
-						function(data)
-						{
-							$('#playlist_form_result').html('');
-							if(!data){
-								alert('No data');
-							} else {
-								if(data.err.length > 2) {
-									cleanedHtml = $.parseHTML(data.err);
-									var msg = $(cleanedHtml).html();
-									curObj.throwHeadMsg('danger',msg, 5000, true);
-								}
-
-								if(data.msg.length > 2) {
-									cleanedHtml = $.parseHTML(data.msg);
-									var msg = $(cleanedHtml).find('div.alert').html();
-									curObj.throwHeadMsg('success',msg, 5000, true);
-									$('#'+form_id).css('display','none');
-								}
-
-							}
-						},'json');
-					break;
-
-				case 'new':
-					$.post(page,
-						{
-							mode : 'add_new_playlist',
-							id : vid,
-							objtype : objtype,
-							plname : $('#playlist_name').val()
-						},
-						function(data)
-						{
-							if(!data){
-								alert('No data');
-							} else {
-								if(data.err ) {
-									$('#playlist_form_result').css('display','block').html(data.err);
-								}
-
-								if(data.msg) {
-									$('#playlist_form_result').css('display','block').html(data.msg);
-									$('#'+form_id).css('display','none');
-								}
-							}
-						},'json');
-					break;
-			}
-		};
-
 		this.getPlayerEl = function(videoid){
 			var player = $(document).find('.cb_video_js_'+videoid+'-dimensions');
 			if (player){

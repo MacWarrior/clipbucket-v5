@@ -77,7 +77,7 @@ $(document).ready(function () {
                 "playlist": playlist
             },
             beforeSend: function () {
-                $(__this).text(lang_loading);
+                $(__this).html(loading);
             },
 
             success: function (data) {
@@ -85,7 +85,7 @@ $(document).ready(function () {
                 if (playlist_total <= loaded) {
                     $(__this).remove();
                 } else {
-                    $(__this).text(lang_load_more);
+                    $(__this).html(loading);
                 }
                 if (data == 'none') {
                     $('#playlist-pull').remove();
