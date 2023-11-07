@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"284",
+  "revision":"285",
   "status":"dev",
   "detail":[
     {
@@ -229,6 +229,7 @@
         ,"Fix homepage pop-up video"
         ,"Update add to playlist and create playlist forms"
         ,"Fix video manager"
+        ,"Fix video with old SD/HD conversion"
       ]
     }
   ,{

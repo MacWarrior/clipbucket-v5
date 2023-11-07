@@ -1349,7 +1349,12 @@ function update_video_files($vdetails)
             foreach ($list_videos as  $path) {
                 $quality = explode('-', $path);
                 $quality = explode('.', end($quality));
-                $video_qualities[] = (int)$quality[0];
+                if( is_numeric($quality[0]) ){
+                    $video_qualities[] = (int)$quality[0];
+                } else {
+                    $video_qualities[] = $quality[0];
+                }
+
             }
             break;
 

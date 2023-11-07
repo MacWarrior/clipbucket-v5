@@ -129,6 +129,11 @@ class myquery
         if ($height == 'index') {
             return lang('video_resolution_auto');
         }
+
+        if( !is_numeric($height) ){
+            return strtoupper($height);
+        }
+
         $sql_select = 'SELECT title FROM ' . tbl('video_resolution') . ' WHERE height = \'' . mysql_clean($height) . '\'';
         $results = db_select($sql_select);
 
