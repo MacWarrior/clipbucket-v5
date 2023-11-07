@@ -217,7 +217,7 @@ function create_thumb($video_db, $multi, $size)
         $db->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version'], [$video_db['videoid'], '', '', '', VERSION]);
         error_log('create_thumb - no thumb file for videoid : ' . $video_db['videoid']);
     }
-    return get_thumb($video_db['videoid'], $multi, $size);
+    return get_thumb($video_db, $multi, $size);
 }
 
 /**
