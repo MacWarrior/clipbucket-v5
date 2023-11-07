@@ -145,9 +145,9 @@ function get_thumb($vdetails, $multi = false, $size = false)
 
     $resThumb = $db->select(tbl('video_thumbs'), '*', implode(' AND ', $where));
 
-    if (empty($resThumb) && $resVideo['num'] === null && $vdetails['status'] == 'Successful') {
+    if (empty($resThumb) && $resVideo['num'] === null && $resVideo['status'] == 'Successful') {
         //if no thumbs, we put some in db see \create_thumb()
-        return create_thumb($vdetails, $multi, $size);
+        return create_thumb($resThumb, $multi, $size);
     }
     if (empty($resThumb)) {
         return $multi ? [default_thumb()] : default_thumb();
@@ -217,7 +217,7 @@ function create_thumb($video_db, $multi, $size)
         $db->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version'], [$video_db['videoid'], '', '', '', VERSION]);
         error_log('create_thumb - no thumb file for videoid : ' . $video_db['videoid']);
     }
-    return get_thumb($video_db, $multi, $size);
+    return get_thumb($video_db['videoid'], $multi, $size);
 }
 
 /**
