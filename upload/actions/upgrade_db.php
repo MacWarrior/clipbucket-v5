@@ -1,5 +1,5 @@
 <?php
-require_once '../includes/admin_config.php';
+require_once dirname(__FILE__, 2).'/includes/admin_config.php';
 global $userquery, $eh, $db;
 $need_to_create_version_table = true;
 
@@ -85,7 +85,9 @@ try {
         $db->mysqli->query($sql);
     }
 
-    $files = get_files_to_upgrade($version, $revision);
+    $update = Update::getInstance();
+    $files = $update->getUpdateFiles(false, $version, $revision);
+
     $installed_plugins = $db->select(tbl('plugins'), '*');
     $files = array_merge($files, get_plugins_files_to_upgrade($installed_plugins));
 
