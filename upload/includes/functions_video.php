@@ -126,7 +126,7 @@ function get_thumb($vdetails, $multi = false, $size = false)
 
     global $db;
     //get current video from db
-    $resVideo = $db->select(tbl('video') . ' AS V LEFT JOIN ' . tbl('video_thumbs') . ' AS VT ON VT.videoid = V.videoid ', 'V.videoid, V.file_name, V.file_directory, VT.num, V.default_thumb', 'V.videoid = ' . mysql_clean($vid));
+    $resVideo = $db->select(tbl('video') . ' AS V LEFT JOIN ' . tbl('video_thumbs') . ' AS VT ON VT.videoid = V.videoid ', 'V.videoid, V.file_name, V.file_directory, VT.num, V.default_thumb, V.status', 'V.videoid = ' . mysql_clean($vid));
     if (empty($resVideo)) {
         error_log('get_thumb - called on missing videoid ' . $vid);
         e(lang('technical_error'));
@@ -147,7 +147,7 @@ function get_thumb($vdetails, $multi = false, $size = false)
 
     if ((empty($resThumb) || $resVideo['num'] === null) && $vdetails['status'] == 'Successful') {
         //if no thumbs, we put some in db see \create_thumb()
-        return create_thumb($resVideo, $multi, $size);
+        return create_thumb($vdetails, $multi, $size);
     }
     if (empty($resThumb)) {
         return $multi ? [default_thumb()] : default_thumb();
