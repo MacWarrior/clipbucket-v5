@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"282",
+  "revision":"283",
   "status":"dev",
   "detail":[
     {
@@ -228,6 +228,7 @@
         ,"Refactor search <i>#290</i>"
         ,"Fix homepage pop-up video"
         ,"Update add to playlist and create playlist forms"
+        ,"Fix video manager"
       ]
     }
   ,{
