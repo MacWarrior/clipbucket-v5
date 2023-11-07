@@ -145,7 +145,7 @@ function get_thumb($vdetails, $multi = false, $size = false)
 
     $resThumb = $db->select(tbl('video_thumbs'), '*', implode(' AND ', $where));
 
-    if ((empty($resThumb) || $resVideo['num'] === null) && $vdetails['status'] == 'Successful') {
+    if (empty($resThumb) && $resVideo['num'] === null && $vdetails['status'] == 'Successful') {
         //if no thumbs, we put some in db see \create_thumb()
         return create_thumb($vdetails, $multi, $size);
     }
