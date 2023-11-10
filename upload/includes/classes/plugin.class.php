@@ -1,7 +1,131 @@
 <?php
+class Plugin
+{
+    private static $plugin;
+
+    private $tablename = '';
+    private $fields = [];
+
+    public function __construct(){
+        $this->tablename = 'plugins';
+        $this->fields = [
+            'plugin_id'
+            ,'plugin_file'
+            ,'plugin_folder'
+            ,'plugin_version'
+            ,'plugin_active'
+        ];
+    }
+
+    public static function getInstance(): self
+    {
+        if( empty(self::$plugin) ){
+            self::$plugin = new self();
+        }
+        return self::$plugin;
+    }
+
+    private function getAllFields(): array
+    {
+        return array_map(function($field) {
+            return $this->tablename . '.' . $field;
+        }, $this->fields);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getAll(array $params = [])
+    {
+        $param_plugin_id = $params['plugin_id'] ?? false;
+        $param_plugin_file = $params['plugin_file'] ?? false;
+        $param_plugin_folder = $params['plugin_folder'] ?? false;
+
+        $param_condition = $params['condition'] ?? false;
+        $param_limit = $params['limit'] ?? false;
+        $param_order = $params['order'] ?? false;
+        $param_group = $params['group'] ?? false;
+        $param_having = $params['having'] ?? false;
+        $param_count = $params['count'] ?? false;
+        $param_first_only = $params['first_only'] ?? false;
+
+        $conditions = [];
+        if( $param_plugin_id ){
+            $conditions[] = 'plugins.plugin_id = '.mysql_clean($param_plugin_id);
+        }
+        if( $param_plugin_file ){
+            $conditions[] = 'plugins.plugin_file = \''.mysql_clean($param_plugin_file).'\'';
+        }
+        if( $param_plugin_folder ){
+            $conditions[] = 'plugins.plugin_folder = \''.mysql_clean($param_plugin_folder).'\'';
+        }
+        if( $param_condition ){
+            $conditions[] = '(' . $param_condition . ')';
+        }
+
+        if( $param_count ){
+            $select = ['COUNT(plugins.plugin_id) AS count'];
+        } else {
+            $select = $this->getAllFields();
+        }
+
+        $group = [];
+        if( $param_group ){
+            $group[] = $param_group;
+        }
+
+        $having = '';
+        if( $param_having ){
+            $having = ' HAVING '.$param_having;
+        }
+
+        $order = '';
+        if( $param_order ){
+            $order = ' ORDER BY '.$param_order;
+        }
+
+        $limit = '';
+        if( $param_limit ){
+            $limit = ' LIMIT '.$param_limit;
+        }
+
+        $sql ='SELECT ' . implode(', ', $select) . '
+                FROM ' . cb_sql_table($this->tablename)
+            . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions))
+            . (empty($group) ? '' : ' GROUP BY ' . implode(',', $group))
+            . $having
+            . $order
+            . $limit;
+
+        $result = Clipbucket_db::getInstance()->_select($sql);
+
+        if( $param_count ){
+            if( empty($result) ){
+                return 0;
+            }
+            return $result[0]['count'];
+        }
+
+        if( !$result ){
+            return false;
+        }
+
+        if( $param_first_only ){
+            return $result[0];
+        }
+
+        return $result;
+    }
+}
 class CBPlugin
 {
     function __construct(){}
+
+    public static function getInstance(): self
+    {
+        global $cbplugin;
+        return $cbplugin;
+    }
 
     /**
      * get plugin list

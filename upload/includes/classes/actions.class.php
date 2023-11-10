@@ -598,7 +598,7 @@ class cbactions
         $select_tag = '';
         $join_tag = '';
         $group_tag = '';
-        $version = get_current_version();
+        $version = Update::getInstance()->getDBVersion();
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
             $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') AS tags';
             $join_tag = ' LEFT JOIN ' . tbl('playlist_tags') . ' AS PT ON playlists.playlist_id = PT.id_playlist 
@@ -975,7 +975,7 @@ class cbactions
 
         $select_tag = '';
         $join_tag = '';
-        $version = get_current_version();
+        $version = Update::getInstance()->getDBVersion();
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
             $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') AS profile_tags';
             $join_tag = ' LEFT JOIN ' . tbl('playlist_tags') . ' AS PT ON playlists.playlist_id = PT.id_playlist 

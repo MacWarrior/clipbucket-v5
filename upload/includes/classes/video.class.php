@@ -102,7 +102,7 @@ class Video
      */
     public function getAll(array $params = [])
     {
-        $param_videoid = $params['videooid'] ?? false;
+        $param_videoid = $params['videoid'] ?? false;
         $param_videokey = $params['videokey'] ?? false;
         $param_userid = $params['userid'] ?? false;
         $param_file_name = $params['file_name'] ?? false;
@@ -145,7 +145,7 @@ class Video
             $conditions[] = '(' . $param_condition . ')';
         }
 
-        $version = get_current_version();
+        $version = Update::getInstance()->getDBVersion();
 
         if( $param_search ){
             /* Search is done on video title, video tags */
@@ -185,7 +185,6 @@ class Video
 
         $join = [];
         $group = [];
-        $version = get_current_version();
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
             $select[] = 'GROUP_CONCAT(tags.name SEPARATOR \',\') AS tags';
             $join[] = 'LEFT JOIN ' . cb_sql_table('video_tags') . ' ON video.videoid = video_tags.id_video';
@@ -213,7 +212,7 @@ class Video
         }
 
         $sql ='SELECT ' . implode(', ', $select) . '
-                FROM ' . cb_sql_table('video') . '
+                FROM ' . cb_sql_table($this->tablename) . '
                 LEFT JOIN ' . cb_sql_table('users') . ' ON video.userid = users.userid '
             . implode(' ', $join)
             . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions))
@@ -455,7 +454,7 @@ class CBvideo extends CBCategory
         $select_tag = '';
         $join_tag = '';
         $group_tag = '';
-        $version = get_current_version();
+        $version = Update::getInstance()->getDBVersion();
 
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
             $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') AS tags';
@@ -1120,7 +1119,7 @@ class CBvideo extends CBCategory
         $tag_n_title = '';
         //Tags
 
-        $version = get_current_version();
+        $version = Update::getInstance()->getDBVersion();
         if ($params['tags'] && ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) ) {
             //checking for commas ;)
             $tag_n_title .= 'T.name IN (\'' . $params['tags'] . '\') ' ;

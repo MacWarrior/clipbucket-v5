@@ -174,11 +174,10 @@ class AdminTool
     public static function updateDataBaseVersion($id_tool)
     {
         global $db;
-        $version = $db->select(tbl('version'), '*')[0];
-        $folder_version = $version['version'];
-        $revision = $version['revision'];
 
-        $files = get_files_to_upgrade($folder_version, $revision);
+        $update = Update::getInstance();
+        $files = $update->getUpdateFiles();
+
         $installed_plugins = $db->select(tbl('plugins'), '*');
         $files = array_merge($files, get_plugins_files_to_upgrade($installed_plugins));
         if (empty($files)) {

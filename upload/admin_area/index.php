@@ -10,7 +10,7 @@ global $breadcrumb;
 $breadcrumb[0] = ['title' => 'Dashboard', 'url' => ''];
 
 if (!empty($_GET['finish_upgrade'])) {
-    $eh->add_message('Your database has been successfuly updated to version ' . display_clean($_GET['version']));
+    e('Your database has been successfuly updated to version ' . display_clean($_GET['version']), 'm');
 }
 
 $mode = $_POST['mode'];
@@ -140,10 +140,20 @@ $params['limit'] = 10;
 $params['order'] = 'date_added DESC';
 $comments = Comments::getAll($params);
 
+$update = Update::getInstance();
+Assign('VERSION', $update->getCurrentCoreVersion());
+Assign('STATE', strtoupper($update->getCurrentCoreState()));
 Assign('comments', $comments);
-Assign('baseurl', BASEURL);
-Assign('VERSION', VERSION);
-Assign('STATE', STATE);
+Assign('changelog_550', $update->getChangelogHTML('550'));
+Assign('changelog_541', $update->getChangelogHTML('541'));
+Assign('changelog_540', $update->getChangelogHTML('540'));
+Assign('changelog_531', $update->getChangelogHTML('531'));
+Assign('changelog_530', $update->getChangelogHTML('530'));
+if( config('enable_update_checker') == '1' ){
+    Assign('update_checker_status', $update->getCoreUpdateStatus());
+    Assign('update_checker_content', $update->getUpdateHTML());
+}
+
 
 if(in_dev()){
     $min_suffixe = '';

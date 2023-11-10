@@ -110,7 +110,7 @@ class Collection
             $conditions[] = '(' . $param_condition . ')';
         }
 
-        $version = get_current_version();
+        $version = Update::getInstance()->getDBVersion();
 
         if( $param_search ){
             /* Search is done on collection title, collection tags */
@@ -133,7 +133,7 @@ class Collection
 
         $join = [];
         $group = [];
-        $version = get_current_version();
+        $version = Update::getInstance()->getDBVersion();
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
             $select[] = 'GROUP_CONCAT(tags.name SEPARATOR \',\') AS tags';
             $join[] = 'LEFT JOIN ' . cb_sql_table('collection_tags') . ' ON collections.collection_id = collection_tags.id_collection';
@@ -397,7 +397,7 @@ class Collections extends CBCategory
     function get_collection($id, $cond = null)
     {
         global $db;
-        $version = get_current_version();
+        $version = Update::getInstance()->getDBVersion();
         $select_tag = '';
         $join_tag = '';
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
@@ -702,7 +702,7 @@ class Collections extends CBCategory
 
         $select_tag = '';
         $join_tag = '';
-        $version = get_current_version();
+        $version = Update::getInstance()->getDBVersion();
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
             $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') AS collection_tags';
             $join_tag = ' LEFT JOIN ' . tbl('collection_tags') . ' AS CT ON C.collection_id = CT.id_collection 

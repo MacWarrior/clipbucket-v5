@@ -6,10 +6,11 @@ $need_to_create_version_table = true;
 $array_42 = ['4.2-RC1-free', '4.2-RC1-premium'];
 if (php_sapi_name() == 'cli') {
 
+    $update = Update::getInstance();
+
     try {
-        $version_db = $db->select(tbl('version'), 'version, revision')[0];
-        $version = $version_db['version'];
-        $revision = $version_db['revision'];
+        $version_db = $update->getDBVersion();
+
         $need_to_create_version_table = false;
         if (!empty($argv[1]) || !empty($argv[2])) {
             echo 'Upgrade system is already installed, parameters so are ignored' . PHP_EOL;
@@ -32,7 +33,7 @@ if (php_sapi_name() == 'cli') {
                 $revision = (int)$arg_revision['rev'];
                 $version = $arg_version['vers'];
             }
-            $version_list = getVersions();
+            $version_list = $update->getUpdateVersions();
             if (!array_key_exists($version, $version_list)) {
                 echo 'Version provided is incorrect' . PHP_EOL;
                 echo 'List of accepted versions : ' . PHP_EOL;
@@ -85,7 +86,8 @@ try {
         $db->mysqli->query($sql);
     }
 
-    $files = get_files_to_upgrade($version, $revision);
+    $update = Update::getInstance();
+    $files = $update->getUpdateFiles(false, $version, $revision);
 
     $installed_plugins = $db->select(tbl('plugins'), '*');
     $files = array_merge($files, get_plugins_files_to_upgrade($installed_plugins));

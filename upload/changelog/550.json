@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"287",
+  "revision":"288",
   "status":"dev",
   "detail":[
     {
@@ -122,6 +122,7 @@
         ,"Refactor comments management"
         ,"Fix SQL timeout"
         ,"Update Plupload to 3.1.5 <i>#281</i>"
+        ,"Refactor update and version"
       ]
     },
     {

@@ -203,27 +203,27 @@
 								{$category = $final}
 								<a href="?type=videos&query={display_clean($smarty.get.query)}&category={$category.id}&author={display_clean($smarty.get.author)}&s=elastic&p=search">
 
-								{cleanString($final.source)} ( {$final.counts} )
+								{display_clean($final.source)} ( {$final.counts} )
 								</a>
 								{elseif $key == 'AUTHOR'}
 								{$author =  $final}
-								<a href="?type=videos&query={display_clean($smarty.get.query)}&category={display_clean($smarty.get.category)}&author={$author.id}&s=elastic&p=search">{cleanString(name($final.source))} ( {$final.counts} )</a>
+								<a href="?type=videos&query={display_clean($smarty.get.query)}&category={display_clean($smarty.get.category)}&author={$author.id}&s=elastic&p=search">{display_clean(name($final.source))} ( {$final.counts} )</a>
 								{elseif $key == 'VIDEO' }
 								{$video_name = $final}
-								<a href="?type=videos&query={display_clean($smarty.get.query)}&object={$video_name}&object_type=video&s=elastic&p=search">{cleanString($final)}</a>
+								<a href="?type=videos&query={display_clean($smarty.get.query)}&object={$video_name}&object_type=video&s=elastic&p=search">{display_clean($final)}</a>
 								{elseif $key == 'GROUP' }
 								{$group_name = $final}
-								<a href="?type=groups&query={display_clean($smarty.get.query)}&object={$group_name.id}&object_type=group&s=elastic&p=search">{cleanString($group_name.source)}</a>
+								<a href="?type=groups&query={display_clean($smarty.get.query)}&object={$group_name.id}&object_type=group&s=elastic&p=search">{display_clean($group_name.source)}</a>
 								{elseif $key =='COLLECTION' }
 								{$collection_name = $final}
-								<a href="?type=collections&query={display_clean($smarty.get.query)}&object={$collection_name.id}&object_type=collection&s=elastic&p=search">{cleanString($collection_name.source)}</a>
+								<a href="?type=collections&query={display_clean($smarty.get.query)}&object={$collection_name.id}&object_type=collection&s=elastic&p=search">{display_clean($collection_name.source)}</a>
 								{elseif $key == 'USER' }
 								{$user_name = $final}
-								<a href="?type=channels&query={display_clean($smarty.get.query)}&object={$user_name}&object_type=user&s=elastic&p=search">{cleanString($final)}</a>
+								<a href="?type=channels&query={display_clean($smarty.get.query)}&object={$user_name}&object_type=user&s=elastic&p=search">{display_clean($final)}</a>
 								{elseif $key == 'SOURCE' }
-								<a href="?type={$final.key}&query={display_clean($smarty.get.query)}&category={display_clean($smarty.get.category)}&author={display_clean($smarty.get.author)}&s=elastic&p=search">{cleanString($final.key)} ( {$final.doc_count} )</a>
+								<a href="?type={$final.key}&query={display_clean($smarty.get.query)}&category={display_clean($smarty.get.category)}&author={display_clean($smarty.get.author)}&s=elastic&p=search">{display_clean($final.key)} ( {$final.doc_count} )</a>
 								{else}
-								<a href="javascript:void(0)">{cleanString($final)}</a>
+								<a href="javascript:void(0)">{display_clean($final)}</a>
 								{/if}
 								
 							</li>
@@ -232,29 +232,29 @@
 							<li class="no-display hide" >
 								{if $key == 'CATEGORY' }
 								{$category = $final}
-								<a href="?type=videos&query={display_clean($smarty.get.query)}&category={$category.id}&author={display_clean($smarty.get.author)}&s=elastic&p=search">{cleanString($final.source)} ( {$final.counts} )
+								<a href="?type=videos&query={display_clean($smarty.get.query)}&category={$category.id}&author={display_clean($smarty.get.author)}&s=elastic&p=search">{display_clean($final.source)} ( {$final.counts} )
 								{elseif $key == 'AUTHOR'}
 								{$author =  $final}
-								<a href="?type=videos&query={display_clean($smarty.get.query)}&category={display_clean($smarty.get.category)}&author={$author}&s=elastic&p=search">{cleanString($final)}</a>
+								<a href="?type=videos&query={display_clean($smarty.get.query)}&category={display_clean($smarty.get.category)}&author={$author}&s=elastic&p=search">{display_clean($final)}</a>
 								{elseif $key == 'VIDEO' }
 								{$video_name = $final}
-								<a href="?type=videos&query={display_clean($smarty.get.query)}&object={$video_name}&object_type=video&s=elastic&p=search">{cleanString($final)}</a>
+								<a href="?type=videos&query={display_clean($smarty.get.query)}&object={$video_name}&object_type=video&s=elastic&p=search">{display_clean($final)}</a>
 								{elseif $key == 'GROUP' }
 								{$group_name = $final}
-								<a href="?type=groups&query={display_clean($smarty.get.query)}&object={$group_name.id}&object_type=group&s=elastic&p=search">{cleanString($final.source)} ( {$final.counts} )</a>
+								<a href="?type=groups&query={display_clean($smarty.get.query)}&object={$group_name.id}&object_type=group&s=elastic&p=search">{display_clean($final.source)} ( {$final.counts} )</a>
 								{elseif $key =='COLLECTION' }
 								{$collection_name = $final}
-								<a href="?type=collections&query={display_clean($smarty.get.query)}&object={$collection_name.id}&object_type=collection&s=elastic&p=search">{cleanString($final.source)} ( {$final.counts} )</a>
+								<a href="?type=collections&query={display_clean($smarty.get.query)}&object={$collection_name.id}&object_type=collection&s=elastic&p=search">{display_clean($final.source)} ( {$final.counts} )</a>
 								{elseif $key == 'USER' }
 								{$user_name = $final}
-								<a href="?type=channels&query={display_clean($smarty.get.query)}&object={$user_name}&object_type=user&s=elastic&p=search">{cleanString($final)}</a>
+								<a href="?type=channels&query={display_clean($smarty.get.query)}&object={$user_name}&object_type=user&s=elastic&p=search">{display_clean($final)}</a>
 								{elseif $key == 'SOURCE' }
 								{$source = explode(' ',$final)}
 								{$source = $source.1}
 								
-								<a href="?type={$source}&query={display_clean($smarty.get.query)}&category={display_clean($smarty.get.author)}&author={display_clean($smarty.get.author)}&s=elastic&p=search">{cleanString($final)}</a>
+								<a href="?type={$source}&query={display_clean($smarty.get.query)}&category={display_clean($smarty.get.author)}&author={display_clean($smarty.get.author)}&s=elastic&p=search">{display_clean($final)}</a>
 								{else}
-								<a href="javascript:void(0)">{cleanString($final)}</a>
+								<a href="javascript:void(0)">{display_clean($final)}</a>
 								{/if}
 							</li>
 							{/if}

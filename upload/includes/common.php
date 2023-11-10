@@ -7,9 +7,6 @@ const COOKIE_TIMEOUT = 86400 * 1; // 1
 const GARBAGE_TIMEOUT = COOKIE_TIMEOUT;
 const REMBER_DAYS = 7;
 
-//Create an empty development.dev file in includes folder
-//To Activate Development mode
-
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php');
 
 if (file_exists(dirname(__FILE__) . '/../files/temp/development.dev')) {
@@ -57,12 +54,15 @@ if (!@$in_bg_cron) {
     session_start();
 }
 
-//Required Files
+
+require_once('functions.php');
 require_once('classes/db.class.php');
 require_once('classes/rediscache.class.php');
+require_once('classes/update.class.php');
+require_once('classes/plugin.class.php');
 
 # file with most frequently used functions
-require_once __DIR__ . '/functions.php';
+
 include_once('clipbucket.php');
 check_install('before');
 
@@ -239,7 +239,7 @@ if (has_access('admin_access', true) && !empty($error_redis)) {
 
 $thisurl = curPageURL();
 
-if (need_to_update_version()) {
+if (!Update::isVersionSystemInstalled()) {
     define('NEED_UPDATE', true);
     if (strpos($thisurl, '/admin_area/upgrade_db.php') === false
         && strpos($thisurl, '/admin_area/logout.php') === false
@@ -253,13 +253,12 @@ if (need_to_update_version()) {
 }
 //Setting Time Zone date_default_timezone_set
 require_once('classes/search.class.php');
-require_once('classes/calcdate.class.php');
 require_once('classes/signup.class.php');
 require_once('classes/image.class.php');
 require_once('classes/upload.class.php');
 require_once('classes/ads.class.php');
 require_once('classes/form.class.php');
-require_once('classes/plugin.class.php');
+
 require_once('classes/log.class.php');
 require_once('classes/video.class.php');
 require_once('classes/player.class.php');
@@ -282,7 +281,6 @@ require 'defined_links.php';
 include 'plugin.functions.php';
 include 'plugins_functions.php';
 
-$calcdate = new CalcDate();
 $signup = new signup();
 $Upload = new Upload();
 $adsObj = new AdsManager();

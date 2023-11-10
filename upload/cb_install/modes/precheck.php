@@ -1,7 +1,7 @@
 <div class="nav_des clearfix">
     <div class="cb_container">
         <h4 style="color:#fff;">Prechecking</h4>
-        <p style="color:#fff; font-size:13px;">Clipbucket requires following modules in order to work properly, we are performing some initial search to find modules.
+        <p style="color:#fff; font-size:13px;">ClipbucketV5 requires following modules in order to work properly, we are performing some initial search to find modules.
     </div>
 </div>
 

@@ -122,7 +122,7 @@ class User
             $conditions[] = '(' . $param_condition . ')';
         }
 
-        $version = get_current_version();
+        $version = Update::getInstance()->getDBVersion();
 
         if( $param_search ){
             /* Search is done on collection title, collection tags */
@@ -144,7 +144,7 @@ class User
 
         $join = [];
         $group = [];
-        $version = get_current_version();
+        $version = Update::getInstance()->getDBVersion();
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
             $select[] = 'GROUP_CONCAT(tags.name SEPARATOR \',\') AS tags';
             $join[] = 'LEFT JOIN ' . cb_sql_table('user_tags') . ' ON users.userid = user_tags.id_user';
@@ -2194,7 +2194,7 @@ class userquery extends CBCategory
         $select = '';
         $join = '';
         $group = '';
-        $version = get_current_version();
+        $version = Update::getInstance()->getDBVersion();
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
             $select = ', GROUP_CONCAT(T.name SEPARATOR \',\') as profile_tags';
             $join = ' LEFT JOIN ' . tbl('user_tags') . ' UT ON UP.userid = UT.id_user
