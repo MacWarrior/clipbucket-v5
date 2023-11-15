@@ -1,5 +1,5 @@
 <?php
-global $userquery, $pages, $myquery, $CBucket, $Cbucket;
+global $userquery, $pages, $myquery, $Cbucket, $Cbucket;
 
 require_once '../includes/admin_config.php';
 $userquery->admin_login_check();
@@ -88,7 +88,7 @@ if ($udetails) {
     assign('catparmas', 'catparmas');
 } else {
     e('No User Found');
-    $CBucket->show_page = false;
+    $Cbucket->show_page = false;
 }
 if (in_dev()) {
     $min_suffixe = '';

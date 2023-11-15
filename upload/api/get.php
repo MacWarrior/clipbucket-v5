@@ -467,7 +467,6 @@ class API extends REST
             'userid', 'email',
             'total_videos',
             'total_photos', 'total_collections',
-            'total_groups'
         ];
 
         $final_users = [];

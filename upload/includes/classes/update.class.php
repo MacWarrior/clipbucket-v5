@@ -249,17 +249,19 @@ class Update
     public function getUpdateFiles(bool $count = false, string $version = '', string $revision = '')
     {
         if( empty($version) ){
-            $version = $this->getCurrentCoreVersion();
+            $version = str_replace('.', '', $this->getCurrentDBVersion());
+        } else if (strpos($version, '.') !== false) {
+            $version = str_replace('.', '', $version);
         }
 
         if( empty($revision) ){
-            $revision = $this->getCurrentCoreRevision();
+            $revision = $this->getCurrentDBRevision();
         }
 
         //Get folders superior or equal to current version
         $folders = array_filter(glob(DIR_SQL . '[0-9]**', GLOB_ONLYDIR)
             , function ($dir) use ($version) {
-                return basename($dir) >= $version;
+                return str_replace('.', '', basename($dir)) >= $version;
             });
 
         $files = [];
@@ -267,6 +269,7 @@ class Update
         if ($version == '4.2-RC1-premium') {
             $files[] = DIR_SQL . 'commercial' . DIRECTORY_SEPARATOR . '00001.sql';
         }
+
         foreach ($folders as $folder) {
             //get files in folder minus . and .. folders
             $clean_folder = array_diff(scandir($folder), ['..', '.']);
@@ -277,7 +280,8 @@ class Update
                 //return absolute path
                     array_map(function ($file) use ($revision, $version, $folder) {
                         $file_rev = (int)pathinfo($file)['filename'];
-                        $folder_version = basename($folder);
+                        $folder_version = str_replace('.', '', basename($folder));
+
                         return
                             //if current version, then only superior revisions but still under current revision in changelog
                             (
@@ -286,8 +290,8 @@ class Update
                                     || $folder_version > $version
                                 )
                                 && //check if version and revision or not superior to changelog
-                                ($folder_version == VERSION && $file_rev <= REV
-                                    || $folder_version < VERSION
+                                ($folder_version == $this->getCurrentCoreVersion() && $file_rev <= $this->getCurrentCoreRevision()
+                                    || $folder_version < $this->getCurrentCoreVersion()
                                 )
                             )
                                 ?
@@ -297,6 +301,7 @@ class Update
                 )
             );
         }
+
         return ($count ? count($files) : $files);
     }
 

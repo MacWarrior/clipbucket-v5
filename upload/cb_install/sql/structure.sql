@@ -177,85 +177,6 @@ CREATE TABLE `{tbl_prefix}flags` (
   `date_added` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
-CREATE TABLE `{tbl_prefix}groups` (
-  `group_id` int(225) NOT NULL,
-  `group_name` mediumtext NOT NULL,
-  `userid` int(255) NOT NULL,
-  `group_admins` text NOT NULL,
-  `group_description` mediumtext NOT NULL,
-  `group_tags` mediumtext NOT NULL,
-  `group_url` mediumtext NOT NULL,
-  `category` varchar(100) NOT NULL,
-  `group_privacy` enum('0','1','2') NOT NULL DEFAULT '0',
-  `video_type` enum('0','1','2') NOT NULL DEFAULT '0',
-  `post_type` enum('0','1','2') NOT NULL DEFAULT '0',
-  `active` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `date_added` datetime NOT NULL,
-  `featured` enum('yes','no') NOT NULL DEFAULT 'no',
-  `total_views` bigint(225) NOT NULL,
-  `total_videos` int(225) NOT NULL,
-  `total_members` int(225) NOT NULL,
-  `total_topics` int(225) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
-
-CREATE TABLE `{tbl_prefix}group_categories` (
-  `category_id` int(225) NOT NULL,
-  `category_name` varchar(30) NOT NULL DEFAULT '',
-  `category_order` int(5) NOT NULL DEFAULT 1,
-  `category_desc` text NOT NULL,
-  `date_added` datetime NOT NULL,
-  `category_thumb` mediumtext NOT NULL,
-  `isdefault` enum('yes','no') NOT NULL DEFAULT 'no'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
-
-CREATE TABLE `{tbl_prefix}group_invitations` (
-  `invitation_id` int(225) NOT NULL,
-  `group_id` int(225) NOT NULL,
-  `userid` int(255) NOT NULL,
-  `invited` int(225) NOT NULL,
-  `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
-
-CREATE TABLE `{tbl_prefix}group_members` (
-  `group_mid` int(225) NOT NULL,
-  `group_id` int(225) NOT NULL,
-  `userid` int(11) NOT NULL,
-  `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `active` enum('yes','no') NOT NULL DEFAULT 'yes'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
-
-CREATE TABLE `{tbl_prefix}group_posts` (
-  `post_id` int(11) NOT NULL,
-  `userid` int(11) NOT NULL,
-  `topic_id` int(11) NOT NULL,
-  `post_content` text NOT NULL,
-  `date_added` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
-
-CREATE TABLE `{tbl_prefix}group_topics` (
-  `topic_id` int(225) NOT NULL,
-  `topic_title` text NOT NULL,
-  `userid` int(225) NOT NULL,
-  `group_id` int(225) NOT NULL,
-  `topic_post` text NOT NULL,
-  `date_added` datetime NOT NULL,
-  `last_poster` int(225) NOT NULL,
-  `last_post_time` datetime NOT NULL,
-  `total_views` bigint(225) NOT NULL,
-  `total_replies` bigint(225) NOT NULL,
-  `topic_icon` varchar(225) NOT NULL,
-  `approved` enum('yes','no') NOT NULL DEFAULT 'yes'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
-
-CREATE TABLE `{tbl_prefix}group_videos` (
-  `group_video_id` int(225) NOT NULL,
-  `videoid` int(255) NOT NULL,
-  `group_id` int(225) NOT NULL,
-  `userid` int(255) NOT NULL,
-  `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `approved` enum('yes','no') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
-
 CREATE TABLE `{tbl_prefix}languages` (
   `language_id` int(9) NOT NULL,
   `language_name` varchar(20) NOT NULL DEFAULT '0',
@@ -470,7 +391,6 @@ CREATE TABLE `{tbl_prefix}users` (
   `background_color` varchar(25) DEFAULT NULL,
   `background_url` text DEFAULT NULL,
   `background_repeat` enum('no-repeat','repeat','repeat-x','repeat-y') NOT NULL DEFAULT 'repeat',
-  `total_groups` bigint(20) NOT NULL DEFAULT 0,
   `last_active` datetime NOT NULL DEFAULT '1000-01-01 00:00:00',
   `banned_users` text DEFAULT NULL,
   `welcome_email_sent` enum('yes','no') NOT NULL DEFAULT 'no',
@@ -506,7 +426,6 @@ CREATE TABLE `{tbl_prefix}user_levels_permissions` (
   `view_photos` enum('yes','no') NOT NULL DEFAULT 'yes',
   `view_collections` enum('yes','no') NOT NULL DEFAULT 'yes',
   `view_channel` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `view_group` enum('yes','no') NOT NULL DEFAULT 'yes',
   `view_videos` enum('yes','no') NOT NULL DEFAULT 'yes',
   `avatar_upload` enum('yes','no') NOT NULL DEFAULT 'yes',
   `video_moderation` enum('yes','no') NOT NULL DEFAULT 'no',
@@ -516,7 +435,6 @@ CREATE TABLE `{tbl_prefix}user_levels_permissions` (
   `group_moderation` enum('yes','no') NOT NULL DEFAULT 'no',
   `web_config_access` enum('yes','no') NOT NULL DEFAULT 'no',
   `view_channels` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `view_groups` enum('yes','no') NOT NULL DEFAULT 'yes',
   `playlist_access` enum('yes','no') NOT NULL DEFAULT 'yes',
   `allow_channel_bg` enum('yes','no') NOT NULL DEFAULT 'yes',
   `private_msg_access` enum('yes','no') NOT NULL DEFAULT 'yes',
@@ -779,27 +697,6 @@ ALTER TABLE `{tbl_prefix}favorites`
 ALTER TABLE `{tbl_prefix}flags`
   ADD PRIMARY KEY (`flag_id`);
 
-ALTER TABLE `{tbl_prefix}groups`
-  ADD PRIMARY KEY (`group_id`);
-
-ALTER TABLE `{tbl_prefix}group_categories`
-  ADD PRIMARY KEY (`category_id`);
-
-ALTER TABLE `{tbl_prefix}group_invitations`
-  ADD PRIMARY KEY (`invitation_id`);
-
-ALTER TABLE `{tbl_prefix}group_members`
-  ADD PRIMARY KEY (`group_mid`);
-
-ALTER TABLE `{tbl_prefix}group_posts`
-  ADD PRIMARY KEY (`post_id`);
-
-ALTER TABLE `{tbl_prefix}group_topics`
-  ADD PRIMARY KEY (`topic_id`);
-
-ALTER TABLE `{tbl_prefix}group_videos`
-  ADD PRIMARY KEY (`group_video_id`);
-
 ALTER TABLE `{tbl_prefix}languages`
   ADD PRIMARY KEY (`language_id`),
   ADD KEY `language_default` (`language_default`);
@@ -954,27 +851,6 @@ ALTER TABLE `{tbl_prefix}favorites`
 
 ALTER TABLE `{tbl_prefix}flags`
   MODIFY `flag_id` int(225) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `{tbl_prefix}groups`
-  MODIFY `group_id` int(225) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `{tbl_prefix}group_categories`
-  MODIFY `category_id` int(225) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `{tbl_prefix}group_invitations`
-  MODIFY `invitation_id` int(225) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `{tbl_prefix}group_members`
-  MODIFY `group_mid` int(225) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `{tbl_prefix}group_posts`
-  MODIFY `post_id` int(11) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `{tbl_prefix}group_topics`
-  MODIFY `topic_id` int(225) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `{tbl_prefix}group_videos`
-  MODIFY `group_video_id` int(225) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `{tbl_prefix}languages`
   MODIFY `language_id` int(9) NOT NULL AUTO_INCREMENT;

@@ -5,11 +5,12 @@ $need_to_create_version_table = true;
 
 $array_42 = ['4.2-RC1-free', '4.2-RC1-premium'];
 if (php_sapi_name() == 'cli') {
-
     $update = Update::getInstance();
 
     try {
         $version_db = $update->getDBVersion();
+        $version = $version_db['version'];
+        $revision = $version_db['revision'];
 
         $need_to_create_version_table = false;
         if (!empty($argv[1]) || !empty($argv[2])) {
@@ -101,21 +102,27 @@ try {
             throw new \Exception();
         }
     }
-    echo json_encode([
-        'success' => true
-        , 'msg'   => htmlentities($match['1'] . ' - revision ' . (int)$match['2'])
-    ]);
+    if (php_sapi_name() != 'cli') {
+        echo json_encode([
+            'success' => true
+            , 'msg'   => htmlentities($match['1'] . ' - revision ' . (int)$match['2'])
+        ]);
+    }
 } catch (\Exception $e) {
     $regex = '/\/(\d{0,3}\.\d{0,3}\.\d{0,3}|commercial)\/(\d{5})\.sql/';
     $match = [];
     preg_match($regex, $file, $match);
-    e('An SQL error occured during update ' . $match['1'] . ' - revision ' . (int)$match['2'] . ' (' . basename($file) . '). Please update manually to this revision and the restart update process from this revision.');
-    if( $e->getMessage() != '' ){
-        error_log($e->getMessage());
+    if (php_sapi_name() != 'cli') {
+        e('An SQL error occured during update ' . $match['1'] . ' - revision ' . (int)$match['2'] . ' (' . basename($file) . '). Please update manually to this revision and the restart update process from this revision.');
+        if ($e->getMessage() != '') {
+            error_log($e->getMessage());
+        }
+        echo json_encode([
+            'success' => false
+            , 'msg'   => getTemplateMsg()
+        ]);
+    } else {
+        echo 'An SQL error occured during update ' . $match['1'] . ' - revision ' . (int)$match['2'] . ' (' . basename($file) . '). Please update manually to this revision and the restart update process from this revision.';
     }
-    echo json_encode([
-        'success' => false
-        , 'msg'   => getTemplateMsg()
-    ]);
     return false;
 }

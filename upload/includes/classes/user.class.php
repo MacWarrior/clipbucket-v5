@@ -53,7 +53,6 @@ class User
             ,'background_color'
             ,'background_url'
             ,'background_repeat'
-            ,'total_groups'
             ,'last_active'
             ,'banned_users'
             ,'welcome_email_sent'
@@ -739,8 +738,6 @@ class userquery extends CBCategory
 
                 //Changing User Videos To Anonymous
                 $db->execute('UPDATE ' . tbl('video') . ' SET userid=\'' . $this->get_anonymous_user() . '\' WHERE userid=\'' . $uid . '\'');
-                //Changing User Group To Anonymous
-                $db->execute('UPDATE ' . tbl('groups') . ' SET userid=\'' . $this->get_anonymous_user() . '\' WHERE userid=\'' . $uid . '\'');
                 //Deleting User Contacts
                 $this->remove_contacts($uid);
 
@@ -3770,7 +3767,6 @@ class userquery extends CBCategory
             ];
             $fields['users'][] = 'last_active';
             $fields['users'][] = 'total_collections';
-            $fields['users'][] = 'total_groups';
             $query = ' SELECT ' . table_fields($fields) . ' FROM ' . cb_sql_table('users');
             $query .= ' LEFT JOIN ' . cb_sql_table('user_profile', 'profile') . ' ON users.userid = profile.userid ';
 

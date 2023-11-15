@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"288",
+  "revision":"289",
   "status":"dev",
   "detail":[
     {
@@ -231,6 +231,7 @@
         ,"Update add to playlist and create playlist forms"
         ,"Fix video manager"
         ,"Fix video with old SD/HD conversion"
+        ,"Slightly update privacy policy page"
       ]
     }
   ,{
