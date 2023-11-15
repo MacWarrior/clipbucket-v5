@@ -10,6 +10,7 @@ class Update
     private $changelog = [];
     private $state = '';
     private $version = '';
+    private $versionCode = '';
     private $revision = '';
     private $webVersion = '';
     private $webRevision = '';
@@ -49,17 +50,17 @@ class Update
      */
     public function getDBVersion(): array
     {
-        if( !empty($this->dbVersion) ){
-            return $this->dbVersion;
+        if( empty($this->dbVersion) ){
+            $select = implode(', ', $this->getAllFields());
+            $result = Clipbucket_db::getInstance()->select(cb_sql_table($this->tableName), $select, false, false, false, false, 30, 'version')[0];
+
+            $this->dbVersion = [
+                'version' => $result['version'],
+                'revision' => $result['revision']
+            ];
         }
 
-        $select = implode(', ', $this->getAllFields());
-        $result = Clipbucket_db::getInstance()->select(cb_sql_table($this->tableName), $select, false, false, false, false, 30, 'version')[0];
-
-        return [
-            'version' => $result['version'],
-            'revision' => $result['revision']
-        ];
+        return $this->dbVersion;
     }
 
     /**
@@ -101,10 +102,22 @@ class Update
         return $this->state;
     }
 
+    private function getCurrentCoreVersionCode(): string
+    {
+        if( empty($this->versionCode) ){
+            $this->versionCode = $this->getCurrentCoreLatest()['dev'];
+        }
+
+        return $this->versionCode;
+    }
+
+    /**
+     * @throws Exception
+     */
     public function getCurrentCoreVersion(): string
     {
         if( empty($this->version) ){
-            $this->version = $this->getCurrentCoreLatest()['dev'];
+            $this->version = $this->getChangelog($this->getCurrentCoreVersionCode())['version'];
         }
 
         return $this->version;
@@ -117,6 +130,9 @@ class Update
     {
         if( empty($this->changelog[$version]) ){
             $base_filepath = realpath(dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'changelog');
+            if (strpos($version, '.') !== false) {
+                $version = str_replace('.','', $version);
+            }
             $filepath_changelog = $base_filepath . DIRECTORY_SEPARATOR . $version . '.json';
 
             if (!file_exists($filepath_changelog)) {
@@ -136,7 +152,10 @@ class Update
      */
     public function getCurrentCoreRevision(): string
     {
-        return $this->getChangelog($this->getCurrentCoreVersion())['revision'];
+        if( empty($this->revision) ){
+            $this->revision = $this->getChangelog($this->getCurrentCoreVersion())['revision'];
+        }
+        return $this->revision;
     }
 
     /**
@@ -290,7 +309,7 @@ class Update
                                     || $folder_version > $version
                                 )
                                 && //check if version and revision or not superior to changelog
-                                ($folder_version == $this->getCurrentCoreVersion() && $file_rev <= $this->getCurrentCoreRevision()
+                                ($folder_version == $this->getCurrentCoreVersionCode() && $file_rev <= $this->getCurrentCoreRevision()
                                     || $folder_version < $this->getCurrentCoreVersion()
                                 )
                             )
@@ -426,7 +445,7 @@ class Update
             return 'red';
         }
 
-        if( $this->getCurrentCoreVersion() >= $this->getWebVersion()
+        if( $this->getCurrentCoreVersionCode() >= $this->getWebVersion()
             && $this->getCurrentCoreRevision() >= $this->getWebRevision()
         ){
             return 'green';
@@ -478,7 +497,7 @@ class Update
             $html .= '<div class="well changelog"><h5>' . lang('dashboard_php_config_allow_url_fopen') . '</h5></div>';
         }
 
-        $current_version = $this->getCurrentCoreVersion();
+        $current_version = $this->getCurrentCoreVersionCode();
         $current_revision = $this->getCurrentCoreRevision();
         $current_state = $this->getCurrentCoreState();
         $web_version = $this->getWebVersion();
@@ -501,7 +520,7 @@ class Update
                 if ($current_version != $web_version) {
                     $html .= $this->getChangelogHTML($this->getWebChangelog());
                 } else {
-                    $diff = $this->getChangelogDiff($this->getChangelog($this->getCurrentCoreVersion()), $this->getWebChangelog());
+                    $diff = $this->getChangelogDiff($this->getChangelog($this->getCurrentCoreVersionCode()), $this->getWebChangelog());
                     if( !$diff ){
                         $html .= 'The new revision has the same changelog';
                     } else {

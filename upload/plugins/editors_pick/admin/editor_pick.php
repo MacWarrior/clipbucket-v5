@@ -44,5 +44,5 @@ if (isset($_POST['upload_special'])) {
 assign('videos', $ep_videos);
 
 subtitle(lang('plugin_editors_picks'));
-template_files('../templates/admin/editor_pick.html');
+template_files('editor_pick.html', PLUG_DIR.'/editors_pick/templates/admin/');
 display_it();

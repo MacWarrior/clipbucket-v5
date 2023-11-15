@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"289",
+  "revision":"290",
   "status":"dev",
   "detail":[
     {
@@ -237,7 +237,7 @@
   ,{
       "title":"Plugin",
       "description":[
-        "Update Editor's Pick to 2.0.3"
+        "Update Editor's Pick to 2.0.4"
         ,"Update Global Announcement to 2.0.2"
         ,"Update CB Server Thumb to 2.0.0"
         ,"Implement plugin compatibility check"
