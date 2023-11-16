@@ -17,10 +17,10 @@
 							{foreach from=$breadcrumb item=page}
 								<li>{if !empty($page['url'])}<a href="{$page['url']}">{/if}{$page['title']}{if !empty($page['url'])}</a>{/if}</li>
 							{/foreach}
-						</ul><!-- .breadcrumb -->
+						</ul>
 					</div>
 					<div class="page-content">
-	                    {include file="$style_dir/msg.html" }
+	                    {include file="$style_dir/msg.html"}
 						<!-- Setting Body File -->
 						{if $Cbucket->show_page}
 	                        {foreach from=$template_files item=file}

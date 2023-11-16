@@ -1,5 +1,5 @@
 #!/bin/bash
-# Clipbucket install on Cent OS 7.8
+# ClipbucketV5 install on Cent OS 7.8
 # PHP : 7.3.X
 # MariaDB : 10.3
 # FFMPEG : 3.4
@@ -27,14 +27,14 @@ yum update -y -q > /dev/null 2>&1
 yum-config-manager --disable remi-php54 > /dev/null
 yum-config-manager --enable remi-php73 > /dev/null
 
-yum install -y -q php php-mysqlnd php-curl php-xml php-mbstring php-pear php-devel httpd git mariadb-server mariadb gcc ImageMagick ImageMagick-devel mediainfo sendmail ffmpeg ffmpeg-devel > /dev/null 2>&1
+yum install -y -q php php-mysqlnd php-curl php-gd php-xml php-mbstring php-pear php-devel httpd git mariadb-server mariadb gcc ImageMagick ImageMagick-devel mediainfo sendmail ffmpeg ffmpeg-devel > /dev/null 2>&1
 
 systemctl enable httpd mariadb > /dev/null 2>&1
 systemctl start httpd mariadb
 echo -ne " OK"
 
 echo ""
-echo -ne "Installing Clipbucket sources..."
+echo -ne "Installing ClipbucketV5 sources..."
 mkdir -p /home/http/clipbucket/ && cd "$_"
 git clone https://github.com/MacWarrior/clipbucket-v5.git ./ > /dev/null 2>&1
 echo -ne " OK"
@@ -95,7 +95,7 @@ echo ""
 echo "- Website URL : http://clipbucket.local"
 
 echo ""
-echo "Clipbucket installation completed"
+echo "ClipbucketV5 installation completed"
 echo ""
 
 # You may have to manually specify a not-default audio codec for video conversion : libfaac

@@ -1,8 +1,4 @@
 <?php
-/**
- * ClipBucket Login
- */
-
 define('THIS_PAGE', 'ADMIN_LOGIN');
 require '../includes/admin_config.php';
 Assign('THIS_PAGE', 'login');

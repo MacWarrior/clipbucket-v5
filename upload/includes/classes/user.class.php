@@ -1,11 +1,212 @@
 <?php
+class User
+{
+    private static $user;
+    private $tablename = '';
+    private $fields = [];
+    private $display_block = '';
+    private $search_limit = 0;
+
+    public function __construct(){
+        $this->tablename = 'users';
+        $this->fields = [
+            'userid'
+            ,'category'
+            ,'featured_video'
+            ,'username'
+            ,'user_session_key'
+            ,'user_session_code'
+            ,'password'
+            ,'email'
+            ,'usr_status'
+            ,'msg_notify'
+            ,'avatar'
+            ,'avatar_url'
+            ,'sex'
+            ,'dob'
+            ,'country'
+            ,'level'
+            ,'avcode'
+            ,'doj'
+            ,'last_logged'
+            ,'num_visits'
+            ,'session'
+            ,'ip'
+            ,'signup_ip'
+            ,'time_zone'
+            ,'featured'
+            ,'featured_date'
+            ,'profile_hits'
+            ,'total_watched'
+            ,'total_videos'
+            ,'total_comments'
+            ,'total_photos'
+            ,'total_collections'
+            ,'comments_count'
+            ,'last_commented'
+            ,'voted'
+            ,'ban_status'
+            ,'upload'
+            ,'subscribers'
+            ,'total_subscriptions'
+            ,'background'
+            ,'background_color'
+            ,'background_url'
+            ,'background_repeat'
+            ,'last_active'
+            ,'banned_users'
+            ,'welcome_email_sent'
+            ,'total_downloads'
+            ,'album_privacy'
+            ,'likes'
+            ,'is_live'
+        ];
+        $this->display_block = LAYOUT . '/blocks/user.html';
+        $this->display_var_name = 'user';
+        $this->search_limit = (int)config('users_items_search_page');
+    }
+
+    public static function getInstance(): self
+    {
+        if( empty(self::$user) ){
+            self::$user = new self();
+        }
+        return self::$user;
+    }
+
+    private function getAllFields(): array
+    {
+        return array_map(function($field) {
+            return $this->tablename . '.' . $field;
+        }, $this->fields);
+    }
+
+    public function getSearchLimit(): int
+    {
+        return $this->search_limit;
+    }
+
+    public function getDisplayBlock(): string
+    {
+        return $this->display_block;
+    }
+
+    public function getDisplayVarName(): string
+    {
+        return $this->display_var_name;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getAll(array $params = [])
+    {
+        $param_collection_id = $params['userid'] ?? false;
+        $param_userid = $params['userid'] ?? false;
+        $param_search = $params['search'] ?? false;
+
+        $param_condition = $params['condition'] ?? false;
+        $param_limit = $params['limit'] ?? false;
+        $param_order = $params['order'] ?? false;
+        $param_group = $params['group'] ?? false;
+        $param_having = $params['having'] ?? false;
+        $param_count = $params['count'] ?? false;
+        $param_first_only = $params['first_only'] ?? false;
+
+        $conditions = [];
+        if( $param_userid ){
+            $conditions[] = 'users.userid = \''.mysql_clean($param_userid).'\'';
+        }
+        if( $param_condition ){
+            $conditions[] = '(' . $param_condition . ')';
+        }
+
+        $version = Update::getInstance()->getDBVersion();
+
+        if( $param_search ){
+            /* Search is done on collection title, collection tags */
+            // TODO : Add search on collection categories
+            $cond = '(MATCH(users.username) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(users.username) LIKE \'%' . mysql_clean($param_search) . '%\'';
+            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+                $cond .= 'OR MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+            }
+            $cond .= ')';
+
+            $conditions[] = $cond;
+        }
+
+        if( $param_count ){
+            $select = ['COUNT(users.userid) AS count'];
+        } else {
+            $select = $this->getAllFields();
+        }
+
+        $join = [];
+        $group = [];
+        $version = Update::getInstance()->getDBVersion();
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+            $select[] = 'GROUP_CONCAT(tags.name SEPARATOR \',\') AS tags';
+            $join[] = 'LEFT JOIN ' . cb_sql_table('user_tags') . ' ON users.userid = user_tags.id_user';
+            $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON user_tags.id_tag = tags.id_tag';
+            $group[] = 'users.userid';
+        }
+
+        if( $param_group ){
+            $group[] = $param_group;
+        }
+
+        $having = '';
+        if( $param_having ){
+            $having = ' HAVING '.$param_having;
+        }
+
+        $order = '';
+        if( $param_order ){
+            $order = ' ORDER BY '.$param_order;
+        }
+
+        $limit = '';
+        if( $param_limit ){
+            $limit = ' LIMIT '.$param_limit;
+        }
+
+        $sql ='SELECT ' . implode(', ', $select) . '
+                FROM ' . cb_sql_table('users') . ' '
+            . implode(' ', $join)
+            . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions))
+            . (empty($group) ? '' : ' GROUP BY ' . implode(',', $group))
+            . $having
+            . $order
+            . $limit;
+
+        $result = Clipbucket_db::getInstance()->_select($sql);
+
+        if( $param_count ){
+            if( empty($result) ){
+                return 0;
+            }
+            return $result[0]['count'];
+        }
+
+        if( !$result ){
+            return false;
+        }
+
+        if( $param_first_only ){
+            return $result[0];
+        }
+
+        return $result;
+    }
+}
+
 
 class userquery extends CBCategory
 {
     var $userid = '';
     var $username = '';
+    var $email = '';
     var $level = '';
-    var $permissions = '';
     var $access_type_list = []; //Access list
     var $usr_levels = [];
     var $custom_signup_fields = [];
@@ -34,6 +235,12 @@ class userquery extends CBCategory
 
     private $basic_fields = [];
     private $extra_fields = [];
+
+    public static function getInstance()
+    {
+        global $userquery;
+        return $userquery;
+    }
 
     function __construct()
     {
@@ -79,6 +286,7 @@ class userquery extends CBCategory
             $this->udetails = $udetails;
             $this->username = $udetails['username'];
             $this->level = $this->udetails['level'];
+            $this->email = $this->udetails['email'];
             $this->permission = $this->get_user_level(user_id());
 
             //Calling Logout Functions
@@ -530,8 +738,6 @@ class userquery extends CBCategory
 
                 //Changing User Videos To Anonymous
                 $db->execute('UPDATE ' . tbl('video') . ' SET userid=\'' . $this->get_anonymous_user() . '\' WHERE userid=\'' . $uid . '\'');
-                //Changing User Group To Anonymous
-                $db->execute('UPDATE ' . tbl('groups') . ' SET userid=\'' . $this->get_anonymous_user() . '\' WHERE userid=\'' . $uid . '\'');
                 //Deleting User Contacts
                 $this->remove_contacts($uid);
 
@@ -1812,73 +2018,6 @@ class userquery extends CBCategory
     }
 
     /**
-     * Function used to count total video comments
-     * @throws Exception
-     */
-    function count_profile_comments($id)
-    {
-        global $db;
-        return $db->count(tbl('comments'), 'comment_id', "type='c' AND type_id='$id' AND parent_id='0'");
-    }
-
-    /**
-     * Function used to update user comments count
-     * @throws Exception
-     */
-    function update_comments_count($id)
-    {
-        global $db;
-        $total_comments = $this->count_profile_comments($id);
-        $db->update(tbl('users'), ['comments_count', 'last_commented'], [$total_comments, now()], " userid='$id'");
-    }
-
-    /**
-     * Function used to add comment on users profile
-     * @throws Exception
-     */
-    function add_comment($comment, $obj_id, $reply_to = null, $type = 'c')
-    {
-        global $myquery;
-        if (!$this->user_exists($obj_id)) {
-            e(lang('usr_exist_err'));
-        } else {
-            $add_comment = $myquery->add_comment($comment, $obj_id, $reply_to, $type, $obj_id);
-        }
-
-        if ($add_comment) {
-            //Logging Comment
-            $log_array = [
-                'success'        => 'yes',
-                'details'        => 'comment on a profile',
-                'action_obj_id'  => $obj_id,
-                'action_done_id' => $add_comment
-            ];
-            insert_log('profile_comment', $log_array);
-
-            //Updating Number of comments of user if comment is not a reply
-            if ($reply_to < 1) {
-                $this->update_comments_count($obj_id);
-            }
-        }
-        return $add_comment;
-    }
-
-    /**
-     * Function used to remove video comment
-     * @throws Exception
-     */
-    function delete_comment($cid, $is_reply = false)
-    {
-        global $myquery;
-        $remove_comment = $myquery->delete_comment($cid, 'c', $is_reply);
-        if ($remove_comment) {
-            //Updating Number of comments of video
-            $this->update_comments_count($obj_id);
-        }
-        return $remove_comment;
-    }
-
-    /**
      * Function used to get number of videos uploaded by user
      *
      * @param      $uid
@@ -2052,7 +2191,7 @@ class userquery extends CBCategory
         $select = '';
         $join = '';
         $group = '';
-        $version = get_current_version();
+        $version = Update::getInstance()->getDBVersion();
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
             $select = ', GROUP_CONCAT(T.name SEPARATOR \',\') as profile_tags';
             $join = ' LEFT JOIN ' . tbl('user_tags') . ' UT ON UP.userid = UT.id_user
@@ -2761,6 +2900,7 @@ class userquery extends CBCategory
 
     /**
      * My Account links Edited on 12 march 2014 for user account links
+     * @throws Exception
      */
     function my_account_links()
     {
@@ -3627,8 +3767,7 @@ class userquery extends CBCategory
             ];
             $fields['users'][] = 'last_active';
             $fields['users'][] = 'total_collections';
-            $fields['users'][] = 'total_groups';
-            $query = ' SELECT ' . table_fields($fields) . ' FROM ' . tbl('users') . ' AS users ';
+            $query = ' SELECT ' . table_fields($fields) . ' FROM ' . cb_sql_table('users');
             $query .= ' LEFT JOIN ' . cb_sql_table('user_profile', 'profile') . ' ON users.userid = profile.userid ';
 
             if ($cond) {
@@ -3657,6 +3796,7 @@ class userquery extends CBCategory
 
     /**
      * Function used to perform several actions with a video
+     * @throws Exception
      */
     function action($case, $uid)
     {
@@ -3725,109 +3865,6 @@ class userquery extends CBCategory
                 e(lang('usr_uuban_msg'), 'm');
                 break;
         }
-    }
-
-    /**
-     * Function used to use to initialize search object for video section
-     * op=>operator (AND OR)
-     */
-    function init_search()
-    {
-        $this->search = new cbsearch;
-        $this->search->db_tbl = 'users';
-        // added more conditions usr_status='Ok' and ban_status='no'
-        /*
-        array('field'=>'usr_status','type'=>'=','var'=>'Ok','op'=>'AND','value'=>'static'),
-            array('field'=>'ban_status','type'=>'=','var'=>'no','op'=>'AND','value'=>'static'),
-        */
-        if (!has_access('admin_access', true)) {
-            $this->search->columns = [
-                ['field' => 'username', 'type' => 'LIKE', 'var' => '%{KEY}%'],
-                ['field' => 'usr_status', 'type' => '=', 'var' => 'Ok', 'op' => 'AND', 'value' => 'static'],
-                ['field' => 'ban_status', 'type' => '=', 'var' => 'no', 'op' => 'AND', 'value' => 'static']
-            ];
-        } else {
-            $this->search->columns = [
-                ['field' => 'username', 'type' => 'LIKE', 'var' => '%{KEY}%'],
-            ];
-        }
-        $version = get_current_version();
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
-            $this->search->columns[] = ['field' => 'name', 'type' => 'LIKE', 'var' => '%{KEY}%', 'op' => 'OR', 'db'=>'tags'];
-        }
-
-        $this->search->cat_tbl = $this->cat_tbl;
-
-        $this->search->display_template = LAYOUT . '/blocks/user.html';
-        $this->search->template_var = 'user';
-        $this->search->multi_cat = false;
-        $this->search->date_added_colum = 'doj';
-        $this->search->results_per_page = config('users_items_search_page');
-
-        /**
-         * Setting up the sorting thing
-         */
-
-        $sorting = [
-            'doj'            => lang('date_added'),
-            'profile_hits'   => lang('views'),
-            'total_comments' => lang('comments'),
-            'total_videos'   => lang('videos')
-        ];
-
-        $this->search->sorting = [
-            'doj'            => ' doj DESC',
-            'profile_hits'   => ' profile_hits DESC',
-            'total_comments' => ' total_comments DESC',
-            'total_videos'   => ' total_videos DESC'
-        ];
-
-        /**
-         * Setting Up The Search Fields
-         */
-        $default = $_GET;
-        if (is_array($default['category'])) {
-            $cat_array = [$default['category']];
-        }
-        $uploaded = $default['datemargin'];
-        $sort = $default['sort'];
-
-        $this->search->search_type['channels'] = ['title' => lang('users')];
-
-        $fields = [
-            'query'       => [
-                'title' => lang('keywords'),
-                'type'  => 'textfield',
-                'name'  => 'query',
-                'id'    => 'query',
-                'value' => mysql_clean($default['query'])
-            ],
-            'category'    => [
-                'title'         => lang('category'),
-                'type'          => 'checkbox',
-                'name'          => 'category[]',
-                'id'            => 'category',
-                'value'         => ['category', $cat_array],
-                'category_type' => 'user'
-            ],
-            'date_margin' => [
-                'title'   => lang('joined'),
-                'type'    => 'dropdown',
-                'name'    => 'datemargin',
-                'id'      => 'datemargin',
-                'value'   => $this->search->date_margins(),
-                'checked' => $uploaded
-            ],
-            'sort'        => [
-                'title'   => lang('sort_by'),
-                'type'    => 'dropdown',
-                'name'    => 'sort',
-                'value'   => $sorting,
-                'checked' => $sort
-            ]
-        ];
-
-        $this->search->search_type['users']['fields'] = $fields;
     }
 
     /**
@@ -4816,7 +4853,7 @@ class userquery extends CBCategory
                     'group_name' => lang('channel_settings'),
                     'group_id'   => 'channel_settings',
                     'fields'     => array_merge($this->load_channel_settings($default)
-                        , $this->load_privacy_field($default)),
+                        , $this->load_privacy_field($default))
                 ]
             ];
         }

@@ -1,11 +1,4 @@
 <?php
-/**
- * This will let you edit ClipBucket templatates
- * @License : Attribution Assurance License -- http://www.opensource.org/licenses/attribution.php
- * @Since : jan 14 2010
- * @Author : Arslan
- */
-
 require_once '../includes/admin_config.php';
 $userquery->admin_login_check();
 $userquery->perm_check('manage_template_access', true);

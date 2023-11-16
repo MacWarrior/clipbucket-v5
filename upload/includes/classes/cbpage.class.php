@@ -1,12 +1,6 @@
 <?php
-/**
- * Class use to create and manage simple pages
- * ie About us, Privacy Policy etc
- */
-
 class cbpage
 {
-
     var $page_tbl = '';
 
     /**
@@ -23,32 +17,45 @@ class cbpage
      * @param $param array
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
-    function create_page($param)
+    function create_page(array $param): bool
     {
         global $db;
         $name = mysql_clean($param['page_name']);
         $title = mysql_clean($param['page_title']);
-        $content = addslashes($param['page_content']);
+        $content = mysql_clean($param['page_content']);
 
         if (empty($name)) {
-            e(lang("page_name_empty"));
+            e(lang('page_name_empty'));
         }
         if (empty($title)) {
-            e(lang("page_title_empty"));
+            e(lang('page_title_empty'));
         }
         if (empty($content)) {
-            e(lang("page_content_empty"));
+            e(lang('page_content_empty'));
         }
 
         if (!error()) {
-            $db->insert(tbl($this->page_tbl), ["page_name", "page_title", "page_content", "userid", "date_added", "active"],
-                [$name, $title, "|no_mc|" . $content, user_id(), now(), "yes"]);
-            e(lang("new_page_added_successfully"), "m");
+            $db->insert(tbl($this->page_tbl), ['page_name', 'page_title', 'page_content', 'userid', 'date_added', 'active', 'page_order'],
+                [$name, $title, '|no_mc|' . $content, user_id(), now(), 'yes', $this->getMaxPageOrder()]);
+            e(lang('new_page_added_successfully'), 'm');
             return false;
         }
         return false;
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getMaxPageOrder(): int
+    {
+        global $db;
+        $result = $db->select(tbl($this->page_tbl), 'MAX(page_order)+1 AS max_page_order');
+        if (count($result) > 0) {
+            return (int)$result[0]['max_page_order'];
+        }
+        return 0;
     }
 
     /**
@@ -56,13 +63,13 @@ class cbpage
      *
      * @param $id
      *
-     * @return bool
-     * @throws \Exception
+     * @return bool|array
+     * @throws Exception
      */
     function get_page($id)
     {
         global $db;
-        $result = $db->select(tbl($this->page_tbl), "*", " page_id ='$id' ");
+        $result = $db->select(tbl($this->page_tbl), '*', ' page_id ='.mysql_clean($id));
         if (count($result) > 0) {
             return $result[0];
         }
@@ -75,7 +82,7 @@ class cbpage
      * @param bool $params
      *
      * @return array|bool
-     * @throws \Exception
+     * @throws Exception
      */
     function get_pages($params = false)
     {
@@ -92,24 +99,24 @@ class cbpage
         }
 
         if (isset($params['active'])) {
-            $conds[] = " active='" . $params['active'] . "'";
+            $conds[] = ' active=\'' . $params['active'] . '\'';
         }
 
         if (isset($params['display_only'])) {
-            $conds[] = " display='yes' ";
+            $conds[] = ' display=\'yes\' ';
         }
 
         if ($conds) {
             foreach ($conds as $c) {
                 if ($cond) {
-                    $cond .= " AND ";
+                    $cond .= ' AND ';
                 }
 
                 $cond .= $c;
             }
         }
 
-        $result = $db->select(tbl($this->page_tbl), "*", $cond, $limit, $order);
+        $result = $db->select(tbl($this->page_tbl), '*', $cond, $limit, $order);
         if (count($result) > 0) {
             return $result;
         }
@@ -120,7 +127,7 @@ class cbpage
      * Function used to edit page
      *
      * @param $param
-     * @throws \Exception
+     * @throws Exception
      */
     function edit_page($param)
     {
@@ -131,24 +138,25 @@ class cbpage
         $content = mysql_clean($param['page_content']);
 
         $page = $this->get_page($id);
+        error_log($id);
 
         if (!$page) {
-            e(lang("page_doesnt_exist"));
+            e(lang('page_doesnt_exist'));
         }
         if (empty($name)) {
-            e(lang("page_name_empty"));
+            e(lang('page_name_empty'));
         }
         if (empty($title)) {
-            e(lang("page_title_empty"));
+            e(lang('page_title_empty'));
         }
         if (empty($content)) {
-            e(lang("page_content_empty"));
+            e(lang('page_content_empty'));
         }
 
         if (!error()) {
-            $db->update(tbl($this->page_tbl), ["page_name", "page_title", "page_content"],
-                [$name, $title, '|no_mc|' . $content], " page_id='$id'");
-            e(lang("page_updated"), "m");
+            $db->update(tbl($this->page_tbl), ['page_name', 'page_title', 'page_content'],
+                [$name, $title, '|no_mc|' . $content], ' page_id='.mysql_clean($id));
+            e(lang('page_updated'), 'm');
         }
     }
 
@@ -156,7 +164,7 @@ class cbpage
      * Function used to delete page
      *
      * @param $id
-     * @throws \Exception
+     * @throws Exception
      */
     function delete_page($id)
     {
@@ -164,11 +172,11 @@ class cbpage
 
         $page = $this->get_page($id);
         if (!$page) {
-            e(lang("page_doesnt_exist"));
+            e(lang('page_doesnt_exist'));
         }
         if (!error()) {
-            $db->delete(tbl($this->page_tbl), ["page_id"], [$id]);
-            e(lang("page_deleted"), "m");
+            $db->delete(tbl($this->page_tbl), ['page_id'], [mysql_clean($id)]);
+            e(lang('page_deleted'), 'm');
         }
     }
 
@@ -179,7 +187,7 @@ class cbpage
      *
      * @return string
      */
-    function page_link($pdetails)
+    function page_link($pdetails): string
     {
         if (SEO == 'yes') {
             return '/page/' . $pdetails['page_id'] . '/' . SEO(strtolower($pdetails['page_name']));
@@ -193,9 +201,10 @@ class cbpage
      * @param $id
      *
      * @return string
-     * @throws \Exception
+     * @throws Exception
+     * @used-by photo_upload.html, signup.html
      */
-    function get_page_link($id)
+    function get_page_link($id): string
     {
         $page = $this->get_page($id);
         return $this->page_link($page);
@@ -206,50 +215,46 @@ class cbpage
      *
      * @param $type
      * @param $id
-     * @throws \Exception
+     * @throws Exception
      */
     function page_actions($type, $id)
     {
         global $db;
         $page = $this->get_page($id);
         if (!$page) {
-            e(lang("page_doent_exist"));
-        } else {
-            switch ($type) {
-                case "activate";
-                    $db->update(tbl($this->page_tbl), ["active"], ["yes"], " page_id='$id'");
-                    e(lang("page_activated"), "m");
-                    break;
-                case "deactivate";
-                    $db->update(tbl($this->page_tbl), ["active"], ["no"], " page_id='$id'");
-                    e(lang("page_deactivated"), "m");
-                    break;
-                case "delete";
-                    {
-                        if ($page['delete_able'] == 'yes') {
-                            $db->delete(tbl($this->page_tbl), ["page_id"], [$id]);
-                            e(lang("page_deleted"), "m");
-                        } else {
-                            e(lang("you_cant_delete_this_page"));
-                        }
-                    }
+            e(lang('page_doent_exist'));
+            return;
+        }
 
-                    break;
+        switch ($type) {
+            case 'activate';
+                $db->update(tbl($this->page_tbl), ['active'], ['yes'], ' page_id='.mysql_clean($id));
+                e(lang('page_activated'), 'm');
+                break;
 
-                case "display":
-                    {
-                        $db->update(tbl($this->page_tbl), ["display"], ["yes"], " page_id='$id'");
-                        e(lang("Page displaye mode has been changed"), "m");
-                    }
-                    break;
+            case 'deactivate';
+                $db->update(tbl($this->page_tbl), ['active'], ['no'], ' page_id='.mysql_clean($id));
+                e(lang('page_deactivated'), 'm');
+                break;
 
-                case "hide":
-                    {
-                        $db->update(tbl($this->page_tbl), ["display"], ["no"], " page_id='$id'");
-                        e(lang("Page displaye mode has been changed"), "m");
-                    }
-                    break;
-            }
+            case 'delete';
+                if ($page['delete_able'] == 'yes') {
+                    $db->delete(tbl($this->page_tbl), ['page_id'], [mysql_clean($id)]);
+                    e(lang('page_deleted'), 'm');
+                } else {
+                    e(lang('you_cant_delete_this_page'), 'w');
+                }
+                break;
+
+            case 'display':
+                $db->update(tbl($this->page_tbl), ['display'], ['yes'], ' page_id='.mysql_clean($id));
+                e(lang('Page display mode has been changed'), 'm');
+                break;
+
+            case 'hide':
+                $db->update(tbl($this->page_tbl), ['display'], ['no'], ' page_id='.mysql_clean($id));
+                e(lang('Page display mode has been changed'), 'm');
+                break;
         }
     }
 
@@ -259,14 +264,14 @@ class cbpage
      * @param $id
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
-    function is_active($id)
+    function is_active($id): bool
     {
         $id = mysql_clean($id);
 
         global $db;
-        $result = $db->count(tbl($this->page_tbl), "page_id", " page_id='$id' AND active='yes' ");
+        $result = $db->count(tbl($this->page_tbl), 'page_id', 'page_id='.mysql_clean($id).' AND active=\'yes\'');
         if ($result > 0) {
             return true;
         }
@@ -275,13 +280,14 @@ class cbpage
 
     /**
      * Function used to update order
+     * @throws Exception
      */
     function update_order()
     {
         global $db;
         $pages = $this->get_pages();
         foreach ($pages as $page) {
-            $db->update(tbl($this->page_tbl), ["page_order"], [$_POST['page_ord_' . $page['page_id']]], " page_id='" . $page['page_id'] . "'");
+            $db->update(tbl($this->page_tbl), ['page_order'], [$_POST['page_ord_' . $page['page_id']]], ' page_id=' . mysql_clean($page['page_id']));
         }
     }
 }

@@ -50,10 +50,6 @@ if ($userquery->perm_check('view_channel', true)) {
         $userquery->subscribe_user($udetails['userid']);
     }
 
-    //Adding Comment
-    if (isset($_POST['add_comment'])) {
-        $userquery->add_comment($_POST['comment'], $udetails['userid']);
-    }
     //Calling view channel functions
     call_view_channel_functions($udetails);
 
@@ -102,6 +98,17 @@ if ($userquery->perm_check('view_channel', true)) {
 
     if ($Cbucket->show_page || $udetails) {
         template_files('view_channel.html');
+
+        if(in_dev()){
+            $min_suffixe = '';
+        } else {
+            $min_suffixe = '.min';
+        }
+
+        $Cbucket->addJS(['pages/view_channel/view_channel'.$min_suffixe.'.js' => 'admin']);
+        $Cbucket->addJS(['/plupload/js/plupload.full.min.js' => 'admin']);
     }
 }
+
+
 display_it();

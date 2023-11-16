@@ -29,7 +29,7 @@ $userquery->login_user(post('username'), post('password'))
             <br/>
             <div class="field">
                 <label for="title">Website title</label>
-                <input name="title" type="text" id="title" class="form-control" value="ClipBucket v<?php echo VERSION . ' ' . STATE; ?>">
+                <input name="title" type="text" id="title" class="form-control" value="ClipBucketV5 - v<?php echo VERSION . ' ' . STATE; ?>">
                 <p class="grey-text font-size" style="margin-top:0;">
                     Its your website title and you can change it from admin area
                 </p>

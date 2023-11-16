@@ -71,7 +71,7 @@ switch ($mode) {
             assign('flags', $flags);
             assign('collection', $cdetails);
         } else {
-            e('Collection does not exist');
+            e(lang('collection_not_exist'));
         }
         break;
 }

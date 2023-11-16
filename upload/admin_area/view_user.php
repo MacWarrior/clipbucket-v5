@@ -1,5 +1,5 @@
 <?php
-global $userquery, $pages, $myquery, $CBucket, $Cbucket;
+global $userquery, $pages, $myquery, $Cbucket, $Cbucket;
 
 require_once '../includes/admin_config.php';
 $userquery->admin_login_check();
@@ -69,12 +69,6 @@ if ($udetails) {
         $userquery->remove_user_pms($uid);
     }
 
-    //Deleting Comment
-    $cid = mysql_clean($_GET['delete_comment']);
-    if (!empty($cid)) {
-        $myquery->delete_comment($cid);
-    }
-
     if (isset($_POST['update_user'])) {
         $userquery->update_user($_POST);
         if (!error()) {
@@ -94,7 +88,7 @@ if ($udetails) {
     assign('catparmas', 'catparmas');
 } else {
     e('No User Found');
-    $CBucket->show_page = false;
+    $Cbucket->show_page = false;
 }
 if (in_dev()) {
     $min_suffixe = '';

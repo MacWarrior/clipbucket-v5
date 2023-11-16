@@ -3,6 +3,8 @@ define("THIS_PAGE", 'download');
 define("PARENT_PAGE", 'videos');
 
 require 'includes/config.inc.php';
+global $userquery, $pages, $cbvid, $Cbucket;
+
 $userquery->perm_check('download_video', true);
 $pages->page_redir();
 

@@ -7,7 +7,7 @@ class Tags
      */
     public static function getTags($limit = 'false', $cond = false)
     {
-        $version = get_current_version();
+        $version = Update::getInstance()->getDBVersion();
         if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
             e(lang('missing_table'));
             return [];
@@ -37,7 +37,7 @@ class Tags
      */
     public static function countTags($cond)
     {
-        $version = get_current_version();
+        $version = Update::getInstance()->getDBVersion();
         if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
             e(lang('missing_table'));
             return 0;
@@ -59,7 +59,7 @@ class Tags
      */
     public static function deleteTag($id_tag)
     {
-        $version = get_current_version();
+        $version = Update::getInstance()->getDBVersion();
         if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
             e(lang('missing_table'));
             return false;
@@ -92,7 +92,7 @@ class Tags
      */
     public static function updateTag($name, $id_tag):bool
     {
-        $version = get_current_version();
+        $version = Update::getInstance()->getDBVersion();
         if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
             e(lang('missing_table'));
             return false;
@@ -117,7 +117,7 @@ class Tags
      */
     public static function saveTags(string $tags, string $object_type, int $object_id)
     {
-        $version = get_current_version();
+        $version = Update::getInstance()->getDBVersion();
         if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
             e(lang('missing_table'));
             return false;
@@ -167,10 +167,9 @@ class Tags
             $sql_insert_tag = 'INSERT IGNORE INTO ' . tbl('tags') . ' (id_tag_type, name) (SELECT ' . mysql_clean($id_type) . ', jsontable.tags
                           FROM JSON_TABLE(CONCAT(\'["\', REPLACE(LOWER(\'' . mysql_clean($tags) . '\'), \',\', \'","\'), \'"]\'), \'$[*]\' COLUMNS (`tags` TEXT PATH \'$\')) jsontable)';
             if (!$db->execute($sql_insert_tag, 'insert')) {
-                e(lang('error_inserting_tags'));
+                e(lang('technical_error'));
                 return false;
             }
-
 
             $sql_link_tag = 'INSERT IGNORE INTO ' . tbl($table_tag) . ' (`id_tag`, `' . $id_field . '`) (
             SELECT T.id_tag, ' . mysql_clean($object_id) . '
@@ -178,7 +177,7 @@ class Tags
             INNER JOIN ' . tbl('tags') . ' AS T ON T.name = LOWER(jsontable.tags) COLLATE utf8mb4_unicode_520_ci AND T.id_tag_type = ' . mysql_clean($id_type) . '
         )';
             if (!$db->execute($sql_link_tag, 'insert')) {
-                e(lang('error_linking_tags'));
+                e(lang('technical_error'));
                 return false;
             }
         }
@@ -192,7 +191,7 @@ class Tags
     public static function fill_auto_complete_tags($object_type): array
     {
         global $db;
-        $version = get_current_version();
+        $version = Update::getInstance()->getDBVersion();
         if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
             e(lang('missing_table'));
             return [];
@@ -220,7 +219,7 @@ class Tags
      */
     public static function getTagTypes(): array
     {
-        $version = get_current_version();
+        $version = Update::getInstance()->getDBVersion();
         if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
             e(lang('missing_table'));
             return [];

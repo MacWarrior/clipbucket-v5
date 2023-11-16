@@ -1,4 +1,5 @@
 <?php
+define('THIS_PAGE', 'members');
 require_once '../includes/admin_config.php';
 
 global $userquery, $pages, $eh;

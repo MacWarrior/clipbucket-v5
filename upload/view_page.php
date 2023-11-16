@@ -1,18 +1,25 @@
 <?php
-define("THIS_PAGE", 'view_page');
-define("PARENT_PAGE", 'home');
+define('THIS_PAGE', 'view_page');
+define('PARENT_PAGE', 'home');
 require 'includes/config.inc.php';
+global $pages, $cbpage, $Cbucket;
+
 $pages->page_redir();
 
 $pid = $_GET['pid'];
 $pid = mysql_clean($pid);
 
 $page = $cbpage->get_page($pid);
+
+if($page['active'] == 'no' && !has_access('admin_access', true)){
+    redirect_to(BASEURL);
+}
+
 if ($page) {
     assign('page', $page);
     subtitle($page['page_title']);
 } else {
-    e(lang("page_doesnt_exist"));
+    e(lang('page_doesnt_exist'));
     $Cbucket->show_page = false;
 }
 

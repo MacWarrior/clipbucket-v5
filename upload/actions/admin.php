@@ -1,5 +1,6 @@
 <?php
 require_once '../includes/admin_config.php';
+global $userquery, $myquery, $cbvid, $eh, $db;
 $userquery->admin_login_check();
 
 $mode = $_POST['mode'];
@@ -19,23 +20,7 @@ switch ($mode) {
         break;
 
     case 'delete_comment':
-        $type = $_POST['type'];
-        switch ($type) {
-            case 'v':
-            case 'video':
-            default:
-                $cid = mysql_clean($_POST['cid']);
-                $type_id = $myquery->delete_comment($cid);
-                $cbvid->update_comments_count($type_id);
-                break;
-
-            case 'u':
-            case 'c':
-                $cid = mysql_clean($_POST['cid']);
-                $type_id = $myquery->delete_comment($cid);
-                $userquery->update_comments_count($type_id);
-                break;
-        }
+        Comments::delete(['comment_id' => $_POST['cid']]);
         $error = $eh->get_error();
         $warning = $eh->get_warning();
         $message = $eh->get_message();
@@ -58,9 +43,7 @@ switch ($mode) {
         break;
 
     case 'spam_comment':
-        $cid = mysql_clean($_POST['cid']);
-
-        $rating = $myquery->spam_comment($cid);
+        $rating = Comments::setSpam($_POST['cid']);
         $error = $eh->get_error();
         $warning = $eh->get_warning();
         $message = $eh->get_message();
@@ -83,9 +66,7 @@ switch ($mode) {
         break;
 
     case 'remove_spam':
-        $cid = mysql_clean($_POST['cid']);
-
-        $rating = $myquery->remove_spam($cid);
+        Comments::unsetSpam($_POST['cid']);
         $error = $eh->get_error();
         $warning = $eh->get_warning();
         $message = $eh->get_message();

@@ -38,7 +38,7 @@
 							<div class="name">
 								<a href="#">{display_clean($comment.anonym_name)}</a>
 							</div>
-							<div class="text">{display_clean($comment.comment|comment)}</div>
+							<div class="text">{display_clean($comment.comment)|comment}</div>
 							<div class="tools">
 								<a href="{getCommentAdminLink($comment.type, $comment.type_id)}" class="btn btn-minier btn-info">
 									<i class="icon-only icon-share-alt"></i>
@@ -135,7 +135,7 @@
 			{if config('enable_update_checker')=='1'}
 			<li class="right">
 				<a data-toggle="tab" href="#update">
-					<h5>{lang code='dashboard_update_status'} <span class="status-{get_update_status(true)}"></span></h5>
+					<h5>{lang code='dashboard_update_status'} <span class="status-{$update_checker_status}"></span></h5>
 				</a>
 			</li>
 			{/if}
@@ -143,40 +143,39 @@
 		<div class="tab-content nopadding">
 			<div id="550" class="tab-pane active">
 				<div class="widgetBox">
-					{display_changelog('550')}
+					{$changelog_550}
 				</div>
 			</div>
 			<div id="541" class="tab-pane">
 				<div class="widgetBox">
-					{display_changelog('541')}
+					{$changelog_541}
 				</div>
 			</div>
 			<div id="540" class="tab-pane">
 				<div class="widgetBox">
-					{display_changelog('540')}
+					{$changelog_540}
 				</div>
 			</div>
 			<div id="531" class="tab-pane">
 				<div class="widgetBox">
-					{display_changelog('531')}
+					{$changelog_531}
 				</div>
 			</div>
 			<div id="530-500" class="tab-pane">
 				<div class="widgetBox">
-					{display_changelog('530')}
+					{$changelog_530}
 				</div>
 			</div>
 			{if config('enable_update_checker')=='1'}
 			<div id="update" class="tab-pane">
 				<div class="widgetBox">
-					{get_update_status()}
+					{$update_checker_content}
 				</div>
 			</div>
 			{/if}
 		</div>
-		<!--		message version -->
-		<div>
-			{get_db_update_status()}
+		<div class="row row-no-gutters" style="margin-top:5px;">
+			{Update::getInstance()->displayGlobalSQLUpdateAlert()}
 		</div>
 	</div>
 </div>

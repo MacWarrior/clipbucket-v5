@@ -1,5 +1,5 @@
 #!/bin/bash
-# Clipbucket install on Cent OS 7.8
+# ClipbucketV5 install on Cent OS 7.8
 # PHP : 7.4.X
 # MySQL : 8.0.X
 # FFMPEG : 3.4
@@ -41,7 +41,7 @@ echo ""
 echo "New Mysql ROOT Password : ${MYSQL_ROOT_PASS_NEW}"
 
 echo ""
-echo -ne "Installing Clipbucket sources..."
+echo -ne "Installing ClipbucketV5 sources..."
 mkdir -p /srv/http/clipbucket/ && cd "$_"
 git clone https://github.com/MacWarrior/clipbucket-v5.git ./ > /dev/null 2>&1
 echo -ne " OK"
@@ -102,7 +102,7 @@ echo ""
 echo "- Website URL : http://clipbucket.local"
 
 echo ""
-echo "Clipbucket installation completed"
+echo "ClipbucketV5 installation completed"
 echo ""
 
 # You may have to manually specify a not-default audio codec for video conversion : libfaac

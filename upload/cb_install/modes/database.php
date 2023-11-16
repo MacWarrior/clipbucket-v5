@@ -51,7 +51,7 @@
                 <label class="grey-text" for="dbprefix">Database Prefix</label>
                 <input type="text" name="dbprefix" id="dbprefix" value="cb_" class="form-control">
                 <p class="grey-text font-size" style="margin-top:0;">
-                    If you want to run multiple Clipbucket installations in a single database,<br/>
+                    If you want to run multiple ClipbucketV5 installations in a single database,<br/>
                     change this
                 </p>
             </div>

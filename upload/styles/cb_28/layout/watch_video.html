@@ -195,7 +195,6 @@
 
 			<div class="clearfix comments-block">
 				{if $myquery->is_commentable($vdo,'v')}
-
 				<div class="collectionComments addComment">
 					<h2>
 						{if $vdo.comments_count <= 1 }
@@ -217,7 +216,6 @@
 						</div>
 					</div>
 				</div>
-
 				{else}
 				<div align="center" class="moveL no_comments">
 					{lang code='comm_disabled_for_vid'}
@@ -272,7 +270,9 @@
 					{/section}
 				</div>
 					{if $total_items > 10}
+				<div style="text-align:center;margin-bottom:5px;">
 				<button class="btn btn-primary text-centre" id="playlist-pull" dataList={$cur_playlist} dataLimit="10" dataHit="2">{lang code='load_more'}</button>
+				</div>
 					{/if}
 				{else}			    	
 					{if $videos}

@@ -238,7 +238,11 @@ class ClipBucket
         $menu_already_exists = false;
 
         if (is_null($order)) {
-            $order = max(array_keys($Cbucket->AdminMenu)) + 1;
+            if( empty($Cbucket->AdminMenu) ){
+                $order = 1;
+            } else {
+                $order = max(array_keys($Cbucket->AdminMenu)) + 1;
+            }
         } else {
             if (array_key_exists($order, $Cbucket->AdminMenu)) {
                 do {
@@ -524,7 +528,7 @@ class ClipBucket
      * @param string $type
      *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     function get_countries($type = 'iso2'): array
     {
@@ -569,6 +573,7 @@ class ClipBucket
      * @param bool $ctemplate
      *
      * @return bool|mixed|string
+     * @throws Exception
      */
     function set_the_template($ctemplate = false)
     {
@@ -660,7 +665,7 @@ class ClipBucket
      * @param null $params
      *
      * @return array|void
-     * @throws \Exception
+     * @throws Exception
      */
     function head_menu($params = null)
     {
@@ -775,7 +780,7 @@ class ClipBucket
      * @param null $params
      *
      * @return array|void
-     * @throws \Exception
+     * @throws Exception
      */
     function foot_menu($params = null)
     {

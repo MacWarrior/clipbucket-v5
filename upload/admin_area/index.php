@@ -9,22 +9,10 @@ $userquery->admin_login_check();
 global $breadcrumb;
 $breadcrumb[0] = ['title' => 'Dashboard', 'url' => ''];
 
-$result_array = $array;
-//Getting Video List
-$result_array['limit'] = $get_limit;
-if (!$array['order']) {
-    $result_array['order'] = ' doj DESC LIMIT 5 ';
-}
-
 if (!empty($_GET['finish_upgrade'])) {
-    $eh->add_message('Your database has been successfuly updated to version ' . display_clean($_GET['version']));
+    e('Your database has been successfuly updated to version ' . display_clean($_GET['version']), 'm');
 }
 
-$users = get_users($result_array);
-
-Assign('users', $users);
-
-//////////////////getting todolist/////////////
 $mode = $_POST['mode'];
 if (!isset($mode)) {
     $mode = $_GET['mode'];
@@ -60,9 +48,7 @@ switch ($mode) {
         $myquery->delete_todo($id);
         die();
 }
-///////////////////ends here/////////////
 
-////////////////getting notes
 $mode = $_POST['mode'];
 switch ($mode) {
     case 'add_note':
@@ -80,24 +66,7 @@ switch ($mode) {
         die();
 
     case 'delete_comment':
-        $type = $_POST['type'];
-        switch ($type) {
-            case 'v':
-            case 'video':
-            default:
-                $cid = mysql_clean($_POST['cid']);
-                $type_id = $myquery->delete_comment($cid);
-                $cbvid->update_comments_count($type_id);
-                break;
-
-            case 'u':
-            case 'c':
-                $cid = mysql_clean($_POST['cid']);
-                $type_id = $myquery->delete_comment($cid);
-                $userquery->update_comments_count($type_id);
-                break;
-        }
-
+        Comments::delete(['comment_id' => $_POST['cid']]);
         $error = $eh->get_error();
         $warning = $eh->get_warning();
         $message = $eh->get_message();
@@ -120,8 +89,7 @@ switch ($mode) {
         break;
 
     case 'spam_comment':
-        $cid = mysql_clean($_POST['cid']);
-        $rating = $myquery->spam_comment($cid);
+        $rating = Comments::setSpam($_POST['cid']);
         $error = $eh->get_error();
         $warning = $eh->get_warning();
         $message = $eh->get_message();
@@ -144,8 +112,7 @@ switch ($mode) {
         break;
 
     case 'remove_spam':
-        $cid = mysql_clean($_POST['cid']);
-        $rating = $myquery->remove_spam($cid);
+        Comments::unsetSpam($_POST['cid']);
         $error = $eh->get_error();
         $warning = $eh->get_warning();
         $message = $eh->get_message();
@@ -168,35 +135,25 @@ switch ($mode) {
         break;
 }
 
-/////////////////////////ending notes
-if (!$array['order']) {
-    $result_array['order'] = ' views DESC LIMIT 8 ';
+$params = [];
+$params['limit'] = 10;
+$params['order'] = 'date_added DESC';
+$comments = Comments::getAll($params);
+
+$update = Update::getInstance();
+Assign('VERSION', $update->getCurrentCoreVersion());
+Assign('STATE', strtoupper($update->getCurrentCoreState()));
+Assign('comments', $comments);
+Assign('changelog_550', $update->getChangelogHTML('550'));
+Assign('changelog_541', $update->getChangelogHTML('541'));
+Assign('changelog_540', $update->getChangelogHTML('540'));
+Assign('changelog_531', $update->getChangelogHTML('531'));
+Assign('changelog_530', $update->getChangelogHTML('530'));
+if( config('enable_update_checker') == '1' ){
+    Assign('update_checker_status', $update->getCoreUpdateStatus());
+    Assign('update_checker_content', $update->getUpdateHTML());
 }
 
-$videos = get_videos($result_array);
-
-Assign('videos', $videos);
-
-$comment_cond['limit'] = 10;
-$comment_cond['order'] = 'date_added DESC';
-$comments = getComments($comment_cond);
-Assign('comments', $comments);
-
-$get_limit = create_query_limit($page, 5);
-$videos = $cbvid->action->get_flagged_objects($get_limit);
-Assign('flaggedVideos', $videos);
-
-$get_limit = create_query_limit($page, 5);
-$users = $userquery->action->get_flagged_objects($get_limit);
-Assign('flaggedUsers', $users);
-
-$get_limit = create_query_limit($page, 5);
-$photos = $cbphoto->action->get_flagged_objects($get_limit);
-Assign('flaggedPhotos', $photos);
-
-Assign('baseurl', BASEURL);
-Assign('VERSION', VERSION);
-Assign('STATE', STATE);
 
 if(in_dev()){
     $min_suffixe = '';

@@ -544,44 +544,18 @@
 				},'text');
 		};
 
-		this.rate_comment = function (cid,thumb,type,typeid){
-			$.post(page,
-				{
-					mode : 'rate_comment',
-					thumb : thumb,
-					cid : cid,
-					type : type,
-					typeid : typeid
-				},
-				function(data)
-				{
-					if(!data){
-						alert('No data');
-					} else {
-						if(data.msg !== ''){
-							alert(data.msg);
-						}
-						if(data.rate !== '') {
-							$('#comment_rating_' + cid).html(data.rate);
-						}
-					}
-				},'json');
-		}
-
-		this.delete_comment = function (cid,type){
+		this.delete_comment = function (cid){
 			$.post(page,
 				{
 					mode : 'delete_comment',
-					cid : cid,
-					type : type
+					cid : cid
 				},
 				function(data)
 				{
 					if(!data){
 						alert('No data');
 					} else {
-						if(data.msg)
-						{
+						if(data.msg) {
 							alert(data.msg);
 							$('#comment_'+cid).fadeOut('slow');
 							$('#spam_comment_'+cid).fadeOut('slow');
@@ -1278,109 +1252,6 @@
 			}
 		};
 
-		this.groupsAjax = function(event,selector,divSelector){
-			event.preventDefault(); // prevent from redirecting to URL
-			var ajaxPage, onLink = false, PreserveHTML, ParentTag, DIV;
-			if(divSelector === undefined){
-				divSelector = 'ajaxGroupResultContainer';
-			}
-			var jqueryObj, javaObj;
-			if(selector.href) // Means function is on link
-			{
-				ajaxPage = selector.href;
-				onLink = true;
-				jqueryObj = $(selector);
-				javaObj = selector;
-			} else {
-				ajaxPage = selector.childNodes[0].href;
-				jqueryObj = $(selector.childNodes[0]);
-				javaObj = selector.childNodes[0];
-			}
-			if(ajaxPage === 'undefined') {
-				alert('URL not found');
-				return false;
-			}
-
-			PreserveHTML = jqueryObj.html();
-			setPageHash(ajaxPage);
-			if(onLink === true) {
-				ParentTag = jqueryObj.parent().parent();
-				ParentTag.children().filter('.selected').removeClass('selected');
-				jqueryObj.parent().addClass('selected');
-			} else {
-				ParentTag = jqueryObj.parent();
-				ParentTag.children().filter('.selected').removeClass('selected');
-				jqueryObj.addClass('selected');
-			}
-			jqueryObj.html(this.loading_img);
-			$('#'+divSelector).on('load',ajaxPage+' #'+divSelector+'',function(response, status, xhr){
-				jqueryObj.html(PreserveHTML);
-				if(document.getElementById('flag_item')){
-					$('#flag_item').show();
-				}
-			});
-		};
-
-		this.encode64 = function(input) {
-			var output = nStringMaker();
-			var chr1, chr2, chr3;
-			var enc1, enc2, enc3, enc4;
-			var i = 0;
-
-			while (i < input.length) {
-				chr1 = input.charCodeAt(i++);
-				chr2 = input.charCodeAt(i++);
-				chr3 = input.charCodeAt(i++);
-
-				enc1 = chr1 >> 2;
-				enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
-				enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
-				enc4 = chr3 & 63;
-
-				if (isNaN(chr2)) {
-					enc3 = enc4 = 64;
-				} else if (isNaN(chr3)) {
-					enc4 = 64;
-				}
-
-				output.append(this.keyStr.charAt(enc1) + this.keyStr.charAt(enc2) + this.keyStr.charAt(enc3) + this.keyStr.charAt(enc4));
-			}
-
-			return output.toString();
-		};
-
-		this.decode64 = function(input) {
-			var output = nStringMaker();
-			var chr1, chr2, chr3;
-			var enc1, enc2, enc3, enc4;
-			var i = 0;
-
-			// remove all characters that are not A-Z, a-z, 0-9, +, /, or =
-			input = input.replace(/[^A-Za-z0-9\+\/\=]/g, '');
-
-			while (i < input.length) {
-				enc1 = this.keyStr.indexOf(input.charAt(i++));
-				enc2 = this.keyStr.indexOf(input.charAt(i++));
-				enc3 = this.keyStr.indexOf(input.charAt(i++));
-				enc4 = this.keyStr.indexOf(input.charAt(i++));
-
-				chr1 = (enc1 << 2) | (enc2 >> 4);
-				chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
-				chr3 = ((enc3 & 3) << 6) | enc4;
-
-				output.append(String.fromCharCode(chr1));
-
-				if (enc3 != 64) {
-					output.append(String.fromCharCode(chr2));
-				}
-				if (enc4 != 64) {
-					output.append(String.fromCharCode(chr3));
-				}
-			}
-
-			return output.toString();
-		};
-
 		this.getAllComments = function(type,type_id,last_update,pageNum,total,object_type,admin){
 			$('#userCommentsList').html("<div style='padding:5px 0;'>"+loading+'</div>');
 			$.ajax({
@@ -1694,67 +1565,71 @@
 			});
 		}
 
-		this.add_playlistNew = function (mode,vid,form_id,objtype){
+		this.addToPlaylist = function (vid,form_id,objtype){
 			curObj = this;
-			$('#playlist_form_result').css('display','block').html('loading');
-			switch(mode)
-			{
-				case 'add':
-					$.post(page,
-						{
-							mode : 'add_playlist',
-							id : vid,
-							objtype : objtype,
-							pid : $('#playlist_id option:selected').val()
-						},
-						function(data)
-						{
-							$('#playlist_form_result').html('');
-							if(!data){
-								alert('No data');
-							} else {
-								if(data.err.length > 2) {
-									cleanedHtml = $.parseHTML(data.err);
-									var msg = $(cleanedHtml).html();
-									curObj.throwHeadMsg('danger',msg, 5000, true);
-								}
+			$('#playlist_form_result').html(loading).show();
+			$.post(page,
+				{
+					mode : 'add_playlist',
+					id : vid,
+					objtype : objtype,
+					pid : $('#playlist_id option:selected').val()
+				},
+				function(data)
+				{
+					if(!data){
+						alert('No data');
+					} else {
+						if(data.err.length > 2) {
+							cleanedHtml = $.parseHTML(data.err);
+							var msg = $(cleanedHtml).html();
+							curObj.throwHeadMsg('danger',msg, 5000, true);
+						}
 
-								if(data.msg.length > 2) {
-									cleanedHtml = $.parseHTML(data.msg);
-									var msg = $(cleanedHtml).find('div.alert').html();
-									curObj.throwHeadMsg('success',msg, 5000, true);
-									$('#'+form_id).css('display','none');
-								}
+						if(data.msg.length > 2) {
+							cleanedHtml = $.parseHTML(data.msg);
+							var msg = $(cleanedHtml).find('div.alert').html();
+							curObj.throwHeadMsg('success',msg, 5000, true);
+							$('#addPlaylistCont').toggle();
+						}
+					}
+					$('#playlist_form_result').hide();
+				},'json'
+			);
+		};
 
-							}
-						},'json');
-					break;
+		this.createPlaylist = function (vid,form_id,objtype){
+			curObj = this;
+			$('#playlist_form_result').html(loading).show();
+			$.post(page, {
+					mode : 'add_new_playlist',
+					id : vid,
+					objtype : objtype,
+					plname : $('#playlist_name').val()
+				},
+				function(data) {
+					if(!data){
+						alert('No data');
+					} else {
+						if(data.err.length > 2) {
+							cleanedHtml = $.parseHTML(data.err);
+							var msg = $(cleanedHtml).html();
+							curObj.throwHeadMsg('danger',msg, 5000, true);
+						}
 
-				case 'new':
-					$.post(page,
-						{
-							mode : 'add_new_playlist',
-							id : vid,
-							objtype : objtype,
-							plname : $('#playlist_name').val()
-						},
-						function(data)
-						{
-							if(!data){
-								alert('No data');
-							} else {
-								if(data.err ) {
-									$('#playlist_form_result').css('display','block').html(data.err);
-								}
-
-								if(data.msg) {
-									$('#playlist_form_result').css('display','block').html(data.msg);
-									$('#'+form_id).css('display','none');
-								}
-							}
-						},'json');
-					break;
-			}
+						if(data.msg) {
+							cleanedHtml = $.parseHTML(data.msg);
+							var msg = $(cleanedHtml).find('div.alert').html();
+							curObj.throwHeadMsg('success',msg, 5000, true);
+							$('#'+form_id)[0].reset();
+							$('#addPlaylistCont').toggle();
+							$('#add_playlist_form').css('display','block');
+							$('#new_playlist_form').css('display','none')
+						}
+					}
+					$('#playlist_form_result').hide();
+				},'json'
+			);
 		};
 
 		this.getModalVideo = function(video_id){
@@ -1772,15 +1647,17 @@
 
 						$('.my-modal-content').attr('id',vData.videoid).html(data.video).promise().done(function(){
 							let videoplayer = $('.my-modal-content').find('video')[0];
-							let playPromise = videoplayer.play();
-							if (playPromise !== null){
-								playPromise.catch(() => {
-									videoplayer.play();
-									document.querySelector('.player-holder video').addEventListener( "loadedmetadata", function (e) {
-										adaptRatioPlayer();
-									});
-								})
-							}
+
+							document.querySelector('.player-holder video').addEventListener( "loadedmetadata", function (e) {
+								adaptRatioPlayer();
+
+								let playPromise = videoplayer.play();
+								if (playPromise !== null){
+									playPromise.catch(() => {
+										videoplayer.play();
+									})
+								}
+							});
 
 							let domVideos = $(document).find('video');
 							if (domVideos.length > 0){

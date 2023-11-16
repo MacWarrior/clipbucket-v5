@@ -202,7 +202,7 @@ class Upload
                 $query_field[] = 'status';
                 $query_val[] = 'Successful';
             }
-            $version = get_current_version();
+            $version = Update::getInstance()->getDBVersion();
             if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
                 $query_field[] = 'tags';
                 $query_val[] = '';

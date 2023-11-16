@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"265",
+  "revision":"290",
   "status":"dev",
   "detail":[
     {
@@ -82,12 +82,15 @@
         ,"Implement tag management"
         ,"Implement cleanup orphan tags tool"
         ,"Add new option to enable RSS feeds"
+        ,"Fix dashboard comments"
+        ,"Fix custom page creation <i>#275</i>"
+        ,"Update page management display"
       ]
     },
     {
       "title": "Miscellaneous",
       "description": [
-        "Cleanup code <i>#251</i>"
+        "Cleanup code <i>#251, #277</i>"
         ,"Remove unused config"
         ,"Remove unused DB columns & tables"
         ,"Fix installation process"
@@ -116,6 +119,10 @@
         ,"Separate and minify CSS & JS from templates"
         ,"Implement hidden input type"
         ,"Refactor tag storage and management"
+        ,"Refactor comments management"
+        ,"Fix SQL timeout"
+        ,"Update Plupload to 3.1.5 <i>#281</i>"
+        ,"Refactor update and version"
       ]
     },
     {
@@ -125,7 +132,7 @@
         ,"Add option to enable subtitles"
         ,"Add support for HLS video files"
         ,"Improve video quality selection <i>#230</i> (Thanks joo4mart !)"
-        ,"Update VideoJS to version 8.6.0"
+        ,"Update VideoJS to version 8.6.1"
         ,"Add HLS player default quality option"
         ,"Update resolution plugin compatibility to VideoJS 8.X"
         ,"Add support for CB 4.X commercial version migration"
@@ -175,7 +182,7 @@
         ,"Fix playlist creation <i>#196</i>"
         ,"Fix adding video to playlist <i>#197</i>"
         ,"Fix IE11 compatibility <i>#210</i>"
-        ,"Update jQuery to 3.6.4 <i>#208</i>"
+        ,"Update jQuery to 3.7.1 <i>#208</i>, <i>#281</i>"
         ,"Fix collection deletion"
         ,"Implement recursive collections"
         ,"Fix SQL error on photos page"
@@ -211,12 +218,26 @@
         ,"Fix short search warning"
         ,"Fix home popup video"
         ,"Fix photo collection creation form"
+        ,"Fix collection & playlists count display"
+        ,"Fix photo, video, collection & playlists privacy"
+        ,"Implement photo breadcrumb"
+        ,"Fix custom page privacy"
+        ,"Fix comments display"
+        ,"Refactor video banner"
+        ,"Implement photo banner"
+        ,"Fix channel main video, feed and popular users display"
+        ,"Refactor search <i>#290</i>"
+        ,"Fix homepage pop-up video"
+        ,"Update add to playlist and create playlist forms"
+        ,"Fix video manager"
+        ,"Fix video with old SD/HD conversion"
+        ,"Slightly update privacy policy page"
       ]
     }
   ,{
       "title":"Plugin",
       "description":[
-        "Update Editor's Pick to 2.0.3"
+        "Update Editor's Pick to 2.0.4"
         ,"Update Global Announcement to 2.0.2"
         ,"Update CB Server Thumb to 2.0.0"
         ,"Implement plugin compatibility check"
@@ -241,6 +262,7 @@
         ,"Fix SQL queries"
         ,"Fix default video activation config value"
         ,"Update DB charset"
+        ,"Fix missing component in CentOS 7 script"
       ]
     }
   ]

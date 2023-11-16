@@ -7,9 +7,6 @@ const COOKIE_TIMEOUT = 86400 * 1; // 1
 const GARBAGE_TIMEOUT = COOKIE_TIMEOUT;
 const REMBER_DAYS = 7;
 
-//Create an empty development.dev file in includes folder
-//To Activate Development mode
-
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php');
 
 if (file_exists(dirname(__FILE__) . '/../files/temp/development.dev')) {
@@ -57,12 +54,15 @@ if (!@$in_bg_cron) {
     session_start();
 }
 
-//Required Files
+
+require_once('functions.php');
 require_once('classes/db.class.php');
 require_once('classes/rediscache.class.php');
+require_once('classes/update.class.php');
+require_once('classes/plugin.class.php');
 
 # file with most frequently used functions
-require_once __DIR__ . '/functions.php';
+
 include_once('clipbucket.php');
 check_install('before');
 
@@ -215,8 +215,6 @@ const LOGOS_URL = '/files/logos';
 
 # ADVANCE CACHING
 const CACHE_DIR = BASEDIR . '/cache';
-const COMM_CACHE_DIR = CACHE_DIR . '/comments';
-const COMM_CACHE_TIME = 1000; //in seconds
 
 # User Feeds
 const USER_FEEDS_DIR = CACHE_DIR . '/userfeeds';
@@ -241,7 +239,7 @@ if (has_access('admin_access', true) && !empty($error_redis)) {
 
 $thisurl = curPageURL();
 
-if (need_to_update_version()) {
+if (!Update::isVersionSystemInstalled()) {
     define('NEED_UPDATE', true);
     if (strpos($thisurl, '/admin_area/upgrade_db.php') === false
         && strpos($thisurl, '/admin_area/logout.php') === false
@@ -255,13 +253,12 @@ if (need_to_update_version()) {
 }
 //Setting Time Zone date_default_timezone_set
 require_once('classes/search.class.php');
-require_once('classes/calcdate.class.php');
 require_once('classes/signup.class.php');
 require_once('classes/image.class.php');
 require_once('classes/upload.class.php');
 require_once('classes/ads.class.php');
 require_once('classes/form.class.php');
-require_once('classes/plugin.class.php');
+
 require_once('classes/log.class.php');
 require_once('classes/video.class.php');
 require_once('classes/player.class.php');
@@ -274,11 +271,16 @@ require_once('classes/photos.class.php');
 require_once('classes/cbfeeds.class.php');
 require_once('classes/resizer.class.php');
 
+require_once('classes/comments.class.php');
+
 //Adding Gravatar
 require_once('classes/gravatar.class.php');
 require 'defined_links.php';
 
-$calcdate = new CalcDate();
+# Checking Website Template
+include 'plugin.functions.php';
+include 'plugins_functions.php';
+
 $signup = new signup();
 $Upload = new Upload();
 $adsObj = new AdsManager();
@@ -291,7 +293,6 @@ $imgObj = new ResizeImage();
 $cbvideo = $cbvid = new CBvideo();
 $cbplayer = new CBPlayer();
 $cbemail = new CBEmail();
-$cbsearch = new CBSearch();
 $cbpm = new cb_pm();
 $cbpage = new cbpage();
 $cbindex = new CBreindex();
@@ -366,10 +367,6 @@ $cbphoto->position = $row['watermark_placement'];
 
 define('EMBED_VDO_WIDTH', $row['embed_player_width']);
 define('EMBED_VDO_HEIGHT', $row['embed_player_height']);
-
-# Checking Website Template
-include 'plugin.functions.php';
-include 'plugins_functions.php';
 
 require BASEDIR . '/includes/classes/template.class.php';
 $cbtpl = new CBTemplate();
@@ -466,7 +463,6 @@ $Smarty->assign_by_ref('lang_obj', Language::getInstance());
 $Smarty->assign_by_ref('cbvid', $cbvid);
 $Smarty->assign_by_ref('cbtpl', $cbtpl);
 $Smarty->assign_by_ref('cbplayer', $cbplayer);
-$Smarty->assign_by_ref('cbsearch', $cbsearch);
 $Smarty->assign_by_ref('cbpm', $cbpm);
 $Smarty->assign_by_ref('cbpage', $cbpage);
 $Smarty->assign_by_ref('cbemail', $cbemail);
@@ -520,7 +516,6 @@ $Smarty->register_function('get_photo', 'get_image_file');
 $Smarty->register_function('uploadButton', 'upload_photo_button');
 $Smarty->register_function('embedCodes', 'photo_embed_codes');
 $Smarty->register_function('cbCategories', 'getSmartyCategoryList');
-$Smarty->register_function('getComments', 'getSmartyComments');
 $Smarty->register_function('cbMenu', 'cbMenu');
 
 $Smarty->register_modifier('SetTime', 'SetTime');

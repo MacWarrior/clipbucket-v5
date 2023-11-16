@@ -16,19 +16,18 @@
 	<div class="clearfix">
 		{include file="$style_dir/blocks/view_channel/channel_header.html"}
 	</div>
+	{if user_id() && $user.userid != user_id()}
 	<div class="clearfix report-block" id="report-user-form" style="display:none;">
 		{show_flag_form id=$user.userid type=user}	
 	</div>
+	{/if}
 	<div class="clearfix">
 		<section id="content" class="clearfix">
 			{if $uservideos}
-			<div class="player-items">
-				<div class="clearfix player-holder">
-					<div id="cb_player" class="clearfix cb_player">
-						{FlashPlayer vdetails=$first_video width='100%' height='355'}
-					</div>
+			<div class="clearfix player-holder">
+				<div id="cb_player" class="clearfix cb_player">
+					{FlashPlayer vdetails=$first_video width='100%' height='355'}
 				</div>
-				<img src="{$theme}/images/player-ratio.png" class="playerRatio"/>
 			</div>
 			{/if}
 			<div id="messageFav" class="alert alert-info marginTop" style="display:none;"></div>
@@ -155,8 +154,8 @@
 						<div class="well well-info">{lang code='no_results_found'}</div>
 							{/if}
 					</div>
-					<div class="tab-pane photos fade in clearfix {if $u.show_my_videos == 'no'}active{/if}" id="user-photos">
 
+					<div class="tab-pane photos fade in clearfix {if $u.show_my_videos == 'no'}active{/if}" id="user-photos">
 						{$photos=get_photos(["user"=>$user.userid,"limit" =>9])}
 							{if $photos}
 						<div id="usr-photos" class="clearfix row user_photos">
@@ -175,8 +174,8 @@
 						<div class="well well-info">{lang code='no_results_found'}</div>
 							{/if}
 					</div>
+
 					<div class="tab-pane playlist fade in clearfix" id="user-playlist">
-						{*$u.userid*}
 						{$playlists = $cbvid->action->get_playlists(["user"=>$u.userid,"order"=>"date_added DESC","limit"=>""])}
 						
 						{if $playlists}
@@ -206,7 +205,8 @@
 				{/foreach}
 			</div>
 			{/if}
-			{$popular_users = get_users(['order'=>'profile_hits DESC limit 5'])}
+
+			{$popular_users = get_users(['cond' => 'users.username != \''|cat:$smarty.get.user|cat:'\'', 'order'=>'profile_hits DESC limit 5'])}
 			{if $popular_users}
 			<h2>{lang code="popular_users"}</h2>
 			<div class="clearfix sidebar-channels">
@@ -235,224 +235,10 @@
 		
 </div>
 <script>
-(function(window){
-  $(document).ready(function(){
-	$("#report-user").on("click",function(){
-		$("#report-user-form").toggle();
-	});
 	var extensions = "{$extensions}";
 	var baseurl = '/';
 	var channelId = "{$user['userid']}";
-	$.get("{$theme}/js/plupload/js/plupload.full.min.js", function(e){
-	  var uploader = new plupload.Uploader({
-		  browse_button: 'changeCover',
-		  runtimes : 'html5,flash,silverlight,html4',
-		  url : "/edit_account.php?mode=avatar_bg",
-		  file_data_name : "backgroundPhoto",
-		  filters: {
-			mime_types : [
-			  { title : "Image files", extensions : extensions },
-			],
-			max_file_size: "2mb",
-			prevent_duplicates: false,
-		  }
-	  });
-	  window.uploader = uploader;
-	  uploader.init();
-	  uploader.bind("FilesAdded", function(up, uploadedFiles){
-		$(".cb-live-background").attr("src",'/images/loading.png');
-		up.start();
-	  });
-	  uploader.bind('UploadComplete', function(plupload, files, response){});
-
-	  uploader.bind("FileUploaded", function(plupload, files, response){
-		var response = $.parseJSON(response.response);
-		if(response.status == true){
-		  $(".cb-live-background").attr("src",response.url);
-		}else{
-		  $(".cb-live-background").attr("src",response.url);
-		  alert(response.msg);
-		}
-	  });
-
-	  uploader.bind("Error", function(plupload, error){
-		alert(error.message);
-	  });
-	});
-	$("#coverContainer").hover(function(e){
-		$("#changeCover").show();
-	}, function(e){
-		$("#changeCover").hide();
-	});
-	$("#channelVoteUp, #channelVoteDown").one({
-	  click: function(e){
-		var vote = "";
-		var id = "" + this.id;
-		var likes = parseInt($("#likes").text());
-		var totalVotes = parseInt($("#totalVotes").text()) + 1;
-		if(this.id == "channelVoteDown"){
-		  vote  = "no";
-		   likes = likes - 1;
-
-		}else{
-		  vote = "yes";
-		  likes = likes + 1;
-		}
-		$.ajax({
-		  type: "POST",
-		  url: "/actions/vote_channel.php",
-		  data: { vote: vote, channelId : channelId},
-          success: function(){
-              $("#likes").text(likes);
-              $("#totalVotes").text(totalVotes);
-          }
-		});
-	  }
-	})
-  });
-})(window);
-
-	function userActivities(){
-		if($(window).width() > 991) {
-			var bannerHeight = $(".player-items").height();
-			$(".user-activities").css({
-				"max-height" : (bannerHeight-43)+"px",
-				"overflow-y" : "auto"
-			});
-		} else {
-			$(".user-activities").css("max-height","auto");
-		}
-	}
-
-	$(document).ready(function (){
-        userActivities();
-		var id ='{$user.userid}';
-		$('#subscribe_channel').on({
-			click: function(e){
-				e.preventDefault();
-				_cb.subscribeToChannelNew(id,'subscribe_user');
-		 	}
-		});
-	});
-
-	$('#myTab a, #reportTab a').click(function (e) {
-		e.preventDefault()
-		$(this).tab('show')
-	});
-	$('#load_more_playlist').click(function() 
-	 { 
-	  var limit = $(this).attr("limit");
-	  var mode = 'load_more';
-	  var inner_mode = 'load_more_playlist';
-	  var append_id = 'load_more_channel_playlist';
-	  var attrb = $(this);
-	  var cat_id = $(this).attr("cat-id");
-	  var total = $(this).attr("total");
-	  load_more(limit,mode,inner_mode,append_id,attrb,cat_id,total);
-	 });
-
+	var totalVids = "{$total_videos}";
+	var totalPhotos = "{$total_photos}";
 	var loadMoreLang = "{$loadMoreLang}";
-	$('#container').on("click","#more-view-channel",function(){
-		loadHit = $(this).attr('dataHit');
-		loadLimit = $(this).attr('dataLimit');
-		user = "{$user['userid']}";
-		totalVids = "{$total_videos}";
-		totalShown = loadHit * 9 - 9;
-		if (totalVids - totalShown <= 9) {
-			loadMore = false;
-		} else {
-			loadMore = true;
-		}
-
-		nextHit = parseInt(loadHit) + 1;
-		$.ajax({
-			url: "/ajax/view_channel.php",
-			type: "post",
-			dataType: "html",
-			data: {
-				"mode":'channelMore',
-				"loadHit":loadHit,
-				"loadLimit":loadLimit,
-				"totalVids":totalVids,
-				"userid":user,
-			},
-			beforeSend: function() {
-				$(document).find('#more-view-channel').text('Loading videos..')
-			},
-
-			success: function(data) {
-				$('#more-view-channel').remove();
-				if (data.length > 1) {
-					$(data).appendTo('#usr-vids').fadeIn('slow');
-					if (loadMore == true) {
-						$('<div class="clearfix text-center"><button id="more-view-channel" class="btn btn-loadmore" dataLimit="'+loadLimit+'" dataHit="'+nextHit+'">'+loadMoreLang+'</button></div>').appendTo('.user_vids').fadeIn('slow');
-					}
-					var moveTo = $( ".recentAppending" ).last().offset().top,
-					currWidth = $(window).width();
-					moveTo = moveTo - 630;
-					if (currWidth > 767) {
-						thakkiLoading(moveTo);
-					}
-				} else {
-					$('<div class="clearfix text-center"><button id="more-view-channel" class="btn btn-loadmore" disabled="disabled">Unable to fetch more</button></div>').appendTo('.user_vids').fadeIn('slow');
-				}
-			}
-		});
-	});
-
-	$('#container').on("click","#more-channel-photos",function(){
-		loadHit = $(this).attr('dataHit');
-		loadLimit = $(this).attr('dataLimit');
-		user = "{$smarty.get.user}";
-		totalPhotos = "{$total_photos}";
-		totalShown = loadHit * 9 - 9;
-		if (totalPhotos - totalShown <= 9) {
-			loadMore = false;
-		} else {
-			loadMore = true;
-		}
-
-		nextHit = parseInt(loadHit) + 1;
-		$.ajax({
-			url: "/ajax/view_channel.php",
-			type: "post",
-			dataType: "html",
-			data: {
-				"mode":'channelMorePhotos',
-				"loadHit":loadHit,
-				"loadLimit":loadLimit,
-				"totalPhotos":totalPhotos,
-				"userid":user,
-			},
-			beforeSend: function() {
-				$(document).find('#more-channel-photos').text('Loading photos..')
-			},
-
-			success: function(data) {
-				$('#more-channel-photos').remove();
-				if (data.length > 1) {
-					$(data).appendTo('#usr-photos').fadeIn('slow');
-					if (loadMore == true) {
-						$('<div class="clearfix text-center"><button id="more-channel-photos" class="btn btn-loadmore" dataLimit="'+loadLimit+'" dataHit="'+nextHit+'">{lang code='load_more'}</button></div>').appendTo('.user_photos').fadeIn('slow');
-					}
-
-					var moveTo = $( ".photoAppending" ).last().offset().top,
-					currWidth = $(window).width();
-					moveTo = moveTo + 240;
-					if (currWidth > 767) {
-						thakkiLoading(moveTo);
-					}
-				} else {
-					$('<div class="clearfix text-center"><button id="more-view-channel" class="btn btn-loadmore" disabled="disabled">Unable to fetch more</button></div>').appendTo('.user_vids').fadeIn('slow');
-				}
-			}
-		});
-	});
-
-	$('.playerRatio').on('load', function(){
-        userActivities();
-	});
-	$(window).resize(function() {
-        userActivities();
-	});
 </script>

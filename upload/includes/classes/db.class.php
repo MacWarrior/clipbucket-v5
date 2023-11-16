@@ -12,6 +12,11 @@ class Clipbucket_db
     var $total_queries_sql = [];
     var $total_queries = 0;
 
+    public static function getInstance(){
+        global $db;
+        return $db;
+    }
+
     /**
      * Connect to mysqli Database
      *
@@ -185,7 +190,7 @@ class Clipbucket_db
      *
      * @param : { string } { $query } { query to run to get row }
      *
-     * @return mixed
+     * @return array|void
      * @throws Exception
      */
     function GetRow($query)
@@ -220,7 +225,7 @@ class Clipbucket_db
             }
             $this->handleError($query);
             return $data;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             if ($e->getMessage() == 'lang_not_installed' || $e->getMessage() == 'version_not_installed') {
                 throw $e;
             }
@@ -411,12 +416,10 @@ class Clipbucket_db
                 $values_query .= 'NULL';
             } else {
                 $needle = substr($val, 0, 3);
-                if ($needle != '|f|') {
-                    $values_query .= "'" . $val . "'";
-                } else {
+                if ($needle == '|f|') {
                     $val = substr($val, 3, strlen($val));
-                    $values_query .= "'" . $val . "'";
                 }
+                $values_query .= "'" . $val . "'";
             }
 
             if ($total_values != $count) {
@@ -537,6 +540,7 @@ class Clipbucket_db
                 e('ERROR : ' . $this->getError());
                 error_log('SQL : ' . $query);
                 error_log('ERROR : ' . $this->getError());
+                error_log(debug_backtrace_string());
             } else {
                 e(lang('technical_error'));
             }
@@ -545,7 +549,10 @@ class Clipbucket_db
 
     private function ping()
     {
-        if (!$this->mysqli->ping()) {
+        try{
+            $this->mysqli->ping();
+        }
+        catch(Exception $e){
             error_log('SQL ERROR : ' . $this->mysqli->error);
             $this->connect();
         }

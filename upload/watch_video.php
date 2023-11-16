@@ -3,30 +3,28 @@ define('THIS_PAGE', 'watch_video');
 define('PARENT_PAGE', 'videos');
 require 'includes/config.inc.php';
 global $cbvid, $userquery, $pages, $Cbucket;
-$perm = $userquery->perm_check('view_video', true);
-$pages->page_redir();
 
-if ($perm) {
-    $vkey = @$_GET['v'];
-    $vkey = mysql_clean($vkey);
-    $vdo = $cbvid->get_video($vkey);
-    $cbvid->update_comments_count($vdo['videoid']);
+if (!$userquery->perm_check('view_video', true)) {
+    redirect_to(BASEURL);
+}
+
+$vkey = $_GET['v'] ?? false;
+$vdo = $cbvid->get_video($vkey);
+
+if (video_playable($vdo)) {
     $assign_arry['vdo'] = $vdo;
-    if (video_playable($vdo)) {
-        //Checking for playlist
-        $pid = (int)$_GET['play_list'];
-        if (!empty($pid)) {
-            $plist = get_playlist($pid);
-            if ($plist) {
-                $assign_arry['playlist'] = $plist;
-            }
+
+    //Checking for playlist
+    $pid = (int)$_GET['play_list'];
+    if (!empty($pid)) {
+        $plist = get_playlist($pid);
+        if ($plist) {
+            $assign_arry['playlist'] = $plist;
         }
-        //Calling Functions When Video Is going to play
-        call_watch_video_function($vdo);
-        subtitle(ucfirst($vdo['title']));
-    } else {
-        $Cbucket->show_page = false;
     }
+    //Calling Functions When Video Is going to play
+    call_watch_video_function($vdo);
+    subtitle(ucfirst($vdo['title']));
 
     //Return category id without '#'
     $v_cat = $vdo['category'];
@@ -55,23 +53,25 @@ if ($perm) {
     # assigning all variables
     array_val_assign($assign_arry);
     template_files('watch_video.html');
-}
 
-if(in_dev()){
-    $min_suffixe = '';
+    if(in_dev()){
+        $min_suffixe = '';
+    } else {
+        $min_suffixe = '.min';
+    }
+
+    $Cbucket->addJS([
+        'tag-it' . $min_suffixe . '.js'                              => 'admin',
+        'pages/watch_video/watch_video' . $min_suffixe . '.js'       => 'admin',
+        'init_readonly_tag/init_readonly_tag' . $min_suffixe . '.js' => 'admin'
+    ]);
+    $Cbucket->addCSS([
+        'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
+        'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin',
+        'readonly_tag' . $min_suffixe . '.css'     => 'admin'
+    ]);
 } else {
-    $min_suffixe = '.min';
+    $Cbucket->show_page = false;
 }
-
-$Cbucket->addJS([
-    'tag-it' . $min_suffixe . '.js'                              => 'admin',
-    'pages/watch_video/watch_video' . $min_suffixe . '.js'       => 'admin',
-    'init_readonly_tag/init_readonly_tag' . $min_suffixe . '.js' => 'admin'
-]);
-$Cbucket->addCSS([
-    'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
-    'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin',
-    'readonly_tag' . $min_suffixe . '.css'     => 'admin'
-]);
 
 display_it();

@@ -48,13 +48,7 @@ function video_playable($id)
         e(lang('private_video_error'));
         return false;
     }
-    if ($vdo['active'] == 'pen') {
-        e(lang("video_in_pending_list"));
-        if (has_access('admin_access', true) || $vdo['userid'] == user_id()) {
-            return true;
-        }
-        return false;
-    }
+
     if ($vdo['broadcast'] == 'logged'
         && !user_id()
         && !has_access('video_moderation', true)
@@ -132,10 +126,7 @@ function get_thumb($vdetails, $multi = false, $size = false, $type = false)
 
     global $db;
     //get current video from db
-    $resVideo = $db->select(tbl('video') . ' AS V 
-    LEFT JOIN ' . tbl('video_thumbs') . ' AS VT ON VT.videoid = V.videoid '
-        , 'V.videoid, V.file_name, V.file_directory, VT.num, V.default_thumb'
-        , 'V.videoid = ' . mysql_clean($vid));
+    $resVideo = $db->select(tbl('video') . ' AS V LEFT JOIN ' . tbl('video_thumbs') . ' AS VT ON VT.videoid = V.videoid ', 'V.videoid, V.file_name, V.file_directory, VT.num, V.default_thumb, V.status', 'V.videoid = ' . mysql_clean($vid));
     if (empty($resVideo)) {
         error_log('get_thumb - called on missing videoid ' . $vid);
         e(lang('technical_error'));
@@ -164,7 +155,7 @@ function get_thumb($vdetails, $multi = false, $size = false, $type = false)
 
     if (empty($resThumb) && $resVideo['num'] === null && $vdetails['status'] == 'Successful') {
         //if no thumbs, we put some in db see \create_thumb()
-        return create_thumb($resVideo, $multi, $size);
+        return create_thumb($resThumb, $multi, $size);
     }
     if (empty($resThumb)) {
         return $multi ? [default_thumb()] : default_thumb();
@@ -1362,7 +1353,12 @@ function update_video_files($vdetails)
             foreach ($list_videos as  $path) {
                 $quality = explode('-', $path);
                 $quality = explode('.', end($quality));
-                $video_qualities[] = (int)$quality[0];
+                if( is_numeric($quality[0]) ){
+                    $video_qualities[] = (int)$quality[0];
+                } else {
+                    $video_qualities[] = $quality[0];
+                }
+
             }
             break;
 
@@ -1713,16 +1709,18 @@ function remove_empty_directory($path, string $stop_path)
 }
 
 /**
- * @param $files
+ * @param $file
  * @return void
  */
 function clean_orphan_files($file)
 {
-
-    if (($file['type'] == 'photo' && in_array($file['photo'] , AdminTool::getTemp()['photo']))
-    || ( $file['type'] != 'photo' && (in_array($file['video'], AdminTool::getTemp()['video'])))) {
+    if (($file['type'] == 'photo' && in_array($file['photo'], AdminTool::getTemp()['photo']))
+    || ( in_array($file['type'], ['video_mp','video_hls','thumb','log','subtitle']) && in_array($file['video'], AdminTool::getTemp()['video']))
+    || ( $file['type'] == 'userfeeds' && in_array($file['user'], AdminTool::getTemp()['user']))
+    ) {
         return;
     }
+
     $stop_path = null;
     switch ($file['type']) {
         case 'log':
@@ -1752,6 +1750,10 @@ function clean_orphan_files($file)
         case 'photo':
             unlink($file['data']);
             $stop_path = PHOTOS_DIR;
+            break;
+        case 'userfeeds':
+            unlink($file['data']);
+            $stop_path = USER_FEEDS_DIR;
             break;
     }
     remove_empty_directory(dirname($file['data']), $stop_path);

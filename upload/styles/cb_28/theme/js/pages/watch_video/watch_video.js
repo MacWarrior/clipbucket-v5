@@ -2,17 +2,16 @@ var cookieToSave, commentDataCheck;
 var link_type = "videos";
 
 $(document).ready(function () {
-    cookieToSave = 'comment_data_u' + userid + "v" + current_video
-        commentDataCheck = $.cookie(cookieToSave);
-
-    if (commentDataCheck !== null) {
+    cookieToSave = 'comment_data_u' + userid + "v" + current_video;
+    commentDataCheck = $.cookie(cookieToSave);
+    if (commentDataCheck !== 'null') {
         $('#comment_box').val(commentDataCheck);
     }
 
     $('#ShareUsers').on("keyup", function () {
-        console.log('treztr');
-        if ($('#ShareUsers').val() === "")
+        if ($('#ShareUsers').val() === ""){
             return;
+        }
 
         var typed = $(this).val();
         $.ajax({
@@ -60,7 +59,6 @@ $(document).ready(function () {
         $('.ad-holder').remove();
     }
 
-
     /*Playlist load more start*/
     $('#playlist-pull').on("click", function () {
         var __this = $(this);
@@ -79,7 +77,7 @@ $(document).ready(function () {
                 "playlist": playlist
             },
             beforeSend: function () {
-                $(__this).text(lang_loading);
+                $(__this).html(loading);
             },
 
             success: function (data) {
@@ -87,7 +85,7 @@ $(document).ready(function () {
                 if (playlist_total <= loaded) {
                     $(__this).remove();
                 } else {
-                    $(__this).text(lang_load_more);
+                    $(__this).html(loading);
                 }
                 if (data == 'none') {
                     $('#playlist-pull').remove();
@@ -106,30 +104,4 @@ $(document).ready(function () {
     $('#add_comment_button').on("click", function () {
         set_cookie_secure(cookieToSave, null);
     });
-
-/*    labels.on('mouseup', function (e) {
-        switch (e.which)
-        {
-            // Left Click.
-            case 1:
-                //Ctrl+Click
-                if (e.ctrlKey) {
-                    window.open(url);
-                } else {
-                    // Standard LeftClick behaviour.
-                    window.location.href = url;
-                }
-                break;
-
-            // Middle click.
-            case 2:
-                e.preventDefault();
-                window.open(url);
-                return false;
-                break;
-            // Default behaviour for right click.
-        }
-        return true;
-    });*/
-
 });

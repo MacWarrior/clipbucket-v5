@@ -22,6 +22,9 @@ if (!is_writable($cache_dir)) {
     }
 }
 
+/**
+ * @throws Exception
+ */
 function get_server_img($params)
 {
     global $__resize_thumbs;

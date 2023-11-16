@@ -1,7 +1,131 @@
 <?php
+class Plugin
+{
+    private static $plugin;
+
+    private $tablename = '';
+    private $fields = [];
+
+    public function __construct(){
+        $this->tablename = 'plugins';
+        $this->fields = [
+            'plugin_id'
+            ,'plugin_file'
+            ,'plugin_folder'
+            ,'plugin_version'
+            ,'plugin_active'
+        ];
+    }
+
+    public static function getInstance(): self
+    {
+        if( empty(self::$plugin) ){
+            self::$plugin = new self();
+        }
+        return self::$plugin;
+    }
+
+    private function getAllFields(): array
+    {
+        return array_map(function($field) {
+            return $this->tablename . '.' . $field;
+        }, $this->fields);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getAll(array $params = [])
+    {
+        $param_plugin_id = $params['plugin_id'] ?? false;
+        $param_plugin_file = $params['plugin_file'] ?? false;
+        $param_plugin_folder = $params['plugin_folder'] ?? false;
+
+        $param_condition = $params['condition'] ?? false;
+        $param_limit = $params['limit'] ?? false;
+        $param_order = $params['order'] ?? false;
+        $param_group = $params['group'] ?? false;
+        $param_having = $params['having'] ?? false;
+        $param_count = $params['count'] ?? false;
+        $param_first_only = $params['first_only'] ?? false;
+
+        $conditions = [];
+        if( $param_plugin_id ){
+            $conditions[] = 'plugins.plugin_id = '.mysql_clean($param_plugin_id);
+        }
+        if( $param_plugin_file ){
+            $conditions[] = 'plugins.plugin_file = \''.mysql_clean($param_plugin_file).'\'';
+        }
+        if( $param_plugin_folder ){
+            $conditions[] = 'plugins.plugin_folder = \''.mysql_clean($param_plugin_folder).'\'';
+        }
+        if( $param_condition ){
+            $conditions[] = '(' . $param_condition . ')';
+        }
+
+        if( $param_count ){
+            $select = ['COUNT(plugins.plugin_id) AS count'];
+        } else {
+            $select = $this->getAllFields();
+        }
+
+        $group = [];
+        if( $param_group ){
+            $group[] = $param_group;
+        }
+
+        $having = '';
+        if( $param_having ){
+            $having = ' HAVING '.$param_having;
+        }
+
+        $order = '';
+        if( $param_order ){
+            $order = ' ORDER BY '.$param_order;
+        }
+
+        $limit = '';
+        if( $param_limit ){
+            $limit = ' LIMIT '.$param_limit;
+        }
+
+        $sql ='SELECT ' . implode(', ', $select) . '
+                FROM ' . cb_sql_table($this->tablename)
+            . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions))
+            . (empty($group) ? '' : ' GROUP BY ' . implode(',', $group))
+            . $having
+            . $order
+            . $limit;
+
+        $result = Clipbucket_db::getInstance()->_select($sql);
+
+        if( $param_count ){
+            if( empty($result) ){
+                return 0;
+            }
+            return $result[0]['count'];
+        }
+
+        if( !$result ){
+            return false;
+        }
+
+        if( $param_first_only ){
+            return $result[0];
+        }
+
+        return $result;
+    }
+}
 class CBPlugin
 {
     function __construct(){}
+
+    public static function getInstance(): self
+    {
+        global $cbplugin;
+        return $cbplugin;
+    }
 
     /**
      * get plugin list
@@ -151,6 +275,11 @@ class CBPlugin
 
         $file = PLUG_DIR . DIRECTORY_SEPARATOR . $sub_dir . $plug_file;
 
+        // Prevent directory change
+        if( strpos(realpath($file), realpath(PLUG_DIR)) === false ){
+            return false;
+        }
+
         if (file_exists($file) && is_file($file)) {
             // We don't need to write to the file, so just open for reading.
             $fp = fopen($file, 'r');
@@ -202,51 +331,58 @@ class CBPlugin
      */
     function installPlugin($pluginFile, $folder = null)
     {
+        if (is_null($pluginFile) || is_null($folder)) {
+            e(lang('technical_error'));
+            error_log('Error: $pluginFile or $folder is null.');
+            return false;
+        }
+
         $plug_details = $this->get_plugin_details($pluginFile, $folder);
 
         if (!$plug_details) {
-            $msg = e(lang('plugin_no_file_err'));
+            e(lang('plugin_no_file_err'));
+            return false;
         }
+
         if (empty($plug_details['name'])) {
-            $msg = e(lang('plugin_file_detail_err'));
+            e(lang('plugin_file_detail_err'));
+            return false;
         }
+
         if ($this->is_installed($pluginFile, $folder)) {
-            $msg = e(lang('plugin_installed_err'));
+            e(lang('plugin_installed_err'));
+            return false;
         }
 
-        if (empty($msg)) {
-            $file_folder = $folder;
-            if ($folder != '') {
-                $folder = $folder . DIRECTORY_SEPARATOR;
-            }
-            $plug_details = $this->get_plugin_details($folder . $pluginFile);
-
-            $plug_install_file = PLUG_DIR . DIRECTORY_SEPARATOR . $folder . 'install_' . $pluginFile;
-            if (file_exists($plug_install_file)) {
-                require_once($plug_install_file);
-            }
-
-            dbInsert(
-                tbl('plugins'),
-                [
-                    'plugin_file',
-                    'plugin_active',
-                    'plugin_folder',
-                    'plugin_version'
-                ],
-                [
-                    $pluginFile,
-                    'yes',
-                    $file_folder,
-                    $plug_details['version']
-                ]
-            );
-
-            //Checking For the installation SQL
-            e(lang('plugin_install_msg'), 'm');
-            return PLUG_DIR . DIRECTORY_SEPARATOR . $folder . $pluginFile;
+        $file_folder = $folder;
+        if ($folder != '') {
+            $folder = $folder . DIRECTORY_SEPARATOR;
         }
-        return false;
+
+        $plug_install_file = PLUG_DIR . DIRECTORY_SEPARATOR . $folder . 'install_' . $pluginFile;
+
+        if (file_exists($plug_install_file)) {
+            require_once($plug_install_file);
+        }
+
+        dbInsert(
+            tbl('plugins'),
+            [
+                'plugin_file',
+                'plugin_folder',
+                'plugin_version',
+                'plugin_active'
+            ],
+            [
+                $pluginFile,
+                $file_folder,
+                $plug_details['version'],
+                'yes'
+            ]
+        );
+        e(lang('plugin_install_msg'), 'm');
+
+        return PLUG_DIR . DIRECTORY_SEPARATOR . $folder . $pluginFile;
     }
 
     /**
