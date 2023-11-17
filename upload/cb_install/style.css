@@ -147,11 +147,18 @@ font-weight:bold;
 .bttnright{background-image:url(images/bttnright.png);width:37px; }
 .bttnrightalt{background-image:url(images/bttnrightalt.png); width:14px;  }
 
-dt{font-weight:bold; float:left; width:80px; display:inline-block;border-bottom:1px dotted #999; padding:5px 3px; line-height:20px; }
-dd{ width:auto; border-bottom:1px dotted #999; padding:5px 3px; margin:0px; line-height:20px;}  
-dd .red{color:ed0000} dd .green{color:#060; } 
-dd .ok{background-image:url(images/tick_arrow.png); background-repeat:no-repeat; height:20px; padding-left:23px; display:inline-block}
-dd .alert_cross{background-image:url(images/cross_arrow.png); background-repeat:no-repeat; height:20px; padding-left:23px; display:inline-block}
+td{font-weight:bold; padding:5px 3px;  }
+tr{ border-bottom:1px dotted #999; padding:5px 3px; height:30px;}
+
+tr:nth-child(even) {
+	background-color:#F7F7F7;
+}
+tr:nth-child(odd) {
+	background-color:#fff;
+}
+.red{color:ed0000} dd .green{color:#060; }
+.ok{background-image:url(images/tick_arrow.png); background-repeat:no-repeat; height:20px; padding-left:23px; display:inline-block}
+.alert_cross{background-image:url(images/cross_arrow.png); background-repeat:no-repeat; height:20px; padding-left:23px; display:inline-block}
 
 dd:last-child{border-bottom:none}
 dl{background-color:#F7F7F7; padding:0px; border:1px dotted #999}
@@ -210,3 +217,4 @@ dl{background-color:#F7F7F7; padding:0px; border:1px dotted #999}
 .small{
 	line-height: 8px;
 }
+
