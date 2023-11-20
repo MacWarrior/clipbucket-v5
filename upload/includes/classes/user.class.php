@@ -4432,6 +4432,7 @@ class userquery extends CBCategory
                 'value'       => $default['last_name'],
                 'db_field'    => 'last_name',
                 'syntax_type' => 'name',
+                'required'    => 'no',
                 'auto_view'   => 'yes'
             ],
             'relation_status' => [
