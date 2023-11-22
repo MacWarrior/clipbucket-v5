@@ -146,7 +146,12 @@ dd:last-child{border-bottom:none}
 .ok{background-image:url(images/tick_arrow.png); background-repeat:no-repeat; height:20px; padding-left:23px; display:inline-block}
 .alert_cross{background-image:url(images/cross_arrow.png); background-repeat:no-repeat; height:20px; padding-left:23px; display:inline-block}
 
-dl{background-color:#F7F7F7; padding:0px; border:1px dotted #999}
+dl{background-color:#F7F7F7; padding:0px; border:1px dotted #999;}
+
+dd.white,
+dt.white{
+	background-color: #ffffff;
+}
 
 .inside_shadow
 {
