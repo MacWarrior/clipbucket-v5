@@ -59,6 +59,22 @@ if (isset($_POST['update'])) {
         , 'enable_gender'
         , 'enable_user_category'
         , 'enable_rss_feeds'
+        , 'enable_user_firstname_lastname'
+        , 'enable_user_relation_status'
+        , 'enable_user_postcode'
+        , 'enable_user_hometown'
+        , 'enable_user_city'
+        , 'enable_user_education'
+        , 'enable_user_schools'
+        , 'enable_user_occupation'
+        , 'enable_user_compagnies'
+        , 'enable_user_hobbies'
+        , 'enable_user_favorite_movies'
+        , 'enable_user_favorite_music'
+        , 'enable_user_favorite_books'
+        , 'enable_user_website'
+        , 'enable_user_about'
+        , 'enable_user_status'
     ];
 
     $config_booleans_to_refactor = [
@@ -238,6 +254,22 @@ if (isset($_POST['update'])) {
         'enable_country',
         'enable_gender',
         'enable_user_category',
+        'enable_user_firstname_lastname',
+        'enable_user_relation_status',
+        'enable_user_postcode',
+        'enable_user_hometown',
+        'enable_user_city',
+        'enable_user_education',
+        'enable_user_schools',
+        'enable_user_occupation',
+        'enable_user_compagnies',
+        'enable_user_hobbies',
+        'enable_user_favorite_movies',
+        'enable_user_favorite_music',
+        'enable_user_favorite_books',
+        'enable_user_website',
+        'enable_user_about',
+        'enable_user_status',
 
         'thumb_width',
         'thumb_height',
