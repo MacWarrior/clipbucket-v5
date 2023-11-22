@@ -691,6 +691,7 @@ class FFMpeg
         $rs = $db->select(tbl('video'), 'videoid', 'file_name LIKE \'' . $this->file_name . '\'');
         if (!empty($rs)) {
             $videoid = $rs[0]['videoid'];
+
         } else {
             e(lang('technical_error'));
             $videoid = 0;
@@ -1010,6 +1011,12 @@ class FFMpeg
 
             $this->generateThumbs($thumbs_settings);
         }
-        $db->update(tbl('video'), ['default_thumb'], [1], ' videoid = ' . mysql_clean($videoid));
+        $res = $db->select(tbl('video') . ' AS V LEFT JOIN ' . tbl('video_thumbs') . ' AS VT ON VT.videoid = V.videoid '
+            , 'num'
+            , ' V.videoid = ' . mysql_clean($videoid). ' AND type=\'custom\' AND V.default_thumb = VT.num'
+        );
+         if (empty($res)) {
+             $db->update(tbl('video'), ['default_thumb'], [1], ' videoid = ' . mysql_clean($videoid));
+         }
     }
 }

@@ -1,4 +1,5 @@
 <div class="row">
+  <h5>{lang code="extracted_thumbs"}</h5>
   {assign var=vidthumbs value=get_thumb($data,TRUE,'168x105','auto')}
   <ul class="ace-thumbnails">
     {foreach from=$vidthumbs item=vid_thumb}
@@ -14,6 +15,7 @@
   </ul>
   <div style="clear:both;"></div>
   <hr>
+  <h5>{lang code="custom_thumbs"}</h5>
   {assign var=vidthumbs value=get_thumb($data,TRUE,'168x105', 'custom')}
   <ul class="ace-thumbnails">
     {foreach from=$vidthumbs item=vid_thumb}
