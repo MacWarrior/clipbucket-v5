@@ -51,7 +51,7 @@ class mass_upload extends Upload
                         $video_file['file'] = $filename;
                         $video_file['title'] = $filename;
                         $video_file['description'] = $filename;
-                        $video_file['tags'] = gentags(str_replace(' ', ',', $filename));
+                        $video_file['tags'] = '';
                         $video_file['size'] = formatfilesize(filesize($filepath));
                         if ($tracks = FFMpeg::get_track_title($filepath, 'audio')) {
                             $video_file['tracks'] = $tracks;

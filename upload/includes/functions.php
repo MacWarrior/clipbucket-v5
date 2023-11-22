@@ -1017,7 +1017,7 @@ function input_value($params)
     }
 
     if ($input['return_checked']) {
-        return $input['checked'];
+        return display_clean($input['checked']);
     }
 
     if (function_exists($input['display_function'])) {
@@ -1026,11 +1026,11 @@ function input_value($params)
 
     if ($input['type'] == 'dropdown') {
         if ($input['checked']) {
-            return $value[$input['checked']];
+            return display_clean($value[$input['checked']]);
         }
-        return $value[0];
+        return display_clean($value[0]);
     }
-    return $input['value'];
+    return display_clean($input['value']);
 }
 
 /**
@@ -2157,24 +2157,6 @@ function validate_cb_form($input, $array)
 }
 
 /**
- * Function used to count age from date
- *
- * @param : { string } { $input } { date to count age }
- *
- * @return float|false : { integer } { $iYears } { years old }
- */
-function get_age($input)
-{
-    $time = strtotime($input);
-    $iMonth = date('m', $time);
-    $iDay = date('d', $time);
-    $iYear = date('Y', $time);
-    $iTimeStamp = (mktime() - 86400) - mktime(0, 0, 0, $iMonth, $iDay, $iYear);
-    $iDays = $iTimeStamp / 86400;
-    return floor($iDays / 365);
-}
-
-/**
  * Function used to check time span a time difference function that outputs the
  * time passed in facebook's style: 1 day ago, or 4 months ago. I took andrew dot
  * macrobert at gmail dot com function and tweaked it a bit. On a strict enviroment
@@ -2239,14 +2221,19 @@ function nicetime($date, $istime = false): string
  * @param : { string } { $out } { link to some webpage }
  *
  * @return string : { string } { HTML anchor tag with link in place }
+ * @throws Exception
  */
-function outgoing_link($out): string
+function outgoing_link($url): string
 {
-    preg_match("/http/", $out, $matches);
-    if (empty($matches[0])) {
-        $out = "http://" . $out;
+    if (filter_var($url, FILTER_VALIDATE_URL) === false) {
+        return lang('incorrect_url');
     }
-    return '<a href="' . $out . '" target="_blank">' . $out . '</a>';
+
+    if (!preg_match("~^(?:f|ht)tps?://~i", $url)) {
+        $url = 'http://' . $url;
+    }
+
+    return '<a href="' . display_clean($url) . '" target="_blank">' . display_clean($url) . '</a>';
 }
 
 /**
@@ -2259,10 +2246,8 @@ function outgoing_link($out): string
  */
 function get_country($code)
 {
-    global $db;
-    $result = $db->select(tbl("countries"), "name_en,iso2", " iso2='$code' OR iso3='$code'");
+    $result = Clipbucket_db::getInstance()->select(tbl('countries'), 'name_en,iso2', " iso2='$code' OR iso3='$code'");
     if (count($result) > 0) {
-        $flag = '';
         $result = $result[0];
         $flag = '<img src="/images/icons/country/' . strtolower($result['iso2']) . '.png" alt="" border="0">&nbsp;';
         return $flag . $result['name_en'];

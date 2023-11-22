@@ -4412,8 +4412,31 @@ class userquery extends CBCategory
             $default = $_POST;
         }
 
-        return [
-            'first_name'      => [
+        $return = [
+            'show_dob'        => [
+                'title'       => lang('show_dob'),
+                'type'        => 'radiobutton',
+                'name'        => 'show_dob',
+                'id'          => 'show_dob',
+                'value'       => ['yes' => lang('yes'), 'no' => lang('no')],
+                'checked'     => $default['show_dob'],
+                'db_field'    => 'show_dob',
+                'syntax_type' => 'name',
+                'auto_view'   => 'no',
+                'sep'         => '&nbsp;'
+            ],
+            'profile_tags'    => [
+                'title'     => lang('profile_tags'),
+                'type'      => 'hidden',
+                'name'      => 'profile_tags',
+                'id'        => 'profile_tags',
+                'value'     => genTags($default['profile_tags']),
+                'auto_view' => 'no'
+            ]
+        ];
+
+        if( config('enable_user_firstname_lastname') == 'yes' ){
+            $return['first_name'] = [
                 'title'       => lang('user_fname'),
                 'type'        => 'textfield',
                 'name'        => 'first_name',
@@ -4423,8 +4446,9 @@ class userquery extends CBCategory
                 'required'    => 'no',
                 'syntax_type' => 'name',
                 'auto_view'   => 'yes'
-            ],
-            'last_name'       => [
+            ];
+
+            $return['last_name'] = [
                 'title'       => lang('user_lname'),
                 'type'        => 'textfield',
                 'name'        => 'last_name',
@@ -4434,8 +4458,11 @@ class userquery extends CBCategory
                 'syntax_type' => 'name',
                 'required'    => 'no',
                 'auto_view'   => 'yes'
-            ],
-            'relation_status' => [
+            ];
+        }
+
+        if( config('enable_user_relation_status') == 'yes' ){
+            $return['relation_status'] = [
                 'title'     => lang('user_relat_status'),
                 'type'      => 'dropdown',
                 'name'      => 'relation_status',
@@ -4450,38 +4477,11 @@ class userquery extends CBCategory
                 'checked'   => $default['relation_status'],
                 'db_field'  => 'relation_status',
                 'auto_view' => 'yes'
-            ],
-            'show_dob'        => [
-                'title'       => lang('show_dob'),
-                'type'        => 'radiobutton',
-                'name'        => 'show_dob',
-                'id'          => 'show_dob',
-                'value'       => ['yes' => lang('yes'), 'no' => lang('no')],
-                'checked'     => $default['show_dob'],
-                'db_field'    => 'show_dob',
-                'syntax_type' => 'name',
-                'auto_view'   => 'no',
-                'sep'         => '&nbsp;'
-            ],
-            'about_me'        => [
-                'title'      => lang('user_about_me'),
-                'type'       => 'textarea',
-                'name'       => 'about_me',
-                'id'         => 'about_me',
-                'value'      => mysql_clean($default['about_me']),
-                'db_field'   => 'about_me',
-                'auto_view'  => 'no',
-                'clean_func' => 'Replacer'
-            ],
-            'profile_tags'    => [
-                'title'     => lang('profile_tags'),
-                'type'      => 'hidden',
-                'name'      => 'profile_tags',
-                'id'        => 'profile_tags',
-                'value'     => genTags($default['profile_tags']),
-                'auto_view' => 'no'
-            ],
-            'web_url'         => [
+            ];
+        }
+
+        if( config('enable_user_website') == 'yes' ){
+            $return['web_url'] = [
                 'title'            => lang('website'),
                 'type'             => 'textfield',
                 'name'             => 'web_url',
@@ -4490,8 +4490,23 @@ class userquery extends CBCategory
                 'db_field'         => 'web_url',
                 'auto_view'        => 'yes',
                 'display_function' => 'outgoing_link'
-            ]
-        ];
+            ];
+        }
+
+        if( config('enable_user_about') == 'yes' ){
+            $return['about_me'] = [
+                'title'      => lang('user_about_me'),
+                'type'       => 'textarea',
+                'name'       => 'about_me',
+                'id'         => 'about_me',
+                'value'      => mysql_clean($default['about_me']),
+                'db_field'   => 'about_me',
+                'auto_view'  => 'no',
+                'clean_func' => 'Replacer'
+            ];
+        }
+
+        return $return;
     }
 
     /**
@@ -4507,8 +4522,11 @@ class userquery extends CBCategory
         if (!$default) {
             $default = $_POST;
         }
-        return [
-            'postal_code' => [
+
+        $return = [];
+
+        if( config('enable_user_postcode') == 'yes' ){
+            $return['postal_code'] = [
                 'title'     => lang('postal_code'),
                 'type'      => 'textfield',
                 'name'      => 'postal_code',
@@ -4516,8 +4534,11 @@ class userquery extends CBCategory
                 'value'     => $default['postal_code'],
                 'db_field'  => 'postal_code',
                 'auto_view' => 'yes'
-            ],
-            'hometown'    => [
+            ];
+        }
+
+        if( config('enable_user_hometown') == 'yes' ){
+            $return['hometown'] = [
                 'title'     => lang('hometown'),
                 'type'      => 'textfield',
                 'name'      => 'hometown',
@@ -4525,8 +4546,11 @@ class userquery extends CBCategory
                 'value'     => $default['hometown'],
                 'db_field'  => 'hometown',
                 'auto_view' => 'yes'
-            ],
-            'city'        => [
+            ];
+        }
+
+        if( config('enable_user_city') == 'yes' ){
+            $return['city'] = [
                 'title'     => lang('city'),
                 'type'      => 'textfield',
                 'name'      => 'city',
@@ -4534,8 +4558,10 @@ class userquery extends CBCategory
                 'value'     => $default['city'],
                 'db_field'  => 'city',
                 'auto_view' => 'yes'
-            ]
-        ];
+            ];
+        }
+
+        return $return;
     }
 
     /**
@@ -4552,8 +4578,10 @@ class userquery extends CBCategory
             $default = $_POST;
         }
 
-        return [
-            'education'  => [
+        $return = [];
+
+        if( config('enable_user_education') == 'yes' ){
+            $return['education'] = [
                 'title'     => lang('education'),
                 'type'      => 'dropdown',
                 'name'      => 'education',
@@ -4572,8 +4600,11 @@ class userquery extends CBCategory
                 'checked'   => $default['education'],
                 'db_field'  => 'education',
                 'auto_view' => 'yes'
-            ],
-            'schools'    => [
+            ];
+        }
+
+        if( config('enable_user_schools') == 'yes' ){
+            $return['schools'] = [
                 'title'      => lang('schools'),
                 'type'       => 'textarea',
                 'name'       => 'schools',
@@ -4582,8 +4613,11 @@ class userquery extends CBCategory
                 'db_field'   => 'schools',
                 'clean_func' => 'Replacer',
                 'auto_view'  => 'yes'
-            ],
-            'occupation' => [
+            ];
+        }
+
+        if( config('enable_user_occupation') == 'yes' ){
+            $return['occupation'] = [
                 'title'      => lang('occupation'),
                 'type'       => 'textarea',
                 'name'       => 'occupation',
@@ -4592,8 +4626,11 @@ class userquery extends CBCategory
                 'db_field'   => 'occupation',
                 'clean_func' => 'Replacer',
                 'auto_view'  => 'yes'
-            ],
-            'companies'  => [
+            ];
+        }
+
+        if( config('enable_user_compagnies') == 'yes' ){
+            $return['companies'] = [
                 'title'      => lang('companies'),
                 'type'       => 'textarea',
                 'name'       => 'companies',
@@ -4602,8 +4639,11 @@ class userquery extends CBCategory
                 'db_field'   => 'companies',
                 'clean_func' => 'Replacer',
                 'auto_view'  => 'yes'
-            ],
-            'hobbies'    => [
+            ];
+        }
+
+        if( config('enable_user_hobbies') == 'yes' ){
+            $return['hobbies'] = [
                 'title'      => lang('hobbies'),
                 'type'       => 'textarea',
                 'name'       => 'hobbies',
@@ -4612,8 +4652,11 @@ class userquery extends CBCategory
                 'db_field'   => 'hobbies',
                 'clean_func' => 'Replacer',
                 'auto_view'  => 'yes'
-            ],
-            'fav_movies' => [
+            ];
+        }
+
+        if( config('enable_user_favorite_movies') == 'yes' ){
+            $return['fav_movies'] = [
                 'title'      => lang('user_fav_movs_shows'),
                 'type'       => 'textarea',
                 'name'       => 'fav_movies',
@@ -4622,8 +4665,11 @@ class userquery extends CBCategory
                 'db_field'   => 'fav_movies',
                 'clean_func' => 'Replacer',
                 'auto_view'  => 'yes'
-            ],
-            'fav_music'  => [
+            ];
+        }
+
+        if( config('enable_user_favorite_music') == 'yes' ){
+            $return['fav_music'] = [
                 'title'      => lang('user_fav_music'),
                 'type'       => 'textarea',
                 'name'       => 'fav_music',
@@ -4632,8 +4678,11 @@ class userquery extends CBCategory
                 'db_field'   => 'fav_music',
                 'clean_func' => 'Replacer',
                 'auto_view'  => 'yes'
-            ],
-            'fav_books'  => [
+            ];
+        }
+
+        if( config('enable_user_favorite_books') == 'yes' ){
+            $return['fav_books'] = [
                 'title'      => lang('user_fav_books'),
                 'type'       => 'textarea',
                 'name'       => 'fav_books',
@@ -4642,8 +4691,10 @@ class userquery extends CBCategory
                 'db_field'   => 'fav_books',
                 'clean_func' => 'Replacer',
                 'auto_view'  => 'yes'
-            ]
-        ];
+            ];
+        }
+
+        return $return;
     }
 
 
@@ -4661,16 +4712,7 @@ class userquery extends CBCategory
             $default = $_POST;
         }
 
-        return [
-            'online_status'      => [
-                'title'    => lang('online_status'),
-                'type'     => 'dropdown',
-                'name'     => 'privacy',
-                'id'       => 'privacy',
-                'value'    => ['online' => lang('online'), 'offline' => lang('offline'), 'custom' => lang('custom')],
-                'checked'  => $default['online_status'],
-                'db_field' => 'online_status'
-            ],
+        $return = [
             'show_profile'       => [
                 'title'    => lang('show_profile'),
                 'type'     => 'dropdown',
@@ -4713,6 +4755,20 @@ class userquery extends CBCategory
                 'sep'      => '&nbsp;'
             ]
         ];
+
+        if( config('enable_user_status') == 'yes' ){
+            $return['online_status'] = [
+                'title'    => lang('online_status'),
+                'type'     => 'dropdown',
+                'name'     => 'privacy',
+                'id'       => 'privacy',
+                'value'    => ['online' => lang('online'), 'offline' => lang('offline'), 'custom' => lang('custom')],
+                'checked'  => $default['online_status'],
+                'db_field' => 'online_status'
+            ];
+        }
+
+        return $return;
     }
 
     /**
@@ -4865,16 +4921,14 @@ class userquery extends CBCategory
                     'group_name' => lang('profile_basic_info'),
                     'group_id'   => 'profile_basic_info',
                     'fields'     => $this->load_personal_details($default),
-                ],
-                [
-                    'group_name' => lang('location'),
-                    'group_id'   => 'profile_location',
-                    'fields'     => $this->load_location_fields($default)
-                ],
-                [
+                ],[
                     'group_name' => lang('profile_education_interests'),
                     'group_id'   => 'profile_education_interests',
                     'fields'     => $this->load_education_interests($default)
+                ],[
+                    'group_name' => lang('location'),
+                    'group_id'   => 'profile_location',
+                    'fields'     => $this->load_location_fields($default)
                 ]
             ];
 
