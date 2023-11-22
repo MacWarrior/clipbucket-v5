@@ -985,4 +985,5 @@ VALUES
        ('option_enable_user_favorite_books'),
        ('option_enable_user_website'),
        ('option_enable_user_about'),
-       ('option_enable_user_status');
+       ('option_enable_user_status'),
+       ('collection_not_active');
