@@ -50,7 +50,7 @@ function msg_arr($arr): string
     return '<span class="msg ' . $type . '">' . $text . '</span>';
 }
 $extensionsCLI = [];
-$extensionsWeb = parseAllPHPModules();
+$extensionsWeb = install_parseAllPHPModules();
 function check_module($type): array
 {
     global $extensionsCLI;
@@ -222,7 +222,7 @@ function check_extension ($extension, $type) {
     return $return;
 }
 
-function parseAllPHPModules()
+function install_parseAllPHPModules()
 {
 
     ob_start();

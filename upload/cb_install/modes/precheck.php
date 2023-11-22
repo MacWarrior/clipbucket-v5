@@ -5,81 +5,43 @@
     </div>
 </div>
 
-<div id="sub_container">
-    <table class="grey-text">
-        <tbody>
-            <tr>
-                <th style="min-width: 80px;">PHP Web</th>
-                <td></td>
-                <td><?php echo msg_arr(check_module('php_web')); ?></td>
-            </tr>
-            <tr>
-                <td rowspan="5"></td>
-                <th style="min-width: 95px;">GD</th>
-                <td><?php echo msg_arr(check_extension('gd', 'web')); ?></td>
-            </tr>
-            <tr>
-                <th style="min-width: 95px;">MBstring</th>
-                <td><?php echo msg_arr(check_extension('mbstring', 'web')); ?></td>
-            </tr>
-            <tr>
-                <th style="min-width: 95px;">MySQLi</th>
-                <td><?php echo msg_arr(check_extension('mysqli', 'web')); ?></td>
-            </tr>
-            <tr>
-                <th style="min-width: 95px;">XML</th>
-                <td><?php echo msg_arr(check_extension('xml', 'web')); ?></td>
-            </tr>
-            <tr>
-                <th style="min-width: 95px;">cURL</th>
-                <td><?php echo msg_arr(check_extension('curl', 'web')); ?></td>
-            </tr>
-        <tbody>
-            <tr>
-                <th style="min-width: 80px;">PHP CLI</th>
-                <td></td>
-                <td><?php echo msg_arr(check_module('php_cli')); ?></td>
-            </tr>
-            <tr>
-                <td rowspan="5"></td>
-                <th style="min-width: 95px;">GD</th>
-                <td><?php echo msg_arr(check_extension('gd', 'cli')); ?></td>
-            </tr>
-            <tr>
-                <th style="min-width: 95px;">MBstring</th>
-                <td><?php echo msg_arr(check_extension('mbstring', 'cli')); ?></td>
-            </tr>
-            <tr>
-                <th style="min-width: 95px;">MySQLi</th>
-                <td><?php echo msg_arr(check_extension('mysqli', 'cli')); ?></td>
-            </tr>
-            <tr>
-                <th style="min-width: 95px;">XML</th>
-                <td><?php echo msg_arr(check_extension('xml', 'cli')); ?></td>
-            </tr>
-            <tr>
-                <th style="min-width: 95px;">cURL</th>
-                <td><?php echo msg_arr(check_extension('curl', 'cli')); ?></td>
-            </tr>
-        </tbody>
-        <tbody>
-        <tr>
-            <th style="min-width: 80px;">FFMPEG</th>
-            <td></td>
-            <td><?php echo msg_arr(check_module('ffmpeg')); ?></td>
-        </tr>
-        <tr>
-            <th style="min-width: 80px;">FFPROBE</th>
-            <td></td>
-            <td><?php echo msg_arr(check_module('ffprobe')); ?></td>
-        </tr>
-        <tr>
-            <th style="min-width: 80px;">Media Info</th>
-            <td></td>
-            <td><?php echo msg_arr(check_module('media_info')); ?></td>
-        </tr>
-        </tbody>
-    </table>
+<div id="sub_container" class="grey-text">
+    <dl>
+        <dt>PHP Web</dt>
+        <dd><span><?php echo msg_arr(check_module('php_web')); ?></span></dd>
+        <dt><span>GD</dt>
+        <dd><span><?php echo msg_arr(check_extension('gd', 'web')); ?></span></dd>
+        <dt><span>MBstring</dt>
+        <dd><span><?php echo msg_arr(check_extension('mbstring', 'web')); ?></span></dd>
+        <dt><span>MySQLi</dt>
+        <dd><span><?php echo msg_arr(check_extension('mysqli', 'web')); ?></span></dd>
+        <dt><span>XML</dt>
+        <dd><span><?php echo msg_arr(check_extension('xml', 'web')); ?></span></dd>
+        <dt><span>cURL</dt>
+        <dd><span><?php echo msg_arr(check_extension('curl', 'web')); ?></span></dd>
+
+        <dt>PHP CLI</dt>
+        <dd><span><?php echo msg_arr(check_module('php_cli')); ?></span></dd>
+        <dt><span>GD</dt>
+        <dd><span><?php echo msg_arr(check_extension('gd', 'cli')); ?></span></dd>
+        <dt><span>MBstring</dt>
+        <dd><span><?php echo msg_arr(check_extension('mbstring', 'cli')); ?></span></dd>
+        <dt><span>MySQLi</dt>
+        <dd><span><?php echo msg_arr(check_extension('mysqli', 'cli')); ?></span></dd>
+        <dt><span>XML</dt>
+        <dd><span><?php echo msg_arr(check_extension('xml', 'cli')); ?></span></dd>
+        <dt><span>cURL</dt>
+        <dd><span><?php echo msg_arr(check_extension('curl', 'cli')); ?></span></dd>
+
+        <dt>FFMPEG</dt>
+        <dd><span><?php echo msg_arr(check_module('ffmpeg')); ?></span></dd>
+
+        <dt>FFPROBE</dt>
+        <dd><span><?php echo msg_arr(check_module('ffprobe')); ?></span></dd>
+
+        <dt>Media Info</dt>
+        <dd><span><?php echo msg_arr(check_module('media_info')); ?></span></dd>
+    </dl>
 
     <form method="post" id="installation">
         <input type="hidden" name="mode" value="permission"/>

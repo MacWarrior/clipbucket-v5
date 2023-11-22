@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"292",
+  "revision":"293",
   "status":"dev",
   "detail":[
     {
@@ -266,6 +266,7 @@
         ,"Fix default video activation config value"
         ,"Update DB charset"
         ,"Fix missing component in CentOS 7 script"
+        ,"Update dependancies check"
       ]
     }
   ]

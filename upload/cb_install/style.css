@@ -36,11 +36,6 @@ a{color:#06c}
 	margin:auto; margin-bottom:5px;
 }
 
-
-.cb_container.arvixe_banner{
-background:url(images/Arvixe-Banner.png) ;
-}
-
 .grey-text{
 color:#797979;
 }
@@ -137,36 +132,20 @@ font-weight:bold;
 
 #logo{font-family: 'Cabin', arial, serif; font-size:28px; font-weight:bold; padding: 5px 0px 15px 20px;}
 
-.bttnleft,.bttncenter,.bttnright,.bttnrightalt
-{
-	height:34px; display:inline-block;line-height:32px; font-size:14px; font-weight:bold; font-family:Arial, Helvetica, sans-serif; color:#fff;
-	cursor:pointer;
-}
-.bttnleft{background-image:url(images/bttnleft.png); width:14px; }
-.bttncenter{background-image:url(images/bttncenter.png);min-width:50px;padding-right:10px; }
-.bttnright{background-image:url(images/bttnright.png);width:37px; }
-.bttnrightalt{background-image:url(images/bttnrightalt.png); width:14px;  }
-
-dt{font-weight:bold; float:left; width:80px; display:inline-block;border-bottom:1px dotted #999; padding:5px 3px; line-height:20px; }
+dt{font-weight:bold; float:left; width:80px; display:inline-block;padding:5px 3px; line-height:20px; }
 dd{ width:auto; border-bottom:1px dotted #999; padding:5px 3px; margin:0px; line-height:20px;}
-dd .red{color:ed0000} dd .green{color:#060; }
-dd .ok{background-image:url(images/tick_arrow.png); background-repeat:no-repeat; height:20px; padding-left:23px; display:inline-block}
-dd .alert_cross{background-image:url(images/cross_arrow.png); background-repeat:no-repeat; height:20px; padding-left:23px; display:inline-block}
 
-td{font-weight:bold; padding:5px 3px;  }
-tr{ border-bottom:1px dotted #999; padding:5px 3px; height:30px;}
+dd span,
+dt span{
+	padding-left: 80px;
+}
 
-tr:nth-child(even) {
-	background-color:#F7F7F7;
-}
-tr:nth-child(odd) {
-	background-color:#fff;
-}
+dd:last-child{border-bottom:none}
+
 .red{color:ed0000} dd .green{color:#060; }
 .ok{background-image:url(images/tick_arrow.png); background-repeat:no-repeat; height:20px; padding-left:23px; display:inline-block}
 .alert_cross{background-image:url(images/cross_arrow.png); background-repeat:no-repeat; height:20px; padding-left:23px; display:inline-block}
 
-dd:last-child{border-bottom:none}
 dl{background-color:#F7F7F7; padding:0px; border:1px dotted #999}
 
 .inside_shadow
