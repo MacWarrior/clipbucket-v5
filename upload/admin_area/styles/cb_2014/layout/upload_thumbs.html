@@ -10,8 +10,9 @@
 <form action="upload_thumbs.php?video={$data.videoid}" method="post" enctype="multipart/form-data" name="set_default_thumb" id="set_default_thumb">
     {include file="$style_dir/blocks/thumb_list.html"}
 </form>
+<hr>
 <form action="upload_thumbs.php?video={$data.videoid}" method="post" enctype="multipart/form-data" name="form1">
-    <h5>Upload new thumbnail</h5>
+    <h4>Upload new thumbnail</h4>
     <input name="vid_thumb[]" type="file"/>
     <br/>
     <input type="submit" name="upload_thumbs" value="Upload thumbnail(s)" class="btn btn-primary btn-sm" />

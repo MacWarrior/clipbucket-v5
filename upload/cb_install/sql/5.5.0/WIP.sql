@@ -1,3 +1,7 @@
+SET @language_id_eng = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = 'en');
+SET @language_id_fra = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = 'fr');
+
+
 ALTER TABLE `{tbl_prefix}video_thumbs`
     ADD COLUMN `type` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
