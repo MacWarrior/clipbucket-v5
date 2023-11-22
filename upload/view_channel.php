@@ -97,6 +97,19 @@ if ($userquery->perm_check('view_channel', true)) {
     add_js(['jquery_plugs/compressed/jquery.jCarousel.js' => 'view_channel']);
 
     if ($Cbucket->show_page || $udetails) {
+        $channel_profile_fields = $userquery->load_user_fields($p,'profile');
+
+        $location_fields = [];
+        foreach($channel_profile_fields AS $field){
+            if( $field['group_id'] == 'profile_location'){
+                $location_fields = $field;
+                break;
+            }
+        }
+        assign('location_fields', $location_fields);
+
+        assign('channel_profile_fields', $channel_profile_fields);
+
         template_files('view_channel.html');
 
         if(in_dev()){

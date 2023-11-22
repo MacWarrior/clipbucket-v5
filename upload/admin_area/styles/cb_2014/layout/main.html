@@ -384,6 +384,13 @@
 								</div>
 							</div>
 							<hr/>
+							<div class="row">
+								<div class="col-md-12">
+									<label class="nowrap" for="disallowed_usernames" title="Disallowed usernames"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Sperate by commas"> Disallowed usernames</label>
+									<textarea class="form-control" name="disallowed_usernames" id="disallowed_usernames" cols="45" rows="5">{$row.disallowed_usernames}</textarea>
+								</div>
+							</div>
+							<hr/>
 
 						</div>
 
@@ -463,10 +470,6 @@
 								</div>
 							</div>
 							<hr/>
-
-						</div>
-
-						<div class="col-md-4">
 							<div class="row">
 								<div class="col-md-8">
 									<label class="nowrap" for="allow_unicode_usernames" title="Allow Special Characters in usernames">Allow Special Characters in usernames</label>
@@ -488,6 +491,9 @@
 							</div>
 							<hr/>
 
+						</div>
+
+						<div class="col-md-4">
 							<div class="row">
 								<div class="col-md-8">
 									<label class="nowrap" for="enable_country" title="{lang code='option_enable_country'}">{lang code='option_enable_country'}</label>
@@ -498,7 +504,6 @@
 								</div>
 							</div>
 							<hr/>
-
 							<div class="row">
 								<div class="col-md-8">
 									<label class="nowrap" for="enable_gender" title="{lang code='option_enable_gender'}">{lang code='option_enable_gender'}</label>
@@ -509,7 +514,6 @@
 								</div>
 							</div>
 							<hr/>
-
 							<div class="row">
 								<div class="col-md-8">
 									<label class="nowrap" for="enable_user_category" title="{lang code='option_enable_user_category'}">{lang code='option_enable_user_category'}</label>
@@ -520,11 +524,163 @@
 								</div>
 							</div>
 							<hr/>
-
 							<div class="row">
-								<div class="col-md-12">
-									<label class="nowrap" for="disallowed_usernames" title="Disallowed usernames"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Sperate by commas"> Disallowed usernames</label>
-									<textarea class="form-control" name="disallowed_usernames" id="disallowed_usernames" cols="45" rows="5">{$row.disallowed_usernames}</textarea>
+								<div class="col-md-8">
+									<label class="nowrap" for="enable_user_firstname_lastname" title="{lang code='option_enable_user_firstname_lastname'}">{lang code='option_enable_user_firstname_lastname'}</label>
+								</div>
+								<div class="col-md-4 row-size">
+									<input value="yes" name="enable_user_firstname_lastname" id="enable_user_firstname_lastname" {if $row.enable_user_firstname_lastname=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-8">
+									<label class="nowrap" for="enable_user_relation_status" title="{lang code='option_enable_user_relation_status'}">{lang code='option_enable_user_relation_status'}</label>
+								</div>
+								<div class="col-md-4 row-size">
+									<input value="yes" name="enable_user_relation_status" id="enable_user_relation_status" {if $row.enable_user_relation_status=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-8">
+									<label class="nowrap" for="enable_user_postcode" title="{lang code='option_enable_user_postcode'}">{lang code='option_enable_user_postcode'}</label>
+								</div>
+								<div class="col-md-4 row-size">
+									<input value="yes" name="enable_user_postcode" id="enable_user_postcode" {if $row.enable_user_postcode=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-8">
+									<label class="nowrap" for="enable_user_hometown" title="{lang code='option_enable_user_hometown'}">{lang code='option_enable_user_hometown'}</label>
+								</div>
+								<div class="col-md-4 row-size">
+									<input value="yes" name="enable_user_hometown" id="enable_user_hometown" {if $row.enable_user_hometown=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-8">
+									<label class="nowrap" for="enable_user_city" title="{lang code='option_enable_user_city'}">{lang code='option_enable_user_city'}</label>
+								</div>
+								<div class="col-md-4 row-size">
+									<input value="yes" name="enable_user_city" id="enable_user_city" {if $row.enable_user_city=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-8">
+									<label class="nowrap" for="enable_user_education" title="{lang code='option_enable_user_education'}">{lang code='option_enable_user_education'}</label>
+								</div>
+								<div class="col-md-4 row-size">
+									<input value="yes" name="enable_user_education" id="enable_user_education" {if $row.enable_user_education=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-8">
+									<label class="nowrap" for="enable_user_schools" title="{lang code='option_enable_user_schools'}">{lang code='option_enable_user_schools'}</label>
+								</div>
+								<div class="col-md-4 row-size">
+									<input value="yes" name="enable_user_schools" id="enable_user_schools" {if $row.enable_user_schools=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-8">
+									<label class="nowrap" for="enable_user_occupation" title="{lang code='option_enable_user_occupation'}">{lang code='option_enable_user_occupation'}</label>
+								</div>
+								<div class="col-md-4 row-size">
+									<input value="yes" name="enable_user_occupation" id="enable_user_occupation" {if $row.enable_user_occupation=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-8">
+									<label class="nowrap" for="enable_user_compagnies" title="{lang code='option_enable_user_compagnies'}">{lang code='option_enable_user_compagnies'}</label>
+								</div>
+								<div class="col-md-4 row-size">
+									<input value="yes" name="enable_user_compagnies" id="enable_user_compagnies" {if $row.enable_user_compagnies=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-8">
+									<label class="nowrap" for="enable_user_hobbies" title="{lang code='option_enable_user_hobbies'}">{lang code='option_enable_user_hobbies'}</label>
+								</div>
+								<div class="col-md-4 row-size">
+									<input value="yes" name="enable_user_hobbies" id="enable_user_hobbies" {if $row.enable_user_hobbies=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-8">
+									<label class="nowrap" for="enable_user_favorite_movies" title="{lang code='option_enable_user_favorite_movies'}">{lang code='option_enable_user_favorite_movies'}</label>
+								</div>
+								<div class="col-md-4 row-size">
+									<input value="yes" name="enable_user_favorite_movies" id="enable_user_favorite_movies" {if $row.enable_user_favorite_movies=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-8">
+									<label class="nowrap" for="enable_user_favorite_music" title="{lang code='option_enable_user_favorite_music'}">{lang code='option_enable_user_favorite_music'}</label>
+								</div>
+								<div class="col-md-4 row-size">
+									<input value="yes" name="enable_user_favorite_music" id="enable_user_favorite_music" {if $row.enable_user_favorite_music=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-8">
+									<label class="nowrap" for="enable_user_favorite_books" title="{lang code='option_enable_user_favorite_books'}">{lang code='option_enable_user_favorite_books'}</label>
+								</div>
+								<div class="col-md-4 row-size">
+									<input value="yes" name="enable_user_favorite_books" id="enable_user_favorite_books" {if $row.enable_user_favorite_books=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-8">
+									<label class="nowrap" for="enable_user_website" title="{lang code='option_enable_user_website'}">{lang code='option_enable_user_website'}</label>
+								</div>
+								<div class="col-md-4 row-size">
+									<input value="yes" name="enable_user_website" id="enable_user_website" {if $row.enable_user_website=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-8">
+									<label class="nowrap" for="enable_user_about" title="{lang code='option_enable_user_about'}">{lang code='option_enable_user_about'}</label>
+								</div>
+								<div class="col-md-4 row-size">
+									<input value="yes" name="enable_user_about" id="enable_user_about" {if $row.enable_user_about=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-8">
+									<label class="nowrap" for="enable_user_status" title="{lang code='option_enable_user_status'}">{lang code='option_enable_user_status'}</label>
+								</div>
+								<div class="col-md-4 row-size">
+									<input value="yes" name="enable_user_status" id="enable_user_status" {if $row.enable_user_status=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
 								</div>
 							</div>
 							<hr/>

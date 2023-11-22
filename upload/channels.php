@@ -1,6 +1,6 @@
 <?php
-define("THIS_PAGE", 'channels');
-define("PARENT_PAGE", 'channels');
+define('THIS_PAGE', 'channels');
+
 require 'includes/config.inc.php';
 global $pages, $userquery;
 $pages->page_redir();
@@ -10,21 +10,21 @@ $assign_arry = [];
 $sort = $_GET['sort'];
 $u_cond = ['category' => mysql_clean($_GET['cat']), 'date_span' => mysql_clean($_GET['time'])];
 switch ($sort) {
-    case "most_recent":
+    case 'most_recent':
     default:
-        $u_cond['order'] = " doj DESC ";
+        $u_cond['order'] = ' doj DESC';
         break;
-    case "most_viewed":
-        $u_cond['order'] = " profile_hits DESC ";
+    case 'most_viewed':
+        $u_cond['order'] = ' profile_hits DESC';
         break;
-    case "featured":
-        $u_cond['featured'] = "yes";
+    case 'featured':
+        $u_cond['featured'] = 'yes';
         break;
-    case "top_rated":
-        $u_cond['order'] = " rating DESC";
+    case 'top_rated':
+        $u_cond['order'] = ' rating DESC';
         break;
-    case "most_commented":
-        $u_cond['order'] = " total_comments DESC";
+    case 'most_commented':
+        $u_cond['order'] = ' total_comments DESC';
         break;
 }
 $page = mysql_clean($_GET['page']);
