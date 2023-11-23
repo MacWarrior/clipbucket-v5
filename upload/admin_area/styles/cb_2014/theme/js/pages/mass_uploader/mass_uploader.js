@@ -35,6 +35,17 @@ $(document).ready(function () {
         if ($(this).is(':checked')) {
             $(this).parent().find(':input').prop('disabled', false);
             $(this).parent().find('div.note-editable').attr('contenteditable', 'true');
+            $(this).parent().find('[id^="list_tags"]').each(function () {
+                var id = $(this).data('id');
+                $(this).tagit({
+                    singleField: true,
+                    fieldName: "tags",
+                    readOnly: false,
+                    singleFieldNode: $('#tags' + id),
+                    animate: true,
+                    caseSensitive:false
+                });
+            });
         } else {
             $(this).parent().find(':input').not('.checkboxMassImport').prop('disabled', true);
             $(this).parent().find('div.note-editable').attr('contenteditable', 'false');
@@ -44,16 +55,5 @@ $(document).ready(function () {
     $('.cbform').find(':input').not('.checkboxMassImport').not('#mass_upload_video').prop('disabled', true);
     $('.cbform').find('div.note-editable').attr('contenteditable', 'false');
 
-    $('[id^="list_tags"]').each(function () {
-        var id = $(this).data('id');
-        $(this).tagit({
-            singleField: true,
-            fieldName: "tags",
-            readOnly: false,
-            singleFieldNode: $('#tags' + id),
-            animate: true,
-            caseSensitive:false
-        });
-    });
 });
 
