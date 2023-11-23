@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"290",
+  "revision":"293",
   "status":"dev",
   "detail":[
     {
@@ -85,6 +85,9 @@
         ,"Fix dashboard comments"
         ,"Fix custom page creation <i>#275</i>"
         ,"Update page management display"
+        ,"Remove default video tag on mass upload"
+        ,"Add options to disable user's fields"
+        ,"Refactor user edition interface"
       ]
     },
     {
@@ -204,7 +207,7 @@
         ,"Fix video upload with too long name"
         ,"Use filename without extension as default title and description <i>#248</i>"
         ,"Update jQuery-ui to 1.13.2"
-        ,"Fix XSS injection <i>#79</i>"
+        ,"Fix possible XSS injections <i>#79</i>"
         ,"Update top collections display"
         ,"Fix collection creation from photo upload"
         ,"Fix display collection selection from photo upload"
@@ -263,6 +266,7 @@
         ,"Fix default video activation config value"
         ,"Update DB charset"
         ,"Fix missing component in CentOS 7 script"
+        ,"Update dependancies check"
       ]
     }
   ]
