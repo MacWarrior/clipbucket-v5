@@ -189,6 +189,27 @@ class Collection
 
         return $result;
     }
+
+    /**
+     * @return string
+     */
+    public static function getGenericConstraint(): string
+    {
+        $dob = user_dob();
+        $sql_age_restrict = '(collection.age_restriction IS NULL OR TIMESTAMPDIFF(YEAR, \'' . mysql_clean($dob) . '\', now()) >= collection.age_restriction )';
+        $cond = '';
+        $current_user_id = user_id();
+        if ($current_user_id) {
+            $select_contacts = 'SELECT contact_userid FROM ' . tbl('contacts') . ' WHERE confirmed = \'yes\' AND userid = ' . $current_user_id;
+            $cond .= ' OR collection.userid = ' . $current_user_id . ')';
+            $cond .= ' OR (collection.active = \'yes\' AND '.$sql_age_restrict.')';
+            $cond .= ' OR (collection.broadcast = \'private\' AND collection.userid IN(' . $select_contacts . ') AND '.$sql_age_restrict.')';
+        } else {
+            $cond .= ')';
+        }
+        $cond .= ')';
+        return $cond;
+    }
 }
 
 
@@ -682,21 +703,16 @@ class Collections extends CBCategory
             }
             $cond .= ')';
 
-            $left_join_video_cond .= ' AND ((video.active = \'yes\' AND video.status = \'Successful\' AND video.broadcast = \'public\'';
+            $left_join_video_cond .= Video::getGenericConstraint();
             $left_join_photos_cond .= ' AND ((photos.active = \'yes\' AND photos.broadcast = \'public\'';
             if( $userid ){
-                $left_join_video_cond .= ' OR video.userid = '.$userid.')';
-                $left_join_video_cond .= ' OR (video.active = \'yes\' AND video.status = \'Successful\' AND video.broadcast IN(\'public\',\'logged\'))';
-                $left_join_video_cond .= ' OR (video.broadcast = \'private\' AND video.userid IN('.$select_contacts.'))';
 
                 $left_join_photos_cond .= ' OR photos.userid = '.$userid.')';
                 $left_join_photos_cond .= ' OR (photos.active = \'yes\' AND photos.broadcast IN(\'public\',\'logged\'))';
                 $left_join_photos_cond .= ' OR (photos.broadcast = \'private\' AND photos.userid IN('.$select_contacts.'))';
             } else {
-                $left_join_video_cond .= ')';
                 $left_join_photos_cond .= ')';
             }
-            $left_join_video_cond .= ')';
             $left_join_photos_cond .= ')';
         }
 
@@ -1113,6 +1129,16 @@ class Collections extends CBCategory
                 'validate_function' => 'yes_or_no',
                 'display_function'  => 'display_sharing_opt',
                 'default_value'     => 'no'
+            ],
+            'age_restriction' => [
+                'title'      => lang('age_restriction'),
+                'type'       => 'textfield',
+                'name'       => 'age_restriction',
+                'id'         => 'age_restriction',
+                'value'      => $default['age_restriction'],
+                'db_field'   => 'age_restriction',
+                'required'   => 'no',
+                'hint_2'     => lang('info_age_restriction')
             ]
         ];
     }

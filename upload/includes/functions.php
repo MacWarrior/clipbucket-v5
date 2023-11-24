@@ -704,6 +704,14 @@ function user_email()
     }
     return false;
 }
+function user_dob()
+{
+    global $userquery;
+    if ($userquery->udetails['dob']) {
+        return $userquery->udetails['dob'];
+    }
+    return false;
+}
 
 /**
  * Function used to check weather user access or not

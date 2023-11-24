@@ -111,6 +111,9 @@ class Photo
         if( $param_condition ){
             $conditions[] = '(' . $param_condition . ')';
         }
+        if (!has_access('admin_access', true)) {
+            $conditions[] = self::getGenericConstraint();
+        }
 
         $version = Update::getInstance()->getDBVersion();
 
@@ -189,6 +192,25 @@ class Photo
         }
 
         return $result;
+    }
+
+    public static function getGenericConstraint(): string
+    {
+        $dob = user_dob();
+        $sql_age_restrict = '(photo.age_restriction IS NULL OR TIMESTAMPDIFF(YEAR, \'' . mysql_clean($dob) . '\', now()) >= photo.age_restriction )';
+        $superCond = '((photos.active = \'yes\' AND photos.broadcast = \'public\'';
+
+        $current_user_id = user_id();
+        if ($current_user_id) {
+            $select_contacts = 'SELECT contact_userid FROM ' . tbl('contacts') . ' WHERE confirmed = \'yes\' AND userid = ' . $current_user_id;
+            $superCond .= ' OR photos.userid = ' . $current_user_id . ')';
+            $superCond .= ' OR (photos.active = \'yes\' AND photos.broadcast IN(\'public\',\'logged\') AND '.$sql_age_restrict.')';
+            $superCond .= ' OR (photos.broadcast = \'private\' AND photos.userid IN(' . $select_contacts . ') AND '.$sql_age_restrict.')';
+        } else {
+            $superCond .= ')';
+        }
+        $superCond .= ')';
+        return $superCond;
     }
 }
 class CBPhotos
@@ -581,18 +603,7 @@ class CBPhotos
         $cond = '';
 
         if (!has_access('admin_access', true)) {
-            $cond .= '((photos.active = \'yes\' AND photos.broadcast = \'public\'';
-            $userid = user_id();
-            if( $userid ){
-                $select_contacts = 'SELECT contact_userid FROM '.tbl('contacts').' WHERE confirmed = \'yes\' AND userid = '.$userid;
-                $cond .= ' OR photos.userid = '.$userid.')';
-                $cond .= ' OR (photos.active = \'yes\' AND photos.broadcast IN(\'public\',\'logged\'))';
-                $cond .= ' OR (photos.broadcast = \'private\' AND photos.userid IN('.$select_contacts.'))';
-            } else {
-                $cond .= ')';
-            }
-            $cond .= ')';
-
+            $cond .= Photo::getGenericConstraint();
         } else {
             if ($p['active']) {
                 $cond .= 'photos.active = \'' . mysql_clean($p['active']) . '\'';
@@ -1531,6 +1542,9 @@ class CBPhotos
             if (!isset($array['allow_rating'])) {
                 $array['allow_rating'] = 'yes';
             }
+            if (!isset($array['age_restriction'])) {
+                $array['age_restriction'] = 'null';
+            }
 
             foreach ($FullForms as $field) {
                 $name = formObj::rmBrackets($field['name']);
@@ -1671,6 +1685,7 @@ class CBPhotos
         $comments = $array['allow_comments'];
         $embedding = $array['allow_embedding'];
         $rating = $array['allow_rating'];
+        $age_restriction = $array['age_restriction'];
 
         return [
             'comments'  => [
@@ -1706,7 +1721,17 @@ class CBPhotos
                 'validate_function' => 'yes_or_no',
                 'display_function'  => 'display_sharing_opt',
                 'default_value'     => 'yes'
-            ]
+            ],
+            'age_restriction' => [
+                'title'      => lang('age_restriction'),
+                'type'       => 'textfield',
+                'name'       => 'age_restriction',
+                'id'         => 'age_restriction',
+                'value'      =>  $age_restriction ?? '',
+                'db_field'   => 'age_restriction',
+                'required'   => 'no',
+                'hint_2'     => lang('info_age_restriction')
+            ],
         ];
     }
 

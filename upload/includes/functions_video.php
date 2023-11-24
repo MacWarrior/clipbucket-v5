@@ -8,12 +8,12 @@ function get_video_fields($extra = null)
 /**
  * Function used to check video is playlable or not
  *
- * @param : { string / id } { $id } { id of key of video }
  *
- * @return bool|void : { boolean } { true if playable, else false }
+ * @param array|string $id contain video info or video id
+ * @return bool : { boolean } { true if playable, else false }
  * @throws Exception
  */
-function video_playable($id)
+function video_playable($id): bool
 {
     global $cbvideo, $userquery;
 
@@ -63,6 +63,7 @@ function video_playable($id)
         }
         return true;
     }
+
     if ($vdo['video_password']
         && $vdo['broadcast'] == 'unlisted'
         && $vdo['video_password'] != $video_password
@@ -85,8 +86,15 @@ function video_playable($id)
                 }
             }
         }
-        return true;
     }
+    if (
+        !empty($vdo['age_restriction'])
+        && age_restriction_check(user_id(), $vdo['videoid']) != 1
+    ) {
+        e(lang('error_age_restriction'));
+        return false;
+    }
+    return true;
 }
 
 /**
@@ -1754,3 +1762,25 @@ function clean_orphan_files($file)
     }
     remove_empty_directory(dirname($file['data']), $stop_path);
 }
+
+function age_restriction_check ($user_id, $video_id)
+{
+    $sql = ' SELECT 
+    TIMESTAMPDIFF(YEAR, U.dob, now()),
+    CASE
+        WHEN V.age_restriction IS NULL THEN 1
+        WHEN TIMESTAMPDIFF(YEAR, U.dob, now()) < V.age_restriction THEN 0
+            ELSE 1
+        END AS can_access
+    FROM '.tbl('users') . ' AS U , '.tbl('video') .' AS V
+    WHERE V.videoid = '.mysql_clean($video_id).' AND U.userid = '.mysql_clean($user_id).'
+    ' ;
+    $rs = select($sql);
+    if (!empty($rs)) {
+        return $rs[0]['can_access'];
+    } else {
+        return 0;
+    }
+}
+
+

@@ -517,6 +517,16 @@ class Upload
                 'extra_tags' => " $video_pass_disable ",
                 'hint_2'     => lang('set_video_password')
             ],
+            'age_restriction' => [
+                'title'      => lang('age_restriction'),
+                'type'       => 'textfield',
+                'name'       => 'age_restriction',
+                'id'         => 'age_restriction',
+                'value'      => $default['age_restriction'],
+                'db_field'   => 'age_restriction',
+                'required'   => 'no',
+                'hint_2'     => lang('info_age_restriction')
+            ],
             'video_users'    => [
                 'title'             => lang('video_users'),
                 'type'              => 'textarea',

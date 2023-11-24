@@ -65,7 +65,8 @@ CREATE TABLE `{tbl_prefix}collections` (
   `voters` longtext DEFAULT NULL,
   `active` varchar(4) NOT NULL,
   `public_upload` varchar(4) NOT NULL,
-  `type` varchar(10) NOT NULL
+  `type` varchar(10) NOT NULL,
+  `age_restriction` INT DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}collection_categories` (
@@ -258,7 +259,8 @@ CREATE TABLE `{tbl_prefix}photos` (
   `downloaded` bigint(255) NOT NULL DEFAULT 0,
   `server_url` text NULL DEFAULT NULL,
   `owner_ip` varchar(20) NOT NULL,
-  `photo_details` text NULL DEFAULT NULL
+  `photo_details` text NULL DEFAULT NULL,
+  `age_restriction` INT DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}playlists` (
@@ -282,7 +284,8 @@ CREATE TABLE `{tbl_prefix}playlists` (
   `first_item` text NULL DEFAULT NULL,
   `cover` text NULL DEFAULT NULL,
   `played` int(255) NOT NULL DEFAULT 0,
-  `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `age_restriction` INT DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}playlist_items` (
@@ -564,7 +567,8 @@ CREATE TABLE `{tbl_prefix}video` (
   `re_conv_status` tinytext NULL DEFAULT NULL,
   `is_castable` tinyint(1) NOT NULL DEFAULT 0,
   `bits_color` tinyint(4) DEFAULT NULL,
-  `subscription_email` enum('pending','sent') NOT NULL DEFAULT 'pending'
+  `subscription_email` enum('pending','sent') NOT NULL DEFAULT 'pending',
+  `age_restriction` INT DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}video_categories` (

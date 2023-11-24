@@ -235,7 +235,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_user_favorite_books', 'no'),
     (NULL, 'enable_user_about', 'no'),
     (NULL, 'enable_user_website', 'no'),
-    (NULL, 'enable_user_status', 'no');
+    (NULL, 'enable_user_status', 'no'),
+    (NULL, 'enable_user_dob_edition', 'yes');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 428, 240, 240000),
