@@ -107,10 +107,13 @@
 							<a href="#cb-item-info" data-toggle="tab"><span class="icon-info"></span>{lang code='info'}</a>
 						</li>
 						{if
-						config('enable_video_link_sharing') == 'yes' ||
-						(config('enable_video_social_sharing') == 'yes' && ($vdo.broadcast == 'public' || ($vdo.broadcast == 'unlisted' && $vdo.video_password == ''))) ||
-						(config('video_embed') == 1 && $vdo.allow_embedding=='yes' && ($vdo.broadcast == 'public' || ($vdo.broadcast == 'unlisted' && $vdo.video_password == ''))) ||
-						(config('enable_video_internal_sharing') == 'yes' && user_id())
+							(userquery::getInstance()->hasUserLevelAccess(4, 'view_video') ||
+							(config('enable_video_internal_sharing') == 'yes' && user_id()))
+							&& (
+								config('enable_video_link_sharing') == 'yes' ||
+								(config('enable_video_social_sharing') == 'yes' && ($vdo.broadcast == 'public' || ($vdo.broadcast == 'unlisted' && $vdo.video_password == ''))) ||
+								(config('video_embed') == 1 && $vdo.allow_embedding=='yes' && ($vdo.broadcast == 'public' || ($vdo.broadcast == 'unlisted' && $vdo.video_password == '')))
+							)
 						}
 						<li>
 							<a href="#cb-item-share" data-toggle="tab"><span class="icon-share"></span>{lang code='share_embed'}</a>
@@ -143,10 +146,13 @@
 						</div>
 
 						{if
-							config('enable_video_link_sharing') == 'yes' ||
-							(config('enable_video_social_sharing') == 'yes' && ($vdo.broadcast == 'public' || ($vdo.broadcast == 'unlisted' && $vdo.video_password == ''))) ||
-							(config('video_embed') == 1 && $vdo.allow_embedding=='yes' && ($vdo.broadcast == 'public' || ($vdo.broadcast == 'unlisted' && $vdo.video_password == ''))) ||
-							(config('enable_video_internal_sharing') == 'yes' && user_id())
+							(userquery::getInstance()->hasUserLevelAccess(4, 'view_video') ||
+							(config('enable_video_internal_sharing') == 'yes' && user_id()))
+							&& (
+								config('enable_video_link_sharing') == 'yes' ||
+								(config('enable_video_social_sharing') == 'yes' && ($vdo.broadcast == 'public' || ($vdo.broadcast == 'unlisted' && $vdo.video_password == ''))) ||
+								(config('video_embed') == 1 && $vdo.allow_embedding=='yes' && ($vdo.broadcast == 'public' || ($vdo.broadcast == 'unlisted' && $vdo.video_password == '')))
+							)
 						}
 						<div class="tab-pane fade in clearfix" id="cb-item-share">
 							{show_share_form id=$vdo.videoid type=video}

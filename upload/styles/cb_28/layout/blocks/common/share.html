@@ -1,7 +1,11 @@
 {$type=$params.type}
 <div id="share_form_div" class="action_box share_form clearfix">
 	{if $params.type =='video'}
-		{if config('enable_video_social_sharing') == 'yes' && ($vdo.broadcast == 'public' || ($vdo.broadcast == 'unlisted' && $vdo.video_password == ''))}
+		{if
+			userquery::getInstance()->hasUserLevelAccess(4, 'view_video') &&
+			config('enable_video_social_sharing') == 'yes' &&
+			($vdo.broadcast == 'public' || ($vdo.broadcast == 'unlisted' && $vdo.video_password == ''))
+		}
 	<ul class="social-share">
 		<li>
 			<a href="http://www.facebook.com/sharer/sharer.php?s=100&p[url]={video_link($vdo)|urlencode}&p[images][0]={get_thumb vdetails=$vdo}&p[title]={$vdo.title|title|urlencode}&p[summary]={$vdo.description|description|urlencode}" target="_blank" class="btn-fb icon-facebook">
@@ -22,7 +26,12 @@
 	<hr/>
 		{/if}
 
-		{if config('video_embed') == 1 && $vdo.allow_embedding=='yes' && ($vdo.broadcast == 'public' || ($vdo.broadcast == 'unlisted' && $vdo.video_password == ''))}
+		{if
+			userquery::getInstance()->hasUserLevelAccess(4, 'view_video') &&
+			config('video_embed') == 1 &&
+			$vdo.allow_embedding=='yes'
+			&& ($vdo.broadcast == 'public' || ($vdo.broadcast == 'unlisted' && $vdo.video_password == ''))
+		}
 	<div class="form-group">
 		<label for="embed_code" class="block-label">{lang code='embed_code'}</label>
 		<textarea name="embed_code" id="embed_code" onclick="this.select()" class="form-control">{display_clean($cbvid->embed_code($vdo))}</textarea>
@@ -67,7 +76,10 @@
 	<hr/>
 		{/if}
 
-		{if config('enable_video_link_sharing') == 'yes'}
+		{if
+			userquery::getInstance()->hasUserLevelAccess(4, 'view_video') &&
+			config('enable_video_link_sharing') == 'yes'
+		}
 	<div class="form-group">
 		<label for="link_video" class="block-label">{lang code='link_this_video'}</label>
 		<input type="text" name="link_video" id="link_video" value="{videoLink vdetails=$vdo}" onclick="this.select()" class="form-control" >

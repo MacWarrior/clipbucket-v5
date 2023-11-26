@@ -6,6 +6,7 @@ class User
     private $fields = [];
     private $display_block = '';
     private $search_limit = 0;
+    private $display_var_name = '';
 
     public function __construct(){
         $this->tablename = 'users';
@@ -256,6 +257,17 @@ class userquery extends CBCategory
         ];
 
         $cb_columns->object('users')->register_columns($basic_fields);
+    }
+
+    public function hasUserLevelAccess($user_level, $access)
+    {
+        $perms = userquery::getInstance()->get_user_level($user_level, true);
+        if( !isset($perms[$access]) ){
+            error_log('Unknown access : '.$access);
+            return false;
+        }
+
+        return $perms[$access] == 'yes';
     }
 
     /**
@@ -2096,6 +2108,7 @@ class userquery extends CBCategory
 
     /**
      * Function used to get permission types
+     * @throws Exception
      */
     function get_level_types(): array
     {
