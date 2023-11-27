@@ -100,6 +100,15 @@ class Video
     /**
      * @throws Exception
      */
+    public function getOne(array $params = [])
+    {
+        $params['first_only'] = true;
+        return $this->getAll($params);
+    }
+
+    /**
+     * @throws Exception
+     */
     public function getAll(array $params = [])
     {
         $param_videoid = $params['videoid'] ?? false;
@@ -116,6 +125,7 @@ class Video
         $param_having = $params['having'] ?? false;
         $param_count = $params['count'] ?? false;
         $param_first_only = $params['first_only'] ?? false;
+        $param_exist = $params['exist'] ?? false;
 
         $conditions = [];
         if( $param_videoid ){
@@ -159,8 +169,13 @@ class Video
             $conditions[] = $cond;
         }
 
-        if( !has_access('admin_access', true) ){
-            $cond = '( (video.active = \'yes\' AND video.status = \'Successful\' AND video.broadcast = \'public\'';
+        if( !has_access('admin_access', true) && !$param_exist ){
+            $cond = '( (video.active = \'yes\' AND video.status = \'Successful\' AND (video.broadcast = \'public\'';
+
+            if( $param_first_only ){
+                $cond .= ' OR (video.broadcast = \'unlisted\' AND video.video_password = \'\')';
+            }
+            $cond .= ')';
 
             $current_user_id = user_id();
             if( $current_user_id ){
@@ -222,6 +237,10 @@ class Video
             . $limit;
 
         $result = Clipbucket_db::getInstance()->_select($sql);
+
+        if( $param_exist ){
+            return !empty($result);
+        }
 
         if( $param_count ){
             if( empty($result) ){
@@ -312,6 +331,9 @@ class CBvideo extends CBCategory
         } else if ($vdo['status'] != 'Successful') {
             $text = sprintf(lang('video_is'), strtolower(lang(strtolower($vdo['status']))) );
             $class = 'label-warning';
+        } else if ($vdo['broadcast'] == 'unlisted') {
+            $text = sprintf(lang('video_is'), strtolower(lang('unlisted')));
+            $class = 'label-info';
         }
 
         if( !empty($text) ){
@@ -1423,12 +1445,10 @@ class CBvideo extends CBCategory
      * Function used to generate Embed Code
      *
      * @param        $vdetails
-     * @param string $type
-     *
-     * @return bool|string
+     * @return string
      * @throws Exception
      */
-    function embed_code($vdetails, $type = 'embed_object')
+    function embed_code($vdetails): string
     {
         //Checking for video details
         if (!is_array($vdetails)) {
@@ -1451,33 +1471,15 @@ class CBvideo extends CBCategory
             }
         }
 
-        if ($type == 'iframe') {
-            $embed_code = '<iframe width="' . config('embed_player_width') . '" height="' . config('embed_player_height') . '" ';
-            $embed_code .= 'src="' . BASEURL . '/player/embed_player.php?vid=' . $vdetails['videokey'] . '&width=' .
-                config('embed_player_width') . '&height=' . config('embed_player_height');
+        $embed_code = '<iframe width="' . config('embed_player_width') . '" height="' . config('embed_player_height') . '" ';
+        $embed_code .= 'src="' . BASEURL . '/player/embed_player.php?vid=' . $vdetails['videokey'];
 
-            if (config('autoplay_embed') == 'yes') {
-                $embed_code .= '&autoplay=yes';
-            }
-
-            $embed_code .= '" frameborder="0" allowfullscreen></iframe>';
+        if (config('autoplay_embed') == 'yes') {
+            $embed_code .= '&autoplay=yes';
         }
 
-        if (!$embed_code) {
-            //return new Embed Code
-            $vid_file = get_video_file($vdetails, false, false);
-            if ($vid_file) {
-                $code = '<object width="' . EMBED_VDO_WIDTH . '" height="' . EMBED_VDO_HEIGHT . '">';
-                $code .= '<param name="movie" value="' . BASEURL . '/embed_player.php?vid=' . $vdetails['videoid'] . '"></param>';
-                $code .= '<param name="allowFullScreen" value="true"></param>';
-                $code .= '<param name="allowscriptaccess" value="always"></param>';
-                $code .= '<embed src="' . BASEURL . '/embed_player.php?vid=' . $vdetails['videoid'] . '"';
-                $code .= 'type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="300" height="250"></embed>';
-                $code .= '</object>';
-                return $code;
-            }
-            return embeded_code($vdetails);
-        }
+        $embed_code .= '" frameborder="0" allowfullscreen></iframe>';
+
         return $embed_code;
     }
 

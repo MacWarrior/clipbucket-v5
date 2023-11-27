@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"292",
+  "revision":"295",
   "status":"dev",
   "detail":[
     {
@@ -88,6 +88,8 @@
         ,"Remove default video tag on mass upload"
         ,"Add options to disable user's fields"
         ,"Refactor user edition interface"
+        ,"Add video sharing options"
+        ,"Remove video embedding with flash"
       ]
     },
     {
@@ -235,6 +237,8 @@
         ,"Fix video manager"
         ,"Fix video with old SD/HD conversion"
         ,"Slightly update privacy policy page"
+        ,"Refactor video sharing"
+        ,"Fix embed player"
       ]
     }
   ,{
@@ -266,6 +270,7 @@
         ,"Fix default video activation config value"
         ,"Update DB charset"
         ,"Fix missing component in CentOS 7 script"
+        ,"Update dependancies check"
       ]
     }
   ]
