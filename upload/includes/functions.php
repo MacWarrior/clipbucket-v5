@@ -2063,6 +2063,7 @@ function validate_cb_form($input, $array)
     //Check the Collpase Category Checkboxes
     if (is_array($input)) {
         foreach ($input as $field) {
+            $funct_err = false;
             $field['name'] = formObj::rmBrackets($field['name']);
             $title = $field['title'];
             $val = $array[$field['name']];
@@ -2094,8 +2095,11 @@ function validate_cb_form($input, $array)
                 } else {
                     $block = false;
                 }
+            } else {
+                //if field not required and empty it's valid
+                $funct_err = true;
             }
-            if (!empty($val)) {
+            if (!empty($val) || $val === '0') {
                 //don't test validity if field is empty
                 $funct_err = is_valid_value($field['validate_function'], $val);
             }

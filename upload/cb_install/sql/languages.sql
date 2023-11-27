@@ -991,4 +991,5 @@ VALUES
        ('option_enable_video_link_sharing'),
        ('download'),
        ('unlisted'),
-       ('of');
+       ('of'),
+       ('collection_not_active');
