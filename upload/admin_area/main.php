@@ -75,6 +75,9 @@ if (isset($_POST['update'])) {
         , 'enable_user_website'
         , 'enable_user_about'
         , 'enable_user_status'
+        , 'enable_video_social_sharing'
+        , 'enable_video_internal_sharing'
+        , 'enable_video_link_sharing'
     ];
 
     $config_booleans_to_refactor = [
@@ -161,8 +164,6 @@ if (isset($_POST['update'])) {
         'collection_home_top_collections',
         'collection_collection_top_collections',
         'collection_photos_top_collections',
-
-        'embed_type',
 
         'date_format',
         'description',
@@ -270,6 +271,9 @@ if (isset($_POST['update'])) {
         'enable_user_website',
         'enable_user_about',
         'enable_user_status',
+        'enable_video_social_sharing',
+        'enable_video_internal_sharing',
+        'enable_video_link_sharing',
 
         'thumb_width',
         'thumb_height',
