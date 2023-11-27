@@ -488,7 +488,7 @@ $Smarty->register_function('load_form', 'load_form');
 $Smarty->register_function('get_all_video_files', 'get_all_video_files_smarty');
 $Smarty->register_function('input_value', 'input_value');
 $Smarty->register_function('userid', 'user_id');
-$Smarty->register_function('FlashPlayer', 'flashPlayer');
+$Smarty->register_function('show_player', 'show_player');
 $Smarty->register_function('link', 'cblink');
 $Smarty->register_function('show_share_form', 'show_share_form');
 $Smarty->register_function('show_flag_form', 'show_flag_form');
@@ -525,15 +525,12 @@ $Smarty->register_modifier('post_form_val', 'post_form_val');
 $Smarty->register_modifier('get_thumb_num', 'get_thumb_num');
 $Smarty->register_modifier('ad', 'ad');
 $Smarty->register_modifier('get_user_level', 'get_user_level');
-$Smarty->register_modifier('get_age', 'get_age');
-$Smarty->register_modifier('outgoing_link', 'outgoing_link');
 $Smarty->register_modifier('nicetime', 'nicetime');
 $Smarty->register_modifier('country', 'get_country');
 $Smarty->register_modifier('flag_type', 'flag_type');
 $Smarty->register_modifier('get_username', 'get_username');
 $Smarty->register_modifier('formatfilesize', 'formatfilesize');
 
-assign('updateEmbedCode', 'updateEmbed');
 # Registering Video Remove Functions
 register_action_remove_video('remove_video_thumbs');
 register_action_remove_video('remove_video_subtitles');

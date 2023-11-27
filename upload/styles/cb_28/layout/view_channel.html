@@ -26,7 +26,7 @@
 			{if $uservideos}
 			<div class="clearfix player-holder">
 				<div id="cb_player" class="clearfix cb_player">
-					{FlashPlayer vdetails=$first_video width='100%' height='355'}
+					{show_player vdetails=$first_video}
 				</div>
 			</div>
 			{/if}
@@ -52,86 +52,80 @@
 					</li>
 				</ul>
 				<div class="tab-content clearfix">
-					<div class="tab-pane fade in clearfix {if $u.show_my_videos == 'no' && $u.show_my_photos == 'no'}active{/if}}" id="user-info">
+					<div class="tab-pane fade in clearfix{if $u.show_my_videos=='no' && $u.show_my_photos=='no'} active{/if}" id="user-info">
 						<div class="clearfix watch-vid-details">
 							<h2>{lang code='user_activity'}</h2>
 							<ul class="clearfix desc-list">
 								{if $p.profile_title}
 								<li>
-									<strong>{lang code='title'}</strong>:{display_clean($p.profile_title)}
+									<strong>{lang code='title'}</strong> : {display_clean($p.profile_title)}
 								</li>
 								{/if}
 								{if $p.profile_desc}
 								<li>
-									<strong>{lang code='description'}</strong>:{display_clean($p.profile_desc)}
+									<strong>{lang code='description'}</strong> : {display_clean($p.profile_desc)}
 								</li>
 								{/if}
 								<li>
-									<strong>{lang code='joined'}</strong>:&nbsp;{$u.doj|niceTime}
+									<strong>{lang code='joined'}</strong> : {$u.doj|niceTime}
 								</li>
 								<li>
-									<strong>{lang code='user_last_login'}</strong>:{$u.last_logged|niceTime}
+									<strong>{lang code='user_last_login'}</strong> : {$u.last_logged|niceTime}
 								</li>
+								{if config('enable_user_status') == 'yes'}
 								<li>
-									<strong>{lang code='online_status'}</strong>:&nbsp;
+									<strong>{lang code='online_status'}</strong> :
 									{if $userquery->isOnline($u.last_active,$p.online_status)}
 										<span style="color:#060;">{lang code='online'}</span>
 									{else}
 										<span style="color:#ed0000;">{lang code='offline'}</span>
 									{/if}
 								</li>
-								{$usercat = $userquery->get_category_name($user.category)}
-								<li><strong>{lang code='category'}: </strong>{display_clean($usercat.category_name)}</li>
+								{/if}
 							</ul>
-							{assign var='channel_profile_fields' value=$userquery->load_user_fields($p,'profile')}
-							{foreach from=$channel_profile_fields item=field_group name=profile_groups}
-							{if $smarty.foreach.profile_groups.iteration==2}
-							<div id="moreDetailsDIV" style="display:none;">
-							{/if}
-							{if $field_group.channel_view !='no'}     
-								<div class="clearfix">
-									<h2>{display_clean($field_group.group_name)}</h2>
-									<ul class="clearfix desc-list">
-										{if $field_group.group_id=='profile_location'}
-										<li>
-											<strong>{lang code='country'}</strong>:&nbsp;{$u.country|country}
-										</li>
-										{/if}
 
-										{foreach from=$field_group.fields item=field}
-										{if $field.auto_view=='yes' && $field.value}
-										<li>
-										{if $field.type !='textarea' && $field.type !='text' && $field.type !='textfield'}
-											<strong>{$field.title}</strong>:&nbsp;{input_value input=$field}
-										{elseif $field.type =='textarea'}
-											<strong>{$field.title}</strong>:&nbsp;{$field.value|nl2br}
-										{else}
-											<strong>{$field.title}</strong>:&nbsp;{input_value input=$field}
-										{/if}
-										</li>
-										{/if}
-										{if $field_group.group_id=='profile_basic_info' 
-											  && $field.name=='relation_status'
-											  && $p.show_dob!='no'}
-										<li>
-											<strong>{lang code='user_date_of_birth'}</strong>:&nbsp;{cbdate(NULL, $u.dob)}
-										</li>
-										{/if}
-										{/foreach}
-										{if $smarty.foreach.profile_groups.iteration==1}
-											{$usercat = $userquery->get_category_name($user.category)}
-											<li><strong>Category: </strong>{$usercat.category_name}</li>
-										{/if}
-									</ul>
-								</div>
+							{if $field_group.channel_view != 'no'}
+								{foreach from=$channel_profile_fields item=field_group name=profile_groups}
+									{if count($field_group.fields) > 0 || ($field_group.group_id=='profile_location' && config('enable_country')=='yes') || ($field_group.group_id=='profile_basic_info' && ($p.show_dob!='no' || config('enable_user_category')=='yes') ) }
+									<div class="clearfix">
+										<h2>{display_clean($field_group.group_name)}</h2>
+										<ul class="clearfix desc-list">
+											{if $field_group.group_id=='profile_location' && config('enable_country')=='yes'}
+											<li>
+												<strong>{lang code='country'}</strong> : {$u.country|country}
+											</li>
+											{/if}
+
+											{foreach from=$field_group.fields item=field}
+												{if $field.auto_view=='yes' && $field.value}
+												<li>
+													{if $field.type !='textarea' && $field.type !='text' && $field.type !='textfield'}
+														<strong>{$field.title}</strong> : {input_value input=$field}
+													{elseif $field.type =='textarea'}
+														<strong>{$field.title}</strong> : {display_clean($field.value)|nl2br}
+													{else}
+														<strong>{$field.title}</strong> : {input_value input=$field}
+													{/if}
+												</li>
+												{/if}
+											{/foreach}
+
+											{if $field_group.group_id=='profile_basic_info'}
+												{if $p.show_dob!='no'}
+												<li>
+													<strong>{lang code='user_date_of_birth'}</strong> : {cbdate(NULL, $u.dob)}
+												</li>
+												{/if}
+												{if config('enable_user_category')=='yes'}
+													{$usercat = $userquery->get_category_name($user.category)}
+													<li><strong>Category : </strong>{$usercat.category_name}</li>
+												{/if}
+											{/if}
+										</ul>
+									</div>
+									{/if}
+								{/foreach}
 							{/if}
-							{if $smarty.foreach.profile_groups.last}
-							</div>
-							{/if}
-							{/foreach}
-							<div id="moreDetails" class="channelFieldset">
-								<a class="btn btn-primary btn-sm channelLegend" href="javascript:void(0);" onClick="$('#moreDetails').hide(); $('#moreDetailsDIV').show();">{lang code='more'}</a>
-							</div>
 						</div>
 					</div>
 					<div class="tab-pane videos fade in clearfix {if $u.show_my_videos != 'no'}active{/if}" id="user-videos">

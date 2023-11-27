@@ -108,6 +108,46 @@ $Cbucket->addAdminCSS([
 $available_tags = Tags::fill_auto_complete_tags('profile');
 assign('available_tags',$available_tags);
 
+assign('signup_fields', $userquery->load_signup_fields($udetails));
+
+$channel_profile_fields = $userquery->load_user_fields($user_profile);
+
+$location_fields = [];
+foreach($channel_profile_fields AS $field){
+    if( $field['group_id'] == 'profile_location'){
+        $location_fields = $field;
+        break;
+    }
+}
+assign('location_fields', $location_fields);
+
+$education_interests_fields = [];
+foreach($channel_profile_fields AS $field){
+    if( $field['group_id'] == 'profile_education_interests'){
+        $education_interests_fields = $field;
+        break;
+    }
+}
+assign('education_interests_fields', $education_interests_fields);
+
+$profile_basic_info = [];
+foreach($channel_profile_fields AS $field){
+    if( $field['group_id'] == 'profile_basic_info'){
+        $profile_basic_info = $field;
+        break;
+    }
+}
+assign('profile_basic_info', $profile_basic_info);
+
+$channel_settings = [];
+foreach($channel_profile_fields AS $field){
+    if( $field['group_id'] == 'channel_settings'){
+        $channel_settings = $field;
+        break;
+    }
+}
+assign('channel_settings', $channel_settings);
+
 subtitle('View User');
 template_files('view_user.html');
 display_it();

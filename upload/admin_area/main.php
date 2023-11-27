@@ -59,6 +59,25 @@ if (isset($_POST['update'])) {
         , 'enable_gender'
         , 'enable_user_category'
         , 'enable_rss_feeds'
+        , 'enable_user_firstname_lastname'
+        , 'enable_user_relation_status'
+        , 'enable_user_postcode'
+        , 'enable_user_hometown'
+        , 'enable_user_city'
+        , 'enable_user_education'
+        , 'enable_user_schools'
+        , 'enable_user_occupation'
+        , 'enable_user_compagnies'
+        , 'enable_user_hobbies'
+        , 'enable_user_favorite_movies'
+        , 'enable_user_favorite_music'
+        , 'enable_user_favorite_books'
+        , 'enable_user_website'
+        , 'enable_user_about'
+        , 'enable_user_status'
+        , 'enable_video_social_sharing'
+        , 'enable_video_internal_sharing'
+        , 'enable_video_link_sharing'
     ];
 
     $config_booleans_to_refactor = [
@@ -145,8 +164,6 @@ if (isset($_POST['update'])) {
         'collection_home_top_collections',
         'collection_collection_top_collections',
         'collection_photos_top_collections',
-
-        'embed_type',
 
         'date_format',
         'description',
@@ -238,6 +255,25 @@ if (isset($_POST['update'])) {
         'enable_country',
         'enable_gender',
         'enable_user_category',
+        'enable_user_firstname_lastname',
+        'enable_user_relation_status',
+        'enable_user_postcode',
+        'enable_user_hometown',
+        'enable_user_city',
+        'enable_user_education',
+        'enable_user_schools',
+        'enable_user_occupation',
+        'enable_user_compagnies',
+        'enable_user_hobbies',
+        'enable_user_favorite_movies',
+        'enable_user_favorite_music',
+        'enable_user_favorite_books',
+        'enable_user_website',
+        'enable_user_about',
+        'enable_user_status',
+        'enable_video_social_sharing',
+        'enable_video_internal_sharing',
+        'enable_video_link_sharing',
 
         'thumb_width',
         'thumb_height',

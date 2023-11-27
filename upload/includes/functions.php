@@ -1017,7 +1017,7 @@ function input_value($params)
     }
 
     if ($input['return_checked']) {
-        return $input['checked'];
+        return display_clean($input['checked']);
     }
 
     if (function_exists($input['display_function'])) {
@@ -1026,11 +1026,11 @@ function input_value($params)
 
     if ($input['type'] == 'dropdown') {
         if ($input['checked']) {
-            return $value[$input['checked']];
+            return display_clean($value[$input['checked']]);
         }
-        return $value[0];
+        return display_clean($value[0]);
     }
-    return $input['value'];
+    return display_clean($input['value']);
 }
 
 /**
@@ -2063,6 +2063,7 @@ function validate_cb_form($input, $array)
     //Check the Collpase Category Checkboxes
     if (is_array($input)) {
         foreach ($input as $field) {
+            $funct_err = false;
             $field['name'] = formObj::rmBrackets($field['name']);
             $title = $field['title'];
             $val = $array[$field['name']];
@@ -2094,8 +2095,11 @@ function validate_cb_form($input, $array)
                 } else {
                     $block = false;
                 }
+            } else {
+                //if field not required and empty it's valid
+                $funct_err = true;
             }
-            if (!empty($val)) {
+            if (!empty($val) || $val === '0') {
                 //don't test validity if field is empty
                 $funct_err = is_valid_value($field['validate_function'], $val);
             }
@@ -2150,24 +2154,6 @@ function validate_cb_form($input, $array)
             }
         }
     }
-}
-
-/**
- * Function used to count age from date
- *
- * @param : { string } { $input } { date to count age }
- *
- * @return float|false : { integer } { $iYears } { years old }
- */
-function get_age($input)
-{
-    $time = strtotime($input);
-    $iMonth = date('m', $time);
-    $iDay = date('d', $time);
-    $iYear = date('Y', $time);
-    $iTimeStamp = (mktime() - 86400) - mktime(0, 0, 0, $iMonth, $iDay, $iYear);
-    $iDays = $iTimeStamp / 86400;
-    return floor($iDays / 365);
 }
 
 /**
@@ -2235,14 +2221,19 @@ function nicetime($date, $istime = false): string
  * @param : { string } { $out } { link to some webpage }
  *
  * @return string : { string } { HTML anchor tag with link in place }
+ * @throws Exception
  */
-function outgoing_link($out): string
+function outgoing_link($url): string
 {
-    preg_match("/http/", $out, $matches);
-    if (empty($matches[0])) {
-        $out = "http://" . $out;
+    if (filter_var($url, FILTER_VALIDATE_URL) === false) {
+        return lang('incorrect_url');
     }
-    return '<a href="' . $out . '" target="_blank">' . $out . '</a>';
+
+    if (!preg_match("~^(?:f|ht)tps?://~i", $url)) {
+        $url = 'http://' . $url;
+    }
+
+    return '<a href="' . display_clean($url) . '" target="_blank">' . display_clean($url) . '</a>';
 }
 
 /**
@@ -2255,10 +2246,8 @@ function outgoing_link($out): string
  */
 function get_country($code)
 {
-    global $db;
-    $result = $db->select(tbl("countries"), "name_en,iso2", " iso2='$code' OR iso3='$code'");
+    $result = Clipbucket_db::getInstance()->select(tbl('countries'), 'name_en,iso2', " iso2='$code' OR iso3='$code'");
     if (count($result) > 0) {
-        $flag = '';
         $result = $result[0];
         $flag = '<img src="/images/icons/country/' . strtolower($result['iso2']) . '.png" alt="" border="0">&nbsp;';
         return $flag . $result['name_en'];
@@ -4841,6 +4830,42 @@ function get_restorable_languages(array $list_language = []): array
         return !in_array($lang, $column);
     });
 }
+
+function parseAllPHPModules()
+{
+
+    ob_start();
+    phpinfo(INFO_MODULES);
+    $s = ob_get_contents();
+    ob_end_clean();
+
+    $s = strip_tags($s, '<h2><th><td>');
+    $s = preg_replace('/<th[^>]*>([^<]+)<\/th>/', "<info>\\1</info>", $s);
+    $s = preg_replace('/<td[^>]*>([^<]+)<\/td>/', "<info>\\1</info>", $s);
+    $vTmp = preg_split('/(<h2>[^<]+<\/h2>)/', $s, -1, PREG_SPLIT_DELIM_CAPTURE);
+    $vModules = [];
+    for ($i = 1; $i < count($vTmp); $i++) {
+        if (preg_match('/<h2>([^<]+)<\/h2>/', $vTmp[$i], $vMat)) {
+            $vName = trim($vMat[1]);
+            $vTmp2 = explode("\n", $vTmp[$i + 1]);
+            foreach ($vTmp2 as $vOne) {
+                $vPat = '<info>([^<]+)<\/info>';
+                $vPat3 = "/$vPat\s*$vPat\s*$vPat/";
+                $vPat2 = "/$vPat\s*$vPat/";
+                if (preg_match($vPat3, $vOne, $vMat)) { // 3cols
+                    $vModules[$vName][trim($vMat[1])] = [
+                        trim($vMat[2]),
+                        trim($vMat[3])
+                    ];
+                } elseif (preg_match($vPat2, $vOne, $vMat)) { // 2cols
+                    $vModules[$vName][trim($vMat[1])] = trim($vMat[2]);
+                }
+            }
+        }
+    }
+    return $vModules;
+}
+
 
 include('functions_db.php');
 include('functions_filter.php');
