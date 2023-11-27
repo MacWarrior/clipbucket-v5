@@ -35,25 +35,32 @@ $(document).ready(function () {
         if ($(this).is(':checked')) {
             $(this).parent().find(':input').prop('disabled', false);
             $(this).parent().find('div.note-editable').attr('contenteditable', 'true');
-            $(this).parent().find('[id^="list_tags"]').each(function () {
-                var id = $(this).data('id');
-                $(this).tagit({
-                    singleField: true,
-                    fieldName: "tags",
-                    readOnly: false,
-                    singleFieldNode: $('#tags' + id),
-                    animate: true,
-                    caseSensitive:false
-                });
-            });
+            $(this).parent().find('.tagit-close').show();
+            $(this).parent().find('.tagit-choice').addClass('tagit-choice-editable').removeClass('tagit-choice-read-only');
         } else {
             $(this).parent().find(':input').not('.checkboxMassImport').prop('disabled', true);
             $(this).parent().find('div.note-editable').attr('contenteditable', 'false');
+            $(this).parent().find('.tagit-close').hide();
+            $(this).parent().find('.tagit-choice').removeClass('tagit-choice-editable').addClass('tagit-choice-read-only');
         }
     });
 
     $('.cbform').find(':input').not('.checkboxMassImport').not('#mass_upload_video').prop('disabled', true);
     $('.cbform').find('div.note-editable').attr('contenteditable', 'false');
 
+    $('[id^="list_tags"]').each(function () {
+        var id = $(this).data('id');
+        $(this).tagit({
+            singleField: true,
+            fieldName: "tags",
+            readOnly: false,
+            singleFieldNode: $('#tags' + id),
+            animate: true,
+            caseSensitive:false
+        });
+        setTimeout(function(){
+           $('#list_tags'+id).find(':input').prop('disabled', true);
+        }, 200);
+    });
 });
 
