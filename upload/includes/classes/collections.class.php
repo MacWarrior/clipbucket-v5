@@ -194,21 +194,21 @@ class Collection
     /**
      * @return string
      */
-    public static function getGenericConstraint(): string
+    public static function getGenericConstraint($alias = 'collections'): string
     {
         $dob = user_dob();
-        $sql_age_restrict = '(collection.age_restriction IS NULL OR TIMESTAMPDIFF(YEAR, \'' . mysql_clean($dob) . '\', now()) >= collection.age_restriction )';
+        $sql_age_restrict = '('.$alias.'.age_restriction IS NULL OR TIMESTAMPDIFF(YEAR, \'' . mysql_clean($dob) . '\', now()) >= '.$alias.'.age_restriction )';
         $cond = '';
         $current_user_id = user_id();
-        if ($current_user_id) {
-            $select_contacts = 'SELECT contact_userid FROM ' . tbl('contacts') . ' WHERE confirmed = \'yes\' AND userid = ' . $current_user_id;
-            $cond .= ' OR collection.userid = ' . $current_user_id . ')';
-            $cond .= ' OR (collection.active = \'yes\' AND '.$sql_age_restrict.')';
-            $cond .= ' OR (collection.broadcast = \'private\' AND collection.userid IN(' . $select_contacts . ') AND '.$sql_age_restrict.')';
+
+        $cond .= '('.$alias.'.active = \'yes\' AND '.$alias.'.broadcast != \'private\' AND '.$alias.'.age_restriction IS NULL';
+        if( $current_user_id ){
+            $select_contacts = 'SELECT contact_userid FROM '.tbl('contacts').' WHERE confirmed = \'yes\' AND userid = '.$current_user_id;
+            $cond .= ' OR '.$alias.'.userid = '.$current_user_id.')';
+            $cond .= ' OR ( '.$alias.'.broadcast = \'private\' AND '.$alias.'.userid IN('.$select_contacts.') AND '.$sql_age_restrict.' )';
         } else {
-            $cond .= ')';
+            $cond .= ') ';
         }
-        $cond .= ')';
         return $cond;
     }
 }
@@ -425,7 +425,7 @@ class Collections extends CBCategory
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
             $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') as collection_tags';
             $join_tag = ' LEFT JOIN ' . tbl('collection_tags') . ' AS CT ON C.collection_id = CT.id_collection  
-                    LEFT JOIN ' . tbl('tags') . ' AS T ON CT.id_tag = T.id_tag';
+                    LEFT JOIN ' . tbl('tags') . ' AS T ON CT.id_tag = T.id_tag ';
         }
 
         $where = '';
@@ -433,33 +433,27 @@ class Collections extends CBCategory
             $where .= 'WHERE '.$cond;
         }
 
-        $userid = user_id();
         $left_join_cond = '';
         if( !has_access('admin_access', true) ) {
-            $cond_video = '';
-            if( $this->objTable == 'video' ){
-                $cond_video = ' AND obj.status = \'Successful\'';
+            switch ($this->objTable){
+                case $this->objTable == 'video' :
+                $left_join_cond = ' AND ' . Video::getGenericConstraint();
+                break;
+                case $this->objTable == 'photos';
+                $left_join_cond = ' AND ' . Photo::getGenericConstraint();
+                break;
+                default:
+//                    @TODO send error
+                    break;
             }
-
-            $left_join_cond = ' AND ( (obj.active = \'yes\'' . $cond_video . ' AND obj.broadcast = \'public\'';
-
-            if( $userid ){
-                $select_contacts = 'SELECT contact_userid FROM '.tbl('contacts').' WHERE confirmed = \'yes\' AND userid = '.$userid;
-                $left_join_cond .= ' OR obj.userid = '.$userid.')';
-                $left_join_cond .= ' OR (obj.active = \'yes\'' . $cond_video . ' AND obj.broadcast IN(\'public\',\'logged\'))';
-                $left_join_cond .= ' OR (obj.broadcast = \'private\' AND obj.userid IN('.$select_contacts.'))';
-            } else {
-                $left_join_cond .= ')';
-            }
-            $left_join_cond .= ')';
         }
 
         $result = $db->select(tbl($this->section_tbl) . ' C
             INNER JOIN ' . tbl('users') . ' U ON C.userid = U.userid
             LEFT JOIN ' . tbl($this->items) . ' citem ON C.collection_id = citem.collection_id
-            LEFT JOIN ' . tbl($this->objTable) . ' obj ON obj.'.$this->objFieldID .' = citem.object_id' . $left_join_cond
+            LEFT JOIN ' . cb_sql_table($this->objTable) . ' ON '.$this->objTable.'.'.$this->objFieldID .' = citem.object_id ' . $left_join_cond
             . $join_tag
-            ,'C.*, U.userid,U.username, COUNT(DISTINCT obj.'.$this->objFieldID.') AS total_objects' . $select_tag,
+            ,'C.*, U.userid,U.username, COUNT(DISTINCT '.$this->objTable.'.'.$this->objFieldID.') AS total_objects' . $select_tag,
             ' C.collection_id = ' . mysql_clean($id) . ' ' . $where . ' GROUP BY C.collection_id') ;
 
         if ($result) {
@@ -690,31 +684,15 @@ class Collections extends CBCategory
             $cond .= '(' . $title_tag . ')';
         }
 
-        $userid = user_id();
         $left_join_video_cond = '';
         $left_join_photos_cond = '';
         if( !has_access('admin_access', true) ) {
-            $select_contacts = 'SELECT contact_userid FROM '.tbl('contacts').' WHERE confirmed = \'yes\' AND userid = '.$userid;
             if ($cond != '') {
                 $cond .= ' AND ';
             }
-            $cond .= '(C.active = \'yes\' AND C.broadcast != \'private\'';
-            if( $userid ){
-                $cond .= ' OR C.userid = '.$userid.' OR ( C.broadcast = \'private\' AND C.userid IN('.$select_contacts.') )';
-            }
-            $cond .= ')';
-
-            $left_join_video_cond .= Video::getGenericConstraint();
-            $left_join_photos_cond .= ' AND ((photos.active = \'yes\' AND photos.broadcast = \'public\'';
-            if( $userid ){
-
-                $left_join_photos_cond .= ' OR photos.userid = '.$userid.')';
-                $left_join_photos_cond .= ' OR (photos.active = \'yes\' AND photos.broadcast IN(\'public\',\'logged\'))';
-                $left_join_photos_cond .= ' OR (photos.broadcast = \'private\' AND photos.userid IN('.$select_contacts.'))';
-            } else {
-                $left_join_photos_cond .= ')';
-            }
-            $left_join_photos_cond .= ')';
+            $cond .= Collection::getGenericConstraint('C');
+            $left_join_video_cond .= ' AND '.Video::getGenericConstraint();
+            $left_join_photos_cond .= ' AND '.Photo::getGenericConstraint();
         }
 
         $select_tag = '';
@@ -865,18 +843,30 @@ class Collections extends CBCategory
     {
         global $db;
         $itemsTbl = tbl($this->items);
-        $objTbl = tbl($this->objTable);
+        $objTbl = cb_sql_table($this->objTable);
         $tables = $itemsTbl . ',' . $objTbl . ', '.tbl('users');
 
         $condition[] = $itemsTbl . '.collection_id = ' . mysql_clean($id);
-        $condition[] = $itemsTbl . '.object_id = ' . $objTbl . '.' . $this->objFieldID;
-        $condition[] = $objTbl . '.userid = ' . tbl('users') . '.userid';
+        $condition[] = $itemsTbl . '.object_id = ' . $this->objTable . '.' . $this->objFieldID;
+        $condition[] = $this->objTable . '.userid = ' . tbl('users') . '.userid';
+
         if (!has_access('admin_access', true) ) {
             $condition[] = 'active = \'yes\'';
+            switch ($this->objTable) {
+                case 'photos':
+                    $condition[] = Photo::getGenericConstraint();
+                    break;
+                case 'video':
+                    $condition[] = Video::getGenericConstraint();
+                    break;
+                default:
+                    //@TODO send error
+                    break;
+            }
         }
 
         if (!$count_only) {
-            $result = $db->select($tables, $itemsTbl . '.ci_id,' . $itemsTbl . '.collection_id,' . $objTbl . '.*,' . tbl('users') . '.username', implode(' AND ', $condition), $limit, $order);
+            $result = $db->select($tables, $itemsTbl . '.ci_id,' . $itemsTbl . '.collection_id,' . $this->objTable . '.*,' . tbl('users') . '.username', implode(' AND ', $condition), $limit, $order);
         } else {
             $result = $db->count($tables, 'ci_id', implode(' AND ', $condition));
         }
