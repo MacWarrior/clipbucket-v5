@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"295",
+  "revision":"296",
   "status":"dev",
   "detail":[
     {
@@ -90,6 +90,7 @@
         ,"Refactor user edition interface"
         ,"Add video sharing options"
         ,"Remove video embedding with flash"
+        ,"Fix user form saving"
       ]
     },
     {
