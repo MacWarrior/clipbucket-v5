@@ -9,17 +9,17 @@
 		<div class="mainContent col-lg-9 col-md-9 col-sm-9 col-xs-12">
 			{assign var='video_fields' value=$Upload->load_video_fields($v)}
 			<div class="cb-box marginBottom">
-				<h2>Edit Video</h2>
+				<h2>{lang code='vdo_edit_vdo'}</h2>
 				<div class="account_form">
 					<h3>Thumbs</h3>
 					<div class="clearfix well">
 						{ANCHOR place="before_edit_video_form_thumbs_upload"}
 						<form action="upload_thumb.php?video={$v.videoid}" method="post" enctype="multipart/form-data" name="form1">
-							<h5>Upload New Thumb</h5>
+							<h5>{lang code='upload_custom_thumbnail'}</h5>
 							<input name="vid_thumb[]" type="file" />
 							<label for="thumb_file"></label>
 							<div class="form-group pull-right">
-								<input type="submit" name="upload_thumbs" value="Upload Thumb(s)" class="btn btn-primary btn-sm"/>
+								<input type="submit" name="upload_thumbs" value="{lang code='upload'}" class="btn btn-primary btn-sm"/>
 							</div>
 						</form>
 						{ANCHOR place="after_edit_video_form_thumbs_upload"}
@@ -30,7 +30,6 @@
 						{ANCHOR place="before_edit_video_form_thumbs"}
 						<div class="row">
 							<h4>{lang code="extracted_thumbs"}</h4>
-							{assign var=vidthumbs value=get_thumb($v,TRUE,'original', 'auto')}
 							{foreach from=$vidthumbs item=vid_thumb}
 							<div class="col-md-3">
 								<div class="form-group text-center">
@@ -42,11 +41,11 @@
 							{/foreach}
 						</div>
 						<div style="clear:both;"></div>
-						<hr>
+						{if !empty($vidthumbs_custom)}
+						<hr/>
 						<div class="row">
 							<h4>{lang code="custom_thumbs"}</h4>
-							{assign var=vidthumbs value=get_thumb($v,TRUE,'original', 'custom')}
-							{foreach from=$vidthumbs item=vid_thumb}
+							{foreach from=$vidthumbs_custom item=vid_thumb}
 							<div class="col-md-3">
 								<div class="form-group text-center">
 									<label for="{$vid_thumb|getname}"><img class="edit-img-thumbnail" src="{$vid_thumb}" width="100" height="100" />
@@ -56,6 +55,7 @@
 							</div>
 							{/foreach}
 						</div>
+						{/if}
 						{ANCHOR place="after_edit_video_form_thumbs"}
 						<hr>
 
@@ -63,12 +63,6 @@
 						{foreach from=$video_fields item=field_group}
 						<div class="clearfix">
 							<h3>{$field_group.group_name}</h3>
-							{if $field_group.group_id == 'required_fields'}
-							<div class="form-group">
-								<label for="videoLink">{lang code='video_link'}</label>
-								<textarea class="form-control" onclick="this.select()">{videoLink vdetails=$v}</textarea>
-							</div>
-							{/if}
 							{foreach from=$field_group.fields item=field}
 							<div class="form-group">
 								<label for="{$field.id}">{$field.title}</label>
@@ -96,10 +90,10 @@
 									<small class="show">{$field.hint_2}</small>
 								{/if}
 							</div>
-							{if $field.name=='broadcast'}
+							{if $field.name=='broadcast' && config('enable_video_link_sharing') == 'yes'}
 							<div class="form-group">
-								<label for="videoLink">{lang code='video_link'}</label>
-								<textarea onclick="this.select()" class="form-control" >{videoLink vdetails=$v}</textarea>
+								<label for="video_link">{lang code='video_link'}</label>
+								<textarea onclick="this.select()" id="video_link" class="form-control" readonly>{videoLink vdetails=$v}</textarea>
 							</div>
 							{/if}
 							{/foreach}
