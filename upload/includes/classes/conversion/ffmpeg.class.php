@@ -691,6 +691,7 @@ class FFMpeg
         $rs = $db->select(tbl('video'), 'videoid', 'file_name LIKE \'' . $this->file_name . '\'');
         if (!empty($rs)) {
             $videoid = $rs[0]['videoid'];
+
         } else {
             e(lang('technical_error'));
             $videoid = 0;
@@ -699,8 +700,8 @@ class FFMpeg
 
         //delete olds thumbs from db and on disk
         $this->log->writeLine(date('Y-m-d H:i:s').' - Deleting old thumbs...');
-        $db->delete(tbl('video_thumbs'), ['videoid'], [$videoid]);
-        $pattern = THUMBS_DIR . DIRECTORY_SEPARATOR . $this->file_directory . DIRECTORY_SEPARATOR . $this->file_name . '*';
+        $db->delete(tbl('video_thumbs'), ['videoid','type'], [$videoid,'auto']);
+        $pattern = THUMBS_DIR . DIRECTORY_SEPARATOR . $this->file_directory . DIRECTORY_SEPARATOR . $this->file_name . '*[!-c].*';
         $glob = glob($pattern);
         foreach ($glob as $thumb) {
             unlink($thumb);
@@ -770,7 +771,7 @@ class FFMpeg
                 }
 
                 if (file_exists($file_path)) {
-                    $db->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version'], [$videoid, $dim, $thumb_file_number, $extension, VERSION]);
+                    $db->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version', 'type'], [$videoid, $dim, $thumb_file_number, $extension, VERSION, 'auto']);
                 } else {
                     $this->log->writeLine(date('Y-m-d H:i:s').' => Error generating '.$file_name.'...');
                 }
@@ -805,7 +806,7 @@ class FFMpeg
         $thumbs = get_thumb($video_details, true);
         //si rien en base
         if (empty($thumbs) || $thumbs[0] == default_thumb()) {
-            $db->delete(tbl('video_thumbs'), ['videoid'], [$videoid]);
+            $db->delete(tbl('video_thumbs'), ['videoid', 'type'], [$videoid, 'auto']);
             //generate default thumb
             $this->generateDefaultsThumbs($db, $videoid, $thumbs_res_settings, $thumbs_settings);
         }
@@ -1010,6 +1011,12 @@ class FFMpeg
 
             $this->generateThumbs($thumbs_settings);
         }
-        $db->update(tbl('video'), ['default_thumb'], [1], ' videoid = ' . mysql_clean($videoid));
+        $res = $db->select(tbl('video') . ' AS V LEFT JOIN ' . tbl('video_thumbs') . ' AS VT ON VT.videoid = V.videoid '
+            , 'num'
+            , ' V.videoid = ' . mysql_clean($videoid). ' AND type=\'custom\' AND V.default_thumb = VT.num'
+        );
+         if (empty($res)) {
+             $db->update(tbl('video'), ['default_thumb'], [1], ' videoid = ' . mysql_clean($videoid));
+         }
     }
 }

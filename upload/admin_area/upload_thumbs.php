@@ -37,14 +37,25 @@ if ($myquery->video_exists($video)) {
         $Upload->upload_thumbs($data['file_name'], $_FILES['vid_thumb'], $data['file_directory'], $data['thumbs_version']);
     }
 
-    Assign('data', $data);
-    Assign('rand', rand(44, 444));
+    assign('data', $data);
+    assign('vidthumbs', get_thumb($data,TRUE,'168x105','auto'));
+    assign('vidthumbs_custom', get_thumb($data,TRUE,'168x105','custom'));
 } else {
     $msg[] = lang('class_vdo_del_err');
 }
 foreach ($msg as $ms) {
     e($ms, 'm');
 }
+
+if(in_dev()){
+    $min_suffixe = '';
+} else {
+    $min_suffixe = '.min';
+}
+
+ClipBucket::getInstance()->addAdminJS(['pages/upload_thumbs/upload_thumbs'.$min_suffixe.'.js' => 'admin']);
+
 subtitle('Video Thumbs Manager');
 template_files('upload_thumbs.html');
 display_it();
+

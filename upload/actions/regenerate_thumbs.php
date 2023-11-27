@@ -7,14 +7,21 @@ $userquery->admin_login_check();
 # Generating more thumbs
 $data = get_video_details($_POST['videoid']);
 generatingMoreThumbs($data, true);
-if ($_POST['origin'] == 'edit_video') {
-    $thumb_mini_list = return_thumb_mini_list($data);
-    ob_start();
-    display_flash_player($data);
-    $player = ob_get_clean();
-    $returnJson = json_decode($thumb_mini_list, true);
-    $returnJson['player'] = $player;
-    echo json_encode($returnJson);
-} elseif ($_POST['origin'] == 'upload_thumb') {
-    display_thumb_list($data);
+
+switch($_POST['origin']){
+    default:
+    case 'edit_video':
+        $thumb_mini_list = return_thumb_mini_list($data);
+        $returnJson = json_decode($thumb_mini_list, true);
+
+        ob_start();
+        show_player(['vdetails' => $data]);
+        $returnJson['player'] = ob_get_clean();
+
+        echo json_encode($returnJson);
+        die();
+
+    case 'upload_thumb':
+        display_thumb_list($data);
+        die();
 }

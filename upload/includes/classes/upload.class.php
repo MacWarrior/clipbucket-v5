@@ -271,7 +271,7 @@ class Upload
             $ext = getExt($file['name'][$key]);
             if ($imgObj->ValidateImage($file['tmp_name'][$key], $ext)) {
                 $thumbs_settings_28 = thumbs_res_settings_28();
-                $temp_file_path = THUMBS_DIR . DIRECTORY_SEPARATOR . $files_dir . DIRECTORY_SEPARATOR . $file_name . '-' . $file_num . '.' . $ext;
+                $temp_file_path = THUMBS_DIR . DIRECTORY_SEPARATOR . $files_dir . DIRECTORY_SEPARATOR . $file_name . '-' . $file_num . '-c.' . $ext;
 
                 $imageDetails = getimagesize($file['tmp_name'][$key]);
 
@@ -287,7 +287,7 @@ class Upload
                         $width_setting = $imageDetails[0];
                         $height_setting = $imageDetails[1];
                     }
-                    $outputFilePath = THUMBS_DIR . DIRECTORY_SEPARATOR . $files_dir . DIRECTORY_SEPARATOR . $file_name . '-' . $dimensions . '-' . $file_num . '.' . $ext;
+                    $outputFilePath = THUMBS_DIR . DIRECTORY_SEPARATOR . $files_dir . DIRECTORY_SEPARATOR . $file_name . '-' . $dimensions . '-' . $file_num . '-c.' . $ext;
                     $imgObj->CreateThumb($temp_file_path, $outputFilePath, $width_setting, $ext, $height_setting, false);
                     global $db;
                     $rs = $db->select(tbl('video'), 'videoid', 'file_name LIKE \'' . $file_name . '\'');
@@ -297,7 +297,7 @@ class Upload
                         e(lang('technical_error'));
                         $videoid = 0;
                     }
-                    $db->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version'], [$videoid, $dimensions, $file_num, $ext, VERSION]);
+                    $db->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version', 'type'], [$videoid, $dimensions, $file_num, $ext, VERSION, 'custom']);
                 }
 
                 unlink($temp_file_path);
@@ -318,7 +318,7 @@ class Upload
      * @internal param $FILE_NAME
      * @internal param array $_FILES name
      */
-    function upload_thumbs($file_name, $file_array, $files_dir = null, $thumbs_ver = false)
+    function upload_thumbs($file_name, $file_array, $files_dir = null, bool $thumbs_ver = false)
     {
         if (count($file_array['name']) > 1) {
             for ($i = 0; $i < count($file_array['name']); $i++) {

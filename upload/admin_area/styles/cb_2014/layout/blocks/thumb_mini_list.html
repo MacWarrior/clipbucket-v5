@@ -1,5 +1,5 @@
 <div class="row">
-  {assign var=vidthumbs value=get_thumb($data,TRUE,'168x105')}
+  <h5>{lang code="extracted_thumbs"}</h5>
   <ul class="ace-thumbnails">
     {foreach from=$vidthumbs item=vid_thumb}
     <li style="display:inline;">
@@ -12,4 +12,22 @@
     </li>
     {/foreach}
   </ul>
+  <div style="clear:both;"></div>
+
+  {if !empty($vidthumbs_custom)}
+  <hr/>
+  <h5>{lang code="custom_thumbs"}</h5>
+  <ul class="ace-thumbnails">
+    {foreach from=$vidthumbs_custom item=vid_thumb}
+    <li style="display:inline;">
+      <label for="{$vid_thumb|get_thumb_num}" class="no-margin">
+        <img src="{$vid_thumb}" width="100" height="63"/>
+      </label>
+      <div class="tools tools-bottom">
+        <input type="radio" id="{$vid_thumb|get_thumb_num}" value="{GetName($vid_thumb)}.{getExt($vid_thumb)}" name="default_thumb" {if $data.default_thumb==$vid_thumb|get_thumb_num}checked{/if} />
+      </div>
+    </li>
+    {/foreach}
+  </ul>
+  {/if}
 </div>

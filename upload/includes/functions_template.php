@@ -151,9 +151,14 @@ function display_language_edit()
     echo templateWithMsgJson('blocks/language_edit.html');
 }
 
+/**
+ * @throws Exception
+ */
 function display_thumb_list($data)
 {
     assign('data', $data);
+    assign('vidthumbs', get_thumb($data,TRUE,'168x105','auto'));
+    assign('vidthumbs_custom', get_thumb($data,TRUE,'168x105','custom'));
     echo templateWithMsgJson('blocks/thumb_list.html');
 }
 
@@ -170,14 +175,14 @@ function display_subtitle_list($data)
 }
 
 //todO séparer en 2 fonctions
+/**
+ * @throws Exception
+ */
 function return_thumb_mini_list($data)
 {
     assign('data', $data);
-    return (templateWithMsgJson('blocks/thumb_mini_list.html'));
-}
+    assign('vidthumbs', get_thumb($data,TRUE,'168x105','auto'));
+    assign('vidthumbs_custom', get_thumb($data,TRUE,'168x105','custom'));
 
-function display_flash_player($data)
-{
-    assign('data', $data);
-    echo show_player(['vdetails' => $data]);
+    return (templateWithMsgJson('blocks/thumb_mini_list.html'));
 }
