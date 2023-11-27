@@ -995,4 +995,5 @@ VALUES
        ('collection_not_active'),
        ('upload_custom_thumbnail'),
        ('extracted_thumbs'),
-       ('custom_thumbs');
+       ('custom_thumbs'),
+       ('confirm');
