@@ -1,6 +1,5 @@
 <div class="row">
   <h5>{lang code="extracted_thumbs"}</h5>
-  {assign var=vidthumbs value=get_thumb($data,TRUE,'168x105','auto')}
   <ul class="ace-thumbnails">
     {foreach from=$vidthumbs item=vid_thumb}
     <li style="display:inline;">
@@ -14,11 +13,12 @@
     {/foreach}
   </ul>
   <div style="clear:both;"></div>
-  <hr>
+
+  {if !empty($vidthumbs_custom)}
+  <hr/>
   <h5>{lang code="custom_thumbs"}</h5>
-  {assign var=vidthumbs value=get_thumb($data,TRUE,'168x105', 'custom')}
   <ul class="ace-thumbnails">
-    {foreach from=$vidthumbs item=vid_thumb}
+    {foreach from=$vidthumbs_custom item=vid_thumb}
     <li style="display:inline;">
       <label for="{$vid_thumb|get_thumb_num}" class="no-margin">
         <img src="{$vid_thumb}" width="100" height="63"/>
@@ -29,4 +29,5 @@
     </li>
     {/foreach}
   </ul>
+  {/if}
 </div>

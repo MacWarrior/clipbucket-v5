@@ -233,7 +233,7 @@ function create_thumb($video_db, $multi, $size)
  */
 function get_player_thumbs_json($data)
 {
-    $thumbs = get_thumb($data, true, '168x105');
+    $thumbs = get_thumb($data, true, '168x105', 'auto');
     $duration = (int)$data['duration'];
     $json = '';
     if (is_array($thumbs)) {

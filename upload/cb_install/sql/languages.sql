@@ -992,4 +992,5 @@ VALUES
        ('download'),
        ('unlisted'),
        ('of'),
-       ('collection_not_active');
+       ('collection_not_active'),
+       ('upload_custom_thumbnail');

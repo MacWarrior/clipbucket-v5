@@ -1,16 +1,22 @@
 function regenerateThumbs(videoid) {
-    showSpinner();
     $.ajax({
         url: "/actions/regenerate_thumbs.php",
         type: "post",
         data: {videoid: videoid, origin: 'edit_video'},
-        dataType: 'json'
-    }).done(function (result) {
-        $('#thumbnails').html(result['template']);
-        $('.page-content').prepend(result['msg']);
-        $('#player').html(result['player']);
-    }).always(function () {
-        hideSpinner();
+        dataType: 'json',
+        beforeSend: function(){
+            showSpinner();
+        },
+        success: function(response){
+            $('#thumbnails').html(response['template']);
+            $('.page-content').prepend(response['msg']);
+
+            videojs($('#player').find('video')[0]).dispose();
+            setTimeout(function(){
+                $('#player').html(response['player']);
+                hideSpinner();
+            }, 200);
+        }
     });
 }
 

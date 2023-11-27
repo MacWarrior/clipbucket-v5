@@ -1,6 +1,5 @@
 <fieldset class="fieldset">
   <h4>{lang code="extracted_thumbs"}</h4>
-  {assign var=vidthumbs value=get_thumb($data,TRUE,'168x105','auto')}
   {foreach from=$vidthumbs item=vid_thumb}
   <div class="cbthumbs" id="thumb_{$vid_thumb|get_thumb_num}">
     <div class="row-fluid">
@@ -9,7 +8,7 @@
           <img src="{$vid_thumb}" height="94" width="150"/>
           <div class="tools tools-bottom">
             {if $vid_thumb|getname!='processing'}
-            <a href="javascript:void(0);" title="{lang code="delete"}" onclick="delete_thumb({$data.videoid}, '{$vid_thumb|get_thumb_num}');">
+            <a href="javascript:void(0);" title="{lang code='delete'}" onclick="delete_thumb({$data.videoid}, '{$vid_thumb|get_thumb_num}');">
               <i class="icon-remove red"></i>
             </a>
             {/if}
@@ -20,10 +19,11 @@
   </div>
   {/foreach}
   <div style="clear:both;"></div>
-  <hr>
+
+  {if !empty($vidthumbs_custom)}
+  <hr/>
   <h4>{lang code="custom_thumbs"}</h4>
-  {assign var=vidthumbs value=get_thumb($data,TRUE,'168x105','custom')}
-  {foreach from=$vidthumbs item=vid_thumb}
+  {foreach from=$vidthumbs_custom item=vid_thumb}
   <div class="cbthumbs" id="thumb_{$vid_thumb|get_thumb_num}">
     <div class="row-fluid">
       <ul class="ace-thumbnails">
@@ -31,7 +31,7 @@
           <img src="{$vid_thumb}" height="94" width="150"/>
           <div class="tools tools-bottom">
             {if $vid_thumb|getname!='processing'}
-            <a href="javascript:void(0);" title="{lang code="delete"}" onclick="delete_thumb({$data.videoid}, '{$vid_thumb|get_thumb_num}');">
+            <a href="javascript:void(0);" title="{lang code='delete'}" onclick="delete_thumb({$data.videoid}, '{$vid_thumb|get_thumb_num}');">
               <i class="icon-remove red"></i>
             </a>
             {/if}
@@ -42,4 +42,5 @@
   </div>
   {/foreach}
   <div style="clear:both;"></div>
+  {/if}
 </fieldset>

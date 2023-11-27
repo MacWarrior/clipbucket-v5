@@ -44,12 +44,14 @@ if ($myquery->video_exists($video)) {
         Comments::delete(['comment_id' => $cid]);
     }
 
-    Assign('udata', $userquery->get_user_details($data['userid']));
+    assign('udata', $userquery->get_user_details($data['userid']));
 
     $date_added = DateTime::createFRomFormat('Y-m-d', explode(' ', $data['date_added'])[0]);
     $data['date_added'] = $date_added->format(DATE_FORMAT);
 
-    Assign('data', $data);
+    assign('data', $data);
+    assign('vidthumbs', get_thumb($data,TRUE,'168x105','auto'));
+    assign('vidthumbs_custom', get_thumb($data,TRUE,'168x105','custom'));
 
     if ($data['file_server_path']) {
         $file = $data['file_server_path'] . '/logs/' . $data['file_directory'] . $data['file_name'] . '.log';
