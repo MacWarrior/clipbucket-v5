@@ -72,7 +72,6 @@
 		{/if}
 		<script>
 			$(document).ready(function(){
-				loading = '<i class="glyphicon glyphicon-refresh animate-spin"></i> {lang code="loading"}...';
 				$( 'ul#photos li:visible' ).each( function( i ){
 					$( this )[ (1&i) ? 'addClass' : 'removeClass' ]( 'photo-land-no' );
 				})

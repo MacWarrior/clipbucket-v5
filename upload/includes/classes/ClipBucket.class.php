@@ -59,6 +59,11 @@ class ClipBucket
     //This array contains the public pages name for private access to website 
     var $public_pages = ["signup", "view_page"];
 
+    public static function getInstance(){
+        global $Cbucket;
+        return $Cbucket;
+    }
+
     /**
      * @throws Exception
      */

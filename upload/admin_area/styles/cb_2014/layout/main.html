@@ -1322,13 +1322,25 @@
 							<hr/>
 							<div class="row">
 								<div class="col-md-6">
-									<label class="nowrap" for="embed_type" title="Embed Type">Embed Type</label>
+									<label class="nowrap" for="seo_vido_url" title="Seo video url pattern">Seo video url pattern</label>
 								</div>
 								<div class="col-md-6 row-size">
-									<select class="form-control" name="embed_type" id="embed_type">
-										<option value="iframe" {if $row.embed_type=='iframe'}selected{/if}>Iframe</option>
-										<option value="embed_object" {if $row.embed_type=='embed_object'}selected{/if}>Embed object</option>
+									<select class="form-control" name="seo_vido_url" id="seo_vido_url">
+										<option value="0" {if $row.seo_vido_url=='0'}selected{/if}>/video/ABCDXYZ/video-title</option>
+										<option value="1" {if $row.seo_vido_url=='1'}selected{/if}>/video-title-v123</option>
+										<option value="2" {if $row.seo_vido_url=='2'}selected{/if}>/video/123/video-title</option>
+										<option value="3" {if $row.seo_vido_url=='3'}selected{/if}>/video/123_video-title</option>
 									</select>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-4">
+									<label class="nowrap" for="enable_video_social_sharing" title="{lang code='option_enable_video_social_sharing'}">{lang code='option_enable_video_social_sharing'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="enable_video_social_sharing" id="enable_video_social_sharing" {if $row.enable_video_social_sharing=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
 								</div>
 							</div>
 							<hr/>
@@ -1346,16 +1358,21 @@
 							</div>
 							<hr/>
 							<div class="row">
-								<div class="col-md-6">
-									<label class="nowrap" for="seo_vido_url" title="Seo video url pattern">Seo video url pattern</label>
+								<div class="col-md-8">
+									<label class="nowrap" for="video_categories" title="Max categories for each video">Max categories for each video</label>
 								</div>
-								<div class="col-md-6 row-size">
-									<select class="form-control" name="seo_vido_url" id="seo_vido_url">
-										<option value="0" {if $row.seo_vido_url=='0'}selected{/if}>/video/ABCDXYZ/video-title</option>
-										<option value="1" {if $row.seo_vido_url=='1'}selected{/if}>/video-title-v123</option>
-										<option value="2" {if $row.seo_vido_url=='2'}selected{/if}>/video/123/video-title</option>
-										<option value="3" {if $row.seo_vido_url=='3'}selected{/if}>/video/123_video-title</option>
-									</select>
+								<div class="col-md-4 row-size">
+									<input class="form-control" name="video_categories" id="video_categories" value="{$row.video_categories}"/>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-4">
+									<label class="nowrap" for="enable_video_internal_sharing" title="{lang code='option_enable_video_internal_sharing'}">{lang code='option_enable_video_internal_sharing'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="enable_video_internal_sharing" id="enable_video_internal_sharing" {if $row.enable_video_internal_sharing=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
 								</div>
 							</div>
 							<hr/>
@@ -1373,15 +1390,6 @@
 							</div>
 							<hr/>
 							<div class="row">
-								<div class="col-md-8">
-									<label class="nowrap" for="video_categories" title="Max categories for each video">Max categories for each video</label>
-								</div>
-								<div class="col-md-4 row-size">
-									<input class="form-control" name="video_categories" id="video_categories" value="{$row.video_categories}"/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
 								<div class="col-md-4">
 									<label class="nowrap" for="vid_cat_width" title="Category Width">Category Width</label>
 								</div>
@@ -1393,6 +1401,16 @@
 								</div>
 								<div class="col-md-2 row-size">
 									<input class="form-control" name="vid_cat_height" id="vid_cat_height" value="{$row.vid_cat_height}"/>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-4">
+									<label class="nowrap" for="enable_video_link_sharing" title="{lang code='option_enable_video_link_sharing'}">{lang code='option_enable_video_link_sharing'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="enable_video_link_sharing" id="enable_video_link_sharing" {if $row.enable_video_link_sharing=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
 								</div>
 							</div>
 							<hr/>

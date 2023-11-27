@@ -138,7 +138,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'max_video_duration', '320'),
 	(NULL, 'embed_player_height', '250'),
 	(NULL, 'embed_player_width', '300'),
-	(NULL, 'autoplay_embed', 'yes'),
+	(NULL, 'autoplay_embed', 'no'),
 	(NULL, 'playlistsSection', 'yes'),
 	(NULL, 'photo_main_list', '10'),
 	(NULL, 'photo_home_tabs', '30'),
@@ -161,7 +161,6 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'store_guest_session', '0'),
 	(NULL, 'delete_mass_upload', 'no'),
 	(NULL, 'comments_per_page', '15'),
-	(NULL, 'embed_type', 'iframe'),
 	(NULL, 'feedsSection', 'yes'),
 	(NULL, 'seo_vido_url', '1'),
 	(NULL, 'use_cached_pagin', 'yes'),
@@ -236,6 +235,9 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_user_about', 'no'),
     (NULL, 'enable_user_website', 'no'),
     (NULL, 'enable_user_status', 'no'),
+    (NULL, 'enable_video_social_sharing', 'yes'),
+    (NULL, 'enable_video_internal_sharing', 'yes'),
+    (NULL, 'enable_video_link_sharing', 'yes'),
     (NULL, 'enable_user_dob_edition', 'yes');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES

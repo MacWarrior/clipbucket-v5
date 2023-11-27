@@ -28,7 +28,6 @@ if (isset($_POST['update'])) {
         'embed_player_height',
         'embed_player_width',
         'autoplay_embed',
-        'pakplayer_contextmsg',
         'chromecast',
         'control_bar_logo',
         'contextual_menu_disabled',

@@ -6,6 +6,7 @@ class Collection
     private $fields = [];
     private $display_block = '';
     private $search_limit = 0;
+    private $display_var_name = '';
 
     public function __construct(){
         $this->tablename = 'collections';
