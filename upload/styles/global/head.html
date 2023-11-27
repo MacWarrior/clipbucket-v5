@@ -6,29 +6,10 @@
     var lang_load_more    = "{lang code='load_more'}";
     var lang_loading      = "{lang code='loading'}";
     var lang_add_comment  = "{lang code='user_add_comment'}";
-    var embedPlayerWidth  = '{$Cbucket->configs.embed_player_width}';
-    var embedPlayerHeight = '{$Cbucket->configs.embed_player_height}';
-    var autoPlayEmbed     = '{$Cbucket->configs.autoplay_embed}';
-    var embed_type        = '{$Cbucket->configs.embed_type}';
 
-    function updateEmbed(width,height,autoplay)
-    {
-        $('#embed_code').val( $('#embed_code').val().replace(/width=\"([0-9]+)\"/g,'width="'+width+'"') );
-        $('#embed_code').val( $('#embed_code').val().replace(/height=\"([0-9]+)\"/g,'height="'+height+'"') );
-        $('#embed_code').val( $('#embed_code').val().replace(/width=([0-9]+)/g,'width='+width) );
-        $('#embed_code').val( $('#embed_code').val().replace(/height=([0-9]+)/g,'height='+height+'') );
-    }
-
-    function switchEmbedCode(type)
-    {
-        if(embed_type==type){
-            return false;
-        }
-        embed_type = type;
-
-        var alt_embed =$('#alternate_embed_code').val();
-        $('#alternate_embed_code').val($('#embed_code').val());
-        $('#embed_code').val(alt_embed);
+    function updateEmbed(width,height) {
+        $('#embed_code').val($('#embed_code').val().replace(/width=\"([0-9]+)\"/g, 'width="' + width + '"'));
+        $('#embed_code').val($('#embed_code').val().replace(/height=\"([0-9]+)\"/g, 'height="' + height + '"'));
     }
 </script>
 
@@ -67,8 +48,7 @@ function show_message(msg,ID,fade)
 function doUpdateVideo(formId,ID)
 {
     var formObjectData = $(formId).serialize();
-    //alert(serializedData);
-    
+
     $('#updateVideoDataLoading').html('<img src="'+imageurl+'/ajax-loader.gif" />');
     $('#cbSubmitUpload'+ID)
     .attr('disabled','disabled')
@@ -182,7 +162,7 @@ window.onload = function() {ldelim}
                     .removeAttr('disabled').attr('onClick','updateAjaxPhoto("'+ID+'");');
                 }
             }
-        })
+        });
     }
 
     function updateAjaxPhoto(ID)
@@ -218,7 +198,7 @@ window.onload = function() {ldelim}
                     }
                 }
             }
-        })
+        });
     }
 
     function showPhotoPreview(ID,preview)

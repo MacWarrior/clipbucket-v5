@@ -27,7 +27,7 @@ function Fetch($name, $inside = false)
 //Simple Template Displaying Function
 function Template($template, $layout = true)
 {
-    global $admin_area, $cbtpl;
+    global $cbtpl;
     if ($layout) {
         $cbtpl->display(LAYOUT . DIRECTORY_SEPARATOR . $template);
     } else {
@@ -179,5 +179,5 @@ function return_thumb_mini_list($data)
 function display_flash_player($data)
 {
     assign('data', $data);
-    echo flashPlayer(['vdetails' => $data]);
+    echo show_player(['vdetails' => $data]);
 }

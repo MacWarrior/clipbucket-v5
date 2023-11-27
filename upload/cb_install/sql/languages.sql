@@ -821,7 +821,6 @@ VALUES
        ('users_categories'),
        ('popular_users'),
        ('channel'),
-       ('embed_type'),
        ('confirm_del_photo'),
        ('signups'),
        ('active_users'),
@@ -985,4 +984,12 @@ VALUES
        ('option_enable_user_favorite_books'),
        ('option_enable_user_website'),
        ('option_enable_user_about'),
-       ('option_enable_user_status');
+       ('option_enable_user_status'),
+       ('video_not_available'),
+       ('option_enable_video_social_sharing'),
+       ('option_enable_video_internal_sharing'),
+       ('option_enable_video_link_sharing'),
+       ('download'),
+       ('unlisted'),
+       ('of'),
+       ('collection_not_active');

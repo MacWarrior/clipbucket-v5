@@ -1,9 +1,6 @@
-<!-- This code is added for timecomments plugin-->
 {$tcomments_params = ['function'=>'get_timeCommnets','videoid'=>$vdata.videoid]}
 {$Comments_allowed = $myquery->is_commentable($vdata,'v') }
-<!-- End -->
 
-<!-- This code is added for Related Videos carousel plugin-->
 {foreach $videos as $video}
     {$related['imageSrc'] = get_thumb($video,FALSE,'168x105')}
     {$related['url'] = video_link($video)}
@@ -11,19 +8,17 @@
     {$related_videos[] = $related}
 {/foreach}
 {$related_videos = json_encode($related_videos)}
-<!-- End -->
 
 <script type="text/javascript">
     var lang_by = "{lang code='by'}";
     var lang_quality = "{lang code='quality'}";
     var video_id = "{$vdata.videoid}";
-    var autoplay = "{config('autoplay_video')}" === 'yes';
-    var video_uploader = "{display_clean($vdata.username)}";
+    var autoplay = "{$player_params.autoplay}" === 'yes';
+    var video_uploader = "{if !empty($vdata.user_username)}{display_clean($vdata.user_username)}{else}{display_clean($vdata.username)}{/if}";
     var video_title = "{display_clean($vdata.title)}";
 </script>
 
-
-<video playsinline id="cb_video_js_{$vdata.videoid}" class="video-js vjs-default-skin vjs-show-big-play-button-on-pause" height="100%" width="100%" poster="{getThumb vdetails=$vdata size=768x432}" >
+<video playsinline id="cb_video_js_{$vdata.videoid}" class="video-js vjs-default-skin vjs-show-big-play-button-on-pause" height="100%" width="100%" poster="{getThumb vdetails=$vdata size=768x432}">
     {foreach $video_files as $file}
         {if strpos($file, 'no_video.mp4') !== false}
             <source src='{$file}' type="video/mp4"/>
@@ -34,7 +29,6 @@
 				{$video_resolution = display_clean(CB_video_js::getVideoResolutionTitleFromFilePath($file))}
                 <source src='{$file}' type="video/mp4" res="{$video_resolution}" label="{$video_resolution}"/>
             {/if}
-
         {/if}
     {/foreach}
     {if config('player_subtitles')}
@@ -55,8 +49,8 @@
         "techOrder" : ['html5'],
         "controls": true,
         "autoplay": autoplay,
+        "muted": autoplay,
         "preload": "auto",
-        "muted": false,
         "loop" : false,
         "fluid": true,
         "responsive": true,
