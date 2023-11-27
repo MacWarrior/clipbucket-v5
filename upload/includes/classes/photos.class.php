@@ -198,8 +198,8 @@ class Photo
     public static function getGenericConstraint(): string
     {
         $dob = user_dob();
-        $sql_age_restrict = '(photo.age_restriction IS NULL OR TIMESTAMPDIFF(YEAR, \'' . mysql_clean($dob) . '\', now()) >= photo.age_restriction )';
-        $superCond = '((photos.active = \'yes\' AND photos.broadcast = \'public\'';
+        $sql_age_restrict = '(photos.age_restriction IS NULL OR TIMESTAMPDIFF(YEAR, \'' . mysql_clean($dob) . '\', now()) >= photos.age_restriction )';
+        $superCond = '((photos.active = \'yes\' AND photos.broadcast = \'public\' AND photos.age_restriction IS NULL ';
 
         $current_user_id = user_id();
         if ($current_user_id) {

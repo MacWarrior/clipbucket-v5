@@ -249,16 +249,15 @@ class Video
     /**
      * @return string
      */
-    public static function getGenericConstraint($param_first_only): string
+    public static function getGenericConstraint($param_first_only = false): string
     {
         $dob = user_dob();
         $sql_age_restrict = '(video.age_restriction IS NULL OR TIMESTAMPDIFF(YEAR, \'' . mysql_clean($dob) . '\', now()) >= video.age_restriction )';
-        $superCond = '( (video.active = \'yes\' AND video.status = \'Successful\' AND video.broadcast = \'public\' ';
+        $superCond = '( (video.active = \'yes\' AND video.status = \'Successful\' AND video.broadcast = \'public\' AND video.age_restriction IS NULL ';
 
         if( $param_first_only ){
             $superCond .= ' OR (video.broadcast = \'unlisted\' AND video.video_password = \'\')';
         }
-        $superCond .= ')';
         $current_user_id = user_id();
         if ($current_user_id) {
             $select_contacts = 'SELECT contact_userid FROM ' . tbl('contacts') . ' WHERE confirmed = \'yes\' AND userid = ' . $current_user_id;
