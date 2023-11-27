@@ -107,7 +107,7 @@ function video_playable($id): bool
  * @return array|string
  * @throws Exception
  */
-function get_thumb($vdetails, $multi = false, $size = false)
+function get_thumb($vdetails, $multi = false, $size = false, $type = false)
 {
     /**  getting video ID*/
     if (is_array($vdetails)) {
@@ -151,9 +151,17 @@ function get_thumb($vdetails, $multi = false, $size = false)
         $where[] = ' resolution LIKE \'' . mysql_clean($size) . '\'';
     }
 
+    if ($type) {
+        $where[] = ' type = \'' . $type . '\'';
+    }
+
     $resThumb = $db->select(tbl('video_thumbs'), '*', implode(' AND ', $where));
 
-    if (empty($resThumb) && $resVideo['num'] === null && $resVideo['status'] == 'Successful') {
+    if (empty($resThumb) && $type =='custom') {
+        return $multi ? [] : '';
+    }
+
+    if (empty($resThumb) && $resVideo['num'] === null && $vdetails['status'] == 'Successful') {
         //if no thumbs, we put some in db see \create_thumb()
         return create_thumb($resThumb, $multi, $size);
     }
@@ -166,7 +174,7 @@ function get_thumb($vdetails, $multi = false, $size = false)
             if ($re['size'] === '') {
                 return [default_thumb()];
             }
-            $filepath = $resVideo['file_directory'] . DIRECTORY_SEPARATOR . $resVideo['file_name'] . '-' . $re['resolution'] . '-' . $re['num'] . '.' . $re['extension'];
+            $filepath = $resVideo['file_directory'] . DIRECTORY_SEPARATOR . $resVideo['file_name'] . '-' . $re['resolution'] . '-' . $re['num'] . ($re['type'] == 'custom' ? '-c' : '') .'.' . $re['extension'];
             if (file_exists(THUMBS_DIR . DIRECTORY_SEPARATOR . $filepath)) {
                 $thumb[] = THUMBS_URL . DIRECTORY_SEPARATOR . $filepath;
             } else {
@@ -176,7 +184,7 @@ function get_thumb($vdetails, $multi = false, $size = false)
         }
         return $thumb;
     }
-    $filepath = $resVideo['file_directory'] . DIRECTORY_SEPARATOR . $resVideo['file_name'] . '-' . $resThumb[0]['resolution'] . '-' . $resThumb[0]['num'] . '.' . $resThumb[0]['extension'];
+    $filepath = $resVideo['file_directory'] . DIRECTORY_SEPARATOR . $resVideo['file_name'] . '-' . $resThumb[0]['resolution'] . '-' . $resThumb[0]['num'] . ($resThumb[0]['type'] == 'custom' ? '-c' : '') .'.' . $resThumb[0]['extension'];
     if (!file_exists(THUMBS_DIR . DIRECTORY_SEPARATOR . $filepath)) {
         error_log('get_thumb - missing file : ' . $filepath);
         return default_thumb();
@@ -233,7 +241,7 @@ function create_thumb($video_db, $multi, $size)
  */
 function get_player_thumbs_json($data)
 {
-    $thumbs = get_thumb($data, true, '168x105');
+    $thumbs = get_thumb($data, true, '168x105', 'auto');
     $duration = (int)$data['duration'];
     $json = '';
     if (is_array($thumbs)) {
@@ -774,11 +782,7 @@ function get_file_details($file_name, $get_jsoned = false)
 }
 
 /**
- * Function used to get thumbnail number from its name
- * Updated: If we provide full path for some reason and
- * web-address has '-' in it, this means our result is messed.
- * But we know our number will always be in last index
- * So wrap it with end() and problem solved.
+ * use regex to get thumb's num
  *
  * @param $name
  *
@@ -786,10 +790,10 @@ function get_file_details($file_name, $get_jsoned = false)
  */
 function get_thumb_num($name): string
 {
-    $list = explode('-', $name);
-    $list = end($list);
-    $list = explode('.', $list);
-    return $list[0];
+    $regex = '`.*-.*-(\d+)(?:-c)?.\w+`';
+    $match = [];
+    $res = preg_match($regex, $name, $match);
+    return $match[1] ?? '' ;
 }
 
 /**
@@ -803,7 +807,7 @@ function get_thumb_num($name): string
 function delete_video_thumb($videoDetails, $num)
 {
     global $db;
-    $files = glob(THUMBS_DIR . DIRECTORY_SEPARATOR . $videoDetails['file_directory'] . DIRECTORY_SEPARATOR . $videoDetails['file_name'] . '*' . $num . '.*');
+    $files = glob(THUMBS_DIR . DIRECTORY_SEPARATOR . $videoDetails['file_directory'] . DIRECTORY_SEPARATOR . $videoDetails['file_name'] . '*-' . $num .'[-.]*');
     if ($files) {
         foreach ($files as $file) {
             if (file_exists($file)) {

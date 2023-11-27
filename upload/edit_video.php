@@ -34,6 +34,8 @@ if ($vdetails['userid'] != $userid) {
     }
 
     assign('v', $vdetails);
+    assign('vidthumbs', get_thumb($vdetails,TRUE,'168x105','auto'));
+    assign('vidthumbs_custom', get_thumb($vdetails,TRUE,'168x105','custom'));
 }
 
 if (in_dev()) {

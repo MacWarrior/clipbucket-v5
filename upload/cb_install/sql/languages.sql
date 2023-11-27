@@ -993,6 +993,9 @@ VALUES
        ('unlisted'),
        ('of'),
        ('collection_not_active'),
-       ('option_enable_user_status'),
+       ('upload_custom_thumbnail'),
+       ('extracted_thumbs'),
+       ('custom_thumbs'),
+       ('confirm'),
        ('age_restriction'),
        ('info_age_restriction');

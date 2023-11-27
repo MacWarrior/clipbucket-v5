@@ -263,3 +263,5 @@ INSERT INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description
     ('clean_orphan_tags', 'clean_orphan_tags_description', 'AdminTool::cleanOrphanTags', 1, NULL, NULL);
 
 INSERT INTO `{tbl_prefix}tags_type` (`name`) VALUES ('video'), ('photo'), ('collection'), ('profile'), ('playlist');
+
+UPDATE `{tbl_prefix}video_thumbs` SET `type` = 'auto' WHERE `type` IS NULL;

@@ -1,3 +1,4 @@
+{$msg}
 {if $data.title neq ""}
 <h3>Manage Video Thumbs</h3>
 <div class="lead dropdown">
@@ -7,51 +8,15 @@
         <li role="presentation"><a role="menuitem" tabindex="-1" href="edit_video.php?video={$data.videoid}">Back to edit details</a></li>
     </ul>
 </div>
-<form action="upload_thumbs.php?video={$data.videoid}" method="post" enctype="multipart/form-data" name="set_default_thumb" id="set_default_thumb">
+<form action="upload_thumbs.php?video={$data.videoid}" method="post" enctype="multipart/form-data" id="thumb_list">
     {include file="$style_dir/blocks/thumb_list.html"}
 </form>
+<hr>
 <form action="upload_thumbs.php?video={$data.videoid}" method="post" enctype="multipart/form-data" name="form1">
-    <h5>Upload new thumbnail</h5>
+    <h4>{lang code='upload_custom_thumbnail'}</h4>
     <input name="vid_thumb[]" type="file"/>
     <br/>
-    <input type="submit" name="upload_thumbs" value="Upload thumbnail(s)" class="btn btn-primary btn-sm"/>
+    <input type="submit" name="upload_thumbs" value="{lang code='upload'}" class="btn btn-primary btn-sm" />
 </form>
-<script>
-    var msg = '{$msg}';
-    {literal}
-
-    $(function () {
-        $('.page-content').prepend(msg);
-    });
-
-    function regenerateThumbs (videoid) {
-        showSpinner();
-        $.ajax({
-            url: "/actions/regenerate_thumbs.php",
-            type: "post",
-            data: {videoid: videoid, origin: 'upload_thumb'},
-            dataType: 'json'
-        }).done(function (result) {
-            $('#set_default_thumb').html(result['template']);
-            $('.page-content').prepend(result['msg']);
-        }).always(function () {
-            hideSpinner();
-        });
-    }
-
-    function delete_thumb(videoid, num) {
-        $.ajax({
-            url: "/actions/delete_thumbs.php",
-            type: "post",
-            dataType: 'json',
-            data: {videoid: videoid, num: num}
-        }).done(function (result) {
-            $('#set_default_thumb').html(result['template']);
-        }).always(function (result) {
-            $('.page-content').prepend(result['msg']);
-        });
-    }
-    {/literal}
-</script>
 {/if}
 

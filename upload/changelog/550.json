@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"297",
+  "revision":"300",
   "status":"dev",
   "detail":[
     {
@@ -91,6 +91,7 @@
         ,"Add video sharing options"
         ,"Remove video embedding with flash"
         ,"Fix user form saving"
+        ,"Implement custom thumbs"
       ]
     },
     {

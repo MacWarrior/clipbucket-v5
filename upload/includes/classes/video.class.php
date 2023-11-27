@@ -172,7 +172,6 @@ class Video
         }
 
         if( !has_access('admin_access', true)  && !$param_exist ){
-
             $conditions[] = self::getGenericConstraint($param_first_only);
         }
 
@@ -247,28 +246,31 @@ class Video
 
 
     /**
+     * @param bool $param_first_only
      * @return string
      */
-    public static function getGenericConstraint($param_first_only = false): string
+    public static function getGenericConstraint(bool $param_first_only = false): string
     {
         $dob = user_dob();
-        $sql_age_restrict = '(video.age_restriction IS NULL OR TIMESTAMPDIFF(YEAR, \'' . mysql_clean($dob) . '\', now()) >= video.age_restriction )';
-        $superCond = '( (video.active = \'yes\' AND video.status = \'Successful\' AND video.broadcast = \'public\' AND video.age_restriction IS NULL ';
+        $sql_age_restrict = '(video.age_restriction IS NULL OR TIMESTAMPDIFF(YEAR, \'' . mysql_clean($dob) . '\', NOW()) >= video.age_restriction )';
+        $cond = '( (video.active = \'yes\' AND video.status = \'Successful\' AND video.age_restriction IS NULL AND (video.broadcast = \'public\' ';
 
         if( $param_first_only ){
-            $superCond .= ' OR (video.broadcast = \'unlisted\' AND video.video_password = \'\')';
+            $cond .= ' OR (video.broadcast = \'unlisted\' AND video.video_password = \'\')';
         }
+        $cond .= ')';
+
         $current_user_id = user_id();
         if ($current_user_id) {
             $select_contacts = 'SELECT contact_userid FROM ' . tbl('contacts') . ' WHERE confirmed = \'yes\' AND userid = ' . $current_user_id;
-            $superCond .= ' OR video.userid = ' . $current_user_id . ')';
-            $superCond .= ' OR (video.active = \'yes\' AND video.status = \'Successful\' AND '.$sql_age_restrict.')';
-            $superCond .= ' OR (video.broadcast = \'private\' AND video.userid IN(' . $select_contacts . ') AND '.$sql_age_restrict.')';
+            $cond .= ' OR video.userid = ' . $current_user_id . ')';
+            $cond .= ' OR (video.active = \'yes\' AND video.status = \'Successful\' AND '.$sql_age_restrict.')';
+            $cond .= ' OR (video.broadcast = \'private\' AND video.userid IN(' . $select_contacts . ') AND '.$sql_age_restrict.')';
         } else {
-            $superCond .= ')';
+            $cond .= ')';
         }
-        $superCond .= ')';
-        return $superCond;
+        $cond .= ')';
+        return $cond;
     }
 }
 
