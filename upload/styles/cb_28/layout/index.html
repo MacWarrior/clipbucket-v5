@@ -59,7 +59,7 @@
 			{/if}
 
 			{if config('collectionsSection') == 'yes'}
-				{$collections = $cbcollection->get_collections(['limit'=>config('collection_home_top_collections'), 'active'=>'yes', 'order'=>'COUNT( DISTINCT CASE WHEN C.type = \'photos\' THEN photos.photo_id ELSE video.videoid END ) DESC', 'parents_only'=>true, 'has_items'=>true])}
+				{$collections = $cbcollection->get_collections(['limit'=>config('collection_home_top_collections'), 'active'=>'yes', 'order'=>'COUNT( DISTINCT CASE WHEN collections.type = \'photos\' THEN photos.photo_id ELSE video.videoid END ) DESC', 'parents_only'=>true, 'has_items'=>true])}
                 {if $collections}
 				<h2 title="Collections with most items">{lang code="top_collections"}</h2>
 				<div class="clearfix sidebar-items collections-grid">

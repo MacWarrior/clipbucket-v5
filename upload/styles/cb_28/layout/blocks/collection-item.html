@@ -10,6 +10,7 @@
 	<div class="photo-block">
 		<a href="{$main_url}" title="{display_clean($collection.collection_name)}">
 			<img alt="{display_clean($collection.collection_name)}" title="{display_clean($collection.collection_name)}" class="img-responsive" id="collection_{$collection.collection_id}" src="{$first_col_thumb}"/>
+			{ANCHOR place='in_collection_thumb' data=$collection}
 			<div class="collection-info">
 				<span>{$collection.total_objects}</span>{lang code=$collection.type}
 			</div>

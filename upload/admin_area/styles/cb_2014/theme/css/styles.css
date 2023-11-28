@@ -843,3 +843,8 @@ a[role='menuitem'] {
     width: calc(100% - 150px);
     vertical-align: middle;
 }
+
+#services .alert.alert-danger{
+    display: inline;
+    padding: 3px;
+}

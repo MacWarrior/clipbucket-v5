@@ -142,9 +142,22 @@ dt span{
 
 dd:last-child{border-bottom:none}
 
-.red{color:ed0000} dd .green{color:#060; }
-.ok{background-image:url(images/tick_arrow.png); background-repeat:no-repeat; height:20px; padding-left:23px; display:inline-block}
-.alert_cross{background-image:url(images/cross_arrow.png); background-repeat:no-repeat; height:20px; padding-left:23px; display:inline-block}
+.red{color:#ed0000;}
+
+.ok, .alert_cross{
+	background-repeat:no-repeat;
+	height:20px;
+	padding-left:23px;
+	display:inline-block;
+	background-position-y: 4px;
+}
+.ok{
+	background-image:url(images/tick_arrow.png);
+}
+.alert_cross{
+	background-image:url(images/cross_arrow.png);
+	background-position-x: 2px;
+}
 
 dl{background-color:#F7F7F7; padding:0px; border:1px dotted #999;}
 
@@ -180,7 +193,6 @@ dt.white{
 	margin-bottom: 0 !important;
 }
 
-.ok{background:url(images/tick_arrow.png); background-repeat:no-repeat; height:20px; padding-left:23px; display:inline-block;line-height:20px}
 .line{height: 1px; background-color: #C9C9C9; margin-top: 10px; margin-bottom: 10px;}
 .green{display:block; margin-bottom:10px}
 

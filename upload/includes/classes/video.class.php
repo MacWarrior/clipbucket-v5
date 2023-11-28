@@ -170,25 +170,7 @@ class Video
         }
 
         if( !has_access('admin_access', true) && !$param_exist ){
-            $cond = '( (video.active = \'yes\' AND video.status = \'Successful\' AND (video.broadcast = \'public\'';
-
-            if( $param_first_only ){
-                $cond .= ' OR (video.broadcast = \'unlisted\' AND video.video_password = \'\')';
-            }
-            $cond .= ')';
-
-            $current_user_id = user_id();
-            if( $current_user_id ){
-                $select_contacts = 'SELECT contact_userid FROM '.tbl('contacts').' WHERE confirmed = \'yes\' AND userid = '.$current_user_id;
-                $cond .= ' OR video.userid = '.$current_user_id.')';
-                $cond .= ' OR (video.active = \'yes\' AND video.status = \'Successful\' AND video.broadcast IN(\'public\',\'logged\'))';
-                $cond .= ' OR (video.broadcast = \'private\' AND video.userid IN('.$select_contacts.'))';
-            } else {
-                $cond .= ')';
-            }
-            $cond .= ')';
-
-            $conditions[] = $cond;
+            $conditions[] = $this->getGenericConstraints($param_first_only);
         }
 
         if( $param_count ){
@@ -258,6 +240,37 @@ class Video
         }
 
         return $result;
+    }
+
+    /**
+     * @param bool $param_first_only
+     * @return string
+     * @throws Exception
+     */
+    public function getGenericConstraints(bool $param_first_only = false): string
+    {
+        if (has_access('admin_access', true)) {
+            return '';
+        }
+
+        $cond = '( (video.active = \'yes\' AND video.status = \'Successful\' AND (video.broadcast = \'public\' ';
+
+        if( $param_first_only ){
+            $cond .= ' OR (video.broadcast = \'unlisted\' AND video.video_password = \'\')';
+        }
+        $cond .= ')';
+
+        $current_user_id = user_id();
+        if ($current_user_id) {
+            $select_contacts = 'SELECT contact_userid FROM ' . tbl('contacts') . ' WHERE confirmed = \'yes\' AND userid = ' . $current_user_id;
+            $cond .= ' OR video.userid = ' . $current_user_id . ')';
+            $cond .= ' OR (video.active = \'yes\' AND video.status = \'Successful\')';
+            $cond .= ' OR (video.broadcast = \'private\' AND video.userid IN(' . $select_contacts . '))';
+        } else {
+            $cond .= ')';
+        }
+        $cond .= ')';
+        return $cond;
     }
 }
 
@@ -1017,18 +1030,7 @@ class CBvideo extends CBCategory
         $cond = '';
         $superCond = '';
         if (!has_access('admin_access', true)) {
-            $superCond = '( (video.active = \'yes\' AND video.status = \'Successful\' AND video.broadcast = \'public\'';
-
-            $current_user_id = user_id();
-            if( $current_user_id ){
-                $select_contacts = 'SELECT contact_userid FROM '.tbl('contacts').' WHERE confirmed = \'yes\' AND userid = '.$current_user_id;
-                $superCond .= ' OR video.userid = '.$current_user_id.')';
-                $superCond .= ' OR (video.active = \'yes\' AND video.status = \'Successful\' AND video.broadcast IN(\'public\',\'logged\'))';
-                $superCond .= ' OR (video.broadcast = \'private\' AND video.userid IN('.$select_contacts.'))';
-            } else {
-                $superCond .= ')';
-            }
-            $superCond .= ')';
+            $superCond = Video::getInstance()->getGenericConstraints();
         } else {
             if ($params['active']) {
                 $cond .= ' ' . ('video.active') . '=\'' . $params['active'] . '\'';

@@ -763,7 +763,7 @@ if (!empty($mode)) {
             $newPage = $page + 1;
             $type = $_POST['type'];
             $limit = create_query_limit($page, COLLIP);
-            $order = tbl("collection_items") . ".ci_id DESC";
+            $order = 'collection_items.ci_id DESC';
 
             switch ($type) {
                 case "videos":

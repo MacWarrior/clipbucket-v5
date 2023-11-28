@@ -113,8 +113,11 @@ class Photo
             $conditions[] = '(' . $param_condition . ')';
         }
 
-        $version = Update::getInstance()->getDBVersion();
+        if (!has_access('admin_access', true)) {
+            $conditions[] = $this->getGenericConstraints();
+        }
 
+        $version = Update::getInstance()->getDBVersion();
         if( $param_search ){
             /* Search is done on photo title, photo tags */
             $cond = '(MATCH(photos.photo_title) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(photos.photo_title) LIKE \'%' . mysql_clean($param_search) . '%\'';
@@ -190,6 +193,30 @@ class Photo
         }
 
         return $result;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getGenericConstraints(): string
+    {
+        if (has_access('admin_access', true)) {
+            return '';
+        }
+
+        $cond = '((photos.active = \'yes\' AND photos.broadcast = \'public\' ';
+
+        $current_user_id = user_id();
+        if ($current_user_id) {
+            $select_contacts = 'SELECT contact_userid FROM ' . tbl('contacts') . ' WHERE confirmed = \'yes\' AND userid = ' . $current_user_id;
+            $cond .= ' OR photos.userid = ' . $current_user_id . ')';
+            $cond .= ' OR (photos.active = \'yes\' AND photos.broadcast IN(\'public\',\'logged\'))';
+            $cond .= ' OR (photos.broadcast = \'private\' AND photos.userid IN(' . $select_contacts . '))';
+        } else {
+            $cond .= ')';
+        }
+        $cond .= ')';
+        return $cond;
     }
 }
 class CBPhotos
@@ -582,18 +609,7 @@ class CBPhotos
         $cond = '';
 
         if (!has_access('admin_access', true)) {
-            $cond .= '((photos.active = \'yes\' AND photos.broadcast = \'public\'';
-            $userid = user_id();
-            if( $userid ){
-                $select_contacts = 'SELECT contact_userid FROM '.tbl('contacts').' WHERE confirmed = \'yes\' AND userid = '.$userid;
-                $cond .= ' OR photos.userid = '.$userid.')';
-                $cond .= ' OR (photos.active = \'yes\' AND photos.broadcast IN(\'public\',\'logged\'))';
-                $cond .= ' OR (photos.broadcast = \'private\' AND photos.userid IN('.$select_contacts.'))';
-            } else {
-                $cond .= ')';
-            }
-            $cond .= ')';
-
+            $cond .= Photo::getInstance()->getGenericConstraints();
         } else {
             if ($p['active']) {
                 $cond .= 'photos.active = \'' . mysql_clean($p['active']) . '\'';
