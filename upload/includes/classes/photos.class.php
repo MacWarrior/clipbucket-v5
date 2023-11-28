@@ -113,7 +113,7 @@ class Photo
             $conditions[] = '(' . $param_condition . ')';
         }
         if (!has_access('admin_access', true)) {
-            $conditions[] = self::getGenericConstraint();
+            $conditions[] = self::getInstance()->getGenericConstraints();
         }
 
         $version = Update::getInstance()->getDBVersion();
@@ -195,7 +195,7 @@ class Photo
         return $result;
     }
 
-    public static function getGenericConstraint(): string
+    public function getGenericConstraints(): string
     {
         $dob = user_dob();
         $sql_age_restrict = '(photos.age_restriction IS NULL OR TIMESTAMPDIFF(YEAR, \'' . mysql_clean($dob) . '\', now()) >= photos.age_restriction )';
@@ -604,7 +604,7 @@ class CBPhotos
         $cond = '';
 
         if (!has_access('admin_access', true)) {
-            $cond .= Photo::getGenericConstraint();
+            $cond .= Photo::getInstance()->getGenericConstraints();
         } else {
             if ($p['active']) {
                 $cond .= 'photos.active = \'' . mysql_clean($p['active']) . '\'';
@@ -1342,8 +1342,8 @@ class CBPhotos
 
         $x = $info[0];
         $y = $info[1];
-        list($w, $h) = getimagesize($file);
-        list($ww, $wh) = getimagesize($watermark);
+        [$w, $h] = getimagesize($file);
+        [$ww, $wh] = getimagesize($watermark);
         $padding = $this->padding;
 
         switch ($x) {
@@ -1394,7 +1394,7 @@ class CBPhotos
             return false;
         }
 
-        list($Swidth, $Sheight, $Stype) = getimagesize($input);
+        [$Swidth, $Sheight, $Stype] = getimagesize($input);
         $wImage = imagecreatefrompng($watermark_file);
         $ww = imagesx($wImage);
         $wh = imagesy($wImage);

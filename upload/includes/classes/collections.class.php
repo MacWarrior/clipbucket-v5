@@ -194,7 +194,7 @@ class Collection
     /**
      * @return string
      */
-    public static function getGenericConstraint($alias = 'collections'): string
+    public function getGenericConstraints($alias = 'collections'): string
     {
         $dob = user_dob();
         $sql_age_restrict = '('.$alias.'.age_restriction IS NULL OR TIMESTAMPDIFF(YEAR, \'' . mysql_clean($dob) . '\', now()) >= '.$alias.'.age_restriction )';
@@ -437,10 +437,10 @@ class Collections extends CBCategory
         if( !has_access('admin_access', true) ) {
             switch ($this->objTable){
                 case $this->objTable == 'video' :
-                $left_join_cond = ' AND ' . Video::getGenericConstraint();
+                $left_join_cond = ' AND ' . Video::getInstance()->getGenericConstraints();
                 break;
                 case $this->objTable == 'photos';
-                $left_join_cond = ' AND ' . Photo::getGenericConstraint();
+                $left_join_cond = ' AND ' . Photo::getInstance()->getGenericConstraints();
                 break;
                 default:
 //                    @TODO send error
@@ -690,9 +690,9 @@ class Collections extends CBCategory
             if ($cond != '') {
                 $cond .= ' AND ';
             }
-            $cond .= Collection::getGenericConstraint('C');
-            $left_join_video_cond .= ' AND '.Video::getGenericConstraint();
-            $left_join_photos_cond .= ' AND '.Photo::getGenericConstraint();
+            $cond .= Collection::getInstance()->getGenericConstraints('C');
+            $left_join_video_cond .= ' AND '.Video::getInstance()->getGenericConstraints();
+            $left_join_photos_cond .= ' AND '.Photo::getInstance()->getGenericConstraints();
         }
 
         $select_tag = '';
@@ -854,10 +854,10 @@ class Collections extends CBCategory
             $condition[] = 'active = \'yes\'';
             switch ($this->objTable) {
                 case 'photos':
-                    $condition[] = Photo::getGenericConstraint();
+                    $condition[] = Photo::getInstance()->getGenericConstraints();
                     break;
                 case 'video':
-                    $condition[] = Video::getGenericConstraint();
+                    $condition[] = Video::getInstance()->getGenericConstraints();
                     break;
                 default:
                     //@TODO send error

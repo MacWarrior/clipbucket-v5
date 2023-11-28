@@ -172,7 +172,7 @@ class Video
         }
 
         if( !has_access('admin_access', true)  && !$param_exist ){
-            $conditions[] = self::getGenericConstraint($param_first_only);
+            $conditions[] = self::getInstance()->getGenericConstraints($param_first_only);
         }
 
         if( $param_count ){
@@ -249,7 +249,7 @@ class Video
      * @param bool $param_first_only
      * @return string
      */
-    public static function getGenericConstraint(bool $param_first_only = false): string
+    public function getGenericConstraints(bool $param_first_only = false): string
     {
         $dob = user_dob();
         $sql_age_restrict = '(video.age_restriction IS NULL OR TIMESTAMPDIFF(YEAR, \'' . mysql_clean($dob) . '\', NOW()) >= video.age_restriction )';
@@ -1030,7 +1030,7 @@ class CBvideo extends CBCategory
         $cond = '';
         $superCond = '';
         if (!has_access('admin_access', true)) {
-            $superCond = Video::getGenericConstraint();
+            $superCond = Video::getInstance()->getGenericConstraints();
         } else {
             if ($params['active']) {
                 $cond .= ' ' . ('video.active') . '=\'' . $params['active'] . '\'';
@@ -1839,7 +1839,7 @@ class CBvideo extends CBCategory
 
         $where = '';
         if( !has_access('admin_access', true) ){
-            $where = ' AND ' . Video::getGenericConstraint();
+            $where = ' AND ' . Video::getInstance()->getGenericConstraints();
         }
 
         $query = 'SELECT ' . table_fields($fields) . ' FROM ' . cb_sql_table('playlist_items');

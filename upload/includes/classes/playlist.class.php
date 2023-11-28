@@ -19,7 +19,7 @@ class Playlist
      * @param bool $param_first_only
      * @return string
      */
-    public static function getGenericConstraint(): string
+    public static function getGenericConstraints(): string
     {
         $dob = user_dob();
         $sql_age_restrict = '(playlists.age_restriction IS NULL OR TIMESTAMPDIFF(YEAR, \'' . mysql_clean($dob) . '\', NOW()) >= playlists.age_restriction )';
