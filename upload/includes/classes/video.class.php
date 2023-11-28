@@ -276,6 +276,13 @@ class Video
         $cond .= ')';
         return $cond;
     }
+
+    public static function display_restricted($video)
+    {
+        if( !empty($video['age_restriction']) ){
+            echo '<span class="restricted" title="Accès interdit aux moins de 18 ans">-' . $video['age_restriction'] . '</span>';
+        }
+    }
 }
 
 class CBvideo extends CBCategory
@@ -331,6 +338,7 @@ class CBvideo extends CBCategory
 
         $cb_columns->object('videos')->register_columns($basic_fields);
 
+        register_anchor_function('display_restricted', 'in_video_thumb', Video::class);
         register_anchor_function('display_banner', 'in_video_thumb', self::class);
     }
 

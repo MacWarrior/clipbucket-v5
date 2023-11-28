@@ -658,15 +658,6 @@ h1 {
   margin: 0 10px 0 0;
 }
 
-.featured-video .video_thumb .img-responsive {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  z-index: 1;
-}
-
 .featured-video .video_thumb a {
   display: block;
   position: absolute;
@@ -774,25 +765,17 @@ h1 {
 }
 
 .item-video .thumb-holder .video-link {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
   display: block;
   z-index: 1;
   text-decoration: none;
   color: #fff;
   font-size: 12px;
-  list-style: 14px;
 }
 
-.item-video .thumb-holder .video-link .img-responsive {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
+.no_select{
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
 }
 
 .item-video .thumb-holder .video-link .title {
@@ -1441,15 +1424,6 @@ h1 {
 .sidebar-playlists .playlist .playlist-video {
   display: block;
   position: relative;
-}
-
-.sidebar-playlists .playlist .playlist-video .img-responsive {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  top: 0;
-  left: 0;
 }
 
 .sidebar-playlists .playlist .videos-count {
@@ -7778,4 +7752,25 @@ textarea#comment_box {
   cursor: pointer;
   font-size: 1.3em;
   margin-right: 1em;
+}
+
+.video-link{
+  overflow: hidden;
+}
+.blur{
+  filter: blur(8px);
+}
+.restricted {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 5;
+  cursor: help;
+  background-color: #000;
+  opacity: 0.9;
+  width: 25px;
+  height: 25px;
+  line-height: 25px;
+  text-align:center;
+  border-radius: 25px;
 }

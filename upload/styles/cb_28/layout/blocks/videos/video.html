@@ -70,16 +70,14 @@
 			class="video-link" 
 		{/if} 
 		href="{video_link($video)}" title="{display_clean($video.title|title)}">
-			<img class="lazy img-responsive" src="{getThumb vdetails=$video size=416x260 }">
+			<img class="lazy img-responsive no_select blur" src="{getThumb vdetails=$video size=416x260}">
 		</a>
-		<img src="{$theme}/images/thumb-ratio.png" class="thumb-ratio" alt="">
-		
+
 		{ANCHOR place='in_video_thumb' data=$video}
 		<button data-quick="quick-{$video.videoid}"
  class="icon-plus2 add_icon cb_quickie cb-btn-quick-{$video.videoid} {if in_array($video.videoid, $qlist_vids)}icon-tick{/if}" vtitle="{display_clean($video.title)}" v-id="{$video.videoid}" vlink="{video_link($video)}" vthumb="{getThumb vdetails=$video size=416x260 }" vduration="{$video.duration|SetTime}" title="Add {display_clean($video.title)} to Quicklist">
  		</button>
 		<span class="duration" title="Video duration : {if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</span>
-
 	</div>
 	<div class="clearfix video-info">
 		<h2 class="title">
@@ -110,7 +108,7 @@
 				<time datetime="2016-15-03" class="duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</time>
 			</a>
 			<img src="{$theme}/images/thumb-ratio.png" class="thumb-ratio" alt=""/>
-		</div> <!--VIDEO_THUMB END-->
+		</div>
 
 		<div class="details_block">
 			<strong class="title"><a href="{video_link($video)}">{display_clean($video.title|truncate:50)}</a></strong>

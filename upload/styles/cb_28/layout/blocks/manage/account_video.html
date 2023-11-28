@@ -136,8 +136,7 @@
 	<div class="playlist featured-video clearfix" style="{if $ajax_load=="yes"}display:none;{/if}{if $video.videoid==$vdo.videoid}background: rgb(241, 236, 236);{/if}" id="{$video.videoid}"  >
 		<a href="{video_link($video)}">
 			<div class="video_thumb">
-				<img src="{getThumb vdetails=$video size=168x105}" {ANCHOR place="video_thumb" data=$video} class="img-responsive"/>
-				<img src="{$theme}/images/thumb-ratio.png" alt="" class="thumb-ratio"/>
+				<img src="{getThumb vdetails=$video size=168x105}" {ANCHOR place="video_thumb" data=$video} class="img-responsive no_select"/>
 				<time datetime="2016-15-03" class="duration">
 					{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}
 				</time>
