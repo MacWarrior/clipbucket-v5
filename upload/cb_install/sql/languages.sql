@@ -644,7 +644,6 @@ VALUES
        ('you_cant_sub_yourself'),
        ('manage_my_album'),
        ('you_dont_have_permission_to_update_this_video'),
-       ('collection_is_private'),
        ('comm_disabled_for_collection'),
        ('share_this_type'),
        ('seperate_usernames_with_comma'),
@@ -997,5 +996,9 @@ VALUES
        ('extracted_thumbs'),
        ('custom_thumbs'),
        ('confirm'),
+       ('uploaded'),
+       ('photo_tags'),
+       ('collection_is'),
+       ('not_found'),
        ('age_restriction'),
        ('info_age_restriction');

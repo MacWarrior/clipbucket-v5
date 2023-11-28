@@ -116,8 +116,11 @@ class Photo
             $conditions[] = self::getInstance()->getGenericConstraints();
         }
 
-        $version = Update::getInstance()->getDBVersion();
+        if (!has_access('admin_access', true)) {
+            $conditions[] = $this->getGenericConstraints();
+        }
 
+        $version = Update::getInstance()->getDBVersion();
         if( $param_search ){
             /* Search is done on photo title, photo tags */
             $cond = '(MATCH(photos.photo_title) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(photos.photo_title) LIKE \'%' . mysql_clean($param_search) . '%\'';
@@ -195,25 +198,33 @@ class Photo
         return $result;
     }
 
+    /**
+     * @throws Exception
+     */
     public function getGenericConstraints(): string
     {
+        if (has_access('admin_access', true)) {
+            return '';
+        }
+
         $dob = user_dob();
         $sql_age_restrict = '(photos.age_restriction IS NULL OR TIMESTAMPDIFF(YEAR, \'' . mysql_clean($dob) . '\', now()) >= photos.age_restriction )';
-        $superCond = '((photos.active = \'yes\' AND photos.broadcast = \'public\' AND photos.age_restriction IS NULL ';
+        $cond = '((photos.active = \'yes\' AND photos.age_restriction IS NULL AND photos.broadcast = \'public\' ';
 
         $current_user_id = user_id();
         if ($current_user_id) {
             $select_contacts = 'SELECT contact_userid FROM ' . tbl('contacts') . ' WHERE confirmed = \'yes\' AND userid = ' . $current_user_id;
-            $superCond .= ' OR photos.userid = ' . $current_user_id . ')';
-            $superCond .= ' OR (photos.active = \'yes\' AND photos.broadcast IN(\'public\',\'logged\') AND '.$sql_age_restrict.')';
-            $superCond .= ' OR (photos.broadcast = \'private\' AND photos.userid IN(' . $select_contacts . ') AND '.$sql_age_restrict.')';
+            $cond .= ' OR photos.userid = ' . $current_user_id . ')';
+            $cond .= ' OR (photos.active = \'yes\' AND photos.broadcast IN(\'public\',\'logged\') AND '.$sql_age_restrict.')';
+            $cond .= ' OR (photos.broadcast = \'private\' AND photos.userid IN(' . $select_contacts . ') AND '.$sql_age_restrict.')';
         } else {
-            $superCond .= ')';
+            $cond .= ')';
         }
-        $superCond .= ')';
-        return $superCond;
+        $cond .= ')';
+        return $cond;
     }
 }
+
 class CBPhotos
 {
     var $action = '';

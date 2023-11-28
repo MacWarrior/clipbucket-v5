@@ -190,7 +190,7 @@ function check_extension ($extension, $type) {
     global $extensionsCLI, $extensionsWeb;
     switch ($type) {
         case 'cli':
-            $version = $extensionsCLI[$extension];
+            $version = $extensionsCLI[$extension] ?? false;
             if (!$version) {
                 $return['err'] = $extension. ' extension is not enabled';
             } else {
@@ -203,10 +203,10 @@ function check_extension ($extension, $type) {
                 'mbstring' => 'libmbfl version',
                 'mysqli' => 'Client API library version',
                 'curl' => 'cURL Information',
-                'xml' => 'libxml2 Version',
+                'xml' => 'libxml2 Version'
             ];
             if (array_key_exists($extension, $extensionMessages)) {
-                $res = $extensionsWeb[$extension];
+                $res = $extensionsWeb[$extension] ?? false;
                 if (empty($res)) {
                     $return['err'] = $extension . ' extension is not enabled';
                 } else {
@@ -222,9 +222,8 @@ function check_extension ($extension, $type) {
     return $return;
 }
 
-function install_parseAllPHPModules()
+function install_parseAllPHPModules(): array
 {
-
     ob_start();
     phpinfo(INFO_MODULES);
     $s = ob_get_contents();

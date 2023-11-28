@@ -68,7 +68,7 @@
                     <label>
                         PHP WEB -
                         {if !$phpVersionWeb}
-                        <div class="alert alert-danger">php {lang code = 'not_found'}</div>
+                        <div class="alert alert-danger">{lang code = 'not_found'}</div>
                         {else}
                         Version <strong>{$phpVersionWeb}</strong>
                         - {lang code='info_php_web'}
@@ -80,7 +80,7 @@
                             <label>
                                 PHP CURL -
                                 {if !$extensionsWEB.curl}
-                                <div class="alert alert-danger">php {lang code = 'not_found'}</div>
+                                <div class="alert alert-danger">{lang code = 'not_found'}</div>
                                 {else}
                                 Version <strong>{$extensionsWEB.curl}</strong>
                                 {/if}
@@ -92,7 +92,7 @@
                             <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsWEB.gd}tick{else}alert{/if}.png"/>
                                 PHP GD -
                                 {if !$extensionsWEB.gd}
-                                <div class="alert alert-danger">php {lang code = 'not_found'}</div>
+                                <div class="alert alert-danger">{lang code = 'not_found'}</div>
                                 {else}
                                 Version <strong>{$extensionsWEB.gd}</strong>
                                 {/if}
@@ -104,7 +104,7 @@
                             <label>
                                 PHP MBSTRING -
                                 {if !$extensionsWEB.mbstring}
-                                <div class="alert alert-danger">php {lang code = 'not_found'}</div>
+                                <div class="alert alert-danger">{lang code = 'not_found'}</div>
                                 {else}
                                 Version <strong>{$extensionsWEB.mbstring}</strong>
                                 {/if}
@@ -117,7 +117,7 @@
                             <label>
                                 PHP MYSQLI -
                                 {if !$extensionsWEB.mysqli}
-                                <div class="alert alert-danger">php {lang code = 'not_found'}</div>
+                                <div class="alert alert-danger">{lang code = 'not_found'}</div>
                                 {else}
                                 Version <strong>{$extensionsWEB.mysqli}</strong>
                                 {/if}
@@ -130,7 +130,7 @@
                             <label>
                                 PHP XML -
                                 {if !$extensionsWEB.xml}
-                                <div class="alert alert-danger">php {lang code = 'not_found'}</div>
+                                <div class="alert alert-danger">{lang code = 'not_found'}</div>
                                 {else}
                                 Version <strong>{$extensionsWEB.xml}</strong>
                                 {/if}
@@ -153,7 +153,7 @@
                             <label>
                                 PHP CURL -
                                 {if !$extensionsCLI.curl}
-                                <div class="alert alert-danger"> {lang code = 'not_found'}</div>
+                                <div class="alert alert-danger">{lang code = 'not_found'}</div>
                                 {else}
                                 Version <strong>{$extensionsCLI.curl}</strong>
                                 {/if}
@@ -166,7 +166,7 @@
                             <label>
                                 PHP GD -
                                 {if !$extensionsCLI.gd}
-                                <div class="alert alert-danger"> {lang code = 'not_found'}</div>
+                                <div class="alert alert-danger">{lang code = 'not_found'}</div>
                                 {else}
                                 Version <strong>{$extensionsCLI.gd}</strong>
                                 {/if}
@@ -179,7 +179,7 @@
                             <label>
                                 PHP MBSTRING -
                                 {if !$extensionsCLI.mbstring}
-                                <div class="alert alert-danger"> {lang code = 'not_found'}</div>
+                                <div class="alert alert-danger">{lang code = 'not_found'}</div>
                                 {else}
                                 Version <strong>{$extensionsCLI.mbstring}</strong>
                                 {/if}
@@ -192,7 +192,7 @@
                             <label>
                                 PHP MYSQLI -
                                 {if !$extensionsCLI.mysqli}
-                                <div class="alert alert-danger"> {lang code = 'not_found'}</div>
+                                <div class="alert alert-danger">{lang code = 'not_found'}</div>
                                 {else}
                                 Version <strong>{$extensionsCLI.mysqli}</strong>
                                 {/if}
@@ -205,7 +205,7 @@
                             <label>
                                 PHP XML -
                                 {if !$extensionsCLI.xml}
-                                <div class="alert alert-danger"> {lang code = 'not_found'}</div>
+                                <div class="alert alert-danger">{lang code = 'not_found'}</div>
                                 {else}
                                 Version <strong>{$extensionsCLI.xml}</strong>
                                 {/if}
@@ -230,9 +230,9 @@
                     <label>
                         FFProbe -
                         {if !$ffprobe_path}
-                            <p class="alert alert-danger">Imagick {lang code = 'not_found'}</p>
+                            <p class="alert alert-danger">{lang code = 'not_found'}</p>
                             {if $ffprobe_path.error}
-                                <br><span style="color:#e70000">{$ffprobe_path.error}</span>
+                                <br/><span style="color:#e70000;">{$ffprobe_path.error}</span>
                             {/if}
                         {else}
                             Version <strong>{$ffprobe_path}</strong>

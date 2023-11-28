@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"300",
+  "revision":"301",
   "status":"dev",
   "detail":[
     {
@@ -105,7 +105,7 @@
         ,"Update PHP 8+ compatibility"
         ,"Update translations"
         ,"Update Readme & Copyright"
-        ,"Update compatibility to PHP 8.2.X"
+        ,"Update compatibility to PHP 8.3.X"
         ,"Update DB functions"
         ,"Auto-clear templates cache when in DEV mode"
         ,"Fix compatibility with MySQL 8.0.X"
@@ -241,6 +241,7 @@
         ,"Slightly update privacy policy page"
         ,"Refactor video sharing"
         ,"Fix embed player"
+        ,"Implement collection banner"
       ]
     }
   ,{

@@ -171,8 +171,8 @@ class Video
             $conditions[] = $cond;
         }
 
-        if( !has_access('admin_access', true)  && !$param_exist ){
-            $conditions[] = self::getInstance()->getGenericConstraints($param_first_only);
+        if( !has_access('admin_access', true) && !$param_exist ){
+            $conditions[] = $this->getGenericConstraints($param_first_only);
         }
 
         if( $param_count ){
@@ -244,13 +244,17 @@ class Video
         return $result;
     }
 
-
     /**
      * @param bool $param_first_only
      * @return string
+     * @throws Exception
      */
     public function getGenericConstraints(bool $param_first_only = false): string
     {
+        if (has_access('admin_access', true)) {
+            return '';
+        }
+
         $dob = user_dob();
         $sql_age_restrict = '(video.age_restriction IS NULL OR TIMESTAMPDIFF(YEAR, \'' . mysql_clean($dob) . '\', NOW()) >= video.age_restriction )';
         $cond = '( (video.active = \'yes\' AND video.status = \'Successful\' AND video.age_restriction IS NULL AND (video.broadcast = \'public\' ';
@@ -273,7 +277,6 @@ class Video
         return $cond;
     }
 }
-
 
 class CBvideo extends CBCategory
 {

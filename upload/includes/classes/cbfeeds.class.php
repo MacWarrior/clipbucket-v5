@@ -181,7 +181,6 @@ class cbfeeds
                 $farr = $feedArray;
 
                 $action = $farr['action'];
-                $object = $farr['object'];
                 $object_id = $farr['object_id'];
                 $farr['user'] = $user;
                 $farr['file'] = getName($feed['file']);
@@ -275,9 +274,7 @@ class cbfeeds
                             $farr['title'] = $collection['collection_name'];
                             $collection_link = $cbcollection->collection_links($collection, 'view');
                             $farr['link'] = $collection_link;
-                            $farr['object_content'] =
-                                $collection['collection_description'] . '<br>' .
-                                $collection['total_objects'] . ' ' . $collection['type'];
+                            $farr['object_content'] = $collection['collection_description'] . '<br>' . $collection['total_objects'] . ' ' . $collection['type'];
                             $farr['icon'] = 'photos.png';
                             $farr['links'][] = ['link' => $collection_link, 'text' => lang('view_collection')];
                         }
