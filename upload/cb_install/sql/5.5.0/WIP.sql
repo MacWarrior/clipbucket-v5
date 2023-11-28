@@ -1,4 +1,3 @@
-
 ALTER TABLE `{tbl_prefix}collections` ADD COLUMN age_restriction INT DEFAULT NULL;
 ALTER TABLE `{tbl_prefix}photos` ADD COLUMN age_restriction INT DEFAULT NULL;
 ALTER TABLE `{tbl_prefix}video` ADD COLUMN age_restriction INT DEFAULT NULL;
