@@ -1,9 +1,9 @@
-ALTER TABLE `{tbl_prefix}collections` ADD COLUMN age_restriction INT DEFAULT NULL;
-ALTER TABLE `{tbl_prefix}photos` ADD COLUMN age_restriction INT DEFAULT NULL;
-ALTER TABLE `{tbl_prefix}video` ADD COLUMN age_restriction INT DEFAULT NULL;
-ALTER TABLE `{tbl_prefix}playlists` ADD COLUMN age_restriction INT DEFAULT NULL;
+ALTER TABLE `{tbl_prefix}collections` ADD COLUMN IF NOT EXISTS age_restriction INT DEFAULT NULL;
+ALTER TABLE `{tbl_prefix}photos` ADD COLUMN IF NOT EXISTS age_restriction INT DEFAULT NULL;
+ALTER TABLE `{tbl_prefix}video` ADD COLUMN IF NOT EXISTS age_restriction INT DEFAULT NULL;
+ALTER TABLE `{tbl_prefix}playlists` ADD COLUMN IF NOT EXISTS age_restriction INT DEFAULT NULL;
 
-INSERT INTO `{tbl_prefix}config` (name, value) VALUES ('enable_user_dob_edition', 'yes');
+INSERT IGNORE INTO `{tbl_prefix}config` (name, value) VALUES ('enable_user_dob_edition', 'yes');
 
 SET @language_id_eng = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = 'en');
 SET @language_id_fra = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = 'fr');
