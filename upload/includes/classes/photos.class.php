@@ -1731,7 +1731,9 @@ class CBPhotos
                 'value'      =>  $age_restriction ?? '',
                 'db_field'   => 'age_restriction',
                 'required'   => 'no',
-                'hint_2'     => lang('info_age_restriction')
+                'hint_2'     => lang('info_age_restriction'),
+                'validate_function' => 'ageRestriction',
+                'use_func_val'      => true
             ],
         ];
     }

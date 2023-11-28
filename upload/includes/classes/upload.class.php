@@ -485,6 +485,18 @@ class Upload
         }
 
         return [
+            'age_restriction' => [
+                'title'             => lang('age_restriction'),
+                'type'              => 'textfield',
+                'name'              => 'age_restriction',
+                'id'                => 'age_restriction',
+                'value'             => $default['age_restriction'],
+                'db_field'          => 'age_restriction',
+                'required'          => 'no',
+                'hint_2'            => lang('info_age_restriction'),
+                'validate_function' => 'ageRestriction',
+                'use_func_val'      => true
+            ],
             'broadcast'      => [
                 'title'             => lang('vdo_br_opt'),
                 'type'              => 'radiobutton',
@@ -517,16 +529,7 @@ class Upload
                 'extra_tags' => " $video_pass_disable ",
                 'hint_2'     => lang('set_video_password')
             ],
-            'age_restriction' => [
-                'title'      => lang('age_restriction'),
-                'type'       => 'textfield',
-                'name'       => 'age_restriction',
-                'id'         => 'age_restriction',
-                'value'      => $default['age_restriction'],
-                'db_field'   => 'age_restriction',
-                'required'   => 'no',
-                'hint_2'     => lang('info_age_restriction')
-            ],
+
             'video_users'    => [
                 'title'             => lang('video_users'),
                 'type'              => 'textarea',
@@ -1069,4 +1072,6 @@ class Upload
 
         return $fields;
     }
+
+
 }	

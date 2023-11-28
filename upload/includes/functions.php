@@ -4873,6 +4873,17 @@ function parseAllPHPModules()
     }
     return $vModules;
 }
+function ageRestriction($var) {
+    $var = (int)$var;
+    if (empty($var)) {
+        return 0;
+    }
+    if ($var > 99 || $var < 0) {
+        return false;
+    }
+    return $var;
+}
+
 
 
 include('functions_db.php');

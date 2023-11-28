@@ -1122,14 +1122,16 @@ class Collections extends CBCategory
                 'default_value'     => 'no'
             ],
             'age_restriction' => [
-                'title'      => lang('age_restriction'),
-                'type'       => 'textfield',
-                'name'       => 'age_restriction',
-                'id'         => 'age_restriction',
-                'value'      => $default['age_restriction'],
-                'db_field'   => 'age_restriction',
-                'required'   => 'no',
-                'hint_2'     => lang('info_age_restriction')
+                'title'             => lang('age_restriction'),
+                'type'              => 'textfield',
+                'name'              => 'age_restriction',
+                'id'                => 'age_restriction',
+                'value'             => $default['age_restriction'],
+                'db_field'          => 'age_restriction',
+                'required'          => 'no',
+                'hint_2'            => lang('info_age_restriction'),
+                'validate_function' => 'ageRestriction',
+                'use_func_val'      => true
             ]
         ];
     }
