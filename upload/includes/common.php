@@ -261,6 +261,7 @@ require_once('classes/form.class.php');
 
 require_once('classes/log.class.php');
 require_once('classes/video.class.php');
+require_once('classes/playlist.class.php');
 require_once('classes/player.class.php');
 require_once('classes/cbemail.class.php');
 require_once('classes/pm.class.php');

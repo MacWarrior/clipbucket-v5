@@ -1839,7 +1839,7 @@ class CBvideo extends CBCategory
 
         $where = '';
         if( !has_access('admin_access', true) ){
-            $where = Video::getGenericConstraint();
+            $where = ' AND ' . Video::getGenericConstraint();
         }
 
         $query = 'SELECT ' . table_fields($fields) . ' FROM ' . cb_sql_table('playlist_items');

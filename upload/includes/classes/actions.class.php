@@ -79,7 +79,7 @@ class cbactions
 
         $fields = ['playlist_id', 'playlist_name', 'userid', 'description', 'category',
             'played', 'privacy', 'total_comments', 'runtime',
-            'last_update', 'date_added', 'first_item', 'playlist_type', 'cover'];
+            'last_update', 'date_added', 'first_item', 'playlist_type', 'cover', 'age_restriction'];
 
         $cb_columns->object('playlists')->register_columns($fields);
 
@@ -507,6 +507,16 @@ class cbactions
                 ],
                 'default_value' => 'yes',
                 'checked'       => $allow_rating
+            ],
+            'age_restriction' => [
+                'title'      => lang('age_restriction'),
+                'type'       => 'textfield',
+                'name'       => 'age_restriction',
+                'id'         => 'age_restriction',
+                'value'      => $array['age_restriction'],
+                'db_field'   => 'age_restriction',
+                'required'   => 'no',
+                'hint_2'     => lang('info_age_restriction')
             ]
         ];
     }
@@ -984,7 +994,7 @@ class cbactions
 
         $left_join_video_cond = '';
         if( !has_access('admin_access', true) ){
-            $left_join_video_cond = Video::getGenericConstraint();
+            $left_join_video_cond = ' AND ' . Video::getGenericConstraint();
         }
 
         $select = ', COUNT(video.videoid) AS total_items';
@@ -993,13 +1003,13 @@ class cbactions
         $query = 'SELECT ' . table_fields($fields) . $select . $select_tag . ' FROM ';
         $from = cb_sql_table('playlists')
                 . ' LEFT JOIN '.cb_sql_table('playlist_items').' ON playlists.playlist_id = playlist_items.playlist_id'
-                . ' LEFT JOIN '.cb_sql_table('video').' ON playlist_items.object_id = video.videoid' . $left_join_video_cond
+                . ' LEFT JOIN '.cb_sql_table('video').' ON playlist_items.object_id = video.videoid ' . $left_join_video_cond
                 . $join_tag;
         $query .= $from;
         $condition = '';
 
         if (!has_access('admin_access')) {
-            $condition .= 'playlists.privacy = \'public\'';
+            $condition .= Playlist::getGenericConstraint();
         } else {
             if (isset($params['privacy'])) {
                 $condition .= ' playlists.privacy = \'' . mysql_clean($params['privacy']) . '\'';

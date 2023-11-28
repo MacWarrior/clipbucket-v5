@@ -10,12 +10,31 @@
  */
 
 
-class cbplaylist
+class Playlist
 {
     /**
      * Database Tables
      */
-    var $dbtbl = ['user_playlists' => 'cb_user_playlists', 'playlist_items' => 'playlist_items'];
+    /**
+     * @param bool $param_first_only
+     * @return string
+     */
+    public static function getGenericConstraint(): string
+    {
+        $dob = user_dob();
+        $sql_age_restrict = '(playlists.age_restriction IS NULL OR TIMESTAMPDIFF(YEAR, \'' . mysql_clean($dob) . '\', NOW()) >= playlists.age_restriction )';
+        $cond = '( (playlists.privacy = \'public\' AND playlists.age_restriction IS NULL ';
 
+
+        $current_user_id = user_id();
+        if ($current_user_id) {
+            $cond .= ' OR playlists.userid = ' . $current_user_id . ')';
+            $cond .= ' OR (playlists.privacy = \'public\' AND '.$sql_age_restrict.')';
+        } else {
+            $cond .= ')';
+        }
+        $cond .= ')';
+        return $cond;
+    }
 
 }
