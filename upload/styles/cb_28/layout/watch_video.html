@@ -144,7 +144,7 @@
 								</ul>
 							</div>
 						</div>
-
+						{if $video.age_restriction }<span>{lang('access_forbidden_under_age')|replace:'%s':$video.age_restriction}</span>{/if}
 						{if
 							(userquery::getInstance()->hasUserLevelAccess(4, 'view_video') ||
 							(config('enable_video_internal_sharing') == 'yes' && user_id()))

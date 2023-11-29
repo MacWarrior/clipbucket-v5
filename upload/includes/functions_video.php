@@ -1773,17 +1773,17 @@ function clean_orphan_files($file)
 /**
  * @throws Exception
  */
-function age_restriction_check ($user_id, $video_id)
+function age_restriction_check ($user_id, $video_id, $obj_type = 'video', $id_field= 'videoid')
 {
     $sql = ' SELECT 
     TIMESTAMPDIFF(YEAR, U.dob, now()),
     CASE
-        WHEN V.age_restriction IS NULL THEN 1
-        WHEN TIMESTAMPDIFF(YEAR, U.dob, now()) < V.age_restriction THEN 0
+        WHEN O.age_restriction IS NULL THEN 1
+        WHEN TIMESTAMPDIFF(YEAR, U.dob, now()) < O.age_restriction THEN 0
             ELSE 1
         END AS can_access
-    FROM '.tbl('users') . ' AS U , '.tbl('video') .' AS V
-    WHERE V.videoid = '.mysql_clean($video_id).' AND U.userid = '.mysql_clean($user_id).'
+    FROM '.tbl('users') . ' AS U , '.tbl($obj_type) .' AS O
+    WHERE O.'.$id_field.' = '.mysql_clean($video_id).' AND U.userid = '.mysql_clean($user_id).'
     ' ;
     $rs = select($sql);
     if (!empty($rs)) {

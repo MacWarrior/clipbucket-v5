@@ -480,8 +480,7 @@ class cbactions
 
         $allow_comments = $array['allow_comments'];
         $allow_rating = $array['allow_rating'];
-
-        return [
+        $return = [
             'allow_comments' => [
                 'title'         => lang('playlist_allow_comments'),
                 'id'            => 'allow_comments',
@@ -507,8 +506,11 @@ class cbactions
                 ],
                 'default_value' => 'yes',
                 'checked'       => $allow_rating
-            ],
-            'age_restriction' => [
+            ]
+
+        ];
+        if (config('enable_age_restriction') == 'yes') {
+            $return['age_restriction'] = [
                 'title'      => lang('age_restriction'),
                 'type'       => 'textfield',
                 'name'       => 'age_restriction',
@@ -516,9 +518,12 @@ class cbactions
                 'value'      => $array['age_restriction'],
                 'db_field'   => 'age_restriction',
                 'required'   => 'no',
-                'hint_2'     => lang('info_age_restriction')
-            ]
-        ];
+                'hint_2'     => lang('info_age_restriction'),
+                'validate_function' => 'ageRestriction',
+                'use_func_val'      => true
+            ];
+        }
+        return $return;
     }
 
     function load_playlist_fields($array = null): array

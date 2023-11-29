@@ -1,9 +1,25 @@
 <?php
 class Playlist
 {
-    /**
-     * @throws Exception
-     */
+    private static $playlist;
+    private $tablename = '';
+    public function getTablename(): string
+    {
+        return $this->tablename;
+    }
+    public function __construct()
+    {
+        $this->tablename = 'playlists';
+    }
+
+    public static function getInstance(): self
+    {
+        if( empty(self::$playlist) ){
+            self::$playlist = new self();
+        }
+        return self::$playlist;
+    }
+
     public static function getGenericConstraints(): string
     {
         if (has_access('admin_access', true)) {
