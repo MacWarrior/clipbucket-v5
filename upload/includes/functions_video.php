@@ -89,6 +89,8 @@ function video_playable($id): bool
     }
     if (
         !empty($vdo['age_restriction'])
+        && !user_id()
+        && !has_access('video_moderation', true)
         && age_restriction_check(user_id(), $vdo['videoid']) != 1
     ) {
         e(lang('error_age_restriction'));
@@ -1777,7 +1779,7 @@ function age_restriction_check ($user_id, $video_id)
             ELSE 1
         END AS can_access
     FROM '.tbl('users') . ' AS U , '.tbl('video') .' AS V
-    WHERE V.videoid = '.mysql_clean($video_id).' AND U.userid = '.mysql_clean($user_id).'
+    WHERE V.videoid = '.mysql_clean($video_id).' AND U.userid = '.($user_id ? mysql_clean($user_id) :  '0').'
     ' ;
     $rs = select($sql);
     if (!empty($rs)) {
