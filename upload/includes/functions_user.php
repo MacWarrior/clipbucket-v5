@@ -30,14 +30,7 @@ function name($user_array)
     return $name;
 }
 
-/**
- * Function used to check fields in myaccount section (edit_account.php?mode=profile)
- * It checks certain important fields to make sure user enters correct data
- * @param: { array } : { $array } { array of fields data }
- * @return: { boolean }  { true or false depending on situation }
- * @since: ClipBucket 2.8
- */
-function profile_fileds_check($array)
+function profile_fileds_check($array): bool
 {
     $post_clean = true;
     if (preg_match('/[0-9]+/', $array['first_name']) || preg_match('/[0-9]+/', $array['last_name'])) {

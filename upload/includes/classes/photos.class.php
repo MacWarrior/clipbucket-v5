@@ -210,7 +210,7 @@ class Photo
         $cond = '((photos.active = \'yes\'';
 
         $sql_age_restrict = '';
-        if( config('enable_age_restriction') == 'yes' ) {
+        if( config('enable_age_restriction') == 'yes' && config('enable_blur_restricted_content') != 'yes' ){
             $cond .= ' AND photos.age_restriction IS NULL';
             $dob = user_dob();
             $sql_age_restrict = ' AND (photos.age_restriction IS NULL OR TIMESTAMPDIFF(YEAR, \'' . mysql_clean($dob) . '\', now()) >= photos.age_restriction )';

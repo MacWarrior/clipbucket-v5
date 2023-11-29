@@ -215,10 +215,10 @@ class Collection
             return '';
         }
 
-        $cond = '((collections.active = \'yes\'';
+        $cond = '(collections.active = \'yes\'';
 
         $sql_age_restrict = '';
-        if( config('enable_age_restriction') == 'yes' ) {
+        if( config('enable_age_restriction') == 'yes' && config('enable_blur_restricted_content') != 'yes' ){
             $cond .= ' AND collections.age_restriction IS NULL';
             $dob = user_dob();
             $sql_age_restrict = ' AND (collections.age_restriction IS NULL OR TIMESTAMPDIFF(YEAR, \'' . mysql_clean($dob) . '\', now()) >= collections.age_restriction )';
@@ -749,7 +749,7 @@ class Collections extends CBCategory
                     LEFT JOIN ' . tbl('tags') . ' AS T ON CT.id_tag = T.id_tag';
         }
         $from = cb_sql_table('collections') .
-            ' INNER JOIN ' . tbl('users') . ' U ON collections.userid = U.userid
+            ' INNER JOIN ' . cb_sql_table('users') . ' ON collections.userid = users.userid
             LEFT JOIN ' . tbl('collections') . ' CPARENT ON collections.collection_id_parent = CPARENT.collection_id
             LEFT JOIN ' . tbl($this->items) . ' citem ON collections.collection_id = citem.collection_id
             LEFT JOIN ' . cb_sql_table('video') . ' ON collections.type = \'videos\' AND citem.object_id = video.videoid' . $left_join_video_cond . '
@@ -773,7 +773,7 @@ class Collections extends CBCategory
         if (isset($p['count_only'])) {
             $select = 'COUNT(collections.collection_id) AS total_collections';
         } else {
-            $select = 'collections.*, U.username, CPARENT.collection_name AS collection_name_parent, '.$count.' AS total_objects' . $select_tag;
+            $select = 'collections.*, users.username, CPARENT.collection_name AS collection_name_parent, '.$count.' AS total_objects' . $select_tag;
         }
 
         $result = Clipbucket_db::getInstance()->select($from, $select, $cond, $limit, $order);

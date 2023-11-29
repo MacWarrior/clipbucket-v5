@@ -80,6 +80,7 @@ if (isset($_POST['update'])) {
         , 'enable_video_link_sharing'
         , 'enable_age_restriction'
         , 'enable_user_dob_edition'
+        , 'enable_blur_restricted_content'
     ];
 
     $config_booleans_to_refactor = [
@@ -278,6 +279,7 @@ if (isset($_POST['update'])) {
         'enable_video_link_sharing',
         'enable_age_restriction',
         'enable_user_dob_edition',
+        'enable_blur_restricted_content',
 
         'thumb_width',
         'thumb_height',

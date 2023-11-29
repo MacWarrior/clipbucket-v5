@@ -1005,4 +1005,6 @@ VALUES
        ('access_forbidden_under_age'),
        ('option_enable_age_restriction'),
        ('option_enable_user_dob_edition'),
-       ('user_dob_edition_disabled');
+       ('user_dob_edition_disabled'),
+       ('option_enable_blur_restricted_content'),
+       ('tips_enable_blur_restricted_content');

@@ -258,7 +258,7 @@ class Video
         $cond = '( (video.active = \'yes\' AND video.status = \'Successful\'';
 
         $sql_age_restrict = '';
-        if( config('enable_age_restriction') == 'yes' ) {
+        if( config('enable_age_restriction') == 'yes' && config('enable_blur_restricted_content') != 'yes' ){
             $cond .= ' AND video.age_restriction IS NULL';
             $dob = user_dob();
             $sql_age_restrict = ' AND (video.age_restriction IS NULL OR TIMESTAMPDIFF(YEAR, \'' . mysql_clean($dob) . '\', NOW()) >= video.age_restriction )';

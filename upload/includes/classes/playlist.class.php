@@ -13,7 +13,7 @@ class Playlist
         $cond = '((playlists.privacy = \'public\'';
 
         $sql_age_restrict = '';
-        if( config('enable_age_restriction') == 'yes' ) {
+        if( config('enable_age_restriction') == 'yes' && config('enable_blur_restricted_content') != 'yes' ){
             $cond .= ' AND photos.age_restriction IS NULL';
             $dob = user_dob();
             $sql_age_restrict = ' AND (playlists.age_restriction IS NULL OR TIMESTAMPDIFF(YEAR, \'' . mysql_clean($dob) . '\', NOW()) >= playlists.age_restriction )';
