@@ -89,6 +89,8 @@ function video_playable($id): bool
     }
 
     if ( config('enable_age_restriction') == 'yes'
+        && !user_id()
+        && !has_access('video_moderation', true)
         && !empty($vdo['age_restriction'])
         && age_restriction_check(user_id(), $vdo['videoid']) != 1
     ) {
