@@ -87,13 +87,15 @@ function video_playable($id): bool
             }
         }
     }
-    if (
-        !empty($vdo['age_restriction'])
+
+    if ( config('enable_age_restriction') == 'yes'
+        && !empty($vdo['age_restriction'])
         && age_restriction_check(user_id(), $vdo['videoid']) != 1
     ) {
         e(lang('error_age_restriction'));
         return false;
     }
+
     return true;
 }
 
@@ -1767,6 +1769,9 @@ function clean_orphan_files($file)
     remove_empty_directory(dirname($file['data']), $stop_path);
 }
 
+/**
+ * @throws Exception
+ */
 function age_restriction_check ($user_id, $video_id)
 {
     $sql = ' SELECT 
