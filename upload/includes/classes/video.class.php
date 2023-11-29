@@ -293,6 +293,39 @@ class Video
             echo '<span class="restricted" title="' . sprintf(lang('access_forbidden_under_age'), $video['age_restriction']) . '">-' . $video['age_restriction'] . '</span>';
         }
     }
+
+    /**
+     * @throws Exception
+     */
+    public function isCurrentUserRestricted($video_id): string
+    {
+        if( config('enable_blur_restricted_content') != 'yes'
+            || has_access('video_moderation', true)
+        ){
+            return false;
+        }
+
+        $params = [];
+        $params['videoid'] = $video_id;
+        $video = $this->getOne($params);
+
+        if( empty($video['age_restriction']) ){
+            return false;
+        }
+
+        if( !User::getInstance()->isUserConnected() ){
+            return true;
+        }
+
+        if( User::getInstance()->getCurrentUserID() == $video['userid'] ){
+            return false;
+        }
+
+        if( User::getInstance()->getCurrentUserAge() >= $video['age_restriction'] ){
+            return true;
+        }
+        return false;
+    }
 }
 
 class CBvideo extends CBCategory

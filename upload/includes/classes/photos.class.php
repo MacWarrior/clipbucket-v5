@@ -41,6 +41,7 @@ class Photo
             ,'server_url'
             ,'owner_ip'
             ,'photo_details'
+            ,'age_restriction'
         ];
         $this->display_block = LAYOUT . '/blocks/photo.html';
         $this->display_var_name = 'photo';
@@ -75,6 +76,15 @@ class Photo
     public function getDisplayVarName(): string
     {
         return $this->display_var_name;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getOne(array $params = [])
+    {
+        $params['first_only'] = true;
+        return $this->getAll($params);
     }
 
     /**
@@ -230,6 +240,49 @@ class Photo
         $cond .= ')';
         return $cond;
     }
+
+    /**
+     * @throws Exception
+     */
+    public static function display_restricted($photo)
+    {
+        if( !empty($photo['age_restriction']) ){
+            echo '<span class="restricted" title="' . sprintf(lang('access_forbidden_under_age'), $photo['age_restriction']) . '">-' . $photo['age_restriction'] . '</span>';
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function isCurrentUserRestricted($photo_id): string
+    {
+        if( config('enable_blur_restricted_content') != 'yes'
+            || has_access('video_moderation', true)
+        ){
+            return false;
+        }
+
+        $params = [];
+        $params['photo_id'] = $photo_id;
+        $photo = $this->getOne($params);
+
+        if( empty($photo['age_restriction']) ){
+            return false;
+        }
+
+        if( !User::getInstance()->isUserConnected() ){
+            return true;
+        }
+
+        if( User::getInstance()->getCurrentUserID() == $photo['userid'] ){
+            return false;
+        }
+
+        if( User::getInstance()->getCurrentUserAge() >= $photo['age_restriction'] ){
+            return true;
+        }
+        return false;
+    }
 }
 
 class CBPhotos
@@ -277,6 +330,9 @@ class CBPhotos
 
         $cb_columns->object('photos')->register_columns($basic_fields);
 
+        if( config('enable_age_restriction') == 'yes' ){
+            register_anchor_function('display_restricted', 'in_photo_thumb', Photo::class);
+        }
         register_anchor_function('display_banner', 'in_photo_thumb', self::class);
     }
 
@@ -316,7 +372,7 @@ class CBPhotos
         $basic_fields = [
             'photo_id', 'photo_key', 'userid', 'photo_title', 'photo_description', 'collection_id',
             'photo_details', 'date_added', 'filename', 'ext', 'active', 'broadcast', 'file_directory', 'views',
-            'last_commented', 'total_comments'
+            'last_commented', 'total_comments', 'age_restriction'
         ];
 
         return $this->set_basic_fields($basic_fields);

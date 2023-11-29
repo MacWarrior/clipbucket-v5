@@ -31,6 +31,7 @@ class Collection
             ,'active'
             ,'public_upload'
             ,'type'
+            ,'age_restriction'
         ];
         $this->display_block = LAYOUT . '/blocks/collection.html';
         $this->display_var_name = 'collection';
@@ -231,7 +232,6 @@ class Collection
             $select_contacts = 'SELECT contact_userid FROM '.tbl('contacts').' WHERE confirmed = \'yes\' AND userid = '.$current_user_id;
             $cond .= ' OR collections.userid = '.$current_user_id.')';
             $cond .= ' OR ( collections.broadcast = \'private\' AND collections.userid IN('.$select_contacts.')'.$sql_age_restrict.')';
-
         } else {
             $cond .= ') ';
         }

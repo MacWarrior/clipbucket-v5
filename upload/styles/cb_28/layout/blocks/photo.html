@@ -1,7 +1,14 @@
+{assign var='photo_class' value='img-responsive photo-land no_select'}
+
+{if Photo::getInstance()->isCurrentUserRestricted($photo['photo_id'])}
+	{$photo_class = $photo_class|cat:' blur'}
+{/if}
+
 {if $display_type == ""}
 <div class="item-photo col-lg-4 col-md-4 col-sm-6 col-xs-6">
 	<a class="photo-holder" href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
-		{get_photo details=$photo size='l' class='img-responsive photo-land' output='html'}
+		{ANCHOR place='in_photo_thumb' data=$photo}
+		{get_photo details=$photo size='l' class=$photo_class output='html'}
 		<i class="icon-zoom"></i>
 	</a>
 	<div class="photo-info">
@@ -19,7 +26,7 @@
 	<div class="photoAppending">
 		<a class="photo-holder" href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
 			{ANCHOR place='in_photo_thumb' data=$photo}
-			{get_photo details=$photo size='l' class='img-responsive photo-land' output='html'}
+			{get_photo details=$photo size='l' class=$photo_class output='html'}
 			<i class="icon-zoom"></i>
 		</a>
 		<div class="photo-info">
@@ -36,7 +43,8 @@
 {if $display_type == "view_channelAjax"}
 <div style="display: none" class="item-photo col-lg-4 col-md-4 col-sm-6 col-xs-12">
 	<a class="photo-holder" href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
-		{get_photo details=$photo size='l' class='img-responsive photo-land' output='html'}
+		{ANCHOR place='in_photo_thumb' data=$photo}
+		{get_photo details=$photo size='l' class=$photo_class output='html'}
 		<i class="icon-zoom"></i>
 	</a>
 	<div class="photo-info">
@@ -52,7 +60,8 @@
 
 {if $display_type == "user_photos"}
 	<a class="photo-holder" href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
-		{get_photo details=$photo size='l' class='img-responsive photo-land' output='html'}
+		{ANCHOR place='in_photo_thumb' data=$photo}
+		{get_photo details=$photo size='l' class=$photo_class output='html'}
 		<i class="icon-zoom"></i>
 	</a>
 	<div class="photo-info">
@@ -67,14 +76,16 @@
 
 {if $display_type == "featuredPhoto_sidebar"}
 	<a class="photo-holder" href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
-		{get_photo details=$photo size='l' class='img-responsive photo-land' output='html'}
+		{ANCHOR place='in_photo_thumb' data=$photo}
+		{get_photo details=$photo size='l' class=$photo_class output='html'}
 		<i class="icon-zoom"></i>
 	</a>
 {/if}
 
 {if $display_type == "search_photos"}
 	<a class="searchresult-photo" href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
-		{get_photo details=$photo size='l' class='img-responsive photo-land' output='html'}
+		{ANCHOR place='in_photo_thumb' data=$photo}
+		{get_photo details=$photo size='l' class=$photo_class output='html'}
 		<div class="hover hidden-xs hidden-sm">
 			<i class="icon-zoom"></i>
 		</div>
@@ -91,7 +102,10 @@
 
 {if $display_type == 'related_photos'}
 	<div class="relatedPhotos clearfix">
-		<a href="{$cbphoto->photo_links($photo,'view_item')}">{get_photo details=$photo output='html' width='120' class='photoThumbBox moveL' style='margin-right:5px;'}</a>
+		<a href="{$cbphoto->photo_links($photo,'view_item')}">
+			{ANCHOR place='in_photo_thumb' data=$object}
+			{get_photo details=$photo output='html' width='120' class='photoThumbBox moveL' style='margin-right:5px;'}
+		</a>
 		<div class="photoTitle" style="margin-bottom:5px;"><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:15}</a></div>
 		<span class="photoInfo">{$photo.views|number_format} {lang code="views"} <br/> {$photo.total_comments} {lang code="comments"}</span>
 		{show_rating rating=$photo.rating total='10' class='rating moveL'}
@@ -100,6 +114,7 @@
 
 {if $display_type == "relatedPhoto_sidebar"}
 	<a class="photo-holder" href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
+		{ANCHOR place='in_photo_thumb' data=$object}
 		{get_photo details=$photo output='html' size='l' class='img-responsive'}
 		<i class="icon-zoom"></i>
 	</a>
@@ -118,7 +133,10 @@
 
 {if $display_type == "side_photos"}
 	<div style="display:inline-block; *display:inline; vertical-align:middle; padding:0 8px 5px 0px;">
-		<a href="{$cbphoto->photo_links($photo,'view_item')}">{get_photo details=$photo output='html' width='82' class='photoThumbBox'}</a>
+		<a href="{$cbphoto->photo_links($photo,'view_item')}">
+			{ANCHOR place='in_photo_thumb' data=$object}
+			{get_photo details=$photo output='html' width='82' class='photoThumbBox'}
+		</a>
 		<div class="photoTitle" style="font:bold 10px Arial; margin:1px 0px">
 		<a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:15}</a>
 		</div>
@@ -131,15 +149,16 @@
 
 {if $display_type == "channel_page"}
 	<li class="itemBox" onclick="loadObject(this,'photos','{$photo.photo_id}','viewingArea')">
+		{ANCHOR place='in_photo_thumb' data=$object}
 		{get_photo details=$photo output='html' width='110' height='64' size='m' style='display:block;margin:0 auto;'}
-	</li> <!-- itemBox {$photo.photo_key} end -->
+	</li>
 {/if}
 
 {if $display_type == "collection_item"}
 <div class="photoAppending">
     <a class="photo-holder" href="{$cbphoto->photo_links($object,'view_item')}" title="{display_clean($object.photo_title)}">
 		{ANCHOR place='in_photo_thumb' data=$object}
-        {get_photo details=$object size='l' class='img-responsive photo-land' output='html'}
+        {get_photo details=$object size='l' class=$photo_class output='html'}
         <i class="icon-zoom"></i>
     </a>
     <div class="photo-info">

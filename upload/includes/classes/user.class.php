@@ -7,7 +7,11 @@ class User
     private $display_block = '';
     private $search_limit = 0;
     private $display_var_name = '';
+    private $current_user = [];
 
+    /**
+     * @throws Exception
+     */
     public function __construct(){
         $this->tablename = 'users';
         $this->fields = [
@@ -65,6 +69,15 @@ class User
         $this->display_block = LAYOUT . '/blocks/user.html';
         $this->display_var_name = 'user';
         $this->search_limit = (int)config('users_items_search_page');
+
+        $user_id = user_id();
+        if( $user_id ){
+            $params = [];
+            $params['userid'] = $user_id;
+            $params['first_only'] = true;
+            $this->current_user = $this->getAll($params);
+        }
+
     }
 
     public static function getInstance(): self
@@ -102,7 +115,6 @@ class User
      */
     public function getAll(array $params = [])
     {
-        $param_collection_id = $params['userid'] ?? false;
         $param_userid = $params['userid'] ?? false;
         $param_search = $params['search'] ?? false;
 
@@ -198,6 +210,31 @@ class User
         }
 
         return $result;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getCurrentUserAge()
+    {
+        if( empty($this->current_user) ){
+            return false;
+        }
+
+        $current_date = new DateTime();
+        $date_of_birth = new DateTime($this->current_user['dob']);
+        $diff = $current_date->diff($date_of_birth);
+        return $diff->y;
+    }
+
+    public function isUserConnected()
+    {
+        return !empty($this->current_user);
+    }
+
+    public function getCurrentUserID()
+    {
+        return $this->current_user['userid'] ?? false;
     }
 }
 
