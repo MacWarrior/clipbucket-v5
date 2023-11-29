@@ -44,16 +44,24 @@ function profile_fileds_check($array)
         e('Name contains numbers! Seriously? Are you alien?');
         $post_clean = false;
     }
+
     if (!empty($array['web_url'])) {
         if (is_numeric($array['web_url'])) {
             e('Invalid URL provided.');
             $post_clean = false;
         }
     }
+
     if (!is_numeric($array['postal_code']) && !empty($array['postal_code'])) {
         e("Don't fake it! Postal Code can't be words!");
         $post_clean = false;
     }
+
+    if( !empty($array['dob']) && config('enable_user_dob_edition') != 'yes'){
+        e(lang('user_dob_edition_disabled'));
+        $post_clean = false;
+    }
+
     return $post_clean;
 }
 

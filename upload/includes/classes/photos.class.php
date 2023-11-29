@@ -207,16 +207,23 @@ class Photo
             return '';
         }
 
-        $dob = user_dob();
-        $sql_age_restrict = '(photos.age_restriction IS NULL OR TIMESTAMPDIFF(YEAR, \'' . mysql_clean($dob) . '\', now()) >= photos.age_restriction )';
-        $cond = '((photos.active = \'yes\' AND photos.age_restriction IS NULL AND photos.broadcast = \'public\' ';
+        $cond = '((photos.active = \'yes\'';
+
+        $sql_age_restrict = '';
+        if( config('enable_age_restriction') == 'yes' ) {
+            $cond .= ' AND photos.age_restriction IS NULL';
+            $dob = user_dob();
+            $sql_age_restrict = ' AND (photos.age_restriction IS NULL OR TIMESTAMPDIFF(YEAR, \'' . mysql_clean($dob) . '\', now()) >= photos.age_restriction )';
+        }
+
+        $cond .= ' AND photos.broadcast = \'public\'';
 
         $current_user_id = user_id();
         if ($current_user_id) {
             $select_contacts = 'SELECT contact_userid FROM ' . tbl('contacts') . ' WHERE confirmed = \'yes\' AND userid = ' . $current_user_id;
             $cond .= ' OR photos.userid = ' . $current_user_id . ')';
-            $cond .= ' OR (photos.active = \'yes\' AND photos.broadcast IN(\'public\',\'logged\') AND '.$sql_age_restrict.')';
-            $cond .= ' OR (photos.broadcast = \'private\' AND photos.userid IN(' . $select_contacts . ') AND '.$sql_age_restrict.')';
+            $cond .= ' OR (photos.active = \'yes\' AND photos.broadcast IN(\'public\',\'logged\')'.$sql_age_restrict.')';
+            $cond .= ' OR (photos.broadcast = \'private\' AND photos.userid IN(' . $select_contacts . ')'.$sql_age_restrict.')';
         } else {
             $cond .= ')';
         }
@@ -1697,9 +1704,8 @@ class CBPhotos
         $comments = $array['allow_comments'];
         $embedding = $array['allow_embedding'];
         $rating = $array['allow_rating'];
-        $age_restriction = $array['age_restriction'];
 
-        return [
+        $return = [
             'comments'  => [
                 'title'             => lang('comments'),
                 'name'              => 'allow_comments',
@@ -1733,20 +1739,26 @@ class CBPhotos
                 'validate_function' => 'yes_or_no',
                 'display_function'  => 'display_sharing_opt',
                 'default_value'     => 'yes'
-            ],
-            'age_restriction' => [
-                'title'      => lang('age_restriction'),
-                'type'       => 'textfield',
-                'name'       => 'age_restriction',
-                'id'         => 'age_restriction',
-                'value'      =>  $age_restriction ?? '',
-                'db_field'   => 'age_restriction',
-                'required'   => 'no',
-                'hint_2'     => lang('info_age_restriction'),
+            ]
+        ];
+
+        if( config('enable_age_restriction') == 'yes' ) {
+            $age_restriction = $array['age_restriction'];
+            $return['age_restriction'] = [
+                'title'             => lang('age_restriction'),
+                'type'              => 'textfield',
+                'name'              => 'age_restriction',
+                'id'                => 'age_restriction',
+                'value'             =>  $age_restriction ?? '',
+                'db_field'          => 'age_restriction',
+                'required'          => 'no',
+                'hint_2'            => lang('info_age_restriction'),
                 'validate_function' => 'ageRestriction',
                 'use_func_val'      => true
-            ],
-        ];
+            ];
+        }
+
+        return $return;
     }
 
     /**

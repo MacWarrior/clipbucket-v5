@@ -1,4 +1,3 @@
-{$myAccountLinks = $userquery->my_account_links()}
 <div class="container manage-page marginBottom">
     {if $mode=='profile_settings' || $mode=='account_settings'}
     <div class="cb-box row">
@@ -22,7 +21,7 @@
                 <br>
                 <form method="post" class="accountForm">
                     <div class="tab-content clearfix">
-                        <div id="cpsetting" class="tab-pane {if $mode=='profile_settings'}active{/if}">
+                        <div id="cpsetting" class="tab-pane{if $mode=='profile_settings'} active{/if}">
                             <div class="channelSettings col-md-10">
                                 {$channel_profile_fields = $userquery->load_user_fields($user)}
                                 {foreach from=$channel_profile_fields item=field_group}
@@ -56,7 +55,6 @@
                                             {$field.hint_2}
                                         {/if}
                                 </div>
-
                                     {/foreach}
                                     {/if}
                                 {/foreach}
@@ -71,8 +69,6 @@
 
                         <div id="asettings" class="tab-pane {if $mode=='account_settings'}active{/if}">
                             <div class="accountSettings col-md-6">
-                                {$signup_fields = $userquery->load_signup_fields($user)}
-                                {$cust_signup_fields = $userquery->load_custom_signup_fields($user,false,true)}
                                 <h2>{lang code='account_details'}</h2>
                                 {if config('enable_country')=='yes'}
                                 <div class="form-group">
@@ -111,6 +107,9 @@
                                     <label for="dob">{lang code='user_date_of_birth'}</label>
                                     {ANCHOR place=$signup_fields.dob.anchor_before}
                                     {$signup_fields.dob.class='form-control'}
+                                    {if config('enable_user_dob_edition') != 'yes'}
+                                        {$signup_fields.dob['disabled'] = true}
+                                    {/if}
                                     {$formObj->createField($signup_fields.dob)}
                                     {ANCHOR place=$signup_fields.dob.anchor_after}
                                 </div>

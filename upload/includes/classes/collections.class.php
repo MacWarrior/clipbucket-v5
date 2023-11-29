@@ -215,16 +215,22 @@ class Collection
             return '';
         }
 
-        $dob = user_dob();
-        $sql_age_restrict = '(collections.age_restriction IS NULL OR TIMESTAMPDIFF(YEAR, \'' . mysql_clean($dob) . '\', now()) >= collections.age_restriction )';
-        $cond = '';
-        $current_user_id = user_id();
+        $cond = '((collections.active = \'yes\'';
 
-        $cond .= '(collections.active = \'yes\' AND collections.broadcast != \'private\' AND collections.age_restriction IS NULL';
+        $sql_age_restrict = '';
+        if( config('enable_age_restriction') == 'yes' ) {
+            $cond .= ' AND collections.age_restriction IS NULL';
+            $dob = user_dob();
+            $sql_age_restrict = ' AND (collections.age_restriction IS NULL OR TIMESTAMPDIFF(YEAR, \'' . mysql_clean($dob) . '\', now()) >= collections.age_restriction )';
+        }
+
+        $cond .= ' AND collections.broadcast = \'public\'';
+
+        $current_user_id = user_id();
         if( $current_user_id ){
             $select_contacts = 'SELECT contact_userid FROM '.tbl('contacts').' WHERE confirmed = \'yes\' AND userid = '.$current_user_id;
             $cond .= ' OR collections.userid = '.$current_user_id.')';
-            $cond .= ' OR ( collections.broadcast = \'private\' AND collections.userid IN('.$select_contacts.') AND '.$sql_age_restrict.')';
+            $cond .= ' OR ( collections.broadcast = \'private\' AND collections.userid IN('.$select_contacts.')'.$sql_age_restrict.')';
 
         } else {
             $cond .= ') ';
@@ -1100,18 +1106,14 @@ class Collections extends CBCategory
             $default = $_POST;
         }
 
-        $broadcast = $default['broadcast'];
-        $allow_comments = $default['allow_comments'];
-        $public_upload = $default['public_upload'];
-
-        return [
+        $return = [
             'broadcast'     => [
                 'title'             => lang('vdo_br_opt'),
                 'type'              => 'radiobutton',
                 'name'              => 'broadcast',
                 'id'                => 'broadcast',
                 'value'             => ['public' => lang('collect_borad_pub'), 'private' => lang('collect_broad_pri')],
-                'checked'           => $broadcast,
+                'checked'           => $default['broadcast'],
                 'db_field'          => 'broadcast',
                 'required'          => 'no',
                 'validate_function' => 'yes_or_no',
@@ -1124,7 +1126,7 @@ class Collections extends CBCategory
                 'id'                => 'allow_comments',
                 'name'              => 'allow_comments',
                 'value'             => ['yes' => lang('vdo_allow_comm'), 'no' => lang('vdo_dallow_comm')],
-                'checked'           => $allow_comments,
+                'checked'           => $default['allow_comments'],
                 'db_field'          => 'allow_comments',
                 'required'          => 'no',
                 'validate_function' => 'yes_or_no',
@@ -1137,14 +1139,17 @@ class Collections extends CBCategory
                 'id'                => 'public_upload',
                 'name'              => 'public_upload',
                 'value'             => ['no' => lang('collect_pub_up_dallow'), 'yes' => lang('collect_pub_up_allow')],
-                'checked'           => $public_upload,
+                'checked'           => $default['public_upload'],
                 'db_field'          => 'public_upload',
                 'required'          => 'no',
                 'validate_function' => 'yes_or_no',
                 'display_function'  => 'display_sharing_opt',
                 'default_value'     => 'no'
-            ],
-            'age_restriction' => [
+            ]
+        ];
+
+        if( config('enable_age_restriction') == 'yes' ) {
+            $return['age_restriction'] = [
                 'title'             => lang('age_restriction'),
                 'type'              => 'textfield',
                 'name'              => 'age_restriction',
@@ -1155,8 +1160,10 @@ class Collections extends CBCategory
                 'hint_2'            => lang('info_age_restriction'),
                 'validate_function' => 'ageRestriction',
                 'use_func_val'      => true
-            ]
-        ];
+            ];
+        }
+
+        return $return;
     }
 
     /**

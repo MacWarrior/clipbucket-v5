@@ -255,9 +255,16 @@ class Video
             return '';
         }
 
-        $dob = user_dob();
-        $sql_age_restrict = '(video.age_restriction IS NULL OR TIMESTAMPDIFF(YEAR, \'' . mysql_clean($dob) . '\', NOW()) >= video.age_restriction )';
-        $cond = '( (video.active = \'yes\' AND video.status = \'Successful\' AND video.age_restriction IS NULL AND (video.broadcast = \'public\' ';
+        $cond = '( (video.active = \'yes\' AND video.status = \'Successful\'';
+
+        $sql_age_restrict = '';
+        if( config('enable_age_restriction') == 'yes' ) {
+            $cond .= ' AND video.age_restriction IS NULL';
+            $dob = user_dob();
+            $sql_age_restrict = ' AND (video.age_restriction IS NULL OR TIMESTAMPDIFF(YEAR, \'' . mysql_clean($dob) . '\', NOW()) >= video.age_restriction )';
+        }
+
+        $cond .= ' AND (video.broadcast = \'public\'';
 
         if( $param_first_only ){
             $cond .= ' OR (video.broadcast = \'unlisted\' AND video.video_password = \'\')';
@@ -268,8 +275,8 @@ class Video
         if ($current_user_id) {
             $select_contacts = 'SELECT contact_userid FROM ' . tbl('contacts') . ' WHERE confirmed = \'yes\' AND userid = ' . $current_user_id;
             $cond .= ' OR video.userid = ' . $current_user_id . ')';
-            $cond .= ' OR (video.active = \'yes\' AND video.status = \'Successful\' AND '.$sql_age_restrict.')';
-            $cond .= ' OR (video.broadcast = \'private\' AND video.userid IN(' . $select_contacts . ') AND '.$sql_age_restrict.')';
+            $cond .= ' OR (video.active = \'yes\' AND video.status = \'Successful\''.$sql_age_restrict.')';
+            $cond .= ' OR (video.broadcast = \'private\' AND video.userid IN(' . $select_contacts . ')'.$sql_age_restrict.')';
         } else {
             $cond .= ')';
         }
@@ -277,10 +284,13 @@ class Video
         return $cond;
     }
 
+    /**
+     * @throws Exception
+     */
     public static function display_restricted($video)
     {
         if( !empty($video['age_restriction']) ){
-            echo '<span class="restricted" title="Accès interdit aux moins de 18 ans">-' . $video['age_restriction'] . '</span>';
+            echo '<span class="restricted" title="' . sprintf(lang('access_forbidden_under_age'), $video['age_restriction']) . '">-' . $video['age_restriction'] . '</span>';
         }
     }
 }
@@ -338,7 +348,9 @@ class CBvideo extends CBCategory
 
         $cb_columns->object('videos')->register_columns($basic_fields);
 
-        register_anchor_function('display_restricted', 'in_video_thumb', Video::class);
+        if( config('enable_age_restriction') == 'yes' ){
+            register_anchor_function('display_restricted', 'in_video_thumb', Video::class);
+        }
         register_anchor_function('display_banner', 'in_video_thumb', self::class);
     }
 

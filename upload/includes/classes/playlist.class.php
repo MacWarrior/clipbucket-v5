@@ -1,35 +1,28 @@
 <?php
-
-/**
- * This class is used to manage Playlist
- * and Quicklist for ClipBucket
- *
- * @Author : Arslan hassan (te haur kaun o sukda :p)
- * @License: CBLA
- * @Since : Bakra Eid 2009
- */
-
-
 class Playlist
 {
     /**
-     * Database Tables
-     */
-    /**
-     * @param bool $param_first_only
-     * @return string
+     * @throws Exception
      */
     public static function getGenericConstraints(): string
     {
-        $dob = user_dob();
-        $sql_age_restrict = '(playlists.age_restriction IS NULL OR TIMESTAMPDIFF(YEAR, \'' . mysql_clean($dob) . '\', NOW()) >= playlists.age_restriction )';
-        $cond = '( (playlists.privacy = \'public\' AND playlists.age_restriction IS NULL ';
+        if (has_access('admin_access', true)) {
+            return '';
+        }
 
+        $cond = '((playlists.privacy = \'public\'';
+
+        $sql_age_restrict = '';
+        if( config('enable_age_restriction') == 'yes' ) {
+            $cond .= ' AND photos.age_restriction IS NULL';
+            $dob = user_dob();
+            $sql_age_restrict = ' AND (playlists.age_restriction IS NULL OR TIMESTAMPDIFF(YEAR, \'' . mysql_clean($dob) . '\', NOW()) >= playlists.age_restriction )';
+        }
 
         $current_user_id = user_id();
         if ($current_user_id) {
             $cond .= ' OR playlists.userid = ' . $current_user_id . ')';
-            $cond .= ' OR (playlists.privacy = \'public\' AND '.$sql_age_restrict.')';
+            $cond .= ' OR (playlists.privacy = \'public\'' . $sql_age_restrict . ')';
         } else {
             $cond .= ')';
         }

@@ -49,7 +49,7 @@ class Upload
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     function submit_upload($array = null)
     {
@@ -246,7 +246,7 @@ class Upload
      *
      * @param $file_name
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     function get_next_available_num($file_name): string
     {
@@ -314,7 +314,7 @@ class Upload
      * @param null $files_dir
      * @param bool $thumbs_ver
      *
-     * @throws \Exception
+     * @throws Exception
      * @internal param $FILE_NAME
      * @internal param array $_FILES name
      */
@@ -341,7 +341,7 @@ class Upload
      * @param null $default
      *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     function loadRequiredFields($default = null): array
     {
@@ -462,7 +462,7 @@ class Upload
      * @param null $default
      *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     function loadOptionFields($default = null): array
     {
@@ -484,8 +484,9 @@ class Upload
             }
         }
 
-        return [
-            'age_restriction' => [
+        $fields = [];
+        if( config('enable_age_restriction') == 'yes' ) {
+            $fields['age_restriction'] = [
                 'title'             => lang('age_restriction'),
                 'type'              => 'textfield',
                 'name'              => 'age_restriction',
@@ -496,94 +497,101 @@ class Upload
                 'hint_2'            => lang('info_age_restriction'),
                 'validate_function' => 'ageRestriction',
                 'use_func_val'      => true
-            ],
-            'broadcast'      => [
-                'title'             => lang('vdo_br_opt'),
-                'type'              => 'radiobutton',
-                'name'              => 'broadcast',
-                'value'             => ['public' => lang('vdo_br_opt1'), 'private' => lang('vdo_br_opt2'), 'unlisted' => lang('vdo_broadcast_unlisted'), 'logged' => lang('logged_users_only')],
-                'checked'           => $broadcast,
-                'db_field'          => 'broadcast',
-                'required'          => 'no',
-                'validate_function' => 'yes_or_no',
-                'display_function'  => 'display_sharing_opt',
-                'default_value'     => 'public',
-                'extra_tags'        => ' onClick="
+            ];
+        }
+
+        $fields['broadcast'] = [
+            'title'             => lang('vdo_br_opt'),
+            'type'              => 'radiobutton',
+            'name'              => 'broadcast',
+            'value'             => ['public' => lang('vdo_br_opt1'), 'private' => lang('vdo_br_opt2'), 'unlisted' => lang('vdo_broadcast_unlisted'), 'logged' => lang('logged_users_only')],
+            'checked'           => $broadcast,
+            'db_field'          => 'broadcast',
+            'required'          => 'no',
+            'validate_function' => 'yes_or_no',
+            'display_function'  => 'display_sharing_opt',
+            'default_value'     => 'public',
+            'extra_tags'        => ' onClick="
 				    $(this).closest(\'form\').find(\'#video_password\').attr(\'disabled\',\'disabled\');
                     $(this).closest(\'form\').find(\'#video_users\').attr(\'disabled\',\'disabled\');
 					if($(this).val()==\'unlisted\'){
 					    $(this).closest(\'form\').find(\'#video_password\').attr(\'disabled\',false);
 					} else if($(this).val()==\'private\') {
 					    $(this).closest(\'form\').find(\'#video_users\').attr(\'disabled\',false);
-                    }"
-                '
-            ],
-            'video_password' => [
-                'title'      => lang('video_password'),
-                'type'       => 'password',
-                'name'       => 'video_password',
-                'id'         => 'video_password',
-                'value'      => $default['video_password'],
-                'db_field'   => 'video_password',
-                'required'   => 'no',
-                'extra_tags' => " $video_pass_disable ",
-                'hint_2'     => lang('set_video_password')
-            ],
-
-            'video_users'    => [
-                'title'             => lang('video_users'),
-                'type'              => 'textarea',
-                'name'              => 'video_users',
-                'id'                => 'video_users',
-                'value'             => $default['video_users'],
-                'db_field'          => 'video_users',
-                'required'          => 'no',
-                'extra_tags'        => " $video_user_disable ",
-                'hint_2'            => lang('specify_video_users'),
-                'validate_function' => 'video_users',
-                'use_func_val'      => true
-            ],
-            'comments'       => [
-                'type'              => 'checkboxv2',
-                'name'              => 'allow_comments',
-                'value'             => 'yes',
-                'label'             => lang('vdo_allow_comm'),
-                'checked'           => $default['allow_comments'] ?? 'yes',
-                'db_field'          => 'allow_comments',
-                'required'          => 'no',
-                'validate_function' => 'yes_or_no'
-            ],
-            'commentsvote'   => [
-                'type'              => 'checkboxv2',
-                'name'              => 'comment_voting',
-                'value'             => 'yes',
-                'label'             => lang('video_allow_comment_vote'),
-                'checked'           => $default['comment_voting'] ?? 'yes',
-                'db_field'          => 'comment_voting',
-                'required'          => 'no',
-                'validate_function' => 'yes_or_no'
-            ],
-            'rating'         => [
-                'type'              => 'checkboxv2',
-                'name'              => 'allow_rating',
-                'value'             => 'yes',
-                'label'             => lang('vdo_allow_rating'),
-                'checked'           => $default['allow_rating'] ?? 'yes',
-                'db_field'          => 'allow_rating',
-                'required'          => 'no',
-                'validate_function' => 'yes_or_no'
-            ],
-            'embedding'      => [
-                'type'              => 'checkboxv2',
-                'name'              => 'allow_embedding',
-                'value'             => 'yes',
-                'label'             => lang('vdo_embed_opt1'),
-                'checked'           => $default['allow_embedding'] ?? 'yes',
-                'db_field'          => 'allow_embedding',
-                'required'          => 'no',
-                'validate_function' => 'yes_or_no'
-            ]
+                    }"'
         ];
+
+        $fields['video_password'] = [
+            'title'      => lang('video_password'),
+            'type'       => 'password',
+            'name'       => 'video_password',
+            'id'         => 'video_password',
+            'value'      => $default['video_password'],
+            'db_field'   => 'video_password',
+            'required'   => 'no',
+            'extra_tags' => " $video_pass_disable ",
+            'hint_2'     => lang('set_video_password')
+        ];
+
+        $fields['video_users'] =[
+            'title'             => lang('video_users'),
+            'type'              => 'textarea',
+            'name'              => 'video_users',
+            'id'                => 'video_users',
+            'value'             => $default['video_users'],
+            'db_field'          => 'video_users',
+            'required'          => 'no',
+            'extra_tags'        => " $video_user_disable ",
+            'hint_2'            => lang('specify_video_users'),
+            'validate_function' => 'video_users',
+            'use_func_val'      => true
+        ];
+
+        $fields['comments'] = [
+            'type'              => 'checkboxv2',
+            'name'              => 'allow_comments',
+            'value'             => 'yes',
+            'label'             => lang('vdo_allow_comm'),
+            'checked'           => $default['allow_comments'] ?? 'yes',
+            'db_field'          => 'allow_comments',
+            'required'          => 'no',
+            'validate_function' => 'yes_or_no'
+        ];
+
+        $fields['commentsvote'] = [
+            'type'              => 'checkboxv2',
+            'name'              => 'comment_voting',
+            'value'             => 'yes',
+            'label'             => lang('video_allow_comment_vote'),
+            'checked'           => $default['comment_voting'] ?? 'yes',
+            'db_field'          => 'comment_voting',
+            'required'          => 'no',
+            'validate_function' => 'yes_or_no'
+        ];
+
+        $fields['rating'] = [
+            'type'              => 'checkboxv2',
+            'name'              => 'allow_rating',
+            'value'             => 'yes',
+            'label'             => lang('vdo_allow_rating'),
+            'checked'           => $default['allow_rating'] ?? 'yes',
+            'db_field'          => 'allow_rating',
+            'required'          => 'no',
+            'validate_function' => 'yes_or_no'
+        ];
+
+        $fields['embedding'] = [
+            'type'              => 'checkboxv2',
+            'name'              => 'allow_embedding',
+            'value'             => 'yes',
+            'label'             => lang('vdo_embed_opt1'),
+            'checked'           => $default['allow_embedding'] ?? 'yes',
+            'db_field'          => 'allow_embedding',
+            'required'          => 'no',
+            'validate_function' => 'yes_or_no'
+        ];
+
+        return $fields;
     }
 
     /**
@@ -595,7 +603,7 @@ class Upload
      * @param null $default
      *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     function loadLocationFields($default = null): array
     {
@@ -664,7 +672,7 @@ class Upload
      * @param string $sub_directory
      * @param string $cqueue_name
      * @return bool|int
-     * @throws \Exception
+     * @throws Exception
      */
     function add_conversion_queue($file, $sub_directory = '', $cqueue_name = '')
     {
@@ -852,7 +860,7 @@ class Upload
      * @param        $uid
      *
      * @return string|bool
-     * @throws \Exception
+     * @throws Exception
      */
     function upload_user_file(string $type, $file, $uid)
     {
@@ -980,7 +988,7 @@ class Upload
      * in clipbucket v2.5 , video fields are loaded in form of groups arrays
      * each group has it name and fields wrapped in array
      * and that array will be part of video fields
-     * @throws \Exception
+     * @throws Exception
      */
     function load_video_fields($input): array
     {

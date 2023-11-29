@@ -1001,4 +1001,8 @@ VALUES
        ('collection_is'),
        ('not_found'),
        ('age_restriction'),
-       ('info_age_restriction');
+       ('info_age_restriction'),
+       ('access_forbidden_under_age'),
+       ('option_enable_age_restriction'),
+       ('option_enable_user_dob_edition'),
+       ('user_dob_edition_disabled');
