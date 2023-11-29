@@ -88,12 +88,11 @@ function video_playable($id): bool
         }
     }
 
-    if ( config('enable_age_restriction') == 'yes'
-        && !user_id()
-        && !has_access('video_moderation', true)
+    if( !has_access('video_moderation', true)
+        && config('enable_age_restriction') == 'yes'
         && !empty($vdo['age_restriction'])
-        && age_restriction_check(user_id(), $vdo['videoid']) != 1
-    ) {
+        && ( !$uid || age_restriction_check($uid, $vdo['videoid']) != 1)
+    ){
         e(lang('error_age_restriction'));
         return false;
     }
