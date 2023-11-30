@@ -54,13 +54,14 @@ $(document).ready(function() {
 	});
 
 	$(document).on("click", ".cb_quickie", function () {
-		obj = $(this);
-		$(this).addClass('icon-tick');
-		id = $(this).attr('v-id');
-		title = $(this).attr('vtitle');
-		thumb = $(this).attr('vthumb');
-		link = $(this).attr('vlink');
-		vdur = $(this).attr('vduration');
+		let obj = $(this);
+		let id = $(this).attr('v-id');
+		let objs = $(".cb_quickie[v-id=" + id + "]");
+		objs.addClass('icon-tick');
+		objs.attr('vtitle');
+		objs.attr('vthumb');
+		objs.attr('vlink');
+		objs.attr('vduration');
 		pushToQlist(obj, id);
 	});
 
