@@ -114,7 +114,7 @@
 
 {if $display_type == "relatedPhoto_sidebar"}
 	<a class="photo-holder" href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
-		{ANCHOR place='in_photo_thumb' data=$object}
+		{ANCHOR place='in_photo_thumb' data=$photo}
 		{get_photo details=$photo output='html' size='l' class='img-responsive'}
 		<i class="icon-zoom"></i>
 	</a>
