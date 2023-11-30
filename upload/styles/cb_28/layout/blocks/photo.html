@@ -103,7 +103,7 @@
 {if $display_type == 'related_photos'}
 	<div class="relatedPhotos clearfix">
 		<a href="{$cbphoto->photo_links($photo,'view_item')}">
-			{ANCHOR place='in_photo_thumb' data=$object}
+			{ANCHOR place='in_photo_thumb' data=$photo}
 			{get_photo details=$photo output='html' width='120' class='photoThumbBox moveL' style='margin-right:5px;'}
 		</a>
 		<div class="photoTitle" style="margin-bottom:5px;"><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:15}</a></div>
@@ -134,7 +134,7 @@
 {if $display_type == "side_photos"}
 	<div style="display:inline-block; *display:inline; vertical-align:middle; padding:0 8px 5px 0px;">
 		<a href="{$cbphoto->photo_links($photo,'view_item')}">
-			{ANCHOR place='in_photo_thumb' data=$object}
+			{ANCHOR place='in_photo_thumb' data=$photo}
 			{get_photo details=$photo output='html' width='82' class='photoThumbBox'}
 		</a>
 		<div class="photoTitle" style="font:bold 10px Arial; margin:1px 0px">
@@ -149,25 +149,25 @@
 
 {if $display_type == "channel_page"}
 	<li class="itemBox" onclick="loadObject(this,'photos','{$photo.photo_id}','viewingArea')">
-		{ANCHOR place='in_photo_thumb' data=$object}
+		{ANCHOR place='in_photo_thumb' data=$photo}
 		{get_photo details=$photo output='html' width='110' height='64' size='m' style='display:block;margin:0 auto;'}
 	</li>
 {/if}
 
 {if $display_type == "collection_item"}
 <div class="photoAppending">
-    <a class="photo-holder" href="{$cbphoto->photo_links($object,'view_item')}" title="{display_clean($object.photo_title)}">
-		{ANCHOR place='in_photo_thumb' data=$object}
-        {get_photo details=$object size='l' class=$photo_class output='html'}
+    <a class="photo-holder" href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
+		{ANCHOR place='in_photo_thumb' data=$photo}
+        {get_photo details=$photo size='l' class=$photo_class output='html'}
         <i class="icon-zoom"></i>
     </a>
     <div class="photo-info">
         {if $photo.photo_title=='no-tag'}
-        <strong><a href="{$cbphoto->photo_links($object,'view_item')}" title="{display_clean($object.photo_title)}">no-title</a></strong>
+        <strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">no-title</a></strong>
         {else}
-        <strong><a href="{$cbphoto->photo_links($object,'view_item')}" title="{display_clean($object.photo_title)}">{display_clean($object.photo_title)|truncate:30}</a></strong>
+        <strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:30}</a></strong>
         {/if}
-        <span>{lang code="by"}&nbsp;<a href="{$userquery->profile_link($object.userid)}">{display_clean($object.username)}</a></span>
+        <span>{lang code="by"}&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{display_clean($photo.username)}</a></span>
     </div>
 </div>
 {/if}

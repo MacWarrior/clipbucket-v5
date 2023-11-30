@@ -1154,6 +1154,7 @@ class Collections extends CBCategory
             $return['age_restriction'] = [
                 'title'             => lang('age_restriction'),
                 'type'              => 'textfield',
+                'class'             => 'form-control',
                 'name'              => 'age_restriction',
                 'id'                => 'age_restriction',
                 'value'             => $default['age_restriction'],
