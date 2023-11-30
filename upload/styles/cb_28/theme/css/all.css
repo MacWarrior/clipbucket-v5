@@ -772,12 +772,6 @@ h1 {
   font-size: 12px;
 }
 
-.no_select{
-  -webkit-user-select: none; /* Safari */
-  -ms-user-select: none; /* IE 10 and IE 11 */
-  user-select: none; /* Standard syntax */
-}
-
 .item-video .thumb-holder .video-link .title {
   position: absolute;
   z-index: 2;
@@ -1187,15 +1181,6 @@ h1 {
   height: 100%;
   display: block;
   position: relative;
-}
-
-.pl_thumb a .img-responsive {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
 }
 
 .ql_delete {
@@ -7754,9 +7739,6 @@ textarea#comment_box {
   margin-right: 1em;
 }
 
-.video-link{
-  overflow: hidden;
-}
 .blur{
   filter: blur(8px);
 }
@@ -7773,4 +7755,16 @@ textarea#comment_box {
   line-height: 25px;
   text-align:center;
   border-radius: 25px;
+}
+.no_overflow{
+  overflow: hidden;
+}
+.no_select{
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+}
+.age_restriction{
+  text-align: center;
+  font-weight: 600;
 }

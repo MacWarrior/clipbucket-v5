@@ -131,6 +131,7 @@
 					<div class="tab-content clearfix">
 						<div class="tab-pane fade in clearfix active" id="cb-item-info">
 							<div class="clearfix watch-vid-details">
+								{if $video.age_restriction }<p class="age_restriction">{sprintf(lang('access_forbidden_under_age'),$video.age_restriction)}</p>{/if}
 								<p style="white-space: pre-line;">{display_clean(AutoLinkUrls($video.description|unescape:"html"))}</p>
 								<ul class="clearfix desc-list">
 									<li><strong>{lang code='category'}</strong>:&nbsp;{$vdo.category|categories:video}</li>
@@ -144,7 +145,6 @@
 								</ul>
 							</div>
 						</div>
-						{if $video.age_restriction }<span>{sprintf(lang('access_forbidden_under_age'),$video.age_restriction)}</span>{/if}
 						{if
 							(userquery::getInstance()->hasUserLevelAccess(4, 'view_video') ||
 							(config('enable_video_internal_sharing') == 'yes' && user_id()))

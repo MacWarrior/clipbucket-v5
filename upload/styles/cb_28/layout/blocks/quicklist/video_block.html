@@ -1,7 +1,7 @@
 {if !$videoLink}
 	{videoLink vdetails=$video assign='videoLink'}
 {/if}
-<div class="qlist_item clearfix" style="background-color:#{$bg}; {if $selected==$video.videoid} border:1px solid #999{/if}" id="{$unique_id}playlist_cont_{$video.videoid}">
+<div class="qlist_item clearfix" style="background-color:#{$bg}; {if $selected==$video.videoid}border:1px solid #999;{/if}" id="{$unique_id}playlist_cont_{$video.videoid}">
 	<div class="pl_num">{$smarty.section.item.iteration}</div>
 	<div class="pl_thumb">
 		<a href="{video_link($video)}" target="blank">
