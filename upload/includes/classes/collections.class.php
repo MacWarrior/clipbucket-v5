@@ -31,7 +31,6 @@ class Collection
             ,'active'
             ,'public_upload'
             ,'type'
-            ,'age_restriction'
         ];
         $this->display_block = LAYOUT . '/blocks/collection.html';
         $this->display_var_name = 'collection';
@@ -216,22 +215,13 @@ class Collection
             return '';
         }
 
-        $cond = '(collections.active = \'yes\'';
-
-        $sql_age_restrict = '';
-        if( config('enable_age_restriction') == 'yes' && config('enable_blur_restricted_content') != 'yes' ){
-            $cond .= ' AND collections.age_restriction IS NULL';
-            $dob = user_dob();
-            $sql_age_restrict = ' AND (collections.age_restriction IS NULL OR TIMESTAMPDIFF(YEAR, \'' . mysql_clean($dob) . '\', now()) >= collections.age_restriction )';
-        }
-
-        $cond .= ' AND collections.broadcast = \'public\'';
+        $cond = '(collections.active = \'yes\' AND collections.broadcast = \'public\'';
 
         $current_user_id = user_id();
         if( $current_user_id ){
             $select_contacts = 'SELECT contact_userid FROM '.tbl('contacts').' WHERE confirmed = \'yes\' AND userid = '.$current_user_id;
             $cond .= ' OR collections.userid = '.$current_user_id.')';
-            $cond .= ' OR ( collections.broadcast = \'private\' AND collections.userid IN('.$select_contacts.')'.$sql_age_restrict.')';
+            $cond .= ' OR ( collections.broadcast = \'private\' AND collections.userid IN('.$select_contacts.'))';
         } else {
             $cond .= ') ';
         }
@@ -1149,22 +1139,6 @@ class Collections extends CBCategory
                 'default_value'     => 'no'
             ]
         ];
-
-        if( config('enable_age_restriction') == 'yes' ) {
-            $return['age_restriction'] = [
-                'title'             => lang('age_restriction'),
-                'type'              => 'textfield',
-                'class'             => 'form-control',
-                'name'              => 'age_restriction',
-                'id'                => 'age_restriction',
-                'value'             => $default['age_restriction'],
-                'db_field'          => 'age_restriction',
-                'required'          => 'no',
-                'hint_2'            => lang('info_age_restriction'),
-                'validate_function' => 'ageRestriction',
-                'use_func_val'      => true
-            ];
-        }
 
         return $return;
     }

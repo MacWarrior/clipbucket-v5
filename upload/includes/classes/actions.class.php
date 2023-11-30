@@ -79,7 +79,7 @@ class cbactions
 
         $fields = ['playlist_id', 'playlist_name', 'userid', 'description', 'category',
             'played', 'privacy', 'total_comments', 'runtime',
-            'last_update', 'date_added', 'first_item', 'playlist_type', 'cover', 'age_restriction'];
+            'last_update', 'date_added', 'first_item', 'playlist_type', 'cover'];
 
         $cb_columns->object('playlists')->register_columns($fields);
 
@@ -509,23 +509,13 @@ class cbactions
             ]
 
         ];
-        if (config('enable_age_restriction') == 'yes') {
-            $return['age_restriction'] = [
-                'title'      => lang('age_restriction'),
-                'type'       => 'textfield',
-                'name'       => 'age_restriction',
-                'id'         => 'age_restriction',
-                'value'      => $array['age_restriction'],
-                'db_field'   => 'age_restriction',
-                'required'   => 'no',
-                'hint_2'     => lang('info_age_restriction'),
-                'validate_function' => 'ageRestriction',
-                'use_func_val'      => true
-            ];
-        }
+
         return $return;
     }
 
+    /**
+     * @throws Exception
+     */
     function load_playlist_fields($array = null): array
     {
         if (is_null($array)) {
