@@ -569,6 +569,8 @@ class Collections extends CBCategory
             e(sprintf(lang('collection_is'), strtolower(lang('private'))));
             return false;
         }
+
+
         return true;
     }
 

@@ -1,6 +1,6 @@
 {assign var='photo_class' value='img-responsive photo-land no_select'}
 
-{if Photo::getInstance()->isCurrentUserRestricted($photo['photo_id'])}
+{if Photo::getInstance()->isToBlur($photo['photo_id'])}
 	{$photo_class = $photo_class|cat:' blur'}
 {/if}
 

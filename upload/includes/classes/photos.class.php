@@ -122,9 +122,6 @@ class Photo
         if( $param_condition ){
             $conditions[] = '(' . $param_condition . ')';
         }
-        if (!has_access('admin_access', true)) {
-            $conditions[] = self::getInstance()->getGenericConstraints();
-        }
 
         if (!has_access('admin_access', true)) {
             $conditions[] = $this->getGenericConstraints();
@@ -256,15 +253,17 @@ class Photo
      */
     public function isCurrentUserRestricted($photo_id): string
     {
-        if( config('enable_blur_restricted_content') != 'yes'
-            || has_access('video_moderation', true)
-        ){
+        if (has_access('video_moderation', true)) {
             return false;
         }
 
         $params = [];
         $params['photo_id'] = $photo_id;
         $photo = $this->getOne($params);
+
+        if (empty($photo)) {
+            return true;
+        }
 
         if( empty($photo['age_restriction']) ){
             return false;
@@ -278,11 +277,23 @@ class Photo
             return false;
         }
 
-        if( User::getInstance()->getCurrentUserAge() >= $photo['age_restriction'] ){
+        if( User::getInstance()->getCurrentUserAge() < $photo['age_restriction'] ){
             return true;
         }
         return false;
     }
+
+    /**
+     * @throws Exception
+     */
+    public function isToBlur($photo_id)
+    {
+        if (config('enable_blur_restricted_content') != 'yes') {
+            return false;
+        }
+        return $this->isCurrentUserRestricted($photo_id);
+    }
+
 }
 
 class CBPhotos
@@ -368,7 +379,7 @@ class CBPhotos
 
     function basic_fields_setup()
     {
-        # Set basic video fields
+        # Set basic photo fields
         $basic_fields = [
             'photo_id', 'photo_key', 'userid', 'photo_title', 'photo_description', 'collection_id',
             'photo_details', 'date_added', 'filename', 'ext', 'active', 'broadcast', 'file_directory', 'views',

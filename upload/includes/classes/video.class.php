@@ -299,15 +299,17 @@ class Video
      */
     public function isCurrentUserRestricted($video_id): string
     {
-        if( config('enable_blur_restricted_content') != 'yes'
-            || has_access('video_moderation', true)
-        ){
+        if( has_access('video_moderation', true) ){
             return false;
         }
 
         $params = [];
         $params['videoid'] = $video_id;
         $video = $this->getOne($params);
+
+        if (empty($video)) {
+            return true;
+        }
 
         if( empty($video['age_restriction']) ){
             return false;
@@ -321,10 +323,21 @@ class Video
             return false;
         }
 
-        if( User::getInstance()->getCurrentUserAge() >= $video['age_restriction'] ){
+        if( User::getInstance()->getCurrentUserAge() < $video['age_restriction'] ){
             return true;
         }
         return false;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function isToBlur($video_id)
+    {
+        if( config('enable_blur_restricted_content') != 'yes'){
+            return false;
+        }
+        return $this->isCurrentUserRestricted($video_id);
     }
 }
 

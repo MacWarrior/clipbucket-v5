@@ -90,8 +90,7 @@ function video_playable($id): bool
 
     if( !has_access('video_moderation', true)
         && config('enable_age_restriction') == 'yes'
-        && !empty($vdo['age_restriction'])
-        && ( !$uid || age_restriction_check($uid, $vdo['videoid']) != 1)
+        && Video::getInstance()->isCurrentUserRestricted($vdo['videoid'])
     ){
         e(lang('error_age_restriction'));
         return false;
@@ -1783,7 +1782,7 @@ function age_restriction_check ($user_id, $video_id, $obj_type = 'video', $id_fi
             ELSE 1
         END AS can_access
     FROM '.tbl('users') . ' AS U , '.tbl($obj_type) .' AS O
-    WHERE O.'.$id_field.' = '.mysql_clean($video_id).' AND U.userid = '.mysql_clean($user_id).'
+    WHERE O.'.$id_field.' = '.mysql_clean($video_id).' AND U.userid = '.($user_id ? mysql_clean($user_id) :  '0').'
     ' ;
     $rs = select($sql);
     if (!empty($rs)) {

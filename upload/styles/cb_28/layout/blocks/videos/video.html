@@ -29,7 +29,7 @@
 {if $display_type=='homeVideos'}
 	<div class="clearfix thumb-holder userAppending">
 		<a class="video-link" href="{video_link($video)}" title="{display_clean($video.title)|title}">
-			<img class="img-responsive" src="{getThumb vdetails=$video size=416x260 }">
+			<img class="img-responsive {if Video::getInstance()->isToBlur($video['videoid'])} blur{/if}" src="{getThumb vdetails=$video size=416x260 }">
 		</a>
 
 		{ANCHOR place='in_video_thumb' data=$video}
@@ -69,7 +69,7 @@
 			class="video-link" 
 		{/if} 
 		href="{video_link($video)}" title="{display_clean($video.title|title)}">
-			<img class="lazy img-responsive no_select{if Video::getInstance()->isCurrentUserRestricted($video['videoid'])} blur{/if}" src="{getThumb vdetails=$video size=416x260}">
+			<img class="lazy img-responsive no_select{if Video::getInstance()->isToBlur($video['videoid'])} blur{/if}" src="{getThumb vdetails=$video size=416x260}">
 		</a>
 
 		{ANCHOR place='in_video_thumb' data=$video}
