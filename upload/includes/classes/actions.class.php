@@ -79,7 +79,7 @@ class cbactions
 
         $fields = ['playlist_id', 'playlist_name', 'userid', 'description', 'category',
             'played', 'privacy', 'total_comments', 'runtime',
-            'last_update', 'date_added', 'first_item', 'playlist_type', 'cover', 'age_restriction'];
+            'last_update', 'date_added', 'first_item', 'playlist_type', 'cover'];
 
         $cb_columns->object('playlists')->register_columns($fields);
 
