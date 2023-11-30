@@ -5,7 +5,6 @@
 			<img src="{getThumb vdetails=$pop_video size=168x105}" {ANCHOR place="video_thumb" data=$pop_video} class="img-responsive {if Video::getInstance()->isToBlur($pop_video.videoid)}blur{/if}"/>
 			<time datetime="2016-15-03" class="duration">{if $pop_video.duration>1}{$pop_video.duration|SetTime}{else}00:00{/if}</time>
 		</a>
-		<img src="{$theme}/images/thumb-ratio.png" class="thumb-ratio" alt="">
 	</div>
 	
 	<div class="details_block">
@@ -105,7 +104,6 @@
 				<img src="{getThumb vdetails=$video size=168x105}" {ANCHOR place="video_thumb" data=$video} class="img-responsive"/>
 				<time datetime="2016-15-03" class="duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</time>
 			</a>
-			<img src="{$theme}/images/thumb-ratio.png" class="thumb-ratio" alt=""/>
 		</div>
 
 		<div class="details_block">
@@ -154,7 +152,6 @@
 		<a class="video-link" href="{video_link($video)}" title="{display_clean($video.title)|title}">
 			<img class="img-responsive" src="{getThumb vdetails=$video size=416x260 }">
 		</a>
-		<img src="{$theme}/images/thumb-ratio.png" class="thumb-ratio" alt="">
 		
 		{ANCHOR place='in_video_thumb' data=$video}
 		<button data-quick="quick-{$video.videoid}"
