@@ -66,7 +66,6 @@ CREATE TABLE `{tbl_prefix}collections` (
   `active` varchar(4) NOT NULL,
   `public_upload` varchar(4) NOT NULL,
   `type` varchar(10) NOT NULL,
-  `age_restriction` INT DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}collection_categories` (
@@ -285,7 +284,6 @@ CREATE TABLE `{tbl_prefix}playlists` (
   `cover` text NULL DEFAULT NULL,
   `played` int(255) NOT NULL DEFAULT 0,
   `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `age_restriction` INT DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}playlist_items` (
