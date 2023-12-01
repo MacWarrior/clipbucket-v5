@@ -149,13 +149,13 @@ class ClipBucket
     {
         if (is_array($files)) {
             foreach ($files as $key => $file) {
-                if( !isset($array_var[$key]) ) {
-                    $array_var[$key] = $file;
+                if (!isset($array_var[$key])) {
+                    $array_var[$key . '?v=' . str_replace('.', '', Update::getInstance()->getCurrentDBVersion()) . Update::getInstance()->getCurrentDBRevision()] = $file;
                 }
             }
         } else {
-            if( !isset($array_var[$files]) ){
-                $array_var[$files] = 'global';
+            if (!isset($array_var[$files])) {
+                $array_var[$files . '?v=' . str_replace('.', '', Update::getInstance()->getCurrentDBVersion()) . Update::getInstance()->getCurrentDBRevision()] = 'global';
             }
         }
     }
