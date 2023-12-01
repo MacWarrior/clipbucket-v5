@@ -4,7 +4,9 @@ ALTER TABLE `{tbl_prefix}video` ADD COLUMN IF NOT EXISTS age_restriction INT DEF
 INSERT IGNORE INTO `{tbl_prefix}config` (name, value) VALUES
     ('enable_user_dob_edition', 'yes'),
     ('enable_age_restriction', 'yes'),
-    ('enable_blur_restricted_content', 'no');
+    ('enable_blur_restricted_content', 'no'),
+    ('enable_global_age_restriction', 'no'),
+    ('global_age_restriction', '18');
 
 SET @language_id_eng = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = 'en');
 SET @language_id_fra = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = 'fr');
@@ -45,9 +47,9 @@ SET @language_key = 'option_enable_age_restriction' COLLATE utf8mb4_unicode_520_
 INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);
 SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
-VALUES (@id_language_key, 'Enable age restriction', @language_id_eng);
+VALUES (@id_language_key, 'Enable age restriction on medias', @language_id_eng);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
-VALUES (@id_language_key, 'Activer la restriction d\'âge', @language_id_fra);
+VALUES (@id_language_key, 'Activer la restriction d\'âge sur les médias', @language_id_fra);
 
 SET @language_key = 'option_enable_user_dob_edition' COLLATE utf8mb4_unicode_520_ci;
 INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);
@@ -80,3 +82,27 @@ INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `tra
 VALUES (@id_language_key, 'When enabled, restricted contents are visible but blurred ; when not, restricted contents are hidden', @language_id_eng);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES (@id_language_key, 'Si activé, les contenus restreints sont visible mais floutés ; sinon, les contenus restreints sont masqués', @language_id_fra);
+
+SET @language_key = 'global_age_restriction' COLLATE utf8mb4_unicode_520_ci;
+INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);
+SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES (@id_language_key, 'Minimal age required', @language_id_eng);
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES (@id_language_key, 'Âge minimum requis', @language_id_fra);
+
+SET @language_key = 'enable_global_age_restriction' COLLATE utf8mb4_unicode_520_ci;
+INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);
+SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES (@id_language_key, 'Enable global age restriction', @language_id_eng);
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES (@id_language_key, 'Activer la restriction d\'âge globale', @language_id_fra);
+
+SET @language_key = 'error_age_restriction_save' COLLATE utf8mb4_unicode_520_ci;
+INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);
+SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES (@id_language_key, 'Minimal age required must be between 1 and 99', @language_id_eng);
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES (@id_language_key, 'L\'âge minimum requis doit être compris entre 1 et 99', @language_id_fra);

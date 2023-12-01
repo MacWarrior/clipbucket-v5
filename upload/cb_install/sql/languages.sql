@@ -1007,4 +1007,7 @@ VALUES
        ('option_enable_user_dob_edition'),
        ('user_dob_edition_disabled'),
        ('option_enable_blur_restricted_content'),
-       ('tips_enable_blur_restricted_content');
+       ('tips_enable_blur_restricted_content'),
+       ('enable_global_age_restriction'),
+       ('global_age_restriction'),
+       ('error_age_restriction');

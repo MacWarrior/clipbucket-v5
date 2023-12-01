@@ -1,0 +1,18 @@
+<div id="disclaimer" >
+    <div class="blur" style="position:fixed; top:0;left:0;width: 100%;height: 100%;z-index: 20240;"></div>
+    <div class="content" style="position:absolute; top:20%;left:50%;width: 70%;height: 50%;padding: 50px;text-align: center;webkit-transform: translate(-50%,-20%); transform: translate(-50%,-20%); max-width: 900px;">
+        <div class="logo row" style="float:none; width: 100%">
+            <img src="{get_website_logo_path()}" class="img-responsive" />
+        </div>
+        <div class="row">
+            <h1>{lang code='age_verification'}</h1>
+        </div>
+        <div class="row">
+            <p>{lang code='age_verification_text'}</p>
+        </div>
+        <div class="row button-wrapper">
+            <button onclick="age_disclaimer(true);">{lang code='disclaimer_older'}</button>
+            <button onclick="age_disclaimer(false);">{lang code='disclaimer_return'}</button>
+        </div>
+    </div>
+</div>

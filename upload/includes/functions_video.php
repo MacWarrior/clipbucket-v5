@@ -1247,6 +1247,10 @@ function get_fast_qlist($cookie_name = false): array
     return array_filter($vid_dets);
 }
 
+function must_check_age() {
+    return ((empty($_COOKIE['age_restrict']) || $_COOKIE['age_restrict']!='checked') && config('enable_global_age_restriction') == 'yes');
+}
+
 function dateNow(): string
 {
     return date('Y-m-d H:i:s');

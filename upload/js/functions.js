@@ -1351,3 +1351,12 @@ function set_cookie_secure(name, value){
         document.cookie=name + "=" + value +";secure;path=/;samesite=strict;";
     }
 }
+
+function age_disclaimer(accept) {
+    if ( accept) {
+        $('#disclaimer').hide();
+        set_cookie_secure('age_restrict','checked');
+    } else {
+        window.location = 'https://www.google.com';
+    }
+}

@@ -54,16 +54,7 @@
 			{/foreach}
 		{/if}
 
-		{* Getting quicklist videos and assigning *}
-		{assign var=qlist_videos value=get_fast_qlist()}
-		{assign var=litems_count value=$qlist_videos|@count}
-		{if $litems_count >= 1} 
-			{assign var=got_qlitems value="yes"}
-		{else}
-			{assign var=got_qlitems value="false"}	
-		{/if}
 
-		{include file="$style_dir/blocks/quicklist/qlist_main.html"}
 		{include_header file='global_header'}
 		{if $Cbucket->header_files}
 		    {foreach from=$Cbucket->header_files key=file item=type}

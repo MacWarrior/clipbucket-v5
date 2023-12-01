@@ -81,6 +81,7 @@ if (isset($_POST['update'])) {
         , 'enable_age_restriction'
         , 'enable_user_dob_edition'
         , 'enable_blur_restricted_content'
+        , 'enable_global_age_restriction'
     ];
 
     $config_booleans_to_refactor = [
@@ -280,6 +281,8 @@ if (isset($_POST['update'])) {
         'enable_age_restriction',
         'enable_user_dob_edition',
         'enable_blur_restricted_content',
+        'enable_global_age_restriction',
+        'global_age_restriction',
 
         'thumb_width',
         'thumb_height',
@@ -400,12 +403,18 @@ if (isset($_POST['update'])) {
         'photo_thumb_width',
         'photo_thumb_height',
         'photo_med_width',
-        'photo_med_height'
+        'photo_med_height',
+
+        'global_age_restriction'
     ];
 
     foreach ($rows as $field) {
         $value = ($_POST[$field]);
         if (in_array($field, $num_array)) {
+            if ($field == 'global_age_restriction' && ($value > 99 || $value <= 0 || !is_numeric($value) )) {
+                e(lang('error_age_restriction_save'));
+                break;
+            }
             if ($value <= 0 || !is_numeric($value)) {
                 $value = 1;
             }
