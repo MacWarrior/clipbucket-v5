@@ -9,7 +9,7 @@
 	<td>
 		<div class="col-md-3">
 			<a class="manageVid_thumb" href="/watch_video.php?v={$video.videokey}">
-				<img src="{getThumb vdetails=$video size=168x105}" class="img-responsive vthumb" width="130" height="80" id="thumbs_{$video.videoid}"/>
+				<img src="{getThumb vdetails=$video size=168x105}" class="img-responsive vthumb {if Video::getInstance()->isToBlur($video['videoid'])}blur{/if}" width="130" height="80" id="thumbs_{$video.videoid}"/>
 				<span class="duration">({if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if})</span>
 			</a>
 		</div>
