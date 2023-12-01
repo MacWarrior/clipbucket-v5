@@ -1248,7 +1248,7 @@ function get_fast_qlist($cookie_name = false): array
 }
 
 function must_check_age() {
-    return ((empty($_COOKIE['age_restrict']) || $_COOKIE['age_restrict']!='checked') && config('enable_global_age_restriction') == 'yes');
+    return ((empty($_COOKIE['age_restrict']) || $_COOKIE['age_restrict']!='checked') && config('enable_global_age_restriction') == 'yes' && config('global_age_restriction') < 99 && config('global_age_restriction') > 0 );
 }
 
 function dateNow(): string
