@@ -268,7 +268,8 @@ class Upload
             define('dir', $files_dir);
 
             $file_num = $this->get_next_available_num($file_name);
-            $ext = getExt($file['name'][$key]);
+            $ext_original = getExt($file['name'][$key]);
+            $ext = 'jpg';
             if ($imgObj->ValidateImage($file['tmp_name'][$key], $ext)) {
                 $thumbs_settings_28 = thumbs_res_settings_28();
                 $temp_file_path = THUMBS_DIR . DIRECTORY_SEPARATOR . $files_dir . DIRECTORY_SEPARATOR . $file_name . '-' . $file_num . '-c.' . $ext;
@@ -288,7 +289,7 @@ class Upload
                         $height_setting = $imageDetails[1];
                     }
                     $outputFilePath = THUMBS_DIR . DIRECTORY_SEPARATOR . $files_dir . DIRECTORY_SEPARATOR . $file_name . '-' . $dimensions . '-' . $file_num . '-c.' . $ext;
-                    $imgObj->CreateThumb($temp_file_path, $outputFilePath, $width_setting, $ext, $height_setting, false);
+                    $imgObj->CreateThumb($temp_file_path, $outputFilePath, $width_setting, $ext_original, $height_setting, false);
                     global $db;
                     $rs = $db->select(tbl('video'), 'videoid', 'file_name LIKE \'' . $file_name . '\'');
                     if (!empty($rs)) {

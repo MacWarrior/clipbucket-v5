@@ -41,13 +41,13 @@ class ResizeImage
                 case 'png':
                     $image = imagecreatefrompng($file);
                     imagecopyresampled($image_p, $image, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
-                    imagepng($image_p, $des);
+                    imagejpeg($image_p, $des, 90);
                     break;
 
                 case 'gif':
                     $image = imagecreatefromgif($file);
                     imagecopyresampled($image_p, $image, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
-                    imagegif($image_p, $des);
+                    imagejpeg($image_p, $des, 90);
                     break;
             }
         } else {
