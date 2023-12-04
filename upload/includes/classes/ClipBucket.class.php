@@ -113,49 +113,70 @@ class ClipBucket
         return $dirname == '/' ? '' : $dirname;
     }
 
+    /**
+     * @throws Exception
+     */
     function addJS($files)
     {
         $this->addFile($this->JSArray, $files);
     }
 
+    /**
+     * @throws Exception
+     */
     function addAdminJS($files)
     {
         $this->addFile($this->AdminJSArray, $files);
     }
 
+    /**
+     * @throws Exception
+     */
     function addAllJS($files)
     {
         $this->addFile($this->JSArray, $files);
         $this->addFile($this->AdminJSArray, $files);
     }
 
+    /**
+     * @throws Exception
+     */
     function addCSS($files)
     {
         $this->addFile($this->CSSArray, $files);
     }
 
+    /**
+     * @throws Exception
+     */
     function addAdminCSS($files)
     {
         $this->addFile($this->AdminCSSArray, $files);
     }
 
+    /**
+     * @throws Exception
+     */
     function addAllCSS($files)
     {
         $this->addFile($this->CSSArray, $files);
         $this->addFile($this->AdminCSSArray, $files);
     }
 
+    /**
+     * @throws Exception
+     */
     private function addFile(&$array_var, $files)
     {
         if (is_array($files)) {
             foreach ($files as $key => $file) {
                 if (!isset($array_var[$key])) {
-                    $array_var[$key . '?v=' . str_replace('.', '', Update::getInstance()->getCurrentDBVersion()) . Update::getInstance()->getCurrentDBRevision()] = $file;
+                    $array_var[$key . '?v=' . str_replace('.', '', Update::getInstance()->getCurrentCoreVersion()) . Update::getInstance()->getCurrentCoreRevision()] = $file;
                 }
             }
         } else {
             if (!isset($array_var[$files])) {
-                $array_var[$files . '?v=' . str_replace('.', '', Update::getInstance()->getCurrentDBVersion()) . Update::getInstance()->getCurrentDBRevision()] = 'global';
+                $array_var[$files . '?v=' . str_replace('.', '', Update::getInstance()->getCurrentCoreVersion()) . Update::getInstance()->getCurrentCoreRevision()] = 'global';
             }
         }
     }
