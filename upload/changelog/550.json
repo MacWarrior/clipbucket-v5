@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"302",
+  "revision":"303",
   "status":"dev",
   "detail":[
     {
@@ -242,6 +242,7 @@
         ,"Refactor video sharing"
         ,"Fix embed player"
         ,"Implement collection banner"
+        ,"Fix quicklists"
       ]
     }
   ,{

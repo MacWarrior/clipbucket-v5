@@ -1,5 +1,4 @@
 <?php
-define('QUICK_LIST_SESS', 'quick_list');
 
 class Video
 {
@@ -1885,85 +1884,6 @@ class CBvideo extends CBCategory
         ]);
 
         return $data;
-    }
-
-    /**
-     * Function used to add video in quicklist
-     *
-     * @param $id
-     *
-     * @return bool
-     * @throws Exception
-     */
-    function add_to_quicklist($id): bool
-    {
-        global $sess;
-
-        if ($this->video_exists($id)) {
-            $list = json_decode($sess->get_cookie(QUICK_LIST_SESS), true);
-
-            $list[] = $id;
-            $new_list = array_unique($list);
-
-            $sess->set_cookie(QUICK_LIST_SESS, json_encode($new_list));
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Removing video from quicklist
-     *
-     * @param $id
-     *
-     * @return bool
-     */
-    function remove_from_quicklist($id): bool
-    {
-        global $sess;
-
-        $list = json_decode($sess->get_cookie(QUICK_LIST_SESS), true);
-
-        $key = array_search($id, $list);
-        unset($list[$key]);
-
-        $sess->set_cookie(QUICK_LIST_SESS, json_encode($list));
-        return true;
-    }
-
-    /**
-     * function used to count num of quicklist
-     */
-    function total_quicklist(): int
-    {
-        global $sess;
-
-        $total = $sess->get_cookie(QUICK_LIST_SESS);
-        $total = json_decode($total, true);
-
-        if (is_null($total)) {
-            return 0;
-        }
-
-        return count($total);
-    }
-
-    /**
-     * Function used to get quicklist
-     */
-    function get_quicklist()
-    {
-        global $sess;
-        return json_decode($sess->get_cookie(QUICK_LIST_SESS), true);
-    }
-
-    /**
-     * Function used to remove all items of quicklist
-     */
-    function clear_quicklist()
-    {
-        global $sess;
-        $sess->set_cookie(QUICK_LIST_SESS, '');
     }
 
     /**
