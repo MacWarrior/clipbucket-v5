@@ -67,16 +67,6 @@ function doUpdateVideo(formId,ID)
     },"json");
 }
 </script>
-
-{else}
-<script type="text/javascript">
-window.onload = function() {ldelim}
-    {if $total_quicklist}
-        load_quicklist_box();
-    {/if}
-    ini_cookies();
-{rdelim}
-</script>
 {/if}
 
 {if $smarty.const.THIS_PAGE == 'photo_upload'}
