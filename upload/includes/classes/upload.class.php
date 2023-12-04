@@ -104,6 +104,10 @@ class Upload
             $name = formObj::rmBrackets($field['name']);
             $val = $array[$name];
 
+            if (empty($val) && !empty($field['default_value'])) {
+                $val = $field['default_value'];
+            }
+
             if( empty($val) && $field['required'] == 'no'){
                 continue;
             }
@@ -128,9 +132,7 @@ class Upload
                 $val = apply_func($field['clean_func'], $val);
             }
 
-            if (empty($val) && !empty($field['default_value'])) {
-                $val = $field['default_value'];
-            }
+
 
             if (!empty($field['db_field'])) {
                 $query_val[] = $val;
