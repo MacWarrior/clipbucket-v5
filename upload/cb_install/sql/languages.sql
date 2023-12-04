@@ -1009,5 +1009,10 @@ VALUES
        ('option_enable_blur_restricted_content'),
        ('tips_enable_blur_restricted_content'),
        ('enable_global_age_restriction'),
-       ('global_age_restriction'),
-       ('error_age_restriction');
+       ('error_age_restriction'),
+       ('error_age_restriction_save'),
+       ('age_verification'),
+       ('age_verification_text'),
+       ('tips_enable_global_age_restriction'),
+       ('disclaimer_return'),
+       ('disclaimer_older');

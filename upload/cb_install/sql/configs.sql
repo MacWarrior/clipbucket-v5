@@ -241,8 +241,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_user_dob_edition', 'yes'),
     (NULL, 'enable_age_restriction', 'yes'),
     (NULL, 'enable_blur_restricted_content', 'no'),
-    (NULL, 'enable_global_age_restriction', 'no'),
-    (NULL, 'global_age_restriction', '18');
+    (NULL, 'enable_global_age_restriction', 'no');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 428, 240, 240000),

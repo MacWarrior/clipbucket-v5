@@ -122,20 +122,10 @@
 							<hr/>
 							<div class="row">
 								<div class="col-md-10">
-									<label class="nowrap" for="enable_rss_feeds" title="{lang code='enable_global_age_restriction'}">{lang code='enable_global_age_restriction'}</label>
+									<label class="nowrap" for="enable_global_age_restriction" title="{lang code='enable_global_age_restriction'}"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='tips_enable_global_age_restriction'}"/> {lang code='enable_global_age_restriction'}</label>
 								</div>
 								<div class="col-md-2 row-size no_padding">
 									<input value="yes" id="enable_global_age_restriction" {if $row.enable_global_age_restriction=='yes'}checked{/if} name="enable_global_age_restriction" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
-									<span class="lbl"></span>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-10">
-									<label class="nowrap" for="global_age_restriction" title="{lang code='global_age_restriction'}">{lang code='global_age_restriction'}</label>
-								</div>
-								<div class="col-md-2 row-size no_padding">
-									<input class="form-control" name="global_age_restriction" id="global_age_restriction" value="{$row.global_age_restriction}" size="5"/>
 									<span class="lbl"></span>
 								</div>
 							</div>

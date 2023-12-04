@@ -1247,8 +1247,22 @@ function get_fast_qlist($cookie_name = false): array
     return array_filter($vid_dets);
 }
 
-function must_check_age() {
-    return ((empty($_COOKIE['age_restrict']) || $_COOKIE['age_restrict']!='checked') && config('enable_global_age_restriction') == 'yes' && config('global_age_restriction') < 99 && config('global_age_restriction') > 0 );
+/**
+ * @throws Exception
+ */
+function must_check_age(): bool
+{
+    $min_age_reg = config('min_age_reg');
+    if( config('enable_global_age_restriction') != 'yes' || $min_age_reg > 99 || $min_age_reg < 0 ){
+        return false;
+    }
+
+    $user = User::getInstance();
+    if( $user->isUserConnected() && $user->getCurrentUserAge() >= $min_age_reg ){
+        return false;
+    }
+
+    return ((empty($_COOKIE['age_restrict']) || $_COOKIE['age_restrict']!='checked')  );
 }
 
 function dateNow(): string

@@ -1355,6 +1355,7 @@ function set_cookie_secure(name, value){
 function age_disclaimer(accept) {
     if ( accept) {
         $('#disclaimer').hide();
+        $('#container').removeClass('blur');
         set_cookie_secure('age_restrict','checked');
     } else {
         window.location = 'https://www.google.com';
