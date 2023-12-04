@@ -658,32 +658,10 @@ h1 {
   margin: 0 10px 0 0;
 }
 
-.featured-video .video_thumb .img-responsive {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  z-index: 1;
-}
-
 .featured-video .video_thumb a {
   display: block;
-  position: absolute;
   width: 100%;
   height: 100%;
-  top: 0;
-  left: 0;
-  z-index: 1;
-}
-
-.featured-video .video_thumb a .img-responsive {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  z-index: 1;
 }
 
 .featured-video .duration {
@@ -774,25 +752,10 @@ h1 {
 }
 
 .item-video .thumb-holder .video-link {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
   display: block;
-  z-index: 1;
   text-decoration: none;
   color: #fff;
   font-size: 12px;
-  list-style: 14px;
-}
-
-.item-video .thumb-holder .video-link .img-responsive {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
 }
 
 .item-video .thumb-holder .video-link .title {
@@ -1206,15 +1169,6 @@ h1 {
   position: relative;
 }
 
-.pl_thumb a .img-responsive {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-}
-
 .ql_delete {
   position: absolute;
   right: 5px;
@@ -1441,15 +1395,6 @@ h1 {
 .sidebar-playlists .playlist .playlist-video {
   display: block;
   position: relative;
-}
-
-.sidebar-playlists .playlist .playlist-video .img-responsive {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  top: 0;
-  left: 0;
 }
 
 .sidebar-playlists .playlist .videos-count {
