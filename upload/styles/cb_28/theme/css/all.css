@@ -660,21 +660,8 @@ h1 {
 
 .featured-video .video_thumb a {
   display: block;
-  position: absolute;
   width: 100%;
   height: 100%;
-  top: 0;
-  left: 0;
-  z-index: 1;
-}
-
-.featured-video .video_thumb a .img-responsive {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  z-index: 1;
 }
 
 .featured-video .duration {
@@ -766,7 +753,6 @@ h1 {
 
 .item-video .thumb-holder .video-link {
   display: block;
-  z-index: 1;
   text-decoration: none;
   color: #fff;
   font-size: 12px;

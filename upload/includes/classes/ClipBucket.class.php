@@ -113,49 +113,76 @@ class ClipBucket
         return $dirname == '/' ? '' : $dirname;
     }
 
+    /**
+     * @throws Exception
+     */
     function addJS($files)
     {
         $this->addFile($this->JSArray, $files);
     }
 
+    /**
+     * @throws Exception
+     */
     function addAdminJS($files)
     {
         $this->addFile($this->AdminJSArray, $files);
     }
 
+    /**
+     * @throws Exception
+     */
     function addAllJS($files)
     {
         $this->addFile($this->JSArray, $files);
         $this->addFile($this->AdminJSArray, $files);
     }
 
+    /**
+     * @throws Exception
+     */
     function addCSS($files)
     {
         $this->addFile($this->CSSArray, $files);
     }
 
+    /**
+     * @throws Exception
+     */
     function addAdminCSS($files)
     {
         $this->addFile($this->AdminCSSArray, $files);
     }
 
+    /**
+     * @throws Exception
+     */
     function addAllCSS($files)
     {
         $this->addFile($this->CSSArray, $files);
         $this->addFile($this->AdminCSSArray, $files);
     }
 
+    /**
+     * @throws Exception
+     */
     private function addFile(&$array_var, $files)
     {
+        if(in_dev()){
+            $cache_key = time();
+        } else {
+            $cache_key = str_replace('.', '', Update::getInstance()->getCurrentCoreVersion()) . Update::getInstance()->getCurrentCoreRevision();
+        }
+
         if (is_array($files)) {
             foreach ($files as $key => $file) {
-                if( !isset($array_var[$key]) ) {
-                    $array_var[$key] = $file;
+                if (!isset($array_var[$key])) {
+                    $array_var[$key . '?v=' . $cache_key] = $file;
                 }
             }
         } else {
-            if( !isset($array_var[$files]) ){
-                $array_var[$files] = 'global';
+            if (!isset($array_var[$files])) {
+                $array_var[$files . '?v=' . $cache_key] = 'global';
             }
         }
     }

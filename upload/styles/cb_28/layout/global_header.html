@@ -27,6 +27,14 @@
 		<meta name="distribution" content="global">
 
 		<title>{cbtitle}</title>
+		{* Getting quicklist videos and assigning *}
+		{assign var=qlist_videos value=get_fast_qlist()}
+		{assign var=litems_count value=$qlist_videos|@count}
+		{if $litems_count >= 1}
+		{assign var=got_qlitems value="yes"}
+		{else}
+		{assign var=got_qlitems value="no"}
+		{/if}
 		<script>
 			var loadingImg = '<i class="glyphicon glyphicon-refresh animate-spin"></i>';
 			var loading = '<i class="glyphicon glyphicon-refresh animate-spin"></i> {lang code="loading"}...';
@@ -53,7 +61,6 @@
 				{include_css type=$type file=$file}
 			{/foreach}
 		{/if}
-
 
 		{include_header file='global_header'}
 		{if $Cbucket->header_files}

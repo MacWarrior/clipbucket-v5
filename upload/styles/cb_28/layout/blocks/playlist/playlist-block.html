@@ -10,7 +10,7 @@
 
 <div class="playlist-thumb">
 	<a href="{videoLink vdetails=$first[0]}" class="playlist-box no_overflow">
-		<img class="img-responsive {if Video::getInstance()->isToBlur($first.videoid)}blur{/if}" src="{$playlist_def_thumb}">
+		<img class="img-responsive {if Video::getInstance()->isToBlur($first.videoid)}blur{/if}" src="{$playlist_def_thumb}"/>
 		<div class="playlist-count">
 			<span>{prettyNum($count_items)}</span>{lang code='videos'}
 		</div>
