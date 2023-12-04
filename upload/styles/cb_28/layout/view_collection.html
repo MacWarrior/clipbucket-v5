@@ -87,7 +87,7 @@
 					<li>	
 						<strong class="pull-left" id="label_tags">{lang('tags')}:&nbsp;&nbsp;</strong>
 						<input type="hidden" id="tags" value="{$c.collection_tags}">
-						<ul id="list_tags" style="border: 0;"></ul>
+						<ul id="list_tags" style="border:0;"></ul>
 					</li>
 				</ul>
 			</div>
@@ -163,3 +163,9 @@
 		</aside>
 	</div>
 </div>
+<script>
+	var collection_id = "{$c.collection_id}";
+	var last_commented = "{$c.last_commented}";
+	var total_comments = "{$c.total_comments}";
+	var object_type = "{$object_type}";
+</script>

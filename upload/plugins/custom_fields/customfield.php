@@ -17,6 +17,7 @@ function add_custom_file($field_name, $field_title, $field_type, $db_field, $def
 
 /**
  *This function is used to list custom fields on custom field plugin page for editing and deleting
+ * @throws Exception
  */
 function list_custom_field()
 {
@@ -30,6 +31,7 @@ function list_custom_field()
 
 /**
  *This function is used to list specific custom field for editing purpose
+ * @throws Exception
  */
 
 function view_customfield_detail($field_id)
@@ -44,6 +46,7 @@ function view_customfield_detail($field_id)
 
 /**
  *This function is used edit custom fields
+ * @throws Exception
  */
 function edit_field($field_name, $field_title, $field_type, $db_field, $default_value, $edit_id)
 {
@@ -54,6 +57,7 @@ function edit_field($field_name, $field_title, $field_type, $db_field, $default_
 
 /**
  *Function for loading custom fields on video page
+ * @throws Exception
  */
 function load_custom_fields($data, $ck_display_admin = false, $ck_display_user = false)
 {
@@ -104,6 +108,7 @@ function load_custom_fields($data, $ck_display_admin = false, $ck_display_user =
 
 /**
  *Function for loading custom fields for signup page
+ * @throws Exception
  */
 //$data,$ck_display_admin=FALSE,$ck_display_user=FALSE
 function load_custom_fields_signup()

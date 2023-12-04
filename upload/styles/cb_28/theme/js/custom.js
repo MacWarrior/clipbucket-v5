@@ -219,7 +219,7 @@ $(document).ready(function()
 
 function homePageVideos(qlist_items)
 {
-    console.log("Hey there Pumpkin! Looks like you really like what we do, hence trying to look under the hood. Happy sneaking buddy! Drop us an email for any questions : info@clipbucket.com")
+    console.log("Greetings Adventurers ! Having a look under the hood ? Happy sneaking buddy ! Drop us an email for any questions : contact+clipbucket@oxygenz.fr")
     $('#container').on("click","#recent_load_more, #featured_load_more",function()
     {
         var loadLink = '/ajax/home.php',
@@ -334,11 +334,11 @@ function homePageVideos(qlist_items)
                             if (loadMode == 'featured') {
                                 $('#featured_load_more').hide();
                                 $('#featured_pre').hide();
-                                $("#featured_vid_sec").html('<div class="break2"></div><span class="well well-info btn-block">'+langCo+'</span>');
+                                $("#featured_vid_sec").html('<span class="well well-info btn-block">'+langCo+'</span>');
                             } else if (loadMode == 'recent') {
                                 $('#recent_load_more').remove();
                                 $('#recent_pre').remove();
-                                $("#recent_vids_sec").html('<div class="break2"></div><span class="well well-info btn-block">'+noRecent+'</span>');
+                                $("#recent_vids_sec").html('<span class="well well-info btn-block">'+noRecent+'</span>');
                             }
                         }
                         return true;

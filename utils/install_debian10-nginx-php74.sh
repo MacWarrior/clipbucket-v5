@@ -1,5 +1,5 @@
 #!/bin/bash
-# Clipbucket install on Debian 10.8
+# ClipbucketV5 install on Debian 10.8
 ## THIS SCRIPT MUST BE LAUNCHED AS ROOT
 
 echo ""
@@ -28,7 +28,7 @@ systemctl restart php7.4-fpm
 echo -ne " OK"
 
 echo ""
-echo -ne "Installing Clipbucket sources..."
+echo -ne "Installing ClipbucketV5 sources..."
 mkdir -p /srv/http/clipbucket/ && cd "$_"
 git clone https://github.com/MacWarrior/clipbucket-v5.git ./ > /dev/null 2>&1
 echo -ne " OK"
@@ -220,5 +220,5 @@ echo ""
 echo "- Website URL : http://clipbucket.local"
 
 echo ""
-echo "Clipbucket installation completed"
+echo "ClipbucketV5 installation completed"
 echo ""

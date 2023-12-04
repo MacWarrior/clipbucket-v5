@@ -61,7 +61,7 @@ function title($title): string
             $title = $func($title);
         }
     }
-    return $title;
+    return $title ?? '';
 }
 
 /**

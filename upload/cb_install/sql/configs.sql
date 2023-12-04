@@ -49,7 +49,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'big_thumb_width', '320'),
 	(NULL, 'big_thumb_height', '240'),
 	(NULL, 'disallowed_usernames', 'shit, asshole, fucker'),
-	(NULL, 'min_age_reg', '0'),
+	(NULL, 'min_age_reg', ''),
 	(NULL, 'max_comment_chr', '800'),
 	(NULL, 'user_comment_own', ''),
 	(NULL, 'anonym_comments', 'yes'),
@@ -138,7 +138,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'max_video_duration', '320'),
 	(NULL, 'embed_player_height', '250'),
 	(NULL, 'embed_player_width', '300'),
-	(NULL, 'autoplay_embed', 'yes'),
+	(NULL, 'autoplay_embed', 'no'),
 	(NULL, 'playlistsSection', 'yes'),
 	(NULL, 'photo_main_list', '10'),
 	(NULL, 'photo_home_tabs', '30'),
@@ -161,7 +161,6 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'store_guest_session', '0'),
 	(NULL, 'delete_mass_upload', 'no'),
 	(NULL, 'comments_per_page', '15'),
-	(NULL, 'embed_type', 'iframe'),
 	(NULL, 'feedsSection', 'yes'),
 	(NULL, 'seo_vido_url', '1'),
 	(NULL, 'use_cached_pagin', 'yes'),
@@ -186,7 +185,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'favicon_name', ''),
 	(NULL, 'comment_per_page', '10'),
 	(NULL, 'stay_mp4', 'no'),
-	(NULL, 'allow_conversion_1_percent', 'no'),
+	(NULL, 'allow_conversion_1_percent', 'yes'),
 	(NULL, 'force_8bits', '1'),
 	(NULL, 'bits_color_warning', '1'),
 	(NULL, 'control_bar_logo', 'yes'),
@@ -216,9 +215,29 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'cache_password', ''),
     (NULL, 'cache_port', ''),
     (NULL, 'disable_email', 'no'),
-    (NULL, 'enable_country', 'yes'),
-    (NULL, 'enable_gender', 'yes'),
-    (NULL, 'enable_user_category', 'yes');
+    (NULL, 'enable_country', 'no'),
+    (NULL, 'enable_gender', 'no'),
+    (NULL, 'enable_user_category', 'no'),
+    (NULL, 'enable_rss_feeds', 'no'),
+    (NULL, 'enable_user_firstname_lastname', 'no'),
+    (NULL, 'enable_user_relation_status', 'no'),
+    (NULL, 'enable_user_postcode', 'no'),
+    (NULL, 'enable_user_hometown', 'no'),
+    (NULL, 'enable_user_city', 'no'),
+    (NULL, 'enable_user_education', 'no'),
+    (NULL, 'enable_user_schools', 'no'),
+    (NULL, 'enable_user_occupation', 'no'),
+    (NULL, 'enable_user_compagnies', 'no'),
+    (NULL, 'enable_user_hobbies', 'no'),
+    (NULL, 'enable_user_favorite_movies', 'no'),
+    (NULL, 'enable_user_favorite_music', 'no'),
+    (NULL, 'enable_user_favorite_books', 'no'),
+    (NULL, 'enable_user_about', 'no'),
+    (NULL, 'enable_user_website', 'no'),
+    (NULL, 'enable_user_status', 'no'),
+    (NULL, 'enable_video_social_sharing', 'yes'),
+    (NULL, 'enable_video_internal_sharing', 'yes'),
+    (NULL, 'enable_video_link_sharing', 'yes');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 428, 240, 240000),
@@ -239,6 +258,9 @@ INSERT INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description
     ('reset_cache_label', 'reset_cache_description', 'AdminTool::resetCache', 1, NULL, NULL),
     ('reset_video_log_label', 'reset_video_log_description', 'AdminTool::resetVideoLog', 1, NULL, NULL),
     ('clean_orphan_files_label', 'clean_orphan_files_description', 'AdminTool::cleanOrphanFiles', 1, NULL, NULL),
+    ('repair_video_duration_label', 'repair_video_duration_description', 'AdminTool::repairVideoDuration', 1, NULL, NULL),
     ('clean_orphan_tags', 'clean_orphan_tags_description', 'AdminTool::cleanOrphanTags', 1, NULL, NULL);
 
 INSERT INTO `{tbl_prefix}tags_type` (`name`) VALUES ('video'), ('photo'), ('collection'), ('profile'), ('playlist');
+
+UPDATE `{tbl_prefix}video_thumbs` SET `type` = 'auto' WHERE `type` IS NULL;

@@ -1,15 +1,17 @@
 <?php
-require_once '../includes/admin_config.php';
+require_once dirname(__FILE__, 2).'/includes/admin_config.php';
 global $userquery, $eh, $db;
 $need_to_create_version_table = true;
 
 $array_42 = ['4.2-RC1-free', '4.2-RC1-premium'];
 if (php_sapi_name() == 'cli') {
+    $update = Update::getInstance();
 
     try {
-        $version_db = $db->select(tbl('version'), 'version, revision')[0];
+        $version_db = $update->getDBVersion();
         $version = $version_db['version'];
         $revision = $version_db['revision'];
+
         $need_to_create_version_table = false;
         if (!empty($argv[1]) || !empty($argv[2])) {
             echo 'Upgrade system is already installed, parameters so are ignored' . PHP_EOL;
@@ -32,7 +34,7 @@ if (php_sapi_name() == 'cli') {
                 $revision = (int)$arg_revision['rev'];
                 $version = $arg_version['vers'];
             }
-            $version_list = getVersions();
+            $version_list = $update->getUpdateVersions();
             if (!array_key_exists($version, $version_list)) {
                 echo 'Version provided is incorrect' . PHP_EOL;
                 echo 'List of accepted versions : ' . PHP_EOL;
@@ -85,7 +87,9 @@ try {
         $db->mysqli->query($sql);
     }
 
-    $files = get_files_to_upgrade($version, $revision);
+    $update = Update::getInstance();
+    $files = $update->getUpdateFiles(false, $version, $revision);
+
     $installed_plugins = $db->select(tbl('plugins'), '*');
     $files = array_merge($files, get_plugins_files_to_upgrade($installed_plugins));
 
@@ -98,21 +102,27 @@ try {
             throw new \Exception();
         }
     }
-    echo json_encode([
-        'success' => true
-        , 'msg'   => htmlentities($match['1'] . ' - revision ' . (int)$match['2'])
-    ]);
+    if (php_sapi_name() != 'cli') {
+        echo json_encode([
+            'success' => true
+            , 'msg'   => htmlentities($match['1'] . ' - revision ' . (int)$match['2'])
+        ]);
+    }
 } catch (\Exception $e) {
     $regex = '/\/(\d{0,3}\.\d{0,3}\.\d{0,3}|commercial)\/(\d{5})\.sql/';
     $match = [];
     preg_match($regex, $file, $match);
-    e('An SQL error occured during update ' . $match['1'] . ' - revision ' . (int)$match['2'] . ' (' . basename($file) . '). Please update manually to this revision and the restart update process from this revision.');
-    if( $e->getMessage() != '' ){
-        error_log($e->getMessage());
+    if (php_sapi_name() != 'cli') {
+        e('An SQL error occured during update ' . $match['1'] . ' - revision ' . (int)$match['2'] . ' (' . basename($file) . '). Please update manually to this revision and the restart update process from this revision.');
+        if ($e->getMessage() != '') {
+            error_log($e->getMessage());
+        }
+        echo json_encode([
+            'success' => false
+            , 'msg'   => getTemplateMsg()
+        ]);
+    } else {
+        echo 'An SQL error occured during update ' . $match['1'] . ' - revision ' . (int)$match['2'] . ' (' . basename($file) . '). Please update manually to this revision and the restart update process from this revision.';
     }
-    echo json_encode([
-        'success' => false
-        , 'msg'   => getTemplateMsg()
-    ]);
     return false;
 }

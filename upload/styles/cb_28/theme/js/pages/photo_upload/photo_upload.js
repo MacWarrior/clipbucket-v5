@@ -81,12 +81,24 @@
                         $(oneUploadForm).find('.savePhotoDetails').removeAttr('disabled');
                     }
 
+                    var alert_shown  = false;
                     $(oneUploadForm).find('#list_tags_'+ index).tagit({
                         singleField:true,
                         readOnly:false,
                         singleFieldNode: $(oneUploadForm).find('#tags'+ index),
                         animate:true,
-                        caseSensitive:false
+                        caseSensitive:false,
+                        availableTags: available_tags,
+                        beforeTagAdded: function (event,info) {
+                            if (info.tagLabel.length <= 2) {
+                                if (!alert_shown) {
+                                    alert_shown = true;
+                                    alert(tag_too_short);
+                                }
+                                return false;
+                            }
+                            alert_shown = false;
+                        }
                     });
 
                     wrapperDiv.appendChild(oneUploadForm);
@@ -144,17 +156,25 @@
                             url : "/actions/photo_uploader.php",
                             type : "post",
                             data : data,
-                            success: function(){
+                            success: function (msg) {
+                                msg = $.parseJSON(msg);
                                 $("#uploadMessage").removeClass("hidden");
-                                $("#uploadMessage").html("Picture details are successfully updated").attr("class", "alert alert-success container");
+                                if (msg.error) {
+                                    $('#uploadMessage').html(msg.error.val).attr('class', 'alert alert-danger container');
+                                    $('html,body').animate({
+                                        scrollTop: $("body").offset().top
+                                    }, 'medium');
+                                } else {
+                                    $("#uploadMessage").html("Picture details are successfully updated").attr("class", "alert alert-success container");
 
-                                $('html,body').animate({
-                                    scrollTop: $("body").offset().top
-                                },'medium');
+                                    $('html,body').animate({
+                                        scrollTop: $("body").offset().top
+                                    }, 'medium');
 
-                                setTimeout(function(){
-                                    $("#uploadMessage").addClass("hidden");
-                                }, 5000);
+                                    setTimeout(function () {
+                                        $("#uploadMessage").addClass("hidden");
+                                    }, 5000);
+                                }
                             }
                         }).fail(function(err){
                             console.log(err);
@@ -373,6 +393,11 @@
                                 setTimeout(function(){
                                     $("#uploadMessage").addClass("hidden");
                                 }, 5000);
+                            }else if (msg.err == 'missing_table') {
+                                $("#uploadMessage").html(msg.err).attr("class", "alert alert-danger container").removeClass("hidden");
+                                setTimeout(function(){
+                                    $("#uploadMessage").addClass("hidden");
+                                }, 5000);
                             }else{
                                 $("#uploadMessage").html(msg.err).attr("class", "alert alert-danger container").removeClass("hidden");
                                 setTimeout(function(){
@@ -387,7 +412,8 @@
             $("#createNewCollection").on({
                 click: function(e){
                     e.preventDefault();
-                    $("#CollectionDIV").toggle("fast");
+                    $('#CollectionDIV').toggle("fast").find('form')[0].reset();
+                    $('.tagit li:not(.tagit-new)').remove();
                     $('.form_header').hide();
                     $(".upload-area").hide();
                 }
@@ -436,13 +462,6 @@
             });
         });
 
-        $('#list_tags').tagit({
-            singleField:true,
-            fieldName:"collection_tags",
-            readOnly:false,
-            singleFieldNode:$('#collection_tags'),
-            animate:true,
-            caseSensitive:false
-        });
+        init_tags('collection_tags', available_collection_tags);
     });
 })(window);

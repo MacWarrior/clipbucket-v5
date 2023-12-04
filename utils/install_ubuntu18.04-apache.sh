@@ -1,5 +1,5 @@
 #!/bin/bash
-# Clipbucket install on Ubuntu 18.04 - By Miasmaejuices
+# ClipbucketV5 install on Ubuntu 18.04
 ## THIS SCRIPT MUST BE LAUNCHED AS ROOT
 
 echo ""
@@ -19,7 +19,7 @@ sed -i "s/max_execution_time = 30/max_execution_time = 7200/g" /etc/php/7.2/apac
 echo -ne " OK"
 
 echo ""
-echo -ne "Installing Clipbucket sources..."
+echo -ne "Installing ClipbucketV5 sources..."
 mkdir -p /var/www/clipbucket/ && cd "$_"
 git clone https://github.com/MacWarrior/clipbucket-v5.git ./ > /dev/null 2>&1
 echo -ne " OK"
@@ -92,5 +92,5 @@ echo ""
 echo "- Website URL : http://clipbucket.local"
 
 echo ""
-echo "Clipbucket installation completed"
+echo "ClipbucketV5 installation completed"
 echo ""

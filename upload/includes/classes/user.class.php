@@ -1,11 +1,213 @@
 <?php
+class User
+{
+    private static $user;
+    private $tablename = '';
+    private $fields = [];
+    private $display_block = '';
+    private $search_limit = 0;
+    private $display_var_name = '';
+
+    public function __construct(){
+        $this->tablename = 'users';
+        $this->fields = [
+            'userid'
+            ,'category'
+            ,'featured_video'
+            ,'username'
+            ,'user_session_key'
+            ,'user_session_code'
+            ,'password'
+            ,'email'
+            ,'usr_status'
+            ,'msg_notify'
+            ,'avatar'
+            ,'avatar_url'
+            ,'sex'
+            ,'dob'
+            ,'country'
+            ,'level'
+            ,'avcode'
+            ,'doj'
+            ,'last_logged'
+            ,'num_visits'
+            ,'session'
+            ,'ip'
+            ,'signup_ip'
+            ,'time_zone'
+            ,'featured'
+            ,'featured_date'
+            ,'profile_hits'
+            ,'total_watched'
+            ,'total_videos'
+            ,'total_comments'
+            ,'total_photos'
+            ,'total_collections'
+            ,'comments_count'
+            ,'last_commented'
+            ,'voted'
+            ,'ban_status'
+            ,'upload'
+            ,'subscribers'
+            ,'total_subscriptions'
+            ,'background'
+            ,'background_color'
+            ,'background_url'
+            ,'background_repeat'
+            ,'last_active'
+            ,'banned_users'
+            ,'welcome_email_sent'
+            ,'total_downloads'
+            ,'album_privacy'
+            ,'likes'
+            ,'is_live'
+        ];
+        $this->display_block = LAYOUT . '/blocks/user.html';
+        $this->display_var_name = 'user';
+        $this->search_limit = (int)config('users_items_search_page');
+    }
+
+    public static function getInstance(): self
+    {
+        if( empty(self::$user) ){
+            self::$user = new self();
+        }
+        return self::$user;
+    }
+
+    private function getAllFields(): array
+    {
+        return array_map(function($field) {
+            return $this->tablename . '.' . $field;
+        }, $this->fields);
+    }
+
+    public function getSearchLimit(): int
+    {
+        return $this->search_limit;
+    }
+
+    public function getDisplayBlock(): string
+    {
+        return $this->display_block;
+    }
+
+    public function getDisplayVarName(): string
+    {
+        return $this->display_var_name;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getAll(array $params = [])
+    {
+        $param_collection_id = $params['userid'] ?? false;
+        $param_userid = $params['userid'] ?? false;
+        $param_search = $params['search'] ?? false;
+
+        $param_condition = $params['condition'] ?? false;
+        $param_limit = $params['limit'] ?? false;
+        $param_order = $params['order'] ?? false;
+        $param_group = $params['group'] ?? false;
+        $param_having = $params['having'] ?? false;
+        $param_count = $params['count'] ?? false;
+        $param_first_only = $params['first_only'] ?? false;
+
+        $conditions = [];
+        if( $param_userid ){
+            $conditions[] = 'users.userid = \''.mysql_clean($param_userid).'\'';
+        }
+        if( $param_condition ){
+            $conditions[] = '(' . $param_condition . ')';
+        }
+
+        $version = Update::getInstance()->getDBVersion();
+
+        if( $param_search ){
+            /* Search is done on collection title, collection tags */
+            // TODO : Add search on collection categories
+            $cond = '(MATCH(users.username) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(users.username) LIKE \'%' . mysql_clean($param_search) . '%\'';
+            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+                $cond .= 'OR MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+            }
+            $cond .= ')';
+
+            $conditions[] = $cond;
+        }
+
+        if( $param_count ){
+            $select = ['COUNT(users.userid) AS count'];
+        } else {
+            $select = $this->getAllFields();
+        }
+
+        $join = [];
+        $group = [];
+        $version = Update::getInstance()->getDBVersion();
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+            $select[] = 'GROUP_CONCAT(tags.name SEPARATOR \',\') AS tags';
+            $join[] = 'LEFT JOIN ' . cb_sql_table('user_tags') . ' ON users.userid = user_tags.id_user';
+            $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON user_tags.id_tag = tags.id_tag';
+            $group[] = 'users.userid';
+        }
+
+        if( $param_group ){
+            $group[] = $param_group;
+        }
+
+        $having = '';
+        if( $param_having ){
+            $having = ' HAVING '.$param_having;
+        }
+
+        $order = '';
+        if( $param_order ){
+            $order = ' ORDER BY '.$param_order;
+        }
+
+        $limit = '';
+        if( $param_limit ){
+            $limit = ' LIMIT '.$param_limit;
+        }
+
+        $sql ='SELECT ' . implode(', ', $select) . '
+                FROM ' . cb_sql_table('users') . ' '
+            . implode(' ', $join)
+            . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions))
+            . (empty($group) ? '' : ' GROUP BY ' . implode(',', $group))
+            . $having
+            . $order
+            . $limit;
+
+        $result = Clipbucket_db::getInstance()->_select($sql);
+
+        if( $param_count ){
+            if( empty($result) ){
+                return 0;
+            }
+            return $result[0]['count'];
+        }
+
+        if( !$result ){
+            return false;
+        }
+
+        if( $param_first_only ){
+            return $result[0];
+        }
+
+        return $result;
+    }
+}
+
 
 class userquery extends CBCategory
 {
     var $userid = '';
     var $username = '';
+    var $email = '';
     var $level = '';
-    var $permissions = '';
     var $access_type_list = []; //Access list
     var $usr_levels = [];
     var $custom_signup_fields = [];
@@ -35,6 +237,12 @@ class userquery extends CBCategory
     private $basic_fields = [];
     private $extra_fields = [];
 
+    public static function getInstance()
+    {
+        global $userquery;
+        return $userquery;
+    }
+
     function __construct()
     {
         global $cb_columns;
@@ -49,6 +257,17 @@ class userquery extends CBCategory
         ];
 
         $cb_columns->object('users')->register_columns($basic_fields);
+    }
+
+    public function hasUserLevelAccess($user_level, $access)
+    {
+        $perms = userquery::getInstance()->get_user_level($user_level, true);
+        if( !isset($perms[$access]) ){
+            error_log('Unknown access : '.$access);
+            return false;
+        }
+
+        return $perms[$access] == 'yes';
     }
 
     /**
@@ -79,6 +298,7 @@ class userquery extends CBCategory
             $this->udetails = $udetails;
             $this->username = $udetails['username'];
             $this->level = $this->udetails['level'];
+            $this->email = $this->udetails['email'];
             $this->permission = $this->get_user_level(user_id());
 
             //Calling Logout Functions
@@ -530,8 +750,6 @@ class userquery extends CBCategory
 
                 //Changing User Videos To Anonymous
                 $db->execute('UPDATE ' . tbl('video') . ' SET userid=\'' . $this->get_anonymous_user() . '\' WHERE userid=\'' . $uid . '\'');
-                //Changing User Group To Anonymous
-                $db->execute('UPDATE ' . tbl('groups') . ' SET userid=\'' . $this->get_anonymous_user() . '\' WHERE userid=\'' . $uid . '\'');
                 //Deleting User Contacts
                 $this->remove_contacts($uid);
 
@@ -1812,73 +2030,6 @@ class userquery extends CBCategory
     }
 
     /**
-     * Function used to count total video comments
-     * @throws Exception
-     */
-    function count_profile_comments($id)
-    {
-        global $db;
-        return $db->count(tbl('comments'), 'comment_id', "type='c' AND type_id='$id' AND parent_id='0'");
-    }
-
-    /**
-     * Function used to update user comments count
-     * @throws Exception
-     */
-    function update_comments_count($id)
-    {
-        global $db;
-        $total_comments = $this->count_profile_comments($id);
-        $db->update(tbl('users'), ['comments_count', 'last_commented'], [$total_comments, now()], " userid='$id'");
-    }
-
-    /**
-     * Function used to add comment on users profile
-     * @throws Exception
-     */
-    function add_comment($comment, $obj_id, $reply_to = null, $type = 'c')
-    {
-        global $myquery;
-        if (!$this->user_exists($obj_id)) {
-            e(lang('usr_exist_err'));
-        } else {
-            $add_comment = $myquery->add_comment($comment, $obj_id, $reply_to, $type, $obj_id);
-        }
-
-        if ($add_comment) {
-            //Logging Comment
-            $log_array = [
-                'success'        => 'yes',
-                'details'        => 'comment on a profile',
-                'action_obj_id'  => $obj_id,
-                'action_done_id' => $add_comment
-            ];
-            insert_log('profile_comment', $log_array);
-
-            //Updating Number of comments of user if comment is not a reply
-            if ($reply_to < 1) {
-                $this->update_comments_count($obj_id);
-            }
-        }
-        return $add_comment;
-    }
-
-    /**
-     * Function used to remove video comment
-     * @throws Exception
-     */
-    function delete_comment($cid, $is_reply = false)
-    {
-        global $myquery;
-        $remove_comment = $myquery->delete_comment($cid, 'c', $is_reply);
-        if ($remove_comment) {
-            //Updating Number of comments of video
-            $this->update_comments_count($obj_id);
-        }
-        return $remove_comment;
-    }
-
-    /**
      * Function used to get number of videos uploaded by user
      *
      * @param      $uid
@@ -1957,6 +2108,7 @@ class userquery extends CBCategory
 
     /**
      * Function used to get permission types
+     * @throws Exception
      */
     function get_level_types(): array
     {
@@ -2049,12 +2201,21 @@ class userquery extends CBCategory
     function get_user_profile($uid)
     {
         global $db;
-        $query = 'SELECT UP.*, GROUP_CONCAT(T.name SEPARATOR \',\') as profile_tags
-                    FROM '.tbl($this->dbtbl['user_profile']).' UP
-                    LEFT JOIN '.tbl('user_tags').' UT ON UP.userid = UT.id_user
-                    LEFT JOIN '.tbl('tags').' T ON T.id_tag = UT.id_tag
-                    WHERE UP.userid = ' . mysql_clean($uid).'
-                    GROUP BY UP.userid';
+        $select = '';
+        $join = '';
+        $group = '';
+        $version = Update::getInstance()->getDBVersion();
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+            $select = ', GROUP_CONCAT(T.name SEPARATOR \',\') as profile_tags';
+            $join = ' LEFT JOIN ' . tbl('user_tags') . ' UT ON UP.userid = UT.id_user
+                    LEFT JOIN ' . tbl('tags') . ' T ON T.id_tag = UT.id_tag';
+            $group = ' GROUP BY UP.userid';
+        }
+        $query = 'SELECT UP.* ' . $select . '
+                    FROM ' . tbl($this->dbtbl['user_profile']) . ' UP
+                   ' . $join . '
+                    WHERE UP.userid = ' . mysql_clean($uid) . '
+                   ' . $group;
         $result = $db->_select($query, 60);
 
         if (count($result) > 0) {
@@ -2752,6 +2913,7 @@ class userquery extends CBCategory
 
     /**
      * My Account links Edited on 12 march 2014 for user account links
+     * @throws Exception
      */
     function my_account_links()
     {
@@ -3618,8 +3780,7 @@ class userquery extends CBCategory
             ];
             $fields['users'][] = 'last_active';
             $fields['users'][] = 'total_collections';
-            $fields['users'][] = 'total_groups';
-            $query = ' SELECT ' . table_fields($fields) . ' FROM ' . tbl('users') . ' AS users ';
+            $query = ' SELECT ' . table_fields($fields) . ' FROM ' . cb_sql_table('users');
             $query .= ' LEFT JOIN ' . cb_sql_table('user_profile', 'profile') . ' ON users.userid = profile.userid ';
 
             if ($cond) {
@@ -3648,6 +3809,7 @@ class userquery extends CBCategory
 
     /**
      * Function used to perform several actions with a video
+     * @throws Exception
      */
     function action($case, $uid)
     {
@@ -3716,107 +3878,6 @@ class userquery extends CBCategory
                 e(lang('usr_uuban_msg'), 'm');
                 break;
         }
-    }
-
-    /**
-     * Function used to use to initialize search object for video section
-     * op=>operator (AND OR)
-     */
-    function init_search()
-    {
-        $this->search = new cbsearch;
-        $this->search->db_tbl = 'users';
-        // added more conditions usr_status='Ok' and ban_status='no'
-        /*
-        array('field'=>'usr_status','type'=>'=','var'=>'Ok','op'=>'AND','value'=>'static'),
-            array('field'=>'ban_status','type'=>'=','var'=>'no','op'=>'AND','value'=>'static'),
-        */
-        if (!has_access('admin_access', true)) {
-            $this->search->columns = [
-                ['field' => 'username', 'type' => 'LIKE', 'var' => '%{KEY}%'],
-                ['field' => 'name', 'type' => 'LIKE', 'var' => '%{KEY}%', 'op' => 'OR', 'db'=>'tags'],
-                ['field' => 'usr_status', 'type' => '=', 'var' => 'Ok', 'op' => 'AND', 'value' => 'static'],
-                ['field' => 'ban_status', 'type' => '=', 'var' => 'no', 'op' => 'AND', 'value' => 'static']
-            ];
-        } else {
-            $this->search->columns = [
-                ['field' => 'username', 'type' => 'LIKE', 'var' => '%{KEY}%'],
-                ['field' => 'name', 'type' => 'LIKE', 'var' => '%{KEY}%', 'op' => 'OR', 'db'=>'tags']
-            ];
-        }
-
-        $this->search->cat_tbl = $this->cat_tbl;
-
-        $this->search->display_template = LAYOUT . '/blocks/user.html';
-        $this->search->template_var = 'user';
-        $this->search->multi_cat = false;
-        $this->search->date_added_colum = 'doj';
-        $this->search->results_per_page = config('users_items_search_page');
-
-        /**
-         * Setting up the sorting thing
-         */
-
-        $sorting = [
-            'doj'            => lang('date_added'),
-            'profile_hits'   => lang('views'),
-            'total_comments' => lang('comments'),
-            'total_videos'   => lang('videos')
-        ];
-
-        $this->search->sorting = [
-            'doj'            => ' doj DESC',
-            'profile_hits'   => ' profile_hits DESC',
-            'total_comments' => ' total_comments DESC',
-            'total_videos'   => ' total_videos DESC'
-        ];
-
-        /**
-         * Setting Up The Search Fields
-         */
-        $default = $_GET;
-        if (is_array($default['category'])) {
-            $cat_array = [$default['category']];
-        }
-        $uploaded = $default['datemargin'];
-        $sort = $default['sort'];
-
-        $this->search->search_type['channels'] = ['title' => lang('users')];
-
-        $fields = [
-            'query'       => [
-                'title' => lang('keywords'),
-                'type'  => 'textfield',
-                'name'  => 'query',
-                'id'    => 'query',
-                'value' => mysql_clean($default['query'])
-            ],
-            'category'    => [
-                'title'         => lang('category'),
-                'type'          => 'checkbox',
-                'name'          => 'category[]',
-                'id'            => 'category',
-                'value'         => ['category', $cat_array],
-                'category_type' => 'user'
-            ],
-            'date_margin' => [
-                'title'   => lang('joined'),
-                'type'    => 'dropdown',
-                'name'    => 'datemargin',
-                'id'      => 'datemargin',
-                'value'   => $this->search->date_margins(),
-                'checked' => $uploaded
-            ],
-            'sort'        => [
-                'title'   => lang('sort_by'),
-                'type'    => 'dropdown',
-                'name'    => 'sort',
-                'value'   => $sorting,
-                'checked' => $sort
-            ]
-        ];
-
-        $this->search->search_type['users']['fields'] = $fields;
     }
 
     /**
@@ -4364,8 +4425,31 @@ class userquery extends CBCategory
             $default = $_POST;
         }
 
-        return [
-            'first_name'      => [
+        $return = [
+            'show_dob'        => [
+                'title'       => lang('show_dob'),
+                'type'        => 'radiobutton',
+                'name'        => 'show_dob',
+                'id'          => 'show_dob',
+                'value'       => ['yes' => lang('yes'), 'no' => lang('no')],
+                'checked'     => $default['show_dob'],
+                'db_field'    => 'show_dob',
+                'syntax_type' => 'name',
+                'auto_view'   => 'no',
+                'sep'         => '&nbsp;'
+            ],
+            'profile_tags'    => [
+                'title'     => lang('profile_tags'),
+                'type'      => 'hidden',
+                'name'      => 'profile_tags',
+                'id'        => 'profile_tags',
+                'value'     => genTags($default['profile_tags']),
+                'auto_view' => 'no'
+            ]
+        ];
+
+        if( config('enable_user_firstname_lastname') == 'yes' ){
+            $return['first_name'] = [
                 'title'       => lang('user_fname'),
                 'type'        => 'textfield',
                 'name'        => 'first_name',
@@ -4375,8 +4459,9 @@ class userquery extends CBCategory
                 'required'    => 'no',
                 'syntax_type' => 'name',
                 'auto_view'   => 'yes'
-            ],
-            'last_name'       => [
+            ];
+
+            $return['last_name'] = [
                 'title'       => lang('user_lname'),
                 'type'        => 'textfield',
                 'name'        => 'last_name',
@@ -4384,9 +4469,13 @@ class userquery extends CBCategory
                 'value'       => $default['last_name'],
                 'db_field'    => 'last_name',
                 'syntax_type' => 'name',
+                'required'    => 'no',
                 'auto_view'   => 'yes'
-            ],
-            'relation_status' => [
+            ];
+        }
+
+        if( config('enable_user_relation_status') == 'yes' ){
+            $return['relation_status'] = [
                 'title'     => lang('user_relat_status'),
                 'type'      => 'dropdown',
                 'name'      => 'relation_status',
@@ -4401,38 +4490,11 @@ class userquery extends CBCategory
                 'checked'   => $default['relation_status'],
                 'db_field'  => 'relation_status',
                 'auto_view' => 'yes'
-            ],
-            'show_dob'        => [
-                'title'       => lang('show_dob'),
-                'type'        => 'radiobutton',
-                'name'        => 'show_dob',
-                'id'          => 'show_dob',
-                'value'       => ['yes' => lang('yes'), 'no' => lang('no')],
-                'checked'     => $default['show_dob'],
-                'db_field'    => 'show_dob',
-                'syntax_type' => 'name',
-                'auto_view'   => 'no',
-                'sep'         => '&nbsp;'
-            ],
-            'about_me'        => [
-                'title'      => lang('user_about_me'),
-                'type'       => 'textarea',
-                'name'       => 'about_me',
-                'id'         => 'about_me',
-                'value'      => mysql_clean($default['about_me']),
-                'db_field'   => 'about_me',
-                'auto_view'  => 'no',
-                'clean_func' => 'Replacer'
-            ],
-            'profile_tags'    => [
-                'title'     => lang('profile_tags'),
-                'type'      => 'hidden',
-                'name'      => 'profile_tags',
-                'id'        => 'profile_tags',
-                'value'     => genTags($default['profile_tags']),
-                'auto_view' => 'no'
-            ],
-            'web_url'         => [
+            ];
+        }
+
+        if( config('enable_user_website') == 'yes' ){
+            $return['web_url'] = [
                 'title'            => lang('website'),
                 'type'             => 'textfield',
                 'name'             => 'web_url',
@@ -4441,8 +4503,23 @@ class userquery extends CBCategory
                 'db_field'         => 'web_url',
                 'auto_view'        => 'yes',
                 'display_function' => 'outgoing_link'
-            ]
-        ];
+            ];
+        }
+
+        if( config('enable_user_about') == 'yes' ){
+            $return['about_me'] = [
+                'title'      => lang('user_about_me'),
+                'type'       => 'textarea',
+                'name'       => 'about_me',
+                'id'         => 'about_me',
+                'value'      => mysql_clean($default['about_me']),
+                'db_field'   => 'about_me',
+                'auto_view'  => 'no',
+                'clean_func' => 'Replacer'
+            ];
+        }
+
+        return $return;
     }
 
     /**
@@ -4458,8 +4535,11 @@ class userquery extends CBCategory
         if (!$default) {
             $default = $_POST;
         }
-        return [
-            'postal_code' => [
+
+        $return = [];
+
+        if( config('enable_user_postcode') == 'yes' ){
+            $return['postal_code'] = [
                 'title'     => lang('postal_code'),
                 'type'      => 'textfield',
                 'name'      => 'postal_code',
@@ -4467,8 +4547,11 @@ class userquery extends CBCategory
                 'value'     => $default['postal_code'],
                 'db_field'  => 'postal_code',
                 'auto_view' => 'yes'
-            ],
-            'hometown'    => [
+            ];
+        }
+
+        if( config('enable_user_hometown') == 'yes' ){
+            $return['hometown'] = [
                 'title'     => lang('hometown'),
                 'type'      => 'textfield',
                 'name'      => 'hometown',
@@ -4476,8 +4559,11 @@ class userquery extends CBCategory
                 'value'     => $default['hometown'],
                 'db_field'  => 'hometown',
                 'auto_view' => 'yes'
-            ],
-            'city'        => [
+            ];
+        }
+
+        if( config('enable_user_city') == 'yes' ){
+            $return['city'] = [
                 'title'     => lang('city'),
                 'type'      => 'textfield',
                 'name'      => 'city',
@@ -4485,8 +4571,10 @@ class userquery extends CBCategory
                 'value'     => $default['city'],
                 'db_field'  => 'city',
                 'auto_view' => 'yes'
-            ]
-        ];
+            ];
+        }
+
+        return $return;
     }
 
     /**
@@ -4503,8 +4591,10 @@ class userquery extends CBCategory
             $default = $_POST;
         }
 
-        return [
-            'education'  => [
+        $return = [];
+
+        if( config('enable_user_education') == 'yes' ){
+            $return['education'] = [
                 'title'     => lang('education'),
                 'type'      => 'dropdown',
                 'name'      => 'education',
@@ -4523,8 +4613,11 @@ class userquery extends CBCategory
                 'checked'   => $default['education'],
                 'db_field'  => 'education',
                 'auto_view' => 'yes'
-            ],
-            'schools'    => [
+            ];
+        }
+
+        if( config('enable_user_schools') == 'yes' ){
+            $return['schools'] = [
                 'title'      => lang('schools'),
                 'type'       => 'textarea',
                 'name'       => 'schools',
@@ -4533,8 +4626,11 @@ class userquery extends CBCategory
                 'db_field'   => 'schools',
                 'clean_func' => 'Replacer',
                 'auto_view'  => 'yes'
-            ],
-            'occupation' => [
+            ];
+        }
+
+        if( config('enable_user_occupation') == 'yes' ){
+            $return['occupation'] = [
                 'title'      => lang('occupation'),
                 'type'       => 'textarea',
                 'name'       => 'occupation',
@@ -4543,8 +4639,11 @@ class userquery extends CBCategory
                 'db_field'   => 'occupation',
                 'clean_func' => 'Replacer',
                 'auto_view'  => 'yes'
-            ],
-            'companies'  => [
+            ];
+        }
+
+        if( config('enable_user_compagnies') == 'yes' ){
+            $return['companies'] = [
                 'title'      => lang('companies'),
                 'type'       => 'textarea',
                 'name'       => 'companies',
@@ -4553,8 +4652,11 @@ class userquery extends CBCategory
                 'db_field'   => 'companies',
                 'clean_func' => 'Replacer',
                 'auto_view'  => 'yes'
-            ],
-            'hobbies'    => [
+            ];
+        }
+
+        if( config('enable_user_hobbies') == 'yes' ){
+            $return['hobbies'] = [
                 'title'      => lang('hobbies'),
                 'type'       => 'textarea',
                 'name'       => 'hobbies',
@@ -4563,8 +4665,11 @@ class userquery extends CBCategory
                 'db_field'   => 'hobbies',
                 'clean_func' => 'Replacer',
                 'auto_view'  => 'yes'
-            ],
-            'fav_movies' => [
+            ];
+        }
+
+        if( config('enable_user_favorite_movies') == 'yes' ){
+            $return['fav_movies'] = [
                 'title'      => lang('user_fav_movs_shows'),
                 'type'       => 'textarea',
                 'name'       => 'fav_movies',
@@ -4573,8 +4678,11 @@ class userquery extends CBCategory
                 'db_field'   => 'fav_movies',
                 'clean_func' => 'Replacer',
                 'auto_view'  => 'yes'
-            ],
-            'fav_music'  => [
+            ];
+        }
+
+        if( config('enable_user_favorite_music') == 'yes' ){
+            $return['fav_music'] = [
                 'title'      => lang('user_fav_music'),
                 'type'       => 'textarea',
                 'name'       => 'fav_music',
@@ -4583,8 +4691,11 @@ class userquery extends CBCategory
                 'db_field'   => 'fav_music',
                 'clean_func' => 'Replacer',
                 'auto_view'  => 'yes'
-            ],
-            'fav_books'  => [
+            ];
+        }
+
+        if( config('enable_user_favorite_books') == 'yes' ){
+            $return['fav_books'] = [
                 'title'      => lang('user_fav_books'),
                 'type'       => 'textarea',
                 'name'       => 'fav_books',
@@ -4593,8 +4704,10 @@ class userquery extends CBCategory
                 'db_field'   => 'fav_books',
                 'clean_func' => 'Replacer',
                 'auto_view'  => 'yes'
-            ]
-        ];
+            ];
+        }
+
+        return $return;
     }
 
 
@@ -4612,16 +4725,7 @@ class userquery extends CBCategory
             $default = $_POST;
         }
 
-        return [
-            'online_status'      => [
-                'title'    => lang('online_status'),
-                'type'     => 'dropdown',
-                'name'     => 'privacy',
-                'id'       => 'privacy',
-                'value'    => ['online' => lang('online'), 'offline' => lang('offline'), 'custom' => lang('custom')],
-                'checked'  => $default['online_status'],
-                'db_field' => 'online_status'
-            ],
+        $return = [
             'show_profile'       => [
                 'title'    => lang('show_profile'),
                 'type'     => 'dropdown',
@@ -4664,6 +4768,20 @@ class userquery extends CBCategory
                 'sep'      => '&nbsp;'
             ]
         ];
+
+        if( config('enable_user_status') == 'yes' ){
+            $return['online_status'] = [
+                'title'    => lang('online_status'),
+                'type'     => 'dropdown',
+                'name'     => 'privacy',
+                'id'       => 'privacy',
+                'value'    => ['online' => lang('online'), 'offline' => lang('offline'), 'custom' => lang('custom')],
+                'checked'  => $default['online_status'],
+                'db_field' => 'online_status'
+            ];
+        }
+
+        return $return;
     }
 
     /**
@@ -4805,7 +4923,7 @@ class userquery extends CBCategory
                     'group_name' => lang('channel_settings'),
                     'group_id'   => 'channel_settings',
                     'fields'     => array_merge($this->load_channel_settings($default)
-                        , $this->load_privacy_field($default)),
+                        , $this->load_privacy_field($default))
                 ]
             ];
         }
@@ -4816,16 +4934,14 @@ class userquery extends CBCategory
                     'group_name' => lang('profile_basic_info'),
                     'group_id'   => 'profile_basic_info',
                     'fields'     => $this->load_personal_details($default),
-                ],
-                [
-                    'group_name' => lang('location'),
-                    'group_id'   => 'profile_location',
-                    'fields'     => $this->load_location_fields($default)
-                ],
-                [
+                ],[
                     'group_name' => lang('profile_education_interests'),
                     'group_id'   => 'profile_education_interests',
                     'fields'     => $this->load_education_interests($default)
+                ],[
+                    'group_name' => lang('location'),
+                    'group_id'   => 'profile_location',
+                    'fields'     => $this->load_location_fields($default)
                 ]
             ];
 

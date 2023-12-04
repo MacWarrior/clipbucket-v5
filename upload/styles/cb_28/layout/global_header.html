@@ -3,7 +3,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
-		<meta name="copyright" content="ClipBucket - Integrated Units 2007 - {$smarty.now|date_format:"%Y"}">
+		<meta name="copyright" content="ClipBucketV5, {lang code='edited_by'} Oxygenz">
 
 		<link rel="apple-touch-icon" sizes="57x57" href="{get_website_favicon_path()}">
 		<link rel="apple-touch-icon" sizes="60x60" href="{get_website_favicon_path()}">
@@ -21,7 +21,6 @@
 		<meta name="msapplication-TileImage" content="{get_website_favicon_path()}">
 		<meta name="msapplication-TileColor" content="#ffffff">
 		<meta name="theme-color" content="#ffffff">
-		<!-- RSS FEEDS -->
 		{rss_feeds link_tag=true}
 		<meta name="keywords" content="{$Cbucket->configs.keywords}">
 		<meta name="description" content="{$Cbucket->configs.description}">
@@ -40,22 +39,22 @@
             var lang_unsubscribe = "{lang code='unsubscribe'}";
 			var fastQitems = "{$got_qlitems}";
 			var pageNow = "{$smarty.const.THIS_PAGE}";
-
+			var tag_too_short = "{lang code=tag_too_short}";
 		</script>
 
 		{if $Cbucket->JSArray}
-		{foreach from=$Cbucket->JSArray key=file item=type}
-		{include_js type=$type file=$file}
-		{/foreach}
+			{foreach from=$Cbucket->JSArray key=file item=type}
+				{include_js type=$type file=$file}
+			{/foreach}
 		{/if}
 
 		{if $Cbucket->CSSArray}
-		{foreach from=$Cbucket->CSSArray key=file item=type}
-		{include_css type=$type file=$file}
-		{/foreach}
+			{foreach from=$Cbucket->CSSArray key=file item=type}
+				{include_css type=$type file=$file}
+			{/foreach}
 		{/if}
 
-		<!-- Getting quicklist videos and assigning -->
+		{* Getting quicklist videos and assigning *}
 		{assign var=qlist_videos value=get_fast_qlist()}
 		{assign var=litems_count value=$qlist_videos|@count}
 		{if $litems_count >= 1} 
@@ -67,19 +66,15 @@
 		{include file="$style_dir/blocks/quicklist/qlist_main.html"}
 		{include_header file='global_header'}
 		{if $Cbucket->header_files}
-		    <!-- Including Headers -->
 		    {foreach from=$Cbucket->header_files key=file item=type}
 		        {include_header type=$type file=$file}
 		    {/foreach}
-		    <!-- Ending Headers -->
 		{/if}
 		<script>
-
 			$(document).ready(function(){
-				loading = '<i class="glyphicon glyphicon-refresh animate-spin"></i> {lang code="loading"}...';
 				$( 'ul#photos li:visible' ).each( function( i ){
 					$( this )[ (1&i) ? 'addClass' : 'removeClass' ]( 'photo-land-no' );
 				})
-			})
+			});
 		</script>
 	</head>

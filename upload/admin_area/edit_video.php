@@ -48,17 +48,19 @@ if ($_GET['mode'] != '') {
 //Check Video Exists or Not
 if ($myquery->video_exists($video)) {
     //Deleting Comment
-    $cid = mysql_clean($_GET['delete_comment']);
+    $cid = $_GET['delete_comment'];
     if (!empty($cid)) {
-        $myquery->delete_comment($cid);
+        Comments::delete(['comment_id' => $cid]);
     }
 
-    Assign('udata', $userquery->get_user_details($data['userid']));
+    assign('udata', $userquery->get_user_details($data['userid']));
 
     $date_added = DateTime::createFRomFormat('Y-m-d', explode(' ', $data['date_added'])[0]);
     $data['date_added'] = $date_added->format(DATE_FORMAT);
 
-    Assign('data', $data);
+    assign('data', $data);
+    assign('vidthumbs', get_thumb($data,TRUE,'168x105','auto'));
+    assign('vidthumbs_custom', get_thumb($data,TRUE,'168x105','custom'));
 
     if ($data['file_server_path']) {
         $file = $data['file_server_path'] . '/logs/' . $data['file_directory'] . $data['file_name'] . '.log';
@@ -78,19 +80,17 @@ assign('resolution_list', $resolution_list);
 $subtitle_list = get_video_subtitles($data) ?: [];
 assign('subtitle_list', $subtitle_list);
 
-$type = 'v';
-$comment_cond = [];
-$comment_cond['order'] = ' comment_id DESC';
-$comment_cond['videoid'] = $video;
-$comments = getComments($comment_cond);
-assign('comments', $comments);
-
 //Deleting comment
 if (isset($_POST['del_cmt'])) {
-    $cid = mysql_clean($_POST['cmt_id']);
-    $type_id = $myquery->delete_comment($cid);
-    $cbvid->update_comments_count($type_id);
+    Comments::delete(['comment_id' => $_POST['cmt_id']]);
 }
+
+$params = [];
+$params['type'] = 'v';
+$params['type_id'] = $video;
+$params['order'] = ' comment_id DESC';
+$comments = Comments::getAll($params);
+assign('comments', $comments);
 
 function format_number($number)
 {
@@ -116,8 +116,8 @@ $Cbucket->addAdminCSS([
     'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
 ]);
 
-$comments = getComments($comment_cond);
-assign('comments', $comments);
+$available_tags = Tags::fill_auto_complete_tags('video');
+assign('available_tags',$available_tags);
 
 $available_tags = Tags::fill_auto_complete_tags('video');
 assign('available_tags',$available_tags);

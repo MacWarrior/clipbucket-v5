@@ -1,5 +1,5 @@
 #!/bin/bash
-# Clipbucket install on Debian 12
+# ClipbucketV5 install on Debian 12
 ## THIS SCRIPT MUST BE LAUNCHED AS ROOT
 
 echo ""
@@ -10,15 +10,18 @@ echo -ne " OK"
 
 echo ""
 echo -ne "Installing requiered elements..."
-apt install php8.2-fpm nginx-full mariadb-server git php8.2-curl ffmpeg php8.2-mysqli php8.2-xml php8.2-mbstring php8.2-gd sendmail mediainfo --yes > /dev/null 2>&1
-sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 100M/g" /etc/php/8.2/fpm/php.ini
-sed -i "s/post_max_size = 8M/post_max_size = 100M/g" /etc/php/8.2/fpm/php.ini
-sed -i "s/max_execution_time = 30/max_execution_time = 7200/g" /etc/php/8.2/fpm/php.ini
-systemctl restart php8.2-fpm
+apt install php8.3-fpm nginx-full mariadb-server git php8.3-curl ffmpeg php8.3-mysqli php8.3-xml php8.3-mbstring php8.3-gd sendmail mediainfo --yes > /dev/null 2>&1
+sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 100M/g" /etc/php/8.3/fpm/php.ini
+sed -i "s/post_max_size = 8M/post_max_size = 100M/g" /etc/php/8.3/fpm/php.ini
+sed -i "s/max_execution_time = 30/max_execution_time = 7200/g" /etc/php/8.3/fpm/php.ini
+
+sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 100M/g" /etc/php/8.3/cli/php.ini
+sed -i "s/post_max_size = 8M/post_max_size = 100M/g" /etc/php/8.3/cli/php.ini
+systemctl restart php8.3-fpm
 echo -ne " OK"
 
 echo ""
-echo -ne "Installing Clipbucket sources..."
+echo -ne "Installing ClipbucketV5 sources..."
 mkdir -p /srv/http/clipbucket/ && cd "$_"
 git clone https://github.com/MacWarrior/clipbucket-v5.git ./ > /dev/null 2>&1
 echo -ne " OK"
@@ -64,7 +67,7 @@ server {
     }
 
     location ~* \.php$ {
-        fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
+        fastcgi_pass unix:/var/run/php/php8.3-fpm.sock;
         fastcgi_index index.php;
         fastcgi_split_path_info ^(.+\.php)(.*)$;
         include fastcgi_params;
@@ -210,5 +213,5 @@ echo ""
 echo "- Website URL : http://clipbucket.local"
 
 echo ""
-echo "Clipbucket installation completed"
+echo "ClipbucketV5 installation completed"
 echo ""

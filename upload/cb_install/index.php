@@ -1,6 +1,9 @@
 <?php
 define('THIS_PAGE', 'cb_install');
-include_once('../includes/clipbucket.php');
+
+$includes_dir = dirname(__DIR__ ). DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR;
+include_once($includes_dir . 'classes' . DIRECTORY_SEPARATOR . 'update.class.php');
+include_once($includes_dir . 'clipbucket.php');
 
 $modes = [
     'agreement',

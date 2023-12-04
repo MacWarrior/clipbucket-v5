@@ -10,7 +10,7 @@
 			{/if}
 			{assign var=sorting_links value=sorting_links()}
 			<div class="filter-dropdowns clearfix">
-				{if (has_access('allow_create_collection',false,$verify_logged_user))}
+				{if (has_access('allow_create_collection',false,false))}
 				<div class="cat-col col-lg-6 col-md-6 col-sm-6 col-xs-12 clearfix">
 					<a class="btn btn-default" href="/manage_collections.php?mode=add_new">{lang code='add_new_collection'}</a>
 				</div>
@@ -22,7 +22,6 @@
 				</div>
 				{/if}
 				<div class="sorting-col col-lg-6 col-md-6 col-sm-6 col-xs-12 clearfix">
-					<!--Sorting By View-->
 					<div class="dropdown">
 						{if $smarty.get.sort}
 						{foreach from=$sorting_links item=name key=sort name=sorts}
@@ -42,8 +41,7 @@
 							{/foreach}
 						</ul>
 					</div>
-					
-					<!--Sorting By time-->
+
 					{assign var=time_links value=time_links()}
 					<div class="dropdown">
 						{if $smarty.get.time} 
@@ -66,7 +64,7 @@
 					</div>
 				</div>
 			</div>
-			<!-- /Page Heading -->
+
 			<div class="collections clearfix">
 				<div class="row clearfix">
 				{if $collections}
@@ -81,9 +79,7 @@
 				</div>
 			</div>
 
-            <!-- Pagination -->
             {include file="$style_dir/blocks/pagination.html"}
-            <!-- end of Pagination -->
 		</section>
 		<aside id="sidebar">
 			{if config("enable_advertisement") == "yes"}

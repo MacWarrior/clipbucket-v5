@@ -59,6 +59,11 @@ class ClipBucket
     //This array contains the public pages name for private access to website 
     var $public_pages = ["signup", "view_page"];
 
+    public static function getInstance(){
+        global $Cbucket;
+        return $Cbucket;
+    }
+
     /**
      * @throws Exception
      */
@@ -118,6 +123,12 @@ class ClipBucket
         $this->addFile($this->AdminJSArray, $files);
     }
 
+    function addAllJS($files)
+    {
+        $this->addFile($this->JSArray, $files);
+        $this->addFile($this->AdminJSArray, $files);
+    }
+
     function addCSS($files)
     {
         $this->addFile($this->CSSArray, $files);
@@ -125,6 +136,12 @@ class ClipBucket
 
     function addAdminCSS($files)
     {
+        $this->addFile($this->AdminCSSArray, $files);
+    }
+
+    function addAllCSS($files)
+    {
+        $this->addFile($this->CSSArray, $files);
         $this->addFile($this->AdminCSSArray, $files);
     }
 
@@ -226,7 +243,11 @@ class ClipBucket
         $menu_already_exists = false;
 
         if (is_null($order)) {
-            $order = max(array_keys($Cbucket->AdminMenu)) + 1;
+            if( empty($Cbucket->AdminMenu) ){
+                $order = 1;
+            } else {
+                $order = max(array_keys($Cbucket->AdminMenu)) + 1;
+            }
         } else {
             if (array_key_exists($order, $Cbucket->AdminMenu)) {
                 do {
@@ -280,7 +301,7 @@ class ClipBucket
         }
         if ($per['web_config_access'] == 'yes') {
             $menu_general = [
-                'title'   => 'General Configurations'
+                'title'   => lang('general')
                 , 'class' => 'glyphicon glyphicon-stats'
                 , 'sub'   => [
                     [
@@ -512,7 +533,7 @@ class ClipBucket
      * @param string $type
      *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     function get_countries($type = 'iso2'): array
     {
@@ -557,6 +578,7 @@ class ClipBucket
      * @param bool $ctemplate
      *
      * @return bool|mixed|string
+     * @throws Exception
      */
     function set_the_template($ctemplate = false)
     {
@@ -648,7 +670,7 @@ class ClipBucket
      * @param null $params
      *
      * @return array|void
-     * @throws \Exception
+     * @throws Exception
      */
     function head_menu($params = null)
     {
@@ -763,7 +785,7 @@ class ClipBucket
      * @param null $params
      *
      * @return array|void
-     * @throws \Exception
+     * @throws Exception
      */
     function foot_menu($params = null)
     {

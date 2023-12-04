@@ -55,7 +55,7 @@
                                     </div>
 
                                 </div>
-                            {if (has_access('allow_create_collection',false,$verify_logged_user))}
+                            {if (has_access('allow_create_collection',false,false))}
                                 <div class="col-md-3 text-center">
                                     <a href="#" class="btn btn-ghost btn-lg" id="createNewCollection">{lang code="create_new_collection_btn"}</a>
                                 </div>
@@ -162,7 +162,8 @@
     var theme = '{$theme}';
     var max_upload_size ='{$Cbucket->configs.max_upload_size}';
     var collection_id = '{$selected_collection.collection_id}';
-
+    var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
+    var available_collection_tags = JSON.parse('{$available_collection_tags|json_encode|replace:"'": "\'"}');
 </script>
 
 {/if}

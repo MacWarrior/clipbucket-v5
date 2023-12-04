@@ -104,6 +104,10 @@ class Upload
             $name = formObj::rmBrackets($field['name']);
             $val = $array[$name];
 
+            if (empty($val) && !empty($field['default_value'])) {
+                $val = $field['default_value'];
+            }
+
             if( empty($val) && $field['required'] == 'no'){
                 continue;
             }
@@ -128,9 +132,7 @@ class Upload
                 $val = apply_func($field['clean_func'], $val);
             }
 
-            if (empty($val) && !empty($field['default_value'])) {
-                $val = $field['default_value'];
-            }
+
 
             if (!empty($field['db_field'])) {
                 $query_val[] = $val;
@@ -202,9 +204,15 @@ class Upload
                 $query_field[] = 'status';
                 $query_val[] = 'Successful';
             }
-
+            $version = Update::getInstance()->getDBVersion();
+            if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
+                $query_field[] = 'tags';
+                $query_val[] = '';
+            }
             $db->insert(tbl('video'),$query_field, $query_val);
             $insert_id = $db->insert_id();
+
+            \Tags::saveTags($array['tags'] ?? '', 'video', $insert_id);
 
             //logging Upload
             $log_array = [
@@ -214,6 +222,8 @@ class Upload
                 'details'       => $array['title']
             ];
             insert_log('Uploaded a video', $log_array);
+
+
 
             $db->update(tbl('users'), ['total_videos'], ['|f|total_videos+1'], ' userid=\'' . $userid . '\'');
 
@@ -263,7 +273,7 @@ class Upload
             $ext = getExt($file['name'][$key]);
             if ($imgObj->ValidateImage($file['tmp_name'][$key], $ext)) {
                 $thumbs_settings_28 = thumbs_res_settings_28();
-                $temp_file_path = THUMBS_DIR . DIRECTORY_SEPARATOR . $files_dir . DIRECTORY_SEPARATOR . $file_name . '-' . $file_num . '.' . $ext;
+                $temp_file_path = THUMBS_DIR . DIRECTORY_SEPARATOR . $files_dir . DIRECTORY_SEPARATOR . $file_name . '-' . $file_num . '-c.' . $ext;
 
                 $imageDetails = getimagesize($file['tmp_name'][$key]);
 
@@ -279,7 +289,7 @@ class Upload
                         $width_setting = $imageDetails[0];
                         $height_setting = $imageDetails[1];
                     }
-                    $outputFilePath = THUMBS_DIR . DIRECTORY_SEPARATOR . $files_dir . DIRECTORY_SEPARATOR . $file_name . '-' . $dimensions . '-' . $file_num . '.' . $ext;
+                    $outputFilePath = THUMBS_DIR . DIRECTORY_SEPARATOR . $files_dir . DIRECTORY_SEPARATOR . $file_name . '-' . $dimensions . '-' . $file_num . '-c.' . $ext;
                     $imgObj->CreateThumb($temp_file_path, $outputFilePath, $width_setting, $ext, $height_setting, false);
                     global $db;
                     $rs = $db->select(tbl('video'), 'videoid', 'file_name LIKE \'' . $file_name . '\'');
@@ -289,7 +299,7 @@ class Upload
                         e(lang('technical_error'));
                         $videoid = 0;
                     }
-                    $db->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version'], [$videoid, $dimensions, $file_num, $ext, VERSION]);
+                    $db->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version', 'type'], [$videoid, $dimensions, $file_num, $ext, VERSION, 'custom']);
                 }
 
                 unlink($temp_file_path);
@@ -310,7 +320,7 @@ class Upload
      * @internal param $FILE_NAME
      * @internal param array $_FILES name
      */
-    function upload_thumbs($file_name, $file_array, $files_dir = null, $thumbs_ver = false)
+    function upload_thumbs($file_name, $file_array, $files_dir = null, bool $thumbs_ver = false)
     {
         if (count($file_array['name']) > 1) {
             for ($i = 0; $i < count($file_array['name']); $i++) {

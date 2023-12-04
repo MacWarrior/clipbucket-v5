@@ -1,31 +1,46 @@
 <div class="nav_des clearfix">
     <div class="cb_container">
         <h4 style="color:#fff;">Prechecking</h4>
-        <p style="color:#fff; font-size:13px;">Clipbucket requires following modules in order to work properly, we are performing some initial search to find modules.
+        <p style="color:#fff; font-size:13px;">ClipbucketV5 requires following modules in order to work properly, we are performing some initial search to find modules.
     </div>
 </div>
 
-<div id="sub_container">
+<div id="sub_container" class="grey-text">
     <dl>
-        <dt class="grey-text">PHP CLI</dt>
-        <?php $php_ver = check_module('php'); ?>
-        <dd><span style="margin-left:60px;" class="grey-text"><?php echo msg_arr($php_ver); ?></span></dd>
+        <dt>PHP Web</dt>
+        <dd><span><?php echo msg_arr(check_module('php_web')); ?></span></dd>
+        <dt class="white"><span>GD</dt>
+        <dd class="white"><span><?php echo msg_arr(check_extension('gd', 'web')); ?></span></dd>
+        <dt><span>MBstring</dt>
+        <dd><span><?php echo msg_arr(check_extension('mbstring', 'web')); ?></span></dd>
+        <dt class="white"><span>MySQLi</dt>
+        <dd class="white"><span><?php echo msg_arr(check_extension('mysqli', 'web')); ?></span></dd>
+        <dt><span>XML</dt>
+        <dd><span><?php echo msg_arr(check_extension('xml', 'web')); ?></span></dd>
+        <dt class="white"><span>cURL</dt>
+        <dd class="white"><span><?php echo msg_arr(check_extension('curl', 'web')); ?></span></dd>
 
-        <dt class="grey-text">FFMPEG</dt>
-        <?php $ffmpeg_ver = check_module('ffmpeg'); ?>
-        <dd style="background-color:#fff;"><span style="margin-left:60px;" class="grey-text"><?php echo msg_arr($ffmpeg_ver); ?></span></dd>
+        <dt>PHP CLI</dt>
+        <dd><span><?php echo msg_arr(check_module('php_cli')); ?></span></dd>
+        <dt class="white"><span>GD</dt>
+        <dd class="white"><span><?php echo msg_arr(check_extension('gd', 'cli')); ?></span></dd>
+        <dt><span>MBstring</dt>
+        <dd><span><?php echo msg_arr(check_extension('mbstring', 'cli')); ?></span></dd>
+        <dt class="white"><span>MySQLi</dt>
+        <dd class="white"><span><?php echo msg_arr(check_extension('mysqli', 'cli')); ?></span></dd>
+        <dt><span>XML</dt>
+        <dd><span><?php echo msg_arr(check_extension('xml', 'cli')); ?></span></dd>
+        <dt class="white"><span>cURL</dt>
+        <dd class="white"><span><?php echo msg_arr(check_extension('curl', 'cli')); ?></span></dd>
 
-        <dt class="grey-text">FFPROBE</dt>
-        <?php $ffprobe_ver = check_module('ffprobe'); ?>
-        <dd><span style="margin-left:60px;" class="grey-text"><?php echo msg_arr($ffprobe_ver); ?></span></dd>
+        <dt>FFMPEG</dt>
+        <dd><span><?php echo msg_arr(check_module('ffmpeg')); ?></span></dd>
 
-        <dt class="grey-text">cURL</dt>
-        <?php $curlver = check_module('curl'); ?>
-        <dd><span style="margin-left:60px;" class="grey-text"><?php echo msg_arr($curlver); ?></span></dd>
+        <dt class="white">FFPROBE</dt>
+        <dd class="white"><span><?php echo msg_arr(check_module('ffprobe')); ?></span></dd>
 
-        <dt class="grey-text">Media Info</dt>
-        <?php $media_info = check_module('media_info'); ?>
-        <dd style="background-color:#fff;"><span style="margin-left:60px;" class="grey-text"><?php echo msg_arr($media_info); ?></span></dd>
+        <dt>Media Info</dt>
+        <dd><span><?php echo msg_arr(check_module('media_info')); ?></span></dd>
     </dl>
 
     <form method="post" id="installation">

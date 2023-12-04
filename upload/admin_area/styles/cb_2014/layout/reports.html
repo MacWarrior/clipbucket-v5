@@ -143,12 +143,14 @@
 		<tbody class="reports">
 			<tr>
 				<td>
-					<span class="show">Video Comments: <strong>{$myquery->get_comments('wildcard',v,TRUE)}</strong></span>
-					<span class="show">Profile Comments: <strong>{$myquery->get_comments('wildcard',c,TRUE)}</strong></span>
+					<span class="show">Video Comments : <strong>{Comments::getAll(['count'=>true,'type'=>'v'])}</strong></span>
+					<span class="show">Photo Comments : <strong>{Comments::getAll(['count'=>true,'type'=>'p'])}</strong></span>
+					<span class="show">Collection Comments : <strong>{Comments::getAll(['count'=>true,'type'=>'cl'])}</strong></span>
 				</td>
 				<td>
-					<span class="show">Videos Reported: <strong>{$cbvid->action->count_flagged_objects()}</strong></span>
-					<span class="show">Profiles Reported: <strong>{$myquery->get_comments('wildcard',c,TRUE)}</strong></span>
+					<span class="show">Videos Reported : <strong>{$cbvid->action->count_flagged_objects()}</strong></span>
+					<span class="show">Photos Reported : <strong>{$cbphoto->action->count_flagged_objects()}</strong></span>
+					<span class="show">Users Reported : <strong>{$userquery->action->count_flagged_objects()}</strong></span>
 				</td>
 				<td>
 					<span class="show">Video PlayList: <strong>{$cbvid->action->count_total_playlist()}</strong></span>

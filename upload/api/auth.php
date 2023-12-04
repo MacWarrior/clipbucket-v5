@@ -1,6 +1,7 @@
 <?php
 include('../includes/config.inc.php');
 include('global.php');
+global $Cbucket, $userquery;
 
 $request = $_REQUEST;
 $mode = strtolower($request['mode']);
@@ -15,7 +16,7 @@ if ($api_keys) {
 
 switch ($mode) {
     case "login":
-        $uDetails = ['username', 'userid', 'email', 'total_videos', 'total_photos', 'total_collections', 'total_groups'];
+        $uDetails = ['username', 'userid', 'email', 'total_videos', 'total_photos', 'total_collections'];
 
         $userDetails = [];
         foreach ($uDetails as $ud) {
@@ -34,7 +35,7 @@ switch ($mode) {
         function onLoginMobile()
         {
             global $userquery;
-            $uDetails = ['username', 'userid', 'email', 'total_videos', 'total_photos', 'total_collections', 'total_groups'];
+            $uDetails = ['username', 'userid', 'email', 'total_videos', 'total_photos', 'total_collections'];
             $userDetails = [];
             foreach ($uDetails as $ud) {
                 $userDetails[$ud] = $userquery->udetails[$ud];
@@ -56,7 +57,7 @@ switch ($mode) {
         if (error()) {
             exit(json_encode(['status' => 'failed', 'msg' => error('single')]));
         } else {
-            $uDetails = ['username', 'userid', 'email', 'total_videos', 'total_photos', 'total_collections', 'total_groups'];
+            $uDetails = ['username', 'userid', 'email', 'total_videos', 'total_photos', 'total_collections'];
             $userDetails = [];
             foreach ($uDetails as $ud) {
                 $userDetails[$ud] = $userquery->udetails[$ud];
@@ -76,7 +77,7 @@ switch ($mode) {
         if (!user_id()) {
             exit(json_encode(['status' => 'failed', 'msg' => 'User is not logged in', 'session' => $_COOKIE['PHPSESSID']]));
         } else {
-            $uDetails = ['username', 'userid', 'email', 'total_videos', 'total_photos', 'total_collections', 'total_groups'];
+            $uDetails = ['username', 'userid', 'email', 'total_videos', 'total_photos', 'total_collections'];
 
             $userDetails = [];
             foreach ($uDetails as $ud) {

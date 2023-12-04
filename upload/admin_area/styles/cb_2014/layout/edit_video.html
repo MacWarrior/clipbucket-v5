@@ -450,7 +450,7 @@
 		<div class="col-md-6">
             {if $data.status=='Successful'}
             <div class="col-md-12" id="player">
-                {FlashPlayer vdetails=$data width='100%' height='100%'}
+                {show_player vdetails=$data}
             </div>
             {/if}
 
@@ -516,6 +516,6 @@
     var text_confirm_vid_file = '{lang code = "confirm_delete_video_file"}';
     var text_confirm_sub_file = '{lang code = "confirm_delete_subtitle_file"}';
     var videoid = '{$data.videoid}';
-    var available_tags = JSON.parse('{$available_tags|json_encode}');
+    var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
 </script>
 {/if}

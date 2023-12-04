@@ -1,90 +1,95 @@
-<!-- Share This {$type} -->
 {$type=$params.type}
 <div id="share_form_div" class="action_box share_form clearfix">
-	{if $params.type=='v' || $params.type =='video' || $params.type =='Video'}
-	<div class="clearfix">
-		{if $Cbucket->configs.video_embed==1 && $vdo.allow_embedding=='yes'}
-		<div class="form-group">
-			<label for="embed_code" class="block-label">{lang code='embed_code'}</label>
-			<textarea name="embed_code" id="embed_code" onclick="this.select()" class="form-control">{if $Cbucket->configs.embed_type=='iframe'}{$cbvid->embed_code($vdo,'iframe')|htmlspecialchars}{else}{$cbvid->embed_code($vdo,'embed_object')|htmlspecialchars}{/if}</textarea>
-
-			<input type="hidden" name="alternate_embed_code" id="alternate_embed_code" value="{if $Cbucket->configs.embed_type=='iframe'}{$cbvid->embed_code($vdo,'embed_object')|htmlspecialchars}{else}{$cbvid->embed_code($vdo,'iframe')|htmlspecialchars}{/if}">
-		</div>
-
-		<div class="form-group custom-elements">
-			<label class="block-label">{lang code='player_size'}</label>
-			<div class="clearfix">
-				<label class="radio-inline">
-					<input type="radio" name="player_size" value="default" id="player_size_0" checked onclick="{$updateEmbedCode}('{$Cbucket->configs.embed_player_width}' ,'{$Cbucket->configs.embed_player_height}',autoPlayEmbed)">
-					{lang code='default'} ({$Cbucket->configs.embed_player_width}x{$Cbucket->configs.embed_player_height})
-				</label>
-				
-				<label class="radio-inline">
-					<input type="radio" name="player_size" value="small" id="player_size_1" onclick="{$updateEmbedCode}('440','272',autoPlayEmbed)">
-					{lang code='small'} (440x272)
-				            </label>
-				
-				<label class="radio-inline">
-					<input type="radio" name="player_size" value="medium" id="player_size_2" onclick="{$updateEmbedCode}('540','334',autoPlayEmbed)">
-					{lang code='medium'} (540x334)
-				</label>
-				
-				<label class="radio-inline">
-					<input type="radio" name="player_size" value="large" id="player_size_3" onclick="{$updateEmbedCode}('600','370',autoPlayEmbed)">
-					{lang code='large'} (600x370)
-				</label>
-				<label class="block-label clearfix">Custom Size</label>
-				<form class="form-inline">
-				  <div class="form-group">
-				    <label for="player_size_width">Width</label>
-				    <input type="text" class="form-control" id="player_size_4" value="640" placeholder="Player width here">
-				  </div>
-				  <div class="form-group">
-				    <label for="player_size_height">Height</label>
-				    <input type="text" class="form-control" id="player_size_5" value="360" placeholder="Player height here">
-				  </div>
-				</form>
-
-			</div>
-		</div>
-
-		{if $pakplayer=='yes'}
-		<div class="form-group custom-elements">
-			Autoplay video : 
-			<label>
-				<input type="radio" name="autoplay" value="yes" onclick="{$updateEmbedCode}(embedPlayerWidth,embedPlayerHeight,'yes')" {if $Cbucket->configs.autoplay_embed=='yes'} checked{/if}>
-				Yes
-			</label>
-			<label>
-				<input type="radio" name="autoplay" value="no" onclick="{$updateEmbedCode}(embedPlayerWidth,embedPlayerHeight,'no')" {if $Cbucket->configs.autoplay_embed!='yes'} checked{/if}>
-				No
-			</label>
-		</div>
+	{if $params.type =='video'}
+		{if
+			userquery::getInstance()->hasUserLevelAccess(4, 'view_video') &&
+			config('enable_video_social_sharing') == 'yes' &&
+			($vdo.broadcast == 'public' || ($vdo.broadcast == 'unlisted' && $vdo.video_password == ''))
+		}
+	<ul class="social-share">
+		<li>
+			<a href="http://www.facebook.com/sharer/sharer.php?s=100&p[url]={video_link($vdo)|urlencode}&p[images][0]={get_thumb vdetails=$vdo}&p[title]={$vdo.title|title|urlencode}&p[summary]={$vdo.description|description|urlencode}" target="_blank" class="btn-fb icon-facebook">
+				<span>Facebook</span>
+			</a>
+		</li>
+		<li>
+			<a href="https://twitter.com/share" target="_blank" class="btn-tw icon-twitter">
+				<span>Twitter</span>
+			</a>
+		</li>
+		<li>
+			<a href="https://plus.google.com/share?url={urlencode(video_link($video))}" target="_blank" class="btn-gplus icon-gplus">
+				<span>Google Plus</span>
+			</a>
+		</li>
+	</ul>
+	<hr/>
 		{/if}
 
-		<div class="form-group custom-elements">
-			<label class="block-label">{lang('embed_type')}</label>
-			<div class="clearfix">
-				<label class="radio-inline">
-					<input type="radio" name="embed_type" value="iframe" onclick="switchEmbedCode('iframe')" {if $Cbucket->configs.embed_type=='iframe'} checked{/if}>
-					{lang code='iframe'}
-				</label>
-				<label class="radio-inline">
-					<input type="radio" name="embed_type" value="iframe" onclick="switchEmbedCode('embed_object')" {if $Cbucket->configs.embed_type=='embed_object'} checked{/if}>
-					{lang code='embed_object'}
-				</label>
-			</div>
-		</div>
-	{/if}
+		{if
+			userquery::getInstance()->hasUserLevelAccess(4, 'view_video') &&
+			config('video_embed') == 1 &&
+			$vdo.allow_embedding=='yes'
+			&& ($vdo.broadcast == 'public' || ($vdo.broadcast == 'unlisted' && $vdo.video_password == ''))
+		}
+	<div class="form-group">
+		<label for="embed_code" class="block-label">{lang code='embed_code'}</label>
+		<textarea name="embed_code" id="embed_code" onclick="this.select()" class="form-control">{display_clean($cbvid->embed_code($vdo))}</textarea>
 	</div>
-	
+
+	<div class="form-group custom-elements">
+		<label class="block-label">{lang code='player_size'}</label>
+		<div class="clearfix">
+			<label class="radio-inline">
+				<input type="radio" name="player_size" value="default" id="player_size_0" checked onclick="updateEmbed('{config('embed_player_width')}' ,'{config('embed_player_height')}')">
+				{lang code='default'} ({$Cbucket->configs.embed_player_width}x{$Cbucket->configs.embed_player_height})
+			</label>
+
+			<label class="radio-inline">
+				<input type="radio" name="player_size" value="small" id="player_size_1" onclick="updateEmbed('440','272')">
+				{lang code='small'} (440x272)
+						</label>
+
+			<label class="radio-inline">
+				<input type="radio" name="player_size" value="medium" id="player_size_2" onclick="updateEmbed('540','334')">
+				{lang code='medium'} (540x334)
+			</label>
+
+			<label class="radio-inline">
+				<input type="radio" name="player_size" value="large" id="player_size_3" onclick="updateEmbed('600','370')">
+				{lang code='large'} (600x370)
+			</label>
+			<label class="block-label clearfix">Custom Size</label>
+			<form class="form-inline">
+			  <div class="form-group">
+				<label for="player_size_width">Width</label>
+				<input type="text" class="form-control" id="player_size_width" value="640" placeholder="Player width here">
+			  </div>
+			  <div class="form-group">
+				<label for="player_size_height">Height</label>
+				<input type="text" class="form-control" id="player_size_height" value="360" placeholder="Player height here">
+			  </div>
+			</form>
+
+		</div>
+	</div>
+	<hr/>
+		{/if}
+
+		{if
+			userquery::getInstance()->hasUserLevelAccess(4, 'view_video') &&
+			config('enable_video_link_sharing') == 'yes'
+		}
 	<div class="form-group">
 		<label for="link_video" class="block-label">{lang code='link_this_video'}</label>
 		<input type="text" name="link_video" id="link_video" value="{videoLink vdetails=$vdo}" onclick="this.select()" class="form-control" >
 	</div>
+	<hr/>
+		{/if}
 	
 	{/if}
 
+	{if config('enable_video_internal_sharing') == 'yes' && user_id()}
 	<div class="form_container">
 		<div id="share_form_results" class="form_result" style="display:none;"></div>
 		<form id="cb_share_item" name="share_form" method="post">
@@ -102,7 +107,7 @@
 			</div>
 			<div class="form-group">
 				<label for="message" class="block-label">
-					{lang code='message'}<span>&nbsp;&nbsp;{lang code='optional'}</span>
+					{lang code='message'}<span>&nbsp;{lang code='optional'}</span>
 				</label>
 				<textarea name="message" id="message" rows="5" class="form-control"></textarea>
 				<input name="objectid" id="objectid" type="hidden" value="{$params.id}">
@@ -112,11 +117,10 @@
 			</div>
 	    </form>
 	</div>
-
+	{/if}
 
     {ANCHOR place="video_sharing_options" data=$vdo}
 </div>
-<!-- Share This {$type} -->
 
 <script>
     $(document).ready(function(){
@@ -126,15 +130,15 @@
         })
     })
 
-    $( "#player_size_4, #player_size_5" ).keyup(function() {
+    $( "#player_size_width, #player_size_height" ).keyup(function() {
 	  var newWidth = '',
 	  newHeight = '',
 	  currentVal = $(this).val();
 
 	  if ($.isNumeric( currentVal )) {
-	  	newWidth = $('#player_size_4').val();
-	  	newHeight = $('#player_size_5').val();
-	  	updateEmbed(newWidth,newHeight,autoPlayEmbed);
+	  	newWidth = $('#player_size_width').val();
+	  	newHeight = $('#player_size_height').val();
+	  	updateEmbed(newWidth,newHeight);
 	  } else {
 	  	alert("Only integer values are allowed");
 	  }

@@ -167,8 +167,7 @@
          * @param {object} [options] configuration for the plugin
          */
         videoJsResolutionSwitcher = function(options) {
-            // TODO VideoJS 8 : videojs.obj.merge(defaults, options)
-            var settings = videojs.mergeOptions(defaults, options),
+            var settings = videojs.obj.merge(defaults, options),
                 player = this,
                 label = document.createElement('span'),
                 groupedSrc = {};

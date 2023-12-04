@@ -7,6 +7,6 @@ $userquery->admin_login_check();
 $id_tag = $_POST['id_tag'];
 $tag = $_POST['tag'];
 
-Tags::updateTag($tag, $id_tag);
+$success = Tags::updateTag($tag, $id_tag);
 
-echo json_encode(['msg' => getTemplateMsg(), 'id'=>$id_tag]);
+echo json_encode(['msg' => getTemplateMsg(), 'id'=>$id_tag, 'success'=>$success]);

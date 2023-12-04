@@ -477,9 +477,8 @@ ul.mainTabs{
     padding: 0;
 }
 
-.myTable .last p{
+.myTable .last div,p{
     margin-left: 10px;
-    border-bottom: dotted 1px #EDF3F4;
     padding: 6px;
     margin-bottom: 0;
 }
@@ -843,4 +842,9 @@ a[role='menuitem'] {
     display: inline-block;
     width: calc(100% - 150px);
     vertical-align: middle;
+}
+
+#services .alert.alert-danger{
+    display: inline;
+    padding: 3px;
 }

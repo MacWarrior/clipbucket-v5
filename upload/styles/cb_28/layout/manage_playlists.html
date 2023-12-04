@@ -10,7 +10,7 @@
 				<h2>{lang code='manage_playlists'}</h2>
 
 				<!-- ADD NEW PLAYLIST -->
-				{if (has_access('allow_create_playlist',false,$verify_logged_user))}
+				{if (has_access('allow_create_playlist',false,false))}
 				<div class="account_form">
 					<form method="post" name="edit_profile">
 						<h3>{lang code='add_new_playlist'}</h3>
@@ -135,5 +135,5 @@
 		</div>
 	</div>
 <script>
-	var available_tags = JSON.parse('{$available_tags|json_encode}');
+	var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
 </script>

@@ -1,47 +1,34 @@
 <?php
 define('THIS_PAGE', 'watch_video');
-global $cbvid;
-include("../includes/config.inc.php");
+include(dirname(__FILE__, 2) . '/includes/config.inc.php');
 
-$vkey = $_GET['vid'];
-//getting video details by key
-$vdetails = $cbvid->get_video($vkey);
-increment_views_new($vkey, 'video');
-$width = @$_GET['width'];
-$height = @$_GET['height'];
-$autoplay = @$_GET['autoplay'];
-
-if (!$width) {
-    $width = '320';
+if (!userquery::getInstance()->perm_check('view_video', true)) {
+    exit(lang('you_dont_hv_perms'));
 }
 
-if (!$height) {
-    $height = '240';
+if(empty($_GET['vid'])){
+    exit(lang('class_vdo_exist_err'));
 }
 
-if (!$autoplay) {
-    $autoplay = 'no';
+$params = [];
+$params['videokey'] = $_GET['vid'];
+$params['exist'] = true;
+$video_exists = Video::getInstance()->getOne($params);
+
+if(!$video_exists){
+    exit(lang('class_vdo_exist_err'));
 }
 
-if (!$vdetails) {
-    exit(json_encode(["err" => "no video details found"]));
+unset($params['exist']);
+$video = Video::getInstance()->getOne($params);
+
+if(!$video){
+    exit(lang('video_not_available'));
 }
 
-?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title><?php echo $vdetails['title']; ?></title>
-    <script type="text/javascript" src="/styles/cb_28/theme/js/jquery-3.6.4.min.js"></script>
-    <?php
-    Template(STYLES_DIR . '/global/head.html', false);
-    ?>
-</head>
+$autoplay = $_GET['autoplay'] ?? false;
 
-<body style="margin:0;padding:0;">
-<?php
-flashPlayer(['vdetails' => $vdetails, 'width' => $width, 'height' => $height, 'autoplay' => $autoplay]);
-?>
-</body>
-</html>
+assign('video', $video);
+assign('autoplay', $autoplay);
+
+Template('embed_player.html');

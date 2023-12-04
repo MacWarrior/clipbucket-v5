@@ -34,6 +34,8 @@ if ($vdetails['userid'] != $userid) {
     }
 
     assign('v', $vdetails);
+    assign('vidthumbs', get_thumb($vdetails,TRUE,'168x105','auto'));
+    assign('vidthumbs_custom', get_thumb($vdetails,TRUE,'168x105','custom'));
 }
 
 if (in_dev()) {
@@ -50,7 +52,6 @@ $Cbucket->addCSS([
     'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
     'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
 ]);
-
 $available_tags = Tags::fill_auto_complete_tags('video');
 assign('available_tags', $available_tags);
 

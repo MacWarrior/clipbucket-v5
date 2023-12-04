@@ -1,6 +1,6 @@
 /**
  * @license
- * Video.js 8.5.3 <http://videojs.com/>
+ * Video.js 8.6.1 <http://videojs.com/>
  * Copyright Brightcove, Inc. <https://www.brightcove.com/>
  * Available under Apache License Version 2.0
  * <https://github.com/videojs/video.js/blob/main/LICENSE>
@@ -28,7 +28,7 @@ import { getId3Offset } from '@videojs/vhs-utils/es/id3-helpers';
 import { detectContainerForBytes, isLikelyFmp4MediaSegment } from '@videojs/vhs-utils/es/containers';
 import { ONE_SECOND_IN_TS } from 'mux.js/lib/utils/clock';
 
-var version$6 = "8.5.3";
+var version$6 = "8.6.1";
 
 /**
  * An Object that contains lifecycle hooks as keys which point to an array
@@ -164,22 +164,30 @@ let history = [];
  * Log messages to the console and history based on the type of message
  *
  * @private
- * @param  {string} type
+ * @param  {string} name
  *         The name of the console method to use.
  *
- * @param  {Array} args
+ * @param  {Object} log
  *         The arguments to be passed to the matching console method.
+ *
+ * @param {string} [styles]
+ *        styles for name
  */
-const LogByTypeFactory = (name, log) => (type, level, args) => {
+const LogByTypeFactory = (name, log, styles) => (type, level, args) => {
   const lvl = log.levels[level];
   const lvlRegExp = new RegExp(`^(${lvl})$`);
+  let resultName = name;
   if (type !== 'log') {
     // Add the type to the front of the message when it's not "log".
     args.unshift(type.toUpperCase() + ':');
   }
+  if (styles) {
+    resultName = `%c${name}`;
+    args.unshift(styles);
+  }
 
   // Add console prefix after adding to history.
-  args.unshift(name + ':');
+  args.unshift(resultName + ':');
 
   // Add a clone of the args at this point to history.
   if (history) {
@@ -213,7 +221,7 @@ const LogByTypeFactory = (name, log) => (type, level, args) => {
   }
   fn[Array.isArray(args) ? 'apply' : 'call'](window$1.console, args);
 };
-function createLogger$1(name) {
+function createLogger$1(name, delimiter = ':', styles = '') {
   // This is the private tracking variable for logging level.
   let level = 'info';
 
@@ -246,10 +254,10 @@ function createLogger$1(name) {
   };
 
   // This is the logByType helper that the logging methods below use
-  logByType = LogByTypeFactory(name, log);
+  logByType = LogByTypeFactory(name, log, styles);
 
   /**
-   * Create a new sublogger which chains the old name to the new name.
+   * Create a new subLogger which chains the old name to the new name.
    *
    * For example, doing `videojs.log.createLogger('player')` and then using that logger will log the following:
    * ```js
@@ -257,11 +265,35 @@ function createLogger$1(name) {
    *  // > VIDEOJS: player: foo
    * ```
    *
-   * @param {string} name
+   * @param {string} subName
    *        The name to add call the new logger
+   * @param {string} [subDelimiter]
+   *        Optional delimiter
+   * @param {string} [subStyles]
+   *        Optional styles
    * @return {Object}
    */
-  log.createLogger = subname => createLogger$1(name + ': ' + subname);
+  log.createLogger = (subName, subDelimiter, subStyles) => {
+    const resultDelimiter = subDelimiter !== undefined ? subDelimiter : delimiter;
+    const resultStyles = subStyles !== undefined ? subStyles : styles;
+    const resultName = `${name} ${resultDelimiter} ${subName}`;
+    return createLogger$1(resultName, resultDelimiter, resultStyles);
+  };
+
+  /**
+   * Create a new logger.
+   *
+   * @param {string} newName
+   *        The name for the new logger
+   * @param {string} [newDelimiter]
+   *        Optional delimiter
+   * @param {string} [newStyles]
+   *        Optional styles
+   * @return {Object}
+   */
+  log.createNewLogger = (newName, newDelimiter, newStyles) => {
+    return createLogger$1(newName, newDelimiter, newStyles);
+  };
 
   /**
    * Enumeration of available logging levels, where the keys are the level names
@@ -298,7 +330,7 @@ function createLogger$1(name) {
    * If a string matching a key from {@link module:log.levels} is provided, acts
    * as a setter.
    *
-   * @param  {string} [lvl]
+   * @param  {'all'|'debug'|'info'|'warn'|'error'|'off'} [lvl]
    *         Pass a valid level to set a new logging level.
    *
    * @return {string}
@@ -1976,7 +2008,7 @@ function _cleanUpEvents(elem, type) {
  * @param {Element|Object} elem
  *        Element or object to bind listeners to
  *
- * @param {string} type
+ * @param {string[]} types
  *        Type of event to bind to.
  *
  * @param {Function} callback
@@ -2699,7 +2731,7 @@ class EventTarget$2 {
 /**
  * All event listeners should follow the following format.
  *
- * @callback EventTarget~EventListener
+ * @callback EventListener
  * @this {EventTarget}
  *
  * @param {Event} event
@@ -2716,7 +2748,7 @@ class EventTarget$2 {
  *         will have extra functionality. See that function for more information.
  *
  * @property EventTarget.prototype.allowedEvents_
- * @private
+ * @protected
  */
 EventTarget$2.prototype.allowedEvents_ = {};
 
@@ -3952,7 +3984,6 @@ class Component$1 {
   /**
    * Add a child `Component` inside the current `Component`.
    *
-   *
    * @param {string|Component} child
    *        The name or instance of a child to add.
    *
@@ -3962,6 +3993,7 @@ class Component$1 {
    *
    * @param {number} [index=this.children_.length]
    *        The index to attempt to add a child into.
+   *
    *
    * @return {Component}
    *         The `Component` that gets added as a child. When using a string the
@@ -4417,9 +4449,8 @@ class Component$1 {
    * @param {boolean} [skipListeners]
    *        Skip the componentresize event trigger
    *
-   * @return {number|string}
-   *         The width when getting, zero if there is no width. Can be a string
-   *           postpixed with '%' or 'px'.
+   * @return {number|undefined}
+   *         The width when getting, zero if there is no width
    */
   width(num, skipListeners) {
     return this.dimension('width', num, skipListeners);
@@ -4435,9 +4466,8 @@ class Component$1 {
    * @param {boolean} [skipListeners]
    *        Skip the componentresize event trigger
    *
-   * @return {number|string}
-   *         The width when getting, zero if there is no width. Can be a string
-   *         postpixed with '%' or 'px'.
+   * @return {number|undefined}
+   *         The height when getting, zero if there is no height
    */
   height(num, skipListeners) {
     return this.dimension('height', num, skipListeners);
@@ -4483,7 +4513,7 @@ class Component$1 {
    * @param  {boolean} [skipListeners]
    *         Skip componentresize event trigger
    *
-   * @return {number}
+   * @return {number|undefined}
    *         The dimension when getting or 0 if unset
    */
   dimension(widthOrHeight, num, skipListeners) {
@@ -4658,7 +4688,7 @@ class Component$1 {
    * delegates to `handleKeyDown`. This means anyone calling `handleKeyPress`
    * will not see their method calls stop working.
    *
-   * @param {Event} event
+   * @param {KeyboardEvent} event
    *        The event that caused this function to be called.
    */
   handleKeyPress(event) {
@@ -4670,7 +4700,7 @@ class Component$1 {
    * support toggling the controls through a tap on the video. They get enabled
    * because every sub-component would have extra overhead otherwise.
    *
-   * @private
+   * @protected
    * @fires Component#tap
    * @listens Component#touchstart
    * @listens Component#touchmove
@@ -6295,7 +6325,7 @@ class TrackList extends EventTarget$2 {
  * Events that can be called with on + eventName. See {@link EventHandler}.
  *
  * @property {Object} TrackList#allowedEvents_
- * @private
+ * @protected
  */
 TrackList.prototype.allowedEvents_ = {
   change: 'change',
@@ -6345,7 +6375,7 @@ class AudioTrackList extends TrackList {
   /**
    * Create an instance of this class.
    *
-   * @param {AudioTrack[]} [tracks=[]]
+   * @param { import('./audio-track').default[] } [tracks=[]]
    *        A list of `AudioTrack` to instantiate the list with.
    */
   constructor(tracks = []) {
@@ -7448,7 +7478,9 @@ class TextTrack extends Track {
    */
   addCue(originalCue) {
     let cue = originalCue;
-    if (cue.constructor && cue.constructor.name !== 'VTTCue') {
+
+    // Testing if the cue is a VTTCue in a way that survives minification
+    if (!('getCueAsHTML' in cue)) {
       cue = new window$1.vttjs.VTTCue(originalCue.startTime, originalCue.endTime, originalCue.text);
       for (const prop in originalCue) {
         if (!(prop in cue)) {
@@ -7491,6 +7523,7 @@ class TextTrack extends Track {
 
 /**
  * cuechange - One or more cues in the track have become active or stopped being active.
+ * @protected
  */
 TextTrack.prototype.allowedEvents_ = {
   cuechange: 'cuechange'
@@ -7749,6 +7782,10 @@ class HTMLTrackElement extends EventTarget$2 {
     });
   }
 }
+
+/**
+ * @protected
+ */
 HTMLTrackElement.prototype.allowedEvents_ = {
   load: 'load'
 };
@@ -7842,7 +7879,7 @@ ALL.names = [].concat(REMOTE.names).concat(NORMAL.names);
  * * `var SourceObject = {src: 'http://ex.com/video.mp4', type: 'video/mp4'};`
    * `var SourceString = 'http://example.com/some-video.mp4';`
  *
- * @typedef {Object|string} Tech~SourceObject
+ * @typedef {Object|string} SourceObject
  *
  * @property {string} src
  *           The url to the source
@@ -8278,7 +8315,7 @@ class Tech extends Component$1 {
    * > NOTE: This implementation is incomplete. It does not track the played `TimeRange`.
    *         It only checks whether the source has played at all or not.
    *
-   * @return {TimeRange}
+   * @return { import('../utils/time').TimeRange }
    *         - A single time range if this video has played
    *         - An empty set of ranges if not.
    */
@@ -9042,7 +9079,7 @@ Tech.withSourceHandlers = function (_Tech) {
    *
    * TODO: Answer question: should 'probably' be prioritized over 'maybe'
    *
-   * @param {Tech~SourceObject} source
+   * @param {SourceObject} source
    *        The source object
    *
    * @param {Object} options
@@ -9067,7 +9104,7 @@ Tech.withSourceHandlers = function (_Tech) {
   /**
    * Check if the tech can support the given source.
    *
-   * @param {Tech~SourceObject} srcObj
+   * @param {SourceObject} srcObj
    *        The source object
    *
    * @param {Object} options
@@ -9122,7 +9159,7 @@ Tech.withSourceHandlers = function (_Tech) {
    * and source handlers.
    * Should never be called unless a source handler was found.
    *
-   * @param {Tech~SourceObject} source
+   * @param {SourceObject} source
    *        A source object with src and type keys
    */
   _Tech.prototype.setSource = function (source) {
@@ -9901,7 +9938,7 @@ class ClickableComponent extends Component$1 {
    *
    * By default, if the key is Space or Enter, it will trigger a `click` event.
    *
-   * @param {Event} event
+   * @param {KeyboardEvent} event
    *        The `keydown` event that caused this function to be called.
    *
    * @listens keydown
@@ -10657,7 +10694,7 @@ class Button extends ClickableComponent {
    * This gets called when a `Button` has focus and `keydown` is triggered via a key
    * press.
    *
-   * @param {Event} event
+   * @param {KeyboardEvent} event
    *        The event that caused this function to get called.
    *
    * @listens keydown
@@ -10711,7 +10748,7 @@ class BigPlayButton extends Button {
    * This gets called when a `BigPlayButton` "clicked". See {@link ClickableComponent}
    * for more detailed information on what a click can be.
    *
-   * @param {KeyboardEvent} event
+   * @param {KeyboardEvent|MouseEvent|TouchEvent} event
    *        The `keydown`, `tap`, or `click` event that caused this function to be
    *        called.
    *
@@ -10722,7 +10759,7 @@ class BigPlayButton extends Button {
     const playPromise = this.player_.play();
 
     // exit early if clicked via the mouse
-    if (this.mouseused_ && event.clientX && event.clientY) {
+    if (this.mouseused_ && 'clientX' in event && 'clientY' in event) {
       silencePromise(playPromise);
       if (this.player_.tech(true)) {
         this.player_.tech(true).focus();
@@ -10742,10 +10779,29 @@ class BigPlayButton extends Button {
       this.setTimeout(playFocus, 1);
     }
   }
+
+  /**
+   * Event handler that is called when a `BigPlayButton` receives a
+   * `keydown` event.
+   *
+   * @param {KeyboardEvent} event
+   *        The `keydown` event that caused this function to be called.
+   *
+   * @listens keydown
+   */
   handleKeyDown(event) {
     this.mouseused_ = false;
     super.handleKeyDown(event);
   }
+
+  /**
+   * Handle `mousedown` events on the `BigPlayButton`.
+   *
+   * @param {MouseEvent} event
+   *        `mousedown` or `touchstart` event that triggered this function
+   *
+   * @listens mousedown
+   */
   handleMouseDown(event) {
     this.mouseused_ = true;
   }
@@ -10831,7 +10887,7 @@ class CloseButton extends Button {
    *
    * By default, if the key is Esc, it will trigger a `click` event.
    *
-   * @param {Event} event
+   * @param {KeyboardEvent} event
    *        The `keydown` event that caused this function to be called.
    *
    * @listens keydown
@@ -14458,7 +14514,7 @@ class Menu extends Component$1 {
   /**
    * Handle a `keydown` event on this menu. This listener is added in the constructor.
    *
-   * @param {Event} event
+   * @param {KeyboardEvent} event
    *        A `keydown` event that happened on the menu.
    *
    * @listens keydown
@@ -15055,7 +15111,7 @@ class MenuItem extends ClickableComponent {
    * Ignore keys which are used by the menu, but pass any other ones up. See
    * {@link ClickableComponent#handleKeyDown} for instances where this is called.
    *
-   * @param {Event} event
+   * @param {KeyboardEvent} event
    *        The `keydown` event that caused this function to be called.
    *
    * @listens keydown
@@ -20114,8 +20170,8 @@ const DEFAULT_BREAKPOINTS = {
  *
  * After an instance has been created it can be accessed globally in three ways:
  * 1. By calling `videojs.getPlayer('example_video_1');`
- * 2. By calling `videojs('example_video_1');` (not recomended)
- * 2. By using it directly via  `videojs.players.example_video_1;`
+ * 2. By calling `videojs('example_video_1');` (not recommended)
+ * 2. By using it directly via `videojs.players.example_video_1;`
  *
  * @extends Component
  * @global
@@ -21854,7 +21910,9 @@ class Player extends Component$1 {
    */
   handleTechError_() {
     const error = this.tech_.error();
-    this.error(error);
+    if (error) {
+      this.error(error);
+    }
   }
 
   /**
@@ -22810,7 +22868,7 @@ class Player extends Component$1 {
    * This allows player-wide hotkeys (either as defined below, or optionally
    * by an external function).
    *
-   * @param {Event} event
+   * @param {KeyboardEvent} event
    *        The `keydown` event that caused this function to be called.
    *
    * @listens keydown
@@ -25014,7 +25072,7 @@ const markPluginAsActive = (player, name) => {
  * @param  {Player} player
  *         A Video.js player instance.
  *
- * @param  {Plugin~PluginEventHash} hash
+ * @param  {PluginEventHash} hash
  *         A plugin event hash.
  *
  * @param  {boolean} [before]
@@ -25167,7 +25225,7 @@ class Plugin {
    * @param   {Object} [hash={}]
    *          An object to be used as event an event hash.
    *
-   * @return {Plugin~PluginEventHash}
+   * @return {PluginEventHash}
    *          An event hash object with provided properties mixed-in.
    */
   getEventHash(hash = {}) {
@@ -25186,7 +25244,7 @@ class Plugin {
    *
    * @param   {Object} [hash={}]
    *          Additional data hash to merge with a
-   *          {@link Plugin~PluginEventHash|PluginEventHash}.
+   *          {@link PluginEventHash|PluginEventHash}.
    *
    * @return {boolean}
    *          Whether or not default was prevented.
@@ -25402,7 +25460,7 @@ Player.prototype.hasPlugin = function (name) {
  * Signals that a plugin is about to be set up on a player.
  *
  * @event    Player#beforepluginsetup
- * @type     {Plugin~PluginEventHash}
+ * @type     {PluginEventHash}
  */
 
 /**
@@ -25410,14 +25468,14 @@ Player.prototype.hasPlugin = function (name) {
  * is the name of the plugin.
  *
  * @event    Player#beforepluginsetup:$name
- * @type     {Plugin~PluginEventHash}
+ * @type     {PluginEventHash}
  */
 
 /**
  * Signals that a plugin has just been set up on a player.
  *
  * @event    Player#pluginsetup
- * @type     {Plugin~PluginEventHash}
+ * @type     {PluginEventHash}
  */
 
 /**
@@ -25425,11 +25483,11 @@ Player.prototype.hasPlugin = function (name) {
  * is the name of the plugin.
  *
  * @event    Player#pluginsetup:$name
- * @type     {Plugin~PluginEventHash}
+ * @type     {PluginEventHash}
  */
 
 /**
- * @typedef  {Object} Plugin~PluginEventHash
+ * @typedef  {Object} PluginEventHash
  *
  * @property {string} instance
  *           For basic plugins, the return value of the plugin function. For
@@ -25756,10 +25814,10 @@ videojs.getComponent = Component$1.getComponent;
  * @param {string} name
  *        The class name of the component
  *
- * @param {Component} comp
+ * @param {typeof Component} comp
  *        The component class
  *
- * @return {Component}
+ * @return {typeof Component}
  *         The newly registered component
  */
 videojs.registerComponent = (name, comp) => {
@@ -25842,9 +25900,11 @@ videojs.deregisterPlugin = Plugin.deregisterPlugin;
  *
  * @param {string} name
  *        The plugin name
- *
- * @param {Plugin|Function} plugin
+*
+ * @param {typeof Plugin|Function} plugin
  *         The plugin sub-class or function
+ *
+ * @return {typeof Plugin|Function}
  */
 videojs.plugin = (name, plugin) => {
   log$1.warn('videojs.plugin() is deprecated; use videojs.registerPlugin() instead');
@@ -26295,7 +26355,7 @@ videojs.registerPlugin('qualityLevels', qualityLevels); // Include the version n
 
 qualityLevels.VERSION = version$5;
 
-/*! @name @videojs/http-streaming @version 3.5.3 @license Apache-2.0 */
+/*! @name @videojs/http-streaming @version 3.7.0 @license Apache-2.0 */
 
 /**
  * @file resolve-url.js - Handling how URLs are resolved and manipulated
@@ -26351,6 +26411,26 @@ function createTimeRanges(...args) {
   const context = videojs.time || videojs;
   const fn = context.createTimeRanges || context.createTimeRanges;
   return fn.apply(context, args);
+}
+/**
+ * Converts any buffered time range to a descriptive string
+ *
+ * @param {TimeRanges} buffered - time ranges
+ * @return {string} - descriptive string
+ */
+
+function prettyBuffered(buffered) {
+  let result = '';
+  for (let i = 0; i < buffered.length; i++) {
+    const start = buffered.start(i);
+    const end = buffered.end(i);
+    const duration = end - start;
+    if (result.length) {
+      result += '\n';
+    }
+    result += `[${duration}](${start} -> ${end})`;
+  }
+  return result || 'empty';
 }
 
 /**
@@ -27009,9 +27089,13 @@ const playlistEnd = function (playlist, expired, useSafeLiveEnd, liveEdgePadding
 const seekable = function (playlist, expired, liveEdgePadding) {
   const useSafeLiveEnd = true;
   const seekableStart = expired || 0;
-  const seekableEnd = playlistEnd(playlist, expired, useSafeLiveEnd, liveEdgePadding);
+  let seekableEnd = playlistEnd(playlist, expired, useSafeLiveEnd, liveEdgePadding);
   if (seekableEnd === null) {
     return createTimeRanges();
+  } // Clamp seekable end since it can not be less than the seekable start
+
+  if (seekableEnd < seekableStart) {
+    seekableEnd = seekableStart;
   }
   return createTimeRanges(seekableStart, seekableEnd);
 };
@@ -29449,7 +29533,10 @@ class DashPlaylistLoader extends EventTarget {
     }); // live playlist staleness timeout
 
     this.on('mediaupdatetimeout', () => {
-      this.refreshMedia_(this.media().id);
+      // We handle live content steering in the playlist controller
+      if (!this.media().attributes.serviceLocation) {
+        this.refreshMedia_(this.media().id);
+      }
     });
     this.state = 'HAVE_NOTHING';
     this.loadedPlaylists_ = {};
@@ -32279,18 +32366,31 @@ const workerCode$1 = transform(getWorkerString(function () {
     var nextByte = packetData[i + 1];
     var win = service.currentWindow;
     var char;
-    var charCodeArray; // Use the TextDecoder if one was created for this service
+    var charCodeArray; // Converts an array of bytes to a unicode hex string.
+
+    function toHexString(byteArray) {
+      return byteArray.map(byte => {
+        return ('0' + (byte & 0xFF).toString(16)).slice(-2);
+      }).join('');
+    }
+    if (isMultiByte) {
+      charCodeArray = [currentByte, nextByte];
+      i++;
+    } else {
+      charCodeArray = [currentByte];
+    } // Use the TextDecoder if one was created for this service
 
     if (service.textDecoder_ && !isExtended) {
-      if (isMultiByte) {
-        charCodeArray = [currentByte, nextByte];
-        i++;
-      } else {
-        charCodeArray = [currentByte];
-      }
       char = service.textDecoder_.decode(new Uint8Array(charCodeArray));
     } else {
-      char = get708CharFromCode(extended | currentByte);
+      // We assume any multi-byte char without a decoder is unicode.
+      if (isMultiByte) {
+        const unicode = toHexString(charCodeArray); // Takes a unicode hex string and creates a single character.
+
+        char = String.fromCharCode(parseInt(unicode, 16));
+      } else {
+        char = get708CharFromCode(extended | currentByte);
+      }
     }
     if (win.pendingNewLine && !win.isEmpty()) {
       win.newLine(this.getPts(i));
@@ -39180,14 +39280,6 @@ const transmuxAndNotify = ({
           isMuxed
         });
         trackInfoFn = null;
-        if (probeResult.hasAudio && !isMuxed) {
-          audioStartFn(probeResult.audioStart);
-        }
-        if (probeResult.hasVideo) {
-          videoStartFn(probeResult.videoStart);
-        }
-        audioStartFn = null;
-        videoStartFn = null;
       }
       finish();
     }
@@ -39295,7 +39387,7 @@ const handleSegmentBytes = ({
             segment.bytes = bytesAsUint8Array = emsgData; // Run through the CaptionParser in case there are captions.
             // Initialize CaptionParser if it hasn't been yet
 
-            if (!tracks.video || !data.byteLength || !segment.transmuxer) {
+            if (!tracks.video || !emsgData.byteLength || !segment.transmuxer) {
               finishLoading(undefined, id3Frames);
               return;
             }
@@ -40958,6 +41050,7 @@ const segmentInfoString = segmentInfo => {
   return `${name} [${seq + index}/${seq + segmentLen}]` + (hasPartIndex ? ` part [${partIndex}/${zeroBasedPartCount}]` : '') + ` segment start/end [${segment.start} => ${segment.end}]` + (hasPartIndex ? ` part start/end [${part.start} => ${part.end}]` : '') + ` startOfSegment [${startOfSegment}]` + ` duration [${duration}]` + ` timeline [${timeline}]` + ` selected by [${selection}]` + ` playlist [${id}]`;
 };
 const timingInfoPropertyForMedia = mediaType => `${mediaType}TimingInfo`;
+const getBufferedEndOrFallback = (buffered, fallback) => buffered.length ? buffered.end(buffered.length - 1) : fallback;
 /**
  * Returns the timestamp offset to use for the segment.
  *
@@ -40969,6 +41062,8 @@ const timingInfoPropertyForMedia = mediaType => `${mediaType}TimingInfo`;
  *        The estimated segment start
  * @param {TimeRange[]} buffered
  *        The loader's buffer
+ * @param {boolean} calculateTimestampOffsetForEachSegment
+ *        Feature flag to always calculate timestampOffset
  * @param {boolean} overrideCheck
  *        If true, no checks are made to see if the timestamp offset value should be set,
  *        but sets it directly to a value.
@@ -40983,14 +41078,18 @@ const timestampOffsetForSegment = ({
   currentTimeline,
   startOfSegment,
   buffered,
+  calculateTimestampOffsetForEachSegment,
   overrideCheck
 }) => {
-  // Check to see if we are crossing a discontinuity to see if we need to set the
+  if (calculateTimestampOffsetForEachSegment) {
+    return getBufferedEndOrFallback(buffered, startOfSegment);
+  } // Check to see if we are crossing a discontinuity to see if we need to set the
   // timestamp offset on the transmuxer and source buffer.
   //
   // Previously, we changed the timestampOffset if the start of this segment was less than
   // the currently set timestampOffset, but this isn't desirable as it can produce bad
   // behavior, especially around long running live streams.
+
   if (!overrideCheck && segmentTimeline === currentTimeline) {
     return null;
   } // When changing renditions, it's possible to request a segment on an older timeline. For
@@ -41026,7 +41125,7 @@ const timestampOffsetForSegment = ({
   // content post discontinuity should line up with the buffered end as if it were
   // time 0 for the new content.
 
-  return buffered.length ? buffered.end(buffered.length - 1) : startOfSegment;
+  return getBufferedEndOrFallback(buffered, startOfSegment);
 };
 /**
  * Returns whether or not the loader should wait for a timeline change from the timeline
@@ -41314,6 +41413,7 @@ class SegmentLoader extends videojs.EventTarget {
     this.shouldSaveSegmentTimingInfo_ = true;
     this.parse708captions_ = settings.parse708captions;
     this.useDtsForTimestampOffset_ = settings.useDtsForTimestampOffset;
+    this.calculateTimestampOffsetForEachSegment_ = settings.calculateTimestampOffsetForEachSegment;
     this.captionServices_ = settings.captionServices;
     this.exactManifestTimings = settings.exactManifestTimings;
     this.addMetadataToTextTrack = settings.addMetadataToTextTrack; // private instance variables
@@ -42222,6 +42322,7 @@ class SegmentLoader extends videojs.EventTarget {
       currentTimeline: this.currentTimeline_,
       startOfSegment,
       buffered: this.buffered_(),
+      calculateTimestampOffsetForEachSegment: this.calculateTimestampOffsetForEachSegment_,
       overrideCheck
     });
     const audioBufferedEnd = lastBufferedEnd(this.sourceUpdater_.audioBuffered());
@@ -43859,12 +43960,15 @@ const pushQueue = ({
   shiftQueue(type, sourceUpdater);
 };
 const onUpdateend = (type, sourceUpdater) => e => {
-  // Although there should, in theory, be a pending action for any updateend receieved,
+  const buffered = sourceUpdater[`${type}Buffered`]();
+  const bufferedAsString = prettyBuffered(buffered);
+  sourceUpdater.logger_(`${type} source buffer update end. Buffered: \n`, bufferedAsString); // Although there should, in theory, be a pending action for any updateend receieved,
   // there are some actions that may trigger updateend events without set definitions in
   // the w3c spec. For instance, setting the duration on the media source may trigger
   // updateend events on source buffers. This does not appear to be in the spec. As such,
   // if we encounter an updateend without a corresponding pending action from our queue
   // for that source buffer type, process the next action.
+
   if (sourceUpdater.queuePending[type]) {
     const doneFn = sourceUpdater.queuePending[type].doneFn;
     sourceUpdater.queuePending[type] = null;
@@ -46274,15 +46378,11 @@ const onError = {
    */
   AUDIO: (type, settings) => () => {
     const {
-      segmentLoaders: {
-        [type]: segmentLoader
-      },
       mediaTypes: {
         [type]: mediaType
       },
       excludePlaylist
-    } = settings;
-    stopLoaders(segmentLoader, mediaType); // switch back to default audio track
+    } = settings; // switch back to default audio track
 
     const activeTrack = mediaType.activeTrack();
     const activeGroup = mediaType.activeGroup();
@@ -46318,15 +46418,11 @@ const onError = {
    */
   SUBTITLES: (type, settings) => () => {
     const {
-      segmentLoaders: {
-        [type]: segmentLoader
-      },
       mediaTypes: {
         [type]: mediaType
       }
     } = settings;
     videojs.log.warn('Problem encountered loading the subtitle track.' + 'Disabling subtitle track.');
-    stopLoaders(segmentLoader, mediaType);
     const track = mediaType.activeTrack();
     if (track) {
       track.mode = 'disabled';
@@ -46914,6 +47010,388 @@ const createMediaTypes = () => {
 };
 
 /**
+ * A utility class for setting properties and maintaining the state of the content steering manifest.
+ *
+ * Content Steering manifest format:
+ * VERSION: number (required) currently only version 1 is supported.
+ * TTL: number in seconds (optional) until the next content steering manifest reload.
+ * RELOAD-URI: string (optional) uri to fetch the next content steering manifest.
+ * SERVICE-LOCATION-PRIORITY or PATHWAY-PRIORITY a non empty array of unique string values.
+ */
+
+class SteeringManifest {
+  constructor() {
+    this.priority_ = [];
+  }
+  set version(number) {
+    // Only version 1 is currently supported for both DASH and HLS.
+    if (number === 1) {
+      this.version_ = number;
+    }
+  }
+  set ttl(seconds) {
+    // TTL = time-to-live, default = 300 seconds.
+    this.ttl_ = seconds || 300;
+  }
+  set reloadUri(uri) {
+    if (uri) {
+      // reload URI can be relative to the previous reloadUri.
+      this.reloadUri_ = resolveUrl(this.reloadUri_, uri);
+    }
+  }
+  set priority(array) {
+    // priority must be non-empty and unique values.
+    if (array && array.length) {
+      this.priority_ = array;
+    }
+  }
+  get version() {
+    return this.version_;
+  }
+  get ttl() {
+    return this.ttl_;
+  }
+  get reloadUri() {
+    return this.reloadUri_;
+  }
+  get priority() {
+    return this.priority_;
+  }
+}
+/**
+ * This class represents a content steering manifest and associated state. See both HLS and DASH specifications.
+ * HLS: https://developer.apple.com/streaming/HLSContentSteeringSpecification.pdf and
+ * https://datatracker.ietf.org/doc/draft-pantos-hls-rfc8216bis/ section 4.4.6.6.
+ * DASH: https://dashif.org/docs/DASH-IF-CTS-00XX-Content-Steering-Community-Review.pdf
+ *
+ * @param {function} xhr for making a network request from the browser.
+ * @param {function} bandwidth for fetching the current bandwidth from the main segment loader.
+ */
+
+class ContentSteeringController extends videojs.EventTarget {
+  constructor(xhr, bandwidth) {
+    super();
+    this.currentPathway = null;
+    this.defaultPathway = null;
+    this.queryBeforeStart = null;
+    this.availablePathways_ = new Set();
+    this.excludedPathways_ = new Set();
+    this.steeringManifest = new SteeringManifest();
+    this.proxyServerUrl_ = null;
+    this.manifestType_ = null;
+    this.ttlTimeout_ = null;
+    this.request_ = null;
+    this.excludedSteeringManifestURLs = new Set();
+    this.logger_ = logger('Content Steering');
+    this.xhr_ = xhr;
+    this.getBandwidth_ = bandwidth;
+  }
+  /**
+   * Assigns the content steering tag properties to the steering controller
+   *
+   * @param {string} baseUrl the baseURL from the manifest for resolving the steering manifest url
+   * @param {Object} steeringTag the content steering tag from the main manifest
+   */
+
+  assignTagProperties(baseUrl, steeringTag) {
+    this.manifestType_ = steeringTag.serverUri ? 'HLS' : 'DASH'; // serverUri is HLS serverURL is DASH
+
+    const steeringUri = steeringTag.serverUri || steeringTag.serverURL;
+    if (!steeringUri) {
+      this.logger_(`steering manifest URL is ${steeringUri}, cannot request steering manifest.`);
+      this.trigger('error');
+      return;
+    } // Content steering manifests can be encoded as a data URI. We can decode, parse and return early if that's the case.
+
+    if (steeringUri.startsWith('data:')) {
+      this.decodeDataUriManifest_(steeringUri.substring(steeringUri.indexOf(',') + 1));
+      return;
+    } // With DASH queryBeforeStart, we want to use the steeringUri as soon as possible for the request.
+
+    this.steeringManifest.reloadUri = this.queryBeforeStart ? steeringUri : resolveUrl(baseUrl, steeringUri); // pathwayId is HLS defaultServiceLocation is DASH
+
+    this.defaultPathway = steeringTag.pathwayId || steeringTag.defaultServiceLocation; // currently only DASH supports the following properties on <ContentSteering> tags.
+
+    this.queryBeforeStart = steeringTag.queryBeforeStart || false;
+    this.proxyServerUrl_ = steeringTag.proxyServerURL || null; // trigger a steering event if we have a pathway from the content steering tag.
+    // this tells VHS which segment pathway to start with.
+    // If queryBeforeStart is true we need to wait for the steering manifest response.
+
+    if (this.defaultPathway && !this.queryBeforeStart) {
+      this.trigger('content-steering');
+    }
+    if (this.queryBeforeStart) {
+      this.requestSteeringManifest(this.steeringManifest.reloadUri);
+    }
+  }
+  /**
+   * Requests the content steering manifest and parse the response. This should only be called after
+   * assignTagProperties was called with a content steering tag.
+   *
+   * @param {string} initialUri The optional uri to make the request with.
+   *    If set, the request should be made with exactly what is passed in this variable.
+   *    This scenario is specific to DASH when the queryBeforeStart parameter is true.
+   *    This scenario should only happen once on initalization.
+   */
+
+  requestSteeringManifest(initialUri) {
+    const reloadUri = this.steeringManifest.reloadUri;
+    if (!initialUri && !reloadUri) {
+      return;
+    } // We currently don't support passing MPD query parameters directly to the content steering URL as this requires
+    // ExtUrlQueryInfo tag support. See the DASH content steering spec section 8.1.
+    // This request URI accounts for manifest URIs that have been excluded.
+
+    const uri = initialUri || this.getRequestURI(reloadUri); // If there are no valid manifest URIs, we should stop content steering.
+
+    if (!uri) {
+      this.logger_('No valid content steering manifest URIs. Stopping content steering.');
+      this.trigger('error');
+      this.dispose();
+      return;
+    }
+    this.request_ = this.xhr_({
+      uri
+    }, (error, errorInfo) => {
+      if (error) {
+        // If the client receives HTTP 410 Gone in response to a manifest request,
+        // it MUST NOT issue another request for that URI for the remainder of the
+        // playback session. It MAY continue to use the most-recently obtained set
+        // of Pathways.
+        if (errorInfo.status === 410) {
+          this.logger_(`manifest request 410 ${error}.`);
+          this.logger_(`There will be no more content steering requests to ${uri} this session.`);
+          this.excludedSteeringManifestURLs.add(uri);
+          return;
+        } // If the client receives HTTP 429 Too Many Requests with a Retry-After
+        // header in response to a manifest request, it SHOULD wait until the time
+        // specified by the Retry-After header to reissue the request.
+
+        if (errorInfo.status === 429) {
+          const retrySeconds = errorInfo.responseHeaders['retry-after'];
+          this.logger_(`manifest request 429 ${error}.`);
+          this.logger_(`content steering will retry in ${retrySeconds} seconds.`);
+          this.startTTLTimeout_(parseInt(retrySeconds, 10));
+          return;
+        } // If the Steering Manifest cannot be loaded and parsed correctly, the
+        // client SHOULD continue to use the previous values and attempt to reload
+        // it after waiting for the previously-specified TTL (or 5 minutes if
+        // none).
+
+        this.logger_(`manifest failed to load ${error}.`);
+        this.startTTLTimeout_();
+        return;
+      }
+      const steeringManifestJson = JSON.parse(this.request_.responseText);
+      this.startTTLTimeout_();
+      this.assignSteeringProperties_(steeringManifestJson);
+    });
+  }
+  /**
+   * Set the proxy server URL and add the steering manifest url as a URI encoded parameter.
+   *
+   * @param {string} steeringUrl the steering manifest url
+   * @return the steering manifest url to a proxy server with all parameters set
+   */
+
+  setProxyServerUrl_(steeringUrl) {
+    const steeringUrlObject = new window$1.URL(steeringUrl);
+    const proxyServerUrlObject = new window$1.URL(this.proxyServerUrl_);
+    proxyServerUrlObject.searchParams.set('url', encodeURI(steeringUrlObject.toString()));
+    return this.setSteeringParams_(proxyServerUrlObject.toString());
+  }
+  /**
+   * Decodes and parses the data uri encoded steering manifest
+   *
+   * @param {string} dataUri the data uri to be decoded and parsed.
+   */
+
+  decodeDataUriManifest_(dataUri) {
+    const steeringManifestJson = JSON.parse(window$1.atob(dataUri));
+    this.assignSteeringProperties_(steeringManifestJson);
+  }
+  /**
+   * Set the HLS or DASH content steering manifest request query parameters. For example:
+   * _HLS_pathway="<CURRENT-PATHWAY-ID>" and _HLS_throughput=<THROUGHPUT>
+   * _DASH_pathway and _DASH_throughput
+   *
+   * @param {string} uri to add content steering server parameters to.
+   * @return a new uri as a string with the added steering query parameters.
+   */
+
+  setSteeringParams_(url) {
+    const urlObject = new window$1.URL(url);
+    const path = this.getPathway();
+    const networkThroughput = this.getBandwidth_();
+    if (path) {
+      const pathwayKey = `_${this.manifestType_}_pathway`;
+      urlObject.searchParams.set(pathwayKey, path);
+    }
+    if (networkThroughput) {
+      const throughputKey = `_${this.manifestType_}_throughput`;
+      urlObject.searchParams.set(throughputKey, networkThroughput);
+    }
+    return urlObject.toString();
+  }
+  /**
+   * Assigns the current steering manifest properties and to the SteeringManifest object
+   *
+   * @param {Object} steeringJson the raw JSON steering manifest
+   */
+
+  assignSteeringProperties_(steeringJson) {
+    this.steeringManifest.version = steeringJson.VERSION;
+    if (!this.steeringManifest.version) {
+      this.logger_(`manifest version is ${steeringJson.VERSION}, which is not supported.`);
+      this.trigger('error');
+      return;
+    }
+    this.steeringManifest.ttl = steeringJson.TTL;
+    this.steeringManifest.reloadUri = steeringJson['RELOAD-URI']; // HLS = PATHWAY-PRIORITY required. DASH = SERVICE-LOCATION-PRIORITY optional
+
+    this.steeringManifest.priority = steeringJson['PATHWAY-PRIORITY'] || steeringJson['SERVICE-LOCATION-PRIORITY']; // TODO: HLS handle PATHWAY-CLONES. See section 7.2 https://datatracker.ietf.org/doc/draft-pantos-hls-rfc8216bis/
+    // 1. apply first pathway from the array.
+    // 2. if first pathway doesn't exist in manifest, try next pathway.
+    //    a. if all pathways are exhausted, ignore the steering manifest priority.
+    // 3. if segments fail from an established pathway, try all variants/renditions, then exclude the failed pathway.
+    //    a. exclude a pathway for a minimum of the last TTL duration. Meaning, from the next steering response,
+    //       the excluded pathway will be ignored.
+    //       See excludePathway usage in excludePlaylist().
+    // If there are no available pathways, we need to stop content steering.
+
+    if (!this.availablePathways_.size) {
+      this.logger_('There are no available pathways for content steering. Ending content steering.');
+      this.trigger('error');
+      this.dispose();
+    }
+    const chooseNextPathway = pathwaysByPriority => {
+      for (const path of pathwaysByPriority) {
+        if (this.availablePathways_.has(path)) {
+          return path;
+        }
+      } // If no pathway matches, ignore the manifest and choose the first available.
+
+      return [...this.availablePathways_][0];
+    };
+    const nextPathway = chooseNextPathway(this.steeringManifest.priority);
+    if (this.currentPathway !== nextPathway) {
+      this.currentPathway = nextPathway;
+      this.trigger('content-steering');
+    }
+  }
+  /**
+   * Returns the pathway to use for steering decisions
+   *
+   * @return {string} returns the current pathway or the default
+   */
+
+  getPathway() {
+    return this.currentPathway || this.defaultPathway;
+  }
+  /**
+   * Chooses the manifest request URI based on proxy URIs and server URLs.
+   * Also accounts for exclusion on certain manifest URIs.
+   *
+   * @param {string} reloadUri the base uri before parameters
+   *
+   * @return {string} the final URI for the request to the manifest server.
+   */
+
+  getRequestURI(reloadUri) {
+    if (!reloadUri) {
+      return null;
+    }
+    const isExcluded = uri => this.excludedSteeringManifestURLs.has(uri);
+    if (this.proxyServerUrl_) {
+      const proxyURI = this.setProxyServerUrl_(reloadUri);
+      if (!isExcluded(proxyURI)) {
+        return proxyURI;
+      }
+    }
+    const steeringURI = this.setSteeringParams_(reloadUri);
+    if (!isExcluded(steeringURI)) {
+      return steeringURI;
+    } // Return nothing if all valid manifest URIs are excluded.
+
+    return null;
+  }
+  /**
+   * Start the timeout for re-requesting the steering manifest at the TTL interval.
+   *
+   * @param {number} ttl time in seconds of the timeout. Defaults to the
+   *        ttl interval in the steering manifest
+   */
+
+  startTTLTimeout_(ttl = this.steeringManifest.ttl) {
+    // 300 (5 minutes) is the default value.
+    const ttlMS = ttl * 1000;
+    this.ttlTimeout_ = window$1.setTimeout(() => {
+      this.requestSteeringManifest();
+    }, ttlMS);
+  }
+  /**
+   * Clear the TTL timeout if necessary.
+   */
+
+  clearTTLTimeout_() {
+    window$1.clearTimeout(this.ttlTimeout_);
+    this.ttlTimeout_ = null;
+  }
+  /**
+   * aborts any current steering xhr and sets the current request object to null
+   */
+
+  abort() {
+    if (this.request_) {
+      this.request_.abort();
+    }
+    this.request_ = null;
+  }
+  /**
+   * aborts steering requests clears the ttl timeout and resets all properties.
+   */
+
+  dispose() {
+    this.off('content-steering');
+    this.off('error');
+    this.abort();
+    this.clearTTLTimeout_();
+    this.currentPathway = null;
+    this.defaultPathway = null;
+    this.queryBeforeStart = null;
+    this.proxyServerUrl_ = null;
+    this.manifestType_ = null;
+    this.ttlTimeout_ = null;
+    this.request_ = null;
+    this.excludedSteeringManifestURLs = new Set();
+    this.availablePathways_ = new Set();
+    this.excludedPathways_ = new Set();
+    this.steeringManifest = new SteeringManifest();
+  }
+  /**
+   * adds a pathway to the available pathways set
+   *
+   * @param {string} pathway the pathway string to add
+   */
+
+  addAvailablePathway(pathway) {
+    if (pathway) {
+      this.availablePathways_.add(pathway);
+    }
+  }
+  /**
+   * clears all pathways from the available pathways set
+   */
+
+  clearAvailablePathways() {
+    this.availablePathways_.clear();
+  }
+  excludePathway(pathway) {
+    return this.availablePathways_.delete(pathway);
+  }
+}
+
+/**
  * @file playlist-controller.js
  */
 const ABORT_EARLY_EXCLUSION_SECONDS = 10;
@@ -47082,6 +47560,7 @@ class PlaylistController extends videojs.EventTarget {
       vhs: this.vhs_,
       parse708captions: options.parse708captions,
       useDtsForTimestampOffset: options.useDtsForTimestampOffset,
+      calculateTimestampOffsetForEachSegment: options.calculateTimestampOffsetForEachSegment,
       captionServices,
       mediaSource: this.mediaSource,
       currentTime: this.tech_.currentTime.bind(this.tech_),
@@ -47139,6 +47618,10 @@ class PlaylistController extends videojs.EventTarget {
         tech.addWebVttScript_();
       })
     }), options);
+    const getBandwidth = () => {
+      return this.mainSegmentLoader_.bandwidth;
+    };
+    this.contentSteeringController_ = new ContentSteeringController(this.vhs_.xhr, getBandwidth);
     this.setupSegmentLoaderListeners_();
     if (this.bufferBasedABR) {
       this.mainPlaylistLoader_.one('loadedplaylist', () => this.startABRTimer_());
@@ -47223,6 +47706,32 @@ class PlaylistController extends videojs.EventTarget {
       });
     }
     this.mainPlaylistLoader_.media(playlist, delay);
+  }
+  /**
+   * A function that ensures we switch our playlists inside of `mediaTypes`
+   * to match the current `serviceLocation` provided by the contentSteering controller.
+   * We want to check media types of `AUDIO`, `SUBTITLES`, and `CLOSED-CAPTIONS`.
+   *
+   * This should only be called on a DASH playback scenario while using content steering.
+   * This is necessary due to differences in how media in HLS manifests are generally tied to
+   * a video playlist, where in DASH that is not always the case.
+   */
+
+  switchMediaForDASHContentSteering_() {
+    ['AUDIO', 'SUBTITLES', 'CLOSED-CAPTIONS'].forEach(type => {
+      const mediaType = this.mediaTypes_[type];
+      const activeGroup = mediaType ? mediaType.activeGroup() : null;
+      const pathway = this.contentSteeringController_.getPathway();
+      if (activeGroup && pathway) {
+        // activeGroup can be an array or a single group
+        const mediaPlaylists = activeGroup.length ? activeGroup[0].playlists : activeGroup.playlists;
+        const dashMediaPlaylists = mediaPlaylists.filter(p => p.attributes.serviceLocation === pathway); // Switch the current active playlist to the correct CDN
+
+        if (dashMediaPlaylists.length) {
+          this.mediaTypes_[type].activePlaylistLoader.media(dashMediaPlaylists[0]);
+        }
+      }
+    });
   }
   /**
    * Start a timer that periodically calls checkABR_
@@ -47372,8 +47881,9 @@ class PlaylistController extends videojs.EventTarget {
       }
       let updatedPlaylist = this.mainPlaylistLoader_.media();
       if (!updatedPlaylist) {
-        // exclude any variants that are not supported by the browser before selecting
+        this.initContentSteeringController_(); // exclude any variants that are not supported by the browser before selecting
         // an initial media as the playlist selectors do not consider browser support
+
         this.excludeUnsupportedVariants_();
         let selectedMedia;
         if (this.enableLowInitialPlaylist) {
@@ -47954,10 +48464,22 @@ class PlaylistController extends videojs.EventTarget {
       return this.mainPlaylistLoader_.load(isFinalRendition);
     }
     if (isFinalRendition) {
-      // Since we're on the final non-excluded playlist, and we're about to exclude
+      // If we're content steering, try other pathways.
+      if (this.main().contentSteering) {
+        const pathway = this.pathwayAttribute_(playlistToExclude); // Ignore at least 1 steering manifest refresh.
+
+        const reIncludeDelay = this.contentSteeringController_.steeringManifest.ttl * 1000;
+        this.contentSteeringController_.excludePathway(pathway);
+        this.excludeThenChangePathway_();
+        setTimeout(() => {
+          this.contentSteeringController_.addAvailablePathway(pathway);
+        }, reIncludeDelay);
+        return;
+      } // Since we're on the final non-excluded playlist, and we're about to exclude
       // it, instead of erring the player or retrying this playlist, clear out the current
       // exclusion list. This allows other playlists to be attempted in case any have been
       // fixed.
+
       let reincluded = false;
       playlists.forEach(playlist => {
         // skip current playlist which is about to be excluded
@@ -48295,6 +48817,7 @@ class PlaylistController extends videojs.EventTarget {
     this.decrypter_.terminate();
     this.mainPlaylistLoader_.dispose();
     this.mainSegmentLoader_.dispose();
+    this.contentSteeringController_.dispose();
     if (this.loadOnPlay_) {
       this.tech_.off('play', this.loadOnPlay_);
     }
@@ -48634,6 +49157,110 @@ class PlaylistController extends videojs.EventTarget {
       timestampOffset,
       videoDuration
     });
+  }
+  pathwayAttribute_(playlist) {
+    return playlist.attributes['PATHWAY-ID'] || playlist.attributes.serviceLocation;
+  }
+  /**
+   * Initialize content steering listeners and apply the tag properties.
+   */
+
+  initContentSteeringController_() {
+    const initialMain = this.main();
+    if (!initialMain.contentSteering) {
+      return;
+    }
+    const updateSteeringValues = main => {
+      for (const playlist of main.playlists) {
+        this.contentSteeringController_.addAvailablePathway(this.pathwayAttribute_(playlist));
+      }
+      this.contentSteeringController_.assignTagProperties(main.uri, main.contentSteering);
+    };
+    updateSteeringValues(initialMain);
+    this.contentSteeringController_.on('content-steering', this.excludeThenChangePathway_.bind(this)); // We need to ensure we update the content steering values when a new
+    // manifest is loaded in live DASH with content steering.
+
+    if (this.sourceType_ === 'dash') {
+      this.mainPlaylistLoader_.on('mediaupdatetimeout', () => {
+        this.mainPlaylistLoader_.refreshMedia_(this.mainPlaylistLoader_.media().id); // clear past values
+
+        this.contentSteeringController_.abort();
+        this.contentSteeringController_.clearTTLTimeout_();
+        this.contentSteeringController_.clearAvailablePathways();
+        updateSteeringValues(this.main());
+      });
+    } // Do this at startup only, after that the steering requests are managed by the Content Steering class.
+    // DASH queryBeforeStart scenarios will be handled by the Content Steering class.
+
+    if (!this.contentSteeringController_.queryBeforeStart) {
+      this.tech_.one('canplay', () => {
+        this.contentSteeringController_.requestSteeringManifest();
+      });
+    }
+  }
+  /**
+   * Simple exclude and change playlist logic for content steering.
+   */
+
+  excludeThenChangePathway_() {
+    const currentPathway = this.contentSteeringController_.getPathway();
+    if (!currentPathway) {
+      return;
+    }
+    const main = this.main();
+    const playlists = main.playlists;
+    const ids = new Set();
+    let didEnablePlaylists = false;
+    Object.keys(playlists).forEach(key => {
+      const variant = playlists[key];
+      const pathwayId = this.pathwayAttribute_(variant);
+      const differentPathwayId = pathwayId && currentPathway !== pathwayId;
+      const steeringExclusion = variant.excludeUntil === Infinity && variant.lastExcludeReason_ === 'content-steering';
+      if (steeringExclusion && !differentPathwayId) {
+        delete variant.excludeUntil;
+        delete variant.lastExcludeReason_;
+        didEnablePlaylists = true;
+      }
+      const noExcludeUntil = !variant.excludeUntil && variant.excludeUntil !== Infinity;
+      const shouldExclude = !ids.has(variant.id) && differentPathwayId && noExcludeUntil;
+      if (!shouldExclude) {
+        return;
+      }
+      ids.add(variant.id);
+      variant.excludeUntil = Infinity;
+      variant.lastExcludeReason_ = 'content-steering'; // TODO: kind of spammy, maybe move this.
+
+      this.logger_(`excluding ${variant.id} for ${variant.lastExcludeReason_}`);
+    });
+    if (this.contentSteeringController_.manifestType_ === 'DASH') {
+      Object.keys(this.mediaTypes_).forEach(key => {
+        const type = this.mediaTypes_[key];
+        if (type.activePlaylistLoader) {
+          const currentPlaylist = type.activePlaylistLoader.media_; // Check if the current media playlist matches the current CDN
+
+          if (currentPlaylist && currentPlaylist.attributes.serviceLocation !== currentPathway) {
+            didEnablePlaylists = true;
+          }
+        }
+      });
+    }
+    if (didEnablePlaylists) {
+      this.changeSegmentPathway_();
+    }
+  }
+  /**
+   * Changes the current playlists for audio, video and subtitles after a new pathway
+   * is chosen from content steering.
+   */
+
+  changeSegmentPathway_() {
+    const nextPlaylist = this.selectPlaylist();
+    this.pauseLoading(); // Switch audio and text track playlists if necessary in DASH
+
+    if (this.contentSteeringController_.manifestType_ === 'DASH') {
+      this.switchMediaForDASHContentSteering_();
+    }
+    this.switchMedia_(nextPlaylist, 'content-steering');
   }
 }
 
@@ -49383,9 +50010,9 @@ const initPlugin = function (player, options) {
 const reloadSourceOnError = function (options) {
   initPlugin(this, options);
 };
-var version$4 = "3.5.3";
-var version$3 = "7.0.0";
-var version$2 = "1.1.1";
+var version$4 = "3.7.0";
+var version$3 = "7.0.1";
+var version$2 = "1.2.2";
 var version$1 = "7.1.0";
 var version = "4.0.1";
 
@@ -49945,6 +50572,7 @@ class VhsHandler extends Component {
     this.options_.useForcedSubtitles = this.options_.useForcedSubtitles || false;
     this.options_.useNetworkInformationApi = this.options_.useNetworkInformationApi || false;
     this.options_.useDtsForTimestampOffset = this.options_.useDtsForTimestampOffset || false;
+    this.options_.calculateTimestampOffsetForEachSegment = this.options_.calculateTimestampOffsetForEachSegment || false;
     this.options_.customTagParsers = this.options_.customTagParsers || [];
     this.options_.customTagMappers = this.options_.customTagMappers || [];
     this.options_.cacheEncryptionKeys = this.options_.cacheEncryptionKeys || false;
@@ -49981,7 +50609,7 @@ class VhsHandler extends Component {
 
     this.options_.enableLowInitialPlaylist = this.options_.enableLowInitialPlaylist && this.options_.bandwidth === Config.INITIAL_BANDWIDTH; // grab options passed to player.src
 
-    ['withCredentials', 'useDevicePixelRatio', 'limitRenditionByPlayerDimensions', 'bandwidth', 'customTagParsers', 'customTagMappers', 'cacheEncryptionKeys', 'playlistSelector', 'initialPlaylistSelector', 'bufferBasedABR', 'liveRangeSafeTimeDelta', 'llhls', 'useForcedSubtitles', 'useNetworkInformationApi', 'useDtsForTimestampOffset', 'exactManifestTimings', 'leastPixelDiffSelector'].forEach(option => {
+    ['withCredentials', 'useDevicePixelRatio', 'limitRenditionByPlayerDimensions', 'bandwidth', 'customTagParsers', 'customTagMappers', 'cacheEncryptionKeys', 'playlistSelector', 'initialPlaylistSelector', 'bufferBasedABR', 'liveRangeSafeTimeDelta', 'llhls', 'useForcedSubtitles', 'useNetworkInformationApi', 'useDtsForTimestampOffset', 'calculateTimestampOffsetForEachSegment', 'exactManifestTimings', 'leastPixelDiffSelector'].forEach(option => {
       if (typeof this.source_[option] !== 'undefined') {
         this.options_[option] = this.source_[option];
       }

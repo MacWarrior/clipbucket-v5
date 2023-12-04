@@ -1,11 +1,5 @@
 <?php
-/**
- * File: Watch Video Ajax
- * Description: File handles watch video ajax requests
- * @since: 4th April, 2016, ClipBucket 2.8.1
- * @author: Saqib Razzaq
- * @modified: 8th April, 2016
- */
+define('THIS_PAGE', 'watch');
 require '../includes/config.inc.php';
 if (isset($_POST['mode'])) {
     $mode = $_POST['mode'];
@@ -21,13 +15,13 @@ if (isset($_POST['mode'])) {
             $total_items = $cbvid->action->count_playlist_items($playlist);
             $items = $cbvid->get_playlist_items($playlist, 'playlist_items.date_added DESC', $sql_limit);
             if ($start >= $total_items) {
-                echo "none";
+                echo 'none';
                 return false;
             }
             foreach ($items as $key => $video) {
-                assign("video", $video);
-                assign("control", "onWatch");
-                assign("pid", $video['playlist_id']);
+                assign('video', $video);
+                assign('control', 'onWatch');
+                assign('pid', $video['playlist_id']);
                 echo trim(Fetch('/blocks/manage/account_video.html'));
             }
             break;

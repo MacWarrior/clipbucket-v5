@@ -13,10 +13,13 @@ $c = (int)$_GET['cid'];
 
 $page = $_GET['page'];
 
-$order = tbl('collection_items') . '.ci_id DESC';
+$order = 'collection_items.ci_id DESC';
 
 if ($cbcollection->is_viewable($c)) {
-    $cdetails = $cbcollection->get_collection($c);
+    $params = [];
+    $params['collection_id'] = $c;
+    $params['first_only'] = true;
+    $cdetails = Collection::getInstance()->getAll($params);
 
     if (!$cdetails || !isSectionEnabled($cdetails['type'])) {
         $Cbucket->show_page = false;
@@ -27,12 +30,11 @@ if ($cbcollection->is_viewable($c)) {
     } else {
         $get_limit = create_query_limit($page, config('collection_items_page'));
         if (config('enable_sub_collection')) {
-            $cond = [
-                'limit'       => $get_limit
-                , 'parent_id' => $c
-            ];
+            $params = [];
+            $params['collection_id_parent'] = $c;
+            $params['limit'] = $get_limit;
+            $collections = Collection::getInstance()->getAll($params);
 
-            $collections = $cbcollection->get_collections($cond);
             Assign('collections', $collections);
         }
 

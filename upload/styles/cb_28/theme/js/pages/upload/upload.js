@@ -82,13 +82,24 @@ $(document).ready(function(){
                 var tagsList = document.createElement('ul');
                 tagsList.id = 'list_tags_' + index;
                 $(tagsList).insertAfter($(oneUploadForm).find("input[name='tags']"));
-
+                var alert_shown = false;
                 $(oneUploadForm).find('#list_tags_'+ index).tagit({
                     singleField:true,
                     readOnly:false,
                     singleFieldNode: $(oneUploadForm).find('#tags'+ index),
                     animate:true,
-                    caseSensitive:false
+                    caseSensitive:false,
+                    availableTags: available_tags,
+                    beforeTagAdded: function (event,info) {
+                        if (info.tagLabel.length <= 2) {
+                            if (!alert_shown) {
+                                alert_shown = true;
+                                alert(tag_too_short);
+                            }
+                            return false;
+                        }
+                        alert_shown = false;
+                    }
                 });
 
                 if(file.data.broadcast === 'unlisted'){

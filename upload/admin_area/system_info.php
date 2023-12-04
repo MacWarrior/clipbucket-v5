@@ -68,11 +68,13 @@ $memory_limit_cli = 0;
 $upload_max_filesize_cli = 0;
 $max_execution_time_cli = 1;
 $phpVersion = 0;
+
+$extensionsCLI = [];
 if (empty($exec_output)) {
     e(lang('php_cli_not_found'));
 } else {
     $reg = '/^(\w*) => (-?\w*).*$/';
-    $regVersion = '/^(\w* \w*) => (.*)$/';
+    $regVersion = '/(\w* \w*) => (.*)$/';
     foreach ($exec_output as $line) {
         $match= [];
         if (strpos($line, 'post_max_size') !== false) {
@@ -100,7 +102,55 @@ if (empty($exec_output)) {
             if (!empty($match)) {
                 $phpVersion = $match[2];
             }
+
+        } elseif (strpos($line, 'GD library Version') !== false) {
+            preg_match($regVersion, $line, $match);
+            if (!empty($match)) {
+                $extensionsCLI['gd'] = $match[2];
+            }
+
+        } elseif (strpos($line, 'libmbfl version') !== false) {
+            preg_match($regVersion, $line, $match);
+            if (!empty($match)) {
+                $extensionsCLI['mbstring'] = $match[2];
+            }
+
+        } elseif (strpos($line, 'Client API library version') !== false) {
+            preg_match($regVersion, $line, $match);
+            if (!empty($match)) {
+                $extensionsCLI['mysqli'] = $match[2];
+            }
+
+        } elseif (strpos($line, 'libxml2 Version') !== false) {
+            preg_match($regVersion, $line, $match);
+            if (!empty($match)) {
+                $extensionsCLI['xml'] = $match[2];
+            }
+
+        } elseif (strpos($line, 'cURL Information') !== false) {
+            preg_match($regVersion, $line, $match);
+            if (!empty($match)) {
+                $extensionsCLI['curl'] = $match[2];
+            }
         }
+    }
+}
+
+$modulesWeb = parseAllPHPModules();
+
+$extensionMessages = [
+    'gd' => 'GD library Version',
+    'mbstring' => 'libmbfl version',
+    'mysqli' => 'Client API library version',
+    'curl' => 'cURL Information',
+    'xml' => 'libxml2 Version',
+];
+
+$extensionsWEB = [];
+foreach ($extensionMessages as $extension => $version) {
+    $res = $modulesWeb[$extension];
+    if (!empty($res)) {
+        $extensionsWEB[$extension] = $modulesWeb[$extension][$version];
     }
 }
 
@@ -109,6 +159,8 @@ assign('post_max_size_cli', $post_max_size_cli);
 assign('memory_limit_cli', $memory_limit_cli);
 assign('upload_max_filesize_cli', $upload_max_filesize_cli);
 assign('max_execution_time_cli', $max_execution_time_cli);
+assign('extensionsCLI', $extensionsCLI);
+assign('extensionsWEB', $extensionsWEB);
 
 subtitle(lang('system_info'));
 template_files("system_info.html");

@@ -1,17 +1,14 @@
 <?php
-/**
- * It is better to keep everything sperated
- * and code properly
- * so i created this file coz i like it this way :p
- *
- *
- * Author : Arslan
- */
-
 class CBEmail
 {
     var $smtp = false;
     var $db_tpl = 'email_templates';
+
+    public static function getInstance()
+    {
+        global $cbemail;
+        return $cbemail;
+    }
 
     function __construct()
     {
@@ -24,7 +21,7 @@ class CBEmail
      * @param $code
      *
      * @return bool|array
-     * @throws \Exception
+     * @throws Exception
      */
     function get_email_template($code)
     {
@@ -38,6 +35,9 @@ class CBEmail
         return false;
     }
 
+    /**
+     * @throws Exception
+     */
     function get_template($code)
     {
         return $this->get_email_template($code);
@@ -49,7 +49,7 @@ class CBEmail
      * @param $code
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     function template_exists($code)
     {
@@ -98,6 +98,7 @@ class CBEmail
 
     /**
      * Function used to get all templates
+     * @throws Exception
      */
     function get_templates()
     {
@@ -113,7 +114,7 @@ class CBEmail
      * Function used to update email template
      *
      * @param $params
-     * @throws \Exception
+     * @throws Exception
      */
     function update_template($params)
     {
@@ -145,7 +146,7 @@ class CBEmail
      * @param null $array
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     function add_mass_email($array = null)
     {
@@ -194,6 +195,7 @@ class CBEmail
 
     /**
      * function used to get email
+     * @throws Exception
      */
     function get_mass_emails()
     {
@@ -212,8 +214,9 @@ class CBEmail
      * @param $id
      * @param $action
      *
-     * @return bool
+     * @return bool|void
      * @throws \PHPMailer\PHPMailer\Exception
+     * @throws Exception
      */
     function action($id, $action)
     {
@@ -241,19 +244,22 @@ class CBEmail
      *
      * @param $id
      *
-     * @return bool
-     * @throws \Exception
+     * @return bool|array
+     * @throws Exception
      */
     function get_email($id)
     {
         global $db;
-        $result = $db->select(tbl("mass_emails"), "*", "id='$id'");
+        $result = $db->select(tbl('mass_emails'), '*', 'id='.mysql_clean($id));
         if (count($result) > 0) {
             return $result[0];
         }
         return false;
     }
 
+    /**
+     * @throws Exception
+     */
     function email_exists($id)
     {
         return $this->get_email($id);
@@ -262,8 +268,8 @@ class CBEmail
     /**
      * @param $id
      *
-     * @return array|bool
-     * @throws \Exception
+     * @return array|bool|void
+     * @throws Exception
      */
     function send_emails($id)
     {
@@ -410,6 +416,7 @@ class CBEmail
      * @param $username
      * @return void
      * @throws \PHPMailer\PHPMailer\Exception
+     * @throws Exception
      */
     function friend_request_email($email, $username)
     {

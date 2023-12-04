@@ -1,12 +1,10 @@
 <div class="comments clearfix">
     <ul id="comments-ul">
     {if $comments}
-    	{foreach from=$comments.comments item=comment}
-            {include file="$style_dir/blocks/comments/comment.html" comment=$comment type=$type parents=$comments.parents}
+    	{foreach from=$comments item=comment}
+            {include file="$style_dir/blocks/comments/comment.html" comment=$comment}
         {/foreach}
-        <div class="break2"></div>
     {else}
-    	<div class="break2"></div>
     	<li class="col-lg-12 no-related no-comments clearfix">
        		<span class="well well-info btn-block">{lang code='no_comment_added'}</span>
         </li>
@@ -18,7 +16,7 @@
     li {
         list-style: none;
     }
-    .main_pic, .comnt_pic, .reply_pic {
+    .comnt_pic, .reply_pic {
         width: 20px;
         height: 20px;
     }

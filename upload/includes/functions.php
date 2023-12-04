@@ -467,90 +467,14 @@ function shell_output($cmd)
 
 function getCommentAdminLink($type, $id): string
 {
-    return '/admin_area/edit_video.php?video=' . $id;
-}
-
-/**
- * FUNCTION USED TO GET COMMENTS
- *
- * @param : { array } { $params } { array of parameters e.g order,limit,type }
- *
- * @return array|bool : { array } { $results } { array of fetched comments }
- * { $results } { array of fetched comments }
- * @throws Exception
- */
-function getComments($params = null)
-{
-    global $db;
-    $order = $params['order'];
-    $limit = $params['limit'];
-    $type = $params['type'];
-    $cond = '';
-    if (!empty($params['videoid'])) {
-        $cond .= 'type_id=' . $params['videoid'];
-        $cond .= ' AND ';
-    }
-    if (empty($type)) {
-        $type = 'v';
-    }
-    $cond .= tbl('comments.type') . " = '" . $type . "'";
-    if ($params['type_id'] && $params['sectionTable']) {
-        if ($cond != "") {
-            $cond .= " AND ";
-        }
-        $cond .= tbl('comments.type_id') . ' = ' . tbl($params['sectionTable'] . '.' . $params['type_id']);
-    }
-
-    if ($params['cond']) {
-        if ($cond != '') {
-            $cond .= ' AND ';
-        }
-        $cond .= $params['cond'];
-    }
-
-    $query = 'SELECT * , ' . tbl('comments.userid') . ' AS c_userid FROM ' . tbl('comments' . ($params['sectionTable'] ? ',' . $params['sectionTable'] : null));
-
-    if ($cond) {
-        $query .= ' WHERE ' . $cond;
-    }
-    if ($order) {
-        $query .= ' ORDER BY ' . $order;
-    }
-    if ($limit) {
-        $query .= ' LIMIT ' . $limit;
-    }
-    if (!$params['count_only']) {
-        $result = db_select($query);
-    }
-
-    if ($params['count_only']) {
-        $cond = tbl('comments.type') . "= '" . $params['type'] . "'";
-        $result = $db->count(tbl('comments'), '*', $cond);
-    }
-
-    if ($result) {
-        return $result;
-    }
-    return false;
-}
-
-/**
- * Fetches comments using params, built for smarty
- *
- * @param $params
- *
- * @return bool|mixed
- * @throws Exception
- * @uses : { class : $myquery } { function : getComments }
- */
-function getSmartyComments($params)
-{
-    global $myquery;
-    $comments = $myquery->getComments($params);
-    if ($params['assign']) {
-        assign($params['assign'], $comments);
-    } else {
-        return $comments;
+    switch($type){
+        default:
+        case 'v':
+            return '/admin_area/edit_video.php?video=' . $id;
+        case 'p':
+            return '/admin_area/edit_photo.php?photo=' . $id;
+        case 'cl':
+            return '/admin_area/edit_collection.php?collection=' . $id;
     }
 }
 
@@ -770,6 +694,15 @@ function user_name()
         return $userquery->user_name;
     }
     return $userquery->get_logged_username();
+}
+
+function user_email()
+{
+    global $userquery;
+    if ($userquery->email) {
+        return $userquery->email;
+    }
+    return false;
 }
 
 /**
@@ -1084,7 +1017,7 @@ function input_value($params)
     }
 
     if ($input['return_checked']) {
-        return $input['checked'];
+        return display_clean($input['checked']);
     }
 
     if (function_exists($input['display_function'])) {
@@ -1093,11 +1026,11 @@ function input_value($params)
 
     if ($input['type'] == 'dropdown') {
         if ($input['checked']) {
-            return $value[$input['checked']];
+            return display_clean($value[$input['checked']]);
         }
-        return $value[0];
+        return display_clean($value[0]);
     }
-    return $input['value'];
+    return display_clean($input['value']);
 }
 
 /**
@@ -1335,6 +1268,22 @@ function error($param = 'array')
     return false;
 }
 
+function warning($param = 'array')
+{
+    global $eh;
+    $error = $eh->get_warning();
+    if (count($error) > 0) {
+        if ($param != 'array') {
+            if ($param == 'single') {
+                $param = 0;
+            }
+            return $error[$param];
+        }
+        return $error;
+    }
+    return false;
+}
+
 /**
  * Function used to check weather msg exists or not
  *
@@ -1376,14 +1325,11 @@ function load_plugin()
  */
 function create_query_limit($page, $result): string
 {
-    $page = mysql_clean($page);
-    $result = mysql_clean($result);
-    $limit = $result;
     if (empty($page) || $page == 0 || !is_numeric($page)) {
         $page = 1;
     }
     $from = $page - 1;
-    $from = $from * $limit;
+    $from = $from * $result;
     return $from . ',' . $result;
 }
 
@@ -1796,7 +1742,7 @@ function call_view_collection_functions($cdetails)
                 $func($cdetails);
             }
         }
-    };
+    }
     increment_views($cdetails['collection_id'], 'collection');
 }
 
@@ -2055,6 +2001,9 @@ function cbdatetime($format = null, $timestamp = null)
  */
 function count_pages($total, $count)
 {
+    if (empty($total)){
+        return 0;
+    }
     if ($count < 1) {
         $count = 1;
     }
@@ -2114,6 +2063,7 @@ function validate_cb_form($input, $array)
     //Check the Collpase Category Checkboxes
     if (is_array($input)) {
         foreach ($input as $field) {
+            $funct_err = false;
             $field['name'] = formObj::rmBrackets($field['name']);
             $title = $field['title'];
             $val = $array[$field['name']];
@@ -2145,8 +2095,11 @@ function validate_cb_form($input, $array)
                 } else {
                     $block = false;
                 }
+            } else {
+                //if field not required and empty it's valid
+                $funct_err = true;
             }
-            if (!empty($val)) {
+            if (!empty($val) || $val === '0') {
                 //don't test validity if field is empty
                 $funct_err = is_valid_value($field['validate_function'], $val);
             }
@@ -2201,24 +2154,6 @@ function validate_cb_form($input, $array)
             }
         }
     }
-}
-
-/**
- * Function used to count age from date
- *
- * @param : { string } { $input } { date to count age }
- *
- * @return float|false : { integer } { $iYears } { years old }
- */
-function get_age($input)
-{
-    $time = strtotime($input);
-    $iMonth = date('m', $time);
-    $iDay = date('d', $time);
-    $iYear = date('Y', $time);
-    $iTimeStamp = (mktime() - 86400) - mktime(0, 0, 0, $iMonth, $iDay, $iYear);
-    $iDays = $iTimeStamp / 86400;
-    return floor($iDays / 365);
 }
 
 /**
@@ -2286,14 +2221,19 @@ function nicetime($date, $istime = false): string
  * @param : { string } { $out } { link to some webpage }
  *
  * @return string : { string } { HTML anchor tag with link in place }
+ * @throws Exception
  */
-function outgoing_link($out): string
+function outgoing_link($url): string
 {
-    preg_match("/http/", $out, $matches);
-    if (empty($matches[0])) {
-        $out = "http://" . $out;
+    if (filter_var($url, FILTER_VALIDATE_URL) === false) {
+        return lang('incorrect_url');
     }
-    return '<a href="' . $out . '" target="_blank">' . $out . '</a>';
+
+    if (!preg_match("~^(?:f|ht)tps?://~i", $url)) {
+        $url = 'http://' . $url;
+    }
+
+    return '<a href="' . display_clean($url) . '" target="_blank">' . display_clean($url) . '</a>';
 }
 
 /**
@@ -2306,10 +2246,8 @@ function outgoing_link($out): string
  */
 function get_country($code)
 {
-    global $db;
-    $result = $db->select(tbl("countries"), "name_en,iso2", " iso2='$code' OR iso3='$code'");
+    $result = Clipbucket_db::getInstance()->select(tbl('countries'), 'name_en,iso2', " iso2='$code' OR iso3='$code'");
     if (count($result) > 0) {
-        $flag = '';
         $result = $result[0];
         $flag = '<img src="/images/icons/country/' . strtolower($result['iso2']) . '.png" alt="" border="0">&nbsp;';
         return $flag . $result['name_en'];
@@ -2467,7 +2405,7 @@ function category_link($data, $type): string
  * @internal param $ : { string } { $mode } { element to sort e.g time } { $mode } { element to sort e.g time }
  * @internal param $ : { string } { $type } { type of element to sort e.g channels } { $type } { type of element to sort e.g channels }
  */
-function sort_link($sort, $mode, $type)
+function sort_link($sort, $mode, $type): string
 {
     switch ($type) {
         case 'video':
@@ -3021,12 +2959,11 @@ function include_header($params)
     $file = getArrayValue($params, 'file');
     $type = getArrayValue($params, 'type');
     if ($file == 'global_header') {
-
         Template(BASEDIR . '/styles/global/head.html', false);
         return false;
     }
     if (!$type) {
-        $type = "global";
+        $type = 'global';
     }
     if (is_includeable($type)) {
         Template($file, false);
@@ -3087,6 +3024,9 @@ function include_js($params)
             case 'plugin':
                 $url = PLUG_URL . '/';
                 break;
+            case 'player':
+                $url = PLAYER_URL . '/';
+                break;
             case 'admin':
                 $url = TEMPLATEURL . '/theme/js/';
                 break;
@@ -3120,6 +3060,9 @@ function include_css($params)
                 break;
             case 'plugin':
                 $url = PLUG_URL . '/';
+                break;
+            case 'player':
+                $url = PLAYER_URL . '/';
                 break;
             case 'admin':
                 $url = TEMPLATEURL . '/theme/css/';
@@ -3239,6 +3182,9 @@ function footer()
  */
 function rss_feeds($params)
 {
+    if( config('enable_rss_feeds') == 'no'){
+        return false;
+    }
     /**
      * setting up the feeds arrays..
      * if you want to call em in your functions..simply call the global variable $rss_feeds
@@ -3314,20 +3260,6 @@ function marked_spammed($comment): bool
         return true;
     }
     return false;
-}
-
-/**
- * Function used to get object type from its code
- *
- * @param : { string } { $type } { shortcode of type ie v=>video }
- *
- * @return string|void : { string } { complete type name }
- */
-function get_obj_type($type)
-{
-    if ($type == 'v') {
-        return 'video';
-    }
 }
 
 /**
@@ -3421,10 +3353,9 @@ function isUTF8($string)
  *
  * @return string : { string } { $code } { embed code for video }
  */
-function embeded_code($vdetails)
+function embeded_code($vdetails): string
 {
-    $code = '';
-    $code .= '<object width="' . EMBED_VDO_WIDTH . '" height="' . EMBED_VDO_HEIGHT . '">';
+    $code = '<object width="' . EMBED_VDO_WIDTH . '" height="' . EMBED_VDO_HEIGHT . '">';
     $code .= '<param name="allowFullScreen" value="true">';
     $code .= '</param><param name="allowscriptaccess" value="always"></param>';
     //Replacing Height And Width
@@ -3687,7 +3618,7 @@ function uploaderDetails()
  * @param : { string } { $input } { section to check }
  * @param bool $restrict
  *
- * @return bool : { boolean } { true of false depending on situation }
+ * @return bool|void
  */
 function isSectionEnabled($input, $restrict = false)
 {
@@ -4809,113 +4740,6 @@ function generic_curl($input_arr = [])
 }
 
 /**
- * This function is used to clean a string removing all special chars
- * @param string $string
- * @return string
- * @author Mohammad Shoaib
- */
-function cleanString($string): string
-{
-    $string = str_replace("â€™", "'", $string);
-    return preg_replace('/[^A-Za-z0-9 !@#$%^&*()_?<>|{}\[\].,+-;\/:"\'\-]/', "'", $string);
-}
-
-function display_changelog($version, $title = null)
-{
-    if (!is_array($version)) {
-        $filepath = __DIR__ . '/../changelog/' . $version . '.json';
-        if (!file_exists($filepath)) {
-            echo lang('error_occured') . '<br/>';
-            echo 'File don\' exists :' . $filepath;
-            return;
-        }
-        $content_json = json_decode(file_get_contents($filepath), true);
-    } else {
-        $content_json = $version;
-    }
-    echo '<div class="well changelog">';
-    if (is_null($title)) {
-        echo '<h3>' . $content_json['version'] . ' Changelog - ' . ucfirst($content_json['status']) . '</h3>';
-    } else {
-        echo '<h3>' . $title . '</h3>';
-    }
-    foreach ($content_json['detail'] as $detail) {
-        echo '<b>' . $detail['title'] . '</b>';
-        if (!isset($detail['description'])) {
-            continue;
-        }
-        echo '<ul>';
-        foreach ($detail['description'] as $description) {
-            echo '<li>' . $description . '</li>';
-        }
-        echo '</ul>';
-    }
-    echo '</div>';
-}
-
-function display_changelog_diff($current, $new)
-{
-    $detail_current = $current['detail'];
-    $detail_new = $new['detail'];
-    $diff = [
-        'version'    => $new['version']
-        , 'revision' => $new['revision']
-        , 'status'   => $new['status']
-        , 'detail'   => []
-    ];
-
-    foreach ($detail_new as $categ) {
-        $categ_exists = false;
-        foreach ($detail_current as $categ_current) {
-            if ($categ['title'] != $categ_current['title']) {
-                continue;
-            }
-
-            foreach ($categ['description'] as $element) {
-                $element_exists = false;
-                foreach ($categ_current['description'] as $element_current) {
-                    if ($element == $element_current) {
-                        $element_exists = true;
-                        break;
-                    }
-                }
-
-                if (!$element_exists) {
-                    $element_diff_exists = false;
-                    foreach ($diff['detail'] as &$element_diff) {
-                        if ($element_diff['title'] == $categ_current['title']) {
-                            $element_diff['description'][] = $element;
-                            $element_diff_exists = true;
-                            break;
-                        }
-                    }
-
-                    if (!$element_diff_exists) {
-                        $diff['detail'][] = [
-                            'title'         => $categ_current['title']
-                            , 'description' => [$element]
-                        ];
-                    }
-                }
-
-            }
-
-            $categ_exists = true;
-        }
-
-        if (!$categ_exists) {
-            $diff['detail'][] = $categ;
-        }
-    }
-
-    if (empty($diff['detail'])) {
-        echo 'The new revision has the same changelog';
-    } else {
-        display_changelog($diff, 'Additions from your current version');
-    }
-}
-
-/**
  * @return array|null
  */
 function get_proxy_settings(string $format = '')
@@ -4938,175 +4762,6 @@ function get_proxy_settings(string $format = '')
             }
             return $context;
     }
-}
-
-/**
- * @param bool $only_flag
- * @return string|void
- * @throws Exception
- */
-function get_update_status($only_flag = false)
-{
-    if (config('enable_update_checker') != 1) {
-        return '';
-    }
-
-    if (!ini_get('allow_url_fopen')) {
-        if ($only_flag) {
-            return 'red';
-        }
-        return '<div class="well changelog"><h5>' . lang('dashboard_php_config_allow_url_fopen') . '</h5></div>';
-    }
-
-    $base_url = 'https://raw.githubusercontent.com/MacWarrior/clipbucket-v5/master/upload/changelog';
-    $current_version = VERSION;
-    $current_status = strtolower(STATE);
-    $current_revision = REV;
-
-    $context = get_proxy_settings('file_get_contents');
-
-    $versions_url = $base_url . '/latest.json';
-    $versions = json_decode(file_get_contents($versions_url, false, $context), true);
-    if (!isset($versions[$current_status])) {
-        if ($only_flag) {
-            return 'red';
-        }
-        echo lang('error_occured') . '<br/>';
-        echo lang('error_file_download') . ' : ' . $versions_url;
-        return;
-    }
-
-    $changelog_url = $base_url . '/' . $versions[$current_status] . '.json';
-    $changelog = json_decode(file_get_contents($changelog_url, false, $context), true);
-    if (!isset($changelog['version'])) {
-        if ($only_flag) {
-            return 'red';
-        }
-        echo lang('error_occured') . '<br/>';
-        echo lang('error_file_download') . ' : ' . $changelog_url;
-        return;
-    }
-
-    if (!$only_flag) {
-        echo '<div class="well changelog"><h5>Current version : <b>' . $current_version . '</b> - Revision <b>' . $current_revision . '</b> <i>(' . ucfirst($current_status) . ')</i><br/>';
-        echo 'Latest version <i>(' . ucfirst($current_status) . ')</i> : <b>' . $changelog['version'] . '</b> - Revision <b>' . $changelog['revision'] . '</b></h5></div>';
-    }
-
-    $is_new_version = $current_version > $changelog['version'];
-    $is_new_revision = $is_new_version || $current_revision > $changelog['revision'];
-
-    if ($current_version == $changelog['version'] && $current_revision == $changelog['revision']) {
-        if ($only_flag) {
-            return 'green';
-        }
-        echo '<h3 style="text-align:center;">Your Clipbucket seems up-to-date !</h3>';
-    } else {
-        if ($is_new_version || $is_new_revision) {
-            if ($only_flag) {
-                return 'green';
-            }
-
-            echo '<h3 style="text-align:center;">Keep working on this new version ! :)</h3>';
-
-        } else {
-            if ($only_flag) {
-                return 'orange';
-            }
-            echo '<h3 style="text-align:center;">Update <b>' . $changelog['version'] . '</b> - Revision <b>' . $changelog['revision'] . '</b> is available !</h3>';
-
-            if ($current_version != $changelog['version']) {
-                display_changelog($changelog);
-            } else {
-                $current_changelog = json_decode(file_get_contents(realpath(__DIR__ . '/../changelog') . '/' . CHANGELOG . '.json'), true);
-                display_changelog_diff($current_changelog, $changelog);
-            }
-        }
-    }
-
-    if ($current_status == 'dev') {
-        echo '<div class="well changelog"><h5>Thank you for using the developpement version of Clipbucket !<br/>Please create an <a href="https://github.com/MacWarrior/clipbucket-v5/issues" target="_blank">issue</a> if you encounter any bug.</h5></div>';
-    }
-}
-
-/**
- * @throws Exception
- */
-function get_db_update_status()
-{
-    global $db;
-    $version = $db->select(tbl('version'), '*')[0];
-    $folder_version = $version['version'];
-    $revision = $version['revision'];
-
-    $need_db_upgrade = check_need_upgrade($folder_version, $revision);
-
-    $nb_db_update = 0;
-    if ($need_db_upgrade) {
-        $nb_db_update += get_files_to_upgrade($folder_version, $revision, true);
-    }
-
-    $nb_db_update += get_plugin_db_update_status(true);
-
-    assign('need_db_update', ($nb_db_update > 0));
-    if ($nb_db_update > 0) {
-        assign('nb_db_update', str_replace('%s', $nb_db_update, lang('need_db_upgrade')));
-    }
-    Template('msg_update_db.html');
-}
-
-/**
- * @throws Exception
- */
-function get_plugin_db_update_status($only_nb = false)
-{
-    global $db;
-
-    $installed_plugins = $db->select(tbl('plugins'), '*');
-
-    $need_db_plugin_upgrade = false;
-    foreach ($installed_plugins as $installed_plugin) {
-        $need_db_plugin_upgrade = check_need_plugin_upgrade($installed_plugin);
-        if ($need_db_plugin_upgrade) {
-            break;
-        }
-    }
-    $nb_db_update = 0;
-    if ($need_db_plugin_upgrade) {
-        $nb_db_update += get_plugins_files_to_upgrade($installed_plugins, true);
-    }
-    if ($only_nb) {
-        return $nb_db_update;
-    }
-    if ($nb_db_update > 0) {
-        assign('nb_db_update', str_replace('%s', $nb_db_update, lang('need_db_upgrade')));
-    }
-    assign('need_db_update', $need_db_plugin_upgrade);
-    assign('is_plugin_db', true);
-    Template('msg_update_db.html');
-}
-
-/**
- * @return bool
- * @throws Exception
- */
-function need_to_update_version(): bool
-{
-    global $db;
-
-    try {
-        $db->select(tbl('version'), '*')[0];
-    } catch (Exception $e) {
-        if ($e->getMessage() == 'version_not_installed') {
-            if (BACK_END) {
-                e('Version system isn\'t installed, please connect and follow upgrade instructions.');
-            } elseif (in_dev()) {
-                e('Version system isn\'t installed, please contact your administrator.');
-            }
-            return true;
-        }
-        throw $e;
-    }
-    return false;
 }
 
 function error_lang_cli($msg)
@@ -5134,7 +4789,7 @@ function rglob($pattern, $flags = 0)
  * @param $path
  * @return bool
  */
-function delete_empty_directories($path)
+function delete_empty_directories($path): bool
 {
     if (!is_dir($path)) {
         return false;
@@ -5175,6 +4830,42 @@ function get_restorable_languages(array $list_language = []): array
         return !in_array($lang, $column);
     });
 }
+
+function parseAllPHPModules()
+{
+
+    ob_start();
+    phpinfo(INFO_MODULES);
+    $s = ob_get_contents();
+    ob_end_clean();
+
+    $s = strip_tags($s, '<h2><th><td>');
+    $s = preg_replace('/<th[^>]*>([^<]+)<\/th>/', "<info>\\1</info>", $s);
+    $s = preg_replace('/<td[^>]*>([^<]+)<\/td>/', "<info>\\1</info>", $s);
+    $vTmp = preg_split('/(<h2>[^<]+<\/h2>)/', $s, -1, PREG_SPLIT_DELIM_CAPTURE);
+    $vModules = [];
+    for ($i = 1; $i < count($vTmp); $i++) {
+        if (preg_match('/<h2>([^<]+)<\/h2>/', $vTmp[$i], $vMat)) {
+            $vName = trim($vMat[1]);
+            $vTmp2 = explode("\n", $vTmp[$i + 1]);
+            foreach ($vTmp2 as $vOne) {
+                $vPat = '<info>([^<]+)<\/info>';
+                $vPat3 = "/$vPat\s*$vPat\s*$vPat/";
+                $vPat2 = "/$vPat\s*$vPat/";
+                if (preg_match($vPat3, $vOne, $vMat)) { // 3cols
+                    $vModules[$vName][trim($vMat[1])] = [
+                        trim($vMat[2]),
+                        trim($vMat[3])
+                    ];
+                } elseif (preg_match($vPat2, $vOne, $vMat)) { // 2cols
+                    $vModules[$vName][trim($vMat[1])] = trim($vMat[2]);
+                }
+            }
+        }
+    }
+    return $vModules;
+}
+
 
 include('functions_db.php');
 include('functions_filter.php');

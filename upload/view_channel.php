@@ -50,10 +50,6 @@ if ($userquery->perm_check('view_channel', true)) {
         $userquery->subscribe_user($udetails['userid']);
     }
 
-    //Adding Comment
-    if (isset($_POST['add_comment'])) {
-        $userquery->add_comment($_POST['comment'], $udetails['userid']);
-    }
     //Calling view channel functions
     call_view_channel_functions($udetails);
 
@@ -101,7 +97,31 @@ if ($userquery->perm_check('view_channel', true)) {
     add_js(['jquery_plugs/compressed/jquery.jCarousel.js' => 'view_channel']);
 
     if ($Cbucket->show_page || $udetails) {
+        $channel_profile_fields = $userquery->load_user_fields($p,'profile');
+
+        $location_fields = [];
+        foreach($channel_profile_fields AS $field){
+            if( $field['group_id'] == 'profile_location'){
+                $location_fields = $field;
+                break;
+            }
+        }
+        assign('location_fields', $location_fields);
+
+        assign('channel_profile_fields', $channel_profile_fields);
+
         template_files('view_channel.html');
+
+        if(in_dev()){
+            $min_suffixe = '';
+        } else {
+            $min_suffixe = '.min';
+        }
+
+        $Cbucket->addJS(['pages/view_channel/view_channel'.$min_suffixe.'.js' => 'admin']);
+        $Cbucket->addJS(['/plupload/js/plupload.full.min.js' => 'admin']);
     }
 }
+
+
 display_it();

@@ -16,7 +16,7 @@ if (file_exists(FILES_DIR . '/temp/install.me')) {
 
 <div class="nav_des clearfix">
     <div class="cb_container">
-        <h4 style="color:#fff;">ClipBucket <?php echo VERSION; ?> has been installed successfully !</h4>
+        <h4 style="color:#fff;">ClipBucketV5 - v<?php echo VERSION; ?> has been installed successfully !</h4>
     </div>
 </div>
 

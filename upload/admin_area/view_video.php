@@ -14,9 +14,9 @@ $video = mysql_clean($_GET['video']);
 //Check Video Exists or Not
 if ($myquery->video_exists($video)) {
     //Deleting Comment
-    $cid = mysql_clean($_GET['delete_comment']);
+    $cid = $_GET['delete_comment'];
     if (!empty($cid)) {
-        $myquery->delete_comment($cid);
+        Comments::delete(['comment_id' => $cid]);
     }
 
     //Get Video Details

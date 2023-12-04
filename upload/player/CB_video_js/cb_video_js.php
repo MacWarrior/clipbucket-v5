@@ -2,181 +2,144 @@
 /*
 	Player Name: VideoJS
 	Description: Official CBV5 player
-	Author: Arslan Hassan & MacWarrior
-	Version: CB5.5.0
-    Released: 2021-12-31
+	Author: Oxygenz
+    Author Website: https://clipbucket.oxygenz.fr/
+	Version: 2.0.1
+    Released: 2023-09-20
     Website: https://github.com/MacWarrior/clipbucket-v5
  */
 
-$cb_video_js = false;
-
-if (!function_exists('cb_video_js'))
+class CB_video_js
 {
-	define('CB_VJS_PLAYER',basename(dirname(__FILE__)));
-	define('CB_VJS_PLAYER_DIR',PLAYER_DIR.DIRECTORY_SEPARATOR.CB_VJS_PLAYER);
-	define('CB_VJS_PLAYER_URL',PLAYER_URL.'/'.CB_VJS_PLAYER);
-	assign('cb_vjs_player_dir',CB_VJS_PLAYER_DIR);
-	assign('cb_vjs_player_url',CB_VJS_PLAYER_URL);
-
-	function cb_video_js($in): bool
+    /**
+     * @throws Exception
+     */
+    private function load_dependancies()
     {
-		global $cb_video_js;
-		$cb_video_js = true;
-		
-		$vdetails = $in['vdetails'];
+        global $Cbucket;
 
-		$video_play = get_video_files($vdetails,true,true);
+        $player_name = self::class;
 
-        if (!is_array($video_play)){
-            assign('video_files',[$video_play]);
+        if (in_dev()) {
+            $min_suffixe = '';
         } else {
-            assign('video_files', $video_play);
+            $min_suffixe = '.min';
+        }
+        $Cbucket->addAllJS([
+            $player_name.'/js/video'.$min_suffixe.'.js' => 'player'
+            ,$player_name.'/lang/'.get_current_language().'.js' => 'player'
+            ,$player_name.'/plugin/clipbucket/videojs-clipbucket'.$min_suffixe.'.js' => 'player'
+            ,$player_name.'/plugin/playinline/iphone-inline-video'.$min_suffixe.'.js' => 'player'
+            ,$player_name.'/plugin/resolution/videojs-resolution'.$min_suffixe.'.js' => 'player'
+            ,$player_name.'/plugin/hls-quality-selector/videojs-hls-quality-selector'.$min_suffixe.'.js' => 'player'
+        ]);
+        $Cbucket->addAllCSS([
+            $player_name.'/css/video-js'.$min_suffixe.'.css' => 'player'
+            ,$player_name.'/plugin/clipbucket/videojs-clipbucket'.$min_suffixe.'.css' => 'player'
+            ,$player_name.'/plugin/resolution/videojs-resolution'.$min_suffixe.'.css' => 'player'
+        ]);
+
+        if( config('chromecast') == 'yes' ){
+            $Cbucket->addAllJS([
+                $player_name.'/plugin/chromecast/cast_sender.js' => 'player'
+                ,$player_name.'/plugin/chromecast/videojs-chromecast'.$min_suffixe.'.js' => 'player'
+            ]);
+            $Cbucket->addAllCSS([$player_name.'/plugin/chromecast/videojs-chromecast'.$min_suffixe.'.css' => 'player']);
         }
 
-		if(!strstr($in['width'],"%")){
-			$in['width'] = $in['width'].'px';
-        }
-		if(!strstr($in['height'],"%")){
-			$in['height'] = $in['height'].'px';
+        if( config('player_thumbnails') == 'yes' ){
+            $Cbucket->addAllJS([$player_name.'/plugin/thumbnails/videojs-thumbnails'.$min_suffixe.'.js' => 'player']);
+            $Cbucket->addAllCSS([$player_name.'/plugin/thumbnails/videojs-thumbnails'.$min_suffixe.'.css' => 'player']);
         }
 
-		assign('height',$in['height']);
-        assign('width',$in['width']);
-		assign('player_config',$in);
-		assign('vdata',$vdetails);
-		
-		Template(CB_VJS_PLAYER_DIR.DIRECTORY_SEPARATOR.'cb_video_js.html',false);
-		return true;
-	}
+        if( config('enable_advertisement') == 'yes' ){
+            $Cbucket->addAllJS([
+                $player_name.'/plugin/ads/videojs-contrib-ads'.$min_suffixe.'.js' => 'player'
+                ,$player_name.'/plugin/ads/videojs.ads'.$min_suffixe.'.js' => 'player'
+                ,$player_name.'/plugin/ads/videojs.ima.js' => 'player'
+            ]);
 
-	/*
-	* This Function is written to get quality of current file
-	*/
-	function get_cbvjs_quality($src, $file_type = 'mp4'): string
+            $Cbucket->addAllCSS([
+                $player_name.'/plugin/ads/videojs.ads'.$min_suffixe.'.css' => 'player'
+                ,$player_name.'/plugin/clipbucket/videojs-clipbucket'.$min_suffixe.'.css' => 'player'
+                ,$player_name.'/plugin/resolution/videojs-resolution'.$min_suffixe.'.css' => 'player'
+                ,$player_name.'/plugin/ads/videojs.ima.css' => 'player'
+            ]);
+
+        }
+    }
+
+    private function register_actions_play_video()
     {
-		switch($file_type)
-        {
-            default:
-            case 'mp4':
-                $quality = explode('-', basename($src));
-                $quality = explode('.',end($quality));
-                return $quality[0];
-            case 'hls':
-                $quality = explode('video_', basename($src));
-                $quality = explode('.',end($quality));
-                return substr(reset($quality), 0, -1);
-        }
+        register_actions_play_video('load_player', self::class);
+    }
 
-	}
+    /**
+     * @throws Exception
+     */
+    public static function load_player($data): bool
+    {
+        $vdetails = $data['vdetails'];
 
-	/*
-	* This Function is written to set default resolution for cb_vjs_player
-	*/
-	function get_cbvjs_quality_type($video_files, $file_type){
-		if ($video_files) {
+        $video_play = get_video_files($vdetails,true);
+
+        assign('video_files', $video_play);
+        assign('vdata',$vdetails);
+
+        Template(PLAYER_DIR . DIRECTORY_SEPARATOR . self::class .DIRECTORY_SEPARATOR . 'cb_video_js.html',false);
+        return true;
+    }
+
+    public static function getVideoQualityFromFilePath($filepath): string
+    {
+        $quality = explode('-', basename($filepath));
+        $quality = explode('.',end($quality));
+        return $quality[0];
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function getVideoResolutionTitleFromFilePath($filepath): string
+    {
+        global $myquery;
+        $quality = self::getVideoQualityFromFilePath($filepath);
+        return $myquery->getVideoResolutionTitleFromHeight($quality);
+    }
+
+    /**
+     * @throws Exception
+     * @used-by cb_video_js.html
+     */
+    public static function getDefaultVideo($video_files)
+    {
+        global $myquery;
+        if (!empty($video_files) && is_array($video_files)) {
             $res = [];
             foreach ($video_files as $file) {
-                $res[] = get_cbvjs_quality($file, $file_type);
+                $res[] = self::getVideoQualityFromFilePath($file);
             }
 
-            if( getExt($video_files[0]) == 'mp4' ){
-                $player_default_resolution = config('player_default_resolution');
-            } else {
-                $player_default_resolution = config('player_default_resolution_hls');
-            }
+            $player_default_resolution = config('player_default_resolution');
 
             if (in_array($player_default_resolution, $res)){
-                $quality = $player_default_resolution;
-            } elseif ($player_default_resolution > max($res)) {
-                $quality = 'high';
-            } else {
-                $quality = 'low';
+                return $myquery->getVideoResolutionTitleFromHeight($player_default_resolution);
             }
+            if ($player_default_resolution > max($res)) {
+                return 'high';
+            }
+           return 'low';
+        }
+        return false;
+    }
 
-			return $quality;	
-		}
-		return false;
-	}
-
-	/**
-	 * Used to return functions of custom/premium plugins
-	 *
-	 * @param   : { Array } { function } { videoid }
-	 *
-	 * @return bool : { functions/Boolean }
-	 * @example : get_my_function($params) { will check the required function name and return the case }
-	 * @since   : 01st August, 2016 ClipBucket 2.8.1
-	 * @author  : Fahad Abbas
-	 */
-	function get_my_function($params){
-
-		$function = $params['function'];
-		$videoid = $params['videoid'];
-
-		if (!$function){
-			return False;
-		}
-
-		switch ($function) {
-			case 'get_ultimate_ads':
-				if( defined('CB_ULTIMATE_ADS') && CB_ULTIMATE_ADS == 'installed'){
-					global $CbUads;
-					$ads_array = ['filter_ad'=>true,'status'=>'1','non_expiry'=>'true'];
-					$current_ad = $CbUads->get_ultimate_ads($ads_array);
-					
-					if ( !empty($current_ad) ){
-						return $current_ad;
-					}
-					return false;
-				}
-				return false;
-
-			case 'get_timeCommnets':
-				if( defined('CB_TIMECOMMENTS_PLUGIN') && CB_TIMECOMMENTS_PLUGIN == 'installed'){
-					$timecomments = get_timeComments($videoid);
-					if (!empty($timecomments)){
-						return json_encode($timecomments);
-					}
-					return false;
-				}
-				return false;
-
-			case 'get_video_editor':
-				if( defined('IA_ADS_INSTALLED') && IA_ADS_INSTALLED == 'installed' ){
-					$video_editor_enabled = video_editor_enabled();
-					return $video_editor_enabled;
-				}
-				return false;
-
-			case 'get_svg_manager':
-				if( defined('IA_ADS_INSTALLED') && IA_ADS_INSTALLED == 'installed' ){
-					$svg_manager = svg_manager();
-					return $svg_manager;
-				}
-				return false;
-
-			case 'get_slot':
-				if( defined('IA_ADS_INSTALLED') && IA_ADS_INSTALLED == 'installed' ){
-					global $ia_ads;
-					$slot_paramas['videoid'] = $videoid;
-					
-					if ( !empty($_GET['slot_id']) ){
-						$slot_paramas['slot_id'] = $_GET['slot_id'];
-					} else {
-						$slot_paramas['state'] = '1';
-					}
-					$slot_id = $ia_ads->get_slot($slot_paramas)[0]['slot_id'];
-					if (!empty($slot_id)){
-						$instances = $ia_ads->get_instance(['slot_id'=>$slot_id,'order'=>'starttime ASC']);
-					}
-					return $instances;
-				}
-				return false;
-
-			default:
-			    break;
-		}
-	}
-
-	register_actions_play_video('cb_video_js');
+    /**
+     * @throws Exception
+     */
+    function __construct(){
+        $this->load_dependancies();
+        $this->register_actions_play_video();
+    }
 }
+
+new CB_video_js();

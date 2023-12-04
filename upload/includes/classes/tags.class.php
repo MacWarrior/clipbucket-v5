@@ -2,8 +2,16 @@
 
 class Tags
 {
+    /**
+     * @throws Exception
+     */
     public static function getTags($limit = 'false', $cond = false)
     {
+        $version = Update::getInstance()->getDBVersion();
+        if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
+            e(lang('missing_table'));
+            return [];
+        }
         global $db;
         $query = 'SELECT T.name AS tag, TT.name AS tag_type, T.id_tag, 
         IF(COUNT(CT.id_tag) = 0 AND COUNT(PT.id_tag) = 0 AND COUNT(PLT.id_tag) = 0 AND COUNT(UT.id_tag) = 0 AND COUNT(VT.id_tag) = 0, true, false) AS can_delete
@@ -14,7 +22,7 @@ class Tags
         LEFT JOIN ' . tbl('playlist_tags') . ' PLT ON PLT.id_tag = T.id_tag 
         LEFT JOIN ' . tbl('user_tags') . ' UT ON UT.id_tag = T.id_tag 
         LEFT JOIN ' . tbl('video_tags') . ' VT ON VT.id_tag = T.id_tag 
-        '. ($cond ? 'WHERE '. $cond : '') .'
+        '. ($cond ? 'WHERE '. (is_array($cond) ? implode(' AND ', $cond) : $cond) : '') .'
         GROUP BY T.id_tag
         ';
         if ($limit) {
@@ -24,8 +32,16 @@ class Tags
         return $db->_select($query, 0);
     }
 
+    /**
+     * @throws Exception
+     */
     public static function countTags($cond)
     {
+        $version = Update::getInstance()->getDBVersion();
+        if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
+            e(lang('missing_table'));
+            return 0;
+        }
         global $db;
         return $db->count(tbl('tags') . ' T 
         INNER JOIN ' . tbl('tags_type') . ' TT ON TT.id_tag_type = T.id_tag_type 
@@ -33,16 +49,21 @@ class Tags
         LEFT JOIN ' . tbl('photo_tags') . ' PT ON PT.id_tag = T.id_tag 
         LEFT JOIN ' . tbl('playlist_tags') . ' PLT ON PLT.id_tag = T.id_tag 
         LEFT JOIN ' . tbl('user_tags') . ' UT ON UT.id_tag = T.id_tag 
-        LEFT JOIN ' . tbl('video_tags') . ' VT ON VT.id_tag = T.id_tag ', 'DISTINCT T.name, TT.name, T.id_tag', $cond);
+        LEFT JOIN ' . tbl('video_tags') . ' VT ON VT.id_tag = T.id_tag ', 'DISTINCT T.name, TT.name, T.id_tag', (is_array($cond) ? implode(' AND ', $cond) : $cond));
     }
 
     /**
      * @param $id_tag
-     * @return false|mixed
+     * @return false|void
      * @throws Exception
      */
     public static function deleteTag($id_tag)
     {
+        $version = Update::getInstance()->getDBVersion();
+        if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
+            e(lang('missing_table'));
+            return false;
+        }
         global $db;
         $query = 'SELECT 
                     IF(COUNT(CT.id_tag) = 0 AND COUNT(PT.id_tag) = 0 AND COUNT(PLT.id_tag) = 0 AND COUNT(UT.id_tag) = 0 AND COUNT(VT.id_tag) = 0, true, false) AS can_delete
@@ -63,20 +84,44 @@ class Tags
     }
 
 
-    public static function updateTag($name, $id_tag)
+    /**
+     * @param $name
+     * @param $id_tag
+     * @return bool
+     * @throws Exception
+     */
+    public static function updateTag($name, $id_tag):bool
     {
+        $version = Update::getInstance()->getDBVersion();
+        if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
+            e(lang('missing_table'));
+            return false;
+        }
         global $db;
+        if (strlen(trim($name)) <= 2) {
+            e(lang('tag_too_short'),'warning');
+            return false;
+        }
         try {
             $db->update(tbl('tags'), ['name'], [$name], 'id_tag = ' . mysql_clean($id_tag));
             e(lang('tag_updated'), 'm');
+            return true;
         } catch (Exception $e) {
             e(lang('error'));
+            return false;
         }
-
     }
 
+    /**
+     * @throws Exception
+     */
     public static function saveTags(string $tags, string $object_type, int $object_id)
     {
+        $version = Update::getInstance()->getDBVersion();
+        if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
+            e(lang('missing_table'));
+            return false;
+        }
         switch ($object_type) {
             case 'video':
                 $id_field = 'id_video';
@@ -103,45 +148,54 @@ class Tags
                 return false;
         }
         global $db;
-        $sql_id_type = 'SELECT id_tag_type
-                   FROM ' . tbl('tags_type') . '
-                   WHERE name LIKE \'' . $object_type . '\'';
-        $res = $db->_select($sql_id_type);
-        if (!empty($res)) {
-            $id_type = $res[0]['id_tag_type'];
-        } else {
-            e(lang('unknown_tag_type'));
-            return false;
-        }
-        $sql_insert_tag = 'INSERT IGNORE INTO ' . tbl('tags') . ' (id_tag_type, name) (SELECT ' . mysql_clean($id_type) . ', jsontable.tags
-                          FROM JSON_TABLE(CONCAT(\'["\', REPLACE(LOWER(\'' . mysql_clean($tags) . '\'), \',\', \'","\'), \'"]\'), \'$[*]\' COLUMNS (`tags` TEXT PATH \'$\')) jsontable)';
-        if (!$db->execute($sql_insert_tag, 'insert')) {
-            e(lang('error_inserting_tags'));
-            return false;
-        }
-
         $sql_delete_link = 'DELETE FROM ' . tbl($table_tag) . ' WHERE ' . $id_field . ' = ' . mysql_clean($object_id);
         if (!$db->execute($sql_delete_link, 'delete')) {
             e(lang('error_delete_linking_tags'));
             return false;
         }
+        if (!empty($tags)) {
+            $sql_id_type = 'SELECT id_tag_type
+                       FROM ' . tbl('tags_type') . '
+                       WHERE name LIKE \'' . $object_type . '\'';
+            $res = $db->_select($sql_id_type);
+            if (!empty($res)) {
+                $id_type = $res[0]['id_tag_type'];
+            } else {
+                e(lang('unknown_tag_type'));
+                return false;
+            }
+            $sql_insert_tag = 'INSERT IGNORE INTO ' . tbl('tags') . ' (id_tag_type, name) (SELECT ' . mysql_clean($id_type) . ', jsontable.tags
+                          FROM JSON_TABLE(CONCAT(\'["\', REPLACE(LOWER(\'' . mysql_clean($tags) . '\'), \',\', \'","\'), \'"]\'), \'$[*]\' COLUMNS (`tags` TEXT PATH \'$\')) jsontable)';
+            if (!$db->execute($sql_insert_tag, 'insert')) {
+                e(lang('technical_error'));
+                return false;
+            }
 
-        $sql_link_tag = 'INSERT IGNORE INTO ' . tbl($table_tag) . ' (`id_tag`, `' . $id_field . '`) (
+            $sql_link_tag = 'INSERT IGNORE INTO ' . tbl($table_tag) . ' (`id_tag`, `' . $id_field . '`) (
             SELECT T.id_tag, ' . mysql_clean($object_id) . '
             FROM JSON_TABLE(CONCAT(\'["\', REPLACE(LOWER(\'' . mysql_clean($tags) . '\'), \',\', \'","\'), \'"]\'), \'$[*]\' COLUMNS (`tags` TEXT PATH \'$\')) jsontable
             INNER JOIN ' . tbl('tags') . ' AS T ON T.name = LOWER(jsontable.tags) COLLATE utf8mb4_unicode_520_ci AND T.id_tag_type = ' . mysql_clean($id_type) . '
         )';
-        if (!$db->execute($sql_link_tag, 'insert')) {
-            e(lang('error_linking_tags'));
-            return false;
+            if (!$db->execute($sql_link_tag, 'insert')) {
+                e(lang('technical_error'));
+                return false;
+            }
         }
 
         return true;
     }
 
+    /**
+     * @throws Exception
+     */
     public static function fill_auto_complete_tags($object_type): array
     {
         global $db;
+        $version = Update::getInstance()->getDBVersion();
+        if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
+            e(lang('missing_table'));
+            return [];
+        }
         $sql_id_type = 'SELECT id_tag_type
                    FROM ' . tbl('tags_type') . '
                    WHERE name LIKE \'' . $object_type . '\'';
@@ -157,5 +211,20 @@ class Tags
         return array_map(function ($item) {
             return $item['name'];
         }, $result);
+    }
+
+    /**
+     * @return array
+     * @throws Exception
+     */
+    public static function getTagTypes(): array
+    {
+        $version = Update::getInstance()->getDBVersion();
+        if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
+            e(lang('missing_table'));
+            return [];
+        }
+        global $db;
+        return $db->select(tbl('tags_type'),'*',false, false, false, false, 300);
     }
 }
