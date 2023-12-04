@@ -51,39 +51,6 @@
 </div>
 {/if}
 
-{if $display_type=='trending'}
-<div class="item_video row clearfix">
-	<div class="col-xs-6">
-		<div class="cb_item_thumb video_thumb">
-			<a class="video-link" href="{video_link($video)}" title="{display_clean($video.title)|title}">
-				<span class="duration">{if
-					$video.duration>1}{$video.duration|SetTime}{else}00:00{/if}{*$video.duration|date_format:$config.time*}
-				</span>
-				<i class="icon-playweb play-icon"></i>
-				<img class="img-responsive" src="{getThumb vdetails=$video size=300x169 }" border="1"/>
-			</a>
-			{ANCHOR place='in_video_thumb' data=$video}
-			
-			<img src="{$imageurl}/dot.gif" data-quick="quick-{$video.videoid}"
-         class="add_icon cb_quickie cb-btn-quick-{$video.videoid}" onclick="add_quicklist(this,'{$video.videoid}')" title="Add {display_clean($video.title)} to Quicklist" alt="Quicklist" />
-		</div>
-	</div>
-	<div class="col-xs-6">
-		<h5 class="dropdown hide_btn">
-			<a data-hover="dropdown" data-toggle="dropdown" class="dropdown-toggle" data-delay="1000" data-close-others="false" onClick="location.href='{video_link($video)}'" href="{video_link($video)}">{display_clean($video.title|truncate:15)} </a>
-		</h5>
-
-		<h5>{lang code="by"}
-		{if isSectionEnabled('channels')}
-			<a href="{$userquery->profile_link($video.username)}">{display_clean($video.username)}</a>
-		{else}
-			{display_clean($video.username)}
-		{/if}
-		</h5>
-	</div>
-</div>
-{/if}
-
 {if $display_type=='related'}
 <div class="item_video row clearfix">
 	<div class="col-xs-6">
@@ -98,7 +65,7 @@
 			{ANCHOR place='in_video_thumb' data=$video}
 			
 			<img src="{$imageurl}/dot.gif" data-quick="quick-{$video.videoid}"
-         class="add_icon cb_quickie cb-btn-quick-{$video.videoid}" onclick="add_quicklist(this,'{$video.videoid}')" title="Add {display_clean($video.title)} to Quicklist" alt="Quicklist" />
+         class="add_icon cb_quickie cb-btn-quick-{$video.videoid}" title="Add {display_clean($video.title)} to Quicklist" alt="Quicklist" />
 		</div>
 	</div>
 	<div class="col-xs-6">
@@ -134,7 +101,7 @@
 			{ANCHOR place='in_video_thumb' data=$video}
 			
 			<img src="{$imageurl}/dot.gif" data-quick="quick-{$video.videoid}"
-         class="add_icon cb_quickie cb-btn-quick-{$video.videoid}" onclick="add_quicklist(this,'{$video.videoid}')" title="Add {display_clean($video.title)} to Quicklist" alt="Quicklist" />
+         class="add_icon cb_quickie cb-btn-quick-{$video.videoid}" title="Add {display_clean($video.title)} to Quicklist" alt="Quicklist" />
 		</div>
 	</div>
 	<div class="clearfix">

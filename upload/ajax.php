@@ -609,29 +609,6 @@ if (!empty($mode)) {
             }
             break;
 
-
-        case 'quicklist':
-            $todo = $_POST['todo'];
-            $id = mysql_clean($_POST['vid']);
-
-            if ($todo == 'add') {
-                echo $cbvid->add_to_quicklist($id);
-            } else {
-                echo $cbvid->remove_from_quicklist($id);
-            }
-
-            break;
-
-        case 'getquicklistbox';
-            if ($cbvid->total_quicklist() > 0) {
-                TEMPLATE('blocks/quicklist/block.html');
-            }
-            break;
-
-        case 'clear_quicklist':
-            $cbvid->clear_quicklist();
-            return 'removed';
-
         case 'delete_comment':
             Comments::delete(['comment_id' => $_POST['cid']]);
             $error = $eh->get_error();

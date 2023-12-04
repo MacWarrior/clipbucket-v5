@@ -27,6 +27,7 @@ $(document).ready(function() {
 		} else {
 			notInList = true;
 			cleanList = [id];
+			$('.ql_show-hide1').toggleClass('glyphicon-plus glyphicon-minus');
 		}
 		$('#qlist_count').html(cleanList.length);
 		set_cookie_secure("fast_qlist", JSON.stringify(cleanList));
@@ -94,3 +95,16 @@ $(document).ready(function() {
 		$('.cb_quickie').removeClass('icon-tick');
 	});
 });
+
+function quick_show_hide_toggle(obj)
+{
+	$(obj).slideToggle()
+
+	if($.cookie("quick_list_box")=="show") {
+		set_cookie_secure('quick_list_box','hide');
+		$('.ql_show-hide').html('show');
+	} else {
+		set_cookie_secure('quick_list_box','show')
+		$('.ql_show-hide').html('hide');
+	}
+}
