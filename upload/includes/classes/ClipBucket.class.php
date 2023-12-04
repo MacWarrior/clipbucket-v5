@@ -168,15 +168,21 @@ class ClipBucket
      */
     private function addFile(&$array_var, $files)
     {
+        if(in_dev()){
+            $cache_key = time();
+        } else {
+            $cache_key = str_replace('.', '', Update::getInstance()->getCurrentCoreVersion()) . Update::getInstance()->getCurrentCoreRevision();
+        }
+
         if (is_array($files)) {
             foreach ($files as $key => $file) {
                 if (!isset($array_var[$key])) {
-                    $array_var[$key . '?v=' . str_replace('.', '', Update::getInstance()->getCurrentCoreVersion()) . Update::getInstance()->getCurrentCoreRevision()] = $file;
+                    $array_var[$key . '?v=' . $cache_key] = $file;
                 }
             }
         } else {
             if (!isset($array_var[$files])) {
-                $array_var[$files . '?v=' . str_replace('.', '', Update::getInstance()->getCurrentCoreVersion()) . Update::getInstance()->getCurrentCoreRevision()] = 'global';
+                $array_var[$files . '?v=' . $cache_key] = 'global';
             }
         }
     }
