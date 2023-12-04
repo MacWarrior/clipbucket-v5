@@ -9,12 +9,12 @@ class Curl
 
 
     /**
-     * @param $base_rul
+     * @param $base_url
      * @param $beared_token
      */
-    public function __construct($base_rul, $beared_token)
+    public function __construct($base_url, $beared_token)
     {
-        $this->base_url = $base_rul . (substr($base_rul, -1) != '/' ? '/' : '');
+        $this->base_url = $base_url . (substr($base_url, -1) != '/' ? '/' : '');
         $this->beared_token = $beared_token;
         $this->curl = curl_init();
         curl_setopt_array($this->curl, [
