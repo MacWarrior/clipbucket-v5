@@ -78,6 +78,7 @@ if (isset($_POST['update'])) {
         , 'enable_video_social_sharing'
         , 'enable_video_internal_sharing'
         , 'enable_video_link_sharing'
+        , 'enable_quicklist'
     ];
 
     $config_booleans_to_refactor = [
@@ -317,6 +318,7 @@ if (isset($_POST['update'])) {
         'enable_video_file_upload',
         'enable_video_remote_upload',
         'enable_photo_file_upload',
+        'enable_quicklist',
 
         'allow_conversion_1_percent',
 

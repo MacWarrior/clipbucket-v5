@@ -28,12 +28,14 @@
 
 		<title>{cbtitle}</title>
 		{* Getting quicklist videos and assigning *}
-		{assign var=qlist_videos value=get_fast_qlist()}
-		{assign var=litems_count value=$qlist_videos|@count}
-		{if $litems_count >= 1}
-		{assign var=got_qlitems value="yes"}
-		{else}
-		{assign var=got_qlitems value="no"}
+		{if config('enable_quicklist') == 'yes'}
+			{assign var=qlist_videos value=get_fast_qlist()}
+			{assign var=litems_count value=$qlist_videos|@count}
+			{if $litems_count >= 1}
+			{assign var=got_qlitems value="yes"}
+			{else}
+			{assign var=got_qlitems value="no"}
+			{/if}
 		{/if}
 		<script>
 			var loadingImg = '<i class="glyphicon glyphicon-refresh animate-spin"></i>';
