@@ -2467,6 +2467,9 @@ class userquery extends CBCategory
 
         //Changing Date of birth
         if (isset($array['dob']) && $array['dob'] != '0000-00-00') {
+            if (!verify_age($array['dob'])) {
+                e(sprintf(lang('register_min_age_request'), config('min_age_reg')));
+            }
             $uquery_field[] = 'dob';
 
             // Converting date from custom format to MySQL
