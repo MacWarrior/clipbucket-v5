@@ -120,6 +120,16 @@
 								</div>
 							</div>
 							<hr/>
+							<div class="row">
+								<div class="col-md-10">
+									<label class="nowrap" for="enable_tmdb" title="Enable RSS feeds">{lang code='enable_tmdb'}</label>
+								</div>
+								<div class="col-md-2 row-size no_padding">
+									<input value="yes" id="enable_tmdb" {if $row.enable_tmdb=='yes'}checked{/if} name="enable_tmdb" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
 
 						</div>
 						<div class="col-md-4">
@@ -174,7 +184,15 @@
 								</div>
 							</div>
 							<hr/>
-
+							<div class="row">
+								<div class="col-md-8">
+									<label class="nowrap" for="tmdb_token" title="{lang code='tmdb_token'}">{lang code='tmdb_token'}</label>
+								</div>
+								<div class="col-md-4">
+									<input class="form-control" name="tmdb_token" id="tmdb_token" value="{$row.tmdb_token}" size="45"/>
+								</div>
+							</div>
+							<hr/>
 						</div>
 						<div class="col-md-4">
 							<div class="row">

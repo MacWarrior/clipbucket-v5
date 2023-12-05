@@ -75,6 +75,18 @@ function saveSubtitle(number) {
         }
     });
 }
+
+function getInfoTmdb($video_id) {
+    $.ajax({
+        url: "/actions/info_tmdb.php",
+        type: "POST",
+        data: {videoid: videoid},
+        dataType: 'json',
+        success: function (result) {
+           //@todo
+        }
+    });
+}
 $(function () {
     init_tags('tags', available_tags);
 });

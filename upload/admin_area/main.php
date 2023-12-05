@@ -78,6 +78,7 @@ if (isset($_POST['update'])) {
         , 'enable_video_social_sharing'
         , 'enable_video_internal_sharing'
         , 'enable_video_link_sharing'
+        , 'enable_tmdb'
     ];
 
     $config_booleans_to_refactor = [
@@ -338,7 +339,10 @@ if (isset($_POST['update'])) {
         'cache_auth',
         'cache_host',
         'cache_port',
-        'cache_password'
+        'cache_password',
+
+        'enable_tmdb',
+        'tmdb_token'
     ];
 
     foreach ($opt_list as $optl) {
