@@ -78,6 +78,9 @@ if (isset($_POST['update'])) {
         , 'enable_video_social_sharing'
         , 'enable_video_internal_sharing'
         , 'enable_video_link_sharing'
+        , 'display_video_comments'
+        , 'display_photo_comments'
+        , 'display_channel_comments'
     ];
 
     $config_booleans_to_refactor = [
@@ -338,7 +341,11 @@ if (isset($_POST['update'])) {
         'cache_auth',
         'cache_host',
         'cache_port',
-        'cache_password'
+        'cache_password',
+
+         'display_video_comments',
+         'display_photo_comments',
+         'display_channel_comments',
     ];
 
     foreach ($opt_list as $optl) {
@@ -397,6 +404,16 @@ if (isset($_POST['update'])) {
         'photo_med_height'
     ];
 
+
+    if (empty($_POST['display_video_comments']) || $_POST['display_video_comments'] == 'no') {
+        $_POST['video_comments'] = '0';
+    }
+    if (empty($_POST['display_photo_comments']) || $_POST['display_photo_comments'] == 'no') {
+        $_POST['photo_comments'] = '0';
+    }
+    if (empty($_POST['display_channel_comments']) || $_POST['display_channel_comments'] == 'no') {
+        $_POST['channel_comments'] = '0';
+    }
     foreach ($rows as $field) {
         $value = ($_POST[$field]);
         if (in_array($field, $num_array)) {

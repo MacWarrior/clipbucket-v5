@@ -43,6 +43,33 @@ $(document).ready(function () {
         }
     });
 
+    $('#display_video_comments').change(function () {
+        let parent = $('#video_comments');
+        if (!$(this).prop('checked')) {
+            parent.prop('checked',false).prop('disabled',true);
+        } else {
+            parent.prop('disabled',false);
+        }
+    });
+
+    $('#display_photo_comments').change(function () {
+        let parent = $('#photo_comments');
+        if (!$(this).prop('checked')) {
+            parent.prop('checked',false).prop('disabled',true);
+        } else {
+            parent.prop('disabled',false);
+        }
+    });
+
+    $('#display_channel_comments').change(function () {
+        let parent = $('#channel_comments');
+        if (!$(this).prop('checked')) {
+            parent.prop('checked',false).prop('disabled',true);
+        } else {
+            parent.prop('disabled',false);
+        }
+    });
+
     $("#smtp_auth").change(function () {
         if ($("#smtp_auth:checked").length == 1) {
             $('.config_smtp_auth').show();

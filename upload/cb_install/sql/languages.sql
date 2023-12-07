@@ -999,4 +999,7 @@ VALUES
        ('uploaded'),
        ('photo_tags'),
        ('collection_is'),
-       ('not_found');
+       ('not_found'),
+       ('display_video_comments'),
+       ('display_photo_comments'),
+       ('display_channel_comments');

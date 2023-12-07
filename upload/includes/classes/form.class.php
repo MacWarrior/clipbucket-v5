@@ -234,11 +234,12 @@ class formObj
         $field_label = $field['label'];
         $field_name = $field['name'];
         $field_value = $field['value'];
+        $field_disabled = $field['disabled'];
         $checked = ($field['checked'] == $field_value) ? 'checked' : '';
 
         echo '
         <div class="col-md-1">
-            <input value="' . $field_value . '" name="' . $field_name . '" id="' . $field_name . '" ' . $checked . ' type="checkbox" class="ace ace-switch ace-switch-5"/>
+            <input value="' . $field_value . '" name="' . $field_name . '" id="' . $field_name . '" ' . $checked . ' '. $field_disabled . 'type="checkbox" class="ace ace-switch ace-switch-5"/>
             <span class="lbl"></span>
         </div>
         <div class="col-md-7">

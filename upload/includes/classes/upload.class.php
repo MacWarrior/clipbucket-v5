@@ -537,7 +537,8 @@ class Upload
                 'name'              => 'allow_comments',
                 'value'             => 'yes',
                 'label'             => lang('vdo_allow_comm'),
-                'checked'           => $default['allow_comments'] ?? 'yes',
+                'checked'           => config('video_comments') ? ($default['allow_comments'] ?? 'yes') : 'no',
+                'disabled'          => config('video_comments') ? '' : 'disabled="disabled" ',
                 'db_field'          => 'allow_comments',
                 'required'          => 'no',
                 'validate_function' => 'yes_or_no'
@@ -547,7 +548,8 @@ class Upload
                 'name'              => 'comment_voting',
                 'value'             => 'yes',
                 'label'             => lang('video_allow_comment_vote'),
-                'checked'           => $default['comment_voting'] ?? 'yes',
+                'checked'           => config('video_comments') ? ($default['comment_voting'] ?? 'yes') : 'no',
+                'disabled'          => config('video_comments') ? '' : 'disabled="disabled" ',
                 'db_field'          => 'comment_voting',
                 'required'          => 'no',
                 'validate_function' => 'yes_or_no'

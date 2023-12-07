@@ -1685,7 +1685,7 @@ class CBPhotos
             $array = $_POST;
         }
 
-        $comments = $array['allow_comments'];
+        $comments = config('photo_comments') ? $array['allow_comments'] : 'no';
         $embedding = $array['allow_embedding'];
         $rating = $array['allow_rating'];
 
@@ -1700,7 +1700,8 @@ class CBPhotos
                 'checked'           => $comments,
                 'validate_function' => 'yes_or_no',
                 'display_function'  => 'display_sharing_opt',
-                'default_value'     => 'yes'
+                'default_value'     => 'yes',
+                'extra_tags'        => config('photo_comments') ? '' : 'disabled="disabled" ',
             ],
             'embedding' => [
                 'title'             => lang('vdo_embedding'),
