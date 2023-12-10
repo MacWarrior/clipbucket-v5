@@ -3,13 +3,19 @@ class Collection
 {
     private static $collection;
     private $tablename = '';
+    private $tablename_items = '';
+    private $tablename_categories = '';
     private $fields = [];
+    private $fields_items = [];
     private $display_block = '';
     private $search_limit = 0;
     private $display_var_name = '';
 
     public function __construct(){
         $this->tablename = 'collections';
+        $this->tablename_items = 'collection_items';
+        $this->tablename_categories = 'video_categories';
+
         $this->fields = [
             'collection_id'
             ,'collection_id_parent'
@@ -32,6 +38,15 @@ class Collection
             ,'public_upload'
             ,'type'
         ];
+        $this->fields_items = [
+            'ci_id'
+            ,'collection_id'
+            ,'object_id'
+            ,'userid'
+            ,'type'
+            ,'date_added'
+        ];
+
         $this->display_block = LAYOUT . '/blocks/collection.html';
         $this->display_var_name = 'collection';
         $this->search_limit = (int)config('collection_search_result');
@@ -45,10 +60,19 @@ class Collection
         return self::$collection;
     }
 
-    private function getAllFields(): array
+    public function getTableNameItems(): string
     {
-        return array_map(function($field) {
-            return $this->tablename . '.' . $field;
+        return $this->tablename_items;
+    }
+
+    public function getAllFields($prefix = false): array
+    {
+        return array_map(function($field) use ($prefix) {
+            $field_name = $this->tablename . '.' . $field;
+            if( $prefix ){
+                $field_name .= ' AS `'.$this->tablename . '.' . $field.'`';
+            }
+            return $field_name;
         }, $this->fields);
     }
 
@@ -85,6 +109,7 @@ class Collection
         $param_having = $params['having'] ?? false;
         $param_count = $params['count'] ?? false;
         $param_first_only = $params['first_only'] ?? false;
+        $param_with_items = $params['with_items'] ?? false;
 
         $conditions = [];
         if( $param_collection_id ){
@@ -129,7 +154,7 @@ class Collection
             $conditions[] = $this->getGenericConstraints();
         }
 
-        if( $param_count ){
+        if( !$param_with_items && $param_count ){
             $select = ['COUNT(collections.collection_id) AS count'];
         } else {
             $select = $this->getAllFields();
@@ -139,7 +164,6 @@ class Collection
 
         $join = [];
         $group = ['collections.collection_id'];
-        $version = Update::getInstance()->getDBVersion();
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
             $select[] = 'GROUP_CONCAT(tags.name SEPARATOR \',\') AS tags';
             $join[] = 'LEFT JOIN ' . cb_sql_table('collection_tags') . ' ON collections.collection_id = collection_tags.id_collection';
@@ -187,6 +211,31 @@ class Collection
 
         $result = Clipbucket_db::getInstance()->_select($sql);
 
+        if( $param_with_items ){
+            $count = 0;
+            foreach($result AS &$collection){
+                $params = [];
+                $params['collection_id'] = $collection['collection_id'];
+                $params['order'] = $this->getTableNameItems() . '.date_added ASC';
+
+                if( $collection['type'] == 'videos' ){
+                    $collection['items'] = Video::getInstance()->getAll($params);
+                } else {
+                    $collection['items'] = Photo::getInstance()->getAll($params);
+                }
+
+                if( $param_count ){
+                    if( !empty($collection['items']) ){
+                        $count += count($collection['items']);
+                    }
+                }
+            }
+
+            if( $param_count ){
+                return $count;
+            }
+        }
+
         if( $param_count ){
             if( empty($result) ){
                 return 0;
@@ -203,6 +252,32 @@ class Collection
         }
 
         return $result;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getItems(array $params = [])
+    {
+        if( empty($params['collection_id']) ){
+            e(lang('technical_error'));
+            return false;
+        }
+        $params['with_items'] = true;
+        $params['first_only'] = true;
+        return $this->getAll($params)['items'];
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getFirstItem(array $params = [])
+    {
+        $items = $this->getItems($params);
+        if( empty($items) ){
+            return false;
+        }
+        return $items[0];
     }
 
     /**
@@ -626,7 +701,7 @@ class Collections extends CBCategory
             if ($cond != '') {
                 $cond .= ' AND ';
             }
-            $cond .= cbsearch::date_margin('collections.date_added', $p['date_span']);
+            $cond .= Search::date_margin('collections.date_added', $p['date_span']);
         }
 
         if ($p['type']) {
@@ -2081,46 +2156,43 @@ class Collections extends CBCategory
      */
     function coll_first_thumb($col_data, $size = false)
     {
-        global $cbphoto, $cbvid;
-        if (is_array($col_data)) {
-            if (isset($_GET['h']) && isset($_GET['w'])) {
-                $size = $_GET['h'] . 'x' . $_GET['w'];
-            }
-            switch ($col_data['type']) {
-                case 'photos':
-                default :
-                    $order = 'photos.date_added DESC';
-                    $first_col = $cbphoto->collection->get_collection_items_with_details($col_data['collection_id'], $order, 1, false);
-                    $param['details'] = $first_col[0];
-                    if (!$size) {
-                        $param['size'] = 's';
-                    } else {
-                        $param['size'] = $size;
-                    }
-                    $param['class'] = 'img-responsive';
-                    return get_photo($param);
+        if( !is_array($col_data) ){
+            return false;
+        }
 
-                case 'videos':
-                    $first_col = $cbvid->collection->get_collection_items_with_details($col_data['collection_id'], 0, 1, false);
+        $params = [];
+        $params['collection_id'] = $col_data['collection_id'];
 
-                    if( empty($first_col) ){
-                        return default_thumb();
-                    }
+        $first_item = Collection::getInstance()->getFirstItem($params);
 
-                    $vdata = $first_col[0];
-                    if (!$size || $size == 's') {
-                        $size = '168x105';
-                    } else {
-                        if ($size == 'l') {
-                            $size = '632x395';
-                        } else {
-                            $size = '416x260';
-                        }
-                    }
-                    return get_thumb($vdata, false, $size);
+        if( empty($first_item) ){
+            if( $col_data['type'] == 'videos' ){
+                return default_thumb();
+            } else {
+                return get_photo_default_thumb();
             }
         }
-        return false;
+
+        if( $col_data['type'] == 'videos' ){
+            if (!$size || $size == 's') {
+                $size = '168x105';
+            } else {
+                if ($size == 'l') {
+                    $size = '632x395';
+                } else {
+                    $size = '416x260';
+                }
+            }
+            return get_thumb($first_item, false, $size);
+        } else {
+            $param['details'] = $first_item;
+            if (!$size) {
+                $param['size'] = 's';
+            } else {
+                $param['size'] = $size;
+            }
+            return get_photo($param);
+        }
     }
 
 }

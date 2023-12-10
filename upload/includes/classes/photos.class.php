@@ -56,10 +56,14 @@ class Photo
         return self::$photo;
     }
 
-    private function getAllFields(): array
+    public function getAllFields($prefix = false): array
     {
-        return array_map(function($field) {
-            return $this->tablename . '.' . $field;
+        return array_map(function($field) use ($prefix) {
+            $field_name = $this->tablename . '.' . $field;
+            if( $prefix ){
+                $field_name .= ' AS `'.$this->tablename . '.' . $field.'`';
+            }
+            return $field_name;
         }, $this->fields);
     }
 
@@ -97,6 +101,7 @@ class Photo
         $param_filename = $params['filename'] ?? false;
         $param_userid = $params['userid'] ?? false;
         $param_search = $params['search'] ?? false;
+        $param_collection_id = $params['collection_id'] ?? false;
 
         $param_condition = $params['condition'] ?? false;
         $param_limit = $params['limit'] ?? false;
@@ -154,6 +159,11 @@ class Photo
             $join[] = 'LEFT JOIN ' . cb_sql_table('photo_tags') . ' ON photos.photo_id = photo_tags.id_photo';
             $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON photo_tags.id_tag = tags.id_tag';
             $group[] = 'photos.photo_id';
+        }
+
+        if( $param_collection_id ){
+            $collection_items_table = Collection::getInstance()->getTableNameItems();
+            $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON ' . $collection_items_table . '.collection_id = ' . $param_collection_id . ' AND photos.photo_id = ' . $collection_items_table . '.object_id';
         }
 
         if( $param_group ){
@@ -262,7 +272,7 @@ class Photo
         $photo = $this->getOne($params);
 
         if (empty($photo)) {
-            return true;
+            return false;
         }
 
         if( empty($photo['age_restriction']) ){
@@ -739,7 +749,7 @@ class CBPhotos
             if ($cond != '') {
                 $cond .= ' AND ';
             }
-            $cond .= cbsearch::date_margin('photos.date_added', $p['date_span']);
+            $cond .= Search::date_margin('photos.date_added', $p['date_span']);
         }
 
         if ($p['featured']) {

@@ -1040,12 +1040,12 @@ class cbactions
             $condition .= $condition ? ' AND ' : '';
             $column = $params['date_span_column'] ? trim($params['date_span_column']) : 'playlists.date_added';
 
-            $condition .= cbsearch::date_margin($column, $params['date_span']);
+            $condition .= Search::date_margin($column, $params['date_span']);
         }
 
         if (isset($params['last_update'])) {
             $condition .= $condition ? ' AND ' : '';
-            $condition .= cbsearch::date_margin('playlists.last_update', $params['last_update']);
+            $condition .= Search::date_margin('playlists.last_update', $params['last_update']);
         }
 
         if (isset($params['user'])) {

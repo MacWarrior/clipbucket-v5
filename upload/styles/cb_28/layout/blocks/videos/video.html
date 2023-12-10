@@ -28,7 +28,7 @@
 {if $display_type=='homeVideos'}
 	<div class="clearfix thumb-holder userAppending no_overflow">
 		<a class="video-link" href="{video_link($video)}" title="{display_clean($video.title)|title}">
-			<img class="img-responsive {if Video::getInstance()->isToBlur($video['videoid'])}blur{/if}" src="{getThumb vdetails=$video size=416x260}">
+			<img alt="{display_clean($video.title)|title}" class="img-responsive {if Video::getInstance()->isToBlur($video['videoid'])}blur{/if}" src="{getThumb vdetails=$video size=416x260}"/>
 		</a>
 
 		{ANCHOR place='in_video_thumb' data=$video}
@@ -37,16 +37,16 @@
 		</button>
 		{/if}
 		<span class="duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</span>
-		
 	</div>
+
 	<div class="clearfix video-info">
 		<h2 class="title"><a href="{video_link($video)}">{display_clean($video.title|truncate:50)}</a></h2>
 
 		<span class="author">{lang code="by"}
 			{if isSectionEnabled('channels')}
-				<a href="{$userquery->profile_link($video)}">{display_clean($video.username)}</a>
+				<a href="{$userquery->profile_link($video)}">{display_clean($video.user_username)}</a>
 			{else}
-				{display_clean($video.username)}
+				{display_clean($video.user_username)}
 			{/if}
 		</span>
 

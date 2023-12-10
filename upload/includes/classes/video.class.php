@@ -4,13 +4,17 @@ class Video
 {
     private static $video;
     private $tablename = '';
+    private $tablename_categories = '';
     private $fields = [];
+    private $fields_categories = [];
     private $display_block = '';
     private $display_var_name = '';
     private $search_limit = 0;
 
     public function __construct(){
         $this->tablename = 'video';
+        $this->tablename_categories = 'video_categories';
+
         $this->fields = [
             'videoid'
             ,'videokey'
@@ -62,6 +66,17 @@ class Video
             ,'subscription_email'
             ,'age_restriction'
         ];
+        $this->fields_categories = [
+            'category_id'
+            ,'parent_id'
+            ,'category_name'
+            ,'category_order'
+            ,'category_desc'
+            ,'date_added'
+            ,'category_thumb'
+            ,'isdefault'
+        ];
+
         $this->display_block = LAYOUT . '/blocks/video.html';
         $this->display_var_name = 'video';
         $this->search_limit = (int)config('videos_items_search_page');
@@ -75,11 +90,56 @@ class Video
         return self::$video;
     }
 
-    private function getAllFields(): array
+    public function getTableName(): string
     {
-        return array_map(function($field) {
-            return $this->tablename . '.' . $field;
-        }, $this->fields);
+        return $this->tablename;
+    }
+
+    public function getTableNameCategories(): string
+    {
+        return $this->tablename_categories;
+    }
+
+    private function getFields(): array
+    {
+        return $this->fields;
+    }
+
+    private function getFieldsCategories(): array
+    {
+        return $this->fields_categories;
+    }
+
+    private function getSQLFields($type = '', $prefix = false): array
+    {
+        switch($type){
+            case 'video':
+            default:
+                $fields = $this->getFields();
+                break;
+
+            case 'categories':
+                $fields = $this->getFieldsCategories();
+                break;
+        }
+
+        return array_map(function($field) use ($prefix) {
+            $field_name = $this->getTableName() . '.' . $field;
+            if( $prefix ){
+                $field_name .= ' AS `'.$this->getTableName() . '.' . $field.'`';
+            }
+            return $field_name;
+        }, $fields);
+    }
+
+    private function getVideoFields($prefix = false): array
+    {
+        return $this->getSQLFields('video', $prefix);
+    }
+
+    private function getCategoriesFields($prefix = false): array
+    {
+        return $this->getSQLFields('categories', $prefix);
     }
 
     public function getSearchLimit(): int
@@ -106,6 +166,46 @@ class Video
         return $this->getAll($params);
     }
 
+    public function getFilterParams(string $value, array $params): array
+    {
+        switch ($value) {
+            case 'most_recent':
+            default:
+                $params['order'] = $this->getTableName() . '.date_added DESC';
+                break;
+
+            case 'most_viewed':
+                $params['order'] = $this->getTableName() . '.views DESC';
+                break;
+
+            case 'featured':
+                $params['featured'] = true;
+                break;
+
+            case 'top_rated':
+                $params['order'] = $this->getTableName() . '.rating DESC, ' . $this->getTableName() . '.rated_by DESC';
+                break;
+
+            case 'most_commented':
+                $params['order'] = $this->getTableName() . '.comments_count DESC';
+                break;
+
+            case 'all_time':
+            case 'today':
+            case 'yesterday':
+            case 'this_week':
+            case 'last_week':
+            case 'this_month':
+            case 'last_month':
+            case 'this_year':
+            case 'last_year':
+                $column = $this->getTableName() . '.date_added';
+                $params['condition'] = Search::date_margin($column, $value);
+                break;
+        }
+        return $params;
+    }
+
     /**
      * @throws Exception
      * @noinspection DuplicatedCode
@@ -118,6 +218,8 @@ class Video
         $param_file_name = $params['file_name'] ?? false;
         $param_category = $params['category'] ?? false;
         $param_search = $params['search'] ?? false;
+        $param_collection_id = $params['collection_id'] ?? false;
+        $param_featured = $params['featured'] ?? false;
 
         $param_condition = $params['condition'] ?? false;
         $param_limit = $params['limit'] ?? false;
@@ -140,6 +242,9 @@ class Video
         }
         if( $param_file_name ){
             $conditions[] = 'video.file_name = \''.mysql_clean($param_file_name).'\'';
+        }
+        if( $param_featured ){
+            $conditions[] = 'video.featured = \'yes\'';
         }
         if( $param_category ){
             if( !is_array($param_category) ){
@@ -177,7 +282,7 @@ class Video
         if( $param_count ){
             $select = ['COUNT(video.videoid) AS count'];
         } else {
-            $select = $this->getAllFields();
+            $select = $this->getVideoFields();
             $select[] = 'users.username AS user_username';
         }
 
@@ -188,6 +293,11 @@ class Video
             $join[] = 'LEFT JOIN ' . cb_sql_table('video_tags') . ' ON video.videoid = video_tags.id_video';
             $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON video_tags.id_tag = tags.id_tag';
             $group[] = 'video.videoid';
+        }
+
+        if( $param_collection_id ){
+            $collection_items_table = Collection::getInstance()->getTableNameItems();
+            $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON ' . $collection_items_table . '.collection_id = ' . $param_collection_id . ' AND video.videoid = ' . $collection_items_table . '.object_id';
         }
 
         if( $param_group ){
@@ -210,7 +320,7 @@ class Video
         }
 
         $sql ='SELECT ' . implode(', ', $select) . '
-                FROM ' . cb_sql_table($this->tablename) . '
+                FROM ' . cb_sql_table($this->getTableName()) . '
                 LEFT JOIN ' . cb_sql_table('users') . ' ON video.userid = users.userid '
             . implode(' ', $join)
             . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions))
@@ -1165,7 +1275,7 @@ class CBvideo extends CBCategory
                 $column = 'date_added';
             }
 
-            $cond .= ' ' . cbsearch::date_margin($column, $params['date_span']);
+            $cond .= ' ' . Search::date_margin($column, $params['date_span']);
         }
 
         //uid

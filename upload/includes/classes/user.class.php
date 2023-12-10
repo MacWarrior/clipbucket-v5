@@ -2135,7 +2135,7 @@ class userquery extends CBCategory
             $udetails = $this->get_user_details($udetails);
         }
 
-        $username = display_clean($udetails['username']);
+        $username = display_clean($udetails['user_username'] ?? $udetails['username']);
         if (SEO != 'yes') {
             return '/view_channel.php?user=' . $username;
         }
@@ -3740,7 +3740,7 @@ class userquery extends CBCategory
             if ($cond != '') {
                 $cond .= ' AND';
             }
-            $cond .= ' ' . cbsearch::date_margin('users.doj', $params['date_span']);
+            $cond .= ' ' . Search::date_margin('users.doj', $params['date_span']);
         }
 
         //FEATURED
