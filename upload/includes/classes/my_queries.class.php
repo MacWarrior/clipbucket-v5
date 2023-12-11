@@ -70,8 +70,6 @@ class myquery
      */
     public function saveVideoResolutions($post)
     {
-        global $db;
-
         $video_resolutions = self::getVideoResolutions();
         foreach ($video_resolutions as $ratio) {
             foreach ($ratio as $resolution) {
@@ -83,7 +81,13 @@ class myquery
                     $enabled = 0;
                 }
 
-                $db->update(tbl('video_resolution'), ['enabled'], [$enabled], " title = '" . mysql_clean($resolution['title']) . "'");
+                if (isset($post['vbrate_' . $resolution['title']])) {
+                    $vbrate = $post['vbrate_' . $resolution['title']];
+                } else {
+                    $vbrate = 0;
+                }
+
+                Clipbucket_db::getInstance()->update(tbl('video_resolution'), ['enabled', 'video_bitrate'], [$enabled, $vbrate], ' title = \'' . mysql_clean($resolution['title']) . '\'');
             }
         }
         static::$video_resolutions = [];

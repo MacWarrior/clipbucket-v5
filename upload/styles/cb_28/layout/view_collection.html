@@ -39,7 +39,7 @@
 			<div class="photos clearfix">
 				{section name=list loop=$objects}
 				<div class="item-photo col-lg-4 col-md-4 col-sm-6 col-xs-12">
-				{include file="$style_dir/blocks/photo.html" object=$objects[list] display_type=collection_item}
+				{include file="$style_dir/blocks/photo.html" photo=$objects[list] display_type=collection_item}
 				</div>
 				{sectionelse}
 				<div class="well well-info">{lang code='no_photos_found'}</div>
@@ -59,9 +59,7 @@
 			</div>
 			{/if}
 
-            <!-- Pagination -->
             {include file="$style_dir/blocks/pagination.html"}
-            <!-- end of Pagination -->
 
 			<div class="clearfix fav-repo">
 				<div class="show clearfix photoStats">

@@ -23,39 +23,46 @@ if (!$cbcollection->is_viewable($cid)) {
 
     $photo = $cbphoto->get_photo($item);
     if ($photo) {
-        $info = $cbphoto->collection->get_collection_item_fields($cid, $photo['photo_id'], 'ci_id');
-        if ($info) {
-            $breadcrum = [];
-            $breadcrum[] = [
-                'title' => $photo['photo_title']
-                ,'url'  => '#'
-            ];
-            $collection_parent = $collect;
-            do {
-                if (config('seo') == 'yes') {
-                    $url = '/collection/' . $collection_parent['collection_id'] . '/' . $collection_parent['type'] . '/' . display_clean($collection_parent['collection_name']);
-                } else {
-                    $url = '/view_collection.php?cid=' . $collection_parent['collection_id'];
-                }
+        if (!Photo::getInstance()->isCurrentUserRestricted($photo['photo_id'])) {
+            $info = $cbphoto->collection->get_collection_item_fields($cid, $photo['photo_id'], 'ci_id');
+            if ($info) {
+                $breadcrum = [];
                 $breadcrum[] = [
-                    'title' => $collection_parent['collection_name']
-                    , 'url' => $url
+                    'title' => $photo['photo_title']
+                    ,
+                    'url'   => '#'
                 ];
-                $collection_parent = $cbcollection->get_parent_collection($collection_parent);
-            } while ($collection_parent);
-            assign('breadcrum', array_reverse($breadcrum));
-            assign('collection_baseurl', $cbcollection->get_base_url());
+                $collection_parent = $collect;
+                do {
+                    if (config('seo') == 'yes') {
+                        $url = '/collection/' . $collection_parent['collection_id'] . '/' . $collection_parent['type'] . '/' . display_clean($collection_parent['collection_name']);
+                    } else {
+                        $url = '/view_collection.php?cid=' . $collection_parent['collection_id'];
+                    }
+                    $breadcrum[] = [
+                        'title' => $collection_parent['collection_name']
+                        ,
+                        'url'   => $url
+                    ];
+                    $collection_parent = $cbcollection->get_parent_collection($collection_parent);
+                } while ($collection_parent);
+                assign('breadcrum', array_reverse($breadcrum));
+                assign('collection_baseurl', $cbcollection->get_base_url());
 
-            $photo = array_merge($photo, $info[0]);
-            increment_views($photo['photo_id'], 'photo');
+                $photo = array_merge($photo, $info[0]);
+                increment_views($photo['photo_id'], 'photo');
 
-            assign('photo', $photo);
-            assign('user', $userquery->get_user_details($photo['userid']));
+                assign('photo', $photo);
+                assign('user', $userquery->get_user_details($photo['userid']));
 
-            subtitle($collect['collection_name'] . ' > ' . $photo['photo_title']);
-            Assign ('c', $collect);
+                subtitle($collect['collection_name'] . ' > ' . $photo['photo_title']);
+                Assign('c', $collect);
+            } else {
+                e(lang('item_not_exist'));
+                $Cbucket->show_page = false;
+            }
         } else {
-            e(lang('item_not_exist'));
+            e(lang('error_age_restriction'));
             $Cbucket->show_page = false;
         }
     } else {

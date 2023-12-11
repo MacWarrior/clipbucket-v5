@@ -1,21 +1,44 @@
 <?php
-
-/**
- * This class is used to manage Playlist
- * and Quicklist for ClipBucket
- *
- * @Author : Arslan hassan (te haur kaun o sukda :p)
- * @License: CBLA
- * @Since : Bakra Eid 2009
- */
-
-
-class cbplaylist
+class Playlist
 {
-    /**
-     * Database Tables
-     */
-    var $dbtbl = ['user_playlists' => 'cb_user_playlists', 'playlist_items' => 'playlist_items'];
+    private static $playlist;
+    private $tablename = '';
+    public function getTablename(): string
+    {
+        return $this->tablename;
+    }
+    public function __construct()
+    {
+        $this->tablename = 'playlists';
+    }
 
+    public static function getInstance(): self
+    {
+        if( empty(self::$playlist) ){
+            self::$playlist = new self();
+        }
+        return self::$playlist;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function getGenericConstraints(): string
+    {
+        if (has_access('admin_access', true)) {
+            return '';
+        }
+
+        $cond = '(playlists.privacy = \'public\'';
+
+        $current_user_id = user_id();
+        if ($current_user_id) {
+            $cond .= ' OR playlists.userid = ' . $current_user_id . ')';
+            $cond .= ' OR (playlists.privacy = \'public\')';
+        } else {
+            $cond .= ')';
+        }
+        return $cond;
+    }
 
 }

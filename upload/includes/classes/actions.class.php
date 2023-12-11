@@ -480,8 +480,7 @@ class cbactions
 
         $allow_comments = $array['allow_comments'];
         $allow_rating = $array['allow_rating'];
-
-        return [
+        $return = [
             'allow_comments' => [
                 'title'         => lang('playlist_allow_comments'),
                 'id'            => 'allow_comments',
@@ -508,9 +507,15 @@ class cbactions
                 'default_value' => 'yes',
                 'checked'       => $allow_rating
             ]
+
         ];
+
+        return $return;
     }
 
+    /**
+     * @throws Exception
+     */
     function load_playlist_fields($array = null): array
     {
         if (is_null($array)) {
@@ -984,18 +989,7 @@ class cbactions
 
         $left_join_video_cond = '';
         if( !has_access('admin_access', true) ){
-            $left_join_video_cond = ' AND ( (video.active = \'yes\' AND video.status = \'Successful\' AND video.broadcast = \'public\'';
-
-            $current_user_id = user_id();
-            if( $current_user_id ){
-                $select_contacts = 'SELECT contact_userid FROM '.tbl('contacts').' WHERE confirmed = \'yes\' AND userid = '.$current_user_id;
-                $left_join_video_cond .= ' OR video.userid = '.$current_user_id.')';
-                $left_join_video_cond .= ' OR (video.active = \'yes\' AND video.status = \'Successful\' AND video.broadcast IN(\'public\',\'logged\'))';
-                $left_join_video_cond .= ' OR (video.broadcast = \'private\' AND video.userid IN('.$select_contacts.'))';
-            } else {
-                $left_join_video_cond .= ')';
-            }
-            $left_join_video_cond .= ')';
+            $left_join_video_cond = ' AND ' . Video::getInstance()->getGenericConstraints();
         }
 
         $select = ', COUNT(video.videoid) AS total_items';
@@ -1004,13 +998,13 @@ class cbactions
         $query = 'SELECT ' . table_fields($fields) . $select . $select_tag . ' FROM ';
         $from = cb_sql_table('playlists')
                 . ' LEFT JOIN '.cb_sql_table('playlist_items').' ON playlists.playlist_id = playlist_items.playlist_id'
-                . ' LEFT JOIN '.cb_sql_table('video').' ON playlist_items.object_id = video.videoid' . $left_join_video_cond
+                . ' LEFT JOIN '.cb_sql_table('video').' ON playlist_items.object_id = video.videoid ' . $left_join_video_cond
                 . $join_tag;
         $query .= $from;
         $condition = '';
 
         if (!has_access('admin_access')) {
-            $condition .= 'playlists.privacy = \'public\'';
+            $condition .= Playlist::getGenericConstraints();
         } else {
             if (isset($params['privacy'])) {
                 $condition .= ' playlists.privacy = \'' . mysql_clean($params['privacy']) . '\'';
@@ -1046,12 +1040,12 @@ class cbactions
             $condition .= $condition ? ' AND ' : '';
             $column = $params['date_span_column'] ? trim($params['date_span_column']) : 'playlists.date_added';
 
-            $condition .= cbsearch::date_margin($column, $params['date_span']);
+            $condition .= Search::date_margin($column, $params['date_span']);
         }
 
         if (isset($params['last_update'])) {
             $condition .= $condition ? ' AND ' : '';
-            $condition .= cbsearch::date_margin('playlists.last_update', $params['last_update']);
+            $condition .= Search::date_margin('playlists.last_update', $params['last_update']);
         }
 
         if (isset($params['user'])) {
@@ -1133,19 +1127,7 @@ class cbactions
         $where_video = '';
         if( !has_access('admin_access', true) ){
             $left_join_video = ' LEFT JOIN '.cb_sql_table('video').' ON playlist_items.object_id = video.videoid';
-
-            $where_video = ' AND ( (video.active = \'yes\' AND video.status = \'Successful\' AND video.broadcast = \'public\'';
-
-            $current_user_id = user_id();
-            if( $current_user_id ){
-                $select_contacts = 'SELECT contact_userid FROM '.tbl('contacts').' WHERE confirmed = \'yes\' AND userid = '.$current_user_id;
-                $where_video .= ' OR video.userid = '.$current_user_id.')';
-                $where_video .= ' OR (video.active = \'yes\' AND video.status = \'Successful\' AND video.broadcast IN(\'public\',\'logged\'))';
-                $where_video .= ' OR (video.broadcast = \'private\' AND video.userid IN('.$select_contacts.'))';
-            } else {
-                $where_video .= ')';
-            }
-            $where_video .= ')';
+            $where_video = 'AND ' . Video::getInstance()->getGenericConstraints();
         }
 
         return $db->count(cb_sql_table($this->playlist_items_tbl) . $left_join_video, 'playlist_items.object_id', 'playlist_id=\'' . mysql_clean($id) . '\'' . $where_video);

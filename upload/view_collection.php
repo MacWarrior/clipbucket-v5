@@ -38,17 +38,19 @@ if ($cbcollection->is_viewable($c)) {
             Assign('collections', $collections);
         }
 
-        switch ($cdetails['type']) {
-            default:
-            case 'videos':
-                $total_items = $cbvideo->collection->get_collection_items_with_details($c, $order, null, true);
-                $items = $cbvideo->collection->get_collection_items_with_details($c, $order, $get_limit);
-                break;
+        $params = [];
+        $params['collection_id'] = $c;
+        $params['limit'] = $get_limit;
+        $items = Collection::getInstance()->getItems($params);
 
-            case 'photos':
-                $total_items = $cbphoto->collection->get_collection_items_with_details($c, $order, null, true);
-                $items = $cbphoto->collection->get_collection_items_with_details($c, $order, $get_limit);
-                break;
+        if( empty($items) ){
+            $total_items = 0;
+        } else if( count($items) < config('collection_items_page') ){
+            $total_items = count($items);
+        } else {
+            unset($params['limit']);
+            $params['count'] = true;
+            $total_items = Collection::getInstance()->getItems($params);
         }
 
         // Calling necessary function for view collection

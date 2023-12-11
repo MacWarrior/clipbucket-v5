@@ -2,7 +2,6 @@
 
 class pages
 {
-
     var $url_page_var = 'page';
     var $pre_link = '';
     var $next_link = '';
@@ -10,7 +9,13 @@ class pages
     var $last_link = '';
     var $pagination = '';
 
-    function GetServerUrl()
+    public static function getInstance()
+    {
+        global $pages;
+        return $pages;
+    }
+
+    function GetServerUrl(): string
     {
         $serverName = null;
         if (isset($_SERVER['SERVER_NAME'])) {
@@ -35,7 +40,7 @@ class pages
         return $serverProtocol . '://' . $serverName . $serverPort;
     }
 
-    function GetCurrentUrl()
+    function GetCurrentUrl(): string
     {
         global $in_bg_cron;
         if (!$in_bg_cron) {
@@ -62,14 +67,6 @@ class pages
         if ($curpage != $newPage) {
             header("location:$newPage");
         }
-    }
-
-    //This Function is used to Redirect to respective URL
-    function redirect($url)
-    {
-        echo '<script type="text/javascript">
-		window.location = "' . $url . '"
-		</script>';
     }
 
     /**
