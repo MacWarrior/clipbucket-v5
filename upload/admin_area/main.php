@@ -78,6 +78,11 @@ if (isset($_POST['update'])) {
         , 'enable_video_social_sharing'
         , 'enable_video_internal_sharing'
         , 'enable_video_link_sharing'
+        , 'enable_age_restriction'
+        , 'enable_user_dob_edition'
+        , 'enable_blur_restricted_content'
+        , 'enable_global_age_restriction'
+        , 'enable_quicklist'
         , 'display_video_comments'
         , 'display_photo_comments'
         , 'display_channel_comments'
@@ -277,6 +282,10 @@ if (isset($_POST['update'])) {
         'enable_video_social_sharing',
         'enable_video_internal_sharing',
         'enable_video_link_sharing',
+        'enable_age_restriction',
+        'enable_user_dob_edition',
+        'enable_blur_restricted_content',
+        'enable_global_age_restriction',
 
         'thumb_width',
         'thumb_height',
@@ -320,6 +329,7 @@ if (isset($_POST['update'])) {
         'enable_video_file_upload',
         'enable_video_remote_upload',
         'enable_photo_file_upload',
+        'enable_quicklist',
 
         'allow_conversion_1_percent',
 
@@ -401,7 +411,7 @@ if (isset($_POST['update'])) {
         'photo_thumb_width',
         'photo_thumb_height',
         'photo_med_width',
-        'photo_med_height'
+        'photo_med_height',
     ];
 
 
@@ -417,6 +427,10 @@ if (isset($_POST['update'])) {
     foreach ($rows as $field) {
         $value = ($_POST[$field]);
         if (in_array($field, $num_array)) {
+            if ($field == 'min_age_reg' && ($value > 99 || $value <= 0 || !is_numeric($value) )) {
+                e(lang('error_age_restriction_save'));
+                break;
+            }
             if ($value <= 0 || !is_numeric($value)) {
                 $value = 1;
             }

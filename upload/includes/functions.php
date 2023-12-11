@@ -704,6 +704,14 @@ function user_email()
     }
     return false;
 }
+function user_dob()
+{
+    global $userquery;
+    if ($userquery->udetails['dob']) {
+        return $userquery->udetails['dob'];
+    }
+    return false;
+}
 
 /**
  * Function used to check weather user access or not
@@ -3961,7 +3969,7 @@ function update_counter($section, $query, $counter)
  *
  * @return bool : { boolean } { true / false depending on situation }
  */
-function verify_age($dob)
+function verify_age($dob): bool
 {
     $allowed_age = config('min_age_reg');
     if ($allowed_age < 1) {
@@ -4865,6 +4873,17 @@ function parseAllPHPModules()
     }
     return $vModules;
 }
+function ageRestriction($var) {
+    $var = (int)$var;
+    if (empty($var)) {
+        return 'null';
+    }
+    if ($var > 99 || $var < 0) {
+        return false;
+    }
+    return $var;
+}
+
 
 
 include('functions_db.php');

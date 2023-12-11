@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"304",
+  "revision":"306",
   "status":"dev",
   "detail":[
     {
@@ -92,6 +92,8 @@
         ,"Remove video embedding with flash"
         ,"Fix user form saving"
         ,"Implement custom thumbs"
+        ,"Implement age restriction options"
+        ,"Add option to disable quicklist"
       ]
     },
     {
@@ -244,6 +246,7 @@
         ,"Fix embed player"
         ,"Implement collection banner"
         ,"Fix quicklists"
+        ,"Implement age restriction pop-in, thumb blur"
       ]
     }
   ,{

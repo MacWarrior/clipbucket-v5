@@ -238,6 +238,11 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_video_social_sharing', 'yes'),
     (NULL, 'enable_video_internal_sharing', 'yes'),
     (NULL, 'enable_video_link_sharing', 'yes'),
+    (NULL, 'enable_user_dob_edition', 'yes'),
+    (NULL, 'enable_age_restriction', 'yes'),
+    (NULL, 'enable_blur_restricted_content', 'no'),
+    (NULL, 'enable_global_age_restriction', 'no'),
+    (NULL, 'enable_quicklist', 'yes'),
     (NULL, 'display_video_comments', 'yes'),
     (NULL, 'display_photo_comments', 'yes'),
     (NULL, 'display_channel_comments', 'yes');

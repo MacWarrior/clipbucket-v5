@@ -44,6 +44,7 @@ if (video_playable($vdo)) {
         $related_videos = get_videos(['exclude' => $videoid, 'limit' => 12, 'order' => 'date_added DESC']);
     }
     $playlist = $cbvid->action->get_playlist($pid, user_id());
+
     $assign_arry['playlist'] = $playlist;
     //Getting Playlist Item
     $items = $cbvid->get_playlist_items($pid, 'playlist_items.date_added DESC');
