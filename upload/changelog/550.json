@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"305",
+  "revision":"306",
   "status":"dev",
   "detail":[
     {
@@ -93,6 +93,7 @@
         ,"Fix user form saving"
         ,"Implement custom thumbs"
         ,"Implement age restriction options"
+        ,"Add option to disable quicklist"
       ]
     },
     {

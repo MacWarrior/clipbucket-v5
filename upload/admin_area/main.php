@@ -82,6 +82,7 @@ if (isset($_POST['update'])) {
         , 'enable_user_dob_edition'
         , 'enable_blur_restricted_content'
         , 'enable_global_age_restriction'
+        , 'enable_quicklist'
     ];
 
     $config_booleans_to_refactor = [
@@ -325,6 +326,7 @@ if (isset($_POST['update'])) {
         'enable_video_file_upload',
         'enable_video_remote_upload',
         'enable_photo_file_upload',
+        'enable_quicklist',
 
         'allow_conversion_1_percent',
 

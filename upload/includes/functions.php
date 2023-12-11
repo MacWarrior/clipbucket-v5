@@ -4876,7 +4876,7 @@ function parseAllPHPModules()
 function ageRestriction($var) {
     $var = (int)$var;
     if (empty($var)) {
-        return 0;
+        return 'null';
     }
     if ($var > 99 || $var < 0) {
         return false;

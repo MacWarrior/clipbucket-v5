@@ -1016,4 +1016,5 @@ VALUES
        ('tips_enable_global_age_restriction'),
        ('disclaimer_return'),
        ('disclaimer_older'),
-       ('edition_min_age_request');
+       ('edition_min_age_request'),
+       ('option_enable_quicklist');
