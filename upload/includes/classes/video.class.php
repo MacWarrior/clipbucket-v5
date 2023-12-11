@@ -426,7 +426,7 @@ class Video
         $video = $this->getOne($params);
 
         if (empty($video)) {
-            return true;
+            return false;
         }
 
         if( empty($video['age_restriction']) ){

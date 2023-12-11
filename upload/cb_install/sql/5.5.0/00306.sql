@@ -10,3 +10,5 @@ INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `tra
 VALUES (@id_language_key, 'Enable quicklist', @language_id_eng);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES (@id_language_key, 'Activer la quicklist', @language_id_fra);
+
+UPDATE `{tbl_prefix}video` SET `age_restriction` = NULL WHERE `age_restriction` = '0';
