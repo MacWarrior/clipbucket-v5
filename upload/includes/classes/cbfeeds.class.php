@@ -176,7 +176,7 @@ class cbfeeds
                 break;
             }
             $feedArray = json_decode($feed['content'], true);
-            if ($feed && count($feedArray) > 0) {
+            if ($feed && !empty($feedArray)) {
                 $remove_feed = false;
                 $farr = $feedArray;
 

@@ -8,12 +8,12 @@ function get_video_fields($extra = null)
 /**
  * Function used to check video is playlable or not
  *
- * @param : { string / id } { $id } { id of key of video }
  *
- * @return bool|void : { boolean } { true if playable, else false }
+ * @param array|string $id contain video info or video id
+ * @return bool : { boolean } { true if playable, else false }
  * @throws Exception
  */
-function video_playable($id)
+function video_playable($id): bool
 {
     global $cbvideo, $userquery;
 
@@ -57,12 +57,13 @@ function video_playable($id)
         return false;
     }
     if ($vdo['active'] == 'no' && $vdo['userid'] != user_id()) {
-        e(lang("vdo_iac_msg"));
+        e(lang('vdo_iac_msg'));
         if (!has_access('admin_access', true)) {
             return false;
         }
         return true;
     }
+
     if ($vdo['video_password']
         && $vdo['broadcast'] == 'unlisted'
         && $vdo['video_password'] != $video_password
@@ -85,8 +86,17 @@ function video_playable($id)
                 }
             }
         }
-        return true;
     }
+
+    if( !has_access('video_moderation', true)
+        && config('enable_age_restriction') == 'yes'
+        && Video::getInstance()->isCurrentUserRestricted($vdo['videoid'])
+    ){
+        e(lang('error_age_restriction'));
+        return false;
+    }
+
+    return true;
 }
 
 /**
@@ -1237,6 +1247,24 @@ function get_fast_qlist($cookie_name = false): array
     return array_filter($vid_dets);
 }
 
+/**
+ * @throws Exception
+ */
+function must_check_age(): bool
+{
+    $min_age_reg = config('min_age_reg');
+    if( config('enable_global_age_restriction') != 'yes' || $min_age_reg > 99 || $min_age_reg < 0 ){
+        return false;
+    }
+
+    $user = User::getInstance();
+    if( $user->isUserConnected() && $user->getCurrentUserAge() >= $min_age_reg ){
+        return false;
+    }
+
+    return ((empty($_COOKIE['age_restrict']) || $_COOKIE['age_restrict']!='checked')  );
+}
+
 function dateNow(): string
 {
     return date('Y-m-d H:i:s');
@@ -1758,3 +1786,28 @@ function clean_orphan_files($file)
     }
     remove_empty_directory(dirname($file['data']), $stop_path);
 }
+
+/**
+ * @throws Exception
+ */
+function age_restriction_check ($user_id, $video_id, $obj_type = 'video', $id_field= 'videoid')
+{
+    $sql = ' SELECT 
+    TIMESTAMPDIFF(YEAR, U.dob, now()),
+    CASE
+        WHEN O.age_restriction IS NULL THEN 1
+        WHEN TIMESTAMPDIFF(YEAR, U.dob, now()) < O.age_restriction THEN 0
+            ELSE 1
+        END AS can_access
+    FROM '.tbl('users') . ' AS U , '.tbl($obj_type) .' AS O
+    WHERE O.'.$id_field.' = '.mysql_clean($video_id).' AND U.userid = '.($user_id ? mysql_clean($user_id) :  '0').'
+    ' ;
+    $rs = select($sql);
+    if (!empty($rs)) {
+        return $rs[0]['can_access'];
+    } else {
+        return 0;
+    }
+}
+
+

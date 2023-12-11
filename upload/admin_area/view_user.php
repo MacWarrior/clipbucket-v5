@@ -11,18 +11,9 @@ $udetails = $userquery->get_user_details($uid);
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = [
-    'title' => lang('users'),
-    'url'   => ''
-];
-$breadcrumb[1] = [
-    'title' => lang('grp_manage_members_title'),
-    'url'   => ADMIN_BASEURL . '/members.php'
-];
-$breadcrumb[2] = [
-    'title' => 'Editing : ' . display_clean($udetails['username']),
-    'url'   => ADMIN_BASEURL . '/view_user.php?uid=' . display_clean($uid)
-];
+$breadcrumb[0] = ['title' => lang('users'), 'url' => ''];
+$breadcrumb[1] = ['title' => lang('grp_manage_members_title'), 'url' => ADMIN_BASEURL . '/members.php'];
+$breadcrumb[2] = ['title' => 'Editing : ' . display_clean($udetails['username']), 'url' => ADMIN_BASEURL . '/view_user.php?uid=' . display_clean($uid)];
 
 if ($udetails) {
     //Deactivating User
@@ -147,7 +138,6 @@ foreach($channel_profile_fields AS $field){
     }
 }
 assign('channel_settings', $channel_settings);
-
 subtitle('View User');
 template_files('view_user.html');
 display_it();

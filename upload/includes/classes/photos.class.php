@@ -8,6 +8,9 @@ class Photo
     private $search_limit = 0;
     private $display_var_name = '';
 
+    /**
+     * @throws Exception
+     */
     public function __construct(){
         $this->tablename = 'photos';
         $this->fields = [
@@ -42,6 +45,12 @@ class Photo
             ,'owner_ip'
             ,'photo_details'
         ];
+
+        $version = Update::getInstance()->getDBVersion();
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 305)) {
+            $this->fields[] = 'age_restriction';
+        }
+
         $this->display_block = LAYOUT . '/blocks/photo.html';
         $this->display_var_name = 'photo';
         $this->search_limit = (int)config('photo_search_result');
@@ -55,10 +64,14 @@ class Photo
         return self::$photo;
     }
 
-    private function getAllFields(): array
+    public function getAllFields($prefix = false): array
     {
-        return array_map(function($field) {
-            return $this->tablename . '.' . $field;
+        return array_map(function($field) use ($prefix) {
+            $field_name = $this->tablename . '.' . $field;
+            if( $prefix ){
+                $field_name .= ' AS `'.$this->tablename . '.' . $field.'`';
+            }
+            return $field_name;
         }, $this->fields);
     }
 
@@ -80,6 +93,15 @@ class Photo
     /**
      * @throws Exception
      */
+    public function getOne(array $params = [])
+    {
+        $params['first_only'] = true;
+        return $this->getAll($params);
+    }
+
+    /**
+     * @throws Exception
+     */
     public function getAll(array $params = [])
     {
         $param_photo_id = $params['photo_id'] ?? false;
@@ -87,6 +109,7 @@ class Photo
         $param_filename = $params['filename'] ?? false;
         $param_userid = $params['userid'] ?? false;
         $param_search = $params['search'] ?? false;
+        $param_collection_id = $params['collection_id'] ?? false;
 
         $param_condition = $params['condition'] ?? false;
         $param_limit = $params['limit'] ?? false;
@@ -139,11 +162,16 @@ class Photo
         $join = [];
         $group = [];
         $version = Update::getInstance()->getDBVersion();
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+        if (!$param_count && ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264))) {
             $select[] = 'GROUP_CONCAT(tags.name SEPARATOR \',\') AS tags';
             $join[] = 'LEFT JOIN ' . cb_sql_table('photo_tags') . ' ON photos.photo_id = photo_tags.id_photo';
             $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON photo_tags.id_tag = tags.id_tag';
             $group[] = 'photos.photo_id';
+        }
+
+        if( $param_collection_id ){
+            $collection_items_table = Collection::getInstance()->getTableNameItems();
+            $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON ' . $collection_items_table . '.collection_id = ' . $param_collection_id . ' AND photos.photo_id = ' . $collection_items_table . '.object_id';
         }
 
         if( $param_group ){
@@ -204,21 +232,88 @@ class Photo
             return '';
         }
 
-        $cond = '((photos.active = \'yes\' AND photos.broadcast = \'public\' ';
+        $cond = '((photos.active = \'yes\'';
+
+        $sql_age_restrict = '';
+        if( config('enable_age_restriction') == 'yes' && config('enable_blur_restricted_content') != 'yes' ){
+            $cond .= ' AND photos.age_restriction IS NULL';
+            $dob = user_dob();
+            $sql_age_restrict = ' AND (photos.age_restriction IS NULL OR TIMESTAMPDIFF(YEAR, \'' . mysql_clean($dob) . '\', now()) >= photos.age_restriction )';
+        }
+
+        $cond .= ' AND photos.broadcast = \'public\'';
 
         $current_user_id = user_id();
         if ($current_user_id) {
             $select_contacts = 'SELECT contact_userid FROM ' . tbl('contacts') . ' WHERE confirmed = \'yes\' AND userid = ' . $current_user_id;
             $cond .= ' OR photos.userid = ' . $current_user_id . ')';
-            $cond .= ' OR (photos.active = \'yes\' AND photos.broadcast IN(\'public\',\'logged\'))';
-            $cond .= ' OR (photos.broadcast = \'private\' AND photos.userid IN(' . $select_contacts . '))';
+            $cond .= ' OR (photos.active = \'yes\' AND photos.broadcast IN(\'public\',\'logged\')'.$sql_age_restrict.')';
+            $cond .= ' OR (photos.broadcast = \'private\' AND photos.userid IN(' . $select_contacts . ')'.$sql_age_restrict.')';
         } else {
             $cond .= ')';
         }
         $cond .= ')';
         return $cond;
     }
+
+    /**
+     * @throws Exception
+     */
+    public static function display_restricted($photo)
+    {
+        if( !empty($photo['age_restriction']) ){
+            echo '<span class="restricted" title="' . sprintf(lang('access_forbidden_under_age'), $photo['age_restriction']) . '">-' . $photo['age_restriction'] . '</span>';
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function isCurrentUserRestricted($photo_id): string
+    {
+        if (has_access('video_moderation', true)) {
+            return false;
+        }
+
+        $params = [];
+        $params['photo_id'] = $photo_id;
+        $photo = $this->getOne($params);
+
+        if (empty($photo)) {
+            return false;
+        }
+
+        if( empty($photo['age_restriction']) ){
+            return false;
+        }
+
+        if( !User::getInstance()->isUserConnected() ){
+            return true;
+        }
+
+        if( User::getInstance()->getCurrentUserID() == $photo['userid'] ){
+            return false;
+        }
+
+        if( User::getInstance()->getCurrentUserAge() < $photo['age_restriction'] ){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function isToBlur($photo_id)
+    {
+        if (config('enable_blur_restricted_content') != 'yes') {
+            return false;
+        }
+        return $this->isCurrentUserRestricted($photo_id);
+    }
+
 }
+
 class CBPhotos
 {
     var $action = '';
@@ -264,6 +359,9 @@ class CBPhotos
 
         $cb_columns->object('photos')->register_columns($basic_fields);
 
+        if( config('enable_age_restriction') == 'yes' ){
+            register_anchor_function('display_restricted', 'in_photo_thumb', Photo::class);
+        }
         register_anchor_function('display_banner', 'in_photo_thumb', self::class);
     }
 
@@ -297,14 +395,22 @@ class CBPhotos
         return $this->basic_fields = $fields;
     }
 
+    /**
+     * @throws Exception
+     */
     function basic_fields_setup()
     {
-        # Set basic video fields
+        # Set basic photo fields
         $basic_fields = [
             'photo_id', 'photo_key', 'userid', 'photo_title', 'photo_description', 'collection_id',
             'photo_details', 'date_added', 'filename', 'ext', 'active', 'broadcast', 'file_directory', 'views',
             'last_commented', 'total_comments'
         ];
+
+        $version = Update::getInstance()->getDBVersion();
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 305)) {
+            $basic_fields[] = 'age_restriction';
+        }
 
         return $this->set_basic_fields($basic_fields);
     }
@@ -659,7 +765,7 @@ class CBPhotos
             if ($cond != '') {
                 $cond .= ' AND ';
             }
-            $cond .= cbsearch::date_margin('photos.date_added', $p['date_span']);
+            $cond .= Search::date_margin('photos.date_added', $p['date_span']);
         }
 
         if ($p['featured']) {
@@ -1347,8 +1453,8 @@ class CBPhotos
 
         $x = $info[0];
         $y = $info[1];
-        list($w, $h) = getimagesize($file);
-        list($ww, $wh) = getimagesize($watermark);
+        [$w, $h] = getimagesize($file);
+        [$ww, $wh] = getimagesize($watermark);
         $padding = $this->padding;
 
         switch ($x) {
@@ -1399,7 +1505,7 @@ class CBPhotos
             return false;
         }
 
-        list($Swidth, $Sheight, $Stype) = getimagesize($input);
+        [$Swidth, $Sheight, $Stype] = getimagesize($input);
         $wImage = imagecreatefrompng($watermark_file);
         $ww = imagesx($wImage);
         $wh = imagesy($wImage);
@@ -1548,6 +1654,9 @@ class CBPhotos
             if (!isset($array['allow_rating'])) {
                 $array['allow_rating'] = 'yes';
             }
+            if (!isset($array['age_restriction'])) {
+                $array['age_restriction'] = 'null';
+            }
 
             foreach ($FullForms as $field) {
                 $name = formObj::rmBrackets($field['name']);
@@ -1689,7 +1798,7 @@ class CBPhotos
         $embedding = $array['allow_embedding'];
         $rating = $array['allow_rating'];
 
-        return [
+        $return = [
             'comments'  => [
                 'title'             => lang('comments'),
                 'name'              => 'allow_comments',
@@ -1725,6 +1834,24 @@ class CBPhotos
                 'default_value'     => 'yes'
             ]
         ];
+
+        if( config('enable_age_restriction') == 'yes' ) {
+            $age_restriction = $array['age_restriction'];
+            $return['age_restriction'] = [
+                'title'             => lang('age_restriction'),
+                'type'              => 'textfield',
+                'name'              => 'age_restriction',
+                'id'                => 'age_restriction',
+                'value'             =>  $age_restriction ?? '',
+                'db_field'          => 'age_restriction',
+                'required'          => 'no',
+                'hint_2'            => lang('info_age_restriction'),
+                'validate_function' => 'ageRestriction',
+                'use_func_val'      => true
+            ];
+        }
+
+        return $return;
     }
 
     /**

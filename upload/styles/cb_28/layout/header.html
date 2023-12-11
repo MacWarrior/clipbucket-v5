@@ -43,7 +43,7 @@
 				<div class="navbar-header clearfix">
 
 					{ANCHOR place="before_logo"}
-					<h1 class="logo">
+					<h1 class="logo no_select">
 						<a href="/">
 							<img src="{get_website_logo_path()}" class="img-responsive"/>
 						</a>
@@ -136,7 +136,7 @@
 								<li class="dropdown myaccount-dd">
 									<a href="javascript:void(0);" class="user-area dropdown-toggle" data-toggle="dropdown">
 										{$user_det = $userquery->get_user_details(user_id())}
-										<img src="{$userquery->getUserThumb($user_det)}" width="35" height="35"/>
+										<img src="{$userquery->getUserThumb($user_det)}" class="no_select" width="35" height="35"/>
 										<span>{display_clean($userquery->username|truncate:15)}</span>
 									</a>
 									<ul class="dropdown-menu">

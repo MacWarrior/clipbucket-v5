@@ -120,6 +120,16 @@
 								</div>
 							</div>
 							<hr/>
+							<div class="row">
+								<div class="col-md-10">
+									<label class="nowrap" for="enable_global_age_restriction" title="{lang code='enable_global_age_restriction'}"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='tips_enable_global_age_restriction'}"/> {lang code='enable_global_age_restriction'}</label>
+								</div>
+								<div class="col-md-2 row-size no_padding">
+									<input value="yes" id="enable_global_age_restriction" {if $row.enable_global_age_restriction=='yes'}checked{/if} name="enable_global_age_restriction" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
 
 						</div>
 						<div class="col-md-4">
@@ -171,6 +181,26 @@
 								<div class="col-md-12">
 									<label class="nowrap" for="closed_msg" title="Closed message">Closed message</label>
 									<textarea class="form-control" name="closed_msg" id="closed_msg" cols="45" rows="5">{$row.closed_msg}</textarea>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-10">
+									<label class="nowrap" for="enable_age_restriction" title="{lang code='option_enable_age_restriction'}">{lang code='option_enable_age_restriction'}</label>
+								</div>
+								<div class="col-md-2 row-size no_padding">
+									<input value="yes" id="enable_age_restriction" {if $row.enable_age_restriction=='yes'}checked{/if} name="enable_age_restriction" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-10">
+									<label class="nowrap" for="enable_blur_restricted_content" title="{lang code='option_enable_blur_restricted_content'}"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='tips_enable_blur_restricted_content'}"/> {lang code='option_enable_blur_restricted_content'}</label>
+								</div>
+								<div class="col-md-2 row-size no_padding">
+									<input value="yes" id="enable_blur_restricted_content" {if $row.enable_blur_restricted_content=='yes'}checked{/if} name="enable_blur_restricted_content" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
+									<span class="lbl"></span>
 								</div>
 							</div>
 							<hr/>
@@ -486,6 +516,16 @@
 								</div>
 								<div class="col-md-4 row-size">
 									<input value="yes" name="allow_username_spaces" id="allow_username_spaces" {if $row.allow_username_spaces=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-8">
+									<label class="nowrap" for="enable_user_dob_edition" title="{lang code='option_enable_user_dob_edition'}">{lang code='option_enable_user_dob_edition'}</label>
+								</div>
+								<div class="col-md-4 row-size">
+									<input value="yes" name="enable_user_dob_edition" id="enable_user_dob_edition" {if $row.enable_user_dob_edition=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 									<span class="lbl"></span>
 								</div>
 							</div>
