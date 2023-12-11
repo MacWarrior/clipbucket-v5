@@ -1015,4 +1015,5 @@ VALUES
        ('age_verification_text'),
        ('tips_enable_global_age_restriction'),
        ('disclaimer_return'),
-       ('disclaimer_older');
+       ('disclaimer_older'),
+       ('edition_min_age_request');

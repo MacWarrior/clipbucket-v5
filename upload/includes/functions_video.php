@@ -57,7 +57,7 @@ function video_playable($id): bool
         return false;
     }
     if ($vdo['active'] == 'no' && $vdo['userid'] != user_id()) {
-        e(lang("vdo_iac_msg"));
+        e(lang('vdo_iac_msg'));
         if (!has_access('admin_access', true)) {
             return false;
         }

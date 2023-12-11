@@ -3969,7 +3969,7 @@ function update_counter($section, $query, $counter)
  *
  * @return bool : { boolean } { true / false depending on situation }
  */
-function verify_age($dob)
+function verify_age($dob): bool
 {
     $allowed_age = config('min_age_reg');
     if ($allowed_age < 1) {

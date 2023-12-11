@@ -137,3 +137,17 @@ INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `tra
 VALUES (@id_language_key, 'Based on minimum age for registration', @language_id_eng);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES (@id_language_key, 'Basé sur l\'âge minimum d\'inscription', @language_id_fra);
+
+SET @language_key = 'edition_min_age_request' COLLATE utf8mb4_unicode_520_ci;
+INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);
+SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES (@id_language_key, 'Age can\'t be under %s', @language_id_eng);
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES (@id_language_key, 'L\'âge ne peut être inférieur à %s ans', @language_id_fra);
+
+SET @language_key = 'register_min_age_request' COLLATE utf8mb4_unicode_520_ci;
+SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
+UPDATE `{tbl_prefix}languages_translations`
+    SET `translation` = 'You must be at least %s year old to register'
+    WHERE `id_language_key` = @id_language_key AND `language_id` = @language_id_eng;
