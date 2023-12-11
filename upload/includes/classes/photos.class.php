@@ -8,6 +8,9 @@ class Photo
     private $search_limit = 0;
     private $display_var_name = '';
 
+    /**
+     * @throws Exception
+     */
     public function __construct(){
         $this->tablename = 'photos';
         $this->fields = [
@@ -41,8 +44,13 @@ class Photo
             ,'server_url'
             ,'owner_ip'
             ,'photo_details'
-            ,'age_restriction'
         ];
+
+        $version = Update::getInstance()->getDBVersion();
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 305)) {
+            $this->fields[] = 'age_restriction';
+        }
+
         $this->display_block = LAYOUT . '/blocks/photo.html';
         $this->display_var_name = 'photo';
         $this->search_limit = (int)config('photo_search_result');
@@ -387,14 +395,22 @@ class CBPhotos
         return $this->basic_fields = $fields;
     }
 
+    /**
+     * @throws Exception
+     */
     function basic_fields_setup()
     {
         # Set basic photo fields
         $basic_fields = [
             'photo_id', 'photo_key', 'userid', 'photo_title', 'photo_description', 'collection_id',
             'photo_details', 'date_added', 'filename', 'ext', 'active', 'broadcast', 'file_directory', 'views',
-            'last_commented', 'total_comments', 'age_restriction'
+            'last_commented', 'total_comments'
         ];
+
+        $version = Update::getInstance()->getDBVersion();
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 305)) {
+            $basic_fields[] = 'age_restriction';
+        }
 
         return $this->set_basic_fields($basic_fields);
     }

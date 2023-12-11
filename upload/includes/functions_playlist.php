@@ -40,7 +40,7 @@ function get_playlists($args = [])
 }
 
 /**
- * @throws \Exception
+ * @throws Exception
  */
 function get_playlist_items($list_id, $limit = -1, $order = "playlist_items.playlist_item_id DESC")
 {
@@ -65,7 +65,7 @@ function get_playlist_cover($playlist, $return_default = false)
 }
 
 /**
- * @throws \Exception
+ * @throws Exception
  */
 function get_playlist_thumb($playlist, $size = false)
 {
@@ -148,7 +148,7 @@ function view_playlist($playlist_id)
 }
 
 /**
- * @throws \Exception
+ * @throws Exception
  */
 function playlist_upload_cover($args)
 {

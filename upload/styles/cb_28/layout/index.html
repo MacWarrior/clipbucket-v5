@@ -74,7 +74,6 @@
                 {/if}
 			{/if}
 
-			<!-- playlists -->
 			{if config('playlistsSection') == 'yes'}
 				{$playlists = get_playlists(['limit'=>4, 'order'=>'total_items DESC'])}
 				{$playlists = activePlaylists($playlists)}
@@ -83,13 +82,10 @@
 					<h2 title="Playlists with most videos">{lang code="top_playlists"}</h2>
 					{foreach $playlists as $playlist}
 					<div class="playlist clearfix">
-						{$items = get_playlist_items($playlist.playlist_id)}
+						{$items = get_playlist_items($playlist.playlist_id, 4)}
 						<a href="{video_link($items[0])}"><h3>{display_clean($playlist.playlist_name)}</h3></a>
 						<div class="clearfix row">
 							{foreach $items as $item}
-								{if $item@iteration == 5}
-									{break}
-								{/if}
 								{$videoid = $item.videoid}
 								{if $videoid}
 							<div class="video col-lg-3 col-md-4 col-sm-6 col-xs-6 no_overflow">
@@ -105,7 +101,7 @@
 								{/if}
 							{/foreach}
 						</div>
-						<span class="videos-count">{count($items)|number_format}&nbsp;{lang code="videos"}</span>
+						<span class="videos-count">{if $items}{count($items)|number_format}{else}0{/if}&nbsp;{lang code="videos"}</span>
 					</div>
 					{/foreach}
 				</div>

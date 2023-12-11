@@ -11,6 +11,9 @@ class Video
     private $display_var_name = '';
     private $search_limit = 0;
 
+    /**
+     * @throws Exception
+     */
     public function __construct(){
         $this->tablename = 'video';
         $this->tablename_categories = 'video_categories';
@@ -64,8 +67,13 @@ class Video
             ,'is_castable'
             ,'bits_color'
             ,'subscription_email'
-            ,'age_restriction'
         ];
+
+        $version = Update::getInstance()->getDBVersion();
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 305)) {
+            $this->fields[] = 'age_restriction';
+        }
+
         $this->fields_categories = [
             'category_id'
             ,'parent_id'
@@ -390,6 +398,7 @@ class Video
             $cond .= ')';
         }
         $cond .= ')';
+
         return $cond;
     }
 
@@ -588,6 +597,9 @@ class CBvideo extends CBCategory
         return $this->basic_fields = $fields;
     }
 
+    /**
+     * @throws Exception
+     */
     function basic_fields_setup(): array
     {
         # Set basic video fields
@@ -599,8 +611,13 @@ class CBvideo extends CBCategory
             , 'active', 'favourite_count', 'playlist_count', 'views', 'last_viewed', 'date_added', 'flagged', 'duration', 'status'
             , 'default_thumb', 'embed_code', 'downloads', 'uploader_ip'
             , 'video_files', 'file_server_path', 'video_version', 'thumbs_version'
-            , 're_conv_status', 'is_castable', 'bits_color', 'subscription_email', 'age_restriction'
+            , 're_conv_status', 'is_castable', 'bits_color', 'subscription_email'
         ];
+
+        $version = Update::getInstance()->getDBVersion();
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 305)) {
+            $basic_fields[] = 'age_restriction';
+        }
 
         return $this->set_basic_fields($basic_fields);
     }
@@ -2037,12 +2054,12 @@ class CBvideo extends CBCategory
 
         $data = cb_do_action('select_playlist_items', ['query_id' => $query_id, 'playlist_id' => $playlist_id]);
 
-        if ($data) {
+        if( !empty($data) ){
             return $data;
         }
 
         $data = select($query);
-        if(!$data){
+        if( empty($data) ){
             return false;
         }
 
