@@ -189,12 +189,13 @@
 					{if $myquery->is_commentable($photo,'p')}
 
 					<div class="collectionComments addComment">
-						<h2>{$photo.total_comments}
+						<h2>
 							{if $photo.total_comments <= 1 }
 								{lang code='comment'}
 							{else}
 								{{lang code='comments'} }
 							{/if}
+							(<span id="comment_count">{$photo.total_comments}</span>)
 						</h2>
 						<span id="show-comments" class="icon-down-arrow" title="{lang code='show_comments'}"></span>
 						<span id="hide-comments" class="icon-up-arrow" title="{lang code='hide_comments'}" style="display:none;"></span>

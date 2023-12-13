@@ -1127,6 +1127,8 @@ function add_comment_js(form_id,type)
                 if(data.cid) {
                     $('.no-comments').remove();
                     get_the_comment(data.cid,data.type_id,'#comments-ul');
+                    var count = parseInt($('#comment_count').html());
+                    $('#comment_count').html((count+1).toString());
                 }
 
             }
