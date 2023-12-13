@@ -30,3 +30,5 @@ INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `tra
 VALUES (@id_language_key, 'Display channel comments', @language_id_eng);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES (@id_language_key, 'Afficher les commentaires de chaîne', @language_id_fra);
+
+ALTER TABLE `{tbl_prefix}comments` MODIFY type varchar(16);

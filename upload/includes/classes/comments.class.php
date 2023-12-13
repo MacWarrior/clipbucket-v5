@@ -2,6 +2,7 @@
 
 class Comments
 {
+    public static $libelle_type_channel = 'channel';
     /**
      * @throws Exception
      */
@@ -33,6 +34,10 @@ class Comments
         if( !$param_type || $param_type == 'cl'){
             $left_join .= ' LEFT JOIN '.cb_sql_table('collections').' ON comments.type = \'cl\' AND comments.type_id = collections.collection_id';
             $case_when .= ' WHEN comments.type = \'cl\' THEN collections.collection_name';
+        }
+        if( !$param_type || $param_type == Comments::$libelle_type_channel){
+            $left_join .= ' LEFT JOIN '.tbl('users').' channels ON comments.type = \''.Comments::$libelle_type_channel.'\' AND comments.type_id = channels.userid';
+            $case_when .= ' WHEN comments.type = \''.Comments::$libelle_type_channel.'\' THEN channels.username';
         }
 
         $conditions = [];
@@ -236,6 +241,10 @@ class Comments
                 $field = 'total_comments';
                 $cond = 'collection_id';
                 break;
+            case Comments::$libelle_type_channel:
+                $table = 'users';
+                $field = 'comments_count';
+                $cond = 'userid';
         }
 
         Clipbucket_db::getInstance()->update(tbl($table), [$field], [$count_comment], $cond.' = '.mysql_clean($type_id));
@@ -385,6 +394,11 @@ class Comments
                 $collection = Collections::getInstance();
                 $obj = $collection->get_collection($type_id);
                 $link = $collection->collection_links($obj);
+                break;
+            case Comments::$libelle_type_channel:
+                $user = userquery::getInstance();
+                $obj = $user->get_user_profile($type_id);
+                $link = $user->profile_link($obj);
                 break;
         }
         $owner_id = $obj['userid'];

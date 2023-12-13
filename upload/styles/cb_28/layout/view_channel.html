@@ -50,6 +50,11 @@
 					<li>
 						<a href="#user-playlist" data-toggle="tab">{lang code='playlists'}</a>
 					</li>
+					{if config('display_channel_comments')}
+						<li>
+							<a href="#user-comments" data-toggle="tab">{lang code='comments'}</a>
+						</li>
+					{/if}
 				</ul>
 				<div class="tab-content clearfix">
 					<div class="tab-pane fade in clearfix{if $u.show_my_videos=='no' && $u.show_my_photos=='no'} active{/if}" id="user-info">
@@ -186,6 +191,38 @@
 							<div class="well well-info">{lang code='no_playlists'}</div>
 						{/if}
 					</div>
+					{if config('display_channel_comments')}
+						<div class="tab-pane comment fade in clearfix" id="user-comments">
+							{if $myquery->is_commentable($p,'channel')}
+
+								<div class="collectionComments addComment">
+									<h2>
+										{if $u.comments_count <= 1 }
+											{lang code='comment'}
+										{else}
+											{{lang code='comments'} }
+										{/if}
+										(<span id="comment_count">{$u.comments_count}</span>)
+									</h2>
+									<span id="show-comments" class="icon-down-arrow" title="{lang code='show_comments'}"></span>
+									<span id="hide-comments" class="icon-up-arrow" title="{lang code='hide_comments'}" style="display:none;"></span>
+
+									<div id="bloc-comment" style="display:none;">
+										{include file="$style_dir/blocks/comments/add_comment.html" id=$u.userid type=Comments::$libelle_type_channel}
+
+										<div class="userComments">
+											<ul id="userCommentsList" style="margin-left:-40px;">
+											</ul>
+										</div>
+									</div>
+								</div>
+							{else}
+								<div align="center" class="moveL no_comments">
+									{lang code='comm_disabled_for_vid'}
+								</div>
+							{/if}
+						</div>
+					{/if}
 				</div>
 			</div>
 		</section>
@@ -235,4 +272,5 @@
 	var totalVids = "{$total_videos}";
 	var totalPhotos = "{$total_photos}";
 	var loadMoreLang = "{$loadMoreLang}";
+	var libelle_type_channel = "{Comments::$libelle_type_channel}";
 </script>

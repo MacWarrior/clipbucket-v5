@@ -118,10 +118,11 @@ if ($userquery->perm_check('view_channel', true)) {
             $min_suffixe = '.min';
         }
 
-        $Cbucket->addJS(['pages/view_channel/view_channel'.$min_suffixe.'.js' => 'admin']);
-        $Cbucket->addJS(['/plupload/js/plupload.full.min.js' => 'admin']);
+        $Cbucket->addJS([
+            'pages/view_channel/view_channel' . $min_suffixe . '.js' => 'admin',
+            '/plupload/js/plupload.full.min.js'                      => 'admin'
+        ]);
     }
 }
-
 
 display_it();
