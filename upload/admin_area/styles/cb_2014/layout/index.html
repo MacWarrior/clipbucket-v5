@@ -1,15 +1,19 @@
 <div class="heading">
     <h2>ClipBucket V{$VERSION} {$STATE} Dashboard</h2>
 </div>
+{$active = 'class="active"'}
 <div class="row display-flex">
 	<div class="col-md-6">
 		<ul class="nav nav-tabs" style="height: 53px;">
-			<li class="active">
-				<a data-toggle="tab" href="#rcomments">
-					<h5><i class="glyphicon glyphicon-comment"></i> Recent Comments</h5>
-				</a>
-			</li>
-			<li>
+			{if $comments}
+				<li {$active}>
+					<a data-toggle="tab" href="#rcomments">
+						<h5><i class="glyphicon glyphicon-comment"></i> Recent Comments</h5>
+					</a>
+				</li>
+			{$active = ''}
+			{/if}
+			<li {$active}>
 				<a data-toggle="tab" href="#todolist">
 					<h5><i class="glyphicon glyphicon-list-alt"></i> ToDo List</h5>
 				</a>
@@ -21,35 +25,35 @@
 			</li>
 		</ul>
 		<div class="tab-content" style="height: calc(100% - 72px);">
-			<div id="rcomments" class="tab-pane active" style="height: 100%; ">
-				<div class="widgetBox" style="height: 100%; min-height: 200px;">
-					{if $comments}
-					{foreach from=$comments item=comment}
-					{$userdetails = $userquery->get_user_details($comment.userid)}
-					<div class="itemdiv dialogdiv">
-						<div class="user">
-							<img alt="{display_clean($userdetails.username)}" title="{display_clean($userdetails.username)}" src="{$userquery->getUserThumb($userdetails,'small')}">
+			{if $comments}
+				<div id="rcomments" class="tab-pane active" style="height: 100%; ">
+					<div class="widgetBox" style="height: 100%; min-height: 200px;">
+						{foreach from=$comments item=comment}
+						{$userdetails = $userquery->get_user_details($comment.userid)}
+						<div class="itemdiv dialogdiv">
+							<div class="user">
+								<img alt="{display_clean($userdetails.username)}" title="{display_clean($userdetails.username)}" src="{$userquery->getUserThumb($userdetails,'small')}">
+							</div>
+							<div class="body">
+								<div class="time">
+									<i class="icon-time"></i>
+									<span class="green">{$comment.date_added|date_format}</span>
+								</div>
+								<div class="name">
+									<a href="#">{display_clean($comment.anonym_name)}</a>
+								</div>
+								<div class="text">{display_clean($comment.comment)|comment}</div>
+								<div class="tools">
+									<a href="{getCommentAdminLink($comment.type, $comment.type_id)}" class="btn btn-minier btn-info">
+										<i class="icon-only icon-share-alt"></i>
+									</a>
+								</div>
+							</div>
 						</div>
-						<div class="body">
-							<div class="time">
-								<i class="icon-time"></i>
-								<span class="green">{$comment.date_added|date_format}</span>
-							</div>
-							<div class="name">
-								<a href="#">{display_clean($comment.anonym_name)}</a>
-							</div>
-							<div class="text">{display_clean($comment.comment)|comment}</div>
-							<div class="tools">
-								<a href="{getCommentAdminLink($comment.type, $comment.type_id)}" class="btn btn-minier btn-info">
-									<i class="icon-only icon-share-alt"></i>
-								</a>
-							</div>
-						</div>
+						{/foreach}
 					</div>
-					{/foreach}
-					{/if}
 				</div>
-			</div>
+			{/if}
 			<div id="todolist" class="tab-pane"  style="height: 100%; ">
 				<div class="widgetBox" style="height: 100%;min-height: 200px;">
 					<div class="addTodo paddingRightSmall paddingLeftLarge marginBottomLarge">
