@@ -142,6 +142,9 @@ if (config('display_video_comments') != 'yes' && config('display_photo_comments'
     $comments = false;
 } else {
     $comments = Comments::getAll($params);
+    if ($comments === false) {
+        $comments = [];
+    }
 }
 
 $update = Update::getInstance();

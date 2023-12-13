@@ -5,7 +5,7 @@
 <div class="row display-flex">
 	<div class="col-md-6">
 		<ul class="nav nav-tabs" style="height: 53px;">
-			{if $comments}
+			{if $comments !== false}
 				<li {$active}>
 					<a data-toggle="tab" href="#rcomments">
 						<h5><i class="glyphicon glyphicon-comment"></i> Recent Comments</h5>
