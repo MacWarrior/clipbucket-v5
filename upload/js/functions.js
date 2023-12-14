@@ -458,10 +458,15 @@ function delete_comment(cid)
                 alert('No data');
             } else {
                 if(data.msg) {
+                    if (data.nb === undefined) {
+                        data.nb = 1;
+                    }
                     $(".reply-"+cid).fadeOut('slow');
                     $("#comment_"+cid).fadeOut('slow');
                     $("#comment_msg_output").html(data.msg+' !');
                     $("#comment_msg_output").fadeIn('slow');
+                    var count = parseInt($('#comment_count').html());
+                    $('#comment_count').html((count- data.nb).toString());
                     setTimeout(function(){
                         $('#comment_msg_output').fadeOut();
                     }, 3000);
