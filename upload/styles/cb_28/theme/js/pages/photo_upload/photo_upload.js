@@ -44,7 +44,6 @@
                     } else {
                         link.innerHTML = '(' + index + ') ';
                     }
-
                     oneUploadForm = $(uploadForm).clone().get(0);
                     oneUploadForm.className = 'updatePhotoInfoForm';
                     oneUploadForm.id = '';
@@ -381,7 +380,9 @@
                                 newCollectionElement.value = parseInt(msg.id);
                                 newCollectionElement.innerHTML = collectionName;
                                 newCollectionElement.selected = true;
-                                $("#collectionSelection").get(0).appendChild(newCollectionElement);
+                                $("select[name='collection_id']").get(0).appendChild(newCollectionElement);
+                                $("#collectionSelection").get(0).appendChild( newCollectionElement.cloneNode(true));
+
                                 $("#uploadMessage").html(msg.msg).attr("class", "alert alert-success container").removeClass("hidden");
 
                                 $("#CollectionDIV").toggle("fast");
