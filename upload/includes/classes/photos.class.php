@@ -1847,7 +1847,8 @@ class CBPhotos
                 'required'          => 'no',
                 'hint_2'            => lang('info_age_restriction'),
                 'validate_function' => 'ageRestriction',
-                'use_func_val'      => true
+                'use_func_val'      => true,
+                'class'             => 'form-control'
             ];
         }
 
