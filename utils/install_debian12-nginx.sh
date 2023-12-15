@@ -1,6 +1,23 @@
 #!/bin/bash
-# ClipbucketV5 install on Debian 12
-## THIS SCRIPT MUST BE LAUNCHED AS ROOT
+
+if [[ $EUID -ne 0 ]]; then
+    echo "ClipBucketV5 easy installation script must be run as root"
+    exit
+fi
+
+clear
+echo ""
+echo "  ____ _ _       ____             _        _ __     ______"
+echo " / ___| (_)_ __ | __ ) _   _  ___| | _____| |\ \   / / ___|"
+echo "| |   | | | '_ \|  _ \| | | |/ __| |/ / _ \ __\ \ / /|___ \\"
+echo "| |___| | | |_) | |_) | |_| | (__|   <  __/ |_ \ V /  ___) |"
+echo " \____|_|_| .__/|____/ \__,_|\___|_|\_\___|\__| \_/  |____/"
+echo "          |_|  Installation script for Debian 12 + Nginx"
+echo ""
+echo "Disclaimer : This easy installation script is only"
+echo "             made to configure local / dev environments."
+echo "             Use it with caution."
+echo ""
 
 echo ""
 echo -ne "Updating Debian system..."
@@ -9,15 +26,40 @@ apt dist-upgrade -y > /dev/null 2>&1
 echo -ne " OK"
 
 echo ""
-echo -ne "Installing requiered elements..."
-apt install php8.3-fpm nginx-full mariadb-server git php8.3-curl ffmpeg php8.3-mysqli php8.3-xml php8.3-mbstring php8.3-gd sendmail mediainfo --yes > /dev/null 2>&1
-sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 100M/g" /etc/php/8.3/fpm/php.ini
-sed -i "s/post_max_size = 8M/post_max_size = 100M/g" /etc/php/8.3/fpm/php.ini
-sed -i "s/max_execution_time = 30/max_execution_time = 7200/g" /etc/php/8.3/fpm/php.ini
+echo ""
+echo "PHP versions availables : "
+echo " - 8.2 [Default]"
+echo " - 8.3"
+read -p "Which PHP version do you want to use ? [8.2] " READ_PHP_VERSION
+case ${READ_PHP_VERSION} in
+    "8.3")
+        echo ""
+        echo -ne "Configuring PHP 8.3 repo..."
+        apt install apt-transport-https lsb-release ca-certificates curl wget gnupg2 --yes > /dev/null 2>&1
+        wget -qO- https://packages.sury.org/php/apt.gpg | gpg --dearmor > /etc/apt/trusted.gpg.d/sury-php-x.x.gpg
+        echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list
+        apt update > /dev/null 2>&1
+        echo -ne " OK"
+        PHP_VERSION="8.3"
+        ;;
+    *)
+        PHP_VERSION="8.2"
+        ;;
+esac
 
-sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 100M/g" /etc/php/8.3/cli/php.ini
-sed -i "s/post_max_size = 8M/post_max_size = 100M/g" /etc/php/8.3/cli/php.ini
-systemctl restart php8.3-fpm
+echo ""
+echo -ne "Installing requiered elements..."
+apt install php${PHP_VERSION}-fpm nginx-full mariadb-server git php${PHP_VERSION}-curl ffmpeg php${PHP_VERSION}-mysqli php${PHP_VERSION}-xml php${PHP_VERSION}-mbstring php${PHP_VERSION}-gd sendmail mediainfo --yes > /dev/null 2>&1
+echo -ne " OK"
+
+echo ""
+echo -ne "Updating PHP ${PHP_VERSION} configs..."
+sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 100M/g" /etc/php/${PHP_VERSION}/fpm/php.ini
+sed -i "s/post_max_size = 8M/post_max_size = 100M/g" /etc/php/${PHP_VERSION}/fpm/php.ini
+sed -i "s/max_execution_time = 30/max_execution_time = 7200/g" /etc/php/${PHP_VERSION}/fpm/php.ini
+sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 100M/g" /etc/php/${PHP_VERSION}/cli/php.ini
+sed -i "s/post_max_size = 8M/post_max_size = 100M/g" /etc/php/${PHP_VERSION}/cli/php.ini
+systemctl restart php${PHP_VERSION}-fpm
 echo -ne " OK"
 
 echo ""
@@ -34,18 +76,15 @@ chmod 755 ./upload/includes
 echo -ne " OK"
 
 echo ""
-echo -ne "Generating DB access..."
-mysql -uroot -e "CREATE DATABASE clipbucket;"
-DB_PASS=$(date +%s | sha256sum | base64 | head -c 16)
-mysql -uroot -e "CREATE USER 'clipbucket'@'localhost' IDENTIFIED BY '$DB_PASS';"
-mysql -uroot -e "GRANT ALL PRIVILEGES ON clipbucket.* TO 'clipbucket'@'localhost' IDENTIFIED BY '$DB_PASS';"
-mysql -uroot -e "FLUSH PRIVILEGES;"
-echo -ne " OK"
-echo ""
-echo "- Database address : localhost"
-echo "- Database name : clipbucket"
-echo "- Database user : clipbucket"
-echo "- Database password : ${DB_PASS}"
+read -p "Which domain name do you want to use ? [clipbucket.local] " READ_DOMAIN
+case ${READ_DOMAIN} in
+    "")
+        DOMAIN_NAME="clipbucket.local"
+        ;;
+    *)
+        DOMAIN_NAME=${READ_DOMAIN}
+        ;;
+esac
 
 echo ""
 echo -ne "Configuring Nginx Vhost..."
@@ -53,7 +92,7 @@ rm -f /etc/nginx/sites-enabled/default
 cat << 'EOF' > /etc/nginx/sites-available/001-clipbucket
 server {
     listen 80;
-    server_name clipbucket.local;
+    server_name DOMAINNAME;
 
     root /srv/http/clipbucket/upload/;
     index index.php;
@@ -67,7 +106,7 @@ server {
     }
 
     location ~* \.php$ {
-        fastcgi_pass unix:/var/run/php/php8.3-fpm.sock;
+        fastcgi_pass unix:/var/run/php/phpPHPVERSION-fpm.sock;
         fastcgi_index index.php;
         fastcgi_split_path_info ^(.+\.php)(.*)$;
         include fastcgi_params;
@@ -203,15 +242,26 @@ server {
 }
 EOF
 
+sed -i "s/DOMAINNAME/${DOMAIN_NAME}/g" /etc/nginx/sites-available/001-clipbucket
+sed -i "s/PHPVERSION/${PHP_VERSION}/g" /etc/nginx/sites-available/001-clipbucket
 ln -s /etc/nginx/sites-available/001-clipbucket /etc/nginx/sites-enabled/
-
-# Restarting Apache service
 systemctl restart nginx > /dev/null
+echo -ne " OK"
 
+echo ""
+echo -ne "Generating DB access..."
+mysql -uroot -e "CREATE DATABASE clipbucket;"
+DB_PASS=$(date +%s | sha256sum | base64 | head -c 16)
+mysql -uroot -e "CREATE USER 'clipbucket'@'localhost' IDENTIFIED BY '$DB_PASS';"
+mysql -uroot -e "GRANT ALL PRIVILEGES ON clipbucket.* TO 'clipbucket'@'localhost' IDENTIFIED BY '$DB_PASS';"
+mysql -uroot -e "FLUSH PRIVILEGES;"
 echo -ne " OK"
 echo ""
-echo "- Website URL : http://clipbucket.local"
-
+echo "- Database address : localhost"
+echo "- Database name : clipbucket"
+echo "- Database user : clipbucket"
+echo "- Database password : ${DB_PASS}"
+echo "- Website URL : http://${DOMAIN_NAME}"
 echo ""
-echo "ClipbucketV5 installation completed"
+echo "ClipBucketV5 installation completed"
 echo ""
