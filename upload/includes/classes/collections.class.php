@@ -164,8 +164,10 @@ class Collection
 
         $join = [];
         $group = ['collections.collection_id'];
-        if (!$param_count && ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264))) {
-            $select[] = 'GROUP_CONCAT(tags.name SEPARATOR \',\') AS tags';
+        if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264) ){
+            if( !$param_count ){
+                $select[] = 'GROUP_CONCAT(tags.name SEPARATOR \',\') AS tags';
+            }
             $join[] = 'LEFT JOIN ' . cb_sql_table('collection_tags') . ' ON collections.collection_id = collection_tags.id_collection';
             $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON collection_tags.id_tag = tags.id_tag';
         }
