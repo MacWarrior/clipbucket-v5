@@ -26,6 +26,10 @@ class mass_upload extends Upload
 
             $filepath = $dir . DIRECTORY_SEPARATOR . $filename;
 
+            if( !is_readable($filepath) ){
+                continue;
+            }
+
             if (is_dir($filepath)) {
                 $new_files = $this->get_video_files_list($listonly, $filepath);
 
