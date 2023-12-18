@@ -50,7 +50,7 @@
 					<li>
 						<a href="#user-playlist" data-toggle="tab">{lang code='playlists'}</a>
 					</li>
-					{if config('display_channel_comments')}
+					{if config('display_channel_comments') == 'yes'}
 						<li>
 							<a href="#user-comments" data-toggle="tab">{lang code='comments'}</a>
 						</li>
@@ -191,7 +191,7 @@
 							<div class="well well-info">{lang code='no_playlists'}</div>
 						{/if}
 					</div>
-					{if config('display_channel_comments')}
+					{if config('display_channel_comments') == 'yes'}
 						<div class="tab-pane comment fade in clearfix" id="user-comments">
 							{if $myquery->is_commentable($p,'channel')}
 
