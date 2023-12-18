@@ -61,7 +61,7 @@
                     $(oneUploadForm).find("textarea[name='photo_description']").val(file.data.photo_description);
                     $(oneUploadForm).find("input[name='photo_tags']").val(file.data.photo_tags).attr('id', 'tags'+ index);
                     $(oneUploadForm).find("select[name='collection_id']").val(file.data.collection_id).prop('disabled',true);
-                    $(oneUploadForm).find("input[name='allow_comments'][value='"+file.data.allow_comments+"']").prop('disabled', true);
+                    $(oneUploadForm).find("input[name='allow_comments'][value='"+file.data.allow_comments+"']").prop('checked', true);
                     $(oneUploadForm).find("input[name='allow_embedding'][value='"+file.data.allow_embedding+"']").prop('checked', true);
                     $(oneUploadForm).find("input[name='allow_rating'][value='"+file.data.allow_rating+"']").prop('checked', true);
                     $(oneUploadForm).find("img").attr("src", file.data.photoThumb);
@@ -381,6 +381,7 @@
                                 newCollectionElement.selected = true;
                                 $("select[name='collection_id']").get(0).appendChild(newCollectionElement);
                                 $("#collectionSelection").get(0).appendChild( newCollectionElement.cloneNode(true));
+                                $("#collectionSelection option").last().attr('selected','selected');
 
                                 $("#uploadMessage").html(msg.msg).attr("class", "alert alert-success container").removeClass("hidden");
 

@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"310",
+  "revision":"311",
   "status":"dev",
   "detail":[
     {
@@ -94,6 +94,7 @@
         ,"Implement custom thumbs"
         ,"Implement age restriction options"
         ,"Add option to disable quicklist"
+        ,"Add option to hide empty collections"
       ]
     },
     {
@@ -247,7 +248,7 @@
         ,"Implement collection banner"
         ,"Fix quicklists"
         ,"Implement age restriction pop-in, thumb blur"
-        ,"Add option to hide empty collections"
+        ,"Fix collection creation while uploading new photos"
       ]
     }
   ,{
