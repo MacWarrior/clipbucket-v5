@@ -107,6 +107,9 @@ class Collection
         $param_order = $params['order'] ?? false;
         $param_group = $params['group'] ?? false;
         $param_having = $params['having'] ?? false;
+        if (config('hide_empty_collection') == 'yes') {
+            $param_having .= ($param_having ? ' AND ' : '' ). ' COUNT( DISTINCT collection_items.ci_id ' . (!empty(User::getInstance()->getCurrentUserID()) ? ' OR ( collections.userid = '.User::getInstance()->getCurrentUserID().')' : '') . ')';
+        }
         $param_count = $params['count'] ?? false;
         $param_first_only = $params['first_only'] ?? false;
         $param_with_items = $params['with_items'] ?? false;
@@ -761,7 +764,10 @@ class Collections extends CBCategory
 
         $having = '';
         if ($p['has_items']) {
-            $having = $count.' >= 1';
+            $having = $count.' >= 1 ';
+            if ( isset($p['show_own']) && !empty(User::getInstance()->getCurrentUserID())) {
+                $having .= ' OR ( collections.userid = '.User::getInstance()->getCurrentUserID().')';
+            }
         }
 
         $title_tag = '';

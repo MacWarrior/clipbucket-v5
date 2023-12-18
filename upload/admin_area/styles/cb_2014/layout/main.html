@@ -47,6 +47,11 @@
                     </a>
                 </li>
                 <li>
+                    <a data-toggle="tab" href="#config_collections">
+                        <h8>{lang code='collections'}</h8>
+                    </a>
+                </li>
+                <li>
                     <a data-toggle="tab" href="#config_comments">
                         <h8>{lang code='comments'}</h8>
                     </a>
@@ -1558,6 +1563,17 @@
                                 </div>
                             </div>
                             <hr/>
+						</div>
+					</div>
+				</div>
+                <div id="config_collections" class="tab-pane">
+					<div class="row">
+						<div class="col-md-4">
+							<label class="nowrap" for="hide_empty_collection" title="Video comments">{lang code='hide_empty_collection'}</label>
+						</div>
+						<div class="col-md-2 row-size">
+							<input value="yes" name="hide_empty_collection" id="hide_empty_collection" {if $row.hide_empty_collection=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+							<span class="lbl"></span>
 						</div>
 					</div>
 				</div>
