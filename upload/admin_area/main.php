@@ -83,6 +83,7 @@ if (isset($_POST['update'])) {
         , 'enable_blur_restricted_content'
         , 'enable_global_age_restriction'
         , 'enable_quicklist'
+        , 'hide_empty_collection'
     ];
 
     $config_booleans_to_refactor = [
@@ -348,7 +349,9 @@ if (isset($_POST['update'])) {
         'cache_auth',
         'cache_host',
         'cache_port',
-        'cache_password'
+        'cache_password',
+
+        'hide_empty_collection'
     ];
 
     foreach ($opt_list as $optl) {

@@ -296,8 +296,10 @@ class Video
 
         $join = [];
         $group = [];
-        if (!$param_count && ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) ) {
-            $select[] = 'GROUP_CONCAT(tags.name SEPARATOR \',\') AS tags';
+        if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264) ) {
+            if( !$param_count ){
+                $select[] = 'GROUP_CONCAT(tags.name SEPARATOR \',\') AS tags';
+            }
             $join[] = 'LEFT JOIN ' . cb_sql_table('video_tags') . ' ON video.videoid = video_tags.id_video';
             $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON video_tags.id_tag = tags.id_tag';
             $group[] = 'video.videoid';

@@ -106,7 +106,19 @@ class Collection
         $param_limit = $params['limit'] ?? false;
         $param_order = $params['order'] ?? false;
         $param_group = $params['group'] ?? false;
-        $param_having = $params['having'] ?? false;
+
+        $param_having = [];
+        if( !empty($params['having']) ){
+            $param_having[] = $params['having'];
+        }
+
+        if (config('hide_empty_collection') == 'yes') {
+            $hide_empty_collection = 'COUNT( DISTINCT collection_items.ci_id > 0 )';
+            if( !empty(User::getInstance()->getCurrentUserID()) ){
+                $hide_empty_collection = '(' . $hide_empty_collection . ' OR collections.userid = ' . User::getInstance()->getCurrentUserID() . ')';
+            }
+            $param_having[] = $hide_empty_collection;
+        }
         $param_count = $params['count'] ?? false;
         $param_first_only = $params['first_only'] ?? false;
         $param_with_items = $params['with_items'] ?? false;
@@ -164,19 +176,16 @@ class Collection
 
         $join = [];
         $group = ['collections.collection_id'];
-        if (!$param_count && ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264))) {
-            $select[] = 'GROUP_CONCAT(tags.name SEPARATOR \',\') AS tags';
+        if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264) ){
+            if( !$param_count ){
+                $select[] = 'GROUP_CONCAT(tags.name SEPARATOR \',\') AS tags';
+            }
             $join[] = 'LEFT JOIN ' . cb_sql_table('collection_tags') . ' ON collections.collection_id = collection_tags.id_collection';
             $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON collection_tags.id_tag = tags.id_tag';
         }
 
         if( $param_group ){
             $group[] = $param_group;
-        }
-
-        $having = '';
-        if( $param_having ){
-            $having = ' HAVING '.$param_having;
         }
 
         $order = '';
@@ -205,7 +214,7 @@ class Collection
             . ' ' . implode(' ', $join)
             . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions))
             . (empty($group) ? '' : ' GROUP BY ' . implode(',', $group))
-            . $having
+            . (empty($param_having) ? '' : ' HAVING ' . implode(' AND ', $param_having))
             . $order
             . $limit;
 
@@ -760,6 +769,9 @@ class Collections extends CBCategory
         $having = '';
         if ($p['has_items']) {
             $having = $count.' >= 1';
+            if ( isset($p['show_own']) && !empty(User::getInstance()->getCurrentUserID())) {
+                $having .= ' OR ( collections.userid = '.User::getInstance()->getCurrentUserID().')';
+            }
         }
 
         $title_tag = '';

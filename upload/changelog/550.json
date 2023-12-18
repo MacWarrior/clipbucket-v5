@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"308",
+  "revision":"310",
   "status":"dev",
   "detail":[
     {
@@ -247,6 +247,7 @@
         ,"Implement collection banner"
         ,"Fix quicklists"
         ,"Implement age restriction pop-in, thumb blur"
+        ,"Add option to hide empty collections"
       ]
     }
   ,{
