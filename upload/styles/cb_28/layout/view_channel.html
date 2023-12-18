@@ -52,7 +52,7 @@
 					</li>
 					{if config('display_channel_comments') == 'yes'}
 						<li>
-							<a href="#user-comments" data-toggle="tab">{lang code='comments'}</a>
+							<a href="#user-comments" data-toggle="tab">{lang code='comments'} (<span id="comment_count">{$u.comments_count}</span>)</a>
 						</li>
 					{/if}
 				</ul>
@@ -196,18 +196,7 @@
 							{if $myquery->is_commentable($p,'channel')}
 
 								<div class="collectionComments addComment">
-									<h2>
-										{if $u.comments_count <= 1 }
-											{lang code='comment'}
-										{else}
-											{{lang code='comments'} }
-										{/if}
-										(<span id="comment_count">{$u.comments_count}</span>)
-									</h2>
-									<span id="show-comments" class="icon-down-arrow" title="{lang code='show_comments'}"></span>
-									<span id="hide-comments" class="icon-up-arrow" title="{lang code='hide_comments'}" style="display:none;"></span>
-
-									<div id="bloc-comment" style="display:none;">
+									<div id="bloc-comment" >
 										{include file="$style_dir/blocks/comments/add_comment.html" id=$u.userid type=Comments::$libelle_type_channel}
 
 										<div class="userComments">

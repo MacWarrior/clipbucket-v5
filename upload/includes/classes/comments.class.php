@@ -496,7 +496,6 @@ class Comments
         }
 
         switch($type){
-            default:
             case 'v':
                 if( !CBvideo::getInstance()->video_exists($type_id) ){
                     e(lang('class_vdo_del_err'));
@@ -515,6 +514,15 @@ class Comments
                     return false;
                 }
                 break;
+            case Comments::$libelle_type_channel:
+                if ( !userquery::getInstance()->user_exists($type_id)) {
+                    e(lang('channel_not_exist'));
+                    return false;
+                }
+                break;
+            default:
+                e(lang('unknow_type'));
+                return false;
         }
 
         $func_array = get_functions('validate_comment_functions');
