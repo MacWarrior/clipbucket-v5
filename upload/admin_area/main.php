@@ -83,6 +83,7 @@ if (isset($_POST['update'])) {
         , 'enable_blur_restricted_content'
         , 'enable_global_age_restriction'
         , 'enable_quicklist'
+        , 'hide_empty_collection'
         , 'display_video_comments'
         , 'display_photo_comments'
         , 'display_channel_comments'
@@ -352,10 +353,10 @@ if (isset($_POST['update'])) {
         'cache_host',
         'cache_port',
         'cache_password',
-
-         'display_video_comments',
-         'display_photo_comments',
-         'display_channel_comments',
+        'hide_empty_collection',
+        'display_video_comments',
+        'display_photo_comments',
+        'display_channel_comments'
     ];
 
     foreach ($opt_list as $optl) {

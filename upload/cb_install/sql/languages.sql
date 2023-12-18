@@ -1018,6 +1018,7 @@ VALUES
        ('disclaimer_older'),
        ('edition_min_age_request'),
        ('option_enable_quicklist'),
+       ('option_hide_empty_collection'),
        ('option_display_video_comments'),
        ('option_display_photo_comments'),
        ('option_display_channel_comments');

@@ -243,6 +243,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_blur_restricted_content', 'no'),
     (NULL, 'enable_global_age_restriction', 'no'),
     (NULL, 'enable_quicklist', 'yes'),
+    (NULL, 'hide_empty_collection', 'yes'),
     (NULL, 'display_video_comments', 'yes'),
     (NULL, 'display_photo_comments', 'yes'),
     (NULL, 'display_channel_comments', 'yes');
