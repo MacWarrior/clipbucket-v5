@@ -58,6 +58,10 @@ $collection_count = $cond;
 $collection_count['count_only'] = true;
 
 $cond['limit'] = $get_limit;
+if (config('hide_empty_collection') == 'yes') {
+    $cond['has_items'] = true;
+    $cond['show_own'] = true;
+}
 $collections = $cbcollection->get_collections($cond);
 
 Assign('collections', $collections);
