@@ -462,7 +462,6 @@ VALUES
        ('invalid_email'),
        ('pelase_enter_reason'),
        ('please_enter_something_for_message'),
-       ('comm_disabled_for_vid'),
        ('file_size_exceeds'),
        ('vid_rate_disabled'),
        ('viewed'),
@@ -644,7 +643,6 @@ VALUES
        ('you_cant_sub_yourself'),
        ('manage_my_album'),
        ('you_dont_have_permission_to_update_this_video'),
-       ('comm_disabled_for_collection'),
        ('share_this_type'),
        ('seperate_usernames_with_comma'),
        ('album_privacy_updated'),
@@ -853,7 +851,6 @@ VALUES
        ('video_subtitles_deleted'),
        ('collection_no_parent'),
        ('collection_parent'),
-       ('comments_disabled_for_photo'),
        ('page_upload_video_limits'),
        ('page_upload_video_select'),
        ('page_upload_photo_limits'),
@@ -1021,4 +1018,5 @@ VALUES
        ('option_hide_empty_collection'),
        ('option_display_video_comments'),
        ('option_display_photo_comments'),
-       ('option_display_channel_comments');
+       ('option_display_channel_comments'),
+       ('comment_disabled_for');

@@ -4765,18 +4765,21 @@ class userquery extends CBCategory
             $default = $_POST;
         }
 
-        $return = [
-            'show_profile'       => [
-                'title'    => lang('show_profile'),
-                'type'     => 'dropdown',
-                'name'     => 'show_profile',
-                'id'       => 'show_profile',
-                'value'    => ['all' => lang('all'), 'members' => lang('members'), 'friends' => lang('friends')],
-                'checked'  => $default['show_profile'],
-                'db_field' => 'show_profile',
-                'sep'      => '&nbsp;'
-            ],
-            'allow_comments'     => [
+        $return = [];
+
+        $return['show_profile'] = [
+            'title'    => lang('show_profile'),
+            'type'     => 'dropdown',
+            'name'     => 'show_profile',
+            'id'       => 'show_profile',
+            'value'    => ['all' => lang('all'), 'members' => lang('members'), 'friends' => lang('friends')],
+            'checked'  => $default['show_profile'],
+            'db_field' => 'show_profile',
+            'sep'      => '&nbsp;'
+        ];
+
+        if( config('display_channel_comments') == 'yes' ){
+            $return['allow_comments'] = [
                 'title'    => lang('vdo_allow_comm'),
                 'type'     => 'radiobutton',
                 'name'     => 'allow_comments',
@@ -4785,28 +4788,30 @@ class userquery extends CBCategory
                 'checked'  => strtolower($default['allow_comments']),
                 'db_field' => 'allow_comments',
                 'sep'      => '&nbsp;'
-            ],
-            'allow_ratings'      => [
-                'title'    => lang('allow_ratings'),
-                'type'     => 'radiobutton',
-                'name'     => 'allow_ratings',
-                'id'       => 'allow_ratings',
-                'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
-                'checked'  => strtolower($default['allow_ratings']),
-                'db_field' => 'allow_ratings',
-                'sep'      => '&nbsp;'
-            ],
-            'allow_subscription' => [
-                'title'    => lang('allow_subscription'),
-                'type'     => 'radiobutton',
-                'name'     => 'allow_subscription',
-                'id'       => 'allow_subscription',
-                'hint_1'   => lang('allow_subscription_hint'),
-                'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
-                'checked'  => strtolower($default['allow_subscription']),
-                'db_field' => 'allow_subscription',
-                'sep'      => '&nbsp;'
-            ]
+            ];
+        }
+
+        $return['allow_ratings'] = [
+            'title'    => lang('allow_ratings'),
+            'type'     => 'radiobutton',
+            'name'     => 'allow_ratings',
+            'id'       => 'allow_ratings',
+            'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
+            'checked'  => strtolower($default['allow_ratings']),
+            'db_field' => 'allow_ratings',
+            'sep'      => '&nbsp;'
+        ];
+
+        $return['allow_subscription'] = [
+            'title'    => lang('allow_subscription'),
+            'type'     => 'radiobutton',
+            'name'     => 'allow_subscription',
+            'id'       => 'allow_subscription',
+            'hint_1'   => lang('allow_subscription_hint'),
+            'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
+            'checked'  => strtolower($default['allow_subscription']),
+            'db_field' => 'allow_subscription',
+            'sep'      => '&nbsp;'
         ];
 
         if( config('enable_user_status') == 'yes' ){
@@ -4837,87 +4842,96 @@ class userquery extends CBCategory
             $default = $_POST;
         }
 
-        return [
-            'profile_title'         => [
-                'title'     => lang('channel_title'),
-                'type'      => 'textfield',
-                'name'      => 'profile_title',
-                'id'        => 'profile_title',
-                'value'     => $default['profile_title'],
-                'db_field'  => 'profile_title',
-                'auto_view' => 'no'
-            ],
-            'profile_desc'          => [
-                'title'      => lang('channel_desc'),
-                'type'       => 'textarea',
-                'name'       => 'profile_desc',
-                'id'         => 'profile_desc',
-                'value'      => $default['profile_desc'],
-                'db_field'   => 'profile_desc',
-                'auto_view'  => 'yes',
-                'clean_func' => 'Replacer'
-            ],
-            'show_my_friends'       => [
-                'title'    => lang('show_my_friends'),
-                'type'     => 'radiobutton',
-                'name'     => 'show_my_friends',
-                'id'       => 'show_my_friends',
-                'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
-                'checked'  => strtolower($default['show_my_friends']),
-                'db_field' => 'show_my_friends',
-                'sep'      => '&nbsp;'
-            ],
-            'show_my_videos'        => [
-                'title'    => lang('show_my_videos'),
-                'type'     => 'radiobutton',
-                'name'     => 'show_my_videos',
-                'id'       => 'show_my_videos',
-                'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
-                'checked'  => strtolower($default['show_my_videos']),
-                'db_field' => 'show_my_videos',
-                'sep'      => '&nbsp;'
-            ],
-            'show_my_photos'        => [
-                'title'    => lang('show_my_photos'),
-                'type'     => 'radiobutton',
-                'name'     => 'show_my_photos',
-                'id'       => 'show_my_photos',
-                'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
-                'checked'  => strtolower($default['show_my_photos']),
-                'db_field' => 'show_my_photos',
-                'sep'      => '&nbsp;'
-            ],
-            'show_my_subscriptions' => [
-                'title'    => lang('show_my_subscriptions'),
-                'type'     => 'radiobutton',
-                'name'     => 'show_my_subscriptions',
-                'id'       => 'show_my_subscriptions',
-                'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
-                'checked'  => strtolower($default['show_my_subscriptions']),
-                'db_field' => 'show_my_subscriptions',
-                'sep'      => '&nbsp;'
-            ],
-            'show_my_subscribers'   => [
-                'title'    => lang('show_my_subscribers'),
-                'type'     => 'radiobutton',
-                'name'     => 'show_my_subscribers',
-                'id'       => 'show_my_subscribers',
-                'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
-                'checked'  => strtolower($default['show_my_subscribers']),
-                'db_field' => 'show_my_subscribers',
-                'sep'      => '&nbsp;'
-            ],
-            'show_my_collections'   => [
-                'title'    => lang('show_my_collections'),
-                'type'     => 'radiobutton',
-                'name'     => 'show_my_collections',
-                'id'       => 'show_my_collections',
-                'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
-                'checked'  => strtolower($default['show_my_collections']),
-                'db_field' => 'show_my_collections',
-                'sep'      => '&nbsp;'
-            ]
+        $return = [];
+
+        $return['profile_title'] = [
+            'title'     => lang('channel_title'),
+            'type'      => 'textfield',
+            'name'      => 'profile_title',
+            'id'        => 'profile_title',
+            'value'     => $default['profile_title'],
+            'db_field'  => 'profile_title',
+            'auto_view' => 'no'
         ];
+
+        $return['profile_desc'] = [
+            'title'      => lang('channel_desc'),
+            'type'       => 'textarea',
+            'name'       => 'profile_desc',
+            'id'         => 'profile_desc',
+            'value'      => $default['profile_desc'],
+            'db_field'   => 'profile_desc',
+            'auto_view'  => 'yes',
+            'clean_func' => 'Replacer'
+        ];
+
+        $return['show_my_friends'] = [
+            'title'    => lang('show_my_friends'),
+            'type'     => 'radiobutton',
+            'name'     => 'show_my_friends',
+            'id'       => 'show_my_friends',
+            'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
+            'checked'  => strtolower($default['show_my_friends']),
+            'db_field' => 'show_my_friends',
+            'sep'      => '&nbsp;'
+        ];
+
+        $return['show_my_videos'] = [
+            'title'    => lang('show_my_videos'),
+            'type'     => 'radiobutton',
+            'name'     => 'show_my_videos',
+            'id'       => 'show_my_videos',
+            'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
+            'checked'  => strtolower($default['show_my_videos']),
+            'db_field' => 'show_my_videos',
+            'sep'      => '&nbsp;'
+        ];
+
+        $return['show_my_photos'] = [
+            'title'    => lang('show_my_photos'),
+            'type'     => 'radiobutton',
+            'name'     => 'show_my_photos',
+            'id'       => 'show_my_photos',
+            'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
+            'checked'  => strtolower($default['show_my_photos']),
+            'db_field' => 'show_my_photos',
+            'sep'      => '&nbsp;'
+        ];
+
+        $return['show_my_subscriptions'] = [
+            'title'    => lang('show_my_subscriptions'),
+            'type'     => 'radiobutton',
+            'name'     => 'show_my_subscriptions',
+            'id'       => 'show_my_subscriptions',
+            'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
+            'checked'  => strtolower($default['show_my_subscriptions']),
+            'db_field' => 'show_my_subscriptions',
+            'sep'      => '&nbsp;'
+        ];
+
+        $return['show_my_subscribers'] = [
+            'title'    => lang('show_my_subscribers'),
+            'type'     => 'radiobutton',
+            'name'     => 'show_my_subscribers',
+            'id'       => 'show_my_subscribers',
+            'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
+            'checked'  => strtolower($default['show_my_subscribers']),
+            'db_field' => 'show_my_subscribers',
+            'sep'      => '&nbsp;'
+        ];
+
+        $return['show_my_collections'] = [
+            'title'    => lang('show_my_collections'),
+            'type'     => 'radiobutton',
+            'name'     => 'show_my_collections',
+            'id'       => 'show_my_collections',
+            'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
+            'checked'  => strtolower($default['show_my_collections']),
+            'db_field' => 'show_my_collections',
+            'sep'      => '&nbsp;'
+        ];
+
+        return $return;
     }
 
     /**
@@ -4934,7 +4948,7 @@ class userquery extends CBCategory
      * and that array will be part of video fields
      * @throws Exception
      */
-    function load_user_fields($default, $type = 'all')
+    function load_user_fields($default, $type = 'all'): array
     {
         $getChannelSettings = false;
         $getProfileSettings = false;
