@@ -1019,4 +1019,6 @@ VALUES
        ('option_display_video_comments'),
        ('option_display_photo_comments'),
        ('option_display_channel_comments'),
-       ('comment_disabled_for');
+       ('comment_disabled_for'),
+       ('enable_collection_comments'),
+       ('display_collection_comments');

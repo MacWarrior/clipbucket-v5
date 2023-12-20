@@ -87,6 +87,8 @@ if (isset($_POST['update'])) {
         , 'display_video_comments'
         , 'display_photo_comments'
         , 'display_channel_comments'
+        , 'enable_collection_comments'
+        , 'display_collection_comments'
     ];
 
     $config_booleans_to_refactor = [
@@ -287,6 +289,8 @@ if (isset($_POST['update'])) {
         'enable_user_dob_edition',
         'enable_blur_restricted_content',
         'enable_global_age_restriction',
+        'enable_collection_comments',
+        'display_collection_comments',
 
         'thumb_width',
         'thumb_height',

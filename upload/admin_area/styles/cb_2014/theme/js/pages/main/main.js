@@ -43,31 +43,22 @@ $(document).ready(function () {
         }
     });
 
-    $('#display_video_comments').change(function () {
-        let parent = $('#video_comments');
-        if (!$(this).prop('checked')) {
-            parent.prop('checked',false).prop('disabled',true);
-        } else {
-            parent.prop('disabled',false);
-        }
-    });
+    const autoDisabled = [
+        'video'
+        ,'photo'
+        ,'channel'
+        ,'collection'
+    ];
 
-    $('#display_photo_comments').change(function () {
-        let parent = $('#photo_comments');
-        if (!$(this).prop('checked')) {
-            parent.prop('checked',false).prop('disabled',true);
-        } else {
-            parent.prop('disabled',false);
-        }
-    });
-
-    $('#display_channel_comments').change(function () {
-        let parent = $('#channel_comments');
-        if (!$(this).prop('checked')) {
-            parent.prop('checked',false).prop('disabled',true);
-        } else {
-            parent.prop('disabled',false);
-        }
+    autoDisabled.forEach(function (elem) {
+        $('#display_'+elem+'_comments').change(function () {
+            let parent = $('#'+elem+'_comments');
+            if (!$(this).prop('checked')) {
+                parent.prop('checked',false).prop('disabled',true);
+            } else {
+                parent.prop('disabled',false);
+            }
+        });
     });
 
     $("#smtp_auth").change(function () {
