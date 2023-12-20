@@ -3628,21 +3628,14 @@ function uploaderDetails()
  *
  * @return bool|void
  */
-function isSectionEnabled($input, $restrict = false)
+function isSectionEnabled($input)
 {
-    global $Cbucket;
-    $section = $Cbucket->configs[$input . 'Section'];
-    if (!$restrict) {
-        return $section == 'yes';
-    }
+    $section = config($input . 'Section');
 
     if ($section == 'yes' || THIS_PAGE == 'cb_install') {
         return true;
     }
-
-    template_files('blocked.html');
-    display_it();
-    exit();
+    return false;
 }
 
 /**

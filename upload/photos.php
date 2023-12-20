@@ -3,10 +3,13 @@ define('THIS_PAGE', 'photos');
 define('PARENT_PAGE', 'photos');
 
 require 'includes/config.inc.php';
-global $cbphoto, $cbcollection, $pages, $userquery;
 
-$pages->page_redir();
-$userquery->perm_check('view_photos', true);
+if( !isSectionEnabled('photos') ){
+    redirect_to(BASEURL);
+}
+
+pages::getInstance()->page_redir();
+userquery::getInstance()->perm_check('view_photos', true);
 
 $sort = $_GET['sort'];
 $cond = ['category' => mysql_clean($_GET['cat']), 'date_span' => $_GET['time']];
@@ -27,7 +30,7 @@ $ccount['count_only'] = true;
 $total_rows = get_photos($ccount);
 $total_pages = count_pages($total_rows, MAINPLIST);
 //Pagination
-$pages->paginate($total_pages, $page);
+pages::getInstance()->paginate($total_pages, $page);
 
 assign('photos', $photos);
 subtitle(lang('photos'));

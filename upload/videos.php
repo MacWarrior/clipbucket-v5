@@ -6,6 +6,10 @@ require 'includes/config.inc.php';
 pages::getInstance()->page_redir();
 userquery::getInstance()->perm_check('view_videos', true);
 
+if( !isSectionEnabled('videos') ){
+    redirect_to(BASEURL);
+}
+
 $child_ids = false;
 if ($_GET['cat'] && is_numeric($_GET['cat'])) {
     $childs = CBvideo::getInstance()->get_sub_categories($_GET['cat']);

@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"313",
+  "revision":"314",
   "status":"dev",
   "detail":[
     {
@@ -251,6 +251,7 @@
         ,"Implement age restriction pop-in, thumb blur"
         ,"Fix collection creation while uploading new photos"
         ,"Fix videos and photos count"
+        ,"Fix disabled sections privacy"
       ]
     }
   ,{

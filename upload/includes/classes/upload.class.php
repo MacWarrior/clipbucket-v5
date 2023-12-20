@@ -6,6 +6,11 @@ class Upload
     var $custom_upload_fields = []; //Step 2 of Uploading
     var $actions_after_video_upload = ['activate_video_with_file'];
 
+    public static function getInstance(){
+        global $Upload;
+        return $Upload;
+    }
+
     /**
      * Function used to validate upload form fields
      *

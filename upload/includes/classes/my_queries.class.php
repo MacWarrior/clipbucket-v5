@@ -4,6 +4,11 @@ class myquery
     static $website_details = [];
     static $video_resolutions = [];
 
+    public static function getInstance(){
+        global $myquery;
+        return $myquery;
+    }
+
     /**
      * @throws Exception
      */

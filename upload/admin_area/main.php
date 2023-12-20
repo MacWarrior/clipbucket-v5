@@ -1,12 +1,13 @@
 <?php
-
+define('THIS_PAGE', 'website_configurations');
 require_once '../includes/admin_config.php';
-global $userquery, $pages, $Upload, $myquery, $Cbucket, $breadcrumb;
-$userquery->admin_login_check();
-$userquery->login_check('web_config_access');
-$pages->page_redir();
+
+userquery::getInstance()->admin_login_check();
+userquery::getInstance()->login_check('web_config_access');
+pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
+global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('general'), 'url' => ''];
 $breadcrumb[1] = ['title' => 'Website Configurations', 'url' => ADMIN_BASEURL . '/main.php'];
 
@@ -14,7 +15,7 @@ if (@$_GET['msg']) {
     $msg = mysql_clean($_GET['msg']);
 }
 
-$opt_list = $Upload->get_upload_options();
+$opt_list = Upload::getInstance()->get_upload_options();
 
 assign('opt_list', $opt_list);
 assign('post_max_size', ini_get('post_max_size'));
@@ -432,18 +433,18 @@ if (isset($_POST['update'])) {
             }
         }
 
-        $myquery->Set_Website_Details($field, $value);
+        myquery::getInstance()->Set_Website_Details($field, $value);
     }
     CacheRedis::flushAll();
 
-    $myquery->saveVideoResolutions($_POST);
+    myquery::getInstance()->saveVideoResolutions($_POST);
     e('Website settings have been updated', 'm');
 }
 
-$row = $myquery->Get_Website_Details();
+$row = myquery::getInstance()->Get_Website_Details();
 Assign('row', $row);
 
-$video_resolutions = $myquery->getVideoResolutions();
+$video_resolutions = myquery::getInstance()->getVideoResolutions();
 Assign('video_resolutions', $video_resolutions);
 
 $ffmpeg_version = check_version('ffmpeg');
@@ -456,7 +457,7 @@ if(in_dev()){
 } else {
     $min_suffixe = '.min';
 }
-$Cbucket->addAdminJS(['jquery-ui-1.13.2.min.js' => 'global']);
-$Cbucket->addAdminJS(['pages/main/main'.$min_suffixe.'.js' => 'admin']);
+ClipBucket::getInstance()->addAdminJS(['jquery-ui-1.13.2.min.js' => 'global']);
+ClipBucket::getInstance()->addAdminJS(['pages/main/main'.$min_suffixe.'.js' => 'admin']);
 template_files('main.html');
 display_it();
