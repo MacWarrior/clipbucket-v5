@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"312",
+  "revision":"313",
   "status":"dev",
   "detail":[
     {
@@ -95,6 +95,7 @@
         ,"Implement age restriction options"
         ,"Add option to disable quicklist"
         ,"Add option to hide empty collections"
+        ,"Mass upload should not list unreadable files"
       ]
     },
     {
@@ -249,6 +250,7 @@
         ,"Fix quicklists"
         ,"Implement age restriction pop-in, thumb blur"
         ,"Fix collection creation while uploading new photos"
+        ,"Fix videos and photos count"
       ]
     }
   ,{

@@ -1576,22 +1576,6 @@
 							<span class="lbl"></span>
 						</div>
 					</div>
-					<div class="row">
-						<div class="col-md-4">
-							<label class="nowrap" for="collection_comments" title="{lang code='enable_collection_comments'}">{lang code='enable_collection_comments'}</label>
-						</div>
-						<div class="col-md-2 row-size">
-							<input value="yes" name="enable_collection_comments" id="collection_comments" {if $row.enable_collection_comments=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-							<span class="lbl"></span>
-						</div>
-						<div class="col-md-4">
-							<label class="nowrap" for="display_collection_comments" title="{lang code='display_collection_comments'}">{lang code='display_collection_comments'}</label>
-						</div>
-						<div class="col-md-2 row-size">
-							<input value="yes" name="display_collection_comments" id="display_collection_comments" {if $row.display_collection_comments=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-							<span class="lbl"></span>
-						</div>
-					</div>
 				</div>
 				<div id="config_comments" class="tab-pane">
 					<div class="row">
@@ -1616,12 +1600,24 @@
                                 </div>
                             </div>
                             <hr/>
-							<div class="col-md-4">
-								<label class="nowrap" for="channel_comments" title="Channel comments">Channel comments</label>
+							<div class="row">
+								<div class="col-md-4">
+									<label class="nowrap" for="channel_comments" title="Channel comments">Channel comments</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="1" name="channel_comments" id="channel_comments" {if $row.channel_comments=='1'}checked{/if} {if $row.display_channel_comments=='no'}disabled{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
 							</div>
-							<div class="col-md-2 row-size">
-								<input value="1" name="channel_comments" id="channel_comments" {if $row.channel_comments=='1'}checked{/if} {if $row.display_channel_comments=='no'}disabled{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-								<span class="lbl"></span>
+							<hr/>
+							<div class="row">
+								<div class="col-md-4">
+									<label class="nowrap" for="collection_comments" title="{lang code='enable_collection_comments'}">{lang code='enable_collection_comments'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="enable_collection_comments" id="collection_comments" {if $row.enable_collection_comments=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
 							</div>
 						</div>
 						<div class="col-md-4">
@@ -1650,6 +1646,14 @@
 							</div>
 							<div class="col-md-2 row-size">
 								<input value="yes" name="display_channel_comments" id="display_channel_comments" {if $row.display_channel_comments=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+								<span class="lbl"></span>
+							</div>
+							<hr/>
+							<div class="col-md-4">
+								<label class="nowrap" for="display_collection_comments" title="{lang code='display_collection_comments'}">{lang code='display_collection_comments'}</label>
+							</div>
+							<div class="col-md-2 row-size">
+								<input value="yes" name="display_collection_comments" id="display_collection_comments" {if $row.display_collection_comments=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 								<span class="lbl"></span>
 							</div>
 						</div>
