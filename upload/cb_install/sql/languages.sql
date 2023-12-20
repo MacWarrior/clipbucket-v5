@@ -1018,4 +1018,5 @@ VALUES
        ('disclaimer_older'),
        ('edition_min_age_request'),
        ('option_enable_quicklist'),
-       ('option_hide_empty_collection');
+       ('option_hide_empty_collection'),
+       ('dev_mode');

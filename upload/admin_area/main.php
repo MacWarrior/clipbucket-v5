@@ -452,6 +452,29 @@ Assign('ffmpeg_version', $ffmpeg_version);
 
 subtitle('Website Configurations');
 
+$filepath_dev_file = TEMP_DIR . '/development.dev';
+if (!empty($_POST)) {
+    if (!empty($_POST['enable_dev_mode'])) {
+        if (is_writable(BASEDIR . '/includes')) {
+            file_put_contents($filepath_dev_file, '');
+            if (file_exists($filepath_dev_file)) {
+                assign('development_mode', true);
+                assign('devmsg', 'Development has been enabled successfuly');
+            }
+        } else {
+            assign('deverror', '"includes" directory is not writeable');
+        }
+    } else {
+        unlink($filepath_dev_file);
+        if (!file_exists($filepath_dev_file)) {
+            assign('development_mode', false);
+            assign('devmsg', 'Development has been disabled successfuly');
+        }
+    }
+} else {
+    assign('development_mode', in_dev());
+}
+
 if(in_dev()){
     $min_suffixe = '';
 } else {

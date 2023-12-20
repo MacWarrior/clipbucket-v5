@@ -498,10 +498,6 @@ class ClipBucket
                 , 'class' => 'glyphicon glyphicon-wrench'
                 , 'sub'   => [
                     [
-                        'title' => 'Development Mode'
-                        , 'url' => ADMIN_BASEURL . '/dev_mode.php'
-                    ]
-                    , [
                         'title' => 'View online users'
                         , 'url' => ADMIN_BASEURL . '/online_users.php'
                     ]
