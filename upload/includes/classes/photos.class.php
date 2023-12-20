@@ -165,10 +165,10 @@ class Photo
         if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264) ){
             if( !$param_count ){
                 $select[] = 'GROUP_CONCAT(tags.name SEPARATOR \',\') AS tags';
+                $group[] = 'photos.photo_id';
             }
             $join[] = 'LEFT JOIN ' . cb_sql_table('photo_tags') . ' ON photos.photo_id = photo_tags.id_photo';
             $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON photo_tags.id_tag = tags.id_tag';
-            $group[] = 'photos.photo_id';
         }
 
         if( $param_collection_id ){
