@@ -4,10 +4,12 @@ define('PARENT_PAGE', 'collections');
 
 require 'includes/config.inc.php';
 
-global $pages, $userquery, $cbcollection;
+if( !isSectionEnabled('collections') ){
+    redirect_to(BASEURL);
+}
 
-$pages->page_redir();
-$userquery->perm_check('view_collections', true);
+pages::getInstance()->page_redir();
+userquery::getInstance()->perm_check('view_collections', true);
 $sort = $_GET['sort'];
 
 $cond = ['date_span' => mysql_clean($_GET['time'])];
@@ -62,16 +64,16 @@ if (config('hide_empty_collection') == 'yes') {
     $cond['has_items'] = true;
     $cond['show_own'] = true;
 }
-$collections = $cbcollection->get_collections($cond);
+$collections = Collections::getInstance()->get_collections($cond);
 
 Assign('collections', $collections);
 
 //Collecting Data for Pagination
-$total_rows = $cbcollection->get_collections($collection_count);
+$total_rows = Collections::getInstance()->get_collections($collection_count);
 $total_pages = count_pages($total_rows, config('collection_per_page'));
 
 //Pagination
-$pages->paginate($total_pages, $page);
+pages::getInstance()->paginate($total_pages, $page);
 
 subtitle(lang('collections'));
 //Displaying The Template
