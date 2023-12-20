@@ -51,11 +51,13 @@
                         <h8>{lang code='collections'}</h8>
                     </a>
                 </li>
+				{if config('display_video_comments') == 'yes' || config('display_photo_comments') == 'yes' || config('display_channel_comments') == 'yes' || config('display_collection_comments') == 'yes' }
                 <li>
                     <a data-toggle="tab" href="#config_comments">
                         <h8>{lang code='comments'}</h8>
                     </a>
                 </li>
+				{/if}
                 <li>
                     <a data-toggle="tab" href="#config_ratings">
                         <h8>Ratings</h8>
@@ -1577,7 +1579,8 @@
 						</div>
 					</div>
 				</div>
-				<div id="config_comments" class="tab-pane">
+				{if config('display_video_comments') == 'yes' || config('display_photo_comments') == 'yes' || config('display_channel_comments') == 'yes' || config('display_collection_comments') == 'yes' }
+					<div id="config_comments" class="tab-pane">
 					<div class="row">
 						<div class="col-md-4">
 							<div class="row">
@@ -1615,7 +1618,7 @@
 									<label class="nowrap" for="collection_comments" title="{lang code='enable_collection_comments'}">{lang code='enable_collection_comments'}</label>
 								</div>
 								<div class="col-md-2 row-size">
-									<input value="yes" name="enable_collection_comments" id="collection_comments" {if $row.enable_collection_comments=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<input value="yes" name="enable_collection_comments" id="collection_comments" {if $row.enable_collection_comments=='yes'}checked{/if}  {if $row.display_collection_comments=='no'}disabled{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 									<span class="lbl"></span>
 								</div>
 							</div>
@@ -1641,20 +1644,24 @@
 								</div>
 							</div>
 							<hr/>
-							<div class="col-md-4">
-								<label class="nowrap" for="display_channel_comments" title="{lang code='option_display_channel_comments'}">{lang code='option_display_channel_comments'}</label>
-							</div>
-							<div class="col-md-2 row-size">
-								<input value="yes" name="display_channel_comments" id="display_channel_comments" {if $row.display_channel_comments=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-								<span class="lbl"></span>
+							<div class="row">
+								<div class="col-md-4">
+									<label class="nowrap" for="display_channel_comments" title="{lang code='option_display_channel_comments'}">{lang code='option_display_channel_comments'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="display_channel_comments" id="display_channel_comments" {if $row.display_channel_comments=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
 							</div>
 							<hr/>
-							<div class="col-md-4">
-								<label class="nowrap" for="display_collection_comments" title="{lang code='display_collection_comments'}">{lang code='display_collection_comments'}</label>
-							</div>
-							<div class="col-md-2 row-size">
-								<input value="yes" name="display_collection_comments" id="display_collection_comments" {if $row.display_collection_comments=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-								<span class="lbl"></span>
+							<div class="row">
+								<div class="col-md-4">
+									<label class="nowrap" for="display_collection_comments" title="{lang code='display_collection_comments'}">{lang code='display_collection_comments'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="display_collection_comments" id="display_collection_comments" {if $row.display_collection_comments=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
 							</div>
 						</div>
 						<div class="col-md-4">
@@ -1694,6 +1701,7 @@
 						</div>
 					</div>
 				</div>
+				{/if}
 				<div id="config_ratings" class="tab-pane">
 					<div class="row">
 						<div class="col-md-4">
