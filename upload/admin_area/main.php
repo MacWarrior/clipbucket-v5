@@ -420,7 +420,6 @@ if (isset($_POST['update'])) {
         'photo_med_height',
     ];
 
-
     if (empty($_POST['display_video_comments']) || $_POST['display_video_comments'] == 'no') {
         $_POST['video_comments'] = '0';
     }
