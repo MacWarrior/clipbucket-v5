@@ -1,7 +1,6 @@
 INSERT IGNORE INTO `{tbl_prefix}config` (`name`, `value`)
 VALUES ('enable_collection_comments', 'yes'),
-       ('display_collection_comments', 'yes')
-       ;
+       ('display_collection_comments', 'yes');
 
 SET @language_id_eng = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = 'en');
 SET @language_id_fra = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = 'fr');

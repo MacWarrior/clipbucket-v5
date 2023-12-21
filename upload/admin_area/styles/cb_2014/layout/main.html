@@ -51,13 +51,11 @@
                         <h8>{lang code='collections'}</h8>
                     </a>
                 </li>
-				{if config('display_video_comments') == 'yes' || config('display_photo_comments') == 'yes' || config('display_channel_comments') == 'yes' || config('display_collection_comments') == 'yes' }
                 <li>
                     <a data-toggle="tab" href="#config_comments">
                         <h8>{lang code='comments'}</h8>
                     </a>
                 </li>
-				{/if}
                 <li>
                     <a data-toggle="tab" href="#config_ratings">
                         <h8>Ratings</h8>
@@ -1571,7 +1569,7 @@
                 <div id="config_collections" class="tab-pane">
 					<div class="row">
 						<div class="col-md-4">
-							<label class="nowrap" for="hide_empty_collection" title="{lang code='hide_empty_collection'}">{lang code='hide_empty_collection'}</label>
+							<label class="nowrap" for="hide_empty_collection" title="{lang code='option_hide_empty_collection'}">{lang code='option_hide_empty_collection'}</label>
 						</div>
 						<div class="col-md-2 row-size">
 							<input value="yes" name="hide_empty_collection" id="hide_empty_collection" {if $row.hide_empty_collection=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -1579,8 +1577,7 @@
 						</div>
 					</div>
 				</div>
-				{if config('display_video_comments') == 'yes' || config('display_photo_comments') == 'yes' || config('display_channel_comments') == 'yes' || config('display_collection_comments') == 'yes' }
-					<div id="config_comments" class="tab-pane">
+				<div id="config_comments" class="tab-pane">
 					<div class="row">
 						<div class="col-md-4">
 							<div class="row">
@@ -1701,7 +1698,6 @@
 						</div>
 					</div>
 				</div>
-				{/if}
 				<div id="config_ratings" class="tab-pane">
 					<div class="row">
 						<div class="col-md-4">
