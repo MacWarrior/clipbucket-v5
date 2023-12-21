@@ -85,6 +85,7 @@ if (isset($_POST['update'])) {
         , 'enable_global_age_restriction'
         , 'enable_quicklist'
         , 'hide_empty_collection'
+        , 'discord_error_log'
     ];
 
     $config_booleans_to_refactor = [
@@ -352,7 +353,9 @@ if (isset($_POST['update'])) {
         'cache_port',
         'cache_password',
 
-        'hide_empty_collection'
+        'hide_empty_collection',
+        'discord_error_log',
+        'discord_webhook_url'
     ];
 
     foreach ($opt_list as $optl) {
@@ -454,6 +457,7 @@ subtitle('Website Configurations');
 
 $filepath_dev_file = TEMP_DIR . '/development.dev';
 if (!empty($_POST)) {
+    //gestion dev_mode
     if (!empty($_POST['enable_dev_mode'])) {
         if (is_writable(BASEDIR . '/includes')) {
             file_put_contents($filepath_dev_file, '');
@@ -470,6 +474,12 @@ if (!empty($_POST)) {
             assign('development_mode', false);
             assign('devmsg', 'Development has been disabled successfuly');
         }
+    }
+    //discord_log
+    if (filter_var($_POST['discord_webhook_url'], FILTER_VALIDATE_URL) && $_POST['discord_error_log'] == 'yes') {
+        DiscordLog::enable($_POST['discord_webhook_url']);
+    } else {
+        DiscordLog::disable();
     }
 } else {
     assign('development_mode', in_dev());

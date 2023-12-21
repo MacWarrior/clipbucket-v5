@@ -1,4 +1,5 @@
 <?php
+
 ob_start();
 const IN_CLIPBUCKET = true;
 
@@ -7,9 +8,14 @@ const COOKIE_TIMEOUT = 86400 * 1; // 1
 const GARBAGE_TIMEOUT = COOKIE_TIMEOUT;
 const REMBER_DAYS = 7;
 
-require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php');
+define("BASEDIR", dirname(__DIR__));
 
-if (file_exists(dirname(__FILE__) . '/../files/temp/development.dev')) {
+const FILES_DIR = BASEDIR . '/files';
+const TEMP_DIR = FILES_DIR . '/temp';
+
+require_once(BASEDIR . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php');
+require_once('classes/DiscordLog.php');
+if (file_exists(TEMP_DIR . DIRECTORY_SEPARATOR . 'development.dev')) {
     define('DEVELOPMENT_MODE', true);
     $__devmsgs = [
         'insert_queries'        => [],
@@ -38,10 +44,13 @@ if (file_exists(dirname(__FILE__) . '/../files/temp/development.dev')) {
 
         // Keep errors in php errors log file
         $whoops->pushHandler(function($e){
-            error_log($e->getMessage().PHP_EOL.$e->getTraceAsString());
+            $message = $e->getMessage().PHP_EOL.$e->getTraceAsString();
+            error_log($message);
+            DiscordLog::sendDump($message);
         });
 
         $whoops->register();
+
     }
 } else {
     define('DEVELOPMENT_MODE', false);
@@ -65,13 +74,11 @@ require_once('classes/plugin.class.php');
 
 include_once('clipbucket.php');
 check_install('before');
-
 if (file_exists(__DIR__ . '/config.php')) {
     require_once __DIR__ . '/config.php'; // New config file
 } else {
     require_once 'dbconnect.php'; // Old config file
 }
-
 # class for storing common ClipBucket functions
 require_once('classes/ClipBucket.class.php');
 require_once('classes/columns.class.php');
@@ -128,7 +135,7 @@ try {
 Language::getInstance()->init();
 $arrayTranslations = Language::getInstance()->loadTranslations(Language::getInstance()->lang_id);
 $ClipBucket = $Cbucket = new ClipBucket();
-define('BASEDIR', $Cbucket->BASEDIR);
+//define('BASEDIR', $Cbucket->BASEDIR);
 const DIR_SQL = BASEDIR . DIRECTORY_SEPARATOR . 'cb_install' . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR;
 
 $Cbucket->cbinfo = ['version' => VERSION, 'state' => STATE, 'rev' => REV];
@@ -166,12 +173,12 @@ const ADMINBASEDIR = BASEDIR . DIRECTORY_SEPARATOR . 'admin_area';              
 const ADMIN_BASEURL = DIRECTORY_SEPARATOR . ADMINDIR;
 
 # DIRECT PATHS OF VIDEO FILES
-const FILES_DIR = BASEDIR . '/files';
+
 const VIDEOS_DIR = FILES_DIR . '/videos';
 const SUBTITLES_DIR = FILES_DIR . '/subtitles';
 const THUMBS_DIR = FILES_DIR . '/thumbs';
 const ORIGINAL_DIR = FILES_DIR . '/original';
-const TEMP_DIR = FILES_DIR . '/temp';
+
 const CON_DIR = FILES_DIR . '/conversion_queue';
 const MASS_UPLOAD_DIR = FILES_DIR . '/mass_uploads';
 const LOGS_DIR = FILES_DIR . '/logs';
