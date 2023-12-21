@@ -15,6 +15,7 @@ const TEMP_DIR = FILES_DIR . '/temp';
 
 require_once(BASEDIR . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php');
 require_once('classes/DiscordLog.php');
+$whoops = new \Whoops\Run;
 if (file_exists(TEMP_DIR . DIRECTORY_SEPARATOR . 'development.dev')) {
     define('DEVELOPMENT_MODE', true);
     $__devmsgs = [
@@ -39,22 +40,18 @@ if (file_exists(TEMP_DIR . DIRECTORY_SEPARATOR . 'development.dev')) {
     ];
 
     if (php_sapi_name() != 'cli') {
-        $whoops = new \Whoops\Run;
         $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
-
         // Keep errors in php errors log file
-        $whoops->pushHandler(function($e){
-            $message = $e->getMessage().PHP_EOL.$e->getTraceAsString();
-            error_log($message);
-            DiscordLog::sendDump($message);
-        });
-
-        $whoops->register();
-
     }
 } else {
     define('DEVELOPMENT_MODE', false);
 }
+$whoops->pushHandler(function($e){
+    $message = $e->getMessage().PHP_EOL.$e->getTraceAsString();
+    error_log($message);
+    DiscordLog::sendDump($message);
+});
+$whoops->register();
 
 if (!@$in_bg_cron) {
     //Setting Session Max Life

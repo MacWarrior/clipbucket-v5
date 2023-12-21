@@ -9,10 +9,6 @@ VALUES (@id_language_key, 'Development mode', @language_id_eng);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES (@id_language_key, 'Mode développement', @language_id_fra);
 
-INSERT IGNORE INTO `{tbl_prefix}config` (name, value) VALUES
-  ('discord_error_log', 'no'),
-  ('discord_webhook_url', '');
-
 SET @language_key = 'discord_error_log' COLLATE utf8mb4_unicode_520_ci;
 INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);
 SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
@@ -28,3 +24,11 @@ INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `tra
 VALUES (@id_language_key, 'Discord webhook URL', @language_id_eng);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES (@id_language_key, 'URL du webhook Discord', @language_id_fra);
+
+SET @language_key = 'discord_webhook_url_invalid' COLLATE utf8mb4_unicode_520_ci;
+INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);
+SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES (@id_language_key, 'Discord webhook URL is invalid', @language_id_eng);
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES (@id_language_key, 'URL du webhook Discord n\'est pas valide', @language_id_fra);

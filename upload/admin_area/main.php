@@ -475,8 +475,8 @@ Assign('ffmpeg_version', $ffmpeg_version);
 subtitle('Website Configurations');
 
 $filepath_dev_file = TEMP_DIR . '/development.dev';
+//gestion dev_mode
 if (!empty($_POST)) {
-    //gestion dev_mode
     if (!empty($_POST['enable_dev_mode'])) {
         if (is_writable(BASEDIR . '/includes')) {
             file_put_contents($filepath_dev_file, '');
@@ -494,15 +494,23 @@ if (!empty($_POST)) {
             assign('devmsg', 'Development has been disabled successfuly');
         }
     }
-    //discord_log
-    if (filter_var($_POST['discord_webhook_url'], FILTER_VALIDATE_URL) && $_POST['discord_error_log'] == 'yes') {
-        DiscordLog::enable($_POST['discord_webhook_url']);
-    } else {
-        DiscordLog::disable();
-    }
 } else {
     assign('development_mode', in_dev());
 }
+
+//discord_log
+if (!empty($_POST['discord_webhook_url']) && $_POST['discord_error_log'] == 'yes') {
+    if (!filter_var($_POST['discord_webhook_url'], FILTER_VALIDATE_URL)) {
+        e(lang('discord_webhook_url_invalid'));
+    } else {
+        DiscordLog::enable($_POST['discord_webhook_url']);
+    }
+} else {
+    DiscordLog::disable();
+}
+
+assign('discord_error_log', DiscordLog::isEnabled());
+assign('discord_webhook_url', DiscordLog::getCurrentUrl());
 
 if(in_dev()){
     $min_suffixe = '';

@@ -48,10 +48,10 @@ class DiscordLog extends \OxygenzSAS\Discord\Discord
     public static function enable($url)
     {
         if (is_writable(BASEDIR . '/includes')) {
-            if (file_exists(DiscordLog::FILE_NAME_DISABLED)) {
-                rename(DiscordLog::FILE_NAME_DISABLED, DiscordLog::FILE_NAME);
+            if (file_exists(self::FILE_NAME_DISABLED)) {
+                rename(self::FILE_NAME_DISABLED, self::FILE_NAME);
             }
-            file_put_contents(DiscordLog::FILE_NAME, $url);
+            file_put_contents(self::FILE_NAME, $url);
         } else {
             e('"includes" directory is not writeable');
         }
@@ -59,11 +59,33 @@ class DiscordLog extends \OxygenzSAS\Discord\Discord
 
     public static function disable()
     {
-        if (file_exists(DiscordLog::FILE_NAME)) {
-            rename(DiscordLog::FILE_NAME, DiscordLog::FILE_NAME_DISABLED);
+        if (file_exists(self::FILE_NAME)) {
+            rename(self::FILE_NAME, self::FILE_NAME_DISABLED);
         } else {
             e('"includes" directory is not writeable');
         }
     }
 
+    public static function isEnabled(): bool
+    {
+        if (!file_exists(self::FILE_NAME)) {
+            return false;
+        }
+        $url = file_get_contents(self::FILE_NAME);
+        if (empty($url) || !filter_var($url, FILTER_VALIDATE_URL)) {
+            return false;
+        }
+        return true;
+    }
+
+    public static function getCurrentUrl(): string
+    {
+        if (file_exists(self::FILE_NAME)) {
+            return $url = file_get_contents(self::FILE_NAME);
+        }
+        if (file_exists(self::FILE_NAME_DISABLED)) {
+            return $url = file_get_contents(self::FILE_NAME_DISABLED);
+        }
+        return '';
+    }
 }
