@@ -11,7 +11,7 @@ $delMassUpload = config('delete_mass_upload');
 
 /* Generating breadcrumb */
 $breadcrumb[0] = ['title' => lang('videos'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'Mass Upload Videos', 'url' => ADMIN_BASEURL . '/mass_uploader.php'];
+$breadcrumb[1] = ['title' => 'Mass Upload Videos', 'url' => DirPath::getUrl('admin_area') . 'mass_uploader.php'];
 
 $cats = $cbvid->get_categories();
 assign('cats', $cats);
@@ -67,8 +67,8 @@ if (isset($_POST['mass_upload_video'])) {
             //Moving file to temp dir and Inserting in conversion queue...
             $file_name = $cbmass->move_to_temp($file_arr, $file_key);
 
-            create_dated_folder(LOGS_DIR);
-            $logFile = LOGS_DIR . DIRECTORY_SEPARATOR . $file_directory . DIRECTORY_SEPARATOR . $file_key . '.log';
+            create_dated_folder(DirPath::get('logs'));
+            $logFile = DirPath::get('logs') . $file_directory . DIRECTORY_SEPARATOR . $file_key . '.log';
             $log = new SLog($logFile);
 
             $log->newSection('Pre-Check Configurations');
@@ -76,15 +76,15 @@ if (isset($_POST['mass_upload_video'])) {
 
             $results = $Upload->add_conversion_queue($file_name);
             $str1 = date('Y') . DIRECTORY_SEPARATOR . date('m') . DIRECTORY_SEPARATOR . date('d');
-            $str = DIRECTORY_SEPARATOR . $str1 . DIRECTORY_SEPARATOR;
-            mkdir(VIDEOS_DIR . $str, 0755, true);
+            $str = $str1 . DIRECTORY_SEPARATOR;
+            mkdir(DirPath::get('videos') . $str, 0755, true);
             $fields['file_directory'] = $str1;
             $fname = explode('.', $file_name);
             $cond = 'file_name=' . '\'' . $fname[0] . '\'';
             $result = $db->db_update(tbl('video'), $fields, $cond);
             $result = exec(php_path() . ' -q ' . BASEDIR . '/actions/video_convert.php ' . $file_name . ' ' . $file_key . ' ' . $file_directory . ' ' . $logFile . ' ' . $file_track . ' > /dev/null &');
-            if (file_exists(CON_DIR . DIRECTORY_SEPARATOR . $file_name)) {
-                unlink(CON_DIR . DIRECTORY_SEPARATOR . $file_name);
+            if (file_exists(DirPath::get('conversion_queue') . $file_name)) {
+                unlink(DirPath::get('conversion_queue') . $file_name);
                 foreach ($vtitle as $title) {
                     $resul1 = glob(FILES_DIR . DIRECTORY_SEPARATOR . 'videos' . DIRECTORY_SEPARATOR . $title . '.*');
                     unlink($resul1[0]);

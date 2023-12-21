@@ -488,7 +488,7 @@ function plug_url($file, $dir, $admin_base = false)
 {
     $url = 'plugin.php?folder=' . $dir . '&file=' . $file;
     if ($admin_base) {
-        $url = ADMIN_BASEURL . '/' . $url;
+        $url = DirPath::getUrl('admin_area') . '' . $url;
     }
     return $url;
 }

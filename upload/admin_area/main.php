@@ -9,7 +9,7 @@ pages::getInstance()->page_redir();
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('general'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'Website Configurations', 'url' => ADMIN_BASEURL . '/main.php'];
+$breadcrumb[1] = ['title' => 'Website Configurations', 'url' => DirPath::getUrl('admin_area') . 'main.php'];
 
 if (@$_GET['msg']) {
     $msg = mysql_clean($_GET['msg']);
@@ -474,7 +474,7 @@ Assign('ffmpeg_version', $ffmpeg_version);
 
 subtitle('Website Configurations');
 
-$filepath_dev_file = TEMP_DIR . '/development.dev';
+$filepath_dev_file = DirPath::get('temp') . 'development.dev';
 if (!empty($_POST)) {
     //gestion dev_mode
     if (!empty($_POST['enable_dev_mode'])) {

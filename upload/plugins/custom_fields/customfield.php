@@ -1,6 +1,6 @@
 <?php
 define("CB_CUSTOM_FIELDS_DIR_NAME", basename(dirname(__FILE__)));
-define('CB_CUSTOM_FIELDS_PLUG_DIR', PLUG_DIR . "/" . CB_CUSTOM_FIELDS_DIR_NAME);
+define('CB_CUSTOM_FIELDS_PLUG_DIR', DirPath::get('plugins') . CB_CUSTOM_FIELDS_DIR_NAME);
 define("SITE_MODE", '/admin_area');
 define("CB_CUSTOM_FIELDS_EditPAGE_URL", SITE_MODE . "/plugin.php?folder=" . CB_CUSTOM_FIELDS_DIR_NAME . "/admin&file=edit_field.php");
 

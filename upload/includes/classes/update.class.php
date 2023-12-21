@@ -355,7 +355,7 @@ class Update
             $db_version = $installed_plugin['plugin_version'];
             $detail_verision = CBPlugin::getInstance()->get_plugin_details($installed_plugin['plugin_file'], $installed_plugin['plugin_folder'])['version'];
             //get files in update folder
-            $folder = PLUG_DIR . DIRECTORY_SEPARATOR . $installed_plugin['plugin_folder'] . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR;
+            $folder = DirPath::get('plugins') . $installed_plugin['plugin_folder'] . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR;
             $files = glob($folder . '*.sql');
             //filter files which are between db version and detail version
             $update_files = array_merge(

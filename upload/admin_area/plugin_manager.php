@@ -9,7 +9,7 @@ $pages->page_redir();
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => 'Plugin Manager', 'url' => ''];
-$breadcrumb[1] = ['title' => 'Plugin Manager', 'url' => ADMIN_BASEURL . '/plugin_manager.php'];
+$breadcrumb[1] = ['title' => 'Plugin Manager', 'url' => DirPath::getUrl('admin_area') . 'plugin_manager.php'];
 
 //uninstalling Plugin
 if (isset($_GET['uninstall'])) {

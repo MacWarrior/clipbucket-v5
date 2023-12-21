@@ -7,7 +7,7 @@ class CBPlayer
     function getPlayers()
     {
         #first we will read the plugin directory
-        $dir = PLAYER_DIR;
+        $dir = DirPath::get('player');
         $dir_list = scandir($dir);
         foreach ($dir_list as $item) {
             if ($item == '..' || $item == '.' || substr($item, 0, 1) == '_' || substr($item, 0, 1) == '.') {
@@ -15,17 +15,17 @@ class CBPlayer
                 //$sub_dir_list = scandir(PLAYER_DIR.'/'.$item);
             } else {
                 //Now Checking if its file, not a directory
-                if (!is_dir(PLAYER_DIR . '/' . $item)) {
+                if (!is_dir(DirPath::get('player') . $item)) {
                     $item_list[] = $item;
                 } else {
                     $sub_dir = $item;
-                    $sub_dir_list = scandir(PLAYER_DIR . '/' . $item);
+                    $sub_dir_list = scandir(DirPath::get('player') . $item);
                     foreach ($sub_dir_list as $item) {
                         if ($item == '..' || $item == '.' || substr($item, 0, 1) == '_' || substr($item, 0, 1) == '.') {
                             //Skip $item_list[] = $item;
-                            //$sub_dir_list = scandir(PLUG_DIR.'/'.$item);
+                            //$sub_dir_list = scandir(DirPath::get('plugins').$item);
                         } else {
-                            if (!is_dir(PLAYER_DIR . '/' . $sub_dir . '/' . $item)) {
+                            if (!is_dir(DirPath::get('player') . $sub_dir . '/' . $item)) {
                                 //Now Checking if its file, not a directory
                                 $subitem_list[$sub_dir][] = $item;
                             }
@@ -72,7 +72,7 @@ class CBPlayer
             $sub_dir = $sub_dir . '/';
         }
 
-        $file = PLAYER_DIR . '/' . $sub_dir . $player_file;
+        $file = DirPath::get('player') . $sub_dir . $player_file;
         if (file_exists($file) && is_file($file)) {
             // We don't need to write to the file, so just open for reading.
             $fp = fopen($file, 'r');
@@ -132,7 +132,7 @@ class CBPlayer
         $exts = ['png', 'jpg', 'gif'];
         $thumb_path = '/images/icons/no_thumb_player.png';
         foreach ($exts as $ext) {
-            $file = PLAYER_DIR . DIRECTORY_SEPARATOR . $path . $ext;
+            $file = DirPath::get('player') . $path . $ext;
             if (file_exists($file)) {
                 $thumb_path = PLAYER_URL . '/' . $path . $ext;
                 break;

@@ -39,10 +39,10 @@ Assign('admin_pages', $admin_pages);
 
 //Do No Edit Below This Line
 define('ADMIN_TEMPLATE', 'cb_2014');
-define('TEMPLATEDIR', BASEDIR . DIRECTORY_SEPARATOR . ADMINDIR . DIRECTORY_SEPARATOR . TEMPLATEFOLDER . DIRECTORY_SEPARATOR . ADMIN_TEMPLATE);
-define('SITETEMPLATEDIR', BASEDIR . DIRECTORY_SEPARATOR . TEMPLATEFOLDER . DIRECTORY_SEPARATOR . $row['template_dir']);
-define('TEMPLATEURL', DIRECTORY_SEPARATOR . ADMINDIR . DIRECTORY_SEPARATOR . TEMPLATEFOLDER . DIRECTORY_SEPARATOR . ADMIN_TEMPLATE);
-define('TEMPLATEURLFO', DIRECTORY_SEPARATOR . TEMPLATEFOLDER . DIRECTORY_SEPARATOR . $Cbucket->template);
+define('TEMPLATEDIR', DirPath::get('admin_area') . DIRECTORY_SEPARATOR . TEMPLATEFOLDER . DIRECTORY_SEPARATOR . ADMIN_TEMPLATE);
+define('SITETEMPLATEDIR', DirPath::get('styles') . $row['template_dir']);
+define('TEMPLATEURL', DirPath::getUrl('admin_area') . TEMPLATEFOLDER . DIRECTORY_SEPARATOR . ADMIN_TEMPLATE);
+define('TEMPLATEURLFO', DirPath::getUrl('styles') . $Cbucket->template);
 define('LAYOUT', TEMPLATEDIR . DIRECTORY_SEPARATOR . 'layout');
 define('TEMPLATE', $row['template_dir']);
 
@@ -56,7 +56,7 @@ require_once TEMPLATEDIR . DIRECTORY_SEPARATOR . 'header.php';
 check_server_confs();
 
 Assign('baseurl', BASEURL);
-Assign('admindir', ADMINDIR);
+Assign('admindir', DirPath::getUrl('admin_area'));
 Assign('imageurl', TEMPLATEURL . '/images');
 Assign('image_url', TEMPLATEURL . '/layout');
 Assign('layout', TEMPLATEURL . '/layout');

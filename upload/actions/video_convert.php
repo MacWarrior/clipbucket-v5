@@ -23,7 +23,7 @@ $file_directory = $file_directory_ . DIRECTORY_SEPARATOR;
 
 $logFile = $argv[4] ?? false;
 if (empty($logFile)) {
-    $logFile = LOGS_DIR . DIRECTORY_SEPARATOR . $file_directory . $_filename . '.log';
+    $logFile = DirPath::get('logs') . $file_directory . $_filename . '.log';
 }
 
 $audio_track = $argv[5] ?? false;
@@ -77,14 +77,14 @@ if (!empty($_filename)) {
         case 'mp4':
             // Delete the uploaded file from temp directory
             // and move it into the conversion queue directory for conversion
-            $temp_file = TEMP_DIR . DIRECTORY_SEPARATOR . $_filename . '.' . $tmp_ext;
-            $orig_file = CON_DIR . DIRECTORY_SEPARATOR . $_filename . '.' . $ext;
+            $temp_file = DirPath::get('temp') . $_filename . '.' . $tmp_ext;
+            $orig_file = DirPath::get('conversion_queue') . $_filename . '.' . $ext;
             $renamed = rename($temp_file, $orig_file);
             break;
         case 'm3u8':
-            $temp_dir = TEMP_DIR . DIRECTORY_SEPARATOR . $_filename . DIRECTORY_SEPARATOR;
+            $temp_dir = DirPath::get('temp') . $_filename . DIRECTORY_SEPARATOR;
             $temp_files = $temp_dir . '*';
-            $conversion_path = CON_DIR . DIRECTORY_SEPARATOR . $_filename . DIRECTORY_SEPARATOR;
+            $conversion_path = DirPath::get('conversion_queue') . $_filename . DIRECTORY_SEPARATOR;
             $orig_file = $conversion_path . $_filename . '.' . $ext;
             mkdir($conversion_path);
             foreach (glob($temp_files) as $file) {

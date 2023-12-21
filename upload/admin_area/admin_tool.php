@@ -9,7 +9,7 @@ $userquery->login_check('web_config_access');
 $pages->page_redir();
 
 $breadcrumb[0] = ['title' => lang('tool_box'), 'url' => ''];
-$breadcrumb[1] = ['title' => lang('admin_tool'), 'url' => ADMIN_BASEURL . '/admin_tool.php'];
+$breadcrumb[1] = ['title' => lang('admin_tool'), 'url' => DirPath::getUrl('admin_area') . 'admin_tool.php'];
 sendClientResponseAndContinue(function () use ($Cbucket) {
     if (!empty($_GET['id_tool'])) {
         AdminTool::setToolInProgress($_GET['id_tool']);

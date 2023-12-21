@@ -86,7 +86,7 @@ class CB_video_js
         assign('video_files', $video_play);
         assign('vdata',$vdetails);
 
-        Template(PLAYER_DIR . DIRECTORY_SEPARATOR . self::class .DIRECTORY_SEPARATOR . 'cb_video_js.html',false);
+        Template(DirPath::get('player') . self::class .DIRECTORY_SEPARATOR . 'cb_video_js.html',false);
         return true;
     }
 

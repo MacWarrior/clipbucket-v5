@@ -552,27 +552,27 @@ class CBPhotos
                 , 'sub'   => [
                     [
                         'title' => 'Photo Manager'
-                        , 'url' => ADMIN_BASEURL . '/photo_manager.php'
+                        , 'url' => DirPath::getUrl('admin_area') . 'photo_manager.php'
                     ]
                     , [
                         'title' => 'Inactive Photos'
-                        , 'url' => ADMIN_BASEURL . '/photo_manager.php?search=search&active=no'
+                        , 'url' => DirPath::getUrl('admin_area') . 'photo_manager.php?search=search&active=no'
                     ]
                     , [
                         'title' => 'Flagged Photos'
-                        , 'url' => ADMIN_BASEURL . '/flagged_photos.php'
+                        , 'url' => DirPath::getUrl('admin_area') . 'flagged_photos.php'
                     ]
                     , [
                         'title' => 'Orphan Photos'
-                        , 'url' => ADMIN_BASEURL . '/orphan_photos.php'
+                        , 'url' => DirPath::getUrl('admin_area') . 'orphan_photos.php'
                     ]
                     , [
                         'title' => 'Watermark Settings'
-                        , 'url' => ADMIN_BASEURL . '/photo_settings.php?mode=watermark_settings'
+                        , 'url' => DirPath::getUrl('admin_area') . 'photo_settings.php?mode=watermark_settings'
                     ]
                     , [
                         'title' => 'Recreate Thumbs'
-                        , 'url' => ADMIN_BASEURL . '/recreate_thumbs.php?mode=mass'
+                        , 'url' => DirPath::getUrl('admin_area') . 'recreate_thumbs.php?mode=mass'
                     ]
                 ]
             ];
@@ -1137,7 +1137,7 @@ class CBPhotos
         $files = get_image_file(['details' => $photo, 'size' => 't', 'multi' => true, 'with_orig' => true, 'with_path' => false]);
         if (!empty($files)) {
             foreach ($files as $file) {
-                $file_dir = PHOTOS_DIR . DIRECTORY_SEPARATOR . $file;
+                $file_dir = DirPath::get('photos') . $file;
                 if (file_exists($file_dir)) {
                     unlink($file_dir);
                 }
@@ -1267,7 +1267,7 @@ class CBPhotos
      */
     function generate_photos($array)
     {
-        $path = PHOTOS_DIR . DIRECTORY_SEPARATOR;
+        $path = DirPath::get('photos');
 
         if (!is_array($array)) {
             $p = $this->get_photo($array);
@@ -1317,7 +1317,7 @@ class CBPhotos
 
             if ($images) {
                 foreach ($images as $image) {
-                    $imageFile = PHOTOS_DIR . DIRECTORY_SEPARATOR . $image;
+                    $imageFile = DirPath::get('photos') . $image;
 
                     if (file_exists($imageFile)) {
                         $imageDetails = getimagesize($imageFile);
@@ -2203,7 +2203,7 @@ class CBPhotos
             }
 
             if (!empty($photo['filename']) && !empty($photo['ext'])) {
-                $files = glob(PHOTOS_DIR . '/' . $photo['filename'] . '*.' . $photo['ext']);
+                $files = glob(DirPath::get('photos') . $photo['filename'] . '*.' . $photo['ext']);
                 if (!empty($files) && is_array($files)) {
                     $thumbs = [];
                     foreach ($files as $file) {
@@ -2213,13 +2213,13 @@ class CBPhotos
                         $type = $this->get_image_type($thumb_name);
                         if ($with_orig) {
                             if ($with_path) {
-                                $thumbs[] = PHOTOS_URL . '/' . $thumb_name;
+                                $thumbs[] = DirPath::getUrl('photos') . $thumb_name;
                             } else {
                                 $thumbs[] = $thumb_name;
                             }
                         } elseif (!empty($type)) {
                             if ($with_path) {
-                                $thumbs[] = PHOTOS_URL . '/' . $thumb_name;
+                                $thumbs[] = DirPath::getUrl('photos') . $thumb_name;
                             } else {
                                 $thumbs[] = $thumb_name;
                             }
@@ -2264,7 +2264,7 @@ class CBPhotos
                         }
 
                         if (empty($imgDetails) || empty($imgDetails[$p['size']])) {
-                            $dem = getimagesize(str_replace(PHOTOS_URL, PHOTOS_DIR, $src));
+                            $dem = getimagesize(str_replace(DirPath::getUrl('photos'), DirPath::get('photos'), $src));
                             $width = $dem[0];
                             $height = $dem[1];
                             /* UPDATING IMAGE DETAILS */
@@ -2558,7 +2558,7 @@ class CBPhotos
         if (file_exists(TEMPLATEDIR . '/images/thumbs/no-photo' . $size . '.png')) {
             $path = TEMPLATEURL . '/images/thumbs/no-photo' . $size . '.png';
         } else {
-            $path = PHOTOS_URL . '/no-photo' . $size . '.png';
+            $path = DirPath::getUrl('photos') . 'no-photo' . $size . '.png';
         }
 
         if (!empty($output) && $output == 'html') {

@@ -80,13 +80,13 @@ function callback($resource, $download_size, $downloaded, $upload_size, $uploade
 
 $file = $_POST['file'];
 
-$log_file = TEMP_DIR . DIRECTORY_SEPARATOR . $file_name . '_curl_log.cblog';
+$log_file = DirPath::get('temp') . $file_name . '_curl_log.cblog';
 
 //For PHP < 5.3.0
-$dummy_file = TEMP_DIR . DIRECTORY_SEPARATOR . $file_name . '_curl_dummy.cblog';
+$dummy_file = DirPath::get('temp') . $file_name . '_curl_dummy.cblog';
 
 $ext = getExt($file);
-$svfile = TEMP_DIR . DIRECTORY_SEPARATOR . $file_name . '.' . $ext;
+$svfile = DirPath::get('temp') . $file_name . '.' . $ext;
 
 //Checking for the url
 if (empty($file)) {
@@ -163,7 +163,7 @@ $vid = $Upload->submit_upload($vidDetails);
 
 echo json_encode(['vid' => $vid]);
 $file_dir = $vidDetails['file_directory'];
-$logFile = LOGS_DIR . DIRECTORY_SEPARATOR . $file_dir . DIRECTORY_SEPARATOR . $file_name . '.log';
+$logFile = DirPath::get('logs') . $file_dir . DIRECTORY_SEPARATOR . $file_name . '.log';
 
 if (stristr(PHP_OS, 'WIN')) {
     exec(php_path() . ' -q ' . BASEDIR . '/actions/video_convert.php ' . $targetFileName . ' sleep');

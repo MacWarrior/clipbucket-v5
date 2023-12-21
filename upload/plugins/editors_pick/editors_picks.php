@@ -136,7 +136,7 @@ function admin_area_tab($vid): string
 function display_editors_pick()
 {
     assign('editor_picks', get_ep_videos());
-    echo Fetch(PLUG_DIR . '/editors_pick/templates/front/editorspicks.html', true);
+    echo Fetch(DirPath::get('plugins') . 'editors_pick/templates/front/editorspicks.html', true);
 }
 
 global $cbvid;
@@ -158,4 +158,4 @@ if (in_dev()) {
 register_anchor_function('display_editors_pick', 'global');
 register_action_remove_video('remove_vid_editors_pick');
 
-add_admin_menu('Plugin Manager', lang('plugin_editors_picks'), PLUG_URL . '/editors_pick/admin/editor_pick.php');
+add_admin_menu('Plugin Manager', lang('plugin_editors_picks'), DirPath::getUrl('plugins') . 'editors_pick/admin/editor_pick.php');

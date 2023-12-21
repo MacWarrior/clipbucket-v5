@@ -10,7 +10,7 @@ $pages->page_redir();
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('tool_box'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'Maintenance', 'url' => ADMIN_BASEURL . '/maintenance.php'];
+$breadcrumb[1] = ['title' => 'Maintenance', 'url' => DirPath::getUrl('admin_area') . 'maintenance.php'];
 
 /**
  * Removing Inactive Sessions

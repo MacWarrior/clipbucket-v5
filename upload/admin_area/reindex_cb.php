@@ -9,7 +9,7 @@ $pages->page_redir();
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('tool_box'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'ReIndexer', 'url' => ADMIN_BASEURL . '/reindex_cb.php'];
+$breadcrumb[1] = ['title' => 'ReIndexer', 'url' => DirPath::getUrl('admin_area') . 'reindex_cb.php'];
 
 $vtbl = tbl("video");
 $utbl = tbl("users");

@@ -38,11 +38,11 @@ $breadcrumb[0] = [
 ];
 $breadcrumb[1] = [
     'title' => lang('manage_collections'),
-    'url'   => ADMIN_BASEURL . '/collection_manager.php'
+    'url'   => DirPath::getUrl('admin_area') . 'collection_manager.php'
 ];
 $breadcrumb[2] = [
     'title' => 'Editing : ' . display_clean($c['collection_name']),
-    'url'   => ADMIN_BASEURL . '/edit_collection.php?collection=' . display_clean($id)
+    'url'   => DirPath::getUrl('admin_area') . 'edit_collection.php?collection=' . display_clean($id)
 ];
 
 switch ($c['type']) {

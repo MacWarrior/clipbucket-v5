@@ -15,7 +15,7 @@ $breadcrumb[0] = [
 ];
 $breadcrumb[1] = [
     'title' => 'Photo Manager',
-    'url'   => ADMIN_BASEURL . '/photo_manager.php'
+    'url'   => DirPath::getUrl('admin_area') . 'photo_manager.php'
 ];
 $breadcrumb[2] = [
     'title' => 'Edit Photo',

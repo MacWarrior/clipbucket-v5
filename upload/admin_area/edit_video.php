@@ -12,8 +12,8 @@ $data = get_video_details($video);
 
 /* Generating breadcrumb */
 $breadcrumb[0] = ['title' => lang('videos'), 'url' => ''];
-$breadcrumb[1] = ['title' => lang('videos_manager'), 'url' => ADMIN_BASEURL . '/video_manager.php'];
-$breadcrumb[2] = ['title' => 'Editing : ' . display_clean($data['title']), 'url' => ADMIN_BASEURL . '/edit_video.php?video=' . display_clean($video)];
+$breadcrumb[1] = ['title' => lang('videos_manager'), 'url' => DirPath::getUrl('admin_area') . 'video_manager.php'];
+$breadcrumb[2] = ['title' => 'Editing : ' . display_clean($data['title']), 'url' => DirPath::getUrl('admin_area') . 'edit_video.php?video=' . display_clean($video)];
 
 if (@$_GET['msg']) {
     $msg[] = clean($_GET['msg']);
@@ -56,13 +56,13 @@ if ($myquery->video_exists($video)) {
     if ($data['file_server_path']) {
         $file = $data['file_server_path'] . '/logs/' . $data['file_directory'] . $data['file_name'] . '.log';
     } else {
-        $str = DIRECTORY_SEPARATOR . $data['file_directory'] . DIRECTORY_SEPARATOR;
-        $file = LOGS_DIR . $str . $data['file_name'] . '.log';
+        $str = $data['file_directory'] . DIRECTORY_SEPARATOR;
+        $file = DirPath::get('logs') . $str . $data['file_name'] . '.log';
     }
     assign('has_log', file_exists($file));
 } else {
     //add parameter to display message after redirect
-    redirect_to(BASEURL . ADMIN_BASEURL . '/video_manager.php?missing_video=1');
+    redirect_to(BASEURL . DirPath::getUrl('admin_area') . 'video_manager.php?missing_video=1');
 }
 
 $resolution_list = getResolution_list($data);

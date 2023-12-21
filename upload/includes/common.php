@@ -1,21 +1,11 @@
 <?php
-
 ob_start();
-const IN_CLIPBUCKET = true;
 
-//Setting Cookie Timeout
-const COOKIE_TIMEOUT = 86400 * 1; // 1
-const GARBAGE_TIMEOUT = COOKIE_TIMEOUT;
-const REMBER_DAYS = 7;
-
-define("BASEDIR", dirname(__DIR__));
-
-const FILES_DIR = BASEDIR . '/files';
-const TEMP_DIR = FILES_DIR . '/temp';
+require_once('constants.php');
 
 require_once(BASEDIR . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php');
 require_once('classes/DiscordLog.php');
-if (file_exists(TEMP_DIR . DIRECTORY_SEPARATOR . 'development.dev')) {
+if (file_exists(DirPath::get('temp') . 'development.dev')) {
     define('DEVELOPMENT_MODE', true);
     $__devmsgs = [
         'insert_queries'        => [],
@@ -162,78 +152,6 @@ if (defined('CLEAN_BASEURL')) {
 }
 
 define('BASEURL', $baseurl);
-
-const TEMPLATEFOLDER = 'styles';                            //Template Folder Name, usually STYLES
-const STYLES_DIR = BASEDIR . DIRECTORY_SEPARATOR . TEMPLATEFOLDER;
-
-# Define Lang Select & Style Select
-//Javascript Directory Name
-const ADMINDIR = 'admin_area';
-const ADMINBASEDIR = BASEDIR . DIRECTORY_SEPARATOR . 'admin_area';                //Admin Accessible Folder
-const ADMIN_BASEURL = DIRECTORY_SEPARATOR . ADMINDIR;
-
-# DIRECT PATHS OF VIDEO FILES
-
-const VIDEOS_DIR = FILES_DIR . '/videos';
-const SUBTITLES_DIR = FILES_DIR . '/subtitles';
-const THUMBS_DIR = FILES_DIR . '/thumbs';
-const ORIGINAL_DIR = FILES_DIR . '/original';
-
-const CON_DIR = FILES_DIR . '/conversion_queue';
-const MASS_UPLOAD_DIR = FILES_DIR . '/mass_uploads';
-const LOGS_DIR = FILES_DIR . '/logs';
-const IMAGES_DIR = BASEDIR . '/images';
-const IMAGES_URL = '/images';
-const USER_THUMBS_DIR = BASEDIR . '/files/avatars';
-const USER_BG_DIR = BASEDIR . '/files/backgrounds';
-const ICONS_URL = '/images/icons';
-const JS_URL = '/js';
-const CSS_URL = '/css';
-
-#DIRECT URL OF VIDEO FILES
-const FILES_URL = BASEURL . '/files';
-const VIDEOS_URL = FILES_URL . '/videos';
-const SUBTITLES_URL = FILES_URL . '/subtitles';
-const THUMBS_URL = FILES_URL . '/thumbs';
-const PLAYER_DIR = BASEDIR . '/player';
-const PLAYER_URL = '/player';
-
-const USER_THUMBS_URL = FILES_URL . '/avatars';
-const USER_BG_URL = FILES_URL . '/backgrounds';
-# Defining Category Thumbs directory
-const CAT_THUMB_DIR = BASEDIR . '/images/category_thumbs';
-const CAT_THUMB_URL = '/images/category_thumbs';
-
-# COLLECTIONS ICON DIR
-const COLLECT_THUMBS_DIR = BASEDIR . '/images/collection_thumbs';
-const COLLECT_THUMBS_URL = '/images/collection_thumbs';
-
-# PHOTOS DETAILS
-const PHOTOS_DIR = FILES_DIR . '/photos';
-const PHOTOS_URL = '/files/photos';
-
-# AVATARS DIR
-const AVATARS_DIR = FILES_DIR . '/avatars';
-const AVATARS_URL = '/files/avatars';
-
-# LOGOS DIR
-const LOGOS_DIR = FILES_DIR . '/logos';
-const LOGOS_URL = '/files/logos';
-
-# ADVANCE CACHING
-const CACHE_DIR = BASEDIR . '/cache';
-
-# User Feeds
-const USER_FEEDS_DIR = CACHE_DIR . '/userfeeds';
-
-# Number of activity feeds to display on channel page
-const USER_ACTIVITY_FEEDS_LIMIT = 15;
-const ALLOWED_CATEGORIES = 3;
-# Defining Plugin Directory
-const PLUG_DIR = BASEDIR . '/plugins';
-const PLUG_URL = '/plugins';
-const PLAYLIST_COVERS_DIR = IMAGES_DIR . '/playlist_covers';
-const PLAYLIST_COVERS_URL = IMAGES_URL . '/playlist_covers';
 
 require_once('classes/session.class.php');
 $sess = new Session();
@@ -399,17 +317,12 @@ Assign('PHP_PATH', PHP_PATH);
 Assign('js', JS_URL);
 Assign('title', TITLE);
 Assign('slogan', SLOGAN);
-Assign('avatardir', '/images/avatars');
-Assign('whatis', getArrayValue($row, 'whatis'));
-Assign('category_thumbs', CAT_THUMB_URL);
-Assign('video_thumbs', THUMBS_URL);
+Assign('category_thumbs', DirPath::get('category_thumbs'));
+Assign('video_thumbs', DirPath::getUrl('thumbs'));
 
 Assign('email_verification', EMAIL_VERIFICATION);
-Assign('captcha_type', $row['captcha_type']);
 Assign('languages', (isset($languages)) ? $languages : false);
 
-Assign('VIDEOS_URL', VIDEOS_URL);
-Assign('THUMBS_URL', THUMBS_URL);
 Assign('PLUG_URL', PLUG_URL);
 
 #Remote and Embed
@@ -422,10 +335,9 @@ Assign('video_rating', $row['video_rating']);
 Assign('comment_rating', $row['comment_rating']);
 Assign('video_download', $row['video_download']);
 Assign('video_embed', $row['video_embed']);
-assign('icons_url', ICONS_URL);
 
-if (!file_exists(PLAYLIST_COVERS_DIR)) {
-    mkdir(PLAYLIST_COVERS_DIR, 0777);
+if (!file_exists(DirPath::get('playlist_covers'))) {
+    mkdir(DirPath::get('playlist_covers'), 0777);
 }
 
 $ClipBucket->upload_opt_list = [];

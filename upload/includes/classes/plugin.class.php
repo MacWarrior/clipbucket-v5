@@ -134,7 +134,7 @@ class CBPlugin
     {
         #first we will read the plugin directory
         #Current Plugin Class will read files only, not subdirectories
-        $dir = PLUG_DIR;
+        $dir = DirPath::get('plugins');
         $dir_list = scandir($dir);
         foreach ($dir_list as $item) {
             if ($item == '..' || $item == '.' || substr($item, 0, 1) == '_' || substr($item, 0, 1) == '.') {
@@ -142,16 +142,16 @@ class CBPlugin
             }
 
             //Now Checking if its file, not a directory
-            if (!is_dir(PLUG_DIR . DIRECTORY_SEPARATOR . $item)) {
+            if (!is_dir(DirPath::get('plugins') . $item)) {
                 $item_list[] = $item;
             } else {
                 $sub_dir = $item;
-                $sub_dir_list = scandir(PLUG_DIR . DIRECTORY_SEPARATOR . $item);
+                $sub_dir_list = scandir(DirPath::get('plugins') . $item);
                 foreach ($sub_dir_list as $item) {
                     if ($item == '..' || $item == '.' || substr($item, 0, 1) == '_' || substr($item, 0, 1) == '.') {
                         continue;
                     }
-                    if (!is_dir(PLUG_DIR . DIRECTORY_SEPARATOR . $sub_dir . DIRECTORY_SEPARATOR . $item)) {
+                    if (!is_dir(DirPath::get('plugins') . $sub_dir . DIRECTORY_SEPARATOR . $item)) {
                         //Now Checking if its file, not a directory
                         $subitem_list[$sub_dir][] = $item;
                     }
@@ -273,10 +273,10 @@ class CBPlugin
             $sub_dir = $sub_dir . DIRECTORY_SEPARATOR;
         }
 
-        $file = PLUG_DIR . DIRECTORY_SEPARATOR . $sub_dir . $plug_file;
+        $file = DirPath::get('plugins') . $sub_dir . $plug_file;
 
         // Prevent directory change
-        if( strpos(realpath($file), realpath(PLUG_DIR)) === false ){
+        if( strpos(realpath($file), realpath(DirPath::get('plugins'))) === false ){
             return false;
         }
 
@@ -359,7 +359,7 @@ class CBPlugin
             $folder = $folder . DIRECTORY_SEPARATOR;
         }
 
-        $plug_install_file = PLUG_DIR . DIRECTORY_SEPARATOR . $folder . 'install_' . $pluginFile;
+        $plug_install_file = DirPath::get('plugins') . $folder . 'install_' . $pluginFile;
 
         if (file_exists($plug_install_file)) {
             require_once($plug_install_file);
@@ -382,7 +382,7 @@ class CBPlugin
         );
         e(lang('plugin_install_msg'), 'm');
 
-        return PLUG_DIR . DIRECTORY_SEPARATOR . $folder . $pluginFile;
+        return DirPath::get('plugins') . $folder . $pluginFile;
     }
 
     /**
@@ -436,7 +436,7 @@ class CBPlugin
 
             $db->execute('DELETE FROM ' . tbl('plugins') . " WHERE plugin_file='" . $file . "' $folder_query");
 
-            $plug_uninstall_file = PLUG_DIR . DIRECTORY_SEPARATOR . $folder . 'uninstall_' . $file;
+            $plug_uninstall_file = DirPath::get('plugins') . $folder . 'uninstall_' . $file;
             if (file_exists($plug_uninstall_file)) {
                 require_once($plug_uninstall_file);
             }

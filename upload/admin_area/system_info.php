@@ -7,7 +7,7 @@ $userquery->admin_login_check();
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('tool_box'), 'url' => ''];
-$breadcrumb[1] = ['title' => lang('system_info'), 'url' => ADMIN_BASEURL . '/cb_server_conf_info.php'];
+$breadcrumb[1] = ['title' => lang('system_info'), 'url' => DirPath::getUrl('admin_area') . 'cb_server_conf_info.php'];
 
 /** hosting */
 $post_max_size = ini_get('post_max_size');

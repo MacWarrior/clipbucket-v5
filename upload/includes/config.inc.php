@@ -11,8 +11,8 @@ require_once 'plugins.php';
 
 global $Cbucket, $cbvid, $ClipBucket, $userquery;
 
-define('TEMPLATEDIR', BASEDIR . DIRECTORY_SEPARATOR . TEMPLATEFOLDER . DIRECTORY_SEPARATOR . $Cbucket->template);
-define('TEMPLATEURL', '/' . TEMPLATEFOLDER . '/' . $Cbucket->template);
+define('TEMPLATEDIR', DirPath::get('styles') . $Cbucket->template);
+define('TEMPLATEURL', DirPath::getUrl('styles') . $Cbucket->template);
 define('LAYOUT', TEMPLATEDIR . DIRECTORY_SEPARATOR . 'layout');
 define('COVERS_DIR', BASEDIR . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . 'cover_photos');
 Assign('baseurl', BASEURL);
@@ -22,7 +22,7 @@ Assign('theme', TEMPLATEURL . '/theme');
 Assign('template_dir', TEMPLATEDIR);
 Assign('style_dir', LAYOUT);
 Assign('covers_dir', COVERS_DIR);
-Assign('admin_baseurl', '/' . ADMINDIR . '/');
+Assign('admin_baseurl', DirPath::getUrl('admin_area'));
 
 //Checking Website is closed or not
 if (config('closed') && THIS_PAGE != 'ajax' && !$in_bg_cron && THIS_PAGE != 'cb_install') {

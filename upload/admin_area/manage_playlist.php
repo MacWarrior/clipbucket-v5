@@ -16,7 +16,7 @@ $breadcrumb[0] = [
 ];
 $breadcrumb[1] = [
     'title' => lang('manage_playlists'),
-    'url'   => ADMIN_BASEURL . '/manage_playlist.php'
+    'url'   => DirPath::getUrl('admin_area') . 'manage_playlist.php'
 ];
 
 $mode = $_GET['mode'];

@@ -117,7 +117,7 @@ function check_need_plugin_upgrade($installed_plugin): bool
 {
     global $cbplugin;
     $detail = $cbplugin->get_plugin_details($installed_plugin['plugin_file'], $installed_plugin['plugin_folder']);
-    $files = glob(PLUG_DIR . DIRECTORY_SEPARATOR . $installed_plugin['plugin_folder'] . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . '*.sql');
+    $files = glob(DirPath::get('plugins') . $installed_plugin['plugin_folder'] . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . '*.sql');
     foreach ($files as $file) {
         $file_cur_version = pathinfo($file)['filename'];
         if ($file_cur_version > $installed_plugin['plugin_version'] && $file_cur_version <= $detail['version']) {
@@ -140,7 +140,7 @@ function get_plugins_files_to_upgrade($installed_plugins, bool $count = false)
         $db_version = $installed_plugin['plugin_version'];
         $detail_verision = $cbplugin->get_plugin_details($installed_plugin['plugin_file'], $installed_plugin['plugin_folder'])['version'];
         //get files in update folder
-        $folder = PLUG_DIR . DIRECTORY_SEPARATOR . $installed_plugin['plugin_folder'] . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR;
+        $folder = DirPath::get('plugins') . $installed_plugin['plugin_folder'] . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR;
         $files = glob($folder . '*.sql');
         //filter files which are between db version and detail version
         $update_files = array_merge(

@@ -15,7 +15,7 @@ $breadcrumb[0] = [
 ];
 $breadcrumb[1] = [
     'title' => lang('manage_collections'),
-    'url'   => ADMIN_BASEURL . '/collection_manager.php'
+    'url'   => DirPath::getUrl('admin_area') . 'collection_manager.php'
 ];
 
 if (isset($_GET['make_feature'])) {

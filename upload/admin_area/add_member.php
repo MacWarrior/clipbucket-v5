@@ -10,7 +10,7 @@ $pages->page_redir();
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('users'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'Add Member', 'url' => ADMIN_BASEURL . '/add_member.php'];
+$breadcrumb[1] = ['title' => 'Add Member', 'url' => DirPath::getUrl('admin_area') . 'add_member.php'];
 
 if (isset($_POST['add_member'])) {
     if ($userquery->signup_user($_POST)) {

@@ -10,7 +10,7 @@ $userquery->login_check('web_config_access');
 $pages->page_redir();
 
 $breadcrumb[0] = ['title' => lang('general'), 'url'   => ''];
-$breadcrumb[1] = ['title' => lang('manage_tags'), 'url'   => ADMIN_BASEURL . '/manage_tags.php'];
+$breadcrumb[1] = ['title' => lang('manage_tags'), 'url'   => DirPath::getUrl('admin_area') . 'manage_tags.php'];
 
 $limit = RESULTS;
 

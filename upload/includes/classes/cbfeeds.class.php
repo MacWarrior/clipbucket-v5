@@ -160,7 +160,7 @@ class cbfeeds
     function getUserFeeds($user)
     {
         global $cbphoto, $userquery, $cbvid, $cbcollection;
-        $allowed_feeds = USER_ACTIVITY_FEEDS_LIMIT;
+        $allowed_feeds = 15;
         $uid = $user['userid'];
         $feeds = $this->getUserFeedsFiles($uid);
 

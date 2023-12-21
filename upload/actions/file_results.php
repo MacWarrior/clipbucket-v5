@@ -1,12 +1,10 @@
 <?php
-//When we need
-define("TEMP_DIR", dirname(__FILE__) . '/../files/temp');
 error_reporting(E_ALL ^ E_NOTICE);
 
 $file_name = $_POST['file_name'];
-$log_file = TEMP_DIR . '/' . $file_name . '_curl_log.cblog';
+$log_file = DirPath::get('temp') . $file_name . '_curl_log.cblog';
 //For PHP < 5.3.0
-$dummy_file = TEMP_DIR . '/' . $file_name . '_curl_dummy.cblog';
+$dummy_file = DirPath::get('temp') . $file_name . '_curl_dummy.cblog';
 
 if (file_exists($dummy_file)) {
     //Read the data
@@ -22,7 +20,7 @@ if (file_exists($dummy_file)) {
     $byte_size = $data['byte_size'];
 
     //Let check whats the file size right now
-    $data['byte_size'] = $now_file_size = filesize(TEMP_DIR . '/' . $file);
+    $data['byte_size'] = $now_file_size = filesize(DirPath::get('temp') . $file);
 
     //Bytes Transfered
     $cur_speed = $now_file_size - $byte_size;

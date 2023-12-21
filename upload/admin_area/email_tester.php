@@ -7,7 +7,7 @@ $pages->page_redir();
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => 'General Configurations', 'url' => ''];
-$breadcrumb[1] = ['title' => 'Email Tester', 'url' => ADMIN_BASEURL . '/email_tester.php'];
+$breadcrumb[1] = ['title' => 'Email Tester', 'url' => DirPath::getUrl('admin_area') . 'email_tester.php'];
 
 if (isset($_POST['start_test'])) {
     try {

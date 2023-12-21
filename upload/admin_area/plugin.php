@@ -15,9 +15,9 @@ $player = str_replace('..', '', $player);
 
 if ($folder && $file) {
     if (!$player) {
-        $file = PLUG_DIR . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $file;
+        $file = DirPath::get('plugins') . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $file;
     } else {
-        $file = PLAYER_DIR . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $file;
+        $file = DirPath::get('player') . $folder . DIRECTORY_SEPARATOR . $file;
     }
 
     if (file_exists($file)) {

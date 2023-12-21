@@ -50,7 +50,7 @@ class oxygenz_remote_play {
         add_js([self::class.'/js/'.$js_file => 'plugin']);
 
         global $Cbucket;
-        $Cbucket->add_header(PLUG_DIR . DIRECTORY_SEPARATOR.self::class.self::$js_dir.'header.html');
+        $Cbucket->add_header(DirPath::get('plugins') . self::class.self::$js_dir.'header.html');
     }
 
     /**
@@ -84,7 +84,7 @@ class oxygenz_remote_play {
      */
     public static function load_form()
     {
-        $plugin_cb_link_video_input_url_example = sprintf( lang(self::$lang_prefix.'input_url_example'), BASEURL.PLUG_URL.self::$media_dir.'example.mp4' );
+        $plugin_cb_link_video_input_url_example = sprintf( lang(self::$lang_prefix.'input_url_example'), BASEURL . DirPath::getUrl('plugins') . self::$media_dir.'example.mp4' );
         assign('placeholder_url', $plugin_cb_link_video_input_url_example);
         Template(self::$template_dir.'first-form.html', false);
     }
@@ -129,7 +129,7 @@ class oxygenz_remote_play {
 
         $file_directory = create_dated_folder();
         $vdetails = get_video_details($video_id);
-        $logFile = LOGS_DIR . DIRECTORY_SEPARATOR . $file_directory . DIRECTORY_SEPARATOR . $vdetails['file_name'] . '.log';
+        $logFile = DirPath::get('logs') . $file_directory . DIRECTORY_SEPARATOR . $vdetails['file_name'] . '.log';
 
         $log = new SLog($logFile);
         $ffmpeg = new FFMpeg($log);

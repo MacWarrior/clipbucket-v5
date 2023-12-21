@@ -203,7 +203,7 @@ class AdminTool
      */
     public static function resetVideoLog($id_tool)
     {
-        $logs = rglob(LOGS_DIR . DIRECTORY_SEPARATOR . '*.log');
+        $logs = rglob(DirPath::get('logs') . '*.log');
 
         global $db;
         $logs_sql = array_map(function ($log) {
@@ -233,12 +233,12 @@ class AdminTool
         $video_file_name = [];
         $photo_file_name = [];
         $array_user_id = [];
-        $logs = rglob(LOGS_DIR . DIRECTORY_SEPARATOR . '*.log');
-        $videos_mp4 = rglob(VIDEOS_DIR . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*.mp4');
-        $photos = rglob(PHOTOS_DIR . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*');
-        $videos_hls = glob(VIDEOS_DIR . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
-        $thumbs = rglob(THUMBS_DIR . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*.jpg');
-        $subtitles = rglob(SUBTITLES_DIR . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*.srt');
+        $logs = rglob(DirPath::get('logs') . '*.log');
+        $videos_mp4 = rglob(DirPath::get('videos') . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*.mp4');
+        $photos = rglob(DirPath::get('photos') . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*');
+        $videos_hls = glob(DirPath::get('videos') . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
+        $thumbs = rglob(DirPath::get('thumbs') . '[0-9]*' . DIRECTORY_SEPARATOR . '*.jpg');
+        $subtitles = rglob(DirPath::get('subtitles') . '[0-9]*' . DIRECTORY_SEPARATOR . '*.srt');
         $userfeeds = rglob(USER_FEEDS_DIR . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*.feed');
 
         $files = array_merge(
@@ -328,12 +328,12 @@ class AdminTool
         self::executeTool($id_tool, $files, 'clean_orphan_files');
 
         //remove already empty folders
-        $empty_logs = glob(LOGS_DIR . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
-        $empty_subs = glob(SUBTITLES_DIR . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
-        $empty_thumbs = glob(THUMBS_DIR . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
-        $empty_vids = glob(VIDEOS_DIR . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
-        $empty_pics = glob(PHOTOS_DIR . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
-        $empty_userfeeds = glob(CACHE_DIR . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
+        $empty_logs = glob(DirPath::get('logs') . '*', GLOB_ONLYDIR);
+        $empty_subs = glob(DirPath::get('subtitles') . '*', GLOB_ONLYDIR);
+        $empty_thumbs = glob(DirPath::get('thumbs') . '*', GLOB_ONLYDIR);
+        $empty_vids = glob(DirPath::get('videos') . '*', GLOB_ONLYDIR);
+        $empty_pics = glob(DirPath::get('photos') . '*', GLOB_ONLYDIR);
+        $empty_userfeeds = glob(DirPath::get('cache') . '*', GLOB_ONLYDIR);
         $empty_folders = array_merge($empty_logs, $empty_subs, $empty_thumbs, $empty_vids, $empty_pics, $empty_userfeeds);
         foreach ($empty_folders as $folder) {
             delete_empty_directories($folder);
