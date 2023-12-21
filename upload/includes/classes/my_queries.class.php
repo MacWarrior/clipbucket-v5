@@ -282,15 +282,6 @@ class myquery
     /**
      * @throws Exception
      */
-    function update_todo($id, $text)
-    {
-        global $db;
-        $db->execute('UPDATE ' . tbl('admin_todo') . ' SET todo=\'' . mysql_clean($text) . '\' WHERE comment_id=\''.mysql_clean($id).'\'');
-    }
-
-    /**
-     * @throws Exception
-     */
     function delete_todo($id)
     {
         global $db;
