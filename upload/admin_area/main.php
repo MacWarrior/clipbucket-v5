@@ -476,24 +476,22 @@ subtitle('Website Configurations');
 $filepath_dev_file = TEMP_DIR . '/development.dev';
 if (!empty($_POST)) {
     if (!empty($_POST['enable_dev_mode'])) {
-        if (is_writable(BASEDIR . '/includes')) {
+        if (is_writable(TEMP_DIR)) {
             file_put_contents($filepath_dev_file, '');
             if (file_exists($filepath_dev_file)) {
-                assign('development_mode', true);
-                assign('devmsg', 'Development has been enabled successfuly');
+                assign('DEVELOPMENT_MODE', true);
             }
         } else {
-            assign('deverror', '"includes" directory is not writeable');
+            e('"temp" directory is not writeable');
         }
     } else {
         unlink($filepath_dev_file);
         if (!file_exists($filepath_dev_file)) {
-            assign('development_mode', false);
-            assign('devmsg', 'Development has been disabled successfuly');
+            assign('DEVELOPMENT_MODE', false);
         }
     }
 } else {
-    assign('development_mode', in_dev());
+    assign('DEVELOPMENT_MODE', in_dev());
 }
 
 if(in_dev()){
