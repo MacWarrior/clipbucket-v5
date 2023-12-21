@@ -1022,4 +1022,5 @@ VALUES
        ('option_display_channel_comments'),
        ('comment_disabled_for'),
        ('enable_collection_comments'),
-       ('display_collection_comments');
+       ('display_collection_comments'),
+       ('dev_mode');

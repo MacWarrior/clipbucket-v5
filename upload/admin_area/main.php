@@ -475,7 +475,6 @@ Assign('ffmpeg_version', $ffmpeg_version);
 subtitle('Website Configurations');
 
 $filepath_dev_file = DirPath::get('temp') . 'development.dev';
-//gestion dev_mode
 if (!empty($_POST)) {
     if (!empty($_POST['enable_dev_mode'])) {
         if (is_writable(DirPath::get('temp'))) {
