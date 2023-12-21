@@ -610,7 +610,7 @@ if (!empty($mode)) {
             break;
 
         case 'delete_comment':
-            Comments::delete(['comment_id' => $_POST['cid']]);
+            $nb_affected = Comments::delete(['comment_id' => $_POST['cid']]);
             $error = $eh->get_error();
             $warning = $eh->get_warning();
             $message = $eh->get_message();
@@ -627,6 +627,7 @@ if (!empty($mode)) {
             }
             $ajax['msg'] = $msg;
             $ajax['err'] = $err;
+            $ajax['nb'] = $nb_affected;
 
             echo json_encode($ajax);
             break;

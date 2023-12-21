@@ -36,7 +36,7 @@ switch ($mode) {
         if (isset($_POST['delete_playlists'])) {
             $playlists = post('check_playlist');
 
-            if (count($playlists) > 0) {
+            if (!empty($playlists) && count($playlists) > 0) {
                 foreach ($playlists as $playlist) {
                     $cbvid->action->delete_playlist($playlist);
                 }
