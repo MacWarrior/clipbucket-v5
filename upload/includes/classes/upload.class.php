@@ -554,27 +554,29 @@ class Upload
             'use_func_val'      => true
         ];
 
-        $fields['comments'] = [
-            'type'              => 'checkboxv2',
-            'name'              => 'allow_comments',
-            'value'             => 'yes',
-            'label'             => lang('vdo_allow_comm'),
-            'checked'           => $default['allow_comments'] ?? 'yes',
-            'db_field'          => 'allow_comments',
-            'required'          => 'no',
-            'validate_function' => 'yes_or_no'
-        ];
+        if( config('display_video_comments') == 'yes' ){
+            $fields['comments'] = [
+                'type'              => 'checkboxv2',
+                'name'              => 'allow_comments',
+                'value'             => 'yes',
+                'label'             => lang('vdo_allow_comm'),
+                'checked'           => $default['allow_comments'] ?? 'yes',
+                'db_field'          => 'allow_comments',
+                'required'          => 'no',
+                'validate_function' => 'yes_or_no'
+            ];
 
-        $fields['commentsvote'] = [
-            'type'              => 'checkboxv2',
-            'name'              => 'comment_voting',
-            'value'             => 'yes',
-            'label'             => lang('video_allow_comment_vote'),
-            'checked'           => $default['comment_voting'] ?? 'yes',
-            'db_field'          => 'comment_voting',
-            'required'          => 'no',
-            'validate_function' => 'yes_or_no'
-        ];
+            $fields['commentsvote'] = [
+                'type'              => 'checkboxv2',
+                'name'              => 'comment_voting',
+                'value'             => 'yes',
+                'label'             => lang('video_allow_comment_vote'),
+                'checked'           => $default['comment_voting'] ?? 'yes',
+                'db_field'          => 'comment_voting',
+                'required'          => 'no',
+                'validate_function' => 'yes_or_no'
+            ];
+        }
 
         $fields['rating'] = [
             'type'              => 'checkboxv2',

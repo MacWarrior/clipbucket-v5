@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"314",
+  "revision":"315",
   "status":"dev",
   "detail":[
     {
@@ -96,6 +96,7 @@
         ,"Add option to disable quicklist"
         ,"Add option to hide empty collections"
         ,"Mass upload should not list unreadable files"
+        ,"Add options to hide comments"
       ]
     },
     {
@@ -252,6 +253,7 @@
         ,"Fix collection creation while uploading new photos"
         ,"Fix videos and photos count"
         ,"Fix disabled sections privacy"
+        ,"Implement channels comments"
       ]
     }
   ,{

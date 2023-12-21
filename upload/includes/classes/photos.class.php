@@ -1796,12 +1796,14 @@ class CBPhotos
             $array = $_POST;
         }
 
-        $comments = $array['allow_comments'];
+        $comments = config('photo_comments') ? $array['allow_comments'] : 'no';
         $embedding = $array['allow_embedding'];
         $rating = $array['allow_rating'];
 
-        $return = [
-            'comments'  => [
+        $return = [];
+
+        if( config('display_photo_comments') == 'yes' ){
+            $return['comments'] = [
                 'title'             => lang('comments'),
                 'name'              => 'allow_comments',
                 'db_field'          => 'allow_comments',
@@ -1811,30 +1813,33 @@ class CBPhotos
                 'checked'           => $comments,
                 'validate_function' => 'yes_or_no',
                 'display_function'  => 'display_sharing_opt',
-                'default_value'     => 'yes'
-            ],
-            'embedding' => [
-                'title'             => lang('vdo_embedding'),
-                'type'              => 'radiobutton',
-                'name'              => 'allow_embedding',
-                'db_field'          => 'allow_embedding',
-                'value'             => ['yes' => lang('pic_allow_embed'), 'no' => lang('pic_dallow_embed')],
-                'checked'           => $embedding,
-                'validate_function' => 'yes_or_no',
-                'display_function'  => 'display_sharing_opt',
-                'default_value'     => 'yes'
-            ],
-            'rating'    => [
-                'title'             => lang('rating'),
-                'name'              => 'allow_rating',
-                'type'              => 'radiobutton',
-                'db_field'          => 'allow_rating',
-                'value'             => ['yes' => lang('pic_allow_rating'), 'no' => lang('pic_dallow_rating')],
-                'checked'           => $rating,
-                'validate_function' => 'yes_or_no',
-                'display_function'  => 'display_sharing_opt',
-                'default_value'     => 'yes'
-            ]
+                'default_value'     => 'yes',
+                'extra_tags'        => config('photo_comments') ? '' : 'disabled="disabled" ',
+            ];
+        }
+
+        $return ['embedding'] = [
+            'title'             => lang('vdo_embedding'),
+            'type'              => 'radiobutton',
+            'name'              => 'allow_embedding',
+            'db_field'          => 'allow_embedding',
+            'value'             => ['yes' => lang('pic_allow_embed'), 'no' => lang('pic_dallow_embed')],
+            'checked'           => $embedding,
+            'validate_function' => 'yes_or_no',
+            'display_function'  => 'display_sharing_opt',
+            'default_value'     => 'yes'
+        ];
+
+        $return ['rating'] = [
+            'title'             => lang('rating'),
+            'name'              => 'allow_rating',
+            'type'              => 'radiobutton',
+            'db_field'          => 'allow_rating',
+            'value'             => ['yes' => lang('pic_allow_rating'), 'no' => lang('pic_dallow_rating')],
+            'checked'           => $rating,
+            'validate_function' => 'yes_or_no',
+            'display_function'  => 'display_sharing_opt',
+            'default_value'     => 'yes'
         ];
 
         if( config('enable_age_restriction') == 'yes' ) {

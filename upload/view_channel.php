@@ -124,5 +124,4 @@ if (userquery::getInstance()->perm_check('view_channel', true)) {
     }
 }
 
-
 display_it();
