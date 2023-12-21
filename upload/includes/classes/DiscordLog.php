@@ -3,11 +3,27 @@
 class DiscordLog extends \OxygenzSAS\Discord\Discord
 {
     private static $discordLog;
+    private $app_name = '';
+    private $filepath = '';
+    private $filepath_disabled = '';
 
-    const FILE_NAME = TEMP_DIR . DIRECTORY_SEPARATOR . 'discord.webhook';
-    const FILE_NAME_DISABLED =  TEMP_DIR . DIRECTORY_SEPARATOR . 'discord.webhook_disabled';
+    public function __construct()
+    {
+        $this->app_name = config('site_title');
+        $this->filepath = DirPath::get('temp') . 'discord.webhook';
+        $this->filepath_disabled = $this->filepath . '_disabled';
 
-    const APP_NAME = 'ClipBucket';
+        if (!file_exists($this->filepath)) {
+            return null;
+        }
+        $url = file_get_contents($this->filepath);
+        if (empty($url)) {
+            return null;
+        }
+
+        self::$discordLog = parent::__construct($url, $this->app_name);
+        return self::$discordLog;
+    }
 
     /**
      * @return DiscordLog|null
@@ -15,14 +31,7 @@ class DiscordLog extends \OxygenzSAS\Discord\Discord
     public static function getInstance()
     {
         if( empty(self::$discordLog) ){
-            if (!file_exists(self::FILE_NAME)) {
-                return null;
-            }
-            $url = file_get_contents(self::FILE_NAME);
-            if (empty($url)) {
-                return null;
-            }
-            self::$discordLog = new self($url, self::APP_NAME);
+            self::$discordLog = new self();
         }
         return self::$discordLog;
     }
@@ -37,6 +46,7 @@ class DiscordLog extends \OxygenzSAS\Discord\Discord
         if (empty($obj)) {
             return false;
         }
+
         if (is_string($var) ) {
             $obj->debug($var);
         } else {
@@ -45,46 +55,46 @@ class DiscordLog extends \OxygenzSAS\Discord\Discord
         return true;
     }
 
-    public static function enable($url)
+    public function enable($url)
     {
-        if (is_writable(BASEDIR . '/includes')) {
-            if (file_exists(self::FILE_NAME_DISABLED)) {
-                rename(self::FILE_NAME_DISABLED, self::FILE_NAME);
+        if (is_writable(DirPath::get('temp'))) {
+            if (file_exists($this->filepath_disabled)) {
+                rename($this->filepath_disabled, $this->filepath);
             }
-            file_put_contents(self::FILE_NAME, $url);
+            file_put_contents($this->filepath, $url);
         } else {
-            e('"includes" directory is not writeable');
+            e('"temp" directory is not writeable');
         }
     }
 
-    public static function disable()
+    public function disable()
     {
-        if (file_exists(self::FILE_NAME)) {
-            rename(self::FILE_NAME, self::FILE_NAME_DISABLED);
+        if (file_exists(DirPath::get('temp'))) {
+            rename($this->filepath, $this->filepath_disabled);
         } else {
-            e('"includes" directory is not writeable');
+            e('"temp" directory is not writeable');
         }
     }
 
-    public static function isEnabled(): bool
+    public function isEnabled(): bool
     {
-        if (!file_exists(self::FILE_NAME)) {
+        if (!file_exists($this->filepath)) {
             return false;
         }
-        $url = file_get_contents(self::FILE_NAME);
+        $url = file_get_contents($this->filepath);
         if (empty($url) || !filter_var($url, FILTER_VALIDATE_URL)) {
             return false;
         }
         return true;
     }
 
-    public static function getCurrentUrl(): string
+    public function getCurrentUrl(): string
     {
-        if (file_exists(self::FILE_NAME)) {
-            return $url = file_get_contents(self::FILE_NAME);
+        if (file_exists($this->filepath)) {
+            return file_get_contents($this->filepath);
         }
-        if (file_exists(self::FILE_NAME_DISABLED)) {
-            return $url = file_get_contents(self::FILE_NAME_DISABLED);
+        if (file_exists($this->filepath_disabled)) {
+            return file_get_contents($this->filepath_disabled);
         }
         return '';
     }

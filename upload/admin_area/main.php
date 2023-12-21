@@ -478,39 +478,38 @@ $filepath_dev_file = DirPath::get('temp') . 'development.dev';
 //gestion dev_mode
 if (!empty($_POST)) {
     if (!empty($_POST['enable_dev_mode'])) {
-        if (is_writable(BASEDIR . '/includes')) {
+        if (is_writable(DirPath::get('temp'))) {
             file_put_contents($filepath_dev_file, '');
             if (file_exists($filepath_dev_file)) {
-                assign('development_mode', true);
-                assign('devmsg', 'Development has been enabled successfuly');
+                assign('DEVELOPMENT_MODE', true);
             }
         } else {
-            assign('deverror', '"includes" directory is not writeable');
+            e('"temp" directory is not writeable');
         }
     } else {
         unlink($filepath_dev_file);
         if (!file_exists($filepath_dev_file)) {
-            assign('development_mode', false);
-            assign('devmsg', 'Development has been disabled successfuly');
+            assign('DEVELOPMENT_MODE', false);
         }
     }
 } else {
-    assign('development_mode', in_dev());
+    assign('DEVELOPMENT_MODE', in_dev());
 }
 
-//discord_log
-if (!empty($_POST['discord_webhook_url']) && $_POST['discord_error_log'] == 'yes') {
-    if (!filter_var($_POST['discord_webhook_url'], FILTER_VALIDATE_URL)) {
-        e(lang('discord_webhook_url_invalid'));
+if( !empty($_POST['discord_error_log']) ){
+    if (!empty($_POST['discord_webhook_url']) && $_POST['discord_error_log'] == 'yes') {
+        if (!filter_var($_POST['discord_webhook_url'], FILTER_VALIDATE_URL)) {
+            e(lang('discord_webhook_url_invalid'));
+        } else {
+            DiscordLog::getInstance()->enable($_POST['discord_webhook_url']);
+        }
     } else {
-        DiscordLog::enable($_POST['discord_webhook_url']);
+        DiscordLog::getInstance()->disable();
     }
-} else {
-    DiscordLog::disable();
 }
 
-assign('discord_error_log', DiscordLog::isEnabled());
-assign('discord_webhook_url', DiscordLog::getCurrentUrl());
+assign('discord_error_log', DiscordLog::getInstance()->isEnabled());
+assign('discord_webhook_url', DiscordLog::getInstance()->getCurrentUrl());
 
 if(in_dev()){
     $min_suffixe = '';
