@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"315",
+  "revision":"316",
   "status":"dev",
   "detail":[
     {
@@ -97,6 +97,7 @@
         ,"Add option to hide empty collections"
         ,"Mass upload should not list unreadable files"
         ,"Add options to hide comments"
+        ,"Move development mode to website configurations"
       ]
     },
     {
