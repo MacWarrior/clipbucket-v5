@@ -430,6 +430,9 @@ if (isset($_POST['update'])) {
     if (empty($_POST['display_channel_comments']) || $_POST['display_channel_comments'] == 'no') {
         $_POST['channel_comments'] = '0';
     }
+    if (empty($_POST['display_collection_comments']) || $_POST['display_collection_comments'] == 'no') {
+        $_POST['collection_comments'] = '0';
+    }
     foreach ($rows as $field) {
         $value = ($_POST[$field]);
         if (in_array($field, $num_array)) {
