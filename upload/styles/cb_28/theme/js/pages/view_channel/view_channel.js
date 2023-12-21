@@ -218,4 +218,6 @@ $(document).ready(function (){
     uploader.bind("Error", function(plupload, error){
         alert(error.message);
     });
+
+    getAllComments(libelle_type_channel, channelId, '', 1, 0, '');
 });

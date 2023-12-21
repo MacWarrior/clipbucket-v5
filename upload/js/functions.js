@@ -458,10 +458,15 @@ function delete_comment(cid)
                 alert('No data');
             } else {
                 if(data.msg) {
+                    if (data.nb === undefined) {
+                        data.nb = 1;
+                    }
                     $(".reply-"+cid).fadeOut('slow');
                     $("#comment_"+cid).fadeOut('slow');
                     $("#comment_msg_output").html(data.msg+' !');
                     $("#comment_msg_output").fadeIn('slow');
+                    var count = parseInt($('#comment_count').html());
+                    $('#comment_count').html((count- data.nb).toString());
                     setTimeout(function(){
                         $('#comment_msg_output').fadeOut();
                     }, 3000);
@@ -1127,6 +1132,8 @@ function add_comment_js(form_id,type)
                 if(data.cid) {
                     $('.no-comments').remove();
                     get_the_comment(data.cid,data.type_id,'#comments-ul');
+                    var count = parseInt($('#comment_count').html());
+                    $('#comment_count').html((count+1).toString());
                 }
 
             }

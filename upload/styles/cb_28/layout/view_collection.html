@@ -89,38 +89,39 @@
 					</li>
 				</ul>
 			</div>
+			{if config('display_collection_comments') == 'yes'}
+				<div class="clearfix comments-block">
+					{if $myquery->is_commentable($c,'collection') && config('enable_collection_comments') == 'yes'}
 
-			<div class="clearfix comments-block">
-				{if $myquery->is_commentable($c,'collection')}
+					<div class="collectionComments addComment">
+						<h2>
+							{if $c.total_comments <= 1 }
+								{lang code='comment'}
+							{else}
+								{{lang code='comments'} }
+							{/if}
+							(<span id="comment_count">{$c.total_comments}</span>)
+						</h2>
+						<span id="show-comments" class="icon-down-arrow" title="{lang code='show_comments'}"></span>
+						<span id="hide-comments" class="icon-up-arrow" title="{lang code='hide_comments'}" style="display:none;"></span>
 
-				<div class="collectionComments addComment">
-					<h2>
-						{if $c.total_comments <= 1 }
-							{lang code='comment'}
-						{else}
-							{{lang code='comments'} }
-						{/if}
-						({$c.total_comments})
-					</h2>
-					<span id="show-comments" class="icon-down-arrow" title="{lang code='show_comments'}"></span>
-					<span id="hide-comments" class="icon-up-arrow" title="{lang code='hide_comments'}" style="display:none;"></span>
+						<div id="bloc-comment" style="display:none;">
+							{include file="$style_dir/blocks/comments/add_comment.html" id=$c.collection_id type='cl'}
 
-					<div id="bloc-comment" style="display:none;">
-						{include file="$style_dir/blocks/comments/add_comment.html" id=$c.collection_id type='cl'}
-
-						<div class="userComments">
-							<ul id="userCommentsList" style="margin-left:-40px;">
-							</ul>
+							<div class="userComments">
+								<ul id="userCommentsList" style="margin-left:-40px;">
+								</ul>
+							</div>
 						</div>
 					</div>
-				</div>
 
-				{else}
-				<div align="center" class="moveL no_comments">
-					{lang code='comm_disabled_for_collection'}
+					{else}
+					<div align="center" class="moveL no_comments">
+						{sprintf(lang('comment_disabled_for'),strtolower(lang('collection')))}
+					</div>
+					{/if}
 				</div>
-				{/if}
-			</div>
+			{/if}
 		</section>
 		<aside id="sidebar">
 			{if config("enable_advertisement") == "yes"}

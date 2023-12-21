@@ -194,35 +194,37 @@
 				</div>
 			</section>
 
-			<div class="clearfix comments-block">
-				{if $myquery->is_commentable($vdo,'v')}
-				<div class="collectionComments addComment">
-					<h2>
-						{if $vdo.comments_count <= 1 }
-							{lang code='comment'}
-						{else}
-							{{lang code='comments'} }
-						{/if}
-						({$vdo.comments_count})
-					</h2>
-					<span id="show-comments" class="icon-down-arrow" title="{lang code='show_comments'}"></span>
-					<span id="hide-comments" class="icon-up-arrow" title="{lang code='hide_comments'}" style="display:none;"></span>
+			{if config('display_video_comments') == 'yes'}
+				<div class="clearfix comments-block">
+					{if $myquery->is_commentable($vdo,'v')}
+					<div class="collectionComments addComment">
+						<h2>
+							{if $vdo.comments_count <= 1 }
+								{lang code='comment'}
+							{else}
+								{{lang code='comments'} }
+							{/if}
+							(<span id="comment_count">{$vdo.comments_count}</span>)
+						</h2>
+						<span id="show-comments" class="icon-down-arrow" title="{lang code='show_comments'}"></span>
+						<span id="hide-comments" class="icon-up-arrow" title="{lang code='hide_comments'}" style="display:none;"></span>
 
-					<div id="bloc-comment" style="display:none;">
-						{include file="$style_dir/blocks/comments/add_comment.html" id=$vdo.videoid type=v}
+						<div id="bloc-comment" style="display:none;">
+							{include file="$style_dir/blocks/comments/add_comment.html" id=$vdo.videoid type=v}
 
-						<div class="userComments">
-							<ul id="userCommentsList" style="margin-left:-40px;">
-							</ul>
+							<div class="userComments">
+								<ul id="userCommentsList" style="margin-left:-40px;">
+								</ul>
+							</div>
 						</div>
 					</div>
+					{else}
+					<div align="center" class="moveL no_comments">
+						{sprintf(lang('comment_disabled_for'),strtolower(lang('video')))}
+					</div>
+					{/if}
 				</div>
-				{else}
-				<div align="center" class="moveL no_comments">
-					{lang code='comm_disabled_for_vid'}
-				</div>
-				{/if}
-			</div>
+			{/if}
 		</section>
 		<aside id="sidebar">
 			{if config("enable_advertisement") == "yes"}

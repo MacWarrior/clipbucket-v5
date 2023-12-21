@@ -85,7 +85,11 @@ if (isset($_POST['update'])) {
         , 'enable_global_age_restriction'
         , 'enable_quicklist'
         , 'hide_empty_collection'
-        , 'discord_error_log'
+        , 'display_video_comments'
+        , 'display_photo_comments'
+        , 'display_channel_comments'
+        , 'enable_collection_comments'
+        , 'display_collection_comments'
     ];
 
     $config_booleans_to_refactor = [
@@ -286,6 +290,8 @@ if (isset($_POST['update'])) {
         'enable_user_dob_edition',
         'enable_blur_restricted_content',
         'enable_global_age_restriction',
+        'enable_collection_comments',
+        'display_collection_comments',
 
         'thumb_width',
         'thumb_height',
@@ -354,8 +360,9 @@ if (isset($_POST['update'])) {
         'cache_password',
 
         'hide_empty_collection',
-        'discord_error_log',
-        'discord_webhook_url'
+        'display_video_comments',
+        'display_photo_comments',
+        'display_channel_comments'
     ];
 
     foreach ($opt_list as $optl) {
@@ -414,6 +421,18 @@ if (isset($_POST['update'])) {
         'photo_med_height',
     ];
 
+    if (empty($_POST['display_video_comments']) || $_POST['display_video_comments'] == 'no') {
+        $_POST['video_comments'] = '0';
+    }
+    if (empty($_POST['display_photo_comments']) || $_POST['display_photo_comments'] == 'no') {
+        $_POST['photo_comments'] = '0';
+    }
+    if (empty($_POST['display_channel_comments']) || $_POST['display_channel_comments'] == 'no') {
+        $_POST['channel_comments'] = '0';
+    }
+    if (empty($_POST['display_collection_comments']) || $_POST['display_collection_comments'] == 'no') {
+        $_POST['collection_comments'] = '0';
+    }
     foreach ($rows as $field) {
         $value = ($_POST[$field]);
         if (in_array($field, $num_array)) {
