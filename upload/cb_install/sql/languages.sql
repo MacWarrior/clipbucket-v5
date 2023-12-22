@@ -1024,6 +1024,7 @@ VALUES
        ('enable_collection_comments'),
        ('display_collection_comments'),
        ('dev_mode'),
+       ('dev'),
        ('discord_error_log'),
        ('discord_webhook_url'),
        ('discord_webhook_url_invalid');
