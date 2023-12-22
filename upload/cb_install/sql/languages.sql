@@ -1022,4 +1022,5 @@ VALUES
        ('comment_disabled_for'),
        ('enable_collection_comments'),
        ('display_collection_comments'),
-       ('dev_mode');
+       ('dev_mode'),
+       ('dev');
