@@ -1,5 +1,145 @@
 <?php
 
+class Category
+{
+    private static $category;
+    private $tablename = '';
+    private $fields = [];
+
+    private $typeNamesByIds = [];
+    public function __construct()
+    {
+        $this->tablename = 'categories';
+        $this->fields = [
+            'category_id'
+            ,'parent_id'
+            ,'id_category_type'
+            ,'category_name'
+            ,'category_order'
+            ,'category_desc'
+            ,'date_added'
+            ,'category_thumb'
+            ,'is_default'
+        ];
+        $this->typeNamesByIds = array_column(self::getAllCategoryTypes(), 'name', 'id_category_type');
+    }
+
+    /**
+     * @param $name
+     * @return array|mixed|null
+     */
+    public function getIdsCategoriesType($name = '')
+    {
+        if (!empty($name)) {
+            return array_search($name, $this->typeNamesByIds);
+        }
+        return $this->typeNamesByIds;
+    }
+
+    public static function getInstance(): self
+    {
+        if( empty(self::$category) ){
+            self::$category = new self();
+        }
+        return self::$category;
+    }
+
+    public static function getAllCategoryTypes()
+    {
+        return Clipbucket_db::getInstance()->_select('Select * from ' . cb_sql_table('categories_type'));
+    }
+
+    private function getAllFields(): array
+    {
+        return array_map(function($field) {
+            return $this->tablename . '.' . $field;
+        }, $this->fields);
+    }
+
+    public function getAll(array $params = [])
+    {
+        $param_category_id = $params['category_id'] ?? false;
+        $param_category_type = $params['category_type'] ?? false;
+        $param_search = $params['search'] ?? false;
+
+        $param_condition = $params['condition'] ?? false;
+        $param_limit = $params['limit'] ?? false;
+        $param_order = $params['order'] ?? false;
+        $param_group = $params['group'] ?? false;
+        $param_having = $params['having'] ?? false;
+        $param_count = $params['count'] ?? false;
+        $param_first_only = $params['first_only'] ?? false;
+
+        $conditions = [];
+
+        if ($param_category_id) {
+            $conditions[] = 'category_id = '. mysql_clean($param_category_id);
+        }
+        if ($param_category_type) {
+            $conditions[] = 'id_category_type = '. mysql_clean($param_category_type);
+        }
+
+        if( $param_condition ){
+            $conditions[] = '(' . $param_condition . ')';
+        }
+
+        if( $param_group ){
+            $group[] = $param_group;
+        }
+
+        $having = '';
+        if( $param_having ){
+            $having = ' HAVING '.$param_having;
+        }
+
+        $order = '';
+        if( $param_order ){
+            $order = ' ORDER BY '.$param_order;
+        }
+
+        $limit = '';
+        if( $param_limit ){
+            $limit = ' LIMIT '.$param_limit;
+        }
+
+        if( $param_count ){
+            $select = ['COUNT(category.category_id) AS count'];
+        } else {
+            $select = $this->getAllFields();
+        }
+
+        $join = [];
+        $group = [];
+
+        $sql ='SELECT ' . implode(', ', $select) . '
+                FROM ' . cb_sql_table('categories') . ' '
+            . implode(' ', $join)
+            . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions))
+            . (empty($group) ? '' : ' GROUP BY ' . implode(',', $group))
+            . $having
+            . $order
+            . $limit;
+        $result = Clipbucket_db::getInstance()->_select($sql);
+
+        if( $param_count ){
+            if( empty($result) ){
+                return 0;
+            }
+            return $result[0]['count'];
+        }
+
+        if( !$result ){
+            return false;
+        }
+
+        if( $param_first_only ){
+            return $result[0];
+        }
+
+        return $result;
+    }
+
+}
 abstract class CBCategory
 {
     var $cat_tbl = ''; //Name of category Table

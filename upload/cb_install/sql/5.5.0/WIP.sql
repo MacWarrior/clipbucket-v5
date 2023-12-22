@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}categories`
     `category_desc`    TEXT              NULL     DEFAULT NULL,
     `date_added`       DATETIME          NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `category_thumb`   MEDIUMTEXT        NOT NULL,
-    `isdefault`        ENUM ('yes','no') NOT NULL DEFAULT 'no'
+    `is_default`        ENUM ('yes','no') NOT NULL DEFAULT 'no'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE utf8mb4_unicode_520_ci;
@@ -110,8 +110,8 @@ SET @type_category = (
     FROM `{tbl_prefix}categories_type`
     WHERE name LIKE 'collection'
 );
-INSERT IGNORE INTO `{tbl_prefix}categories` (id_category_type, parent_id, category_name, category_order, category_desc, date_added, category_thumb, isdefault) (
-    SELECT @type_category, CASE WHEN parent_id = 0 THEN NULL ELSE parent_id END, category_name, category_order, category_desc, date_added, category_thumb, isdefault
+INSERT IGNORE INTO `{tbl_prefix}categories` (id_category_type, parent_id, category_name, category_order, category_desc, date_added, category_thumb, is_default) (
+    SELECT @type_category, CASE WHEN parent_id = 0 THEN NULL ELSE parent_id END, category_name, category_order, category_desc, date_added, category_thumb, is_default
     FROM `{tbl_prefix}collection_categories`
     WHERE 1
 );
@@ -135,8 +135,8 @@ SET @id_categ = (
     WHERE 1
 );
 
-INSERT IGNORE INTO `{tbl_prefix}categories` (id_category_type, parent_id, category_name, category_order, category_desc, date_added, category_thumb, isdefault) (
-    SELECT @type_category, CASE WHEN parent_id != 0 THEN parent_id + @id_categ ELSE NULL END, category_name, category_order, category_desc, date_added, category_thumb, isdefault
+INSERT IGNORE INTO `{tbl_prefix}categories` (id_category_type, parent_id, category_name, category_order, category_desc, date_added, category_thumb, is_default) (
+    SELECT @type_category, CASE WHEN parent_id != 0 THEN parent_id + @id_categ ELSE NULL END, category_name, category_order, category_desc, date_added, category_thumb, is_default
     FROM `{tbl_prefix}video_categories`
     WHERE 1
 );
@@ -161,8 +161,8 @@ SET @id_categ = (
     WHERE 1
 );
 
-INSERT IGNORE INTO `{tbl_prefix}categories` (id_category_type, parent_id, category_name, category_order, category_desc, date_added, category_thumb, isdefault) (
-    SELECT @type_category, NULL, category_name, category_order, category_desc, date_added, category_thumb, isdefault
+INSERT IGNORE INTO `{tbl_prefix}categories` (id_category_type, parent_id, category_name, category_order, category_desc, date_added, category_thumb, is_default) (
+    SELECT @type_category, NULL, category_name, category_order, category_desc, date_added, category_thumb, is_default
     FROM `{tbl_prefix}user_categories`
     WHERE 1
 );

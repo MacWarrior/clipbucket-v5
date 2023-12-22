@@ -41,7 +41,9 @@ if (isset($_GET['delete_category'])) {
     $userquery->delete_category($_GET['delete_category']);
 }
 
-$cats = $userquery->get_categories();
+$cats = Category::getInstance()->getAll([
+    'category_type' => Category::getInstance()->getIdsCategoriesType('user')
+]);
 //Updating Category Order
 if (isset($_POST['update_order'])) {
     foreach ($cats as $cat) {
