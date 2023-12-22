@@ -50,7 +50,6 @@ CREATE TABLE `{tbl_prefix}collections` (
   `collection_id_parent` BIGINT(25) NULL DEFAULT NULL,
   `collection_name` varchar(225) NOT NULL,
   `collection_description` text NOT NULL,
-  `category` varchar(200) NOT NULL,
   `userid` int(10) NOT NULL,
   `views` bigint(20) NOT NULL DEFAULT 0,
   `date_added` datetime NOT NULL,
@@ -66,17 +65,6 @@ CREATE TABLE `{tbl_prefix}collections` (
   `active` varchar(4) NOT NULL,
   `public_upload` varchar(4) NOT NULL,
   `type` varchar(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
-
-CREATE TABLE `{tbl_prefix}collection_categories` (
-  `category_id` int(255) NOT NULL,
-  `parent_id` int(255) NOT NULL DEFAULT 1,
-  `category_name` varchar(30) NOT NULL DEFAULT '',
-  `category_order` int(5) NOT NULL DEFAULT 0,
-  `category_desc` text NULL DEFAULT NULL,
-  `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `category_thumb` mediumtext NOT NULL,
-  `isdefault` enum('yes','no') NOT NULL DEFAULT 'no'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}collection_items` (
@@ -267,7 +255,6 @@ CREATE TABLE `{tbl_prefix}playlists` (
   `playlist_name` varchar(225) NOT NULL DEFAULT '',
   `userid` int(11) NOT NULL DEFAULT 0,
   `playlist_type` varchar(10) NOT NULL DEFAULT '',
-  `category` enum('normal','favorites','likes','history','quicklist','watch_later') NOT NULL DEFAULT 'normal',
   `description` mediumtext NOT NULL,
   `tags` mediumtext NOT NULL,
   `privacy` enum('public','private','unlisted') NOT NULL DEFAULT 'public',
@@ -350,7 +337,6 @@ CREATE TABLE `{tbl_prefix}template` (
 
 CREATE TABLE `{tbl_prefix}users` (
   `userid` bigint(20) NOT NULL,
-  `category` int(20) NOT NULL DEFAULT 0,
   `featured_video` mediumtext NOT NULL,
   `username` text NOT NULL,
   `user_session_key` varchar(32) NOT NULL,
@@ -399,16 +385,6 @@ CREATE TABLE `{tbl_prefix}users` (
   `album_privacy` enum('public','private','friends') NOT NULL DEFAULT 'private',
   `likes` int(11) NOT NULL DEFAULT 0,
   `is_live` enum('yes','no') NOT NULL DEFAULT 'no'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
-
-CREATE TABLE `{tbl_prefix}user_categories` (
-  `category_id` int(225) NOT NULL,
-  `category_name` varchar(30) NOT NULL DEFAULT '',
-  `category_order` int(5) NOT NULL DEFAULT 1,
-  `category_desc` text NOT NULL,
-  `date_added` datetime NOT NULL,
-  `category_thumb` mediumtext NOT NULL,
-  `isdefault` enum('yes','no') NOT NULL DEFAULT 'no'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}user_levels` (
@@ -529,7 +505,6 @@ CREATE TABLE `{tbl_prefix}video` (
   `file_type` VARCHAR(3) NULL DEFAULT NULL,
   `file_directory` varchar(25) NOT NULL DEFAULT '',
   `description` text DEFAULT NULL,
-  `category` VARCHAR(200) NULL DEFAULT NULL,
   `broadcast` varchar(10) NOT NULL DEFAULT '',
   `location` mediumtext DEFAULT NULL,
   `datecreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -567,17 +542,6 @@ CREATE TABLE `{tbl_prefix}video` (
   `bits_color` tinyint(4) DEFAULT NULL,
   `subscription_email` enum('pending','sent') NOT NULL DEFAULT 'pending',
   `age_restriction` INT DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
-
-CREATE TABLE `{tbl_prefix}video_categories` (
-  `category_id` int(225) NOT NULL,
-  `parent_id` int(255) NOT NULL DEFAULT 0,
-  `category_name` varchar(30) NOT NULL DEFAULT '',
-  `category_order` int(5) NOT NULL DEFAULT 1,
-  `category_desc` text NULL DEFAULT NULL,
-  `date_added` datetime NULL DEFAULT NULL,
-  `category_thumb` mediumtext NOT NULL,
-  `isdefault` enum('yes','no') NOT NULL DEFAULT 'no'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}video_favourites` (
@@ -660,9 +624,6 @@ ALTER TABLE `{tbl_prefix}collections`
   ADD KEY `featured` (`featured`),
   ADD INDEX(`collection_id_parent`),
   ADD FULLTEXT KEY `collection_name` (`collection_name`);
-
-ALTER TABLE `{tbl_prefix}collection_categories`
-  ADD PRIMARY KEY (`category_id`);
 
 ALTER TABLE `{tbl_prefix}collection_items`
   ADD PRIMARY KEY (`ci_id`);
@@ -756,9 +717,6 @@ ALTER TABLE `{tbl_prefix}users`
   ADD KEY `username` (`username`(255),`userid`),
   ADD FULLTEXT KEY `username_fulltext` (`username`);
 
-ALTER TABLE `{tbl_prefix}user_categories`
-  ADD PRIMARY KEY (`category_id`);
-
 ALTER TABLE `{tbl_prefix}user_levels`
   ADD PRIMARY KEY (`user_level_id`);
 
@@ -790,9 +748,6 @@ ALTER TABLE `{tbl_prefix}video`
 ALTER TABLE `{tbl_prefix}video`
   ADD FULLTEXT KEY `title` (`title`);
 
-ALTER TABLE `{tbl_prefix}video_categories`
-  ADD PRIMARY KEY (`category_id`);
-
 ALTER TABLE `{tbl_prefix}video_favourites`
   ADD PRIMARY KEY (`fav_id`);
 
@@ -820,9 +775,6 @@ ALTER TABLE `{tbl_prefix}ads_placements`
 
 ALTER TABLE `{tbl_prefix}collections`
   MODIFY `collection_id` bigint(25) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `{tbl_prefix}collection_categories`
-  MODIFY `category_id` int(255) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `{tbl_prefix}collection_items`
   MODIFY `ci_id` bigint(20) NOT NULL AUTO_INCREMENT;
@@ -896,9 +848,6 @@ ALTER TABLE `{tbl_prefix}template`
 ALTER TABLE `{tbl_prefix}users`
   MODIFY `userid` bigint(20) NOT NULL AUTO_INCREMENT;
 
-ALTER TABLE `{tbl_prefix}user_categories`
-  MODIFY `category_id` int(225) NOT NULL AUTO_INCREMENT;
-
 ALTER TABLE `{tbl_prefix}user_levels`
   MODIFY `user_level_id` int(20) NOT NULL AUTO_INCREMENT;
 
@@ -916,9 +865,6 @@ ALTER TABLE `{tbl_prefix}user_profile`
 
 ALTER TABLE `{tbl_prefix}video`
   MODIFY `videoid` bigint(20) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `{tbl_prefix}video_categories`
-  MODIFY `category_id` int(225) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `{tbl_prefix}video_favourites`
   MODIFY `fav_id` int(11) NOT NULL AUTO_INCREMENT;
@@ -1092,3 +1038,74 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}playlist_tags`
 ALTER TABLE `{tbl_prefix}playlist_tags`
   ADD CONSTRAINT `playlist_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   ADD CONSTRAINT `playlist_tags_playlist` FOREIGN KEY (`id_playlist`) REFERENCES `{tbl_prefix}playlists` (`playlist_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}categories`
+(
+    `category_id`      INT(255)          NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `parent_id`        INT(255)          NULL DEFAULT NULL,
+    `id_category_type` INT(255)          NOT NULL,
+    `category_name`    VARCHAR(30)       NOT NULL DEFAULT '',
+    `category_order`   INT(5)            NOT NULL DEFAULT 0,
+    `category_desc`    TEXT              NULL     DEFAULT NULL,
+    `date_added`       DATETIME          NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `category_thumb`   MEDIUMTEXT        NOT NULL,
+    `isdefault`        ENUM ('yes','no') NOT NULL DEFAULT 'no'
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE utf8mb4_unicode_520_ci;
+ALTER TABLE `{tbl_prefix}categories`
+    ADD CONSTRAINT `categorie_parent` FOREIGN KEY (`parent_id`) REFERENCES `{tbl_prefix}categories` (`category_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}categories_type`
+(
+    `id_category_type` INT         NOT NULL AUTO_INCREMENT,
+    `name`             VARCHAR(32) NOT NULL,
+    PRIMARY KEY (`id_category_type`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}categories`
+    ADD CONSTRAINT `categorie_type` FOREIGN KEY (`id_category_type`) REFERENCES `{tbl_prefix}categories_type` (`id_category_type`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}videos_categories`
+(
+    `id_video`    BIGINT NOT NULL,
+    `id_category` INT    NOT NULL,
+    PRIMARY KEY (`id_video`, `id_category`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}videos_categories`
+    ADD CONSTRAINT `video_categories_category` FOREIGN KEY (`id_category`) REFERENCES `{tbl_prefix}categories` (`category_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}videos_categories`
+    ADD CONSTRAINT `video_categories_video` FOREIGN KEY (`id_video`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}photos_categories`
+(
+    `id_photo`    BIGINT NOT NULL,
+    `id_category` INT    NOT NULL,
+    PRIMARY KEY (`id_photo`, `id_category`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}photos_categories`
+    ADD CONSTRAINT `photo_categories_category` FOREIGN KEY (`id_category`) REFERENCES `{tbl_prefix}categories` (`category_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}photos_categories`
+    ADD CONSTRAINT `photo_categories_photo` FOREIGN KEY (`id_photo`) REFERENCES `{tbl_prefix}photos` (`photo_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}collections_categories`
+(
+    `id_collection` BIGINT NOT NULL,
+    `id_category`   INT    NOT NULL,
+    PRIMARY KEY (`id_collection`, `id_category`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}collections_categories`
+    ADD CONSTRAINT `collection_categories_category` FOREIGN KEY (`id_category`) REFERENCES `{tbl_prefix}categories` (`category_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}collections_categories`
+    ADD CONSTRAINT `collection_categories_collection` FOREIGN KEY (`id_collection`) REFERENCES `{tbl_prefix}collections` (`collection_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
