@@ -1420,8 +1420,8 @@ class CBPhotos
      */
     function watermark_file()
     {
-        if (file_exists(BASEDIR . '/images/photo_watermark.png')) {
-            return '/images/photo_watermark.png';
+        if (file_exists(DirPath::get('images') . 'photo_watermark.png')) {
+            return DirPath::getUrl('images') . 'photo_watermark.png';
         }
         return false;
     }
@@ -1759,7 +1759,7 @@ class CBPhotos
         if (empty($file)) {
             e(lang('no_watermark_found'));
         } else {
-            $oldW = BASEDIR . '/images/photo_watermark.png';
+            $oldW = DirPath::get('images') . 'photo_watermark.png';
             if (file_exists($oldW)) {
                 unset($oldW);
             }
@@ -1769,8 +1769,8 @@ class CBPhotos
             $type = $info[2];
 
             if ($type == 3) {
-                if (move_uploaded_file($file['tmp_name'], BASEDIR . '/images/photo_watermark.png')) {
-                    $wFile = BASEDIR . '/images/photo_watermark.png';
+                if (move_uploaded_file($file['tmp_name'], DirPath::get('images') . 'photo_watermark.png')) {
+                    $wFile = DirPath::get('images') . 'photo_watermark.png';
                     if ($width > $this->max_watermark_width) {
                         $this->createThumb($wFile, $wFile, 'png', $this->max_watermark_width);
                     }

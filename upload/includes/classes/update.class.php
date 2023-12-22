@@ -235,7 +235,7 @@ class Update
             return false;
         }
 
-        $folders = glob(DIR_SQL . '[0-9]**', GLOB_ONLYDIR);
+        $folders = glob(DirPath::get('sql') . '[0-9]**', GLOB_ONLYDIR);
         $folder_version = '';
         foreach ($folders as $folder) {
             $folder_cur_version = basename($folder);
@@ -278,7 +278,7 @@ class Update
         }
 
         //Get folders superior or equal to current version
-        $folders = array_filter(glob(DIR_SQL . '[0-9]**', GLOB_ONLYDIR)
+        $folders = array_filter(glob(DirPath::get('sql') . '[0-9]**', GLOB_ONLYDIR)
             , function ($dir) use ($version) {
                 return str_replace('.', '', basename($dir)) >= $version;
             });
@@ -286,7 +286,7 @@ class Update
         $files = [];
 
         if ($version == '4.2-RC1-premium') {
-            $files[] = DIR_SQL . 'commercial' . DIRECTORY_SEPARATOR . '00001.sql';
+            $files[] = DirPath::get('sql') . 'commercial' . DIRECTORY_SEPARATOR . '00001.sql';
         }
 
         foreach ($folders as $folder) {

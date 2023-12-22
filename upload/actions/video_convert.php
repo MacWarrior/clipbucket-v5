@@ -131,11 +131,11 @@ if (!empty($_filename)) {
     }
 
     if (stristr(PHP_OS, 'WIN')) {
-        exec(php_path() . ' -q ' . BASEDIR . '/actions/verify_converted_videos.php ' . $queue_details['cqueue_name']);
+        exec(php_path() . ' -q ' . DirPath::get('actions') . 'verify_converted_videos.php ' . $queue_details['cqueue_name']);
     } elseif (stristr(PHP_OS, 'darwin')) {
-        exec(php_path() . ' -q ' . BASEDIR . '/actions/verify_converted_videos.php ' . $queue_details['cqueue_name'] . ' </dev/null >/dev/null &');
+        exec(php_path() . ' -q ' . DirPath::get('actions') . 'verify_converted_videos.php ' . $queue_details['cqueue_name'] . ' </dev/null >/dev/null &');
     } else {
-        exec(php_path() . ' -q ' . BASEDIR . '/actions/verify_converted_videos.php ' . $queue_details['cqueue_name'] . ' &> /dev/null &');
+        exec(php_path() . ' -q ' . DirPath::get('actions') . 'verify_converted_videos.php ' . $queue_details['cqueue_name'] . ' &> /dev/null &');
     }
 
     switch ($ext) {

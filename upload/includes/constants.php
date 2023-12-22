@@ -5,6 +5,12 @@ class DirPath
     {
         $root_directory = dirname(__DIR__) . DIRECTORY_SEPARATOR;
         switch($dir_name){
+            default:
+            case 'root':
+                $path = $root_directory;
+                $url = '';
+                break;
+
             case 'files':
             case 'images':
             case 'player':
@@ -12,6 +18,10 @@ class DirPath
             case 'admin_area':
             case 'styles':
             case 'cache':
+            case 'js':
+            case 'css':
+            case 'actions':
+            case 'changelog':
                 $path = $root_directory . $dir_name;
                 $url = $dir_name;
                 break;
@@ -35,8 +45,19 @@ class DirPath
             case 'category_thumbs':
             case 'collection_thumbs':
             case 'playlist_covers':
+            case 'icons':
                 $path = $root_directory . 'images' . DIRECTORY_SEPARATOR . $dir_name;
                 $url = 'images/' . $dir_name;
+                break;
+
+            case 'userfeeds':
+                $path = $root_directory . 'cache' . DIRECTORY_SEPARATOR . $dir_name;
+                $url = 'cache/' . $dir_name;
+                break;
+
+            case 'sql':
+                $path = $root_directory . 'cb_install' . DIRECTORY_SEPARATOR . $dir_name;
+                $url = 'cb_install/' . $dir_name;
                 break;
         }
 
@@ -53,9 +74,6 @@ class DirPath
 }
 define("BASEDIR", dirname(__DIR__));
 
-const FILES_DIR = BASEDIR . DIRECTORY_SEPARATOR . 'files';
-const TEMP_DIR = FILES_DIR . DIRECTORY_SEPARATOR . 'temp';
-const PLUG_DIR = BASEDIR . DIRECTORY_SEPARATOR . 'plugins';
 
 const TEMPLATEFOLDER = 'styles';
 
@@ -69,17 +87,3 @@ const IN_CLIPBUCKET = true;
 const COOKIE_TIMEOUT = 86400 * 1; // 1
 const GARBAGE_TIMEOUT = COOKIE_TIMEOUT;
 const REMBER_DAYS = 7;
-
-const JS_URL = '/js';
-const CSS_URL = '/css';
-
-const PLAYER_URL = '/player';
-
-# ADVANCE CACHING
-const CACHE_DIR = BASEDIR . '/cache';
-
-# User Feeds
-const USER_FEEDS_DIR = CACHE_DIR . '/userfeeds';
-
-
-const PLUG_URL = '/plugins';

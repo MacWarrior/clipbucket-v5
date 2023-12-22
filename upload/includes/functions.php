@@ -3019,7 +3019,7 @@ function include_js($params)
         if (is_array($type)) {
             foreach ($type as $t) {
                 if ($t == THIS_PAGE) {
-                    return '<script src="' . JS_URL . '/' . $file . '" type="text/javascript"></script>';
+                    return '<script src="' . DirPath::getUrl('js') . $file . '" type="text/javascript"></script>';
                 }
             }
         }
@@ -3027,7 +3027,7 @@ function include_js($params)
         switch ($type) {
             default:
             case 'global:':
-                $url = JS_URL . '/';
+                $url = DirPath::getUrl('js');
                 break;
             case 'plugin':
                 $url = DirPath::getUrl('plugins');
@@ -3056,7 +3056,8 @@ function include_css($params)
         if (is_array($type)) {
             foreach ($type as $t) {
                 if ($t == THIS_PAGE) {
-                    return '<link rel="stylesheet" href="' . CSS_URL . '/' . $file . '" ">';
+                    error_log(DirPath::getUrl('css') . $file);
+                    return '<link rel="stylesheet" href="' . DirPath::getUrl('css') . $file . '" ">';
                 }
             }
         }
@@ -3064,7 +3065,7 @@ function include_css($params)
         switch ($type) {
             default:
             case 'global:':
-                $url = CSS_URL . '/';
+                $url = DirPath::getUrl('css');
                 break;
             case 'plugin':
                 $url = DirPath::getUrl('plugins');

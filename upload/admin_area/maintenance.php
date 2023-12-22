@@ -100,7 +100,7 @@ if (@$_GET['mode'] == 'remove_activity_feed') {
     while ($i < $total_users) {
         if ($users[$i]['userid']) {
             $deleted = 0;
-            $user_feed_dir = USER_FEEDS_DIR . DIRECTORY_SEPARATOR . $users[$i]['userid'];
+            $user_feed_dir = DirPath::getUrl('userfeeds') . $users[$i]['userid'];
             if ($user_feed_dir) {
                 $feeds = glob($user_feed_dir . '/*.feed');
                 if ($feeds) {

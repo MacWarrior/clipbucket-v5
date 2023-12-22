@@ -1,13 +1,13 @@
 <?php
 define('BASEDIR', dirname(__FILE__, 2));
 
-if (!file_exists(BASEDIR . '/files/temp/install.me')) {
-    if (!file_exists(BASEDIR . '/files/temp/install.me.not') && !file_exists(BASEDIR . '/files/temp/development.dev')) {
+if (!file_exists(DirPath::get('temp') . 'install.me')) {
+    if (!file_exists(DirPath::get('temp') . 'install.me.not') && !file_exists(DirPath::get('temp') . 'development.dev')) {
         header('Location: //' . $_SERVER['SERVER_NAME']);
         die();
     }
 
-    if (!file_exists(BASEDIR . '/files/temp/install.me.not')) {
+    if (!file_exists(DirPath::get('temp') . 'install.me.not')) {
         $mode = 'lock';
     }
 }

@@ -123,13 +123,8 @@ try {
 Language::getInstance()->init();
 $arrayTranslations = Language::getInstance()->loadTranslations(Language::getInstance()->lang_id);
 $ClipBucket = $Cbucket = new ClipBucket();
-//define('BASEDIR', $Cbucket->BASEDIR);
-const DIR_SQL = BASEDIR . DIRECTORY_SEPARATOR . 'cb_install' . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR;
 
 $Cbucket->cbinfo = ['version' => VERSION, 'state' => STATE, 'rev' => REV];
-if (!file_exists(BASEDIR . '/index.php')) {
-    die('Basedir is incorrect, please set the correct basedir value in \'config\' table');
-}
 $baseurl = $row['baseurl'];
 
 if (is_ssl()) {
@@ -312,7 +307,7 @@ Assign('NEED_UPDATE', NEED_UPDATE);
 
 # Assigning Smarty Tags & Values
 Assign('PHP_PATH', PHP_PATH);
-Assign('js', JS_URL);
+Assign('js', DirPath::getUrl('js'));
 Assign('title', TITLE);
 Assign('slogan', SLOGAN);
 Assign('category_thumbs', DirPath::get('category_thumbs'));
@@ -321,7 +316,7 @@ Assign('video_thumbs', DirPath::getUrl('thumbs'));
 Assign('email_verification', EMAIL_VERIFICATION);
 Assign('languages', (isset($languages)) ? $languages : false);
 
-Assign('PLUG_URL', PLUG_URL);
+Assign('PLUG_URL', DirPath::getUrl('plugins'));
 
 #Remote and Embed
 Assign('remoteUpload', $row['remoteUpload']);

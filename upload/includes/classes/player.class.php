@@ -130,11 +130,11 @@ class CBPlayer
     {
         $path = $player . '/preview.';
         $exts = ['png', 'jpg', 'gif'];
-        $thumb_path = '/images/icons/no_thumb_player.png';
+        $thumb_path = DirPath::getUrl('icons') . 'no_thumb_player.png';
         foreach ($exts as $ext) {
             $file = DirPath::get('player') . $path . $ext;
             if (file_exists($file)) {
-                $thumb_path = PLAYER_URL . '/' . $path . $ext;
+                $thumb_path = DirPath::getUrl('player') . $path . $ext;
                 break;
             }
         }
@@ -145,7 +145,7 @@ class CBPlayer
      * Function used to set player for ClipBucket
      *
      * @param $details
-     * @throws \Exception
+     * @throws Exception
      */
     function set_player($details)
     {

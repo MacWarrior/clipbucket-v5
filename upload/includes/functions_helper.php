@@ -27,10 +27,10 @@ function config($input)
 function website_logo(): string
 {
     $logo_file = config('player_logo_file');
-    if ($logo_file && file_exists(BASEDIR . '/images/' . $logo_file)) {
-        return '/images/' . $logo_file;
+    if ($logo_file && file_exists(DirPath::get('images') . $logo_file)) {
+        return DirPath::getUrl('images') . $logo_file;
     }
-    return '/images/logo.png';
+    return DirPath::getUrl('images') . 'logo.png';
 }
 
 /**

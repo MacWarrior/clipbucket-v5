@@ -969,7 +969,7 @@ class Upload
             $ext = getExt($file['name']);
             $file_name = 'plaery-logo';
             if ($imgObj->ValidateImage($file['tmp_name'], $ext)) {
-                $file_path = BASEDIR . '/images/' . $file_name . '.' . $ext;
+                $file_path = DirPath::get('images') . $file_name . '.' . $ext;
                 if (file_exists($file_path)) {
                     if (!unlink($file_path)) {
                         e("Unable to remove '$file_path', please chmod it to 0777");

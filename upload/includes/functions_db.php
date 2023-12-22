@@ -236,7 +236,7 @@ function getRevisions(): array
         function ($dir) {
             return basename($dir);
         }
-        , array_filter(glob(DIR_SQL . '*', GLOB_ONLYDIR)
+        , array_filter(glob(DirPath::get('sql') . '*', GLOB_ONLYDIR)
         , function ($dir) {
             return basename($dir) >= '5.3.0' && basename($dir) <= '5.5.0';
         }
@@ -249,7 +249,7 @@ function getRevisions(): array
         '5.2.0'           => '1',
     ];
     foreach ($versions as $version) {
-        $changelog_url = BASEDIR . DIRECTORY_SEPARATOR . 'changelog' . DIRECTORY_SEPARATOR . str_replace('.', '', $version) . '.json';
+        $changelog_url = DirPath::get('changelog') . str_replace('.', '', $version) . '.json';
         $changelog = json_decode(file_get_contents($changelog_url, false), true);
         //after revision 168, version system should be already ready
         $revisions[$version] = min($changelog['revision'], 168);

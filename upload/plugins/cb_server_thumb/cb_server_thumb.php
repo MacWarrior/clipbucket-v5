@@ -4,12 +4,11 @@
     Description: Increase photos thumbs quality of default theme
     Author: Mohammad Shoaib & MacWarrior
     Website: https://github.com/MacWarrior/clipbucket-v5/
-    Version: 2.0.0
+    Version: 2.0.1
     ClipBucket Version: 5.5.0
 */
 const DEFAULT_WIDTH = 200;
 const DEFAULT_HEIGHT = 120;
-const CB_SERVER_THUMB_URL = PLUG_URL . '/cb_server_thumb';
 
 $__resize_thumbs = true;
 
@@ -36,7 +35,7 @@ function get_server_img($params)
     $w = DEFAULT_WIDTH;
     $h = DEFAULT_HEIGHT;
 
-    $timthumb_path = CB_SERVER_THUMB_URL . '/timthumb.php?src=';
+    $timthumb_path = DirPath::getUrl('plugins') . 'cb_server_thumb/timthumb.php?src=';
 
     $details = $params['details'];
     $output = $params['output'];

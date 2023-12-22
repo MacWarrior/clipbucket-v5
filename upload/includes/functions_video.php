@@ -1572,7 +1572,7 @@ function reConvertVideos($data = '')
             remove_video_files($vdetails);
 
             $logFile = DirPath::get('logs') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR . $vdetails['file_name'] . '.log';
-            exec(php_path() . ' -q ' . BASEDIR . "/actions/video_convert.php {$conversion_filepath} {$vdetails['file_name']} {$vdetails['file_directory']} {$logFile} '' 'reconvert' > /dev/null &");
+            exec(php_path() . ' -q ' . DirPath::get('actions')  . "video_convert.php {$conversion_filepath} {$vdetails['file_name']} {$vdetails['file_directory']} {$logFile} '' 'reconvert' > /dev/null &");
 
             setVideoStatus($daVideo, 'started', true);
         }
@@ -1781,7 +1781,7 @@ function clean_orphan_files($file)
             break;
         case 'userfeeds':
             unlink($file['data']);
-            $stop_path = USER_FEEDS_DIR;
+            $stop_path = DirPath::getUrl('userfeeds');
             break;
     }
     remove_empty_directory(dirname($file['data']), $stop_path);
