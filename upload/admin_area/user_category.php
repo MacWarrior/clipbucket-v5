@@ -13,8 +13,7 @@ $breadcrumb[1] = ['title' => lang('manage_categories'), 'url'   => ADMIN_BASEURL
 
 //Making Category as Default
 if (isset($_GET['make_default'])) {
-    $cid = mysql_clean($_GET['make_default']);
-    $userquery->make_default_category($cid);
+    Category::getInstance()->makeDefault('user', $_GET['make_default']);
 }
 
 if (!empty($_POST)) {

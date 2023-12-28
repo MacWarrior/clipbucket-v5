@@ -23,8 +23,8 @@
             <div class="col-md-6">
                 <label>Make Default Category</label>
                 <select class="form-control" name="default_categ">
-                    <option class="form-control" name="is_default" id="default_0" {if $cat_details.isdefault=='yes'}selected{/if} >{lang code='yes'}</option>
-                    <option class="form-control" name="is_default" id="default_1" {if $cat_details.isdefault=='no' || $cat_details.isdefault==''}selected{/if}>{lang code='no'}</option>
+                    <option class="form-control" name="is_default" id="default_0" {if $cat_details.is_default=='yes'}selected{/if} >{lang code='yes'}</option>
+                    <option class="form-control" name="is_default" id="default_1" {if $cat_details.is_default=='no' || $cat_details.is_default==''}selected{/if}>{lang code='no'}</option>
                 </select>
             </div>
         </div>
@@ -75,7 +75,7 @@
                 <input name="category_order[{$category[list].category_id}]" type="text" id="order" style="border:1px solid #999; padding:2px; width:30px" value="{$category[list].category_order}" size="5" maxlength="5"/>
             </td>
             <td>{if $category[list].category_desc}{display_clean($category[list].category_desc)}{else}<em>N/A</em>{/if}</td>
-            <td>{$category[list].isdefault}</td>
+            <td>{$category[list].is_default}</td>
             <td>
                 <div class="lead dropdown">
                     <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">Options <i class="caret"></i></button>

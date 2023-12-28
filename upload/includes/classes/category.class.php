@@ -269,6 +269,30 @@ class Category
         ]);
     }
 
+    /**
+     * @param string $type
+     * @param $category_id
+     * @return false|void
+     * @throws Exception
+     */
+    public function makeDefault(string $type, $category_id)
+    {
+        $categ_type_id = $this->getIdsCategoriesType($type);
+        if (empty($categ_type_id)) {
+            e(lang('unknow_categ'));
+            return false;
+        }
+        if (!empty($this->getById($category_id))) {
+            $sql = 'UPDATE ' . cb_sql_table($this->tablename) . ' SET is_default = \'no\' WHERE id_category_type = ' . mysql_clean($categ_type_id);
+            Clipbucket_db::getInstance()->execute($sql);
+            $sql = 'UPDATE ' . cb_sql_table($this->tablename) . ' SET is_default = \'yes\' WHERE category_id = ' . mysql_clean($category_id);
+            Clipbucket_db::getInstance()->execute($sql);
+            e(lang('cat_set_default_ok'), 'm');
+        } else {
+            e(lang('cat_exist_error'));
+        }
+    }
+
 }
 abstract class CBCategory
 {
@@ -371,24 +395,6 @@ abstract class CBCategory
                     $this->add_category_thumb($cid, $_FILES['cat_thumb']);
                 }
             }
-        }
-    }
-
-    /**
-     * Function used to make category as default
-     *
-     * @param $cid
-     * @throws Exception
-     */
-    function make_default_category($cid)
-    {
-        global $db;
-        if ($this->category_exists($cid)) {
-            $db->update(tbl($this->cat_tbl), ['isdefault'], ['no'], ' isdefault=\'yes\' ');
-            $db->update(tbl($this->cat_tbl), ['isdefault'], ['yes'], ' category_id=\'' . mysql_clean($cid) . '\' ');
-            e(lang('cat_set_default_ok'), 'm');
-        } else {
-            e(lang('cat_exist_error'));
         }
     }
 
@@ -792,28 +798,6 @@ abstract class CBCategory
         return false;
     }
 
-    /**
-     * Function used to check wheather category has parent or not
-     *
-     * @param      $cid
-     * @param bool $return_parent
-     *
-     * @return array|bool
-     * @throws Exception
-     */
-    function has_parent($cid, $return_parent = false)
-    {
-        global $db;
-        $result = $db->select(tbl($this->cat_tbl), '*', ' category_id = ' . mysql_clean($cid) . ' AND parent_id != 0');
-
-        if (is_array($result) && count($result) > 0) {
-            if ($return_parent) {
-                return $this->get_parent_category($result[0]['parent_id']);
-            }
-            return true;
-        }
-        return false;
-    }
 
     /**
      * Function used to get parent categories
