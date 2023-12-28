@@ -29,7 +29,7 @@ if (isset($_GET['category'])) {
         $cbcollection->thumb_dir = 'collections';
         $cbcollection->update_category($_POST);
     }
-    $cat_details = $cbcollection->get_category($_GET['category']);
+    $cat_details = Category::getInstance()->getById($_GET['category']);
 
     assign('cat_details', $cat_details);
 

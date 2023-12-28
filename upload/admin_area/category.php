@@ -31,7 +31,7 @@ if (isset($_GET['category']) && !empty($_GET['category']) && is_numeric($_GET['c
         $cbvid->update_category($_POST);
     }
 
-    $cat_details = $cbvid->get_category($id_category);
+    $cat_details = Category::getInstance()->getById($id_category);
     $breadcrumb[2] = ['title' => 'Editing : ' . display_clean($cat_details['category_name']), 'url' => ADMIN_BASEURL . '/category.php?category=' . display_clean($id_category)];
     assign('cat_details', $cat_details);
 

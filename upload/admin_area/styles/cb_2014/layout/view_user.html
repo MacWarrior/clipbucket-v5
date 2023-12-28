@@ -1,5 +1,3 @@
-{$thecats = pullCategories('channels')}
-
 <div class="row">
     <div class="lead dropdown">
         <div class="heading clearfix">
@@ -135,13 +133,14 @@
                                             </td>
                                         </tr>
                                         {if config('enable_user_category')=='yes'}
+                                        {$thecats = getCategoryList(['type'=>'user'])}
                                         <tr>
                                             <td class="first"> <label for="category">User Category</label></td>
                                             <td class="last">
                                                 <div>
                                                     <select class="form-control" name="category" id="category">
                                                         {foreach from=$thecats item=cat}
-                                                        <option value="{$cat.category_id}" {if $cat.category_id == $u.category}selected{/if}>{$cat.category_name}</option>
+                                                        <option value="{$cat.category_id}" {if $cat.category_id == $u.id_category}selected{/if}>{$cat.category_name}</option>
                                                         {/foreach}
                                                     </select>
                                                 </div>

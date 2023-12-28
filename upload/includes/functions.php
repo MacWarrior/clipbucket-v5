@@ -586,10 +586,9 @@ function getCategoryList($params = [])
         case 'user':
         case 'u':
         case 'channels':
-            global $userquery;
-            $cats = $userquery->cbCategories($params);
+            $params['category_type']= Category::getInstance()->getIdsCategoriesType('user');
+            $cats = Category::getInstance()->getAll($params);
             break;
-
         case 'collection':
         case 'collections':
         case 'cl':
@@ -1054,16 +1053,16 @@ function convert_to_categories($input)
                 foreach ($in as $i) {
                     if (is_array($i)) {
                         foreach ($i as $info) {
-                            $cat_details = get_category($info);
+                            $cat_details = Category::getInstance()->getById($info);
                             $cat_array[] = [$cat_details['categoryid'], $cat_details['category_name']];
                         }
                     } elseif (is_numeric($i)) {
-                        $cat_details = get_category($i);
+                        $cat_details = Category::getInstance()->getById($i);
                         $cat_array[] = [$cat_details['categoryid'], $cat_details['category_name']];
                     }
                 }
             } elseif (is_numeric($in)) {
-                $cat_details = get_category($in);
+                $cat_details = Category::getInstance()->getById($in);
                 $cat_array[] = [$cat_details['categoryid'], $cat_details['category_name']];
             }
         }
@@ -1071,7 +1070,7 @@ function convert_to_categories($input)
         preg_match_all('/#([0-9]+)#/', $default['category'], $m);
         $cat_array = [$m[1]];
         foreach ($cat_array as $i) {
-            $cat_details = get_category($i);
+            $cat_details = Category::getInstance()->getById($i);
             $cat_array[] = [$cat_details['categoryid'], $cat_details['category_name']];
         }
     }
@@ -1087,19 +1086,6 @@ function convert_to_categories($input)
     }
 }
 
-/**
- * Function used to get categorie details
- * @param $id
- *
- * @return array
- * @throws Exception
- * @uses : { class : $myquery } { function : get_category }
- */
-function get_category($id): array
-{
-    global $myquery;
-    return $myquery->get_category($id);
-}
 
 /**
  * Sharing OPT displaying
