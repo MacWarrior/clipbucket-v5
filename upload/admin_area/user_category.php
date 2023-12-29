@@ -7,8 +7,14 @@ $pages->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => lang('users'), 'url'   => ''];
-$breadcrumb[1] = ['title' => lang('manage_categories'), 'url'   => ADMIN_BASEURL . '/user_category.php'];
+$breadcrumb[0] = [
+    'title' => lang('users'),
+    'url'   => ''
+];
+$breadcrumb[1] = [
+    'title' => lang('manage_categories'),
+    'url'   => ADMIN_BASEURL . '/user_category.php'
+];
 
 
 //Making Category as Default
@@ -24,7 +30,7 @@ if (!empty($_POST)) {
             'category_type' => Category::getInstance()->getIdsCategoriesType('user'),
             'condition'     => 'category_name like \'%' . mysql_clean($_POST['category_name']) . '%\'',
             'first_only'    => true
-        ])) && ($_POST['cur_name'] != $_POST['category_name']) ) {
+        ])) && ($_POST['cur_name'] != $_POST['category_name'])) {
         e(lang('add_cat_erro'));
     } elseif (!empty($_POST['category_id'])) {
         $id_category = $_POST['category_id'];
@@ -38,11 +44,8 @@ if (!empty($_POST)) {
     }
 
     if (!empty($_FILES['category_thumb']['tmp_name'])) {
-        $userquery->thumb_dir = 'users';
-        $userquery->add_category_thumb($id_category, $_FILES['category_thumb']);
+        Category::getInstance()->add_category_thumb($id_category, $_FILES['category_thumb']);
     }
-
-
 }
 $cat_details = Category::getInstance()->getAll([
     'category_type' => Category::getInstance()->getIdsCategoriesType('user'),

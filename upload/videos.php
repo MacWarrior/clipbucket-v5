@@ -12,7 +12,7 @@ if( !isSectionEnabled('videos') ){
 
 $child_ids = false;
 if ($_GET['cat'] && is_numeric($_GET['cat'])) {
-    $child_ids = Category::getInstance()->getChildrenIds($_GET['cat']);
+    $child_ids = Category::getInstance()->getChildren($_GET['cat'], false, true);
     $child_ids[] = mysql_clean($_GET['cat']);
 }
 

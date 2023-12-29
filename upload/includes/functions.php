@@ -567,9 +567,9 @@ function isValidtag($tag): bool
  */
 function getCategoryList($params = [])
 {
-    global $cats;
     $cats = '';
     $type = $params['type'];
+    $params['echo'] = $params['echo'] ?: false;
     switch ($type) {
         default:
             cb_call_functions('categoryListing', $params);
@@ -578,8 +578,11 @@ function getCategoryList($params = [])
         case 'video':
         case 'videos':
         case 'v':
-        $params['category_type']= Category::getInstance()->getIdsCategoriesType('video');
-        $cats = Category::getInstance()->getAll($params);
+            $params['category_type'] = Category::getInstance()->getIdsCategoriesType('video');
+            $cats = Category::getInstance()->getAll($params);
+            foreach ($cats as &$cat) {
+                $cat['children'] = Category::getInstance()->getChildren($cat['category_id']);
+            }
             break;
 
         case 'users':
@@ -596,6 +599,14 @@ function getCategoryList($params = [])
             $cats = $cbcollection->cbCategories($params);
             break;
     }
+    if (!empty($params['with_all'])) {
+        $cats[] = ['category_id' => 'all', 'category_name' => lang('cat_all')];
+    }
+    if (!empty($params['echo'])) {
+        echo CBvideo::getInstance()->displayDropdownCategory($cats, $params);
+        return;
+    }
+
     return $cats;
 }
 

@@ -7,6 +7,10 @@ class Category
     private $primary_key = '';
     private $fields = [];
 
+    private $cat_thumb_height = '';
+    private $cat_thumb_width = '';
+    private $default_thumb = '';
+
     private $typeNamesByIds = [];
     public function __construct()
     {
@@ -23,6 +27,9 @@ class Category
             ,'category_thumb'
             ,'is_default'
         ];
+        $this->cat_thumb_height = '125';
+        $this->cat_thumb_width = '125';
+        $this->default_thumb = 'no_thumb.jpg';
         $this->typeNamesByIds = array_column(self::getAllCategoryTypes(), 'name', 'id_category_type');
     }
 
@@ -64,6 +71,7 @@ class Category
         $param_category_type = $params['category_type'] ?? false;
         $param_category_default = $params['category_default'] ?? false;
         $param_parent_id = $params['parent_id'] ?? false;
+        $param_parent_only = $params['parent_only'] ?? false;
         $param_search = $params['search'] ?? false;
 
         $param_condition = $params['condition'] ?? false;
@@ -87,6 +95,9 @@ class Category
         }
         if ($param_parent_id !== false) {
             $conditions[] = 'parent_id = '. mysql_clean($param_parent_id);
+        }
+        if ($param_parent_only !== false) {
+            $conditions[] = 'parent_id IS NULL ';
         }
 
         if( $param_condition ){
@@ -312,20 +323,97 @@ class Category
         }
     }
 
-    public function getChildrenIds($category_id)
+    /**
+     * @param $category_id
+     * @param $multi_level bool if returned array contain children which contain their children in 'children' case, false if all result in 1 level array
+     * @param $only_id bool
+     * @return array|false|int|mixed
+     */
+    public function getChildren($category_id, $multi_level = true,$only_id = false)
     {
-        $childrenIds = $this->getAll([
+        if (empty($category_id)) {
+            return [];
+        }
+        $children = $this->getAll([
             'parent_id' => $category_id
         ]);
-        if (empty($childrenIds)) {
+        if (empty($children)) {
             return [];
         } else {
-            foreach ($childrenIds as $childrenId) {
-                $childrenIds = array_merge($childrenIds, $this->getChildrenIds($childrenId));
+            foreach ($children as &$child) {
+                $children_of_child = $this->getChildren($child['category_id'], $multi_level, $only_id);
+                if ($multi_level) {
+                    $child['children'] = $children_of_child;
+                } else {
+                    $children = array_merge($children, $children_of_child);
+                }
             }
         }
-        return $childrenIds;
+        if ($only_id) {
+            $children = array_map(function ($elem){
+                return $elem['category_id'];
+            }, $children);
+        }
+        return $children;
     }
+
+    public function getParent($category_id)
+    {
+        return $this->getAll([
+            'parent_id'  => $category_id,
+            'first_only' => true
+        ]);
+    }
+
+    public function add_category_thumb($cid, $file)
+    {
+        global $imgObj;
+        $category = $this->getById($cid);
+        if (empty($category)) {
+            return false;
+        }
+        //Checking for category thumbs directory
+        $dir = $this->typeNamesByIds[$category['id_type_category']] . 's';
+
+        //Checking File Extension
+        $ext = getext($file['name']);
+
+        if ($ext != 'jpg' && $ext != 'png' && $ext != 'gif') {
+            e(lang('cat_img_error'));
+            return false;
+        }
+        $dir_path = CAT_THUMB_DIR . DIRECTORY_SEPARATOR . $dir;
+        if (!is_dir($dir_path)) {
+            @mkdir($dir_path, 0777);
+        }
+
+        if (is_dir($dir_path)) {
+            e(lang('cat_dir_make_err'));
+            return false;
+        }
+
+        $path = $dir_path . DIRECTORY_SEPARATOR . $cid . '.' . $ext;
+
+        //Removing File if already exists
+        if (file_exists($path)) {
+            unlink($path);
+        }
+        move_uploaded_file($file['tmp_name'], $path);
+
+        //Now checking if file is really an image
+        if (!@$imgObj->ValidateImage($path, $ext)) {
+            e(lang('pic_upload_vali_err'));
+            unlink($path);
+        } else {
+            $imgObj->CreateThumb($path, $path, $this->cat_thumb_width, $ext, $this->cat_thumb_height);
+            Category::getInstance()->update([
+                'category_id'    => $cid,
+                'category_thumb' => $file['name']
+            ]);
+        }
+        return true;
+    }
+
 
 }
 abstract class CBCategory
@@ -681,60 +769,6 @@ abstract class CBCategory
         }
     }
 
-
-    /**
-     * Function used to add category thumbnail
-     *
-     * @param $cid
-     * @param $file
-     *
-     * @throws Exception
-     * @internal param and $Cid Array
-     */
-    function add_category_thumb($cid, $file)
-    {
-        global $imgObj;
-        if ($this->category_exists($cid)) {
-            //Checking for category thumbs directory
-            $dir = $this->thumb_dir ?? $this->section_tbl;
-
-            //Checking File Extension
-            $ext = getext($file['name']);
-
-            if ($ext == 'jpg' || $ext == 'png' || $ext == 'gif') {
-                $dir_path = CAT_THUMB_DIR . DIRECTORY_SEPARATOR . $dir;
-                if (!is_dir($dir_path)) {
-                    @mkdir($dir_path, 0777);
-                }
-
-                if (is_dir($dir_path)) {
-                    $path = $dir_path . DIRECTORY_SEPARATOR . $cid . '.' . $ext;
-
-                    //Removing File if already exists
-                    if (file_exists($path)) {
-                        unlink($path);
-                    }
-                    move_uploaded_file($file['tmp_name'], $path);
-
-                    //Now checking if file is really an image
-                    if (!@$imgObj->ValidateImage($path, $ext)) {
-                        e(lang('pic_upload_vali_err'));
-                        unlink($path);
-                    } else {
-                        $imgObj->CreateThumb($path, $path, $this->cat_thumb_width, $ext, $this->cat_thumb_height, true);
-                        Category::getInstance()->update([
-                            'category_id'=>$cid,
-                            'category_thumb'=>$file['name']
-                        ]);
-                    }
-                } else {
-                    e(lang('cat_dir_make_err'));
-                }
-            } else {
-                e(lang('cat_img_error'));
-            }
-        }
-    }
 
     /**
      * Function used to get category thumb
