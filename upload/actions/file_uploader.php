@@ -46,7 +46,7 @@ switch ($mode) {
             'title'       => $title,
             'description' => $desc,
             'tags'        => $tags,
-            'category'    => [$cbvid->get_default_cid()]
+            'category'    => [Category::getInstance()->getDefaultByType('video')['category_id']]
         ];
 
         assign('objId', $_POST['objId']);
@@ -155,7 +155,7 @@ switch ($mode) {
             , 'file_name'       => $file_name
             , 'file_directory'  => $file_directory
             , 'description'     => $filename_without_ext
-            , 'category'        => [$cbvid->get_default_cid()]
+            , 'category'        => [Category::getInstance()->getDefaultByType('video')['category_id']]
             , 'userid'          => user_id()
             , 'allow_comments'  => 'yes'
             , 'comment_voting'  => 'yes'

@@ -2335,13 +2335,6 @@ class userquery extends CBCategory
                 $query_field[] = $field['db_field'];
             }
 
-            if (is_array($val)) {
-                $new_val = '';
-                foreach ($val as $v) {
-                    $new_val .= '#' . $v . '# ';
-                }
-                $val = $new_val;
-            }
             if ($field['clean_func'] && (function_exists($field['clean_func']) || is_array($field['clean_func']))) {
                 $val = apply_func($field['clean_func'], $val);
             }
@@ -2453,9 +2446,7 @@ class userquery extends CBCategory
         }
 
         //Changing category
-        if (isset($array['category'])) {
-            Category::getInstance()->updateLink('user', $array['userid'], $array['category']);
-        }
+        Category::getInstance()->saveLinks('user', $array['userid'], [$array['category']]);
 
         //Updating User Avatar
         if ($array['avatar_url']) {

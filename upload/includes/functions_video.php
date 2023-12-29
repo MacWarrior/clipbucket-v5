@@ -448,7 +448,7 @@ function validate_vid_category($array = null): bool
 
     $new_array = [];
     foreach ($array as $arr) {
-        if ($cbvid->category_exists($arr)) {
+        if (!empty(Category::getInstance()->getById($arr))) {
             $new_array[] = $arr;
         }
     }

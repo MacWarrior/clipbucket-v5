@@ -30,7 +30,6 @@ class Video
             ,'file_type'
             ,'file_directory'
             ,'description'
-            ,'category'
             ,'broadcast'
             ,'location'
             ,'datecreated'
@@ -256,13 +255,9 @@ class Video
         }
         if( $param_category ){
             if( !is_array($param_category) ){
-                $conditions[] = 'video.category LIKE \'%#'.mysql_clean($param_category).'#%\'';
+                $conditions[] = 'categories.category_id = '.mysql_clean($param_category);
             } else {
-                $category_cond = [];
-                foreach($param_category as $category){
-                    $category_cond[] = 'video.category LIKE \'%#'.mysql_clean($category).'#%\'';
-                }
-                $conditions[] = '(' . implode(' OR ', $category_cond) . ')';
+                $conditions[] = 'categories.category_id IN (' . implode(', ', $param_category) . ')';
             }
         }
         if( $param_condition ){
@@ -331,7 +326,10 @@ class Video
 
         $sql ='SELECT ' . implode(', ', $select) . '
                 FROM ' . cb_sql_table($this->getTableName()) . '
-                LEFT JOIN ' . cb_sql_table('users') . ' ON video.userid = users.userid '
+                LEFT JOIN ' . cb_sql_table('users') . ' ON video.userid = users.userid
+                LEFT JOIN ' . cb_sql_table('videos_categories') . ' ON video.videoid = videos_categories.id_video
+                LEFT JOIN ' . cb_sql_table('categories') . ' ON videos_categories.id_category = categories.category_id 
+                '
             . implode(' ', $join)
             . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions))
             . (empty($group) ? '' : ' GROUP BY ' . implode(',', $group))
@@ -607,7 +605,7 @@ class CBvideo extends CBCategory
         # Set basic video fields
         $basic_fields = [
             'videoid', 'videokey', 'video_password', 'video_users', 'username', 'userid', 'title', 'file_name', 'file_type'
-            , 'file_directory', 'description', 'category', 'broadcast', 'location', 'datecreated'
+            , 'file_directory', 'description', 'broadcast', 'location', 'datecreated'
             , 'country', 'allow_embedding', 'rating', 'rated_by', 'voter_ids', 'allow_comments'
             , 'comment_voting', 'comments_count', 'last_commented', 'featured', 'featured_date', 'allow_rating'
             , 'active', 'favourite_count', 'playlist_count', 'views', 'last_viewed', 'date_added', 'flagged', 'duration', 'status'
@@ -885,13 +883,6 @@ class CBvideo extends CBCategory
                         $query_field[] = $field['db_field'];
                     }
 
-                    if (is_array($val)) {
-                        $new_val = '';
-                        foreach ($val as $v) {
-                            $new_val .= '#' . $v . '# ';
-                        }
-                        $val = $new_val;
-                    }
                     if (!$field['clean_func'] || (!apply_func($field['clean_func'], $val) && !is_array($field['clean_func']))) {
                         $val = ($val);
                     } else {
@@ -966,6 +957,7 @@ class CBvideo extends CBCategory
                 $db->update(tbl('video'), $query_field, $query_val, ' videoid=\'' . $vid . '\'');
 
                 Tags::saveTags($array['tags'], 'video', $vid);
+                Category::getInstance()->saveLinks('video', $vid, [$array['category']]);
 
                 cb_do_action('update_video', [
                     'object_id' => $vid,

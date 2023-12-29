@@ -150,7 +150,7 @@ class formObj
     function createCheckBox($field, $multi = false)
     {
         //First Checking if value is CATEGORY
-        if ($field['value'][0] == 'category') {
+        if ($field['id'] == 'category') {
             //Generate Category list
             $type = $field['category_type'] ?: 'video';
 

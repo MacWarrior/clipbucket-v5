@@ -578,8 +578,8 @@ function getCategoryList($params = [])
         case 'video':
         case 'videos':
         case 'v':
-            global $cbvid;
-            $cats = $cbvid->cbCategories($params);
+        $params['category_type']= Category::getInstance()->getIdsCategoriesType('video');
+        $cats = Category::getInstance()->getAll($params);
             break;
 
         case 'users':
@@ -1054,24 +1054,17 @@ function convert_to_categories($input)
                     if (is_array($i)) {
                         foreach ($i as $info) {
                             $cat_details = Category::getInstance()->getById($info);
-                            $cat_array[] = [$cat_details['categoryid'], $cat_details['category_name']];
+                            $cat_array[] = [$cat_details['category_id'], $cat_details['category_name']];
                         }
                     } elseif (is_numeric($i)) {
                         $cat_details = Category::getInstance()->getById($i);
-                        $cat_array[] = [$cat_details['categoryid'], $cat_details['category_name']];
+                        $cat_array[] = [$cat_details['category_id'], $cat_details['category_name']];
                     }
                 }
             } elseif (is_numeric($in)) {
                 $cat_details = Category::getInstance()->getById($in);
-                $cat_array[] = [$cat_details['categoryid'], $cat_details['category_name']];
+                $cat_array[] = [$cat_details['category_id'], $cat_details['category_name']];
             }
-        }
-    } else {
-        preg_match_all('/#([0-9]+)#/', $default['category'], $m);
-        $cat_array = [$m[1]];
-        foreach ($cat_array as $i) {
-            $cat_details = Category::getInstance()->getById($i);
-            $cat_array[] = [$cat_details['categoryid'], $cat_details['category_name']];
         }
     }
     $count = 1;

@@ -63,6 +63,7 @@ class Category
         $param_category_id = $params['category_id'] ?? false;
         $param_category_type = $params['category_type'] ?? false;
         $param_category_default = $params['category_default'] ?? false;
+        $param_parent_id = $params['parent_id'] ?? false;
         $param_search = $params['search'] ?? false;
 
         $param_condition = $params['condition'] ?? false;
@@ -83,6 +84,9 @@ class Category
         }
         if ($param_category_default !== false) {
             $conditions[] = 'is_default = '. mysql_clean($param_category_type);
+        }
+        if ($param_parent_id !== false) {
+            $conditions[] = 'parent_id = '. mysql_clean($param_parent_id);
         }
 
         if( $param_condition ){
@@ -145,15 +149,30 @@ class Category
         return $result;
     }
 
-    public function updateLink($categ_type, $obj_id, $new_val): bool
+    /**
+     * @param $categ_type
+     * @param $obj_id
+     * @param array $new_vals
+     * @return bool
+     * @throws Exception
+     */
+    public function saveLinks($categ_type, $obj_id, array $new_vals): bool
     {
         if (!in_array($categ_type, $this->typeNamesByIds)) {
             e(lang('unknow_categ'));
             return false;
         }
+        if (empty($new_vals)) {
+            e(lang('unknow_categ'));
+            return false;
+        }
         $categ_table_name = $categ_type . 's_categories';
         $categ_id = 'id_' . $categ_type;
-        Clipbucket_db::getInstance()->update(tbl($categ_table_name), ['id_category'], [$new_val], $categ_id . ' = ' . mysql_clean($obj_id));
+
+        Clipbucket_db::getInstance()->delete(tbl($categ_table_name),  [$categ_id], [$obj_id]);
+        foreach ($new_vals as $new_val) {
+            Clipbucket_db::getInstance()->insert(tbl($categ_table_name), ['id_category', $categ_id], [$new_val, $obj_id]);
+        }
         return true;
     }
 
@@ -228,7 +247,7 @@ class Category
         if (!empty($childs)) {
             //deplacer
             //si a un parent => décaler vers parent sinon vers default
-            $dest_category_id = (!empty($cat_details['parent_id']) ? $cat_details['parent_id'] : $this->getDefaultByType('user')['category_id']);
+            $dest_category_id = (!empty($cat_details['parent_id']) ? $cat_details['parent_id'] : $this->getDefaultByType($this->typeNamesByIds[$cat_details['id_category_type']])['category_id']);
             //@TODO rework update for update all children with 1 request
             foreach ($childs as $child) {
                 $this->update([
@@ -291,6 +310,21 @@ class Category
         } else {
             e(lang('cat_exist_error'));
         }
+    }
+
+    public function getChildrenIds($category_id)
+    {
+        $childrenIds = $this->getAll([
+            'parent_id' => $category_id
+        ]);
+        if (empty($childrenIds)) {
+            return [];
+        } else {
+            foreach ($childrenIds as $childrenId) {
+                $childrenIds = array_merge($childrenIds, $this->getChildrenIds($childrenId));
+            }
+        }
+        return $childrenIds;
     }
 
 }
@@ -601,15 +635,6 @@ abstract class CBCategory
             return $results[0];
         }
         return false;
-    }
-
-    /**
-     * Function used to get default category ID
-     */
-    function get_default_cid()
-    {
-        $default = $this->get_default_category();
-        return $default['category_id'];
     }
 
     /**

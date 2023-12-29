@@ -125,14 +125,6 @@ class Upload
                 $query_field[] = $field['db_field'];
             }
 
-            if (is_array($val)) {
-                $new_val = '';
-                foreach ($val as $v) {
-                    $new_val .= '#' . $v . '# ';
-                }
-                $val = $new_val;
-            }
-
             if( !empty($field['clean_func']) && !apply_func($field['clean_func'], $val) ){
                 $val = apply_func($field['clean_func'], $val);
             }
@@ -218,7 +210,7 @@ class Upload
             $insert_id = $db->insert_id();
 
             \Tags::saveTags($array['tags'] ?? '', 'video', $insert_id);
-
+            Category::getInstance()->saveLinks('video', $insert_id, $array['category']);
             //logging Upload
             $log_array = [
                 'success'       => 'yes',
@@ -360,10 +352,9 @@ class Upload
         $desc = $default['description'];
 
         if (is_array($default['category'])) {
-            $cat_array = [$default['category']];
+            $cat_array = $default['category'];
         } else {
-            preg_match_all('/#([0-9]+)#/', $default['category'], $m);
-            $cat_array = [$m[1]];
+            $cat_array = explode(',', $default['category']);
         }
 
         $tags = $default['tags'];
@@ -419,9 +410,8 @@ class Upload
                 'type'              => 'checkbox',
                 'name'              => 'category[]',
                 'id'                => 'category',
-                'value'             => ['category', $cat_array],
+                'value'             => $cat_array,
                 'hint_1'            => sprintf(lang('vdo_cat_msg'), ALLOWED_VDO_CATS),
-                'db_field'          => 'category',
                 'required'          => 'yes',
                 'validate_function' => 'validate_vid_category',
                 'invalid_err'       => lang('vdo_cat_err3'),

@@ -33,15 +33,15 @@ if (in_dev()) {
     $min_suffixe = '.min';
 }
 $Cbucket->addJS([
-    'tag-it' . $min_suffixe . '.js'                            => 'admin',
-    'pages/upload/upload' . $min_suffixe . '.js'               => 'admin'
+    'tag-it' . $min_suffixe . '.js'              => 'admin',
+    'pages/upload/upload' . $min_suffixe . '.js' => 'admin'
 ]);
 $Cbucket->addCSS([
     'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
     'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
 ]);
 $available_tags = Tags::fill_auto_complete_tags('video');
-assign('available_tags',$available_tags);
-
+assign('available_tags', $available_tags);
+assign('default_category_id', Category::getInstance()->getDefaultByType('video')['category_id']);
 template_files('upload.html');
 display_it();
