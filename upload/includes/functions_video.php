@@ -303,10 +303,8 @@ function default_thumb(): string
     if (file_exists(TEMPLATEDIR . '/images/thumbs/processing.png')) {
         return TEMPLATEURL . '/images/thumbs/processing.png';
     }
-    if (file_exists(TEMPLATEDIR . '/images/thumbs/processing.jpg')) {
-        return TEMPLATEURL . '/images/thumbs/processing.jpg';
-    }
-    return '/files/thumbs/processing.jpg';
+
+    return DirPath::getUrl('thumbs') . 'processing.jpg';
 }
 
 /**
