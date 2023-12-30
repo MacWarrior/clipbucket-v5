@@ -9,7 +9,11 @@ class DiscordLog extends \OxygenzSAS\Discord\Discord
 
     public function __construct()
     {
-        $this->app_name = config('site_title');
+        $site_title = config('site_title');
+        if( empty($site_title) ){
+            $site_title = $_SERVER['HTTP_HOST'];
+        }
+        $this->app_name = $site_title;
         $this->filepath = DirPath::get('temp') . 'discord.webhook';
         $this->filepath_disabled = $this->filepath . '_disabled';
 

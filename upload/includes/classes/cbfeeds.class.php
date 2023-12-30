@@ -112,7 +112,7 @@ class cbfeeds
     function getFeedFile($uid)
     {
         $time = time();
-        $ufeedDir = DirPath::getUrl('userfeeds') . $uid;
+        $ufeedDir = DirPath::get('userfeeds') . $uid;
         //checking user feed folder exists or not
         if (!file_exists($ufeedDir)) {
             mkdir($ufeedDir, 0755, true);
@@ -134,7 +134,7 @@ class cbfeeds
         }
 
         $feeds = [];
-        $ufeedDir = DirPath::getUrl('userfeeds') . $uid;
+        $ufeedDir = DirPath::get('userfeeds') . $uid;
         if (file_exists($ufeedDir)) {
             $files = glob($ufeedDir . DIRECTORY_SEPARATOR . '*.feed');
             rsort($files);
@@ -323,7 +323,7 @@ class cbfeeds
      */
     function deleteFeed($uid, $feedid)
     {
-        $ufeedDir = DirPath::getUrl('userfeeds') . $uid . DIRECTORY_SEPARATOR . getName($feedid) . '.feed';
+        $ufeedDir = DirPath::get('userfeeds') . $uid . DIRECTORY_SEPARATOR . getName($feedid) . '.feed';
         if (file_exists($ufeedDir)) {
             unlink($ufeedDir);
         }

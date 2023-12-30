@@ -1,10 +1,9 @@
 <?php
 ob_start();
 
-require_once('constants.php');
-
-require_once(DirPath::get('vendor') . 'autoload.php');
-require_once('classes/DiscordLog.php');
+require_once 'constants.php';
+require_once DirPath::get('vendor') . 'autoload.php';
+require_once DirPath::get('classes') . 'DiscordLog.php';
 
 $whoops = new \Whoops\Run;
 if (file_exists(DirPath::get('temp') . 'development.dev')) {
@@ -32,7 +31,6 @@ if (file_exists(DirPath::get('temp') . 'development.dev')) {
 
     if (php_sapi_name() != 'cli') {
         $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
-        // Keep errors in php errors log file
     }
 } else {
     define('DEVELOPMENT_MODE', false);
@@ -52,31 +50,31 @@ if (!@$in_bg_cron) {
 }
 
 
-require_once('functions.php');
-require_once('classes/db.class.php');
-require_once('classes/rediscache.class.php');
-require_once('classes/update.class.php');
-require_once('classes/plugin.class.php');
+require_once DirPath::get('includes') . 'functions.php';
+require_once DirPath::get('classes') . 'db.class.php';
+require_once DirPath::get('classes') . 'rediscache.class.php';
+require_once DirPath::get('classes') . 'update.class.php';
+require_once DirPath::get('classes') . 'plugin.class.php';
 
 # file with most frequently used functions
 
-include_once('clipbucket.php');
+require_once DirPath::get('includes') . 'clipbucket.php';
 check_install('before');
-if (file_exists(__DIR__ . '/config.php')) {
-    require_once __DIR__ . '/config.php'; // New config file
+if (file_exists(DirPath::get('includes') . '/config.php')) {
+    require_once DirPath::get('includes') . '/config.php'; // New config file
 } else {
-    require_once 'dbconnect.php'; // Old config file
+    require_once DirPath::get('includes') . 'dbconnect.php'; // Old config file
 }
 # class for storing common ClipBucket functions
-require_once('classes/ClipBucket.class.php');
-require_once('classes/columns.class.php');
-require_once('classes/my_queries.class.php');
-require_once('classes/actions.class.php');
-require_once('classes/category.class.php');
-require_once('classes/user.class.php');
-require_once('classes/lang.class.php');
-require_once('classes/pages.class.php');
-require_once('classes/tags.class.php');
+require_once DirPath::get('classes') . 'ClipBucket.class.php';
+require_once DirPath::get('classes') . 'columns.class.php';
+require_once DirPath::get('classes') . 'my_queries.class.php';
+require_once DirPath::get('classes') . 'actions.class.php';
+require_once DirPath::get('classes') . 'category.class.php';
+require_once DirPath::get('classes') . 'user.class.php';
+require_once DirPath::get('classes') . 'lang.class.php';
+require_once DirPath::get('classes') . 'pages.class.php';
+require_once DirPath::get('classes') . 'tags.class.php';
 
 $cb_columns = new cb_columns();
 $myquery = new myquery();
@@ -104,7 +102,7 @@ switch (DEBUG_LEVEL) {
         error_reporting(E_ALL & ~(E_NOTICE | E_DEPRECATED | E_STRICT | E_WARNING));
         ini_set('display_errors', 'on');
 }
-require_once('classes/errorhandler.class.php');
+require_once DirPath::get('classes') . 'errorhandler.class.php';
 $pages = new pages();
 $eh = new errorhandler();
 $param_redis = ['host' => $row['cache_host'], 'port' => $row['cache_port']];
@@ -169,36 +167,30 @@ if (!Update::isVersionSystemInstalled()) {
 } else {
     define('NEED_UPDATE', false);
 }
-//Setting Time Zone date_default_timezone_set
-require_once('classes/search.class.php');
-require_once('classes/signup.class.php');
-require_once('classes/image.class.php');
-require_once('classes/upload.class.php');
-require_once('classes/ads.class.php');
-require_once('classes/form.class.php');
 
-require_once('classes/log.class.php');
-require_once('classes/video.class.php');
-require_once('classes/playlist.class.php');
-require_once('classes/player.class.php');
-require_once('classes/cbemail.class.php');
-require_once('classes/pm.class.php');
-require_once('classes/cbpage.class.php');
-require_once('classes/reindex.class.php');
-require_once('classes/collections.class.php');
-require_once('classes/photos.class.php');
-require_once('classes/cbfeeds.class.php');
-require_once('classes/resizer.class.php');
-
-require_once('classes/comments.class.php');
-
-//Adding Gravatar
-require_once('classes/gravatar.class.php');
-require 'defined_links.php';
-
-# Checking Website Template
-include 'plugin.functions.php';
-include 'plugins_functions.php';
+require_once DirPath::get('classes') . 'search.class.php';
+require_once DirPath::get('classes') . 'signup.class.php';
+require_once DirPath::get('classes') . 'image.class.php';
+require_once DirPath::get('classes') . 'upload.class.php';
+require_once DirPath::get('classes') . 'ads.class.php';
+require_once DirPath::get('classes') . 'form.class.php';
+require_once DirPath::get('classes') . 'log.class.php';
+require_once DirPath::get('classes') . 'video.class.php';
+require_once DirPath::get('classes') . 'playlist.class.php';
+require_once DirPath::get('classes') . 'player.class.php';
+require_once DirPath::get('classes') . 'cbemail.class.php';
+require_once DirPath::get('classes') . 'pm.class.php';
+require_once DirPath::get('classes') . 'cbpage.class.php';
+require_once DirPath::get('classes') . 'reindex.class.php';
+require_once DirPath::get('classes') . 'collections.class.php';
+require_once DirPath::get('classes') . 'photos.class.php';
+require_once DirPath::get('classes') . 'cbfeeds.class.php';
+require_once DirPath::get('classes') . 'resizer.class.php';
+require_once DirPath::get('classes') . 'comments.class.php';
+require_once DirPath::get('classes') . 'gravatar.class.php';
+require_once DirPath::get('includes') . 'defined_links.php';
+require_once DirPath::get('includes') . 'plugin.functions.php';
+require_once DirPath::get('includes') .  'plugins_functions.php';
 
 $signup = new signup();
 $Upload = new Upload();

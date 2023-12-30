@@ -1,11 +1,10 @@
 <?php
 define('THIS_PAGE', 'cb_install');
 
-$includes_dir = dirname(__DIR__ ). DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR;
-include_once($includes_dir . 'classes' . DIRECTORY_SEPARATOR . 'update.class.php');
-include_once($includes_dir . 'clipbucket.php');
-
-require_once 'functions_install.php';
+require_once dirname(__DIR__ ). DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'constants.php';
+require_once DirPath::get('classes') . 'update.class.php';
+require_once DirPath::get('includes') . 'clipbucket.php';
+require_once DirPath::get('cb_install') . 'functions_install.php';
 
 $mode = $_POST['mode'];
 
