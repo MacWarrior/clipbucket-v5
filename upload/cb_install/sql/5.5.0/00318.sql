@@ -23,4 +23,4 @@ SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys`
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES (@id_language_key, 'Discord webhook URL is invalid', @language_id_eng);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
-VALUES (@id_language_key, 'URL du webhook Discord n\'est pas valide', @language_id_fra);
+VALUES (@id_language_key, 'L\'URL du webhook Discord n\'est pas valide', @language_id_fra);

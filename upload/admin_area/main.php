@@ -474,8 +474,8 @@ Assign('ffmpeg_version', $ffmpeg_version);
 
 subtitle('Website Configurations');
 
-$filepath_dev_file = DirPath::get('temp') . 'development.dev';
 if (!empty($_POST)) {
+    $filepath_dev_file = DirPath::get('temp') . 'development.dev';
     if (!empty($_POST['enable_dev_mode'])) {
         if (is_writable(DirPath::get('temp'))) {
             file_put_contents($filepath_dev_file, '');
@@ -497,7 +497,7 @@ if (!empty($_POST)) {
 
 if( !empty($_POST['discord_error_log']) ){
     if (!empty($_POST['discord_webhook_url']) && $_POST['discord_error_log'] == 'yes') {
-        if (!filter_var($_POST['discord_webhook_url'], FILTER_VALIDATE_URL)) {
+        if (!filter_var($_POST['discord_webhook_url'], FILTER_VALIDATE_URL) || strpos($_POST['discord_webhook_url'], 'https://discord.com/') !== 0) {
             e(lang('discord_webhook_url_invalid'));
         } else {
             DiscordLog::getInstance()->enable($_POST['discord_webhook_url']);
