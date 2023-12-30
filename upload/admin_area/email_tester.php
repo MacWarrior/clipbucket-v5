@@ -123,7 +123,7 @@ if (!empty($templates)) {
         $code = $template['email_template_code'];
         $list[$code] = $template['email_template_name'];
 
-        $HTML_template = BASEDIR . '/styles/global/v4/email_templates/' . $code . '.html';
+        $HTML_template = DirPath::get('styles') . 'global/v4/email_templates/' . $code . '.html';
 
         if (file_exists($HTML_template)) {
             $body = file_get_contents($HTML_template);

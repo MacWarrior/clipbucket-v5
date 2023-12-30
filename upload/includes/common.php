@@ -3,7 +3,7 @@ ob_start();
 
 require_once('constants.php');
 
-require_once(BASEDIR . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php');
+require_once(DirPath::get('vendor') . 'autoload.php');
 require_once('classes/DiscordLog.php');
 
 $whoops = new \Whoops\Run;
@@ -287,7 +287,7 @@ $cbphoto->position = $row['watermark_placement'];
 define('EMBED_VDO_WIDTH', $row['embed_player_width']);
 define('EMBED_VDO_HEIGHT', $row['embed_player_height']);
 
-require BASEDIR . '/includes/classes/template.class.php';
+require DirPath::get('classes') . 'template.class.php';
 $cbtpl = new CBTemplate();
 
 # STOP CACHING
@@ -299,7 +299,7 @@ $cbphoto->init_photos();
 $Cbucket->set_the_template();
 
 $cbtpl->init();
-require BASEDIR . '/includes/active.php';
+require DirPath::get('includes') . 'active.php';
 Assign('THIS_URL', $thisurl);
 define('ALLOWED_VDO_CATS', $row['video_categories']);
 

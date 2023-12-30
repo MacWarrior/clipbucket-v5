@@ -102,7 +102,7 @@ if (!empty($_filename)) {
         $log->writeLine(date('Y-m-d H:i:s').' => Something went wrong while moving file...');
     }
 
-    require_once(BASEDIR . '/includes/classes/conversion/ffmpeg.class.php');
+    require_once(DirPath::get('classes') . 'conversion/ffmpeg.class.php');
 
     $ffmpeg = new FFMpeg($log);
     $ffmpeg->conversion_type = config('conversion_type');

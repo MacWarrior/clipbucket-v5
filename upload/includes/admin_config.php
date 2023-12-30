@@ -38,10 +38,9 @@ define('RESULTS', $admin_pages);
 Assign('admin_pages', $admin_pages);
 
 //Do No Edit Below This Line
-define('ADMIN_TEMPLATE', 'cb_2014');
-define('TEMPLATEDIR', DirPath::get('admin_area') . DIRECTORY_SEPARATOR . TEMPLATEFOLDER . DIRECTORY_SEPARATOR . ADMIN_TEMPLATE);
+define('TEMPLATEDIR', DirPath::get('admin_area') . DIRECTORY_SEPARATOR . 'styles' . DIRECTORY_SEPARATOR . 'cb_2014');
 define('SITETEMPLATEDIR', DirPath::get('styles') . $row['template_dir']);
-define('TEMPLATEURL', DirPath::getUrl('admin_area') . TEMPLATEFOLDER . DIRECTORY_SEPARATOR . ADMIN_TEMPLATE);
+define('TEMPLATEURL', DirPath::getUrl('admin_area') . 'styles' . DIRECTORY_SEPARATOR . 'cb_2014');
 define('TEMPLATEURLFO', DirPath::getUrl('styles') . $Cbucket->template);
 define('LAYOUT', TEMPLATEDIR . DIRECTORY_SEPARATOR . 'layout');
 define('TEMPLATE', $row['template_dir']);

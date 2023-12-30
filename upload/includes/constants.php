@@ -22,6 +22,9 @@ class DirPath
             case 'css':
             case 'actions':
             case 'changelog':
+            case 'includes':
+            case 'cb_install':
+            case 'vendor':
                 $path = $root_directory . $dir_name;
                 $url = $dir_name;
                 break;
@@ -51,6 +54,7 @@ class DirPath
                 break;
 
             case 'userfeeds':
+            case 'views':
                 $path = $root_directory . 'cache' . DIRECTORY_SEPARATOR . $dir_name;
                 $url = 'cache/' . $dir_name;
                 break;
@@ -58,6 +62,11 @@ class DirPath
             case 'sql':
                 $path = $root_directory . 'cb_install' . DIRECTORY_SEPARATOR . $dir_name;
                 $url = 'cb_install/' . $dir_name;
+                break;
+
+            case 'classes':
+                $path = $root_directory . 'includes' . DIRECTORY_SEPARATOR . $dir_name;
+                $url = 'includes/' . $dir_name;
                 break;
         }
 
@@ -67,19 +76,11 @@ class DirPath
         return $path . DIRECTORY_SEPARATOR;
     }
 
-    public static function getUrl($dir_name)
+    public static function getUrl($dir_name): string
     {
         return self::get($dir_name, true);
     }
 }
-define("BASEDIR", dirname(__DIR__));
-
-
-const TEMPLATEFOLDER = 'styles';
-
-
-
-
 
 const IN_CLIPBUCKET = true;
 

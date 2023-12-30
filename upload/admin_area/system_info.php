@@ -59,7 +59,7 @@ assign('php_info', $phpinfo);
 
 /** php info cli */
 $row = $myquery->Get_Website_Details();
-$cmd = $row['php_path'] . ' ' . BASEDIR . DIRECTORY_SEPARATOR . 'phpinfo.php';
+$cmd = $row['php_path'] . ' ' . DirPath::get('root') . 'phpinfo.php';
 exec($cmd, $exec_output);
 assign('cli_php_info', implode('<br/>',$exec_output));
 

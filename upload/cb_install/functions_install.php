@@ -1,6 +1,4 @@
 <?php
-define('BASEDIR', dirname(__FILE__, 2));
-
 if (!file_exists(DirPath::get('temp') . 'install.me')) {
     if (!file_exists(DirPath::get('temp') . 'install.me.not') && !file_exists(DirPath::get('temp') . 'development.dev')) {
         header('Location: //' . $_SERVER['SERVER_NAME']);
@@ -67,7 +65,7 @@ function check_module($type): array
             break;
         case 'php_cli':
             $php_path = exec('which php');
-            $cmd = $php_path . ' ' . BASEDIR . DIRECTORY_SEPARATOR . 'phpinfo.php';
+            $cmd = $php_path . ' ' . DirPath::get('root') . 'phpinfo.php';
             if (empty($php_cli_info)) {
                 exec($cmd, $php_cli_info);
             }
@@ -316,7 +314,7 @@ function checkPermissions(): array
 
     $permsArray = [];
     foreach ($files as $file) {
-        if (is_writeable(BASEDIR . DIRECTORY_SEPARATOR . $file)) {
+        if (is_writeable(DirPath::get('root') . $file)) {
             $permsArray[] = [
                 'path' => $file,
                 'msg'  => 'writeable'

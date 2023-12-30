@@ -6,7 +6,7 @@ if (substr($baseurl, strlen($baseurl) - 1, 1) == '/') {
 
 global $db;
 $db->update(tbl('config'), ['value'], [$baseurl], " name='baseurl'");
-$db->update(tbl('config'), ['value'], [BASEDIR], " name='basedir'");
+$db->update(tbl('config'), ['value'], [DirPath::get('root')], " name='basedir'");
 ?>
 
 <div class="nav_des clearfix">

@@ -232,7 +232,7 @@ function devWitch($query, $query_type, $time, $cache = false): array
 
 function showDevWitch()
 {
-    $file = BASEDIR . '/styles/global/devmode.html';
+    $file = DirPath::get('styles') . 'global/devmode.html';
     Template($file, false);
 }
 

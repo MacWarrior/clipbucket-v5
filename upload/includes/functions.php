@@ -2967,7 +2967,7 @@ function include_header($params)
     $file = getArrayValue($params, 'file');
     $type = getArrayValue($params, 'type');
     if ($file == 'global_header') {
-        Template(BASEDIR . '/styles/global/head.html', false);
+        Template(DirPath::get('styles') . 'global/head.html', false);
         return false;
     }
     if (!$type) {

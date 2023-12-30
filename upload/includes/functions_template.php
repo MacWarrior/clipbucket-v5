@@ -86,7 +86,7 @@ function display_it()
     try {
         global $ClipBucket, $__devmsgs, $breadcrumb;
         if( in_dev() ) {
-            assign('thebase', BASEDIR);
+            assign('thebase', DirPath::get('root'));
             assign('__devmsgs', $__devmsgs);
         }
 

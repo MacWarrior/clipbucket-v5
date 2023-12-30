@@ -1593,9 +1593,9 @@ function generatingMoreThumbs($data, bool $regenerate = false)
 {
     global $db;
     $vid_file = get_high_res_file($data);
-    require_once BASEDIR . '/includes/classes/sLog.php';
+    require_once DirPath::get('classes') . 'sLog.php';
     $log = new SLog();
-    require_once BASEDIR . '/includes/classes/conversion/ffmpeg.class.php';
+    require_once DirPath::get('classes') . 'conversion/ffmpeg.class.php';
     $ffmpeg = new FFMpeg($log);
     $ffmpeg->input_details['duration'] = $data['duration'];
     $ffmpeg->input_file = $vid_file;
@@ -1624,7 +1624,7 @@ function update_duration($vdetails)
 
     global $db;
     $filepath = get_high_res_file($vdetails);
-    require_once BASEDIR . '/includes/classes/conversion/ffmpeg.class.php';
+    require_once DirPath::get('classes') . 'conversion/ffmpeg.class.php';
     $data = FFMpeg::get_video_basic_infos($filepath);
 
     if (isset($data['duration'])) {

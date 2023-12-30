@@ -82,7 +82,7 @@ class Update
     private function getCurrentCoreLatest(): array
     {
         if( empty($this->latest) ){
-            $filepath_latest = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'changelog' . DIRECTORY_SEPARATOR.'latest.json';
+            $filepath_latest = DirPath::get('changelog') . 'latest.json';
             $this->latest = json_decode(file_get_contents($filepath_latest), true);
         }
 
@@ -129,11 +129,10 @@ class Update
     private function getChangelog($version): array
     {
         if( empty($this->changelog[$version]) ){
-            $base_filepath = realpath(dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'changelog');
             if (strpos($version, '.') !== false) {
                 $version = str_replace('.','', $version);
             }
-            $filepath_changelog = $base_filepath . DIRECTORY_SEPARATOR . $version . '.json';
+            $filepath_changelog = DirPath::get('changelog') . $version . '.json';
 
             if (!file_exists($filepath_changelog)) {
                 e(lang('error_occured'));
@@ -609,7 +608,7 @@ class Update
             '5.2.0'           => '1',
         ];
 
-        $files = glob(dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'changelog' . DIRECTORY_SEPARATOR . '[0-9]*' . '.json');
+        $files = glob(DirPath::get('changelog') . '[0-9]*' . '.json');
         foreach ($files as $file) {
             $changelog = json_decode(file_get_contents($file), true);
             $versions[$changelog['version']] = $changelog['revision'];

@@ -136,14 +136,14 @@ if ($mode == 'adminsettings') {
 
             case 'create_files':
                 mysqli_close($cnnct);
-                $dbconnect = file_get_contents(BASEDIR . '/cb_install/config.php');
+                $dbconnect = file_get_contents(DirPath::get('cb_install') . 'config.php');
                 $dbconnect = str_replace('_DB_HOST_', $dbhost, $dbconnect);
                 $dbconnect = str_replace('_DB_NAME_', $dbname, $dbconnect);
                 $dbconnect = str_replace('_DB_USER_', $dbuser, $dbconnect);
                 $dbconnect = str_replace('_DB_PASS_', $dbpass, $dbconnect);
                 $dbconnect = str_replace('_TABLE_PREFIX_', $dbprefix, $dbconnect);
 
-                $fp = fopen(BASEDIR . '/includes/config.php', 'w');
+                $fp = fopen(DirPath::get('includes') . 'config.php', 'w');
                 fwrite($fp, $dbconnect);
                 fclose($fp);
 

@@ -1,7 +1,6 @@
 <?php
 class ClipBucket
 {
-    var $BASEDIR;
     var $JSArray = [];
     var $AdminJSArray = [];
     var $CSSArray = [];
@@ -22,11 +21,11 @@ class ClipBucket
     var $template_files = [];
     var $links = [];
     var $captchas = [];
-    var $clipbucket_footer = ['cb_bottom', 'smarty_catch_error'];
+    var $clipbucket_footer = [];
     var $clipbucket_functions = [];
     var $head_menu = [];
     var $foot_menu = [];
-    var $template = "";
+    var $template = '';
     var $cbinfo = [];
     var $search_types = [];
 
@@ -74,8 +73,6 @@ class ClipBucket
         $this->configs = $this->get_configs();
         //Get Current Page and Redirects it to without www.
         $pages->redirectOrig();
-        //Get Base Directory
-        $this->BASEDIR = $this->getBasedir();
 
         //This is used to create Admin Menu
         //Updating Upload Options		
@@ -103,14 +100,6 @@ class ClipBucket
         if (!isset($_GET['page']) || !is_numeric($_GET['page'])) {
             $_GET['page'] = 1;
         }
-    }
-
-    function getBasedir()
-    {
-        $dirname = dirname(__FILE__);
-        $dirname = preg_replace(['/includes/', '/classes/'], '', $dirname);
-        $dirname = substr($dirname, 0, strlen($dirname) - 2);
-        return $dirname == '/' ? '' : $dirname;
     }
 
     /**
