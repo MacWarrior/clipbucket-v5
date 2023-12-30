@@ -11,19 +11,19 @@ class DirPath
                 $url = '';
                 break;
 
+            case 'actions':
+            case 'admin_area':
+            case 'cache':
+            case 'cb_install':
+            case 'changelog':
+            case 'css':
             case 'files':
             case 'images':
+            case 'includes':
+            case 'js':
             case 'player':
             case 'plugins':
-            case 'admin_area':
             case 'styles':
-            case 'cache':
-            case 'js':
-            case 'css':
-            case 'actions':
-            case 'changelog':
-            case 'includes':
-            case 'cb_install':
             case 'vendor':
                 $path = $root_directory . $dir_name;
                 $url = $dir_name;
@@ -31,24 +31,24 @@ class DirPath
 
             case 'avatars':
             case 'backgrounds':
-            case 'videos':
-            case 'subtitles':
-            case 'thumbs':
-            case 'original':
             case 'conversion_queue':
-            case 'mass_uploads':
-            case 'logs':
-            case 'temp':
-            case 'photos':
             case 'logos':
+            case 'logs':
+            case 'mass_uploads':
+            case 'original':
+            case 'photos':
+            case 'subtitles':
+            case 'temp':
+            case 'thumbs':
+            case 'videos':
                 $path = $root_directory . 'files' . DIRECTORY_SEPARATOR . $dir_name;
                 $url = 'files/' . $dir_name;
                 break;
 
             case 'category_thumbs':
             case 'collection_thumbs':
-            case 'playlist_covers':
             case 'icons':
+            case 'playlist_covers':
                 $path = $root_directory . 'images' . DIRECTORY_SEPARATOR . $dir_name;
                 $url = 'images/' . $dir_name;
                 break;

@@ -308,7 +308,6 @@ function checkPermissions(): array
         'images/avatars',
         'images/category_thumbs',
         'images/collection_thumbs',
-        'images/groups_thumbs',
         'includes'
     ];
 
