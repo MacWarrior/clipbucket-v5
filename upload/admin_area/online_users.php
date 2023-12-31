@@ -1,8 +1,10 @@
 <?php
-global $userquery,$pages;
+define('THIS_PAGE', 'online_users');
+
 require_once '../includes/admin_config.php';
-$userquery->admin_login_check();
-$pages->page_redir();
+
+userquery::getInstance()->admin_login_check();
+pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
@@ -25,7 +27,7 @@ $users = get_users($result_array);
 
 Assign('users', $users);
 
-$online_users = $userquery->get_online_users(false);
+$online_users = userquery::getInstance()->get_online_users(false);
 assign('total', count($online_users));
 assign('online_users', $online_users);
 assign('queryString', queryString(null, 'kick'));

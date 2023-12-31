@@ -1,8 +1,10 @@
 <?php
+define('THIS_PAGE', 'system_info');
+
 require_once '../includes/admin_config.php';
 
-global $db, $userquery, $myquery;
-$userquery->admin_login_check();
+global $db, $myquery;
+userquery::getInstance()->admin_login_check();
 
 /* Generating breadcrumb */
 global $breadcrumb;

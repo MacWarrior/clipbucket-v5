@@ -1,12 +1,14 @@
 <?php
+define('THIS_PAGE', 'email_tester');
+
 require_once '../includes/admin_config.php';
-$userquery->admin_login_check();
-$userquery->login_check('web_config_access');
-$pages->page_redir();
+userquery::getInstance()->admin_login_check();
+userquery::getInstance()->login_check('web_config_access');
+pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => 'General Configurations', 'url' => ''];
+$breadcrumb[0] = ['title' => 'Tool Box', 'url' => ''];
 $breadcrumb[1] = ['title' => 'Email Tester', 'url' => DirPath::getUrl('admin_area') . 'email_tester.php'];
 
 if (isset($_POST['start_test'])) {
@@ -107,14 +109,14 @@ $macros = [
     '{date}'          => cbdate(),
     '{username}'      => user_name(),
     '{userid}'        => user_id(),
-    '{first_name}'    => $userquery->udetails['first_name'],
-    '{last_name}'     => $userquery->udetails['last_name'],
-    '{name}'          => name($userquery->udetails),
-    '{user}'          => name($userquery->udetails),
-    '{email}'         => $userquery->udetails['email'],
-    '{date_year}'     => cbdate("Y"),
-    '{date_month}'    => cbdate("m"),
-    '{date_day}'      => cbdate("d"),
+    '{first_name}'    => userquery::getInstance()->udetails['first_name'],
+    '{last_name}'     => userquery::getInstance()->udetails['last_name'],
+    '{name}'          => name(userquery::getInstance()->udetails),
+    '{user}'          => name(userquery::getInstance()->udetails),
+    '{email}'         => userquery::getInstance()->udetails['email'],
+    '{date_year}'     => cbdate('Y'),
+    '{date_month}'    => cbdate('m'),
+    '{date_day}'      => cbdate('d'),
     '{now}'           => NOW()
 ];
 

@@ -1,9 +1,10 @@
 <?php
+define('THIS_PAGE', 'action_logs');
+
 require_once '../includes/admin_config.php';
 
-global $userquery, $pages;
-$userquery->admin_login_check();
-$pages->page_redir();
+userquery::getInstance()->admin_login_check();
+pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;

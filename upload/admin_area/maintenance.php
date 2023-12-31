@@ -1,11 +1,13 @@
 <?php
+define('THIS_PAGE', 'maintenance');
+
 require_once '../includes/admin_config.php';
 
-global $userquery, $pages, $db, $cbindex;
+global $db, $cbindex;
 
-$userquery->admin_login_check();
-$userquery->login_check('web_config_access');
-$pages->page_redir();
+userquery::getInstance()->admin_login_check();
+userquery::getInstance()->login_check('web_config_access');
+pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;

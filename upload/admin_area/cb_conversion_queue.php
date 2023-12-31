@@ -1,11 +1,12 @@
 <?php
 define('THIS_PAGE', 'cb_conversion_queue');
 
-global $userquery, $pages, $myquery, $db;
+global $myquery, $db;
 
 require_once '../includes/admin_config.php';
-$userquery->admin_login_check();
-$pages->page_redir();
+
+userquery::getInstance()->admin_login_check();
+pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
@@ -56,7 +57,7 @@ $queue_list = $myquery->get_conversion_queue(null, $get_limit);
 assign('queues', $queue_list);
 $total_rows = get_videos($vcount);
 $total_pages = count_pages($db->count(tbl('conversion_queue'), 'cqueue_id'), RESULTS);
-$pages->paginate($total_pages, $page);
+pages::getInstance()->paginate($total_pages, $page);
 
 subtitle('Conversion Queue Manager');
 template_files('cb_conversion_queue.html');
